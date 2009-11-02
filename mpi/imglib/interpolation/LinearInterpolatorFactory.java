@@ -1,0 +1,45 @@
+/**
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License 2
+ * as published by the Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ *
+ * @author Stephan Preibisch & Stephan Saalfeld
+ */
+package mpi.imglib.interpolation;
+
+import mpi.imglib.image.Image;
+import mpi.imglib.outside.OutsideStrategyFactory;
+import mpi.imglib.type.NumericType;
+import mpi.imglib.type.numeric.FloatType;
+
+public class LinearInterpolatorFactory<T extends NumericType<T>> extends InterpolatorFactory<T>
+{
+	public LinearInterpolatorFactory( final OutsideStrategyFactory<T> outsideStrategyFactory )
+	{
+		super(outsideStrategyFactory);
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public LinearInterpolator<T> createInterpolator( final Image<T> img )
+	{
+		if ( img.getNumDimensions() == 3 )	
+		{
+			if ( FloatType.class.isInstance( img.createType() ))
+				return (LinearInterpolator<T>)new LinearInterpolator3DFloat( (Image<FloatType>)img, (LinearInterpolatorFactory<FloatType>)this, (OutsideStrategyFactory<FloatType>)outsideStrategyFactory );
+			else
+				return new LinearInterpolator3D<T>( img, this, outsideStrategyFactory );
+		}
+		else
+			return new LinearInterpolator<T>( img, this, outsideStrategyFactory );			
+	}
+}

@@ -1,0 +1,652 @@
+/**
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License 2
+ * as published by the Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ *
+ * @author Stephan Preibisch & Stephan Saalfeld
+ */
+package mpi.imglib.cursor.array;
+
+import mpi.imglib.container.array.Array3D;
+import mpi.imglib.cursor.LocalizableByDimCursor3D;
+import mpi.imglib.image.Image;
+import mpi.imglib.outside.OutsideStrategyFactory;
+import mpi.imglib.type.Type;
+
+public class Array3DLocalizableByDimOutsideCursor<T extends Type<T>> extends ArrayLocalizableByDimOutsideCursor<T> implements LocalizableByDimCursor3D<T>
+{
+	protected int x = -1, y = 0, z = 0;
+	final int widthMinus1, heightMinus1, depthMinus1;
+	final int width, height, depth;
+	final int stepY, stepZ;
+	final Array3D<T> container;
+
+	public Array3DLocalizableByDimOutsideCursor( final Array3D<T> container, final Image<T> image, final T type, final OutsideStrategyFactory<T> outsideStrategyFactory ) 
+	{
+		super( container, image, type, outsideStrategyFactory );
+		
+		this.container = container;
+		
+		this.widthMinus1 = container.getWidth() - 1;
+		this.heightMinus1 = container.getHeight() - 1;
+		this.depthMinus1 = container.getDepth() - 1;
+
+		this.width = container.getWidth();
+		this.height = container.getHeight();
+		this.depth = container.getDepth();
+		
+		this.stepY = container.getWidth();
+		this.stepZ = container.getWidth() * container.getHeight();
+		
+		reset();
+	}
+	
+	@Override
+	public void fwd()
+	{ 
+		if ( !isOutside )
+		{
+			//++type.i;
+			type.incIndex();
+			
+			if ( x < widthMinus1 )
+			{
+				++x;
+			}
+			else if ( y < heightMinus1 )
+			{
+				x = 0;
+				++y;
+			}
+			else if ( z < depthMinus1 )
+			{
+				x = 0;
+				y = 0;
+				++z;
+			}
+			else
+			{
+				// if it did not return we moved outside the image
+				isOutside = true;
+				++x;
+				outsideStrategy.initOutside( type );				
+			}
+		}
+	}
+
+	@Override
+	public int getX() { return x; }
+	@Override
+	public int getY() { return y; }
+	@Override
+	public int getZ() { return z; }
+
+	@Override
+	public void reset()
+	{ 
+		if ( outsideStrategy == null )
+			return;
+		
+		isOutside = false;
+		isClosed = false;
+		x = -1;
+		y = z = 0;
+		type.updateIndex( -1 );
+		type.updateDataArray( this );
+	}
+
+	@Override
+	public void getPosition( int[] position )
+	{
+		position[ 0 ] = x;
+		position[ 1 ] = y;
+		position[ 2 ] = z;
+	}
+
+	@Override
+	public Array3D<T> getStorageContainer(){ return container; }
+
+	@Override
+	public int[] getPosition(){ return new int[]{x, y, z}; }
+	
+	@Override
+	public int getPosition( final int dim )
+	{
+		if ( dim == 0 )
+			return x;
+		else if ( dim == 1 )
+			return y;
+		else if ( dim == 2 )
+			return z;
+		
+		System.err.println("Array3DLocalizableByDimOutsideCursor.getPosition( int dim ): There is no dimension " + dim );
+		return -1;
+	}
+
+	@Override
+	public void fwd( final int dim )
+	{
+		if ( dim == 0 )
+			fwdX();
+		else if ( dim == 1 )
+			fwdY();
+		else if ( dim == 2 )
+			fwdZ();
+		else
+			System.err.println("Array3DLocalizableByDimOutsideCursor.fwd( int dim ): There is no dimension " + dim );
+		
+		/*
+		position[ dim ]++;
+
+		if ( isOutside )
+		{
+			// reenter the image?
+			if ( position[ dim ] == 0 )
+				setPosition( position );
+			else // moved outside of the image
+				outsideStrategy.notifyOutside( type );
+		}
+		else
+		{			
+			if ( position[ dim ] < dimensions[ dim ] )
+			{
+				// moved within the image
+				type.i += step[ dim ];
+			}
+			else
+			{
+				// left the image
+				isOutside = true;
+				outsideStrategy.initOutside( type );
+			}
+		}
+		 */
+	}
+
+	@Override
+	public void fwdX()
+	{
+		if ( isOutside )
+		{
+			if ( x == -1 )
+			{
+				// possibly moved back into the image, depending on the other dimensions
+				setPositionX( 0 );
+			}
+			else // moved outside of the image
+			{
+				++x;
+				outsideStrategy.notifyOutside( type );
+			}
+		}
+		else
+		{
+			if ( x < widthMinus1 )
+			{
+				// moved within the image
+				type.incIndex();
+				++x;
+			}
+			else
+			{
+				// left the image
+				++x;
+				isOutside = true;
+				outsideStrategy.initOutside( type );				
+			}
+		}
+	}
+
+	@Override
+	public void fwdY()
+	{
+		if ( isOutside )
+		{
+			if ( y == -1 )
+			{
+				// possibly moved back into the image, depending on the other dimensions
+				setPositionY( 0 );
+			}
+			else // moved outside of the image
+			{
+				++y;
+				outsideStrategy.notifyOutside( type );
+			}
+		}
+		else
+		{
+			if ( y < heightMinus1 )
+			{
+				// moved within the image
+				type.incIndex( stepY );
+				++y;
+			}
+			else
+			{
+				// left the image
+				++y;
+				isOutside = true;
+				outsideStrategy.initOutside( type );				
+			}
+		}
+	}
+	
+	@Override
+	public void fwdZ()
+	{
+		if ( isOutside )
+		{
+			if ( z == -1 )
+			{
+				// possibly moved back into the image, depending on the other dimensions
+				setPositionZ( 0 );
+			}
+			else // moved outside of the image
+			{
+				++z;
+				outsideStrategy.notifyOutside( type );
+			}
+		}
+		else
+		{
+			if ( z < depthMinus1 )
+			{
+				// moved within the image
+				type.incIndex( stepZ );
+				++z;
+			}
+			else
+			{
+				// left the image
+				++z;
+				isOutside = true;
+				outsideStrategy.initOutside( type );				
+			}
+		}
+	}
+
+	@Override
+	public void move( final int steps, final int dim )
+	{
+		if ( dim == 0 )
+			moveX( steps );
+		else if ( dim == 1 )
+			moveY( steps );
+		else if ( dim == 2 )
+			moveZ( steps );
+		else
+			System.err.println("Array3DLocalizableByDimOutsideCursor.move( int dim ): There is no dimension " + dim );
+		
+	}
+	
+	@Override
+	public void moveRel( final int x, final int y, final int z )
+	{
+		moveX( x );
+		moveY( y );
+		moveZ( z );
+	}
+
+	@Override
+	public void moveTo( final int x, final int y, final int z )
+	{		
+		moveX( x - this.x );
+		moveY( y - this.y );
+		moveZ( z - this.z );
+	}
+	
+	@Override
+	public void moveX( final int steps )
+	{
+		x += steps;
+		
+		if ( isOutside )
+		{
+			if ( x > -1 && x < width)
+			{
+				// possibly moved back into the image, depending on the other dimensions
+				setPositionX( x );
+			}
+			else // moved outside of the image
+			{
+				outsideStrategy.notifyOutside( type );
+			}
+		}
+		else
+		{
+			if ( x > -1 && x < width )
+			{
+				// moved within the image
+				type.incIndex( steps );
+			}
+			else
+			{
+				// left the image
+				isOutside = true;
+				outsideStrategy.initOutside( type );				
+			}
+		}
+	}
+
+	@Override
+	public void moveY( final int steps )
+	{
+		y += steps;
+		
+		if ( isOutside )
+		{
+			if ( y > -1 && y < height)
+			{
+				// possibly moved back into the image, depending on the other dimensions
+				setPositionY( y );
+			}
+			else // moved outside of the image
+			{
+				outsideStrategy.notifyOutside( type );
+			}
+		}
+		else
+		{
+			if (  y > -1 && y < height )
+			{
+				// moved within the image
+				type.incIndex( steps * stepY );
+			}
+			else
+			{
+				// left the image
+				isOutside = true;
+				outsideStrategy.initOutside( type );				
+			}
+		}
+	}
+	
+	@Override
+	public void moveZ( final int steps )
+	{
+		z += steps;
+		
+		if ( isOutside )
+		{
+			if ( z > -1 && z < depth )
+			{
+				// possibly moved back into the image, depending on the other dimensions
+				setPositionZ( z );
+			}
+			else // moved outside of the image
+			{
+				outsideStrategy.notifyOutside( type );
+			}
+		}
+		else
+		{
+			if (  z > -1 && z < depth )
+			{
+				// moved within the image
+				type.incIndex( steps * stepZ );
+			}
+			else
+			{
+				// left the image
+				isOutside = true;
+				outsideStrategy.initOutside( type );				
+			}
+		}
+	}
+
+	@Override
+	public void bck( final int dim )
+	{
+		if ( dim == 0 )
+			bckX();
+		else if ( dim == 1 )
+			bckY();
+		else if ( dim == 2 )
+			bckZ();
+		else
+			System.err.println("Array3DLocalizableByDimCursor.bck( int dim ): There is no dimension " + dim );
+	}
+
+	@Override
+	public void bckX()
+	{
+		if ( isOutside )
+		{
+			if ( x == width )
+			{
+				// possibly moved back into the image, depending on the other dimensions
+				setPositionX( widthMinus1 );
+			}
+			else // moved outside of the image
+			{
+				--x;
+				outsideStrategy.notifyOutside( type );
+			}
+		}
+		else
+		{
+			--x;
+			
+			if ( x > -1 )
+			{
+				// moved within the image
+				type.decIndex();
+			}
+			else
+			{
+				// left the image
+				isOutside = true;
+				outsideStrategy.initOutside( type );				
+			}
+		}
+	}
+
+	@Override
+	public void bckY()
+	{
+		if ( isOutside )
+		{
+			if ( y == height )
+			{
+				// possibly moved back into the image, depending on the other dimensions
+				setPositionY( heightMinus1 );
+			}
+			else // moved outside of the image
+			{
+				--y;
+				outsideStrategy.notifyOutside( type );
+			}
+		}
+		else
+		{
+			--y;
+			
+			if ( y > -1 )
+			{
+				// moved within the image
+				type.decIndex( stepY );
+			}
+			else
+			{
+				// left the image
+				isOutside = true;
+				outsideStrategy.initOutside( type );				
+			}
+		}
+	}
+	
+	@Override
+	public void bckZ()
+	{
+		if ( isOutside )
+		{
+			if ( z == depth )
+			{
+				// possibly moved back into the image, depending on the other dimensions
+				setPositionZ( depthMinus1 );
+			}
+			else // moved outside of the image
+			{
+				--z;
+				outsideStrategy.notifyOutside( type );
+			}
+		}
+		else
+		{
+			--z;
+			
+			if ( z > -1 )
+			{
+				// moved within the image
+				type.decIndex( stepZ );
+			}
+			else
+			{
+				// left the image
+				isOutside = true;
+				outsideStrategy.initOutside( type );				
+			}
+		}
+	}
+	
+	@Override
+	public void setPosition( final int[] position ) { setPosition( position[0], position[1], position[2] );	}
+
+	@Override
+	public void setPosition( final int posX, final int posY, final int posZ )
+	{
+		this.x = posX;
+		this.y = posY;
+		this.z = posZ;
+
+		if ( posX > -1 && posX < width &&
+			 posY > -1 && posY < height &&
+			 posZ > -1 && posZ < depth)
+		{			
+			type.updateIndex( container.getPos( x, y, z ) );
+			
+			// new location is inside the image			
+			if ( isOutside ) // we reenter the image with this setPosition() call
+				type.updateDataArray( this );
+			
+			isOutside = false;
+		}
+		else
+		{
+			// new location is outside the image			
+			if ( isOutside ) // just moved outside the image
+			{
+				outsideStrategy.notifyOutside( type );
+			}
+			else // we left the image with this setPosition() call
+			{
+				isOutside = true;
+				outsideStrategy.initOutside( type );
+			}
+		}
+	}
+	
+	@Override
+	public void setPositionX( final int pos )
+	{		
+		// we are outside the image or in the initial starting position
+		if ( isOutside || type.getIndex() == -1 )
+		{
+			// if just this dimensions moves inside does not necessarily mean that
+			// the other ones do as well, so we have to do a full check here
+			setPosition( pos, y, z );
+		}
+		else if ( pos > -1 && pos < width )
+		{
+			type.incIndex( pos - x );
+			x = pos;
+		}
+		else
+		{
+			x = pos;
+
+			// moved outside the image
+			isOutside = true;
+			outsideStrategy.initOutside( type );
+		}
+	}
+
+	@Override
+	public void setPositionY( final int pos )
+	{
+		// we are outside the image or in the initial starting position
+		if ( isOutside || type.getIndex() == -1 )
+		{
+			// if just this dimensions moves inside does not necessarily mean that
+			// the other ones do as well, so we have to do a full check here
+			setPosition( x, pos, z );
+		}
+		else if ( pos > -1 && pos < height )
+		{
+			type.incIndex( (pos - y)*stepY );
+			y = pos;
+		}
+		else
+		{
+			y = pos;
+
+			// moved outside the image
+			isOutside = true;
+			outsideStrategy.initOutside( type );
+		}
+	}
+
+	@Override
+	public void setPositionZ( final int pos )
+	{
+		// we are outside the image or in the initial starting position
+		if ( isOutside || type.getIndex() == -1 )
+		{
+			// if just this dimensions moves inside does not necessarily mean that
+			// the other ones do as well, so we have to do a full check here
+			setPosition( x, y, pos );
+		}
+		else if ( pos > -1 && pos < depth )
+		{
+			type.incIndex( (pos - z)*stepZ );
+			z = pos;
+		}
+		else
+		{
+			z = pos;
+
+			// moved outside the image
+			isOutside = true;
+			outsideStrategy.initOutside( type );
+		}
+	}
+
+	@Override
+	public void setPosition( final int position, final int dim )
+	{
+		if ( dim == 0 )
+			setPositionX( position );
+		else if ( dim == 1 )
+			setPositionY( position );
+		else if ( dim == 2 )
+			setPositionZ( position );
+		else
+			System.err.println("Array3DLocalizableByDimOutsideCursor.setPosition( int dim ): There is no dimension " + dim );
+	}
+	
+	@Override
+	public String getPositionAsString()
+	{
+		return "(" + x + ", " + y + ", " + z + ")";
+	}
+	
+}
