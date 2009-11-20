@@ -19,24 +19,43 @@ public class GaussianConvolution< T extends NumericType<T>> implements MultiThre
 	final Image<T> image, convolved;
 	final OutsideStrategyFactory<T> outsideFactory;
 	final int numDimensions;
-	final double sigma;
-    final double[] kernel;
+	final double[] sigma;
+    final double[][] kernel;
 
 	long processingTime;
 	int numThreads;
 	String errorMessage = "";
 
-	public GaussianConvolution( final Image<T> image, final OutsideStrategyFactory<T> outsideFactory, final double sigma )
+	public GaussianConvolution( final Image<T> image, final OutsideStrategyFactory<T> outsideFactory, final double[] sigma )
 	{
 		this.image = image;
 		this.convolved = image.createNewImage();
 		this.sigma = sigma;
-		this.kernel = MathLib.createGaussianKernel1DDouble( sigma, true );
 		this.processingTime = -1;
 		setNumThreads();
 		
 		this.outsideFactory = outsideFactory;
 		this.numDimensions = image.getNumDimensions();
+
+		this.kernel = new double[ numDimensions ][];
+		
+		for ( int d = 0; d < numDimensions; ++d )
+			this.kernel[ d ] = MathLib.createGaussianKernel1DDouble( sigma[ d ], true );
+	}
+
+	public GaussianConvolution( final Image<T> image, final OutsideStrategyFactory<T> outsideFactory, final double sigma )
+	{
+		this ( image, outsideFactory, createArray(image, sigma));
+	}
+	
+	protected static double[] createArray( final Image<?> image, final double sigma )
+	{
+		final double[] sigmas = new double[ image.getNumDimensions() ];
+		
+		for ( int d = 0; d < image.getNumDimensions(); ++d )
+			sigmas[ d ] = sigma;
+		
+		return sigmas;
 	}
 	
 	@Override
@@ -55,7 +74,7 @@ public class GaussianConvolution< T extends NumericType<T>> implements MultiThre
 	 * The sigma the image was convolved with
 	 * @return - double sigma
 	 */
-	public double getSigma() { return sigma; }
+	public double[] getSigmas() { return sigma; }
 	
 	@Override
 	public Image<T> getResult() { return convolved;	}
@@ -88,8 +107,6 @@ public class GaussianConvolution< T extends NumericType<T>> implements MultiThre
 	public boolean process() 
 	{		
 		final long startTime = System.currentTimeMillis();
-
-		System.out.println( "Computing a gaussian with a sigma of " + sigma + " (" + kernel.length  + " px) using " + numThreads + " thread(s)" );
 	
 		if ( Array3D.class.isInstance( image.getContainer() ) && FloatType.class.isInstance( image.createType() ))
 		{
@@ -178,10 +195,10 @@ public class GaussianConvolution< T extends NumericType<T>> implements MultiThre
 	                    	loopSize = threadChunkSize;
 	                	
 	                    // convolve the image in the current dimension using the given cursors
-	                    float[] kernelF = new float[ kernel.length ];
+	                    float[] kernelF = new float[ kernel[ currentDim ].length ];
 	                    
 	                    for ( int i = 0; i < kernelF.length; ++i )
-	                    	kernelF[ i ] = (float)kernel[ i ];
+	                    	kernelF[ i ] = (float)kernel[ currentDim ][ i ];
 	                    
 	                    convolve( inputIterator, outputIterator, currentDim, kernelF, startPosition, loopSize );
 		                
@@ -200,8 +217,9 @@ public class GaussianConvolution< T extends NumericType<T>> implements MultiThre
         return true;
 	}
 	
-	protected static <T extends NumericType<T>> void convolve( final LocalizableByDimCursor<T> inputIterator, final LocalizableCursor<T> outputIterator, final int dim, final float[] kernel,
-													  final long startPos, final long loopSize )
+	protected static <T extends NumericType<T>> void convolve( final LocalizableByDimCursor<T> inputIterator, final LocalizableCursor<T> outputIterator, 
+															   final int dim, final float[] kernel,
+															   final long startPos, final long loopSize )
 	{		
     	// move to the starting position of the current thread
     	outputIterator.fwd( startPos );
@@ -301,9 +319,6 @@ public class GaussianConvolution< T extends NumericType<T>> implements MultiThre
 		final int height = input.getHeight();
 		final int depth = input.getDepth();
 
-		final int filterSize = kernel.length;
-		final int filterSizeHalf = filterSize / 2;
-
 		final AtomicInteger ai = new AtomicInteger(0);
 		final Thread[] threads = SimpleMultiThreading.newThreads();
 		final int numThreads = threads.length;
@@ -318,6 +333,9 @@ public class GaussianConvolution< T extends NumericType<T>> implements MultiThre
 
 					final float[] in = input.getCurrentStorageArray( null );
 					final float[] out = output.getCurrentStorageArray( null );
+					final double[] kernel1 = kernel[ 0 ].clone();
+					final int filterSize = kernel[ 0 ].length;
+					final int filterSizeHalf = filterSize / 2;
 					
 					final LocalizableByDimCursor3D<FloatType> it = (LocalizableByDimCursor3D<FloatType>)imageFloat.createLocalizableByDimCursor( outsideFactoryFloat );
 
@@ -325,7 +343,7 @@ public class GaussianConvolution< T extends NumericType<T>> implements MultiThre
 					int kernelPos, count;
 
 					// precompute direct positions inside image data when multiplying with kernel
-					final int posLUT[] = new int[kernel.length];
+					final int posLUT[] = new int[kernel1.length];
 					for (int f = -filterSizeHalf; f <= filterSizeHalf; f++)
 						posLUT[f + filterSizeHalf] = f;
 
@@ -345,7 +363,7 @@ public class GaussianConvolution< T extends NumericType<T>> implements MultiThre
 
 									if (directlyComputable[x]) 
 										for (kernelPos = 0; kernelPos < filterSize; kernelPos++)
-											avg += in[count + posLUT[kernelPos]] * kernel[kernelPos];
+											avg += in[count + posLUT[kernelPos]] * kernel1[kernelPos];
 									else
 									{
 										kernelPos = 0;
@@ -354,7 +372,7 @@ public class GaussianConvolution< T extends NumericType<T>> implements MultiThre
 										for (int f = -filterSizeHalf; f <= filterSizeHalf; f++)
 										{
 											it.fwdX();
-											avg += it.getType().get() * kernel[kernelPos++];
+											avg += it.getType().get() * kernel1[kernelPos++];
 										}
 									}
 									out[count++] = (float) avg;
@@ -378,9 +396,12 @@ public class GaussianConvolution< T extends NumericType<T>> implements MultiThre
 
 					final float[] out =  output.getCurrentStorageArray( null );
 					final LocalizableByDimCursor3D<FloatType> it = (LocalizableByDimCursor3D<FloatType>)convolvedFloat.createLocalizableByDimCursor( outsideFactoryFloat );
+					final double[] kernel1 = kernel[ 1 ].clone();
+					final int filterSize = kernel[ 1 ].length;
+					final int filterSizeHalf = filterSize / 2;
 
 					final int inc = output.getPos(0, 1, 0);
-					final int posLUT[] = new int[kernel.length];
+					final int posLUT[] = new int[kernel1.length];
 					for (int f = -filterSizeHalf; f <= filterSizeHalf; f++)
 						posLUT[f + filterSizeHalf] = f * inc;
 
@@ -401,7 +422,7 @@ public class GaussianConvolution< T extends NumericType<T>> implements MultiThre
 									avg = 0;
 
 									if (directlyComputable[y]) for (kernelPos = 0; kernelPos < filterSize; kernelPos++)
-										avg += out[count + posLUT[kernelPos]] * kernel[kernelPos];
+										avg += out[count + posLUT[kernelPos]] * kernel1[kernelPos];
 									else
 									{
 										kernelPos = 0;
@@ -410,7 +431,7 @@ public class GaussianConvolution< T extends NumericType<T>> implements MultiThre
 										for (int f = -filterSizeHalf; f <= filterSizeHalf; f++)
 										{
 											it.fwdY();
-											avg += it.getType().get() * kernel[kernelPos++];
+											avg += it.getType().get() * kernel1[kernelPos++];
 										}
 									}
 
@@ -443,12 +464,15 @@ public class GaussianConvolution< T extends NumericType<T>> implements MultiThre
 					final int myNumber = ai.getAndIncrement();
 					double avg;
 					int kernelPos, count;
+					final double[] kernel1 = kernel[ 2 ].clone();
+					final int filterSize = kernel[ 2 ].length;
+					final int filterSizeHalf = filterSize / 2;
 
 					final float[] out = output.getCurrentStorageArray( null );
 					final LocalizableByDimCursor3D<FloatType> it = (LocalizableByDimCursor3D<FloatType>)convolvedFloat.createLocalizableByDimCursor( outsideFactoryFloat );
 
 					final int inc = output.getPos(0, 0, 1);
-					final int posLUT[] = new int[kernel.length];
+					final int posLUT[] = new int[kernel1.length];
 					for (int f = -filterSizeHalf; f <= filterSizeHalf; f++)
 						posLUT[f + filterSizeHalf] = f * inc;
 
@@ -470,7 +494,7 @@ public class GaussianConvolution< T extends NumericType<T>> implements MultiThre
 									avg = 0;
 
 									if (directlyComputable[z]) for (kernelPos = 0; kernelPos < filterSize; kernelPos++)
-										avg += out[count + posLUT[kernelPos]] * kernel[kernelPos];
+										avg += out[count + posLUT[kernelPos]] * kernel1[kernelPos];
 									else
 									{
 										kernelPos = 0;
@@ -479,7 +503,7 @@ public class GaussianConvolution< T extends NumericType<T>> implements MultiThre
 										for (int f = -filterSizeHalf; f <= filterSizeHalf; f++)
 										{
 											it.fwdZ();
-											avg += it.getType().get() * kernel[kernelPos++];
+											avg += it.getType().get() * kernel1[kernelPos++];
 										}
 									}
 									tempOut[z] = (float) avg;

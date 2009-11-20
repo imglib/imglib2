@@ -81,6 +81,16 @@ public class MathLib
 
             return gaussianKernel;
     }
+    
+    public static int getSuggestedKernelDiameter( final double sigma )
+    {
+        int size = 3;
+
+        if ( sigma > 0 )
+            size = Math.max(3, (int) (2 * (int) (3 * sigma + 0.5) + 1));
+    	
+        return size;
+    }
 	
 	public static String printCoordinates( final float[] value )
 	{

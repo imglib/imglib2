@@ -50,6 +50,15 @@ public class ImagePlusLocalizableByDimOutsideCursor<T extends Type<T>> extends I
 	}
 
 	@Override
+	public T getType() 
+	{ 
+		if ( isOutside )
+			return outsideStrategy.getType();
+		else
+			return type; 
+	}
+	
+	@Override
 	public void reset()
 	{
 		if ( outsideStrategy == null )
@@ -98,7 +107,7 @@ public class ImagePlusLocalizableByDimOutsideCursor<T extends Type<T>> extends I
 			// if it did not return we moved outside the image
 			isOutside = true;
 			position[0]++;
-			outsideStrategy.initOutside( type );
+			outsideStrategy.initOutside(  );
 		}
 	}
 
@@ -113,7 +122,7 @@ public class ImagePlusLocalizableByDimOutsideCursor<T extends Type<T>> extends I
 			if ( position[ dim ] == 0 )
 				setPosition( position );
 			else // moved outside of the image
-				outsideStrategy.notifyOutside( type );
+				outsideStrategy.notifyOutsideFwd( dim );
 		}
 		else
 		{			
@@ -134,7 +143,7 @@ public class ImagePlusLocalizableByDimOutsideCursor<T extends Type<T>> extends I
 			{
 				// left the image
 				isOutside = true;
-				outsideStrategy.initOutside( type );
+				outsideStrategy.initOutside(  );
 			}
 		}
 	}
@@ -148,9 +157,32 @@ public class ImagePlusLocalizableByDimOutsideCursor<T extends Type<T>> extends I
 		{
 			// reenter the image?
 			if ( position[ dim ] >= 0 && position[ dim ] < dimensions[ dim ] )
-				setPosition( position );
+			{
+				isOutside = false;
+				
+				for ( int d = 0; d < numDimensions && !isOutside; d++ )
+					if ( position[ d ] < 0 || position[ d ] >= dimensions[ d ])
+						isOutside = true;
+				
+				if ( !isOutside )
+				{
+					// new location is inside the image
+					
+					// get the offset inside the image
+					type.updateIndex( container.getPos( position ) );
+					slice = position[ 2 ];
+					
+					type.updateDataArray( this );			
+				}
+				else
+				{
+					outsideStrategy.notifyOutside( steps, dim  );
+				}
+			}
 			else // moved outside of the image
-				outsideStrategy.notifyOutside( type );
+			{
+				outsideStrategy.notifyOutside( steps, dim );
+			}
 		}
 		else
 		{			
@@ -171,7 +203,7 @@ public class ImagePlusLocalizableByDimOutsideCursor<T extends Type<T>> extends I
 			{
 				// left the image
 				isOutside = true;
-				outsideStrategy.initOutside( type );
+				outsideStrategy.initOutside(  );
 			}
 		}
 	}
@@ -187,7 +219,7 @@ public class ImagePlusLocalizableByDimOutsideCursor<T extends Type<T>> extends I
 			if ( position[ dim ] == dimensions[ dim ] - 1 )
 				setPosition( position );
 			else // moved outside of the image
-				outsideStrategy.notifyOutside( type );
+				outsideStrategy.notifyOutsideBck( dim );
 		}
 		else
 		{			
@@ -208,7 +240,7 @@ public class ImagePlusLocalizableByDimOutsideCursor<T extends Type<T>> extends I
 			{
 				// left the image
 				isOutside = true;
-				outsideStrategy.initOutside( type );
+				outsideStrategy.initOutside(  );
 			}
 		}
 	}
@@ -237,9 +269,9 @@ public class ImagePlusLocalizableByDimOutsideCursor<T extends Type<T>> extends I
 			// new location is outside the image
 		
 			if ( wasOutside ) // just moved outside of the image
-				outsideStrategy.notifyOutside( type );
+				outsideStrategy.notifyOutside(  );
 			else // we left the image with this setPosition() call
-				outsideStrategy.initOutside( type );
+				outsideStrategy.initOutside(  );
 		}
 		else
 		{
@@ -269,7 +301,7 @@ public class ImagePlusLocalizableByDimOutsideCursor<T extends Type<T>> extends I
 		{
 			// cursor has left the image
 			isOutside = true;
-			outsideStrategy.initOutside( type );
+			outsideStrategy.initOutside(  );
 			return;
 		}
 		else

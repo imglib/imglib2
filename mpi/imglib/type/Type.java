@@ -35,8 +35,8 @@ public interface Type<T extends Type<T>>
 	public void decIndex( final int decrement );
 	
 	public void updateDataArray( Cursor<?> c );	
-	public void updateDataArray( T type );	
-	public boolean hasSameDataArray( T type );		
+	//public void updateDataArray( T type );	
+	//public boolean hasSameDataArray( T type );		
 	
 	public T getType();
 	public T createType( Container<T> container );

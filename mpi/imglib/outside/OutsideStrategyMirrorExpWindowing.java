@@ -18,9 +18,9 @@ package mpi.imglib.outside;
 
 import mpi.imglib.cursor.LocalizableByDimCursor;
 import mpi.imglib.cursor.LocalizableCursor;
-import mpi.imglib.type.Type;
+import mpi.imglib.type.NumericType;
 
-public class OutsideStrategyMirror<T extends Type<T>> extends OutsideStrategy<T>
+public class OutsideStrategyMirrorExpWindowing<T extends NumericType<T>> extends OutsideStrategy<T>
 {
 	final LocalizableCursor<T> parentCursor;
 	final LocalizableByDimCursor<T> mirrorCursor;
@@ -28,7 +28,10 @@ public class OutsideStrategyMirror<T extends Type<T>> extends OutsideStrategy<T>
 	final int numDimensions;
 	final int[] dimension, position, mirroredPosition, currentDirection, tmp;
 	
-	public OutsideStrategyMirror( final LocalizableCursor<T> parentCursor )
+	final float[][] weights;
+	final float cutOff = 0.0001f;
+	
+	public OutsideStrategyMirrorExpWindowing( final LocalizableCursor<T> parentCursor )
 	{
 		super( parentCursor );
 		
@@ -43,7 +46,27 @@ public class OutsideStrategyMirror<T extends Type<T>> extends OutsideStrategy<T>
 		this.mirroredPosition = new int[ numDimensions ];
 		this.currentDirection = new int[ numDimensions ];
 		this.tmp = new int[ numDimensions ];
+		
+		// create lookup table for the weights
+		weights = new float[ numDimensions ][];
+		
+		for ( int d = 0; d < numDimensions; ++d )
+			weights[ d ] = new float[ dimension[d] ];
+		
+		final float a = 1000;
+
+		for ( int d = 0; d < numDimensions; ++d )
+			for ( int pos = 0; pos < dimension[ d ]; ++pos )
+			{
+				final float relPos = (float) pos / (float) ( dimension[ d ] - 1);
+	
+				if (relPos <= 0.5f)
+					weights[ d ][ pos ] = (float) ( 1.0 - (1.0 / (Math.pow(a, (relPos * 2)))) );
+				else
+					weights[ d ][ pos ] = (float) ( 1.0 - (1.0 / (Math.pow(a, ((1 - relPos) * 2)))) );
+			}		
 	}
+	
 
 	@Override
 	public T getType(){ return type; }
@@ -56,6 +79,7 @@ public class OutsideStrategyMirror<T extends Type<T>> extends OutsideStrategy<T>
 		mirrorCursor.setPosition( mirroredPosition );
 
 		type.set( mirrorType );
+		type.mul( getWeight( position ) );
 
 		// test current direction
 		// where do we have to move when we move one forward in every dimension, respectively
@@ -66,6 +90,16 @@ public class OutsideStrategyMirror<T extends Type<T>> extends OutsideStrategy<T>
 
 		for ( int d = 0; d < numDimensions; ++d )
 			currentDirection[ d ] = currentDirection[ d ] - mirroredPosition[ d ];
+	}
+	
+	final protected float getWeight( final int[] position )
+	{
+		float weight = 1;
+		
+		for ( int d = 0; d < numDimensions; ++d )
+			weight *= weights[ d ][ position[ d ] ];
+
+		return weight;
 	}
 
 	@Override
@@ -116,6 +150,8 @@ public class OutsideStrategyMirror<T extends Type<T>> extends OutsideStrategy<T>
 		}
 		
 		type.set( mirrorType );		
+		parentCursor.getPosition( position );
+		type.mul( getWeight( position ) );
 	}
 
 	@Override
@@ -153,6 +189,8 @@ public class OutsideStrategyMirror<T extends Type<T>> extends OutsideStrategy<T>
 		}
 		
 		type.set( mirrorType );		
+		parentCursor.getPosition( position );
+		type.mul( getWeight( position ) );
 	}
 	
 	/*

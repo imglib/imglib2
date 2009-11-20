@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import javax.media.j3d.Transform3D;
 import javax.vecmath.Vector3d;
 
+import mpi.imglib.algorithm.CanvasImage;
 import mpi.imglib.algorithm.GaussianConvolution;
 import mpi.imglib.algorithm.math.MathLib;
 import mpi.imglib.algorithm.transformation.AffineTransform;
@@ -51,6 +52,7 @@ import mpi.imglib.interpolation.LinearInterpolatorFactory;
 import mpi.imglib.interpolation.NearestNeighborInterpolatorFactory;
 import mpi.imglib.io.LOCI;
 import mpi.imglib.outside.OutsideStrategyFactory;
+import mpi.imglib.outside.OutsideStrategyMirrorExpWindowingFactory;
 import mpi.imglib.outside.OutsideStrategyMirrorFactory;
 import mpi.imglib.outside.OutsideStrategyValueFactory;
 import mpi.imglib.type.ComparableType;
@@ -73,15 +75,24 @@ public class Test
 	
 	public <T extends NumericType<T>> Test()
 	{
+		System.out.println( "Starting..." );
+		
 		// open imageJ window
 		initImageJWindow();				
-		
+				
 		//Image<?> image = LOCI.openLOCI("D:/Temp/", "73.tif", new ArrayContainerFactory());
 		//Image<T> image = LOCI.openLOCI("D:/Temp/Truman/MoreTiles/73.tif", new ArrayContainerFactory());
-		Image<FloatType> image = LOCI.openLOCIFloatType("F:/Stephan/OldMonster/Stephan/Stitching/Truman/73.tif", new ArrayContainerFactory());
-						
+		Image<FloatType> image = LOCI.openLOCIFloatType("F:/Stephan/OldMonster/Stephan/Stitching/Truman/73.tif", new ArrayContainerFactory());				
+			
+		//Image<FloatType> image = LOCI.openLOCIFloatType("F:/Stephan/img2.tif", new ArrayContainerFactory());
+		
 		image.getDisplay().setMinMax();
 		ImageJFunctions.displayAsVirtualStack( image ).show();
+		
+		testCanvas( image, 1.5f );
+
+		if ( true )
+			return;
 
 		OutsideStrategyFactory<FloatType> outsideStrategyFactory = new OutsideStrategyValueFactory<FloatType>( new FloatType(0) );
 		//OutsideStrategyFactory<FloatType> outsideStrategyFactory = new OutsideStrategyMirrorFactory<FloatType>();
@@ -131,6 +142,30 @@ public class Test
 							
 		
 		genericProcessing( img );
+	}
+	
+	public <T extends NumericType<T>> void testCanvas( final Image<T> img, final float factor )
+	{
+		final int[] newSize = new int[ img.getNumDimensions() ];
+		
+		for ( int d = 0; d < img.getNumDimensions(); ++d )
+			newSize[ d ] = MathLib.round( img.getDimension( d ) * factor );
+		
+		final CanvasImage<T> canvas = new CanvasImage<T>( img, newSize, new OutsideStrategyMirrorExpWindowingFactory<T>() );
+		
+		if ( canvas.checkInput() && canvas.process() )
+		{
+			Image<T> out = canvas.getResult();
+			out.getDisplay().setMinMax();
+			
+			System.out.println( canvas.getProcessingTime() );
+			
+			ImageJFunctions.displayAsVirtualStack( out ).show();
+		}
+		else
+		{
+			System.out.println( canvas.getErrorMessage() );
+		}
 	}
 	
 	public void testBinarization()
@@ -673,7 +708,7 @@ public class Test
 		
 		// close the cursor
 		c.close();
-	}
+	}	
 
 	public <T extends NumericType<T>> void fillUpPattern( Image<T> image )
 	{

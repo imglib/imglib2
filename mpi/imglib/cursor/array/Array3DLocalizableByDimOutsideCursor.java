@@ -78,11 +78,11 @@ public class Array3DLocalizableByDimOutsideCursor<T extends Type<T>> extends Arr
 				// if it did not return we moved outside the image
 				isOutside = true;
 				++x;
-				outsideStrategy.initOutside( type );				
+				outsideStrategy.initOutside(  );				
 			}
 		}
 	}
-
+	
 	@Override
 	public int getX() { return x; }
 	@Override
@@ -185,7 +185,7 @@ public class Array3DLocalizableByDimOutsideCursor<T extends Type<T>> extends Arr
 			else // moved outside of the image
 			{
 				++x;
-				outsideStrategy.notifyOutside( type );
+				outsideStrategy.notifyOutsideFwd( 0 );
 			}
 		}
 		else
@@ -201,7 +201,7 @@ public class Array3DLocalizableByDimOutsideCursor<T extends Type<T>> extends Arr
 				// left the image
 				++x;
 				isOutside = true;
-				outsideStrategy.initOutside( type );				
+				outsideStrategy.initOutside(  );				
 			}
 		}
 	}
@@ -219,7 +219,7 @@ public class Array3DLocalizableByDimOutsideCursor<T extends Type<T>> extends Arr
 			else // moved outside of the image
 			{
 				++y;
-				outsideStrategy.notifyOutside( type );
+				outsideStrategy.notifyOutsideFwd( 1 );
 			}
 		}
 		else
@@ -235,7 +235,7 @@ public class Array3DLocalizableByDimOutsideCursor<T extends Type<T>> extends Arr
 				// left the image
 				++y;
 				isOutside = true;
-				outsideStrategy.initOutside( type );				
+				outsideStrategy.initOutside(  );				
 			}
 		}
 	}
@@ -253,7 +253,7 @@ public class Array3DLocalizableByDimOutsideCursor<T extends Type<T>> extends Arr
 			else // moved outside of the image
 			{
 				++z;
-				outsideStrategy.notifyOutside( type );
+				outsideStrategy.notifyOutsideFwd( 2 );
 			}
 		}
 		else
@@ -269,7 +269,7 @@ public class Array3DLocalizableByDimOutsideCursor<T extends Type<T>> extends Arr
 				// left the image
 				++z;
 				isOutside = true;
-				outsideStrategy.initOutside( type );				
+				outsideStrategy.initOutside(  );				
 			}
 		}
 	}
@@ -311,14 +311,26 @@ public class Array3DLocalizableByDimOutsideCursor<T extends Type<T>> extends Arr
 		
 		if ( isOutside )
 		{
-			if ( x > -1 && x < width)
+			if ( x > -1 && x < width )
 			{
 				// possibly moved back into the image, depending on the other dimensions
-				setPositionX( x );
+				if ( y < 0 || y >= height || z < 0 || z >= depth )
+				{
+					outsideStrategy.notifyOutside( steps, 0 );
+				}
+				else
+				{
+					type.updateIndex( container.getPos( x, y, z ) );
+					
+					// new location is inside the image			
+					type.updateDataArray( this );
+					
+					isOutside = false;					
+				}
 			}
 			else // moved outside of the image
 			{
-				outsideStrategy.notifyOutside( type );
+				outsideStrategy.notifyOutside( steps, 0 );
 			}
 		}
 		else
@@ -332,7 +344,7 @@ public class Array3DLocalizableByDimOutsideCursor<T extends Type<T>> extends Arr
 			{
 				// left the image
 				isOutside = true;
-				outsideStrategy.initOutside( type );				
+				outsideStrategy.initOutside(  );				
 			}
 		}
 	}
@@ -347,11 +359,23 @@ public class Array3DLocalizableByDimOutsideCursor<T extends Type<T>> extends Arr
 			if ( y > -1 && y < height)
 			{
 				// possibly moved back into the image, depending on the other dimensions
-				setPositionY( y );
+				if ( x < 0 || x >= width || z < 0 || z >= depth )
+				{
+					outsideStrategy.notifyOutside( steps, 1 );
+				}
+				else
+				{
+					type.updateIndex( container.getPos( x, y, z ) );
+					
+					// new location is inside the image			
+					type.updateDataArray( this );
+					
+					isOutside = false;					
+				}
 			}
-			else // moved outside of the image
+			else
 			{
-				outsideStrategy.notifyOutside( type );
+				outsideStrategy.notifyOutside( steps, 1 );
 			}
 		}
 		else
@@ -365,7 +389,7 @@ public class Array3DLocalizableByDimOutsideCursor<T extends Type<T>> extends Arr
 			{
 				// left the image
 				isOutside = true;
-				outsideStrategy.initOutside( type );				
+				outsideStrategy.initOutside(  );				
 			}
 		}
 	}
@@ -380,11 +404,23 @@ public class Array3DLocalizableByDimOutsideCursor<T extends Type<T>> extends Arr
 			if ( z > -1 && z < depth )
 			{
 				// possibly moved back into the image, depending on the other dimensions
-				setPositionZ( z );
+				if ( y < 0 || y >= height || x < 0 || x >= width )
+				{
+					outsideStrategy.notifyOutside( steps, 2 );
+				}
+				else
+				{
+					type.updateIndex( container.getPos( x, y, z ) );
+					
+					// new location is inside the image			
+					type.updateDataArray( this );
+					
+					isOutside = false;					
+				}
 			}
-			else // moved outside of the image
+			else
 			{
-				outsideStrategy.notifyOutside( type );
+				outsideStrategy.notifyOutside( steps, 2 );
 			}
 		}
 		else
@@ -398,7 +434,7 @@ public class Array3DLocalizableByDimOutsideCursor<T extends Type<T>> extends Arr
 			{
 				// left the image
 				isOutside = true;
-				outsideStrategy.initOutside( type );				
+				outsideStrategy.initOutside(  );				
 			}
 		}
 	}
@@ -429,7 +465,7 @@ public class Array3DLocalizableByDimOutsideCursor<T extends Type<T>> extends Arr
 			else // moved outside of the image
 			{
 				--x;
-				outsideStrategy.notifyOutside( type );
+				outsideStrategy.notifyOutsideBck( 0 );
 			}
 		}
 		else
@@ -445,7 +481,7 @@ public class Array3DLocalizableByDimOutsideCursor<T extends Type<T>> extends Arr
 			{
 				// left the image
 				isOutside = true;
-				outsideStrategy.initOutside( type );				
+				outsideStrategy.initOutside(  );				
 			}
 		}
 	}
@@ -463,7 +499,7 @@ public class Array3DLocalizableByDimOutsideCursor<T extends Type<T>> extends Arr
 			else // moved outside of the image
 			{
 				--y;
-				outsideStrategy.notifyOutside( type );
+				outsideStrategy.notifyOutsideBck( 1 );
 			}
 		}
 		else
@@ -479,7 +515,7 @@ public class Array3DLocalizableByDimOutsideCursor<T extends Type<T>> extends Arr
 			{
 				// left the image
 				isOutside = true;
-				outsideStrategy.initOutside( type );				
+				outsideStrategy.initOutside(  );				
 			}
 		}
 	}
@@ -497,7 +533,7 @@ public class Array3DLocalizableByDimOutsideCursor<T extends Type<T>> extends Arr
 			else // moved outside of the image
 			{
 				--z;
-				outsideStrategy.notifyOutside( type );
+				outsideStrategy.notifyOutsideBck( 2 );
 			}
 		}
 		else
@@ -513,7 +549,7 @@ public class Array3DLocalizableByDimOutsideCursor<T extends Type<T>> extends Arr
 			{
 				// left the image
 				isOutside = true;
-				outsideStrategy.initOutside( type );				
+				outsideStrategy.initOutside(  );				
 			}
 		}
 	}
@@ -545,12 +581,12 @@ public class Array3DLocalizableByDimOutsideCursor<T extends Type<T>> extends Arr
 			// new location is outside the image			
 			if ( isOutside ) // just moved outside the image
 			{
-				outsideStrategy.notifyOutside( type );
+				outsideStrategy.notifyOutside(  );
 			}
 			else // we left the image with this setPosition() call
 			{
 				isOutside = true;
-				outsideStrategy.initOutside( type );
+				outsideStrategy.initOutside(  );
 			}
 		}
 	}
@@ -576,7 +612,7 @@ public class Array3DLocalizableByDimOutsideCursor<T extends Type<T>> extends Arr
 
 			// moved outside the image
 			isOutside = true;
-			outsideStrategy.initOutside( type );
+			outsideStrategy.initOutside(  );
 		}
 	}
 
@@ -601,7 +637,7 @@ public class Array3DLocalizableByDimOutsideCursor<T extends Type<T>> extends Arr
 
 			// moved outside the image
 			isOutside = true;
-			outsideStrategy.initOutside( type );
+			outsideStrategy.initOutside(  );
 		}
 	}
 
@@ -626,7 +662,7 @@ public class Array3DLocalizableByDimOutsideCursor<T extends Type<T>> extends Arr
 
 			// moved outside the image
 			isOutside = true;
-			outsideStrategy.initOutside( type );
+			outsideStrategy.initOutside(  );
 		}
 	}
 

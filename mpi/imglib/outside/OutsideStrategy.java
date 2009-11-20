@@ -36,12 +36,27 @@ public abstract class OutsideStrategy<T extends Type<T>>
 	/*
 	 * This method is fired by the parent cursor in the case that it moves while being outside the image
 	 */
-	public abstract void notifyOutside( T type );
+	public abstract void notifyOutside();
 
+	/*
+	 * This method is fired by the parent cursor in the case that it moves while being outside the image
+	 */
+	public abstract void notifyOutside( int steps, int dim );
+
+	/*
+	 * This method is fired by the parent cursor in the case that it moves while being outside the image
+	 */
+	public abstract void notifyOutsideFwd( int dim );
+
+	/*
+	 * This method is fired by the parent cursor in the case that it moves while being outside the image
+	 */
+	public abstract void notifyOutsideBck( int dim );
+	
 	/*
 	 * This method is fired by the parent cursor in the case that it leaves the image
 	 */
-	public abstract void initOutside( T type );
+	public abstract void initOutside();
 	
 	/*
 	 * Returns the Type that stores the current value of the Outside Strategy

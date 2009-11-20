@@ -34,7 +34,7 @@ public class OutsideStrategyValue<T extends Type<T>> extends OutsideStrategy<T>
 	 * @see mpi.imglib.outside.OutsideStrategy#getType()
 	 */
 	@Override
-	public T getType(){ return value; }
+	final public T getType(){ return value; }
 
 	/*
 	 * Outside strategy value has nothing to do when the parent cursor moves
@@ -42,8 +42,22 @@ public class OutsideStrategyValue<T extends Type<T>> extends OutsideStrategy<T>
 	 * @see mpi.imglib.outside.OutsideStrategy#notifyOutside()
 	 */
 	@Override
-	public void notifyOutside( final T type ) {}
+	final public void notifyOutside() {}
 
+	/*
+	 * Outside strategy value has nothing to do when the parent cursor moves
+	 * while being outside the image
+	 * @see mpi.imglib.outside.OutsideStrategy#notifyOutside()
+	 */
+	@Override
+	final public void notifyOutside( final int dim, final int steps ) {}
+
+	@Override
+	final public void notifyOutsideFwd( final int dim ) {}
+
+	@Override
+	final public void notifyOutsideBck( final int dim ) {}
+	
 	/*
 	 * Outside strategy value updates the array of the Cursor type to the constant value
 	 * and sets the index to 0
@@ -51,12 +65,8 @@ public class OutsideStrategyValue<T extends Type<T>> extends OutsideStrategy<T>
 	 * @see mpi.imglib.outside.OutsideStrategy#initOutside()
 	 */
 	@Override
-	public void initOutside( final T cursorType ) 
-	{  
-		cursorType.updateDataArray( value );
-		cursorType.updateIndex( 0 ); /* equals type.i = value.i */
-	}
+	final public void initOutside() {}
 	
 	@Override
-	public void close() {}
+	final public void close() {}
 }

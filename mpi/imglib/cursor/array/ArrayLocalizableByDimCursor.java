@@ -86,7 +86,12 @@ public class ArrayLocalizableByDimCursor<T extends Type<T>> extends ArrayLocaliz
 	public void moveTo( final int[] position )
 	{		
 		for ( int d = 0; d < numDimensions; ++d )
-			move( position[ d ] - getPosition(d), d );
+		{
+			final int dist = position[ d ] - getPosition( d );
+			
+			if ( dist != 0 )				
+				move( dist, d );
+		}
 	}
 
 	@Override
