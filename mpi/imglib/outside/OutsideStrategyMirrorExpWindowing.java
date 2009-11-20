@@ -16,6 +16,7 @@
  */
 package mpi.imglib.outside;
 
+import mpi.imglib.algorithm.math.MathLib;
 import mpi.imglib.cursor.LocalizableByDimCursor;
 import mpi.imglib.cursor.LocalizableCursor;
 import mpi.imglib.type.NumericType;
@@ -31,7 +32,7 @@ public class OutsideStrategyMirrorExpWindowing<T extends NumericType<T>> extends
 	final float[][] weights;
 	final float cutOff = 0.0001f;
 	
-	public OutsideStrategyMirrorExpWindowing( final LocalizableCursor<T> parentCursor )
+	public OutsideStrategyMirrorExpWindowing( final LocalizableCursor<T> parentCursor, final float[] relativeDistanceFadeOut )
 	{
 		super( parentCursor );
 		
@@ -51,7 +52,7 @@ public class OutsideStrategyMirrorExpWindowing<T extends NumericType<T>> extends
 		weights = new float[ numDimensions ][];
 		
 		for ( int d = 0; d < numDimensions; ++d )
-			weights[ d ] = new float[ dimension[d] ];
+			weights[ d ] = new float[ MathLib.round( dimension[ d ] * relativeDistanceFadeOut[ d ] ) ];
 		
 		final float a = 1000;
 
