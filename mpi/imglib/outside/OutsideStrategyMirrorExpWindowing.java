@@ -54,18 +54,18 @@ public class OutsideStrategyMirrorExpWindowing<T extends NumericType<T>> extends
 		for ( int d = 0; d < numDimensions; ++d )
 			weights[ d ] = new float[ MathLib.round( dimension[ d ] * relativeDistanceFadeOut[ d ] ) ];
 		
-		final float a = 1000;
+		final float exponent = 10;
 
 		for ( int d = 0; d < numDimensions; ++d )
+		{
+			final int maxDistance = weights[ d ].length;
+			
 			for ( int pos = 0; pos < dimension[ d ]; ++pos )
 			{
-				final float relPos = (float) pos / (float) ( dimension[ d ] - 1);
-	
-				if (relPos <= 0.5f)
-					weights[ d ][ pos ] = (float) ( 1.0 - (1.0 / (Math.pow(a, (relPos * 2)))) );
-				else
-					weights[ d ][ pos ] = (float) ( 1.0 - (1.0 / (Math.pow(a, ((1 - relPos) * 2)))) );
-			}		
+				final float relPos = pos / (float)( maxDistance - 1 );  					
+				weights[ d ][ pos ] = (float)( 1 - ( 1 / Math.pow( exponent, 1 - relPos ) ) ) * ( 1 + 1/(exponent-1) );
+			}
+		}
 	}
 	
 
