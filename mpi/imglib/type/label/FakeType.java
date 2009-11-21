@@ -35,12 +35,6 @@ public class FakeType extends TypeImpl<FakeType>
 	public Display<FakeType> getDefaultDisplay( Image<FakeType> image ) { return null; }
 
 	@Override
-	public void updateDataArray( FakeType type ) {}
-
-	@Override
-	public boolean hasSameDataArray( final FakeType type ) { return true; }
-
-	@Override
 	public void set( final FakeType c ) {}
 	
 	@Override

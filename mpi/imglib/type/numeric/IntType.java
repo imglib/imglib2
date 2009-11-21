@@ -67,12 +67,6 @@ public class IntType extends TypeImpl<IntType> implements NumericType<IntType>
 	}
 
 	@Override
-	public void updateDataArray( final IntType type ) { v = type.v; }
-
-	@Override
-	public boolean hasSameDataArray( final IntType type ) { return v == type.v; }
-
-	@Override
 	public void mul( final float c ) { v[ i ] = Math.round( v[ i ] * c ); }
 
 	@Override

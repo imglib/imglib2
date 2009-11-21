@@ -69,12 +69,6 @@ public class BooleanType extends TypeImpl<BooleanType> implements LogicType<Bool
 		b = bitStorage;
 		b.updateStorageArray( c );
 	}
-	
-	@Override
-	public void updateDataArray( final BooleanType type ) { b = type.b; }
-
-	@Override
-	public boolean hasSameDataArray( final BooleanType type ) { return b == type.b; }
 
 	public boolean get() { return b.getValue( i ); }
 	public void set( final boolean value) { b.setValue( i, value ); }

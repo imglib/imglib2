@@ -115,12 +115,6 @@ public class ComplexFloatType extends TypeImpl<ComplexFloatType> implements Nume
 	{ 
 		v = floatStorage.getCurrentStorageArray( c ); 
 	}
-
-	@Override
-	public void updateDataArray( final ComplexFloatType type ) { v = type.v; }
-
-	@Override
-	public boolean hasSameDataArray( final ComplexFloatType type ) { return v == type.v; }
 	
 	@Override
 	public void mul( final float c ) { v[ realI ] *= c; }

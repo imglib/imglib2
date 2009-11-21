@@ -67,12 +67,6 @@ public class LongType extends TypeImpl<LongType> implements NumericType<LongType
 	}
 
 	@Override
-	public void updateDataArray( final LongType type ) { v = type.v; }
-
-	@Override
-	public boolean hasSameDataArray( final LongType type ) { return v == type.v; }
-
-	@Override
 	public void mul( final float c ) { v[ i ] = Math.round( v[ i ] * c ); }
 
 	@Override

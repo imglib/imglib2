@@ -67,12 +67,6 @@ public class FloatType extends TypeImpl<FloatType> implements NumericType<FloatT
 	}
 
 	@Override
-	public void updateDataArray( final FloatType type ) { v = type.v; }
-
-	@Override
-	public boolean hasSameDataArray( final FloatType type ) { return v == type.v; }
-	
-	@Override
 	public void mul( final float c ) { v[ i ] *= c; }
 
 	@Override

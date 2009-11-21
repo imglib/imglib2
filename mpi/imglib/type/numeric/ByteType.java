@@ -65,12 +65,6 @@ public class ByteType extends TypeImpl<ByteType> implements NumericType<ByteType
 	{ 
 		v = byteStorage.getCurrentStorageArray( c ); 
 	}
-	
-	@Override
-	public void updateDataArray( ByteType type ) { v = type.v; }
-
-	@Override
-	public boolean hasSameDataArray( final ByteType type ) { return v == type.v; }
 
 	@Override
 	final public void mul( final float c ) { v[ i ] = (byte)Math.round( v[ i ] * c ); }

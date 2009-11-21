@@ -67,12 +67,6 @@ public class DoubleType extends TypeImpl<DoubleType> implements NumericType<Doub
 	}
 
 	@Override
-	public void updateDataArray( final DoubleType type ) { v = type.v; }
-
-	@Override
-	public boolean hasSameDataArray( final DoubleType type ) { return v == type.v; }
-
-	@Override
 	public void mul( final float c ) { v[ i ] = v[ i ] * c; }
 
 	@Override

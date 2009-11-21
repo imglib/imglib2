@@ -125,7 +125,23 @@ public class MathLib
 		
 		return out;
 	}
-	
+
+	public static Transform3D getTransform3D( AffineModel3D model )
+	{
+		final Transform3D transform = new Transform3D();		
+		final float[] m = model.getMatrix( null );
+		
+		final float[] m2 = new float[ 16 ]; 			
+		transform.get( m2 );
+		
+		for ( int i = 0; i < m.length; ++i )
+			m2[ i ] = m[ i ];
+		
+		transform.set( m2 );
+		
+		return transform;
+	}
+
 	public static AffineModel3D getAffineModel3D( Transform3D transform )
 	{
 		final float[] m = new float[16];

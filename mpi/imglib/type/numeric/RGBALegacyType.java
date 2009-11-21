@@ -67,12 +67,6 @@ public class RGBALegacyType extends TypeImpl<RGBALegacyType> implements NumericT
 		v = intStorage.getCurrentStorageArray( c ); 
 	}
 
-	@Override
-	public void updateDataArray( final RGBALegacyType type ) { v = type.v; }
-
-	@Override
-	public boolean hasSameDataArray( final RGBALegacyType type ) { return v == type.v; }
-
 	final public static int rgba( final int r, final int g, final int b, final int a)
 	{
 		return (r & 0xff) | ((g & 0xff) << 8) | ((b & 0xff) << 16) | ((a & 0xff) << 24);

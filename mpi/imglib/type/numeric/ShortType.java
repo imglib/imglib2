@@ -65,12 +65,6 @@ public class ShortType extends TypeImpl<ShortType> implements NumericType<ShortT
 	{ 
 		v = shortStorage.getCurrentStorageArray( c ); 
 	}
-	
-	@Override
-	public void updateDataArray( ShortType type ) { v = type.v; }
-
-	@Override
-	public boolean hasSameDataArray( final ShortType type ) { return v == type.v; }
 
 	@Override
 	public void mul( final float c ) { v[ i ] = (short)Math.round( v[ i ] * c ); }

@@ -21,10 +21,37 @@ import mpi.imglib.type.NumericType;
 
 public class OutsideStrategyMirrorExpWindowingFactory<T extends NumericType<T>> extends OutsideStrategyFactory<T>
 {
+	float[] relativeDistanceFadeOut;
+	float commonRelativeDistanceFadeOut;
+	
+	public OutsideStrategyMirrorExpWindowingFactory() 
+	{ 
+		this.relativeDistanceFadeOut = null;
+		this.commonRelativeDistanceFadeOut = -1;
+	}
+	
+	public OutsideStrategyMirrorExpWindowingFactory( float relativeDistanceFadeOut ) 
+	{ 
+		this.relativeDistanceFadeOut = null;
+		this.commonRelativeDistanceFadeOut = relativeDistanceFadeOut;
+	}
+
+	public OutsideStrategyMirrorExpWindowingFactory( float[] relativeDistanceFadeOut ) 
+	{
+		this.relativeDistanceFadeOut = relativeDistanceFadeOut.clone();
+	}
+	
 	@Override
 	public OutsideStrategyMirrorExpWindowing<T> createStrategy( final LocalizableCursor<T> cursor )
 	{
-		return new OutsideStrategyMirrorExpWindowing<T>( cursor );
+		if ( relativeDistanceFadeOut == null && commonRelativeDistanceFadeOut > 0 )
+		{
+			relativeDistanceFadeOut = new float[ cursor.getImage().getNumDimensions() ];		
+			for ( int i = 0; i < relativeDistanceFadeOut.length; ++i )
+				relativeDistanceFadeOut[ i ] = 0.1f;
+		}
+		
+		return new OutsideStrategyMirrorExpWindowing<T>( cursor, relativeDistanceFadeOut );
 	}
 
 }
