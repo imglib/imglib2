@@ -32,7 +32,7 @@ public class OutsideStrategyMirrorExpWindowing<T extends NumericType<T>> extends
 	final float[][] weights;
 	final float cutOff = 0.0001f;
 	
-	public OutsideStrategyMirrorExpWindowing( final LocalizableCursor<T> parentCursor, final float[] relativeDistanceFadeOut )
+	public OutsideStrategyMirrorExpWindowing( final LocalizableCursor<T> parentCursor, final float[] relativeDistanceFadeOut, final float exponent )
 	{
 		super( parentCursor );
 		
@@ -47,23 +47,26 @@ public class OutsideStrategyMirrorExpWindowing<T extends NumericType<T>> extends
 		this.mirroredPosition = new int[ numDimensions ];
 		this.currentDirection = new int[ numDimensions ];
 		this.tmp = new int[ numDimensions ];
-		
+				
 		// create lookup table for the weights
 		weights = new float[ numDimensions ][];
 		
 		for ( int d = 0; d < numDimensions; ++d )
-			weights[ d ] = new float[ MathLib.round( dimension[ d ] * relativeDistanceFadeOut[ d ] ) ];
-		
-		final float exponent = 10;
-
+			weights[ d ] = new float[ MathLib.round( dimension[ d ] * relativeDistanceFadeOut[ d ] / 2 ) ];
+				
 		for ( int d = 0; d < numDimensions; ++d )
 		{
 			final int maxDistance = weights[ d ].length;
 			
-			for ( int pos = 0; pos < dimension[ d ]; ++pos )
+			for ( int pos = 0; pos < maxDistance; ++pos )
 			{
-				final float relPos = pos / (float)( maxDistance - 1 );  					
-				weights[ d ][ pos ] = (float)( 1 - ( 1 / Math.pow( exponent, 1 - relPos ) ) ) * ( 1 + 1/(exponent-1) );
+				final float relPos = pos / (float)( maxDistance - 1 );
+
+				// if exponent equals one means linear function
+				if ( MathLib.isApproxEqual( exponent, 1f, 0.0001f ) )
+					weights[ d ][ pos ] = 1 - relPos;
+				else
+					weights[ d ][ pos ] = (float)( 1 - ( 1 / Math.pow( exponent, 1 - relPos ) ) ) * ( 1 + 1/(exponent-1) );
 			}
 		}
 	}
@@ -98,7 +101,22 @@ public class OutsideStrategyMirrorExpWindowing<T extends NumericType<T>> extends
 		float weight = 1;
 		
 		for ( int d = 0; d < numDimensions; ++d )
-			weight *= weights[ d ][ position[ d ] ];
+		{
+			final int pos = position[ d ];
+			final int distance;
+			
+			if ( pos < 0 )
+				distance = -pos;
+			else if ( pos >= dimension[ d ] )
+				distance = pos - dimension[ d ];
+			else
+				continue;
+			
+			if ( distance < weights[ d ].length )
+				weight *= weights[ d ][ distance ];
+			else
+				return 0;
+		}
 
 		return weight;
 	}

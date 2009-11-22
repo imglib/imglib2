@@ -22,7 +22,26 @@ import mpicbg.models.AffineModel3D;
 import mpicbg.models.CoordinateTransform;
 
 public class MathLib
-{
+{	
+	public static boolean isApproxEqual( final float a, final float b, final float threshold )
+	{
+		if (a==b)
+		  return true;		
+		else if (a + threshold > b && a - threshold < b)
+		  return true;
+		else
+		  return false;
+	}
+	
+	public static boolean isApproxEqual( final double a, final double b, final double threshold )
+	{
+		if (a==b)
+		  return true;		
+		else if (a + threshold > b && a - threshold < b)
+		  return true;
+		else
+		  return false;
+	}
 	
 	public static int round( final float value )
 	{

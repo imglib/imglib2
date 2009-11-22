@@ -81,15 +81,15 @@ public class Test
 		initImageJWindow();				
 				
 		//Image<?> image = LOCI.openLOCI("D:/Temp/", "73.tif", new ArrayContainerFactory());
-		//Image<T> image = LOCI.openLOCI("D:/Temp/Truman/MoreTiles/73.tif", new ArrayContainerFactory());
-		Image<FloatType> image = LOCI.openLOCIFloatType("F:/Stephan/OldMonster/Stephan/Stitching/Truman/73.tif", new ArrayContainerFactory());				
+		//Image<FloatType> image = LOCI.openLOCIFloatType("D:/Temp/Truman/MoreTiles/73.tif", new ArrayContainerFactory());
+		//Image<FloatType> image = LOCI.openLOCIFloatType("F:/Stephan/OldMonster/Stephan/Stitching/Truman/73.tif", new ArrayContainerFactory());				
 			
-		//Image<FloatType> image = LOCI.openLOCIFloatType("F:/Stephan/img2.tif", new ArrayContainerFactory());
+		Image<FloatType> image = LOCI.openLOCIFloatType("D:/Documents and Settings/Stephan/My Documents/My Pictures/rockface.tif", new ArrayContainerFactory());
 		
 		image.getDisplay().setMinMax();
 		ImageJFunctions.displayAsVirtualStack( image ).show();
 		
-		testCanvas( image, 1.5f );
+		testCanvas( image, 1.5f, 0.4f, 10f );
 
 		if ( true )
 			return;
@@ -144,14 +144,14 @@ public class Test
 		genericProcessing( img );
 	}
 	
-	public <T extends NumericType<T>> void testCanvas( final Image<T> img, final float factor )
+	public <T extends NumericType<T>> void testCanvas( final Image<T> img, final float factor, final float fadingRange, final float exponent )
 	{
 		final int[] newSize = new int[ img.getNumDimensions() ];
 		
 		for ( int d = 0; d < img.getNumDimensions(); ++d )
 			newSize[ d ] = MathLib.round( img.getDimension( d ) * factor );
 		
-		final CanvasImage<T> canvas = new CanvasImage<T>( img, newSize, new OutsideStrategyMirrorExpWindowingFactory<T>() );
+		final CanvasImage<T> canvas = new CanvasImage<T>( img, newSize, new OutsideStrategyMirrorExpWindowingFactory<T>( fadingRange, exponent ) );
 		
 		if ( canvas.checkInput() && canvas.process() )
 		{
