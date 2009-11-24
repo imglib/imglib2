@@ -27,6 +27,7 @@ import javax.vecmath.Vector3d;
 
 import mpi.imglib.algorithm.CanvasImage;
 import mpi.imglib.algorithm.GaussianConvolution;
+import mpi.imglib.algorithm.fft.FourierTransform;
 import mpi.imglib.algorithm.math.MathLib;
 import mpi.imglib.algorithm.transformation.AffineTransform;
 import mpi.imglib.algorithm.transformation.ImageTransform;
@@ -43,6 +44,7 @@ import mpi.imglib.cursor.special.LocalNeighborhoodCursor;
 import mpi.imglib.image.Image;
 import mpi.imglib.image.ImageFactory;
 import mpi.imglib.image.ImagePlusAdapter;
+import mpi.imglib.image.display.ComplexFloatTypePhaseSpectrumDisplay;
 import mpi.imglib.image.display.imagej.ImageJFunctions;
 import mpi.imglib.image.display.imagej.InverseTransformDescription;
 import mpi.imglib.interpolation.Interpolator;
@@ -59,6 +61,7 @@ import mpi.imglib.type.ComparableType;
 import mpi.imglib.type.NumericType;
 import mpi.imglib.type.Type;
 import mpi.imglib.type.logic.BooleanType;
+import mpi.imglib.type.numeric.ComplexFloatType;
 import mpi.imglib.type.numeric.FloatType;
 import mpi.imglib.type.numeric.ShortType;
 import mpicbg.models.AffineModel2D;
@@ -81,15 +84,22 @@ public class Test
 		initImageJWindow();				
 				
 		//Image<?> image = LOCI.openLOCI("D:/Temp/", "73.tif", new ArrayContainerFactory());
-		//Image<FloatType> image = LOCI.openLOCIFloatType("D:/Temp/Truman/MoreTiles/73.tif", new ArrayContainerFactory());
+		Image<FloatType> image = LOCI.openLOCIFloatType("D:/Temp/Truman/MoreTiles/73.tif", new ArrayContainerFactory());
 		//Image<FloatType> image = LOCI.openLOCIFloatType("F:/Stephan/OldMonster/Stephan/Stitching/Truman/73.tif", new ArrayContainerFactory());				
 			
-		Image<FloatType> image = LOCI.openLOCIFloatType("D:/Documents and Settings/Stephan/My Documents/My Pictures/rockface.tif", new ArrayContainerFactory());
+		//Image<FloatType> image = LOCI.openLOCIFloatType("D:/Documents and Settings/Stephan/My Documents/My Pictures/rockface.tif", new ArrayContainerFactory());
+		
+		//ImageFactory<FloatType> f = new ImageFactory<FloatType>( new FloatType(), new ArrayContainerFactory() );
+		//Image<FloatType> image = f.createImage( new int[]{ 5, 5, 5 } );		
+		//fillUp( image );
+		
+		//FourierTransform.rearrangeFFTQuadrants( image );
 		
 		image.getDisplay().setMinMax();
 		ImageJFunctions.displayAsVirtualStack( image ).show();
-		
-		testCanvas( image, 1.5f, 0.4f, 10f );
+				
+		//testCanvas( image, 1.5f, 0.4f, 10f );
+		testFFT( image );
 
 		if ( true )
 			return;
@@ -106,42 +116,39 @@ public class Test
 		if ( true )
 			return;
 		
-		//FloatTypeImageFactory imageFactory = new FloatTypeImageFactory( new ArrayContainerFactory() );
-		//genericProcessing( imageFactory );						
-		
-		//OutsideStrategyFactory<FloatType> outsideStrategyFactory = new OutsideStrategyValueFactory<FloatType>( new FloatType(0) );
-		//OutsideStrategyFactory<FloatType> outsideStrategyFactory = new OutsideStrategyMirrorFactory<FloatType>();
-		
-		//InterpolatorFactory<FloatType> interpolatorFactory = new NearestNeighborInterpolatorFactory<FloatType>( outsideStrategyFactory );
-		//InterpolatorFactory<FloatType> interpolatorFactory = new LinearInterpolatorFactory<FloatType>( outsideStrategyFactory );
-		
-		// simpleTest();		
-		// illustrateOutsideStrategy( outsideStrategyFactory );
-		// testInterpolation( interpolatorFactory );
-		
-		//FloatTypeImage img = LOCI.openLOCI( "D:/Temp/", "73.tif", new FloatTypeImageFactory( new ArrayContainerFactory() ) );
-		//img.getDisplay().setMinMax();
-		//img.getDisplay().setMax( img.getDisplay().getMax()/2 );
-		// ImageJFunctions.displayAsVirtualStack( img ).show();
-		//img.getImageJFunctions().displayAsVirtualStack( new int[]{0,2,1} ).show();
-		//img.getImageJFunctions().displayAsVirtualStack( new int[]{1,2,0} ).show();
-		
-		//IJ.run("MRI Stack (528K)");
-		//IJ.run("32-bit");
-		//ImagePlus imp = WindowManager.getCurrentImage();
-		
 		ImagePlus imp = new Opener().openImage("D:/Temp/Truman/TilesForStitching/L031/TopLeft.tif");
-		//imp.show();		
 		
 		Image< T > img = ImagePlusAdapter.wrap( imp );
 		Image<FloatType> img2 = ImagePlusAdapter.wrapFloat( imp );
 		
 		
 		ImageJFunctions.displayAsVirtualStack( img, ImageJFunctions.COLOR_RGB, new int[]{ 0, 1, 2} ).show();
-		//ImageJFunctions.displayAsVirtualStack( img, ImageJFunctions.COLOR_RGB, new int[]{ 1, 2, 0} ).show();
-							
 		
 		genericProcessing( img );
+	}
+	
+	public void testFFT( final Image<FloatType> img )
+	{
+		final FourierTransform fft = new FourierTransform( img );
+		fft.setNumThreads( 2 );
+		
+		if ( fft.checkInput() && fft.process() )
+		{
+			Image<ComplexFloatType> fftImage = fft.getResult();
+			
+			fftImage.getDisplay().setMinMax();
+			ImageJFunctions.copyToImagePlus( fftImage ).show();			
+
+			fftImage.setDisplay( new ComplexFloatTypePhaseSpectrumDisplay( fftImage ) );
+			fftImage.getDisplay().setMinMax();
+			ImageJFunctions.copyToImagePlus( fftImage ).show();		
+			
+			System.out.println( fft.getProcessingTime() );
+		}
+		else
+		{
+			System.out.println( fft.getErrorMessage() );
+		}
 	}
 	
 	public <T extends NumericType<T>> void testCanvas( final Image<T> img, final float factor, final float fadingRange, final float exponent )
@@ -151,7 +158,7 @@ public class Test
 		for ( int d = 0; d < img.getNumDimensions(); ++d )
 			newSize[ d ] = MathLib.round( img.getDimension( d ) * factor );
 		
-		final CanvasImage<T> canvas = new CanvasImage<T>( img, newSize, new OutsideStrategyMirrorExpWindowingFactory<T>( fadingRange, exponent ) );
+		final CanvasImage<T> canvas = new CanvasImage<T>( img, newSize, new OutsideStrategyMirrorExpWindowingFactory<T>( fadingRange ) );
 		
 		if ( canvas.checkInput() && canvas.process() )
 		{

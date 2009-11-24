@@ -16,22 +16,22 @@
  */
 package mpi.imglib.image.display;
 
+import mpi.imglib.algorithm.math.MathLib;
 import mpi.imglib.cursor.Cursor;
 import mpi.imglib.image.Image;
 import mpi.imglib.type.numeric.ComplexFloatType;
 
-public class ComplexFloatTypeDisplay extends Display<ComplexFloatType>
+public class ComplexFloatTypePowerSpectrumDisplay extends Display<ComplexFloatType>
 {
-	public ComplexFloatTypeDisplay( final Image<ComplexFloatType> img )
+	public ComplexFloatTypePowerSpectrumDisplay( final Image<ComplexFloatType> img )
 	{
 		super(img);
 	}	
-	
+
 	@Override
 	public void setMinMax()
 	{
 		final Cursor<ComplexFloatType> c = img.createCursor();
-		final ComplexFloatType t = c.getType();
 		
 		if ( !c.hasNext() )
 		{
@@ -41,13 +41,13 @@ public class ComplexFloatTypeDisplay extends Display<ComplexFloatType>
 		}
 		
 		c.fwd();
-		min = max = t.getReal();
+		min = max = getComplexDisplayValue( c.getType() );
 
 		while ( c.hasNext() )
 		{
 			c.fwd();
 
-			final float value = t.getReal();
+			final float value = getComplexDisplayValue( c.getType() );
 			
 			if ( value > max )
 				max = value;			
@@ -57,14 +57,23 @@ public class ComplexFloatTypeDisplay extends Display<ComplexFloatType>
 		
 		c.close();
 	}
+	
+	protected float getComplexDisplayValue( final ComplexFloatType c )
+	{
+		final float real = c.getReal();
+		final float complex = c.getComplex();
+
+		return (float)MathLib.gLog( Math.sqrt( real * real + complex * complex ), 2 );		
+	}	
 
 	@Override
-	public float get32Bit( ComplexFloatType c ) { return c.getReal(); }
+	public float get32Bit( final ComplexFloatType c ) { return getComplexDisplayValue( c.getType() ); }
 	@Override
-	public float get32BitNormed( ComplexFloatType c ) { return normFloat( c.getReal() ); }
+	public float get32BitNormed( final ComplexFloatType c ) { return normFloat( getComplexDisplayValue( c.getType() ) ); }
 	
 	@Override
-	public byte get8BitSigned( final ComplexFloatType c) { return (byte) Math.round( normFloat( c.getReal() ) * 255 ); }
+	public byte get8BitSigned( final ComplexFloatType c) { return (byte) Math.round( normFloat( getComplexDisplayValue( c.getType() ) ) * 255 ); }
 	@Override
-	public short get8BitUnsigned( final ComplexFloatType c) { return (short)Math.round( normFloat( c.getReal() ) * 255 ); }		
+	public short get8BitUnsigned( final ComplexFloatType c) { return (short)Math.round( normFloat( getComplexDisplayValue( c.getType() ) ) * 255 ); }		
+	
 }
