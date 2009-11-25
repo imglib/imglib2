@@ -134,6 +134,7 @@ public class Test
 		
 		if ( fft.checkInput() && fft.process() )
 		{
+			System.out.println( fft.getProcessingTime() );
 			Image<ComplexFloatType> fftImage = fft.getResult();
 			
 			fftImage.getDisplay().setMinMax();
@@ -142,8 +143,6 @@ public class Test
 			fftImage.setDisplay( new ComplexFloatTypePhaseSpectrumDisplay( fftImage ) );
 			fftImage.getDisplay().setMinMax();
 			ImageJFunctions.copyToImagePlus( fftImage ).show();		
-			
-			System.out.println( fft.getProcessingTime() );
 		}
 		else
 		{
