@@ -21,7 +21,7 @@ import mpi.imglib.container.ContainerFactory;
 import mpi.imglib.container.basictypecontainer.FloatContainer;
 import mpi.imglib.cursor.Cursor;
 import mpi.imglib.image.Image;
-import mpi.imglib.image.display.ComplexFloatTypeDisplay;
+import mpi.imglib.image.display.ComplexFloatTypePowerSpectrumDisplay;
 import mpi.imglib.type.NumericType;
 import mpi.imglib.type.TypeImpl;
 
@@ -105,9 +105,9 @@ public class ComplexFloatType extends TypeImpl<ComplexFloatType> implements Nume
 	}
 
 	@Override
-	public ComplexFloatTypeDisplay getDefaultDisplay( Image<ComplexFloatType> image )
+	public ComplexFloatTypePowerSpectrumDisplay getDefaultDisplay( Image<ComplexFloatType> image )
 	{
-		return new ComplexFloatTypeDisplay( image );
+		return new ComplexFloatTypePowerSpectrumDisplay( image );
 	}
 	
 	@Override
@@ -123,7 +123,7 @@ public class ComplexFloatType extends TypeImpl<ComplexFloatType> implements Nume
 	public void mul( final double c ) { v[ realI ] *= c; }
 
 	public float getReal() { return v[ realI ]; }
-	public float getComplex() { return v[ realI ]; }
+	public float getComplex() { return v[ complexI ]; }
 	
 	public void setReal( final float real ) { v[ realI ] = real; }
 	public void setComplex( final float complex ) { v[ complexI ] = complex; }

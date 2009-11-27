@@ -22,7 +22,58 @@ import mpicbg.models.AffineModel3D;
 import mpicbg.models.CoordinateTransform;
 
 public class MathLib
-{
+{	
+	public static double gLog( final double z, final double c )
+	{
+		if (c == 0)
+			return z;
+		else
+			return Math.log10((z + Math.sqrt(z * z + c * c)) / 2.0);
+	}
+
+	public static float gLog( final float z, final float c )
+	{
+		if (c == 0)
+			return z;
+		else
+			return (float)Math.log10((z + Math.sqrt(z * z + c * c)) / 2.0);
+	}
+
+	public static double gLogInv( final double w, final double c )
+	{
+		if (c == 0)
+			return w;
+		else
+			return Math.pow(10, w) - (((c * c) * Math.pow(10,-w)) / 4.0);
+	}
+
+	public static double gLogInv( final float w, final float c )
+	{
+		if (c == 0)
+			return w;
+		else
+			return Math.pow(10, w) - (((c * c) * Math.pow(10,-w)) / 4.0);
+	}
+
+	public static boolean isApproxEqual( final float a, final float b, final float threshold )
+	{
+		if (a==b)
+		  return true;		
+		else if (a + threshold > b && a - threshold < b)
+		  return true;
+		else
+		  return false;
+	}
+	
+	public static boolean isApproxEqual( final double a, final double b, final double threshold )
+	{
+		if (a==b)
+		  return true;		
+		else if (a + threshold > b && a - threshold < b)
+		  return true;
+		else
+		  return false;
+	}
 	
 	public static int round( final float value )
 	{
