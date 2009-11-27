@@ -744,13 +744,13 @@ public class LOCI
 
 	protected static final float getFloatValue(final byte[] b, final int i)
 	{
-		return Float.intBitsToFloat( ((b[i] & 0xff) << 24)  + ((b[i+1] & 0xff) << 16)  +  ((b[i+2] & 0xff) << 8)  + (b[i+3] & 0xff) );
+		return Float.intBitsToFloat( ((b[i+3] & 0xff) << 24)  + ((b[i+2] & 0xff) << 16)  +  ((b[i+1] & 0xff) << 8)  + (b[i] & 0xff) );
 	}
 
 	protected static final int getIntValue(final byte[] b, final int i)
 	{
 		// TODO: Untested
-		return ( ((b[i] & 0xff) << 24)  + ((b[i+1] & 0xff) << 16)  +  ((b[i+2] & 0xff) << 8)  + (b[i+3] & 0xff) );
+		return ( ((b[i+3] & 0xff) << 24)  + ((b[i+2] & 0xff) << 16)  +  ((b[i+1] & 0xff) << 8)  + (b[i] & 0xff) );
 	}
 	
 	protected static final short getShortValue(final byte[] b, final int i)
@@ -760,7 +760,8 @@ public class LOCI
 
 	protected static final int getShortValueInt(final byte[] b, final int i)
 	{
-		return ((((b[i] & 0xff) << 8)) + (b[i+1] & 0xff));
+		return ((((b[i+1] & 0xff) << 8)) + (b[i] & 0xff));
+		//return ((((b[i] & 0xff) << 8)) + (b[i+1] & 0xff));
 	}
 	
 }
