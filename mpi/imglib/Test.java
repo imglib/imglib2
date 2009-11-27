@@ -84,22 +84,22 @@ public class Test
 		initImageJWindow();				
 				
 		//Image<?> image = LOCI.openLOCI("D:/Temp/", "73.tif", new ArrayContainerFactory());
-		Image<FloatType> image = LOCI.openLOCIFloatType("D:/Temp/Truman/MoreTiles/73.tif", new ArrayContainerFactory());
+		//Image<FloatType> image = LOCI.openLOCIFloatType("D:/Temp/Truman/MoreTiles/73.tif", new ArrayContainerFactory());
 		//Image<FloatType> image = LOCI.openLOCIFloatType("F:/Stephan/OldMonster/Stephan/Stitching/Truman/73.tif", new ArrayContainerFactory());				
 			
 		//Image<FloatType> image = LOCI.openLOCIFloatType("D:/Documents and Settings/Stephan/My Documents/My Pictures/rockface.tif", new ArrayContainerFactory());
 		
-		//ImageFactory<FloatType> f = new ImageFactory<FloatType>( new FloatType(), new ArrayContainerFactory() );
-		//Image<FloatType> image = f.createImage( new int[]{ 5, 5, 5 } );		
-		//fillUp( image );
+		ImageFactory<FloatType> f = new ImageFactory<FloatType>( new FloatType(), new ArrayContainerFactory() );
+		Image<FloatType> image = f.createImage( new int[]{ 5, 5 } );		
+		fillUp( image );
 		
 		//FourierTransform.rearrangeFFTQuadrants( image );
 		
 		image.getDisplay().setMinMax();
 		ImageJFunctions.displayAsVirtualStack( image ).show();
 				
-		//testCanvas( image, 1.5f, 0.4f, 10f );
-		testFFT( image );
+		testCanvas( image, 1.25f, 0.25f, 10f );
+		//testFFT( image );
 
 		if ( true )
 			return;
