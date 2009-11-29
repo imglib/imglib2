@@ -31,10 +31,22 @@ public class Vector2d extends AbstractVector<Vector2d>
 		y += vector2.y;
 	}
 
+	public void add( final int value )
+	{
+		x += value;
+		y += value;
+	}
+
 	public void sub( final Vector2d vector2 )
 	{
 		x -= vector2.x;
 		y -= vector2.y;
+	}
+
+	public void sub( final int value )
+	{
+		x -= value;
+		y -= value;
 	}
 
 }

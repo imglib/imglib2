@@ -16,6 +16,9 @@ public abstract class AbstractVector<V extends AbstractVector<V>>
 	
 	public abstract int getPosition( final int dimension );
 	public abstract void setPosition( final int dimension, final int value );
+
+	public abstract void add( final int value );
+	public abstract void sub( final int value );
 	
 	public abstract void add( final V vector );
 	public abstract void sub( final V vector );

@@ -19,10 +19,11 @@ package mpi.imglib.cursor;
 import java.util.Iterator;
 
 import mpi.imglib.container.Container;
+import mpi.imglib.cursor.vector.Dimensionality;
 import mpi.imglib.image.Image;
 import mpi.imglib.type.Type;
 
-public interface Cursor<T extends Type<T>> extends Iterator<T>, java.lang.Iterable<T>, Iterable
+public interface Cursor<T extends Type<T>> extends Iterator<T>, java.lang.Iterable<T>, Iterable, Dimensionality
 {	
 	public void reset();			
 	public boolean isActive();	

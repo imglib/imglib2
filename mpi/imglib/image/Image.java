@@ -26,6 +26,7 @@ import mpi.imglib.cursor.Cursor;
 import mpi.imglib.cursor.LocalizableCursor;
 import mpi.imglib.cursor.LocalizableByDimCursor;
 import mpi.imglib.cursor.LocalizablePlaneCursor;
+import mpi.imglib.cursor.vector.Dimensionality;
 import mpi.imglib.image.display.Display;
 import mpi.imglib.image.display.imagej.ImageJFunctions;
 import mpi.imglib.interpolation.Interpolator;
@@ -33,7 +34,7 @@ import mpi.imglib.interpolation.InterpolatorFactory;
 import mpi.imglib.outside.OutsideStrategyFactory;
 import mpi.imglib.type.Type;
 
-public class Image<T extends Type<T>> implements ImageProperties
+public class Image<T extends Type<T>> implements ImageProperties, Dimensionality
 {
 	final protected ArrayList<Cursor<T>> cursors;
 	final ContainerFactory storageFactory;

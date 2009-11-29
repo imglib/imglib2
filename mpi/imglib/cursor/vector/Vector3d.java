@@ -36,11 +36,25 @@ public class Vector3d extends AbstractVector<Vector3d>
 		z += vector2.z;
 	}
 
+	public void add( final int value )
+	{
+		x += value;
+		y += value;
+		z += value;
+	}
+
 	public void sub( final Vector3d vector2 )
 	{
 		x -= vector2.x;
 		y -= vector2.y;
 		z -= vector2.z;
+	}
+
+	public void sub( final int value )
+	{
+		x -= value;
+		y -= value;
+		z -= value;
 	}
 
 }

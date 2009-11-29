@@ -71,4 +71,14 @@ public abstract class CursorImpl<T extends Type<T>> implements Cursor<T>
 
 	@Override
 	public int[] createPositionArray() { return new int[ image.getNumDimensions() ]; }	
+	
+	@Override
+	public int getNumDimensions() { return image.getNumDimensions(); }
+	
+	@Override
+	public int[] getDimensions() { return image.getDimensions(); }
+	
+	@Override
+	public void getDimensions( int[] position ) { image.getDimensions( position ); }
+	
 }

@@ -24,10 +24,22 @@ public class Vector extends AbstractVector<Vector>
 			vector[ d ] += vector2.vector[ d ];
 	}
 
+	public void add( final int value )
+	{
+		for ( int d = 0; d < numDimensions; ++d )
+			vector[ d ] += value;
+	}
+
 	public void sub( final Vector vector2 )
 	{
 		for ( int d = 0; d < numDimensions; ++d )
 			vector[ d ] -= vector2.vector[ d ];
+	}
+
+	public void sub( final int value )
+	{
+		for ( int d = 0; d < numDimensions; ++d )
+			vector[ d ] -= value;
 	}
 	
 	

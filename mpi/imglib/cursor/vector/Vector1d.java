@@ -16,14 +16,9 @@ public class Vector1d extends AbstractVector<Vector1d>
 		x = value;
 	}
 	
-	public void add( final Vector1d vector2 )
-	{
-		x += vector2.x;
-	}
-
-	public void sub( final Vector1d vector2 )
-	{
-		x -= vector2.x;
-	}
+	public void add( final Vector1d vector2 ) { x += vector2.x; }
+	public void add( final int value ) { x += value; }
+	public void sub( final Vector1d vector2 ) { x -= vector2.x; }
+	public void sub( final int value ) { x -= value; }
 
 }

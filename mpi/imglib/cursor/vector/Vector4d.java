@@ -42,12 +42,28 @@ public class Vector4d extends AbstractVector<Vector4d>
 		d += vector2.d;
 	}
 
+	public void add( final int value )
+	{
+		a += value;
+		b += value;
+		c += value;
+		d += value;
+	}
+
 	public void sub( final Vector4d vector2 )
 	{
 		a -= vector2.a;
 		b -= vector2.b;
 		c -= vector2.c;
 		d -= vector2.d;
+	}
+
+	public void sub( final int value )
+	{
+		a -= value;
+		b -= value;
+		c -= value;
+		d -= value;
 	}
 
 }
