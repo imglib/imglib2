@@ -59,6 +59,20 @@ public class CanvasImage<T extends Type<T>> implements OutputAlgorithm<T>, Bench
 	}
 	
 	/**
+	 * 
+	 * @param input - the input image
+	 * @param extension - the amount of pixels to add/subtract in all dimensions on each side
+	 * @param outsideFactory - what to do when extending the image
+	 */
+	public CanvasImage( final Image<T> input, final int extension, final OutsideStrategyFactory<T> outsideFactory )
+	{
+		final int[] newSize = input.getDimensions();
+		
+		for ( int d = 0; d < )
+		
+	}
+	
+	/**
 	 * This constructor can be called if the image is only cropped, then there is no {@link OutsideStrategyFactory} necessary.
 	 * It will fail if the image size is increased.
 	 *   

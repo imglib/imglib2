@@ -1,18 +1,14 @@
 package mpi.imglib.cursor.special;
 
-import java.util.Iterator;
-
-import mpi.imglib.container.Container;
 import mpi.imglib.container.array.FakeArray;
-import mpi.imglib.cursor.Cursor;
+import mpi.imglib.cursor.CursorImpl;
 import mpi.imglib.cursor.LocalizableByDimCursor;
 import mpi.imglib.cursor.LocalizableCursor;
 import mpi.imglib.cursor.array.ArrayLocalizableByDimCursor;
-import mpi.imglib.image.Image;
 import mpi.imglib.type.Type;
 import mpi.imglib.type.label.FakeType;
 
-public class LocalNeighborhoodCursor<T extends Type<T>> implements Cursor<T> 
+public class LocalNeighborhoodCursor<T extends Type<T>> extends CursorImpl<T> 
 {
 	/**
 	 * Here we "misuse" a ArrayLocalizableCursor to iterate through the cubes,
@@ -27,6 +23,8 @@ public class LocalNeighborhoodCursor<T extends Type<T>> implements Cursor<T>
 	
 	public LocalNeighborhoodCursor( final LocalizableByDimCursor<T> cursor )
 	{
+		super( cursor.getStorageContainer(), cursor.getImage(), cursor.getType() );
+		
 		this.cursor = cursor;
 		this.position = cursor.getPosition();
 		
@@ -88,41 +86,11 @@ public class LocalNeighborhoodCursor<T extends Type<T>> implements Cursor<T>
 	public int getArrayIndex() { return cursor.getArrayIndex(); }
 
 	@Override
-	public Image<T> getImage() { return cursor.getImage(); }
-
-	@Override
-	public Container<T> getStorageContainer() { return cursor.getStorageContainer(); }
-
-	@Override
 	public int getStorageIndex() { return cursor.getStorageIndex();	}
-
-	@Override
-	public T getType() { return cursor.getType(); }
 
 	@Override
 	public boolean isActive() { return cursor.isActive() && isActive; }
 
 	@Override
 	public void setDebug( boolean debug ) { cursor.setDebug( debug ); }
-
-	@Override
-	public T next() { fwd(); return getType(); }
-
-	@Override
-	public void remove() { }
-
-	@Override
-	public Iterator<T> iterator() 
-	{
-		reset();
-		return this;
-	}
-
-	@Override
-	public void fwd( long steps ) 
-	{
-		for ( long j = 0; j < steps; ++j )
-			fwd();
-	}
-	
 }

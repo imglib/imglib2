@@ -68,5 +68,7 @@ public abstract class CursorImpl<T extends Type<T>> implements Cursor<T>
 		for ( long j = 0; j < steps; ++j )
 			fwd();
 	}
-	
+
+	@Override
+	public int[] createPositionArray() { return new int[ image.getNumDimensions() ]; }	
 }

@@ -168,9 +168,12 @@ public class Image<T extends Type<T>> implements ImageProperties
 	final public synchronized static int createUniqueId() { return j.getAndIncrement(); }
 	
 	public void close()
-	{
-		closeAllCursors();		
+	{ 
+		closeAllCursors();
+		container.close();
 	}
+	
+	public int[] createPositionArray() { return new int[ getNumDimensions() ]; }
 	
 	@Override
 	public int getNumDimensions() { return dim.length; }
