@@ -151,17 +151,32 @@ public class ComplexFloatType extends TypeImpl<ComplexFloatType> implements Nume
 		v[ realI ] = ( a1*c1 + b1*d1 ) / ( c1*c1 + d1*d1 );
 		v[ complexI ] = ( b1*c1 - a1*d1 ) / ( c1*c1 + d1*d1 );
 	}
+	
+	public void complexConjugate()
+	{
+		v[ complexI ] = -v[ complexI ];
+	}
+	
+	public void switchRealComplex()
+	{
+		final float a = v[ realI ];
+		v[ realI ] = v[ complexI ];
+		v[ complexI ] = a;
+	}
 
 	@Override
-	public void mul( final ComplexFloatType c ) 
+	public void mul( final ComplexFloatType t ) 
 	{
-		final float a1 = v[ realI ]; 
-		final float b1 = v[ complexI ];
-		final float c1 = c.getReal();
-		final float d1 = c.getComplex();
+		// a + bi
+		final float a = v[ realI ]; 
+		final float b = v[ complexI ];
 		
-		v[ realI ] = a1*c1 - b1*d1; 
-		v[ complexI ] = a1*d1 + b1*c1; 
+		// c + di
+		final float c = t.getReal();
+		final float d = t.getComplex();
+		
+		v[ realI ] = a*c - b*d; 
+		v[ complexI ] = a*d + b*c; 
 	}
 
 	@Override
@@ -175,7 +190,7 @@ public class ComplexFloatType extends TypeImpl<ComplexFloatType> implements Nume
 	public int compareTo( final ComplexFloatType c ) 
 	{
 		final float real1 = v[ realI ];
-		final float complex1 = v[ realI ];
+		final float complex1 = v[ complexI ];
 		final float real2 = c.getReal();
 		final float complex2 = c.getComplex();
 		
@@ -239,5 +254,5 @@ public class ComplexFloatType extends TypeImpl<ComplexFloatType> implements Nume
 	public ComplexFloatType copyVariable(){ return new ComplexFloatType( v[ realI ], v[ complexI] ); }
 	
 	@Override
-	public String toString() { return "" + v[ realI ] + "+" + v[complexI] + "i"; }
+	public String toString() { return "(" + v[ realI ] + ") + (" + v[complexI] + ")i"; }
 }

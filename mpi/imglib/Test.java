@@ -91,9 +91,7 @@ public class Test
 		//Image<FloatType> image = LOCI.openLOCIFloatType("D:/Temp/Truman/MoreTiles/73.tif", new ArrayContainerFactory());
 		//Image<FloatType> image = LOCI.openLOCIFloatType("F:/Stephan/OldMonster/Stephan/Stitching/Truman/73.tif", new ArrayContainerFactory());				
 			
-		Image<FloatType> image = LOCI.openLOCIFloatType("D:/Documents and Settings/Stephan/My Documents/My Pictures/rockface_odd.tif", new ArrayContainerFactory());
-		
-		FFTFunctions.rearrangeFFTQuadrants( image, 1 );
+		Image<FloatType> image = LOCI.openLOCIFloatType("D:/Documents and Settings/Stephan/My Documents/My Pictures/rockface.tif", new ArrayContainerFactory());
 		
 		/*
 		ImageFactory<FloatType> f = new ImageFactory<FloatType>( new FloatType(), new ArrayContainerFactory() );
@@ -146,7 +144,7 @@ public class Test
 		c.setPosition( center );
 		c.getType().setOne();
 		c.close();
-		
+		/*
 		final GaussianConvolution<FloatType> gauss = new GaussianConvolution<FloatType>( kernelTemplate, new OutsideStrategyValueFactory<FloatType>(), 2.0f );
 		
 		if ( !gauss.checkInput() || !gauss.process() )
@@ -156,8 +154,9 @@ public class Test
 		}
 		
 		kernelTemplate.close();
+		*/
 		
-		final Image<FloatType> kernel = gauss.getResult();
+		final Image<FloatType> kernel = kernelTemplate;//gauss.getResult();
 		kernel.setName( "Convolution Kernel" );
 		
 		kernel.getDisplay().setMinMax();
@@ -166,8 +165,8 @@ public class Test
 		final FourierTransform fft1 = new FourierTransform( img );
 		final FourierTransform fft2 = new FourierTransform( kernel );
 		
-		fft1.setPreProcessing( PreProcessing.None );
-		fft2.setPreProcessing( PreProcessing.None );
+		//fft1.setPreProcessing( PreProcessing.None );
+		//fft2.setPreProcessing( PreProcessing.None );
 		
 		fft1.setRearrangement( Rearrangement.Unchanged );
 		fft2.setRearrangement( Rearrangement.Unchanged );
@@ -183,16 +182,15 @@ public class Test
 			System.out.println( "FFT of kernel failed: " + fft2.getErrorMessage() );
 			return;			
 		}
+		
+		kernel.close();
 
 		final Image<ComplexFloatType> imgFFT = fft1.getResult();
 		final Image<ComplexFloatType> kernelFFT = fft2.getResult();
 
 		imgFFT.setName( "fft of image" );
 		kernelFFT.setName( "fft of kernel" );
-		
-		kernelFFT.getDisplay().setMinMax();
-		ImageJFunctions.displayAsVirtualStack( kernelFFT ).show();
-		
+						
 		final Cursor<ComplexFloatType> cursorImgFFT = imgFFT.createCursor();
 		final Cursor<ComplexFloatType> cursorKernelFFT = kernelFFT.createCursor();
 		
@@ -204,10 +202,12 @@ public class Test
 			cursorImgFFT.getType().mul( cursorKernelFFT.getType() );
 		}
 		
+		cursorImgFFT.close();
+		cursorKernelFFT.close();
+		
+		
 		final InverseFourierTransform invFFT = new InverseFourierTransform( imgFFT, fft1 );
 		invFFT.setCropBackToOriginalSize( false );
-		
-		invFFT.setRearrangement( Rearrangement.Unchanged );
 
 		if ( !invFFT.checkInput() || !invFFT.process() )
 		{
@@ -215,11 +215,31 @@ public class Test
 			return;			
 		}
 		
-		final Image<FloatType> fftConvol = invFFT.getResult();
+		imgFFT.close();
+		kernelFFT.close();
+		
+		final Image<FloatType> fftConvol = invFFT.getResult();	
+		FFTFunctions.rearrangeAllQuadrants( fftConvol, 2 );
 		
 		fftConvol.getDisplay().setMinMax();
 		ImageJFunctions.displayAsVirtualStack( fftConvol ).show();
 		
+		/*
+		final CanvasImage<FloatType> canvas = new CanvasImage<FloatType>( fftConvol, fft1.getOriginalSize(), fft1.getOriginalOffset(), null );
+		
+		if ( !canvas.checkInput() || !canvas.process() )
+		{
+			System.out.println( "Cropping of convolved image failed: " + canvas.getErrorMessage() );
+			return;						
+		}
+		
+		fftConvol.close();
+		
+		final Image<FloatType> result = canvas.getResult();
+		
+		result.getDisplay().setMinMax();
+		ImageJFunctions.displayAsVirtualStack( result ).show();
+		*/
 		
 	}
 	

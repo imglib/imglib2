@@ -574,11 +574,47 @@ A:						while( cursorDim.hasNext() )
 		return fftImage;
 	}
 	
-	final public static <T extends Type<T>> void rearrangeFFTQuadrants( final Image<T> fftImage, final int numThreads )
+	final private static <T extends Type<T>> void rearrangeQuadrantsSingleDimension( final Image<T> img )
+	{
+		final int sizeDim = img.getDimension( 0 );					
+		final int halfSizeDim = sizeDim / 2;
+
+		final T buffer = img.createType();
+		
+		final LocalizableByDimCursor<T> cursor1 = img.createLocalizableByDimCursor(); 
+		final LocalizableByDimCursor<T> cursor2 = img.createLocalizableByDimCursor(); 
+
+		// update the first cursor in the image to the zero position
+		cursor1.setPosition( 0, 0 );
+		
+		// and a second one to the middle for rapid exchange of the quadrants
+		cursor2.setPosition( 0,  halfSizeDim );
+						
+		// now do a triangle-exchange
+		for ( int i = 0; i < halfSizeDim ; ++i )
+		{
+			// cache first "half" to buffer
+			buffer.set( cursor1.getType() );
+
+			// move second "half" to first "half"
+			cursor1.getType().set( cursor2.getType() );
+			
+			// move data in buffer to second "half"
+			cursor2.getType().set( buffer );
+			
+			// move both cursors forward
+			cursor1.fwd( 0 ); 
+			cursor2.fwd( 0 ); 
+		}
+		
+		cursor1.close();
+		cursor2.close();		
+	}
+
+	final private static <T extends Type<T>> void rearrangeQuadrantDim( final Image<T> fftImage, final int dim, final int numThreads )
 	{
 		final int numDimensions = fftImage.getNumDimensions();
 		
-		//swap in dimension 0
 		final AtomicInteger ai = new AtomicInteger(0);
 		Thread[] threads = SimpleMultiThreading.newThreads( numThreads );
 		
@@ -589,17 +625,159 @@ A:						while( cursorDim.hasNext() )
 				{
 					final int myNumber = ai.getAndIncrement();
 
-					final int sizeDim = fftImage.getDimension( 0 );					
+					final int sizeDim = fftImage.getDimension( dim );
 					final int halfSizeDim = sizeDim / 2;
-					final int sizeDimMinus1 = sizeDim - 1;
+					
+					// if we have an odd image size, e.g. 315 the lower half has an offset of 1
+					final int oddOffset = sizeDim % 2;
 		
 					final T buffer = fftImage.createType();
 					
 					final LocalizableByDimCursor<T> cursor1 = fftImage.createLocalizableByDimCursor(); 
 					final LocalizableByDimCursor<T> cursor2 = fftImage.createLocalizableByDimCursor(); 
+		
+					/**
+					 * Here we "misuse" a ArrayLocalizableCursor to iterate through all dimensions except the one we are computing the fft in 
+					 */	
+					final int[] fakeSize = new int[ numDimensions - 1 ];
+					final int[] tmp = new int[ numDimensions ];
 					
-					if ( numDimensions > 1 )
+					// get all dimensions except the one we are currently swapping
+					int countDim = 0;						
+					for ( int d = 0; d < numDimensions; ++d )
+						if ( d != dim )
+							fakeSize[ countDim++ ] = fftImage.getDimension( d );
+					
+					final ArrayLocalizableCursor<FakeType> cursorDim = 
+						new ArrayLocalizableCursor<FakeType>( new FakeArray<FakeType>( fakeSize ), null, new FakeType() );
+		
+					// iterate over all dimensions except the one we are computing the fft in, which is dim=0 here
+					while( cursorDim.hasNext() )
 					{
+						cursorDim.fwd();
+						
+						if ( cursorDim.getPosition( 0 ) % numThreads == myNumber )
+						{							
+							// update all positions except for the one we are currrently doing the fft on
+							cursorDim.getPosition( fakeSize );
+			
+							tmp[ dim ] = 0;								
+							countDim = 0;						
+							for ( int d = 0; d < numDimensions; ++d )
+								if ( d != dim )
+									tmp[ d ] = fakeSize[ countDim++ ];
+							
+							// update the first cursor in the image to the zero position
+							cursor1.setPosition( tmp );
+							
+							// and a second one to the middle for rapid exchange of the quadrants
+							tmp[ dim ] = halfSizeDim + oddOffset;
+							cursor2.setPosition( tmp );
+											
+							// now do a triangle-exchange
+							for ( int i = 0; i < halfSizeDim ; ++i )
+							{
+								// cache first "half" to buffer
+								buffer.set( cursor1.getType() );
+			
+								// move second "half" to first "half"
+								cursor1.getType().set( cursor2.getType() );
+								
+								// move data in buffer to second "half"
+								cursor2.getType().set( buffer );
+								
+								// move both cursors forward
+								cursor1.fwd( dim ); 
+								cursor2.fwd( dim ); 
+							}
+						}
+					}
+					
+					cursor1.close();
+					cursor2.close();
+					cursorDim.close();
+				}
+			});
+		
+		SimpleMultiThreading.startAndJoin( threads );						
+		
+	}
+	
+
+	final public static <T extends Type<T>> void rearrangeAllQuadrants( final Image<T> img, final int numThreads )
+	{
+		final int numDimensions = img.getNumDimensions();
+
+		if ( numDimensions == 1 )
+			rearrangeQuadrantsSingleDimension( img );
+		else
+			for ( int d = 0; d < numDimensions; ++d )
+				rearrangeQuadrantDim( img, d, numThreads );
+	}
+	
+	final public static <T extends Type<T>> void rearrangeFFTQuadrants( final Image<T> fftImage, final int numThreads )
+	{
+		final int numDimensions = fftImage.getNumDimensions();
+
+		if ( numDimensions == 1 )
+		{
+			final int sizeDim = fftImage.getDimension( 0 );					
+			final int halfSizeDim = sizeDim / 2;
+			final int sizeDimMinus1 = sizeDim - 1;
+
+			final T buffer = fftImage.createType();
+			
+			final LocalizableByDimCursor<T> cursor1 = fftImage.createLocalizableByDimCursor(); 
+			final LocalizableByDimCursor<T> cursor2 = fftImage.createLocalizableByDimCursor(); 
+
+			// update the first cursor in the image to the zero position
+			cursor1.setPosition( 0, 0 );
+			
+			// and a second one to the middle for rapid exchange of the quadrants
+			cursor2.setPosition( 0,  sizeDimMinus1 );
+							
+			// now do a triangle-exchange
+			for ( int i = 0; i < halfSizeDim ; ++i )
+			{
+				// cache first "half" to buffer
+				buffer.set( cursor1.getType() );
+
+				// move second "half" to first "half"
+				cursor1.getType().set( cursor2.getType() );
+				
+				// move data in buffer to second "half"
+				cursor2.getType().set( buffer );
+				
+				// move both cursors forward
+				cursor1.fwd( 0 ); 
+				cursor2.bck( 0 ); 
+			}	
+			
+			cursor1.close();
+			cursor2.close();
+		}
+		else
+		{			
+			//swap in dimension 0
+			final AtomicInteger ai = new AtomicInteger(0);
+			Thread[] threads = SimpleMultiThreading.newThreads( numThreads );
+			
+			for (int ithread = 0; ithread < threads.length; ++ithread)
+				threads[ithread] = new Thread(new Runnable()
+				{
+					public void run()
+					{
+						final int myNumber = ai.getAndIncrement();
+
+						final int sizeDim = fftImage.getDimension( 0 );					
+						final int halfSizeDim = sizeDim / 2;
+						final int sizeDimMinus1 = sizeDim - 1;
+			
+						final T buffer = fftImage.createType();
+						
+						final LocalizableByDimCursor<T> cursor1 = fftImage.createLocalizableByDimCursor(); 
+						final LocalizableByDimCursor<T> cursor2 = fftImage.createLocalizableByDimCursor(); 
+						
 						/**
 						 * Here we "misuse" a ArrayLocalizableCursor to iterate through all dimensions except the one we are computing the fft in 
 						 */	
@@ -650,179 +828,17 @@ A:						while( cursorDim.hasNext() )
 									cursor2.bck( 0 ); 
 								}
 							}
-						}
-						
-					}
-					else // multithreading makes no sense here
-					{
-						// update the first cursor in the image to the zero position
-						cursor1.setPosition( 0, 0 );
-						
-						// and a second one to the middle for rapid exchange of the quadrants
-						cursor2.setPosition( 0,  sizeDimMinus1 );
-										
-						// now do a triangle-exchange
-						for ( int i = 0; i < halfSizeDim ; ++i )
-						{
-							// cache first "half" to buffer
-							buffer.set( cursor1.getType() );
-		
-							// move second "half" to first "half"
-							cursor1.getType().set( cursor2.getType() );
-							
-							// move data in buffer to second "half"
-							cursor2.getType().set( buffer );
-							
-							// move both cursors forward
-							cursor1.fwd( 0 ); 
-							cursor2.bck( 0 ); 
-						}
-						
-					}
-				}
-			});
-		
-		SimpleMultiThreading.startAndJoin( threads );		
-		
-		
-		// swap data in each dimension apart from the first one
-		for ( int d = 1; d < numDimensions; ++d )
-		{
-			final int dim = d;
-			
-			ai.set( 0 );
-			threads = SimpleMultiThreading.newThreads( numThreads );
-			
-			for (int ithread = 0; ithread < threads.length; ++ithread)
-				threads[ithread] = new Thread(new Runnable()
-				{
-					public void run()
-					{
-						final int myNumber = ai.getAndIncrement();
-
-						final int sizeDim = fftImage.getDimension( dim );
-						final int halfSizeDim = sizeDim / 2;
-			
-						final T buffer = fftImage.createType();
-						
-						final LocalizableByDimCursor<T> cursor1 = fftImage.createLocalizableByDimCursor(); 
-						final LocalizableByDimCursor<T> cursor2 = fftImage.createLocalizableByDimCursor(); 
-			
-						/**
-						 * Here we "misuse" a ArrayLocalizableCursor to iterate through all dimensions except the one we are computing the fft in 
-						 */	
-						final int[] fakeSize = new int[ numDimensions - 1 ];
-						final int[] tmp = new int[ numDimensions ];
-						
-						// get all dimensions except the one we are currently swapping
-						int countDim = 0;						
-						for ( int d = 0; d < numDimensions; ++d )
-							if ( d != dim )
-								fakeSize[ countDim++ ] = fftImage.getDimension( d );
-						
-						final ArrayLocalizableCursor<FakeType> cursorDim = 
-							new ArrayLocalizableCursor<FakeType>( new FakeArray<FakeType>( fakeSize ), null, new FakeType() );
-			
-						// iterate over all dimensions except the one we are computing the fft in, which is dim=0 here
-						while( cursorDim.hasNext() )
-						{
-							cursorDim.fwd();
-							
-							if ( cursorDim.getPosition( 0 ) % numThreads == myNumber )
-							{							
-								// update all positions except for the one we are currrently doing the fft on
-								cursorDim.getPosition( fakeSize );
-				
-								tmp[ dim ] = 0;								
-								countDim = 0;						
-								for ( int d = 0; d < numDimensions; ++d )
-									if ( d != dim )
-										tmp[ d ] = fakeSize[ countDim++ ];
-								
-								// update the first cursor in the image to the zero position
-								cursor1.setPosition( tmp );
-								
-								// and a second one to the middle for rapid exchange of the quadrants
-								tmp[ dim ] = halfSizeDim;
-								cursor2.setPosition( tmp );
-												
-								// now do a triangle-exchange
-								for ( int i = 0; i < halfSizeDim ; ++i )
-								{
-									// cache first "half" to buffer
-									buffer.set( cursor1.getType() );
-				
-									// move second "half" to first "half"
-									cursor1.getType().set( cursor2.getType() );
-									
-									// move data in buffer to second "half"
-									cursor2.getType().set( buffer );
-									
-									// move both cursors forward
-									cursor1.fwd( dim ); 
-									cursor2.fwd( dim ); 
-								}
-							}
-						}
+						}	
 						
 						cursor1.close();
 						cursor2.close();
-						cursorDim.close();
 					}
 				});
 			
-			SimpleMultiThreading.startAndJoin( threads );						
-		}
-		
-		/*
-		int w = values.width;
-		int h = values.height;
-		int d = values.depth;
-
-		//int halfDimYRounded = ( int ) Math.round( h / 2d );
-		//int halfDimZRounded = ( int ) Math.round( d / 2d );
-		int halfDimYRounded = ( int ) ( h / 2 );
-		int halfDimZRounded = ( int ) ( d / 2 );
-
-		float buffer[] = new float[h];
-
-		// swap data in y-direction
-		for ( int x = 0; x < w; x++ )
-			for ( int z = 0; z < d; z++ )
-			{
-				// cache first "half" to buffer
-				for ( int y = 0; y < h / 2; y++ )
-					buffer[ y ] = values.get(x,y,z);
-
-				// move second "half" to first "half"
-				for ( int y = 0; y < halfDimYRounded; y++ )
-					values.set(values.get(x, y + h/2, z), x, y, z);
-
-				// move data in buffer to second "half"
-				for ( int y = halfDimYRounded; y < h; y++ )
-					values.set(buffer[ y - halfDimYRounded ], x, y, z);
-			}
-
-		buffer = new float[d];
-
-		// swap data in z-direction
-		for ( int x = 0; x < w; x++ )
-			for ( int y = 0; y < h; y++ )
-			{
-				// cache first "half" to buffer
-				for ( int z = 0; z < d/2; z++ )
-					buffer[ z ] = values.get(x, y, z);
-
-				// move second "half" to first "half"
-				for ( int z = 0; z < halfDimZRounded; z++ )
-					values.set(values.get(x, y, z + d/2 ), x, y, z);
-
-				// move data in buffer to second "half"
-				for ( int z = halfDimZRounded; z<d; z++ )
-					values.set(buffer[ z - halfDimZRounded ], x, y, z);
-			}
-		*/
-		
-	}
-	
+			SimpleMultiThreading.startAndJoin( threads );		
+			
+			for ( int d = 1; d < numDimensions; ++d )
+				rearrangeQuadrantDim( fftImage, d, numThreads );
+		}				
+	}	
 }

@@ -26,7 +26,7 @@ public class CanvasImage<T extends Type<T>> implements OutputAlgorithm<T>, Bench
 	 * @param newSize - the size of the new image
 	 * @param outsideFactory - what to do when extending the image
 	 */
-	public CanvasImage( final Image<T> input, final int[] newSize, final OutsideStrategyFactory<T> outsideFactory )
+	public CanvasImage( final Image<T> input, final int[] newSize, final int[] offset, final OutsideStrategyFactory<T> outsideFactory )
 	{
 		this.input = input;
 		this.outsideFactory = outsideFactory;
@@ -34,45 +34,53 @@ public class CanvasImage<T extends Type<T>> implements OutputAlgorithm<T>, Bench
 		
 		this.newSize = newSize.clone();
 		this.location = new int[ numDimensions ];
-		this.offset = new int[ numDimensions ];
+		this.offset = offset;
 		this.processingTime = -1;
-
-		for ( int d = 0; d < numDimensions; ++d )
-		{
-			offset[ d ] = ( newSize[ d ] - input.getDimension( d ) ) / 2;
-			
-			if ( outsideFactory == null && offset[ d ] > 0 )
-			{
-				errorMessage = "no OutsideStrategyFactory given but image size should increase, that is not possible";				
-			}
-		}
 		
 		if ( newSize == null || newSize.length != numDimensions )
 		{
 			errorMessage = "newSize is invalid: null or not of same dimensionality as input image";
 			this.output = null;
 		}
+		else if ( offset == null || offset.length != numDimensions )
+		{
+			errorMessage = "offset is invalid: null or not of same dimensionality as input image";
+			this.output = null;			
+		}
 		else
 		{
-			this.output = input.createNewImage( newSize );
-		}	
+			for ( int d = 0; d < numDimensions; ++d )
+			{
+				System.out.println( offset[ d ] );
+				
+				if ( outsideFactory == null && offset[ d ] < 0 )
+					errorMessage = "no OutsideStrategyFactory given but image size should increase, that is not possible";
+			}
+
+			if ( errorMessage.length() == 0 )
+				this.output = input.createNewImage( newSize );
+			else
+				this.output = null;
+		}
 	}
 	
 	public int[] getOffset() { return offset.clone(); }
 	
-	/**
-	 * 
-	 * @param input - the input image
-	 * @param extension - the amount of pixels to add/subtract in all dimensions on each side
-	 * @param outsideFactory - what to do when extending the image
-	 */
-	/*public CanvasImage( final Image<T> input, final int extension, final OutsideStrategyFactory<T> outsideFactory )
+	public CanvasImage( final Image<T> input, final int[] newSize, final OutsideStrategyFactory<T> outsideFactory )
+	{		
+		this( input, newSize, computeOffset(input, newSize), outsideFactory ); 
+	}
+	
+	private static int[] computeOffset( final Image<?> input, final int[] newSize )
 	{
-		final int[] newSize = input.getDimensions();
+		final int offset[] = new int[ input.getNumDimensions() ];
 		
-		for ( int d = 0; d < )
+		for ( int d = 0; d < input.getNumDimensions(); ++d )
+			offset[ d ] = ( input.getDimension( d ) - newSize[ d ] ) / 2;
 		
-	}*/
+		return offset;
+	}
+	
 	
 	/**
 	 * This constructor can be called if the image is only cropped, then there is no {@link OutsideStrategyFactory} necessary.
@@ -105,7 +113,7 @@ public class CanvasImage<T extends Type<T>> implements OutputAlgorithm<T>, Bench
 			outputCursor.getPosition( location );
 			
 			for ( int d = 0; d < numDimensions; ++d )
-				location[ d ] -= offset[ d ];
+				location[ d ] += offset[ d ];
 			
 			inputCursor.moveTo( location );
 			outputCursor.getType().set( inputCursor.getType() );
