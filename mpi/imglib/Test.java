@@ -28,6 +28,7 @@ import javax.vecmath.Vector3d;
 import mpi.imglib.algorithm.CanvasImage;
 import mpi.imglib.algorithm.GaussianConvolution;
 import mpi.imglib.algorithm.fft.FourierTransform;
+import mpi.imglib.algorithm.fft.InverseFourierTransform;
 import mpi.imglib.algorithm.math.MathLib;
 import mpi.imglib.algorithm.transformation.AffineTransform;
 import mpi.imglib.algorithm.transformation.ImageTransform;
@@ -87,19 +88,19 @@ public class Test
 		//Image<FloatType> image = LOCI.openLOCIFloatType("D:/Temp/Truman/MoreTiles/73.tif", new ArrayContainerFactory());
 		//Image<FloatType> image = LOCI.openLOCIFloatType("F:/Stephan/OldMonster/Stephan/Stitching/Truman/73.tif", new ArrayContainerFactory());				
 			
-		//Image<FloatType> image = LOCI.openLOCIFloatType("D:/Documents and Settings/Stephan/My Documents/My Pictures/rockface.tif", new ArrayContainerFactory());
+		Image<FloatType> image = LOCI.openLOCIFloatType("D:/Documents and Settings/Stephan/My Documents/My Pictures/rockface_odd.tif", new ArrayContainerFactory());
 		
+		/*
 		ImageFactory<FloatType> f = new ImageFactory<FloatType>( new FloatType(), new ArrayContainerFactory() );
-		Image<FloatType> image = f.createImage( new int[]{ 5, 5 } );		
-		fillUp( image );
-		
-		//FourierTransform.rearrangeFFTQuadrants( image );
+		Image<FloatType> image = f.createImage( new int[]{ 7, 7 } );		
+		fillUpWithValue( image, new FloatType( 1 ) );
+		*/
 		
 		image.getDisplay().setMinMax();
 		ImageJFunctions.displayAsVirtualStack( image ).show();
 				
-		testCanvas( image, 1.25f, 0.25f, 10f );
-		//testFFT( image );
+		//testCanvas( image, 3f, 0.25f, 10f );
+		testFFT( image );
 
 		if ( true )
 			return;
@@ -132,10 +133,12 @@ public class Test
 		final FourierTransform fft = new FourierTransform( img );
 		fft.setNumThreads( 2 );
 		
+		final Image<ComplexFloatType> fftImage;
+		
 		if ( fft.checkInput() && fft.process() )
 		{
 			System.out.println( fft.getProcessingTime() );
-			Image<ComplexFloatType> fftImage = fft.getResult();
+			fftImage = fft.getResult();
 			
 			fftImage.getDisplay().setMinMax();
 			ImageJFunctions.copyToImagePlus( fftImage ).show();			
@@ -147,6 +150,20 @@ public class Test
 		else
 		{
 			System.out.println( fft.getErrorMessage() );
+			fftImage = null;
+		}
+		
+		
+		final InverseFourierTransform invfft = new InverseFourierTransform( fftImage, fft );
+		
+		if ( invfft.checkInput() && invfft.process() )
+		{
+			System.out.println( invfft.getProcessingTime() );
+			
+			final Image<FloatType> inverseFFT = invfft.getResult();
+			
+			inverseFFT.getDisplay().setMinMax();
+			ImageJFunctions.displayAsVirtualStack( inverseFFT ).show();
 		}
 	}
 	
@@ -158,6 +175,7 @@ public class Test
 			newSize[ d ] = MathLib.round( img.getDimension( d ) * factor );
 		
 		final CanvasImage<T> canvas = new CanvasImage<T>( img, newSize, new OutsideStrategyMirrorExpWindowingFactory<T>( fadingRange ) );
+		//final CanvasImage<T> canvas = new CanvasImage<T>( img, newSize, new OutsideStrategyMirrorFactory<T>() );
 		
 		if ( canvas.checkInput() && canvas.process() )
 		{

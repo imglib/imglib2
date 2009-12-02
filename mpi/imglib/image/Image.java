@@ -204,6 +204,28 @@ public class Image<T extends Type<T>> implements ImageProperties, Dimensionality
 		else
 			return 1;		
 	}
+	
+	@Override
+	public Image<T> clone()
+	{
+		final Image<T> clone = this.createNewImage();
+		
+		final Cursor<T> c1 = this.createCursor();
+		final Cursor<T> c2 = clone.createCursor();
+		
+		while ( c1.hasNext() )
+		{
+			c1.fwd();
+			c2.fwd();
+			
+			c2.getType().set( c1.getType() );		
+		}
+		
+		c1.close();
+		c2.close();
+		
+		return clone;
+	}
 
 	public ContainerFactory getStorageFactory() { return storageFactory; }
 	public ImageFactory<T> getImageFactory() { return imageFactory; }

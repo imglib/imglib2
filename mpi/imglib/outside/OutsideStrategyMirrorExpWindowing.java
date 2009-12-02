@@ -32,7 +32,7 @@ public class OutsideStrategyMirrorExpWindowing<T extends NumericType<T>> extends
 	final float[][] weights;
 	final float cutOff = 0.0001f;
 	
-	public OutsideStrategyMirrorExpWindowing( final LocalizableCursor<T> parentCursor, final float[] relativeDistanceFadeOut, final float exponent )
+	public OutsideStrategyMirrorExpWindowing( final LocalizableCursor<T> parentCursor, final int[] fadeOutDistance, final float exponent )
 	{
 		super( parentCursor );
 		
@@ -52,21 +52,28 @@ public class OutsideStrategyMirrorExpWindowing<T extends NumericType<T>> extends
 		weights = new float[ numDimensions ][];
 		
 		for ( int d = 0; d < numDimensions; ++d )
-			weights[ d ] = new float[ MathLib.round( dimension[ d ] * relativeDistanceFadeOut[ d ] / 2 ) ];
+			weights[ d ] = new float[ Math.max( 1, fadeOutDistance[ d ] ) ];
 				
 		for ( int d = 0; d < numDimensions; ++d )
 		{
 			final int maxDistance = weights[ d ].length;
 			
-			for ( int pos = 0; pos < maxDistance; ++pos )
+			if ( maxDistance > 1 )
 			{
-				final float relPos = pos / (float)( maxDistance - 1 );
-
-				// if exponent equals one means linear function
-				if ( MathLib.isApproxEqual( exponent, 1f, 0.0001f ) )
-					weights[ d ][ pos ] = 1 - relPos;
-				else
-					weights[ d ][ pos ] = (float)( 1 - ( 1 / Math.pow( exponent, 1 - relPos ) ) ) * ( 1 + 1/(exponent-1) );
+				for ( int pos = 0; pos < maxDistance; ++pos )
+				{
+					final float relPos = pos / (float)( maxDistance - 1 );
+	
+					// if exponent equals one means linear function
+					if ( MathLib.isApproxEqual( exponent, 1f, 0.0001f ) )
+						weights[ d ][ pos ] = 1 - relPos;
+					else
+						weights[ d ][ pos ] = (float)( 1 - ( 1 / Math.pow( exponent, 1 - relPos ) ) ) * ( 1 + 1/(exponent-1) );
+				}
+			}
+			else
+			{
+				weights[ d ][ 0 ] = 0;
 			}
 		}
 	}
@@ -106,7 +113,7 @@ public class OutsideStrategyMirrorExpWindowing<T extends NumericType<T>> extends
 			final int distance;
 			
 			if ( pos < 0 )
-				distance = -pos;
+				distance = -pos - 1;
 			else if ( pos >= dimension[ d ] )
 				distance = pos - dimension[ d ];
 			else

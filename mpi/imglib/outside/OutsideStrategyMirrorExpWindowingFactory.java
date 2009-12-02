@@ -16,53 +16,80 @@
  */
 package mpi.imglib.outside;
 
+import mpi.imglib.algorithm.math.MathLib;
 import mpi.imglib.cursor.LocalizableCursor;
 import mpi.imglib.type.NumericType;
 
 public class OutsideStrategyMirrorExpWindowingFactory<T extends NumericType<T>> extends OutsideStrategyFactory<T>
 {
-	float[] relativeDistanceFadeOut = null;
-	float commonRelativeDistanceFadeOut = 0.1f;
+	int[] fadeOutDistance = null;
+	int minFadeOutDistance = 6;
+	int commonFadeOutDistance = 6;
+	float commonRelativeDistanceFadeOut = Float.NaN;
 	float exponent = 10;
 
 	public OutsideStrategyMirrorExpWindowingFactory( ) { }
 	
-	public OutsideStrategyMirrorExpWindowingFactory( float relativeDistanceFadeOut ) 
+	public OutsideStrategyMirrorExpWindowingFactory( final float relativeDistanceFadeOut ) 
 	{ 
 		this.commonRelativeDistanceFadeOut = relativeDistanceFadeOut; 
 	}
 
-	public OutsideStrategyMirrorExpWindowingFactory( float relativeDistanceFadeOut, float exponent ) 
+	public OutsideStrategyMirrorExpWindowingFactory( final int fadeOutDistance ) 
 	{ 
-		this.commonRelativeDistanceFadeOut = relativeDistanceFadeOut; 
-		this.exponent = exponent;
+		this.commonFadeOutDistance = fadeOutDistance; 
 	}
 
-	public OutsideStrategyMirrorExpWindowingFactory( float[] relativeDistanceFadeOut ) 
+	public OutsideStrategyMirrorExpWindowingFactory( final int[] fadeOutDistance ) 
 	{
-		this.relativeDistanceFadeOut = relativeDistanceFadeOut.clone();
+		this.fadeOutDistance = fadeOutDistance.clone();
 	}
 	
-	public OutsideStrategyMirrorExpWindowingFactory( float[] relativeDistanceFadeOut, float exponent ) 
-	{
-		this.relativeDistanceFadeOut = relativeDistanceFadeOut.clone();
-		this.exponent = exponent;
-	}
+	public void setExponent( final float exponent )  { this.exponent = exponent; }
+	public float getExponent() { return exponent; }
 	
+	public void setMinFadeOutDistance( final int minFadeOutDistance ) { this.minFadeOutDistance = minFadeOutDistance; }
+	public int getMinFadeOutDistance() { return minFadeOutDistance; }
+	
+	public void setCommonFadeOutDistance( final int fadeOutDistance ) { this.commonFadeOutDistance = fadeOutDistance; }
+	public int getCommonFadeOutDistance() { return commonFadeOutDistance; }
+
+	public void setCommonRelativeFadeOutDistance( final float commonRelativeDistanceFadeOut ) { this.commonRelativeDistanceFadeOut = commonRelativeDistanceFadeOut; }
+	public float getCommonRelativeFadeOutDistance() { return commonRelativeDistanceFadeOut; }
+
+	public void setFadeOutDistance( final int[] fadeOutDistance ) { this.fadeOutDistance = fadeOutDistance.clone(); }
+	public int[] getFadeOutDistance() { return fadeOutDistance.clone(); }
+
 	@Override
 	public OutsideStrategyMirrorExpWindowing<T> createStrategy( final LocalizableCursor<T> cursor )
 	{
-		if ( commonRelativeDistanceFadeOut <= 0 )
-			commonRelativeDistanceFadeOut = 0.1f;
-			
-		if ( relativeDistanceFadeOut == null && commonRelativeDistanceFadeOut > 0 )
+		if ( Float.isNaN(commonRelativeDistanceFadeOut) )
+		{					
+			if ( fadeOutDistance == null  )
+			{
+				fadeOutDistance = new int[ cursor.getImage().getNumDimensions() ];
+				
+				for ( int d = 0; d < cursor.getNumDimensions(); ++d )
+					fadeOutDistance[ d ] = Math.max( minFadeOutDistance, commonFadeOutDistance );
+			}
+			else
+			{
+				for ( int d = 0; d < cursor.getNumDimensions(); ++d )
+					fadeOutDistance[ d ] = Math.max( minFadeOutDistance, fadeOutDistance[ d ] );				
+			}
+		}
+		else
 		{
-			relativeDistanceFadeOut = new float[ cursor.getImage().getNumDimensions() ];		
-			for ( int i = 0; i < relativeDistanceFadeOut.length; ++i )
-				relativeDistanceFadeOut[ i ] = commonRelativeDistanceFadeOut;
+			if ( commonRelativeDistanceFadeOut <= 0 )
+				commonRelativeDistanceFadeOut = 0.1f;
+
+			fadeOutDistance = new int[ cursor.getNumDimensions() ];
+			
+			for ( int d = 0; d < cursor.getNumDimensions(); ++d )
+				fadeOutDistance[ d ] = Math.max( minFadeOutDistance, MathLib.round( cursor.getImage().getDimension( d ) * commonRelativeDistanceFadeOut ) / 2 );
 		}
 		
-		return new OutsideStrategyMirrorExpWindowing<T>( cursor, relativeDistanceFadeOut, exponent );
+		return new OutsideStrategyMirrorExpWindowing<T>( cursor, fadeOutDistance, exponent );
 	}
 
 }

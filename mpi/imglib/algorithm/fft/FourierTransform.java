@@ -7,6 +7,7 @@ import mpi.imglib.algorithm.CanvasImage;
 import mpi.imglib.algorithm.MultiThreadedOutputAlgorithm;
 import mpi.imglib.algorithm.math.MathLib;
 import mpi.imglib.image.Image;
+import mpi.imglib.image.display.imagej.ImageJFunctions;
 import mpi.imglib.outside.OutsideStrategyFactory;
 import mpi.imglib.outside.OutsideStrategyMirrorExpWindowingFactory;
 import mpi.imglib.outside.OutsideStrategyMirrorFactory;
@@ -29,14 +30,17 @@ public class FourierTransform implements MultiThreadedOutputAlgorithm<ComplexFlo
 	FFTOptimization fftOptimization;	
 	float relativeImageExtension;
 	float relativeFadeOutDistance;
+	int minExtension;
 	OutsideStrategyFactory<FloatType> strategy;
-	
+	int[] originalSize, originalOffset; 
+
 	String errorMessage = "";
 	int numThreads;
 	long processingTime;
 	
 	public FourierTransform( final Image<FloatType> image, final PreProcessing preProcessing, final Rearrangement rearrangement,
-							 final FFTOptimization fftOptimization, final float relativeImageExtension, final float relativeFadeOutDistance )
+							 final FFTOptimization fftOptimization, final float relativeImageExtension, final float relativeFadeOutDistance,
+							 final int minExtension )
 	{
 		this.img = image;
 		this.numDimensions = img.getNumDimensions();
@@ -46,9 +50,12 @@ public class FourierTransform implements MultiThreadedOutputAlgorithm<ComplexFlo
 		this.fftOptimization = fftOptimization;
 		this.relativeImageExtension = relativeImageExtension;
 		this.relativeFadeOutDistance = relativeFadeOutDistance;
+		this.minExtension = minExtension;
 		this.strategy = null;
+		this.originalSize = image.getDimensions();
+		this.originalOffset = new int[ numDimensions ];
 		
-		this.processingTime = -1;
+		this.processingTime = -1;		
 		
 		setNumThreads();
 	}
@@ -59,20 +66,49 @@ public class FourierTransform implements MultiThreadedOutputAlgorithm<ComplexFlo
 	public void setRelativeImageExtension( final float extensionRatio ) { this.relativeImageExtension = extensionRatio; } 
 	public void setRelativeFadeOutDistance( final float relativeFadeOutDistance ) { this.relativeFadeOutDistance = relativeFadeOutDistance; }
 	public void setCustomOutsideStrategy( final OutsideStrategyFactory<FloatType> strategy ) { this.strategy = strategy; } 
+	public void setMinExtension( final int minExtension ) { this.minExtension = minExtension; }
 	
 	public PreProcessing getPreProcessing() { return preProcessing; }
 	public Rearrangement getRearrangement() { return rearrangement; }
 	public FFTOptimization getFFOptimization() { return fftOptimization; }
 	public float getRelativeImageExtension() { return relativeImageExtension; } 
 	public float getRelativeFadeOutDistance() { return relativeFadeOutDistance; }
-	public OutsideStrategyFactory<FloatType> getCustomOutsideStrategy() { return strategy; } 
+	public OutsideStrategyFactory<FloatType> getCustomOutsideStrategy() { return strategy; }
+	public int getMinExtension() { return minExtension; }
+	public int[] getOriginalSize() { return originalSize.clone(); }
+	public int[] getOriginalOffset() { return originalOffset.clone(); }
 
 	public FourierTransform( final Image<FloatType> image ) 
 	{ 
 		this ( image, PreProcessing.ExtendMirrorFading, Rearrangement.RearrangeQuadrants, 
-		       FFTOptimization.OptimizeSpeed, 0.25f, 0.25f ); 
+		       FFTOptimization.OptimizeSpeed, 0.25f, 0.25f, 12 ); 
 	}
 
+	public FourierTransform( final Image<FloatType> image, final Rearrangement rearrangement ) 
+	{ 
+		this ( image );
+		setRearrangement( rearrangement );
+	}
+
+	public FourierTransform( final Image<FloatType> image, final FFTOptimization fftOptimization ) 
+	{ 
+		this ( image );
+		setFFTOptimization( fftOptimization );
+	}
+
+	public FourierTransform( final Image<FloatType> image, final PreProcessing preProcessing ) 
+	{ 
+		this ( image );
+		setPreProcessing( preProcessing );
+	}
+
+	public FourierTransform( final Image<FloatType> image, final OutsideStrategyFactory<FloatType> strategy ) 
+	{ 
+		this ( image );
+		setPreProcessing( PreProcessing.UseGivenOutsideStrategy );
+		setCustomOutsideStrategy( strategy );
+	}
+	
 	@Override
 	public boolean process() 
 	{		
@@ -80,6 +116,9 @@ public class FourierTransform implements MultiThreadedOutputAlgorithm<ComplexFlo
 
 		// extend the original image
 		final Image<FloatType> tmp = extendImage( img, preProcessing );
+		
+		tmp.getDisplay().setMinMax();
+		ImageJFunctions.copyToImagePlus( tmp ).show();
 		
 		if ( tmp == null )
 			return false;
@@ -155,6 +194,8 @@ public class FourierTransform implements MultiThreadedOutputAlgorithm<ComplexFlo
 			return null;
 		}
 		
+		this.originalOffset = canvas.getOffset();
+		
 		return canvas.getResult();		
 	}
 			
@@ -164,11 +205,18 @@ public class FourierTransform implements MultiThreadedOutputAlgorithm<ComplexFlo
 		
 		for ( int d = 0; d < img.getNumDimensions(); ++d )
 		{
-			extendedSize[ d ] = MathLib.round( img.getDimension( d ) * ( 1 + extensionRatio ) );
+			// how much do we want to extend
+			extendedSize[ d ] = MathLib.round( img.getDimension( d ) * ( 1 + extensionRatio ) ) - img.getDimension( d );
+			
+			if ( extendedSize[ d ] < minExtension )
+				extendedSize[ d ] = minExtension;
 
 			// add an even number so that both sides extend equally
 			if ( extendedSize[ d ] % 2 != 0) 
-				extendedSize[ d ]++;	
+				++extendedSize[ d ];
+			
+			// the new size includes the current image size
+			extendedSize[ d ] += img.getDimension( d );
 		}		
 		
 		return extendedSize;

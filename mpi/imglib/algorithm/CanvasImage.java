@@ -58,6 +58,8 @@ public class CanvasImage<T extends Type<T>> implements OutputAlgorithm<T>, Bench
 		}	
 	}
 	
+	public int[] getOffset() { return offset.clone(); }
+	
 	/**
 	 * 
 	 * @param input - the input image
