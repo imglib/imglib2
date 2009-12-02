@@ -578,13 +578,120 @@ A:						while( cursorDim.hasNext() )
 	{
 		final int numDimensions = fftImage.getNumDimensions();
 		
+		//swap in dimension 0
+		final AtomicInteger ai = new AtomicInteger(0);
+		Thread[] threads = SimpleMultiThreading.newThreads( numThreads );
+		
+		for (int ithread = 0; ithread < threads.length; ++ithread)
+			threads[ithread] = new Thread(new Runnable()
+			{
+				public void run()
+				{
+					final int myNumber = ai.getAndIncrement();
+
+					final int sizeDim = fftImage.getDimension( 0 );					
+					final int halfSizeDim = sizeDim / 2;
+					final int sizeDimMinus1 = sizeDim - 1;
+		
+					final T buffer = fftImage.createType();
+					
+					final LocalizableByDimCursor<T> cursor1 = fftImage.createLocalizableByDimCursor(); 
+					final LocalizableByDimCursor<T> cursor2 = fftImage.createLocalizableByDimCursor(); 
+					
+					if ( numDimensions > 1 )
+					{
+						/**
+						 * Here we "misuse" a ArrayLocalizableCursor to iterate through all dimensions except the one we are computing the fft in 
+						 */	
+						final int[] fakeSize = new int[ numDimensions - 1 ];
+						final int[] tmp = new int[ numDimensions ];
+						
+						for ( int d = 1; d < numDimensions; ++d )
+							fakeSize[ d - 1 ] = fftImage.getDimension( d );
+						
+						final ArrayLocalizableCursor<FakeType> cursorDim = 
+							new ArrayLocalizableCursor<FakeType>( new FakeArray<FakeType>( fakeSize ), null, new FakeType() );
+						
+						// iterate over all dimensions except the one we are computing the fft in, which is dim=0 here
+						while( cursorDim.hasNext() )
+						{
+							cursorDim.fwd();
+							
+							if ( cursorDim.getPosition( 0 ) % numThreads == myNumber )
+							{							
+								// update all positions except for the one we are currrently doing the fft on
+								cursorDim.getPosition( fakeSize );
+				
+								tmp[ 0 ] = 0;								
+								for ( int d = 1; d < numDimensions; ++d )
+									tmp[ d ] = fakeSize[ d - 1 ];
+								
+								// update the first cursor in the image to the zero position
+								cursor1.setPosition( tmp );
+								
+								// and a second one to the middle for rapid exchange of the quadrants
+								tmp[ 0 ] = sizeDimMinus1;
+								cursor2.setPosition( tmp );
+												
+								// now do a triangle-exchange
+								for ( int i = 0; i < halfSizeDim ; ++i )
+								{
+									// cache first "half" to buffer
+									buffer.set( cursor1.getType() );
+				
+									// move second "half" to first "half"
+									cursor1.getType().set( cursor2.getType() );
+									
+									// move data in buffer to second "half"
+									cursor2.getType().set( buffer );
+									
+									// move both cursors forward
+									cursor1.fwd( 0 ); 
+									cursor2.bck( 0 ); 
+								}
+							}
+						}
+						
+					}
+					else // multithreading makes no sense here
+					{
+						// update the first cursor in the image to the zero position
+						cursor1.setPosition( 0, 0 );
+						
+						// and a second one to the middle for rapid exchange of the quadrants
+						cursor2.setPosition( 0,  sizeDimMinus1 );
+										
+						// now do a triangle-exchange
+						for ( int i = 0; i < halfSizeDim ; ++i )
+						{
+							// cache first "half" to buffer
+							buffer.set( cursor1.getType() );
+		
+							// move second "half" to first "half"
+							cursor1.getType().set( cursor2.getType() );
+							
+							// move data in buffer to second "half"
+							cursor2.getType().set( buffer );
+							
+							// move both cursors forward
+							cursor1.fwd( 0 ); 
+							cursor2.bck( 0 ); 
+						}
+						
+					}
+				}
+			});
+		
+		SimpleMultiThreading.startAndJoin( threads );		
+		
+		
 		// swap data in each dimension apart from the first one
 		for ( int d = 1; d < numDimensions; ++d )
 		{
 			final int dim = d;
 			
-			final AtomicInteger ai = new AtomicInteger(0);
-			Thread[] threads = SimpleMultiThreading.newThreads( numThreads );
+			ai.set( 0 );
+			threads = SimpleMultiThreading.newThreads( numThreads );
 			
 			for (int ithread = 0; ithread < threads.length; ++ithread)
 				threads[ithread] = new Thread(new Runnable()
