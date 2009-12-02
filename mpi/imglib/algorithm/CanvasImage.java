@@ -118,7 +118,7 @@ public class CanvasImage<T extends Type<T>> implements OutputAlgorithm<T>, Bench
 
         return true;		
 	}
-
+	
 	@Override
 	public long getProcessingTime() { return processingTime; }
 	

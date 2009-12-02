@@ -11,6 +11,7 @@ import mpi.imglib.cursor.array.ArrayLocalizableCursor;
 import mpi.imglib.image.Image;
 import mpi.imglib.image.ImageFactory;
 import mpi.imglib.multithreading.SimpleMultiThreading;
+import mpi.imglib.outside.OutsideStrategyFactory;
 import mpi.imglib.type.Type;
 import mpi.imglib.type.label.FakeType;
 import mpi.imglib.type.numeric.ComplexFloatType;
@@ -18,18 +19,10 @@ import mpi.imglib.type.numeric.FloatType;
 
 final public class FFTFunctions 
 {
-	final public static Image<FloatType> computeInverseFFT( final Image<ComplexFloatType> input, final int numThreads, 
-	                                                        final boolean inPlace, final boolean scale, final boolean cropBack,
+	final public static Image<FloatType> computeInverseFFT( final Image<ComplexFloatType> complex, final int numThreads, 
+	                                                        final boolean scale, final boolean cropBack,
 	                                                        final int[] originalSize, final int[] originalOffset )
-	{		
-		// if we do the inverse FFT in place we destroy the FFT image
-		final Image<ComplexFloatType> complex;
-		
-		if ( inPlace )
-			complex = input;
-		else
-			complex = input.clone();
-
+	{
 		// not enough memory
 		if ( complex == null )
 			return null;
@@ -320,22 +313,22 @@ A:						while( cursorDim.hasNext() )
 		
 		SimpleMultiThreading.startAndJoin(threads);
 		
-		if ( !inPlace )
-			complex.close();
-		
 		return realImage;
 	}
 	
-	final public static Image<ComplexFloatType> computeFFT( final Image<FloatType> img, final int numThreads, final boolean scale )
+	final public static Image<ComplexFloatType> computeFFT( final Image<FloatType> img, final OutsideStrategyFactory<FloatType> outsideFactory,
+	                                                        final int[] imageOffset, final int[] imageSize,
+	                                                        final int numThreads, final boolean scale )
 	{
 		final int numDimensions = img.getNumDimensions();
+		
 		final int complexSize[] = new int[ numDimensions ];
 		
 		// the size of the first dimension is changed
-		complexSize[ 0 ] = ( img.getDimension( 0 )  / 2 + 1);
+		complexSize[ 0 ] = ( imageSize[ 0 ]  / 2 + 1);
 		
 		for ( int d = 1; d < numDimensions; ++d )
-			complexSize[ d ] = img.getDimension( d );
+			complexSize[ d ] = imageSize[ d ];
 		
 		final ImageFactory<ComplexFloatType> imgFactory = new ImageFactory<ComplexFloatType>( new ComplexFloatType(), img.getStorageFactory() );
 		final Image<ComplexFloatType> fftImage = imgFactory.createImage( complexSize );
@@ -354,25 +347,26 @@ A:						while( cursorDim.hasNext() )
 				{
 					final int myNumber = ai.getAndIncrement();
 					
-					final int realSize = img.getDimension( 0 );
+					final int realSize = imageSize[ 0 ];
 					final int complexSize = fftImage.getDimension( 0 );
 							
 					final float[] tempIn = new float[ realSize ];				
 					final FftReal fft = new FftReal( realSize );
 					
-					final LocalizableByDimCursor<FloatType> cursor = img.createLocalizableByDimCursor(); 
+					final LocalizableByDimCursor<FloatType> cursor = img.createLocalizableByDimCursor( outsideFactory );
 					final LocalizableByDimCursor<ComplexFloatType> cursorOut = fftImage.createLocalizableByDimCursor(); 
 					
-					if ( img.getNumDimensions() > 1 )
+					if ( numDimensions > 1 )
 					{
 						/**
 						 * Here we "misuse" a ArrayLocalizableCursor to iterate through all dimensions except the one we are computing the fft in 
 						 */	
 						final int[] fakeSize = new int[ numDimensions - 1 ];
 						final int[] tmp = new int[ numDimensions ];
+						final int[] tmp2 = new int[ numDimensions ];
 						
 						for ( int d = 1; d < numDimensions; ++d )
-							fakeSize[ d - 1 ] = img.getDimension( d );
+							fakeSize[ d - 1 ] = imageSize[ d ];
 						
 						final ArrayLocalizableCursor<FakeType> cursorDim = 
 							new ArrayLocalizableCursor<FakeType>( new FakeArray<FakeType>( fakeSize ), null, new FakeType() );
@@ -390,11 +384,16 @@ A:						while( cursorDim.hasNext() )
 								cursorDim.getPosition( fakeSize );
 
 								tmp[ 0 ] = 0;
+								tmp2[ 0 ] = -imageOffset[ 0 ];
+								
 								for ( int d = 1; d < numDimensions; ++d )
-									tmp[ d ] = fakeSize[ d - 1 ];							
+								{
+									tmp[ d ] = fakeSize[ d - 1 ];
+									tmp2[ d ] = fakeSize[ d - 1 ] - imageOffset[ d ];
+								}
 
 								// set the cursor to the beginning of the correct line
-								cursor.setPosition( tmp );
+								cursor.setPosition( tmp2 );
 								
 								// fill the input array with image data
 								for ( int x = 0; x < realSize; ++x )
@@ -435,7 +434,7 @@ A:						while( cursorDim.hasNext() )
 						if ( myNumber == 0)
 						{
 							// set the cursor to 0 in the first (and only) dimension
-							cursor.setPosition( 0, 0 );
+							cursor.setPosition( -imageOffset[ 0 ], 0 );
 							
 							// get the input data
 							for ( int x = 0; x < realSize; ++x )

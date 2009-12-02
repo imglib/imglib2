@@ -3,11 +3,9 @@ package mpi.imglib.algorithm.fft;
 import edu.mines.jtk.dsp.FftComplex;
 import edu.mines.jtk.dsp.FftReal;
 import mpi.imglib.algorithm.Benchmark;
-import mpi.imglib.algorithm.CanvasImage;
 import mpi.imglib.algorithm.MultiThreadedOutputAlgorithm;
 import mpi.imglib.algorithm.math.MathLib;
 import mpi.imglib.image.Image;
-import mpi.imglib.image.display.imagej.ImageJFunctions;
 import mpi.imglib.outside.OutsideStrategyFactory;
 import mpi.imglib.outside.OutsideStrategyMirrorExpWindowingFactory;
 import mpi.imglib.outside.OutsideStrategyMirrorFactory;
@@ -32,7 +30,7 @@ public class FourierTransform implements MultiThreadedOutputAlgorithm<ComplexFlo
 	float relativeFadeOutDistance;
 	int minExtension;
 	OutsideStrategyFactory<FloatType> strategy;
-	int[] originalSize, originalOffset; 
+	int[] originalSize, originalOffset, extendedSize; 
 
 	String errorMessage = "";
 	int numThreads;
@@ -114,36 +112,10 @@ public class FourierTransform implements MultiThreadedOutputAlgorithm<ComplexFlo
 	{		
 		final long startTime = System.currentTimeMillis();
 
-		// extend the original image
-		final Image<FloatType> tmp = extendImage( img, preProcessing );
-		
-		tmp.getDisplay().setMinMax();
-		ImageJFunctions.copyToImagePlus( tmp ).show();
-		
-		if ( tmp == null )
-			return false;
-		
+		//
 		// perform FFT on the temporary image
-		fftImage = FFTFunctions.computeFFT( tmp, getNumThreads(), false );
-		
-		// close temporary image
-		tmp.close();
-		
-		if ( fftImage == null )
-			return false;
-		
-		if ( rearrangement == Rearrangement.RearrangeQuadrants )
-			FFTFunctions.rearrangeFFTQuadrants( fftImage, getNumThreads() );
-			
-        processingTime = System.currentTimeMillis() - startTime;
-
-        return true;
-	}	
-	
-	protected Image<FloatType> extendImage( final Image<FloatType> img, final PreProcessing preProcessing )
-	{
-		final CanvasImage<FloatType> canvas;
-		
+		//			
+		final OutsideStrategyFactory<FloatType> outsideFactory;		
 		switch ( preProcessing )
 		{
 			case UseGivenOutsideStrategy:
@@ -151,54 +123,51 @@ public class FourierTransform implements MultiThreadedOutputAlgorithm<ComplexFlo
 				if ( strategy == null )
 				{
 					errorMessage = "Custom OutsideStrategyFactory is null, cannot use custom strategy";
-					return null;
-				}
-				
-				canvas = new CanvasImage<FloatType>( img, 
-						 getZeroPaddingSize( getExtendedImageSize( img, relativeImageExtension ), fftOptimization), 
-						 strategy );
-				
+					return false;
+				}				
+				extendedSize = getZeroPaddingSize( getExtendedImageSize( img, relativeImageExtension ), fftOptimization );
+				outsideFactory = strategy;				
 				break;
 			}
 			case ExtendMirror:
-			{				
-				canvas = new CanvasImage<FloatType>( img, 
-						 getZeroPaddingSize( getExtendedImageSize( img, relativeImageExtension ), fftOptimization), 
-						 new OutsideStrategyMirrorFactory<FloatType>() );
+			{	
+				extendedSize = getZeroPaddingSize( getExtendedImageSize( img, relativeImageExtension ), fftOptimization );
+				outsideFactory = new OutsideStrategyMirrorFactory<FloatType>();
 				break;
 				
-			}
-			
+			}			
 			case ExtendMirrorFading:
 			{
-				canvas = new CanvasImage<FloatType>( img, 
-						 getZeroPaddingSize( getExtendedImageSize( img, relativeImageExtension ), fftOptimization), 
-						 new OutsideStrategyMirrorExpWindowingFactory<FloatType>( relativeFadeOutDistance ) );
-				
+				extendedSize = getZeroPaddingSize( getExtendedImageSize( img, relativeImageExtension ), fftOptimization );
+				outsideFactory = new OutsideStrategyMirrorExpWindowingFactory<FloatType>( relativeFadeOutDistance );				
 				break;
-			}
-			
+			}			
 			default: // or NONE
 			{
-				canvas = new CanvasImage<FloatType>( img, 
-						 getZeroPaddingSize( img.getDimensions(), fftOptimization), 
-						 new OutsideStrategyValueFactory<FloatType>( new FloatType( 0 ) ) );
+				extendedSize = getZeroPaddingSize( img.getDimensions(), fftOptimization); 
+				outsideFactory = new OutsideStrategyValueFactory<FloatType>( new FloatType( 0 ) );
 				break;
-			}
+			}		
 		}
 		
-		// zero pad and maybe extend the image using the given strategy
-		if ( !(canvas.checkInput() && canvas.process()) )			
-		{
-			errorMessage = canvas.getErrorMessage();
-			return null;
-		}
+		originalOffset = new int[ numDimensions ];		
+		for ( int d = 0; d < numDimensions; ++d )
+			originalOffset[ d ] = ( extendedSize[ d ] - img.getDimension( d ) ) / 2;
 		
-		this.originalOffset = canvas.getOffset();
+		fftImage = FFTFunctions.computeFFT( img, outsideFactory, originalOffset, extendedSize, getNumThreads(), false );
 		
-		return canvas.getResult();		
-	}
+		if ( fftImage == null )
+			return false;
+
+		// rearrange quadrants if wanted
+		if ( rearrangement == Rearrangement.RearrangeQuadrants )
+			FFTFunctions.rearrangeFFTQuadrants( fftImage, getNumThreads() );
 			
+        processingTime = System.currentTimeMillis() - startTime;
+
+        return true;
+	}	
+				
 	protected int[] getExtendedImageSize( final Image<?> img, final float extensionRatio )
 	{
 		final int[] extendedSize = new int[ img.getNumDimensions() ];

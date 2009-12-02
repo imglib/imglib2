@@ -61,8 +61,8 @@ public class InverseFourierTransform implements MultiThreadedOutputAlgorithm<Flo
 
 	public Rearrangement getRearrangement() { return rearrangement; }
 	public boolean getInPlaceTransform() { return inPlace; }
-	public boolean setDoScaling() { return scale; }
-	public boolean setCropBackToOriginalSize() { return cropBack; }
+	public boolean getDoScaling() { return scale; }
+	public boolean getCropBackToOriginalSize() { return cropBack; }
 	public int[] getOriginalSize() { return originalSize.clone(); }
 	public int[] getOriginalOffset() { return originalOffset.clone(); }
 
@@ -70,12 +70,23 @@ public class InverseFourierTransform implements MultiThreadedOutputAlgorithm<Flo
 	public boolean process() 
 	{		
 		final long startTime = System.currentTimeMillis();
-		
-		if ( rearrangement == Rearrangement.RearrangeQuadrants )
-			FFTFunctions.rearrangeFFTQuadrants( fftImage, getNumThreads() );
 
-		// perform inverse FFT 
-		image = FFTFunctions.computeInverseFFT( fftImage, getNumThreads(), inPlace, scale, cropBack, originalSize, originalOffset );
+		// in Place computation will destroy the image
+		final Image<ComplexFloatType> complex;		
+		
+		if ( inPlace )
+			complex = fftImage;
+		else
+			complex = fftImage.clone();
+			
+		if ( rearrangement == Rearrangement.RearrangeQuadrants )
+			FFTFunctions.rearrangeFFTQuadrants( complex, getNumThreads() );
+
+		// perform inverse FFT 					
+		image = FFTFunctions.computeInverseFFT( complex, getNumThreads(), scale, cropBack, originalSize, originalOffset );
+		
+		if ( !inPlace )
+			complex.close();
 
 		processingTime = System.currentTimeMillis() - startTime;
 

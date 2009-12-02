@@ -29,6 +29,7 @@ import mpi.imglib.algorithm.CanvasImage;
 import mpi.imglib.algorithm.GaussianConvolution;
 import mpi.imglib.algorithm.fft.FourierTransform;
 import mpi.imglib.algorithm.fft.InverseFourierTransform;
+import mpi.imglib.algorithm.fft.FourierTransform.Rearrangement;
 import mpi.imglib.algorithm.math.MathLib;
 import mpi.imglib.algorithm.transformation.AffineTransform;
 import mpi.imglib.algorithm.transformation.ImageTransform;
@@ -85,10 +86,10 @@ public class Test
 		initImageJWindow();				
 				
 		//Image<?> image = LOCI.openLOCI("D:/Temp/", "73.tif", new ArrayContainerFactory());
-		//Image<FloatType> image = LOCI.openLOCIFloatType("D:/Temp/Truman/MoreTiles/73.tif", new ArrayContainerFactory());
+		Image<FloatType> image = LOCI.openLOCIFloatType("D:/Temp/Truman/MoreTiles/73.tif", new ArrayContainerFactory());
 		//Image<FloatType> image = LOCI.openLOCIFloatType("F:/Stephan/OldMonster/Stephan/Stitching/Truman/73.tif", new ArrayContainerFactory());				
 			
-		Image<FloatType> image = LOCI.openLOCIFloatType("D:/Documents and Settings/Stephan/My Documents/My Pictures/rockface_odd.tif", new ArrayContainerFactory());
+		//Image<FloatType> image = LOCI.openLOCIFloatType("D:/Documents and Settings/Stephan/My Documents/My Pictures/rockface.tif", new ArrayContainerFactory());
 		
 		/*
 		ImageFactory<FloatType> f = new ImageFactory<FloatType>( new FloatType(), new ArrayContainerFactory() );
@@ -132,6 +133,7 @@ public class Test
 	{
 		final FourierTransform fft = new FourierTransform( img );
 		fft.setNumThreads( 2 );
+		//fft.setRearrangement( Rearrangement.Unchanged );
 		
 		final Image<ComplexFloatType> fftImage;
 		
@@ -141,11 +143,11 @@ public class Test
 			fftImage = fft.getResult();
 			
 			fftImage.getDisplay().setMinMax();
-			ImageJFunctions.copyToImagePlus( fftImage ).show();			
+			ImageJFunctions.displayAsVirtualStack( fftImage ).show();			
 
 			fftImage.setDisplay( new ComplexFloatTypePhaseSpectrumDisplay( fftImage ) );
 			fftImage.getDisplay().setMinMax();
-			ImageJFunctions.copyToImagePlus( fftImage ).show();		
+			ImageJFunctions.displayAsVirtualStack( fftImage ).show();
 		}
 		else
 		{
@@ -155,6 +157,7 @@ public class Test
 		
 		
 		final InverseFourierTransform invfft = new InverseFourierTransform( fftImage, fft );
+		//invfft.setInPlaceTransform( true );
 		
 		if ( invfft.checkInput() && invfft.process() )
 		{
@@ -163,7 +166,7 @@ public class Test
 			final Image<FloatType> inverseFFT = invfft.getResult();
 			
 			inverseFFT.getDisplay().setMinMax();
-			ImageJFunctions.displayAsVirtualStack( inverseFFT ).show();
+			ImageJFunctions.copyToImagePlus( inverseFFT ).show();
 		}
 	}
 	
