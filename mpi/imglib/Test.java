@@ -148,6 +148,7 @@ public class Test
 		
 		
 		FourierConvolution fftConv = new FourierConvolution( img, kernel );
+		fftConv.setNumThreads( 4 );
 		
 		if ( !fftConv.checkInput() || !fftConv.process() )
 		{
@@ -155,7 +156,7 @@ public class Test
 			return;
 		}
 		
-		System.out.println( "FFT Convolution: " + fftConv.getProcessingTime() / 1000 + " seconds"  );
+		System.out.println( "FFT Convolution: " + fftConv.getProcessingTime()  + " ms"  );
 		
 		Image<FloatType> conv = fftConv.getResult();
 		
@@ -170,7 +171,7 @@ public class Test
 			return;
 		}
 
-		System.out.println( "Gauss Convolution: " + gauss.getProcessingTime() / 1000 + " seconds"  );
+		System.out.println( "Gauss Convolution: " + gauss.getProcessingTime() + " ms"  );
 		
 		Image<FloatType> res = gauss.getResult();
 		res.getDisplay().setMinMax();

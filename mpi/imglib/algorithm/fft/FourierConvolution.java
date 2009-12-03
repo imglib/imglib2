@@ -108,6 +108,7 @@ public class FourierConvolution implements MultiThreadedOutputAlgorithm<FloatTyp
 		// compute fft of the input image
 		//
 		final FourierTransform fftImage = new FourierTransform( image );
+		fftImage.setNumThreads( this.getNumThreads() );
 		
 		// we simply mirror
 		fftImage.setPreProcessing( PreProcessing.ExtendMirror );		
@@ -173,6 +174,7 @@ public class FourierConvolution implements MultiThreadedOutputAlgorithm<FloatTyp
 		// compute FFT of kernel
 		//
 		final FourierTransform fftKernel = new FourierTransform( kernelTemplate );
+		fftKernel.setNumThreads( this.getNumThreads() );
 		
 		fftKernel.setPreProcessing( PreProcessing.None );		
 		fftKernel.setRearrangement( fftImage.getRearrangement() );
@@ -206,7 +208,8 @@ public class FourierConvolution implements MultiThreadedOutputAlgorithm<FloatTyp
 		// Compute inverse Fourier Transform
 		//		
 		final InverseFourierTransform invFFT = new InverseFourierTransform( imgFFT, fftImage );
-		//invFFT.setCropBackToOriginalSize( false );
+		invFFT.setInPlaceTransform( true );
+		invFFT.setNumThreads( this.getNumThreads() );
 
 		if ( !invFFT.checkInput() || !invFFT.process() )
 		{
