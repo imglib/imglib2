@@ -19,6 +19,7 @@ package mpi.imglib.image;
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import mpi.imglib.algorithm.math.MathLib;
 import mpi.imglib.container.Container;
 import mpi.imglib.container.ContainerFactory;
 import mpi.imglib.container.ImageProperties;
@@ -187,7 +188,13 @@ public class Image<T extends Type<T>> implements ImageProperties, Dimensionality
 	public String getName() { return name; }
 
 	@Override
-	public void setName(String name) { this.name = name;	}	
+	public void setName(String name) { this.name = name; }
+	
+	@Override
+	public String toString()
+	{
+		return "Image '" + this.getName() + "', dim=" + MathLib.printCoordinates( dim );
+	}
 	
 	@Override
 	public void getDimensions( int[] dimensions )

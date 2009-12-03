@@ -109,8 +109,6 @@ public abstract class ContainerImpl<T extends Type<T>> implements Container<T>
 	@Override
 	public boolean compareStorageContainerCompatibility( final Container<T> container )
 	{
-		System.out.println("calling compareStorageContainerCompatibility");
-		
 		if ( compareStorageContainerDimensions( container ))
 		{			
 			if ( getFactory().getClass().isInstance( container.getFactory() ))
