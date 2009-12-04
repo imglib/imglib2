@@ -144,11 +144,10 @@ public class Test
 		Image<FloatType> kernel = FourierConvolution.getGaussianKernel( img.getImageFactory(), 20, img.getNumDimensions() );
 		
 		kernel.getDisplay().setMinMax();
-		ImageJFunctions.displayAsVirtualStack( kernel ).show();
-		
+		ImageJFunctions.displayAsVirtualStack( kernel ).show();		
 		
 		FourierConvolution fftConv = new FourierConvolution( img, kernel );
-		fftConv.setNumThreads( 4 );
+		fftConv.setNumThreads();
 		
 		if ( !fftConv.checkInput() || !fftConv.process() )
 		{
