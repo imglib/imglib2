@@ -144,6 +144,7 @@ public class LOCI
 			if ( reader == null )
 				r.setId(id);
 			
+			final boolean isLittleEndian = r.isLittleEndian();			
 			final int width = r.getSizeX();
 			final int height = r.getSizeY();
 			final int depth = r.getSizeZ();
@@ -245,7 +246,7 @@ public class LOCI
 						while(it.hasNext())
 						{
 							it.fwd();
-							type.set( getShortValue( b[ 0 ], ( it.getPosition( planeX )+it.getPosition( planeY )*width ) * 2 ) );
+							type.set( getShortValue( b[ 0 ], ( it.getPosition( planeX )+it.getPosition( planeY )*width ) * 2, isLittleEndian ) );
 						}
 					}						
 				}				
@@ -313,6 +314,7 @@ public class LOCI
 			if ( reader == null )
 				r.setId(id);
 			
+			final boolean isLittleEndian = r.isLittleEndian();			
 			final int width = r.getSizeX();
 			final int height = r.getSizeY();
 			final int depth = r.getSizeZ();
@@ -415,7 +417,7 @@ public class LOCI
 						while(it.hasNext())
 						{
 							it.fwd();
-							type.set( getShortValue( b[ 0 ], ( it.getPosition( planeX )+it.getPosition( planeY )*width ) * 2 ) );
+							type.set( getShortValue( b[ 0 ], ( it.getPosition( planeX )+it.getPosition( planeY )*width ) * 2, isLittleEndian ) );
 						}
 					}						
 					else if (pixelType == FormatTools.UINT32)
@@ -425,7 +427,7 @@ public class LOCI
 						while(it.hasNext())
 						{
 							it.fwd();
-							type.set( getIntValue( b[ 0 ], ( it.getPosition( planeX )+it.getPosition( planeY )*width )*4 ) );
+							type.set( getIntValue( b[ 0 ], ( it.getPosition( planeX )+it.getPosition( planeY )*width )*4, isLittleEndian ) );
 						}
 
 					}
@@ -434,7 +436,7 @@ public class LOCI
 						while(it.hasNext())
 						{
 							it.fwd();
-							type.set( getFloatValue( b[ 0 ], ( it.getPosition( planeX )+it.getPosition( planeY )*width )*4 ) );
+							type.set( getFloatValue( b[ 0 ], ( it.getPosition( planeX )+it.getPosition( planeY )*width )*4, isLittleEndian ) );
 						}
 
 					}
@@ -750,26 +752,34 @@ public class LOCI
 		return path;
 	}
 
-	protected static final float getFloatValue(final byte[] b, final int i)
+	private static final float getFloatValue( final byte[] b, final int i, final boolean isLittleEndian )
 	{
-		return Float.intBitsToFloat( ((b[i+3] & 0xff) << 24)  + ((b[i+2] & 0xff) << 16)  +  ((b[i+1] & 0xff) << 8)  + (b[i] & 0xff) );
+		if ( isLittleEndian )
+			return Float.intBitsToFloat( ((b[i+3] & 0xff) << 24)  + ((b[i+2] & 0xff) << 16)  +  ((b[i+1] & 0xff) << 8)  + (b[i] & 0xff) );
+		else
+			return Float.intBitsToFloat( ((b[i] & 0xff) << 24)  + ((b[i+1] & 0xff) << 16)  +  ((b[i+2] & 0xff) << 8)  + (b[i+3] & 0xff) );
 	}
 
-	protected static final int getIntValue(final byte[] b, final int i)
+	private static final int getIntValue( final byte[] b, final int i, final boolean isLittleEndian )
 	{
 		// TODO: Untested
-		return ( ((b[i+3] & 0xff) << 24)  + ((b[i+2] & 0xff) << 16)  +  ((b[i+1] & 0xff) << 8)  + (b[i] & 0xff) );
+		if ( isLittleEndian )
+			return ( ((b[i+3] & 0xff) << 24)  + ((b[i+2] & 0xff) << 16)  +  ((b[i+1] & 0xff) << 8)  + (b[i] & 0xff) );
+		else
+			return ( ((b[i] & 0xff) << 24)  + ((b[i+1] & 0xff) << 16)  +  ((b[i+2] & 0xff) << 8)  + (b[i+3] & 0xff) );
 	}
 	
-	protected static final short getShortValue(final byte[] b, final int i)
+	private static final short getShortValue( final byte[] b, final int i, final boolean isLittleEndian )
 	{
-		return (short)getShortValueInt(b, i);
+		return (short)getShortValueInt( b, i, isLittleEndian );
 	}
 
-	protected static final int getShortValueInt(final byte[] b, final int i)
+	private static final int getShortValueInt( final byte[] b, final int i, final boolean isLittleEndian )
 	{
-		return ((((b[i+1] & 0xff) << 8)) + (b[i] & 0xff));
-		//return ((((b[i] & 0xff) << 8)) + (b[i+1] & 0xff));
+		if ( isLittleEndian )
+			return ((((b[i+1] & 0xff) << 8)) + (b[i] & 0xff));
+		else
+			return ((((b[i] & 0xff) << 8)) + (b[i+1] & 0xff));
 	}
 	
 }
