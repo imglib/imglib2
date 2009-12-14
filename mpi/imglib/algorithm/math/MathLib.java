@@ -23,6 +23,37 @@ import mpicbg.models.CoordinateTransform;
 
 public class MathLib
 {	
+	
+	public static double[] getArrayFromValue( final double value, final int numDimensions )
+	{
+		final double[] values = new double[ numDimensions ];
+		
+		for ( int d = 0; d < numDimensions; ++d )
+			values[ d ] = value;
+		
+		return values;
+	}
+
+	public static float[] getArrayFromValue( final float value, final int numDimensions )
+	{
+		final float[] values = new float[ numDimensions ];
+		
+		for ( int d = 0; d < numDimensions; ++d )
+			values[ d ] = value;
+		
+		return values;
+	}
+	
+	public static int[] getArrayFromValue( final int value, final int numDimensions )
+	{
+		final int[] values = new int[ numDimensions ];
+		
+		for ( int d = 0; d < numDimensions; ++d )
+			values[ d ] = value;
+		
+		return values;
+	}	
+	
 	public static double gLog( final double z, final double c )
 	{
 		if (c == 0)

@@ -1,13 +1,14 @@
 package mpi.imglib.algorithm.fft;
 
 import mpi.imglib.algorithm.Benchmark;
-import mpi.imglib.algorithm.MultiThreadedOutputAlgorithm;
+import mpi.imglib.algorithm.MultiThreaded;
+import mpi.imglib.algorithm.OutputAlgorithm;
 import mpi.imglib.algorithm.fft.FourierTransform.Rearrangement;
 import mpi.imglib.image.Image;
 import mpi.imglib.type.numeric.ComplexFloatType;
 import mpi.imglib.type.numeric.FloatType;
 
-public class InverseFourierTransform implements MultiThreadedOutputAlgorithm<FloatType>, Benchmark
+public class InverseFourierTransform implements MultiThreaded, OutputAlgorithm<FloatType>, Benchmark
 {
 	final Image<ComplexFloatType> fftImage;	
 	final int numDimensions;

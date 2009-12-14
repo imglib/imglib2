@@ -1,25 +1,23 @@
 package mpi.imglib.algorithm.fft;
 
 import mpi.imglib.algorithm.Benchmark;
-import mpi.imglib.algorithm.GaussianConvolution;
-import mpi.imglib.algorithm.MultiThreadedOutputAlgorithm;
+import mpi.imglib.algorithm.MultiThreaded;
+import mpi.imglib.algorithm.OutputAlgorithm;
 import mpi.imglib.algorithm.fft.FourierTransform.PreProcessing;
 import mpi.imglib.algorithm.fft.FourierTransform.Rearrangement;
+import mpi.imglib.algorithm.gauss.GaussianConvolution;
 import mpi.imglib.algorithm.math.MathLib;
-import mpi.imglib.container.ContainerFactory;
 import mpi.imglib.cursor.Cursor;
 import mpi.imglib.cursor.LocalizableByDimCursor;
 import mpi.imglib.cursor.LocalizableCursor;
 import mpi.imglib.image.Image;
 import mpi.imglib.image.ImageFactory;
-import mpi.imglib.image.display.imagej.ImageJFunctions;
 import mpi.imglib.outside.OutsideStrategyValueFactory;
 import mpi.imglib.type.NumericType;
-import mpi.imglib.type.Type;
 import mpi.imglib.type.numeric.ComplexFloatType;
 import mpi.imglib.type.numeric.FloatType;
 
-public class FourierConvolution implements MultiThreadedOutputAlgorithm<FloatType>, Benchmark
+public class FourierConvolution implements MultiThreaded, OutputAlgorithm<FloatType>, Benchmark
 {
 	final int numDimensions;
 	Image<FloatType> kernel, image, convolved;

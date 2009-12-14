@@ -3,7 +3,8 @@ package mpi.imglib.algorithm.fft;
 import edu.mines.jtk.dsp.FftComplex;
 import edu.mines.jtk.dsp.FftReal;
 import mpi.imglib.algorithm.Benchmark;
-import mpi.imglib.algorithm.MultiThreadedOutputAlgorithm;
+import mpi.imglib.algorithm.MultiThreaded;
+import mpi.imglib.algorithm.OutputAlgorithm;
 import mpi.imglib.algorithm.math.MathLib;
 import mpi.imglib.image.Image;
 import mpi.imglib.outside.OutsideStrategyFactory;
@@ -13,7 +14,7 @@ import mpi.imglib.outside.OutsideStrategyValueFactory;
 import mpi.imglib.type.numeric.ComplexFloatType;
 import mpi.imglib.type.numeric.FloatType;
 
-public class FourierTransform implements MultiThreadedOutputAlgorithm<ComplexFloatType>, Benchmark
+public class FourierTransform implements MultiThreaded, OutputAlgorithm<ComplexFloatType>, Benchmark
 {
 	public static enum PreProcessing { None, ExtendMirror, ExtendMirrorFading, UseGivenOutsideStrategy }
 	public static enum Rearrangement { RearrangeQuadrants, Unchanged }

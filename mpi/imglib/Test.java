@@ -26,13 +26,14 @@ import javax.media.j3d.Transform3D;
 import javax.vecmath.Vector3d;
 
 import mpi.imglib.algorithm.CanvasImage;
-import mpi.imglib.algorithm.GaussianConvolution;
 import mpi.imglib.algorithm.fft.FFTFunctions;
 import mpi.imglib.algorithm.fft.FourierConvolution;
 import mpi.imglib.algorithm.fft.FourierTransform;
 import mpi.imglib.algorithm.fft.InverseFourierTransform;
 import mpi.imglib.algorithm.fft.FourierTransform.PreProcessing;
 import mpi.imglib.algorithm.fft.FourierTransform.Rearrangement;
+import mpi.imglib.algorithm.gauss.DownSample;
+import mpi.imglib.algorithm.gauss.GaussianConvolution;
 import mpi.imglib.algorithm.math.MathLib;
 import mpi.imglib.algorithm.transformation.AffineTransform;
 import mpi.imglib.algorithm.transformation.ImageTransform;
@@ -90,25 +91,26 @@ public class Test
 				
 		//Image<?> image = LOCI.openLOCI("D:/Temp/", "73.tif", new ArrayContainerFactory());
 		//Image<FloatType> image = LOCI.openLOCIFloatType("D:/Temp/Truman/MoreTiles/73.tif", new ArrayContainerFactory());
-		Image<FloatType> image = LOCI.openLOCIFloatType("D:/Documents and Settings/Stephan/Desktop/ls-1 f5-01-1 3500x-1.tif", new ArrayContainerFactory());
+		//Image<FloatType> image = LOCI.openLOCIFloatType("D:/Documents and Settings/Stephan/Desktop/ls-1 f5-01-1 3500x-1.tif", new ArrayContainerFactory());
 		//Image<FloatType> image = LOCI.openLOCIFloatType("F:/Stephan/OldMonster/Stephan/Stitching/Truman/73.tif", new ArrayContainerFactory());				
 			
-		//Image<FloatType> image = LOCI.openLOCIFloatType("D:/Documents and Settings/Stephan/My Documents/My Pictures/rockface_odd.tif", new ArrayContainerFactory());
-				
+		Image<FloatType> image = LOCI.openLOCIFloatType("D:/Documents and Settings/Stephan/My Documents/My Pictures/rockface.tif", new ArrayContainerFactory());
+		
+		testDownSampling( image );
 				
 		//ImageFactory<FloatType> f = new ImageFactory<FloatType>( new FloatType(), new ArrayContainerFactory() );
 		//Image<FloatType> image = f.createImage( new int[]{ 24, 24 } );		
 		//fillUp( image );
 		
-		//image.getDisplay().setMinMax();
-		//ImageJFunctions.copyToImagePlus( image ).show();
+		image.getDisplay().setMinMax();
+		ImageJFunctions.copyToImagePlus( image ).show();
 
 		//testCanvas( image, 3f, 0.25f, 10f );
 		//testFFT( image );
 		//testFFTConvolution( image );				
 		//testFFTConvolutionLoop();
 		
-		testFFTConvolutionAlg( image );
+		//testFFTConvolutionAlg( image );
 		
 		if ( true )
 			return;
@@ -134,6 +136,22 @@ public class Test
 		ImageJFunctions.displayAsVirtualStack( img, ImageJFunctions.COLOR_RGB, new int[]{ 0, 1, 2} ).show();
 		
 		genericProcessing( img );
+	}
+	
+	public <T extends NumericType<T>> void testDownSampling( final Image<T> img )
+	{
+		final DownSample<T> downSample = new DownSample<T>( img, 0.5f );
+		
+		if ( !downSample.checkInput() || !downSample.process() )
+		{
+			System.out.println( "DownSampling failed: " + downSample.getErrorMessage() );
+			return;
+		}
+		
+		final Image<T> downSampledImage = downSample.getResult();
+		
+		downSampledImage.getDisplay().setMinMax();
+		ImageJFunctions.displayAsVirtualStack( downSampledImage ).show();		
 	}
 	
 	public void testFFTConvolutionAlg( Image<FloatType> img )

@@ -1,7 +1,10 @@
-package mpi.imglib.algorithm;
+package mpi.imglib.algorithm.gauss;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
+import mpi.imglib.algorithm.Benchmark;
+import mpi.imglib.algorithm.MultiThreaded;
+import mpi.imglib.algorithm.OutputAlgorithm;
 import mpi.imglib.algorithm.math.MathLib;
 import mpi.imglib.container.array.Array3D;
 import mpi.imglib.container.array.FloatArray3D;
@@ -14,7 +17,7 @@ import mpi.imglib.outside.OutsideStrategyFactory;
 import mpi.imglib.type.NumericType;
 import mpi.imglib.type.numeric.FloatType;
 
-public class GaussianConvolution< T extends NumericType<T>> implements MultiThreadedOutputAlgorithm<T>, Benchmark
+public class GaussianConvolution< T extends NumericType<T>> implements MultiThreaded, OutputAlgorithm<T>, Benchmark
 {	
 	final Image<T> image, convolved;
 	final OutsideStrategyFactory<T> outsideFactory;

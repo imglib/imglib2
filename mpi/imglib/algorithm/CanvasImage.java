@@ -50,12 +50,8 @@ public class CanvasImage<T extends Type<T>> implements OutputAlgorithm<T>, Bench
 		else
 		{
 			for ( int d = 0; d < numDimensions; ++d )
-			{
-				System.out.println( offset[ d ] );
-				
 				if ( outsideFactory == null && offset[ d ] < 0 )
 					errorMessage = "no OutsideStrategyFactory given but image size should increase, that is not possible";
-			}
 
 			if ( errorMessage.length() == 0 )
 				this.output = input.createNewImage( newSize );

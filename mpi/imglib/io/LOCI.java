@@ -71,9 +71,13 @@ public class LOCI
 			{
 				return (Image<T>)openLOCIRGBALegacyType( path, fileName, new ImageFactory<RGBALegacyType>( new RGBALegacyType(), containerFactory ), from, to );
 			}			
-			if ( pixelType == FormatTools.FLOAT || pixelType == FormatTools.UINT16 || pixelType == FormatTools.UINT32 )
+			else if ( pixelType == FormatTools.FLOAT || pixelType == FormatTools.UINT32 )
 			{
 				return (Image<T>)openLOCIFloatType( path, fileName, new ImageFactory<FloatType>( new FloatType(), containerFactory ), from, to );
+			}
+			else if ( pixelType == FormatTools.UINT16 )
+			{
+				return (Image<T>)openLOCIShortType( path, fileName, new ImageFactory<ShortType>( new ShortType(), containerFactory ), from, to );
 			}
 			else if ( pixelType == FormatTools.UINT8 )
 			{
@@ -196,6 +200,7 @@ public class LOCI
 			else
 			{
 				System.out.println( "Opening '" + fileName + "' [" + width + "x" + height + "x" + depth + " type=" + pixelTypeString + " image=Image<ShortType>]" ); 
+				img.setName( fileName );
 			}
 		
 			final int t = 0;			
@@ -349,7 +354,7 @@ public class LOCI
 					end = to;
 			}
 
-			final Image<FloatType> img;
+			final Image<FloatType> img;		
 			
 			if ( end-start == 1)				
 				img = factory.createImage( new int[]{ width, height }, fileName);
@@ -363,7 +368,8 @@ public class LOCI
 			}
 			else
 			{
-				System.out.println( "Opening '" + fileName + "' [" + width + "x" + height + "x" + depth + " type=" + pixelTypeString + " image=Image<FloatType>]" ); 
+				System.out.println( "Opening '" + fileName + "' [" + width + "x" + height + "x" + depth + " type=" + pixelTypeString + " image=Image<FloatType>]" );
+				img.setName( fileName );
 			}
 		
 			final int t = 0;			
@@ -546,6 +552,7 @@ public class LOCI
 			else
 			{
 				System.out.println( "Opening '" + fileName + "' [" + width + "x" + height + "x" + depth + " type=" + pixelTypeString + " image=Image<ByteType>]" ); 
+				img.setName( fileName );
 			}
 		
 			final int t = 0;			
@@ -681,6 +688,7 @@ public class LOCI
 			else
 			{
 				System.out.println( "Opening '" + fileName + "' [" + width + "x" + height + "x" + depth + " channels=" + channels + " type=" + pixelTypeString + " image=RGBALegacyTypeImage]" ); 
+				img.setName( fileName );
 			}
 		
 			final int t = 0;			
