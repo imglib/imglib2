@@ -5,14 +5,15 @@ import mpi.imglib.algorithm.MultiThreaded;
 import mpi.imglib.algorithm.OutputAlgorithm;
 import mpi.imglib.algorithm.fft.FourierTransform.Rearrangement;
 import mpi.imglib.image.Image;
+import mpi.imglib.type.NumericType;
 import mpi.imglib.type.numeric.ComplexFloatType;
-import mpi.imglib.type.numeric.FloatType;
 
-public class InverseFourierTransform implements MultiThreaded, OutputAlgorithm<FloatType>, Benchmark
+public class InverseFourierTransform<T extends NumericType<T>> implements MultiThreaded, OutputAlgorithm<T>, Benchmark
 {
 	final Image<ComplexFloatType> fftImage;	
 	final int numDimensions;
-	Image<FloatType> image;
+	Image<T> image;
+	T type;
 	
 	Rearrangement rearrangement;
 
@@ -22,11 +23,12 @@ public class InverseFourierTransform implements MultiThreaded, OutputAlgorithm<F
 	boolean scale, inPlace, cropBack;
 	int[] originalSize, originalOffset; 
 
-	public InverseFourierTransform( final Image<ComplexFloatType> fftImage, final Rearrangement rearrangement, 
+	public InverseFourierTransform( final Image<ComplexFloatType> fftImage, final T type, final Rearrangement rearrangement, 
 									final boolean inPlace, final boolean scale, final boolean cropBack, 
 									final int[] originalSize, final int[] originalOffset )
 	{
 		this.fftImage = fftImage;
+		this.type = type;
 		this.numDimensions = fftImage.getNumDimensions();
 		
 		this.rearrangement = rearrangement;
@@ -43,14 +45,19 @@ public class InverseFourierTransform implements MultiThreaded, OutputAlgorithm<F
 		setNumThreads();
 	}
 	
-	public InverseFourierTransform( final Image<ComplexFloatType> fftImage, final FourierTransform forwardTransform )
+	public InverseFourierTransform( final Image<ComplexFloatType> fftImage, final FourierTransform<T> forwardTransform )
 	{
-		this ( fftImage, forwardTransform.getRearrangement(), false, true, true, forwardTransform.getOriginalSize(), forwardTransform.getOriginalOffset() );
+		this ( fftImage, forwardTransform.getImageType(), forwardTransform.getRearrangement(), false, true, true, forwardTransform.getFFTInputSize(), forwardTransform.getFFTInputOffset() );
 	}
-	
-	public InverseFourierTransform( final Image<ComplexFloatType> fftImage )
+
+	public InverseFourierTransform( final Image<ComplexFloatType> fftImage, final FourierTransform<?> forwardTransform, final T type )
 	{
-		this( fftImage, Rearrangement.RearrangeQuadrants, false, true, false, null, null );
+		this ( fftImage, type, forwardTransform.getRearrangement(), false, true, true, forwardTransform.getFFTInputSize(), forwardTransform.getFFTInputOffset() );
+	}
+
+	public InverseFourierTransform( final Image<ComplexFloatType> fftImage, final T type )
+	{
+		this( fftImage, type, Rearrangement.RearrangeQuadrants, false, true, false, null, null );
 	}
 	
 	public void setRearrangement( final Rearrangement rearrangement ) { this.rearrangement = rearrangement; }
@@ -84,7 +91,7 @@ public class InverseFourierTransform implements MultiThreaded, OutputAlgorithm<F
 			FFTFunctions.rearrangeFFTQuadrants( complex, getNumThreads() );
 
 		// perform inverse FFT 					
-		image = FFTFunctions.computeInverseFFT( complex, getNumThreads(), scale, cropBack, originalSize, originalOffset );
+		image = FFTFunctions.computeInverseFFT( complex, type, getNumThreads(), scale, cropBack, originalSize, originalOffset );
 		
 		if ( !inPlace )
 			complex.close();
@@ -107,7 +114,7 @@ public class InverseFourierTransform implements MultiThreaded, OutputAlgorithm<F
 	public int getNumThreads() { return numThreads; }	
 
 	@Override
-	public Image<FloatType> getResult() { return image; }
+	public Image<T> getResult() { return image; }
 
 	@Override
 	public boolean checkInput() 

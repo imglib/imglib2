@@ -94,7 +94,7 @@ public abstract class ContainerImpl<T extends Type<T>> implements Container<T>
 	}
 	
 	@Override
-	public boolean compareStorageContainerDimensions( final Container<T> container )
+	public boolean compareStorageContainerDimensions( final Container<?> container )
 	{
 		if ( container.getNumDimensions() != this.getNumDimensions() )
 			return false;
@@ -107,7 +107,7 @@ public abstract class ContainerImpl<T extends Type<T>> implements Container<T>
 	}		
 
 	@Override
-	public boolean compareStorageContainerCompatibility( final Container<T> container )
+	public boolean compareStorageContainerCompatibility( final Container<?> container )
 	{
 		if ( compareStorageContainerDimensions( container ))
 		{			

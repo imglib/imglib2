@@ -16,6 +16,7 @@
  */
 package mpi.imglib.type.numeric;
 
+import mpi.imglib.algorithm.math.MathLib;
 import mpi.imglib.container.Container;
 import mpi.imglib.container.ContainerFactory;
 import mpi.imglib.container.basictypecontainer.ByteContainer;
@@ -74,6 +75,8 @@ public class ByteType extends TypeImpl<ByteType> implements NumericType<ByteType
 
 	public byte get() { return v[ i ]; }
 	public void set( final byte f ) { v[ i ] = f; }
+	public float getReal() { return v[ i ]; }
+	public void setReal( final float f ) { v[ i ] = (byte)MathLib.round( f ); }
 
 	@Override
 	public void add( final ByteType c ) { v[ i ] += c.get(); }

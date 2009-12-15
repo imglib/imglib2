@@ -74,6 +74,8 @@ public class DoubleType extends TypeImpl<DoubleType> implements NumericType<Doub
 
 	public double get() { return v[ i ]; }
 	public void set( final double f ) { v[ i ] = f; }
+	public float getReal() { return (float)v[ i ]; }
+	public void setReal( final float f ) { v[ i ] = f; }
 
 	@Override
 	public void add( final DoubleType c ) { v[ i ] += c.get(); }

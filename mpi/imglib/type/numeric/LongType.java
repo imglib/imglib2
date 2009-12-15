@@ -16,6 +16,7 @@
  */
 package mpi.imglib.type.numeric;
 
+import mpi.imglib.algorithm.math.MathLib;
 import mpi.imglib.container.Container;
 import mpi.imglib.container.ContainerFactory;
 import mpi.imglib.container.basictypecontainer.LongContainer;
@@ -74,6 +75,8 @@ public class LongType extends TypeImpl<LongType> implements NumericType<LongType
 
 	public long get() { return v[ i ]; }
 	public void set( final long f ) { v[ i ] = f; }
+	public float getReal() { return (float)v[ i ]; }
+	public void setReal( final float f ) { v[ i ] = MathLib.round( f ); }
 
 	@Override
 	public void add( final LongType c ) { v[ i ] += c.get(); }

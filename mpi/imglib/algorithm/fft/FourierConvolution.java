@@ -15,12 +15,12 @@ import mpi.imglib.image.ImageFactory;
 import mpi.imglib.outside.OutsideStrategyValueFactory;
 import mpi.imglib.type.NumericType;
 import mpi.imglib.type.numeric.ComplexFloatType;
-import mpi.imglib.type.numeric.FloatType;
 
-public class FourierConvolution implements MultiThreaded, OutputAlgorithm<FloatType>, Benchmark
+public class FourierConvolution<T extends NumericType<T>, S extends NumericType<S>> implements MultiThreaded, OutputAlgorithm<T>, Benchmark
 {
 	final int numDimensions;
-	Image<FloatType> kernel, image, convolved;
+	Image<T> image, convolved;
+	Image<S> kernel;
 	Image<ComplexFloatType> kernelFFT; 
 	
 	final int[] kernelDim;
@@ -29,7 +29,7 @@ public class FourierConvolution implements MultiThreaded, OutputAlgorithm<FloatT
 	int numThreads;
 	long processingTime;
 
-	public FourierConvolution( final Image<FloatType> image, final Image<FloatType> kernel )
+	public FourierConvolution( final Image<T> image, final Image<S> kernel )
 	{
 		this.numDimensions = image.getNumDimensions();
 				
@@ -41,7 +41,7 @@ public class FourierConvolution implements MultiThreaded, OutputAlgorithm<FloatT
 		setNumThreads();
 	}
 	
-	public boolean replaceImage( final Image<FloatType> image )
+	public boolean replaceImage( final Image<T> image )
 	{
 		if ( !image.getContainer().compareStorageContainerCompatibility( this.image.getContainer() ))
 		{
@@ -54,7 +54,7 @@ public class FourierConvolution implements MultiThreaded, OutputAlgorithm<FloatT
 			return true;
 		}
 	}
-
+	
 	final public static <T extends NumericType<T>> Image<T> getGaussianKernel( final ImageFactory<T> imgFactory, final double sigma, final int numDimensions )
 	{
 		final double[ ] sigmas = new double[ numDimensions ];
@@ -105,7 +105,7 @@ public class FourierConvolution implements MultiThreaded, OutputAlgorithm<FloatT
 		//
 		// compute fft of the input image
 		//
-		final FourierTransform fftImage = new FourierTransform( image );
+		final FourierTransform<T> fftImage = new FourierTransform<T>( image );
 		fftImage.setNumThreads( this.getNumThreads() );
 		
 		// we simply mirror
@@ -141,11 +141,13 @@ public class FourierConvolution implements MultiThreaded, OutputAlgorithm<FloatT
 		// instaniate real valued kernel template
 		// which is of the same container type as the image
 		// so that the computation is easy
-		final Image<FloatType> kernelTemplate = image.createNewImage( kernelTemplateDim );					
+		final ImageFactory<S> kernelTemplateFactory = new ImageFactory<S>( kernel.createType(), image.getContainer().getFactory() );
+		final Image<S> kernelTemplate = kernelTemplateFactory.createImage( kernelTemplateDim );
+		//final Image<S> kernelTemplate = image.createNewImage( kernelTemplateDim );					
 		
 		// copy the kernel into the kernelTemplate
-		final LocalizableCursor<FloatType> kernelCursor = kernel.createLocalizableCursor();
-		final LocalizableByDimCursor<FloatType> kernelTemplateCursor = kernelTemplate.createLocalizableByDimCursor();
+		final LocalizableCursor<S> kernelCursor = kernel.createLocalizableCursor();
+		final LocalizableByDimCursor<S> kernelTemplateCursor = kernelTemplate.createLocalizableByDimCursor();
 		
 		final int[] position = new int[ numDimensions ];
 		while ( kernelCursor.hasNext() )
@@ -171,7 +173,7 @@ public class FourierConvolution implements MultiThreaded, OutputAlgorithm<FloatT
 		// 
 		// compute FFT of kernel
 		//
-		final FourierTransform fftKernel = new FourierTransform( kernelTemplate );
+		final FourierTransform<S> fftKernel = new FourierTransform<S>( kernelTemplate );
 		fftKernel.setNumThreads( this.getNumThreads() );
 		
 		fftKernel.setPreProcessing( PreProcessing.None );		
@@ -205,7 +207,7 @@ public class FourierConvolution implements MultiThreaded, OutputAlgorithm<FloatT
 		//
 		// Compute inverse Fourier Transform
 		//		
-		final InverseFourierTransform invFFT = new InverseFourierTransform( imgFFT, fftImage );
+		final InverseFourierTransform<T> invFFT = new InverseFourierTransform<T>( imgFFT, fftImage );
 		invFFT.setInPlaceTransform( true );
 		invFFT.setNumThreads( this.getNumThreads() );
 
@@ -236,7 +238,7 @@ public class FourierConvolution implements MultiThreaded, OutputAlgorithm<FloatT
 	public int getNumThreads() { return numThreads; }	
 
 	@Override
-	public Image<FloatType> getResult() { return convolved; }
+	public Image<T> getResult() { return convolved; }
 
 	@Override
 	public boolean checkInput() 

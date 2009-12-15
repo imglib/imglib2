@@ -30,6 +30,7 @@ import mpi.imglib.algorithm.fft.FFTFunctions;
 import mpi.imglib.algorithm.fft.FourierConvolution;
 import mpi.imglib.algorithm.fft.FourierTransform;
 import mpi.imglib.algorithm.fft.InverseFourierTransform;
+import mpi.imglib.algorithm.fft.PhaseCorrelation;
 import mpi.imglib.algorithm.fft.FourierTransform.PreProcessing;
 import mpi.imglib.algorithm.fft.FourierTransform.Rearrangement;
 import mpi.imglib.algorithm.gauss.DownSample;
@@ -59,6 +60,7 @@ import mpi.imglib.interpolation.InterpolatorFactory;
 import mpi.imglib.interpolation.LinearInterpolatorFactory;
 import mpi.imglib.interpolation.NearestNeighborInterpolatorFactory;
 import mpi.imglib.io.LOCI;
+import mpi.imglib.outside.OutsideStrategyCircleFactory;
 import mpi.imglib.outside.OutsideStrategyFactory;
 import mpi.imglib.outside.OutsideStrategyMirrorExpWindowingFactory;
 import mpi.imglib.outside.OutsideStrategyMirrorFactory;
@@ -94,23 +96,36 @@ public class Test
 		//Image<FloatType> image = LOCI.openLOCIFloatType("D:/Documents and Settings/Stephan/Desktop/ls-1 f5-01-1 3500x-1.tif", new ArrayContainerFactory());
 		//Image<FloatType> image = LOCI.openLOCIFloatType("F:/Stephan/OldMonster/Stephan/Stitching/Truman/73.tif", new ArrayContainerFactory());				
 			
-		Image<FloatType> image = LOCI.openLOCIFloatType("D:/Documents and Settings/Stephan/My Documents/My Pictures/rockface.tif", new ArrayContainerFactory());
+		Image<FloatType> image = LOCI.openLOCIFloatType("D:/Documents and Settings/Stephan/My Documents/My Pictures/rockface_odd.tif", new ArrayContainerFactory());
+
+		image.getDisplay().setMinMax();
+		ImageJFunctions.copyToImagePlus( image ).show();
+
+		/*
+		Image<FloatType> image1 = LOCI.openLOCIFloatType("D:/Documents and Settings/Stephan/My Documents/My Pictures/rockface_odd-1.tif", new ArrayContainerFactory());
+		Image<FloatType> image2 = LOCI.openLOCIFloatType("D:/Documents and Settings/Stephan/My Documents/My Pictures/rockface_odd-2.tif", new ArrayContainerFactory());
+
 		
-		testDownSampling( image );
-				
+		image1.getDisplay().setMinMax();
+		ImageJFunctions.copyToImagePlus( image1 ).show();
+
+		image2.getDisplay().setMinMax();
+		ImageJFunctions.copyToImagePlus( image2 ).show();
+
+		testPhaseCorrelation( image1, image2 );
+		*/
+		
 		//ImageFactory<FloatType> f = new ImageFactory<FloatType>( new FloatType(), new ArrayContainerFactory() );
 		//Image<FloatType> image = f.createImage( new int[]{ 24, 24 } );		
 		//fillUp( image );
 		
-		image.getDisplay().setMinMax();
-		ImageJFunctions.copyToImagePlus( image ).show();
-
 		//testCanvas( image, 3f, 0.25f, 10f );
 		//testFFT( image );
 		//testFFTConvolution( image );				
-		//testFFTConvolutionLoop();
-		
+		testFFTConvolutionLoop();		
 		//testFFTConvolutionAlg( image );
+		//testDownSampling( image );
+
 		
 		if ( true )
 			return;
@@ -136,6 +151,17 @@ public class Test
 		ImageJFunctions.displayAsVirtualStack( img, ImageJFunctions.COLOR_RGB, new int[]{ 0, 1, 2} ).show();
 		
 		genericProcessing( img );
+	}
+	
+	public void testPhaseCorrelation( final Image<FloatType> image1, final Image<FloatType> image2 )	
+	{
+		PhaseCorrelation pc = new PhaseCorrelation( image1, image2 );
+		
+		if ( !pc.checkInput() || !pc.process() )
+		{
+			System.out.println( "Phase Correlation failed: " + pc.getErrorMessage() );
+			return;
+		}
 	}
 	
 	public <T extends NumericType<T>> void testDownSampling( final Image<T> img )
@@ -164,7 +190,7 @@ public class Test
 		kernel.getDisplay().setMinMax();
 		ImageJFunctions.displayAsVirtualStack( kernel ).show();		
 		
-		FourierConvolution fftConv = new FourierConvolution( img, kernel );
+		FourierConvolution<FloatType, FloatType> fftConv = new FourierConvolution<FloatType, FloatType>( img, kernel );
 		fftConv.setNumThreads();
 		
 		if ( !fftConv.checkInput() || !fftConv.process() )
@@ -343,7 +369,7 @@ public class Test
 	
 	public void testFFT( final Image<FloatType> img )
 	{
-		final FourierTransform fft = new FourierTransform( img );
+		final FourierTransform<FloatType> fft = new FourierTransform<FloatType>( img );
 		fft.setNumThreads( 2 );
 		fft.setPreProcessing( PreProcessing.None );
 		fft.setRearrangement( Rearrangement.Unchanged );
@@ -370,7 +396,7 @@ public class Test
 			fftImage = null;
 		}
 				
-		final InverseFourierTransform invfft = new InverseFourierTransform( fftImage, fft );
+		final InverseFourierTransform<FloatType> invfft = new InverseFourierTransform<FloatType>( fftImage, fft );
 		//invfft.setCropBackToOriginalSize( false );
 		
 		if ( invfft.checkInput() && invfft.process() )
@@ -391,8 +417,9 @@ public class Test
 		for ( int d = 0; d < img.getNumDimensions(); ++d )
 			newSize[ d ] = MathLib.round( img.getDimension( d ) * factor );
 		
-		final CanvasImage<T> canvas = new CanvasImage<T>( img, newSize, new OutsideStrategyMirrorExpWindowingFactory<T>( fadingRange ) );
+		//final CanvasImage<T> canvas = new CanvasImage<T>( img, newSize, new OutsideStrategyMirrorExpWindowingFactory<T>( fadingRange ) );
 		//final CanvasImage<T> canvas = new CanvasImage<T>( img, newSize, new OutsideStrategyMirrorFactory<T>() );
+		final CanvasImage<T> canvas = new CanvasImage<T>( img, newSize, new OutsideStrategyCircleFactory<T>() );
 		
 		if ( canvas.checkInput() && canvas.process() )
 		{

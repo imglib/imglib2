@@ -12,14 +12,15 @@ import mpi.imglib.image.Image;
 import mpi.imglib.image.ImageFactory;
 import mpi.imglib.multithreading.SimpleMultiThreading;
 import mpi.imglib.outside.OutsideStrategyFactory;
+import mpi.imglib.type.NumericType;
 import mpi.imglib.type.Type;
 import mpi.imglib.type.label.FakeType;
 import mpi.imglib.type.numeric.ComplexFloatType;
-import mpi.imglib.type.numeric.FloatType;
 
 final public class FFTFunctions 
 {
-	final public static Image<FloatType> computeInverseFFT( final Image<ComplexFloatType> complex, final int numThreads, 
+	final public static <T extends NumericType<T>> Image<T> computeInverseFFT( final Image<ComplexFloatType> complex, final T type,  
+	                                                        final int numThreads, 
 	                                                        final boolean scale, final boolean cropBack,
 	                                                        final int[] originalSize, final int[] originalOffset )
 	{
@@ -38,8 +39,8 @@ final public class FFTFunctions
 		dimensionsReal[ 0 ] = nfft;
 		
 		// create the output image
-		final ImageFactory<FloatType> imgFactory = new ImageFactory<FloatType>( new FloatType(), complex.getStorageFactory() );
-		final Image<FloatType> realImage;
+		final ImageFactory<T> imgFactory = new ImageFactory<T>( type, complex.getStorageFactory() );
+		final Image<T> realImage;
 		
 		if ( cropBack )
 			realImage = imgFactory.createImage( originalSize );
@@ -180,7 +181,7 @@ final public class FFTFunctions
 					}
 					
 					final LocalizableByDimCursor<ComplexFloatType> cursor = complex.createLocalizableByDimCursor(); 
-					final LocalizableByDimCursor<FloatType> cursorOut = realImage.createLocalizableByDimCursor(); 
+					final LocalizableByDimCursor<T> cursorOut = realImage.createLocalizableByDimCursor(); 
 					
 					if ( numDimensions > 1 )
 					{
@@ -251,13 +252,13 @@ A:						while( cursorDim.hasNext() )
 								if ( scale )
 									for ( int x = cropX1; x < cropX2; ++x )
 									{
-										cursorOut.getType().set( tempOut[ x ] / realSize );
+										cursorOut.getType().setReal( tempOut[ x ] / realSize );
 										cursorOut.fwd( 0 );
 									}
 								else
 									for ( int x = cropX1; x < cropX2; ++x )
 									{
-										cursorOut.getType().set( tempOut[ x ] );
+										cursorOut.getType().setReal( tempOut[ x ] );
 										cursorOut.fwd( 0 );
 									}
 							}
@@ -295,13 +296,13 @@ A:						while( cursorDim.hasNext() )
 							if ( scale )
 								for ( int x = cropX1; x < cropX2; ++x )
 								{
-									cursorOut.getType().set( tempOut[ x ] / realSize );
+									cursorOut.getType().setReal( tempOut[ x ] / realSize );
 									cursorOut.fwd( 0 );
 								}
 							else
 								for ( int x = cropX1; x < cropX2; ++x )
 								{
-									cursorOut.getType().set( tempOut[ x ] );
+									cursorOut.getType().setReal( tempOut[ x ] );
 									cursorOut.fwd( 0 );
 								}
 						}
@@ -316,7 +317,7 @@ A:						while( cursorDim.hasNext() )
 		return realImage;
 	}
 	
-	final public static Image<ComplexFloatType> computeFFT( final Image<FloatType> img, final OutsideStrategyFactory<FloatType> outsideFactory,
+	final public static <T extends NumericType<T>> Image<ComplexFloatType> computeFFT( final Image<T> img, final OutsideStrategyFactory<T> outsideFactory,
 	                                                        final int[] imageOffset, final int[] imageSize,
 	                                                        final int numThreads, final boolean scale )
 	{
@@ -353,7 +354,7 @@ A:						while( cursorDim.hasNext() )
 					final float[] tempIn = new float[ realSize ];				
 					final FftReal fft = new FftReal( realSize );
 					
-					final LocalizableByDimCursor<FloatType> cursor = img.createLocalizableByDimCursor( outsideFactory );
+					final LocalizableByDimCursor<T> cursor = img.createLocalizableByDimCursor( outsideFactory );
 					final LocalizableByDimCursor<ComplexFloatType> cursorOut = fftImage.createLocalizableByDimCursor(); 
 					
 					if ( numDimensions > 1 )
@@ -398,7 +399,7 @@ A:						while( cursorDim.hasNext() )
 								// fill the input array with image data
 								for ( int x = 0; x < realSize; ++x )
 								{
-									tempIn[ x ] = cursor.getType().get();									
+									tempIn[ x ] = cursor.getType().getReal();									
 									cursor.fwd( 0 );
 								}
 																
@@ -439,7 +440,7 @@ A:						while( cursorDim.hasNext() )
 							// get the input data
 							for ( int x = 0; x < realSize; ++x )
 							{
-								tempIn[ x ] = cursor.getType().get();
+								tempIn[ x ] = cursor.getType().getReal();
 								cursor.fwd( 0 );
 							}
 							

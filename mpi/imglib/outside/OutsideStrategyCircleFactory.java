@@ -14,25 +14,17 @@
  *
  * @author Stephan Preibisch & Stephan Saalfeld
  */
+package mpi.imglib.outside;
 
-package mpi.imglib.type;
+import mpi.imglib.cursor.LocalizableCursor;
+import mpi.imglib.type.Type;
 
-public interface NumericType<T extends NumericType<T>> extends ComparableType<T>
+public class OutsideStrategyCircleFactory<T extends Type<T>> extends OutsideStrategyFactory<T>
 {
-	public void mul( float c );
-	public void mul( double c );
-	
-	public void add( T c );
-	public void sub( T c );
-	public void mul( T c );
-	public void div( T c );
-	
-	public float getReal();
-	public void setReal( float f );
-	
-	public void inc();
-	public void dec();
-	
-	public void setZero();
-	public void setOne();
+	@Override
+	public OutsideStrategyCircle<T> createStrategy( final LocalizableCursor<T> cursor )
+	{
+		return new OutsideStrategyCircle<T>( cursor );
+	}
+
 }

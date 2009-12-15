@@ -16,6 +16,7 @@
  */
 package mpi.imglib.type.numeric;
 
+import mpi.imglib.algorithm.math.MathLib;
 import mpi.imglib.container.Container;
 import mpi.imglib.container.ContainerFactory;
 import mpi.imglib.container.basictypecontainer.IntContainer;
@@ -74,6 +75,8 @@ public class IntType extends TypeImpl<IntType> implements NumericType<IntType>
 
 	public int get() { return v[ i ]; }
 	public void set( final int f ) { v[ i ] = f; }
+	public float getReal() { return v[ i ]; }
+	public void setReal( final float f ) { v[ i ] = MathLib.round( f ); }
 
 	@Override
 	public void add( final IntType c ) { v[ i ] += c.get(); }

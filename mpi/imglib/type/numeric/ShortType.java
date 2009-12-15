@@ -16,6 +16,7 @@
  */
 package mpi.imglib.type.numeric;
 
+import mpi.imglib.algorithm.math.MathLib;
 import mpi.imglib.container.Container;
 import mpi.imglib.container.ContainerFactory;
 import mpi.imglib.container.basictypecontainer.ShortContainer;
@@ -74,6 +75,8 @@ public class ShortType extends TypeImpl<ShortType> implements NumericType<ShortT
 
 	public short get() { return v[ i ]; }
 	public void set( final short f ) { v[ i ] = f; }
+	public float getReal() { return v[ i ]; }
+	public void setReal( final float f ) { v[ i ] = (short)MathLib.round( f ); }
 
 	@Override
 	public void add( final ShortType c ) { v[ i ] += c.get(); }

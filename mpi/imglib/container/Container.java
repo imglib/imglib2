@@ -46,7 +46,7 @@ public interface Container<T extends Type<T>>
 	public int getNumEntities();
 	public int getNumEntitiesPerPixel();
 		
-	public boolean compareStorageContainerDimensions( final Container<T> img );
-	public boolean compareStorageContainerCompatibility( final Container<T> img );
+	public boolean compareStorageContainerDimensions( final Container<?> img );
+	public boolean compareStorageContainerCompatibility( final Container<?> img );
 
 }

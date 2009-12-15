@@ -152,9 +152,24 @@ public class ComplexFloatType extends TypeImpl<ComplexFloatType> implements Nume
 		v[ complexI ] = ( b1*c1 - a1*d1 ) / ( c1*c1 + d1*d1 );
 	}
 	
-	public void complexConjugate()
+	public void complexConjugate() { v[ complexI ] = -v[ complexI ]; }
+
+	public void normalizeLength( final float threshold )
 	{
-		v[ complexI ] = -v[ complexI ];
+		final float real = v[ realI ];
+		final float complex = v[ complexI ];
+		
+		final float length = (float)Math.sqrt( real*real + complex*complex );
+		
+		if ( length < threshold )
+		{
+			v[ realI ] = v[ complexI ] = 0;
+		}
+		else
+		{
+			v[ realI ] /= length;
+			v[ complexI ] /= length;
+		}
 	}
 	
 	public void switchRealComplex()
