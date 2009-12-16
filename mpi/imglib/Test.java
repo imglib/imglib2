@@ -160,8 +160,6 @@ public class Test
 	{
 		final int[] size = new int[]{ 2*image.getDimension( 0 )/3 + 1, 2*image.getDimension( 1 )/3 };
 		
-		
-		// 31, 18
 		for ( int x = 0; x < 10; ++x )
 			for ( int y = 0; y < 10; ++y )
 			{

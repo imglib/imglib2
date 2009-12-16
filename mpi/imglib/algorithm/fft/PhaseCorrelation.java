@@ -102,16 +102,6 @@ public class PhaseCorrelation<T extends NumericType<T>, S extends NumericType<S>
 				
 		final Image<ComplexFloatType> fftImage1 = fft1.getResult();
 		final Image<ComplexFloatType> fftImage2 = fft2.getResult();
-				
-		/*
-		final InverseFourierTransform<T> i1 = new InverseFourierTransform<T>( fftImage1, fft1 );
-		final InverseFourierTransform<S> i2 = new InverseFourierTransform<S>( fftImage2, fft2 );
-		i1.setCropBackToOriginalSize( false );
-		i2.setCropBackToOriginalSize( false );
-		i1.process(); i2.process();		
-		ImageJFunctions.copyToImagePlus( i1.getResult() ).show();
-		ImageJFunctions.copyToImagePlus( i2.getResult() ).show();
-		*/
 		
 		//
 		// normalize and compute complex conjugate of fftImage2
@@ -152,7 +142,6 @@ public class PhaseCorrelation<T extends NumericType<T>, S extends NumericType<S>
 		// extract the peaks
 		//
 		phaseCorrelationPeaks = extractPhaseCorrelationPeaks( invPCM, numPeaks, fft1, fft2 );
-		phaseCorrelationPeaks.get(0);
 		
 		return true;
 	}
