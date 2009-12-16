@@ -1,5 +1,6 @@
 package mpi.imglib.algorithm.fft;
 
+import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import mpi.imglib.algorithm.Algorithm;
@@ -8,6 +9,7 @@ import mpi.imglib.algorithm.MultiThreaded;
 import mpi.imglib.algorithm.fft.FourierTransform.Rearrangement;
 import mpi.imglib.algorithm.math.MathLib;
 import mpi.imglib.cursor.Cursor;
+import mpi.imglib.cursor.LocalizableByDimCursor;
 import mpi.imglib.image.Image;
 import mpi.imglib.image.display.imagej.ImageJFunctions;
 import mpi.imglib.multithreading.SimpleMultiThreading;
@@ -90,6 +92,7 @@ public class PhaseCorrelation<T extends NumericType<T>, S extends NumericType<S>
 		// invert fftImage1
 		final InverseFourierTransform<FloatType> invFFT = new InverseFourierTransform<FloatType>( fftImage1, fft1, new FloatType() );
 		invFFT.setInPlaceTransform( true );
+		invFFT.setCropBackToOriginalSize( false );
 		
 		if ( !invFFT.checkInput() || !invFFT.process() )
 		{
@@ -105,7 +108,16 @@ public class PhaseCorrelation<T extends NumericType<T>, S extends NumericType<S>
 		invPCM.getDisplay().setMinMax();
 		ImageJFunctions.copyToImagePlus( invPCM ).show();
 		
+		// extract the peaks
+		
+		
 		return true;
+	}
+	
+	protected ArrayList<PhaseCorrelationPeak> extractPhaseCorrelationPeaks( final Image<FloatType> invPCM )
+	{
+		//final LocalizableByDimCursor<Type<T>>
+		return null;
 	}
 	
 	protected static int[] getMaxDim( final Image<?> image1, final Image<?> image2 )

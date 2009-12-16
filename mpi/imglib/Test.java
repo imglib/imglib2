@@ -101,9 +101,9 @@ public class Test
 		image.getDisplay().setMinMax();
 		ImageJFunctions.copyToImagePlus( image ).show();
 
-		/*
+		
 		Image<FloatType> image1 = LOCI.openLOCIFloatType("D:/Documents and Settings/Stephan/My Documents/My Pictures/rockface_odd-1.tif", new ArrayContainerFactory());
-		Image<FloatType> image2 = LOCI.openLOCIFloatType("D:/Documents and Settings/Stephan/My Documents/My Pictures/rockface_odd-2.tif", new ArrayContainerFactory());
+		Image<FloatType> image2 = LOCI.openLOCIFloatType("D:/Documents and Settings/Stephan/My Documents/My Pictures/rockface_odd-1020.tif", new ArrayContainerFactory());
 
 		
 		image1.getDisplay().setMinMax();
@@ -113,7 +113,6 @@ public class Test
 		ImageJFunctions.copyToImagePlus( image2 ).show();
 
 		testPhaseCorrelation( image1, image2 );
-		*/
 		
 		//ImageFactory<FloatType> f = new ImageFactory<FloatType>( new FloatType(), new ArrayContainerFactory() );
 		//Image<FloatType> image = f.createImage( new int[]{ 24, 24 } );		
@@ -122,7 +121,7 @@ public class Test
 		//testCanvas( image, 3f, 0.25f, 10f );
 		//testFFT( image );
 		//testFFTConvolution( image );				
-		testFFTConvolutionLoop();		
+		//testFFTConvolutionLoop();		
 		//testFFTConvolutionAlg( image );
 		//testDownSampling( image );
 
@@ -155,7 +154,7 @@ public class Test
 	
 	public void testPhaseCorrelation( final Image<FloatType> image1, final Image<FloatType> image2 )	
 	{
-		PhaseCorrelation pc = new PhaseCorrelation( image1, image2 );
+		PhaseCorrelation<FloatType, FloatType> pc = new PhaseCorrelation<FloatType, FloatType>( image1, image2 );
 		
 		if ( !pc.checkInput() || !pc.process() )
 		{
