@@ -112,5 +112,5 @@ public class ImagePlusLocalizableCursor<T extends Type<T>> extends ImagePlusCurs
 	}
 	
 	@Override
-	public String toString() { return getPositionAsString() + " = " + type; }
+	public String toString() { return getPositionAsString() + " = " + getType(); }
 }

@@ -109,5 +109,5 @@ public class ArrayLocalizableCursor<T extends Type<T>> extends ArrayCursor<T> im
 	}
 	
 	@Override
-	public String toString() { return getPositionAsString() + " = " + type; }
+	public String toString() { return getPositionAsString() + " = " + getType(); }
 }

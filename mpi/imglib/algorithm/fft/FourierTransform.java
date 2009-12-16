@@ -32,7 +32,7 @@ public class FourierTransform<T extends NumericType<T>> implements MultiThreaded
 	float relativeFadeOutDistance;
 	int minExtension;
 	OutsideStrategyFactory<T> strategy;
-	int[] originalSize, originalOffset, extendedSize;
+	int[] originalSize, originalOffset, extendedSize, extendedZeroPaddedSize;
 	
 	// if you want the image to be extended more use that
 	int[] inputSize = null, inputSizeOffset = null;
@@ -48,6 +48,7 @@ public class FourierTransform<T extends NumericType<T>> implements MultiThreaded
 		this.img = image;
 		this.numDimensions = img.getNumDimensions();
 		this.extendedSize = new int[ numDimensions ];
+		this.extendedZeroPaddedSize = new int[ numDimensions ];
 		this.imageExtension = new int[ numDimensions ];
 			
 		setPreProcessing( preProcessing );
@@ -191,29 +192,29 @@ public class FourierTransform<T extends NumericType<T>> implements MultiThreaded
 					errorMessage = "Custom OutsideStrategyFactory is null, cannot use custom strategy";
 					return false;
 				}				
-				extendedSize = getZeroPaddingSize( getExtendedImageSize( img, imageExtension ), fftOptimization );
+				extendedZeroPaddedSize = getZeroPaddingSize( getExtendedImageSize( img, imageExtension ), fftOptimization );
 				outsideFactory = strategy;				
 				break;
 			}
 			case ExtendMirror:
 			{	
-				extendedSize = getZeroPaddingSize( getExtendedImageSize( img, imageExtension ), fftOptimization );
+				extendedZeroPaddedSize = getZeroPaddingSize( getExtendedImageSize( img, imageExtension ), fftOptimization );
 				outsideFactory = new OutsideStrategyMirrorFactory<T>();
 				break;
 				
 			}			
 			case ExtendMirrorFading:
 			{
-				extendedSize = getZeroPaddingSize( getExtendedImageSize( img, imageExtension ), fftOptimization );
+				extendedZeroPaddedSize = getZeroPaddingSize( getExtendedImageSize( img, imageExtension ), fftOptimization );
 				outsideFactory = new OutsideStrategyMirrorExpWindowingFactory<T>( relativeFadeOutDistance );				
 				break;
 			}			
 			default: // or NONE
 			{
 				if ( inputSize == null )
-					extendedSize = getZeroPaddingSize( img.getDimensions(), fftOptimization );
+					extendedZeroPaddedSize = getZeroPaddingSize( img.getDimensions(), fftOptimization );
 				else
-					extendedSize = getZeroPaddingSize( inputSize, fftOptimization );
+					extendedZeroPaddedSize = getZeroPaddingSize( inputSize, fftOptimization );
 				
 				outsideFactory = new OutsideStrategyValueFactory<T>( img.createType() );
 				break;
@@ -224,13 +225,13 @@ public class FourierTransform<T extends NumericType<T>> implements MultiThreaded
 		for ( int d = 0; d < numDimensions; ++d )
 		{
 			if ( inputSize != null )
-				inputSizeOffset[ d ] = ( extendedSize[ d ] - inputSize[ d ] ) / 2;
+				inputSizeOffset[ d ] = ( extendedZeroPaddedSize[ d ] - inputSize[ d ] ) / 2;
 			
-			originalOffset[ d ] = ( extendedSize[ d ] - img.getDimension( d ) ) / 2;			
+			originalOffset[ d ] = ( extendedZeroPaddedSize[ d ] - img.getDimension( d ) ) / 2;			
 		}
 		
 		
-		fftImage = FFTFunctions.computeFFT( img, outsideFactory, originalOffset, extendedSize, getNumThreads(), false );
+		fftImage = FFTFunctions.computeFFT( img, outsideFactory, originalOffset, extendedZeroPaddedSize, getNumThreads(), false );
 		
 		if ( fftImage == null )
 		{

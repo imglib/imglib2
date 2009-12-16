@@ -172,5 +172,5 @@ public class CubeLocalizableCursor<T extends Type<T>> extends CubeCursor<T> impl
 	}
 	
 	@Override
-	public String toString() { return getPositionAsString() + " = " + type; }	
+	public String toString() { return getPositionAsString() + " = " + getType(); }	
 }

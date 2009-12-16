@@ -60,6 +60,7 @@ import mpi.imglib.interpolation.InterpolatorFactory;
 import mpi.imglib.interpolation.LinearInterpolatorFactory;
 import mpi.imglib.interpolation.NearestNeighborInterpolatorFactory;
 import mpi.imglib.io.LOCI;
+import mpi.imglib.multithreading.SimpleMultiThreading;
 import mpi.imglib.outside.OutsideStrategyPeriodicFactory;
 import mpi.imglib.outside.OutsideStrategyFactory;
 import mpi.imglib.outside.OutsideStrategyMirrorExpWindowingFactory;
@@ -96,23 +97,26 @@ public class Test
 		//Image<FloatType> image = LOCI.openLOCIFloatType("D:/Documents and Settings/Stephan/Desktop/ls-1 f5-01-1 3500x-1.tif", new ArrayContainerFactory());
 		//Image<FloatType> image = LOCI.openLOCIFloatType("F:/Stephan/OldMonster/Stephan/Stitching/Truman/73.tif", new ArrayContainerFactory());				
 			
-		Image<FloatType> image = LOCI.openLOCIFloatType("D:/Documents and Settings/Stephan/My Documents/My Pictures/rockface_odd.tif", new ArrayContainerFactory());
+		Image<FloatType> image = LOCI.openLOCIFloatType("D:/Documents and Settings/Stephan/My Documents/My Pictures/rockface_odd-1.tif", new ArrayContainerFactory());
 
 		image.getDisplay().setMinMax();
 		ImageJFunctions.copyToImagePlus( image ).show();
 
+		/*
 		
 		Image<FloatType> image1 = LOCI.openLOCIFloatType("D:/Documents and Settings/Stephan/My Documents/My Pictures/rockface_odd-1.tif", new ArrayContainerFactory());
 		Image<FloatType> image2 = LOCI.openLOCIFloatType("D:/Documents and Settings/Stephan/My Documents/My Pictures/rockface_odd-1020.tif", new ArrayContainerFactory());
-
+		
 		
 		image1.getDisplay().setMinMax();
 		ImageJFunctions.copyToImagePlus( image1 ).show();
 
 		image2.getDisplay().setMinMax();
 		ImageJFunctions.copyToImagePlus( image2 ).show();
-
-		testPhaseCorrelation( image1, image2 );
+		*/
+		
+		testPhaseCorrelation( image );
+		//testPhaseCorrelation( image1, image2 );
 		
 		//ImageFactory<FloatType> f = new ImageFactory<FloatType>( new FloatType(), new ArrayContainerFactory() );
 		//Image<FloatType> image = f.createImage( new int[]{ 24, 24 } );		
@@ -150,6 +154,40 @@ public class Test
 		ImageJFunctions.displayAsVirtualStack( img, ImageJFunctions.COLOR_RGB, new int[]{ 0, 1, 2} ).show();
 		
 		genericProcessing( img );
+	}
+	
+	public void testPhaseCorrelation( final Image<FloatType> image )
+	{
+		final int[] size = new int[]{ 2*image.getDimension( 0 )/3 + 1, 2*image.getDimension( 1 )/3 };
+		
+		
+		// 31, 18
+		for ( int x = 0; x < 10; ++x )
+			for ( int y = 0; y < 10; ++y )
+			{
+				final int[] offset = new int[]{ x, y };
+				final CanvasImage<FloatType> cropping = new CanvasImage<FloatType>( image, size, offset, new OutsideStrategyValueFactory<FloatType>()  );
+				
+				cropping.process();
+				
+				final Image<FloatType> crop = cropping.getResult();
+
+				//crop.getDisplay().setMinMax();
+				//crop.setName("crop");
+				//ImageJFunctions.copyToImagePlus( crop ).show();
+
+				final PhaseCorrelation<FloatType, FloatType> pcm = new PhaseCorrelation<FloatType, FloatType>( image, crop );
+				pcm.process();
+				
+				final int[] shift = pcm.getShift().getPosition();
+				
+				if ( shift[ 0 ] == offset[ 0 ] && shift[ 1 ] == offset[ 1 ])
+					System.out.println( "Works - " + MathLib.printCoordinates( offset ));
+				else
+					System.out.println( "FAIL - " + MathLib.printCoordinates( offset ) + " != " + MathLib.printCoordinates( shift ) );
+				
+				//SimpleMultiThreading.threadHaltUnClean();
+			}
 	}
 	
 	public void testPhaseCorrelation( final Image<FloatType> image1, final Image<FloatType> image2 )	

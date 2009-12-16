@@ -1,6 +1,7 @@
 package mpi.imglib.algorithm.fft;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import mpi.imglib.algorithm.Algorithm;
@@ -10,9 +11,11 @@ import mpi.imglib.algorithm.fft.FourierTransform.Rearrangement;
 import mpi.imglib.algorithm.math.MathLib;
 import mpi.imglib.cursor.Cursor;
 import mpi.imglib.cursor.LocalizableByDimCursor;
+import mpi.imglib.cursor.special.LocalNeighborhoodCursor;
 import mpi.imglib.image.Image;
 import mpi.imglib.image.display.imagej.ImageJFunctions;
 import mpi.imglib.multithreading.SimpleMultiThreading;
+import mpi.imglib.outside.OutsideStrategyPeriodicFactory;
 import mpi.imglib.type.NumericType;
 import mpi.imglib.type.numeric.ComplexFloatType;
 import mpi.imglib.type.numeric.FloatType;
@@ -23,25 +26,40 @@ public class PhaseCorrelation<T extends NumericType<T>, S extends NumericType<S>
 	boolean computeFFTinParalell = true;
 	Image<T> image1;
 	Image<S> image2;
+	int numPeaks;
+	float normalizationThreshold;
+	ArrayList<PhaseCorrelationPeak> phaseCorrelationPeaks;
 
 	String errorMessage = "";
 	int numThreads;
 	long processingTime;
 
-	public PhaseCorrelation( final Image<T> image1, final Image<S> image2 )
+	public PhaseCorrelation( final Image<T> image1, final Image<S> image2, final int numPeaks )
 	{
 		this.image1 = image1;
 		this.image2 = image2;
+		this.numPeaks = numPeaks;
 
 		this.numDimensions = image1.getNumDimensions();
+		this.normalizationThreshold = 1E-5f;
 	
 		setNumThreads();
 		processingTime = -1;
 	}
 	
+	public PhaseCorrelation( final Image<T> image1, final Image<S> image2 )
+	{
+		this( image1, image2, 5 );
+	}
+	
 	public void setComputeFFTinParalell( final boolean computeFFTinParalell ) { this.computeFFTinParalell = computeFFTinParalell; }
+	public void setInvestigateNumPeaks( final int numPeaks ) { this.numPeaks = numPeaks; }
+	public void setNormalizationThreshold( final int normalizationThreshold ) { this.normalizationThreshold = normalizationThreshold; }
 	
 	public boolean getComputeFFTinParalell() { return computeFFTinParalell; }
+	public int getInvestigateNumPeaks() { return numPeaks; }
+	public float getNormalizationThreshold() { return normalizationThreshold; }
+	public PhaseCorrelationPeak getShift() { return phaseCorrelationPeaks.get( phaseCorrelationPeaks.size() -1 ); }
 	
 	@Override
 	public boolean process()
@@ -73,23 +91,41 @@ public class PhaseCorrelation<T extends NumericType<T>, S extends NumericType<S>
 			return false;
 		}
 		
+		//
 		// compute the fft's
+		//
 		if ( !computeFFT( fft1, fft2 ) )
 		{
 			errorMessage = "Fourier Transform of failed: fft1=" + fft1.getErrorMessage() + " fft2=" + fft2.getErrorMessage();
 			return false;
 		}
-		
+				
 		final Image<ComplexFloatType> fftImage1 = fft1.getResult();
 		final Image<ComplexFloatType> fftImage2 = fft2.getResult();
+				
+		/*
+		final InverseFourierTransform<T> i1 = new InverseFourierTransform<T>( fftImage1, fft1 );
+		final InverseFourierTransform<S> i2 = new InverseFourierTransform<S>( fftImage2, fft2 );
+		i1.setCropBackToOriginalSize( false );
+		i2.setCropBackToOriginalSize( false );
+		i1.process(); i2.process();		
+		ImageJFunctions.copyToImagePlus( i1.getResult() ).show();
+		ImageJFunctions.copyToImagePlus( i2.getResult() ).show();
+		*/
 		
+		//
 		// normalize and compute complex conjugate of fftImage2
+		//
 		normalizeAndConjugate( fftImage1, fftImage2 );
 		
-		// multiply fftImage1 and fftImage2
+		//
+		// multiply fftImage1 and fftImage2 which yields the phase correlation spectrum
+		//
 		multiplyInPlace( fftImage1, fftImage2 );
 		
-		// invert fftImage1
+		//
+		// invert fftImage1 which contains the phase correlation spectrum
+		//
 		final InverseFourierTransform<FloatType> invFFT = new InverseFourierTransform<FloatType>( fftImage1, fft1, new FloatType() );
 		invFFT.setInPlaceTransform( true );
 		invFFT.setCropBackToOriginalSize( false );
@@ -99,25 +135,117 @@ public class PhaseCorrelation<T extends NumericType<T>, S extends NumericType<S>
 			errorMessage = "Inverse Fourier Transform of failed: " + invFFT.getErrorMessage();
 			return false;			
 		}
-		
+
+		//
+		// close the fft images
+		//
 		fftImage1.close();
 		fftImage2.close();
 		
 		final Image<FloatType> invPCM = invFFT.getResult();
-
-		invPCM.getDisplay().setMinMax();
-		ImageJFunctions.copyToImagePlus( invPCM ).show();
 		
+		//invPCM.getDisplay().setMinMax();
+		//invPCM.setName("invPCM");
+		//ImageJFunctions.copyToImagePlus( invPCM ).show();
+		
+		//
 		// extract the peaks
-		
+		//
+		phaseCorrelationPeaks = extractPhaseCorrelationPeaks( invPCM, numPeaks, fft1, fft2 );
+		phaseCorrelationPeaks.get(0);
 		
 		return true;
 	}
 	
-	protected ArrayList<PhaseCorrelationPeak> extractPhaseCorrelationPeaks( final Image<FloatType> invPCM )
+	protected ArrayList<PhaseCorrelationPeak> extractPhaseCorrelationPeaks( final Image<FloatType> invPCM, final int numPeaks,
+	                                                                        final FourierTransform<?> fft1, final FourierTransform<?> fft2 )
 	{
-		//final LocalizableByDimCursor<Type<T>>
-		return null;
+		final ArrayList<PhaseCorrelationPeak> peakList = new ArrayList<PhaseCorrelationPeak>();
+		
+		for ( int i = 0; i < numPeaks; ++i )
+			peakList.add( new PhaseCorrelationPeak( new int[ numDimensions ], Float.MIN_VALUE) );
+
+		final LocalizableByDimCursor<FloatType> cursor = invPCM.createLocalizableByDimCursor( new OutsideStrategyPeriodicFactory<FloatType>() );
+		final LocalNeighborhoodCursor<FloatType> localCursor = cursor.createLocalNeighborhoodCursor();
+				
+		final int[] originalOffset1 = fft1.getOriginalOffset();
+		final int[] originalOffset2 = fft2.getOriginalOffset();
+
+		final int[] offset = new int[ numDimensions ];
+		
+		for ( int d = 0; d < numDimensions; ++d )
+			offset[ d ] = originalOffset2[ d ] - originalOffset1[ d ];
+		
+		final int[] imgSize = invPCM.getDimensions();
+
+		while ( cursor.hasNext() )
+		{
+			cursor.fwd();
+			
+			// set the local cursor to the current position of the mother cursor
+			localCursor.update();
+			
+			// the value we are checking for if it is a maximum
+			final float value = cursor.getType().get();
+			boolean isMax = true;
+			
+			// iterate over local environment while value is still the maximum
+			while ( localCursor.hasNext() && isMax )
+			{
+				localCursor.fwd();								
+				isMax = ( cursor.getType().get() <= value );
+			}
+			
+			// reset the mothercursor and this cursor
+			localCursor.reset();
+
+			if ( isMax )
+			{
+				float lowestValue = Float.MAX_VALUE;
+				int lowestValueIndex = -1;
+				
+				for ( int i = 0; i < numPeaks; ++i )
+				{
+					final float v = peakList.get( i ).getPhaseCorrelationPeak();
+					
+					if ( v < lowestValue )
+					{
+						lowestValue = v;
+						lowestValueIndex = i;
+					}
+				}
+				
+				// if this value is bigger than the lowest entry we replace it 
+				if ( value > lowestValue )
+				{
+					// remove lowest entry
+					peakList.remove( lowestValueIndex );
+
+					// add new peak
+					final int[] position = cursor.getPosition();
+					
+					for ( int d = 0; d < numDimensions; ++d )
+					{
+						position[ d ] = ( position[ d ] + offset[ d ] ) % imgSize[ d ];
+						
+						if ( position[ d ] > imgSize[ d ] / 2 )
+							position[ d ] = imgSize[ d ] - position[ d ];
+					}
+
+					final PhaseCorrelationPeak pcp = new PhaseCorrelationPeak( position, value );
+					pcp.setOriginalInvPCMPosition( cursor.getPosition() );
+					peakList.add( pcp );
+				}
+			}			
+		}
+		
+		// sort list 
+		Collections.sort( peakList );
+		
+		//for ( PhaseCorrelationPeak p : peakList )
+		//	System.out.println( p );
+				
+		return peakList;
 	}
 	
 	protected static int[] getMaxDim( final Image<?> image1, final Image<?> image2 )
@@ -134,9 +262,6 @@ public class PhaseCorrelation<T extends NumericType<T>, S extends NumericType<S>
 	{
 		final Cursor<ComplexFloatType> cursor1 = fftImage1.createCursor();
 		final Cursor<ComplexFloatType> cursor2 = fftImage2.createCursor();
-		
-		System.out.println( MathLib.printCoordinates( fftImage1.getDimensions() ));
-		System.out.println( MathLib.printCoordinates( fftImage2.getDimensions() ));
 		
 		while ( cursor1.hasNext() )
 		{
@@ -165,15 +290,15 @@ public class PhaseCorrelation<T extends NumericType<T>, S extends NumericType<S>
 					
 					if ( numThreads == 1 )
 					{
-						normalizeComplexImage( fftImage1 );
-						normalizeAndConjugateComplexImage( fftImage2 );
+						normalizeComplexImage( fftImage1, normalizationThreshold );
+						normalizeAndConjugateComplexImage( fftImage2, normalizationThreshold );
 					}
 					else
 					{
 						if ( myNumber == 0 )
-							normalizeComplexImage( fftImage1 );
+							normalizeComplexImage( fftImage1, normalizationThreshold );
 						else
-							normalizeAndConjugateComplexImage( fftImage2 );
+							normalizeAndConjugateComplexImage( fftImage2, normalizationThreshold );
 					}
 				}
 			});
@@ -181,37 +306,35 @@ public class PhaseCorrelation<T extends NumericType<T>, S extends NumericType<S>
 		SimpleMultiThreading.startAndJoin( threads );		
 	}
 	
-	private static final void normalizeComplexImage( final Image<ComplexFloatType> fftImage )
+	private static final void normalizeComplexImage( final Image<ComplexFloatType> fftImage, final float normalizationThreshold )
 	{
 		final Cursor<ComplexFloatType> cursor = fftImage.createCursor();
-		final float threshold = 1E-5f;
-		
+
 		while ( cursor.hasNext() )
 		{
 			cursor.fwd();
-			cursor.getType().normalizeLength( threshold );
+			cursor.getType().normalizeLength( normalizationThreshold );
 		}
 				
 		cursor.close();		
 	}
 	
-	private static final void normalizeAndConjugateComplexImage( final Image<ComplexFloatType> fftImage )
+	private static final void normalizeAndConjugateComplexImage( final Image<ComplexFloatType> fftImage, final float normalizationThreshold )
 	{
 		final Cursor<ComplexFloatType> cursor = fftImage.createCursor();
-		final float threshold = 1E-5f;
 		
 		while ( cursor.hasNext() )
 		{
 			cursor.fwd();
 			
-			cursor.getType().normalizeLength( threshold );
+			cursor.getType().normalizeLength( normalizationThreshold );
 			cursor.getType().complexConjugate();
 		}
 				
 		cursor.close();		
 	}
 		
-	protected boolean computeFFT( final FourierTransform fft1, final FourierTransform fft2 )
+	protected boolean computeFFT( final FourierTransform<T> fft1, final FourierTransform<S> fft2 )
 	{
 		// use two threads in paralell if wanted
 		final int minThreads = computeFFTinParalell ? 2 : 1;
@@ -240,13 +363,11 @@ public class PhaseCorrelation<T extends NumericType<T>, S extends NumericType<S>
 					{
 						if ( myNumber == 0 )
 						{
-							System.out.println( "fft1" );
 							fft1.setNumThreads( getNumThreads() / 2 );
 							sucess[ 0 ] = fft1.process();							
 						}
 						else
 						{
-							System.out.println( "fft2" );
 							fft2.setNumThreads( getNumThreads() / 2 );
 							sucess[ 1 ] = fft2.process();														
 						}

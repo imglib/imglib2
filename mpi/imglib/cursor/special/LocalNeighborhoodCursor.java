@@ -19,7 +19,7 @@ public class LocalNeighborhoodCursor<T extends Type<T>> extends CursorImpl<T>
 	final LocalizableByDimCursor<T> cursor;
 	final int[] position, tmp;
 	final int numDimensions, centralPositionIndex;
-	boolean isActive;
+	boolean isActive, debug = false;
 	
 	public LocalNeighborhoodCursor( final LocalizableByDimCursor<T> cursor )
 	{
@@ -59,7 +59,11 @@ public class LocalNeighborhoodCursor<T extends Type<T>> extends CursorImpl<T>
 		cursor.getPosition( position );
 		this.neigborhoodCursor.reset();		
 	}
+
+	@Override
+	public T getType() { return cursor.getType(); }
 	
+	@Override
 	public void reset()
 	{
 		cursor.setPosition( position );
@@ -92,5 +96,5 @@ public class LocalNeighborhoodCursor<T extends Type<T>> extends CursorImpl<T>
 	public boolean isActive() { return cursor.isActive() && isActive; }
 
 	@Override
-	public void setDebug( boolean debug ) { cursor.setDebug( debug ); }
+	public void setDebug( boolean debug ) { this.debug = debug; }
 }
