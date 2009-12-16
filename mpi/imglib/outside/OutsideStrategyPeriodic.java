@@ -20,7 +20,7 @@ import mpi.imglib.cursor.LocalizableByDimCursor;
 import mpi.imglib.cursor.LocalizableCursor;
 import mpi.imglib.type.Type;
 
-public class OutsideStrategyCircle<T extends Type<T>> extends OutsideStrategy<T>
+public class OutsideStrategyPeriodic<T extends Type<T>> extends OutsideStrategy<T>
 {
 	final LocalizableCursor<T> parentCursor;
 	final LocalizableByDimCursor<T> circleCursor;
@@ -28,7 +28,7 @@ public class OutsideStrategyCircle<T extends Type<T>> extends OutsideStrategy<T>
 	final int numDimensions;
 	final int[] dimension, position, circledPosition;
 	
-	public OutsideStrategyCircle( final LocalizableCursor<T> parentCursor )
+	public OutsideStrategyPeriodic( final LocalizableCursor<T> parentCursor )
 	{
 		super( parentCursor );
 		

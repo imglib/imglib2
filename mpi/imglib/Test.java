@@ -60,7 +60,7 @@ import mpi.imglib.interpolation.InterpolatorFactory;
 import mpi.imglib.interpolation.LinearInterpolatorFactory;
 import mpi.imglib.interpolation.NearestNeighborInterpolatorFactory;
 import mpi.imglib.io.LOCI;
-import mpi.imglib.outside.OutsideStrategyCircleFactory;
+import mpi.imglib.outside.OutsideStrategyPeriodicFactory;
 import mpi.imglib.outside.OutsideStrategyFactory;
 import mpi.imglib.outside.OutsideStrategyMirrorExpWindowingFactory;
 import mpi.imglib.outside.OutsideStrategyMirrorFactory;
@@ -418,7 +418,7 @@ public class Test
 		
 		//final CanvasImage<T> canvas = new CanvasImage<T>( img, newSize, new OutsideStrategyMirrorExpWindowingFactory<T>( fadingRange ) );
 		//final CanvasImage<T> canvas = new CanvasImage<T>( img, newSize, new OutsideStrategyMirrorFactory<T>() );
-		final CanvasImage<T> canvas = new CanvasImage<T>( img, newSize, new OutsideStrategyCircleFactory<T>() );
+		final CanvasImage<T> canvas = new CanvasImage<T>( img, newSize, new OutsideStrategyPeriodicFactory<T>() );
 		
 		if ( canvas.checkInput() && canvas.process() )
 		{

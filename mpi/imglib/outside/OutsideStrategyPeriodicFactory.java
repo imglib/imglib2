@@ -19,12 +19,12 @@ package mpi.imglib.outside;
 import mpi.imglib.cursor.LocalizableCursor;
 import mpi.imglib.type.Type;
 
-public class OutsideStrategyCircleFactory<T extends Type<T>> extends OutsideStrategyFactory<T>
+public class OutsideStrategyPeriodicFactory<T extends Type<T>> extends OutsideStrategyFactory<T>
 {
 	@Override
-	public OutsideStrategyCircle<T> createStrategy( final LocalizableCursor<T> cursor )
+	public OutsideStrategyPeriodic<T> createStrategy( final LocalizableCursor<T> cursor )
 	{
-		return new OutsideStrategyCircle<T>( cursor );
+		return new OutsideStrategyPeriodic<T>( cursor );
 	}
 
 }
