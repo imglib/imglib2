@@ -7,6 +7,7 @@ public class PhaseCorrelationPeak implements Comparable<PhaseCorrelationPeak>
 	int[] position = null;
 	int[] originalInvPCMPosition = null;
 	float phaseCorrelationPeak = 0, crossCorrelationPeak = 0;
+	boolean sortPhaseCorrelation = true;
 	
 	public PhaseCorrelationPeak( final int[] position, final float phaseCorrelationPeak, final float crossCorrelationPeak )
 	{
@@ -34,11 +35,13 @@ public class PhaseCorrelationPeak implements Comparable<PhaseCorrelationPeak>
 	public void setOriginalInvPCMPosition( final int[] originalInvPCMPosition ) { this.originalInvPCMPosition = originalInvPCMPosition; }
 	public void setPhaseCorrelationPeak( final float phaseCorrelationPeak ) { this.phaseCorrelationPeak = phaseCorrelationPeak; }
 	public void setCrossCorrelationPeak( final float crossCorrelationPeak ) { this.crossCorrelationPeak = crossCorrelationPeak; }
+	public void setSortPhaseCorrelation( final boolean sortPhaseCorrelation ) { this.sortPhaseCorrelation = sortPhaseCorrelation; }
 	
 	public int[] getPosition() { return position.clone(); }
 	public int[] getOriginalInvPCMPosition() { return originalInvPCMPosition; }
 	public float getPhaseCorrelationPeak() { return phaseCorrelationPeak; }
 	public float getCrossCorrelationPeak() { return crossCorrelationPeak; }
+	public boolean getSortPhaseCorrelation() { return sortPhaseCorrelation; }
 
 	@Override
 	public int compareTo( final PhaseCorrelationPeak o )

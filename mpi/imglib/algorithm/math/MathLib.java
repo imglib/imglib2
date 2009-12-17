@@ -208,6 +208,34 @@ public class MathLib
 		return out;
 	}
 
+	public static String printCoordinates( final boolean[] value )
+	{
+		String out = "(Array empty)";
+		
+		if ( value == null || value.length == 0 )
+			return out;
+		else
+			out = "(";
+		
+		if ( value[ 0 ] )
+			out += "1";
+		else
+			out += "0";
+		
+		for ( int i = 1; i < value.length; i++ )
+		{
+			out += ", ";
+			if ( value[ i ] )
+				out += "1";
+			else
+				out += "0";
+		}
+		
+		out += ")";
+		
+		return out;
+	}
+	
 	public static Transform3D getTransform3D( AffineModel3D model )
 	{
 		final Transform3D transform = new Transform3D();		
@@ -250,7 +278,16 @@ public class MathLib
 	
 			return result;
 		}
-	}	
+	}
+	
+	public static boolean[][] getRecursiveCoordinates( final int numDimensions )
+	{
+		boolean[][] positions = new boolean[ MathLib.pow( 2, numDimensions ) ][ numDimensions ];
+		
+		setCoordinateRecursive( numDimensions - 1, numDimensions, new int[ numDimensions ], positions );
+		
+		return positions;
+	}
 
 	/**
 	 * recursively get coordinates covering all binary combinations for the given dimensionality  

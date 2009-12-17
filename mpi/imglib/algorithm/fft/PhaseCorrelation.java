@@ -13,7 +13,6 @@ import mpi.imglib.cursor.Cursor;
 import mpi.imglib.cursor.LocalizableByDimCursor;
 import mpi.imglib.cursor.special.LocalNeighborhoodCursor;
 import mpi.imglib.image.Image;
-import mpi.imglib.image.display.imagej.ImageJFunctions;
 import mpi.imglib.multithreading.SimpleMultiThreading;
 import mpi.imglib.outside.OutsideStrategyPeriodicFactory;
 import mpi.imglib.type.NumericType;
@@ -28,17 +27,19 @@ public class PhaseCorrelation<T extends NumericType<T>, S extends NumericType<S>
 	Image<S> image2;
 	int numPeaks;
 	float normalizationThreshold;
+	boolean verifyWithCrossCorrelation;
 	ArrayList<PhaseCorrelationPeak> phaseCorrelationPeaks;
 
 	String errorMessage = "";
 	int numThreads;
 	long processingTime;
 
-	public PhaseCorrelation( final Image<T> image1, final Image<S> image2, final int numPeaks )
+	public PhaseCorrelation( final Image<T> image1, final Image<S> image2, final int numPeaks, final boolean verifyWithCrossCorrelation )
 	{
 		this.image1 = image1;
 		this.image2 = image2;
 		this.numPeaks = numPeaks;
+		this.verifyWithCrossCorrelation = verifyWithCrossCorrelation;
 
 		this.numDimensions = image1.getNumDimensions();
 		this.normalizationThreshold = 1E-5f;
@@ -49,21 +50,24 @@ public class PhaseCorrelation<T extends NumericType<T>, S extends NumericType<S>
 	
 	public PhaseCorrelation( final Image<T> image1, final Image<S> image2 )
 	{
-		this( image1, image2, 5 );
+		this( image1, image2, 5, true );
 	}
 	
 	public void setComputeFFTinParalell( final boolean computeFFTinParalell ) { this.computeFFTinParalell = computeFFTinParalell; }
 	public void setInvestigateNumPeaks( final int numPeaks ) { this.numPeaks = numPeaks; }
 	public void setNormalizationThreshold( final int normalizationThreshold ) { this.normalizationThreshold = normalizationThreshold; }
+	public void setVerifyWithCrossCorrelation( final boolean verifyWithCrossCorrelation ) { this.verifyWithCrossCorrelation = verifyWithCrossCorrelation; }
 	
 	public boolean getComputeFFTinParalell() { return computeFFTinParalell; }
 	public int getInvestigateNumPeaks() { return numPeaks; }
 	public float getNormalizationThreshold() { return normalizationThreshold; }
+	public boolean getVerifyWithCrossCorrelation() { return verifyWithCrossCorrelation; }
 	public PhaseCorrelationPeak getShift() { return phaseCorrelationPeaks.get( phaseCorrelationPeaks.size() -1 ); }
+	public ArrayList<PhaseCorrelationPeak> getAllShifts() { return phaseCorrelationPeaks; }
 	
 	@Override
 	public boolean process()
-	{
+	{		
 		// get the maximal dimensions of both images
 		final int[] maxDim = getMaxDim( image1, image2 );
 		
@@ -143,7 +147,23 @@ public class PhaseCorrelation<T extends NumericType<T>, S extends NumericType<S>
 		//
 		phaseCorrelationPeaks = extractPhaseCorrelationPeaks( invPCM, numPeaks, fft1, fft2 );
 		
+		if ( verifyWithCrossCorrelation )
+		{
+			verifyWithCrossCorrelation( phaseCorrelationPeaks, invPCM.getDimensions(), image1, image2 );
+		}
+		
 		return true;
+	}
+	
+	protected void verifyWithCrossCorrelation( final ArrayList<PhaseCorrelationPeak> peakList, final int[] dimInvPCM, final Image<T> image1, final Image<S> image2 )
+	{
+		final boolean[][] coordinates = MathLib.getRecursiveCoordinates( numDimensions );
+		
+		for ( final PhaseCorrelationPeak peak : peakList )
+		{
+			
+		}
+		
 	}
 	
 	protected ArrayList<PhaseCorrelationPeak> extractPhaseCorrelationPeaks( final Image<FloatType> invPCM, final int numPeaks,
