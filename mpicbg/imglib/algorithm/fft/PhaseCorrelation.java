@@ -14,6 +14,7 @@ import mpicbg.imglib.cursor.LocalizableByDimCursor;
 import mpicbg.imglib.cursor.special.LocalNeighborhoodCursor;
 import mpicbg.imglib.cursor.special.RegionOfInterestCursor;
 import mpicbg.imglib.image.Image;
+import mpicbg.imglib.image.display.imagej.ImageJFunctions;
 import mpicbg.imglib.multithreading.SimpleMultiThreading;
 import mpicbg.imglib.outside.OutsideStrategyPeriodicFactory;
 import mpicbg.imglib.type.NumericType;
@@ -150,9 +151,9 @@ public class PhaseCorrelation<T extends NumericType<T>, S extends NumericType<S>
 		
 		final Image<FloatType> invPCM = invFFT.getResult();
 		
-		//invPCM.getDisplay().setMinMax();
-		//invPCM.setName("invPCM");
-		//ImageJFunctions.copyToImagePlus( invPCM ).show();
+		invPCM.getDisplay().setMinMax();
+		invPCM.setName("invPCM");
+		ImageJFunctions.copyToImagePlus( invPCM ).show();
 		
 		//
 		// extract the peaks
@@ -162,7 +163,7 @@ public class PhaseCorrelation<T extends NumericType<T>, S extends NumericType<S>
 		for ( PhaseCorrelationPeak p : phaseCorrelationPeaks )
 			System.out.println( p );
 		
-		System.out.println("////");
+		System.out.println("-----");
 		
 		if ( !verifyWithCrossCorrelation )
 			return true;
@@ -455,7 +456,7 @@ public class PhaseCorrelation<T extends NumericType<T>, S extends NumericType<S>
 						position[ d ] = ( position[ d ] + offset[ d ] ) % imgSize[ d ];
 						
 						if ( position[ d ] > imgSize[ d ] / 2 )
-							position[ d ] = imgSize[ d ] - position[ d ];
+							position[ d ] = position[ d ] - imgSize[ d ];
 					}
 
 					final PhaseCorrelationPeak pcp = new PhaseCorrelationPeak( position, value );

@@ -105,8 +105,10 @@ public class Test
 
 		
 		
-		Image<FloatType> image1 = LOCI.openLOCIFloatType("D:/Documents and Settings/Stephan/My Documents/My Pictures/rockface_odd-1.tif", new ArrayContainerFactory());
-		Image<FloatType> image2 = LOCI.openLOCIFloatType("D:/Documents and Settings/Stephan/My Documents/My Pictures/rockface_odd-1020.tif", new ArrayContainerFactory());
+		Image<FloatType> image1 = LOCI.openLOCIFloatType("D:/Documents and Settings/Stephan/My Documents/ImageJ Conference 2008/2D Grid/dros_cns_001.tif", new ArrayContainerFactory());
+		Image<FloatType> image2 = LOCI.openLOCIFloatType("D:/Documents and Settings/Stephan/My Documents/ImageJ Conference 2008/2D Grid/dros_cns_002.tif", new ArrayContainerFactory());
+		//Image<FloatType> image1 = LOCI.openLOCIFloatType("D:/Documents and Settings/Stephan/My Documents/My Pictures/rockface_odd-1.tif", new ArrayContainerFactory());
+		//Image<FloatType> image2 = LOCI.openLOCIFloatType("D:/Documents and Settings/Stephan/My Documents/My Pictures/rockface_odd-1020.tif", new ArrayContainerFactory());
 		image1.setName( "image1" );
 		image2.setName( "image2" );
 		
