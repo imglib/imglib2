@@ -12,6 +12,7 @@ import mpicbg.imglib.algorithm.math.MathLib;
 import mpicbg.imglib.cursor.Cursor;
 import mpicbg.imglib.cursor.LocalizableByDimCursor;
 import mpicbg.imglib.cursor.special.LocalNeighborhoodCursor;
+import mpicbg.imglib.cursor.special.RegionOfInterestCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.multithreading.SimpleMultiThreading;
 import mpicbg.imglib.outside.OutsideStrategyPeriodicFactory;
@@ -26,6 +27,7 @@ public class PhaseCorrelation<T extends NumericType<T>, S extends NumericType<S>
 	Image<T> image1;
 	Image<S> image2;
 	int numPeaks;
+	int[] minOverlapPx;
 	float normalizationThreshold;
 	boolean verifyWithCrossCorrelation;
 	ArrayList<PhaseCorrelationPeak> phaseCorrelationPeaks;
@@ -43,7 +45,10 @@ public class PhaseCorrelation<T extends NumericType<T>, S extends NumericType<S>
 
 		this.numDimensions = image1.getNumDimensions();
 		this.normalizationThreshold = 1E-5f;
-	
+		
+		this.minOverlapPx = new int[ numDimensions ];		
+		setMinimalPixelOverlap( 3 );
+		
 		setNumThreads();
 		processingTime = -1;
 	}
@@ -57,11 +62,18 @@ public class PhaseCorrelation<T extends NumericType<T>, S extends NumericType<S>
 	public void setInvestigateNumPeaks( final int numPeaks ) { this.numPeaks = numPeaks; }
 	public void setNormalizationThreshold( final int normalizationThreshold ) { this.normalizationThreshold = normalizationThreshold; }
 	public void setVerifyWithCrossCorrelation( final boolean verifyWithCrossCorrelation ) { this.verifyWithCrossCorrelation = verifyWithCrossCorrelation; }
+	public void setMinimalPixelOverlap( final int[] minOverlapPx ) { this.minOverlapPx = minOverlapPx.clone(); } 
+	public void setMinimalPixelOverlap( final int minOverlapPx ) 
+	{ 
+		for ( int d = 0; d < numDimensions; ++d )
+			this.minOverlapPx[ d ] = minOverlapPx;
+	}
 	
 	public boolean getComputeFFTinParalell() { return computeFFTinParalell; }
 	public int getInvestigateNumPeaks() { return numPeaks; }
 	public float getNormalizationThreshold() { return normalizationThreshold; }
 	public boolean getVerifyWithCrossCorrelation() { return verifyWithCrossCorrelation; }
+	public int[] getMinimalPixelOverlap() { return minOverlapPx.clone(); }
 	public PhaseCorrelationPeak getShift() { return phaseCorrelationPeaks.get( phaseCorrelationPeaks.size() -1 ); }
 	public ArrayList<PhaseCorrelationPeak> getAllShifts() { return phaseCorrelationPeaks; }
 	
@@ -146,12 +158,20 @@ public class PhaseCorrelation<T extends NumericType<T>, S extends NumericType<S>
 		// extract the peaks
 		//
 		phaseCorrelationPeaks = extractPhaseCorrelationPeaks( invPCM, numPeaks, fft1, fft2 );
+
+		for ( PhaseCorrelationPeak p : phaseCorrelationPeaks )
+			System.out.println( p );
 		
-		if ( verifyWithCrossCorrelation )
-		{
-			verifyWithCrossCorrelation( phaseCorrelationPeaks, invPCM.getDimensions(), image1, image2 );
-		}
+		System.out.println("////");
 		
+		if ( !verifyWithCrossCorrelation )
+			return true;
+
+		verifyWithCrossCorrelation( phaseCorrelationPeaks, invPCM.getDimensions(), image1, image2 );
+		
+		for ( PhaseCorrelationPeak p : phaseCorrelationPeaks )
+			System.out.println( p );
+
 		return true;
 	}
 	
@@ -159,11 +179,208 @@ public class PhaseCorrelation<T extends NumericType<T>, S extends NumericType<S>
 	{
 		final boolean[][] coordinates = MathLib.getRecursiveCoordinates( numDimensions );
 		
+		final ArrayList<PhaseCorrelationPeak> newPeakList = new ArrayList<PhaseCorrelationPeak>();
+		
+		//
+		// get all the different possiblities
+		//
 		for ( final PhaseCorrelationPeak peak : peakList )
 		{
-			
+			for ( int i = 0; i < coordinates.length; ++i )
+			{
+				final boolean[] currentPossiblity = coordinates[ i ];
+				
+				final int[] peakPosition = peak.getPosition();
+				
+				for ( int d = 0; d < currentPossiblity.length; ++d )
+				{
+					if ( currentPossiblity[ d ] )
+					{
+						if ( peakPosition[ d ]  < 0 )
+							peakPosition[ d ] += dimInvPCM[ d ];
+						else
+							peakPosition[ d ] -= dimInvPCM[ d ];
+					}
+				}				
+				newPeakList.add( new PhaseCorrelationPeak( peakPosition, peak.getPhaseCorrelationPeak() ) );
+			}			
 		}
 		
+		
+		//
+		// test them multithreaded
+		//
+		final AtomicInteger ai = new AtomicInteger(0);
+		Thread[] threads = SimpleMultiThreading.newThreads( getNumThreads() );
+		final int numThreads = threads.length;
+			
+		for (int ithread = 0; ithread < threads.length; ++ithread)
+			threads[ithread] = new Thread(new Runnable()
+			{
+				public void run()
+				{
+					final int myNumber = ai.getAndIncrement();
+					
+					for ( int i = 0; i < newPeakList.size(); ++i )
+						if ( i % numThreads == myNumber )
+						{
+							final PhaseCorrelationPeak peak = newPeakList.get( i );
+							peak.setCrossCorrelationPeak( (float)testCrossCorrelation( peak, image1, image2, minOverlapPx ) );
+							
+							// sort by cross correlation peak
+							peak.setSortPhaseCorrelation( false );
+						}
+											
+				}
+			});
+		
+		SimpleMultiThreading.startAndJoin( threads );
+		
+		// update old list and sort
+		peakList.clear();
+		peakList.addAll( newPeakList );
+		Collections.sort( peakList );		
+	}
+	
+	private static <T extends NumericType<T>, S extends NumericType<S>> double testCrossCorrelation( final PhaseCorrelationPeak peak, final Image<T> image1, final Image<S> image2, final int[] minOverlapPx )
+	{
+		final int numDimensions = image1.getNumDimensions();
+		double correlationCoefficient = 0;
+		
+		final int[] shift = peak.getPosition();
+		final int[] overlapSize = new int[ numDimensions ];
+		final int[] offsetImage1 = new int[ numDimensions ];
+		final int[] offsetImage2 = new int[ numDimensions ];
+		
+		int numPixels = 1;
+		
+		for ( int d = 0; d < numDimensions; ++d )
+		{
+			if ( shift[ d ] >= 0 )
+			{
+				// two possiblities
+				//
+				//               shift=start              end
+				//                 |					   |
+				// A: Image 1 ------------------------------
+				//    Image 2      ----------------------------------
+				//
+				//               shift=start	    end
+				//                 |			     |
+				// B: Image 1 ------------------------------
+				//    Image 2      -------------------
+				
+				// they are not overlapping ( this might happen due to fft zeropadding and extension
+				if ( shift[ d ] >= image1.getDimension( d ) )
+					return 0;
+				
+				offsetImage1[ d ] = shift[ d ];
+				offsetImage2[ d ] = 0;
+				overlapSize[ d ] = Math.min( image1.getDimension( d ) - shift[ d ],  image2.getDimension( d ) );
+			}
+			else
+			{
+				// two possiblities
+				//
+				//          shift start                	  end
+				//            |	   |			`		   |
+				// A: Image 1      ------------------------------
+				//    Image 2 ------------------------------
+				//
+				//          shift start	     end
+				//            |	   |          |
+				// B: Image 1      ------------
+				//    Image 2 -------------------
+				
+				// they are not overlapping ( this might happen due to fft zeropadding and extension
+				if ( shift[ d ] >= image2.getDimension( d ) )
+					return 0;
+
+				offsetImage1[ d ] = 0;
+				offsetImage2[ d ] = -shift[ d ];
+				overlapSize[ d ] = Math.min( image2.getDimension( d ) + shift[ d ],  image1.getDimension( d ) );				
+			}
+			
+			numPixels *= overlapSize[ d ];
+			
+			if ( overlapSize[ d ] < minOverlapPx[ d ] )
+				return 0;
+		}
+		
+		final LocalizableByDimCursor<T> cursor1 = image1.createLocalizableByDimCursor();
+		final LocalizableByDimCursor<S> cursor2 = image2.createLocalizableByDimCursor();
+		
+		final RegionOfInterestCursor<T> roiCursor1 = cursor1.createRegionOfInterestCursor( offsetImage1, overlapSize );
+		final RegionOfInterestCursor<S> roiCursor2 = cursor2.createRegionOfInterestCursor( offsetImage2, overlapSize );
+						
+		//
+		// compute average
+		//
+		double avg1 = 0;
+		double avg2 = 0;
+		
+		while ( roiCursor1.hasNext() )
+		{
+			roiCursor1.fwd();
+			roiCursor2.fwd();
+
+			avg1 += cursor1.getType().getReal();
+			avg2 += cursor2.getType().getReal();
+		}
+
+		avg1 /= (double) numPixels;
+		avg2 /= (double) numPixels;
+				
+		//
+		// compute cross correlation
+		//
+		roiCursor1.reset();
+		roiCursor2.reset();
+				
+		double var1 = 0, var2 = 0;
+		double coVar = 0;
+		
+		while ( roiCursor1.hasNext() )
+		{
+			roiCursor1.fwd();
+			roiCursor2.fwd();
+
+			final float pixel1 = cursor1.getType().getReal();
+			final float pixel2 = cursor2.getType().getReal();
+			
+			final double dist1 = pixel1 - avg1;
+			final double dist2 = pixel2 - avg2;
+
+			coVar += dist1 * dist2;
+			var1 += dist1 * dist1;
+			var2 += dist2 * dist2;
+		}		
+		
+		var1 /= (double) numPixels;
+		var2 /= (double) numPixels;
+		coVar /= (double) numPixels;
+
+		double stDev1 = Math.sqrt(var1);
+		double stDev2 = Math.sqrt(var2);
+
+		// all pixels had the same color....
+		if (stDev1 == 0 || stDev2 == 0)
+		{
+			if ( stDev1 == stDev2 && avg1 == avg2 )
+				return 1;
+			else
+				return 0;
+		}
+
+		// compute correlation coeffienct
+		correlationCoefficient = coVar / (stDev1 * stDev2);
+		
+		roiCursor1.close();
+		roiCursor2.close();
+		cursor1.close();
+		cursor2.close();
+		
+		return correlationCoefficient;
 	}
 	
 	protected ArrayList<PhaseCorrelationPeak> extractPhaseCorrelationPeaks( final Image<FloatType> invPCM, final int numPeaks,
@@ -250,10 +467,7 @@ public class PhaseCorrelation<T extends NumericType<T>, S extends NumericType<S>
 		
 		// sort list 
 		Collections.sort( peakList );
-		
-		//for ( PhaseCorrelationPeak p : peakList )
-		//	System.out.println( p );
-				
+						
 		return peakList;
 	}
 	

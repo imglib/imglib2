@@ -46,12 +46,24 @@ public class PhaseCorrelationPeak implements Comparable<PhaseCorrelationPeak>
 	@Override
 	public int compareTo( final PhaseCorrelationPeak o )
 	{
-		if ( this.phaseCorrelationPeak > o.phaseCorrelationPeak )
-			return 1;
-		else if ( this.phaseCorrelationPeak == o.phaseCorrelationPeak )
-			return 0;
+		if ( sortPhaseCorrelation )
+		{
+			if ( this.phaseCorrelationPeak > o.phaseCorrelationPeak )
+				return 1;
+			else if ( this.phaseCorrelationPeak == o.phaseCorrelationPeak )
+				return 0;
+			else
+				return -1;
+		}
 		else
-			return -1;
+		{
+			if ( this.crossCorrelationPeak > o.crossCorrelationPeak )
+				return 1;
+			else if ( this.crossCorrelationPeak == o.crossCorrelationPeak )
+				return 0;
+			else
+				return -1;			
+		}
 	}
 	
 	@Override

@@ -17,9 +17,11 @@
 package mpicbg.imglib.cursor;
 
 import mpicbg.imglib.cursor.special.LocalNeighborhoodCursor;
+import mpicbg.imglib.cursor.special.RegionOfInterestCursor;
 import mpicbg.imglib.type.Type;
 
 public interface LocalizableByDimCursor<T extends Type<T>> extends LocalizableCursor<T>, LocalizableByDim
 {
 	public LocalNeighborhoodCursor<T> createLocalNeighborhoodCursor();	
+	public RegionOfInterestCursor<T> createRegionOfInterestCursor( final int[] offset, final int[] size );	
 }

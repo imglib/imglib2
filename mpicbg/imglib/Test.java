@@ -49,6 +49,7 @@ import mpicbg.imglib.cursor.Cursor;
 import mpicbg.imglib.cursor.LocalizableByDimCursor;
 import mpicbg.imglib.cursor.LocalizableCursor;
 import mpicbg.imglib.cursor.special.LocalNeighborhoodCursor;
+import mpicbg.imglib.cursor.special.RegionOfInterestCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.ImageFactory;
 import mpicbg.imglib.image.ImagePlusAdapter;
@@ -97,26 +98,27 @@ public class Test
 		//Image<FloatType> image = LOCI.openLOCIFloatType("D:/Documents and Settings/Stephan/Desktop/ls-1 f5-01-1 3500x-1.tif", new ArrayContainerFactory());
 		//Image<FloatType> image = LOCI.openLOCIFloatType("F:/Stephan/OldMonster/Stephan/Stitching/Truman/73.tif", new ArrayContainerFactory());				
 			
-		Image<FloatType> image = LOCI.openLOCIFloatType("D:/Documents and Settings/Stephan/My Documents/My Pictures/rockface_odd-1.tif", new ArrayContainerFactory());
+		//Image<FloatType> image = LOCI.openLOCIFloatType("D:/Documents and Settings/Stephan/My Documents/My Pictures/rockface_odd-1.tif", new ArrayContainerFactory());
 
-		image.getDisplay().setMinMax();
-		ImageJFunctions.copyToImagePlus( image ).show();
+		//image.getDisplay().setMinMax();
+		//ImageJFunctions.copyToImagePlus( image ).show();
 
-		/*
+		
 		
 		Image<FloatType> image1 = LOCI.openLOCIFloatType("D:/Documents and Settings/Stephan/My Documents/My Pictures/rockface_odd-1.tif", new ArrayContainerFactory());
 		Image<FloatType> image2 = LOCI.openLOCIFloatType("D:/Documents and Settings/Stephan/My Documents/My Pictures/rockface_odd-1020.tif", new ArrayContainerFactory());
-		
+		image1.setName( "image1" );
+		image2.setName( "image2" );
 		
 		image1.getDisplay().setMinMax();
 		ImageJFunctions.copyToImagePlus( image1 ).show();
 
 		image2.getDisplay().setMinMax();
 		ImageJFunctions.copyToImagePlus( image2 ).show();
-		*/
+				
 		
-		testPhaseCorrelation( image );
-		//testPhaseCorrelation( image1, image2 );
+		//testPhaseCorrelation( image );
+		testPhaseCorrelation( image1, image2 );
 		
 		//ImageFactory<FloatType> f = new ImageFactory<FloatType>( new FloatType(), new ArrayContainerFactory() );
 		//Image<FloatType> image = f.createImage( new int[]{ 24, 24 } );		
@@ -128,7 +130,8 @@ public class Test
 		//testFFTConvolutionLoop();		
 		//testFFTConvolutionAlg( image );
 		//testDownSampling( image );
-
+		//testROICursor( image ); 
+		
 		
 		if ( true )
 			return;
@@ -154,6 +157,38 @@ public class Test
 		ImageJFunctions.displayAsVirtualStack( img, ImageJFunctions.COLOR_RGB, new int[]{ 0, 1, 2} ).show();
 		
 		genericProcessing( img );
+	}
+	
+	public <T extends NumericType<T>> void testROICursor(final Image<T> image )
+	{
+		final int[] roiOffset = image.getDimensions();
+		final int[] roiSize = image.getDimensions();
+		
+		for ( int d = 0; d < image.getNumDimensions(); ++d )
+		{
+			roiOffset[ d ] = 10;
+			roiSize[ d ] = image.getDimension( d ) / 2;
+		}
+		
+		final Image<T> roiImage = image.createNewImage( roiSize );
+		final LocalizableByDimCursor<T> roiCursor = roiImage.createLocalizableByDimCursor();
+		
+		final LocalizableByDimCursor<T> c = image.createLocalizableByDimCursor();
+		final RegionOfInterestCursor<T> cursor = c.createRegionOfInterestCursor( roiOffset, roiSize );
+		
+		while ( cursor.hasNext() )
+		{
+			cursor.fwd();
+			roiCursor.moveTo( cursor );
+			
+			roiCursor.getType().set( cursor.getType() );
+		}
+		
+		cursor.close();
+		c.close();
+		
+		roiImage.getDisplay().setMinMax();
+		ImageJFunctions.displayAsVirtualStack( roiImage ).show();
 	}
 	
 	public void testPhaseCorrelation( final Image<FloatType> image )

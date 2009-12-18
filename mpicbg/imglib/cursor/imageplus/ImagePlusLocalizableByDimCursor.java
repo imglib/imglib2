@@ -22,6 +22,7 @@ import mpicbg.imglib.cursor.LocalizableByDimCursor;
 import mpicbg.imglib.cursor.LocalizableCursor;
 import mpicbg.imglib.cursor.special.LocalNeighborhoodCursor;
 import mpicbg.imglib.cursor.special.LocalNeighborhoodCursorFactory;
+import mpicbg.imglib.cursor.special.RegionOfInterestCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.type.Type;
 
@@ -49,7 +50,22 @@ public class ImagePlusLocalizableByDimCursor<T extends Type<T>> extends ImagePlu
 		}
 		else
 		{
-			System.out.println("ImagePlusLocalizableByDimCursor.createLocalNeighborhoodCursor(): There is only one LocalNeighborhoodCursor per cursor allowed.");
+			System.out.println("ImagePlusLocalizableByDimCursor.createLocalNeighborhoodCursor(): There is only one special cursor per cursor allowed.");
+			return null;
+		}
+	}
+
+	@Override
+	public synchronized RegionOfInterestCursor<T> createRegionOfInterestCursor( final int[] offset, final int[] size )
+	{
+		if ( numNeighborhoodCursors == 0)
+		{
+			++numNeighborhoodCursors;
+			return new RegionOfInterestCursor<T>( this, offset, size );
+		}
+		else
+		{
+			System.out.println("ImagePlusLocalizableByDimCursor.createRegionOfInterestCursor(): There is only one special cursor per cursor allowed.");
 			return null;
 		}
 	}
