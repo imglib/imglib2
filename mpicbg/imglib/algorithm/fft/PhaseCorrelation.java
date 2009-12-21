@@ -159,20 +159,12 @@ public class PhaseCorrelation<T extends NumericType<T>, S extends NumericType<S>
 		// extract the peaks
 		//
 		phaseCorrelationPeaks = extractPhaseCorrelationPeaks( invPCM, numPeaks, fft1, fft2 );
-
-		for ( PhaseCorrelationPeak p : phaseCorrelationPeaks )
-			System.out.println( p );
-		
-		System.out.println("-----");
 		
 		if ( !verifyWithCrossCorrelation )
 			return true;
 
 		verifyWithCrossCorrelation( phaseCorrelationPeaks, invPCM.getDimensions(), image1, image2 );
 		
-		for ( PhaseCorrelationPeak p : phaseCorrelationPeaks )
-			System.out.println( p );
-
 		return true;
 	}
 	
@@ -242,8 +234,18 @@ public class PhaseCorrelation<T extends NumericType<T>, S extends NumericType<S>
 		peakList.addAll( newPeakList );
 		Collections.sort( peakList );		
 	}
+
+	public static <T extends NumericType<T>, S extends NumericType<S>> double testCrossCorrelation( final PhaseCorrelationPeak peak, final Image<T> image1, final Image<S> image2 )
+	{
+		return testCrossCorrelation( peak, image1, image2, MathLib.getArrayFromValue( 5, image1.getNumDimensions()) );
+	}
+
+	public static <T extends NumericType<T>, S extends NumericType<S>> double testCrossCorrelation( final PhaseCorrelationPeak peak, final Image<T> image1, final Image<S> image2, final int minOverlapPx )
+	{
+		return testCrossCorrelation( peak, image1, image2, MathLib.getArrayFromValue( minOverlapPx, image1.getNumDimensions()) );
+	}
 	
-	private static <T extends NumericType<T>, S extends NumericType<S>> double testCrossCorrelation( final PhaseCorrelationPeak peak, final Image<T> image1, final Image<S> image2, final int[] minOverlapPx )
+	public static <T extends NumericType<T>, S extends NumericType<S>> double testCrossCorrelation( final PhaseCorrelationPeak peak, final Image<T> image1, final Image<S> image2, final int[] minOverlapPx )
 	{
 		final int numDimensions = image1.getNumDimensions();
 		double correlationCoefficient = 0;

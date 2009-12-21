@@ -54,6 +54,114 @@ public class MathLib
 		return values;
 	}	
 	
+	public static double computeMedian( final double[] values )
+	{
+		final double temp[] = values.clone();
+		double median;
+
+		final int length = temp.length;
+
+		quicksort( temp, 0, length - 1 );
+
+		if (length % 2 == 1) //odd length
+			median = temp[length / 2];
+		else //even length
+			median = (temp[length / 2] + temp[(length / 2) - 1]) / 2;
+
+		return median;
+	}
+
+	public static float computeMedian( final float[] values )
+	{
+		final float temp[] = values.clone();
+		float median;
+
+		final int length = temp.length;
+
+		quicksort( temp, 0, length - 1 );
+
+		if (length % 2 == 1) //odd length
+			median = temp[length / 2];
+		else //even length
+			median = (temp[length / 2] + temp[(length / 2) - 1]) / 2;
+
+		return median;
+	}
+	
+	public static void quicksort( final double[] data, final int left, final int right )
+	{
+		if (data == null || data.length < 2)return;
+		int i = left, j = right;
+		double x = data[(left + right) / 2];
+		do
+		{
+			while (data[i] < x) i++;
+			while (x < data[j]) j--;
+			if (i <= j)
+			{
+				double temp = data[i];
+				data[i] = data[j];
+				data[j] = temp;
+				i++;
+				j--;
+			}
+		}
+		while (i <= j);
+		if (left < j) quicksort(data, left, j);
+		if (i < right) quicksort(data, i, right);
+	}
+
+	public static void quicksort( final float[] data, final int left, final int right )
+	{
+		if (data == null || data.length < 2)return;
+		int i = left, j = right;
+		float x = data[(left + right) / 2];
+		do
+		{
+			while (data[i] < x) i++;
+			while (x < data[j]) j--;
+			if (i <= j)
+			{
+				float temp = data[i];
+				data[i] = data[j];
+				data[j] = temp;
+				i++;
+				j--;
+			}
+		}
+		while (i <= j);
+		if (left < j) quicksort(data, left, j);
+		if (i < right) quicksort(data, i, right);
+	}
+
+	public static void quicksort( final double[] data, final int[] sortAlso, final int left, final int right )
+	{
+		if (data == null || data.length < 2)return;
+		int i = left, j = right;
+		double x = data[(left + right) / 2];
+		do
+		{
+			while (data[i] < x) i++;
+			while (x < data[j]) j--;
+			if (i <= j)
+			{
+				double temp = data[i];
+				data[i] = data[j];
+				data[j] = temp;
+
+				int temp2 = sortAlso[i];
+				sortAlso[i] = sortAlso[j];
+				sortAlso[j] = temp2;
+
+				i++;
+				j--;
+			}
+		}
+		while (i <= j);
+		if (left < j) quicksort(data, sortAlso, left, j);
+		if (i < right) quicksort(data, sortAlso, i, right);
+	}
+
 	public static double gLog( final double z, final double c )
 	{
 		if (c == 0)

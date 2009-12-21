@@ -21,13 +21,15 @@ import javax.vecmath.Point3d;
 import javax.vecmath.Point3f;
 
 import mpicbg.imglib.algorithm.OutputAlgorithm;
+import mpicbg.imglib.algorithm.math.MathLib;
 import mpicbg.imglib.cursor.LocalizableCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.interpolation.Interpolator;
 import mpicbg.imglib.interpolation.InterpolatorFactory;
 import mpicbg.imglib.type.Type;
+import mpicbg.models.AffineModel3D;
 
-public class AffineTransform<T extends Type<T>> implements OutputAlgorithm<T>
+public class Affine3DImageTransform<T extends Type<T>> implements OutputAlgorithm<T>
 {
 	final Image<T> img;
 	final int numDimensions;
@@ -38,7 +40,7 @@ public class AffineTransform<T extends Type<T>> implements OutputAlgorithm<T>
 	Image<T> transformed;
 	String errorMessage = "";
 	
-	public AffineTransform( final Image<T> img, final Transform3D transform, final InterpolatorFactory<T> interpolatorFactory )
+	public Affine3DImageTransform( final Image<T> img, final Transform3D transform, final InterpolatorFactory<T> interpolatorFactory )
 	{
 		this.img = img;
 		this.interpolatorFactory = interpolatorFactory;
@@ -56,7 +58,25 @@ public class AffineTransform<T extends Type<T>> implements OutputAlgorithm<T>
 		}
 	}
 
-	public AffineTransform( final Image<T> img, final float[] transform, final InterpolatorFactory<T> interpolatorFactory )
+	public Affine3DImageTransform( final Image<T> img, final AffineModel3D transform, final InterpolatorFactory<T> interpolatorFactory )
+	{
+		this.img = img;
+		this.interpolatorFactory = interpolatorFactory;
+		this.numDimensions = img.getNumDimensions();
+		this.location = new float[ numDimensions ];
+		
+		if ( numDimensions != 3 )
+		{
+			errorMessage = "A Transform3D is not suitable for a " + img.getNumDimensions() + "-dimensional image.";
+			this.transform = null;
+		}
+		else
+		{
+			this.transform = MathLib.getTransform3D( transform );			
+		}
+	}
+
+	public Affine3DImageTransform( final Image<T> img, final float[] transform, final InterpolatorFactory<T> interpolatorFactory )
 	{
 		this.img = img;
 		this.interpolatorFactory = interpolatorFactory;
@@ -314,7 +334,7 @@ public class AffineTransform<T extends Type<T>> implements OutputAlgorithm<T>
 			final LocalizableCursor<T> transformedIterator = transformed.createLocalizableCursor();
 			final Interpolator<T> interpolator = img.createInterpolator( interpolatorFactory );
 	
-			final T transformedValue = transformedIterator.getType();		
+			//final T transformedValue = transformedIterator.getType();		
 			//final T interpolatedValue = interpolator.getType();
 				
 			int c = 0;
@@ -325,9 +345,9 @@ public class AffineTransform<T extends Type<T>> implements OutputAlgorithm<T>
 	
 				// we have to add the offset of our new image
 				// relative to it's starting point (0,0,0)
-				loc.x = transformedIterator.getPosition( 0 )  + minX;
-				loc.y = (transformedIterator.getPosition( 1 ) + minY);
-				loc.z = (transformedIterator.getPosition( 2 ) + minZ);			
+				loc.x = transformedIterator.getPosition( 0 ) + minX;
+				loc.y = transformedIterator.getPosition( 1 ) + minY;
+				loc.z = transformedIterator.getPosition( 2 ) + minZ;			
 	
 				// transform back into the original image
 				trans.transform( loc );
@@ -342,7 +362,7 @@ public class AffineTransform<T extends Type<T>> implements OutputAlgorithm<T>
 				interpolator.moveTo( location );				
 				//interpolator.setPosition( location );
 				
-				transformedValue.set( interpolator.getType() );
+				transformedIterator.getType().set( interpolator.getType() );
 				
 				++c;
 			}
