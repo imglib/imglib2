@@ -218,7 +218,7 @@ public class PhaseCorrelation<T extends NumericType<T>, S extends NumericType<S>
 						if ( i % numThreads == myNumber )
 						{
 							final PhaseCorrelationPeak peak = newPeakList.get( i );
-							peak.setCrossCorrelationPeak( (float)testCrossCorrelation( peak, image1, image2, minOverlapPx ) );
+							peak.setCrossCorrelationPeak( (float)testCrossCorrelation( peak.getPosition(), image1, image2, minOverlapPx ) );
 							
 							// sort by cross correlation peak
 							peak.setSortPhaseCorrelation( false );
@@ -235,22 +235,21 @@ public class PhaseCorrelation<T extends NumericType<T>, S extends NumericType<S>
 		Collections.sort( peakList );		
 	}
 
-	public static <T extends NumericType<T>, S extends NumericType<S>> double testCrossCorrelation( final PhaseCorrelationPeak peak, final Image<T> image1, final Image<S> image2 )
+	public static <T extends NumericType<T>, S extends NumericType<S>> double testCrossCorrelation( final int[] shift, final Image<T> image1, final Image<S> image2 )
 	{
-		return testCrossCorrelation( peak, image1, image2, MathLib.getArrayFromValue( 5, image1.getNumDimensions()) );
+		return testCrossCorrelation( shift, image1, image2, MathLib.getArrayFromValue( 5, image1.getNumDimensions()) );
 	}
 
-	public static <T extends NumericType<T>, S extends NumericType<S>> double testCrossCorrelation( final PhaseCorrelationPeak peak, final Image<T> image1, final Image<S> image2, final int minOverlapPx )
+	public static <T extends NumericType<T>, S extends NumericType<S>> double testCrossCorrelation( final int[] shift, final Image<T> image1, final Image<S> image2, final int minOverlapPx )
 	{
-		return testCrossCorrelation( peak, image1, image2, MathLib.getArrayFromValue( minOverlapPx, image1.getNumDimensions()) );
+		return testCrossCorrelation( shift, image1, image2, MathLib.getArrayFromValue( minOverlapPx, image1.getNumDimensions()) );
 	}
 	
-	public static <T extends NumericType<T>, S extends NumericType<S>> double testCrossCorrelation( final PhaseCorrelationPeak peak, final Image<T> image1, final Image<S> image2, final int[] minOverlapPx )
+	public static <T extends NumericType<T>, S extends NumericType<S>> double testCrossCorrelation( final int[] shift, final Image<T> image1, final Image<S> image2, final int[] minOverlapPx )
 	{
 		final int numDimensions = image1.getNumDimensions();
 		double correlationCoefficient = 0;
 		
-		final int[] shift = peak.getPosition();
 		final int[] overlapSize = new int[ numDimensions ];
 		final int[] offsetImage1 = new int[ numDimensions ];
 		final int[] offsetImage2 = new int[ numDimensions ];
