@@ -36,6 +36,7 @@ public class Affine3DImageTransform<T extends Type<T>> implements OutputAlgorith
 	final Transform3D transform;
 	final InterpolatorFactory<T> interpolatorFactory;
 	final float[] location;
+	final int[] offset;
 	
 	Image<T> transformed;
 	String errorMessage = "";
@@ -46,6 +47,7 @@ public class Affine3DImageTransform<T extends Type<T>> implements OutputAlgorith
 		this.interpolatorFactory = interpolatorFactory;
 		this.numDimensions = img.getNumDimensions();
 		this.location = new float[ numDimensions ];
+		this.offset = new int[ numDimensions ];
 		
 		if ( numDimensions != 3 )
 		{
@@ -64,6 +66,7 @@ public class Affine3DImageTransform<T extends Type<T>> implements OutputAlgorith
 		this.interpolatorFactory = interpolatorFactory;
 		this.numDimensions = img.getNumDimensions();
 		this.location = new float[ numDimensions ];
+		this.offset = new int[ numDimensions ];
 		
 		if ( numDimensions != 3 )
 		{
@@ -82,6 +85,7 @@ public class Affine3DImageTransform<T extends Type<T>> implements OutputAlgorith
 		this.interpolatorFactory = interpolatorFactory;
 		this.numDimensions = img.getNumDimensions();
 		this.location = new float[ numDimensions ];
+		this.offset = new int[ numDimensions ];
 		
 		if ( transform == null )
 		{
@@ -142,6 +146,11 @@ public class Affine3DImageTransform<T extends Type<T>> implements OutputAlgorith
 	@Override
 	public Image<T> getResult() { return transformed; }
 	
+	/**
+	 * Returns the translational offset applied so that the image data starts at (0,0,0)
+	 * @return - int[] offset
+	 */
+	public int[] getOffset() { return offset; }
 
 	@Override
 	public boolean process()
@@ -209,6 +218,10 @@ public class Affine3DImageTransform<T extends Type<T>> implements OutputAlgorith
 		final int dimX = maxX - minX;
 		final int dimY = maxY - minY;
 		final int dimZ = maxZ - minZ;
+		
+		offset[ 0 ] = minX;
+		offset[ 1 ] = minY;
+		offset[ 2 ] = minZ;
 
 		transformed = img.createNewImage( new int[] {dimX, dimY, dimZ} );
 
@@ -369,7 +382,7 @@ public class Affine3DImageTransform<T extends Type<T>> implements OutputAlgorith
 		}
 		return true;
 	}
-
+	/*
 	protected void adaptPoints(final Point3d[] points)
 	{
 		for (final Point3d point : points)
@@ -393,4 +406,5 @@ public class Affine3DImageTransform<T extends Type<T>> implements OutputAlgorith
 		point.y = -point.y;
 		point.z = -point.z;
 	}
+	*/
 }

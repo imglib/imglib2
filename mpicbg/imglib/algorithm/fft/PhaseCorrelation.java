@@ -14,7 +14,6 @@ import mpicbg.imglib.cursor.LocalizableByDimCursor;
 import mpicbg.imglib.cursor.special.LocalNeighborhoodCursor;
 import mpicbg.imglib.cursor.special.RegionOfInterestCursor;
 import mpicbg.imglib.image.Image;
-import mpicbg.imglib.image.display.imagej.ImageJFunctions;
 import mpicbg.imglib.multithreading.SimpleMultiThreading;
 import mpicbg.imglib.outside.OutsideStrategyPeriodicFactory;
 import mpicbg.imglib.type.NumericType;
@@ -93,8 +92,29 @@ public class PhaseCorrelation<T extends NumericType<T>, S extends NumericType<S>
 		fft2.setRelativeFadeOutDistance( 0.1f );		
 		fft1.setRearrangement( Rearrangement.Unchanged );
 		fft2.setRearrangement( Rearrangement.Unchanged );
-		fft1.setExtendedOriginalImageSize( maxDim );
-		fft2.setExtendedOriginalImageSize( maxDim );
+		
+		boolean sizeFound = false;
+		
+		// check if the size was enough ( there is a minimum extension )
+		do
+		{
+			sizeFound = true;
+
+			fft1.setExtendedOriginalImageSize( maxDim );
+			fft2.setExtendedOriginalImageSize( maxDim );
+			
+			for ( int d = 0; d < numDimensions; ++d )
+			{
+				final int diff = Math.abs( fft1.getExtendedSize()[ d ] - fft2.getExtendedSize()[ d ] );
+				
+				if ( diff > 0 )
+				{
+					maxDim[ d ] += diff;
+					sizeFound = false;
+				}
+			}			
+		}
+		while( !sizeFound );
 				
 		if ( !fft1.checkInput() )
 		{
@@ -119,7 +139,7 @@ public class PhaseCorrelation<T extends NumericType<T>, S extends NumericType<S>
 				
 		final Image<ComplexFloatType> fftImage1 = fft1.getResult();
 		final Image<ComplexFloatType> fftImage2 = fft2.getResult();
-		
+
 		//
 		// normalize and compute complex conjugate of fftImage2
 		//
@@ -151,9 +171,11 @@ public class PhaseCorrelation<T extends NumericType<T>, S extends NumericType<S>
 		
 		final Image<FloatType> invPCM = invFFT.getResult();
 		
+		/*
 		invPCM.getDisplay().setMinMax();
 		invPCM.setName("invPCM");
 		ImageJFunctions.copyToImagePlus( invPCM ).show();
+		*/
 		
 		//
 		// extract the peaks

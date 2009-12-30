@@ -113,7 +113,7 @@ public class GaussianConvolution< T extends NumericType<T>> implements MultiThre
 	
 		if ( Array3D.class.isInstance( image.getContainer() ) && FloatType.class.isInstance( image.createType() ))
 		{
-    		System.out.println( "GaussianConvolution: Input is instance of Image<Float> using an Array3D, fast forward algorithm");
+    		//System.out.println( "GaussianConvolution: Input is instance of Image<Float> using an Array3D, fast forward algorithm");
     		computeGaussFloatArray3D();
     		
     		processingTime = System.currentTimeMillis() - startTime;
