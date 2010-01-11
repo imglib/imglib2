@@ -71,6 +71,28 @@ public class MathLib
 		return median;
 	}
 
+	public static float computeAverage( final float[] values )
+	{
+		final double size = values.length;
+		double avg = 0;
+		
+		for ( final float v : values )
+			avg += v / size;
+
+		return (float)avg;
+	}
+
+	public static double computeAverage( final double[] values )
+	{
+		final double size = values.length;
+		double avg = 0;
+		
+		for ( final double v : values )
+			avg += v / size;
+
+		return avg;
+	}
+
 	public static float computeMedian( final float[] values )
 	{
 		final float temp[] = values.clone();

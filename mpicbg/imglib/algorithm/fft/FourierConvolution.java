@@ -7,6 +7,7 @@ import mpicbg.imglib.algorithm.fft.FourierTransform.PreProcessing;
 import mpicbg.imglib.algorithm.fft.FourierTransform.Rearrangement;
 import mpicbg.imglib.algorithm.gauss.GaussianConvolution;
 import mpicbg.imglib.algorithm.math.MathLib;
+import mpicbg.imglib.container.ContainerFactory;
 import mpicbg.imglib.cursor.Cursor;
 import mpicbg.imglib.cursor.LocalizableByDimCursor;
 import mpicbg.imglib.cursor.LocalizableCursor;
@@ -15,6 +16,7 @@ import mpicbg.imglib.image.ImageFactory;
 import mpicbg.imglib.outside.OutsideStrategyValueFactory;
 import mpicbg.imglib.type.NumericType;
 import mpicbg.imglib.type.numeric.ComplexFloatType;
+import mpicbg.imglib.type.numeric.FloatType;
 
 public class FourierConvolution<T extends NumericType<T>, S extends NumericType<S>> implements MultiThreaded, OutputAlgorithm<T>, Benchmark
 {
@@ -53,6 +55,51 @@ public class FourierConvolution<T extends NumericType<T>, S extends NumericType<
 			this.image = image;
 			return true;
 		}
+	}
+	final public static Image<FloatType> createGaussianKernel( final ContainerFactory factory, final double sigma, final int numDimensions )
+	{
+		final double[ ] sigmas = new double[ numDimensions ];
+		
+		for ( int d = 0; d < numDimensions; ++d )
+			sigmas[ d ] = sigma;
+		
+		return createGaussianKernel( factory, sigmas );
+	}
+
+	final public static Image<FloatType> createGaussianKernel( final ContainerFactory factory, final double[] sigmas )
+	{
+		final int numDimensions = sigmas.length;
+		
+		final int[] imageSize = new int[ numDimensions ];
+		final double[][] kernel = new double[ numDimensions ][];
+		
+		for ( int d = 0; d < numDimensions; ++d )
+		{
+			kernel[ d ] = MathLib.createGaussianKernel1DDouble( sigmas[ d ], true );
+			imageSize[ d ] = kernel[ d ].length;
+		}
+		
+		final Image<FloatType> kernelImg = new ImageFactory<FloatType>( new FloatType(), factory ).createImage( imageSize );
+		
+		final LocalizableCursor<FloatType> cursor = kernelImg.createLocalizableByDimCursor();
+		final int[] position = new int[ numDimensions ];
+		
+		while ( cursor.hasNext() )
+		{
+			cursor.fwd();
+			cursor.getPosition( position );
+			
+			double value = 1;
+			
+			for ( int d = 0; d < numDimensions; ++d )
+				value *= kernel[ d ][ position[ d ] ];
+			
+			cursor.getType().set( (float)value );
+		}
+		
+		cursor.close();
+		
+		return kernelImg;
 	}
 	
 	final public static <T extends NumericType<T>> Image<T> getGaussianKernel( final ImageFactory<T> imgFactory, final double sigma, final int numDimensions )
