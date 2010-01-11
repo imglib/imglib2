@@ -28,11 +28,15 @@ public abstract class TypeConverter
 	
 	public static <A extends Type< A >, B extends Type< B > > TypeConverter getTypeConverter( final A input, final B output ) 
 	{		
-		if ( input instanceof ByteType )
-			return getTypeConverter((ByteType)input, output);
+		/* inconvertible types due to javac bug 6548436: if ( input instanceof ByteType )
+			return getTypeConverter((ByteType)input, output); */
+		if ( (Object)input instanceof ByteType )
+			return getTypeConverter((ByteType)(Object)input, output);
 
-		if ( input instanceof ShortType )
-			return getTypeConverter((ShortType)input, output);
+		/* inconvertible types due to javac bug 6548436: if ( input instanceof ShortType )
+			return getTypeConverter((ShortType)input, output); */
+		if ( (Object)input instanceof ShortType )
+			return getTypeConverter((ShortType)(Object)input, output);
 		
 		System.out.println("mpi.imglib.type.TypeConverter(): Do not know how to convert Type " + input.getClass() );		
 		return null;		
@@ -43,7 +47,8 @@ public abstract class TypeConverter
 		
 		if ( ByteType.class.isInstance( output ) ) 
 		{
-			final ByteType out = (ByteType)output;
+			/* inconvertible types due to javac bug 6548436: final ByteType out = (ByteType)output; */
+			final ByteType out = (ByteType)(Object)output;
 			
 			return new TypeConverter() 
 			{
@@ -56,7 +61,8 @@ public abstract class TypeConverter
 
 		if ( ShortType.class.isInstance( output ) ) 
 		{
-			final ShortType out = (ShortType)output;
+			/* inconvertible types due to javac bug 6548436: final ShortType out = (ShortType)output; */
+			final ShortType out = (ShortType)(Object)output;
 			
 			return new TypeConverter() 
 			{
@@ -69,7 +75,8 @@ public abstract class TypeConverter
 
 		if ( IntType.class.isInstance( output ) )
 		{
-			final IntType out = (IntType)output;
+			/* inconvertible types due to javac bug 6548436: final IntType out = (IntType)output; */
+			final IntType out = (IntType)(Object)output;
 			
 			return new TypeConverter() 
 			{
@@ -82,7 +89,8 @@ public abstract class TypeConverter
 
 		if ( LongType.class.isInstance( output ) ) 
 		{
-			final IntType out = (IntType)output;
+			/* inconvertible types due to javac bug 6548436: final IntType out = (IntType)output; */
+			final IntType out = (IntType)(Object)output;
 			
 			return new TypeConverter() 
 			{
@@ -95,7 +103,8 @@ public abstract class TypeConverter
 		
 		if ( FloatType.class.isInstance( output ) ) 
 		{
-			final FloatType out = (FloatType)output;
+			/* inconvertible types due to javac bug 6548436: final FloatType out = (FloatType)output; */
+			final FloatType out = (FloatType)(Object)output;
 			
 			return new TypeConverter() 
 			{
@@ -115,7 +124,8 @@ public abstract class TypeConverter
 		
 		if ( ShortType.class.isInstance( output ) ) 
 		{
-			final ShortType out = (ShortType)output;
+			/* inconvertible types due to javac bug 6548436: final ShortType out = (ShortType)output; */
+			final ShortType out = (ShortType)(Object)output;
 			
 			return new TypeConverter() 
 			{
@@ -128,7 +138,8 @@ public abstract class TypeConverter
 
 		if ( FloatType.class.isInstance( output ) ) 
 		{
-			final FloatType out = (FloatType)output;
+			/* inconvertible types due to javac bug 6548436: final FloatType out = (FloatType)output; */
+			final FloatType out = (FloatType)(Object)output;
 			
 			return new TypeConverter() 
 			{

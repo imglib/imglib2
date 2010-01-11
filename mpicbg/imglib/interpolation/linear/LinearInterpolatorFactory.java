@@ -41,7 +41,8 @@ public class LinearInterpolatorFactory<T extends NumericType<T>> extends Interpo
 		if ( img.getNumDimensions() == 3 )	
 		{
 			if ( FloatType.class.isInstance( img.createType() ))
-				return (LinearInterpolator<T>)new LinearInterpolator3DFloat( (Image<FloatType>)img, (LinearInterpolatorFactory<FloatType>)this, (OutsideStrategyFactory<FloatType>)outsideStrategyFactory );
+				/* inconvertible types due to javac bug 6548436: return (LinearInterpolator<T>)new LinearInterpolator3DFloat( (Image<FloatType>)img, (LinearInterpolatorFactory<FloatType>)this, (OutsideStrategyFactory<FloatType>)outsideStrategyFactory ); */
+				return (LinearInterpolator)new LinearInterpolator3DFloat( (Image)img, (LinearInterpolatorFactory)this, (OutsideStrategyFactory)outsideStrategyFactory );
 			else
 				return new LinearInterpolator3D<T>( img, this, outsideStrategyFactory );
 		}

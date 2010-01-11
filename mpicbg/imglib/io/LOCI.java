@@ -72,19 +72,23 @@ public class LOCI
 			
 			if ( channels > 1 && channels <= 3 && pixelType == FormatTools.UINT8 )
 			{
-				return (Image<T>)openLOCIRGBALegacyType( path, fileName, new ImageFactory<RGBALegacyType>( new RGBALegacyType(), containerFactory ), from, to );
+				/* inconvertible types due to javac bug 6548436: return (Image<T>)openLOCIRGBALegacyType( path, fileName, new ImageFactory<RGBALegacyType>( new RGBALegacyType(), containerFactory ), from, to ); */
+				return (Image)openLOCIRGBALegacyType( path, fileName, new ImageFactory<RGBALegacyType>( new RGBALegacyType(), containerFactory ), from, to );
 			}			
 			else if ( pixelType == FormatTools.FLOAT || pixelType == FormatTools.UINT32 )
 			{
-				return (Image<T>)openLOCIFloatType( path, fileName, new ImageFactory<FloatType>( new FloatType(), containerFactory ), from, to );
+				/* inconvertible types due to javac bug 6548436: return (Image<T>)openLOCIFloatType( path, fileName, new ImageFactory<FloatType>( new FloatType(), containerFactory ), from, to ); */
+				return (Image)openLOCIFloatType( path, fileName, new ImageFactory<FloatType>( new FloatType(), containerFactory ), from, to );
 			}
 			else if ( pixelType == FormatTools.UINT16 )
 			{
-				return (Image<T>)openLOCIShortType( path, fileName, new ImageFactory<ShortType>( new ShortType(), containerFactory ), from, to );
+				/* inconvertible types due to javac bug 6548436: return (Image<T>)openLOCIShortType( path, fileName, new ImageFactory<ShortType>( new ShortType(), containerFactory ), from, to ); */
+				return (Image)openLOCIShortType( path, fileName, new ImageFactory<ShortType>( new ShortType(), containerFactory ), from, to );
 			}
 			else if ( pixelType == FormatTools.UINT8 )
 			{
-				return (Image<T>)openLOCIByteType( path, fileName, new ImageFactory<ByteType>( new ByteType(), containerFactory ), from, to );
+				/* inconvertible types due to javac bug 6548436: return (Image<T>)openLOCIByteType( path, fileName, new ImageFactory<ByteType>( new ByteType(), containerFactory ), from, to ); */
+				return (Image)openLOCIByteType( path, fileName, new ImageFactory<ByteType>( new ByteType(), containerFactory ), from, to );
 			}
 			else
 			{

@@ -310,10 +310,13 @@ public class GaussianConvolution< T extends NumericType<T>> implements MultiThre
 	@SuppressWarnings("unchecked")
 	public void computeGaussFloatArray3D()
 	{
-		final OutsideStrategyFactory<FloatType> outsideFactoryFloat = (OutsideStrategyFactory<FloatType>)outsideFactory; 
+		/* inconvertible types due to javac bug 6548436: final OutsideStrategyFactory<FloatType> outsideFactoryFloat = (OutsideStrategyFactory<FloatType>)outsideFactory;  */
+		final OutsideStrategyFactory<FloatType> outsideFactoryFloat = (OutsideStrategyFactory)outsideFactory;
 		
-		final Image<FloatType> imageFloat = (Image<FloatType>) image;
-		final Image<FloatType> convolvedFloat = (Image<FloatType>) convolved;
+		/* inconvertible types due to javac bug 6548436: final Image<FloatType> imageFloat = (Image<FloatType>) image; */
+		final Image<FloatType> imageFloat = (Image)image;
+		/* inconvertible types due to javac bug 6548436: final Image<FloatType> convolvedFloat = (Image<FloatType>) convolved; */
+		final Image<FloatType> convolvedFloat = (Image)convolved;
 		
 		final FloatArray3D<FloatType> input = (FloatArray3D<FloatType>) imageFloat.getContainer();
 		final FloatArray3D<FloatType> output = (FloatArray3D<FloatType>) convolvedFloat.getContainer();
