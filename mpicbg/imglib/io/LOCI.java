@@ -22,6 +22,9 @@ import loci.formats.ChannelSeparator;
 import loci.formats.FormatException;
 import loci.formats.FormatTools;
 import loci.formats.IFormatReader;
+import loci.formats.MetadataTools;
+import loci.formats.meta.IMetadata;
+import loci.formats.meta.MetadataRetrieve;
 import mpicbg.imglib.container.ContainerFactory;
 import mpicbg.imglib.cursor.LocalizablePlaneCursor;
 import mpicbg.imglib.image.Image;
@@ -117,32 +120,20 @@ public class LOCI
 	{
 		return openLOCIShortType( path, fileName, new ImageFactory<ShortType>( new ShortType(), factory ), from, to );
 	}
-
-	public static Image<ShortType> openLOCIShortType( final String path, final String fileName, final ImageFactory<ShortType> factory, int from, int to)
-	{
-		return openLOCIShortType( path, fileName, factory, from, to, null );
-	}
 	
-	public static Image<ShortType> openLOCIShortType( String path, final String fileName, final ImageFactory<ShortType> factory, int from, int to, IFormatReader reader )
+	public static Image<ShortType> openLOCIShortType( String path, final String fileName, final ImageFactory<ShortType> factory, int from, int to )
 	{				
-		final IFormatReader r;
+		path = checkPath( path );
+		final IFormatReader r = new ChannelSeparator();
 
-		if ( reader == null)
-		{
-			path = checkPath( path );
-			r = new ChannelSeparator();
-		}
-		else
-		{
-			r = reader;
-		}
+		final IMetadata omexmlMeta = MetadataTools.createOMEXMLMetadata();
+		r.setMetadataStore( omexmlMeta );
 
 		final String id = path + fileName;
 		
 		try 
 		{
-			if ( reader == null )
-				r.setId(id);
+			r.setId(id);
 			
 			final boolean isLittleEndian = r.isLittleEndian();			
 			final int width = r.getSizeX();
@@ -203,6 +194,9 @@ public class LOCI
 				System.out.println( "Opening '" + fileName + "' [" + width + "x" + height + "x" + depth + " type=" + pixelTypeString + " image=Image<ShortType>]" ); 
 				img.setName( fileName );
 			}
+			
+			// try read metadata
+			applyMetaData( img, r );
 		
 			final int t = 0;			
 			final byte[][] b = new byte[channels][width * height * bytesPerPixel];
@@ -261,7 +255,64 @@ public class LOCI
 		catch (FormatException exc) {System.out.println("LOCI.openLOCI(): Sorry, an error occurred: " + exc.getMessage()); return null;}		
 	}
 	
-	
+	protected static void applyMetaData( final Image<?> img, final IFormatReader reader )
+	{
+		for ( int d = 0; d < img.getNumDimensions(); ++d )
+			img.setCalibration( 1, d );
+
+		try
+		{
+			final MetadataRetrieve retrieve = (MetadataRetrieve)reader.getMetadataStore();
+			
+			float cal = retrieve.getDimensionsPhysicalSizeX( 0, 0 ).floatValue();
+			if ( cal == 0)
+			{
+				cal = 1;
+				System.out.println( "LOCI.openLOCI(): Warning, calibration for dimension 0 seems corrupted, setting to 1." );
+			}
+			
+			img.setCalibration( cal , 0 );
+			
+			if ( img.getNumDimensions() >= 2 )
+			{
+				cal = retrieve.getDimensionsPhysicalSizeY( 0, 0 ).floatValue();
+				if ( cal == 0)
+				{
+					cal = 1;
+					System.out.println( "LOCI.openLOCI(): Warning, calibration for dimension 1 seems corrupted, setting to 1." );
+				}
+				img.setCalibration( cal, 1 );
+			}
+			
+			if ( img.getNumDimensions() >= 3 )
+			{
+				cal = retrieve.getDimensionsPhysicalSizeZ( 0, 0 ).floatValue();
+				if ( cal == 0)
+				{
+					cal = 1;
+					System.out.println( "LOCI.openLOCI(): Warning, calibration for dimension 2 seems corrupted, setting to 1." );
+				}
+				img.setCalibration( cal, 2 );
+			}
+
+			if ( img.getNumDimensions() >= 4 )
+			{
+				cal = retrieve.getDimensionsTimeIncrement( 0, 0 ).floatValue();
+				if ( cal == 0)
+				{
+					cal = 1;
+					System.out.println( "LOCI.openLOCI(): Warning, calibration for dimension 3 seems corrupted, setting to 1." );
+				}
+				img.setCalibration( cal, 3 );
+			}
+			
+		}
+		catch( Exception e )
+		{
+			System.out.println( "LOCI.openLOCI(): Cannot read metadata, setting calibration to 1" );
+			return;
+		}
+	}
 
 	public static Image<FloatType> openLOCIFloatType( final String fileName, final ContainerFactory factory )
 	{
@@ -288,32 +339,21 @@ public class LOCI
 		return openLOCIFloatType( path, fileName, new ImageFactory<FloatType>( new FloatType(), factory ), from, to );
 	}
 
-	public static Image<FloatType> openLOCIFloatType( final String path, final String fileName, final ImageFactory<FloatType> factory, int from, int to)
-	{
-		return openLOCIFloatType( path, fileName, factory, from, to, null );
-	}
 	
-	public static Image<FloatType> openLOCIFloatType( String path, final String fileName, final ImageFactory<FloatType> factory, int from, int to, IFormatReader reader )
+	public static Image<FloatType> openLOCIFloatType( String path, final String fileName, final ImageFactory<FloatType> factory, int from, int to )
 	{				
-		final IFormatReader r;
+		path = checkPath( path );
+		final IFormatReader r = new ChannelSeparator();
 
-		if ( reader == null)
-		{
-			path = checkPath( path );
-			r = new ChannelSeparator();
-		}
-		else
-		{
-			r = reader;
-		}
-
+		final IMetadata omexmlMeta = MetadataTools.createOMEXMLMetadata();
+		r.setMetadataStore( omexmlMeta );
+		
 		final String id = path + fileName;
 		
 		try 
 		{
-			if ( reader == null )
-				r.setId(id);
-			
+			r.setId( id );
+						
 			final boolean isLittleEndian = r.isLittleEndian();			
 			final int width = r.getSizeX();
 			final int height = r.getSizeY();
@@ -373,6 +413,9 @@ public class LOCI
 				System.out.println( "Opening '" + fileName + "' [" + width + "x" + height + "x" + depth + " type=" + pixelTypeString + " image=Image<FloatType>]" );
 				img.setName( fileName );
 			}
+			
+			// try read metadata
+			applyMetaData( img, r );
 		
 			final int t = 0;			
 			final byte[][] b = new byte[channels][width * height * bytesPerPixel];
@@ -472,31 +515,19 @@ public class LOCI
 		return openLOCIByteType(path, fileName, factory, -1, -1 );
 	}
 	
-	public static Image<ByteType> openLOCIByteType( final String path, final String fileName, final ImageFactory<ByteType> factory, int from, int to)
-	{
-		return openLOCIByteType( path, fileName, factory, from, to, null );
-	}
-
-	public static Image<ByteType> openLOCIByteType( String path, final String fileName, final ImageFactory<ByteType> factory, int from, int to, IFormatReader reader )
+	public static Image<ByteType> openLOCIByteType( String path, final String fileName, final ImageFactory<ByteType> factory, int from, int to )
 	{				
-		final IFormatReader r;
+		path = checkPath( path );
+		final IFormatReader r = new ChannelSeparator();
 
-		if ( reader == null)
-		{
-			path = checkPath( path );
-			r = new ChannelSeparator();
-		}
-		else
-		{
-			r = reader;
-		}
+		final IMetadata omexmlMeta = MetadataTools.createOMEXMLMetadata();
+		r.setMetadataStore( omexmlMeta );
 
 		final String id = path + fileName;
 		
 		try 
 		{
-			if ( reader == null )
-				r.setId(id);
+			r.setId(id);
 			
 			final int width = r.getSizeX();
 			final int height = r.getSizeY();
@@ -556,6 +587,9 @@ public class LOCI
 				System.out.println( "Opening '" + fileName + "' [" + width + "x" + height + "x" + depth + " type=" + pixelTypeString + " image=Image<ByteType>]" ); 
 				img.setName( fileName );
 			}
+			
+			// try read metadata
+			applyMetaData( img, r );
 		
 			final int t = 0;			
 			final byte[][] b = new byte[channels][width * height * bytesPerPixel];
@@ -607,32 +641,20 @@ public class LOCI
 	{
 		return openLOCIRGBALegacyType(path, fileName, factory, -1, -1 );
 	}
-	
-	public static Image<RGBALegacyType> openLOCIRGBALegacyType( final String path, final String fileName, final ImageFactory<RGBALegacyType> factory, int from, int to)
-	{
-		return openLOCIRGBALegacyType( path, fileName, factory, from, to, null );
-	}
-	
-	public static Image<RGBALegacyType> openLOCIRGBALegacyType( String path, final String fileName, final ImageFactory<RGBALegacyType> factory, int from, int to, IFormatReader reader )
+		
+	public static Image<RGBALegacyType> openLOCIRGBALegacyType( String path, final String fileName, final ImageFactory<RGBALegacyType> factory, int from, int to )
 	{				
-		final IFormatReader r;
+		path = checkPath( path );
+		final IFormatReader r = new ChannelSeparator();
 
-		if ( reader == null)
-		{
-			path = checkPath( path );
-			r = new ChannelSeparator();
-		}
-		else
-		{
-			r = reader;
-		}
+		final IMetadata omexmlMeta = MetadataTools.createOMEXMLMetadata();
+		r.setMetadataStore( omexmlMeta );
 
 		final String id = path + fileName;
 		
 		try 
 		{
-			if ( reader == null )
-				r.setId(id);
+			r.setId(id);
 			
 			final int width = r.getSizeX();
 			final int height = r.getSizeY();
@@ -692,7 +714,10 @@ public class LOCI
 				System.out.println( "Opening '" + fileName + "' [" + width + "x" + height + "x" + depth + " channels=" + channels + " type=" + pixelTypeString + " image=RGBALegacyTypeImage]" ); 
 				img.setName( fileName );
 			}
-		
+			
+			// try read metadata
+			applyMetaData( img, r );
+
 			final int t = 0;			
 			final byte[][] b = new byte[channels][width * height * bytesPerPixel];
 			
