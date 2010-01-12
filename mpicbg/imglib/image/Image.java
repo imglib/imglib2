@@ -47,6 +47,8 @@ public class Image<T extends Type<T>> implements ImageProperties, Dimensionality
 	protected String name;
 	final protected int numDimensions, numPixels;
 	final protected int[] dim;
+	
+	final protected float[] calibration;
 
 	protected Display<T> display;
 
@@ -93,6 +95,10 @@ public class Image<T extends Type<T>> implements ImageProperties, Dimensionality
 			this.container = container;
 		
 		setDefaultDisplay();	
+		
+		calibration = new float[ numDimensions ];
+		for ( int d = 0; d < numDimensions; ++d )
+			calibration[ d ] = 1;
 	}
 	
 	protected Image( Container<T> container, ImageFactory<T> imageFactory, String name )
@@ -109,6 +115,15 @@ public class Image<T extends Type<T>> implements ImageProperties, Dimensionality
 	public Image<T> createNewImage( final int[] dimensions ) { return createNewImage( dimensions, null ); }
 	public Image<T> createNewImage( final String name ) { return createNewImage( dim, name); }
 	public Image<T> createNewImage() { return createNewImage( dim, null ); }
+	
+	public float[] getCalibration() { return calibration.clone(); }
+	public float getCalibration( final int dim ) { return calibration[ dim ]; }
+	public void setCalibration( final float[] calibration ) 
+	{ 
+		for ( int d = 0; d < numDimensions; ++d )
+			this.calibration[ d ] = calibration[ d ];
+	}
+	public void setCalibration( final float calibration, final int dim ) { this.calibration[ dim ] = calibration; } 
 	
 	public Container<T> getContainer() { return container; }
 	public T createType() { return imageFactory.createType(); }
