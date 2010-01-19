@@ -316,6 +316,16 @@ public class FourierConvolution<T extends NumericType<T>, S extends NumericType<
 		
 		return true;
 	}
+	
+	public void close()
+	{
+		kernelFFT.close(); 
+		
+		image = null;
+		convolved = null;
+		kernel = null;
+		kernelFFT = null;
+	}
 
 	@Override
 	public String getErrorMessage()  { return errorMessage; }
