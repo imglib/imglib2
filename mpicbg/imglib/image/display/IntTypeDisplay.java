@@ -25,7 +25,7 @@ public class IntTypeDisplay extends Display<IntType>
 	public IntTypeDisplay( final Image<IntType> img)
 	{
 		super(img);
-		min = Integer.MIN_VALUE;
+		min = -Integer.MAX_VALUE;
 		max = Integer.MAX_VALUE;
 	}	
 
@@ -37,7 +37,7 @@ public class IntTypeDisplay extends Display<IntType>
 		
 		if ( !c.hasNext() )
 		{
-			min = Integer.MIN_VALUE;
+			min = -Integer.MAX_VALUE;
 			max = Integer.MAX_VALUE;
 			return;
 		}

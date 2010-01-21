@@ -62,7 +62,7 @@ public class ImageJVirtualDisplay<T extends Type<T>> extends ImageStack
 		this.sizeZ = dimensions[ 2 ];
 		
 		min = Double.MAX_VALUE;
-		max = Double.MIN_VALUE;
+		max = -Double.MAX_VALUE;
 		
 		for ( InverseTransformDescription<T> it : interpolators )
 		{

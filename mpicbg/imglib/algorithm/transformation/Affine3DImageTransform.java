@@ -196,13 +196,13 @@ public class Affine3DImageTransform<T extends Type<T>> implements OutputAlgorith
 
 		// get min and max
 		int minX = Integer.MAX_VALUE;
-		int maxX = Integer.MIN_VALUE;
+		int maxX = -Integer.MAX_VALUE;
 
 		int minY = Integer.MAX_VALUE;
-		int maxY = Integer.MIN_VALUE;
+		int maxY = -Integer.MAX_VALUE;
 
 		int minZ = Integer.MAX_VALUE;
-		int maxZ = Integer.MIN_VALUE;
+		int maxZ = -Integer.MAX_VALUE;
 
 		for (final Point3d point : points)
 		{

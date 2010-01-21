@@ -37,8 +37,10 @@ public class ImageTransform<T extends Type<T>> implements OutputAlgorithm<T>
 	final Image<T> img;
 	final int numDimensions;
 	final InterpolatorFactory<T> interpolatorFactory;
-	final float[] location;
 	final boolean isAffine;
+	
+	final int[] newDim;
+	final float[] offset;
 	
 	Image<T> transformed;
 	String errorMessage = "";
@@ -48,7 +50,6 @@ public class ImageTransform<T extends Type<T>> implements OutputAlgorithm<T>
 		this.img = img;
 		this.interpolatorFactory = interpolatorFactory;
 		this.numDimensions = img.getNumDimensions();
-		this.location = new float[ numDimensions ];
 		this.transform = transform;		
 
 		if ( transform instanceof AffineModel3D ||
@@ -59,8 +60,41 @@ public class ImageTransform<T extends Type<T>> implements OutputAlgorithm<T>
 				isAffine = true;
 			else
 				isAffine = false;
+		
+		// get image dimensions
+		final int[] dimensions = img.getDimensions();
+
+		//
+		// first determine new min-max in all dimensions of the image
+		// by transforming all the corner-points
+		//	
+		final float[][] minMaxDim = MathLib.getMinMaxDim( dimensions, transform );		
+		offset = new float[ numDimensions ];
+		
+		// get the final size for the new image
+		newDim = new int[ numDimensions ];
+
+		for ( int d = 0; d < numDimensions; ++d )
+		{
+			newDim[ d ] = Math.round( minMaxDim[ d ][ 1 ] ) - Math.round( minMaxDim[ d ][ 0 ] );
+			offset[ d ] = minMaxDim[ d ][ 0 ];
+		}		
 	}
 	
+	public float[] getOffset() { return offset; }
+	public void setOffset( final float[] offset ) 
+	{
+		for ( int d = 0; d < numDimensions; ++d )
+			this.offset[ d ] = offset[ d ];
+	}
+
+	public int[] getNewImageSize() { return newDim; }
+	public void setNewImageSize( final int[] newDim ) 
+	{
+		for ( int d = 0; d < numDimensions; ++d )
+			this.newDim[ d ] = newDim[ d ];
+	}
+
 	@Override
 	public boolean checkInput()
 	{
@@ -104,21 +138,6 @@ public class ImageTransform<T extends Type<T>> implements OutputAlgorithm<T>
 	{
 		if ( !checkInput() )
 			return false;
-
-		// get image dimensions
-		final int[] dimensions = img.getDimensions();
-
-		//
-		// first determine new min-max in all dimensions of the image
-		// by transforming all the corner-points
-		//	
-		final float[][] minMaxDim = MathLib.getMinMaxDim( dimensions, transform );
-		
-		// get the final size for the new image
-		final int[] newDim = new int[ numDimensions ];
-
-		for ( int d = 0; d < numDimensions; ++d )
-			newDim[ d ] = Math.round( minMaxDim[ d ][ 1 ] ) - Math.round( minMaxDim[ d ][ 0 ] );
 		
 		// create the new output image
 		transformed = img.createNewImage( newDim );
@@ -133,56 +152,29 @@ public class ImageTransform<T extends Type<T>> implements OutputAlgorithm<T>
 		{
 			final float[] tmp = new float[ numDimensions ];
 
-			if ( isAffine )
+			while (transformedIterator.hasNext())
 			{
-				while (transformedIterator.hasNext())
-				{
-					transformedIterator.fwd();
-		
-					// we have to add the offset of our new image
-					// relative to it's starting point (0,0,0)
-					for ( int d = 0; d < numDimensions; ++d )
-						tmp[ d ] = transformedIterator.getPosition( d ) + minMaxDim[ d ][ 0 ];
-					
-					// transform back into the original image
-					// 
-					// in order to compute the voxels in the new object we have to apply
-					// the inverse transform to all voxels of the new array and interpolate
-					// the position in the original image
-					transform.applyInverseInPlace( tmp );
-					
-					interpolator.moveTo( tmp );
-					
-					// does the same, but for affine typically slower
-					// interpolator.setPosition( tmp );
-		
-					transformedValue.set( interpolatedValue );
-				}
-			}
-			else
-			{				
-				while (transformedIterator.hasNext())
-				{
-					transformedIterator.fwd();
-		
-					// we have to add the offset of our new image
-					// relative to it's starting point (0,0,0)
-					for ( int d = 0; d < numDimensions; ++d )
-						tmp[ d ] = transformedIterator.getPosition( d ) + minMaxDim[ d ][ 0 ];
-					
-					// transform back into the original image
-					// 
-					// in order to compute the voxels in the new object we have to apply
-					// the inverse transform to all voxels of the new array and interpolate
-					// the position in the original image
-					transform.applyInverseInPlace( tmp );
-					
-					interpolator.setPosition( tmp );
-		
-					transformedValue.set( interpolatedValue );
-				}
-			}
-		
+				transformedIterator.fwd();
+	
+				// we have to add the offset of our new image
+				// relative to it's starting point (0,0,0)
+				for ( int d = 0; d < numDimensions; ++d )
+					tmp[ d ] = transformedIterator.getPosition( d ) + offset[ d ];
+				
+				// transform back into the original image
+				// 
+				// in order to compute the voxels in the new object we have to apply
+				// the inverse transform to all voxels of the new array and interpolate
+				// the position in the original image
+				transform.applyInverseInPlace( tmp );
+				
+				interpolator.moveTo( tmp );
+				
+				// does the same, but for affine typically slower
+				// interpolator.setPosition( tmp );
+	
+				transformedValue.set( interpolatedValue );
+			}		
 		} 
 		catch ( NoninvertibleModelException e )
 		{

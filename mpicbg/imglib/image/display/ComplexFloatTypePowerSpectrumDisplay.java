@@ -35,7 +35,7 @@ public class ComplexFloatTypePowerSpectrumDisplay extends Display<ComplexFloatTy
 		
 		if ( !c.hasNext() )
 		{
-			min = Float.MIN_VALUE;
+			min = -Float.MAX_VALUE;
 			max = Float.MAX_VALUE;
 			return;
 		}

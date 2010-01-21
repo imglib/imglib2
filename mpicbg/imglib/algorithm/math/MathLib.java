@@ -505,7 +505,7 @@ public class MathLib
 		for ( int d = 0; d < numDimensions; ++d )
 		{
 			minMaxDim[ d ][ 0 ] = Float.MAX_VALUE;
-			minMaxDim[ d ][ 1 ] = Float.MIN_VALUE;
+			minMaxDim[ d ][ 1 ] = -Float.MAX_VALUE;
 		}
 		
 		// recursively get all corner points of the image, assuming they will still be the extremum points
