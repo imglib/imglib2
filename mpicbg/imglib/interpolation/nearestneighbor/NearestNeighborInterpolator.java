@@ -14,11 +14,13 @@
  *
  * @author Stephan Preibisch & Stephan Saalfeld
  */
-package mpicbg.imglib.interpolation;
+package mpicbg.imglib.interpolation.nearestneighbor;
 
 import mpicbg.imglib.algorithm.math.MathLib;
 import mpicbg.imglib.cursor.LocalizableByDimCursor;
 import mpicbg.imglib.image.Image;
+import mpicbg.imglib.interpolation.InterpolatorFactory;
+import mpicbg.imglib.interpolation.InterpolatorImpl;
 import mpicbg.imglib.outside.OutsideStrategyFactory;
 import mpicbg.imglib.type.Type;
 

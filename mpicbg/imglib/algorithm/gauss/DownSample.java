@@ -7,7 +7,7 @@ import mpicbg.imglib.algorithm.math.MathLib;
 import mpicbg.imglib.cursor.LocalizableCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.interpolation.Interpolator;
-import mpicbg.imglib.interpolation.NearestNeighborInterpolatorFactory;
+import mpicbg.imglib.interpolation.nearestneighbor.NearestNeighborInterpolatorFactory;
 import mpicbg.imglib.outside.OutsideStrategyMirrorFactory;
 import mpicbg.imglib.type.NumericType;
 

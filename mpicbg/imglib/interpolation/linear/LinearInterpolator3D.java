@@ -1,10 +1,11 @@
-package mpicbg.imglib.interpolation;
+package mpicbg.imglib.interpolation.linear;
 
 import mpicbg.imglib.image.Image;
+import mpicbg.imglib.interpolation.InterpolatorFactory;
 import mpicbg.imglib.outside.OutsideStrategyFactory;
 import mpicbg.imglib.type.NumericType;
 
-public class LinearInterpolator3D<T extends NumericType<T>> extends LinearInterpolator<T> 
+public class LinearInterpolator3D<T extends NumericType<T>> extends LinearInterpolator<T>
 {
 	final int tmpLocation[];
 

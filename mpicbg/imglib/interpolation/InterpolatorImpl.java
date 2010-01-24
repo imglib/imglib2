@@ -27,7 +27,7 @@ public abstract class InterpolatorImpl<T extends Type<T>> implements Interpolato
 	final protected Image<T> img;
 
 	// the location of the interpolator in the image
-	final float[] position, tmp;
+	final protected float[] position, tmp;
 
 	/**
 	 * the number of dimensions 

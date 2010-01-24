@@ -14,9 +14,10 @@
  *
  * @author Stephan Preibisch & Stephan Saalfeld
  */
-package mpicbg.imglib.interpolation;
+package mpicbg.imglib.interpolation.linear;
 
 import mpicbg.imglib.image.Image;
+import mpicbg.imglib.interpolation.InterpolatorFactory;
 import mpicbg.imglib.outside.OutsideStrategyFactory;
 import mpicbg.imglib.type.NumericType;
 import mpicbg.imglib.type.numeric.FloatType;
