@@ -22,6 +22,15 @@ import mpicbg.imglib.container.Container;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.type.Type;
 
+/**
+ * We use the class {@link CursorImpl} instead of implementing methods here so that other classes can
+ * only implement {@link Cursor} and extend other classes instead. As each {@link CursorImpl} is also
+ * a {@link Cursor} there are no disadvantages for the {@link Cursor} implementations.
+ * 
+ * @author Stephan
+ *
+ * @param <T>
+ */
 public abstract class CursorImpl<T extends Type<T>> implements Cursor<T>
 {
 	final protected T type;

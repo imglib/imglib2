@@ -111,8 +111,8 @@ public class BooleanType extends TypeImpl<BooleanType> implements LogicType<Bool
 	@Override
 	public BooleanType[][][] createArray3D(int size1, int size2, int size3) { return new BooleanType[ size1 ][ size2 ][ size3 ]; }
 
-	@Override
-	public BooleanType getType() { return this; }
+	//@Override
+	//public BooleanType getType() { return this; }
 
 	@Override
 	public BooleanType createType( Container<BooleanType> container )

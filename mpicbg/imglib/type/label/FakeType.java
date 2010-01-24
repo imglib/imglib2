@@ -46,8 +46,8 @@ public class FakeType extends TypeImpl<FakeType>
 	@Override
 	public FakeType[][][] createArray3D(int size1, int size2, int size3) { return new FakeType[ size1 ][ size2 ][ size3 ]; }
 
-	@Override
-	public FakeType getType() { return this; }
+	//@Override
+	//public FakeType getType() { return this; }
 
 	@Override
 	public FakeType createType( Container<FakeType> container ){ return new FakeType(); }

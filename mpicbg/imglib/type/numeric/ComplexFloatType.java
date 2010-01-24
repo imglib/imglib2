@@ -253,8 +253,8 @@ public class ComplexFloatType extends TypeImpl<ComplexFloatType> implements Nume
 	@Override
 	public ComplexFloatType[][][] createArray3D(int size1, int size2, int size3) { return new ComplexFloatType[ size1 ][ size2 ][ size3 ]; }
 
-	@Override
-	public ComplexFloatType getType() { return this; }
+	//@Override
+	//public ComplexFloatType getType() { return this; }
 
 	@Override
 	public ComplexFloatType createType( Container<ComplexFloatType> container )

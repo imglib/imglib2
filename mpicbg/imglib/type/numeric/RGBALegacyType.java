@@ -203,8 +203,8 @@ public class RGBALegacyType extends TypeImpl<RGBALegacyType> implements NumericT
 	@Override
 	public RGBALegacyType[][][] createArray3D(int size1, int size2, int size3) { return new RGBALegacyType[ size1 ][ size2 ][ size3 ]; }
 
-	@Override
-	public RGBALegacyType getType() { return this; }
+	//@Override
+	//public RGBALegacyType getType() { return this; }
 	
 	@Override
 	public RGBALegacyType createType( Container<RGBALegacyType> container )

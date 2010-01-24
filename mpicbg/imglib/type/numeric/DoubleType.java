@@ -124,8 +124,8 @@ public class DoubleType extends TypeImpl<DoubleType> implements NumericType<Doub
 	@Override
 	public DoubleType[][][] createArray3D(int size1, int size2, int size3) { return new DoubleType[ size1 ][ size2 ][ size3 ]; }
 
-	@Override
-	public DoubleType getType() { return this; }
+	//@Override
+	//public DoubleType getType() { return this; }
 	
 	@Override
 	public DoubleType createType( Container<DoubleType> container )

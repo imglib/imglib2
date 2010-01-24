@@ -125,8 +125,8 @@ public class IntType extends TypeImpl<IntType> implements NumericType<IntType>
 	@Override
 	public IntType[][][] createArray3D(int size1, int size2, int size3) { return new IntType[ size1 ][ size2 ][ size3 ]; }
 
-	@Override
-	public IntType getType() { return this; }
+	//@Override
+	//public IntType getType() { return this; }
 		
 	@Override
 	public IntType createType( Container<IntType> container )

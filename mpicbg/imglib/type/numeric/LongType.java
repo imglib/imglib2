@@ -125,8 +125,8 @@ public class LongType extends TypeImpl<LongType> implements NumericType<LongType
 	@Override
 	public LongType[][][] createArray3D(int size1, int size2, int size3) { return new LongType[ size1 ][ size2 ][ size3 ]; }
 
-	@Override
-	public LongType getType() { return this; }
+	//@Override
+	//public LongType getType() { return this; }
 	
 	@Override
 	public LongType createType( Container<LongType> container )

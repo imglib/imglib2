@@ -224,8 +224,8 @@ public class BasePairBitType extends TypeImpl<BasePairBitType> implements BasePa
 	@Override
 	public BasePairBitType[][][] createArray3D(int size1, int size2, int size3) { return new BasePairBitType[ size1 ][ size2 ][ size3 ]; }
 
-	@Override
-	public BasePairBitType getType() { return this; }
+	//@Override
+	//public BasePairBitType getType() { return this; }
 
 	@Override
 	public BasePairBitType createType( Container<BasePairBitType> container ){ return new BasePairBitType(); }

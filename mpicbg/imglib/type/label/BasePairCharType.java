@@ -163,8 +163,8 @@ public class BasePairCharType extends TypeImpl<BasePairCharType> implements Base
 	@Override
 	public BasePairCharType[][][] createArray3D(int size1, int size2, int size3) { return new BasePairCharType[ size1 ][ size2 ][ size3 ]; }
 
-	@Override
-	public BasePairCharType getType() { return this; }
+	//@Override
+	//public BasePairCharType getType() { return this; }
 
 	@Override
 	public BasePairCharType createType( Container<BasePairCharType> container )

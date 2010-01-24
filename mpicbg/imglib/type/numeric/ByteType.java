@@ -125,8 +125,8 @@ public class ByteType extends TypeImpl<ByteType> implements NumericType<ByteType
 	@Override
 	public ByteType[][][] createArray3D(int size1, int size2, int size3) { return new ByteType[ size1 ][ size2 ][ size3 ]; }
 
-	@Override
-	public ByteType getType() { return this; }
+	//@Override
+	//public ByteType getType() { return this; }
 
 	@Override
 	public ByteType createType( Container<ByteType> container )

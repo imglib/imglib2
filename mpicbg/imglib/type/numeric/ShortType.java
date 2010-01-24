@@ -125,8 +125,8 @@ public class ShortType extends TypeImpl<ShortType> implements NumericType<ShortT
 	@Override
 	public ShortType[][][] createArray3D(int size1, int size2, int size3) { return new ShortType[ size1 ][ size2 ][ size3 ]; }
 
-	@Override
-	public ShortType getType() { return this; }
+	//@Override
+	//public ShortType getType() { return this; }
 	
 	@Override
 	public ShortType createType( Container<ShortType> container )

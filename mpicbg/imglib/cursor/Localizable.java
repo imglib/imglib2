@@ -16,6 +16,15 @@
  */
 package mpicbg.imglib.cursor;
 
+/**
+ * The {@link Localizable} interface add functionality to return
+ * the current position. Not only {@link Cursor}s can use this 
+ * interface, it might be used by much more classes as {@link LocalizableByDimCursor}s
+ * can take any {@link Localizable} as input for where they should move to.
+ *  
+ * @author Stephan Preibisch & Stephan Saalfeld
+ *
+ */
 public interface Localizable extends Iterable
 {
 	public void getPosition( int[] position );

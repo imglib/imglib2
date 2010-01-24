@@ -16,6 +16,15 @@
  */
 package mpicbg.imglib.cursor;
 
+import mpicbg.imglib.image.Image;
+
+/** 
+ * The {@link Iterable} interface provides basic functionality for
+ * iterating over an {@link Image}.
+ *  
+ * @author Stephan
+ *
+ */
 public interface Iterable
 {
 	public void fwd( long steps );

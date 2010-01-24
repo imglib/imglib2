@@ -124,8 +124,8 @@ public class FloatType extends TypeImpl<FloatType> implements NumericType<FloatT
 	@Override
 	public FloatType[][][] createArray3D(int size1, int size2, int size3) { return new FloatType[ size1 ][ size2 ][ size3 ]; }
 
-	@Override
-	public FloatType getType() { return this; }
+	//@Override
+	//public FloatType getType() { return this; }
 
 	@Override
 	public FloatType createType( Container<FloatType> container )

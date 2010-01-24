@@ -19,10 +19,28 @@ package mpicbg.imglib.cursor;
 import java.util.Iterator;
 
 import mpicbg.imglib.container.Container;
+import mpicbg.imglib.container.array.Array;
+import mpicbg.imglib.container.cube.Cube;
 import mpicbg.imglib.cursor.vector.Dimensionality;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.type.Type;
 
+/**
+ * The {@link Cursor} is responsible for iterating over the image. Therefore it has to be implemented 
+ * for each type of {@link Container} like {@link Array}, {@link Cube}, ... 
+ * 
+ * The {@link Cursor} does not know which {@link Type} of {@link Image} it is working on as there this
+ * is not important for its positioning. It is typed to the {@link Type} so that the {@link Cursor} is
+ * able to return the correct instance of {@link Type} when calling the getType() method.
+ * 
+ * The {@link Cursor} class itself is only capable of iterating over all pixels of the {@link Image}, 
+ * there is no guaranteed order in which the pixels are iterated, this depends on the implementation for
+ * the specific {@link Container}.
+ *  
+ * @author Stephan Preibisch & Stephan Saalfeld
+ *
+ * @param <T> - the {@link Type} this {@link Cursor} works on
+ */
 public interface Cursor<T extends Type<T>> extends Iterator<T>, java.lang.Iterable<T>, Iterable, Dimensionality
 {	
 	public void reset();			

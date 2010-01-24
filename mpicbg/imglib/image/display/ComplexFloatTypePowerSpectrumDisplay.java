@@ -67,13 +67,13 @@ public class ComplexFloatTypePowerSpectrumDisplay extends Display<ComplexFloatTy
 	}	
 
 	@Override
-	public float get32Bit( final ComplexFloatType c ) { return getComplexDisplayValue( c.getType() ); }
+	public float get32Bit( final ComplexFloatType c ) { return getComplexDisplayValue( c ); }
 	@Override
-	public float get32BitNormed( final ComplexFloatType c ) { return normFloat( getComplexDisplayValue( c.getType() ) ); }
+	public float get32BitNormed( final ComplexFloatType c ) { return normFloat( getComplexDisplayValue( c ) ); }
 	
 	@Override
-	public byte get8BitSigned( final ComplexFloatType c) { return (byte) Math.round( normFloat( getComplexDisplayValue( c.getType() ) ) * 255 ); }
+	public byte get8BitSigned( final ComplexFloatType c) { return (byte) Math.round( normFloat( getComplexDisplayValue( c ) ) * 255 ); }
 	@Override
-	public short get8BitUnsigned( final ComplexFloatType c) { return (short)Math.round( normFloat( getComplexDisplayValue( c.getType() ) ) * 255 ); }		
+	public short get8BitUnsigned( final ComplexFloatType c) { return (short)Math.round( normFloat( getComplexDisplayValue( c ) ) * 255 ); }		
 	
 }
