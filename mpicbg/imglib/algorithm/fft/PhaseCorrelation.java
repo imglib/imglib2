@@ -413,7 +413,7 @@ public class PhaseCorrelation<T extends NumericType<T>, S extends NumericType<S>
 		final ArrayList<PhaseCorrelationPeak> peakList = new ArrayList<PhaseCorrelationPeak>();
 		
 		for ( int i = 0; i < numPeaks; ++i )
-			peakList.add( new PhaseCorrelationPeak( new int[ numDimensions ], Float.MIN_VALUE) );
+			peakList.add( new PhaseCorrelationPeak( new int[ numDimensions ], -Float.MAX_VALUE) );
 
 		final LocalizableByDimCursor<FloatType> cursor = invPCM.createLocalizableByDimCursor( new OutsideStrategyPeriodicFactory<FloatType>() );
 		final LocalNeighborhoodCursor<FloatType> localCursor = cursor.createLocalNeighborhoodCursor();

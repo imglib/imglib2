@@ -35,7 +35,7 @@ public class DoubleTypeDisplay extends Display<DoubleType>
 		
 		if ( !c.hasNext() )
 		{
-			min = Float.MIN_VALUE;
+			min = -Float.MAX_VALUE;
 			max = Float.MAX_VALUE;
 			return;
 		}

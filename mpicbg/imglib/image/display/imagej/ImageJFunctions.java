@@ -62,9 +62,9 @@ public class ImageJFunctions
 			minMaxDim[1][0] = Float.MAX_VALUE;
 			minMaxDim[2][0] = Float.MAX_VALUE;
 			
-			minMaxDim[0][1] = Float.MIN_VALUE;
-			minMaxDim[1][1] = Float.MIN_VALUE;
-			minMaxDim[2][1] = Float.MIN_VALUE;
+			minMaxDim[0][1] = -Float.MAX_VALUE;
+			minMaxDim[1][1] = -Float.MAX_VALUE;
+			minMaxDim[2][1] = -Float.MAX_VALUE;
 			
 			for ( InverseTransformDescription<T> ti : interpolators )
 			{
@@ -91,7 +91,7 @@ public class ImageJFunctions
 		dimensions[ 2 ] = 1;
 		
 		for ( int d = 0; d < dim.length; d++ )
-			if ( minMaxDim[ d ][ 0 ] < Float.MAX_VALUE && minMaxDim[ d ][ 1 ] > Float.MIN_VALUE )
+			if ( minMaxDim[ d ][ 0 ] < Float.MAX_VALUE && minMaxDim[ d ][ 1 ] > -Float.MAX_VALUE )
 				dimensions[ d ] = Math.round( minMaxDim[ d ][ 1 ] ) - Math.round( minMaxDim[ d ][ 0 ] );
 
 		// set the offset for all InverseTransformableIterators

@@ -25,7 +25,7 @@ public class LongTypeDisplay extends Display<LongType>
 	public LongTypeDisplay( final Image<LongType> img)
 	{
 		super(img);
-		min = Long.MIN_VALUE;
+		min = -Long.MAX_VALUE;
 		max = Long.MAX_VALUE;
 	}	
 
@@ -37,7 +37,7 @@ public class LongTypeDisplay extends Display<LongType>
 		
 		if ( !c.hasNext() )
 		{
-			min = Long.MIN_VALUE;
+			min = -Long.MAX_VALUE;
 			max = Long.MAX_VALUE;
 			return;
 		}
