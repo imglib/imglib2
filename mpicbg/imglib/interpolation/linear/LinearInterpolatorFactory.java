@@ -33,11 +33,12 @@ public class LinearInterpolatorFactory<T extends NumericType<T>> extends Interpo
 	@Override
 	public LinearInterpolator<T> createInterpolator( final Image<T> img )
 	{
-		if ( img.getNumDimensions() == 1 )	
-			return new LinearInterpolator1D<T>( img, this, outsideStrategyFactory );
-		else if ( img.getNumDimensions() == 2 )	
-			return new LinearInterpolator2D<T>( img, this, outsideStrategyFactory );
-		else if ( img.getNumDimensions() == 3 )	
+		//if ( img.getNumDimensions() == 1 )	
+		//	return new LinearInterpolator1D<T>( img, this, outsideStrategyFactory );
+		//else if ( img.getNumDimensions() == 2 )	
+		//	return new LinearInterpolator2D<T>( img, this, outsideStrategyFactory );
+		//else 
+		if ( img.getNumDimensions() == 3 )	
 		{
 			if ( FloatType.class.isInstance( img.createType() ))
 				return (LinearInterpolator<T>)new LinearInterpolator3DFloat( (Image<FloatType>)img, (LinearInterpolatorFactory<FloatType>)this, (OutsideStrategyFactory<FloatType>)outsideStrategyFactory );
