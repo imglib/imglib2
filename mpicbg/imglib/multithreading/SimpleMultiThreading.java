@@ -1,16 +1,4 @@
-package mpicbg.imglib.multithreading;
-
 /**
- * <p>Title: MultiThreading </p>
- *
- * <p>Description: </p>
- *
- * <p>Copyright: Copyright (c) 2007</p>
- *
- * <p>Company: </p>
- *
- * <p>License: GPL
- *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License 2
  * as published by the Free Software Foundation.
@@ -24,9 +12,10 @@ package mpicbg.imglib.multithreading;
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
- * @author Dave Hale, Stephan Preibisch
- * @version 1.0
+ * @author Stephan Preibisch
  */
+
+package mpicbg.imglib.multithreading;
 
 public class SimpleMultiThreading
 {
