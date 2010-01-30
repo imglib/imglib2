@@ -42,7 +42,7 @@ public class FloatImagePlus<T extends Type<T>> extends ImagePlusContainer<T> imp
 	final ImagePlus image;
 	final float[][] mirror;
 	
-	public FloatImagePlus( ImagePlusContainerFactory factory, int[] dim, final int entitiesPerPixel ) 
+	public FloatImagePlus( final ImagePlusContainerFactory factory, final int[] dim, final int entitiesPerPixel ) 
 	{
 		super( factory, dim, entitiesPerPixel );
 		
@@ -53,9 +53,15 @@ public class FloatImagePlus<T extends Type<T>> extends ImagePlusContainer<T> imp
 			mirror[ i ] = (float[])image.getStack().getProcessor( i+1 ).getPixels();
 	}
 
-	public FloatImagePlus( ImagePlus image, ImagePlusContainerFactory factory ) 
+	public FloatImagePlus( final ImagePlus image, final ImagePlusContainerFactory factory ) 
 	{
-		this( factory, new int[]{ image.getWidth(), image.getHeight(), image.getStackSize()}, 1 );
+		super( factory, new int[]{ image.getWidth(), image.getHeight(), image.getStackSize()}, 1 );
+		
+		this.image = image;
+		mirror = new float[ dim[2] ][];
+		
+		for ( int i = 0; i < dim[ 2 ]; ++i )
+			mirror[ i ] = (float[])image.getStack().getProcessor( i+1 ).getPixels();
 	}
 	
 	@Override
