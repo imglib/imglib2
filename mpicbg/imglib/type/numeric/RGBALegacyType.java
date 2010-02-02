@@ -146,7 +146,7 @@ public class RGBALegacyType extends TypeImpl<RGBALegacyType> implements NumericT
 	public void add( final RGBALegacyType c ) 
 	{ 
 		final int value1 = v[ i ];		
-		final int value2 = c.v[ i ];		
+		final int value2 = c.get();		
 		
 		v[ i ] = rgba( red(value1) + red(value2), green(value1) + green(value2), blue(value1) + blue(value2), alpha(value1) + alpha(value2) );		 
 	}
@@ -155,7 +155,7 @@ public class RGBALegacyType extends TypeImpl<RGBALegacyType> implements NumericT
 	public void div( final RGBALegacyType c ) 
 	{ 
 		final int value1 = v[ i ];		
-		final int value2 = c.v[ i ];		
+		final int value2 = c.get();		
 		
 		v[ i ] = rgba( red(value1) / red(value2), green(value1) / green(value2), blue(value1) / blue(value2), alpha(value1) / alpha(value2) );		 
 	}
@@ -164,7 +164,7 @@ public class RGBALegacyType extends TypeImpl<RGBALegacyType> implements NumericT
 	public void mul( final RGBALegacyType c ) 
 	{
 		final int value1 = v[ i ];		
-		final int value2 = c.v[ i ];		
+		final int value2 = c.get();		
 		
 		v[ i ] = rgba( red(value1) * red(value2), green(value1) * green(value2), blue(value1) * blue(value2), alpha(value1) * alpha(value2) );		 
 	}
@@ -173,7 +173,7 @@ public class RGBALegacyType extends TypeImpl<RGBALegacyType> implements NumericT
 	public void sub( final RGBALegacyType c ) 
 	{
 		final int value1 = v[ i ];		
-		final int value2 = c.v[ i ];		
+		final int value2 = c.get();		
 		
 		v[ i ] = rgba( red(value1) - red(value2), green(value1) - green(value2), blue(value1) - blue(value2), alpha(value1) - alpha(value2) );		 
 	}
@@ -182,7 +182,7 @@ public class RGBALegacyType extends TypeImpl<RGBALegacyType> implements NumericT
 	public int compareTo( final RGBALegacyType c ) 
 	{ 
 		final int value1 = v[ i ];		
-		final int value2 = c.v[ i ];
+		final int value2 = c.get();
 
 		if ( red(value1) + green(value1) + blue(value1) + alpha(value1) > red(value2) + green(value2) + blue(value2) + alpha(value2) )
 			return 1;

@@ -42,7 +42,7 @@ public class ByteImagePlus<T extends Type<T>> extends ImagePlusContainer<T> impl
 	final ImagePlus image;
 	final byte[][] mirror;
 	
-	public ByteImagePlus( ImagePlusContainerFactory factory, int[] dim, final int entitiesPerPixel ) 
+	public ByteImagePlus( final ImagePlusContainerFactory factory, final int[] dim, final int entitiesPerPixel ) 
 	{
 		super( factory, dim, entitiesPerPixel );
 
@@ -53,9 +53,15 @@ public class ByteImagePlus<T extends Type<T>> extends ImagePlusContainer<T> impl
 			mirror[ i ] = (byte[])image.getStack().getProcessor( i+1 ).getPixels();
 	}
 
-	public ByteImagePlus( ImagePlus image, ImagePlusContainerFactory factory ) 
+	public ByteImagePlus( final ImagePlus image, final ImagePlusContainerFactory factory ) 
 	{
-		this( factory, new int[]{ image.getWidth(), image.getHeight(), image.getStackSize()}, 1 );
+		super( factory, new int[]{ image.getWidth(), image.getHeight(), image.getStackSize()}, 1 );
+		
+		this.image = image;
+		mirror = new byte[ dim[2] ][];
+		
+		for ( int i = 0; i < dim[ 2 ]; ++i )
+			mirror[ i ] = (byte[])image.getStack().getProcessor( i+1 ).getPixels();
 	}
 	
 	@Override

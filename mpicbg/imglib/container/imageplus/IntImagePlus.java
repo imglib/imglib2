@@ -42,7 +42,7 @@ public class IntImagePlus<T extends Type<T>> extends ImagePlusContainer<T> imple
 	final ImagePlus image;
 	final int[][] mirror;
 	
-	public IntImagePlus( ImagePlusContainerFactory factory, int[] dim, final int entitiesPerPixel ) 
+	public IntImagePlus( final ImagePlusContainerFactory factory, final int[] dim, final int entitiesPerPixel ) 
 	{
 		super( factory, dim, entitiesPerPixel );
 
@@ -53,9 +53,15 @@ public class IntImagePlus<T extends Type<T>> extends ImagePlusContainer<T> imple
 			mirror[ i ] = (int[])image.getStack().getProcessor( i+1 ).getPixels();
 	}
 
-	public IntImagePlus( ImagePlus image, ImagePlusContainerFactory factory ) 
+	public IntImagePlus( final ImagePlus image, final ImagePlusContainerFactory factory ) 
 	{
-		this( factory, new int[]{ image.getWidth(), image.getHeight(), image.getStackSize()}, 1 );
+		super( factory, new int[]{ image.getWidth(), image.getHeight(), image.getStackSize()}, 1 );
+		
+		this.image = image;
+		mirror = new int[ dim[2] ][];
+		
+		for ( int i = 0; i < dim[ 2 ]; ++i )
+			mirror[ i ] = (int[])image.getStack().getProcessor( i+1 ).getPixels();
 	}
 	
 	@Override
