@@ -141,6 +141,9 @@ public class Image<T extends Type<T>> implements ImageProperties, Dimensionality
 	public Container<T> getContainer() { return container; }
 	public T createType() { return imageFactory.createType(); }
 	
+	/**
+	 * Return a {@link Cursor} that will traverse the image's pixel data in a memory-optimized fashion.
+	 */
 	public Cursor<T> createCursor()
 	{
 		final T type = this.type.createType( container );
