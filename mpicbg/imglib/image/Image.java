@@ -152,6 +152,10 @@ public class Image<T extends Type<T>> implements ImageProperties, Dimensionality
 		return cursor;	
 	}
 	
+	/**
+	 * Return a {@link Cursor} that will traverse the image's pixel data in a memory-optimized fashion 
+	 * and keeps track of its position
+	 */
 	public LocalizableCursor<T> createLocalizableCursor()
 	{
 		final T type = this.type.createType( container );
