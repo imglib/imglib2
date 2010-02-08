@@ -119,14 +119,35 @@ public class Image<T extends Type<T>> implements ImageProperties, Dimensionality
 		this( container, imageFactory, container.getDimensions(), name );
 	}
 	
-	public Image( final ImageFactory<T> imageFactory, int dim[], final String name )	
+	protected Image( final ImageFactory<T> imageFactory, int dim[], final String name )	
 	{	
 		this ( null, imageFactory, dim, name );		
 	}
 
+	/**
+	 * Creates a new {@link Image} with the same {@link ContainerFactory} and {@link Type} as this one.
+	 * @param dimensions - the dimensions of the {@link Image}
+	 * @return - a new empty {@link Image}
+	 */
 	public Image<T> createNewImage( final int[] dimensions, final String name ) { return imageFactory.createImage( dimensions, name ); }
+
+	/**
+	 * Creates a new {@link Image} with the same {@link ContainerFactory} and {@link Type} as this one, the name is given automatically.
+	 * @param dimensions - the dimensions of the {@link Image}
+	 * @return - a new empty {@link Image}
+	 */
 	public Image<T> createNewImage( final int[] dimensions ) { return createNewImage( dimensions, null ); }
+
+	/**
+	 * Creates a new {@link Image} with the same dimensions, {@link ContainerFactory} and {@link Type} as this one as this one.
+	 * @return - a new empty {@link Image}
+	 */
 	public Image<T> createNewImage( final String name ) { return createNewImage( dim, name); }
+	
+	/**
+	 * Creates a new {@link Image} with the same dimensions, {@link ContainerFactory} and {@link Type} as this one, the name is given automatically.
+	 * @return - a new empty {@link Image}
+	 */
 	public Image<T> createNewImage() { return createNewImage( dim, null ); }
 	
 	public float[] getCalibration() { return calibration.clone(); }
@@ -137,12 +158,22 @@ public class Image<T extends Type<T>> implements ImageProperties, Dimensionality
 			this.calibration[ d ] = calibration[ d ];
 	}
 	public void setCalibration( final float calibration, final int dim ) { this.calibration[ dim ] = calibration; } 
-	
+
+	/**
+	 * Returns the {@link Container} that is used for storing the image data.
+	 * @return Container<T> - the typed {@link Container}
+	 */
 	public Container<T> getContainer() { return container; }
+	
+	/**
+	 * Creates a {@link Type} that the {@link Image} is typed with.
+	 * @return T - an instance of {@link Type} for computing
+	 */
 	public T createType() { return imageFactory.createType(); }
 	
 	/**
 	 * Return a {@link Cursor} that will traverse the image's pixel data in a memory-optimized fashion.
+	 * @return Cursor<T> - the typed {@link Cursor}
 	 */
 	public Cursor<T> createCursor()
 	{
@@ -153,8 +184,9 @@ public class Image<T extends Type<T>> implements ImageProperties, Dimensionality
 	}
 	
 	/**
-	 * Return a {@link Cursor} that will traverse the image's pixel data in a memory-optimized fashion 
+	 * Return a {@link LocalizableCursor} that will traverse the image's pixel data in a memory-optimized fashion 
 	 * and keeps track of its position
+	 * @return LocalizableCursor<T> - the typed {@link LocalizableCursor}
 	 */
 	public LocalizableCursor<T> createLocalizableCursor()
 	{
@@ -164,6 +196,12 @@ public class Image<T extends Type<T>> implements ImageProperties, Dimensionality
 		return cursor;		
 	}
 	
+	/**
+	 * Creates a {@link LocalizablePlaneCursor} which is optimized to iterate arbitrary 2-dimensional planes within an {@link Image}.
+	 * This is very important for the {@link Display}.
+	 * 
+	 * @return - {@link LocalizablePlaneCursor}
+	 */
 	public LocalizablePlaneCursor<T> createLocalizablePlaneCursor()
 	{
 		final T type = this.type.createType( container );
@@ -172,6 +210,11 @@ public class Image<T extends Type<T>> implements ImageProperties, Dimensionality
 		return cursor;				
 	}
 	
+	/**
+	 * Creates a {@link LocalizableByDimCursor} which is able to move freely within the {@link Image}.
+	 * When exiting the {@link Image} this {@link LocalizableByDimCursor} will fail!! Therefore it is faster.
+	 * @return - a {@link LocalizableByDimCursor} that cannot leave the {@link Image}
+	 */
 	public LocalizableByDimCursor<T> createLocalizableByDimCursor()
 	{
 		final T type = this.type.createType( container );
@@ -179,7 +222,13 @@ public class Image<T extends Type<T>> implements ImageProperties, Dimensionality
 		addCursor( cursor );
 		return cursor;						
 	}
-	
+
+	/**
+	 * Creates a {@link LocalizableByDimCursor} which is able to move freely within and OUTSIDE of the {@link Image}
+	 * given a {@link OutsideStrategyFactory} which defines the behaviour outside the {@link Image}.
+	 * @param factory - the {@link OutsideStrategyFactory}
+	 * @return - a {@link LocalizableByDimCursor} that can leave the {@link Image}
+	 */
 	public LocalizableByDimCursor<T> createLocalizableByDimCursor( OutsideStrategyFactory<T> factory )
 	{
 		final T type = this.type.createType( container );
@@ -188,28 +237,54 @@ public class Image<T extends Type<T>> implements ImageProperties, Dimensionality
 		return cursor;								
 	}
 		
+	/**
+	 * This method is called internally, it asks the {@link Type} to create a suitable {@link Container} for the {@link Type} and
+	 * the dimensionality
+	 * @return {@link Container} - the instantiated Container
+	 */
 	protected Container<T> createContainer() { return type.createSuitableContainer( storageFactory, dim ); }
 
-	public Interpolator<T> createInterpolator( final InterpolatorFactory<T> factory )
-	{
-		return factory.createInterpolator( this );
-	}
+	/**
+	 * Creates and {@link Interpolator} on this {@link Image} given a certain {@link InterpolatorFactory}.
+	 * @param factory - the {@link InterpolatorFactory} to use
+	 * @return {@link Interpolator}
+	 */
+	public Interpolator<T> createInterpolator( final InterpolatorFactory<T> factory ) { return factory.createInterpolator( this ); }
 	
+	/**
+	 * Sets the default {@link Display} of this {@link Image} as defined by the {@link Type}
+	 */
 	public void setDefaultDisplay() { this.display = type.getDefaultDisplay( this ); }
 
+	/**
+	 * Return the current {@link Display} of the {@link Image}
+	 * @return - the {@link Display}
+	 */
 	public Display<T> getDisplay() { return display; }
+	
+	/**
+	 * Sets the {@link Display} associated with this {@link Image}.
+	 * @param display - the {@link Display}
+	 */
 	public void setDisplay( final Display<T> display ) { this.display = display; }
 	
 	public ImageJFunctions getImageJFunctions() { return new ImageJFunctions(); }
 
 	final public synchronized static int createUniqueId() { return j.getAndIncrement(); }
 	
+	/**
+	 * Closes the {@link Image} by closing all {@link Cursor}s and the {@link Container}
+	 */
 	public void close()
 	{ 
 		closeAllCursors();
 		container.close();
 	}
 	
+	/**
+	 * Creates an int array of the same dimensionality as this {@link Image} which can be used for addressing {@link Cursor}s. 
+	 * @return - empty int[]
+	 */
 	public int[] createPositionArray() { return new int[ getNumDimensions() ]; }
 	
 	@Override
@@ -247,6 +322,10 @@ public class Image<T extends Type<T>> implements ImageProperties, Dimensionality
 			return 1;		
 	}
 	
+	/**
+	 * Clones this {@link Image}, i.e. creates this {@link Image} containing the same content.
+	 * No {@link Cursor}s will be instantiated and the name will be given automatically.
+	 */
 	@Override
 	public Image<T> clone()
 	{
@@ -269,18 +348,40 @@ public class Image<T extends Type<T>> implements ImageProperties, Dimensionality
 		return clone;
 	}
 
+	/**
+	 * Returns the {@link ContainerFactory} of this {@link Image}.
+	 * @return - {@link ContainerFactory}
+	 */
 	public ContainerFactory getStorageFactory() { return storageFactory; }
+	
+	/**
+	 * Returns the {@link ImageFactory} of this {@link Image}.
+	 * @return - {@link ImageFactory}
+	 */
 	public ImageFactory<T> getImageFactory() { return imageFactory; }
 	
+	/**
+	 * Closes all {@link Cursor}s operating on this {@link Image}.
+	 */
 	public void closeAllCursors()
 	{
-		for (Cursor<?> i : cursors)
+		for ( final Cursor<?> i : cursors )
 			i.close();
-	}	
+	}
+	
+	/**
+	 * Return all {@link Cursor}s currently instantiated for this {@link Image}.
+	 * @return - {@link ArrayList} containing the {@link Cursor}s
+	 */
 	public ArrayList<Cursor<T>> getCursors() { return cursors; }	
+
+	/**
+	 * Return all active {@link Cursor}s currently instantiated for this {@link Image}.
+	 * @return - {@link ArrayList} containing the {@link Cursor}s
+	 */
 	public ArrayList<Cursor<T>> getActiveCursors() 
 	{ 
-		ArrayList<Cursor<T>> activeCursors = new ArrayList<Cursor<T>>();
+		final ArrayList<Cursor<T>> activeCursors = new ArrayList<Cursor<T>>();
 		
 		for (Cursor<T> i : cursors)
 			if (i.isActive())
@@ -288,7 +389,15 @@ public class Image<T extends Type<T>> implements ImageProperties, Dimensionality
 		
 		return activeCursors; 
 	}	
-	public synchronized void addCursor( final Cursor<T> c ) { cursors.add( c );	}
+	/**
+	 * Adds a {@link Cursor} to the {@link ArrayList} of instantiated {@link Cursor}s.
+	 * @param c - new {@link Cursor}
+	 */
+	protected synchronized void addCursor( final Cursor<T> c ) { cursors.add( c );	}
+	
+	/**
+	 * Closes the {@link Cursor} last instantiated.
+	 */
 	public synchronized void closeLastCursor() 
 	{ 
 		if ( cursors.size() > 0 )
@@ -297,7 +406,17 @@ public class Image<T extends Type<T>> implements ImageProperties, Dimensionality
 			cursors.remove( cursors.size() - 1 );
 		}
 	}
+
+	/**
+	 * Returns the number of {@link Cursor}s instantiated on this {@link Image}.
+	 * @return - the number of {@link Cursor}s
+	 */
 	public int getNumCursors() { return cursors.size(); }
+	
+	/**
+	 * Returns the number of active {@link Cursor}s instantiated on this {@link Image}.
+	 * @return - the number of active {@link Cursor}s
+	 */
 	public int getNumActiveCursors() 
 	{
 		int active = 0;
