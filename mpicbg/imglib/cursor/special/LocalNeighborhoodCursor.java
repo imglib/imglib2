@@ -37,7 +37,7 @@ import mpicbg.imglib.cursor.array.ArrayLocalizableByDimCursor;
 import mpicbg.imglib.type.Type;
 import mpicbg.imglib.type.label.FakeType;
 
-public class LocalNeighborhoodCursor<T extends Type<T>> extends CursorImpl<T> 
+public class LocalNeighborhoodCursor<T extends Type<T>> extends CursorImpl<T>
 {
 	/**
 	 * Here we "misuse" a ArrayLocalizableCursor to iterate through the cubes,
@@ -114,6 +114,8 @@ public class LocalNeighborhoodCursor<T extends Type<T>> extends CursorImpl<T>
 		
 		cursor.moveTo( tmp );		
 	}
+	
+	public int getRelativePosition( final int d ) { return neigborhoodCursor.getPosition( d ); }
 	
 	@Override
 	public int getArrayIndex() { return cursor.getArrayIndex(); }
