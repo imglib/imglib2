@@ -30,11 +30,11 @@
 package mpicbg.imglib.image.display;
 
 import mpicbg.imglib.image.Image;
-import mpicbg.imglib.type.logic.BooleanType;
+import mpicbg.imglib.type.logic.BitType;
 
-public class BooleanTypeDisplay extends Display<BooleanType>
+public class BitTypeDisplay extends Display<BitType>
 {
-	public BooleanTypeDisplay( final Image<BooleanType> img )
+	public BitTypeDisplay( final Image<BitType> img )
 	{
 		super(img);
 		this.min = 0;
@@ -45,13 +45,13 @@ public class BooleanTypeDisplay extends Display<BooleanType>
 	public void setMinMax() {}
 	
 	@Override
-	public float get32Bit( BooleanType c ) { return c.get() ? 1 : 0; }
+	public float get32Bit( BitType c ) { return c.get() ? 1 : 0; }
 	@Override
-	public float get32BitNormed( BooleanType c ) { return c.get() ? 1 : 0; }
+	public float get32BitNormed( BitType c ) { return c.get() ? 1 : 0; }
 	
 	@Override
-	public byte get8BitSigned( final BooleanType c ) { return c.get() ? (byte)255 : (byte)0; }
+	public byte get8BitSigned( final BitType c ) { return c.get() ? (byte)255 : (byte)0; }
 	@Override
-	public short get8BitUnsigned( final BooleanType c ) { return c.get() ? (short)255 : (short)0; }
+	public short get8BitUnsigned( final BitType c ) { return c.get() ? (short)255 : (short)0; }
 }
 

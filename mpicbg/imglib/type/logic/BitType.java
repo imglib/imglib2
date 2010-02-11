@@ -36,44 +36,45 @@ import mpicbg.imglib.container.array.BitArray;
 import mpicbg.imglib.container.basictypecontainer.BitContainer;
 import mpicbg.imglib.cursor.Cursor;
 import mpicbg.imglib.image.Image;
-import mpicbg.imglib.image.display.BooleanTypeDisplay;
+import mpicbg.imglib.image.display.BitTypeDisplay;
 import mpicbg.imglib.type.LogicType;
+import mpicbg.imglib.type.NumericType;
 import mpicbg.imglib.type.TypeImpl;
 
-public class BooleanType extends TypeImpl<BooleanType> implements LogicType<BooleanType>
+public class BitType extends TypeImpl<BitType> implements LogicType<BitType>, NumericType<BitType>
 {
-	final BitContainer<BooleanType> bitStorage;
-	BitContainer<BooleanType> b;
+	final BitContainer<BitType> bitStorage;
+	BitContainer<BitType> b;
 	
 	int outputType = 0;
 	
 	// this is the constructor if you want it to read from an array
-	public BooleanType( final BitContainer<BooleanType> bitStorage )
+	public BitType( final BitContainer<BitType> bitStorage )
 	{
 		this.bitStorage = bitStorage;
 		this.b = bitStorage;
 	}
 	
 	// this is the constructor if you want it to be a variable
-	public BooleanType( final boolean value )
+	public BitType( final boolean value )
 	{
-		this( new BitArray<BooleanType>( null, new int[]{1}, 1 ) );
+		this( new BitArray<BitType>( null, new int[]{1}, 1 ) );
 		b.setValue( i, value );
 	}
 
 	// this is the constructor if you want it to be a variable
-	public BooleanType() { this( false ); }
+	public BitType() { this( false ); }
 	
 	@Override
-	public BitContainer<BooleanType> createSuitableContainer( final ContainerFactory storageFactory, final int dim[] )
+	public BitContainer<BitType> createSuitableContainer( final ContainerFactory storageFactory, final int dim[] )
 	{
 		return storageFactory.createBitInstance( dim, 1 );	
 	}
 	
 	@Override
-	public BooleanTypeDisplay getDefaultDisplay( final Image<BooleanType> image )
+	public BitTypeDisplay getDefaultDisplay( final Image<BitType> image )
 	{
-		return new BooleanTypeDisplay( image );
+		return new BitTypeDisplay( image );
 	}
 	
 	@Override
@@ -87,22 +88,82 @@ public class BooleanType extends TypeImpl<BooleanType> implements LogicType<Bool
 	public void set( final boolean value) { b.setValue( i, value ); }
 
 	@Override
-	public void set( final BooleanType c ) { b.setValue(i, c.get() ); }
+	public void set( final BitType c ) { b.setValue(i, c.get() ); }
 
 	@Override
-	public void and( final BooleanType c ) { b.setValue(i, b.getValue(i) && c.get() ); }
+	public void and( final BitType c ) { b.setValue(i, b.getValue(i) && c.get() ); }
 	
 	@Override
-	public void or( final BooleanType c ) { b.setValue(i, b.getValue(i) || c.get() ); }
+	public void or( final BitType c ) { b.setValue(i, b.getValue(i) || c.get() ); }
 	
 	@Override
-	public void xor( final BooleanType c ) { b.setValue(i, b.getValue(i) ^ c.get() ); }
+	public void xor( final BitType c ) { b.setValue(i, b.getValue(i) ^ c.get() ); }
 	
 	@Override
 	public void not() { b.setValue(i, !b.getValue(i) ); }
 	
 	@Override
-	public int compareTo( final BooleanType c ) 
+	public void add( final BitType c ) { xor( c ); }
+
+	@Override
+	public void div( final BitType c ) { and( c ); }
+
+	@Override
+	public void mul( final BitType c ) { and( c ); }
+
+	@Override
+	public void sub( final BitType c ) { xor( c ); }
+	
+	@Override
+	public void mul( final float c ) 
+	{ 
+		if ( c >= 0.5f )
+			b.setValue(i, b.getValue(i) && true );
+		else
+			b.setValue(i, b.getValue(i) && false );
+	}
+
+	@Override
+	public void mul( final double c ) 
+	{ 
+		if ( c >= 0.5f )
+			b.setValue(i, b.getValue(i) && true );
+		else
+			b.setValue(i, b.getValue(i) && false );
+	}
+	
+	@Override
+	public float getReal() 
+	{ 
+		if ( b.getValue( i ) )
+			return 1;
+		else
+			return 0;
+	}
+	
+	@Override
+	public void setReal( final float f ) 
+	{
+		if ( f >= 0.5f )
+			b.setValue( i, true );
+		else
+			b.setValue( i, false );
+	}
+	
+	@Override
+	public void setOne() { b.setValue( i, true ); }
+
+	@Override
+	public void setZero() { b.setValue( i, false ); }
+	
+	@Override
+	public void inc() { b.setValue( i, !b.getValue( i) ); }
+
+	@Override
+	public void dec() { inc(); }
+
+	@Override
+	public int compareTo( final BitType c ) 
 	{
 		final boolean b1 = b.getValue(i);
 		final boolean b2 = c.get();
@@ -116,28 +177,28 @@ public class BooleanType extends TypeImpl<BooleanType> implements LogicType<Bool
 	}
 
 	@Override
-	public BooleanType[] createArray1D(int size1){ return new BooleanType[ size1 ]; }
+	public BitType[] createArray1D(int size1){ return new BitType[ size1 ]; }
 
 	@Override
-	public BooleanType[][] createArray2D(int size1, int size2){ return new BooleanType[ size1 ][ size2 ]; }
+	public BitType[][] createArray2D(int size1, int size2){ return new BitType[ size1 ][ size2 ]; }
 
 	@Override
-	public BooleanType[][][] createArray3D(int size1, int size2, int size3) { return new BooleanType[ size1 ][ size2 ][ size3 ]; }
+	public BitType[][][] createArray3D(int size1, int size2, int size3) { return new BitType[ size1 ][ size2 ][ size3 ]; }
 
 	//@Override
 	//public BooleanType getType() { return this; }
 
 	@Override
-	public BooleanType createType( Container<BooleanType> container )
+	public BitType createType( Container<BitType> container )
 	{
-		return new BooleanType( (BitContainer<BooleanType>)container );
+		return new BitType( (BitContainer<BitType>)container );
 	}
 	
 	@Override
-	public BooleanType createVariable(){ return new BooleanType(); }
+	public BitType createVariable(){ return new BitType(); }
 
 	@Override
-	public BooleanType copyVariable(){ return new BooleanType( b.getValue(i) ); }
+	public BitType copyVariable(){ return new BitType( b.getValue(i) ); }
 
 	@Override
 	public String toString() 

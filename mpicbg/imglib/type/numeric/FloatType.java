@@ -87,7 +87,10 @@ public class FloatType extends TypeImpl<FloatType> implements NumericType<FloatT
 
 	public float get() { return v[ i ]; }
 	public void set( final float f ) { v[ i ] = f; }
+	
+	@Override
 	public float getReal() { return v[ i ]; }
+	@Override
 	public void setReal( final float f ) { v[ i ] = f; }
 
 	@Override
