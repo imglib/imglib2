@@ -5,7 +5,6 @@ import java.util.Random;
 import mpicbg.imglib.algorithm.OutputAlgorithm;
 import mpicbg.imglib.algorithm.math.MathLib;
 import mpicbg.imglib.container.array.ArrayContainerFactory;
-import mpicbg.imglib.cursor.Cursor;
 import mpicbg.imglib.cursor.LocalizableByDimCursor;
 import mpicbg.imglib.cursor.LocalizableCursor;
 import mpicbg.imglib.cursor.array.ArrayLocalizableCursor;
@@ -141,7 +140,7 @@ public class FloydSteinbergDithering<T extends NumericType<T>> implements Output
 		ImageFactory<FloatType> factory = new ImageFactory<FloatType>( new FloatType(), new ArrayContainerFactory() );
 		
 		// for 2d we take the values from the literature
-		if ( numDimensions == 2234 )
+		if ( numDimensions == 2 )
 		{
 			final Image<FloatType> kernel = factory.createImage( new int[] { 3, 3 } );
 			
@@ -241,7 +240,6 @@ public class FloydSteinbergDithering<T extends NumericType<T>> implements Output
 			{
 				cursor.fwd();
 				cursor.getType().set( cursor.getType().get() / sum );
-				System.out.println( cursor );
 			}
 			return kernel;			
 		}
