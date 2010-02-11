@@ -175,9 +175,10 @@ public class FourierConvolution<T extends NumericType<T>, S extends NumericType<
 		final FourierTransform<T> fftImage = new FourierTransform<T>( image );
 		fftImage.setNumThreads( this.getNumThreads() );
 		
-		// we simply mirror
+		// how to extend the input image outside of its boundaries for computing the FFT,
+		// we simply mirror the content at the borders
 		fftImage.setPreProcessing( PreProcessing.ExtendMirror );		
-		// we do not rearrange
+		// we do not rearrange the fft quadrants
 		fftImage.setRearrangement( Rearrangement.Unchanged );
 		
 		// the image has to be extended by the size of the kernel-1
@@ -201,7 +202,8 @@ public class FourierConvolution<T extends NumericType<T>, S extends NumericType<
 		// create the kernel for fourier transform
 		//
 		
-		// get the size of the kernel image that will be fourier transformed
+		// get the size of the kernel image that will be fourier transformed,
+		// it has the same size as the image
 		final int kernelTemplateDim[] = imgFFT.getDimensions();
 		kernelTemplateDim[ 0 ] = ( imgFFT.getDimension( 0 ) - 1 ) * 2;
 		
@@ -210,9 +212,10 @@ public class FourierConvolution<T extends NumericType<T>, S extends NumericType<
 		// so that the computation is easy
 		final ImageFactory<S> kernelTemplateFactory = new ImageFactory<S>( kernel.createType(), image.getContainer().getFactory() );
 		final Image<S> kernelTemplate = kernelTemplateFactory.createImage( kernelTemplateDim );
-		//final Image<S> kernelTemplate = image.createNewImage( kernelTemplateDim );					
 		
-		// copy the kernel into the kernelTemplate
+		// copy the kernel into the kernelTemplate,
+		// the key here is that the center pixel of the kernel (e.g. 13,13,13)
+		// is located at (0,0,0)
 		final LocalizableCursor<S> kernelCursor = kernel.createLocalizableCursor();
 		final LocalizableByDimCursor<S> kernelTemplateCursor = kernelTemplate.createLocalizableByDimCursor();
 		
