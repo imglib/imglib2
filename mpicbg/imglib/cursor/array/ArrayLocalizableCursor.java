@@ -30,9 +30,11 @@
 package mpicbg.imglib.cursor.array;
 
 import mpicbg.imglib.container.array.Array;
+import mpicbg.imglib.container.array.FakeArray;
 import mpicbg.imglib.cursor.LocalizableCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.type.Type;
+import mpicbg.imglib.type.label.FakeType;
 
 public class ArrayLocalizableCursor<T extends Type<T>> extends ArrayCursor<T> implements LocalizableCursor<T>
 {
@@ -51,6 +53,11 @@ public class ArrayLocalizableCursor<T extends Type<T>> extends ArrayCursor<T> im
 		// unluckily we have to call it twice, in the superclass position is not initialized yet
 		reset();
 	}	
+	
+	public static ArrayLocalizableCursor<FakeType> createLinearCursor( final int[] dim )
+	{
+		return new ArrayLocalizableCursor<FakeType>( new FakeArray<FakeType>( dim ), null, new FakeType() );
+	}
 	
 	@Override
 	public void fwd()
