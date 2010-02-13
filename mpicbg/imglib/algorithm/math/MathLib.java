@@ -53,7 +53,35 @@ public class MathLib
 		
 		return values;
 	}	
-	
+
+	final public static float computeDistance( final int[] position1, final int[] position2 )
+	{
+		float dist = 0;
+		
+		for ( int d = 0; d < position1.length; ++d )
+		{
+			final int pos = position2[ d ] - position1[ d ];
+			
+			dist += pos*pos;
+		}
+		
+		return (float)Math.sqrt( dist );
+	}
+
+	final public static float computeLength( final int[] position )
+	{
+		float dist = 0;
+		
+		for ( int d = 0; d < position.length; ++d )
+		{
+			final int pos = position[ d ];
+			
+			dist += pos*pos;
+		}
+		
+		return (float)Math.sqrt( dist );
+	}
+
 	public static double computeMedian( final double[] values )
 	{
 		final double temp[] = values.clone();

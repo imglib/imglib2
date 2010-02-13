@@ -161,7 +161,10 @@ public class ImageJFunctions
 
 	public static <T extends Type<T>> ImagePlus copyToImagePlus( final Image<T> img ) 
 	{		
-		return createImagePlus( img, img.getName(), GRAY32, getDim3( getStandardDimensions() ), new int[ img.getNumDimensions() ] ); 
+		if ( RGBALegacyType.class.isInstance( img.createType() ) )
+			return createImagePlus( img, img.getName(), COLOR_RGB, getDim3( getStandardDimensions() ), new int[ img.getNumDimensions() ] );
+		else
+			return createImagePlus( img, img.getName(), GRAY32, getDim3( getStandardDimensions() ), new int[ img.getNumDimensions() ] ); 
 	}
 
 	public static <T extends Type<T>> ImagePlus copyToImagePlus( final Image<T> img, final int type ) 
