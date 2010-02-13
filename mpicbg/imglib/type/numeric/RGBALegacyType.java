@@ -139,7 +139,7 @@ public class RGBALegacyType extends TypeImpl<RGBALegacyType> implements NumericT
 	public void setReal( final float f ) 
 	{
 		final int value = MathLib.round( f );
-		v[ i ] = rgba( red(value), green(value), blue(value), alpha(value) );
+		v[ i ] = rgba( value, value, value, 0 );
 	}
 
 	@Override
