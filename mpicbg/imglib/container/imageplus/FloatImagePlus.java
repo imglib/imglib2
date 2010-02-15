@@ -65,7 +65,7 @@ public class FloatImagePlus<T extends Type<T>> extends ImagePlusContainer<T> imp
 	}
 	
 	@Override
-	public float[] getCurrentStorageArray( Cursor<?> c ) 
+	public float[] getCurrentStorageArray( final Cursor<?> c ) 
 	{
 		return mirror[ c.getStorageIndex() ];
 	}
