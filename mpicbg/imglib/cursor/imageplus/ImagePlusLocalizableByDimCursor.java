@@ -172,7 +172,11 @@ public class ImagePlusLocalizableByDimCursor<T extends Type<T>> extends ImagePlu
 		for ( int d = 0; d < numDimensions; d++ )
 			this.position[ d ] = position[ d ];
 		
-		slice = position[ 2 ];
+		if ( numDimensions == 3 )
+			slice = position[ 2 ];
+		else
+			slice = 0;
+		
 		type.updateDataArray( this );		
 	}
 

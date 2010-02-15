@@ -46,21 +46,21 @@ public class ShortImagePlus<T extends Type<T>> extends ImagePlusContainer<T> imp
 	{
 		super( factory, dim, entitiesPerPixel );
 		
-		image = IJ.createImage( "image", "16-Bit Black", dim[0], dim[1], dim[2]);
-		mirror = new short[ dim[2] ][];
+		image = IJ.createImage( "image", "16-Bit Black", width * entitiesPerPixel, height, depth );
+		mirror = new short[ depth ][];
 		
-		for ( int i = 0; i < dim[ 2 ]; ++i )
+		for ( int i = 0; i < depth; ++i )
 			mirror[ i ] = (short[])image.getStack().getProcessor( i+1 ).getPixels();
 }
 
 	public ShortImagePlus( final ImagePlus image, final ImagePlusContainerFactory factory ) 
 	{
-		super( factory, new int[]{ image.getWidth(), image.getHeight(), image.getStackSize()}, 1 );
+		super( factory, ImagePlusContainer.getCorrectDimensionality(image), 1 );
 		
 		this.image = image;
-		mirror = new short[ dim[2] ][];
+		mirror = new short[ depth ][];
 		
-		for ( int i = 0; i < dim[ 2 ]; ++i )
+		for ( int i = 0; i < depth; ++i )
 			mirror[ i ] = (short[])image.getStack().getProcessor( i+1 ).getPixels();
 	}
 	

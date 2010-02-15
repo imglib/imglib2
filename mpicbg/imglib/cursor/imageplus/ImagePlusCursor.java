@@ -29,9 +29,6 @@
  */
 package mpicbg.imglib.cursor.imageplus;
 
-
-
-
 import mpicbg.imglib.container.imageplus.ImagePlusContainer;
 import mpicbg.imglib.cursor.Cursor;
 import mpicbg.imglib.cursor.CursorImpl;

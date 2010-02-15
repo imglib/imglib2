@@ -183,7 +183,10 @@ public class ImagePlusLocalizableByDimOutsideCursor<T extends Type<T>> extends I
 					
 					// get the offset inside the image
 					type.updateIndex( container.getPos( position ) );
-					slice = position[ 2 ];
+					if ( numDimensions == 3 )
+						slice = position[ 2 ];
+					else
+						slice = 0;
 					
 					type.updateDataArray( this );			
 				}
@@ -292,7 +295,10 @@ public class ImagePlusLocalizableByDimOutsideCursor<T extends Type<T>> extends I
 						
 			// get the offset inside the image
 			type.updateIndex( container.getPos( position ) );
-			slice = position[ 2 ];
+			if ( numDimensions == 3 )
+				slice = position[ 2 ];
+			else
+				slice = 0;
 			
 			type.updateDataArray( this );			
 		}

@@ -38,19 +38,19 @@ public class ImagePlusContainerFactory extends ContainerFactory
 	@Override
 	public <T extends Type<T>>BitContainer<T> createBitInstance(int[] dimensions, final int entitiesPerPixel)
 	{
-		throw new RuntimeException( "Unsupported type: bit" );
+		if ( dimensions.length > 3 )
+			throw new RuntimeException( "Unsupported dimensionality: "+ dimensions.length );
+
+		return new BitImagePlus<T>( this, dimensions, entitiesPerPixel );
 	}
 
 	@Override
 	public <T extends Type<T>>ByteContainer<T> createByteInstance( final int[] dimensions, final int entitiesPerPixel )
 	{
-		if ( entitiesPerPixel > 1 )
-			throw new RuntimeException( "Unsupported entities per pixel: "+ entitiesPerPixel );
-		
-		if ( dimensions.length != 3 )
+		if ( dimensions.length > 3 )
 			throw new RuntimeException( "Unsupported dimensionality: "+ dimensions.length );
 						
-		return new ByteImagePlus<T>( this, dimensions, 1 );
+		return new ByteImagePlus<T>( this, dimensions, entitiesPerPixel );
 	}
 
 	@Override
@@ -68,25 +68,19 @@ public class ImagePlusContainerFactory extends ContainerFactory
 	@Override
 	public <T extends Type<T>>FloatContainer<T> createFloatInstance(int[] dimensions, final int entitiesPerPixel)
 	{
-		if ( entitiesPerPixel > 1 )
-			throw new RuntimeException( "Unsupported entities per pixel: "+ entitiesPerPixel );
-		
-		if ( dimensions.length != 3 )
+		if ( dimensions.length > 3 )
 			throw new RuntimeException( "Unsupported dimensionality: "+ dimensions.length );
 						
-		return new FloatImagePlus<T>( this, dimensions, 1 );
+		return new FloatImagePlus<T>( this, dimensions, entitiesPerPixel );
 	}
 
 	@Override
 	public <T extends Type<T>>IntContainer<T> createIntInstance(int[] dimensions, final int entitiesPerPixel)
 	{
-		if ( entitiesPerPixel > 1 )
-			throw new RuntimeException( "Unsupported entities per pixel: "+ entitiesPerPixel );
-		
-		if ( dimensions.length != 3 )
+		if ( dimensions.length > 3 )
 			throw new RuntimeException( "Unsupported dimensionality: "+ dimensions.length );
 						
-		return new IntImagePlus<T>( this, dimensions, 1 );
+		return new IntImagePlus<T>( this, dimensions, entitiesPerPixel );
 	}
 
 	@Override
@@ -98,13 +92,10 @@ public class ImagePlusContainerFactory extends ContainerFactory
 	@Override
 	public <T extends Type<T>>ShortContainer<T> createShortInstance(int[] dimensions, final int entitiesPerPixel)
 	{
-		if ( entitiesPerPixel > 1 )
-			throw new RuntimeException( "Unsupported entities per pixel: "+ entitiesPerPixel );
-		
-		if ( dimensions.length != 3 )
+		if ( dimensions.length > 3 )
 			throw new RuntimeException( "Unsupported dimensionality: "+ dimensions.length );
 						
-		return new ShortImagePlus<T>( this, dimensions, 1 );
+		return new ShortImagePlus<T>( this, dimensions, entitiesPerPixel );
 	}
 
 	@Override

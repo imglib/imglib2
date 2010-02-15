@@ -46,21 +46,21 @@ public class IntImagePlus<T extends Type<T>> extends ImagePlusContainer<T> imple
 	{
 		super( factory, dim, entitiesPerPixel );
 
-		image = IJ.createImage( "image", "RGB Black", dim[0], dim[1], dim[2]);
-		mirror = new int[ dim[2] ][];
+		image = IJ.createImage( "image", "RGB Black", width * entitiesPerPixel, height, depth );
+		mirror = new int[ depth ][];
 		
-		for ( int i = 0; i < dim[ 2 ]; ++i )
+		for ( int i = 0; i < depth; ++i )
 			mirror[ i ] = (int[])image.getStack().getProcessor( i+1 ).getPixels();
 	}
 
 	public IntImagePlus( final ImagePlus image, final ImagePlusContainerFactory factory ) 
 	{
-		super( factory, new int[]{ image.getWidth(), image.getHeight(), image.getStackSize()}, 1 );
+		super( factory, ImagePlusContainer.getCorrectDimensionality(image), 1 );
 		
 		this.image = image;
-		mirror = new int[ dim[2] ][];
+		mirror = new int[ depth ][];
 		
-		for ( int i = 0; i < dim[ 2 ]; ++i )
+		for ( int i = 0; i < depth; ++i )
 			mirror[ i ] = (int[])image.getStack().getProcessor( i+1 ).getPixels();
 	}
 	

@@ -62,8 +62,16 @@ public abstract class ImagePlusContainer<T extends Type<T>> extends ContainerImp
 		
 		this.factory = factory;
 		this.width = dim[ 0 ];
-		this.height = dim[ 1 ];
-		this.depth = dim[ 2 ];
+		
+		if( dim.length < 2 )
+			this.height = 1;
+		else
+			this.height = dim[ 1 ];
+		
+		if ( dim.length < 3 )
+			this.depth = 1;
+		else
+			this.depth = dim[ 2 ];
 
 /*		int i = 0;
 		width = image.getWidth();
@@ -83,6 +91,28 @@ public abstract class ImagePlusContainer<T extends Type<T>> extends ContainerImp
 		if (frames > 1) dimensions[i++] = frames;
 */
 	}
+	
+	protected static int[] getCorrectDimensionality( final ImagePlus imp )
+	{
+		int numDimensions = 3;
+				
+		if ( imp.getStackSize() == 1 )
+			--numDimensions;
+		
+		if ( imp.getHeight() == 1 )
+			--numDimensions;
+		
+		final int[] dim = new int[ numDimensions ];
+		dim[ 0 ] = imp.getWidth();
+
+		if ( numDimensions >= 2 )
+			dim[ 1 ] = imp.getHeight();
+		
+		if ( numDimensions == 3 )
+			dim[ 2 ] = imp.getStackSize();
+		
+		return dim;
+	}
 
 	@Override
 	public int getWidth() { return width; }
@@ -91,7 +121,13 @@ public abstract class ImagePlusContainer<T extends Type<T>> extends ContainerImp
 	@Override
 	public int getDepth() { return depth; }
 
-	public final int getPos( final int[] l ) { return l[1] * width + l[0];	}	
+	public final int getPos( final int[] l ) 
+	{
+		if ( numDimensions > 1 )
+			return l[ 1 ] * width + l[ 0 ];
+		else
+			return l[ 0 ];
+	}	
 	
 	public abstract ImagePlus getImagePlus();
 

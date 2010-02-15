@@ -193,7 +193,7 @@ public class ImagePlusLocalizablePlaneCursor<T extends Type<T>> extends ImagePlu
 	}
 
 	@Override
-	public void getPosition( int[] position )
+	public void getPosition( final int[] position )
 	{
 		for ( int d = 0; d < numDimensions; d++ )
 			position[ d ] = this.position[ d ];
@@ -208,7 +208,11 @@ public class ImagePlusLocalizablePlaneCursor<T extends Type<T>> extends ImagePlu
 	protected void setPosition( final int[] position )
 	{
 		type.updateIndex( container.getPos( position ) );
-		slice = position[ 2 ];
+		
+		if ( numDimensions == 3 )
+			slice = position[ 2 ];
+		else
+			slice = 0;
 		
 		for ( int d = 0; d < numDimensions; d++ )
 			this.position[ d ] = position[ d ];
