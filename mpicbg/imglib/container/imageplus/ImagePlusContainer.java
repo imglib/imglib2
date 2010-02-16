@@ -25,16 +25,11 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  *
- * @author Johannes Schindelin
+ * @author Johannes Schindelin & Stephan Preibisch
  */
 package mpicbg.imglib.container.imageplus;
 
 import ij.ImagePlus;
-
-
-
-
-
 
 import mpicbg.imglib.container.Container3D;
 import mpicbg.imglib.container.ContainerImpl;

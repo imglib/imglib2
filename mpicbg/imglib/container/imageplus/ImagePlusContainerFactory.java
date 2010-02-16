@@ -25,7 +25,7 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  *
- * @author Johannes Schindelin
+ * @author Johannes Schindelin & Stephan Preibisch
  */
 package mpicbg.imglib.container.imageplus;
 
@@ -56,13 +56,19 @@ public class ImagePlusContainerFactory extends ContainerFactory
 	@Override
 	public <T extends Type<T>>CharContainer<T> createCharInstance(int[] dimensions, final int entitiesPerPixel)
 	{
-		throw new RuntimeException( "Unsupported type: char" );
+		if ( dimensions.length > 3 )
+			throw new RuntimeException( "Unsupported dimensionality: "+ dimensions.length );
+		
+		return new CharImagePlus<T>( this, dimensions, entitiesPerPixel );
 	}
 
 	@Override
 	public <T extends Type<T>>DoubleContainer<T> createDoubleInstance(int[] dimensions, final int entitiesPerPixel)
 	{
-		throw new RuntimeException( "Unsupported type: double" );
+		if ( dimensions.length > 3 )
+			throw new RuntimeException( "Unsupported dimensionality: "+ dimensions.length );
+		
+		return new DoubleImagePlus<T>( this, dimensions, entitiesPerPixel );
 	}
 
 	@Override
@@ -86,7 +92,10 @@ public class ImagePlusContainerFactory extends ContainerFactory
 	@Override
 	public <T extends Type<T>>LongContainer<T> createLongInstance(int[] dimensions, final int entitiesPerPixel)
 	{
-		throw new RuntimeException( "Unsupported type: long" );
+		if ( dimensions.length > 3 )
+			throw new RuntimeException( "Unsupported dimensionality: "+ dimensions.length );
+		
+		return new LongImagePlus<T>( this, dimensions, entitiesPerPixel );
 	}
 
 	@Override
