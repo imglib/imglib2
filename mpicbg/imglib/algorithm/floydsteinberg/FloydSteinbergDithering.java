@@ -102,25 +102,28 @@ public class FloydSteinbergDithering<T extends NumericType<T>> implements Output
 				cursorOutput.getType().setOne();
 				error = in - maxValue; 
 			}
-
-			// distribute the error
-			cursorKernel.reset();
-			cursor.getPosition( tmp1 );
 			
-			while ( cursorKernel.hasNext() )
+			if ( error != 0.0f )
 			{
-				cursorKernel.fwd();				
+				// distribute the error
+				cursorKernel.reset();
+				cursorKernel.fwd( errorDiffusionKernel.getNumPixels()/2 );
+				cursor.getPosition( tmp1 );			
 				
-				final float value = error * cursorKernel.getType().get();
-				cursorKernel.getPosition( tmp2 );
-				
-				for ( int d = 0; d < numDimensions; ++d )
-					tmp2[ d ] += tmp1[ d ] - 1;
-				
-				cursorInput.moveTo( tmp2 );
-				cursorInput.getType().setReal( cursorInput.getType().getReal() + value );
-			}
-			
+				while ( cursorKernel.hasNext() )
+				{
+					cursorKernel.fwd();				
+					
+					final float value = error * cursorKernel.getType().get();
+					cursorKernel.getPosition( tmp2 );
+					
+					for ( int d = 0; d < numDimensions; ++d )
+						tmp2[ d ] += tmp1[ d ] - 1;
+					
+					cursorInput.moveTo( tmp2 );
+					cursorInput.getType().setReal( cursorInput.getType().getReal() + value );
+				}
+			}		
 		}
 		
 		// close all cursors
