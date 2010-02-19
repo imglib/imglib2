@@ -162,7 +162,7 @@ public interface Type<T extends Type<T>>
 	 * Creates a new {@link Type} which can only store one value but contains the value of this {@link Type}
 	 * @return - a new {@link Type} instance
 	 */
-	public T copyVariable();
+	public T clone();
 	
 	/**
 	 * Sets the value of another {@link Type}.

@@ -44,4 +44,7 @@ public abstract class TypeImpl<T extends TypeImpl<T>> implements Type<T>
 	
 	@Override
 	public abstract String toString();	
+
+	@Override
+	public abstract T clone();	
 }

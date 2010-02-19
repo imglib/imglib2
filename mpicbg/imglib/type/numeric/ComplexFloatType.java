@@ -279,7 +279,7 @@ public class ComplexFloatType extends TypeImpl<ComplexFloatType> implements Nume
 	public ComplexFloatType createVariable(){ return new ComplexFloatType( 0, 0 ); }
 	
 	@Override
-	public ComplexFloatType copyVariable(){ return new ComplexFloatType( v[ realI ], v[ complexI] ); }
+	public ComplexFloatType clone(){ return new ComplexFloatType( v[ realI ], v[ complexI] ); }
 	
 	@Override
 	public String toString() { return "(" + v[ realI ] + ") + (" + v[complexI] + ")i"; }

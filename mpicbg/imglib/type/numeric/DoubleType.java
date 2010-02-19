@@ -150,7 +150,7 @@ public class DoubleType extends TypeImpl<DoubleType> implements NumericType<Doub
 	public DoubleType createVariable(){ return new DoubleType( 0 ); }
 
 	@Override
-	public DoubleType copyVariable(){ return new DoubleType( v[ i ] ); }
+	public DoubleType clone(){ return new DoubleType( v[ i ] ); }
 
 	@Override
 	public String toString() { return "" + v[i]; }

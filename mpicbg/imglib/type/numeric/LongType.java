@@ -151,7 +151,7 @@ public class LongType extends TypeImpl<LongType> implements NumericType<LongType
 	public LongType createVariable(){ return new LongType( 0 ); }
 
 	@Override
-	public LongType copyVariable(){ return new LongType( v[ i ] ); }
+	public LongType clone(){ return new LongType( v[ i ] ); }
 
 	@Override
 	public String toString() { return "" + v[i]; }

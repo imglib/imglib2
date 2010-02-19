@@ -263,7 +263,7 @@ public class BasePairBitType extends TypeImpl<BasePairBitType> implements BasePa
 	public BasePairBitType createVariable(){ return new BasePairBitType(); }
 
 	@Override
-	public BasePairBitType copyVariable(){ return new BasePairBitType( this.get() ); }
+	public BasePairBitType clone(){ return new BasePairBitType( this.get() ); }
 
 	@Override
 	public String toString() { return this.get().toString(); }

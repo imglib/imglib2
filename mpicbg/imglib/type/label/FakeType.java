@@ -69,7 +69,7 @@ public class FakeType extends TypeImpl<FakeType>
 	public FakeType createVariable(){ return new FakeType(); }
 
 	@Override
-	public FakeType copyVariable(){ return createVariable(); }
+	public FakeType clone(){ return createVariable(); }
 
 	@Override
 	public String toString() { return ""; }

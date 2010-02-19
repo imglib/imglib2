@@ -229,7 +229,7 @@ public class RGBALegacyType extends TypeImpl<RGBALegacyType> implements NumericT
 	public RGBALegacyType createVariable() { return new RGBALegacyType( 0 ); }
 
 	@Override
-	public RGBALegacyType copyVariable() { return new RGBALegacyType( v[ i ] ); }
+	public RGBALegacyType clone() { return new RGBALegacyType( v[ i ] ); }
 
 	@Override
 	public String toString() 

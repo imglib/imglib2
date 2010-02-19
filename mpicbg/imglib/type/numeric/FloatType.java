@@ -153,7 +153,7 @@ public class FloatType extends TypeImpl<FloatType> implements NumericType<FloatT
 	public FloatType createVariable(){ return new FloatType( 0 ); }
 	
 	@Override
-	public FloatType copyVariable(){ return new FloatType( v[ i ] ); }
+	public FloatType clone(){ return new FloatType( v[ i ] ); }
 	
 	@Override
 	public String toString() { return "" + v[i]; }

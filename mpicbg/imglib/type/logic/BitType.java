@@ -198,7 +198,7 @@ public class BitType extends TypeImpl<BitType> implements LogicType<BitType>, Nu
 	public BitType createVariable(){ return new BitType(); }
 
 	@Override
-	public BitType copyVariable(){ return new BitType( b.getValue(i) ); }
+	public BitType clone(){ return new BitType( b.getValue(i) ); }
 
 	@Override
 	public String toString() 
