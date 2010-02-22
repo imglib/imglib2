@@ -95,7 +95,6 @@ public class Image<T extends Type<T>> implements ImageProperties, Dimensionality
 		this.cursors = new ArrayList<Cursor<T>>();
 		
 		this.storageFactory = imageFactory.getContainerFactory();
-		this.storageFactory.setOptimizedContainerUse( imageFactory.useOptimizedContainers() );
 		
 		this.imageFactory = imageFactory;
 

@@ -35,7 +35,6 @@ import mpicbg.imglib.type.Type;
 
 public class ImageFactory<T extends Type<T>> implements Factory
 {
-	protected boolean useOptimizedContainers = true;
 	final ContainerFactory storageFactory;
 	final T type;
 	String errorMessage = "No errors.";
@@ -61,7 +60,7 @@ public class ImageFactory<T extends Type<T>> implements Factory
 	public void printProperties()
 	{
 		System.out.println("ByteTypeImageFactory(): ");
-		System.out.println("Use optimized containers if possible: " + useOptimizedContainers );
+		System.out.println("Use optimized containers if possible: " + storageFactory.useOptimizedContainers() );
 		storageFactory.printProperties();		
 	}
 	
@@ -72,6 +71,6 @@ public class ImageFactory<T extends Type<T>> implements Factory
 	public void setParameters(String configuration) {}	
 	
 	
-	public void setOptimizedContainerUse ( final boolean useOptimizedContainers ) { this.useOptimizedContainers = useOptimizedContainers; }
-	public boolean useOptimizedContainers() { return useOptimizedContainers; }
+	public void setOptimizedContainerUse ( final boolean useOptimizedContainers ) { storageFactory.setOptimizedContainerUse( useOptimizedContainers ); }
+	public boolean useOptimizedContainers() { return storageFactory.useOptimizedContainers(); }
 }
