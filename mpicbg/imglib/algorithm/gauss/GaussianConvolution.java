@@ -342,7 +342,7 @@ public class GaussianConvolution< T extends NumericType<T>> implements MultiThre
 		final int depth = input.getDepth();
 
 		final AtomicInteger ai = new AtomicInteger(0);
-		final Thread[] threads = SimpleMultiThreading.newThreads();
+		final Thread[] threads = SimpleMultiThreading.newThreads( numThreads );
 		final int numThreads = threads.length;
 
 		for (int ithread = 0; ithread < threads.length; ++ithread)
