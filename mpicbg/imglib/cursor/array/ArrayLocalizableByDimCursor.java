@@ -32,6 +32,8 @@ package mpicbg.imglib.cursor.array;
 import mpicbg.imglib.container.array.Array;
 import mpicbg.imglib.cursor.LocalizableByDimCursor;
 import mpicbg.imglib.cursor.LocalizableCursor;
+//import mpicbg.imglib.cursor.link.CursorLink;
+//import mpicbg.imglib.cursor.link.NullLink;
 import mpicbg.imglib.cursor.special.LocalNeighborhoodCursor;
 import mpicbg.imglib.cursor.special.LocalNeighborhoodCursorFactory;
 import mpicbg.imglib.cursor.special.RegionOfInterestCursor;
@@ -40,6 +42,7 @@ import mpicbg.imglib.type.Type;
 
 public class ArrayLocalizableByDimCursor<T extends Type<T>> extends ArrayLocalizableCursor<T> implements LocalizableByDimCursor<T>
 {
+	//final CursorLink link;
 	final protected int[] step;
 	final int tmp[];
 	
@@ -51,6 +54,7 @@ public class ArrayLocalizableByDimCursor<T extends Type<T>> extends ArrayLocaliz
 		
 		step = Array.createAllocationSteps( container.getDimensions() );
 		tmp = new int[ numDimensions ];
+		//link = new NullLink();
 	}	
 	
 	@Override
@@ -88,6 +92,7 @@ public class ArrayLocalizableByDimCursor<T extends Type<T>> extends ArrayLocaliz
 	{
 		type.incIndex( step[ dim ] );
 		++position[ dim ];	
+		//link.fwd(dim);
 	}
 
 	@Override
@@ -95,13 +100,15 @@ public class ArrayLocalizableByDimCursor<T extends Type<T>> extends ArrayLocaliz
 	{
 		type.incIndex( step[ dim ] * steps );
 		position[ dim ] += steps;	
+		//link.move(steps, dim);
 	}
 	
 	@Override
 	public void bck( final int dim )
 	{
 		type.decIndex( step[ dim ] );
-		--position[ dim ];	
+		--position[ dim ];
+		//link.bck(dim);
 	}
 		
 	@Override
@@ -144,12 +151,15 @@ public class ArrayLocalizableByDimCursor<T extends Type<T>> extends ArrayLocaliz
 		
 		for ( int d = 0; d < numDimensions; ++d )
 			this.position[ d ] = position[ d ];
+		
+		//link.setPosition( position );
 	}
 
 	@Override
 	public void setPosition( final int position, final int dim )
 	{
 		this.position[ dim ] = position;
-		type.updateIndex( container.getPos( this.position ) );		
+		type.updateIndex( container.getPos( this.position ) );
+		//link.setPosition( position, dim );
 	}
 }

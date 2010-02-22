@@ -104,7 +104,8 @@ public class ArrayLocalizableByDimOutsideCursor<T extends Type<T>> extends Array
 					
 					for ( int e = 0; e < d; e++ )
 						position[ e ] = 0;
-					
+
+					//link.fwd();
 					return;
 				}
 			}
@@ -113,6 +114,7 @@ public class ArrayLocalizableByDimOutsideCursor<T extends Type<T>> extends Array
 			isOutside = true;
 			++position[0];
 			outsideStrategy.initOutside(  );
+			//link.fwd();
 		}
 	}
 
@@ -143,6 +145,7 @@ public class ArrayLocalizableByDimOutsideCursor<T extends Type<T>> extends Array
 				outsideStrategy.initOutside(  );
 			}
 		}
+		//link.fwd( dim );
 	}
 
 	@Override
@@ -168,7 +171,7 @@ public class ArrayLocalizableByDimOutsideCursor<T extends Type<T>> extends Array
 					type.updateDataArray( this );
 					
 					// get the offset inside the image
-					type.updateIndex( container.getPos( position ) );			
+					type.updateIndex( container.getPos( position ) );
 				}
 				else
 				{
@@ -195,6 +198,7 @@ public class ArrayLocalizableByDimOutsideCursor<T extends Type<T>> extends Array
 				outsideStrategy.initOutside(  );
 			}
 		}
+		//link.move( steps, dim );
 	}
 	
 	@Override
@@ -224,6 +228,7 @@ public class ArrayLocalizableByDimOutsideCursor<T extends Type<T>> extends Array
 				outsideStrategy.initOutside(  );
 			}
 		}
+		//link.bck( dim );
 	}
 
 	@Override
@@ -264,6 +269,7 @@ public class ArrayLocalizableByDimOutsideCursor<T extends Type<T>> extends Array
 			// get the offset inside the image
 			type.updateIndex( container.getPos( position ) );			
 		}
+		//link.setPosition( position );
 	}
 
 	@Override
@@ -290,5 +296,6 @@ public class ArrayLocalizableByDimOutsideCursor<T extends Type<T>> extends Array
 			// jumped around inside the image
 			type.updateIndex( container.getPos( this.position ) );
 		}		
+		//link.setPosition(position, dim);
 	}
 }
