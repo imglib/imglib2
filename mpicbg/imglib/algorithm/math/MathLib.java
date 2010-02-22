@@ -82,6 +82,23 @@ public class MathLib
 		return (float)Math.sqrt( dist );
 	}
 
+	public static long computeMedian( final long[] values )
+	{
+		final long temp[] = values.clone();
+		long median;
+
+		final int length = temp.length;
+
+		quicksort( temp, 0, length - 1 );
+
+		if (length % 2 == 1) //odd length
+			median = temp[length / 2];
+		else //even length
+			median = (temp[length / 2] + temp[(length / 2) - 1]) / 2;
+
+		return median;
+	}
+
 	public static double computeMedian( final double[] values )
 	{
 		final double temp[] = values.clone();
@@ -138,6 +155,29 @@ public class MathLib
 		return median;
 	}
 	
+	public static void quicksort( final long[] data, final int left, final int right )
+	{
+		if (data == null || data.length < 2)return;
+		int i = left, j = right;
+		long x = data[(left + right) / 2];
+		do
+		{
+			while (data[i] < x) i++;
+			while (x < data[j]) j--;
+			if (i <= j)
+			{
+				long temp = data[i];
+				data[i] = data[j];
+				data[j] = temp;
+				i++;
+				j--;
+			}
+		}
+		while (i <= j);
+		if (left < j) quicksort(data, left, j);
+		if (i < right) quicksort(data, i, right);
+	}
+
 	public static void quicksort( final double[] data, final int left, final int right )
 	{
 		if (data == null || data.length < 2)return;
