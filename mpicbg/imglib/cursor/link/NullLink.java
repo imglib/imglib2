@@ -2,7 +2,7 @@ package mpicbg.imglib.cursor.link;
 
 import mpicbg.imglib.cursor.LocalizableCursor;
 
-public class NullLink implements CursorLink
+final public class NullLink implements CursorLink
 {
 	@Override
 	final public void bck(final int dim)
@@ -68,49 +68,49 @@ public class NullLink implements CursorLink
 	}
 
 	@Override
-	public void getPosition(int[] position)
+	final public void getPosition(final int[] position)
 	{
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public int[] getPosition()
+	final public int[] getPosition()
 	{
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public int getPosition(int dim)
+	final public int getPosition(int dim)
 	{
 		// TODO Auto-generated method stub
 		return 0;
 	}
 
 	@Override
-	public String getPositionAsString()
+	final public String getPositionAsString()
 	{
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public void fwd(long steps)
+	final public void fwd(long steps)
 	{
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void fwd()
+	final public void fwd()
 	{
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void reset()
+	final public void reset()
 	{
 		// TODO Auto-generated method stub
 		
