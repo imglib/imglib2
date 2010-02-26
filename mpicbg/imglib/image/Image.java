@@ -58,8 +58,10 @@ public class Image<T extends Type<T>> implements ImageProperties, Dimensionality
 
 	final static AtomicInteger i = new AtomicInteger(), j = new AtomicInteger();
 	protected String name;
-	final protected int numDimensions, numPixels;
-	final protected int[] dim;
+	
+	// this has to be read from the container as it might change during processing	
+	//final protected int numDimensions, numPixels;	
+	//final protected int[] dim;
 	
 	final protected float[] calibration;
 
@@ -78,38 +80,30 @@ public class Image<T extends Type<T>> implements ImageProperties, Dimensionality
 			dim = new int[]{1};
 		}
 
-		this.numDimensions = dim.length;
-		int numPixels = 1;		
-		for (int i = 0; i < numDimensions; i++)
+		for (int i = 0; i < dim.length; i++)
 		{
 			if ( dim[i] <= 0 )
 			{
 				System.err.print("Warning: Image dimension " + (i+1) + " does not make sense: size=" + dim[i] + ". Replacing it by 1.");
 				dim[i] = 1;	
 			}
-			numPixels *= dim[i];
 		}
-		this.numPixels = numPixels;
-		
-		this.dim = dim.clone();
-		this.cursors = new ArrayList<Cursor<T>>();
-		
-		this.storageFactory = imageFactory.getContainerFactory();
-		
+		this.cursors = new ArrayList<Cursor<T>>();		
+		this.storageFactory = imageFactory.getContainerFactory();		
 		this.imageFactory = imageFactory;
 
 		// createType() needs the imageFactory
 		this.type = createType();
 		
 		if ( container == null )
-			this.container = createContainer();
+			this.container = createContainer( dim );
 		else
 			this.container = container;
 		
 		setDefaultDisplay();	
 		
-		calibration = new float[ numDimensions ];
-		for ( int d = 0; d < numDimensions; ++d )
+		calibration = new float[ getContainer().getNumDimensions() ];
+		for ( int d = 0; d < getContainer().getNumEntities(); ++d )
 			calibration[ d ] = 1;
 	}
 	
@@ -141,19 +135,19 @@ public class Image<T extends Type<T>> implements ImageProperties, Dimensionality
 	 * Creates a new {@link Image} with the same dimensions, {@link ContainerFactory} and {@link Type} as this one as this one.
 	 * @return - a new empty {@link Image}
 	 */
-	public Image<T> createNewImage( final String name ) { return createNewImage( dim, name); }
+	public Image<T> createNewImage( final String name ) { return createNewImage( getContainer().getDimensions(), name); }
 	
 	/**
 	 * Creates a new {@link Image} with the same dimensions, {@link ContainerFactory} and {@link Type} as this one, the name is given automatically.
 	 * @return - a new empty {@link Image}
 	 */
-	public Image<T> createNewImage() { return createNewImage( dim, null ); }
+	public Image<T> createNewImage() { return createNewImage( getContainer().getDimensions(), null ); }
 	
 	public float[] getCalibration() { return calibration.clone(); }
 	public float getCalibration( final int dim ) { return calibration[ dim ]; }
 	public void setCalibration( final float[] calibration ) 
 	{ 
-		for ( int d = 0; d < numDimensions; ++d )
+		for ( int d = 0; d < getContainer().getNumDimensions(); ++d )
 			this.calibration[ d ] = calibration[ d ];
 	}
 	public void setCalibration( final float calibration, final int dim ) { this.calibration[ dim ] = calibration; } 
@@ -241,7 +235,7 @@ public class Image<T extends Type<T>> implements ImageProperties, Dimensionality
 	 * the dimensionality
 	 * @return {@link Container} - the instantiated Container
 	 */
-	protected Container<T> createContainer() { return type.createSuitableContainer( storageFactory, dim ); }
+	protected Container<T> createContainer( final int[] dim ) { return type.createSuitableContainer( storageFactory, dim ); }
 
 	/**
 	 * Creates and {@link Interpolator} on this {@link Image} given a certain {@link InterpolatorFactory}.
@@ -287,11 +281,11 @@ public class Image<T extends Type<T>> implements ImageProperties, Dimensionality
 	public int[] createPositionArray() { return new int[ getNumDimensions() ]; }
 	
 	@Override
-	public int getNumDimensions() { return dim.length; }
+	public int getNumDimensions() { return getContainer().getNumDimensions(); }
 	@Override
-	public int[] getDimensions() { return dim.clone(); }
+	public int[] getDimensions() { return getContainer().getDimensions(); }
 	@Override
-	public int getNumPixels() { return numPixels; }
+	public int getNumPixels() { return getContainer().getNumPixels(); }
 
 	@Override
 	public String getName() { return name; }
@@ -302,24 +296,18 @@ public class Image<T extends Type<T>> implements ImageProperties, Dimensionality
 	@Override
 	public String toString()
 	{
-		return "Image '" + this.getName() + "', dim=" + MathLib.printCoordinates( dim );
+		return "Image '" + this.getName() + "', dim=" + MathLib.printCoordinates( getContainer().getDimensions() );
 	}
 	
 	@Override
-	public void getDimensions( int[] dimensions )
+	public void getDimensions( final int[] dimensions )
 	{
-		for (int i = 0; i < numDimensions; i++)
-			dimensions[i] = this.dim[i];
+		for (int i = 0; i < getContainer().getNumDimensions(); i++)
+			dimensions[i] = getContainer().getDimension( i );
 	}
 
 	@Override
-	public int getDimension( int dim )
-	{
-		if ( dim < numDimensions && dim > -1 )
-			return this.dim[ dim ];
-		else
-			return 1;		
-	}
+	public int getDimension( final int dim ) { return getContainer().getDimension( dim ); }
 	
 	/**
 	 * Clones this {@link Image}, i.e. creates this {@link Image} containing the same content.
