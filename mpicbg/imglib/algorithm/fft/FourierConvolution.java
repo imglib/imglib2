@@ -43,7 +43,8 @@ public class FourierConvolution<T extends NumericType<T>, S extends NumericType<
 	final int numDimensions;
 	Image<T> image, convolved;
 	Image<S> kernel;
-	Image<ComplexFloatType> kernelFFT; 
+	Image<ComplexFloatType> kernelFFT, imgFFT; 
+	FourierTransform<T> fftImage;
 	
 	final int[] kernelDim;
 
@@ -59,6 +60,7 @@ public class FourierConvolution<T extends NumericType<T>, S extends NumericType<
 		this.kernel = kernel;
 		this.kernelDim = kernel.getDimensions();
 		this.kernelFFT = null;
+		this.imgFFT = null;
 		
 		setNumThreads();
 	}
@@ -67,15 +69,35 @@ public class FourierConvolution<T extends NumericType<T>, S extends NumericType<
 	{
 		if ( !image.getContainer().compareStorageContainerCompatibility( this.image.getContainer() ))
 		{
-			errorMessage = "Containers are not comparable, cannot exchange image";
+			errorMessage = "Image containers are not comparable, cannot exchange image";
 			return false;
 		}
 		else
 		{
 			this.image = image;
+			// the fft has to be recomputed
+			this.imgFFT = null;
 			return true;
 		}
 	}
+
+	public boolean replaceKernel( final Image<S> kernel )
+	{
+		if ( !kernel.getContainer().compareStorageContainerCompatibility( this.kernel.getContainer() ))
+		{
+			errorMessage = "Kernel containers are not comparable, cannot exchange image";
+			return false;
+		}
+		else
+		{
+			this.kernel = kernel;
+			// the fft has to be recomputed
+			this.kernelFFT = null;
+			return true;
+		}
+	}
+
+	
 	final public static Image<FloatType> createGaussianKernel( final ContainerFactory factory, final double sigma, final int numDimensions )
 	{
 		final double[ ] sigmas = new double[ numDimensions ];
@@ -172,90 +194,95 @@ public class FourierConvolution<T extends NumericType<T>, S extends NumericType<
 		//
 		// compute fft of the input image
 		//
-		final FourierTransform<T> fftImage = new FourierTransform<T>( image );
-		fftImage.setNumThreads( this.getNumThreads() );
-		
-		// how to extend the input image outside of its boundaries for computing the FFT,
-		// we simply mirror the content at the borders
-		fftImage.setPreProcessing( PreProcessing.ExtendMirror );		
-		// we do not rearrange the fft quadrants
-		fftImage.setRearrangement( Rearrangement.Unchanged );
-		
-		// the image has to be extended by the size of the kernel-1
-		// as the kernel is always odd, e.g. if kernel size is 3, we need to add
-		// one pixel outside in each dimension (3-1=2 pixel all together) so that the
-		// convolution works
-		final int[] imageExtension = kernelDim.clone();		
-		for ( int d = 0; d < numDimensions; ++d )
-			--imageExtension[ d ];		
-		fftImage.setImageExtension( imageExtension );
-		
-		if ( !fftImage.checkInput() || !fftImage.process() )
+		if ( imgFFT == null ) //not computed in a previous step
 		{
-			errorMessage = "FFT of image failed: " + fftImage.getErrorMessage();
-			return false;			
+			fftImage = new FourierTransform<T>( image );
+			fftImage.setNumThreads( this.getNumThreads() );
+			
+			// how to extend the input image outside of its boundaries for computing the FFT,
+			// we simply mirror the content at the borders
+			fftImage.setPreProcessing( PreProcessing.ExtendMirror );		
+			// we do not rearrange the fft quadrants
+			fftImage.setRearrangement( Rearrangement.Unchanged );
+			
+			// the image has to be extended by the size of the kernel-1
+			// as the kernel is always odd, e.g. if kernel size is 3, we need to add
+			// one pixel outside in each dimension (3-1=2 pixel all together) so that the
+			// convolution works
+			final int[] imageExtension = kernelDim.clone();		
+			for ( int d = 0; d < numDimensions; ++d )
+				--imageExtension[ d ];		
+			fftImage.setImageExtension( imageExtension );
+			
+			if ( !fftImage.checkInput() || !fftImage.process() )
+			{
+				errorMessage = "FFT of image failed: " + fftImage.getErrorMessage();
+				return false;			
+			}
+			
+			imgFFT = fftImage.getResult();
 		}
-		
-		final Image<ComplexFloatType> imgFFT = fftImage.getResult();
 		
 		//
 		// create the kernel for fourier transform
 		//
-		
-		// get the size of the kernel image that will be fourier transformed,
-		// it has the same size as the image
-		final int kernelTemplateDim[] = imgFFT.getDimensions();
-		kernelTemplateDim[ 0 ] = ( imgFFT.getDimension( 0 ) - 1 ) * 2;
-		
-		// instaniate real valued kernel template
-		// which is of the same container type as the image
-		// so that the computation is easy
-		final ImageFactory<S> kernelTemplateFactory = new ImageFactory<S>( kernel.createType(), image.getContainer().getFactory() );
-		final Image<S> kernelTemplate = kernelTemplateFactory.createImage( kernelTemplateDim );
-		
-		// copy the kernel into the kernelTemplate,
-		// the key here is that the center pixel of the kernel (e.g. 13,13,13)
-		// is located at (0,0,0)
-		final LocalizableCursor<S> kernelCursor = kernel.createLocalizableCursor();
-		final LocalizableByDimCursor<S> kernelTemplateCursor = kernelTemplate.createLocalizableByDimCursor();
-		
-		final int[] position = new int[ numDimensions ];
-		while ( kernelCursor.hasNext() )
+		if ( kernelFFT == null )
 		{
-			kernelCursor.next();
-			kernelCursor.getPosition( position );
+			// get the size of the kernel image that will be fourier transformed,
+			// it has the same size as the image
+			final int kernelTemplateDim[] = imgFFT.getDimensions();
+			kernelTemplateDim[ 0 ] = ( imgFFT.getDimension( 0 ) - 1 ) * 2;
 			
-			for ( int d = 0; d < numDimensions; ++d )
+			// instaniate real valued kernel template
+			// which is of the same container type as the image
+			// so that the computation is easy
+			final ImageFactory<S> kernelTemplateFactory = new ImageFactory<S>( kernel.createType(), image.getContainer().getFactory() );
+			final Image<S> kernelTemplate = kernelTemplateFactory.createImage( kernelTemplateDim );
+			
+			// copy the kernel into the kernelTemplate,
+			// the key here is that the center pixel of the kernel (e.g. 13,13,13)
+			// is located at (0,0,0)
+			final LocalizableCursor<S> kernelCursor = kernel.createLocalizableCursor();
+			final LocalizableByDimCursor<S> kernelTemplateCursor = kernelTemplate.createLocalizableByDimCursor();
+			
+			final int[] position = new int[ numDimensions ];
+			while ( kernelCursor.hasNext() )
 			{
-				position[ d ] = ( position[ d ] - kernelDim[ d ]/2 + kernelTemplateDim[ d ] ) % kernelTemplateDim[ d ];
-				/*final int tmp = ( position[ d ] - kernelDim[ d ]/2 );
+				kernelCursor.next();
+				kernelCursor.getPosition( position );
 				
-				if ( tmp < 0 )
-					position[ d ] = kernelTemplateDim[ d ] + tmp;
-				else
-					position[ d ] = tmp;*/
-			}			
+				for ( int d = 0; d < numDimensions; ++d )
+				{
+					position[ d ] = ( position[ d ] - kernelDim[ d ]/2 + kernelTemplateDim[ d ] ) % kernelTemplateDim[ d ];
+					/*final int tmp = ( position[ d ] - kernelDim[ d ]/2 );
+					
+					if ( tmp < 0 )
+						position[ d ] = kernelTemplateDim[ d ] + tmp;
+					else
+						position[ d ] = tmp;*/
+				}			
+				
+				kernelTemplateCursor.setPosition( position );
+				kernelTemplateCursor.getType().set( kernelCursor.getType() );
+			}
 			
-			kernelTemplateCursor.setPosition( position );
-			kernelTemplateCursor.getType().set( kernelCursor.getType() );
+			// 
+			// compute FFT of kernel
+			//
+			final FourierTransform<S> fftKernel = new FourierTransform<S>( kernelTemplate );
+			fftKernel.setNumThreads( this.getNumThreads() );
+			
+			fftKernel.setPreProcessing( PreProcessing.None );		
+			fftKernel.setRearrangement( fftImage.getRearrangement() );
+			
+			if ( !fftKernel.checkInput() || !fftKernel.process() )
+			{
+				errorMessage = "FFT of kernel failed: " + fftKernel.getErrorMessage();
+				return false;			
+			}		
+			kernelTemplate.close();		
+			kernelFFT = fftKernel.getResult();
 		}
-		
-		// 
-		// compute FFT of kernel
-		//
-		final FourierTransform<S> fftKernel = new FourierTransform<S>( kernelTemplate );
-		fftKernel.setNumThreads( this.getNumThreads() );
-		
-		fftKernel.setPreProcessing( PreProcessing.None );		
-		fftKernel.setRearrangement( fftImage.getRearrangement() );
-		
-		if ( !fftKernel.checkInput() || !fftKernel.process() )
-		{
-			errorMessage = "FFT of kernel failed: " + fftKernel.getErrorMessage();
-			return false;			
-		}		
-		kernelTemplate.close();		
-		kernelFFT = fftKernel.getResult();
 		
 		//
 		// Multiply in Fourier Space
