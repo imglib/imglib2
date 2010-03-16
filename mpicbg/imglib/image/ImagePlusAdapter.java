@@ -30,7 +30,7 @@
 package mpicbg.imglib.image;
 
 import ij.ImagePlus;
-import mpicbg.imglib.container.imageplus.ByteImagePlus;
+import mpicbg.imglib.container.imageplus.UnsignedByteImagePlus;
 import mpicbg.imglib.container.imageplus.FloatImagePlus;
 import mpicbg.imglib.container.imageplus.ImagePlusContainerFactory;
 import mpicbg.imglib.container.imageplus.IntImagePlus;
@@ -40,7 +40,7 @@ import mpicbg.imglib.image.Image;
 import mpicbg.imglib.type.NumericType;
 import mpicbg.imglib.type.Type;
 import mpicbg.imglib.type.TypeConverter;
-import mpicbg.imglib.type.numeric.ByteType;
+import mpicbg.imglib.type.numeric.UnsignedByteType;
 import mpicbg.imglib.type.numeric.FloatType;
 import mpicbg.imglib.type.numeric.RGBALegacyType;
 import mpicbg.imglib.type.numeric.ShortType;
@@ -81,15 +81,15 @@ public class ImagePlusAdapter
 		}
 	}
 	
-	public static Image<ByteType> wrapByte( final ImagePlus imp )
+	public static Image<UnsignedByteType> wrapByte( final ImagePlus imp )
 	{
 		if ( imp.getType() != ImagePlus.GRAY8)
 			return null;
 		
 		ImagePlusContainerFactory containerFactory = new ImagePlusContainerFactory();
-		ByteImagePlus<ByteType> container = new ByteImagePlus<ByteType>( imp,  containerFactory );
-		ImageFactory<ByteType> imageFactory = new ImageFactory<ByteType>( new ByteType(), containerFactory );				
-		Image<ByteType> image = new Image<ByteType>( container, imageFactory, imp.getTitle() );
+		UnsignedByteImagePlus<UnsignedByteType> container = new UnsignedByteImagePlus<UnsignedByteType>( imp,  containerFactory );
+		ImageFactory<UnsignedByteType> imageFactory = new ImageFactory<UnsignedByteType>( new UnsignedByteType(), containerFactory );				
+		Image<UnsignedByteType> image = new Image<UnsignedByteType>( container, imageFactory, imp.getTitle() );
 		
 		return image;		
 	}
