@@ -34,6 +34,7 @@ import mpicbg.imglib.type.numeric.ByteType;
 import mpicbg.imglib.type.numeric.FloatType;
 import mpicbg.imglib.type.numeric.RGBALegacyType;
 import mpicbg.imglib.type.numeric.ShortType;
+import mpicbg.imglib.type.numeric.UnsignedByteType;
 
 public class LOCI
 {
@@ -640,7 +641,149 @@ public class LOCI
 		catch (IOException exc) { System.out.println("LOCI.openLOCI(): Sorry, an error occurred: " + exc.getMessage()); return null;}
 		catch (FormatException exc) {System.out.println("LOCI.openLOCI(): Sorry, an error occurred: " + exc.getMessage()); return null;}		
 	}
+
+	public static Image<UnsignedByteType> openLOCIUnsignedByteType( final String fileName, final ContainerFactory factory )
+	{
+		return openLOCIUnsignedByteType( "", fileName, new ImageFactory<UnsignedByteType>( new UnsignedByteType(), factory ) );
+	}
+
+	public static Image<UnsignedByteType> openLOCIUnsignedByteType( final String fileName, final ImageFactory<UnsignedByteType> factory )
+	{
+		return openLOCIUnsignedByteType( "", fileName, factory );
+	}
 	
+	public static Image<UnsignedByteType> openLOCIUnsignedByteType( final String path, final String fileName, final ContainerFactory factory )
+	{
+		return openLOCIUnsignedByteType(path, fileName, new ImageFactory<UnsignedByteType>( new UnsignedByteType(), factory ) );
+	}
+
+	public static Image<UnsignedByteType> openLOCIUnsignedByteType( final String path, final String fileName, final ImageFactory<UnsignedByteType> factory )
+	{
+		return openLOCIUnsignedByteType(path, fileName, factory, -1, -1 );
+	}
+	
+	public static Image<UnsignedByteType> openLOCIUnsignedByteType( String path, final String fileName, final ImageFactory<UnsignedByteType> factory, int from, int to )
+	{				
+		path = checkPath( path );
+		final IFormatReader r = new ChannelSeparator();
+
+		final IMetadata omexmlMeta = MetadataTools.createOMEXMLMetadata();
+		r.setMetadataStore( omexmlMeta );
+
+		final String id = path + fileName;
+		
+		try 
+		{
+			r.setId(id);
+			
+			final int width = r.getSizeX();
+			final int height = r.getSizeY();
+			final int depth = r.getSizeZ();
+			int timepoints = r.getSizeT();
+			int channels = r.getSizeC();
+			final int pixelType = r.getPixelType();
+			final int bytesPerPixel = FormatTools.getBytesPerPixel(pixelType); 
+			final String pixelTypeString = FormatTools.getPixelTypeString(pixelType);
+			
+			if ( timepoints > 1 )
+			{
+				System.out.println("LOCI.openLOCI(): More than one timepoint. Not implemented yet. Returning first timepoint");
+				timepoints = 1;
+			}
+			
+			if ( channels > 1 )
+			{
+				System.out.println("LOCI.openLOCI(): More than one channel. Image<ByteType> supports only 1 channel right now, returning the first channel.");
+				channels = 1;
+			}
+			
+			if (!(pixelType == FormatTools.UINT8))
+			{
+				System.out.println("LOCI.openLOCI(): PixelType " + pixelTypeString + " not supported by ByteType, returning. ");
+				return null;
+			}
+			
+			final int start, end;			
+			if (from < 0 || to < 0 || to < from)
+			{
+				start = 0; end = depth;
+			}
+			else 
+			{
+				start = from;
+				if (to > depth)
+					end = depth;
+				else 
+					end = to;
+			}
+
+			final Image<UnsignedByteType> img;
+			
+			if ( end-start == 1)				
+				img = factory.createImage( new int[]{ width, height }, fileName);
+			else
+				img = factory.createImage( new int[]{ width, height, end - start }, fileName);
+
+			if (img == null)
+			{
+				System.out.println("LOCI.openLOCI():  - Could not create image.");
+				return null;
+			}
+			else
+			{
+				System.out.println( "Opening '" + fileName + "' [" + width + "x" + height + "x" + depth + " type=" + pixelTypeString + " image=Image<ByteType>]" ); 
+				img.setName( fileName );
+			}
+			
+			// try read metadata
+			applyMetaData( img, r );
+		
+			final int t = 0;			
+			final byte[][] b = new byte[channels][width * height * bytesPerPixel];
+			
+			final int[] planePos = new int[3];
+			final int planeX = 0;
+			final int planeY = 1;
+									
+			LocalizablePlaneCursor<UnsignedByteType> it = img.createLocalizablePlaneCursor();
+			final UnsignedByteType type = it.getType();
+
+			
+			for (int z = start; z < end; z++)
+			{	
+				//System.out.println((z+1) + "/" + (end));
+				
+				// set the z plane iterator to the current z plane
+				planePos[ 2 ] = z - start;
+				it.reset( planeX, planeY, planePos );
+				
+				// read the data from LOCI
+				for (int c = 0; c < channels; c++)
+				{
+					final int index = r.getIndex(z, c, t);
+					r.openBytes(index, b[c]);	
+				}
+				
+				// write data for that plane into the Image structure using the iterator
+				if (channels == 1)
+				{					
+						while(it.hasNext())
+						{
+							it.fwd();
+							type.set( UnsignedByteType.getUnsignedByte( b[ 0 ][ it.getPosition( planeX )+it.getPosition( planeY )*width ] ) );
+						}						
+				}				
+			}
+			
+			it.close();
+			
+			return img;			
+			
+		}
+		catch (IOException exc) { System.out.println("LOCI.openLOCI(): Sorry, an error occurred: " + exc.getMessage()); return null;}
+		catch (FormatException exc) {System.out.println("LOCI.openLOCI(): Sorry, an error occurred: " + exc.getMessage()); return null;}		
+	}
+
 	public static Image<RGBALegacyType> openLOCIRGBALegacyType( final String path, final String fileName, final ImageFactory<RGBALegacyType> factory )
 	{
 		return openLOCIRGBALegacyType(path, fileName, factory, -1, -1 );
