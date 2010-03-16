@@ -68,7 +68,7 @@ public class FloydSteinbergDithering<T extends NumericType<T>> implements Output
 	public boolean process()
 	{		
 		// creates the output image of BitType using the same Storage Strategy as the input image 
-		final ImageFactory<BitType> imgFactory = new ImageFactory<BitType>( new BitType(), img.getStorageFactory() );
+		final ImageFactory<BitType> imgFactory = new ImageFactory<BitType>( new BitType(), img.getContainerFactory() );
 		result = imgFactory.createImage( dim );
 		
 		// we create a Cursor that traverses (top -> bottom) and (left -> right) in n dimensions,
