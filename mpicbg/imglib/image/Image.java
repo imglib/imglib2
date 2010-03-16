@@ -30,7 +30,8 @@
 package mpicbg.imglib.image;
 
 import java.util.ArrayList;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.Collection;
+import java.util.concurrent.atomic.AtomicLong;
 
 import mpicbg.imglib.algorithm.math.MathLib;
 import mpicbg.imglib.container.Container;
@@ -42,7 +43,6 @@ import mpicbg.imglib.cursor.LocalizableCursor;
 import mpicbg.imglib.cursor.LocalizablePlaneCursor;
 import mpicbg.imglib.cursor.vector.Dimensionality;
 import mpicbg.imglib.image.display.Display;
-import mpicbg.imglib.image.display.imagej.ImageJFunctions;
 import mpicbg.imglib.interpolation.Interpolator;
 import mpicbg.imglib.interpolation.InterpolatorFactory;
 import mpicbg.imglib.outside.OutsideStrategyFactory;
@@ -51,20 +51,17 @@ import mpicbg.imglib.type.Type;
 public class Image<T extends Type<T>> implements ImageProperties, Dimensionality
 {
 	final protected ArrayList<Cursor<T>> cursors;
-	final ContainerFactory storageFactory;
+	final ContainerFactory containerFactory;
 	final Container<T> container;
 	final ImageFactory<T> imageFactory;
 	final T type;
 
-	final static AtomicInteger i = new AtomicInteger(), j = new AtomicInteger();
+	final static AtomicLong i = new AtomicLong(), j = new AtomicLong();
 	protected String name;
-	
-	// this has to be read from the container as it might change during processing	
-	//final protected int numDimensions, numPixels;	
-	//final protected int[] dim;
 	
 	final protected float[] calibration;
 
+	/* TODO Should this be in the multi-channel image?  Should that be in the image or not?  Better not! */
 	protected Display<T> display;
 
 	private Image( Container<T> container, ImageFactory<T> imageFactory, int dim[], String name )
@@ -89,7 +86,7 @@ public class Image<T extends Type<T>> implements ImageProperties, Dimensionality
 			}
 		}
 		this.cursors = new ArrayList<Cursor<T>>();		
-		this.storageFactory = imageFactory.getContainerFactory();		
+		this.containerFactory = imageFactory.getContainerFactory();		
 		this.imageFactory = imageFactory;
 
 		// createType() needs the imageFactory
@@ -122,7 +119,12 @@ public class Image<T extends Type<T>> implements ImageProperties, Dimensionality
 	 * @param dimensions - the dimensions of the {@link Image}
 	 * @return - a new empty {@link Image}
 	 */
-	public Image<T> createNewImage( final int[] dimensions, final String name ) { return imageFactory.createImage( dimensions, name ); }
+	public Image<T> createNewImage( final int[] dimensions, final String name )
+	{
+		final Image< T > newImage = imageFactory.createImage( dimensions, name );
+		newImage.setCalibration( getCalibration() );
+		return newImage;
+	}
 
 	/**
 	 * Creates a new {@link Image} with the same {@link ContainerFactory} and {@link Type} as this one, the name is given automatically.
@@ -235,7 +237,7 @@ public class Image<T extends Type<T>> implements ImageProperties, Dimensionality
 	 * the dimensionality
 	 * @return {@link Container} - the instantiated Container
 	 */
-	protected Container<T> createContainer( final int[] dim ) { return type.createSuitableContainer( storageFactory, dim ); }
+	protected Container<T> createContainer( final int[] dim ) { return type.createSuitableContainer( containerFactory, dim ); }
 
 	/**
 	 * Creates and {@link Interpolator} on this {@link Image} given a certain {@link InterpolatorFactory}.
@@ -261,9 +263,7 @@ public class Image<T extends Type<T>> implements ImageProperties, Dimensionality
 	 */
 	public void setDisplay( final Display<T> display ) { this.display = display; }
 	
-	public ImageJFunctions getImageJFunctions() { return new ImageJFunctions(); }
-
-	final public synchronized static int createUniqueId() { return j.getAndIncrement(); }
+	final public synchronized static long createUniqueId() { return j.getAndIncrement(); }
 	
 	/**
 	 * Closes the {@link Image} by closing all {@link Cursor}s and the {@link Container}
@@ -277,8 +277,15 @@ public class Image<T extends Type<T>> implements ImageProperties, Dimensionality
 	/**
 	 * Creates an int array of the same dimensionality as this {@link Image} which can be used for addressing {@link Cursor}s. 
 	 * @return - empty int[]
+	 * 
+	 * TODO Do we really need this?  I just replaces
+	 * int[] t = new int[ img1.getNumDimensions() ]; by
+	 * int[] t = img1.getPositionArray()
+	 *
+	 * Saalfeld: remove! ;)  Preibisch: keep (esoteric reasons)
 	 */
 	public int[] createPositionArray() { return new int[ getNumDimensions() ]; }
+	
 	
 	@Override
 	public int getNumDimensions() { return getContainer().getNumDimensions(); }
@@ -339,13 +346,22 @@ public class Image<T extends Type<T>> implements ImageProperties, Dimensionality
 	 * Returns the {@link ContainerFactory} of this {@link Image}.
 	 * @return - {@link ContainerFactory}
 	 */
-	public ContainerFactory getStorageFactory() { return storageFactory; }
+	public ContainerFactory getContainerFactory() { return containerFactory; }
 	
 	/**
 	 * Returns the {@link ImageFactory} of this {@link Image}.
 	 * @return - {@link ImageFactory}
 	 */
 	public ImageFactory<T> getImageFactory() { return imageFactory; }
+	
+	/**
+	 * Remove all cursors
+	 */
+	public void removeAllCursors()
+	{
+		closeAllCursors();
+		cursors.clear();
+	}
 	
 	/**
 	 * Closes all {@link Cursor}s operating on this {@link Image}.
@@ -357,10 +373,19 @@ public class Image<T extends Type<T>> implements ImageProperties, Dimensionality
 	}
 	
 	/**
-	 * Return all {@link Cursor}s currently instantiated for this {@link Image}.
+	 * Put all {@link Cursor}s currently instantiated into a {@link Collection}.
+	 * 
+	 */
+	public void getCursors( final Collection< Cursor< T > > collection )
+	{
+		collection.addAll( cursors );
+	}
+	
+	/**
+	 * Return all {@link Cursor}s currently instantiated for this {@link Image} in a new {@link ArrayList}.
 	 * @return - {@link ArrayList} containing the {@link Cursor}s
 	 */
-	public ArrayList<Cursor<T>> getCursors() { return cursors; }	
+	public ArrayList< Cursor< T > > getCursors(){ return new ArrayList< Cursor< T > >( cursors ); }	
 
 	/**
 	 * Return all active {@link Cursor}s currently instantiated for this {@link Image}.
@@ -376,6 +401,7 @@ public class Image<T extends Type<T>> implements ImageProperties, Dimensionality
 		
 		return activeCursors; 
 	}	
+	
 	/**
 	 * Adds a {@link Cursor} to the {@link ArrayList} of instantiated {@link Cursor}s.
 	 * @param c - new {@link Cursor}
@@ -383,17 +409,15 @@ public class Image<T extends Type<T>> implements ImageProperties, Dimensionality
 	protected synchronized void addCursor( final Cursor<T> c ) { cursors.add( c );	}
 	
 	/**
-	 * Closes the {@link Cursor} last instantiated.
+	 * Remove a {@link Cursor} from the {@link ArrayList} of instantiated {@link Cursor}s.
+	 * @param c - {@link Cursor} to be removed
 	 */
-	public synchronized void closeLastCursor() 
-	{ 
-		if ( cursors.size() > 0 )
-		{
-			cursors.get( cursors.size() - 1 ).close();
-			cursors.remove( cursors.size() - 1 );
-		}
+	protected synchronized void removeCursor( final Cursor<T> c )
+	{
+		c.close();
+		cursors.remove( c );
 	}
-
+	
 	/**
 	 * Returns the number of {@link Cursor}s instantiated on this {@link Image}.
 	 * @return - the number of {@link Cursor}s
