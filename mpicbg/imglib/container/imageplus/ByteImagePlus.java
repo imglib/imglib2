@@ -37,7 +37,7 @@ import mpicbg.imglib.container.basictypecontainer.ByteContainer;
 import mpicbg.imglib.cursor.Cursor;
 import mpicbg.imglib.type.Type;
 
-public class ByteImagePlus<T extends Type<T>> extends ImagePlusContainer<T> implements ByteContainer<T> 
+public class ByteImagePlus<T extends Type<T>> extends ImagePlusContainer<T> implements ByteContainer<T>
 {
 	final ImagePlus image;
 	final byte[][] mirror;
