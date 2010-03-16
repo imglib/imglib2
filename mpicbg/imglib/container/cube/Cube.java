@@ -32,7 +32,7 @@ package mpicbg.imglib.container.cube;
 import java.util.ArrayList;
 
 import mpicbg.imglib.container.ContainerFactory;
-import mpicbg.imglib.container.ContainerImpl;
+import mpicbg.imglib.container.PixelGridContainerImpl;
 import mpicbg.imglib.container.array.FakeArray;
 import mpicbg.imglib.cursor.array.ArrayLocalizableByDimCursor;
 import mpicbg.imglib.cursor.array.ArrayLocalizableCursor;
@@ -46,7 +46,7 @@ import mpicbg.imglib.outside.OutsideStrategyFactory;
 import mpicbg.imglib.type.Type;
 import mpicbg.imglib.type.label.FakeType;
 
-public abstract class Cube<C extends CubeElement<C, D, T>, D extends Cube<C, D, T>, T extends Type<T>> extends ContainerImpl<T>
+public abstract class Cube<C extends CubeElement<C, D, T>, D extends Cube<C, D, T>, T extends Type<T>> extends PixelGridContainerImpl<T>
 {
 	final protected ArrayList<C> data;
 	final protected int[] numCubesDim, cubeSize;

@@ -32,7 +32,7 @@ package mpicbg.imglib.container.imageplus;
 import ij.ImagePlus;
 
 import mpicbg.imglib.container.Container3D;
-import mpicbg.imglib.container.ContainerImpl;
+import mpicbg.imglib.container.PixelGridContainerImpl;
 import mpicbg.imglib.cursor.Cursor;
 import mpicbg.imglib.cursor.LocalizableByDimCursor;
 import mpicbg.imglib.cursor.LocalizableCursor;
@@ -46,7 +46,7 @@ import mpicbg.imglib.image.Image;
 import mpicbg.imglib.outside.OutsideStrategyFactory;
 import mpicbg.imglib.type.Type;
 
-public abstract class ImagePlusContainer<T extends Type<T>> extends ContainerImpl<T> implements Container3D<T>
+public abstract class ImagePlusContainer<T extends Type<T>> extends PixelGridContainerImpl<T> implements Container3D<T>
 {
 	final ImagePlusContainerFactory factory;
 	final int width, height, depth;

@@ -29,35 +29,10 @@
  */
 package mpicbg.imglib.container;
 
-import mpicbg.imglib.cursor.Cursor;
-import mpicbg.imglib.cursor.LocalizableByDimCursor;
-import mpicbg.imglib.cursor.LocalizableCursor;
-import mpicbg.imglib.cursor.LocalizablePlaneCursor;
-import mpicbg.imglib.image.Image;
-import mpicbg.imglib.outside.OutsideStrategyFactory;
 import mpicbg.imglib.type.Type;
 
-public interface Container<T extends Type<T>>
+public interface PixelGridContainer<T extends Type< T > > extends Container< T >
 {
-	public Cursor<T> createCursor( T type, Image<T> image );
-	public LocalizableCursor<T> createLocalizableCursor( T type, Image<T> image );
-	public LocalizablePlaneCursor<T> createLocalizablePlaneCursor( T type, Image<T> image );
-	public LocalizableByDimCursor<T> createLocalizableByDimCursor( T type, Image<T> image );
-	public LocalizableByDimCursor<T> createLocalizableByDimCursor( T type, Image<T> image, OutsideStrategyFactory<T> outsideFactory );
-	
-	public void close();
-
-	public ContainerFactory getFactory();
-	
-	public int getNumDimensions();
-	public void getDimensions( int[] dimensions );
-	public int[] getDimensions();
-	public int getDimension( int dim );
-	public long getId();
-	
-	public int getNumPixels();
-		
-	public boolean compareStorageContainerDimensions( final Container<?> img );
-	public boolean compareStorageContainerCompatibility( final Container<?> img );
-
+	public int getNumEntities();
+	public int getNumEntitiesPerPixel();
 }

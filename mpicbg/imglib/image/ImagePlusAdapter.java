@@ -30,7 +30,7 @@
 package mpicbg.imglib.image;
 
 import ij.ImagePlus;
-import mpicbg.imglib.container.imageplus.UnsignedByteImagePlus;
+import mpicbg.imglib.container.imageplus.ByteImagePlus;
 import mpicbg.imglib.container.imageplus.FloatImagePlus;
 import mpicbg.imglib.container.imageplus.ImagePlusContainerFactory;
 import mpicbg.imglib.container.imageplus.IntImagePlus;
@@ -87,7 +87,7 @@ public class ImagePlusAdapter
 			return null;
 		
 		ImagePlusContainerFactory containerFactory = new ImagePlusContainerFactory();
-		UnsignedByteImagePlus<UnsignedByteType> container = new UnsignedByteImagePlus<UnsignedByteType>( imp,  containerFactory );
+		ByteImagePlus<UnsignedByteType> container = new ByteImagePlus<UnsignedByteType>( imp,  containerFactory );
 		ImageFactory<UnsignedByteType> imageFactory = new ImageFactory<UnsignedByteType>( new UnsignedByteType(), containerFactory );				
 		Image<UnsignedByteType> image = new Image<UnsignedByteType>( container, imageFactory, imp.getTitle() );
 		

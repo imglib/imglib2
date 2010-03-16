@@ -29,7 +29,7 @@
  */
 package mpicbg.imglib.container.dynamic;
 
-import mpicbg.imglib.container.ContainerImpl;
+import mpicbg.imglib.container.PixelGridContainerImpl;
 import mpicbg.imglib.container.array.Array;
 import mpicbg.imglib.cursor.LocalizableByDimCursor;
 import mpicbg.imglib.cursor.LocalizablePlaneCursor;
@@ -42,7 +42,7 @@ import mpicbg.imglib.image.Image;
 import mpicbg.imglib.outside.OutsideStrategyFactory;
 import mpicbg.imglib.type.Type;
 
-public abstract class DynamicContainer<T extends Type<T>> extends ContainerImpl<T>
+public abstract class DynamicContainer<T extends Type<T>> extends PixelGridContainerImpl<T>
 {
 	final protected int[] step;
 	
