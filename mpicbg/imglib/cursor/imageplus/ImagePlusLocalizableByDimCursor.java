@@ -91,7 +91,7 @@ public class ImagePlusLocalizableByDimCursor<T extends Type<T>> extends ImagePlu
 		if ( dim == 2 )
 		{
 			++slice;
-			type.updateDataArray( this );
+			type.updateContainer( this );
 		}
 		else
 		{
@@ -107,7 +107,7 @@ public class ImagePlusLocalizableByDimCursor<T extends Type<T>> extends ImagePlu
 		if ( dim == 2 )
 		{
 			slice += steps;
-			type.updateDataArray( this );
+			type.updateContainer( this );
 		}
 		else
 		{
@@ -156,7 +156,7 @@ public class ImagePlusLocalizableByDimCursor<T extends Type<T>> extends ImagePlu
 		if ( dim == 2 )
 		{
 			--slice;
-			type.updateDataArray( this );
+			type.updateContainer( this );
 		}
 		else
 		{
@@ -177,7 +177,7 @@ public class ImagePlusLocalizableByDimCursor<T extends Type<T>> extends ImagePlu
 		else
 			slice = 0;
 		
-		type.updateDataArray( this );		
+		type.updateContainer( this );		
 	}
 
 	@Override
@@ -188,7 +188,7 @@ public class ImagePlusLocalizableByDimCursor<T extends Type<T>> extends ImagePlu
 		if ( dim == 2 )
 		{
 			slice = position;
-			type.updateDataArray( this );
+			type.updateContainer( this );
 		}
 		else
 		{

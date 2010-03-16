@@ -55,14 +55,14 @@ public class DynamicCursor<T extends Type<T>> extends CursorImpl<T> implements C
 	public void fwd( final long steps ) 
 	{ 
 		internalIndex += steps;
-		type.updateDataArray( this );
+		type.updateContainer( this );
 	}
 
 	@Override
 	public void fwd() 
 	{ 
 		++internalIndex; 
-		type.updateDataArray( this );
+		type.updateContainer( this );
 	}
 
 	@Override
@@ -77,7 +77,7 @@ public class DynamicCursor<T extends Type<T>> extends CursorImpl<T> implements C
 	{		
 		type.updateIndex( 0 );
 		internalIndex = 0;
-		type.updateDataArray( this );
+		type.updateContainer( this );
 		internalIndex = -1;
 		isClosed = false;
 	}

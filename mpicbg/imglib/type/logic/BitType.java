@@ -43,15 +43,13 @@ import mpicbg.imglib.type.TypeImpl;
 
 public class BitType extends TypeImpl<BitType> implements LogicType<BitType>, NumericType<BitType>
 {
-	final BitContainer<BitType> bitStorage;
-	BitContainer<BitType> b;
+	final BitContainer<BitType> b;
 	
 	int outputType = 0;
 	
 	// this is the constructor if you want it to read from an array
 	public BitType( final BitContainer<BitType> bitStorage )
 	{
-		this.bitStorage = bitStorage;
 		this.b = bitStorage;
 	}
 	
@@ -78,10 +76,9 @@ public class BitType extends TypeImpl<BitType> implements LogicType<BitType>, Nu
 	}
 	
 	@Override
-	public void updateDataArray( final Cursor<?> c ) 
+	public void updateContainer( final Cursor<?> c ) 
 	{ 
-		b = bitStorage;
-		b.updateStorageArray( c );
+		b.update( c );
 	}
 
 	public boolean get() { return b.getValue( i ); }

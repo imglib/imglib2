@@ -75,9 +75,9 @@ public class BasePairCharType extends TypeImpl<BasePairCharType> implements Base
 	}
 	
 	@Override
-	public void updateDataArray( final Cursor<?> c ) 
+	public void updateContainer( final Cursor<?> c ) 
 	{ 
-		v = charStorage.getCurrentStorageArray( c ); 
+		charStorage.update( c ); 
 	}
 	
 	public char getChar() { return v[ i ]; }

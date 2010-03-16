@@ -87,7 +87,7 @@ public class ImagePlusLocalizableByDimOutsideCursor<T extends Type<T>> extends I
 		for ( int d = 1; d < numDimensions; d++ )
 			position[ d ] = 0;
 		
-		type.updateDataArray( this );
+		type.updateContainer( this );
 	}
 	
 	@Override
@@ -101,7 +101,7 @@ public class ImagePlusLocalizableByDimOutsideCursor<T extends Type<T>> extends I
 			{
 				slice++;
 				type.updateIndex( 0 );
-				type.updateDataArray( this );
+				type.updateContainer( this );
 			}
 			
 			for ( int d = 0; d < numDimensions; d++ )
@@ -145,7 +145,7 @@ public class ImagePlusLocalizableByDimOutsideCursor<T extends Type<T>> extends I
 				if ( dim == 2 )
 				{
 					++slice;
-					type.updateDataArray( this );
+					type.updateContainer( this );
 				}
 				else
 				{
@@ -188,7 +188,7 @@ public class ImagePlusLocalizableByDimOutsideCursor<T extends Type<T>> extends I
 					else
 						slice = 0;
 					
-					type.updateDataArray( this );			
+					type.updateContainer( this );			
 				}
 				else
 				{
@@ -208,7 +208,7 @@ public class ImagePlusLocalizableByDimOutsideCursor<T extends Type<T>> extends I
 				if ( dim == 2 )
 				{
 					slice += steps;
-					type.updateDataArray( this );
+					type.updateContainer( this );
 				}
 				else
 				{
@@ -245,7 +245,7 @@ public class ImagePlusLocalizableByDimOutsideCursor<T extends Type<T>> extends I
 				if ( dim == 2 )
 				{
 					--slice;
-					type.updateDataArray( this );
+					type.updateContainer( this );
 				}
 				else
 				{
@@ -300,7 +300,7 @@ public class ImagePlusLocalizableByDimOutsideCursor<T extends Type<T>> extends I
 			else
 				slice = 0;
 			
-			type.updateDataArray( this );			
+			type.updateContainer( this );			
 		}
 	}
 
@@ -330,7 +330,7 @@ public class ImagePlusLocalizableByDimOutsideCursor<T extends Type<T>> extends I
 			if ( dim == 2 )
 			{
 				slice = position;
-				type.updateDataArray( this );
+				type.updateContainer( this );
 			}
 			else
 			{

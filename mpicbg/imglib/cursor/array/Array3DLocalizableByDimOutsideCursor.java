@@ -114,7 +114,7 @@ public class Array3DLocalizableByDimOutsideCursor<T extends Type<T>> extends Arr
 		x = -1;
 		y = z = 0;
 		type.updateIndex( -1 );
-		type.updateDataArray( this );
+		type.updateContainer( this );
 	}
 
 	@Override
@@ -336,7 +336,7 @@ public class Array3DLocalizableByDimOutsideCursor<T extends Type<T>> extends Arr
 					type.updateIndex( container.getPos( x, y, z ) );
 					
 					// new location is inside the image			
-					type.updateDataArray( this );
+					type.updateContainer( this );
 					
 					isOutside = false;					
 				}
@@ -381,7 +381,7 @@ public class Array3DLocalizableByDimOutsideCursor<T extends Type<T>> extends Arr
 					type.updateIndex( container.getPos( x, y, z ) );
 					
 					// new location is inside the image			
-					type.updateDataArray( this );
+					type.updateContainer( this );
 					
 					isOutside = false;					
 				}
@@ -426,7 +426,7 @@ public class Array3DLocalizableByDimOutsideCursor<T extends Type<T>> extends Arr
 					type.updateIndex( container.getPos( x, y, z ) );
 					
 					// new location is inside the image			
-					type.updateDataArray( this );
+					type.updateContainer( this );
 					
 					isOutside = false;					
 				}
@@ -585,7 +585,7 @@ public class Array3DLocalizableByDimOutsideCursor<T extends Type<T>> extends Arr
 			
 			// new location is inside the image			
 			if ( isOutside ) // we reenter the image with this setPosition() call
-				type.updateDataArray( this );
+				type.updateContainer( this );
 			
 			isOutside = false;
 		}

@@ -88,7 +88,7 @@ public class CubeCursor<T extends Type<T>> extends CursorImpl<T> implements Curs
 		cubeInstance = container.getCubeElement( cube );				
 		cubeMaxI = cubeInstance.getNumPixels();	
 		
-		type.updateDataArray( this );
+		type.updateContainer( this );
 	}
 	
 	public CubeElement<?,?,T> getCurrentCube() { return cubeInstance; }

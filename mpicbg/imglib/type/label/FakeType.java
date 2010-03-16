@@ -42,7 +42,7 @@ public class FakeType extends TypeImpl<FakeType>
 	public Container<FakeType> createSuitableContainer( final ContainerFactory storageFactory, final int dim[] ) { return null; }
 
 	@Override
-	public void updateDataArray( Cursor<?> c ) {}
+	public void updateContainer( Cursor<?> c ) {}
 	
 	@Override
 	public Display<FakeType> getDefaultDisplay( Image<FakeType> image ) { return null; }

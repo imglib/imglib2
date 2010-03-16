@@ -27,7 +27,7 @@ public class DynamicLocalizableCursor<T extends Type<T>> extends DynamicCursor<T
 	public void fwd()
 	{ 
 		++internalIndex; 
-		type.updateDataArray( this );
+		type.updateContainer( this );
 		
 		for ( int d = 0; d < numDimensions; d++ )
 		{
@@ -55,7 +55,7 @@ public class DynamicLocalizableCursor<T extends Type<T>> extends DynamicCursor<T
 
 		type.updateIndex( 0 );
 		internalIndex = 0;
-		type.updateDataArray( this );
+		type.updateContainer( this );
 		internalIndex = -1;
 		isClosed = false;
 		

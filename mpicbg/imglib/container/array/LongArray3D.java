@@ -47,5 +47,19 @@ public class LongArray3D<T extends Type<T>> extends Array3D<T> implements LongCo
 	public void close() { data = null; }
 
 	@Override
-	public long[] getCurrentStorageArray( Cursor<?> c ) { return data; }
+	public void update( final Cursor<?> c ){}
+
+	@Override
+	public long getValue( final int index )
+	{
+		return data[ index ];
+	}
+
+	@Override
+	public void setValue( final int index, final long value )
+	{
+		data[ index ] = value;		
+	}
+	
+	public long[] getCurrentStorageArray( final Cursor< T > c ){ return data; }
 }

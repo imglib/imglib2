@@ -31,6 +31,7 @@ package mpicbg.imglib.type.numeric;
 
 import mpicbg.imglib.container.Container;
 import mpicbg.imglib.container.ContainerFactory;
+import mpicbg.imglib.container.array.FloatArray;
 import mpicbg.imglib.container.basictypecontainer.FloatContainer;
 import mpicbg.imglib.cursor.Cursor;
 import mpicbg.imglib.image.Image;
@@ -40,22 +41,19 @@ import mpicbg.imglib.type.TypeImpl;
 
 public class FloatType extends TypeImpl<FloatType> implements NumericType<FloatType>
 {
-	final FloatContainer<FloatType> floatStorage;
-	float[] v;
+	final FloatContainer< FloatType > b;
 	
 	// this is the constructor if you want it to read from an array
 	public FloatType( FloatContainer<FloatType> floatStorage )
 	{
-		this.floatStorage = floatStorage;
+		b = floatStorage;
 	}
 	
 	// this is the constructor if you want it to be a variable
 	public FloatType( final float value )
 	{
-		floatStorage = null;
-		v = new float[ 1 ];
-		v[ 0 ] = value;
-		i = 0;
+		this( new FloatArray< FloatType >( null, new int[]{ 1 }, 1 ) );
+		set( value );
 	}
 
 	// this is the constructor if you want it to be a variable
@@ -74,63 +72,92 @@ public class FloatType extends TypeImpl<FloatType> implements NumericType<FloatT
 	}
 	
 	@Override
-	public void updateDataArray( final Cursor<?> c ) 
+	public void updateContainer( final Cursor<?> c ) 
 	{ 
-		v = floatStorage.getCurrentStorageArray( c ); 
+		b.update( c ); 
+	}
+	
+	public float get(){ return b.getValue( i ); }
+	public void set( final float f ){ b.setValue( i, f ); }
+	
+	@Override
+	public float getReal() { return get(); }
+	
+	@Override
+	public void setReal( final float f ){ set( f ); }
+	
+	@Override
+	public void mul( final float c )
+	{
+		set( get() * c );
 	}
 
 	@Override
-	public void mul( final float c ) { v[ i ] *= c; }
-
-	@Override
-	public void mul( final double c ) { v[ i ] *= c; }
-
-	public float get() { return v[ i ]; }
-	public void set( final float f ) { v[ i ] = f; }
+	public void mul( final double c )
+	{
+		set( ( float )( get() * c ) );
+	}
 	
 	@Override
-	public float getReal() { return v[ i ]; }
-	@Override
-	public void setReal( final float f ) { v[ i ] = f; }
+	public void add( final FloatType c )
+	{
+		set( get() + c.get() );
+	}
 
 	@Override
-	public void add( final FloatType c ) { v[ i ] += c.get(); }
+	public void div( final FloatType c )
+	{
+		set( get() / c.get() );
+	}
 
 	@Override
-	public void div( final FloatType c ) { v[ i ] /= c.get(); }
+	public void mul( final FloatType c )
+	{
+		set( get() * c.get() );
+	}
 
 	@Override
-	public void mul( final FloatType c ) { v[ i ] *= c.get(); }
-
-	@Override
-	public void sub( final FloatType c ) { v[ i ] -= c.get(); }
+	public void sub( final FloatType c )
+	{
+		set( get() - c.get() );
+	}
 
 	@Override
 	public int compareTo( final FloatType c ) 
 	{ 
-		if ( v[ i ] > c.get() )
+		final float a = get();
+		final float b = c.get();
+		if ( a > b )
 			return 1;
-		else if ( v[ i ] < c.get() )
+		else if ( a < b )
 			return -1;
 		else 
 			return 0;
 	}
-
-	@Override
-	public void set( final FloatType c ) { v[ i ] = c.get(); }
-
-	@Override
-	public void setOne() { v[ i ] = 1; }
-
-	@Override
-	public void setZero() { v[ i ] = 0; }
-
-	@Override
-	public void inc() { v[ i ]++; }
-
-	@Override
-	public void dec() { v[ i ]--; }
 	
+	@Override
+	public void set( final FloatType c ){ set( c.get() ); }
+
+	@Override
+	public void setOne() { set( 1 ); }
+
+	@Override
+	public void setZero() { set( 0 ); }
+
+	@Override
+	public void inc()
+	{
+		float a = get();
+		set( ++a );
+	}
+
+	@Override
+	public void dec()
+	{
+		float a = get();
+		set( --a );
+	}
+
 	@Override
 	public FloatType[] createArray1D(int size1){ return new FloatType[ size1 ]; }
 
@@ -153,8 +180,8 @@ public class FloatType extends TypeImpl<FloatType> implements NumericType<FloatT
 	public FloatType createVariable(){ return new FloatType( 0 ); }
 	
 	@Override
-	public FloatType clone(){ return new FloatType( v[ i ] ); }
+	public FloatType clone(){ return new FloatType( get() ); }
 	
 	@Override
-	public String toString() { return "" + v[i]; }
+	public String toString() { return "" + get(); }
 }

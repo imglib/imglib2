@@ -117,7 +117,7 @@ public class Array3DLocalizableByDimCursor<T extends Type<T>> extends ArrayLocal
 		x = -1;
 		y = z = 0;
 		type.updateIndex( -1 );
-		type.updateDataArray( this );
+		type.updateContainer( this );
 	}
 
 	@Override

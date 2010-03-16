@@ -97,7 +97,7 @@ public interface Type<T extends Type<T>>
 	 * @param c - the {@link Cursor} gives a link to itself so that the {@link Type} 
 	 * tell its {@link BasicTypeContainer} to get the new basic type array.
 	 */
-	public void updateDataArray( Cursor<?> c );	
+	public void updateContainer( Cursor<?> c );	
 
 	/**
 	 * Increments the array position of the {@link Type}, 

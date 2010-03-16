@@ -99,7 +99,7 @@ public class ArrayLocalizableCursor<T extends Type<T>> extends ArrayCursor<T> im
 		for ( int d = 1; d < numDimensions; d++ )
 			position[ d ] = 0;
 		
-		type.updateDataArray( this );
+		type.updateContainer( this );
 	}
 
 	@Override

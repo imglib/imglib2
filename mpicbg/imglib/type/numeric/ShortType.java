@@ -45,9 +45,9 @@ public class ShortType extends GenericShortType<ShortType>
 	// this is the constructor if you want it to be a variable
 	public ShortType() { this( (short)0 ); }
 	
-	public short get() { return v[ i ]; }
-	public void set( final short b ) { v[ i ] = b; }
-
+	public short get() { return getValue(); }
+	public void set( final short b ) { setValue( b ); }
+	
 	@Override
 	public ShortTypeDisplay getDefaultDisplay( Image<ShortType> image ) { return new ShortTypeDisplay( image );	}
 
@@ -61,14 +61,14 @@ public class ShortType extends GenericShortType<ShortType>
 	public ShortType[][][] createArray3D( final int size1, final int size2, final int size3 ) { return new ShortType[ size1 ][ size2 ][ size3 ]; }
 	
 	@Override
-	public ShortType createType( final Container<ShortType> container )
-	{
-		return new ShortType( (ShortContainer<ShortType>)container );
-	}
+	public ShortType createType( final Container<ShortType> container ){ return new ShortType( (ShortContainer<ShortType>)container ); }
 
 	@Override
 	public ShortType createVariable(){ return new ShortType( (short)0 ); }
 
 	@Override
-	public ShortType clone(){ return new ShortType( v[ i ] ); }
+	public ShortType clone(){ return new ShortType( getValue() ); }
+
+	@Override
+	public String toString() { return "" + get(); }
 }

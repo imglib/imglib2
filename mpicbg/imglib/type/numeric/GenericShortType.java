@@ -31,6 +31,7 @@ package mpicbg.imglib.type.numeric;
 
 import mpicbg.imglib.algorithm.math.MathLib;
 import mpicbg.imglib.container.ContainerFactory;
+import mpicbg.imglib.container.array.ShortArray;
 import mpicbg.imglib.container.basictypecontainer.ShortContainer;
 import mpicbg.imglib.cursor.Cursor;
 import mpicbg.imglib.type.NumericType;
@@ -38,26 +39,23 @@ import mpicbg.imglib.type.TypeImpl;
 
 public abstract class GenericShortType<T extends GenericShortType<T>> extends TypeImpl<T> implements NumericType<T>
 {
-	final ShortContainer<T> shortStorage;
-	short[] v;
+	final ShortContainer< T > b;
 	
 	// this is the constructor if you want it to read from an array
 	public GenericShortType( final ShortContainer<T> shortStorage )
 	{
-		this.shortStorage = shortStorage;
+		this.b = shortStorage;
 	}
 	
 	// this is the constructor if you want it to be a variable
 	public GenericShortType( final short value )
 	{
-		shortStorage = null;
-		v = new short[ 1 ];
-		v[ 0 ] = value;
-		i = 0;
+		this( new ShortArray< T >( null, new int[]{ 1 }, 1 ) );
+		setValue( value );
 	}
 
 	// this is the constructor if you want it to be a variable
-	public GenericShortType() { this( (short)0 ); }
+	public GenericShortType(){ this( ( short )0 ); }
 	
 	@Override
 	public ShortContainer<T> createSuitableContainer( final ContainerFactory storageFactory, final int dim[] )
@@ -66,60 +64,101 @@ public abstract class GenericShortType<T extends GenericShortType<T>> extends Ty
 	}
 
 	@Override
-	public void updateDataArray( Cursor<?> c ) 
+	public void updateContainer( Cursor< ? > c ) 
 	{ 
-		v = shortStorage.getCurrentStorageArray( c ); 
+		b.update( c ); 
+	}
+	
+	protected short getValue(){ return b.getValue( i ); }
+	protected void setValue( final short f ){ b.setValue( i, f ); }
+	
+	@Override
+	public float getReal() { return getValue(); }
+	
+	@Override
+	public void setReal( final float f ){ setValue( ( short )MathLib.round( f ) ); }
+
+	@Override
+	public void mul( final float c )
+	{
+		final short a = getValue();
+		setValue( ( short )MathLib.round( a * c ) );
 	}
 
 	@Override
-	public void mul( final float c ) { v[ i ] = (short)Math.round( v[ i ] * c ); }
+	public void mul( final double c )
+	{
+		final short a = getValue();
+		setValue( ( short )MathLib.round( a * c ) );
+	}
 
 	@Override
-	public void mul( final double c ) { v[ i ] = (short)Math.round( v[ i ] * c ); }
-
-	protected short getValue() { return v[ i ]; }
-	protected void setValue( final short f ) { v[ i ] = f; }
-	public float getReal() { return v[ i ]; }
-	public void setReal( final float f ) { v[ i ] = (short)MathLib.round( f ); }
-
-	@Override
-	public void add( final T c ) { v[ i ] += c.getValue(); }
+	public void add( final T c )
+	{
+		final short a = getValue( );
+		setValue( ( short )( a + c.getValue() ) );
+	}
 
 	@Override
-	public void div( final T c ) { v[ i ] /= c.getValue(); }
+	public void div( final T c )
+	{
+		final short a = getValue();
+		setValue( ( short )( a / c.getValue() ) );
+	}
 
 	@Override
-	public void mul( final T c ) { v[ i ] *= c.getValue(); }
+	public void mul( final T c )
+	{
+		final short a = getValue( );
+		setValue( ( short )( a * c.getValue() ) );
+	}
 
 	@Override
-	public void sub( final T c ) { v[ i ] -= c.getValue(); }
+	public void sub( final T c )
+	{
+		final short a = getValue( );
+		setValue( ( byte )( a - c.getValue() ) );
+	}
 
 	@Override
 	public int compareTo( final T c ) 
 	{ 
-		if ( v[ i ] > c.getValue() )
+		final short a = getValue();
+		final short b = c.getValue();
+		if ( a > b )
 			return 1;
-		else if ( v[ i ] < c.getValue() )
+		else if ( a < b )
 			return -1;
 		else 
 			return 0;
 	}
 
 	@Override
-	public void set( final T c ) { v[ i ] = c.getValue(); }
+	public void set( final T c )
+	{
+		setValue( c.getValue() );
+	}
 
 	@Override
-	public void setOne() { v[ i ] = 1; }
+	public void setOne() { setValue( ( short )1 ); }
 
 	@Override
-	public void setZero() { v[ i ] = 0; }
+	public void setZero() { setValue( ( short )0 ); }
 
 	@Override
-	public void inc() { v[ i ]++; }
+	public void inc()
+	{
+		short a = getValue();
+		setValue( ++a );
+	}
 
 	@Override
-	public void dec() { v[ i ]--; }
-
+	public void dec()
+	{
+		short a = getValue();
+		setValue( --a );
+	}
+	
 	@Override
-	public String toString() { return "" + v[i]; }
+	public String toString() { return "" + getValue(); }
 }

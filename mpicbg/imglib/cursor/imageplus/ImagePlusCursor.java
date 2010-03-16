@@ -70,7 +70,7 @@ public class ImagePlusCursor<T extends Type<T>> extends CursorImpl<T> implements
 		{
 			slice++;
 			type.updateIndex( 0 );
-			type.updateDataArray( this );
+			type.updateContainer( this );
 		}
 	}
 
@@ -87,7 +87,7 @@ public class ImagePlusCursor<T extends Type<T>> extends CursorImpl<T> implements
 	{
 		slice = 0;
 		type.updateIndex( -1 );
-		type.updateDataArray( this );
+		type.updateContainer( this );
 		isClosed = false;
 	}
 

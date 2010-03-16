@@ -74,7 +74,7 @@ public class BitCube<T extends Type<T>> extends Cube<BitCubeElement<T>, BitCube<
 	}
 
 	@Override
-	public void updateStorageArray( final Cursor<?> c )
+	public void update( final Cursor<?> c )
 	{
 		cache = data.get( c.getStorageIndex() ).data;
 	}	

@@ -47,5 +47,19 @@ public class IntArray<T extends Type<T>> extends Array<T> implements IntContaine
 	public void close() { data = null; }
 
 	@Override
-	public int[] getCurrentStorageArray( Cursor<?> c ) { return data; }
+	public void update( final Cursor<?> c ){}
+
+	@Override
+	public int getValue( final int index )
+	{
+		return data[ index ];
+	}
+
+	@Override
+	public void setValue( final int index, final int value )
+	{
+		data[ index ] = value;		
+	}
+	
+	public int[] getCurrentStorageArray( final Cursor< T > c ){ return data; }
 }

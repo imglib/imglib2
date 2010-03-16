@@ -110,7 +110,7 @@ public class ArrayLocalizablePlaneCursor<T extends Type<T>> extends ArrayLocaliz
 		
 		maxI = container.getPos( dimPos );
 		
-		type.updateDataArray( this );				
+		type.updateContainer( this );				
 	}
 
 	@Override

@@ -29,10 +29,10 @@
  */
 package mpicbg.imglib.container.basictypecontainer;
 
-import mpicbg.imglib.cursor.Cursor;
 import mpicbg.imglib.type.Type;
 
 public interface ByteContainer<T extends Type<T>> extends BasicTypeContainer<T>
 {
-	public byte[] getCurrentStorageArray( Cursor<?> c );
+	public byte getValue( final int index );
+	public void setValue( final int index, final byte value );
 }

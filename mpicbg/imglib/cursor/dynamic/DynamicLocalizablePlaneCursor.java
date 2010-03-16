@@ -62,7 +62,7 @@ public class DynamicLocalizablePlaneCursor<T extends Type<T>> extends DynamicLoc
 			internalIndex += incPlaneB;
 			internalIndex -= (planeSizeA - 1) * incPlaneA;
 		}
-		type.updateDataArray( this );				
+		type.updateContainer( this );				
 	}
 	
 	@Override
@@ -95,7 +95,7 @@ public class DynamicLocalizablePlaneCursor<T extends Type<T>> extends DynamicLoc
 		setPosition( dimPos );		
 		isClosed = false;
 		
-		type.updateDataArray( this );				
+		type.updateContainer( this );				
 		internalIndex -= incPlaneA;					
 		position[ planeDimA ] = -1;
 		
@@ -140,7 +140,7 @@ public class DynamicLocalizablePlaneCursor<T extends Type<T>> extends DynamicLoc
 	protected void setPosition( final int[] position )
 	{
 		internalIndex = container.getPos( position );
-		type.updateDataArray( this );				
+		type.updateContainer( this );				
 		
 		for ( int d = 0; d < numDimensions; d++ )
 			this.position[ d ] = position[ d ];

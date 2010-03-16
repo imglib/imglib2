@@ -82,6 +82,6 @@ public class BitCubeElement<T extends Type<T>> extends CubeElement<BitCubeElemen
 	}
 
 	@Override
-	public void updateStorageArray( final Cursor<?> c ) { }	
+	public void update( final Cursor<?> c ) { }	
 	
 }

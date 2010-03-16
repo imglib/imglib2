@@ -45,8 +45,8 @@ public class ByteType extends GenericByteType<ByteType>
 	// this is the constructor if you want it to be a variable
 	public ByteType() { super( (byte)0 ); }
 		
-	public byte get() { return v[ i ]; }
-	public void set( final byte b ) { v[ i ] = b; }
+	public byte get() { return getValue(); }
+	public void set( final byte b ) { setValue( b ); }
 	
 	@Override
 	public ByteTypeDisplay getDefaultDisplay( Image<ByteType> image ) { return new ByteTypeDisplay( image ); }
@@ -67,8 +67,8 @@ public class ByteType extends GenericByteType<ByteType>
 	public ByteType createVariable(){ return new ByteType( (byte)0 ); }
 
 	@Override
-	public ByteType clone(){ return new ByteType( v[ i ] ); }
+	public ByteType clone(){ return new ByteType( getValue() ); }
 
 	@Override
-	public String toString() { return "" + v[i]; }
+	public String toString() { return "" + get(); }
 }

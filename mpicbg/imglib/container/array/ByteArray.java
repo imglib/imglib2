@@ -47,5 +47,19 @@ public class ByteArray<T extends Type<T>> extends Array<T> implements ByteContai
 	public void close() { data = null; }
 
 	@Override
-	public byte[] getCurrentStorageArray( Cursor<?> c ) { return data; }
+	public void update( final Cursor<?> c ){}
+
+	@Override
+	public byte getValue( final int index )
+	{
+		return data[ index ];
+	}
+
+	@Override
+	public void setValue( final int index, final byte value )
+	{
+		data[ index ] = value;		
+	}
+	
+	public byte[] getCurrentStorageArray( final Cursor< T > c ){ return data; }
 }

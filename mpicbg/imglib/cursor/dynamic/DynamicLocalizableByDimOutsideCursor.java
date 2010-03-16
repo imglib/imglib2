@@ -71,7 +71,7 @@ public class DynamicLocalizableByDimOutsideCursor<T extends Type<T>> extends Dyn
 		isOutside = false;		
 		type.updateIndex( 0 );
 		internalIndex = 0;
-		type.updateDataArray( this );
+		type.updateContainer( this );
 		internalIndex = -1;
 		isClosed = false;
 		
@@ -96,7 +96,7 @@ public class DynamicLocalizableByDimOutsideCursor<T extends Type<T>> extends Dyn
 		if ( !isOutside )
 		{
 			++internalIndex;
-			type.updateDataArray( this );
+			type.updateContainer( this );
 			
 			for ( int d = 0; d < numDimensions; d++ )
 			{
@@ -138,7 +138,7 @@ public class DynamicLocalizableByDimOutsideCursor<T extends Type<T>> extends Dyn
 			{
 				// moved within the image
 				internalIndex += step[ dim ];
-				type.updateDataArray( this );
+				type.updateContainer( this );
 			}
 			else
 			{
@@ -172,7 +172,7 @@ public class DynamicLocalizableByDimOutsideCursor<T extends Type<T>> extends Dyn
 					// new location is inside the image					
 					// get the offset inside the image
 					internalIndex = container.getPos( position );
-					type.updateDataArray( this );					
+					type.updateContainer( this );					
 				}
 				else
 				{
@@ -190,7 +190,7 @@ public class DynamicLocalizableByDimOutsideCursor<T extends Type<T>> extends Dyn
 			{
 				// moved within the image
 				internalIndex += step[ dim ] * steps;
-				type.updateDataArray( this );									
+				type.updateContainer( this );									
 			}
 			else
 			{
@@ -220,7 +220,7 @@ public class DynamicLocalizableByDimOutsideCursor<T extends Type<T>> extends Dyn
 			{
 				// moved within the image
 				internalIndex -= step[ dim ];
-				type.updateDataArray( this );					
+				type.updateContainer( this );					
 			}
 			else
 			{
@@ -266,7 +266,7 @@ public class DynamicLocalizableByDimOutsideCursor<T extends Type<T>> extends Dyn
 			// we reenter the image with this setPosition() call
 			// get the offset inside the image
 			internalIndex = container.getPos( position );
-			type.updateDataArray( this );
+			type.updateContainer( this );
 		}
 	}
 
@@ -293,7 +293,7 @@ public class DynamicLocalizableByDimOutsideCursor<T extends Type<T>> extends Dyn
 		{
 			// jumped around inside the image
 			internalIndex = container.getPos( this.position );
-			type.updateDataArray( this );
+			type.updateContainer( this );
 		}		
 	}
 }

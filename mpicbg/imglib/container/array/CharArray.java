@@ -47,5 +47,19 @@ public class CharArray<T extends Type<T>> extends Array<T> implements CharContai
 	public void close() { data = null; }
 
 	@Override
-	public char[] getCurrentStorageArray( Cursor<?> c ) { return data; }
+	public void update( final Cursor<?> c ){}
+
+	@Override
+	public char getValue( final int index )
+	{
+		return data[ index ];
+	}
+
+	@Override
+	public void setValue( final int index, final char value )
+	{
+		data[ index ] = value;		
+	}
+	
+	public char[] getCurrentStorageArray( final Cursor< T > c ){ return data; }
 }

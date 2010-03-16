@@ -69,7 +69,7 @@ public class ImagePlusLocalizablePlaneCursor<T extends Type<T>> extends ImagePlu
 			if ( incPlaneA == -1 )
 			{
 				++slice;
-				type.updateDataArray( this );
+				type.updateContainer( this );
 			}
 			else
 			{
@@ -84,7 +84,7 @@ public class ImagePlusLocalizablePlaneCursor<T extends Type<T>> extends ImagePlu
 			if ( incPlaneB == -1 )
 			{
 				++slice;
-				type.updateDataArray( this );
+				type.updateContainer( this );
 			}
 			else
 			{
@@ -94,7 +94,7 @@ public class ImagePlusLocalizablePlaneCursor<T extends Type<T>> extends ImagePlu
 			if ( incPlaneA == -1 )
 			{
 				slice = 0;
-				type.updateDataArray( this );
+				type.updateContainer( this );
 			}
 			else
 			{
@@ -168,7 +168,7 @@ public class ImagePlusLocalizablePlaneCursor<T extends Type<T>> extends ImagePlu
 		else
 		{
 			type.decIndex( incPlaneA );
-			type.updateDataArray( this );				
+			type.updateContainer( this );				
 		}
 		
 		position[ planeDimA ] = -1;

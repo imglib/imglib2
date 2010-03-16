@@ -31,6 +31,7 @@ package mpicbg.imglib.type.numeric;
 
 import mpicbg.imglib.container.Container;
 import mpicbg.imglib.container.ContainerFactory;
+import mpicbg.imglib.container.array.DoubleArray;
 import mpicbg.imglib.container.basictypecontainer.DoubleContainer;
 import mpicbg.imglib.cursor.Cursor;
 import mpicbg.imglib.image.Image;
@@ -40,22 +41,19 @@ import mpicbg.imglib.type.TypeImpl;
 
 public class DoubleType extends TypeImpl<DoubleType> implements NumericType<DoubleType>
 {
-	final DoubleContainer<DoubleType> doubleStorage;
-	double[] v;
+	final DoubleContainer< DoubleType > b;
 	
 	// this is the constructor if you want it to read from an array
-	public DoubleType( DoubleContainer<DoubleType> doubleStorage )
+	public DoubleType( DoubleContainer<DoubleType> floatStorage )
 	{
-		this.doubleStorage = doubleStorage;
+		b = floatStorage;
 	}
 	
 	// this is the constructor if you want it to be a variable
 	public DoubleType( final double value )
 	{
-		doubleStorage = null;
-		v = new double[ 1 ];
-		v[ 0 ] = value;
-		i = 0;
+		this( new DoubleArray< DoubleType >( null, new int[]{ 1 }, 1 ) );
+		set( value );
 	}
 
 	// this is the constructor if you want it to be a variable
@@ -72,62 +70,94 @@ public class DoubleType extends TypeImpl<DoubleType> implements NumericType<Doub
 	{
 		return new DoubleTypeDisplay( image );
 	}
-
+	
 	@Override
-	public void updateDataArray( final Cursor<?> c ) 
+	public void updateContainer( final Cursor<?> c ) 
 	{ 
-		v = doubleStorage.getCurrentStorageArray( c ); 
+		b.update( c ); 
+	}
+	
+	public double get(){ return b.getValue( i ); }
+	public void set( final double f ){ b.setValue( i, f ); }
+	
+	@Override
+	public float getReal() { return ( float )get(); }
+	
+	@Override
+	public void setReal( final float f ){ set( f ); }
+	
+	@Override
+	public void mul( final float c )
+	{
+		set( get() * c );
 	}
 
 	@Override
-	public void mul( final float c ) { v[ i ] = v[ i ] * c; }
+	public void mul( final double c )
+	{
+		set( get() * c );
+	}
+	
+	@Override
+	public void add( final DoubleType c )
+	{
+		set( get() + c.get() );
+	}
 
 	@Override
-	public void mul( final double c ) { v[ i ] = v[ i ] * c; }
-
-	public double get() { return v[ i ]; }
-	public void set( final double f ) { v[ i ] = f; }
-	public float getReal() { return (float)v[ i ]; }
-	public void setReal( final float f ) { v[ i ] = f; }
+	public void div( final DoubleType c )
+	{
+		set( get() / c.get() );
+	}
 
 	@Override
-	public void add( final DoubleType c ) { v[ i ] += c.get(); }
+	public void mul( final DoubleType c )
+	{
+		set( get() * c.get() );
+	}
 
 	@Override
-	public void div( final DoubleType c ) { v[ i ] /= c.get(); }
-
-	@Override
-	public void mul( final DoubleType c ) { v[ i ] *= c.get(); }
-
-	@Override
-	public void sub( final DoubleType c ) { v[ i ] -= c.get(); }
-
-	@Override
-	public void set( final DoubleType c ) { v[ i ] = c.get(); }
+	public void sub( final DoubleType c )
+	{
+		set( get() - c.get() );
+	}
 
 	@Override
 	public int compareTo( final DoubleType c ) 
 	{ 
-		if ( v[ i ] > c.get() )
+		final double a = get();
+		final double b = c.get();
+		if ( a > b )
 			return 1;
-		else if ( v[ i ] < c.get() )
+		else if ( a < b )
 			return -1;
 		else 
 			return 0;
 	}
-
-	@Override
-	public void setOne() { v[ i ] = 1; }
-
-	@Override
-	public void setZero() { v[ i ] = 0; }
-
-	@Override
-	public void inc() { v[ i ]++; }
-
-	@Override
-	public void dec() { v[ i ]--; }
 	
+	@Override
+	public void set( final DoubleType c ){ set( c.get() ); }
+
+	@Override
+	public void setOne() { set( 1 ); }
+
+	@Override
+	public void setZero() { set( 0 ); }
+
+	@Override
+	public void inc()
+	{
+		double a = get();
+		set( ++a );
+	}
+
+	@Override
+	public void dec()
+	{
+		double a = get();
+		set( --a );
+	}
+
 	@Override
 	public DoubleType[] createArray1D(int size1){ return new DoubleType[ size1 ]; }
 
@@ -139,19 +169,19 @@ public class DoubleType extends TypeImpl<DoubleType> implements NumericType<Doub
 
 	//@Override
 	//public DoubleType getType() { return this; }
-	
+
 	@Override
 	public DoubleType createType( Container<DoubleType> container )
 	{
 		return new DoubleType( (DoubleContainer<DoubleType>)container );
 	}
-
+	
 	@Override
 	public DoubleType createVariable(){ return new DoubleType( 0 ); }
-
+	
 	@Override
-	public DoubleType clone(){ return new DoubleType( v[ i ] ); }
-
+	public DoubleType clone(){ return new DoubleType( get() ); }
+	
 	@Override
-	public String toString() { return "" + v[i]; }
+	public String toString() { return "" + get(); }
 }

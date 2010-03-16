@@ -62,28 +62,43 @@ public class UnsignedByteType extends GenericByteType<UnsignedByteType>
 	public UnsignedByteTypeDisplay getDefaultDisplay( Image<UnsignedByteType> image ) { return new UnsignedByteTypeDisplay( image ); }
 
 	@Override
-	public void mul( final float c ) { v[ i ] = getCodedSignedByte( MathLib.round( getUnsignedByte( v[ i ] ) * c ) ); }
+	public void mul( final float c )
+	{
+		final int a = getUnsignedByte( getValue() );
+		setValue( getCodedSignedByte( MathLib.round( a * c ) ) );
+	}
 
 	@Override
-	public void mul( final double c ) { v[ i ] = getCodedSignedByte( (int)MathLib.round( getUnsignedByte( v[ i ] ) * c ) ); }
+	public void mul( final double c )
+	{
+		final int a = getUnsignedByte( getValue() );
+		setValue( getCodedSignedByte( ( int )MathLib.round( a * c ) ) );
+	}
 
-	public int get() { return getUnsignedByte( v[ i ] ); }
-	public void set( final int f ) { v[ i ] = getCodedSignedByte( f ); }
-	public float getReal() { return getUnsignedByte( v[ i ] ); }
-	public void setReal( final float f ) { v[ i ] = getCodedSignedByte( MathLib.round( f ) ); }
+	public int get(){ return getUnsignedByte( getValue() ); }
+	public void set( final int f ){ setValue( getCodedSignedByte( f ) ); }
+	
+	@Override
+	public float getReal(){ return get(); }
+	
+	@Override
+	public void setReal( final float f ){ set( MathLib.round( f ) ); }
 
 	@Override
-	public void div( final UnsignedByteType c ) { v[ i ] = getCodedSignedByte( get() / c.get() ); }
+	public void div( final UnsignedByteType c )
+	{
+		set( get() / c.get() );
+	}
 
 	@Override
 	public int compareTo( final UnsignedByteType c ) 
 	{
-		final int value1 = get();
-		final int value2 = c.get();
+		final int a = get();
+		final int b = c.get();
 		
-		if ( value1 > value2 )
+		if ( a > b )
 			return 1;
-		else if ( value1 < value2 )
+		else if ( a < b )
 			return -1;
 		else 
 			return 0;
@@ -105,8 +120,8 @@ public class UnsignedByteType extends GenericByteType<UnsignedByteType>
 	public UnsignedByteType createVariable(){ return new UnsignedByteType( 0 ); }
 
 	@Override
-	public UnsignedByteType clone(){ return new UnsignedByteType( v[ i ] ); }
+	public UnsignedByteType clone(){ return new UnsignedByteType( get() ); }
 
 	@Override
-	public String toString() { return "" + getUnsignedByte( v[i] ); }
+	public String toString() { return "" + get(); }
 }

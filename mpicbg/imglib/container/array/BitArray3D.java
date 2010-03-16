@@ -81,5 +81,5 @@ public class BitArray3D<T extends Type<T>> extends Array3D<T> implements BitCont
 	}
 
 	@Override
-	public void updateStorageArray( final Cursor<?> c ) { }	
+	public void update( final Cursor<?> c ) { }	
 }

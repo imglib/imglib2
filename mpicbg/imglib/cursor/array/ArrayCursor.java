@@ -80,7 +80,7 @@ public class ArrayCursor<T extends Type<T>> extends CursorImpl<T> implements Cur
 	public void reset()
 	{ 
 		type.updateIndex( -1 ); 
-		type.updateDataArray( this );
+		type.updateContainer( this );
 		isClosed = false;
 	}
 

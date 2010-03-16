@@ -90,6 +90,6 @@ public class BitImagePlus<T extends Type<T>> extends ImagePlusContainer<T> imple
 	}
 
 	@Override
-	public void updateStorageArray( final Cursor<?> c ) { cache = mirror[ c.getStorageIndex() ]; }
+	public void update( final Cursor<?> c ) { cache = mirror[ c.getStorageIndex() ]; }
 }
 

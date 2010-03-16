@@ -146,7 +146,7 @@ public class CubeLocalizableByDimCursor<T extends Type<T>> extends CubeLocalizab
 		// the steps when moving from cube to cube
 		// Array.createAllocationSteps( numCubesDim, cubeStep );
 		
-		type.updateDataArray( this );
+		type.updateContainer( this );
 	}
 	
 	@Override
@@ -198,7 +198,7 @@ public class CubeLocalizableByDimCursor<T extends Type<T>> extends CubeLocalizab
 			cubePosition[ d ] = 0;
 		}
 		
-		type.updateDataArray( this );
+		type.updateContainer( this );
 	}
 	
 	@Override

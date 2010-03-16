@@ -87,7 +87,7 @@ public class DynamicLocalizableByDimCursor<T extends Type<T>> extends DynamicLoc
 	public void fwd( final int dim )
 	{
 		internalIndex += step[ dim ];
-		type.updateDataArray( this );
+		type.updateContainer( this );
 
 		++position[ dim ];	
 	}
@@ -96,7 +96,7 @@ public class DynamicLocalizableByDimCursor<T extends Type<T>> extends DynamicLoc
 	public void move( final int steps, final int dim )
 	{
 		internalIndex += step[ dim * steps ];
-		type.updateDataArray( this );
+		type.updateContainer( this );
 
 		position[ dim ] += steps;	
 	}
@@ -105,7 +105,7 @@ public class DynamicLocalizableByDimCursor<T extends Type<T>> extends DynamicLoc
 	public void bck( final int dim )
 	{
 		internalIndex -= step[ dim ];
-		type.updateDataArray( this );
+		type.updateContainer( this );
  
 		--position[ dim ];
 	}
@@ -147,7 +147,7 @@ public class DynamicLocalizableByDimCursor<T extends Type<T>> extends DynamicLoc
 	public void setPosition( final int[] position )
 	{
 		internalIndex = container.getPos( position );
-		type.updateDataArray( this );
+		type.updateContainer( this );
 		
 		for ( int d = 0; d < numDimensions; ++d )
 			this.position[ d ] = position[ d ];		
@@ -159,6 +159,6 @@ public class DynamicLocalizableByDimCursor<T extends Type<T>> extends DynamicLoc
 		this.position[ dim ] = position;
 
 		internalIndex = container.getPos( this.position );
-		type.updateDataArray( this );
+		type.updateContainer( this );
 	}
 }

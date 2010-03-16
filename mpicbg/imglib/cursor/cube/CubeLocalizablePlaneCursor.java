@@ -193,7 +193,7 @@ public class CubeLocalizablePlaneCursor<T extends Type<T>> extends CubeLocalizab
 		
 		this.cubeMaxI = cubeInstance.getPosGlobal( tmp );
 		
-		type.updateDataArray( this );
+		type.updateContainer( this );
 	}
 	
 	@Override

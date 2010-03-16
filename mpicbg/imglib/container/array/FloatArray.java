@@ -47,5 +47,19 @@ public class FloatArray<T extends Type<T>> extends Array<T> implements FloatCont
 	public void close() { data = null; }
 
 	@Override
-	public float[] getCurrentStorageArray( final Cursor<?> c ) { return data; }
+	public void update( final Cursor<?> c ){}
+
+	@Override
+	public float getValue( final int index )
+	{
+		return data[ index ];
+	}
+
+	@Override
+	public void setValue( final int index, final float value )
+	{
+		data[ index ] = value;		
+	}
+	
+	public float[] getCurrentStorageArray( final Cursor< T > c ){ return data; }
 }

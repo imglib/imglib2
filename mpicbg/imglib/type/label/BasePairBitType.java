@@ -74,10 +74,10 @@ public class BasePairBitType extends TypeImpl<BasePairBitType> implements BasePa
 	}
 	
 	@Override
-	public void updateDataArray( final Cursor<?> c ) 
+	public void updateContainer( final Cursor<?> c ) 
 	{
 		b = bitStorage;
-		b.updateStorageArray( c );		
+		b.update( c );		
 	}
 	
 	@Override
