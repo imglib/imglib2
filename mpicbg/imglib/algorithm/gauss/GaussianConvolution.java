@@ -95,6 +95,8 @@ public class GaussianConvolution< T extends NumericType<T>> implements MultiThre
 	 */
 	public double[] getSigmas() { return sigma; }
 	
+	public int getKernelSize( final int dim ) { return kernel[ dim ].length; }
+	
 	@Override
 	public Image<T> getResult() { return convolved;	}
 
