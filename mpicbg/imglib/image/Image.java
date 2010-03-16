@@ -103,7 +103,7 @@ public class Image<T extends Type<T>> implements ImageProperties, Dimensionality
 		setDefaultDisplay();	
 		
 		calibration = new float[ getContainer().getNumDimensions() ];
-		for ( int d = 0; d < getContainer().getNumEntities(); ++d )
+		for ( int d = 0; d < getContainer().getNumDimensions(); ++d )
 			calibration[ d ] = 1;
 	}
 	
