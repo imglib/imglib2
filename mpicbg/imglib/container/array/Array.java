@@ -29,7 +29,7 @@
  */
 package mpicbg.imglib.container.array;
 
-import mpicbg.imglib.container.ContainerImpl;
+import mpicbg.imglib.container.PixelGridContainerImpl;
 import mpicbg.imglib.cursor.array.ArrayCursor;
 import mpicbg.imglib.cursor.array.ArrayLocalizableByDimCursor;
 import mpicbg.imglib.cursor.array.ArrayLocalizableByDimOutsideCursor;
@@ -39,12 +39,12 @@ import mpicbg.imglib.image.Image;
 import mpicbg.imglib.outside.OutsideStrategyFactory;
 import mpicbg.imglib.type.Type;
 
-public abstract class Array<T extends Type<T>> extends ContainerImpl<T>
+public abstract class Array<T extends Type<T>> extends PixelGridContainerImpl<T>
 {
 	final protected int[] step;
 	final ArrayContainerFactory factory;
 
-	public Array( ArrayContainerFactory factory, int[] dim, final int entitiesPerPixel )
+	public Array( final ArrayContainerFactory factory, final int[] dim, final int entitiesPerPixel )
 	{
 		super( factory, dim, entitiesPerPixel );
 		step = Array.createAllocationSteps( dim );

@@ -40,10 +40,10 @@ import mpicbg.imglib.image.Image;
 import mpicbg.imglib.type.NumericType;
 import mpicbg.imglib.type.Type;
 import mpicbg.imglib.type.TypeConverter;
-import mpicbg.imglib.type.numeric.ByteType;
+import mpicbg.imglib.type.numeric.UnsignedByteType;
 import mpicbg.imglib.type.numeric.FloatType;
 import mpicbg.imglib.type.numeric.RGBALegacyType;
-import mpicbg.imglib.type.numeric.ShortType;
+import mpicbg.imglib.type.numeric.UnsignedShortType;
 
 public class ImagePlusAdapter
 {
@@ -81,28 +81,28 @@ public class ImagePlusAdapter
 		}
 	}
 	
-	public static Image<ByteType> wrapByte( final ImagePlus imp )
+	public static Image<UnsignedByteType> wrapByte( final ImagePlus imp )
 	{
 		if ( imp.getType() != ImagePlus.GRAY8)
 			return null;
 		
 		ImagePlusContainerFactory containerFactory = new ImagePlusContainerFactory();
-		ByteImagePlus<ByteType> container = new ByteImagePlus<ByteType>( imp,  containerFactory );
-		ImageFactory<ByteType> imageFactory = new ImageFactory<ByteType>( new ByteType(), containerFactory );				
-		Image<ByteType> image = new Image<ByteType>( container, imageFactory, imp.getTitle() );
+		ByteImagePlus<UnsignedByteType> container = new ByteImagePlus<UnsignedByteType>( imp,  containerFactory );
+		ImageFactory<UnsignedByteType> imageFactory = new ImageFactory<UnsignedByteType>( new UnsignedByteType(), containerFactory );				
+		Image<UnsignedByteType> image = new Image<UnsignedByteType>( container, imageFactory, imp.getTitle() );
 		
 		return image;		
 	}
 	
-	public static Image<ShortType> wrapShort( final ImagePlus imp )
+	public static Image<UnsignedShortType> wrapShort( final ImagePlus imp )
 	{
 		if ( imp.getType() != ImagePlus.GRAY16)
 			return null;
 
 		ImagePlusContainerFactory containerFactory = new ImagePlusContainerFactory();
-		ShortImagePlus<ShortType> container = new ShortImagePlus<ShortType>( imp,  containerFactory );
-		ImageFactory<ShortType> imageFactory = new ImageFactory<ShortType>( new ShortType(), containerFactory );				
-		Image<ShortType> image = new Image<ShortType>( container, imageFactory, imp.getTitle() );
+		ShortImagePlus<UnsignedShortType> container = new ShortImagePlus<UnsignedShortType>( imp,  containerFactory );
+		ImageFactory<UnsignedShortType> imageFactory = new ImageFactory<UnsignedShortType>( new UnsignedShortType(), containerFactory );				
+		Image<UnsignedShortType> image = new Image<UnsignedShortType>( container, imageFactory, imp.getTitle() );
 		
 		return image;						
 	}

@@ -59,7 +59,7 @@ final public class FFTFunctions
 		dimensionsReal[ 0 ] = nfft;
 		
 		// create the output image
-		final ImageFactory<T> imgFactory = new ImageFactory<T>( type, complex.getStorageFactory() );
+		final ImageFactory<T> imgFactory = new ImageFactory<T>( type, complex.getContainerFactory() );
 		final Image<T> realImage;
 		
 		if ( cropBack )
@@ -374,7 +374,7 @@ A:						while( cursorDim.hasNext() )
 		for ( int d = 1; d < numDimensions; ++d )
 			complexSize[ d ] = imageSize[ d ];
 		
-		final ImageFactory<ComplexFloatType> imgFactory = new ImageFactory<ComplexFloatType>( new ComplexFloatType(), img.getStorageFactory() );
+		final ImageFactory<ComplexFloatType> imgFactory = new ImageFactory<ComplexFloatType>( new ComplexFloatType(), img.getContainerFactory() );
 		final Image<ComplexFloatType> fftImage = imgFactory.createImage( complexSize );
 		
 		// not enough memory

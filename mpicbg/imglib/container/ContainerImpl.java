@@ -29,19 +29,18 @@
  */
 package mpicbg.imglib.container;
 
-import java.util.concurrent.atomic.AtomicInteger;
-
+import mpicbg.imglib.image.Image;
 import mpicbg.imglib.type.Type;
 
 public abstract class ContainerImpl<T extends Type<T>> implements Container<T>
 {
-	final static AtomicInteger idGen = new AtomicInteger(0);
-	final protected int numPixels, numDimensions, entitiesPerPixel, numEntities, id;
+	final protected int numPixels, numDimensions;
+	final protected long id;
 	protected final int[] dim;
 	
 	final ContainerFactory factory;
 
-	public ContainerImpl( final ContainerFactory factory, int[] dim, final int entitiesPerPixel )
+	public ContainerImpl( final ContainerFactory factory, int[] dim )
 	{
 		this.numDimensions = dim.length;
 		
@@ -49,25 +48,19 @@ public abstract class ContainerImpl<T extends Type<T>> implements Container<T>
 		for (int i = 0; i < numDimensions; i++)
 			numPixels *= dim[i];
 		this.numPixels = numPixels;
-		this.entitiesPerPixel = entitiesPerPixel;
-		this.numEntities = numPixels * entitiesPerPixel;
-
+		
 		this.dim = dim.clone();
 		this.factory = factory;
-		this.id = idGen.getAndIncrement();
+		this.id = Image.createUniqueId();
 	}
 		
 	@Override
 	public ContainerFactory getFactory() { return factory; }
 	
 	@Override
-	public int getId(){ return id; }
-	@Override
-	public int getNumEntities() { return numEntities; }
+	public long getId(){ return id; }
 	@Override
 	public int getNumDimensions() { return dim.length; }
-	@Override
-	public int getNumEntitiesPerPixel(){ return entitiesPerPixel; }
 	@Override
 	public int[] getDimensions() { return dim.clone(); }
 	
@@ -93,7 +86,7 @@ public abstract class ContainerImpl<T extends Type<T>> implements Container<T>
 	@Override
 	public String toString()
 	{
-		String className = this.getClass().getName();
+		String className = this.getClass().getCanonicalName();
 		className = className.substring( className.lastIndexOf(".") + 1, className.length());
 		
 		String description = className + ", id '" + getId() + "' [" + dim[ 0 ];
@@ -101,7 +94,7 @@ public abstract class ContainerImpl<T extends Type<T>> implements Container<T>
 		for ( int i = 1; i < numDimensions; i++ )
 			description += "x" + dim[ i ];
 		
-		description += "], " + entitiesPerPixel + " entities per pixel.";
+		description += "]";
 		
 		return description;
 	}
