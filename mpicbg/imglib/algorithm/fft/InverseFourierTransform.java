@@ -42,6 +42,7 @@ public class InverseFourierTransform<T extends NumericType<T>> implements MultiT
 	long processingTime;
 	boolean scale, inPlace, cropBack;
 	int[] originalSize, originalOffset; 
+	float additionalNormalization;
 
 	public InverseFourierTransform( final Image<ComplexFloatType> fftImage, final T type, final Rearrangement rearrangement, 
 									final boolean inPlace, final boolean scale, final boolean cropBack, 
@@ -55,6 +56,8 @@ public class InverseFourierTransform<T extends NumericType<T>> implements MultiT
 		this.scale = scale;
 		this.inPlace = inPlace;
 		this.cropBack = cropBack;
+		
+		this.additionalNormalization = 1;
 		
 		if ( originalSize != null )
 			this.originalSize = originalSize.clone();
@@ -86,6 +89,7 @@ public class InverseFourierTransform<T extends NumericType<T>> implements MultiT
 	public void setCropBackToOriginalSize( final boolean cropBack ) { this.cropBack = cropBack; }
 	public void setOriginalSize( final int[] originalSize ) { this.originalSize = originalSize; }
 	public void setOriginalOffset( final int[] originalOffset ) { this.originalOffset = originalOffset; }
+	public void setAdditionalNormalization( final float additionalNormalization ) { this.additionalNormalization = additionalNormalization; }
 
 	public Rearrangement getRearrangement() { return rearrangement; }
 	public boolean getInPlaceTransform() { return inPlace; }
@@ -93,6 +97,7 @@ public class InverseFourierTransform<T extends NumericType<T>> implements MultiT
 	public boolean getCropBackToOriginalSize() { return cropBack; }
 	public int[] getOriginalSize() { return originalSize.clone(); }
 	public int[] getOriginalOffset() { return originalOffset.clone(); }
+	public float getAdditionalNormalization() { return additionalNormalization; }
 
 	@Override
 	public boolean process() 
@@ -111,7 +116,7 @@ public class InverseFourierTransform<T extends NumericType<T>> implements MultiT
 			FFTFunctions.rearrangeFFTQuadrants( complex, getNumThreads() );
 
 		// perform inverse FFT 					
-		image = FFTFunctions.computeInverseFFT( complex, type, getNumThreads(), scale, cropBack, originalSize, originalOffset );
+		image = FFTFunctions.computeInverseFFT( complex, type, getNumThreads(), scale, cropBack, originalSize, originalOffset, additionalNormalization );
 		
 		if ( !inPlace )
 			complex.close();

@@ -42,7 +42,8 @@ final public class FFTFunctions
 	final public static <T extends NumericType<T>> Image<T> computeInverseFFT( final Image<ComplexFloatType> complex, final T type,  
 	                                                        final int numThreads, 
 	                                                        final boolean scale, final boolean cropBack,
-	                                                        final int[] originalSize, final int[] originalOffset )
+	                                                        final int[] originalSize, final int[] originalOffset,
+	                                                        final float additionalNormalization )
 	{
 		// not enough memory
 		if ( complex == null )
@@ -267,7 +268,7 @@ A:						while( cursorDim.hasNext() )
 								tempIn[ (complexSize-1) * 2 ] = cursor.getType().getReal();
 								tempIn[ (complexSize-1) * 2 + 1 ] = cursor.getType().getComplex();
 																								
-								// compute the fft in dimension 0 ( real -> complex )
+								// compute the fft in dimension 0 ( complex -> real )
 								fft.complexToReal( 1, tempIn, tempOut );
 										
 								// set the cursor in the fft output image to the right line								
@@ -282,19 +283,19 @@ A:						while( cursorDim.hasNext() )
 								{
 									for ( int x = cropX1; x < cropX2-1; ++x )
 									{
-										cursorOut.getType().setReal( tempOut[ x ] / realSize );
+										cursorOut.getType().setReal( (tempOut[ x ] / realSize) * additionalNormalization );
 										cursorOut.fwd( 0 );
 									}
-									cursorOut.getType().setReal( tempOut[ cropX2-1 ] / realSize );
+									cursorOut.getType().setReal( (tempOut[ cropX2-1 ] / realSize) * additionalNormalization );
 								}
 								else
 								{
 									for ( int x = cropX1; x < cropX2-1; ++x )
 									{
-										cursorOut.getType().setReal( tempOut[ x ] );
+										cursorOut.getType().setReal( tempOut[ x ] * additionalNormalization );
 										cursorOut.fwd( 0 );
 									}
-									cursorOut.getType().setReal( tempOut[ cropX2-1 ] );
+									cursorOut.getType().setReal( tempOut[ cropX2-1 ] * additionalNormalization );
 								}
 							}
 						}
@@ -334,19 +335,19 @@ A:						while( cursorDim.hasNext() )
 							{
 								for ( int x = cropX1; x < cropX2-1; ++x )
 								{
-									cursorOut.getType().setReal( tempOut[ x ] / realSize );
+									cursorOut.getType().setReal( (tempOut[ x ] / realSize) * additionalNormalization );
 									cursorOut.fwd( 0 );
 								}
-								cursorOut.getType().setReal( tempOut[ cropX2-1 ] / realSize );
+								cursorOut.getType().setReal( (tempOut[ cropX2-1 ] / realSize) * additionalNormalization );
 							}
 							else
 							{
 								for ( int x = cropX1; x < cropX2-1; ++x )
 								{
-									cursorOut.getType().setReal( tempOut[ x ] );
+									cursorOut.getType().setReal( tempOut[ x ] * additionalNormalization );
 									cursorOut.fwd( 0 );
 								}
-								cursorOut.getType().setReal( tempOut[ cropX2-1 ] );
+								cursorOut.getType().setReal( tempOut[ cropX2-1 ] * additionalNormalization );
 							}
 						}
 						cursorOut.close();
