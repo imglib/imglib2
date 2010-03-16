@@ -50,7 +50,7 @@ public class ImagePlusContainerFactory extends ContainerFactory
 		if ( dimensions.length > 3 )
 			throw new RuntimeException( "Unsupported dimensionality: "+ dimensions.length );
 						
-		return new ByteImagePlus<T>( this, dimensions, entitiesPerPixel );
+		return new UnsignedByteImagePlus<T>( this, dimensions, entitiesPerPixel );
 	}
 
 	@Override
