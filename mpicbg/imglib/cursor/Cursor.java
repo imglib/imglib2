@@ -64,7 +64,7 @@ import mpicbg.imglib.type.Type;
  * <pre>
   		Container&lt T &gt c1 = img1.getContainer(); 
   		Container&lt S &gt c2 = img2.getContainer();
-Ê 		if ( c1.compareStorageContainerCompatibility( c2 ) )  
+ 		if ( c1.compareStorageContainerCompatibility( c2 ) )  
  * </pre>
  * then, it is ensured that 
  * <pre>
