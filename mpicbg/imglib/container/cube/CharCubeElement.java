@@ -47,5 +47,13 @@ public class CharCubeElement<T extends Type<T>> extends CubeElement<CharCubeElem
 	public void close(){ data = null; }
 
 	@Override
+	public char getValue( final int index )  { return data[ index ]; }
+
+	@Override
+	public void setValue( final int index, final char value ) { data[ index ] = value; }
+	
+	@Override
+	public void update( final Cursor<?> c ) {}
+	
 	public char[] getCurrentStorageArray(Cursor<?> c) { return data; }
 }

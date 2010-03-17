@@ -47,5 +47,13 @@ public class ByteCubeElement<T extends Type<T>> extends CubeElement<ByteCubeElem
 	public void close(){ data = null; }
 
 	@Override
+	public byte getValue( final int index )  { return data[ index ]; }
+
+	@Override
+	public void setValue( final int index, final byte value ) { data[ index ] = value; }
+	
+	@Override
+	public void update( final Cursor<?> c ) {}
+
 	public byte[] getCurrentStorageArray(Cursor<?> c) { return data; }
 }

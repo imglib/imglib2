@@ -36,6 +36,8 @@ import mpicbg.imglib.type.Type;
 
 public class IntCube<T extends Type<T>> extends Cube<IntCubeElement<T>, IntCube<T>, T> implements IntContainer<T>
 {
+	int[] cache = null;
+	
 	public IntCube(ContainerFactory factory, int[] dim, int[] cubeSize, int entitiesPerPixel)
 	{
 		super(factory, dim, cubeSize, entitiesPerPixel);
@@ -48,5 +50,20 @@ public class IntCube<T extends Type<T>> extends Cube<IntCubeElement<T>, IntCube<
 	}
 
 	@Override
+	public void close() 
+	{
+		super.close();
+		cache = null; 
+	}
+	
+	@Override
+	public int getValue( final int index )  { return cache[ index ]; }
+
+	@Override
+	public void setValue( final int index, final int value ) { cache[ index ] = value; }
+	
+	@Override
+	public void update( final Cursor<?> c ) { cache = data.get( c.getStorageIndex() ).data;	}
+
 	public int[] getCurrentStorageArray(Cursor<?> c) { return data.get( c.getStorageIndex() ).getCurrentStorageArray( c ); }	
 }

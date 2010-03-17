@@ -47,5 +47,13 @@ public class IntCubeElement<T extends Type<T>> extends CubeElement<IntCubeElemen
 	public void close(){ data = null; }
 
 	@Override
+	public int getValue( final int index )  { return data[ index ]; }
+
+	@Override
+	public void setValue( final int index, final int value ) { data[ index ] = value; }
+	
+	@Override
+	public void update( final Cursor<?> c ) {}
+
 	public int[] getCurrentStorageArray(Cursor<?> c) { return data; }
 }

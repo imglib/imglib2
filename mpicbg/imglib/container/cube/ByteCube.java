@@ -36,6 +36,8 @@ import mpicbg.imglib.type.Type;
 
 public class ByteCube<T extends Type<T>> extends Cube<ByteCubeElement<T>, ByteCube<T>, T> implements ByteContainer<T>
 {
+	byte[] cache = null;
+	
 	public ByteCube(ContainerFactory factory, int[] dim, int[] cubeSize, int entitiesPerPixel)
 	{
 		super(factory, dim, cubeSize, entitiesPerPixel);
@@ -46,7 +48,22 @@ public class ByteCube<T extends Type<T>> extends Cube<ByteCubeElement<T>, ByteCu
 	{
 		return new ByteCubeElement<T>( this, cubeId, dim, offset, entitiesPerPixel );
 	}
+	
+	@Override
+	public void close() 
+	{
+		super.close();
+		cache = null; 
+	}
+	
+	@Override
+	public byte getValue( final int index )  { return cache[ index ]; }
 
 	@Override
+	public void setValue( final int index, final byte value ) { cache[ index ] = value; }
+	
+	@Override
+	public void update( final Cursor<?> c ) { cache = data.get( c.getStorageIndex() ).data;	}
+	
 	public byte[] getCurrentStorageArray(Cursor<?> c) { return data.get( c.getStorageIndex() ).getCurrentStorageArray( c ); }	
 }
