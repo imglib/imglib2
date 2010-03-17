@@ -38,6 +38,7 @@ import mpicbg.imglib.type.Type;
 public class CharImagePlus<T extends Type<T>> extends ImagePlusContainer<T> implements CharContainer<T> 
 {
 	final char[][] mirror;
+	char[] cache;
 	
 	public CharImagePlus( final ImagePlusContainerFactory factory, final int[] dim, final int entitiesPerPixel ) 
 	{
@@ -47,6 +48,14 @@ public class CharImagePlus<T extends Type<T>> extends ImagePlusContainer<T> impl
 	}
 
 	@Override
+	public char getValue( final int index )  { return cache[ index ]; }
+
+	@Override
+	public void setValue( final int index, final char value ) { cache[ index ] = value; }
+	
+	@Override
+	public void update( final Cursor<?> c ) { cache = mirror[ c.getStorageIndex() ]; }
+
 	public char[] getCurrentStorageArray( final Cursor<?> c ) 
 	{
 		return mirror[ c.getStorageIndex() ];

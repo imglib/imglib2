@@ -38,6 +38,7 @@ import mpicbg.imglib.type.Type;
 public class LongImagePlus<T extends Type<T>> extends ImagePlusContainer<T> implements LongContainer<T> 
 {
 	final long[][] mirror;
+	long[] cache = null;
 	
 	public LongImagePlus( final ImagePlusContainerFactory factory, final int[] dim, final int entitiesPerPixel ) 
 	{
@@ -47,6 +48,14 @@ public class LongImagePlus<T extends Type<T>> extends ImagePlusContainer<T> impl
 	}
 
 	@Override
+	public long getValue( final int index )  { return cache[ index ]; }
+
+	@Override
+	public void setValue( final int index, final long value ) { cache[ index ] = value; }
+	
+	@Override
+	public void update( final Cursor<?> c ) { cache = mirror[ c.getStorageIndex() ]; }
+
 	public long[] getCurrentStorageArray( final Cursor<?> c ) 
 	{
 		return mirror[ c.getStorageIndex() ];

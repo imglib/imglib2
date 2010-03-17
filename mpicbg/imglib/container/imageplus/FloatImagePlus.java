@@ -40,6 +40,7 @@ public class FloatImagePlus<T extends Type<T>> extends ImagePlusContainer<T> imp
 {
 	final ImagePlus image;
 	final float[][] mirror;
+	float[] cache = null;
 	
 	public FloatImagePlus( final ImagePlusContainerFactory factory, final int[] dim, final int entitiesPerPixel ) 
 	{
@@ -64,6 +65,14 @@ public class FloatImagePlus<T extends Type<T>> extends ImagePlusContainer<T> imp
 	}
 	
 	@Override
+	public float getValue( final int index )  { return cache[ index ]; }
+
+	@Override
+	public void setValue( final int index, final float value ) { cache[ index ] = value; }
+	
+	@Override
+	public void update( final Cursor<?> c ) { cache = mirror[ c.getStorageIndex() ]; }
+
 	public float[] getCurrentStorageArray( final Cursor<?> c ) 
 	{
 		return mirror[ c.getStorageIndex() ];

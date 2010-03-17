@@ -38,6 +38,7 @@ import mpicbg.imglib.type.Type;
 public class DoubleImagePlus<T extends Type<T>> extends ImagePlusContainer<T> implements DoubleContainer<T> 
 {
 	final double[][] mirror;
+	double[] cache = null;
 	
 	public DoubleImagePlus( final ImagePlusContainerFactory factory, final int[] dim, final int entitiesPerPixel ) 
 	{
@@ -47,6 +48,14 @@ public class DoubleImagePlus<T extends Type<T>> extends ImagePlusContainer<T> im
 	}
 
 	@Override
+	public double getValue( final int index )  { return cache[ index ]; }
+
+	@Override
+	public void setValue( final int index, final double value ) { cache[ index ] = value; }
+	
+	@Override
+	public void update( final Cursor<?> c ) { cache = mirror[ c.getStorageIndex() ]; }
+
 	public double[] getCurrentStorageArray( final Cursor<?> c ) 
 	{
 		return mirror[ c.getStorageIndex() ];

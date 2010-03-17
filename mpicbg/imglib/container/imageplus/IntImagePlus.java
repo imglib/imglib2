@@ -41,6 +41,7 @@ public class IntImagePlus<T extends Type<T>> extends ImagePlusContainer<T> imple
 {
 	final ImagePlus image;
 	final int[][] mirror;
+	int[] cache = null;
 	
 	public IntImagePlus( final ImagePlusContainerFactory factory, final int[] dim, final int entitiesPerPixel ) 
 	{
@@ -65,6 +66,14 @@ public class IntImagePlus<T extends Type<T>> extends ImagePlusContainer<T> imple
 	}
 	
 	@Override
+	public int getValue( final int index )  { return cache[ index ]; }
+
+	@Override
+	public void setValue( final int index, final int value ) { cache[ index ] = value; }
+	
+	@Override
+	public void update( final Cursor<?> c ) { cache = mirror[ c.getStorageIndex() ]; }
+
 	public int[] getCurrentStorageArray( Cursor<?> c ) 
 	{
 		return mirror[ c.getStorageIndex() ];

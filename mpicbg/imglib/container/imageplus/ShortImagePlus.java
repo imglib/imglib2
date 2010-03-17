@@ -41,6 +41,7 @@ public class ShortImagePlus<T extends Type<T>> extends ImagePlusContainer<T> imp
 {
 	final ImagePlus image;
 	final short[][] mirror;
+	short[] cache = null;
 	
 	public ShortImagePlus( final ImagePlusContainerFactory factory, final int[] dim, final int entitiesPerPixel ) 
 	{
@@ -65,6 +66,14 @@ public class ShortImagePlus<T extends Type<T>> extends ImagePlusContainer<T> imp
 	}
 	
 	@Override
+	public short getValue( final int index )  { return cache[ index ]; }
+
+	@Override
+	public void setValue( final int index, final short value ) { cache[ index ] = value; }
+	
+	@Override
+	public void update( final Cursor<?> c ) { cache = mirror[ c.getStorageIndex() ]; }
+
 	public short[] getCurrentStorageArray( Cursor<?> c ) 
 	{
 		return mirror[ c.getStorageIndex() ];

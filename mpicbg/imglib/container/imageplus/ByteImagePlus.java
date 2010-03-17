@@ -41,6 +41,7 @@ public class ByteImagePlus<T extends Type<T>> extends ImagePlusContainer<T> impl
 {
 	final ImagePlus image;
 	final byte[][] mirror;
+	byte[] cache = null;
 	
 	public ByteImagePlus( final ImagePlusContainerFactory factory, final int[] dim, final int entitiesPerPixel ) 
 	{
@@ -63,8 +64,16 @@ public class ByteImagePlus<T extends Type<T>> extends ImagePlusContainer<T> impl
 		for ( int i = 0; i < depth; ++i )
 			mirror[ i ] = (byte[])image.getStack().getProcessor( i+1 ).getPixels();
 	}
+
+	@Override
+	public byte getValue( final int index )  { return cache[ index ]; }
+
+	@Override
+	public void setValue( final int index, final byte value ) { cache[ index ] = value; }
 	
 	@Override
+	public void update( final Cursor<?> c ) { cache = mirror[ c.getStorageIndex() ]; }
+
 	public byte[] getCurrentStorageArray( Cursor<?> c ) 
 	{
 		return mirror[ c.getStorageIndex() ];
