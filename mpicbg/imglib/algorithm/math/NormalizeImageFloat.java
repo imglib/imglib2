@@ -72,6 +72,9 @@ public class NormalizeImageFloat <T extends NumericType<T>> implements OutputAlg
 		
 		pTime = System.currentTimeMillis() - startTime;
 		
+		pullCursor.close();
+	    pushCursor.close();
+	    
 		return true;
 	}
 
