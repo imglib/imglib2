@@ -1,12 +1,13 @@
 package mpicbg.imglib.algorithm.fft;
 
+import mpicbg.imglib.algorithm.Benchmark;
 import mpicbg.imglib.algorithm.OutputAlgorithm;
 import mpicbg.imglib.algorithm.math.MathLib;
 import mpicbg.imglib.cursor.LocalizableCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.type.NumericType;
 
-public class Bandpass<T extends NumericType<T>> implements OutputAlgorithm<T>
+public class Bandpass<T extends NumericType<T>> implements OutputAlgorithm<T>, Benchmark
 {
 	String errorMessage = "";
 	boolean inPlace, bandPass;
@@ -14,6 +15,7 @@ public class Bandpass<T extends NumericType<T>> implements OutputAlgorithm<T>
 	Image<T> img, output;
 	
 	int beginRadius, endRadius;
+	long processingTime;
 	int[] origin;
 	
 	public Bandpass( final Image<T> img, final int beginRadius, final int endRadius )
@@ -51,6 +53,7 @@ public class Bandpass<T extends NumericType<T>> implements OutputAlgorithm<T>
 	@Override
 	public boolean process()
 	{
+		final long startTime = System.currentTimeMillis();
 		final Image<T> img;
 
 		if ( inPlace )
@@ -87,6 +90,8 @@ public class Bandpass<T extends NumericType<T>> implements OutputAlgorithm<T>
 			}
 		}
 		
+		processingTime = System.currentTimeMillis() - startTime;
+		
 		// finished applying bandpass
 		return true;
 	}	
@@ -100,6 +105,9 @@ public class Bandpass<T extends NumericType<T>> implements OutputAlgorithm<T>
 			return output;
 	}
 
+	@Override
+	public long getProcessingTime() { return processingTime; }
+	
 	@Override
 	public boolean checkInput() { return true; }
 
