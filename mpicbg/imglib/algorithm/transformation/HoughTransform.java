@@ -34,7 +34,7 @@ implements Algorithm, Benchmark
 		
 	}
 	
-	protected boolean placeVote(final int[] loc, S vote)
+	protected boolean placeVote(final int[] loc, final S vote)
 	{
 		if (voteSpace != null)
 		{
@@ -53,6 +53,37 @@ implements Algorithm, Benchmark
 			errorMsg = "Uninitialized Vote Space";
 			return false;
 		}		
+	}
+	
+	protected boolean placeVote(final int[] loc)
+	{
+		if (voteSpace != null)
+		{
+			if (voteCursor == null)
+			{
+				voteCursor = voteSpace.createLocalizableByDimCursor();
+			}
+			voteCursor.setPosition(loc);
+			
+			voteCursor.getType().inc();
+			
+			return true;
+		}
+		else
+		{
+			errorMsg = "Uninitialized Vote Space";
+			return false;
+		}		
+	}
+	
+	public Image<S> getVoteSpace()
+	{
+		return voteSpace;
+	}
+	
+	protected void setErrorMsg(final String msg)
+	{
+		errorMsg = msg;
 	}
 	
 	@Override
