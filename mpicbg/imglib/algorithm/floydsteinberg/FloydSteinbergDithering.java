@@ -18,6 +18,7 @@ package mpicbg.imglib.algorithm.floydsteinberg;
 
 import java.util.Random;
 
+import mpicbg.imglib.algorithm.Benchmark;
 import mpicbg.imglib.algorithm.OutputAlgorithm;
 import mpicbg.imglib.algorithm.math.MathLib;
 import mpicbg.imglib.container.array.ArrayContainerFactory;
@@ -32,7 +33,7 @@ import mpicbg.imglib.type.label.FakeType;
 import mpicbg.imglib.type.logic.BitType;
 import mpicbg.imglib.type.numeric.FloatType;
 
-public class FloydSteinbergDithering<T extends NumericType<T>> implements OutputAlgorithm<BitType>
+public class FloydSteinbergDithering<T extends NumericType<T>> implements OutputAlgorithm<BitType>, Benchmark
 {
 	Image<BitType> result;
 	final Image<T> img;
@@ -40,6 +41,7 @@ public class FloydSteinbergDithering<T extends NumericType<T>> implements Output
 	final int[] dim, tmp1, tmp2;
 	final int numDimensions;
 	final float ditheringThreshold, minValue, maxValue;
+	long processingTime;
 	
 	String errorMessage = "";
 	
@@ -67,6 +69,8 @@ public class FloydSteinbergDithering<T extends NumericType<T>> implements Output
 	@Override
 	public boolean process()
 	{		
+		final long startTime = System.currentTimeMillis();
+
 		// creates the output image of BitType using the same Storage Strategy as the input image 
 		final ImageFactory<BitType> imgFactory = new ImageFactory<BitType>( new BitType(), img.getContainerFactory() );
 		result = imgFactory.createImage( dim );
@@ -135,10 +139,15 @@ public class FloydSteinbergDithering<T extends NumericType<T>> implements Output
 		// close image
 		img.close();
 		
+		processingTime = System.currentTimeMillis() - startTime;
+		
 		// successfully computed the dithering
 		return true;
 	}
 	
+	@Override
+	public long getProcessingTime() { return processingTime; }
+
 	@Override
 	public Image<BitType> getResult() { return result; }
 
