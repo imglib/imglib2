@@ -30,14 +30,13 @@
 package mpicbg.imglib.container.cube;
 
 import mpicbg.imglib.container.ContainerFactory;
+import mpicbg.imglib.container.basictypecontainer.BasicTypeContainer;
 import mpicbg.imglib.container.basictypecontainer.BitContainer;
 import mpicbg.imglib.cursor.Cursor;
 import mpicbg.imglib.type.Type;
 
-public class BitCube<T extends Type<T>> extends Cube<BitCubeElement<T>, BitCube<T>, T> implements BitContainer<T>
+public class BitCube<T extends Type<T>> extends Cube<BitCubeElement<T>, BitCube<T>, T> implements BasicTypeContainer<T, BitContainer<T>>
 {
-	int[] cache = null;
-	
 	public BitCube(ContainerFactory factory, int[] dim, int[] cubeSize, int entitiesPerPixel)
 	{
 		super(factory, dim, cubeSize, entitiesPerPixel);
@@ -50,32 +49,5 @@ public class BitCube<T extends Type<T>> extends Cube<BitCubeElement<T>, BitCube<
 	}
 
 	@Override
-	public boolean getValue( final int index ) 
-	{
-		final int arrayIndex = index / BitCubeElement.bitsPerEntity;
-		final int arrayOffset = index % BitCubeElement.bitsPerEntity;
-
-		final int entry = cache[ arrayIndex ];		
-		final int value = (entry & ( 1 << arrayOffset ) );
-		
-		return value != 0; 
-	}
-
-	@Override
-	public void setValue( final int index, final boolean value ) 
-	{
-		final int arrayIndex = index / BitCubeElement.bitsPerEntity;
-		final int arrayOffset = index % BitCubeElement.bitsPerEntity;
-		
-		if ( value )
-			cache[ arrayIndex ] = cache[ arrayIndex ] | ( 1 << arrayOffset );
-		else
-			cache[ arrayIndex ] = cache[ arrayIndex ] & ~( 1 << arrayOffset ); 
-	}
-
-	@Override
-	public void update( final Cursor<?> c )
-	{
-		cache = data.get( c.getStorageIndex() ).data;
-	}	
+	public BitContainer<T> update( final Cursor<?> c ) { return data.get( c.getStorageIndex() ); }	
 }

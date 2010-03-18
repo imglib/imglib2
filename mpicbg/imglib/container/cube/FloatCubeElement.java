@@ -53,7 +53,7 @@ public class FloatCubeElement<T extends Type<T>> extends CubeElement<FloatCubeEl
 	public void setValue( final int index, final float value ) { data[ index ] = value; }
 	
 	@Override
-	public void update( final Cursor<?> c ) {}
+	public FloatContainer<T> update( final Cursor<?> c ) { return this; }
 
 	public float[] getCurrentStorageArray( final Cursor<?> c ) { return data; }
 }

@@ -33,7 +33,7 @@ import mpicbg.imglib.container.Container;
 import mpicbg.imglib.cursor.Cursor;
 import mpicbg.imglib.type.Type;
 
-public interface BasicTypeContainer<T extends Type<T>> extends Container<T>
+public interface BasicTypeContainer<T extends Type<T>, C extends BasicTypeContainer<T, C>> extends Container<T>
 {
-	public void update( final Cursor<?> c );
+	public C update( final Cursor<?> c );
 }

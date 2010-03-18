@@ -30,14 +30,13 @@
 package mpicbg.imglib.container.cube;
 
 import mpicbg.imglib.container.ContainerFactory;
+import mpicbg.imglib.container.basictypecontainer.BasicTypeContainer;
 import mpicbg.imglib.container.basictypecontainer.DoubleContainer;
 import mpicbg.imglib.cursor.Cursor;
 import mpicbg.imglib.type.Type;
 
-public class DoubleCube<T extends Type<T>> extends Cube<DoubleCubeElement<T>, DoubleCube<T>, T> implements DoubleContainer<T>
+public class DoubleCube<T extends Type<T>> extends Cube<DoubleCubeElement<T>, DoubleCube<T>, T> implements BasicTypeContainer<T, DoubleContainer<T>>
 {
-	double[] cache = null;
-	
 	public DoubleCube(ContainerFactory factory, int[] dim, int[] cubeSize, int entitiesPerPixel)
 	{
 		super(factory, dim, cubeSize, entitiesPerPixel);
@@ -50,20 +49,7 @@ public class DoubleCube<T extends Type<T>> extends Cube<DoubleCubeElement<T>, Do
 	}
 	
 	@Override
-	public void close() 
-	{
-		super.close();
-		cache = null; 
-	}
-	
-	@Override
-	public double getValue( final int index )  { return cache[ index ]; }
-
-	@Override
-	public void setValue( final int index, final double value ) { cache[ index ] = value; }
-	
-	@Override
-	public void update( final Cursor<?> c ) { cache = data.get( c.getStorageIndex() ).data;	}
+	public DoubleContainer<T> update( final Cursor<?> c ) { return data.get( c.getStorageIndex() );	}
 
 	public double[] getCurrentStorageArray(Cursor<?> c) { return data.get( c.getStorageIndex() ).getCurrentStorageArray( c ); }	
 }

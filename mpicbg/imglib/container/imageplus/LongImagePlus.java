@@ -29,40 +29,43 @@
  */
 package mpicbg.imglib.container.imageplus;
 
+import java.util.ArrayList;
+
 import ij.ImagePlus;
 
+import mpicbg.imglib.container.array.LongArray;
+import mpicbg.imglib.container.basictypecontainer.BasicTypeContainer;
 import mpicbg.imglib.container.basictypecontainer.LongContainer;
 import mpicbg.imglib.cursor.Cursor;
 import mpicbg.imglib.type.Type;
 
-public class LongImagePlus<T extends Type<T>> extends ImagePlusContainer<T> implements LongContainer<T> 
+public class LongImagePlus<T extends Type<T>> extends ImagePlusContainer<T> implements BasicTypeContainer<T, LongContainer<T>> 
 {
-	final long[][] mirror;
-	long[] cache = null;
+	final ArrayList<LongArray<T>> mirror;
 	
 	public LongImagePlus( final ImagePlusContainerFactory factory, final int[] dim, final int entitiesPerPixel ) 
 	{
 		super( factory, dim, entitiesPerPixel );
 		
-		mirror = new long[ depth ][ width * height * entitiesPerPixel ];
+		mirror = new ArrayList<LongArray<T>>( depth ); 
+		
+		final int[] dim2 = new int[]{ width, height };		
+		
+		for ( int i = 0; i < depth; ++i )
+			mirror.add( new LongArray<T>( new long[ width * height ], dim2, entitiesPerPixel ) );
 	}
 
 	@Override
-	public long getValue( final int index )  { return cache[ index ]; }
+	public LongContainer<T> update( final Cursor<?> c ) { return mirror.get( c.getStorageIndex() ); }
+
+	public long[] getCurrentStorageArray( final Cursor<?> c ) { return mirror.get( c.getStorageIndex() ).getCurrentStorageArray( null ); }
 
 	@Override
-	public void setValue( final int index, final long value ) { cache[ index ] = value; }
-	
-	@Override
-	public void update( final Cursor<?> c ) { cache = mirror[ c.getStorageIndex() ]; }
-
-	public long[] getCurrentStorageArray( final Cursor<?> c ) 
-	{
-		return mirror[ c.getStorageIndex() ];
+	public void close() 
+	{		
+		for ( final LongArray<T> array : mirror )
+			array.close();
 	}
-
-	@Override
-	public void close() {}
 
 	@Override
 	public ImagePlus getImagePlus() { throw new RuntimeException( "LongImagePlus has not ImagePlus instance, not a standard type of ImagePlus" ); }

@@ -29,28 +29,33 @@
  */
 package mpicbg.imglib.container.imageplus;
 
+import java.util.ArrayList;
+
 import ij.IJ;
 import ij.ImagePlus;
 
+import mpicbg.imglib.container.array.FloatArray;
+import mpicbg.imglib.container.basictypecontainer.BasicTypeContainer;
 import mpicbg.imglib.container.basictypecontainer.FloatContainer;
 import mpicbg.imglib.cursor.Cursor;
 import mpicbg.imglib.type.Type;
 
-public class FloatImagePlus<T extends Type<T>> extends ImagePlusContainer<T> implements FloatContainer<T> 
+public class FloatImagePlus<T extends Type<T>> extends ImagePlusContainer<T> implements BasicTypeContainer<T, FloatContainer<T>> 
 {
-	final ImagePlus image;
-	final float[][] mirror;
-	float[] cache = null;
+	final ImagePlus image;	
+	final ArrayList<FloatArray<T>> mirror;
 	
 	public FloatImagePlus( final ImagePlusContainerFactory factory, final int[] dim, final int entitiesPerPixel ) 
 	{
 		super( factory, dim, entitiesPerPixel );
 		
 		image = IJ.createImage( "image", "32-Bit Black", width * entitiesPerPixel, height, depth );
-		mirror = new float[ depth ][];
+		mirror = new ArrayList<FloatArray<T>>( depth ); 
+		
+		final int[] dim2 = new int[]{ width, height };		
 		
 		for ( int i = 0; i < depth; ++i )
-			mirror[ i ] = (float[])image.getStack().getProcessor( i+1 ).getPixels();
+			mirror.add( new FloatArray<T>( (float[])image.getStack().getProcessor( i+1 ).getPixels(), dim2, entitiesPerPixel ) );
 	}
 
 	public FloatImagePlus( final ImagePlus image, final ImagePlusContainerFactory factory ) 
@@ -58,28 +63,27 @@ public class FloatImagePlus<T extends Type<T>> extends ImagePlusContainer<T> imp
 		super( factory, ImagePlusContainer.getCorrectDimensionality(image), 1 );
 		
 		this.image = image;
-		mirror = new float[ depth ][];
+		mirror = new ArrayList<FloatArray<T>>( depth ); 
+		
+		final int[] dim2 = new int[]{ width, height };		
 		
 		for ( int i = 0; i < depth; ++i )
-			mirror[ i ] = (float[])image.getStack().getProcessor( i+1 ).getPixels();
+			mirror.add( new FloatArray<T>( (float[])image.getStack().getProcessor( i+1 ).getPixels(), dim2, 1 ) );
 	}
 	
 	@Override
-	public float getValue( final int index )  { return cache[ index ]; }
+	public FloatContainer<T> update( final Cursor<?> c ) { return mirror.get( c.getStorageIndex() ); }
+
+	public float[] getCurrentStorageArray( final Cursor<?> c ) { return mirror.get( c.getStorageIndex() ).getCurrentStorageArray( null ); }
 
 	@Override
-	public void setValue( final int index, final float value ) { cache[ index ] = value; }
-	
-	@Override
-	public void update( final Cursor<?> c ) { cache = mirror[ c.getStorageIndex() ]; }
-
-	public float[] getCurrentStorageArray( final Cursor<?> c ) 
+	public void close() 
 	{
-		return mirror[ c.getStorageIndex() ];
+		for ( final FloatArray<T> array : mirror )
+			array.close();
+		
+		image.close(); 
 	}
-
-	@Override
-	public void close() { image.close(); }
 
 	@Override
 	public ImagePlus getImagePlus() { return image;	}

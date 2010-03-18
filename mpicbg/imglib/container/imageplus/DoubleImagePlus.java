@@ -29,40 +29,43 @@
  */
 package mpicbg.imglib.container.imageplus;
 
+import java.util.ArrayList;
+
 import ij.ImagePlus;
 
+import mpicbg.imglib.container.array.DoubleArray;
+import mpicbg.imglib.container.basictypecontainer.BasicTypeContainer;
 import mpicbg.imglib.container.basictypecontainer.DoubleContainer;
 import mpicbg.imglib.cursor.Cursor;
 import mpicbg.imglib.type.Type;
 
-public class DoubleImagePlus<T extends Type<T>> extends ImagePlusContainer<T> implements DoubleContainer<T> 
+public class DoubleImagePlus<T extends Type<T>> extends ImagePlusContainer<T> implements BasicTypeContainer<T,DoubleContainer<T>> 
 {
-	final double[][] mirror;
-	double[] cache = null;
+	final ArrayList<DoubleArray<T>> mirror;
 	
 	public DoubleImagePlus( final ImagePlusContainerFactory factory, final int[] dim, final int entitiesPerPixel ) 
 	{
 		super( factory, dim, entitiesPerPixel );
 		
-		mirror = new double[ depth ][ width * height * entitiesPerPixel ];
+		mirror = new ArrayList<DoubleArray<T>>( depth ); 
+		
+		final int[] dim2 = new int[]{ width, height };		
+		
+		for ( int i = 0; i < depth; ++i )
+			mirror.add( new DoubleArray<T>( new double[ width * height ], dim2, entitiesPerPixel ) );
 	}
 
 	@Override
-	public double getValue( final int index )  { return cache[ index ]; }
+	public DoubleContainer<T> update( final Cursor<?> c ) { return mirror.get( c.getStorageIndex() ); }
+
+	public double[] getCurrentStorageArray( final Cursor<?> c ) { return mirror.get( c.getStorageIndex() ).getCurrentStorageArray( null ); }
 
 	@Override
-	public void setValue( final int index, final double value ) { cache[ index ] = value; }
-	
-	@Override
-	public void update( final Cursor<?> c ) { cache = mirror[ c.getStorageIndex() ]; }
-
-	public double[] getCurrentStorageArray( final Cursor<?> c ) 
+	public void close() 
 	{
-		return mirror[ c.getStorageIndex() ];
+		for ( final DoubleArray<T> array : mirror )
+			array.close();		
 	}
-
-	@Override
-	public void close() {}
 
 	@Override
 	public ImagePlus getImagePlus() { throw new RuntimeException( "DoubleImagePlus has not ImagePlus instance, not a standard type of ImagePlus" ); }

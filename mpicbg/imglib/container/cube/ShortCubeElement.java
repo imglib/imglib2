@@ -50,10 +50,10 @@ public class ShortCubeElement<T extends Type<T>> extends CubeElement<ShortCubeEl
 	public short getValue( final int index )  { return data[ index ]; }
 
 	@Override
-	public void setValue( final int index, final short value ) { data[ index ] = value; }
-	
+	public void setValue( final int index, final short value )  { data[ index ] = value; }
+
 	@Override
-	public void update( final Cursor<?> c ) {}
+	public ShortContainer<T> update( final Cursor<?> c ) { return this;	}
 
 	public short[] getCurrentStorageArray(Cursor<?> c) { return data; }
 }

@@ -31,7 +31,7 @@ package mpicbg.imglib.container.basictypecontainer;
 
 import mpicbg.imglib.type.Type;
 
-public interface CharContainer<T extends Type<T>> extends BasicTypeContainer<T>
+public interface CharContainer<T extends Type<T>> extends BasicTypeContainer<T,CharContainer<T>>
 {
 	public char getValue( final int index );
 	public void setValue( final int index, final char value );

@@ -29,67 +29,45 @@
  */
 package mpicbg.imglib.container.imageplus;
 
+import java.util.ArrayList;
+
 import ij.ImagePlus;
+import mpicbg.imglib.container.array.BitArray;
+import mpicbg.imglib.container.basictypecontainer.BasicTypeContainer;
 import mpicbg.imglib.container.basictypecontainer.BitContainer;
 import mpicbg.imglib.cursor.Cursor;
 import mpicbg.imglib.type.Type;
 
-public class BitImagePlus<T extends Type<T>> extends ImagePlusContainer<T> implements BitContainer<T> 
+public class BitImagePlus<T extends Type<T>> extends ImagePlusContainer<T> implements BasicTypeContainer<T, BitContainer<T>> 
 {
-	final static int bitsPerEntity = Integer.SIZE;
-
-	final int[][] mirror;
-	int cache[] = null;
+	final ArrayList<BitArray<T>> mirror;
 	
 	public BitImagePlus( final ImagePlusContainerFactory factory, final int[] dim, final int entitiesPerPixel ) 
 	{
 		super( factory, dim, entitiesPerPixel );
 		
-		final int numElementsPerPlane;
-		final int numEntitiesPerPlane = width * height * entitiesPerPixel;
+		mirror = new ArrayList<BitArray<T>>( depth ); 
 		
-		if ( numEntitiesPerPlane % bitsPerEntity == 0 )
-			numElementsPerPlane = numEntitiesPerPlane / bitsPerEntity;
-		else
-			numElementsPerPlane = numEntitiesPerPlane / bitsPerEntity + 1;
-
-		mirror = new int[ depth ][ numElementsPerPlane ];
+		final int[] dim2 = new int[]{ width, height };		
+		
+		for ( int i = 0; i < depth; ++i )
+			mirror.add( new BitArray<T>( null, dim2, entitiesPerPixel ) );
 	}
 	
 	@Override
-	public void close() {}
+	public BitContainer<T> update( final Cursor<?> c ) { return mirror.get( c.getStorageIndex() ); }
+
+	@Override
+	public void close() 
+	{
+		for ( final BitArray<T> array : mirror )
+			array.close();		
+	}
 
 	@Override
 	public ImagePlus getImagePlus() 
 	{ 
 		throw new RuntimeException( "BitImagePlus has not ImagePlus instance, not a standard type of ImagePlus" );
 	}
-
-	@Override
-	public boolean getValue( final int index ) 
-	{
-		final int arrayIndex = index / bitsPerEntity;
-		final int arrayOffset = index % bitsPerEntity;
-
-		final int entry = cache[ arrayIndex ];		
-		final int value = (entry & ( 1 << arrayOffset ) );
-		
-		return value != 0; 
-	}
-
-	@Override
-	public void setValue( final int index, final boolean value ) 
-	{
-		final int arrayIndex = index / bitsPerEntity;
-		final int arrayOffset = index % bitsPerEntity;
-		
-		if ( value )
-			cache[ arrayIndex ] = cache[ arrayIndex ] | ( 1 << arrayOffset );
-		else
-			cache[ arrayIndex ] = cache[ arrayIndex ] & ~( 1 << arrayOffset ); 
-	}
-
-	@Override
-	public void update( final Cursor<?> c ) { cache = mirror[ c.getStorageIndex() ]; }
 }
 

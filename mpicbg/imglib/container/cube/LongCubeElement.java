@@ -51,9 +51,9 @@ public class LongCubeElement<T extends Type<T>> extends CubeElement<LongCubeElem
 
 	@Override
 	public void setValue( final int index, final long value ) { data[ index ] = value; }
-	
-	@Override
-	public void update( final Cursor<?> c ) {}
 
-	public long[] getCurrentStorageArray(Cursor<?> c) { return data; }
+	@Override
+	public LongContainer<T> update( final Cursor<?> c ) { return this;	}
+	
+	public long[] getCurrentStorageArray( final Cursor<?> c ) { return data; }
 }

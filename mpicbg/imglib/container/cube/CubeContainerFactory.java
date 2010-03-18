@@ -30,6 +30,7 @@
 package mpicbg.imglib.container.cube;
 
 import mpicbg.imglib.container.ContainerFactory;
+import mpicbg.imglib.container.basictypecontainer.BasicTypeContainer;
 import mpicbg.imglib.container.basictypecontainer.BitContainer;
 import mpicbg.imglib.container.basictypecontainer.ByteContainer;
 import mpicbg.imglib.container.basictypecontainer.CharContainer;
@@ -126,7 +127,7 @@ public class CubeContainerFactory extends ContainerFactory
 	}
 
 	@Override
-	public <T extends Type<T>>BitContainer<T> createBitInstance( int[] dimensions, int entitiesPerPixel )
+	public <T extends Type<T>> BasicTypeContainer<T, BitContainer<T>> createBitInstance( int[] dimensions, int entitiesPerPixel )
 	{
 		dimensions = checkDimensions( dimensions );
 		int[] cubeSize = checkCubeSize( this.cubeSize, dimensions );
@@ -135,7 +136,7 @@ public class CubeContainerFactory extends ContainerFactory
 	}
 	
 	@Override
-	public <T extends Type<T>>ByteContainer<T> createByteInstance( int[] dimensions, int entitiesPerPixel )
+	public <T extends Type<T>> BasicTypeContainer<T, ByteContainer<T>> createByteInstance( int[] dimensions, int entitiesPerPixel )
 	{
 		dimensions = checkDimensions( dimensions );
 		int[] cubeSize = checkCubeSize( this.cubeSize, dimensions );
@@ -144,7 +145,7 @@ public class CubeContainerFactory extends ContainerFactory
 	}
 
 	@Override
-	public <T extends Type<T>>CharContainer<T> createCharInstance(int[] dimensions, int entitiesPerPixel)
+	public <T extends Type<T>> BasicTypeContainer<T, CharContainer<T>> createCharInstance(int[] dimensions, int entitiesPerPixel)
 	{
 		dimensions = checkDimensions( dimensions );
 		int[] cubeSize = checkCubeSize( this.cubeSize, dimensions );
@@ -153,7 +154,7 @@ public class CubeContainerFactory extends ContainerFactory
 	}
 
 	@Override
-	public <T extends Type<T>>DoubleContainer<T> createDoubleInstance(int[] dimensions, int entitiesPerPixel)
+	public <T extends Type<T>> BasicTypeContainer<T, DoubleContainer<T>> createDoubleInstance(int[] dimensions, int entitiesPerPixel)
 	{
 		dimensions = checkDimensions( dimensions );
 		int[] cubeSize = checkCubeSize( this.cubeSize, dimensions );
@@ -162,7 +163,7 @@ public class CubeContainerFactory extends ContainerFactory
 	}
 
 	@Override
-	public <T extends Type<T>>FloatContainer<T> createFloatInstance(int[] dimensions, int entitiesPerPixel)
+	public <T extends Type<T>> BasicTypeContainer<T, FloatContainer<T>> createFloatInstance(int[] dimensions, int entitiesPerPixel)
 	{
 		dimensions = checkDimensions( dimensions );
 		int[] cubeSize = checkCubeSize( this.cubeSize, dimensions );
@@ -171,7 +172,7 @@ public class CubeContainerFactory extends ContainerFactory
 	}
 
 	@Override
-	public <T extends Type<T>>IntContainer<T> createIntInstance(int[] dimensions, int entitiesPerPixel)
+	public <T extends Type<T>> BasicTypeContainer<T, IntContainer<T>> createIntInstance(int[] dimensions, int entitiesPerPixel)
 	{
 		dimensions = checkDimensions( dimensions );
 		int[] cubeSize = checkCubeSize( this.cubeSize, dimensions );
@@ -180,7 +181,7 @@ public class CubeContainerFactory extends ContainerFactory
 	}
 
 	@Override
-	public <T extends Type<T>>LongContainer<T> createLongInstance(int[] dimensions, int entitiesPerPixel)
+	public <T extends Type<T>> BasicTypeContainer<T, LongContainer<T>> createLongInstance(int[] dimensions, int entitiesPerPixel)
 	{
 		dimensions = checkDimensions( dimensions );
 		int[] cubeSize = checkCubeSize( this.cubeSize, dimensions );
@@ -189,7 +190,7 @@ public class CubeContainerFactory extends ContainerFactory
 	}
 
 	@Override
-	public <T extends Type<T>>ShortContainer<T> createShortInstance(int[] dimensions, int entitiesPerPixel)
+	public <T extends Type<T>> BasicTypeContainer<T, ShortContainer<T>> createShortInstance(int[] dimensions, int entitiesPerPixel)
 	{
 		dimensions = checkDimensions( dimensions );
 		int[] cubeSize = checkCubeSize( this.cubeSize, dimensions );

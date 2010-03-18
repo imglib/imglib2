@@ -53,7 +53,7 @@ public class DoubleCubeElement<T extends Type<T>> extends CubeElement<DoubleCube
 	public void setValue( final int index, final double value ) { data[ index ] = value; }
 	
 	@Override
-	public void update( final Cursor<?> c ) {}
+	public DoubleContainer<T> update( final Cursor<?> c ) { return this; }
 
 	public double[] getCurrentStorageArray(Cursor<?> c) { return data; }
 }

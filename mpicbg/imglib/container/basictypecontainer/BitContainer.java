@@ -31,7 +31,7 @@ package mpicbg.imglib.container.basictypecontainer;
 
 import mpicbg.imglib.type.Type;
 
-public interface BitContainer<T extends Type<T>> extends BasicTypeContainer<T>
+public interface BitContainer<T extends Type<T>> extends BasicTypeContainer<T, BitContainer<T>>
 {
 	public boolean getValue( final int index );
 	public void setValue( final int index, final boolean value );

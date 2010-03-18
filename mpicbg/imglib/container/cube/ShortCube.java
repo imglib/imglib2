@@ -30,14 +30,13 @@
 package mpicbg.imglib.container.cube;
 
 import mpicbg.imglib.container.ContainerFactory;
+import mpicbg.imglib.container.basictypecontainer.BasicTypeContainer;
 import mpicbg.imglib.container.basictypecontainer.ShortContainer;
 import mpicbg.imglib.cursor.Cursor;
 import mpicbg.imglib.type.Type;
 
-public class ShortCube<T extends Type<T>> extends Cube<ShortCubeElement<T>, ShortCube<T>,T> implements ShortContainer<T>
+public class ShortCube<T extends Type<T>> extends Cube<ShortCubeElement<T>, ShortCube<T>,T> implements BasicTypeContainer<T, ShortContainer<T>>
 {
-	short[] cache = null;
-	
 	public ShortCube(ContainerFactory factory, int[] dim, int[] cubeSize, int entitiesPerPixel)
 	{
 		super(factory, dim, cubeSize, entitiesPerPixel);
@@ -47,22 +46,9 @@ public class ShortCube<T extends Type<T>> extends Cube<ShortCubeElement<T>, Shor
 	{
 		return new ShortCubeElement<T>( this, cubeId, dim, offset, entitiesPerPixel );
 	}
-	
+		
 	@Override
-	public void close() 
-	{
-		super.close();
-		cache = null; 
-	}
+	public ShortContainer<T> update( final Cursor<?> c ) { return data.get( c.getStorageIndex() );	}
 
-	@Override
-	public short getValue( final int index )  { return cache[ index ]; }
-
-	@Override
-	public void setValue( final int index, final short value ) { cache[ index ] = value; }
-	
-	@Override
-	public void update( final Cursor<?> c ) { cache = data.get( c.getStorageIndex() ).data;	}
-
-	public short[] getCurrentStorageArray(Cursor<?> c) { return data.get( c.getStorageIndex() ).getCurrentStorageArray( c ); }	
+	public short[] getCurrentStorageArray( final Cursor<?> c ) { return data.get( c.getStorageIndex() ).getCurrentStorageArray( c ); }	
 }
