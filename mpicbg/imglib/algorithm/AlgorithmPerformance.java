@@ -15,6 +15,7 @@ import mpicbg.imglib.algorithm.gauss.DownSample;
 import mpicbg.imglib.algorithm.math.MathLib;
 import mpicbg.imglib.container.ContainerFactory;
 import mpicbg.imglib.container.array.ArrayContainerFactory;
+import mpicbg.imglib.container.cube.CubeContainerFactory;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.display.ComplexFloatTypePhaseSpectrumDisplay;
 import mpicbg.imglib.image.display.ComplexFloatTypePowerSpectrumDisplay;
@@ -32,7 +33,10 @@ public class AlgorithmPerformance
 	{
 		boolean show = false;
 		
-		final Image<FloatType> image = FourierConvolution.createGaussianKernel( containerFactory, 100, numDimensions );
+		final Image<FloatType> image = FourierConvolution.createGaussianKernel( containerFactory, 10, numDimensions );
+		image.getDisplay().setMinMax();
+		ImageJFunctions.copyToImagePlus( image ).show();
+		
 		System.out.println( "Created Image: " + image );
 		
 		final int numAlgorithms = 7;
@@ -41,13 +45,13 @@ public class AlgorithmPerformance
 		{
 			double overAllProcessingTime = 0;
 			
-			overAllProcessingTime += testDithering( image, show );
-			overAllProcessingTime += testBandpass( image, show );		
-			overAllProcessingTime += testPhaseCorrelation( image, image, show );			
-			overAllProcessingTime += testCanvas( image, 3f, 0.25f, 10f, show );
+			//overAllProcessingTime += testDithering( image, show );
+			//overAllProcessingTime += testBandpass( image, show );		
+			//overAllProcessingTime += testPhaseCorrelation( image, image, show );			
+			//overAllProcessingTime += testCanvas( image, 3f, 0.25f, 10f, show );
 			overAllProcessingTime += testFFT( image, show );
-			overAllProcessingTime += testFFTConvolution( image, show );
-			overAllProcessingTime += testDownSampling( image, show );
+			//overAllProcessingTime += testFFTConvolution( image, show );
+			//overAllProcessingTime += testDownSampling( image, show );
 			
 			System.out.println( "Processing Time: " + overAllProcessingTime/numAlgorithms );
 		}
@@ -55,7 +59,7 @@ public class AlgorithmPerformance
 	
 	public static void main( String[] args )
 	{
-		new AlgorithmPerformance( new ArrayContainerFactory(), 2 );
+		new AlgorithmPerformance( new CubeContainerFactory(), 3 );
 	}
 	
 	public static <T extends NumericType<T>> double testFFTConvolution( final Image<T> img, boolean show )
