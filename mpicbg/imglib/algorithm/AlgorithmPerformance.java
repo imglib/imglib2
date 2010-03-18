@@ -20,7 +20,6 @@ import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.display.ComplexFloatTypePhaseSpectrumDisplay;
 import mpicbg.imglib.image.display.ComplexFloatTypePowerSpectrumDisplay;
 import mpicbg.imglib.image.display.imagej.ImageJFunctions;
-import mpicbg.imglib.io.LOCI;
 import mpicbg.imglib.outside.OutsideStrategyPeriodicFactory;
 import mpicbg.imglib.type.NumericType;
 import mpicbg.imglib.type.logic.BitType;
