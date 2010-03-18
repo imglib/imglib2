@@ -32,6 +32,7 @@ package mpicbg.imglib.type.numeric;
 import mpicbg.imglib.container.Container;
 import mpicbg.imglib.container.ContainerFactory;
 import mpicbg.imglib.container.array.FloatArray;
+import mpicbg.imglib.container.basictypecontainer.BasicTypeContainer;
 import mpicbg.imglib.container.basictypecontainer.FloatContainer;
 import mpicbg.imglib.cursor.Cursor;
 import mpicbg.imglib.image.Image;
@@ -41,21 +42,30 @@ import mpicbg.imglib.type.TypeImpl;
 
 public class ComplexFloatType extends TypeImpl<ComplexFloatType> implements NumericType<ComplexFloatType>
 {
-	final FloatContainer<ComplexFloatType> b;
+	// the Container
+	final BasicTypeContainer<ComplexFloatType, FloatContainer<ComplexFloatType>> storage;
 	
-	// the index position of the real and complex component in the array
+	// the (sub)container that holds the information 
+	FloatContainer< ComplexFloatType > b;
+	
 	int realI, complexI;
 	
 	// this is the constructor if you want it to read from an array
-	public ComplexFloatType( FloatContainer<ComplexFloatType> floatStorage )
+	public ComplexFloatType( BasicTypeContainer<ComplexFloatType, FloatContainer<ComplexFloatType>> complexfloatStorage )
 	{
-		b = floatStorage;
+		storage = complexfloatStorage;
+	}
+
+	public ComplexFloatType( FloatContainer<ComplexFloatType> complexfloatStorage )
+	{
+		storage = null;
+		b = complexfloatStorage;
 	}
 	
 	// this is the constructor if you want it to be a variable
 	public ComplexFloatType( final float real, final float complex )
 	{
-		this( new FloatArray< ComplexFloatType >( null, new int[]{ 1 }, 2 ) );
+		this( new FloatArray< ComplexFloatType >( new int[]{ 1 }, 2 ) );
 		set( real, complex );
 		realI = 0;
 		complexI = 1;
@@ -105,7 +115,7 @@ public class ComplexFloatType extends TypeImpl<ComplexFloatType> implements Nume
 	}
 
 	@Override
-	public FloatContainer<ComplexFloatType> createSuitableContainer( final ContainerFactory storageFactory, final int dim[] )
+	public BasicTypeContainer<ComplexFloatType, FloatContainer<ComplexFloatType>> createSuitableContainer( final ContainerFactory storageFactory, final int dim[] )
 	{
 		return storageFactory.createFloatInstance( dim, 2 );	
 	}
@@ -119,7 +129,7 @@ public class ComplexFloatType extends TypeImpl<ComplexFloatType> implements Nume
 	@Override
 	public void updateContainer( final Cursor<?> c ) 
 	{ 
-		b.update( c ); 
+		b = storage.update( c ); 
 	}
 	
 	public float getReal() { return b.getValue( realI ); }

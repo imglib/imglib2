@@ -33,6 +33,7 @@ import mpicbg.imglib.algorithm.math.MathLib;
 import mpicbg.imglib.container.Container;
 import mpicbg.imglib.container.ContainerFactory;
 import mpicbg.imglib.container.array.IntArray;
+import mpicbg.imglib.container.basictypecontainer.BasicTypeContainer;
 import mpicbg.imglib.container.basictypecontainer.IntContainer;
 import mpicbg.imglib.cursor.Cursor;
 import mpicbg.imglib.image.Image;
@@ -42,18 +43,28 @@ import mpicbg.imglib.type.TypeImpl;
 
 final public class RGBALegacyType extends TypeImpl<RGBALegacyType> implements NumericType<RGBALegacyType>
 {
-	final IntContainer<RGBALegacyType> b;
+	// the Container
+	final BasicTypeContainer<RGBALegacyType, IntContainer<RGBALegacyType>> storage;
+	
+	// the (sub)container that holds the information 
+	IntContainer< RGBALegacyType > b;
 	
 	// this is the constructor if you want it to read from an array
-	public RGBALegacyType( IntContainer<RGBALegacyType> intStorage )
+	public RGBALegacyType( BasicTypeContainer<RGBALegacyType, IntContainer<RGBALegacyType>> byteStorage )
 	{
-		b = intStorage;
+		storage = byteStorage;
+	}
+
+	public RGBALegacyType( IntContainer<RGBALegacyType> byteStorage )
+	{
+		storage = null;
+		b = byteStorage;
 	}
 	
 	// this is the constructor if you want it to be a variable
 	public RGBALegacyType( final int value )
 	{
-		this( new IntArray< RGBALegacyType >( null, new int[]{1}, 1 ) );
+		this( new IntArray< RGBALegacyType >( new int[]{1}, 1 ) );
 		set( value );
 	}
 
@@ -61,7 +72,7 @@ final public class RGBALegacyType extends TypeImpl<RGBALegacyType> implements Nu
 	public RGBALegacyType() { this( 0 ); }
 	
 	@Override
-	public IntContainer<RGBALegacyType> createSuitableContainer( final ContainerFactory storageFactory, final int dim[] )
+	public BasicTypeContainer<RGBALegacyType, IntContainer<RGBALegacyType>> createSuitableContainer( final ContainerFactory storageFactory, final int dim[] )
 	{
 		return storageFactory.createIntInstance( dim, 1 );	
 	}
@@ -75,7 +86,7 @@ final public class RGBALegacyType extends TypeImpl<RGBALegacyType> implements Nu
 	@Override
 	public void updateContainer( final Cursor<?> c ) 
 	{ 
-		b.update( c ); 
+		b = storage.update( c );
 	}
 
 	final public static int rgba( final int r, final int g, final int b, final int a)

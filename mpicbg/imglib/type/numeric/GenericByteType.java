@@ -32,6 +32,7 @@ package mpicbg.imglib.type.numeric;
 import mpicbg.imglib.algorithm.math.MathLib;
 import mpicbg.imglib.container.ContainerFactory;
 import mpicbg.imglib.container.array.ByteArray;
+import mpicbg.imglib.container.basictypecontainer.BasicTypeContainer;
 import mpicbg.imglib.container.basictypecontainer.ByteContainer;
 import mpicbg.imglib.cursor.Cursor;
 import mpicbg.imglib.type.NumericType;
@@ -39,18 +40,28 @@ import mpicbg.imglib.type.TypeImpl;
 
 public abstract class GenericByteType<T extends GenericByteType<T>> extends TypeImpl<T> implements NumericType<T>
 {
-	final protected ByteContainer< T > b;
+	// the Container
+	final BasicTypeContainer<T, ByteContainer<T>> storage;
+	
+	// the (sub)container that holds the information 
+	ByteContainer< T > b;
 	
 	// this is the constructor if you want it to read from an array
-	protected GenericByteType( final ByteContainer<T> byteStorage )
+	public GenericByteType( BasicTypeContainer<T, ByteContainer<T>> byteStorage )
 	{
-		this.b = byteStorage;
+		storage = byteStorage;
+	}
+
+	public GenericByteType( ByteContainer<T> byteStorage )
+	{
+		storage = null;
+		b = byteStorage;
 	}
 	
 	// this is the constructor if you want it to be a variable
 	protected GenericByteType( final byte value )
 	{
-		this( new ByteArray< T >( null, new int[]{ 1 }, 1 ) );
+		this( new ByteArray< T >( new int[]{ 1 }, 1 ) );
 		setValue( value );
 	}
 
@@ -58,7 +69,7 @@ public abstract class GenericByteType<T extends GenericByteType<T>> extends Type
 	protected GenericByteType() { this( ( byte )0 ); }
 	
 	@Override
-	public ByteContainer<T> createSuitableContainer( final ContainerFactory storageFactory, final int dim[] )
+	public BasicTypeContainer<T, ByteContainer<T>> createSuitableContainer( final ContainerFactory storageFactory, final int dim[] )
 	{
 		return storageFactory.createByteInstance( dim, 1 );	
 	}
@@ -66,7 +77,7 @@ public abstract class GenericByteType<T extends GenericByteType<T>> extends Type
 	@Override
 	public void updateContainer( final Cursor< ? > c ) 
 	{ 
-		b.update( c );
+		b = storage.update( c ); 
 	}
 	
 	protected byte getValue(){ return b.getValue( i ); }

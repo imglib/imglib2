@@ -32,6 +32,7 @@ package mpicbg.imglib.type.numeric;
 import mpicbg.imglib.algorithm.math.MathLib;
 import mpicbg.imglib.container.ContainerFactory;
 import mpicbg.imglib.container.array.ShortArray;
+import mpicbg.imglib.container.basictypecontainer.BasicTypeContainer;
 import mpicbg.imglib.container.basictypecontainer.ShortContainer;
 import mpicbg.imglib.cursor.Cursor;
 import mpicbg.imglib.type.NumericType;
@@ -39,18 +40,28 @@ import mpicbg.imglib.type.TypeImpl;
 
 public abstract class GenericShortType<T extends GenericShortType<T>> extends TypeImpl<T> implements NumericType<T>
 {
-	final ShortContainer< T > b;
+	// the Container
+	final BasicTypeContainer<T, ShortContainer<T>> storage;
+	
+	// the (sub)container that holds the information 
+	ShortContainer< T > b;
 	
 	// this is the constructor if you want it to read from an array
-	public GenericShortType( final ShortContainer<T> shortStorage )
+	public GenericShortType( BasicTypeContainer<T, ShortContainer<T>> shortStorage )
 	{
-		this.b = shortStorage;
+		storage = shortStorage;
+	}
+
+	public GenericShortType( ShortContainer<T> shortStorage )
+	{
+		storage = null;
+		b = shortStorage;
 	}
 	
 	// this is the constructor if you want it to be a variable
 	public GenericShortType( final short value )
 	{
-		this( new ShortArray< T >( null, new int[]{ 1 }, 1 ) );
+		this( new ShortArray< T >( new int[]{ 1 }, 1 ) );
 		setValue( value );
 	}
 
@@ -58,15 +69,15 @@ public abstract class GenericShortType<T extends GenericShortType<T>> extends Ty
 	public GenericShortType(){ this( ( short )0 ); }
 	
 	@Override
-	public ShortContainer<T> createSuitableContainer( final ContainerFactory storageFactory, final int dim[] )
+	public BasicTypeContainer<T, ShortContainer<T>> createSuitableContainer( final ContainerFactory storageFactory, final int dim[] )
 	{
 		return storageFactory.createShortInstance( dim, 1 );	
 	}
 
 	@Override
-	public void updateContainer( Cursor< ? > c ) 
+	public void updateContainer( final Cursor< ? > c ) 
 	{ 
-		b.update( c ); 
+		b = storage.update( c ); 
 	}
 	
 	protected short getValue(){ return b.getValue( i ); }
