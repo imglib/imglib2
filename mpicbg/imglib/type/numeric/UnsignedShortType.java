@@ -31,6 +31,7 @@ package mpicbg.imglib.type.numeric;
 
 import mpicbg.imglib.algorithm.math.MathLib;
 import mpicbg.imglib.container.Container;
+import mpicbg.imglib.container.basictypecontainer.BasicTypeContainer;
 import mpicbg.imglib.container.basictypecontainer.ShortContainer;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.display.UnsignedShortTypeDisplay;
@@ -38,7 +39,7 @@ import mpicbg.imglib.image.display.UnsignedShortTypeDisplay;
 public class UnsignedShortType extends GenericShortType<UnsignedShortType>
 {
 	// this is the constructor if you want it to read from an array
-	public UnsignedShortType( final ShortContainer<UnsignedShortType> shortStorage ) { super( shortStorage );	}
+	public UnsignedShortType( BasicTypeContainer<UnsignedShortType, ShortContainer<UnsignedShortType>> shortStorage ) { super( shortStorage ); }
 
 	// this is the constructor if you want it to be a variable
 	public UnsignedShortType( final int value ) { super( getCodedSignedShortChecked(value) ); }
@@ -114,7 +115,10 @@ public class UnsignedShortType extends GenericShortType<UnsignedShortType>
 	public UnsignedShortType[][][] createArray3D( final int size1, final int size2, final int size3 ) { return new UnsignedShortType[ size1 ][ size2 ][ size3 ]; }
 
 	@Override
-	public UnsignedShortType createType( final Container<UnsignedShortType> container ) { return new UnsignedShortType( (ShortContainer<UnsignedShortType>)container ); }
+	public UnsignedShortType createType( final Container<UnsignedShortType> container ) 
+	{ 
+		return new UnsignedShortType( (BasicTypeContainer<UnsignedShortType, ShortContainer<UnsignedShortType>>)(ShortContainer<UnsignedShortType>)container ); 
+	}
 	
 	@Override
 	public UnsignedShortType createVariable(){ return new UnsignedShortType( 0 ); }

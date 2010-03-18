@@ -31,6 +31,7 @@ package mpicbg.imglib.type.numeric;
 
 import mpicbg.imglib.algorithm.math.MathLib;
 import mpicbg.imglib.container.Container;
+import mpicbg.imglib.container.basictypecontainer.BasicTypeContainer;
 import mpicbg.imglib.container.basictypecontainer.IntContainer;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.display.UnsignedIntTypeDisplay;
@@ -38,7 +39,7 @@ import mpicbg.imglib.image.display.UnsignedIntTypeDisplay;
 public class UnsignedIntType extends GenericIntType<UnsignedIntType>
 {
 	// this is the constructor if you want it to read from an array
-	public UnsignedIntType( final IntContainer<UnsignedIntType> intStorage ) { super( intStorage );	}
+	public UnsignedIntType( BasicTypeContainer<UnsignedIntType, IntContainer<UnsignedIntType>> intStorage ) { super( intStorage ); }
 
 	// this is the constructor if you want it to be a variable
 	public UnsignedIntType( final long value ) { super( getCodedSignedIntChecked(value) ); }
@@ -110,7 +111,10 @@ public class UnsignedIntType extends GenericIntType<UnsignedIntType>
 	public UnsignedIntType[][][] createArray3D( final int size1, final int size2, final int size3 ) { return new UnsignedIntType[ size1 ][ size2 ][ size3 ]; }
 
 	@Override
-	public UnsignedIntType createType( final Container<UnsignedIntType> container ) { return new UnsignedIntType( (IntContainer<UnsignedIntType>)container ); }
+	public UnsignedIntType createType( final Container<UnsignedIntType> container ) 
+	{ 
+		return new UnsignedIntType( (BasicTypeContainer<UnsignedIntType, IntContainer<UnsignedIntType>>)(IntContainer<UnsignedIntType>)container ); 
+	}
 	
 	@Override
 	public UnsignedIntType createVariable(){ return new UnsignedIntType( 0 ); }

@@ -53,17 +53,12 @@ public class DoubleType extends TypeImpl<DoubleType> implements NumericType<Doub
 	{
 		storage = doubleStorage;
 	}
-
-	public DoubleType( DoubleContainer<DoubleType> doubleStorage )
-	{
-		storage = null;
-		b = doubleStorage;
-	}
 	
 	// this is the constructor if you want it to be a variable
 	public DoubleType( final double value )
 	{
-		this( new DoubleArray< DoubleType >( new int[]{ 1 }, 1 ) );
+		storage = null;
+		b = new DoubleArray< DoubleType >( new int[]{ 1 }, 1 );
 		set( value );
 	}
 

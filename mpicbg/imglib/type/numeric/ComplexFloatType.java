@@ -55,17 +55,12 @@ public class ComplexFloatType extends TypeImpl<ComplexFloatType> implements Nume
 	{
 		storage = complexfloatStorage;
 	}
-
-	public ComplexFloatType( FloatContainer<ComplexFloatType> complexfloatStorage )
-	{
-		storage = null;
-		b = complexfloatStorage;
-	}
 	
 	// this is the constructor if you want it to be a variable
 	public ComplexFloatType( final float real, final float complex )
 	{
-		this( new FloatArray< ComplexFloatType >( new int[]{ 1 }, 2 ) );
+		storage = null;
+		b = new FloatArray< ComplexFloatType >( new int[]{ 1 }, 2 );
 		set( real, complex );
 		realI = 0;
 		complexI = 1;
