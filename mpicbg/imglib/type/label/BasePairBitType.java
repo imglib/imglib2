@@ -32,6 +32,7 @@ package mpicbg.imglib.type.label;
 import mpicbg.imglib.container.Container;
 import mpicbg.imglib.container.ContainerFactory;
 import mpicbg.imglib.container.array.BitArray;
+import mpicbg.imglib.container.basictypecontainer.BasicTypeContainer;
 import mpicbg.imglib.container.basictypecontainer.BitContainer;
 import mpicbg.imglib.cursor.Cursor;
 import mpicbg.imglib.image.Image;
@@ -44,17 +45,25 @@ public class BasePairBitType extends TypeImpl<BasePairBitType> implements BasePa
 {
 	public static enum Base { gap, N, A, T, G, C; }
 			
-	final BitContainer<BasePairBitType> bitStorage;
-	BitContainer<BasePairBitType> b;
+	// the Container
+	final BasicTypeContainer<BasePairBitType, BitContainer<BasePairBitType>> storage;
+	
+	// the (sub)container that holds the information 
+	BitContainer< BasePairBitType > b;
 	
 	// the adresses of the bits that we store
 	int j1, j2, j3;
 	
 	// this is the constructor if you want it to read from an array
-	public BasePairBitType( final BitContainer<BasePairBitType> bitStorage )
+	public BasePairBitType( BasicTypeContainer<BasePairBitType, BitContainer<BasePairBitType>> bitStorage )
 	{
-		this.bitStorage = bitStorage;
-		this.b = bitStorage;
+		storage = bitStorage;
+	}
+
+	public BasePairBitType( BitContainer<BasePairBitType> bitStorage )
+	{
+		storage = null;
+		b = bitStorage;
 	}
 	
 	// this is the constructor if you want it to be a variable
@@ -68,7 +77,7 @@ public class BasePairBitType extends TypeImpl<BasePairBitType> implements BasePa
 	public BasePairBitType() { this( Base.N ); }
 	
 	@Override
-	public Container<BasePairBitType> createSuitableContainer( final ContainerFactory storageFactory, final int dim[] )	
+	public BasicTypeContainer<BasePairBitType, BitContainer<BasePairBitType>> createSuitableContainer( final ContainerFactory storageFactory, final int dim[] )	
 	{
 		return storageFactory.createBitInstance( dim, 3 );	
 	}
@@ -76,8 +85,7 @@ public class BasePairBitType extends TypeImpl<BasePairBitType> implements BasePa
 	@Override
 	public void updateContainer( final Cursor<?> c ) 
 	{
-		b = bitStorage;
-		b.update( c );		
+		b = storage.update( c );	
 	}
 	
 	@Override
