@@ -48,7 +48,6 @@ import mpicbg.imglib.image.display.Display;
 import mpicbg.imglib.interpolation.Interpolator;
 import mpicbg.imglib.interpolation.InterpolatorFactory;
 import mpicbg.imglib.outside.OutsideStrategyFactory;
-import mpicbg.imglib.type.ComparableType;
 import mpicbg.imglib.type.Type;
 import mpicbg.imglib.type.label.FakeType;
 
