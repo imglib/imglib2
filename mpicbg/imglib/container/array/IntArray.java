@@ -43,6 +43,12 @@ public class IntArray<T extends Type<T>> extends Array<T> implements IntContaine
 		this.data = new int[ this.numEntities ];
 	}
 
+	public IntArray( int[] dim, final int entitiesPerPixel )
+	{
+		super( null, dim, entitiesPerPixel );
+		this.data = new int[ this.numEntities ];
+	}
+
 	public IntArray( final int[] data, int[] dim, final int entitiesPerPixel )
 	{
 		super( null, dim, entitiesPerPixel );

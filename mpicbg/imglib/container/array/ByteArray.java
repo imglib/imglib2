@@ -43,6 +43,12 @@ public class ByteArray<T extends Type<T>> extends Array<T> implements ByteContai
 		this.data = new byte[ this.numEntities ];
 	}
 
+	public ByteArray( int[] dim, final int entitiesPerPixel )
+	{
+		super( null, dim, entitiesPerPixel );
+		this.data = new byte[ this.numEntities ];
+	}
+
 	public ByteArray( final byte[] data, int[] dim, final int entitiesPerPixel )
 	{
 		super( null, dim, entitiesPerPixel );

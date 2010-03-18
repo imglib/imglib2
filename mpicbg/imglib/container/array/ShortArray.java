@@ -43,6 +43,12 @@ public class ShortArray<T extends Type<T>> extends Array<T> implements ShortCont
 		this.data = new short[ this.numEntities ];
 	}
 
+	public ShortArray( int[] dim, final int entitiesPerPixel )
+	{
+		super( null, dim, entitiesPerPixel );
+		this.data = new short[ this.numEntities ];
+	}
+
 	public ShortArray( final short[] data, int[] dim, final int entitiesPerPixel )
 	{
 		super( null, dim, entitiesPerPixel );
