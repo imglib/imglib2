@@ -32,6 +32,7 @@ package mpicbg.imglib.type.numeric;
 import mpicbg.imglib.container.Container;
 import mpicbg.imglib.container.ContainerFactory;
 import mpicbg.imglib.container.array.FloatArray;
+import mpicbg.imglib.container.basictypecontainer.BasicTypeContainer;
 import mpicbg.imglib.container.basictypecontainer.FloatContainer;
 import mpicbg.imglib.cursor.Cursor;
 import mpicbg.imglib.image.Image;
@@ -41,18 +42,28 @@ import mpicbg.imglib.type.TypeImpl;
 
 public class FloatType extends TypeImpl<FloatType> implements NumericType<FloatType>
 {
-	final FloatContainer< FloatType > b;
+	// the Container
+	final BasicTypeContainer<FloatType, FloatContainer<FloatType>> storage;
+	
+	// the (sub)container that holds the information 
+	FloatContainer< FloatType > b;
 	
 	// this is the constructor if you want it to read from an array
+	public FloatType( BasicTypeContainer<FloatType, FloatContainer<FloatType>> floatStorage )
+	{
+		storage = floatStorage;
+	}
+
 	public FloatType( FloatContainer<FloatType> floatStorage )
 	{
+		storage = null;
 		b = floatStorage;
 	}
-	
+
 	// this is the constructor if you want it to be a variable
 	public FloatType( final float value )
 	{
-		this( new FloatArray< FloatType >( null, new int[]{ 1 }, 1 ) );
+		this( new FloatArray< FloatType >( new int[]{ 1 }, 1 ) );
 		set( value );
 	}
 
@@ -60,7 +71,7 @@ public class FloatType extends TypeImpl<FloatType> implements NumericType<FloatT
 	public FloatType() { this( 0 ); }
 
 	@Override
-	public FloatContainer<FloatType> createSuitableContainer( final ContainerFactory storageFactory, final int dim[] )
+	public BasicTypeContainer<FloatType, FloatContainer<FloatType>> createSuitableContainer( final ContainerFactory storageFactory, final int dim[] )
 	{
 		return storageFactory.createFloatInstance( dim, 1 );	
 	}
@@ -74,7 +85,7 @@ public class FloatType extends TypeImpl<FloatType> implements NumericType<FloatT
 	@Override
 	public void updateContainer( final Cursor<?> c ) 
 	{ 
-		b.update( c ); 
+		b = storage.update( c ); 
 	}
 	
 	public float get(){ return b.getValue( i ); }

@@ -33,6 +33,7 @@ import mpicbg.imglib.algorithm.math.MathLib;
 import mpicbg.imglib.container.Container;
 import mpicbg.imglib.container.ContainerFactory;
 import mpicbg.imglib.container.array.LongArray;
+import mpicbg.imglib.container.basictypecontainer.BasicTypeContainer;
 import mpicbg.imglib.container.basictypecontainer.LongContainer;
 import mpicbg.imglib.cursor.Cursor;
 import mpicbg.imglib.image.Image;
@@ -42,18 +43,28 @@ import mpicbg.imglib.type.TypeImpl;
 
 final public class LongType extends TypeImpl<LongType> implements NumericType<LongType>
 {
-	final LongContainer< LongType > b;
+	// the Container
+	final BasicTypeContainer<LongType, LongContainer<LongType>> storage;
+	
+	// the (sub)container that holds the information 
+	LongContainer< LongType > b;
 	
 	// this is the constructor if you want it to read from an array
+	public LongType( BasicTypeContainer<LongType, LongContainer<LongType>> longStorage )
+	{
+		storage = longStorage;
+	}
+
 	public LongType( LongContainer<LongType> longStorage )
 	{
+		storage = null;
 		b = longStorage;
 	}
 	
 	// this is the constructor if you want it to be a variable
 	public LongType( final long value )
 	{
-		this( new LongArray< LongType >( null, new int[]{ 1 }, 1 ) );
+		this( new LongArray< LongType >( new int[]{ 1 }, 1 ) );
 		set( value );
 	}
 
@@ -61,7 +72,7 @@ final public class LongType extends TypeImpl<LongType> implements NumericType<Lo
 	public LongType() { this( 0 ); }
 
 	@Override
-	public LongContainer<LongType> createSuitableContainer( final ContainerFactory storageFactory, final int dim[] )
+	public BasicTypeContainer<LongType, LongContainer<LongType>> createSuitableContainer( final ContainerFactory storageFactory, final int dim[] )
 	{
 		return storageFactory.createLongInstance( dim, 1 );	
 	}
@@ -75,7 +86,7 @@ final public class LongType extends TypeImpl<LongType> implements NumericType<Lo
 	@Override
 	public void updateContainer( final Cursor<?> c ) 
 	{ 
-		b.update( c ); 
+		b = storage.update( c ); 
 	}
 	
 	public long get(){ return b.getValue( i ); }

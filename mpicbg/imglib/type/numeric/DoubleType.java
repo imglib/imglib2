@@ -32,6 +32,7 @@ package mpicbg.imglib.type.numeric;
 import mpicbg.imglib.container.Container;
 import mpicbg.imglib.container.ContainerFactory;
 import mpicbg.imglib.container.array.DoubleArray;
+import mpicbg.imglib.container.basictypecontainer.BasicTypeContainer;
 import mpicbg.imglib.container.basictypecontainer.DoubleContainer;
 import mpicbg.imglib.cursor.Cursor;
 import mpicbg.imglib.image.Image;
@@ -41,18 +42,28 @@ import mpicbg.imglib.type.TypeImpl;
 
 public class DoubleType extends TypeImpl<DoubleType> implements NumericType<DoubleType>
 {
-	final DoubleContainer< DoubleType > b;
+	// the Container
+	final BasicTypeContainer<DoubleType, DoubleContainer<DoubleType>> storage;
+	
+	// the (sub)container that holds the information 
+	DoubleContainer< DoubleType > b;
 	
 	// this is the constructor if you want it to read from an array
-	public DoubleType( DoubleContainer<DoubleType> floatStorage )
+	public DoubleType( BasicTypeContainer<DoubleType, DoubleContainer<DoubleType>> doubleStorage )
 	{
-		b = floatStorage;
+		storage = doubleStorage;
+	}
+
+	public DoubleType( DoubleContainer<DoubleType> doubleStorage )
+	{
+		storage = null;
+		b = doubleStorage;
 	}
 	
 	// this is the constructor if you want it to be a variable
 	public DoubleType( final double value )
 	{
-		this( new DoubleArray< DoubleType >( null, new int[]{ 1 }, 1 ) );
+		this( new DoubleArray< DoubleType >( new int[]{ 1 }, 1 ) );
 		set( value );
 	}
 
@@ -60,7 +71,7 @@ public class DoubleType extends TypeImpl<DoubleType> implements NumericType<Doub
 	public DoubleType() { this( 0 ); }
 
 	@Override
-	public DoubleContainer<DoubleType> createSuitableContainer( final ContainerFactory storageFactory, final int dim[] )
+	public BasicTypeContainer<DoubleType, DoubleContainer<DoubleType>> createSuitableContainer( final ContainerFactory storageFactory, final int dim[] )
 	{
 		return storageFactory.createDoubleInstance( dim, 1 );	
 	}
@@ -74,7 +85,7 @@ public class DoubleType extends TypeImpl<DoubleType> implements NumericType<Doub
 	@Override
 	public void updateContainer( final Cursor<?> c ) 
 	{ 
-		b.update( c ); 
+		b = storage.update( c ); 
 	}
 	
 	public double get(){ return b.getValue( i ); }
