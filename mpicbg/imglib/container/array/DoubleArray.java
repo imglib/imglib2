@@ -43,11 +43,23 @@ public class DoubleArray<T extends Type<T>> extends Array<T> implements DoubleCo
 		this.data = new double[ this.numEntities ];
 	}
 
+	public DoubleArray( int[] dim, final int entitiesPerPixel )
+	{ 
+		super( null, dim, entitiesPerPixel );
+		this.data = new double[ this.numEntities ];
+	}
+
+	public DoubleArray( final double[] data, int[] dim, final int entitiesPerPixel )
+	{
+		super( null, dim, entitiesPerPixel );
+		this.data = data;
+	}
+	
 	@Override
 	public void close() { data = null; }
 
 	@Override
-	public void update( final Cursor<?> c ){}
+	public DoubleContainer<T> update( final Cursor<?> c ){ return this; }
 
 	@Override
 	public double getValue( final int index )

@@ -37,17 +37,29 @@ public class FloatArray<T extends Type<T>> extends Array<T> implements FloatCont
 {
 	protected float data[];
 
-	public FloatArray( ArrayContainerFactory factory, int[] dim, final int entitiesPerPixel )
+	public FloatArray( final ArrayContainerFactory factory, final int[] dim, final int entitiesPerPixel )
 	{
 		super( factory, dim, entitiesPerPixel );
 		this.data = new float[ this.numEntities ];
+	}
+
+	public FloatArray( final int[] dim, final int entitiesPerPixel )
+	{
+		super( null, dim, entitiesPerPixel );
+		this.data = new float[ this.numEntities ];
+	}
+
+	public FloatArray( final float[] data, final int[] dim, final int entitiesPerPixel )
+	{
+		super( null, dim, entitiesPerPixel );
+		this.data = data;
 	}
 
 	@Override
 	public void close() { data = null; }
 
 	@Override
-	public void update( final Cursor<?> c ){}
+	public FloatContainer<T> update( final Cursor<?> c ){ return this; }
 
 	@Override
 	public float getValue( final int index )

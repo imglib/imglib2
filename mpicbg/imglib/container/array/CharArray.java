@@ -43,11 +43,17 @@ public class CharArray<T extends Type<T>> extends Array<T> implements CharContai
 		this.data = new char[ this.numEntities ];
 	}
 
+	public CharArray( final char[] data, int[] dim, final int entitiesPerPixel )
+	{
+		super( null, dim, entitiesPerPixel );
+		this.data = new char[ this.numEntities ];
+	}
+
 	@Override
 	public void close() { data = null; }
 
 	@Override
-	public void update( final Cursor<?> c ){}
+	public CharContainer<T> update( final Cursor<?> c ){ return this; }
 
 	@Override
 	public char getValue( final int index )

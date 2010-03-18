@@ -43,11 +43,23 @@ public class LongArray<T extends Type<T>> extends Array<T> implements LongContai
 		this.data = new long[ this.numEntities ];
 	}
 
+	public LongArray( final int[] dim, final int entitiesPerPixel )
+	{
+		super( null, dim, entitiesPerPixel );
+		this.data = new long[ this.numEntities ];
+	}
+
+	public LongArray( final long[] data, int[] dim, final int entitiesPerPixel )
+	{
+		super( null, dim, entitiesPerPixel );
+		this.data = data;
+	}
+
 	@Override
 	public void close() { data = null; }
 
 	@Override
-	public void update( final Cursor<?> c ){}
+	public LongContainer<T> update( final Cursor<?> c ){ return this; }
 
 	@Override
 	public long getValue( final int index )

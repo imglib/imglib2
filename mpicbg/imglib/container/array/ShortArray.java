@@ -43,11 +43,17 @@ public class ShortArray<T extends Type<T>> extends Array<T> implements ShortCont
 		this.data = new short[ this.numEntities ];
 	}
 
+	public ShortArray( final short[] data, int[] dim, final int entitiesPerPixel )
+	{
+		super( null, dim, entitiesPerPixel );
+		this.data = data;
+	}
+
 	@Override
 	public void close() { data = null; }
 
 	@Override
-	public void update( final Cursor<?> c ){}
+	public ShortContainer<T> update( final Cursor<?> c ){ return this; }
 
 	@Override
 	public short getValue( final int index )

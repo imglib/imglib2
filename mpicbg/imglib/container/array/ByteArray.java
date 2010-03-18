@@ -43,11 +43,17 @@ public class ByteArray<T extends Type<T>> extends Array<T> implements ByteContai
 		this.data = new byte[ this.numEntities ];
 	}
 
+	public ByteArray( final byte[] data, int[] dim, final int entitiesPerPixel )
+	{
+		super( null, dim, entitiesPerPixel );
+		this.data = data;
+	}
+
 	@Override
 	public void close() { data = null; }
 
 	@Override
-	public void update( final Cursor<?> c ){}
+	public ByteContainer<T> update( final Cursor<?> c ){ return this; }
 
 	@Override
 	public byte getValue( final int index )

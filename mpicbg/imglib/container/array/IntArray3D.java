@@ -47,7 +47,7 @@ public class IntArray3D<T extends Type<T>> extends Array3D<T> implements IntCont
 	public void close() { data = null; }
 
 	@Override
-	public void update( final Cursor<?> c ){}
+	public IntContainer<T> update( final Cursor<?> c ){ return this; }
 
 	@Override
 	public int getValue( final int index )

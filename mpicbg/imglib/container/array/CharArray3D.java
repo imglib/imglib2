@@ -47,7 +47,7 @@ public class CharArray3D<T extends Type<T>> extends Array3D<T> implements CharCo
 	public void close() { data = null; }
 
 	@Override
-	public void update( final Cursor<?> c ){}
+	public CharContainer<T> update( final Cursor<?> c ){ return this; }
 
 	@Override
 	public char getValue( final int index )

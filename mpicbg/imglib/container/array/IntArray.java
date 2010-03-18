@@ -43,11 +43,17 @@ public class IntArray<T extends Type<T>> extends Array<T> implements IntContaine
 		this.data = new int[ this.numEntities ];
 	}
 
+	public IntArray( final int[] data, int[] dim, final int entitiesPerPixel )
+	{
+		super( null, dim, entitiesPerPixel );
+		this.data = data;
+	}
+
 	@Override
 	public void close() { data = null; }
 
 	@Override
-	public void update( final Cursor<?> c ){}
+	public IntContainer<T> update( final Cursor<?> c ){ return this; }
 
 	@Override
 	public int getValue( final int index )

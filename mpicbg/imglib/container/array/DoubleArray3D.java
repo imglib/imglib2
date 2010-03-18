@@ -47,7 +47,7 @@ public class DoubleArray3D<T extends Type<T>> extends Array3D<T> implements Doub
 	public void close() { data = null; }
 
 	@Override
-	public void update( final Cursor<?> c ){}
+	public DoubleContainer<T> update( final Cursor<?> c ){ return this; }
 
 	@Override
 	public double getValue( final int index )

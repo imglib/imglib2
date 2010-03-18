@@ -81,5 +81,5 @@ public class BitArray<T extends Type<T>> extends Array<T> implements BitContaine
 	}
 
 	@Override
-	public void update( final Cursor<?> c ){}	
+	public BitContainer<T> update( final Cursor<?> c ){ return this; }
 }

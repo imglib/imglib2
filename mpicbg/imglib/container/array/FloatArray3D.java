@@ -47,7 +47,7 @@ public class FloatArray3D<T extends Type<T>> extends Array3D<T> implements Float
 	public void close() { data = null; }
 
 	@Override
-	public void update( final Cursor<?> c ){}
+	public FloatContainer<T> update( final Cursor<?> c ){ return this; }
 
 	@Override
 	public float getValue( final int index )

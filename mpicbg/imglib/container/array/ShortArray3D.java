@@ -47,7 +47,7 @@ public class ShortArray3D<T extends Type<T>> extends Array3D<T> implements Short
 	public void close() { data = null; }
 
 	@Override
-	public void update( final Cursor<?> c ){}
+	public ShortContainer<T> update( final Cursor<?> c ){ return this; }
 
 	@Override
 	public short getValue( final int index )
