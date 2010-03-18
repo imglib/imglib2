@@ -43,6 +43,12 @@ public class CharArray<T extends Type<T>> extends Array<T> implements CharContai
 		this.data = new char[ this.numEntities ];
 	}
 
+	public CharArray( int[] dim, final int entitiesPerPixel )
+	{
+		super( null, dim, entitiesPerPixel );
+		this.data = new char[ this.numEntities ];
+	}
+
 	public CharArray( final char[] data, int[] dim, final int entitiesPerPixel )
 	{
 		super( null, dim, entitiesPerPixel );

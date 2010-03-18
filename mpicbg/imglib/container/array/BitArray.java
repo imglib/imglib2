@@ -52,6 +52,11 @@ public class BitArray<T extends Type<T>> extends Array<T> implements BitContaine
 			
 		this.data = new int[ numElements ];
 	}
+	
+	public BitArray( final int[] dim, final int entitiesPerPixel )
+	{
+		this( null, dim, entitiesPerPixel );
+	}
 
 	@Override
 	public void close() { data = null; }
