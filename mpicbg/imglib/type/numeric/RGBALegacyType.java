@@ -243,7 +243,7 @@ final public class RGBALegacyType extends TypeImpl<RGBALegacyType> implements Nu
 	@Override
 	public RGBALegacyType createType( Container<RGBALegacyType> container )
 	{
-		return new RGBALegacyType( (IntContainer<RGBALegacyType>)container );
+		return new RGBALegacyType( (BasicTypeContainer<RGBALegacyType, IntContainer<RGBALegacyType>>)(IntContainer<RGBALegacyType>)container );
 	}
 
 	@Override

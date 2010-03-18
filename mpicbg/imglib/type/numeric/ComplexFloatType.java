@@ -283,7 +283,7 @@ public class ComplexFloatType extends TypeImpl<ComplexFloatType> implements Nume
 	@Override
 	public ComplexFloatType createType( Container<ComplexFloatType> container )
 	{
-		return new ComplexFloatType( (FloatContainer<ComplexFloatType>)container );
+		return new ComplexFloatType( (BasicTypeContainer<ComplexFloatType, FloatContainer<ComplexFloatType>>)(FloatContainer<ComplexFloatType>)container );
 	}
 	
 	@Override

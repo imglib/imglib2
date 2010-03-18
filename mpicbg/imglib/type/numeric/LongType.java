@@ -185,7 +185,7 @@ final public class LongType extends TypeImpl<LongType> implements NumericType<Lo
 	@Override
 	public LongType createType( Container<LongType> container )
 	{
-		return new LongType( (LongContainer<LongType>)container );
+		return new LongType( (BasicTypeContainer<LongType, LongContainer<LongType>>)(LongContainer<LongType>)container );
 	}
 
 	@Override

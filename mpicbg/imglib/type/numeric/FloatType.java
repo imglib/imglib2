@@ -184,7 +184,7 @@ public class FloatType extends TypeImpl<FloatType> implements NumericType<FloatT
 	@Override
 	public FloatType createType( Container<FloatType> container )
 	{
-		return new FloatType( (FloatContainer<FloatType>)container );
+		return new FloatType( (BasicTypeContainer<FloatType, FloatContainer<FloatType>>)(FloatContainer<FloatType>)container );
 	}
 	
 	@Override

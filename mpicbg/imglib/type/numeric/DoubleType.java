@@ -184,7 +184,7 @@ public class DoubleType extends TypeImpl<DoubleType> implements NumericType<Doub
 	@Override
 	public DoubleType createType( Container<DoubleType> container )
 	{
-		return new DoubleType( (DoubleContainer<DoubleType>)container );
+		return new DoubleType( (BasicTypeContainer<DoubleType, DoubleContainer<DoubleType>>)(DoubleContainer<DoubleType>)container );
 	}
 	
 	@Override

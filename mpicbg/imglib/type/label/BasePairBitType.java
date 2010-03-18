@@ -265,7 +265,10 @@ public class BasePairBitType extends TypeImpl<BasePairBitType> implements BasePa
 	//public BasePairBitType getType() { return this; }
 
 	@Override
-	public BasePairBitType createType( Container<BasePairBitType> container ){ return new BasePairBitType(); }
+	public BasePairBitType createType( Container<BasePairBitType> container )
+	{ 
+		return new BasePairBitType( (BasicTypeContainer<BasePairBitType, BitContainer<BasePairBitType>>)(BitContainer<BasePairBitType>)container ); 
+	}
 	
 	@Override
 	public BasePairBitType createVariable(){ return new BasePairBitType(); }

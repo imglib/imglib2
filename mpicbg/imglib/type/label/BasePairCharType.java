@@ -198,7 +198,7 @@ public class BasePairCharType extends TypeImpl<BasePairCharType> implements Base
 	@Override
 	public BasePairCharType createType( Container<BasePairCharType> container )
 	{
-		return new BasePairCharType( (CharContainer<BasePairCharType>)container );
+		return new BasePairCharType( (BasicTypeContainer<BasePairCharType, CharContainer<BasePairCharType>>)(CharContainer<BasePairCharType>)container );
 	}
 	
 	@Override

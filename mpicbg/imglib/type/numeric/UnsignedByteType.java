@@ -31,6 +31,7 @@ package mpicbg.imglib.type.numeric;
 
 import mpicbg.imglib.algorithm.math.MathLib;
 import mpicbg.imglib.container.Container;
+import mpicbg.imglib.container.basictypecontainer.BasicTypeContainer;
 import mpicbg.imglib.container.basictypecontainer.ByteContainer;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.display.UnsignedByteTypeDisplay;
@@ -38,7 +39,7 @@ import mpicbg.imglib.image.display.UnsignedByteTypeDisplay;
 public class UnsignedByteType extends GenericByteType<UnsignedByteType>
 {
 	// this is the constructor if you want it to read from an array
-	public UnsignedByteType( final ByteContainer<UnsignedByteType> byteStorage ) { super( byteStorage );	}
+	public UnsignedByteType( BasicTypeContainer<UnsignedByteType, ByteContainer<UnsignedByteType>> byteStorage ) { super( byteStorage ); }
 
 	// this is the constructor if you want it to be a variable
 	public UnsignedByteType( final int value ) { super( getCodedSignedByteChecked(value) ); }
@@ -114,7 +115,10 @@ public class UnsignedByteType extends GenericByteType<UnsignedByteType>
 	public UnsignedByteType[][][] createArray3D( final int size1, final int size2, final int size3 ) { return new UnsignedByteType[ size1 ][ size2 ][ size3 ]; }
 
 	@Override
-	public UnsignedByteType createType( final Container<UnsignedByteType> container ) { return new UnsignedByteType( (ByteContainer<UnsignedByteType>)container ); }
+	public UnsignedByteType createType( final Container<UnsignedByteType> container ) 
+	{ 
+		return new UnsignedByteType( (BasicTypeContainer<UnsignedByteType, ByteContainer<UnsignedByteType>>)(ByteContainer<UnsignedByteType>)container ); 
+	}
 	
 	@Override
 	public UnsignedByteType createVariable(){ return new UnsignedByteType( 0 ); }

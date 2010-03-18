@@ -197,7 +197,7 @@ public class BitType extends TypeImpl<BitType> implements LogicType<BitType>, Nu
 	@Override
 	public BitType createType( Container<BitType> container )
 	{
-		return new BitType( (BitContainer<BitType>)container );
+		return new BitType( (BasicTypeContainer<BitType, BitContainer<BitType>>)(BitContainer<BitType>)container );
 	}
 	
 	@Override
