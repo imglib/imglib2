@@ -22,7 +22,7 @@ public class PickImagePeaks <T extends ComparableType<T>>implements OutputAlgori
 	private ContainerFactory peakContainerFactory;
 	private final ArrayList<int[]> peakList;
 
-	public PickImagePeaks(Image<T> inputImage)
+	public PickImagePeaks(final Image<T> inputImage)
 	{
 		image = inputImage;
 		pTime = 0;
@@ -132,7 +132,7 @@ public class PickImagePeaks <T extends ComparableType<T>>implements OutputAlgori
 			
 		}				
 		pTime = System.currentTimeMillis() - sTime;
-		return false;
+		return true;
 	}
 
 	@Override
