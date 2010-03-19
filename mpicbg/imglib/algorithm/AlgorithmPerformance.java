@@ -32,7 +32,7 @@ public class AlgorithmPerformance
 	{
 		boolean show = false;
 		
-		final Image<FloatType> image = FourierConvolution.createGaussianKernel( containerFactory, 10, numDimensions );
+		final Image<FloatType> image = FourierConvolution.createGaussianKernel( containerFactory, 30, numDimensions );
 		image.getDisplay().setMinMax();
 		ImageJFunctions.copyToImagePlus( image ).show();
 		
@@ -40,17 +40,17 @@ public class AlgorithmPerformance
 		
 		final int numAlgorithms = 7;
 		
-		for ( int i = 0; i < 1; ++i )
+		for ( int i = 0; i < 20; ++i )
 		{
 			double overAllProcessingTime = 0;
 			
-			//overAllProcessingTime += testDithering( image, show );
-			//overAllProcessingTime += testBandpass( image, show );		
-			//overAllProcessingTime += testPhaseCorrelation( image, image, show );			
-			//overAllProcessingTime += testCanvas( image, 3f, 0.25f, 10f, show );
+			overAllProcessingTime += testDithering( image, show );
+			overAllProcessingTime += testBandpass( image, show );		
+			overAllProcessingTime += testPhaseCorrelation( image, image, show );			
+			overAllProcessingTime += testCanvas( image, 3f, 0.25f, 10f, show );
 			overAllProcessingTime += testFFT( image, show );
-			//overAllProcessingTime += testFFTConvolution( image, show );
-			//overAllProcessingTime += testDownSampling( image, show );
+			overAllProcessingTime += testFFTConvolution( image, show );
+			overAllProcessingTime += testDownSampling( image, show );
 			
 			System.out.println( "Processing Time: " + overAllProcessingTime/numAlgorithms );
 		}
@@ -58,7 +58,7 @@ public class AlgorithmPerformance
 	
 	public static void main( String[] args )
 	{
-		new AlgorithmPerformance( new CubeContainerFactory(), 3 );
+		new AlgorithmPerformance( new ArrayContainerFactory(), 2 );
 	}
 	
 	public static <T extends NumericType<T>> double testFFTConvolution( final Image<T> img, boolean show )
