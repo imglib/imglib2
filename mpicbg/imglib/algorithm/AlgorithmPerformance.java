@@ -15,6 +15,7 @@ import mpicbg.imglib.algorithm.gauss.DownSample;
 import mpicbg.imglib.algorithm.math.MathLib;
 import mpicbg.imglib.container.ContainerFactory;
 import mpicbg.imglib.container.array.ArrayContainerFactory;
+import mpicbg.imglib.container.cube.CubeContainerFactory;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.display.ComplexFloatTypePhaseSpectrumDisplay;
 import mpicbg.imglib.image.display.ComplexFloatTypePowerSpectrumDisplay;
@@ -31,12 +32,15 @@ public class AlgorithmPerformance
 	{
 		boolean show = false;
 		
-		final Image<FloatType> image = FourierConvolution.createGaussianKernel( containerFactory, 100, numDimensions );
+		final Image<FloatType> image = FourierConvolution.createGaussianKernel( containerFactory, 30, numDimensions );
+		image.getDisplay().setMinMax();
+		ImageJFunctions.copyToImagePlus( image ).show();
+		
 		System.out.println( "Created Image: " + image );
 		
 		final int numAlgorithms = 7;
 		
-		for ( int i = 0; i < 10; ++i )
+		for ( int i = 0; i < 20; ++i )
 		{
 			double overAllProcessingTime = 0;
 			
