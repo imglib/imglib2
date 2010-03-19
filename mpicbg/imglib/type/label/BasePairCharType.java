@@ -55,16 +55,11 @@ public class BasePairCharType extends TypeImpl<BasePairCharType> implements Base
 		storage = charStorage;
 	}
 
-	public BasePairCharType( CharContainer<BasePairCharType> charStorage )
-	{
-		storage = null;
-		b = charStorage;
-	}
-	
 	// this is the constructor if you want it to be a variable
 	public BasePairCharType( final Base value )
-	{	
-		this( new CharArray< BasePairCharType >( new int[]{ 1 }, 1 ) );
+	{
+		storage = null;
+		b = new CharArray< BasePairCharType >( new int[]{ 1 }, 1 );
 		set( value );
 	}
 

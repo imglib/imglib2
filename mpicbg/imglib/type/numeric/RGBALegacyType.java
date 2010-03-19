@@ -55,16 +55,11 @@ final public class RGBALegacyType extends TypeImpl<RGBALegacyType> implements Nu
 		storage = byteStorage;
 	}
 
-	public RGBALegacyType( IntContainer<RGBALegacyType> byteStorage )
-	{
-		storage = null;
-		b = byteStorage;
-	}
-	
 	// this is the constructor if you want it to be a variable
 	public RGBALegacyType( final int value )
 	{
-		this( new IntArray< RGBALegacyType >( new int[]{1}, 1 ) );
+		storage = null;
+		b = new IntArray< RGBALegacyType >( new int[]{1}, 1 );
 		set( value );
 	}
 

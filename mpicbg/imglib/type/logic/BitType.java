@@ -55,17 +55,12 @@ public class BitType extends TypeImpl<BitType> implements LogicType<BitType>, Nu
 	{
 		storage = bitStorage;
 	}
-
-	public BitType( BitContainer<BitType> bitStorage )
-	{
-		storage = null;
-		b = bitStorage;
-	}
 	
 	// this is the constructor if you want it to be a variable
 	public BitType( final boolean value )
 	{
-		this( new BitArray<BitType>( new int[]{1}, 1 ) );
+		storage = null;
+		b = new BitArray<BitType>( new int[]{1}, 1 );
 		b.setValue( i, value );
 	}
 

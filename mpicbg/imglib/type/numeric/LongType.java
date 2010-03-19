@@ -55,16 +55,11 @@ final public class LongType extends TypeImpl<LongType> implements NumericType<Lo
 		storage = longStorage;
 	}
 
-	public LongType( LongContainer<LongType> longStorage )
-	{
-		storage = null;
-		b = longStorage;
-	}
-	
 	// this is the constructor if you want it to be a variable
 	public LongType( final long value )
 	{
-		this( new LongArray< LongType >( new int[]{ 1 }, 1 ) );
+		storage = null;
+		b = new LongArray< LongType >( new int[]{ 1 }, 1 );
 		set( value );
 	}
 

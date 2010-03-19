@@ -54,16 +54,11 @@ public class FloatType extends TypeImpl<FloatType> implements NumericType<FloatT
 		storage = floatStorage;
 	}
 
-	public FloatType( FloatContainer<FloatType> floatStorage )
-	{
-		storage = null;
-		b = floatStorage;
-	}
-
 	// this is the constructor if you want it to be a variable
 	public FloatType( final float value )
 	{
-		this( new FloatArray< FloatType >( new int[]{ 1 }, 1 ) );
+		storage = null;
+		b = new FloatArray< FloatType >( new int[]{ 1 }, 1 );
 		set( value );
 	}
 

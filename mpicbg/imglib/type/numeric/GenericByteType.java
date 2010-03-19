@@ -51,17 +51,12 @@ public abstract class GenericByteType<T extends GenericByteType<T>> extends Type
 	{
 		storage = byteStorage;
 	}
-
-	public GenericByteType( ByteContainer<T> byteStorage )
-	{
-		storage = null;
-		b = byteStorage;
-	}
 	
 	// this is the constructor if you want it to be a variable
 	protected GenericByteType( final byte value )
 	{
-		this( new ByteArray< T >( new int[]{ 1 }, 1 ) );
+		storage = null;
+		b = new ByteArray< T >( new int[]{ 1 }, 1 );
 		setValue( value );
 	}
 

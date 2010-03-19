@@ -51,17 +51,12 @@ public abstract class GenericShortType<T extends GenericShortType<T>> extends Ty
 	{
 		storage = shortStorage;
 	}
-
-	public GenericShortType( ShortContainer<T> shortStorage )
-	{
-		storage = null;
-		b = shortStorage;
-	}
 	
 	// this is the constructor if you want it to be a variable
 	public GenericShortType( final short value )
 	{
-		this( new ShortArray< T >( new int[]{ 1 }, 1 ) );
+		storage = null;
+		b = new ShortArray< T >( new int[]{ 1 }, 1 );
 		setValue( value );
 	}
 

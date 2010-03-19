@@ -59,17 +59,12 @@ public class BasePairBitType extends TypeImpl<BasePairBitType> implements BasePa
 	{
 		storage = bitStorage;
 	}
-
-	public BasePairBitType( BitContainer<BasePairBitType> bitStorage )
-	{
-		storage = null;
-		b = bitStorage;
-	}
 	
 	// this is the constructor if you want it to be a variable
 	public BasePairBitType( final Base value )
 	{
-		this( new BitArray<BasePairBitType>( null, new int[]{1}, 3 ) );
+		storage = null;
+		b = new BitArray<BasePairBitType>( null, new int[]{1}, 3 );
 		set( value );
 	}	
 

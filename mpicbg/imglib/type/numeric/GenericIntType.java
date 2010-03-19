@@ -52,16 +52,11 @@ public abstract class GenericIntType<T extends GenericIntType<T>> extends TypeIm
 		storage = intStorage;
 	}
 
-	public GenericIntType( IntContainer<T> intStorage )
-	{
-		storage = null;
-		b = intStorage;
-	}
-	
 	// this is the constructor if you want it to be a variable
 	public GenericIntType( final int value )
 	{
-		this( new IntArray< T >( new int[]{1}, 1 ) );
+		storage = null;
+		b = new IntArray< T >( new int[]{1}, 1 );
 		setValue( value );
 	}
 
