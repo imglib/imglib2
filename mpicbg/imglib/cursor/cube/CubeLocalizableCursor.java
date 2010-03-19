@@ -70,7 +70,7 @@ public class CubeLocalizableCursor<T extends Type<T>> extends CubeCursor<T> impl
 	 */
 	final protected int[] cubeOffset;
 	
-	public CubeLocalizableCursor( final Cube<?,?,T> container, final Image<T> image, final T type )
+	public CubeLocalizableCursor( final Cube<T,?> container, final Image<T> image, final T type )
 	{
 		super( container, image, type);
 

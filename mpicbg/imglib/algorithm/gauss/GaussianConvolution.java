@@ -23,7 +23,7 @@ import mpicbg.imglib.algorithm.MultiThreaded;
 import mpicbg.imglib.algorithm.OutputAlgorithm;
 import mpicbg.imglib.algorithm.math.MathLib;
 import mpicbg.imglib.container.array.Array3D;
-import mpicbg.imglib.container.array.FloatArray3D;
+import mpicbg.imglib.container.basictypecontainer.array.FloatArray;
 import mpicbg.imglib.cursor.LocalizableByDimCursor;
 import mpicbg.imglib.cursor.LocalizableByDimCursor3D;
 import mpicbg.imglib.cursor.LocalizableCursor;
@@ -336,12 +336,15 @@ public class GaussianConvolution< T extends NumericType<T>> implements MultiThre
 		/* inconvertible types due to javac bug 6548436: final Image<FloatType> convolvedFloat = (Image<FloatType>) convolved; */
 		final Image<FloatType> convolvedFloat = (Image)convolved;
 		
-		final FloatArray3D<FloatType> input = (FloatArray3D<FloatType>) imageFloat.getContainer();
-		final FloatArray3D<FloatType> output = (FloatArray3D<FloatType>) convolvedFloat.getContainer();
+		final FloatArray inputArray = (FloatArray) imageFloat.getContainer().update( null );
+		final FloatArray outputArray = (FloatArray) convolvedFloat.getContainer().update( null );
 		
-  		final int width = input.getWidth();
-		final int height = input.getHeight();
-		final int depth = input.getDepth();
+		final Array3D input = (Array3D) imageFloat.getContainer();
+		final Array3D output = (Array3D) convolvedFloat.getContainer();
+		
+  		final int width = imageFloat.getDimension( 0 );
+		final int height = imageFloat.getDimension( 1 );
+		final int depth = imageFloat.getDimension( 2 );
 
 		final AtomicInteger ai = new AtomicInteger(0);
 		final Thread[] threads = SimpleMultiThreading.newThreads( numThreads );
@@ -355,8 +358,8 @@ public class GaussianConvolution< T extends NumericType<T>> implements MultiThre
 					final int myNumber = ai.getAndIncrement();
 					double avg;
 
-					final float[] in = input.getCurrentStorageArray( null );
-					final float[] out = output.getCurrentStorageArray( null );
+					final float[] in = inputArray.getCurrentStorageArray();
+					final float[] out = outputArray.getCurrentStorageArray();
 					final double[] kernel1 = kernel[ 0 ].clone();
 					final int filterSize = kernel[ 0 ].length;
 					final int filterSizeHalf = filterSize / 2;
@@ -418,7 +421,7 @@ public class GaussianConvolution< T extends NumericType<T>> implements MultiThre
 					double avg;
 					int kernelPos, count;
 
-					final float[] out =  output.getCurrentStorageArray( null );
+					final float[] out =  outputArray.getCurrentStorageArray();
 					final LocalizableByDimCursor3D<FloatType> it = (LocalizableByDimCursor3D<FloatType>)convolvedFloat.createLocalizableByDimCursor( outsideFactoryFloat );
 					final double[] kernel1 = kernel[ 1 ].clone();
 					final int filterSize = kernel[ 1 ].length;
@@ -492,7 +495,7 @@ public class GaussianConvolution< T extends NumericType<T>> implements MultiThre
 					final int filterSize = kernel[ 2 ].length;
 					final int filterSizeHalf = filterSize / 2;
 
-					final float[] out = output.getCurrentStorageArray( null );
+					final float[] out = outputArray.getCurrentStorageArray();
 					final LocalizableByDimCursor3D<FloatType> it = (LocalizableByDimCursor3D<FloatType>)convolvedFloat.createLocalizableByDimCursor( outsideFactoryFloat );
 
 					final int inc = output.getPos(0, 0, 1);

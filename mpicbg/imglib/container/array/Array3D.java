@@ -30,6 +30,7 @@
 package mpicbg.imglib.container.array;
 
 import mpicbg.imglib.container.Container3D;
+import mpicbg.imglib.container.basictypecontainer.DataAccess;
 import mpicbg.imglib.cursor.array.Array3DLocalizableByDimCursor;
 import mpicbg.imglib.cursor.array.Array3DLocalizableByDimOutsideCursor;
 import mpicbg.imglib.cursor.array.Array3DLocalizableCursor;
@@ -37,13 +38,13 @@ import mpicbg.imglib.image.Image;
 import mpicbg.imglib.outside.OutsideStrategyFactory;
 import mpicbg.imglib.type.Type;
 
-public abstract class Array3D<T extends Type<T>> extends Array<T> implements Container3D<T>
+public class Array3D<T extends Type<T>, A extends DataAccess> extends Array<T,A> implements Container3D<T,A>
 {
 	final int width, height, depth;
 	
-	public Array3D( ArrayContainerFactory factory, int width, int height, int depth, final int entitiesPerPixel )
+	public Array3D( final ArrayContainerFactory factory, final A data, final int width, final int height, final int depth, final int entitiesPerPixel )
 	{
-		super( factory, new int[]{ width, height, depth }, entitiesPerPixel );
+		super( factory, data, new int[]{ width, height, depth }, entitiesPerPixel );
 
 		this.width = dim[ 0 ];
 		this.height = dim[ 1 ];

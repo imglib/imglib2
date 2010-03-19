@@ -31,11 +31,11 @@ package mpicbg.imglib.container.dynamic;
 
 import java.util.ArrayList;
 
-import mpicbg.imglib.container.basictypecontainer.LongContainer;
+import mpicbg.imglib.container.basictypecontainer.LongAccess;
 import mpicbg.imglib.cursor.Cursor;
 import mpicbg.imglib.type.Type;
 
-public class LongDynamicContainer <T extends Type<T>> extends DynamicContainer<T> implements LongContainer<T>
+public class LongDynamicContainer <T extends Type<T>> extends DynamicContainer<T> implements LongAccess<T>
 {
 	final ArrayList<long[]> data;
 	

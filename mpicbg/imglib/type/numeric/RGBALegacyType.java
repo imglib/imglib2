@@ -32,9 +32,8 @@ package mpicbg.imglib.type.numeric;
 import mpicbg.imglib.algorithm.math.MathLib;
 import mpicbg.imglib.container.Container;
 import mpicbg.imglib.container.ContainerFactory;
-import mpicbg.imglib.container.array.IntArray;
-import mpicbg.imglib.container.basictypecontainer.BasicTypeContainer;
-import mpicbg.imglib.container.basictypecontainer.IntContainer;
+import mpicbg.imglib.container.basictypecontainer.IntAccess;
+import mpicbg.imglib.container.basictypecontainer.array.IntArray;
 import mpicbg.imglib.cursor.Cursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.display.imagej.RGBALegacyTypeDisplay;
@@ -44,13 +43,13 @@ import mpicbg.imglib.type.TypeImpl;
 final public class RGBALegacyType extends TypeImpl<RGBALegacyType> implements NumericType<RGBALegacyType>
 {
 	// the Container
-	final BasicTypeContainer<RGBALegacyType, IntContainer<RGBALegacyType>> storage;
+	final Container<RGBALegacyType, IntAccess> storage;
 	
 	// the (sub)container that holds the information 
-	IntContainer< RGBALegacyType > b;
+	IntAccess b;
 	
 	// this is the constructor if you want it to read from an array
-	public RGBALegacyType( BasicTypeContainer<RGBALegacyType, IntContainer<RGBALegacyType>> byteStorage )
+	public RGBALegacyType( Container<RGBALegacyType, IntAccess> byteStorage )
 	{
 		storage = byteStorage;
 	}
@@ -59,7 +58,7 @@ final public class RGBALegacyType extends TypeImpl<RGBALegacyType> implements Nu
 	public RGBALegacyType( final int value )
 	{
 		storage = null;
-		b = new IntArray< RGBALegacyType >( new int[]{1}, 1 );
+		b = new IntArray( 1 );
 		set( value );
 	}
 
@@ -67,7 +66,7 @@ final public class RGBALegacyType extends TypeImpl<RGBALegacyType> implements Nu
 	public RGBALegacyType() { this( 0 ); }
 	
 	@Override
-	public BasicTypeContainer<RGBALegacyType, IntContainer<RGBALegacyType>> createSuitableContainer( final ContainerFactory storageFactory, final int dim[] )
+	public Container<RGBALegacyType, ? extends IntAccess> createSuitableContainer( final ContainerFactory storageFactory, final int dim[] )
 	{
 		return storageFactory.createIntInstance( dim, 1 );	
 	}
@@ -236,9 +235,9 @@ final public class RGBALegacyType extends TypeImpl<RGBALegacyType> implements Nu
 	//public RGBALegacyType getType() { return this; }
 	
 	@Override
-	public RGBALegacyType createType( Container<RGBALegacyType> container )
+	public RGBALegacyType createType( Container<RGBALegacyType,?> container )
 	{
-		return new RGBALegacyType( (BasicTypeContainer<RGBALegacyType, IntContainer<RGBALegacyType>>)(IntContainer<RGBALegacyType>)container );
+		return new RGBALegacyType( (Container<RGBALegacyType, IntAccess>)container );
 	}
 
 	@Override

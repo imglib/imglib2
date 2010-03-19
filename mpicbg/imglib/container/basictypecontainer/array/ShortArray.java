@@ -27,33 +27,41 @@
  *
  * @author Stephan Preibisch & Stephan Saalfeld
  */
-package mpicbg.imglib.container.cube;
+package mpicbg.imglib.container.basictypecontainer.array;
 
-import mpicbg.imglib.container.basictypecontainer.FloatContainer;
-import mpicbg.imglib.cursor.Cursor;
-import mpicbg.imglib.type.Type;
+import mpicbg.imglib.container.basictypecontainer.ShortAccess;
 
-public class FloatCubeElement<T extends Type<T>> extends CubeElement<FloatCubeElement<T>, FloatCube<T>,T> implements FloatContainer<T>
+public class ShortArray implements ShortAccess, ArrayDataAccess<ShortArray>
 {
-	protected float[] data;
-	
-	public FloatCubeElement(FloatCube<T> parent, int cubeId, int[] dim, int[] offset, int entitiesPerPixel)
+	protected short data[];
+
+	public ShortArray( final int numEntities )
 	{
-		super( parent, cubeId, dim, offset, entitiesPerPixel );
-		data = new float[ numEntities ];
+		this.data = new short[ numEntities ];
+	}
+
+	public ShortArray( final short[] data )
+	{
+		this.data = data;
 	}
 
 	@Override
-	public void close(){ data = null; }
+	public void close() { data = null; }
 
 	@Override
-	public float getValue( final int index )  { return data[ index ]; }
+	public short getValue( final int index )
+	{
+		return data[ index ];
+	}
 
 	@Override
-	public void setValue( final int index, final float value ) { data[ index ] = value; }
+	public void setValue( final int index, final short value )
+	{
+		data[ index ] = value;		
+	}
 	
 	@Override
-	public FloatContainer<T> update( final Cursor<?> c ) { return this; }
+	public ShortArray createArray( final int numEntities ) { return new ShortArray( numEntities ); }
 
-	public float[] getCurrentStorageArray( final Cursor<?> c ) { return data; }
+	public short[] getCurrentStorageArray(){ return data; }
 }

@@ -27,33 +27,10 @@
  *
  * @author Stephan Preibisch & Stephan Saalfeld
  */
-package mpicbg.imglib.container.cube;
+package mpicbg.imglib.container.basictypecontainer;
 
-import mpicbg.imglib.container.basictypecontainer.DoubleContainer;
-import mpicbg.imglib.cursor.Cursor;
-import mpicbg.imglib.type.Type;
-
-public class DoubleCubeElement<T extends Type<T>> extends CubeElement<DoubleCubeElement<T>, DoubleCube<T>, T> implements DoubleContainer<T>
+public interface BitAccess extends DataAccess
 {
-	protected double[] data;
-	
-	public DoubleCubeElement( DoubleCube<T> parent, int cubeId, int[] dim, int[] offset, int entitiesPerPixel)
-	{
-		super( parent, cubeId, dim, offset, entitiesPerPixel );
-		data = new double[ numEntities ];
-	}
-
-	@Override
-	public void close(){ data = null; }
-
-	@Override
-	public double getValue( final int index )  { return data[ index ]; }
-
-	@Override
-	public void setValue( final int index, final double value ) { data[ index ] = value; }
-	
-	@Override
-	public DoubleContainer<T> update( final Cursor<?> c ) { return this; }
-
-	public double[] getCurrentStorageArray(Cursor<?> c) { return data; }
+	public boolean getValue( final int index );
+	public void setValue( final int index, final boolean value );
 }

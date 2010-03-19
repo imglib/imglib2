@@ -27,17 +27,9 @@
  *
  * @author Stephan Preibisch & Stephan Saalfeld
  */
-package mpicbg.imglib.container.array;
+package mpicbg.imglib.container.basictypecontainer;
 
-import mpicbg.imglib.type.Type;
-
-public class FakeArray<T extends Type<T>> extends Array<T> 
+public interface DataAccess//<T extends Type<T>, A extends DataAccess<T, A>>
 {
-	public FakeArray( int[] dim )
-	{
-		super( null, dim, 1 );
-	}
-
-	@Override
-	public void close() {}
+	public void close();
 }

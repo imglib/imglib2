@@ -29,34 +29,24 @@
  */
 package mpicbg.imglib.container.imageplus;
 
-import java.util.ArrayList;
-
 import ij.IJ;
 import ij.ImagePlus;
 
-
-import mpicbg.imglib.container.array.ByteArray;
-import mpicbg.imglib.container.basictypecontainer.BasicTypeContainer;
-import mpicbg.imglib.container.basictypecontainer.ByteContainer;
-import mpicbg.imglib.cursor.Cursor;
+import mpicbg.imglib.container.basictypecontainer.array.ByteArray;
 import mpicbg.imglib.type.Type;
 
-public class ByteImagePlus<T extends Type<T>> extends ImagePlusContainer<T> implements BasicTypeContainer<T, ByteContainer<T>>
+public class ByteImagePlus<T extends Type<T>> extends ImagePlusContainer<T, ByteArray>
 {
 	final ImagePlus image;	
-	final ArrayList<ByteArray<T>> mirror;
 	
 	public ByteImagePlus( final ImagePlusContainerFactory factory, final int[] dim, final int entitiesPerPixel ) 
 	{
 		super( factory, dim, entitiesPerPixel );
-
+		
 		image = IJ.createImage( "image", "8-Bit Black", width * entitiesPerPixel, height, depth );
-		mirror = new ArrayList<ByteArray<T>>( depth ); 
-		
-		final int[] dim2 = new int[]{ width, height };		
-		
+
 		for ( int i = 0; i < depth; ++i )
-			mirror.add( new ByteArray<T>( (byte[])image.getStack().getProcessor( i+1 ).getPixels(), dim2, entitiesPerPixel ) );
+			mirror.add( new ByteArray( (byte[])image.getStack().getProcessor( i+1 ).getPixels() ) );
 	}
 
 	public ByteImagePlus( final ImagePlus image, final ImagePlusContainerFactory factory ) 
@@ -64,28 +54,18 @@ public class ByteImagePlus<T extends Type<T>> extends ImagePlusContainer<T> impl
 		super( factory, ImagePlusContainer.getCorrectDimensionality(image), 1 );
 		
 		this.image = image;
-		mirror = new ArrayList<ByteArray<T>>( depth ); 
-		
-		final int[] dim2 = new int[]{ width, height };		
 		
 		for ( int i = 0; i < depth; ++i )
-			mirror.add( new ByteArray<T>( (byte[])image.getStack().getProcessor( i+1 ).getPixels(), dim2, 1 ) );
+			mirror.add( new ByteArray( (byte[])image.getStack().getProcessor( i+1 ).getPixels() ) );
 	}
-
-	@Override
-	public ByteContainer<T> update( final Cursor<?> c ) { return mirror.get( c.getStorageIndex() ); }
-
-	public byte[] getCurrentStorageArray( final Cursor<?> c ) { return mirror.get( c.getStorageIndex() ).getCurrentStorageArray( null ); }
 
 	@Override
 	public void close() 
 	{
-		for ( final ByteArray<T> array : mirror )
-			array.close();
-		
+		super.close();
 		image.close(); 
 	}
-	
+
 	@Override
 	public ImagePlus getImagePlus() { return image;	}
 }

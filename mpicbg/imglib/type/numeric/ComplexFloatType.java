@@ -31,9 +31,8 @@ package mpicbg.imglib.type.numeric;
 
 import mpicbg.imglib.container.Container;
 import mpicbg.imglib.container.ContainerFactory;
-import mpicbg.imglib.container.array.FloatArray;
-import mpicbg.imglib.container.basictypecontainer.BasicTypeContainer;
-import mpicbg.imglib.container.basictypecontainer.FloatContainer;
+import mpicbg.imglib.container.basictypecontainer.FloatAccess;
+import mpicbg.imglib.container.basictypecontainer.array.FloatArray;
 import mpicbg.imglib.cursor.Cursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.display.ComplexFloatTypePowerSpectrumDisplay;
@@ -43,15 +42,15 @@ import mpicbg.imglib.type.TypeImpl;
 public class ComplexFloatType extends TypeImpl<ComplexFloatType> implements NumericType<ComplexFloatType>
 {
 	// the Container
-	final BasicTypeContainer<ComplexFloatType, FloatContainer<ComplexFloatType>> storage;
+	final Container<ComplexFloatType, FloatAccess> storage;
 	
 	// the (sub)container that holds the information 
-	FloatContainer< ComplexFloatType > b;
+	FloatAccess b;
 	
 	int realI, complexI;
 	
 	// this is the constructor if you want it to read from an array
-	public ComplexFloatType( BasicTypeContainer<ComplexFloatType, FloatContainer<ComplexFloatType>> complexfloatStorage )
+	public ComplexFloatType( Container<ComplexFloatType, FloatAccess> complexfloatStorage )
 	{
 		storage = complexfloatStorage;
 	}
@@ -60,7 +59,7 @@ public class ComplexFloatType extends TypeImpl<ComplexFloatType> implements Nume
 	public ComplexFloatType( final float real, final float complex )
 	{
 		storage = null;
-		b = new FloatArray< ComplexFloatType >( new int[]{ 1 }, 2 );
+		b = new FloatArray( 2 );
 		set( real, complex );
 		realI = 0;
 		complexI = 1;
@@ -110,7 +109,7 @@ public class ComplexFloatType extends TypeImpl<ComplexFloatType> implements Nume
 	}
 
 	@Override
-	public BasicTypeContainer<ComplexFloatType, FloatContainer<ComplexFloatType>> createSuitableContainer( final ContainerFactory storageFactory, final int dim[] )
+	public Container<ComplexFloatType, ? extends FloatAccess> createSuitableContainer( final ContainerFactory storageFactory, final int dim[] )
 	{
 		return storageFactory.createFloatInstance( dim, 2 );	
 	}
@@ -276,9 +275,9 @@ public class ComplexFloatType extends TypeImpl<ComplexFloatType> implements Nume
 	//public ComplexFloatType getType() { return this; }
 
 	@Override
-	public ComplexFloatType createType( Container<ComplexFloatType> container )
+	public ComplexFloatType createType( Container<ComplexFloatType,?> container )
 	{
-		return new ComplexFloatType( (BasicTypeContainer<ComplexFloatType, FloatContainer<ComplexFloatType>>)(FloatContainer<ComplexFloatType>)container );
+		return new ComplexFloatType( (Container<ComplexFloatType, FloatAccess>)container );
 	}
 	
 	@Override

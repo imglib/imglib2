@@ -32,9 +32,9 @@ package mpicbg.imglib.type.numeric;
 import mpicbg.imglib.algorithm.math.MathLib;
 import mpicbg.imglib.container.Container;
 import mpicbg.imglib.container.ContainerFactory;
-import mpicbg.imglib.container.array.LongArray;
-import mpicbg.imglib.container.basictypecontainer.BasicTypeContainer;
-import mpicbg.imglib.container.basictypecontainer.LongContainer;
+import mpicbg.imglib.container.basictypecontainer.DataAccess;
+import mpicbg.imglib.container.basictypecontainer.LongAccess;
+import mpicbg.imglib.container.basictypecontainer.array.LongArray;
 import mpicbg.imglib.cursor.Cursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.display.LongTypeDisplay;
@@ -44,13 +44,13 @@ import mpicbg.imglib.type.TypeImpl;
 final public class LongType extends TypeImpl<LongType> implements NumericType<LongType>
 {
 	// the Container
-	final BasicTypeContainer<LongType, LongContainer<LongType>> storage;
+	final Container<LongType, LongAccess> storage;
 	
 	// the (sub)container that holds the information 
-	LongContainer< LongType > b;
+	LongAccess b;
 	
 	// this is the constructor if you want it to read from an array
-	public LongType( BasicTypeContainer<LongType, LongContainer<LongType>> longStorage )
+	public LongType( Container<LongType, LongAccess> longStorage )
 	{
 		storage = longStorage;
 	}
@@ -59,7 +59,7 @@ final public class LongType extends TypeImpl<LongType> implements NumericType<Lo
 	public LongType( final long value )
 	{
 		storage = null;
-		b = new LongArray< LongType >( new int[]{ 1 }, 1 );
+		b = new LongArray ( 1 );
 		set( value );
 	}
 
@@ -67,7 +67,7 @@ final public class LongType extends TypeImpl<LongType> implements NumericType<Lo
 	public LongType() { this( 0 ); }
 
 	@Override
-	public BasicTypeContainer<LongType, LongContainer<LongType>> createSuitableContainer( final ContainerFactory storageFactory, final int dim[] )
+	public Container<LongType, ? extends LongAccess> createSuitableContainer( final ContainerFactory storageFactory, final int dim[] )
 	{
 		return storageFactory.createLongInstance( dim, 1 );	
 	}
@@ -178,9 +178,9 @@ final public class LongType extends TypeImpl<LongType> implements NumericType<Lo
 	//public LongType getType() { return this; }
 	
 	@Override
-	public LongType createType( Container<LongType> container )
+	public LongType createType( Container<LongType,?> container )
 	{
-		return new LongType( (BasicTypeContainer<LongType, LongContainer<LongType>>)(LongContainer<LongType>)container );
+		return new LongType( (Container<LongType, LongAccess>)(LongAccess)container );
 	}
 
 	@Override

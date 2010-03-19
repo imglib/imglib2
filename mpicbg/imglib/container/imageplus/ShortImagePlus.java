@@ -29,34 +29,25 @@
  */
 package mpicbg.imglib.container.imageplus;
 
-import java.util.ArrayList;
-
 import ij.IJ;
 import ij.ImagePlus;
 
 
-import mpicbg.imglib.container.array.ShortArray;
-import mpicbg.imglib.container.basictypecontainer.BasicTypeContainer;
-import mpicbg.imglib.container.basictypecontainer.ShortContainer;
-import mpicbg.imglib.cursor.Cursor;
+import mpicbg.imglib.container.basictypecontainer.array.ShortArray;
 import mpicbg.imglib.type.Type;
 
-public class ShortImagePlus<T extends Type<T>> extends ImagePlusContainer<T> implements BasicTypeContainer<T, ShortContainer<T>> 
+public class ShortImagePlus<T extends Type<T>> extends ImagePlusContainer<T, ShortArray> 
 {
-	final ImagePlus image;
-	final ArrayList<ShortArray<T>> mirror;
+	final ImagePlus image;	
 	
 	public ShortImagePlus( final ImagePlusContainerFactory factory, final int[] dim, final int entitiesPerPixel ) 
 	{
 		super( factory, dim, entitiesPerPixel );
-
+		
 		image = IJ.createImage( "image", "16-Bit Black", width * entitiesPerPixel, height, depth );
-		mirror = new ArrayList<ShortArray<T>>( depth ); 
-		
-		final int[] dim2 = new int[]{ width, height };		
-		
+
 		for ( int i = 0; i < depth; ++i )
-			mirror.add( new ShortArray<T>( (short[])image.getStack().getProcessor( i+1 ).getPixels(), dim2, entitiesPerPixel ) );
+			mirror.add( new ShortArray( (short[])image.getStack().getProcessor( i+1 ).getPixels() ) );
 	}
 
 	public ShortImagePlus( final ImagePlus image, final ImagePlusContainerFactory factory ) 
@@ -64,25 +55,15 @@ public class ShortImagePlus<T extends Type<T>> extends ImagePlusContainer<T> imp
 		super( factory, ImagePlusContainer.getCorrectDimensionality(image), 1 );
 		
 		this.image = image;
-		mirror = new ArrayList<ShortArray<T>>( depth ); 
-		
-		final int[] dim2 = new int[]{ width, height };		
 		
 		for ( int i = 0; i < depth; ++i )
-			mirror.add( new ShortArray<T>( (short[])image.getStack().getProcessor( i+1 ).getPixels(), dim2, 1 ) );
+			mirror.add( new ShortArray( (short[])image.getStack().getProcessor( i+1 ).getPixels() ) );
 	}
-	
-	@Override
-	public ShortContainer<T> update( final Cursor<?> c ) { return mirror.get( c.getStorageIndex() ); }
-
-	public short[] getCurrentStorageArray( final Cursor<?> c ) { return mirror.get( c.getStorageIndex() ).getCurrentStorageArray( null ); }
 
 	@Override
 	public void close() 
-	{ 
-		for ( final ShortArray<T> array : mirror )
-			array.close();
-		
+	{
+		super.close();
 		image.close(); 
 	}
 

@@ -43,7 +43,7 @@ public class ImagePlusLocalizableByDimOutsideCursor<T extends Type<T>> extends I
 	
 	boolean isOutside = false;
 	
-	public ImagePlusLocalizableByDimOutsideCursor( final ImagePlusContainer<T> container, final Image<T> image, final T type, final OutsideStrategyFactory<T> outsideStrategyFactory ) 
+	public ImagePlusLocalizableByDimOutsideCursor( final ImagePlusContainer<T,?> container, final Image<T> image, final T type, final OutsideStrategyFactory<T> outsideStrategyFactory ) 
 	{
 		super( container, image, type );
 		

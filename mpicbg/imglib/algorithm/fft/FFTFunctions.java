@@ -25,7 +25,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 import edu.mines.jtk.dsp.FftComplex;
 import edu.mines.jtk.dsp.FftReal;
 
-import mpicbg.imglib.container.array.FakeArray;
 import mpicbg.imglib.cursor.LocalizableByDimCursor;
 import mpicbg.imglib.cursor.array.ArrayLocalizableCursor;
 import mpicbg.imglib.image.Image;
@@ -107,8 +106,7 @@ final public class FFTFunctions
 							if ( d != dim )
 								fakeSize[ countDim++ ] = complex.getDimension( d );
 
-						final ArrayLocalizableCursor<FakeType> cursorDim = 
-							new ArrayLocalizableCursor<FakeType>( new FakeArray<FakeType>( fakeSize ), null, new FakeType() );
+						final ArrayLocalizableCursor<FakeType> cursorDim = ArrayLocalizableCursor.createLinearCursor( fakeSize );
 						
 						final float[] tempOut = new float[ size * 2 ];
 						
@@ -221,9 +219,8 @@ final public class FFTFunctions
 						for ( int d = 1; d < numDimensions; ++d )
 							fakeSize[ d - 1 ] = complex.getDimension( d );
 						
-						final ArrayLocalizableCursor<FakeType> cursorDim = 
-							new ArrayLocalizableCursor<FakeType>( new FakeArray<FakeType>( fakeSize ), null, new FakeType() );
-
+						final ArrayLocalizableCursor<FakeType> cursorDim = ArrayLocalizableCursor.createLinearCursor( fakeSize );
+							
 						final float[] tempOut = new float[ realSize ];
 																		
 						// iterate over all dimensions except the one we are computing the fft in, which is dim=0 here
@@ -412,8 +409,7 @@ A:						while( cursorDim.hasNext() )
 						for ( int d = 1; d < numDimensions; ++d )
 							fakeSize[ d - 1 ] = imageSize[ d ];
 						
-						final ArrayLocalizableCursor<FakeType> cursorDim = 
-							new ArrayLocalizableCursor<FakeType>( new FakeArray<FakeType>( fakeSize ), null, new FakeType() );
+						final ArrayLocalizableCursor<FakeType> cursorDim = ArrayLocalizableCursor.createLinearCursor( fakeSize );
 
 						final float[] tempOut = new float[ complexSize * 2 ];
 						
@@ -566,8 +562,7 @@ A:						while( cursorDim.hasNext() )
 							if ( d != dim )
 								fakeSize[ countDim++ ] = fftImage.getDimension( d );
 
-						final ArrayLocalizableCursor<FakeType> cursorDim = 
-							new ArrayLocalizableCursor<FakeType>( new FakeArray<FakeType>( fakeSize ), null, new FakeType() );
+						final ArrayLocalizableCursor<FakeType> cursorDim = ArrayLocalizableCursor.createLinearCursor( fakeSize );
 						
 						final float[] tempOut = new float[ size * 2 ];
 						
@@ -724,8 +719,7 @@ A:						while( cursorDim.hasNext() )
 					for ( int d = 1; d < numDimensions; ++d )
 						fakeSize[ d - 1 ] = fftImage.getDimension( d );
 					
-					final ArrayLocalizableCursor<FakeType> cursorDim = 
-						new ArrayLocalizableCursor<FakeType>( new FakeArray<FakeType>( fakeSize ), null, new FakeType() );
+					final ArrayLocalizableCursor<FakeType> cursorDim = ArrayLocalizableCursor.createLinearCursor( fakeSize );
 					
 					// iterate over all dimensions except the one we are computing the fft in, which is dim=0 here
 					while( cursorDim.hasNext() )
@@ -825,8 +819,7 @@ A:						while( cursorDim.hasNext() )
 						if ( d != dim )
 							fakeSize[ countDim++ ] = fftImage.getDimension( d );
 					
-					final ArrayLocalizableCursor<FakeType> cursorDim = 
-						new ArrayLocalizableCursor<FakeType>( new FakeArray<FakeType>( fakeSize ), null, new FakeType() );
+					final ArrayLocalizableCursor<FakeType> cursorDim = ArrayLocalizableCursor.createLinearCursor( fakeSize );
 		
 					// iterate over all dimensions except the one we are computing the fft in, which is dim=0 here
 					while( cursorDim.hasNext() )

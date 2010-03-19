@@ -30,7 +30,6 @@
 package mpicbg.imglib.cursor.cube;
 
 import mpicbg.imglib.container.array.Array;
-import mpicbg.imglib.container.array.FakeArray;
 import mpicbg.imglib.container.cube.Cube;
 import mpicbg.imglib.cursor.LocalizableByDimCursor;
 import mpicbg.imglib.cursor.LocalizableCursor;
@@ -102,7 +101,7 @@ public class CubeLocalizableByDimCursor<T extends Type<T>> extends CubeLocalizab
 	
 	final int[] tmp;
 	
-	public CubeLocalizableByDimCursor( final Cube<?,?,T> container, final Image<T> image, final T type )
+	public CubeLocalizableByDimCursor( final Cube<T,?> container, final Image<T> image, final T type )
 	{
 		super( container, image, type);
 		
@@ -115,7 +114,7 @@ public class CubeLocalizableByDimCursor<T extends Type<T>> extends CubeLocalizab
 		this.cubeStep = new int[ numDimensions ];
 		this.tmp = new int[ numDimensions ];
 		
-		this.cursor = new ArrayLocalizableByDimCursor<FakeType>( new FakeArray<FakeType>( numCubesDim ), null, new FakeType() );
+		this.cursor = ArrayLocalizableByDimCursor.createLinearByDimCursor( numCubesDim );
 		cursor.setPosition( new int[ container.getNumDimensions() ] );
 		
 		// the steps when moving from cube to cube

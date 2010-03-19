@@ -30,15 +30,14 @@
 package mpicbg.imglib.type.numeric;
 
 import mpicbg.imglib.container.Container;
-import mpicbg.imglib.container.basictypecontainer.BasicTypeContainer;
-import mpicbg.imglib.container.basictypecontainer.ByteContainer;
+import mpicbg.imglib.container.basictypecontainer.ByteAccess;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.display.ByteTypeDisplay;
 
 public class ByteType extends GenericByteType<ByteType>
 {
 	// this is the constructor if you want it to read from an array
-	public ByteType( BasicTypeContainer<ByteType, ByteContainer<ByteType>> byteStorage ) { super( byteStorage ); }
+	public ByteType( final Container<ByteType, ByteAccess> byteStorage ) { super( byteStorage ); }
 	
 	// this is the constructor if you want it to be a variable
 	public ByteType( final byte value ) { super( value ); }
@@ -62,9 +61,9 @@ public class ByteType extends GenericByteType<ByteType>
 	public ByteType[][][] createArray3D( final int size1, final int size2, final int size3 ) { return new ByteType[ size1 ][ size2 ][ size3 ]; }
 
 	@Override
-	public ByteType createType( final Container<ByteType> container ) 
+	public ByteType createType( final Container<ByteType, ?> container ) 
 	{ 
-		return new ByteType( (BasicTypeContainer<ByteType, ByteContainer<ByteType>>)(ByteContainer<ByteType>)container ); 
+		return new ByteType( (Container<ByteType, ByteAccess>)container ); 
 	}
 	
 	@Override

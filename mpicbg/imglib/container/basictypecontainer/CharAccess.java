@@ -27,51 +27,10 @@
  *
  * @author Stephan Preibisch & Stephan Saalfeld
  */
-package mpicbg.imglib.container.array;
+package mpicbg.imglib.container.basictypecontainer;
 
-import mpicbg.imglib.container.basictypecontainer.DoubleContainer;
-import mpicbg.imglib.cursor.Cursor;
-import mpicbg.imglib.type.Type;
-
-public class DoubleArray<T extends Type<T>> extends Array<T> implements DoubleContainer<T>
+public interface CharAccess extends DataAccess
 {
-	protected double data[];
-
-	public DoubleArray( ArrayContainerFactory factory, int[] dim, final int entitiesPerPixel )
-	{
-		super( factory, dim, entitiesPerPixel );
-		this.data = new double[ this.numEntities ];
-	}
-
-	public DoubleArray( int[] dim, final int entitiesPerPixel )
-	{ 
-		super( null, dim, entitiesPerPixel );
-		this.data = new double[ this.numEntities ];
-	}
-
-	public DoubleArray( final double[] data, int[] dim, final int entitiesPerPixel )
-	{
-		super( null, dim, entitiesPerPixel );
-		this.data = data;
-	}
-	
-	@Override
-	public void close() { data = null; }
-
-	@Override
-	public DoubleContainer<T> update( final Cursor<?> c ){ return this; }
-
-	@Override
-	public double getValue( final int index )
-	{
-		return data[ index ];
-	}
-
-	@Override
-	public void setValue( final int index, final double value )
-	{
-		data[ index ] = value;		
-	}
-	
-	public double[] getCurrentStorageArray( final Cursor< T > c ){ return data; }
+	public char getValue( final int index );
+	public void setValue( final int index, final char value );
 }

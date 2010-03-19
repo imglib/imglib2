@@ -27,33 +27,10 @@
  *
  * @author Stephan Preibisch & Stephan Saalfeld
  */
-package mpicbg.imglib.container.cube;
+package mpicbg.imglib.container.basictypecontainer;
 
-import mpicbg.imglib.container.basictypecontainer.ByteContainer;
-import mpicbg.imglib.cursor.Cursor;
-import mpicbg.imglib.type.Type;
-
-public class ByteCubeElement<T extends Type<T>> extends CubeElement<ByteCubeElement<T>, ByteCube<T>, T> implements ByteContainer<T>
+public interface ShortAccess extends DataAccess
 {
-	protected byte[] data;
-	
-	public ByteCubeElement(ByteCube<T> parent, int cubeId, int[] dim, int[] offset, int entitiesPerPixel)
-	{
-		super( parent, cubeId, dim, offset, entitiesPerPixel );
-		data = new byte[ numEntities ];
-	}
-
-	@Override
-	public void close(){ data = null; }
-
-	@Override
-	public byte getValue( final int index )  { return data[ index ]; }
-
-	@Override
-	public void setValue( final int index, final byte value ) { data[ index ] = value; }
-	
-	@Override
-	public ByteContainer<T> update( final Cursor<?> c ) { return this; }
-
-	public byte[] getCurrentStorageArray(Cursor<?> c) { return data; }
+	public short getValue( final int index );
+	public void setValue( final int index, final short value );
 }

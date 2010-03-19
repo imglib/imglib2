@@ -38,9 +38,9 @@ public class Array3DLocalizableCursor<T extends Type<T>> extends ArrayLocalizabl
 {
 	protected int x = -1, y = 0, z = 0;
 	final int widthMinus1, heightMinus1, depthMinus1, width, height, depth;
-	final Array3D<T> container;
+	final Array3D<T,?> container;
 	
-	public Array3DLocalizableCursor( final Array3D<T> container, final Image<T> image, final T type ) 
+	public Array3DLocalizableCursor( final Array3D<T,?> container, final Image<T> image, final T type ) 
 	{
 		super( container, image, type );
 
@@ -123,7 +123,7 @@ public class Array3DLocalizableCursor<T extends Type<T>> extends ArrayLocalizabl
 	}
 
 	@Override
-	public Array3D<T> getStorageContainer(){ return container; }
+	public Array3D<T,?> getStorageContainer(){ return container; }
 
 	@Override
 	public int[] getPosition(){ return new int[]{x, y, z}; }

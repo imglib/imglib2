@@ -30,10 +30,10 @@
 package mpicbg.imglib.type.numeric;
 
 import mpicbg.imglib.algorithm.math.MathLib;
+import mpicbg.imglib.container.Container;
 import mpicbg.imglib.container.ContainerFactory;
-import mpicbg.imglib.container.array.IntArray;
-import mpicbg.imglib.container.basictypecontainer.BasicTypeContainer;
-import mpicbg.imglib.container.basictypecontainer.IntContainer;
+import mpicbg.imglib.container.basictypecontainer.IntAccess;
+import mpicbg.imglib.container.basictypecontainer.array.IntArray;
 import mpicbg.imglib.cursor.Cursor;
 import mpicbg.imglib.type.NumericType;
 import mpicbg.imglib.type.TypeImpl;
@@ -41,13 +41,13 @@ import mpicbg.imglib.type.TypeImpl;
 public abstract class GenericIntType<T extends GenericIntType<T>> extends TypeImpl<T> implements NumericType<T>
 {
 	// the Container
-	final BasicTypeContainer<T, IntContainer<T>> storage;
+	final Container<T, IntAccess> storage;
 	
 	// the (sub)container that holds the information 
-	IntContainer< T > b;
+	IntAccess b;
 	
 	// this is the constructor if you want it to read from an array
-	public GenericIntType( BasicTypeContainer<T, IntContainer<T>> intStorage )
+	public GenericIntType( Container<T, IntAccess> intStorage )
 	{
 		storage = intStorage;
 	}
@@ -56,7 +56,7 @@ public abstract class GenericIntType<T extends GenericIntType<T>> extends TypeIm
 	public GenericIntType( final int value )
 	{
 		storage = null;
-		b = new IntArray< T >( new int[]{1}, 1 );
+		b = new IntArray( 1 );
 		setValue( value );
 	}
 
@@ -64,7 +64,7 @@ public abstract class GenericIntType<T extends GenericIntType<T>> extends TypeIm
 	public GenericIntType() { this( 0 ); }
 
 	@Override
-	public BasicTypeContainer<T, IntContainer<T>> createSuitableContainer( final ContainerFactory storageFactory, final int dim[] )
+	public Container<T, ? extends IntAccess> createSuitableContainer( final ContainerFactory storageFactory, final int dim[] )
 	{
 		return storageFactory.createIntInstance( dim, 1 );	
 	}

@@ -43,7 +43,7 @@ public class ArrayLocalizableByDimOutsideCursor<T extends Type<T>> extends Array
 	
 	boolean isOutside = false;
 	
-	public ArrayLocalizableByDimOutsideCursor( final Array<T> container, final Image<T> image, final T type, final OutsideStrategyFactory<T> outsideStrategyFactory ) 
+	public ArrayLocalizableByDimOutsideCursor( final Array<T,?> container, final Image<T> image, final T type, final OutsideStrategyFactory<T> outsideStrategyFactory ) 
 	{
 		super( container, image, type );
 		

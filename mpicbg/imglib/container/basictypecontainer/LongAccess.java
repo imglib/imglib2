@@ -27,29 +27,10 @@
  *
  * @author Stephan Preibisch & Stephan Saalfeld
  */
-package mpicbg.imglib.container.cube;
+package mpicbg.imglib.container.basictypecontainer;
 
-import mpicbg.imglib.container.ContainerFactory;
-import mpicbg.imglib.container.basictypecontainer.BasicTypeContainer;
-import mpicbg.imglib.container.basictypecontainer.LongContainer;
-import mpicbg.imglib.cursor.Cursor;
-import mpicbg.imglib.type.Type;
-
-public class LongCube<T extends Type<T>> extends Cube<LongCubeElement<T>, LongCube<T>, T> implements BasicTypeContainer<T, LongContainer<T>>
+public interface LongAccess extends DataAccess
 {
-	public LongCube(ContainerFactory factory, int[] dim, int[] cubeSize, int entitiesPerPixel)
-	{
-		super(factory, dim, cubeSize, entitiesPerPixel);
-	}
-	
-	@Override
-	public LongCubeElement<T> createCubeElementInstance( final int cubeId, final int[] dim, final int offset[], final int entitiesPerPixel )
-	{
-		return new LongCubeElement<T>( this, cubeId, dim, offset, entitiesPerPixel );
-	}
-	
-	@Override
-	public LongContainer<T> update( final Cursor<?> c ) { return data.get( c.getStorageIndex() );	}
-
-	public long[] getCurrentStorageArray(Cursor<?> c) { return data.get( c.getStorageIndex() ).getCurrentStorageArray( c ); }	
+	public long getValue( final int index );
+	public void setValue( final int index, final long value );
 }

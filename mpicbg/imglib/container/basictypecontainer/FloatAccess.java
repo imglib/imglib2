@@ -27,51 +27,10 @@
  *
  * @author Stephan Preibisch & Stephan Saalfeld
  */
-package mpicbg.imglib.container.array;
+package mpicbg.imglib.container.basictypecontainer;
 
-import mpicbg.imglib.container.basictypecontainer.LongContainer;
-import mpicbg.imglib.cursor.Cursor;
-import mpicbg.imglib.type.Type;
-
-public class LongArray<T extends Type<T>> extends Array<T> implements LongContainer<T>
+public interface FloatAccess extends DataAccess
 {
-	protected long data[];
-
-	public LongArray( ArrayContainerFactory factory, int[] dim, final int entitiesPerPixel )
-	{
-		super( factory, dim, entitiesPerPixel );
-		this.data = new long[ this.numEntities ];
-	}
-
-	public LongArray( final int[] dim, final int entitiesPerPixel )
-	{
-		super( null, dim, entitiesPerPixel );
-		this.data = new long[ this.numEntities ];
-	}
-
-	public LongArray( final long[] data, int[] dim, final int entitiesPerPixel )
-	{
-		super( null, dim, entitiesPerPixel );
-		this.data = data;
-	}
-
-	@Override
-	public void close() { data = null; }
-
-	@Override
-	public LongContainer<T> update( final Cursor<?> c ){ return this; }
-
-	@Override
-	public long getValue( final int index )
-	{
-		return data[ index ];
-	}
-
-	@Override
-	public void setValue( final int index, final long value )
-	{
-		data[ index ] = value;		
-	}
-	
-	public long[] getCurrentStorageArray( final Cursor< T > c ){ return data; }
+	public float getValue( final int index );
+	public void setValue( final int index, final float value );	
 }

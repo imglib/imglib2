@@ -29,33 +29,24 @@
  */
 package mpicbg.imglib.container.imageplus;
 
-import java.util.ArrayList;
-
 import ij.IJ;
 import ij.ImagePlus;
 
-import mpicbg.imglib.container.array.IntArray;
-import mpicbg.imglib.container.basictypecontainer.BasicTypeContainer;
-import mpicbg.imglib.container.basictypecontainer.IntContainer;
-import mpicbg.imglib.cursor.Cursor;
+import mpicbg.imglib.container.basictypecontainer.array.IntArray;
 import mpicbg.imglib.type.Type;
 
-public class IntImagePlus<T extends Type<T>> extends ImagePlusContainer<T> implements BasicTypeContainer<T, IntContainer<T>> 
+public class IntImagePlus<T extends Type<T>> extends ImagePlusContainer<T, IntArray> 
 {
-	final ImagePlus image;
-	final ArrayList<IntArray<T>> mirror;
+	final ImagePlus image;	
 	
 	public IntImagePlus( final ImagePlusContainerFactory factory, final int[] dim, final int entitiesPerPixel ) 
 	{
 		super( factory, dim, entitiesPerPixel );
-
+		
 		image = IJ.createImage( "image", "RGB Black", width * entitiesPerPixel, height, depth );
-		mirror = new ArrayList<IntArray<T>>( depth ); 
-		
-		final int[] dim2 = new int[]{ width, height };		
-		
+
 		for ( int i = 0; i < depth; ++i )
-			mirror.add( new IntArray<T>( (int[])image.getStack().getProcessor( i+1 ).getPixels(), dim2, entitiesPerPixel ) );
+			mirror.add( new IntArray( (int[])image.getStack().getProcessor( i+1 ).getPixels() ) );
 	}
 
 	public IntImagePlus( final ImagePlus image, final ImagePlusContainerFactory factory ) 
@@ -63,25 +54,15 @@ public class IntImagePlus<T extends Type<T>> extends ImagePlusContainer<T> imple
 		super( factory, ImagePlusContainer.getCorrectDimensionality(image), 1 );
 		
 		this.image = image;
-		mirror = new ArrayList<IntArray<T>>( depth ); 
-		
-		final int[] dim2 = new int[]{ width, height };		
 		
 		for ( int i = 0; i < depth; ++i )
-			mirror.add( new IntArray<T>( (int[])image.getStack().getProcessor( i+1 ).getPixels(), dim2, 1 ) );
+			mirror.add( new IntArray( (int[])image.getStack().getProcessor( i+1 ).getPixels() ) );
 	}
-	
-	@Override
-	public IntContainer<T> update( final Cursor<?> c ) { return mirror.get( c.getStorageIndex() ); }
-
-	public int[] getCurrentStorageArray( final Cursor<?> c ) { return mirror.get( c.getStorageIndex() ).getCurrentStorageArray( null ); }
 
 	@Override
 	public void close() 
 	{
-		for ( final IntArray<T> array : mirror )
-			array.close();
-		
+		super.close();
 		image.close(); 
 	}
 

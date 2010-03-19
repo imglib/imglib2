@@ -27,33 +27,59 @@
  *
  * @author Stephan Preibisch & Stephan Saalfeld
  */
-package mpicbg.imglib.container.cube;
+package mpicbg.imglib.container.basictypecontainer.array;
 
-import mpicbg.imglib.container.basictypecontainer.LongContainer;
-import mpicbg.imglib.cursor.Cursor;
-import mpicbg.imglib.type.Type;
+import mpicbg.imglib.container.basictypecontainer.BitAccess;
 
-public class LongCubeElement<T extends Type<T>> extends CubeElement<LongCubeElement<T>, LongCube<T>, T> implements LongContainer<T>
+public class BitArray implements BitAccess, ArrayDataAccess<BitArray>
 {
-	protected long[] data;
+	final static int bitsPerEntity = Integer.SIZE;
+
+	final int numEntities;
+	protected int data[];
 	
-	public LongCubeElement(LongCube<T> parent, int cubeId, int[] dim, int[] offset, int entitiesPerPixel)
+	public BitArray( final int numEntities )
 	{
-		super( parent, cubeId, dim, offset, entitiesPerPixel );
-		data = new long[ numEntities ];
+		this.numEntities = numEntities;
+		
+		final int numElements;
+		
+		if ( this.numEntities % bitsPerEntity == 0 )
+			numElements = this.numEntities / bitsPerEntity;
+		else
+			numElements = this.numEntities / bitsPerEntity + 1;
+			
+		this.data = new int[ numElements ];
 	}
 
 	@Override
-	public void close(){ data = null; }
-	
-	@Override
-	public long getValue( final int index )  { return data[ index ]; }
+	public void close() { data = null; }
 
 	@Override
-	public void setValue( final int index, final long value ) { data[ index ] = value; }
+	public boolean getValue( final int index ) 
+	{
+		final int arrayIndex = index / bitsPerEntity;
+		final int arrayOffset = index % bitsPerEntity;
+
+		final int entry = data[ arrayIndex ];		
+		final int value = (entry & ( 1 << arrayOffset ) );
+		
+		return value != 0; 
+	}
 
 	@Override
-	public LongContainer<T> update( final Cursor<?> c ) { return this;	}
+	public void setValue( final int index, final boolean value ) 
+	{
+		final int arrayIndex = index / bitsPerEntity;
+		final int arrayOffset = index % bitsPerEntity;
+		
+		if ( value )
+			data[ arrayIndex ] = data[ arrayIndex ] | ( 1 << arrayOffset );
+		else
+			data[ arrayIndex ] = data[ arrayIndex ] & ~( 1 << arrayOffset ); 
+	}
 	
-	public long[] getCurrentStorageArray( final Cursor<?> c ) { return data; }
+	@Override
+	public BitArray createArray( final int numEntities ) { return new BitArray( numEntities ); }
+	
 }

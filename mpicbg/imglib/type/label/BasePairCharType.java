@@ -31,9 +31,8 @@ package mpicbg.imglib.type.label;
 
 import mpicbg.imglib.container.Container;
 import mpicbg.imglib.container.ContainerFactory;
-import mpicbg.imglib.container.array.CharArray;
-import mpicbg.imglib.container.basictypecontainer.BasicTypeContainer;
-import mpicbg.imglib.container.basictypecontainer.CharContainer;
+import mpicbg.imglib.container.basictypecontainer.CharAccess;
+import mpicbg.imglib.container.basictypecontainer.array.CharArray;
 import mpicbg.imglib.cursor.Cursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.display.BasePairTypeDisplay;
@@ -44,13 +43,13 @@ import mpicbg.imglib.type.label.BasePairBitType.Base;
 public class BasePairCharType extends TypeImpl<BasePairCharType> implements BasePairType<BasePairCharType>
 {
 	// the Container
-	final BasicTypeContainer<BasePairCharType, CharContainer<BasePairCharType>> storage;
+	final Container<BasePairCharType, CharAccess> storage;
 	
 	// the (sub)container that holds the information 
-	CharContainer< BasePairCharType > b;
+	CharAccess b;
 	
 	// this is the constructor if you want it to read from an array
-	public BasePairCharType( BasicTypeContainer<BasePairCharType, CharContainer<BasePairCharType>> charStorage )
+	public BasePairCharType( Container<BasePairCharType, CharAccess> charStorage )
 	{
 		storage = charStorage;
 	}
@@ -59,14 +58,15 @@ public class BasePairCharType extends TypeImpl<BasePairCharType> implements Base
 	public BasePairCharType( final Base value )
 	{
 		storage = null;
-		b = new CharArray< BasePairCharType >( new int[]{ 1 }, 1 );
+		b = new CharArray( 1 );
 		set( value );
 	}
 
 	// this is the constructor if you want it to be a variable
 	public BasePairCharType( final char value )
 	{	
-		this( new CharArray< BasePairCharType >( new int[]{ 1 }, 1 ) );
+		storage = null;
+		b = new CharArray( 1 );
 		setChar( value );
 	}
 
@@ -74,7 +74,7 @@ public class BasePairCharType extends TypeImpl<BasePairCharType> implements Base
 	public BasePairCharType() { this( Base.N ); }
 
 	@Override
-	public BasicTypeContainer<BasePairCharType, CharContainer<BasePairCharType>> createSuitableContainer( final ContainerFactory storageFactory, final int dim[] )
+	public Container<BasePairCharType, ? extends CharAccess> createSuitableContainer( final ContainerFactory storageFactory, final int dim[] )
 	{
 		return storageFactory.createCharInstance( dim, 1 );	
 	}
@@ -191,9 +191,9 @@ public class BasePairCharType extends TypeImpl<BasePairCharType> implements Base
 	//public BasePairCharType getType() { return this; }
 
 	@Override
-	public BasePairCharType createType( Container<BasePairCharType> container )
+	public BasePairCharType createType( Container<BasePairCharType,?> container )
 	{
-		return new BasePairCharType( (BasicTypeContainer<BasePairCharType, CharContainer<BasePairCharType>>)(CharContainer<BasePairCharType>)container );
+		return new BasePairCharType( (Container<BasePairCharType, CharAccess>)container );
 	}
 	
 	@Override

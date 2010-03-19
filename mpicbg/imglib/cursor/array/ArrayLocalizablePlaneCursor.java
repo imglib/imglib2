@@ -38,7 +38,7 @@ public class ArrayLocalizablePlaneCursor<T extends Type<T>> extends ArrayLocaliz
 {
 	protected int planeDimA, planeDimB, planeSizeA, planeSizeB, incPlaneA, incPlaneB, maxI;
 	
-	public ArrayLocalizablePlaneCursor( final Array<T> container, final Image<T> image, final T type ) 
+	public ArrayLocalizablePlaneCursor( final Array<T,?> container, final Image<T> image, final T type ) 
 	{
 		super( container, image, type );
 	}	

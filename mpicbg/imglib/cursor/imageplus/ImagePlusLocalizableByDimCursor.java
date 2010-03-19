@@ -45,7 +45,7 @@ public class ImagePlusLocalizableByDimCursor<T extends Type<T>> extends ImagePlu
 	final protected int[] step, tmp;
 	int numNeighborhoodCursors = 0;
 	
-	public ImagePlusLocalizableByDimCursor( final ImagePlusContainer<T> container, final Image<T> image, final T type ) 
+	public ImagePlusLocalizableByDimCursor( final ImagePlusContainer<T,?> container, final Image<T> image, final T type ) 
 	{
 		super( container, image, type );
 		

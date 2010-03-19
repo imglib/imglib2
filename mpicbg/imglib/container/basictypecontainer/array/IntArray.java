@@ -27,51 +27,41 @@
  *
  * @author Stephan Preibisch & Stephan Saalfeld
  */
-package mpicbg.imglib.container.array;
+package mpicbg.imglib.container.basictypecontainer.array;
 
-import mpicbg.imglib.container.basictypecontainer.CharContainer;
-import mpicbg.imglib.cursor.Cursor;
-import mpicbg.imglib.type.Type;
+import mpicbg.imglib.container.basictypecontainer.IntAccess;
 
-public class CharArray<T extends Type<T>> extends Array<T> implements CharContainer<T>
+public class IntArray implements IntAccess, ArrayDataAccess<IntArray>
 {
-	protected char data[];
+	protected int data[];
 
-	public CharArray( ArrayContainerFactory factory, int[] dim, final int entitiesPerPixel )
+	public IntArray( final int numEntities )
 	{
-		super( factory, dim, entitiesPerPixel );
-		this.data = new char[ this.numEntities ];
+		this.data = new int[ numEntities ];
 	}
 
-	public CharArray( int[] dim, final int entitiesPerPixel )
+	public IntArray( final int[] data )
 	{
-		super( null, dim, entitiesPerPixel );
-		this.data = new char[ this.numEntities ];
-	}
-
-	public CharArray( final char[] data, int[] dim, final int entitiesPerPixel )
-	{
-		super( null, dim, entitiesPerPixel );
-		this.data = new char[ this.numEntities ];
+		this.data = data;
 	}
 
 	@Override
 	public void close() { data = null; }
 
 	@Override
-	public CharContainer<T> update( final Cursor<?> c ){ return this; }
-
-	@Override
-	public char getValue( final int index )
+	public int getValue( final int index )
 	{
 		return data[ index ];
 	}
 
 	@Override
-	public void setValue( final int index, final char value )
+	public void setValue( final int index, final int value )
 	{
 		data[ index ] = value;		
 	}
-	
-	public char[] getCurrentStorageArray( final Cursor< T > c ){ return data; }
+
+	@Override
+	public IntArray createArray( final int numEntities ) { return new IntArray( numEntities ); }
+
+	public int[] getCurrentStorageArray(){ return data; }
 }

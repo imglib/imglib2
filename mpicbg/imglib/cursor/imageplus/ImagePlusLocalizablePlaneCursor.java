@@ -39,7 +39,7 @@ public class ImagePlusLocalizablePlaneCursor<T extends Type<T>> extends ImagePlu
 	protected int planeDimA, planeDimB, planeSizeA, planeSizeB, incPlaneA, incPlaneB, maxI, pos, maxPos;
 	final protected int width, height, depth;
 	
-	public ImagePlusLocalizablePlaneCursor( final ImagePlusContainer<T> container, final Image<T> image, final T type ) 
+	public ImagePlusLocalizablePlaneCursor( final ImagePlusContainer<T,?> container, final Image<T> image, final T type ) 
 	{
 		super( container, image, type );
 		

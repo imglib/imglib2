@@ -30,10 +30,10 @@
 package mpicbg.imglib.type.numeric;
 
 import mpicbg.imglib.algorithm.math.MathLib;
+import mpicbg.imglib.container.Container;
 import mpicbg.imglib.container.ContainerFactory;
-import mpicbg.imglib.container.array.ShortArray;
-import mpicbg.imglib.container.basictypecontainer.BasicTypeContainer;
-import mpicbg.imglib.container.basictypecontainer.ShortContainer;
+import mpicbg.imglib.container.basictypecontainer.ShortAccess;
+import mpicbg.imglib.container.basictypecontainer.array.ShortArray;
 import mpicbg.imglib.cursor.Cursor;
 import mpicbg.imglib.type.NumericType;
 import mpicbg.imglib.type.TypeImpl;
@@ -41,13 +41,13 @@ import mpicbg.imglib.type.TypeImpl;
 public abstract class GenericShortType<T extends GenericShortType<T>> extends TypeImpl<T> implements NumericType<T>
 {
 	// the Container
-	final BasicTypeContainer<T, ShortContainer<T>> storage;
+	final Container<T, ShortAccess> storage;
 	
 	// the (sub)container that holds the information 
-	ShortContainer< T > b;
+	ShortAccess b;
 	
 	// this is the constructor if you want it to read from an array
-	public GenericShortType( BasicTypeContainer<T, ShortContainer<T>> shortStorage )
+	public GenericShortType( Container<T, ShortAccess> shortStorage )
 	{
 		storage = shortStorage;
 	}
@@ -56,7 +56,7 @@ public abstract class GenericShortType<T extends GenericShortType<T>> extends Ty
 	public GenericShortType( final short value )
 	{
 		storage = null;
-		b = new ShortArray< T >( new int[]{ 1 }, 1 );
+		b = new ShortArray( 1 );
 		setValue( value );
 	}
 
@@ -64,7 +64,7 @@ public abstract class GenericShortType<T extends GenericShortType<T>> extends Ty
 	public GenericShortType(){ this( ( short )0 ); }
 	
 	@Override
-	public BasicTypeContainer<T, ShortContainer<T>> createSuitableContainer( final ContainerFactory storageFactory, final int dim[] )
+	public Container<T, ? extends ShortAccess> createSuitableContainer( final ContainerFactory storageFactory, final int dim[] )
 	{
 		return storageFactory.createShortInstance( dim, 1 );	
 	}

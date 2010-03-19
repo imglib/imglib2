@@ -31,9 +31,9 @@ package mpicbg.imglib.type.numeric;
 
 import mpicbg.imglib.container.Container;
 import mpicbg.imglib.container.ContainerFactory;
-import mpicbg.imglib.container.array.FloatArray;
-import mpicbg.imglib.container.basictypecontainer.BasicTypeContainer;
-import mpicbg.imglib.container.basictypecontainer.FloatContainer;
+import mpicbg.imglib.container.basictypecontainer.DataAccess;
+import mpicbg.imglib.container.basictypecontainer.FloatAccess;
+import mpicbg.imglib.container.basictypecontainer.array.FloatArray;
 import mpicbg.imglib.cursor.Cursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.display.FloatTypeDisplay;
@@ -43,13 +43,13 @@ import mpicbg.imglib.type.TypeImpl;
 public class FloatType extends TypeImpl<FloatType> implements NumericType<FloatType>
 {
 	// the Container
-	final BasicTypeContainer<FloatType, FloatContainer<FloatType>> storage;
+	final Container<FloatType, FloatAccess> storage;
 	
 	// the (sub)container that holds the information 
-	FloatContainer< FloatType > b;
+	FloatAccess b;
 	
 	// this is the constructor if you want it to read from an array
-	public FloatType( BasicTypeContainer<FloatType, FloatContainer<FloatType>> floatStorage )
+	public FloatType( Container<FloatType, FloatAccess> floatStorage )
 	{
 		storage = floatStorage;
 	}
@@ -58,7 +58,7 @@ public class FloatType extends TypeImpl<FloatType> implements NumericType<FloatT
 	public FloatType( final float value )
 	{
 		storage = null;
-		b = new FloatArray< FloatType >( new int[]{ 1 }, 1 );
+		b = new FloatArray( 1 );
 		set( value );
 	}
 
@@ -66,7 +66,7 @@ public class FloatType extends TypeImpl<FloatType> implements NumericType<FloatT
 	public FloatType() { this( 0 ); }
 
 	@Override
-	public BasicTypeContainer<FloatType, FloatContainer<FloatType>> createSuitableContainer( final ContainerFactory storageFactory, final int dim[] )
+	public Container<FloatType, ? extends FloatAccess> createSuitableContainer( final ContainerFactory storageFactory, final int dim[] )
 	{
 		return storageFactory.createFloatInstance( dim, 1 );	
 	}
@@ -177,9 +177,9 @@ public class FloatType extends TypeImpl<FloatType> implements NumericType<FloatT
 	//public FloatType getType() { return this; }
 
 	@Override
-	public FloatType createType( Container<FloatType> container )
+	public FloatType createType( Container<FloatType,? extends DataAccess> container )
 	{
-		return new FloatType( (BasicTypeContainer<FloatType, FloatContainer<FloatType>>)(FloatContainer<FloatType>)container );
+		return new FloatType( (Container<FloatType, FloatAccess>)container );
 	}
 	
 	@Override

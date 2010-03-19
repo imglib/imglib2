@@ -41,9 +41,9 @@ public class Array3DLocalizableByDimOutsideCursor<T extends Type<T>> extends Arr
 	final int widthMinus1, heightMinus1, depthMinus1;
 	final int width, height, depth;
 	final int stepY, stepZ;
-	final Array3D<T> container;
+	final Array3D<T,?> container;
 
-	public Array3DLocalizableByDimOutsideCursor( final Array3D<T> container, final Image<T> image, final T type, final OutsideStrategyFactory<T> outsideStrategyFactory ) 
+	public Array3DLocalizableByDimOutsideCursor( final Array3D<T,?> container, final Image<T> image, final T type, final OutsideStrategyFactory<T> outsideStrategyFactory ) 
 	{
 		super( container, image, type, outsideStrategyFactory );
 		
@@ -126,7 +126,7 @@ public class Array3DLocalizableByDimOutsideCursor<T extends Type<T>> extends Arr
 	}
 
 	@Override
-	public Array3D<T> getStorageContainer(){ return container; }
+	public Array3D<T,?> getStorageContainer(){ return container; }
 
 	@Override
 	public int[] getPosition(){ return new int[]{x, y, z}; }

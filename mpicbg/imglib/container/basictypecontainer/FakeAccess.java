@@ -27,39 +27,8 @@
  *
  * @author Stephan Preibisch & Stephan Saalfeld
  */
-package mpicbg.imglib.container.array;
+package mpicbg.imglib.container.basictypecontainer;
 
-import mpicbg.imglib.container.basictypecontainer.ShortContainer;
-import mpicbg.imglib.cursor.Cursor;
-import mpicbg.imglib.type.Type;
-
-public class ShortArray3D<T extends Type<T>> extends Array3D<T> implements ShortContainer<T>
+public interface FakeAccess extends DataAccess
 {
-	protected short data[];
-
-	public ShortArray3D( ArrayContainerFactory factory, int width, int height, int depth, final int entitiesPerPixel )
-	{
-		super( factory, width, height, depth, entitiesPerPixel );
-		this.data = new short[ this.numEntities ];
-	}
-
-	@Override
-	public void close() { data = null; }
-
-	@Override
-	public ShortContainer<T> update( final Cursor<?> c ){ return this; }
-
-	@Override
-	public short getValue( final int index )
-	{
-		return data[ index ];
-	}
-
-	@Override
-	public void setValue( final int index, final short value )
-	{
-		data[ index ] = value;		
-	}
-	
-	public short[] getCurrentStorageArray( final Cursor< T > c ){ return data; }
 }

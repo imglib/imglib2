@@ -31,11 +31,11 @@ package mpicbg.imglib.container.dynamic;
 
 import java.util.ArrayList;
 
-import mpicbg.imglib.container.basictypecontainer.ShortContainer;
+import mpicbg.imglib.container.basictypecontainer.ShortAccess;
 import mpicbg.imglib.cursor.Cursor;
 import mpicbg.imglib.type.Type;
 
-public class ShortDynamicContainer <T extends Type<T>> extends DynamicContainer<T> implements ShortContainer<T>
+public class ShortDynamicContainer <T extends Type<T>> extends DynamicContainer<T> implements ShortAccess<T>
 {
 	final ArrayList<short[]> data;
 	

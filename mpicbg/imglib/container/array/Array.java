@@ -30,6 +30,8 @@
 package mpicbg.imglib.container.array;
 
 import mpicbg.imglib.container.PixelGridContainerImpl;
+import mpicbg.imglib.container.basictypecontainer.DataAccess;
+import mpicbg.imglib.cursor.Cursor;
 import mpicbg.imglib.cursor.array.ArrayCursor;
 import mpicbg.imglib.cursor.array.ArrayLocalizableByDimCursor;
 import mpicbg.imglib.cursor.array.ArrayLocalizableByDimOutsideCursor;
@@ -39,18 +41,26 @@ import mpicbg.imglib.image.Image;
 import mpicbg.imglib.outside.OutsideStrategyFactory;
 import mpicbg.imglib.type.Type;
 
-public abstract class Array<T extends Type<T>> extends PixelGridContainerImpl<T>
+public class Array<T extends Type<T>, A extends DataAccess> extends PixelGridContainerImpl<T,A>
 {
 	final protected int[] step;
 	final ArrayContainerFactory factory;
+	
+	// the DataAccess created by the ArrayContainerFactory
+	final A data;
 
-	public Array( final ArrayContainerFactory factory, final int[] dim, final int entitiesPerPixel )
+	public Array( final ArrayContainerFactory factory, final A data, final int[] dim, final int entitiesPerPixel )
 	{
 		super( factory, dim, entitiesPerPixel );
+		
 		step = Array.createAllocationSteps( dim );
 		this.factory = factory;
+		this.data = data;
 	}
 	
+	@Override
+	public A update( final Cursor<?> c ) { return data; }
+
 	@Override
 	public ArrayContainerFactory getFactory() { return factory; }
 	
@@ -110,5 +120,8 @@ public abstract class Array<T extends Type<T>> extends PixelGridContainerImpl<T>
 			i += l[ d ] * step[ d ];
 		
 		return i;
-	}	
+	}
+
+	@Override
+	public void close() { data.close();	}	
 }

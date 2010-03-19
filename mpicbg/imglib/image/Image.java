@@ -37,6 +37,7 @@ import mpicbg.imglib.algorithm.math.MathLib;
 import mpicbg.imglib.container.Container;
 import mpicbg.imglib.container.ContainerFactory;
 import mpicbg.imglib.container.ImageProperties;
+import mpicbg.imglib.container.basictypecontainer.DataAccess;
 import mpicbg.imglib.cursor.Cursor;
 import mpicbg.imglib.cursor.LocalizableByDimCursor;
 import mpicbg.imglib.cursor.LocalizableCursor;
@@ -52,7 +53,7 @@ public class Image<T extends Type<T>> implements ImageProperties, Dimensionality
 {
 	final protected ArrayList<Cursor<T>> cursors;
 	final ContainerFactory containerFactory;
-	final Container<T> container;
+	final Container<T,? extends DataAccess> container;
 	final ImageFactory<T> imageFactory;
 	final T type;
 
@@ -64,7 +65,7 @@ public class Image<T extends Type<T>> implements ImageProperties, Dimensionality
 	/* TODO Should this be in the multi-channel image?  Should that be in the image or not?  Better not! */
 	protected Display<T> display;
 
-	private Image( Container<T> container, ImageFactory<T> imageFactory, int dim[], String name )
+	private Image( Container<T,? extends DataAccess> container, ImageFactory<T> imageFactory, int dim[], String name )
 	{
 		if (name == null || name.length() == 0)
 			this.name = "image" + i.getAndIncrement();
@@ -104,7 +105,7 @@ public class Image<T extends Type<T>> implements ImageProperties, Dimensionality
 			calibration[ d ] = 1;
 	}
 	
-	protected Image( Container<T> container, ImageFactory<T> imageFactory, String name )
+	protected Image( Container<T,? extends DataAccess> container, ImageFactory<T> imageFactory, String name )
 	{
 		this( container, imageFactory, container.getDimensions(), name );
 	}
@@ -156,9 +157,9 @@ public class Image<T extends Type<T>> implements ImageProperties, Dimensionality
 
 	/**
 	 * Returns the {@link Container} that is used for storing the image data.
-	 * @return Container<T> - the typed {@link Container}
+	 * @return Container<T,? extends DataAccess> - the typed {@link Container}
 	 */
-	public Container<T> getContainer() { return container; }
+	public Container<T,? extends DataAccess> getContainer() { return container; }
 	
 	/**
 	 * Creates a {@link Type} that the {@link Image} is typed with.
@@ -237,7 +238,7 @@ public class Image<T extends Type<T>> implements ImageProperties, Dimensionality
 	 * the dimensionality
 	 * @return {@link Container} - the instantiated Container
 	 */
-	protected Container<T> createContainer( final int[] dim ) { return type.createSuitableContainer( containerFactory, dim ); }
+	protected Container<T,? extends DataAccess> createContainer( final int[] dim ) { return type.createSuitableContainer( containerFactory, dim ); }
 
 	/**
 	 * Creates and {@link Interpolator} on this {@link Image} given a certain {@link InterpolatorFactory}.

@@ -29,10 +29,11 @@
  */
 package mpicbg.imglib.container;
 
+import mpicbg.imglib.container.basictypecontainer.DataAccess;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.type.Type;
 
-public abstract class ContainerImpl<T extends Type<T>> implements Container<T>
+public abstract class ContainerImpl<T extends Type<T>, A extends DataAccess> implements Container<T,A>
 {
 	final protected int numPixels, numDimensions;
 	final protected long id;
@@ -44,14 +45,21 @@ public abstract class ContainerImpl<T extends Type<T>> implements Container<T>
 	{
 		this.numDimensions = dim.length;
 		
-		int numPixels = 1;		
-		for (int i = 0; i < numDimensions; i++)
-			numPixels *= dim[i];
-		this.numPixels = numPixels;
+		this.numPixels = getNumPixels(dim);
 		
 		this.dim = dim.clone();
 		this.factory = factory;
 		this.id = Image.createUniqueId();
+	}
+	
+	public static int getNumPixels( final int[] dim )
+	{
+		int numPixels = 1;		
+		
+		for (int i = 0; i < dim.length; i++)
+			numPixels *= dim[i];
+		
+		return numPixels;		
 	}
 		
 	@Override
@@ -100,7 +108,7 @@ public abstract class ContainerImpl<T extends Type<T>> implements Container<T>
 	}
 	
 	@Override
-	public boolean compareStorageContainerDimensions( final Container<?> container )
+	public boolean compareStorageContainerDimensions( final Container<?,?> container )
 	{
 		if ( container.getNumDimensions() != this.getNumDimensions() )
 			return false;
@@ -113,7 +121,7 @@ public abstract class ContainerImpl<T extends Type<T>> implements Container<T>
 	}		
 
 	@Override
-	public boolean compareStorageContainerCompatibility( final Container<?> container )
+	public boolean compareStorageContainerCompatibility( final Container<?,?> container )
 	{
 		if ( compareStorageContainerDimensions( container ))
 		{			

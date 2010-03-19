@@ -31,11 +31,11 @@ package mpicbg.imglib.container.dynamic;
 
 import java.util.ArrayList;
 
-import mpicbg.imglib.container.basictypecontainer.FloatContainer;
+import mpicbg.imglib.container.basictypecontainer.FloatAccess;
 import mpicbg.imglib.cursor.Cursor;
 import mpicbg.imglib.type.Type;
 
-public class FloatDynamicContainer <T extends Type<T>> extends DynamicContainer<T> implements FloatContainer<T>
+public class FloatDynamicContainer <T extends Type<T>> extends DynamicContainer<T> implements FloatAccess<T>
 {
 	final ArrayList<float[]> data;
 	

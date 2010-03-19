@@ -27,39 +27,41 @@
  *
  * @author Stephan Preibisch & Stephan Saalfeld
  */
-package mpicbg.imglib.container.array;
+package mpicbg.imglib.container.basictypecontainer.array;
 
-import mpicbg.imglib.container.basictypecontainer.LongContainer;
-import mpicbg.imglib.cursor.Cursor;
-import mpicbg.imglib.type.Type;
+import mpicbg.imglib.container.basictypecontainer.ByteAccess;
 
-public class LongArray3D<T extends Type<T>> extends Array3D<T> implements LongContainer<T>
+public class ByteArray implements ByteAccess, ArrayDataAccess<ByteArray>
 {
-	protected long data[];
+	protected byte data[];
 
-	public LongArray3D( ArrayContainerFactory factory, int width, int height, int depth, final int entitiesPerPixel )
+	public ByteArray( final int numEntities )
 	{
-		super( factory, width, height, depth, entitiesPerPixel );
-		this.data = new long[ this.numEntities ];
+		this.data = new byte[ numEntities ];
+	}
+
+	public ByteArray( final byte[] data )
+	{
+		this.data = data;
 	}
 
 	@Override
 	public void close() { data = null; }
 
 	@Override
-	public LongContainer<T> update( final Cursor<?> c ){ return this; }
-
-	@Override
-	public long getValue( final int index )
+	public byte getValue( final int index )
 	{
 		return data[ index ];
 	}
 
 	@Override
-	public void setValue( final int index, final long value )
+	public void setValue( final int index, final byte value )
 	{
 		data[ index ] = value;		
 	}
 	
-	public long[] getCurrentStorageArray( final Cursor< T > c ){ return data; }
+	public byte[] getCurrentStorageArray(){ return data; }
+
+	@Override
+	public ByteArray createArray( final int numEntities ) { return new ByteArray( numEntities ); }
 }

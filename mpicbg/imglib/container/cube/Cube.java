@@ -33,7 +33,8 @@ import java.util.ArrayList;
 
 import mpicbg.imglib.container.ContainerFactory;
 import mpicbg.imglib.container.PixelGridContainerImpl;
-import mpicbg.imglib.container.array.FakeArray;
+import mpicbg.imglib.container.basictypecontainer.array.ArrayDataAccess;
+import mpicbg.imglib.cursor.Cursor;
 import mpicbg.imglib.cursor.array.ArrayLocalizableByDimCursor;
 import mpicbg.imglib.cursor.array.ArrayLocalizableCursor;
 import mpicbg.imglib.cursor.cube.CubeCursor;
@@ -46,13 +47,13 @@ import mpicbg.imglib.outside.OutsideStrategyFactory;
 import mpicbg.imglib.type.Type;
 import mpicbg.imglib.type.label.FakeType;
 
-public abstract class Cube<C extends CubeElement<C, D, T>, D extends Cube<C, D, T>, T extends Type<T>> extends PixelGridContainerImpl<T>
+public class Cube<T extends Type<T>, A extends ArrayDataAccess<A>> extends PixelGridContainerImpl<T,A>
 {
-	final protected ArrayList<C> data;
+	final protected ArrayList<CubeElement<T,A>> data;
 	final protected int[] numCubesDim, cubeSize;
 	final protected int numCubes;
 	
-	public Cube( ContainerFactory factory, int[] dim, int[] cubeSize, final int entitiesPerPixel )
+	public Cube( final ContainerFactory factory, final A creator, final int[] dim, final int[] cubeSize, final int entitiesPerPixel )
 	{
 		super(factory, dim, entitiesPerPixel);
 		
@@ -76,7 +77,7 @@ public abstract class Cube<C extends CubeElement<C, D, T>, D extends Cube<C, D, 
 		
 		// Here we "misuse" a ArrayLocalizableCursor to iterate through the cubes,
 		// he always gives us the location of the current cube we are instantiating
-		final ArrayLocalizableCursor<FakeType> cursor = new ArrayLocalizableCursor<FakeType>( new FakeArray<FakeType>( numCubesDim ), null, new FakeType() );
+		final ArrayLocalizableCursor<FakeType> cursor = ArrayLocalizableCursor.createLinearCursor( numCubesDim ); 
 		
 		for ( int cube = 0; cube < numCubes; cube++ )			
 		{
@@ -94,17 +95,25 @@ public abstract class Cube<C extends CubeElement<C, D, T>, D extends Cube<C, D, 
 						finalSize[ d ] = dim[ d ] % cubeSize[ d ];
 				
 				finalOffset[ d ] = cursor.getPosition( d ) * cubeSize[ d ];
-			}
-			data.add( createCubeElementInstance( cube, finalSize, finalOffset, entitiesPerPixel ) );			
+			}			
+
+			data.add( createCubeElementInstance( creator, cube, finalSize, finalOffset, entitiesPerPixel ) );			
 		}
 		
 		cursor.close();
 	}
 	
-	public ArrayList<C> createCubeArray( final int numCubes ) { return new ArrayList<C>( numCubes ); }	
-	public abstract C createCubeElementInstance( final int cubeId, final int[] dim, final int offset[], final int entitiesPerPixel );
+	@Override
+	public A update( final Cursor<?> c ) { return data.get( c.getStorageIndex() ).getData(); }
+	
+	public ArrayList<CubeElement<T, A>> createCubeArray( final int numCubes ) { return new ArrayList<CubeElement<T, A>>( numCubes ); }	
+	
+	public CubeElement<T, A> createCubeElementInstance( final A creator, final int cubeId, final int[] dim, final int offset[], final int entitiesPerPixel )
+	{
+		return new CubeElement<T,A>( creator, cubeId, dim, offset, entitiesPerPixel );
+	}
 
-	public C getCubeElement( int cubeId ) { return data.get( cubeId ); }
+	public CubeElement<T, A> getCubeElement( final int cubeId ) { return data.get( cubeId ); }
 	public int getCubeElementIndex( final ArrayLocalizableByDimCursor<FakeType> cursor, final int[] cubePos )
 	{
 		cursor.setPosition( cubePos );
@@ -157,7 +166,7 @@ public abstract class Cube<C extends CubeElement<C, D, T>, D extends Cube<C, D, 
 	@Override
 	public void close()
 	{
-		for ( final C e : data )
+		for ( final CubeElement<T, A> e : data )
 			e.close();
 	}
 

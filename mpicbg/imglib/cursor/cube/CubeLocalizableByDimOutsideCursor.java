@@ -43,7 +43,7 @@ public class CubeLocalizableByDimOutsideCursor<T extends Type<T>> extends CubeLo
 	
 	boolean isOutside = false;
 	
-	public CubeLocalizableByDimOutsideCursor( final Cube<?,?,T> container, final Image<T> image, final T type, final OutsideStrategyFactory<T> outsideStrategyFactory ) 
+	public CubeLocalizableByDimOutsideCursor( final Cube<T,?> container, final Image<T> image, final T type, final OutsideStrategyFactory<T> outsideStrategyFactory ) 
 	{
 		super( container, image, type );
 		

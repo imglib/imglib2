@@ -31,9 +31,8 @@ package mpicbg.imglib.type.numeric;
 
 import mpicbg.imglib.container.Container;
 import mpicbg.imglib.container.ContainerFactory;
-import mpicbg.imglib.container.array.DoubleArray;
-import mpicbg.imglib.container.basictypecontainer.BasicTypeContainer;
-import mpicbg.imglib.container.basictypecontainer.DoubleContainer;
+import mpicbg.imglib.container.basictypecontainer.DoubleAccess;
+import mpicbg.imglib.container.basictypecontainer.array.DoubleArray;
 import mpicbg.imglib.cursor.Cursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.display.DoubleTypeDisplay;
@@ -43,13 +42,13 @@ import mpicbg.imglib.type.TypeImpl;
 public class DoubleType extends TypeImpl<DoubleType> implements NumericType<DoubleType>
 {
 	// the Container
-	final BasicTypeContainer<DoubleType, DoubleContainer<DoubleType>> storage;
+	final Container<DoubleType, DoubleAccess> storage;
 	
 	// the (sub)container that holds the information 
-	DoubleContainer< DoubleType > b;
+	DoubleAccess b;
 	
 	// this is the constructor if you want it to read from an array
-	public DoubleType( BasicTypeContainer<DoubleType, DoubleContainer<DoubleType>> doubleStorage )
+	public DoubleType( Container<DoubleType, DoubleAccess> doubleStorage )
 	{
 		storage = doubleStorage;
 	}
@@ -58,7 +57,7 @@ public class DoubleType extends TypeImpl<DoubleType> implements NumericType<Doub
 	public DoubleType( final double value )
 	{
 		storage = null;
-		b = new DoubleArray< DoubleType >( new int[]{ 1 }, 1 );
+		b = new DoubleArray( 1 );
 		set( value );
 	}
 
@@ -66,7 +65,7 @@ public class DoubleType extends TypeImpl<DoubleType> implements NumericType<Doub
 	public DoubleType() { this( 0 ); }
 
 	@Override
-	public BasicTypeContainer<DoubleType, DoubleContainer<DoubleType>> createSuitableContainer( final ContainerFactory storageFactory, final int dim[] )
+	public Container<DoubleType, ? extends DoubleAccess> createSuitableContainer( final ContainerFactory storageFactory, final int dim[] )
 	{
 		return storageFactory.createDoubleInstance( dim, 1 );	
 	}
@@ -177,9 +176,9 @@ public class DoubleType extends TypeImpl<DoubleType> implements NumericType<Doub
 	//public DoubleType getType() { return this; }
 
 	@Override
-	public DoubleType createType( Container<DoubleType> container )
+	public DoubleType createType( Container<DoubleType,?> container )
 	{
-		return new DoubleType( (BasicTypeContainer<DoubleType, DoubleContainer<DoubleType>>)(DoubleContainer<DoubleType>)container );
+		return new DoubleType( (Container<DoubleType, DoubleAccess>)container );
 	}
 	
 	@Override

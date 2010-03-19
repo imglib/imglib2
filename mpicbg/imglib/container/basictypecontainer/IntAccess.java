@@ -27,64 +27,10 @@
  *
  * @author Stephan Preibisch & Stephan Saalfeld
  */
-package mpicbg.imglib.container.array;
+package mpicbg.imglib.container.basictypecontainer;
 
-import mpicbg.imglib.container.basictypecontainer.BitContainer;
-import mpicbg.imglib.cursor.Cursor;
-import mpicbg.imglib.type.Type;
-
-public class BitArray<T extends Type<T>> extends Array<T> implements BitContainer<T>
+public interface IntAccess extends DataAccess
 {
-	final static int bitsPerEntity = Integer.SIZE;
-
-	protected int data[];	
-	
-	public BitArray( final ArrayContainerFactory factory, final int[] dim, final int entitiesPerPixel )
-	{
-		super( factory, dim, entitiesPerPixel );
-		
-		final int numElements;
-		
-		if ( this.numEntities % bitsPerEntity == 0 )
-			numElements = this.numEntities / bitsPerEntity;
-		else
-			numElements = this.numEntities / bitsPerEntity + 1;
-			
-		this.data = new int[ numElements ];
-	}
-	
-	public BitArray( final int[] dim, final int entitiesPerPixel )
-	{
-		this( null, dim, entitiesPerPixel );
-	}
-
-	@Override
-	public void close() { data = null; }
-
-	@Override
-	public boolean getValue( final int index ) 
-	{
-		final int arrayIndex = index / bitsPerEntity;
-		final int arrayOffset = index % bitsPerEntity;
-
-		final int entry = data[ arrayIndex ];		
-		final int value = (entry & ( 1 << arrayOffset ) );
-		
-		return value != 0; 
-	}
-
-	@Override
-	public void setValue( final int index, final boolean value ) 
-	{
-		final int arrayIndex = index / bitsPerEntity;
-		final int arrayOffset = index % bitsPerEntity;
-		
-		if ( value )
-			data[ arrayIndex ] = data[ arrayIndex ] | ( 1 << arrayOffset );
-		else
-			data[ arrayIndex ] = data[ arrayIndex ] & ~( 1 << arrayOffset ); 
-	}
-
-	@Override
-	public BitContainer<T> update( final Cursor<?> c ){ return this; }
+	public int getValue( final int index );
+	public void setValue( final int index, final int value );
 }

@@ -30,10 +30,10 @@
 package mpicbg.imglib.type.numeric;
 
 import mpicbg.imglib.algorithm.math.MathLib;
+import mpicbg.imglib.container.Container;
 import mpicbg.imglib.container.ContainerFactory;
-import mpicbg.imglib.container.array.ByteArray;
-import mpicbg.imglib.container.basictypecontainer.BasicTypeContainer;
-import mpicbg.imglib.container.basictypecontainer.ByteContainer;
+import mpicbg.imglib.container.basictypecontainer.ByteAccess;
+import mpicbg.imglib.container.basictypecontainer.array.ByteArray;
 import mpicbg.imglib.cursor.Cursor;
 import mpicbg.imglib.type.NumericType;
 import mpicbg.imglib.type.TypeImpl;
@@ -41,13 +41,13 @@ import mpicbg.imglib.type.TypeImpl;
 public abstract class GenericByteType<T extends GenericByteType<T>> extends TypeImpl<T> implements NumericType<T>
 {
 	// the Container
-	final BasicTypeContainer<T, ByteContainer<T>> storage;
+	final Container<T, ByteAccess> storage;
 	
 	// the (sub)container that holds the information 
-	ByteContainer< T > b;
+	ByteAccess b;
 	
 	// this is the constructor if you want it to read from an array
-	public GenericByteType( BasicTypeContainer<T, ByteContainer<T>> byteStorage )
+	public GenericByteType( Container<T, ByteAccess> byteStorage )
 	{
 		storage = byteStorage;
 	}
@@ -56,7 +56,7 @@ public abstract class GenericByteType<T extends GenericByteType<T>> extends Type
 	protected GenericByteType( final byte value )
 	{
 		storage = null;
-		b = new ByteArray< T >( new int[]{ 1 }, 1 );
+		b = new ByteArray( 1 );
 		setValue( value );
 	}
 
@@ -64,7 +64,7 @@ public abstract class GenericByteType<T extends GenericByteType<T>> extends Type
 	protected GenericByteType() { this( ( byte )0 ); }
 	
 	@Override
-	public BasicTypeContainer<T, ByteContainer<T>> createSuitableContainer( final ContainerFactory storageFactory, final int dim[] )
+	public Container<T, ? extends ByteAccess> createSuitableContainer( final ContainerFactory storageFactory, final int dim[] )
 	{
 		return storageFactory.createByteInstance( dim, 1 );	
 	}

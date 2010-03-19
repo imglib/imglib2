@@ -31,11 +31,11 @@ package mpicbg.imglib.container.dynamic;
 
 import java.util.ArrayList;
 
-import mpicbg.imglib.container.basictypecontainer.ByteContainer;
+import mpicbg.imglib.container.basictypecontainer.ByteAccess;
 import mpicbg.imglib.cursor.Cursor;
 import mpicbg.imglib.type.Type;
 
-public class ByteDynamicContainer <T extends Type<T>> extends DynamicContainer<T> implements ByteContainer<T>
+public class ByteDynamicContainer <T extends Type<T>> extends DynamicContainer<T> implements ByteAccess<T>
 {
 	final ArrayList<byte[]> data;
 	

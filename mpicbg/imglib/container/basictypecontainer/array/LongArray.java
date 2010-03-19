@@ -27,12 +27,41 @@
  *
  * @author Stephan Preibisch & Stephan Saalfeld
  */
-package mpicbg.imglib.container.basictypecontainer;
+package mpicbg.imglib.container.basictypecontainer.array;
 
-import mpicbg.imglib.type.Type;
+import mpicbg.imglib.container.basictypecontainer.LongAccess;
 
-public interface CharContainer<T extends Type<T>> extends BasicTypeContainer<T,CharContainer<T>>
+public class LongArray implements LongAccess, ArrayDataAccess<LongArray>
 {
-	public char getValue( final int index );
-	public void setValue( final int index, final char value );
+	protected long data[];
+
+	public LongArray( final int numEntities )
+	{
+		this.data = new long[ numEntities ];
+	}
+
+	public LongArray( final long[] data )
+	{
+		this.data = data;
+	}
+
+	@Override
+	public void close() { data = null; }
+
+	@Override
+	public long getValue( final int index )
+	{
+		return data[ index ];
+	}
+
+	@Override
+	public void setValue( final int index, final long value )
+	{
+		data[ index ] = value;		
+	}
+	
+	public long[] getCurrentStorageArray(){ return data; }
+
+	@Override
+	public LongArray createArray( final int numEntities ) { return new LongArray( numEntities ); }
 }

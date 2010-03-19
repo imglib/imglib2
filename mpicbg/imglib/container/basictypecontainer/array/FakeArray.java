@@ -27,61 +27,17 @@
  *
  * @author Stephan Preibisch & Stephan Saalfeld
  */
-package mpicbg.imglib.container.cube;
+package mpicbg.imglib.container.basictypecontainer.array;
 
-import mpicbg.imglib.container.basictypecontainer.BitContainer;
-import mpicbg.imglib.cursor.Cursor;
-import mpicbg.imglib.type.Type;
+import mpicbg.imglib.container.basictypecontainer.FakeAccess;
 
-public class BitCubeElement<T extends Type<T>> extends CubeElement<BitCubeElement<T>, BitCube<T>, T> implements BitContainer<T>
+public class FakeArray implements FakeAccess, ArrayDataAccess<FakeArray>
 {
-	final static int bitsPerEntity = Integer.SIZE;
-
-	protected int[] data;
-	
-	public BitCubeElement( BitCube<T> parent, int cubeId, int[] dim, int[] offset, int entitiesPerPixel )
-	{
-		super( parent, cubeId, dim, offset, entitiesPerPixel );
-		
-		final int numElements;
-		
-		if ( this.numEntities % bitsPerEntity == 0 )
-			numElements = this.numEntities / bitsPerEntity;
-		else
-			numElements = this.numEntities / bitsPerEntity + 1;
-			
-		this.data = new int[ numElements ];
-	}
-
+	public FakeArray( ){}
 
 	@Override
-	public void close() { data = null; }
+	public void close() {}
 
 	@Override
-	public boolean getValue( final int index ) 
-	{
-		final int arrayIndex = index / bitsPerEntity;
-		final int arrayOffset = index % bitsPerEntity;
-
-		final int entry = data[ arrayIndex ];		
-		final int value = (entry & ( 1 << arrayOffset ) );
-		
-		return value != 0; 
-	}
-
-	@Override
-	public void setValue( final int index, final boolean value ) 
-	{
-		final int arrayIndex = index / bitsPerEntity;
-		final int arrayOffset = index % bitsPerEntity;
-		
-		if ( value )
-			data[ arrayIndex ] = data[ arrayIndex ] | ( 1 << arrayOffset );
-		else
-			data[ arrayIndex ] = data[ arrayIndex ] & ~( 1 << arrayOffset ); 
-	}
-
-	@Override
-	public BitContainer<T> update( final Cursor<?> c ) { return this; }	
-	
+	public FakeArray createArray( final int numEntities ) { return null; }
 }

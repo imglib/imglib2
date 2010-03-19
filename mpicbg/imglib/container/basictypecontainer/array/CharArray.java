@@ -27,39 +27,41 @@
  *
  * @author Stephan Preibisch & Stephan Saalfeld
  */
-package mpicbg.imglib.container.array;
+package mpicbg.imglib.container.basictypecontainer.array;
 
-import mpicbg.imglib.container.basictypecontainer.DoubleContainer;
-import mpicbg.imglib.cursor.Cursor;
-import mpicbg.imglib.type.Type;
+import mpicbg.imglib.container.basictypecontainer.CharAccess;
 
-public class DoubleArray3D<T extends Type<T>> extends Array3D<T> implements DoubleContainer<T>
+public class CharArray implements CharAccess, ArrayDataAccess<CharArray>
 {
-	protected double data[];
+	protected char data[];
 
-	public DoubleArray3D( ArrayContainerFactory factory, int width, int height, int depth, final int entitiesPerPixel )
+	public CharArray( final int numEntities )
 	{
-		super( factory, width, height, depth, entitiesPerPixel );
-		this.data = new double[ this.numEntities ];
+		this.data = new char[ numEntities ];
+	}
+
+	public CharArray( final char[] data )
+	{
+		this.data = data;
 	}
 
 	@Override
 	public void close() { data = null; }
 
 	@Override
-	public DoubleContainer<T> update( final Cursor<?> c ){ return this; }
-
-	@Override
-	public double getValue( final int index )
+	public char getValue( final int index )
 	{
 		return data[ index ];
 	}
 
 	@Override
-	public void setValue( final int index, final double value )
+	public void setValue( final int index, final char value )
 	{
 		data[ index ] = value;		
 	}
 	
-	public double[] getCurrentStorageArray( final Cursor< T > c ){ return data; }
+	public char[] getCurrentStorageArray(){ return data; }
+
+	@Override
+	public CharArray createArray( final int numEntities ) { return new CharArray( numEntities ); }
 }

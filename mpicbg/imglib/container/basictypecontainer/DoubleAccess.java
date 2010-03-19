@@ -29,10 +29,8 @@
  */
 package mpicbg.imglib.container.basictypecontainer;
 
-import mpicbg.imglib.type.Type;
-
-public interface IntContainer<T extends Type<T>> extends BasicTypeContainer<T,IntContainer<T>>
+public interface DoubleAccess extends DataAccess
 {
-	public int getValue( final int index );
-	public void setValue( final int index, final int value );
+	public double getValue( final int index );
+	public void setValue( final int index, final double value );
 }

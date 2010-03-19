@@ -30,15 +30,15 @@
 package mpicbg.imglib.type.numeric;
 
 import mpicbg.imglib.container.Container;
-import mpicbg.imglib.container.basictypecontainer.BasicTypeContainer;
-import mpicbg.imglib.container.basictypecontainer.ShortContainer;
+import mpicbg.imglib.container.basictypecontainer.DataAccess;
+import mpicbg.imglib.container.basictypecontainer.ShortAccess;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.display.ShortTypeDisplay;
 
 public class ShortType extends GenericShortType<ShortType>
 {
 	// this is the constructor if you want it to read from an array
-	public ShortType( BasicTypeContainer<ShortType, ShortContainer<ShortType>> shortStorage ) { super( shortStorage ); }
+	public ShortType( Container<ShortType, ShortAccess> shortStorage ) { super( shortStorage ); }
 	
 	// this is the constructor if you want it to be a variable
 	public ShortType( final short value ) { super( value ); }
@@ -62,9 +62,9 @@ public class ShortType extends GenericShortType<ShortType>
 	public ShortType[][][] createArray3D( final int size1, final int size2, final int size3 ) { return new ShortType[ size1 ][ size2 ][ size3 ]; }
 	
 	@Override
-	public ShortType createType( final Container<ShortType> container )
+	public ShortType createType( final Container<ShortType,?> container )
 	{ 
-		return new ShortType( (BasicTypeContainer<ShortType, ShortContainer<ShortType>>)(ShortContainer<ShortType>)container );
+		return new ShortType( (Container<ShortType, ShortAccess>)container );
 	}
 
 	@Override

@@ -32,9 +32,8 @@ package mpicbg.imglib.type.logic;
 
 import mpicbg.imglib.container.Container;
 import mpicbg.imglib.container.ContainerFactory;
-import mpicbg.imglib.container.array.BitArray;
-import mpicbg.imglib.container.basictypecontainer.BasicTypeContainer;
-import mpicbg.imglib.container.basictypecontainer.BitContainer;
+import mpicbg.imglib.container.basictypecontainer.BitAccess;
+import mpicbg.imglib.container.basictypecontainer.array.BitArray;
 import mpicbg.imglib.cursor.Cursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.display.BitTypeDisplay;
@@ -45,13 +44,13 @@ import mpicbg.imglib.type.TypeImpl;
 public class BitType extends TypeImpl<BitType> implements LogicType<BitType>, NumericType<BitType>
 {
 	// the Container
-	final BasicTypeContainer<BitType, BitContainer<BitType>> storage;
+	final Container<BitType, BitAccess> storage;
 	
 	// the (sub)container that holds the information 
-	BitContainer< BitType > b;
+	BitAccess b;
 	
 	// this is the constructor if you want it to read from an array
-	public BitType( BasicTypeContainer<BitType, BitContainer<BitType>> bitStorage )
+	public BitType( Container<BitType, BitAccess> bitStorage )
 	{
 		storage = bitStorage;
 	}
@@ -60,7 +59,7 @@ public class BitType extends TypeImpl<BitType> implements LogicType<BitType>, Nu
 	public BitType( final boolean value )
 	{
 		storage = null;
-		b = new BitArray<BitType>( new int[]{1}, 1 );
+		b = new BitArray( 1 );
 		b.setValue( i, value );
 	}
 
@@ -68,7 +67,7 @@ public class BitType extends TypeImpl<BitType> implements LogicType<BitType>, Nu
 	public BitType() { this( false ); }
 	
 	@Override
-	public BasicTypeContainer<BitType, BitContainer<BitType>> createSuitableContainer( final ContainerFactory storageFactory, final int dim[] )
+	public Container<BitType, ? extends BitAccess> createSuitableContainer( final ContainerFactory storageFactory, final int dim[] )
 	{
 		return storageFactory.createBitInstance( dim, 1 );	
 	}
@@ -190,9 +189,9 @@ public class BitType extends TypeImpl<BitType> implements LogicType<BitType>, Nu
 	//public BooleanType getType() { return this; }
 
 	@Override
-	public BitType createType( Container<BitType> container )
+	public BitType createType( Container<BitType,?> container )
 	{
-		return new BitType( (BasicTypeContainer<BitType, BitContainer<BitType>>)(BitContainer<BitType>)container );
+		return new BitType( (Container<BitType, BitAccess>)container );
 	}
 	
 	@Override

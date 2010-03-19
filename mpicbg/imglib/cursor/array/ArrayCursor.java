@@ -37,11 +37,11 @@ import mpicbg.imglib.type.Type;
 
 public class ArrayCursor<T extends Type<T>> extends CursorImpl<T> implements Cursor<T>
 {
-	protected final Array<T> container;
+	protected final Array<T,?> container;
 	protected final int sizeMinus1;
 	//protected final int size;
 	
-	public ArrayCursor( final Array<T> container, final Image<T> image, final T type ) 
+	public ArrayCursor( final Array<T,?> container, final Image<T> image, final T type ) 
 	{
 		super( container, image, type );
 
@@ -85,7 +85,7 @@ public class ArrayCursor<T extends Type<T>> extends CursorImpl<T> implements Cur
 	}
 
 	@Override
-	public Array<T> getStorageContainer(){ return container; }
+	public Array<T,?> getStorageContainer(){ return container; }
 
 	@Override
 	public int getStorageIndex() { return 0; }

@@ -30,15 +30,15 @@
 package mpicbg.imglib.type.numeric;
 
 import mpicbg.imglib.container.Container;
-import mpicbg.imglib.container.basictypecontainer.BasicTypeContainer;
-import mpicbg.imglib.container.basictypecontainer.IntContainer;
+import mpicbg.imglib.container.basictypecontainer.DataAccess;
+import mpicbg.imglib.container.basictypecontainer.IntAccess;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.display.IntTypeDisplay;
 
 public class IntType extends GenericIntType<IntType>
 {
 	// this is the constructor if you want it to read from an array
-	public IntType( BasicTypeContainer<IntType, IntContainer<IntType>> intStorage ) { super( intStorage ); }
+	public IntType( Container<IntType, IntAccess> intStorage ) { super( intStorage ); }
 	
 	// this is the constructor if you want it to be a variable
 	public IntType( final int value ) { super( value ); }
@@ -62,9 +62,9 @@ public class IntType extends GenericIntType<IntType>
 	public IntType[][][] createArray3D(int size1, int size2, int size3) { return new IntType[ size1 ][ size2 ][ size3 ]; }
 
 	@Override
-	public IntType createType( Container<IntType> container )
+	public IntType createType( Container<IntType,?> container )
 	{
-		return new IntType( (BasicTypeContainer<IntType, IntContainer<IntType>>)(IntContainer<IntType>)container );
+		return new IntType( (Container<IntType, IntAccess>)container );
 	}
 
 	@Override

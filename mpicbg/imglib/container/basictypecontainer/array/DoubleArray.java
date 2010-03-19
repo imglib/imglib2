@@ -27,33 +27,41 @@
  *
  * @author Stephan Preibisch & Stephan Saalfeld
  */
-package mpicbg.imglib.container.cube;
+package mpicbg.imglib.container.basictypecontainer.array;
 
-import mpicbg.imglib.container.basictypecontainer.IntContainer;
-import mpicbg.imglib.cursor.Cursor;
-import mpicbg.imglib.type.Type;
+import mpicbg.imglib.container.basictypecontainer.DoubleAccess;
 
-public class IntCubeElement<T extends Type<T>> extends CubeElement<IntCubeElement<T>, IntCube<T>, T> implements IntContainer<T>
+public class DoubleArray implements DoubleAccess, ArrayDataAccess<DoubleArray>
 {
-	protected int[] data;
-	
-	public IntCubeElement(IntCube<T> parent, int cubeId, int[] dim, int[] offset, int entitiesPerPixel)
+	protected double data[];
+
+	public DoubleArray( final int numEntities )
+	{ 
+		this.data = new double[ numEntities ];
+	}
+
+	public DoubleArray( final double[] data )
 	{
-		super( parent, cubeId, dim, offset, entitiesPerPixel );
-		data = new int[ numEntities ];
+		this.data = data;
+	}
+	
+	@Override
+	public void close() { data = null; }
+
+	@Override
+	public double getValue( final int index )
+	{
+		return data[ index ];
 	}
 
 	@Override
-	public void close(){ data = null; }
-
-	@Override
-	public int getValue( final int index )  { return data[ index ]; }
-
-	@Override
-	public void setValue( final int index, final int value ) { data[ index ] = value; }
+	public void setValue( final int index, final double value )
+	{
+		data[ index ] = value;		
+	}
 	
 	@Override
-	public IntContainer<T> update( final Cursor<?> c ) { return this; }
-
-	public int[] getCurrentStorageArray(Cursor<?> c) { return data; }
+	public DoubleArray createArray( final int numEntities ) { return new DoubleArray( numEntities ); }
+	
+	public double[] getCurrentStorageArray(){ return data; }
 }
