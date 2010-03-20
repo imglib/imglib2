@@ -1,6 +1,8 @@
 package mpicbg.imglib.algorithm.math;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 
 import mpicbg.imglib.algorithm.Benchmark;
 import mpicbg.imglib.algorithm.OutputAlgorithm;
@@ -10,27 +12,159 @@ import mpicbg.imglib.cursor.LocalizableByDimCursor;
 import mpicbg.imglib.cursor.LocalizableCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.ImageFactory;
-import mpicbg.imglib.image.display.imagej.ImageJFunctions;
 import mpicbg.imglib.type.ComparableType;
+import mpicbg.imglib.type.NumericType;
 import mpicbg.imglib.type.logic.BitType;
-
-public class PickImagePeaks <T extends ComparableType<T>>implements OutputAlgorithm<BitType>, Benchmark
+/**
+ * This class implements a very simple peak-picker, with optional ellipsoidal peak suppression.
+ * Peaks are found by taking the sign of the difference operator in each dimension, differentiating
+ * between negative and non-negative differences, then finding transitions from non-negative to 
+ * negative.  This is accomplished in a random-access manner, in other words, with one
+ * {@link LocalizableCursor} irrespective of how it traverses the {@link Image}, and a
+ * {@link LocalizableByDimCursor} that is set to its 2^n-connected neighbors (where n is
+ * dimensionality).
+ * 
+ * The result is that this is a fairly simple, (hopefully) fast peak-picker, but it is accurate
+ * only for strict peaks, that is, peaks that have no neighbors of equal value.
+ * 
+ * This picker does no pre-processing, so it may be advisable to smooth your peak image before 
+ * using this. 
+ * 
+ * @author lindsey 
+ *
+ * @param <T> the {@link ComparableType} representing information stored in the {@link Image} to
+ * pick peaks from.
+ */
+public class PickImagePeaks <T extends NumericType<T>> implements OutputAlgorithm<BitType>, Benchmark
 {
 	private final Image<T> image;
 	private long pTime;
 	private Image<BitType> peakImage;
 	private ContainerFactory peakContainerFactory;
-	private final ArrayList<int[]> peakList;
+	final private ArrayList<int[]> peakLocList;
+	private final double[] suppressAxis;
+	private double suppressSum;
 
+	private class Peak implements Comparable<Peak>
+	{
+		private final T peakVal;
+		private final int[] pos;
+
+		public Peak(final int[] inPos, final T val)
+		{
+			peakVal = val;
+			pos = inPos;
+		}
+		
+		@Override
+		public int compareTo(final Peak inPeak) {
+			/*
+			 * You're probably wondering why this is negated.
+			 * It is because Collections.sort() sorts only in the forward direction.
+			 * I want these to be sorted in the descending order, and the Collections.sort
+			 * method is the only thing that should ever touch Peak.compareTo.
+			 * This is faster than sorting, then reversing.
+			 */
+			//return -(this.peakVal.compareTo(inPeak.peakVal));
+			float hereVal = peakVal.getReal();
+			float thereVal = inPeak.peakVal.getReal();
+			if (hereVal > thereVal)
+			{
+				return -1;
+			}
+			else if (hereVal == thereVal)
+			{
+				return 0;
+			}
+			else
+			{
+				return 1;
+			}
+		}
+		
+		public int[] getPosition()
+		{
+			return pos;
+		}
+		
+		public double distanceFactor(final int inPos[])
+		{
+			double val = 0;
+			for (int i = 0; i < pos.length; i++)
+			{
+				val += Math.pow((((double) pos[i] - inPos[i]) / (double)suppressAxis[i]), 2.0);
+			}
+			val =  Math.sqrt(val);
+			
+			return val;
+		}
+		
+	}
+	
 	public PickImagePeaks(final Image<T> inputImage)
 	{
 		image = inputImage;
 		pTime = 0;
 		peakContainerFactory = null;
-		peakList = new ArrayList<int[]>();
+		peakLocList = new ArrayList<int[]>();
 		peakImage = null;
+		suppressAxis = new double[inputImage.getDimensions().length];
+		Arrays.fill(suppressAxis, 0);
+		suppressSum = 0;
 	}
 		
+	/**
+	 * Carries out ellipsoidal peak suppression.
+	 * This works by first sorting the peaks in peakList by their corresponding magnitudes,
+	 * clearing peakList, then adding the peaks back in, one-by-one, only if they are not
+	 * within the suppression ellipsoid of any other peaks that have already been added, 
+	 * as defined by suppressAxis.
+	 */
+	private void doSuppression()
+	{
+		/*
+		 * I have a great suspicion that this code, as I write it, will be fairly slow.
+		 * Here there be type casts (of ints, doubles, and such), among other Bad Things.
+		 */
+		if (peakLocList.size() > 0 && suppressSum >= 1)
+		{
+			final ArrayList<Peak> suppressionList = new ArrayList<Peak>();
+			final LocalizableByDimCursor<T> imCursor = image.createLocalizableByDimCursor();
+			
+			T type;
+			//populate the suppression list.
+			for (int[] pos : peakLocList)				
+			{
+				imCursor.setPosition(pos);
+				type = imCursor.getType().clone();
+				suppressionList.add(new Peak(pos, type));
+			}
+			//sort the list.
+			Collections.sort(suppressionList);
+			peakLocList.clear();
+			//AHH! ~O(n^2)!
+			for (Peak p : suppressionList)
+			{
+				boolean isOK = true;
+				for (int[] pos : peakLocList)
+				{
+					if (p.distanceFactor(pos) < 1)
+					{
+						isOK = false;
+						break;
+					}
+					
+				}
+				
+				if (isOK)
+				{
+					peakLocList.add(p.getPosition());
+				}
+			
+			}
+		}
+	}
+	
 	@Override
 	public boolean checkInput() {		
 		return true;
@@ -73,7 +207,7 @@ public class PickImagePeaks <T extends ComparableType<T>>implements OutputAlgori
 		
 		peakImageCursor = peakImage.createLocalizableByDimCursor();
 				
-		peakList.clear();
+		peakLocList.clear();
 		
 		//Iterate Over Dimension
 		for (int d = 0; d < pos.length; ++d)
@@ -128,8 +262,6 @@ public class PickImagePeaks <T extends ComparableType<T>>implements OutputAlgori
 					peakImageCursor.getType().set(!imImagePullCursor.getType().get() && imImagePushCursor.getType().get());
 				}				
 			}
-			//ImageJFunctions.displayAsVirtualStack(peakImage).show();
-			
 		}				
 		pTime = System.currentTimeMillis() - sTime;
 		return true;
@@ -148,25 +280,67 @@ public class PickImagePeaks <T extends ComparableType<T>>implements OutputAlgori
 	/**
 	 * Returns an ArrayList containing the locations of peaks in the image associated with this
 	 * peak picker, as calculated by running the process() method.  This ArrayList will be 
-	 * populated if it is not already. The locations are placed in the list as they are returned
-	 * by calling the LocalizableCursor.getPosition() method, and are not guaranteed to have
-	 * anything like a natural order. 
+	 * populated if it is not already.
+	 * 
+	 * In the case that there is no peak suppression, the locations are placed in the list as
+	 * they are returned by calling the LocalizableCursor.getPosition() method, and are not
+	 * guaranteed to have anything like a natural order.
+	 * 
+	 * In the case that there is peak suppression, an additional step is taken.  The peaks are
+	 * first collected, then sorted by magnitude.  These are then selected in order, and the
+	 * peaks within a distance defined by the suppressAxis array are rejected.
+	 * 
+	 * There is no peak suppression if the sum of all values in suppressAxis is less than 1.
+	 * 
 	 * @return an ArrayList containing peak locations
 	 */
 	public ArrayList<int[]> getPeakList()
 	{
-		if (peakList.size() == 0 && peakImage!=null)
-		{
-			final LocalizableCursor<BitType> cursor = peakImage.createLocalizableCursor();
-			while (cursor.hasNext())
+		if (peakLocList.isEmpty() && peakImage!=null)
+		{			
+			final LocalizableCursor<BitType> pkCursor = peakImage.createLocalizableCursor();
+			peakLocList.clear();
+			while (pkCursor.hasNext())
 			{
-				cursor.fwd();
-				if (cursor.getType().get())
+				pkCursor.fwd();
+				if (pkCursor.getType().get())
 				{
-					peakList.add(cursor.getPosition());
+					peakLocList.add(pkCursor.getPosition());
 				}				
 			}
+
+			doSuppression();
+			
 		}
-		return peakList;
+		
+		return peakLocList;
 	}
+	
+	/**
+	 * Sets the peak suppression region to a spheroid of radius r.
+	 * @param r the radius of the spheroid of peak suppression.
+	 */
+	public void setSuppression(final double r)
+	{
+		Arrays.fill(suppressAxis, r);
+		suppressSum = suppressAxis.length * r;
+		
+	}
+	
+	/**
+	 * Sets the peak suppression region to an ellipsoid with dimensional axes corresponding to the
+	 * elements in r.
+	 * @param r an array with as many elements as there are dimensions in the {@link Image} with
+	 * which this {@link PickImagePeaks} was created, and represents the extent of the ellipsoid
+	 */
+	public void setSuppression(final double[] r)
+	{
+		System.arraycopy(r, 0, suppressAxis, 0, suppressAxis.length);
+		suppressSum = 0;
+		for (double a : r)
+		{
+			suppressSum += a;
+		}
+	}
+	
 }
