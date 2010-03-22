@@ -32,38 +32,42 @@ package mpicbg.imglib.type.numeric;
 import mpicbg.imglib.algorithm.math.MathLib;
 import mpicbg.imglib.container.Container;
 import mpicbg.imglib.container.ContainerFactory;
-import mpicbg.imglib.container.basictypecontainer.LongContainer;
+import mpicbg.imglib.container.basictypecontainer.DataAccess;
+import mpicbg.imglib.container.basictypecontainer.LongAccess;
+import mpicbg.imglib.container.basictypecontainer.array.LongArray;
 import mpicbg.imglib.cursor.Cursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.display.LongTypeDisplay;
 import mpicbg.imglib.type.NumericType;
 import mpicbg.imglib.type.TypeImpl;
 
-public class LongType extends TypeImpl<LongType> implements NumericType<LongType>
+final public class LongType extends TypeImpl<LongType> implements NumericType<LongType>
 {
-	final LongContainer<LongType> longStorage;
-	long[] v;
+	// the Container
+	final Container<LongType, LongAccess> storage;
+	
+	// the (sub)container that holds the information 
+	LongAccess b;
 	
 	// this is the constructor if you want it to read from an array
-	public LongType( LongContainer<LongType> longStorage )
+	public LongType( Container<LongType, LongAccess> longStorage )
 	{
-		this.longStorage = longStorage;
+		storage = longStorage;
 	}
-	
+
 	// this is the constructor if you want it to be a variable
 	public LongType( final long value )
 	{
-		longStorage = null;
-		v = new long[ 1 ];
-		v[ 0 ] = value;
-		i = 0;
+		storage = null;
+		b = new LongArray ( 1 );
+		set( value );
 	}
 
 	// this is the constructor if you want it to be a variable
 	public LongType() { this( 0 ); }
 
 	@Override
-	public LongContainer<LongType> createSuitableContainer( final ContainerFactory storageFactory, final int dim[] )
+	public Container<LongType, ? extends LongAccess> createSuitableContainer( final ContainerFactory storageFactory, final int dim[] )
 	{
 		return storageFactory.createLongInstance( dim, 1 );	
 	}
@@ -75,60 +79,92 @@ public class LongType extends TypeImpl<LongType> implements NumericType<LongType
 	}
 
 	@Override
-	public void updateDataArray( final Cursor<?> c ) 
+	public void updateContainer( final Cursor<?> c ) 
 	{ 
-		v = longStorage.getCurrentStorageArray( c ); 
+		b = storage.update( c ); 
+	}
+	
+	public long get(){ return b.getValue( i ); }
+	public void set( final long f ){ b.setValue( i, f ); }
+	
+	@Override
+	public float getReal() { return ( float )get(); }
+	
+	@Override
+	public void setReal( final float f ){ set( MathLib.round( f ) ); }
+	
+	@Override
+	public void mul( final float c )
+	{
+		set( MathLib.round( get() * c ) );
 	}
 
 	@Override
-	public void mul( final float c ) { v[ i ] = Math.round( v[ i ] * c ); }
+	public void mul( final double c )
+	{
+		set( MathLib.round( get() * c ) );
+	}
+	
+	@Override
+	public void add( final LongType c )
+	{
+		set( get() + c.get() );
+	}
 
 	@Override
-	public void mul( final double c ) { v[ i ] = Math.round( v[ i ] * c ); }
-
-	public long get() { return v[ i ]; }
-	public void set( final long f ) { v[ i ] = f; }
-	public float getReal() { return (float)v[ i ]; }
-	public void setReal( final float f ) { v[ i ] = MathLib.round( f ); }
+	public void div( final LongType c )
+	{
+		set( get() / c.get() );
+	}
 
 	@Override
-	public void add( final LongType c ) { v[ i ] += c.get(); }
+	public void mul( final LongType c )
+	{
+		set( get() * c.get() );
+	}
 
 	@Override
-	public void div( final LongType c ) { v[ i ] /= c.get(); }
-
-	@Override
-	public void mul( final LongType c ) { v[ i ] *= c.get(); }
-
-	@Override
-	public void sub( final LongType c ) { v[ i ] -= c.get(); }
+	public void sub( final LongType c )
+	{
+		set( get() - c.get() );
+	}
 
 	@Override
 	public int compareTo( final LongType c ) 
 	{ 
-		if ( v[ i ] > c.get() )
+		final long a = get();
+		final long b = c.get();
+		if ( a > b )
 			return 1;
-		else if ( v[ i ] < c.get() )
+		else if ( a < b )
 			return -1;
 		else 
 			return 0;
 	}
-
-	@Override
-	public void set( final LongType c ) { v[ i ] = c.get(); }
-
-	@Override
-	public void setOne() { v[ i ] = 1; }
-
-	@Override
-	public void setZero() { v[ i ] = 0; }
-
-	@Override
-	public void inc() { v[ i ]++; }
-
-	@Override
-	public void dec() { v[ i ]--; }
 	
+	@Override
+	public void set( final LongType c ){ set( c.get() ); }
+
+	@Override
+	public void setOne() { set( 1 ); }
+
+	@Override
+	public void setZero() { set( 0 ); }
+
+	@Override
+	public void inc()
+	{
+		long a = get();
+		set( ++a );
+	}
+
+	@Override
+	public void dec()
+	{
+		long a = get();
+		set( --a );
+	}
+
 	@Override
 	public LongType[] createArray1D(int size1){ return new LongType[ size1 ]; }
 
@@ -142,17 +178,17 @@ public class LongType extends TypeImpl<LongType> implements NumericType<LongType
 	//public LongType getType() { return this; }
 	
 	@Override
-	public LongType createType( Container<LongType> container )
+	public LongType createType( Container<LongType,?> container )
 	{
-		return new LongType( (LongContainer<LongType>)container );
+		return new LongType( (Container<LongType, LongAccess>)(LongAccess)container );
 	}
 
 	@Override
 	public LongType createVariable(){ return new LongType( 0 ); }
 
 	@Override
-	public LongType clone(){ return new LongType( v[ i ] ); }
+	public LongType clone(){ return new LongType( get() ); }
 
 	@Override
-	public String toString() { return "" + v[i]; }
+	public String toString() { return "" + get(); }
 }

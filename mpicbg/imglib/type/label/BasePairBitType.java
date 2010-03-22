@@ -31,8 +31,8 @@ package mpicbg.imglib.type.label;
 
 import mpicbg.imglib.container.Container;
 import mpicbg.imglib.container.ContainerFactory;
-import mpicbg.imglib.container.array.BitArray;
-import mpicbg.imglib.container.basictypecontainer.BitContainer;
+import mpicbg.imglib.container.basictypecontainer.BitAccess;
+import mpicbg.imglib.container.basictypecontainer.array.BitArray;
 import mpicbg.imglib.cursor.Cursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.display.BasePairTypeDisplay;
@@ -44,23 +44,26 @@ public class BasePairBitType extends TypeImpl<BasePairBitType> implements BasePa
 {
 	public static enum Base { gap, N, A, T, G, C; }
 			
-	final BitContainer<BasePairBitType> bitStorage;
-	BitContainer<BasePairBitType> b;
+	// the Container
+	final Container<BasePairBitType, BitAccess> storage;
+	
+	// the (sub)container that holds the information 
+	BitAccess b;
 	
 	// the adresses of the bits that we store
 	int j1, j2, j3;
 	
 	// this is the constructor if you want it to read from an array
-	public BasePairBitType( final BitContainer<BasePairBitType> bitStorage )
+	public BasePairBitType( Container<BasePairBitType, BitAccess> bitStorage )
 	{
-		this.bitStorage = bitStorage;
-		this.b = bitStorage;
+		storage = bitStorage;
 	}
 	
 	// this is the constructor if you want it to be a variable
 	public BasePairBitType( final Base value )
 	{
-		this( new BitArray<BasePairBitType>( null, new int[]{1}, 3 ) );
+		storage = null;
+		b = new BitArray( 3 );
 		set( value );
 	}	
 
@@ -68,16 +71,15 @@ public class BasePairBitType extends TypeImpl<BasePairBitType> implements BasePa
 	public BasePairBitType() { this( Base.N ); }
 	
 	@Override
-	public Container<BasePairBitType> createSuitableContainer( final ContainerFactory storageFactory, final int dim[] )	
+	public Container<BasePairBitType, ? extends BitAccess> createSuitableContainer( final ContainerFactory storageFactory, final int dim[] )	
 	{
 		return storageFactory.createBitInstance( dim, 3 );	
 	}
 	
 	@Override
-	public void updateDataArray( final Cursor<?> c ) 
+	public void updateContainer( final Cursor<?> c ) 
 	{
-		b = bitStorage;
-		b.updateStorageArray( c );		
+		b = storage.update( c );	
 	}
 	
 	@Override
@@ -257,7 +259,10 @@ public class BasePairBitType extends TypeImpl<BasePairBitType> implements BasePa
 	//public BasePairBitType getType() { return this; }
 
 	@Override
-	public BasePairBitType createType( Container<BasePairBitType> container ){ return new BasePairBitType(); }
+	public BasePairBitType createType( Container<BasePairBitType,?> container )
+	{ 
+		return new BasePairBitType( (Container<BasePairBitType, BitAccess>)container ); 
+	}
 	
 	@Override
 	public BasePairBitType createVariable(){ return new BasePairBitType(); }

@@ -43,7 +43,7 @@ public class ArrayLocalizableByDimOutsideCursor<T extends Type<T>> extends Array
 	
 	boolean isOutside = false;
 	
-	public ArrayLocalizableByDimOutsideCursor( final Array<T> container, final Image<T> image, final T type, final OutsideStrategyFactory<T> outsideStrategyFactory ) 
+	public ArrayLocalizableByDimOutsideCursor( final Array<T,?> container, final Image<T> image, final T type, final OutsideStrategyFactory<T> outsideStrategyFactory ) 
 	{
 		super( container, image, type );
 		
@@ -77,7 +77,7 @@ public class ArrayLocalizableByDimOutsideCursor<T extends Type<T>> extends Array
 		for ( int d = 1; d < numDimensions; d++ )
 			position[ d ] = 0;
 		
-		type.updateDataArray( this );
+		type.updateContainer( this );
 	}
 	
 	@Override
@@ -168,7 +168,7 @@ public class ArrayLocalizableByDimOutsideCursor<T extends Type<T>> extends Array
 				{
 					// we re-entered the image
 					// new location is inside the image					
-					type.updateDataArray( this );
+					type.updateContainer( this );
 					
 					// get the offset inside the image
 					type.updateIndex( container.getPos( position ) );
@@ -264,7 +264,7 @@ public class ArrayLocalizableByDimOutsideCursor<T extends Type<T>> extends Array
 			// new location is inside the image
 			
 			if ( wasOutside ) // we reenter the image with this setPosition() call
-				type.updateDataArray( this );
+				type.updateContainer( this );
 			
 			// get the offset inside the image
 			type.updateIndex( container.getPos( position ) );			

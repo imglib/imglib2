@@ -29,9 +29,10 @@
  */
 package mpicbg.imglib.container;
 
+import mpicbg.imglib.container.basictypecontainer.DataAccess;
 import mpicbg.imglib.type.Type;
 
-public interface PixelGridContainer<T extends Type< T > > extends Container< T >
+public interface PixelGridContainer<T extends Type< T >, A extends DataAccess > extends Container< T,A >
 {
 	public int getNumEntities();
 	public int getNumEntitiesPerPixel();

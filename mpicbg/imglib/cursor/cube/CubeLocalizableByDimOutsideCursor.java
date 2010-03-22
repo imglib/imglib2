@@ -43,7 +43,7 @@ public class CubeLocalizableByDimOutsideCursor<T extends Type<T>> extends CubeLo
 	
 	boolean isOutside = false;
 	
-	public CubeLocalizableByDimOutsideCursor( final Cube<?,?,T> container, final Image<T> image, final T type, final OutsideStrategyFactory<T> outsideStrategyFactory ) 
+	public CubeLocalizableByDimOutsideCursor( final Cube<T,?> container, final Image<T> image, final T type, final OutsideStrategyFactory<T> outsideStrategyFactory ) 
 	{
 		super( container, image, type );
 		
@@ -93,7 +93,7 @@ public class CubeLocalizableByDimOutsideCursor<T extends Type<T>> extends CubeLo
 			cubePosition[ d ] = 0;
 		}
 		
-		type.updateDataArray( this );
+		type.updateContainer( this );
 	}
 
 	@Override
@@ -156,7 +156,7 @@ public class CubeLocalizableByDimOutsideCursor<T extends Type<T>> extends CubeLo
 				
 				if ( !isOutside )
 				{
-					type.updateDataArray( this );			
+					type.updateContainer( this );			
 					
 					// the cube position in "cube space" from the image coordinates 
 					container.getCubeElementPosition( position, cubePosition );
@@ -330,7 +330,7 @@ public class CubeLocalizableByDimOutsideCursor<T extends Type<T>> extends CubeLo
 		{
 			// new location is inside the image
 			if ( wasOutside ) // we reenter the image with this setPosition() call
-				type.updateDataArray( this );			
+				type.updateContainer( this );			
 						
 			// the cube position in "cube space" from the image coordinates 
 			container.getCubeElementPosition( position, cubePosition );

@@ -31,7 +31,8 @@ package mpicbg.imglib.type.numeric;
 
 import mpicbg.imglib.container.Container;
 import mpicbg.imglib.container.ContainerFactory;
-import mpicbg.imglib.container.basictypecontainer.FloatContainer;
+import mpicbg.imglib.container.basictypecontainer.FloatAccess;
+import mpicbg.imglib.container.basictypecontainer.array.FloatArray;
 import mpicbg.imglib.cursor.Cursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.display.ComplexFloatTypePowerSpectrumDisplay;
@@ -40,26 +41,26 @@ import mpicbg.imglib.type.TypeImpl;
 
 public class ComplexFloatType extends TypeImpl<ComplexFloatType> implements NumericType<ComplexFloatType>
 {
-	final FloatContainer<ComplexFloatType> floatStorage;
-	float[] v;
+	// the Container
+	final Container<ComplexFloatType, FloatAccess> storage;
 	
-	// the index position of the real and complex component in the array
+	// the (sub)container that holds the information 
+	FloatAccess b;
+	
 	int realI, complexI;
 	
 	// this is the constructor if you want it to read from an array
-	public ComplexFloatType( FloatContainer<ComplexFloatType> floatStorage )
+	public ComplexFloatType( Container<ComplexFloatType, FloatAccess> complexfloatStorage )
 	{
-		this.floatStorage = floatStorage;
+		storage = complexfloatStorage;
 	}
 	
 	// this is the constructor if you want it to be a variable
 	public ComplexFloatType( final float real, final float complex )
 	{
-		floatStorage = null;
-		v = new float[ 2 ];
-		v[ 0 ] = real;
-		v[ 1 ] = complex;
-		i = 0;
+		storage = null;
+		b = new FloatArray( 2 );
+		set( real, complex );
 		realI = 0;
 		complexI = 1;
 	}
@@ -79,10 +80,8 @@ public class ComplexFloatType extends TypeImpl<ComplexFloatType> implements Nume
 	public void incIndex() 
 	{ 
 		++i;
-		++realI;
-		++realI;
-		++complexI;
-		++complexI;
+		realI += 2;
+		complexI += 2;
 	}
 	@Override
 	public void incIndex( final int increment ) 
@@ -97,10 +96,8 @@ public class ComplexFloatType extends TypeImpl<ComplexFloatType> implements Nume
 	public void decIndex() 
 	{ 
 		--i; 
-		--realI;
-		--realI;
-		--complexI;
-		--complexI;
+		realI -= 2;
+		complexI -= 2;
 	}
 	@Override
 	public void decIndex( final int decrement ) 
@@ -112,7 +109,7 @@ public class ComplexFloatType extends TypeImpl<ComplexFloatType> implements Nume
 	}
 
 	@Override
-	public FloatContainer<ComplexFloatType> createSuitableContainer( final ContainerFactory storageFactory, final int dim[] )
+	public Container<ComplexFloatType, ? extends FloatAccess> createSuitableContainer( final ContainerFactory storageFactory, final int dim[] )
 	{
 		return storageFactory.createFloatInstance( dim, 2 );	
 	}
@@ -124,101 +121,102 @@ public class ComplexFloatType extends TypeImpl<ComplexFloatType> implements Nume
 	}
 	
 	@Override
-	public void updateDataArray( final Cursor<?> c ) 
+	public void updateContainer( final Cursor<?> c ) 
 	{ 
-		v = floatStorage.getCurrentStorageArray( c ); 
+		b = storage.update( c ); 
 	}
 	
-	@Override
-	public void mul( final float c ) { v[ realI ] *= c; }
-
-	@Override
-	public void mul( final double c ) { v[ realI ] *= c; }
-
-	public float getReal() { return v[ realI ]; }
-	public float getComplex() { return v[ complexI ]; }
+	public float getReal() { return b.getValue( realI ); }
+	public float getComplex() { return b.getValue( complexI ); }
 	
-	public void setReal( final float real ) { v[ realI ] = real; }
-	public void setComplex( final float complex ) { v[ complexI ] = complex; }
+	public void setReal( final float real ){ b.setValue( realI, real ); }
+	public void setComplex( final float complex ){ b.setValue( complexI, complex ); }
 	public void set( final float real, final float complex ) 
 	{ 
-		v[ realI ] = real;
-		v[ complexI ] = complex;
+		b.setValue( realI, real );
+		b.setValue( complexI, complex );
 	}
+	
+	@Override
+	public void mul( final float c ){ setReal( getReal() * c ); }
+
+	@Override
+	public void mul( final double c ){ setReal( ( float )( getReal() * c ) ); }
 
 	@Override
 	public void add( final ComplexFloatType c ) 
-	{ 
-		v[ realI ] += c.getReal(); 
-		v[ complexI ] += c.getComplex(); 
+	{
+		setReal( getReal() + c.getReal() );
+		setComplex( getComplex() + c.getComplex() );
 	}
 
 	@Override
 	public void div( final ComplexFloatType c ) 
 	{ 
-		final float a1 = v[ realI ]; 
-		final float b1 = v[ complexI ];
+		final float a1 = getReal(); 
+		final float b1 = getComplex();
 		final float c1 = c.getReal();
 		final float d1 = c.getComplex();
 		
-		v[ realI ] = ( a1*c1 + b1*d1 ) / ( c1*c1 + d1*d1 );
-		v[ complexI ] = ( b1*c1 - a1*d1 ) / ( c1*c1 + d1*d1 );
+		setReal( ( a1*c1 + b1*d1 ) / ( c1*c1 + d1*d1 ) );
+		setComplex( ( b1*c1 - a1*d1 ) / ( c1*c1 + d1*d1 ) );
 	}
 	
-	public void complexConjugate() { v[ complexI ] = -v[ complexI ]; }
+	public void complexConjugate(){ setComplex( -getComplex() ); }
 
 	public void normalizeLength( final float threshold )
 	{
-		final float real = v[ realI ];
-		final float complex = v[ complexI ];
+		final float real = getReal();
+		final float complex = getComplex();
 		
 		final float length = (float)Math.sqrt( real*real + complex*complex );
 		
 		if ( length < threshold )
 		{
-			v[ realI ] = v[ complexI ] = 0;
+			setReal( 0 );
+			setComplex( 0 );
 		}
 		else
 		{
-			v[ realI ] /= length;
-			v[ complexI ] /= length;
+			setReal( real / length );
+			setComplex( complex / length );
 		}
 	}
 	
 	public void switchRealComplex()
 	{
-		final float a = v[ realI ];
-		v[ realI ] = v[ complexI ];
-		v[ complexI ] = a;
+		final float a = getReal();
+		setReal( getComplex() );
+		setComplex( a );
 	}
 
 	@Override
 	public void mul( final ComplexFloatType t ) 
 	{
 		// a + bi
-		final float a = v[ realI ]; 
-		final float b = v[ complexI ];
+		final float a = getReal(); 
+		final float b = getComplex();
 		
 		// c + di
 		final float c = t.getReal();
 		final float d = t.getComplex();
 		
-		v[ realI ] = a*c - b*d; 
-		v[ complexI ] = a*d + b*c; 
+		setReal( a*c - b*d ); 
+		setComplex( a*d + b*c ); 
 	}
 
 	@Override
 	public void sub( final ComplexFloatType c ) 
 	{ 
-		v[ realI ] -= c.getReal(); 
-		v[ complexI ] -= c.getComplex(); 
+		setReal( getReal() - c.getReal() ); 
+		setComplex( getComplex() - c.getComplex() ); 
 	}
 
 	@Override
 	public int compareTo( final ComplexFloatType c ) 
 	{
-		final float real1 = v[ realI ];
-		final float complex1 = v[ complexI ];
+		final float real1 = getReal();
+		final float complex1 = getComplex();
 		final float real2 = c.getReal();
 		final float complex2 = c.getComplex();
 		
@@ -233,30 +231,37 @@ public class ComplexFloatType extends TypeImpl<ComplexFloatType> implements Nume
 	@Override
 	public void set( final ComplexFloatType c ) 
 	{ 
-		v[ realI ] = c.getReal();
-		v[ complexI ] = c.getComplex();
+		setReal( c.getReal() );
+		setComplex( c.getComplex() );
 	}
 
 	@Override
 	public void setOne() 
 	{ 
-		v[ realI ] = 1; 
-		v[ complexI ] = 0; 
+		setReal( 1 );
+		setComplex( 0 );
 	}
 
 	@Override
 	public void setZero() 
 	{ 
-		v[ realI ] = 0; 
-		v[ complexI ] = 0; 
+		setReal( 0 );
+		setComplex( 0 );
+	}
+	@Override
+	public void inc()
+	{
+		float a = getReal();
+		setReal( ++a );
 	}
 
 	@Override
-	public void inc() { v[ realI ]++; }
+	public void dec()
+	{
+		float a = getReal();
+		setReal( --a );
+	}
 
-	@Override
-	public void dec() { v[ realI ]--; }
-	
 	@Override
 	public ComplexFloatType[] createArray1D(int size1){ return new ComplexFloatType[ size1 ]; }
 
@@ -270,17 +275,17 @@ public class ComplexFloatType extends TypeImpl<ComplexFloatType> implements Nume
 	//public ComplexFloatType getType() { return this; }
 
 	@Override
-	public ComplexFloatType createType( Container<ComplexFloatType> container )
+	public ComplexFloatType createType( Container<ComplexFloatType,?> container )
 	{
-		return new ComplexFloatType( (FloatContainer<ComplexFloatType>)container );
+		return new ComplexFloatType( (Container<ComplexFloatType, FloatAccess>)container );
 	}
 	
 	@Override
 	public ComplexFloatType createVariable(){ return new ComplexFloatType( 0, 0 ); }
 	
 	@Override
-	public ComplexFloatType clone(){ return new ComplexFloatType( v[ realI ], v[ complexI] ); }
+	public ComplexFloatType clone(){ return new ComplexFloatType( getReal(), getComplex() ); }
 	
 	@Override
-	public String toString() { return "(" + v[ realI ] + ") + (" + v[complexI] + ")i"; }
+	public String toString(){ return "(" + getReal() + ") + (" + getComplex() + ")i"; }
 }

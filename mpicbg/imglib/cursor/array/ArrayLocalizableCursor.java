@@ -30,7 +30,8 @@
 package mpicbg.imglib.cursor.array;
 
 import mpicbg.imglib.container.array.Array;
-import mpicbg.imglib.container.array.FakeArray;
+import mpicbg.imglib.container.basictypecontainer.FakeAccess;
+import mpicbg.imglib.container.basictypecontainer.array.FakeArray;
 import mpicbg.imglib.cursor.LocalizableCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.type.Type;
@@ -41,7 +42,7 @@ public class ArrayLocalizableCursor<T extends Type<T>> extends ArrayCursor<T> im
 	final protected int numDimensions; 	
 	final protected int[] position, dimensions;
 	
-	public ArrayLocalizableCursor( final Array<T> container, final Image<T> image, final T type ) 
+	public ArrayLocalizableCursor( final Array<T,?> container, final Image<T> image, final T type ) 
 	{
 		super( container, image, type );
 
@@ -56,7 +57,8 @@ public class ArrayLocalizableCursor<T extends Type<T>> extends ArrayCursor<T> im
 	
 	public static ArrayLocalizableCursor<FakeType> createLinearCursor( final int[] dim )
 	{
-		return new ArrayLocalizableCursor<FakeType>( new FakeArray<FakeType>( dim ), null, new FakeType() );
+		final Array<FakeType, FakeAccess> array = new Array<FakeType, FakeAccess>( null, new FakeArray(), dim, 1 );
+		return new ArrayLocalizableCursor<FakeType>( array, null, new FakeType() );
 	}
 	
 	@Override
@@ -99,7 +101,7 @@ public class ArrayLocalizableCursor<T extends Type<T>> extends ArrayCursor<T> im
 		for ( int d = 1; d < numDimensions; d++ )
 			position[ d ] = 0;
 		
-		type.updateDataArray( this );
+		type.updateContainer( this );
 	}
 
 	@Override

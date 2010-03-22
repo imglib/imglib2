@@ -29,37 +29,47 @@
  */
 package mpicbg.imglib.container.cube;
 
+import mpicbg.imglib.container.ContainerImpl;
+import mpicbg.imglib.container.PixelGridContainerImpl;
 import mpicbg.imglib.container.array.Array;
+import mpicbg.imglib.container.basictypecontainer.array.ArrayDataAccess;
 import mpicbg.imglib.type.Type;
 
-public abstract class CubeElement<C extends CubeElement<C,D,T>, D extends Cube<C,D,T>, T extends Type<T>> extends Array<T>
+public class CubeElement< T extends Type<T>, A extends ArrayDataAccess<A>> //extends Array<T,A>
 {
-	final protected int[] offset, step;	
-	final protected D parent;
-	final protected int cubeId;
+	final protected int[] offset, step, dim;	
+	final protected int cubeId, numDimensions, numPixels, numEntities;
 	
-	public CubeElement( final D parent, final int cubeId, final int[] dim, final int offset[], final int entitiesPerPixel)
+	// the ArrayDataAccess containing the data
+	final protected A data;
+	
+	public CubeElement( final A creator, final int cubeId, final int[] dim, final int offset[], final int entitiesPerPixel)
 	{
-		super( null, dim, entitiesPerPixel );
 		this.offset = offset;		
-		this.parent = parent;
 		this.cubeId = cubeId;
+		this.numDimensions = dim.length;
+		this.dim = dim;
+		this.numPixels = ContainerImpl.getNumPixels( dim );
+		this.numEntities = PixelGridContainerImpl.getNumEntities( dim, entitiesPerPixel );
 		
-		step = new int[ parent.getNumDimensions() ];
+		step = new int[ numDimensions ];
+		
+		this.data = creator.createArray( numEntities );
 		
 		// the steps when moving inside a cube
 		Array.createAllocationSteps( dim, step );		
-	}	
+	}
 	
-	// done by Array
-	/*protected final int getPosLocal( final int[] l ) 
-	{ 
-		int i = l[ 0 ];
-		for ( int d = 1; d < dim.length; ++d )
-			i += l[ d ] * step[ d ];
-		
-		return i;
-	}*/
+	protected A getData() { return data; }
+	protected void close() { data.close(); }
+	
+	public int getNumPixels() { return numPixels; }
+	public int getNumEntities() { return numEntities; }
+	public void getDimensions( final int[] dim )
+	{
+		for ( int d = 0; d < numDimensions; ++d )
+			dim[ d ] = this.dim[ d ];
+	}
 	
 	public void getSteps( final int[] step )
 	{

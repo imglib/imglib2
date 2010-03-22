@@ -48,10 +48,10 @@ public abstract class CursorImpl<T extends Type<T>> implements Cursor<T>
 {
 	final protected T type;
 	final protected Image<T> image;
-	final protected Container<T> container;
+	final protected Container<T,?> container;
 	protected boolean isClosed = false, debug = false;
 	
-	public CursorImpl( final Container<T> container, final Image<T> image, final T type )
+	public CursorImpl( final Container<T,?> container, final Image<T> image, final T type )
 	{
 		this.type = type;	
 		this.image = image;
@@ -72,7 +72,7 @@ public abstract class CursorImpl<T extends Type<T>> implements Cursor<T>
 	@Override
 	public T getType() { return type; }
 	@Override
-	public Container<T> getStorageContainer() { return container; }
+	public Container<T,?> getStorageContainer() { return container; }
 	@Override
 	public boolean isActive() { return !isClosed; }
 	@Override

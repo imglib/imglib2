@@ -30,6 +30,8 @@
 package mpicbg.imglib.cursor.array;
 
 import mpicbg.imglib.container.array.Array;
+import mpicbg.imglib.container.basictypecontainer.FakeAccess;
+import mpicbg.imglib.container.basictypecontainer.array.FakeArray;
 import mpicbg.imglib.cursor.LocalizableByDimCursor;
 import mpicbg.imglib.cursor.LocalizableCursor;
 //import mpicbg.imglib.cursor.link.CursorLink;
@@ -39,6 +41,7 @@ import mpicbg.imglib.cursor.special.LocalNeighborhoodCursorFactory;
 import mpicbg.imglib.cursor.special.RegionOfInterestCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.type.Type;
+import mpicbg.imglib.type.label.FakeType;
 
 public class ArrayLocalizableByDimCursor<T extends Type<T>> extends ArrayLocalizableCursor<T> implements LocalizableByDimCursor<T>
 {
@@ -48,7 +51,7 @@ public class ArrayLocalizableByDimCursor<T extends Type<T>> extends ArrayLocaliz
 	
 	int numNeighborhoodCursors = 0;
 	
-	public ArrayLocalizableByDimCursor( final Array<T> container, final Image<T> image, final T type ) 
+	public ArrayLocalizableByDimCursor( final Array<T,?> container, final Image<T> image, final T type ) 
 	{
 		super( container, image, type );
 		
@@ -56,6 +59,12 @@ public class ArrayLocalizableByDimCursor<T extends Type<T>> extends ArrayLocaliz
 		tmp = new int[ numDimensions ];
 		//link = new NullLink();
 	}	
+	
+	public static ArrayLocalizableByDimCursor<FakeType> createLinearByDimCursor( final int[] dim )
+	{
+		final Array<FakeType, FakeAccess> array = new Array<FakeType, FakeAccess>( null, new FakeArray(), dim, 1 );
+		return new ArrayLocalizableByDimCursor<FakeType>( array, null, new FakeType() );
+	}
 	
 	@Override
 	public synchronized LocalNeighborhoodCursor<T> createLocalNeighborhoodCursor()

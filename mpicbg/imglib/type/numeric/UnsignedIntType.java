@@ -31,14 +31,15 @@ package mpicbg.imglib.type.numeric;
 
 import mpicbg.imglib.algorithm.math.MathLib;
 import mpicbg.imglib.container.Container;
-import mpicbg.imglib.container.basictypecontainer.IntContainer;
+import mpicbg.imglib.container.basictypecontainer.DataAccess;
+import mpicbg.imglib.container.basictypecontainer.IntAccess;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.display.UnsignedIntTypeDisplay;
 
 public class UnsignedIntType extends GenericIntType<UnsignedIntType>
 {
 	// this is the constructor if you want it to read from an array
-	public UnsignedIntType( final IntContainer<UnsignedIntType> intStorage ) { super( intStorage );	}
+	public UnsignedIntType( Container<UnsignedIntType, IntAccess> intStorage ) { super( intStorage ); }
 
 	// this is the constructor if you want it to be a variable
 	public UnsignedIntType( final long value ) { super( getCodedSignedIntChecked(value) ); }
@@ -50,8 +51,8 @@ public class UnsignedIntType extends GenericIntType<UnsignedIntType>
 	{
 		if ( unsignedInt < 0 )
 			unsignedInt = 0;
-		else if ( unsignedInt > 4200000000l )
-			unsignedInt = 4200000000l;
+		else if ( unsignedInt > 4294967295l )
+			unsignedInt = 4294967295l;
 		
 		return getCodedSignedInt( unsignedInt );
 	}
@@ -62,28 +63,39 @@ public class UnsignedIntType extends GenericIntType<UnsignedIntType>
 	public UnsignedIntTypeDisplay getDefaultDisplay( Image<UnsignedIntType> image ) { return new UnsignedIntTypeDisplay( image ); }
 
 	@Override
-	public void mul( final float c ) { v[ i ] = getCodedSignedInt( MathLib.round( getUnsignedInt( v[ i ] ) * c ) ); }
+	public void mul( final float c )
+	{
+		final long a = getUnsignedInt( getValue() );
+		setValue( getCodedSignedInt( MathLib.round( a * c ) ) );
+	}
 
 	@Override
-	public void mul( final double c ) { v[ i ] = getCodedSignedInt( (int)MathLib.round( getUnsignedInt( v[ i ] ) * c ) ); }
+	public void mul( final double c )
+	{
+		final long a = getUnsignedInt( getValue() );
+		setValue( getCodedSignedInt( ( int )MathLib.round( a * c ) ) );
+	}
 
-	public long get() { return getUnsignedInt( v[ i ] ); }
-	public void set( final long f ) { v[ i ] = getCodedSignedInt( f ); }
-	public float getReal() { return getUnsignedInt( v[ i ] ); }
-	public void setReal( final float f ) { v[ i ] = getCodedSignedInt( MathLib.round( f ) ); }
+	public long get(){ return getUnsignedInt( getValue() ); }
+	public void set( final long f ){ setValue( getCodedSignedInt( f ) ); }
+	public float getReal(){ return get(); }
+	public void setReal( final float f ){ set( MathLib.round( f ) ); }
 
 	@Override
-	public void div( final UnsignedIntType c ) { v[ i ] = getCodedSignedInt( get() / c.get() ); }
+	public void div( final UnsignedIntType c )
+	{
+		set( get() / c.get() );
+	}
 
 	@Override
 	public int compareTo( final UnsignedIntType c ) 
 	{
-		final long value1 = get();
-		final long value2 = c.get();
+		final long a = get();
+		final long b = c.get();
 		
-		if ( value1 > value2 )
+		if ( a > b )
 			return 1;
-		else if ( value1 < value2 )
+		else if ( a < b )
 			return -1;
 		else 
 			return 0;
@@ -99,14 +111,17 @@ public class UnsignedIntType extends GenericIntType<UnsignedIntType>
 	public UnsignedIntType[][][] createArray3D( final int size1, final int size2, final int size3 ) { return new UnsignedIntType[ size1 ][ size2 ][ size3 ]; }
 
 	@Override
-	public UnsignedIntType createType( final Container<UnsignedIntType> container ) { return new UnsignedIntType( (IntContainer<UnsignedIntType>)container ); }
+	public UnsignedIntType createType( final Container<UnsignedIntType, ?> container ) 
+	{ 
+		return new UnsignedIntType( (Container<UnsignedIntType, IntAccess>)container ); 
+	}
 	
 	@Override
 	public UnsignedIntType createVariable(){ return new UnsignedIntType( 0 ); }
 
 	@Override
-	public UnsignedIntType clone(){ return new UnsignedIntType( v[ i ] ); }
+	public UnsignedIntType clone(){ return new UnsignedIntType( get() ); }
 
 	@Override
-	public String toString() { return "" + getUnsignedInt( v[i] ); }
+	public String toString() { return "" + get(); }
 }

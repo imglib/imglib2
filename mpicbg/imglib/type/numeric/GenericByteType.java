@@ -30,93 +30,141 @@
 package mpicbg.imglib.type.numeric;
 
 import mpicbg.imglib.algorithm.math.MathLib;
+import mpicbg.imglib.container.Container;
 import mpicbg.imglib.container.ContainerFactory;
-import mpicbg.imglib.container.basictypecontainer.ByteContainer;
+import mpicbg.imglib.container.basictypecontainer.ByteAccess;
+import mpicbg.imglib.container.basictypecontainer.array.ByteArray;
 import mpicbg.imglib.cursor.Cursor;
 import mpicbg.imglib.type.NumericType;
 import mpicbg.imglib.type.TypeImpl;
 
 public abstract class GenericByteType<T extends GenericByteType<T>> extends TypeImpl<T> implements NumericType<T>
 {
-	final ByteContainer<T> byteStorage;
-	byte[] v;
+	// the Container
+	final Container<T, ByteAccess> storage;
+	
+	// the (sub)container that holds the information 
+	ByteAccess b;
 	
 	// this is the constructor if you want it to read from an array
-	protected GenericByteType( final ByteContainer<T> byteStorage )
+	public GenericByteType( Container<T, ByteAccess> byteStorage )
 	{
-		this.byteStorage = byteStorage;
+		storage = byteStorage;
 	}
 	
 	// this is the constructor if you want it to be a variable
 	protected GenericByteType( final byte value )
 	{
-		byteStorage = null;
-		v = new byte[ 1 ];
-		v[ 0 ] = value;
-		i = 0;
+		storage = null;
+		b = new ByteArray( 1 );
+		setValue( value );
 	}
 
 	// this is the constructor if you want it to be a variable
-	protected GenericByteType() { this( (byte)0 ); }
+	protected GenericByteType() { this( ( byte )0 ); }
 	
 	@Override
-	public ByteContainer<T> createSuitableContainer( final ContainerFactory storageFactory, final int dim[] )
+	public Container<T, ? extends ByteAccess> createSuitableContainer( final ContainerFactory storageFactory, final int dim[] )
 	{
 		return storageFactory.createByteInstance( dim, 1 );	
 	}
 		
 	@Override
-	public void updateDataArray( Cursor<?> c ) 
+	public void updateContainer( final Cursor< ? > c ) 
 	{ 
-		v = byteStorage.getCurrentStorageArray( c ); 
+		b = storage.update( c ); 
+	}
+	
+	protected byte getValue(){ return b.getValue( i ); }
+	protected void setValue( final byte f ){ b.setValue( i, f ); }
+	
+	@Override
+	public float getReal() { return getValue(); }
+	
+	@Override
+	public void setReal( final float f ){ setValue( ( byte )MathLib.round( f ) ); }
+	
+	@Override
+	public void mul( final float c )
+	{
+		final byte a = getValue();
+		setValue( ( byte )MathLib.round( a * c ) );
 	}
 
 	@Override
-	public void mul( final float c ) { v[ i ] = (byte)Math.round( v[ i ] * c ); }
+	public void mul( final double c )
+	{
+		final byte a = getValue();
+		setValue( ( byte )MathLib.round( a * c ) );
+	}
 
 	@Override
-	public void mul( final double c ) { v[ i ] = (byte)Math.round( v[ i ] * c ); }
-
-	protected byte getValue() { return v[ i ]; }
-	protected void setValue( final byte f ) { v[ i ] = f; }
-	public float getReal() { return v[ i ]; }
-	public void setReal( final float f ) { v[ i ] = (byte)MathLib.round( f ); }
-
-	@Override
-	public void add( final T c ) { v[ i ] += c.getValue(); }
+	public void add( final T c )
+	{
+		final byte a = getValue( );
+		setValue( ( byte )( a + c.getValue() ) );
+	}
 
 	@Override
-	public void div( final T c ) { v[ i ] /= c.getValue(); }
+	public void div( final T c )
+	{
+		final byte a = getValue();
+		setValue( ( byte )( a / c.getValue() ) );
+	}
 
 	@Override
-	public void mul( final T c ) { v[ i ] *= c.getValue(); }
+	public void mul( final T c )
+	{
+		final byte a = getValue( );
+		setValue( ( byte )( a * c.getValue() ) );
+	}
 
 	@Override
-	public void sub( final T c ) { v[ i ] -= c.getValue(); }
-
-	@Override
-	public void set( final T c ) { v[ i ] = c.getValue(); }
+	public void sub( final T c )
+	{
+		final byte a = getValue( );
+		setValue( ( byte )( a - c.getValue() ) );
+	}
 
 	@Override
 	public int compareTo( final T c ) 
 	{ 
-		if ( v[ i ] > c.getValue() )
+		final byte a = getValue();
+		final byte b = c.getValue();
+		if ( a > b )
 			return 1;
-		else if ( v[ i ] < c.getValue() )
+		else if ( a < b )
 			return -1;
 		else 
 			return 0;
 	}
 	
 	@Override
-	public void setOne() { v[ i ] = 1; }
+	public void set( final T c )
+	{
+		setValue( c.getValue() );
+	}
 
 	@Override
-	public void setZero() { v[ i ] = 0; }
+	public void setOne() { setValue( ( byte )1 ); }
 
 	@Override
-	public void inc() { v[ i ]++; }
+	public void setZero() { setValue( ( byte )0 ); }
 
 	@Override
-	public void dec() { v[ i ]--; }		
+	public void inc()
+	{
+		byte a = getValue();
+		setValue( ++a );
+	}
+
+	@Override
+	public void dec()
+	{
+		byte a = getValue();
+		setValue( --a );
+	}
+	
+	@Override
+	public String toString() { return "" + getValue(); }
 }

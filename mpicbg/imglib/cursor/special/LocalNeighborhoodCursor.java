@@ -29,11 +29,11 @@
  */
 package mpicbg.imglib.cursor.special;
 
-import mpicbg.imglib.container.array.FakeArray;
+import mpicbg.imglib.container.array.Array;
 import mpicbg.imglib.cursor.CursorImpl;
 import mpicbg.imglib.cursor.LocalizableByDimCursor;
 import mpicbg.imglib.cursor.LocalizableCursor;
-import mpicbg.imglib.cursor.array.ArrayLocalizableByDimCursor;
+import mpicbg.imglib.cursor.array.ArrayLocalizableCursor;
 import mpicbg.imglib.type.Type;
 import mpicbg.imglib.type.label.FakeType;
 
@@ -64,13 +64,13 @@ public class LocalNeighborhoodCursor<T extends Type<T>> extends CursorImpl<T>
 		for ( int d = 0; d < numDimensions; ++d )
 			dim[ d ] = 3;
 
-		this.neigborhoodCursor = new ArrayLocalizableByDimCursor<FakeType>( new FakeArray<FakeType>( dim ), null, new FakeType() );
+		this.neigborhoodCursor = ArrayLocalizableCursor.createLinearCursor( dim );
 		this.isActive = true;
 
 		for ( int d = 0; d < numDimensions; ++d )
 			dim[ d ] = 1;
 
-		this.centralPositionIndex = ((FakeArray<FakeType>)neigborhoodCursor.getStorageContainer()).getPos( dim );
+		this.centralPositionIndex = ((Array<FakeType, ?>)neigborhoodCursor.getStorageContainer()).getPos( dim );
 	}
 	
 	@Override

@@ -37,11 +37,11 @@ import mpicbg.imglib.type.Type;
 
 public class ImagePlusCursor<T extends Type<T>> extends CursorImpl<T> implements Cursor<T>
 {
-	protected final ImagePlusContainer<T> container;
+	protected final ImagePlusContainer<T,?> container;
 	protected final int slicePixelCountMinus1, maxSliceMinus1;
 	protected int slice; // TODO: support hyperstacks	
 
-	public ImagePlusCursor( final ImagePlusContainer<T> container, final Image<T> image, final T type )
+	public ImagePlusCursor( final ImagePlusContainer<T,?> container, final Image<T> image, final T type )
 	{
 		super( container, image, type );
 
@@ -70,7 +70,7 @@ public class ImagePlusCursor<T extends Type<T>> extends CursorImpl<T> implements
 		{
 			slice++;
 			type.updateIndex( 0 );
-			type.updateDataArray( this );
+			type.updateContainer( this );
 		}
 	}
 
@@ -87,12 +87,12 @@ public class ImagePlusCursor<T extends Type<T>> extends CursorImpl<T> implements
 	{
 		slice = 0;
 		type.updateIndex( -1 );
-		type.updateDataArray( this );
+		type.updateContainer( this );
 		isClosed = false;
 	}
 
 	@Override
-	public ImagePlusContainer<T> getStorageContainer(){ return container; }
+	public ImagePlusContainer<T,?> getStorageContainer(){ return container; }
 
 	@Override
 	public int getStorageIndex() { return slice; }

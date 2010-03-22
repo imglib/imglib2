@@ -29,10 +29,13 @@
  */
 package mpicbg.imglib.container.imageplus;
 
+import java.util.ArrayList;
+
 import ij.ImagePlus;
 
 import mpicbg.imglib.container.Container3D;
 import mpicbg.imglib.container.PixelGridContainerImpl;
+import mpicbg.imglib.container.basictypecontainer.array.ArrayDataAccess;
 import mpicbg.imglib.cursor.Cursor;
 import mpicbg.imglib.cursor.LocalizableByDimCursor;
 import mpicbg.imglib.cursor.LocalizableCursor;
@@ -46,14 +49,16 @@ import mpicbg.imglib.image.Image;
 import mpicbg.imglib.outside.OutsideStrategyFactory;
 import mpicbg.imglib.type.Type;
 
-public abstract class ImagePlusContainer<T extends Type<T>> extends PixelGridContainerImpl<T> implements Container3D<T>
+public class ImagePlusContainer<T extends Type<T>, A extends ArrayDataAccess<A>> extends PixelGridContainerImpl<T,A> implements Container3D<T,A>
 {
 	final ImagePlusContainerFactory factory;
 	final int width, height, depth;
 
+	final ArrayList<A> mirror;
+
 	ImagePlusContainer( final ImagePlusContainerFactory factory, final int[] dim, final int entitiesPerPixel ) 
 	{
-		super( factory, dim, entitiesPerPixel );		
+		super( factory, dim, entitiesPerPixel );
 		
 		this.factory = factory;
 		this.width = dim[ 0 ];
@@ -67,25 +72,22 @@ public abstract class ImagePlusContainer<T extends Type<T>> extends PixelGridCon
 			this.depth = 1;
 		else
 			this.depth = dim[ 2 ];
-
-/*		int i = 0;
-		width = image.getWidth();
-		height = image.getHeight();
-		channels = image.getNChannels();
-		slices = image.getNSlices();
-		frames = image.getNFrames();
-
-		dimensions = new int[2
-			+ (channels > 1 ? 1 : 0)
-			+ (slices > 1 ? 1 : 0)
-			+ (frames > 1 ? 1 : 0)];
-		dimensions[i++] = width;
-		dimensions[i++] = height;
-		if (channels > 1) dimensions[i++] = channels;
-		if (slices > 1) dimensions[i++] = slices;
-		if (frames > 1) dimensions[i++] = frames;
-*/
+		
+		mirror = new ArrayList<A>( depth );
 	}
+	
+	ImagePlusContainer( final ImagePlusContainerFactory factory, final A creator, final int[] dim, final int entitiesPerPixel ) 
+	{
+		this( factory, dim, entitiesPerPixel );				
+		
+		for ( int i = 0; i < depth; ++i )
+			mirror.add( creator.createArray( width * height ));
+	}
+
+	public ImagePlus getImagePlus() { throw new RuntimeException( "GenericImagePlusContainer has no ImagePlus instance, it is not a standard type of ImagePlus" ); }
+
+	@Override
+	public A update( final Cursor<?> c ) { return mirror.get( c.getStorageIndex() ); }
 	
 	protected static int[] getCorrectDimensionality( final ImagePlus imp )
 	{
@@ -123,8 +125,6 @@ public abstract class ImagePlusContainer<T extends Type<T>> extends PixelGridCon
 		else
 			return l[ 0 ];
 	}	
-	
-	public abstract ImagePlus getImagePlus();
 
 	public Cursor<T> createCursor( T type, Image<T> image ) 
 	{
@@ -152,4 +152,11 @@ public abstract class ImagePlusContainer<T extends Type<T>> extends PixelGridCon
 	}
 	
 	public ImagePlusContainerFactory getFactory() { return factory; }
+
+	@Override
+	public void close()
+	{
+		for ( final A array : mirror )
+			array.close();
+	}
 }

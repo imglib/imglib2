@@ -31,14 +31,14 @@ package mpicbg.imglib.type.numeric;
 
 import mpicbg.imglib.algorithm.math.MathLib;
 import mpicbg.imglib.container.Container;
-import mpicbg.imglib.container.basictypecontainer.ShortContainer;
+import mpicbg.imglib.container.basictypecontainer.ShortAccess;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.display.UnsignedShortTypeDisplay;
 
 public class UnsignedShortType extends GenericShortType<UnsignedShortType>
 {
 	// this is the constructor if you want it to read from an array
-	public UnsignedShortType( final ShortContainer<UnsignedShortType> shortStorage ) { super( shortStorage );	}
+	public UnsignedShortType( Container<UnsignedShortType, ShortAccess> shortStorage ) { super( shortStorage ); }
 
 	// this is the constructor if you want it to be a variable
 	public UnsignedShortType( final int value ) { super( getCodedSignedShortChecked(value) ); }
@@ -62,28 +62,43 @@ public class UnsignedShortType extends GenericShortType<UnsignedShortType>
 	public UnsignedShortTypeDisplay getDefaultDisplay( Image<UnsignedShortType> image ) { return new UnsignedShortTypeDisplay( image ); }
 
 	@Override
-	public void mul( final float c ) { v[ i ] = getCodedSignedShort( MathLib.round( getUnsignedShort( v[ i ] ) * c ) ); }
+	public void mul( final float c )
+	{
+		final int a = getUnsignedShort( getValue() );
+		setValue( getCodedSignedShort( MathLib.round( a * c ) ) );
+	}
 
 	@Override
-	public void mul( final double c ) { v[ i ] = getCodedSignedShort( (int)MathLib.round( getUnsignedShort( v[ i ] ) * c ) ); }
+	public void mul( final double c )
+	{
+		final int a = getUnsignedShort( getValue() );
+		setValue( getCodedSignedShort( ( int )MathLib.round( a * c ) ) );
+	}
 
-	public int get() { return getUnsignedShort( v[ i ] ); }
-	public void set( final int f ) { v[ i ] = getCodedSignedShort( f ); }
-	public float getReal() { return getUnsignedShort( v[ i ] ); }
-	public void setReal( final float f ) { v[ i ] = getCodedSignedShort( MathLib.round( f ) ); }
+	public int get() { return getUnsignedShort( getValue() ); }
+	public void set( final int f ) { setValue( getCodedSignedShort( f ) ); }
+	
+	@Override
+	public float getReal() { return get(); }
+	
+	@Override
+	public void setReal( final float f ){ set( MathLib.round( f ) ); }
 
 	@Override
-	public void div( final UnsignedShortType c ) { v[ i ] = getCodedSignedShort( get() / c.get() ); }
+	public void div( final UnsignedShortType c )
+	{
+		set( get() / c.get() );
+	}
 
 	@Override
 	public int compareTo( final UnsignedShortType c ) 
 	{
-		final int value1 = get();
-		final int value2 = c.get();
+		final int a = get();
+		final int b = c.get();
 		
-		if ( value1 > value2 )
+		if ( a > b )
 			return 1;
-		else if ( value1 < value2 )
+		else if ( a < b )
 			return -1;
 		else 
 			return 0;
@@ -99,14 +114,17 @@ public class UnsignedShortType extends GenericShortType<UnsignedShortType>
 	public UnsignedShortType[][][] createArray3D( final int size1, final int size2, final int size3 ) { return new UnsignedShortType[ size1 ][ size2 ][ size3 ]; }
 
 	@Override
-	public UnsignedShortType createType( final Container<UnsignedShortType> container ) { return new UnsignedShortType( (ShortContainer<UnsignedShortType>)container ); }
+	public UnsignedShortType createType( final Container<UnsignedShortType,?> container ) 
+	{ 
+		return new UnsignedShortType( (Container<UnsignedShortType, ShortAccess>)container ); 
+	}
 	
 	@Override
 	public UnsignedShortType createVariable(){ return new UnsignedShortType( 0 ); }
 
 	@Override
-	public UnsignedShortType clone(){ return new UnsignedShortType( v[ i ] ); }
+	public UnsignedShortType clone(){ return new UnsignedShortType( get() ); }
 
 	@Override
-	public String toString() { return "" + getUnsignedShort( v[i] ); }
+	public String toString() { return "" + get(); }
 }

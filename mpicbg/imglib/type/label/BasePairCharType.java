@@ -31,7 +31,8 @@ package mpicbg.imglib.type.label;
 
 import mpicbg.imglib.container.Container;
 import mpicbg.imglib.container.ContainerFactory;
-import mpicbg.imglib.container.basictypecontainer.CharContainer;
+import mpicbg.imglib.container.basictypecontainer.CharAccess;
+import mpicbg.imglib.container.basictypecontainer.array.CharArray;
 import mpicbg.imglib.cursor.Cursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.display.BasePairTypeDisplay;
@@ -41,29 +42,39 @@ import mpicbg.imglib.type.label.BasePairBitType.Base;
 
 public class BasePairCharType extends TypeImpl<BasePairCharType> implements BasePairType<BasePairCharType>
 {
-	final CharContainer<BasePairCharType> charStorage;
-	char[] v;
+	// the Container
+	final Container<BasePairCharType, CharAccess> storage;
+	
+	// the (sub)container that holds the information 
+	CharAccess b;
 	
 	// this is the constructor if you want it to read from an array
-	public BasePairCharType( CharContainer<BasePairCharType> charStorage )
+	public BasePairCharType( Container<BasePairCharType, CharAccess> charStorage )
 	{
-		this.charStorage = charStorage;
-	}
-	
-	// this is BasePairCharType constructor if you want it to be a variable
-	public BasePairCharType( final char value )
-	{
-		charStorage = null;
-		v = new char[ 1 ];
-		v[ 0 ] = value;
-		i = 0;
+		storage = charStorage;
 	}
 
 	// this is the constructor if you want it to be a variable
-	public BasePairCharType() { this( 'N' ); }
+	public BasePairCharType( final Base value )
+	{
+		storage = null;
+		b = new CharArray( 1 );
+		set( value );
+	}
+
+	// this is the constructor if you want it to be a variable
+	public BasePairCharType( final char value )
+	{	
+		storage = null;
+		b = new CharArray( 1 );
+		setChar( value );
+	}
+
+	// this is the constructor if you want it to be a variable
+	public BasePairCharType() { this( Base.N ); }
 
 	@Override
-	public CharContainer<BasePairCharType> createSuitableContainer( final ContainerFactory storageFactory, final int dim[] )
+	public Container<BasePairCharType, ? extends CharAccess> createSuitableContainer( final ContainerFactory storageFactory, final int dim[] )
 	{
 		return storageFactory.createCharInstance( dim, 1 );	
 	}
@@ -75,13 +86,13 @@ public class BasePairCharType extends TypeImpl<BasePairCharType> implements Base
 	}
 	
 	@Override
-	public void updateDataArray( final Cursor<?> c ) 
+	public void updateContainer( final Cursor<?> c ) 
 	{ 
-		v = charStorage.getCurrentStorageArray( c ); 
+		b = storage.update( c ); 
 	}
 	
-	public char getChar() { return v[ i ]; }
-	public void setChar( final char f ) { v[ i ] = f; }
+	public char getChar() { return b.getValue( i ); }
+	public void setChar( final char f ) { b.setValue( i, f ); }
 
 	public void set( final Base base ) 
 	{
@@ -112,7 +123,7 @@ public class BasePairCharType extends TypeImpl<BasePairCharType> implements Base
 	}
 	
 	@Override
-	public void set( final BasePairCharType c ) { v[ i ] = c.getChar(); }
+	public void set( final BasePairCharType c ) { b.setValue( i, c.getChar() ); }
 
 	@Override
 	public int compareTo( final BasePairCharType c ) 
@@ -180,17 +191,17 @@ public class BasePairCharType extends TypeImpl<BasePairCharType> implements Base
 	//public BasePairCharType getType() { return this; }
 
 	@Override
-	public BasePairCharType createType( Container<BasePairCharType> container )
+	public BasePairCharType createType( Container<BasePairCharType,?> container )
 	{
-		return new BasePairCharType( (CharContainer<BasePairCharType>)container );
+		return new BasePairCharType( (Container<BasePairCharType, CharAccess>)container );
 	}
 	
 	@Override
-	public BasePairCharType createVariable(){ return new BasePairCharType( 'N' ); }
+	public BasePairCharType createVariable(){ return new BasePairCharType( Base.N ); }
 	
 	@Override
-	public BasePairCharType clone(){ return new BasePairCharType( v[ i ] ); }
+	public BasePairCharType clone(){ return new BasePairCharType( get() ); }
 	
 	@Override
-	public String toString() { return "" + v[i]; }
+	public String toString() { return "" + get(); }
 }

@@ -30,14 +30,15 @@
 package mpicbg.imglib.type.numeric;
 
 import mpicbg.imglib.container.Container;
-import mpicbg.imglib.container.basictypecontainer.ShortContainer;
+import mpicbg.imglib.container.basictypecontainer.DataAccess;
+import mpicbg.imglib.container.basictypecontainer.ShortAccess;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.display.ShortTypeDisplay;
 
 public class ShortType extends GenericShortType<ShortType>
 {
 	// this is the constructor if you want it to read from an array
-	public ShortType( final ShortContainer<ShortType> shortStorage ) { super( shortStorage ); }
+	public ShortType( Container<ShortType, ShortAccess> shortStorage ) { super( shortStorage ); }
 	
 	// this is the constructor if you want it to be a variable
 	public ShortType( final short value ) { super( value ); }
@@ -45,9 +46,9 @@ public class ShortType extends GenericShortType<ShortType>
 	// this is the constructor if you want it to be a variable
 	public ShortType() { this( (short)0 ); }
 	
-	public short get() { return v[ i ]; }
-	public void set( final short b ) { v[ i ] = b; }
-
+	public short get() { return getValue(); }
+	public void set( final short b ) { setValue( b ); }
+	
 	@Override
 	public ShortTypeDisplay getDefaultDisplay( Image<ShortType> image ) { return new ShortTypeDisplay( image );	}
 
@@ -61,14 +62,17 @@ public class ShortType extends GenericShortType<ShortType>
 	public ShortType[][][] createArray3D( final int size1, final int size2, final int size3 ) { return new ShortType[ size1 ][ size2 ][ size3 ]; }
 	
 	@Override
-	public ShortType createType( final Container<ShortType> container )
-	{
-		return new ShortType( (ShortContainer<ShortType>)container );
+	public ShortType createType( final Container<ShortType,?> container )
+	{ 
+		return new ShortType( (Container<ShortType, ShortAccess>)container );
 	}
 
 	@Override
 	public ShortType createVariable(){ return new ShortType( (short)0 ); }
 
 	@Override
-	public ShortType clone(){ return new ShortType( v[ i ] ); }
+	public ShortType clone(){ return new ShortType( getValue() ); }
+
+	@Override
+	public String toString() { return "" + get(); }
 }

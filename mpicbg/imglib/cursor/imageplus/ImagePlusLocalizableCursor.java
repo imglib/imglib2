@@ -39,7 +39,7 @@ public class ImagePlusLocalizableCursor<T extends Type<T>> extends ImagePlusCurs
 	final protected int numDimensions; 	
 	final protected int[] position, dimensions;
 	
-	public ImagePlusLocalizableCursor( final ImagePlusContainer<T> container, final Image<T> image, final T type ) 
+	public ImagePlusLocalizableCursor( final ImagePlusContainer<T,?> container, final Image<T> image, final T type ) 
 	{
 		super( container, image, type );
 
@@ -60,7 +60,7 @@ public class ImagePlusLocalizableCursor<T extends Type<T>> extends ImagePlusCurs
 		{
 			++slice;
 			type.updateIndex( 0 );
-			type.updateDataArray( this );
+			type.updateContainer( this );
 		}
 		
 		for ( int d = 0; d < numDimensions; d++ )
@@ -94,7 +94,7 @@ public class ImagePlusLocalizableCursor<T extends Type<T>> extends ImagePlusCurs
 		
 		slice = 0;
 		
-		type.updateDataArray( this );
+		type.updateContainer( this );
 	}
 
 

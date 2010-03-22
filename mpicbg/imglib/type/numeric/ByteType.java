@@ -30,14 +30,14 @@
 package mpicbg.imglib.type.numeric;
 
 import mpicbg.imglib.container.Container;
-import mpicbg.imglib.container.basictypecontainer.ByteContainer;
+import mpicbg.imglib.container.basictypecontainer.ByteAccess;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.display.ByteTypeDisplay;
 
 public class ByteType extends GenericByteType<ByteType>
 {
 	// this is the constructor if you want it to read from an array
-	public ByteType( final ByteContainer<ByteType> byteStorage ) { super( byteStorage );	}
+	public ByteType( final Container<ByteType, ByteAccess> byteStorage ) { super( byteStorage ); }
 	
 	// this is the constructor if you want it to be a variable
 	public ByteType( final byte value ) { super( value ); }
@@ -45,8 +45,8 @@ public class ByteType extends GenericByteType<ByteType>
 	// this is the constructor if you want it to be a variable
 	public ByteType() { super( (byte)0 ); }
 		
-	public byte get() { return v[ i ]; }
-	public void set( final byte b ) { v[ i ] = b; }
+	public byte get() { return getValue(); }
+	public void set( final byte b ) { setValue( b ); }
 	
 	@Override
 	public ByteTypeDisplay getDefaultDisplay( Image<ByteType> image ) { return new ByteTypeDisplay( image ); }
@@ -61,14 +61,17 @@ public class ByteType extends GenericByteType<ByteType>
 	public ByteType[][][] createArray3D( final int size1, final int size2, final int size3 ) { return new ByteType[ size1 ][ size2 ][ size3 ]; }
 
 	@Override
-	public ByteType createType( final Container<ByteType> container ) { return new ByteType( (ByteContainer<ByteType>)container ); }
+	public ByteType createType( final Container<ByteType, ?> container ) 
+	{ 
+		return new ByteType( (Container<ByteType, ByteAccess>)container ); 
+	}
 	
 	@Override
 	public ByteType createVariable(){ return new ByteType( (byte)0 ); }
 
 	@Override
-	public ByteType clone(){ return new ByteType( v[ i ] ); }
+	public ByteType clone(){ return new ByteType( getValue() ); }
 
 	@Override
-	public String toString() { return "" + v[i]; }
+	public String toString() { return "" + get(); }
 }

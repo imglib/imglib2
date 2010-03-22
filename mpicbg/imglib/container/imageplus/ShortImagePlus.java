@@ -33,45 +33,39 @@ import ij.IJ;
 import ij.ImagePlus;
 
 
-import mpicbg.imglib.container.basictypecontainer.ShortContainer;
-import mpicbg.imglib.cursor.Cursor;
+import mpicbg.imglib.container.basictypecontainer.array.ShortArray;
 import mpicbg.imglib.type.Type;
 
-public class ShortImagePlus<T extends Type<T>> extends ImagePlusContainer<T> implements ShortContainer<T> 
+public class ShortImagePlus<T extends Type<T>> extends ImagePlusContainer<T, ShortArray> 
 {
-	final ImagePlus image;
-	final short[][] mirror;
+	final ImagePlus image;	
 	
 	public ShortImagePlus( final ImagePlusContainerFactory factory, final int[] dim, final int entitiesPerPixel ) 
 	{
 		super( factory, dim, entitiesPerPixel );
 		
 		image = IJ.createImage( "image", "16-Bit Black", width * entitiesPerPixel, height, depth );
-		mirror = new short[ depth ][];
-		
+
 		for ( int i = 0; i < depth; ++i )
-			mirror[ i ] = (short[])image.getStack().getProcessor( i+1 ).getPixels();
-}
+			mirror.add( new ShortArray( (short[])image.getStack().getProcessor( i+1 ).getPixels() ) );
+	}
 
 	public ShortImagePlus( final ImagePlus image, final ImagePlusContainerFactory factory ) 
 	{
 		super( factory, ImagePlusContainer.getCorrectDimensionality(image), 1 );
 		
 		this.image = image;
-		mirror = new short[ depth ][];
 		
 		for ( int i = 0; i < depth; ++i )
-			mirror[ i ] = (short[])image.getStack().getProcessor( i+1 ).getPixels();
-	}
-	
-	@Override
-	public short[] getCurrentStorageArray( Cursor<?> c ) 
-	{
-		return mirror[ c.getStorageIndex() ];
+			mirror.add( new ShortArray( (short[])image.getStack().getProcessor( i+1 ).getPixels() ) );
 	}
 
 	@Override
-	public void close() { image.close(); }
+	public void close() 
+	{
+		super.close();
+		image.close(); 
+	}
 
 	@Override
 	public ImagePlus getImagePlus() { return image;	}

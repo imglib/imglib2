@@ -70,7 +70,7 @@ public class CubeLocalizableCursor<T extends Type<T>> extends CubeCursor<T> impl
 	 */
 	final protected int[] cubeOffset;
 	
-	public CubeLocalizableCursor( final Cube<?,?,T> container, final Image<T> image, final T type )
+	public CubeLocalizableCursor( final Cube<T,?> container, final Image<T> image, final T type )
 	{
 		super( container, image, type);
 
@@ -98,7 +98,7 @@ public class CubeLocalizableCursor<T extends Type<T>> extends CubeCursor<T> impl
 		cubeInstance.getDimensions( cubeDimensions );
 		cubeInstance.getOffset( cubeOffset );
 		
-		type.updateDataArray( this );
+		type.updateContainer( this );
 	}
 	
 	@Override
@@ -117,7 +117,7 @@ public class CubeLocalizableCursor<T extends Type<T>> extends CubeCursor<T> impl
 		for ( int d = 1; d < numDimensions; d++ )
 			position[ d ] = 0;
 		
-		type.updateDataArray( this );
+		type.updateContainer( this );
 	}
 	
 	@Override

@@ -32,38 +32,41 @@ package mpicbg.imglib.type.numeric;
 import mpicbg.imglib.algorithm.math.MathLib;
 import mpicbg.imglib.container.Container;
 import mpicbg.imglib.container.ContainerFactory;
-import mpicbg.imglib.container.basictypecontainer.IntContainer;
+import mpicbg.imglib.container.basictypecontainer.IntAccess;
+import mpicbg.imglib.container.basictypecontainer.array.IntArray;
 import mpicbg.imglib.cursor.Cursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.display.imagej.RGBALegacyTypeDisplay;
 import mpicbg.imglib.type.NumericType;
 import mpicbg.imglib.type.TypeImpl;
 
-public class RGBALegacyType extends TypeImpl<RGBALegacyType> implements NumericType<RGBALegacyType>
+final public class RGBALegacyType extends TypeImpl<RGBALegacyType> implements NumericType<RGBALegacyType>
 {
-	final IntContainer<RGBALegacyType> intStorage;
-	int[] v;
+	// the Container
+	final Container<RGBALegacyType, IntAccess> storage;
+	
+	// the (sub)container that holds the information 
+	IntAccess b;
 	
 	// this is the constructor if you want it to read from an array
-	public RGBALegacyType( IntContainer<RGBALegacyType> intStorage )
+	public RGBALegacyType( Container<RGBALegacyType, IntAccess> byteStorage )
 	{
-		this.intStorage = intStorage;
+		storage = byteStorage;
 	}
-	
+
 	// this is the constructor if you want it to be a variable
 	public RGBALegacyType( final int value )
 	{
-		intStorage = null;
-		v = new int[ 1 ];
-		v[ 0 ] = value;
-		i = 0;
+		storage = null;
+		b = new IntArray( 1 );
+		set( value );
 	}
 
 	// this is the constructor if you want it to be a variable
 	public RGBALegacyType() { this( 0 ); }
 	
 	@Override
-	public IntContainer<RGBALegacyType> createSuitableContainer( final ContainerFactory storageFactory, final int dim[] )
+	public Container<RGBALegacyType, ? extends IntAccess> createSuitableContainer( final ContainerFactory storageFactory, final int dim[] )
 	{
 		return storageFactory.createIntInstance( dim, 1 );	
 	}
@@ -75,14 +78,14 @@ public class RGBALegacyType extends TypeImpl<RGBALegacyType> implements NumericT
 	}
 
 	@Override
-	public void updateDataArray( final Cursor<?> c ) 
+	public void updateContainer( final Cursor<?> c ) 
 	{ 
-		v = intStorage.getCurrentStorageArray( c ); 
+		b = storage.update( c );
 	}
 
 	final public static int rgba( final int r, final int g, final int b, final int a)
 	{
-		return (r & 0xff) | ((g & 0xff) << 8) | ((b & 0xff) << 16) | ((a & 0xff) << 24);
+		return ((r & 0xff) << 16) | ((g & 0xff) << 8) | (b & 0xff) | ((a & 0xff) << 24);
 	}
 	
 	final public static int rgba( final float r, final float g, final float b, final float a)
@@ -97,7 +100,7 @@ public class RGBALegacyType extends TypeImpl<RGBALegacyType> implements NumericT
 	
 	final public static int red( final int value )
 	{
-		return value & 0xff;
+		return (value >> 16) & 0xff;
 	}
 	
 	final public static int green( final int value )
@@ -107,7 +110,7 @@ public class RGBALegacyType extends TypeImpl<RGBALegacyType> implements NumericT
 	
 	final public static int blue( final int value )
 	{
-		return (value >> 16) & 0xff;
+		return value & 0xff;
 	}
 	
 	final public static int alpha( final int value )
@@ -115,73 +118,77 @@ public class RGBALegacyType extends TypeImpl<RGBALegacyType> implements NumericT
 		return (value >> 24) & 0xff;
 	}
 	
+	public int get(){ return b.getValue( i ); }
+	public void set( final int f ){ b.setValue( i, f ); }
+	
+	@Override
+	public float getReal() 
+	{
+		final int value = get();
+		return ( red( value ) + green( value ) + blue( value ) ) / 3; 
+	}
+	
+	@Override
+	public void setReal( final float f ) 
+	{
+		final int value = MathLib.round( f );
+		set( rgba( value, value, value, 0 ) );
+	}
+
 	@Override
 	public void mul( final float c )
 	{
-		final int value = v[ i ];		
-		v[ i ] = rgba( red(value) * c, green(value) * c, blue(value) * c, alpha(value) * c );
+		final int value = get();
+		set( rgba( red(value) * c, green(value) * c, blue(value) * c, alpha(value) * c ) );
 	}
 
 	@Override
 	public void mul( final double c ) 
 	{ 
-		final int value = v[ i ];		
-		v[ i ] = rgba( red(value) * c, green(value) * c, blue(value) * c, alpha(value) * c );
-	}
-
-	public int get() { return v[ i ]; }
-	public void set( final int f ) { v[ i ] = f; }
-	public float getReal() 
-	{
-		final int value = v[ i ];
-		return ( red( value ) + green( value ) + blue( value ) ) / 3; 
-	}
-	public void setReal( final float f ) 
-	{
-		final int value = MathLib.round( f );
-		v[ i ] = rgba( value, value, value, 0 );
+		final int value = get();		
+		set( rgba( red(value) * c, green(value) * c, blue(value) * c, alpha(value) * c ) );
 	}
 
 	@Override
 	public void add( final RGBALegacyType c ) 
 	{ 
-		final int value1 = v[ i ];		
+		final int value1 = get();		
 		final int value2 = c.get();		
 		
-		v[ i ] = rgba( red(value1) + red(value2), green(value1) + green(value2), blue(value1) + blue(value2), alpha(value1) + alpha(value2) );		 
+		set( rgba( red(value1) + red(value2), green(value1) + green(value2), blue(value1) + blue(value2), alpha(value1) + alpha(value2) ) );		 
 	}
 
 	@Override
 	public void div( final RGBALegacyType c ) 
 	{ 
-		final int value1 = v[ i ];		
+		final int value1 = get();		
 		final int value2 = c.get();		
 		
-		v[ i ] = rgba( red(value1) / red(value2), green(value1) / green(value2), blue(value1) / blue(value2), alpha(value1) / alpha(value2) );		 
+		set( rgba( red(value1) / red(value2), green(value1) / green(value2), blue(value1) / blue(value2), alpha(value1) / alpha(value2) ) );		 
 	}
 
 	@Override
 	public void mul( final RGBALegacyType c ) 
 	{
-		final int value1 = v[ i ];		
+		final int value1 = get();		
 		final int value2 = c.get();		
 		
-		v[ i ] = rgba( red(value1) * red(value2), green(value1) * green(value2), blue(value1) * blue(value2), alpha(value1) * alpha(value2) );		 
+		set( rgba( red(value1) * red(value2), green(value1) * green(value2), blue(value1) * blue(value2), alpha(value1) * alpha(value2) ) );		 
 	}
 
 	@Override
 	public void sub( final RGBALegacyType c ) 
 	{
-		final int value1 = v[ i ];		
+		final int value1 = get();		
 		final int value2 = c.get();		
 		
-		v[ i ] = rgba( red(value1) - red(value2), green(value1) - green(value2), blue(value1) - blue(value2), alpha(value1) - alpha(value2) );		 
+		set( rgba( red(value1) - red(value2), green(value1) - green(value2), blue(value1) - blue(value2), alpha(value1) - alpha(value2) ) );		 
 	}
 	
 	@Override
 	public int compareTo( final RGBALegacyType c ) 
 	{ 
-		final int value1 = v[ i ];		
+		final int value1 = get();		
 		final int value2 = c.get();
 
 		if ( red(value1) + green(value1) + blue(value1) + alpha(value1) > red(value2) + green(value2) + blue(value2) + alpha(value2) )
@@ -193,19 +200,27 @@ public class RGBALegacyType extends TypeImpl<RGBALegacyType> implements NumericT
 	}
 
 	@Override
-	public void set( final RGBALegacyType c ) { v[ i ] = c.get(); }
+	public void set( final RGBALegacyType c ) { set( c.get() ); }
 
 	@Override
-	public void setOne() { v[ i ] = rgba( 1, 1, 1, 1 ); }
+	public void setOne() { set( rgba( 1, 1, 1, 1 ) ); }
 
 	@Override
-	public void setZero() { v[ i ] = 0; }
+	public void setZero() { set( 0 ); }
 
 	@Override
-	public void inc() { v[ i ] += rgba( 1, 1, 1, 1 ); }
+	public void inc()
+	{
+		final int a = get();
+		set( rgba( red( a ) + 1, green( a ) + 1, blue( a ) + 1, alpha( a ) + 1 ) );
+	}
 
 	@Override
-	public void dec() { v[ i ] -= rgba( 1, 1, 1, 1 ); }
+	public void dec()
+	{
+		final int a = get();
+		set( rgba( red( a ) - 1, green( a ) - 1, blue( a ) - 1, alpha( a ) - 1 ) );
+	}
 	
 	@Override
 	public RGBALegacyType[] createArray1D(int size1){ return new RGBALegacyType[ size1 ]; }
@@ -220,20 +235,21 @@ public class RGBALegacyType extends TypeImpl<RGBALegacyType> implements NumericT
 	//public RGBALegacyType getType() { return this; }
 	
 	@Override
-	public RGBALegacyType createType( Container<RGBALegacyType> container )
+	public RGBALegacyType createType( Container<RGBALegacyType,?> container )
 	{
-		return new RGBALegacyType( (IntContainer<RGBALegacyType>)container );
+		return new RGBALegacyType( (Container<RGBALegacyType, IntAccess>)container );
 	}
 
 	@Override
 	public RGBALegacyType createVariable() { return new RGBALegacyType( 0 ); }
 
 	@Override
-	public RGBALegacyType clone() { return new RGBALegacyType( v[ i ] ); }
+	public RGBALegacyType clone() { return new RGBALegacyType( get() ); }
 
 	@Override
 	public String toString() 
 	{
-		return "(r=" + red( v[ i ] ) + ",g=" + green( v[ i ] ) + ",b=" + blue( v[ i ] ) + ",a=" + alpha( v[ i ] ) + ")";
+		final int rgba = get();
+		return "(r=" + red( rgba ) + ",g=" + green( rgba ) + ",b=" + blue( rgba ) + ",a=" + alpha( rgba ) + ")";
 	}
 }

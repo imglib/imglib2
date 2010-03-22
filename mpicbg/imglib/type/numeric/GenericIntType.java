@@ -30,96 +30,138 @@
 package mpicbg.imglib.type.numeric;
 
 import mpicbg.imglib.algorithm.math.MathLib;
+import mpicbg.imglib.container.Container;
 import mpicbg.imglib.container.ContainerFactory;
-import mpicbg.imglib.container.basictypecontainer.IntContainer;
+import mpicbg.imglib.container.basictypecontainer.IntAccess;
+import mpicbg.imglib.container.basictypecontainer.array.IntArray;
 import mpicbg.imglib.cursor.Cursor;
 import mpicbg.imglib.type.NumericType;
 import mpicbg.imglib.type.TypeImpl;
 
 public abstract class GenericIntType<T extends GenericIntType<T>> extends TypeImpl<T> implements NumericType<T>
 {
-	final IntContainer<T> intStorage;
-	int[] v;
+	// the Container
+	final Container<T, IntAccess> storage;
+	
+	// the (sub)container that holds the information 
+	IntAccess b;
 	
 	// this is the constructor if you want it to read from an array
-	public GenericIntType( IntContainer<T> intStorage )
+	public GenericIntType( Container<T, IntAccess> intStorage )
 	{
-		this.intStorage = intStorage;
+		storage = intStorage;
 	}
-	
+
 	// this is the constructor if you want it to be a variable
 	public GenericIntType( final int value )
 	{
-		intStorage = null;
-		v = new int[ 1 ];
-		v[ 0 ] = value;
-		i = 0;
+		storage = null;
+		b = new IntArray( 1 );
+		setValue( value );
 	}
 
 	// this is the constructor if you want it to be a variable
 	public GenericIntType() { this( 0 ); }
 
 	@Override
-	public IntContainer<T> createSuitableContainer( final ContainerFactory storageFactory, final int dim[] )
+	public Container<T, ? extends IntAccess> createSuitableContainer( final ContainerFactory storageFactory, final int dim[] )
 	{
 		return storageFactory.createIntInstance( dim, 1 );	
 	}
 
 	@Override
-	public void updateDataArray( final Cursor<?> c ) 
+	public void updateContainer( final Cursor<?> c ) 
 	{ 
-		v = intStorage.getCurrentStorageArray( c ); 
+		b = storage.update( c ); 
+	}
+
+	protected int getValue(){ return b.getValue( i ); }
+	protected void setValue( final int f ){ b.setValue( i, f ); }
+	
+	public float getReal() { return getValue(); }
+	public void setReal( final float f ){ setValue( MathLib.round( f ) ); }
+	
+	@Override
+	public void mul( final float c )
+	{
+		final int a = getValue();
+		setValue( MathLib.round( a * c ) );
+	}
+	
+	@Override
+	public void mul( final double c )
+	{
+		final int a = getValue();
+		setValue( ( int )MathLib.round( a * c ) );
+	}
+	
+	@Override
+	public void add( final T c )
+	{
+		final int a = getValue();
+		setValue( a + c.getValue() );
 	}
 
 	@Override
-	public void mul( final float c ) { v[ i ] = Math.round( v[ i ] * c ); }
+	public void div( final T c )
+	{
+		final int a = getValue();
+		setValue( a / c.getValue() );
+	}
 
 	@Override
-	public void mul( final double c ) { v[ i ] = (int)Math.round( v[ i ] * c ); }
-
-	protected int getValue() { return v[ i ]; }
-	protected void setValue( final int f ) { v[ i ] = f; }
-	public float getReal() { return v[ i ]; }
-	public void setReal( final float f ) { v[ i ] = MathLib.round( f ); }
-
-	@Override
-	public void add( final T c ) { v[ i ] += c.getValue(); }
+	public void mul( final T c )
+	{
+		final int a = getValue( );
+		setValue( a * c.getValue() );
+	}
 
 	@Override
-	public void div( final T c ) { v[ i ] /= c.getValue(); }
-
-	@Override
-	public void mul( final T c ) { v[ i ] *= c.getValue(); }
-
-	@Override
-	public void sub( final T c ) { v[ i ] -= c.getValue(); }
+	public void sub( final T c )
+	{
+		final int a = getValue( );
+		setValue( a - c.getValue() );
+	}
 
 	@Override
 	public int compareTo( final T c ) 
 	{ 
-		if ( v[ i ] > c.getValue() )
+		final int a = getValue();
+		final int b = c.getValue();
+		if ( a > b )
 			return 1;
-		else if ( v[ i ] < c.getValue() )
+		else if ( a < b )
 			return -1;
 		else 
 			return 0;
 	}
 
 	@Override
-	public void set( final T c ) { v[ i ] = c.getValue(); }
+	public void set( final T c )
+	{
+		setValue( c.getValue() );
+	}
 
 	@Override
-	public void setOne() { v[ i ] = 1; }
+	public void setOne() { setValue( 1 ); }
 
 	@Override
-	public void setZero() { v[ i ] = 0; }
+	public void setZero() { setValue( 0 ); }
 
 	@Override
-	public void inc() { v[ i ]++; }
+	public void inc()
+	{
+		int a = getValue();
+		setValue( ++a );
+	}
 
 	@Override
-	public void dec() { v[ i ]--; }
+	public void dec()
+	{
+		int a = getValue();
+		setValue( --a );
+	}
 	
 	@Override
-	public String toString() { return "" + v[i]; }
+	public String toString(){ return "" + getValue(); }
 }

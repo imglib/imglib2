@@ -41,7 +41,7 @@ public class CubeCursor<T extends Type<T>> extends CursorImpl<T> implements Curs
 	/*
 	 * Pointer to the Cube we are iterating on
 	 */
-	protected final Cube<?,?,T> container;
+	protected final Cube<T,?> container;
 	
 	/*
 	 * The number of cubes inside the image
@@ -66,9 +66,9 @@ public class CubeCursor<T extends Type<T>> extends CursorImpl<T> implements Curs
 	/*
 	 * The instance of the current cube
 	 */
-	protected CubeElement<?,?,T> cubeInstance;
+	protected CubeElement<T,?> cubeInstance;
 	
-	public CubeCursor( final Cube<?,?,T> container, final Image<T> image, final T type )
+	public CubeCursor( final Cube<T,?> container, final Image<T> image, final T type )
 	{
 		super( container, image, type );
 		
@@ -88,10 +88,10 @@ public class CubeCursor<T extends Type<T>> extends CursorImpl<T> implements Curs
 		cubeInstance = container.getCubeElement( cube );				
 		cubeMaxI = cubeInstance.getNumPixels();	
 		
-		type.updateDataArray( this );
+		type.updateContainer( this );
 	}
 	
-	public CubeElement<?,?,T> getCurrentCube() { return cubeInstance; }
+	public CubeElement<T,?> getCurrentCube() { return cubeInstance; }
 	
 	@Override
 	public void reset()
@@ -149,7 +149,7 @@ public class CubeCursor<T extends Type<T>> extends CursorImpl<T> implements Curs
 	}	
 
 	@Override
-	public Cube<?,?,T> getStorageContainer(){ return container; }
+	public Cube<T,?> getStorageContainer(){ return container; }
 
 	@Override
 	public int getStorageIndex() { return cubeInstance.getCubeId(); }	

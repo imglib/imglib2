@@ -39,10 +39,10 @@ import mpicbg.imglib.type.TypeImpl;
 public class FakeType extends TypeImpl<FakeType>
 {	
 	@Override
-	public Container<FakeType> createSuitableContainer( final ContainerFactory storageFactory, final int dim[] ) { return null; }
+	public Container<FakeType,?> createSuitableContainer( final ContainerFactory storageFactory, final int dim[] ) { return null; }
 
 	@Override
-	public void updateDataArray( Cursor<?> c ) {}
+	public void updateContainer( Cursor<?> c ) {}
 	
 	@Override
 	public Display<FakeType> getDefaultDisplay( Image<FakeType> image ) { return null; }
@@ -63,7 +63,7 @@ public class FakeType extends TypeImpl<FakeType>
 	//public FakeType getType() { return this; }
 
 	@Override
-	public FakeType createType( Container<FakeType> container ){ return new FakeType(); }
+	public FakeType createType( Container<FakeType,?> container ){ return new FakeType(); }
 	
 	@Override
 	public FakeType createVariable(){ return new FakeType(); }

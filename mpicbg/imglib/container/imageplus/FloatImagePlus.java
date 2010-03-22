@@ -32,24 +32,21 @@ package mpicbg.imglib.container.imageplus;
 import ij.IJ;
 import ij.ImagePlus;
 
-import mpicbg.imglib.container.basictypecontainer.FloatContainer;
-import mpicbg.imglib.cursor.Cursor;
+import mpicbg.imglib.container.basictypecontainer.array.FloatArray;
 import mpicbg.imglib.type.Type;
 
-public class FloatImagePlus<T extends Type<T>> extends ImagePlusContainer<T> implements FloatContainer<T> 
+public class FloatImagePlus<T extends Type<T>> extends ImagePlusContainer<T, FloatArray> 
 {
-	final ImagePlus image;
-	final float[][] mirror;
+	final ImagePlus image;	
 	
 	public FloatImagePlus( final ImagePlusContainerFactory factory, final int[] dim, final int entitiesPerPixel ) 
 	{
 		super( factory, dim, entitiesPerPixel );
 		
 		image = IJ.createImage( "image", "32-Bit Black", width * entitiesPerPixel, height, depth );
-		mirror = new float[ depth ][];
-		
+
 		for ( int i = 0; i < depth; ++i )
-			mirror[ i ] = (float[])image.getStack().getProcessor( i+1 ).getPixels();
+			mirror.add( new FloatArray( (float[])image.getStack().getProcessor( i+1 ).getPixels() ) );
 	}
 
 	public FloatImagePlus( final ImagePlus image, final ImagePlusContainerFactory factory ) 
@@ -57,20 +54,17 @@ public class FloatImagePlus<T extends Type<T>> extends ImagePlusContainer<T> imp
 		super( factory, ImagePlusContainer.getCorrectDimensionality(image), 1 );
 		
 		this.image = image;
-		mirror = new float[ depth ][];
 		
 		for ( int i = 0; i < depth; ++i )
-			mirror[ i ] = (float[])image.getStack().getProcessor( i+1 ).getPixels();
-	}
-	
-	@Override
-	public float[] getCurrentStorageArray( final Cursor<?> c ) 
-	{
-		return mirror[ c.getStorageIndex() ];
+			mirror.add( new FloatArray( (float[])image.getStack().getProcessor( i+1 ).getPixels() ) );
 	}
 
 	@Override
-	public void close() { image.close(); }
+	public void close() 
+	{
+		super.close();
+		image.close(); 
+	}
 
 	@Override
 	public ImagePlus getImagePlus() { return image;	}

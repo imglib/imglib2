@@ -29,9 +29,10 @@
  */
 package mpicbg.imglib.container;
 
+import mpicbg.imglib.container.basictypecontainer.DataAccess;
 import mpicbg.imglib.type.Type;
 
-public abstract class PixelGridContainerImpl< T extends Type< T > > extends ContainerImpl<T> implements PixelGridContainer< T >
+public abstract class PixelGridContainerImpl< T extends Type< T >, A extends DataAccess > extends ContainerImpl<T,A> implements PixelGridContainer< T,A >
 {
 	final protected int entitiesPerPixel;
 	protected int numEntities;
@@ -41,6 +42,11 @@ public abstract class PixelGridContainerImpl< T extends Type< T > > extends Cont
 		super( factory, dim );
 		this.entitiesPerPixel = entitiesPerPixel;
 		this.numEntities = numPixels * entitiesPerPixel;
+	}
+	
+	public static int getNumEntities( final int[] dim, final int entitiesPerPixel )
+	{
+		return getNumPixels( dim ) * entitiesPerPixel;
 	}
 		
 	@Override

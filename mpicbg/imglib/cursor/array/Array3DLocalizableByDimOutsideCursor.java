@@ -41,9 +41,9 @@ public class Array3DLocalizableByDimOutsideCursor<T extends Type<T>> extends Arr
 	final int widthMinus1, heightMinus1, depthMinus1;
 	final int width, height, depth;
 	final int stepY, stepZ;
-	final Array3D<T> container;
+	final Array3D<T,?> container;
 
-	public Array3DLocalizableByDimOutsideCursor( final Array3D<T> container, final Image<T> image, final T type, final OutsideStrategyFactory<T> outsideStrategyFactory ) 
+	public Array3DLocalizableByDimOutsideCursor( final Array3D<T,?> container, final Image<T> image, final T type, final OutsideStrategyFactory<T> outsideStrategyFactory ) 
 	{
 		super( container, image, type, outsideStrategyFactory );
 		
@@ -114,7 +114,7 @@ public class Array3DLocalizableByDimOutsideCursor<T extends Type<T>> extends Arr
 		x = -1;
 		y = z = 0;
 		type.updateIndex( -1 );
-		type.updateDataArray( this );
+		type.updateContainer( this );
 	}
 
 	@Override
@@ -126,7 +126,7 @@ public class Array3DLocalizableByDimOutsideCursor<T extends Type<T>> extends Arr
 	}
 
 	@Override
-	public Array3D<T> getStorageContainer(){ return container; }
+	public Array3D<T,?> getStorageContainer(){ return container; }
 
 	@Override
 	public int[] getPosition(){ return new int[]{x, y, z}; }
@@ -336,7 +336,7 @@ public class Array3DLocalizableByDimOutsideCursor<T extends Type<T>> extends Arr
 					type.updateIndex( container.getPos( x, y, z ) );
 					
 					// new location is inside the image			
-					type.updateDataArray( this );
+					type.updateContainer( this );
 					
 					isOutside = false;					
 				}
@@ -381,7 +381,7 @@ public class Array3DLocalizableByDimOutsideCursor<T extends Type<T>> extends Arr
 					type.updateIndex( container.getPos( x, y, z ) );
 					
 					// new location is inside the image			
-					type.updateDataArray( this );
+					type.updateContainer( this );
 					
 					isOutside = false;					
 				}
@@ -426,7 +426,7 @@ public class Array3DLocalizableByDimOutsideCursor<T extends Type<T>> extends Arr
 					type.updateIndex( container.getPos( x, y, z ) );
 					
 					// new location is inside the image			
-					type.updateDataArray( this );
+					type.updateContainer( this );
 					
 					isOutside = false;					
 				}
@@ -585,7 +585,7 @@ public class Array3DLocalizableByDimOutsideCursor<T extends Type<T>> extends Arr
 			
 			// new location is inside the image			
 			if ( isOutside ) // we reenter the image with this setPosition() call
-				type.updateDataArray( this );
+				type.updateContainer( this );
 			
 			isOutside = false;
 		}

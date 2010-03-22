@@ -32,8 +32,8 @@ package mpicbg.imglib.type.logic;
 
 import mpicbg.imglib.container.Container;
 import mpicbg.imglib.container.ContainerFactory;
-import mpicbg.imglib.container.array.BitArray;
-import mpicbg.imglib.container.basictypecontainer.BitContainer;
+import mpicbg.imglib.container.basictypecontainer.BitAccess;
+import mpicbg.imglib.container.basictypecontainer.array.BitArray;
 import mpicbg.imglib.cursor.Cursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.display.BitTypeDisplay;
@@ -43,22 +43,23 @@ import mpicbg.imglib.type.TypeImpl;
 
 public class BitType extends TypeImpl<BitType> implements LogicType<BitType>, NumericType<BitType>
 {
-	final BitContainer<BitType> bitStorage;
-	BitContainer<BitType> b;
+	// the Container
+	final Container<BitType, BitAccess> storage;
 	
-	int outputType = 0;
+	// the (sub)container that holds the information 
+	BitAccess b;
 	
 	// this is the constructor if you want it to read from an array
-	public BitType( final BitContainer<BitType> bitStorage )
+	public BitType( Container<BitType, BitAccess> bitStorage )
 	{
-		this.bitStorage = bitStorage;
-		this.b = bitStorage;
+		storage = bitStorage;
 	}
 	
 	// this is the constructor if you want it to be a variable
 	public BitType( final boolean value )
 	{
-		this( new BitArray<BitType>( null, new int[]{1}, 1 ) );
+		storage = null;
+		b = new BitArray( 1 );
 		b.setValue( i, value );
 	}
 
@@ -66,7 +67,7 @@ public class BitType extends TypeImpl<BitType> implements LogicType<BitType>, Nu
 	public BitType() { this( false ); }
 	
 	@Override
-	public BitContainer<BitType> createSuitableContainer( final ContainerFactory storageFactory, final int dim[] )
+	public Container<BitType, ? extends BitAccess> createSuitableContainer( final ContainerFactory storageFactory, final int dim[] )
 	{
 		return storageFactory.createBitInstance( dim, 1 );	
 	}
@@ -78,10 +79,9 @@ public class BitType extends TypeImpl<BitType> implements LogicType<BitType>, Nu
 	}
 	
 	@Override
-	public void updateDataArray( final Cursor<?> c ) 
+	public void updateContainer( final Cursor<?> c ) 
 	{ 
-		b = bitStorage;
-		b.updateStorageArray( c );
+		b = storage.update( c );
 	}
 
 	public boolean get() { return b.getValue( i ); }
@@ -189,9 +189,9 @@ public class BitType extends TypeImpl<BitType> implements LogicType<BitType>, Nu
 	//public BooleanType getType() { return this; }
 
 	@Override
-	public BitType createType( Container<BitType> container )
+	public BitType createType( Container<BitType,?> container )
 	{
-		return new BitType( (BitContainer<BitType>)container );
+		return new BitType( (Container<BitType, BitAccess>)container );
 	}
 	
 	@Override
@@ -205,14 +205,9 @@ public class BitType extends TypeImpl<BitType> implements LogicType<BitType>, Nu
 	{
 		final boolean value = b.getValue(i);
 		
-		if ( outputType == 0)
-			return "" + value;
-		else
-			if ( value ) 
-				return "1"; 
-			else 
-				return "0"; 			
+		if ( value ) 
+			return "1"; 
+		else 
+			return "0"; 			
 	}
-	
-	public void setOutputType( final int outputType ) { this.outputType = outputType; }
 }

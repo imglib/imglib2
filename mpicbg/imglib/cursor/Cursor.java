@@ -33,7 +33,6 @@ import java.util.Iterator;
 
 import mpicbg.imglib.container.Container;
 import mpicbg.imglib.container.array.Array;
-import mpicbg.imglib.container.cube.Cube;
 import mpicbg.imglib.cursor.vector.Dimensionality;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.type.Type;
@@ -110,7 +109,7 @@ public interface Cursor<T extends Type<T>> extends Iterator<T>, java.lang.Iterab
 	public T getType();
 	public int getArrayIndex();
 	public int getStorageIndex();
-	public Container<T> getStorageContainer();
+	public Container<T,?> getStorageContainer();
 	public void setDebug( final boolean debug );
 	public int[] createPositionArray();
 	

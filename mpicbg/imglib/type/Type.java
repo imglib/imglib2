@@ -32,8 +32,7 @@ package mpicbg.imglib.type;
 import mpicbg.imglib.container.Container;
 import mpicbg.imglib.container.ContainerFactory;
 import mpicbg.imglib.container.array.Array;
-import mpicbg.imglib.container.basictypecontainer.BasicTypeContainer;
-import mpicbg.imglib.container.cube.Cube;
+import mpicbg.imglib.container.basictypecontainer.DataAccess;
 import mpicbg.imglib.cursor.Cursor;
 import mpicbg.imglib.cursor.array.ArrayCursor;
 import mpicbg.imglib.cursor.cube.CubeCursor;
@@ -45,7 +44,7 @@ import mpicbg.imglib.type.numeric.FloatType;
  * The {@link Type} class is responsible for computing. It can be instaniated as a variable holding one single value only or with
  * a container. There is no differentiation between the two cases except for the constructor to avoid double implementations. 
  * 
- * The {@link Type} is the only class that is aware of the actual data type, i.e. which basic type ({@link BasicTypeContainer}) is used to 
+ * The {@link Type} is the only class that is aware of the actual data type, i.e. which basic type ({@link DataAccess}) is used to 
  * store the data. On the other hand it does not know the storage type ({@link Array}, {@link Cursor}, ...). This is not necessary for
  * computation and avoid complicated re-implementations. The method public void updateDataArray( Cursor<?> c );	links the container and
  * the cursor which define the current position as well as the current storage array.
@@ -65,7 +64,7 @@ public interface Type<T extends Type<T>>
 	 * @param dim - the dimensions
 	 * @return - the instantiated container where only the {@link Type} knowns the BasicType it contains.
 	 */
-	public Container<T> createSuitableContainer( final ContainerFactory storageFactory, final int dim[] );
+	public Container<T,?> createSuitableContainer( final ContainerFactory storageFactory, final int dim[] );
 	
 	/**
 	 * The {@link Type} creates the default {@link Display} for displaying the image contents. Only {@link Type} can do this as in {@link Image}
@@ -86,8 +85,8 @@ public interface Type<T extends Type<T>>
 	 * The idea behind this concept is maybe not obvious. The {@link Type} knows which basic type
 	 * is used (float, int, byte, ...) but does not know how it is stored ({@link Array}, {@link Cube}, ...) to
 	 * prevent multiple implementations of {@link Type}.
-	 * That's why {@link Type} asks the {@link BasicTypeContainer} to give the actual basic array by passing the {@link Cursor}
-	 * that calls the method. The {@link BasicTypeContainer} is also an {@link Array}, {@link Cube}, ... which
+	 * That's why {@link Type} asks the {@link DataAccess} to give the actual basic array by passing the {@link Cursor}
+	 * that calls the method. The {@link DataAccess} is also an {@link Array}, {@link Cube}, ... which
 	 * can then communicate with the {@link ArrayCursor}, {@link CubeCursor}, ... and return the current basic type array. 
 	 * 
 	 * A typical implementation of this method looks like that (this is the {@link FloatType} implementation):
@@ -95,9 +94,9 @@ public interface Type<T extends Type<T>>
 	 * 		float[] v = floatStorage.getCurrentStorageArray( c ); 
 	 *  
 	 * @param c - the {@link Cursor} gives a link to itself so that the {@link Type} 
-	 * tell its {@link BasicTypeContainer} to get the new basic type array.
+	 * tell its {@link DataAccess} to get the new basic type array.
 	 */
-	public void updateDataArray( Cursor<?> c );	
+	public void updateContainer( Cursor<?> c );	
 
 	/**
 	 * Increments the array position of the {@link Type}, 
@@ -150,7 +149,7 @@ public interface Type<T extends Type<T>>
 	 * @param container - the {@link Container} where the {@link Type} works on
 	 * @return - a new {@link Type}
 	 */
-	public T createType( Container<T> container );
+	public T createType( Container<T,? extends DataAccess> container );
 	
 	/**
 	 * Creates a new {@link Type} which can only store one value.

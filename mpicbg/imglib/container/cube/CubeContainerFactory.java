@@ -29,15 +29,16 @@
  */
 package mpicbg.imglib.container.cube;
 
+import mpicbg.imglib.container.Container;
 import mpicbg.imglib.container.ContainerFactory;
-import mpicbg.imglib.container.basictypecontainer.BitContainer;
-import mpicbg.imglib.container.basictypecontainer.ByteContainer;
-import mpicbg.imglib.container.basictypecontainer.CharContainer;
-import mpicbg.imglib.container.basictypecontainer.DoubleContainer;
-import mpicbg.imglib.container.basictypecontainer.FloatContainer;
-import mpicbg.imglib.container.basictypecontainer.IntContainer;
-import mpicbg.imglib.container.basictypecontainer.LongContainer;
-import mpicbg.imglib.container.basictypecontainer.ShortContainer;
+import mpicbg.imglib.container.basictypecontainer.array.BitArray;
+import mpicbg.imglib.container.basictypecontainer.array.ByteArray;
+import mpicbg.imglib.container.basictypecontainer.array.CharArray;
+import mpicbg.imglib.container.basictypecontainer.array.DoubleArray;
+import mpicbg.imglib.container.basictypecontainer.array.FloatArray;
+import mpicbg.imglib.container.basictypecontainer.array.IntArray;
+import mpicbg.imglib.container.basictypecontainer.array.LongArray;
+import mpicbg.imglib.container.basictypecontainer.array.ShortArray;
 import mpicbg.imglib.type.Type;
 
 public class CubeContainerFactory extends ContainerFactory
@@ -126,75 +127,75 @@ public class CubeContainerFactory extends ContainerFactory
 	}
 
 	@Override
-	public <T extends Type<T>>BitContainer<T> createBitInstance( int[] dimensions, int entitiesPerPixel )
+	public <T extends Type<T>> Container<T, BitArray> createBitInstance( int[] dimensions, int entitiesPerPixel )
 	{
 		dimensions = checkDimensions( dimensions );
 		int[] cubeSize = checkCubeSize( this.cubeSize, dimensions );
 		
-		return new BitCube<T>( this, dimensions, cubeSize, entitiesPerPixel );
+		return new Cube<T, BitArray>( this, new BitArray( 1 ), dimensions, cubeSize, entitiesPerPixel );
 	}
 	
 	@Override
-	public <T extends Type<T>>ByteContainer<T> createByteInstance( int[] dimensions, int entitiesPerPixel )
+	public <T extends Type<T>> Container<T, ByteArray> createByteInstance( int[] dimensions, int entitiesPerPixel )
 	{
 		dimensions = checkDimensions( dimensions );
 		int[] cubeSize = checkCubeSize( this.cubeSize, dimensions );
 		
-		return new ByteCube<T>( this, dimensions, cubeSize, entitiesPerPixel );
+		return new Cube<T, ByteArray>( this, new ByteArray( 1 ), dimensions, cubeSize, entitiesPerPixel );
 	}
 
 	@Override
-	public <T extends Type<T>>CharContainer<T> createCharInstance(int[] dimensions, int entitiesPerPixel)
+	public <T extends Type<T>> Container<T, CharArray> createCharInstance(int[] dimensions, int entitiesPerPixel)
 	{
 		dimensions = checkDimensions( dimensions );
 		int[] cubeSize = checkCubeSize( this.cubeSize, dimensions );
 		
-		return new CharCube<T>( this, dimensions, cubeSize, entitiesPerPixel );
+		return new Cube<T, CharArray>( this, new CharArray( 1 ), dimensions, cubeSize, entitiesPerPixel );
 	}
 
 	@Override
-	public <T extends Type<T>>DoubleContainer<T> createDoubleInstance(int[] dimensions, int entitiesPerPixel)
+	public <T extends Type<T>> Container<T, DoubleArray> createDoubleInstance(int[] dimensions, int entitiesPerPixel)
 	{
 		dimensions = checkDimensions( dimensions );
 		int[] cubeSize = checkCubeSize( this.cubeSize, dimensions );
 		
-		return new DoubleCube<T>( this, dimensions, cubeSize, entitiesPerPixel );
+		return new Cube<T, DoubleArray>( this, new DoubleArray( 1 ), dimensions, cubeSize, entitiesPerPixel );
 	}
 
 	@Override
-	public <T extends Type<T>>FloatContainer<T> createFloatInstance(int[] dimensions, int entitiesPerPixel)
+	public <T extends Type<T>> Container<T, FloatArray> createFloatInstance(int[] dimensions, int entitiesPerPixel)
 	{
 		dimensions = checkDimensions( dimensions );
 		int[] cubeSize = checkCubeSize( this.cubeSize, dimensions );
 		
-		return new FloatCube<T>( this, dimensions, cubeSize, entitiesPerPixel );
+		return new Cube<T, FloatArray>( this, new FloatArray( 1 ), dimensions, cubeSize, entitiesPerPixel );
 	}
 
 	@Override
-	public <T extends Type<T>>IntContainer<T> createIntInstance(int[] dimensions, int entitiesPerPixel)
+	public <T extends Type<T>> Container<T, IntArray> createIntInstance(int[] dimensions, int entitiesPerPixel)
 	{
 		dimensions = checkDimensions( dimensions );
 		int[] cubeSize = checkCubeSize( this.cubeSize, dimensions );
 		
-		return new IntCube<T>( this, dimensions, cubeSize, entitiesPerPixel );
+		return new Cube<T, IntArray>( this, new IntArray( 1 ), dimensions, cubeSize, entitiesPerPixel );
 	}
 
 	@Override
-	public <T extends Type<T>>LongContainer<T> createLongInstance(int[] dimensions, int entitiesPerPixel)
+	public <T extends Type<T>> Container<T, LongArray> createLongInstance(int[] dimensions, int entitiesPerPixel)
 	{
 		dimensions = checkDimensions( dimensions );
 		int[] cubeSize = checkCubeSize( this.cubeSize, dimensions );
 		
-		return new LongCube<T>( this, dimensions, cubeSize, entitiesPerPixel );
+		return new Cube<T, LongArray>( this, new LongArray( 1 ), dimensions, cubeSize, entitiesPerPixel );
 	}
 
 	@Override
-	public <T extends Type<T>>ShortContainer<T> createShortInstance(int[] dimensions, int entitiesPerPixel)
+	public <T extends Type<T>> Container<T, ShortArray> createShortInstance(int[] dimensions, int entitiesPerPixel)
 	{
 		dimensions = checkDimensions( dimensions );
 		int[] cubeSize = checkCubeSize( this.cubeSize, dimensions );
 		
-		return new ShortCube<T>( this, dimensions, cubeSize, entitiesPerPixel );
+		return new Cube<T, ShortArray>( this, new ShortArray( 1 ), dimensions, cubeSize, entitiesPerPixel );
 	}
 
 	@Override

@@ -41,12 +41,12 @@ public abstract class ContainerFactory implements Factory
 	public boolean useOptimizedContainers() { return useOptimizedContainers; }
 	
 	// All basic Type containers
-	public abstract <T extends Type<T>>BitContainer<T> createBitInstance( int[] dimensions, int entitiesPerPixel );
-	public abstract <T extends Type<T>>ByteContainer<T> createByteInstance( int[] dimensions, int entitiesPerPixel );
-	public abstract <T extends Type<T>>CharContainer<T> createCharInstance( int[] dimensions, int entitiesPerPixel );
-	public abstract <T extends Type<T>>ShortContainer<T> createShortInstance( int[] dimensions, int entitiesPerPixel );
-	public abstract <T extends Type<T>>IntContainer<T> createIntInstance( int[] dimensions, int entitiesPerPixel );
-	public abstract <T extends Type<T>>LongContainer<T> createLongInstance( int[] dimensions, int entitiesPerPixel );
-	public abstract <T extends Type<T>>FloatContainer<T> createFloatInstance( int[] dimensions, int entitiesPerPixel );
-	public abstract <T extends Type<T>>DoubleContainer<T> createDoubleInstance( int[] dimensions, int entitiesPerPixel );
+	public abstract <T extends Type<T>> Container<T, ? extends BitAccess> createBitInstance( int[] dimensions, int entitiesPerPixel );
+	public abstract <T extends Type<T>> Container<T, ? extends ByteAccess> createByteInstance( int[] dimensions, int entitiesPerPixel );
+	public abstract <T extends Type<T>> Container<T, ? extends CharAccess> createCharInstance( int[] dimensions, int entitiesPerPixel );
+	public abstract <T extends Type<T>> Container<T, ? extends ShortAccess> createShortInstance( int[] dimensions, int entitiesPerPixel );
+	public abstract <T extends Type<T>> Container<T, ? extends IntAccess> createIntInstance( int[] dimensions, int entitiesPerPixel );
+	public abstract <T extends Type<T>> Container<T, ? extends LongAccess> createLongInstance( int[] dimensions, int entitiesPerPixel );
+	public abstract <T extends Type<T>> Container<T, ? extends FloatAccess> createFloatInstance( int[] dimensions, int entitiesPerPixel );
+	public abstract <T extends Type<T>> Container<T, ? extends DoubleAccess> createDoubleInstance( int[] dimensions, int entitiesPerPixel );
 }
