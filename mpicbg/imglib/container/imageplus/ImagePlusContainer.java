@@ -45,6 +45,7 @@ import mpicbg.imglib.cursor.imageplus.ImagePlusLocalizableByDimCursor;
 import mpicbg.imglib.cursor.imageplus.ImagePlusLocalizableByDimOutsideCursor;
 import mpicbg.imglib.cursor.imageplus.ImagePlusLocalizableCursor;
 import mpicbg.imglib.cursor.imageplus.ImagePlusLocalizablePlaneCursor;
+import mpicbg.imglib.exception.ImgLibException;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.outside.OutsideStrategyFactory;
 import mpicbg.imglib.type.Type;
@@ -84,7 +85,10 @@ public class ImagePlusContainer<T extends Type<T>, A extends ArrayDataAccess<A>>
 			mirror.add( creator.createArray( width * height ));
 	}
 
-	public ImagePlus getImagePlus() { throw new RuntimeException( "GenericImagePlusContainer has no ImagePlus instance, it is not a standard type of ImagePlus" ); }
+	public ImagePlus getImagePlus() throws ImgLibException 
+	{ 
+		throw new ImgLibException( this, "has no ImagePlus instance, it is not a standard type of ImagePlus" ); 
+	}
 
 	@Override
 	public A update( final Cursor<?> c ) { return mirror.get( c.getStorageIndex() ); }
