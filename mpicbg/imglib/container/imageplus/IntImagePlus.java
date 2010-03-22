@@ -33,6 +33,7 @@ import ij.IJ;
 import ij.ImagePlus;
 
 import mpicbg.imglib.container.basictypecontainer.array.IntArray;
+import mpicbg.imglib.exception.ImgLibException;
 import mpicbg.imglib.type.Type;
 
 public class IntImagePlus<T extends Type<T>> extends ImagePlusContainer<T, IntArray> 
@@ -42,11 +43,21 @@ public class IntImagePlus<T extends Type<T>> extends ImagePlusContainer<T, IntAr
 	public IntImagePlus( final ImagePlusContainerFactory factory, final int[] dim, final int entitiesPerPixel ) 
 	{
 		super( factory, dim, entitiesPerPixel );
-		
-		image = IJ.createImage( "image", "RGB Black", width * entitiesPerPixel, height, depth );
 
-		for ( int i = 0; i < depth; ++i )
-			mirror.add( new IntArray( (int[])image.getStack().getProcessor( i+1 ).getPixels() ) );
+		if ( entitiesPerPixel == 1 )
+		{
+			image = IJ.createImage( "image", "RGB Black", width * entitiesPerPixel, height, depth );
+	
+			for ( int i = 0; i < depth; ++i )
+				mirror.add( new IntArray( (int[])image.getStack().getProcessor( i+1 ).getPixels() ) );
+		}
+		else
+		{
+			image = null;
+	
+			for ( int i = 0; i < depth; ++i )
+				mirror.add( new IntArray( width * height ));
+		}
 	}
 
 	public IntImagePlus( final ImagePlus image, final ImagePlusContainerFactory factory ) 
@@ -67,6 +78,12 @@ public class IntImagePlus<T extends Type<T>> extends ImagePlusContainer<T, IntAr
 	}
 
 	@Override
-	public ImagePlus getImagePlus() { return image;	}
+	public ImagePlus getImagePlus() throws ImgLibException 
+	{
+		if ( image == null )
+			throw new ImgLibException( this, "has no ImagePlus instance, it is not a standard type of ImagePlus (" + entitiesPerPixel + " entities per pixel)" ); 
+		else
+			return image;
+	}
 }
 

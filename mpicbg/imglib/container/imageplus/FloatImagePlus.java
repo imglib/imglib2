@@ -33,6 +33,7 @@ import ij.IJ;
 import ij.ImagePlus;
 
 import mpicbg.imglib.container.basictypecontainer.array.FloatArray;
+import mpicbg.imglib.exception.ImgLibException;
 import mpicbg.imglib.type.Type;
 
 public class FloatImagePlus<T extends Type<T>> extends ImagePlusContainer<T, FloatArray> 
@@ -43,10 +44,20 @@ public class FloatImagePlus<T extends Type<T>> extends ImagePlusContainer<T, Flo
 	{
 		super( factory, dim, entitiesPerPixel );
 		
-		image = IJ.createImage( "image", "32-Bit Black", width * entitiesPerPixel, height, depth );
+		if ( entitiesPerPixel == 1 )
+		{
+			image = IJ.createImage( "image", "32-Bit Black", width * entitiesPerPixel, height, depth );
+	
+			for ( int i = 0; i < depth; ++i )
+				mirror.add( new FloatArray( (float[])image.getStack().getProcessor( i+1 ).getPixels() ) );
+		}
+		else
+		{
+			image = null;
 
-		for ( int i = 0; i < depth; ++i )
-			mirror.add( new FloatArray( (float[])image.getStack().getProcessor( i+1 ).getPixels() ) );
+			for ( int i = 0; i < depth; ++i )
+				mirror.add( new FloatArray( width * height ));
+		}
 	}
 
 	public FloatImagePlus( final ImagePlus image, final ImagePlusContainerFactory factory ) 
@@ -67,6 +78,12 @@ public class FloatImagePlus<T extends Type<T>> extends ImagePlusContainer<T, Flo
 	}
 
 	@Override
-	public ImagePlus getImagePlus() { return image;	}
+	public ImagePlus getImagePlus() throws ImgLibException 
+	{
+		if ( image == null )
+			throw new ImgLibException( this, "has no ImagePlus instance, it is not a standard type of ImagePlus (" + entitiesPerPixel + " entities per pixel)" ); 
+		else
+			return image;
+	}
 }
 
