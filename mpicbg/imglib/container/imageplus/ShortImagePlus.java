@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2009--2010, Johannes Schindelin
+ * Copyright (c) 2009--2010, Stephan Preibisch & Johannes Schindelin
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
