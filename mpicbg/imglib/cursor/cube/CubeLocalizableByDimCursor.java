@@ -350,7 +350,7 @@ public class CubeLocalizableByDimCursor<T extends Type<T>> extends CubeLocalizab
 		cubePosition[ dim ] = container.getCubeElementPosition( position, dim );
 
 		// get the cube index
-		cube = container.getCubeElementIndex( cursor, position, dim );
+		cube = container.getCubeElementIndex( cursor, cubePosition[ dim ], dim );
 		
 		getCubeData(cube);
 		type.updateIndex( cubeInstance.getPosGlobal( this.position ) );
