@@ -31,9 +31,9 @@ package mpicbg.imglib.outside;
 
 import mpicbg.imglib.algorithm.math.MathLib;
 import mpicbg.imglib.cursor.LocalizableCursor;
-import mpicbg.imglib.type.NumericType;
+import mpicbg.imglib.type.numeric.RealType;
 
-public class OutsideStrategyMirrorExpWindowingFactory<T extends NumericType<T>> extends OutsideStrategyFactory<T>
+public class OutsideStrategyMirrorExpWindowingFactory<T extends RealType<T>> extends OutsideStrategyFactory<T>
 {
 	int[] fadeOutDistance = null;
 	int minFadeOutDistance = 6;

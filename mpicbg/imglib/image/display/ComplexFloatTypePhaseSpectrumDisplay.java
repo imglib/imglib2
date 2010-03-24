@@ -30,7 +30,7 @@
 package mpicbg.imglib.image.display;
 
 import mpicbg.imglib.image.Image;
-import mpicbg.imglib.type.numeric.ComplexFloatType;
+import mpicbg.imglib.type.numeric.complex.ComplexFloatType;
 
 public class ComplexFloatTypePhaseSpectrumDisplay extends ComplexFloatTypePowerSpectrumDisplay
 {
@@ -42,8 +42,8 @@ public class ComplexFloatTypePhaseSpectrumDisplay extends ComplexFloatTypePowerS
 	@Override
 	protected float getComplexDisplayValue( final ComplexFloatType c )
 	{
-		final float real = c.getReal();
-		final float complex = c.getComplex();
+		final float real = c.getRealFloat();
+		final float complex = c.getComplexFloat();
 
 		if ( real != 0.0 || complex != 0)
 			return (float)Math.atan2( complex, real );

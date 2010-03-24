@@ -37,10 +37,9 @@ import mpicbg.imglib.container.basictypecontainer.array.IntArray;
 import mpicbg.imglib.cursor.Cursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.display.imagej.RGBALegacyTypeDisplay;
-import mpicbg.imglib.type.NumericType;
-import mpicbg.imglib.type.TypeImpl;
+import mpicbg.imglib.type.numeric.integer.IntegerTypeImpl;
 
-final public class RGBALegacyType extends TypeImpl<RGBALegacyType> implements NumericType<RGBALegacyType>
+final public class RGBALegacyType extends IntegerTypeImpl<RGBALegacyType> implements RealType<RGBALegacyType>
 {
 	// the Container
 	final Container<RGBALegacyType, IntAccess> storage;
@@ -120,21 +119,23 @@ final public class RGBALegacyType extends TypeImpl<RGBALegacyType> implements Nu
 	
 	public int get(){ return b.getValue( i ); }
 	public void set( final int f ){ b.setValue( i, f ); }
-	
+
 	@Override
-	public float getReal() 
-	{
+	public int getInteger()
+	{ 
 		final int value = get();
 		return ( red( value ) + green( value ) + blue( value ) ) / 3; 
 	}
-	
 	@Override
-	public void setReal( final float f ) 
-	{
-		final int value = MathLib.round( f );
-		set( rgba( value, value, value, 0 ) );
+	public long getIntegerLong() { return getInteger(); }
+	@Override
+	public void setInteger( final int f )
+	{ 
+		set( rgba( f, f, f, 0 ) );
 	}
-
+	@Override
+	public void setInteger( final long f ){ setInteger( (int)f ); }
+		
 	@Override
 	public void mul( final float c )
 	{

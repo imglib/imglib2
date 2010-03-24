@@ -25,10 +25,10 @@ import mpicbg.imglib.algorithm.MultiThreaded;
 import mpicbg.imglib.algorithm.OutputAlgorithm;
 import mpicbg.imglib.algorithm.fft.FourierTransform.Rearrangement;
 import mpicbg.imglib.image.Image;
-import mpicbg.imglib.type.NumericType;
-import mpicbg.imglib.type.numeric.ComplexFloatType;
+import mpicbg.imglib.type.numeric.RealType;
+import mpicbg.imglib.type.numeric.complex.ComplexFloatType;
 
-public class InverseFourierTransform<T extends NumericType<T>> implements MultiThreaded, OutputAlgorithm<T>, Benchmark
+public class InverseFourierTransform<T extends RealType<T>> implements MultiThreaded, OutputAlgorithm<T>, Benchmark
 {
 	final Image<ComplexFloatType> fftImage;	
 	final int numDimensions;

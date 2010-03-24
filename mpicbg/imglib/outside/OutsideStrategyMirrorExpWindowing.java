@@ -32,9 +32,9 @@ package mpicbg.imglib.outside;
 import mpicbg.imglib.algorithm.math.MathLib;
 import mpicbg.imglib.cursor.LocalizableByDimCursor;
 import mpicbg.imglib.cursor.LocalizableCursor;
-import mpicbg.imglib.type.NumericType;
+import mpicbg.imglib.type.numeric.RealType;
 
-public class OutsideStrategyMirrorExpWindowing<T extends NumericType<T>> extends OutsideStrategy<T>
+public class OutsideStrategyMirrorExpWindowing<T extends RealType<T>> extends OutsideStrategy<T>
 {
 	final LocalizableCursor<T> parentCursor;
 	final LocalizableByDimCursor<T> mirrorCursor;

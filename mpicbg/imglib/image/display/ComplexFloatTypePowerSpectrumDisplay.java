@@ -32,7 +32,7 @@ package mpicbg.imglib.image.display;
 import mpicbg.imglib.algorithm.math.MathLib;
 import mpicbg.imglib.cursor.Cursor;
 import mpicbg.imglib.image.Image;
-import mpicbg.imglib.type.numeric.ComplexFloatType;
+import mpicbg.imglib.type.numeric.complex.ComplexFloatType;
 
 public class ComplexFloatTypePowerSpectrumDisplay extends Display<ComplexFloatType>
 {
@@ -73,8 +73,8 @@ public class ComplexFloatTypePowerSpectrumDisplay extends Display<ComplexFloatTy
 	
 	protected float getComplexDisplayValue( final ComplexFloatType c )
 	{
-		final float real = c.getReal();
-		final float complex = c.getComplex();
+		final float real = c.getRealFloat();
+		final float complex = c.getComplexFloat();
 
 		return (float)MathLib.gLog( Math.sqrt( real * real + complex * complex ), 2 );		
 	}	

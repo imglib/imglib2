@@ -37,18 +37,18 @@ import mpicbg.imglib.container.imageplus.IntImagePlus;
 import mpicbg.imglib.container.imageplus.ShortImagePlus;
 import mpicbg.imglib.cursor.Cursor;
 import mpicbg.imglib.image.Image;
-import mpicbg.imglib.type.NumericType;
 import mpicbg.imglib.type.Type;
 import mpicbg.imglib.type.TypeConverter;
-import mpicbg.imglib.type.numeric.UnsignedByteType;
-import mpicbg.imglib.type.numeric.FloatType;
+import mpicbg.imglib.type.numeric.RealType;
 import mpicbg.imglib.type.numeric.RGBALegacyType;
-import mpicbg.imglib.type.numeric.UnsignedShortType;
+import mpicbg.imglib.type.numeric.integer.UnsignedByteType;
+import mpicbg.imglib.type.numeric.integer.UnsignedShortType;
+import mpicbg.imglib.type.numeric.real.FloatType;
 
 public class ImagePlusAdapter
 {
 	@SuppressWarnings("unchecked")
-	public static <T extends NumericType<T>> Image< T > wrap( final ImagePlus imp )
+	public static <T extends RealType<T>> Image< T > wrap( final ImagePlus imp )
 	{
 		return (Image<T>) wrapLocal(imp);
 	}

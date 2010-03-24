@@ -31,10 +31,10 @@ import mpicbg.imglib.outside.OutsideStrategyFactory;
 import mpicbg.imglib.outside.OutsideStrategyMirrorExpWindowingFactory;
 import mpicbg.imglib.outside.OutsideStrategyMirrorFactory;
 import mpicbg.imglib.outside.OutsideStrategyValueFactory;
-import mpicbg.imglib.type.NumericType;
-import mpicbg.imglib.type.numeric.ComplexFloatType;
+import mpicbg.imglib.type.numeric.RealType;
+import mpicbg.imglib.type.numeric.complex.ComplexFloatType;
 
-public class FourierTransform<T extends NumericType<T>> implements MultiThreaded, OutputAlgorithm<ComplexFloatType>, Benchmark
+public class FourierTransform<T extends RealType<T>> implements MultiThreaded, OutputAlgorithm<ComplexFloatType>, Benchmark
 {
 	public static enum PreProcessing { None, ExtendMirror, ExtendMirrorFading, UseGivenOutsideStrategy }
 	public static enum Rearrangement { RearrangeQuadrants, Unchanged }

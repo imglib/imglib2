@@ -31,7 +31,7 @@ package mpicbg.imglib.image.display;
 
 import mpicbg.imglib.cursor.Cursor;
 import mpicbg.imglib.image.Image;
-import mpicbg.imglib.type.numeric.DoubleType;
+import mpicbg.imglib.type.numeric.real.DoubleType;
 
 public class DoubleTypeDisplay extends Display<DoubleType>
 {

@@ -38,10 +38,11 @@ import mpicbg.imglib.cursor.Cursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.display.BitTypeDisplay;
 import mpicbg.imglib.type.LogicType;
-import mpicbg.imglib.type.NumericType;
 import mpicbg.imglib.type.TypeImpl;
+import mpicbg.imglib.type.numeric.RealType;
+import mpicbg.imglib.type.numeric.integer.IntegerTypeImpl;
 
-public class BitType extends TypeImpl<BitType> implements LogicType<BitType>, NumericType<BitType>
+public class BitType extends IntegerTypeImpl<BitType> implements LogicType<BitType>, RealType<BitType>
 {
 	// the Container
 	final Container<BitType, BitAccess> storage;
@@ -85,8 +86,30 @@ public class BitType extends TypeImpl<BitType> implements LogicType<BitType>, Nu
 	}
 
 	public boolean get() { return b.getValue( i ); }
-	public void set( final boolean value) { b.setValue( i, value ); }
+	public void set( final boolean value ) { b.setValue( i, value ); }
 
+	@Override
+	public int getInteger(){ return get() ? 1 : 0; }
+	@Override
+	public long getIntegerLong() { return get() ? 1 : 0; }
+	@Override
+	public void setInteger( final int f )
+	{
+		if ( f >= 1 ) 
+			set( true );
+		else
+			set( false );
+	}
+	@Override
+	public void setInteger( final long f )
+	{
+		if ( f >= 1 ) 
+			set( true );
+		else
+			set( false );
+	}
+
+	
 	@Override
 	public void set( final BitType c ) { b.setValue(i, c.get() ); }
 
@@ -131,25 +154,7 @@ public class BitType extends TypeImpl<BitType> implements LogicType<BitType>, Nu
 		else
 			b.setValue(i, b.getValue(i) && false );
 	}
-	
-	@Override
-	public float getReal() 
-	{ 
-		if ( b.getValue( i ) )
-			return 1;
-		else
-			return 0;
-	}
-	
-	@Override
-	public void setReal( final float f ) 
-	{
-		if ( f >= 0.5f )
-			b.setValue( i, true );
-		else
-			b.setValue( i, false );
-	}
-	
+		
 	@Override
 	public void setOne() { b.setValue( i, true ); }
 

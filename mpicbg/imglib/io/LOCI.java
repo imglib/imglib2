@@ -29,27 +29,27 @@ import mpicbg.imglib.container.ContainerFactory;
 import mpicbg.imglib.cursor.LocalizablePlaneCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.ImageFactory;
-import mpicbg.imglib.type.NumericType;
-import mpicbg.imglib.type.numeric.ByteType;
-import mpicbg.imglib.type.numeric.FloatType;
+import mpicbg.imglib.type.numeric.RealType;
 import mpicbg.imglib.type.numeric.RGBALegacyType;
-import mpicbg.imglib.type.numeric.ShortType;
-import mpicbg.imglib.type.numeric.UnsignedByteType;
+import mpicbg.imglib.type.numeric.integer.ByteType;
+import mpicbg.imglib.type.numeric.integer.ShortType;
+import mpicbg.imglib.type.numeric.integer.UnsignedByteType;
+import mpicbg.imglib.type.numeric.real.FloatType;
 
 public class LOCI
 {
-	public static <T extends NumericType<T>> Image<T> openLOCI( final String fileName, final ContainerFactory containerFactory )
+	public static <T extends RealType<T>> Image<T> openLOCI( final String fileName, final ContainerFactory containerFactory )
 	{
 		return openLOCI( "", fileName, containerFactory );
 	}
 	
-	public static <T extends NumericType<T>> Image<T> openLOCI( final String path, final String fileName, final ContainerFactory containerFactory )
+	public static <T extends RealType<T>> Image<T> openLOCI( final String path, final String fileName, final ContainerFactory containerFactory )
 	{
 		return openLOCI(path, fileName, containerFactory, -1, -1);
 	}
 	
 	@SuppressWarnings("unchecked")
-	public static <T extends NumericType<T>> Image<T> openLOCI( String path, final String fileName, final ContainerFactory containerFactory, int from, int to)
+	public static <T extends RealType<T>> Image<T> openLOCI( String path, final String fileName, final ContainerFactory containerFactory, int from, int to)
 	{
 		path = checkPath( path );
 

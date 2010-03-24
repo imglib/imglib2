@@ -30,7 +30,7 @@
 package mpicbg.imglib.image.display;
 
 import mpicbg.imglib.image.Image;
-import mpicbg.imglib.type.numeric.ComplexFloatType;
+import mpicbg.imglib.type.numeric.complex.ComplexFloatType;
 
 public class ComplexFloatTypeRealValueDisplay extends ComplexFloatTypePowerSpectrumDisplay
 {
@@ -42,6 +42,6 @@ public class ComplexFloatTypeRealValueDisplay extends ComplexFloatTypePowerSpect
 	@Override
 	protected float getComplexDisplayValue( final ComplexFloatType c )
 	{
-		return c.getReal();
+		return c.getRealFloat();
 	}
 }

@@ -27,54 +27,52 @@
  *
  * @author Stephan Preibisch & Stephan Saalfeld
  */
-package mpicbg.imglib.type.numeric;
+package mpicbg.imglib.type.numeric.real;
 
 import mpicbg.imglib.container.Container;
 import mpicbg.imglib.container.ContainerFactory;
-import mpicbg.imglib.container.basictypecontainer.DataAccess;
-import mpicbg.imglib.container.basictypecontainer.FloatAccess;
-import mpicbg.imglib.container.basictypecontainer.array.FloatArray;
+import mpicbg.imglib.container.basictypecontainer.DoubleAccess;
+import mpicbg.imglib.container.basictypecontainer.array.DoubleArray;
 import mpicbg.imglib.cursor.Cursor;
 import mpicbg.imglib.image.Image;
-import mpicbg.imglib.image.display.FloatTypeDisplay;
-import mpicbg.imglib.type.NumericType;
-import mpicbg.imglib.type.TypeImpl;
+import mpicbg.imglib.image.display.DoubleTypeDisplay;
+import mpicbg.imglib.type.numeric.RealType;
 
-public class FloatType extends TypeImpl<FloatType> implements NumericType<FloatType>
+public class DoubleType extends RealTypeImpl<DoubleType> implements RealType<DoubleType>
 {
 	// the Container
-	final Container<FloatType, FloatAccess> storage;
+	final Container<DoubleType, DoubleAccess> storage;
 	
 	// the (sub)container that holds the information 
-	FloatAccess b;
+	DoubleAccess b;
 	
 	// this is the constructor if you want it to read from an array
-	public FloatType( Container<FloatType, FloatAccess> floatStorage )
+	public DoubleType( Container<DoubleType, DoubleAccess> doubleStorage )
 	{
-		storage = floatStorage;
+		storage = doubleStorage;
 	}
-
+	
 	// this is the constructor if you want it to be a variable
-	public FloatType( final float value )
+	public DoubleType( final double value )
 	{
 		storage = null;
-		b = new FloatArray( 1 );
+		b = new DoubleArray( 1 );
 		set( value );
 	}
 
 	// this is the constructor if you want it to be a variable
-	public FloatType() { this( 0 ); }
+	public DoubleType() { this( 0 ); }
 
 	@Override
-	public Container<FloatType, ? extends FloatAccess> createSuitableContainer( final ContainerFactory storageFactory, final int dim[] )
+	public Container<DoubleType, ? extends DoubleAccess> createSuitableContainer( final ContainerFactory storageFactory, final int dim[] )
 	{
-		return storageFactory.createFloatInstance( dim, 1 );	
+		return storageFactory.createDoubleInstance( dim, 1 );	
 	}
 
 	@Override
-	public FloatTypeDisplay getDefaultDisplay( Image<FloatType> image )
+	public DoubleTypeDisplay getDefaultDisplay( Image<DoubleType> image )
 	{
-		return new FloatTypeDisplay( image );
+		return new DoubleTypeDisplay( image );
 	}
 	
 	@Override
@@ -83,14 +81,18 @@ public class FloatType extends TypeImpl<FloatType> implements NumericType<FloatT
 		b = storage.update( c ); 
 	}
 	
-	public float get(){ return b.getValue( i ); }
-	public void set( final float f ){ b.setValue( i, f ); }
+	public double get(){ return b.getValue( i ); }
+	public void set( final double f ){ b.setValue( i, f ); }
 	
 	@Override
-	public float getReal() { return get(); }
+	public float getRealFloat() { return (float)get(); }
+	@Override
+	public double getRealDouble() { return get(); }
 	
 	@Override
-	public void setReal( final float f ){ set( f ); }
+	public void setReal( final float real ){ set( real ); }
+	@Override
+	public void setReal( final double real ){ set( real ); }
 	
 	@Override
 	public void mul( final float c )
@@ -101,38 +103,38 @@ public class FloatType extends TypeImpl<FloatType> implements NumericType<FloatT
 	@Override
 	public void mul( final double c )
 	{
-		set( ( float )( get() * c ) );
+		set( get() * c );
 	}
 	
 	@Override
-	public void add( final FloatType c )
+	public void add( final DoubleType c )
 	{
 		set( get() + c.get() );
 	}
 
 	@Override
-	public void div( final FloatType c )
+	public void div( final DoubleType c )
 	{
 		set( get() / c.get() );
 	}
 
 	@Override
-	public void mul( final FloatType c )
+	public void mul( final DoubleType c )
 	{
 		set( get() * c.get() );
 	}
 
 	@Override
-	public void sub( final FloatType c )
+	public void sub( final DoubleType c )
 	{
 		set( get() - c.get() );
 	}
 
 	@Override
-	public int compareTo( final FloatType c ) 
+	public int compareTo( final DoubleType c ) 
 	{ 
-		final float a = get();
-		final float b = c.get();
+		final double a = get();
+		final double b = c.get();
 		if ( a > b )
 			return 1;
 		else if ( a < b )
@@ -142,7 +144,7 @@ public class FloatType extends TypeImpl<FloatType> implements NumericType<FloatT
 	}
 	
 	@Override
-	public void set( final FloatType c ){ set( c.get() ); }
+	public void set( final DoubleType c ){ set( c.get() ); }
 
 	@Override
 	public void setOne() { set( 1 ); }
@@ -153,40 +155,40 @@ public class FloatType extends TypeImpl<FloatType> implements NumericType<FloatT
 	@Override
 	public void inc()
 	{
-		float a = get();
+		double a = get();
 		set( ++a );
 	}
 
 	@Override
 	public void dec()
 	{
-		float a = get();
+		double a = get();
 		set( --a );
 	}
 
 	@Override
-	public FloatType[] createArray1D(int size1){ return new FloatType[ size1 ]; }
+	public DoubleType[] createArray1D(int size1){ return new DoubleType[ size1 ]; }
 
 	@Override
-	public FloatType[][] createArray2D(int size1, int size2){ return new FloatType[ size1 ][ size2 ]; }
+	public DoubleType[][] createArray2D(int size1, int size2){ return new DoubleType[ size1 ][ size2 ]; }
 
 	@Override
-	public FloatType[][][] createArray3D(int size1, int size2, int size3) { return new FloatType[ size1 ][ size2 ][ size3 ]; }
+	public DoubleType[][][] createArray3D(int size1, int size2, int size3) { return new DoubleType[ size1 ][ size2 ][ size3 ]; }
 
 	//@Override
-	//public FloatType getType() { return this; }
+	//public DoubleType getType() { return this; }
 
 	@Override
-	public FloatType createType( Container<FloatType,? extends DataAccess> container )
+	public DoubleType createType( Container<DoubleType,?> container )
 	{
-		return new FloatType( (Container<FloatType, FloatAccess>)container );
+		return new DoubleType( (Container<DoubleType, DoubleAccess>)container );
 	}
 	
 	@Override
-	public FloatType createVariable(){ return new FloatType( 0 ); }
+	public DoubleType createVariable(){ return new DoubleType( 0 ); }
 	
 	@Override
-	public FloatType clone(){ return new FloatType( get() ); }
+	public DoubleType clone(){ return new DoubleType( get() ); }
 	
 	@Override
 	public String toString() { return "" + get(); }

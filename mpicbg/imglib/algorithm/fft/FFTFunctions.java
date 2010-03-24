@@ -31,14 +31,14 @@ import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.ImageFactory;
 import mpicbg.imglib.multithreading.SimpleMultiThreading;
 import mpicbg.imglib.outside.OutsideStrategyFactory;
-import mpicbg.imglib.type.NumericType;
 import mpicbg.imglib.type.Type;
 import mpicbg.imglib.type.label.FakeType;
-import mpicbg.imglib.type.numeric.ComplexFloatType;
+import mpicbg.imglib.type.numeric.RealType;
+import mpicbg.imglib.type.numeric.complex.ComplexFloatType;
 
 final public class FFTFunctions 
 {
-	final public static <T extends NumericType<T>> Image<T> computeInverseFFT( final Image<ComplexFloatType> complex, final T type,  
+	final public static <T extends RealType<T>> Image<T> computeInverseFFT( final Image<ComplexFloatType> complex, final T type,  
 	                                                        final int numThreads, 
 	                                                        final boolean scale, final boolean cropBack,
 	                                                        final int[] originalSize, final int[] originalOffset,
@@ -133,12 +133,12 @@ final public class FFTFunctions
 								// get the input line
 								for ( int i = 0; i < size-1; ++i )
 								{
-									tempIn[ i * 2 ] = cursor.getType().getReal();
-									tempIn[ i * 2 + 1 ] = cursor.getType().getComplex();
+									tempIn[ i * 2 ] = cursor.getType().getRealFloat();
+									tempIn[ i * 2 + 1 ] = cursor.getType().getComplexFloat();
 									cursor.fwd( dim );
 								}
-								tempIn[ (size-1) * 2 ] = cursor.getType().getReal();
-								tempIn[ (size-1) * 2 + 1 ] = cursor.getType().getComplex();
+								tempIn[ (size-1) * 2 ] = cursor.getType().getRealFloat();
+								tempIn[ (size-1) * 2 + 1 ] = cursor.getType().getComplexFloat();
 								
 								// compute the inverse fft
 								fftc.complexToComplex( 1, tempIn, tempOut );
@@ -258,12 +258,12 @@ A:						while( cursorDim.hasNext() )
 								// fill the input array with complex image data
 								for ( int i = 0; i < complexSize-1; ++i )
 								{
-									tempIn[ i * 2 ] = cursor.getType().getReal();
-									tempIn[ i * 2 + 1 ] = cursor.getType().getComplex();
+									tempIn[ i * 2 ] = cursor.getType().getRealFloat();
+									tempIn[ i * 2 + 1 ] = cursor.getType().getComplexFloat();
 									cursor.fwd( 0 );
 								}
-								tempIn[ (complexSize-1) * 2 ] = cursor.getType().getReal();
-								tempIn[ (complexSize-1) * 2 + 1 ] = cursor.getType().getComplex();
+								tempIn[ (complexSize-1) * 2 ] = cursor.getType().getRealFloat();
+								tempIn[ (complexSize-1) * 2 + 1 ] = cursor.getType().getComplexFloat();
 																								
 								// compute the fft in dimension 0 ( complex -> real )
 								fft.complexToReal( 1, tempIn, tempOut );
@@ -313,12 +313,12 @@ A:						while( cursorDim.hasNext() )
 							// fill the input array with complex image data
 							for ( int i = 0; i < complexSize-1; ++i )
 							{
-								tempIn[ i * 2 ] = cursor.getType().getReal();
-								tempIn[ i * 2 + 1 ] = cursor.getType().getComplex();
+								tempIn[ i * 2 ] = cursor.getType().getRealFloat();
+								tempIn[ i * 2 + 1 ] = cursor.getType().getComplexFloat();
 								cursor.fwd( 0 );
 							}
-							tempIn[ (complexSize-1) * 2 ] = cursor.getType().getReal();
-							tempIn[ (complexSize-1) * 2 + 1 ] = cursor.getType().getComplex();
+							tempIn[ (complexSize-1) * 2 ] = cursor.getType().getRealFloat();
+							tempIn[ (complexSize-1) * 2 + 1 ] = cursor.getType().getComplexFloat();
 							
 							// compute the fft in dimension 0 ( real -> complex )
 							final float[] tempOut = new float[ realSize ];
@@ -358,7 +358,7 @@ A:						while( cursorDim.hasNext() )
 		return realImage;
 	}
 	
-	final public static <T extends NumericType<T>> Image<ComplexFloatType> computeFFT( final Image<T> img, final OutsideStrategyFactory<T> outsideFactory,
+	final public static <T extends RealType<T>> Image<ComplexFloatType> computeFFT( final Image<T> img, final OutsideStrategyFactory<T> outsideFactory,
 	                                                        final int[] imageOffset, final int[] imageSize,
 	                                                        final int numThreads, final boolean scale )
 	{
@@ -439,10 +439,10 @@ A:						while( cursorDim.hasNext() )
 								// fill the input array with image data
 								for ( int x = 0; x < realSize-1; ++x )
 								{
-									tempIn[ x ] = cursor.getType().getReal();									
+									tempIn[ x ] = cursor.getType().getRealFloat();									
 									cursor.fwd( 0 );
 								}
-								tempIn[ (realSize-1) ] = cursor.getType().getReal();
+								tempIn[ (realSize-1) ] = cursor.getType().getRealFloat();
 
 								// compute the fft in dimension 0 ( real -> complex )
 								fft.realToComplex( -1, tempIn, tempOut );
@@ -487,10 +487,10 @@ A:						while( cursorDim.hasNext() )
 							// get the input data
 							for ( int x = 0; x < realSize-1; ++x )
 							{
-								tempIn[ x ] = cursor.getType().getReal();
+								tempIn[ x ] = cursor.getType().getRealFloat();
 								cursor.fwd( 0 );
 							}
-							tempIn[ realSize-1 ] = cursor.getType().getReal();
+							tempIn[ realSize-1 ] = cursor.getType().getRealFloat();
 							
 							// compute the fft in dimension 0 ( real -> complex )
 							final float[] tempOut = new float[ complexSize * 2 ];
@@ -589,12 +589,12 @@ A:						while( cursorDim.hasNext() )
 								// get the input line
 								for ( int i = 0; i < size - 1; ++i )
 								{
-									tempIn[ i * 2 ] = cursor.getType().getReal();
-									tempIn[ i * 2 + 1 ] = cursor.getType().getComplex();
+									tempIn[ i * 2 ] = cursor.getType().getRealFloat();
+									tempIn[ i * 2 + 1 ] = cursor.getType().getComplexFloat();
 									cursor.fwd( dim  );
 								}
-								tempIn[ (size-1) * 2 ] = cursor.getType().getReal();
-								tempIn[ (size-1) * 2 + 1 ] = cursor.getType().getComplex();
+								tempIn[ (size-1) * 2 ] = cursor.getType().getRealFloat();
+								tempIn[ (size-1) * 2 + 1 ] = cursor.getType().getComplexFloat();
 								
 								// compute the fft in dimension dim (complex -> complex) 
 								fftc.complexToComplex( -1, tempIn, tempOut);

@@ -27,107 +27,103 @@
  *
  * @author Stephan Preibisch & Stephan Saalfeld
  */
-package mpicbg.imglib.type.numeric;
+package mpicbg.imglib.type.numeric.integer;
 
 import mpicbg.imglib.algorithm.math.MathLib;
 import mpicbg.imglib.container.Container;
 import mpicbg.imglib.container.ContainerFactory;
-import mpicbg.imglib.container.basictypecontainer.IntAccess;
-import mpicbg.imglib.container.basictypecontainer.array.IntArray;
+import mpicbg.imglib.container.basictypecontainer.ShortAccess;
+import mpicbg.imglib.container.basictypecontainer.array.ShortArray;
 import mpicbg.imglib.cursor.Cursor;
-import mpicbg.imglib.type.NumericType;
-import mpicbg.imglib.type.TypeImpl;
+import mpicbg.imglib.type.numeric.RealType;
 
-public abstract class GenericIntType<T extends GenericIntType<T>> extends TypeImpl<T> implements NumericType<T>
+public abstract class GenericShortType<T extends GenericShortType<T>> extends IntegerTypeImpl<T> implements RealType<T>
 {
 	// the Container
-	final Container<T, IntAccess> storage;
+	final Container<T, ShortAccess> storage;
 	
 	// the (sub)container that holds the information 
-	IntAccess b;
+	ShortAccess b;
 	
 	// this is the constructor if you want it to read from an array
-	public GenericIntType( Container<T, IntAccess> intStorage )
+	public GenericShortType( Container<T, ShortAccess> shortStorage )
 	{
-		storage = intStorage;
+		storage = shortStorage;
 	}
-
+	
 	// this is the constructor if you want it to be a variable
-	public GenericIntType( final int value )
+	public GenericShortType( final short value )
 	{
 		storage = null;
-		b = new IntArray( 1 );
+		b = new ShortArray( 1 );
 		setValue( value );
 	}
 
 	// this is the constructor if you want it to be a variable
-	public GenericIntType() { this( 0 ); }
-
+	public GenericShortType(){ this( ( short )0 ); }
+	
 	@Override
-	public Container<T, ? extends IntAccess> createSuitableContainer( final ContainerFactory storageFactory, final int dim[] )
+	public Container<T, ? extends ShortAccess> createSuitableContainer( final ContainerFactory storageFactory, final int dim[] )
 	{
-		return storageFactory.createIntInstance( dim, 1 );	
+		return storageFactory.createShortInstance( dim, 1 );	
 	}
 
 	@Override
-	public void updateContainer( final Cursor<?> c ) 
+	public void updateContainer( final Cursor< ? > c ) 
 	{ 
 		b = storage.update( c ); 
 	}
-
-	protected int getValue(){ return b.getValue( i ); }
-	protected void setValue( final int f ){ b.setValue( i, f ); }
 	
-	public float getReal() { return getValue(); }
-	public void setReal( final float f ){ setValue( MathLib.round( f ) ); }
+	protected short getValue(){ return b.getValue( i ); }
+	protected void setValue( final short f ){ b.setValue( i, f ); }
 	
 	@Override
 	public void mul( final float c )
 	{
-		final int a = getValue();
-		setValue( MathLib.round( a * c ) );
+		final short a = getValue();
+		setValue( ( short )MathLib.round( a * c ) );
 	}
-	
+
 	@Override
 	public void mul( final double c )
 	{
-		final int a = getValue();
-		setValue( ( int )MathLib.round( a * c ) );
+		final short a = getValue();
+		setValue( ( short )MathLib.round( a * c ) );
 	}
-	
+
 	@Override
 	public void add( final T c )
 	{
-		final int a = getValue();
-		setValue( a + c.getValue() );
+		final short a = getValue( );
+		setValue( ( short )( a + c.getValue() ) );
 	}
 
 	@Override
 	public void div( final T c )
 	{
-		final int a = getValue();
-		setValue( a / c.getValue() );
+		final short a = getValue();
+		setValue( ( short )( a / c.getValue() ) );
 	}
 
 	@Override
 	public void mul( final T c )
 	{
-		final int a = getValue( );
-		setValue( a * c.getValue() );
+		final short a = getValue( );
+		setValue( ( short )( a * c.getValue() ) );
 	}
 
 	@Override
 	public void sub( final T c )
 	{
-		final int a = getValue( );
-		setValue( a - c.getValue() );
+		final short a = getValue( );
+		setValue( ( byte )( a - c.getValue() ) );
 	}
 
 	@Override
 	public int compareTo( final T c ) 
 	{ 
-		final int a = getValue();
-		final int b = c.getValue();
+		final short a = getValue();
+		final short b = c.getValue();
 		if ( a > b )
 			return 1;
 		else if ( a < b )
@@ -143,25 +139,25 @@ public abstract class GenericIntType<T extends GenericIntType<T>> extends TypeIm
 	}
 
 	@Override
-	public void setOne() { setValue( 1 ); }
+	public void setOne() { setValue( ( short )1 ); }
 
 	@Override
-	public void setZero() { setValue( 0 ); }
+	public void setZero() { setValue( ( short )0 ); }
 
 	@Override
 	public void inc()
 	{
-		int a = getValue();
+		short a = getValue();
 		setValue( ++a );
 	}
 
 	@Override
 	public void dec()
 	{
-		int a = getValue();
+		short a = getValue();
 		setValue( --a );
 	}
 	
 	@Override
-	public String toString(){ return "" + getValue(); }
+	public String toString() { return "" + getValue(); }
 }

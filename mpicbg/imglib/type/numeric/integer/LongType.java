@@ -27,21 +27,19 @@
  *
  * @author Stephan Preibisch & Stephan Saalfeld
  */
-package mpicbg.imglib.type.numeric;
+package mpicbg.imglib.type.numeric.integer;
 
 import mpicbg.imglib.algorithm.math.MathLib;
 import mpicbg.imglib.container.Container;
 import mpicbg.imglib.container.ContainerFactory;
-import mpicbg.imglib.container.basictypecontainer.DataAccess;
 import mpicbg.imglib.container.basictypecontainer.LongAccess;
 import mpicbg.imglib.container.basictypecontainer.array.LongArray;
 import mpicbg.imglib.cursor.Cursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.display.LongTypeDisplay;
-import mpicbg.imglib.type.NumericType;
-import mpicbg.imglib.type.TypeImpl;
+import mpicbg.imglib.type.numeric.RealType;
 
-final public class LongType extends TypeImpl<LongType> implements NumericType<LongType>
+final public class LongType extends IntegerTypeImpl<LongType> implements RealType<LongType>
 {
 	// the Container
 	final Container<LongType, LongAccess> storage;
@@ -86,12 +84,15 @@ final public class LongType extends TypeImpl<LongType> implements NumericType<Lo
 	
 	public long get(){ return b.getValue( i ); }
 	public void set( final long f ){ b.setValue( i, f ); }
-	
+
 	@Override
-	public float getReal() { return ( float )get(); }
-	
+	public int getInteger(){ return (int)get(); }
 	@Override
-	public void setReal( final float f ){ set( MathLib.round( f ) ); }
+	public long getIntegerLong() { return get(); }
+	@Override
+	public void setInteger( final int f ){ set( f ); }
+	@Override
+	public void setInteger( final long f ){ set( f ); }
 	
 	@Override
 	public void mul( final float c )

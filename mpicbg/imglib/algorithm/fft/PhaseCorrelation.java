@@ -36,11 +36,11 @@ import mpicbg.imglib.cursor.special.RegionOfInterestCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.multithreading.SimpleMultiThreading;
 import mpicbg.imglib.outside.OutsideStrategyPeriodicFactory;
-import mpicbg.imglib.type.NumericType;
-import mpicbg.imglib.type.numeric.ComplexFloatType;
-import mpicbg.imglib.type.numeric.FloatType;
+import mpicbg.imglib.type.numeric.RealType;
+import mpicbg.imglib.type.numeric.complex.ComplexFloatType;
+import mpicbg.imglib.type.numeric.real.FloatType;
 
-public class PhaseCorrelation<T extends NumericType<T>, S extends NumericType<S>> implements MultiThreaded, Algorithm, Benchmark
+public class PhaseCorrelation<T extends RealType<T>, S extends RealType<S>> implements MultiThreaded, Algorithm, Benchmark
 {
 	final int numDimensions;
 	boolean computeFFTinParalell = true;
@@ -277,17 +277,17 @@ public class PhaseCorrelation<T extends NumericType<T>, S extends NumericType<S>
 		Collections.sort( peakList );		
 	}
 
-	public static <T extends NumericType<T>, S extends NumericType<S>> double testCrossCorrelation( final int[] shift, final Image<T> image1, final Image<S> image2 )
+	public static <T extends RealType<T>, S extends RealType<S>> double testCrossCorrelation( final int[] shift, final Image<T> image1, final Image<S> image2 )
 	{
 		return testCrossCorrelation( shift, image1, image2, MathLib.getArrayFromValue( 5, image1.getNumDimensions()) );
 	}
 
-	public static <T extends NumericType<T>, S extends NumericType<S>> double testCrossCorrelation( final int[] shift, final Image<T> image1, final Image<S> image2, final int minOverlapPx )
+	public static <T extends RealType<T>, S extends RealType<S>> double testCrossCorrelation( final int[] shift, final Image<T> image1, final Image<S> image2, final int minOverlapPx )
 	{
 		return testCrossCorrelation( shift, image1, image2, MathLib.getArrayFromValue( minOverlapPx, image1.getNumDimensions()) );
 	}
 	
-	public static <T extends NumericType<T>, S extends NumericType<S>> double testCrossCorrelation( final int[] shift, final Image<T> image1, final Image<S> image2, final int[] minOverlapPx )
+	public static <T extends RealType<T>, S extends RealType<S>> double testCrossCorrelation( final int[] shift, final Image<T> image1, final Image<S> image2, final int[] minOverlapPx )
 	{
 		final int numDimensions = image1.getNumDimensions();
 		double correlationCoefficient = 0;
@@ -368,8 +368,8 @@ public class PhaseCorrelation<T extends NumericType<T>, S extends NumericType<S>
 			roiCursor1.fwd();
 			roiCursor2.fwd();
 
-			avg1 += cursor1.getType().getReal();
-			avg2 += cursor2.getType().getReal();
+			avg1 += cursor1.getType().getRealFloat();
+			avg2 += cursor2.getType().getRealFloat();
 		}
 
 		avg1 /= (double) numPixels;
@@ -389,8 +389,8 @@ public class PhaseCorrelation<T extends NumericType<T>, S extends NumericType<S>
 			roiCursor1.fwd();
 			roiCursor2.fwd();
 
-			final float pixel1 = cursor1.getType().getReal();
-			final float pixel2 = cursor2.getType().getReal();
+			final float pixel1 = cursor1.getType().getRealFloat();
+			final float pixel2 = cursor2.getType().getRealFloat();
 			
 			final double dist1 = pixel1 - avg1;
 			final double dist2 = pixel2 - avg2;

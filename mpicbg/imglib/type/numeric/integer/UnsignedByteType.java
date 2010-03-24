@@ -27,7 +27,7 @@
  *
  * @author Stephan Preibisch & Stephan Saalfeld
  */
-package mpicbg.imglib.type.numeric;
+package mpicbg.imglib.type.numeric.integer;
 
 import mpicbg.imglib.algorithm.math.MathLib;
 import mpicbg.imglib.container.Container;
@@ -79,10 +79,13 @@ public class UnsignedByteType extends GenericByteType<UnsignedByteType>
 	public void set( final int f ){ setValue( getCodedSignedByte( f ) ); }
 	
 	@Override
-	public float getReal(){ return get(); }
-	
+	public int getInteger(){ return get(); }
 	@Override
-	public void setReal( final float f ){ set( MathLib.round( f ) ); }
+	public long getIntegerLong() { return get(); }
+	@Override
+	public void setInteger( final int f ){ set( f ); }
+	@Override
+	public void setInteger( final long f ){ set( (int)f ); }
 
 	@Override
 	public void div( final UnsignedByteType c )

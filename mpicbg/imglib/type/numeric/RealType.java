@@ -27,52 +27,14 @@
  *
  * @author Stephan Preibisch & Stephan Saalfeld
  */
+
 package mpicbg.imglib.type.numeric;
 
-import mpicbg.imglib.container.Container;
-import mpicbg.imglib.container.basictypecontainer.DataAccess;
-import mpicbg.imglib.container.basictypecontainer.IntAccess;
-import mpicbg.imglib.image.Image;
-import mpicbg.imglib.image.display.IntTypeDisplay;
-
-public class IntType extends GenericIntType<IntType>
+public interface RealType<T extends RealType<T>> extends ComplexType<T>
 {
-	// this is the constructor if you want it to read from an array
-	public IntType( Container<IntType, IntAccess> intStorage ) { super( intStorage ); }
-	
-	// this is the constructor if you want it to be a variable
-	public IntType( final int value ) { super( value ); }
-
-	// this is the constructor if you want it to be a variable
-	public IntType() { super( 0 ); }
-		
-	public int get() { return getValue(); }
-	public void set( final int b ) { setValue( b ); }
-
-	@Override
-	public IntTypeDisplay getDefaultDisplay( Image<IntType> image ) { return new IntTypeDisplay( image ); }
-	
-	@Override
-	public IntType[] createArray1D(int size1){ return new IntType[ size1 ]; }
-
-	@Override
-	public IntType[][] createArray2D(int size1, int size2){ return new IntType[ size1 ][ size2 ]; }
-
-	@Override
-	public IntType[][][] createArray3D(int size1, int size2, int size3) { return new IntType[ size1 ][ size2 ][ size3 ]; }
-
-	@Override
-	public IntType createType( Container<IntType,?> container )
-	{
-		return new IntType( (Container<IntType, IntAccess>)container );
-	}
-
-	@Override
-	public IntType createVariable(){ return new IntType( 0 ); }
-
-	@Override
-	public IntType clone(){ return new IntType( getValue() ); }
-
-	@Override
-	public String toString() { return "" + get(); }
+	public void mul( float c );
+	public void mul( double c );
+			
+	public void inc();
+	public void dec();	
 }

@@ -27,7 +27,7 @@
  *
  * @author Stephan Preibisch & Stephan Saalfeld
  */
-package mpicbg.imglib.type.numeric;
+package mpicbg.imglib.type.numeric.integer;
 
 import mpicbg.imglib.container.Container;
 import mpicbg.imglib.container.basictypecontainer.DataAccess;
@@ -48,6 +48,15 @@ public class ShortType extends GenericShortType<ShortType>
 	
 	public short get() { return getValue(); }
 	public void set( final short b ) { setValue( b ); }
+	
+	@Override
+	public int getInteger(){ return get(); }
+	@Override
+	public long getIntegerLong() { return get(); }
+	@Override
+	public void setInteger( final int f ){ set( (short)f ); }
+	@Override
+	public void setInteger( final long f ){ set( (short)f ); }
 	
 	@Override
 	public ShortTypeDisplay getDefaultDisplay( Image<ShortType> image ) { return new ShortTypeDisplay( image );	}

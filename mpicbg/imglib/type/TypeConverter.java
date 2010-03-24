@@ -29,11 +29,11 @@
  */
 package mpicbg.imglib.type;
 
-import mpicbg.imglib.type.numeric.ByteType;
-import mpicbg.imglib.type.numeric.FloatType;
-import mpicbg.imglib.type.numeric.IntType;
-import mpicbg.imglib.type.numeric.LongType;
-import mpicbg.imglib.type.numeric.ShortType;
+import mpicbg.imglib.type.numeric.integer.ByteType;
+import mpicbg.imglib.type.numeric.integer.IntType;
+import mpicbg.imglib.type.numeric.integer.LongType;
+import mpicbg.imglib.type.numeric.integer.ShortType;
+import mpicbg.imglib.type.numeric.real.FloatType;
 
 public abstract class TypeConverter
 {

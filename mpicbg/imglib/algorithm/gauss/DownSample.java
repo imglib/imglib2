@@ -25,9 +25,9 @@ import mpicbg.imglib.image.Image;
 import mpicbg.imglib.interpolation.Interpolator;
 import mpicbg.imglib.interpolation.nearestneighbor.NearestNeighborInterpolatorFactory;
 import mpicbg.imglib.outside.OutsideStrategyMirrorFactory;
-import mpicbg.imglib.type.NumericType;
+import mpicbg.imglib.type.numeric.RealType;
 
-public class DownSample<T extends NumericType<T>> implements MultiThreaded, OutputAlgorithm<T>, Benchmark
+public class DownSample<T extends RealType<T>> implements MultiThreaded, OutputAlgorithm<T>, Benchmark
 {
 	Image<T> input;
 	Image<T> downSampled;

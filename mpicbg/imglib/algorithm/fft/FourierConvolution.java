@@ -34,11 +34,11 @@ import mpicbg.imglib.cursor.LocalizableCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.ImageFactory;
 import mpicbg.imglib.outside.OutsideStrategyValueFactory;
-import mpicbg.imglib.type.NumericType;
-import mpicbg.imglib.type.numeric.ComplexFloatType;
-import mpicbg.imglib.type.numeric.FloatType;
+import mpicbg.imglib.type.numeric.RealType;
+import mpicbg.imglib.type.numeric.complex.ComplexFloatType;
+import mpicbg.imglib.type.numeric.real.FloatType;
 
-public class FourierConvolution<T extends NumericType<T>, S extends NumericType<S>> implements MultiThreaded, OutputAlgorithm<T>, Benchmark
+public class FourierConvolution<T extends RealType<T>, S extends RealType<S>> implements MultiThreaded, OutputAlgorithm<T>, Benchmark
 {
 	final int numDimensions;
 	Image<T> image, convolved;
@@ -144,7 +144,7 @@ public class FourierConvolution<T extends NumericType<T>, S extends NumericType<
 		return kernelImg;
 	}
 	
-	final public static <T extends NumericType<T>> Image<T> getGaussianKernel( final ImageFactory<T> imgFactory, final double sigma, final int numDimensions )
+	final public static <T extends RealType<T>> Image<T> getGaussianKernel( final ImageFactory<T> imgFactory, final double sigma, final int numDimensions )
 	{
 		final double[ ] sigmas = new double[ numDimensions ];
 		
@@ -154,7 +154,7 @@ public class FourierConvolution<T extends NumericType<T>, S extends NumericType<
 		return getGaussianKernel( imgFactory, sigmas );
 	}
 	
-	final public static <T extends NumericType<T>> Image<T> getGaussianKernel( final ImageFactory<T> imgFactory, final double[] sigma )
+	final public static <T extends RealType<T>> Image<T> getGaussianKernel( final ImageFactory<T> imgFactory, final double[] sigma )
 	{
 		final int numDimensions = sigma.length;
 		final int imgSize[] = new int[ numDimensions ];

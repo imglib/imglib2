@@ -21,10 +21,10 @@ import mpicbg.imglib.image.display.ComplexFloatTypePhaseSpectrumDisplay;
 import mpicbg.imglib.image.display.ComplexFloatTypePowerSpectrumDisplay;
 import mpicbg.imglib.image.display.imagej.ImageJFunctions;
 import mpicbg.imglib.outside.OutsideStrategyPeriodicFactory;
-import mpicbg.imglib.type.NumericType;
 import mpicbg.imglib.type.logic.BitType;
-import mpicbg.imglib.type.numeric.ComplexFloatType;
-import mpicbg.imglib.type.numeric.FloatType;
+import mpicbg.imglib.type.numeric.RealType;
+import mpicbg.imglib.type.numeric.complex.ComplexFloatType;
+import mpicbg.imglib.type.numeric.real.FloatType;
 
 public class AlgorithmPerformance
 {
@@ -61,7 +61,7 @@ public class AlgorithmPerformance
 		new AlgorithmPerformance( new ArrayContainerFactory(), 2 );
 	}
 	
-	public static <T extends NumericType<T>> double testFFTConvolution( final Image<T> img, boolean show )
+	public static <T extends RealType<T>> double testFFTConvolution( final Image<T> img, boolean show )
 	{
 		final Image<FloatType> kernel = FourierConvolution.createGaussianKernel( new ArrayContainerFactory(), 30 + System.currentTimeMillis()%10/10.0, img.getNumDimensions() );		
 		final FourierConvolution<T, FloatType> fftConvol = new FourierConvolution<T, FloatType>( img, kernel );
@@ -86,7 +86,7 @@ public class AlgorithmPerformance
 		}
 	}
 
-	public static <T extends NumericType<T>> double testDownSampling( final Image<T> img, boolean show )
+	public static <T extends RealType<T>> double testDownSampling( final Image<T> img, boolean show )
 	{
 		final DownSample<T> downSample = new DownSample<T>( img, 0.5f );
 		
@@ -107,7 +107,7 @@ public class AlgorithmPerformance
 		return -1;
 	}
 
-	public <S extends NumericType<S>, T extends NumericType<T>> double testPhaseCorrelation( final Image<S> image1, final Image<T> image2, boolean show )	
+	public <S extends RealType<S>, T extends RealType<T>> double testPhaseCorrelation( final Image<S> image1, final Image<T> image2, boolean show )	
 	{
 		PhaseCorrelation<S, T> pc = new PhaseCorrelation<S, T>( image1, image2 );
 		pc.setInvestigateNumPeaks( 10 );
@@ -127,7 +127,7 @@ public class AlgorithmPerformance
 		return pc.getProcessingTime();
 	}
 	
-	public static <T extends NumericType<T>> double testDithering( final Image<T> image, boolean show )
+	public static <T extends RealType<T>> double testDithering( final Image<T> image, boolean show )
 	{
 		final FloydSteinbergDithering<T> dither = new FloydSteinbergDithering<T>( image );
 		
@@ -148,7 +148,7 @@ public class AlgorithmPerformance
 			
 	}
 
-	public static <T extends NumericType<T>> double testBandpass( final Image<T> img, boolean show )
+	public static <T extends RealType<T>> double testBandpass( final Image<T> img, boolean show )
 	{
 		// init fft
 		final FourierTransform<T> fft = new FourierTransform<T>( img );
@@ -258,7 +258,7 @@ public class AlgorithmPerformance
 		}
 	}
 	
-	public static <T extends NumericType<T>> double testCanvas( final Image<T> img, final float factor, final float fadingRange, final float exponent, boolean show )
+	public static <T extends RealType<T>> double testCanvas( final Image<T> img, final float factor, final float fadingRange, final float exponent, boolean show )
 	{
 		final int[] newSize = new int[ img.getNumDimensions() ];
 		

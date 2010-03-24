@@ -5,7 +5,7 @@ import mpicbg.imglib.algorithm.OutputAlgorithm;
 import mpicbg.imglib.algorithm.math.MathLib;
 import mpicbg.imglib.cursor.LocalizableCursor;
 import mpicbg.imglib.image.Image;
-import mpicbg.imglib.type.NumericType;
+import mpicbg.imglib.type.numeric.NumericType;
 
 public class Bandpass<T extends NumericType<T>> implements OutputAlgorithm<T>, Benchmark
 {

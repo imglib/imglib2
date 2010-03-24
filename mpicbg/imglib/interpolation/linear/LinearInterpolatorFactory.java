@@ -32,10 +32,10 @@ package mpicbg.imglib.interpolation.linear;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.interpolation.InterpolatorFactory;
 import mpicbg.imglib.outside.OutsideStrategyFactory;
-import mpicbg.imglib.type.NumericType;
-import mpicbg.imglib.type.numeric.FloatType;
+import mpicbg.imglib.type.numeric.RealType;
+import mpicbg.imglib.type.numeric.real.FloatType;
 
-public class LinearInterpolatorFactory<T extends NumericType<T>> extends InterpolatorFactory<T>
+public class LinearInterpolatorFactory<T extends RealType<T>> extends InterpolatorFactory<T>
 {
 	public LinearInterpolatorFactory( final OutsideStrategyFactory<T> outsideStrategyFactory )
 	{

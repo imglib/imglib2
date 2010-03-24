@@ -38,7 +38,7 @@ import mpicbg.imglib.cursor.array.ArrayCursor;
 import mpicbg.imglib.cursor.cube.CubeCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.display.Display;
-import mpicbg.imglib.type.numeric.FloatType;
+import mpicbg.imglib.type.numeric.real.FloatType;
 
 /**
  * The {@link Type} class is responsible for computing. It can be instaniated as a variable holding one single value only or with

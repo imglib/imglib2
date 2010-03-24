@@ -28,12 +28,12 @@ import mpicbg.imglib.cursor.array.ArrayLocalizableCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.ImageFactory;
 import mpicbg.imglib.outside.OutsideStrategyValueFactory;
-import mpicbg.imglib.type.NumericType;
 import mpicbg.imglib.type.label.FakeType;
 import mpicbg.imglib.type.logic.BitType;
-import mpicbg.imglib.type.numeric.FloatType;
+import mpicbg.imglib.type.numeric.RealType;
+import mpicbg.imglib.type.numeric.real.FloatType;
 
-public class FloydSteinbergDithering<T extends NumericType<T>> implements OutputAlgorithm<BitType>, Benchmark
+public class FloydSteinbergDithering<T extends RealType<T>> implements OutputAlgorithm<BitType>, Benchmark
 {
 	Image<BitType> result;
 	final Image<T> img;
@@ -95,7 +95,7 @@ public class FloydSteinbergDithering<T extends NumericType<T>> implements Output
 			
 			// set new value and compute error
 			final float error;
-			final float in = cursorInput.getType().getReal(); 
+			final float in = cursorInput.getType().getRealFloat(); 
 			if ( in < ditheringThreshold )
 			{
 				cursorOutput.getType().setZero();
@@ -125,7 +125,7 @@ public class FloydSteinbergDithering<T extends NumericType<T>> implements Output
 						tmp2[ d ] += tmp1[ d ] - 1;
 					
 					cursorInput.moveTo( tmp2 );
-					cursorInput.getType().setReal( cursorInput.getType().getReal() + value );
+					cursorInput.getType().setReal( cursorInput.getType().getRealFloat() + value );
 				}
 			}		
 		}
@@ -154,7 +154,7 @@ public class FloydSteinbergDithering<T extends NumericType<T>> implements Output
 	@Override
 	public boolean checkInput() { return true; }
 	
-	public static <T extends NumericType<T>> float getThreshold( final Image<T> img )
+	public static <T extends RealType<T>> float getThreshold( final Image<T> img )
 	{
 		img.getDisplay().setMinMax();
 		return (float) (img.getDisplay().getMax() - img.getDisplay().getMin()) / 2.0f ;

@@ -27,7 +27,7 @@
  *
  * @author Stephan Preibisch & Stephan Saalfeld
  */
-package mpicbg.imglib.type.numeric;
+package mpicbg.imglib.type.numeric.integer;
 
 import mpicbg.imglib.algorithm.math.MathLib;
 import mpicbg.imglib.container.Container;
@@ -78,8 +78,15 @@ public class UnsignedIntType extends GenericIntType<UnsignedIntType>
 
 	public long get(){ return getUnsignedInt( getValue() ); }
 	public void set( final long f ){ setValue( getCodedSignedInt( f ) ); }
-	public float getReal(){ return get(); }
-	public void setReal( final float f ){ set( MathLib.round( f ) ); }
+
+	@Override
+	public int getInteger(){ return (int)get(); }
+	@Override
+	public long getIntegerLong() { return get(); }
+	@Override
+	public void setInteger( final int f ){ set( f ); }
+	@Override
+	public void setInteger( final long f ){ set( f ); }
 
 	@Override
 	public void div( final UnsignedIntType c )

@@ -30,10 +30,10 @@ import mpicbg.imglib.cursor.LocalizableCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.multithreading.SimpleMultiThreading;
 import mpicbg.imglib.outside.OutsideStrategyFactory;
-import mpicbg.imglib.type.NumericType;
-import mpicbg.imglib.type.numeric.FloatType;
+import mpicbg.imglib.type.numeric.RealType;
+import mpicbg.imglib.type.numeric.real.FloatType;
 
-public class GaussianConvolution< T extends NumericType<T>> implements MultiThreaded, OutputAlgorithm<T>, Benchmark
+public class GaussianConvolution< T extends RealType<T>> implements MultiThreaded, OutputAlgorithm<T>, Benchmark
 {	
 	final Image<T> image, convolved;
 	final OutsideStrategyFactory<T> outsideFactory;
@@ -238,7 +238,7 @@ public class GaussianConvolution< T extends NumericType<T>> implements MultiThre
         return true;
 	}
 	
-	protected static <T extends NumericType<T>> void convolve( final LocalizableByDimCursor<T> inputIterator, final LocalizableCursor<T> outputIterator, 
+	protected static <T extends RealType<T>> void convolve( final LocalizableByDimCursor<T> inputIterator, final LocalizableCursor<T> outputIterator, 
 															   final int dim, final float[] kernel,
 															   final long startPos, final long loopSize )
 	{		

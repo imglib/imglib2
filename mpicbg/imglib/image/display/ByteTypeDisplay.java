@@ -31,7 +31,7 @@ package mpicbg.imglib.image.display;
 
 import mpicbg.imglib.cursor.Cursor;
 import mpicbg.imglib.image.Image;
-import mpicbg.imglib.type.numeric.ByteType;
+import mpicbg.imglib.type.numeric.integer.ByteType;
 
 public class ByteTypeDisplay extends Display<ByteType>
 {
