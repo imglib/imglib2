@@ -442,8 +442,8 @@ A:						while( cursorDim.hasNext() )
 									tempIn[ x ] = cursor.getType().getReal();									
 									cursor.fwd( 0 );
 								}
-								tempIn[ (realSize-1) ] = cursor.getType().getReal();									
-																
+								tempIn[ (realSize-1) ] = cursor.getType().getReal();
+
 								// compute the fft in dimension 0 ( real -> complex )
 								fft.realToComplex( -1, tempIn, tempOut );
 									
@@ -631,7 +631,6 @@ A:						while( cursorDim.hasNext() )
 			
 			SimpleMultiThreading.startAndJoin( threads );
 		}
-				
 		return fftImage;
 	}
 	
@@ -660,10 +659,10 @@ A:						while( cursorDim.hasNext() )
 
 			// move second "half" to first "half"
 			cursor1.getType().set( cursor2.getType() );
-			
+
 			// move data in buffer to second "half"
 			cursor2.getType().set( buffer );
-			
+
 			// move both cursors forward
 			cursor1.fwd( 0 ); 
 			cursor2.bck( 0 ); 
@@ -694,7 +693,7 @@ A:						while( cursorDim.hasNext() )
 		//swap in dimension 0
 		final AtomicInteger ai = new AtomicInteger(0);
 		Thread[] threads = SimpleMultiThreading.newThreads( numThreads );
-		
+
 		for (int ithread = 0; ithread < threads.length; ++ithread)
 			threads[ithread] = new Thread(new Runnable()
 			{
@@ -751,7 +750,7 @@ A:						while( cursorDim.hasNext() )
 			
 								// move second "half" to first "half"
 								cursor1.getType().set( cursor2.getType() );
-								
+
 								// move data in buffer to second "half"
 								cursor2.getType().set( buffer );
 								
@@ -882,10 +881,10 @@ A:						while( cursorDim.hasNext() )
 	}
 		
 	final public static <T extends Type<T>> void rearrangeFFTQuadrants( final Image<T> fftImage, final int numThreads )
-	{		
+	{
 		rearrangeQuadrantFFTDimZero( fftImage, numThreads );
 		
 		for ( int d = 1; d < fftImage.getNumDimensions(); ++d )
-			rearrangeQuadrantDim( fftImage, d, numThreads );
+			rearrangeQuadrantDim( fftImage, d, numThreads );		
 	}	
 }
