@@ -53,6 +53,8 @@ public class ComplexFloatType extends TypeImpl<ComplexFloatType> implements Nume
 	public ComplexFloatType( Container<ComplexFloatType, FloatAccess> complexfloatStorage )
 	{
 		storage = complexfloatStorage;
+		realI = 0;
+		complexI = 1;
 	}
 	
 	// this is the constructor if you want it to be a variable
