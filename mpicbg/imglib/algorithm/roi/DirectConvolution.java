@@ -11,15 +11,17 @@ public class DirectConvolution <T extends NumericType<T>, S extends NumericType<
 	private final Image<T> kernel;
 	private final int[] kernelSize;
 	private LocalizableByDimCursor<S> imageCursor;
+	private final LocalizableByDimCursor<T> kernelCursor;
 	
 	protected DirectConvolution(final S type, final LocalizableByDimCursor<T> inCursor, final Image<T> kernel) {
 		super(type, inCursor, kernel.getDimensions());
 		this.kernel = kernel;
 		imageCursor = null;
 		kernelSize = kernel.getDimensions();
+		kernelCursor = kernel.createLocalizableByDimCursor();
 	}
 	
-	private LocalizableByDimCursor<S> getCursor()
+	private LocalizableByDimCursor<S> getOutCursor()
 	{
 		if (imageCursor == null)
 		{
@@ -38,23 +40,24 @@ public class DirectConvolution <T extends NumericType<T>, S extends NumericType<
 	
 	@Override
 	protected boolean patchOperation(RegionOfInterestCursor<T> cursor) {
-		final Image<S> image = getImage();
-		final S conv = image.createType();
-		final LocalizableByDimCursor<S> outCursor = getCursor();
+		final LocalizableByDimCursor<S> outCursor = getOutCursor();
 		final int[] pos = new int[outCursor.getNumDimensions()];
 		final int[] invPos = new int[outCursor.getNumDimensions()];
+		float conv = 0;
 		
-		conv.setZero();
+		outCursor.setPosition(cursor);
+		
 		while(cursor.hasNext())
 		{
-			S mul = image.createType();
 			cursor.fwd();
 			cursor.getPosition(pos);
 			invertPosition(pos, invPos);
-			outCursor.setPosition(invPos);
-			mul.setReal(cursor.getType().getReal() * outCursor.getType().getReal());
-			conv.add(mul);			
+			kernelCursor.setPosition(invPos);
+			conv += cursor.getType().getReal() * kernelCursor.getType().getReal();					
 		}
+		
+		outCursor.getType().setReal(conv);
+		
 		return true;
 	}
 
