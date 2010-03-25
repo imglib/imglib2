@@ -35,11 +35,8 @@ import mpicbg.imglib.container.ContainerFactory;
 import mpicbg.imglib.container.basictypecontainer.LongAccess;
 import mpicbg.imglib.container.basictypecontainer.array.LongArray;
 import mpicbg.imglib.cursor.Cursor;
-import mpicbg.imglib.image.Image;
-import mpicbg.imglib.image.display.LongTypeDisplay;
-import mpicbg.imglib.type.numeric.RealType;
 
-final public class LongType extends IntegerTypeImpl<LongType> implements RealType<LongType>
+final public class LongType extends IntegerTypeImpl<LongType>
 {
 	// the Container
 	final Container<LongType, LongAccess> storage;
@@ -68,12 +65,6 @@ final public class LongType extends IntegerTypeImpl<LongType> implements RealTyp
 	public Container<LongType, ? extends LongAccess> createSuitableContainer( final ContainerFactory storageFactory, final int dim[] )
 	{
 		return storageFactory.createLongInstance( dim, 1 );	
-	}
-
-	@Override
-	public LongTypeDisplay getDefaultDisplay( Image<LongType> image )
-	{
-		return new LongTypeDisplay( image );
 	}
 
 	@Override
@@ -189,7 +180,4 @@ final public class LongType extends IntegerTypeImpl<LongType> implements RealTyp
 
 	@Override
 	public LongType clone(){ return new LongType( get() ); }
-
-	@Override
-	public String toString() { return "" + get(); }
 }

@@ -17,8 +17,8 @@ import mpicbg.imglib.container.ContainerFactory;
 import mpicbg.imglib.container.array.ArrayContainerFactory;
 import mpicbg.imglib.container.cube.CubeContainerFactory;
 import mpicbg.imglib.image.Image;
-import mpicbg.imglib.image.display.ComplexFloatTypePhaseSpectrumDisplay;
-import mpicbg.imglib.image.display.ComplexFloatTypePowerSpectrumDisplay;
+import mpicbg.imglib.image.display.ComplexTypePhaseSpectrumDisplay;
+import mpicbg.imglib.image.display.ComplexTypePowerSpectrumDisplay;
 import mpicbg.imglib.image.display.imagej.ImageJFunctions;
 import mpicbg.imglib.outside.OutsideStrategyPeriodicFactory;
 import mpicbg.imglib.type.logic.BitType;
@@ -169,7 +169,7 @@ public class AlgorithmPerformance
 			processingTime += bandpass.getProcessingTime();
 
 			// show power spectrum
-			fftImage.setDisplay( new ComplexFloatTypePowerSpectrumDisplay( fftImage ) );
+			fftImage.setDisplay( new ComplexTypePowerSpectrumDisplay( fftImage ) );
 			
 			if ( show )
 			{
@@ -224,7 +224,7 @@ public class AlgorithmPerformance
 				fftImage.getDisplay().setMinMax();
 				ImageJFunctions.displayAsVirtualStack( fftImage ).show();			
 	
-				fftImage.setDisplay( new ComplexFloatTypePhaseSpectrumDisplay( fftImage ) );
+				fftImage.setDisplay( new ComplexTypePhaseSpectrumDisplay( fftImage ) );
 				fftImage.getDisplay().setMinMax();
 				ImageJFunctions.displayAsVirtualStack( fftImage ).show();
 			}			

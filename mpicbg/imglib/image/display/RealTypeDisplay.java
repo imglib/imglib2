@@ -29,19 +29,55 @@
  */
 package mpicbg.imglib.image.display;
 
+import mpicbg.imglib.cursor.Cursor;
 import mpicbg.imglib.image.Image;
-import mpicbg.imglib.type.numeric.complex.ComplexFloatType;
+import mpicbg.imglib.type.numeric.RealType;
 
-public class ComplexFloatTypeRealValueDisplay extends ComplexFloatTypePowerSpectrumDisplay
+public class RealTypeDisplay<T extends RealType<T>> extends Display<T>
 {
-	public ComplexFloatTypeRealValueDisplay( final Image<ComplexFloatType> img )
+	public RealTypeDisplay( final Image<T> img )
 	{
 		super(img);
 	}	
 	
 	@Override
-	protected float getComplexDisplayValue( final ComplexFloatType c )
+	public void setMinMax()
 	{
-		return c.getRealFloat();
+		final Cursor<T> c = img.createCursor();
+		final T t = c.getType();
+		
+		if ( !c.hasNext() )
+		{
+			min = -Float.MAX_VALUE;
+			max = Float.MAX_VALUE;
+			return;
+		}
+		
+		c.fwd();
+		min = max = t.getRealDouble();
+
+		while ( c.hasNext() )
+		{
+			c.fwd();
+
+			final double value = t.getRealDouble();
+			
+			if ( value > max )
+				max = value;			
+			else if ( value < min )
+				min = value;
+		}
+		
+		c.close();
 	}
+
+	@Override
+	public float get32Bit( T c ) { return c.getRealFloat(); }
+	@Override
+	public float get32BitNormed( T c ) { return normFloat( c.getRealFloat() ); }
+	
+	@Override
+	public byte get8BitSigned( final T c) { return (byte) Math.round( normFloat( c.getRealFloat() ) * 255 ); }
+	@Override
+	public short get8BitUnsigned( final T c) { return (short)Math.round( normFloat( c.getRealFloat() ) * 255 ); }		
 }

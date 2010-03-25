@@ -29,59 +29,19 @@
  */
 package mpicbg.imglib.image.display;
 
-import mpicbg.imglib.cursor.Cursor;
 import mpicbg.imglib.image.Image;
-import mpicbg.imglib.type.numeric.integer.UnsignedIntType;
+import mpicbg.imglib.type.numeric.ComplexType;
 
-public class UnsignedIntTypeDisplay extends Display<UnsignedIntType>
+public class ComplexTypeRealValueDisplay<T extends ComplexType<T>> extends ComplexTypePowerSpectrumDisplay<T>
 {
-	public UnsignedIntTypeDisplay( final Image<UnsignedIntType> img)
+	public ComplexTypeRealValueDisplay( final Image<T> img )
 	{
 		super(img);
-		this.min = 0;
-		this.max = 255;
 	}	
-
+	
 	@Override
-	public void setMinMax()
+	protected float getComplexDisplayValue( final T c )
 	{
-		final Cursor<UnsignedIntType> c = img.createCursor();
-		final UnsignedIntType t = c.getType();
-
-		
-		if ( !c.hasNext() )
-		{
-			min = 0;
-			max = 65535;
-			return;
-		}
-		
-		c.fwd();
-		min = max = t.get();
-
-		while ( c.hasNext() )
-		{
-			c.fwd();
-			
-			final long value = t.get();
-			
-			if ( value > max )
-				max = value;			
-			else if ( value < min )
-				min = value;
-		}
-		
-		c.close();
+		return c.getRealFloat();
 	}
-	
-	@Override
-	public float get32Bit( final UnsignedIntType c ) { return (c.get()); }
-	@Override
-	public float get32BitNormed( final UnsignedIntType c ) { return normFloat( c.get() ); }
-	
-	@Override
-	public byte get8BitSigned( final UnsignedIntType c ) { return (byte)(normFloat( c.get() )*255 - 127); }
-	@Override
-	public short get8BitUnsigned( final UnsignedIntType c ) { return (short)(normFloat( c.get() )*255); }
 }
-

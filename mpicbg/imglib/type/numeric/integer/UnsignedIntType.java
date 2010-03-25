@@ -31,10 +31,7 @@ package mpicbg.imglib.type.numeric.integer;
 
 import mpicbg.imglib.algorithm.math.MathLib;
 import mpicbg.imglib.container.Container;
-import mpicbg.imglib.container.basictypecontainer.DataAccess;
 import mpicbg.imglib.container.basictypecontainer.IntAccess;
-import mpicbg.imglib.image.Image;
-import mpicbg.imglib.image.display.UnsignedIntTypeDisplay;
 
 public class UnsignedIntType extends GenericIntType<UnsignedIntType>
 {
@@ -58,9 +55,6 @@ public class UnsignedIntType extends GenericIntType<UnsignedIntType>
 	}
 	public static int getCodedSignedInt( final long unsignedInt ) { return (int)( unsignedInt & 0xffffffff ); }
 	public static long getUnsignedInt( final int signedInt ) { return signedInt & 0xffffffff; }
-		
-	@Override
-	public UnsignedIntTypeDisplay getDefaultDisplay( Image<UnsignedIntType> image ) { return new UnsignedIntTypeDisplay( image ); }
 
 	@Override
 	public void mul( final float c )
@@ -128,7 +122,4 @@ public class UnsignedIntType extends GenericIntType<UnsignedIntType>
 
 	@Override
 	public UnsignedIntType clone(){ return new UnsignedIntType( get() ); }
-
-	@Override
-	public String toString() { return "" + get(); }
 }

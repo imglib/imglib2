@@ -32,8 +32,6 @@ package mpicbg.imglib.type.numeric.integer;
 import mpicbg.imglib.algorithm.math.MathLib;
 import mpicbg.imglib.container.Container;
 import mpicbg.imglib.container.basictypecontainer.ByteAccess;
-import mpicbg.imglib.image.Image;
-import mpicbg.imglib.image.display.UnsignedByteTypeDisplay;
 
 public class UnsignedByteType extends GenericByteType<UnsignedByteType>
 {
@@ -57,9 +55,6 @@ public class UnsignedByteType extends GenericByteType<UnsignedByteType>
 	}
 	public static byte getCodedSignedByte( final int unsignedByte ) { return (byte)( unsignedByte & 0xff );	}
 	public static int getUnsignedByte( final byte signedByte ) { return signedByte & 0xff; }
-		
-	@Override
-	public UnsignedByteTypeDisplay getDefaultDisplay( Image<UnsignedByteType> image ) { return new UnsignedByteTypeDisplay( image ); }
 
 	@Override
 	public void mul( final float c )
@@ -127,7 +122,4 @@ public class UnsignedByteType extends GenericByteType<UnsignedByteType>
 
 	@Override
 	public UnsignedByteType clone(){ return new UnsignedByteType( get() ); }
-
-	@Override
-	public String toString() { return "" + get(); }
 }

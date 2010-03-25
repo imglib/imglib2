@@ -13,4 +13,11 @@ public interface ComplexType<T extends ComplexType<T>> extends NumericType<T>
 
 	public void setComplex( float f );
 	public void setComplex( double f );
+	
+	public float getPowerFloat();
+	public double getPowerDouble();
+	public float getPhaseFloat();
+	public double getPhaseDouble();
+	
+	public void complexConjugate();
 }

@@ -29,57 +29,16 @@
  */
 package mpicbg.imglib.image.display;
 
-import mpicbg.imglib.cursor.Cursor;
 import mpicbg.imglib.image.Image;
-import mpicbg.imglib.type.numeric.integer.IntType;
+import mpicbg.imglib.type.numeric.ComplexType;
 
-public class IntTypeDisplay extends Display<IntType>
+public class ComplexTypePhaseSpectrumDisplay<T extends ComplexType<T>> extends ComplexTypePowerSpectrumDisplay<T>
 {
-	public IntTypeDisplay( final Image<IntType> img)
+	public ComplexTypePhaseSpectrumDisplay( final Image<T> img )
 	{
 		super(img);
-		min = -Integer.MAX_VALUE;
-		max = Integer.MAX_VALUE;
 	}	
-
-	@Override
-	public void setMinMax()
-	{
-		final Cursor<IntType> c = img.createCursor();
-		final IntType t = c.getType();
-		
-		if ( !c.hasNext() )
-		{
-			min = -Integer.MAX_VALUE;
-			max = Integer.MAX_VALUE;
-			return;
-		}
-		
-		c.fwd();
-		min = max = t.get();
-
-		while ( c.hasNext() )
-		{
-			c.fwd();
-			
-			final int value = t.get();
-
-			if ( value > max )
-				max = value;
-			else if ( value < min )
-				min = value;
-		}
-		
-		c.close();
-	}
 	
 	@Override
-	public float get32Bit( IntType c ) { return c.get(); }
-	@Override
-	public float get32BitNormed( IntType c ) { return normFloat( c.get() ); }
-	
-	@Override
-	public byte get8BitSigned( final IntType c) { return (byte)Math.round( normFloat( c.get() ) * 255 ); }
-	@Override
-	public short get8BitUnsigned( final IntType c) { return (short)Math.round( normFloat( c.get() ) * 255 ); }			
+	protected float getComplexDisplayValue( final T c ) { return c.getPhaseFloat(); }
 }

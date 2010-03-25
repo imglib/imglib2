@@ -32,8 +32,6 @@ package mpicbg.imglib.type.numeric.integer;
 import mpicbg.imglib.algorithm.math.MathLib;
 import mpicbg.imglib.container.Container;
 import mpicbg.imglib.container.basictypecontainer.ShortAccess;
-import mpicbg.imglib.image.Image;
-import mpicbg.imglib.image.display.UnsignedShortTypeDisplay;
 
 public class UnsignedShortType extends GenericShortType<UnsignedShortType>
 {
@@ -57,9 +55,6 @@ public class UnsignedShortType extends GenericShortType<UnsignedShortType>
 	}
 	public static short getCodedSignedShort( final int unsignedShort ) { return (short)( unsignedShort & 0xffff );	}
 	public static int getUnsignedShort( final short signedShort ) { return signedShort & 0xffff; }
-		
-	@Override
-	public UnsignedShortTypeDisplay getDefaultDisplay( Image<UnsignedShortType> image ) { return new UnsignedShortTypeDisplay( image ); }
 
 	@Override
 	public void mul( final float c )
@@ -127,7 +122,4 @@ public class UnsignedShortType extends GenericShortType<UnsignedShortType>
 
 	@Override
 	public UnsignedShortType clone(){ return new UnsignedShortType( get() ); }
-
-	@Override
-	public String toString() { return "" + get(); }
 }

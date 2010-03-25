@@ -31,38 +31,38 @@ package mpicbg.imglib.image.display;
 
 import mpicbg.imglib.cursor.Cursor;
 import mpicbg.imglib.image.Image;
-import mpicbg.imglib.type.numeric.integer.ShortType;
+import mpicbg.imglib.type.numeric.IntegerType;
 
-public class ShortTypeDisplay extends Display<ShortType>
+public class IntegerTypeDisplay<T extends IntegerType<T>> extends Display<T>
 {
-	public ShortTypeDisplay( final Image<ShortType> img)
+	public IntegerTypeDisplay( final Image<T> img)
 	{
 		super(img);
-		this.min = 0;
-		this.max = 65535;
+		min = -Integer.MAX_VALUE;
+		max = Integer.MAX_VALUE;
 	}	
 
 	@Override
 	public void setMinMax()
 	{
-		final Cursor<ShortType> c = img.createCursor();
-		final ShortType t = c.getType();
+		final Cursor<T> c = img.createCursor();
+		final T t = c.getType();
 		
 		if ( !c.hasNext() )
 		{
-			min = 0;
-			max = 65535;
+			min = -Integer.MAX_VALUE;
+			max = Integer.MAX_VALUE;
 			return;
 		}
 		
 		c.fwd();
-		min = max = t.get() & 0xffff;
+		min = max = t.getIntegerLong();
 
 		while ( c.hasNext() )
 		{
 			c.fwd();
 			
-			final int value = t.get() & 0xffff;
+			final long value = t.getIntegerLong();
 
 			if ( value > max )
 				max = value;
@@ -74,12 +74,12 @@ public class ShortTypeDisplay extends Display<ShortType>
 	}
 	
 	@Override
-	public float get32Bit( ShortType c ) { return c.get(); }
+	public float get32Bit( T c ) { return c.getIntegerLong(); }
 	@Override
-	public float get32BitNormed( ShortType c ) { return normFloat( c.get() ); }
+	public float get32BitNormed( T c ) { return normFloat( c.getIntegerLong() ); }
 	
 	@Override
-	public byte get8BitSigned( final ShortType c) { return (byte)Math.round( normFloat( c.get() ) * 255 ); }
+	public byte get8BitSigned( final T c) { return (byte)Math.round( normFloat( c.getIntegerLong() ) * 255 ); }
 	@Override
-	public short get8BitUnsigned( final ShortType c) { return (short)Math.round( normFloat( c.get() ) * 255 ); }		
+	public short get8BitUnsigned( final T c) { return (short)Math.round( normFloat( c.getIntegerLong() ) * 255 ); }			
 }

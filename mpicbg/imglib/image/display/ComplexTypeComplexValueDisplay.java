@@ -29,55 +29,19 @@
  */
 package mpicbg.imglib.image.display;
 
-import mpicbg.imglib.cursor.Cursor;
 import mpicbg.imglib.image.Image;
-import mpicbg.imglib.type.numeric.real.DoubleType;
+import mpicbg.imglib.type.numeric.ComplexType;
 
-public class DoubleTypeDisplay extends Display<DoubleType>
+public class ComplexTypeComplexValueDisplay<T extends ComplexType<T>> extends ComplexTypePowerSpectrumDisplay<T>
 {
-	public DoubleTypeDisplay( final Image<DoubleType> img )
+	public ComplexTypeComplexValueDisplay( final Image<T> img )
 	{
 		super(img);
 	}	
 	
 	@Override
-	public void setMinMax()
+	protected float getComplexDisplayValue( final T c )
 	{
-		final Cursor<DoubleType> c = img.createCursor();
-		final DoubleType t = c.getType();
-		
-		if ( !c.hasNext() )
-		{
-			min = -Float.MAX_VALUE;
-			max = Float.MAX_VALUE;
-			return;
-		}
-		
-		c.fwd();
-		min = max = t.get();
-
-		while ( c.hasNext() )
-		{
-			c.fwd();
-
-			final double value = t.get();
-			
-			if ( value > max )
-				max = value;			
-			else if ( value < min )
-				min = value;
-		}
-		
-		c.close();
+		return c.getComplexFloat();
 	}
-
-	@Override
-	public float get32Bit( DoubleType c ) { return (float)c.get(); }
-	@Override
-	public float get32BitNormed( DoubleType c ) { return (float)normDouble( c.get() ); }
-	
-	@Override
-	public byte get8BitSigned( final DoubleType c) { return (byte) Math.round( normDouble( c.get() ) * 255 ); }
-	@Override
-	public short get8BitUnsigned( final DoubleType c) { return (short)Math.round( normDouble( c.get() ) * 255 ); }		
 }

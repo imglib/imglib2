@@ -35,19 +35,16 @@ import mpicbg.imglib.container.basictypecontainer.FloatAccess;
 import mpicbg.imglib.container.basictypecontainer.array.FloatArray;
 import mpicbg.imglib.cursor.Cursor;
 import mpicbg.imglib.image.Image;
-import mpicbg.imglib.image.display.ComplexFloatTypePowerSpectrumDisplay;
-import mpicbg.imglib.type.TypeImpl;
+import mpicbg.imglib.image.display.ComplexTypePowerSpectrumDisplay;
 import mpicbg.imglib.type.numeric.ComplexType;
 
-public class ComplexFloatType extends TypeImpl<ComplexFloatType> implements ComplexType<ComplexFloatType>
+public class ComplexFloatType extends ComplexTypeImpl<ComplexFloatType> implements ComplexType<ComplexFloatType>
 {
 	// the Container
 	final Container<ComplexFloatType, FloatAccess> storage;
 	
 	// the (sub)container that holds the information 
 	FloatAccess b;
-	
-	int realI, complexI;
 	
 	// this is the constructor if you want it to read from an array
 	public ComplexFloatType( Container<ComplexFloatType, FloatAccess> complexfloatStorage )
@@ -71,55 +68,9 @@ public class ComplexFloatType extends TypeImpl<ComplexFloatType> implements Comp
 	public ComplexFloatType() { this( 0, 0 ); }
 
 	@Override
-	public void updateIndex( final int i ) 
-	{ 
-		this.i = i;
-		realI = i * 2;
-		complexI = i * 2 + 1;
-	}
-	
-	@Override
-	public void incIndex() 
-	{ 
-		++i;
-		realI += 2;
-		complexI += 2;
-	}
-	@Override
-	public void incIndex( final int increment ) 
-	{ 
-		i += increment; 
-		
-		final int inc2 = 2 * increment;		
-		realI += inc2;
-		complexI += inc2;
-	}
-	@Override
-	public void decIndex() 
-	{ 
-		--i; 
-		realI -= 2;
-		complexI -= 2;
-	}
-	@Override
-	public void decIndex( final int decrement ) 
-	{ 
-		i -= decrement; 
-		final int dec2 = 2 * decrement;		
-		realI -= dec2;
-		complexI -= dec2;
-	}
-
-	@Override
 	public Container<ComplexFloatType, ? extends FloatAccess> createSuitableContainer( final ContainerFactory storageFactory, final int dim[] )
 	{
 		return storageFactory.createFloatInstance( dim, 2 );	
-	}
-
-	@Override
-	public ComplexFloatTypePowerSpectrumDisplay getDefaultDisplay( Image<ComplexFloatType> image )
-	{
-		return new ComplexFloatTypePowerSpectrumDisplay( image );
 	}
 	
 	@Override
@@ -127,11 +78,6 @@ public class ComplexFloatType extends TypeImpl<ComplexFloatType> implements Comp
 	{ 
 		b = storage.update( c );		
 	}
-	
-	@Override
-	public void mul( final float c ) { setReal( getRealFloat() * c ); }
-	@Override
-	public void mul( final double c ) { setReal( getRealDouble() * c ); }
 	
 	@Override
 	public float getRealFloat() { return b.getValue( realI ); }
@@ -175,6 +121,28 @@ public class ComplexFloatType extends TypeImpl<ComplexFloatType> implements Comp
 		setReal( ( a1*c1 + b1*d1 ) / ( c1*c1 + d1*d1 ) );
 		setComplex( ( b1*c1 - a1*d1 ) / ( c1*c1 + d1*d1 ) );
 	}
+
+	@Override
+	public void mul( final ComplexFloatType t ) 
+	{
+		// a + bi
+		final float a = getRealFloat(); 
+		final float b = getComplexFloat();
+		
+		// c + di
+		final float c = t.getRealFloat();
+		final float d = t.getComplexFloat();
+		
+		setReal( a*c - b*d ); 
+		setComplex( a*d + b*c ); 
+	}
+
+	@Override
+	public void sub( final ComplexFloatType c ) 
+	{ 
+		setReal( getRealFloat() - c.getRealFloat() ); 
+		setComplex( getComplexFloat() - c.getComplexFloat() ); 
+	}
 	
 	public void complexConjugate(){ setComplex( -getComplexFloat() ); }
 
@@ -205,28 +173,6 @@ public class ComplexFloatType extends TypeImpl<ComplexFloatType> implements Comp
 	}
 
 	@Override
-	public void mul( final ComplexFloatType t ) 
-	{
-		// a + bi
-		final float a = getRealFloat(); 
-		final float b = getComplexFloat();
-		
-		// c + di
-		final float c = t.getRealFloat();
-		final float d = t.getComplexFloat();
-		
-		setReal( a*c - b*d ); 
-		setComplex( a*d + b*c ); 
-	}
-
-	@Override
-	public void sub( final ComplexFloatType c ) 
-	{ 
-		setReal( getRealFloat() - c.getRealFloat() ); 
-		setComplex( getComplexFloat() - c.getComplexFloat() ); 
-	}
-
-	@Override
 	public int compareTo( final ComplexFloatType c ) 
 	{
 		final float real1 = getRealFloat();
@@ -247,20 +193,6 @@ public class ComplexFloatType extends TypeImpl<ComplexFloatType> implements Comp
 	{ 
 		setReal( c.getRealFloat() );
 		setComplex( c.getComplexFloat() );
-	}
-
-	@Override
-	public void setOne() 
-	{ 
-		setReal( 1 );
-		setComplex( 0 );
-	}
-
-	@Override
-	public void setZero() 
-	{ 
-		setReal( 0 );
-		setComplex( 0 );
 	}
 
 	@Override
@@ -286,7 +218,4 @@ public class ComplexFloatType extends TypeImpl<ComplexFloatType> implements Comp
 	
 	@Override
 	public ComplexFloatType clone(){ return new ComplexFloatType( getRealFloat(), getComplexFloat() ); }
-	
-	@Override
-	public String toString(){ return "(" + getRealFloat() + ") + (" + getComplexFloat() + ")i"; }
 }

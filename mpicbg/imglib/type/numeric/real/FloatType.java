@@ -35,8 +35,6 @@ import mpicbg.imglib.container.basictypecontainer.DataAccess;
 import mpicbg.imglib.container.basictypecontainer.FloatAccess;
 import mpicbg.imglib.container.basictypecontainer.array.FloatArray;
 import mpicbg.imglib.cursor.Cursor;
-import mpicbg.imglib.image.Image;
-import mpicbg.imglib.image.display.FloatTypeDisplay;
 import mpicbg.imglib.type.numeric.RealType;
 
 public class FloatType extends RealTypeImpl<FloatType> implements RealType<FloatType>
@@ -70,12 +68,6 @@ public class FloatType extends RealTypeImpl<FloatType> implements RealType<Float
 		return storageFactory.createFloatInstance( dim, 1 );	
 	}
 
-	@Override
-	public FloatTypeDisplay getDefaultDisplay( Image<FloatType> image )
-	{
-		return new FloatTypeDisplay( image );
-	}
-	
 	@Override
 	public void updateContainer( final Cursor<?> c ) 
 	{ 
@@ -190,7 +182,4 @@ public class FloatType extends RealTypeImpl<FloatType> implements RealType<Float
 	
 	@Override
 	public FloatType clone(){ return new FloatType( get() ); }
-	
-	@Override
-	public String toString() { return "" + get(); }
 }

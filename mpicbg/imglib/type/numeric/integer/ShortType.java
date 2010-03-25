@@ -30,10 +30,7 @@
 package mpicbg.imglib.type.numeric.integer;
 
 import mpicbg.imglib.container.Container;
-import mpicbg.imglib.container.basictypecontainer.DataAccess;
 import mpicbg.imglib.container.basictypecontainer.ShortAccess;
-import mpicbg.imglib.image.Image;
-import mpicbg.imglib.image.display.ShortTypeDisplay;
 
 public class ShortType extends GenericShortType<ShortType>
 {
@@ -57,9 +54,6 @@ public class ShortType extends GenericShortType<ShortType>
 	public void setInteger( final int f ){ set( (short)f ); }
 	@Override
 	public void setInteger( final long f ){ set( (short)f ); }
-	
-	@Override
-	public ShortTypeDisplay getDefaultDisplay( Image<ShortType> image ) { return new ShortTypeDisplay( image );	}
 
 	@Override
 	public ShortType[] createArray1D( final int size1 ){ return new ShortType[ size1 ]; }
@@ -81,7 +75,4 @@ public class ShortType extends GenericShortType<ShortType>
 
 	@Override
 	public ShortType clone(){ return new ShortType( getValue() ); }
-
-	@Override
-	public String toString() { return "" + get(); }
 }

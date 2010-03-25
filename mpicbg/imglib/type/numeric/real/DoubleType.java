@@ -34,8 +34,6 @@ import mpicbg.imglib.container.ContainerFactory;
 import mpicbg.imglib.container.basictypecontainer.DoubleAccess;
 import mpicbg.imglib.container.basictypecontainer.array.DoubleArray;
 import mpicbg.imglib.cursor.Cursor;
-import mpicbg.imglib.image.Image;
-import mpicbg.imglib.image.display.DoubleTypeDisplay;
 import mpicbg.imglib.type.numeric.RealType;
 
 public class DoubleType extends RealTypeImpl<DoubleType> implements RealType<DoubleType>
@@ -67,12 +65,6 @@ public class DoubleType extends RealTypeImpl<DoubleType> implements RealType<Dou
 	public Container<DoubleType, ? extends DoubleAccess> createSuitableContainer( final ContainerFactory storageFactory, final int dim[] )
 	{
 		return storageFactory.createDoubleInstance( dim, 1 );	
-	}
-
-	@Override
-	public DoubleTypeDisplay getDefaultDisplay( Image<DoubleType> image )
-	{
-		return new DoubleTypeDisplay( image );
 	}
 	
 	@Override
@@ -188,8 +180,5 @@ public class DoubleType extends RealTypeImpl<DoubleType> implements RealType<Dou
 	public DoubleType createVariable(){ return new DoubleType( 0 ); }
 	
 	@Override
-	public DoubleType clone(){ return new DoubleType( get() ); }
-	
-	@Override
-	public String toString() { return "" + get(); }
+	public DoubleType clone(){ return new DoubleType( get() ); }	
 }

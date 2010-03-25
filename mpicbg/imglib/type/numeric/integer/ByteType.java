@@ -31,8 +31,6 @@ package mpicbg.imglib.type.numeric.integer;
 
 import mpicbg.imglib.container.Container;
 import mpicbg.imglib.container.basictypecontainer.ByteAccess;
-import mpicbg.imglib.image.Image;
-import mpicbg.imglib.image.display.ByteTypeDisplay;
 
 public class ByteType extends GenericByteType<ByteType>
 {
@@ -58,9 +56,6 @@ public class ByteType extends GenericByteType<ByteType>
 	public void setInteger( final long f ){ set( (byte)f ); }
 	
 	@Override
-	public ByteTypeDisplay getDefaultDisplay( Image<ByteType> image ) { return new ByteTypeDisplay( image ); }
-	
-	@Override
 	public ByteType[] createArray1D( final int size1 ){ return new ByteType[ size1 ]; }
 
 	@Override
@@ -80,7 +75,4 @@ public class ByteType extends GenericByteType<ByteType>
 
 	@Override
 	public ByteType clone(){ return new ByteType( getValue() ); }
-
-	@Override
-	public String toString() { return "" + get(); }
 }

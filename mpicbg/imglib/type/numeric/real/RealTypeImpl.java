@@ -1,10 +1,19 @@
 package mpicbg.imglib.type.numeric.real;
 
+import mpicbg.imglib.image.Image;
+import mpicbg.imglib.image.display.Display;
+import mpicbg.imglib.image.display.RealTypeDisplay;
 import mpicbg.imglib.type.numeric.RealType;
 import mpicbg.imglib.type.numeric.complex.ComplexTypeImpl;
 
 public abstract class RealTypeImpl<T extends RealTypeImpl<T>> extends ComplexTypeImpl<T> implements RealType<T>
 {
+	@Override
+	public Display<T> getDefaultDisplay( final Image<T> image )
+	{
+		return new RealTypeDisplay<T>( image );
+	}
+
 	@Override
 	public float getComplexFloat() { return 0; }
 	@Override
@@ -26,11 +35,6 @@ public abstract class RealTypeImpl<T extends RealTypeImpl<T>> extends ComplexTyp
 	public void setOne() { setReal( 0 ); };	
 	
 	@Override
-	public void mul( float c ) { setReal( getRealFloat() * c ); }
-	@Override
-	public void mul( double c ) { setReal( getRealDouble() * c ); }		
-
-	@Override
 	public int compareTo( final T c ) 
 	{ 
 		final double a = getRealDouble();
@@ -42,4 +46,32 @@ public abstract class RealTypeImpl<T extends RealTypeImpl<T>> extends ComplexTyp
 		else 
 			return 0;
 	}
+	@Override
+	public float getPowerFloat() { return getRealFloat(); }
+
+	@Override
+	public double getPowerDouble() { return getRealDouble(); }
+	
+	@Override
+	public float getPhaseFloat() { return 0; }
+	
+	@Override
+	public double getPhaseDouble() { return 0; }
+	
+	@Override
+	public void updateIndex( final int i ) { this.i = i; }
+	@Override
+	public int getIndex() { return i; }
+	
+	@Override
+	public void incIndex() { ++i; }
+	@Override
+	public void incIndex( final int increment ) { i += increment; }
+	@Override
+	public void decIndex() { --i; }
+	@Override
+	public void decIndex( final int decrement ) { i -= decrement; }	
+	
+	@Override
+	public String toString() { return "" + getRealDouble(); }	
 }

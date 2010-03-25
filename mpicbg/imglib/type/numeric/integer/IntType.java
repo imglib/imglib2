@@ -30,10 +30,7 @@
 package mpicbg.imglib.type.numeric.integer;
 
 import mpicbg.imglib.container.Container;
-import mpicbg.imglib.container.basictypecontainer.DataAccess;
 import mpicbg.imglib.container.basictypecontainer.IntAccess;
-import mpicbg.imglib.image.Image;
-import mpicbg.imglib.image.display.IntTypeDisplay;
 
 public class IntType extends GenericIntType<IntType>
 {
@@ -59,9 +56,6 @@ public class IntType extends GenericIntType<IntType>
 	public void setInteger( final long f ){ set( (int)f ); }
 
 	@Override
-	public IntTypeDisplay getDefaultDisplay( Image<IntType> image ) { return new IntTypeDisplay( image ); }
-	
-	@Override
 	public IntType[] createArray1D(int size1){ return new IntType[ size1 ]; }
 
 	@Override
@@ -81,7 +75,4 @@ public class IntType extends GenericIntType<IntType>
 
 	@Override
 	public IntType clone(){ return new IntType( getValue() ); }
-
-	@Override
-	public String toString() { return "" + get(); }
 }
