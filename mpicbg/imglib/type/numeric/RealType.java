@@ -31,10 +31,7 @@
 package mpicbg.imglib.type.numeric;
 
 public interface RealType<T extends RealType<T>> extends ComplexType<T>
-{
-	public void mul( float c );
-	public void mul( double c );
-			
+{			
 	public void inc();
 	public void dec();	
 }

@@ -129,6 +129,11 @@ public class ComplexFloatType extends TypeImpl<ComplexFloatType> implements Comp
 	}
 	
 	@Override
+	public void mul( final float c ) { setReal( getRealFloat() * c ); }
+	@Override
+	public void mul( final double c ) { setReal( getRealDouble() * c ); }
+	
+	@Override
 	public float getRealFloat() { return b.getValue( realI ); }
 	@Override
 	public double getRealDouble() { return b.getValue( realI ); }

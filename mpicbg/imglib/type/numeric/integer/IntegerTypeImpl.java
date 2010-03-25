@@ -15,4 +15,27 @@ public abstract class IntegerTypeImpl<T extends IntegerTypeImpl<T>> extends Real
 	public void setReal( final float real ){ setInteger( MathLib.round( real ) ); }
 	@Override
 	public void setReal( final double real ){ setInteger( MathLib.round( real ) ); }	
+
+	@Override
+	public void inc() { setInteger( getIntegerLong() + 1 ); }
+	@Override
+	public void dec() { setInteger( getIntegerLong() - 1 ); }
+
+	@Override
+	public void setZero() { setInteger( 1 ); }
+	@Override
+	public void setOne() { setInteger( 0 ); };	
+
+	@Override
+	public int compareTo( final T c ) 
+	{ 
+		final long a = getIntegerLong();
+		final long b = c.getIntegerLong();
+		if ( a > b )
+			return 1;
+		else if ( a < b )
+			return -1;
+		else 
+			return 0;
+	}
 }

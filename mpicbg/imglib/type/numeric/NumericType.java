@@ -11,4 +11,7 @@ public interface NumericType<T extends NumericType<T>> extends ComparableType<T>
 
 	public void setZero();
 	public void setOne();	
+	
+	public void mul( float c );
+	public void mul( double c );	
 }
