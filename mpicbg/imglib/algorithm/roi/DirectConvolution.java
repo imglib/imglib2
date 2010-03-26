@@ -7,20 +7,23 @@ import mpicbg.imglib.image.Image;
 import mpicbg.imglib.outside.OutsideStrategyFactory;
 import mpicbg.imglib.type.NumericType;
 
-public class DirectConvolution <T extends NumericType<T>, S extends NumericType<S>> extends ROIAlgorithm<T, S> {
+public class DirectConvolution
+	<T extends NumericType<T>, R extends NumericType<R>, S extends NumericType<S>>
+		extends ROIAlgorithm<T, S>
+{
 
-	private final Image<T> kernel;
+	private final Image<R> kernel;
 	private final int[] kernelSize;
 	private LocalizableByDimCursor<S> outputImageCursor;
-	private final LocalizableByDimCursor<T> kernelCursor;
+	private final LocalizableByDimCursor<R> kernelCursor;
 	
-	public DirectConvolution(final S type, final Image<T> inputImage, final Image<T> kernel)
+	public DirectConvolution(final S type, final Image<T> inputImage, final Image<R> kernel)
 	{
 		this(type, inputImage, kernel, null);
 	}
 	
 	
-	public DirectConvolution(final S type, final Image<T> inputImage, final Image<T> kernel,
+	public DirectConvolution(final S type, final Image<T> inputImage, final Image<R> kernel,
 			final OutsideStrategyFactory<T> outsideFactory) {
 		super(type, inputImage, kernel.getDimensions(), outsideFactory);
 		this.kernel = kernel;
