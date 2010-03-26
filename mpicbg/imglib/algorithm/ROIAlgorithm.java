@@ -16,7 +16,6 @@ public abstract class ROIAlgorithm <T extends NumericType<T>, S extends NumericT
 	private final LocalizableCursor<T> inImagePullCursor;
 	private RegionOfInterestCursor<T> roiCursor;
 	private final int[] patchSize;
-	//private final int[] inputImageSize;
 	private final Image<T> inputImage;
 	private final OutsideStrategyFactory<T> outsideFactory;
 	private Image<S> outputImage;	
@@ -93,11 +92,11 @@ public abstract class ROIAlgorithm <T extends NumericType<T>, S extends NumericT
 	{		
 		if (outputImage == null)
 		{
-			final int[] outputImageSize = new int[inputImage.getNumDimensions()];
+			/*final int[] outputImageSize = new int[inputImage.getNumDimensions()];
 			for (int i = 0; i < inputImage.getNumDimensions(); ++i)
 			{
 				outputImageSize[i] = inputImage.getDimension(i) + patchSize[i];  
-			}
+			}*/
 			
 			if (imageFactory == null)
 			{			
@@ -106,11 +105,11 @@ public abstract class ROIAlgorithm <T extends NumericType<T>, S extends NumericT
 					
 			if (name == null)
 			{
-				outputImage = imageFactory.createImage(outputImageSize);
+				outputImage = imageFactory.createImage(inputImage.getDimensions());
 			}
 			else
 			{
-				outputImage = imageFactory.createImage(outputImageSize, name);				
+				outputImage = imageFactory.createImage(inputImage.getDimensions(), name);				
 			}
 		}
 		return outputImage;
