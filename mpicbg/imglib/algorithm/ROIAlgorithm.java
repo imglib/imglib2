@@ -1,36 +1,62 @@
 package mpicbg.imglib.algorithm;
 
 import mpicbg.imglib.cursor.LocalizableByDimCursor;
+import mpicbg.imglib.cursor.LocalizableCursor;
 import mpicbg.imglib.cursor.special.RegionOfInterestCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.ImageFactory;
-import mpicbg.imglib.type.Type;
+import mpicbg.imglib.outside.OutsideStrategyFactory;
+import mpicbg.imglib.outside.OutsideStrategyValueFactory;
+import mpicbg.imglib.type.NumericType;
 
-public abstract class ROIAlgorithm <T extends Type<T>> implements OutputAlgorithm<T>
+public abstract class ROIAlgorithm <T extends NumericType<T>, S extends NumericType<S>> implements OutputAlgorithm<S>
 {
 
-	private final LocalizableByDimCursor<T> cursor;
+	private final LocalizableByDimCursor<T> inImageDummyCursor;
+	private final LocalizableCursor<T> inImagePullCursor;
+	private RegionOfInterestCursor<T> roiCursor;
 	private final int[] patchSize;
-	private final int[] imageSize;
-	private Image<T> image;
-	private ImageFactory<T> imageFactory;
+	//private final int[] inputImageSize;
+	private final Image<T> inputImage;
+	private final OutsideStrategyFactory<T> outsideFactory;
+	private Image<S> outputImage;	
+	private ImageFactory<S> imageFactory;		
 	private String errorMsg;
 	private String name;
+	private final S typeS;
 	
-	protected ROIAlgorithm(final LocalizableByDimCursor<T> inCursor, final int[] patchSize)
+	protected ROIAlgorithm(final S type, final Image<T> imageIn, final int[] patchSize)
 	{
-		this(inCursor, patchSize, inCursor.getImage().getDimensions());
+		this(type, imageIn, patchSize, null);
 	}
 	
-	protected ROIAlgorithm(final LocalizableByDimCursor<T> inCursor, final int[] patchSize, final int[] imageSize)
+	protected ROIAlgorithm(final S type, final Image<T> imageIn, final int[] patchSize, final OutsideStrategyFactory<T> inOutFactory)
 	{
-		cursor = inCursor;
+		
+		inputImage = imageIn;
 		this.patchSize = patchSize.clone();
-		this.imageSize = imageSize.clone();
-		image = null;
+		//this.inputImageSize = inputImage.getDimensions();		
+		outputImage = null;
 		imageFactory = null;
 		errorMsg = "";
 		name = null;
+		typeS = type.clone();
+		roiCursor = null;
+		//cursor 
+		
+		if (inOutFactory == null)
+		{
+			T typeT = imageIn.createType();
+			typeT.setZero();
+			outsideFactory = new OutsideStrategyValueFactory<T>(typeT); 
+		}
+		else
+		{
+			outsideFactory = inOutFactory;
+		}
+		
+		inImageDummyCursor = imageIn.createLocalizableByDimCursor(outsideFactory);
+		inImagePullCursor = imageIn.createLocalizableCursor();
 	}
 
 	/**
@@ -40,9 +66,14 @@ public abstract class ROIAlgorithm <T extends Type<T>> implements OutputAlgorith
 	 * patch-of-interest
 	 * @return true if the operation on the given patch was successful, false otherwise 
 	 */
-	protected abstract boolean patchOperation(final RegionOfInterestCursor<T> cursor);
+	protected abstract boolean patchOperation(final int[] position, final RegionOfInterestCursor<T> cursor);
 	
-	public void setImageFactory(final ImageFactory<T> factory)
+	protected LocalizableCursor<T> getInputCursor()
+	{
+		return inImageDummyCursor;
+	}
+	
+	public void setImageFactory(final ImageFactory<S> factory)
 	{
 		imageFactory = factory;
 	}
@@ -58,57 +89,84 @@ public abstract class ROIAlgorithm <T extends Type<T>> implements OutputAlgorith
 	}
 	
 	
-	protected Image<T> getImage()
-	{
-		if (image == null)
+	protected Image<S> getOutputImage()
+	{		
+		if (outputImage == null)
 		{
-			if (imageFactory == null)
+			final int[] outputImageSize = new int[inputImage.getNumDimensions()];
+			for (int i = 0; i < inputImage.getNumDimensions(); ++i)
 			{
-				imageFactory = new ImageFactory<T>(cursor.getType(), cursor.getImage().getContainerFactory());
+				outputImageSize[i] = inputImage.getDimension(i) + patchSize[i];  
 			}
 			
+			if (imageFactory == null)
+			{			
+				imageFactory = new ImageFactory<S>(typeS, inImageDummyCursor.getImage().getContainerFactory());
+			}
+					
 			if (name == null)
 			{
-				image = imageFactory.createImage(imageSize);
+				outputImage = imageFactory.createImage(outputImageSize);
 			}
 			else
 			{
-				image = imageFactory.createImage(imageSize, name);				
+				outputImage = imageFactory.createImage(outputImageSize, name);				
 			}
 		}
-		return image;
+		return outputImage;
 	}
 	
 	@Override
-	public Image<T> getResult() {		
-		return image;
+	public Image<S> getResult()
+	{		
+		return outputImage;
 	}
 
 	@Override
-	public String getErrorMessage() {
+	public String getErrorMessage()
+	{
 		return errorMsg;
 	}
+	
+	protected void setErrorMessage(String message)
+	{
+		errorMsg = message;
+	}
 
-	@Override
-	public boolean process() {		
-		RegionOfInterestCursor<T> roiCursor;
-		int[] pos = new int[cursor.getNumDimensions()];
-		cursor.reset();
-		while (cursor.hasNext())
+	protected void setROIPosition(int[] pos)
+	{
+		if (roiCursor == null)
 		{
-			cursor.fwd();			
-			cursor.getPosition(pos);
-			roiCursor = cursor.createRegionOfInterestCursor(pos, patchSize);
-			if (!patchOperation(roiCursor))
+			roiCursor = inImageDummyCursor.createRegionOfInterestCursor(pos, patchSize);
+		}
+		else
+		{
+			roiCursor.reset(pos);
+		}
+	}
+	
+	@Override
+	public boolean process()
+	{		
+		int[] pos = new int[inImageDummyCursor.getNumDimensions()];
+		inImagePullCursor.reset();
+		
+		while (inImagePullCursor.hasNext())
+		{
+			inImagePullCursor.fwd();			
+			inImagePullCursor.getPosition(pos);
+			setROIPosition(pos);
+						
+			if (!patchOperation(pos, roiCursor))
 			{
 				return false;
 			}
 			
 			//TODO: Which of these next two lines do I need?
-			roiCursor.reset();
-			//cursor.setPosition(pos);
+			//roiCursor.reset();
+			//inImageDummyCursor.setPosition(pos);
 			
-			roiCursor.close();
+			//roiCursor.close();
 		}
 		
 		return true;		
