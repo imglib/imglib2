@@ -30,6 +30,7 @@
 package mpicbg.imglib.image;
 
 import ij.ImagePlus;
+import ij.measure.Calibration;
 import mpicbg.imglib.container.imageplus.ByteImagePlus;
 import mpicbg.imglib.container.imageplus.FloatImagePlus;
 import mpicbg.imglib.container.imageplus.ImagePlusContainerFactory;
@@ -80,6 +81,25 @@ public class ImagePlusAdapter
 			}
 		}
 	}
+
+	protected static void setCalibrationFromImagePlus( Image image, ImagePlus imp ) {
+		int d = image.getNumDimensions();
+		float [] spacing = new float[d];
+		for( int i = 0; i < d; ++i )
+			spacing[i] = 1f;
+		Calibration c = imp.getCalibration();
+		if( c != null ) {
+			if( d >= 1 )
+				spacing[0] = (float)c.pixelWidth;
+			if( d >= 2 )
+				spacing[1] = (float)c.pixelHeight;
+			if( d >= 3 )
+				spacing[2] = (float)c.pixelDepth;
+			if( d >= 4 )
+				spacing[3] = (float)c.frameInterval;
+		}
+		image.setCalibration( spacing );
+	}
 	
 	public static Image<UnsignedByteType> wrapByte( final ImagePlus imp )
 	{
@@ -90,6 +110,7 @@ public class ImagePlusAdapter
 		ByteImagePlus<UnsignedByteType> container = new ByteImagePlus<UnsignedByteType>( imp,  containerFactory );
 		ImageFactory<UnsignedByteType> imageFactory = new ImageFactory<UnsignedByteType>( new UnsignedByteType(), containerFactory );				
 		Image<UnsignedByteType> image = new Image<UnsignedByteType>( container, imageFactory, imp.getTitle() );
+		setCalibrationFromImagePlus( image, imp );
 		
 		return image;		
 	}
@@ -103,6 +124,7 @@ public class ImagePlusAdapter
 		ShortImagePlus<UnsignedShortType> container = new ShortImagePlus<UnsignedShortType>( imp,  containerFactory );
 		ImageFactory<UnsignedShortType> imageFactory = new ImageFactory<UnsignedShortType>( new UnsignedShortType(), containerFactory );				
 		Image<UnsignedShortType> image = new Image<UnsignedShortType>( container, imageFactory, imp.getTitle() );
+		setCalibrationFromImagePlus( image, imp );
 		
 		return image;						
 	}
@@ -116,6 +138,7 @@ public class ImagePlusAdapter
 		IntImagePlus<RGBALegacyType> container = new IntImagePlus<RGBALegacyType>( imp,  containerFactory );
 		ImageFactory<RGBALegacyType> imageFactory = new ImageFactory<RGBALegacyType>( new RGBALegacyType(), containerFactory );				
 		Image<RGBALegacyType> image = new Image<RGBALegacyType>( container, imageFactory, imp.getTitle() );
+		setCalibrationFromImagePlus( image, imp );
 		
 		return image;				
 	}	
@@ -129,6 +152,7 @@ public class ImagePlusAdapter
 		FloatImagePlus<FloatType> container = new FloatImagePlus<FloatType>( imp,  containerFactory );
 		ImageFactory<FloatType> imageFactory = new ImageFactory<FloatType>( new FloatType(), containerFactory );				
 		Image<FloatType> image = new Image<FloatType>( container, imageFactory, imp.getTitle() );
+		setCalibrationFromImagePlus( image, imp );
 		
 		return image;				
 	}	
