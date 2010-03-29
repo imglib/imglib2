@@ -172,7 +172,7 @@ public class OutOfBoundsStrategyMirror<T extends Type<T>> extends OutOfBoundsStr
 	 * For mirroring, there is no difference between leaving the image and moving while 
 	 * being out of image bounds
 	 * 
-	 * @see mpi.imglib.outside.OutOfeStrategy#initOutOfBounds()
+	 * @see mpicbg.imglib.outofbounds.OutOfBoundsStrategy#notifyOutOfBounds()
 	 */
 	@Override
 	public void initOutOfBOunds() { notifyOutOfBOunds(); }
