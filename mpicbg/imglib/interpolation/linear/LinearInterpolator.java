@@ -34,7 +34,7 @@ import mpicbg.imglib.cursor.LocalizableByDimCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.interpolation.InterpolatorFactory;
 import mpicbg.imglib.interpolation.InterpolatorImpl;
-import mpicbg.imglib.outside.OutsideStrategyFactory;
+import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
 import mpicbg.imglib.type.numeric.RealType;
 
 public class LinearInterpolator<T extends RealType<T>> extends InterpolatorImpl<T>
@@ -58,14 +58,14 @@ public class LinearInterpolator<T extends RealType<T>> extends InterpolatorImpl<
 	// the locations where to initially grab pixels from
 	final boolean[][] positions;
 	
-	protected LinearInterpolator( final Image<T> img, final InterpolatorFactory<T> interpolatorFactory, final OutsideStrategyFactory<T> outsideStrategyFactory )
+	protected LinearInterpolator( final Image<T> img, final InterpolatorFactory<T> interpolatorFactory, final OutOfBoundsStrategyFactory<T> outOfBoundsStrategyFactory )
 	{
-		this( img, interpolatorFactory, outsideStrategyFactory, true );
+		this( img, interpolatorFactory, outOfBoundsStrategyFactory, true );
 	}
 	
-	protected LinearInterpolator( final Image<T> img, final InterpolatorFactory<T> interpolatorFactory, final OutsideStrategyFactory<T> outsideStrategyFactory, boolean initGenericStructures )
+	protected LinearInterpolator( final Image<T> img, final InterpolatorFactory<T> interpolatorFactory, final OutOfBoundsStrategyFactory<T> outOfBoundsStrategyFactory, boolean initGenericStructures )
 	{
-		super(img, interpolatorFactory, outsideStrategyFactory);
+		super(img, interpolatorFactory, outOfBoundsStrategyFactory);
 
 		// Principle of interpolation used
 		//
@@ -121,7 +121,7 @@ public class LinearInterpolator<T extends RealType<T>> extends InterpolatorImpl<
 		//
 		// yiels the interpolated value in 3 dimensions
 		
-		cursor = img.createLocalizableByDimCursor( outsideStrategyFactory );
+		cursor = img.createLocalizableByDimCursor( outOfBoundsStrategyFactory );
 		cursorType = cursor.getType();
 		tmp1 = img.createType();
 		tmp2 = img.createType();

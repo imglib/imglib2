@@ -20,7 +20,7 @@ import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.display.ComplexTypePhaseSpectrumDisplay;
 import mpicbg.imglib.image.display.ComplexTypePowerSpectrumDisplay;
 import mpicbg.imglib.image.display.imagej.ImageJFunctions;
-import mpicbg.imglib.outside.OutsideStrategyPeriodicFactory;
+import mpicbg.imglib.outofbounds.OutOfBoundsStrategyPeriodicFactory;
 import mpicbg.imglib.type.logic.BitType;
 import mpicbg.imglib.type.numeric.RealType;
 import mpicbg.imglib.type.numeric.complex.ComplexFloatType;
@@ -206,8 +206,8 @@ public class AlgorithmPerformance
 	{
 		final FourierTransform<FloatType> fft = new FourierTransform<FloatType>( img );
 		fft.setNumThreads( 1 );
-		fft.setPreProcessing( PreProcessing.None );
-		fft.setRearrangement( Rearrangement.Unchanged );
+		fft.setPreProcessing( PreProcessing.NONE );
+		fft.setRearrangement( Rearrangement.UNCHANGED );
 		
 		double processingTime = 0;
 		
@@ -265,7 +265,7 @@ public class AlgorithmPerformance
 		for ( int d = 0; d < img.getNumDimensions(); ++d )
 			newSize[ d ] = MathLib.round( img.getDimension( d ) * factor );
 		
-		final CanvasImage<T> canvas = new CanvasImage<T>( img, newSize, new OutsideStrategyPeriodicFactory<T>() );
+		final CanvasImage<T> canvas = new CanvasImage<T>( img, newSize, new OutOfBoundsStrategyPeriodicFactory<T>() );
 		
 		if ( canvas.checkInput() && canvas.process() )
 		{

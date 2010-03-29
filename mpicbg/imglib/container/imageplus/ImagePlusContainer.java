@@ -42,12 +42,12 @@ import mpicbg.imglib.cursor.LocalizableCursor;
 import mpicbg.imglib.cursor.LocalizablePlaneCursor;
 import mpicbg.imglib.cursor.imageplus.ImagePlusCursor;
 import mpicbg.imglib.cursor.imageplus.ImagePlusLocalizableByDimCursor;
-import mpicbg.imglib.cursor.imageplus.ImagePlusLocalizableByDimOutsideCursor;
+import mpicbg.imglib.cursor.imageplus.ImagePlusLocalizableByDimOutOfBoundsCursor;
 import mpicbg.imglib.cursor.imageplus.ImagePlusLocalizableCursor;
 import mpicbg.imglib.cursor.imageplus.ImagePlusLocalizablePlaneCursor;
 import mpicbg.imglib.exception.ImgLibException;
 import mpicbg.imglib.image.Image;
-import mpicbg.imglib.outside.OutsideStrategyFactory;
+import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
 import mpicbg.imglib.type.Type;
 
 public class ImagePlusContainer<T extends Type<T>, A extends ArrayDataAccess<A>> extends PixelGridContainerImpl<T,A> implements Container3D<T,A>
@@ -150,9 +150,9 @@ public class ImagePlusContainer<T extends Type<T>, A extends ArrayDataAccess<A>>
 		return new ImagePlusLocalizableByDimCursor<T>( this, image, type );
 	}
 ;
-	public LocalizableByDimCursor<T> createLocalizableByDimCursor( T type, Image<T> image, OutsideStrategyFactory<T> outsideFactory ) 
+	public LocalizableByDimCursor<T> createLocalizableByDimCursor( T type, Image<T> image, OutOfBoundsStrategyFactory<T> outOfBoundsFactory ) 
 	{
-		return new ImagePlusLocalizableByDimOutsideCursor<T>( this, image, type, outsideFactory );
+		return new ImagePlusLocalizableByDimOutOfBoundsCursor<T>( this, image, type, outOfBoundsFactory );
 	}
 	
 	public ImagePlusContainerFactory getFactory() { return factory; }

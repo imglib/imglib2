@@ -34,7 +34,7 @@ import mpicbg.imglib.cursor.LocalizableByDimCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.interpolation.InterpolatorFactory;
 import mpicbg.imglib.interpolation.InterpolatorImpl;
-import mpicbg.imglib.outside.OutsideStrategyFactory;
+import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
 import mpicbg.imglib.type.Type;
 
 public class NearestNeighborInterpolator<T extends Type<T>> extends InterpolatorImpl<T>
@@ -42,11 +42,11 @@ public class NearestNeighborInterpolator<T extends Type<T>> extends Interpolator
 	final LocalizableByDimCursor<T> cursor;
 	final T type;
 	
-	protected NearestNeighborInterpolator( final Image<T> img, final InterpolatorFactory<T> interpolatorFactory, final OutsideStrategyFactory<T> outsideStrategyFactory )
+	protected NearestNeighborInterpolator( final Image<T> img, final InterpolatorFactory<T> interpolatorFactory, final OutOfBoundsStrategyFactory<T> outOfBoundsStrategyFactory )
 	{
-		super(img, interpolatorFactory, outsideStrategyFactory);
+		super(img, interpolatorFactory, outOfBoundsStrategyFactory);
 		
-		cursor = img.createLocalizableByDimCursor( outsideStrategyFactory );
+		cursor = img.createLocalizableByDimCursor( outOfBoundsStrategyFactory );
 		type = cursor.getType();
 		
 		moveTo( position );		

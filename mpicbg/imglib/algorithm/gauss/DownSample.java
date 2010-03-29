@@ -24,7 +24,7 @@ import mpicbg.imglib.cursor.LocalizableCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.interpolation.Interpolator;
 import mpicbg.imglib.interpolation.nearestneighbor.NearestNeighborInterpolatorFactory;
-import mpicbg.imglib.outside.OutsideStrategyMirrorFactory;
+import mpicbg.imglib.outofbounds.OutOfBoundsStrategyMirrorFactory;
 import mpicbg.imglib.type.numeric.RealType;
 
 public class DownSample<T extends RealType<T>> implements MultiThreaded, OutputAlgorithm<T>, Benchmark
@@ -122,7 +122,7 @@ public class DownSample<T extends RealType<T>> implements MultiThreaded, OutputA
 			sigma[ d ] = Math.sqrt( s * s - sourceSigma * sourceSigma );
 		}
 		
-		final GaussianConvolution<T> gauss = new GaussianConvolution<T>( input, new OutsideStrategyMirrorFactory<T>(), sigma );
+		final GaussianConvolution<T> gauss = new GaussianConvolution<T>( input, new OutOfBoundsStrategyMirrorFactory<T>(), sigma );
 		gauss.setNumThreads( getNumThreads() );
 		
 		if ( !gauss.checkInput() || !gauss.process() )
@@ -134,7 +134,7 @@ public class DownSample<T extends RealType<T>> implements MultiThreaded, OutputA
 		final Image<T> gaussConvolved = gauss.getResult();
 		downSampled = input.createNewImage( newSize );
 		
-		final Interpolator<T> interpolator = gaussConvolved.createInterpolator( new NearestNeighborInterpolatorFactory<T>( new OutsideStrategyMirrorFactory<T>() ) );		
+		final Interpolator<T> interpolator = gaussConvolved.createInterpolator( new NearestNeighborInterpolatorFactory<T>( new OutOfBoundsStrategyMirrorFactory<T>() ) );		
 		final LocalizableCursor<T> cursor = downSampled.createLocalizableCursor();
 		
 		final int[] pos = new int[ numDimensions ];

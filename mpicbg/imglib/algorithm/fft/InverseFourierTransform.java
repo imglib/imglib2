@@ -80,7 +80,7 @@ public class InverseFourierTransform<T extends RealType<T>> implements MultiThre
 
 	public InverseFourierTransform( final Image<ComplexFloatType> fftImage, final T type )
 	{
-		this( fftImage, type, Rearrangement.RearrangeQuadrants, false, true, false, null, null );
+		this( fftImage, type, Rearrangement.REARRANGE_QUADRANTS, false, true, false, null, null );
 	}
 	
 	public void setRearrangement( final Rearrangement rearrangement ) { this.rearrangement = rearrangement; }
@@ -112,7 +112,7 @@ public class InverseFourierTransform<T extends RealType<T>> implements MultiThre
 		else
 			complex = fftImage.clone();
 			
-		if ( rearrangement == Rearrangement.RearrangeQuadrants )
+		if ( rearrangement == Rearrangement.REARRANGE_QUADRANTS )
 			FFTFunctions.rearrangeFFTQuadrants( complex, getNumThreads() );
 
 		// perform inverse FFT 					

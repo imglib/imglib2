@@ -39,11 +39,11 @@ import mpicbg.imglib.cursor.array.ArrayLocalizableByDimCursor;
 import mpicbg.imglib.cursor.array.ArrayLocalizableCursor;
 import mpicbg.imglib.cursor.cube.CubeCursor;
 import mpicbg.imglib.cursor.cube.CubeLocalizableByDimCursor;
-import mpicbg.imglib.cursor.cube.CubeLocalizableByDimOutsideCursor;
+import mpicbg.imglib.cursor.cube.CubeLocalizableByDimOutOfBoundsCursor;
 import mpicbg.imglib.cursor.cube.CubeLocalizableCursor;
 import mpicbg.imglib.cursor.cube.CubeLocalizablePlaneCursor;
 import mpicbg.imglib.image.Image;
-import mpicbg.imglib.outside.OutsideStrategyFactory;
+import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
 import mpicbg.imglib.type.Type;
 import mpicbg.imglib.type.label.FakeType;
 
@@ -199,9 +199,9 @@ public class Cube<T extends Type<T>, A extends ArrayDataAccess<A>> extends Pixel
 	}	
 	
 	@Override
-	public CubeLocalizableByDimCursor<T> createLocalizableByDimCursor( final T type, final Image<T> image, final OutsideStrategyFactory<T> outsideFactory ) 
+	public CubeLocalizableByDimCursor<T> createLocalizableByDimCursor( final T type, final Image<T> image, final OutOfBoundsStrategyFactory<T> outOfBoundsFactory ) 
 	{ 
-		CubeLocalizableByDimOutsideCursor<T> c = new CubeLocalizableByDimOutsideCursor<T>( this, image, type, outsideFactory );
+		CubeLocalizableByDimOutOfBoundsCursor<T> c = new CubeLocalizableByDimOutOfBoundsCursor<T>( this, image, type, outOfBoundsFactory );
 		return c;
 	}	
 }

@@ -27,28 +27,28 @@
  *
  * @author Stephan Preibisch & Stephan Saalfeld
  */
-package mpicbg.imglib.cursor.array;
+package mpicbg.imglib.cursor.imageplus;
 
-import mpicbg.imglib.container.array.Array;
+import mpicbg.imglib.container.imageplus.ImagePlusContainer;
 import mpicbg.imglib.cursor.LocalizableByDimCursor;
 import mpicbg.imglib.image.Image;
-import mpicbg.imglib.outside.OutsideStrategy;
-import mpicbg.imglib.outside.OutsideStrategyFactory;
+import mpicbg.imglib.outofbounds.OutOfBoundsStrategy;
+import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
 import mpicbg.imglib.type.Type;
 
-public class ArrayLocalizableByDimOutsideCursor<T extends Type<T>> extends ArrayLocalizableByDimCursor<T> implements LocalizableByDimCursor<T>
+public class ImagePlusLocalizableByDimOutOfBoundsCursor<T extends Type<T>> extends ImagePlusLocalizableByDimCursor<T> implements LocalizableByDimCursor<T>
 {
-	final OutsideStrategyFactory<T> outsideStrategyFactory;
-	final OutsideStrategy<T> outsideStrategy;
+	final OutOfBoundsStrategyFactory<T> outOfBoundsStrategyFactory;
+	final OutOfBoundsStrategy<T> outOfBoundsStrategy;
 	
-	boolean isOutside = false;
+	boolean isOutOfBounds = false;
 	
-	public ArrayLocalizableByDimOutsideCursor( final Array<T,?> container, final Image<T> image, final T type, final OutsideStrategyFactory<T> outsideStrategyFactory ) 
+	public ImagePlusLocalizableByDimOutOfBoundsCursor( final ImagePlusContainer<T,?> container, final Image<T> image, final T type, final OutOfBoundsStrategyFactory<T> outOfBoundsStrategyFactory ) 
 	{
 		super( container, image, type );
 		
-		this.outsideStrategyFactory = outsideStrategyFactory;
-		this.outsideStrategy = outsideStrategyFactory.createStrategy( this );
+		this.outOfBoundsStrategyFactory = outOfBoundsStrategyFactory;
+		this.outOfBoundsStrategy = outOfBoundsStrategyFactory.createStrategy( this );
 		
 		reset();
 	}	
@@ -56,23 +56,33 @@ public class ArrayLocalizableByDimOutsideCursor<T extends Type<T>> extends Array
 	@Override
 	public boolean hasNext()
 	{
-		if ( !isOutside && type.getIndex() < sizeMinus1 )
+		if ( !isOutOfBounds && ( type.getIndex() < slicePixelCountMinus1 || slice < maxSliceMinus1 ) )
 			return true;
 		else
 			return false;
 	}
 
 	@Override
+	public T getType() 
+	{ 
+		if ( isOutOfBounds )
+			return outOfBoundsStrategy.getType();
+		else
+			return type; 
+	}
+	
+	@Override
 	public void reset()
 	{
-		if ( outsideStrategy == null )
+		if ( outOfBoundsStrategy == null )
 			return;
 		
 		isClosed = false;
-		isOutside = false;
+		isOutOfBounds = false;
 		type.updateIndex( -1 );
 		
 		position[ 0 ] = -1;
+		slice = 0;
 		
 		for ( int d = 1; d < numDimensions; d++ )
 			position[ d ] = 0;
@@ -81,20 +91,18 @@ public class ArrayLocalizableByDimOutsideCursor<T extends Type<T>> extends Array
 	}
 	
 	@Override
-	public T getType() 
-	{ 
-		if ( isOutside )
-			return outsideStrategy.getType();
-		else
-			return type; 
-	}
-		
-	@Override
 	public void fwd()
 	{
-		if ( !isOutside )
+		if ( !isOutOfBounds )
 		{
 			type.incIndex();
+			
+			if ( type.getIndex() > slicePixelCountMinus1 ) 
+			{
+				slice++;
+				type.updateIndex( 0 );
+				type.updateContainer( this );
+			}
 			
 			for ( int d = 0; d < numDimensions; d++ )
 			{
@@ -104,48 +112,53 @@ public class ArrayLocalizableByDimOutsideCursor<T extends Type<T>> extends Array
 					
 					for ( int e = 0; e < d; e++ )
 						position[ e ] = 0;
-
-					//link.fwd();
+					
 					return;
 				}
 			}
 			
-			// if it did not return we moved outside the image
-			isOutside = true;
-			++position[0];
-			outsideStrategy.initOutside(  );
-			//link.fwd();
+			// if it did not return we moved out of image bounds
+			isOutOfBounds = true;
+			position[0]++;
+			outOfBoundsStrategy.initOutOfBOunds(  );
 		}
 	}
 
 	@Override
 	public void fwd( final int dim )
 	{
-		++position[ dim ];
+		position[ dim ]++;
 
-		if ( isOutside )
+		if ( isOutOfBounds )
 		{
 			// reenter the image?
 			if ( position[ dim ] == 0 )
 				setPosition( position );
-			else // moved outside of the image
-				outsideStrategy.notifyOutsideFwd( dim );
+			else // moved out of image bounds
+				outOfBoundsStrategy.notifyOutOfBOundsFwd( dim );
 		}
 		else
 		{			
 			if ( position[ dim ] < dimensions[ dim ] )
 			{
 				// moved within the image
-				type.incIndex( step[ dim ] );
+				if ( dim == 2 )
+				{
+					++slice;
+					type.updateContainer( this );
+				}
+				else
+				{
+					type.incIndex( step[ dim ] );
+				}
 			}
 			else
 			{
 				// left the image
-				isOutside = true;
-				outsideStrategy.initOutside(  );
+				isOutOfBounds = true;
+				outOfBoundsStrategy.initOutOfBOunds(  );
 			}
 		}
-		//link.fwd( dim );
 	}
 
 	@Override
@@ -153,34 +166,38 @@ public class ArrayLocalizableByDimOutsideCursor<T extends Type<T>> extends Array
 	{
 		position[ dim ] += steps;
 
-		if ( isOutside )
+		if ( isOutOfBounds )
 		{
 			// reenter the image?
 			if ( position[ dim ] >= 0 && position[ dim ] < dimensions[ dim ] )
 			{
-				isOutside = false;
+				isOutOfBounds = false;
 				
-				for ( int d = 0; d < numDimensions && !isOutside; d++ )
+				for ( int d = 0; d < numDimensions && !isOutOfBounds; d++ )
 					if ( position[ d ] < 0 || position[ d ] >= dimensions[ d ])
-						isOutside = true;
+						isOutOfBounds = true;
 				
-				if ( !isOutside )
+				if ( !isOutOfBounds )
 				{
-					// we re-entered the image
-					// new location is inside the image					
-					type.updateContainer( this );
+					// new location is inside the image
 					
 					// get the offset inside the image
 					type.updateIndex( container.getPos( position ) );
+					if ( numDimensions == 3 )
+						slice = position[ 2 ];
+					else
+						slice = 0;
+					
+					type.updateContainer( this );			
 				}
 				else
 				{
-					outsideStrategy.notifyOutside( steps, dim  );
+					outOfBoundsStrategy.notifyOutOfBOunds( steps, dim  );
 				}
 			}
-			else // moved outside of the image
+			else // moved out of image bounds
 			{
-				outsideStrategy.notifyOutside( steps, dim  );
+				outOfBoundsStrategy.notifyOutOfBOunds( steps, dim );
 			}
 		}
 		else
@@ -188,17 +205,23 @@ public class ArrayLocalizableByDimOutsideCursor<T extends Type<T>> extends Array
 			if ( position[ dim ] >= 0 && position[ dim ] < dimensions[ dim ] )
 			{
 				// moved within the image
-				//type.i += step[ dim ] * steps;
-				type.incIndex( step[ dim ] * steps );
+				if ( dim == 2 )
+				{
+					slice += steps;
+					type.updateContainer( this );
+				}
+				else
+				{
+					type.incIndex( step[ dim ] * steps );
+				}
 			}
 			else
 			{
 				// left the image
-				isOutside = true;
-				outsideStrategy.initOutside(  );
+				isOutOfBounds = true;
+				outOfBoundsStrategy.initOutOfBOunds(  );
 			}
 		}
-		//link.move( steps, dim );
 	}
 	
 	@Override
@@ -206,37 +229,44 @@ public class ArrayLocalizableByDimOutsideCursor<T extends Type<T>> extends Array
 	{
 		position[ dim ]--;	
 
-		if ( isOutside )
+		if ( isOutOfBounds )
 		{
 			// reenter the image?
 			if ( position[ dim ] == dimensions[ dim ] - 1 )
 				setPosition( position );
-			else // moved outside of the image
-				outsideStrategy.notifyOutsideBck( dim );
+			else // moved out of image bounds
+				outOfBoundsStrategy.notifyOutOfBOundsBck( dim );
 		}
 		else
 		{			
 			if ( position[ dim ] > -1 )
 			{
 				// moved within the image
-				type.decIndex( step[ dim ] );
+				if ( dim == 2 )
+				{
+					--slice;
+					type.updateContainer( this );
+				}
+				else
+				{
+					type.decIndex( step[ dim ] );
+				}
 			}
 			else
 			{
 				// left the image
-				isOutside = true;
-				outsideStrategy.initOutside(  );
+				isOutOfBounds = true;
+				outOfBoundsStrategy.initOutOfBOunds(  );
 			}
 		}
-		//link.bck( dim );
 	}
 
 	@Override
 	public void setPosition( final int[] position )
 	{
 		// save current state
-		final boolean wasOutside = isOutside;
-		isOutside = false;
+		final boolean wasOutOfBounds = isOutOfBounds;
+		isOutOfBounds = false;
 		
 		// update positions and check if we are inside the image
 		for ( int d = 0; d < numDimensions; d++ )
@@ -245,31 +275,33 @@ public class ArrayLocalizableByDimOutsideCursor<T extends Type<T>> extends Array
 			
 			if ( position[ d ] < 0 || position[ d ] >= dimensions[ d ])
 			{
-				// we are outside of the image
-				isOutside = true;
+				// we are out of image bounds
+				isOutOfBounds = true;
 			}
 		}
 		
-		if ( isOutside )
+		if ( isOutOfBounds )
 		{
-			// new location is outside the image
+			// new location is out of image bounds
 		
-			if ( wasOutside ) // just moved outside of the image
-				outsideStrategy.notifyOutside(  );
+			if ( wasOutOfBounds ) // just moved out of image bounds
+				outOfBoundsStrategy.notifyOutOfBOunds(  );
 			else // we left the image with this setPosition() call
-				outsideStrategy.initOutside(  );
+				outOfBoundsStrategy.initOutOfBOunds(  );
 		}
 		else
 		{
 			// new location is inside the image
-			
-			if ( wasOutside ) // we reenter the image with this setPosition() call
-				type.updateContainer( this );
-			
+						
 			// get the offset inside the image
-			type.updateIndex( container.getPos( position ) );			
+			type.updateIndex( container.getPos( position ) );
+			if ( numDimensions == 3 )
+				slice = position[ 2 ];
+			else
+				slice = 0;
+			
+			type.updateContainer( this );			
 		}
-		//link.setPosition( position );
 	}
 
 	@Override
@@ -277,8 +309,8 @@ public class ArrayLocalizableByDimOutsideCursor<T extends Type<T>> extends Array
 	{
 		this.position[ dim ] = position;
 
-		// we are outside the image or in the initial starting position
-		if ( isOutside || type.getIndex() == -1 )
+		// we areout of image bounds or in the initial starting position
+		if ( isOutOfBounds || type.getIndex() == -1 )
 		{
 			// if just this dimensions moves inside does not necessarily mean that
 			// the other ones do as well, so we have to do a full check here
@@ -287,15 +319,23 @@ public class ArrayLocalizableByDimOutsideCursor<T extends Type<T>> extends Array
 		else if ( position < 0 || position >= dimensions[ dim ]) // we can just check in this dimension if it is still inside
 		{
 			// cursor has left the image
-			isOutside = true;
-			outsideStrategy.initOutside();
+			isOutOfBounds = true;
+			outOfBoundsStrategy.initOutOfBOunds(  );
 			return;
 		}
 		else
 		{
 			// jumped around inside the image
-			type.updateIndex( container.getPos( this.position ) );
+			
+			if ( dim == 2 )
+			{
+				slice = position;
+				type.updateContainer( this );
+			}
+			else
+			{
+				type.updateIndex( container.getPos( this.position ) );
+			}
 		}		
-		//link.setPosition(position, dim);
 	}
 }

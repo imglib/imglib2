@@ -107,9 +107,9 @@ public class ImageTransform<T extends Type<T>> implements OutputAlgorithm<T>
 			errorMessage = "AffineTransform: [Image<T> img] is null.";
 			return false;
 		}
-		else if ( interpolatorFactory.getOutsideStrategyFactory() == null )
+		else if ( interpolatorFactory.getOutOfBoundsStrategyFactory() == null )
 		{
-			errorMessage = "AffineTransform: [OutsideStrategyFactory<T> of interpolatorFactory] is null.";
+			errorMessage = "AffineTransform: [OutOfBoundsStrategyFactory<T> of interpolatorFactory] is null.";
 			return false;
 		}
 		else if ( interpolatorFactory == null )

@@ -27,13 +27,13 @@
  *
  * @author Stephan Preibisch & Stephan Saalfeld
  */
-package mpicbg.imglib.outside;
+package mpicbg.imglib.outofbounds;
 
 import mpicbg.imglib.algorithm.math.MathLib;
 import mpicbg.imglib.cursor.LocalizableCursor;
 import mpicbg.imglib.type.numeric.RealType;
 
-public class OutsideStrategyMirrorExpWindowingFactory<T extends RealType<T>> extends OutsideStrategyFactory<T>
+public class OutOfBoundsStrategyMirrorExpWindowingFactory<T extends RealType<T>> extends OutOfBoundsStrategyFactory<T>
 {
 	int[] fadeOutDistance = null;
 	int minFadeOutDistance = 6;
@@ -41,19 +41,19 @@ public class OutsideStrategyMirrorExpWindowingFactory<T extends RealType<T>> ext
 	float commonRelativeDistanceFadeOut = Float.NaN;
 	float exponent = 10;
 
-	public OutsideStrategyMirrorExpWindowingFactory( ) { }
+	public OutOfBoundsStrategyMirrorExpWindowingFactory( ) { }
 	
-	public OutsideStrategyMirrorExpWindowingFactory( final float relativeDistanceFadeOut ) 
+	public OutOfBoundsStrategyMirrorExpWindowingFactory( final float relativeDistanceFadeOut ) 
 	{ 
 		this.commonRelativeDistanceFadeOut = relativeDistanceFadeOut; 
 	}
 
-	public OutsideStrategyMirrorExpWindowingFactory( final int fadeOutDistance ) 
+	public OutOfBoundsStrategyMirrorExpWindowingFactory( final int fadeOutDistance ) 
 	{ 
 		this.commonFadeOutDistance = fadeOutDistance; 
 	}
 
-	public OutsideStrategyMirrorExpWindowingFactory( final int[] fadeOutDistance ) 
+	public OutOfBoundsStrategyMirrorExpWindowingFactory( final int[] fadeOutDistance ) 
 	{
 		this.fadeOutDistance = fadeOutDistance.clone();
 	}
@@ -74,7 +74,7 @@ public class OutsideStrategyMirrorExpWindowingFactory<T extends RealType<T>> ext
 	public int[] getFadeOutDistance() { return fadeOutDistance.clone(); }
 
 	@Override
-	public OutsideStrategyMirrorExpWindowing<T> createStrategy( final LocalizableCursor<T> cursor )
+	public OutOfBoundsStrategyMirrorExpWindowing<T> createStrategy( final LocalizableCursor<T> cursor )
 	{
 		if ( Float.isNaN(commonRelativeDistanceFadeOut) )
 		{					
@@ -102,7 +102,7 @@ public class OutsideStrategyMirrorExpWindowingFactory<T extends RealType<T>> ext
 				fadeOutDistance[ d ] = Math.max( minFadeOutDistance, MathLib.round( cursor.getImage().getDimension( d ) * commonRelativeDistanceFadeOut ) / 2 );
 		}
 		
-		return new OutsideStrategyMirrorExpWindowing<T>( cursor, fadeOutDistance, exponent );
+		return new OutOfBoundsStrategyMirrorExpWindowing<T>( cursor, fadeOutDistance, exponent );
 	}
 
 }

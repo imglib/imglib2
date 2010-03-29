@@ -31,16 +31,16 @@ package mpicbg.imglib.interpolation.linear;
 
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.interpolation.InterpolatorFactory;
-import mpicbg.imglib.outside.OutsideStrategyFactory;
+import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
 import mpicbg.imglib.type.numeric.RealType;
 
 public class LinearInterpolator3D<T extends RealType<T>> extends LinearInterpolator<T>
 {
 	final int tmpLocation[];
 
-	protected LinearInterpolator3D( final Image<T> img, final InterpolatorFactory<T> interpolatorFactory, final OutsideStrategyFactory<T> outsideStrategyFactory )
+	protected LinearInterpolator3D( final Image<T> img, final InterpolatorFactory<T> interpolatorFactory, final OutOfBoundsStrategyFactory<T> outOfBoundsStrategyFactory )
 	{
-		super( img, interpolatorFactory, outsideStrategyFactory, false );
+		super( img, interpolatorFactory, outOfBoundsStrategyFactory, false );
 
 		tmpLocation = new int[ 3 ];				
 		moveTo( position );		

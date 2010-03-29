@@ -27,57 +27,17 @@
  *
  * @author Stephan Preibisch & Stephan Saalfeld
  */
-package mpicbg.imglib.outside;
+package mpicbg.imglib.outofbounds;
 
-import mpicbg.imglib.cursor.Cursor;
+import mpicbg.imglib.cursor.LocalizableCursor;
 import mpicbg.imglib.type.Type;
 
-public abstract class OutsideStrategy<T extends Type<T>>
+public class OutOfBoundsStrategyPeriodicFactory<T extends Type<T>> extends OutOfBoundsStrategyFactory<T>
 {
-	final Cursor<T> parentCursor;
-	
-	public OutsideStrategy( final Cursor<T> parentCursor )
+	@Override
+	public OutOfBoundsStrategyPeriodic<T> createStrategy( final LocalizableCursor<T> cursor )
 	{
-		this.parentCursor = parentCursor;
+		return new OutOfBoundsStrategyPeriodic<T>( cursor );
 	}
-	
-	/*
-	 * Returns a link to the parent Cursor of this Strategy
-	 */
-	public Cursor<T> getParentCursor() { return parentCursor; }
 
-	/*
-	 * This method is fired by the parent cursor in the case that it moves while being outside the image
-	 */
-	public abstract void notifyOutside();
-
-	/*
-	 * This method is fired by the parent cursor in the case that it moves while being outside the image
-	 */
-	public abstract void notifyOutside( int steps, int dim );
-
-	/*
-	 * This method is fired by the parent cursor in the case that it moves while being outside the image
-	 */
-	public abstract void notifyOutsideFwd( int dim );
-
-	/*
-	 * This method is fired by the parent cursor in the case that it moves while being outside the image
-	 */
-	public abstract void notifyOutsideBck( int dim );
-	
-	/*
-	 * This method is fired by the parent cursor in the case that it leaves the image
-	 */
-	public abstract void initOutside();
-	
-	/*
-	 * Returns the Type that stores the current value of the Outside Strategy
-	 */
-	public abstract T getType();
-	
-	/*
-	 * Closed possibly created cursors or images
-	 */
-	public abstract void close();
 }

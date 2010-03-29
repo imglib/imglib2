@@ -32,10 +32,10 @@ package mpicbg.imglib.cursor.array;
 import mpicbg.imglib.container.array.Array3D;
 import mpicbg.imglib.cursor.LocalizableByDimCursor3D;
 import mpicbg.imglib.image.Image;
-import mpicbg.imglib.outside.OutsideStrategyFactory;
+import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
 import mpicbg.imglib.type.Type;
 
-public class Array3DLocalizableByDimOutsideCursor<T extends Type<T>> extends ArrayLocalizableByDimOutsideCursor<T> implements LocalizableByDimCursor3D<T>
+public class Array3DLocalizableByDimOutOfBoundsCursor<T extends Type<T>> extends ArrayLocalizableByDimOutOfBoundsCursor<T> implements LocalizableByDimCursor3D<T>
 {
 	protected int x = -1, y = 0, z = 0;
 	final int widthMinus1, heightMinus1, depthMinus1;
@@ -43,9 +43,9 @@ public class Array3DLocalizableByDimOutsideCursor<T extends Type<T>> extends Arr
 	final int stepY, stepZ;
 	final Array3D<T,?> container;
 
-	public Array3DLocalizableByDimOutsideCursor( final Array3D<T,?> container, final Image<T> image, final T type, final OutsideStrategyFactory<T> outsideStrategyFactory ) 
+	public Array3DLocalizableByDimOutOfBoundsCursor( final Array3D<T,?> container, final Image<T> image, final T type, final OutOfBoundsStrategyFactory<T> outOfBoundsStrategyFactory ) 
 	{
-		super( container, image, type, outsideStrategyFactory );
+		super( container, image, type, outOfBoundsStrategyFactory );
 		
 		this.container = container;
 		
@@ -66,7 +66,7 @@ public class Array3DLocalizableByDimOutsideCursor<T extends Type<T>> extends Arr
 	@Override
 	public void fwd()
 	{ 
-		if ( !isOutside )
+		if ( !isOutOfBounds )
 		{
 			//++type.i;
 			type.incIndex();
@@ -88,10 +88,10 @@ public class Array3DLocalizableByDimOutsideCursor<T extends Type<T>> extends Arr
 			}
 			else
 			{
-				// if it did not return we moved outside the image
-				isOutside = true;
+				// if it did not return we moved out of image bounds
+				isOutOfBounds = true;
 				++x;
-				outsideStrategy.initOutside(  );				
+				outOfBoundsStrategy.initOutOfBOunds(  );				
 			}
 		}
 	}
@@ -106,10 +106,10 @@ public class Array3DLocalizableByDimOutsideCursor<T extends Type<T>> extends Arr
 	@Override
 	public void reset()
 	{ 
-		if ( outsideStrategy == null )
+		if ( outOfBoundsStrategy == null )
 			return;
 		
-		isOutside = false;
+		isOutOfBounds = false;
 		isClosed = false;
 		x = -1;
 		y = z = 0;
@@ -141,7 +141,7 @@ public class Array3DLocalizableByDimOutsideCursor<T extends Type<T>> extends Arr
 		else if ( dim == 2 )
 			return z;
 		
-		System.err.println("Array3DLocalizableByDimOutsideCursor.getPosition( int dim ): There is no dimension " + dim );
+		System.err.println("Array3DLocalizableByDimOutOfBoundsCursor.getPosition( int dim ): There is no dimension " + dim );
 		return -1;
 	}
 
@@ -155,18 +155,18 @@ public class Array3DLocalizableByDimOutsideCursor<T extends Type<T>> extends Arr
 		else if ( dim == 2 )
 			fwdZ();
 		else
-			System.err.println("Array3DLocalizableByDimOutsideCursor.fwd( int dim ): There is no dimension " + dim );
+			System.err.println("Array3DLocalizableByDimOutOfBoundsCursor.fwd( int dim ): There is no dimension " + dim );
 		
 		/*
 		position[ dim ]++;
 
-		if ( isOutside )
+		if ( isOutOfBounds )
 		{
 			// reenter the image?
 			if ( position[ dim ] == 0 )
 				setPosition( position );
-			else // moved outside of the image
-				outsideStrategy.notifyOutside( type );
+			else // moved out of image bounds
+				outOfBoundsStrategy.notifyOutOfBounds( type );
 		}
 		else
 		{			
@@ -178,8 +178,8 @@ public class Array3DLocalizableByDimOutsideCursor<T extends Type<T>> extends Arr
 			else
 			{
 				// left the image
-				isOutside = true;
-				outsideStrategy.initOutside( type );
+				isOutOfBounds = true;
+				outOfBoundsStrategy.initOutOfBounds( type );
 			}
 		}
 		 */
@@ -188,17 +188,17 @@ public class Array3DLocalizableByDimOutsideCursor<T extends Type<T>> extends Arr
 	@Override
 	public void fwdX()
 	{
-		if ( isOutside )
+		if ( isOutOfBounds )
 		{
 			if ( x == -1 )
 			{
 				// possibly moved back into the image, depending on the other dimensions
 				setPositionX( 0 );
 			}
-			else // moved outside of the image
+			else // moved out of image bounds
 			{
 				++x;
-				outsideStrategy.notifyOutsideFwd( 0 );
+				outOfBoundsStrategy.notifyOutOfBOundsFwd( 0 );
 			}
 		}
 		else
@@ -213,8 +213,8 @@ public class Array3DLocalizableByDimOutsideCursor<T extends Type<T>> extends Arr
 			{
 				// left the image
 				++x;
-				isOutside = true;
-				outsideStrategy.initOutside(  );				
+				isOutOfBounds = true;
+				outOfBoundsStrategy.initOutOfBOunds(  );				
 			}
 		}
 	}
@@ -222,17 +222,17 @@ public class Array3DLocalizableByDimOutsideCursor<T extends Type<T>> extends Arr
 	@Override
 	public void fwdY()
 	{
-		if ( isOutside )
+		if ( isOutOfBounds )
 		{
 			if ( y == -1 )
 			{
 				// possibly moved back into the image, depending on the other dimensions
 				setPositionY( 0 );
 			}
-			else // moved outside of the image
+			else // moved moved out of image bounds
 			{
 				++y;
-				outsideStrategy.notifyOutsideFwd( 1 );
+				outOfBoundsStrategy.notifyOutOfBOundsFwd( 1 );
 			}
 		}
 		else
@@ -247,8 +247,8 @@ public class Array3DLocalizableByDimOutsideCursor<T extends Type<T>> extends Arr
 			{
 				// left the image
 				++y;
-				isOutside = true;
-				outsideStrategy.initOutside(  );				
+				isOutOfBounds = true;
+				outOfBoundsStrategy.initOutOfBOunds(  );				
 			}
 		}
 	}
@@ -256,17 +256,17 @@ public class Array3DLocalizableByDimOutsideCursor<T extends Type<T>> extends Arr
 	@Override
 	public void fwdZ()
 	{
-		if ( isOutside )
+		if ( isOutOfBounds )
 		{
 			if ( z == -1 )
 			{
 				// possibly moved back into the image, depending on the other dimensions
 				setPositionZ( 0 );
 			}
-			else // moved outside of the image
+			else // moved out of image bounds
 			{
 				++z;
-				outsideStrategy.notifyOutsideFwd( 2 );
+				outOfBoundsStrategy.notifyOutOfBOundsFwd( 2 );
 			}
 		}
 		else
@@ -281,8 +281,8 @@ public class Array3DLocalizableByDimOutsideCursor<T extends Type<T>> extends Arr
 			{
 				// left the image
 				++z;
-				isOutside = true;
-				outsideStrategy.initOutside(  );				
+				isOutOfBounds = true;
+				outOfBoundsStrategy.initOutOfBOunds(  );				
 			}
 		}
 	}
@@ -297,7 +297,7 @@ public class Array3DLocalizableByDimOutsideCursor<T extends Type<T>> extends Arr
 		else if ( dim == 2 )
 			moveZ( steps );
 		else
-			System.err.println("Array3DLocalizableByDimOutsideCursor.move( int dim ): There is no dimension " + dim );
+			System.err.println("Array3DLocalizableByDimOutOfBoundsCursor.move( int dim ): There is no dimension " + dim );
 		
 	}
 	
@@ -322,14 +322,14 @@ public class Array3DLocalizableByDimOutsideCursor<T extends Type<T>> extends Arr
 	{
 		x += steps;
 		
-		if ( isOutside )
+		if ( isOutOfBounds )
 		{
 			if ( x > -1 && x < width )
 			{
 				// possibly moved back into the image, depending on the other dimensions
 				if ( y < 0 || y >= height || z < 0 || z >= depth )
 				{
-					outsideStrategy.notifyOutside( steps, 0 );
+					outOfBoundsStrategy.notifyOutOfBOunds( steps, 0 );
 				}
 				else
 				{
@@ -338,12 +338,12 @@ public class Array3DLocalizableByDimOutsideCursor<T extends Type<T>> extends Arr
 					// new location is inside the image			
 					type.updateContainer( this );
 					
-					isOutside = false;					
+					isOutOfBounds = false;					
 				}
 			}
-			else // moved outside of the image
+			else // moved out of image bounds
 			{
-				outsideStrategy.notifyOutside( steps, 0 );
+				outOfBoundsStrategy.notifyOutOfBOunds( steps, 0 );
 			}
 		}
 		else
@@ -356,8 +356,8 @@ public class Array3DLocalizableByDimOutsideCursor<T extends Type<T>> extends Arr
 			else
 			{
 				// left the image
-				isOutside = true;
-				outsideStrategy.initOutside(  );				
+				isOutOfBounds = true;
+				outOfBoundsStrategy.initOutOfBOunds(  );				
 			}
 		}
 	}
@@ -367,14 +367,14 @@ public class Array3DLocalizableByDimOutsideCursor<T extends Type<T>> extends Arr
 	{
 		y += steps;
 		
-		if ( isOutside )
+		if ( isOutOfBounds )
 		{
 			if ( y > -1 && y < height)
 			{
 				// possibly moved back into the image, depending on the other dimensions
 				if ( x < 0 || x >= width || z < 0 || z >= depth )
 				{
-					outsideStrategy.notifyOutside( steps, 1 );
+					outOfBoundsStrategy.notifyOutOfBOunds( steps, 1 );
 				}
 				else
 				{
@@ -383,12 +383,12 @@ public class Array3DLocalizableByDimOutsideCursor<T extends Type<T>> extends Arr
 					// new location is inside the image			
 					type.updateContainer( this );
 					
-					isOutside = false;					
+					isOutOfBounds = false;					
 				}
 			}
 			else
 			{
-				outsideStrategy.notifyOutside( steps, 1 );
+				outOfBoundsStrategy.notifyOutOfBOunds( steps, 1 );
 			}
 		}
 		else
@@ -401,8 +401,8 @@ public class Array3DLocalizableByDimOutsideCursor<T extends Type<T>> extends Arr
 			else
 			{
 				// left the image
-				isOutside = true;
-				outsideStrategy.initOutside(  );				
+				isOutOfBounds = true;
+				outOfBoundsStrategy.initOutOfBOunds(  );				
 			}
 		}
 	}
@@ -412,14 +412,14 @@ public class Array3DLocalizableByDimOutsideCursor<T extends Type<T>> extends Arr
 	{
 		z += steps;
 		
-		if ( isOutside )
+		if ( isOutOfBounds )
 		{
 			if ( z > -1 && z < depth )
 			{
 				// possibly moved back into the image, depending on the other dimensions
 				if ( y < 0 || y >= height || x < 0 || x >= width )
 				{
-					outsideStrategy.notifyOutside( steps, 2 );
+					outOfBoundsStrategy.notifyOutOfBOunds( steps, 2 );
 				}
 				else
 				{
@@ -428,12 +428,12 @@ public class Array3DLocalizableByDimOutsideCursor<T extends Type<T>> extends Arr
 					// new location is inside the image			
 					type.updateContainer( this );
 					
-					isOutside = false;					
+					isOutOfBounds = false;					
 				}
 			}
 			else
 			{
-				outsideStrategy.notifyOutside( steps, 2 );
+				outOfBoundsStrategy.notifyOutOfBOunds( steps, 2 );
 			}
 		}
 		else
@@ -446,8 +446,8 @@ public class Array3DLocalizableByDimOutsideCursor<T extends Type<T>> extends Arr
 			else
 			{
 				// left the image
-				isOutside = true;
-				outsideStrategy.initOutside(  );				
+				isOutOfBounds = true;
+				outOfBoundsStrategy.initOutOfBOunds(  );				
 			}
 		}
 	}
@@ -468,17 +468,17 @@ public class Array3DLocalizableByDimOutsideCursor<T extends Type<T>> extends Arr
 	@Override
 	public void bckX()
 	{
-		if ( isOutside )
+		if ( isOutOfBounds )
 		{
 			if ( x == width )
 			{
 				// possibly moved back into the image, depending on the other dimensions
 				setPositionX( widthMinus1 );
 			}
-			else // moved outside of the image
+			else // moved out of image bounds
 			{
 				--x;
-				outsideStrategy.notifyOutsideBck( 0 );
+				outOfBoundsStrategy.notifyOutOfBOundsBck( 0 );
 			}
 		}
 		else
@@ -493,8 +493,8 @@ public class Array3DLocalizableByDimOutsideCursor<T extends Type<T>> extends Arr
 			else
 			{
 				// left the image
-				isOutside = true;
-				outsideStrategy.initOutside(  );				
+				isOutOfBounds = true;
+				outOfBoundsStrategy.initOutOfBOunds(  );				
 			}
 		}
 	}
@@ -502,17 +502,17 @@ public class Array3DLocalizableByDimOutsideCursor<T extends Type<T>> extends Arr
 	@Override
 	public void bckY()
 	{
-		if ( isOutside )
+		if ( isOutOfBounds )
 		{
 			if ( y == height )
 			{
 				// possibly moved back into the image, depending on the other dimensions
 				setPositionY( heightMinus1 );
 			}
-			else // moved outside of the image
+			else // moved out of image bounds
 			{
 				--y;
-				outsideStrategy.notifyOutsideBck( 1 );
+				outOfBoundsStrategy.notifyOutOfBOundsBck( 1 );
 			}
 		}
 		else
@@ -527,8 +527,8 @@ public class Array3DLocalizableByDimOutsideCursor<T extends Type<T>> extends Arr
 			else
 			{
 				// left the image
-				isOutside = true;
-				outsideStrategy.initOutside(  );				
+				isOutOfBounds = true;
+				outOfBoundsStrategy.initOutOfBOunds(  );				
 			}
 		}
 	}
@@ -536,17 +536,17 @@ public class Array3DLocalizableByDimOutsideCursor<T extends Type<T>> extends Arr
 	@Override
 	public void bckZ()
 	{
-		if ( isOutside )
+		if ( isOutOfBounds )
 		{
 			if ( z == depth )
 			{
 				// possibly moved back into the image, depending on the other dimensions
 				setPositionZ( depthMinus1 );
 			}
-			else // moved outside of the image
+			else // moved out of image bounds
 			{
 				--z;
-				outsideStrategy.notifyOutsideBck( 2 );
+				outOfBoundsStrategy.notifyOutOfBOundsBck( 2 );
 			}
 		}
 		else
@@ -561,8 +561,8 @@ public class Array3DLocalizableByDimOutsideCursor<T extends Type<T>> extends Arr
 			else
 			{
 				// left the image
-				isOutside = true;
-				outsideStrategy.initOutside(  );				
+				isOutOfBounds = true;
+				outOfBoundsStrategy.initOutOfBOunds(  );				
 			}
 		}
 	}
@@ -584,22 +584,22 @@ public class Array3DLocalizableByDimOutsideCursor<T extends Type<T>> extends Arr
 			type.updateIndex( container.getPos( x, y, z ) );
 			
 			// new location is inside the image			
-			if ( isOutside ) // we reenter the image with this setPosition() call
+			if ( isOutOfBounds ) // we reenter the image with this setPosition() call
 				type.updateContainer( this );
 			
-			isOutside = false;
+			isOutOfBounds = false;
 		}
 		else
 		{
-			// new location is outside the image			
-			if ( isOutside ) // just moved outside the image
+			// new location is out of image bounds
+			if ( isOutOfBounds ) // just moved out of image bounds
 			{
-				outsideStrategy.notifyOutside(  );
+				outOfBoundsStrategy.notifyOutOfBOunds(  );
 			}
 			else // we left the image with this setPosition() call
 			{
-				isOutside = true;
-				outsideStrategy.initOutside(  );
+				isOutOfBounds = true;
+				outOfBoundsStrategy.initOutOfBOunds(  );
 			}
 		}
 	}
@@ -607,8 +607,8 @@ public class Array3DLocalizableByDimOutsideCursor<T extends Type<T>> extends Arr
 	@Override
 	public void setPositionX( final int pos )
 	{		
-		// we are outside the image or in the initial starting position
-		if ( isOutside || type.getIndex() == -1 )
+		// we are out of image bounds or in the initial starting position
+		if ( isOutOfBounds || type.getIndex() == -1 )
 		{
 			// if just this dimensions moves inside does not necessarily mean that
 			// the other ones do as well, so we have to do a full check here
@@ -623,17 +623,17 @@ public class Array3DLocalizableByDimOutsideCursor<T extends Type<T>> extends Arr
 		{
 			x = pos;
 
-			// moved outside the image
-			isOutside = true;
-			outsideStrategy.initOutside(  );
+			// moved out of image bounds
+			isOutOfBounds = true;
+			outOfBoundsStrategy.initOutOfBOunds(  );
 		}
 	}
 
 	@Override
 	public void setPositionY( final int pos )
 	{
-		// we are outside the image or in the initial starting position
-		if ( isOutside || type.getIndex() == -1 )
+		// we are out of image bounds or in the initial starting position
+		if ( isOutOfBounds || type.getIndex() == -1 )
 		{
 			// if just this dimensions moves inside does not necessarily mean that
 			// the other ones do as well, so we have to do a full check here
@@ -648,17 +648,17 @@ public class Array3DLocalizableByDimOutsideCursor<T extends Type<T>> extends Arr
 		{
 			y = pos;
 
-			// moved outside the image
-			isOutside = true;
-			outsideStrategy.initOutside(  );
+			// moved out of image bounds
+			isOutOfBounds = true;
+			outOfBoundsStrategy.initOutOfBOunds(  );
 		}
 	}
 
 	@Override
 	public void setPositionZ( final int pos )
 	{
-		// we are outside the image or in the initial starting position
-		if ( isOutside || type.getIndex() == -1 )
+		// we are out of image bounds or in the initial starting position
+		if ( isOutOfBounds || type.getIndex() == -1 )
 		{
 			// if just this dimensions moves inside does not necessarily mean that
 			// the other ones do as well, so we have to do a full check here
@@ -673,9 +673,9 @@ public class Array3DLocalizableByDimOutsideCursor<T extends Type<T>> extends Arr
 		{
 			z = pos;
 
-			// moved outside the image
-			isOutside = true;
-			outsideStrategy.initOutside(  );
+			// moved out of image bounds
+			isOutOfBounds = true;
+			outOfBoundsStrategy.initOutOfBOunds(  );
 		}
 	}
 
@@ -689,7 +689,7 @@ public class Array3DLocalizableByDimOutsideCursor<T extends Type<T>> extends Arr
 		else if ( dim == 2 )
 			setPositionZ( position );
 		else
-			System.err.println("Array3DLocalizableByDimOutsideCursor.setPosition( int dim ): There is no dimension " + dim );
+			System.err.println("Array3DLocalizableByDimOutOfBoundsCursor.setPosition( int dim ): There is no dimension " + dim );
 	}
 	
 	@Override

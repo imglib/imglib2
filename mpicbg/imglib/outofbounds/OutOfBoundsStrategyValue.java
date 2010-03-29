@@ -27,58 +27,53 @@
  *
  * @author Stephan Preibisch & Stephan Saalfeld
  */
-package mpicbg.imglib.outside;
+package mpicbg.imglib.outofbounds;
 
 import mpicbg.imglib.cursor.Cursor;
 import mpicbg.imglib.type.Type;
 
-public class OutsideStrategyValue<T extends Type<T>> extends OutsideStrategy<T>
+public class OutOfBoundsStrategyValue<T extends Type<T>> extends OutOfBoundsStrategy<T>
 {
 	final T value;
 	
-	public OutsideStrategyValue( final Cursor<T> parentCursor, final T value )
+	public OutOfBoundsStrategyValue( final Cursor<T> parentCursor, final T value )
 	{
 		super( parentCursor );
 		this.value = value;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see mpi.imglib.outside.OutsideStrategy#getType()
-	 */
 	@Override
 	final public T getType(){ return value; }
 
-	/*
-	 * Outside strategy value has nothing to do when the parent cursor moves
-	 * while being outside the image
-	 * @see mpi.imglib.outside.OutsideStrategy#notifyOutside()
-	 */
-	@Override
-	final public void notifyOutside() {}
-
-	/*
-	 * Outside strategy value has nothing to do when the parent cursor moves
-	 * while being outside the image
-	 * @see mpi.imglib.outside.OutsideStrategy#notifyOutside()
-	 */
-	@Override
-	final public void notifyOutside( final int dim, final int steps ) {}
-
-	@Override
-	final public void notifyOutsideFwd( final int dim ) {}
-
-	@Override
-	final public void notifyOutsideBck( final int dim ) {}
-	
-	/*
-	 * Outside strategy value updates the array of the Cursor type to the constant value
-	 * and sets the index to 0
+	/**
+	 * Has nothing to do when the parent cursor moves while being out of image bounds
 	 * 
-	 * @see mpi.imglib.outside.OutsideStrategy#initOutside()
+	 * @see mpicbg.imglib.outofbounds.OutOfBoundsStrategy#notifyOutOfBounds()
 	 */
 	@Override
-	final public void initOutside() {}
+	final public void notifyOutOfBOunds() {}
+
+	/**
+	 * Has nothing to do when the parent cursor moves while being out of image bounds
+	 * 
+	 * @see mpicbg.imglib.outofbounds.OutOfBoundsStrategy#notifyOutOfBOunds(int, int)
+	 */
+	@Override
+	final public void notifyOutOfBOunds( final int dim, final int steps ) {}
+
+	@Override
+	final public void notifyOutOfBOundsFwd( final int dim ) {}
+
+	@Override
+	final public void notifyOutOfBOundsBck( final int dim ) {}
+	
+	/**
+	 * Updates the array of the Cursor type to the constant value and sets the index to 0
+	 * 
+	 * @see mpicbg.imglib.outofbounds.OutOfBoundsStrategy#initOutOfBOunds()
+	 */
+	@Override
+	final public void initOutOfBOunds() {}
 	
 	@Override
 	final public void close() {}

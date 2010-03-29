@@ -32,10 +32,10 @@ package mpicbg.imglib.container.array;
 import mpicbg.imglib.container.Container3D;
 import mpicbg.imglib.container.basictypecontainer.DataAccess;
 import mpicbg.imglib.cursor.array.Array3DLocalizableByDimCursor;
-import mpicbg.imglib.cursor.array.Array3DLocalizableByDimOutsideCursor;
+import mpicbg.imglib.cursor.array.Array3DLocalizableByDimOutOfBoundsCursor;
 import mpicbg.imglib.cursor.array.Array3DLocalizableCursor;
 import mpicbg.imglib.image.Image;
-import mpicbg.imglib.outside.OutsideStrategyFactory;
+import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
 import mpicbg.imglib.type.Type;
 
 public class Array3D<T extends Type<T>, A extends DataAccess> extends Array<T,A> implements Container3D<T,A>
@@ -66,9 +66,9 @@ public class Array3D<T extends Type<T>, A extends DataAccess> extends Array<T,A>
 	}
 
 	@Override
-	public Array3DLocalizableByDimOutsideCursor<T> createLocalizableByDimCursor( final T type, final Image<T> image, final OutsideStrategyFactory<T> outsideFactory ) 
+	public Array3DLocalizableByDimOutOfBoundsCursor<T> createLocalizableByDimCursor( final T type, final Image<T> image, final OutOfBoundsStrategyFactory<T> outOfBoundsFactory ) 
 	{ 
-		Array3DLocalizableByDimOutsideCursor<T> c = new Array3DLocalizableByDimOutsideCursor<T>( this, image, type, outsideFactory );
+		Array3DLocalizableByDimOutOfBoundsCursor<T> c = new Array3DLocalizableByDimOutOfBoundsCursor<T>( this, image, type, outOfBoundsFactory );
 		return c;
 	}
 	

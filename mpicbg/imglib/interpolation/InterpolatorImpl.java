@@ -30,13 +30,14 @@
 package mpicbg.imglib.interpolation;
 
 import mpicbg.imglib.image.Image;
-import mpicbg.imglib.outside.OutsideStrategyFactory;
+import mpicbg.imglib.outofbounds.OutOfBoundsStrategy;
+import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
 import mpicbg.imglib.type.Type;
 
 public abstract class InterpolatorImpl<T extends Type<T>> implements Interpolator<T>
 {
 	final protected InterpolatorFactory<T> interpolatorFactory;
-	final protected OutsideStrategyFactory<T> outsideStrategyFactory;
+	final protected OutOfBoundsStrategyFactory<T> outOfBoundsStrategyFactory;
 	final protected Image<T> img;
 
 	// the location of the interpolator in the image
@@ -47,10 +48,10 @@ public abstract class InterpolatorImpl<T extends Type<T>> implements Interpolato
 	 */
 	final protected int numDimensions;
 	
-	protected InterpolatorImpl( final Image<T> img, final InterpolatorFactory<T> interpolatorFactory, final OutsideStrategyFactory<T> outsideStrategyFactory )
+	protected InterpolatorImpl( final Image<T> img, final InterpolatorFactory<T> interpolatorFactory, final OutOfBoundsStrategyFactory<T> outOfBoundsStrategyFactory )
 	{
 		this.interpolatorFactory = interpolatorFactory;
-		this.outsideStrategyFactory = outsideStrategyFactory;
+		this.outOfBoundsStrategyFactory = outOfBoundsStrategyFactory;
 		this.img = img;
 		this.numDimensions = img.getNumDimensions();
 	
@@ -67,12 +68,12 @@ public abstract class InterpolatorImpl<T extends Type<T>> implements Interpolato
 	public InterpolatorFactory<T> getInterpolatorFactory(){ return interpolatorFactory; }
 	
 	/**
-	 * Returns the typed outside strategy used for interpolation
+	 * Returns the {@link OutOfBoundsStrategyFactory} used for interpolation
 	 * 
-	 * @return - the outside strategy
+	 * @return - the {@link OutOfBoundsStrategyFactory}
 	 */
 	@Override
-	public OutsideStrategyFactory<T> getOutsideStrategyFactory() { return outsideStrategyFactory; }
+	public OutOfBoundsStrategyFactory<T> getOutOfBoundsStrategyFactory() { return outOfBoundsStrategyFactory; }
 	
 	/**
 	 * Returns the typed image the interpolator is working on

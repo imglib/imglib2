@@ -48,7 +48,7 @@ import mpicbg.imglib.cursor.vector.Dimensionality;
 import mpicbg.imglib.image.display.Display;
 import mpicbg.imglib.interpolation.Interpolator;
 import mpicbg.imglib.interpolation.InterpolatorFactory;
-import mpicbg.imglib.outside.OutsideStrategyFactory;
+import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
 import mpicbg.imglib.type.Type;
 import mpicbg.imglib.type.label.FakeType;
 
@@ -223,12 +223,12 @@ public class Image<T extends Type<T>> implements ImageProperties, Dimensionality
 	}
 
 	/**
-	 * Creates a {@link LocalizableByDimCursor} which is able to move freely within and OUTSIDE of the {@link Image}
-	 * given a {@link OutsideStrategyFactory} which defines the behaviour outside the {@link Image}.
-	 * @param factory - the {@link OutsideStrategyFactory}
+	 * Creates a {@link LocalizableByDimCursor} which is able to move freely within and out of {@link Image} bounds.
+	 * given a {@link OutOfBoundsStrategyFactory} which defines the behaviour out of {@link Image} bounds.
+	 * @param factory - the {@link OutOfBoundsStrategyFactory}
 	 * @return - a {@link LocalizableByDimCursor} that can leave the {@link Image}
 	 */
-	public LocalizableByDimCursor<T> createLocalizableByDimCursor( OutsideStrategyFactory<T> factory )
+	public LocalizableByDimCursor<T> createLocalizableByDimCursor( OutOfBoundsStrategyFactory<T> factory )
 	{
 		final T type = this.type.createType( container );
 		LocalizableByDimCursor<T> cursor = container.createLocalizableByDimCursor( type, this, factory );

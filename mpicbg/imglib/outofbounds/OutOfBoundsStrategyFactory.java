@@ -27,17 +27,35 @@
  *
  * @author Stephan Preibisch & Stephan Saalfeld
  */
-package mpicbg.imglib.outside;
+package mpicbg.imglib.outofbounds;
 
+import mpicbg.imglib.Factory;
 import mpicbg.imglib.cursor.LocalizableCursor;
 import mpicbg.imglib.type.Type;
 
-public class OutsideStrategyMirrorFactory<T extends Type<T>> extends OutsideStrategyFactory<T>
+public abstract class OutOfBoundsStrategyFactory<T extends Type<T>> implements Factory
 {
+	public abstract OutOfBoundsStrategy<T> createStrategy( LocalizableCursor<T> cursor ); 
+	
 	@Override
-	public OutsideStrategyMirror<T> createStrategy( final LocalizableCursor<T> cursor )
+	public String getErrorMessage()
 	{
-		return new OutsideStrategyMirror<T>( cursor );
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void printProperties()
+	{
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void setParameters(String configuration)
+	{
+		// TODO Auto-generated method stub
+		
 	}
 
 }

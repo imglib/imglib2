@@ -31,15 +31,15 @@ package mpicbg.imglib.interpolation.linear;
 
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.interpolation.InterpolatorFactory;
-import mpicbg.imglib.outside.OutsideStrategyFactory;
+import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
 import mpicbg.imglib.type.numeric.RealType;
 import mpicbg.imglib.type.numeric.real.FloatType;
 
 public class LinearInterpolatorFactory<T extends RealType<T>> extends InterpolatorFactory<T>
 {
-	public LinearInterpolatorFactory( final OutsideStrategyFactory<T> outsideStrategyFactory )
+	public LinearInterpolatorFactory( final OutOfBoundsStrategyFactory<T> outOfBoundsStrategyFactory )
 	{
-		super(outsideStrategyFactory);
+		super(outOfBoundsStrategyFactory);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -47,19 +47,19 @@ public class LinearInterpolatorFactory<T extends RealType<T>> extends Interpolat
 	public LinearInterpolator<T> createInterpolator( final Image<T> img )
 	{
 		//if ( img.getNumDimensions() == 1 )	
-		//	return new LinearInterpolator1D<T>( img, this, outsideStrategyFactory );
+		//	return new LinearInterpolator1D<T>( img, this, outOfBoundsStrategyFactory );
 		//else if ( img.getNumDimensions() == 2 )	
-		//	return new LinearInterpolator2D<T>( img, this, outsideStrategyFactory );
+		//	return new LinearInterpolator2D<T>( img, this, outOfBoundsStrategyFactory );
 		//else 
 		if ( img.getNumDimensions() == 3 )	
 		{
 			if ( FloatType.class.isInstance( img.createType() ))
-				/* inconvertible types due to javac bug 6548436: return (LinearInterpolator<T>)new LinearInterpolator3DFloat( (Image<FloatType>)img, (LinearInterpolatorFactory<FloatType>)this, (OutsideStrategyFactory<FloatType>)outsideStrategyFactory ); */
-				return (LinearInterpolator)new LinearInterpolator3DFloat( (Image)img, (LinearInterpolatorFactory)this, (OutsideStrategyFactory)outsideStrategyFactory );
+				/* inconvertible types due to javac bug 6548436: return (LinearInterpolator<T>)new LinearInterpolator3DFloat( (Image<FloatType>)img, (LinearInterpolatorFactory<FloatType>)this, (OutOfBoundsStrategyFactory<FloatType>)outOfBoundsStrategyFactory ); */
+				return (LinearInterpolator)new LinearInterpolator3DFloat( (Image)img, (LinearInterpolatorFactory)this, (OutOfBoundsStrategyFactory)outOfBoundsStrategyFactory );
 			else
-				return new LinearInterpolator3D<T>( img, this, outsideStrategyFactory );
+				return new LinearInterpolator3D<T>( img, this, outOfBoundsStrategyFactory );
 		}
 		else
-			return new LinearInterpolator<T>( img, this, outsideStrategyFactory );			
+			return new LinearInterpolator<T>( img, this, outOfBoundsStrategyFactory );			
 	}
 }

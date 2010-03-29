@@ -27,7 +27,7 @@ import mpicbg.imglib.cursor.LocalizableCursor;
 import mpicbg.imglib.cursor.array.ArrayLocalizableCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.ImageFactory;
-import mpicbg.imglib.outside.OutsideStrategyValueFactory;
+import mpicbg.imglib.outofbounds.OutOfBoundsStrategyValueFactory;
 import mpicbg.imglib.type.label.FakeType;
 import mpicbg.imglib.type.logic.BitType;
 import mpicbg.imglib.type.numeric.RealType;
@@ -81,7 +81,7 @@ public class FloydSteinbergDithering<T extends RealType<T>> implements OutputAlg
 		final LocalizableCursor<FakeType> cursor = ArrayLocalizableCursor.createLinearCursor( dim );
 
 		// we also need a Cursors for the input, the output and the kernel image
-		final LocalizableByDimCursor<T> cursorInput = img.createLocalizableByDimCursor( new OutsideStrategyValueFactory<T>() );
+		final LocalizableByDimCursor<T> cursorInput = img.createLocalizableByDimCursor( new OutOfBoundsStrategyValueFactory<T>() );
 		final LocalizableByDimCursor<BitType> cursorOutput = result.createLocalizableByDimCursor();
 		final LocalizableCursor<FloatType> cursorKernel = errorDiffusionKernel.createLocalizableCursor();
 		

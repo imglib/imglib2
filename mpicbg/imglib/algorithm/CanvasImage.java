@@ -20,14 +20,14 @@ import mpicbg.imglib.algorithm.Benchmark;
 import mpicbg.imglib.cursor.LocalizableByDimCursor;
 import mpicbg.imglib.cursor.LocalizableCursor;
 import mpicbg.imglib.image.Image;
-import mpicbg.imglib.outside.OutsideStrategyFactory;
+import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
 import mpicbg.imglib.type.Type;
 
 public class CanvasImage<T extends Type<T>> implements OutputAlgorithm<T>, Benchmark
 {
 	final Image<T> input;
 	final Image<T> output;
-	final OutsideStrategyFactory<T> outsideFactory;
+	final OutOfBoundsStrategyFactory<T> outOfBoundsFactory;
 	final int numDimensions;
 	final int[] newSize, offset, location;
 	
@@ -40,12 +40,12 @@ public class CanvasImage<T extends Type<T>> implements OutputAlgorithm<T>, Bench
 	 * 
 	 * @param input - the input image
 	 * @param newSize - the size of the new image
-	 * @param outsideFactory - what to do when extending the image
+	 * @param outOfBoundsFactory - what to do when extending the image
 	 */
-	public CanvasImage( final Image<T> input, final int[] newSize, final int[] offset, final OutsideStrategyFactory<T> outsideFactory )
+	public CanvasImage( final Image<T> input, final int[] newSize, final int[] offset, final OutOfBoundsStrategyFactory<T> outOfBoundsFactory )
 	{
 		this.input = input;
-		this.outsideFactory = outsideFactory;
+		this.outOfBoundsFactory = outOfBoundsFactory;
 		this.numDimensions = input.getNumDimensions();
 		
 		this.newSize = newSize.clone();
@@ -66,8 +66,8 @@ public class CanvasImage<T extends Type<T>> implements OutputAlgorithm<T>, Bench
 		else
 		{
 			for ( int d = 0; d < numDimensions; ++d )
-				if ( outsideFactory == null && offset[ d ] < 0 )
-					errorMessage = "no OutsideStrategyFactory given but image size should increase, that is not possible";
+				if ( outOfBoundsFactory == null && offset[ d ] < 0 )
+					errorMessage = "no OutOfBoundsStrategyFactory given but image size should increase, that is not possible";
 
 			if ( errorMessage.length() == 0 )
 				this.output = input.createNewImage( newSize );
@@ -78,9 +78,9 @@ public class CanvasImage<T extends Type<T>> implements OutputAlgorithm<T>, Bench
 	
 	public int[] getOffset() { return offset.clone(); }
 	
-	public CanvasImage( final Image<T> input, final int[] newSize, final OutsideStrategyFactory<T> outsideFactory )
+	public CanvasImage( final Image<T> input, final int[] newSize, final OutOfBoundsStrategyFactory<T> outOfBoundsFactory )
 	{		
-		this( input, newSize, computeOffset(input, newSize), outsideFactory ); 
+		this( input, newSize, computeOffset(input, newSize), outOfBoundsFactory ); 
 	}
 	
 	private static int[] computeOffset( final Image<?> input, final int[] newSize )
@@ -95,7 +95,7 @@ public class CanvasImage<T extends Type<T>> implements OutputAlgorithm<T>, Bench
 	
 	
 	/**
-	 * This constructor can be called if the image is only cropped, then there is no {@link OutsideStrategyFactory} necessary.
+	 * This constructor can be called if the image is only cropped, then there is no {@link OutOfBoundsStrategyFactory} necessary.
 	 * It will fail if the image size is increased.
 	 *   
 	 * @param input - the input image
@@ -114,10 +114,10 @@ public class CanvasImage<T extends Type<T>> implements OutputAlgorithm<T>, Bench
 		final LocalizableCursor<T> outputCursor = output.createLocalizableCursor();
 		final LocalizableByDimCursor<T> inputCursor;
 		
-		if ( outsideFactory == null)
+		if ( outOfBoundsFactory == null)
 			inputCursor = input.createLocalizableByDimCursor( );
 		else
-			inputCursor = input.createLocalizableByDimCursor( outsideFactory );
+			inputCursor = input.createLocalizableByDimCursor( outOfBoundsFactory );
 
 		while ( outputCursor.hasNext() )
 		{

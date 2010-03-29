@@ -27,35 +27,57 @@
  *
  * @author Stephan Preibisch & Stephan Saalfeld
  */
-package mpicbg.imglib.outside;
+package mpicbg.imglib.outofbounds;
 
-import mpicbg.imglib.cursor.LocalizableCursor;
+import mpicbg.imglib.cursor.Cursor;
 import mpicbg.imglib.type.Type;
 
-public class OutsideStrategyValueFactory<T extends Type<T>> extends OutsideStrategyFactory<T>
+public abstract class OutOfBoundsStrategy<T extends Type<T>>
 {
-	T value;
+	final Cursor<T> parentCursor;
 	
-	public OutsideStrategyValueFactory( )
+	public OutOfBoundsStrategy( final Cursor<T> parentCursor )
 	{
-		this.value = null;
+		this.parentCursor = parentCursor;
 	}
 	
-	public OutsideStrategyValueFactory( final T value )
-	{
-		this.value = value;
-	}
-		
-	public void setValue( T value ) { this.value = value; }
-	public T getValue() { return value; }
-	
-	@Override
-	public OutsideStrategyValue<T> createStrategy( final LocalizableCursor<T> cursor )
-	{
-		if ( value == null )
-			return new OutsideStrategyValue<T>( cursor, cursor.getType().createVariable() );
-		else
-			return new OutsideStrategyValue<T>( cursor, value );
-	}
+	/**
+	 * @returns a link to the parent Cursor of this Strategy
+	 */
+	public Cursor<T> getParentCursor() { return parentCursor; }
 
+	/**
+	 * Fired by the parent cursor in case that it moves while being out of image bounds
+	 */
+	public abstract void notifyOutOfBOunds();
+
+	/**
+	 * Fired by the parent cursor in case that it moves while being out of image bounds
+	 */
+	public abstract void notifyOutOfBOunds( int steps, int dim );
+
+	/**
+	 * Fired by the parent cursor in case that it moves while being out of image bounds
+	 */
+	public abstract void notifyOutOfBOundsFwd( int dim );
+
+	/**
+	 * Fired by the parent cursor in case that it moves while being out of image bounds
+	 */
+	public abstract void notifyOutOfBOundsBck( int dim );
+	
+	/**
+	 * Fired by the parent cursor in case that it leaves image bounds
+	 */
+	public abstract void initOutOfBOunds();
+	
+	/**
+	 * @returns the Type that stores the current value of the OutOfBoundsStrategy
+	 */
+	public abstract T getType();
+	
+	/**
+	 * Closed possibly created cursors or images
+	 */
+	public abstract void close();
 }

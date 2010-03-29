@@ -35,7 +35,7 @@ import mpicbg.imglib.cursor.special.LocalNeighborhoodCursor;
 import mpicbg.imglib.cursor.special.RegionOfInterestCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.multithreading.SimpleMultiThreading;
-import mpicbg.imglib.outside.OutsideStrategyPeriodicFactory;
+import mpicbg.imglib.outofbounds.OutOfBoundsStrategyPeriodicFactory;
 import mpicbg.imglib.type.numeric.RealType;
 import mpicbg.imglib.type.numeric.complex.ComplexFloatType;
 import mpicbg.imglib.type.numeric.real.FloatType;
@@ -110,8 +110,8 @@ public class PhaseCorrelation<T extends RealType<T>, S extends RealType<S>> impl
 		fft2.setRelativeImageExtension( 0.1f );
 		fft1.setRelativeFadeOutDistance( 0.1f );
 		fft2.setRelativeFadeOutDistance( 0.1f );		
-		fft1.setRearrangement( Rearrangement.Unchanged );
-		fft2.setRearrangement( Rearrangement.Unchanged );
+		fft1.setRearrangement( Rearrangement.UNCHANGED );
+		fft2.setRearrangement( Rearrangement.UNCHANGED );
 		
 		boolean sizeFound = false;
 		
@@ -435,7 +435,7 @@ public class PhaseCorrelation<T extends RealType<T>, S extends RealType<S>> impl
 		for ( int i = 0; i < numPeaks; ++i )
 			peakList.add( new PhaseCorrelationPeak( new int[ numDimensions ], -Float.MAX_VALUE) );
 
-		final LocalizableByDimCursor<FloatType> cursor = invPCM.createLocalizableByDimCursor( new OutsideStrategyPeriodicFactory<FloatType>() );
+		final LocalizableByDimCursor<FloatType> cursor = invPCM.createLocalizableByDimCursor( new OutOfBoundsStrategyPeriodicFactory<FloatType>() );
 		final LocalNeighborhoodCursor<FloatType> localCursor = cursor.createLocalNeighborhoodCursor();
 				
 		final int[] originalOffset1 = fft1.getOriginalOffset();

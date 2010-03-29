@@ -35,11 +35,11 @@ import mpicbg.imglib.cursor.LocalizableByDimCursor;
 import mpicbg.imglib.cursor.LocalizablePlaneCursor;
 import mpicbg.imglib.cursor.dynamic.DynamicCursor;
 import mpicbg.imglib.cursor.dynamic.DynamicLocalizableByDimCursor;
-import mpicbg.imglib.cursor.dynamic.DynamicLocalizableByDimOutsideCursor;
+import mpicbg.imglib.cursor.dynamic.DynamicLocalizableByDimOutOfBoundsCursor;
 import mpicbg.imglib.cursor.dynamic.DynamicLocalizableCursor;
 import mpicbg.imglib.cursor.dynamic.DynamicLocalizablePlaneCursor;
 import mpicbg.imglib.image.Image;
-import mpicbg.imglib.outside.OutsideStrategyFactory;
+import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
 import mpicbg.imglib.type.Type;
 
 public abstract class DynamicContainer<T extends Type<T>, A extends DynamicContainerAccessor> extends PixelGridContainerImpl<T,A>
@@ -95,9 +95,9 @@ public abstract class DynamicContainer<T extends Type<T>, A extends DynamicConta
 	}
 
 	@Override
-	public LocalizableByDimCursor<T> createLocalizableByDimCursor( final T type, final Image<T> image, final OutsideStrategyFactory<T> outsideFactory )
+	public LocalizableByDimCursor<T> createLocalizableByDimCursor( final T type, final Image<T> image, final OutOfBoundsStrategyFactory<T> outOfBoundsFactory )
 	{
-		return new DynamicLocalizableByDimOutsideCursor<T>( this, image, type, outsideFactory );
+		return new DynamicLocalizableByDimOutOfBoundsCursor<T>( this, image, type, outOfBoundsFactory );
 	}
 
 	@Override

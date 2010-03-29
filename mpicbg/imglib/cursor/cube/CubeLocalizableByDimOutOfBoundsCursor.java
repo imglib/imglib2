@@ -32,23 +32,23 @@ package mpicbg.imglib.cursor.cube;
 import mpicbg.imglib.container.cube.Cube;
 import mpicbg.imglib.cursor.LocalizableByDimCursor;
 import mpicbg.imglib.image.Image;
-import mpicbg.imglib.outside.OutsideStrategy;
-import mpicbg.imglib.outside.OutsideStrategyFactory;
+import mpicbg.imglib.outofbounds.OutOfBoundsStrategy;
+import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
 import mpicbg.imglib.type.Type;
 
-public class CubeLocalizableByDimOutsideCursor<T extends Type<T>> extends CubeLocalizableByDimCursor<T> implements LocalizableByDimCursor<T>
+public class CubeLocalizableByDimOutOfBoundsCursor<T extends Type<T>> extends CubeLocalizableByDimCursor<T> implements LocalizableByDimCursor<T>
 {
-	final OutsideStrategyFactory<T> outsideStrategyFactory;
-	final OutsideStrategy<T> outsideStrategy;
+	final OutOfBoundsStrategyFactory<T> outOfBoundsStrategyFactory;
+	final OutOfBoundsStrategy<T> outOfBoundsStrategy;
 	
-	boolean isOutside = false;
+	boolean isOutOfBounds = false;
 	
-	public CubeLocalizableByDimOutsideCursor( final Cube<T,?> container, final Image<T> image, final T type, final OutsideStrategyFactory<T> outsideStrategyFactory ) 
+	public CubeLocalizableByDimOutOfBoundsCursor( final Cube<T,?> container, final Image<T> image, final T type, final OutOfBoundsStrategyFactory<T> outOfBoundsStrategyFactory ) 
 	{
 		super( container, image, type );
 		
-		this.outsideStrategyFactory = outsideStrategyFactory;
-		this.outsideStrategy = outsideStrategyFactory.createStrategy( this );
+		this.outOfBoundsStrategyFactory = outOfBoundsStrategyFactory;
+		this.outOfBoundsStrategy = outOfBoundsStrategyFactory.createStrategy( this );
 		
 		reset();
 	}	
@@ -56,7 +56,7 @@ public class CubeLocalizableByDimOutsideCursor<T extends Type<T>> extends CubeLo
 	@Override
 	public boolean hasNext()
 	{			
-		if ( !isOutside && cube < numCubes - 1 )
+		if ( !isOutOfBounds && cube < numCubes - 1 )
 			return true;
 		else if ( type.getIndex() < cubeMaxI - 1 )
 			return true;
@@ -67,8 +67,8 @@ public class CubeLocalizableByDimOutsideCursor<T extends Type<T>> extends CubeLo
 	@Override
 	public T getType() 
 	{ 
-		if ( isOutside )
-			return outsideStrategy.getType();
+		if ( isOutOfBounds )
+			return outOfBoundsStrategy.getType();
 		else
 			return type; 
 	}
@@ -76,14 +76,14 @@ public class CubeLocalizableByDimOutsideCursor<T extends Type<T>> extends CubeLo
 	@Override
 	public void reset()
 	{
-		if ( outsideStrategy == null )
+		if ( outOfBoundsStrategy == null )
 			return;
 		
 		type.updateIndex( -1 );
 		cube = 0;
 		getCubeData( cube );
 		isClosed = false;
-		isOutside = false;
+		isOutOfBounds = false;
 		
 		position[ 0 ] = -1;
 		
@@ -99,7 +99,7 @@ public class CubeLocalizableByDimOutsideCursor<T extends Type<T>> extends CubeLo
 	@Override
 	public void fwd()
 	{
-		if ( !isOutside )
+		if ( !isOutOfBounds )
 		{
 			if ( type.getIndex() < cubeMaxI - 1 )
 			{
@@ -128,12 +128,12 @@ public class CubeLocalizableByDimOutsideCursor<T extends Type<T>> extends CubeLo
 			}
 			else
 			{
-				// we moved outside the image
-				isOutside = true;
+				// we moved out of image bounds
+				isOutOfBounds = true;
 				lastCube = -1;						
 				cube = numCubes;
 				position[0]++;
-				outsideStrategy.initOutside(  );
+				outOfBoundsStrategy.initOutOfBOunds(  );
 			}
 		}
 	}
@@ -141,20 +141,20 @@ public class CubeLocalizableByDimOutsideCursor<T extends Type<T>> extends CubeLo
 	@Override
 	public void move( final int steps, final int dim )
 	{
-		if ( isOutside )
+		if ( isOutOfBounds )
 		{
 			position[ dim ] += steps;	
 
 			// reenter the image?
 			if ( position[ dim ] >= 0 && position[ dim ] <  dimensions[ dim ] ) 
 			{
-				isOutside = false;
+				isOutOfBounds = false;
 				
-				for ( int d = 0; d < numDimensions && !isOutside; d++ )
+				for ( int d = 0; d < numDimensions && !isOutOfBounds; d++ )
 					if ( position[ d ] < 0 || position[ d ] >= dimensions[ d ])
-						isOutside = true;
+						isOutOfBounds = true;
 				
-				if ( !isOutside )
+				if ( !isOutOfBounds )
 				{
 					type.updateContainer( this );			
 					
@@ -169,12 +169,12 @@ public class CubeLocalizableByDimOutsideCursor<T extends Type<T>> extends CubeLo
 				}
 				else
 				{
-					outsideStrategy.notifyOutside( steps, dim );
+					outOfBoundsStrategy.notifyOutOfBOunds( steps, dim );
 				}
 			}
-			else // moved outside of the image
+			else // moved out of image bounds
 			{
-				outsideStrategy.notifyOutside( steps, dim );
+				outOfBoundsStrategy.notifyOutOfBOunds( steps, dim );
 			}
 		}
 		else
@@ -196,15 +196,15 @@ public class CubeLocalizableByDimOutsideCursor<T extends Type<T>> extends CubeLo
 	@Override
 	public void fwd( final int dim )
 	{
-		if ( isOutside )
+		if ( isOutOfBounds )
 		{
 			position[ dim ]++;
 
 			// reenter the image?
 			if ( position[ dim ] == 0 )
 				setPosition( position );
-			else // moved outside of the image
-				outsideStrategy.notifyOutsideFwd( dim );
+			else // moved out of image bounds
+				outOfBoundsStrategy.notifyOutOfBOundsFwd( dim );
 		}
 		else if ( position[ dim ] + 1 < cubeEnd[ dim ])
 		{
@@ -237,26 +237,26 @@ public class CubeLocalizableByDimOutsideCursor<T extends Type<T>> extends CubeLo
 		else
 		{
 			// left the image
-			isOutside = true;
+			isOutOfBounds = true;
 			lastCube = -1;						
 			cube = numCubes;
 			position[0]++;
-			outsideStrategy.initOutside(  );
+			outOfBoundsStrategy.initOutOfBOunds(  );
 		}
 	}
 
 	@Override
 	public void bck( final int dim )
 	{
-		if ( isOutside )
+		if ( isOutOfBounds )
 		{
 			position[ dim ]--;	
 
 			// reenter the image?
 			if ( position[ dim ] == dimensions[ dim ] - 1 )
 				setPosition( position );
-			else // moved outside of the image
-				outsideStrategy.notifyOutsideBck( dim );
+			else // moved out of image bounds
+				outOfBoundsStrategy.notifyOutOfBOundsBck( dim );
 		}
 		else if ( position[ dim ] - 1 >= cubeOffset[ dim ])
 		{
@@ -290,11 +290,11 @@ public class CubeLocalizableByDimOutsideCursor<T extends Type<T>> extends CubeLo
 		else
 		{
 			// left the image
-			isOutside = true;
+			isOutOfBounds = true;
 			lastCube = -1;						
 			cube = numCubes;
 			position[0]++;
-			outsideStrategy.initOutside(  );			
+			outOfBoundsStrategy.initOutOfBOunds(  );			
 		}
 	}
 
@@ -302,8 +302,8 @@ public class CubeLocalizableByDimOutsideCursor<T extends Type<T>> extends CubeLo
 	public void setPosition( final int[] position )
 	{
 		// save current state
-		final boolean wasOutside = isOutside;
-		isOutside = false;
+		final boolean wasOutOfBounds = isOutOfBounds;
+		isOutOfBounds = false;
 
 		// update positions and check if we are inside the image
 		for ( int d = 0; d < numDimensions; d++ )
@@ -312,24 +312,24 @@ public class CubeLocalizableByDimOutsideCursor<T extends Type<T>> extends CubeLo
 			
 			if ( position[ d ] < 0 || position[ d ] >= dimensions[ d ])
 			{
-				// we are outside of the image
-				isOutside = true;
+				// we are out of image bounds
+				isOutOfBounds = true;
 			}
 		}
 
-		if ( isOutside )
+		if ( isOutOfBounds )
 		{
-			// new location is outside the image
+			// new location is out of image bounds
 		
-			if ( wasOutside ) // just moved outside of the image
-				outsideStrategy.notifyOutside(  );
+			if ( wasOutOfBounds ) // just moved out of image bounds
+				outOfBoundsStrategy.notifyOutOfBOunds(  );
 			else // we left the image with this setPosition() call
-				outsideStrategy.initOutside(  );
+				outOfBoundsStrategy.initOutOfBOunds(  );
 		}
 		else
 		{
 			// new location is inside the image
-			if ( wasOutside ) // we reenter the image with this setPosition() call
+			if ( wasOutOfBounds ) // we reenter the image with this setPosition() call
 				type.updateContainer( this );			
 						
 			// the cube position in "cube space" from the image coordinates 
@@ -348,8 +348,8 @@ public class CubeLocalizableByDimOutsideCursor<T extends Type<T>> extends CubeLo
 	{
 		this.position[ dim ] = position;
 
-		// we are outside the image or in the initial starting position
-		if ( isOutside || type.getIndex() == -1 )
+		// we are out of image bounds or in the initial starting position
+		if ( isOutOfBounds || type.getIndex() == -1 )
 		{
 			// if just this dimensions moves inside does not necessarily mean that
 			// the other ones do as well, so we have to do a full check here
@@ -362,8 +362,8 @@ public class CubeLocalizableByDimOutsideCursor<T extends Type<T>> extends CubeLo
 			if ( position < 0 || position >= dimensions[ dim ])
 			{
 				// cursor has left the image
-				isOutside = true;
-				outsideStrategy.initOutside(  );
+				isOutOfBounds = true;
+				outOfBoundsStrategy.initOutOfBOunds(  );
 				return;
 			}
 			else

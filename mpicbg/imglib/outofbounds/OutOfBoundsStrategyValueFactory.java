@@ -27,35 +27,35 @@
  *
  * @author Stephan Preibisch & Stephan Saalfeld
  */
-package mpicbg.imglib.outside;
+package mpicbg.imglib.outofbounds;
 
-import mpicbg.imglib.Factory;
 import mpicbg.imglib.cursor.LocalizableCursor;
 import mpicbg.imglib.type.Type;
 
-public abstract class OutsideStrategyFactory<T extends Type<T>> implements Factory
+public class OutOfBoundsStrategyValueFactory<T extends Type<T>> extends OutOfBoundsStrategyFactory<T>
 {
-	public abstract OutsideStrategy<T> createStrategy( LocalizableCursor<T> cursor ); 
+	T value;
+	
+	public OutOfBoundsStrategyValueFactory( )
+	{
+		this.value = null;
+	}
+	
+	public OutOfBoundsStrategyValueFactory( final T value )
+	{
+		this.value = value;
+	}
+		
+	public void setValue( T value ) { this.value = value; }
+	public T getValue() { return value; }
 	
 	@Override
-	public String getErrorMessage()
+	public OutOfBoundsStrategyValue<T> createStrategy( final LocalizableCursor<T> cursor )
 	{
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void printProperties()
-	{
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void setParameters(String configuration)
-	{
-		// TODO Auto-generated method stub
-		
+		if ( value == null )
+			return new OutOfBoundsStrategyValue<T>( cursor, cursor.getType().createVariable() );
+		else
+			return new OutOfBoundsStrategyValue<T>( cursor, value );
 	}
 
 }

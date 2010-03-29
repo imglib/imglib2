@@ -33,7 +33,7 @@ import mpicbg.imglib.cursor.LocalizableByDimCursor;
 import mpicbg.imglib.cursor.LocalizableCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.ImageFactory;
-import mpicbg.imglib.outside.OutsideStrategyValueFactory;
+import mpicbg.imglib.outofbounds.OutOfBoundsStrategyValueFactory;
 import mpicbg.imglib.type.numeric.RealType;
 import mpicbg.imglib.type.numeric.complex.ComplexFloatType;
 import mpicbg.imglib.type.numeric.real.FloatType;
@@ -173,7 +173,7 @@ public class FourierConvolution<T extends RealType<T>, S extends RealType<S>> im
 		c.getType().setOne();
 		c.close();
 		
-		final GaussianConvolution<T> gauss = new GaussianConvolution<T>( kernel, new OutsideStrategyValueFactory<T>(), sigma );
+		final GaussianConvolution<T> gauss = new GaussianConvolution<T>( kernel, new OutOfBoundsStrategyValueFactory<T>(), sigma );
 		
 		if ( !gauss.checkInput() || !gauss.process() )
 		{
@@ -199,15 +199,15 @@ public class FourierConvolution<T extends RealType<T>, S extends RealType<S>> im
 			fftImage = new FourierTransform<T>( image );
 			fftImage.setNumThreads( this.getNumThreads() );
 			
-			// how to extend the input image outside of its boundaries for computing the FFT,
+			// how to extend the input image out of its boundaries for computing the FFT,
 			// we simply mirror the content at the borders
-			fftImage.setPreProcessing( PreProcessing.ExtendMirror );		
+			fftImage.setPreProcessing( PreProcessing.EXTEND_MIRROR );		
 			// we do not rearrange the fft quadrants
-			fftImage.setRearrangement( Rearrangement.Unchanged );
+			fftImage.setRearrangement( Rearrangement.UNCHANGED );
 			
 			// the image has to be extended by the size of the kernel-1
 			// as the kernel is always odd, e.g. if kernel size is 3, we need to add
-			// one pixel outside in each dimension (3-1=2 pixel all together) so that the
+			// one pixel out of bounds in each dimension (3-1=2 pixel all together) so that the
 			// convolution works
 			final int[] imageExtension = kernelDim.clone();		
 			for ( int d = 0; d < numDimensions; ++d )
@@ -272,7 +272,7 @@ public class FourierConvolution<T extends RealType<T>, S extends RealType<S>> im
 			final FourierTransform<S> fftKernel = new FourierTransform<S>( kernelTemplate );
 			fftKernel.setNumThreads( this.getNumThreads() );
 			
-			fftKernel.setPreProcessing( PreProcessing.None );		
+			fftKernel.setPreProcessing( PreProcessing.NONE );		
 			fftKernel.setRearrangement( fftImage.getRearrangement() );
 			
 			if ( !fftKernel.checkInput() || !fftKernel.process() )

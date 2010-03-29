@@ -27,13 +27,13 @@
  *
  * @author Stephan Preibisch & Stephan Saalfeld
  */
-package mpicbg.imglib.outside;
+package mpicbg.imglib.outofbounds;
 
 import mpicbg.imglib.cursor.LocalizableByDimCursor;
 import mpicbg.imglib.cursor.LocalizableCursor;
 import mpicbg.imglib.type.Type;
 
-public class OutsideStrategyPeriodic<T extends Type<T>> extends OutsideStrategy<T>
+public class OutOfBoundsStrategyPeriodic<T extends Type<T>> extends OutOfBoundsStrategy<T>
 {
 	final LocalizableCursor<T> parentCursor;
 	final LocalizableByDimCursor<T> circleCursor;
@@ -41,7 +41,7 @@ public class OutsideStrategyPeriodic<T extends Type<T>> extends OutsideStrategy<
 	final int numDimensions;
 	final int[] dimension, position, circledPosition;
 	
-	public OutsideStrategyPeriodic( final LocalizableCursor<T> parentCursor )
+	public OutOfBoundsStrategyPeriodic( final LocalizableCursor<T> parentCursor )
 	{
 		super( parentCursor );
 		
@@ -60,7 +60,7 @@ public class OutsideStrategyPeriodic<T extends Type<T>> extends OutsideStrategy<
 	public T getType(){ return type; }
 	
 	@Override
-	final public void notifyOutside()
+	final public void notifyOutOfBOunds()
 	{
 		parentCursor.getPosition( position );
 		getCircleCoordinate( position, circledPosition, dimension, numDimensions );		
@@ -70,7 +70,7 @@ public class OutsideStrategyPeriodic<T extends Type<T>> extends OutsideStrategy<
 	}
 
 	@Override
-	public void notifyOutside( final int steps, final int dim ) 
+	public void notifyOutOfBOunds( final int steps, final int dim ) 
 	{
 		final int oldPos = circleCursor.getPosition( dim ); 
 		
@@ -79,7 +79,7 @@ public class OutsideStrategyPeriodic<T extends Type<T>> extends OutsideStrategy<
 	}
 	
 	@Override
-	public void notifyOutsideFwd( final int dim ) 
+	public void notifyOutOfBOundsFwd( final int dim ) 
 	{		
 		final int oldPos = circleCursor.getPosition( dim ); 
 		
@@ -88,7 +88,7 @@ public class OutsideStrategyPeriodic<T extends Type<T>> extends OutsideStrategy<
 	}
 
 	@Override
-	public void notifyOutsideBck( final int dim ) 
+	public void notifyOutOfBOundsBck( final int dim ) 
 	{
 		final int oldPos = circleCursor.getPosition( dim ); 
 		
@@ -96,13 +96,8 @@ public class OutsideStrategyPeriodic<T extends Type<T>> extends OutsideStrategy<
 		type.set( circleType );
 	}
 	
-	/*
-	 * For mirroring there is no difference between leaving the image and moving while 
-	 * being outside of the image
-	 * @see mpi.imglib.outside.OutsideStrategy#initOutside()
-	 */
 	@Override
-	public void initOutside() 
+	public void initOutOfBOunds() 
 	{ 
 		parentCursor.getPosition( position );
 		getCircleCoordinate( position, circledPosition, dimension, numDimensions );		

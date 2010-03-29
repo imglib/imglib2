@@ -27,17 +27,17 @@
  *
  * @author Stephan Preibisch & Stephan Saalfeld
  */
-package mpicbg.imglib.outside;
+package mpicbg.imglib.outofbounds;
 
 import mpicbg.imglib.cursor.LocalizableCursor;
 import mpicbg.imglib.type.Type;
 
-public class OutsideStrategyPeriodicFactory<T extends Type<T>> extends OutsideStrategyFactory<T>
+public class OutOfBoundsStrategyMirrorFactory<T extends Type<T>> extends OutOfBoundsStrategyFactory<T>
 {
 	@Override
-	public OutsideStrategyPeriodic<T> createStrategy( final LocalizableCursor<T> cursor )
+	public OutOfBoundsStrategyMirror<T> createStrategy( final LocalizableCursor<T> cursor )
 	{
-		return new OutsideStrategyPeriodic<T>( cursor );
+		return new OutOfBoundsStrategyMirror<T>( cursor );
 	}
 
 }

@@ -27,13 +27,14 @@
  *
  * @author Stephan Preibisch & Stephan Saalfeld
  */
-package mpicbg.imglib.outside;
+package mpicbg.imglib.outofbounds;
 
+import mpicbg.imglib.algorithm.math.MathLib;
 import mpicbg.imglib.cursor.LocalizableByDimCursor;
 import mpicbg.imglib.cursor.LocalizableCursor;
-import mpicbg.imglib.type.Type;
+import mpicbg.imglib.type.numeric.RealType;
 
-public class OutsideStrategyMirror<T extends Type<T>> extends OutsideStrategy<T>
+public class OutOfBoundsStrategyMirrorExpWindowing<T extends RealType<T>> extends OutOfBoundsStrategy<T>
 {
 	final LocalizableCursor<T> parentCursor;
 	final LocalizableByDimCursor<T> mirrorCursor;
@@ -41,7 +42,10 @@ public class OutsideStrategyMirror<T extends Type<T>> extends OutsideStrategy<T>
 	final int numDimensions;
 	final int[] dimension, position, mirroredPosition, currentDirection, tmp;
 	
-	public OutsideStrategyMirror( final LocalizableCursor<T> parentCursor )
+	final float[][] weights;
+	final float cutOff = 0.0001f;
+	
+	public OutOfBoundsStrategyMirrorExpWindowing( final LocalizableCursor<T> parentCursor, final int[] fadeOutDistance, final float exponent )
 	{
 		super( parentCursor );
 		
@@ -56,19 +60,50 @@ public class OutsideStrategyMirror<T extends Type<T>> extends OutsideStrategy<T>
 		this.mirroredPosition = new int[ numDimensions ];
 		this.currentDirection = new int[ numDimensions ];
 		this.tmp = new int[ numDimensions ];
+				
+		// create lookup table for the weights
+		weights = new float[ numDimensions ][];
+		
+		for ( int d = 0; d < numDimensions; ++d )
+			weights[ d ] = new float[ Math.max( 1, fadeOutDistance[ d ] ) ];
+				
+		for ( int d = 0; d < numDimensions; ++d )
+		{
+			final int maxDistance = weights[ d ].length;
+			
+			if ( maxDistance > 1 )
+			{
+				for ( int pos = 0; pos < maxDistance; ++pos )
+				{
+					final float relPos = pos / (float)( maxDistance - 1 );
+	
+					// if exponent equals one means linear function
+					if ( MathLib.isApproxEqual( exponent, 1f, 0.0001f ) )
+						weights[ d ][ pos ] = 1 - relPos;
+					else
+						weights[ d ][ pos ] = (float)( 1 - ( 1 / Math.pow( exponent, 1 - relPos ) ) ) * ( 1 + 1/(exponent-1) );
+				}
+			}
+			else
+			{
+				weights[ d ][ 0 ] = 0;
+			}
+		}
 	}
+	
 
 	@Override
 	public T getType(){ return type; }
 	
 	@Override
-	final public void notifyOutside()
+	final public void notifyOutOfBOunds()
 	{
 		parentCursor.getPosition( position );
 		getMirrorCoordinate( position, mirroredPosition );		
 		mirrorCursor.setPosition( mirroredPosition );
 
 		type.set( mirrorType );
+		type.mul( getWeight( position ) );
 
 		// test current direction
 		// where do we have to move when we move one forward in every dimension, respectively
@@ -80,28 +115,53 @@ public class OutsideStrategyMirror<T extends Type<T>> extends OutsideStrategy<T>
 		for ( int d = 0; d < numDimensions; ++d )
 			currentDirection[ d ] = currentDirection[ d ] - mirroredPosition[ d ];
 	}
+	
+	final protected float getWeight( final int[] position )
+	{
+		float weight = 1;
+		
+		for ( int d = 0; d < numDimensions; ++d )
+		{
+			final int pos = position[ d ];
+			final int distance;
+			
+			if ( pos < 0 )
+				distance = -pos - 1;
+			else if ( pos >= dimension[ d ] )
+				distance = pos - dimension[ d ];
+			else
+				continue;
+			
+			if ( distance < weights[ d ].length )
+				weight *= weights[ d ][ distance ];
+			else
+				return 0;
+		}
+
+		return weight;
+	}
 
 	@Override
-	public void notifyOutside( final int steps, final int dim ) 
+	public void notifyOutOfBOunds( final int steps, final int dim ) 
 	{
 		if ( Math.abs( steps ) > 10 )
 		{
-			notifyOutside();
+			notifyOutOfBOunds();
 		}
 		else if ( steps > 0 )
 		{
 			for ( int i = 0; i < steps; ++i )
-				notifyOutsideFwd( dim );
+				notifyOutOfBOundsFwd( dim );
 		}
 		else
 		{
 			for ( int i = 0; i < -steps; ++i )
-				notifyOutsideBck( dim );
+				notifyOutOfBOundsBck( dim );
 		}
 	}
 	
 	@Override
-	public void notifyOutsideFwd( final int dim ) 
+	public void notifyOutOfBOundsFwd( final int dim ) 
 	{
 		if ( currentDirection[ dim ] == 1 )
 		{
@@ -129,10 +189,12 @@ public class OutsideStrategyMirror<T extends Type<T>> extends OutsideStrategy<T>
 		}
 		
 		type.set( mirrorType );		
+		parentCursor.getPosition( position );
+		type.mul( getWeight( position ) );
 	}
 
 	@Override
-	public void notifyOutsideBck( final int dim ) 
+	public void notifyOutOfBOundsBck( final int dim ) 
 	{
 		// current direction of the mirror cursor when going forward
 		if ( currentDirection[ dim ] == 1 )
@@ -166,15 +228,18 @@ public class OutsideStrategyMirror<T extends Type<T>> extends OutsideStrategy<T>
 		}
 		
 		type.set( mirrorType );		
+		parentCursor.getPosition( position );
+		type.mul( getWeight( position ) );
 	}
 	
-	/*
-	 * For mirroring there is no difference between leaving the image and moving while 
-	 * being outside of the image
-	 * @see mpi.imglib.outside.OutsideStrategy#initOutside()
+	/**
+	 * For mirroring, there is no difference between leaving the image and moving while 
+	 * being out of image bounds
+	 * 
+	 * @see mpi.imglib.outside.OutOfBoundsStrategy#initOutOfBounds()
 	 */
 	@Override
-	public void initOutside() { notifyOutside(); }
+	public void initOutOfBOunds() { notifyOutOfBOunds(); }
 	
 	protected void getMirrorCoordinate( final int[] position, final int mirroredPosition[] )
 	{

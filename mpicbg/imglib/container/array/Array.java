@@ -34,11 +34,11 @@ import mpicbg.imglib.container.basictypecontainer.DataAccess;
 import mpicbg.imglib.cursor.Cursor;
 import mpicbg.imglib.cursor.array.ArrayCursor;
 import mpicbg.imglib.cursor.array.ArrayLocalizableByDimCursor;
-import mpicbg.imglib.cursor.array.ArrayLocalizableByDimOutsideCursor;
+import mpicbg.imglib.cursor.array.ArrayLocalizableByDimOutOfBoundsCursor;
 import mpicbg.imglib.cursor.array.ArrayLocalizableCursor;
 import mpicbg.imglib.cursor.array.ArrayLocalizablePlaneCursor;
 import mpicbg.imglib.image.Image;
-import mpicbg.imglib.outside.OutsideStrategyFactory;
+import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
 import mpicbg.imglib.type.Type;
 
 public class Array<T extends Type<T>, A extends DataAccess> extends PixelGridContainerImpl<T,A>
@@ -93,9 +93,9 @@ public class Array<T extends Type<T>, A extends DataAccess> extends PixelGridCon
 	}
 	
 	@Override
-	public ArrayLocalizableByDimOutsideCursor<T> createLocalizableByDimCursor( final T type, final Image<T> image, final OutsideStrategyFactory<T> outsideFactory ) 
+	public ArrayLocalizableByDimOutOfBoundsCursor<T> createLocalizableByDimCursor( final T type, final Image<T> image, final OutOfBoundsStrategyFactory<T> outOfBoundsFactory ) 
 	{ 
-		ArrayLocalizableByDimOutsideCursor<T> c = new ArrayLocalizableByDimOutsideCursor<T>( this, image, type, outsideFactory );
+		ArrayLocalizableByDimOutOfBoundsCursor<T> c = new ArrayLocalizableByDimOutOfBoundsCursor<T>( this, image, type, outOfBoundsFactory );
 		return c;
 	}
 	

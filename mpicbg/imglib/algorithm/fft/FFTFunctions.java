@@ -30,7 +30,7 @@ import mpicbg.imglib.cursor.array.ArrayLocalizableCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.ImageFactory;
 import mpicbg.imglib.multithreading.SimpleMultiThreading;
-import mpicbg.imglib.outside.OutsideStrategyFactory;
+import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
 import mpicbg.imglib.type.Type;
 import mpicbg.imglib.type.label.FakeType;
 import mpicbg.imglib.type.numeric.RealType;
@@ -237,7 +237,7 @@ A:						while( cursorDim.hasNext() )
 								tmp[ 0 ] = 0;
 								if ( cropBack )
 								{
-									// check that we are not outside the cropped image, then we do not have to compute the
+									// check that we are not out of the cropped image's bounds, then we do not have to compute the
 									// inverse fft here
 									for ( int d = 1; d < numDimensions; ++d )
 									{
@@ -358,7 +358,7 @@ A:						while( cursorDim.hasNext() )
 		return realImage;
 	}
 	
-	final public static <T extends RealType<T>> Image<ComplexFloatType> computeFFT( final Image<T> img, final OutsideStrategyFactory<T> outsideFactory,
+	final public static <T extends RealType<T>> Image<ComplexFloatType> computeFFT( final Image<T> img, final OutOfBoundsStrategyFactory<T> outOfBoundsFactory,
 	                                                        final int[] imageOffset, final int[] imageSize,
 	                                                        final int numThreads, final boolean scale )
 	{
@@ -395,7 +395,7 @@ A:						while( cursorDim.hasNext() )
 					final float[] tempIn = new float[ realSize ];				
 					final FftReal fft = new FftReal( realSize );
 					
-					final LocalizableByDimCursor<T> cursor = img.createLocalizableByDimCursor( outsideFactory );
+					final LocalizableByDimCursor<T> cursor = img.createLocalizableByDimCursor( outOfBoundsFactory );
 					final LocalizableByDimCursor<ComplexFloatType> cursorOut = fftImage.createLocalizableByDimCursor(); 
 					
 					if ( numDimensions > 1 )
