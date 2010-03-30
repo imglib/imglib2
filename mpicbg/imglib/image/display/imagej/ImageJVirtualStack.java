@@ -130,9 +130,7 @@ public class ImageJVirtualStack<T extends Type<T>> extends ImageStack
     	final LocalizablePlaneCursor<T> cursor = img.createLocalizablePlaneCursor();		
 		cursor.reset( dimX, dimY, dimensionPositions );   	
 		
-		final T type = cursor.getType();
-	    	
-    	// store the slice image
+		// store the slice image
     	float[] sliceImg = new float[ sizeX * sizeY ];
     	
     	if ( dimY < img.getNumDimensions() )
@@ -140,7 +138,7 @@ public class ImageJVirtualStack<T extends Type<T>> extends ImageStack
 	    	while ( cursor.hasNext() )
 	    	{
 	    		cursor.fwd();
-	    		sliceImg[ cursor.getPosition( dimX ) + cursor.getPosition( dimY ) * sizeX ] = display.get32Bit(type);    		
+	    		sliceImg[ cursor.getPosition( dimX ) + cursor.getPosition( dimY ) * sizeX ] = display.get32Bit( cursor.getType() );    		
 	    	}
     	}
     	else // only a 1D image
@@ -148,7 +146,7 @@ public class ImageJVirtualStack<T extends Type<T>> extends ImageStack
 	    	while ( cursor.hasNext() )
 	    	{
 	    		cursor.fwd();
-	    		sliceImg[ cursor.getPosition( dimX ) ] = display.get32Bit(type);    		
+	    		sliceImg[ cursor.getPosition( dimX ) ] = display.get32Bit( cursor.getType() );    		
 	    	}    		
     	}
     	
@@ -165,9 +163,7 @@ public class ImageJVirtualStack<T extends Type<T>> extends ImageStack
     	final LocalizablePlaneCursor<T> cursor = img.createLocalizablePlaneCursor();		
 		cursor.reset( dimX, dimY, dimensionPositions );   	
 		
-		final T type = cursor.getType();
-	    	
-    	// store the slice image
+		// store the slice image
     	int[] sliceImg = new int[ sizeX * sizeY ];
     	
     	if ( dimY < img.getNumDimensions() )
@@ -175,7 +171,7 @@ public class ImageJVirtualStack<T extends Type<T>> extends ImageStack
 	    	while ( cursor.hasNext() )
 	    	{
 	    		cursor.fwd();
-	    		sliceImg[ cursor.getPosition( dimX ) + cursor.getPosition( dimY ) * sizeX ] = display.get8BitARGB(type);    		
+	    		sliceImg[ cursor.getPosition( dimX ) + cursor.getPosition( dimY ) * sizeX ] = display.get8BitARGB( cursor.getType() );    		
 	    	}
     	}
     	else // only a 1D image
@@ -183,7 +179,7 @@ public class ImageJVirtualStack<T extends Type<T>> extends ImageStack
 	    	while ( cursor.hasNext() )
 	    	{
 	    		cursor.fwd();
-	    		sliceImg[ cursor.getPosition( dimX ) ] = display.get8BitARGB(type);    		
+	    		sliceImg[ cursor.getPosition( dimX ) ] = display.get8BitARGB( cursor.getType() );    		
 	    	}
     	}
 
@@ -198,9 +194,7 @@ public class ImageJVirtualStack<T extends Type<T>> extends ImageStack
     	final LocalizablePlaneCursor<T> cursor = img.createLocalizablePlaneCursor();		
 		cursor.reset( dimX, dimY, dimensionPositions );   	
 		
-		final T type = cursor.getType();
-	    	
-    	// store the slice image
+		// store the slice image
     	byte[] sliceImg = new byte[ sizeX * sizeY ];
     	
     	if ( dimY < img.getNumDimensions() )
@@ -208,7 +202,7 @@ public class ImageJVirtualStack<T extends Type<T>> extends ImageStack
 	    	while ( cursor.hasNext() )
 	    	{
 	    		cursor.fwd();
-	    		sliceImg[ cursor.getPosition( dimX ) + cursor.getPosition( dimY ) * sizeX ] = display.get8BitSigned(type);    		
+	    		sliceImg[ cursor.getPosition( dimX ) + cursor.getPosition( dimY ) * sizeX ] = display.get8BitSigned( cursor.getType() );    		
 	    	}
     	}
     	else // only a 1D image
@@ -216,7 +210,7 @@ public class ImageJVirtualStack<T extends Type<T>> extends ImageStack
 	    	while ( cursor.hasNext() )
 	    	{
 	    		cursor.fwd();
-	    		sliceImg[ cursor.getPosition( dimX ) ] = display.get8BitSigned(type);    		
+	    		sliceImg[ cursor.getPosition( dimX ) ] = display.get8BitSigned( cursor.getType() );    		
 	    	}    		
     	}
 

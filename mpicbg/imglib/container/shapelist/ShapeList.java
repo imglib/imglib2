@@ -47,7 +47,8 @@ import mpicbg.imglib.type.Type;
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  * @version 0.1a
  */
-public class ShapeList< T extends Type< T > > extends ContainerImpl< T, DataAccess >
+//public class ShapeList< T extends Type< T > > extends ContainerImpl< T, DataAccess >
+public class ShapeList< T extends Type< T >, D extends DataAccess > extends ContainerImpl< T, D >
 {
 	final public ShapeListContainerFactory factory;
 	
@@ -65,6 +66,11 @@ public class ShapeList< T extends Type< T > > extends ContainerImpl< T, DataAcce
 			n *= dim[ d ];
 		shapeLists = ( ArrayList< Shape >[] )new ArrayList[ n ];
 		typeLists = ( ArrayList< T >[] )new ArrayList[ n ];
+		for ( int d = 0; d < shapeLists.length; ++d )
+		{
+			shapeLists[ d ] = new ArrayList< Shape >();
+			typeLists[ d ] = new ArrayList< T >();
+		}
 		this.background = background;
 	}
 	
@@ -107,14 +113,15 @@ public class ShapeList< T extends Type< T > > extends ContainerImpl< T, DataAcce
 	
 	@Override
 	public ShapeListLocalizableByDimCursor< T > createLocalizableByDimCursor( final T type, final Image< T > image ) 
-	{ 
+	{
 		return new ShapeListLocalizableByDimCursor< T >( this, image, type );
 	}
 	
 	@Override
 	public ShapeListLocalizableByDimOutOfBoundsCursor< T > createLocalizableByDimCursor( final T type, final Image< T > image, final OutOfBoundsStrategyFactory< T > outOfBoundsFactory ) 
-	{ 
-		return new ShapeListLocalizableByDimOutOfBoundsCursor< T >( this, image, type, outOfBoundsFactory );
+	{
+		throw new UnsupportedOperationException();
+//		return new ShapeListLocalizableByDimOutOfBoundsCursor< T >( this, image, type, outOfBoundsFactory );
 	}
 	
 	@Override
@@ -122,7 +129,7 @@ public class ShapeList< T extends Type< T > > extends ContainerImpl< T, DataAcce
 
 	@Override
 	/* TODO That doesn't make any sense here */
-	public DataAccess update( Cursor< ? > c ){ return null; }
+	public D update( Cursor< ? > c ){ return null; }
 
 	
 	/**

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2009--2010, Stephan Preibisch & Stephan Saalfeld
+ * Copyright (c) 2010, Stephan Saalfeld
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -48,14 +48,12 @@ public class ShapeListLocalizableByDimCursor< T extends Type< T > > extends Curs
 {
 	private int numNeighborhoodCursors = 0;
 	 
-	final protected ShapeList< T > container;
+	final protected ShapeList< T, ? > container;
 	
 	final protected int numDimensions;
 	final protected int[] position, dimensions;
 	
-	private boolean hasNext = true;
-	
-	public ShapeListLocalizableByDimCursor( final ShapeList< T > container, final Image< T > image, final T type ) 
+	public ShapeListLocalizableByDimCursor( final ShapeList< T, ? > container, final Image< T > image, final T type ) 
 	{
 		super( container, image, type );
 		this.container = container;
@@ -186,10 +184,23 @@ public class ShapeListLocalizableByDimCursor< T extends Type< T > > extends Curs
 			position[ d ] = 0; 
 	}
 
+	/**
+	 * Assumes that position is not out of bounds.
+	 * 
+	 * TODO Not the most efficient way to calculate this on demand.  Better: count an index while moving...
+	 */
 	@Override
 	public boolean hasNext()
 	{
-		return hasNext;
+		for ( int d = numDimensions - 1; d >= 0; --d )
+		{
+			final int sizeD = dimensions[ d ] - 1;
+			if ( position[ d ] < sizeD )
+				return true;
+			else if ( position[ d ] > sizeD )
+				return false;
+		}
+		return false;
 	}
 
 	@Override

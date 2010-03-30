@@ -40,83 +40,57 @@ public class ShapeListContainerFactory extends ContainerFactory
 	@Override
 	public < T extends Type< T >> Container< T, ? extends BitAccess > createBitInstance( int[] dimensions, int entitiesPerPixel )
 	{
-		// TODO Auto-generated method stub
-		return null;
+		throw new UnsupportedOperationException();
 	}
 
-	/* (non-Javadoc)
-	 * @see mpicbg.imglib.container.ContainerFactory#createByteInstance(int[], int)
+	/**
+	 * A pointless hack to get a container instance somehow.
+	 * 
+	 * TODO Check if that factory system is really necessary and if so, how it
+	 * can be made flexible enough to prevent these stupid re-implementations.  
 	 */
 	@Override
-	public < T extends Type< T >> Container< T, ? extends ByteAccess > createByteInstance( int[] dimensions, int entitiesPerPixel )
+	public ByteShapeList< ByteAccess > createByteInstance( int[] dimensions, int entitiesPerPixel )
 	{
-		// TODO Auto-generated method stub
-		return null;
+		return new ByteShapeList< ByteAccess >( this, dimensions );
 	}
 
-	/* (non-Javadoc)
-	 * @see mpicbg.imglib.container.ContainerFactory#createCharInstance(int[], int)
-	 */
 	@Override
 	public < T extends Type< T >> Container< T, ? extends CharAccess > createCharInstance( int[] dimensions, int entitiesPerPixel )
 	{
-		// TODO Auto-generated method stub
-		return null;
+		throw new UnsupportedOperationException();
 	}
 
-	/* (non-Javadoc)
-	 * @see mpicbg.imglib.container.ContainerFactory#createDoubleInstance(int[], int)
-	 */
 	@Override
 	public < T extends Type< T >> Container< T, ? extends DoubleAccess > createDoubleInstance( int[] dimensions, int entitiesPerPixel )
 	{
-		// TODO Auto-generated method stub
-		return null;
+		throw new UnsupportedOperationException();
 	}
 
-	/* (non-Javadoc)
-	 * @see mpicbg.imglib.container.ContainerFactory#createFloatInstance(int[], int)
-	 */
 	@Override
 	public < T extends Type< T >> Container< T, ? extends FloatAccess > createFloatInstance( int[] dimensions, int entitiesPerPixel )
 	{
-		// TODO Auto-generated method stub
-		return null;
+		throw new UnsupportedOperationException();
 	}
 
-	/* (non-Javadoc)
-	 * @see mpicbg.imglib.container.ContainerFactory#createIntInstance(int[], int)
-	 */
 	@Override
 	public < T extends Type< T >> Container< T, ? extends IntAccess > createIntInstance( int[] dimensions, int entitiesPerPixel )
 	{
-		// TODO Auto-generated method stub
-		return null;
+		throw new UnsupportedOperationException();
 	}
 
-	/* (non-Javadoc)
-	 * @see mpicbg.imglib.container.ContainerFactory#createLongInstance(int[], int)
-	 */
 	@Override
 	public < T extends Type< T >> Container< T, ? extends LongAccess > createLongInstance( int[] dimensions, int entitiesPerPixel )
 	{
-		// TODO Auto-generated method stub
-		return null;
+		throw new UnsupportedOperationException();
 	}
 
-	/* (non-Javadoc)
-	 * @see mpicbg.imglib.container.ContainerFactory#createShortInstance(int[], int)
-	 */
 	@Override
 	public < T extends Type< T >> Container< T, ? extends ShortAccess > createShortInstance( int[] dimensions, int entitiesPerPixel )
 	{
-		// TODO Auto-generated method stub
-		return null;
+		throw new UnsupportedOperationException();
 	}
 
-	/* (non-Javadoc)
-	 * @see mpicbg.imglib.Factory#getErrorMessage()
-	 */
 	@Override
 	public String getErrorMessage()
 	{
