@@ -82,7 +82,7 @@ public abstract class CursorImpl<T extends Type<T>> implements Cursor<T>
 	public void remove() {}
 	
 	@Override
-	public T next(){ fwd(); return type; }
+	public T next(){ fwd(); return getType(); }
 
 	@Override
 	public void fwd( final long steps )
