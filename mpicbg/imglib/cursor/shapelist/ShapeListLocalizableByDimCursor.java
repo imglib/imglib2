@@ -217,7 +217,7 @@ public class ShapeListLocalizableByDimCursor< T extends Type< T > > extends Curs
 	}
 
 	@Override
-	public void getPosition( int[] position )
+	public void getPosition( final int[] position )
 	{
 		for ( int d = 0; d < numDimensions; ++d )
 			position[ d ] = this.position[ d ];
@@ -230,9 +230,9 @@ public class ShapeListLocalizableByDimCursor< T extends Type< T > > extends Curs
 	}
 
 	@Override
-	public int getPosition( int dim )
+	public int getPosition( final int dim )
 	{
-		return 0;
+		return position[ dim ];
 	}
 
 	@Override
