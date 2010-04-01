@@ -31,6 +31,7 @@ package mpicbg.imglib.cursor.shapelist;
 
 import mpicbg.imglib.container.shapelist.ShapeList;
 import mpicbg.imglib.cursor.LocalizableByDimCursor;
+import mpicbg.imglib.cursor.LocalizableCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategy;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
@@ -43,7 +44,7 @@ public class ShapeListLocalizableByDimOutOfBoundsCursor<T extends Type<T>> exten
 	
 	boolean isOutOfBounds = false;
 	
-	public ShapeListLocalizableByDimOutOfBoundsCursor( final ShapeList<T> container, final Image<T> image, final T type, final OutOfBoundsStrategyFactory<T> outOfBoundsStrategyFactory ) 
+	public ShapeListLocalizableByDimOutOfBoundsCursor( final ShapeList<T, ?> container, final Image<T> image, final T type, final OutOfBoundsStrategyFactory<T> outOfBoundsStrategyFactory ) 
 	{
 		super( container, image, type );
 		
@@ -53,13 +54,21 @@ public class ShapeListLocalizableByDimOutOfBoundsCursor<T extends Type<T>> exten
 		reset();
 	}	
 	
+	/**
+	 * TODO Not the most efficient way to calculate this on demand.  Better: count an index while moving...
+	 */
 	@Override
 	public boolean hasNext()
 	{
-		if ( !isOutOfBounds && type.getIndex() < sizeMinus1 )
-			return true;
-		else
-			return false;
+		if ( isOutOfBounds ) return false;
+		
+		for ( int d = numDimensions - 1; d >= 0; --d )
+		{
+			final int sizeD = dimensions[ d ] - 1;
+			if ( position[ d ] < sizeD )
+				return true;
+		}
+		return false;
 	}
 
 	@Override
@@ -70,23 +79,17 @@ public class ShapeListLocalizableByDimOutOfBoundsCursor<T extends Type<T>> exten
 		
 		isClosed = false;
 		isOutOfBounds = false;
-		type.updateIndex( -1 );
 		
-		position[ 0 ] = -1;
-		
-		for ( int d = 1; d < numDimensions; d++ )
-			position[ d ] = 0;
-		
-		type.updateContainer( this );
+		super.reset();
 	}
 	
 	@Override
 	public T getType() 
-	{ 
+	{
 		if ( isOutOfBounds )
 			return outOfBoundsStrategy.getType();
 		else
-			return type; 
+			return super.getType(); 
 	}
 		
 	@Override
@@ -94,26 +97,17 @@ public class ShapeListLocalizableByDimOutOfBoundsCursor<T extends Type<T>> exten
 	{
 		if ( !isOutOfBounds )
 		{
-			type.incIndex();
-			
-			for ( int d = 0; d < numDimensions; d++ )
+			for ( int d = 0; d < numDimensions; ++d )
 			{
-				if ( position[ d ] < dimensions[ d ] - 1 )
-				{
-					position[ d ]++;
-					
-					for ( int e = 0; e < d; e++ )
-						position[ e ] = 0;
-
-					//link.fwd();
+				if ( ++position[ d ] >= dimensions[ d ] )
+					position[ d ] = 0;
+				else
 					return;
-				}
 			}
 			
-			// if it did not return we moved out of image bounds
 			isOutOfBounds = true;
-			++position[0];
-			outOfBoundsStrategy.initOutOfBOunds(  );
+			++position[ 0 ];
+			outOfBoundsStrategy.initOutOfBOunds();
 			//link.fwd();
 		}
 	}
@@ -125,24 +119,17 @@ public class ShapeListLocalizableByDimOutOfBoundsCursor<T extends Type<T>> exten
 
 		if ( isOutOfBounds )
 		{
-			// reenter the image?
 			if ( position[ dim ] == 0 )
 				setPosition( position );
-			else // moved out of image bounds
+			else
 				outOfBoundsStrategy.notifyOutOfBOundsFwd( dim );
 		}
 		else
 		{			
-			if ( position[ dim ] < dimensions[ dim ] )
+			if ( position[ dim ] >= dimensions[ dim ] )
 			{
-				// moved within the image
-				type.incIndex( step[ dim ] );
-			}
-			else
-			{
-				// left the image
 				isOutOfBounds = true;
-				outOfBoundsStrategy.initOutOfBOunds(  );
+				outOfBoundsStrategy.initOutOfBOunds();
 			}
 		}
 		//link.fwd( dim );
@@ -155,47 +142,24 @@ public class ShapeListLocalizableByDimOutOfBoundsCursor<T extends Type<T>> exten
 
 		if ( isOutOfBounds )
 		{
-			// reenter the image?
 			if ( position[ dim ] >= 0 && position[ dim ] < dimensions[ dim ] )
 			{
 				isOutOfBounds = false;
+				for ( int d = 0; d < numDimensions && !isOutOfBounds; ++d )
+					isOutOfBounds = position[ d ] < 0 || position[ d ] >= dimensions[ d ];
 				
-				for ( int d = 0; d < numDimensions && !isOutOfBounds; d++ )
-					if ( position[ d ] < 0 || position[ d ] >= dimensions[ d ])
-						isOutOfBounds = true;
-				
-				if ( !isOutOfBounds )
-				{
-					// we re-entered the image
-					// new location is inside the image					
-					type.updateContainer( this );
-					
-					// get the offset inside the image
-					type.updateIndex( container.getPos( position ) );
-				}
-				else
-				{
+				if ( isOutOfBounds )
 					outOfBoundsStrategy.notifyOutOfBOunds( steps, dim  );
-				}
 			}
-			else // moved out of image bounds
-			{
+			else
 				outOfBoundsStrategy.notifyOutOfBOunds( steps, dim  );
-			}
 		}
 		else
 		{			
-			if ( position[ dim ] >= 0 && position[ dim ] < dimensions[ dim ] )
+			if ( position[ dim ] < 0 || position[ dim ] >= dimensions[ dim ] )
 			{
-				// moved within the image
-				//type.i += step[ dim ] * steps;
-				type.incIndex( step[ dim ] * steps );
-			}
-			else
-			{
-				// left the image
 				isOutOfBounds = true;
-				outOfBoundsStrategy.initOutOfBOunds(  );
+				outOfBoundsStrategy.initOutOfBOunds();
 			}
 		}
 		//link.move( steps, dim );
@@ -204,28 +168,21 @@ public class ShapeListLocalizableByDimOutOfBoundsCursor<T extends Type<T>> exten
 	@Override
 	public void bck( final int dim )
 	{
-		position[ dim ]--;	
+		--position[ dim ];
 
 		if ( isOutOfBounds )
 		{
-			// reenter the image?
-			if ( position[ dim ] == dimensions[ dim ] - 1 )
+			if ( position[ dim ] < dimensions[ dim ] )
 				setPosition( position );
-			else // moved out of image bounds
-				outOfBoundsStrategy.notifyOutOfBOundsBck( dim );
+			else
+				outOfBoundsStrategy.notifyOutOfBOundsFwd( dim );
 		}
 		else
 		{			
-			if ( position[ dim ] > -1 )
+			if ( position[ dim ] == -1 )
 			{
-				// moved within the image
-				type.decIndex( step[ dim ] );
-			}
-			else
-			{
-				// left the image
 				isOutOfBounds = true;
-				outOfBoundsStrategy.initOutOfBOunds(  );
+				outOfBoundsStrategy.initOutOfBOunds();
 			}
 		}
 		//link.bck( dim );
@@ -234,40 +191,22 @@ public class ShapeListLocalizableByDimOutOfBoundsCursor<T extends Type<T>> exten
 	@Override
 	public void setPosition( final int[] position )
 	{
-		// save current state
 		final boolean wasOutOfBounds = isOutOfBounds;
 		isOutOfBounds = false;
 		
-		// update positions and check if we are inside the image
-		for ( int d = 0; d < numDimensions; d++ )
+		for ( int d = 0; d < numDimensions; ++d )
 		{
 			this.position[ d ] = position[ d ];
-			
 			if ( position[ d ] < 0 || position[ d ] >= dimensions[ d ])
-			{
-				// we are out of image bounds
 				isOutOfBounds = true;
-			}
 		}
 		
 		if ( isOutOfBounds )
 		{
-			// new location is out of image bounds
-		
-			if ( wasOutOfBounds ) // just moved out of image bounds
-				outOfBoundsStrategy.notifyOutOfBOunds(  );
-			else // we left the image with this setPosition() call
-				outOfBoundsStrategy.initOutOfBOunds(  );
-		}
-		else
-		{
-			// new location is inside the image
-			
-			if ( wasOutOfBounds ) // we reenter the image with this setPosition() call
-				type.updateContainer( this );
-			
-			// get the offset inside the image
-			type.updateIndex( container.getPos( position ) );			
+			if ( wasOutOfBounds )
+				outOfBoundsStrategy.notifyOutOfBOunds();
+			else
+				outOfBoundsStrategy.initOutOfBOunds();
 		}
 		//link.setPosition( position );
 	}
@@ -277,25 +216,30 @@ public class ShapeListLocalizableByDimOutOfBoundsCursor<T extends Type<T>> exten
 	{
 		this.position[ dim ] = position;
 
-		// we are out of image bounds or in the initial starting position
-		if ( isOutOfBounds || type.getIndex() == -1 )
+		if ( isOutOfBounds )
 		{
-			// if just this dimensions moves inside does not necessarily mean that
-			// the other ones do as well, so we have to do a full check here
 			setPosition( this.position );
 		}
-		else if ( position < 0 || position >= dimensions[ dim ]) // we can just check in this dimension if it is still inside
+		else if ( position < 0 || position >= dimensions[ dim ] )
 		{
-			// cursor has left the image
 			isOutOfBounds = true;
 			outOfBoundsStrategy.initOutOfBOunds();
 			return;
 		}
-		else
-		{
-			// jumped around inside the image
-			type.updateIndex( container.getPos( this.position ) );
-		}		
 		//link.setPosition(position, dim);
+	}
+	
+	@Override
+	public void moveTo( final LocalizableCursor<?> cursor )
+	{
+		final int[] position = cursor.getPosition();
+		moveTo( position );
+	}
+
+	@Override
+	public void setPosition( final LocalizableCursor<?> cursor )
+	{
+		final int[] position = cursor.getPosition();
+		setPosition( position );
 	}
 }

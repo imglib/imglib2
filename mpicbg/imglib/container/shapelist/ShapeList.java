@@ -120,8 +120,7 @@ public class ShapeList< T extends Type< T >, D extends DataAccess > extends Cont
 	@Override
 	public ShapeListLocalizableByDimOutOfBoundsCursor< T > createLocalizableByDimCursor( final T type, final Image< T > image, final OutOfBoundsStrategyFactory< T > outOfBoundsFactory ) 
 	{
-		throw new UnsupportedOperationException();
-//		return new ShapeListLocalizableByDimOutOfBoundsCursor< T >( this, image, type, outOfBoundsFactory );
+		return new ShapeListLocalizableByDimOutOfBoundsCursor< T >( this, image, type, outOfBoundsFactory );
 	}
 	
 	@Override

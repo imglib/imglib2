@@ -213,7 +213,6 @@ public class ShapeListLocalizableByDimCursor< T extends Type< T > > extends Curs
 			else
 				break;
 		}
-		
 	}
 
 	@Override
