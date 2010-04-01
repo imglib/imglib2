@@ -55,7 +55,7 @@ public class DirectConvolution
 		final int[] pos = new int[outCursor.getNumDimensions()];
 		final int[] invPos = new int[outCursor.getNumDimensions()];
 		float conv = 0;
-		final S type = outCursor.getImage().createType();
+		//final S type = outCursor.getImage().createType();
 		
 		outCursor.setPosition(position);
 		
@@ -67,9 +67,8 @@ public class DirectConvolution
 			kernelCursor.setPosition(invPos);
 			conv += roiCursor.getType().getReal() * kernelCursor.getType().getReal();					
 		}
-		type.setReal(conv);
 				
-		outCursor.getType().set(type);
+		outCursor.getType().setReal(conv);
 		
 		return true;
 	}

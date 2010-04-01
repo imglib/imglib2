@@ -1,6 +1,7 @@
 package mpicbg.imglib.algorithm;
 
-import mpicbg.imglib.cursor.LocalizableByDimCursor;
+import java.util.Arrays;
+
 import mpicbg.imglib.cursor.LocalizableCursor;
 import mpicbg.imglib.cursor.special.RegionOfInterestCursor;
 import mpicbg.imglib.image.Image;
@@ -12,10 +13,11 @@ import mpicbg.imglib.type.NumericType;
 public abstract class ROIAlgorithm <T extends NumericType<T>, S extends NumericType<S>> implements OutputAlgorithm<S>
 {
 
-	private final LocalizableByDimCursor<T> inImageDummyCursor;
-	private final LocalizableCursor<T> inImagePullCursor;
-	private RegionOfInterestCursor<T> roiCursor;
+	//private final LocalizableByDimCursor<T> inImageDummyCursor;
+	//private final LocalizableCursor<T> inImagePullCursor;
+	private final RegionOfInterestCursor<T> roiCursor;
 	private final int[] patchSize;
+	private final int[] originOffset;
 	private final Image<T> inputImage;
 	private final OutsideStrategyFactory<T> outsideFactory;
 	private Image<S> outputImage;	
@@ -29,19 +31,23 @@ public abstract class ROIAlgorithm <T extends NumericType<T>, S extends NumericT
 		this(type, imageIn, patchSize, null);
 	}
 	
-	protected ROIAlgorithm(final S type, final Image<T> imageIn, final int[] patchSize, final OutsideStrategyFactory<T> inOutFactory)
-	{
+	protected ROIAlgorithm(final S type, final Image<T> imageIn, final int[] patchSize,
+			final OutsideStrategyFactory<T> inOutFactory)
+	{		
+		int nd = imageIn.getNumDimensions();
 		
+		final int[] initPos = new int[nd];
+		final int[] imageSize = imageIn.getDimensions();
+		
+		originOffset = new int[nd];
 		inputImage = imageIn;
 		this.patchSize = patchSize.clone();
-		//this.inputImageSize = inputImage.getDimensions();		
 		outputImage = null;
 		imageFactory = null;
 		errorMsg = "";
 		name = null;
 		typeS = type.clone();
-		roiCursor = null;
-		//cursor 
+		Arrays.fill(initPos, 0);
 		
 		if (inOutFactory == null)
 		{
@@ -54,8 +60,14 @@ public abstract class ROIAlgorithm <T extends NumericType<T>, S extends NumericT
 			outsideFactory = inOutFactory;
 		}
 		
-		inImageDummyCursor = imageIn.createLocalizableByDimCursor(outsideFactory);
-		inImagePullCursor = imageIn.createLocalizableCursor();
+		roiCursor = imageIn.createLocalizableByDimCursor(outsideFactory)
+			.createRegionOfInterestCursor(initPos, patchSize);
+		
+		for (int i = 0; i < nd; ++i)
+		{
+			//Dividing an int by 2 automatically takes the floor, which is what we want.
+			originOffset[i] = patchSize[i] / 2;
+		}
 	}
 
 	/**
@@ -65,12 +77,13 @@ public abstract class ROIAlgorithm <T extends NumericType<T>, S extends NumericT
 	 * patch-of-interest
 	 * @return true if the operation on the given patch was successful, false otherwise 
 	 */
-	protected abstract boolean patchOperation(final int[] position, final RegionOfInterestCursor<T> cursor);
+	protected abstract boolean patchOperation(final int[] position,
+			final RegionOfInterestCursor<T> cursor);
 	
-	protected LocalizableCursor<T> getInputCursor()
+	/*protected LocalizableCursor<T> getInputCursor()
 	{
-		return inImageDummyCursor;
-	}
+		return inImagePullCursor;
+	}*/
 	
 	public void setImageFactory(final ImageFactory<S> factory)
 	{
@@ -87,20 +100,19 @@ public abstract class ROIAlgorithm <T extends NumericType<T>, S extends NumericT
 		return name;
 	}
 	
+	public int[] getPatchSize()
+	{
+		return patchSize.clone();
+	}
+	
 	
 	protected Image<S> getOutputImage()
 	{		
 		if (outputImage == null)
 		{
-			/*final int[] outputImageSize = new int[inputImage.getNumDimensions()];
-			for (int i = 0; i < inputImage.getNumDimensions(); ++i)
-			{
-				outputImageSize[i] = inputImage.getDimension(i) + patchSize[i];  
-			}*/
-			
 			if (imageFactory == null)
 			{			
-				imageFactory = new ImageFactory<S>(typeS, inImageDummyCursor.getImage().getContainerFactory());
+				imageFactory = new ImageFactory<S>(typeS, inputImage.getContainerFactory());
 			}
 					
 			if (name == null)
@@ -132,42 +144,46 @@ public abstract class ROIAlgorithm <T extends NumericType<T>, S extends NumericT
 		errorMsg = message;
 	}
 
-	protected void setROIPosition(int[] pos)
+	protected int[] positionOffset(final int[] position, final int[] offsetPosition)
 	{
-		if (roiCursor == null)
+		if (offsetPosition.length < position.length)
 		{
-			roiCursor = inImageDummyCursor.createRegionOfInterestCursor(pos, patchSize);
+			throw new RuntimeException("Cannot copy " + position.length 
+					+ " values into array of length " + offsetPosition.length);
 		}
-		else
+		else if (position.length < originOffset.length){
+			throw new RuntimeException("Position vector has less cardinality than " +
+					"the input image's dimensionality.");
+		}
+			
+		for (int i = 0; i < position.length; ++i)
 		{
-			roiCursor.reset(pos);
+			offsetPosition[i] = position[i] - originOffset[i];
 		}
+		return offsetPosition;
 	}
 	
 	@Override
 	public boolean process()
-	{		
-		int[] pos = new int[inImageDummyCursor.getNumDimensions()];
-		inImagePullCursor.reset();
+	{
+		final LocalizableCursor<S> outputCursor = getOutputImage().createLocalizableCursor();
+		final int[] pos = new int[inputImage.getNumDimensions()];
+		final int[] offsetPos = new int[inputImage.getNumDimensions()];
 		
-		while (inImagePullCursor.hasNext())
+		while (outputCursor.hasNext())
 		{
-			inImagePullCursor.fwd();			
-			inImagePullCursor.getPosition(pos);
-			setROIPosition(pos);
+			outputCursor.fwd();			
+			outputCursor.getPosition(pos);
+			roiCursor.reset(positionOffset(pos, offsetPos));
 						
 			if (!patchOperation(pos, roiCursor))
 			{
+				outputCursor.close();
 				return false;
 			}
-			
-			//TODO: Which of these next two lines do I need?
-			//roiCursor.reset();
-			//inImageDummyCursor.setPosition(pos);
-			
-			//roiCursor.close();
 		}
-		
+			
+		outputCursor.close();
 		return true;		
 	}
 
