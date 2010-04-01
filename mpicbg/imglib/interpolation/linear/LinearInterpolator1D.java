@@ -67,7 +67,7 @@ public class LinearInterpolator1D<T extends RealType<T>> extends LinearInterpola
 		
 		cursor.moveTo( tmpLocation );
 
-		// How to iterate the cube
+		// How to iterate the range
 		//
 		//     *----x->*
 		//   y0         y1
@@ -104,7 +104,7 @@ public class LinearInterpolator1D<T extends RealType<T>> extends LinearInterpola
 		
 		cursor.setPosition( tmpLocation );
 
-		// How to iterate the cube
+		// How to iterate the range
 		//
 		//     *----x->*
 		//   y0         y1

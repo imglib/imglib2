@@ -35,7 +35,7 @@ import mpicbg.imglib.container.array.Array;
 import mpicbg.imglib.container.basictypecontainer.DataAccess;
 import mpicbg.imglib.cursor.Cursor;
 import mpicbg.imglib.cursor.array.ArrayCursor;
-import mpicbg.imglib.cursor.cube.CubeCursor;
+import mpicbg.imglib.cursor.cell.CellCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.display.Display;
 import mpicbg.imglib.type.numeric.real.FloatType;
@@ -79,15 +79,15 @@ public interface Type<T extends Type<T>>
 	
 	/**
 	 * This method is used by the {@link Cursor}s to update the data current data array
-	 * of the {@link Type}, for example when moving from one {@link Cube} to the next.
+	 * of the {@link Type}, for example when moving from one {@link Cell} to the next.
 	 * If it is only an {@link Array} the {@link Cursor}s never have to call that function.
 	 * 
 	 * The idea behind this concept is maybe not obvious. The {@link Type} knows which basic type
-	 * is used (float, int, byte, ...) but does not know how it is stored ({@link Array}, {@link Cube}, ...) to
+	 * is used (float, int, byte, ...) but does not know how it is stored ({@link Array}, {@link CellContainer}, ...) to
 	 * prevent multiple implementations of {@link Type}.
 	 * That's why {@link Type} asks the {@link DataAccess} to give the actual basic array by passing the {@link Cursor}
-	 * that calls the method. The {@link DataAccess} is also an {@link Array}, {@link Cube}, ... which
-	 * can then communicate with the {@link ArrayCursor}, {@link CubeCursor}, ... and return the current basic type array. 
+	 * that calls the method. The {@link DataAccess} is also an {@link Array}, {@link CellContainer}, ... which
+	 * can then communicate with the {@link ArrayCursor}, {@link CellCursor}, ... and return the current basic type array. 
 	 * 
 	 * A typical implementation of this method looks like that (this is the {@link FloatType} implementation):
 	 * 

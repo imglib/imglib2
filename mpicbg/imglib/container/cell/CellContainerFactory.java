@@ -27,7 +27,7 @@
  *
  * @author Stephan Preibisch & Stephan Saalfeld
  */
-package mpicbg.imglib.container.cube;
+package mpicbg.imglib.container.cell;
 
 import mpicbg.imglib.container.Container;
 import mpicbg.imglib.container.ContainerFactory;
@@ -41,46 +41,46 @@ import mpicbg.imglib.container.basictypecontainer.array.LongArray;
 import mpicbg.imglib.container.basictypecontainer.array.ShortArray;
 import mpicbg.imglib.type.Type;
 
-public class CubeContainerFactory extends ContainerFactory
+public class CellContainerFactory extends ContainerFactory
 {
-	protected int[] cubeSize;
-	protected int standardCubeSize = 10;
+	protected int[] cellSize;
+	protected int standardCellSize = 10;
 
-	public CubeContainerFactory()
+	public CellContainerFactory()
 	{
 	}
 	
-	public CubeContainerFactory( final int cubeSize )
+	public CellContainerFactory( final int cellSize )
 	{
-		this.standardCubeSize = cubeSize;
+		this.standardCellSize = cellSize;
 	}
 	
-	public CubeContainerFactory( final int[] cubeSize )
+	public CellContainerFactory( final int[] cellSize )
 	{
-		if ( cubeSize == null || cubeSize.length == 0 )
+		if ( cellSize == null || cellSize.length == 0 )
 		{
-			System.err.println("CubeContainerFactory(): cubeSize is null. Using equal cube size of 10.");
-			this.cubeSize = null;
+			System.err.println("CellContainerFactory(): cellSize is null. Using equal cell size of 10.");
+			this.cellSize = null;
 			return;
 		}
 		
-		for ( int i = 0; i < cubeSize.length; i++ )
+		for ( int i = 0; i < cellSize.length; i++ )
 		{
-			if ( cubeSize[ i ] <= 0 )
+			if ( cellSize[ i ] <= 0 )
 			{
-				System.err.println("CubeContainerFactory(): cube size in dimension " + i + " is <= 0, using a size of " + standardCubeSize + ".");
-				cubeSize[ i ] = standardCubeSize;
+				System.err.println("CellContainerFactory(): cell size in dimension " + i + " is <= 0, using a size of " + standardCellSize + ".");
+				cellSize[ i ] = standardCellSize;
 			}
 		}
 		
-		this.cubeSize = cubeSize;
+		this.cellSize = cellSize;
 	}
 	
 	protected int[] checkDimensions( int dimensions[] )
 	{
 		if ( dimensions == null || dimensions.length == 0 )
 		{
-			System.err.println("CubeContainerFactory(): dimensionality is null. Creating a 1D cube with size 1.");
+			System.err.println("CellContainerFactory(): dimensionality is null. Creating a 1D cell with size 1.");
 			dimensions = new int[]{1};
 		}
 
@@ -88,7 +88,7 @@ public class CubeContainerFactory extends ContainerFactory
 		{
 			if ( dimensions[ i ] <= 0 )
 			{
-				System.err.println("CubeContainerFactory(): size of dimension " + i + " is <= 0, using a size of 1.");
+				System.err.println("CellContainerFactory(): size of dimension " + i + " is <= 0, using a size of 1.");
 				dimensions[ i ] = 1;
 			}
 		}
@@ -96,106 +96,106 @@ public class CubeContainerFactory extends ContainerFactory
 		return dimensions;
 	}
 	
-	protected int[] checkCubeSize( int[] cubeSize, int[] dimensions )
+	protected int[] checkCellSize( int[] cellSize, int[] dimensions )
 	{		
-		if ( cubeSize == null )
+		if ( cellSize == null )
 		{
-			cubeSize = new int[ dimensions.length ];
-			for ( int i = 0; i < cubeSize.length; i++ )
-				cubeSize[ i ] = standardCubeSize;
+			cellSize = new int[ dimensions.length ];
+			for ( int i = 0; i < cellSize.length; i++ )
+				cellSize[ i ] = standardCellSize;
 			
-			return cubeSize;
+			return cellSize;
 		}
 		
-		if ( cubeSize.length != dimensions.length )
+		if ( cellSize.length != dimensions.length )
 		{
-			System.err.println("CubeContainerFactory(): dimensionality of image is unequal to dimensionality of cubes, adjusting cube dimensionality.");
-			int[] cubeSizeNew = new int[ dimensions.length ];
+			System.err.println("CellContainerFactory(): dimensionality of image is unequal to dimensionality of cells, adjusting cell dimensionality.");
+			int[] cellSizeNew = new int[ dimensions.length ];
 			
 			for ( int i = 0; i < dimensions.length; i++ )
 			{
-				if ( i < cubeSize.length )
-					cubeSizeNew[ i ] = cubeSize[ i ];
+				if ( i < cellSize.length )
+					cellSizeNew[ i ] = cellSize[ i ];
 				else
-					cubeSizeNew[ i ] = standardCubeSize;
+					cellSizeNew[ i ] = standardCellSize;
 			}
 					
-			return cubeSizeNew;
+			return cellSizeNew;
 		}
 		
-		return cubeSize;
+		return cellSize;
 	}
 
 	@Override
 	public <T extends Type<T>> Container<T, BitArray> createBitInstance( int[] dimensions, int entitiesPerPixel )
 	{
 		dimensions = checkDimensions( dimensions );
-		int[] cubeSize = checkCubeSize( this.cubeSize, dimensions );
+		int[] cellSize = checkCellSize( this.cellSize, dimensions );
 		
-		return new Cube<T, BitArray>( this, new BitArray( 1 ), dimensions, cubeSize, entitiesPerPixel );
+		return new CellContainer<T, BitArray>( this, new BitArray( 1 ), dimensions, cellSize, entitiesPerPixel );
 	}
 	
 	@Override
 	public <T extends Type<T>> Container<T, ByteArray> createByteInstance( int[] dimensions, int entitiesPerPixel )
 	{
 		dimensions = checkDimensions( dimensions );
-		int[] cubeSize = checkCubeSize( this.cubeSize, dimensions );
+		int[] cellSize = checkCellSize( this.cellSize, dimensions );
 		
-		return new Cube<T, ByteArray>( this, new ByteArray( 1 ), dimensions, cubeSize, entitiesPerPixel );
+		return new CellContainer<T, ByteArray>( this, new ByteArray( 1 ), dimensions, cellSize, entitiesPerPixel );
 	}
 
 	@Override
 	public <T extends Type<T>> Container<T, CharArray> createCharInstance(int[] dimensions, int entitiesPerPixel)
 	{
 		dimensions = checkDimensions( dimensions );
-		int[] cubeSize = checkCubeSize( this.cubeSize, dimensions );
+		int[] cellSize = checkCellSize( this.cellSize, dimensions );
 		
-		return new Cube<T, CharArray>( this, new CharArray( 1 ), dimensions, cubeSize, entitiesPerPixel );
+		return new CellContainer<T, CharArray>( this, new CharArray( 1 ), dimensions, cellSize, entitiesPerPixel );
 	}
 
 	@Override
 	public <T extends Type<T>> Container<T, DoubleArray> createDoubleInstance(int[] dimensions, int entitiesPerPixel)
 	{
 		dimensions = checkDimensions( dimensions );
-		int[] cubeSize = checkCubeSize( this.cubeSize, dimensions );
+		int[] cellSize = checkCellSize( this.cellSize, dimensions );
 		
-		return new Cube<T, DoubleArray>( this, new DoubleArray( 1 ), dimensions, cubeSize, entitiesPerPixel );
+		return new CellContainer<T, DoubleArray>( this, new DoubleArray( 1 ), dimensions, cellSize, entitiesPerPixel );
 	}
 
 	@Override
 	public <T extends Type<T>> Container<T, FloatArray> createFloatInstance(int[] dimensions, int entitiesPerPixel)
 	{
 		dimensions = checkDimensions( dimensions );
-		int[] cubeSize = checkCubeSize( this.cubeSize, dimensions );
+		int[] cellSize = checkCellSize( this.cellSize, dimensions );
 		
-		return new Cube<T, FloatArray>( this, new FloatArray( 1 ), dimensions, cubeSize, entitiesPerPixel );
+		return new CellContainer<T, FloatArray>( this, new FloatArray( 1 ), dimensions, cellSize, entitiesPerPixel );
 	}
 
 	@Override
 	public <T extends Type<T>> Container<T, IntArray> createIntInstance(int[] dimensions, int entitiesPerPixel)
 	{
 		dimensions = checkDimensions( dimensions );
-		int[] cubeSize = checkCubeSize( this.cubeSize, dimensions );
+		int[] cellSize = checkCellSize( this.cellSize, dimensions );
 		
-		return new Cube<T, IntArray>( this, new IntArray( 1 ), dimensions, cubeSize, entitiesPerPixel );
+		return new CellContainer<T, IntArray>( this, new IntArray( 1 ), dimensions, cellSize, entitiesPerPixel );
 	}
 
 	@Override
 	public <T extends Type<T>> Container<T, LongArray> createLongInstance(int[] dimensions, int entitiesPerPixel)
 	{
 		dimensions = checkDimensions( dimensions );
-		int[] cubeSize = checkCubeSize( this.cubeSize, dimensions );
+		int[] cellSize = checkCellSize( this.cellSize, dimensions );
 		
-		return new Cube<T, LongArray>( this, new LongArray( 1 ), dimensions, cubeSize, entitiesPerPixel );
+		return new CellContainer<T, LongArray>( this, new LongArray( 1 ), dimensions, cellSize, entitiesPerPixel );
 	}
 
 	@Override
 	public <T extends Type<T>> Container<T, ShortArray> createShortInstance(int[] dimensions, int entitiesPerPixel)
 	{
 		dimensions = checkDimensions( dimensions );
-		int[] cubeSize = checkCubeSize( this.cubeSize, dimensions );
+		int[] cellSize = checkCellSize( this.cellSize, dimensions );
 		
-		return new Cube<T, ShortArray>( this, new ShortArray( 1 ), dimensions, cubeSize, entitiesPerPixel );
+		return new CellContainer<T, ShortArray>( this, new ShortArray( 1 ), dimensions, cellSize, entitiesPerPixel );
 	}
 
 	@Override

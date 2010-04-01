@@ -15,7 +15,7 @@ import mpicbg.imglib.algorithm.gauss.DownSample;
 import mpicbg.imglib.algorithm.math.MathLib;
 import mpicbg.imglib.container.ContainerFactory;
 import mpicbg.imglib.container.array.ArrayContainerFactory;
-import mpicbg.imglib.container.cube.CubeContainerFactory;
+import mpicbg.imglib.container.cell.CellContainerFactory;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.display.ComplexTypePhaseSpectrumDisplay;
 import mpicbg.imglib.image.display.ComplexTypePowerSpectrumDisplay;

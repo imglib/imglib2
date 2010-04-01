@@ -27,74 +27,74 @@
  *
  * @author Stephan Preibisch & Stephan Saalfeld
  */
-package mpicbg.imglib.cursor.cube;
+package mpicbg.imglib.cursor.cell;
 
 import mpicbg.imglib.container.array.Array;
-import mpicbg.imglib.container.cube.Cube;
+import mpicbg.imglib.container.cell.CellContainer;
 import mpicbg.imglib.cursor.LocalizablePlaneCursor;
 import mpicbg.imglib.cursor.array.ArrayLocalizableByDimCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.type.Type;
 import mpicbg.imglib.type.label.FakeType;
 
-public class CubeLocalizablePlaneCursor<T extends Type<T>> extends CubeLocalizableCursor<T> implements LocalizablePlaneCursor<T>
+public class CellLocalizablePlaneCursor<T extends Type<T>> extends CellLocalizableCursor<T> implements LocalizablePlaneCursor<T>
 {
 	/**
-	 * Here we "misuse" a ArrayLocalizableCursor to iterate through the cubes,
-	 * he always gives us the location of the current cube we are instantiating 
+	 * Here we "misuse" a ArrayLocalizableCursor to iterate over cells,
+	 * it always gives us the location of the current cell we are instantiating 
 	 */
 	final ArrayLocalizableByDimCursor<FakeType> cursor;
 
 	/*
-	protected final Cube<?,?> img;
+	protected final CellContainer<?,?> img;
 	
-	protected final int numCubes;
-	protected int cube, lastCube, cubeMaxI;
-	protected int[] cubeSize;
+	protected final int numCells;
+	protected int cell, lastCell, cellMaxI;
+	protected int[] cellSize;
 	protected final int[] dim;
-	protected CubeElement<?,?> cubeInstance;
+	protected Cell<?,?> cellInstance;
 	*/
 
-	/* Inherited from CubeLocalizableCursor<T>
+	/* Inherited from CellLocalizableCursor<T>
 	final protected int numDimensions;
 	final protected int[] position;
 	final protected int[] dimensions;
-	final protected int[] cubeDimensions;
-	final protected int[] cubeOffset;
+	final protected int[] cellDimensions;
+	final protected int[] cellOffset;
 	*/
 
-	protected int maxCubesPlane, currentCubePlane;
+	protected int maxCellsPlane, currentCellsPlane;
 	protected int planeDimA, planeDimB, planeSizeA, planeSizeB, incPlaneA, incPlaneB;
-	final protected int[] step, cubePosition, tmp, cubeEnd, numCubesDim, cubeStep;
+	final protected int[] step, cellPosition, tmp, cellEnd, numCellsDim, cellStep;
 	
-	public CubeLocalizablePlaneCursor( final Cube<T,?> container, final Image<T> image, final T type )
+	public CellLocalizablePlaneCursor( final CellContainer<T,?> container, final Image<T> image, final T type )
 	{
 		super( container, image, type);
 		
 		step = new int[ numDimensions ];
-		cubePosition = new int[ numDimensions ];
-		cubeEnd = new int[ numDimensions ];
+		cellPosition = new int[ numDimensions ];
+		cellEnd = new int[ numDimensions ];
 		tmp = new int[ numDimensions ];
 		
-		numCubesDim = container.getNumCubesDim();
-		cubeStep = new int[ numDimensions ];
+		numCellsDim = container.getNumCellsDim();
+		cellStep = new int[ numDimensions ];
 		
-		cursor = ArrayLocalizableByDimCursor.createLinearByDimCursor( numCubesDim ); 
+		cursor = ArrayLocalizableByDimCursor.createLinearByDimCursor( numCellsDim ); 
 		cursor.setPosition( new int[ container.getNumDimensions() ] );
 		
-		// the steps when moving from cube to cube
-		Array.createAllocationSteps( numCubesDim, cubeStep );
+		// the steps when moving from cell to cell
+		Array.createAllocationSteps( numCellsDim, cellStep );
 
 		reset();
 	}
 	
-	// TODO: type.getIndex() < cubeMaxI seems wrong
+	// TODO: type.getIndex() < cellMaxI seems wrong
 	@Override
 	public boolean hasNext()
 	{			
-		if ( currentCubePlane < maxCubesPlane - 1 )
+		if ( currentCellsPlane < maxCellsPlane - 1 )
 			return true;
-		else if ( type.getIndex() < cubeMaxI )
+		else if ( type.getIndex() < cellMaxI )
 			return true;
 		else
 			return false;
@@ -103,86 +103,86 @@ public class CubeLocalizablePlaneCursor<T extends Type<T>> extends CubeLocalizab
 	@Override
 	public void fwd()
 	{
-		if ( type.getIndex() < cubeMaxI )
+		if ( type.getIndex() < cellMaxI )
 		{
-			if ( type.getIndex() == -1 || position[ planeDimA ] < cubeEnd[ planeDimA ] - 1)
+			if ( type.getIndex() == -1 || position[ planeDimA ] < cellEnd[ planeDimA ] - 1)
 			{
 				position[ planeDimA ]++;
 				type.incIndex( incPlaneA );
 			}
-			else //if ( position[ planeDimB ] < cubeEnd[ planeDimB ] - 1)
+			else //if ( position[ planeDimB ] < cellEnd[ planeDimB ] - 1)
 			{
-				position[ planeDimA ] = cubeOffset[ planeDimA ];
+				position[ planeDimA ] = cellOffset[ planeDimA ];
 				position[ planeDimB ]++;
 				type.incIndex( incPlaneB );
 				type.decIndex( (planeSizeA - 1) * incPlaneA );
 			}
 		}
-		else if ( currentCubePlane < maxCubesPlane - 1 )
+		else if ( currentCellsPlane < maxCellsPlane - 1 )
 		{
-			currentCubePlane++;
+			currentCellsPlane++;
 
-			if ( cubePosition[ planeDimA ] < numCubesDim[ planeDimA ] - 1 )
+			if ( cellPosition[ planeDimA ] < numCellsDim[ planeDimA ] - 1 )
 			{
-				cubePosition[ planeDimA ]++;
+				cellPosition[ planeDimA ]++;
 			}
-			else if ( cubePosition[ planeDimB ] < numCubesDim[ planeDimB ] - 1 )
+			else if ( cellPosition[ planeDimB ] < numCellsDim[ planeDimB ] - 1 )
 			{
-				cubePosition[ planeDimA ] = 0;
-				cubePosition[ planeDimB ]++;
+				cellPosition[ planeDimA ] = 0;
+				cellPosition[ planeDimB ]++;
 			}
 
-			// get the new cube index
-			cube = container.getCubeElementIndex( cursor, cubePosition );
+			// get the new cell index
+			cell = container.getCellIndex( cursor, cellPosition );
 			
-			// get the new cube data
-			getCubeData(cube);
+			// get the new cell data
+			getCellData(cell);
 			
 			// update the global position
-			position[ planeDimA ] = cubeOffset[ planeDimA ];
+			position[ planeDimA ] = cellOffset[ planeDimA ];
 
 			// catch the 1d case
 			if ( planeDimB < numDimensions )
-				position[ planeDimB ] = cubeOffset[ planeDimB ];
+				position[ planeDimB ] = cellOffset[ planeDimB ];
 			
-			// get the correct index inside the cube
-			type.updateIndex( cubeInstance.getPosGlobal( position ) );			
+			// get the correct index inside the cell
+			type.updateIndex( cellInstance.getPosGlobal( position ) );			
 		}
 	}	
 	
-	protected void getCubeData( final int cube )
+	protected void getCellData( final int cell )
 	{
-		if ( cube == lastCube )
+		if ( cell == lastCell )
 			return;
 		
-		lastCube = cube;		
-		cubeInstance = container.getCubeElement( cube );		
+		lastCell = cell;		
+		cellInstance = container.getCell( cell );		
 
-		cubeInstance.getDimensions( cubeDimensions );
-		cubeInstance.getOffset( cubeOffset );
+		cellInstance.getDimensions( cellDimensions );
+		cellInstance.getOffset( cellOffset );
 
-		this.planeSizeA = cubeDimensions[ planeDimA ];
+		this.planeSizeA = cellDimensions[ planeDimA ];
 		
 		if ( planeDimB < numDimensions )
-			this.planeSizeB = cubeDimensions[ planeDimB ];
+			this.planeSizeB = cellDimensions[ planeDimB ];
 		else
 			this.planeDimB = 1;
 
 		for ( int d = 0; d < numDimensions; d++ )
-			cubeEnd[ d ] = cubeOffset[ d ] + cubeDimensions[ d ];
+			cellEnd[ d ] = cellOffset[ d ] + cellDimensions[ d ];
 
-		// the steps when moving inside a cube
-		cubeInstance.getSteps( step );
+		// the steps when moving inside a cell
+		cellInstance.getSteps( step );
 		
 		for ( int d = 0; d < numDimensions; d++ )
 			tmp[ d ] = position[ d ];
 		
 		this.incPlaneA = step[ planeDimA ];
-		this.tmp[ planeDimA ] = cubeEnd[ planeDimA ] - 1;
+		this.tmp[ planeDimA ] = cellEnd[ planeDimA ] - 1;
 		
 		if ( planeDimB > -1 && planeDimB < step.length )
 		{
-			this.tmp[ planeDimB ] = cubeEnd[ planeDimB ] - 1;
+			this.tmp[ planeDimB ] = cellEnd[ planeDimB ] - 1;
 			this.incPlaneB = step[ planeDimB ];
 		}
 		else
@@ -190,7 +190,7 @@ public class CubeLocalizablePlaneCursor<T extends Type<T>> extends CubeLocalizab
 			this.incPlaneB = 0;
 		}
 		
-		this.cubeMaxI = cubeInstance.getPosGlobal( tmp );
+		this.cellMaxI = cellInstance.getPosGlobal( tmp );
 		
 		type.updateContainer( this );
 	}
@@ -198,13 +198,13 @@ public class CubeLocalizablePlaneCursor<T extends Type<T>> extends CubeLocalizab
 	@Override
 	public void reset( final int planeDimA, final int planeDimB, final int[] dimensionPositions )
 	{
-		this.lastCube = -1;
+		this.lastCell = -1;
 
 		this.planeDimA = planeDimA;
 		this.planeDimB = planeDimB;
 				
-		this.maxCubesPlane = container.getNumCubes( planeDimA ) * container.getNumCubes( planeDimB ); 
-		this.currentCubePlane = 0;
+		this.maxCellsPlane = container.getNumCells( planeDimA ) * container.getNumCells( planeDimB ); 
+		this.currentCellsPlane = 0;
 			
 		// store the current position
     	final int[] dimPos = dimensionPositions.clone();
@@ -254,14 +254,14 @@ public class CubeLocalizablePlaneCursor<T extends Type<T>> extends CubeLocalizab
 		for ( int d = 0; d < numDimensions; d++ )
 			this.position[ d ] = position[ d ];
 
-		// the cube position in "cube space" from the image coordinates 
-		container.getCubeElementPosition( position, cubePosition );
+		// the cell position in "cell space" from the image coordinates 
+		container.getCellPosition( position, cellPosition );
 		
-		// get the cube index
-		cube = container.getCubeElementIndex( cursor, cubePosition );
+		// get the cell index
+		cell = container.getCellIndex( cursor, cellPosition );
 
-		getCubeData(cube);
-		type.updateIndex( cubeInstance.getPosGlobal( position ) );
+		getCellData(cell);
+		type.updateIndex( cellInstance.getPosGlobal( position ) );
 	}
 
 	@Override
@@ -270,7 +270,7 @@ public class CubeLocalizablePlaneCursor<T extends Type<T>> extends CubeLocalizab
 		cursor.close();
 		if (!isClosed)
 		{
-			lastCube = -1;
+			lastCell = -1;
 			isClosed = true;
 		}		
 	}	

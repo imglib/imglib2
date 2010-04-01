@@ -27,78 +27,78 @@
  *
  * @author Stephan Preibisch & Stephan Saalfeld
  */
-package mpicbg.imglib.cursor.cube;
+package mpicbg.imglib.cursor.cell;
 
-import mpicbg.imglib.container.cube.Cube;
-import mpicbg.imglib.container.cube.CubeElement;
+import mpicbg.imglib.container.cell.Cell;
+import mpicbg.imglib.container.cell.CellContainer;
 import mpicbg.imglib.cursor.Cursor;
 import mpicbg.imglib.cursor.CursorImpl;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.type.Type;
 
-public class CubeCursor<T extends Type<T>> extends CursorImpl<T> implements Cursor<T>
+public class CellCursor<T extends Type<T>> extends CursorImpl<T> implements Cursor<T>
 {
 	/*
-	 * Pointer to the Cube we are iterating on
+	 * Pointer to the CellContainer we are iterating on
 	 */
-	protected final Cube<T,?> container;
+	protected final CellContainer<T,?> container;
 	
 	/*
-	 * The number of cubes inside the image
+	 * The number of cells inside the image
 	 */
-	protected final int numCubes;
+	protected final int numCells;
 	
 	/*
-	 * The index of the current cube
+	 * The index of the current cell
 	 */
-	protected int cube;
+	protected int cell;
 	
 	/*
-	 * The index of the last cube
+	 * The index of the last cell
 	 */
-	protected int lastCube;
+	protected int lastCell;
 	
 	/*
-	 * The index+1 of the last pixel in the cube 
+	 * The index+1 of the last pixel in the cell 
 	 */
-	protected int cubeMaxI;
+	protected int cellMaxI;
 	
 	/*
-	 * The instance of the current cube
+	 * The instance of the current cell
 	 */
-	protected CubeElement<T,?> cubeInstance;
+	protected Cell<T,?> cellInstance;
 	
-	public CubeCursor( final Cube<T,?> container, final Image<T> image, final T type )
+	public CellCursor( final CellContainer<T,?> container, final Image<T> image, final T type )
 	{
 		super( container, image, type );
 		
 		this.container = container;
-		this.numCubes = container.getNumCubes();
-		this.lastCube = -1;
+		this.numCells = container.getNumCells();
+		this.lastCell = -1;
 		
 		reset();
 	}
 	
-	protected void getCubeData( final int cube )
+	protected void getCellData( final int cell )
 	{
-		if ( cube == lastCube )
+		if ( cell == lastCell )
 			return;
 		
-		lastCube = cube;		
-		cubeInstance = container.getCubeElement( cube );				
-		cubeMaxI = cubeInstance.getNumPixels();	
+		lastCell = cell;		
+		cellInstance = container.getCell( cell );				
+		cellMaxI = cellInstance.getNumPixels();	
 		
 		type.updateContainer( this );
 	}
 	
-	public CubeElement<T,?> getCurrentCube() { return cubeInstance; }
+	public Cell<T,?> getCurrentCell() { return cellInstance; }
 	
 	@Override
 	public void reset()
 	{
 		type.updateIndex( -1 );
-		cube = 0;
-		getCubeData(cube);
+		cell = 0;
+		getCellData(cell);
 		isClosed = false;
 	}
 	
@@ -108,7 +108,7 @@ public class CubeCursor<T extends Type<T>> extends CursorImpl<T> implements Curs
 	{ 
 		if (!isClosed)
 		{
-			lastCube = -1;
+			lastCell = -1;
 			isClosed = true;
 		}
 	}
@@ -116,9 +116,9 @@ public class CubeCursor<T extends Type<T>> extends CursorImpl<T> implements Curs
 	@Override
 	public boolean hasNext()
 	{			
-		if ( cube < numCubes - 1 )
+		if ( cell < numCells - 1 )
 			return true;
-		else if ( type.getIndex() < cubeMaxI - 1 )
+		else if ( type.getIndex() < cellMaxI - 1 )
 			return true;
 		else
 			return false;
@@ -127,32 +127,32 @@ public class CubeCursor<T extends Type<T>> extends CursorImpl<T> implements Curs
 	@Override
 	public void fwd()
 	{
-		if ( type.getIndex() < cubeMaxI - 1 )
+		if ( type.getIndex() < cellMaxI - 1 )
 		{
 			type.incIndex();
 		}
-		else //if (cube < numCubes - 1)
+		else //if (cell < numCells - 1)
 		{
-			cube++;
+			cell++;
 			type.updateIndex( 0 );			
-			getCubeData(cube);
+			getCellData(cell);
 		}
 		/*
 		else
 		{			
 			// we have to run out of the image so that the next hasNext() fails
-			lastCube = -1;						
-			type.i = cubeMaxI;
-			cube = numCubes;
+			lastCell= -1;						
+			type.i = cellMaxI;
+			cells = numCells;
 		}
 		*/
 	}	
 
 	@Override
-	public Cube<T,?> getStorageContainer(){ return container; }
+	public CellContainer<T,?> getStorageContainer(){ return container; }
 
 	@Override
-	public int getStorageIndex() { return cubeInstance.getCubeId(); }	
+	public int getStorageIndex() { return cellInstance.getCellId(); }	
 
 	@Override
 	public String toString() { return type.toString(); }	

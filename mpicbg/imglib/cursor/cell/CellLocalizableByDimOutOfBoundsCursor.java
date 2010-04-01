@@ -27,23 +27,23 @@
  *
  * @author Stephan Preibisch & Stephan Saalfeld
  */
-package mpicbg.imglib.cursor.cube;
+package mpicbg.imglib.cursor.cell;
 
-import mpicbg.imglib.container.cube.Cube;
+import mpicbg.imglib.container.cell.CellContainer;
 import mpicbg.imglib.cursor.LocalizableByDimCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategy;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
 import mpicbg.imglib.type.Type;
 
-public class CubeLocalizableByDimOutOfBoundsCursor<T extends Type<T>> extends CubeLocalizableByDimCursor<T> implements LocalizableByDimCursor<T>
+public class CellLocalizableByDimOutOfBoundsCursor<T extends Type<T>> extends CellLocalizableByDimCursor<T> implements LocalizableByDimCursor<T>
 {
 	final OutOfBoundsStrategyFactory<T> outOfBoundsStrategyFactory;
 	final OutOfBoundsStrategy<T> outOfBoundsStrategy;
 	
 	boolean isOutOfBounds = false;
 	
-	public CubeLocalizableByDimOutOfBoundsCursor( final Cube<T,?> container, final Image<T> image, final T type, final OutOfBoundsStrategyFactory<T> outOfBoundsStrategyFactory ) 
+	public CellLocalizableByDimOutOfBoundsCursor( final CellContainer<T,?> container, final Image<T> image, final T type, final OutOfBoundsStrategyFactory<T> outOfBoundsStrategyFactory ) 
 	{
 		super( container, image, type );
 		
@@ -56,9 +56,9 @@ public class CubeLocalizableByDimOutOfBoundsCursor<T extends Type<T>> extends Cu
 	@Override
 	public boolean hasNext()
 	{			
-		if ( !isOutOfBounds && cube < numCubes - 1 )
+		if ( !isOutOfBounds && cell < numCells - 1 )
 			return true;
-		else if ( type.getIndex() < cubeMaxI - 1 )
+		else if ( type.getIndex() < cellMaxI - 1 )
 			return true;
 		else
 			return false;
@@ -80,8 +80,8 @@ public class CubeLocalizableByDimOutOfBoundsCursor<T extends Type<T>> extends Cu
 			return;
 		
 		type.updateIndex( -1 );
-		cube = 0;
-		getCubeData( cube );
+		cell = 0;
+		getCellData( cell );
 		isClosed = false;
 		isOutOfBounds = false;
 		
@@ -90,7 +90,7 @@ public class CubeLocalizableByDimOutOfBoundsCursor<T extends Type<T>> extends Cu
 		for ( int d = 1; d < numDimensions; d++ )
 		{
 			position[ d ] = 0;
-			cubePosition[ d ] = 0;
+			cellPosition[ d ] = 0;
 		}
 		
 		type.updateContainer( this );
@@ -101,37 +101,37 @@ public class CubeLocalizableByDimOutOfBoundsCursor<T extends Type<T>> extends Cu
 	{
 		if ( !isOutOfBounds )
 		{
-			if ( type.getIndex() < cubeMaxI - 1 )
+			if ( type.getIndex() < cellMaxI - 1 )
 			{
 				type.incIndex();
 				
 				for ( int d = 0; d < numDimensions; d++ )
 				{
-					if ( position[ d ] < cubeDimensions[ d ] + cubeOffset[ d ] - 1 )
+					if ( position[ d ] < cellDimensions[ d ] + cellOffset[ d ] - 1 )
 					{
 						position[ d ]++;
 						
 						for ( int e = 0; e < d; e++ )
-							position[ e ] = cubeOffset[ e ];
+							position[ e ] = cellOffset[ e ];
 						
 						return;
 					}
 				}				
 			}
-			else if (cube < numCubes - 1)
+			else if (cell < numCells - 1)
 			{
-				cube++;
+				cell++;
 				type.updateIndex( 0 );			
-				getCubeData(cube);
+				getCellData(cell);
 				for ( int d = 0; d < numDimensions; d++ )
-					position[ d ] = cubeOffset[ d ];
+					position[ d ] = cellOffset[ d ];
 			}
 			else
 			{
 				// we moved out of image bounds
 				isOutOfBounds = true;
-				lastCube = -1;						
-				cube = numCubes;
+				lastCell = -1;						
+				cell = numCells;
 				position[0]++;
 				outOfBoundsStrategy.initOutOfBOunds(  );
 			}
@@ -158,14 +158,14 @@ public class CubeLocalizableByDimOutOfBoundsCursor<T extends Type<T>> extends Cu
 				{
 					type.updateContainer( this );			
 					
-					// the cube position in "cube space" from the image coordinates 
-					container.getCubeElementPosition( position, cubePosition );
+					// the cell position in "cell space" from the image coordinates 
+					container.getCellPosition( position, cellPosition );
 					
-					// get the cube index
-					cube = container.getCubeElementIndex( cursor, cubePosition );
+					// get the cell index
+					cell = container.getCellIndex( cursor, cellPosition );
 
-					getCubeData(cube);
-					type.updateIndex( cubeInstance.getPosGlobal( position ) );
+					getCellData(cell);
+					type.updateIndex( cellInstance.getPosGlobal( position ) );
 				}
 				else
 				{
@@ -181,9 +181,9 @@ public class CubeLocalizableByDimOutOfBoundsCursor<T extends Type<T>> extends Cu
 		{
 			position[ dim ] += steps;	
 	
-			if ( position[ dim ] < cubeEnd[ dim ] && position[ dim ] >= cubeOffset[ dim ] )
+			if ( position[ dim ] < cellEnd[ dim ] && position[ dim ] >= cellOffset[ dim ] )
 			{
-				// still inside the cube
+				// still inside the cell
 				type.incIndex( step[ dim ] * steps );
 			}
 			else
@@ -206,40 +206,40 @@ public class CubeLocalizableByDimOutOfBoundsCursor<T extends Type<T>> extends Cu
 			else // moved out of image bounds
 				outOfBoundsStrategy.notifyOutOfBOundsFwd( dim );
 		}
-		else if ( position[ dim ] + 1 < cubeEnd[ dim ])
+		else if ( position[ dim ] + 1 < cellEnd[ dim ])
 		{
-			// still inside the cube
+			// still inside the cell
 			type.incIndex( step[ dim ] );
 			position[ dim ]++;	
 		}
-		else if ( cubePosition[ dim ] < numCubesDim[ dim ] - 2 )
+		else if ( cellPosition[ dim ] < numCellsDim[ dim ] - 2 )
 		{
-			// next cube in dim direction is not the last one
-			cubePosition[ dim ]++;
-			cube += cubeStep[ dim ];
+			// next cell in dim direction is not the last one
+			cellPosition[ dim ]++;
+			cell += cellStep[ dim ];
 			
-			// we can directly compute the array index i in the next cube
-			type.decIndex( ( position[ dim ] - cubeOffset[ dim ] ) * step[ dim ] );
-			getCubeData(cube);
+			// we can directly compute the array index i in the next cell
+			type.decIndex( ( position[ dim ] - cellOffset[ dim ] ) * step[ dim ] );
+			getCellData(cell);
 			
 			position[ dim ]++;	
 		} 
-		else if ( cubePosition[ dim ] == numCubesDim[ dim ] - 2 ) 
+		else if ( cellPosition[ dim ] == numCellsDim[ dim ] - 2 ) 
 		{
-			// next cube in dim direction is the last one, we cannot propagte array index i					
-			cubePosition[ dim ]++;
-			cube += cubeStep[ dim ];
+			// next cell in dim direction is the last one, we cannot propagte array index i					
+			cellPosition[ dim ]++;
+			cell += cellStep[ dim ];
 
-			getCubeData(cube);					
+			getCellData(cell);					
 			position[ dim ]++;	
-			type.updateIndex( cubeInstance.getPosGlobal( position ) );
+			type.updateIndex( cellInstance.getPosGlobal( position ) );
 		}
 		else
 		{
 			// left the image
 			isOutOfBounds = true;
-			lastCube = -1;						
-			cube = numCubes;
+			lastCell = -1;						
+			cell = numCells;
 			position[0]++;
 			outOfBoundsStrategy.initOutOfBOunds(  );
 		}
@@ -258,32 +258,32 @@ public class CubeLocalizableByDimOutOfBoundsCursor<T extends Type<T>> extends Cu
 			else // moved out of image bounds
 				outOfBoundsStrategy.notifyOutOfBOundsBck( dim );
 		}
-		else if ( position[ dim ] - 1 >= cubeOffset[ dim ])
+		else if ( position[ dim ] - 1 >= cellOffset[ dim ])
 		{
-			// still inside the cube
+			// still inside the cell
 			type.decIndex( step[ dim ] );
 			position[ dim ]--;	
 		}
-		else if ( cubePosition[ dim ] == numCubesDim[ dim ] - 1 && numCubes != 1)
+		else if ( cellPosition[ dim ] == numCellsDim[ dim ] - 1 && numCells != 1)
 		{
-			// current cube is the last one, so we cannot propagate the i
-			cubePosition[ dim ]--;
-			cube -= cubeStep[ dim ];
+			// current cell is the last one, so we cannot propagate the i
+			cellPosition[ dim ]--;
+			cell -= cellStep[ dim ];
 
-			getCubeData(cube);					
+			getCellData(cell);					
 			
 			position[ dim ]--;
-			type.updateIndex( cubeInstance.getPosGlobal( position ) );
+			type.updateIndex( cellInstance.getPosGlobal( position ) );
 		}
-		else if ( cubePosition[ dim ] > 0 )
+		else if ( cellPosition[ dim ] > 0 )
 		{
-			// current cube in dim direction is not the last one
-			cubePosition[ dim ]--;
-			cube -= cubeStep[ dim ];
+			// current cell in dim direction is not the last one
+			cellPosition[ dim ]--;
+			cell -= cellStep[ dim ];
 			
-			type.decIndex( ( position[ dim ] - cubeOffset[ dim ]) * step[ dim ] );
-			getCubeData(cube);
-			type.incIndex( ( cubeDimensions[ dim ] - 1 ) * step[ dim ] );
+			type.decIndex( ( position[ dim ] - cellOffset[ dim ]) * step[ dim ] );
+			getCellData(cell);
+			type.incIndex( ( cellDimensions[ dim ] - 1 ) * step[ dim ] );
 			
 			position[ dim ]--;	
 		}
@@ -291,8 +291,8 @@ public class CubeLocalizableByDimOutOfBoundsCursor<T extends Type<T>> extends Cu
 		{
 			// left the image
 			isOutOfBounds = true;
-			lastCube = -1;						
-			cube = numCubes;
+			lastCell = -1;						
+			cell = numCells;
 			position[0]++;
 			outOfBoundsStrategy.initOutOfBOunds(  );			
 		}
@@ -332,14 +332,14 @@ public class CubeLocalizableByDimOutOfBoundsCursor<T extends Type<T>> extends Cu
 			if ( wasOutOfBounds ) // we reenter the image with this setPosition() call
 				type.updateContainer( this );			
 						
-			// the cube position in "cube space" from the image coordinates 
-			container.getCubeElementPosition( position, cubePosition );
+			// the cell position in "cell space" from the image coordinates 
+			container.getCellPosition( position, cellPosition );
 			
-			// get the cube index
-			cube = container.getCubeElementIndex( cursor, cubePosition );
+			// get the cell index
+			cell = container.getCellIndex( cursor, cellPosition );
 
-			getCubeData(cube);
-			type.updateIndex( cubeInstance.getPosGlobal( position ) );			
+			getCellData(cell);
+			type.updateIndex( cellInstance.getPosGlobal( position ) );			
 		}	
 	}
 	
@@ -370,14 +370,14 @@ public class CubeLocalizableByDimOutOfBoundsCursor<T extends Type<T>> extends Cu
 			{
 				// jumped around inside the image
 				
-				// the cube position in "cube space" from the image coordinates 
-				cubePosition[ dim ] = container.getCubeElementPosition( position, dim );
+				// the cell position in "cell space" from the image coordinates 
+				cellPosition[ dim ] = container.getCellPosition( position, dim );
 
-				// get the cube index
-				cube = container.getCubeElementIndex( cursor, cubePosition[ dim ], dim );
+				// get the cell index
+				cell = container.getCellIndex( cursor, cellPosition[ dim ], dim );
 				
-				getCubeData(cube);
-				type.updateIndex( cubeInstance.getPosGlobal( this.position ) );				
+				getCellData(cell);
+				type.updateIndex( cellInstance.getPosGlobal( this.position ) );				
 			}
 		}
 	}	

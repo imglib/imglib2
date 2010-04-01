@@ -7,7 +7,7 @@ import java.awt.Rectangle;
 
 import mpicbg.imglib.container.Container;
 import mpicbg.imglib.container.array.ArrayContainerFactory;
-import mpicbg.imglib.container.cube.CubeContainerFactory;
+import mpicbg.imglib.container.cell.CellContainerFactory;
 import mpicbg.imglib.container.shapelist.ByteShapeList;
 import mpicbg.imglib.container.shapelist.ShapeListContainerFactory;
 import mpicbg.imglib.cursor.Cursor;
@@ -37,6 +37,8 @@ public class TestShapeList
 	{
 		final int depth = 50;
 		
+
+		/* Create ShapeList */
 		final ShapeListContainerFactory shapeListFactory = new ShapeListContainerFactory();
 		final ImageFactory< ByteType > shapeListImageFactory = new ImageFactory< ByteType >( new ByteType( ( byte )0 ), shapeListFactory );
 		
@@ -52,6 +54,15 @@ public class TestShapeList
 			shapeList.addShape( new Polygon( new int[]{ 90 + i, 180 - 2 * i, 190 - 4 * i, 120 - 2 * i }, new int[]{ 90, 80 + i, 140 - 3 * i, 130 - 2 * i }, 4 ), new ByteType( ( byte )127 ), new int[]{ i } );
 		}
 		
+		final ImagePlus shapeListImp = ImageJFunctions.displayAsVirtualStack( shapeListImage );
+		shapeListImp.show();
+		shapeListImp.getProcessor().setMinAndMax( 0, 255 );
+		shapeListImp.updateAndDraw();
+		/* ----------------------------------------------------------------- */
+
+
+		
+		
 		/* Copy content into another container */
 		final ArrayContainerFactory arrayFactory = new ArrayContainerFactory();
 		final Image< ByteType > arrayImage = new ImageFactory< ByteType >( new ByteType(), arrayFactory ).createImage( new int[]{ 200, 200, depth }, "ArrayContainer" );
@@ -64,10 +75,18 @@ public class TestShapeList
 			cShapeList.moveTo( cArray );
 			cArray.getType().set( cShapeList.getType() );
 		}
+
+		final ImagePlus arrayImp = ImageJFunctions.displayAsVirtualStack( arrayImage );
+		arrayImp.show();
+		arrayImp.getProcessor().setMinAndMax( 0, 255 );
+		arrayImp.updateAndDraw();
+		/* ----------------------------------------------------------------- */
+
+		
 		
 		/* Copy content rotated into another container */
-		final CubeContainerFactory cellFactory = new CubeContainerFactory();
-		final Image< ByteType > cellImage = new ImageFactory< ByteType >( new ByteType(), cellFactory ).createImage( new int[]{ 200, 200, depth }, "CellContainer" );
+		final CellContainerFactory cellFactory = new CellContainerFactory();
+		final Image< ByteType > cellImage = new ImageFactory< ByteType >( new ByteType(), cellFactory ).createImage( new int[]{ 200, 200, depth }, "Rotated CellContainer" );
 		final LocalizableCursor< ByteType > cCell = cellImage.createLocalizableCursor();
 		
 		final int[] iLocation = new int[ cellImage.getNumDimensions() ];
@@ -97,22 +116,18 @@ public class TestShapeList
 				iLocation[ d ] = Math.round( fLocation[ d ] );
 			
 			cShapeList.setPosition( iLocation );
+			//cShapeList.moveTo( iLocation );
 			
 			try { cCell.getType().set( cShapeList.getType() ); }
 			catch ( final IndexOutOfBoundsException e ){}
 		}
-		
-		final ImagePlus shapeListImp = ImageJFunctions.displayAsVirtualStack( shapeListImage );
-		shapeListImp.show();
-		shapeListImp.getProcessor().setMinAndMax( 0, 255 );
-		
-		final ImagePlus arrayImp = ImageJFunctions.displayAsVirtualStack( arrayImage );
-		arrayImp.show();
-		arrayImp.getProcessor().setMinAndMax( 0, 255 );
-		
+
 		final ImagePlus cellImp = ImageJFunctions.displayAsVirtualStack( cellImage );
 		cellImp.show();
 		cellImp.getProcessor().setMinAndMax( 0, 255 );
+		cellImp.updateAndDraw();
+		/* ----------------------------------------------------------------- */
+
 		
 		try
 		{

@@ -75,7 +75,7 @@ public class LinearInterpolator2D<T extends RealType<T>> extends LinearInterpola
 		
 		cursor.moveTo( tmpLocation );
 
-		// How to iterate the cube
+		// How to iterate the area
 		//
 		//   y3         y2 
 		//     *<------*
@@ -141,7 +141,7 @@ public class LinearInterpolator2D<T extends RealType<T>> extends LinearInterpola
 		
 		cursor.setPosition( tmpLocation );
 
-		// How to iterate the cube
+		// How to iterate the area
 		//
 		//   y3         y2 
 		//     *<------*

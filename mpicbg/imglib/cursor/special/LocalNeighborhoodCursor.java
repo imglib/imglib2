@@ -40,8 +40,8 @@ import mpicbg.imglib.type.label.FakeType;
 public class LocalNeighborhoodCursor<T extends Type<T>> extends CursorImpl<T>
 {
 	/**
-	 * Here we "misuse" a ArrayLocalizableCursor to iterate through the cubes,
-	 * he always gives us the location of the current cube we are instantiating 
+	 * Here we "misuse" a ArrayLocalizableCursor to iterate over cells,
+	 * it always gives us the location of the current cell we are instantiating 
 	 */
 	final LocalizableCursor<FakeType> neigborhoodCursor;
 

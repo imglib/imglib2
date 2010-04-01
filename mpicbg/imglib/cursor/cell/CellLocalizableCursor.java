@@ -27,22 +27,22 @@
  *
  * @author Stephan Preibisch & Stephan Saalfeld
  */
-package mpicbg.imglib.cursor.cube;
+package mpicbg.imglib.cursor.cell;
 
-import mpicbg.imglib.container.cube.Cube;
+import mpicbg.imglib.container.cell.CellContainer;
 import mpicbg.imglib.cursor.LocalizableCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.type.Type;
 
-public class CubeLocalizableCursor<T extends Type<T>> extends CubeCursor<T> implements LocalizableCursor<T>
+public class CellLocalizableCursor<T extends Type<T>> extends CellCursor<T> implements LocalizableCursor<T>
 {
-	/* Inherited from CubeCursor<T>
-	protected final Cube<?,?> img;
-	protected final int numCubes;
-	protected int cube;
-	protected int lastCube;
-	protected int cubeMaxI;
-	protected CubeElement<?,?> cubeInstance;
+	/* Inherited from CellCursor<T>
+	protected final CellContainer<?,?> img;
+	protected final int numCells;
+	protected int cell;
+	protected int lastCell;
+	protected int cellMaxI;
+	protected Cell<?,?> cellInstance;
 	*/
 
 	/*
@@ -61,16 +61,16 @@ public class CubeLocalizableCursor<T extends Type<T>> extends CubeCursor<T> impl
 	final protected int[] dimensions;
 	
 	/*
-	 * The dimension of the current cube
+	 * The dimension of the current cell
 	 */
-	final protected int[] cubeDimensions;
+	final protected int[] cellDimensions;
 	
 	/*
-	 * The offset of the current cube in the image
+	 * The offset of the current cell in the image
 	 */
-	final protected int[] cubeOffset;
+	final protected int[] cellOffset;
 	
-	public CubeLocalizableCursor( final Cube<T,?> container, final Image<T> image, final T type )
+	public CellLocalizableCursor( final CellContainer<T,?> container, final Image<T> image, final T type )
 	{
 		super( container, image, type);
 
@@ -79,24 +79,24 @@ public class CubeLocalizableCursor<T extends Type<T>> extends CubeCursor<T> impl
 		position = new int[ numDimensions ];
 		dimensions = container.getDimensions();
 		
-		cubeDimensions = new int[ numDimensions ];
-		cubeOffset = new int[ numDimensions ];		
+		cellDimensions = new int[ numDimensions ];
+		cellOffset = new int[ numDimensions ];		
 		
 		// unluckily we have to call it twice, in the superclass position is not initialized yet
 		reset();		
 	}
 	
-	protected void getCubeData( final int cube )
+	protected void getCellData( final int cell )
 	{
-		if ( cube == lastCube )
+		if ( cell == lastCell )
 			return;
 		
-		lastCube = cube;		
-		cubeInstance = container.getCubeElement( cube );		
+		lastCell = cell;		
+		cellInstance = container.getCell( cell );		
 
-		cubeMaxI = cubeInstance.getNumPixels();	
-		cubeInstance.getDimensions( cubeDimensions );
-		cubeInstance.getOffset( cubeOffset );
+		cellMaxI = cellInstance.getNumPixels();	
+		cellInstance.getDimensions( cellDimensions );
+		cellInstance.getOffset( cellOffset );
 		
 		type.updateContainer( this );
 	}
@@ -108,8 +108,8 @@ public class CubeLocalizableCursor<T extends Type<T>> extends CubeCursor<T> impl
 			return;
 		
 		type.updateIndex( -1 );
-		cube = 0;
-		getCubeData( cube );
+		cell = 0;
+		getCellData( cell );
 		isClosed = false;
 		
 		position[ 0 ] = -1;
@@ -123,38 +123,38 @@ public class CubeLocalizableCursor<T extends Type<T>> extends CubeCursor<T> impl
 	@Override
 	public void fwd()
 	{
-		if ( type.getIndex() < cubeMaxI - 1 )
+		if ( type.getIndex() < cellMaxI - 1 )
 		{
 			type.incIndex();
 			
 			for ( int d = 0; d < numDimensions; d++ )
 			{
-				if ( position[ d ] < cubeDimensions[ d ] + cubeOffset[ d ] - 1 )
+				if ( position[ d ] < cellDimensions[ d ] + cellOffset[ d ] - 1 )
 				{
 					position[ d ]++;
 					
 					for ( int e = 0; e < d; e++ )
-						position[ e ] = cubeOffset[ e ];
+						position[ e ] = cellOffset[ e ];
 					
 					break;
 				}
 			}
 			
 		}
-		else if (cube < numCubes - 1)
+		else if (cell < numCells - 1)
 		{
-			cube++;
+			cell++;
 			type.updateIndex( 0 );			
-			getCubeData(cube);
+			getCellData(cell);
 			for ( int d = 0; d < numDimensions; d++ )
-				position[ d ] = cubeOffset[ d ];
+				position[ d ] = cellOffset[ d ];
 		}
 		else
 		{			
 			// we have to run out of the image so that the next hasNext() fails
-			lastCube = -1;						
-			type.updateIndex( cubeMaxI );
-			cube = numCubes;
+			lastCell = -1;						
+			type.updateIndex( cellMaxI );
+			cell = numCells;
 		}
 	}	
 

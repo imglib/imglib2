@@ -27,7 +27,7 @@
  *
  * @author Stephan Preibisch & Stephan Saalfeld
  */
-package mpicbg.imglib.container.cube;
+package mpicbg.imglib.container.cell;
 
 import mpicbg.imglib.container.ContainerImpl;
 import mpicbg.imglib.container.PixelGridContainerImpl;
@@ -35,18 +35,18 @@ import mpicbg.imglib.container.array.Array;
 import mpicbg.imglib.container.basictypecontainer.array.ArrayDataAccess;
 import mpicbg.imglib.type.Type;
 
-public class CubeElement< T extends Type<T>, A extends ArrayDataAccess<A>> //extends Array<T,A>
+public class Cell< T extends Type<T>, A extends ArrayDataAccess<A>> //extends Array<T,A>
 {
 	final protected int[] offset, step, dim;	
-	final protected int cubeId, numDimensions, numPixels, numEntities;
+	final protected int cellId, numDimensions, numPixels, numEntities;
 	
 	// the ArrayDataAccess containing the data
 	final protected A data;
 	
-	public CubeElement( final A creator, final int cubeId, final int[] dim, final int offset[], final int entitiesPerPixel)
+	public Cell( final A creator, final int cellId, final int[] dim, final int offset[], final int entitiesPerPixel)
 	{
 		this.offset = offset;		
-		this.cubeId = cubeId;
+		this.cellId = cellId;
 		this.numDimensions = dim.length;
 		this.dim = dim;
 		this.numPixels = ContainerImpl.getNumPixels( dim );
@@ -56,7 +56,7 @@ public class CubeElement< T extends Type<T>, A extends ArrayDataAccess<A>> //ext
 		
 		this.data = creator.createArray( numEntities );
 		
-		// the steps when moving inside a cube
+		// the steps when moving inside a cell
 		Array.createAllocationSteps( dim, step );		
 	}
 	
@@ -77,7 +77,7 @@ public class CubeElement< T extends Type<T>, A extends ArrayDataAccess<A>> //ext
 			step[ d ] = this.step[ d ];
 	}
 	
-	public int getCubeId() { return cubeId; }
+	public int getCellId() { return cellId; }
 	
 	public void getOffset( final int[] offset )
 	{

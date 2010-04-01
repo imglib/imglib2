@@ -43,7 +43,7 @@ import mpicbg.imglib.type.Type;
  * <h3>Implementation</h3>
  * 
  * The {@link Cursor} is responsible for iterating over the image. Therefore it has to be implemented 
- * for each type of {@link Container} like {@link Array}, {@link Cube}, ... 
+ * for each type of {@link Container} like {@link Array}, {@link CellContainer}, ... 
  * 
  * <h3>Type support</h3>
  * 
