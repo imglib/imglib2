@@ -30,6 +30,8 @@ public class DirectConvolution
 		outputImageCursor = null;
 		kernelSize = kernel.getDimensions();
 		kernelCursor = kernel.createLocalizableByDimCursor();
+		
+		setName(inputImage.getName() + " * " + kernel.getName());
 	}
 	
 	private LocalizableByDimCursor<S> getOutputCursor()
