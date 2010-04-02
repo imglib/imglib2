@@ -10,11 +10,9 @@ import mpicbg.imglib.outside.OutsideStrategyFactory;
 import mpicbg.imglib.outside.OutsideStrategyValueFactory;
 import mpicbg.imglib.type.NumericType;
 
-public abstract class ROIAlgorithm <T extends NumericType<T>, S extends NumericType<S>> implements OutputAlgorithm<S>
+public abstract class ROIAlgorithm <T extends NumericType<T>, S extends NumericType<S>> implements OutputAlgorithm<S>, Benchmark
 {
 
-	//private final LocalizableByDimCursor<T> inImageDummyCursor;
-	//private final LocalizableCursor<T> inImagePullCursor;
 	private final RegionOfInterestCursor<T> roiCursor;
 	private final int[] patchSize;
 	private final int[] originOffset;
@@ -25,6 +23,7 @@ public abstract class ROIAlgorithm <T extends NumericType<T>, S extends NumericT
 	private String errorMsg;
 	private String name;
 	private final S typeS;
+	private long pTime;
 	
 	protected ROIAlgorithm(final S type, final Image<T> imageIn, final int[] patchSize)
 	{
@@ -37,8 +36,8 @@ public abstract class ROIAlgorithm <T extends NumericType<T>, S extends NumericT
 		int nd = imageIn.getNumDimensions();
 		
 		final int[] initPos = new int[nd];
-		final int[] imageSize = imageIn.getDimensions();
 		
+		pTime = 0;
 		originOffset = new int[nd];
 		inputImage = imageIn;
 		this.patchSize = patchSize.clone();
@@ -79,11 +78,6 @@ public abstract class ROIAlgorithm <T extends NumericType<T>, S extends NumericT
 	 */
 	protected abstract boolean patchOperation(final int[] position,
 			final RegionOfInterestCursor<T> cursor);
-	
-	/*protected LocalizableCursor<T> getInputCursor()
-	{
-		return inImagePullCursor;
-	}*/
 	
 	public void setImageFactory(final ImageFactory<S> factory)
 	{
@@ -169,6 +163,7 @@ public abstract class ROIAlgorithm <T extends NumericType<T>, S extends NumericT
 		final LocalizableCursor<S> outputCursor = getOutputImage().createLocalizableCursor();
 		final int[] pos = new int[inputImage.getNumDimensions()];
 		final int[] offsetPos = new int[inputImage.getNumDimensions()];
+		final long sTime = System.currentTimeMillis();
 		
 		while (outputCursor.hasNext())
 		{
@@ -184,9 +179,16 @@ public abstract class ROIAlgorithm <T extends NumericType<T>, S extends NumericT
 		}
 			
 		outputCursor.close();
+		
+		pTime = System.currentTimeMillis() - sTime;
 		return true;		
 	}
 
+	@Override
+	public long getProcessingTime()
+	{
+		return pTime;
+	}
 	
 	
 }
