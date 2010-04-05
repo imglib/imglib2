@@ -34,18 +34,22 @@ import mpicbg.imglib.container.DirectAccessContainerFactory;
 import mpicbg.imglib.container.basictypecontainer.DoubleAccess;
 import mpicbg.imglib.container.basictypecontainer.array.DoubleArray;
 import mpicbg.imglib.cursor.Cursor;
+import mpicbg.imglib.type.LinkedType;
 import mpicbg.imglib.type.numeric.RealType;
 
 public class DoubleType extends RealTypeImpl<DoubleType> implements RealType<DoubleType>
 {
 	// the DirectAccessContainer
-	final DirectAccessContainer<DoubleType, DoubleAccess> storage;
+	final DirectAccessContainer<DoubleType, ? extends DoubleAccess> storage;
+
+	// for linking a Type instance to a certain DirectAccessContainer
+	LinkedType<DoubleType, ? extends DoubleAccess> lt = null;
 	
 	// the (sub)DirectAccessContainer that holds the information 
 	DoubleAccess b;
 	
 	// this is the constructor if you want it to read from an array
-	public DoubleType( DirectAccessContainer<DoubleType, DoubleAccess> doubleStorage )
+	public DoubleType( DirectAccessContainer<DoubleType, ? extends DoubleAccess> doubleStorage )
 	{
 		storage = doubleStorage;
 	}
@@ -64,9 +68,21 @@ public class DoubleType extends RealTypeImpl<DoubleType> implements RealType<Dou
 	@Override
 	public DirectAccessContainer<DoubleType, ? extends DoubleAccess> createSuitableDirectAccessContainer( final DirectAccessContainerFactory storageFactory, final int dim[] )
 	{
-		return storageFactory.createDoubleInstance( dim, 1 );	
+		DirectAccessContainer<DoubleType, ? extends DoubleAccess> container = storageFactory.createDoubleInstance( this, dim, 1 );
+		
+		// link this Type instance with the DirectAccessContainer
+		lt = container.getLinkedType();		
+		
+		return container;
 	}
-	
+
+	// this is only done by the DirectAccessContainer when creating a Type for a Cursor
+	@Override
+	public DoubleType createDirectAccessType()
+	{
+		return new DoubleType( lt.directAccessContainer );
+	}
+
 	@Override
 	public void updateContainer( final Cursor<?> c ) 
 	{ 
@@ -166,15 +182,6 @@ public class DoubleType extends RealTypeImpl<DoubleType> implements RealType<Dou
 
 	@Override
 	public DoubleType[][][] createArray3D(int size1, int size2, int size3) { return new DoubleType[ size1 ][ size2 ][ size3 ]; }
-
-	//@Override
-	//public DoubleType getType() { return this; }
-
-	@Override
-	public DoubleType createType( DirectAccessContainer<DoubleType,?> DirectAccessContainer )
-	{
-		return new DoubleType( (DirectAccessContainer<DoubleType, DoubleAccess>)DirectAccessContainer );
-	}
 	
 	@Override
 	public DoubleType createVariable(){ return new DoubleType( 0 ); }

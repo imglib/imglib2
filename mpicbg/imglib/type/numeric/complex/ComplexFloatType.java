@@ -208,7 +208,7 @@ public class ComplexFloatType extends ComplexTypeImpl<ComplexFloatType> implemen
 	//public ComplexFloatType getType() { return this; }
 
 	@Override
-	public ComplexFloatType createType( DirectAccessContainer<ComplexFloatType,?> DirectAccessContainer )
+	public ComplexFloatType createDirectAccessType( DirectAccessContainer<ComplexFloatType,?> DirectAccessContainer )
 	{
 		return new ComplexFloatType( (DirectAccessContainer<ComplexFloatType, FloatAccess>)DirectAccessContainer );
 	}

@@ -32,9 +32,11 @@ package mpicbg.imglib.container;
 
 import mpicbg.imglib.container.basictypecontainer.DataAccess;
 import mpicbg.imglib.cursor.Cursor;
+import mpicbg.imglib.type.LinkedType;
 import mpicbg.imglib.type.Type;
 
 public interface DirectAccessContainer<T extends Type<T>, A extends DataAccess> extends PixelGridContainer<T>
 {
 	public A update( final Cursor<?> c );
+	public LinkedType<T, A> getLinkedType();
 }

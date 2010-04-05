@@ -122,7 +122,7 @@ public class ComplexDoubleType extends ComplexTypeImpl<ComplexDoubleType> implem
 	//public ComplexFloatType getType() { return this; }
 
 	@Override
-	public ComplexDoubleType createType( DirectAccessContainer<ComplexDoubleType,?> DirectAccessContainer )
+	public ComplexDoubleType createDirectAccessType( DirectAccessContainer<ComplexDoubleType,?> DirectAccessContainer )
 	{
 		return new ComplexDoubleType( (DirectAccessContainer<ComplexDoubleType, DoubleAccess>)DirectAccessContainer );
 	}

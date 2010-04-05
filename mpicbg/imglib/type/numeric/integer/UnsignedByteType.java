@@ -112,7 +112,7 @@ public class UnsignedByteType extends GenericByteType<UnsignedByteType>
 	public UnsignedByteType[][][] createArray3D( final int size1, final int size2, final int size3 ) { return new UnsignedByteType[ size1 ][ size2 ][ size3 ]; }
 
 	@Override
-	public UnsignedByteType createType( final DirectAccessContainer<UnsignedByteType, ?> DirectAccessContainer ) 
+	public UnsignedByteType createDirectAccessType( final DirectAccessContainer<UnsignedByteType, ?> DirectAccessContainer ) 
 	{ 
 		return new UnsignedByteType( (DirectAccessContainer<UnsignedByteType, ByteAccess>)DirectAccessContainer ); 
 	}

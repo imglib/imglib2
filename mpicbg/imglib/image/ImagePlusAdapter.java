@@ -87,8 +87,8 @@ public class ImagePlusAdapter
 			return null;
 		
 		ImagePlusContainerFactory containerFactory = new ImagePlusContainerFactory();
-		ByteImagePlus<UnsignedByteType> container = new ByteImagePlus<UnsignedByteType>( imp,  containerFactory );
-		Image<UnsignedByteType> image = new Image<UnsignedByteType>( container, new UnsignedByteType(), imp.getTitle() );
+		ByteImagePlus<UnsignedByteType> container = new ByteImagePlus<UnsignedByteType>( imp, containerFactory, new UnsignedByteType() );
+		Image<UnsignedByteType> image = new Image<UnsignedByteType>( container, imp.getTitle() );
 		
 		return image;		
 	}
@@ -99,8 +99,8 @@ public class ImagePlusAdapter
 			return null;
 
 		ImagePlusContainerFactory containerFactory = new ImagePlusContainerFactory();
-		ShortImagePlus<UnsignedShortType> container = new ShortImagePlus<UnsignedShortType>( imp,  containerFactory );
-		Image<UnsignedShortType> image = new Image<UnsignedShortType>( container, new UnsignedShortType(), imp.getTitle() );
+		ShortImagePlus<UnsignedShortType> container = new ShortImagePlus<UnsignedShortType>( imp, containerFactory, new UnsignedShortType() );
+		Image<UnsignedShortType> image = new Image<UnsignedShortType>( container, imp.getTitle() );
 		
 		return image;						
 	}
@@ -111,8 +111,8 @@ public class ImagePlusAdapter
 			return null;
 
 		ImagePlusContainerFactory containerFactory = new ImagePlusContainerFactory();
-		IntImagePlus<RGBALegacyType> container = new IntImagePlus<RGBALegacyType>( imp,  containerFactory );
-		Image<RGBALegacyType> image = new Image<RGBALegacyType>( container, new RGBALegacyType(), imp.getTitle() );
+		IntImagePlus<RGBALegacyType> container = new IntImagePlus<RGBALegacyType>( imp,  containerFactory, new RGBALegacyType() );
+		Image<RGBALegacyType> image = new Image<RGBALegacyType>( container, imp.getTitle() );
 		
 		return image;				
 	}	
@@ -123,8 +123,8 @@ public class ImagePlusAdapter
 			return null;
 
 		ImagePlusContainerFactory containerFactory = new ImagePlusContainerFactory();
-		FloatImagePlus<FloatType> container = new FloatImagePlus<FloatType>( imp,  containerFactory );
-		Image<FloatType> image = new Image<FloatType>( container, new FloatType(), imp.getTitle() );
+		FloatImagePlus<FloatType> container = new FloatImagePlus<FloatType>( imp,  containerFactory, new FloatType() );
+		Image<FloatType> image = new Image<FloatType>( container, imp.getTitle() );
 		
 		return image;				
 	}	

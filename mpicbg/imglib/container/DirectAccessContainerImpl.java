@@ -29,27 +29,23 @@
  */
 package mpicbg.imglib.container;
 
+import mpicbg.imglib.container.basictypecontainer.DataAccess;
+import mpicbg.imglib.type.LinkedType;
 import mpicbg.imglib.type.Type;
 
-public abstract class PixelGridContainerImpl< T extends Type< T > > extends ContainerImpl<T> implements PixelGridContainer< T >
+public abstract class DirectAccessContainerImpl< T extends Type< T >, A extends DataAccess > extends PixelGridContainerImpl< T > implements DirectAccessContainer<T, A>
 {
-	final protected int entitiesPerPixel;
-	protected int numEntities;
+	protected final LinkedType<T, A> linkedType;
 	
-	public PixelGridContainerImpl( final ContainerFactory factory, final T type, final int[] dim, final int entitiesPerPixel )
+	public DirectAccessContainerImpl( final ContainerFactory factory, final T type, int[] dim, final int entitiesPerPixel )
 	{
-		super( factory, type, dim );
-		this.entitiesPerPixel = entitiesPerPixel;
-		this.numEntities = numPixels * entitiesPerPixel;
-	}
-	
-	public static int getNumEntities( final int[] dim, final int entitiesPerPixel )
-	{
-		return getNumPixels( dim ) * entitiesPerPixel;
-	}
+		super( factory, type, dim, entitiesPerPixel );
 		
+		// create a Type that is linked to this very DirectAccessContainer
+		// which is then used to create Cursors that are linked to this DirectAccessContainer
+		this.linkedType = new LinkedType<T, A>( type.clone(), this );
+	}
+	
 	@Override
-	public int getNumEntities() { return numEntities; }
-	@Override
-	public int getNumEntitiesPerPixel(){ return entitiesPerPixel; }
+	public LinkedType<T, A> getLinkedType() { return linkedType; }
 }

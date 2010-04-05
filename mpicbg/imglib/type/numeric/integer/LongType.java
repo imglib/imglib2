@@ -170,7 +170,7 @@ final public class LongType extends IntegerTypeImpl<LongType>
 	//public LongType getType() { return this; }
 	
 	@Override
-	public LongType createType( DirectAccessContainer<LongType,?> DirectAccessContainer )
+	public LongType createDirectAccessType( DirectAccessContainer<LongType,?> DirectAccessContainer )
 	{
 		return new LongType( (DirectAccessContainer<LongType, LongAccess>)(LongAccess)DirectAccessContainer );
 	}

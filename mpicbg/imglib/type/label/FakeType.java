@@ -63,7 +63,7 @@ public class FakeType extends TypeImpl<FakeType>
 	//public FakeType getType() { return this; }
 
 	@Override
-	public FakeType createType( DirectAccessContainer<FakeType,?> DirectAccessContainer ){ return new FakeType(); }
+	public FakeType createDirectAccessType( DirectAccessContainer<FakeType,?> DirectAccessContainer ){ return new FakeType(); }
 	
 	@Override
 	public FakeType createVariable(){ return new FakeType(); }

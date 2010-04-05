@@ -107,14 +107,14 @@ public class Image<T extends Type<T>> implements ImageProperties, Dimensionality
 			calibration[ d ] = 1;
 	}
 
-	public Image( final Container<T> container, final T type )
+	public Image( final Container<T> container )
 	{
-		this( container, type, null );
+		this( container, null );
 	}
 
-	public Image( final Container<T> container, final T type, final String name )
+	public Image( final Container<T> container, final String name )
 	{
-		this( container, new ImageFactory<T>( type, container.getFactory() ), container.getDimensions(), name );
+		this( container, new ImageFactory<T>( container.getType(), container.getFactory() ), container.getDimensions(), name );
 	}
 	
 	protected Image( final ImageFactory<T> imageFactory, final int dim[], final String name )	
@@ -180,7 +180,7 @@ public class Image<T extends Type<T>> implements ImageProperties, Dimensionality
 	 */
 	public Cursor<T> createCursor()
 	{
-		Cursor<T> cursor = container.createCursor( type, this );
+		Cursor<T> cursor = container.createCursor( this );
 		addCursor( cursor );
 		return cursor;	
 	}
@@ -192,7 +192,7 @@ public class Image<T extends Type<T>> implements ImageProperties, Dimensionality
 	 */
 	public LocalizableCursor<T> createLocalizableCursor()
 	{
-		LocalizableCursor<T> cursor = container.createLocalizableCursor( type, this );
+		LocalizableCursor<T> cursor = container.createLocalizableCursor( this );
 		addCursor( cursor );
 		return cursor;		
 	}
@@ -205,7 +205,7 @@ public class Image<T extends Type<T>> implements ImageProperties, Dimensionality
 	 */
 	public LocalizablePlaneCursor<T> createLocalizablePlaneCursor()
 	{
-		LocalizablePlaneCursor<T> cursor = container.createLocalizablePlaneCursor( type, this );
+		LocalizablePlaneCursor<T> cursor = container.createLocalizablePlaneCursor( this );
 		addCursor( cursor );
 		return cursor;				
 	}
@@ -217,7 +217,7 @@ public class Image<T extends Type<T>> implements ImageProperties, Dimensionality
 	 */
 	public LocalizableByDimCursor<T> createLocalizableByDimCursor()
 	{
-		LocalizableByDimCursor<T> cursor = container.createLocalizableByDimCursor( type, this );
+		LocalizableByDimCursor<T> cursor = container.createLocalizableByDimCursor( this );
 		addCursor( cursor );
 		return cursor;						
 	}
@@ -230,7 +230,7 @@ public class Image<T extends Type<T>> implements ImageProperties, Dimensionality
 	 */
 	public LocalizableByDimCursor<T> createLocalizableByDimCursor( OutOfBoundsStrategyFactory<T> factory )
 	{
-		LocalizableByDimCursor<T> cursor = container.createLocalizableByDimCursor( type, this, factory );
+		LocalizableByDimCursor<T> cursor = container.createLocalizableByDimCursor( this, factory );
 		addCursor( cursor );
 		return cursor;								
 	}

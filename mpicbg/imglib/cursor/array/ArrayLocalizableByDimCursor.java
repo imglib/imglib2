@@ -62,7 +62,7 @@ public class ArrayLocalizableByDimCursor<T extends Type<T>> extends ArrayLocaliz
 	
 	public static ArrayLocalizableByDimCursor<FakeType> createLinearByDimCursor( final int[] dim )
 	{
-		final Array<FakeType, FakeAccess> array = new Array<FakeType, FakeAccess>( null, new FakeArray(), dim, 1 );
+		final Array<FakeType, FakeAccess> array = new Array<FakeType, FakeAccess>( null, new FakeType(), new FakeArray(), dim, 1 );
 		return new ArrayLocalizableByDimCursor<FakeType>( array, null, new FakeType() );
 	}
 	

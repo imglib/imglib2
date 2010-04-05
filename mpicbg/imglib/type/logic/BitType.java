@@ -194,7 +194,7 @@ public class BitType extends IntegerTypeImpl<BitType> implements LogicType<BitTy
 	//public BooleanType getType() { return this; }
 
 	@Override
-	public BitType createType( DirectAccessContainer<BitType,?> DirectAccessContainer )
+	public BitType createDirectAccessType( DirectAccessContainer<BitType,?> DirectAccessContainer )
 	{
 		return new BitType( (DirectAccessContainer<BitType, BitAccess>)DirectAccessContainer );
 	}

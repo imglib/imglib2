@@ -39,9 +39,9 @@ public class LongDynamicContainer <T extends Type<T>> extends DynamicContainer<T
 {
 	final ArrayList<Long> data;
 	
-	public LongDynamicContainer( final DynamicContainerFactory factory, final int[] dim, final int entitiesPerPixel )
+	public LongDynamicContainer( final DynamicContainerFactory factory, final T type, final int[] dim, final int entitiesPerPixel )
 	{
-		super( factory, dim, entitiesPerPixel );
+		super( factory, type, dim, entitiesPerPixel );
 		
 		data = new ArrayList<Long>();
 		

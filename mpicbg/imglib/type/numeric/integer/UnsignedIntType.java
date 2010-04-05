@@ -112,7 +112,7 @@ public class UnsignedIntType extends GenericIntType<UnsignedIntType>
 	public UnsignedIntType[][][] createArray3D( final int size1, final int size2, final int size3 ) { return new UnsignedIntType[ size1 ][ size2 ][ size3 ]; }
 
 	@Override
-	public UnsignedIntType createType( final DirectAccessContainer<UnsignedIntType, ?> DirectAccessContainer ) 
+	public UnsignedIntType createDirectAccessType( final DirectAccessContainer<UnsignedIntType, ?> DirectAccessContainer ) 
 	{ 
 		return new UnsignedIntType( (DirectAccessContainer<UnsignedIntType, IntAccess>)DirectAccessContainer ); 
 	}

@@ -65,7 +65,7 @@ public class IntType extends GenericIntType<IntType>
 	public IntType[][][] createArray3D(int size1, int size2, int size3) { return new IntType[ size1 ][ size2 ][ size3 ]; }
 
 	@Override
-	public IntType createType( DirectAccessContainer<IntType,?> DirectAccessContainer )
+	public IntType createDirectAccessType( DirectAccessContainer<IntType,?> DirectAccessContainer )
 	{
 		return new IntType( (DirectAccessContainer<IntType, IntAccess>)DirectAccessContainer );
 	}

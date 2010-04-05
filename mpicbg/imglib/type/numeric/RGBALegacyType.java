@@ -236,7 +236,7 @@ final public class RGBALegacyType extends IntegerTypeImpl<RGBALegacyType> implem
 	//public RGBALegacyType getType() { return this; }
 	
 	@Override
-	public RGBALegacyType createType( DirectAccessContainer<RGBALegacyType,?> DirectAccessContainer )
+	public RGBALegacyType createDirectAccessType( DirectAccessContainer<RGBALegacyType,?> DirectAccessContainer )
 	{
 		return new RGBALegacyType( (DirectAccessContainer<RGBALegacyType, IntAccess>)DirectAccessContainer );
 	}

@@ -27,45 +27,33 @@
  *
  * @author Stephan Preibisch
  */
-package mpicbg.imglib.container.dynamic;
+package mpicbg.imglib.type;
 
-import java.util.ArrayList;
+import mpicbg.imglib.container.DirectAccessContainer;
+import mpicbg.imglib.container.basictypecontainer.DataAccess;
 
-import mpicbg.imglib.cursor.Cursor;
-import mpicbg.imglib.cursor.dynamic.DynamicCursor;
-import mpicbg.imglib.type.Type;
-
-public class DoubleDynamicContainer <T extends Type<T>> extends DynamicContainer<T, DoubleDynamicContainerAccessor>
+/**
+ * This purpose this class serves for is a quite a complicated one. It links (preserve typing) a {@link Type} to a {@link DirectAccessContainer}
+ * so that the {@link DirectAccessContainer} can create {@link Type}s that run on it with the correct {@link DataAccess}.
+ *  
+ * @author Stephan Preibisch
+ *
+ * @param <T> - the {@link Type}
+ * @param <A> - the {@link DataAccess}
+ */
+public class LinkedType<T extends Type<T>, A extends DataAccess>
 {
-	final ArrayList<Double> data;
+	public T type;
+	public DirectAccessContainer<T, A> directAccessContainer;
 	
-	public DoubleDynamicContainer( final DynamicContainerFactory factory, final T type, final int[] dim, final int entitiesPerPixel )
+	public LinkedType( T type, DirectAccessContainer<T, A> directAccessContainer )
 	{
-		super( factory, type, dim, entitiesPerPixel );
-		
-		data = new ArrayList<Double>();
-		
-		for ( int i = 0; i < numPixels*entitiesPerPixel; ++i )
-			data.add( 0.0 );
+		this.type = type;
+		this.directAccessContainer = directAccessContainer;
 	}
 	
-	@Override
-	public DoubleDynamicContainerAccessor update( final Cursor<?> c )
+	public T createDirectAccessType()
 	{
-		final DynamicCursor<?> cursor = (DynamicCursor<?>)c;
-		final DoubleDynamicContainerAccessor accessor = (DoubleDynamicContainerAccessor) cursor.getAccessor();
-		accessor.updateIndex( cursor.getInternalIndex() );
-		
-		return accessor;
+		return type.createDirectAccessType();
 	}
-
-	@Override
-	public DoubleDynamicContainerAccessor createAccessor()
-	{
-		return new DoubleDynamicContainerAccessor( this, entitiesPerPixel );
-	}
-
-	@Override 
-	public void close() { data.clear(); }
-	
 }

@@ -191,7 +191,7 @@ public class BasePairCharType extends TypeImpl<BasePairCharType> implements Base
 	//public BasePairCharType getType() { return this; }
 
 	@Override
-	public BasePairCharType createType( DirectAccessContainer<BasePairCharType,?> DirectAccessContainer )
+	public BasePairCharType createDirectAccessType( DirectAccessContainer<BasePairCharType,?> DirectAccessContainer )
 	{
 		return new BasePairCharType( (DirectAccessContainer<BasePairCharType, CharAccess>)DirectAccessContainer );
 	}
