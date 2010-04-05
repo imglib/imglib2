@@ -30,22 +30,22 @@
 package mpicbg.imglib.type.numeric.integer;
 
 import mpicbg.imglib.algorithm.math.MathLib;
-import mpicbg.imglib.container.Container;
-import mpicbg.imglib.container.ContainerFactory;
+import mpicbg.imglib.container.DirectAccessContainer;
+import mpicbg.imglib.container.DirectAccessContainerFactory;
 import mpicbg.imglib.container.basictypecontainer.LongAccess;
 import mpicbg.imglib.container.basictypecontainer.array.LongArray;
 import mpicbg.imglib.cursor.Cursor;
 
 final public class LongType extends IntegerTypeImpl<LongType>
 {
-	// the Container
-	final Container<LongType, LongAccess> storage;
+	// the DirectAccessContainer
+	final DirectAccessContainer<LongType, LongAccess> storage;
 	
-	// the (sub)container that holds the information 
+	// the (sub)DirectAccessContainer that holds the information 
 	LongAccess b;
 	
 	// this is the constructor if you want it to read from an array
-	public LongType( Container<LongType, LongAccess> longStorage )
+	public LongType( DirectAccessContainer<LongType, LongAccess> longStorage )
 	{
 		storage = longStorage;
 	}
@@ -62,7 +62,7 @@ final public class LongType extends IntegerTypeImpl<LongType>
 	public LongType() { this( 0 ); }
 
 	@Override
-	public Container<LongType, ? extends LongAccess> createSuitableContainer( final ContainerFactory storageFactory, final int dim[] )
+	public DirectAccessContainer<LongType, ? extends LongAccess> createSuitableDirectAccessContainer( final DirectAccessContainerFactory storageFactory, final int dim[] )
 	{
 		return storageFactory.createLongInstance( dim, 1 );	
 	}
@@ -170,9 +170,9 @@ final public class LongType extends IntegerTypeImpl<LongType>
 	//public LongType getType() { return this; }
 	
 	@Override
-	public LongType createType( Container<LongType,?> container )
+	public LongType createType( DirectAccessContainer<LongType,?> DirectAccessContainer )
 	{
-		return new LongType( (Container<LongType, LongAccess>)(LongAccess)container );
+		return new LongType( (DirectAccessContainer<LongType, LongAccess>)(LongAccess)DirectAccessContainer );
 	}
 
 	@Override

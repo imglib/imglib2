@@ -36,6 +36,7 @@ import mpicbg.imglib.type.Type;
 public class ImageFactory<T extends Type<T>> implements Factory
 {
 	final ContainerFactory containerFactory;
+	
 	final T type;
 	String errorMessage = "No errors.";
 	

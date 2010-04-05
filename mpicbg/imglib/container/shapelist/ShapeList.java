@@ -31,8 +31,7 @@ import java.awt.Shape;
 import java.util.ArrayList;
 
 import mpicbg.imglib.container.ContainerImpl;
-import mpicbg.imglib.container.basictypecontainer.DataAccess;
-import mpicbg.imglib.cursor.Cursor;
+import mpicbg.imglib.container.PixelGridContainerImpl;
 import mpicbg.imglib.cursor.shapelist.ShapeListLocalizableByDimCursor;
 import mpicbg.imglib.cursor.shapelist.ShapeListLocalizableByDimOutOfBoundsCursor;
 import mpicbg.imglib.cursor.shapelist.ShapeListLocalizablePlaneCursor;
@@ -48,31 +47,39 @@ import mpicbg.imglib.type.Type;
  * @version 0.1a
  */
 //public class ShapeList< T extends Type< T > > extends ContainerImpl< T, DataAccess >
-public class ShapeList< T extends Type< T >, D extends DataAccess > extends ContainerImpl< T, D >
+public class ShapeList< T extends Type< T > > extends ContainerImpl< T >
 {
 	final public ShapeListContainerFactory factory;
 	
 	/* shapes need to be ordered for rendering with correct overlap */
-	final protected ArrayList< Shape > shapeLists[];
-	final protected ArrayList< T > typeLists[];
+	final protected ArrayList< ArrayList< Shape > > shapeLists;
+	final protected ArrayList< ArrayList< T > > typeLists;
 	final protected T background;
 	
 	public ShapeList( final ShapeListContainerFactory factory, final int[] dim, final T background )
 	{
 		super( factory, dim );
 		this.factory = factory;
-		int n = 1;
-		for ( int d = 2; d < dim.length; ++d )
-			n *= dim[ d ];
-		shapeLists = ( ArrayList< Shape >[] )new ArrayList[ n ];
-		typeLists = ( ArrayList< T >[] )new ArrayList[ n ];
-		for ( int d = 0; d < shapeLists.length; ++d )
+		
+		final int n = PixelGridContainerImpl.getNumPixels( dim );
+
+		shapeLists = new ArrayList< ArrayList< Shape > > ( n );
+		typeLists = new ArrayList< ArrayList< T > > ( n );
+		
+		for ( int d = 0; d < n; ++d )
 		{
-			shapeLists[ d ] = new ArrayList< Shape >();
-			typeLists[ d ] = new ArrayList< T >();
+			shapeLists.add( new ArrayList< Shape >() );
+			typeLists.add( new ArrayList< T >() );
 		}
 		this.background = background;
 	}
+
+	public ShapeList( final int[] dim, final T background )
+	{
+		this( new ShapeListContainerFactory(), dim, background );
+	}
+	
+	public T getBackground() { return background; }
 	
 	public synchronized void addShape( final Shape shape, final T type, final int[] position )
 	{
@@ -86,8 +93,8 @@ public class ShapeList< T extends Type< T >, D extends DataAccess > extends Cont
 				f *= dim[ d ];
 			}
 		}
-		shapeLists[ p ].add( shape ); 
-		typeLists[ p ].add( type );
+		shapeLists.get( p ).add( shape ); 
+		typeLists.get( p ).add( type );
 	}
 	
 	@Override
@@ -126,11 +133,6 @@ public class ShapeList< T extends Type< T >, D extends DataAccess > extends Cont
 	@Override
 	public void close(){}
 
-	@Override
-	/* TODO That doesn't make any sense here */
-	public D update( Cursor< ? > c ){ return null; }
-
-	
 	/**
 	 * Find the upper most Shape visible at the given position and return its
 	 * {@link Type}.
@@ -146,11 +148,11 @@ public class ShapeList< T extends Type< T >, D extends DataAccess > extends Cont
 	 */
 	public T getShapeType( final int x, final int y, final int p )
 	{
-		final ArrayList< Shape > shapeList = shapeLists[ p ];
+		final ArrayList< Shape > shapeList = shapeLists.get( p );
 		for ( int i = shapeList.size() - 1; i >= 0; --i )
 		{
 			if ( shapeList.get( i ).contains( x, y ) )
-				return typeLists[ p ].get( i );
+				return typeLists.get( p ).get( i );
 		}
 		return background;
 	}

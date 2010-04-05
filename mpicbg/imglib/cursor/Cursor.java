@@ -109,7 +109,7 @@ public interface Cursor<T extends Type<T>> extends Iterator<T>, java.lang.Iterab
 	public T getType();
 	public int getArrayIndex();
 	public int getStorageIndex();
-	public Container<T,?> getStorageContainer();
+	public Container<T> getStorageContainer();
 	public void setDebug( final boolean debug );
 	public int[] createPositionArray();
 	

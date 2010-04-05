@@ -29,8 +29,8 @@
  */
 package mpicbg.imglib.type.numeric.real;
 
-import mpicbg.imglib.container.Container;
-import mpicbg.imglib.container.ContainerFactory;
+import mpicbg.imglib.container.DirectAccessContainer;
+import mpicbg.imglib.container.DirectAccessContainerFactory;
 import mpicbg.imglib.container.basictypecontainer.DataAccess;
 import mpicbg.imglib.container.basictypecontainer.FloatAccess;
 import mpicbg.imglib.container.basictypecontainer.array.FloatArray;
@@ -39,14 +39,14 @@ import mpicbg.imglib.type.numeric.RealType;
 
 public class FloatType extends RealTypeImpl<FloatType> implements RealType<FloatType>
 {
-	// the Container
-	final Container<FloatType, FloatAccess> storage;
+	// the DirectAccessContainer
+	final DirectAccessContainer<FloatType, FloatAccess> storage;
 	
-	// the (sub)container that holds the information 
+	// the (sub)DirectAccessContainer that holds the information 
 	FloatAccess b;
 	
 	// this is the constructor if you want it to read from an array
-	public FloatType( Container<FloatType, FloatAccess> floatStorage )
+	public FloatType( DirectAccessContainer<FloatType, FloatAccess> floatStorage )
 	{
 		storage = floatStorage;
 	}
@@ -63,7 +63,7 @@ public class FloatType extends RealTypeImpl<FloatType> implements RealType<Float
 	public FloatType() { this( 0 ); }
 
 	@Override
-	public Container<FloatType, ? extends FloatAccess> createSuitableContainer( final ContainerFactory storageFactory, final int dim[] )
+	public DirectAccessContainer<FloatType, ? extends FloatAccess> createSuitableDirectAccessContainer( final DirectAccessContainerFactory storageFactory, final int dim[] )
 	{
 		return storageFactory.createFloatInstance( dim, 1 );	
 	}
@@ -172,9 +172,9 @@ public class FloatType extends RealTypeImpl<FloatType> implements RealType<Float
 	//public FloatType getType() { return this; }
 
 	@Override
-	public FloatType createType( Container<FloatType,? extends DataAccess> container )
+	public FloatType createType( DirectAccessContainer<FloatType,? extends DataAccess> DirectAccessContainer )
 	{
-		return new FloatType( (Container<FloatType, FloatAccess>)container );
+		return new FloatType( (DirectAccessContainer<FloatType, FloatAccess>)DirectAccessContainer );
 	}
 	
 	@Override

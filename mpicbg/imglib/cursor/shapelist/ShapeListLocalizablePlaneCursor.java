@@ -38,7 +38,7 @@ public class ShapeListLocalizablePlaneCursor<T extends Type<T>> extends ShapeLis
 {
 	protected int planeDimA, planeDimB;
 	
-	public ShapeListLocalizablePlaneCursor( final ShapeList< T, ? > container, final Image< T > image, final T type ) 
+	public ShapeListLocalizablePlaneCursor( final ShapeList< T > container, final Image< T > image, final T type ) 
 	{
 		super( container, image, type );
 	}	

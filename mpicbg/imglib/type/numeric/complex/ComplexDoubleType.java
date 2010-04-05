@@ -29,8 +29,8 @@
  */
 package mpicbg.imglib.type.numeric.complex;
 
-import mpicbg.imglib.container.Container;
-import mpicbg.imglib.container.ContainerFactory;
+import mpicbg.imglib.container.DirectAccessContainer;
+import mpicbg.imglib.container.DirectAccessContainerFactory;
 import mpicbg.imglib.container.basictypecontainer.DoubleAccess;
 import mpicbg.imglib.container.basictypecontainer.FloatAccess;
 import mpicbg.imglib.container.basictypecontainer.array.DoubleArray;
@@ -39,14 +39,14 @@ import mpicbg.imglib.type.numeric.ComplexType;
 
 public class ComplexDoubleType extends ComplexTypeImpl<ComplexDoubleType> implements ComplexType<ComplexDoubleType>
 {
-	// the Container
-	final Container<ComplexDoubleType, DoubleAccess> storage;
+	// the DirectAccessContainer
+	final DirectAccessContainer<ComplexDoubleType, DoubleAccess> storage;
 	
-	// the (sub)container that holds the information 
+	// the (sub)DirectAccessContainer that holds the information 
 	DoubleAccess b;
 	
 	// this is the constructor if you want it to read from an array
-	public ComplexDoubleType( Container<ComplexDoubleType, DoubleAccess> complexfloatStorage )
+	public ComplexDoubleType( DirectAccessContainer<ComplexDoubleType, DoubleAccess> complexfloatStorage )
 	{
 		storage = complexfloatStorage;
 		realI = 0;
@@ -67,7 +67,7 @@ public class ComplexDoubleType extends ComplexTypeImpl<ComplexDoubleType> implem
 	public ComplexDoubleType() { this( 0, 0 ); }
 
 	@Override
-	public Container<ComplexDoubleType, ? extends FloatAccess> createSuitableContainer( final ContainerFactory storageFactory, final int dim[] )
+	public DirectAccessContainer<ComplexDoubleType, ? extends FloatAccess> createSuitableDirectAccessContainer( final DirectAccessContainerFactory storageFactory, final int dim[] )
 	{
 		return storageFactory.createFloatInstance( dim, 2 );	
 	}
@@ -122,9 +122,9 @@ public class ComplexDoubleType extends ComplexTypeImpl<ComplexDoubleType> implem
 	//public ComplexFloatType getType() { return this; }
 
 	@Override
-	public ComplexDoubleType createType( Container<ComplexDoubleType,?> container )
+	public ComplexDoubleType createType( DirectAccessContainer<ComplexDoubleType,?> DirectAccessContainer )
 	{
-		return new ComplexDoubleType( (Container<ComplexDoubleType, DoubleAccess>)container );
+		return new ComplexDoubleType( (DirectAccessContainer<ComplexDoubleType, DoubleAccess>)DirectAccessContainer );
 	}
 	
 	@Override

@@ -29,6 +29,7 @@
  */
 package mpicbg.imglib.container.dynamic;
 
+import mpicbg.imglib.container.DirectAccessContainer;
 import mpicbg.imglib.container.PixelGridContainerImpl;
 import mpicbg.imglib.container.array.Array;
 import mpicbg.imglib.cursor.LocalizableByDimCursor;
@@ -42,7 +43,7 @@ import mpicbg.imglib.image.Image;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
 import mpicbg.imglib.type.Type;
 
-public abstract class DynamicContainer<T extends Type<T>, A extends DynamicContainerAccessor> extends PixelGridContainerImpl<T,A>
+public abstract class DynamicContainer<T extends Type<T>, A extends DynamicContainerAccessor> extends PixelGridContainerImpl<T> implements DirectAccessContainer<T, A>
 {
 	final protected int[] step;
 	
@@ -85,30 +86,35 @@ public abstract class DynamicContainer<T extends Type<T>, A extends DynamicConta
 	@Override
 	public DynamicCursor<T> createCursor( final T type, final Image<T> image )
 	{
-		return new DynamicCursor<T>( this, image, type );
+		// create a Cursor using a Type that is linked to the container
+		return new DynamicCursor<T>( this, image, type.createType( this ) );
 	}
 
 	@Override
 	public LocalizableByDimCursor<T> createLocalizableByDimCursor( final T type, final Image<T> image )
 	{
-		return new DynamicLocalizableByDimCursor<T>( this, image, type );
+		// create a Cursor using a Type that is linked to the container
+		return new DynamicLocalizableByDimCursor<T>( this, image, type.createType( this ) );
 	}
 
 	@Override
 	public LocalizableByDimCursor<T> createLocalizableByDimCursor( final T type, final Image<T> image, final OutOfBoundsStrategyFactory<T> outOfBoundsFactory )
 	{
-		return new DynamicLocalizableByDimOutOfBoundsCursor<T>( this, image, type, outOfBoundsFactory );
+		// create a Cursor using a Type that is linked to the container
+		return new DynamicLocalizableByDimOutOfBoundsCursor<T>( this, image, type.createType( this ), outOfBoundsFactory );
 	}
 
 	@Override
 	public DynamicLocalizableCursor<T> createLocalizableCursor( final T type, final Image<T> image )
 	{
-		return new DynamicLocalizableCursor<T>( this, image, type );	
+		// create a Cursor using a Type that is linked to the container
+		return new DynamicLocalizableCursor<T>( this, image, type.createType( this ) );	
 	}
 
 	@Override
 	public LocalizablePlaneCursor<T> createLocalizablePlaneCursor( final T type, final Image<T> image )
 	{
-		return new DynamicLocalizablePlaneCursor<T>( this, image, type );
+		// create a Cursor using a Type that is linked to the container
+		return new DynamicLocalizablePlaneCursor<T>( this, image, type.createType( this ) );
 	}
 }

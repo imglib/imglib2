@@ -5,12 +5,9 @@ import ij.ImagePlus;
 import java.awt.Polygon;
 import java.awt.Rectangle;
 
-import mpicbg.imglib.container.Container;
 import mpicbg.imglib.container.array.ArrayContainerFactory;
 import mpicbg.imglib.container.cell.CellContainerFactory;
-import mpicbg.imglib.container.shapelist.ByteShapeList;
-import mpicbg.imglib.container.shapelist.ShapeListContainerFactory;
-import mpicbg.imglib.cursor.Cursor;
+import mpicbg.imglib.container.shapelist.ShapeList;
 import mpicbg.imglib.cursor.LocalizableByDimCursor;
 import mpicbg.imglib.cursor.LocalizableCursor;
 import mpicbg.imglib.image.Image;
@@ -39,13 +36,8 @@ public class TestShapeList
 		
 
 		/* Create ShapeList */
-		final ShapeListContainerFactory shapeListFactory = new ShapeListContainerFactory();
-		final ImageFactory< ByteType > shapeListImageFactory = new ImageFactory< ByteType >( new ByteType( ( byte )0 ), shapeListFactory );
-		
-		final Image< ByteType > shapeListImage = shapeListImageFactory.createImage( new int[]{ 200, 200, depth }, "ShapeListContainer" );
-		
-		/* Pfui! */
-		final ByteShapeList< ? > shapeList = ( ByteShapeList< ? > )shapeListImage.getContainer();
+		final ShapeList< ByteType > shapeList = new ShapeList<ByteType>( new int[]{ 200, 200, depth },  new ByteType( ) );
+		final Image< ByteType > shapeListImage = new Image< ByteType >( shapeList, shapeList.getBackground(), "ShapeListContainer" ); 
 		
 		/* add some shapes */
 		for ( int i = 0; i < depth; ++i )

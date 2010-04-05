@@ -30,13 +30,13 @@
 package mpicbg.imglib.type.numeric.integer;
 
 import mpicbg.imglib.algorithm.math.MathLib;
-import mpicbg.imglib.container.Container;
+import mpicbg.imglib.container.DirectAccessContainer;
 import mpicbg.imglib.container.basictypecontainer.IntAccess;
 
 public class UnsignedIntType extends GenericIntType<UnsignedIntType>
 {
 	// this is the constructor if you want it to read from an array
-	public UnsignedIntType( Container<UnsignedIntType, IntAccess> intStorage ) { super( intStorage ); }
+	public UnsignedIntType( DirectAccessContainer<UnsignedIntType, IntAccess> intStorage ) { super( intStorage ); }
 
 	// this is the constructor if you want it to be a variable
 	public UnsignedIntType( final long value ) { super( getCodedSignedIntChecked(value) ); }
@@ -112,9 +112,9 @@ public class UnsignedIntType extends GenericIntType<UnsignedIntType>
 	public UnsignedIntType[][][] createArray3D( final int size1, final int size2, final int size3 ) { return new UnsignedIntType[ size1 ][ size2 ][ size3 ]; }
 
 	@Override
-	public UnsignedIntType createType( final Container<UnsignedIntType, ?> container ) 
+	public UnsignedIntType createType( final DirectAccessContainer<UnsignedIntType, ?> DirectAccessContainer ) 
 	{ 
-		return new UnsignedIntType( (Container<UnsignedIntType, IntAccess>)container ); 
+		return new UnsignedIntType( (DirectAccessContainer<UnsignedIntType, IntAccess>)DirectAccessContainer ); 
 	}
 	
 	@Override

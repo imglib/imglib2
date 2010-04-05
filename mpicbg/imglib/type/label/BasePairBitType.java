@@ -29,8 +29,8 @@
  */
 package mpicbg.imglib.type.label;
 
-import mpicbg.imglib.container.Container;
-import mpicbg.imglib.container.ContainerFactory;
+import mpicbg.imglib.container.DirectAccessContainer;
+import mpicbg.imglib.container.DirectAccessContainerFactory;
 import mpicbg.imglib.container.basictypecontainer.BitAccess;
 import mpicbg.imglib.container.basictypecontainer.array.BitArray;
 import mpicbg.imglib.cursor.Cursor;
@@ -44,17 +44,17 @@ public class BasePairBitType extends TypeImpl<BasePairBitType> implements BasePa
 {
 	public static enum Base { gap, N, A, T, G, C; }
 			
-	// the Container
-	final Container<BasePairBitType, BitAccess> storage;
+	// the DirectAccessContainer
+	final DirectAccessContainer<BasePairBitType, BitAccess> storage;
 	
-	// the (sub)container that holds the information 
+	// the (sub)DirectAccessContainer that holds the information 
 	BitAccess b;
 	
 	// the adresses of the bits that we store
 	int j1, j2, j3;
 	
 	// this is the constructor if you want it to read from an array
-	public BasePairBitType( Container<BasePairBitType, BitAccess> bitStorage )
+	public BasePairBitType( DirectAccessContainer<BasePairBitType, BitAccess> bitStorage )
 	{
 		storage = bitStorage;
 	}
@@ -71,7 +71,7 @@ public class BasePairBitType extends TypeImpl<BasePairBitType> implements BasePa
 	public BasePairBitType() { this( Base.N ); }
 	
 	@Override
-	public Container<BasePairBitType, ? extends BitAccess> createSuitableContainer( final ContainerFactory storageFactory, final int dim[] )	
+	public DirectAccessContainer<BasePairBitType, ? extends BitAccess> createSuitableDirectAccessContainer( final DirectAccessContainerFactory storageFactory, final int dim[] )	
 	{
 		return storageFactory.createBitInstance( dim, 3 );	
 	}
@@ -259,9 +259,9 @@ public class BasePairBitType extends TypeImpl<BasePairBitType> implements BasePa
 	//public BasePairBitType getType() { return this; }
 
 	@Override
-	public BasePairBitType createType( Container<BasePairBitType,?> container )
+	public BasePairBitType createType( DirectAccessContainer<BasePairBitType,?> DirectAccessContainer )
 	{ 
-		return new BasePairBitType( (Container<BasePairBitType, BitAccess>)container ); 
+		return new BasePairBitType( (DirectAccessContainer<BasePairBitType, BitAccess>)DirectAccessContainer ); 
 	}
 	
 	@Override

@@ -15,7 +15,6 @@ import mpicbg.imglib.algorithm.gauss.DownSample;
 import mpicbg.imglib.algorithm.math.MathLib;
 import mpicbg.imglib.container.ContainerFactory;
 import mpicbg.imglib.container.array.ArrayContainerFactory;
-import mpicbg.imglib.container.cell.CellContainerFactory;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.display.ComplexTypePhaseSpectrumDisplay;
 import mpicbg.imglib.image.display.ComplexTypePowerSpectrumDisplay;
@@ -169,7 +168,7 @@ public class AlgorithmPerformance
 			processingTime += bandpass.getProcessingTime();
 
 			// show power spectrum
-			fftImage.setDisplay( new ComplexTypePowerSpectrumDisplay( fftImage ) );
+			fftImage.setDisplay( new ComplexTypePowerSpectrumDisplay<ComplexFloatType>( fftImage ) );
 			
 			if ( show )
 			{
@@ -224,7 +223,7 @@ public class AlgorithmPerformance
 				fftImage.getDisplay().setMinMax();
 				ImageJFunctions.displayAsVirtualStack( fftImage ).show();			
 	
-				fftImage.setDisplay( new ComplexTypePhaseSpectrumDisplay( fftImage ) );
+				fftImage.setDisplay( new ComplexTypePhaseSpectrumDisplay<ComplexFloatType>( fftImage ) );
 				fftImage.getDisplay().setMinMax();
 				ImageJFunctions.displayAsVirtualStack( fftImage ).show();
 			}			

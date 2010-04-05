@@ -30,8 +30,8 @@
 
 package mpicbg.imglib.type.logic;
 
-import mpicbg.imglib.container.Container;
-import mpicbg.imglib.container.ContainerFactory;
+import mpicbg.imglib.container.DirectAccessContainer;
+import mpicbg.imglib.container.DirectAccessContainerFactory;
 import mpicbg.imglib.container.basictypecontainer.BitAccess;
 import mpicbg.imglib.container.basictypecontainer.array.BitArray;
 import mpicbg.imglib.cursor.Cursor;
@@ -44,14 +44,14 @@ import mpicbg.imglib.type.numeric.integer.IntegerTypeImpl;
 
 public class BitType extends IntegerTypeImpl<BitType> implements LogicType<BitType>, RealType<BitType>
 {
-	// the Container
-	final Container<BitType, BitAccess> storage;
+	// the DirectAccessContainer
+	final DirectAccessContainer<BitType, BitAccess> storage;
 	
-	// the (sub)container that holds the information 
+	// the (sub)DirectAccessContainer that holds the information 
 	BitAccess b;
 	
 	// this is the constructor if you want it to read from an array
-	public BitType( Container<BitType, BitAccess> bitStorage )
+	public BitType( DirectAccessContainer<BitType, BitAccess> bitStorage )
 	{
 		storage = bitStorage;
 	}
@@ -68,7 +68,7 @@ public class BitType extends IntegerTypeImpl<BitType> implements LogicType<BitTy
 	public BitType() { this( false ); }
 	
 	@Override
-	public Container<BitType, ? extends BitAccess> createSuitableContainer( final ContainerFactory storageFactory, final int dim[] )
+	public DirectAccessContainer<BitType, ? extends BitAccess> createSuitableDirectAccessContainer( final DirectAccessContainerFactory storageFactory, final int dim[] )
 	{
 		return storageFactory.createBitInstance( dim, 1 );	
 	}
@@ -194,9 +194,9 @@ public class BitType extends IntegerTypeImpl<BitType> implements LogicType<BitTy
 	//public BooleanType getType() { return this; }
 
 	@Override
-	public BitType createType( Container<BitType,?> container )
+	public BitType createType( DirectAccessContainer<BitType,?> DirectAccessContainer )
 	{
-		return new BitType( (Container<BitType, BitAccess>)container );
+		return new BitType( (DirectAccessContainer<BitType, BitAccess>)DirectAccessContainer );
 	}
 	
 	@Override

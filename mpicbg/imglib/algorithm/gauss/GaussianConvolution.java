@@ -22,7 +22,9 @@ import mpicbg.imglib.algorithm.Benchmark;
 import mpicbg.imglib.algorithm.MultiThreaded;
 import mpicbg.imglib.algorithm.OutputAlgorithm;
 import mpicbg.imglib.algorithm.math.MathLib;
+import mpicbg.imglib.container.DirectAccessContainer;
 import mpicbg.imglib.container.array.Array3D;
+import mpicbg.imglib.container.basictypecontainer.FloatAccess;
 import mpicbg.imglib.container.basictypecontainer.array.FloatArray;
 import mpicbg.imglib.cursor.LocalizableByDimCursor;
 import mpicbg.imglib.cursor.LocalizableByDimCursor3D;
@@ -336,8 +338,8 @@ public class GaussianConvolution< T extends RealType<T>> implements MultiThreade
 		/* inconvertible types due to javac bug 6548436: final Image<FloatType> convolvedFloat = (Image<FloatType>) convolved; */
 		final Image<FloatType> convolvedFloat = (Image)convolved;
 		
-		final FloatArray inputArray = (FloatArray) imageFloat.getContainer().update( null );
-		final FloatArray outputArray = (FloatArray) convolvedFloat.getContainer().update( null );
+		final FloatArray inputArray = (FloatArray) ( (DirectAccessContainer<FloatType, FloatAccess>) imageFloat.getContainer() ).update( null );
+		final FloatArray outputArray = (FloatArray) ( (DirectAccessContainer<FloatType, FloatAccess>) convolvedFloat.getContainer() ).update( null );
 		
 		final Array3D input = (Array3D) imageFloat.getContainer();
 		final Array3D output = (Array3D) convolvedFloat.getContainer();

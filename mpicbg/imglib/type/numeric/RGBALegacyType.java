@@ -30,8 +30,8 @@
 package mpicbg.imglib.type.numeric;
 
 import mpicbg.imglib.algorithm.math.MathLib;
-import mpicbg.imglib.container.Container;
-import mpicbg.imglib.container.ContainerFactory;
+import mpicbg.imglib.container.DirectAccessContainer;
+import mpicbg.imglib.container.DirectAccessContainerFactory;
 import mpicbg.imglib.container.basictypecontainer.IntAccess;
 import mpicbg.imglib.container.basictypecontainer.array.IntArray;
 import mpicbg.imglib.cursor.Cursor;
@@ -41,14 +41,14 @@ import mpicbg.imglib.type.numeric.integer.IntegerTypeImpl;
 
 final public class RGBALegacyType extends IntegerTypeImpl<RGBALegacyType> implements RealType<RGBALegacyType>
 {
-	// the Container
-	final Container<RGBALegacyType, IntAccess> storage;
+	// the DirectAccessContainer
+	final DirectAccessContainer<RGBALegacyType, IntAccess> storage;
 	
-	// the (sub)container that holds the information 
+	// the (sub)DirectAccessContainer that holds the information 
 	IntAccess b;
 	
 	// this is the constructor if you want it to read from an array
-	public RGBALegacyType( Container<RGBALegacyType, IntAccess> byteStorage )
+	public RGBALegacyType( DirectAccessContainer<RGBALegacyType, IntAccess> byteStorage )
 	{
 		storage = byteStorage;
 	}
@@ -65,7 +65,7 @@ final public class RGBALegacyType extends IntegerTypeImpl<RGBALegacyType> implem
 	public RGBALegacyType() { this( 0 ); }
 	
 	@Override
-	public Container<RGBALegacyType, ? extends IntAccess> createSuitableContainer( final ContainerFactory storageFactory, final int dim[] )
+	public DirectAccessContainer<RGBALegacyType, ? extends IntAccess> createSuitableDirectAccessContainer( final DirectAccessContainerFactory storageFactory, final int dim[] )
 	{
 		return storageFactory.createIntInstance( dim, 1 );	
 	}
@@ -236,9 +236,9 @@ final public class RGBALegacyType extends IntegerTypeImpl<RGBALegacyType> implem
 	//public RGBALegacyType getType() { return this; }
 	
 	@Override
-	public RGBALegacyType createType( Container<RGBALegacyType,?> container )
+	public RGBALegacyType createType( DirectAccessContainer<RGBALegacyType,?> DirectAccessContainer )
 	{
-		return new RGBALegacyType( (Container<RGBALegacyType, IntAccess>)container );
+		return new RGBALegacyType( (DirectAccessContainer<RGBALegacyType, IntAccess>)DirectAccessContainer );
 	}
 
 	@Override

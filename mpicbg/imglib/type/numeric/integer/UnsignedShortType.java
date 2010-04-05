@@ -30,13 +30,13 @@
 package mpicbg.imglib.type.numeric.integer;
 
 import mpicbg.imglib.algorithm.math.MathLib;
-import mpicbg.imglib.container.Container;
+import mpicbg.imglib.container.DirectAccessContainer;
 import mpicbg.imglib.container.basictypecontainer.ShortAccess;
 
 public class UnsignedShortType extends GenericShortType<UnsignedShortType>
 {
 	// this is the constructor if you want it to read from an array
-	public UnsignedShortType( Container<UnsignedShortType, ShortAccess> shortStorage ) { super( shortStorage ); }
+	public UnsignedShortType( DirectAccessContainer<UnsignedShortType, ShortAccess> shortStorage ) { super( shortStorage ); }
 
 	// this is the constructor if you want it to be a variable
 	public UnsignedShortType( final int value ) { super( getCodedSignedShortChecked(value) ); }
@@ -112,9 +112,9 @@ public class UnsignedShortType extends GenericShortType<UnsignedShortType>
 	public UnsignedShortType[][][] createArray3D( final int size1, final int size2, final int size3 ) { return new UnsignedShortType[ size1 ][ size2 ][ size3 ]; }
 
 	@Override
-	public UnsignedShortType createType( final Container<UnsignedShortType,?> container ) 
+	public UnsignedShortType createType( final DirectAccessContainer<UnsignedShortType,?> DirectAccessContainer ) 
 	{ 
-		return new UnsignedShortType( (Container<UnsignedShortType, ShortAccess>)container ); 
+		return new UnsignedShortType( (DirectAccessContainer<UnsignedShortType, ShortAccess>)DirectAccessContainer ); 
 	}
 	
 	@Override

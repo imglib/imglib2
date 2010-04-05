@@ -18,14 +18,8 @@ package mpicbg.imglib.container.shapelist;
 
 import mpicbg.imglib.container.Container;
 import mpicbg.imglib.container.ContainerFactory;
-import mpicbg.imglib.container.basictypecontainer.BitAccess;
-import mpicbg.imglib.container.basictypecontainer.ByteAccess;
-import mpicbg.imglib.container.basictypecontainer.CharAccess;
-import mpicbg.imglib.container.basictypecontainer.DoubleAccess;
-import mpicbg.imglib.container.basictypecontainer.FloatAccess;
-import mpicbg.imglib.container.basictypecontainer.IntAccess;
-import mpicbg.imglib.container.basictypecontainer.LongAccess;
-import mpicbg.imglib.container.basictypecontainer.ShortAccess;
+import mpicbg.imglib.container.DirectAccessContainerFactory;
+import mpicbg.imglib.image.Image;
 import mpicbg.imglib.type.Type;
 
 /**
@@ -36,59 +30,16 @@ import mpicbg.imglib.type.Type;
  */
 public class ShapeListContainerFactory extends ContainerFactory
 {
-
-	@Override
-	public < T extends Type< T >> Container< T, ? extends BitAccess > createBitInstance( int[] dimensions, int entitiesPerPixel )
-	{
-		throw new UnsupportedOperationException();
-	}
-
 	/**
-	 * A pointless hack to get a container instance somehow.
+	 * This method is called by {@link Image}. The {@link ContainerFactory} can decide how to create the {@link Container},
+	 * if it is for example a {@link DirectAccessContainerFactory} it will ask the {@link Type} to create a 
+	 * suitable {@link Container} for the {@link Type} and the dimensionality
 	 * 
-	 * TODO Check if that factory system is really necessary and if so, how it
-	 * can be made flexible enough to prevent these stupid re-implementations.  
+	 * @return {@link Container} - the instantiated Container
 	 */
-	@Override
-	public ByteShapeList< ByteAccess > createByteInstance( int[] dimensions, int entitiesPerPixel )
+	public <T extends Type<T>> ShapeList<T> createContainer( final int[] dim, final T type )
 	{
-		return new ByteShapeList< ByteAccess >( this, dimensions );
-	}
-
-	@Override
-	public < T extends Type< T >> Container< T, ? extends CharAccess > createCharInstance( int[] dimensions, int entitiesPerPixel )
-	{
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public < T extends Type< T >> Container< T, ? extends DoubleAccess > createDoubleInstance( int[] dimensions, int entitiesPerPixel )
-	{
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public < T extends Type< T >> Container< T, ? extends FloatAccess > createFloatInstance( int[] dimensions, int entitiesPerPixel )
-	{
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public < T extends Type< T >> Container< T, ? extends IntAccess > createIntInstance( int[] dimensions, int entitiesPerPixel )
-	{
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public < T extends Type< T >> Container< T, ? extends LongAccess > createLongInstance( int[] dimensions, int entitiesPerPixel )
-	{
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public < T extends Type< T >> Container< T, ? extends ShortAccess > createShortInstance( int[] dimensions, int entitiesPerPixel )
-	{
-		throw new UnsupportedOperationException();
+		return new ShapeList<T>( this, dim, type );
 	}
 
 	@Override

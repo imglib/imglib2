@@ -30,23 +30,22 @@
 package mpicbg.imglib.container;
 
 import mpicbg.imglib.Factory;
-import mpicbg.imglib.container.basictypecontainer.*;
+import mpicbg.imglib.image.Image;
 import mpicbg.imglib.type.Type;
 
 public abstract class ContainerFactory implements Factory
 {
 	protected boolean useOptimizedContainers = true;
 		
-	public void setOptimizedContainerUse ( final boolean useOptimizedContainers ) { this.useOptimizedContainers = useOptimizedContainers; }
-	public boolean useOptimizedContainers() { return useOptimizedContainers; }
+	/**
+	 * This method is called by {@link Image}. The {@link ContainerFactory} can decide how to create the {@link Container},
+	 * if it is for example a {@link DirectAccessContainerFactory} it will ask the {@link Type} to create a 
+	 * suitable {@link Container} for the {@link Type} and the dimensionality
+	 * 
+	 * @return {@link Container} - the instantiated Container
+	 */
+	public abstract <T extends Type<T>> Container<T> createContainer( final int[] dim, final T type );
 	
-	// All basic Type containers
-	public abstract <T extends Type<T>> Container<T, ? extends BitAccess> createBitInstance( int[] dimensions, int entitiesPerPixel );
-	public abstract <T extends Type<T>> Container<T, ? extends ByteAccess> createByteInstance( int[] dimensions, int entitiesPerPixel );
-	public abstract <T extends Type<T>> Container<T, ? extends CharAccess> createCharInstance( int[] dimensions, int entitiesPerPixel );
-	public abstract <T extends Type<T>> Container<T, ? extends ShortAccess> createShortInstance( int[] dimensions, int entitiesPerPixel );
-	public abstract <T extends Type<T>> Container<T, ? extends IntAccess> createIntInstance( int[] dimensions, int entitiesPerPixel );
-	public abstract <T extends Type<T>> Container<T, ? extends LongAccess> createLongInstance( int[] dimensions, int entitiesPerPixel );
-	public abstract <T extends Type<T>> Container<T, ? extends FloatAccess> createFloatInstance( int[] dimensions, int entitiesPerPixel );
-	public abstract <T extends Type<T>> Container<T, ? extends DoubleAccess> createDoubleInstance( int[] dimensions, int entitiesPerPixel );
+	public void setOptimizedContainerUse ( final boolean useOptimizedContainers ) { this.useOptimizedContainers = useOptimizedContainers; }
+	public boolean useOptimizedContainers() { return useOptimizedContainers; }	
 }

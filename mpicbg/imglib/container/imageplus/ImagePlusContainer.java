@@ -34,6 +34,7 @@ import java.util.ArrayList;
 import ij.ImagePlus;
 
 import mpicbg.imglib.container.Container3D;
+import mpicbg.imglib.container.DirectAccessContainer;
 import mpicbg.imglib.container.PixelGridContainerImpl;
 import mpicbg.imglib.container.basictypecontainer.array.ArrayDataAccess;
 import mpicbg.imglib.cursor.Cursor;
@@ -50,7 +51,7 @@ import mpicbg.imglib.image.Image;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
 import mpicbg.imglib.type.Type;
 
-public class ImagePlusContainer<T extends Type<T>, A extends ArrayDataAccess<A>> extends PixelGridContainerImpl<T,A> implements Container3D<T,A>
+public class ImagePlusContainer<T extends Type<T>, A extends ArrayDataAccess<A>> extends PixelGridContainerImpl<T> implements Container3D<T>, DirectAccessContainer<T, A>
 {
 	final ImagePlusContainerFactory factory;
 	final int width, height, depth;

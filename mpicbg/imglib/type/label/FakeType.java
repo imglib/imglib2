@@ -29,8 +29,8 @@
  */
 package mpicbg.imglib.type.label;
 
-import mpicbg.imglib.container.Container;
-import mpicbg.imglib.container.ContainerFactory;
+import mpicbg.imglib.container.DirectAccessContainer;
+import mpicbg.imglib.container.DirectAccessContainerFactory;
 import mpicbg.imglib.cursor.Cursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.display.Display;
@@ -39,7 +39,7 @@ import mpicbg.imglib.type.TypeImpl;
 public class FakeType extends TypeImpl<FakeType>
 {	
 	@Override
-	public Container<FakeType,?> createSuitableContainer( final ContainerFactory storageFactory, final int dim[] ) { return null; }
+	public DirectAccessContainer<FakeType,?> createSuitableDirectAccessContainer( final DirectAccessContainerFactory storageFactory, final int dim[] ) { return null; }
 
 	@Override
 	public void updateContainer( Cursor<?> c ) {}
@@ -63,7 +63,7 @@ public class FakeType extends TypeImpl<FakeType>
 	//public FakeType getType() { return this; }
 
 	@Override
-	public FakeType createType( Container<FakeType,?> container ){ return new FakeType(); }
+	public FakeType createType( DirectAccessContainer<FakeType,?> DirectAccessContainer ){ return new FakeType(); }
 	
 	@Override
 	public FakeType createVariable(){ return new FakeType(); }

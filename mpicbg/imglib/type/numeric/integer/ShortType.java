@@ -29,13 +29,13 @@
  */
 package mpicbg.imglib.type.numeric.integer;
 
-import mpicbg.imglib.container.Container;
+import mpicbg.imglib.container.DirectAccessContainer;
 import mpicbg.imglib.container.basictypecontainer.ShortAccess;
 
 public class ShortType extends GenericShortType<ShortType>
 {
 	// this is the constructor if you want it to read from an array
-	public ShortType( Container<ShortType, ShortAccess> shortStorage ) { super( shortStorage ); }
+	public ShortType( DirectAccessContainer<ShortType, ShortAccess> shortStorage ) { super( shortStorage ); }
 	
 	// this is the constructor if you want it to be a variable
 	public ShortType( final short value ) { super( value ); }
@@ -65,9 +65,9 @@ public class ShortType extends GenericShortType<ShortType>
 	public ShortType[][][] createArray3D( final int size1, final int size2, final int size3 ) { return new ShortType[ size1 ][ size2 ][ size3 ]; }
 	
 	@Override
-	public ShortType createType( final Container<ShortType,?> container )
+	public ShortType createType( final DirectAccessContainer<ShortType,?> DirectAccessContainer )
 	{ 
-		return new ShortType( (Container<ShortType, ShortAccess>)container );
+		return new ShortType( (DirectAccessContainer<ShortType, ShortAccess>)DirectAccessContainer );
 	}
 
 	@Override

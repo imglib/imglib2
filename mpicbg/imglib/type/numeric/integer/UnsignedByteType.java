@@ -30,13 +30,13 @@
 package mpicbg.imglib.type.numeric.integer;
 
 import mpicbg.imglib.algorithm.math.MathLib;
-import mpicbg.imglib.container.Container;
+import mpicbg.imglib.container.DirectAccessContainer;
 import mpicbg.imglib.container.basictypecontainer.ByteAccess;
 
 public class UnsignedByteType extends GenericByteType<UnsignedByteType>
 {
 	// this is the constructor if you want it to read from an array
-	public UnsignedByteType( final Container<UnsignedByteType, ByteAccess> byteStorage ) { super( byteStorage ); }
+	public UnsignedByteType( final DirectAccessContainer<UnsignedByteType, ByteAccess> byteStorage ) { super( byteStorage ); }
 
 	// this is the constructor if you want it to be a variable
 	public UnsignedByteType( final int value ) { super( getCodedSignedByteChecked(value) ); }
@@ -112,9 +112,9 @@ public class UnsignedByteType extends GenericByteType<UnsignedByteType>
 	public UnsignedByteType[][][] createArray3D( final int size1, final int size2, final int size3 ) { return new UnsignedByteType[ size1 ][ size2 ][ size3 ]; }
 
 	@Override
-	public UnsignedByteType createType( final Container<UnsignedByteType, ?> container ) 
+	public UnsignedByteType createType( final DirectAccessContainer<UnsignedByteType, ?> DirectAccessContainer ) 
 	{ 
-		return new UnsignedByteType( (Container<UnsignedByteType, ByteAccess>)container ); 
+		return new UnsignedByteType( (DirectAccessContainer<UnsignedByteType, ByteAccess>)DirectAccessContainer ); 
 	}
 	
 	@Override

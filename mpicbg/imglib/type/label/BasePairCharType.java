@@ -29,8 +29,8 @@
  */
 package mpicbg.imglib.type.label;
 
-import mpicbg.imglib.container.Container;
-import mpicbg.imglib.container.ContainerFactory;
+import mpicbg.imglib.container.DirectAccessContainer;
+import mpicbg.imglib.container.DirectAccessContainerFactory;
 import mpicbg.imglib.container.basictypecontainer.CharAccess;
 import mpicbg.imglib.container.basictypecontainer.array.CharArray;
 import mpicbg.imglib.cursor.Cursor;
@@ -42,14 +42,14 @@ import mpicbg.imglib.type.label.BasePairBitType.Base;
 
 public class BasePairCharType extends TypeImpl<BasePairCharType> implements BasePairType<BasePairCharType>
 {
-	// the Container
-	final Container<BasePairCharType, CharAccess> storage;
+	// the DirectAccessContainer
+	final DirectAccessContainer<BasePairCharType, CharAccess> storage;
 	
-	// the (sub)container that holds the information 
+	// the (sub)DirectAccessContainer that holds the information 
 	CharAccess b;
 	
 	// this is the constructor if you want it to read from an array
-	public BasePairCharType( Container<BasePairCharType, CharAccess> charStorage )
+	public BasePairCharType( DirectAccessContainer<BasePairCharType, CharAccess> charStorage )
 	{
 		storage = charStorage;
 	}
@@ -74,7 +74,7 @@ public class BasePairCharType extends TypeImpl<BasePairCharType> implements Base
 	public BasePairCharType() { this( Base.N ); }
 
 	@Override
-	public Container<BasePairCharType, ? extends CharAccess> createSuitableContainer( final ContainerFactory storageFactory, final int dim[] )
+	public DirectAccessContainer<BasePairCharType, ? extends CharAccess> createSuitableDirectAccessContainer( final DirectAccessContainerFactory storageFactory, final int dim[] )
 	{
 		return storageFactory.createCharInstance( dim, 1 );	
 	}
@@ -191,9 +191,9 @@ public class BasePairCharType extends TypeImpl<BasePairCharType> implements Base
 	//public BasePairCharType getType() { return this; }
 
 	@Override
-	public BasePairCharType createType( Container<BasePairCharType,?> container )
+	public BasePairCharType createType( DirectAccessContainer<BasePairCharType,?> DirectAccessContainer )
 	{
-		return new BasePairCharType( (Container<BasePairCharType, CharAccess>)container );
+		return new BasePairCharType( (DirectAccessContainer<BasePairCharType, CharAccess>)DirectAccessContainer );
 	}
 	
 	@Override

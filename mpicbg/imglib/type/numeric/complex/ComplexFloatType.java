@@ -29,8 +29,8 @@
  */
 package mpicbg.imglib.type.numeric.complex;
 
-import mpicbg.imglib.container.Container;
-import mpicbg.imglib.container.ContainerFactory;
+import mpicbg.imglib.container.DirectAccessContainer;
+import mpicbg.imglib.container.DirectAccessContainerFactory;
 import mpicbg.imglib.container.basictypecontainer.FloatAccess;
 import mpicbg.imglib.container.basictypecontainer.array.FloatArray;
 import mpicbg.imglib.cursor.Cursor;
@@ -40,14 +40,14 @@ import mpicbg.imglib.type.numeric.ComplexType;
 
 public class ComplexFloatType extends ComplexTypeImpl<ComplexFloatType> implements ComplexType<ComplexFloatType>
 {
-	// the Container
-	final Container<ComplexFloatType, FloatAccess> storage;
+	// the DirectAccessContainer
+	final DirectAccessContainer<ComplexFloatType, FloatAccess> storage;
 	
-	// the (sub)container that holds the information 
+	// the (sub)DirectAccessContainer that holds the information 
 	FloatAccess b;
 	
 	// this is the constructor if you want it to read from an array
-	public ComplexFloatType( Container<ComplexFloatType, FloatAccess> complexfloatStorage )
+	public ComplexFloatType( DirectAccessContainer<ComplexFloatType, FloatAccess> complexfloatStorage )
 	{
 		storage = complexfloatStorage;
 		realI = 0;
@@ -68,7 +68,7 @@ public class ComplexFloatType extends ComplexTypeImpl<ComplexFloatType> implemen
 	public ComplexFloatType() { this( 0, 0 ); }
 
 	@Override
-	public Container<ComplexFloatType, ? extends FloatAccess> createSuitableContainer( final ContainerFactory storageFactory, final int dim[] )
+	public DirectAccessContainer<ComplexFloatType, ? extends FloatAccess> createSuitableDirectAccessContainer( final DirectAccessContainerFactory storageFactory, final int dim[] )
 	{
 		return storageFactory.createFloatInstance( dim, 2 );	
 	}
@@ -208,9 +208,9 @@ public class ComplexFloatType extends ComplexTypeImpl<ComplexFloatType> implemen
 	//public ComplexFloatType getType() { return this; }
 
 	@Override
-	public ComplexFloatType createType( Container<ComplexFloatType,?> container )
+	public ComplexFloatType createType( DirectAccessContainer<ComplexFloatType,?> DirectAccessContainer )
 	{
-		return new ComplexFloatType( (Container<ComplexFloatType, FloatAccess>)container );
+		return new ComplexFloatType( (DirectAccessContainer<ComplexFloatType, FloatAccess>)DirectAccessContainer );
 	}
 	
 	@Override

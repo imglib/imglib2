@@ -29,6 +29,7 @@
  */
 package mpicbg.imglib.container.array;
 
+import mpicbg.imglib.container.DirectAccessContainer;
 import mpicbg.imglib.container.PixelGridContainerImpl;
 import mpicbg.imglib.container.basictypecontainer.DataAccess;
 import mpicbg.imglib.cursor.Cursor;
@@ -41,7 +42,7 @@ import mpicbg.imglib.image.Image;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
 import mpicbg.imglib.type.Type;
 
-public class Array<T extends Type<T>, A extends DataAccess> extends PixelGridContainerImpl<T,A>
+public class Array<T extends Type<T>, A extends DataAccess> extends PixelGridContainerImpl<T> implements DirectAccessContainer<T, A>
 {
 	final protected int[] step;
 	final ArrayContainerFactory factory;
@@ -66,36 +67,41 @@ public class Array<T extends Type<T>, A extends DataAccess> extends PixelGridCon
 	
 	@Override
 	public ArrayCursor<T> createCursor( final T type, final Image<T> image ) 
-	{ 
-		ArrayCursor<T> c = new ArrayCursor<T>( this, image, type );
+	{
+		// create a Cursor using a Type that is linked to the container
+		ArrayCursor<T> c = new ArrayCursor<T>( this, image, type.createType( this ) );
 		return c;
 	}
 
 	@Override
 	public ArrayLocalizableCursor<T> createLocalizableCursor( final T type, final Image<T> image ) 
 	{ 
-		ArrayLocalizableCursor<T> c = new ArrayLocalizableCursor<T>( this, image, type );
+		// create a Cursor using a Type that is linked to the container
+		ArrayLocalizableCursor<T> c = new ArrayLocalizableCursor<T>( this, image, type.createType( this ) );
 		return c;
 	}
 
 	@Override
 	public ArrayLocalizablePlaneCursor<T> createLocalizablePlaneCursor( final T type, final Image<T> image ) 
 	{ 
-		ArrayLocalizablePlaneCursor<T> c = new ArrayLocalizablePlaneCursor<T>( this, image, type );
+		// create a Cursor using a Type that is linked to the container
+		ArrayLocalizablePlaneCursor<T> c = new ArrayLocalizablePlaneCursor<T>( this, image, type.createType( this ) );
 		return c;
 	}
 	
 	@Override
 	public ArrayLocalizableByDimCursor<T> createLocalizableByDimCursor( final T type, final Image<T> image ) 
 	{ 
-		ArrayLocalizableByDimCursor<T> c = new ArrayLocalizableByDimCursor<T>( this, image, type );
+		// create a Cursor using a Type that is linked to the container
+		ArrayLocalizableByDimCursor<T> c = new ArrayLocalizableByDimCursor<T>( this, image, type.createType( this ) );
 		return c;
 	}
 	
 	@Override
 	public ArrayLocalizableByDimOutOfBoundsCursor<T> createLocalizableByDimCursor( final T type, final Image<T> image, final OutOfBoundsStrategyFactory<T> outOfBoundsFactory ) 
 	{ 
-		ArrayLocalizableByDimOutOfBoundsCursor<T> c = new ArrayLocalizableByDimOutOfBoundsCursor<T>( this, image, type, outOfBoundsFactory );
+		// create a Cursor using a Type that is linked to the container
+		ArrayLocalizableByDimOutOfBoundsCursor<T> c = new ArrayLocalizableByDimOutOfBoundsCursor<T>( this, image, type.createType( this ), outOfBoundsFactory );
 		return c;
 	}
 	

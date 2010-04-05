@@ -29,13 +29,13 @@
  */
 package mpicbg.imglib.type.numeric.integer;
 
-import mpicbg.imglib.container.Container;
+import mpicbg.imglib.container.DirectAccessContainer;
 import mpicbg.imglib.container.basictypecontainer.ByteAccess;
 
 public class ByteType extends GenericByteType<ByteType>
 {
 	// this is the constructor if you want it to read from an array
-	public ByteType( final Container<ByteType, ByteAccess> byteStorage ) { super( byteStorage ); }
+	public ByteType( final DirectAccessContainer<ByteType, ByteAccess> byteStorage ) { super( byteStorage ); }
 	
 	// this is the constructor if you want it to be a variable
 	public ByteType( final byte value ) { super( value ); }
@@ -65,9 +65,9 @@ public class ByteType extends GenericByteType<ByteType>
 	public ByteType[][][] createArray3D( final int size1, final int size2, final int size3 ) { return new ByteType[ size1 ][ size2 ][ size3 ]; }
 
 	@Override
-	public ByteType createType( final Container<ByteType, ?> container ) 
+	public ByteType createType( final DirectAccessContainer<ByteType, ?> DirectAccessContainer ) 
 	{ 
-		return new ByteType( (Container<ByteType, ByteAccess>)container ); 
+		return new ByteType( (DirectAccessContainer<ByteType, ByteAccess>)DirectAccessContainer ); 
 	}
 	
 	@Override

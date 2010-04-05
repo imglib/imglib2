@@ -48,12 +48,12 @@ public class ShapeListLocalizableByDimCursor< T extends Type< T > > extends Curs
 {
 	private int numNeighborhoodCursors = 0;
 	 
-	final protected ShapeList< T, ? > container;
+	final protected ShapeList< T > container;
 	
 	final protected int numDimensions;
 	final protected int[] position, dimensions;
 	
-	public ShapeListLocalizableByDimCursor( final ShapeList< T, ? > container, final Image< T > image, final T type ) 
+	public ShapeListLocalizableByDimCursor( final ShapeList< T > container, final Image< T > image, final T type ) 
 	{
 		super( container, image, type );
 		this.container = container;

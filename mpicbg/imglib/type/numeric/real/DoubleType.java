@@ -29,8 +29,8 @@
  */
 package mpicbg.imglib.type.numeric.real;
 
-import mpicbg.imglib.container.Container;
-import mpicbg.imglib.container.ContainerFactory;
+import mpicbg.imglib.container.DirectAccessContainer;
+import mpicbg.imglib.container.DirectAccessContainerFactory;
 import mpicbg.imglib.container.basictypecontainer.DoubleAccess;
 import mpicbg.imglib.container.basictypecontainer.array.DoubleArray;
 import mpicbg.imglib.cursor.Cursor;
@@ -38,14 +38,14 @@ import mpicbg.imglib.type.numeric.RealType;
 
 public class DoubleType extends RealTypeImpl<DoubleType> implements RealType<DoubleType>
 {
-	// the Container
-	final Container<DoubleType, DoubleAccess> storage;
+	// the DirectAccessContainer
+	final DirectAccessContainer<DoubleType, DoubleAccess> storage;
 	
-	// the (sub)container that holds the information 
+	// the (sub)DirectAccessContainer that holds the information 
 	DoubleAccess b;
 	
 	// this is the constructor if you want it to read from an array
-	public DoubleType( Container<DoubleType, DoubleAccess> doubleStorage )
+	public DoubleType( DirectAccessContainer<DoubleType, DoubleAccess> doubleStorage )
 	{
 		storage = doubleStorage;
 	}
@@ -62,7 +62,7 @@ public class DoubleType extends RealTypeImpl<DoubleType> implements RealType<Dou
 	public DoubleType() { this( 0 ); }
 
 	@Override
-	public Container<DoubleType, ? extends DoubleAccess> createSuitableContainer( final ContainerFactory storageFactory, final int dim[] )
+	public DirectAccessContainer<DoubleType, ? extends DoubleAccess> createSuitableDirectAccessContainer( final DirectAccessContainerFactory storageFactory, final int dim[] )
 	{
 		return storageFactory.createDoubleInstance( dim, 1 );	
 	}
@@ -171,9 +171,9 @@ public class DoubleType extends RealTypeImpl<DoubleType> implements RealType<Dou
 	//public DoubleType getType() { return this; }
 
 	@Override
-	public DoubleType createType( Container<DoubleType,?> container )
+	public DoubleType createType( DirectAccessContainer<DoubleType,?> DirectAccessContainer )
 	{
-		return new DoubleType( (Container<DoubleType, DoubleAccess>)container );
+		return new DoubleType( (DirectAccessContainer<DoubleType, DoubleAccess>)DirectAccessContainer );
 	}
 	
 	@Override
