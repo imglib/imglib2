@@ -36,9 +36,9 @@ public abstract class PixelGridContainerImpl< T extends Type< T > > extends Cont
 	final protected int entitiesPerPixel;
 	protected int numEntities;
 	
-	public PixelGridContainerImpl( final ContainerFactory factory, final T type, final int[] dim, final int entitiesPerPixel )
+	public PixelGridContainerImpl( final ContainerFactory factory, int[] dim, final int entitiesPerPixel )
 	{
-		super( factory, type, dim );
+		super( factory, dim );
 		this.entitiesPerPixel = entitiesPerPixel;
 		this.numEntities = numPixels * entitiesPerPixel;
 	}

@@ -39,9 +39,8 @@ public abstract class ContainerImpl<T extends Type<T>> implements Container<T>
 	protected final int[] dim;
 	
 	final ContainerFactory factory;
-	final T type;
 
-	public ContainerImpl( final ContainerFactory factory, final T type, int[] dim )
+	public ContainerImpl( final ContainerFactory factory, int[] dim )
 	{
 		this.numDimensions = dim.length;
 		
@@ -50,9 +49,6 @@ public abstract class ContainerImpl<T extends Type<T>> implements Container<T>
 		this.dim = dim.clone();
 		this.factory = factory;
 		this.id = Image.createUniqueId();
-		
-		// every container has its own instance of one Type
-		this.type = type.clone();
 	}
 	
 	public static int getNumPixels( final int[] dim )
@@ -64,10 +60,7 @@ public abstract class ContainerImpl<T extends Type<T>> implements Container<T>
 		
 		return numPixels;		
 	}
-	
-	@Override
-	public T getType() { return type.clone(); }
-	
+		
 	@Override
 	public ContainerFactory getFactory() { return factory; }
 	

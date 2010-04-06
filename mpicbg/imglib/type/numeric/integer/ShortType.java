@@ -65,7 +65,7 @@ public class ShortType extends GenericShortType<ShortType>
 	public ShortType[][][] createArray3D( final int size1, final int size2, final int size3 ) { return new ShortType[ size1 ][ size2 ][ size3 ]; }
 	
 	@Override
-	public ShortType createDirectAccessType( final DirectAccessContainer<ShortType,?> DirectAccessContainer )
+	public ShortType createType( final DirectAccessContainer<ShortType,?> DirectAccessContainer )
 	{ 
 		return new ShortType( (DirectAccessContainer<ShortType, ShortAccess>)DirectAccessContainer );
 	}

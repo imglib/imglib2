@@ -39,9 +39,9 @@ public class ByteDynamicContainer <T extends Type<T>> extends DynamicContainer<T
 {
 	final ArrayList<Byte> data;
 	
-	public ByteDynamicContainer( final DynamicContainerFactory factory, final T type, final int[] dim, final int entitiesPerPixel )
+	public ByteDynamicContainer( final DynamicContainerFactory factory, final int[] dim, final int entitiesPerPixel )
 	{
-		super( factory, type, dim, entitiesPerPixel );
+		super( factory, dim, entitiesPerPixel );
 		
 		data = new ArrayList<Byte>();
 		

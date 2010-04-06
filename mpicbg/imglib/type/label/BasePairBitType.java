@@ -259,7 +259,7 @@ public class BasePairBitType extends TypeImpl<BasePairBitType> implements BasePa
 	//public BasePairBitType getType() { return this; }
 
 	@Override
-	public BasePairBitType createDirectAccessType( DirectAccessContainer<BasePairBitType,?> DirectAccessContainer )
+	public BasePairBitType createType( DirectAccessContainer<BasePairBitType,?> DirectAccessContainer )
 	{ 
 		return new BasePairBitType( (DirectAccessContainer<BasePairBitType, BitAccess>)DirectAccessContainer ); 
 	}

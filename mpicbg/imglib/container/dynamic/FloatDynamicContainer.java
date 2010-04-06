@@ -39,9 +39,9 @@ public class FloatDynamicContainer <T extends Type<T>> extends DynamicContainer<
 {
 	final ArrayList<Float> data;
 	
-	public FloatDynamicContainer( final DynamicContainerFactory factory, final T type, final int[] dim, final int entitiesPerPixel )
+	public FloatDynamicContainer( final DynamicContainerFactory factory, final int[] dim, final int entitiesPerPixel )
 	{
-		super( factory, type, dim, entitiesPerPixel );
+		super( factory, dim, entitiesPerPixel );
 		
 		data = new ArrayList<Float>();
 		

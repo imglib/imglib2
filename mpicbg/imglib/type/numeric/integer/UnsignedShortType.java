@@ -112,7 +112,7 @@ public class UnsignedShortType extends GenericShortType<UnsignedShortType>
 	public UnsignedShortType[][][] createArray3D( final int size1, final int size2, final int size3 ) { return new UnsignedShortType[ size1 ][ size2 ][ size3 ]; }
 
 	@Override
-	public UnsignedShortType createDirectAccessType( final DirectAccessContainer<UnsignedShortType,?> DirectAccessContainer ) 
+	public UnsignedShortType createType( final DirectAccessContainer<UnsignedShortType,?> DirectAccessContainer ) 
 	{ 
 		return new UnsignedShortType( (DirectAccessContainer<UnsignedShortType, ShortAccess>)DirectAccessContainer ); 
 	}

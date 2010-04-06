@@ -32,7 +32,8 @@ package mpicbg.imglib.container.cell;
 import java.util.ArrayList;
 
 import mpicbg.imglib.container.ContainerFactory;
-import mpicbg.imglib.container.DirectAccessContainerImpl;
+import mpicbg.imglib.container.DirectAccessContainer;
+import mpicbg.imglib.container.PixelGridContainerImpl;
 import mpicbg.imglib.container.basictypecontainer.array.ArrayDataAccess;
 import mpicbg.imglib.cursor.Cursor;
 import mpicbg.imglib.cursor.array.ArrayLocalizableByDimCursor;
@@ -47,15 +48,15 @@ import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
 import mpicbg.imglib.type.Type;
 import mpicbg.imglib.type.label.FakeType;
 
-public class CellContainer<T extends Type<T>, A extends ArrayDataAccess<A>> extends DirectAccessContainerImpl<T, A>
+public class CellContainer<T extends Type<T>, A extends ArrayDataAccess<A>> extends PixelGridContainerImpl<T> implements DirectAccessContainer<T, A>
 {
 	final protected ArrayList<Cell<T,A>> data;
 	final protected int[] numCellsDim, cellSize;
 	final protected int numCells;
 	
-	public CellContainer( final ContainerFactory factory, final T type, final A creator, final int[] dim, final int[] cellSize, final int entitiesPerPixel )
+	public CellContainer( final ContainerFactory factory, final A creator, final int[] dim, final int[] cellSize, final int entitiesPerPixel )
 	{
-		super(factory, type, dim, entitiesPerPixel);
+		super(factory, dim, entitiesPerPixel);
 		
 		// check that cellsize is not bigger than the image
 		for ( int d = 0; d < getNumDimensions(); d++ )
@@ -171,42 +172,42 @@ public class CellContainer<T extends Type<T>, A extends ArrayDataAccess<A>> exte
 	}
 
 	@Override
-	public CellCursor<T> createCursor( final Image<T> image ) 
+	public CellCursor<T> createCursor( final T type, final Image<T> image ) 
 	{ 
 		// create a Cursor using a Type that is linked to the container
-		CellCursor<T> c = new CellCursor<T>( this, image, linkedType.createDirectAccessType() );
+		CellCursor<T> c = new CellCursor<T>( this, image, type.createType( this ) );
 		return c;
 	}
 	
 	@Override
-	public CellLocalizableCursor<T> createLocalizableCursor( final Image<T> image ) 
+	public CellLocalizableCursor<T> createLocalizableCursor( final T type, final Image<T> image ) 
 	{
 		// create a Cursor using a Type that is linked to the container
-		CellLocalizableCursor<T> c = new CellLocalizableCursor<T>( this, image, linkedType.createDirectAccessType() );
+		CellLocalizableCursor<T> c = new CellLocalizableCursor<T>( this, image, type.createType( this ) );
 		return c;
 	}	
 
 	@Override
-	public CellLocalizablePlaneCursor<T> createLocalizablePlaneCursor( final Image<T> image ) 
+	public CellLocalizablePlaneCursor<T> createLocalizablePlaneCursor( final T type, final Image<T> image ) 
 	{
 		// create a Cursor using a Type that is linked to the container
-		CellLocalizablePlaneCursor<T> c = new CellLocalizablePlaneCursor<T>( this, image, linkedType.createDirectAccessType() );
+		CellLocalizablePlaneCursor<T> c = new CellLocalizablePlaneCursor<T>( this, image, type.createType( this ) );
 		return c;
 	}	
 	
 	@Override
-	public CellLocalizableByDimCursor<T> createLocalizableByDimCursor( final Image<T> image ) 
+	public CellLocalizableByDimCursor<T> createLocalizableByDimCursor( final T type, final Image<T> image ) 
 	{
 		// create a Cursor using a Type that is linked to the container
-		CellLocalizableByDimCursor<T> c = new CellLocalizableByDimCursor<T>( this, image, linkedType.createDirectAccessType() );
+		CellLocalizableByDimCursor<T> c = new CellLocalizableByDimCursor<T>( this, image, type.createType( this ) );
 		return c;
 	}	
 	
 	@Override
-	public CellLocalizableByDimCursor<T> createLocalizableByDimCursor( final Image<T> image, final OutOfBoundsStrategyFactory<T> outOfBoundsFactory ) 
+	public CellLocalizableByDimCursor<T> createLocalizableByDimCursor( final T type, final Image<T> image, final OutOfBoundsStrategyFactory<T> outOfBoundsFactory ) 
 	{ 
 		// create a Cursor using a Type that is linked to the container
-		CellLocalizableByDimOutOfBoundsCursor<T> c = new CellLocalizableByDimOutOfBoundsCursor<T>( this, image, linkedType.createDirectAccessType(), outOfBoundsFactory );
+		CellLocalizableByDimOutOfBoundsCursor<T> c = new CellLocalizableByDimOutOfBoundsCursor<T>( this, image, type.createType( this ), outOfBoundsFactory );
 		return c;
 	}	
 }

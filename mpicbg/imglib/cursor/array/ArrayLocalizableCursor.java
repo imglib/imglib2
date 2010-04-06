@@ -57,7 +57,7 @@ public class ArrayLocalizableCursor<T extends Type<T>> extends ArrayCursor<T> im
 	
 	public static ArrayLocalizableCursor<FakeType> createLinearCursor( final int[] dim )
 	{
-		final Array<FakeType, FakeAccess> array = new Array<FakeType, FakeAccess>( null, new FakeType(), new FakeArray(), dim, 1 );
+		final Array<FakeType, FakeAccess> array = new Array<FakeType, FakeAccess>( null, new FakeArray(), dim, 1 );
 		return new ArrayLocalizableCursor<FakeType>( array, null, new FakeType() );
 	}
 	

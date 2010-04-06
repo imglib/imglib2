@@ -37,7 +37,7 @@ public class TestShapeList
 
 		/* Create ShapeList */
 		final ShapeList< ByteType > shapeList = new ShapeList<ByteType>( new int[]{ 200, 200, depth },  new ByteType( ) );
-		final Image< ByteType > shapeListImage = new Image< ByteType >( shapeList, "ShapeListContainer" ); 
+		final Image< ByteType > shapeListImage = new Image< ByteType >( shapeList, shapeList.getBackground(), "ShapeListContainer" ); 
 		
 		/* add some shapes */
 		for ( int i = 0; i < depth; ++i )

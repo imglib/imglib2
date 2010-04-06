@@ -65,7 +65,7 @@ public class ByteType extends GenericByteType<ByteType>
 	public ByteType[][][] createArray3D( final int size1, final int size2, final int size3 ) { return new ByteType[ size1 ][ size2 ][ size3 ]; }
 
 	@Override
-	public ByteType createDirectAccessType( final DirectAccessContainer<ByteType, ?> DirectAccessContainer ) 
+	public ByteType createType( final DirectAccessContainer<ByteType, ?> DirectAccessContainer ) 
 	{ 
 		return new ByteType( (DirectAccessContainer<ByteType, ByteAccess>)DirectAccessContainer ); 
 	}

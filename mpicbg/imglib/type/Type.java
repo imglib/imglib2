@@ -149,7 +149,7 @@ public interface Type<T extends Type<T>>
 	 * @param DirectAccessContainer - the {@link DirectAccessContainer} where the {@link Type} works on
 	 * @return - a new {@link Type}
 	 */
-	public T createDirectAccessType();
+	public T createType( DirectAccessContainer<T,? extends DataAccess> DirectAccessContainer );
 	
 	/**
 	 * Creates a new {@link Type} which can only store one value.

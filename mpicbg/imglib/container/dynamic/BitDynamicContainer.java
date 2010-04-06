@@ -40,9 +40,9 @@ public class BitDynamicContainer <T extends Type<T>> extends DynamicContainer<T,
 	final static int bitsPerEntity = Integer.SIZE;
 	final ArrayList<Integer> data;
 	
-	public BitDynamicContainer( final DynamicContainerFactory factory, final T type, final int[] dim, final int entitiesPerPixel )
+	public BitDynamicContainer( final DynamicContainerFactory factory, final int[] dim, final int entitiesPerPixel )
 	{
-		super( factory, type, dim, entitiesPerPixel );
+		super( factory, dim, entitiesPerPixel );
 		
 		data = new ArrayList<Integer>();
 

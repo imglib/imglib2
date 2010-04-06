@@ -40,9 +40,9 @@ public class ByteImagePlus<T extends Type<T>> extends ImagePlusContainer<T, Byte
 {
 	final ImagePlus image;	
 	
-	public ByteImagePlus( final ImagePlusContainerFactory factory, final T type, final int[] dim, final int entitiesPerPixel ) 
+	public ByteImagePlus( final ImagePlusContainerFactory factory, final int[] dim, final int entitiesPerPixel ) 
 	{
-		super( factory, type, dim, entitiesPerPixel );
+		super( factory, dim, entitiesPerPixel );
 	
 		if ( entitiesPerPixel == 1)
 		{
@@ -60,9 +60,9 @@ public class ByteImagePlus<T extends Type<T>> extends ImagePlusContainer<T, Byte
 			}
 	}
 
-	public ByteImagePlus( final ImagePlus image, final ImagePlusContainerFactory factory, final T type ) 
+	public ByteImagePlus( final ImagePlus image, final ImagePlusContainerFactory factory ) 
 	{
-		super( factory, type, ImagePlusContainer.getCorrectDimensionality(image), 1 );
+		super( factory, ImagePlusContainer.getCorrectDimensionality(image), 1 );
 		
 		this.image = image;
 		
