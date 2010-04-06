@@ -580,7 +580,7 @@ public class PhaseCorrelation<T extends RealType<T>, S extends RealType<S>> impl
 		while ( cursor.hasNext() )
 		{
 			cursor.fwd();
-			cursor.getType().normalizeLength( normalizationThreshold );
+			normalizeLength( cursor.getType(), normalizationThreshold );
 		}
 				
 		cursor.close();		
@@ -594,11 +594,30 @@ public class PhaseCorrelation<T extends RealType<T>, S extends RealType<S>> impl
 		{
 			cursor.fwd();
 			
-			cursor.getType().normalizeLength( normalizationThreshold );
+			normalizeLength( cursor.getType(), normalizationThreshold );
 			cursor.getType().complexConjugate();
 		}
 				
 		cursor.close();		
+	}
+	
+	private static void normalizeLength( final ComplexFloatType type, final float threshold )
+	{
+		final float real = type.getRealFloat();
+		final float complex = type.getComplexFloat();
+		
+		final float length = (float)Math.sqrt( real*real + complex*complex );
+		
+		if ( length < threshold )
+		{
+			type.setReal( 0 );
+			type.setComplex( 0 );
+		}
+		else
+		{
+			type.setReal( real / length );
+			type.setComplex( complex / length );
+		}
 	}
 		
 	protected boolean computeFFT( final FourierTransform<T> fft1, final FourierTransform<S> fft2 )

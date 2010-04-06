@@ -145,25 +145,6 @@ public class ComplexFloatType extends ComplexTypeImpl<ComplexFloatType> implemen
 	}
 	
 	public void complexConjugate(){ setComplex( -getComplexFloat() ); }
-
-	public void normalizeLength( final float threshold )
-	{
-		final float real = getRealFloat();
-		final float complex = getComplexFloat();
-		
-		final float length = (float)Math.sqrt( real*real + complex*complex );
-		
-		if ( length < threshold )
-		{
-			setReal( 0 );
-			setComplex( 0 );
-		}
-		else
-		{
-			setReal( real / length );
-			setComplex( complex / length );
-		}
-	}
 	
 	public void switchRealComplex()
 	{
