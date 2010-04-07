@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry including="mpicbg/**" kind="src" path=""/>
+	<classpathentry kind="src" path="tests"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="var" path="FIJI_HOME/jars/mpicbg.jar"/>
 	<classpathentry kind="var" path="FIJI_HOME/jars/ij.jar"/>
