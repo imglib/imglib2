@@ -75,6 +75,11 @@ public class ShortType extends GenericShortType<ShortType>
 	public void setInteger( final long f ){ set( (short)f ); }
 
 	@Override
+	public double getMaxValue() { return Short.MAX_VALUE; }
+	@Override
+	public double getMinValue()  { return Short.MIN_VALUE; }
+	
+	@Override
 	public ShortType[] createArray1D( final int size1 ){ return new ShortType[ size1 ]; }
 
 	@Override

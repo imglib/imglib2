@@ -75,6 +75,11 @@ public class IntType extends GenericIntType<IntType>
 	public void setInteger( final long f ){ set( (int)f ); }
 
 	@Override
+	public double getMaxValue() { return Integer.MAX_VALUE; }
+	@Override
+	public double getMinValue()  { return Integer.MIN_VALUE; }
+
+	@Override
 	public IntType[] createArray1D(int size1){ return new IntType[ size1 ]; }
 
 	@Override

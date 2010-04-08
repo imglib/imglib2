@@ -103,6 +103,11 @@ public class UnsignedByteType extends GenericByteType<UnsignedByteType>
 	public void setInteger( final long f ){ set( (int)f ); }
 
 	@Override
+	public double getMaxValue() { return -Byte.MIN_VALUE + Byte.MAX_VALUE; }
+	@Override
+	public double getMinValue()  { return 0; }
+
+	@Override
 	public void div( final UnsignedByteType c )
 	{
 		set( get() / c.get() );

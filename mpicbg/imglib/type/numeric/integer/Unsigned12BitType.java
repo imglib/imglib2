@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2009--2010, Stephan Preibisch & Stephan Saalfeld
+ * Copyright (c) 2009--2010, Stephan Preibisch
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -25,7 +25,7 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  *
- * @author Stephan Preibisch & Stephan Saalfeld
+ * @author Stephan Preibisch
  */
 
 package mpicbg.imglib.type.numeric.integer;
@@ -136,10 +136,15 @@ public class Unsigned12BitType extends IntegerTypeImpl<Unsigned12BitType>
 	public void setInteger( final long f ) { set( (short)f ); }
 
 	@Override
+	public double getMaxValue() { return 4095; }
+	@Override
+	public double getMinValue()  { return 0; }
+
+	@Override
 	public void updateIndex( final int i ) 
 	{ 
 		this.i = i;
-		j1 = i * 3;
+		j1 = i * 12;
 		j2 = j1 + 1;
 		j3 = j1 + 2;
 		j4 = j1 + 3;
@@ -157,73 +162,73 @@ public class Unsigned12BitType extends IntegerTypeImpl<Unsigned12BitType>
 	public void incIndex() 
 	{ 
 		++i;
-		j1 += 3;
-		j2 += 3;
-		j3 += 3;
-		j4 += 3;
-		j5 += 3;
-		j6 += 3;
-		j7 += 3;
-		j8 += 3;
-		j9 += 3;
-		j10 += 3;
-		j11 += 3;
-		j12 += 3;
+		j1 += 12;
+		j2 += 12;
+		j3 += 12;
+		j4 += 12;
+		j5 += 12;
+		j6 += 12;
+		j7 += 12;
+		j8 += 12;
+		j9 += 12;
+		j10 += 12;
+		j11 += 12;
+		j12 += 12;
 	}
 	@Override
 	public void incIndex( final int increment ) 
 	{ 
 		i += increment; 
 		
-		final int inc3 = 3 * increment;		
-		j1 += inc3;
-		j2 += inc3;
-		j3 += inc3;
-		j4 += inc3;
-		j5 += inc3;
-		j6 += inc3;
-		j7 += inc3;
-		j8 += inc3;
-		j9 += inc3;
-		j10 += inc3;
-		j11 += inc3;
-		j12 += inc3;
+		final int inc12 = 12 * increment;		
+		j1 += inc12;
+		j2 += inc12;
+		j3 += inc12;
+		j4 += inc12;
+		j5 += inc12;
+		j6 += inc12;
+		j7 += inc12;
+		j8 += inc12;
+		j9 += inc12;
+		j10 += inc12;
+		j11 += inc12;
+		j12 += inc12;
 	}
 	@Override
 	public void decIndex() 
 	{ 
 		--i;
-		j1 -= 3;
-		j2 -= 3;
-		j3 -= 3;
-		j4 -= 3;
-		j5 -= 3;
-		j6 -= 3;
-		j7 -= 3;
-		j8 -= 3;
-		j9 -= 3;
-		j10 -= 3;
-		j11 -= 3;
-		j12 -= 3;
+		j1 -= 12;
+		j2 -= 12;
+		j3 -= 12;
+		j4 -= 12;
+		j5 -= 12;
+		j6 -= 12;
+		j7 -= 12;
+		j8 -= 12;
+		j9 -= 12;
+		j10 -= 12;
+		j11 -= 12;
+		j12 -= 12;
 	}
 	@Override
 	public void decIndex( final int decrement ) 
 	{ 
 		i -= decrement; 
 
-		final int dec3 = 3 * decrement;		
-		j1 -= dec3;
-		j2 -= dec3;
-		j3 -= dec3;
-		j4 -= dec3;
-		j5 -= dec3;
-		j6 -= dec3;
-		j7 -= dec3;
-		j8 -= dec3;
-		j9 -= dec3;
-		j10 -= dec3;
-		j11 -= dec3;
-		j12 -= dec3;
+		final int dec12 = 12 * decrement;		
+		j1 -= dec12;
+		j2 -= dec12;
+		j3 -= dec12;
+		j4 -= dec12;
+		j5 -= dec12;
+		j6 -= dec12;
+		j7 -= dec12;
+		j8 -= dec12;
+		j9 -= dec12;
+		j10 -= dec12;
+		j11 -= dec12;
+		j12 -= dec12;
 	}
 
 	

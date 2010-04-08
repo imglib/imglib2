@@ -16,6 +16,9 @@ public abstract class IntegerTypeImpl<T extends IntegerTypeImpl<T>> extends Real
 	}
 
 	@Override
+	public double getMinIncrement() { return 1; }
+
+	@Override
 	public float getRealFloat() { return getInteger(); }
 	@Override
 	public double getRealDouble() { return getIntegerLong(); }

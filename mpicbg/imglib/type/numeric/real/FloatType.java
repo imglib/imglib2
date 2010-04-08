@@ -99,6 +99,13 @@ public class FloatType extends RealTypeImpl<FloatType> implements RealType<Float
 	public void setReal( final double real ){ set( (float)real ); }
 	
 	@Override
+	public double getMaxValue() { return Float.MAX_VALUE; }
+	@Override
+	public double getMinValue()  { return -Float.MAX_VALUE; }
+	@Override
+	public double getMinIncrement()  { return Float.MIN_VALUE; }
+
+	@Override
 	public void mul( final float c )
 	{
 		set( get() * c );

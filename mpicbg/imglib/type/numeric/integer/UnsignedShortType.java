@@ -102,6 +102,11 @@ public class UnsignedShortType extends GenericShortType<UnsignedShortType>
 	public void setInteger( final long f ){ set( (int)f ); }
 
 	@Override
+	public double getMaxValue() { return -Short.MIN_VALUE + Short.MAX_VALUE; }
+	@Override
+	public double getMinValue()  { return 0; }
+
+	@Override
 	public void div( final UnsignedShortType c )
 	{
 		set( get() / c.get() );

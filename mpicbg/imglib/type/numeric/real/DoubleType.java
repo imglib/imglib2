@@ -97,7 +97,14 @@ public class DoubleType extends RealTypeImpl<DoubleType> implements RealType<Dou
 	public void setReal( final float real ){ set( real ); }
 	@Override
 	public void setReal( final double real ){ set( real ); }
-			
+	
+	@Override
+	public double getMaxValue() { return Double.MAX_VALUE; }
+	@Override
+	public double getMinValue()  { return -Double.MAX_VALUE; }
+	@Override
+	public double getMinIncrement()  { return Double.MIN_VALUE; }
+	
 	@Override
 	public DoubleType[] createArray1D(int size1){ return new DoubleType[ size1 ]; }
 

@@ -75,6 +75,11 @@ public class ByteType extends GenericByteType<ByteType>
 	public void setInteger( final long f ){ set( (byte)f ); }
 	
 	@Override
+	public double getMaxValue() { return Byte.MAX_VALUE; }
+	@Override
+	public double getMinValue()  { return Byte.MIN_VALUE; }
+
+	@Override
 	public ByteType[] createArray1D( final int size1 ){ return new ByteType[ size1 ]; }
 
 	@Override

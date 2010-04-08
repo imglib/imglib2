@@ -98,6 +98,11 @@ final public class LongType extends IntegerTypeImpl<LongType>
 	public void setInteger( final long f ){ set( f ); }
 	
 	@Override
+	public double getMaxValue() { return Long.MAX_VALUE; }
+	@Override
+	public double getMinValue()  { return Long.MIN_VALUE; }
+	
+	@Override
 	public void mul( final float c )
 	{
 		set( MathLib.round( get() * c ) );

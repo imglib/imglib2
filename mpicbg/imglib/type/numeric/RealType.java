@@ -34,4 +34,9 @@ public interface RealType<T extends RealType<T>> extends ComplexType<T>
 {			
 	public void inc();
 	public void dec();	
+	
+	public double getMaxValue();
+	public double getMinValue();
+	public double getMinIncrement();
+
 }
