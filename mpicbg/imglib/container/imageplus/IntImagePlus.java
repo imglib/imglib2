@@ -46,7 +46,7 @@ public class IntImagePlus<T extends Type<T>> extends ImagePlusContainer<T, IntAr
 
 		if ( entitiesPerPixel == 1 )
 		{
-			image = IJ.createImage( "image", "RGB Black", width * entitiesPerPixel, height, depth );
+			image = IJ.createImage( "image", "RGB Black", width, height, depth );
 	
 			for ( int i = 0; i < depth; ++i )
 				mirror.add( new IntArray( (int[])image.getStack().getProcessor( i+1 ).getPixels() ) );
@@ -56,7 +56,7 @@ public class IntImagePlus<T extends Type<T>> extends ImagePlusContainer<T, IntAr
 			image = null;
 	
 			for ( int i = 0; i < depth; ++i )
-				mirror.add( new IntArray( width * height ));
+				mirror.add( new IntArray( width * height * entitiesPerPixel ));
 		}
 	}
 
@@ -74,7 +74,8 @@ public class IntImagePlus<T extends Type<T>> extends ImagePlusContainer<T, IntAr
 	public void close() 
 	{
 		super.close();
-		image.close(); 
+		if ( image != null )
+			image.close(); 
 	}
 
 	@Override

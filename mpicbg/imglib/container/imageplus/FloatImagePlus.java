@@ -46,7 +46,7 @@ public class FloatImagePlus<T extends Type<T>> extends ImagePlusContainer<T, Flo
 		
 		if ( entitiesPerPixel == 1 )
 		{
-			image = IJ.createImage( "image", "32-Bit Black", width * entitiesPerPixel, height, depth );
+			image = IJ.createImage( "image", "32-Bit Black", width, height, depth );
 	
 			for ( int i = 0; i < depth; ++i )
 				mirror.add( new FloatArray( (float[])image.getStack().getProcessor( i+1 ).getPixels() ) );
@@ -56,7 +56,7 @@ public class FloatImagePlus<T extends Type<T>> extends ImagePlusContainer<T, Flo
 			image = null;
 
 			for ( int i = 0; i < depth; ++i )
-				mirror.add( new FloatArray( width * height ));
+				mirror.add( new FloatArray( width * height * entitiesPerPixel ));
 		}
 	}
 
@@ -74,7 +74,8 @@ public class FloatImagePlus<T extends Type<T>> extends ImagePlusContainer<T, Flo
 	public void close() 
 	{
 		super.close();
-		image.close(); 
+		if ( image != null )
+			image.close(); 
 	}
 
 	@Override

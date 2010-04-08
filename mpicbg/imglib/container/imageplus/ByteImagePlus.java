@@ -46,7 +46,7 @@ public class ByteImagePlus<T extends Type<T>> extends ImagePlusContainer<T, Byte
 	
 		if ( entitiesPerPixel == 1)
 		{
-			image = IJ.createImage( "image", "8-Bit Black", width * entitiesPerPixel, height, depth );
+			image = IJ.createImage( "image", "8-Bit Black", width, height, depth );
 	
 			for ( int i = 0; i < depth; ++i )
 				mirror.add( new ByteArray( (byte[])image.getStack().getProcessor( i+1 ).getPixels() ) );
@@ -56,7 +56,7 @@ public class ByteImagePlus<T extends Type<T>> extends ImagePlusContainer<T, Byte
 				image = null;
 		
 				for ( int i = 0; i < depth; ++i )
-					mirror.add( new ByteArray( width * height ));
+					mirror.add( new ByteArray( width * height * entitiesPerPixel ));
 			}
 	}
 
@@ -74,7 +74,8 @@ public class ByteImagePlus<T extends Type<T>> extends ImagePlusContainer<T, Byte
 	public void close() 
 	{
 		super.close();
-		image.close(); 
+		if ( image != null )
+			image.close(); 
 	}
 
 	@Override
