@@ -38,20 +38,19 @@ import mpicbg.imglib.cursor.Cursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.display.BitTypeDisplay;
 import mpicbg.imglib.type.LogicType;
-import mpicbg.imglib.type.TypeImpl;
 import mpicbg.imglib.type.numeric.RealType;
 import mpicbg.imglib.type.numeric.integer.IntegerTypeImpl;
 
 public class BitType extends IntegerTypeImpl<BitType> implements LogicType<BitType>, RealType<BitType>
 {
 	// the DirectAccessContainer
-	final DirectAccessContainer<BitType, BitAccess> storage;
+	final DirectAccessContainer<BitType, ? extends BitAccess> storage;
 	
 	// the (sub)DirectAccessContainer that holds the information 
 	BitAccess b;
 	
 	// this is the constructor if you want it to read from an array
-	public BitType( DirectAccessContainer<BitType, BitAccess> bitStorage )
+	public BitType( DirectAccessContainer<BitType, ? extends BitAccess> bitStorage )
 	{
 		storage = bitStorage;
 	}
@@ -70,19 +69,31 @@ public class BitType extends IntegerTypeImpl<BitType> implements LogicType<BitTy
 	@Override
 	public DirectAccessContainer<BitType, ? extends BitAccess> createSuitableDirectAccessContainer( final DirectAccessContainerFactory storageFactory, final int dim[] )
 	{
-		return storageFactory.createBitInstance( dim, 1 );	
+		// create the container
+		final DirectAccessContainer<BitType, ? extends BitAccess> container = storageFactory.createBitInstance( dim, 1 );
+		
+		// create a Type that is linked to the container
+		final BitType linkedType = new BitType( container );
+		
+		// pass it to the DirectAccessContainer
+		container.setLinkedType( linkedType );
+		
+		return container;
 	}
-	
-	@Override
-	public BitTypeDisplay getDefaultDisplay( final Image<BitType> image )
-	{
-		return new BitTypeDisplay( image );
-	}
-	
+		
 	@Override
 	public void updateContainer( final Cursor<?> c ) 
 	{ 
 		b = storage.update( c );
+	}
+	
+	@Override
+	public BitType duplicateTypeOnSameDirectAccessContainer() { return new BitType( storage ); }
+
+	@Override
+	public BitTypeDisplay getDefaultDisplay( final Image<BitType> image )
+	{
+		return new BitTypeDisplay( image );
 	}
 
 	public boolean get() { return b.getValue( i ); }
@@ -189,15 +200,6 @@ public class BitType extends IntegerTypeImpl<BitType> implements LogicType<BitTy
 
 	@Override
 	public BitType[][][] createArray3D(int size1, int size2, int size3) { return new BitType[ size1 ][ size2 ][ size3 ]; }
-
-	//@Override
-	//public BooleanType getType() { return this; }
-
-	@Override
-	public BitType createType( DirectAccessContainer<BitType,?> DirectAccessContainer )
-	{
-		return new BitType( (DirectAccessContainer<BitType, BitAccess>)DirectAccessContainer );
-	}
 	
 	@Override
 	public BitType createVariable(){ return new BitType(); }

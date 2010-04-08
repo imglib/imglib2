@@ -31,12 +31,13 @@ package mpicbg.imglib.type.numeric.integer;
 
 import mpicbg.imglib.algorithm.math.MathLib;
 import mpicbg.imglib.container.DirectAccessContainer;
+import mpicbg.imglib.container.DirectAccessContainerFactory;
 import mpicbg.imglib.container.basictypecontainer.ByteAccess;
 
 public class UnsignedByteType extends GenericByteType<UnsignedByteType>
 {
 	// this is the constructor if you want it to read from an array
-	public UnsignedByteType( final DirectAccessContainer<UnsignedByteType, ByteAccess> byteStorage ) { super( byteStorage ); }
+	public UnsignedByteType( final DirectAccessContainer<UnsignedByteType, ? extends ByteAccess> byteStorage ) { super( byteStorage ); }
 
 	// this is the constructor if you want it to be a variable
 	public UnsignedByteType( final int value ) { super( getCodedSignedByteChecked(value) ); }
@@ -57,8 +58,27 @@ public class UnsignedByteType extends GenericByteType<UnsignedByteType>
 	public static int getUnsignedByte( final byte signedByte ) { return signedByte & 0xff; }
 
 	@Override
+	public DirectAccessContainer<UnsignedByteType, ? extends ByteAccess> createSuitableDirectAccessContainer( final DirectAccessContainerFactory storageFactory, final int dim[] )
+	{
+		// create the container
+		final DirectAccessContainer<UnsignedByteType, ? extends ByteAccess> container = storageFactory.createByteInstance( dim, 1 );
+		
+		// create a Type that is linked to the container
+		final UnsignedByteType linkedType = new UnsignedByteType( container );
+		
+		// pass it to the DirectAccessContainer
+		container.setLinkedType( linkedType );
+		
+		return container;
+	}
+	
+	@Override
+	public UnsignedByteType duplicateTypeOnSameDirectAccessContainer() { return new UnsignedByteType( storage ); }
+	
+	@Override
 	public void mul( final float c )
 	{
+		
 		final int a = getUnsignedByte( getValue() );
 		setValue( getCodedSignedByte( MathLib.round( a * c ) ) );
 	}
@@ -111,12 +131,6 @@ public class UnsignedByteType extends GenericByteType<UnsignedByteType>
 	@Override
 	public UnsignedByteType[][][] createArray3D( final int size1, final int size2, final int size3 ) { return new UnsignedByteType[ size1 ][ size2 ][ size3 ]; }
 
-	@Override
-	public UnsignedByteType createType( final DirectAccessContainer<UnsignedByteType, ?> DirectAccessContainer ) 
-	{ 
-		return new UnsignedByteType( (DirectAccessContainer<UnsignedByteType, ByteAccess>)DirectAccessContainer ); 
-	}
-	
 	@Override
 	public UnsignedByteType createVariable(){ return new UnsignedByteType( 0 ); }
 

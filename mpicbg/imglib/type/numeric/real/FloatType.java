@@ -31,7 +31,6 @@ package mpicbg.imglib.type.numeric.real;
 
 import mpicbg.imglib.container.DirectAccessContainer;
 import mpicbg.imglib.container.DirectAccessContainerFactory;
-import mpicbg.imglib.container.basictypecontainer.DataAccess;
 import mpicbg.imglib.container.basictypecontainer.FloatAccess;
 import mpicbg.imglib.container.basictypecontainer.array.FloatArray;
 import mpicbg.imglib.cursor.Cursor;
@@ -40,13 +39,13 @@ import mpicbg.imglib.type.numeric.RealType;
 public class FloatType extends RealTypeImpl<FloatType> implements RealType<FloatType>
 {
 	// the DirectAccessContainer
-	final DirectAccessContainer<FloatType, FloatAccess> storage;
+	final DirectAccessContainer<FloatType, ? extends FloatAccess> storage;
 	
 	// the (sub)DirectAccessContainer that holds the information 
 	FloatAccess b;
 	
 	// this is the constructor if you want it to read from an array
-	public FloatType( DirectAccessContainer<FloatType, FloatAccess> floatStorage )
+	public FloatType( DirectAccessContainer<FloatType, ? extends FloatAccess> floatStorage )
 	{
 		storage = floatStorage;
 	}
@@ -65,7 +64,16 @@ public class FloatType extends RealTypeImpl<FloatType> implements RealType<Float
 	@Override
 	public DirectAccessContainer<FloatType, ? extends FloatAccess> createSuitableDirectAccessContainer( final DirectAccessContainerFactory storageFactory, final int dim[] )
 	{
-		return storageFactory.createFloatInstance( dim, 1 );	
+		// create the container
+		final DirectAccessContainer<FloatType, ? extends FloatAccess> container = storageFactory.createFloatInstance( dim, 1 );
+		
+		// create a Type that is linked to the container
+		final FloatType linkedType = new FloatType( container );
+		
+		// pass it to the DirectAccessContainer
+		container.setLinkedType( linkedType );
+		
+		return container;
 	}
 
 	@Override
@@ -74,6 +82,9 @@ public class FloatType extends RealTypeImpl<FloatType> implements RealType<Float
 		b = storage.update( c ); 
 	}
 	
+	@Override
+	public FloatType duplicateTypeOnSameDirectAccessContainer() { return new FloatType( storage ); }
+
 	public float get(){ return b.getValue( i ); }
 	public void set( final float f ){ b.setValue( i, f ); }
 	
@@ -167,15 +178,6 @@ public class FloatType extends RealTypeImpl<FloatType> implements RealType<Float
 
 	@Override
 	public FloatType[][][] createArray3D(int size1, int size2, int size3) { return new FloatType[ size1 ][ size2 ][ size3 ]; }
-
-	//@Override
-	//public FloatType getType() { return this; }
-
-	@Override
-	public FloatType createType( DirectAccessContainer<FloatType,? extends DataAccess> DirectAccessContainer )
-	{
-		return new FloatType( (DirectAccessContainer<FloatType, FloatAccess>)DirectAccessContainer );
-	}
 	
 	@Override
 	public FloatType createVariable(){ return new FloatType( 0 ); }

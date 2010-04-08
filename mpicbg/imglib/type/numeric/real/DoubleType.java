@@ -39,13 +39,13 @@ import mpicbg.imglib.type.numeric.RealType;
 public class DoubleType extends RealTypeImpl<DoubleType> implements RealType<DoubleType>
 {
 	// the DirectAccessContainer
-	final DirectAccessContainer<DoubleType, DoubleAccess> storage;
+	final DirectAccessContainer<DoubleType, ? extends DoubleAccess> storage;
 	
 	// the (sub)DirectAccessContainer that holds the information 
 	DoubleAccess b;
 	
 	// this is the constructor if you want it to read from an array
-	public DoubleType( DirectAccessContainer<DoubleType, DoubleAccess> doubleStorage )
+	public DoubleType( DirectAccessContainer<DoubleType, ? extends DoubleAccess> doubleStorage )
 	{
 		storage = doubleStorage;
 	}
@@ -64,7 +64,16 @@ public class DoubleType extends RealTypeImpl<DoubleType> implements RealType<Dou
 	@Override
 	public DirectAccessContainer<DoubleType, ? extends DoubleAccess> createSuitableDirectAccessContainer( final DirectAccessContainerFactory storageFactory, final int dim[] )
 	{
-		return storageFactory.createDoubleInstance( dim, 1 );	
+		// create the container
+		final DirectAccessContainer<DoubleType, ? extends DoubleAccess> container = storageFactory.createDoubleInstance( dim, 1 );
+		
+		// create a Type that is linked to the container
+		final DoubleType linkedType = new DoubleType( container );
+		
+		// pass it to the DirectAccessContainer
+		container.setLinkedType( linkedType );
+		
+		return container;
 	}
 	
 	@Override
@@ -72,6 +81,9 @@ public class DoubleType extends RealTypeImpl<DoubleType> implements RealType<Dou
 	{ 
 		b = storage.update( c ); 
 	}
+
+	@Override
+	public DoubleType duplicateTypeOnSameDirectAccessContainer() { return new DoubleType( storage ); }
 	
 	public double get(){ return b.getValue( i ); }
 	public void set( final double f ){ b.setValue( i, f ); }
@@ -166,15 +178,6 @@ public class DoubleType extends RealTypeImpl<DoubleType> implements RealType<Dou
 
 	@Override
 	public DoubleType[][][] createArray3D(int size1, int size2, int size3) { return new DoubleType[ size1 ][ size2 ][ size3 ]; }
-
-	//@Override
-	//public DoubleType getType() { return this; }
-
-	@Override
-	public DoubleType createType( DirectAccessContainer<DoubleType,?> DirectAccessContainer )
-	{
-		return new DoubleType( (DirectAccessContainer<DoubleType, DoubleAccess>)DirectAccessContainer );
-	}
 	
 	@Override
 	public DoubleType createVariable(){ return new DoubleType( 0 ); }

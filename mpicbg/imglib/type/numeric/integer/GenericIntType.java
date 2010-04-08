@@ -31,7 +31,6 @@ package mpicbg.imglib.type.numeric.integer;
 
 import mpicbg.imglib.algorithm.math.MathLib;
 import mpicbg.imglib.container.DirectAccessContainer;
-import mpicbg.imglib.container.DirectAccessContainerFactory;
 import mpicbg.imglib.container.basictypecontainer.IntAccess;
 import mpicbg.imglib.container.basictypecontainer.array.IntArray;
 import mpicbg.imglib.cursor.Cursor;
@@ -39,13 +38,13 @@ import mpicbg.imglib.cursor.Cursor;
 public abstract class GenericIntType<T extends GenericIntType<T>> extends IntegerTypeImpl<T>
 {
 	// the DirectAccessContainer
-	final DirectAccessContainer<T, IntAccess> storage;
+	final DirectAccessContainer<T, ? extends IntAccess> storage;
 	
 	// the (sub)DirectAccessContainer that holds the information 
 	IntAccess b;
 	
 	// this is the constructor if you want it to read from an array
-	public GenericIntType( DirectAccessContainer<T, IntAccess> intStorage )
+	public GenericIntType( DirectAccessContainer<T, ? extends IntAccess> intStorage )
 	{
 		storage = intStorage;
 	}
@@ -60,12 +59,6 @@ public abstract class GenericIntType<T extends GenericIntType<T>> extends Intege
 
 	// this is the constructor if you want it to be a variable
 	public GenericIntType() { this( 0 ); }
-
-	@Override
-	public DirectAccessContainer<T, ? extends IntAccess> createSuitableDirectAccessContainer( final DirectAccessContainerFactory storageFactory, final int dim[] )
-	{
-		return storageFactory.createIntInstance( dim, 1 );	
-	}
 
 	@Override
 	public void updateContainer( final Cursor<?> c ) 

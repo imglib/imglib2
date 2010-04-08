@@ -10,7 +10,7 @@ import mpicbg.imglib.type.numeric.ComplexType;
 public abstract class ComplexTypeImpl<T extends ComplexTypeImpl<T>> extends TypeImpl<T> implements ComplexType<T>
 {
 	// the indices for real and complex number
-	int realI, complexI;
+	int realI = 0, complexI = 1;
 
 	@Override
 	public Display<T> getDefaultDisplay( final Image<T> image )
@@ -19,9 +19,9 @@ public abstract class ComplexTypeImpl<T extends ComplexTypeImpl<T>> extends Type
 	}
 	
 	@Override
-	public void mul( float c ) { setReal( getRealFloat() * c ); }
+	public void mul( final float c ) { setReal( getRealFloat() * c ); }
 	@Override
-	public void mul( double c ) { setReal( getRealDouble() * c ); }		
+	public void mul( final double c ) { setReal( getRealDouble() * c ); }		
 
 	@Override
 	public void add( final T c ) 

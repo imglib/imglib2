@@ -32,8 +32,7 @@ package mpicbg.imglib.container.cell;
 import java.util.ArrayList;
 
 import mpicbg.imglib.container.ContainerFactory;
-import mpicbg.imglib.container.DirectAccessContainer;
-import mpicbg.imglib.container.PixelGridContainerImpl;
+import mpicbg.imglib.container.DirectAccessContainerImpl;
 import mpicbg.imglib.container.basictypecontainer.array.ArrayDataAccess;
 import mpicbg.imglib.cursor.Cursor;
 import mpicbg.imglib.cursor.array.ArrayLocalizableByDimCursor;
@@ -48,7 +47,7 @@ import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
 import mpicbg.imglib.type.Type;
 import mpicbg.imglib.type.label.FakeType;
 
-public class CellContainer<T extends Type<T>, A extends ArrayDataAccess<A>> extends PixelGridContainerImpl<T> implements DirectAccessContainer<T, A>
+public class CellContainer<T extends Type<T>, A extends ArrayDataAccess<A>> extends DirectAccessContainerImpl<T, A>
 {
 	final protected ArrayList<Cell<T,A>> data;
 	final protected int[] numCellsDim, cellSize;
@@ -175,7 +174,7 @@ public class CellContainer<T extends Type<T>, A extends ArrayDataAccess<A>> exte
 	public CellCursor<T> createCursor( final T type, final Image<T> image ) 
 	{ 
 		// create a Cursor using a Type that is linked to the container
-		CellCursor<T> c = new CellCursor<T>( this, image, type.createType( this ) );
+		CellCursor<T> c = new CellCursor<T>( this, image, linkedType.duplicateTypeOnSameDirectAccessContainer() );
 		return c;
 	}
 	
@@ -183,7 +182,7 @@ public class CellContainer<T extends Type<T>, A extends ArrayDataAccess<A>> exte
 	public CellLocalizableCursor<T> createLocalizableCursor( final T type, final Image<T> image ) 
 	{
 		// create a Cursor using a Type that is linked to the container
-		CellLocalizableCursor<T> c = new CellLocalizableCursor<T>( this, image, type.createType( this ) );
+		CellLocalizableCursor<T> c = new CellLocalizableCursor<T>( this, image, linkedType.duplicateTypeOnSameDirectAccessContainer() );
 		return c;
 	}	
 
@@ -191,7 +190,7 @@ public class CellContainer<T extends Type<T>, A extends ArrayDataAccess<A>> exte
 	public CellLocalizablePlaneCursor<T> createLocalizablePlaneCursor( final T type, final Image<T> image ) 
 	{
 		// create a Cursor using a Type that is linked to the container
-		CellLocalizablePlaneCursor<T> c = new CellLocalizablePlaneCursor<T>( this, image, type.createType( this ) );
+		CellLocalizablePlaneCursor<T> c = new CellLocalizablePlaneCursor<T>( this, image, linkedType.duplicateTypeOnSameDirectAccessContainer() );
 		return c;
 	}	
 	
@@ -199,7 +198,7 @@ public class CellContainer<T extends Type<T>, A extends ArrayDataAccess<A>> exte
 	public CellLocalizableByDimCursor<T> createLocalizableByDimCursor( final T type, final Image<T> image ) 
 	{
 		// create a Cursor using a Type that is linked to the container
-		CellLocalizableByDimCursor<T> c = new CellLocalizableByDimCursor<T>( this, image, type.createType( this ) );
+		CellLocalizableByDimCursor<T> c = new CellLocalizableByDimCursor<T>( this, image, linkedType.duplicateTypeOnSameDirectAccessContainer() );
 		return c;
 	}	
 	
@@ -207,7 +206,7 @@ public class CellContainer<T extends Type<T>, A extends ArrayDataAccess<A>> exte
 	public CellLocalizableByDimCursor<T> createLocalizableByDimCursor( final T type, final Image<T> image, final OutOfBoundsStrategyFactory<T> outOfBoundsFactory ) 
 	{ 
 		// create a Cursor using a Type that is linked to the container
-		CellLocalizableByDimOutOfBoundsCursor<T> c = new CellLocalizableByDimOutOfBoundsCursor<T>( this, image, type.createType( this ), outOfBoundsFactory );
+		CellLocalizableByDimOutOfBoundsCursor<T> c = new CellLocalizableByDimOutOfBoundsCursor<T>( this, image, linkedType.duplicateTypeOnSameDirectAccessContainer(), outOfBoundsFactory );
 		return c;
 	}	
 }

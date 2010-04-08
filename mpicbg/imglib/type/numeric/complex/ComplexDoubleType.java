@@ -32,7 +32,6 @@ package mpicbg.imglib.type.numeric.complex;
 import mpicbg.imglib.container.DirectAccessContainer;
 import mpicbg.imglib.container.DirectAccessContainerFactory;
 import mpicbg.imglib.container.basictypecontainer.DoubleAccess;
-import mpicbg.imglib.container.basictypecontainer.FloatAccess;
 import mpicbg.imglib.container.basictypecontainer.array.DoubleArray;
 import mpicbg.imglib.cursor.Cursor;
 import mpicbg.imglib.type.numeric.ComplexType;
@@ -40,17 +39,15 @@ import mpicbg.imglib.type.numeric.ComplexType;
 public class ComplexDoubleType extends ComplexTypeImpl<ComplexDoubleType> implements ComplexType<ComplexDoubleType>
 {
 	// the DirectAccessContainer
-	final DirectAccessContainer<ComplexDoubleType, DoubleAccess> storage;
+	final DirectAccessContainer<ComplexDoubleType, ? extends DoubleAccess> storage;
 	
 	// the (sub)DirectAccessContainer that holds the information 
 	DoubleAccess b;
 	
 	// this is the constructor if you want it to read from an array
-	public ComplexDoubleType( DirectAccessContainer<ComplexDoubleType, DoubleAccess> complexfloatStorage )
+	public ComplexDoubleType( DirectAccessContainer<ComplexDoubleType, ? extends DoubleAccess> complexfloatStorage )
 	{
 		storage = complexfloatStorage;
-		realI = 0;
-		complexI = 1;
 	}
 	
 	// this is the constructor if you want it to be a variable
@@ -59,17 +56,24 @@ public class ComplexDoubleType extends ComplexTypeImpl<ComplexDoubleType> implem
 		storage = null;
 		b = new DoubleArray( 2 );
 		set( real, complex );
-		realI = 0;
-		complexI = 1;
 	}
 
 	// this is the constructor if you want it to be a variable
 	public ComplexDoubleType() { this( 0, 0 ); }
 
 	@Override
-	public DirectAccessContainer<ComplexDoubleType, ? extends FloatAccess> createSuitableDirectAccessContainer( final DirectAccessContainerFactory storageFactory, final int dim[] )
+	public DirectAccessContainer<ComplexDoubleType, ? extends DoubleAccess> createSuitableDirectAccessContainer( final DirectAccessContainerFactory storageFactory, final int dim[] )
 	{
-		return storageFactory.createFloatInstance( dim, 2 );	
+		// create the container
+		final DirectAccessContainer<ComplexDoubleType, ? extends DoubleAccess> container = storageFactory.createDoubleInstance( dim, 2 );
+		
+		// create a Type that is linked to the container
+		final ComplexDoubleType linkedType = new ComplexDoubleType( container );
+		
+		// pass it to the DirectAccessContainer
+		container.setLinkedType( linkedType );
+		
+		return container;
 	}
 
 	@Override
@@ -78,6 +82,9 @@ public class ComplexDoubleType extends ComplexTypeImpl<ComplexDoubleType> implem
 		b = storage.update( c );		
 	}
 	
+	@Override
+	public ComplexDoubleType duplicateTypeOnSameDirectAccessContainer() { return new ComplexDoubleType( storage ); }
+
 	@Override
 	public float getRealFloat() { return (float)b.getValue( realI ); }
 	@Override
@@ -117,15 +124,6 @@ public class ComplexDoubleType extends ComplexTypeImpl<ComplexDoubleType> implem
 
 	@Override
 	public ComplexDoubleType[][][] createArray3D(int size1, int size2, int size3) { return new ComplexDoubleType[ size1 ][ size2 ][ size3 ]; }
-
-	//@Override
-	//public ComplexFloatType getType() { return this; }
-
-	@Override
-	public ComplexDoubleType createType( DirectAccessContainer<ComplexDoubleType,?> DirectAccessContainer )
-	{
-		return new ComplexDoubleType( (DirectAccessContainer<ComplexDoubleType, DoubleAccess>)DirectAccessContainer );
-	}
 	
 	@Override
 	public ComplexDoubleType createVariable(){ return new ComplexDoubleType( 0, 0 ); }

@@ -31,7 +31,6 @@ package mpicbg.imglib.type.numeric.integer;
 
 import mpicbg.imglib.algorithm.math.MathLib;
 import mpicbg.imglib.container.DirectAccessContainer;
-import mpicbg.imglib.container.DirectAccessContainerFactory;
 import mpicbg.imglib.container.basictypecontainer.ShortAccess;
 import mpicbg.imglib.container.basictypecontainer.array.ShortArray;
 import mpicbg.imglib.cursor.Cursor;
@@ -39,13 +38,13 @@ import mpicbg.imglib.cursor.Cursor;
 public abstract class GenericShortType<T extends GenericShortType<T>> extends IntegerTypeImpl<T>
 {
 	// the DirectAccessContainer
-	final DirectAccessContainer<T, ShortAccess> storage;
+	final DirectAccessContainer<T, ? extends ShortAccess> storage;
 	
 	// the (sub)DirectAccessContainer that holds the information 
 	ShortAccess b;
 	
 	// this is the constructor if you want it to read from an array
-	public GenericShortType( DirectAccessContainer<T, ShortAccess> shortStorage )
+	public GenericShortType( DirectAccessContainer<T, ? extends ShortAccess> shortStorage )
 	{
 		storage = shortStorage;
 	}
@@ -60,12 +59,6 @@ public abstract class GenericShortType<T extends GenericShortType<T>> extends In
 
 	// this is the constructor if you want it to be a variable
 	public GenericShortType(){ this( ( short )0 ); }
-	
-	@Override
-	public DirectAccessContainer<T, ? extends ShortAccess> createSuitableDirectAccessContainer( final DirectAccessContainerFactory storageFactory, final int dim[] )
-	{
-		return storageFactory.createShortInstance( dim, 1 );	
-	}
 
 	@Override
 	public void updateContainer( final Cursor< ? > c ) 

@@ -143,15 +143,6 @@ public interface Type<T extends Type<T>>
 	public void decIndex( final int decrement );
 	
 	/**
-	 * Creates a new Type for a certain {@link DirectAccessContainer}, this is done
-	 * when a new {@link Cursor} is created.
-	 * 
-	 * @param DirectAccessContainer - the {@link DirectAccessContainer} where the {@link Type} works on
-	 * @return - a new {@link Type}
-	 */
-	public T createType( DirectAccessContainer<T,? extends DataAccess> DirectAccessContainer );
-	
-	/**
 	 * Creates a new {@link Type} which can only store one value.
 	 * @return - a new {@link Type} instance
 	 */
@@ -162,7 +153,13 @@ public interface Type<T extends Type<T>>
 	 * @return - a new {@link Type} instance
 	 */
 	public T clone();
-	
+
+	/**
+	 * Creates a new {@link Type} which stores in the same physical array. This is only used internally.
+	 * @return - a new {@link Type} instance working on the same {@link DirectAccessContainer}
+	 */
+	public T duplicateTypeOnSameDirectAccessContainer();
+
 	/**
 	 * Sets the value of another {@link Type}.
 	 * @param c - the new value
@@ -192,8 +189,4 @@ public interface Type<T extends Type<T>>
 	 * @return - T[][][] array
 	 */
 	public T[][][] createArray3D( int size1, int size2, int size3 );	
-	
-	//public void updateDataArray( T type );	
-	//public boolean hasSameDataArray( T type );			
-	//public T getType();
 }

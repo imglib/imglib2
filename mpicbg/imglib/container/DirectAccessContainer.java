@@ -37,4 +37,5 @@ import mpicbg.imglib.type.Type;
 public interface DirectAccessContainer<T extends Type<T>, A extends DataAccess> extends PixelGridContainer<T>
 {
 	public A update( final Cursor<?> c );
+	public void setLinkedType( final T type );
 }

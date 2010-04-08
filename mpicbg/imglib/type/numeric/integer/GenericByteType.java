@@ -31,7 +31,6 @@ package mpicbg.imglib.type.numeric.integer;
 
 import mpicbg.imglib.algorithm.math.MathLib;
 import mpicbg.imglib.container.DirectAccessContainer;
-import mpicbg.imglib.container.DirectAccessContainerFactory;
 import mpicbg.imglib.container.basictypecontainer.ByteAccess;
 import mpicbg.imglib.container.basictypecontainer.array.ByteArray;
 import mpicbg.imglib.cursor.Cursor;
@@ -39,13 +38,13 @@ import mpicbg.imglib.cursor.Cursor;
 public abstract class GenericByteType<T extends GenericByteType<T>> extends IntegerTypeImpl<T>
 {
 	// the DirectAccessContainer
-	final DirectAccessContainer<T, ByteAccess> storage;
+	final DirectAccessContainer<T, ? extends ByteAccess> storage;
 	
 	// the (sub)DirectAccessContainer that holds the information 
 	ByteAccess b;
 	
 	// this is the constructor if you want it to read from an array
-	public GenericByteType( DirectAccessContainer<T, ByteAccess> byteStorage )
+	public GenericByteType( DirectAccessContainer<T, ? extends ByteAccess> byteStorage )
 	{
 		storage = byteStorage;
 	}
@@ -60,13 +59,7 @@ public abstract class GenericByteType<T extends GenericByteType<T>> extends Inte
 
 	// this is the constructor if you want it to be a variable
 	protected GenericByteType() { this( ( byte )0 ); }
-	
-	@Override
-	public DirectAccessContainer<T, ? extends ByteAccess> createSuitableDirectAccessContainer( final DirectAccessContainerFactory storageFactory, final int dim[] )
-	{
-		return storageFactory.createByteInstance( dim, 1 );	
-	}
-		
+			
 	@Override
 	public void updateContainer( final Cursor< ? > c ) 
 	{ 

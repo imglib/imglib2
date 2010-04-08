@@ -43,13 +43,13 @@ import mpicbg.imglib.type.label.BasePairBitType.Base;
 public class BasePairCharType extends TypeImpl<BasePairCharType> implements BasePairType<BasePairCharType>
 {
 	// the DirectAccessContainer
-	final DirectAccessContainer<BasePairCharType, CharAccess> storage;
+	final DirectAccessContainer<BasePairCharType, ? extends CharAccess> storage;
 	
 	// the (sub)DirectAccessContainer that holds the information 
 	CharAccess b;
 	
 	// this is the constructor if you want it to read from an array
-	public BasePairCharType( DirectAccessContainer<BasePairCharType, CharAccess> charStorage )
+	public BasePairCharType( DirectAccessContainer<BasePairCharType, ? extends CharAccess> charStorage )
 	{
 		storage = charStorage;
 	}
@@ -76,19 +76,31 @@ public class BasePairCharType extends TypeImpl<BasePairCharType> implements Base
 	@Override
 	public DirectAccessContainer<BasePairCharType, ? extends CharAccess> createSuitableDirectAccessContainer( final DirectAccessContainerFactory storageFactory, final int dim[] )
 	{
-		return storageFactory.createCharInstance( dim, 1 );	
-	}
-
-	@Override
-	public BasePairTypeDisplay<BasePairCharType> getDefaultDisplay( final Image<BasePairCharType> image )
-	{
-		return new BasePairTypeDisplay<BasePairCharType>( image );
+		// create the container
+		final DirectAccessContainer<BasePairCharType, ? extends CharAccess> container = storageFactory.createCharInstance( dim, 1 );
+		
+		// create a Type that is linked to the container
+		final BasePairCharType linkedType = new BasePairCharType( container );
+		
+		// pass it to the DirectAccessContainer
+		container.setLinkedType( linkedType );
+		
+		return container;
 	}
 	
 	@Override
 	public void updateContainer( final Cursor<?> c ) 
 	{ 
 		b = storage.update( c ); 
+	}
+	
+	@Override
+	public BasePairCharType duplicateTypeOnSameDirectAccessContainer() { return new BasePairCharType( storage ); }
+
+	@Override
+	public BasePairTypeDisplay<BasePairCharType> getDefaultDisplay( final Image<BasePairCharType> image )
+	{
+		return new BasePairTypeDisplay<BasePairCharType>( image );
 	}
 	
 	public char getChar() { return b.getValue( i ); }
@@ -187,15 +199,6 @@ public class BasePairCharType extends TypeImpl<BasePairCharType> implements Base
 	@Override
 	public BasePairCharType[][][] createArray3D(int size1, int size2, int size3) { return new BasePairCharType[ size1 ][ size2 ][ size3 ]; }
 
-	//@Override
-	//public BasePairCharType getType() { return this; }
-
-	@Override
-	public BasePairCharType createType( DirectAccessContainer<BasePairCharType,?> DirectAccessContainer )
-	{
-		return new BasePairCharType( (DirectAccessContainer<BasePairCharType, CharAccess>)DirectAccessContainer );
-	}
-	
 	@Override
 	public BasePairCharType createVariable(){ return new BasePairCharType( Base.N ); }
 	

@@ -39,13 +39,13 @@ import mpicbg.imglib.cursor.Cursor;
 final public class LongType extends IntegerTypeImpl<LongType>
 {
 	// the DirectAccessContainer
-	final DirectAccessContainer<LongType, LongAccess> storage;
+	final DirectAccessContainer<LongType, ? extends LongAccess> storage;
 	
 	// the (sub)DirectAccessContainer that holds the information 
 	LongAccess b;
 	
 	// this is the constructor if you want it to read from an array
-	public LongType( DirectAccessContainer<LongType, LongAccess> longStorage )
+	public LongType( DirectAccessContainer<LongType, ? extends LongAccess> longStorage )
 	{
 		storage = longStorage;
 	}
@@ -64,7 +64,16 @@ final public class LongType extends IntegerTypeImpl<LongType>
 	@Override
 	public DirectAccessContainer<LongType, ? extends LongAccess> createSuitableDirectAccessContainer( final DirectAccessContainerFactory storageFactory, final int dim[] )
 	{
-		return storageFactory.createLongInstance( dim, 1 );	
+		// create the container
+		final DirectAccessContainer<LongType, ? extends LongAccess> container = storageFactory.createLongInstance( dim, 1 );
+		
+		// create a Type that is linked to the container
+		final LongType linkedType = new LongType( container );
+		
+		// pass it to the DirectAccessContainer
+		container.setLinkedType( linkedType );
+		
+		return container;
 	}
 
 	@Override
@@ -72,6 +81,9 @@ final public class LongType extends IntegerTypeImpl<LongType>
 	{ 
 		b = storage.update( c ); 
 	}
+
+	@Override
+	public LongType duplicateTypeOnSameDirectAccessContainer() { return new LongType( storage ); }
 	
 	public long get(){ return b.getValue( i ); }
 	public void set( final long f ){ b.setValue( i, f ); }
@@ -165,15 +177,6 @@ final public class LongType extends IntegerTypeImpl<LongType>
 
 	@Override
 	public LongType[][][] createArray3D(int size1, int size2, int size3) { return new LongType[ size1 ][ size2 ][ size3 ]; }
-
-	//@Override
-	//public LongType getType() { return this; }
-	
-	@Override
-	public LongType createType( DirectAccessContainer<LongType,?> DirectAccessContainer )
-	{
-		return new LongType( (DirectAccessContainer<LongType, LongAccess>)(LongAccess)DirectAccessContainer );
-	}
 
 	@Override
 	public LongType createVariable(){ return new LongType( 0 ); }

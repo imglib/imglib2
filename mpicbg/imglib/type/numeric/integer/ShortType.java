@@ -30,12 +30,13 @@
 package mpicbg.imglib.type.numeric.integer;
 
 import mpicbg.imglib.container.DirectAccessContainer;
+import mpicbg.imglib.container.DirectAccessContainerFactory;
 import mpicbg.imglib.container.basictypecontainer.ShortAccess;
 
 public class ShortType extends GenericShortType<ShortType>
 {
 	// this is the constructor if you want it to read from an array
-	public ShortType( DirectAccessContainer<ShortType, ShortAccess> shortStorage ) { super( shortStorage ); }
+	public ShortType( DirectAccessContainer<ShortType, ? extends ShortAccess> shortStorage ) { super( shortStorage ); }
 	
 	// this is the constructor if you want it to be a variable
 	public ShortType( final short value ) { super( value ); }
@@ -43,6 +44,24 @@ public class ShortType extends GenericShortType<ShortType>
 	// this is the constructor if you want it to be a variable
 	public ShortType() { this( (short)0 ); }
 	
+	@Override
+	public DirectAccessContainer<ShortType, ? extends ShortAccess> createSuitableDirectAccessContainer( final DirectAccessContainerFactory storageFactory, final int dim[] )
+	{
+		// create the container
+		final DirectAccessContainer<ShortType, ? extends ShortAccess> container = storageFactory.createShortInstance( dim, 1 );
+		
+		// create a Type that is linked to the container
+		final ShortType linkedType = new ShortType( container );
+		
+		// pass it to the DirectAccessContainer
+		container.setLinkedType( linkedType );
+		
+		return container;
+	}
+	
+	@Override
+	public ShortType duplicateTypeOnSameDirectAccessContainer() { return new ShortType( storage ); }
+
 	public short get() { return getValue(); }
 	public void set( final short b ) { setValue( b ); }
 	
@@ -63,12 +82,6 @@ public class ShortType extends GenericShortType<ShortType>
 
 	@Override
 	public ShortType[][][] createArray3D( final int size1, final int size2, final int size3 ) { return new ShortType[ size1 ][ size2 ][ size3 ]; }
-	
-	@Override
-	public ShortType createType( final DirectAccessContainer<ShortType,?> DirectAccessContainer )
-	{ 
-		return new ShortType( (DirectAccessContainer<ShortType, ShortAccess>)DirectAccessContainer );
-	}
 
 	@Override
 	public ShortType createVariable(){ return new ShortType( (short)0 ); }

@@ -34,8 +34,7 @@ import java.util.ArrayList;
 import ij.ImagePlus;
 
 import mpicbg.imglib.container.Container3D;
-import mpicbg.imglib.container.DirectAccessContainer;
-import mpicbg.imglib.container.PixelGridContainerImpl;
+import mpicbg.imglib.container.DirectAccessContainerImpl;
 import mpicbg.imglib.container.basictypecontainer.array.ArrayDataAccess;
 import mpicbg.imglib.cursor.Cursor;
 import mpicbg.imglib.cursor.LocalizableByDimCursor;
@@ -51,7 +50,7 @@ import mpicbg.imglib.image.Image;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
 import mpicbg.imglib.type.Type;
 
-public class ImagePlusContainer<T extends Type<T>, A extends ArrayDataAccess<A>> extends PixelGridContainerImpl<T> implements Container3D<T>, DirectAccessContainer<T, A>
+public class ImagePlusContainer<T extends Type<T>, A extends ArrayDataAccess<A>> extends DirectAccessContainerImpl<T,A> implements Container3D<T>
 {
 	final ImagePlusContainerFactory factory;
 	final int width, height, depth;
@@ -133,27 +132,27 @@ public class ImagePlusContainer<T extends Type<T>, A extends ArrayDataAccess<A>>
 
 	public Cursor<T> createCursor( T type, Image<T> image ) 
 	{
-		return new ImagePlusCursor<T>( this, image, type );
+		return new ImagePlusCursor<T>( this, image, linkedType.duplicateTypeOnSameDirectAccessContainer() );
 	}
 
 	public LocalizableCursor<T> createLocalizableCursor( T type, Image<T> image ) 
 	{
-		return new ImagePlusLocalizableCursor<T>( this, image, type );
+		return new ImagePlusLocalizableCursor<T>( this, image, linkedType.duplicateTypeOnSameDirectAccessContainer() );
 	}
 ;
 	public LocalizablePlaneCursor<T> createLocalizablePlaneCursor( T type, Image<T> image ) 
 	{
-		return new ImagePlusLocalizablePlaneCursor<T>( this, image, type );
+		return new ImagePlusLocalizablePlaneCursor<T>( this, image, linkedType.duplicateTypeOnSameDirectAccessContainer() );
 	}
 ;
 	public LocalizableByDimCursor<T> createLocalizableByDimCursor( T type, Image<T> image ) 
 	{
-		return new ImagePlusLocalizableByDimCursor<T>( this, image, type );
+		return new ImagePlusLocalizableByDimCursor<T>( this, image, linkedType.duplicateTypeOnSameDirectAccessContainer() );
 	}
 ;
 	public LocalizableByDimCursor<T> createLocalizableByDimCursor( T type, Image<T> image, OutOfBoundsStrategyFactory<T> outOfBoundsFactory ) 
 	{
-		return new ImagePlusLocalizableByDimOutOfBoundsCursor<T>( this, image, type, outOfBoundsFactory );
+		return new ImagePlusLocalizableByDimOutOfBoundsCursor<T>( this, image, linkedType.duplicateTypeOnSameDirectAccessContainer(), outOfBoundsFactory );
 	}
 	
 	public ImagePlusContainerFactory getFactory() { return factory; }

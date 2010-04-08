@@ -30,19 +30,38 @@
 package mpicbg.imglib.type.numeric.integer;
 
 import mpicbg.imglib.container.DirectAccessContainer;
+import mpicbg.imglib.container.DirectAccessContainerFactory;
 import mpicbg.imglib.container.basictypecontainer.ByteAccess;
 
 public class ByteType extends GenericByteType<ByteType>
 {
 	// this is the constructor if you want it to read from an array
-	public ByteType( final DirectAccessContainer<ByteType, ByteAccess> byteStorage ) { super( byteStorage ); }
+	public ByteType( final DirectAccessContainer<ByteType, ? extends ByteAccess> byteStorage ) { super( byteStorage ); }
 	
 	// this is the constructor if you want it to be a variable
 	public ByteType( final byte value ) { super( value ); }
 
 	// this is the constructor if you want it to be a variable
 	public ByteType() { super( (byte)0 ); }
+
+	@Override
+	public DirectAccessContainer<ByteType, ? extends ByteAccess> createSuitableDirectAccessContainer( final DirectAccessContainerFactory storageFactory, final int dim[] )
+	{
+		// create the container
+		final DirectAccessContainer<ByteType, ? extends ByteAccess> container = storageFactory.createByteInstance( dim, 1 );
 		
+		// create a Type that is linked to the container
+		final ByteType linkedType = new ByteType( container );
+		
+		// pass it to the DirectAccessContainer
+		container.setLinkedType( linkedType );
+		
+		return container;
+	}
+	
+	@Override
+	public ByteType duplicateTypeOnSameDirectAccessContainer() { return new ByteType( storage ); }
+
 	public byte get() { return getValue(); }
 	public void set( final byte b ) { setValue( b ); }
 	
@@ -64,12 +83,6 @@ public class ByteType extends GenericByteType<ByteType>
 	@Override
 	public ByteType[][][] createArray3D( final int size1, final int size2, final int size3 ) { return new ByteType[ size1 ][ size2 ][ size3 ]; }
 
-	@Override
-	public ByteType createType( final DirectAccessContainer<ByteType, ?> DirectAccessContainer ) 
-	{ 
-		return new ByteType( (DirectAccessContainer<ByteType, ByteAccess>)DirectAccessContainer ); 
-	}
-	
 	@Override
 	public ByteType createVariable(){ return new ByteType( (byte)0 ); }
 

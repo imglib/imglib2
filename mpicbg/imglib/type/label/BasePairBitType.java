@@ -45,7 +45,7 @@ public class BasePairBitType extends TypeImpl<BasePairBitType> implements BasePa
 	public static enum Base { gap, N, A, T, G, C; }
 			
 	// the DirectAccessContainer
-	final DirectAccessContainer<BasePairBitType, BitAccess> storage;
+	final DirectAccessContainer<BasePairBitType, ? extends BitAccess> storage;
 	
 	// the (sub)DirectAccessContainer that holds the information 
 	BitAccess b;
@@ -54,7 +54,7 @@ public class BasePairBitType extends TypeImpl<BasePairBitType> implements BasePa
 	int j1, j2, j3;
 	
 	// this is the constructor if you want it to read from an array
-	public BasePairBitType( DirectAccessContainer<BasePairBitType, BitAccess> bitStorage )
+	public BasePairBitType( DirectAccessContainer<BasePairBitType, ? extends BitAccess> bitStorage )
 	{
 		storage = bitStorage;
 	}
@@ -73,7 +73,16 @@ public class BasePairBitType extends TypeImpl<BasePairBitType> implements BasePa
 	@Override
 	public DirectAccessContainer<BasePairBitType, ? extends BitAccess> createSuitableDirectAccessContainer( final DirectAccessContainerFactory storageFactory, final int dim[] )	
 	{
-		return storageFactory.createBitInstance( dim, 3 );	
+		// create the container
+		final DirectAccessContainer<BasePairBitType, ? extends BitAccess> container = storageFactory.createBitInstance( dim, 1 );
+		
+		// create a Type that is linked to the container
+		final BasePairBitType linkedType = new BasePairBitType( container );
+		
+		// pass it to the DirectAccessContainer
+		container.setLinkedType( linkedType );
+		
+		return container;
 	}
 	
 	@Override
@@ -81,6 +90,9 @@ public class BasePairBitType extends TypeImpl<BasePairBitType> implements BasePa
 	{
 		b = storage.update( c );	
 	}
+
+	@Override
+	public BasePairBitType duplicateTypeOnSameDirectAccessContainer() { return new BasePairBitType( storage ); }
 	
 	@Override
 	public void updateIndex( final int i ) 
@@ -255,15 +267,6 @@ public class BasePairBitType extends TypeImpl<BasePairBitType> implements BasePa
 	@Override
 	public BasePairBitType[][][] createArray3D(int size1, int size2, int size3) { return new BasePairBitType[ size1 ][ size2 ][ size3 ]; }
 
-	//@Override
-	//public BasePairBitType getType() { return this; }
-
-	@Override
-	public BasePairBitType createType( DirectAccessContainer<BasePairBitType,?> DirectAccessContainer )
-	{ 
-		return new BasePairBitType( (DirectAccessContainer<BasePairBitType, BitAccess>)DirectAccessContainer ); 
-	}
-	
 	@Override
 	public BasePairBitType createVariable(){ return new BasePairBitType(); }
 

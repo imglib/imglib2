@@ -34,24 +34,20 @@ import mpicbg.imglib.container.DirectAccessContainerFactory;
 import mpicbg.imglib.container.basictypecontainer.FloatAccess;
 import mpicbg.imglib.container.basictypecontainer.array.FloatArray;
 import mpicbg.imglib.cursor.Cursor;
-import mpicbg.imglib.image.Image;
-import mpicbg.imglib.image.display.ComplexTypePowerSpectrumDisplay;
 import mpicbg.imglib.type.numeric.ComplexType;
 
 public class ComplexFloatType extends ComplexTypeImpl<ComplexFloatType> implements ComplexType<ComplexFloatType>
 {
 	// the DirectAccessContainer
-	final DirectAccessContainer<ComplexFloatType, FloatAccess> storage;
+	final DirectAccessContainer<ComplexFloatType, ? extends FloatAccess> storage;
 	
 	// the (sub)DirectAccessContainer that holds the information 
 	FloatAccess b;
 	
 	// this is the constructor if you want it to read from an array
-	public ComplexFloatType( DirectAccessContainer<ComplexFloatType, FloatAccess> complexfloatStorage )
+	public ComplexFloatType( DirectAccessContainer<ComplexFloatType, ? extends FloatAccess> complexfloatStorage )
 	{
 		storage = complexfloatStorage;
-		realI = 0;
-		complexI = 1;
 	}
 	
 	// this is the constructor if you want it to be a variable
@@ -60,8 +56,6 @@ public class ComplexFloatType extends ComplexTypeImpl<ComplexFloatType> implemen
 		storage = null;
 		b = new FloatArray( 2 );
 		set( real, complex );
-		realI = 0;
-		complexI = 1;
 	}
 
 	// this is the constructor if you want it to be a variable
@@ -70,7 +64,16 @@ public class ComplexFloatType extends ComplexTypeImpl<ComplexFloatType> implemen
 	@Override
 	public DirectAccessContainer<ComplexFloatType, ? extends FloatAccess> createSuitableDirectAccessContainer( final DirectAccessContainerFactory storageFactory, final int dim[] )
 	{
-		return storageFactory.createFloatInstance( dim, 2 );	
+		// create the container
+		final DirectAccessContainer<ComplexFloatType, ? extends FloatAccess> container = storageFactory.createFloatInstance( dim, 2 );
+		
+		// create a Type that is linked to the container
+		final ComplexFloatType linkedType = new ComplexFloatType( container );
+		
+		// pass it to the DirectAccessContainer
+		container.setLinkedType( linkedType );
+		
+		return container;
 	}
 	
 	@Override
@@ -78,6 +81,9 @@ public class ComplexFloatType extends ComplexTypeImpl<ComplexFloatType> implemen
 	{ 
 		b = storage.update( c );		
 	}
+	
+	@Override
+	public ComplexFloatType duplicateTypeOnSameDirectAccessContainer() { return new ComplexFloatType( storage ); }
 	
 	@Override
 	public float getRealFloat() { return b.getValue( realI ); }
@@ -184,15 +190,6 @@ public class ComplexFloatType extends ComplexTypeImpl<ComplexFloatType> implemen
 
 	@Override
 	public ComplexFloatType[][][] createArray3D(int size1, int size2, int size3) { return new ComplexFloatType[ size1 ][ size2 ][ size3 ]; }
-
-	//@Override
-	//public ComplexFloatType getType() { return this; }
-
-	@Override
-	public ComplexFloatType createType( DirectAccessContainer<ComplexFloatType,?> DirectAccessContainer )
-	{
-		return new ComplexFloatType( (DirectAccessContainer<ComplexFloatType, FloatAccess>)DirectAccessContainer );
-	}
 	
 	@Override
 	public ComplexFloatType createVariable(){ return new ComplexFloatType( 0, 0 ); }

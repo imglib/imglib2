@@ -55,7 +55,7 @@ public class Array3D<T extends Type<T>, A extends DataAccess> extends Array<T,A>
 	public Array3DLocalizableCursor<T> createLocalizableCursor( final T type, final Image<T> image ) 
 	{ 
 		// create a Cursor using a Type that is linked to the container
-		Array3DLocalizableCursor<T> c = new Array3DLocalizableCursor<T>( this, image, type.createType( this ) );
+		Array3DLocalizableCursor<T> c = new Array3DLocalizableCursor<T>( this, image, linkedType.duplicateTypeOnSameDirectAccessContainer() );
 		return c;
 	}
 
@@ -63,7 +63,7 @@ public class Array3D<T extends Type<T>, A extends DataAccess> extends Array<T,A>
 	public Array3DLocalizableByDimCursor<T> createLocalizableByDimCursor( final T type, final Image<T> image ) 
 	{ 
 		// create a Cursor using a Type that is linked to the container
-		Array3DLocalizableByDimCursor<T> c = new Array3DLocalizableByDimCursor<T>( this, image, type.createType( this ) );
+		Array3DLocalizableByDimCursor<T> c = new Array3DLocalizableByDimCursor<T>( this, image, linkedType.duplicateTypeOnSameDirectAccessContainer() );
 		return c;
 	}
 
@@ -71,7 +71,7 @@ public class Array3D<T extends Type<T>, A extends DataAccess> extends Array<T,A>
 	public Array3DLocalizableByDimOutOfBoundsCursor<T> createLocalizableByDimCursor( final T type, final Image<T> image, final OutOfBoundsStrategyFactory<T> outOfBoundsFactory ) 
 	{ 
 		// create a Cursor using a Type that is linked to the container
-		Array3DLocalizableByDimOutOfBoundsCursor<T> c = new Array3DLocalizableByDimOutOfBoundsCursor<T>( this, image, type.createType( this ), outOfBoundsFactory );
+		Array3DLocalizableByDimOutOfBoundsCursor<T> c = new Array3DLocalizableByDimOutOfBoundsCursor<T>( this, image, linkedType.duplicateTypeOnSameDirectAccessContainer(), outOfBoundsFactory );
 		return c;
 	}
 	

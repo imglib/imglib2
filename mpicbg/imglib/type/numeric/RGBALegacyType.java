@@ -42,13 +42,13 @@ import mpicbg.imglib.type.numeric.integer.IntegerTypeImpl;
 final public class RGBALegacyType extends IntegerTypeImpl<RGBALegacyType> implements RealType<RGBALegacyType>
 {
 	// the DirectAccessContainer
-	final DirectAccessContainer<RGBALegacyType, IntAccess> storage;
+	final DirectAccessContainer<RGBALegacyType, ? extends IntAccess> storage;
 	
 	// the (sub)DirectAccessContainer that holds the information 
 	IntAccess b;
 	
 	// this is the constructor if you want it to read from an array
-	public RGBALegacyType( DirectAccessContainer<RGBALegacyType, IntAccess> byteStorage )
+	public RGBALegacyType( DirectAccessContainer<RGBALegacyType, ? extends IntAccess> byteStorage )
 	{
 		storage = byteStorage;
 	}
@@ -67,19 +67,31 @@ final public class RGBALegacyType extends IntegerTypeImpl<RGBALegacyType> implem
 	@Override
 	public DirectAccessContainer<RGBALegacyType, ? extends IntAccess> createSuitableDirectAccessContainer( final DirectAccessContainerFactory storageFactory, final int dim[] )
 	{
-		return storageFactory.createIntInstance( dim, 1 );	
-	}
-
-	@Override
-	public RGBALegacyTypeDisplay getDefaultDisplay( Image<RGBALegacyType> image )
-	{
-		return new RGBALegacyTypeDisplay( image );
+		// create the container
+		final DirectAccessContainer<RGBALegacyType, ? extends IntAccess> container = storageFactory.createIntInstance( dim, 1 );
+		
+		// create a Type that is linked to the container
+		final RGBALegacyType linkedType = new RGBALegacyType( container );
+		
+		// pass it to the DirectAccessContainer
+		container.setLinkedType( linkedType );
+		
+		return container;
 	}
 
 	@Override
 	public void updateContainer( final Cursor<?> c ) 
 	{ 
 		b = storage.update( c );
+	}
+
+	@Override
+	public RGBALegacyType duplicateTypeOnSameDirectAccessContainer() { return new RGBALegacyType( storage ); }
+	
+	@Override
+	public RGBALegacyTypeDisplay getDefaultDisplay( Image<RGBALegacyType> image )
+	{
+		return new RGBALegacyTypeDisplay( image );
 	}
 
 	final public static int rgba( final int r, final int g, final int b, final int a)
@@ -231,15 +243,6 @@ final public class RGBALegacyType extends IntegerTypeImpl<RGBALegacyType> implem
 
 	@Override
 	public RGBALegacyType[][][] createArray3D(int size1, int size2, int size3) { return new RGBALegacyType[ size1 ][ size2 ][ size3 ]; }
-
-	//@Override
-	//public RGBALegacyType getType() { return this; }
-	
-	@Override
-	public RGBALegacyType createType( DirectAccessContainer<RGBALegacyType,?> DirectAccessContainer )
-	{
-		return new RGBALegacyType( (DirectAccessContainer<RGBALegacyType, IntAccess>)DirectAccessContainer );
-	}
 
 	@Override
 	public RGBALegacyType createVariable() { return new RGBALegacyType( 0 ); }
