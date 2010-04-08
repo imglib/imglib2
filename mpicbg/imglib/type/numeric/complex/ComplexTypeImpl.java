@@ -19,6 +19,13 @@ public abstract class ComplexTypeImpl<T extends ComplexTypeImpl<T>> extends Type
 	}
 	
 	@Override
+	public void set( final T c )
+	{ 
+		setReal( c.getRealDouble() ); 
+		setComplex( c.getComplexDouble() ); 
+	}
+	
+	@Override
 	public void mul( final float c ) { setReal( getRealFloat() * c ); }
 	@Override
 	public void mul( final double c ) { setReal( getRealDouble() * c ); }		

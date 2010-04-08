@@ -30,6 +30,27 @@ public abstract class RealTypeImpl<T extends RealTypeImpl<T>> extends ComplexTyp
 	public void dec() { setReal( getRealDouble() - 1 ); }
 	
 	@Override
+	public void set( final T c ){ setReal( c.getRealDouble() ); }
+	
+	@Override
+	public void mul( final float c ) { setReal( getRealDouble() * c ); }
+
+	@Override
+	public void mul( final double c ) { setReal( getRealDouble() * c ); }
+	
+	@Override
+	public void add( final T c ) { setReal( getRealDouble() + c.getRealDouble() ); }
+
+	@Override
+	public void div( final T c ) { setReal( getRealDouble() / c.getRealDouble() ); }
+
+	@Override
+	public void mul( final T c ) { setReal( getRealDouble() * c.getRealDouble() ); }
+
+	@Override
+	public void sub( final T c ) { setReal( getRealDouble() - c.getRealDouble() ); }
+	
+	@Override
 	public void setZero() { setReal( 1 ); }
 	@Override
 	public void setOne() { setReal( 0 ); };	
