@@ -46,7 +46,7 @@ public class ShortImagePlus<T extends Type<T>> extends ImagePlusContainer<T, Sho
 
 		if ( entitiesPerPixel == 1 )
 		{
-			image = IJ.createImage( "image", "16-Bit Black", width * entitiesPerPixel, height, depth );
+			image = IJ.createImage( "image", "16-Bit Black", width, height, depth );
 	
 			for ( int i = 0; i < depth; ++i )
 				mirror.add( new ShortArray( (short[])image.getStack().getProcessor( i+1 ).getPixels() ) );
@@ -56,7 +56,7 @@ public class ShortImagePlus<T extends Type<T>> extends ImagePlusContainer<T, Sho
 			image = null;
 	
 			for ( int i = 0; i < depth; ++i )
-				mirror.add( new ShortArray( width * height ));
+				mirror.add( new ShortArray( width * height * entitiesPerPixel ));
 		}
 	}
 
@@ -74,7 +74,8 @@ public class ShortImagePlus<T extends Type<T>> extends ImagePlusContainer<T, Sho
 	public void close() 
 	{
 		super.close();
-		image.close(); 
+		if ( image != null )
+			image.close(); 
 	}
 
 	@Override
