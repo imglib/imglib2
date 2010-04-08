@@ -38,6 +38,8 @@ import mpicbg.imglib.type.Type;
 
 public class CellCursor<T extends Type<T>> extends CursorImpl<T> implements Cursor<T>
 {
+	final protected T type;
+	
 	/*
 	 * Pointer to the CellContainer we are iterating on
 	 */
@@ -70,8 +72,9 @@ public class CellCursor<T extends Type<T>> extends CursorImpl<T> implements Curs
 	
 	public CellCursor( final CellContainer<T,?> container, final Image<T> image, final T type )
 	{
-		super( container, image, type );
+		super( container, image );
 		
+		this.type = type;
 		this.container = container;
 		this.numCells = container.getNumCells();
 		this.lastCell = -1;
@@ -92,6 +95,9 @@ public class CellCursor<T extends Type<T>> extends CursorImpl<T> implements Curs
 	}
 	
 	public Cell<T,?> getCurrentCell() { return cellInstance; }
+	
+	@Override
+	public T getType() { return type; }
 	
 	@Override
 	public void reset()

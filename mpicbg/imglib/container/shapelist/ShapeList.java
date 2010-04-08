@@ -101,33 +101,33 @@ public class ShapeList< T extends Type< T > > extends ContainerImpl< T >
 	public ShapeListContainerFactory getFactory() { return factory; }
 	
 	@Override
-	public ShapeListLocalizableByDimCursor< T > createCursor( final T type, final Image< T > image ) 
+	public ShapeListLocalizableByDimCursor< T > createCursor( final Image< T > image ) 
 	{ 
-		return createLocalizableByDimCursor( type, image );
+		return createLocalizableByDimCursor( image );
 	}
 
 	@Override
-	public ShapeListLocalizableByDimCursor< T > createLocalizableCursor( final T type, final Image< T > image ) 
+	public ShapeListLocalizableByDimCursor< T > createLocalizableCursor( final Image< T > image ) 
 	{ 
-		return createLocalizableByDimCursor( type, image );
+		return createLocalizableByDimCursor( image );
 	}
 
 	@Override
-	public ShapeListLocalizablePlaneCursor< T > createLocalizablePlaneCursor( final T type, final Image< T > image ) 
+	public ShapeListLocalizablePlaneCursor< T > createLocalizablePlaneCursor( final Image< T > image ) 
 	{ 
-		return new ShapeListLocalizablePlaneCursor< T >( this, image, type );
+		return new ShapeListLocalizablePlaneCursor< T >( this, image );
 	}
 	
 	@Override
-	public ShapeListLocalizableByDimCursor< T > createLocalizableByDimCursor( final T type, final Image< T > image ) 
+	public ShapeListLocalizableByDimCursor< T > createLocalizableByDimCursor( final Image< T > image ) 
 	{
-		return new ShapeListLocalizableByDimCursor< T >( this, image, type );
+		return new ShapeListLocalizableByDimCursor< T >( this, image );
 	}
 	
 	@Override
-	public ShapeListLocalizableByDimOutOfBoundsCursor< T > createLocalizableByDimCursor( final T type, final Image< T > image, final OutOfBoundsStrategyFactory< T > outOfBoundsFactory ) 
+	public ShapeListLocalizableByDimOutOfBoundsCursor< T > createLocalizableByDimCursor( final Image< T > image, final OutOfBoundsStrategyFactory< T > outOfBoundsFactory ) 
 	{
-		return new ShapeListLocalizableByDimOutOfBoundsCursor< T >( this, image, type, outOfBoundsFactory );
+		return new ShapeListLocalizableByDimOutOfBoundsCursor< T >( this, image, outOfBoundsFactory );
 	}
 	
 	@Override

@@ -83,35 +83,35 @@ public abstract class DynamicContainer<T extends Type<T>, A extends DynamicConta
 	public int getNumPixels() { return numPixels; }
 
 	@Override
-	public DynamicCursor<T> createCursor( final T type, final Image<T> image )
+	public DynamicCursor<T> createCursor( final Image<T> image )
 	{
 		// create a Cursor using a Type that is linked to the container
 		return new DynamicCursor<T>( this, image, linkedType.duplicateTypeOnSameDirectAccessContainer() );
 	}
 
 	@Override
-	public LocalizableByDimCursor<T> createLocalizableByDimCursor( final T type, final Image<T> image )
+	public LocalizableByDimCursor<T> createLocalizableByDimCursor( final Image<T> image )
 	{
 		// create a Cursor using a Type that is linked to the container
 		return new DynamicLocalizableByDimCursor<T>( this, image, linkedType.duplicateTypeOnSameDirectAccessContainer() );
 	}
 
 	@Override
-	public LocalizableByDimCursor<T> createLocalizableByDimCursor( final T type, final Image<T> image, final OutOfBoundsStrategyFactory<T> outOfBoundsFactory )
+	public LocalizableByDimCursor<T> createLocalizableByDimCursor( final Image<T> image, final OutOfBoundsStrategyFactory<T> outOfBoundsFactory )
 	{
 		// create a Cursor using a Type that is linked to the container
 		return new DynamicLocalizableByDimOutOfBoundsCursor<T>( this, image, linkedType.duplicateTypeOnSameDirectAccessContainer(), outOfBoundsFactory );
 	}
 
 	@Override
-	public DynamicLocalizableCursor<T> createLocalizableCursor( final T type, final Image<T> image )
+	public DynamicLocalizableCursor<T> createLocalizableCursor( final Image<T> image )
 	{
 		// create a Cursor using a Type that is linked to the container
 		return new DynamicLocalizableCursor<T>( this, image, linkedType.duplicateTypeOnSameDirectAccessContainer() );	
 	}
 
 	@Override
-	public LocalizablePlaneCursor<T> createLocalizablePlaneCursor( final T type, final Image<T> image )
+	public LocalizablePlaneCursor<T> createLocalizablePlaneCursor( final Image<T> image )
 	{
 		// create a Cursor using a Type that is linked to the container
 		return new DynamicLocalizablePlaneCursor<T>( this, image, linkedType.duplicateTypeOnSameDirectAccessContainer() );

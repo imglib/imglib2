@@ -130,27 +130,32 @@ public class ImagePlusContainer<T extends Type<T>, A extends ArrayDataAccess<A>>
 			return l[ 0 ];
 	}	
 
-	public Cursor<T> createCursor( T type, Image<T> image ) 
+	@Override
+	public Cursor<T> createCursor( final Image<T> image ) 
 	{
 		return new ImagePlusCursor<T>( this, image, linkedType.duplicateTypeOnSameDirectAccessContainer() );
 	}
 
-	public LocalizableCursor<T> createLocalizableCursor( T type, Image<T> image ) 
+	@Override
+	public LocalizableCursor<T> createLocalizableCursor( final Image<T> image ) 
 	{
 		return new ImagePlusLocalizableCursor<T>( this, image, linkedType.duplicateTypeOnSameDirectAccessContainer() );
 	}
-;
-	public LocalizablePlaneCursor<T> createLocalizablePlaneCursor( T type, Image<T> image ) 
+
+	@Override
+	public LocalizablePlaneCursor<T> createLocalizablePlaneCursor( final Image<T> image ) 
 	{
 		return new ImagePlusLocalizablePlaneCursor<T>( this, image, linkedType.duplicateTypeOnSameDirectAccessContainer() );
 	}
-;
-	public LocalizableByDimCursor<T> createLocalizableByDimCursor( T type, Image<T> image ) 
+
+	@Override
+	public LocalizableByDimCursor<T> createLocalizableByDimCursor( final Image<T> image ) 
 	{
 		return new ImagePlusLocalizableByDimCursor<T>( this, image, linkedType.duplicateTypeOnSameDirectAccessContainer() );
 	}
-;
-	public LocalizableByDimCursor<T> createLocalizableByDimCursor( T type, Image<T> image, OutOfBoundsStrategyFactory<T> outOfBoundsFactory ) 
+
+	@Override
+	public LocalizableByDimCursor<T> createLocalizableByDimCursor( final Image<T> image, OutOfBoundsStrategyFactory<T> outOfBoundsFactory ) 
 	{
 		return new ImagePlusLocalizableByDimOutOfBoundsCursor<T>( this, image, linkedType.duplicateTypeOnSameDirectAccessContainer(), outOfBoundsFactory );
 	}

@@ -65,7 +65,7 @@ public class Array<T extends Type<T>, A extends DataAccess> extends DirectAccess
 	public ArrayContainerFactory getFactory() { return factory; }
 	
 	@Override
-	public ArrayCursor<T> createCursor( final T type, final Image<T> image ) 
+	public ArrayCursor<T> createCursor( final Image<T> image ) 
 	{
 		// create a Cursor using a Type that is linked to the container
 		ArrayCursor<T> c = new ArrayCursor<T>( this, image, linkedType.duplicateTypeOnSameDirectAccessContainer() );
@@ -73,7 +73,7 @@ public class Array<T extends Type<T>, A extends DataAccess> extends DirectAccess
 	}
 
 	@Override
-	public ArrayLocalizableCursor<T> createLocalizableCursor( final T type, final Image<T> image ) 
+	public ArrayLocalizableCursor<T> createLocalizableCursor( final Image<T> image ) 
 	{ 
 		// create a Cursor using a Type that is linked to the container
 		ArrayLocalizableCursor<T> c = new ArrayLocalizableCursor<T>( this, image, linkedType.duplicateTypeOnSameDirectAccessContainer() );
@@ -81,7 +81,7 @@ public class Array<T extends Type<T>, A extends DataAccess> extends DirectAccess
 	}
 
 	@Override
-	public ArrayLocalizablePlaneCursor<T> createLocalizablePlaneCursor( final T type, final Image<T> image ) 
+	public ArrayLocalizablePlaneCursor<T> createLocalizablePlaneCursor( final Image<T> image ) 
 	{ 
 		// create a Cursor using a Type that is linked to the container
 		ArrayLocalizablePlaneCursor<T> c = new ArrayLocalizablePlaneCursor<T>( this, image, linkedType.duplicateTypeOnSameDirectAccessContainer() );
@@ -89,7 +89,7 @@ public class Array<T extends Type<T>, A extends DataAccess> extends DirectAccess
 	}
 	
 	@Override
-	public ArrayLocalizableByDimCursor<T> createLocalizableByDimCursor( final T type, final Image<T> image ) 
+	public ArrayLocalizableByDimCursor<T> createLocalizableByDimCursor( final Image<T> image ) 
 	{ 
 		// create a Cursor using a Type that is linked to the container
 		ArrayLocalizableByDimCursor<T> c = new ArrayLocalizableByDimCursor<T>( this, image, linkedType.duplicateTypeOnSameDirectAccessContainer() );
@@ -97,7 +97,7 @@ public class Array<T extends Type<T>, A extends DataAccess> extends DirectAccess
 	}
 	
 	@Override
-	public ArrayLocalizableByDimOutOfBoundsCursor<T> createLocalizableByDimCursor( final T type, final Image<T> image, final OutOfBoundsStrategyFactory<T> outOfBoundsFactory ) 
+	public ArrayLocalizableByDimOutOfBoundsCursor<T> createLocalizableByDimCursor( final Image<T> image, final OutOfBoundsStrategyFactory<T> outOfBoundsFactory ) 
 	{ 
 		// create a Cursor using a Type that is linked to the container
 		ArrayLocalizableByDimOutOfBoundsCursor<T> c = new ArrayLocalizableByDimOutOfBoundsCursor<T>( this, image, linkedType.duplicateTypeOnSameDirectAccessContainer(), outOfBoundsFactory );

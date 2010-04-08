@@ -46,14 +46,12 @@ import mpicbg.imglib.type.Type;
  */
 public abstract class CursorImpl<T extends Type<T>> implements Cursor<T>
 {
-	final protected T type;
 	final protected Image<T> image;
 	final protected Container<T> container;
 	protected boolean isClosed = false, debug = false;
 	
-	public CursorImpl( final Container<T> container, final Image<T> image, final T type )
+	public CursorImpl( final Container<T> container, final Image<T> image )
 	{
-		this.type = type;	
 		this.image = image;
 		this.container = container;
 	}
@@ -66,11 +64,9 @@ public abstract class CursorImpl<T extends Type<T>> implements Cursor<T>
 	}
 	
 	@Override
-	public int getArrayIndex() { return type.getIndex(); }
+	public int getArrayIndex() { return getType().getIndex(); }
 	@Override
 	public Image<T> getImage() { return image; }
-	@Override
-	public T getType() { return type; }
 	@Override
 	public Container<T> getStorageContainer() { return container; }
 	@Override

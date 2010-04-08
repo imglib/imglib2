@@ -39,11 +39,11 @@ import mpicbg.imglib.type.Type;
 
 public interface Container<T extends Type<T>>
 {
-	public Cursor<T> createCursor( T type, Image<T> image );
-	public LocalizableCursor<T> createLocalizableCursor( T type, Image<T> image );
-	public LocalizablePlaneCursor<T> createLocalizablePlaneCursor( T type, Image<T> image );
-	public LocalizableByDimCursor<T> createLocalizableByDimCursor( T type, Image<T> image );
-	public LocalizableByDimCursor<T> createLocalizableByDimCursor( T type, Image<T> image, OutOfBoundsStrategyFactory<T> outOfBoundsFactory );
+	public Cursor<T> createCursor( Image<T> image );
+	public LocalizableCursor<T> createLocalizableCursor( Image<T> image );
+	public LocalizablePlaneCursor<T> createLocalizablePlaneCursor( Image<T> image );
+	public LocalizableByDimCursor<T> createLocalizableByDimCursor( Image<T> image );
+	public LocalizableByDimCursor<T> createLocalizableByDimCursor( Image<T> image, OutOfBoundsStrategyFactory<T> outOfBoundsFactory );
 	
 	public void close();
 

@@ -53,9 +53,9 @@ public class ShapeListLocalizableByDimCursor< T extends Type< T > > extends Curs
 	final protected int numDimensions;
 	final protected int[] position, dimensions;
 	
-	public ShapeListLocalizableByDimCursor( final ShapeList< T > container, final Image< T > image, final T type ) 
+	public ShapeListLocalizableByDimCursor( final ShapeList< T > container, final Image< T > image ) 
 	{
-		super( container, image, type );
+		super( container, image );
 		this.container = container;
 		numDimensions = container.getNumDimensions(); 
 		

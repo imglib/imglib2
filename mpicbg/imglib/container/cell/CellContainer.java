@@ -171,7 +171,7 @@ public class CellContainer<T extends Type<T>, A extends ArrayDataAccess<A>> exte
 	}
 
 	@Override
-	public CellCursor<T> createCursor( final T type, final Image<T> image ) 
+	public CellCursor<T> createCursor( final Image<T> image ) 
 	{ 
 		// create a Cursor using a Type that is linked to the container
 		CellCursor<T> c = new CellCursor<T>( this, image, linkedType.duplicateTypeOnSameDirectAccessContainer() );
@@ -179,7 +179,7 @@ public class CellContainer<T extends Type<T>, A extends ArrayDataAccess<A>> exte
 	}
 	
 	@Override
-	public CellLocalizableCursor<T> createLocalizableCursor( final T type, final Image<T> image ) 
+	public CellLocalizableCursor<T> createLocalizableCursor( final Image<T> image ) 
 	{
 		// create a Cursor using a Type that is linked to the container
 		CellLocalizableCursor<T> c = new CellLocalizableCursor<T>( this, image, linkedType.duplicateTypeOnSameDirectAccessContainer() );
@@ -187,7 +187,7 @@ public class CellContainer<T extends Type<T>, A extends ArrayDataAccess<A>> exte
 	}	
 
 	@Override
-	public CellLocalizablePlaneCursor<T> createLocalizablePlaneCursor( final T type, final Image<T> image ) 
+	public CellLocalizablePlaneCursor<T> createLocalizablePlaneCursor( final Image<T> image ) 
 	{
 		// create a Cursor using a Type that is linked to the container
 		CellLocalizablePlaneCursor<T> c = new CellLocalizablePlaneCursor<T>( this, image, linkedType.duplicateTypeOnSameDirectAccessContainer() );
@@ -195,7 +195,7 @@ public class CellContainer<T extends Type<T>, A extends ArrayDataAccess<A>> exte
 	}	
 	
 	@Override
-	public CellLocalizableByDimCursor<T> createLocalizableByDimCursor( final T type, final Image<T> image ) 
+	public CellLocalizableByDimCursor<T> createLocalizableByDimCursor( final Image<T> image ) 
 	{
 		// create a Cursor using a Type that is linked to the container
 		CellLocalizableByDimCursor<T> c = new CellLocalizableByDimCursor<T>( this, image, linkedType.duplicateTypeOnSameDirectAccessContainer() );
@@ -203,7 +203,7 @@ public class CellContainer<T extends Type<T>, A extends ArrayDataAccess<A>> exte
 	}	
 	
 	@Override
-	public CellLocalizableByDimCursor<T> createLocalizableByDimCursor( final T type, final Image<T> image, final OutOfBoundsStrategyFactory<T> outOfBoundsFactory ) 
+	public CellLocalizableByDimCursor<T> createLocalizableByDimCursor( final Image<T> image, final OutOfBoundsStrategyFactory<T> outOfBoundsFactory ) 
 	{ 
 		// create a Cursor using a Type that is linked to the container
 		CellLocalizableByDimOutOfBoundsCursor<T> c = new CellLocalizableByDimOutOfBoundsCursor<T>( this, image, linkedType.duplicateTypeOnSameDirectAccessContainer(), outOfBoundsFactory );

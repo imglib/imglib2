@@ -50,7 +50,7 @@ public class LocalNeighborhoodCursor<T extends Type<T>> extends CursorImpl<T>
 	
 	public LocalNeighborhoodCursor( final LocalizableByDimCursor<T> cursor )
 	{
-		super( cursor.getStorageContainer(), cursor.getImage(), cursor.getType() );
+		super( cursor.getStorageContainer(), cursor.getImage() );
 		
 		this.cursor = cursor;
 		this.position = cursor.getPosition();

@@ -44,9 +44,9 @@ public class ShapeListLocalizableByDimOutOfBoundsCursor<T extends Type<T>> exten
 	
 	boolean isOutOfBounds = false;
 	
-	public ShapeListLocalizableByDimOutOfBoundsCursor( final ShapeList<T> container, final Image<T> image, final T type, final OutOfBoundsStrategyFactory<T> outOfBoundsStrategyFactory ) 
+	public ShapeListLocalizableByDimOutOfBoundsCursor( final ShapeList<T> container, final Image<T> image, final OutOfBoundsStrategyFactory<T> outOfBoundsStrategyFactory ) 
 	{
-		super( container, image, type );
+		super( container, image );
 		
 		this.outOfBoundsStrategyFactory = outOfBoundsStrategyFactory;
 		this.outOfBoundsStrategy = outOfBoundsStrategyFactory.createStrategy( this );
