@@ -57,12 +57,14 @@ public class BasePairBitType extends TypeImpl<BasePairBitType> implements BasePa
 	public BasePairBitType( DirectAccessContainer<BasePairBitType, ? extends BitAccess> bitStorage )
 	{
 		storage = bitStorage;
+		updateIndex( 0 );
 	}
 	
 	// this is the constructor if you want it to be a variable
 	public BasePairBitType( final Base value )
 	{
 		storage = null;
+		updateIndex( 0 );
 		b = new BitArray( 3 );
 		set( value );
 	}	
@@ -74,7 +76,7 @@ public class BasePairBitType extends TypeImpl<BasePairBitType> implements BasePa
 	public DirectAccessContainer<BasePairBitType, ? extends BitAccess> createSuitableDirectAccessContainer( final DirectAccessContainerFactory storageFactory, final int dim[] )	
 	{
 		// create the container
-		final DirectAccessContainer<BasePairBitType, ? extends BitAccess> container = storageFactory.createBitInstance( dim, 1 );
+		final DirectAccessContainer<BasePairBitType, ? extends BitAccess> container = storageFactory.createBitInstance( dim, 3 );
 		
 		// create a Type that is linked to the container
 		final BasePairBitType linkedType = new BasePairBitType( container );
