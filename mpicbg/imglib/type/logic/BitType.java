@@ -120,6 +120,10 @@ public class BitType extends IntegerTypeImpl<BitType> implements LogicType<BitTy
 			set( false );
 	}
 
+	@Override
+	public double getMaxValue() { return 1; }
+	@Override
+	public double getMinValue()  { return 0; }
 	
 	@Override
 	public void set( final BitType c ) { b.setValue(i, c.get() ); }
