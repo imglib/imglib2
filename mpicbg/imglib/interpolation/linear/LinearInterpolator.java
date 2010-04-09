@@ -40,7 +40,7 @@ import mpicbg.imglib.type.numeric.NumericType;
 public class LinearInterpolator<T extends NumericType<T>> extends InterpolatorImpl<T>
 {
 	final LocalizableByDimCursor<T> cursor;
-	final T cursorType, tmp1, tmp2;
+	final T tmp1, tmp2;
 	
 	// the offset in each dimension and a temporary array for computing the global coordinates
 	final int[] baseDim, location;
@@ -122,7 +122,6 @@ public class LinearInterpolator<T extends NumericType<T>> extends InterpolatorIm
 		// yiels the interpolated value in 3 dimensions
 		
 		cursor = img.createLocalizableByDimCursor( outOfBoundsStrategyFactory );
-		cursorType = cursor.getType();
 		tmp1 = img.createType();
 		tmp2 = img.createType();
 
@@ -156,12 +155,12 @@ public class LinearInterpolator<T extends NumericType<T>> extends InterpolatorIm
 			//                           \   /
 			//  final interpolated value  [0]
 	
-			tree = cursorType.createArray2D( numDimensions + 1, 1 );
+			tree = tmp1.createArray2D( numDimensions + 1, 1 );
 			halfTreeLevelSizes = new int[ numDimensions + 1 ];
 			
 			for ( int d = 0; d < tree.length; d++ )
 			{
-				tree[ d ] = cursorType.createArray1D( MathLib.pow( 2, d ));
+				tree[ d ] = tmp1.createArray1D( MathLib.pow( 2, d ));
 				
 				for ( int i = 0; i < tree[ d ].length; i++ )
 					tree[ d ][ i ] = img.createType();
@@ -236,7 +235,7 @@ public class LinearInterpolator<T extends NumericType<T>> extends InterpolatorIm
 				if ( positions[ i ][ d ] )
 					cursor.fwd(d);
 
-			tree[ numDimensions ][ i ].set( cursorType );
+			tree[ numDimensions ][ i ].set( cursor.getType() );
 			
 			// move back to the offset position
 			for ( int d = 0; d < numDimensions; ++d )
@@ -298,7 +297,7 @@ public class LinearInterpolator<T extends NumericType<T>> extends InterpolatorIm
 				if ( positions[ i ][ d ] )
 					cursor.fwd(d);
 
-			tree[ numDimensions ][ i ].set( cursorType );
+			tree[ numDimensions ][ i ].set( cursor.getType() );
 			
 			// move back to the offset position
 			for ( int d = 0; d < numDimensions; ++d )
