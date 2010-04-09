@@ -63,9 +63,6 @@ public class NearestNeighborInterpolator1D<T extends Type<T>> extends NearestNei
 	
 	@Override
 	public void close() { cursor.close(); }
-
-	@Override
-	public T getType() { return type; }
 	
 	@Override
 	public void moveTo( final float x )
