@@ -35,11 +35,13 @@ import mpicbg.imglib.type.numeric.IntegerType;
 
 public class IntegerTypeDisplay<T extends IntegerType<T>> extends Display<T>
 {
-	public IntegerTypeDisplay( final Image<T> img)
+	public IntegerTypeDisplay( final Image<T> img )
 	{
 		super(img);
-		min = -Integer.MAX_VALUE;
-		max = Integer.MAX_VALUE;
+		
+		final T type = img.createType(); 
+		min = type.getMinValue();
+		max = type.getMaxValue();
 	}	
 
 	@Override
