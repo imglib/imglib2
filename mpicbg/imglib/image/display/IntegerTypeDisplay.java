@@ -48,23 +48,23 @@ public class IntegerTypeDisplay<T extends IntegerType<T>> extends Display<T>
 	public void setMinMax()
 	{
 		final Cursor<T> c = img.createCursor();
-		final T t = c.getType();
 		
 		if ( !c.hasNext() )
 		{
-			min = -Integer.MAX_VALUE;
-			max = Integer.MAX_VALUE;
+			final T type = img.createType(); 
+			min = type.getMinValue();
+			max = type.getMaxValue();
 			return;
 		}
 		
 		c.fwd();
-		min = max = t.getIntegerLong();
+		min = max = c.getType().getIntegerLong();
 
 		while ( c.hasNext() )
 		{
 			c.fwd();
 			
-			final long value = t.getIntegerLong();
+			final long value = c.getType().getIntegerLong();
 
 			if ( value > max )
 				max = value;

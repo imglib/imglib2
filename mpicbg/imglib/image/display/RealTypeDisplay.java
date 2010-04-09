@@ -38,29 +38,33 @@ public class RealTypeDisplay<T extends RealType<T>> extends Display<T>
 	public RealTypeDisplay( final Image<T> img )
 	{
 		super(img);
+
+		final T type = img.createType(); 
+		min = type.getMinValue();
+		max = type.getMaxValue();
 	}	
 	
 	@Override
 	public void setMinMax()
 	{
 		final Cursor<T> c = img.createCursor();
-		final T t = c.getType();
 		
 		if ( !c.hasNext() )
 		{
-			min = -Float.MAX_VALUE;
-			max = Float.MAX_VALUE;
+			final T type = img.createType(); 
+			min = type.getMinValue();
+			max = type.getMaxValue();
 			return;
 		}
 		
 		c.fwd();
-		min = max = t.getRealDouble();
+		min = max = c.getType().getRealDouble();
 
 		while ( c.hasNext() )
 		{
 			c.fwd();
 
-			final double value = t.getRealDouble();
+			final double value = c.getType().getRealDouble();
 			
 			if ( value > max )
 				max = value;			
