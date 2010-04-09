@@ -33,6 +33,7 @@ import mpicbg.imglib.type.numeric.RealType;
 import mpicbg.imglib.type.numeric.RGBALegacyType;
 import mpicbg.imglib.type.numeric.integer.ByteType;
 import mpicbg.imglib.type.numeric.integer.ShortType;
+import mpicbg.imglib.type.numeric.integer.Unsigned12BitType;
 import mpicbg.imglib.type.numeric.integer.UnsignedByteType;
 import mpicbg.imglib.type.numeric.real.FloatType;
 
@@ -96,6 +97,163 @@ public class LOCI
 				return null;
 			}
 						
+		}
+		catch (IOException exc) { System.out.println("LOCI.openLOCI(): Sorry, an error occurred: " + exc.getMessage()); return null;}
+		catch (FormatException exc) {System.out.println("LOCI.openLOCI(): Sorry, an error occurred: " + exc.getMessage()); return null;}		
+	}
+
+	public static Image<Unsigned12BitType> openLOCIUnsigned12BitType( final String fileName, final ContainerFactory factory )
+	{
+		return openLOCIUnsigned12BitType( fileName, new ImageFactory<Unsigned12BitType>( new Unsigned12BitType(), factory ) );
+	}
+	
+	public static Image<Unsigned12BitType> openLOCIUnsigned12BitType( final String fileName, final ImageFactory<Unsigned12BitType> factory )
+	{
+		return openLOCIUnsigned12BitType( "", fileName, factory );
+	}
+	
+	public static Image<Unsigned12BitType> openLOCIUnsigned12BitType( final String path, final String fileName, final ContainerFactory factory )
+	{
+		return openLOCIUnsigned12BitType(path, fileName, new ImageFactory<Unsigned12BitType>( new Unsigned12BitType(), factory ) );
+	}
+
+	public static Image<Unsigned12BitType> openLOCIUnsigned12BitType( final String path, final String fileName, final ImageFactory<Unsigned12BitType> factory )
+	{
+		return openLOCIUnsigned12BitType(path, fileName, factory, -1, -1 );
+	}
+	
+	public static Image<Unsigned12BitType> openLOCIUnsigned12BitType( final String path, final String fileName, final ContainerFactory factory, int from, int to)
+	{
+		return openLOCIUnsigned12BitType( path, fileName, new ImageFactory<Unsigned12BitType>( new Unsigned12BitType(), factory ), from, to );
+	}
+	
+	public static Image<Unsigned12BitType> openLOCIUnsigned12BitType( String path, final String fileName, final ImageFactory<Unsigned12BitType> factory, int from, int to )
+	{				
+		path = checkPath( path );
+		final IFormatReader r = new ChannelSeparator();
+
+		final IMetadata omexmlMeta = MetadataTools.createOMEXMLMetadata();
+		r.setMetadataStore( omexmlMeta );
+
+		final String id = path + fileName;
+		
+		try 
+		{
+			r.setId(id);
+			
+			final boolean isLittleEndian = r.isLittleEndian();			
+			final int width = r.getSizeX();
+			final int height = r.getSizeY();
+			final int depth = r.getSizeZ();
+			int timepoints = r.getSizeT();
+			int channels = r.getSizeC();
+			final int pixelType = r.getPixelType();
+			final int bytesPerPixel = FormatTools.getBytesPerPixel(pixelType); 
+			final String pixelTypeString = FormatTools.getPixelTypeString(pixelType);
+			
+			if ( timepoints > 1 )
+			{
+				System.out.println("LOCI.openLOCI(): More than one timepoint. Not implemented yet. Returning first timepoint");
+				timepoints = 1;
+			}
+			
+			if ( channels > 1 )
+			{
+				System.out.println("LOCI.openLOCI(): More than one channel. Image<ShortType> supports only 1 channel right now, returning the first channel.");
+				channels = 1;
+			}
+			
+			if (!(pixelType == FormatTools.UINT8 || pixelType == FormatTools.UINT16))
+			{
+				System.out.println("LOCI.openLOCI(): PixelType " + pixelTypeString + " not supported by ShortType, returning. ");
+				return null;
+			}
+			
+			final int start, end;			
+			if (from < 0 || to < 0 || to < from)
+			{
+				start = 0; end = depth;
+			}
+			else 
+			{
+				start = from;
+				if (to > depth)
+					end = depth;
+				else 
+					end = to;
+			}
+
+			final Image<Unsigned12BitType> img;
+			
+			if ( end-start == 1)				
+				img = factory.createImage( new int[]{ width, height }, fileName);
+			else
+				img = factory.createImage( new int[]{ width, height, end - start }, fileName);
+
+			if (img == null)
+			{
+				System.out.println("LOCI.openLOCI():  - Could not create image.");
+				return null;
+			}
+			else
+			{
+				System.out.println( "Opening '" + fileName + "' [" + width + "x" + height + "x" + depth + " type=" + pixelTypeString + " image=Image<ShortType>]" ); 
+				img.setName( fileName );
+			}
+			
+			// try read metadata
+			applyMetaData( img, r );
+		
+			final int t = 0;			
+			final byte[][] b = new byte[channels][width * height * bytesPerPixel];
+			
+			final int[] planePos = new int[3];
+			final int planeX = 0;
+			final int planeY = 1;
+									
+			final LocalizablePlaneCursor<Unsigned12BitType> it = img.createLocalizablePlaneCursor();
+			
+			for (int z = start; z < end; z++)
+			{	
+				//System.out.println((z+1) + "/" + (end));
+				
+				// set the z plane iterator to the current z plane
+				planePos[ 2 ] = z - start;
+				it.reset( planeX, planeY, planePos );
+				
+				// read the data from LOCI
+				for (int c = 0; c < channels; c++)
+				{
+					final int index = r.getIndex(z, c, t);
+					r.openBytes(index, b[c]);	
+				}
+				
+				// write data for that plane into the Image structure using the iterator
+				if (channels == 1)
+				{					
+					if (pixelType == FormatTools.UINT8)
+					{						
+						while(it.hasNext())
+						{
+							it.fwd();
+							it.getType().set( (short)(b[ 0 ][ it.getPosition( planeX )+it.getPosition( planeY )*width ] & 0xff) );
+						}						
+					}	
+					else //if (pixelType == FormatTools.UINT16)
+					{
+						while(it.hasNext())
+						{
+							it.fwd();
+							it.getType().set( getShortValue( b[ 0 ], ( it.getPosition( planeX )+it.getPosition( planeY )*width ) * 2, isLittleEndian ) );
+						}
+					}						
+				}				
+			}
+			
+			it.close();
+			
+			return img;			
+			
 		}
 		catch (IOException exc) { System.out.println("LOCI.openLOCI(): Sorry, an error occurred: " + exc.getMessage()); return null;}
 		catch (FormatException exc) {System.out.println("LOCI.openLOCI(): Sorry, an error occurred: " + exc.getMessage()); return null;}		
@@ -210,9 +368,7 @@ public class LOCI
 			final int planeX = 0;
 			final int planeY = 1;
 									
-			LocalizablePlaneCursor<ShortType> it = img.createLocalizablePlaneCursor();
-			final ShortType type = it.getType();
-
+			final LocalizablePlaneCursor<ShortType> it = img.createLocalizablePlaneCursor();
 			
 			for (int z = start; z < end; z++)
 			{	
@@ -237,7 +393,7 @@ public class LOCI
 						while(it.hasNext())
 						{
 							it.fwd();
-							type.set( (short)(b[ 0 ][ it.getPosition( planeX )+it.getPosition( planeY )*width ] & 0xff) );
+							it.getType().set( (short)(b[ 0 ][ it.getPosition( planeX )+it.getPosition( planeY )*width ] & 0xff) );
 						}						
 					}	
 					else //if (pixelType == FormatTools.UINT16)
@@ -245,7 +401,7 @@ public class LOCI
 						while(it.hasNext())
 						{
 							it.fwd();
-							type.set( getShortValue( b[ 0 ], ( it.getPosition( planeX )+it.getPosition( planeY )*width ) * 2, isLittleEndian ) );
+							it.getType().set( getShortValue( b[ 0 ], ( it.getPosition( planeX )+it.getPosition( planeY )*width ) * 2, isLittleEndian ) );
 						}
 					}						
 				}				
@@ -429,9 +585,7 @@ public class LOCI
 			final int planeX = 0;
 			final int planeY = 1;
 									
-			LocalizablePlaneCursor<FloatType> it = img.createLocalizablePlaneCursor();
-			final FloatType type = it.getType();
-
+			final LocalizablePlaneCursor<FloatType> it = img.createLocalizablePlaneCursor();
 			
 			for (int z = start; z < end; z++)
 			{	
@@ -456,7 +610,7 @@ public class LOCI
 						while(it.hasNext())
 						{
 							it.fwd();
-							type.set( b[ 0 ][ it.getPosition( planeX )+it.getPosition( planeY )*width ] & 0xff );
+							it.getType().set( b[ 0 ][ it.getPosition( planeX )+it.getPosition( planeY )*width ] & 0xff );
 						}
 						
 					}	
@@ -465,7 +619,7 @@ public class LOCI
 						while(it.hasNext())
 						{
 							it.fwd();
-							type.set( getShortValue( b[ 0 ], ( it.getPosition( planeX )+it.getPosition( planeY )*width ) * 2, isLittleEndian ) );
+							it.getType().set( getShortValue( b[ 0 ], ( it.getPosition( planeX )+it.getPosition( planeY )*width ) * 2, isLittleEndian ) );
 						}
 					}						
 					else if (pixelType == FormatTools.UINT32)
@@ -475,7 +629,7 @@ public class LOCI
 						while(it.hasNext())
 						{
 							it.fwd();
-							type.set( getIntValue( b[ 0 ], ( it.getPosition( planeX )+it.getPosition( planeY )*width )*4, isLittleEndian ) );
+							it.getType().set( getIntValue( b[ 0 ], ( it.getPosition( planeX )+it.getPosition( planeY )*width )*4, isLittleEndian ) );
 						}
 
 					}
@@ -484,7 +638,7 @@ public class LOCI
 						while(it.hasNext())
 						{
 							it.fwd();
-							type.set( getFloatValue( b[ 0 ], ( it.getPosition( planeX )+it.getPosition( planeY )*width )*4, isLittleEndian ) );
+							it.getType().set( getFloatValue( b[ 0 ], ( it.getPosition( planeX )+it.getPosition( planeY )*width )*4, isLittleEndian ) );
 						}
 
 					}
@@ -872,9 +1026,7 @@ public class LOCI
 			final int planeX = 0;
 			final int planeY = 1;
 									
-			LocalizablePlaneCursor<RGBALegacyType> it = img.createLocalizablePlaneCursor();
-			final RGBALegacyType type = it.getType();
-
+			final LocalizablePlaneCursor<RGBALegacyType> it = img.createLocalizablePlaneCursor();
 			
 			for (int z = start; z < end; z++)
 			{	
@@ -899,7 +1051,7 @@ public class LOCI
 					for ( int channel = 0; channel < channels; ++channel )
 						col[ channels - channel - 1 ] = b[ channel ][ it.getPosition( planeX )+it.getPosition( planeY )*width ];						
 					
-					type.set( RGBALegacyType.rgba( col[ 0 ], col[ 1 ], col[ 2 ], 0) );
+					it.getType().set( RGBALegacyType.rgba( col[ 0 ], col[ 1 ], col[ 2 ], 0) );
 				}						
 			}
 			
