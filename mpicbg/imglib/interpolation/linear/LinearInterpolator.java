@@ -35,9 +35,9 @@ import mpicbg.imglib.image.Image;
 import mpicbg.imglib.interpolation.InterpolatorFactory;
 import mpicbg.imglib.interpolation.InterpolatorImpl;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
-import mpicbg.imglib.type.numeric.RealType;
+import mpicbg.imglib.type.numeric.NumericType;
 
-public class LinearInterpolator<T extends RealType<T>> extends InterpolatorImpl<T>
+public class LinearInterpolator<T extends NumericType<T>> extends InterpolatorImpl<T>
 {
 	final LocalizableByDimCursor<T> cursor;
 	final T cursorType, tmp1, tmp2;

@@ -32,9 +32,9 @@ package mpicbg.imglib.interpolation.linear;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.interpolation.InterpolatorFactory;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
-import mpicbg.imglib.type.numeric.RealType;
+import mpicbg.imglib.type.numeric.NumericType;
 
-public class LinearInterpolator1D<T extends RealType<T>> extends LinearInterpolator<T> 
+public class LinearInterpolator1D<T extends NumericType<T>> extends LinearInterpolator<T> 
 {
 	final int[] tmpLocation;
 

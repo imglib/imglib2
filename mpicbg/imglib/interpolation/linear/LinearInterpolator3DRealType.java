@@ -32,13 +32,13 @@ package mpicbg.imglib.interpolation.linear;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.interpolation.InterpolatorFactory;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
-import mpicbg.imglib.type.numeric.real.FloatType;
+import mpicbg.imglib.type.numeric.RealType;
 
-public class LinearInterpolator3DFloat extends LinearInterpolator<FloatType> 
+public class LinearInterpolator3DRealType<T extends RealType<T>> extends LinearInterpolator<T> 
 {
 	final int tmpLocation[];
 
-	protected LinearInterpolator3DFloat( final Image<FloatType> img, final InterpolatorFactory<FloatType> interpolatorFactory, final OutOfBoundsStrategyFactory<FloatType> outOfBoundsStrategyFactory )
+	protected LinearInterpolator3DRealType( final Image<T> img, final InterpolatorFactory<T> interpolatorFactory, final OutOfBoundsStrategyFactory<T> outOfBoundsStrategyFactory )
 	{
 		super( img, interpolatorFactory, outOfBoundsStrategyFactory, false );
 		
@@ -47,7 +47,7 @@ public class LinearInterpolator3DFloat extends LinearInterpolator<FloatType>
 	}
 	
 	@Override
-	public FloatType getType() { return tmp2; }
+	public T getType() { return tmp2; }
 	
 	@Override
 	public void moveTo( final float[] position )
@@ -95,35 +95,35 @@ public class LinearInterpolator3DFloat extends LinearInterpolator<FloatType>
 		//     y0    y1
 
         //final float y0 = strategy.get(baseX1    , baseX2,     baseX3);
-        final float y0 = cursor.getType().get(); 
+        final float y0 = cursor.getType().getRealFloat(); 
         
         //final float y1 = strategy.get(baseX1 + 1, baseX2,     baseX3);
         cursor.fwd( 0 );
-        final float y1 = cursor.getType().get(); 
+        final float y1 = cursor.getType().getRealFloat(); 
         
         //final float y2 = strategy.get(baseX1 + 1, baseX2 + 1, baseX3);
         cursor.fwd( 1 );
-        final float y2 = cursor.getType().get(); 
+        final float y2 = cursor.getType().getRealFloat(); 
                 
         //final float y3 = strategy.get(baseX1    , baseX2 + 1, baseX3);
         cursor.bck( 0 );
-        final float y3 = cursor.getType().get(); 
+        final float y3 = cursor.getType().getRealFloat(); 
         
         //final float y7 = strategy.get(baseX1    , baseX2 + 1, baseX3 + 1);
         cursor.fwd( 2 );
-        final float y7 = cursor.getType().get();
+        final float y7 = cursor.getType().getRealFloat();
 
         //final float y6 = strategy.get(baseX1 + 1, baseX2 + 1, baseX3 + 1);
         cursor.fwd( 0 );
-        final float y6 = cursor.getType().get();
+        final float y6 = cursor.getType().getRealFloat();
 
         //final float y5 = strategy.get(baseX1 + 1, baseX2,     baseX3 + 1);
         cursor.bck( 1 );
-        final float y5 = cursor.getType().get();
+        final float y5 = cursor.getType().getRealFloat();
         
         //final float y4 = strategy.get(baseX1    , baseX2,	  baseX3 + 1);
         cursor.bck( 0 );
-        final float y4 = cursor.getType().get();        
+        final float y4 = cursor.getType().getRealFloat();        
 
         // weights
         final float t = x - baseX1; 
@@ -137,7 +137,7 @@ public class LinearInterpolator3DFloat extends LinearInterpolator<FloatType>
         final float value = t1*u1*v1*y0 + t*u1*v1*y1 + t*u*v1*y2 + t1*u*v1*y3 + 
                             t1*u1*v*y4  + t*u1*v*y5  + t*u*v*y6  + t1*u*v*y7;
         
-        tmp2.set( value );
+        tmp2.setReal( value );
 	}
 	
 	@Override
@@ -186,35 +186,35 @@ public class LinearInterpolator3DFloat extends LinearInterpolator<FloatType>
 		//     y0    y1
 
         //final float y0 = strategy.get(baseX1    , baseX2,     baseX3);
-        final float y0 = cursor.getType().get(); 
+        final float y0 = cursor.getType().getRealFloat(); 
         
         //final float y1 = strategy.get(baseX1 + 1, baseX2,     baseX3);
         cursor.fwd( 0 );
-        final float y1 = cursor.getType().get(); 
+        final float y1 = cursor.getType().getRealFloat(); 
         
         //final float y2 = strategy.get(baseX1 + 1, baseX2 + 1, baseX3);
         cursor.fwd( 1 );
-        final float y2 = cursor.getType().get(); 
+        final float y2 = cursor.getType().getRealFloat(); 
                 
         //final float y3 = strategy.get(baseX1    , baseX2 + 1, baseX3);
         cursor.bck( 0 );
-        final float y3 = cursor.getType().get(); 
+        final float y3 = cursor.getType().getRealFloat(); 
         
         //final float y7 = strategy.get(baseX1    , baseX2 + 1, baseX3 + 1);
         cursor.fwd( 2 );
-        final float y7 = cursor.getType().get();
+        final float y7 = cursor.getType().getRealFloat();
 
         //final float y6 = strategy.get(baseX1 + 1, baseX2 + 1, baseX3 + 1);
         cursor.fwd( 0 );
-        final float y6 = cursor.getType().get();
+        final float y6 = cursor.getType().getRealFloat();
 
         //final float y5 = strategy.get(baseX1 + 1, baseX2,     baseX3 + 1);
         cursor.bck( 1 );
-        final float y5 = cursor.getType().get();
+        final float y5 = cursor.getType().getRealFloat();
         
         //final float y4 = strategy.get(baseX1    , baseX2,	  baseX3 + 1);
         cursor.bck( 0 );
-        final float y4 = cursor.getType().get();        
+        final float y4 = cursor.getType().getRealFloat();        
 
         // weights
         final float t = x - baseX1; 
@@ -228,7 +228,7 @@ public class LinearInterpolator3DFloat extends LinearInterpolator<FloatType>
         final float value = t1*u1*v1*y0 + t*u1*v1*y1 + t*u*v1*y2 + t1*u*v1*y3 + 
                             t1*u1*v*y4  + t*u1*v*y5  + t*u*v*y6  + t1*u*v*y7;
         
-        tmp2.set( value );
+        tmp2.setReal( value );
 	}	
 	
 }
