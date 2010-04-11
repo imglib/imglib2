@@ -42,5 +42,4 @@ public interface Iterable
 {
 	public void fwd( long steps );
 	public void fwd();
-	public void reset();
 }
