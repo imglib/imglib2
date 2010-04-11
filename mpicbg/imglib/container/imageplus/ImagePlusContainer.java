@@ -82,7 +82,7 @@ public class ImagePlusContainer<T extends Type<T>, A extends ArrayDataAccess<A>>
 		this( factory, dim, entitiesPerPixel );				
 		
 		for ( int i = 0; i < depth; ++i )
-			mirror.add( creator.createArray( width * height ));
+			mirror.add( creator.createArray( width * height * entitiesPerPixel ));
 	}
 
 	public ImagePlus getImagePlus() throws ImgLibException 
