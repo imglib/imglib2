@@ -32,8 +32,8 @@ package mpicbg.imglib.cursor.cell;
 import mpicbg.imglib.container.array.Array;
 import mpicbg.imglib.container.cell.CellContainer;
 import mpicbg.imglib.cursor.LocalizableByDimCursor;
-import mpicbg.imglib.cursor.LocalizableCursor;
 import mpicbg.imglib.cursor.array.ArrayLocalizableByDimCursor;
+import mpicbg.imglib.cursor.Localizable;
 import mpicbg.imglib.cursor.special.LocalNeighborhoodCursor;
 import mpicbg.imglib.cursor.special.LocalNeighborhoodCursorFactory;
 import mpicbg.imglib.cursor.special.RegionOfInterestCursor;
@@ -273,16 +273,16 @@ public class CellLocalizableByDimCursor<T extends Type<T>> extends CellLocalizab
 	}
 	
 	@Override
-	public void moveTo( final LocalizableCursor<?> cursor )
+	public void moveTo( final Localizable localizable )
 	{
-		cursor.getPosition( tmp );
+		localizable.getPosition( tmp );
 		moveTo( tmp );
 	}
 
 	@Override
-	public void setPosition( final LocalizableCursor<?> cursor )
+	public void setPosition( final Localizable localizable )
 	{
-		cursor.getPosition( tmp );
+		localizable.getPosition( tmp );
 		setPosition( tmp );
 	}
 	

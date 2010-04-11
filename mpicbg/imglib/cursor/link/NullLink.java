@@ -1,6 +1,6 @@
 package mpicbg.imglib.cursor.link;
 
-import mpicbg.imglib.cursor.LocalizableCursor;
+import mpicbg.imglib.cursor.Localizable;
 
 final public class NullLink implements CursorLink
 {
@@ -33,7 +33,7 @@ final public class NullLink implements CursorLink
 	}
 
 	@Override
-	final public void moveTo(final LocalizableCursor<?> cursor)
+	final public void moveTo( final Localizable localizable )
 	{
 		// TODO Auto-generated method stub
 		
@@ -47,7 +47,7 @@ final public class NullLink implements CursorLink
 	}
 
 	@Override
-	final public void setPosition(final LocalizableCursor<?> cursor)
+	final public void setPosition( final Localizable localizable )
 	{
 		// TODO Auto-generated method stub
 		

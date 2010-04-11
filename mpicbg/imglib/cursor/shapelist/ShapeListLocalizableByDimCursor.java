@@ -30,7 +30,7 @@ package mpicbg.imglib.cursor.shapelist;
 import mpicbg.imglib.container.shapelist.ShapeList;
 import mpicbg.imglib.cursor.CursorImpl;
 import mpicbg.imglib.cursor.LocalizableByDimCursor;
-import mpicbg.imglib.cursor.LocalizableCursor;
+import mpicbg.imglib.cursor.Localizable;
 import mpicbg.imglib.cursor.special.LocalNeighborhoodCursor;
 import mpicbg.imglib.cursor.special.LocalNeighborhoodCursorFactory;
 import mpicbg.imglib.cursor.special.RegionOfInterestCursor;
@@ -142,15 +142,15 @@ public class ShapeListLocalizableByDimCursor< T extends Type< T > > extends Curs
 	}
 
 	@Override
-	public void moveTo( final LocalizableCursor<?> cursor )
+	public void moveTo( final Localizable localizable )
 	{
-		cursor.getPosition( position );
+		localizable.getPosition( position );
 	}
 
 	@Override
-	public void setPosition( final LocalizableCursor<?> cursor )
+	public void setPosition( final Localizable localizable )
 	{
-		cursor.getPosition( position );
+		localizable.getPosition( position );
 	}
 	
 	@Override

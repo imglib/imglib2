@@ -31,7 +31,7 @@ package mpicbg.imglib.cursor.shapelist;
 
 import mpicbg.imglib.container.shapelist.ShapeList;
 import mpicbg.imglib.cursor.LocalizableByDimCursor;
-import mpicbg.imglib.cursor.LocalizableCursor;
+import mpicbg.imglib.cursor.Localizable;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategy;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
@@ -230,16 +230,14 @@ public class ShapeListLocalizableByDimOutOfBoundsCursor<T extends Type<T>> exten
 	}
 	
 	@Override
-	public void moveTo( final LocalizableCursor<?> cursor )
+	public void moveTo( final Localizable localizable )
 	{
-		final int[] position = cursor.getPosition();
-		moveTo( position );
+		moveTo( localizable.getPosition() );
 	}
 
 	@Override
-	public void setPosition( final LocalizableCursor<?> cursor )
+	public void setPosition( final Localizable localizable )
 	{
-		final int[] position = cursor.getPosition();
-		setPosition( position );
+		setPosition( localizable.getPosition() );
 	}
 }
