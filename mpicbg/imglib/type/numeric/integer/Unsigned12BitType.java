@@ -72,7 +72,7 @@ public class Unsigned12BitType extends IntegerTypeImpl<Unsigned12BitType>
 	{
 		// create the container
 		final DirectAccessContainer<Unsigned12BitType, ? extends BitAccess> container = storageFactory.createBitInstance( dim, 12 );
-		int a = 0;
+		
 		// create a Type that is linked to the container
 		final Unsigned12BitType linkedType = new Unsigned12BitType( container );
 		
