@@ -6,6 +6,7 @@ import ij.ImagePlus;
 import java.awt.Polygon;
 import java.awt.Rectangle;
 
+import mpicbg.imglib.algorithm.transformation.ImageTransform;
 import mpicbg.imglib.container.array.ArrayContainerFactory;
 import mpicbg.imglib.container.cell.CellContainerFactory;
 import mpicbg.imglib.container.shapelist.ShapeList;
@@ -14,6 +15,8 @@ import mpicbg.imglib.cursor.LocalizableCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.ImageFactory;
 import mpicbg.imglib.image.display.imagej.ImageJFunctions;
+import mpicbg.imglib.interpolation.linear.LinearInterpolatorFactory;
+import mpicbg.imglib.outofbounds.OutOfBoundsStrategyValueFactory;
 import mpicbg.imglib.type.numeric.RealType;
 import mpicbg.imglib.type.numeric.integer.ByteType;
 import mpicbg.models.AffineModel3D;
@@ -78,16 +81,10 @@ public class TestShapeList
 		//arrayImp.getProcessor().setMinAndMax( 0, 255 );
 		//arrayImp.updateAndDraw();
 		/* ----------------------------------------------------------------- */
-
 		
 		
 		/* Copy content rotated into another container */
 		final CellContainerFactory cellFactory = new CellContainerFactory();
-		final Image< ByteType > cellImage = new ImageFactory< ByteType >( new ByteType(), cellFactory ).createImage( new int[]{ 200, 200, depth }, "Rotated CellContainer" );
-		final LocalizableCursor< ByteType > cCell = cellImage.createLocalizableCursor();
-		
-		final int[] iLocation = new int[ cellImage.getNumDimensions() ];
-		final float[] fLocation = new float[ cellImage.getNumDimensions() ];
 		final AffineModel3D affine = new AffineModel3D();
 		affine.set(
 				0.7660444f, -0.6427875f, 0.0f, 0.0f,
@@ -97,6 +94,24 @@ public class TestShapeList
 		translation.set( 100, 0, -15 );
 		
 		affine.preConcatenate( translation );
+		
+		final ImageTransform<ByteType> transform = new ImageTransform<ByteType>( shapeListImage, affine, new LinearInterpolatorFactory<ByteType>( new OutOfBoundsStrategyValueFactory<ByteType>() ) );
+		transform.setOutputImageFactory( new ImageFactory< ByteType >( new ByteType(), cellFactory ) );
+		
+		if ( !transform.checkInput() || !transform.process() )
+		{
+			System.out.println( transform.getErrorMessage() );
+			return;
+		}
+		
+		final Image<ByteType> cellImage = transform.getResult();
+		
+		/*
+		final Image< ByteType > cellImage = new ImageFactory< ByteType >( new ByteType(), cellFactory ).createImage( new int[]{ 200, 200, depth }, "Rotated CellContainer" );
+		final LocalizableCursor< ByteType > cCell = cellImage.createLocalizableCursor();
+		
+		final int[] iLocation = new int[ cellImage.getNumDimensions() ];
+		final float[] fLocation = new float[ cellImage.getNumDimensions() ];
 		
 		while ( cCell.hasNext() )
 		{
@@ -118,7 +133,8 @@ public class TestShapeList
 			try { cCell.getType().set( cShapeList.getType() ); }
 			catch ( final IndexOutOfBoundsException e ){}
 		}
-
+		*/
+		
 		cellImage.getDisplay().setMinMax();
 		final ImagePlus cellImp = ImageJFunctions.displayAsVirtualStack( cellImage );
 		cellImp.show();
