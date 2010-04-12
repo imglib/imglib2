@@ -20,7 +20,6 @@ import mpicbg.imglib.outofbounds.OutOfBoundsStrategyValueFactory;
 import mpicbg.imglib.type.numeric.RealType;
 import mpicbg.imglib.type.numeric.integer.ByteType;
 import mpicbg.models.AffineModel3D;
-import mpicbg.models.NoninvertibleModelException;
 import mpicbg.models.TranslationModel3D;
 
 /**
