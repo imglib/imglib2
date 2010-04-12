@@ -49,9 +49,11 @@ public class TestShapeList
 			shapeList.addShape( new Polygon( new int[]{ 90 + i, 180 - 2 * i, 190 - 4 * i, 120 - 2 * i }, new int[]{ 90, 80 + i, 140 - 3 * i, 130 - 2 * i }, 4 ), new ByteType( ( byte )127 ), new int[]{ i } );
 		}
 		
+		shapeListImage.getDisplay().setMinMax();
 		final ImagePlus shapeListImp = ImageJFunctions.displayAsVirtualStack( shapeListImage );
 		shapeListImp.show();
-		shapeListImp.getProcessor().setMinAndMax( 0, 255 );
+		//shapeListImp.getProcessor().setMinAndMax( 0, 255 );
+		//shapeListImp.updateAndDraw();
 		/* ----------------------------------------------------------------- */
 
 
@@ -70,9 +72,11 @@ public class TestShapeList
 			cArray.getType().set( cShapeList.getType() );
 		}
 
+		arrayImage.getDisplay().setMinMax();
 		final ImagePlus arrayImp = ImageJFunctions.displayAsVirtualStack( arrayImage );
 		arrayImp.show();
-		arrayImp.getProcessor().setMinAndMax( 0, 255 );
+		//arrayImp.getProcessor().setMinAndMax( 0, 255 );
+		//arrayImp.updateAndDraw();
 		/* ----------------------------------------------------------------- */
 
 		
@@ -115,9 +119,11 @@ public class TestShapeList
 			catch ( final IndexOutOfBoundsException e ){}
 		}
 
+		cellImage.getDisplay().setMinMax();
 		final ImagePlus cellImp = ImageJFunctions.displayAsVirtualStack( cellImage );
 		cellImp.show();
-		cellImp.getProcessor().setMinAndMax( 0, 255 );
+		//cellImp.getProcessor().setMinAndMax( 0, 255 );
+		//cellImp.updateAndDraw();
 		/* ----------------------------------------------------------------- */
 
 		

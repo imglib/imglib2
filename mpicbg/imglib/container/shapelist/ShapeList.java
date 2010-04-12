@@ -31,7 +31,6 @@ import java.awt.Shape;
 import java.util.ArrayList;
 
 import mpicbg.imglib.container.ContainerImpl;
-import mpicbg.imglib.container.PixelGridContainerImpl;
 import mpicbg.imglib.cursor.shapelist.ShapeListLocalizableByDimCursor;
 import mpicbg.imglib.cursor.shapelist.ShapeListLocalizableByDimOutOfBoundsCursor;
 import mpicbg.imglib.cursor.shapelist.ShapeListLocalizablePlaneCursor;
@@ -61,8 +60,10 @@ public class ShapeList< T extends Type< T > > extends ContainerImpl< T >
 		super( factory, dim );
 		this.factory = factory;
 		
-		final int n = PixelGridContainerImpl.getNumPixels( dim );
-
+		int n = 1;
+		for ( int d = 2; d < dim.length; ++d )
+			n *= dim[ d ];
+		
 		shapeLists = new ArrayList< ArrayList< Shape > > ( n );
 		typeLists = new ArrayList< ArrayList< T > > ( n );
 		

@@ -3,7 +3,7 @@ package mpicbg.imglib.cursor.link;
 import mpicbg.imglib.cursor.Localizable;
 
 final public class NullLink implements CursorLink
-{
+{	
 	@Override
 	final public void bck( final int dim ) {}
 
