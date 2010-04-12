@@ -1,6 +1,4 @@
-//
-// ImgLibTest.java
-//
+package tests;
 
 import ij.IJ;
 import ij.ImageJ;
