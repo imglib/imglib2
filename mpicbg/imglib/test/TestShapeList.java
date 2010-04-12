@@ -1,5 +1,6 @@
 package mpicbg.imglib.test;
 
+import ij.ImageJ;
 import ij.ImagePlus;
 
 import java.awt.Polygon;
@@ -32,6 +33,8 @@ public class TestShapeList
 	 */
 	public static < T extends RealType< T > > void main( String[] args )
 	{
+		new ImageJ();
+		
 		final int depth = 50;
 		
 
@@ -49,7 +52,6 @@ public class TestShapeList
 		final ImagePlus shapeListImp = ImageJFunctions.displayAsVirtualStack( shapeListImage );
 		shapeListImp.show();
 		shapeListImp.getProcessor().setMinAndMax( 0, 255 );
-		shapeListImp.updateAndDraw();
 		/* ----------------------------------------------------------------- */
 
 
@@ -71,7 +73,6 @@ public class TestShapeList
 		final ImagePlus arrayImp = ImageJFunctions.displayAsVirtualStack( arrayImage );
 		arrayImp.show();
 		arrayImp.getProcessor().setMinAndMax( 0, 255 );
-		arrayImp.updateAndDraw();
 		/* ----------------------------------------------------------------- */
 
 		
@@ -117,9 +118,13 @@ public class TestShapeList
 		final ImagePlus cellImp = ImageJFunctions.displayAsVirtualStack( cellImage );
 		cellImp.show();
 		cellImp.getProcessor().setMinAndMax( 0, 255 );
-		cellImp.updateAndDraw();
 		/* ----------------------------------------------------------------- */
 
+		
+		shapeListImp.updateAndDraw();
+		arrayImp.updateAndDraw();
+		cellImp.updateAndDraw();
+		
 		
 		try
 		{
