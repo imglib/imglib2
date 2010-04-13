@@ -147,7 +147,7 @@ public class ShapeList< T extends Type< T > > extends ContainerImpl< T >
 	 * @param p pre-multiplied index of all dimensions >1
 	 * @return
 	 */
-	public T getShapeType( final int x, final int y, final int p )
+	protected T getShapeType( final int x, final int y, final int p )
 	{
 		final ArrayList< Shape > shapeList = shapeLists.get( p );
 		for ( int i = shapeList.size() - 1; i >= 0; --i )

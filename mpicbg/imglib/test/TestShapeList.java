@@ -10,6 +10,7 @@ import mpicbg.imglib.algorithm.transformation.ImageTransform;
 import mpicbg.imglib.container.array.ArrayContainerFactory;
 import mpicbg.imglib.container.cell.CellContainerFactory;
 import mpicbg.imglib.container.shapelist.ShapeList;
+import mpicbg.imglib.container.shapelist.ShapeListCached;
 import mpicbg.imglib.cursor.LocalizableByDimCursor;
 import mpicbg.imglib.cursor.LocalizableCursor;
 import mpicbg.imglib.image.Image;
@@ -41,7 +42,7 @@ public class TestShapeList
 		
 
 		/* Create ShapeList */
-		final ShapeList< ByteType > shapeList = new ShapeList<ByteType>( new int[]{ 200, 200, depth },  new ByteType( ) );
+		final ShapeList< ByteType > shapeList = new ShapeListCached<ByteType>( new int[]{ 200, 200, depth },  new ByteType( ) );
 		final Image< ByteType > shapeListImage = new Image< ByteType >( shapeList, shapeList.getBackground(), "ShapeListContainer" ); 
 		
 		/* add some shapes */
