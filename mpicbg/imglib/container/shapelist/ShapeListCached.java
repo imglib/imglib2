@@ -39,17 +39,25 @@ public class ShapeListCached<T extends Type<T> > extends ShapeList<T>
 	public T getShapeType( final int[] position )
 	{
 		final int index = fakeArray.getPos( position );
+
+		final T value;
 		
-		final T value = cache.get( index );
+		synchronized ( cache )
+		{
+			value = cache.get( index );
+		}
 		
 		if ( value == null )
 		{
 			final T t = super.getShapeType( position );
 			
-			queue.add( index );
-			cache.put( index , t );
-			
-			cache.remove( queue.removeFirst() );
+			synchronized ( cache )
+			{
+				queue.add( index );
+				cache.put( index , t );
+				
+				cache.remove( queue.removeFirst() );				
+			}
 			
 			return t;
 		}
