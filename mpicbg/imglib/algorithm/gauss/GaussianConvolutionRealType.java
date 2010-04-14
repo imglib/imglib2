@@ -29,10 +29,10 @@ public class GaussianConvolutionRealType<T extends RealType<T>> extends Gaussian
 		 	   				 final int dim, final float[] kernel,
 		 	   				 final long startPos, final long loopSize )
 	{
-		if ( precision == PrecisionReal.Double )
-			convolveDouble( inputIterator, outputIterator, dim, kernel, startPos, loopSize );
-		else
+		if ( precision == PrecisionReal.Float )
 			convolveFloat( inputIterator, outputIterator, dim, kernel, startPos, loopSize );
+		else
+			convolveDouble( inputIterator, outputIterator, dim, kernel, startPos, loopSize );
 	}
 	
 	protected void convolveDouble( final LocalizableByDimCursor<T> inputIterator, final LocalizableCursor<T> outputIterator, final int dim, final float[] kernel, final long startPos, final long loopSize )
