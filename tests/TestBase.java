@@ -27,12 +27,20 @@ import mpicbg.imglib.type.numeric.FloatType;
  * should be, in which case you can use a signature for verification: the 1st
  * and 2nd order moments of the intensity, and the moments of
  * intensity * pos[i] for i = 0, .., dim-1
+ *
+ * @author Johannes Schindelin
  */
 public class TestBase {
+	/**
+	 * An interface for image generators
+	 */
 	protected interface Function {
 		public float calculate( int[] pos );
 	}
 
+	/**
+	 * Check whether an image is identical to a generated image
+	 */
 	protected<T extends NumericType<T>> boolean match( Image<T> image, Function function ) {
 		LocalizableCursor<T> cursor = image.createLocalizableCursor();
 		int[] pos = new int[cursor.getNumDimensions()];
@@ -46,6 +54,9 @@ public class TestBase {
 		return true;
 	}
 
+	/**
+	 * Check whether an image is identical to a generated image, with fuzz
+	 */
 	protected<T extends NumericType<T>> boolean match( Image<T> image, Function function, float tolerance ) {
 		LocalizableCursor<T> cursor = image.createLocalizableCursor();
 		int[] pos = new int[cursor.getNumDimensions()];
@@ -59,12 +70,22 @@ public class TestBase {
 		return true;
 	}
 
+	/**
+	 * Calculate an image signature
+	 *
+	 * The image signature are 1st and 2nd order moments of the intensity and the coordinates.
+	 */
 	protected<T extends NumericType<T>> float[] signature( Image<T> image ) {
 		float[] result = new float[( image.getNumDimensions() + 1 ) * 2];
 		signature( image, result );
 		return result;
 	}
 
+	/**
+	 * Calculate an image signature
+	 *
+	 * The image signature are 1st and 2nd order moments of the intensity and the coordinates.
+	 */
 	protected<T extends NumericType<T>> void signature( Image<T> image, float[] result ) {
 		Arrays.fill( result, 0 );
 		LocalizableCursor<T> cursor = image.createLocalizableCursor();
@@ -97,11 +118,21 @@ public class TestBase {
 		result[dim + 1] = ( float )Math.sqrt( result[dim + 1] / total - result[0] * result[0] );
 	}
 
+	/**
+	 * Verify that an image has a certain image signature
+	 *
+	 * When it is hard/computationally expensive to calculate the values of the expected image, we need a quick test like this one.
+	 */
 	protected<T extends NumericType<T>> boolean matchSignature( Image<T> image, float[] signature) {
 		float[] result = signature(image);
 		return Arrays.equals( result, signature );
 	}
 
+	/**
+	 * Verify that an image has a certain image signature, with fuzz
+	 *
+	 * When it is hard/computationally expensive to calculate the values of the expected image, we need a quick test like this one.
+	 */
 	protected<T extends NumericType<T>> boolean matchSignature( Image<T> image, float[] signature, float tolerance) {
 		float[] result = signature(image);
 		for (int i = 0; i < signature.length; i++)
@@ -110,6 +141,9 @@ public class TestBase {
 		return true;
 	}
 
+	/**
+	 * Convenience helper to access single pixels
+	 */
 	protected<T extends NumericType<T>> float get( Image<T> image, int[] pos ) {
 		LocalizableByDimCursor<T> cursor = image.createLocalizableByDimCursor();
 		cursor.setPosition( pos );
@@ -118,10 +152,16 @@ public class TestBase {
 		return result;
 	}
 
+	/**
+	 * Convenience helper to access single pixels
+	 */
 	protected<T extends NumericType<T>> float get3D( Image<T> image, int x, int y, int z ) {
 		return get( image, new int[] { x, y, z } );
 	}
 
+	/**
+	 * Generate an image
+	 */
 	protected<T extends NumericType<T>> Image<T> makeImage( T type, Function function, int[] dims ) {
 		ImageFactory<T> factory = new ImageFactory<T>(type, new ArrayContainerFactory());
 		Image<T> result = factory.createImage( dims );
@@ -137,6 +177,9 @@ public class TestBase {
 		return result;
 	}
 
+	/**
+	 * Test image generator (of a hopefully complex-enough image)
+	 */
 	protected class TestGenerator implements Function {
 		float factor;
 
@@ -149,6 +192,11 @@ public class TestBase {
 		}
 	}
 
+	/**
+	 * Test image generator
+	 *
+	 * This test image is 0 everywhere, except at the given coordinate, where it is 1.
+	 */
 	protected class SinglePixel3D implements Function {
 		int x, y, z;
 
@@ -161,14 +209,23 @@ public class TestBase {
 		}
 	}
 
+	/**
+	 * Generate a test image
+	 */
 	protected Image<FloatType> makeTestImage3D( int cubeLength ) {
 		return makeImage( new FloatType(), new TestGenerator( cubeLength ), new int[] { cubeLength, cubeLength, cubeLength });
 	}
 
+	/**
+	 * Generate a test image
+	 */
 	protected Image<FloatType> makeSinglePixel3D( int cubeLength, int x, int y, int z ) {
 		return makeImage( new FloatType(), new SinglePixel3D( x, y, z ), new int[] { cubeLength, cubeLength, cubeLength });
 	}
 
+	/**
+	 * Convenience method to display a tuple of floats, such as the image signature
+	 */
 	public String toString( float[] array ) {
 		if (array == null)
 			return "(null)";
