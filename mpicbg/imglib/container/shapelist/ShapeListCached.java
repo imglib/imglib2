@@ -62,8 +62,8 @@ public class ShapeListCached<T extends Type<T> > extends ShapeList<T>
 		this( dim, background, 32 );
 	}
 	
-	public ShapeListCache<T> getShapeListCache() { return cache; }
-	public void setShapeListCache( final ShapeListCache<T> cache ) { this.cache = cache; }
+	public ShapeListCache<T> getShapeListCachingStrategy() { return cache; }
+	public void setShapeListCachingStrategy( final ShapeListCache<T> cache ) { this.cache = cache; }
 
 	@Override
 	public ShapeListLocalizablePlaneCursor< T > createLocalizablePlaneCursor( final Image< T > image ) 
