@@ -1,5 +1,7 @@
 package mpicbg.imglib.algorithm.transformation;
 
+import java.util.ArrayList;
+
 import ij.IJ;
 import mpicbg.imglib.algorithm.math.MathLib;
 import mpicbg.imglib.cursor.LocalizableCursor;
@@ -9,6 +11,7 @@ import mpicbg.imglib.type.ComparableType;
 import mpicbg.imglib.type.NumericType;
 import mpicbg.imglib.type.numeric.IntType;
 import mpicbg.imglib.type.numeric.LongType;
+import mpicbg.imglib.type.numeric.ShortType;
 
 
 /**
@@ -44,6 +47,7 @@ public class HoughLineTransform <S extends NumericType<S>, T extends ComparableT
 	private final int nTheta;
 	private final double[] rho;
 	private final double[] theta;
+	private ArrayList<double[]> rtPeaks;
 	
 	/**
 	 * Calculates a default number of rho bins, which corresponds to a resolution of one pixel.
@@ -54,6 +58,19 @@ public class HoughLineTransform <S extends NumericType<S>, T extends ComparableT
 	{
 		return (int)(2 * MathLib.computeLength(inputImage.getDimensions()));
 	}
+
+	
+	/**
+	 * Creates a default {@link HoughLineTransform} with {@ShortType} vote space.
+	 * @param <T> the {@link Type} of the {@link Image} in question.
+	 * @param inputImage the {@link Image} to perform the Hough Line Transform against.
+	 * @return a default {@link HoughLineTransform} with {@link IntType} vote space.
+	 */
+	public static <T extends ComparableType<T>> HoughLineTransform<ShortType, T> shortHoughLine(final Image<T> inputImage)
+	{
+		return new HoughLineTransform<ShortType, T>(inputImage, new ShortType());
+	}
+
 	
 	/**
 	 * Creates a default {@link HoughLineTransform} with {@IntType} vote space.
@@ -127,6 +144,7 @@ public class HoughLineTransform <S extends NumericType<S>, T extends ComparableT
 		nTheta = inNTheta;
 		theta = new double[inNTheta];
 		rho = new double[inNRho];
+		rtPeaks = null;
 	}
 	
 	/**
@@ -147,6 +165,7 @@ public class HoughLineTransform <S extends NumericType<S>, T extends ComparableT
 		nTheta = inNTheta;
 		theta = new double[inNTheta];
 		rho = new double[inNRho];
+		rtPeaks = null;
 	}
 	
 	public void setThreshold(final T inThreshold)
@@ -207,5 +226,22 @@ public class HoughLineTransform <S extends NumericType<S>, T extends ComparableT
 		return success;
 	}
 	
+	public ArrayList<double[]> getTranslatedPeakList()
+	{
+		if (rtPeaks == null)
+		{
+			ArrayList<int[]> peaks = getPeakList();
+			rtPeaks = new ArrayList<double[]>(peaks.size());
+			for (int[] irt : peaks)
+			{
+				double[] rt = new double[2];
+				rt[0] = rho[irt[0]];
+				rt[1] = theta[irt[2]];
+				rtPeaks.add(rt);
+			}
+		}
+		
+		return rtPeaks;
+	}
 
 }
