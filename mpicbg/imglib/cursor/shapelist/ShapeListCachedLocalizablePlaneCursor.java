@@ -27,35 +27,25 @@
  *
  * @author Stephan Preibisch & Stephan Saalfeld
  */
-package mpicbg.imglib.outofbounds;
+package mpicbg.imglib.cursor.shapelist;
 
-import mpicbg.imglib.cursor.LocalizableCursor;
+import mpicbg.imglib.container.shapelist.ShapeList;
+import mpicbg.imglib.image.Image;
 import mpicbg.imglib.type.Type;
 
-public class OutOfBoundsStrategyValueFactory<T extends Type<T>> extends OutOfBoundsStrategyFactory<T>
+public class ShapeListCachedLocalizablePlaneCursor<T extends Type<T>> extends ShapeListLocalizablePlaneCursor<T>
 {
-	T value;
-	
-	public OutOfBoundsStrategyValueFactory( )
+	final ShapeListCache<T> cache;
+
+	public ShapeListCachedLocalizablePlaneCursor( final ShapeList< T > container, final Image< T > image, final ShapeListCache<T> cache ) 
 	{
-		this.value = null;
-	}
-	
-	public OutOfBoundsStrategyValueFactory( final T value )
-	{
-		this.value = value;
-	}
-		
-	public void setValue( T value ) { this.value = value; }
-	public T getValue() { return value; }
+		super( container, image );
+		this.cache = cache;
+	}	
 	
 	@Override
-	public OutOfBoundsStrategyValue<T> createStrategy( final LocalizableCursor<T> cursor )
+	public T getType()
 	{
-		if ( value == null )
-			return new OutOfBoundsStrategyValue<T>( cursor, cursor.getImage().createType() );
-		else
-			return new OutOfBoundsStrategyValue<T>( cursor, value );
+		return cache.lookUp( position );
 	}
-
 }
