@@ -14,11 +14,13 @@ public class GaussianConvolutionRealType<T extends RealType<T>> extends Gaussian
 	public GaussianConvolutionRealType( final Image<T> image, final OutOfBoundsStrategyFactory<T> outOfBoundsFactory, final double[] sigma )
 	{
 		super( image, outOfBoundsFactory, sigma );
+		precision = image.createType().getPreferredRealPrecision(); 
 	}
 
 	public GaussianConvolutionRealType( final Image<T> image, final OutOfBoundsStrategyFactory<T> outOfBoundsFactory, final double sigma )
 	{
 		super( image, outOfBoundsFactory, sigma );
+		precision = image.createType().getPreferredRealPrecision(); 
 	}
 	
 	public void setPrecision( PrecisionReal precision ) { this.precision = precision; }
