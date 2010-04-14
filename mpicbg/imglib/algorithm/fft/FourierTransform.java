@@ -31,10 +31,10 @@ import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyMirrorExpWindowingFactory;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyMirrorFactory;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyValueFactory;
+import mpicbg.imglib.type.numeric.ComplexType;
 import mpicbg.imglib.type.numeric.RealType;
-import mpicbg.imglib.type.numeric.complex.ComplexFloatType;
 
-public class FourierTransform<T extends RealType<T>> implements MultiThreaded, OutputAlgorithm<ComplexFloatType>, Benchmark
+public class FourierTransform<T extends RealType<T>, S extends ComplexType<S>> implements MultiThreaded, OutputAlgorithm<S>, Benchmark
 {
 	public static enum PreProcessing { NONE, EXTEND_MIRROR, EXTEND_MIRROR_FADING, USE_GIVEN_OUTOFBOUNDSSTRATEGY }
 	public static enum Rearrangement { REARRANGE_QUADRANTS, UNCHANGED }
@@ -42,7 +42,7 @@ public class FourierTransform<T extends RealType<T>> implements MultiThreaded, O
 	
 	final Image<T> img;
 	final int numDimensions;
-	Image<ComplexFloatType> fftImage;
+	Image<S> fftImage;
 	
 	PreProcessing preProcessing;
 	Rearrangement rearrangement;
@@ -56,16 +56,19 @@ public class FourierTransform<T extends RealType<T>> implements MultiThreaded, O
 	
 	// if you want the image to be extended more use that
 	int[] inputSize = null, inputSizeOffset = null;
+	
+	final S complexType;
 
 	String errorMessage = "";
 	int numThreads;
 	long processingTime;
 
-	public FourierTransform( final Image<T> image, final PreProcessing preProcessing, final Rearrangement rearrangement,
+	public FourierTransform( final Image<T> image, final S complexType, final PreProcessing preProcessing, final Rearrangement rearrangement,
 							 final FFTOptimization fftOptimization, final float relativeImageExtension, final float relativeFadeOutDistance,
 							 final int minExtension )
 	{
 		this.img = image;
+		this.complexType = complexType;
 		this.numDimensions = img.getNumDimensions();
 		this.extendedSize = new int[ numDimensions ];
 		this.extendedZeroPaddedSize = new int[ numDimensions ];
@@ -88,33 +91,33 @@ public class FourierTransform<T extends RealType<T>> implements MultiThreaded, O
 		setNumThreads();
 	}
 	
-	public FourierTransform( final Image<T> image ) 
+	public FourierTransform( final Image<T> image, final S complexType ) 
 	{ 
-		this ( image, PreProcessing.EXTEND_MIRROR_FADING, Rearrangement.REARRANGE_QUADRANTS, 
+		this ( image, complexType, PreProcessing.EXTEND_MIRROR_FADING, Rearrangement.REARRANGE_QUADRANTS, 
 		       FFTOptimization.SPEED, 0.25f, 0.25f, 12 ); 
 	}
 
-	public FourierTransform( final Image<T> image, final Rearrangement rearrangement ) 
+	public FourierTransform( final Image<T> image, final S complexType, final Rearrangement rearrangement ) 
 	{ 
-		this ( image );
+		this ( image, complexType );
 		setRearrangement( rearrangement );
 	}
 
-	public FourierTransform( final Image<T> image, final FFTOptimization fftOptimization ) 
+	public FourierTransform( final Image<T> image, final S complexType, final FFTOptimization fftOptimization ) 
 	{ 
-		this ( image );
+		this ( image, complexType );
 		setFFTOptimization( fftOptimization );
 	}
 
-	public FourierTransform( final Image<T> image, final PreProcessing preProcessing ) 
+	public FourierTransform( final Image<T> image, final S complexType, final PreProcessing preProcessing ) 
 	{ 
-		this ( image );
+		this ( image, complexType );
 		setPreProcessing( preProcessing );
 	}
 
-	public FourierTransform( final Image<T> image, final OutOfBoundsStrategyFactory<T> strategy ) 
+	public FourierTransform( final Image<T> image, final S complexType, final OutOfBoundsStrategyFactory<T> strategy ) 
 	{ 
-		this ( image );
+		this ( image, complexType );
 		setPreProcessing( PreProcessing.USE_GIVEN_OUTOFBOUNDSSTRATEGY );
 		setCustomOutOfBoundsStrategy( strategy );
 	}
@@ -251,7 +254,7 @@ public class FourierTransform<T extends RealType<T>> implements MultiThreaded, O
 		}
 		
 		
-		fftImage = FFTFunctions.computeFFT( img, outOfBoundsFactory, originalOffset, extendedZeroPaddedSize, getNumThreads(), false );
+		fftImage = FFTFunctions.computeFFT( img, complexType, outOfBoundsFactory, originalOffset, extendedZeroPaddedSize, getNumThreads(), false );
 		
 		if ( fftImage == null )
 		{
@@ -316,7 +319,7 @@ public class FourierTransform<T extends RealType<T>> implements MultiThreaded, O
 	public int getNumThreads() { return numThreads; }	
 
 	@Override
-	public Image<ComplexFloatType> getResult() { return fftImage; }
+	public Image<S> getResult() { return fftImage; }
 
 	@Override
 	public boolean checkInput() 

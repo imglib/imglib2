@@ -104,8 +104,8 @@ public class PhaseCorrelation<T extends RealType<T>, S extends RealType<S>> impl
 		final int[] maxDim = getMaxDim( image1, image2 );
 		
 		// compute fourier transforms
-		final FourierTransform<T> fft1 = new FourierTransform<T>( image1 );
-		final FourierTransform<S> fft2 = new FourierTransform<S>( image2 );
+		final FourierTransform<T, ComplexFloatType> fft1 = new FourierTransform<T, ComplexFloatType>( image1, new ComplexFloatType() );
+		final FourierTransform<S, ComplexFloatType> fft2 = new FourierTransform<S, ComplexFloatType>( image2, new ComplexFloatType() );
 		fft1.setRelativeImageExtension( 0.1f );
 		fft2.setRelativeImageExtension( 0.1f );
 		fft1.setRelativeFadeOutDistance( 0.1f );
@@ -173,7 +173,7 @@ public class PhaseCorrelation<T extends RealType<T>, S extends RealType<S>> impl
 		//
 		// invert fftImage1 which contains the phase correlation spectrum
 		//
-		final InverseFourierTransform<FloatType> invFFT = new InverseFourierTransform<FloatType>( fftImage1, fft1, new FloatType() );
+		final InverseFourierTransform<FloatType, ComplexFloatType> invFFT = new InverseFourierTransform<FloatType, ComplexFloatType>( fftImage1, fft1, new FloatType() );
 		invFFT.setInPlaceTransform( true );
 		invFFT.setCropBackToOriginalSize( false );
 		
@@ -428,7 +428,7 @@ public class PhaseCorrelation<T extends RealType<T>, S extends RealType<S>> impl
 	}
 	
 	protected ArrayList<PhaseCorrelationPeak> extractPhaseCorrelationPeaks( final Image<FloatType> invPCM, final int numPeaks,
-	                                                                        final FourierTransform<?> fft1, final FourierTransform<?> fft2 )
+	                                                                        final FourierTransform<?,?> fft1, final FourierTransform<?,?> fft2 )
 	{
 		final ArrayList<PhaseCorrelationPeak> peakList = new ArrayList<PhaseCorrelationPeak>();
 		
@@ -620,7 +620,7 @@ public class PhaseCorrelation<T extends RealType<T>, S extends RealType<S>> impl
 		}
 	}
 		
-	protected boolean computeFFT( final FourierTransform<T> fft1, final FourierTransform<S> fft2 )
+	protected boolean computeFFT( final FourierTransform<T, ComplexFloatType> fft1, final FourierTransform<S, ComplexFloatType> fft2 )
 	{
 		// use two threads in paralell if wanted
 		final int minThreads = computeFFTinParalell ? 2 : 1;

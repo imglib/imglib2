@@ -25,12 +25,12 @@ import mpicbg.imglib.algorithm.MultiThreaded;
 import mpicbg.imglib.algorithm.OutputAlgorithm;
 import mpicbg.imglib.algorithm.fft.FourierTransform.Rearrangement;
 import mpicbg.imglib.image.Image;
+import mpicbg.imglib.type.numeric.ComplexType;
 import mpicbg.imglib.type.numeric.RealType;
-import mpicbg.imglib.type.numeric.complex.ComplexFloatType;
 
-public class InverseFourierTransform<T extends RealType<T>> implements MultiThreaded, OutputAlgorithm<T>, Benchmark
+public class InverseFourierTransform<T extends RealType<T>, S extends ComplexType<S>> implements MultiThreaded, OutputAlgorithm<T>, Benchmark
 {
-	final Image<ComplexFloatType> fftImage;	
+	final Image<S> fftImage;	
 	final int numDimensions;
 	Image<T> image;
 	T type;
@@ -44,7 +44,7 @@ public class InverseFourierTransform<T extends RealType<T>> implements MultiThre
 	int[] originalSize, originalOffset; 
 	float additionalNormalization;
 
-	public InverseFourierTransform( final Image<ComplexFloatType> fftImage, final T type, final Rearrangement rearrangement, 
+	public InverseFourierTransform( final Image<S> fftImage, final T type, final Rearrangement rearrangement, 
 									final boolean inPlace, final boolean scale, final boolean cropBack, 
 									final int[] originalSize, final int[] originalOffset )
 	{
@@ -68,17 +68,17 @@ public class InverseFourierTransform<T extends RealType<T>> implements MultiThre
 		setNumThreads();
 	}
 	
-	public InverseFourierTransform( final Image<ComplexFloatType> fftImage, final FourierTransform<T> forwardTransform )
+	public InverseFourierTransform( final Image<S> fftImage, final FourierTransform<T,?> forwardTransform )
 	{
 		this ( fftImage, forwardTransform.getImageType(), forwardTransform.getRearrangement(), false, true, true, forwardTransform.getFFTInputSize(), forwardTransform.getFFTInputOffset() );
 	}
 
-	public InverseFourierTransform( final Image<ComplexFloatType> fftImage, final FourierTransform<?> forwardTransform, final T type )
+	public InverseFourierTransform( final Image<S> fftImage, final FourierTransform<?,?> forwardTransform, final T type )
 	{
 		this ( fftImage, type, forwardTransform.getRearrangement(), false, true, true, forwardTransform.getFFTInputSize(), forwardTransform.getFFTInputOffset() );
 	}
 
-	public InverseFourierTransform( final Image<ComplexFloatType> fftImage, final T type )
+	public InverseFourierTransform( final Image<S> fftImage, final T type )
 	{
 		this( fftImage, type, Rearrangement.REARRANGE_QUADRANTS, false, true, false, null, null );
 	}
@@ -105,7 +105,7 @@ public class InverseFourierTransform<T extends RealType<T>> implements MultiThre
 		final long startTime = System.currentTimeMillis();
 
 		// in Place computation will destroy the image
-		final Image<ComplexFloatType> complex;		
+		final Image<S> complex;		
 		
 		if ( inPlace )
 			complex = fftImage;

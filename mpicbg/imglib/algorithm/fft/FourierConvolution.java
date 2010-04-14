@@ -44,7 +44,7 @@ public class FourierConvolution<T extends RealType<T>, S extends RealType<S>> im
 	Image<T> image, convolved;
 	Image<S> kernel;
 	Image<ComplexFloatType> kernelFFT, imgFFT; 
-	FourierTransform<T> fftImage;
+	FourierTransform<T, ComplexFloatType> fftImage;
 	
 	final int[] kernelDim;
 
@@ -196,7 +196,7 @@ public class FourierConvolution<T extends RealType<T>, S extends RealType<S>> im
 		//
 		if ( imgFFT == null ) //not computed in a previous step
 		{
-			fftImage = new FourierTransform<T>( image );
+			fftImage = new FourierTransform<T, ComplexFloatType>( image, new ComplexFloatType() );
 			fftImage.setNumThreads( this.getNumThreads() );
 			
 			// how to extend the input image out of its boundaries for computing the FFT,
@@ -269,7 +269,7 @@ public class FourierConvolution<T extends RealType<T>, S extends RealType<S>> im
 			// 
 			// compute FFT of kernel
 			//
-			final FourierTransform<S> fftKernel = new FourierTransform<S>( kernelTemplate );
+			final FourierTransform<S, ComplexFloatType> fftKernel = new FourierTransform<S, ComplexFloatType>( kernelTemplate, new ComplexFloatType() );
 			fftKernel.setNumThreads( this.getNumThreads() );
 			
 			fftKernel.setPreProcessing( PreProcessing.NONE );		
@@ -304,7 +304,7 @@ public class FourierConvolution<T extends RealType<T>, S extends RealType<S>> im
 		//
 		// Compute inverse Fourier Transform
 		//		
-		final InverseFourierTransform<T> invFFT = new InverseFourierTransform<T>( imgFFT, fftImage );
+		final InverseFourierTransform<T, ComplexFloatType> invFFT = new InverseFourierTransform<T, ComplexFloatType>( imgFFT, fftImage );
 		invFFT.setInPlaceTransform( true );
 		invFFT.setNumThreads( this.getNumThreads() );
 
