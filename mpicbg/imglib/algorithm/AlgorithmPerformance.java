@@ -150,7 +150,7 @@ public class AlgorithmPerformance
 	public static <T extends RealType<T>> double testBandpass( final Image<T> img, boolean show )
 	{
 		// init fft
-		final FourierTransform<T> fft = new FourierTransform<T>( img );
+		final FourierTransform<T, ComplexFloatType> fft = new FourierTransform<T, ComplexFloatType>( img, new ComplexFloatType() );
 		
 		double processingTime = 0;
 		
@@ -177,7 +177,7 @@ public class AlgorithmPerformance
 			}
 			
 			// init inverse fft
-			final InverseFourierTransform<T> invFFT = new InverseFourierTransform<T>( fftImage, fft );
+			final InverseFourierTransform<T, ComplexFloatType> invFFT = new InverseFourierTransform<T, ComplexFloatType>( fftImage, fft );
 						
 			// comute inverse fft and display result
 			if ( invFFT.checkInput() && invFFT.process())
@@ -203,7 +203,7 @@ public class AlgorithmPerformance
 	
 	public double testFFT( final Image<FloatType> img, boolean show )
 	{
-		final FourierTransform<FloatType> fft = new FourierTransform<FloatType>( img );
+		final FourierTransform<FloatType, ComplexFloatType> fft = new FourierTransform<FloatType, ComplexFloatType>( img, new ComplexFloatType() );
 		fft.setNumThreads( 1 );
 		fft.setPreProcessing( PreProcessing.NONE );
 		fft.setRearrangement( Rearrangement.UNCHANGED );
@@ -235,7 +235,7 @@ public class AlgorithmPerformance
 			return -1;			
 		}
 				
-		final InverseFourierTransform<FloatType> invfft = new InverseFourierTransform<FloatType>( fftImage, fft );
+		final InverseFourierTransform<FloatType, ComplexFloatType> invfft = new InverseFourierTransform<FloatType, ComplexFloatType>( fftImage, fft );
 		//invfft.setCropBackToOriginalSize( false );
 		
 		if ( invfft.checkInput() && invfft.process() )
