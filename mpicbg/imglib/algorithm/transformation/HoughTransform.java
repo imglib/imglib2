@@ -1,6 +1,7 @@
 package mpicbg.imglib.algorithm.transformation;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import mpicbg.imglib.algorithm.Benchmark;
 import mpicbg.imglib.algorithm.OutputAlgorithm;
@@ -29,6 +30,7 @@ implements OutputAlgorithm<S>, Benchmark
 	private final Image<S> voteSpace;
 	private LocalizableByDimCursor<S> voteCursor;
 	private ArrayList<int[]> peaks;
+	private final double[] peakExclusion;
 	
 	/**
 	 * Constructor for a HoughTransform using an ArrayContainerFactory to back the ImageFactory
@@ -59,6 +61,9 @@ implements OutputAlgorithm<S>, Benchmark
 		pTime = 0;
 		voteSpace = voteFactory.createImage(voteSize);		
 		peaks = null;
+		peakExclusion = new double[voteSize.length];
+		
+		Arrays.fill(peakExclusion, 0);
 		
 	}
 	
@@ -111,11 +116,26 @@ implements OutputAlgorithm<S>, Benchmark
 		}		
 	}
 	
+	/**
+	 * Returns an ArrayList of int arrays, representing the positions in the vote space
+	 * that correspond to peaks.
+	 * @return an ArrayList of vote space peak locations.
+	 */
 	public ArrayList<int[]> getPeakList()
 	{
 		return peaks;
 	}
 		
+	public boolean setExclusion(double[] newExclusion)
+	{
+		if (newExclusion.length >= peakExclusion.length)
+		{
+			System.arraycopy(newExclusion, 0, peakExclusion, 0, peakExclusion.length);
+			return true;
+		}
+		return false;
+	}
+	
 	protected void setErrorMsg(final String msg)
 	{
 		errorMsg = msg;
@@ -128,7 +148,10 @@ implements OutputAlgorithm<S>, Benchmark
 	protected boolean pickPeaks()
 	{
 		final PickImagePeaks<S> peakPicker = new PickImagePeaks<S>(voteSpace);
-		boolean ok = peakPicker.process();
+		boolean ok;
+		
+		peakPicker.setSuppression(peakExclusion);
+		ok = peakPicker.process();
 		if (ok)
 		{
 			peaks = peakPicker.getPeakList();
