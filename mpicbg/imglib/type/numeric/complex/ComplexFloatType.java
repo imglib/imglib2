@@ -29,6 +29,7 @@
  */
 package mpicbg.imglib.type.numeric.complex;
 
+import mpicbg.imglib.algorithm.Precision.PrecisionReal;
 import mpicbg.imglib.container.DirectAccessContainer;
 import mpicbg.imglib.container.DirectAccessContainerFactory;
 import mpicbg.imglib.container.basictypecontainer.FloatAccess;
@@ -103,6 +104,9 @@ public class ComplexFloatType extends ComplexTypeImpl<ComplexFloatType> implemen
 	@Override
 	public void setComplex( final double complex ){ b.setValue( complexI, (float)complex ); }
 	
+	@Override
+	public PrecisionReal getPreferredRealPrecision() { return PrecisionReal.Float; }
+
 	public void set( final float real, final float complex ) 
 	{ 
 		b.setValue( realI, real );

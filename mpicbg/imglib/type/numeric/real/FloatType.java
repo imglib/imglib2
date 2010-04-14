@@ -29,6 +29,7 @@
  */
 package mpicbg.imglib.type.numeric.real;
 
+import mpicbg.imglib.algorithm.Precision.PrecisionReal;
 import mpicbg.imglib.container.DirectAccessContainer;
 import mpicbg.imglib.container.DirectAccessContainerFactory;
 import mpicbg.imglib.container.basictypecontainer.FloatAccess;
@@ -98,6 +99,9 @@ public class FloatType extends RealTypeImpl<FloatType> implements RealType<Float
 	@Override
 	public void setReal( final double real ){ set( (float)real ); }
 	
+	@Override
+	public PrecisionReal getPreferredRealPrecision() { return PrecisionReal.Float; }
+
 	@Override
 	public double getMaxValue() { return Float.MAX_VALUE; }
 	@Override

@@ -1,5 +1,6 @@
 package mpicbg.imglib.type.numeric.complex;
 
+import mpicbg.imglib.algorithm.Precision.PrecisionReal;
 import mpicbg.imglib.algorithm.math.MathLib;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.display.ComplexTypePowerSpectrumDisplay;
@@ -129,6 +130,23 @@ public abstract class ComplexTypeImpl<T extends ComplexTypeImpl<T>> extends Type
 		setReal( 0 );
 		setComplex( 0 );
 	}
+	
+	@Override
+	public void setComplexNumber( final float real, final float complex )
+	{
+		setReal( real );
+		setComplex( complex );
+	}
+	
+	@Override
+	public void setComplexNumber( final double real, final double complex )
+	{
+		setReal( real );
+		setComplex( complex );
+	}
+	
+	@Override
+	public PrecisionReal getPreferredRealPrecision() { return PrecisionReal.Double; }
 	
 	@Override
 	public int compareTo( final T c ) 
