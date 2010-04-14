@@ -56,6 +56,8 @@ public class SquareTest {
       float value = inputCursor.getType().getReal();
       outputCursor.getType().setReal(value * value);
     }
+    inputCursor.close();
+    outputCursor.close();
     return outputImage;
   }
 
