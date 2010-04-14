@@ -88,6 +88,13 @@ public class ImagePlusAdapter
 		
 		ImagePlusContainerFactory containerFactory = new ImagePlusContainerFactory();
 		ByteImagePlus<UnsignedByteType> container = new ByteImagePlus<UnsignedByteType>( imp,  containerFactory );
+
+		// create a Type that is linked to the container
+		final UnsignedByteType linkedType = new UnsignedByteType( container );
+		
+		// pass it to the DirectAccessContainer
+		container.setLinkedType( linkedType );
+
 		Image<UnsignedByteType> image = new Image<UnsignedByteType>( container, new UnsignedByteType(), imp.getTitle() );
 		
 		return image;		
@@ -100,6 +107,13 @@ public class ImagePlusAdapter
 
 		ImagePlusContainerFactory containerFactory = new ImagePlusContainerFactory();
 		ShortImagePlus<UnsignedShortType> container = new ShortImagePlus<UnsignedShortType>( imp,  containerFactory );
+
+		// create a Type that is linked to the container
+		final UnsignedShortType linkedType = new UnsignedShortType( container );
+		
+		// pass it to the DirectAccessContainer
+		container.setLinkedType( linkedType );
+
 		Image<UnsignedShortType> image = new Image<UnsignedShortType>( container, new UnsignedShortType(), imp.getTitle() );
 		
 		return image;						
@@ -112,6 +126,13 @@ public class ImagePlusAdapter
 
 		ImagePlusContainerFactory containerFactory = new ImagePlusContainerFactory();
 		IntImagePlus<RGBALegacyType> container = new IntImagePlus<RGBALegacyType>( imp,  containerFactory );
+
+		// create a Type that is linked to the container
+		final RGBALegacyType linkedType = new RGBALegacyType( container );
+		
+		// pass it to the DirectAccessContainer
+		container.setLinkedType( linkedType );
+
 		Image<RGBALegacyType> image = new Image<RGBALegacyType>( container, new RGBALegacyType(), imp.getTitle() );
 		
 		return image;				
@@ -124,6 +145,13 @@ public class ImagePlusAdapter
 
 		ImagePlusContainerFactory containerFactory = new ImagePlusContainerFactory();
 		FloatImagePlus<FloatType> container = new FloatImagePlus<FloatType>( imp,  containerFactory );
+
+		// create a Type that is linked to the container
+		final FloatType linkedType = new FloatType( container );
+		
+		// pass it to the DirectAccessContainer
+		container.setLinkedType( linkedType );
+
 		Image<FloatType> image = new Image<FloatType>( container, new FloatType(), imp.getTitle() );
 		
 		return image;				
