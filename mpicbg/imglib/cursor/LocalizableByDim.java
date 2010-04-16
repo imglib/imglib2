@@ -36,11 +36,11 @@ public interface LocalizableByDim extends Localizable
 	
 	public void move( int steps, int dim );
 
-	public void moveTo( LocalizableCursor<?> cursor );
+	public void moveTo( Localizable localizable );
 	public void moveTo( int position[] );
 	public void moveRel( int position[] );
 	
-	public void setPosition( LocalizableCursor<?> cursor );
+	public void setPosition( Localizable localizable );
 	public void setPosition( int position[] );
 	public void setPosition( int position, int dim );		
 }

@@ -31,16 +31,16 @@ package mpicbg.imglib.interpolation.linear;
 
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.interpolation.InterpolatorFactory;
-import mpicbg.imglib.outside.OutsideStrategyFactory;
-import mpicbg.imglib.type.NumericType;
+import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
+import mpicbg.imglib.type.numeric.NumericType;
 
 public class LinearInterpolator1D<T extends NumericType<T>> extends LinearInterpolator<T> 
 {
 	final int[] tmpLocation;
 
-	protected LinearInterpolator1D( final Image<T> img, final InterpolatorFactory<T> interpolatorFactory, final OutsideStrategyFactory<T> outsideStrategyFactory )
+	protected LinearInterpolator1D( final Image<T> img, final InterpolatorFactory<T> interpolatorFactory, final OutOfBoundsStrategyFactory<T> outOfBoundsStrategyFactory )
 	{
-		super( img, interpolatorFactory, outsideStrategyFactory, false );
+		super( img, interpolatorFactory, outOfBoundsStrategyFactory, false );
 
 		tmpLocation = new int[ 1 ];
 		moveTo( position );		
@@ -67,7 +67,7 @@ public class LinearInterpolator1D<T extends NumericType<T>> extends LinearInterp
 		
 		cursor.moveTo( tmpLocation );
 
-		// How to iterate the cube
+		// How to iterate the range
 		//
 		//     *----x->*
 		//   y0         y1
@@ -104,7 +104,7 @@ public class LinearInterpolator1D<T extends NumericType<T>> extends LinearInterp
 		
 		cursor.setPosition( tmpLocation );
 
-		// How to iterate the cube
+		// How to iterate the range
 		//
 		//     *----x->*
 		//   y0         y1

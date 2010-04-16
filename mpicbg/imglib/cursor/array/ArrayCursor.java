@@ -37,31 +37,26 @@ import mpicbg.imglib.type.Type;
 
 public class ArrayCursor<T extends Type<T>> extends CursorImpl<T> implements Cursor<T>
 {
+	protected final T type;
 	protected final Array<T,?> container;
 	protected final int sizeMinus1;
-	//protected final int size;
 	
 	public ArrayCursor( final Array<T,?> container, final Image<T> image, final T type ) 
 	{
-		super( container, image, type );
+		super( container, image );
 
+		this.type = type;
 		this.container = container;
-		//this.size = container.getNumPixels();
 		this.sizeMinus1 = container.getNumPixels() - 1;
 		
 		reset();
 	}
 	
 	@Override
-	public boolean hasNext()
-	{
-		return type.getIndex() < sizeMinus1;
-		
-		/*if ( type.getIndex() < sizeMinus1 )
-			return true;
-		else
-			return false;*/
-	}
+	public T getType() { return type; }
+	
+	@Override
+	public boolean hasNext() { return type.getIndex() < sizeMinus1; }
 
 	@Override
 	public void fwd( final long steps ) { type.incIndex( (int)steps ); }

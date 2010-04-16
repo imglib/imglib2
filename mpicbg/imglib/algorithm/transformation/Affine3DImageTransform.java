@@ -121,9 +121,9 @@ public class Affine3DImageTransform<T extends Type<T>> implements OutputAlgorith
 			errorMessage = "AffineTransform: [Image<T> img] is null.";
 			return false;
 		}
-		else if ( interpolatorFactory.getOutsideStrategyFactory() == null )
+		else if ( interpolatorFactory.getOutOfBoundsStrategyFactory() == null )
 		{
-			errorMessage = "AffineTransform: [OutsideStrategyFactory<T> of interpolatorFactory] is null.";
+			errorMessage = "AffineTransform: [OutOfBoundsStrategyFactory<T> of interpolatorFactory] is null.";
 			return false;
 		}
 		else if ( interpolatorFactory == null )

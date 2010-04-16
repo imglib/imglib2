@@ -30,19 +30,20 @@ import mpicbg.imglib.cursor.array.ArrayLocalizableCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.ImageFactory;
 import mpicbg.imglib.multithreading.SimpleMultiThreading;
-import mpicbg.imglib.outside.OutsideStrategyFactory;
-import mpicbg.imglib.type.NumericType;
+import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
 import mpicbg.imglib.type.Type;
 import mpicbg.imglib.type.label.FakeType;
-import mpicbg.imglib.type.numeric.ComplexFloatType;
+import mpicbg.imglib.type.numeric.ComplexType;
+import mpicbg.imglib.type.numeric.RealType;
 
 final public class FFTFunctions 
 {
-	final public static <T extends NumericType<T>> Image<T> computeInverseFFT( final Image<ComplexFloatType> complex, final T type,  
-	                                                        final int numThreads, 
-	                                                        final boolean scale, final boolean cropBack,
-	                                                        final int[] originalSize, final int[] originalOffset,
-	                                                        final float additionalNormalization )
+	final public static <T extends RealType<T>, S extends ComplexType<S>> Image<T> 
+						computeInverseFFT( final Image<S> complex, final T type,  
+						                   final int numThreads, 
+						                   final boolean scale, final boolean cropBack,
+						                   final int[] originalSize, final int[] originalOffset,
+						                   final float additionalNormalization )
 	{
 		// not enough memory
 		if ( complex == null )
@@ -93,7 +94,7 @@ final public class FFTFunctions
 						final float[] tempIn = new float[ size * 2 ];						
 						final FftComplex fftc = new FftComplex( size );
 						
-						final LocalizableByDimCursor<ComplexFloatType> cursor = complex.createLocalizableByDimCursor(); 
+						final LocalizableByDimCursor<S> cursor = complex.createLocalizableByDimCursor(); 
 
 						/**
 						 * Here we "misuse" a ArrayLocalizableCursor to iterate through all dimensions except the one we are computing the inverse fft in 
@@ -133,12 +134,12 @@ final public class FFTFunctions
 								// get the input line
 								for ( int i = 0; i < size-1; ++i )
 								{
-									tempIn[ i * 2 ] = cursor.getType().getReal();
-									tempIn[ i * 2 + 1 ] = cursor.getType().getComplex();
+									tempIn[ i * 2 ] = cursor.getType().getRealFloat();
+									tempIn[ i * 2 + 1 ] = cursor.getType().getComplexFloat();
 									cursor.fwd( dim );
 								}
-								tempIn[ (size-1) * 2 ] = cursor.getType().getReal();
-								tempIn[ (size-1) * 2 + 1 ] = cursor.getType().getComplex();
+								tempIn[ (size-1) * 2 ] = cursor.getType().getRealFloat();
+								tempIn[ (size-1) * 2 + 1 ] = cursor.getType().getComplexFloat();
 								
 								// compute the inverse fft
 								fftc.complexToComplex( 1, tempIn, tempOut );
@@ -151,19 +152,19 @@ final public class FFTFunctions
 								{
 									for ( int i = 0; i < size-1; ++i )
 									{
-										cursor.getType().set( tempOut[ i * 2 ] / size, tempOut[ i * 2 + 1 ] / size );
+										cursor.getType().setComplexNumber( tempOut[ i * 2 ] / size, tempOut[ i * 2 + 1 ] / size );
 										cursor.fwd( dim );
 									}
-									cursor.getType().set( tempOut[ (size-1) * 2 ] / size, tempOut[ (size-1) * 2 + 1 ] / size );
+									cursor.getType().setComplexNumber( tempOut[ (size-1) * 2 ] / size, tempOut[ (size-1) * 2 + 1 ] / size );
 								}
 								else
 								{
 									for ( int i = 0; i < size-1; ++i )
 									{
-										cursor.getType().set( tempOut[ i * 2 ], tempOut[ i * 2 + 1 ] );
+										cursor.getType().setComplexNumber( tempOut[ i * 2 ], tempOut[ i * 2 + 1 ] );
 										cursor.fwd( dim );
 									}
-									cursor.getType().set( tempOut[ (size-1) * 2 ], tempOut[ (size-1) * 2 + 1 ] );
+									cursor.getType().setComplexNumber( tempOut[ (size-1) * 2 ], tempOut[ (size-1) * 2 + 1 ] );
 								}	
 							}							
 						}
@@ -206,7 +207,7 @@ final public class FFTFunctions
 						cropX2 = realSize;
 					}
 					
-					final LocalizableByDimCursor<ComplexFloatType> cursor = complex.createLocalizableByDimCursor(); 
+					final LocalizableByDimCursor<S> cursor = complex.createLocalizableByDimCursor(); 
 					final LocalizableByDimCursor<T> cursorOut = realImage.createLocalizableByDimCursor(); 
 					
 					if ( numDimensions > 1 )
@@ -237,7 +238,7 @@ A:						while( cursorDim.hasNext() )
 								tmp[ 0 ] = 0;
 								if ( cropBack )
 								{
-									// check that we are not outside the cropped image, then we do not have to compute the
+									// check that we are not out of the cropped image's bounds, then we do not have to compute the
 									// inverse fft here
 									for ( int d = 1; d < numDimensions; ++d )
 									{
@@ -258,12 +259,12 @@ A:						while( cursorDim.hasNext() )
 								// fill the input array with complex image data
 								for ( int i = 0; i < complexSize-1; ++i )
 								{
-									tempIn[ i * 2 ] = cursor.getType().getReal();
-									tempIn[ i * 2 + 1 ] = cursor.getType().getComplex();
+									tempIn[ i * 2 ] = cursor.getType().getRealFloat();
+									tempIn[ i * 2 + 1 ] = cursor.getType().getComplexFloat();
 									cursor.fwd( 0 );
 								}
-								tempIn[ (complexSize-1) * 2 ] = cursor.getType().getReal();
-								tempIn[ (complexSize-1) * 2 + 1 ] = cursor.getType().getComplex();
+								tempIn[ (complexSize-1) * 2 ] = cursor.getType().getRealFloat();
+								tempIn[ (complexSize-1) * 2 + 1 ] = cursor.getType().getComplexFloat();
 																								
 								// compute the fft in dimension 0 ( complex -> real )
 								fft.complexToReal( 1, tempIn, tempOut );
@@ -313,12 +314,12 @@ A:						while( cursorDim.hasNext() )
 							// fill the input array with complex image data
 							for ( int i = 0; i < complexSize-1; ++i )
 							{
-								tempIn[ i * 2 ] = cursor.getType().getReal();
-								tempIn[ i * 2 + 1 ] = cursor.getType().getComplex();
+								tempIn[ i * 2 ] = cursor.getType().getRealFloat();
+								tempIn[ i * 2 + 1 ] = cursor.getType().getComplexFloat();
 								cursor.fwd( 0 );
 							}
-							tempIn[ (complexSize-1) * 2 ] = cursor.getType().getReal();
-							tempIn[ (complexSize-1) * 2 + 1 ] = cursor.getType().getComplex();
+							tempIn[ (complexSize-1) * 2 ] = cursor.getType().getRealFloat();
+							tempIn[ (complexSize-1) * 2 + 1 ] = cursor.getType().getComplexFloat();
 							
 							// compute the fft in dimension 0 ( real -> complex )
 							final float[] tempOut = new float[ realSize ];
@@ -358,9 +359,10 @@ A:						while( cursorDim.hasNext() )
 		return realImage;
 	}
 	
-	final public static <T extends NumericType<T>> Image<ComplexFloatType> computeFFT( final Image<T> img, final OutsideStrategyFactory<T> outsideFactory,
-	                                                        final int[] imageOffset, final int[] imageSize,
-	                                                        final int numThreads, final boolean scale )
+	final public static <T extends RealType<T>, S extends ComplexType<S>> Image<S> 
+						computeFFT( final Image<T> img, final S complexType, final OutOfBoundsStrategyFactory<T> outOfBoundsFactory,
+						            final int[] imageOffset, final int[] imageSize,
+						            final int numThreads, final boolean scale )
 	{
 		final int numDimensions = img.getNumDimensions();
 		
@@ -372,8 +374,8 @@ A:						while( cursorDim.hasNext() )
 		for ( int d = 1; d < numDimensions; ++d )
 			complexSize[ d ] = imageSize[ d ];
 		
-		final ImageFactory<ComplexFloatType> imgFactory = new ImageFactory<ComplexFloatType>( new ComplexFloatType(), img.getContainerFactory() );
-		final Image<ComplexFloatType> fftImage = imgFactory.createImage( complexSize );
+		final ImageFactory<S> imgFactory = new ImageFactory<S>( complexType, img.getContainerFactory() );
+		final Image<S> fftImage = imgFactory.createImage( complexSize );
 		
 		// not enough memory
 		if ( fftImage == null )
@@ -395,8 +397,8 @@ A:						while( cursorDim.hasNext() )
 					final float[] tempIn = new float[ realSize ];				
 					final FftReal fft = new FftReal( realSize );
 					
-					final LocalizableByDimCursor<T> cursor = img.createLocalizableByDimCursor( outsideFactory );
-					final LocalizableByDimCursor<ComplexFloatType> cursorOut = fftImage.createLocalizableByDimCursor(); 
+					final LocalizableByDimCursor<T> cursor = img.createLocalizableByDimCursor( outOfBoundsFactory );
+					final LocalizableByDimCursor<S> cursorOut = fftImage.createLocalizableByDimCursor(); 
 					
 					if ( numDimensions > 1 )
 					{
@@ -439,11 +441,11 @@ A:						while( cursorDim.hasNext() )
 								// fill the input array with image data
 								for ( int x = 0; x < realSize-1; ++x )
 								{
-									tempIn[ x ] = cursor.getType().getReal();									
+									tempIn[ x ] = cursor.getType().getRealFloat();									
 									cursor.fwd( 0 );
 								}
-								tempIn[ (realSize-1) ] = cursor.getType().getReal();									
-																
+								tempIn[ (realSize-1) ] = cursor.getType().getRealFloat();
+
 								// compute the fft in dimension 0 ( real -> complex )
 								fft.realToComplex( -1, tempIn, tempOut );
 									
@@ -455,19 +457,19 @@ A:						while( cursorDim.hasNext() )
 								{
 									for ( int x = 0; x < complexSize-1; ++x )
 									{
-										cursorOut.getType().set( tempOut[ x * 2 ] / realSize, tempOut[ x * 2 + 1 ] / realSize );									
+										cursorOut.getType().setComplexNumber( tempOut[ x * 2 ] / realSize, tempOut[ x * 2 + 1 ] / realSize );									
 										cursorOut.fwd( 0 );
 									}
-									cursorOut.getType().set( tempOut[ (complexSize-1) * 2 ] / realSize, tempOut[ (complexSize-1) * 2 + 1 ] / realSize );									
+									cursorOut.getType().setComplexNumber( tempOut[ (complexSize-1) * 2 ] / realSize, tempOut[ (complexSize-1) * 2 + 1 ] / realSize );									
 								}
 								else
 								{
 									for ( int x = 0; x < complexSize-1; ++x )
 									{
-										cursorOut.getType().set( tempOut[ x * 2 ], tempOut[ x * 2 + 1 ] );									
+										cursorOut.getType().setComplexNumber( tempOut[ x * 2 ], tempOut[ x * 2 + 1 ] );									
 										cursorOut.fwd( 0 );
 									}
-									cursorOut.getType().set( tempOut[ (complexSize-1) * 2 ], tempOut[ (complexSize-1) * 2 + 1 ] );									
+									cursorOut.getType().setComplexNumber( tempOut[ (complexSize-1) * 2 ], tempOut[ (complexSize-1) * 2 + 1 ] );									
 								}
 							}
 						}
@@ -487,10 +489,10 @@ A:						while( cursorDim.hasNext() )
 							// get the input data
 							for ( int x = 0; x < realSize-1; ++x )
 							{
-								tempIn[ x ] = cursor.getType().getReal();
+								tempIn[ x ] = cursor.getType().getRealFloat();
 								cursor.fwd( 0 );
 							}
-							tempIn[ realSize-1 ] = cursor.getType().getReal();
+							tempIn[ realSize-1 ] = cursor.getType().getRealFloat();
 							
 							// compute the fft in dimension 0 ( real -> complex )
 							final float[] tempOut = new float[ complexSize * 2 ];
@@ -504,19 +506,19 @@ A:						while( cursorDim.hasNext() )
 							{
 								for ( int x = 0; x < complexSize-1; ++x )
 								{
-									cursorOut.getType().set( tempOut[ x * 2 ] / realSize, tempOut[ x * 2 + 1 ] / realSize );
+									cursorOut.getType().setComplexNumber( tempOut[ x * 2 ] / realSize, tempOut[ x * 2 + 1 ] / realSize );
 									cursorOut.fwd( 0 );
 								}
-								cursorOut.getType().set( tempOut[ (complexSize-1) * 2 ] / realSize, tempOut[ (complexSize-1) * 2 + 1 ] / realSize );
+								cursorOut.getType().setComplexNumber( tempOut[ (complexSize-1) * 2 ] / realSize, tempOut[ (complexSize-1) * 2 + 1 ] / realSize );
 							}
 							else
 							{
 								for ( int x = 0; x < complexSize-1; ++x )
 								{
-									cursorOut.getType().set( tempOut[ x * 2 ], tempOut[ x * 2 + 1 ] );									
+									cursorOut.getType().setComplexNumber( tempOut[ x * 2 ], tempOut[ x * 2 + 1 ] );									
 									cursorOut.fwd( 0 );
 								}
-								cursorOut.getType().set( tempOut[ (complexSize-1) * 2 ], tempOut[ (complexSize-1) * 2 + 1 ] );									
+								cursorOut.getType().setComplexNumber( tempOut[ (complexSize-1) * 2 ], tempOut[ (complexSize-1) * 2 + 1 ] );									
 							}	
 						}
 						cursorOut.close();
@@ -549,7 +551,7 @@ A:						while( cursorDim.hasNext() )
 						final float[] tempIn = new float[ size * 2 ];						
 						final FftComplex fftc = new FftComplex( size );
 						
-						final LocalizableByDimCursor<ComplexFloatType> cursor = fftImage.createLocalizableByDimCursor(); 
+						final LocalizableByDimCursor<S> cursor = fftImage.createLocalizableByDimCursor(); 
 
 						/**
 						 * Here we "misuse" a ArrayLocalizableCursor to iterate through all dimensions except the one we are computing the fft in 
@@ -589,12 +591,12 @@ A:						while( cursorDim.hasNext() )
 								// get the input line
 								for ( int i = 0; i < size - 1; ++i )
 								{
-									tempIn[ i * 2 ] = cursor.getType().getReal();
-									tempIn[ i * 2 + 1 ] = cursor.getType().getComplex();
+									tempIn[ i * 2 ] = cursor.getType().getRealFloat();
+									tempIn[ i * 2 + 1 ] = cursor.getType().getComplexFloat();
 									cursor.fwd( dim  );
 								}
-								tempIn[ (size-1) * 2 ] = cursor.getType().getReal();
-								tempIn[ (size-1) * 2 + 1 ] = cursor.getType().getComplex();
+								tempIn[ (size-1) * 2 ] = cursor.getType().getRealFloat();
+								tempIn[ (size-1) * 2 + 1 ] = cursor.getType().getComplexFloat();
 								
 								// compute the fft in dimension dim (complex -> complex) 
 								fftc.complexToComplex( -1, tempIn, tempOut);
@@ -607,19 +609,19 @@ A:						while( cursorDim.hasNext() )
 								{
 									for ( int i = 0; i < size-1; ++i )
 									{
-										cursor.getType().set( tempOut[ i * 2 ] / size, tempOut[ i * 2 + 1 ] / size );
+										cursor.getType().setComplexNumber( tempOut[ i * 2 ] / size, tempOut[ i * 2 + 1 ] / size );
 										cursor.fwd( dim );
 									}
-									cursor.getType().set( tempOut[ (size-1) * 2 ] / size, tempOut[ (size-1) * 2 + 1 ] / size );
+									cursor.getType().setComplexNumber( tempOut[ (size-1) * 2 ] / size, tempOut[ (size-1) * 2 + 1 ] / size );
 								}
 								else
 								{
 									for ( int i = 0; i < size-1; ++i )
 									{
-										cursor.getType().set( tempOut[ i * 2 ], tempOut[ i * 2 + 1 ] );
+										cursor.getType().setComplexNumber( tempOut[ i * 2 ], tempOut[ i * 2 + 1 ] );
 										cursor.fwd( dim );
 									}
-									cursor.getType().set( tempOut[ (size-1) * 2 ], tempOut[ (size-1) * 2 + 1 ] );									
+									cursor.getType().setComplexNumber( tempOut[ (size-1) * 2 ], tempOut[ (size-1) * 2 + 1 ] );									
 								}
 							}
 						}
@@ -631,7 +633,6 @@ A:						while( cursorDim.hasNext() )
 			
 			SimpleMultiThreading.startAndJoin( threads );
 		}
-				
 		return fftImage;
 	}
 	
@@ -660,10 +661,10 @@ A:						while( cursorDim.hasNext() )
 
 			// move second "half" to first "half"
 			cursor1.getType().set( cursor2.getType() );
-			
+
 			// move data in buffer to second "half"
 			cursor2.getType().set( buffer );
-			
+
 			// move both cursors forward
 			cursor1.fwd( 0 ); 
 			cursor2.bck( 0 ); 
@@ -694,7 +695,7 @@ A:						while( cursorDim.hasNext() )
 		//swap in dimension 0
 		final AtomicInteger ai = new AtomicInteger(0);
 		Thread[] threads = SimpleMultiThreading.newThreads( numThreads );
-		
+
 		for (int ithread = 0; ithread < threads.length; ++ithread)
 			threads[ithread] = new Thread(new Runnable()
 			{
@@ -751,7 +752,7 @@ A:						while( cursorDim.hasNext() )
 			
 								// move second "half" to first "half"
 								cursor1.getType().set( cursor2.getType() );
-								
+
 								// move data in buffer to second "half"
 								cursor2.getType().set( buffer );
 								
@@ -882,10 +883,10 @@ A:						while( cursorDim.hasNext() )
 	}
 		
 	final public static <T extends Type<T>> void rearrangeFFTQuadrants( final Image<T> fftImage, final int numThreads )
-	{		
+	{
 		rearrangeQuadrantFFTDimZero( fftImage, numThreads );
 		
 		for ( int d = 1; d < fftImage.getNumDimensions(); ++d )
-			rearrangeQuadrantDim( fftImage, d, numThreads );
+			rearrangeQuadrantDim( fftImage, d, numThreads );		
 	}	
 }

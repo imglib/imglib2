@@ -49,7 +49,7 @@ public class RegionOfInterestCursor<T extends Type<T>> extends CursorImpl<T> imp
 	
 	public RegionOfInterestCursor( final LocalizableByDimCursor<T> cursor, final int[] offset, final int size[] )
 	{
-		super( cursor.getStorageContainer(), cursor.getImage(), cursor.getType() );
+		super( cursor.getStorageContainer(), cursor.getImage() );
 		
 		this.offset = offset.clone();
 		this.size = size.clone();		

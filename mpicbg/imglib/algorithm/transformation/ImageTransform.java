@@ -20,6 +20,7 @@ import mpicbg.imglib.algorithm.OutputAlgorithm;
 import mpicbg.imglib.algorithm.math.MathLib;
 import mpicbg.imglib.cursor.LocalizableCursor;
 import mpicbg.imglib.image.Image;
+import mpicbg.imglib.image.ImageFactory;
 import mpicbg.imglib.interpolation.Interpolator;
 import mpicbg.imglib.interpolation.InterpolatorFactory;
 import mpicbg.imglib.type.Type;
@@ -39,6 +40,8 @@ public class ImageTransform<T extends Type<T>> implements OutputAlgorithm<T>
 	final InterpolatorFactory<T> interpolatorFactory;
 	final boolean isAffine;
 	
+	ImageFactory<T> outputImageFactory;
+	
 	final int[] newDim;
 	final float[] offset;
 	
@@ -51,6 +54,7 @@ public class ImageTransform<T extends Type<T>> implements OutputAlgorithm<T>
 		this.interpolatorFactory = interpolatorFactory;
 		this.numDimensions = img.getNumDimensions();
 		this.transform = transform;		
+		this.outputImageFactory = img.getImageFactory();
 
 		if ( transform instanceof AffineModel3D ||
 			 transform instanceof AffineModel2D ||
@@ -81,6 +85,9 @@ public class ImageTransform<T extends Type<T>> implements OutputAlgorithm<T>
 		}		
 	}
 	
+	public void setOutputImageFactory( final ImageFactory<T> outputImageFactory ) { this.outputImageFactory = outputImageFactory; } 
+	public ImageFactory<T> getOutputImageFactory() { return this.outputImageFactory; } 
+	
 	public float[] getOffset() { return offset; }
 	public void setOffset( final float[] offset ) 
 	{
@@ -107,9 +114,9 @@ public class ImageTransform<T extends Type<T>> implements OutputAlgorithm<T>
 			errorMessage = "AffineTransform: [Image<T> img] is null.";
 			return false;
 		}
-		else if ( interpolatorFactory.getOutsideStrategyFactory() == null )
+		else if ( interpolatorFactory.getOutOfBoundsStrategyFactory() == null )
 		{
-			errorMessage = "AffineTransform: [OutsideStrategyFactory<T> of interpolatorFactory] is null.";
+			errorMessage = "AffineTransform: [OutOfBoundsStrategyFactory<T> of interpolatorFactory] is null.";
 			return false;
 		}
 		else if ( interpolatorFactory == null )
@@ -140,13 +147,10 @@ public class ImageTransform<T extends Type<T>> implements OutputAlgorithm<T>
 			return false;
 		
 		// create the new output image
-		transformed = img.createNewImage( newDim );
+		transformed = outputImageFactory.createImage( newDim );
 
 		final LocalizableCursor<T> transformedIterator = transformed.createLocalizableCursor();
 		final Interpolator<T> interpolator = img.createInterpolator( interpolatorFactory );
-
-		final T transformedValue = transformedIterator.getType();		
-		final T interpolatedValue = interpolator.getType();		
 		
 		try
 		{
@@ -173,7 +177,7 @@ public class ImageTransform<T extends Type<T>> implements OutputAlgorithm<T>
 				// does the same, but for affine typically slower
 				// interpolator.setPosition( tmp );
 	
-				transformedValue.set( interpolatedValue );
+				transformedIterator.getType().set( interpolator.getType() );
 			}		
 		} 
 		catch ( NoninvertibleModelException e )

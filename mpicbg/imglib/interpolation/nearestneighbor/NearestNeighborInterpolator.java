@@ -34,20 +34,18 @@ import mpicbg.imglib.cursor.LocalizableByDimCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.interpolation.InterpolatorFactory;
 import mpicbg.imglib.interpolation.InterpolatorImpl;
-import mpicbg.imglib.outside.OutsideStrategyFactory;
+import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
 import mpicbg.imglib.type.Type;
 
 public class NearestNeighborInterpolator<T extends Type<T>> extends InterpolatorImpl<T>
 {
 	final LocalizableByDimCursor<T> cursor;
-	final T type;
 	
-	protected NearestNeighborInterpolator( final Image<T> img, final InterpolatorFactory<T> interpolatorFactory, final OutsideStrategyFactory<T> outsideStrategyFactory )
+	protected NearestNeighborInterpolator( final Image<T> img, final InterpolatorFactory<T> interpolatorFactory, final OutOfBoundsStrategyFactory<T> outOfBoundsStrategyFactory )
 	{
-		super(img, interpolatorFactory, outsideStrategyFactory);
+		super(img, interpolatorFactory, outOfBoundsStrategyFactory);
 		
-		cursor = img.createLocalizableByDimCursor( outsideStrategyFactory );
-		type = cursor.getType();
+		cursor = img.createLocalizableByDimCursor( outOfBoundsStrategyFactory );
 		
 		moveTo( position );		
 	}
@@ -56,7 +54,7 @@ public class NearestNeighborInterpolator<T extends Type<T>> extends Interpolator
 	public void close() { cursor.close(); }
 
 	@Override
-	public T getType() { return type; }
+	public T getType() { return cursor.getType(); }
 
 	@Override
 	public void moveTo( final float[] position )

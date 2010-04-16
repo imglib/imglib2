@@ -29,7 +29,7 @@
  */
 package mpicbg.imglib.container.basictypecontainer;
 
-public interface DataAccess//<T extends Type<T>, A extends DataAccess<T, A>>
+public interface DataAccess
 {
 	public void close();
 }
