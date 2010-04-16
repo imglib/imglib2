@@ -82,13 +82,18 @@ public class ImagePlusAdapter
 		}
 	}
 
-	protected static void setCalibrationFromImagePlus( Image image, ImagePlus imp ) {
-		int d = image.getNumDimensions();
-		float [] spacing = new float[d];
+	protected static void setCalibrationFromImagePlus( final Image<?> image, final ImagePlus imp ) 
+	{
+		final int d = image.getNumDimensions();
+		final float [] spacing = new float[d];
+		
 		for( int i = 0; i < d; ++i )
 			spacing[i] = 1f;
-		Calibration c = imp.getCalibration();
-		if( c != null ) {
+		
+		final Calibration c = imp.getCalibration();
+		
+		if( c != null ) 
+		{
 			if( d >= 1 )
 				spacing[0] = (float)c.pixelWidth;
 			if( d >= 2 )
@@ -98,6 +103,7 @@ public class ImagePlusAdapter
 			if( d >= 4 )
 				spacing[3] = (float)c.frameInterval;
 		}
+		
 		image.setCalibration( spacing );
 	}
 	
