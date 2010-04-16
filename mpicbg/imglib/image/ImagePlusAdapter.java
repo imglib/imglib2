@@ -103,7 +103,7 @@ public class ImagePlusAdapter
 			if( d >= 4 )
 				spacing[3] = (float)c.frameInterval;
 		}
-		
+
 		image.setCalibration( spacing );
 	}
 	
