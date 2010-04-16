@@ -4,7 +4,7 @@ import mpicbg.imglib.cursor.LocalizableCursor;
 
 import mpicbg.imglib.image.Image;
 
-import mpicbg.imglib.type.numeric.FloatType;
+import mpicbg.imglib.type.numeric.real.FloatType;
 
 import static org.junit.Assert.assertTrue;
 

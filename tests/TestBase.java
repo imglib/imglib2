@@ -10,9 +10,9 @@ import mpicbg.imglib.cursor.LocalizableCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.ImageFactory;
 
-import mpicbg.imglib.type.NumericType;
+import mpicbg.imglib.type.numeric.RealType;
 
-import mpicbg.imglib.type.numeric.FloatType;
+import mpicbg.imglib.type.numeric.real.FloatType;
 
 /**
  * The base class for JUnit tests
@@ -41,13 +41,13 @@ public class TestBase {
 	/**
 	 * Check whether an image is identical to a generated image
 	 */
-	protected<T extends NumericType<T>> boolean match( Image<T> image, Function function ) {
+	protected<T extends RealType<T>> boolean match( Image<T> image, Function function ) {
 		LocalizableCursor<T> cursor = image.createLocalizableCursor();
 		int[] pos = new int[cursor.getNumDimensions()];
 		while( cursor.hasNext() ) {
 			cursor.fwd();
 			cursor.getPosition( pos );
-			if( function.calculate( pos ) != cursor.getType().getReal() )
+			if( function.calculate( pos ) != cursor.getType().getRealFloat() )
 				return false;
 		}
 		cursor.close();
@@ -57,13 +57,13 @@ public class TestBase {
 	/**
 	 * Check whether an image is identical to a generated image, with fuzz
 	 */
-	protected<T extends NumericType<T>> boolean match( Image<T> image, Function function, float tolerance ) {
+	protected<T extends RealType<T>> boolean match( Image<T> image, Function function, float tolerance ) {
 		LocalizableCursor<T> cursor = image.createLocalizableCursor();
 		int[] pos = new int[cursor.getNumDimensions()];
 		while( cursor.hasNext() ) {
 			cursor.fwd();
 			cursor.getPosition( pos );
-			if( Math.abs( function.calculate( pos ) - cursor.getType().getReal() ) > tolerance )
+			if( Math.abs( function.calculate( pos ) - cursor.getType().getRealFloat() ) > tolerance )
 				return false;
 		}
 		cursor.close();
@@ -75,7 +75,7 @@ public class TestBase {
 	 *
 	 * The image signature are 1st and 2nd order moments of the intensity and the coordinates.
 	 */
-	protected<T extends NumericType<T>> float[] signature( Image<T> image ) {
+	protected<T extends RealType<T>> float[] signature( Image<T> image ) {
 		float[] result = new float[( image.getNumDimensions() + 1 ) * 2];
 		signature( image, result );
 		return result;
@@ -86,7 +86,7 @@ public class TestBase {
 	 *
 	 * The image signature are 1st and 2nd order moments of the intensity and the coordinates.
 	 */
-	protected<T extends NumericType<T>> void signature( Image<T> image, float[] result ) {
+	protected<T extends RealType<T>> void signature( Image<T> image, float[] result ) {
 		Arrays.fill( result, 0 );
 		LocalizableCursor<T> cursor = image.createLocalizableCursor();
 		int dim = cursor.getNumDimensions();
@@ -94,7 +94,7 @@ public class TestBase {
 		while( cursor.hasNext() ) {
 			cursor.fwd();
 			cursor.getPosition( pos );
-			float value = cursor.getType().getReal();
+			float value = cursor.getType().getRealFloat();
 			result[0] += value;
 			result[dim + 1] += value * value;
 			for( int i = 0; i < dim; i++ ) {
@@ -123,7 +123,7 @@ public class TestBase {
 	 *
 	 * When it is hard/computationally expensive to calculate the values of the expected image, we need a quick test like this one.
 	 */
-	protected<T extends NumericType<T>> boolean matchSignature( Image<T> image, float[] signature) {
+	protected<T extends RealType<T>> boolean matchSignature( Image<T> image, float[] signature) {
 		float[] result = signature(image);
 		return Arrays.equals( result, signature );
 	}
@@ -133,7 +133,7 @@ public class TestBase {
 	 *
 	 * When it is hard/computationally expensive to calculate the values of the expected image, we need a quick test like this one.
 	 */
-	protected<T extends NumericType<T>> boolean matchSignature( Image<T> image, float[] signature, float tolerance) {
+	protected<T extends RealType<T>> boolean matchSignature( Image<T> image, float[] signature, float tolerance) {
 		float[] result = signature(image);
 		for (int i = 0; i < signature.length; i++)
 			if (Math.abs(result[i] - signature[i]) > tolerance)
@@ -144,10 +144,10 @@ public class TestBase {
 	/**
 	 * Convenience helper to access single pixels
 	 */
-	protected<T extends NumericType<T>> float get( Image<T> image, int[] pos ) {
+	protected<T extends RealType<T>> float get( Image<T> image, int[] pos ) {
 		LocalizableByDimCursor<T> cursor = image.createLocalizableByDimCursor();
 		cursor.setPosition( pos );
-		float result = cursor.getType().getReal();
+		float result = cursor.getType().getRealFloat();
 		cursor.close();
 		return result;
 	}
@@ -155,14 +155,14 @@ public class TestBase {
 	/**
 	 * Convenience helper to access single pixels
 	 */
-	protected<T extends NumericType<T>> float get3D( Image<T> image, int x, int y, int z ) {
+	protected<T extends RealType<T>> float get3D( Image<T> image, int x, int y, int z ) {
 		return get( image, new int[] { x, y, z } );
 	}
 
 	/**
 	 * Generate an image
 	 */
-	protected<T extends NumericType<T>> Image<T> makeImage( T type, Function function, int[] dims ) {
+	protected<T extends RealType<T>> Image<T> makeImage( T type, Function function, int[] dims ) {
 		ImageFactory<T> factory = new ImageFactory<T>(type, new ArrayContainerFactory());
 		Image<T> result = factory.createImage( dims );
 		LocalizableCursor<T> cursor = result.createLocalizableCursor();
