@@ -31,27 +31,27 @@ package mpicbg.imglib.interpolation.nearestneighbor;
 
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.interpolation.InterpolatorFactory;
-import mpicbg.imglib.outside.OutsideStrategyFactory;
+import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
 import mpicbg.imglib.type.Type;
 
 public class NearestNeighborInterpolatorFactory<T extends Type<T>> extends InterpolatorFactory<T>
 {
-	public NearestNeighborInterpolatorFactory( final OutsideStrategyFactory<T> outsideStrategyFactory )
+	public NearestNeighborInterpolatorFactory( final OutOfBoundsStrategyFactory<T> outOfBoundsStrategyFactory )
 	{
-		super(outsideStrategyFactory);
+		super(outOfBoundsStrategyFactory);
 	}
 
 	@Override
 	public NearestNeighborInterpolator<T> createInterpolator( final Image<T> img )
 	{
 		//if ( img.getNumDimensions() == 1)
-		//	return new NearestNeighborInterpolator1D<T>( img, this, outsideStrategyFactory );
+		//	return new NearestNeighborInterpolator1D<T>( img, this, outOfBoundsStrategyFactory );
 		//else if ( img.getNumDimensions() == 2)
-		//	return new NearestNeighborInterpolator2D<T>( img, this, outsideStrategyFactory );
+		//	return new NearestNeighborInterpolator2D<T>( img, this, outOfBoundsStrategyFactory );
 		//else 
 		if ( img.getNumDimensions() == 3)
-			return new NearestNeighborInterpolator3D<T>( img, this, outsideStrategyFactory );
+			return new NearestNeighborInterpolator3D<T>( img, this, outOfBoundsStrategyFactory );
 		else
-			return new NearestNeighborInterpolator<T>( img, this, outsideStrategyFactory );
+			return new NearestNeighborInterpolator<T>( img, this, outOfBoundsStrategyFactory );
 	}
 }

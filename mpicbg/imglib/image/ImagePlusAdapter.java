@@ -30,6 +30,7 @@
 package mpicbg.imglib.image;
 
 import ij.ImagePlus;
+import ij.measure.Calibration;
 import mpicbg.imglib.container.imageplus.ByteImagePlus;
 import mpicbg.imglib.container.imageplus.FloatImagePlus;
 import mpicbg.imglib.container.imageplus.ImagePlusContainerFactory;
@@ -37,18 +38,18 @@ import mpicbg.imglib.container.imageplus.IntImagePlus;
 import mpicbg.imglib.container.imageplus.ShortImagePlus;
 import mpicbg.imglib.cursor.Cursor;
 import mpicbg.imglib.image.Image;
-import mpicbg.imglib.type.NumericType;
 import mpicbg.imglib.type.Type;
 import mpicbg.imglib.type.TypeConverter;
-import mpicbg.imglib.type.numeric.UnsignedByteType;
-import mpicbg.imglib.type.numeric.FloatType;
+import mpicbg.imglib.type.numeric.RealType;
 import mpicbg.imglib.type.numeric.RGBALegacyType;
-import mpicbg.imglib.type.numeric.UnsignedShortType;
+import mpicbg.imglib.type.numeric.integer.UnsignedByteType;
+import mpicbg.imglib.type.numeric.integer.UnsignedShortType;
+import mpicbg.imglib.type.numeric.real.FloatType;
 
 public class ImagePlusAdapter
 {
 	@SuppressWarnings("unchecked")
-	public static <T extends NumericType<T>> Image< T > wrap( final ImagePlus imp )
+	public static <T extends RealType<T>> Image< T > wrap( final ImagePlus imp )
 	{
 		return (Image<T>) wrapLocal(imp);
 	}
@@ -80,16 +81,49 @@ public class ImagePlusAdapter
 			}
 		}
 	}
+
+	protected static void setCalibrationFromImagePlus( final Image<?> image, final ImagePlus imp ) 
+	{
+		final int d = image.getNumDimensions();
+		final float [] spacing = new float[d];
+		
+		for( int i = 0; i < d; ++i )
+			spacing[i] = 1f;
+		
+		final Calibration c = imp.getCalibration();
+		
+		if( c != null ) 
+		{
+			if( d >= 1 )
+				spacing[0] = (float)c.pixelWidth;
+			if( d >= 2 )
+				spacing[1] = (float)c.pixelHeight;
+			if( d >= 3 )
+				spacing[2] = (float)c.pixelDepth;
+			if( d >= 4 )
+				spacing[3] = (float)c.frameInterval;
+		}
+
+		image.setCalibration( spacing );
+	}
 	
 	public static Image<UnsignedByteType> wrapByte( final ImagePlus imp )
 	{
 		if ( imp.getType() != ImagePlus.GRAY8)
 			return null;
 		
-		ImagePlusContainerFactory containerFactory = new ImagePlusContainerFactory();
-		ByteImagePlus<UnsignedByteType> container = new ByteImagePlus<UnsignedByteType>( imp,  containerFactory );
-		ImageFactory<UnsignedByteType> imageFactory = new ImageFactory<UnsignedByteType>( new UnsignedByteType(), containerFactory );				
-		Image<UnsignedByteType> image = new Image<UnsignedByteType>( container, imageFactory, imp.getTitle() );
+		final ImagePlusContainerFactory containerFactory = new ImagePlusContainerFactory();
+		final ByteImagePlus<UnsignedByteType> container = new ByteImagePlus<UnsignedByteType>( imp,  containerFactory );
+
+		// create a Type that is linked to the container
+		final UnsignedByteType linkedType = new UnsignedByteType( container );
+		
+		// pass it to the DirectAccessContainer
+		container.setLinkedType( linkedType );
+
+		final Image<UnsignedByteType> image = new Image<UnsignedByteType>( container, new UnsignedByteType(), imp.getTitle() );
+
+		setCalibrationFromImagePlus( image, imp );
 		
 		return image;		
 	}
@@ -99,10 +133,18 @@ public class ImagePlusAdapter
 		if ( imp.getType() != ImagePlus.GRAY16)
 			return null;
 
-		ImagePlusContainerFactory containerFactory = new ImagePlusContainerFactory();
-		ShortImagePlus<UnsignedShortType> container = new ShortImagePlus<UnsignedShortType>( imp,  containerFactory );
-		ImageFactory<UnsignedShortType> imageFactory = new ImageFactory<UnsignedShortType>( new UnsignedShortType(), containerFactory );				
-		Image<UnsignedShortType> image = new Image<UnsignedShortType>( container, imageFactory, imp.getTitle() );
+		final ImagePlusContainerFactory containerFactory = new ImagePlusContainerFactory();
+		final ShortImagePlus<UnsignedShortType> container = new ShortImagePlus<UnsignedShortType>( imp,  containerFactory );
+
+		// create a Type that is linked to the container
+		final UnsignedShortType linkedType = new UnsignedShortType( container );
+		
+		// pass it to the DirectAccessContainer
+		container.setLinkedType( linkedType );
+
+		Image<UnsignedShortType> image = new Image<UnsignedShortType>( container, new UnsignedShortType(), imp.getTitle() );
+
+		setCalibrationFromImagePlus( image, imp );
 		
 		return image;						
 	}
@@ -112,10 +154,18 @@ public class ImagePlusAdapter
 		if ( imp.getType() != ImagePlus.COLOR_RGB)
 			return null;
 
-		ImagePlusContainerFactory containerFactory = new ImagePlusContainerFactory();
-		IntImagePlus<RGBALegacyType> container = new IntImagePlus<RGBALegacyType>( imp,  containerFactory );
-		ImageFactory<RGBALegacyType> imageFactory = new ImageFactory<RGBALegacyType>( new RGBALegacyType(), containerFactory );				
-		Image<RGBALegacyType> image = new Image<RGBALegacyType>( container, imageFactory, imp.getTitle() );
+		final ImagePlusContainerFactory containerFactory = new ImagePlusContainerFactory();
+		final IntImagePlus<RGBALegacyType> container = new IntImagePlus<RGBALegacyType>( imp,  containerFactory );
+
+		// create a Type that is linked to the container
+		final RGBALegacyType linkedType = new RGBALegacyType( container );
+		
+		// pass it to the DirectAccessContainer
+		container.setLinkedType( linkedType );
+
+		final Image<RGBALegacyType> image = new Image<RGBALegacyType>( container, new RGBALegacyType(), imp.getTitle() );
+
+		setCalibrationFromImagePlus( image, imp );
 		
 		return image;				
 	}	
@@ -125,10 +175,18 @@ public class ImagePlusAdapter
 		if ( imp.getType() != ImagePlus.GRAY32)
 			return null;
 
-		ImagePlusContainerFactory containerFactory = new ImagePlusContainerFactory();
-		FloatImagePlus<FloatType> container = new FloatImagePlus<FloatType>( imp,  containerFactory );
-		ImageFactory<FloatType> imageFactory = new ImageFactory<FloatType>( new FloatType(), containerFactory );				
-		Image<FloatType> image = new Image<FloatType>( container, imageFactory, imp.getTitle() );
+		final ImagePlusContainerFactory containerFactory = new ImagePlusContainerFactory();
+		final FloatImagePlus<FloatType> container = new FloatImagePlus<FloatType>( imp,  containerFactory );
+
+		// create a Type that is linked to the container
+		final FloatType linkedType = new FloatType( container );
+		
+		// pass it to the DirectAccessContainer
+		container.setLinkedType( linkedType );
+
+		final Image<FloatType> image = new Image<FloatType>( container, new FloatType(), imp.getTitle() );
+
+		setCalibrationFromImagePlus( image, imp );
 		
 		return image;				
 	}	

@@ -33,7 +33,7 @@ import mpicbg.imglib.algorithm.math.MathLib;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.interpolation.Interpolator3D;
 import mpicbg.imglib.interpolation.InterpolatorFactory;
-import mpicbg.imglib.outside.OutsideStrategyFactory;
+import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
 import mpicbg.imglib.type.Type;
 
 public class NearestNeighborInterpolator3D<T extends Type<T>> extends NearestNeighborInterpolator<T> implements Interpolator3D<T>
@@ -43,11 +43,11 @@ public class NearestNeighborInterpolator3D<T extends Type<T>> extends NearestNei
 	
 	float x, y, z;
 	
-	protected NearestNeighborInterpolator3D( final Image<T> img, final InterpolatorFactory<T> interpolatorFactory, final OutsideStrategyFactory<T> outsideStrategyFactory )
+	protected NearestNeighborInterpolator3D( final Image<T> img, final InterpolatorFactory<T> interpolatorFactory, final OutOfBoundsStrategyFactory<T> outOfBoundsStrategyFactory )
 	{
-		super( img, interpolatorFactory, outsideStrategyFactory );
+		super( img, interpolatorFactory, outOfBoundsStrategyFactory );
 		
-		//cursor = img.createLocalizableByDimCursor( outsideStrategyFactory );
+		//cursor = img.createLocalizableByDimCursor( outOfBoundsStrategyFactory );
 		//type = cursor.getType();
 		
 		x = 0;
@@ -72,16 +72,10 @@ public class NearestNeighborInterpolator3D<T extends Type<T>> extends NearestNei
 	}
 
 	@Override
-	public float[] getPosition() 
-	{ 
-		return new float[]{ x, y, z };	
-	}	
+	public float[] getPosition() { return new float[]{ x, y, z }; }	
 	
 	@Override
 	public void close() { cursor.close(); }
-
-	@Override
-	public T getType() { return type; }
 	
 	@Override
 	public void moveTo( final float x, final float y, final float z )

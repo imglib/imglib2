@@ -30,26 +30,25 @@
 package mpicbg.imglib.type.numeric;
 
 import mpicbg.imglib.algorithm.math.MathLib;
-import mpicbg.imglib.container.Container;
-import mpicbg.imglib.container.ContainerFactory;
+import mpicbg.imglib.container.DirectAccessContainer;
+import mpicbg.imglib.container.DirectAccessContainerFactory;
 import mpicbg.imglib.container.basictypecontainer.IntAccess;
 import mpicbg.imglib.container.basictypecontainer.array.IntArray;
 import mpicbg.imglib.cursor.Cursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.display.imagej.RGBALegacyTypeDisplay;
-import mpicbg.imglib.type.NumericType;
 import mpicbg.imglib.type.TypeImpl;
 
 final public class RGBALegacyType extends TypeImpl<RGBALegacyType> implements NumericType<RGBALegacyType>
 {
-	// the Container
-	final Container<RGBALegacyType, IntAccess> storage;
+	// the DirectAccessContainer
+	final DirectAccessContainer<RGBALegacyType, ? extends IntAccess> storage;
 	
-	// the (sub)container that holds the information 
+	// the (sub)DirectAccessContainer that holds the information 
 	IntAccess b;
 	
 	// this is the constructor if you want it to read from an array
-	public RGBALegacyType( Container<RGBALegacyType, IntAccess> byteStorage )
+	public RGBALegacyType( DirectAccessContainer<RGBALegacyType, ? extends IntAccess> byteStorage )
 	{
 		storage = byteStorage;
 	}
@@ -66,21 +65,33 @@ final public class RGBALegacyType extends TypeImpl<RGBALegacyType> implements Nu
 	public RGBALegacyType() { this( 0 ); }
 	
 	@Override
-	public Container<RGBALegacyType, ? extends IntAccess> createSuitableContainer( final ContainerFactory storageFactory, final int dim[] )
+	public DirectAccessContainer<RGBALegacyType, ? extends IntAccess> createSuitableDirectAccessContainer( final DirectAccessContainerFactory storageFactory, final int dim[] )
 	{
-		return storageFactory.createIntInstance( dim, 1 );	
-	}
-
-	@Override
-	public RGBALegacyTypeDisplay getDefaultDisplay( Image<RGBALegacyType> image )
-	{
-		return new RGBALegacyTypeDisplay( image );
+		// create the container
+		final DirectAccessContainer<RGBALegacyType, ? extends IntAccess> container = storageFactory.createIntInstance( dim, 1 );
+		
+		// create a Type that is linked to the container
+		final RGBALegacyType linkedType = new RGBALegacyType( container );
+		
+		// pass it to the DirectAccessContainer
+		container.setLinkedType( linkedType );
+		
+		return container;
 	}
 
 	@Override
 	public void updateContainer( final Cursor<?> c ) 
 	{ 
 		b = storage.update( c );
+	}
+
+	@Override
+	public RGBALegacyType duplicateTypeOnSameDirectAccessContainer() { return new RGBALegacyType( storage ); }
+	
+	@Override
+	public RGBALegacyTypeDisplay getDefaultDisplay( Image<RGBALegacyType> image )
+	{
+		return new RGBALegacyTypeDisplay( image );
 	}
 
 	final public static int rgba( final int r, final int g, final int b, final int a)
@@ -120,21 +131,7 @@ final public class RGBALegacyType extends TypeImpl<RGBALegacyType> implements Nu
 	
 	public int get(){ return b.getValue( i ); }
 	public void set( final int f ){ b.setValue( i, f ); }
-	
-	@Override
-	public float getReal() 
-	{
-		final int value = get();
-		return ( red( value ) + green( value ) + blue( value ) ) / 3; 
-	}
-	
-	@Override
-	public void setReal( final float f ) 
-	{
-		final int value = MathLib.round( f );
-		set( rgba( value, value, value, 0 ) );
-	}
-
+		
 	@Override
 	public void mul( final float c )
 	{
@@ -207,20 +204,6 @@ final public class RGBALegacyType extends TypeImpl<RGBALegacyType> implements Nu
 
 	@Override
 	public void setZero() { set( 0 ); }
-
-	@Override
-	public void inc()
-	{
-		final int a = get();
-		set( rgba( red( a ) + 1, green( a ) + 1, blue( a ) + 1, alpha( a ) + 1 ) );
-	}
-
-	@Override
-	public void dec()
-	{
-		final int a = get();
-		set( rgba( red( a ) - 1, green( a ) - 1, blue( a ) - 1, alpha( a ) - 1 ) );
-	}
 	
 	@Override
 	public RGBALegacyType[] createArray1D(int size1){ return new RGBALegacyType[ size1 ]; }
@@ -230,15 +213,6 @@ final public class RGBALegacyType extends TypeImpl<RGBALegacyType> implements Nu
 
 	@Override
 	public RGBALegacyType[][][] createArray3D(int size1, int size2, int size3) { return new RGBALegacyType[ size1 ][ size2 ][ size3 ]; }
-
-	//@Override
-	//public RGBALegacyType getType() { return this; }
-	
-	@Override
-	public RGBALegacyType createType( Container<RGBALegacyType,?> container )
-	{
-		return new RGBALegacyType( (Container<RGBALegacyType, IntAccess>)container );
-	}
 
 	@Override
 	public RGBALegacyType createVariable() { return new RGBALegacyType( 0 ); }

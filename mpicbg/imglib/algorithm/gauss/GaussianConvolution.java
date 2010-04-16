@@ -22,21 +22,23 @@ import mpicbg.imglib.algorithm.Benchmark;
 import mpicbg.imglib.algorithm.MultiThreaded;
 import mpicbg.imglib.algorithm.OutputAlgorithm;
 import mpicbg.imglib.algorithm.math.MathLib;
+import mpicbg.imglib.container.DirectAccessContainer;
 import mpicbg.imglib.container.array.Array3D;
+import mpicbg.imglib.container.basictypecontainer.FloatAccess;
 import mpicbg.imglib.container.basictypecontainer.array.FloatArray;
 import mpicbg.imglib.cursor.LocalizableByDimCursor;
 import mpicbg.imglib.cursor.LocalizableByDimCursor3D;
 import mpicbg.imglib.cursor.LocalizableCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.multithreading.SimpleMultiThreading;
-import mpicbg.imglib.outside.OutsideStrategyFactory;
-import mpicbg.imglib.type.NumericType;
-import mpicbg.imglib.type.numeric.FloatType;
+import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
+import mpicbg.imglib.type.numeric.NumericType;
+import mpicbg.imglib.type.numeric.real.FloatType;
 
 public class GaussianConvolution< T extends NumericType<T>> implements MultiThreaded, OutputAlgorithm<T>, Benchmark
 {	
 	final Image<T> image, convolved;
-	final OutsideStrategyFactory<T> outsideFactory;
+	final OutOfBoundsStrategyFactory<T> outOfBoundsFactory;
 	final int numDimensions;
 	final double[] sigma;
     final double[][] kernel;
@@ -45,7 +47,7 @@ public class GaussianConvolution< T extends NumericType<T>> implements MultiThre
 	int numThreads;
 	String errorMessage = "";
 
-	public GaussianConvolution( final Image<T> image, final OutsideStrategyFactory<T> outsideFactory, final double[] sigma )
+	public GaussianConvolution( final Image<T> image, final OutOfBoundsStrategyFactory<T> outOfBoundsFactory, final double[] sigma )
 	{
 		this.image = image;
 		this.convolved = image.createNewImage();
@@ -53,7 +55,7 @@ public class GaussianConvolution< T extends NumericType<T>> implements MultiThre
 		this.processingTime = -1;
 		setNumThreads();
 		
-		this.outsideFactory = outsideFactory;
+		this.outOfBoundsFactory = outOfBoundsFactory;
 		this.numDimensions = image.getNumDimensions();
 
 		this.kernel = new double[ numDimensions ][];
@@ -62,9 +64,9 @@ public class GaussianConvolution< T extends NumericType<T>> implements MultiThre
 			this.kernel[ d ] = MathLib.createGaussianKernel1DDouble( sigma[ d ], true );
 	}
 
-	public GaussianConvolution( final Image<T> image, final OutsideStrategyFactory<T> outsideFactory, final double sigma )
+	public GaussianConvolution( final Image<T> image, final OutOfBoundsStrategyFactory<T> outOfBoundsFactory, final double sigma )
 	{
-		this ( image, outsideFactory, createArray(image, sigma));
+		this ( image, outOfBoundsFactory, createArray(image, sigma));
 	}
 	
 	protected static double[] createArray( final Image<?> image, final double sigma )
@@ -112,9 +114,9 @@ public class GaussianConvolution< T extends NumericType<T>> implements MultiThre
 			errorMessage = "GaussianConvolution: [Image<T> img] is null.";
 			return false;
 		}
-		else if ( outsideFactory == null )
+		else if ( outOfBoundsFactory == null )
 		{
-			errorMessage = "GaussianConvolution: [OutsideStrategyFactory<T>] is null.";
+			errorMessage = "GaussianConvolution: [OutOfBoundsStrategyFactory<T>] is null.";
 			return false;
 		}
 		else
@@ -172,17 +174,17 @@ public class GaussianConvolution< T extends NumericType<T>> implements MultiThre
 	                	{
 	                		if ( currentDim == 0 ) // first dimension convolve to the temporary image
 	                		{
-			                	inputIterator = image.createLocalizableByDimCursor( outsideFactory );
+			                	inputIterator = image.createLocalizableByDimCursor( outOfBoundsFactory );
 			                    outputIterator = temp.createLocalizableCursor();	                			
 	                		}
 	                		else if ( currentDim % 2 == 1 ) // for odd dimension ids we convolve to the output image, because that might be the last convolution  
 	                		{
-			                	inputIterator = temp.createLocalizableByDimCursor( outsideFactory );
+			                	inputIterator = temp.createLocalizableByDimCursor( outOfBoundsFactory );
 			                    outputIterator = convolved.createLocalizableCursor();
 	                		}
 	                		else //if ( currentDim % 2 == 0 ) // for even dimension ids we convolve to the temp image, it is not the last convolution for sure
 	                		{
-			                	inputIterator = convolved.createLocalizableByDimCursor( outsideFactory );
+			                	inputIterator = convolved.createLocalizableByDimCursor( outOfBoundsFactory );
 			                    outputIterator = temp.createLocalizableCursor();
 	                		}	                		
 	                	}
@@ -190,17 +192,17 @@ public class GaussianConvolution< T extends NumericType<T>> implements MultiThre
 	                	{
 	                		if ( currentDim == 0 ) // first dimension convolve to the output image, in the 1d case we are done then already
 	                		{
-			                	inputIterator = image.createLocalizableByDimCursor( outsideFactory );
+			                	inputIterator = image.createLocalizableByDimCursor( outOfBoundsFactory );
 			                    outputIterator = convolved.createLocalizableCursor();	                			
 	                		}
 	                		else if ( currentDim % 2 == 1 ) // for odd dimension ids we convolve to the output image, because that might be the last convolution  
 	                		{
-			                	inputIterator = convolved.createLocalizableByDimCursor( outsideFactory );
+			                	inputIterator = convolved.createLocalizableByDimCursor( outOfBoundsFactory );
 			                    outputIterator = temp.createLocalizableCursor();
 	                		}
 	                		else //if ( currentDim % 2 == 0 ) // for even dimension ids we convolve to the temp image, it is not the last convolution for sure
 	                		{
-			                	inputIterator = temp.createLocalizableByDimCursor( outsideFactory );
+			                	inputIterator = temp.createLocalizableByDimCursor( outOfBoundsFactory );
 			                    outputIterator = convolved.createLocalizableCursor();
 	                		}	 
 	                	}
@@ -238,7 +240,7 @@ public class GaussianConvolution< T extends NumericType<T>> implements MultiThre
         return true;
 	}
 	
-	protected static <T extends NumericType<T>> void convolve( final LocalizableByDimCursor<T> inputIterator, final LocalizableCursor<T> outputIterator, 
+	protected void convolve( final LocalizableByDimCursor<T> inputIterator, final LocalizableCursor<T> outputIterator, 
 															   final int dim, final float[] kernel,
 															   final long startPos, final long loopSize )
 	{		
@@ -328,16 +330,16 @@ public class GaussianConvolution< T extends NumericType<T>> implements MultiThre
 	@SuppressWarnings("unchecked")
 	public void computeGaussFloatArray3D()
 	{
-		/* inconvertible types due to javac bug 6548436: final OutsideStrategyFactory<FloatType> outsideFactoryFloat = (OutsideStrategyFactory<FloatType>)outsideFactory;  */
-		final OutsideStrategyFactory<FloatType> outsideFactoryFloat = (OutsideStrategyFactory)outsideFactory;
+		/* inconvertible types due to javac bug 6548436: final OutOfBoundsStrategyFactory<FloatType> outOfBoundsFactoryFloat = (OutOfBoundsStrategyFactory<FloatType>)outOfBoundsFactory;  */
+		final OutOfBoundsStrategyFactory<FloatType> outOfBoundsFactoryFloat = (OutOfBoundsStrategyFactory)outOfBoundsFactory;
 		
 		/* inconvertible types due to javac bug 6548436: final Image<FloatType> imageFloat = (Image<FloatType>) image; */
 		final Image<FloatType> imageFloat = (Image)image;
 		/* inconvertible types due to javac bug 6548436: final Image<FloatType> convolvedFloat = (Image<FloatType>) convolved; */
 		final Image<FloatType> convolvedFloat = (Image)convolved;
 		
-		final FloatArray inputArray = (FloatArray) imageFloat.getContainer().update( null );
-		final FloatArray outputArray = (FloatArray) convolvedFloat.getContainer().update( null );
+		final FloatArray inputArray = (FloatArray) ( (DirectAccessContainer<FloatType, FloatAccess>) imageFloat.getContainer() ).update( null );
+		final FloatArray outputArray = (FloatArray) ( (DirectAccessContainer<FloatType, FloatAccess>) convolvedFloat.getContainer() ).update( null );
 		
 		final Array3D input = (Array3D) imageFloat.getContainer();
 		final Array3D output = (Array3D) convolvedFloat.getContainer();
@@ -364,7 +366,7 @@ public class GaussianConvolution< T extends NumericType<T>> implements MultiThre
 					final int filterSize = kernel[ 0 ].length;
 					final int filterSizeHalf = filterSize / 2;
 					
-					final LocalizableByDimCursor3D<FloatType> it = (LocalizableByDimCursor3D<FloatType>)imageFloat.createLocalizableByDimCursor( outsideFactoryFloat );
+					final LocalizableByDimCursor3D<FloatType> it = (LocalizableByDimCursor3D<FloatType>)imageFloat.createLocalizableByDimCursor( outOfBoundsFactoryFloat );
 
 					// fold in x
 					int kernelPos, count;
@@ -374,7 +376,7 @@ public class GaussianConvolution< T extends NumericType<T>> implements MultiThre
 					for (int f = -filterSizeHalf; f <= filterSizeHalf; f++)
 						posLUT[f + filterSizeHalf] = f;
 
-					// precompute wheater we have to use mirroring or not (mirror when kernel goes outside image range)
+					// precompute wheater we have to use mirroring or not (mirror when kernel goes out of image bounds)
 					final boolean directlyComputable[] = new boolean[width];
 					for (int x = 0; x < width; x++)
 						directlyComputable[x] = (x - filterSizeHalf >= 0 && x + filterSizeHalf < width);
@@ -422,7 +424,7 @@ public class GaussianConvolution< T extends NumericType<T>> implements MultiThre
 					int kernelPos, count;
 
 					final float[] out =  outputArray.getCurrentStorageArray();
-					final LocalizableByDimCursor3D<FloatType> it = (LocalizableByDimCursor3D<FloatType>)convolvedFloat.createLocalizableByDimCursor( outsideFactoryFloat );
+					final LocalizableByDimCursor3D<FloatType> it = (LocalizableByDimCursor3D<FloatType>)convolvedFloat.createLocalizableByDimCursor( outOfBoundsFactoryFloat );
 					final double[] kernel1 = kernel[ 1 ].clone();
 					final int filterSize = kernel[ 1 ].length;
 					final int filterSizeHalf = filterSize / 2;
@@ -496,7 +498,7 @@ public class GaussianConvolution< T extends NumericType<T>> implements MultiThre
 					final int filterSizeHalf = filterSize / 2;
 
 					final float[] out = outputArray.getCurrentStorageArray();
-					final LocalizableByDimCursor3D<FloatType> it = (LocalizableByDimCursor3D<FloatType>)convolvedFloat.createLocalizableByDimCursor( outsideFactoryFloat );
+					final LocalizableByDimCursor3D<FloatType> it = (LocalizableByDimCursor3D<FloatType>)convolvedFloat.createLocalizableByDimCursor( outOfBoundsFactoryFloat );
 
 					final int inc = output.getPos(0, 0, 1);
 					final int posLUT[] = new int[kernel1.length];

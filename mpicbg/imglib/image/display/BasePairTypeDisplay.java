@@ -38,11 +38,15 @@ public class BasePairTypeDisplay<T extends BasePairType<T>> extends Display<T>
 	{
 		super(img);
 		this.min = 0;
-		this.max = 1;
+		this.max = 5;
 	}	
 	
 	@Override
-	public void setMinMax() {}
+	public void setMinMax() 
+	{
+		this.min = 0;
+		this.max = 5;		
+	}
 	
 	@Override
 	public float get32Bit( T c ) { return c.baseToValue(); }

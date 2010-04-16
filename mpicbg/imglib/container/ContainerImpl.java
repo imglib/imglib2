@@ -29,11 +29,10 @@
  */
 package mpicbg.imglib.container;
 
-import mpicbg.imglib.container.basictypecontainer.DataAccess;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.type.Type;
 
-public abstract class ContainerImpl<T extends Type<T>, A extends DataAccess> implements Container<T,A>
+public abstract class ContainerImpl<T extends Type<T>> implements Container<T>
 {
 	final protected int numPixels, numDimensions;
 	final protected long id;
@@ -108,7 +107,7 @@ public abstract class ContainerImpl<T extends Type<T>, A extends DataAccess> imp
 	}
 	
 	@Override
-	public boolean compareStorageContainerDimensions( final Container<?,?> container )
+	public boolean compareStorageContainerDimensions( final Container<?> container )
 	{
 		if ( container.getNumDimensions() != this.getNumDimensions() )
 			return false;
@@ -121,7 +120,7 @@ public abstract class ContainerImpl<T extends Type<T>, A extends DataAccess> imp
 	}		
 
 	@Override
-	public boolean compareStorageContainerCompatibility( final Container<?,?> container )
+	public boolean compareStorageContainerCompatibility( final Container<?> container )
 	{
 		if ( compareStorageContainerDimensions( container ))
 		{			

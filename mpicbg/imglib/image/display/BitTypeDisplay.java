@@ -42,7 +42,11 @@ public class BitTypeDisplay extends Display<BitType>
 	}	
 
 	@Override
-	public void setMinMax() {}
+	public void setMinMax() 
+	{
+		this.min = 0;
+		this.max = 1;
+	}
 	
 	@Override
 	public float get32Bit( BitType c ) { return c.get() ? 1 : 0; }

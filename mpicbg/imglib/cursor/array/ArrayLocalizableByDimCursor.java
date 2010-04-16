@@ -33,9 +33,9 @@ import mpicbg.imglib.container.array.Array;
 import mpicbg.imglib.container.basictypecontainer.FakeAccess;
 import mpicbg.imglib.container.basictypecontainer.array.FakeArray;
 import mpicbg.imglib.cursor.LocalizableByDimCursor;
-import mpicbg.imglib.cursor.LocalizableCursor;
 //import mpicbg.imglib.cursor.link.CursorLink;
 //import mpicbg.imglib.cursor.link.NullLink;
+import mpicbg.imglib.cursor.Localizable;
 import mpicbg.imglib.cursor.special.LocalNeighborhoodCursor;
 import mpicbg.imglib.cursor.special.LocalNeighborhoodCursorFactory;
 import mpicbg.imglib.cursor.special.RegionOfInterestCursor;
@@ -140,16 +140,16 @@ public class ArrayLocalizableByDimCursor<T extends Type<T>> extends ArrayLocaliz
 	}
 
 	@Override
-	public void moveTo( final LocalizableCursor<?> cursor )
+	public void moveTo( final Localizable localizable )
 	{
-		cursor.getPosition( tmp );
+		localizable.getPosition( tmp );
 		moveTo( tmp );
 	}
 
 	@Override
-	public void setPosition( final LocalizableCursor<?> cursor )
+	public void setPosition( final Localizable localizable )
 	{
-		cursor.getPosition( tmp );
+		localizable.getPosition( tmp );
 		setPosition( tmp );
 	}
 	

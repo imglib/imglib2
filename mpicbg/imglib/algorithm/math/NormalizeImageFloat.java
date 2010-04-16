@@ -2,14 +2,14 @@ package mpicbg.imglib.algorithm.math;
 
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.ImageFactory;
-import mpicbg.imglib.type.NumericType;
 import mpicbg.imglib.type.numeric.*;
+import mpicbg.imglib.type.numeric.real.FloatType;
 import mpicbg.imglib.algorithm.Benchmark;
 import mpicbg.imglib.algorithm.OutputAlgorithm;
 import mpicbg.imglib.cursor.*;
 import mpicbg.util.RealSum;
 
-public class NormalizeImageFloat <T extends NumericType<T>> implements OutputAlgorithm<FloatType>, Benchmark
+public class NormalizeImageFloat <T extends RealType<T>> implements OutputAlgorithm<FloatType>, Benchmark
 {
 	private final Image<T> image;
 	private Image<FloatType> outputImage;
@@ -17,7 +17,7 @@ public class NormalizeImageFloat <T extends NumericType<T>> implements OutputAlg
 	private long pTime;
 	
 	
-	public static <T extends NumericType<T>> double sumImage( final Image<T> image )
+	public static <T extends RealType<T>> double sumImage( final Image<T> image )
 	{
 		final RealSum sum = new RealSum();
 		final Cursor<T> cursor = image.createCursor();
@@ -25,7 +25,7 @@ public class NormalizeImageFloat <T extends NumericType<T>> implements OutputAlg
 		while (cursor.hasNext())
 		{
 			cursor.fwd();
-			sum.add(cursor.getType().getReal());
+			sum.add(cursor.getType().getRealFloat());
 		}
 		
 		cursor.close();
@@ -67,7 +67,7 @@ public class NormalizeImageFloat <T extends NumericType<T>> implements OutputAlg
 		{			
 			pullCursor.fwd();
 			pushCursor.setPosition(pullCursor);
-			pushCursor.getType().set((float)(pullCursor.getType().getReal() / norm));
+			pushCursor.getType().set((float)(pullCursor.getType().getRealFloat() / norm));
 		}
 		
 		pTime = System.currentTimeMillis() - startTime;

@@ -34,7 +34,7 @@ import mpicbg.imglib.type.Type;
 public interface Interpolator1D<T extends Type<T>> extends Interpolator<T>
 {
 	/**
-	 * Moves the interpolator to a random position inside or outside the image.
+	 * Moves the interpolator to a random position inside or out of image bounds.
 	 * This method is typically more efficient than setting the position
 	 * 
 	 * @param float x - the float position in x
@@ -42,7 +42,7 @@ public interface Interpolator1D<T extends Type<T>> extends Interpolator<T>
 	public void moveTo( float x );
 
 	/**
-	 * Moves the interpolator a certain distance given by the vector to a random position inside or outside the image.
+	 * Moves the interpolator a certain distance given by the vector to a random position inside or out of image bounds.
 	 * This method is typically more efficient than setting the position
 	 * 
 	 * @param float x - the float vector in x
@@ -50,7 +50,7 @@ public interface Interpolator1D<T extends Type<T>> extends Interpolator<T>
 	public void moveRel( float x );
 	
 	/**
-	 * Sets the interpolator to a random position inside or outside the image.
+	 * Sets the interpolator to a random position inside or out of image bounds.
 	 * This method is typically less efficient than moving the position
 	 * 
 	 * @param float x - the float position in x

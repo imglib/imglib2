@@ -30,7 +30,7 @@
 package mpicbg.imglib.interpolation;
 
 import mpicbg.imglib.image.Image;
-import mpicbg.imglib.outside.OutsideStrategyFactory;
+import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
 import mpicbg.imglib.type.Type;
 
 public interface Interpolator<T extends Type<T>>
@@ -43,11 +43,11 @@ public interface Interpolator<T extends Type<T>>
 	public InterpolatorFactory<T> getInterpolatorFactory();
 	
 	/**
-	 * Returns the typed outside strategy used for interpolation
+	 * Returns the {@link OutOfBoundsStrategyFactory} used for interpolation
 	 * 
-	 * @return - the outside strategy
+	 * @return - the {@link OutOfBoundsStrategyFactory}
 	 */
-	public OutsideStrategyFactory<T> getOutsideStrategyFactory();
+	public OutOfBoundsStrategyFactory<T> getOutOfBoundsStrategyFactory();
 	
 	/**
 	 * Returns the typed image the interpolator is working on
@@ -64,7 +64,7 @@ public interface Interpolator<T extends Type<T>>
 	public T getType();
 	
 	/**
-	 * Moves the interpolator to a random position inside or outside the image.
+	 * Moves the interpolator to a random position inside or out of image bounds.
 	 * This method is typically more efficient than setting the position
 	 * 
 	 * @param position - the floating position of the same dimensionality as the image
@@ -72,7 +72,7 @@ public interface Interpolator<T extends Type<T>>
 	public void moveTo( float[] position );
 
 	/**
-	 * Moves the interpolator a certain distance given by the vector to a random position inside or outside the image.
+	 * Moves the interpolator a certain distance given by the vector to a random position inside or out of image bounds.
 	 * This method is typically more efficient than setting the position
 	 * 
 	 * @param vector - the floating vector of the same dimensionality as the image
@@ -80,7 +80,7 @@ public interface Interpolator<T extends Type<T>>
 	public void moveRel( float[] vector );
 	
 	/**
-	 * Sets the interpolator to a random position inside or outside the image.
+	 * Sets the interpolator to a random position inside or out of image bounds.
 	 * This method is typically less efficient than moving the position
 	 * 
 	 * @param position - the floating position of the same dimensionality as the image

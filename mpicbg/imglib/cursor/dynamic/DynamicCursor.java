@@ -39,13 +39,16 @@ import mpicbg.imglib.type.Type;
 
 public class DynamicCursor<T extends Type<T>> extends CursorImpl<T> implements Cursor<T>
 {
+	protected final T type;
 	protected final DynamicContainer<T,? extends DataAccess> container;
 	protected final DynamicContainerAccessor accessor;
 	int internalIndex;
 	
 	public DynamicCursor( final DynamicContainer<T,? extends DynamicContainerAccessor> container, final Image<T> image, final T type ) 
 	{
-		super( container, image, type );
+		super( container, image );
+		
+		this.type = type;
 		this.container = container;
 	
 		accessor = container.createAccessor();
@@ -54,7 +57,10 @@ public class DynamicCursor<T extends Type<T>> extends CursorImpl<T> implements C
 	}
 	
 	public DynamicContainerAccessor getAccessor() { return accessor; }
-	
+
+	@Override
+	public T getType() { return type; }
+
 	@Override
 	public boolean hasNext() { return internalIndex < container.getNumPixels() - 1; }
 
