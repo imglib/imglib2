@@ -40,9 +40,33 @@ package mpicbg.imglib.cursor;
  */
 public interface Localizable extends Iterable
 {
+	/**
+	 * Write the current position into the passed array.
+	 * 
+	 * @param position
+	 */
 	public void getPosition( int[] position );
+	
+	/**
+	 * Return a copy of the current position.
+	 * 
+	 * @return
+	 */
 	public int[] getPosition();
+	
+	/**
+	 * Return the current position in a given dimension.
+	 * 
+	 * @param dim
+	 * @return
+	 */
 	public int getPosition( int dim );
 	
+	/**
+	 * Create a human-readable {@link String} representation of the current
+	 * position.
+	 * 
+	 * @return
+	 */
 	public String getPositionAsString();
 }

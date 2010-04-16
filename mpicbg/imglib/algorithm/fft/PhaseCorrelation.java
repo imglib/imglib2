@@ -35,12 +35,12 @@ import mpicbg.imglib.cursor.special.LocalNeighborhoodCursor;
 import mpicbg.imglib.cursor.special.RegionOfInterestCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.multithreading.SimpleMultiThreading;
-import mpicbg.imglib.outside.OutsideStrategyPeriodicFactory;
-import mpicbg.imglib.type.NumericType;
-import mpicbg.imglib.type.numeric.ComplexFloatType;
-import mpicbg.imglib.type.numeric.FloatType;
+import mpicbg.imglib.outofbounds.OutOfBoundsStrategyPeriodicFactory;
+import mpicbg.imglib.type.numeric.RealType;
+import mpicbg.imglib.type.numeric.complex.ComplexFloatType;
+import mpicbg.imglib.type.numeric.real.FloatType;
 
-public class PhaseCorrelation<T extends NumericType<T>, S extends NumericType<S>> implements MultiThreaded, Algorithm, Benchmark
+public class PhaseCorrelation<T extends RealType<T>, S extends RealType<S>> implements MultiThreaded, Algorithm, Benchmark
 {
 	final int numDimensions;
 	boolean computeFFTinParalell = true;
@@ -104,14 +104,14 @@ public class PhaseCorrelation<T extends NumericType<T>, S extends NumericType<S>
 		final int[] maxDim = getMaxDim( image1, image2 );
 		
 		// compute fourier transforms
-		final FourierTransform<T> fft1 = new FourierTransform<T>( image1 );
-		final FourierTransform<S> fft2 = new FourierTransform<S>( image2 );
+		final FourierTransform<T, ComplexFloatType> fft1 = new FourierTransform<T, ComplexFloatType>( image1, new ComplexFloatType() );
+		final FourierTransform<S, ComplexFloatType> fft2 = new FourierTransform<S, ComplexFloatType>( image2, new ComplexFloatType() );
 		fft1.setRelativeImageExtension( 0.1f );
 		fft2.setRelativeImageExtension( 0.1f );
 		fft1.setRelativeFadeOutDistance( 0.1f );
 		fft2.setRelativeFadeOutDistance( 0.1f );		
-		fft1.setRearrangement( Rearrangement.Unchanged );
-		fft2.setRearrangement( Rearrangement.Unchanged );
+		fft1.setRearrangement( Rearrangement.UNCHANGED );
+		fft2.setRearrangement( Rearrangement.UNCHANGED );
 		
 		boolean sizeFound = false;
 		
@@ -173,7 +173,7 @@ public class PhaseCorrelation<T extends NumericType<T>, S extends NumericType<S>
 		//
 		// invert fftImage1 which contains the phase correlation spectrum
 		//
-		final InverseFourierTransform<FloatType> invFFT = new InverseFourierTransform<FloatType>( fftImage1, fft1, new FloatType() );
+		final InverseFourierTransform<FloatType, ComplexFloatType> invFFT = new InverseFourierTransform<FloatType, ComplexFloatType>( fftImage1, fft1, new FloatType() );
 		invFFT.setInPlaceTransform( true );
 		invFFT.setCropBackToOriginalSize( false );
 		
@@ -277,17 +277,17 @@ public class PhaseCorrelation<T extends NumericType<T>, S extends NumericType<S>
 		Collections.sort( peakList );		
 	}
 
-	public static <T extends NumericType<T>, S extends NumericType<S>> double testCrossCorrelation( final int[] shift, final Image<T> image1, final Image<S> image2 )
+	public static <T extends RealType<T>, S extends RealType<S>> double testCrossCorrelation( final int[] shift, final Image<T> image1, final Image<S> image2 )
 	{
 		return testCrossCorrelation( shift, image1, image2, MathLib.getArrayFromValue( 5, image1.getNumDimensions()) );
 	}
 
-	public static <T extends NumericType<T>, S extends NumericType<S>> double testCrossCorrelation( final int[] shift, final Image<T> image1, final Image<S> image2, final int minOverlapPx )
+	public static <T extends RealType<T>, S extends RealType<S>> double testCrossCorrelation( final int[] shift, final Image<T> image1, final Image<S> image2, final int minOverlapPx )
 	{
 		return testCrossCorrelation( shift, image1, image2, MathLib.getArrayFromValue( minOverlapPx, image1.getNumDimensions()) );
 	}
 	
-	public static <T extends NumericType<T>, S extends NumericType<S>> double testCrossCorrelation( final int[] shift, final Image<T> image1, final Image<S> image2, final int[] minOverlapPx )
+	public static <T extends RealType<T>, S extends RealType<S>> double testCrossCorrelation( final int[] shift, final Image<T> image1, final Image<S> image2, final int[] minOverlapPx )
 	{
 		final int numDimensions = image1.getNumDimensions();
 		double correlationCoefficient = 0;
@@ -368,8 +368,8 @@ public class PhaseCorrelation<T extends NumericType<T>, S extends NumericType<S>
 			roiCursor1.fwd();
 			roiCursor2.fwd();
 
-			avg1 += cursor1.getType().getReal();
-			avg2 += cursor2.getType().getReal();
+			avg1 += cursor1.getType().getRealFloat();
+			avg2 += cursor2.getType().getRealFloat();
 		}
 
 		avg1 /= (double) numPixels;
@@ -389,8 +389,8 @@ public class PhaseCorrelation<T extends NumericType<T>, S extends NumericType<S>
 			roiCursor1.fwd();
 			roiCursor2.fwd();
 
-			final float pixel1 = cursor1.getType().getReal();
-			final float pixel2 = cursor2.getType().getReal();
+			final float pixel1 = cursor1.getType().getRealFloat();
+			final float pixel2 = cursor2.getType().getRealFloat();
 			
 			final double dist1 = pixel1 - avg1;
 			final double dist2 = pixel2 - avg2;
@@ -428,14 +428,14 @@ public class PhaseCorrelation<T extends NumericType<T>, S extends NumericType<S>
 	}
 	
 	protected ArrayList<PhaseCorrelationPeak> extractPhaseCorrelationPeaks( final Image<FloatType> invPCM, final int numPeaks,
-	                                                                        final FourierTransform<?> fft1, final FourierTransform<?> fft2 )
+	                                                                        final FourierTransform<?,?> fft1, final FourierTransform<?,?> fft2 )
 	{
 		final ArrayList<PhaseCorrelationPeak> peakList = new ArrayList<PhaseCorrelationPeak>();
 		
 		for ( int i = 0; i < numPeaks; ++i )
 			peakList.add( new PhaseCorrelationPeak( new int[ numDimensions ], -Float.MAX_VALUE) );
 
-		final LocalizableByDimCursor<FloatType> cursor = invPCM.createLocalizableByDimCursor( new OutsideStrategyPeriodicFactory<FloatType>() );
+		final LocalizableByDimCursor<FloatType> cursor = invPCM.createLocalizableByDimCursor( new OutOfBoundsStrategyPeriodicFactory<FloatType>() );
 		final LocalNeighborhoodCursor<FloatType> localCursor = cursor.createLocalNeighborhoodCursor();
 				
 		final int[] originalOffset1 = fft1.getOriginalOffset();
@@ -580,7 +580,7 @@ public class PhaseCorrelation<T extends NumericType<T>, S extends NumericType<S>
 		while ( cursor.hasNext() )
 		{
 			cursor.fwd();
-			cursor.getType().normalizeLength( normalizationThreshold );
+			normalizeLength( cursor.getType(), normalizationThreshold );
 		}
 				
 		cursor.close();		
@@ -594,14 +594,33 @@ public class PhaseCorrelation<T extends NumericType<T>, S extends NumericType<S>
 		{
 			cursor.fwd();
 			
-			cursor.getType().normalizeLength( normalizationThreshold );
+			normalizeLength( cursor.getType(), normalizationThreshold );
 			cursor.getType().complexConjugate();
 		}
 				
 		cursor.close();		
 	}
+	
+	private static void normalizeLength( final ComplexFloatType type, final float threshold )
+	{
+		final float real = type.getRealFloat();
+		final float complex = type.getComplexFloat();
 		
-	protected boolean computeFFT( final FourierTransform<T> fft1, final FourierTransform<S> fft2 )
+		final float length = (float)Math.sqrt( real*real + complex*complex );
+		
+		if ( length < threshold )
+		{
+			type.setReal( 0 );
+			type.setComplex( 0 );
+		}
+		else
+		{
+			type.setReal( real / length );
+			type.setComplex( complex / length );
+		}
+	}
+		
+	protected boolean computeFFT( final FourierTransform<T, ComplexFloatType> fft1, final FourierTransform<S, ComplexFloatType> fft2 )
 	{
 		// use two threads in paralell if wanted
 		final int minThreads = computeFFTinParalell ? 2 : 1;

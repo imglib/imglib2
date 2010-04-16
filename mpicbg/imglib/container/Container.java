@@ -29,24 +29,21 @@
  */
 package mpicbg.imglib.container;
 
-import mpicbg.imglib.container.basictypecontainer.DataAccess;
 import mpicbg.imglib.cursor.Cursor;
 import mpicbg.imglib.cursor.LocalizableByDimCursor;
 import mpicbg.imglib.cursor.LocalizableCursor;
 import mpicbg.imglib.cursor.LocalizablePlaneCursor;
 import mpicbg.imglib.image.Image;
-import mpicbg.imglib.outside.OutsideStrategyFactory;
+import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
 import mpicbg.imglib.type.Type;
 
-public interface Container<T extends Type<T>, A extends DataAccess>
+public interface Container<T extends Type<T>>
 {
-	public A update( final Cursor<?> c );
-
-	public Cursor<T> createCursor( T type, Image<T> image );
-	public LocalizableCursor<T> createLocalizableCursor( T type, Image<T> image );
-	public LocalizablePlaneCursor<T> createLocalizablePlaneCursor( T type, Image<T> image );
-	public LocalizableByDimCursor<T> createLocalizableByDimCursor( T type, Image<T> image );
-	public LocalizableByDimCursor<T> createLocalizableByDimCursor( T type, Image<T> image, OutsideStrategyFactory<T> outsideFactory );
+	public Cursor<T> createCursor( Image<T> image );
+	public LocalizableCursor<T> createLocalizableCursor( Image<T> image );
+	public LocalizablePlaneCursor<T> createLocalizablePlaneCursor( Image<T> image );
+	public LocalizableByDimCursor<T> createLocalizableByDimCursor( Image<T> image );
+	public LocalizableByDimCursor<T> createLocalizableByDimCursor( Image<T> image, OutOfBoundsStrategyFactory<T> outOfBoundsFactory );
 	
 	public void close();
 
@@ -60,7 +57,7 @@ public interface Container<T extends Type<T>, A extends DataAccess>
 	
 	public int getNumPixels();
 		
-	public boolean compareStorageContainerDimensions( final Container<?,?> img );
-	public boolean compareStorageContainerCompatibility( final Container<?,?> img );
+	public boolean compareStorageContainerDimensions( final Container<?> img );
+	public boolean compareStorageContainerCompatibility( final Container<?> img );
 
 }

@@ -4,5 +4,4 @@ import mpicbg.imglib.cursor.LocalizableByDim;
 
 public interface CursorLink extends LocalizableByDim
 {
-
 }

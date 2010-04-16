@@ -34,7 +34,7 @@ import java.util.ArrayList;
 import ij.ImagePlus;
 
 import mpicbg.imglib.container.Container3D;
-import mpicbg.imglib.container.PixelGridContainerImpl;
+import mpicbg.imglib.container.DirectAccessContainerImpl;
 import mpicbg.imglib.container.basictypecontainer.array.ArrayDataAccess;
 import mpicbg.imglib.cursor.Cursor;
 import mpicbg.imglib.cursor.LocalizableByDimCursor;
@@ -42,15 +42,15 @@ import mpicbg.imglib.cursor.LocalizableCursor;
 import mpicbg.imglib.cursor.LocalizablePlaneCursor;
 import mpicbg.imglib.cursor.imageplus.ImagePlusCursor;
 import mpicbg.imglib.cursor.imageplus.ImagePlusLocalizableByDimCursor;
-import mpicbg.imglib.cursor.imageplus.ImagePlusLocalizableByDimOutsideCursor;
+import mpicbg.imglib.cursor.imageplus.ImagePlusLocalizableByDimOutOfBoundsCursor;
 import mpicbg.imglib.cursor.imageplus.ImagePlusLocalizableCursor;
 import mpicbg.imglib.cursor.imageplus.ImagePlusLocalizablePlaneCursor;
 import mpicbg.imglib.exception.ImgLibException;
 import mpicbg.imglib.image.Image;
-import mpicbg.imglib.outside.OutsideStrategyFactory;
+import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
 import mpicbg.imglib.type.Type;
 
-public class ImagePlusContainer<T extends Type<T>, A extends ArrayDataAccess<A>> extends PixelGridContainerImpl<T,A> implements Container3D<T,A>
+public class ImagePlusContainer<T extends Type<T>, A extends ArrayDataAccess<A>> extends DirectAccessContainerImpl<T,A> implements Container3D<T>
 {
 	final ImagePlusContainerFactory factory;
 	final int width, height, depth;
@@ -130,29 +130,34 @@ public class ImagePlusContainer<T extends Type<T>, A extends ArrayDataAccess<A>>
 			return l[ 0 ];
 	}	
 
-	public Cursor<T> createCursor( T type, Image<T> image ) 
+	@Override
+	public Cursor<T> createCursor( final Image<T> image ) 
 	{
-		return new ImagePlusCursor<T>( this, image, type );
+		return new ImagePlusCursor<T>( this, image, linkedType.duplicateTypeOnSameDirectAccessContainer() );
 	}
 
-	public LocalizableCursor<T> createLocalizableCursor( T type, Image<T> image ) 
+	@Override
+	public LocalizableCursor<T> createLocalizableCursor( final Image<T> image ) 
 	{
-		return new ImagePlusLocalizableCursor<T>( this, image, type );
+		return new ImagePlusLocalizableCursor<T>( this, image, linkedType.duplicateTypeOnSameDirectAccessContainer() );
 	}
-;
-	public LocalizablePlaneCursor<T> createLocalizablePlaneCursor( T type, Image<T> image ) 
+
+	@Override
+	public LocalizablePlaneCursor<T> createLocalizablePlaneCursor( final Image<T> image ) 
 	{
-		return new ImagePlusLocalizablePlaneCursor<T>( this, image, type );
+		return new ImagePlusLocalizablePlaneCursor<T>( this, image, linkedType.duplicateTypeOnSameDirectAccessContainer() );
 	}
-;
-	public LocalizableByDimCursor<T> createLocalizableByDimCursor( T type, Image<T> image ) 
+
+	@Override
+	public LocalizableByDimCursor<T> createLocalizableByDimCursor( final Image<T> image ) 
 	{
-		return new ImagePlusLocalizableByDimCursor<T>( this, image, type );
+		return new ImagePlusLocalizableByDimCursor<T>( this, image, linkedType.duplicateTypeOnSameDirectAccessContainer() );
 	}
-;
-	public LocalizableByDimCursor<T> createLocalizableByDimCursor( T type, Image<T> image, OutsideStrategyFactory<T> outsideFactory ) 
+
+	@Override
+	public LocalizableByDimCursor<T> createLocalizableByDimCursor( final Image<T> image, OutOfBoundsStrategyFactory<T> outOfBoundsFactory ) 
 	{
-		return new ImagePlusLocalizableByDimOutsideCursor<T>( this, image, type, outsideFactory );
+		return new ImagePlusLocalizableByDimOutOfBoundsCursor<T>( this, image, linkedType.duplicateTypeOnSameDirectAccessContainer(), outOfBoundsFactory );
 	}
 	
 	public ImagePlusContainerFactory getFactory() { return factory; }

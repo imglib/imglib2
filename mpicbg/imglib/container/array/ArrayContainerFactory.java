@@ -29,8 +29,8 @@
  */
 package mpicbg.imglib.container.array;
 
-import mpicbg.imglib.container.Container;
-import mpicbg.imglib.container.ContainerFactory;
+import mpicbg.imglib.container.DirectAccessContainer;
+import mpicbg.imglib.container.DirectAccessContainerFactory;
 import mpicbg.imglib.container.PixelGridContainerImpl;
 import mpicbg.imglib.container.basictypecontainer.*;
 import mpicbg.imglib.container.basictypecontainer.array.BitArray;
@@ -43,10 +43,10 @@ import mpicbg.imglib.container.basictypecontainer.array.LongArray;
 import mpicbg.imglib.container.basictypecontainer.array.ShortArray;
 import mpicbg.imglib.type.Type;
 
-public class ArrayContainerFactory extends ContainerFactory
+public class ArrayContainerFactory extends DirectAccessContainerFactory
 {
 	@Override
-	public <T extends Type<T>> Container<T, BitAccess> createBitInstance( int[] dimensions, final int entitiesPerPixel)
+	public <T extends Type<T>> DirectAccessContainer<T, BitAccess> createBitInstance( int[] dimensions, final int entitiesPerPixel)
 	{
 		final int numPixels = PixelGridContainerImpl.getNumEntities(dimensions, entitiesPerPixel);
 		
@@ -57,7 +57,7 @@ public class ArrayContainerFactory extends ContainerFactory
 	}
 	
 	@Override
-	public <T extends Type<T>> Container<T, ByteAccess> createByteInstance( final int[] dimensions, final int entitiesPerPixel)
+	public <T extends Type<T>> DirectAccessContainer<T, ByteAccess> createByteInstance( final int[] dimensions, final int entitiesPerPixel)
 	{
 		final int numPixels = PixelGridContainerImpl.getNumEntities(dimensions, entitiesPerPixel);
 		
@@ -68,7 +68,7 @@ public class ArrayContainerFactory extends ContainerFactory
 	}
 
 	@Override
-	public <T extends Type<T>> Container<T, CharAccess> createCharInstance(int[] dimensions, final int entitiesPerPixel)
+	public <T extends Type<T>> DirectAccessContainer<T, CharAccess> createCharInstance(int[] dimensions, final int entitiesPerPixel)
 	{
 		final int numPixels = PixelGridContainerImpl.getNumEntities(dimensions, entitiesPerPixel);
 		
@@ -79,7 +79,7 @@ public class ArrayContainerFactory extends ContainerFactory
 	}
 
 	@Override
-	public <T extends Type<T>> Container<T, DoubleAccess> createDoubleInstance(int[] dimensions, final int entitiesPerPixel)
+	public <T extends Type<T>> DirectAccessContainer<T, DoubleAccess> createDoubleInstance(int[] dimensions, final int entitiesPerPixel)
 	{
 		final int numPixels = PixelGridContainerImpl.getNumEntities(dimensions, entitiesPerPixel);
 		
@@ -90,7 +90,7 @@ public class ArrayContainerFactory extends ContainerFactory
 	}
 
 	@Override
-	public <T extends Type<T>> Container<T, FloatAccess> createFloatInstance(int[] dimensions, final int entitiesPerPixel)
+	public <T extends Type<T>> DirectAccessContainer<T, FloatAccess> createFloatInstance(int[] dimensions, final int entitiesPerPixel)
 	{
 		final int numPixels = PixelGridContainerImpl.getNumEntities(dimensions, entitiesPerPixel);
 		
@@ -101,7 +101,7 @@ public class ArrayContainerFactory extends ContainerFactory
 	}
 
 	@Override
-	public <T extends Type<T>> Container<T, IntAccess> createIntInstance(int[] dimensions, final int entitiesPerPixel)
+	public <T extends Type<T>> DirectAccessContainer<T, IntAccess> createIntInstance(int[] dimensions, final int entitiesPerPixel)
 	{
 		final int numPixels = PixelGridContainerImpl.getNumEntities(dimensions, entitiesPerPixel);
 		
@@ -112,7 +112,7 @@ public class ArrayContainerFactory extends ContainerFactory
 	}
 
 	@Override
-	public <T extends Type<T>> Container<T, LongAccess> createLongInstance(int[] dimensions, final int entitiesPerPixel)
+	public <T extends Type<T>> DirectAccessContainer<T, LongAccess> createLongInstance(int[] dimensions, final int entitiesPerPixel)
 	{
 		final int numPixels = PixelGridContainerImpl.getNumEntities(dimensions, entitiesPerPixel);
 		
@@ -123,7 +123,7 @@ public class ArrayContainerFactory extends ContainerFactory
 	}
 
 	@Override
-	public <T extends Type<T>> Container<T, ShortAccess> createShortInstance(int[] dimensions, final int entitiesPerPixel)
+	public <T extends Type<T>> DirectAccessContainer<T, ShortAccess> createShortInstance(int[] dimensions, final int entitiesPerPixel)
 	{
 		final int numPixels = PixelGridContainerImpl.getNumEntities(dimensions, entitiesPerPixel);
 		

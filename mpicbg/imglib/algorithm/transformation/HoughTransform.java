@@ -4,9 +4,9 @@ import mpicbg.imglib.algorithm.Algorithm;
 import mpicbg.imglib.algorithm.Benchmark;
 import mpicbg.imglib.cursor.LocalizableByDimCursor;
 import mpicbg.imglib.image.Image;
-import mpicbg.imglib.type.NumericType;
+import mpicbg.imglib.type.numeric.RealType;
 
-public abstract class HoughTransform<S extends NumericType<S>, T extends NumericType<T>>
+public abstract class HoughTransform<S extends RealType<S>, T extends RealType<T>>
 implements Algorithm, Benchmark
 {
 	protected long pTime;

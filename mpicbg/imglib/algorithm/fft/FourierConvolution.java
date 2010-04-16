@@ -33,18 +33,18 @@ import mpicbg.imglib.cursor.LocalizableByDimCursor;
 import mpicbg.imglib.cursor.LocalizableCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.ImageFactory;
-import mpicbg.imglib.outside.OutsideStrategyValueFactory;
-import mpicbg.imglib.type.NumericType;
-import mpicbg.imglib.type.numeric.ComplexFloatType;
-import mpicbg.imglib.type.numeric.FloatType;
+import mpicbg.imglib.outofbounds.OutOfBoundsStrategyValueFactory;
+import mpicbg.imglib.type.numeric.RealType;
+import mpicbg.imglib.type.numeric.complex.ComplexFloatType;
+import mpicbg.imglib.type.numeric.real.FloatType;
 
-public class FourierConvolution<T extends NumericType<T>, S extends NumericType<S>> implements MultiThreaded, OutputAlgorithm<T>, Benchmark
+public class FourierConvolution<T extends RealType<T>, S extends RealType<S>> implements MultiThreaded, OutputAlgorithm<T>, Benchmark
 {
 	final int numDimensions;
 	Image<T> image, convolved;
 	Image<S> kernel;
 	Image<ComplexFloatType> kernelFFT, imgFFT; 
-	FourierTransform<T> fftImage;
+	FourierTransform<T, ComplexFloatType> fftImage;
 	
 	final int[] kernelDim;
 
@@ -144,7 +144,7 @@ public class FourierConvolution<T extends NumericType<T>, S extends NumericType<
 		return kernelImg;
 	}
 	
-	final public static <T extends NumericType<T>> Image<T> getGaussianKernel( final ImageFactory<T> imgFactory, final double sigma, final int numDimensions )
+	final public static <T extends RealType<T>> Image<T> getGaussianKernel( final ImageFactory<T> imgFactory, final double sigma, final int numDimensions )
 	{
 		final double[ ] sigmas = new double[ numDimensions ];
 		
@@ -154,7 +154,7 @@ public class FourierConvolution<T extends NumericType<T>, S extends NumericType<
 		return getGaussianKernel( imgFactory, sigmas );
 	}
 	
-	final public static <T extends NumericType<T>> Image<T> getGaussianKernel( final ImageFactory<T> imgFactory, final double[] sigma )
+	final public static <T extends RealType<T>> Image<T> getGaussianKernel( final ImageFactory<T> imgFactory, final double[] sigma )
 	{
 		final int numDimensions = sigma.length;
 		final int imgSize[] = new int[ numDimensions ];
@@ -173,7 +173,7 @@ public class FourierConvolution<T extends NumericType<T>, S extends NumericType<
 		c.getType().setOne();
 		c.close();
 		
-		final GaussianConvolution<T> gauss = new GaussianConvolution<T>( kernel, new OutsideStrategyValueFactory<T>(), sigma );
+		final GaussianConvolution<T> gauss = new GaussianConvolution<T>( kernel, new OutOfBoundsStrategyValueFactory<T>(), sigma );
 		
 		if ( !gauss.checkInput() || !gauss.process() )
 		{
@@ -196,18 +196,18 @@ public class FourierConvolution<T extends NumericType<T>, S extends NumericType<
 		//
 		if ( imgFFT == null ) //not computed in a previous step
 		{
-			fftImage = new FourierTransform<T>( image );
+			fftImage = new FourierTransform<T, ComplexFloatType>( image, new ComplexFloatType() );
 			fftImage.setNumThreads( this.getNumThreads() );
 			
-			// how to extend the input image outside of its boundaries for computing the FFT,
+			// how to extend the input image out of its boundaries for computing the FFT,
 			// we simply mirror the content at the borders
-			fftImage.setPreProcessing( PreProcessing.ExtendMirror );		
+			fftImage.setPreProcessing( PreProcessing.EXTEND_MIRROR );		
 			// we do not rearrange the fft quadrants
-			fftImage.setRearrangement( Rearrangement.Unchanged );
+			fftImage.setRearrangement( Rearrangement.UNCHANGED );
 			
 			// the image has to be extended by the size of the kernel-1
 			// as the kernel is always odd, e.g. if kernel size is 3, we need to add
-			// one pixel outside in each dimension (3-1=2 pixel all together) so that the
+			// one pixel out of bounds in each dimension (3-1=2 pixel all together) so that the
 			// convolution works
 			final int[] imageExtension = kernelDim.clone();		
 			for ( int d = 0; d < numDimensions; ++d )
@@ -269,10 +269,10 @@ public class FourierConvolution<T extends NumericType<T>, S extends NumericType<
 			// 
 			// compute FFT of kernel
 			//
-			final FourierTransform<S> fftKernel = new FourierTransform<S>( kernelTemplate );
+			final FourierTransform<S, ComplexFloatType> fftKernel = new FourierTransform<S, ComplexFloatType>( kernelTemplate, new ComplexFloatType() );
 			fftKernel.setNumThreads( this.getNumThreads() );
 			
-			fftKernel.setPreProcessing( PreProcessing.None );		
+			fftKernel.setPreProcessing( PreProcessing.NONE );		
 			fftKernel.setRearrangement( fftImage.getRearrangement() );
 			
 			if ( !fftKernel.checkInput() || !fftKernel.process() )
@@ -304,7 +304,7 @@ public class FourierConvolution<T extends NumericType<T>, S extends NumericType<
 		//
 		// Compute inverse Fourier Transform
 		//		
-		final InverseFourierTransform<T> invFFT = new InverseFourierTransform<T>( imgFFT, fftImage );
+		final InverseFourierTransform<T, ComplexFloatType> invFFT = new InverseFourierTransform<T, ComplexFloatType>( imgFFT, fftImage );
 		invFFT.setInPlaceTransform( true );
 		invFFT.setNumThreads( this.getNumThreads() );
 

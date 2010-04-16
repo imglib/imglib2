@@ -31,26 +31,26 @@ package mpicbg.imglib.interpolation;
 
 import mpicbg.imglib.Factory;
 import mpicbg.imglib.image.Image;
-import mpicbg.imglib.outside.OutsideStrategyFactory;
+import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
 import mpicbg.imglib.type.Type;
 
 public abstract class InterpolatorFactory<T extends Type<T>> implements Factory
 {	
-	protected OutsideStrategyFactory<T> outsideStrategyFactory;
+	protected OutOfBoundsStrategyFactory<T> outOfBoundsStrategyFactory;
 	
-	public InterpolatorFactory( final OutsideStrategyFactory<T> outsideStrategyFactory )
+	public InterpolatorFactory( final OutOfBoundsStrategyFactory<T> outOfBoundsStrategyFactory )
 	{
-		this.outsideStrategyFactory = outsideStrategyFactory;
+		this.outOfBoundsStrategyFactory = outOfBoundsStrategyFactory;
 	}
 	
-	public void setOutsideStrategyFactory( final OutsideStrategyFactory<T> outsideStrategyFactory ) 
+	public void setOutOfBoundsStrategyFactory( final OutOfBoundsStrategyFactory<T> outOfBoundsStrategyFactory ) 
 	{ 
-		this.outsideStrategyFactory = outsideStrategyFactory; 
+		this.outOfBoundsStrategyFactory = outOfBoundsStrategyFactory; 
 	}
 	
-	public OutsideStrategyFactory<T> getOutsideStrategyFactory() 
+	public OutOfBoundsStrategyFactory<T> getOutOfBoundsStrategyFactory() 
 	{ 
-		return outsideStrategyFactory; 
+		return outOfBoundsStrategyFactory; 
 	}
 		
 	public abstract Interpolator<T> createInterpolator( final Image<T> img );

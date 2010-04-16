@@ -34,13 +34,13 @@ import mpicbg.imglib.cursor.LocalizableByDimCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.interpolation.InterpolatorFactory;
 import mpicbg.imglib.interpolation.InterpolatorImpl;
-import mpicbg.imglib.outside.OutsideStrategyFactory;
-import mpicbg.imglib.type.NumericType;
+import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
+import mpicbg.imglib.type.numeric.NumericType;
 
 public class LinearInterpolator<T extends NumericType<T>> extends InterpolatorImpl<T>
 {
 	final LocalizableByDimCursor<T> cursor;
-	final T cursorType, tmp1, tmp2;
+	final T tmp1, tmp2;
 	
 	// the offset in each dimension and a temporary array for computing the global coordinates
 	final int[] baseDim, location;
@@ -58,14 +58,14 @@ public class LinearInterpolator<T extends NumericType<T>> extends InterpolatorIm
 	// the locations where to initially grab pixels from
 	final boolean[][] positions;
 	
-	protected LinearInterpolator( final Image<T> img, final InterpolatorFactory<T> interpolatorFactory, final OutsideStrategyFactory<T> outsideStrategyFactory )
+	protected LinearInterpolator( final Image<T> img, final InterpolatorFactory<T> interpolatorFactory, final OutOfBoundsStrategyFactory<T> outOfBoundsStrategyFactory )
 	{
-		this( img, interpolatorFactory, outsideStrategyFactory, true );
+		this( img, interpolatorFactory, outOfBoundsStrategyFactory, true );
 	}
 	
-	protected LinearInterpolator( final Image<T> img, final InterpolatorFactory<T> interpolatorFactory, final OutsideStrategyFactory<T> outsideStrategyFactory, boolean initGenericStructures )
+	protected LinearInterpolator( final Image<T> img, final InterpolatorFactory<T> interpolatorFactory, final OutOfBoundsStrategyFactory<T> outOfBoundsStrategyFactory, boolean initGenericStructures )
 	{
-		super(img, interpolatorFactory, outsideStrategyFactory);
+		super(img, interpolatorFactory, outOfBoundsStrategyFactory);
 
 		// Principle of interpolation used
 		//
@@ -121,8 +121,7 @@ public class LinearInterpolator<T extends NumericType<T>> extends InterpolatorIm
 		//
 		// yiels the interpolated value in 3 dimensions
 		
-		cursor = img.createLocalizableByDimCursor( outsideStrategyFactory );
-		cursorType = cursor.getType();
+		cursor = img.createLocalizableByDimCursor( outOfBoundsStrategyFactory );
 		tmp1 = img.createType();
 		tmp2 = img.createType();
 
@@ -156,12 +155,12 @@ public class LinearInterpolator<T extends NumericType<T>> extends InterpolatorIm
 			//                           \   /
 			//  final interpolated value  [0]
 	
-			tree = cursorType.createArray2D( numDimensions + 1, 1 );
+			tree = tmp1.createArray2D( numDimensions + 1, 1 );
 			halfTreeLevelSizes = new int[ numDimensions + 1 ];
 			
 			for ( int d = 0; d < tree.length; d++ )
 			{
-				tree[ d ] = cursorType.createArray1D( MathLib.pow( 2, d ));
+				tree[ d ] = tmp1.createArray1D( MathLib.pow( 2, d ));
 				
 				for ( int i = 0; i < tree[ d ].length; i++ )
 					tree[ d ][ i ] = img.createType();
@@ -236,7 +235,7 @@ public class LinearInterpolator<T extends NumericType<T>> extends InterpolatorIm
 				if ( positions[ i ][ d ] )
 					cursor.fwd(d);
 
-			tree[ numDimensions ][ i ].set( cursorType );
+			tree[ numDimensions ][ i ].set( cursor.getType() );
 			
 			// move back to the offset position
 			for ( int d = 0; d < numDimensions; ++d )
@@ -298,7 +297,7 @@ public class LinearInterpolator<T extends NumericType<T>> extends InterpolatorIm
 				if ( positions[ i ][ d ] )
 					cursor.fwd(d);
 
-			tree[ numDimensions ][ i ].set( cursorType );
+			tree[ numDimensions ][ i ].set( cursor.getType() );
 			
 			// move back to the offset position
 			for ( int d = 0; d < numDimensions; ++d )

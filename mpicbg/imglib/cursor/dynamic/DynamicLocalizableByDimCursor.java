@@ -31,7 +31,7 @@ package mpicbg.imglib.cursor.dynamic;
 
 import mpicbg.imglib.container.dynamic.DynamicContainer;
 import mpicbg.imglib.cursor.LocalizableByDimCursor;
-import mpicbg.imglib.cursor.LocalizableCursor;
+import mpicbg.imglib.cursor.Localizable;
 import mpicbg.imglib.cursor.special.LocalNeighborhoodCursor;
 import mpicbg.imglib.cursor.special.LocalNeighborhoodCursorFactory;
 import mpicbg.imglib.cursor.special.RegionOfInterestCursor;
@@ -130,16 +130,16 @@ public class DynamicLocalizableByDimCursor<T extends Type<T>> extends DynamicLoc
 	}
 
 	@Override
-	public void moveTo( final LocalizableCursor<?> cursor )
+	public void moveTo( final Localizable localizable )
 	{
-		cursor.getPosition( tmp );
+		localizable.getPosition( tmp );
 		moveTo( tmp );
 	}
 
 	@Override
-	public void setPosition( final LocalizableCursor<?> cursor )
+	public void setPosition( final Localizable localizable )
 	{
-		cursor.getPosition( tmp );
+		localizable.getPosition( tmp );
 		setPosition( tmp );
 	}
 	

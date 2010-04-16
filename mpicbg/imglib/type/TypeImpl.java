@@ -41,7 +41,7 @@ public abstract class TypeImpl<T extends TypeImpl<T>> implements Type<T>
 	public void incIndex( final int increment ) { i += increment; }
 	public void decIndex() { --i; }
 	public void decIndex( final int decrement ) { i -= decrement; }
-	
+		
 	@Override
 	public abstract String toString();	
 
