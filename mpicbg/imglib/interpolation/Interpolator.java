@@ -31,9 +31,10 @@ package mpicbg.imglib.interpolation;
 
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
+import mpicbg.imglib.sampler.Sampler;
 import mpicbg.imglib.type.Type;
 
-public interface Interpolator<T extends Type<T>>
+public interface Interpolator<T extends Type<T>> extends Sampler< T >
 {
 	/**
 	 * Returns the typed interpolator factory the Interpolator has been instantiated with.
@@ -55,13 +56,6 @@ public interface Interpolator<T extends Type<T>>
 	 * @return - the image
 	 */
 	public Image<T> getImage();
-	
-	/**
-	 * Returns the type which stores the value for the current position of the interpolator
-	 * 
-	 * @return - the Type object of the interpolator
-	 */
-	public T getType();
 	
 	/**
 	 * Moves the interpolator to a random position inside or out of image bounds.

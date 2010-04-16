@@ -58,13 +58,13 @@ public class RealTypeDisplay<T extends RealType<T>> extends Display<T>
 		}
 		
 		c.fwd();
-		min = max = c.getType().getRealDouble();
+		min = max = c.type().getRealDouble();
 
 		while ( c.hasNext() )
 		{
 			c.fwd();
 
-			final double value = c.getType().getRealDouble();
+			final double value = c.type().getRealDouble();
 			
 			if ( value > max )
 				max = value;			

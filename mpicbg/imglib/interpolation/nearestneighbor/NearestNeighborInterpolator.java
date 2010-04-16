@@ -54,7 +54,7 @@ public class NearestNeighborInterpolator<T extends Type<T>> extends Interpolator
 	public void close() { cursor.close(); }
 
 	@Override
-	public T getType() { return cursor.getType(); }
+	public T type() { return cursor.type(); }
 
 	@Override
 	public void moveTo( final float[] position )

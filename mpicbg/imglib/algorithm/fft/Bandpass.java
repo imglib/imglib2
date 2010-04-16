@@ -81,12 +81,12 @@ public class Bandpass<T extends NumericType<T>> implements OutputAlgorithm<T>, B
 			if ( actAsBandPass )
 			{
 				if ( dist < beginRadius || dist > endRadius )
-					cursor.getType().setZero();
+					cursor.type().setZero();
 			}
 			else
 			{
 				if ( dist >= beginRadius && dist <= endRadius )
-					cursor.getType().setZero();				
+					cursor.type().setZero();				
 			}
 		}
 		

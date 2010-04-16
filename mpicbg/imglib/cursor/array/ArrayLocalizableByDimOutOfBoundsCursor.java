@@ -81,7 +81,7 @@ public class ArrayLocalizableByDimOutOfBoundsCursor<T extends Type<T>> extends A
 	}
 	
 	@Override
-	public T getType() 
+	public T type() 
 	{ 
 		if ( isOutOfBounds )
 			return outOfBoundsStrategy.getType();

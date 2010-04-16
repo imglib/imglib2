@@ -47,7 +47,7 @@ public class OutOfBoundsStrategyMirror<T extends Type<T>> extends OutOfBoundsStr
 		
 		this.parentCursor = parentCursor;
 		this.mirrorCursor = parentCursor.getImage().createLocalizableByDimCursor();
-		this.mirrorType = mirrorCursor.getType();
+		this.mirrorType = mirrorCursor.type();
 		this.type = mirrorType.createVariable();
 			
 		this.numDimensions = parentCursor.getImage().getNumDimensions();

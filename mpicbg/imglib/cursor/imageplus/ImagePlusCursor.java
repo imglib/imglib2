@@ -55,7 +55,7 @@ public class ImagePlusCursor<T extends Type<T>> extends CursorImpl<T> implements
 	}
 
 	@Override
-	public T getType() { return type; }
+	public T type() { return type; }
 
 	@Override
 	public boolean hasNext()

@@ -47,7 +47,7 @@ public class LinearInterpolator2D<T extends NumericType<T>> extends LinearInterp
 	}
 	
 	@Override
-	public T getType() { return tmp2; }
+	public T type() { return tmp2; }
 	
 	@Override
 	public void moveTo( final float[] position )
@@ -91,25 +91,25 @@ public class LinearInterpolator2D<T extends NumericType<T>> extends LinearInterp
 		final float t1 = 1 - t;
 		final float u1 = 1 - u;
 
-		tmp1.set( cursor.getType() );
+		tmp1.set( cursor.type() );
 		tmp1.mul( t1 );
 		tmp1.mul( u1 );
 		tmp2.set( tmp1 );
 
 		cursor.fwd( 0 );
-		tmp1.set( cursor.getType() );
+		tmp1.set( cursor.type() );
 		tmp1.mul( t );
 		tmp1.mul( u1 );
 		tmp2.add( tmp1 );
 
 		cursor.fwd( 1 );
-		tmp1.set( cursor.getType() );
+		tmp1.set( cursor.type() );
 		tmp1.mul( t );
 		tmp1.mul( u );
 		tmp2.add( tmp1 );
 
 		cursor.bck( 0 );
-		tmp1.set( cursor.getType() );
+		tmp1.set( cursor.type() );
 		tmp1.mul( t1 );
 		tmp1.mul( u );
 		tmp2.add( tmp1 );
@@ -157,25 +157,25 @@ public class LinearInterpolator2D<T extends NumericType<T>> extends LinearInterp
 		final float t1 = 1 - t;
 		final float u1 = 1 - u;
 
-		tmp1.set( cursor.getType() );
+		tmp1.set( cursor.type() );
 		tmp1.mul( t1 );
 		tmp1.mul( u1 );
 		tmp2.set( tmp1 );
 
 		cursor.fwd( 0 );
-		tmp1.set( cursor.getType() );
+		tmp1.set( cursor.type() );
 		tmp1.mul( t );
 		tmp1.mul( u1 );
 		tmp2.add( tmp1 );
 
 		cursor.fwd( 1 );
-		tmp1.set( cursor.getType() );
+		tmp1.set( cursor.type() );
 		tmp1.mul( t );
 		tmp1.mul( u );
 		tmp2.add( tmp1 );
 
 		cursor.bck( 0 );
-		tmp1.set( cursor.getType() );
+		tmp1.set( cursor.type() );
 		tmp1.mul( t1 );
 		tmp1.mul( u );
 		tmp2.add( tmp1 );

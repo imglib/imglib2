@@ -128,7 +128,7 @@ public class CanvasImage<T extends Type<T>> implements OutputAlgorithm<T>, Bench
 				location[ d ] += offset[ d ];
 			
 			inputCursor.moveTo( location );
-			outputCursor.getType().set( inputCursor.getType() );
+			outputCursor.type().set( inputCursor.type() );
 		}
 
 		outputCursor.close();

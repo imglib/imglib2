@@ -82,7 +82,7 @@ public abstract class SliceTransformableExtraction<T extends Type<T>> extends Th
 		
 		this.parent = parent;
     	this.display = it.getImage().getDisplay();
-    	this.type = this.it.getType();
+    	this.type = this.it.type();
 		
 		this.dimX = dimX;
 		this.dimY = dimY;

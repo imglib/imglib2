@@ -185,5 +185,5 @@ public class CellLocalizableCursor<T extends Type<T>> extends CellCursor<T> impl
 	}
 	
 	@Override
-	public String toString() { return getPositionAsString() + " = " + getType(); }	
+	public String toString() { return getPositionAsString() + " = " + type(); }	
 }

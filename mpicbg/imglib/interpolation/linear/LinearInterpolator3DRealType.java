@@ -47,7 +47,7 @@ public class LinearInterpolator3DRealType<T extends RealType<T>> extends LinearI
 	}
 	
 	@Override
-	public T getType() { return tmp2; }
+	public T type() { return tmp2; }
 	
 	@Override
 	public void moveTo( final float[] position )
@@ -95,35 +95,35 @@ public class LinearInterpolator3DRealType<T extends RealType<T>> extends LinearI
 		//     y0    y1
 
         //final float y0 = strategy.get(baseX1    , baseX2,     baseX3);
-        final float y0 = cursor.getType().getRealFloat(); 
+        final float y0 = cursor.type().getRealFloat(); 
         
         //final float y1 = strategy.get(baseX1 + 1, baseX2,     baseX3);
         cursor.fwd( 0 );
-        final float y1 = cursor.getType().getRealFloat(); 
+        final float y1 = cursor.type().getRealFloat(); 
         
         //final float y2 = strategy.get(baseX1 + 1, baseX2 + 1, baseX3);
         cursor.fwd( 1 );
-        final float y2 = cursor.getType().getRealFloat(); 
+        final float y2 = cursor.type().getRealFloat(); 
                 
         //final float y3 = strategy.get(baseX1    , baseX2 + 1, baseX3);
         cursor.bck( 0 );
-        final float y3 = cursor.getType().getRealFloat(); 
+        final float y3 = cursor.type().getRealFloat(); 
         
         //final float y7 = strategy.get(baseX1    , baseX2 + 1, baseX3 + 1);
         cursor.fwd( 2 );
-        final float y7 = cursor.getType().getRealFloat();
+        final float y7 = cursor.type().getRealFloat();
 
         //final float y6 = strategy.get(baseX1 + 1, baseX2 + 1, baseX3 + 1);
         cursor.fwd( 0 );
-        final float y6 = cursor.getType().getRealFloat();
+        final float y6 = cursor.type().getRealFloat();
 
         //final float y5 = strategy.get(baseX1 + 1, baseX2,     baseX3 + 1);
         cursor.bck( 1 );
-        final float y5 = cursor.getType().getRealFloat();
+        final float y5 = cursor.type().getRealFloat();
         
         //final float y4 = strategy.get(baseX1    , baseX2,	  baseX3 + 1);
         cursor.bck( 0 );
-        final float y4 = cursor.getType().getRealFloat();        
+        final float y4 = cursor.type().getRealFloat();        
 
         // weights
         final float t = x - baseX1; 
@@ -186,35 +186,35 @@ public class LinearInterpolator3DRealType<T extends RealType<T>> extends LinearI
 		//     y0    y1
 
         //final float y0 = strategy.get(baseX1    , baseX2,     baseX3);
-        final float y0 = cursor.getType().getRealFloat(); 
+        final float y0 = cursor.type().getRealFloat(); 
         
         //final float y1 = strategy.get(baseX1 + 1, baseX2,     baseX3);
         cursor.fwd( 0 );
-        final float y1 = cursor.getType().getRealFloat(); 
+        final float y1 = cursor.type().getRealFloat(); 
         
         //final float y2 = strategy.get(baseX1 + 1, baseX2 + 1, baseX3);
         cursor.fwd( 1 );
-        final float y2 = cursor.getType().getRealFloat(); 
+        final float y2 = cursor.type().getRealFloat(); 
                 
         //final float y3 = strategy.get(baseX1    , baseX2 + 1, baseX3);
         cursor.bck( 0 );
-        final float y3 = cursor.getType().getRealFloat(); 
+        final float y3 = cursor.type().getRealFloat(); 
         
         //final float y7 = strategy.get(baseX1    , baseX2 + 1, baseX3 + 1);
         cursor.fwd( 2 );
-        final float y7 = cursor.getType().getRealFloat();
+        final float y7 = cursor.type().getRealFloat();
 
         //final float y6 = strategy.get(baseX1 + 1, baseX2 + 1, baseX3 + 1);
         cursor.fwd( 0 );
-        final float y6 = cursor.getType().getRealFloat();
+        final float y6 = cursor.type().getRealFloat();
 
         //final float y5 = strategy.get(baseX1 + 1, baseX2,     baseX3 + 1);
         cursor.bck( 1 );
-        final float y5 = cursor.getType().getRealFloat();
+        final float y5 = cursor.type().getRealFloat();
         
         //final float y4 = strategy.get(baseX1    , baseX2,	  baseX3 + 1);
         cursor.bck( 0 );
-        final float y4 = cursor.getType().getRealFloat();        
+        final float y4 = cursor.type().getRealFloat();        
 
         // weights
         final float t = x - baseX1; 

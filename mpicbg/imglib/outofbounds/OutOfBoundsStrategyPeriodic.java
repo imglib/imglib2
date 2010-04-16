@@ -47,7 +47,7 @@ public class OutOfBoundsStrategyPeriodic<T extends Type<T>> extends OutOfBoundsS
 		
 		this.parentCursor = parentCursor;
 		this.circleCursor = parentCursor.getImage().createLocalizableByDimCursor();
-		this.circleType = circleCursor.getType();
+		this.circleType = circleCursor.type();
 		this.type = circleType.createVariable();
 			
 		this.numDimensions = parentCursor.getImage().getNumDimensions();

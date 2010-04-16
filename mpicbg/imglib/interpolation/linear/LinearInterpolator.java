@@ -200,7 +200,7 @@ public class LinearInterpolator<T extends NumericType<T>> extends InterpolatorIm
 	public void close() { cursor.close(); }
 
 	@Override
-	public T getType() { return tree[ 0 ][ 0 ]; }
+	public T type() { return tree[ 0 ][ 0 ]; }
 
 	@Override
 	public void moveTo( final float[] position )
@@ -235,7 +235,7 @@ public class LinearInterpolator<T extends NumericType<T>> extends InterpolatorIm
 				if ( positions[ i ][ d ] )
 					cursor.fwd(d);
 
-			tree[ numDimensions ][ i ].set( cursor.getType() );
+			tree[ numDimensions ][ i ].set( cursor.type() );
 			
 			// move back to the offset position
 			for ( int d = 0; d < numDimensions; ++d )
@@ -297,7 +297,7 @@ public class LinearInterpolator<T extends NumericType<T>> extends InterpolatorIm
 				if ( positions[ i ][ d ] )
 					cursor.fwd(d);
 
-			tree[ numDimensions ][ i ].set( cursor.getType() );
+			tree[ numDimensions ][ i ].set( cursor.type() );
 			
 			// move back to the offset position
 			for ( int d = 0; d < numDimensions; ++d )

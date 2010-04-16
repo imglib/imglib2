@@ -84,12 +84,12 @@ public class ShapeListLocalizableByDimOutOfBoundsCursor<T extends Type<T>> exten
 	}
 	
 	@Override
-	public T getType() 
+	public T type() 
 	{
 		if ( isOutOfBounds )
 			return outOfBoundsStrategy.getType();
 		else
-			return super.getType(); 
+			return super.type(); 
 	}
 		
 	@Override

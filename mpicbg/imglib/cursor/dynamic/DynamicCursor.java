@@ -59,7 +59,7 @@ public class DynamicCursor<T extends Type<T>> extends CursorImpl<T> implements C
 	public DynamicContainerAccessor getAccessor() { return accessor; }
 
 	@Override
-	public T getType() { return type; }
+	public T type() { return type; }
 
 	@Override
 	public boolean hasNext() { return internalIndex < container.getNumPixels() - 1; }

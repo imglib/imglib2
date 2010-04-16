@@ -47,7 +47,7 @@ public class LinearInterpolator1D<T extends NumericType<T>> extends LinearInterp
 	}
 	
 	@Override
-	public T getType() { return tmp2; }
+	public T type() { return tmp2; }
 	
 	@Override
 	public void moveTo( final float[] position )
@@ -76,12 +76,12 @@ public class LinearInterpolator1D<T extends NumericType<T>> extends LinearInterp
 		final float t = x - baseX1;
 		final float t1 = 1 - t;
 
-		tmp1.set( cursor.getType() );
+		tmp1.set( cursor.type() );
 		tmp1.mul( t1 );
 		tmp2.set( tmp1 );
 
 		cursor.fwd( 0 );
-		tmp1.set( cursor.getType() );
+		tmp1.set( cursor.type() );
 		tmp1.mul( t );
 		tmp2.add( tmp1 );
 	}
@@ -113,12 +113,12 @@ public class LinearInterpolator1D<T extends NumericType<T>> extends LinearInterp
 		final float t = x - baseX1;
 		final float t1 = 1 - t;
 
-		tmp1.set( cursor.getType() );
+		tmp1.set( cursor.type() );
 		tmp1.mul( t1 );
 		tmp2.set( tmp1 );
 
 		cursor.fwd( 0 );
-		tmp1.set( cursor.getType() );
+		tmp1.set( cursor.type() );
 		tmp1.mul( t );
 		tmp2.add( tmp1 );
 	}	

@@ -72,7 +72,7 @@ public class TestShapeList
 		{
 			cArray.fwd();
 			cShapeList.moveTo( cArray );
-			cArray.getType().set( cShapeList.getType() );
+			cArray.type().set( cShapeList.type() );
 		}
 
 		arrayImage.getDisplay().setMinMax();

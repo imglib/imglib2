@@ -66,7 +66,7 @@ public class ShapeListLocalizableByDimCursor< T extends Type< T > > extends Curs
 	}
 	
 	@Override
-	public T getType()
+	public T type()
 	{
 		return container.getShapeType( position );
 	}

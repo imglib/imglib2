@@ -46,7 +46,7 @@ public class ShapeListCachedLocalizableByDimOutOfBoundsCursor<T extends Type<T>>
 	}	
 		
 	@Override
-	public T getType() 
+	public T type() 
 	{
 		if ( isOutOfBounds )
 			return outOfBoundsStrategy.getType();

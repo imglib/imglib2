@@ -63,7 +63,7 @@ public class ImagePlusLocalizableByDimOutOfBoundsCursor<T extends Type<T>> exten
 	}
 
 	@Override
-	public T getType() 
+	public T type() 
 	{ 
 		if ( isOutOfBounds )
 			return outOfBoundsStrategy.getType();

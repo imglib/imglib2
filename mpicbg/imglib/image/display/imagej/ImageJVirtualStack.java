@@ -138,7 +138,7 @@ public class ImageJVirtualStack<T extends Type<T>> extends ImageStack
 	    	while ( cursor.hasNext() )
 	    	{
 	    		cursor.fwd();
-	    		sliceImg[ cursor.getPosition( dimX ) + cursor.getPosition( dimY ) * sizeX ] = display.get32Bit( cursor.getType() );    		
+	    		sliceImg[ cursor.getPosition( dimX ) + cursor.getPosition( dimY ) * sizeX ] = display.get32Bit( cursor.type() );    		
 	    	}
     	}
     	else // only a 1D image
@@ -146,7 +146,7 @@ public class ImageJVirtualStack<T extends Type<T>> extends ImageStack
 	    	while ( cursor.hasNext() )
 	    	{
 	    		cursor.fwd();
-	    		sliceImg[ cursor.getPosition( dimX ) ] = display.get32Bit( cursor.getType() );    		
+	    		sliceImg[ cursor.getPosition( dimX ) ] = display.get32Bit( cursor.type() );    		
 	    	}    		
     	}
     	
@@ -171,7 +171,7 @@ public class ImageJVirtualStack<T extends Type<T>> extends ImageStack
 	    	while ( cursor.hasNext() )
 	    	{
 	    		cursor.fwd();
-	    		sliceImg[ cursor.getPosition( dimX ) + cursor.getPosition( dimY ) * sizeX ] = display.get8BitARGB( cursor.getType() );    		
+	    		sliceImg[ cursor.getPosition( dimX ) + cursor.getPosition( dimY ) * sizeX ] = display.get8BitARGB( cursor.type() );    		
 	    	}
     	}
     	else // only a 1D image
@@ -179,7 +179,7 @@ public class ImageJVirtualStack<T extends Type<T>> extends ImageStack
 	    	while ( cursor.hasNext() )
 	    	{
 	    		cursor.fwd();
-	    		sliceImg[ cursor.getPosition( dimX ) ] = display.get8BitARGB( cursor.getType() );    		
+	    		sliceImg[ cursor.getPosition( dimX ) ] = display.get8BitARGB( cursor.type() );    		
 	    	}
     	}
 
@@ -202,7 +202,7 @@ public class ImageJVirtualStack<T extends Type<T>> extends ImageStack
 	    	while ( cursor.hasNext() )
 	    	{
 	    		cursor.fwd();
-	    		sliceImg[ cursor.getPosition( dimX ) + cursor.getPosition( dimY ) * sizeX ] = display.get8BitSigned( cursor.getType() );    		
+	    		sliceImg[ cursor.getPosition( dimX ) + cursor.getPosition( dimY ) * sizeX ] = display.get8BitSigned( cursor.type() );    		
 	    	}
     	}
     	else // only a 1D image
@@ -210,7 +210,7 @@ public class ImageJVirtualStack<T extends Type<T>> extends ImageStack
 	    	while ( cursor.hasNext() )
 	    	{
 	    		cursor.fwd();
-	    		sliceImg[ cursor.getPosition( dimX ) ] = display.get8BitSigned( cursor.getType() );    		
+	    		sliceImg[ cursor.getPosition( dimX ) ] = display.get8BitSigned( cursor.type() );    		
 	    	}    		
     	}
 

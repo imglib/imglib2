@@ -74,7 +74,7 @@ public class RGBALegacyTypeDisplay extends Display<RGBALegacyType>
 	public void setMinMax()
 	{
 		final Cursor<RGBALegacyType> c = img.createCursor();
-		final RGBALegacyType t = c.getType();
+		final RGBALegacyType t = c.type();
 		
 		if ( !c.hasNext() )
 		{

@@ -76,7 +76,7 @@ public class RegionOfInterestCursor<T extends Type<T>> extends CursorImpl<T> imp
 	public void close()  { isActive = false; }
 
 	@Override
-	public T getType() { return cursor.getType(); }
+	public T type() { return cursor.type(); }
 	
 	@Override
 	public void reset()
@@ -172,5 +172,5 @@ public class RegionOfInterestCursor<T extends Type<T>> extends CursorImpl<T> imp
 	}
 	
 	@Override
-	public String toString() { return getPositionAsString() + " = " + getType(); }
+	public String toString() { return getPositionAsString() + " = " + type(); }
 }

@@ -47,7 +47,7 @@ public class TestBase {
 		while( cursor.hasNext() ) {
 			cursor.fwd();
 			cursor.getPosition( pos );
-			if( function.calculate( pos ) != cursor.getType().getRealFloat() )
+			if( function.calculate( pos ) != cursor.type().getRealFloat() )
 				return false;
 		}
 		cursor.close();
@@ -63,7 +63,7 @@ public class TestBase {
 		while( cursor.hasNext() ) {
 			cursor.fwd();
 			cursor.getPosition( pos );
-			if( Math.abs( function.calculate( pos ) - cursor.getType().getRealFloat() ) > tolerance )
+			if( Math.abs( function.calculate( pos ) - cursor.type().getRealFloat() ) > tolerance )
 				return false;
 		}
 		cursor.close();
@@ -94,7 +94,7 @@ public class TestBase {
 		while( cursor.hasNext() ) {
 			cursor.fwd();
 			cursor.getPosition( pos );
-			float value = cursor.getType().getRealFloat();
+			float value = cursor.type().getRealFloat();
 			result[0] += value;
 			result[dim + 1] += value * value;
 			for( int i = 0; i < dim; i++ ) {
@@ -147,7 +147,7 @@ public class TestBase {
 	protected<T extends RealType<T>> float get( Image<T> image, int[] pos ) {
 		LocalizableByDimCursor<T> cursor = image.createLocalizableByDimCursor();
 		cursor.setPosition( pos );
-		float result = cursor.getType().getRealFloat();
+		float result = cursor.type().getRealFloat();
 		cursor.close();
 		return result;
 	}
@@ -171,7 +171,7 @@ public class TestBase {
 			cursor.fwd();
 			cursor.getPosition( pos );
 			float value = function.calculate( pos );
-			cursor.getType().setReal( value );
+			cursor.type().setReal( value );
 		}
 		cursor.close();
 		return result;

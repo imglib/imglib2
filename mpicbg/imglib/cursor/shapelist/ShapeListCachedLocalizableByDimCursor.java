@@ -42,7 +42,7 @@ public class ShapeListCachedLocalizableByDimCursor< T extends Type< T > > extend
 	}
 	
 	@Override
-	public T getType()
+	public T type()
 	{
 		return cache.lookUp( position );
 	}

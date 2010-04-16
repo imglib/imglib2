@@ -134,12 +134,12 @@ final public class FFTFunctions
 								// get the input line
 								for ( int i = 0; i < size-1; ++i )
 								{
-									tempIn[ i * 2 ] = cursor.getType().getRealFloat();
-									tempIn[ i * 2 + 1 ] = cursor.getType().getComplexFloat();
+									tempIn[ i * 2 ] = cursor.type().getRealFloat();
+									tempIn[ i * 2 + 1 ] = cursor.type().getComplexFloat();
 									cursor.fwd( dim );
 								}
-								tempIn[ (size-1) * 2 ] = cursor.getType().getRealFloat();
-								tempIn[ (size-1) * 2 + 1 ] = cursor.getType().getComplexFloat();
+								tempIn[ (size-1) * 2 ] = cursor.type().getRealFloat();
+								tempIn[ (size-1) * 2 + 1 ] = cursor.type().getComplexFloat();
 								
 								// compute the inverse fft
 								fftc.complexToComplex( 1, tempIn, tempOut );
@@ -152,19 +152,19 @@ final public class FFTFunctions
 								{
 									for ( int i = 0; i < size-1; ++i )
 									{
-										cursor.getType().setComplexNumber( tempOut[ i * 2 ] / size, tempOut[ i * 2 + 1 ] / size );
+										cursor.type().setComplexNumber( tempOut[ i * 2 ] / size, tempOut[ i * 2 + 1 ] / size );
 										cursor.fwd( dim );
 									}
-									cursor.getType().setComplexNumber( tempOut[ (size-1) * 2 ] / size, tempOut[ (size-1) * 2 + 1 ] / size );
+									cursor.type().setComplexNumber( tempOut[ (size-1) * 2 ] / size, tempOut[ (size-1) * 2 + 1 ] / size );
 								}
 								else
 								{
 									for ( int i = 0; i < size-1; ++i )
 									{
-										cursor.getType().setComplexNumber( tempOut[ i * 2 ], tempOut[ i * 2 + 1 ] );
+										cursor.type().setComplexNumber( tempOut[ i * 2 ], tempOut[ i * 2 + 1 ] );
 										cursor.fwd( dim );
 									}
-									cursor.getType().setComplexNumber( tempOut[ (size-1) * 2 ], tempOut[ (size-1) * 2 + 1 ] );
+									cursor.type().setComplexNumber( tempOut[ (size-1) * 2 ], tempOut[ (size-1) * 2 + 1 ] );
 								}	
 							}							
 						}
@@ -259,12 +259,12 @@ A:						while( cursorDim.hasNext() )
 								// fill the input array with complex image data
 								for ( int i = 0; i < complexSize-1; ++i )
 								{
-									tempIn[ i * 2 ] = cursor.getType().getRealFloat();
-									tempIn[ i * 2 + 1 ] = cursor.getType().getComplexFloat();
+									tempIn[ i * 2 ] = cursor.type().getRealFloat();
+									tempIn[ i * 2 + 1 ] = cursor.type().getComplexFloat();
 									cursor.fwd( 0 );
 								}
-								tempIn[ (complexSize-1) * 2 ] = cursor.getType().getRealFloat();
-								tempIn[ (complexSize-1) * 2 + 1 ] = cursor.getType().getComplexFloat();
+								tempIn[ (complexSize-1) * 2 ] = cursor.type().getRealFloat();
+								tempIn[ (complexSize-1) * 2 + 1 ] = cursor.type().getComplexFloat();
 																								
 								// compute the fft in dimension 0 ( complex -> real )
 								fft.complexToReal( 1, tempIn, tempOut );
@@ -281,19 +281,19 @@ A:						while( cursorDim.hasNext() )
 								{
 									for ( int x = cropX1; x < cropX2-1; ++x )
 									{
-										cursorOut.getType().setReal( (tempOut[ x ] / realSize) * additionalNormalization );
+										cursorOut.type().setReal( (tempOut[ x ] / realSize) * additionalNormalization );
 										cursorOut.fwd( 0 );
 									}
-									cursorOut.getType().setReal( (tempOut[ cropX2-1 ] / realSize) * additionalNormalization );
+									cursorOut.type().setReal( (tempOut[ cropX2-1 ] / realSize) * additionalNormalization );
 								}
 								else
 								{
 									for ( int x = cropX1; x < cropX2-1; ++x )
 									{
-										cursorOut.getType().setReal( tempOut[ x ] * additionalNormalization );
+										cursorOut.type().setReal( tempOut[ x ] * additionalNormalization );
 										cursorOut.fwd( 0 );
 									}
-									cursorOut.getType().setReal( tempOut[ cropX2-1 ] * additionalNormalization );
+									cursorOut.type().setReal( tempOut[ cropX2-1 ] * additionalNormalization );
 								}
 							}
 						}
@@ -314,12 +314,12 @@ A:						while( cursorDim.hasNext() )
 							// fill the input array with complex image data
 							for ( int i = 0; i < complexSize-1; ++i )
 							{
-								tempIn[ i * 2 ] = cursor.getType().getRealFloat();
-								tempIn[ i * 2 + 1 ] = cursor.getType().getComplexFloat();
+								tempIn[ i * 2 ] = cursor.type().getRealFloat();
+								tempIn[ i * 2 + 1 ] = cursor.type().getComplexFloat();
 								cursor.fwd( 0 );
 							}
-							tempIn[ (complexSize-1) * 2 ] = cursor.getType().getRealFloat();
-							tempIn[ (complexSize-1) * 2 + 1 ] = cursor.getType().getComplexFloat();
+							tempIn[ (complexSize-1) * 2 ] = cursor.type().getRealFloat();
+							tempIn[ (complexSize-1) * 2 + 1 ] = cursor.type().getComplexFloat();
 							
 							// compute the fft in dimension 0 ( real -> complex )
 							final float[] tempOut = new float[ realSize ];
@@ -333,19 +333,19 @@ A:						while( cursorDim.hasNext() )
 							{
 								for ( int x = cropX1; x < cropX2-1; ++x )
 								{
-									cursorOut.getType().setReal( (tempOut[ x ] / realSize) * additionalNormalization );
+									cursorOut.type().setReal( (tempOut[ x ] / realSize) * additionalNormalization );
 									cursorOut.fwd( 0 );
 								}
-								cursorOut.getType().setReal( (tempOut[ cropX2-1 ] / realSize) * additionalNormalization );
+								cursorOut.type().setReal( (tempOut[ cropX2-1 ] / realSize) * additionalNormalization );
 							}
 							else
 							{
 								for ( int x = cropX1; x < cropX2-1; ++x )
 								{
-									cursorOut.getType().setReal( tempOut[ x ] * additionalNormalization );
+									cursorOut.type().setReal( tempOut[ x ] * additionalNormalization );
 									cursorOut.fwd( 0 );
 								}
-								cursorOut.getType().setReal( tempOut[ cropX2-1 ] * additionalNormalization );
+								cursorOut.type().setReal( tempOut[ cropX2-1 ] * additionalNormalization );
 							}
 						}
 						cursorOut.close();
@@ -441,10 +441,10 @@ A:						while( cursorDim.hasNext() )
 								// fill the input array with image data
 								for ( int x = 0; x < realSize-1; ++x )
 								{
-									tempIn[ x ] = cursor.getType().getRealFloat();									
+									tempIn[ x ] = cursor.type().getRealFloat();									
 									cursor.fwd( 0 );
 								}
-								tempIn[ (realSize-1) ] = cursor.getType().getRealFloat();
+								tempIn[ (realSize-1) ] = cursor.type().getRealFloat();
 
 								// compute the fft in dimension 0 ( real -> complex )
 								fft.realToComplex( -1, tempIn, tempOut );
@@ -457,19 +457,19 @@ A:						while( cursorDim.hasNext() )
 								{
 									for ( int x = 0; x < complexSize-1; ++x )
 									{
-										cursorOut.getType().setComplexNumber( tempOut[ x * 2 ] / realSize, tempOut[ x * 2 + 1 ] / realSize );									
+										cursorOut.type().setComplexNumber( tempOut[ x * 2 ] / realSize, tempOut[ x * 2 + 1 ] / realSize );									
 										cursorOut.fwd( 0 );
 									}
-									cursorOut.getType().setComplexNumber( tempOut[ (complexSize-1) * 2 ] / realSize, tempOut[ (complexSize-1) * 2 + 1 ] / realSize );									
+									cursorOut.type().setComplexNumber( tempOut[ (complexSize-1) * 2 ] / realSize, tempOut[ (complexSize-1) * 2 + 1 ] / realSize );									
 								}
 								else
 								{
 									for ( int x = 0; x < complexSize-1; ++x )
 									{
-										cursorOut.getType().setComplexNumber( tempOut[ x * 2 ], tempOut[ x * 2 + 1 ] );									
+										cursorOut.type().setComplexNumber( tempOut[ x * 2 ], tempOut[ x * 2 + 1 ] );									
 										cursorOut.fwd( 0 );
 									}
-									cursorOut.getType().setComplexNumber( tempOut[ (complexSize-1) * 2 ], tempOut[ (complexSize-1) * 2 + 1 ] );									
+									cursorOut.type().setComplexNumber( tempOut[ (complexSize-1) * 2 ], tempOut[ (complexSize-1) * 2 + 1 ] );									
 								}
 							}
 						}
@@ -489,10 +489,10 @@ A:						while( cursorDim.hasNext() )
 							// get the input data
 							for ( int x = 0; x < realSize-1; ++x )
 							{
-								tempIn[ x ] = cursor.getType().getRealFloat();
+								tempIn[ x ] = cursor.type().getRealFloat();
 								cursor.fwd( 0 );
 							}
-							tempIn[ realSize-1 ] = cursor.getType().getRealFloat();
+							tempIn[ realSize-1 ] = cursor.type().getRealFloat();
 							
 							// compute the fft in dimension 0 ( real -> complex )
 							final float[] tempOut = new float[ complexSize * 2 ];
@@ -506,19 +506,19 @@ A:						while( cursorDim.hasNext() )
 							{
 								for ( int x = 0; x < complexSize-1; ++x )
 								{
-									cursorOut.getType().setComplexNumber( tempOut[ x * 2 ] / realSize, tempOut[ x * 2 + 1 ] / realSize );
+									cursorOut.type().setComplexNumber( tempOut[ x * 2 ] / realSize, tempOut[ x * 2 + 1 ] / realSize );
 									cursorOut.fwd( 0 );
 								}
-								cursorOut.getType().setComplexNumber( tempOut[ (complexSize-1) * 2 ] / realSize, tempOut[ (complexSize-1) * 2 + 1 ] / realSize );
+								cursorOut.type().setComplexNumber( tempOut[ (complexSize-1) * 2 ] / realSize, tempOut[ (complexSize-1) * 2 + 1 ] / realSize );
 							}
 							else
 							{
 								for ( int x = 0; x < complexSize-1; ++x )
 								{
-									cursorOut.getType().setComplexNumber( tempOut[ x * 2 ], tempOut[ x * 2 + 1 ] );									
+									cursorOut.type().setComplexNumber( tempOut[ x * 2 ], tempOut[ x * 2 + 1 ] );									
 									cursorOut.fwd( 0 );
 								}
-								cursorOut.getType().setComplexNumber( tempOut[ (complexSize-1) * 2 ], tempOut[ (complexSize-1) * 2 + 1 ] );									
+								cursorOut.type().setComplexNumber( tempOut[ (complexSize-1) * 2 ], tempOut[ (complexSize-1) * 2 + 1 ] );									
 							}	
 						}
 						cursorOut.close();
@@ -591,12 +591,12 @@ A:						while( cursorDim.hasNext() )
 								// get the input line
 								for ( int i = 0; i < size - 1; ++i )
 								{
-									tempIn[ i * 2 ] = cursor.getType().getRealFloat();
-									tempIn[ i * 2 + 1 ] = cursor.getType().getComplexFloat();
+									tempIn[ i * 2 ] = cursor.type().getRealFloat();
+									tempIn[ i * 2 + 1 ] = cursor.type().getComplexFloat();
 									cursor.fwd( dim  );
 								}
-								tempIn[ (size-1) * 2 ] = cursor.getType().getRealFloat();
-								tempIn[ (size-1) * 2 + 1 ] = cursor.getType().getComplexFloat();
+								tempIn[ (size-1) * 2 ] = cursor.type().getRealFloat();
+								tempIn[ (size-1) * 2 + 1 ] = cursor.type().getComplexFloat();
 								
 								// compute the fft in dimension dim (complex -> complex) 
 								fftc.complexToComplex( -1, tempIn, tempOut);
@@ -609,19 +609,19 @@ A:						while( cursorDim.hasNext() )
 								{
 									for ( int i = 0; i < size-1; ++i )
 									{
-										cursor.getType().setComplexNumber( tempOut[ i * 2 ] / size, tempOut[ i * 2 + 1 ] / size );
+										cursor.type().setComplexNumber( tempOut[ i * 2 ] / size, tempOut[ i * 2 + 1 ] / size );
 										cursor.fwd( dim );
 									}
-									cursor.getType().setComplexNumber( tempOut[ (size-1) * 2 ] / size, tempOut[ (size-1) * 2 + 1 ] / size );
+									cursor.type().setComplexNumber( tempOut[ (size-1) * 2 ] / size, tempOut[ (size-1) * 2 + 1 ] / size );
 								}
 								else
 								{
 									for ( int i = 0; i < size-1; ++i )
 									{
-										cursor.getType().setComplexNumber( tempOut[ i * 2 ], tempOut[ i * 2 + 1 ] );
+										cursor.type().setComplexNumber( tempOut[ i * 2 ], tempOut[ i * 2 + 1 ] );
 										cursor.fwd( dim );
 									}
-									cursor.getType().setComplexNumber( tempOut[ (size-1) * 2 ], tempOut[ (size-1) * 2 + 1 ] );									
+									cursor.type().setComplexNumber( tempOut[ (size-1) * 2 ], tempOut[ (size-1) * 2 + 1 ] );									
 								}
 							}
 						}
@@ -657,26 +657,26 @@ A:						while( cursorDim.hasNext() )
 		for ( int i = 0; i < halfSizeDim-1; ++i )
 		{
 			// cache first "half" to buffer
-			buffer.set( cursor1.getType() );
+			buffer.set( cursor1.type() );
 
 			// move second "half" to first "half"
-			cursor1.getType().set( cursor2.getType() );
+			cursor1.type().set( cursor2.type() );
 
 			// move data in buffer to second "half"
-			cursor2.getType().set( buffer );
+			cursor2.type().set( buffer );
 
 			// move both cursors forward
 			cursor1.fwd( 0 ); 
 			cursor2.bck( 0 ); 
 		}	
 		// cache first "half" to buffer
-		buffer.set( cursor1.getType() );
+		buffer.set( cursor1.type() );
 
 		// move second "half" to first "half"
-		cursor1.getType().set( cursor2.getType() );
+		cursor1.type().set( cursor2.type() );
 		
 		// move data in buffer to second "half"
-		cursor2.getType().set( buffer );
+		cursor2.type().set( buffer );
 		
 		cursor1.close();
 		cursor2.close();		
@@ -748,26 +748,26 @@ A:						while( cursorDim.hasNext() )
 							for ( int i = 0; i < halfSizeDim-1 ; ++i )
 							{
 								// cache first "half" to buffer
-								buffer.set( cursor1.getType() );
+								buffer.set( cursor1.type() );
 			
 								// move second "half" to first "half"
-								cursor1.getType().set( cursor2.getType() );
+								cursor1.type().set( cursor2.type() );
 
 								// move data in buffer to second "half"
-								cursor2.getType().set( buffer );
+								cursor2.type().set( buffer );
 								
 								// move both cursors forward
 								cursor1.fwd( 0 ); 
 								cursor2.bck( 0 ); 
 							}
 							// cache first "half" to buffer
-							buffer.set( cursor1.getType() );
+							buffer.set( cursor1.type() );
 		
 							// move second "half" to first "half"
-							cursor1.getType().set( cursor2.getType() );
+							cursor1.type().set( cursor2.type() );
 							
 							// move data in buffer to second "half"
-							cursor2.getType().set( buffer );
+							cursor2.type().set( buffer );
 						}
 					}	
 					
@@ -850,26 +850,26 @@ A:						while( cursorDim.hasNext() )
 							for ( int i = 0; i < halfSizeDim-1; ++i )
 							{
 								// cache first "half" to buffer
-								buffer.set( cursor1.getType() );
+								buffer.set( cursor1.type() );
 			
 								// move second "half" to first "half"
-								cursor1.getType().set( cursor2.getType() );
+								cursor1.type().set( cursor2.type() );
 								
 								// move data in buffer to second "half"
-								cursor2.getType().set( buffer );
+								cursor2.type().set( buffer );
 								
 								// move both cursors forward
 								cursor1.fwd( dim ); 
 								cursor2.fwd( dim ); 
 							}							
 							// cache first "half" to buffer
-							buffer.set( cursor1.getType() );
+							buffer.set( cursor1.type() );
 		
 							// move second "half" to first "half"
-							cursor1.getType().set( cursor2.getType() );
+							cursor1.type().set( cursor2.type() );
 							
 							// move data in buffer to second "half"
-							cursor2.getType().set( buffer );
+							cursor2.type().set( buffer );
 						}
 					}
 					

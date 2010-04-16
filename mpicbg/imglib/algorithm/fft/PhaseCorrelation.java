@@ -368,8 +368,8 @@ public class PhaseCorrelation<T extends RealType<T>, S extends RealType<S>> impl
 			roiCursor1.fwd();
 			roiCursor2.fwd();
 
-			avg1 += cursor1.getType().getRealFloat();
-			avg2 += cursor2.getType().getRealFloat();
+			avg1 += cursor1.type().getRealFloat();
+			avg2 += cursor2.type().getRealFloat();
 		}
 
 		avg1 /= (double) numPixels;
@@ -389,8 +389,8 @@ public class PhaseCorrelation<T extends RealType<T>, S extends RealType<S>> impl
 			roiCursor1.fwd();
 			roiCursor2.fwd();
 
-			final float pixel1 = cursor1.getType().getRealFloat();
-			final float pixel2 = cursor2.getType().getRealFloat();
+			final float pixel1 = cursor1.type().getRealFloat();
+			final float pixel2 = cursor2.type().getRealFloat();
 			
 			final double dist1 = pixel1 - avg1;
 			final double dist2 = pixel2 - avg2;
@@ -456,14 +456,14 @@ public class PhaseCorrelation<T extends RealType<T>, S extends RealType<S>> impl
 			localCursor.update();
 			
 			// the value we are checking for if it is a maximum
-			final float value = cursor.getType().get();
+			final float value = cursor.type().get();
 			boolean isMax = true;
 			
 			// iterate over local environment while value is still the maximum
 			while ( localCursor.hasNext() && isMax )
 			{
 				localCursor.fwd();								
-				isMax = ( cursor.getType().get() <= value );
+				isMax = ( cursor.type().get() <= value );
 			}
 			
 			// reset the mothercursor and this cursor
@@ -535,7 +535,7 @@ public class PhaseCorrelation<T extends RealType<T>, S extends RealType<S>> impl
 			cursor1.fwd();
 			cursor2.fwd();
 			
-			cursor1.getType().mul( cursor2.getType() );
+			cursor1.type().mul( cursor2.type() );
 		}
 				
 		cursor1.close();
@@ -580,7 +580,7 @@ public class PhaseCorrelation<T extends RealType<T>, S extends RealType<S>> impl
 		while ( cursor.hasNext() )
 		{
 			cursor.fwd();
-			normalizeLength( cursor.getType(), normalizationThreshold );
+			normalizeLength( cursor.type(), normalizationThreshold );
 		}
 				
 		cursor.close();		
@@ -594,8 +594,8 @@ public class PhaseCorrelation<T extends RealType<T>, S extends RealType<S>> impl
 		{
 			cursor.fwd();
 			
-			normalizeLength( cursor.getType(), normalizationThreshold );
-			cursor.getType().complexConjugate();
+			normalizeLength( cursor.type(), normalizationThreshold );
+			cursor.type().complexConjugate();
 		}
 				
 		cursor.close();		

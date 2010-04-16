@@ -170,7 +170,7 @@ public class ImageJVirtualDisplay<T extends Type<T>> extends ImageStack
 	
 			try
 			{
-		    	final T type = it.getType();
+		    	final T type = it.type();
 		    	final Display<T> display = it.getImage().getDisplay();
 	
 		    	int i = 0;

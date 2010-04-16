@@ -77,7 +77,7 @@ public class GaussianConvolutionRealType<T extends RealType<T>> extends Gaussian
 			for ( int f = -filterSizeHalf; f <= filterSizeHalfMinus1; ++f )
 			{
 				// get value from the input image
-				tmp = inputIterator.getType().getRealDouble();
+				tmp = inputIterator.type().getRealDouble();
 				
 				// multiply the kernel
 				tmp *= kernel[ f + filterSizeHalf ];
@@ -94,7 +94,7 @@ public class GaussianConvolutionRealType<T extends RealType<T>> extends Gaussian
 			//
 			
 			// get value from the input image
-			tmp = inputIterator.getType().getRealDouble();
+			tmp = inputIterator.type().getRealDouble();
 			
 			// multiply the kernel
 			tmp *= kernel[ filterSizeMinus1 ];
@@ -102,7 +102,7 @@ public class GaussianConvolutionRealType<T extends RealType<T>> extends Gaussian
 			// add up the sum
 			sum += tmp;
 			
-			outputIterator.getType().setReal( sum );			                		        	
+			outputIterator.type().setReal( sum );			                		        	
 		}
 	}	
 
@@ -146,7 +146,7 @@ public class GaussianConvolutionRealType<T extends RealType<T>> extends Gaussian
 			for ( int f = -filterSizeHalf; f <= filterSizeHalfMinus1; ++f )
 			{
 				// get value from the input image
-				tmp = inputIterator.getType().getRealFloat();
+				tmp = inputIterator.type().getRealFloat();
 				
 				// multiply the kernel
 				tmp *= kernel[ f + filterSizeHalf ];
@@ -163,7 +163,7 @@ public class GaussianConvolutionRealType<T extends RealType<T>> extends Gaussian
 			//
 			
 			// get value from the input image
-			tmp = inputIterator.getType().getRealFloat();
+			tmp = inputIterator.type().getRealFloat();
 			
 			// multiply the kernel
 			tmp *= kernel[ filterSizeMinus1 ];
@@ -171,7 +171,7 @@ public class GaussianConvolutionRealType<T extends RealType<T>> extends Gaussian
 			// add up the sum
 			sum += tmp;
 			
-			outputIterator.getType().setReal( sum );			                		        	
+			outputIterator.type().setReal( sum );			                		        	
 		}
 	}	
 }

@@ -27,25 +27,22 @@
  *
  * @author Stephan Preibisch & Stephan Saalfeld
  */
-package mpicbg.imglib.cursor.shapelist;
+package mpicbg.imglib.sampler;
 
-import mpicbg.imglib.container.shapelist.ShapeList;
-import mpicbg.imglib.image.Image;
 import mpicbg.imglib.type.Type;
 
-public class ShapeListCachedLocalizablePlaneCursor<T extends Type<T>> extends ShapeListLocalizablePlaneCursor<T>
+/** 
+ * The {@link Sampler} interface provides access to a {@link Type} instance.
+ * This {@link Type} instance may point to an actual pixel stored in a
+ * {@link Container} or be generated. 
+ *  
+ * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
+ * 
+ */
+public interface Sampler< T extends Type< T > >
 {
-	final ShapeListCache<T> cache;
-
-	public ShapeListCachedLocalizablePlaneCursor( final ShapeList< T > container, final Image< T > image, final ShapeListCache<T> cache ) 
-	{
-		super( container, image );
-		this.cache = cache;
-	}	
+	public T type();
 	
-	@Override
-	public T type()
-	{
-		return cache.lookUp( position );
-	}
+	@Deprecated
+	public T getType();
 }

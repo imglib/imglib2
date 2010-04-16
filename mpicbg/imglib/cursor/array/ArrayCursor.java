@@ -53,7 +53,7 @@ public class ArrayCursor<T extends Type<T>> extends CursorImpl<T> implements Cur
 	}
 	
 	@Override
-	public T getType() { return type; }
+	public T type() { return type; }
 	
 	@Override
 	public boolean hasNext() { return type.getIndex() < sizeMinus1; }

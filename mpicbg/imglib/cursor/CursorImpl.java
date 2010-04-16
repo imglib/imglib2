@@ -64,7 +64,11 @@ public abstract class CursorImpl<T extends Type<T>> implements Cursor<T>
 	}
 	
 	@Override
-	public int getArrayIndex() { return getType().getIndex(); }
+	@Deprecated
+	final public T getType(){ return type(); } 
+	
+	@Override
+	public int getArrayIndex() { return type().getIndex(); }
 	@Override
 	public Image<T> getImage() { return image; }
 	@Override
@@ -78,7 +82,7 @@ public abstract class CursorImpl<T extends Type<T>> implements Cursor<T>
 	public void remove() {}
 	
 	@Override
-	public T next(){ fwd(); return getType(); }
+	public T next(){ fwd(); return type(); }
 
 	@Override
 	public void fwd( final long steps )

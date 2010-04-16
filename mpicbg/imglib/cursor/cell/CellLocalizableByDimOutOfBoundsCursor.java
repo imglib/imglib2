@@ -65,7 +65,7 @@ public class CellLocalizableByDimOutOfBoundsCursor<T extends Type<T>> extends Ce
 	}	
 
 	@Override
-	public T getType() 
+	public T type() 
 	{ 
 		if ( isOutOfBounds )
 			return outOfBoundsStrategy.getType();

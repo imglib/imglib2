@@ -136,7 +136,7 @@ public class FourierConvolution<T extends RealType<T>, S extends RealType<S>> im
 			for ( int d = 0; d < numDimensions; ++d )
 				value *= kernel[ d ][ position[ d ] ];
 			
-			cursor.getType().set( (float)value );
+			cursor.type().set( (float)value );
 		}
 		
 		cursor.close();
@@ -170,7 +170,7 @@ public class FourierConvolution<T extends RealType<T>, S extends RealType<S>> im
 				
 		final LocalizableByDimCursor<T> c = kernel.createLocalizableByDimCursor();
 		c.setPosition( center );
-		c.getType().setOne();
+		c.type().setOne();
 		c.close();
 		
 		final GaussianConvolution<T> gauss = new GaussianConvolution<T>( kernel, new OutOfBoundsStrategyValueFactory<T>(), sigma );
@@ -263,7 +263,7 @@ public class FourierConvolution<T extends RealType<T>, S extends RealType<S>> im
 				}			
 				
 				kernelTemplateCursor.setPosition( position );
-				kernelTemplateCursor.getType().set( kernelCursor.getType() );
+				kernelTemplateCursor.type().set( kernelCursor.type() );
 			}
 			
 			// 
@@ -295,7 +295,7 @@ public class FourierConvolution<T extends RealType<T>, S extends RealType<S>> im
 			cursorImgFFT.fwd();
 			cursorKernelFFT.fwd();
 			
-			cursorImgFFT.getType().mul( cursorKernelFFT.getType() );
+			cursorImgFFT.type().mul( cursorKernelFFT.type() );
 		}
 		
 		cursorImgFFT.close();

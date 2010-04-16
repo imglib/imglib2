@@ -236,7 +236,7 @@ public class LOCI
 						while(it.hasNext())
 						{
 							it.fwd();
-							it.getType().set( (short)(b[ 0 ][ it.getPosition( planeX )+it.getPosition( planeY )*width ] & 0xff) );
+							it.type().set( (short)(b[ 0 ][ it.getPosition( planeX )+it.getPosition( planeY )*width ] & 0xff) );
 						}						
 					}	
 					else //if (pixelType == FormatTools.UINT16)
@@ -244,7 +244,7 @@ public class LOCI
 						while(it.hasNext())
 						{
 							it.fwd();
-							it.getType().set( getShortValue( b[ 0 ], ( it.getPosition( planeX )+it.getPosition( planeY )*width ) * 2, isLittleEndian ) );
+							it.type().set( getShortValue( b[ 0 ], ( it.getPosition( planeX )+it.getPosition( planeY )*width ) * 2, isLittleEndian ) );
 						}
 					}						
 				}				
@@ -393,7 +393,7 @@ public class LOCI
 						while(it.hasNext())
 						{
 							it.fwd();
-							it.getType().set( (short)(b[ 0 ][ it.getPosition( planeX )+it.getPosition( planeY )*width ] & 0xff) );
+							it.type().set( (short)(b[ 0 ][ it.getPosition( planeX )+it.getPosition( planeY )*width ] & 0xff) );
 						}						
 					}	
 					else //if (pixelType == FormatTools.UINT16)
@@ -401,7 +401,7 @@ public class LOCI
 						while(it.hasNext())
 						{
 							it.fwd();
-							it.getType().set( getShortValue( b[ 0 ], ( it.getPosition( planeX )+it.getPosition( planeY )*width ) * 2, isLittleEndian ) );
+							it.type().set( getShortValue( b[ 0 ], ( it.getPosition( planeX )+it.getPosition( planeY )*width ) * 2, isLittleEndian ) );
 						}
 					}						
 				}				
@@ -610,7 +610,7 @@ public class LOCI
 						while(it.hasNext())
 						{
 							it.fwd();
-							it.getType().set( b[ 0 ][ it.getPosition( planeX )+it.getPosition( planeY )*width ] & 0xff );
+							it.type().set( b[ 0 ][ it.getPosition( planeX )+it.getPosition( planeY )*width ] & 0xff );
 						}
 						
 					}	
@@ -619,7 +619,7 @@ public class LOCI
 						while(it.hasNext())
 						{
 							it.fwd();
-							it.getType().set( getShortValue( b[ 0 ], ( it.getPosition( planeX )+it.getPosition( planeY )*width ) * 2, isLittleEndian ) );
+							it.type().set( getShortValue( b[ 0 ], ( it.getPosition( planeX )+it.getPosition( planeY )*width ) * 2, isLittleEndian ) );
 						}
 					}						
 					else if (pixelType == FormatTools.UINT32)
@@ -629,7 +629,7 @@ public class LOCI
 						while(it.hasNext())
 						{
 							it.fwd();
-							it.getType().set( getIntValue( b[ 0 ], ( it.getPosition( planeX )+it.getPosition( planeY )*width )*4, isLittleEndian ) );
+							it.type().set( getIntValue( b[ 0 ], ( it.getPosition( planeX )+it.getPosition( planeY )*width )*4, isLittleEndian ) );
 						}
 
 					}
@@ -638,7 +638,7 @@ public class LOCI
 						while(it.hasNext())
 						{
 							it.fwd();
-							it.getType().set( getFloatValue( b[ 0 ], ( it.getPosition( planeX )+it.getPosition( planeY )*width )*4, isLittleEndian ) );
+							it.type().set( getFloatValue( b[ 0 ], ( it.getPosition( planeX )+it.getPosition( planeY )*width )*4, isLittleEndian ) );
 						}
 
 					}
@@ -758,7 +758,7 @@ public class LOCI
 			final int planeY = 1;
 									
 			LocalizablePlaneCursor<ByteType> it = img.createLocalizablePlaneCursor();
-			final ByteType type = it.getType();
+			final ByteType type = it.type();
 
 			
 			for (int z = start; z < end; z++)
@@ -900,7 +900,7 @@ public class LOCI
 			final int planeY = 1;
 									
 			LocalizablePlaneCursor<UnsignedByteType> it = img.createLocalizablePlaneCursor();
-			final UnsignedByteType type = it.getType();
+			final UnsignedByteType type = it.type();
 
 			
 			for (int z = start; z < end; z++)
@@ -1051,7 +1051,7 @@ public class LOCI
 					for ( int channel = 0; channel < channels; ++channel )
 						col[ channels - channel - 1 ] = b[ channel ][ it.getPosition( planeX )+it.getPosition( planeY )*width ];						
 					
-					it.getType().set( RGBALegacyType.rgba( col[ 0 ], col[ 1 ], col[ 2 ], 0) );
+					it.type().set( RGBALegacyType.rgba( col[ 0 ], col[ 1 ], col[ 2 ], 0) );
 				}						
 			}
 			

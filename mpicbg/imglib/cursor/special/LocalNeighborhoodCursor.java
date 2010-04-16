@@ -88,7 +88,7 @@ public class LocalNeighborhoodCursor<T extends Type<T>> extends CursorImpl<T>
 	}
 
 	@Override
-	public T getType() { return cursor.getType(); }
+	public T type() { return cursor.type(); }
 	
 	@Override
 	public void reset()
@@ -102,7 +102,7 @@ public class LocalNeighborhoodCursor<T extends Type<T>> extends CursorImpl<T>
 	{
 		neigborhoodCursor.fwd();
 		
-		if ( neigborhoodCursor.getType().getIndex() == centralPositionIndex )
+		if ( neigborhoodCursor.type().getIndex() == centralPositionIndex )
 			neigborhoodCursor.fwd();
 		
 		neigborhoodCursor.getPosition( tmp );

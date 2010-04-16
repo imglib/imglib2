@@ -58,13 +58,13 @@ public class IntegerTypeDisplay<T extends IntegerType<T>> extends Display<T>
 		}
 		
 		c.fwd();
-		min = max = c.getType().getIntegerLong();
+		min = max = c.type().getIntegerLong();
 
 		while ( c.hasNext() )
 		{
 			c.fwd();
 			
-			final long value = c.getType().getIntegerLong();
+			final long value = c.type().getIntegerLong();
 
 			if ( value > max )
 				max = value;

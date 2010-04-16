@@ -85,7 +85,7 @@ public class DynamicLocalizableByDimOutOfBoundsCursor<T extends Type<T>> extends
 	}
 	
 	@Override
-	public T getType() 
+	public T type() 
 	{ 
 		if ( isOutOfBounds )
 			return outOfBoundsStrategy.getType();

@@ -57,6 +57,10 @@ public abstract class InterpolatorImpl<T extends Type<T>> implements Interpolato
 		tmp = new float[ numDimensions ];
 		position = new float[ numDimensions ];
 	}
+	
+	@Override
+	@Deprecated
+	final public T getType(){ return type(); }
 
 	/**
 	 * Returns the typed interpolator factory the Interpolator has been instantiated with.

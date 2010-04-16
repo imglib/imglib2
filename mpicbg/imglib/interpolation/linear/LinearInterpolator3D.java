@@ -47,7 +47,7 @@ public class LinearInterpolator3D<T extends NumericType<T>> extends LinearInterp
 	}
 	
 	@Override
-	public T getType() { return tmp2; }
+	public T type() { return tmp2; }
 	
 	@Override
 	public void moveTo( final float[] position )
@@ -107,7 +107,7 @@ public class LinearInterpolator3D<T extends NumericType<T>> extends LinearInterp
 		//			     	  t1*u1*v*y4  + t*u1*v*y5  + t*u*v*y6  + t1*u*v*y7;
 
 		//final float y0 = strategy.get(baseX1    , baseX2,     baseX3);
-		tmp1.set( cursor.getType() );
+		tmp1.set( cursor.type() );
 		tmp1.mul( t1 );
 		tmp1.mul( u1 );
 		tmp1.mul( v1 );
@@ -115,7 +115,7 @@ public class LinearInterpolator3D<T extends NumericType<T>> extends LinearInterp
 
 		//final float y1 = strategy.get(baseX1 + 1, baseX2,     baseX3);
 		cursor.fwd( 0 );
-		tmp1.set( cursor.getType() );
+		tmp1.set( cursor.type() );
 		tmp1.mul( t );
 		tmp1.mul( u1 );
 		tmp1.mul( v1 );
@@ -123,7 +123,7 @@ public class LinearInterpolator3D<T extends NumericType<T>> extends LinearInterp
 
 		//final float y2 = strategy.get(baseX1 + 1, baseX2 + 1, baseX3);
 		cursor.fwd( 1 );
-		tmp1.set( cursor.getType() );
+		tmp1.set( cursor.type() );
 		tmp1.mul( t );
 		tmp1.mul( u );
 		tmp1.mul( v1 );
@@ -131,7 +131,7 @@ public class LinearInterpolator3D<T extends NumericType<T>> extends LinearInterp
 
 		//final float y3 = strategy.get(baseX1    , baseX2 + 1, baseX3);
 		cursor.bck( 0 );
-		tmp1.set( cursor.getType() );
+		tmp1.set( cursor.type() );
 		tmp1.mul( t1 );
 		tmp1.mul( u );
 		tmp1.mul( v1 );
@@ -139,7 +139,7 @@ public class LinearInterpolator3D<T extends NumericType<T>> extends LinearInterp
 
 		//final float y7 = strategy.get(baseX1    , baseX2 + 1, baseX3 + 1);
 		cursor.fwd( 2 );
-		tmp1.set( cursor.getType() );
+		tmp1.set( cursor.type() );
 		tmp1.mul( t1 );
 		tmp1.mul( u );
 		tmp1.mul( v );
@@ -147,7 +147,7 @@ public class LinearInterpolator3D<T extends NumericType<T>> extends LinearInterp
 
 		//final float y6 = strategy.get(baseX1 + 1, baseX2 + 1, baseX3 + 1);
 		cursor.fwd( 0 );
-		tmp1.set( cursor.getType() );
+		tmp1.set( cursor.type() );
 		tmp1.mul( t );
 		tmp1.mul( u );
 		tmp1.mul( v );
@@ -155,7 +155,7 @@ public class LinearInterpolator3D<T extends NumericType<T>> extends LinearInterp
 
 		//final float y5 = strategy.get(baseX1 + 1, baseX2,     baseX3 + 1);
 		cursor.bck( 1 );
-		tmp1.set( cursor.getType() );
+		tmp1.set( cursor.type() );
 		tmp1.mul( t );
 		tmp1.mul( u1 );
 		tmp1.mul( v );
@@ -163,7 +163,7 @@ public class LinearInterpolator3D<T extends NumericType<T>> extends LinearInterp
 
 		//final float y4 = strategy.get(baseX1    , baseX2,	  baseX3 + 1);
 		cursor.bck( 0 );
-		tmp1.set( cursor.getType() );
+		tmp1.set( cursor.type() );
 		tmp1.mul( t1 );
 		tmp1.mul( u1 );
 		tmp1.mul( v );
@@ -228,7 +228,7 @@ public class LinearInterpolator3D<T extends NumericType<T>> extends LinearInterp
 		//			     	  t1*u1*v*y4  + t*u1*v*y5  + t*u*v*y6  + t1*u*v*y7;
 
 		//final float y0 = strategy.get(baseX1    , baseX2,     baseX3);
-		tmp1.set( cursor.getType() );
+		tmp1.set( cursor.type() );
 		tmp1.mul( t1 );
 		tmp1.mul( u1 );
 		tmp1.mul( v1 );
@@ -236,7 +236,7 @@ public class LinearInterpolator3D<T extends NumericType<T>> extends LinearInterp
 
 		//final float y1 = strategy.get(baseX1 + 1, baseX2,     baseX3);
 		cursor.fwd( 0 );
-		tmp1.set( cursor.getType() );
+		tmp1.set( cursor.type() );
 		tmp1.mul( t );
 		tmp1.mul( u1 );
 		tmp1.mul( v1 );
@@ -244,7 +244,7 @@ public class LinearInterpolator3D<T extends NumericType<T>> extends LinearInterp
 
 		//final float y2 = strategy.get(baseX1 + 1, baseX2 + 1, baseX3);
 		cursor.fwd( 1 );
-		tmp1.set( cursor.getType() );
+		tmp1.set( cursor.type() );
 		tmp1.mul( t );
 		tmp1.mul( u );
 		tmp1.mul( v1 );
@@ -252,7 +252,7 @@ public class LinearInterpolator3D<T extends NumericType<T>> extends LinearInterp
 
 		//final float y3 = strategy.get(baseX1    , baseX2 + 1, baseX3);
 		cursor.bck( 0 );
-		tmp1.set( cursor.getType() );
+		tmp1.set( cursor.type() );
 		tmp1.mul( t1 );
 		tmp1.mul( u );
 		tmp1.mul( v1 );
@@ -260,7 +260,7 @@ public class LinearInterpolator3D<T extends NumericType<T>> extends LinearInterp
 
 		//final float y7 = strategy.get(baseX1    , baseX2 + 1, baseX3 + 1);
 		cursor.fwd( 2 );
-		tmp1.set( cursor.getType() );
+		tmp1.set( cursor.type() );
 		tmp1.mul( t1 );
 		tmp1.mul( u );
 		tmp1.mul( v );
@@ -268,7 +268,7 @@ public class LinearInterpolator3D<T extends NumericType<T>> extends LinearInterp
 
 		//final float y6 = strategy.get(baseX1 + 1, baseX2 + 1, baseX3 + 1);
 		cursor.fwd( 0 );
-		tmp1.set( cursor.getType() );
+		tmp1.set( cursor.type() );
 		tmp1.mul( t );
 		tmp1.mul( u );
 		tmp1.mul( v );
@@ -276,7 +276,7 @@ public class LinearInterpolator3D<T extends NumericType<T>> extends LinearInterp
 
 		//final float y5 = strategy.get(baseX1 + 1, baseX2,     baseX3 + 1);
 		cursor.bck( 1 );
-		tmp1.set( cursor.getType() );
+		tmp1.set( cursor.type() );
 		tmp1.mul( t );
 		tmp1.mul( u1 );
 		tmp1.mul( v );
@@ -284,7 +284,7 @@ public class LinearInterpolator3D<T extends NumericType<T>> extends LinearInterp
 
 		//final float y4 = strategy.get(baseX1    , baseX2,	  baseX3 + 1);
 		cursor.bck( 0 );
-		tmp1.set( cursor.getType() );
+		tmp1.set( cursor.type() );
 		tmp1.mul( t1 );
 		tmp1.mul( u1 );
 		tmp1.mul( v );

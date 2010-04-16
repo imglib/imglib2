@@ -217,11 +217,11 @@ public class ImagePlusAdapter
 		Cursor<T> in = input.createCursor();
 		Cursor<FloatType> out = output.createCursor();
 		
-		TypeConverter tc = TypeConverter.getTypeConverter( in.getType(), out.getType() );
+		TypeConverter tc = TypeConverter.getTypeConverter( in.type(), out.type() );
 		
 		if ( tc == null )
 		{
-			System.out.println( "Cannot convert from " + in.getType().getClass() + " to " + out.getType().getClass() );
+			System.out.println( "Cannot convert from " + in.type().getClass() + " to " + out.type().getClass() );
 			output.close();
 			return null;
 		}

@@ -97,7 +97,7 @@ public class CellCursor<T extends Type<T>> extends CursorImpl<T> implements Curs
 	public Cell<T,?> getCurrentCell() { return cellInstance; }
 	
 	@Override
-	public T getType() { return type; }
+	public T type() { return type; }
 	
 	@Override
 	public void reset()

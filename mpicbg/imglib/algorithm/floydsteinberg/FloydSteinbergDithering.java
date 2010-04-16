@@ -95,15 +95,15 @@ public class FloydSteinbergDithering<T extends RealType<T>> implements OutputAlg
 			
 			// set new value and compute error
 			final float error;
-			final float in = cursorInput.getType().getRealFloat(); 
+			final float in = cursorInput.type().getRealFloat(); 
 			if ( in < ditheringThreshold )
 			{
-				cursorOutput.getType().setZero();
+				cursorOutput.type().setZero();
 				error = in - minValue; 
 			}
 			else
 			{
-				cursorOutput.getType().setOne();
+				cursorOutput.type().setOne();
 				error = in - maxValue; 
 			}
 			
@@ -118,14 +118,14 @@ public class FloydSteinbergDithering<T extends RealType<T>> implements OutputAlg
 				{
 					cursorKernel.fwd();				
 					
-					final float value = error * cursorKernel.getType().get();
+					final float value = error * cursorKernel.type().get();
 					cursorKernel.getPosition( tmp2 );
 					
 					for ( int d = 0; d < numDimensions; ++d )
 						tmp2[ d ] += tmp1[ d ] - 1;
 					
 					cursorInput.moveTo( tmp2 );
-					cursorInput.getType().setReal( cursorInput.getType().getRealFloat() + value );
+					cursorInput.type().setReal( cursorInput.type().getRealFloat() + value );
 				}
 			}		
 		}
@@ -181,16 +181,16 @@ public class FloydSteinbergDithering<T extends RealType<T>> implements OutputAlg
 			//( - means processed already, # means the one we are currently processing)			
 			cursor.setPosition( 2, 0 );
 			cursor.setPosition( 1, 1 );			
-			cursor.getType().setReal( 7.0f / 16.0f );
+			cursor.type().setReal( 7.0f / 16.0f );
 			
 			cursor.move( 1, 1 );
-			cursor.getType().setReal( 1.0f / 16.0f );
+			cursor.type().setReal( 1.0f / 16.0f );
 
 			cursor.move( -1, 0 );
-			cursor.getType().setReal( 5.0f / 16.0f );
+			cursor.type().setReal( 5.0f / 16.0f );
 
 			cursor.move( -1, 0 );
-			cursor.getType().setReal( 3.0f / 16.0f );
+			cursor.type().setReal( 3.0f / 16.0f );
 
 			cursor.close();
 			
@@ -221,7 +221,7 @@ public class FloydSteinbergDithering<T extends RealType<T>> implements OutputAlg
 				cursor.fwd();
 				
 				if ( count > numValues )
-					cursor.getType().setReal( rndValues[ count - numValues - 1 ] );				
+					cursor.type().setReal( rndValues[ count - numValues - 1 ] );				
 				
 				++count;
 			}
@@ -240,7 +240,7 @@ public class FloydSteinbergDithering<T extends RealType<T>> implements OutputAlg
 				{
 					cursor.fwd();
 					if ( cursor.getPosition( d ) != 1 )
-						sumD += cursor.getType().get(); 				
+						sumD += cursor.type().get(); 				
 				}
 				
 				cursor.reset();
@@ -249,7 +249,7 @@ public class FloydSteinbergDithering<T extends RealType<T>> implements OutputAlg
 					cursor.fwd();
 
 					if ( cursor.getPosition( d ) != 1 )
-						cursor.getType().set( cursor.getType().get() / sumD );
+						cursor.type().set( cursor.type().get() / sumD );
 				}
 			}
 			cursor.close();
@@ -260,14 +260,14 @@ public class FloydSteinbergDithering<T extends RealType<T>> implements OutputAlg
 			while ( cursor.hasNext() )
 			{
 				cursor.fwd();
-				sum += cursor.getType().get();
+				sum += cursor.type().get();
 			}
 
 			cursor.reset();
 			while ( cursor.hasNext() )
 			{
 				cursor.fwd();
-				cursor.getType().set( cursor.getType().get() / sum );
+				cursor.type().set( cursor.type().get() / sum );
 			}
 			return kernel;			
 		}
