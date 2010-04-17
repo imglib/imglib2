@@ -81,8 +81,8 @@ public class NearestNeighborInterpolator2D<T extends Type<T>> extends NearestNei
 		final int ix = MathLib.round( x ); 
 		final int iy = MathLib.round( y ); 
 		
-		cursor.move( ix - cursor.getPosition( 0 ), 0 );
-		cursor.move( iy - cursor.getPosition( 1 ), 1 );
+		cursor.move( ix - cursor.getRasterLocation( 0 ), 0 );
+		cursor.move( iy - cursor.getRasterLocation( 1 ), 1 );
 	}
 
 	@Override
@@ -97,8 +97,8 @@ public class NearestNeighborInterpolator2D<T extends Type<T>> extends NearestNei
 		this.x += x;
 		this.y += y;
 		
-		cursor.move( MathLib.round( this.x ) - cursor.getPosition( 0 ), 0 );
-		cursor.move( MathLib.round( this.y ) - cursor.getPosition( 1 ), 1 );
+		cursor.move( MathLib.round( this.x ) - cursor.getRasterLocation( 0 ), 0 );
+		cursor.move( MathLib.round( this.y ) - cursor.getRasterLocation( 1 ), 1 );
 	}
 	
 	@Override

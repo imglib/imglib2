@@ -1,6 +1,6 @@
 package mpicbg.imglib.cursor.link;
 
-import mpicbg.imglib.cursor.Localizable;
+import mpicbg.imglib.cursor.RasterLocalizable;
 
 final public class NullLink implements CursorLink
 {	
@@ -17,13 +17,13 @@ final public class NullLink implements CursorLink
 	final public void moveRel( final int[] position ) {}
 
 	@Override
-	final public void moveTo( final Localizable localizable ) {}
+	final public void moveTo( final RasterLocalizable localizable ) {}
 
 	@Override
 	final public void moveTo( final int[] position ) {}
 
 	@Override
-	final public void setPosition( final Localizable localizable ) {}
+	final public void setPosition( final RasterLocalizable localizable ) {}
 	
 	@Override
 	final public void setPosition( final int[] position ) {}
@@ -32,20 +32,38 @@ final public class NullLink implements CursorLink
 	final public void setPosition( final int position, final int dim ) {}
 
 	@Override
-	final public void getPosition( final int[] position ) {}
+	final public void localize( final int[] position ) {}
 
 	@Override
-	final public int[] getPosition() { return null; }
+	final public int[] getRasterLocation() { return null; }
 
 	@Override
-	final public int getPosition( final int dim ) { return 0; }
+	final public int getRasterLocation( final int dim ) { return 0; }
 
 	@Override
-	final public String getPositionAsString() { return ""; }
+	final public String getLocationAsString() { return ""; }
 
 	@Override
 	final public void fwd( final long steps ) {}
 
 	@Override
 	final public void fwd() {}
+
+	@Override
+	public double[] getDoubleLocation(){ return null; }
+
+	@Override
+	public double getDoubleLocation( int dim ){ return 0; }
+	
+	@Override
+	public float[] getFloatLocation(){ return null; }
+
+	@Override
+	public float getFloatLocation( int dim ){ return 0; }
+
+	@Override
+	public void localize( float[] location ){}
+
+	@Override
+	public void localize( double[] location ){}
 }

@@ -211,7 +211,7 @@ public class LinearInterpolator<T extends NumericType<T>> extends InterpolatorIm
 			this.position[ d ] = position[ d ];
 			
 			baseDim[ d ] = position[ d ] > 0 ? (int)position[ d ]: (int)position[ d ]-1;			
-			cursor.move( baseDim[ d ] - cursor.getPosition(d), d );
+			cursor.move( baseDim[ d ] - cursor.getRasterLocation(d), d );
 		}
 
         // compute the weights [0...1] in each dimension and the inverse (1-weight) [1...0]

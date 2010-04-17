@@ -115,7 +115,7 @@ public class Array3DLocalizableCursor<T extends Type<T>> extends ArrayLocalizabl
 	}
 
 	@Override
-	public void getPosition( final int[] position )
+	public void localize( final int[] position )
 	{
 		position[ 0 ] = x;
 		position[ 1 ] = y;
@@ -126,10 +126,10 @@ public class Array3DLocalizableCursor<T extends Type<T>> extends ArrayLocalizabl
 	public Array3D<T,?> getStorageContainer(){ return container; }
 
 	@Override
-	public int[] getPosition(){ return new int[]{x, y, z}; }
+	public int[] getRasterLocation(){ return new int[]{x, y, z}; }
 	
 	@Override
-	public int getPosition( final int dim )
+	public int getRasterLocation( final int dim )
 	{
 		if ( dim == 0 )
 			return x;
@@ -143,7 +143,7 @@ public class Array3DLocalizableCursor<T extends Type<T>> extends ArrayLocalizabl
 	}
 	
 	@Override
-	public String getPositionAsString()
+	public String getLocationAsString()
 	{
 		return "(" + x + ", " + y + ", " + z + ")";
 	}	

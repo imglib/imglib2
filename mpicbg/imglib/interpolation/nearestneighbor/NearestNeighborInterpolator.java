@@ -65,7 +65,7 @@ public class NearestNeighborInterpolator<T extends Type<T>> extends Interpolator
 			
 			//final int pos = (int)( position[d] + (0.5f * Math.signum( position[d] ) ) );
 			final int pos = MathLib.round( position[ d ] );
-			cursor.move( pos - cursor.getPosition(d), d );
+			cursor.move( pos - cursor.getRasterLocation(d), d );
 		}
 	}
 
@@ -78,7 +78,7 @@ public class NearestNeighborInterpolator<T extends Type<T>> extends Interpolator
 			
 			//final int pos = (int)( position[d] + (0.5f * Math.signum( position[d] ) ) );
 			final int pos = MathLib.round( position[ d ] );			
-			cursor.move( pos - cursor.getPosition(d), d );
+			cursor.move( pos - cursor.getRasterLocation(d), d );
 		}
 	}
 	

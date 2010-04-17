@@ -146,20 +146,56 @@ public class RegionOfInterestCursor<T extends Type<T>> extends CursorImpl<T> imp
 	public void setDebug( boolean debug ) { this.debug = debug; }
 
 	@Override
-	public void getPosition( final int[] position )
+	public void localize( final float[] position )
 	{
 		for ( int d = 0; d < numDimensions; ++d )
 			position[ d ] = roiPosition[ d ];
 	}
 
 	@Override
-	public int[] getPosition() { return roiPosition.clone(); }
+	public void localize( final double[] position )
+	{
+		for ( int d = 0; d < numDimensions; ++d )
+			position[ d ] = roiPosition[ d ];
+	}
 
 	@Override
-	public int getPosition( final int dim ) { return roiPosition[ dim ]; }
+	public void localize( final int[] position )
+	{
+		for ( int d = 0; d < numDimensions; ++d )
+			position[ d ] = roiPosition[ d ];
+	}
+	
+	@Override
+	public float[] getFloatLocation()
+	{
+		final float[] location = new float[ roiPosition.length ];
+		localize( location );
+		return location;
+	}
+	
+	@Override
+	public double[] getDoubleLocation()
+	{
+		final double[] location = new double[ roiPosition.length ];
+		localize( location );
+		return location;
+	}
 
 	@Override
-	public String getPositionAsString()
+	public int[] getRasterLocation() { return roiPosition.clone(); }
+
+	@Override
+	public float getFloatLocation( final int d ){ return roiPosition[ d ]; }
+	
+	@Override
+	public double getDoubleLocation( final int d ){ return roiPosition[ d ]; }
+	
+	@Override
+	public int getRasterLocation( final int d ) { return roiPosition[ d ]; }
+
+	@Override
+	public String getLocationAsString()
 	{
 		String pos = "(" + roiPosition[ 0 ];
 		
@@ -172,5 +208,5 @@ public class RegionOfInterestCursor<T extends Type<T>> extends CursorImpl<T> imp
 	}
 	
 	@Override
-	public String toString() { return getPositionAsString() + " = " + type(); }
+	public String toString() { return getLocationAsString() + " = " + type(); }
 }

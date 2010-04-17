@@ -29,18 +29,18 @@
  */
 package mpicbg.imglib.cursor;
 
-public interface LocalizableByDim extends Localizable
+public interface LocalizableByDim extends RasterLocalizable
 {
 	public void fwd( int dim );
 	public void bck( int dim );
 	
 	public void move( int steps, int dim );
 
-	public void moveTo( Localizable localizable );
+	public void moveTo( RasterLocalizable localizable );
 	public void moveTo( int position[] );
 	public void moveRel( int position[] );
 	
-	public void setPosition( Localizable localizable );
+	public void setPosition( RasterLocalizable localizable );
 	public void setPosition( int position[] );
 	public void setPosition( int position, int dim );		
 }

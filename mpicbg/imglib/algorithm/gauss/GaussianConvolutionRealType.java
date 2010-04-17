@@ -65,7 +65,7 @@ public class GaussianConvolutionRealType<T extends RealType<T>> extends Gaussian
 			//
 			
 			// get the current positon in the output image
-			outputIterator.getPosition( to );
+			outputIterator.localize( to );
 			
 			// position in the input image is filtersize/2 to the left
 			to[ dim ] -= iteratorPosition;
@@ -134,7 +134,7 @@ public class GaussianConvolutionRealType<T extends RealType<T>> extends Gaussian
 			//
 			
 			// get the current positon in the output image
-			outputIterator.getPosition( to );
+			outputIterator.localize( to );
 			
 			// position in the input image is filtersize/2 to the left
 			to[ dim ] -= iteratorPosition;

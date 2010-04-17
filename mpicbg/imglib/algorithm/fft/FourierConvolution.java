@@ -129,7 +129,7 @@ public class FourierConvolution<T extends RealType<T>, S extends RealType<S>> im
 		while ( cursor.hasNext() )
 		{
 			cursor.fwd();
-			cursor.getPosition( position );
+			cursor.localize( position );
 			
 			double value = 1;
 			
@@ -249,7 +249,7 @@ public class FourierConvolution<T extends RealType<T>, S extends RealType<S>> im
 			while ( kernelCursor.hasNext() )
 			{
 				kernelCursor.next();
-				kernelCursor.getPosition( position );
+				kernelCursor.localize( position );
 				
 				for ( int d = 0; d < numDimensions; ++d )
 				{

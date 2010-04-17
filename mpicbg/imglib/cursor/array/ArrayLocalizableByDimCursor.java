@@ -35,7 +35,7 @@ import mpicbg.imglib.container.basictypecontainer.array.FakeArray;
 import mpicbg.imglib.cursor.LocalizableByDimCursor;
 //import mpicbg.imglib.cursor.link.CursorLink;
 //import mpicbg.imglib.cursor.link.NullLink;
-import mpicbg.imglib.cursor.Localizable;
+import mpicbg.imglib.cursor.RasterLocalizable;
 import mpicbg.imglib.cursor.special.LocalNeighborhoodCursor;
 import mpicbg.imglib.cursor.special.LocalNeighborhoodCursorFactory;
 import mpicbg.imglib.cursor.special.RegionOfInterestCursor;
@@ -132,7 +132,7 @@ public class ArrayLocalizableByDimCursor<T extends Type<T>> extends ArrayLocaliz
 	{		
 		for ( int d = 0; d < numDimensions; ++d )
 		{
-			final int dist = position[ d ] - getPosition( d );
+			final int dist = position[ d ] - getRasterLocation( d );
 			
 			if ( dist != 0 )				
 				move( dist, d );
@@ -140,16 +140,16 @@ public class ArrayLocalizableByDimCursor<T extends Type<T>> extends ArrayLocaliz
 	}
 
 	@Override
-	public void moveTo( final Localizable localizable )
+	public void moveTo( final RasterLocalizable localizable )
 	{
-		localizable.getPosition( tmp );
+		localizable.localize( tmp );
 		moveTo( tmp );
 	}
 
 	@Override
-	public void setPosition( final Localizable localizable )
+	public void setPosition( final RasterLocalizable localizable )
 	{
-		localizable.getPosition( tmp );
+		localizable.localize( tmp );
 		setPosition( tmp );
 	}
 	

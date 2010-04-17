@@ -117,10 +117,10 @@ final public class FFTFunctions
 						{
 							cursorDim.fwd();							
 
-							if ( cursorDim.getPosition( 0 ) % numThreads == myNumber )
+							if ( cursorDim.getRasterLocation( 0 ) % numThreads == myNumber )
 							{
 								// update all positions except for the one we are currrently doing the inverse fft on
-								cursorDim.getPosition( fakeSize );
+								cursorDim.localize( fakeSize );
 
 								tmp[ dim ] = 0;								
 								countDim = 0;						
@@ -230,10 +230,10 @@ A:						while( cursorDim.hasNext() )
 						{
 							cursorDim.fwd();							
 
-							if ( cursorDim.getPosition( 0 ) % numThreads == myNumber )
+							if ( cursorDim.getRasterLocation( 0 ) % numThreads == myNumber )
 							{							
 								// get all dimensions except the one we are currently doing the fft on
-								cursorDim.getPosition( fakeSize );
+								cursorDim.localize( fakeSize );
 
 								tmp[ 0 ] = 0;
 								if ( cropBack )
@@ -421,10 +421,10 @@ A:						while( cursorDim.hasNext() )
 						{
 							cursorDim.fwd();							
 
-							if ( cursorDim.getPosition( 0 ) % numThreads == myNumber )
+							if ( cursorDim.getRasterLocation( 0 ) % numThreads == myNumber )
 							{							
 								// get all dimensions except the one we are currently doing the fft on
-								cursorDim.getPosition( fakeSize );
+								cursorDim.localize( fakeSize );
 
 								tmp[ 0 ] = 0;
 								tmp2[ 0 ] = -imageOffset[ 0 ];
@@ -574,10 +574,10 @@ A:						while( cursorDim.hasNext() )
 						{
 							cursorDim.fwd();							
 
-							if ( cursorDim.getPosition( 0 ) % numThreads == myNumber )
+							if ( cursorDim.getRasterLocation( 0 ) % numThreads == myNumber )
 							{
 								// update all positions except for the one we are currrently doing the fft on
-								cursorDim.getPosition( fakeSize );
+								cursorDim.localize( fakeSize );
 
 								tmp[ dim ] = 0;								
 								countDim = 0;						
@@ -728,10 +728,10 @@ A:						while( cursorDim.hasNext() )
 					{
 						cursorDim.fwd();
 						
-						if ( cursorDim.getPosition( 0 ) % numThreads == myNumber )
+						if ( cursorDim.getRasterLocation( 0 ) % numThreads == myNumber )
 						{							
 							// update all positions except for the one we are currrently doing the fft on
-							cursorDim.getPosition( fakeSize );
+							cursorDim.localize( fakeSize );
 			
 							tmp[ 0 ] = 0;								
 							for ( int d = 1; d < numDimensions; ++d )
@@ -828,10 +828,10 @@ A:						while( cursorDim.hasNext() )
 					{
 						cursorDim.fwd();
 						
-						if ( cursorDim.getPosition( 0 ) % numThreads == myNumber )
+						if ( cursorDim.getRasterLocation( 0 ) % numThreads == myNumber )
 						{							
 							// update all positions except for the one we are currrently doing the fft on
-							cursorDim.getPosition( fakeSize );
+							cursorDim.localize( fakeSize );
 			
 							tmp[ dim ] = 0;								
 							countDim = 0;						

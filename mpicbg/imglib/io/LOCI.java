@@ -236,7 +236,7 @@ public class LOCI
 						while(it.hasNext())
 						{
 							it.fwd();
-							it.type().set( (short)(b[ 0 ][ it.getPosition( planeX )+it.getPosition( planeY )*width ] & 0xff) );
+							it.type().set( (short)(b[ 0 ][ it.getRasterLocation( planeX )+it.getRasterLocation( planeY )*width ] & 0xff) );
 						}						
 					}	
 					else //if (pixelType == FormatTools.UINT16)
@@ -244,7 +244,7 @@ public class LOCI
 						while(it.hasNext())
 						{
 							it.fwd();
-							it.type().set( getShortValue( b[ 0 ], ( it.getPosition( planeX )+it.getPosition( planeY )*width ) * 2, isLittleEndian ) );
+							it.type().set( getShortValue( b[ 0 ], ( it.getRasterLocation( planeX )+it.getRasterLocation( planeY )*width ) * 2, isLittleEndian ) );
 						}
 					}						
 				}				
@@ -393,7 +393,7 @@ public class LOCI
 						while(it.hasNext())
 						{
 							it.fwd();
-							it.type().set( (short)(b[ 0 ][ it.getPosition( planeX )+it.getPosition( planeY )*width ] & 0xff) );
+							it.type().set( (short)(b[ 0 ][ it.getRasterLocation( planeX )+it.getRasterLocation( planeY )*width ] & 0xff) );
 						}						
 					}	
 					else //if (pixelType == FormatTools.UINT16)
@@ -401,7 +401,7 @@ public class LOCI
 						while(it.hasNext())
 						{
 							it.fwd();
-							it.type().set( getShortValue( b[ 0 ], ( it.getPosition( planeX )+it.getPosition( planeY )*width ) * 2, isLittleEndian ) );
+							it.type().set( getShortValue( b[ 0 ], ( it.getRasterLocation( planeX )+it.getRasterLocation( planeY )*width ) * 2, isLittleEndian ) );
 						}
 					}						
 				}				
@@ -610,7 +610,7 @@ public class LOCI
 						while(it.hasNext())
 						{
 							it.fwd();
-							it.type().set( b[ 0 ][ it.getPosition( planeX )+it.getPosition( planeY )*width ] & 0xff );
+							it.type().set( b[ 0 ][ it.getRasterLocation( planeX )+it.getRasterLocation( planeY )*width ] & 0xff );
 						}
 						
 					}	
@@ -619,7 +619,7 @@ public class LOCI
 						while(it.hasNext())
 						{
 							it.fwd();
-							it.type().set( getShortValue( b[ 0 ], ( it.getPosition( planeX )+it.getPosition( planeY )*width ) * 2, isLittleEndian ) );
+							it.type().set( getShortValue( b[ 0 ], ( it.getRasterLocation( planeX )+it.getRasterLocation( planeY )*width ) * 2, isLittleEndian ) );
 						}
 					}						
 					else if (pixelType == FormatTools.UINT32)
@@ -629,7 +629,7 @@ public class LOCI
 						while(it.hasNext())
 						{
 							it.fwd();
-							it.type().set( getIntValue( b[ 0 ], ( it.getPosition( planeX )+it.getPosition( planeY )*width )*4, isLittleEndian ) );
+							it.type().set( getIntValue( b[ 0 ], ( it.getRasterLocation( planeX )+it.getRasterLocation( planeY )*width )*4, isLittleEndian ) );
 						}
 
 					}
@@ -638,7 +638,7 @@ public class LOCI
 						while(it.hasNext())
 						{
 							it.fwd();
-							it.type().set( getFloatValue( b[ 0 ], ( it.getPosition( planeX )+it.getPosition( planeY )*width )*4, isLittleEndian ) );
+							it.type().set( getFloatValue( b[ 0 ], ( it.getRasterLocation( planeX )+it.getRasterLocation( planeY )*width )*4, isLittleEndian ) );
 						}
 
 					}
@@ -782,7 +782,7 @@ public class LOCI
 						while(it.hasNext())
 						{
 							it.fwd();
-							type.set( b[ 0 ][ it.getPosition( planeX )+it.getPosition( planeY )*width ] );
+							type.set( b[ 0 ][ it.getRasterLocation( planeX )+it.getRasterLocation( planeY )*width ] );
 						}						
 				}				
 			}
@@ -924,7 +924,7 @@ public class LOCI
 						while(it.hasNext())
 						{
 							it.fwd();
-							type.set( UnsignedByteType.getUnsignedByte( b[ 0 ][ it.getPosition( planeX )+it.getPosition( planeY )*width ] ) );
+							type.set( UnsignedByteType.getUnsignedByte( b[ 0 ][ it.getRasterLocation( planeX )+it.getRasterLocation( planeY )*width ] ) );
 						}						
 				}				
 			}
@@ -1049,7 +1049,7 @@ public class LOCI
 					it.fwd();
 					
 					for ( int channel = 0; channel < channels; ++channel )
-						col[ channels - channel - 1 ] = b[ channel ][ it.getPosition( planeX )+it.getPosition( planeY )*width ];						
+						col[ channels - channel - 1 ] = b[ channel ][ it.getRasterLocation( planeX )+it.getRasterLocation( planeY )*width ];						
 					
 					it.type().set( RGBALegacyType.rgba( col[ 0 ], col[ 1 ], col[ 2 ], 0) );
 				}						

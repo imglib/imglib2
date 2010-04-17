@@ -144,7 +144,7 @@ public class DownSample<T extends RealType<T>> implements MultiThreaded, OutputA
 		while ( cursor.hasNext() )
 		{
 			cursor.fwd();
-			cursor.getPosition( pos );
+			cursor.localize( pos );
 			
 			for ( int d = 0; d < numDimensions; ++d )
 				scaledPos[ d ] = pos[ d ] * scalingDim[ d ];

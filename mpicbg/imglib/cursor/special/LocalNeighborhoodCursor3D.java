@@ -61,7 +61,7 @@ public class LocalNeighborhoodCursor3D<T extends Type<T>> extends LocalNeighborh
 	@Override
 	public void update()
 	{
-		cursor.getPosition( position );		
+		cursor.localize( position );		
 		i = -1;
 	}
 	
@@ -143,5 +143,5 @@ public class LocalNeighborhoodCursor3D<T extends Type<T>> extends LocalNeighborh
 		++i;
 	}
 	
-	public int getRelativePosition( final int d ) { return cursor.getPosition( d ) - position[ d ]; }	
+	public int getRelativePosition( final int d ) { return cursor.getRasterLocation( d ) - position[ d ]; }	
 }

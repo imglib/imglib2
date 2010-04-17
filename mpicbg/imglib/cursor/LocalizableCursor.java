@@ -32,6 +32,6 @@ package mpicbg.imglib.cursor;
 import mpicbg.imglib.cursor.Cursor;
 import mpicbg.imglib.type.Type;
 
-public interface LocalizableCursor<T extends Type<T>> extends Cursor<T>, Localizable
+public interface LocalizableCursor<T extends Type<T>> extends Cursor<T>, RasterLocalizable
 {
 }

@@ -99,20 +99,59 @@ public class ImagePlusLocalizableCursor<T extends Type<T>> extends ImagePlusCurs
 
 
 	@Override
-	public void getPosition( int[] position )
+	public void localize( float[] position )
 	{
 		for ( int d = 0; d < numDimensions; d++ )
 			position[ d ] = this.position[ d ];
 	}
 	
 	@Override
-	public int[] getPosition(){ return position.clone(); }
+	public void localize( double[] position )
+	{
+		for ( int d = 0; d < numDimensions; d++ )
+			position[ d ] = this.position[ d ];
+	}
 	
 	@Override
-	public int getPosition( final int dim ){ return position[ dim ]; }
+	public void localize( int[] position )
+	{
+		for ( int d = 0; d < numDimensions; d++ )
+			position[ d ] = this.position[ d ];
+	}
+	
 	
 	@Override
-	public String getPositionAsString()
+	public float[] getFloatLocation()
+	{
+		final float[] location = new float[ position.length ];
+		localize( location );
+		return location;
+	}
+	
+	@Override
+	public double[] getDoubleLocation()
+	{
+		final double[] location = new double[ position.length ];
+		localize( location );
+		return location;
+	}
+
+	@Override
+	public int[] getRasterLocation(){ return position.clone(); }
+	
+	
+	@Override
+	public float getFloatLocation( final int dim ){ return position[ dim ]; }
+	
+	@Override
+	public double getDoubleLocation( final int dim ){ return position[ dim ]; }
+	
+	@Override
+	public int getRasterLocation( final int dim ){ return position[ dim ]; }
+
+	
+	@Override
+	public String getLocationAsString()
 	{
 		String pos = "(" + position[ 0 ];
 		
@@ -125,5 +164,5 @@ public class ImagePlusLocalizableCursor<T extends Type<T>> extends ImagePlusCurs
 	}
 	
 	@Override
-	public String toString() { return getPositionAsString() + " = " + type(); }
+	public String toString() { return getLocationAsString() + " = " + type(); }
 }

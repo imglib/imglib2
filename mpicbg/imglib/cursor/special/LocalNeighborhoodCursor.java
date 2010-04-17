@@ -53,7 +53,7 @@ public class LocalNeighborhoodCursor<T extends Type<T>> extends CursorImpl<T>
 		super( cursor.getStorageContainer(), cursor.getImage() );
 		
 		this.cursor = cursor;
-		this.position = cursor.getPosition();
+		this.position = cursor.getRasterLocation();
 		
 		this.numDimensions = cursor.getImage().getNumDimensions();
 		this.tmp = new int[ numDimensions ];
@@ -83,7 +83,7 @@ public class LocalNeighborhoodCursor<T extends Type<T>> extends CursorImpl<T>
 
 	public void update()
 	{
-		cursor.getPosition( position );
+		cursor.localize( position );
 		this.neigborhoodCursor.reset();		
 	}
 
@@ -105,7 +105,7 @@ public class LocalNeighborhoodCursor<T extends Type<T>> extends CursorImpl<T>
 		if ( neigborhoodCursor.type().getIndex() == centralPositionIndex )
 			neigborhoodCursor.fwd();
 		
-		neigborhoodCursor.getPosition( tmp );
+		neigborhoodCursor.localize( tmp );
 
 		for ( int d = 0; d < numDimensions; ++d )
 			tmp[ d ] = position[ d ] + ( tmp[d] - 1 );
@@ -113,7 +113,7 @@ public class LocalNeighborhoodCursor<T extends Type<T>> extends CursorImpl<T>
 		cursor.moveTo( tmp );		
 	}
 	
-	public int getRelativePosition( final int d ) { return neigborhoodCursor.getPosition( d ); }
+	public int getRelativePosition( final int d ) { return neigborhoodCursor.getRasterLocation( d ); }
 	
 	@Override
 	public int getArrayIndex() { return cursor.getArrayIndex(); }

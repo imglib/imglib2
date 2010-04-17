@@ -88,9 +88,9 @@ public class NearestNeighborInterpolator3D<T extends Type<T>> extends NearestNei
 		final int iy = MathLib.round( y ); //(int)(y + (0.5f * Math.signum(y) )); 
 		final int iz = MathLib.round( z ); //(int)(z + (0.5f * Math.signum(z) )); 
 		
-		cursor.move( ix - cursor.getPosition( 0 ), 0 );
-		cursor.move( iy - cursor.getPosition( 1 ), 1 );
-		cursor.move( iz - cursor.getPosition( 2 ), 2 );
+		cursor.move( ix - cursor.getRasterLocation( 0 ), 0 );
+		cursor.move( iy - cursor.getRasterLocation( 1 ), 1 );
+		cursor.move( iz - cursor.getRasterLocation( 2 ), 2 );
 		
 		/*
 		
@@ -122,9 +122,9 @@ public class NearestNeighborInterpolator3D<T extends Type<T>> extends NearestNei
 		//cursor.move( (int)( this.y + (0.5f * Math.signum(this.y) ) ) - cursor.getPosition( 1 ), 1 );
 		//cursor.move( (int)( this.z + (0.5f * Math.signum(this.z) ) ) - cursor.getPosition( 2 ), 2 );
 		
-		cursor.move( MathLib.round( this.x ) - cursor.getPosition( 0 ), 0 );
-		cursor.move( MathLib.round( this.y ) - cursor.getPosition( 1 ), 1 );
-		cursor.move( MathLib.round( this.z ) - cursor.getPosition( 2 ), 2 );
+		cursor.move( MathLib.round( this.x ) - cursor.getRasterLocation( 0 ), 0 );
+		cursor.move( MathLib.round( this.y ) - cursor.getRasterLocation( 1 ), 1 );
+		cursor.move( MathLib.round( this.z ) - cursor.getRasterLocation( 2 ), 2 );
 		
 		/*
 		for ( int d = 0; d < numDimensions; d++ )

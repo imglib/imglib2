@@ -39,10 +39,10 @@ import mpicbg.imglib.type.Type;
  * {@link Container} or be generated differently.
  * 
  * The {@link Sampler} interface unifies pixel access for {@link Cursor},
- * {@link Interpolator} and later Integrators.   and Interpolators are actually
-point samplers, whereas many operations require
-integrating a region defined by some function.  The
-Sampler interface is the basis of 
+ * {@link Interpolator} and later Integrators.  Cursor and Interpolator are
+ * point samplers, whereas many operations require integrating a region in a
+ * functionally defined way.  The {@link Sampler} interface is the basis of all
+ * these strategies.
  *  
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  * 

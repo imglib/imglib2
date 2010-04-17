@@ -131,19 +131,6 @@ public class ArrayLocalizablePlaneCursor<T extends Type<T>> extends ArrayLocaliz
 		reset( 0, 1, new int[ numDimensions ] );		
 	}
 
-	@Override
-	public void getPosition( int[] position )
-	{
-		for ( int d = 0; d < numDimensions; d++ )
-			position[ d ] = this.position[ d ];
-	}
-	
-	@Override
-	public int[] getPosition(){ return position.clone(); }
-	
-	@Override
-	public int getPosition( final int dim ){ return position[ dim ]; }
-	
 	protected void setPosition( final int[] position )
 	{
 		type.updateIndex( container.getPos( position ) );

@@ -274,7 +274,7 @@ public class GaussianConvolution< T extends NumericType<T>> implements MultiThre
         	//
         	
         	// get the current positon in the output image
-    		outputIterator.getPosition( to );
+    		outputIterator.localize( to );
     		
     		// position in the input image is filtersize/2 to the left
     		to[ dim ] -= iteratorPosition;

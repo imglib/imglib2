@@ -103,22 +103,64 @@ public class ArrayLocalizableCursor<T extends Type<T>> extends ArrayCursor<T> im
 		
 		type.updateContainer( this );
 	}
+	
+	@Override
+	public void localize( float[] position )
+	{
+		for ( int d = 0; d < numDimensions; d++ )
+			position[ d ] = this.position[ d ];
+	}
 
 	@Override
-	public void getPosition( int[] position )
+	public void localize( double[] position )
+	{
+		for ( int d = 0; d < numDimensions; d++ )
+			position[ d ] = this.position[ d ];
+	}
+
+	@Override
+	public void localize( int[] position )
 	{
 		for ( int d = 0; d < numDimensions; d++ )
 			position[ d ] = this.position[ d ];
 	}
 	
 	@Override
-	public int[] getPosition(){ return position.clone(); }
+	public float getFloatLocation( final int d )
+	{
+		return position[ d ];
+	}
 	
 	@Override
-	public int getPosition( final int dim ){ return position[ dim ]; }
+	public double getDoubleLocation( final int d )
+	{
+		return position[ d ];
+	}
 	
 	@Override
-	public String getPositionAsString()
+	public float[] getFloatLocation()
+	{
+		final float[] location = new float[ position.length ];
+		localize( location );
+		return location;
+	}
+	
+	@Override
+	public double[] getDoubleLocation()
+	{
+		final double[] location = new double[ position.length ];
+		localize( location );
+		return location;
+	}
+	
+	@Override
+	public int[] getRasterLocation(){ return position.clone(); }
+	
+	@Override
+	public int getRasterLocation( final int dim ){ return position[ dim ]; }
+	
+	@Override
+	public String getLocationAsString()
 	{
 		String pos = "(" + position[ 0 ];
 		
@@ -131,5 +173,5 @@ public class ArrayLocalizableCursor<T extends Type<T>> extends ArrayCursor<T> im
 	}
 	
 	@Override
-	public String toString() { return getPositionAsString() + " = " + type(); }
+	public String toString() { return getLocationAsString() + " = " + type(); }
 }

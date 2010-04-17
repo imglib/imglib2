@@ -46,7 +46,7 @@ public class TestBase {
 		int[] pos = new int[cursor.getNumDimensions()];
 		while( cursor.hasNext() ) {
 			cursor.fwd();
-			cursor.getPosition( pos );
+			cursor.localize( pos );
 			if( function.calculate( pos ) != cursor.type().getRealFloat() )
 				return false;
 		}
@@ -62,7 +62,7 @@ public class TestBase {
 		int[] pos = new int[cursor.getNumDimensions()];
 		while( cursor.hasNext() ) {
 			cursor.fwd();
-			cursor.getPosition( pos );
+			cursor.localize( pos );
 			if( Math.abs( function.calculate( pos ) - cursor.type().getRealFloat() ) > tolerance )
 				return false;
 		}
@@ -93,7 +93,7 @@ public class TestBase {
 		int[] pos = new int[dim];
 		while( cursor.hasNext() ) {
 			cursor.fwd();
-			cursor.getPosition( pos );
+			cursor.localize( pos );
 			float value = cursor.type().getRealFloat();
 			result[0] += value;
 			result[dim + 1] += value * value;
@@ -169,7 +169,7 @@ public class TestBase {
 		int[] pos = new int[cursor.getNumDimensions()];
 		while( cursor.hasNext() ) {
 			cursor.fwd();
-			cursor.getPosition( pos );
+			cursor.localize( pos );
 			float value = function.calculate( pos );
 			cursor.type().setReal( value );
 		}

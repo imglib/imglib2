@@ -237,17 +237,17 @@ public class CellLocalizablePlaneCursor<T extends Type<T>> extends CellLocalizab
 	}
 	
 	@Override
-	public void getPosition( final int[] position )
+	public void localize( final int[] position )
 	{
 		for ( int d = 0; d < numDimensions; d++ )
 			position[ d ] = this.position[ d ];
 	}
 	
 	@Override
-	public int[] getPosition(){ return position.clone(); }
+	public int[] getRasterLocation(){ return position.clone(); }
 	
 	@Override
-	public int getPosition( final int dim ){ return position[ dim ]; }	
+	public int getRasterLocation( final int dim ){ return position[ dim ]; }	
 	
 	protected void setPosition( final int[] position )
 	{

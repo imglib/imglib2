@@ -163,7 +163,7 @@ public class ImageTransform<T extends Type<T>> implements OutputAlgorithm<T>
 				// we have to add the offset of our new image
 				// relative to it's starting point (0,0,0)
 				for ( int d = 0; d < numDimensions; ++d )
-					tmp[ d ] = transformedIterator.getPosition( d ) + offset[ d ];
+					tmp[ d ] = transformedIterator.getRasterLocation( d ) + offset[ d ];
 				
 				// transform back into the original image
 				// 

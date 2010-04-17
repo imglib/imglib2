@@ -27,63 +27,38 @@
  *
  * @author Stephan Preibisch & Stephan Saalfeld
  */
-package mpicbg.imglib.cursor.array;
+package mpicbg.imglib.cursor;
 
-import mpicbg.imglib.container.array.Array;
-import mpicbg.imglib.cursor.CursorImpl;
-import mpicbg.imglib.image.Image;
-import mpicbg.imglib.type.Type;
-
-public class ArrayCursor<T extends Type<T>> extends CursorImpl<T>
+/**
+ * The {@link RasterLocalizable} interface can localize itself in an n-dimensional
+ * discrete space.  Not only {@link Cursor}s can use this 
+ * interface, it might be used by much more classes as {@link LocalizableByDimCursor}s
+ * can take any {@link RasterLocalizable} as input for where they should move to.
+ *  
+ * @author Stephan Preibisch & Stephan Saalfeld
+ *
+ */
+public interface RasterLocalizable extends Localizable
 {
-	protected final T type;
-	protected final Array<T,?> container;
-	protected final int sizeMinus1;
+	/**
+	 * Write the current location into the passed array.
+	 * 
+	 * @param location
+	 */
+	public void localize( int[] location );
 	
-	public ArrayCursor( final Array<T,?> container, final Image<T> image, final T type ) 
-	{
-		super( container, image );
-
-		this.type = type;
-		this.container = container;
-		this.sizeMinus1 = container.getNumPixels() - 1;
-		
-		reset();
-	}
+	/**
+	 * Return a copy of the current location.
+	 * 
+	 * @return
+	 */
+	public int[] getRasterLocation();
 	
-	@Override
-	public T type() { return type; }
-	
-	@Override
-	public boolean hasNext() { return type.getIndex() < sizeMinus1; }
-
-	@Override
-	public void fwd( final long steps ) { type.incIndex( (int)steps ); }
-
-	@Override
-	public void fwd() { type.incIndex(); }
-
-	@Override
-	public void close() 
-	{ 
-		isClosed = true;
-		type.updateIndex( sizeMinus1 + 1 );
-	}
-
-	@Override
-	public void reset()
-	{ 
-		type.updateIndex( -1 ); 
-		type.updateContainer( this );
-		isClosed = false;
-	}
-
-	@Override
-	public Array<T,?> getStorageContainer(){ return container; }
-
-	@Override
-	public int getStorageIndex() { return 0; }
-	
-	@Override
-	public String toString() { return type.toString(); }		
+	/**
+	 * Return the current location in a given dimension.
+	 * 
+	 * @param dim
+	 * @return
+	 */
+	public int getRasterLocation( int dim );
 }

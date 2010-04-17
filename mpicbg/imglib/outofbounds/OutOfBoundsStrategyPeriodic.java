@@ -62,7 +62,7 @@ public class OutOfBoundsStrategyPeriodic<T extends Type<T>> extends OutOfBoundsS
 	@Override
 	final public void notifyOutOfBOunds()
 	{
-		parentCursor.getPosition( position );
+		parentCursor.localize( position );
 		getCircleCoordinate( position, circledPosition, dimension, numDimensions );		
 		circleCursor.setPosition( circledPosition );
 
@@ -72,7 +72,7 @@ public class OutOfBoundsStrategyPeriodic<T extends Type<T>> extends OutOfBoundsS
 	@Override
 	public void notifyOutOfBOunds( final int steps, final int dim ) 
 	{
-		final int oldPos = circleCursor.getPosition( dim ); 
+		final int oldPos = circleCursor.getRasterLocation( dim ); 
 		
 		circleCursor.move( getCircleCoordinateDim( oldPos + steps, dimension[ dim ] )  - oldPos, dim );
 		type.set( circleType );
@@ -81,7 +81,7 @@ public class OutOfBoundsStrategyPeriodic<T extends Type<T>> extends OutOfBoundsS
 	@Override
 	public void notifyOutOfBOundsFwd( final int dim ) 
 	{		
-		final int oldPos = circleCursor.getPosition( dim ); 
+		final int oldPos = circleCursor.getRasterLocation( dim ); 
 		
 		circleCursor.move( getCircleCoordinateDim( oldPos + 1, dimension[ dim ] )  - oldPos, dim );
 		type.set( circleType );
@@ -90,7 +90,7 @@ public class OutOfBoundsStrategyPeriodic<T extends Type<T>> extends OutOfBoundsS
 	@Override
 	public void notifyOutOfBOundsBck( final int dim ) 
 	{
-		final int oldPos = circleCursor.getPosition( dim ); 
+		final int oldPos = circleCursor.getRasterLocation( dim ); 
 		
 		circleCursor.move( getCircleCoordinateDim( oldPos - 1, dimension[ dim ] )  - oldPos, dim );
 		type.set( circleType );
@@ -99,7 +99,7 @@ public class OutOfBoundsStrategyPeriodic<T extends Type<T>> extends OutOfBoundsS
 	@Override
 	public void initOutOfBOunds() 
 	{ 
-		parentCursor.getPosition( position );
+		parentCursor.localize( position );
 		getCircleCoordinate( position, circledPosition, dimension, numDimensions );		
 		circleCursor.setPosition( circledPosition );
 

@@ -90,11 +90,11 @@ public class CellContainer<T extends Type<T>, A extends ArrayDataAccess<A>> exte
 				finalSize[ d ] = cellSize[ d ];
 				
 				// the last cell in each dimension might have another size
-				if ( cursor.getPosition( d ) == numCellsDim[ d ] - 1 )
+				if ( cursor.getRasterLocation( d ) == numCellsDim[ d ] - 1 )
 					if ( dim[ d ] % cellSize[ d ] != 0 )
 						finalSize[ d ] = dim[ d ] % cellSize[ d ];
 				
-				finalOffset[ d ] = cursor.getPosition( d ) * cellSize[ d ];
+				finalOffset[ d ] = cursor.getRasterLocation( d ) * cellSize[ d ];
 			}			
 
 			data.add( createCellInstance( creator, c, finalSize, finalOffset, entitiesPerPixel ) );			

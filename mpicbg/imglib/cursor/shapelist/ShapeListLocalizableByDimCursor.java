@@ -30,7 +30,7 @@ package mpicbg.imglib.cursor.shapelist;
 import mpicbg.imglib.container.shapelist.ShapeList;
 import mpicbg.imglib.cursor.CursorImpl;
 import mpicbg.imglib.cursor.LocalizableByDimCursor;
-import mpicbg.imglib.cursor.Localizable;
+import mpicbg.imglib.cursor.RasterLocalizable;
 import mpicbg.imglib.cursor.special.LocalNeighborhoodCursor;
 import mpicbg.imglib.cursor.special.LocalNeighborhoodCursorFactory;
 import mpicbg.imglib.cursor.special.RegionOfInterestCursor;
@@ -134,7 +134,7 @@ public class ShapeListLocalizableByDimCursor< T extends Type< T > > extends Curs
 	{		
 		for ( int d = 0; d < numDimensions; ++d )
 		{
-			final int dist = position[ d ] - getPosition( d );
+			final int dist = position[ d ] - getRasterLocation( d );
 			
 			if ( dist != 0 )				
 				move( dist, d );
@@ -142,15 +142,15 @@ public class ShapeListLocalizableByDimCursor< T extends Type< T > > extends Curs
 	}
 
 	@Override
-	public void moveTo( final Localizable localizable )
+	public void moveTo( final RasterLocalizable localizable )
 	{
-		localizable.getPosition( position );
+		localizable.localize( position );
 	}
 
 	@Override
-	public void setPosition( final Localizable localizable )
+	public void setPosition( final RasterLocalizable localizable )
 	{
-		localizable.getPosition( position );
+		localizable.localize( position );
 	}
 	
 	@Override
@@ -216,26 +216,70 @@ public class ShapeListLocalizableByDimCursor< T extends Type< T > > extends Curs
 	}
 
 	@Override
-	public void getPosition( final int[] position )
+	public void localize( final float[] position )
+	{
+		for ( int d = 0; d < numDimensions; ++d )
+			position[ d ] = this.position[ d ];
+	}
+	
+	@Override
+	public void localize( final double[] position )
 	{
 		for ( int d = 0; d < numDimensions; ++d )
 			position[ d ] = this.position[ d ];
 	}
 
 	@Override
-	public int[] getPosition()
+	public void localize( final int[] position )
+	{
+		for ( int d = 0; d < numDimensions; ++d )
+			position[ d ] = this.position[ d ];
+	}
+
+	
+	@Override
+	public float[] getFloatLocation()
+	{
+		final float[] location = new float[ position.length ];
+		localize( location );
+		return location;
+	}
+	
+	@Override
+	public double[] getDoubleLocation()
+	{
+		final double[] location = new double[ position.length ];
+		localize( location );
+		return location;
+	}
+
+	@Override
+	public int[] getRasterLocation()
 	{
 		return position.clone();
 	}
 
+	
 	@Override
-	public int getPosition( final int dim )
+	public float getFloatLocation( final int dim )
 	{
 		return position[ dim ];
 	}
 
 	@Override
-	public String getPositionAsString()
+	public double getDoubleLocation( final int dim )
+	{
+		return position[ dim ];
+	}
+
+	@Override
+	public int getRasterLocation( final int dim )
+	{
+		return position[ dim ];
+	}
+
+	@Override
+	public String getLocationAsString()
 	{
 		String pos = "(" + position[ 0 ];
 		

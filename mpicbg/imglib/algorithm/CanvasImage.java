@@ -122,7 +122,7 @@ public class CanvasImage<T extends Type<T>> implements OutputAlgorithm<T>, Bench
 		while ( outputCursor.hasNext() )
 		{
 			outputCursor.fwd();
-			outputCursor.getPosition( location );
+			outputCursor.localize( location );
 			
 			for ( int d = 0; d < numDimensions; ++d )
 				location[ d ] += offset[ d ];

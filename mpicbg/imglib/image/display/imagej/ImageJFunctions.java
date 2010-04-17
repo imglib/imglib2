@@ -272,7 +272,7 @@ public class ImageJFunctions
 			while ( cursor.hasNext() )
 			{
 				cursor.fwd();
-				cursor.getPosition( extraDimPos );
+				cursor.localize( extraDimPos );
 				
 				for ( int d = 2; d < numDimensions; ++d )
 					dimensionPositions[ d ] = extraDimPos[ d - 2 ];

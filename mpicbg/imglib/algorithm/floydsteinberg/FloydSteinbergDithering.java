@@ -112,14 +112,14 @@ public class FloydSteinbergDithering<T extends RealType<T>> implements OutputAlg
 				// distribute the error
 				cursorKernel.reset();
 				cursorKernel.fwd( errorDiffusionKernel.getNumPixels()/2 );
-				cursor.getPosition( tmp1 );			
+				cursor.localize( tmp1 );			
 				
 				while ( cursorKernel.hasNext() )
 				{
 					cursorKernel.fwd();				
 					
 					final float value = error * cursorKernel.type().get();
-					cursorKernel.getPosition( tmp2 );
+					cursorKernel.localize( tmp2 );
 					
 					for ( int d = 0; d < numDimensions; ++d )
 						tmp2[ d ] += tmp1[ d ] - 1;
@@ -239,7 +239,7 @@ public class FloydSteinbergDithering<T extends RealType<T>> implements OutputAlg
 				while ( cursor.hasNext() )
 				{
 					cursor.fwd();
-					if ( cursor.getPosition( d ) != 1 )
+					if ( cursor.getRasterLocation( d ) != 1 )
 						sumD += cursor.type().get(); 				
 				}
 				
@@ -248,7 +248,7 @@ public class FloydSteinbergDithering<T extends RealType<T>> implements OutputAlg
 				{
 					cursor.fwd();
 
-					if ( cursor.getPosition( d ) != 1 )
+					if ( cursor.getRasterLocation( d ) != 1 )
 						cursor.type().set( cursor.type().get() / sumD );
 				}
 			}

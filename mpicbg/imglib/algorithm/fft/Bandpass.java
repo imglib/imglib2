@@ -74,7 +74,7 @@ public class Bandpass<T extends NumericType<T>> implements OutputAlgorithm<T>, B
 		while ( cursor.hasNext() )
 		{
 			cursor.fwd();
-			cursor.getPosition( pos );
+			cursor.localize( pos );
 			
 			final float dist = MathLib.computeDistance( origin, pos );
 			

@@ -30,43 +30,63 @@
 package mpicbg.imglib.cursor;
 
 /**
- * The {@link Localizable} interface add functionality to return
- * the current position. Not only {@link Cursor}s can use this 
- * interface, it might be used by much more classes as {@link LocalizableByDimCursor}s
- * can take any {@link Localizable} as input for where they should move to.
+ * The {@link Localizable} interface can localize itself in an n-dimensional
+ * real space.
  *  
- * @author Stephan Preibisch & Stephan Saalfeld
+ * @author Stephan Saalfeld
  *
  */
-public interface Localizable extends Iterable
+public interface Localizable
 {
 	/**
-	 * Write the current position into the passed array.
+	 * Write the current location into the passed array.
 	 * 
-	 * @param position
+	 * @param location
 	 */
-	public void getPosition( int[] position );
+	public void localize( float[] location );
 	
 	/**
-	 * Return a copy of the current position.
+	 * Write the current location into the passed array.
+	 * 
+	 * @param location
+	 */
+	public void localize( double[] location );
+	
+	/**
+	 * Return a copy of the current location.
 	 * 
 	 * @return
 	 */
-	public int[] getPosition();
+	public float[] getFloatLocation();
 	
 	/**
-	 * Return the current position in a given dimension.
+	 * Return a copy of the current location.
+	 * 
+	 * @return
+	 */
+	public double[] getDoubleLocation();
+	
+	/**
+	 * Return the current location in a given dimension.
 	 * 
 	 * @param dim
 	 * @return
 	 */
-	public int getPosition( int dim );
+	public float getFloatLocation( int dim );
+	
+	/**
+	 * Return the current location in a given dimension.
+	 * 
+	 * @param dim
+	 * @return
+	 */
+	public double getDoubleLocation( int dim );
 	
 	/**
 	 * Create a human-readable {@link String} representation of the current
-	 * position.
+	 * location.
 	 * 
 	 * @return
 	 */
-	public String getPositionAsString();
+	public String getLocationAsString();
 }

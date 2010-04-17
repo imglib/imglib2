@@ -492,7 +492,7 @@ public class PhaseCorrelation<T extends RealType<T>, S extends RealType<S>> impl
 					peakList.remove( lowestValueIndex );
 
 					// add new peak
-					final int[] position = cursor.getPosition();
+					final int[] position = cursor.getRasterLocation();
 					
 					for ( int d = 0; d < numDimensions; ++d )
 					{
@@ -503,7 +503,7 @@ public class PhaseCorrelation<T extends RealType<T>, S extends RealType<S>> impl
 					}
 
 					final PhaseCorrelationPeak pcp = new PhaseCorrelationPeak( position, value );
-					pcp.setOriginalInvPCMPosition( cursor.getPosition() );
+					pcp.setOriginalInvPCMPosition( cursor.getRasterLocation() );
 					peakList.add( pcp );
 				}
 			}			

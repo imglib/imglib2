@@ -64,7 +64,7 @@ public class OutOfBoundsStrategyMirror<T extends Type<T>> extends OutOfBoundsStr
 	@Override
 	final public void notifyOutOfBOunds()
 	{
-		parentCursor.getPosition( position );
+		parentCursor.localize( position );
 		getMirrorCoordinate( position, mirroredPosition );		
 		mirrorCursor.setPosition( mirroredPosition );
 
@@ -105,7 +105,7 @@ public class OutOfBoundsStrategyMirror<T extends Type<T>> extends OutOfBoundsStr
 	{
 		if ( currentDirection[ dim ] == 1 )
 		{
-			if ( mirrorCursor.getPosition( dim ) + 1 == dimension[ dim ] )
+			if ( mirrorCursor.getRasterLocation( dim ) + 1 == dimension[ dim ] )
 			{
 				mirrorCursor.bck( dim );
 				currentDirection[ dim ] = -1;				
@@ -117,7 +117,7 @@ public class OutOfBoundsStrategyMirror<T extends Type<T>> extends OutOfBoundsStr
 		}
 		else
 		{
-			if ( mirrorCursor.getPosition( dim ) == 0 )
+			if ( mirrorCursor.getRasterLocation( dim ) == 0 )
 			{
 				currentDirection[ dim ] = 1;
 				mirrorCursor.fwd( dim );
@@ -138,7 +138,7 @@ public class OutOfBoundsStrategyMirror<T extends Type<T>> extends OutOfBoundsStr
 		if ( currentDirection[ dim ] == 1 )
 		{
 			// so we have to move the mirror cursor back if we are not position 0
-			if ( mirrorCursor.getPosition( dim ) == 0 )
+			if ( mirrorCursor.getRasterLocation( dim ) == 0 )
 			{
 				// the mirror cursor is at position 0, so we have to go forward instead 
 				mirrorCursor.fwd( dim );
@@ -153,7 +153,7 @@ public class OutOfBoundsStrategyMirror<T extends Type<T>> extends OutOfBoundsStr
 		}
 		else
 		{
-			if ( mirrorCursor.getPosition( dim ) + 1 == dimension[ dim ] )
+			if ( mirrorCursor.getRasterLocation( dim ) + 1 == dimension[ dim ] )
 			{
 				mirrorCursor.bck( dim );				
 				currentDirection[ dim ] = 1;

@@ -29,7 +29,7 @@
  */
 package mpicbg.imglib.cursor;
 
-public interface LocalizablePlane extends Localizable
+public interface LocalizablePlane extends RasterLocalizable
 {
 	public void reset( int planeDimA, int planeDimB );
 	public void reset( int planeDimA, int planeDimB, int[] dimensionPositions );
