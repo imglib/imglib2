@@ -29,18 +29,32 @@
  */
 package mpicbg.imglib.sampler;
 
+import mpicbg.imglib.cursor.Cursor;
+import mpicbg.imglib.interpolation.Interpolator;
 import mpicbg.imglib.type.Type;
 
 /** 
  * The {@link Sampler} interface provides access to a {@link Type} instance.
  * This {@link Type} instance may point to an actual pixel stored in a
- * {@link Container} or be generated. 
+ * {@link Container} or be generated differently.
+ * 
+ * The {@link Sampler} interface unifies pixel access for {@link Cursor},
+ * {@link Interpolator} and later Integrators.   and Interpolators are actually
+point samplers, whereas many operations require
+integrating a region defined by some function.  The
+Sampler interface is the basis of 
  *  
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  * 
  */
 public interface Sampler< T extends Type< T > >
 {
+	/**
+	 * Access the actual {@link Type} instance providing access to a pixel,
+	 * sub-pixel or integral region value the {@link Sampler} points at.
+	 * 
+	 * @return
+	 */
 	public T type();
 	
 	@Deprecated
