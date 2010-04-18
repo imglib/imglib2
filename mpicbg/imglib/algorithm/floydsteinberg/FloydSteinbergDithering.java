@@ -90,8 +90,8 @@ public class FloydSteinbergDithering<T extends RealType<T>> implements OutputAlg
 			cursor.fwd();
 			
 			// move input and output cursor to the current location
-			cursorInput.moveTo( cursor );
-			cursorOutput.moveTo( cursor );
+			cursorInput.setPosition( cursor );
+			cursorOutput.setPosition( cursor );
 			
 			// set new value and compute error
 			final float error;
@@ -124,7 +124,7 @@ public class FloydSteinbergDithering<T extends RealType<T>> implements OutputAlg
 					for ( int d = 0; d < numDimensions; ++d )
 						tmp2[ d ] += tmp1[ d ] - 1;
 					
-					cursorInput.moveTo( tmp2 );
+					cursorInput.setPosition( tmp2 );
 					cursorInput.type().setReal( cursorInput.type().getRealFloat() + value );
 				}
 			}		

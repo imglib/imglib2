@@ -29,12 +29,23 @@
  */
 package mpicbg.imglib.cursor;
 
-import mpicbg.imglib.cursor.special.LocalNeighborhoodCursor;
-import mpicbg.imglib.cursor.special.RegionOfInterestCursor;
-import mpicbg.imglib.type.Type;
-
-public interface LocalizableByDimCursor<T extends Type<T>> extends LocalizableCursor<T>, RasterPositionable
+/**
+ * An element that can be positioned in n-dimensional discrete space.
+ *
+ * @author Stephan Saalfeld <saalfeld@mpi-cbg.de> and Stephan Preibisch
+ */
+public interface RasterPositionable
 {
-	public LocalNeighborhoodCursor<T> createLocalNeighborhoodCursor();	
-	public RegionOfInterestCursor<T> createRegionOfInterestCursor( final int[] offset, final int[] size );	
+	public void fwd( int dim );
+	public void bck( int dim );
+	
+	public void move( int distance, int dim );
+
+	public void moveTo( RasterLocalizable localizable );
+	public void moveTo( int position[] );
+	public void moveRel( int position[] );
+	
+	public void setPosition( RasterLocalizable localizable );
+	public void setPosition( int position[] );
+	public void setPosition( int position, int dim );		
 }

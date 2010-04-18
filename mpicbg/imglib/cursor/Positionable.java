@@ -29,18 +29,63 @@
  */
 package mpicbg.imglib.cursor;
 
-public interface LocalizableByDim extends RasterLocalizable
+/**
+ * An element that can be positioned in n-dimensional real space.
+ *
+ * @author Stephan Saalfeld <saalfeld@mpi-cbg.de> and Stephan Preibisch
+ */
+public interface Positionable extends RasterPositionable
 {
-	public void fwd( int dim );
-	public void bck( int dim );
-	
-	public void move( int steps, int dim );
+	/**
+	 * Move the element in one dimension for some distance.
+	 *  
+	 * @param distance
+	 * @param dim
+	 */
+	public void move( float distance, int dim );
 
-	public void moveTo( RasterLocalizable localizable );
-	public void moveTo( int position[] );
-	public void moveRel( int position[] );
+	/**
+	 * Move the element in one dimension for some distance.
+	 *  
+	 * @param distance
+	 * @param dim
+	 */
+	public void move( double distance, int dim );
+
+	/**
+	 * Place the element at the same location as a given {@link Localizable}
+	 * 
+	 * @param localizable
+	 */
+	public void setPosition( Localizable localizable );
 	
-	public void setPosition( RasterLocalizable localizable );
-	public void setPosition( int position[] );
-	public void setPosition( int position, int dim );		
+	/**
+	 * Set the position of the element.
+	 * 
+	 * @param position
+	 */
+	public void setPosition( float position[] );
+	
+	/**
+	 * Set the position of the element.
+	 * 
+	 * @param position
+	 */
+	public void setPosition( double position[] );
+	
+	/**
+	 * Set the position of the element for one dimension.
+	 * 
+	 * @param position
+	 * @param dim
+	 */
+	public void setPosition( float position, int dim );		
+	
+	/**
+	 * Set the position of the element for one dimension.
+	 * 
+	 * @param position
+	 * @param dim
+	 */
+	public void setPosition( double position, int dim );
 }
