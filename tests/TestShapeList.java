@@ -1,4 +1,4 @@
-package mpicbg.imglib.test;
+package tests;
 
 import ij.ImageJ;
 import ij.ImagePlus;
