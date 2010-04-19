@@ -8,10 +8,10 @@ import mpicbg.imglib.cursor.LocalizableCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.ImageFactory;
 import mpicbg.imglib.type.ComparableType;
-import mpicbg.imglib.type.NumericType;
-import mpicbg.imglib.type.numeric.IntType;
-import mpicbg.imglib.type.numeric.LongType;
-import mpicbg.imglib.type.numeric.ShortType;
+import mpicbg.imglib.type.numeric.NumericType;
+import mpicbg.imglib.type.numeric.integer.IntType;
+import mpicbg.imglib.type.numeric.integer.LongType;
+import mpicbg.imglib.type.numeric.integer.ShortType;
 
 
 /**

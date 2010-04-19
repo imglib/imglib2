@@ -3,10 +3,10 @@ package mpicbg.imglib.algorithm.roi;
 import mpicbg.imglib.algorithm.Benchmark;
 import mpicbg.imglib.algorithm.OutputAlgorithm;
 import mpicbg.imglib.image.Image;
-import mpicbg.imglib.outside.OutsideStrategyFactory;
-import mpicbg.imglib.type.NumericType;
+import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
+import mpicbg.imglib.type.numeric.ComplexType;
 
-public class MorphClose<T extends NumericType<T>> implements OutputAlgorithm<T>, Benchmark
+public class MorphClose<T extends ComplexType<T>> implements OutputAlgorithm<T>, Benchmark
 {
 	
 	private final Image<T> image;
@@ -14,7 +14,7 @@ public class MorphClose<T extends NumericType<T>> implements OutputAlgorithm<T>,
 	private final MorphDilate<T> dilater;
 	private MorphErode<T> eroder;
 	private final StructuringElement strel;
-	private final OutsideStrategyFactory<T> outsideFactory;
+	private final OutOfBoundsStrategyFactory<T> outsideFactory;
 	private long pTime;
 	
 	public MorphClose(Image<T> imageIn, StructuringElement strelIn)
@@ -22,7 +22,8 @@ public class MorphClose<T extends NumericType<T>> implements OutputAlgorithm<T>,
 		this(imageIn, strelIn, null);
 	}
 	
-	public MorphClose(Image<T> imageIn, StructuringElement strelIn, final OutsideStrategyFactory<T> inOutsideFactory)
+	public MorphClose(Image<T> imageIn, StructuringElement strelIn,
+			final OutOfBoundsStrategyFactory<T> inOutsideFactory)
 	{
 		image = imageIn;		
 		strel = strelIn;

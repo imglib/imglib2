@@ -7,12 +7,12 @@ import mpicbg.imglib.cursor.LocalizableByDimCursor;
 import mpicbg.imglib.cursor.special.RegionOfInterestCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.ImageFactory;
-import mpicbg.imglib.outside.OutsideStrategyFactory;
-import mpicbg.imglib.type.NumericType;
-import mpicbg.imglib.type.numeric.ShortType;
+import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
+import mpicbg.imglib.type.numeric.ComplexType;
+import mpicbg.imglib.type.numeric.integer.ShortType;
 
 public class DirectConvolution
-	<T extends NumericType<T>, R extends NumericType<R>, S extends NumericType<S>>
+	<T extends ComplexType<T>, R extends ComplexType<R>, S extends ComplexType<S>>
 		extends ROIAlgorithm<T, S>
 {
 
@@ -67,6 +67,7 @@ public class DirectConvolution
 	private final int[] kernelSize;
 	private LocalizableByDimCursor<S> outputImageCursor;
 	private final LocalizableByDimCursor<R> kernelCursor;
+	private final boolean doInvert;
 	
 	public DirectConvolution(final S type, final Image<T> inputImage, final Image<R> kernel)
 	{
@@ -75,14 +76,23 @@ public class DirectConvolution
 	
 	
 	public DirectConvolution(final S type, final Image<T> inputImage, final Image<R> kernel,
-			final OutsideStrategyFactory<T> outsideFactory) {
+			final OutOfBoundsStrategyFactory<T> outsideFactory) {
+		this(type, inputImage, kernel, outsideFactory, true);
+	}
+	
+	protected DirectConvolution(final S type, final Image<T> inputImage, final Image<R> kernel,
+			final OutOfBoundsStrategyFactory<T> outsideFactory, final boolean isconv)
+	{
 		super(type, inputImage, kernel.getDimensions(), outsideFactory);
+		
 		this.kernel = kernel;
 		outputImageCursor = null;
 		kernelSize = kernel.getDimensions();
 		kernelCursor = kernel.createLocalizableByDimCursor();
 		
 		setName(inputImage.getName() + " * " + kernel.getName());
+		
+		doInvert = isconv;
 	}
 	
 	private LocalizableByDimCursor<S> getOutputCursor()
@@ -107,21 +117,44 @@ public class DirectConvolution
 		final LocalizableByDimCursor<S> outCursor = getOutputCursor();
 		final int[] pos = new int[outCursor.getNumDimensions()];
 		final int[] invPos = new int[outCursor.getNumDimensions()];
-		float conv = 0;
-		//final S type = outCursor.getImage().createType();
+		S accum = outCursor.getImage().createType();
+		S mul = outCursor.getImage().createType();
+		S temp = outCursor.getImage().createType();
+		
+		accum.setZero();
 		
 		outCursor.setPosition(position);
 		
 		while(roiCursor.hasNext())
 		{
+			mul.setOne();
 			roiCursor.fwd();
 			roiCursor.getPosition(pos);
-			invertPosition(pos, invPos);
-			kernelCursor.setPosition(invPos);
-			conv += roiCursor.getType().getReal() * kernelCursor.getType().getReal();					
+			
+			if (doInvert)
+			{
+				invertPosition(pos, invPos);			
+				kernelCursor.setPosition(invPos);
+			}
+			else
+			{
+				kernelCursor.setPosition(pos);
+			}
+			
+			//temp = temp.clone();
+			temp.setReal(kernelCursor.getType().getRealDouble());
+			temp.setComplex(-kernelCursor.getType().getComplexDouble());			
+			mul.mul(temp);
+			
+			//temp = temp.clone();
+			temp.setReal(roiCursor.getType().getRealDouble());
+			temp.setComplex(roiCursor.getType().getComplexDouble());
+			mul.mul(temp);
+			
+			accum.add(mul);					
 		}
 				
-		outCursor.getType().setReal(conv);
+		outCursor.getType().set(mul);
 		
 		return true;
 	}

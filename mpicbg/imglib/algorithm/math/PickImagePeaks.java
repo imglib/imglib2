@@ -12,9 +12,8 @@ import mpicbg.imglib.cursor.LocalizableByDimCursor;
 import mpicbg.imglib.cursor.LocalizableCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.ImageFactory;
-import mpicbg.imglib.type.ComparableType;
-import mpicbg.imglib.type.NumericType;
 import mpicbg.imglib.type.logic.BitType;
+import mpicbg.imglib.type.numeric.NumericType;
 /**
  * This class implements a very simple peak-picker, with optional ellipsoidal peak suppression.
  * Peaks are found by taking the sign of the difference operator in each dimension, differentiating
@@ -66,13 +65,13 @@ public class PickImagePeaks <T extends NumericType<T>> implements OutputAlgorith
 			 * This is faster than sorting, then reversing.
 			 */
 			//return -(this.peakVal.compareTo(inPeak.peakVal));
-			float hereVal = peakVal.getReal();
-			float thereVal = inPeak.peakVal.getReal();
-			if (hereVal > thereVal)
+			//float hereVal = peakVal.
+			//f//loat thereVal = inPeak.peakVal.getReal();
+			if (peakVal.compareTo(inPeak.peakVal) == 1)
 			{
 				return -1;
 			}
-			else if (hereVal == thereVal)
+			else if (peakVal.compareTo(inPeak.peakVal) == 0)
 			{
 				return 0;
 			}

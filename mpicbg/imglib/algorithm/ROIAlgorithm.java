@@ -6,18 +6,19 @@ import mpicbg.imglib.cursor.LocalizableCursor;
 import mpicbg.imglib.cursor.special.RegionOfInterestCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.ImageFactory;
-import mpicbg.imglib.outside.OutsideStrategyFactory;
-import mpicbg.imglib.outside.OutsideStrategyValueFactory;
-import mpicbg.imglib.type.NumericType;
+import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
+import mpicbg.imglib.outofbounds.OutOfBoundsStrategyValueFactory;
+import mpicbg.imglib.type.numeric.ComplexType;
 
-public abstract class ROIAlgorithm <T extends NumericType<T>, S extends NumericType<S>> implements OutputAlgorithm<S>, Benchmark
+public abstract class ROIAlgorithm <T extends ComplexType<T>, S extends ComplexType<S>>
+	implements OutputAlgorithm<S>, Benchmark
 {
 
 	private final RegionOfInterestCursor<T> roiCursor;
 	private final int[] patchSize;
 	private final int[] originOffset;
 	private final Image<T> inputImage;
-	private final OutsideStrategyFactory<T> outsideFactory;
+	private final OutOfBoundsStrategyFactory<T> outsideFactory;
 	private Image<S> outputImage;	
 	private ImageFactory<S> imageFactory;		
 	private String errorMsg;
@@ -31,7 +32,7 @@ public abstract class ROIAlgorithm <T extends NumericType<T>, S extends NumericT
 	}
 	
 	protected ROIAlgorithm(final S type, final Image<T> imageIn, final int[] patchSize,
-			final OutsideStrategyFactory<T> inOutFactory)
+			final OutOfBoundsStrategyFactory<T> inOutFactory)
 	{		
 		int nd = imageIn.getNumDimensions();
 		
@@ -52,12 +53,14 @@ public abstract class ROIAlgorithm <T extends NumericType<T>, S extends NumericT
 		{
 			T typeT = imageIn.createType();
 			typeT.setZero();
-			outsideFactory = new OutsideStrategyValueFactory<T>(typeT); 
+			outsideFactory = new OutOfBoundsStrategyValueFactory<T>(typeT); 
 		}
 		else
 		{
 			outsideFactory = inOutFactory;
 		}
+		
+		
 		
 		roiCursor = imageIn.createLocalizableByDimCursor(outsideFactory)
 			.createRegionOfInterestCursor(initPos, patchSize);

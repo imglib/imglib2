@@ -6,11 +6,11 @@ import mpicbg.imglib.algorithm.ROIAlgorithm;
 import mpicbg.imglib.cursor.LocalizableByDimCursor;
 import mpicbg.imglib.cursor.special.RegionOfInterestCursor;
 import mpicbg.imglib.image.Image;
-import mpicbg.imglib.outside.OutsideStrategyFactory;
-import mpicbg.imglib.type.NumericType;
+import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
+import mpicbg.imglib.type.numeric.ComplexType;
 import mpicbg.imglib.type.logic.BitType;
 
-public abstract class StatisticalOperation<T extends NumericType<T>> extends ROIAlgorithm<T, T> {
+public abstract class StatisticalOperation<T extends ComplexType<T>> extends ROIAlgorithm<T, T> {
 	//Member classes
 	
 	/**
@@ -24,7 +24,7 @@ public abstract class StatisticalOperation<T extends NumericType<T>> extends ROI
 	 * 
 	 * @param <R> Image storage type.
 	 */
-	public interface StatisticsCollectionStrategy<R extends NumericType<R>> 
+	public interface StatisticsCollectionStrategy<R extends ComplexType<R>> 
 	{
 		public void collectStats(LinkedList<R> list, RegionOfInterestCursor<R> cursor, int[] pos);
 	}
@@ -35,7 +35,7 @@ public abstract class StatisticalOperation<T extends NumericType<T>> extends ROI
 	 * 
 	 * @param <R> Image storage type.
 	 */
-	public class SimpleCollectionStrategy<R extends NumericType<R>> 
+	public class SimpleCollectionStrategy<R extends ComplexType<R>> 
 		implements StatisticsCollectionStrategy<R>
 	{
 		private final LocalizableByDimCursor<BitType> strelCursor;
@@ -114,7 +114,7 @@ public abstract class StatisticalOperation<T extends NumericType<T>> extends ROI
 	}
 	
 	public StatisticalOperation(final Image<T> imageIn, final StructuringElement inStrel,
-			final OutsideStrategyFactory<T> inOutFactory) {
+			final OutOfBoundsStrategyFactory<T> inOutFactory) {
 		super(imageIn.createType(), imageIn, inStrel.getDimensions(), inOutFactory);
 		strel = inStrel;
 		statList = new LinkedList<T>();
@@ -159,12 +159,6 @@ public abstract class StatisticalOperation<T extends NumericType<T>> extends ROI
 		System.arraycopy(position, 0, lastPosition, 0, position.length);
 		init = true;
 		return true;
-	}
-
-	@Override
-	public boolean checkInput() {
-		// TODO Auto-generated method stub
-		return false;
 	}
 
 	protected abstract void statsOp(LocalizableByDimCursor<T> cursor);

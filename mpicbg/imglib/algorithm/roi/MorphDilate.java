@@ -2,14 +2,14 @@ package mpicbg.imglib.algorithm.roi;
 
 import mpicbg.imglib.cursor.LocalizableByDimCursor;
 import mpicbg.imglib.image.Image;
-import mpicbg.imglib.outside.OutsideStrategyFactory;
-import mpicbg.imglib.type.NumericType;
+import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
+import mpicbg.imglib.type.numeric.ComplexType;
 
-public class MorphDilate<T extends NumericType<T>> extends StatisticalOperation<T> {
+public class MorphDilate<T extends ComplexType<T>> extends StatisticalOperation<T> {
 
 	
 	public MorphDilate(final Image<T> imageIn, final StructuringElement strel,
-			final OutsideStrategyFactory<T> inOutsideFactory)
+			final OutOfBoundsStrategyFactory<T> inOutsideFactory)
 	{
 		super(imageIn, strel, inOutsideFactory);
 		setName(imageIn.getName() + " dilated");
@@ -24,6 +24,12 @@ public class MorphDilate<T extends NumericType<T>> extends StatisticalOperation<
 	@Override
 	protected void statsOp(final LocalizableByDimCursor<T> cursor) {
 		cursor.getType().set(super.getList().getLast());
+	}
+
+
+	@Override
+	public boolean checkInput() {
+		return true;
 	}
 
 }

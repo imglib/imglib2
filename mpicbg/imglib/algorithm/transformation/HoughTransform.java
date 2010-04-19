@@ -11,7 +11,7 @@ import mpicbg.imglib.cursor.LocalizableByDimCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.ImageFactory;
 import mpicbg.imglib.type.ComparableType;
-import mpicbg.imglib.type.NumericType;
+import mpicbg.imglib.type.numeric.NumericType;
 /**
  * This abstract class provides some basic functionality for use with arbitrary Hough-like
  * transforms. 
@@ -31,6 +31,7 @@ implements OutputAlgorithm<S>, Benchmark
 	private LocalizableByDimCursor<S> voteCursor;
 	private ArrayList<int[]> peaks;
 	private final double[] peakExclusion;
+	private final S one;
 	
 	/**
 	 * Constructor for a HoughTransform using an ArrayContainerFactory to back the ImageFactory
@@ -62,7 +63,8 @@ implements OutputAlgorithm<S>, Benchmark
 		voteSpace = voteFactory.createImage(voteSize);		
 		peaks = null;
 		peakExclusion = new double[voteSize.length];
-		
+		one = voteSpace.createType();
+		one.setOne();
 		Arrays.fill(peakExclusion, 0);
 		
 	}
@@ -105,7 +107,7 @@ implements OutputAlgorithm<S>, Benchmark
 			}
 			voteCursor.setPosition(loc);
 			
-			voteCursor.getType().inc();
+			voteCursor.getType().add(one);
 			
 			return true;
 		}
