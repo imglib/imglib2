@@ -10,6 +10,15 @@ import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyValueFactory;
 import mpicbg.imglib.type.numeric.ComplexType;
 
+/**
+ * ROIAlgorithm implements a framework against which to build operations of one image against
+ * another, like convolution, cross-correlation, or morphological operations.
+ * 
+ * @author Larry Lindsey
+ *
+ * @param <T>
+ * @param <S>
+ */
 public abstract class ROIAlgorithm <T extends ComplexType<T>, S extends ComplexType<S>>
 	implements OutputAlgorithm<S>, Benchmark
 {

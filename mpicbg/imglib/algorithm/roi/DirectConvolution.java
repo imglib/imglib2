@@ -11,6 +11,16 @@ import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
 import mpicbg.imglib.type.numeric.ComplexType;
 import mpicbg.imglib.type.numeric.integer.ShortType;
 
+/**
+ * DirectConvolution is an ROIAlgorithm designed to do both convolution and cross-correlation 
+ * by operating on the image and kernel directly, rather than by using such time-saving tricks as
+ * FFT.
+ * @author Larry Lindsey
+ *
+ * @param <T> input image type
+ * @param <R> kernel type
+ * @param <S> output image type
+ */
 public class DirectConvolution
 	<T extends ComplexType<T>, R extends ComplexType<R>, S extends ComplexType<S>>
 		extends ROIAlgorithm<T, S>
@@ -140,22 +150,19 @@ public class DirectConvolution
 			{
 				kernelCursor.setPosition(pos);
 			}
-			
-			//temp = temp.clone();
+
 			temp.setReal(kernelCursor.getType().getRealDouble());
 			temp.setComplex(-kernelCursor.getType().getComplexDouble());			
 			mul.mul(temp);
 			
-			//temp = temp.clone();
 			temp.setReal(roiCursor.getType().getRealDouble());
 			temp.setComplex(roiCursor.getType().getComplexDouble());
 			mul.mul(temp);
 			
-			accum.add(mul);					
+			accum.add(mul);			
 		}
 				
-		outCursor.getType().set(mul);
-		
+		outCursor.getType().set(accum);
 		return true;
 	}
 

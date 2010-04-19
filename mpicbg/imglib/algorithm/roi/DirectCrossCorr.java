@@ -4,6 +4,14 @@ import mpicbg.imglib.image.Image;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
 import mpicbg.imglib.type.numeric.ComplexType;
 
+/**
+ * DirectCrossCorr performs direct cross-correlation of a kernel against an image.
+ * @author Larry Lindsey
+ *
+ * @param <T> input image type
+ * @param <R> kernel type
+ * @param <S> output image type 
+ */
 public class DirectCrossCorr
 	<T extends ComplexType<T>, R extends ComplexType<R>, S extends ComplexType<S>>
 		extends DirectConvolution<T, R, S>
