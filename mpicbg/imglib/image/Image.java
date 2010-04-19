@@ -39,7 +39,7 @@ import mpicbg.imglib.container.Container;
 import mpicbg.imglib.container.ContainerFactory;
 import mpicbg.imglib.container.ImageProperties;
 import mpicbg.imglib.cursor.Cursor;
-import mpicbg.imglib.cursor.LocalizableByDimCursor;
+import mpicbg.imglib.cursor.PositionableCursor;
 import mpicbg.imglib.cursor.LocalizableCursor;
 import mpicbg.imglib.cursor.LocalizablePlaneCursor;
 import mpicbg.imglib.cursor.array.ArrayLocalizableCursor;
@@ -211,26 +211,26 @@ public class Image<T extends Type<T>> implements ImageProperties, Dimensionality
 	}
 	
 	/**
-	 * Creates a {@link LocalizableByDimCursor} which is able to move freely within the {@link Image}.
-	 * When exiting the {@link Image} this {@link LocalizableByDimCursor} will fail!! Therefore it is faster.
-	 * @return - a {@link LocalizableByDimCursor} that cannot leave the {@link Image}
+	 * Creates a {@link PositionableCursor} which is able to move freely within the {@link Image}.
+	 * When exiting the {@link Image} this {@link PositionableCursor} will fail!! Therefore it is faster.
+	 * @return - a {@link PositionableCursor} that cannot leave the {@link Image}
 	 */
-	public LocalizableByDimCursor<T> createLocalizableByDimCursor()
+	public PositionableCursor<T> createPositionableCursor()
 	{
-		LocalizableByDimCursor<T> cursor = container.createLocalizableByDimCursor( this );
+		PositionableCursor<T> cursor = container.createPositionableCursor( this );
 		addCursor( cursor );
 		return cursor;						
 	}
 
 	/**
-	 * Creates a {@link LocalizableByDimCursor} which is able to move freely within and out of {@link Image} bounds.
+	 * Creates a {@link PositionableCursor} which is able to move freely within and out of {@link Image} bounds.
 	 * given a {@link OutOfBoundsStrategyFactory} which defines the behaviour out of {@link Image} bounds.
 	 * @param factory - the {@link OutOfBoundsStrategyFactory}
-	 * @return - a {@link LocalizableByDimCursor} that can leave the {@link Image}
+	 * @return - a {@link PositionableCursor} that can leave the {@link Image}
 	 */
-	public LocalizableByDimCursor<T> createLocalizableByDimCursor( OutOfBoundsStrategyFactory<T> factory )
+	public PositionableCursor<T> createPositionableCursor( OutOfBoundsStrategyFactory<T> factory )
 	{
-		LocalizableByDimCursor<T> cursor = container.createLocalizableByDimCursor( this, factory );
+		PositionableCursor<T> cursor = container.createPositionableCursor( this, factory );
 		addCursor( cursor );
 		return cursor;								
 	}
@@ -475,7 +475,7 @@ public class Image<T extends Type<T>> implements ImageProperties, Dimensionality
 		final T[] pixels = createType().createArray1D( getNumPixels() );
 		
 		final ArrayLocalizableCursor<FakeType> cursor1 = ArrayLocalizableCursor.createLinearCursor( getDimensions() );
-		final LocalizableByDimCursor<T> cursor2 = this.createLocalizableByDimCursor();
+		final PositionableCursor<T> cursor2 = this.createPositionableCursor();
 		
 		int i = 0;
 		while ( cursor1.hasNext() )

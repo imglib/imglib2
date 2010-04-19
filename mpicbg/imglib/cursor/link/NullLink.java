@@ -14,9 +14,6 @@ final public class NullLink implements CursorLink
 	final public void move( final int steps, final int dim ) {}
 
 	@Override
-	final public void moveRel( final int[] position ) {}
-
-	@Override
 	final public void moveTo( final RasterLocalizable localizable ) {}
 
 	@Override
@@ -35,10 +32,7 @@ final public class NullLink implements CursorLink
 	final public void localize( final int[] position ) {}
 
 	@Override
-	final public int[] getRasterLocation() { return null; }
-
-	@Override
-	final public int getRasterLocation( final int dim ) { return 0; }
+	final public int getIntPosition( final int dim ) { return 0; }
 
 	@Override
 	final public String getLocationAsString() { return ""; }
@@ -50,20 +44,32 @@ final public class NullLink implements CursorLink
 	final public void fwd() {}
 
 	@Override
-	public double[] getDoubleLocation(){ return null; }
-
-	@Override
-	public double getDoubleLocation( int dim ){ return 0; }
+	public double getDoublePosition( final int dim ){ return 0; }
 	
 	@Override
-	public float[] getFloatLocation(){ return null; }
+	public float getFloatPosition( final int dim ){ return 0; }
 
 	@Override
-	public float getFloatLocation( int dim ){ return 0; }
+	public void localize( final float[] location ){}
 
 	@Override
-	public void localize( float[] location ){}
+	public void localize( final double[] location ){}
 
 	@Override
-	public void localize( double[] location ){}
+	public void move( long distance, int dim ){}
+
+	@Override
+	public void moveTo( long[] position ){}
+
+	@Override
+	public void setPosition( long[] position ){}
+
+	@Override
+	public void setPosition( long position, int dim ){}
+
+	@Override
+	public long getLongPosition( int dim ){ return 0; }
+	
+	@Override
+	public void localize( long[] location ){}
 }

@@ -30,7 +30,7 @@
 package mpicbg.imglib.interpolation.linear;
 
 import mpicbg.imglib.algorithm.math.MathLib;
-import mpicbg.imglib.cursor.LocalizableByDimCursor;
+import mpicbg.imglib.cursor.PositionableCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.interpolation.InterpolatorFactory;
 import mpicbg.imglib.interpolation.InterpolatorImpl;
@@ -39,7 +39,7 @@ import mpicbg.imglib.type.numeric.NumericType;
 
 public class LinearInterpolator<T extends NumericType<T>> extends InterpolatorImpl<T>
 {
-	final LocalizableByDimCursor<T> cursor;
+	final PositionableCursor<T> cursor;
 	final T tmp1, tmp2;
 	
 	// the offset in each dimension and a temporary array for computing the global coordinates
@@ -121,7 +121,7 @@ public class LinearInterpolator<T extends NumericType<T>> extends InterpolatorIm
 		//
 		// yiels the interpolated value in 3 dimensions
 		
-		cursor = img.createLocalizableByDimCursor( outOfBoundsStrategyFactory );
+		cursor = img.createPositionableCursor( outOfBoundsStrategyFactory );
 		tmp1 = img.createType();
 		tmp2 = img.createType();
 
@@ -211,7 +211,7 @@ public class LinearInterpolator<T extends NumericType<T>> extends InterpolatorIm
 			this.position[ d ] = position[ d ];
 			
 			baseDim[ d ] = position[ d ] > 0 ? (int)position[ d ]: (int)position[ d ]-1;			
-			cursor.move( baseDim[ d ] - cursor.getRasterLocation(d), d );
+			cursor.move( baseDim[ d ] - cursor.getIntPosition(d), d );
 		}
 
         // compute the weights [0...1] in each dimension and the inverse (1-weight) [1...0]

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2009--2010, Stephan Preibisch & Stephan Saalfeld
+ * Copyright (c) 2010, Stephan Saalfeld
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -24,30 +24,26 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- *
- * @author Stephan Preibisch & Stephan Saalfeld
  */
-package mpicbg.imglib.cursor;
+package mpicbg.imglib.cursor.shapelist;
 
-public interface LocalizableByDim3D extends Localizable3D
+import mpicbg.imglib.container.shapelist.ShapeList;
+import mpicbg.imglib.image.Image;
+import mpicbg.imglib.type.Type;
+
+public class ShapeListCachedPositionableCursor< T extends Type< T > > extends ShapeListPositionableCursor< T >
 {
-	public void fwdX();
-	public void fwdY();
-	public void fwdZ();
-
-	public void bckX();
-	public void bckY();
-	public void bckZ();
+	final ShapeListCache<T> cache;
 	
-	public void moveX( int steps );
-	public void moveY( int steps );
-	public void moveZ( int steps );
-
-	public void moveTo( int x, int y, int z );
-	public void moveRel( int x, int y, int z );
+	public ShapeListCachedPositionableCursor( final ShapeList< T > container, final Image< T > image, final ShapeListCache<T> cache ) 
+	{
+		super( container, image );
+		this.cache = cache;
+	}
 	
-	public void setPosition( int posX, int posY, int posZ );
-	public void setPositionX( int pos );
-	public void setPositionY( int pos );
-	public void setPositionZ( int pos );
+	@Override
+	public T type()
+	{
+		return cache.lookUp( position );
+	}
 }

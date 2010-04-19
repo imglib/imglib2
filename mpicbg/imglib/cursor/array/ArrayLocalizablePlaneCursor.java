@@ -112,6 +112,51 @@ public class ArrayLocalizablePlaneCursor<T extends Type<T>> extends ArrayLocaliz
 		
 		type.updateContainer( this );				
 	}
+	
+	@Override
+	public void reset( int planeDimA, int planeDimB, long[] dimensionPositions )
+	{
+		this.planeDimA = planeDimA;
+		this.planeDimB = planeDimB;
+		
+		this.planeSizeA = container.getDimension( planeDimA );
+		this.planeSizeB = container.getDimension( planeDimB );
+		
+		final int[] steps = Array.createAllocationSteps( container.getDimensions() );
+
+		// store the current position
+    	final int[] dimPos = new int[ dimensionPositions.length ]; 
+    	for ( int i = 0; i < dimensionPositions.length; ++i )
+    		dimPos[ i ] = ( int )dimensionPositions[ i ];
+		
+		incPlaneA = steps[ planeDimA ];
+		dimPos[ planeDimA ] = 0;
+		
+		if ( planeDimB > -1 && planeDimB < steps.length )
+		{
+			incPlaneB = steps[ planeDimB ];
+			dimPos[ planeDimB ] = 0;
+		}
+		else
+		{
+			incPlaneB = 0;
+		}
+
+		setPosition( dimPos );		
+		isClosed = false;
+		
+		type.decIndex( incPlaneA );					
+		position[ planeDimA ] = -1;
+		
+		dimPos[ planeDimA ] = dimensions[ planeDimA ] - 1;		
+		if ( planeDimB > -1 && planeDimB < steps.length )
+			dimPos[ planeDimB ] = dimensions[ planeDimB ] - 1;
+		
+		maxI = container.getPos( dimPos );
+		
+		type.updateContainer( this );
+		
+	}
 
 	@Override
 	public void reset( final int planeDimA, final int planeDimB )
@@ -130,6 +175,14 @@ public class ArrayLocalizablePlaneCursor<T extends Type<T>> extends ArrayLocaliz
 		
 		reset( 0, 1, new int[ numDimensions ] );		
 	}
+	
+	protected void setPosition( final long[] position )
+	{
+		for ( int d = 0; d < numDimensions; d++ )
+			this.position[ d ] = ( int )position[ d ];
+		
+		type.updateIndex( container.getPos( this.position ) );
+	}
 
 	protected void setPosition( final int[] position )
 	{
@@ -138,5 +191,4 @@ public class ArrayLocalizablePlaneCursor<T extends Type<T>> extends ArrayLocaliz
 		for ( int d = 0; d < numDimensions; d++ )
 			this.position[ d ] = position[ d ];
 	}
-	
 }

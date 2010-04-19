@@ -358,9 +358,9 @@ public class Affine3DImageTransform<T extends Type<T>> implements OutputAlgorith
 	
 				// we have to add the offset of our new image
 				// relative to it's starting point (0,0,0)
-				loc.x = transformedIterator.getRasterLocation( 0 ) + minX;
-				loc.y = transformedIterator.getRasterLocation( 1 ) + minY;
-				loc.z = transformedIterator.getRasterLocation( 2 ) + minZ;			
+				loc.x = transformedIterator.getIntPosition( 0 ) + minX;
+				loc.y = transformedIterator.getIntPosition( 1 ) + minY;
+				loc.z = transformedIterator.getIntPosition( 2 ) + minZ;			
 	
 				// transform back into the original image
 				trans.transform( loc );

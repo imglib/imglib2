@@ -26,8 +26,8 @@ import mpicbg.imglib.container.DirectAccessContainer;
 import mpicbg.imglib.container.array.Array3D;
 import mpicbg.imglib.container.basictypecontainer.FloatAccess;
 import mpicbg.imglib.container.basictypecontainer.array.FloatArray;
-import mpicbg.imglib.cursor.LocalizableByDimCursor;
-import mpicbg.imglib.cursor.LocalizableByDimCursor3D;
+import mpicbg.imglib.cursor.PositionableCursor;
+import mpicbg.imglib.cursor.PositionableCursor3D;
 import mpicbg.imglib.cursor.LocalizableCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.multithreading.SimpleMultiThreading;
@@ -167,24 +167,24 @@ public class GaussianConvolution< T extends NumericType<T>> implements MultiThre
 
 	                	//System.out.println("Thread " + myNumber + " folds in dimension " + currentDim);
 
-	                	final LocalizableByDimCursor<T> inputIterator;
+	                	final PositionableCursor<T> inputIterator;
 	                	final LocalizableCursor<T> outputIterator;
 	                	
 	                	if ( numDimensions % 2 == 0 ) // even number of dimensions ( 2d, 4d, 6d, ... )
 	                	{
 	                		if ( currentDim == 0 ) // first dimension convolve to the temporary image
 	                		{
-			                	inputIterator = image.createLocalizableByDimCursor( outOfBoundsFactory );
+			                	inputIterator = image.createPositionableCursor( outOfBoundsFactory );
 			                    outputIterator = temp.createLocalizableCursor();	                			
 	                		}
 	                		else if ( currentDim % 2 == 1 ) // for odd dimension ids we convolve to the output image, because that might be the last convolution  
 	                		{
-			                	inputIterator = temp.createLocalizableByDimCursor( outOfBoundsFactory );
+			                	inputIterator = temp.createPositionableCursor( outOfBoundsFactory );
 			                    outputIterator = convolved.createLocalizableCursor();
 	                		}
 	                		else //if ( currentDim % 2 == 0 ) // for even dimension ids we convolve to the temp image, it is not the last convolution for sure
 	                		{
-			                	inputIterator = convolved.createLocalizableByDimCursor( outOfBoundsFactory );
+			                	inputIterator = convolved.createPositionableCursor( outOfBoundsFactory );
 			                    outputIterator = temp.createLocalizableCursor();
 	                		}	                		
 	                	}
@@ -192,17 +192,17 @@ public class GaussianConvolution< T extends NumericType<T>> implements MultiThre
 	                	{
 	                		if ( currentDim == 0 ) // first dimension convolve to the output image, in the 1d case we are done then already
 	                		{
-			                	inputIterator = image.createLocalizableByDimCursor( outOfBoundsFactory );
+			                	inputIterator = image.createPositionableCursor( outOfBoundsFactory );
 			                    outputIterator = convolved.createLocalizableCursor();	                			
 	                		}
 	                		else if ( currentDim % 2 == 1 ) // for odd dimension ids we convolve to the output image, because that might be the last convolution  
 	                		{
-			                	inputIterator = convolved.createLocalizableByDimCursor( outOfBoundsFactory );
+			                	inputIterator = convolved.createPositionableCursor( outOfBoundsFactory );
 			                    outputIterator = temp.createLocalizableCursor();
 	                		}
 	                		else //if ( currentDim % 2 == 0 ) // for even dimension ids we convolve to the temp image, it is not the last convolution for sure
 	                		{
-			                	inputIterator = temp.createLocalizableByDimCursor( outOfBoundsFactory );
+			                	inputIterator = temp.createPositionableCursor( outOfBoundsFactory );
 			                    outputIterator = convolved.createLocalizableCursor();
 	                		}	 
 	                	}
@@ -240,7 +240,7 @@ public class GaussianConvolution< T extends NumericType<T>> implements MultiThre
         return true;
 	}
 	
-	protected void convolve( final LocalizableByDimCursor<T> inputIterator, final LocalizableCursor<T> outputIterator, 
+	protected void convolve( final PositionableCursor<T> inputIterator, final LocalizableCursor<T> outputIterator, 
 															   final int dim, final float[] kernel,
 															   final long startPos, final long loopSize )
 	{		
@@ -366,7 +366,7 @@ public class GaussianConvolution< T extends NumericType<T>> implements MultiThre
 					final int filterSize = kernel[ 0 ].length;
 					final int filterSizeHalf = filterSize / 2;
 					
-					final LocalizableByDimCursor3D<FloatType> it = (LocalizableByDimCursor3D<FloatType>)imageFloat.createLocalizableByDimCursor( outOfBoundsFactoryFloat );
+					final PositionableCursor3D<FloatType> it = (PositionableCursor3D<FloatType>)imageFloat.createPositionableCursor( outOfBoundsFactoryFloat );
 
 					// fold in x
 					int kernelPos, count;
@@ -424,7 +424,7 @@ public class GaussianConvolution< T extends NumericType<T>> implements MultiThre
 					int kernelPos, count;
 
 					final float[] out =  outputArray.getCurrentStorageArray();
-					final LocalizableByDimCursor3D<FloatType> it = (LocalizableByDimCursor3D<FloatType>)convolvedFloat.createLocalizableByDimCursor( outOfBoundsFactoryFloat );
+					final PositionableCursor3D<FloatType> it = (PositionableCursor3D<FloatType>)convolvedFloat.createPositionableCursor( outOfBoundsFactoryFloat );
 					final double[] kernel1 = kernel[ 1 ].clone();
 					final int filterSize = kernel[ 1 ].length;
 					final int filterSizeHalf = filterSize / 2;
@@ -498,7 +498,7 @@ public class GaussianConvolution< T extends NumericType<T>> implements MultiThre
 					final int filterSizeHalf = filterSize / 2;
 
 					final float[] out = outputArray.getCurrentStorageArray();
-					final LocalizableByDimCursor3D<FloatType> it = (LocalizableByDimCursor3D<FloatType>)convolvedFloat.createLocalizableByDimCursor( outOfBoundsFactoryFloat );
+					final PositionableCursor3D<FloatType> it = (PositionableCursor3D<FloatType>)convolvedFloat.createPositionableCursor( outOfBoundsFactoryFloat );
 
 					final int inc = output.getPos(0, 0, 1);
 					final int posLUT[] = new int[kernel1.length];

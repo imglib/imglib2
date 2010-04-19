@@ -29,15 +29,15 @@
  */
 package mpicbg.imglib.cursor.special;
 
-import mpicbg.imglib.cursor.LocalizableByDimCursor3D;
+import mpicbg.imglib.cursor.PositionableCursor3D;
 import mpicbg.imglib.type.Type;
 
 public class LocalNeighborhoodCursor3DOptimized<T extends Type<T>> extends LocalNeighborhoodCursor3D<T>
 {
-	final LocalizableByDimCursor3D<T> cursor;
+	final PositionableCursor3D<T> cursor;
 	int x, y, z;
 	
-	public LocalNeighborhoodCursor3DOptimized( final LocalizableByDimCursor3D<T> cursor )
+	public LocalNeighborhoodCursor3DOptimized( final PositionableCursor3D<T> cursor )
 	{
 		super( cursor );
 		

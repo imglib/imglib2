@@ -71,7 +71,7 @@ public class NearestNeighborInterpolator1D<T extends Type<T>> extends NearestNei
 		
 		final int ix = MathLib.round( x ); 
 		
-		cursor.move( ix - cursor.getRasterLocation( 0 ), 0 );
+		cursor.move( ix - cursor.getIntPosition( 0 ), 0 );
 	}
 
 	@Override
@@ -82,7 +82,7 @@ public class NearestNeighborInterpolator1D<T extends Type<T>> extends NearestNei
 	{
 		this.x += x;
 		
-		cursor.move( MathLib.round( this.x ) - cursor.getRasterLocation( 0 ), 0 );
+		cursor.move( MathLib.round( this.x ) - cursor.getIntPosition( 0 ), 0 );
 	}
 	
 	@Override

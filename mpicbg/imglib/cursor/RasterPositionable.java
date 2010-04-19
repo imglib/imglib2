@@ -36,16 +36,106 @@ package mpicbg.imglib.cursor;
  */
 public interface RasterPositionable
 {
+	/**
+	 * Move by 1 in one dimension.
+	 * 
+	 * @param dim
+	 */
 	public void fwd( int dim );
+	
+	/**
+	 * Move by -1 in one dimension.
+	 * 
+	 * @param dim
+	 */
 	public void bck( int dim );
 	
+	/**
+	 * Move the element in one dimension for some distance.
+	 *  
+	 * @param distance
+	 * @param dim
+	 */
 	public void move( int distance, int dim );
-
-	public void moveTo( RasterLocalizable localizable );
-	public void moveTo( int position[] );
-	public void moveRel( int position[] );
 	
+	/**
+	 * Move the element in one dimension for some distance.
+	 *  
+	 * @param distance
+	 * @param dim
+	 */
+	public void move( long distance, int dim );
+
+	/**
+	 * Move the element to the same location as a given {@link RasterLocalizable}.
+	 * This method is expected to evaluates the distance to move for each
+	 * dimension independently and then perform relative moves which can result
+	 * in more efficient moves, particularly in containers where local parts of
+	 * an image need to be requested on demand and switching between them is
+	 * expensive.  It also is slightly faster for dimensionally sparse moves.
+	 * 
+	 * @param localizable
+	 */
+	public void moveTo( RasterLocalizable localizable );
+	
+	/**
+	 * Move the element to some position.  This method is expected to evaluates
+	 * the distance to move for each dimension independently and then perform
+	 * relative moves which can result in more efficient moves, particularly in
+	 * containers where local parts of an image need to be requested on demand
+	 * and switching between them is expensive.  It also is slightly faster for
+	 * dimensionally sparse moves.
+	 * 
+	 * @param position
+	 */
+	public void moveTo( int[] position );
+	
+	/**
+	 * Move the element to some position.  This method is expected to evaluates
+	 * the distance to move for each dimension independently and then perform
+	 * relative moves which can result in more efficient moves, particularly in
+	 * containers where local parts of an image need to be requested on demand
+	 * and switching between them is expensive.  It also is slightly faster for
+	 * dimensionally sparse moves.
+	 * 
+	 * @param position
+	 */
+	public void moveTo( long[] position );
+	
+	/**
+	 * Place the element at the same location as a given {@link RasterLocalizable}
+	 * 
+	 * @param localizable
+	 */
 	public void setPosition( RasterLocalizable localizable );
-	public void setPosition( int position[] );
+	
+	/**
+	 * Set the position of the element.
+	 * 
+	 * @param position
+	 */
+	public void setPosition( int[] position );
+	
+	/**
+	 * Set the position of the element.
+	 * 
+	 * @param position
+	 */
+	public void setPosition( long[] position );
+	
+	/**
+	 * Set the position of the element for one dimension.
+	 * 
+	 * @param position
+	 * @param dim
+	 */
 	public void setPosition( int position, int dim );		
+	
+	/**
+	 * Set the position of the element for one dimension.
+	 * 
+	 * @param position
+	 * @param dim
+	 */
+	public void setPosition( long position, int dim );
 }

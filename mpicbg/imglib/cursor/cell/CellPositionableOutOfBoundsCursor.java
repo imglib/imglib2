@@ -30,20 +30,20 @@
 package mpicbg.imglib.cursor.cell;
 
 import mpicbg.imglib.container.cell.CellContainer;
-import mpicbg.imglib.cursor.LocalizableByDimCursor;
+import mpicbg.imglib.cursor.PositionableCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategy;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
 import mpicbg.imglib.type.Type;
 
-public class CellLocalizableByDimOutOfBoundsCursor<T extends Type<T>> extends CellLocalizableByDimCursor<T> implements LocalizableByDimCursor<T>
+public class CellPositionableOutOfBoundsCursor<T extends Type<T>> extends CellPositionableCursor<T> implements PositionableCursor<T>
 {
 	final OutOfBoundsStrategyFactory<T> outOfBoundsStrategyFactory;
 	final OutOfBoundsStrategy<T> outOfBoundsStrategy;
 	
 	boolean isOutOfBounds = false;
 	
-	public CellLocalizableByDimOutOfBoundsCursor( final CellContainer<T,?> container, final Image<T> image, final T type, final OutOfBoundsStrategyFactory<T> outOfBoundsStrategyFactory ) 
+	public CellPositionableOutOfBoundsCursor( final CellContainer<T,?> container, final Image<T> image, final T type, final OutOfBoundsStrategyFactory<T> outOfBoundsStrategyFactory ) 
 	{
 		super( container, image, type );
 		

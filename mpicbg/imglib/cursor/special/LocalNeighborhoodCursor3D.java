@@ -29,14 +29,14 @@
  */
 package mpicbg.imglib.cursor.special;
 
-import mpicbg.imglib.cursor.LocalizableByDimCursor;
+import mpicbg.imglib.cursor.PositionableCursor;
 import mpicbg.imglib.type.Type;
 
 public class LocalNeighborhoodCursor3D<T extends Type<T>> extends LocalNeighborhoodCursor<T>
 {
 	int i = -1;
 	
-	public LocalNeighborhoodCursor3D( final LocalizableByDimCursor<T> cursor ) 
+	public LocalNeighborhoodCursor3D( final PositionableCursor<T> cursor ) 
 	{ 
 		super( cursor );
 		
@@ -143,5 +143,5 @@ public class LocalNeighborhoodCursor3D<T extends Type<T>> extends LocalNeighborh
 		++i;
 	}
 	
-	public int getRelativePosition( final int d ) { return cursor.getRasterLocation( d ) - position[ d ]; }	
+	public int getRelativePosition( final int d ) { return cursor.getIntPosition( d ) - position[ d ]; }	
 }

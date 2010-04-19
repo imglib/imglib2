@@ -29,7 +29,7 @@ package mpicbg.imglib.cursor.shapelist;
 
 import mpicbg.imglib.container.shapelist.ShapeList;
 import mpicbg.imglib.cursor.CursorImpl;
-import mpicbg.imglib.cursor.LocalizableByDimCursor;
+import mpicbg.imglib.cursor.PositionableCursor;
 import mpicbg.imglib.cursor.RasterLocalizable;
 import mpicbg.imglib.cursor.special.LocalNeighborhoodCursor;
 import mpicbg.imglib.cursor.special.LocalNeighborhoodCursorFactory;
@@ -44,7 +44,7 @@ import mpicbg.imglib.type.Type;
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  * @version 0.1a
  */
-public class ShapeListLocalizableByDimCursor< T extends Type< T > > extends CursorImpl< T > implements LocalizableByDimCursor< T >
+public class ShapeListPositionableCursor< T extends Type< T > > extends CursorImpl< T > implements PositionableCursor< T >
 {
 	private int numNeighborhoodCursors = 0;
 	 
@@ -53,7 +53,7 @@ public class ShapeListLocalizableByDimCursor< T extends Type< T > > extends Curs
 	final protected int numDimensions;
 	final protected int[] position, dimensions;
 	
-	public ShapeListLocalizableByDimCursor( final ShapeList< T > container, final Image< T > image ) 
+	public ShapeListPositionableCursor( final ShapeList< T > container, final Image< T > image ) 
 	{
 		super( container, image );
 		this.container = container;
@@ -116,6 +116,14 @@ public class ShapeListLocalizableByDimCursor< T extends Type< T > > extends Curs
 	}
 	
 	@Override
+	public void move( final long steps, final int dim )
+	{
+		position[ dim ] += steps;	
+		//link.move(steps, dim);
+	}
+	
+	
+	@Override
 	public void bck( final int dim )
 	{
 		--position[ dim ];
@@ -123,18 +131,23 @@ public class ShapeListLocalizableByDimCursor< T extends Type< T > > extends Curs
 	}
 		
 	@Override
-	public void moveRel( final int[] vector )
-	{
-		for ( int d = 0; d < numDimensions; ++d )
-			move( vector[ d ], d );
-	}
-
-	@Override
 	public void moveTo( final int[] position )
 	{		
 		for ( int d = 0; d < numDimensions; ++d )
 		{
-			final int dist = position[ d ] - getRasterLocation( d );
+			final int dist = position[ d ] - getIntPosition( d );
+			
+			if ( dist != 0 )				
+				move( dist, d );
+		}
+	}
+	
+	@Override
+	public void moveTo( final long[] position )
+	{		
+		for ( int d = 0; d < numDimensions; ++d )
+		{
+			final long dist = position[ d ] - getIntPosition( d );
 			
 			if ( dist != 0 )				
 				move( dist, d );
@@ -161,11 +174,30 @@ public class ShapeListLocalizableByDimCursor< T extends Type< T > > extends Curs
 		
 		//link.setPosition( position );
 	}
+	
+	@Override
+	/* TODO change position to long accuracy */
+	public void setPosition( final long[] position )
+	{
+		for ( int d = 0; d < numDimensions; ++d )
+			this.position[ d ] = ( int )position[ d ];
+		
+		//link.setPosition( position );
+	}
+	
 
 	@Override
 	public void setPosition( final int position, final int dim )
 	{
 		this.position[ dim ] = position;
+		//link.setPosition( position, dim );
+	}
+	
+	@Override
+	/* TODO change position to long accuracy */
+	public void setPosition( final long position, final int dim )
+	{
+		setPosition( ( int )position, dim );
 		//link.setPosition( position, dim );
 	}
 
@@ -235,45 +267,35 @@ public class ShapeListLocalizableByDimCursor< T extends Type< T > > extends Curs
 		for ( int d = 0; d < numDimensions; ++d )
 			position[ d ] = this.position[ d ];
 	}
-
 	
 	@Override
-	public float[] getFloatLocation()
+	public void localize( final long[] position )
 	{
-		final float[] location = new float[ position.length ];
-		localize( location );
-		return location;
-	}
-	
-	@Override
-	public double[] getDoubleLocation()
-	{
-		final double[] location = new double[ position.length ];
-		localize( location );
-		return location;
-	}
-
-	@Override
-	public int[] getRasterLocation()
-	{
-		return position.clone();
+		for ( int d = 0; d < numDimensions; ++d )
+			position[ d ] = this.position[ d ];
 	}
 
 	
 	@Override
-	public float getFloatLocation( final int dim )
+	public float getFloatPosition( final int dim )
 	{
 		return position[ dim ];
 	}
 
 	@Override
-	public double getDoubleLocation( final int dim )
+	public double getDoublePosition( final int dim )
 	{
 		return position[ dim ];
 	}
 
 	@Override
-	public int getRasterLocation( final int dim )
+	public int getIntPosition( final int dim )
+	{
+		return position[ dim ];
+	}
+
+	@Override
+	public long getLongPosition( final int dim )
 	{
 		return position[ dim ];
 	}

@@ -29,14 +29,14 @@
  */
 package mpicbg.imglib.outofbounds;
 
-import mpicbg.imglib.cursor.LocalizableByDimCursor;
+import mpicbg.imglib.cursor.PositionableCursor;
 import mpicbg.imglib.cursor.LocalizableCursor;
 import mpicbg.imglib.type.Type;
 
 public class OutOfBoundsStrategyPeriodic<T extends Type<T>> extends OutOfBoundsStrategy<T>
 {
 	final LocalizableCursor<T> parentCursor;
-	final LocalizableByDimCursor<T> circleCursor;
+	final PositionableCursor<T> circleCursor;
 	final T type, circleType;
 	final int numDimensions;
 	final int[] dimension, position, circledPosition;
@@ -46,7 +46,7 @@ public class OutOfBoundsStrategyPeriodic<T extends Type<T>> extends OutOfBoundsS
 		super( parentCursor );
 		
 		this.parentCursor = parentCursor;
-		this.circleCursor = parentCursor.getImage().createLocalizableByDimCursor();
+		this.circleCursor = parentCursor.getImage().createPositionableCursor();
 		this.circleType = circleCursor.type();
 		this.type = circleType.createVariable();
 			
@@ -72,7 +72,7 @@ public class OutOfBoundsStrategyPeriodic<T extends Type<T>> extends OutOfBoundsS
 	@Override
 	public void notifyOutOfBOunds( final int steps, final int dim ) 
 	{
-		final int oldPos = circleCursor.getRasterLocation( dim ); 
+		final int oldPos = circleCursor.getIntPosition( dim ); 
 		
 		circleCursor.move( getCircleCoordinateDim( oldPos + steps, dimension[ dim ] )  - oldPos, dim );
 		type.set( circleType );
@@ -81,7 +81,7 @@ public class OutOfBoundsStrategyPeriodic<T extends Type<T>> extends OutOfBoundsS
 	@Override
 	public void notifyOutOfBOundsFwd( final int dim ) 
 	{		
-		final int oldPos = circleCursor.getRasterLocation( dim ); 
+		final int oldPos = circleCursor.getIntPosition( dim ); 
 		
 		circleCursor.move( getCircleCoordinateDim( oldPos + 1, dimension[ dim ] )  - oldPos, dim );
 		type.set( circleType );
@@ -90,7 +90,7 @@ public class OutOfBoundsStrategyPeriodic<T extends Type<T>> extends OutOfBoundsS
 	@Override
 	public void notifyOutOfBOundsBck( final int dim ) 
 	{
-		final int oldPos = circleCursor.getRasterLocation( dim ); 
+		final int oldPos = circleCursor.getIntPosition( dim ); 
 		
 		circleCursor.move( getCircleCoordinateDim( oldPos - 1, dimension[ dim ] )  - oldPos, dim );
 		type.set( circleType );

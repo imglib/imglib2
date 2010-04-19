@@ -30,21 +30,20 @@
 package mpicbg.imglib.cursor.shapelist;
 
 import mpicbg.imglib.container.shapelist.ShapeList;
-import mpicbg.imglib.cursor.LocalizableByDimCursor;
-import mpicbg.imglib.cursor.RasterLocalizable;
+import mpicbg.imglib.cursor.PositionableCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategy;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
 import mpicbg.imglib.type.Type;
 
-public class ShapeListLocalizableByDimOutOfBoundsCursor<T extends Type<T>> extends ShapeListLocalizableByDimCursor<T> implements LocalizableByDimCursor<T>
+public class ShapeListPositionableOutOfBoundsCursor<T extends Type<T>> extends ShapeListPositionableCursor<T> implements PositionableCursor<T>
 {
 	final OutOfBoundsStrategyFactory<T> outOfBoundsStrategyFactory;
 	final OutOfBoundsStrategy<T> outOfBoundsStrategy;
 	
 	boolean isOutOfBounds = false;
 	
-	public ShapeListLocalizableByDimOutOfBoundsCursor( final ShapeList<T> container, final Image<T> image, final OutOfBoundsStrategyFactory<T> outOfBoundsStrategyFactory ) 
+	public ShapeListPositionableOutOfBoundsCursor( final ShapeList<T> container, final Image<T> image, final OutOfBoundsStrategyFactory<T> outOfBoundsStrategyFactory ) 
 	{
 		super( container, image );
 		
@@ -227,17 +226,5 @@ public class ShapeListLocalizableByDimOutOfBoundsCursor<T extends Type<T>> exten
 			return;
 		}
 		//link.setPosition(position, dim);
-	}
-	
-	@Override
-	public void moveTo( final RasterLocalizable localizable )
-	{
-		moveTo( localizable.getRasterLocation() );
-	}
-
-	@Override
-	public void setPosition( final RasterLocalizable localizable )
-	{
-		setPosition( localizable.getRasterLocation() );
 	}
 }

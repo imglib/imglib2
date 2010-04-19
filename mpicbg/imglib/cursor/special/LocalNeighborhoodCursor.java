@@ -30,7 +30,7 @@
 package mpicbg.imglib.cursor.special;
 
 import mpicbg.imglib.cursor.CursorImpl;
-import mpicbg.imglib.cursor.LocalizableByDimCursor;
+import mpicbg.imglib.cursor.PositionableCursor;
 import mpicbg.imglib.cursor.array.ArrayLocalizableCursor;
 import mpicbg.imglib.type.Type;
 import mpicbg.imglib.type.label.FakeType;
@@ -43,32 +43,34 @@ public class LocalNeighborhoodCursor<T extends Type<T>> extends CursorImpl<T>
 	 */
 	final ArrayLocalizableCursor<FakeType> neigborhoodCursor;
 
-	final LocalizableByDimCursor<T> cursor;
+	final PositionableCursor<T> cursor;
 	final int[] position, tmp;
 	final int numDimensions, centralPositionIndex;
 	boolean isActive, debug = false;
 	
-	public LocalNeighborhoodCursor( final LocalizableByDimCursor<T> cursor )
+	public LocalNeighborhoodCursor( final PositionableCursor<T> cursor )
 	{
 		super( cursor.getStorageContainer(), cursor.getImage() );
 		
-		this.cursor = cursor;
-		this.position = cursor.getRasterLocation();
+		numDimensions = cursor.getImage().getNumDimensions();
 		
-		this.numDimensions = cursor.getImage().getNumDimensions();
-		this.tmp = new int[ numDimensions ];
+		this.cursor = cursor;
+		position = new int[ numDimensions ];
+		cursor.localize( position );
+		
+		tmp = new int[ numDimensions ];
 				
 		int[] dim = new int[ numDimensions ];
 		for ( int d = 0; d < numDimensions; ++d )
 			dim[ d ] = 3;
 
-		this.neigborhoodCursor = ArrayLocalizableCursor.createLinearCursor( dim );
-		this.isActive = true;
+		neigborhoodCursor = ArrayLocalizableCursor.createLinearCursor( dim );
+		isActive = true;
 
 		for ( int d = 0; d < numDimensions; ++d )
 			dim[ d ] = 1;
 
-		this.centralPositionIndex = neigborhoodCursor.getStorageContainer().getPos( dim );
+		centralPositionIndex = neigborhoodCursor.getStorageContainer().getPos( dim );
 	}
 	
 	@Override
@@ -113,7 +115,7 @@ public class LocalNeighborhoodCursor<T extends Type<T>> extends CursorImpl<T>
 		cursor.moveTo( tmp );		
 	}
 	
-	public int getRelativePosition( final int d ) { return neigborhoodCursor.getRasterLocation( d ); }
+	public int getRelativePosition( final int d ) { return neigborhoodCursor.getIntPosition( d ); }
 	
 	@Override
 	public int getArrayIndex() { return cursor.getArrayIndex(); }

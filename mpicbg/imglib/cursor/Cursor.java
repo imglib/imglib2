@@ -80,7 +80,7 @@ import mpicbg.imglib.type.Type;
  * </pre>
  * will visit the <b>same pixel positions</b>.
  * <p>
- * If the two {@link Container} are not the same, then {@link LocalizableCursor} and {@link LocalizableByDimCursor} 
+ * If the two {@link Container} are not the same, then {@link LocalizableCursor} and {@link PositionableCursor} 
  * have to be used:
  * <pre>
  * 		else {

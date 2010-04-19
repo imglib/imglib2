@@ -31,8 +31,8 @@ package mpicbg.imglib.cursor.cell;
 
 import mpicbg.imglib.container.array.Array;
 import mpicbg.imglib.container.cell.CellContainer;
-import mpicbg.imglib.cursor.LocalizableByDimCursor;
-import mpicbg.imglib.cursor.array.ArrayLocalizableByDimCursor;
+import mpicbg.imglib.cursor.PositionableCursor;
+import mpicbg.imglib.cursor.array.ArrayPositionableCursor;
 import mpicbg.imglib.cursor.RasterLocalizable;
 import mpicbg.imglib.cursor.special.LocalNeighborhoodCursor;
 import mpicbg.imglib.cursor.special.LocalNeighborhoodCursorFactory;
@@ -41,13 +41,13 @@ import mpicbg.imglib.image.Image;
 import mpicbg.imglib.type.Type;
 import mpicbg.imglib.type.label.FakeType;
 
-public class CellLocalizableByDimCursor<T extends Type<T>> extends CellLocalizableCursor<T> implements LocalizableByDimCursor<T>
+public class CellPositionableCursor<T extends Type<T>> extends CellLocalizableCursor<T> implements PositionableCursor<T>
 {
 	/**
 	 * Here we "misuse" a ArrayLocalizableCursor to iterate over cells,
 	 * it always gives us the location of the current cell we are instantiating 
 	 */
-	final ArrayLocalizableByDimCursor<FakeType> cursor;
+	final ArrayPositionableCursor<FakeType> cursor;
 	
 	/*
 	protected final CellContainer<?,?> img;
@@ -101,7 +101,7 @@ public class CellLocalizableByDimCursor<T extends Type<T>> extends CellLocalizab
 	
 	final int[] tmp;
 	
-	public CellLocalizableByDimCursor( final CellContainer<T,?> container, final Image<T> image, final T type )
+	public CellPositionableCursor( final CellContainer<T,?> container, final Image<T> image, final T type )
 	{
 		super( container, image, type);
 		
@@ -114,7 +114,7 @@ public class CellLocalizableByDimCursor<T extends Type<T>> extends CellLocalizab
 		this.cellStep = new int[ numDimensions ];
 		this.tmp = new int[ numDimensions ];
 		
-		this.cursor = ArrayLocalizableByDimCursor.createLinearByDimCursor( numCellsDim );
+		this.cursor = ArrayPositionableCursor.createLinearByDimCursor( numCellsDim );
 		cursor.setPosition( new int[ container.getNumDimensions() ] );
 		
 		// the steps when moving from cell to cell
@@ -254,23 +254,36 @@ public class CellLocalizableByDimCursor<T extends Type<T>> extends CellLocalizab
 	}
 	
 	@Override
-	public void moveRel( final int[] vector )
+	/* TODO change position to long accuracy */
+	public void move( final long distance, final int dim )
 	{
-		for ( int d = 0; d < numDimensions; ++d )
-			move( vector[ d ], d );
+		move( ( int )distance, dim );		
 	}
-
+	
+	
 	@Override
 	public void moveTo( final int[] position )
 	{		
 		for ( int d = 0; d < numDimensions; ++d )
 		{
-			final int dist = position[ d ] - getRasterLocation( d );
+			final int dist = position[ d ] - getIntPosition( d );
 			
 			if ( dist != 0 )				
 				move( dist, d );
 		}
 	}
+	
+	@Override
+	public void moveTo( final long[] position )
+	{
+		for ( int d = 0; d < numDimensions; ++d )
+		{
+			final long dist = position[ d ] - getIntPosition( d );
+			
+			if ( dist != 0 )				
+				move( dist, d );
+		}
+	}	
 	
 	@Override
 	public void moveTo( final RasterLocalizable localizable )
@@ -342,6 +355,23 @@ public class CellLocalizableByDimCursor<T extends Type<T>> extends CellLocalizab
 	}
 
 	@Override
+	/* TODO change position to long accuracy */
+	public void setPosition( final long[] position )
+	{
+		for ( int d = 0; d < numDimensions; d++ )
+			this.position[ d ] = ( int )position[ d ];
+
+		// the cell position in "cell space" from the image coordinates 
+		container.getCellPosition( this.position, cellPosition );
+		
+		// get the cell index
+		cell = container.getCellIndex( cursor, cellPosition );
+
+		getCellData(cell);
+		type.updateIndex( cellInstance.getPosGlobal( this.position ) );
+	}
+
+	@Override
 	public void setPosition( final int position, final int dim )
 	{
 		this.position[ dim ] = position;
@@ -354,7 +384,14 @@ public class CellLocalizableByDimCursor<T extends Type<T>> extends CellLocalizab
 		
 		getCellData(cell);
 		type.updateIndex( cellInstance.getPosGlobal( this.position ) );
-	}	
+	}
+	
+	@Override
+	/* TODO change position to long accuracy */
+	public void setPosition( final long position, final int dim )
+	{
+		setPosition( ( int )position, dim );
+	}
 	
 	@Override
 	public void close()

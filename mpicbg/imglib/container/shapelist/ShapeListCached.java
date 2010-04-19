@@ -31,11 +31,11 @@ package mpicbg.imglib.container.shapelist;
 
 import mpicbg.imglib.cursor.shapelist.ShapeListCache;
 import mpicbg.imglib.cursor.shapelist.ShapeListCacheFIFO;
-import mpicbg.imglib.cursor.shapelist.ShapeListCachedLocalizableByDimCursor;
-import mpicbg.imglib.cursor.shapelist.ShapeListCachedLocalizableByDimOutOfBoundsCursor;
+import mpicbg.imglib.cursor.shapelist.ShapeListCachedPositionableCursor;
+import mpicbg.imglib.cursor.shapelist.ShapeListCachedPositionableOutOfBoundsCursor;
 import mpicbg.imglib.cursor.shapelist.ShapeListCachedLocalizablePlaneCursor;
-import mpicbg.imglib.cursor.shapelist.ShapeListLocalizableByDimCursor;
-import mpicbg.imglib.cursor.shapelist.ShapeListLocalizableByDimOutOfBoundsCursor;
+import mpicbg.imglib.cursor.shapelist.ShapeListPositionableCursor;
+import mpicbg.imglib.cursor.shapelist.ShapeListPositionableOutOfBoundsCursor;
 import mpicbg.imglib.cursor.shapelist.ShapeListLocalizablePlaneCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
@@ -72,14 +72,14 @@ public class ShapeListCached<T extends Type<T> > extends ShapeList<T>
 	}
 	
 	@Override
-	public ShapeListLocalizableByDimCursor< T > createLocalizableByDimCursor( final Image< T > image ) 
+	public ShapeListPositionableCursor< T > createPositionableCursor( final Image< T > image ) 
 	{
-		return new ShapeListCachedLocalizableByDimCursor< T >( this, image, cache.getCursorCacheInstance() );
+		return new ShapeListCachedPositionableCursor< T >( this, image, cache.getCursorCacheInstance() );
 	}
 	
 	@Override
-	public ShapeListLocalizableByDimOutOfBoundsCursor< T > createLocalizableByDimCursor( final Image< T > image, final OutOfBoundsStrategyFactory< T > outOfBoundsFactory ) 
+	public ShapeListPositionableOutOfBoundsCursor< T > createPositionableCursor( final Image< T > image, final OutOfBoundsStrategyFactory< T > outOfBoundsFactory ) 
 	{
-		return new ShapeListCachedLocalizableByDimOutOfBoundsCursor< T >( this, image, outOfBoundsFactory, cache.getCursorCacheInstance() );
+		return new ShapeListCachedPositionableOutOfBoundsCursor< T >( this, image, outOfBoundsFactory, cache.getCursorCacheInstance() );
 	}
 }

@@ -1,7 +1,7 @@
 package mpicbg.imglib.algorithm.gauss;
 
 import mpicbg.imglib.algorithm.Precision.PrecisionReal;
-import mpicbg.imglib.cursor.LocalizableByDimCursor;
+import mpicbg.imglib.cursor.PositionableCursor;
 import mpicbg.imglib.cursor.LocalizableCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
@@ -27,7 +27,7 @@ public class GaussianConvolutionRealType<T extends RealType<T>> extends Gaussian
 	public PrecisionReal getPrecision() { return precision; }
 	
 	@Override
-	protected void convolve( final LocalizableByDimCursor<T> inputIterator, final LocalizableCursor<T> outputIterator, 
+	protected void convolve( final PositionableCursor<T> inputIterator, final LocalizableCursor<T> outputIterator, 
 		 	   				 final int dim, final float[] kernel,
 		 	   				 final long startPos, final long loopSize )
 	{
@@ -37,7 +37,7 @@ public class GaussianConvolutionRealType<T extends RealType<T>> extends Gaussian
 			convolveDouble( inputIterator, outputIterator, dim, kernel, startPos, loopSize );
 	}
 	
-	protected void convolveDouble( final LocalizableByDimCursor<T> inputIterator, final LocalizableCursor<T> outputIterator, final int dim, final float[] kernel, final long startPos, final long loopSize )
+	protected void convolveDouble( final PositionableCursor<T> inputIterator, final LocalizableCursor<T> outputIterator, final int dim, final float[] kernel, final long startPos, final long loopSize )
 	{		
 		// move to the starting position of the current thread
 		outputIterator.fwd( startPos );
@@ -106,7 +106,7 @@ public class GaussianConvolutionRealType<T extends RealType<T>> extends Gaussian
 		}
 	}	
 
-	protected void convolveFloat( final LocalizableByDimCursor<T> inputIterator, final LocalizableCursor<T> outputIterator, final int dim, final float[] kernel, final long startPos, final long loopSize )
+	protected void convolveFloat( final PositionableCursor<T> inputIterator, final LocalizableCursor<T> outputIterator, final int dim, final float[] kernel, final long startPos, final long loopSize )
 	{		
 		// move to the starting position of the current thread
 		outputIterator.fwd( startPos );

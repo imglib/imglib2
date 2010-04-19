@@ -31,8 +31,8 @@ import java.awt.Shape;
 import java.util.ArrayList;
 
 import mpicbg.imglib.container.ContainerImpl;
-import mpicbg.imglib.cursor.shapelist.ShapeListLocalizableByDimCursor;
-import mpicbg.imglib.cursor.shapelist.ShapeListLocalizableByDimOutOfBoundsCursor;
+import mpicbg.imglib.cursor.shapelist.ShapeListPositionableCursor;
+import mpicbg.imglib.cursor.shapelist.ShapeListPositionableOutOfBoundsCursor;
 import mpicbg.imglib.cursor.shapelist.ShapeListLocalizablePlaneCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
@@ -102,15 +102,15 @@ public class ShapeList< T extends Type< T > > extends ContainerImpl< T >
 	public ShapeListContainerFactory getFactory() { return factory; }
 	
 	@Override
-	public ShapeListLocalizableByDimCursor< T > createCursor( final Image< T > image ) 
+	public ShapeListPositionableCursor< T > createCursor( final Image< T > image ) 
 	{ 
-		return createLocalizableByDimCursor( image );
+		return createPositionableCursor( image );
 	}
 
 	@Override
-	public ShapeListLocalizableByDimCursor< T > createLocalizableCursor( final Image< T > image ) 
+	public ShapeListPositionableCursor< T > createLocalizableCursor( final Image< T > image ) 
 	{ 
-		return createLocalizableByDimCursor( image );
+		return createPositionableCursor( image );
 	}
 
 	@Override
@@ -120,15 +120,15 @@ public class ShapeList< T extends Type< T > > extends ContainerImpl< T >
 	}
 	
 	@Override
-	public ShapeListLocalizableByDimCursor< T > createLocalizableByDimCursor( final Image< T > image ) 
+	public ShapeListPositionableCursor< T > createPositionableCursor( final Image< T > image ) 
 	{
-		return new ShapeListLocalizableByDimCursor< T >( this, image );
+		return new ShapeListPositionableCursor< T >( this, image );
 	}
 	
 	@Override
-	public ShapeListLocalizableByDimOutOfBoundsCursor< T > createLocalizableByDimCursor( final Image< T > image, final OutOfBoundsStrategyFactory< T > outOfBoundsFactory ) 
+	public ShapeListPositionableOutOfBoundsCursor< T > createPositionableCursor( final Image< T > image, final OutOfBoundsStrategyFactory< T > outOfBoundsFactory ) 
 	{
-		return new ShapeListLocalizableByDimOutOfBoundsCursor< T >( this, image, outOfBoundsFactory );
+		return new ShapeListPositionableOutOfBoundsCursor< T >( this, image, outOfBoundsFactory );
 	}
 	
 	@Override

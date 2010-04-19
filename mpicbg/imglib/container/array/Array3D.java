@@ -31,8 +31,8 @@ package mpicbg.imglib.container.array;
 
 import mpicbg.imglib.container.Container3D;
 import mpicbg.imglib.container.basictypecontainer.DataAccess;
-import mpicbg.imglib.cursor.array.Array3DLocalizableByDimCursor;
-import mpicbg.imglib.cursor.array.Array3DLocalizableByDimOutOfBoundsCursor;
+import mpicbg.imglib.cursor.array.Array3DPositionableCursor;
+import mpicbg.imglib.cursor.array.Array3DPositionableOutOfBoundsCursor;
 import mpicbg.imglib.cursor.array.Array3DLocalizableCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
@@ -60,18 +60,18 @@ public class Array3D<T extends Type<T>, A extends DataAccess> extends Array<T,A>
 	}
 
 	@Override
-	public Array3DLocalizableByDimCursor<T> createLocalizableByDimCursor( final Image<T> image ) 
+	public Array3DPositionableCursor<T> createPositionableCursor( final Image<T> image ) 
 	{ 
 		// create a Cursor using a Type that is linked to the container
-		Array3DLocalizableByDimCursor<T> c = new Array3DLocalizableByDimCursor<T>( this, image, linkedType.duplicateTypeOnSameDirectAccessContainer() );
+		Array3DPositionableCursor<T> c = new Array3DPositionableCursor<T>( this, image, linkedType.duplicateTypeOnSameDirectAccessContainer() );
 		return c;
 	}
 
 	@Override
-	public Array3DLocalizableByDimOutOfBoundsCursor<T> createLocalizableByDimCursor( final Image<T> image, final OutOfBoundsStrategyFactory<T> outOfBoundsFactory ) 
+	public Array3DPositionableOutOfBoundsCursor<T> createPositionableCursor( final Image<T> image, final OutOfBoundsStrategyFactory<T> outOfBoundsFactory ) 
 	{ 
 		// create a Cursor using a Type that is linked to the container
-		Array3DLocalizableByDimOutOfBoundsCursor<T> c = new Array3DLocalizableByDimOutOfBoundsCursor<T>( this, image, linkedType.duplicateTypeOnSameDirectAccessContainer(), outOfBoundsFactory );
+		Array3DPositionableOutOfBoundsCursor<T> c = new Array3DPositionableOutOfBoundsCursor<T>( this, image, linkedType.duplicateTypeOnSameDirectAccessContainer(), outOfBoundsFactory );
 		return c;
 	}
 	

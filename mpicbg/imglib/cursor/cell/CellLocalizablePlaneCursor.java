@@ -32,7 +32,7 @@ package mpicbg.imglib.cursor.cell;
 import mpicbg.imglib.container.array.Array;
 import mpicbg.imglib.container.cell.CellContainer;
 import mpicbg.imglib.cursor.LocalizablePlaneCursor;
-import mpicbg.imglib.cursor.array.ArrayLocalizableByDimCursor;
+import mpicbg.imglib.cursor.array.ArrayPositionableCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.type.Type;
 import mpicbg.imglib.type.label.FakeType;
@@ -43,7 +43,7 @@ public class CellLocalizablePlaneCursor<T extends Type<T>> extends CellLocalizab
 	 * Here we "misuse" a ArrayLocalizableCursor to iterate over cells,
 	 * it always gives us the location of the current cell we are instantiating 
 	 */
-	final ArrayLocalizableByDimCursor<FakeType> cursor;
+	final ArrayPositionableCursor<FakeType> cursor;
 
 	/*
 	protected final CellContainer<?,?> img;
@@ -79,7 +79,7 @@ public class CellLocalizablePlaneCursor<T extends Type<T>> extends CellLocalizab
 		numCellsDim = container.getNumCellsDim();
 		cellStep = new int[ numDimensions ];
 		
-		cursor = ArrayLocalizableByDimCursor.createLinearByDimCursor( numCellsDim ); 
+		cursor = ArrayPositionableCursor.createLinearByDimCursor( numCellsDim ); 
 		cursor.setPosition( new int[ container.getNumDimensions() ] );
 		
 		// the steps when moving from cell to cell
@@ -220,6 +220,35 @@ public class CellLocalizablePlaneCursor<T extends Type<T>> extends CellLocalizab
 		position[ planeDimA ] = -1;				
 		type.decIndex( incPlaneA );				
 	}
+	
+	@Override
+	/* TODO change position to long accuracy */
+	public void reset( int planeDimA, int planeDimB, long[] dimensionPositions )
+	{
+		this.lastCell = -1;
+
+		this.planeDimA = planeDimA;
+		this.planeDimB = planeDimB;
+				
+		this.maxCellsPlane = container.getNumCells( planeDimA ) * container.getNumCells( planeDimB ); 
+		this.currentCellsPlane = 0;
+			
+		// store the current position
+    	final int[] dimPos = new int[ dimensionPositions.length ];
+    	for ( int i = 0; i < dimensionPositions.length; ++i )	
+    		dimPos[ i ] = ( int )dimensionPositions[ i ];
+
+    	dimPos[ planeDimA ] = 0;
+		
+		if ( planeDimB > -1 && planeDimB < step.length )
+			dimPos[ planeDimB ] = 0;
+		
+		setPosition( dimPos );
+		
+		isClosed = false;		
+		position[ planeDimA ] = -1;				
+		type.decIndex( incPlaneA );
+	}
 
 	@Override
 	public void reset( final int planeDimA, final int planeDimB )
@@ -244,10 +273,7 @@ public class CellLocalizablePlaneCursor<T extends Type<T>> extends CellLocalizab
 	}
 	
 	@Override
-	public int[] getRasterLocation(){ return position.clone(); }
-	
-	@Override
-	public int getRasterLocation( final int dim ){ return position[ dim ]; }	
+	public int getIntPosition( final int dim ){ return position[ dim ]; }	
 	
 	protected void setPosition( final int[] position )
 	{
@@ -273,5 +299,5 @@ public class CellLocalizablePlaneCursor<T extends Type<T>> extends CellLocalizab
 			lastCell = -1;
 			isClosed = true;
 		}		
-	}	
+	}
 }

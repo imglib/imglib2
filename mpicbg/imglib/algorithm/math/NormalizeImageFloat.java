@@ -51,7 +51,7 @@ public class NormalizeImageFloat <T extends RealType<T>> implements OutputAlgori
 			new ImageFactory<FloatType>(new FloatType(), image.getContainerFactory());  		
 		
 		final LocalizableCursor<T> pullCursor;
-		final LocalizableByDimCursor<FloatType> pushCursor;
+		final PositionableCursor<FloatType> pushCursor;
 		
 		if (norm == 0)
 		{
@@ -60,7 +60,7 @@ public class NormalizeImageFloat <T extends RealType<T>> implements OutputAlgori
 		}		
 		
 		outputImage = factory.createImage(dims);
-		pushCursor = outputImage.createLocalizableByDimCursor();
+		pushCursor = outputImage.createPositionableCursor();
 		pullCursor = image.createLocalizableCursor();
 			
 		while(pullCursor.hasNext())

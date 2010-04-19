@@ -29,12 +29,24 @@
  */
 package mpicbg.imglib.cursor;
 
-import mpicbg.imglib.cursor.special.LocalNeighborhoodCursor;
-import mpicbg.imglib.cursor.special.RegionOfInterestCursor;
-import mpicbg.imglib.type.Type;
-
-public interface LocalizableByDimCursor<T extends Type<T>> extends LocalizableCursor<T>, RasterPositionable
+public interface Positionable3D
 {
-	public LocalNeighborhoodCursor<T> createLocalNeighborhoodCursor();	
-	public RegionOfInterestCursor<T> createRegionOfInterestCursor( final int[] offset, final int[] size );	
+	public void fwdX();
+	public void fwdY();
+	public void fwdZ();
+
+	public void bckX();
+	public void bckY();
+	public void bckZ();
+	
+	public void moveX( int steps );
+	public void moveY( int steps );
+	public void moveZ( int steps );
+
+	public void moveTo( int x, int y, int z );
+	
+	public void setPosition( int posX, int posY, int posZ );
+	public void setPositionX( int pos );
+	public void setPositionY( int pos );
+	public void setPositionZ( int pos );
 }

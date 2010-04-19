@@ -75,21 +75,28 @@ public class DynamicLocalizableCursor<T extends Type<T>> extends DynamicCursor<T
 
 	
 	@Override
-	public void localize( float[] position )
+	public void localize( final float[] position )
 	{
 		for ( int d = 0; d < numDimensions; d++ )
 			position[ d ] = this.position[ d ];
 	}
 	
 	@Override
-	public void localize( double[] position )
+	public void localize( final double[] position )
 	{
 		for ( int d = 0; d < numDimensions; d++ )
 			position[ d ] = this.position[ d ];
 	}
 	
 	@Override
-	public void localize( int[] position )
+	public void localize( final int[] position )
+	{
+		for ( int d = 0; d < numDimensions; d++ )
+			position[ d ] = this.position[ d ];
+	}
+	
+	@Override
+	public void localize( final long[] position )
 	{
 		for ( int d = 0; d < numDimensions; d++ )
 			position[ d ] = this.position[ d ];
@@ -97,34 +104,18 @@ public class DynamicLocalizableCursor<T extends Type<T>> extends DynamicCursor<T
 
 	
 	@Override
-	public float[] getFloatLocation()
-	{
-		final float[] location = new float[ position.length ];
-		localize( location );
-		return location;
-	}
+	public float getFloatPosition( final int dim ){ return position[ dim ]; }
 	
 	@Override
-	public double[] getDoubleLocation()
-	{
-		final double[] location = new double[ position.length ];
-		localize( location );
-		return location;
-	}
+	public double getDoublePosition( final int dim ){ return position[ dim ]; }
+	
+	@Override
+	public int getIntPosition( final int dim ){ return position[ dim ]; }
+	
+	@Override
+	public long getLongPosition( final int dim ){ return position[ dim ]; }
+	
 
-	@Override
-	public int[] getRasterLocation(){ return position.clone(); }
-	
-	
-	@Override
-	public float getFloatLocation( final int dim ){ return position[ dim ]; }
-	
-	@Override
-	public double getDoubleLocation( final int dim ){ return position[ dim ]; }
-	
-	@Override
-	public int getRasterLocation( final int dim ){ return position[ dim ]; }
-	
 	@Override
 	public String getLocationAsString()
 	{
@@ -139,5 +130,5 @@ public class DynamicLocalizableCursor<T extends Type<T>> extends DynamicCursor<T
 	}
 	
 	@Override
-	public String toString() { return getLocationAsString() + " = " + type(); }	
+	public String toString() { return getLocationAsString() + " = " + type(); }
 }

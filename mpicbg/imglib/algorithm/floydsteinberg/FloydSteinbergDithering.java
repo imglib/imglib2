@@ -22,7 +22,7 @@ import mpicbg.imglib.algorithm.Benchmark;
 import mpicbg.imglib.algorithm.OutputAlgorithm;
 import mpicbg.imglib.algorithm.math.MathLib;
 import mpicbg.imglib.container.array.ArrayContainerFactory;
-import mpicbg.imglib.cursor.LocalizableByDimCursor;
+import mpicbg.imglib.cursor.PositionableCursor;
 import mpicbg.imglib.cursor.LocalizableCursor;
 import mpicbg.imglib.cursor.array.ArrayLocalizableCursor;
 import mpicbg.imglib.image.Image;
@@ -81,8 +81,8 @@ public class FloydSteinbergDithering<T extends RealType<T>> implements OutputAlg
 		final LocalizableCursor<FakeType> cursor = ArrayLocalizableCursor.createLinearCursor( dim );
 
 		// we also need a Cursors for the input, the output and the kernel image
-		final LocalizableByDimCursor<T> cursorInput = img.createLocalizableByDimCursor( new OutOfBoundsStrategyValueFactory<T>() );
-		final LocalizableByDimCursor<BitType> cursorOutput = result.createLocalizableByDimCursor();
+		final PositionableCursor<T> cursorInput = img.createPositionableCursor( new OutOfBoundsStrategyValueFactory<T>() );
+		final PositionableCursor<BitType> cursorOutput = result.createPositionableCursor();
 		final LocalizableCursor<FloatType> cursorKernel = errorDiffusionKernel.createLocalizableCursor();
 		
 		while( cursor.hasNext() )
@@ -172,7 +172,7 @@ public class FloydSteinbergDithering<T extends RealType<T>> implements OutputAlg
 		{
 			final Image<FloatType> kernel = factory.createImage( new int[] { 3, 3 } );
 			
-			final LocalizableByDimCursor<FloatType> cursor = kernel.createLocalizableByDimCursor();
+			final PositionableCursor<FloatType> cursor = kernel.createPositionableCursor();
 			
 			// For the 2d-case as well:
 			// |-  -  -|
@@ -239,7 +239,7 @@ public class FloydSteinbergDithering<T extends RealType<T>> implements OutputAlg
 				while ( cursor.hasNext() )
 				{
 					cursor.fwd();
-					if ( cursor.getRasterLocation( d ) != 1 )
+					if ( cursor.getIntPosition( d ) != 1 )
 						sumD += cursor.type().get(); 				
 				}
 				
@@ -248,7 +248,7 @@ public class FloydSteinbergDithering<T extends RealType<T>> implements OutputAlg
 				{
 					cursor.fwd();
 
-					if ( cursor.getRasterLocation( d ) != 1 )
+					if ( cursor.getIntPosition( d ) != 1 )
 						cursor.type().set( cursor.type().get() / sumD );
 				}
 			}

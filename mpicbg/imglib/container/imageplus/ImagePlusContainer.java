@@ -37,12 +37,12 @@ import mpicbg.imglib.container.Container3D;
 import mpicbg.imglib.container.DirectAccessContainerImpl;
 import mpicbg.imglib.container.basictypecontainer.array.ArrayDataAccess;
 import mpicbg.imglib.cursor.Cursor;
-import mpicbg.imglib.cursor.LocalizableByDimCursor;
+import mpicbg.imglib.cursor.PositionableCursor;
 import mpicbg.imglib.cursor.LocalizableCursor;
 import mpicbg.imglib.cursor.LocalizablePlaneCursor;
 import mpicbg.imglib.cursor.imageplus.ImagePlusCursor;
-import mpicbg.imglib.cursor.imageplus.ImagePlusLocalizableByDimCursor;
-import mpicbg.imglib.cursor.imageplus.ImagePlusLocalizableByDimOutOfBoundsCursor;
+import mpicbg.imglib.cursor.imageplus.ImagePlusPositionableCursor;
+import mpicbg.imglib.cursor.imageplus.ImagePlusPositionableOutOfBoundsCursor;
 import mpicbg.imglib.cursor.imageplus.ImagePlusLocalizableCursor;
 import mpicbg.imglib.cursor.imageplus.ImagePlusLocalizablePlaneCursor;
 import mpicbg.imglib.exception.ImgLibException;
@@ -149,15 +149,15 @@ public class ImagePlusContainer<T extends Type<T>, A extends ArrayDataAccess<A>>
 	}
 
 	@Override
-	public LocalizableByDimCursor<T> createLocalizableByDimCursor( final Image<T> image ) 
+	public PositionableCursor<T> createPositionableCursor( final Image<T> image ) 
 	{
-		return new ImagePlusLocalizableByDimCursor<T>( this, image, linkedType.duplicateTypeOnSameDirectAccessContainer() );
+		return new ImagePlusPositionableCursor<T>( this, image, linkedType.duplicateTypeOnSameDirectAccessContainer() );
 	}
 
 	@Override
-	public LocalizableByDimCursor<T> createLocalizableByDimCursor( final Image<T> image, OutOfBoundsStrategyFactory<T> outOfBoundsFactory ) 
+	public PositionableCursor<T> createPositionableCursor( final Image<T> image, OutOfBoundsStrategyFactory<T> outOfBoundsFactory ) 
 	{
-		return new ImagePlusLocalizableByDimOutOfBoundsCursor<T>( this, image, linkedType.duplicateTypeOnSameDirectAccessContainer(), outOfBoundsFactory );
+		return new ImagePlusPositionableOutOfBoundsCursor<T>( this, image, linkedType.duplicateTypeOnSameDirectAccessContainer(), outOfBoundsFactory );
 	}
 	
 	public ImagePlusContainerFactory getFactory() { return factory; }

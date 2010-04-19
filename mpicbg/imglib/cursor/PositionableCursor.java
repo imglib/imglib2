@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2010, Stephan Saalfeld
+ * Copyright (c) 2009--2010, Stephan Preibisch & Stephan Saalfeld
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -24,26 +24,17 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
+ *
+ * @author Stephan Preibisch & Stephan Saalfeld
  */
-package mpicbg.imglib.cursor.shapelist;
+package mpicbg.imglib.cursor;
 
-import mpicbg.imglib.container.shapelist.ShapeList;
-import mpicbg.imglib.image.Image;
+import mpicbg.imglib.cursor.special.LocalNeighborhoodCursor;
+import mpicbg.imglib.cursor.special.RegionOfInterestCursor;
 import mpicbg.imglib.type.Type;
 
-public class ShapeListCachedLocalizableByDimCursor< T extends Type< T > > extends ShapeListLocalizableByDimCursor< T >
+public interface PositionableCursor<T extends Type<T>> extends LocalizableCursor<T>, RasterPositionable
 {
-	final ShapeListCache<T> cache;
-	
-	public ShapeListCachedLocalizableByDimCursor( final ShapeList< T > container, final Image< T > image, final ShapeListCache<T> cache ) 
-	{
-		super( container, image );
-		this.cache = cache;
-	}
-	
-	@Override
-	public T type()
-	{
-		return cache.lookUp( position );
-	}
+	public LocalNeighborhoodCursor<T> createLocalNeighborhoodCursor();	
+	public RegionOfInterestCursor<T> createRegionOfInterestCursor( final int[] offset, final int[] size );	
 }

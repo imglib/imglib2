@@ -126,38 +126,29 @@ public class ArrayLocalizableCursor<T extends Type<T>> extends ArrayCursor<T> im
 	}
 	
 	@Override
-	public float getFloatLocation( final int d )
+	public void localize( long[] position )
+	{
+		for ( int d = 0; d < numDimensions; d++ )
+			position[ d ] = this.position[ d ];
+	}
+	
+	@Override
+	public float getFloatPosition( final int d )
 	{
 		return position[ d ];
 	}
 	
 	@Override
-	public double getDoubleLocation( final int d )
+	public double getDoublePosition( final int d )
 	{
 		return position[ d ];
 	}
 	
 	@Override
-	public float[] getFloatLocation()
-	{
-		final float[] location = new float[ position.length ];
-		localize( location );
-		return location;
-	}
+	public int getIntPosition( final int dim ){ return position[ dim ]; }
 	
 	@Override
-	public double[] getDoubleLocation()
-	{
-		final double[] location = new double[ position.length ];
-		localize( location );
-		return location;
-	}
-	
-	@Override
-	public int[] getRasterLocation(){ return position.clone(); }
-	
-	@Override
-	public int getRasterLocation( final int dim ){ return position[ dim ]; }
+	public long getLongPosition( final int dim ){ return position[ dim ]; }
 	
 	@Override
 	public String getLocationAsString()

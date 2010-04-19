@@ -31,11 +31,11 @@ package mpicbg.imglib.container.dynamic;
 
 import mpicbg.imglib.container.DirectAccessContainerImpl;
 import mpicbg.imglib.container.array.Array;
-import mpicbg.imglib.cursor.LocalizableByDimCursor;
+import mpicbg.imglib.cursor.PositionableCursor;
 import mpicbg.imglib.cursor.LocalizablePlaneCursor;
 import mpicbg.imglib.cursor.dynamic.DynamicCursor;
-import mpicbg.imglib.cursor.dynamic.DynamicLocalizableByDimCursor;
-import mpicbg.imglib.cursor.dynamic.DynamicLocalizableByDimOutOfBoundsCursor;
+import mpicbg.imglib.cursor.dynamic.DynamicPositionableCursor;
+import mpicbg.imglib.cursor.dynamic.DynamicPositionableOutOfBoundsCursor;
 import mpicbg.imglib.cursor.dynamic.DynamicLocalizableCursor;
 import mpicbg.imglib.cursor.dynamic.DynamicLocalizablePlaneCursor;
 import mpicbg.imglib.image.Image;
@@ -90,17 +90,17 @@ public abstract class DynamicContainer<T extends Type<T>, A extends DynamicConta
 	}
 
 	@Override
-	public LocalizableByDimCursor<T> createLocalizableByDimCursor( final Image<T> image )
+	public PositionableCursor<T> createPositionableCursor( final Image<T> image )
 	{
 		// create a Cursor using a Type that is linked to the container
-		return new DynamicLocalizableByDimCursor<T>( this, image, linkedType.duplicateTypeOnSameDirectAccessContainer() );
+		return new DynamicPositionableCursor<T>( this, image, linkedType.duplicateTypeOnSameDirectAccessContainer() );
 	}
 
 	@Override
-	public LocalizableByDimCursor<T> createLocalizableByDimCursor( final Image<T> image, final OutOfBoundsStrategyFactory<T> outOfBoundsFactory )
+	public PositionableCursor<T> createPositionableCursor( final Image<T> image, final OutOfBoundsStrategyFactory<T> outOfBoundsFactory )
 	{
 		// create a Cursor using a Type that is linked to the container
-		return new DynamicLocalizableByDimOutOfBoundsCursor<T>( this, image, linkedType.duplicateTypeOnSameDirectAccessContainer(), outOfBoundsFactory );
+		return new DynamicPositionableOutOfBoundsCursor<T>( this, image, linkedType.duplicateTypeOnSameDirectAccessContainer(), outOfBoundsFactory );
 	}
 
 	@Override

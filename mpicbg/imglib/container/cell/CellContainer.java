@@ -35,11 +35,11 @@ import mpicbg.imglib.container.ContainerFactory;
 import mpicbg.imglib.container.DirectAccessContainerImpl;
 import mpicbg.imglib.container.basictypecontainer.array.ArrayDataAccess;
 import mpicbg.imglib.cursor.Cursor;
-import mpicbg.imglib.cursor.array.ArrayLocalizableByDimCursor;
+import mpicbg.imglib.cursor.array.ArrayPositionableCursor;
 import mpicbg.imglib.cursor.array.ArrayLocalizableCursor;
 import mpicbg.imglib.cursor.cell.CellCursor;
-import mpicbg.imglib.cursor.cell.CellLocalizableByDimCursor;
-import mpicbg.imglib.cursor.cell.CellLocalizableByDimOutOfBoundsCursor;
+import mpicbg.imglib.cursor.cell.CellPositionableCursor;
+import mpicbg.imglib.cursor.cell.CellPositionableOutOfBoundsCursor;
 import mpicbg.imglib.cursor.cell.CellLocalizableCursor;
 import mpicbg.imglib.cursor.cell.CellLocalizablePlaneCursor;
 import mpicbg.imglib.image.Image;
@@ -90,11 +90,11 @@ public class CellContainer<T extends Type<T>, A extends ArrayDataAccess<A>> exte
 				finalSize[ d ] = cellSize[ d ];
 				
 				// the last cell in each dimension might have another size
-				if ( cursor.getRasterLocation( d ) == numCellsDim[ d ] - 1 )
+				if ( cursor.getIntPosition( d ) == numCellsDim[ d ] - 1 )
 					if ( dim[ d ] % cellSize[ d ] != 0 )
 						finalSize[ d ] = dim[ d ] % cellSize[ d ];
 				
-				finalOffset[ d ] = cursor.getRasterLocation( d ) * cellSize[ d ];
+				finalOffset[ d ] = cursor.getIntPosition( d ) * cellSize[ d ];
 			}			
 
 			data.add( createCellInstance( creator, c, finalSize, finalOffset, entitiesPerPixel ) );			
@@ -114,14 +114,14 @@ public class CellContainer<T extends Type<T>, A extends ArrayDataAccess<A>> exte
 	}
 
 	public Cell<T, A> getCell( final int cellId ) { return data.get( cellId ); }
-	public int getCellIndex( final ArrayLocalizableByDimCursor<FakeType> cursor, final int[] cellPos )
+	public int getCellIndex( final ArrayPositionableCursor<FakeType> cursor, final int[] cellPos )
 	{
 		cursor.setPosition( cellPos );
 		return cursor.getArrayIndex();
 	}
 
 	// many cursors using the same cursor for getting their position
-	public int getCellIndex( final ArrayLocalizableByDimCursor<FakeType> cursor, final int cellPos, final int dim )
+	public int getCellIndex( final ArrayPositionableCursor<FakeType> cursor, final int cellPos, final int dim )
 	{
 		cursor.setPosition( cellPos, dim );		
 		return cursor.getArrayIndex();
@@ -145,7 +145,7 @@ public class CellContainer<T extends Type<T>, A extends ArrayDataAccess<A>> exte
 
 	public int getCellPosition( final int position, final int dim ) { return position / cellSize[ dim ]; }
 	
-	public int getCellIndexFromImageCoordinates( final ArrayLocalizableByDimCursor<FakeType> cursor, final int[] position )
+	public int getCellIndexFromImageCoordinates( final ArrayPositionableCursor<FakeType> cursor, final int[] position )
 	{		
 		return getCellIndex( cursor, getCellPosition( position ) );
 	}
@@ -195,18 +195,18 @@ public class CellContainer<T extends Type<T>, A extends ArrayDataAccess<A>> exte
 	}	
 	
 	@Override
-	public CellLocalizableByDimCursor<T> createLocalizableByDimCursor( final Image<T> image ) 
+	public CellPositionableCursor<T> createPositionableCursor( final Image<T> image ) 
 	{
 		// create a Cursor using a Type that is linked to the container
-		CellLocalizableByDimCursor<T> c = new CellLocalizableByDimCursor<T>( this, image, linkedType.duplicateTypeOnSameDirectAccessContainer() );
+		CellPositionableCursor<T> c = new CellPositionableCursor<T>( this, image, linkedType.duplicateTypeOnSameDirectAccessContainer() );
 		return c;
 	}	
 	
 	@Override
-	public CellLocalizableByDimCursor<T> createLocalizableByDimCursor( final Image<T> image, final OutOfBoundsStrategyFactory<T> outOfBoundsFactory ) 
+	public CellPositionableCursor<T> createPositionableCursor( final Image<T> image, final OutOfBoundsStrategyFactory<T> outOfBoundsFactory ) 
 	{ 
 		// create a Cursor using a Type that is linked to the container
-		CellLocalizableByDimOutOfBoundsCursor<T> c = new CellLocalizableByDimOutOfBoundsCursor<T>( this, image, linkedType.duplicateTypeOnSameDirectAccessContainer(), outOfBoundsFactory );
+		CellPositionableOutOfBoundsCursor<T> c = new CellPositionableOutOfBoundsCursor<T>( this, image, linkedType.duplicateTypeOnSameDirectAccessContainer(), outOfBoundsFactory );
 		return c;
 	}	
 }

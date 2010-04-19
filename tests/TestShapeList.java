@@ -11,7 +11,7 @@ import mpicbg.imglib.container.array.ArrayContainerFactory;
 import mpicbg.imglib.container.cell.CellContainerFactory;
 import mpicbg.imglib.container.shapelist.ShapeList;
 import mpicbg.imglib.container.shapelist.ShapeListCached;
-import mpicbg.imglib.cursor.LocalizableByDimCursor;
+import mpicbg.imglib.cursor.PositionableCursor;
 import mpicbg.imglib.cursor.LocalizableCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.ImageFactory;
@@ -66,7 +66,7 @@ public class TestShapeList
 		final ArrayContainerFactory arrayFactory = new ArrayContainerFactory();
 		final Image< ByteType > arrayImage = new ImageFactory< ByteType >( new ByteType(), arrayFactory ).createImage( new int[]{ 200, 200, depth }, "ArrayContainer" );
 		final LocalizableCursor< ByteType > cArray = arrayImage.createLocalizableCursor();
-		final LocalizableByDimCursor< ByteType > cShapeList = shapeListImage.createLocalizableByDimCursor();
+		final PositionableCursor< ByteType > cShapeList = shapeListImage.createPositionableCursor();
 		
 		while ( cArray.hasNext() )
 		{

@@ -2,7 +2,7 @@ package mpicbg.imglib.algorithm.transformation;
 
 import mpicbg.imglib.algorithm.Algorithm;
 import mpicbg.imglib.algorithm.Benchmark;
-import mpicbg.imglib.cursor.LocalizableByDimCursor;
+import mpicbg.imglib.cursor.PositionableCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.type.numeric.RealType;
 
@@ -13,7 +13,7 @@ implements Algorithm, Benchmark
 	private String errorMsg;
 	private final Image<T> image;
 	private Image<S> voteSpace;
-	private LocalizableByDimCursor<S> voteCursor;	
+	private PositionableCursor<S> voteCursor;	
 	
 	protected HoughTransform(final Image<T> inputImage, final int[] voteSize)
 	{
@@ -29,7 +29,7 @@ implements Algorithm, Benchmark
 		{
 			if (voteCursor == null)
 			{
-				voteCursor = voteSpace.createLocalizableByDimCursor();
+				voteCursor = voteSpace.createPositionableCursor();
 			}
 			voteCursor.setPosition(loc);
 			

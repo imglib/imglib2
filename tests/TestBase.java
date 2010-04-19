@@ -4,7 +4,7 @@ import java.util.Arrays;
 
 import mpicbg.imglib.container.array.ArrayContainerFactory;
 
-import mpicbg.imglib.cursor.LocalizableByDimCursor;
+import mpicbg.imglib.cursor.PositionableCursor;
 import mpicbg.imglib.cursor.LocalizableCursor;
 
 import mpicbg.imglib.image.Image;
@@ -145,7 +145,7 @@ public class TestBase {
 	 * Convenience helper to access single pixels
 	 */
 	protected<T extends RealType<T>> float get( Image<T> image, int[] pos ) {
-		LocalizableByDimCursor<T> cursor = image.createLocalizableByDimCursor();
+		PositionableCursor<T> cursor = image.createPositionableCursor();
 		cursor.setPosition( pos );
 		float result = cursor.type().getRealFloat();
 		cursor.close();

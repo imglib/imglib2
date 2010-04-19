@@ -30,14 +30,14 @@
 package mpicbg.imglib.outofbounds;
 
 import mpicbg.imglib.algorithm.math.MathLib;
-import mpicbg.imglib.cursor.LocalizableByDimCursor;
+import mpicbg.imglib.cursor.PositionableCursor;
 import mpicbg.imglib.cursor.LocalizableCursor;
 import mpicbg.imglib.type.numeric.RealType;
 
 public class OutOfBoundsStrategyMirrorExpWindowing<T extends RealType<T>> extends OutOfBoundsStrategy<T>
 {
 	final LocalizableCursor<T> parentCursor;
-	final LocalizableByDimCursor<T> mirrorCursor;
+	final PositionableCursor<T> mirrorCursor;
 	final T type, mirrorType;
 	final int numDimensions;
 	final int[] dimension, position, mirroredPosition, currentDirection, tmp;
@@ -50,7 +50,7 @@ public class OutOfBoundsStrategyMirrorExpWindowing<T extends RealType<T>> extend
 		super( parentCursor );
 		
 		this.parentCursor = parentCursor;
-		this.mirrorCursor = parentCursor.getImage().createLocalizableByDimCursor();
+		this.mirrorCursor = parentCursor.getImage().createPositionableCursor();
 		this.mirrorType = mirrorCursor.type();
 		this.type = mirrorType.createVariable();
 			
@@ -165,7 +165,7 @@ public class OutOfBoundsStrategyMirrorExpWindowing<T extends RealType<T>> extend
 	{
 		if ( currentDirection[ dim ] == 1 )
 		{
-			if ( mirrorCursor.getRasterLocation( dim ) + 1 == dimension[ dim ] )
+			if ( mirrorCursor.getIntPosition( dim ) + 1 == dimension[ dim ] )
 			{
 				mirrorCursor.bck( dim );
 				currentDirection[ dim ] = -1;				
@@ -177,7 +177,7 @@ public class OutOfBoundsStrategyMirrorExpWindowing<T extends RealType<T>> extend
 		}
 		else
 		{
-			if ( mirrorCursor.getRasterLocation( dim ) == 0 )
+			if ( mirrorCursor.getIntPosition( dim ) == 0 )
 			{
 				currentDirection[ dim ] = 1;
 				mirrorCursor.fwd( dim );
@@ -200,7 +200,7 @@ public class OutOfBoundsStrategyMirrorExpWindowing<T extends RealType<T>> extend
 		if ( currentDirection[ dim ] == 1 )
 		{
 			// so we have to move the mirror cursor back if we are not position 0
-			if ( mirrorCursor.getRasterLocation( dim ) == 0 )
+			if ( mirrorCursor.getIntPosition( dim ) == 0 )
 			{
 				// the mirror cursor is at position 0, so we have to go forward instead 
 				mirrorCursor.fwd( dim );
@@ -215,7 +215,7 @@ public class OutOfBoundsStrategyMirrorExpWindowing<T extends RealType<T>> extend
 		}
 		else
 		{
-			if ( mirrorCursor.getRasterLocation( dim ) + 1 == dimension[ dim ] )
+			if ( mirrorCursor.getIntPosition( dim ) + 1 == dimension[ dim ] )
 			{
 				mirrorCursor.bck( dim );				
 				currentDirection[ dim ] = 1;

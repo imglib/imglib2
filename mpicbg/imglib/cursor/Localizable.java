@@ -39,52 +39,38 @@ package mpicbg.imglib.cursor;
 public interface Localizable
 {
 	/**
-	 * Write the current location into the passed array.
+	 * Write the current position into the passed array.
 	 * 
 	 * @param location
 	 */
 	public void localize( float[] location );
 	
 	/**
-	 * Write the current location into the passed array.
+	 * Write the current position into the passed array.
 	 * 
 	 * @param location
 	 */
 	public void localize( double[] location );
 	
 	/**
-	 * Return a copy of the current location.
-	 * 
-	 * @return
-	 */
-	public float[] getFloatLocation();
-	
-	/**
-	 * Return a copy of the current location.
-	 * 
-	 * @return
-	 */
-	public double[] getDoubleLocation();
-	
-	/**
-	 * Return the current location in a given dimension.
+	 * Return the current position in a given dimension.
 	 * 
 	 * @param dim
 	 * @return
 	 */
-	public float getFloatLocation( int dim );
+	public float getFloatPosition( int dim );
 	
 	/**
-	 * Return the current location in a given dimension.
+	 * Return the current position in a given dimension.
 	 * 
 	 * @param dim
 	 * @return
 	 */
-	public double getDoubleLocation( int dim );
+	public double getDoublePosition( int dim );
 	
 	/**
 	 * Create a human-readable {@link String} representation of the current
-	 * location.
+	 * position.
 	 * 
 	 * @return
 	 */

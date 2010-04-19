@@ -173,6 +173,80 @@ public class ImagePlusLocalizablePlaneCursor<T extends Type<T>> extends ImagePlu
 		
 		position[ planeDimA ] = -1;
 	}
+	
+	@Override
+	/* TODO do not copy the whole body of the int version but, instead, separate things */
+	public void reset( final int planeDimA, final int planeDimB, final long[] dimensionPositions )
+	{
+		this.planeDimA = planeDimA;
+		this.planeDimB = planeDimB;
+
+		// store the current position
+    	final int[] dimPos = new int[ dimensionPositions.length ];
+    	for ( int i = 0; i < dimensionPositions.length; ++i )
+    		dimPos[ i ] = ( int )dimensionPositions[ i ];
+
+		dimPos[ planeDimA ] = 0;
+		dimPos[ planeDimB ] = 0;
+		setPosition( dimPos );				
+    	
+    	if ( planeDimA == 0 )
+    	{
+    		incPlaneA = 1;
+    		planeSizeA = width;
+    	}
+    	else if ( planeDimA == 1 )
+    	{
+    		incPlaneA = width;
+    		planeSizeA = height;
+    	}
+    	else if ( planeDimA == 2 )
+    	{
+    		incPlaneA = -1;
+    		planeSizeA = depth;
+    	}
+    	else
+    	{
+    		throw new RuntimeException("ImagePlusLocalizablePlaneCursor cannot have only 3 dimensions, cannot handle dimension index of planeDimA " + planeDimA );
+    	}
+
+    	if ( planeDimB == 0 )
+    	{
+    		incPlaneB = 1;
+    		planeSizeB = width;
+    	}
+    	else if ( planeDimB == 1 )
+    	{
+    		incPlaneB = width;
+    		planeSizeB = height;
+    	}
+    	else if ( planeDimB == 2 )
+    	{
+    		incPlaneB = -1;
+    		planeSizeB = depth;
+    	}
+    	else
+    	{
+    		throw new RuntimeException("ImagePlusLocalizablePlaneCursor cannot have only 3 dimensions, cannot handle dimension index planeDimB " + planeDimB );
+    	}    	
+		
+		maxPos = planeSizeA * planeSizeB;
+		pos = 0;
+		
+		isClosed = false;
+
+		if ( incPlaneA == -1 )
+		{
+			--slice;
+		}
+		else
+		{
+			type.decIndex( incPlaneA );
+			type.updateContainer( this );				
+		}
+		
+		position[ planeDimA ] = -1;
+	}
 
 	@Override
 	public void reset( final int planeDimA, final int planeDimB )
@@ -200,10 +274,7 @@ public class ImagePlusLocalizablePlaneCursor<T extends Type<T>> extends ImagePlu
 	}
 	
 	@Override
-	public int[] getRasterLocation(){ return position.clone(); }
-	
-	@Override
-	public int getRasterLocation( final int dim ){ return position[ dim ]; }
+	public int getIntPosition( final int dim ){ return position[ dim ]; }
 	
 	protected void setPosition( final int[] position )
 	{

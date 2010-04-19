@@ -34,7 +34,7 @@ import mpicbg.imglib.cursor.LocalizablePlaneCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.type.Type;
 
-public class ShapeListLocalizablePlaneCursor<T extends Type<T>> extends ShapeListLocalizableByDimCursor<T> implements LocalizablePlaneCursor<T>
+public class ShapeListLocalizablePlaneCursor<T extends Type<T>> extends ShapeListPositionableCursor<T> implements LocalizablePlaneCursor<T>
 {
 	protected int planeDimA, planeDimB;
 	
@@ -84,6 +84,18 @@ public class ShapeListLocalizablePlaneCursor<T extends Type<T>> extends ShapeLis
 	}
 
 	@Override
+	public void reset( final int planeDimA, final int planeDimB, final long[] dimensionPositions )
+	{
+		this.planeDimA = planeDimA;
+		this.planeDimB = planeDimB;
+		
+		setPosition( dimensionPositions );
+		position[ planeDimA ] = -1;
+		position[ planeDimA ] = 0;				
+	}
+
+	
+	@Override
 	public void reset( final int planeDimA, final int planeDimB )
 	{
 		if ( dimensions == null )
@@ -109,10 +121,7 @@ public class ShapeListLocalizablePlaneCursor<T extends Type<T>> extends ShapeLis
 	}
 	
 	@Override
-	public int[] getRasterLocation(){ return position.clone(); }
-	
-	@Override
-	public int getRasterLocation( final int dim ){ return position[ dim ]; }
+	public int getIntPosition( final int dim ){ return position[ dim ]; }
 	
 	@Override
 	public void setPosition( final int[] position )

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2009--2010, Stephan Preibisch & Stephan Saalfeld
+ * Copyright (c) 2009--2010, Stephan Preibisch
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -25,46 +25,33 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  *
- * @author Stephan Preibisch & Stephan Saalfeld
+ * @author Stephan Preibisch
  */
-package mpicbg.imglib.cursor.array;
+package mpicbg.imglib.cursor.dynamic;
 
-import mpicbg.imglib.container.array.Array;
-import mpicbg.imglib.container.basictypecontainer.FakeAccess;
-import mpicbg.imglib.container.basictypecontainer.array.FakeArray;
-import mpicbg.imglib.cursor.LocalizableByDimCursor;
-//import mpicbg.imglib.cursor.link.CursorLink;
-//import mpicbg.imglib.cursor.link.NullLink;
+import mpicbg.imglib.container.dynamic.DynamicContainer;
+import mpicbg.imglib.cursor.PositionableCursor;
 import mpicbg.imglib.cursor.RasterLocalizable;
 import mpicbg.imglib.cursor.special.LocalNeighborhoodCursor;
 import mpicbg.imglib.cursor.special.LocalNeighborhoodCursorFactory;
 import mpicbg.imglib.cursor.special.RegionOfInterestCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.type.Type;
-import mpicbg.imglib.type.label.FakeType;
 
-public class ArrayLocalizableByDimCursor<T extends Type<T>> extends ArrayLocalizableCursor<T> implements LocalizableByDimCursor<T>
+public class DynamicPositionableCursor<T extends Type<T>> extends DynamicLocalizableCursor<T> implements PositionableCursor<T>
 {
-	//final CursorLink link;
 	final protected int[] step;
 	final int tmp[];
 	
 	int numNeighborhoodCursors = 0;
 	
-	public ArrayLocalizableByDimCursor( final Array<T,?> container, final Image<T> image, final T type ) 
+	public DynamicPositionableCursor( final DynamicContainer<T,?> container, final Image<T> image, final T type ) 
 	{
 		super( container, image, type );
 		
-		step = Array.createAllocationSteps( container.getDimensions() );
+		step = container.getSteps();
 		tmp = new int[ numDimensions ];
-		//link = new NullLink();
 	}	
-	
-	public static ArrayLocalizableByDimCursor<FakeType> createLinearByDimCursor( final int[] dim )
-	{
-		final Array<FakeType, FakeAccess> array = new Array<FakeType, FakeAccess>( null, new FakeArray(), dim, 1 );
-		return new ArrayLocalizableByDimCursor<FakeType>( array, null, new FakeType() );
-	}
 	
 	@Override
 	public synchronized LocalNeighborhoodCursor<T> createLocalNeighborhoodCursor()
@@ -99,40 +86,55 @@ public class ArrayLocalizableByDimCursor<T extends Type<T>> extends ArrayLocaliz
 	@Override
 	public void fwd( final int dim )
 	{
-		type.incIndex( step[ dim ] );
+		internalIndex += step[ dim ];
+		accessor.updateIndex( internalIndex );
+
 		++position[ dim ];	
-		//link.fwd(dim);
 	}
 
 	@Override
 	public void move( final int steps, final int dim )
 	{
-		type.incIndex( step[ dim ] * steps );
+		internalIndex += step[ dim ] * steps;
+		accessor.updateIndex( internalIndex );
+
 		position[ dim ] += steps;	
-		//link.move(steps, dim);
 	}
 	
 	@Override
-	public void bck( final int dim )
+	/* TODO change position to long accuracy */
+	public void move( final long distance, final int dim )
 	{
-		type.decIndex( step[ dim ] );
-		--position[ dim ];
-		//link.bck(dim);
-	}
-		
-	@Override
-	public void moveRel( final int[] vector )
-	{
-		for ( int d = 0; d < numDimensions; ++d )
-			move( vector[ d ], d );
+		move( ( int )distance, dim );
 	}
 
+	@Override
+	public void bck( final int dim )
+	{
+		internalIndex -= step[ dim ];
+		accessor.updateIndex( internalIndex );
+ 
+		--position[ dim ];
+	}
+		
 	@Override
 	public void moveTo( final int[] position )
 	{		
 		for ( int d = 0; d < numDimensions; ++d )
 		{
-			final int dist = position[ d ] - getRasterLocation( d );
+			final int dist = position[ d ] - getIntPosition( d );
+			
+			if ( dist != 0 )				
+				move( dist, d );
+		}
+	}
+
+	@Override
+	public void moveTo( final long[] position )
+	{
+		for ( int d = 0; d < numDimensions; ++d )
+		{
+			final long dist = position[ d ] - getIntPosition( d );
 			
 			if ( dist != 0 )				
 				move( dist, d );
@@ -145,7 +147,7 @@ public class ArrayLocalizableByDimCursor<T extends Type<T>> extends ArrayLocaliz
 		localizable.localize( tmp );
 		moveTo( tmp );
 	}
-
+	
 	@Override
 	public void setPosition( final RasterLocalizable localizable )
 	{
@@ -156,19 +158,37 @@ public class ArrayLocalizableByDimCursor<T extends Type<T>> extends ArrayLocaliz
 	@Override
 	public void setPosition( final int[] position )
 	{
-		type.updateIndex( container.getPos( position ) );
+		internalIndex = container.getPos( position );
+		accessor.updateIndex( internalIndex );
 		
 		for ( int d = 0; d < numDimensions; ++d )
-			this.position[ d ] = position[ d ];
+			this.position[ d ] = position[ d ];		
+	}
+
+	@Override
+	/* TODO change position to long accuracy */
+	public void setPosition( final long[] position )
+	{
+		for ( int d = 0; d < numDimensions; ++d )
+			this.position[ d ] = ( int )position[ d ];
 		
-		//link.setPosition( position );
+		internalIndex = container.getPos( this.position );
+		accessor.updateIndex( internalIndex );
 	}
 
 	@Override
 	public void setPosition( final int position, final int dim )
 	{
 		this.position[ dim ] = position;
-		type.updateIndex( container.getPos( this.position ) );
-		//link.setPosition( position, dim );
+
+		internalIndex = container.getPos( this.position );
+		accessor.updateIndex( internalIndex );
+	}
+
+	@Override
+	/* TODO change position to long accuracy */
+	public void setPosition( final long position, final int dim )
+	{
+		setPosition( ( int )position, dim );
 	}
 }

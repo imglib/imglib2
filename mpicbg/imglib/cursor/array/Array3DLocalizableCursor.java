@@ -126,10 +126,7 @@ public class Array3DLocalizableCursor<T extends Type<T>> extends ArrayLocalizabl
 	public Array3D<T,?> getStorageContainer(){ return container; }
 
 	@Override
-	public int[] getRasterLocation(){ return new int[]{x, y, z}; }
-	
-	@Override
-	public int getRasterLocation( final int dim )
+	public int getIntPosition( final int dim )
 	{
 		if ( dim == 0 )
 			return x;

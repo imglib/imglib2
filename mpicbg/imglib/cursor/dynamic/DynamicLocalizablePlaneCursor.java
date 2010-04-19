@@ -105,6 +105,50 @@ public class DynamicLocalizablePlaneCursor<T extends Type<T>> extends DynamicLoc
 		
 		maxI = container.getPos( dimPos );		
 	}
+	
+	@Override
+	/* TODO change position to long accuracy */
+	public void reset( final int planeDimA, final int planeDimB, final long[] dimensionPositions )
+	{
+		this.planeDimA = planeDimA;
+		this.planeDimB = planeDimB;
+		
+		this.planeSizeA = container.getDimension( planeDimA );
+		this.planeSizeB = container.getDimension( planeDimB );
+		
+		final int[] steps = container.getSteps();
+
+		// store the current position
+    	final int[] dimPos = new int[ dimensionPositions.length ];
+    	for ( int i = 0; i < dimensionPositions.length; ++i )
+    		dimPos[ i ] = ( int )dimensionPositions[ i ];
+		
+		incPlaneA = steps[ planeDimA ];
+		dimPos[ planeDimA ] = 0;
+		
+		if ( planeDimB > -1 && planeDimB < steps.length )
+		{
+			incPlaneB = steps[ planeDimB ];
+			dimPos[ planeDimB ] = 0;
+		}
+		else
+		{
+			incPlaneB = 0;
+		}
+
+		setPosition( dimPos );		
+		isClosed = false;
+		
+		type.updateContainer( this );				
+		internalIndex -= incPlaneA;					
+		position[ planeDimA ] = -1;
+		
+		dimPos[ planeDimA ] = dimensions[ planeDimA ] - 1;		
+		if ( planeDimB > -1 && planeDimB < steps.length )
+			dimPos[ planeDimB ] = dimensions[ planeDimB ] - 1;
+		
+		maxI = container.getPos( dimPos );
+	}
 
 	@Override
 	public void reset( final int planeDimA, final int planeDimB )
@@ -132,10 +176,7 @@ public class DynamicLocalizablePlaneCursor<T extends Type<T>> extends DynamicLoc
 	}
 	
 	@Override
-	public int[] getRasterLocation(){ return position.clone(); }
-	
-	@Override
-	public int getRasterLocation( final int dim ){ return position[ dim ]; }
+	public int getIntPosition( final int dim ){ return position[ dim ]; }
 	
 	protected void setPosition( final int[] position )
 	{
@@ -145,5 +186,4 @@ public class DynamicLocalizablePlaneCursor<T extends Type<T>> extends DynamicLoc
 		for ( int d = 0; d < numDimensions; d++ )
 			this.position[ d ] = position[ d ];
 	}
-	
 }

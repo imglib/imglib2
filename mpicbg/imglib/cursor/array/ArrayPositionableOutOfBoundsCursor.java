@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2009--2010, Stephan Preibisch
+ * Copyright (c) 2009--2010, Stephan Preibisch & Stephan Saalfeld
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -25,25 +25,25 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  *
- * @author Stephan Preibisch
+ * @author Stephan Preibisch & Stephan Saalfeld
  */
-package mpicbg.imglib.cursor.dynamic;
+package mpicbg.imglib.cursor.array;
 
-import mpicbg.imglib.container.dynamic.DynamicContainer;
-import mpicbg.imglib.cursor.LocalizableByDimCursor;
+import mpicbg.imglib.container.array.Array;
+import mpicbg.imglib.cursor.PositionableCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategy;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
 import mpicbg.imglib.type.Type;
 
-public class DynamicLocalizableByDimOutOfBoundsCursor<T extends Type<T>> extends DynamicLocalizableByDimCursor<T> implements LocalizableByDimCursor<T>
+public class ArrayPositionableOutOfBoundsCursor<T extends Type<T>> extends ArrayPositionableCursor<T> implements PositionableCursor<T>
 {
 	final OutOfBoundsStrategyFactory<T> outOfBoundsStrategyFactory;
 	final OutOfBoundsStrategy<T> outOfBoundsStrategy;
 	
 	boolean isOutOfBounds = false;
 	
-	public DynamicLocalizableByDimOutOfBoundsCursor( final DynamicContainer<T,?> container, final Image<T> image, final T type, final OutOfBoundsStrategyFactory<T> outOfBoundsStrategyFactory ) 
+	public ArrayPositionableOutOfBoundsCursor( final Array<T,?> container, final Image<T> image, final T type, final OutOfBoundsStrategyFactory<T> outOfBoundsStrategyFactory ) 
 	{
 		super( container, image, type );
 		
@@ -56,7 +56,7 @@ public class DynamicLocalizableByDimOutOfBoundsCursor<T extends Type<T>> extends
 	@Override
 	public boolean hasNext()
 	{
-		if ( !isOutOfBounds && internalIndex < container.getNumPixels() - 1 )
+		if ( !isOutOfBounds && type.getIndex() < sizeMinus1 )
 			return true;
 		else
 			return false;
@@ -67,21 +67,17 @@ public class DynamicLocalizableByDimOutOfBoundsCursor<T extends Type<T>> extends
 	{
 		if ( outOfBoundsStrategy == null )
 			return;
-
-		isOutOfBounds = false;		
 		
-		// in this way he returns the value of index 0 even if not moved at all
-		type.updateIndex( 0 );
-		internalIndex = 0;
-		type.updateContainer( this );
-		accessor.updateIndex( internalIndex );
-		internalIndex = -1;
 		isClosed = false;
+		isOutOfBounds = false;
+		type.updateIndex( -1 );
 		
 		position[ 0 ] = -1;
 		
 		for ( int d = 1; d < numDimensions; d++ )
-			position[ d ] = 0;		
+			position[ d ] = 0;
+		
+		type.updateContainer( this );
 	}
 	
 	@Override
@@ -98,8 +94,7 @@ public class DynamicLocalizableByDimOutOfBoundsCursor<T extends Type<T>> extends
 	{
 		if ( !isOutOfBounds )
 		{
-			++internalIndex;
-			accessor.updateIndex( internalIndex );
+			type.incIndex();
 			
 			for ( int d = 0; d < numDimensions; d++ )
 			{
@@ -110,6 +105,7 @@ public class DynamicLocalizableByDimOutOfBoundsCursor<T extends Type<T>> extends
 					for ( int e = 0; e < d; e++ )
 						position[ e ] = 0;
 
+					//link.fwd();
 					return;
 				}
 			}
@@ -140,8 +136,7 @@ public class DynamicLocalizableByDimOutOfBoundsCursor<T extends Type<T>> extends
 			if ( position[ dim ] < dimensions[ dim ] )
 			{
 				// moved within the image
-				internalIndex += step[ dim ];
-				accessor.updateIndex( internalIndex );
+				type.incIndex( step[ dim ] );
 			}
 			else
 			{
@@ -173,9 +168,10 @@ public class DynamicLocalizableByDimOutOfBoundsCursor<T extends Type<T>> extends
 				{
 					// we re-entered the image
 					// new location is inside the image					
+					type.updateContainer( this );
+					
 					// get the offset inside the image
-					internalIndex = container.getPos( position );
-					accessor.updateIndex( internalIndex );
+					type.updateIndex( container.getPos( position ) );
 				}
 				else
 				{
@@ -192,8 +188,8 @@ public class DynamicLocalizableByDimOutOfBoundsCursor<T extends Type<T>> extends
 			if ( position[ dim ] >= 0 && position[ dim ] < dimensions[ dim ] )
 			{
 				// moved within the image
-				internalIndex += step[ dim ] * steps;
-				accessor.updateIndex( internalIndex );
+				//type.i += step[ dim ] * steps;
+				type.incIndex( step[ dim ] * steps );
 			}
 			else
 			{
@@ -202,12 +198,13 @@ public class DynamicLocalizableByDimOutOfBoundsCursor<T extends Type<T>> extends
 				outOfBoundsStrategy.initOutOfBOunds(  );
 			}
 		}
+		//link.move( steps, dim );
 	}
 	
 	@Override
 	public void bck( final int dim )
 	{
-		--position[ dim ];	
+		position[ dim ]--;	
 
 		if ( isOutOfBounds )
 		{
@@ -222,8 +219,7 @@ public class DynamicLocalizableByDimOutOfBoundsCursor<T extends Type<T>> extends
 			if ( position[ dim ] > -1 )
 			{
 				// moved within the image
-				internalIndex -= step[ dim ];
-				accessor.updateIndex( internalIndex );
+				type.decIndex( step[ dim ] );
 			}
 			else
 			{
@@ -265,12 +261,15 @@ public class DynamicLocalizableByDimOutOfBoundsCursor<T extends Type<T>> extends
 		}
 		else
 		{
-			// new location is inside the image			
-			// we reenter the image with this setPosition() call
+			// new location is inside the image
+			
+			if ( wasOutOfBounds ) // we reenter the image with this setPosition() call
+				type.updateContainer( this );
+			
 			// get the offset inside the image
-			internalIndex = container.getPos( position );			
-			accessor.updateIndex( internalIndex );
+			type.updateIndex( container.getPos( position ) );			
 		}
+		//link.setPosition( position );
 	}
 
 	@Override
@@ -279,7 +278,7 @@ public class DynamicLocalizableByDimOutOfBoundsCursor<T extends Type<T>> extends
 		this.position[ dim ] = position;
 
 		// we are out of image bounds or in the initial starting position
-		if ( isOutOfBounds || internalIndex == -1 )
+		if ( isOutOfBounds || type.getIndex() == -1 )
 		{
 			// if just this dimensions moves inside does not necessarily mean that
 			// the other ones do as well, so we have to do a full check here
@@ -290,12 +289,13 @@ public class DynamicLocalizableByDimOutOfBoundsCursor<T extends Type<T>> extends
 			// cursor has left the image
 			isOutOfBounds = true;
 			outOfBoundsStrategy.initOutOfBOunds();
+			return;
 		}
 		else
 		{
 			// jumped around inside the image
-			internalIndex = container.getPos( this.position );
-			accessor.updateIndex( internalIndex );
+			type.updateIndex( container.getPos( this.position ) );
 		}		
+		//link.setPosition(position, dim);
 	}
 }

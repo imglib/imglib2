@@ -177,38 +177,28 @@ public class CellLocalizableCursor<T extends Type<T>> extends CellCursor<T> impl
 	public void localize( final int[] position )
 	{
 		for ( int d = 0; d < numDimensions; d++ )
+			position[ d ] = ( int )this.position[ d ];
+	}
+	
+	@Override
+	public void localize( final long[] position )
+	{
+		for ( int d = 0; d < numDimensions; d++ )
 			position[ d ] = this.position[ d ];
 	}
 	
 
 	@Override
-	public float[] getFloatLocation()
-	{
-		final float[] location = new float[ position.length ];
-		localize( location );
-		return location;
-	}
+	public float getFloatPosition( final int d ){ return position[ d ]; }
 	
 	@Override
-	public double[] getDoubleLocation()
-	{
-		final double[] location = new double[ position.length ];
-		localize( location );
-		return location;
-	}
-
-	@Override
-	public int[] getRasterLocation(){ return position.clone(); }
-
+	public double getDoublePosition( final int d ){ return position[ d ]; }
 	
 	@Override
-	public float getFloatLocation( final int d ){ return position[ d ]; }
+	public int getIntPosition( final int dim ){ return ( int )position[ dim ]; }	
 	
 	@Override
-	public double getDoubleLocation( final int d ){ return position[ d ]; }
-	
-	@Override
-	public int getRasterLocation( final int dim ){ return position[ dim ]; }	
+	public long getLongPosition( final int dim ){ return position[ dim ]; }	
 	
 	@Override
 	public String getLocationAsString()

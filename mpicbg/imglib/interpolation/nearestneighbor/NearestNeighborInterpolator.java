@@ -30,7 +30,7 @@
 package mpicbg.imglib.interpolation.nearestneighbor;
 
 import mpicbg.imglib.algorithm.math.MathLib;
-import mpicbg.imglib.cursor.LocalizableByDimCursor;
+import mpicbg.imglib.cursor.PositionableCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.interpolation.InterpolatorFactory;
 import mpicbg.imglib.interpolation.InterpolatorImpl;
@@ -39,13 +39,13 @@ import mpicbg.imglib.type.Type;
 
 public class NearestNeighborInterpolator<T extends Type<T>> extends InterpolatorImpl<T>
 {
-	final LocalizableByDimCursor<T> cursor;
+	final PositionableCursor<T> cursor;
 	
 	protected NearestNeighborInterpolator( final Image<T> img, final InterpolatorFactory<T> interpolatorFactory, final OutOfBoundsStrategyFactory<T> outOfBoundsStrategyFactory )
 	{
 		super(img, interpolatorFactory, outOfBoundsStrategyFactory);
 		
-		cursor = img.createLocalizableByDimCursor( outOfBoundsStrategyFactory );
+		cursor = img.createPositionableCursor( outOfBoundsStrategyFactory );
 		
 		moveTo( position );		
 	}
@@ -65,7 +65,7 @@ public class NearestNeighborInterpolator<T extends Type<T>> extends Interpolator
 			
 			//final int pos = (int)( position[d] + (0.5f * Math.signum( position[d] ) ) );
 			final int pos = MathLib.round( position[ d ] );
-			cursor.move( pos - cursor.getRasterLocation(d), d );
+			cursor.move( pos - cursor.getIntPosition(d), d );
 		}
 	}
 
@@ -78,7 +78,7 @@ public class NearestNeighborInterpolator<T extends Type<T>> extends Interpolator
 			
 			//final int pos = (int)( position[d] + (0.5f * Math.signum( position[d] ) ) );
 			final int pos = MathLib.round( position[ d ] );			
-			cursor.move( pos - cursor.getRasterLocation(d), d );
+			cursor.move( pos - cursor.getIntPosition(d), d );
 		}
 	}
 	

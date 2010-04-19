@@ -32,7 +32,7 @@ package mpicbg.imglib.cursor;
 /**
  * The {@link RasterLocalizable} interface can localize itself in an n-dimensional
  * discrete space.  Not only {@link Cursor}s can use this 
- * interface, it might be used by much more classes as {@link LocalizableByDimCursor}s
+ * interface, it might be used by much more classes as {@link PositionableCursor}s
  * can take any {@link RasterLocalizable} as input for where they should move to.
  *  
  * @author Stephan Preibisch & Stephan Saalfeld
@@ -41,24 +41,32 @@ package mpicbg.imglib.cursor;
 public interface RasterLocalizable extends Localizable
 {
 	/**
-	 * Write the current location into the passed array.
+	 * Write the current position into the passed array.
 	 * 
 	 * @param location
 	 */
 	public void localize( int[] location );
 	
 	/**
-	 * Return a copy of the current location.
+	 * Write the current position into the passed array.
 	 * 
-	 * @return
+	 * @param location
 	 */
-	public int[] getRasterLocation();
+	public void localize( long[] location );
 	
 	/**
-	 * Return the current location in a given dimension.
+	 * Return the current position in a given dimension.
 	 * 
 	 * @param dim
 	 * @return
 	 */
-	public int getRasterLocation( int dim );
+	public int getIntPosition( int dim );
+	
+	/**
+	 * Return the current position in a given dimension.
+	 * 
+	 * @param dim
+	 * @return
+	 */
+	public long getLongPosition( int dim );
 }

@@ -30,13 +30,13 @@
 package mpicbg.imglib.cursor.special;
 
 import mpicbg.imglib.cursor.CursorImpl;
-import mpicbg.imglib.cursor.LocalizableByDimCursor;
+import mpicbg.imglib.cursor.PositionableCursor;
 import mpicbg.imglib.cursor.LocalizableCursor;
 import mpicbg.imglib.type.Type;
 
 public class RegionOfInterestCursor<T extends Type<T>> extends CursorImpl<T> implements LocalizableCursor<T> 
 {
-	final LocalizableByDimCursor<T> cursor;
+	final PositionableCursor<T> cursor;
 	final int[] offset, size, roiPosition;
 	
 	// true means go forward, false go backward
@@ -47,7 +47,7 @@ public class RegionOfInterestCursor<T extends Type<T>> extends CursorImpl<T> imp
 	boolean isActive, debug = false;
 	int i;
 	
-	public RegionOfInterestCursor( final LocalizableByDimCursor<T> cursor, final int[] offset, final int size[] )
+	public RegionOfInterestCursor( final PositionableCursor<T> cursor, final int[] offset, final int size[] )
 	{
 		super( cursor.getStorageContainer(), cursor.getImage() );
 		
@@ -167,32 +167,24 @@ public class RegionOfInterestCursor<T extends Type<T>> extends CursorImpl<T> imp
 	}
 	
 	@Override
-	public float[] getFloatLocation()
+	public void localize( final long[] position )
 	{
-		final float[] location = new float[ roiPosition.length ];
-		localize( location );
-		return location;
+		for ( int d = 0; d < numDimensions; ++d )
+			position[ d ] = roiPosition[ d ];
 	}
 	
-	@Override
-	public double[] getDoubleLocation()
-	{
-		final double[] location = new double[ roiPosition.length ];
-		localize( location );
-		return location;
-	}
-
-	@Override
-	public int[] getRasterLocation() { return roiPosition.clone(); }
-
-	@Override
-	public float getFloatLocation( final int d ){ return roiPosition[ d ]; }
 	
 	@Override
-	public double getDoubleLocation( final int d ){ return roiPosition[ d ]; }
+	public float getFloatPosition( final int d ){ return roiPosition[ d ]; }
 	
 	@Override
-	public int getRasterLocation( final int d ) { return roiPosition[ d ]; }
+	public double getDoublePosition( final int d ){ return roiPosition[ d ]; }
+	
+	@Override
+	public int getIntPosition( final int d ) { return roiPosition[ d ]; }
+
+	@Override
+	public long getLongPosition( final int d ) { return roiPosition[ d ]; }
 
 	@Override
 	public String getLocationAsString()

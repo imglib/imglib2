@@ -30,12 +30,13 @@
 package mpicbg.imglib.cursor.array;
 
 import mpicbg.imglib.container.array.Array3D;
-import mpicbg.imglib.cursor.LocalizableByDimCursor3D;
+import mpicbg.imglib.cursor.Localizable3D;
+import mpicbg.imglib.cursor.PositionableCursor3D;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
 import mpicbg.imglib.type.Type;
 
-public class Array3DLocalizableByDimOutOfBoundsCursor<T extends Type<T>> extends ArrayLocalizableByDimOutOfBoundsCursor<T> implements LocalizableByDimCursor3D<T>
+public class Array3DPositionableOutOfBoundsCursor<T extends Type<T>> extends ArrayPositionableOutOfBoundsCursor<T> implements PositionableCursor3D<T>, Localizable3D
 {
 	protected int x = -1, y = 0, z = 0;
 	final int widthMinus1, heightMinus1, depthMinus1;
@@ -43,7 +44,7 @@ public class Array3DLocalizableByDimOutOfBoundsCursor<T extends Type<T>> extends
 	final int stepY, stepZ;
 	final Array3D<T,?> container;
 
-	public Array3DLocalizableByDimOutOfBoundsCursor( final Array3D<T,?> container, final Image<T> image, final T type, final OutOfBoundsStrategyFactory<T> outOfBoundsStrategyFactory ) 
+	public Array3DPositionableOutOfBoundsCursor( final Array3D<T,?> container, final Image<T> image, final T type, final OutOfBoundsStrategyFactory<T> outOfBoundsStrategyFactory ) 
 	{
 		super( container, image, type, outOfBoundsStrategyFactory );
 		
@@ -129,10 +130,7 @@ public class Array3DLocalizableByDimOutOfBoundsCursor<T extends Type<T>> extends
 	public Array3D<T,?> getStorageContainer(){ return container; }
 
 	@Override
-	public int[] getRasterLocation(){ return new int[]{x, y, z}; }
-	
-	@Override
-	public int getRasterLocation( final int dim )
+	public int getIntPosition( final int dim )
 	{
 		if ( dim == 0 )
 			return x;
@@ -301,14 +299,6 @@ public class Array3DLocalizableByDimOutOfBoundsCursor<T extends Type<T>> extends
 		
 	}
 	
-	@Override
-	public void moveRel( final int x, final int y, final int z )
-	{
-		moveX( x );
-		moveY( y );
-		moveZ( z );
-	}
-
 	@Override
 	public void moveTo( final int x, final int y, final int z )
 	{		

@@ -30,18 +30,19 @@
 package mpicbg.imglib.cursor.array;
 
 import mpicbg.imglib.container.array.Array3D;
-import mpicbg.imglib.cursor.LocalizableByDimCursor3D;
+import mpicbg.imglib.cursor.Localizable3D;
+import mpicbg.imglib.cursor.PositionableCursor3D;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.type.Type;
 
-public class Array3DLocalizableByDimCursor<T extends Type<T>> extends ArrayLocalizableByDimCursor<T> implements LocalizableByDimCursor3D<T>
+public class Array3DPositionableCursor<T extends Type<T>> extends ArrayPositionableCursor<T> implements PositionableCursor3D<T>, Localizable3D
 {
 	protected int x = -1, y = 0, z = 0;
 	final int widthMinus1, heightMinus1, depthMinus1, width, height, depth;
 	final int stepY, stepZ;
 	final Array3D<T,?> container;
 
-	public Array3DLocalizableByDimCursor( final Array3D<T,?> container, final Image<T> image, final T type ) 
+	public Array3DPositionableCursor( final Array3D<T,?> container, final Image<T> image, final T type ) 
 	{
 		super( container, image, type );
 		
@@ -132,10 +133,7 @@ public class Array3DLocalizableByDimCursor<T extends Type<T>> extends ArrayLocal
 	public Array3D<T,?> getStorageContainer(){ return container; }
 
 	@Override
-	public int[] getRasterLocation(){ return new int[]{x, y, z}; }
-	
-	@Override
-	public int getRasterLocation( final int dim )
+	public int getIntPosition( final int dim )
 	{
 		if ( dim == 0 )
 			return x;
@@ -193,14 +191,6 @@ public class Array3DLocalizableByDimCursor<T extends Type<T>> extends ArrayLocal
 			moveZ( steps );
 		else
 			System.err.println("Array3DLocalizableByDimCursor.move( int dim ): There is no dimension " + dim );		
-	}
-
-	@Override
-	public void moveRel( final int x, final int y, final int z )
-	{
-		moveX( x );
-		moveY( y );
-		moveZ( z );
 	}
 
 	@Override

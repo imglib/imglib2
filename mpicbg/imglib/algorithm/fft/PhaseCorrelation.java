@@ -30,7 +30,7 @@ import mpicbg.imglib.algorithm.MultiThreaded;
 import mpicbg.imglib.algorithm.fft.FourierTransform.Rearrangement;
 import mpicbg.imglib.algorithm.math.MathLib;
 import mpicbg.imglib.cursor.Cursor;
-import mpicbg.imglib.cursor.LocalizableByDimCursor;
+import mpicbg.imglib.cursor.PositionableCursor;
 import mpicbg.imglib.cursor.special.LocalNeighborhoodCursor;
 import mpicbg.imglib.cursor.special.RegionOfInterestCursor;
 import mpicbg.imglib.image.Image;
@@ -351,8 +351,8 @@ public class PhaseCorrelation<T extends RealType<T>, S extends RealType<S>> impl
 				return 0;
 		}
 		
-		final LocalizableByDimCursor<T> cursor1 = image1.createLocalizableByDimCursor();
-		final LocalizableByDimCursor<S> cursor2 = image2.createLocalizableByDimCursor();
+		final PositionableCursor<T> cursor1 = image1.createPositionableCursor();
+		final PositionableCursor<S> cursor2 = image2.createPositionableCursor();
 		
 		final RegionOfInterestCursor<T> roiCursor1 = cursor1.createRegionOfInterestCursor( offsetImage1, overlapSize );
 		final RegionOfInterestCursor<S> roiCursor2 = cursor2.createRegionOfInterestCursor( offsetImage2, overlapSize );
@@ -435,7 +435,7 @@ public class PhaseCorrelation<T extends RealType<T>, S extends RealType<S>> impl
 		for ( int i = 0; i < numPeaks; ++i )
 			peakList.add( new PhaseCorrelationPeak( new int[ numDimensions ], -Float.MAX_VALUE) );
 
-		final LocalizableByDimCursor<FloatType> cursor = invPCM.createLocalizableByDimCursor( new OutOfBoundsStrategyPeriodicFactory<FloatType>() );
+		final PositionableCursor<FloatType> cursor = invPCM.createPositionableCursor( new OutOfBoundsStrategyPeriodicFactory<FloatType>() );
 		final LocalNeighborhoodCursor<FloatType> localCursor = cursor.createLocalNeighborhoodCursor();
 				
 		final int[] originalOffset1 = fft1.getOriginalOffset();
@@ -492,7 +492,10 @@ public class PhaseCorrelation<T extends RealType<T>, S extends RealType<S>> impl
 					peakList.remove( lowestValueIndex );
 
 					// add new peak
-					final int[] position = cursor.getRasterLocation();
+					final int[] position = new int[ numDimensions ];
+					cursor.localize( position );
+					
+					final int[] originalInvPCMPosition = position.clone();
 					
 					for ( int d = 0; d < numDimensions; ++d )
 					{
@@ -503,7 +506,7 @@ public class PhaseCorrelation<T extends RealType<T>, S extends RealType<S>> impl
 					}
 
 					final PhaseCorrelationPeak pcp = new PhaseCorrelationPeak( position, value );
-					pcp.setOriginalInvPCMPosition( cursor.getRasterLocation() );
+					pcp.setOriginalInvPCMPosition( originalInvPCMPosition );
 					peakList.add( pcp );
 				}
 			}			

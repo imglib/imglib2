@@ -27,32 +27,45 @@
  *
  * @author Stephan Preibisch & Stephan Saalfeld
  */
-package mpicbg.imglib.cursor.imageplus;
+package mpicbg.imglib.cursor.array;
 
 import mpicbg.imglib.container.array.Array;
-import mpicbg.imglib.container.imageplus.ImagePlusContainer;
-import mpicbg.imglib.cursor.LocalizableByDimCursor;
+import mpicbg.imglib.container.basictypecontainer.FakeAccess;
+import mpicbg.imglib.container.basictypecontainer.array.FakeArray;
+import mpicbg.imglib.cursor.PositionableCursor;
+//import mpicbg.imglib.cursor.link.CursorLink;
+//import mpicbg.imglib.cursor.link.NullLink;
 import mpicbg.imglib.cursor.RasterLocalizable;
 import mpicbg.imglib.cursor.special.LocalNeighborhoodCursor;
 import mpicbg.imglib.cursor.special.LocalNeighborhoodCursorFactory;
 import mpicbg.imglib.cursor.special.RegionOfInterestCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.type.Type;
+import mpicbg.imglib.type.label.FakeType;
 
-
-public class ImagePlusLocalizableByDimCursor<T extends Type<T>> extends ImagePlusLocalizableCursor<T> implements LocalizableByDimCursor<T>
+public class ArrayPositionableCursor<T extends Type<T>> extends ArrayLocalizableCursor<T> implements PositionableCursor<T>
 {
-	final protected int[] step, tmp;
+	//final CursorLink link;
+	final protected int[] step;
+	final int tmp[];
+	
 	int numNeighborhoodCursors = 0;
 	
-	public ImagePlusLocalizableByDimCursor( final ImagePlusContainer<T,?> container, final Image<T> image, final T type ) 
+	public ArrayPositionableCursor( final Array<T,?> container, final Image<T> image, final T type ) 
 	{
 		super( container, image, type );
 		
 		step = Array.createAllocationSteps( container.getDimensions() );
 		tmp = new int[ numDimensions ];
+		//link = new NullLink();
 	}	
-
+	
+	public static ArrayPositionableCursor<FakeType> createLinearByDimCursor( final int[] dim )
+	{
+		final Array<FakeType, FakeAccess> array = new Array<FakeType, FakeAccess>( null, new FakeArray(), dim, 1 );
+		return new ArrayPositionableCursor<FakeType>( array, null, new FakeType() );
+	}
+	
 	@Override
 	public synchronized LocalNeighborhoodCursor<T> createLocalNeighborhoodCursor()
 	{
@@ -63,7 +76,7 @@ public class ImagePlusLocalizableByDimCursor<T extends Type<T>> extends ImagePlu
 		}
 		else
 		{
-			System.out.println("ImagePlusLocalizableByDimCursor.createLocalNeighborhoodCursor(): There is only one special cursor per cursor allowed.");
+			System.out.println("ArrayLocalizableByDimCursor.createLocalNeighborhoodCursor(): There is only one one special cursor per cursor allowed.");
 			return null;
 		}
 	}
@@ -78,62 +91,65 @@ public class ImagePlusLocalizableByDimCursor<T extends Type<T>> extends ImagePlu
 		}
 		else
 		{
-			System.out.println("ImagePlusLocalizableByDimCursor.createRegionOfInterestCursor(): There is only one special cursor per cursor allowed.");
+			System.out.println("ArrayLocalizableByDimCursor.createRegionOfInterestCursor(): There is only one special cursor per cursor allowed.");
 			return null;
 		}
 	}
-
+	
 	@Override
 	public void fwd( final int dim )
 	{
-		position[ dim ]++;
-
-		if ( dim == 2 )
-		{
-			++slice;
-			type.updateContainer( this );
-		}
-		else
-		{
-			type.incIndex( step[ dim ] );
-		}
+		type.incIndex( step[ dim ] );
+		++position[ dim ];	
+		//link.fwd(dim);
 	}
 
 	@Override
 	public void move( final int steps, final int dim )
 	{
+		type.incIndex( step[ dim ] * steps );
 		position[ dim ] += steps;	
-
-		if ( dim == 2 )
-		{
-			slice += steps;
-			type.updateContainer( this );
-		}
-		else
-		{
-			type.incIndex( step[ dim ] * steps );
-		}		
+		//link.move(steps, dim);
 	}
 	
 	@Override
-	public void moveRel( final int[] vector )
+	public void move( final long distance, final int dim )
 	{
-		for ( int d = 0; d < numDimensions; ++d )
-			move( vector[ d ], d );
+		move( ( int )distance, dim );		
 	}
-
+	
+	@Override
+	public void bck( final int dim )
+	{
+		type.decIndex( step[ dim ] );
+		--position[ dim ];
+		//link.bck(dim);
+	}
+		
 	@Override
 	public void moveTo( final int[] position )
 	{		
 		for ( int d = 0; d < numDimensions; ++d )
 		{
-			final int dist = position[ d ] - getRasterLocation( d );
+			final int dist = position[ d ] - getIntPosition( d );
 			
 			if ( dist != 0 )				
 				move( dist, d );
 		}
 	}
 	
+	@Override
+	public void moveTo( final long[] position )
+	{
+		for ( int d = 0; d < numDimensions; ++d )
+		{
+			final long dist = position[ d ] - getLongPosition( d );
+			
+			if ( dist != 0 )				
+				move( dist, d );
+		}
+	}
+
 	@Override
 	public void moveTo( final RasterLocalizable localizable )
 	{
@@ -149,50 +165,40 @@ public class ImagePlusLocalizableByDimCursor<T extends Type<T>> extends ImagePlu
 	}
 	
 	@Override
-	public void bck( final int dim )
-	{		
-		position[ dim ]--;
-		
-		if ( dim == 2 )
-		{
-			--slice;
-			type.updateContainer( this );
-		}
-		else
-		{
-			type.decIndex( step[ dim ] );
-		}
-	}
-
-	@Override
 	public void setPosition( final int[] position )
 	{
 		type.updateIndex( container.getPos( position ) );
 		
-		for ( int d = 0; d < numDimensions; d++ )
+		for ( int d = 0; d < numDimensions; ++d )
 			this.position[ d ] = position[ d ];
 		
-		if ( numDimensions == 3 )
-			slice = position[ 2 ];
-		else
-			slice = 0;
+		//link.setPosition( position );
+	}
+	
+	@Override
+	public void setPosition( long[] position )
+	{
+		for ( int d = 0; d < numDimensions; ++d )
+			this.position[ d ] = ( int )position[ d ];
 		
-		type.updateContainer( this );		
+		type.updateIndex( container.getPos( this.position ) );
+		
+		//link.setPosition( position );
+		
 	}
 
 	@Override
 	public void setPosition( final int position, final int dim )
 	{
 		this.position[ dim ] = position;
-
-		if ( dim == 2 )
-		{
-			slice = position;
-			type.updateContainer( this );
-		}
-		else
-		{
-			type.updateIndex( container.getPos( this.position ) );
-		}
+		type.updateIndex( container.getPos( this.position ) );
+		//link.setPosition( position, dim );
+	}
+	
+	@Override
+	public void setPosition( final long position, final int dim )
+	{
+		setPosition( ( int )position, dim );
+		
 	}
 }

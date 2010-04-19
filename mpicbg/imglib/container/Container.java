@@ -30,7 +30,7 @@
 package mpicbg.imglib.container;
 
 import mpicbg.imglib.cursor.Cursor;
-import mpicbg.imglib.cursor.LocalizableByDimCursor;
+import mpicbg.imglib.cursor.PositionableCursor;
 import mpicbg.imglib.cursor.LocalizableCursor;
 import mpicbg.imglib.cursor.LocalizablePlaneCursor;
 import mpicbg.imglib.image.Image;
@@ -42,8 +42,8 @@ public interface Container<T extends Type<T>>
 	public Cursor<T> createCursor( Image<T> image );
 	public LocalizableCursor<T> createLocalizableCursor( Image<T> image );
 	public LocalizablePlaneCursor<T> createLocalizablePlaneCursor( Image<T> image );
-	public LocalizableByDimCursor<T> createLocalizableByDimCursor( Image<T> image );
-	public LocalizableByDimCursor<T> createLocalizableByDimCursor( Image<T> image, OutOfBoundsStrategyFactory<T> outOfBoundsFactory );
+	public PositionableCursor<T> createPositionableCursor( Image<T> image );
+	public PositionableCursor<T> createPositionableCursor( Image<T> image, OutOfBoundsStrategyFactory<T> outOfBoundsFactory );
 	
 	public void close();
 

@@ -33,8 +33,8 @@ import mpicbg.imglib.container.DirectAccessContainerImpl;
 import mpicbg.imglib.container.basictypecontainer.DataAccess;
 import mpicbg.imglib.cursor.Cursor;
 import mpicbg.imglib.cursor.array.ArrayCursor;
-import mpicbg.imglib.cursor.array.ArrayLocalizableByDimCursor;
-import mpicbg.imglib.cursor.array.ArrayLocalizableByDimOutOfBoundsCursor;
+import mpicbg.imglib.cursor.array.ArrayPositionableCursor;
+import mpicbg.imglib.cursor.array.ArrayPositionableOutOfBoundsCursor;
 import mpicbg.imglib.cursor.array.ArrayLocalizableCursor;
 import mpicbg.imglib.cursor.array.ArrayLocalizablePlaneCursor;
 import mpicbg.imglib.image.Image;
@@ -89,18 +89,18 @@ public class Array<T extends Type<T>, A extends DataAccess> extends DirectAccess
 	}
 	
 	@Override
-	public ArrayLocalizableByDimCursor<T> createLocalizableByDimCursor( final Image<T> image ) 
+	public ArrayPositionableCursor<T> createPositionableCursor( final Image<T> image ) 
 	{ 
 		// create a Cursor using a Type that is linked to the container
-		ArrayLocalizableByDimCursor<T> c = new ArrayLocalizableByDimCursor<T>( this, image, linkedType.duplicateTypeOnSameDirectAccessContainer() );
+		ArrayPositionableCursor<T> c = new ArrayPositionableCursor<T>( this, image, linkedType.duplicateTypeOnSameDirectAccessContainer() );
 		return c;
 	}
 	
 	@Override
-	public ArrayLocalizableByDimOutOfBoundsCursor<T> createLocalizableByDimCursor( final Image<T> image, final OutOfBoundsStrategyFactory<T> outOfBoundsFactory ) 
+	public ArrayPositionableOutOfBoundsCursor<T> createPositionableCursor( final Image<T> image, final OutOfBoundsStrategyFactory<T> outOfBoundsFactory ) 
 	{ 
 		// create a Cursor using a Type that is linked to the container
-		ArrayLocalizableByDimOutOfBoundsCursor<T> c = new ArrayLocalizableByDimOutOfBoundsCursor<T>( this, image, linkedType.duplicateTypeOnSameDirectAccessContainer(), outOfBoundsFactory );
+		ArrayPositionableOutOfBoundsCursor<T> c = new ArrayPositionableOutOfBoundsCursor<T>( this, image, linkedType.duplicateTypeOnSameDirectAccessContainer(), outOfBoundsFactory );
 		return c;
 	}
 	
@@ -118,7 +118,7 @@ public class Array<T extends Type<T>, A extends DataAccess> extends DirectAccess
 			  steps[ d ] = steps[ d - 1 ] * dim[ d - 1 ];
 	}
 	
-	public final int getPos( final int[] l ) 
+	public final int getPos( final int[] l )
 	{ 
 		int i = l[ 0 ];
 		for ( int d = 1; d < numDimensions; ++d )

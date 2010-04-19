@@ -27,10 +27,30 @@
  *
  * @author Stephan Preibisch & Stephan Saalfeld
  */
-package mpicbg.imglib.cursor;
+package mpicbg.imglib.cursor.shapelist;
 
+import mpicbg.imglib.container.shapelist.ShapeList;
+import mpicbg.imglib.image.Image;
+import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
 import mpicbg.imglib.type.Type;
 
-public interface LocalizableByDimCursor3D<T extends Type<T>> extends LocalizableByDimCursor<T>, LocalizableByDim3D
+public class ShapeListCachedPositionableOutOfBoundsCursor<T extends Type<T>> extends ShapeListPositionableOutOfBoundsCursor<T>
 {
+	final ShapeListCache<T> cache;
+
+	public ShapeListCachedPositionableOutOfBoundsCursor( final ShapeList<T> container, final Image<T> image, final OutOfBoundsStrategyFactory<T> outOfBoundsStrategyFactory, final ShapeListCache<T> cache ) 
+	{
+		super( container, image, outOfBoundsStrategyFactory );
+		
+		this.cache = cache;
+	}	
+		
+	@Override
+	public T type() 
+	{
+		if ( isOutOfBounds )
+			return outOfBoundsStrategy.getType();
+		else
+			return cache.lookUp( position ); 
+	}
 }

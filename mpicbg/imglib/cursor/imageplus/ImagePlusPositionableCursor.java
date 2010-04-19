@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2009--2010, Stephan Preibisch
+ * Copyright (c) 2009--2010, Stephan Preibisch & Stephan Saalfeld
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -25,12 +25,13 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  *
- * @author Stephan Preibisch
+ * @author Stephan Preibisch & Stephan Saalfeld
  */
-package mpicbg.imglib.cursor.dynamic;
+package mpicbg.imglib.cursor.imageplus;
 
-import mpicbg.imglib.container.dynamic.DynamicContainer;
-import mpicbg.imglib.cursor.LocalizableByDimCursor;
+import mpicbg.imglib.container.array.Array;
+import mpicbg.imglib.container.imageplus.ImagePlusContainer;
+import mpicbg.imglib.cursor.PositionableCursor;
 import mpicbg.imglib.cursor.RasterLocalizable;
 import mpicbg.imglib.cursor.special.LocalNeighborhoodCursor;
 import mpicbg.imglib.cursor.special.LocalNeighborhoodCursorFactory;
@@ -38,21 +39,20 @@ import mpicbg.imglib.cursor.special.RegionOfInterestCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.type.Type;
 
-public class DynamicLocalizableByDimCursor<T extends Type<T>> extends DynamicLocalizableCursor<T> implements LocalizableByDimCursor<T>
+
+public class ImagePlusPositionableCursor<T extends Type<T>> extends ImagePlusLocalizableCursor<T> implements PositionableCursor<T>
 {
-	final protected int[] step;
-	final int tmp[];
-	
+	final protected int[] step, tmp;
 	int numNeighborhoodCursors = 0;
 	
-	public DynamicLocalizableByDimCursor( final DynamicContainer<T,?> container, final Image<T> image, final T type ) 
+	public ImagePlusPositionableCursor( final ImagePlusContainer<T,?> container, final Image<T> image, final T type ) 
 	{
 		super( container, image, type );
 		
-		step = container.getSteps();
+		step = Array.createAllocationSteps( container.getDimensions() );
 		tmp = new int[ numDimensions ];
 	}	
-	
+
 	@Override
 	public synchronized LocalNeighborhoodCursor<T> createLocalNeighborhoodCursor()
 	{
@@ -63,7 +63,7 @@ public class DynamicLocalizableByDimCursor<T extends Type<T>> extends DynamicLoc
 		}
 		else
 		{
-			System.out.println("ArrayLocalizableByDimCursor.createLocalNeighborhoodCursor(): There is only one one special cursor per cursor allowed.");
+			System.out.println("ImagePlusLocalizableByDimCursor.createLocalNeighborhoodCursor(): There is only one special cursor per cursor allowed.");
 			return null;
 		}
 	}
@@ -78,57 +78,73 @@ public class DynamicLocalizableByDimCursor<T extends Type<T>> extends DynamicLoc
 		}
 		else
 		{
-			System.out.println("ArrayLocalizableByDimCursor.createRegionOfInterestCursor(): There is only one special cursor per cursor allowed.");
+			System.out.println("ImagePlusLocalizableByDimCursor.createRegionOfInterestCursor(): There is only one special cursor per cursor allowed.");
 			return null;
 		}
 	}
-	
+
 	@Override
 	public void fwd( final int dim )
 	{
-		internalIndex += step[ dim ];
-		accessor.updateIndex( internalIndex );
+		position[ dim ]++;
 
-		++position[ dim ];	
+		if ( dim == 2 )
+		{
+			++slice;
+			type.updateContainer( this );
+		}
+		else
+		{
+			type.incIndex( step[ dim ] );
+		}
 	}
 
 	@Override
 	public void move( final int steps, final int dim )
 	{
-		internalIndex += step[ dim ] * steps;
-		accessor.updateIndex( internalIndex );
-
 		position[ dim ] += steps;	
+
+		if ( dim == 2 )
+		{
+			slice += steps;
+			type.updateContainer( this );
+		}
+		else
+		{
+			type.incIndex( step[ dim ] * steps );
+		}		
 	}
 	
 	@Override
-	public void bck( final int dim )
+	public void move( final long distance, final int dim )
 	{
-		internalIndex -= step[ dim ];
-		accessor.updateIndex( internalIndex );
- 
-		--position[ dim ];
+		move( ( int )distance, dim );		
 	}
-		
-	@Override
-	public void moveRel( final int[] vector )
-	{
-		for ( int d = 0; d < numDimensions; ++d )
-			move( vector[ d ], d );
-	}
-
+	
 	@Override
 	public void moveTo( final int[] position )
 	{		
 		for ( int d = 0; d < numDimensions; ++d )
 		{
-			final int dist = position[ d ] - getRasterLocation( d );
+			final int dist = position[ d ] - getIntPosition( d );
 			
 			if ( dist != 0 )				
 				move( dist, d );
 		}
 	}
-
+	
+	@Override
+	public void moveTo( final long[] position )
+	{
+		for ( int d = 0; d < numDimensions; ++d )
+		{
+			final long dist = position[ d ] - getLongPosition( d );
+			
+			if ( dist != 0 )				
+				move( dist, d );
+		}
+	}
+	
 	@Override
 	public void moveTo( final RasterLocalizable localizable )
 	{
@@ -144,13 +160,51 @@ public class DynamicLocalizableByDimCursor<T extends Type<T>> extends DynamicLoc
 	}
 	
 	@Override
+	public void bck( final int dim )
+	{		
+		position[ dim ]--;
+		
+		if ( dim == 2 )
+		{
+			--slice;
+			type.updateContainer( this );
+		}
+		else
+		{
+			type.decIndex( step[ dim ] );
+		}
+	}
+
+	@Override
 	public void setPosition( final int[] position )
 	{
-		internalIndex = container.getPos( position );
-		accessor.updateIndex( internalIndex );
+		type.updateIndex( container.getPos( position ) );
 		
-		for ( int d = 0; d < numDimensions; ++d )
-			this.position[ d ] = position[ d ];		
+		for ( int d = 0; d < numDimensions; d++ )
+			this.position[ d ] = position[ d ];
+		
+		if ( numDimensions == 3 )
+			slice = position[ 2 ];
+		else
+			slice = 0;
+		
+		type.updateContainer( this );		
+	}
+	
+	@Override
+	public void setPosition( final long[] position )
+	{
+		for ( int d = 0; d < numDimensions; d++ )
+			this.position[ d ] = ( int )position[ d ];
+		
+		type.updateIndex( container.getPos( this.position ) );
+		
+		if ( numDimensions == 3 )
+			slice = this.position[ 2 ];
+		else
+			slice = 0;
+		
+		type.updateContainer( this );		
 	}
 
 	@Override
@@ -158,7 +212,20 @@ public class DynamicLocalizableByDimCursor<T extends Type<T>> extends DynamicLoc
 	{
 		this.position[ dim ] = position;
 
-		internalIndex = container.getPos( this.position );
-		accessor.updateIndex( internalIndex );
+		if ( dim == 2 )
+		{
+			slice = position;
+			type.updateContainer( this );
+		}
+		else
+		{
+			type.updateIndex( container.getPos( this.position ) );
+		}
+	}
+	
+	@Override
+	public void setPosition( final long position, final int dim )
+	{
+		setPosition( ( int )position, dim );
 	}
 }

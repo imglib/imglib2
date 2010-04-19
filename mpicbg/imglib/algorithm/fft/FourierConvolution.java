@@ -29,7 +29,7 @@ import mpicbg.imglib.algorithm.gauss.GaussianConvolution;
 import mpicbg.imglib.algorithm.math.MathLib;
 import mpicbg.imglib.container.ContainerFactory;
 import mpicbg.imglib.cursor.Cursor;
-import mpicbg.imglib.cursor.LocalizableByDimCursor;
+import mpicbg.imglib.cursor.PositionableCursor;
 import mpicbg.imglib.cursor.LocalizableCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.ImageFactory;
@@ -123,7 +123,7 @@ public class FourierConvolution<T extends RealType<T>, S extends RealType<S>> im
 		
 		final Image<FloatType> kernelImg = new ImageFactory<FloatType>( new FloatType(), factory ).createImage( imageSize );
 		
-		final LocalizableCursor<FloatType> cursor = kernelImg.createLocalizableByDimCursor();
+		final LocalizableCursor<FloatType> cursor = kernelImg.createPositionableCursor();
 		final int[] position = new int[ numDimensions ];
 		
 		while ( cursor.hasNext() )
@@ -168,7 +168,7 @@ public class FourierConvolution<T extends RealType<T>, S extends RealType<S>> im
 		for ( int d = 0; d < numDimensions; ++d )
 			center[ d ] = kernel.getDimension( d ) / 2;
 				
-		final LocalizableByDimCursor<T> c = kernel.createLocalizableByDimCursor();
+		final PositionableCursor<T> c = kernel.createPositionableCursor();
 		c.setPosition( center );
 		c.type().setOne();
 		c.close();
@@ -243,7 +243,7 @@ public class FourierConvolution<T extends RealType<T>, S extends RealType<S>> im
 			// the key here is that the center pixel of the kernel (e.g. 13,13,13)
 			// is located at (0,0,0)
 			final LocalizableCursor<S> kernelCursor = kernel.createLocalizableCursor();
-			final LocalizableByDimCursor<S> kernelTemplateCursor = kernelTemplate.createLocalizableByDimCursor();
+			final PositionableCursor<S> kernelTemplateCursor = kernelTemplate.createPositionableCursor();
 			
 			final int[] position = new int[ numDimensions ];
 			while ( kernelCursor.hasNext() )

@@ -25,7 +25,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import edu.mines.jtk.dsp.FftComplex;
 import edu.mines.jtk.dsp.FftReal;
 
-import mpicbg.imglib.cursor.LocalizableByDimCursor;
+import mpicbg.imglib.cursor.PositionableCursor;
 import mpicbg.imglib.cursor.array.ArrayLocalizableCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.ImageFactory;
@@ -94,7 +94,7 @@ final public class FFTFunctions
 						final float[] tempIn = new float[ size * 2 ];						
 						final FftComplex fftc = new FftComplex( size );
 						
-						final LocalizableByDimCursor<S> cursor = complex.createLocalizableByDimCursor(); 
+						final PositionableCursor<S> cursor = complex.createPositionableCursor(); 
 
 						/**
 						 * Here we "misuse" a ArrayLocalizableCursor to iterate through all dimensions except the one we are computing the inverse fft in 
@@ -117,7 +117,7 @@ final public class FFTFunctions
 						{
 							cursorDim.fwd();							
 
-							if ( cursorDim.getRasterLocation( 0 ) % numThreads == myNumber )
+							if ( cursorDim.getIntPosition( 0 ) % numThreads == myNumber )
 							{
 								// update all positions except for the one we are currrently doing the inverse fft on
 								cursorDim.localize( fakeSize );
@@ -207,8 +207,8 @@ final public class FFTFunctions
 						cropX2 = realSize;
 					}
 					
-					final LocalizableByDimCursor<S> cursor = complex.createLocalizableByDimCursor(); 
-					final LocalizableByDimCursor<T> cursorOut = realImage.createLocalizableByDimCursor(); 
+					final PositionableCursor<S> cursor = complex.createPositionableCursor(); 
+					final PositionableCursor<T> cursorOut = realImage.createPositionableCursor(); 
 					
 					if ( numDimensions > 1 )
 					{
@@ -230,7 +230,7 @@ A:						while( cursorDim.hasNext() )
 						{
 							cursorDim.fwd();							
 
-							if ( cursorDim.getRasterLocation( 0 ) % numThreads == myNumber )
+							if ( cursorDim.getIntPosition( 0 ) % numThreads == myNumber )
 							{							
 								// get all dimensions except the one we are currently doing the fft on
 								cursorDim.localize( fakeSize );
@@ -397,8 +397,8 @@ A:						while( cursorDim.hasNext() )
 					final float[] tempIn = new float[ realSize ];				
 					final FftReal fft = new FftReal( realSize );
 					
-					final LocalizableByDimCursor<T> cursor = img.createLocalizableByDimCursor( outOfBoundsFactory );
-					final LocalizableByDimCursor<S> cursorOut = fftImage.createLocalizableByDimCursor(); 
+					final PositionableCursor<T> cursor = img.createPositionableCursor( outOfBoundsFactory );
+					final PositionableCursor<S> cursorOut = fftImage.createPositionableCursor(); 
 					
 					if ( numDimensions > 1 )
 					{
@@ -421,7 +421,7 @@ A:						while( cursorDim.hasNext() )
 						{
 							cursorDim.fwd();							
 
-							if ( cursorDim.getRasterLocation( 0 ) % numThreads == myNumber )
+							if ( cursorDim.getIntPosition( 0 ) % numThreads == myNumber )
 							{							
 								// get all dimensions except the one we are currently doing the fft on
 								cursorDim.localize( fakeSize );
@@ -551,7 +551,7 @@ A:						while( cursorDim.hasNext() )
 						final float[] tempIn = new float[ size * 2 ];						
 						final FftComplex fftc = new FftComplex( size );
 						
-						final LocalizableByDimCursor<S> cursor = fftImage.createLocalizableByDimCursor(); 
+						final PositionableCursor<S> cursor = fftImage.createPositionableCursor(); 
 
 						/**
 						 * Here we "misuse" a ArrayLocalizableCursor to iterate through all dimensions except the one we are computing the fft in 
@@ -574,7 +574,7 @@ A:						while( cursorDim.hasNext() )
 						{
 							cursorDim.fwd();							
 
-							if ( cursorDim.getRasterLocation( 0 ) % numThreads == myNumber )
+							if ( cursorDim.getIntPosition( 0 ) % numThreads == myNumber )
 							{
 								// update all positions except for the one we are currrently doing the fft on
 								cursorDim.localize( fakeSize );
@@ -644,8 +644,8 @@ A:						while( cursorDim.hasNext() )
 
 		final T buffer = fftImage.createType();
 		
-		final LocalizableByDimCursor<T> cursor1 = fftImage.createLocalizableByDimCursor(); 
-		final LocalizableByDimCursor<T> cursor2 = fftImage.createLocalizableByDimCursor(); 
+		final PositionableCursor<T> cursor1 = fftImage.createPositionableCursor(); 
+		final PositionableCursor<T> cursor2 = fftImage.createPositionableCursor(); 
 
 		// update the first cursor in the image to the zero position
 		cursor1.setPosition( 0, 0 );
@@ -709,8 +709,8 @@ A:						while( cursorDim.hasNext() )
 		
 					final T buffer = fftImage.createType();
 					
-					final LocalizableByDimCursor<T> cursor1 = fftImage.createLocalizableByDimCursor(); 
-					final LocalizableByDimCursor<T> cursor2 = fftImage.createLocalizableByDimCursor(); 
+					final PositionableCursor<T> cursor1 = fftImage.createPositionableCursor(); 
+					final PositionableCursor<T> cursor2 = fftImage.createPositionableCursor(); 
 					
 					/**
 					 * Here we "misuse" a ArrayLocalizableCursor to iterate through all dimensions except the one we are computing the fft in 
@@ -728,7 +728,7 @@ A:						while( cursorDim.hasNext() )
 					{
 						cursorDim.fwd();
 						
-						if ( cursorDim.getRasterLocation( 0 ) % numThreads == myNumber )
+						if ( cursorDim.getIntPosition( 0 ) % numThreads == myNumber )
 						{							
 							// update all positions except for the one we are currrently doing the fft on
 							cursorDim.localize( fakeSize );
@@ -806,8 +806,8 @@ A:						while( cursorDim.hasNext() )
 		
 					final T buffer = fftImage.createType();
 					
-					final LocalizableByDimCursor<T> cursor1 = fftImage.createLocalizableByDimCursor(); 
-					final LocalizableByDimCursor<T> cursor2 = fftImage.createLocalizableByDimCursor(); 
+					final PositionableCursor<T> cursor1 = fftImage.createPositionableCursor(); 
+					final PositionableCursor<T> cursor2 = fftImage.createPositionableCursor(); 
 		
 					/**
 					 * Here we "misuse" a ArrayLocalizableCursor to iterate through all dimensions except the one we are computing the fft in 
@@ -828,7 +828,7 @@ A:						while( cursorDim.hasNext() )
 					{
 						cursorDim.fwd();
 						
-						if ( cursorDim.getRasterLocation( 0 ) % numThreads == myNumber )
+						if ( cursorDim.getIntPosition( 0 ) % numThreads == myNumber )
 						{							
 							// update all positions except for the one we are currrently doing the fft on
 							cursorDim.localize( fakeSize );
