@@ -268,6 +268,13 @@ public class ShapeListPositionableCursor< T extends Type< T > > extends CursorIm
 			position[ d ] = this.position[ d ];
 	}
 	
+	@Deprecated
+	@Override
+	public void getPosition( int[] position )
+	{
+		localize( position );
+	}
+	
 	@Override
 	public void localize( final long[] position )
 	{

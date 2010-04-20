@@ -43,14 +43,14 @@ public interface Localizable
 	 * 
 	 * @param location
 	 */
-	public void localize( float[] location );
+	public void localize( float[] position );
 	
 	/**
 	 * Write the current position into the passed array.
 	 * 
 	 * @param location
 	 */
-	public void localize( double[] location );
+	public void localize( double[] position );
 	
 	/**
 	 * Return the current position in a given dimension.

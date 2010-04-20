@@ -221,6 +221,15 @@ public class Image<T extends Type<T>> implements ImageProperties, Dimensionality
 		addCursor( cursor );
 		return cursor;						
 	}
+	
+	@Deprecated
+	/**
+	 * Use {@link #createPositionableCursor()} instead.
+	 */
+	public PositionableCursor<T> createLocalizableByDimCursor()
+	{
+		return createPositionableCursor();
+	}
 
 	/**
 	 * Creates a {@link PositionableCursor} which is able to move freely within and out of {@link Image} bounds.
@@ -228,11 +237,20 @@ public class Image<T extends Type<T>> implements ImageProperties, Dimensionality
 	 * @param factory - the {@link OutOfBoundsStrategyFactory}
 	 * @return - a {@link PositionableCursor} that can leave the {@link Image}
 	 */
-	public PositionableCursor<T> createPositionableCursor( OutOfBoundsStrategyFactory<T> factory )
+	public PositionableCursor<T> createPositionableCursor( final OutOfBoundsStrategyFactory<T> factory )
 	{
 		PositionableCursor<T> cursor = container.createPositionableCursor( this, factory );
 		addCursor( cursor );
 		return cursor;								
+	}
+	
+	@Deprecated
+	/**
+	 * Use {@link #createPositionableCursor( OutOfBoundsStrategyFactory<T> )} instead.
+	 */
+	public PositionableCursor<T> createLocalizableByDimCursor( final OutOfBoundsStrategyFactory<T> factory )
+	{
+		return createPositionableCursor( factory);
 	}
 
 	/**

@@ -180,6 +180,13 @@ public class CellLocalizableCursor<T extends Type<T>> extends CellCursor<T> impl
 			position[ d ] = ( int )this.position[ d ];
 	}
 	
+	@Deprecated
+	@Override
+	public void getPosition( int[] position )
+	{
+		localize( position );
+	}
+	
 	@Override
 	public void localize( final long[] position )
 	{

@@ -45,14 +45,14 @@ public interface RasterLocalizable extends Localizable
 	 * 
 	 * @param location
 	 */
-	public void localize( int[] location );
+	public void localize( int[] position );
 	
 	/**
 	 * Write the current position into the passed array.
 	 * 
 	 * @param location
 	 */
-	public void localize( long[] location );
+	public void localize( long[] position );
 	
 	/**
 	 * Return the current position in a given dimension.

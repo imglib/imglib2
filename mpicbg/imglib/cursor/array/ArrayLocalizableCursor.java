@@ -125,6 +125,13 @@ public class ArrayLocalizableCursor<T extends Type<T>> extends ArrayCursor<T> im
 			position[ d ] = this.position[ d ];
 	}
 	
+	@Deprecated
+	@Override
+	public void getPosition( int[] position )
+	{
+		localize( position );
+	}
+	
 	@Override
 	public void localize( long[] position )
 	{

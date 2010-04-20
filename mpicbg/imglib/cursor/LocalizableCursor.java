@@ -34,4 +34,9 @@ import mpicbg.imglib.type.Type;
 
 public interface LocalizableCursor<T extends Type<T>> extends Cursor<T>, RasterLocalizable
 {
+	@Deprecated
+	/**
+	 * Use {@link RasterLocalizable#localize(int[])} instead.
+	 */
+	public void getPosition( int[] location );
 }

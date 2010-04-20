@@ -166,6 +166,13 @@ public class RegionOfInterestCursor<T extends Type<T>> extends CursorImpl<T> imp
 			position[ d ] = roiPosition[ d ];
 	}
 	
+	@Deprecated
+	@Override
+	public void getPosition( int[] position )
+	{
+		localize( position );
+	}
+	
 	@Override
 	public void localize( final long[] position )
 	{
