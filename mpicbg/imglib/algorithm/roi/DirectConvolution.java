@@ -168,14 +168,21 @@ public class DirectConvolution
 
 	@Override
 	public boolean checkInput() {
-		if (kernel.getNumDimensions() == getOutputImage().getNumActiveCursors())
+		if (super.checkInput())
 		{
-			setErrorMessage("Kernel has different dimensionality than the Image");
-			return false;
+			if (kernel.getNumDimensions() == getOutputImage().getNumActiveCursors())
+			{
+				setErrorMessage("Kernel has different dimensionality than the Image");
+				return false;
+			}
+			else
+			{
+				return true;
+			}
 		}
 		else
 		{
-			return true;
+			return false;
 		}
 	}
 
