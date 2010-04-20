@@ -6,6 +6,14 @@ import mpicbg.imglib.image.Image;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
 import mpicbg.imglib.type.numeric.ComplexType;
 
+/**
+ * Close morphological operation. Operates by creating a {@link MorphDilate} and a
+ * {@link MorphErode}, taking the output from the first, and passing it to the second.
+ * 
+ * @author Larry Lindsey
+ *
+ * @param <T> {@link Image} type.
+ */
 public class MorphClose<T extends ComplexType<T>> implements OutputAlgorithm<T>, Benchmark
 {
 	

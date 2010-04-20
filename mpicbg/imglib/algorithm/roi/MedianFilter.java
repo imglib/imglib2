@@ -6,7 +6,13 @@ import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
 import mpicbg.imglib.type.numeric.ComplexType;
 
 
-
+/**
+ * Median filter / morphological operation.
+ * 
+ * @author Larry Lindsey
+ *
+ * @param <T> {@link Image} type.
+ */
 public class MedianFilter<T extends ComplexType<T>> extends StatisticalOperation<T> {
 
 	public MedianFilter(final Image<T> imageIn, final StructuringElement inStrel,
@@ -25,12 +31,5 @@ public class MedianFilter<T extends ComplexType<T>> extends StatisticalOperation
 		int n = super.getList().size();
 		cursor.getType().set(super.getList().get(n / 2));
 	}
-
-	@Override
-	public boolean checkInput() {
-		return true;
-	}
-	
-	
 
 }
