@@ -5,6 +5,13 @@ import mpicbg.imglib.image.Image;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
 import mpicbg.imglib.type.numeric.ComplexType;
 
+/**
+ * Erosion morphological operation.
+ * 
+ * @author Larry Lindsey
+ *
+ * @param <T> {@link Image} type.
+ */
 public class MorphErode<T extends ComplexType<T>> extends StatisticalOperation<T> {
 	public MorphErode(final Image<T> imageIn, final StructuringElement strel,
 			final OutOfBoundsStrategyFactory<T> inOutsideFactory)
@@ -22,12 +29,6 @@ public class MorphErode<T extends ComplexType<T>> extends StatisticalOperation<T
 	@Override
 	protected void statsOp(final LocalizableByDimCursor<T> cursor) { 
 		cursor.getType().set(super.getList().getFirst());
-	}
-
-
-	@Override
-	public boolean checkInput() {
-		return true;
 	}
 
 }

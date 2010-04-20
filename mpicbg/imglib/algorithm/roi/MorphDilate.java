@@ -5,6 +5,13 @@ import mpicbg.imglib.image.Image;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
 import mpicbg.imglib.type.numeric.ComplexType;
 
+/**
+ * Dilation morphological operation.
+ * 
+ * @author Larry Lindsey
+ *
+ * @param <T> {@link Image} type.
+ */
 public class MorphDilate<T extends ComplexType<T>> extends StatisticalOperation<T> {
 
 	
@@ -24,12 +31,6 @@ public class MorphDilate<T extends ComplexType<T>> extends StatisticalOperation<
 	@Override
 	protected void statsOp(final LocalizableByDimCursor<T> cursor) {
 		cursor.getType().set(super.getList().getLast());
-	}
-
-
-	@Override
-	public boolean checkInput() {
-		return true;
 	}
 
 }

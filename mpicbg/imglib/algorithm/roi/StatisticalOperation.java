@@ -10,6 +10,16 @@ import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
 import mpicbg.imglib.type.numeric.ComplexType;
 import mpicbg.imglib.type.logic.BitType;
 
+/**
+ * StatisticalOperation provides the framework to create Order Statistic operations.  It operates
+ * by cursing over the input {@link Image}, and collecting a sorted list of the pixels "covered" by
+ * a {@link StructuringElement}.  This list is made available to children classes, which are
+ * responsible for setting the pixel value at the current position in the output Image.
+ * 
+ * @author Larry Lindsey
+ *
+ * @param <T> The input- and output-{@link Image} type.
+ */
 public abstract class StatisticalOperation<T extends ComplexType<T>> extends ROIAlgorithm<T, T> {
 	//Member classes
 	
@@ -148,6 +158,18 @@ public abstract class StatisticalOperation<T extends ComplexType<T>> extends ROI
 		return lastPosition;
 	}
 	
+	public void close()
+	{
+		super.close();
+		outputCursor.close();
+	}
+
+	@Override
+	public boolean checkInput()
+	{
+		return super.checkInput() && outputCursor.isActive();
+	}
+	
 	@Override
 	protected boolean patchOperation(final int[] position,
 			final RegionOfInterestCursor<T> cursor) {
@@ -161,6 +183,18 @@ public abstract class StatisticalOperation<T extends ComplexType<T>> extends ROI
 		return true;
 	}
 
+	/*
+	I can't remember the reason behind the decision to pass a cursor to statsOp rather than a type.
+	It's possible that I'll change this later.  It doesn't make sense to me to give a child class the
+	power to set the position of the output Image's cursor.
+	
+	-Larry
+	*/
+	
+	/**
+	 * Perform the order statistic operation, then set the value of the type of the given cursor.
+	 * @param cursor
+	 */
 	protected abstract void statsOp(LocalizableByDimCursor<T> cursor);
 	
 }
