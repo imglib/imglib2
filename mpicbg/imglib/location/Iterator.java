@@ -40,6 +40,9 @@ import mpicbg.imglib.image.Image;
  */
 public interface Iterator< E > extends java.util.Iterator< E >
 {
+	/* TODO this method potentially collides with Positionable.fwd( int ),
+	 * both methods mean very differen things.  That is, the method needs
+	 * to be renamed. */
 	public void fwd( long steps );
 	public void fwd();
 	public void reset();			
