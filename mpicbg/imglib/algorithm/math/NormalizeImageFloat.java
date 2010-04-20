@@ -9,6 +9,14 @@ import mpicbg.imglib.algorithm.OutputAlgorithm;
 import mpicbg.imglib.cursor.*;
 import mpicbg.util.RealSum;
 
+
+/**
+ * Normalizes a given {@link Image} so that the sum of all of its pixels is equal to one
+ * (or approximately so). 
+ * @author Larry Lindsey
+ *
+ * @param <T> Image type
+ */
 public class NormalizeImageFloat <T extends RealType<T>> implements OutputAlgorithm<FloatType>, Benchmark
 {
 	private final Image<T> image;

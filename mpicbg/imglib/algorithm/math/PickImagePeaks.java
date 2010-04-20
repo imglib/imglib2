@@ -29,7 +29,7 @@ import mpicbg.imglib.type.numeric.NumericType;
  * This picker does no pre-processing, so it may be advisable to smooth your peak image before 
  * using this. 
  * 
- * @author lindsey 
+ * @author Larry Lindsey 
  *
  * @param <T> the {@link ComparableType} representing information stored in the {@link Image} to
  * pick peaks from.
