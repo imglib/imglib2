@@ -29,6 +29,8 @@
  */
 package mpicbg.imglib.cursor;
 
+import mpicbg.imglib.location.Localizable3D;
+import mpicbg.imglib.location.Positionable3D;
 import mpicbg.imglib.type.Type;
 
 public interface PositionableCursor3D<T extends Type<T>> extends PositionableCursor<T>, Positionable3D, Localizable3D

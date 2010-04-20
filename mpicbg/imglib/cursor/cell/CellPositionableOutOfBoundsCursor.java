@@ -94,6 +94,8 @@ public class CellPositionableOutOfBoundsCursor<T extends Type<T>> extends CellPo
 		}
 		
 		type.updateContainer( this );
+		
+		linkedIterator.reset();
 	}
 
 	@Override
@@ -113,6 +115,8 @@ public class CellPositionableOutOfBoundsCursor<T extends Type<T>> extends CellPo
 						
 						for ( int e = 0; e < d; e++ )
 							position[ e ] = cellOffset[ e ];
+						
+						linkedIterator.fwd();
 						
 						return;
 					}
@@ -136,6 +140,8 @@ public class CellPositionableOutOfBoundsCursor<T extends Type<T>> extends CellPo
 				outOfBoundsStrategy.initOutOfBOunds(  );
 			}
 		}
+		
+		linkedIterator.fwd();
 	}
 	
 	@Override

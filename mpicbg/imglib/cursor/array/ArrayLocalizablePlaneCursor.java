@@ -69,6 +69,8 @@ public class ArrayLocalizablePlaneCursor<T extends Type<T>> extends ArrayLocaliz
 			type.incIndex( incPlaneB );
 			type.decIndex( (planeSizeA - 1) * incPlaneA );
 		}
+		
+		linkedIterator.fwd();
 	}
 	
 	@Override

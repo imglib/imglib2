@@ -24,29 +24,44 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- *
- * @author Stephan Preibisch & Stephan Saalfeld
  */
-package mpicbg.imglib.cursor;
+package mpicbg.imglib.location;
 
-public interface Positionable3D
+/**
+ * An {@link Iterator} that just does nothing.  This is the default linked
+ * {@link Iterator} of any Iterable.  This object doing nothing, it is
+ * implemented as a Singleton.
+ *
+ * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
+ */
+final public class VoidIterator implements Iterator< Object >
 {
-	public void fwdX();
-	public void fwdY();
-	public void fwdZ();
-
-	public void bckX();
-	public void bckY();
-	public void bckZ();
+	final static private VoidIterator instance = new VoidIterator();
 	
-	public void moveX( int steps );
-	public void moveY( int steps );
-	public void moveZ( int steps );
-
-	public void moveTo( int x, int y, int z );
+	private VoidIterator(){}
+	final static public VoidIterator getInstance(){ return instance; }
 	
-	public void setPosition( int posX, int posY, int posZ );
-	public void setPositionX( int pos );
-	public void setPositionY( int pos );
-	public void setPositionZ( int pos );
+	@Override
+	final public void fwd( final long steps ){}
+
+	@Override
+	final public void fwd(){}
+
+	@Override
+	final public void reset(){}
+
+	@Override
+	final public void linkIterator( Iterator< ? > iterable ){}
+
+	@Override
+	final public VoidIterator unlinkIterator(){ return this; }
+	
+	@Override
+	final public boolean hasNext(){ return true; }
+	
+	@Override
+	public Object next(){ return null; }
+	
+	@Override
+	public void remove(){}
 }

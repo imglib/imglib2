@@ -105,7 +105,7 @@ public class ArrayPositionableOutOfBoundsCursor<T extends Type<T>> extends Array
 					for ( int e = 0; e < d; e++ )
 						position[ e ] = 0;
 
-					//link.fwd();
+					linkedIterator.fwd();
 					return;
 				}
 			}
@@ -114,8 +114,9 @@ public class ArrayPositionableOutOfBoundsCursor<T extends Type<T>> extends Array
 			isOutOfBounds = true;
 			++position[0];
 			outOfBoundsStrategy.initOutOfBOunds(  );
-			//link.fwd();
 		}
+		
+		linkedIterator.fwd();
 	}
 
 	@Override

@@ -113,6 +113,8 @@ public class ImagePlusPositionableOutOfBoundsCursor<T extends Type<T>> extends I
 					for ( int e = 0; e < d; e++ )
 						position[ e ] = 0;
 					
+					linkedIterator.fwd();
+					
 					return;
 				}
 			}
@@ -122,6 +124,8 @@ public class ImagePlusPositionableOutOfBoundsCursor<T extends Type<T>> extends I
 			position[0]++;
 			outOfBoundsStrategy.initOutOfBOunds(  );
 		}
+		
+		linkedIterator.fwd();
 	}
 
 	@Override

@@ -118,6 +118,8 @@ public class CellLocalizableCursor<T extends Type<T>> extends CellCursor<T> impl
 			position[ d ] = 0;
 		
 		type.updateContainer( this );
+		
+		linkedIterator.reset();
 	}
 	
 	@Override
@@ -156,6 +158,8 @@ public class CellLocalizableCursor<T extends Type<T>> extends CellCursor<T> impl
 			type.updateIndex( cellMaxI );
 			cell = numCells;
 		}
+		
+		linkedIterator.fwd();
 	}	
 
 	

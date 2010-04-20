@@ -30,9 +30,9 @@
 package mpicbg.imglib.cursor.array;
 
 import mpicbg.imglib.container.array.Array3D;
-import mpicbg.imglib.cursor.Localizable3D;
 import mpicbg.imglib.cursor.PositionableCursor3D;
 import mpicbg.imglib.image.Image;
+import mpicbg.imglib.location.Localizable3D;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
 import mpicbg.imglib.type.Type;
 
@@ -95,6 +95,8 @@ public class Array3DPositionableOutOfBoundsCursor<T extends Type<T>> extends Arr
 				outOfBoundsStrategy.initOutOfBOunds(  );				
 			}
 		}
+		
+		linkedIterator.fwd();
 	}
 	
 	@Override

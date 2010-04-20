@@ -76,6 +76,8 @@ public class Array3DLocalizableCursor<T extends Type<T>> extends ArrayLocalizabl
 			y = 0;
 			++z;
 		}
+		
+		linkedIterator.fwd();
 	}
 
 	@Override
@@ -95,6 +97,8 @@ public class Array3DLocalizableCursor<T extends Type<T>> extends ArrayLocalizabl
 		i -= y * width;
 		
 		x = i;
+		
+		linkedIterator.fwd( steps );
 	}
 	
 	@Override

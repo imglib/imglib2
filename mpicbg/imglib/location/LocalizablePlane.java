@@ -27,19 +27,12 @@
  *
  * @author Stephan Preibisch & Stephan Saalfeld
  */
-package mpicbg.imglib.cursor;
+package mpicbg.imglib.location;
 
-import mpicbg.imglib.image.Image;
 
-/** 
- * The {@link Iterable} interface provides basic functionality for
- * iterating over an {@link Image}.
- *  
- * @author Stephan
- *
- */
-public interface Iterable
+public interface LocalizablePlane extends RasterLocalizable
 {
-	public void fwd( long steps );
-	public void fwd();
+	public void reset( int planeDimA, int planeDimB );
+	public void reset( int planeDimA, int planeDimB, int[] dimensionPositions );
+	public void reset( int planeDimA, int planeDimB, long[] dimensionPositions );
 }

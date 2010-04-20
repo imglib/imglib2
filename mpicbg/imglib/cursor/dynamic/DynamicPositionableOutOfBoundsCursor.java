@@ -109,6 +109,8 @@ public class DynamicPositionableOutOfBoundsCursor<T extends Type<T>> extends Dyn
 					
 					for ( int e = 0; e < d; e++ )
 						position[ e ] = 0;
+					
+					linkedIterator.fwd();
 
 					return;
 				}
@@ -118,8 +120,9 @@ public class DynamicPositionableOutOfBoundsCursor<T extends Type<T>> extends Dyn
 			isOutOfBounds = true;
 			++position[0];
 			outOfBoundsStrategy.initOutOfBOunds(  );
-			//link.fwd();
 		}
+		
+		linkedIterator.fwd();
 	}
 
 	@Override

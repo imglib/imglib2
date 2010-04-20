@@ -148,6 +148,8 @@ public class CellLocalizablePlaneCursor<T extends Type<T>> extends CellLocalizab
 			// get the correct index inside the cell
 			type.updateIndex( cellInstance.getPosGlobal( position ) );			
 		}
+		
+		linkedIterator.fwd();
 	}	
 	
 	protected void getCellData( final int cell )
@@ -218,7 +220,9 @@ public class CellLocalizablePlaneCursor<T extends Type<T>> extends CellLocalizab
 		
 		isClosed = false;		
 		position[ planeDimA ] = -1;				
-		type.decIndex( incPlaneA );				
+		type.decIndex( incPlaneA );
+		
+		linkedIterator.reset();
 	}
 	
 	@Override

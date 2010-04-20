@@ -33,11 +33,11 @@ import mpicbg.imglib.container.array.Array;
 import mpicbg.imglib.container.cell.CellContainer;
 import mpicbg.imglib.cursor.PositionableCursor;
 import mpicbg.imglib.cursor.array.ArrayPositionableCursor;
-import mpicbg.imglib.cursor.RasterLocalizable;
 import mpicbg.imglib.cursor.special.LocalNeighborhoodCursor;
 import mpicbg.imglib.cursor.special.LocalNeighborhoodCursorFactory;
 import mpicbg.imglib.cursor.special.RegionOfInterestCursor;
 import mpicbg.imglib.image.Image;
+import mpicbg.imglib.location.RasterLocalizable;
 import mpicbg.imglib.type.Type;
 import mpicbg.imglib.type.label.FakeType;
 
@@ -198,6 +198,8 @@ public class CellPositionableCursor<T extends Type<T>> extends CellLocalizableCu
 		}
 		
 		type.updateContainer( this );
+		
+		linkedIterator.reset();
 	}
 	
 	@Override

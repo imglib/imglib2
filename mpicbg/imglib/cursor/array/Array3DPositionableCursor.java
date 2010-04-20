@@ -30,9 +30,9 @@
 package mpicbg.imglib.cursor.array;
 
 import mpicbg.imglib.container.array.Array3D;
-import mpicbg.imglib.cursor.Localizable3D;
 import mpicbg.imglib.cursor.PositionableCursor3D;
 import mpicbg.imglib.image.Image;
+import mpicbg.imglib.location.Localizable3D;
 import mpicbg.imglib.type.Type;
 
 public class Array3DPositionableCursor<T extends Type<T>> extends ArrayPositionableCursor<T> implements PositionableCursor3D<T>, Localizable3D
@@ -83,6 +83,8 @@ public class Array3DPositionableCursor<T extends Type<T>> extends ArrayPositiona
 			y = 0;
 			++z;
 		}
+		
+		linkedIterator.fwd();
 	}
 
 	@Override
@@ -102,6 +104,8 @@ public class Array3DPositionableCursor<T extends Type<T>> extends ArrayPositiona
 		i -= y * width;
 		
 		x = i;
+		
+		linkedIterator.fwd( steps );
 	}
 	
 	@Override

@@ -27,30 +27,35 @@
  *
  * @author Stephan Preibisch & Stephan Saalfeld
  */
-package mpicbg.imglib.cursor;
+package mpicbg.imglib.location;
+
+import mpicbg.imglib.cursor.Cursor;
+import mpicbg.imglib.cursor.PositionableCursor;
 
 /**
- * The {@link Localizable} interface can localize itself in an n-dimensional
- * real space.
+ * The {@link RasterLocalizable} interface can localize itself in an n-dimensional
+ * discrete space.  Not only {@link Cursor}s can use this 
+ * interface, it might be used by much more classes as {@link PositionableCursor}s
+ * can take any {@link RasterLocalizable} as input for where they should move to.
  *  
- * @author Stephan Saalfeld
+ * @author Stephan Preibisch & Stephan Saalfeld
  *
  */
-public interface Localizable
+public interface RasterLocalizable extends Localizable
 {
 	/**
 	 * Write the current position into the passed array.
 	 * 
 	 * @param location
 	 */
-	public void localize( float[] position );
+	public void localize( int[] position );
 	
 	/**
 	 * Write the current position into the passed array.
 	 * 
 	 * @param location
 	 */
-	public void localize( double[] position );
+	public void localize( long[] position );
 	
 	/**
 	 * Return the current position in a given dimension.
@@ -58,7 +63,7 @@ public interface Localizable
 	 * @param dim
 	 * @return
 	 */
-	public float getFloatPosition( int dim );
+	public int getIntPosition( int dim );
 	
 	/**
 	 * Return the current position in a given dimension.
@@ -66,13 +71,5 @@ public interface Localizable
 	 * @param dim
 	 * @return
 	 */
-	public double getDoublePosition( int dim );
-	
-	/**
-	 * Create a human-readable {@link String} representation of the current
-	 * position.
-	 * 
-	 * @return
-	 */
-	public String getLocationAsString();
+	public long getLongPosition( int dim );
 }

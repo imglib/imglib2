@@ -63,6 +63,8 @@ public class DynamicLocalizablePlaneCursor<T extends Type<T>> extends DynamicLoc
 			internalIndex -= (planeSizeA - 1) * incPlaneA;
 		}
 		accessor.updateIndex( internalIndex );
+		
+		linkedIterator.fwd();
 	}
 	
 	@Override

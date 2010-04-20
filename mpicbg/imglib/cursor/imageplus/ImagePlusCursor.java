@@ -77,6 +77,8 @@ public class ImagePlusCursor<T extends Type<T>> extends CursorImpl<T> implements
 			type.updateIndex( 0 );
 			type.updateContainer( this );
 		}
+		
+		linkedIterator.fwd();
 	}
 
 	@Override

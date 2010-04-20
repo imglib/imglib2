@@ -141,6 +141,8 @@ public class LocalNeighborhoodCursor3D<T extends Type<T>> extends LocalNeighborh
 		}
 		
 		++i;
+		
+		linkedIterator.fwd();
 	}
 	
 	public int getRelativePosition( final int d ) { return cursor.getIntPosition( d ) - position[ d ]; }	

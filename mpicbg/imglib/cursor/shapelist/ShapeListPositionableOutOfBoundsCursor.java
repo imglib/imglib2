@@ -107,8 +107,9 @@ public class ShapeListPositionableOutOfBoundsCursor<T extends Type<T>> extends S
 			isOutOfBounds = true;
 			++position[ 0 ];
 			outOfBoundsStrategy.initOutOfBOunds();
-			//link.fwd();
 		}
+		
+		linkedIterator.fwd();
 	}
 
 	@Override

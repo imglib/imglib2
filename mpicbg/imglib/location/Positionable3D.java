@@ -27,11 +27,26 @@
  *
  * @author Stephan Preibisch & Stephan Saalfeld
  */
-package mpicbg.imglib.cursor;
+package mpicbg.imglib.location;
 
-public interface Localizable3D
+public interface Positionable3D
 {
-	public int getX();
-	public int getY();
-	public int getZ();
+	public void fwdX();
+	public void fwdY();
+	public void fwdZ();
+
+	public void bckX();
+	public void bckY();
+	public void bckZ();
+	
+	public void moveX( int steps );
+	public void moveY( int steps );
+	public void moveZ( int steps );
+
+	public void moveTo( int x, int y, int z );
+	
+	public void setPosition( int posX, int posY, int posZ );
+	public void setPositionX( int pos );
+	public void setPositionY( int pos );
+	public void setPositionZ( int pos );
 }

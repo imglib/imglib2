@@ -113,7 +113,7 @@ public class RegionOfInterestCursor<T extends Type<T>> extends CursorImpl<T> imp
 					for ( int e = 0; e < d; e++ )
 						currentDirectionDim[ e ] = !currentDirectionDim[ e ];
 					
-					return;
+					break;
 				}				
 			}
 			else
@@ -127,10 +127,12 @@ public class RegionOfInterestCursor<T extends Type<T>> extends CursorImpl<T> imp
 					for ( int e = 0; e < d; e++ )
 						currentDirectionDim[ e ] = !currentDirectionDim[ e ];
 					
-					return;
+					break;
 				}
 			}
-		}		
+		}
+		
+		linkedIterator.fwd();
 	}
 	
 	@Override
@@ -141,9 +143,6 @@ public class RegionOfInterestCursor<T extends Type<T>> extends CursorImpl<T> imp
 
 	@Override
 	public boolean isActive() { return cursor.isActive() && isActive; }
-
-	@Override
-	public void setDebug( boolean debug ) { this.debug = debug; }
 
 	@Override
 	public void localize( final float[] position )

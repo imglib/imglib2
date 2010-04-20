@@ -29,10 +29,10 @@
  */
 package mpicbg.imglib.cursor;
 
-import java.util.Iterator;
-
 import mpicbg.imglib.container.Container;
 import mpicbg.imglib.image.Image;
+import mpicbg.imglib.location.Iterator;
+import mpicbg.imglib.location.VoidIterator;
 import mpicbg.imglib.type.Type;
 
 /**
@@ -48,7 +48,9 @@ public abstract class CursorImpl<T extends Type<T>> implements Cursor<T>
 {
 	final protected Image<T> image;
 	final protected Container<T> container;
-	protected boolean isClosed = false, debug = false;
+	protected boolean isClosed = false;
+	
+	protected Iterator< ? > linkedIterator = VoidIterator.getInstance();
 	
 	public CursorImpl( final Container<T> container, final Image<T> image )
 	{
@@ -57,7 +59,8 @@ public abstract class CursorImpl<T extends Type<T>> implements Cursor<T>
 	}
 
 	@Override
-	public Iterator<T> iterator() 
+	/* TODO Cursors are Iterable?  Shouldn't the Image/Containers be Iterable? */
+	public Iterator< T > iterator() 
 	{
 		reset();
 		return this;
@@ -75,8 +78,6 @@ public abstract class CursorImpl<T extends Type<T>> implements Cursor<T>
 	public Container<T> getStorageContainer() { return container; }
 	@Override
 	public boolean isActive() { return !isClosed; }
-	@Override
-	public void setDebug( final boolean debug ) { this.debug = debug; }
 	
 	@Override
 	public void remove() {}
@@ -103,4 +104,14 @@ public abstract class CursorImpl<T extends Type<T>> implements Cursor<T>
 	@Override
 	public void getDimensions( int[] position ) { image.getDimensions( position ); }
 	
+	@Override
+	final public void linkIterator( final Iterator< ? > iterable ){ linkedIterator = iterable; }
+	
+	@Override
+	final public Iterator< ? > unlinkIterator()
+	{
+		final Iterator< ? > iterable = linkedIterator;
+		linkedIterator = VoidIterator.getInstance();
+		return iterable;
+	}
 }

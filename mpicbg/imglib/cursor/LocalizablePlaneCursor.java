@@ -29,6 +29,7 @@
  */
 package mpicbg.imglib.cursor;
 
+import mpicbg.imglib.location.LocalizablePlane;
 import mpicbg.imglib.type.Type;
 
 public interface LocalizablePlaneCursor<T extends Type<T>> extends  Cursor<T>, LocalizablePlane

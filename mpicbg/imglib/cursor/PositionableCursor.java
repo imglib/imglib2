@@ -31,6 +31,7 @@ package mpicbg.imglib.cursor;
 
 import mpicbg.imglib.cursor.special.LocalNeighborhoodCursor;
 import mpicbg.imglib.cursor.special.RegionOfInterestCursor;
+import mpicbg.imglib.location.RasterPositionable;
 import mpicbg.imglib.type.Type;
 
 public interface PositionableCursor<T extends Type<T>> extends LocalizableCursor<T>, RasterPositionable

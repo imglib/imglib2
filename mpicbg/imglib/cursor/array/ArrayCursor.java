@@ -58,10 +58,20 @@ public class ArrayCursor<T extends Type<T>> extends CursorImpl<T>
 	public boolean hasNext() { return type.getIndex() < sizeMinus1; }
 
 	@Override
-	public void fwd( final long steps ) { type.incIndex( (int)steps ); }
+	public void fwd( final long steps )
+	{
+		type.incIndex( (int)steps );
+		
+		linkedIterator.fwd( steps );
+	}
 
 	@Override
-	public void fwd() { type.incIndex(); }
+	public void fwd()
+	{
+		type.incIndex();
+		
+		linkedIterator.fwd();
+	}
 
 	@Override
 	public void close() 
@@ -76,6 +86,8 @@ public class ArrayCursor<T extends Type<T>> extends CursorImpl<T>
 		type.updateIndex( -1 ); 
 		type.updateContainer( this );
 		isClosed = false;
+		
+		linkedIterator.reset();
 	}
 
 	@Override

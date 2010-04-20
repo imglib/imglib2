@@ -70,6 +70,8 @@ public class ShapeListLocalizablePlaneCursor<T extends Type<T>> extends ShapeLis
 			position[ planeDimA ] = 0;
 			++position[ planeDimB ];
 		}
+		
+		linkedIterator.fwd();
 	}
 	
 	@Override

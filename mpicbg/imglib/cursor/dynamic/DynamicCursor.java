@@ -69,6 +69,8 @@ public class DynamicCursor<T extends Type<T>> extends CursorImpl<T> implements C
 	{ 
 		internalIndex += steps;
 		accessor.updateIndex( internalIndex );
+		
+		linkedIterator.fwd( steps );
 	}
 
 	@Override
@@ -76,6 +78,8 @@ public class DynamicCursor<T extends Type<T>> extends CursorImpl<T> implements C
 	{ 
 		++internalIndex; 
 		accessor.updateIndex( internalIndex );
+		
+		linkedIterator.fwd();
 	}
 
 	@Override

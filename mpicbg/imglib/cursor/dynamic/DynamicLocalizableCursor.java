@@ -41,6 +41,8 @@ public class DynamicLocalizableCursor<T extends Type<T>> extends DynamicCursor<T
 				return;
 			}
 		}
+		
+		linkedIterator.fwd();
 	}
 
 	@Override

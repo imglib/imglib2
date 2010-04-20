@@ -101,6 +101,8 @@ public class ImagePlusLocalizablePlaneCursor<T extends Type<T>> extends ImagePlu
 				type.decIndex( (planeSizeA - 1) * incPlaneA );	
 			}						
 		}
+		
+		linkedIterator.fwd();
 	}
 
 	@Override

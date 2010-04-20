@@ -106,6 +106,8 @@ public class CellCursor<T extends Type<T>> extends CursorImpl<T> implements Curs
 		cell = 0;
 		getCellData(cell);
 		isClosed = false;
+		
+		linkedIterator.reset();
 	}
 	
 	
@@ -121,7 +123,7 @@ public class CellCursor<T extends Type<T>> extends CursorImpl<T> implements Curs
 
 	@Override
 	public boolean hasNext()
-	{			
+	{	
 		if ( cell < numCells - 1 )
 			return true;
 		else if ( type.getIndex() < cellMaxI - 1 )
@@ -152,6 +154,8 @@ public class CellCursor<T extends Type<T>> extends CursorImpl<T> implements Curs
 			cells = numCells;
 		}
 		*/
+		
+		linkedIterator.fwd();
 	}	
 
 	@Override

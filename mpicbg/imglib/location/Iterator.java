@@ -27,11 +27,23 @@
  *
  * @author Stephan Preibisch & Stephan Saalfeld
  */
-package mpicbg.imglib.cursor;
+package mpicbg.imglib.location;
 
-import mpicbg.imglib.location.Localizable3D;
-import mpicbg.imglib.type.Type;
+import mpicbg.imglib.image.Image;
 
-public interface LocalizableCursor3D<T extends Type<T>> extends LocalizableCursor<T>, Localizable3D
+/** 
+ * The {@link Iterator} interface provides basic functionality for
+ * iterating over an {@link Image}.
+ *  
+ * @author Stephan Preibisch & Stephan Saalfeld
+ *
+ */
+public interface Iterator< E > extends java.util.Iterator< E >
 {
+	public void fwd( long steps );
+	public void fwd();
+	public void reset();			
+	
+	public void linkIterator( Iterator< ? > iterable );
+	public Iterator< ? > unlinkIterator();
 }

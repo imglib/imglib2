@@ -72,10 +72,11 @@ public class ImagePlusLocalizableCursor<T extends Type<T>> extends ImagePlusCurs
 				for ( int e = 0; e < d; e++ )
 					position[ e ] = 0;
 				
-				return;
+				break;
 			}
 		}
-				
+		
+		linkedIterator.fwd();
 	}
 
 	@Override

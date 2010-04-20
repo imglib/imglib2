@@ -27,7 +27,7 @@
  *
  * @author Stephan Preibisch & Stephan Saalfeld
  */
-package mpicbg.imglib.cursor;
+package mpicbg.imglib.location;
 
 /**
  * An element that can be positioned in n-dimensional discrete space.

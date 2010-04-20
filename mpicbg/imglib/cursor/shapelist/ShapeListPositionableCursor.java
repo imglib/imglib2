@@ -30,11 +30,11 @@ package mpicbg.imglib.cursor.shapelist;
 import mpicbg.imglib.container.shapelist.ShapeList;
 import mpicbg.imglib.cursor.CursorImpl;
 import mpicbg.imglib.cursor.PositionableCursor;
-import mpicbg.imglib.cursor.RasterLocalizable;
 import mpicbg.imglib.cursor.special.LocalNeighborhoodCursor;
 import mpicbg.imglib.cursor.special.LocalNeighborhoodCursorFactory;
 import mpicbg.imglib.cursor.special.RegionOfInterestCursor;
 import mpicbg.imglib.image.Image;
+import mpicbg.imglib.location.RasterLocalizable;
 import mpicbg.imglib.type.Type;
 
 /**
@@ -104,7 +104,7 @@ public class ShapeListPositionableCursor< T extends Type< T > > extends CursorIm
 	@Override
 	public void fwd( final int dim )
 	{
-		++position[ dim ];	
+		++position[ dim ];
 		//link.fwd(dim);
 	}
 
@@ -245,6 +245,8 @@ public class ShapeListPositionableCursor< T extends Type< T > > extends CursorIm
 			else
 				break;
 		}
+		
+		linkedIterator.fwd();
 	}
 
 	@Override

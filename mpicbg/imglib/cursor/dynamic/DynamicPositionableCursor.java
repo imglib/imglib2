@@ -31,11 +31,11 @@ package mpicbg.imglib.cursor.dynamic;
 
 import mpicbg.imglib.container.dynamic.DynamicContainer;
 import mpicbg.imglib.cursor.PositionableCursor;
-import mpicbg.imglib.cursor.RasterLocalizable;
 import mpicbg.imglib.cursor.special.LocalNeighborhoodCursor;
 import mpicbg.imglib.cursor.special.LocalNeighborhoodCursorFactory;
 import mpicbg.imglib.cursor.special.RegionOfInterestCursor;
 import mpicbg.imglib.image.Image;
+import mpicbg.imglib.location.RasterLocalizable;
 import mpicbg.imglib.type.Type;
 
 public class DynamicPositionableCursor<T extends Type<T>> extends DynamicLocalizableCursor<T> implements PositionableCursor<T>
@@ -89,7 +89,9 @@ public class DynamicPositionableCursor<T extends Type<T>> extends DynamicLocaliz
 		internalIndex += step[ dim ];
 		accessor.updateIndex( internalIndex );
 
-		++position[ dim ];	
+		++position[ dim ];
+		
+		linkedIterator.fwd();
 	}
 
 	@Override

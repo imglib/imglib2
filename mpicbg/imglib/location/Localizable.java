@@ -27,11 +27,52 @@
  *
  * @author Stephan Preibisch & Stephan Saalfeld
  */
-package mpicbg.imglib.cursor;
+package mpicbg.imglib.location;
 
-public interface LocalizablePlane extends RasterLocalizable
+/**
+ * The {@link Localizable} interface can localize itself in an n-dimensional
+ * real space.
+ *  
+ * @author Stephan Saalfeld
+ *
+ */
+public interface Localizable
 {
-	public void reset( int planeDimA, int planeDimB );
-	public void reset( int planeDimA, int planeDimB, int[] dimensionPositions );
-	public void reset( int planeDimA, int planeDimB, long[] dimensionPositions );
+	/**
+	 * Write the current position into the passed array.
+	 * 
+	 * @param location
+	 */
+	public void localize( float[] position );
+	
+	/**
+	 * Write the current position into the passed array.
+	 * 
+	 * @param location
+	 */
+	public void localize( double[] position );
+	
+	/**
+	 * Return the current position in a given dimension.
+	 * 
+	 * @param dim
+	 * @return
+	 */
+	public float getFloatPosition( int dim );
+	
+	/**
+	 * Return the current position in a given dimension.
+	 * 
+	 * @param dim
+	 * @return
+	 */
+	public double getDoublePosition( int dim );
+	
+	/**
+	 * Create a human-readable {@link String} representation of the current
+	 * position.
+	 * 
+	 * @return
+	 */
+	public String getLocationAsString();
 }

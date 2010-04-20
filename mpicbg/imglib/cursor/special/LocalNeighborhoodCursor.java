@@ -112,7 +112,9 @@ public class LocalNeighborhoodCursor<T extends Type<T>> extends CursorImpl<T>
 		for ( int d = 0; d < numDimensions; ++d )
 			tmp[ d ] = position[ d ] + ( tmp[d] - 1 );
 		
-		cursor.moveTo( tmp );		
+		cursor.moveTo( tmp );
+		
+		linkedIterator.fwd();
 	}
 	
 	public int getRelativePosition( final int d ) { return neigborhoodCursor.getIntPosition( d ); }
@@ -125,7 +127,4 @@ public class LocalNeighborhoodCursor<T extends Type<T>> extends CursorImpl<T>
 
 	@Override
 	public boolean isActive() { return cursor.isActive() && isActive; }
-
-	@Override
-	public void setDebug( boolean debug ) { this.debug = debug; }
 }

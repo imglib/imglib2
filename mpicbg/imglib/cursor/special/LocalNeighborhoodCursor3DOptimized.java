@@ -144,5 +144,7 @@ public class LocalNeighborhoodCursor3DOptimized<T extends Type<T>> extends Local
 		}
 		
 		++i;
+		
+		linkedIterator.fwd();
 	}
 }

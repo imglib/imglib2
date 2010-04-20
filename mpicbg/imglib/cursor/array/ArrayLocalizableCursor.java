@@ -78,6 +78,8 @@ public class ArrayLocalizableCursor<T extends Type<T>> extends ArrayCursor<T> im
 				return;
 			}
 		}
+		
+		linkedIterator.fwd();
 	}
 
 	@Override
@@ -102,6 +104,8 @@ public class ArrayLocalizableCursor<T extends Type<T>> extends ArrayCursor<T> im
 			position[ d ] = 0;
 		
 		type.updateContainer( this );
+		
+		linkedIterator.reset();
 	}
 	
 	@Override
