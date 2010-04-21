@@ -30,7 +30,6 @@
 package mpicbg.imglib.cursor.special;
 
 import mpicbg.imglib.cursor.PositionableCursor;
-import mpicbg.imglib.cursor.PositionableCursor3D;
 import mpicbg.imglib.type.Type;
 
 public class LocalNeighborhoodCursorFactory 
@@ -39,10 +38,7 @@ public class LocalNeighborhoodCursorFactory
 	{
 		if ( cursor.getImage().getNumDimensions() == 3 )
 		{
-			if ( PositionableCursor3D.class.isInstance( cursor ) )
-				return new LocalNeighborhoodCursor3DOptimized<T>( (PositionableCursor3D<T>)cursor );
-			else
-				return new LocalNeighborhoodCursor3D<T>( cursor );
+			return new LocalNeighborhoodCursor3D<T>( cursor );
 		}
 		else
 		{

@@ -33,8 +33,8 @@ import java.util.ArrayList;
 
 import ij.ImagePlus;
 
-import mpicbg.imglib.container.Container3D;
 import mpicbg.imglib.container.AbstractDirectAccessContainer;
+import mpicbg.imglib.container.Container;
 import mpicbg.imglib.container.basictypecontainer.array.ArrayDataAccess;
 import mpicbg.imglib.cursor.Cursor;
 import mpicbg.imglib.cursor.PositionableCursor;
@@ -50,7 +50,7 @@ import mpicbg.imglib.image.Image;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
 import mpicbg.imglib.type.Type;
 
-public class ImagePlusContainer<T extends Type<T>, A extends ArrayDataAccess<A>> extends AbstractDirectAccessContainer<T,A> implements Container3D<T>
+public class ImagePlusContainer<T extends Type<T>, A extends ArrayDataAccess<A>> extends AbstractDirectAccessContainer<T,A> implements Container<T>
 {
 	final ImagePlusContainerFactory factory;
 	final int width, height, depth;
@@ -115,11 +115,8 @@ public class ImagePlusContainer<T extends Type<T>, A extends ArrayDataAccess<A>>
 		return dim;
 	}
 
-	@Override
 	public int getWidth() { return width; }
-	@Override
 	public int getHeight() { return height; }
-	@Override
 	public int getDepth() { return depth; }
 
 	public final int getPos( final int[] l ) 
