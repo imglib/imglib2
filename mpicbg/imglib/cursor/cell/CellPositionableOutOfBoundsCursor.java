@@ -179,6 +179,8 @@ public class CellPositionableOutOfBoundsCursor<T extends Type<T>> extends CellPo
 			{
 				outOfBoundsStrategy.notifyOutOfBOunds( steps, dim );
 			}
+			
+			linkedRasterPositionable.move( steps, dim );
 		}
 		else
 		{
@@ -188,14 +190,12 @@ public class CellPositionableOutOfBoundsCursor<T extends Type<T>> extends CellPo
 			{
 				// still inside the cell
 				type.incIndex( step[ dim ] * steps );
+				
+				linkedRasterPositionable.move( steps, dim );
 			}
 			else
-			{
 				setPosition( position[ dim ], dim );
-			}
 		}
-
-		linkedRasterPositionable.move( steps, dim );
 	}
 
 	@Override

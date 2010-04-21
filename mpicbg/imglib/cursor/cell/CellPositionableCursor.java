@@ -254,13 +254,13 @@ public class CellPositionableCursor<T extends Type<T>> extends CellLocalizableCu
 		{
 			// still inside the cell
 			type.incIndex( step[ dim ] * steps );
+			
+			linkedRasterPositionable.move( steps, dim );
 		}
 		else
 		{
 			setPosition( position[ dim ], dim );
 		}
-
-		linkedRasterPositionable.move( steps, dim );
 	}
 	
 	@Override
