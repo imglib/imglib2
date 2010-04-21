@@ -32,7 +32,6 @@ package mpicbg.imglib.cursor.dynamic;
 import mpicbg.imglib.container.basictypecontainer.DataAccess;
 import mpicbg.imglib.container.dynamic.DynamicContainer;
 import mpicbg.imglib.container.dynamic.DynamicContainerAccessor;
-import mpicbg.imglib.cursor.Cursor;
 import mpicbg.imglib.cursor.AbstractCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.type.Type;
