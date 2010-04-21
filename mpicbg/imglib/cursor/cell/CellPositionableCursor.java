@@ -364,6 +364,8 @@ public class CellPositionableCursor<T extends Type<T>> extends CellLocalizableCu
 
 		getCellData(cell);
 		type.updateIndex( cellInstance.getPosGlobal( position ) );
+
+		linkedRasterPositionable.setPosition( position );
 	}
 
 	@Override

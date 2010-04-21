@@ -130,6 +130,8 @@ public class ShapeListLocalizablePlaneCursor<T extends Type<T>> extends ShapeLis
 	{
 		for ( int d = 0; d < numDimensions; d++ )
 			this.position[ d ] = position[ d ];
+
+		linkedRasterPositionable.setPosition( position );
 	}
 	
 }

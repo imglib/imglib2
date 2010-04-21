@@ -172,7 +172,9 @@ public class DynamicPositionableCursor<T extends Type<T>> extends DynamicLocaliz
 		accessor.updateIndex( internalIndex );
 		
 		for ( int d = 0; d < numDimensions; ++d )
-			this.position[ d ] = position[ d ];		
+			this.position[ d ] = position[ d ];
+
+		linkedRasterPositionable.setPosition( position );
 	}
 
 	@Override

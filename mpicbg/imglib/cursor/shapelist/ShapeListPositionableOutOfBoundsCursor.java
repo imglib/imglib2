@@ -214,7 +214,8 @@ public class ShapeListPositionableOutOfBoundsCursor<T extends Type<T>> extends S
 			else
 				outOfBoundsStrategy.initOutOfBOunds();
 		}
-		//link.setPosition( position );
+
+		linkedRasterPositionable.setPosition( position );
 	}
 
 	@Override

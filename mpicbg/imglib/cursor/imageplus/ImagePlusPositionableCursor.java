@@ -198,7 +198,9 @@ public class ImagePlusPositionableCursor<T extends Type<T>> extends ImagePlusLoc
 		else
 			slice = 0;
 		
-		type.updateContainer( this );		
+		type.updateContainer( this );
+
+		linkedRasterPositionable.setPosition( position );
 	}
 	
 	@Override

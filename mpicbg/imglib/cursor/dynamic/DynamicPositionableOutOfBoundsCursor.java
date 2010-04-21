@@ -279,6 +279,8 @@ public class DynamicPositionableOutOfBoundsCursor<T extends Type<T>> extends Dyn
 			internalIndex = container.getPos( position );			
 			accessor.updateIndex( internalIndex );
 		}
+
+		linkedRasterPositionable.setPosition( position );
 	}
 
 	@Override

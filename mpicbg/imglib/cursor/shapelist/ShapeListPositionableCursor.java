@@ -181,8 +181,8 @@ public class ShapeListPositionableCursor< T extends Type< T > > extends Abstract
 	{
 		for ( int d = 0; d < numDimensions; ++d )
 			this.position[ d ] = position[ d ];
-		
-		//link.setPosition( position );
+
+		linkedRasterPositionable.setPosition( position );
 	}
 	
 	@Override

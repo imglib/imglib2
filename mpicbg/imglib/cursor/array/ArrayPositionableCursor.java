@@ -177,7 +177,7 @@ public class ArrayPositionableCursor<T extends Type<T>> extends ArrayLocalizable
 		for ( int d = 0; d < numDimensions; ++d )
 			this.position[ d ] = position[ d ];
 		
-		//link.setPosition( position );
+		linkedRasterPositionable.setPosition( position );
 	}
 	
 	@Override

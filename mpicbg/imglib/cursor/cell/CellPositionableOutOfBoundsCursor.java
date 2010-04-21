@@ -349,7 +349,9 @@ public class CellPositionableOutOfBoundsCursor<T extends Type<T>> extends CellPo
 
 			getCellData(cell);
 			type.updateIndex( cellInstance.getPosGlobal( position ) );			
-		}	
+		}
+
+		linkedRasterPositionable.setPosition( position );
 	}
 	
 	@Override

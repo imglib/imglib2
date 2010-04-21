@@ -313,6 +313,8 @@ public class ImagePlusPositionableOutOfBoundsCursor<T extends Type<T>> extends I
 			
 			type.updateContainer( this );			
 		}
+
+		linkedRasterPositionable.setPosition( position );
 	}
 
 	@Override
