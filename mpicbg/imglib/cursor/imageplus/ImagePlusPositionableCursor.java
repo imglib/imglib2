@@ -118,7 +118,9 @@ public class ImagePlusPositionableCursor<T extends Type<T>> extends ImagePlusLoc
 		else
 		{
 			type.incIndex( step[ dim ] * steps );
-		}		
+		}
+
+		linkedRasterPositionable.move( steps, dim );
 	}
 	
 	@Override
@@ -179,6 +181,8 @@ public class ImagePlusPositionableCursor<T extends Type<T>> extends ImagePlusLoc
 		{
 			type.decIndex( step[ dim ] );
 		}
+
+		linkedRasterPositionable.bck( dim );
 	}
 
 	@Override

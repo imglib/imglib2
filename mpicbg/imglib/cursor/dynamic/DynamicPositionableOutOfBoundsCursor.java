@@ -207,6 +207,8 @@ public class DynamicPositionableOutOfBoundsCursor<T extends Type<T>> extends Dyn
 				outOfBoundsStrategy.initOutOfBOunds(  );
 			}
 		}
+
+		linkedRasterPositionable.move( steps, dim );
 	}
 	
 	@Override
@@ -237,7 +239,8 @@ public class DynamicPositionableOutOfBoundsCursor<T extends Type<T>> extends Dyn
 				outOfBoundsStrategy.initOutOfBOunds(  );
 			}
 		}
-		//link.bck( dim );
+
+		linkedRasterPositionable.bck( dim );
 	}
 
 	@Override

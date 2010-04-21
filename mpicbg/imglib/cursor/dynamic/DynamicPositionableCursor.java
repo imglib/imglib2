@@ -104,7 +104,9 @@ public class DynamicPositionableCursor<T extends Type<T>> extends DynamicLocaliz
 		internalIndex += step[ dim ] * steps;
 		accessor.updateIndex( internalIndex );
 
-		position[ dim ] += steps;	
+		position[ dim ] += steps;
+
+		linkedRasterPositionable.move( steps, dim );
 	}
 	
 	@Override
@@ -121,6 +123,8 @@ public class DynamicPositionableCursor<T extends Type<T>> extends DynamicLocaliz
 		accessor.updateIndex( internalIndex );
  
 		--position[ dim ];
+		
+		linkedRasterPositionable.bck( dim );
 	}
 		
 	@Override

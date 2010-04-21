@@ -117,7 +117,8 @@ public class ShapeListPositionableCursor< T extends Type< T > > extends Abstract
 	public void move( final int steps, final int dim )
 	{
 		position[ dim ] += steps;	
-		//link.move(steps, dim);
+
+		linkedRasterPositionable.move( steps, dim );
 	}
 	
 	@Override
@@ -132,7 +133,8 @@ public class ShapeListPositionableCursor< T extends Type< T > > extends Abstract
 	public void bck( final int dim )
 	{
 		--position[ dim ];
-		//link.bck(dim);
+
+		linkedRasterPositionable.bck( dim );
 	}
 		
 	@Override

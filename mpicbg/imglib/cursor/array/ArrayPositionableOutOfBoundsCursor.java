@@ -201,7 +201,8 @@ public class ArrayPositionableOutOfBoundsCursor<T extends Type<T>> extends Array
 				outOfBoundsStrategy.initOutOfBOunds(  );
 			}
 		}
-		//link.move( steps, dim );
+
+		linkedRasterPositionable.move( steps, dim );
 	}
 	
 	@Override
@@ -231,7 +232,8 @@ public class ArrayPositionableOutOfBoundsCursor<T extends Type<T>> extends Array
 				outOfBoundsStrategy.initOutOfBOunds(  );
 			}
 		}
-		//link.bck( dim );
+
+		linkedRasterPositionable.bck( dim );
 	}
 
 	@Override

@@ -166,7 +166,8 @@ public class ShapeListPositionableOutOfBoundsCursor<T extends Type<T>> extends S
 				outOfBoundsStrategy.initOutOfBOunds();
 			}
 		}
-		//link.move( steps, dim );
+
+		linkedRasterPositionable.move( steps, dim );
 	}
 	
 	@Override
@@ -189,7 +190,8 @@ public class ShapeListPositionableOutOfBoundsCursor<T extends Type<T>> extends S
 				outOfBoundsStrategy.initOutOfBOunds();
 			}
 		}
-		//link.bck( dim );
+
+		linkedRasterPositionable.bck( dim );
 	}
 
 	@Override

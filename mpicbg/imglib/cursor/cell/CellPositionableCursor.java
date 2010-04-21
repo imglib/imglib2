@@ -259,6 +259,8 @@ public class CellPositionableCursor<T extends Type<T>> extends CellLocalizableCu
 		{
 			setPosition( position[ dim ], dim );
 		}
+
+		linkedRasterPositionable.move( steps, dim );
 	}
 	
 	@Override
@@ -342,7 +344,9 @@ public class CellPositionableCursor<T extends Type<T>> extends CellLocalizableCu
 				position[ dim ]--;	
 			} 
 			//else we are moving out of the image
-		}				
+		}
+
+		linkedRasterPositionable.bck( dim );
 	}
 	
 

@@ -194,6 +194,8 @@ public class CellPositionableOutOfBoundsCursor<T extends Type<T>> extends CellPo
 				setPosition( position[ dim ], dim );
 			}
 		}
+
+		linkedRasterPositionable.move( steps, dim );
 	}
 
 	@Override
@@ -301,6 +303,8 @@ public class CellPositionableOutOfBoundsCursor<T extends Type<T>> extends CellPo
 			position[0]++;
 			outOfBoundsStrategy.initOutOfBOunds(  );			
 		}
+
+		linkedRasterPositionable.bck( dim );
 	}
 
 	@Override

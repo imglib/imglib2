@@ -111,8 +111,9 @@ public class ArrayPositionableCursor<T extends Type<T>> extends ArrayLocalizable
 	public void move( final int steps, final int dim )
 	{
 		type.incIndex( step[ dim ] * steps );
-		position[ dim ] += steps;	
-		//link.move(steps, dim);
+		position[ dim ] += steps;
+		
+		linkedRasterPositionable.move( steps, dim );
 	}
 	
 	@Override
@@ -126,7 +127,8 @@ public class ArrayPositionableCursor<T extends Type<T>> extends ArrayLocalizable
 	{
 		type.decIndex( step[ dim ] );
 		--position[ dim ];
-		//link.bck(dim);
+		
+		linkedRasterPositionable.bck( dim );
 	}
 		
 	@Override

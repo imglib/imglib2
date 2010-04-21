@@ -229,6 +229,8 @@ public class ImagePlusPositionableOutOfBoundsCursor<T extends Type<T>> extends I
 				outOfBoundsStrategy.initOutOfBOunds(  );
 			}
 		}
+
+		linkedRasterPositionable.move( steps, dim );
 	}
 	
 	@Override
@@ -266,6 +268,8 @@ public class ImagePlusPositionableOutOfBoundsCursor<T extends Type<T>> extends I
 				outOfBoundsStrategy.initOutOfBOunds(  );
 			}
 		}
+
+		linkedRasterPositionable.bck( dim );
 	}
 
 	@Override
