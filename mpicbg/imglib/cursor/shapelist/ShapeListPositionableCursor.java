@@ -166,6 +166,8 @@ public class ShapeListPositionableCursor< T extends Type< T > > extends Abstract
 	public void moveTo( final RasterLocalizable localizable )
 	{
 		localizable.localize( position );
+		
+		linkedRasterPositionable.moveTo( localizable );
 	}
 
 	@Override
@@ -198,7 +200,8 @@ public class ShapeListPositionableCursor< T extends Type< T > > extends Abstract
 	public void setPosition( final int position, final int dim )
 	{
 		this.position[ dim ] = position;
-		//link.setPosition( position, dim );
+		
+		linkedRasterPositionable.setPosition( position, dim );
 	}
 	
 	@Override

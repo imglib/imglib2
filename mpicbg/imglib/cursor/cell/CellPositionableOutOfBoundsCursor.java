@@ -373,7 +373,6 @@ public class CellPositionableOutOfBoundsCursor<T extends Type<T>> extends CellPo
 				// cursor has left the image
 				isOutOfBounds = true;
 				outOfBoundsStrategy.initOutOfBOunds(  );
-				return;
 			}
 			else
 			{
@@ -388,6 +387,8 @@ public class CellPositionableOutOfBoundsCursor<T extends Type<T>> extends CellPo
 				getCellData(cell);
 				type.updateIndex( cellInstance.getPosGlobal( this.position ) );				
 			}
+
+			linkedRasterPositionable.setPosition( position, dim );
 		}
 	}	
 }

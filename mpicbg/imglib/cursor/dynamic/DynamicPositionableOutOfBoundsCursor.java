@@ -293,17 +293,22 @@ public class DynamicPositionableOutOfBoundsCursor<T extends Type<T>> extends Dyn
 			// the other ones do as well, so we have to do a full check here
 			setPosition( this.position );
 		}
-		else if ( position < 0 || position >= dimensions[ dim ]) // we can just check in this dimension if it is still inside
-		{
-			// cursor has left the image
-			isOutOfBounds = true;
-			outOfBoundsStrategy.initOutOfBOunds();
-		}
 		else
 		{
-			// jumped around inside the image
-			internalIndex = container.getPos( this.position );
-			accessor.updateIndex( internalIndex );
-		}		
+			if ( position < 0 || position >= dimensions[ dim ]) // we can just check in this dimension if it is still inside
+			{
+				// cursor has left the image
+				isOutOfBounds = true;
+				outOfBoundsStrategy.initOutOfBOunds();
+			}
+			else
+			{
+				// jumped around inside the image
+				internalIndex = container.getPos( this.position );
+				accessor.updateIndex( internalIndex );
+			}
+
+			linkedRasterPositionable.setPosition( position, dim );
+		}
 	}
 }

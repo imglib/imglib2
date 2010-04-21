@@ -230,8 +230,8 @@ public class ShapeListPositionableOutOfBoundsCursor<T extends Type<T>> extends S
 		{
 			isOutOfBounds = true;
 			outOfBoundsStrategy.initOutOfBOunds();
-			return;
+
+			linkedRasterPositionable.setPosition( position, dim );
 		}
-		//link.setPosition(position, dim);
 	}
 }

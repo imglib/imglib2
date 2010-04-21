@@ -197,7 +197,8 @@ public class ArrayPositionableCursor<T extends Type<T>> extends ArrayLocalizable
 	{
 		this.position[ dim ] = position;
 		type.updateIndex( container.getPos( this.position ) );
-		//link.setPosition( position, dim );
+		
+		linkedRasterPositionable.setPosition( position, dim );
 	}
 	
 	@Override

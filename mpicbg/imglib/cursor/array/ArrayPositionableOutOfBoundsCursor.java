@@ -294,13 +294,15 @@ public class ArrayPositionableOutOfBoundsCursor<T extends Type<T>> extends Array
 			// cursor has left the image
 			isOutOfBounds = true;
 			outOfBoundsStrategy.initOutOfBOunds();
-			return;
+
+			linkedRasterPositionable.setPosition( position, dim );
 		}
 		else
 		{
 			// jumped around inside the image
 			type.updateIndex( container.getPos( this.position ) );
-		}		
-		//link.setPosition(position, dim);
+
+			linkedRasterPositionable.setPosition( position, dim );
+		}
 	}
 }

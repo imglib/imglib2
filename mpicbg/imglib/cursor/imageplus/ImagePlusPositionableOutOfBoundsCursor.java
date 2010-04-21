@@ -327,26 +327,30 @@ public class ImagePlusPositionableOutOfBoundsCursor<T extends Type<T>> extends I
 			// the other ones do as well, so we have to do a full check here
 			setPosition( this.position );
 		}
-		else if ( position < 0 || position >= dimensions[ dim ]) // we can just check in this dimension if it is still inside
-		{
-			// cursor has left the image
-			isOutOfBounds = true;
-			outOfBoundsStrategy.initOutOfBOunds(  );
-			return;
-		}
 		else
 		{
-			// jumped around inside the image
-			
-			if ( dim == 2 )
+			if ( position < 0 || position >= dimensions[ dim ]) // we can just check in this dimension if it is still inside
 			{
-				slice = position;
-				type.updateContainer( this );
+				// cursor has left the image
+				isOutOfBounds = true;
+				outOfBoundsStrategy.initOutOfBOunds(  );
 			}
 			else
 			{
-				type.updateIndex( container.getPos( this.position ) );
+				// jumped around inside the image
+				
+				if ( dim == 2 )
+				{
+					slice = position;
+					type.updateContainer( this );
+				}
+				else
+				{
+					type.updateIndex( container.getPos( this.position ) );
+				}
 			}
-		}		
+
+			linkedRasterPositionable.setPosition( position, dim );
+		}
 	}
 }
