@@ -34,8 +34,8 @@ import mpicbg.imglib.type.Type;
 
 public abstract class AbstractContainer<T extends Type<T>> implements Container<T>
 {
-	final protected int numPixels, numDimensions;
-	final protected long id;
+	final protected int numDimensions;
+	final protected long numPixels, id;
 	protected final int[] dim;
 	
 	final ContainerFactory factory;
@@ -51,9 +51,9 @@ public abstract class AbstractContainer<T extends Type<T>> implements Container<
 		this.id = Image.createUniqueId();
 	}
 	
-	public static int getNumPixels( final int[] dim )
+	public static long getNumPixels( final int[] dim )
 	{
-		int numPixels = 1;		
+		long numPixels = 1;		
 		
 		for (int i = 0; i < dim.length; i++)
 			numPixels *= dim[i];
@@ -88,7 +88,7 @@ public abstract class AbstractContainer<T extends Type<T>> implements Container<
 	}
 	
 	@Override
-	public int getNumPixels() { return numPixels; }
+	public long getNumPixels() { return numPixels; }
 
 	@Override
 	public String toString()

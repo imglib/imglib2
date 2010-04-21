@@ -118,7 +118,7 @@ public class ContainerTests
 		final Random rnd = new Random( 1241234 );
 		
 		// create reference array
-		final float[] reference = new float[ img.getNumPixels() ];
+		final float[] reference = new float[ (int)img.getNumPixels() ];
 		
 		// iterate over image and reference array and fill with data
 		final Cursor<FloatType> cursor = img.createCursor();			

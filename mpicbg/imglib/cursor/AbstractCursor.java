@@ -98,7 +98,10 @@ public abstract class AbstractCursor<T extends Type<T>> implements Cursor<T>
 	
 	@Override
 	public void getDimensions( int[] position ) { image.getDimensions( position ); }
-	
+
+	@Override
+	public int getDimension( final int dim ) { return image.getDimension( dim ); }
+
 	@Override
 	final public void linkIterator( final Iterator< ? > iterable ){ linkedIterator = iterable; }
 	

@@ -46,7 +46,7 @@ public class ArrayCursor<T extends Type<T>> extends AbstractCursor<T>
 
 		this.type = type;
 		this.container = container;
-		this.sizeMinus1 = container.getNumPixels() - 1;
+		this.sizeMinus1 = (int)container.getNumPixels() - 1;
 		
 		reset();
 	}

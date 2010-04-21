@@ -38,7 +38,6 @@ import mpicbg.imglib.Dimensionality;
 import mpicbg.imglib.algorithm.math.MathLib;
 import mpicbg.imglib.container.Container;
 import mpicbg.imglib.container.ContainerFactory;
-import mpicbg.imglib.container.ImageProperties;
 import mpicbg.imglib.cursor.Cursor;
 import mpicbg.imglib.cursor.PositionableCursor;
 import mpicbg.imglib.cursor.LocalizableCursor;
@@ -306,7 +305,7 @@ public class Image<T extends Type<T>> implements ImageProperties, Dimensionality
 	@Override
 	public int[] getDimensions() { return getContainer().getDimensions(); }
 	@Override
-	public int getNumPixels() { return getContainer().getNumPixels(); }
+	public long getNumPixels() { return getContainer().getNumPixels(); }
 
 	@Override
 	public String getName() { return name; }
@@ -458,7 +457,12 @@ public class Image<T extends Type<T>> implements ImageProperties, Dimensionality
 
 	public T[] toArray()
 	{
-		final T[] pixels = createType().createArray1D( getNumPixels() );
+		final long numPixels = getNumPixels();
+		
+		if ( numPixels > (long)Integer.MAX_VALUE )
+			throw new RuntimeException( "Number of pixels in Container too big for a T[] array: " + numPixels + " > " + Integer.MAX_VALUE );
+		
+		final T[] pixels = createType().createArray1D( (int)numPixels );
 		
 		final ArrayLocalizableCursor<FakeType> cursor1 = ArrayLocalizableCursor.createLinearCursor( getDimensions() );
 		final PositionableCursor<T> cursor2 = this.createPositionableCursor();

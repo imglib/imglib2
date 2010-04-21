@@ -29,6 +29,7 @@
  */
 package mpicbg.imglib.container;
 
+import mpicbg.imglib.Dimensionality;
 import mpicbg.imglib.cursor.Cursor;
 import mpicbg.imglib.cursor.PositionableCursor;
 import mpicbg.imglib.cursor.LocalizableCursor;
@@ -37,7 +38,7 @@ import mpicbg.imglib.image.Image;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
 import mpicbg.imglib.type.Type;
 
-public interface Container<T extends Type<T>>
+public interface Container<T extends Type<T>> extends Dimensionality
 {
 	public Cursor<T> createCursor( Image<T> image );
 	public LocalizableCursor<T> createLocalizableCursor( Image<T> image );
@@ -49,13 +50,9 @@ public interface Container<T extends Type<T>>
 
 	public ContainerFactory getFactory();
 	
-	public int getNumDimensions();
-	public void getDimensions( int[] dimensions );
-	public int[] getDimensions();
-	public int getDimension( int dim );
 	public long getId();
 	
-	public int getNumPixels();
+	public long getNumPixels();
 		
 	public boolean compareStorageContainerDimensions( final Container<?> img );
 	public boolean compareStorageContainerCompatibility( final Container<?> img );

@@ -27,16 +27,13 @@
  *
  * @author Stephan Preibisch & Stephan Saalfeld
  */
-package mpicbg.imglib.container;
+package mpicbg.imglib.image;
 
-public interface ImageProperties
-{
-	public int[] getDimensions();
-	public void getDimensions( int[] dimensions );
-	public int getDimension( int dim );
-		
-	public int getNumPixels();
-	public int getNumDimensions();
+import mpicbg.imglib.Dimensionality;
+
+public interface ImageProperties extends Dimensionality
+{		
+	public long getNumPixels();
 	
 	public String getName();
 	public void setName( String name );
