@@ -60,6 +60,9 @@ final public class VoidIterator implements Iterator< Object >
 	final public boolean hasNext(){ return true; }
 	
 	@Override
+	final public boolean hasNextLinked(){ return true; }
+	
+	@Override
 	final public Object next(){ return null; }
 	
 	@Override
