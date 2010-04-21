@@ -74,20 +74,22 @@ public class ImagePlusPositionableOutOfBoundsCursor<T extends Type<T>> extends I
 	@Override
 	public void reset()
 	{
-		if ( outOfBoundsStrategy == null )
-			return;
+		if ( outOfBoundsStrategy != null )
+		{
+			isClosed = false;
+			isOutOfBounds = false;
+			type.updateIndex( -1 );
+			
+			position[ 0 ] = -1;
+			slice = 0;
+			
+			for ( int d = 1; d < numDimensions; d++ )
+				position[ d ] = 0;
+			
+			type.updateContainer( this );
+		}
 		
-		isClosed = false;
-		isOutOfBounds = false;
-		type.updateIndex( -1 );
-		
-		position[ 0 ] = -1;
-		slice = 0;
-		
-		for ( int d = 1; d < numDimensions; d++ )
-			position[ d ] = 0;
-		
-		type.updateContainer( this );
+		linkedIterator.reset();
 	}
 	
 	@Override

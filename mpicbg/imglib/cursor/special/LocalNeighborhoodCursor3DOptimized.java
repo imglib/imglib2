@@ -56,6 +56,8 @@ public class LocalNeighborhoodCursor3DOptimized<T extends Type<T>> extends Local
 			cursor.setPosition( x, y, z );
 		
 		i = -1;
+		
+		linkedIterator.reset();
 	}
 	
 	@Override

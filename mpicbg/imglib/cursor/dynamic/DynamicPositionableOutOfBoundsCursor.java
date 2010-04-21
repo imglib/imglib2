@@ -65,23 +65,25 @@ public class DynamicPositionableOutOfBoundsCursor<T extends Type<T>> extends Dyn
 	@Override
 	public void reset()
 	{
-		if ( outOfBoundsStrategy == null )
-			return;
-
-		isOutOfBounds = false;		
+		if ( outOfBoundsStrategy != null )
+		{
+			isOutOfBounds = false;		
+			
+			// in this way he returns the value of index 0 even if not moved at all
+			type.updateIndex( 0 );
+			internalIndex = 0;
+			type.updateContainer( this );
+			accessor.updateIndex( internalIndex );
+			internalIndex = -1;
+			isClosed = false;
+			
+			position[ 0 ] = -1;
+			
+			for ( int d = 1; d < numDimensions; d++ )
+				position[ d ] = 0;		
+		}
 		
-		// in this way he returns the value of index 0 even if not moved at all
-		type.updateIndex( 0 );
-		internalIndex = 0;
-		type.updateContainer( this );
-		accessor.updateIndex( internalIndex );
-		internalIndex = -1;
-		isClosed = false;
-		
-		position[ 0 ] = -1;
-		
-		for ( int d = 1; d < numDimensions; d++ )
-			position[ d ] = 0;		
+		linkedIterator.reset();
 	}
 	
 	@Override

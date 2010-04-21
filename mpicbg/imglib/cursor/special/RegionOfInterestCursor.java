@@ -93,6 +93,8 @@ public class RegionOfInterestCursor<T extends Type<T>> extends AbstractCursor<T>
 		}
 		
 		roiPosition[ 0 ] = -1;
+		
+		linkedIterator.reset();
 	}
 
 	@Override

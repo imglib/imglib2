@@ -123,6 +123,8 @@ public class Array3DPositionableCursor<T extends Type<T>> extends ArrayPositiona
 		y = z = 0;
 		type.updateIndex( -1 );
 		type.updateContainer( this );
+		
+		linkedIterator.reset();
 	}
 
 	@Override

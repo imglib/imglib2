@@ -96,7 +96,9 @@ public class LocalNeighborhoodCursor<T extends Type<T>> extends AbstractCursor<T
 	public void reset()
 	{
 		cursor.setPosition( position );
-		this.neigborhoodCursor.reset();		
+		this.neigborhoodCursor.reset();
+		
+		linkedIterator.reset();
 	}
 
 	@Override

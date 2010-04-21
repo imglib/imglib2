@@ -221,8 +221,6 @@ public class CellLocalizablePlaneCursor<T extends Type<T>> extends CellLocalizab
 		isClosed = false;		
 		position[ planeDimA ] = -1;				
 		type.decIndex( incPlaneA );
-		
-		linkedIterator.reset();
 	}
 	
 	@Override
@@ -263,10 +261,10 @@ public class CellLocalizablePlaneCursor<T extends Type<T>> extends CellLocalizab
 	@Override
 	public void reset()
 	{
-		if ( step == null )
-			return;
+		if ( step != null )
+			reset( 0, 1, new int[ numDimensions ] );
 		
-		reset( 0, 1, new int[ numDimensions ] );		
+		linkedIterator.reset();
 	}
 	
 	@Override

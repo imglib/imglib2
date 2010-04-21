@@ -76,24 +76,24 @@ public class CellPositionableOutOfBoundsCursor<T extends Type<T>> extends CellPo
 	@Override
 	public void reset()
 	{
-		if ( outOfBoundsStrategy == null )
-			return;
-		
-		type.updateIndex( -1 );
-		cell = 0;
-		getCellData( cell );
-		isClosed = false;
-		isOutOfBounds = false;
-		
-		position[ 0 ] = -1;
-		
-		for ( int d = 1; d < numDimensions; d++ )
+		if ( outOfBoundsStrategy != null )
 		{
-			position[ d ] = 0;
-			cellPosition[ d ] = 0;
+			type.updateIndex( -1 );
+			cell = 0;
+			getCellData( cell );
+			isClosed = false;
+			isOutOfBounds = false;
+			
+			position[ 0 ] = -1;
+			
+			for ( int d = 1; d < numDimensions; d++ )
+			{
+				position[ d ] = 0;
+				cellPosition[ d ] = 0;
+			}
+			
+			type.updateContainer( this );
 		}
-		
-		type.updateContainer( this );
 		
 		linkedIterator.reset();
 	}
@@ -116,9 +116,7 @@ public class CellPositionableOutOfBoundsCursor<T extends Type<T>> extends CellPo
 						for ( int e = 0; e < d; e++ )
 							position[ e ] = cellOffset[ e ];
 						
-						linkedIterator.fwd();
-						
-						return;
+						break;
 					}
 				}				
 			}

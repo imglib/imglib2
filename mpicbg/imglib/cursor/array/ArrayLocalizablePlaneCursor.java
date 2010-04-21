@@ -172,10 +172,10 @@ public class ArrayLocalizablePlaneCursor<T extends Type<T>> extends ArrayLocaliz
 	@Override
 	public void reset()
 	{
-		if ( dimensions == null )
-			return;
+		if ( dimensions != null )
+			reset( 0, 1, new int[ numDimensions ] );
 		
-		reset( 0, 1, new int[ numDimensions ] );		
+		linkedIterator.reset();
 	}
 	
 	protected void setPosition( final long[] position )

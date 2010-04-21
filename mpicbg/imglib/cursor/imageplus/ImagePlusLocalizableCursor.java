@@ -82,20 +82,22 @@ public class ImagePlusLocalizableCursor<T extends Type<T>> extends ImagePlusCurs
 	@Override
 	public void reset()
 	{
-		if ( dimensions == null )
-			return;
+		if ( dimensions != null )
+		{
+			isClosed = false;
+			type.updateIndex( -1 );
+			
+			position[ 0 ] = -1;
+			
+			for ( int d = 1; d < numDimensions; d++ )
+				position[ d ] = 0;
+			
+			slice = 0;
+			
+			type.updateContainer( this );
+		}
 		
-		isClosed = false;
-		type.updateIndex( -1 );
-		
-		position[ 0 ] = -1;
-		
-		for ( int d = 1; d < numDimensions; d++ )
-			position[ d ] = 0;
-		
-		slice = 0;
-		
-		type.updateContainer( this );
+		linkedIterator.reset();
 	}
 
 

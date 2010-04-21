@@ -164,10 +164,10 @@ public class DynamicLocalizablePlaneCursor<T extends Type<T>> extends DynamicLoc
 	@Override
 	public void reset()
 	{
-		if ( dimensions == null )
-			return;
+		if ( dimensions != null )
+			reset( 0, 1, image.createPositionArray() );
 		
-		reset( 0, 1, image.createPositionArray() );		
+		linkedIterator.reset();
 	}
 
 	@Override

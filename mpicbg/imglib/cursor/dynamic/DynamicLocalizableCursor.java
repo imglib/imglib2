@@ -38,7 +38,7 @@ public class DynamicLocalizableCursor<T extends Type<T>> extends DynamicCursor<T
 				for ( int e = 0; e < d; e++ )
 					position[ e ] = 0;
 				
-				return;
+				break;
 			}
 		}
 		
@@ -59,20 +59,22 @@ public class DynamicLocalizableCursor<T extends Type<T>> extends DynamicCursor<T
 	@Override
 	public void reset()
 	{
-		if ( dimensions == null )
-			return;
-
-		type.updateIndex( 0 );
-		internalIndex = 0;
-		type.updateContainer( this );
-		accessor.updateIndex( internalIndex );
-		internalIndex = -1;
-		isClosed = false;
+		if ( dimensions != null )
+		{
+			type.updateIndex( 0 );
+			internalIndex = 0;
+			type.updateContainer( this );
+			accessor.updateIndex( internalIndex );
+			internalIndex = -1;
+			isClosed = false;
+			
+			position[ 0 ] = -1;
+			
+			for ( int d = 1; d < numDimensions; d++ )
+				position[ d ] = 0;		
+		}
 		
-		position[ 0 ] = -1;
-		
-		for ( int d = 1; d < numDimensions; d++ )
-			position[ d ] = 0;		
+		linkedIterator.reset();
 	}
 
 	

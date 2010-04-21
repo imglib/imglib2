@@ -213,7 +213,9 @@ public class ShapeListPositionableCursor< T extends Type< T > > extends Abstract
 		position[ 0 ] = -1;
 		
 		for ( int d = 1; d < numDimensions; ++d )
-			position[ d ] = 0; 
+			position[ d ] = 0;
+		
+		linkedIterator.reset();
 	}
 
 	/**

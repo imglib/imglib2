@@ -109,15 +109,17 @@ public class Array3DPositionableOutOfBoundsCursor<T extends Type<T>> extends Arr
 	@Override
 	public void reset()
 	{ 
-		if ( outOfBoundsStrategy == null )
-			return;
+		if ( outOfBoundsStrategy != null )
+		{
+			isOutOfBounds = false;
+			isClosed = false;
+			x = -1;
+			y = z = 0;
+			type.updateIndex( -1 );
+			type.updateContainer( this );
+		}
 		
-		isOutOfBounds = false;
-		isClosed = false;
-		x = -1;
-		y = z = 0;
-		type.updateIndex( -1 );
-		type.updateContainer( this );
+		linkedIterator.reset();
 	}
 
 	@Override

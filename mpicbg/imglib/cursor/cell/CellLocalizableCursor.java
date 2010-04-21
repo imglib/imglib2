@@ -104,20 +104,20 @@ public class CellLocalizableCursor<T extends Type<T>> extends CellCursor<T> impl
 	@Override
 	public void reset()
 	{
-		if ( position == null )
-			return;
-		
-		type.updateIndex( -1 );
-		cell = 0;
-		getCellData( cell );
-		isClosed = false;
-		
-		position[ 0 ] = -1;
-		
-		for ( int d = 1; d < numDimensions; d++ )
-			position[ d ] = 0;
-		
-		type.updateContainer( this );
+		if ( position != null )
+		{
+			type.updateIndex( -1 );
+			cell = 0;
+			getCellData( cell );
+			isClosed = false;
+			
+			position[ 0 ] = -1;
+			
+			for ( int d = 1; d < numDimensions; d++ )
+				position[ d ] = 0;
+			
+			type.updateContainer( this );
+		}
 		
 		linkedIterator.reset();
 	}

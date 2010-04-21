@@ -262,10 +262,10 @@ public class ImagePlusLocalizablePlaneCursor<T extends Type<T>> extends ImagePlu
 	@Override
 	public void reset()
 	{
-		if ( dimensions == null )
-			return;
+		if ( dimensions != null )		
+			reset( 0, 1, new int[ numDimensions ] );
 		
-		reset( 0, 1, new int[ numDimensions ] );		
+		linkedIterator.reset();
 	}
 
 	@Override

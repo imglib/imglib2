@@ -75,7 +75,7 @@ public class ArrayLocalizableCursor<T extends Type<T>> extends ArrayCursor<T> im
 				for ( int e = 0; e < d; e++ )
 					position[ e ] = 0;
 				
-				return;
+				break;
 			}
 		}
 		
@@ -84,26 +84,28 @@ public class ArrayLocalizableCursor<T extends Type<T>> extends ArrayCursor<T> im
 
 	@Override
 	public void jumpFwd( final long steps )
-	{ 
-		for ( long j = 0; j < steps; ++j )
-			fwd();
+	{	
+		type.incIndex( (int)steps );		
+		container.getPositionForIndex( type.getIndex(), position );
+		
+		linkedIterator.jumpFwd( steps );
 	}
 	
 	@Override
 	public void reset()
 	{
-		if ( dimensions == null )
-			return;
-		
-		isClosed = false;
-		type.updateIndex( -1 );
-		
-		position[ 0 ] = -1;
-		
-		for ( int d = 1; d < numDimensions; d++ )
-			position[ d ] = 0;
-		
-		type.updateContainer( this );
+		if ( dimensions != null )
+		{
+			isClosed = false;
+			type.updateIndex( -1 );
+			
+			position[ 0 ] = -1;
+			
+			for ( int d = 1; d < numDimensions; d++ )
+				position[ d ] = 0;
+			
+			type.updateContainer( this );
+		}
 		
 		linkedIterator.reset();
 	}

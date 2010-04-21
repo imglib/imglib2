@@ -82,7 +82,7 @@ public class ShapeListLocalizablePlaneCursor<T extends Type<T>> extends ShapeLis
 		
 		setPosition( dimensionPositions );
 		position[ planeDimA ] = -1;
-		position[ planeDimA ] = 0;				
+		position[ planeDimA ] = 0;			
 	}
 
 	@Override
@@ -109,10 +109,10 @@ public class ShapeListLocalizablePlaneCursor<T extends Type<T>> extends ShapeLis
 	@Override
 	public void reset()
 	{
-		if ( dimensions == null )
-			return;
+		if ( dimensions != null )
+			reset( 0, 1, new int[ numDimensions ] );
 		
-		reset( 0, 1, new int[ numDimensions ] );		
+		linkedIterator.reset();
 	}
 
 	@Override

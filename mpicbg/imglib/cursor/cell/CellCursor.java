@@ -31,7 +31,6 @@ package mpicbg.imglib.cursor.cell;
 
 import mpicbg.imglib.container.cell.Cell;
 import mpicbg.imglib.container.cell.CellContainer;
-import mpicbg.imglib.cursor.Cursor;
 import mpicbg.imglib.cursor.AbstractCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.type.Type;

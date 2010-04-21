@@ -30,7 +30,6 @@
 package mpicbg.imglib.cursor.imageplus;
 
 import mpicbg.imglib.container.imageplus.ImagePlusContainer;
-import mpicbg.imglib.cursor.Cursor;
 import mpicbg.imglib.cursor.AbstractCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.type.Type;
@@ -96,6 +95,8 @@ public class ImagePlusCursor<T extends Type<T>> extends AbstractCursor<T>
 		type.updateIndex( -1 );
 		type.updateContainer( this );
 		isClosed = false;
+		
+		linkedIterator.reset();
 	}
 
 	@Override

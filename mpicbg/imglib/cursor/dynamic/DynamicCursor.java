@@ -98,6 +98,8 @@ public class DynamicCursor<T extends Type<T>> extends AbstractCursor<T>
 		accessor.updateIndex( internalIndex );
 		internalIndex = -1;
 		isClosed = false;
+		
+		linkedIterator.reset();
 	}
 	
 	public int getInternalIndex() { return internalIndex; }

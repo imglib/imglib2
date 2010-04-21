@@ -73,13 +73,14 @@ public class ShapeListPositionableOutOfBoundsCursor<T extends Type<T>> extends S
 	@Override
 	public void reset()
 	{
-		if ( outOfBoundsStrategy == null )
-			return;
-		
-		isClosed = false;
-		isOutOfBounds = false;
-		
-		super.reset();
+		if ( outOfBoundsStrategy != null )
+		{
+			isClosed = false;
+			isOutOfBounds = false;
+			super.reset();
+		}
+		else
+			linkedIterator.reset();
 	}
 	
 	@Override
@@ -101,7 +102,10 @@ public class ShapeListPositionableOutOfBoundsCursor<T extends Type<T>> extends S
 				if ( ++position[ d ] >= dimensions[ d ] )
 					position[ d ] = 0;
 				else
+				{
+					linkedIterator.fwd();
 					return;
+				}
 			}
 			
 			isOutOfBounds = true;
