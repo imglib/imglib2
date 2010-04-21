@@ -125,7 +125,8 @@ public class ShapeListPositionableCursor< T extends Type< T > > extends Abstract
 	public void move( final long steps, final int dim )
 	{
 		position[ dim ] += steps;	
-		//link.move(steps, dim);
+
+		linkedRasterPositionable.move( steps, dim );
 	}
 	
 	
