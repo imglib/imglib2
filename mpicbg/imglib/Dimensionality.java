@@ -35,6 +35,7 @@ public interface Dimensionality
 	
 	public int[] getDimensions();
 	public void getDimensions( int[] position );
-	
+	public int getDimension( int dim );
+
 	//public Point
 }

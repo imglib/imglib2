@@ -33,6 +33,6 @@ import mpicbg.imglib.type.Type;
 
 public interface PixelGridContainer<T extends Type< T >> extends Container< T >
 {
-	public int getNumEntities();
+	public long getNumEntities();
 	public int getNumEntitiesPerPixel();
 }

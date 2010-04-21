@@ -54,8 +54,8 @@ public abstract class DynamicContainer<T extends Type<T>, A extends DynamicConta
 		super( factory, dim, entitiesPerPixel );
 		
 		this.step = Array.createAllocationSteps( dim );
-		this.numPixels = super.numPixels; 
-		this.numEntities = super.numEntities; 
+		this.numPixels = (int)super.numPixels; 
+		this.numEntities = (int)super.numEntities; 
 	}
 	
 	public int[] getSteps() { return step.clone(); }
@@ -77,10 +77,10 @@ public abstract class DynamicContainer<T extends Type<T>, A extends DynamicConta
 	public abstract A createAccessor();
 
 	@Override
-	public int getNumEntities() { return numEntities; }
+	public long getNumEntities() { return numEntities; }
 
 	@Override
-	public int getNumPixels() { return numPixels; }
+	public long getNumPixels() { return numPixels; }
 
 	@Override
 	public DynamicCursor<T> createCursor( final Image<T> image )

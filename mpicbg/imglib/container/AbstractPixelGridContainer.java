@@ -34,7 +34,7 @@ import mpicbg.imglib.type.Type;
 public abstract class AbstractPixelGridContainer< T extends Type< T > > extends AbstractContainer<T> implements PixelGridContainer< T >
 {
 	final protected int entitiesPerPixel;
-	protected int numEntities;
+	protected long numEntities;
 	
 	public AbstractPixelGridContainer( final ContainerFactory factory, int[] dim, final int entitiesPerPixel )
 	{
@@ -43,13 +43,13 @@ public abstract class AbstractPixelGridContainer< T extends Type< T > > extends 
 		this.numEntities = numPixels * entitiesPerPixel;
 	}
 	
-	public static int getNumEntities( final int[] dim, final int entitiesPerPixel )
+	public static long getNumEntities( final int[] dim, final int entitiesPerPixel )
 	{
 		return getNumPixels( dim ) * entitiesPerPixel;
 	}
 		
 	@Override
-	public int getNumEntities() { return numEntities; }
+	public long getNumEntities() { return numEntities; }
 	@Override
 	public int getNumEntitiesPerPixel(){ return entitiesPerPixel; }
 }

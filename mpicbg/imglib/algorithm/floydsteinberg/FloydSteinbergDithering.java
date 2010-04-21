@@ -201,7 +201,7 @@ public class FloydSteinbergDithering<T extends RealType<T>> implements OutputAlg
 			final Image<FloatType> kernel = factory.createImage( MathLib.getArrayFromValue( 3, numDimensions) );				
 			final LocalizableCursor<FloatType> cursor = kernel.createLocalizableCursor();
 			
-			final int numValues = kernel.getNumPixels() / 2;
+			final int numValues = (int)kernel.getNumPixels() / 2;
 			final float[] rndValues = new float[ numValues ];
 			float sum = 0;
 			Random rnd = new Random( 435345 );

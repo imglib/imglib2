@@ -49,8 +49,8 @@ public class Cell< T extends Type<T>, A extends ArrayDataAccess<A>> //extends Ar
 		this.cellId = cellId;
 		this.numDimensions = dim.length;
 		this.dim = dim;
-		this.numPixels = AbstractContainer.getNumPixels( dim );
-		this.numEntities = AbstractPixelGridContainer.getNumEntities( dim, entitiesPerPixel );
+		this.numPixels = (int)AbstractContainer.getNumPixels( dim );
+		this.numEntities = (int)AbstractPixelGridContainer.getNumEntities( dim, entitiesPerPixel );
 		
 		step = new int[ numDimensions ];
 		
