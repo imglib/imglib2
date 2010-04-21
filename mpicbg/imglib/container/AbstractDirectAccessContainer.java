@@ -27,24 +27,20 @@
  *
  * @author Stephan Preibisch & Stephan Saalfeld
  */
+package mpicbg.imglib.container;
 
-package mpicbg.imglib.type;
+import mpicbg.imglib.container.basictypecontainer.DataAccess;
+import mpicbg.imglib.type.Type;
 
-public abstract class TypeImpl<T extends TypeImpl<T>> implements Type<T>
+public abstract class AbstractDirectAccessContainer< T extends Type< T >, A extends DataAccess > extends AbstractPixelGridContainer< T > implements DirectAccessContainer<T, A>
 {
-	protected int i = 0;
-
-	public void updateIndex( final int i ) { this.i = i; }
-	public int getIndex() { return i; }
+	protected T linkedType; 
 	
-	public void incIndex() { ++i; }
-	public void incIndex( final int increment ) { i += increment; }
-	public void decIndex() { --i; }
-	public void decIndex( final int decrement ) { i -= decrement; }
-		
+	public AbstractDirectAccessContainer( final ContainerFactory factory, int[] dim, final int entitiesPerPixel )
+	{
+		super( factory, dim, entitiesPerPixel );
+	}
+	
 	@Override
-	public abstract String toString();	
-
-	@Override
-	public abstract T clone();	
+	public void setLinkedType( final T type ) { this.linkedType = type; }
 }

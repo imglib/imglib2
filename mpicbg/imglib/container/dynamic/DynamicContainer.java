@@ -29,7 +29,7 @@
  */
 package mpicbg.imglib.container.dynamic;
 
-import mpicbg.imglib.container.DirectAccessContainerImpl;
+import mpicbg.imglib.container.AbstractDirectAccessContainer;
 import mpicbg.imglib.container.array.Array;
 import mpicbg.imglib.cursor.PositionableCursor;
 import mpicbg.imglib.cursor.LocalizablePlaneCursor;
@@ -42,7 +42,7 @@ import mpicbg.imglib.image.Image;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
 import mpicbg.imglib.type.Type;
 
-public abstract class DynamicContainer<T extends Type<T>, A extends DynamicContainerAccessor> extends DirectAccessContainerImpl<T, A>
+public abstract class DynamicContainer<T extends Type<T>, A extends DynamicContainerAccessor> extends AbstractDirectAccessContainer<T, A>
 {
 	final protected int[] step;
 	

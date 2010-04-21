@@ -35,7 +35,7 @@ import mpicbg.imglib.container.basictypecontainer.ByteAccess;
 import mpicbg.imglib.container.basictypecontainer.array.ByteArray;
 import mpicbg.imglib.cursor.Cursor;
 
-public abstract class GenericByteType<T extends GenericByteType<T>> extends IntegerTypeImpl<T>
+public abstract class GenericByteType<T extends GenericByteType<T>> extends AbstractIntegerType<T>
 {
 	// the DirectAccessContainer
 	final DirectAccessContainer<T, ? extends ByteAccess> storage;

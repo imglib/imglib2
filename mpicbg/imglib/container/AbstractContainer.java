@@ -32,7 +32,7 @@ package mpicbg.imglib.container;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.type.Type;
 
-public abstract class ContainerImpl<T extends Type<T>> implements Container<T>
+public abstract class AbstractContainer<T extends Type<T>> implements Container<T>
 {
 	final protected int numPixels, numDimensions;
 	final protected long id;
@@ -40,7 +40,7 @@ public abstract class ContainerImpl<T extends Type<T>> implements Container<T>
 	
 	final ContainerFactory factory;
 
-	public ContainerImpl( final ContainerFactory factory, int[] dim )
+	public AbstractContainer( final ContainerFactory factory, int[] dim )
 	{
 		this.numDimensions = dim.length;
 		

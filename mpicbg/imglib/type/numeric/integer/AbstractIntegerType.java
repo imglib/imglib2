@@ -5,9 +5,9 @@ import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.display.Display;
 import mpicbg.imglib.image.display.IntegerTypeDisplay;
 import mpicbg.imglib.type.numeric.IntegerType;
-import mpicbg.imglib.type.numeric.real.RealTypeImpl;
+import mpicbg.imglib.type.numeric.real.AbstractRealType;
 
-public abstract class IntegerTypeImpl<T extends IntegerTypeImpl<T>> extends RealTypeImpl<T> implements IntegerType<T>
+public abstract class AbstractIntegerType<T extends AbstractIntegerType<T>> extends AbstractRealType<T> implements IntegerType<T>
 {
 	@Override
 	public Display<T> getDefaultDisplay( final Image<T> image )

@@ -36,15 +36,15 @@ import mpicbg.imglib.location.VoidIterator;
 import mpicbg.imglib.type.Type;
 
 /**
- * We use the class {@link CursorImpl} instead of implementing methods here so that other classes can
- * only implement {@link Cursor} and extend other classes instead. As each {@link CursorImpl} is also
+ * We use the class {@link AbstractCursor} instead of implementing methods here so that other classes can
+ * only implement {@link Cursor} and extend other classes instead. As each {@link AbstractCursor} is also
  * a {@link Cursor} there are no disadvantages for the {@link Cursor} implementations.
  * 
  * @author Stephan
  *
  * @param <T>
  */
-public abstract class CursorImpl<T extends Type<T>> implements Cursor<T>
+public abstract class AbstractCursor<T extends Type<T>> implements Cursor<T>
 {
 	final protected Image<T> image;
 	final protected Container<T> container;
@@ -52,20 +52,12 @@ public abstract class CursorImpl<T extends Type<T>> implements Cursor<T>
 	
 	protected Iterator< ? > linkedIterator = VoidIterator.getInstance();
 	
-	public CursorImpl( final Container<T> container, final Image<T> image )
+	public AbstractCursor( final Container<T> container, final Image<T> image )
 	{
 		this.image = image;
 		this.container = container;
 	}
 
-	@Override
-	/* TODO Cursors are Iterable?  Shouldn't the Image/Containers be Iterable? */
-	public Iterator< T > iterator() 
-	{
-		reset();
-		return this;
-	}
-	
 	@Override
 	@Deprecated
 	final public T getType(){ return type(); } 

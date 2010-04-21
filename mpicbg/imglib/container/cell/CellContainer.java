@@ -32,7 +32,7 @@ package mpicbg.imglib.container.cell;
 import java.util.ArrayList;
 
 import mpicbg.imglib.container.ContainerFactory;
-import mpicbg.imglib.container.DirectAccessContainerImpl;
+import mpicbg.imglib.container.AbstractDirectAccessContainer;
 import mpicbg.imglib.container.basictypecontainer.array.ArrayDataAccess;
 import mpicbg.imglib.cursor.Cursor;
 import mpicbg.imglib.cursor.array.ArrayPositionableCursor;
@@ -47,7 +47,7 @@ import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
 import mpicbg.imglib.type.Type;
 import mpicbg.imglib.type.label.FakeType;
 
-public class CellContainer<T extends Type<T>, A extends ArrayDataAccess<A>> extends DirectAccessContainerImpl<T, A>
+public class CellContainer<T extends Type<T>, A extends ArrayDataAccess<A>> extends AbstractDirectAccessContainer<T, A>
 {
 	final protected ArrayList<Cell<T,A>> data;
 	final protected int[] numCellsDim, cellSize;

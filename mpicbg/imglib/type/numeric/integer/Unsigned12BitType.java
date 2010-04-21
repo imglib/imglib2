@@ -35,9 +35,9 @@ import mpicbg.imglib.container.DirectAccessContainerFactory;
 import mpicbg.imglib.container.basictypecontainer.BitAccess;
 import mpicbg.imglib.container.basictypecontainer.array.BitArray;
 import mpicbg.imglib.cursor.Cursor;
-import mpicbg.imglib.type.numeric.integer.IntegerTypeImpl;
+import mpicbg.imglib.type.numeric.integer.AbstractIntegerType;
 
-public class Unsigned12BitType extends IntegerTypeImpl<Unsigned12BitType>
+public class Unsigned12BitType extends AbstractIntegerType<Unsigned12BitType>
 {
 	// the DirectAccessContainer
 	final DirectAccessContainer<Unsigned12BitType, ? extends BitAccess> storage;

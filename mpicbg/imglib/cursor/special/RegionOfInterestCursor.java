@@ -29,12 +29,12 @@
  */
 package mpicbg.imglib.cursor.special;
 
-import mpicbg.imglib.cursor.CursorImpl;
+import mpicbg.imglib.cursor.AbstractCursor;
 import mpicbg.imglib.cursor.PositionableCursor;
 import mpicbg.imglib.cursor.LocalizableCursor;
 import mpicbg.imglib.type.Type;
 
-public class RegionOfInterestCursor<T extends Type<T>> extends CursorImpl<T> implements LocalizableCursor<T> 
+public class RegionOfInterestCursor<T extends Type<T>> extends AbstractCursor<T> implements LocalizableCursor<T> 
 {
 	final PositionableCursor<T> cursor;
 	final int[] offset, size, roiPosition;

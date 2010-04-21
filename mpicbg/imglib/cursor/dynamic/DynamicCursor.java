@@ -33,11 +33,11 @@ import mpicbg.imglib.container.basictypecontainer.DataAccess;
 import mpicbg.imglib.container.dynamic.DynamicContainer;
 import mpicbg.imglib.container.dynamic.DynamicContainerAccessor;
 import mpicbg.imglib.cursor.Cursor;
-import mpicbg.imglib.cursor.CursorImpl;
+import mpicbg.imglib.cursor.AbstractCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.type.Type;
 
-public class DynamicCursor<T extends Type<T>> extends CursorImpl<T> implements Cursor<T>
+public class DynamicCursor<T extends Type<T>> extends AbstractCursor<T> implements Cursor<T>
 {
 	protected final T type;
 	protected final DynamicContainer<T,? extends DataAccess> container;

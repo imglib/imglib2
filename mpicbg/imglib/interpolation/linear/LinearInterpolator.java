@@ -33,11 +33,11 @@ import mpicbg.imglib.algorithm.math.MathLib;
 import mpicbg.imglib.cursor.PositionableCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.interpolation.InterpolatorFactory;
-import mpicbg.imglib.interpolation.InterpolatorImpl;
+import mpicbg.imglib.interpolation.AbstractInterpolator;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
 import mpicbg.imglib.type.numeric.NumericType;
 
-public class LinearInterpolator<T extends NumericType<T>> extends InterpolatorImpl<T>
+public class LinearInterpolator<T extends NumericType<T>> extends AbstractInterpolator<T>
 {
 	final PositionableCursor<T> cursor;
 	final T tmp1, tmp2;

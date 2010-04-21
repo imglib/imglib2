@@ -37,7 +37,7 @@ import mpicbg.imglib.container.basictypecontainer.array.FloatArray;
 import mpicbg.imglib.cursor.Cursor;
 import mpicbg.imglib.type.numeric.RealType;
 
-public class FloatType extends RealTypeImpl<FloatType> implements RealType<FloatType>
+public class FloatType extends AbstractRealType<FloatType> implements RealType<FloatType>
 {
 	// the DirectAccessContainer
 	final DirectAccessContainer<FloatType, ? extends FloatAccess> storage;

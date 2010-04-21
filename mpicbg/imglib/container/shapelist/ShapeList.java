@@ -30,7 +30,7 @@ package mpicbg.imglib.container.shapelist;
 import java.awt.Shape;
 import java.util.ArrayList;
 
-import mpicbg.imglib.container.ContainerImpl;
+import mpicbg.imglib.container.AbstractContainer;
 import mpicbg.imglib.cursor.shapelist.ShapeListPositionableCursor;
 import mpicbg.imglib.cursor.shapelist.ShapeListPositionableOutOfBoundsCursor;
 import mpicbg.imglib.cursor.shapelist.ShapeListLocalizablePlaneCursor;
@@ -46,7 +46,7 @@ import mpicbg.imglib.type.Type;
  * @version 0.1a
  */
 //public class ShapeList< T extends Type< T > > extends ContainerImpl< T, DataAccess >
-public class ShapeList< T extends Type< T > > extends ContainerImpl< T >
+public class ShapeList< T extends Type< T > > extends AbstractContainer< T >
 {
 	final public ShapeListContainerFactory factory;
 	

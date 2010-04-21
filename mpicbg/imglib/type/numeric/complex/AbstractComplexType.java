@@ -5,10 +5,10 @@ import mpicbg.imglib.algorithm.math.MathLib;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.display.ComplexTypePowerSpectrumDisplay;
 import mpicbg.imglib.image.display.Display;
-import mpicbg.imglib.type.TypeImpl;
+import mpicbg.imglib.type.AbstractType;
 import mpicbg.imglib.type.numeric.ComplexType;
 
-public abstract class ComplexTypeImpl<T extends ComplexTypeImpl<T>> extends TypeImpl<T> implements ComplexType<T>
+public abstract class AbstractComplexType<T extends AbstractComplexType<T>> extends AbstractType<T> implements ComplexType<T>
 {
 	// the indices for real and complex number
 	int realI = 0, complexI = 1;

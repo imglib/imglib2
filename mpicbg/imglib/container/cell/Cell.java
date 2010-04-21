@@ -29,8 +29,8 @@
  */
 package mpicbg.imglib.container.cell;
 
-import mpicbg.imglib.container.ContainerImpl;
-import mpicbg.imglib.container.PixelGridContainerImpl;
+import mpicbg.imglib.container.AbstractContainer;
+import mpicbg.imglib.container.AbstractPixelGridContainer;
 import mpicbg.imglib.container.array.Array;
 import mpicbg.imglib.container.basictypecontainer.array.ArrayDataAccess;
 import mpicbg.imglib.type.Type;
@@ -49,8 +49,8 @@ public class Cell< T extends Type<T>, A extends ArrayDataAccess<A>> //extends Ar
 		this.cellId = cellId;
 		this.numDimensions = dim.length;
 		this.dim = dim;
-		this.numPixels = ContainerImpl.getNumPixels( dim );
-		this.numEntities = PixelGridContainerImpl.getNumEntities( dim, entitiesPerPixel );
+		this.numPixels = AbstractContainer.getNumPixels( dim );
+		this.numEntities = AbstractPixelGridContainer.getNumEntities( dim, entitiesPerPixel );
 		
 		step = new int[ numDimensions ];
 		

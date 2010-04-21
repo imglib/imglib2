@@ -29,7 +29,7 @@
  */
 package mpicbg.imglib.container.array;
 
-import mpicbg.imglib.container.DirectAccessContainerImpl;
+import mpicbg.imglib.container.AbstractDirectAccessContainer;
 import mpicbg.imglib.container.basictypecontainer.DataAccess;
 import mpicbg.imglib.cursor.Cursor;
 import mpicbg.imglib.cursor.array.ArrayCursor;
@@ -41,7 +41,7 @@ import mpicbg.imglib.image.Image;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
 import mpicbg.imglib.type.Type;
 
-public class Array<T extends Type<T>, A extends DataAccess> extends DirectAccessContainerImpl<T, A>
+public class Array<T extends Type<T>, A extends DataAccess> extends AbstractDirectAccessContainer<T, A>
 {
 	final protected int[] step;
 	final ArrayContainerFactory factory;

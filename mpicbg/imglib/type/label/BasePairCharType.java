@@ -37,10 +37,10 @@ import mpicbg.imglib.cursor.Cursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.display.BasePairTypeDisplay;
 import mpicbg.imglib.type.BasePairType;
-import mpicbg.imglib.type.TypeImpl;
+import mpicbg.imglib.type.AbstractType;
 import mpicbg.imglib.type.label.BasePairBitType.Base;
 
-public class BasePairCharType extends TypeImpl<BasePairCharType> implements BasePairType<BasePairCharType>
+public class BasePairCharType extends AbstractType<BasePairCharType> implements BasePairType<BasePairCharType>
 {
 	// the DirectAccessContainer
 	final DirectAccessContainer<BasePairCharType, ? extends CharAccess> storage;

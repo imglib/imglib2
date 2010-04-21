@@ -29,9 +29,9 @@
  */
 package mpicbg.imglib.cursor;
 
+import mpicbg.imglib.Dimensionality;
 import mpicbg.imglib.container.Container;
 import mpicbg.imglib.container.array.Array;
-import mpicbg.imglib.cursor.vector.Dimensionality;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.location.Iterator;
 import mpicbg.imglib.sampler.Sampler;
@@ -100,7 +100,7 @@ import mpicbg.imglib.type.Type;
  *
  * @param <T> - the {@link Type} this {@link Cursor} works on
  */
-public interface Cursor< T extends Type< T > > extends Sampler< T >, java.lang.Iterable< T >, Iterator< T >, Dimensionality
+public interface Cursor< T extends Type< T > > extends Sampler< T >, Iterator< T >, Dimensionality
 {	
 	public boolean isActive();	
 

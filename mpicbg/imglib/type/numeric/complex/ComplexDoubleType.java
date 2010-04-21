@@ -36,7 +36,7 @@ import mpicbg.imglib.container.basictypecontainer.array.DoubleArray;
 import mpicbg.imglib.cursor.Cursor;
 import mpicbg.imglib.type.numeric.ComplexType;
 
-public class ComplexDoubleType extends ComplexTypeImpl<ComplexDoubleType> implements ComplexType<ComplexDoubleType>
+public class ComplexDoubleType extends AbstractComplexType<ComplexDoubleType> implements ComplexType<ComplexDoubleType>
 {
 	// the DirectAccessContainer
 	final DirectAccessContainer<ComplexDoubleType, ? extends DoubleAccess> storage;

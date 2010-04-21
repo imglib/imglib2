@@ -39,9 +39,9 @@ import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.display.BitTypeDisplay;
 import mpicbg.imglib.type.LogicType;
 import mpicbg.imglib.type.numeric.RealType;
-import mpicbg.imglib.type.numeric.integer.IntegerTypeImpl;
+import mpicbg.imglib.type.numeric.integer.AbstractIntegerType;
 
-public class BitType extends IntegerTypeImpl<BitType> implements LogicType<BitType>, RealType<BitType>
+public class BitType extends AbstractIntegerType<BitType> implements LogicType<BitType>, RealType<BitType>
 {
 	// the DirectAccessContainer
 	final DirectAccessContainer<BitType, ? extends BitAccess> storage;

@@ -36,7 +36,7 @@ import mpicbg.imglib.container.basictypecontainer.LongAccess;
 import mpicbg.imglib.container.basictypecontainer.array.LongArray;
 import mpicbg.imglib.cursor.Cursor;
 
-final public class LongType extends IntegerTypeImpl<LongType>
+final public class LongType extends AbstractIntegerType<LongType>
 {
 	// the DirectAccessContainer
 	final DirectAccessContainer<LongType, ? extends LongAccess> storage;

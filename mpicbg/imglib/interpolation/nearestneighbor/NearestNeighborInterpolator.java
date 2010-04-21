@@ -33,11 +33,11 @@ import mpicbg.imglib.algorithm.math.MathLib;
 import mpicbg.imglib.cursor.PositionableCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.interpolation.InterpolatorFactory;
-import mpicbg.imglib.interpolation.InterpolatorImpl;
+import mpicbg.imglib.interpolation.AbstractInterpolator;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
 import mpicbg.imglib.type.Type;
 
-public class NearestNeighborInterpolator<T extends Type<T>> extends InterpolatorImpl<T>
+public class NearestNeighborInterpolator<T extends Type<T>> extends AbstractInterpolator<T>
 {
 	final PositionableCursor<T> cursor;
 	

@@ -31,7 +31,7 @@ package mpicbg.imglib.container.array;
 
 import mpicbg.imglib.container.DirectAccessContainer;
 import mpicbg.imglib.container.DirectAccessContainerFactory;
-import mpicbg.imglib.container.PixelGridContainerImpl;
+import mpicbg.imglib.container.AbstractPixelGridContainer;
 import mpicbg.imglib.container.basictypecontainer.*;
 import mpicbg.imglib.container.basictypecontainer.array.BitArray;
 import mpicbg.imglib.container.basictypecontainer.array.ByteArray;
@@ -48,7 +48,7 @@ public class ArrayContainerFactory extends DirectAccessContainerFactory
 	@Override
 	public <T extends Type<T>> DirectAccessContainer<T, BitAccess> createBitInstance( int[] dimensions, final int entitiesPerPixel)
 	{
-		final int numPixels = PixelGridContainerImpl.getNumEntities(dimensions, entitiesPerPixel);
+		final int numPixels = AbstractPixelGridContainer.getNumEntities(dimensions, entitiesPerPixel);
 		
 		if ( dimensions.length == 3 && useOptimizedContainers )
 			return new Array3D<T, BitAccess>( this, new BitArray( numPixels ), dimensions[0], dimensions[1], dimensions[2], entitiesPerPixel );
@@ -59,7 +59,7 @@ public class ArrayContainerFactory extends DirectAccessContainerFactory
 	@Override
 	public <T extends Type<T>> DirectAccessContainer<T, ByteAccess> createByteInstance( final int[] dimensions, final int entitiesPerPixel)
 	{
-		final int numPixels = PixelGridContainerImpl.getNumEntities(dimensions, entitiesPerPixel);
+		final int numPixels = AbstractPixelGridContainer.getNumEntities(dimensions, entitiesPerPixel);
 		
 		if ( dimensions.length == 3 && useOptimizedContainers )
 			return new Array3D<T, ByteAccess>( this, new ByteArray( numPixels ), dimensions[0], dimensions[1], dimensions[2], entitiesPerPixel );
@@ -70,7 +70,7 @@ public class ArrayContainerFactory extends DirectAccessContainerFactory
 	@Override
 	public <T extends Type<T>> DirectAccessContainer<T, CharAccess> createCharInstance(int[] dimensions, final int entitiesPerPixel)
 	{
-		final int numPixels = PixelGridContainerImpl.getNumEntities(dimensions, entitiesPerPixel);
+		final int numPixels = AbstractPixelGridContainer.getNumEntities(dimensions, entitiesPerPixel);
 		
 		if ( dimensions.length == 3 && useOptimizedContainers )
 			return new Array3D<T, CharAccess>( this, new CharArray( numPixels ), dimensions[0], dimensions[1], dimensions[2], entitiesPerPixel );
@@ -81,7 +81,7 @@ public class ArrayContainerFactory extends DirectAccessContainerFactory
 	@Override
 	public <T extends Type<T>> DirectAccessContainer<T, DoubleAccess> createDoubleInstance(int[] dimensions, final int entitiesPerPixel)
 	{
-		final int numPixels = PixelGridContainerImpl.getNumEntities(dimensions, entitiesPerPixel);
+		final int numPixels = AbstractPixelGridContainer.getNumEntities(dimensions, entitiesPerPixel);
 		
 		if ( dimensions.length == 3 && useOptimizedContainers )
 			return new Array3D<T, DoubleAccess>( this, new DoubleArray( numPixels ), dimensions[0], dimensions[1], dimensions[2], entitiesPerPixel );
@@ -92,7 +92,7 @@ public class ArrayContainerFactory extends DirectAccessContainerFactory
 	@Override
 	public <T extends Type<T>> DirectAccessContainer<T, FloatAccess> createFloatInstance(int[] dimensions, final int entitiesPerPixel)
 	{
-		final int numPixels = PixelGridContainerImpl.getNumEntities(dimensions, entitiesPerPixel);
+		final int numPixels = AbstractPixelGridContainer.getNumEntities(dimensions, entitiesPerPixel);
 		
 		if ( dimensions.length == 3 && useOptimizedContainers )
 			return new Array3D<T, FloatAccess>( this, new FloatArray( numPixels ), dimensions[0], dimensions[1], dimensions[2], entitiesPerPixel );
@@ -103,7 +103,7 @@ public class ArrayContainerFactory extends DirectAccessContainerFactory
 	@Override
 	public <T extends Type<T>> DirectAccessContainer<T, IntAccess> createIntInstance(int[] dimensions, final int entitiesPerPixel)
 	{
-		final int numPixels = PixelGridContainerImpl.getNumEntities(dimensions, entitiesPerPixel);
+		final int numPixels = AbstractPixelGridContainer.getNumEntities(dimensions, entitiesPerPixel);
 		
 		if ( dimensions.length == 3 && useOptimizedContainers )
 			return new Array3D<T, IntAccess>( this, new IntArray( numPixels ), dimensions[0], dimensions[1], dimensions[2], entitiesPerPixel );
@@ -114,7 +114,7 @@ public class ArrayContainerFactory extends DirectAccessContainerFactory
 	@Override
 	public <T extends Type<T>> DirectAccessContainer<T, LongAccess> createLongInstance(int[] dimensions, final int entitiesPerPixel)
 	{
-		final int numPixels = PixelGridContainerImpl.getNumEntities(dimensions, entitiesPerPixel);
+		final int numPixels = AbstractPixelGridContainer.getNumEntities(dimensions, entitiesPerPixel);
 		
 		if ( dimensions.length == 3 && useOptimizedContainers )
 			return new Array3D<T, LongAccess>( this, new LongArray( numPixels ), dimensions[0], dimensions[1], dimensions[2], entitiesPerPixel );
@@ -125,7 +125,7 @@ public class ArrayContainerFactory extends DirectAccessContainerFactory
 	@Override
 	public <T extends Type<T>> DirectAccessContainer<T, ShortAccess> createShortInstance(int[] dimensions, final int entitiesPerPixel)
 	{
-		final int numPixels = PixelGridContainerImpl.getNumEntities(dimensions, entitiesPerPixel);
+		final int numPixels = AbstractPixelGridContainer.getNumEntities(dimensions, entitiesPerPixel);
 		
 		if ( dimensions.length == 3 && useOptimizedContainers )
 			return new Array3D<T, ShortAccess>( this, new ShortArray( numPixels ), dimensions[0], dimensions[1], dimensions[2], entitiesPerPixel );

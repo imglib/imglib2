@@ -37,9 +37,9 @@ import mpicbg.imglib.container.basictypecontainer.array.IntArray;
 import mpicbg.imglib.cursor.Cursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.display.imagej.RGBALegacyTypeDisplay;
-import mpicbg.imglib.type.TypeImpl;
+import mpicbg.imglib.type.AbstractType;
 
-final public class RGBALegacyType extends TypeImpl<RGBALegacyType> implements NumericType<RGBALegacyType>
+final public class RGBALegacyType extends AbstractType<RGBALegacyType> implements NumericType<RGBALegacyType>
 {
 	// the DirectAccessContainer
 	final DirectAccessContainer<RGBALegacyType, ? extends IntAccess> storage;

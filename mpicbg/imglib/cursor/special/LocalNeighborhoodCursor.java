@@ -29,13 +29,13 @@
  */
 package mpicbg.imglib.cursor.special;
 
-import mpicbg.imglib.cursor.CursorImpl;
+import mpicbg.imglib.cursor.AbstractCursor;
 import mpicbg.imglib.cursor.PositionableCursor;
 import mpicbg.imglib.cursor.array.ArrayLocalizableCursor;
 import mpicbg.imglib.type.Type;
 import mpicbg.imglib.type.label.FakeType;
 
-public class LocalNeighborhoodCursor<T extends Type<T>> extends CursorImpl<T>
+public class LocalNeighborhoodCursor<T extends Type<T>> extends AbstractCursor<T>
 {
 	/**
 	 * Here we "misuse" a ArrayLocalizableCursor to iterate over cells,

@@ -33,7 +33,7 @@ import mpicbg.imglib.image.Image;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
 import mpicbg.imglib.type.Type;
 
-public abstract class InterpolatorImpl<T extends Type<T>> implements Interpolator<T>
+public abstract class AbstractInterpolator<T extends Type<T>> implements Interpolator<T>
 {
 	final protected InterpolatorFactory<T> interpolatorFactory;
 	final protected OutOfBoundsStrategyFactory<T> outOfBoundsStrategyFactory;
@@ -47,7 +47,7 @@ public abstract class InterpolatorImpl<T extends Type<T>> implements Interpolato
 	 */
 	final protected int numDimensions;
 	
-	protected InterpolatorImpl( final Image<T> img, final InterpolatorFactory<T> interpolatorFactory, final OutOfBoundsStrategyFactory<T> outOfBoundsStrategyFactory )
+	protected AbstractInterpolator( final Image<T> img, final InterpolatorFactory<T> interpolatorFactory, final OutOfBoundsStrategyFactory<T> outOfBoundsStrategyFactory )
 	{
 		this.interpolatorFactory = interpolatorFactory;
 		this.outOfBoundsStrategyFactory = outOfBoundsStrategyFactory;

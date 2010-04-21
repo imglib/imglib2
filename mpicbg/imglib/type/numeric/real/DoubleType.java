@@ -36,7 +36,7 @@ import mpicbg.imglib.container.basictypecontainer.array.DoubleArray;
 import mpicbg.imglib.cursor.Cursor;
 import mpicbg.imglib.type.numeric.RealType;
 
-public class DoubleType extends RealTypeImpl<DoubleType> implements RealType<DoubleType>
+public class DoubleType extends AbstractRealType<DoubleType> implements RealType<DoubleType>
 {
 	// the DirectAccessContainer
 	final DirectAccessContainer<DoubleType, ? extends DoubleAccess> storage;

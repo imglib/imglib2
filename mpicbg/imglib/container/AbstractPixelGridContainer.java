@@ -31,12 +31,12 @@ package mpicbg.imglib.container;
 
 import mpicbg.imglib.type.Type;
 
-public abstract class PixelGridContainerImpl< T extends Type< T > > extends ContainerImpl<T> implements PixelGridContainer< T >
+public abstract class AbstractPixelGridContainer< T extends Type< T > > extends AbstractContainer<T> implements PixelGridContainer< T >
 {
 	final protected int entitiesPerPixel;
 	protected int numEntities;
 	
-	public PixelGridContainerImpl( final ContainerFactory factory, int[] dim, final int entitiesPerPixel )
+	public AbstractPixelGridContainer( final ContainerFactory factory, int[] dim, final int entitiesPerPixel )
 	{
 		super( factory, dim );
 		this.entitiesPerPixel = entitiesPerPixel;

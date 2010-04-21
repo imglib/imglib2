@@ -37,7 +37,7 @@ import mpicbg.imglib.container.basictypecontainer.array.FloatArray;
 import mpicbg.imglib.cursor.Cursor;
 import mpicbg.imglib.type.numeric.ComplexType;
 
-public class ComplexFloatType extends ComplexTypeImpl<ComplexFloatType> implements ComplexType<ComplexFloatType>
+public class ComplexFloatType extends AbstractComplexType<ComplexFloatType> implements ComplexType<ComplexFloatType>
 {
 	// the DirectAccessContainer
 	final DirectAccessContainer<ComplexFloatType, ? extends FloatAccess> storage;

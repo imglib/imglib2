@@ -38,9 +38,9 @@ import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.display.BasePairTypeDisplay;
 import mpicbg.imglib.image.display.Display;
 import mpicbg.imglib.type.BasePairType;
-import mpicbg.imglib.type.TypeImpl;
+import mpicbg.imglib.type.AbstractType;
 
-public class BasePairBitType extends TypeImpl<BasePairBitType> implements BasePairType<BasePairBitType>
+public class BasePairBitType extends AbstractType<BasePairBitType> implements BasePairType<BasePairBitType>
 {
 	public static enum Base { gap, N, A, T, G, C; }
 			

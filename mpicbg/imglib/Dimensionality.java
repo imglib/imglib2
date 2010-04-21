@@ -27,47 +27,14 @@
  *
  * @author Stephan Preibisch & Stephan Saalfeld
  */
-package mpicbg.imglib.type.label;
+package mpicbg.imglib;
 
-import mpicbg.imglib.container.DirectAccessContainer;
-import mpicbg.imglib.container.DirectAccessContainerFactory;
-import mpicbg.imglib.cursor.Cursor;
-import mpicbg.imglib.image.Image;
-import mpicbg.imglib.image.display.Display;
-import mpicbg.imglib.type.AbstractType;
-
-public class FakeType extends AbstractType<FakeType>
-{	
-	@Override
-	public DirectAccessContainer<FakeType,?> createSuitableDirectAccessContainer( final DirectAccessContainerFactory storageFactory, final int dim[] ) { return null; }
-
-	@Override
-	public void updateContainer( Cursor<?> c ) {}
+public interface Dimensionality
+{
+	public int getNumDimensions();
 	
-	@Override
-	public FakeType duplicateTypeOnSameDirectAccessContainer() { return new FakeType(); }
-
-	@Override
-	public Display<FakeType> getDefaultDisplay( Image<FakeType> image ) { return null; }
-
-	@Override
-	public void set( final FakeType c ) {}
+	public int[] getDimensions();
+	public void getDimensions( int[] position );
 	
-	@Override
-	public FakeType[] createArray1D(int size1){ return new FakeType[ size1 ]; }
-
-	@Override
-	public FakeType[][] createArray2D(int size1, int size2){ return new FakeType[ size1 ][ size2 ]; }
-
-	@Override
-	public FakeType[][][] createArray3D(int size1, int size2, int size3) { return new FakeType[ size1 ][ size2 ][ size3 ]; }
-	
-	@Override
-	public FakeType createVariable(){ return new FakeType(); }
-
-	@Override
-	public FakeType clone(){ return createVariable(); }
-
-	@Override
-	public String toString() { return ""; }
+	//public Point
 }

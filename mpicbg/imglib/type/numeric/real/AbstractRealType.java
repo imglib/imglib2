@@ -4,9 +4,9 @@ import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.display.Display;
 import mpicbg.imglib.image.display.RealTypeDisplay;
 import mpicbg.imglib.type.numeric.RealType;
-import mpicbg.imglib.type.numeric.complex.ComplexTypeImpl;
+import mpicbg.imglib.type.numeric.complex.AbstractComplexType;
 
-public abstract class RealTypeImpl<T extends RealTypeImpl<T>> extends ComplexTypeImpl<T> implements RealType<T>
+public abstract class AbstractRealType<T extends AbstractRealType<T>> extends AbstractComplexType<T> implements RealType<T>
 {
 	@Override
 	public Display<T> getDefaultDisplay( final Image<T> image )
