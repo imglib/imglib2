@@ -23,11 +23,10 @@ import mpicbg.imglib.algorithm.MultiThreaded;
 import mpicbg.imglib.algorithm.OutputAlgorithm;
 import mpicbg.imglib.algorithm.math.MathLib;
 import mpicbg.imglib.container.DirectAccessContainer;
-import mpicbg.imglib.container.array.Array3D;
+import mpicbg.imglib.container.array.Array;
 import mpicbg.imglib.container.basictypecontainer.FloatAccess;
 import mpicbg.imglib.container.basictypecontainer.array.FloatArray;
 import mpicbg.imglib.cursor.PositionableCursor;
-import mpicbg.imglib.cursor.PositionableCursor3D;
 import mpicbg.imglib.cursor.LocalizableCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.multithreading.SimpleMultiThreading;
@@ -131,7 +130,7 @@ public class GaussianConvolution< T extends NumericType<T>> implements MultiThre
 	{		
 		final long startTime = System.currentTimeMillis();
 	
-		if ( Array3D.class.isInstance( image.getContainer() ) && FloatType.class.isInstance( image.createType() ))
+		if ( image.getNumDimensions() == 3 && Array.class.isInstance( image.getContainer() ) && FloatType.class.isInstance( image.createType() ))
 		{
     		//System.out.println( "GaussianConvolution: Input is instance of Image<Float> using an Array3D, fast forward algorithm");
     		computeGaussFloatArray3D();
@@ -315,6 +314,11 @@ public class GaussianConvolution< T extends NumericType<T>> implements MultiThre
         }
 	}	
 	
+	final private static int getPos( final int x, final int y, final int z, final int width, final int height )
+	{
+		return x + y*width + z*width*height;
+	}
+	
 	/**
 	 * This class does the gaussian filtering of an image. On the edges of
 	 * the image it does mirror the pixels. It also uses the seperability of
@@ -341,9 +345,6 @@ public class GaussianConvolution< T extends NumericType<T>> implements MultiThre
 		final FloatArray inputArray = (FloatArray) ( (DirectAccessContainer<FloatType, FloatAccess>) imageFloat.getContainer() ).update( null );
 		final FloatArray outputArray = (FloatArray) ( (DirectAccessContainer<FloatType, FloatAccess>) convolvedFloat.getContainer() ).update( null );
 		
-		final Array3D input = (Array3D) imageFloat.getContainer();
-		final Array3D output = (Array3D) convolvedFloat.getContainer();
-		
   		final int width = imageFloat.getDimension( 0 );
 		final int height = imageFloat.getDimension( 1 );
 		final int depth = imageFloat.getDimension( 2 );
@@ -366,7 +367,7 @@ public class GaussianConvolution< T extends NumericType<T>> implements MultiThre
 					final int filterSize = kernel[ 0 ].length;
 					final int filterSizeHalf = filterSize / 2;
 					
-					final PositionableCursor3D<FloatType> it = (PositionableCursor3D<FloatType>)imageFloat.createPositionableCursor( outOfBoundsFactoryFloat );
+					final PositionableCursor<FloatType> it = imageFloat.createPositionableCursor( outOfBoundsFactoryFloat );
 
 					// fold in x
 					int kernelPos, count;
@@ -384,7 +385,7 @@ public class GaussianConvolution< T extends NumericType<T>> implements MultiThre
 					for (int z = 0; z < depth; z++)
 						if (z % numThreads == myNumber)
 						{
-							count = input.getPos(0, 0, z);
+							count = getPos( 0, 0, z, width, height );
 							for (int y = 0; y < height; y++)
 								for (int x = 0; x < width; x++)
 								{
@@ -397,10 +398,13 @@ public class GaussianConvolution< T extends NumericType<T>> implements MultiThre
 									{
 										kernelPos = 0;
 
-										it.setPosition(x - filterSizeHalf - 1, y, z);
+										it.setPosition( x - filterSizeHalf - 1, 0 );
+										it.setPosition( y, 1 );
+										it.setPosition( z, 2 );
+										
 										for (int f = -filterSizeHalf; f <= filterSizeHalf; f++)
 										{
-											it.fwdX();
+											it.fwd( 0 );
 											avg += it.type().get() * kernel1[kernelPos++];
 										}
 									}
@@ -424,12 +428,12 @@ public class GaussianConvolution< T extends NumericType<T>> implements MultiThre
 					int kernelPos, count;
 
 					final float[] out =  outputArray.getCurrentStorageArray();
-					final PositionableCursor3D<FloatType> it = (PositionableCursor3D<FloatType>)convolvedFloat.createPositionableCursor( outOfBoundsFactoryFloat );
+					final PositionableCursor<FloatType> it = convolvedFloat.createPositionableCursor( outOfBoundsFactoryFloat );
 					final double[] kernel1 = kernel[ 1 ].clone();
 					final int filterSize = kernel[ 1 ].length;
 					final int filterSizeHalf = filterSize / 2;
 
-					final int inc = output.getPos(0, 1, 0);
+					final int inc = getPos( 0, 1, 0, width, height );
 					final int posLUT[] = new int[kernel1.length];
 					for (int f = -filterSizeHalf; f <= filterSizeHalf; f++)
 						posLUT[f + filterSizeHalf] = f * inc;
@@ -444,7 +448,7 @@ public class GaussianConvolution< T extends NumericType<T>> implements MultiThre
 						if (z % numThreads == myNumber)
 							for (int x = 0; x < width; x++)
 							{
-								count = output.getPos(x, 0, z);
+								count = getPos( x, 0, z, width, height );
 
 								for (int y = 0; y < height; y++)
 								{
@@ -456,10 +460,13 @@ public class GaussianConvolution< T extends NumericType<T>> implements MultiThre
 									{
 										kernelPos = 0;
 
-										it.setPosition(x, y - filterSizeHalf - 1, z);
+										it.setPosition( x, 0 );
+										it.setPosition( y - filterSizeHalf - 1, 1 ); 
+										it.setPosition( z, 2 );
+										               
 										for (int f = -filterSizeHalf; f <= filterSizeHalf; f++)
 										{
-											it.fwdY();
+											it.fwd( 1 );
 											avg += it.type().get() * kernel1[kernelPos++];
 										}
 									}
@@ -469,7 +476,7 @@ public class GaussianConvolution< T extends NumericType<T>> implements MultiThre
 									count += inc;
 								}
 
-								count = output.getPos(x, 0, z);
+								count = getPos( x, 0, z, width, height );
 
 								for (int y = 0; y < height; y++)
 								{
@@ -498,9 +505,9 @@ public class GaussianConvolution< T extends NumericType<T>> implements MultiThre
 					final int filterSizeHalf = filterSize / 2;
 
 					final float[] out = outputArray.getCurrentStorageArray();
-					final PositionableCursor3D<FloatType> it = (PositionableCursor3D<FloatType>)convolvedFloat.createPositionableCursor( outOfBoundsFactoryFloat );
+					final PositionableCursor<FloatType> it = convolvedFloat.createPositionableCursor( outOfBoundsFactoryFloat );
 
-					final int inc = output.getPos(0, 0, 1);
+					final int inc = getPos( 0, 0, 1, width, height );
 					final int posLUT[] = new int[kernel1.length];
 					for (int f = -filterSizeHalf; f <= filterSizeHalf; f++)
 						posLUT[f + filterSizeHalf] = f * inc;
@@ -516,8 +523,8 @@ public class GaussianConvolution< T extends NumericType<T>> implements MultiThre
 						if (x % numThreads == myNumber)
 							for (int y = 0; y < height; y++)
 							{
-								count = output.getPos(x, y, 0);
-
+								count = getPos( x, y, 0, width, height );
+								
 								for (int z = 0; z < depth; z++)
 								{
 									avg = 0;
@@ -528,10 +535,13 @@ public class GaussianConvolution< T extends NumericType<T>> implements MultiThre
 									{
 										kernelPos = 0;
 
-										it.setPosition(x, y, z - filterSizeHalf - 1);
+										it.setPosition( x, 0 );
+										it.setPosition( y, 1 ); 
+										it.setPosition( z - filterSizeHalf - 1, 2 );
+										
 										for (int f = -filterSizeHalf; f <= filterSizeHalf; f++)
 										{
-											it.fwdZ();
+											it.fwd( 2 );
 											avg += it.type().get() * kernel1[kernelPos++];
 										}
 									}
@@ -540,7 +550,7 @@ public class GaussianConvolution< T extends NumericType<T>> implements MultiThre
 									count += inc;
 								}
 
-								count = output.getPos(x, y, 0);
+								count = getPos( x, y, 0, width, height );
 
 								for (int z = 0; z < depth; z++)
 								{
