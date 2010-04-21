@@ -30,13 +30,12 @@
 package mpicbg.imglib.cursor.shapelist;
 
 import mpicbg.imglib.container.shapelist.ShapeList;
-import mpicbg.imglib.cursor.PositionableCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategy;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
 import mpicbg.imglib.type.Type;
 
-public class ShapeListPositionableOutOfBoundsCursor<T extends Type<T>> extends ShapeListPositionableCursor<T> implements PositionableCursor<T>
+public class ShapeListPositionableOutOfBoundsCursor<T extends Type<T>> extends ShapeListPositionableCursor<T>
 {
 	final OutOfBoundsStrategyFactory<T> outOfBoundsStrategyFactory;
 	final OutOfBoundsStrategy<T> outOfBoundsStrategy;
@@ -136,7 +135,8 @@ public class ShapeListPositionableOutOfBoundsCursor<T extends Type<T>> extends S
 				outOfBoundsStrategy.initOutOfBOunds();
 			}
 		}
-		//link.fwd( dim );
+
+		linkedRasterPositionable.fwd( dim );
 	}
 
 	@Override

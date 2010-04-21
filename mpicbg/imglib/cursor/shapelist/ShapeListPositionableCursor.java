@@ -35,6 +35,8 @@ import mpicbg.imglib.cursor.special.LocalNeighborhoodCursorFactory;
 import mpicbg.imglib.cursor.special.RegionOfInterestCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.location.RasterLocalizable;
+import mpicbg.imglib.location.RasterPositionable;
+import mpicbg.imglib.location.VoidRasterPositionable;
 import mpicbg.imglib.type.Type;
 
 /**
@@ -52,6 +54,8 @@ public class ShapeListPositionableCursor< T extends Type< T > > extends Abstract
 	
 	final protected int numDimensions;
 	final protected int[] position, dimensions;
+	
+	protected RasterPositionable linkedRasterPositionable = VoidRasterPositionable.getInstance();
 	
 	public ShapeListPositionableCursor( final ShapeList< T > container, final Image< T > image ) 
 	{
@@ -105,7 +109,8 @@ public class ShapeListPositionableCursor< T extends Type< T > > extends Abstract
 	public void fwd( final int dim )
 	{
 		++position[ dim ];
-		//link.fwd(dim);
+		
+		linkedRasterPositionable.fwd( dim );
 	}
 
 	@Override
@@ -322,5 +327,19 @@ public class ShapeListPositionableCursor< T extends Type< T > > extends Abstract
 		pos += ")";
 		
 		return pos;
+	}
+	
+	@Override
+	public void linkRasterPositionable( final RasterPositionable rasterPositionable )
+	{
+		linkedRasterPositionable = rasterPositionable;
+	}
+
+	@Override
+	public RasterPositionable unlinkRasterPositionable()
+	{
+		final RasterPositionable rasterPositionable = linkedRasterPositionable;
+		linkedRasterPositionable = VoidRasterPositionable.getInstance();
+		return rasterPositionable;
 	}
 }

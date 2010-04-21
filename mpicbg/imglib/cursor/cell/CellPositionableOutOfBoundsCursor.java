@@ -30,13 +30,12 @@
 package mpicbg.imglib.cursor.cell;
 
 import mpicbg.imglib.container.cell.CellContainer;
-import mpicbg.imglib.cursor.PositionableCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategy;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
 import mpicbg.imglib.type.Type;
 
-public class CellPositionableOutOfBoundsCursor<T extends Type<T>> extends CellPositionableCursor<T> implements PositionableCursor<T>
+public class CellPositionableOutOfBoundsCursor<T extends Type<T>> extends CellPositionableCursor<T>
 {
 	final OutOfBoundsStrategyFactory<T> outOfBoundsStrategyFactory;
 	final OutOfBoundsStrategy<T> outOfBoundsStrategy;
@@ -247,6 +246,8 @@ public class CellPositionableOutOfBoundsCursor<T extends Type<T>> extends CellPo
 			position[0]++;
 			outOfBoundsStrategy.initOutOfBOunds(  );
 		}
+		
+		linkedRasterPositionable.fwd( dim );
 	}
 
 	@Override

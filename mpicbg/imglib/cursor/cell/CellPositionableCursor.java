@@ -38,6 +38,8 @@ import mpicbg.imglib.cursor.special.LocalNeighborhoodCursorFactory;
 import mpicbg.imglib.cursor.special.RegionOfInterestCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.location.RasterLocalizable;
+import mpicbg.imglib.location.RasterPositionable;
+import mpicbg.imglib.location.VoidRasterPositionable;
 import mpicbg.imglib.type.Type;
 import mpicbg.imglib.type.label.FakeType;
 
@@ -100,6 +102,8 @@ public class CellPositionableCursor<T extends Type<T>> extends CellLocalizableCu
 	int numNeighborhoodCursors = 0;
 	
 	final int[] tmp;
+	
+	protected RasterPositionable linkedRasterPositionable = VoidRasterPositionable.getInstance();
 	
 	public CellPositionableCursor( final CellContainer<T,?> container, final Image<T> image, final T type )
 	{
@@ -237,6 +241,8 @@ public class CellPositionableCursor<T extends Type<T>> extends CellLocalizableCu
 			}
 			// else moving out of image...			
 		}
+
+		linkedRasterPositionable.fwd( dim );
 	}
 
 	@Override
@@ -404,5 +410,19 @@ public class CellPositionableCursor<T extends Type<T>> extends CellLocalizableCu
 			lastCell = -1;
 			isClosed = true;
 		}		
+	}
+	
+	@Override
+	public void linkRasterPositionable( final RasterPositionable rasterPositionable )
+	{
+		linkedRasterPositionable = rasterPositionable;
+	}
+
+	@Override
+	public RasterPositionable unlinkRasterPositionable()
+	{
+		final RasterPositionable rasterPositionable = linkedRasterPositionable;
+		linkedRasterPositionable = VoidRasterPositionable.getInstance();
+		return rasterPositionable;
 	}
 }
