@@ -42,7 +42,7 @@ final public class VoidIterator implements Iterator< Object >
 	final static public VoidIterator getInstance(){ return instance; }
 	
 	@Override
-	final public void fwd( final long steps ){}
+	final public void jumpFwd( final long steps ){}
 
 	@Override
 	final public void fwd(){}
@@ -60,8 +60,8 @@ final public class VoidIterator implements Iterator< Object >
 	final public boolean hasNext(){ return true; }
 	
 	@Override
-	public Object next(){ return null; }
+	final public Object next(){ return null; }
 	
 	@Override
-	public void remove(){}
+	final public void remove(){}
 }

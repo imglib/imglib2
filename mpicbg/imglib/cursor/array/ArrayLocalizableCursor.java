@@ -83,7 +83,7 @@ public class ArrayLocalizableCursor<T extends Type<T>> extends ArrayCursor<T> im
 	}
 
 	@Override
-	public void fwd( final long steps )
+	public void jumpFwd( final long steps )
 	{ 
 		for ( long j = 0; j < steps; ++j )
 			fwd();

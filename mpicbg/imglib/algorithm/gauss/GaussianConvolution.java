@@ -245,7 +245,7 @@ public class GaussianConvolution< T extends NumericType<T>> implements MultiThre
 															   final long startPos, final long loopSize )
 	{		
     	// move to the starting position of the current thread
-    	outputIterator.fwd( startPos );
+    	outputIterator.jumpFwd( startPos );
    	 
         final int filterSize = kernel.length;
         final int filterSizeMinus1 = filterSize - 1;

@@ -88,7 +88,7 @@ public class Array3DPositionableCursor<T extends Type<T>> extends ArrayPositiona
 	}
 
 	@Override
-	public void fwd( final long steps )
+	public void jumpFwd( final long steps )
 	{
 		if ( steps <= 0 )
 			return;
@@ -105,7 +105,7 @@ public class Array3DPositionableCursor<T extends Type<T>> extends ArrayPositiona
 		
 		x = i;
 		
-		linkedIterator.fwd( steps );
+		linkedIterator.jumpFwd( steps );
 	}
 	
 	@Override

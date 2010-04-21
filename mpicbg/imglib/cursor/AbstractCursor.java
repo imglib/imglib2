@@ -78,11 +78,14 @@ public abstract class AbstractCursor<T extends Type<T>> implements Cursor<T>
 	public T next(){ fwd(); return type(); }
 
 	@Override
-	public void fwd( final long steps )
+	public void jumpFwd( final long steps )
 	{ 
 		for ( long j = 0; j < steps; ++j )
 			fwd();
 	}
+	
+	@Override
+	public boolean hasNextLinked(){ return hasNext() && linkedIterator.hasNext(); }
 
 	@Override
 	public int[] createPositionArray() { return new int[ image.getNumDimensions() ]; }	

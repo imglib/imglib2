@@ -35,7 +35,7 @@ import mpicbg.imglib.cursor.AbstractCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.type.Type;
 
-public class ImagePlusCursor<T extends Type<T>> extends AbstractCursor<T> implements Cursor<T>
+public class ImagePlusCursor<T extends Type<T>> extends AbstractCursor<T>
 {
 	protected final T type;
 	protected final ImagePlusContainer<T,?> container;

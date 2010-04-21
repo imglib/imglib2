@@ -111,7 +111,7 @@ public class FloydSteinbergDithering<T extends RealType<T>> implements OutputAlg
 			{
 				// distribute the error
 				cursorKernel.reset();
-				cursorKernel.fwd( errorDiffusionKernel.getNumPixels()/2 );
+				cursorKernel.jumpFwd( errorDiffusionKernel.getNumPixels()/2 );
 				cursor.localize( tmp1 );			
 				
 				while ( cursorKernel.hasNext() )

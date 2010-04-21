@@ -55,14 +55,14 @@ public class ArrayCursor<T extends Type<T>> extends AbstractCursor<T>
 	public T type() { return type; }
 	
 	@Override
-	public boolean hasNext() { return type.getIndex() < sizeMinus1; }
+	public boolean hasNext(){ return type.getIndex() < sizeMinus1; }
 
 	@Override
-	public void fwd( final long steps )
+	public void jumpFwd( final long steps )
 	{
 		type.incIndex( (int)steps );
 		
-		linkedIterator.fwd( steps );
+		linkedIterator.jumpFwd( steps );
 	}
 
 	@Override

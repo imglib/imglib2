@@ -133,6 +133,5 @@ public abstract class AbstractContainer<T extends Type<T>> implements Container<
 		{
 			return false;
 		}
-	}		
-	
+	}
 }

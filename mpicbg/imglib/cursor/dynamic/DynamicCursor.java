@@ -37,7 +37,7 @@ import mpicbg.imglib.cursor.AbstractCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.type.Type;
 
-public class DynamicCursor<T extends Type<T>> extends AbstractCursor<T> implements Cursor<T>
+public class DynamicCursor<T extends Type<T>> extends AbstractCursor<T>
 {
 	protected final T type;
 	protected final DynamicContainer<T,? extends DataAccess> container;
@@ -65,12 +65,12 @@ public class DynamicCursor<T extends Type<T>> extends AbstractCursor<T> implemen
 	public boolean hasNext() { return internalIndex < container.getNumPixels() - 1; }
 
 	@Override
-	public void fwd( final long steps ) 
+	public void jumpFwd( final long steps ) 
 	{ 
 		internalIndex += steps;
 		accessor.updateIndex( internalIndex );
 		
-		linkedIterator.fwd( steps );
+		linkedIterator.jumpFwd( steps );
 	}
 
 	@Override

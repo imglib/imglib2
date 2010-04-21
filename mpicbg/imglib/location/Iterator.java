@@ -40,12 +40,12 @@ import mpicbg.imglib.image.Image;
  */
 public interface Iterator< E > extends java.util.Iterator< E >
 {
-	/* TODO this method potentially collides with Positionable.fwd( int ),
-	 * both methods mean very differen things.  That is, the method needs
-	 * to be renamed. */
-	public void fwd( long steps );
+	public void jumpFwd( long steps );
 	public void fwd();
-	public void reset();			
+	public void reset();
+	
+	/* TODO reverse naming of hasNext() and hasNextLinked(), hasNext should be the safe but slow version, and the alternative the fast unsafe one */
+	public boolean hasNextLinked();
 	
 	public void linkIterator( Iterator< ? > iterable );
 	public Iterator< ? > unlinkIterator();

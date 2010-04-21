@@ -40,7 +40,7 @@ public class GaussianConvolutionRealType<T extends RealType<T>> extends Gaussian
 	protected void convolveDouble( final PositionableCursor<T> inputIterator, final LocalizableCursor<T> outputIterator, final int dim, final float[] kernel, final long startPos, final long loopSize )
 	{		
 		// move to the starting position of the current thread
-		outputIterator.fwd( startPos );
+		outputIterator.jumpFwd( startPos );
 		
 		final int filterSize = kernel.length;
 		final int filterSizeMinus1 = filterSize - 1;
@@ -109,7 +109,7 @@ public class GaussianConvolutionRealType<T extends RealType<T>> extends Gaussian
 	protected void convolveFloat( final PositionableCursor<T> inputIterator, final LocalizableCursor<T> outputIterator, final int dim, final float[] kernel, final long startPos, final long loopSize )
 	{		
 		// move to the starting position of the current thread
-		outputIterator.fwd( startPos );
+		outputIterator.jumpFwd( startPos );
 		
 		final int filterSize = kernel.length;
 		final int filterSizeMinus1 = filterSize - 1;

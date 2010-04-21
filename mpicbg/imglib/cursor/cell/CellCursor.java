@@ -36,7 +36,7 @@ import mpicbg.imglib.cursor.AbstractCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.type.Type;
 
-public class CellCursor<T extends Type<T>> extends AbstractCursor<T> implements Cursor<T>
+public class CellCursor<T extends Type<T>> extends AbstractCursor<T>
 {
 	final protected T type;
 	
