@@ -33,20 +33,47 @@ import mpicbg.imglib.image.Image;
 
 /** 
  * The {@link Iterator} interface provides basic functionality for
- * iterating over an {@link Image}.
+ * iterating over an {@link Image}.  {@link Iterator Iterators} are expected
+ * to run over all pixels of an image in an optimal order.
  *  
  * @author Stephan Preibisch & Stephan Saalfeld
- *
  */
 public interface Iterator< E > extends java.util.Iterator< E >
 {
+	/**
+	 * Move steps &times; forward.
+	 * 
+	 * @param steps
+	 */
 	public void jumpFwd( long steps );
+	
+	/**
+	 * Move forward.
+	 */
 	public void fwd();
+	
+	/**
+	 * Reset the {@link Iterator}, that is put it to where it would be if
+	 * newly created.
+	 */
 	public void reset();
 	
 	/* TODO reverse naming of hasNext() and hasNextLinked(), hasNext should be the safe but slow version, and the alternative the fast unsafe one */
 	public boolean hasNextLinked();
 	
+	/**
+	 * Link another {@link Iterator}.  The linked {@link Iterator} will follow
+	 * the move and reset commands and can be used for a joined hasNext check.
+	 * 
+	 * @param iterable
+	 */
 	public void linkIterator( Iterator< ? > iterable );
+	
+	/**
+	 * Unlink the currently linked {@link Iterator}.  It is replaced by the
+	 * default link, which is {@link VoidIterator}.
+	 * 
+	 * @param the unlinked {@link Iterable}
+	 */
 	public Iterator< ? > unlinkIterator();
 }
