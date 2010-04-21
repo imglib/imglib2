@@ -138,4 +138,20 @@ public interface RasterPositionable
 	 * @param dim
 	 */
 	public void setPosition( long position, int dim );
+	
+	/**
+	 * Link another {@link RasterPositionable}.  The linked
+	 * {@link RasterPositionable} will follow the move commands.
+	 * 
+	 * @param rasterPositionable
+	 */
+	public void linkRasterPositionable( RasterPositionable rasterPositionable );
+	
+	/**
+	 * Unlink the currently linked {@link RasterPositionable}.  It is replaced
+	 * by the default link, which is {@link VoidRasterPositionable}.
+	 * 
+	 * @param the unlinked {@link RasterPositionable}
+	 */
+	public RasterPositionable unlinkRasterPositionable();
 }

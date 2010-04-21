@@ -37,6 +37,8 @@ import mpicbg.imglib.cursor.special.LocalNeighborhoodCursorFactory;
 import mpicbg.imglib.cursor.special.RegionOfInterestCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.location.RasterLocalizable;
+import mpicbg.imglib.location.RasterPositionable;
+import mpicbg.imglib.location.VoidRasterPositionable;
 import mpicbg.imglib.type.Type;
 
 
@@ -44,6 +46,8 @@ public class ImagePlusPositionableCursor<T extends Type<T>> extends ImagePlusLoc
 {
 	final protected int[] step, tmp;
 	int numNeighborhoodCursors = 0;
+	
+	protected RasterPositionable linkedRasterPositionable = VoidRasterPositionable.getInstance();
 	
 	public ImagePlusPositionableCursor( final ImagePlusContainer<T,?> container, final Image<T> image, final T type ) 
 	{
@@ -97,6 +101,8 @@ public class ImagePlusPositionableCursor<T extends Type<T>> extends ImagePlusLoc
 		{
 			type.incIndex( step[ dim ] );
 		}
+
+		linkedRasterPositionable.fwd( dim );
 	}
 
 	@Override
@@ -112,7 +118,9 @@ public class ImagePlusPositionableCursor<T extends Type<T>> extends ImagePlusLoc
 		else
 		{
 			type.incIndex( step[ dim ] * steps );
-		}		
+		}
+
+		linkedRasterPositionable.move( steps, dim );
 	}
 	
 	@Override
@@ -173,6 +181,8 @@ public class ImagePlusPositionableCursor<T extends Type<T>> extends ImagePlusLoc
 		{
 			type.decIndex( step[ dim ] );
 		}
+
+		linkedRasterPositionable.bck( dim );
 	}
 
 	@Override
@@ -227,5 +237,19 @@ public class ImagePlusPositionableCursor<T extends Type<T>> extends ImagePlusLoc
 	public void setPosition( final long position, final int dim )
 	{
 		setPosition( ( int )position, dim );
+	}
+	
+	@Override
+	public void linkRasterPositionable( final RasterPositionable rasterPositionable )
+	{
+		linkedRasterPositionable = rasterPositionable;
+	}
+
+	@Override
+	public RasterPositionable unlinkRasterPositionable()
+	{
+		final RasterPositionable rasterPositionable = linkedRasterPositionable;
+		linkedRasterPositionable = VoidRasterPositionable.getInstance();
+		return rasterPositionable;
 	}
 }

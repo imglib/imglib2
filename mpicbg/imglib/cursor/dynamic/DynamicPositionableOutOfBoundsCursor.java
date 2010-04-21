@@ -30,13 +30,12 @@
 package mpicbg.imglib.cursor.dynamic;
 
 import mpicbg.imglib.container.dynamic.DynamicContainer;
-import mpicbg.imglib.cursor.PositionableCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategy;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
 import mpicbg.imglib.type.Type;
 
-public class DynamicPositionableOutOfBoundsCursor<T extends Type<T>> extends DynamicPositionableCursor<T> implements PositionableCursor<T>
+public class DynamicPositionableOutOfBoundsCursor<T extends Type<T>> extends DynamicPositionableCursor<T>
 {
 	final OutOfBoundsStrategyFactory<T> outOfBoundsStrategyFactory;
 	final OutOfBoundsStrategy<T> outOfBoundsStrategy;
@@ -155,7 +154,8 @@ public class DynamicPositionableOutOfBoundsCursor<T extends Type<T>> extends Dyn
 				outOfBoundsStrategy.initOutOfBOunds(  );
 			}
 		}
-		//link.fwd( dim );
+
+		linkedRasterPositionable.fwd( dim );
 	}
 
 	@Override
@@ -207,6 +207,8 @@ public class DynamicPositionableOutOfBoundsCursor<T extends Type<T>> extends Dyn
 				outOfBoundsStrategy.initOutOfBOunds(  );
 			}
 		}
+
+		linkedRasterPositionable.move( steps, dim );
 	}
 	
 	@Override
@@ -237,7 +239,8 @@ public class DynamicPositionableOutOfBoundsCursor<T extends Type<T>> extends Dyn
 				outOfBoundsStrategy.initOutOfBOunds(  );
 			}
 		}
-		//link.bck( dim );
+
+		linkedRasterPositionable.bck( dim );
 	}
 
 	@Override

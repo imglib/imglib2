@@ -36,6 +36,8 @@ import mpicbg.imglib.cursor.special.LocalNeighborhoodCursorFactory;
 import mpicbg.imglib.cursor.special.RegionOfInterestCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.location.RasterLocalizable;
+import mpicbg.imglib.location.RasterPositionable;
+import mpicbg.imglib.location.VoidRasterPositionable;
 import mpicbg.imglib.type.Type;
 
 public class DynamicPositionableCursor<T extends Type<T>> extends DynamicLocalizableCursor<T> implements PositionableCursor<T>
@@ -44,6 +46,8 @@ public class DynamicPositionableCursor<T extends Type<T>> extends DynamicLocaliz
 	final int tmp[];
 	
 	int numNeighborhoodCursors = 0;
+	
+	protected RasterPositionable linkedRasterPositionable = VoidRasterPositionable.getInstance();
 	
 	public DynamicPositionableCursor( final DynamicContainer<T,?> container, final Image<T> image, final T type ) 
 	{
@@ -91,7 +95,7 @@ public class DynamicPositionableCursor<T extends Type<T>> extends DynamicLocaliz
 
 		++position[ dim ];
 		
-		linkedIterator.fwd();
+		linkedRasterPositionable.fwd( dim );
 	}
 
 	@Override
@@ -100,7 +104,9 @@ public class DynamicPositionableCursor<T extends Type<T>> extends DynamicLocaliz
 		internalIndex += step[ dim ] * steps;
 		accessor.updateIndex( internalIndex );
 
-		position[ dim ] += steps;	
+		position[ dim ] += steps;
+
+		linkedRasterPositionable.move( steps, dim );
 	}
 	
 	@Override
@@ -117,6 +123,8 @@ public class DynamicPositionableCursor<T extends Type<T>> extends DynamicLocaliz
 		accessor.updateIndex( internalIndex );
  
 		--position[ dim ];
+		
+		linkedRasterPositionable.bck( dim );
 	}
 		
 	@Override
@@ -192,5 +200,19 @@ public class DynamicPositionableCursor<T extends Type<T>> extends DynamicLocaliz
 	public void setPosition( final long position, final int dim )
 	{
 		setPosition( ( int )position, dim );
+	}
+	
+	@Override
+	public void linkRasterPositionable( final RasterPositionable rasterPositionable )
+	{
+		linkedRasterPositionable = rasterPositionable;
+	}
+
+	@Override
+	public RasterPositionable unlinkRasterPositionable()
+	{
+		final RasterPositionable rasterPositionable = linkedRasterPositionable;
+		linkedRasterPositionable = VoidRasterPositionable.getInstance();
+		return rasterPositionable;
 	}
 }
