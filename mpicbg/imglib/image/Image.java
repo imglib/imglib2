@@ -34,6 +34,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.concurrent.atomic.AtomicLong;
 
+import mpicbg.imglib.Dimensionality;
 import mpicbg.imglib.algorithm.math.MathLib;
 import mpicbg.imglib.container.Container;
 import mpicbg.imglib.container.ContainerFactory;
@@ -43,7 +44,6 @@ import mpicbg.imglib.cursor.PositionableCursor;
 import mpicbg.imglib.cursor.LocalizableCursor;
 import mpicbg.imglib.cursor.LocalizablePlaneCursor;
 import mpicbg.imglib.cursor.array.ArrayLocalizableCursor;
-import mpicbg.imglib.cursor.vector.Dimensionality;
 import mpicbg.imglib.image.display.Display;
 import mpicbg.imglib.interpolation.Interpolator;
 import mpicbg.imglib.interpolation.InterpolatorFactory;
@@ -51,7 +51,7 @@ import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
 import mpicbg.imglib.type.Type;
 import mpicbg.imglib.type.label.FakeType;
 
-public class Image<T extends Type<T>> implements ImageProperties, Dimensionality, Collection<T>
+public class Image<T extends Type<T>> implements ImageProperties, Dimensionality, Iterable<T>
 {
 	final protected ArrayList<Cursor<T>> cursors;
 	final ContainerFactory containerFactory;
@@ -453,41 +453,9 @@ public class Image<T extends Type<T>> implements ImageProperties, Dimensionality
 		return active;
 	}
 
-	// TODO: Check these functions once the DynamicContainer is there
-	@Override
-	public boolean add( final T e ) { throw new UnsupportedOperationException( "Image.add(): not supported." ); }
-
-	@Override
-	public boolean addAll( final Collection<? extends T> c ) { throw new UnsupportedOperationException( "Image.addAll(): not supported." ); }
-
-	@Override
-	public void clear() { this.close(); }
-
-	@Override
-	public boolean contains( final Object o )  { throw new UnsupportedOperationException( "Image.contains(): not supported." ); }
-
-	@Override
-	public boolean containsAll( final Collection<?> c ) { throw new UnsupportedOperationException( "Image.containsAll(): not supported." ); }
-
-	@Override
-	public boolean isEmpty() { return false; }
-
 	@Override
 	public Iterator<T> iterator() { return this.createCursor(); }
 
-	@Override
-	public boolean remove(Object o) { throw new UnsupportedOperationException( "Image.remove(): not supported." );	}
-
-	@Override
-	public boolean removeAll(Collection<?> c) { throw new UnsupportedOperationException( "Image.removeAll(): not supported." ); }
-
-	@Override
-	public boolean retainAll(Collection<?> c) {throw new UnsupportedOperationException( "Image.retainAll(): not supported." ); }
-
-	@Override
-	public int size() { return this.getNumPixels(); }
-
-	@Override
 	public T[] toArray()
 	{
 		final T[] pixels = createType().createArray1D( getNumPixels() );
@@ -508,11 +476,5 @@ public class Image<T extends Type<T>> implements ImageProperties, Dimensionality
 		cursor2.close();
 		
 		return pixels;
-	}
-
-	@Override
-	public <E> E[] toArray( E[] a )
-	{
-		throw new UnsupportedOperationException( "Image.toArray<E>(): not supported, use T[] toArray or T[] toArray( T[] a ) instead." );
 	}	
 }
