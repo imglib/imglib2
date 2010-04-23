@@ -34,54 +34,16 @@ import mpicbg.imglib.interpolation.InterpolatorFactory;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
 import mpicbg.imglib.type.numeric.RealType;
 
-public class LinearInterpolator3DRealType<T extends RealType<T>> extends LinearInterpolator<T> 
+public class LinearInterpolator3DRealType<T extends RealType<T>> extends LinearInterpolator3D<T> 
 {
-	final int tmpLocation[];
-
 	protected LinearInterpolator3DRealType( final Image<T> img, final InterpolatorFactory<T> interpolatorFactory, final OutOfBoundsStrategyFactory<T> outOfBoundsStrategyFactory )
 	{
 		super( img, interpolatorFactory, outOfBoundsStrategyFactory, false );
-		
-		tmpLocation = new int[ 3 ];				
-		moveTo( position );		
 	}
 	
 	@Override
-	public T type() { return tmp2; }
-	
-	@Override
-	public void moveTo( final float[] position )
+	public T type()
 	{
-		final float x = position[ 0 ];
-		final float y = position[ 1 ];
-		final float z = position[ 2 ];
-		
-		this.position[ 0 ] = x;
-		this.position[ 1 ] = y;
-		this.position[ 2 ] = z;
-		
-		//       y7     y6
-		//        *-------*
-		//       /       /|
-		//   y3 /    y2 / |
-		//     *-------*  * y5
-		//     |    x  | /
-		//     |       |/
-		//     *-------*
-		//     y0    y1
-
-		// base offset (y0)
-		final int baseX1 = x > 0 ? (int)x: (int)x-1;
-		final int baseX2 = y > 0 ? (int)y: (int)y-1;
-		final int baseX3 = z > 0 ? (int)z: (int)z-1;
-
-		// update iterator position
-		tmpLocation[ 0 ] = baseX1;
-		tmpLocation[ 1 ] = baseX2;
-		tmpLocation[ 2 ] = baseX3;
-		
-		cursor.moveTo( tmpLocation );
-
 		// How to iterate the cube
 		//
 		//       y7     y6
@@ -126,9 +88,9 @@ public class LinearInterpolator3DRealType<T extends RealType<T>> extends LinearI
         final float y4 = cursor.type().getRealFloat();        
 
         // weights
-        final float t = x - baseX1; 
-        final float u = y - baseX2; 
-        final float v = z - baseX3;
+        final float t = x - cursor.getIntPosition( 0 ); 
+        final float u = y - cursor.getIntPosition( 1 ); 
+        final float v = z - cursor.getIntPosition( 2 );
 
         final float t1 = 1 - t;
         final float u1 = 1 - u;
@@ -138,97 +100,7 @@ public class LinearInterpolator3DRealType<T extends RealType<T>> extends LinearI
                             t1*u1*v*y4  + t*u1*v*y5  + t*u*v*y6  + t1*u*v*y7;
         
         tmp2.setReal( value );
+        
+		return tmp2; 
 	}
-	
-	@Override
-	public void setPosition( final float[] position )
-	{
-		final float x = position[ 0 ];
-		final float y = position[ 1 ];
-		final float z = position[ 2 ];
-		
-		this.position[ 0 ] = x;
-		this.position[ 1 ] = y;
-		this.position[ 2 ] = z;
-		
-		//       y7     y6
-		//        *-------*
-		//       /       /|
-		//   y3 /    y2 / |
-		//     *-------*  * y5
-		//     |    x  | /
-		//     |       |/
-		//     *-------*
-		//     y0    y1
-
-		// base offset (y0)
-		final int baseX1 = x > 0 ? (int)x: (int)x-1;
-		final int baseX2 = y > 0 ? (int)y: (int)y-1;
-		final int baseX3 = z > 0 ? (int)z: (int)z-1;
-
-		// update iterator position
-		tmpLocation[ 0 ] = baseX1;
-		tmpLocation[ 1 ] = baseX2;
-		tmpLocation[ 2 ] = baseX3;
-		
-		cursor.setPosition( tmpLocation );
-
-		// How to iterate the cube
-		//
-		//       y7     y6
-		//        *------>*
-		//       ^       /|
-		//   y3 /    y2 / v
-		//     *<------*  * y5
-		//     |    x  ^ /
-		//     |       |/
-		//     *------>*
-		//     y0    y1
-
-        //final float y0 = strategy.get(baseX1    , baseX2,     baseX3);
-        final float y0 = cursor.type().getRealFloat(); 
-        
-        //final float y1 = strategy.get(baseX1 + 1, baseX2,     baseX3);
-        cursor.fwd( 0 );
-        final float y1 = cursor.type().getRealFloat(); 
-        
-        //final float y2 = strategy.get(baseX1 + 1, baseX2 + 1, baseX3);
-        cursor.fwd( 1 );
-        final float y2 = cursor.type().getRealFloat(); 
-                
-        //final float y3 = strategy.get(baseX1    , baseX2 + 1, baseX3);
-        cursor.bck( 0 );
-        final float y3 = cursor.type().getRealFloat(); 
-        
-        //final float y7 = strategy.get(baseX1    , baseX2 + 1, baseX3 + 1);
-        cursor.fwd( 2 );
-        final float y7 = cursor.type().getRealFloat();
-
-        //final float y6 = strategy.get(baseX1 + 1, baseX2 + 1, baseX3 + 1);
-        cursor.fwd( 0 );
-        final float y6 = cursor.type().getRealFloat();
-
-        //final float y5 = strategy.get(baseX1 + 1, baseX2,     baseX3 + 1);
-        cursor.bck( 1 );
-        final float y5 = cursor.type().getRealFloat();
-        
-        //final float y4 = strategy.get(baseX1    , baseX2,	  baseX3 + 1);
-        cursor.bck( 0 );
-        final float y4 = cursor.type().getRealFloat();        
-
-        // weights
-        final float t = x - baseX1; 
-        final float u = y - baseX2; 
-        final float v = z - baseX3;
-
-        final float t1 = 1 - t;
-        final float u1 = 1 - u;
-        final float v1 = 1 - v;
-
-        final float value = t1*u1*v1*y0 + t*u1*v1*y1 + t*u*v1*y2 + t1*u*v1*y3 + 
-                            t1*u1*v*y4  + t*u1*v*y5  + t*u*v*y6  + t1*u*v*y7;
-        
-        tmp2.setReal( value );
-	}	
-	
 }
