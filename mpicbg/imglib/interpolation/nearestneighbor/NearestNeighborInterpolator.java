@@ -70,19 +70,6 @@ public class NearestNeighborInterpolator<T extends Type<T>> extends AbstractInte
 	}
 
 	@Override
-	public void moveRel( final float[] vector )
-	{
-		for ( int d = 0; d < numDimensions; d++ )
-		{
-			this.position[ d ] += vector[ d ];
-			
-			//final int pos = (int)( position[d] + (0.5f * Math.signum( position[d] ) ) );
-			final int pos = MathLib.round( position[ d ] );			
-			cursor.move( pos - cursor.getIntPosition(d), d );
-		}
-	}
-	
-	@Override
 	public void setPosition( final float[] position )
 	{
 		for ( int d = 0; d < numDimensions; d++ )

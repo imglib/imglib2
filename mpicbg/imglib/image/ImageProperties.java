@@ -29,9 +29,9 @@
  */
 package mpicbg.imglib.image;
 
-import mpicbg.imglib.Dimensionality;
+import mpicbg.imglib.Dimensions;
 
-public interface ImageProperties extends Dimensionality
+public interface ImageProperties extends Dimensions
 {		
 	public long getNumPixels();
 	

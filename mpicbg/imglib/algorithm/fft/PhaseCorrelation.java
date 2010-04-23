@@ -63,7 +63,7 @@ public class PhaseCorrelation<T extends RealType<T>, S extends RealType<S>> impl
 		this.numPeaks = numPeaks;
 		this.verifyWithCrossCorrelation = verifyWithCrossCorrelation;
 
-		this.numDimensions = image1.getNumDimensions();
+		this.numDimensions = image1.numDimensions();
 		this.normalizationThreshold = 1E-5f;
 		
 		this.minOverlapPx = new int[ numDimensions ];		
@@ -279,17 +279,17 @@ public class PhaseCorrelation<T extends RealType<T>, S extends RealType<S>> impl
 
 	public static <T extends RealType<T>, S extends RealType<S>> double testCrossCorrelation( final int[] shift, final Image<T> image1, final Image<S> image2 )
 	{
-		return testCrossCorrelation( shift, image1, image2, MathLib.getArrayFromValue( 5, image1.getNumDimensions()) );
+		return testCrossCorrelation( shift, image1, image2, MathLib.getArrayFromValue( 5, image1.numDimensions()) );
 	}
 
 	public static <T extends RealType<T>, S extends RealType<S>> double testCrossCorrelation( final int[] shift, final Image<T> image1, final Image<S> image2, final int minOverlapPx )
 	{
-		return testCrossCorrelation( shift, image1, image2, MathLib.getArrayFromValue( minOverlapPx, image1.getNumDimensions()) );
+		return testCrossCorrelation( shift, image1, image2, MathLib.getArrayFromValue( minOverlapPx, image1.numDimensions()) );
 	}
 	
 	public static <T extends RealType<T>, S extends RealType<S>> double testCrossCorrelation( final int[] shift, final Image<T> image1, final Image<S> image2, final int[] minOverlapPx )
 	{
-		final int numDimensions = image1.getNumDimensions();
+		final int numDimensions = image1.numDimensions();
 		double correlationCoefficient = 0;
 		
 		final int[] overlapSize = new int[ numDimensions ];
@@ -520,9 +520,9 @@ public class PhaseCorrelation<T extends RealType<T>, S extends RealType<S>> impl
 	
 	protected static int[] getMaxDim( final Image<?> image1, final Image<?> image2 )
 	{
-		final int[] maxDim = new int[ image1.getNumDimensions() ];
+		final int[] maxDim = new int[ image1.numDimensions() ];
 		
-		for ( int d = 0; d < image1.getNumDimensions(); ++d )
+		for ( int d = 0; d < image1.numDimensions(); ++d )
 			maxDim[ d ] = Math.max( image1.getDimension( d ), image2.getDimension( d ) );
 		
 		return maxDim;
@@ -695,7 +695,7 @@ public class PhaseCorrelation<T extends RealType<T>, S extends RealType<S>> impl
 			return false;
 		}
 		
-		if ( image1.getNumDimensions() != image2.getNumDimensions() )
+		if ( image1.numDimensions() != image2.numDimensions() )
 		{
 			errorMessage = "Dimensionality of images is not the same";
 			return false;

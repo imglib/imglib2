@@ -58,15 +58,15 @@ public class CellContainer<T extends Type<T>, A extends ArrayDataAccess<A>> exte
 		super(factory, dim, entitiesPerPixel);
 		
 		// check that cellsize is not bigger than the image
-		for ( int d = 0; d < getNumDimensions(); d++ )
+		for ( int d = 0; d < numDimensions(); d++ )
 			if ( cellSize[ d ] > dim[ d ] )
 				cellSize[ d ] = dim[ d ];
 			
 		this.cellSize = cellSize;
-		numCellsDim = new int[ getNumDimensions() ];				
+		numCellsDim = new int[ numDimensions() ];				
 		
 		int tmp = 1;		
-		for ( int d = 0; d < getNumDimensions(); d++ )
+		for ( int d = 0; d < numDimensions(); d++ )
 		{
 			numCellsDim[ d ] = ( dim[ d ] - 1) / cellSize[ d ] + 1;
 			tmp *= numCellsDim[ d ];
@@ -82,10 +82,10 @@ public class CellContainer<T extends Type<T>, A extends ArrayDataAccess<A>> exte
 		for ( int c = 0; c < numCells; c++ )			
 		{
 			cursor.fwd();
-			final int[] finalSize = new int[ getNumDimensions() ];
-			final int[] finalOffset = new int[ getNumDimensions() ];
+			final int[] finalSize = new int[ numDimensions() ];
+			final int[] finalOffset = new int[ numDimensions() ];
 			
-			for ( int d = 0; d < getNumDimensions(); d++ )
+			for ( int d = 0; d < numDimensions(); d++ )
 			{
 				finalSize[ d ] = cellSize[ d ];
 				

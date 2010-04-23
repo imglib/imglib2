@@ -55,7 +55,7 @@ public class RegionOfInterestCursor<T extends Type<T>> extends AbstractCursor<T>
 		this.size = size.clone();		
 		this.cursor = cursor;
 		
-		this.numDimensions = cursor.getImage().getNumDimensions();
+		this.numDimensions = cursor.getImage().numDimensions();
 		this.roiPosition = new int[ numDimensions ];
 		this.currentDirectionDim = new boolean[ numDimensions ]; 
 		
@@ -209,4 +209,7 @@ public class RegionOfInterestCursor<T extends Type<T>> extends AbstractCursor<T>
 	
 	@Override
 	public String toString() { return getLocationAsString() + " = " + type(); }
+	
+	@Override
+	public int numDimensions(){ return numDimensions; }
 }

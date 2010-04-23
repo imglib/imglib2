@@ -45,13 +45,13 @@ public class Affine3DImageTransform<T extends Type<T>> implements OutputAlgorith
 	{
 		this.img = img;
 		this.interpolatorFactory = interpolatorFactory;
-		this.numDimensions = img.getNumDimensions();
+		this.numDimensions = img.numDimensions();
 		this.location = new float[ numDimensions ];
 		this.offset = new int[ numDimensions ];
 		
 		if ( numDimensions != 3 )
 		{
-			errorMessage = "A Transform3D is not suitable for a " + img.getNumDimensions() + "-dimensional image.";
+			errorMessage = "A Transform3D is not suitable for a " + img.numDimensions() + "-dimensional image.";
 			this.transform = null;
 		}
 		else
@@ -64,13 +64,13 @@ public class Affine3DImageTransform<T extends Type<T>> implements OutputAlgorith
 	{
 		this.img = img;
 		this.interpolatorFactory = interpolatorFactory;
-		this.numDimensions = img.getNumDimensions();
+		this.numDimensions = img.numDimensions();
 		this.location = new float[ numDimensions ];
 		this.offset = new int[ numDimensions ];
 		
 		if ( numDimensions != 3 )
 		{
-			errorMessage = "A Transform3D is not suitable for a " + img.getNumDimensions() + "-dimensional image.";
+			errorMessage = "A Transform3D is not suitable for a " + img.numDimensions() + "-dimensional image.";
 			this.transform = null;
 		}
 		else
@@ -83,7 +83,7 @@ public class Affine3DImageTransform<T extends Type<T>> implements OutputAlgorith
 	{
 		this.img = img;
 		this.interpolatorFactory = interpolatorFactory;
-		this.numDimensions = img.getNumDimensions();
+		this.numDimensions = img.numDimensions();
 		this.location = new float[ numDimensions ];
 		this.offset = new int[ numDimensions ];
 		
@@ -91,12 +91,12 @@ public class Affine3DImageTransform<T extends Type<T>> implements OutputAlgorith
 		{
 			this.transform = null;
 		}
-		else if ( transform.length != (img.getNumDimensions()+1) * (img.getNumDimensions()+1) )
+		else if ( transform.length != (img.numDimensions()+1) * (img.numDimensions()+1) )
 		{
 			this.transform = null;
 			errorMessage = "AffineTransform: [float[] transform] has a length of " + transform.length + ", should be " + 
-						   ((img.getNumDimensions()+1) * (img.getNumDimensions()+1)) +" (" + (img.getNumDimensions()+1) + "x" + (img.getNumDimensions()+1) + ")" +
-						   " for a " + img.getNumDimensions() + "-dimensional image.";
+						   ((img.numDimensions()+1) * (img.numDimensions()+1)) +" (" + (img.numDimensions()+1) + "x" + (img.numDimensions()+1) + ")" +
+						   " for a " + img.numDimensions() + "-dimensional image.";
 		}
 		else if ( numDimensions == 3)
 		{
@@ -104,7 +104,7 @@ public class Affine3DImageTransform<T extends Type<T>> implements OutputAlgorith
 		}
 		else
 		{
-			errorMessage = "Only 3D-Transforms are supported yet but this is a " + img.getNumDimensions() + "-dimensional image.";
+			errorMessage = "Only 3D-Transforms are supported yet but this is a " + img.numDimensions() + "-dimensional image.";
 			this.transform = null;
 		}
 	}

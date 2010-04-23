@@ -43,7 +43,7 @@ public class TestBase {
 	 */
 	protected<T extends RealType<T>> boolean match( Image<T> image, Function function ) {
 		LocalizableCursor<T> cursor = image.createLocalizableCursor();
-		int[] pos = new int[cursor.getNumDimensions()];
+		int[] pos = new int[cursor.numDimensions()];
 		while( cursor.hasNext() ) {
 			cursor.fwd();
 			cursor.localize( pos );
@@ -59,7 +59,7 @@ public class TestBase {
 	 */
 	protected<T extends RealType<T>> boolean match( Image<T> image, Function function, float tolerance ) {
 		LocalizableCursor<T> cursor = image.createLocalizableCursor();
-		int[] pos = new int[cursor.getNumDimensions()];
+		int[] pos = new int[cursor.numDimensions()];
 		while( cursor.hasNext() ) {
 			cursor.fwd();
 			cursor.localize( pos );
@@ -76,7 +76,7 @@ public class TestBase {
 	 * The image signature are 1st and 2nd order moments of the intensity and the coordinates.
 	 */
 	protected<T extends RealType<T>> float[] signature( Image<T> image ) {
-		float[] result = new float[( image.getNumDimensions() + 1 ) * 2];
+		float[] result = new float[( image.numDimensions() + 1 ) * 2];
 		signature( image, result );
 		return result;
 	}
@@ -89,7 +89,7 @@ public class TestBase {
 	protected<T extends RealType<T>> void signature( Image<T> image, float[] result ) {
 		Arrays.fill( result, 0 );
 		LocalizableCursor<T> cursor = image.createLocalizableCursor();
-		int dim = cursor.getNumDimensions();
+		int dim = cursor.numDimensions();
 		int[] pos = new int[dim];
 		while( cursor.hasNext() ) {
 			cursor.fwd();
@@ -166,7 +166,7 @@ public class TestBase {
 		ImageFactory<T> factory = new ImageFactory<T>(type, new ArrayContainerFactory());
 		Image<T> result = factory.createImage( dims );
 		LocalizableCursor<T> cursor = result.createLocalizableCursor();
-		int[] pos = new int[cursor.getNumDimensions()];
+		int[] pos = new int[cursor.numDimensions()];
 		while( cursor.hasNext() ) {
 			cursor.fwd();
 			cursor.localize( pos );

@@ -29,11 +29,10 @@
  */
 package mpicbg.imglib.cursor;
 
-import mpicbg.imglib.Dimensionality;
 import mpicbg.imglib.container.Container;
 import mpicbg.imglib.container.array.Array;
 import mpicbg.imglib.image.Image;
-import mpicbg.imglib.location.Iterator;
+import mpicbg.imglib.location.LinkableIterator;
 import mpicbg.imglib.sampler.Sampler;
 import mpicbg.imglib.type.Type;
 
@@ -100,7 +99,7 @@ import mpicbg.imglib.type.Type;
  *
  * @param <T> - the {@link Type} this {@link Cursor} works on
  */
-public interface Cursor< T extends Type< T > > extends Sampler< T >, Iterator< T >, Dimensionality
+public interface Cursor< T extends Type< T > > extends Sampler< T >, LinkableIterator< T >
 {	
 	public boolean isActive();	
 
@@ -109,9 +108,6 @@ public interface Cursor< T extends Type< T > > extends Sampler< T >, Iterator< T
 	public int getArrayIndex();
 	public int getStorageIndex();
 	public Container<T> getStorageContainer();
-	
-	/* TODO Can we live without this ... junk? ;) */
-	public int[] createPositionArray();
 	
 	public void close();
 }

@@ -43,7 +43,7 @@ public class ImagePlusLocalizableCursor<T extends Type<T>> extends ImagePlusCurs
 	{
 		super( container, image, type );
 
-		numDimensions = container.getNumDimensions(); 		
+		numDimensions = container.numDimensions(); 		
 		position = new int[ numDimensions ];
 		dimensions = container.getDimensions();
 		
@@ -165,4 +165,7 @@ public class ImagePlusLocalizableCursor<T extends Type<T>> extends ImagePlusCurs
 	
 	@Override
 	public String toString() { return getLocationAsString() + " = " + type(); }
+	
+	@Override
+	public int numDimensions(){ return numDimensions; }
 }

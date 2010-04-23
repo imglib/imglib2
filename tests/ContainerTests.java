@@ -164,7 +164,7 @@ public class ContainerTests
 		final Image<FloatType> img1 = imageFactory1.createImage( dim );
 		final Image<FloatType> img2 = imageFactory2.createImage( dim );
 	
-		final int numDimensions = img1.getNumDimensions();
+		final int numDimensions = img1.numDimensions();
 
 		// get a reference to compare to
 		final float[] reference = createReference( img1 );

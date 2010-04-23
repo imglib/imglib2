@@ -69,7 +69,7 @@ public abstract class SliceTransformableExtraction<T extends Type<T>> extends Th
 		this.transform = desc.getTransform();
 		this.it = desc.getImage().createInterpolator( desc.getInterpolatorFactory() );
 		this.offset = desc.getOffset();
-		this.numDimensions = desc.getImage().getNumDimensions();
+		this.numDimensions = desc.getImage().numDimensions();
 		
 		if ( AffineModel2D.class.isInstance( desc.getTransform() ) ||
 			 AffineModel3D.class.isInstance( desc.getTransform() ) ||
@@ -128,7 +128,7 @@ public abstract class SliceTransformableExtraction<T extends Type<T>> extends Th
 	    	
 	    	if ( isAffine )
 	    	{
-	    		// if it is an affine transform, lines stay lines
+	    		// if it is an affine transform, lines stay lines and distances remain proportional
 	    		// so we can get the vectors we have to move for each location in the output image
 	    		// based on the edges of the image; by that we do not have to apply the inverse transformation
 	    		// every time we move on a vector in the output image ( we move on the corresponding line in the input image) 	    		
@@ -198,11 +198,13 @@ public abstract class SliceTransformableExtraction<T extends Type<T>> extends Th
 	    		
 	    		transform.applyInverseInPlace( position1 );
 	    		it.moveTo( position1 );
+	    		
+	    		final float[] position3 = position1.clone();
 	    	
 		    	for ( int y = 0; y < sizeY; y++ )
-		    	{		    		
+		    	{
 		        	for ( int x = 0; x < sizeX; x++ )
-		        	{	        		
+		        	{
 		        		if ( stopThread )
 		        		{
 		        			it.close();
@@ -215,14 +217,20 @@ public abstract class SliceTransformableExtraction<T extends Type<T>> extends Th
 		        		// we move one step on the x axis in the output image 
 		        		++i;
 		        		
-		        		// we move one step on the corresponding vector in the input image 
-		        		it.moveRel( vectorX );
+		        		// we move one step on the corresponding vector in the input image
+		        		for ( int d = 0; d < position3.length; ++i )
+		        			position3[ d ] += vectorX[ d ];
+		        		
+		        		it.moveTo( position3 );
 
 		        	}
 		        	
 		        	
 		    		for ( int d = 0; d < initialPosition.length; ++d )
+		    		{
 		    			position1[ d ] += vectorY[ d ];
+		    			position3[ d ] = position1[ d ];
+		    		}
 		    		
 		    		// typically this is big jump of hundreds of pixels
 		    		it.setPosition( position1 );

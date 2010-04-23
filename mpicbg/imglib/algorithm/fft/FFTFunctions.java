@@ -50,7 +50,7 @@ final public class FFTFunctions
 			return null;
 
 		// get the number of dimensions		
-		final int numDimensions = complex.getNumDimensions();
+		final int numDimensions = complex.numDimensions();
 			
 		// the size in dimension 0 of the output image
 		final int nfft = ( complex.getDimension( 0 ) - 1 ) * 2;
@@ -364,7 +364,7 @@ A:						while( cursorDim.hasNext() )
 						            final int[] imageOffset, final int[] imageSize,
 						            final int numThreads, final boolean scale )
 	{
-		final int numDimensions = img.getNumDimensions();
+		final int numDimensions = img.numDimensions();
 		
 		final int complexSize[] = new int[ numDimensions ];
 		
@@ -684,7 +684,7 @@ A:						while( cursorDim.hasNext() )
 
 	final private static <T extends Type<T>> void rearrangeQuadrantFFTDimZero( final Image<T> fftImage, final int numThreads )
 	{
-		final int numDimensions = fftImage.getNumDimensions();
+		final int numDimensions = fftImage.numDimensions();
 		
 		if ( numDimensions == 1 )
 		{
@@ -781,7 +781,7 @@ A:						while( cursorDim.hasNext() )
 
 	final private static <T extends Type<T>> void rearrangeQuadrantDim( final Image<T> fftImage, final int dim, final int numThreads )
 	{
-		final int numDimensions = fftImage.getNumDimensions();
+		final int numDimensions = fftImage.numDimensions();
 		
 		/*
 		if ( fftImage.getDimension( dim ) % 2 == 1 )
@@ -886,7 +886,7 @@ A:						while( cursorDim.hasNext() )
 	{
 		rearrangeQuadrantFFTDimZero( fftImage, numThreads );
 		
-		for ( int d = 1; d < fftImage.getNumDimensions(); ++d )
+		for ( int d = 1; d < fftImage.numDimensions(); ++d )
 			rearrangeQuadrantDim( fftImage, d, numThreads );		
 	}	
 }

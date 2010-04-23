@@ -46,7 +46,7 @@ public class ArrayLocalizableCursor<T extends Type<T>> extends ArrayCursor<T> im
 	{
 		super( container, image, type );
 
-		numDimensions = container.getNumDimensions(); 
+		numDimensions = container.numDimensions(); 
 		
 		position = new int[ numDimensions ];
 		dimensions = container.getDimensions();
@@ -178,4 +178,7 @@ public class ArrayLocalizableCursor<T extends Type<T>> extends ArrayCursor<T> im
 	
 	@Override
 	public String toString() { return getLocationAsString() + " = " + type(); }
+	
+	@Override
+	public int numDimensions(){ return numDimensions; }
 }

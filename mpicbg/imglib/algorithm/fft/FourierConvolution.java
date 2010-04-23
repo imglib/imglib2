@@ -54,7 +54,7 @@ public class FourierConvolution<T extends RealType<T>, S extends RealType<S>> im
 
 	public FourierConvolution( final Image<T> image, final Image<S> kernel )
 	{
-		this.numDimensions = image.getNumDimensions();
+		this.numDimensions = image.numDimensions();
 				
 		this.image = image;
 		this.kernel = kernel;

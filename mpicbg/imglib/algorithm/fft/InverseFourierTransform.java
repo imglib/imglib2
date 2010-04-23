@@ -50,7 +50,7 @@ public class InverseFourierTransform<T extends RealType<T>, S extends ComplexTyp
 	{
 		this.fftImage = fftImage;
 		this.type = type;
-		this.numDimensions = fftImage.getNumDimensions();
+		this.numDimensions = fftImage.numDimensions();
 		
 		this.rearrangement = rearrangement;
 		this.scale = scale;

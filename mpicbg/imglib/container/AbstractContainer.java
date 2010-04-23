@@ -67,7 +67,7 @@ public abstract class AbstractContainer<T extends Type<T>> implements Container<
 	@Override
 	public long getId(){ return id; }
 	@Override
-	public int getNumDimensions() { return dim.length; }
+	public int numDimensions() { return dim.length; }
 	@Override
 	public int[] getDimensions() { return dim.clone(); }
 	
@@ -109,7 +109,7 @@ public abstract class AbstractContainer<T extends Type<T>> implements Container<
 	@Override
 	public boolean compareStorageContainerDimensions( final Container<?> container )
 	{
-		if ( container.getNumDimensions() != this.getNumDimensions() )
+		if ( container.numDimensions() != this.numDimensions() )
 			return false;
 		
 		for ( int i = 0; i < numDimensions; i++ )

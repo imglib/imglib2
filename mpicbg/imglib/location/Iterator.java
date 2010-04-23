@@ -57,23 +57,4 @@ public interface Iterator< E > extends java.util.Iterator< E >
 	 * newly created.
 	 */
 	public void reset();
-	
-	/* TODO reverse naming of hasNext() and hasNextLinked(), hasNext should be the safe but slow version, and the alternative the fast unsafe one */
-	public boolean hasNextLinked();
-	
-	/**
-	 * Link another {@link Iterator}.  The linked {@link Iterator} will follow
-	 * the move and reset commands and can be used for a joined hasNext check.
-	 * 
-	 * @param iterable
-	 */
-	public void linkIterator( Iterator< ? > iterable );
-	
-	/**
-	 * Unlink the currently linked {@link Iterator}.  It is replaced by the
-	 * default link, which is {@link VoidIterator}.
-	 * 
-	 * @param the unlinked {@link Iterable}
-	 */
-	public Iterator< ? > unlinkIterator();
 }

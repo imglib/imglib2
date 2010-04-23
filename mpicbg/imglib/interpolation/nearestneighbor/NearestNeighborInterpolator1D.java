@@ -56,11 +56,8 @@ public class NearestNeighborInterpolator1D<T extends Type<T>> extends NearestNei
 	public Image<T> getImage() { return img; }		
 	
 	@Override
-	public void getPosition( final float[] position ) { position[ 0 ] = x; }
+	public void localize( final float[] position ) { position[ 0 ] = x; }
 
-	@Override
-	public float[] getPosition() { return new float[]{ x }; }	
-	
 	@Override
 	public void close() { cursor.close(); }
 	
@@ -84,9 +81,6 @@ public class NearestNeighborInterpolator1D<T extends Type<T>> extends NearestNei
 		
 		cursor.move( MathLib.round( this.x ) - cursor.getIntPosition( 0 ), 0 );
 	}
-	
-	@Override
-	public void moveRel( final float[] vector ) { moveRel( vector[0] ); }
 	
 	@Override
 	public void setPosition( final float x )

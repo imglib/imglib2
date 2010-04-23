@@ -55,7 +55,7 @@ public class GaussianConvolution< T extends NumericType<T>> implements MultiThre
 		setNumThreads();
 		
 		this.outOfBoundsFactory = outOfBoundsFactory;
-		this.numDimensions = image.getNumDimensions();
+		this.numDimensions = image.numDimensions();
 
 		this.kernel = new double[ numDimensions ][];
 		
@@ -70,9 +70,9 @@ public class GaussianConvolution< T extends NumericType<T>> implements MultiThre
 	
 	protected static double[] createArray( final Image<?> image, final double sigma )
 	{
-		final double[] sigmas = new double[ image.getNumDimensions() ];
+		final double[] sigmas = new double[ image.numDimensions() ];
 		
-		for ( int d = 0; d < image.getNumDimensions(); ++d )
+		for ( int d = 0; d < image.numDimensions(); ++d )
 			sigmas[ d ] = sigma;
 		
 		return sigmas;
@@ -130,7 +130,7 @@ public class GaussianConvolution< T extends NumericType<T>> implements MultiThre
 	{		
 		final long startTime = System.currentTimeMillis();
 	
-		if ( image.getNumDimensions() == 3 && Array.class.isInstance( image.getContainer() ) && FloatType.class.isInstance( image.createType() ))
+		if ( image.numDimensions() == 3 && Array.class.isInstance( image.getContainer() ) && FloatType.class.isInstance( image.createType() ))
 		{
     		//System.out.println( "GaussianConvolution: Input is instance of Image<Float> using an Array3D, fast forward algorithm");
     		computeGaussFloatArray3D();
@@ -250,7 +250,7 @@ public class GaussianConvolution< T extends NumericType<T>> implements MultiThre
         final int filterSizeMinus1 = filterSize - 1;
         final int filterSizeHalf = filterSize / 2;
         final int filterSizeHalfMinus1 = filterSizeHalf - 1;
-        final int numDimensions = inputIterator.getImage().getNumDimensions();
+        final int numDimensions = inputIterator.getImage().numDimensions();
         
     	final int iteratorPosition = filterSizeHalf;
     	

@@ -47,7 +47,7 @@ public class InverseTransformDescription<T extends Type<T>>
 		this.transform = transform;
 		this.factory = factory;
 		this.image = image;
-		this.numDimensions = image.getNumDimensions();
+		this.numDimensions = image.numDimensions();
 		this.offset = new float[ numDimensions ];
 	}
 	

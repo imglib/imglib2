@@ -52,7 +52,7 @@ public class LocalNeighborhoodCursor<T extends Type<T>> extends AbstractCursor<T
 	{
 		super( cursor.getStorageContainer(), cursor.getImage() );
 		
-		numDimensions = cursor.getImage().getNumDimensions();
+		numDimensions = cursor.getImage().numDimensions();
 		
 		this.cursor = cursor;
 		position = new int[ numDimensions ];

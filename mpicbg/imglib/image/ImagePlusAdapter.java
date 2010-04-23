@@ -84,7 +84,7 @@ public class ImagePlusAdapter
 
 	protected static void setCalibrationFromImagePlus( final Image<?> image, final ImagePlus imp ) 
 	{
-		final int d = image.getNumDimensions();
+		final int d = image.numDimensions();
 		final float [] spacing = new float[d];
 		
 		for( int i = 0; i < d; ++i )

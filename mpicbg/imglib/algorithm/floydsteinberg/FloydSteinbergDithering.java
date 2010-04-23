@@ -52,13 +52,13 @@ public class FloydSteinbergDithering<T extends RealType<T>> implements OutputAlg
 		this.tmp1 = img.createPositionArray();
 		this.tmp2 = img.createPositionArray();
 
-		this.errorDiffusionKernel = createErrorDiffusionKernel( img.getNumDimensions() );
+		this.errorDiffusionKernel = createErrorDiffusionKernel( img.numDimensions() );
 
 		this.ditheringThreshold = ditheringThreshold;
 		img.getDisplay().setMinMax();		
 		this.minValue = (float)img.getDisplay().getMin();
 		this.maxValue = (float)img.getDisplay().getMax();
-		this.numDimensions = img.getNumDimensions();
+		this.numDimensions = img.numDimensions();
 	}
 
 	public FloydSteinbergDithering( final Image<T> img )

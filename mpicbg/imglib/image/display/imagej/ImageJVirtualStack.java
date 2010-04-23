@@ -104,7 +104,7 @@ public class ImageJVirtualStack<T extends Type<T>> extends ImageStack
 
         final int[] dimPos = dimensionPositions.clone();
         
-        if ( dimZ < img.getNumDimensions() )
+        if ( dimZ < img.numDimensions() )
         	dimPos[ dimZ ] = n - 1;
                 
         switch(type) 
@@ -133,7 +133,7 @@ public class ImageJVirtualStack<T extends Type<T>> extends ImageStack
 		// store the slice image
     	float[] sliceImg = new float[ sizeX * sizeY ];
     	
-    	if ( dimY < img.getNumDimensions() )
+    	if ( dimY < img.numDimensions() )
     	{
 	    	while ( cursor.hasNext() )
 	    	{
@@ -166,7 +166,7 @@ public class ImageJVirtualStack<T extends Type<T>> extends ImageStack
 		// store the slice image
     	int[] sliceImg = new int[ sizeX * sizeY ];
     	
-    	if ( dimY < img.getNumDimensions() )
+    	if ( dimY < img.numDimensions() )
     	{
 	    	while ( cursor.hasNext() )
 	    	{
@@ -197,7 +197,7 @@ public class ImageJVirtualStack<T extends Type<T>> extends ImageStack
 		// store the slice image
     	byte[] sliceImg = new byte[ sizeX * sizeY ];
     	
-    	if ( dimY < img.getNumDimensions() )
+    	if ( dimY < img.numDimensions() )
     	{
 	    	while ( cursor.hasNext() )
 	    	{

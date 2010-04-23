@@ -74,7 +74,7 @@ public class CellLocalizableCursor<T extends Type<T>> extends CellCursor<T> impl
 	{
 		super( container, image, type);
 
-		numDimensions = container.getNumDimensions(); 
+		numDimensions = container.numDimensions(); 
 		
 		position = new int[ numDimensions ];
 		dimensions = container.getDimensions();
@@ -225,5 +225,8 @@ public class CellLocalizableCursor<T extends Type<T>> extends CellCursor<T> impl
 	}
 	
 	@Override
-	public String toString() { return getLocationAsString() + " = " + type(); }	
+	public String toString() { return getLocationAsString() + " = " + type(); }
+	
+	@Override
+	public int numDimensions(){ return numDimensions; }
 }

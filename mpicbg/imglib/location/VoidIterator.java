@@ -51,16 +51,7 @@ final public class VoidIterator implements Iterator< Object >
 	final public void reset(){}
 
 	@Override
-	final public void linkIterator( Iterator< ? > iterable ){}
-
-	@Override
-	final public VoidIterator unlinkIterator(){ return this; }
-	
-	@Override
 	final public boolean hasNext(){ return true; }
-	
-	@Override
-	final public boolean hasNextLinked(){ return true; }
 	
 	@Override
 	final public Object next(){ return null; }

@@ -34,16 +34,23 @@ import mpicbg.imglib.cursor.PositionableCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.interpolation.InterpolatorFactory;
 import mpicbg.imglib.interpolation.AbstractInterpolator;
+import mpicbg.imglib.location.LinkablePositionable;
+import mpicbg.imglib.location.Positionable;
+import mpicbg.imglib.location.RasterPositionable;
+import mpicbg.imglib.location.VoidPositionable;
+import mpicbg.imglib.location.link.LocalizableFloorRasterPositionable;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
 import mpicbg.imglib.type.numeric.NumericType;
 
 public class LinearInterpolator<T extends NumericType<T>> extends AbstractInterpolator<T>
 {
-	final PositionableCursor<T> cursor;
-	final T tmp1, tmp2;
+	final protected PositionableCursor<T> cursor;
+	final private LocalizableFloorRasterPositionable floorLink; 
+	final protected T tmp1, tmp2;
+	
 	
 	// the offset in each dimension and a temporary array for computing the global coordinates
-	final int[] baseDim, location;
+	final int[] floorLocation;
 	
 	// the weights and inverse weights in each dimension
 	final float[][] weights;
@@ -122,11 +129,12 @@ public class LinearInterpolator<T extends NumericType<T>> extends AbstractInterp
 		// yiels the interpolated value in 3 dimensions
 		
 		cursor = img.createPositionableCursor( outOfBoundsStrategyFactory );
+		linkedRasterPositionable = linkedPositionable = floorLink = new LocalizableFloorRasterPositionable( this, cursor );
+		
 		tmp1 = img.createType();
 		tmp2 = img.createType();
 
-		baseDim = new int[ numDimensions ];
-		location = new int[ numDimensions ];
+		floorLocation = new int[ numDimensions ];
 		weights = new float[ numDimensions ][ 2 ];
 
 		if ( initGenericStructures )
@@ -200,40 +208,23 @@ public class LinearInterpolator<T extends NumericType<T>> extends AbstractInterp
 	public void close() { cursor.close(); }
 
 	@Override
-	public T type() { return tree[ 0 ][ 0 ]; }
-
-	@Override
-	public void moveTo( final float[] position )
+	public T type()
 	{
-        // compute the offset (Math.floor) in each dimension
+		/* calculate weights [0...1] and their inverse (1-weight) [1...0] in each dimension */
 		for (int d = 0; d < numDimensions; d++)
 		{
-			this.position[ d ] = position[ d ];
-			
-			baseDim[ d ] = position[ d ] > 0 ? (int)position[ d ]: (int)position[ d ]-1;			
-			cursor.move( baseDim[ d ] - cursor.getIntPosition(d), d );
-		}
-
-        // compute the weights [0...1] in each dimension and the inverse (1-weight) [1...0]
-		for (int d = 0; d < numDimensions; d++)
-		{
-			final float w = position[ d ] - baseDim[ d ];
-			
+			final float w = position[ d ] - cursor.getIntPosition( d );
 			weights[ d ][ 1 ] = w;
 			weights[ d ][ 0 ] = 1 - w;
 		}
 		
-		//
-		// compute the output value
-		//
+		/* the values from the image */
 		
-		// the the values from the image
 		for ( int i = 0; i < positions.length; ++i )
 		{
-			// move to the position
 			for ( int d = 0; d < numDimensions; ++d )
 				if ( positions[ i ][ d ] )
-					cursor.fwd(d);
+					cursor.fwd( d );
 
 			tree[ numDimensions ][ i ].set( cursor.type() );
 			
@@ -243,7 +234,7 @@ public class LinearInterpolator<T extends NumericType<T>> extends AbstractInterp
 					cursor.bck(d);
 		}
 		
-		// interpolate down the tree as shown above
+		/* interpolate down the tree as shown above */
 		for ( int d = numDimensions; d > 0; --d )
 		{
 			for ( int i = 0; i < halfTreeLevelSizes[ d ]; i++ )
@@ -251,8 +242,6 @@ public class LinearInterpolator<T extends NumericType<T>> extends AbstractInterp
 				tmp1.set( tree[ d ][ i*2 ] );
 				tmp2.set( tree[ d ][ i*2+1 ] );
 				
-				//tmp1.mul( weights[d - 1][ 0 ] );
-				//tmp2.mul( weights[d - 1][ 1 ] );
 				tmp1.mul( weights[ numDimensions - d ][ 0 ] );
 				tmp2.mul( weights[ numDimensions - d ][ 1 ] );
 				
@@ -261,65 +250,33 @@ public class LinearInterpolator<T extends NumericType<T>> extends AbstractInterp
 				tree[ d - 1 ][ i ].set( tmp1 );
 			}
 		}
+		
+		return tree[ 0 ][ 0 ];
 	}
 	
+	/* LinkablePositionable */
+	
 	@Override
-	public void setPosition( final float[] position )
+	public void linkPositionable( final Positionable positionable )
 	{
-        // compute the offset (Math.floor) in each dimension
-		for (int d = 0; d < numDimensions; d++)
-		{
-			this.position[ d ] = position[ d ];
+		floorLink.linkPositionable( positionable );
+	}
 
-			baseDim[ d ] = position[ d ] > 0 ? (int)position[ d ]: (int)position[ d ]-1;
-		}
-			
-	    cursor.setPosition( baseDim );
-		
-        // compute the weights [0...1] in each dimension and the inverse (1-weight) [1...0]
-		for (int d = 0; d < numDimensions; d++)
-		{
-			final float w = position[ d ] - baseDim[ d ];
-			
-			weights[ d ][ 1 ] = w;
-			weights[ d ][ 0 ] = 1 - w;
-		}
-		
-		//
-		// compute the output value
-		//
-		
-		// the the values from the image
-		for ( int i = 0; i < positions.length; ++i )
-		{
-			// move to the position
-			for ( int d = 0; d < numDimensions; ++d )
-				if ( positions[ i ][ d ] )
-					cursor.fwd(d);
+	@Override
+	public Positionable unlinkPositionable()
+	{
+		return floorLink.unlinkPositionable();
+	}
 
-			tree[ numDimensions ][ i ].set( cursor.type() );
-			
-			// move back to the offset position
-			for ( int d = 0; d < numDimensions; ++d )
-				if ( positions[ i ][ d ] )
-					cursor.bck(d);
-		}
-		
-		// interpolate down the tree as shown above
-		for ( int d = numDimensions; d > 0; --d )
-		{
-			for ( int i = 0; i < halfTreeLevelSizes[ d ]; i++ )
-			{
-				tmp1.set( tree[ d ][ i*2 ] );
-				tmp2.set( tree[ d ][ i*2+1 ] );
-				
-				tmp1.mul( weights[ numDimensions - d ][ 0 ] );
-				tmp2.mul( weights[ numDimensions - d ][ 1 ] );
-				
-				tmp1.add( tmp2 );
-				
-				tree[ d - 1 ][ i ].set( tmp1 );
-			}
-		}
+	@Override
+	public void linkRasterPositionable( final RasterPositionable rasterPositionable )
+	{
+		floorLink.linkRasterPositionable( rasterPositionable );
+	}
+
+	@Override
+	public RasterPositionable unlinkRasterPositionable()
+	{
+		return floorLink.unlinkRasterPositionable();
 	}
 }

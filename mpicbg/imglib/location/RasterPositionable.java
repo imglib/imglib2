@@ -29,12 +29,14 @@
  */
 package mpicbg.imglib.location;
 
+import mpicbg.imglib.Dimensionality;
+
 /**
  * An element that can be positioned in n-dimensional discrete space.
  *
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de> and Stephan Preibisch
  */
-public interface RasterPositionable
+public interface RasterPositionable extends Dimensionality
 {
 	/**
 	 * Move by 1 in one dimension.
@@ -138,20 +140,4 @@ public interface RasterPositionable
 	 * @param dim
 	 */
 	public void setPosition( long position, int dim );
-	
-	/**
-	 * Link another {@link RasterPositionable}.  The linked
-	 * {@link RasterPositionable} will follow the move commands.
-	 * 
-	 * @param rasterPositionable
-	 */
-	public void linkRasterPositionable( RasterPositionable rasterPositionable );
-	
-	/**
-	 * Unlink the currently linked {@link RasterPositionable}.  It is replaced
-	 * by the default link, which is {@link VoidRasterPositionable}.
-	 * 
-	 * @param the unlinked {@link RasterPositionable}
-	 */
-	public RasterPositionable unlinkRasterPositionable();
 }

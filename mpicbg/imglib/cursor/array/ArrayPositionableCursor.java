@@ -39,7 +39,7 @@ import mpicbg.imglib.cursor.special.RegionOfInterestCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.location.RasterLocalizable;
 import mpicbg.imglib.location.RasterPositionable;
-import mpicbg.imglib.location.VoidRasterPositionable;
+import mpicbg.imglib.location.VoidPositionable;
 import mpicbg.imglib.type.Type;
 import mpicbg.imglib.type.label.FakeType;
 
@@ -51,7 +51,7 @@ public class ArrayPositionableCursor<T extends Type<T>> extends ArrayLocalizable
 	
 	int numNeighborhoodCursors = 0;
 	
-	protected RasterPositionable linkedRasterPositionable = VoidRasterPositionable.getInstance();
+	protected RasterPositionable linkedRasterPositionable = VoidPositionable.getInstance();
 	
 	public ArrayPositionableCursor( final Array<T,?> container, final Image<T> image, final T type ) 
 	{
@@ -188,8 +188,7 @@ public class ArrayPositionableCursor<T extends Type<T>> extends ArrayLocalizable
 		
 		type.updateIndex( container.getPos( this.position ) );
 		
-		//link.setPosition( position );
-		
+		linkedRasterPositionable.setPosition( position );
 	}
 
 	@Override
@@ -218,7 +217,7 @@ public class ArrayPositionableCursor<T extends Type<T>> extends ArrayLocalizable
 	public RasterPositionable unlinkRasterPositionable()
 	{
 		final RasterPositionable rasterPositionable = linkedRasterPositionable;
-		linkedRasterPositionable = VoidRasterPositionable.getInstance();
+		linkedRasterPositionable = VoidPositionable.getInstance();
 		return rasterPositionable;
 	}
 }

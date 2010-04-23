@@ -39,7 +39,7 @@ import mpicbg.imglib.cursor.special.RegionOfInterestCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.location.RasterLocalizable;
 import mpicbg.imglib.location.RasterPositionable;
-import mpicbg.imglib.location.VoidRasterPositionable;
+import mpicbg.imglib.location.VoidPositionable;
 import mpicbg.imglib.type.Type;
 import mpicbg.imglib.type.label.FakeType;
 
@@ -103,7 +103,7 @@ public class CellPositionableCursor<T extends Type<T>> extends CellLocalizableCu
 	
 	final int[] tmp;
 	
-	protected RasterPositionable linkedRasterPositionable = VoidRasterPositionable.getInstance();
+	protected RasterPositionable linkedRasterPositionable = VoidPositionable.getInstance();
 	
 	public CellPositionableCursor( final CellContainer<T,?> container, final Image<T> image, final T type )
 	{
@@ -119,7 +119,7 @@ public class CellPositionableCursor<T extends Type<T>> extends CellLocalizableCu
 		this.tmp = new int[ numDimensions ];
 		
 		this.cursor = ArrayPositionableCursor.createLinearByDimCursor( numCellsDim );
-		cursor.setPosition( new int[ container.getNumDimensions() ] );
+		cursor.setPosition( new int[ container.numDimensions() ] );
 		
 		// the steps when moving from cell to cell
 		Array.createAllocationSteps( numCellsDim, cellStep );
@@ -432,7 +432,7 @@ public class CellPositionableCursor<T extends Type<T>> extends CellLocalizableCu
 	public RasterPositionable unlinkRasterPositionable()
 	{
 		final RasterPositionable rasterPositionable = linkedRasterPositionable;
-		linkedRasterPositionable = VoidRasterPositionable.getInstance();
+		linkedRasterPositionable = VoidPositionable.getInstance();
 		return rasterPositionable;
 	}
 }

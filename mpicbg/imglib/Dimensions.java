@@ -27,34 +27,11 @@
  *
  * @author Stephan Preibisch & Stephan Saalfeld
  */
-package mpicbg.imglib.container;
+package mpicbg.imglib;
 
-import mpicbg.imglib.Dimensions;
-import mpicbg.imglib.cursor.Cursor;
-import mpicbg.imglib.cursor.PositionableCursor;
-import mpicbg.imglib.cursor.LocalizableCursor;
-import mpicbg.imglib.cursor.LocalizablePlaneCursor;
-import mpicbg.imglib.image.Image;
-import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
-import mpicbg.imglib.type.Type;
-
-public interface Container<T extends Type<T>> extends Dimensions
+public interface Dimensions extends Dimensionality
 {
-	public Cursor<T> createCursor( Image<T> image );
-	public LocalizableCursor<T> createLocalizableCursor( Image<T> image );
-	public LocalizablePlaneCursor<T> createLocalizablePlaneCursor( Image<T> image );
-	public PositionableCursor<T> createPositionableCursor( Image<T> image );
-	public PositionableCursor<T> createPositionableCursor( Image<T> image, OutOfBoundsStrategyFactory<T> outOfBoundsFactory );
-	
-	public void close();
-
-	public ContainerFactory getFactory();
-	
-	public long getId();
-	
-	public long getNumPixels();
-		
-	public boolean compareStorageContainerDimensions( final Container<?> img );
-	public boolean compareStorageContainerCompatibility( final Container<?> img );
-
+	public int[] getDimensions();
+	public void getDimensions( int[] position );
+	public int getDimension( int dim );
 }

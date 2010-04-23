@@ -29,24 +29,29 @@
  */
 package mpicbg.imglib.location;
 
-public interface Positionable3D
+/** 
+ * An {@link Iterator} that can be linked with other {@link Iterator Iterators}.
+ *  
+ * @author Stephan Preibisch & Stephan Saalfeld
+ */
+public interface LinkableIterator< E > extends Iterator< E >
 {
-	public void fwdX();
-	public void fwdY();
-	public void fwdZ();
-
-	public void bckX();
-	public void bckY();
-	public void bckZ();
+	/* TODO reverse naming of hasNext() and hasNextLinked(), hasNext should be the safe but slow version, and the alternative the fast unsafe one */
+	public boolean hasNextLinked();
 	
-	public void moveX( int steps );
-	public void moveY( int steps );
-	public void moveZ( int steps );
-
-	public void moveTo( int x, int y, int z );
+	/**
+	 * Link another {@link Iterator}.  The linked {@link Iterator} will follow
+	 * the move and reset commands and can be used for a joined hasNext check.
+	 * 
+	 * @param iterable
+	 */
+	public void linkIterator( Iterator< ? > iterable );
 	
-	public void setPosition( int posX, int posY, int posZ );
-	public void setPositionX( int pos );
-	public void setPositionY( int pos );
-	public void setPositionZ( int pos );
+	/**
+	 * Unlink the currently linked {@link Iterator}.  It is replaced by the
+	 * default link, which is {@link VoidIterator}.
+	 * 
+	 * @param the unlinked {@link Iterable}
+	 */
+	public Iterator< ? > unlinkIterator();
 }

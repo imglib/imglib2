@@ -36,7 +36,7 @@ public class LocalNeighborhoodCursorFactory
 {
 	public static <T extends Type<T>>LocalNeighborhoodCursor<T> createLocalNeighborhoodCursor( final PositionableCursor<T> cursor )
 	{
-		if ( cursor.getImage().getNumDimensions() == 3 )
+		if ( cursor.getImage().numDimensions() == 3 )
 		{
 			return new LocalNeighborhoodCursor3D<T>( cursor );
 		}

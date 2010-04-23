@@ -80,14 +80,14 @@ public class OutOfBoundsStrategyMirrorExpWindowingFactory<T extends RealType<T>>
 		{					
 			if ( fadeOutDistance == null  )
 			{
-				fadeOutDistance = new int[ cursor.getImage().getNumDimensions() ];
+				fadeOutDistance = new int[ cursor.getImage().numDimensions() ];
 				
-				for ( int d = 0; d < cursor.getNumDimensions(); ++d )
+				for ( int d = 0; d < cursor.numDimensions(); ++d )
 					fadeOutDistance[ d ] = Math.max( minFadeOutDistance, commonFadeOutDistance );
 			}
 			else
 			{
-				for ( int d = 0; d < cursor.getNumDimensions(); ++d )
+				for ( int d = 0; d < cursor.numDimensions(); ++d )
 					fadeOutDistance[ d ] = Math.max( minFadeOutDistance, fadeOutDistance[ d ] );				
 			}
 		}
@@ -96,9 +96,9 @@ public class OutOfBoundsStrategyMirrorExpWindowingFactory<T extends RealType<T>>
 			if ( commonRelativeDistanceFadeOut <= 0 )
 				commonRelativeDistanceFadeOut = 0.1f;
 
-			fadeOutDistance = new int[ cursor.getNumDimensions() ];
+			fadeOutDistance = new int[ cursor.numDimensions() ];
 			
-			for ( int d = 0; d < cursor.getNumDimensions(); ++d )
+			for ( int d = 0; d < cursor.numDimensions(); ++d )
 				fadeOutDistance[ d ] = Math.max( minFadeOutDistance, MathLib.round( cursor.getImage().getDimension( d ) * commonRelativeDistanceFadeOut ) / 2 );
 		}
 		

@@ -65,7 +65,7 @@ public class BasicTests extends TestBase {
 	@Test public void testCursorCoverage() {
 		LocalizableCursor<FloatType> cursor = testImage.createLocalizableCursor();
 		int count = 0;
-		int[] pos = new int[cursor.getNumDimensions()];
+		int[] pos = new int[cursor.numDimensions()];
 		while( cursor.hasNext() ) {
 			cursor.fwd();
 			count++;

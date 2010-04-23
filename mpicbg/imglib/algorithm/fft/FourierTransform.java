@@ -69,7 +69,7 @@ public class FourierTransform<T extends RealType<T>, S extends ComplexType<S>> i
 	{
 		this.img = image;
 		this.complexType = complexType;
-		this.numDimensions = img.getNumDimensions();
+		this.numDimensions = img.numDimensions();
 		this.extendedSize = new int[ numDimensions ];
 		this.extendedZeroPaddedSize = new int[ numDimensions ];
 		this.imageExtension = new int[ numDimensions ];
@@ -150,7 +150,7 @@ public class FourierTransform<T extends RealType<T>, S extends ComplexType<S>> i
 	{ 
 		this.relativeImageExtensionRatio = extensionRatio;
 		
-		for ( int d = 0; d < img.getNumDimensions(); ++d )
+		for ( int d = 0; d < img.numDimensions(); ++d )
 		{
 			// how much do we want to extend
 			if ( inputSize == null )
@@ -273,9 +273,9 @@ public class FourierTransform<T extends RealType<T>, S extends ComplexType<S>> i
 				
 	protected int[] getExtendedImageSize( final Image<?> img, final int[] imageExtension )
 	{
-		final int[] extendedSize = new int[ img.getNumDimensions() ];
+		final int[] extendedSize = new int[ img.numDimensions() ];
 		
-		for ( int d = 0; d < img.getNumDimensions(); ++d )
+		for ( int d = 0; d < img.numDimensions(); ++d )
 		{
 			// the new size includes the current image size
 			extendedSize[ d ] = imageExtension[ d ] + img.getDimension( d );

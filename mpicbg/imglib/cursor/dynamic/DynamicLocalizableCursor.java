@@ -14,7 +14,7 @@ public class DynamicLocalizableCursor<T extends Type<T>> extends DynamicCursor<T
 	{
 		super( container, image, type );
 		
-		this.numDimensions = container.getNumDimensions();
+		this.numDimensions = container.numDimensions();
 
 		this.position = image.createPositionArray();
 		this.dimensions = container.getDimensions();
@@ -142,4 +142,7 @@ public class DynamicLocalizableCursor<T extends Type<T>> extends DynamicCursor<T
 	
 	@Override
 	public String toString() { return getLocationAsString() + " = " + type(); }
+	
+	@Override
+	public int numDimensions(){ return numDimensions; }
 }

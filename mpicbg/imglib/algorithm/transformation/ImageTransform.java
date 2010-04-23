@@ -52,7 +52,7 @@ public class ImageTransform<T extends Type<T>> implements OutputAlgorithm<T>
 	{
 		this.img = img;
 		this.interpolatorFactory = interpolatorFactory;
-		this.numDimensions = img.getNumDimensions();
+		this.numDimensions = img.numDimensions();
 		this.transform = transform;		
 		this.outputImageFactory = img.getImageFactory();
 

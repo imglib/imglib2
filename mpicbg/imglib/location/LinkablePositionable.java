@@ -29,9 +29,29 @@
  */
 package mpicbg.imglib.location;
 
-public interface Localizable3D
+
+/**
+ * An element that can be positioned in n-dimensional real space.
+ *
+ * @author Stephan Saalfeld <saalfeld@mpi-cbg.de> and Stephan Preibisch
+ */
+public interface LinkablePositionable extends LinkableRasterPositionable, Positionable
 {
-	public int getX();
-	public int getY();
-	public int getZ();
+	/**
+	 * Link another {@link Positionable}.  The linked {@link Positionable} will
+	 * follow the move commands.  This will also replace the linked
+	 * {@link RasterPositionable}
+	 * 
+	 * @param positionable
+	 */
+	public void linkPositionable( Positionable positionable );
+	
+	/**
+	 * Unlink the currently linked {@link Positionable} and
+	 * {@link RasterPositionable}.  They are replaced by the default link,
+	 * which is {@link VoidPositionable}.
+	 * 
+	 * @param the unlinked {@link RasterPositionable}
+	 */
+	public Positionable unlinkPositionable();
 }

@@ -34,7 +34,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.concurrent.atomic.AtomicLong;
 
-import mpicbg.imglib.Dimensionality;
+import mpicbg.imglib.Dimensions;
 import mpicbg.imglib.algorithm.math.MathLib;
 import mpicbg.imglib.container.Container;
 import mpicbg.imglib.container.ContainerFactory;
@@ -50,7 +50,7 @@ import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
 import mpicbg.imglib.type.Type;
 import mpicbg.imglib.type.label.FakeType;
 
-public class Image<T extends Type<T>> implements ImageProperties, Dimensionality, Iterable<T>
+public class Image<T extends Type<T>> implements ImageProperties, Dimensions, Iterable<T>
 {
 	final protected ArrayList<Cursor<T>> cursors;
 	final ContainerFactory containerFactory;
@@ -101,8 +101,8 @@ public class Image<T extends Type<T>> implements ImageProperties, Dimensionality
 		
 		setDefaultDisplay();	
 		
-		calibration = new float[ getContainer().getNumDimensions() ];
-		for ( int d = 0; d < getContainer().getNumDimensions(); ++d )
+		calibration = new float[ getContainer().numDimensions() ];
+		for ( int d = 0; d < getContainer().numDimensions(); ++d )
 			calibration[ d ] = 1;
 	}
 
@@ -156,7 +156,7 @@ public class Image<T extends Type<T>> implements ImageProperties, Dimensionality
 	public float getCalibration( final int dim ) { return calibration[ dim ]; }
 	public void setCalibration( final float[] calibration ) 
 	{ 
-		for ( int d = 0; d < getContainer().getNumDimensions(); ++d )
+		for ( int d = 0; d < getContainer().numDimensions(); ++d )
 			this.calibration[ d ] = calibration[ d ];
 	}
 	public void setCalibration( final float calibration, final int dim ) { this.calibration[ dim ] = calibration; } 
@@ -297,11 +297,11 @@ public class Image<T extends Type<T>> implements ImageProperties, Dimensionality
 	 *
 	 * Saalfeld: remove! ;)  Preibisch: keep (esoteric reasons)
 	 */
-	public int[] createPositionArray() { return new int[ getNumDimensions() ]; }
+	public int[] createPositionArray() { return new int[ numDimensions() ]; }
 	
 	
 	@Override
-	public int getNumDimensions() { return getContainer().getNumDimensions(); }
+	public int numDimensions() { return getContainer().numDimensions(); }
 	@Override
 	public int[] getDimensions() { return getContainer().getDimensions(); }
 	@Override
@@ -322,7 +322,7 @@ public class Image<T extends Type<T>> implements ImageProperties, Dimensionality
 	@Override
 	public void getDimensions( final int[] dimensions )
 	{
-		for (int i = 0; i < getContainer().getNumDimensions(); i++)
+		for (int i = 0; i < getContainer().numDimensions(); i++)
 			dimensions[i] = getContainer().getDimension( i );
 	}
 

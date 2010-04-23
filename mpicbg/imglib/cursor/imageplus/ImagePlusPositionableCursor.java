@@ -38,7 +38,7 @@ import mpicbg.imglib.cursor.special.RegionOfInterestCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.location.RasterLocalizable;
 import mpicbg.imglib.location.RasterPositionable;
-import mpicbg.imglib.location.VoidRasterPositionable;
+import mpicbg.imglib.location.VoidPositionable;
 import mpicbg.imglib.type.Type;
 
 
@@ -47,7 +47,7 @@ public class ImagePlusPositionableCursor<T extends Type<T>> extends ImagePlusLoc
 	final protected int[] step, tmp;
 	int numNeighborhoodCursors = 0;
 	
-	protected RasterPositionable linkedRasterPositionable = VoidRasterPositionable.getInstance();
+	protected RasterPositionable linkedRasterPositionable = VoidPositionable.getInstance();
 	
 	public ImagePlusPositionableCursor( final ImagePlusContainer<T,?> container, final Image<T> image, final T type ) 
 	{
@@ -255,7 +255,7 @@ public class ImagePlusPositionableCursor<T extends Type<T>> extends ImagePlusLoc
 	public RasterPositionable unlinkRasterPositionable()
 	{
 		final RasterPositionable rasterPositionable = linkedRasterPositionable;
-		linkedRasterPositionable = VoidRasterPositionable.getInstance();
+		linkedRasterPositionable = VoidPositionable.getInstance();
 		return rasterPositionable;
 	}
 }

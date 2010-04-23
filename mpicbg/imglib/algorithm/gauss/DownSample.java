@@ -52,8 +52,8 @@ public class DownSample<T extends RealType<T>> implements MultiThreaded, OutputA
 		{
 			this.imgSize = image.getDimensions();
 
-			this.scaling = new float[ image.getNumDimensions() ];
-			for ( int d = 0; d < image.getNumDimensions(); ++d )
+			this.scaling = new float[ image.numDimensions() ];
+			for ( int d = 0; d < image.numDimensions(); ++d )
 				this.scaling[ d ] = (float)imgSize[ d ] / (float)newSize[ d ];
 		}
 		else
@@ -84,10 +84,10 @@ public class DownSample<T extends RealType<T>> implements MultiThreaded, OutputA
 	public void setTargetSigma( final float targetSigma ) { this.targetSigma = targetSigma; }
 	public void setDownSamplingFactor( final float factor )
 	{
-		newSize = new int[ input.getNumDimensions() ];
-		scaling = new float[ input.getNumDimensions() ];
+		newSize = new int[ input.numDimensions() ];
+		scaling = new float[ input.numDimensions() ];
 		
-		for ( int d = 0; d < input.getNumDimensions(); ++d )
+		for ( int d = 0; d < input.numDimensions(); ++d )
 		{
 			newSize[ d ] = MathLib.round( input.getDimension(d) * factor );
 			scaling[ d ] = 1.0f / factor;
@@ -113,7 +113,7 @@ public class DownSample<T extends RealType<T>> implements MultiThreaded, OutputA
 	{
 		final long startTime = System.currentTimeMillis();
 		
-		final int numDimensions = input.getNumDimensions();
+		final int numDimensions = input.numDimensions();
 		final double[] sigma = new double[ numDimensions ];
 		
 		for ( int d = 0; d < numDimensions; ++d )
@@ -182,7 +182,7 @@ public class DownSample<T extends RealType<T>> implements MultiThreaded, OutputA
 			return false;			
 		}
 
-		for ( int d = 0; d < input.getNumDimensions(); ++d )
+		for ( int d = 0; d < input.numDimensions(); ++d )
 		{
 			if ( newSize[ d ] > imgSize[ d ] )
 			{

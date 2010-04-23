@@ -62,7 +62,7 @@ public class AlgorithmPerformance
 	
 	public static <T extends RealType<T>> double testFFTConvolution( final Image<T> img, boolean show )
 	{
-		final Image<FloatType> kernel = FourierConvolution.createGaussianKernel( new ArrayContainerFactory(), 30 + System.currentTimeMillis()%10/10.0, img.getNumDimensions() );		
+		final Image<FloatType> kernel = FourierConvolution.createGaussianKernel( new ArrayContainerFactory(), 30 + System.currentTimeMillis()%10/10.0, img.numDimensions() );		
 		final FourierConvolution<T, FloatType> fftConvol = new FourierConvolution<T, FloatType>( img, kernel );
 		
 		if ( fftConvol.checkInput() && fftConvol.process() )
@@ -259,9 +259,9 @@ public class AlgorithmPerformance
 	
 	public static <T extends RealType<T>> double testCanvas( final Image<T> img, final float factor, final float fadingRange, final float exponent, boolean show )
 	{
-		final int[] newSize = new int[ img.getNumDimensions() ];
+		final int[] newSize = new int[ img.numDimensions() ];
 		
-		for ( int d = 0; d < img.getNumDimensions(); ++d )
+		for ( int d = 0; d < img.numDimensions(); ++d )
 			newSize[ d ] = MathLib.round( img.getDimension( d ) * factor );
 		
 		final CanvasImage<T> canvas = new CanvasImage<T>( img, newSize, new OutOfBoundsStrategyPeriodicFactory<T>() );

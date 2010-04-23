@@ -46,7 +46,7 @@ public class GaussianConvolutionRealType<T extends RealType<T>> extends Gaussian
 		final int filterSizeMinus1 = filterSize - 1;
 		final int filterSizeHalf = filterSize / 2;
 		final int filterSizeHalfMinus1 = filterSizeHalf - 1;
-		final int numDimensions = inputIterator.getImage().getNumDimensions();
+		final int numDimensions = inputIterator.getImage().numDimensions();
 		
 		final int iteratorPosition = filterSizeHalf;
 		
@@ -115,7 +115,7 @@ public class GaussianConvolutionRealType<T extends RealType<T>> extends Gaussian
 		final int filterSizeMinus1 = filterSize - 1;
 		final int filterSizeHalf = filterSize / 2;
 		final int filterSizeHalfMinus1 = filterSizeHalf - 1;
-		final int numDimensions = inputIterator.getImage().getNumDimensions();
+		final int numDimensions = inputIterator.getImage().numDimensions();
 		
 		final int iteratorPosition = filterSizeHalf;
 		

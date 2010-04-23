@@ -29,6 +29,8 @@
  */
 package mpicbg.imglib.location;
 
+import mpicbg.imglib.Dimensionality;
+
 /**
  * The {@link Localizable} interface can localize itself in an n-dimensional
  * real space.
@@ -36,7 +38,7 @@ package mpicbg.imglib.location;
  * @author Stephan Saalfeld
  *
  */
-public interface Localizable
+public interface Localizable extends Dimensionality
 {
 	/**
 	 * Write the current position into the passed array.

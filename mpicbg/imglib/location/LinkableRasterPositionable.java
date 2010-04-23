@@ -24,62 +24,31 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
+ *
+ * @author Stephan Preibisch & Stephan Saalfeld
  */
 package mpicbg.imglib.location;
 
 /**
- * A {@link RasterPositionable} that just does nothing.  This is the default
- * linked {@link RasterPositionable} of any {@link RasterPositionable}.  This
- * object doing nothing, it is implemented as a Singleton.
+ * An element that can be positioned in n-dimensional discrete space.
  *
- * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
+ * @author Stephan Saalfeld <saalfeld@mpi-cbg.de> and Stephan Preibisch
  */
-final public class VoidRasterPositionable implements RasterPositionable
+public interface LinkableRasterPositionable extends RasterPositionable
 {
-	final static private VoidRasterPositionable instance = new VoidRasterPositionable();
+	/**
+	 * Link another {@link RasterPositionable}.  The linked
+	 * {@link RasterPositionable} will follow the move commands.
+	 * 
+	 * @param rasterPositionable
+	 */
+	public void linkRasterPositionable( RasterPositionable rasterPositionable );
 	
-	private VoidRasterPositionable(){}
-	final static public VoidRasterPositionable getInstance(){ return instance; }
-	
-	@Override
-	final public void bck( final int dim ){}
-	
-	@Override
-	final public void fwd( final int dim ){}
-	
-	@Override
-	final public void linkRasterPositionable( final RasterPositionable rasterPositionable ){}
-	
-	@Override
-	final public void move( final int distance, final int dim ){}
-	
-	@Override
-	final public void move( final long distance, final int dim ){}
-	
-	@Override
-	final public void moveTo( final RasterLocalizable localizable ){}
-	
-	@Override
-	final public void moveTo( final int[] position ){}
-	
-	@Override
-	final public void moveTo( final long[] position ){}
-	
-	@Override
-	final public void setPosition( final RasterLocalizable localizable ){}
-	
-	@Override
-	final public void setPosition( final int[] position ){}
-	
-	@Override
-	final public void setPosition( final long[] position ){}
-	
-	@Override
-	final public void setPosition( final int position, final int dim ){}
-	
-	@Override
-	final public void setPosition( final long position, final int dim ){}
-	
-	@Override
-	final public RasterPositionable unlinkRasterPositionable(){ return this; }
+	/**
+	 * Unlink the currently linked {@link RasterPositionable}.  It is replaced
+	 * by the default link, which is {@link VoidPositionable}.
+	 * 
+	 * @param the unlinked {@link RasterPositionable}
+	 */
+	public RasterPositionable unlinkRasterPositionable();
 }

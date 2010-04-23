@@ -80,7 +80,7 @@ public class CellLocalizablePlaneCursor<T extends Type<T>> extends CellLocalizab
 		cellStep = new int[ numDimensions ];
 		
 		cursor = ArrayPositionableCursor.createLinearByDimCursor( numCellsDim ); 
-		cursor.setPosition( new int[ container.getNumDimensions() ] );
+		cursor.setPosition( new int[ container.numDimensions() ] );
 		
 		// the steps when moving from cell to cell
 		Array.createAllocationSteps( numCellsDim, cellStep );

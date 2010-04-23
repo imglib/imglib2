@@ -50,7 +50,7 @@ public class OutOfBoundsStrategyPeriodic<T extends Type<T>> extends OutOfBoundsS
 		this.circleType = circleCursor.type();
 		this.type = circleType.createVariable();
 			
-		this.numDimensions = parentCursor.getImage().getNumDimensions();
+		this.numDimensions = parentCursor.getImage().numDimensions();
 		this.dimension = parentCursor.getImage().getDimensions();
 		this.position = new int[ numDimensions ];
 		this.circledPosition = new int[ numDimensions ];

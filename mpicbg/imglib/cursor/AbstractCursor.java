@@ -88,21 +88,6 @@ public abstract class AbstractCursor<T extends Type<T>> implements Cursor<T>
 	public boolean hasNextLinked(){ return hasNext() && linkedIterator.hasNext(); }
 
 	@Override
-	public int[] createPositionArray() { return new int[ image.getNumDimensions() ]; }	
-	
-	@Override
-	public int getNumDimensions() { return image.getNumDimensions(); }
-	
-	@Override
-	public int[] getDimensions() { return image.getDimensions(); }
-	
-	@Override
-	public void getDimensions( int[] position ) { image.getDimensions( position ); }
-
-	@Override
-	public int getDimension( final int dim ) { return image.getDimension( dim ); }
-
-	@Override
 	final public void linkIterator( final Iterator< ? > iterable ){ linkedIterator = iterable; }
 	
 	@Override

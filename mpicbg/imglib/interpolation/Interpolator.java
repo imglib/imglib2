@@ -30,11 +30,13 @@
 package mpicbg.imglib.interpolation;
 
 import mpicbg.imglib.image.Image;
+import mpicbg.imglib.location.LinkablePositionable;
+import mpicbg.imglib.location.Localizable;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
 import mpicbg.imglib.sampler.Sampler;
 import mpicbg.imglib.type.Type;
 
-public interface Interpolator<T extends Type<T>> extends Sampler< T >
+public interface Interpolator<T extends Type<T>> extends Sampler< T >, Localizable, LinkablePositionable
 {
 	/**
 	 * Returns the typed interpolator factory the Interpolator has been instantiated with.
@@ -56,44 +58,6 @@ public interface Interpolator<T extends Type<T>> extends Sampler< T >
 	 * @return - the image
 	 */
 	public Image<T> getImage();
-	
-	/**
-	 * Moves the interpolator to a random position inside or out of image bounds.
-	 * This method is typically more efficient than setting the position
-	 * 
-	 * @param position - the floating position of the same dimensionality as the image
-	 */
-	public void moveTo( float[] position );
-
-	/**
-	 * Moves the interpolator a certain distance given by the vector to a random position inside or out of image bounds.
-	 * This method is typically more efficient than setting the position
-	 * 
-	 * @param vector - the floating vector of the same dimensionality as the image
-	 */
-	public void moveRel( float[] vector );
-	
-	/**
-	 * Sets the interpolator to a random position inside or out of image bounds.
-	 * This method is typically less efficient than moving the position
-	 * 
-	 * @param position - the floating position of the same dimensionality as the image
-	 */
-	public void setPosition( float[] position );
-
-	/**
-	 * Returns the positon of the interpolator.
-	 * 
-	 * @param position - the floating position of the same dimensionality as the image
-	 */
-	public void getPosition( float[] position );
-
-	/**
-	 * Returns the positon of the interpolator.
-	 * 
-	 * @return - the floating position of the same dimensionality as the image (as a new object)
-	 */
-	public float[] getPosition();
 	
 	/**
 	 * Closes the interpolator and with it any cursors or other containers, images or datastructures

@@ -49,7 +49,7 @@ public class NearestNeighborInterpolatorFactory<T extends Type<T>> extends Inter
 		//else if ( img.getNumDimensions() == 2)
 		//	return new NearestNeighborInterpolator2D<T>( img, this, outOfBoundsStrategyFactory );
 		//else 
-		if ( img.getNumDimensions() == 3)
+		if ( img.numDimensions() == 3)
 			return new NearestNeighborInterpolator3D<T>( img, this, outOfBoundsStrategyFactory );
 		else
 			return new NearestNeighborInterpolator<T>( img, this, outOfBoundsStrategyFactory );

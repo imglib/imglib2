@@ -109,7 +109,7 @@ public class ImageJFunctions
 		// set the offset for all InverseTransformableIterators
 		for ( InverseTransformDescription<T> ti : interpolators )
 		{
-			final float[] offset = new float[ ti.getImage().getNumDimensions() ];
+			final float[] offset = new float[ ti.getImage().numDimensions() ];
 			
 			for ( int d = 0; d < dim.length; ++d )
 				offset[ dim[d] ] = minMaxDim[ d ][ 0 ];
@@ -130,27 +130,27 @@ public class ImageJFunctions
 	public static <T extends Type<T>> ImagePlus displayAsVirtualStack( final Image<T> img ) 
 	{
 		if ( RGBALegacyType.class.isInstance( img.createType() ) )
-			return new ImagePlus( img.getName(), new ImageJVirtualStack<T>( img, COLOR_RGB, getDim3( getStandardDimensions() ), new int[ img.getNumDimensions() ] ) );
+			return new ImagePlus( img.getName(), new ImageJVirtualStack<T>( img, COLOR_RGB, getDim3( getStandardDimensions() ), new int[ img.numDimensions() ] ) );
 		else
-			return new ImagePlus( img.getName(), new ImageJVirtualStack<T>( img, GRAY32, getDim3( getStandardDimensions() ), new int[ img.getNumDimensions() ] ) );
+			return new ImagePlus( img.getName(), new ImageJVirtualStack<T>( img, GRAY32, getDim3( getStandardDimensions() ), new int[ img.numDimensions() ] ) );
 	}
 
 	public static <T extends Type<T>> ImagePlus displayAsVirtualStack( final Image<T> img, final int type ) 
 	{		
-		return new ImagePlus( img.getName(), new ImageJVirtualStack<T>( img, type, getDim3( getStandardDimensions() ), new int[ img.getNumDimensions() ] ) ); 
+		return new ImagePlus( img.getName(), new ImageJVirtualStack<T>( img, type, getDim3( getStandardDimensions() ), new int[ img.numDimensions() ] ) ); 
 	}
 
 	public static <T extends Type<T>> ImagePlus displayAsVirtualStack( final Image<T> img, final int type, final int[] dim ) 
 	{		
-		return new ImagePlus( img.getName(), new ImageJVirtualStack<T>( img, type, getDim3(dim), new int[ img.getNumDimensions() ] ) ); 
+		return new ImagePlus( img.getName(), new ImageJVirtualStack<T>( img, type, getDim3(dim), new int[ img.numDimensions() ] ) ); 
 	}
 
 	public static <T extends Type<T>> ImagePlus displayAsVirtualStack( final Image<T> img, final int[] dim ) 
 	{		
 		if ( RGBALegacyType.class.isInstance( img.createType() ) )
-			return new ImagePlus( img.getName(), new ImageJVirtualStack<T>( img, COLOR_RGB, getDim3(dim), new int[ img.getNumDimensions() ] ) );
+			return new ImagePlus( img.getName(), new ImageJVirtualStack<T>( img, COLOR_RGB, getDim3(dim), new int[ img.numDimensions() ] ) );
 		else
-			return new ImagePlus( img.getName(), new ImageJVirtualStack<T>( img, GRAY32, getDim3(dim), new int[ img.getNumDimensions() ] ) ); 
+			return new ImagePlus( img.getName(), new ImageJVirtualStack<T>( img, GRAY32, getDim3(dim), new int[ img.numDimensions() ] ) ); 
 	}
 
 	public static <T extends Type<T>> ImagePlus displayAsVirtualStack( final Image<T> img, final int type, final int[] dim, final int[] dimensionPositions ) 
@@ -161,24 +161,24 @@ public class ImageJFunctions
 	public static <T extends Type<T>> ImagePlus copyToImagePlus( final Image<T> img ) 
 	{		
 		if ( RGBALegacyType.class.isInstance( img.createType() ) )
-			return createImagePlus( img, img.getName(), COLOR_RGB, getDim3( getStandardDimensions() ), new int[ img.getNumDimensions() ] );
+			return createImagePlus( img, img.getName(), COLOR_RGB, getDim3( getStandardDimensions() ), new int[ img.numDimensions() ] );
 		else
-			return createImagePlus( img, img.getName(), GRAY32, getDim3( getStandardDimensions() ), new int[ img.getNumDimensions() ] ); 
+			return createImagePlus( img, img.getName(), GRAY32, getDim3( getStandardDimensions() ), new int[ img.numDimensions() ] ); 
 	}
 
 	public static <T extends Type<T>> ImagePlus copyToImagePlus( final Image<T> img, final int type ) 
 	{		
-		return createImagePlus( img, img.getName(), type, getDim3( getStandardDimensions() ), new int[ img.getNumDimensions() ] ); 
+		return createImagePlus( img, img.getName(), type, getDim3( getStandardDimensions() ), new int[ img.numDimensions() ] ); 
 	}
 	
 	public static <T extends Type<T>> ImagePlus copyToImagePlus( final Image<T> img, final int[] dim ) 
 	{		
-		return createImagePlus( img, img.getName(), GRAY32, getDim3(dim), new int[ img.getNumDimensions() ] ); 
+		return createImagePlus( img, img.getName(), GRAY32, getDim3(dim), new int[ img.numDimensions() ] ); 
 	}
 
 	public static <T extends Type<T>> ImagePlus copyToImagePlus( final Image<T> img, final int type, final int[] dim ) 
 	{		
-		return createImagePlus( img, img.getName(), type, getDim3(dim), new int[ img.getNumDimensions() ] ); 
+		return createImagePlus( img, img.getName(), type, getDim3(dim), new int[ img.numDimensions() ] ); 
 	}
 
 	public static <T extends Type<T>> ImagePlus copyToImagePlus( final Image<T> img, final int type, final int[] dim, final int[] dimensionPositions ) 
@@ -228,7 +228,7 @@ public class ImageJFunctions
 		if (directory.length() > 0 && !directory.endsWith("/"))
 			directory = directory + "/";
 		    	
-		final int numDimensions = img.getNumDimensions();
+		final int numDimensions = img.numDimensions();
 		
 		final int[] dimensionPositions = new int[ numDimensions ];
 		
@@ -345,7 +345,7 @@ public class ImageJFunctions
         	case ImagePlus.GRAY8:        		
         		for (int z = 0; z < size[ 2 ]; z++)
         		{
-        			if ( dimZ < img.getNumDimensions() )
+        			if ( dimZ < img.numDimensions() )
         				dimPos[ dimZ ] = z;
 
         			ByteProcessor bp = new ByteProcessor( size[ 0 ], size[ 1 ] );        			
@@ -356,7 +356,7 @@ public class ImageJFunctions
         	case ImagePlus.COLOR_RGB:
         		for (int z = 0; z < size[ 2 ]; z++)
         		{
-        			if ( dimZ < img.getNumDimensions() )
+        			if ( dimZ < img.numDimensions() )
         				dimPos[ dimZ ] = z;
         			
         			ColorProcessor bp = new ColorProcessor( size[ 0 ], size[ 1 ] );        			
@@ -367,7 +367,7 @@ public class ImageJFunctions
         	default:
         		for (int z = 0; z < size[ 2 ]; z++)
         		{
-        			if ( dimZ < img.getNumDimensions() )
+        			if ( dimZ < img.numDimensions() )
         				dimPos[ dimZ ] = z;
         			
 	    			FloatProcessor bp = new FloatProcessor( size[ 0 ], size[ 1 ] );        			

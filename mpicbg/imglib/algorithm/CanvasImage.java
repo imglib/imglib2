@@ -46,7 +46,7 @@ public class CanvasImage<T extends Type<T>> implements OutputAlgorithm<T>, Bench
 	{
 		this.input = input;
 		this.outOfBoundsFactory = outOfBoundsFactory;
-		this.numDimensions = input.getNumDimensions();
+		this.numDimensions = input.numDimensions();
 		
 		this.newSize = newSize.clone();
 		this.location = new int[ numDimensions ];
@@ -85,9 +85,9 @@ public class CanvasImage<T extends Type<T>> implements OutputAlgorithm<T>, Bench
 	
 	private static int[] computeOffset( final Image<?> input, final int[] newSize )
 	{
-		final int offset[] = new int[ input.getNumDimensions() ];
+		final int offset[] = new int[ input.numDimensions() ];
 		
-		for ( int d = 0; d < input.getNumDimensions(); ++d )
+		for ( int d = 0; d < input.numDimensions(); ++d )
 			offset[ d ] = ( input.getDimension( d ) - newSize[ d ] ) / 2;
 		
 		return offset;

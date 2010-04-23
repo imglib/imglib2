@@ -418,7 +418,7 @@ public class LOCI
 	
 	protected static void applyMetaData( final Image<?> img, final IFormatReader reader )
 	{
-		for ( int d = 0; d < img.getNumDimensions(); ++d )
+		for ( int d = 0; d < img.numDimensions(); ++d )
 			img.setCalibration( 1, d );
 
 		try
@@ -434,7 +434,7 @@ public class LOCI
 			
 			img.setCalibration( cal , 0 );
 			
-			if ( img.getNumDimensions() >= 2 )
+			if ( img.numDimensions() >= 2 )
 			{
 				cal = retrieve.getDimensionsPhysicalSizeY( 0, 0 ).floatValue();
 				if ( cal == 0)
@@ -445,7 +445,7 @@ public class LOCI
 				img.setCalibration( cal, 1 );
 			}
 			
-			if ( img.getNumDimensions() >= 3 )
+			if ( img.numDimensions() >= 3 )
 			{
 				cal = retrieve.getDimensionsPhysicalSizeZ( 0, 0 ).floatValue();
 				if ( cal == 0)
@@ -456,7 +456,7 @@ public class LOCI
 				img.setCalibration( cal, 2 );
 			}
 
-			if ( img.getNumDimensions() >= 4 )
+			if ( img.numDimensions() >= 4 )
 			{
 				cal = retrieve.getDimensionsTimeIncrement( 0, 0 ).floatValue();
 				if ( cal == 0)
