@@ -38,11 +38,16 @@ import mpicbg.imglib.type.numeric.NumericType;
 
 public class LinearInterpolator3D<T extends NumericType<T>> extends LinearInterpolator<T>
 {
-	private float x, y, z;
+	protected float x, y, z;
 	
 	protected LinearInterpolator3D( final Image<T> img, final InterpolatorFactory<T> interpolatorFactory, final OutOfBoundsStrategyFactory<T> outOfBoundsStrategyFactory )
 	{
 		super( img, interpolatorFactory, outOfBoundsStrategyFactory, false );
+	}
+	
+	protected LinearInterpolator3D( final Image<T> img, final InterpolatorFactory<T> interpolatorFactory, final OutOfBoundsStrategyFactory<T> outOfBoundsStrategyFactory, boolean initGenericStructures )
+	{
+		super( img, interpolatorFactory, outOfBoundsStrategyFactory, initGenericStructures );
 	}
 	
 	@Override
