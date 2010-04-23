@@ -38,7 +38,7 @@ import mpicbg.imglib.location.VoidPositionable;
 /**
  * Links a {@link Localizable} with a {@link RasterPositionable} by
  * transferring real coordinates to floor discrete coordinates.  For practical
- * useage, the floor operation is defined as the integer smaller then the real
+ * useage, the floor operation is defined as the integer smaller than the real
  * value:
  * 
  * f = r < 0 ? (long)r - 1 : (long)r

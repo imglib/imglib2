@@ -31,96 +31,223 @@ package mpicbg.imglib.interpolation.linear;
 
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.interpolation.InterpolatorFactory;
+import mpicbg.imglib.location.Localizable;
+import mpicbg.imglib.location.RasterLocalizable;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
 import mpicbg.imglib.type.numeric.NumericType;
 
 public class LinearInterpolator1D<T extends NumericType<T>> extends LinearInterpolator<T> 
 {
-	final int[] tmpLocation;
-
+	private float x;
+	
 	protected LinearInterpolator1D( final Image<T> img, final InterpolatorFactory<T> interpolatorFactory, final OutOfBoundsStrategyFactory<T> outOfBoundsStrategyFactory )
 	{
 		super( img, interpolatorFactory, outOfBoundsStrategyFactory, false );
-
-		tmpLocation = new int[ 1 ];
-		moveTo( position );		
 	}
 	
 	@Override
-	public T type() { return tmp2; }
+	public T type()
+	{
+		// weights
+		final float t = x - cursor.getFloatPosition( 0 );
+		final float t1 = 1 - t;
+
+		tmp1.set( cursor.type() );
+		tmp1.mul( t1 );
+		tmp2.set( tmp1 );
+
+		cursor.fwd( 0 );
+		tmp1.set( cursor.type() );
+		tmp1.mul( t );
+		tmp2.add( tmp1 );
+		
+		return tmp2;
+	}
 	
+	
+	/* Localizable */
+	
+	@Override
+	public double getDoublePosition( final int dim ){ return x; }
+
+	@Override
+	public float getFloatPosition( final int dim ){ return x; }
+
+	@Override
+	public String getLocationAsString()
+	{
+		return new StringBuffer( "(" ).append( x ).append( ")" ).toString();
+	}
+
+	@Override
+	public void localize( final float[] position )
+	{
+		position[ 0 ] = x;
+	}
+
+	@Override
+	public void localize( final double[] position )
+	{
+		position[ 0 ] = x;
+	}
+	
+	
+	/* Positionable */
+
+	@Override
+	public void move( final double distance, final int dim )
+	{
+		x += distance;
+		linkedPositionable.move( distance, dim );
+	}
+	
+	@Override
+	public void move( final float distance, final int dim )
+	{
+		x += distance;
+		linkedPositionable.move( distance, dim );
+	}
+
+	@Override
+	public void moveTo( final double[] position )
+	{
+		x = ( float )position[ 0 ];
+		linkedPositionable.moveTo( position );
+	}
+
 	@Override
 	public void moveTo( final float[] position )
 	{
-		final float x = position[ 0 ];
-		
-		this.position[ 0 ] = x;
-		
-		//     *----x--*
-		//   y0         y1
-
-		// base offset (y0)
-		final int baseX1 = x > 0 ? (int)x: (int)x-1;
-
-		// update iterator position
-		tmpLocation[ 0 ] = baseX1;
-		
-		cursor.moveTo( tmpLocation );
-
-		// How to iterate the range
-		//
-		//     *----x->*
-		//   y0         y1
-
-		// weights
-		final float t = x - baseX1;
-		final float t1 = 1 - t;
-
-		tmp1.set( cursor.type() );
-		tmp1.mul( t1 );
-		tmp2.set( tmp1 );
-
-		cursor.fwd( 0 );
-		tmp1.set( cursor.type() );
-		tmp1.mul( t );
-		tmp2.add( tmp1 );
+		x = position[ 0 ];
+		linkedPositionable.moveTo( position );
 	}
-	
+
+	@Override
+	public void moveTo( final Localizable localizable )
+	{
+		x = localizable.getFloatPosition( 0 );
+		linkedPositionable.moveTo( localizable );
+	}
+
+	@Override
+	public void setPosition( final Localizable localizable )
+	{
+		x = localizable.getFloatPosition( 0 );
+		linkedPositionable.setPosition( localizable );
+	}
+
 	@Override
 	public void setPosition( final float[] position )
 	{
-		final float x = position[ 0 ];
-		
-		this.position[ 0 ] = x;
-		
-		//     *----x--*
-		//   y0         y1
+		x = position[ 0 ];
+		linkedPositionable.setPosition( position );
+	}
 
-		// base offset (y0)
-		final int baseX1 = x > 0 ? (int)x: (int)x-1;
+	@Override
+	public void setPosition( final double[] position )
+	{
+		x = ( float )position[ 0 ];
+		linkedPositionable.setPosition( position );
+	}
 
-		// update iterator position
-		tmpLocation[ 0 ] = baseX1;
-		
-		cursor.setPosition( tmpLocation );
+	@Override
+	public void setPosition( final float position, final int dim )
+	{
+		x = position;
+		linkedPositionable.setPosition( position, dim );
+	}
 
-		// How to iterate the range
-		//
-		//     *----x->*
-		//   y0         y1
-
-		// weights
-		final float t = x - baseX1;
-		final float t1 = 1 - t;
-
-		tmp1.set( cursor.type() );
-		tmp1.mul( t1 );
-		tmp2.set( tmp1 );
-
-		cursor.fwd( 0 );
-		tmp1.set( cursor.type() );
-		tmp1.mul( t );
-		tmp2.add( tmp1 );
-	}	
+	@Override
+	public void setPosition( final double position, final int dim )
+	{
+		x = ( float )position;
+		linkedPositionable.setPosition( position, dim );
+	}
 	
+	
+	/* RasterPositionable */
+
+	@Override
+	public void bck( final int dim )
+	{
+		x -= 1;
+		linkedRasterPositionable.bck( dim );
+	}
+
+	@Override
+	public void fwd( final int dim )
+	{
+		x += 1;
+		linkedRasterPositionable.fwd( dim );
+	}
+
+	@Override
+	public void move( final int distance, final int dim )
+	{
+		x += distance;
+		linkedRasterPositionable.move( distance, dim );
+	}
+
+	@Override
+	public void move( final long distance, final int dim )
+	{
+		x += distance;
+		linkedRasterPositionable.move( distance, dim );
+	}
+
+	@Override
+	public void moveTo( final RasterLocalizable localizable )
+	{
+		x = localizable.getIntPosition( 0 );
+		linkedRasterPositionable.moveTo( localizable );
+	}
+
+	@Override
+	public void moveTo( final int[] position )
+	{
+		x = position[ 0 ];
+		linkedPositionable.moveTo( position );
+	}
+
+	@Override
+	public void moveTo( final long[] position )
+	{
+		x = position[ 0 ];
+		linkedPositionable.moveTo( position );
+	}
+
+	@Override
+	public void setPosition( final RasterLocalizable localizable )
+	{
+		x = localizable.getIntPosition( 0 );
+		linkedRasterPositionable.setPosition( localizable );
+	}
+
+	@Override
+	public void setPosition( final int[] position )
+	{
+		x = position[ 0 ];
+		linkedPositionable.setPosition( position );
+	}
+
+	@Override
+	public void setPosition( final long[] position )
+	{
+		x = position[ 0 ];
+		linkedPositionable.setPosition( position );
+	}
+
+	@Override
+	public void setPosition( final int position, final int dim )
+	{
+		x = position;
+		linkedRasterPositionable.setPosition( position, dim );
+	}
+
+	@Override
+	public void setPosition( final long position, final int dim )
+	{
+		x = position;
+		linkedRasterPositionable.setPosition( position, dim );
+	}
 }
