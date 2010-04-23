@@ -22,6 +22,7 @@ import mpicbg.imglib.type.numeric.RealType;
 import mpicbg.imglib.type.numeric.integer.ByteType;
 import mpicbg.models.AffineModel3D;
 import mpicbg.models.TranslationModel3D;
+import mpicbg.util.Timer;
 
 /**
  * 
@@ -36,6 +37,9 @@ public class TestShapeList
 	 */
 	public static < T extends RealType< T > > void main( String[] args )
 	{
+		
+		Timer timer = new Timer();
+		
 		new ImageJ();
 		
 		final int depth = 50;
@@ -63,11 +67,12 @@ public class TestShapeList
 		
 		
 		/* Copy content into another container */
+		
+		timer.start();
 		final ArrayContainerFactory arrayFactory = new ArrayContainerFactory();
 		final Image< ByteType > arrayImage = new ImageFactory< ByteType >( new ByteType(), arrayFactory ).createImage( new int[]{ 200, 200, depth }, "ArrayContainer" );
 		final LocalizableCursor< ByteType > cArray = arrayImage.createLocalizableCursor();
 		final PositionableCursor< ByteType > cShapeList = shapeListImage.createPositionableCursor();
-		
 		while ( cArray.hasNext() )
 		{
 			cArray.fwd();
@@ -80,10 +85,12 @@ public class TestShapeList
 		arrayImp.show();
 		//arrayImp.getProcessor().setMinAndMax( 0, 255 );
 		//arrayImp.updateAndDraw();
+		System.out.println( "Copying into an ArrayContainer took " + timer.stop() + " ms." );
 		/* ----------------------------------------------------------------- */
 		
-		
+
 		/* Copy content rotated into another container */
+		timer.start();
 		final CellContainerFactory cellFactory = new CellContainerFactory();
 		final AffineModel3D affine = new AffineModel3D();
 		affine.set(
@@ -140,6 +147,7 @@ public class TestShapeList
 		cellImp.show();
 		//cellImp.getProcessor().setMinAndMax( 0, 255 );
 		//cellImp.updateAndDraw();
+		System.out.println( "Transforming with an AffineModel3D took " + timer.stop() + " ms." );
 		/* ----------------------------------------------------------------- */
 
 		
