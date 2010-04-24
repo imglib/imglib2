@@ -44,12 +44,11 @@ public class NearestNeighborInterpolatorFactory<T extends Type<T>> extends Inter
 	@Override
 	public NearestNeighborInterpolator<T> createInterpolator( final Image<T> img )
 	{
-		//if ( img.getNumDimensions() == 1)
-		//	return new NearestNeighborInterpolator1D<T>( img, this, outOfBoundsStrategyFactory );
-		//else if ( img.getNumDimensions() == 2)
-		//	return new NearestNeighborInterpolator2D<T>( img, this, outOfBoundsStrategyFactory );
-		//else 
-		if ( img.numDimensions() == 3)
+		if ( img.numDimensions() == 1)
+			return new NearestNeighborInterpolator1D<T>( img, this, outOfBoundsStrategyFactory );
+		else if ( img.numDimensions() == 2)
+			return new NearestNeighborInterpolator2D<T>( img, this, outOfBoundsStrategyFactory );
+		else if ( img.numDimensions() == 3)
 			return new NearestNeighborInterpolator3D<T>( img, this, outOfBoundsStrategyFactory );
 		else
 			return new NearestNeighborInterpolator<T>( img, this, outOfBoundsStrategyFactory );

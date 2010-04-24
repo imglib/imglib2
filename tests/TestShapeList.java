@@ -17,6 +17,7 @@ import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.ImageFactory;
 import mpicbg.imglib.image.display.imagej.ImageJFunctions;
 import mpicbg.imglib.interpolation.linear.LinearInterpolatorFactory;
+import mpicbg.imglib.interpolation.nearestneighbor.NearestNeighborInterpolatorFactory;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyValueFactory;
 import mpicbg.imglib.type.numeric.RealType;
 import mpicbg.imglib.type.numeric.integer.ByteType;
@@ -46,7 +47,8 @@ public class TestShapeList
 		
 
 		/* Create ShapeList */
-		final ShapeList< ByteType > shapeList = new ShapeListCached<ByteType>( new int[]{ 200, 200, depth },  new ByteType( ) );
+		//final ShapeList< ByteType > shapeList = new ShapeListCached<ByteType>( new int[]{ 200, 200, depth },  new ByteType( ) );
+		final ShapeList< ByteType > shapeList = new ShapeList<ByteType>( new int[]{ 200, 200, depth },  new ByteType( ) );
 		final Image< ByteType > shapeListImage = new Image< ByteType >( shapeList, shapeList.getBackground(), "ShapeListContainer" ); 
 		
 		/* add some shapes */
@@ -102,7 +104,9 @@ public class TestShapeList
 		
 		affine.preConcatenate( translation );
 		
-		final ImageTransform<ByteType> transform = new ImageTransform<ByteType>( shapeListImage, affine, new LinearInterpolatorFactory<ByteType>( new OutOfBoundsStrategyValueFactory<ByteType>() ) );
+		//final ImageTransform<ByteType> transform = new ImageTransform<ByteType>( shapeListImage, affine, new LinearInterpolatorFactory<ByteType>( new OutOfBoundsStrategyValueFactory<ByteType>() ) );
+		//final ImageTransform<ByteType> transform = new ImageTransform<ByteType>( arrayImage, affine, new LinearInterpolatorFactory<ByteType>( new OutOfBoundsStrategyValueFactory<ByteType>() ) );
+		final ImageTransform<ByteType> transform = new ImageTransform<ByteType>( arrayImage, affine, new NearestNeighborInterpolatorFactory<ByteType>( new OutOfBoundsStrategyValueFactory<ByteType>() ) );
 		transform.setOutputImageFactory( new ImageFactory< ByteType >( new ByteType(), cellFactory ) );
 		
 		if ( !transform.checkInput() || !transform.process() )

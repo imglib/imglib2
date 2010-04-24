@@ -88,7 +88,7 @@ public class OutOfBoundsStrategyPeriodic<T extends Type<T>> extends OutOfBoundsS
 	}
 
 	@Override
-	public void notifyOutOfBOundsBck( final int dim ) 
+	public void notifyOutOfBoundsBck( final int dim ) 
 	{
 		final int oldPos = circleCursor.getIntPosition( dim ); 
 		

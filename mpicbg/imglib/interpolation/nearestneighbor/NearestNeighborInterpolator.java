@@ -29,23 +29,28 @@
  */
 package mpicbg.imglib.interpolation.nearestneighbor;
 
-import mpicbg.imglib.algorithm.math.MathLib;
 import mpicbg.imglib.cursor.PositionableCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.interpolation.InterpolatorFactory;
 import mpicbg.imglib.interpolation.AbstractInterpolator;
+import mpicbg.imglib.location.Positionable;
+import mpicbg.imglib.location.RasterPositionable;
+import mpicbg.imglib.location.link.LocalizableRoundRasterPositionable;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
 import mpicbg.imglib.type.Type;
 
 public class NearestNeighborInterpolator<T extends Type<T>> extends AbstractInterpolator<T>
 {
-	final PositionableCursor<T> cursor;
+	final protected PositionableCursor<T> cursor;
+	final private LocalizableRoundRasterPositionable roundLink; 
 	
 	protected NearestNeighborInterpolator( final Image<T> img, final InterpolatorFactory<T> interpolatorFactory, final OutOfBoundsStrategyFactory<T> outOfBoundsStrategyFactory )
 	{
 		super(img, interpolatorFactory, outOfBoundsStrategyFactory);
 		
 		cursor = img.createPositionableCursor( outOfBoundsStrategyFactory );
+		linkedRasterPositionable = linkedPositionable = roundLink = new LocalizableRoundRasterPositionable( this, cursor );
+		
 		
 		moveTo( position );		
 	}
@@ -55,30 +60,31 @@ public class NearestNeighborInterpolator<T extends Type<T>> extends AbstractInte
 
 	@Override
 	public T type() { return cursor.type(); }
-
+	
+	
+	/* LinkablePositionable */
+	
 	@Override
-	public void moveTo( final float[] position )
+	public void linkPositionable( final Positionable positionable )
 	{
-		for ( int d = 0; d < numDimensions; d++ )
-		{
-			this.position[ d ] = position[d];
-			
-			//final int pos = (int)( position[d] + (0.5f * Math.signum( position[d] ) ) );
-			final int pos = MathLib.round( position[ d ] );
-			cursor.move( pos - cursor.getIntPosition(d), d );
-		}
+		roundLink.linkPositionable( positionable );
 	}
 
 	@Override
-	public void setPosition( final float[] position )
+	public Positionable unlinkPositionable()
 	{
-		for ( int d = 0; d < numDimensions; d++ )
-		{
-			this.position[ d ] = position[d];
+		return roundLink.unlinkPositionable();
+	}
 
-			//final int pos = (int)( position[d] + (0.5f * Math.signum( position[d] ) ) );
-			final int pos = MathLib.round( position[ d ] );
-			cursor.setPosition( pos, d );
-		}
+	@Override
+	public void linkRasterPositionable( final RasterPositionable rasterPositionable )
+	{
+		roundLink.linkRasterPositionable( rasterPositionable );
+	}
+
+	@Override
+	public RasterPositionable unlinkRasterPositionable()
+	{
+		return roundLink.unlinkRasterPositionable();
 	}
 }

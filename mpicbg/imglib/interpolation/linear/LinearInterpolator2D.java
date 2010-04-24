@@ -311,7 +311,7 @@ public class LinearInterpolator2D<T extends NumericType<T>> extends LinearInterp
 	{
 		x = position[ 0 ];
 		y = position[ 1 ];
-		linkedPositionable.moveTo( position );
+		linkedRasterPositionable.moveTo( position );
 	}
 
 	@Override
@@ -319,7 +319,7 @@ public class LinearInterpolator2D<T extends NumericType<T>> extends LinearInterp
 	{
 		x = position[ 0 ];
 		y = position[ 1 ];
-		linkedPositionable.moveTo( position );
+		linkedRasterPositionable.moveTo( position );
 	}
 
 	@Override
@@ -335,7 +335,7 @@ public class LinearInterpolator2D<T extends NumericType<T>> extends LinearInterp
 	{
 		x = position[ 0 ];
 		y = position[ 1 ];
-		linkedPositionable.setPosition( position );
+		linkedRasterPositionable.setPosition( position );
 	}
 
 	@Override
@@ -343,7 +343,7 @@ public class LinearInterpolator2D<T extends NumericType<T>> extends LinearInterp
 	{
 		x = position[ 0 ];
 		y = position[ 1 ];
-		linkedPositionable.setPosition( position );
+		linkedRasterPositionable.setPosition( position );
 	}
 
 	@Override

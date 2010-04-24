@@ -152,6 +152,37 @@ public class ArrayPositionableOutOfBoundsCursor<T extends Type<T>> extends Array
 	}
 
 	@Override
+	public void bck( final int dim )
+	{
+		position[ dim ]--;	
+
+		if ( isOutOfBounds )
+		{
+			// reenter the image?
+			if ( position[ dim ] == dimensions[ dim ] - 1 )
+				setPosition( position );
+			else // moved out of image bounds
+				outOfBoundsStrategy.notifyOutOfBoundsBck( dim );
+		}
+		else
+		{			
+			if ( position[ dim ] > -1 )
+			{
+				// moved within the image
+				type.decIndex( step[ dim ] );
+			}
+			else
+			{
+				// left the image
+				isOutOfBounds = true;
+				outOfBoundsStrategy.initOutOfBOunds(  );
+			}
+		}
+
+		linkedRasterPositionable.bck( dim );
+	}
+
+	@Override
 	public void move( final int steps, final int dim )
 	{
 		position[ dim ] += steps;
@@ -205,37 +236,6 @@ public class ArrayPositionableOutOfBoundsCursor<T extends Type<T>> extends Array
 		linkedRasterPositionable.move( steps, dim );
 	}
 	
-	@Override
-	public void bck( final int dim )
-	{
-		position[ dim ]--;	
-
-		if ( isOutOfBounds )
-		{
-			// reenter the image?
-			if ( position[ dim ] == dimensions[ dim ] - 1 )
-				setPosition( position );
-			else // moved out of image bounds
-				outOfBoundsStrategy.notifyOutOfBOundsBck( dim );
-		}
-		else
-		{			
-			if ( position[ dim ] > -1 )
-			{
-				// moved within the image
-				type.decIndex( step[ dim ] );
-			}
-			else
-			{
-				// left the image
-				isOutOfBounds = true;
-				outOfBoundsStrategy.initOutOfBOunds(  );
-			}
-		}
-
-		linkedRasterPositionable.bck( dim );
-	}
-
 	@Override
 	public void setPosition( final int[] position )
 	{
@@ -305,5 +305,11 @@ public class ArrayPositionableOutOfBoundsCursor<T extends Type<T>> extends Array
 
 			linkedRasterPositionable.setPosition( position, dim );
 		}
+	}
+	
+	@Override
+	public void setPosition( final long position, final int dim )
+	{
+		setPosition( ( int )position, dim );
 	}
 }

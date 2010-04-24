@@ -65,7 +65,7 @@ public class OutOfBoundsStrategyValue<T extends Type<T>> extends OutOfBoundsStra
 	final public void notifyOutOfBOundsFwd( final int dim ) {}
 
 	@Override
-	final public void notifyOutOfBOundsBck( final int dim ) {}
+	final public void notifyOutOfBoundsBck( final int dim ) {}
 	
 	/**
 	 * Updates the array of the Cursor type to the constant value and sets the index to 0

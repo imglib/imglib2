@@ -206,14 +206,14 @@ public class LinearInterpolator1D<T extends NumericType<T>> extends LinearInterp
 	public void moveTo( final int[] position )
 	{
 		x = position[ 0 ];
-		linkedPositionable.moveTo( position );
+		linkedRasterPositionable.moveTo( position );
 	}
 
 	@Override
 	public void moveTo( final long[] position )
 	{
 		x = position[ 0 ];
-		linkedPositionable.moveTo( position );
+		linkedRasterPositionable.moveTo( position );
 	}
 
 	@Override
@@ -227,14 +227,14 @@ public class LinearInterpolator1D<T extends NumericType<T>> extends LinearInterp
 	public void setPosition( final int[] position )
 	{
 		x = position[ 0 ];
-		linkedPositionable.setPosition( position );
+		linkedRasterPositionable.setPosition( position );
 	}
 
 	@Override
 	public void setPosition( final long[] position )
 	{
 		x = position[ 0 ];
-		linkedPositionable.setPosition( position );
+		linkedRasterPositionable.setPosition( position );
 	}
 
 	@Override

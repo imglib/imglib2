@@ -263,7 +263,7 @@ public class CellPositionableOutOfBoundsCursor<T extends Type<T>> extends CellPo
 			if ( position[ dim ] == dimensions[ dim ] - 1 )
 				setPosition( position );
 			else // moved out of image bounds
-				outOfBoundsStrategy.notifyOutOfBOundsBck( dim );
+				outOfBoundsStrategy.notifyOutOfBoundsBck( dim );
 		}
 		else if ( position[ dim ] - 1 >= cellOffset[ dim ])
 		{

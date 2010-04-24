@@ -25,290 +25,243 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  *
- * @author Stephan Preibisch & Stephan Saalfeld
  */
-package mpicbg.imglib.interpolation;
+package mpicbg.imglib.location.link;
 
-import mpicbg.imglib.image.Image;
+import mpicbg.imglib.location.LinkablePositionable;
 import mpicbg.imglib.location.Localizable;
 import mpicbg.imglib.location.Positionable;
 import mpicbg.imglib.location.RasterLocalizable;
 import mpicbg.imglib.location.RasterPositionable;
 import mpicbg.imglib.location.VoidPositionable;
-import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
-import mpicbg.imglib.type.Type;
 
-abstract public class AbstractInterpolator<T extends Type<T>> implements Interpolator<T>
+/**
+ * Links a {@link Localizable} with a {@link RasterPositionable} by
+ * transferring real coordinates to rounded discrete coordinates.  For practical
+ * useage, the round operation is defined as the integer smaller than the real
+ * value:
+ * 
+ * f = r < 0 ? (long)( r - 0.5 ) : (long)( r + 0.5 )
+ * 
+ * The {@link RasterPositionable} is not the linked {@link Positionable} of
+ * this link, that is, other {@link Positionable Positionables} can be linked
+ * to it in addition. 
+ * 
+ * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
+ */
+public class LocalizableRoundRasterPositionable implements LinkablePositionable
 {
-	final protected InterpolatorFactory<T> interpolatorFactory;
-	final protected OutOfBoundsStrategyFactory<T> outOfBoundsStrategyFactory;
-	final protected Image<T> img;
-
-	// the location of the interpolator in the image
-	/* TODO Better double[] ? */
-	final protected float[] position;
-
-	/**
-	 * the number of dimensions 
-	 */
-	final protected int numDimensions;
+	final protected RasterPositionable target;
+	final protected Localizable source;
+	
+	final private int numDimensions;
+	
+	final private long[] floor;
+	final private double[] position;
 	
 	protected RasterPositionable linkedRasterPositionable = VoidPositionable.getInstance();
 	protected Positionable linkedPositionable = VoidPositionable.getInstance();
 	
-	protected AbstractInterpolator(
-			final Image<T> img,
-			final InterpolatorFactory<T> interpolatorFactory,
-			final OutOfBoundsStrategyFactory<T> outOfBoundsStrategyFactory )
+	public LocalizableRoundRasterPositionable( final Localizable source, final RasterPositionable target )
 	{
-		this.interpolatorFactory = interpolatorFactory;
-		this.outOfBoundsStrategyFactory = outOfBoundsStrategyFactory;
-		this.img = img;
+		this.source = source;
+		this.target = target;
 		
-		numDimensions = img.numDimensions();
-	
-		position = new float[ numDimensions ];
+		numDimensions = source.numDimensions();
+		
+		position = new double[ numDimensions ];
+		floor = new long[ numDimensions ];
 	}
 	
-	@Override
-	final public int numDimensions(){ return numDimensions; }
-	
-	@Override
-	@Deprecated
-	final public T getType(){ return type(); }
-
-	/**
-	 * Returns the typed interpolator factory the Interpolator has been instantiated with.
-	 * 
-	 * @return - the interpolator factory
-	 */
-	@Override
-	public InterpolatorFactory<T> getInterpolatorFactory(){ return interpolatorFactory; }
-	
-	/**
-	 * Returns the {@link OutOfBoundsStrategyFactory} used for interpolation
-	 * 
-	 * @return - the {@link OutOfBoundsStrategyFactory}
-	 */
-	@Override
-	public OutOfBoundsStrategyFactory<T> getOutOfBoundsStrategyFactory(){ return outOfBoundsStrategyFactory; }
-	
-	/**
-	 * Returns the typed image the interpolator is working on
-	 * 
-	 * @return - the image
-	 */
-	@Override
-	public Image<T> getImage() { return img; }
-
-	
-	/* Localizable */
-	
-	@Override
-	public double getDoublePosition( final int dim ){ return position[ dim ]; }
-
-	@Override
-	public float getFloatPosition( final int dim ){ return position[ dim ]; }
-
-	@Override
-	public String getLocationAsString()
+	final static private long round( final double r )
 	{
-		final StringBuffer pos = new StringBuffer( "(" );
-		pos.append( position[ 0 ] );
-		
-		for ( int d = 1; d < numDimensions; d++ )
-			pos.append( ", " ).append( position[ d ] );
-		
-		pos.append( ")" );
-		
-		return pos.toString();
-	}
-
-	@Override
-	public void localize( final float[] position )
-	{
-		for ( int d = 0; d < position.length; ++d )
-			position[ d ] = this.position[ d ];
-	}
-
-	@Override
-	public void localize( final double[] position )
-	{
-		for ( int d = 0; d < position.length; ++d )
-			position[ d ] = this.position[ d ];
+		return r < 0 ? ( long )( r - 0.5 ) : ( long )( r + 0.5 );
 	}
 	
+	final static private long round( final float r )
+	{
+		return r < 0 ? ( long )( r - 0.5f ) : ( long )( r + 0.5f );
+	}
+	
+	final static private void round( final double[] r, final long[] f )
+	{
+		for ( int i = 0; i < r.length; ++i )
+			f[ i ] = round( r[ i ] );
+	}
+	
+	final static private void round( final float[] r, final long[] f )
+	{
+		for ( int i = 0; i < r.length; ++i )
+			f[ i ] = round( r[ i ] );
+	}
+	
+	
+	/* Dimensionality */
+	
+	@Override
+	public int numDimensions(){ return source.numDimensions(); }
+
 	
 	/* Positionable */
-
-	@Override
-	public void move( final double distance, final int dim )
-	{
-		position[ dim ] += distance;
-		linkedPositionable.move( distance, dim );
-	}
 	
 	@Override
 	public void move( final float distance, final int dim )
 	{
-		position[ dim ] += distance;
+		target.setPosition( round( source.getDoublePosition( dim ) ), dim );
 		linkedPositionable.move( distance, dim );
 	}
 
 	@Override
-	public void moveTo( final double[] position )
+	public void move( final double distance, final int dim )
 	{
-		for ( int i = 0; i < numDimensions; ++i )
-		{
-			final double di = position[ i ] - this.position[ i ];
-			if ( di == 0 ) continue;
-			move( di, i );
-		}
-	}
-
-	@Override
-	public void moveTo( final float[] position )
-	{
-		for ( int i = 0; i < numDimensions; ++i )
-		{
-			final float di = position[ i ] - this.position[ i ];
-			if ( di == 0 ) continue;
-			move( di, i );
-		}
+		target.setPosition( round( source.getDoublePosition( dim ) ), dim );
+		linkedPositionable.move( distance, dim );
 	}
 
 	@Override
 	public void moveTo( final Localizable localizable )
 	{
-		localizable.localize( position );
-		linkedPositionable.moveTo( localizable );
+		source.localize( position );
+		moveTo( position );
+	}
+
+	@Override
+	public void moveTo( final float[] position )
+	{
+		round( position, floor );
+		target.moveTo( floor );
+		linkedPositionable.moveTo( position );
+	}
+
+	@Override
+	public void moveTo( final double[] position )
+	{
+		round( position, floor );
+		target.moveTo( floor );
+		linkedPositionable.moveTo( position );
 	}
 
 	@Override
 	public void setPosition( final Localizable localizable )
 	{
-		localizable.localize( position );
-		linkedPositionable.setPosition( localizable );
+		source.localize( position );
+		setPosition( position );
 	}
 
 	@Override
 	public void setPosition( final float[] position )
 	{
-		for ( int i = 0; i < numDimensions; ++i )
-			this.position[ i ] = position[ i ];
+		round( position, floor );
+		target.setPosition( floor );
 		linkedPositionable.setPosition( position );
 	}
 
 	@Override
 	public void setPosition( final double[] position )
 	{
-		for ( int i = 0; i < numDimensions; ++i )
-			this.position[ i ] = ( float )position[ i ];
+		round( position, floor );
+		target.setPosition( floor );
 		linkedPositionable.setPosition( position );
 	}
 
 	@Override
 	public void setPosition( final float position, final int dim )
 	{
-		this.position[ dim ] = position;
+		target.setPosition( round( position ), dim );
 		linkedPositionable.setPosition( position, dim );
 	}
 
 	@Override
 	public void setPosition( final double position, final int dim )
 	{
-		this.position[ dim ] = ( float )position;
+		target.setPosition( round( position ), dim );
 		linkedPositionable.setPosition( position, dim );
 	}
-	
+
 	
 	/* RasterPositionable */
-
+	
 	@Override
 	public void bck( final int dim )
 	{
-		position[ dim ] -= 1;
+		target.bck( dim );
 		linkedRasterPositionable.bck( dim );
 	}
 
 	@Override
 	public void fwd( final int dim )
 	{
-		position[ dim ] += 1;
+		target.fwd( dim );
 		linkedRasterPositionable.fwd( dim );
 	}
 
 	@Override
 	public void move( final int distance, final int dim )
 	{
-		position[ dim ] += distance;
+		target.move( distance, dim );
 		linkedRasterPositionable.move( distance, dim );
 	}
 
 	@Override
 	public void move( final long distance, final int dim )
 	{
-		position[ dim ] += distance;
+		target.move( distance, dim );
 		linkedRasterPositionable.move( distance, dim );
 	}
 
 	@Override
 	public void moveTo( final RasterLocalizable localizable )
 	{
-		localizable.localize( position );
+		target.moveTo( localizable );
 		linkedRasterPositionable.moveTo( localizable );
 	}
 
 	@Override
 	public void moveTo( final int[] position )
 	{
-		for ( int i = 0; i < numDimensions; ++i )
-			this.position[ i ] = position[ i ];
+		target.moveTo( position );
 		linkedRasterPositionable.moveTo( position );
 	}
 
 	@Override
 	public void moveTo( final long[] position )
 	{
-		for ( int i = 0; i < numDimensions; ++i )
-			this.position[ i ] = position[ i ];
-		linkedRasterPositionable.setPosition( position );
+		target.moveTo( position );
+		linkedRasterPositionable.moveTo( position );
 	}
-
+	
 	@Override
-	public void setPosition( final RasterLocalizable localizable )
+	public void setPosition( RasterLocalizable localizable )
 	{
-		localizable.localize( position );
+		target.setPosition( localizable );
 		linkedRasterPositionable.setPosition( localizable );
 	}
-
+	
 	@Override
 	public void setPosition( final int[] position )
 	{
-		for ( int i = 0; i < numDimensions; ++i )
-			this.position[ i ] = position[ i ];
+		target.setPosition( position );
+		linkedRasterPositionable.setPosition( position );
+	}
+	
+	@Override
+	public void setPosition( long[] position )
+	{
+		target.setPosition( position );
 		linkedRasterPositionable.setPosition( position );
 	}
 
 	@Override
-	public void setPosition( final long[] position )
+	public void setPosition( int position, int dim )
 	{
-		for ( int i = 0; i < numDimensions; ++i )
-			this.position[ i ] = position[ i ];
-		linkedRasterPositionable.setPosition( position );
-	}
-
-	@Override
-	public void setPosition( final int position, final int dim )
-	{
-		this.position[ dim ] = position;
+		target.setPosition( position, dim );
 		linkedRasterPositionable.setPosition( position, dim );
 	}
 
 	@Override
-	public void setPosition( final long position, final int dim )
+	public void setPosition( long position, int dim )
 	{
-		this.position[ dim ] = position;
+		target.setPosition( position, dim );
 		linkedRasterPositionable.setPosition( position, dim );
 	}
 	

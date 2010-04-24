@@ -222,7 +222,7 @@ public class DynamicPositionableOutOfBoundsCursor<T extends Type<T>> extends Dyn
 			if ( position[ dim ] == dimensions[ dim ] - 1 )
 				setPosition( position );
 			else // moved out of image bounds
-				outOfBoundsStrategy.notifyOutOfBOundsBck( dim );
+				outOfBoundsStrategy.notifyOutOfBoundsBck( dim );
 		}
 		else
 		{			

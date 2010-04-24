@@ -96,7 +96,7 @@ public class OutOfBoundsStrategyMirror<T extends Type<T>> extends OutOfBoundsStr
 		else
 		{
 			for ( int i = 0; i < -steps; ++i )
-				notifyOutOfBOundsBck( dim );
+				notifyOutOfBoundsBck( dim );
 		}
 	}
 	
@@ -132,7 +132,7 @@ public class OutOfBoundsStrategyMirror<T extends Type<T>> extends OutOfBoundsStr
 	}
 
 	@Override
-	public void notifyOutOfBOundsBck( final int dim ) 
+	public void notifyOutOfBoundsBck( final int dim ) 
 	{
 		// current direction of the mirror cursor when going forward
 		if ( currentDirection[ dim ] == 1 )

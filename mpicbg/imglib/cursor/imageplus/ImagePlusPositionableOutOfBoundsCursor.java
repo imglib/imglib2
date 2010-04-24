@@ -244,7 +244,7 @@ public class ImagePlusPositionableOutOfBoundsCursor<T extends Type<T>> extends I
 			if ( position[ dim ] == dimensions[ dim ] - 1 )
 				setPosition( position );
 			else // moved out of image bounds
-				outOfBoundsStrategy.notifyOutOfBOundsBck( dim );
+				outOfBoundsStrategy.notifyOutOfBoundsBck( dim );
 		}
 		else
 		{			

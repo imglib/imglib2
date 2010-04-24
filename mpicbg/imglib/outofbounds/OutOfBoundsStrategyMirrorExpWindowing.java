@@ -156,7 +156,7 @@ public class OutOfBoundsStrategyMirrorExpWindowing<T extends RealType<T>> extend
 		else
 		{
 			for ( int i = 0; i < -steps; ++i )
-				notifyOutOfBOundsBck( dim );
+				notifyOutOfBoundsBck( dim );
 		}
 	}
 	
@@ -194,7 +194,7 @@ public class OutOfBoundsStrategyMirrorExpWindowing<T extends RealType<T>> extend
 	}
 
 	@Override
-	public void notifyOutOfBOundsBck( final int dim ) 
+	public void notifyOutOfBoundsBck( final int dim ) 
 	{
 		// current direction of the mirror cursor when going forward
 		if ( currentDirection[ dim ] == 1 )

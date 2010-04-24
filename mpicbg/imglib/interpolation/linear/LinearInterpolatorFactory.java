@@ -47,7 +47,7 @@ public class LinearInterpolatorFactory<T extends RealType<T>> extends Interpolat
 	{
 //		/* TODO Just for testing */
 //		if ( true ) return new LinearInterpolator<T>( img, this, outOfBoundsStrategyFactory );
-		
+//		
 		if ( img.numDimensions() == 1 )
 		{
 			return new LinearInterpolator1D<T>( img, this, outOfBoundsStrategyFactory );
@@ -59,8 +59,7 @@ public class LinearInterpolatorFactory<T extends RealType<T>> extends Interpolat
 		else if ( img.numDimensions() == 3 )	
 		{
 			if ( RealType.class.isInstance( img.createType() ))
-				/* inconvertible types due to javac bug 6548436: return (LinearInterpolator<T>)new LinearInterpolator3DFloat( (Image<FloatType>)img, (LinearInterpolatorFactory<FloatType>)this, (OutOfBoundsStrategyFactory<FloatType>)outOfBoundsStrategyFactory ); */
-				return (LinearInterpolator<T>)new LinearInterpolator3DRealType( (Image)img, (LinearInterpolatorFactory)this, (OutOfBoundsStrategyFactory)outOfBoundsStrategyFactory );
+				return (LinearInterpolator<T>)new LinearInterpolator3DRealType( img, this, outOfBoundsStrategyFactory );
 			else
 				return new LinearInterpolator3D<T>( img, this, outOfBoundsStrategyFactory );
 		}

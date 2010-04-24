@@ -64,7 +64,7 @@ public abstract class OutOfBoundsStrategy<T extends Type<T>>
 	/**
 	 * Fired by the parent cursor in case that it moves while being out of image bounds
 	 */
-	public abstract void notifyOutOfBOundsBck( int dim );
+	public abstract void notifyOutOfBoundsBck( int dim );
 	
 	/**
 	 * Fired by the parent cursor in case that it leaves image bounds

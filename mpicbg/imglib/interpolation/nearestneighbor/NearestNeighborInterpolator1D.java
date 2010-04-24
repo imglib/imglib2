@@ -29,70 +29,207 @@
  */
 package mpicbg.imglib.interpolation.nearestneighbor;
 
-import mpicbg.imglib.algorithm.math.MathLib;
 import mpicbg.imglib.image.Image;
-import mpicbg.imglib.interpolation.Interpolator1D;
 import mpicbg.imglib.interpolation.InterpolatorFactory;
+import mpicbg.imglib.location.Localizable;
+import mpicbg.imglib.location.RasterLocalizable;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
 import mpicbg.imglib.type.Type;
 
-public class NearestNeighborInterpolator1D<T extends Type<T>> extends NearestNeighborInterpolator<T> implements Interpolator1D<T>
+public class NearestNeighborInterpolator1D<T extends Type<T>> extends NearestNeighborInterpolator<T>
 {
-	float x;
+	private float x;
 	
 	protected NearestNeighborInterpolator1D( final Image<T> img, final InterpolatorFactory<T> interpolatorFactory, final OutOfBoundsStrategyFactory<T> outOfBoundsStrategyFactory )
 	{
 		super( img, interpolatorFactory, outOfBoundsStrategyFactory );
-		
 		x = 0;
 	}
+	
 
-	/**
-	 * Returns the typed image the interpolator is working on
-	 * 
-	 * @return - the image
-	 */
-	@Override
-	public Image<T> getImage() { return img; }		
+	/* Localizable */
 	
 	@Override
-	public void localize( final float[] position ) { position[ 0 ] = x; }
+	public double getDoublePosition( final int dim ){ return x; }
 
 	@Override
-	public void close() { cursor.close(); }
-	
-	@Override
-	public void moveTo( final float x )
-	{		
-		this.x = x;
-		
-		final int ix = MathLib.round( x ); 
-		
-		cursor.move( ix - cursor.getIntPosition( 0 ), 0 );
-	}
+	public float getFloatPosition( final int dim ){ return x; }
 
 	@Override
-	public void moveTo( final float[] position ) { moveTo( position[0] ); }
-
-	@Override
-	public void moveRel( final float x )
+	public String getLocationAsString()
 	{
-		this.x += x;
-		
-		cursor.move( MathLib.round( this.x ) - cursor.getIntPosition( 0 ), 0 );
+		return new StringBuffer( "(" ).append( x ).append( ")" ).toString();
 	}
-	
+
 	@Override
-	public void setPosition( final float x )
+	public void localize( final float[] position )
 	{
-		this.x = x;
+		position[ 0 ] = x;
+	}
 
-		cursor.setPosition( MathLib.round( x ), 0 );
+	@Override
+	public void localize( final double[] position )
+	{
+		position[ 0 ] = x;
+	}
+	
+	
+	/* Positionable */
+
+	@Override
+	public void move( final double distance, final int dim )
+	{
+		x += distance;
+		linkedPositionable.move( distance, dim );
 	}
 	
 	@Override
-	public void setPosition( final float[] position ) { setPosition( position[0] ); }
+	public void move( final float distance, final int dim )
+	{
+		x += distance;
+		linkedPositionable.move( distance, dim );
+	}
 
 	@Override
-	public float getX() { return x;	}
+	public void moveTo( final double[] position )
+	{
+		x = ( float )position[ 0 ];
+		linkedPositionable.moveTo( position );
+	}
+
+	@Override
+	public void moveTo( final float[] position )
+	{
+		x = position[ 0 ];
+		linkedPositionable.moveTo( position );
+	}
+
+	@Override
+	public void moveTo( final Localizable localizable )
+	{
+		x = localizable.getFloatPosition( 0 );
+		linkedPositionable.moveTo( localizable );
+	}
+
+	@Override
+	public void setPosition( final Localizable localizable )
+	{
+		x = localizable.getFloatPosition( 0 );
+		linkedPositionable.setPosition( localizable );
+	}
+
+	@Override
+	public void setPosition( final float[] position )
+	{
+		x = position[ 0 ];
+		linkedPositionable.setPosition( position );
+	}
+
+	@Override
+	public void setPosition( final double[] position )
+	{
+		x = ( float )position[ 0 ];
+		linkedPositionable.setPosition( position );
+	}
+
+	@Override
+	public void setPosition( final float position, final int dim )
+	{
+		x = position;
+		linkedPositionable.setPosition( position, dim );
+	}
+
+	@Override
+	public void setPosition( final double position, final int dim )
+	{
+		x = ( float )position;
+		linkedPositionable.setPosition( position, dim );
+	}
+	
+	
+	/* RasterPositionable */
+
+	@Override
+	public void bck( final int dim )
+	{
+		x -= 1;
+		linkedRasterPositionable.bck( dim );
+	}
+
+	@Override
+	public void fwd( final int dim )
+	{
+		x += 1;
+		linkedRasterPositionable.fwd( dim );
+	}
+
+	@Override
+	public void move( final int distance, final int dim )
+	{
+		x += distance;
+		linkedRasterPositionable.move( distance, dim );
+	}
+
+	@Override
+	public void move( final long distance, final int dim )
+	{
+		x += distance;
+		linkedRasterPositionable.move( distance, dim );
+	}
+
+	@Override
+	public void moveTo( final RasterLocalizable localizable )
+	{
+		x = localizable.getIntPosition( 0 );
+		linkedRasterPositionable.moveTo( localizable );
+	}
+
+	@Override
+	public void moveTo( final int[] position )
+	{
+		x = position[ 0 ];
+		linkedRasterPositionable.moveTo( position );
+	}
+
+	@Override
+	public void moveTo( final long[] position )
+	{
+		x = position[ 0 ];
+		linkedRasterPositionable.moveTo( position );
+	}
+
+	@Override
+	public void setPosition( final RasterLocalizable localizable )
+	{
+		x = localizable.getIntPosition( 0 );
+		linkedRasterPositionable.setPosition( localizable );
+	}
+
+	@Override
+	public void setPosition( final int[] position )
+	{
+		x = position[ 0 ];
+		linkedRasterPositionable.setPosition( position );
+	}
+
+	@Override
+	public void setPosition( final long[] position )
+	{
+		x = position[ 0 ];
+		linkedRasterPositionable.setPosition( position );
+	}
+
+	@Override
+	public void setPosition( final int position, final int dim )
+	{
+		x = position;
+		linkedRasterPositionable.setPosition( position, dim );
+	}
+
+	@Override
+	public void setPosition( final long position, final int dim )
+	{
+		x = position;
+		linkedRasterPositionable.setPosition( position, dim );
+	}
 }

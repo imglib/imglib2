@@ -39,11 +39,14 @@ public class LinearInterpolator3DRealType<T extends RealType<T>> extends LinearI
 	protected LinearInterpolator3DRealType( final Image<T> img, final InterpolatorFactory<T> interpolatorFactory, final OutOfBoundsStrategyFactory<T> outOfBoundsStrategyFactory )
 	{
 		super( img, interpolatorFactory, outOfBoundsStrategyFactory, false );
+		setPosition( position );
 	}
 	
 	@Override
 	public T type()
 	{
+		//System.out.println( cursor.getLocationAsString() );
+		
 		// How to iterate the cube
 		//
 		//       y7     y6
@@ -85,7 +88,9 @@ public class LinearInterpolator3DRealType<T extends RealType<T>> extends LinearI
         
         //final float y4 = strategy.get(baseX1    , baseX2,	  baseX3 + 1);
         cursor.bck( 0 );
-        final float y4 = cursor.type().getRealFloat();        
+        final float y4 = cursor.type().getRealFloat();
+        
+        cursor.bck( 2 );
 
         // weights
         final float t = x - cursor.getIntPosition( 0 ); 

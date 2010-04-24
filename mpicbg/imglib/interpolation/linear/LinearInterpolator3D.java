@@ -144,7 +144,7 @@ public class LinearInterpolator3D<T extends NumericType<T>> extends LinearInterp
 	}
 	
 	
-/* Localizable */
+	/* Localizable */
 	
 	@Override
 	public double getDoublePosition( final int dim )
@@ -411,7 +411,7 @@ public class LinearInterpolator3D<T extends NumericType<T>> extends LinearInterp
 		x = position[ 0 ];
 		y = position[ 1 ];
 		z = position[ 2 ];
-		linkedPositionable.moveTo( position );
+		linkedRasterPositionable.moveTo( position );
 	}
 
 	@Override
@@ -420,7 +420,7 @@ public class LinearInterpolator3D<T extends NumericType<T>> extends LinearInterp
 		x = position[ 0 ];
 		y = position[ 1 ];
 		z = position[ 2 ];
-		linkedPositionable.moveTo( position );
+		linkedRasterPositionable.moveTo( position );
 	}
 
 	@Override
@@ -438,7 +438,7 @@ public class LinearInterpolator3D<T extends NumericType<T>> extends LinearInterp
 		x = position[ 0 ];
 		y = position[ 1 ];
 		z = position[ 2 ];
-		linkedPositionable.setPosition( position );
+		linkedRasterPositionable.setPosition( position );
 	}
 
 	@Override
@@ -447,7 +447,7 @@ public class LinearInterpolator3D<T extends NumericType<T>> extends LinearInterp
 		x = position[ 0 ];
 		y = position[ 1 ];
 		z = position[ 2 ];
-		linkedPositionable.setPosition( position );
+		linkedRasterPositionable.setPosition( position );
 	}
 
 	@Override
