@@ -30,15 +30,14 @@
 package mpicbg.imglib.cursor.special;
 
 import mpicbg.imglib.cursor.LocalizableCursor;
-import mpicbg.imglib.cursor.PositionableCursor;
 import mpicbg.imglib.image.Image;
-import mpicbg.imglib.location.Localizable;
+import mpicbg.imglib.location.RasterLocalizable;
 import mpicbg.imglib.type.Type;
 
 public class LocalNeighborhoodCursorFactory 
 {
 	public static < T extends Type< T > >LocalNeighborhoodCursor<T> createLocalNeighborhoodCursor(
-			final Localizable localizable,
+			final RasterLocalizable localizable,
 			final Image< T > image )
 	{
 		if ( image.numDimensions() == 3 )
@@ -56,11 +55,11 @@ public class LocalNeighborhoodCursorFactory
 	{
 		if ( cursor.getImage().numDimensions() == 3 )
 		{
-			return new LocalNeighborhoodCursor3D< T >( cursor );
+			return new LocalNeighborhoodCursor3D< T >( cursor, cursor.getImage() );
 		}
 		else
 		{
-			return new LocalNeighborhoodCursor< T >( cursor );
+			return new LocalNeighborhoodCursor< T >( cursor, cursor.getImage() );
 		}
 	}
 }

@@ -29,16 +29,17 @@
  */
 package mpicbg.imglib.cursor.special;
 
-import mpicbg.imglib.cursor.PositionableCursor;
+import mpicbg.imglib.image.Image;
+import mpicbg.imglib.location.RasterLocalizable;
 import mpicbg.imglib.type.Type;
 
 public class LocalNeighborhoodCursor3D<T extends Type<T>> extends LocalNeighborhoodCursor<T>
 {
 	int i = -1;
 	
-	public LocalNeighborhoodCursor3D( final PositionableCursor<T> cursor ) 
+	public LocalNeighborhoodCursor3D( final RasterLocalizable localizable, final Image< T > image ) 
 	{ 
-		super( cursor );
+		super( localizable, image );
 		
 		if ( numDimensions != 3 )
 		{
@@ -53,20 +54,13 @@ public class LocalNeighborhoodCursor3D<T extends Type<T>> extends LocalNeighborh
 		if (i == 25)
 			cursor.bck( 2 );
 		else
-			cursor.setPosition( position );
+			cursor.setPosition( localizable );
 		
 		i = -1;
 		
 		linkedIterator.reset();
 	}
-	
-	@Override
-	public void update()
-	{
-		cursor.localize( position );		
-		i = -1;
-	}
-	
+		
 	@Override
 	public boolean hasNext()
 	{
@@ -147,5 +141,6 @@ public class LocalNeighborhoodCursor3D<T extends Type<T>> extends LocalNeighborh
 		linkedIterator.fwd();
 	}
 	
-	public int getRelativePosition( final int d ) { return cursor.getIntPosition( d ) - position[ d ]; }	
+	@Override
+	public int getRelativePosition( final int d ) { return cursor.getIntPosition( d ) - localizable.getIntPosition( d ); }	
 }
