@@ -32,29 +32,26 @@ package mpicbg.imglib.cursor.array;
 import mpicbg.imglib.container.array.Array;
 import mpicbg.imglib.container.basictypecontainer.FakeAccess;
 import mpicbg.imglib.container.basictypecontainer.array.FakeArray;
-import mpicbg.imglib.cursor.PositionableCursor;
+import mpicbg.imglib.cursor.AbstractPositionableCursor;
 import mpicbg.imglib.image.Image;
-import mpicbg.imglib.location.RasterLocalizable;
-import mpicbg.imglib.location.RasterPositionable;
-import mpicbg.imglib.location.VoidPositionable;
 import mpicbg.imglib.type.Type;
 import mpicbg.imglib.type.label.FakeType;
 
-public class ArrayPositionableCursor<T extends Type<T>> extends ArrayLocalizableCursor<T> implements PositionableCursor<T>
+public class ArrayPositionableCursor<T extends Type<T>> extends AbstractPositionableCursor<T>
 {
-	//final CursorLink link;
+	final T type;
 	final protected int[] step;
-	final int tmp[];
-	
-	protected RasterPositionable linkedRasterPositionable = VoidPositionable.getInstance();
+	final Array<T,?> container;
 	
 	public ArrayPositionableCursor( final Array<T,?> container, final Image<T> image, final T type ) 
 	{
-		super( container, image, type );
+		super( container, image );
 		
+		this.container = container;
+		this.type = type;
 		step = Array.createAllocationSteps( container.getDimensions() );
-		tmp = new int[ numDimensions ];
-		//link = new NullLink();
+		
+		reset();
 	}	
 	
 	public static ArrayPositionableCursor<FakeType> createLinearByDimCursor( final int[] dim )
@@ -62,6 +59,9 @@ public class ArrayPositionableCursor<T extends Type<T>> extends ArrayLocalizable
 		final Array<FakeType, FakeAccess> array = new Array<FakeType, FakeAccess>( null, new FakeArray(), dim, 1 );
 		return new ArrayPositionableCursor<FakeType>( array, null, new FakeType() );
 	}
+
+	@Override
+	public T type() { return type; }	
 	
 	@Override
 	public void fwd( final int dim )
@@ -73,21 +73,6 @@ public class ArrayPositionableCursor<T extends Type<T>> extends ArrayLocalizable
 	}
 
 	@Override
-	public void move( final int steps, final int dim )
-	{
-		type.incIndex( step[ dim ] * steps );
-		position[ dim ] += steps;
-		
-		linkedRasterPositionable.move( steps, dim );
-	}
-	
-	@Override
-	public void move( final long distance, final int dim )
-	{
-		move( ( int )distance, dim );		
-	}
-	
-	@Override
 	public void bck( final int dim )
 	{
 		type.decIndex( step[ dim ] );
@@ -95,45 +80,16 @@ public class ArrayPositionableCursor<T extends Type<T>> extends ArrayLocalizable
 		
 		linkedRasterPositionable.bck( dim );
 	}
+	
+	@Override
+	public void move( final int steps, final int dim )
+	{
+		type.incIndex( step[ dim ] * steps );
+		position[ dim ] += steps;
 		
-	@Override
-	public void moveTo( final int[] position )
-	{		
-		for ( int d = 0; d < numDimensions; ++d )
-		{
-			final int dist = position[ d ] - getIntPosition( d );
-			
-			if ( dist != 0 )				
-				move( dist, d );
-		}
+		linkedRasterPositionable.move( steps, dim );
 	}
-	
-	@Override
-	public void moveTo( final long[] position )
-	{
-		for ( int d = 0; d < numDimensions; ++d )
-		{
-			final long dist = position[ d ] - getLongPosition( d );
-			
-			if ( dist != 0 )				
-				move( dist, d );
-		}
-	}
-
-	@Override
-	public void moveTo( final RasterLocalizable localizable )
-	{
-		localizable.localize( tmp );
-		moveTo( tmp );
-	}
-
-	@Override
-	public void setPosition( final RasterLocalizable localizable )
-	{
-		localizable.localize( tmp );
-		setPosition( tmp );
-	}
-	
+					
 	@Override
 	public void setPosition( final int[] position )
 	{
@@ -166,23 +122,20 @@ public class ArrayPositionableCursor<T extends Type<T>> extends ArrayLocalizable
 	}
 	
 	@Override
-	public void setPosition( final long position, final int dim )
+	public void reset()
 	{
-		setPosition( ( int )position, dim );
+		isClosed = false;
 		
+		for ( int d = 0; d < numDimensions; d++ )
+			position[ d ] = 0;
+
+		setPosition( position );
+		type.updateContainer( this );
 	}
 
 	@Override
-	public void linkRasterPositionable( final RasterPositionable rasterPositionable )
-	{
-		linkedRasterPositionable = rasterPositionable;
-	}
+	public Array<T,?> getContainer(){ return container; }
 
 	@Override
-	public RasterPositionable unlinkRasterPositionable()
-	{
-		final RasterPositionable rasterPositionable = linkedRasterPositionable;
-		linkedRasterPositionable = VoidPositionable.getInstance();
-		return rasterPositionable;
-	}
+	public void close() { this.isClosed = true; }
 }

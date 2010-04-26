@@ -33,8 +33,9 @@ import mpicbg.imglib.container.DirectAccessContainer;
 import mpicbg.imglib.container.DirectAccessContainerFactory;
 import mpicbg.imglib.container.array.Array;
 import mpicbg.imglib.container.basictypecontainer.DataAccess;
+import mpicbg.imglib.cursor.Cursor;
 import mpicbg.imglib.cursor.IterableCursor;
-import mpicbg.imglib.cursor.array.ArrayCursor;
+import mpicbg.imglib.cursor.array.ArrayIterableCursor;
 import mpicbg.imglib.cursor.cell.CellCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.display.Display;
@@ -87,7 +88,7 @@ public interface Type<T extends Type<T>>
 	 * prevent multiple implementations of {@link Type}.
 	 * That's why {@link Type} asks the {@link DataAccess} to give the actual basic array by passing the {@link IterableCursor}
 	 * that calls the method. The {@link DataAccess} is also an {@link Array}, {@link CellDirectAccessContainer}, ... which
-	 * can then communicate with the {@link ArrayCursor}, {@link CellCursor}, ... and return the current basic type array. 
+	 * can then communicate with the {@link ArrayIterableCursor}, {@link CellCursor}, ... and return the current basic type array. 
 	 * 
 	 * A typical implementation of this method looks like that (this is the {@link FloatType} implementation):
 	 * 
@@ -96,7 +97,7 @@ public interface Type<T extends Type<T>>
 	 * @param c - the {@link IterableCursor} gives a link to itself so that the {@link Type} 
 	 * tell its {@link DataAccess} to get the new basic type array.
 	 */
-	public void updateContainer( IterableCursor<?> c );	
+	public void updateContainer( Cursor<?> c );	
 
 	/**
 	 * Increments the array position of the {@link Type}, 

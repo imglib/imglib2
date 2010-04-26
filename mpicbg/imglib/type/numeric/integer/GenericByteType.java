@@ -33,7 +33,7 @@ import mpicbg.imglib.algorithm.math.MathLib;
 import mpicbg.imglib.container.DirectAccessContainer;
 import mpicbg.imglib.container.basictypecontainer.ByteAccess;
 import mpicbg.imglib.container.basictypecontainer.array.ByteArray;
-import mpicbg.imglib.cursor.IterableCursor;
+import mpicbg.imglib.cursor.Cursor;
 
 public abstract class GenericByteType<T extends GenericByteType<T>> extends AbstractIntegerType<T>
 {
@@ -61,7 +61,7 @@ public abstract class GenericByteType<T extends GenericByteType<T>> extends Abst
 	protected GenericByteType() { this( ( byte )0 ); }
 			
 	@Override
-	public void updateContainer( final IterableCursor< ? > c ) 
+	public void updateContainer( final Cursor< ? > c ) 
 	{ 
 		b = storage.update( c ); 
 	}

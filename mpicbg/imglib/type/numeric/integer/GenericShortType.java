@@ -33,7 +33,7 @@ import mpicbg.imglib.algorithm.math.MathLib;
 import mpicbg.imglib.container.DirectAccessContainer;
 import mpicbg.imglib.container.basictypecontainer.ShortAccess;
 import mpicbg.imglib.container.basictypecontainer.array.ShortArray;
-import mpicbg.imglib.cursor.IterableCursor;
+import mpicbg.imglib.cursor.Cursor;
 
 public abstract class GenericShortType<T extends GenericShortType<T>> extends AbstractIntegerType<T>
 {
@@ -61,7 +61,7 @@ public abstract class GenericShortType<T extends GenericShortType<T>> extends Ab
 	public GenericShortType(){ this( ( short )0 ); }
 
 	@Override
-	public void updateContainer( final IterableCursor< ? > c ) 
+	public void updateContainer( final Cursor< ? > c ) 
 	{ 
 		b = storage.update( c ); 
 	}

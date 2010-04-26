@@ -108,4 +108,6 @@ public interface Cursor< T extends Type< T > > extends Sampler< T >
 	public Container<T> getContainer();
 	
 	public void close();
+	
+	public void reset();
 }

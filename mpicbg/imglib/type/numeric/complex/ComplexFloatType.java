@@ -34,7 +34,7 @@ import mpicbg.imglib.container.DirectAccessContainer;
 import mpicbg.imglib.container.DirectAccessContainerFactory;
 import mpicbg.imglib.container.basictypecontainer.FloatAccess;
 import mpicbg.imglib.container.basictypecontainer.array.FloatArray;
-import mpicbg.imglib.cursor.IterableCursor;
+import mpicbg.imglib.cursor.Cursor;
 import mpicbg.imglib.type.numeric.ComplexType;
 
 public class ComplexFloatType extends AbstractComplexType<ComplexFloatType> implements ComplexType<ComplexFloatType>
@@ -78,7 +78,7 @@ public class ComplexFloatType extends AbstractComplexType<ComplexFloatType> impl
 	}
 	
 	@Override
-	public void updateContainer( final IterableCursor<?> c ) 
+	public void updateContainer( final Cursor<?> c ) 
 	{ 
 		b = storage.update( c );		
 	}

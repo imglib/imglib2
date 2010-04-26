@@ -34,7 +34,7 @@ import mpicbg.imglib.container.DirectAccessContainer;
 import mpicbg.imglib.container.DirectAccessContainerFactory;
 import mpicbg.imglib.container.basictypecontainer.BitAccess;
 import mpicbg.imglib.container.basictypecontainer.array.BitArray;
-import mpicbg.imglib.cursor.IterableCursor;
+import mpicbg.imglib.cursor.Cursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.display.BitTypeDisplay;
 import mpicbg.imglib.type.LogicType;
@@ -82,7 +82,7 @@ public class BitType extends AbstractIntegerType<BitType> implements LogicType<B
 	}
 		
 	@Override
-	public void updateContainer( final IterableCursor<?> c ) 
+	public void updateContainer( final Cursor<?> c ) 
 	{ 
 		b = storage.update( c );
 	}

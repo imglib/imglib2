@@ -34,7 +34,7 @@ import mpicbg.imglib.cursor.LocalizablePlaneCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.type.Type;
 
-public class ArrayLocalizablePlaneCursor<T extends Type<T>> extends ArrayLocalizableCursor<T> implements LocalizablePlaneCursor<T>
+public class ArrayLocalizablePlaneCursor<T extends Type<T>> extends ArrayLocalizableIterableCursor<T> implements LocalizablePlaneCursor<T>
 {
 	protected int planeDimA, planeDimB, planeSizeA, planeSizeB, incPlaneA, incPlaneB, maxI;
 	

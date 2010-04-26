@@ -37,7 +37,6 @@ import mpicbg.imglib.type.Type;
  *
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-public interface LocalizableCursor< T extends Type< T > > extends
-		Cursor< T >, RasterLocalizable
+public interface LocalizableCursor< T extends Type< T > > extends Cursor< T >, RasterLocalizable
 {
 }

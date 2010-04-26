@@ -36,6 +36,7 @@ import ij.ImagePlus;
 import mpicbg.imglib.container.AbstractDirectAccessContainer;
 import mpicbg.imglib.container.Container;
 import mpicbg.imglib.container.basictypecontainer.array.ArrayDataAccess;
+import mpicbg.imglib.cursor.Cursor;
 import mpicbg.imglib.cursor.IterableCursor;
 import mpicbg.imglib.cursor.PositionableCursor;
 import mpicbg.imglib.cursor.LocalizableIterableCursor;
@@ -91,7 +92,7 @@ public class ImagePlusContainer<T extends Type<T>, A extends ArrayDataAccess<A>>
 	}
 
 	@Override
-	public A update( final IterableCursor<?> c ) { return mirror.get( ((ImagePlusCursor<?>)c).getStorageIndex() ); }
+	public A update( final Cursor<?> c ) { return mirror.get( ((ImagePlusCursor<?>)c).getStorageIndex() ); }
 	
 	protected static int[] getCorrectDimensionality( final ImagePlus imp )
 	{

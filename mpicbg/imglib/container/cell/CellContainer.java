@@ -34,9 +34,9 @@ import java.util.ArrayList;
 import mpicbg.imglib.container.ContainerFactory;
 import mpicbg.imglib.container.AbstractDirectAccessContainer;
 import mpicbg.imglib.container.basictypecontainer.array.ArrayDataAccess;
-import mpicbg.imglib.cursor.IterableCursor;
+import mpicbg.imglib.cursor.Cursor;
 import mpicbg.imglib.cursor.array.ArrayPositionableCursor;
-import mpicbg.imglib.cursor.array.ArrayLocalizableCursor;
+import mpicbg.imglib.cursor.array.ArrayLocalizableIterableCursor;
 import mpicbg.imglib.cursor.cell.CellCursor;
 import mpicbg.imglib.cursor.cell.CellPositionableCursor;
 import mpicbg.imglib.cursor.cell.CellPositionableOutOfBoundsCursor;
@@ -77,7 +77,7 @@ public class CellContainer<T extends Type<T>, A extends ArrayDataAccess<A>> exte
 		
 		// Here we "misuse" an ArrayLocalizableCursor to iterate over cells,
 		// it always gives us the location of the current cell we are instantiating.
-		final ArrayLocalizableCursor<FakeType> cursor = ArrayLocalizableCursor.createLinearCursor( numCellsDim ); 
+		final ArrayLocalizableIterableCursor<FakeType> cursor = ArrayLocalizableIterableCursor.createLinearCursor( numCellsDim ); 
 		
 		for ( int c = 0; c < numCells; c++ )			
 		{
@@ -104,7 +104,7 @@ public class CellContainer<T extends Type<T>, A extends ArrayDataAccess<A>> exte
 	}
 	
 	@Override
-	public A update( final IterableCursor<?> c ) { return data.get( ((CellCursor<?>)c).getStorageIndex() ).getData(); }
+	public A update( final Cursor<?> c ) { return data.get( ((CellCursor<?>)c).getStorageIndex() ).getData(); }
 	
 	public ArrayList<Cell<T, A>> createCellArray( final int numCells ) { return new ArrayList<Cell<T, A>>( numCells ); }	
 	

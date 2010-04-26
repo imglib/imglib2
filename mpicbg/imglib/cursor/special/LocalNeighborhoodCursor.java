@@ -32,7 +32,7 @@ package mpicbg.imglib.cursor.special;
 import mpicbg.imglib.container.Container;
 import mpicbg.imglib.cursor.AbstractIterableCursor;
 import mpicbg.imglib.cursor.PositionableCursor;
-import mpicbg.imglib.cursor.array.ArrayLocalizableCursor;
+import mpicbg.imglib.cursor.array.ArrayLocalizableIterableCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.location.RasterLocalizable;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
@@ -45,7 +45,7 @@ public class LocalNeighborhoodCursor<T extends Type<T>> extends AbstractIterable
 	 * Here we "misuse" a ArrayLocalizableCursor to iterate over cells,
 	 * it always gives us the location of the current cell we are instantiating 
 	 */
-	final ArrayLocalizableCursor<FakeType> neigborhoodCursor;
+	final ArrayLocalizableIterableCursor<FakeType> neigborhoodCursor;
 
 	final RasterLocalizable localizable;
 	final PositionableCursor< T > cursor;
@@ -71,7 +71,7 @@ public class LocalNeighborhoodCursor<T extends Type<T>> extends AbstractIterable
 		for ( int d = 0; d < numDimensions; ++d )
 			dim[ d ] = 3;
 
-		neigborhoodCursor = ArrayLocalizableCursor.createLinearCursor( dim );
+		neigborhoodCursor = ArrayLocalizableIterableCursor.createLinearCursor( dim );
 		isActive = true;
 
 		for ( int d = 0; d < numDimensions; ++d )

@@ -32,34 +32,40 @@ package mpicbg.imglib.cursor.array;
 import mpicbg.imglib.container.array.Array;
 import mpicbg.imglib.container.basictypecontainer.FakeAccess;
 import mpicbg.imglib.container.basictypecontainer.array.FakeArray;
+import mpicbg.imglib.cursor.AbstractLocalizableIterableCursor;
 import mpicbg.imglib.cursor.LocalizableIterableCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.type.Type;
 import mpicbg.imglib.type.label.FakeType;
 
-public class ArrayLocalizableCursor<T extends Type<T>> extends ArrayCursor<T> implements LocalizableIterableCursor<T>
+public class ArrayLocalizableIterableCursor<T extends Type<T>> extends AbstractLocalizableIterableCursor<T> implements LocalizableIterableCursor<T>
 {
-	final protected int numDimensions; 	
-	final protected int[] position, dimensions;
+	protected final T type;
+	protected final Array<T,?> container;
+	protected final int sizeMinus1;
 	
-	public ArrayLocalizableCursor( final Array<T,?> container, final Image<T> image, final T type ) 
+	public ArrayLocalizableIterableCursor( final Array<T,?> container, final Image<T> image, final T type ) 
 	{
-		super( container, image, type );
+		super( container, image );
 
-		numDimensions = container.numDimensions(); 
+		this.container = container;
+		this.type = type;		
+		this.sizeMinus1 = (int)container.getNumPixels() - 1;
 		
-		position = new int[ numDimensions ];
-		dimensions = container.getDimensions();
-		
-		// unluckily we have to call it twice, in the superclass position is not initialized yet
 		reset();
 	}	
 	
-	public static ArrayLocalizableCursor<FakeType> createLinearCursor( final int[] dim )
+	public static ArrayLocalizableIterableCursor<FakeType> createLinearCursor( final int[] dim )
 	{
 		final Array<FakeType, FakeAccess> array = new Array<FakeType, FakeAccess>( null, new FakeArray(), dim, 1 );
-		return new ArrayLocalizableCursor<FakeType>( array, null, new FakeType() );
+		return new ArrayLocalizableIterableCursor<FakeType>( array, null, new FakeType() );
 	}
+
+	@Override
+	public T type() { return type; }
+
+	@Override
+	public boolean hasNext(){ return type.getIndex() < sizeMinus1; }
 	
 	@Override
 	public void fwd()
@@ -109,69 +115,10 @@ public class ArrayLocalizableCursor<T extends Type<T>> extends ArrayCursor<T> im
 		
 		linkedIterator.reset();
 	}
-	
-	@Override
-	public void localize( float[] position )
-	{
-		for ( int d = 0; d < numDimensions; d++ )
-			position[ d ] = this.position[ d ];
-	}
 
 	@Override
-	public void localize( double[] position )
-	{
-		for ( int d = 0; d < numDimensions; d++ )
-			position[ d ] = this.position[ d ];
-	}
+	public Array<T,?> getContainer(){ return container; }
 
 	@Override
-	public void localize( int[] position )
-	{
-		for ( int d = 0; d < numDimensions; d++ )
-			position[ d ] = this.position[ d ];
-	}
-	
-	@Override
-	public void localize( long[] position )
-	{
-		for ( int d = 0; d < numDimensions; d++ )
-			position[ d ] = this.position[ d ];
-	}
-	
-	@Override
-	public float getFloatPosition( final int d )
-	{
-		return position[ d ];
-	}
-	
-	@Override
-	public double getDoublePosition( final int d )
-	{
-		return position[ d ];
-	}
-	
-	@Override
-	public int getIntPosition( final int dim ){ return position[ dim ]; }
-	
-	@Override
-	public long getLongPosition( final int dim ){ return position[ dim ]; }
-	
-	@Override
-	public String getLocationAsString()
-	{
-		String pos = "(" + position[ 0 ];
-		
-		for ( int d = 1; d < numDimensions; d++ )
-			pos += ", " + position[ d ];
-		
-		pos += ")";
-		
-		return pos;
-	}
-	
-	@Override
-	public String toString() { return getLocationAsString() + " = " + type(); }
-	
-	@Override
-	public int numDimensions(){ return numDimensions; }
+	public void close() { this.isClosed = true; }	
 }

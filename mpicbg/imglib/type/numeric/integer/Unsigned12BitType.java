@@ -34,7 +34,7 @@ import mpicbg.imglib.container.DirectAccessContainer;
 import mpicbg.imglib.container.DirectAccessContainerFactory;
 import mpicbg.imglib.container.basictypecontainer.BitAccess;
 import mpicbg.imglib.container.basictypecontainer.array.BitArray;
-import mpicbg.imglib.cursor.IterableCursor;
+import mpicbg.imglib.cursor.Cursor;
 import mpicbg.imglib.type.numeric.integer.AbstractIntegerType;
 
 public class Unsigned12BitType extends AbstractIntegerType<Unsigned12BitType>
@@ -83,7 +83,7 @@ public class Unsigned12BitType extends AbstractIntegerType<Unsigned12BitType>
 	}
 		
 	@Override
-	public void updateContainer( final IterableCursor<?> c ) 
+	public void updateContainer( final Cursor<?> c ) 
 	{ 
 		b = storage.update( c );
 	}

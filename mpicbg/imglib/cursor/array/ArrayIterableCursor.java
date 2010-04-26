@@ -34,13 +34,13 @@ import mpicbg.imglib.cursor.AbstractIterableCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.type.Type;
 
-public class ArrayCursor<T extends Type<T>> extends AbstractIterableCursor<T>
+public class ArrayIterableCursor<T extends Type<T>> extends AbstractIterableCursor<T>
 {
 	protected final T type;
 	protected final Array<T,?> container;
 	protected final int sizeMinus1;
 	
-	public ArrayCursor( final Array<T,?> container, final Image<T> image, final T type ) 
+	public ArrayIterableCursor( final Array<T,?> container, final Image<T> image, final T type ) 
 	{
 		super( container, image );
 

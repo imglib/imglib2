@@ -53,32 +53,10 @@ public class ArrayPositionableOutOfBoundsCursor<T extends Type<T>> extends Array
 	}	
 	
 	@Override
-	public boolean hasNext()
-	{
-		if ( !isOutOfBounds && type.getIndex() < sizeMinus1 )
-			return true;
-		else
-			return false;
-	}
-
-	@Override
 	public void reset()
 	{
-		if ( outOfBoundsStrategy != null )
-		{
-			isClosed = false;
-			isOutOfBounds = false;
-			type.updateIndex( -1 );
-			
-			position[ 0 ] = -1;
-			
-			for ( int d = 1; d < numDimensions; d++ )
-				position[ d ] = 0;
-			
-			type.updateContainer( this );
-		}
-		
-		linkedIterator.reset();
+		isOutOfBounds = false;
+		super.reset();
 	}
 	
 	@Override
@@ -90,36 +68,6 @@ public class ArrayPositionableOutOfBoundsCursor<T extends Type<T>> extends Array
 			return type; 
 	}
 		
-	@Override
-	public void fwd()
-	{
-		if ( !isOutOfBounds )
-		{
-			type.incIndex();
-			
-			for ( int d = 0; d < numDimensions; d++ )
-			{
-				if ( position[ d ] < dimensions[ d ] - 1 )
-				{
-					position[ d ]++;
-					
-					for ( int e = 0; e < d; e++ )
-						position[ e ] = 0;
-
-					linkedIterator.fwd();
-					return;
-				}
-			}
-			
-			// if it did not return we moved out of image bounds
-			isOutOfBounds = true;
-			++position[0];
-			outOfBoundsStrategy.initOutOfBOunds(  );
-		}
-		
-		linkedIterator.fwd();
-	}
-
 	@Override
 	public void fwd( final int dim )
 	{
@@ -305,11 +253,5 @@ public class ArrayPositionableOutOfBoundsCursor<T extends Type<T>> extends Array
 
 			linkedRasterPositionable.setPosition( position, dim );
 		}
-	}
-	
-	@Override
-	public void setPosition( final long position, final int dim )
-	{
-		setPosition( ( int )position, dim );
-	}
+	}	
 }
