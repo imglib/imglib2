@@ -111,7 +111,7 @@ public class LocalNeighborhoodCursor<T extends Type<T>> extends AbstractIterable
 		neigborhoodCursor.localize( tmp );
 
 		for ( int d = 0; d < numDimensions; ++d )
-			tmp[ d ] = position[ d ] + ( tmp[d] - 1 );
+			tmp[ d ] = localizable.getIntPosition( d ) + ( tmp[d] - 1 );
 		
 		cursor.moveTo( tmp );
 		
