@@ -33,6 +33,7 @@ import mpicbg.imglib.container.Container;
 import mpicbg.imglib.cursor.AbstractIterableCursor;
 import mpicbg.imglib.cursor.PositionableCursor;
 import mpicbg.imglib.cursor.LocalizableIterableCursor;
+import mpicbg.imglib.image.Image;
 import mpicbg.imglib.type.Type;
 
 public class RegionOfInterestCursor<T extends Type<T>> extends AbstractIterableCursor<T> implements LocalizableIterableCursor<T> 
@@ -48,13 +49,13 @@ public class RegionOfInterestCursor<T extends Type<T>> extends AbstractIterableC
 	boolean isActive, debug = false;
 	int i;
 	
-	public RegionOfInterestCursor( final PositionableCursor<T> cursor, final int[] offset, final int size[] )
+	public RegionOfInterestCursor( final Image< T > image, final int[] offset, final int size[] )
 	{
-		super( cursor.getContainer(), cursor.getImage() );
+		super( image.getContainer(), image );
 		
 		this.offset = offset.clone();
 		this.size = size.clone();		
-		this.cursor = cursor;
+		this.cursor = image.createPositionableCursor();
 		
 		this.numDimensions = cursor.getImage().numDimensions();
 		this.roiPosition = new int[ numDimensions ];
@@ -166,13 +167,6 @@ public class RegionOfInterestCursor<T extends Type<T>> extends AbstractIterableC
 	{
 		for ( int d = 0; d < numDimensions; ++d )
 			position[ d ] = roiPosition[ d ];
-	}
-	
-	@Deprecated
-	@Override
-	public void getPosition( int[] position )
-	{
-		localize( position );
 	}
 	
 	@Override

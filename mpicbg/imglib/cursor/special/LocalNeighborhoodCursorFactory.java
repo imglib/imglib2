@@ -32,34 +32,38 @@ package mpicbg.imglib.cursor.special;
 import mpicbg.imglib.cursor.LocalizableCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.location.RasterLocalizable;
+import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
 import mpicbg.imglib.type.Type;
 
 public class LocalNeighborhoodCursorFactory 
 {
-	public static < T extends Type< T > >LocalNeighborhoodCursor<T> createLocalNeighborhoodCursor(
+	public static < T extends Type< T > > LocalNeighborhoodCursor<T> createLocalNeighborhoodCursor(
 			final RasterLocalizable localizable,
-			final Image< T > image )
+			final Image< T > image,
+			final OutOfBoundsStrategyFactory<T> outsideFactory )
 	{
 		if ( image.numDimensions() == 3 )
 		{
-			return new LocalNeighborhoodCursor3D< T >( localizable, image );
+			return new LocalNeighborhoodCursor3D< T >( localizable, image, outsideFactory );
 		}
 		else
 		{
-			return new LocalNeighborhoodCursor< T >( localizable, image );
+			return new LocalNeighborhoodCursor< T >( localizable, image, outsideFactory );
 		}
 	}
-	
-	public static < T extends Type< T > >LocalNeighborhoodCursor<T> createLocalNeighborhoodCursor(
-			final LocalizableCursor< T > cursor )
+
+	public static < T extends Type< T > >LocalNeighborhoodCursor<T> createLocalNeighborhoodCursor( final RasterLocalizable localizable, final Image< T > image )
 	{
-		if ( cursor.getImage().numDimensions() == 3 )
-		{
-			return new LocalNeighborhoodCursor3D< T >( cursor, cursor.getImage() );
-		}
-		else
-		{
-			return new LocalNeighborhoodCursor< T >( cursor, cursor.getImage() );
-		}
+		return createLocalNeighborhoodCursor( localizable, image, null ); 
+	}
+	
+	public static < T extends Type< T > >LocalNeighborhoodCursor<T> createLocalNeighborhoodCursor( final LocalizableCursor< T > cursor, final OutOfBoundsStrategyFactory<T> outsideFactory )
+	{
+		return createLocalNeighborhoodCursor( cursor, cursor.getImage(), outsideFactory ); 
+	}
+	
+	public static < T extends Type< T > >LocalNeighborhoodCursor<T> createLocalNeighborhoodCursor( final LocalizableCursor< T > cursor )
+	{
+		return createLocalNeighborhoodCursor( cursor, cursor.getImage(), null ); 
 	}
 }

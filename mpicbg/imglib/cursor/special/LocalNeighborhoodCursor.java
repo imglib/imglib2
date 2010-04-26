@@ -35,6 +35,7 @@ import mpicbg.imglib.cursor.PositionableCursor;
 import mpicbg.imglib.cursor.array.ArrayLocalizableCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.location.RasterLocalizable;
+import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
 import mpicbg.imglib.type.Type;
 import mpicbg.imglib.type.label.FakeType;
 
@@ -53,12 +54,16 @@ public class LocalNeighborhoodCursor<T extends Type<T>> extends AbstractIterable
 	final int centralPositionIndex;
 	boolean isActive, debug = false;
 	
-	LocalNeighborhoodCursor( final RasterLocalizable localizable, final Image< T > image )
+	LocalNeighborhoodCursor( final RasterLocalizable localizable, final Image< T > image, final OutOfBoundsStrategyFactory<T> outofboundsFactory )
 	{
 		super( image.getContainer(), image );
 		
 		this.localizable = localizable;
-		cursor = image.createPositionableCursor();
+		
+		if ( outofboundsFactory == null )
+			cursor = image.createPositionableCursor();
+		else
+			cursor = image.createPositionableCursor( outofboundsFactory );
 		
 		tmp = new int[ numDimensions ];
 				
