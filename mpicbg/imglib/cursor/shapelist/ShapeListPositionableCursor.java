@@ -48,8 +48,6 @@ import mpicbg.imglib.type.Type;
  */
 public class ShapeListPositionableCursor< T extends Type< T > > extends AbstractIterableCursor< T > implements PositionableCursor< T >
 {
-	private int numNeighborhoodCursors = 0;
-	 
 	final protected ShapeList< T > container;
 	
 	final protected int numDimensions;
@@ -73,36 +71,6 @@ public class ShapeListPositionableCursor< T extends Type< T > > extends Abstract
 	public T type()
 	{
 		return container.getShapeType( position );
-	}
-	
-	@Override
-	public synchronized LocalNeighborhoodCursor<T> createLocalNeighborhoodCursor()
-	{
-		if ( numNeighborhoodCursors == 0 )
-		{
-			++numNeighborhoodCursors;
-			return LocalNeighborhoodCursorFactory.createLocalNeighborhoodCursor( this );
-		}
-		else
-		{
-			System.out.println( "ShapeListLocalizableByDimCursor.createLocalNeighborhoodCursor(): There is only one one special cursor per cursor allowed." );
-			return null;
-		}
-	}
-
-	@Override
-	public synchronized RegionOfInterestCursor<T> createRegionOfInterestCursor( final int[] offset, final int[] size )
-	{
-		if ( numNeighborhoodCursors == 0 )
-		{
-			++numNeighborhoodCursors;
-			return new RegionOfInterestCursor<T>( this, offset, size );
-		}
-		else
-		{
-			System.out.println( "ShapeListLocalizableByDimCursor.createRegionOfInterestCursor(): There is only one special cursor per cursor allowed." );
-			return null;
-		}
 	}
 	
 	@Override

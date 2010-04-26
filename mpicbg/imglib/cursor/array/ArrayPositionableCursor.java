@@ -33,9 +33,6 @@ import mpicbg.imglib.container.array.Array;
 import mpicbg.imglib.container.basictypecontainer.FakeAccess;
 import mpicbg.imglib.container.basictypecontainer.array.FakeArray;
 import mpicbg.imglib.cursor.PositionableCursor;
-import mpicbg.imglib.cursor.special.LocalNeighborhoodCursor;
-import mpicbg.imglib.cursor.special.LocalNeighborhoodCursorFactory;
-import mpicbg.imglib.cursor.special.RegionOfInterestCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.location.RasterLocalizable;
 import mpicbg.imglib.location.RasterPositionable;
@@ -48,8 +45,6 @@ public class ArrayPositionableCursor<T extends Type<T>> extends ArrayLocalizable
 	//final CursorLink link;
 	final protected int[] step;
 	final int tmp[];
-	
-	int numNeighborhoodCursors = 0;
 	
 	protected RasterPositionable linkedRasterPositionable = VoidPositionable.getInstance();
 	
@@ -66,36 +61,6 @@ public class ArrayPositionableCursor<T extends Type<T>> extends ArrayLocalizable
 	{
 		final Array<FakeType, FakeAccess> array = new Array<FakeType, FakeAccess>( null, new FakeArray(), dim, 1 );
 		return new ArrayPositionableCursor<FakeType>( array, null, new FakeType() );
-	}
-	
-	@Override
-	public synchronized LocalNeighborhoodCursor<T> createLocalNeighborhoodCursor()
-	{
-		if ( numNeighborhoodCursors == 0)
-		{
-			++numNeighborhoodCursors;
-			return LocalNeighborhoodCursorFactory.createLocalNeighborhoodCursor( this );
-		}
-		else
-		{
-			System.out.println("ArrayLocalizableByDimCursor.createLocalNeighborhoodCursor(): There is only one one special cursor per cursor allowed.");
-			return null;
-		}
-	}
-
-	@Override
-	public synchronized RegionOfInterestCursor<T> createRegionOfInterestCursor( final int[] offset, final int[] size )
-	{
-		if ( numNeighborhoodCursors == 0)
-		{
-			++numNeighborhoodCursors;
-			return new RegionOfInterestCursor<T>( this, offset, size );
-		}
-		else
-		{
-			System.out.println("ArrayLocalizableByDimCursor.createRegionOfInterestCursor(): There is only one special cursor per cursor allowed.");
-			return null;
-		}
 	}
 	
 	@Override
