@@ -75,7 +75,11 @@ public class RegionOfInterestCursor<T extends Type<T>> extends AbstractIterableC
 	public boolean hasNext() { return i < numPixelsMinus1; }
 	
 	@Override
-	public void close()  { isActive = false; }
+	public void close()  
+	{
+		cursor.close();
+		isActive = false; 
+	}
 
 	@Override
 	public T type() { return cursor.type(); }

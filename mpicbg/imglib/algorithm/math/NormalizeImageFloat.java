@@ -20,7 +20,7 @@ public class NormalizeImageFloat <T extends RealType<T>> implements OutputAlgori
 	public static <T extends RealType<T>> double sumImage( final Image<T> image )
 	{
 		final RealSum sum = new RealSum();
-		final IterableCursor<T> cursor = image.createCursor();
+		final IterableCursor<T> cursor = image.createIterableCursor();
 		
 		while (cursor.hasNext())
 		{
