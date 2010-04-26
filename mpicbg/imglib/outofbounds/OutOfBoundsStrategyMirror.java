@@ -35,13 +35,13 @@ import mpicbg.imglib.type.Type;
 
 public class OutOfBoundsStrategyMirror<T extends Type<T>> extends OutOfBoundsStrategy<T>
 {
-	final LocalizableIterableCursor<T> parentCursor;
+	final PositionableCursor<T> parentCursor;
 	final PositionableCursor<T> mirrorCursor;
 	final T type, mirrorType;
 	final int numDimensions;
 	final int[] dimension, position, mirroredPosition, currentDirection, tmp;
 	
-	public OutOfBoundsStrategyMirror( final LocalizableIterableCursor<T> parentCursor )
+	public OutOfBoundsStrategyMirror( final PositionableCursor<T> parentCursor )
 	{
 		super( parentCursor );
 		

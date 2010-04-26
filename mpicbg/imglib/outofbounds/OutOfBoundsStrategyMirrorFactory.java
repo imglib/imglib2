@@ -30,12 +30,13 @@
 package mpicbg.imglib.outofbounds;
 
 import mpicbg.imglib.cursor.LocalizableIterableCursor;
+import mpicbg.imglib.cursor.PositionableCursor;
 import mpicbg.imglib.type.Type;
 
 public class OutOfBoundsStrategyMirrorFactory<T extends Type<T>> extends OutOfBoundsStrategyFactory<T>
 {
 	@Override
-	public OutOfBoundsStrategyMirror<T> createStrategy( final LocalizableIterableCursor<T> cursor )
+	public OutOfBoundsStrategyMirror<T> createStrategy( final PositionableCursor<T> cursor )
 	{
 		return new OutOfBoundsStrategyMirror<T>( cursor );
 	}

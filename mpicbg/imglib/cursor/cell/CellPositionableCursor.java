@@ -33,9 +33,6 @@ import mpicbg.imglib.container.array.Array;
 import mpicbg.imglib.container.cell.CellContainer;
 import mpicbg.imglib.cursor.PositionableCursor;
 import mpicbg.imglib.cursor.array.ArrayPositionableCursor;
-import mpicbg.imglib.cursor.special.LocalNeighborhoodCursor;
-import mpicbg.imglib.cursor.special.LocalNeighborhoodCursorFactory;
-import mpicbg.imglib.cursor.special.RegionOfInterestCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.location.RasterLocalizable;
 import mpicbg.imglib.location.RasterPositionable;
@@ -152,36 +149,6 @@ public class CellPositionableCursor<T extends Type<T>> extends CellLocalizableCu
 		type.updateContainer( this );
 	}
 	
-	@Override
-	public synchronized LocalNeighborhoodCursor<T> createLocalNeighborhoodCursor()
-	{
-		if ( numNeighborhoodCursors == 0)
-		{
-			++numNeighborhoodCursors;
-			return LocalNeighborhoodCursorFactory.createLocalNeighborhoodCursor( this );
-		}
-		else
-		{
-			System.out.println("CellLocalizableByDimCursor.createLocalNeighborhoodCursor(): There is only one special cursor per cursor allowed.");
-			return null;
-		}
-	}
-
-	@Override
-	public synchronized RegionOfInterestCursor<T> createRegionOfInterestCursor( final int[] offset, final int[] size )
-	{
-		if ( numNeighborhoodCursors == 0)
-		{
-			++numNeighborhoodCursors;
-			return new RegionOfInterestCursor<T>( this, offset, size );
-		}
-		else
-		{
-			System.out.println("CellLocalizableByDimCursor.createRegionOfInterestCursor(): There is only one special cursor per cursor allowed.");
-			return null;
-		}
-	}
-
 	@Override
 	public void reset()
 	{

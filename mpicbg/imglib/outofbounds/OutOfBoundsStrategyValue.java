@@ -30,13 +30,14 @@
 package mpicbg.imglib.outofbounds;
 
 import mpicbg.imglib.cursor.IterableCursor;
+import mpicbg.imglib.cursor.PositionableCursor;
 import mpicbg.imglib.type.Type;
 
 public class OutOfBoundsStrategyValue<T extends Type<T>> extends OutOfBoundsStrategy<T>
 {
 	final T value;
 	
-	public OutOfBoundsStrategyValue( final IterableCursor<T> parentCursor, final T value )
+	public OutOfBoundsStrategyValue( final PositionableCursor<T> parentCursor, final T value )
 	{
 		super( parentCursor );
 		this.value = value;

@@ -31,11 +31,12 @@ package mpicbg.imglib.outofbounds;
 
 import mpicbg.imglib.Factory;
 import mpicbg.imglib.cursor.LocalizableIterableCursor;
+import mpicbg.imglib.cursor.PositionableCursor;
 import mpicbg.imglib.type.Type;
 
 public abstract class OutOfBoundsStrategyFactory<T extends Type<T>> implements Factory
 {
-	public abstract OutOfBoundsStrategy<T> createStrategy( LocalizableIterableCursor<T> cursor ); 
+	public abstract OutOfBoundsStrategy<T> createStrategy( PositionableCursor<T> cursor ); 
 	
 	@Override
 	public String getErrorMessage()

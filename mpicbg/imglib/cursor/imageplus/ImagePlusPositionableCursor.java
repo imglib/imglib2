@@ -32,9 +32,6 @@ package mpicbg.imglib.cursor.imageplus;
 import mpicbg.imglib.container.array.Array;
 import mpicbg.imglib.container.imageplus.ImagePlusContainer;
 import mpicbg.imglib.cursor.PositionableCursor;
-import mpicbg.imglib.cursor.special.LocalNeighborhoodCursor;
-import mpicbg.imglib.cursor.special.LocalNeighborhoodCursorFactory;
-import mpicbg.imglib.cursor.special.RegionOfInterestCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.location.RasterLocalizable;
 import mpicbg.imglib.location.RasterPositionable;
@@ -56,36 +53,6 @@ public class ImagePlusPositionableCursor<T extends Type<T>> extends ImagePlusLoc
 		step = Array.createAllocationSteps( container.getDimensions() );
 		tmp = new int[ numDimensions ];
 	}	
-
-	@Override
-	public synchronized LocalNeighborhoodCursor<T> createLocalNeighborhoodCursor()
-	{
-		if ( numNeighborhoodCursors == 0)
-		{
-			++numNeighborhoodCursors;
-			return LocalNeighborhoodCursorFactory.createLocalNeighborhoodCursor( this );
-		}
-		else
-		{
-			System.out.println("ImagePlusLocalizableByDimCursor.createLocalNeighborhoodCursor(): There is only one special cursor per cursor allowed.");
-			return null;
-		}
-	}
-
-	@Override
-	public synchronized RegionOfInterestCursor<T> createRegionOfInterestCursor( final int[] offset, final int[] size )
-	{
-		if ( numNeighborhoodCursors == 0)
-		{
-			++numNeighborhoodCursors;
-			return new RegionOfInterestCursor<T>( this, offset, size );
-		}
-		else
-		{
-			System.out.println("ImagePlusLocalizableByDimCursor.createRegionOfInterestCursor(): There is only one special cursor per cursor allowed.");
-			return null;
-		}
-	}
 
 	@Override
 	public void fwd( final int dim )

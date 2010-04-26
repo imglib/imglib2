@@ -36,7 +36,7 @@ import mpicbg.imglib.type.numeric.RealType;
 
 public class OutOfBoundsStrategyMirrorExpWindowing<T extends RealType<T>> extends OutOfBoundsStrategy<T>
 {
-	final LocalizableIterableCursor<T> parentCursor;
+	final PositionableCursor<T> parentCursor;
 	final PositionableCursor<T> mirrorCursor;
 	final T type, mirrorType;
 	final int numDimensions;
@@ -45,7 +45,7 @@ public class OutOfBoundsStrategyMirrorExpWindowing<T extends RealType<T>> extend
 	final float[][] weights;
 	final float cutOff = 0.0001f;
 	
-	public OutOfBoundsStrategyMirrorExpWindowing( final LocalizableIterableCursor<T> parentCursor, final int[] fadeOutDistance, final float exponent )
+	public OutOfBoundsStrategyMirrorExpWindowing( final PositionableCursor<T> parentCursor, final int[] fadeOutDistance, final float exponent )
 	{
 		super( parentCursor );
 		

@@ -30,13 +30,14 @@
 package mpicbg.imglib.outofbounds;
 
 import mpicbg.imglib.cursor.IterableCursor;
+import mpicbg.imglib.cursor.PositionableCursor;
 import mpicbg.imglib.type.Type;
 
 public abstract class OutOfBoundsStrategy<T extends Type<T>>
 {
-	final IterableCursor<T> parentCursor;
+	final PositionableCursor<T> parentCursor;
 	
-	public OutOfBoundsStrategy( final IterableCursor<T> parentCursor )
+	public OutOfBoundsStrategy( final PositionableCursor<T> parentCursor )
 	{
 		this.parentCursor = parentCursor;
 	}
@@ -44,7 +45,7 @@ public abstract class OutOfBoundsStrategy<T extends Type<T>>
 	/**
 	 * @returns a link to the parent Cursor of this Strategy
 	 */
-	public IterableCursor<T> getParentCursor() { return parentCursor; }
+	public PositionableCursor<T> getParentCursor() { return parentCursor; }
 
 	/**
 	 * Fired by the parent cursor in case that it moves while being out of image bounds

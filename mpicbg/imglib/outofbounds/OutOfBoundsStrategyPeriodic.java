@@ -35,13 +35,13 @@ import mpicbg.imglib.type.Type;
 
 public class OutOfBoundsStrategyPeriodic<T extends Type<T>> extends OutOfBoundsStrategy<T>
 {
-	final LocalizableIterableCursor<T> parentCursor;
+	final PositionableCursor<T> parentCursor;
 	final PositionableCursor<T> circleCursor;
 	final T type, circleType;
 	final int numDimensions;
 	final int[] dimension, position, circledPosition;
 	
-	public OutOfBoundsStrategyPeriodic( final LocalizableIterableCursor<T> parentCursor )
+	public OutOfBoundsStrategyPeriodic( final PositionableCursor<T> parentCursor )
 	{
 		super( parentCursor );
 		

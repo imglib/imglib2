@@ -29,10 +29,8 @@ package mpicbg.imglib.cursor.shapelist;
 
 import mpicbg.imglib.container.shapelist.ShapeList;
 import mpicbg.imglib.cursor.AbstractIterableCursor;
+import mpicbg.imglib.cursor.LocalizableIterableCursor;
 import mpicbg.imglib.cursor.PositionableCursor;
-import mpicbg.imglib.cursor.special.LocalNeighborhoodCursor;
-import mpicbg.imglib.cursor.special.LocalNeighborhoodCursorFactory;
-import mpicbg.imglib.cursor.special.RegionOfInterestCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.location.RasterLocalizable;
 import mpicbg.imglib.location.RasterPositionable;
@@ -46,7 +44,7 @@ import mpicbg.imglib.type.Type;
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  * @version 0.1a
  */
-public class ShapeListPositionableCursor< T extends Type< T > > extends AbstractIterableCursor< T > implements PositionableCursor< T >
+public class ShapeListPositionableCursor< T extends Type< T > > extends AbstractIterableCursor< T > implements PositionableCursor< T >, LocalizableIterableCursor< T >
 {
 	final protected ShapeList< T > container;
 	
@@ -252,13 +250,6 @@ public class ShapeListPositionableCursor< T extends Type< T > > extends Abstract
 	{
 		for ( int d = 0; d < numDimensions; ++d )
 			position[ d ] = this.position[ d ];
-	}
-	
-	@Deprecated
-	@Override
-	public void getPosition( int[] position )
-	{
-		localize( position );
 	}
 	
 	@Override

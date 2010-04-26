@@ -99,13 +99,6 @@ public class DynamicLocalizableCursor<T extends Type<T>> extends DynamicCursor<T
 			position[ d ] = this.position[ d ];
 	}
 	
-	@Deprecated
-	@Override
-	public void getPosition( int[] position )
-	{
-		localize( position );
-	}
-	
 	@Override
 	public void localize( final long[] position )
 	{

@@ -30,6 +30,7 @@
 package mpicbg.imglib.outofbounds;
 
 import mpicbg.imglib.cursor.LocalizableIterableCursor;
+import mpicbg.imglib.cursor.PositionableCursor;
 import mpicbg.imglib.type.Type;
 
 public class OutOfBoundsStrategyValueFactory<T extends Type<T>> extends OutOfBoundsStrategyFactory<T>
@@ -50,7 +51,7 @@ public class OutOfBoundsStrategyValueFactory<T extends Type<T>> extends OutOfBou
 	public T getValue() { return value; }
 	
 	@Override
-	public OutOfBoundsStrategyValue<T> createStrategy( final LocalizableIterableCursor<T> cursor )
+	public OutOfBoundsStrategyValue<T> createStrategy( final PositionableCursor<T> cursor )
 	{
 		if ( value == null )
 			return new OutOfBoundsStrategyValue<T>( cursor, cursor.getImage().createType() );
