@@ -36,9 +36,9 @@ import ij.ImagePlus;
 import mpicbg.imglib.container.AbstractDirectAccessContainer;
 import mpicbg.imglib.container.Container;
 import mpicbg.imglib.container.basictypecontainer.array.ArrayDataAccess;
-import mpicbg.imglib.cursor.Cursor;
+import mpicbg.imglib.cursor.IterableCursor;
 import mpicbg.imglib.cursor.PositionableCursor;
-import mpicbg.imglib.cursor.LocalizableCursor;
+import mpicbg.imglib.cursor.LocalizableIterableCursor;
 import mpicbg.imglib.cursor.LocalizablePlaneCursor;
 import mpicbg.imglib.cursor.imageplus.ImagePlusCursor;
 import mpicbg.imglib.cursor.imageplus.ImagePlusPositionableCursor;
@@ -91,7 +91,7 @@ public class ImagePlusContainer<T extends Type<T>, A extends ArrayDataAccess<A>>
 	}
 
 	@Override
-	public A update( final Cursor<?> c ) { return mirror.get( ((ImagePlusCursor<?>)c).getStorageIndex() ); }
+	public A update( final IterableCursor<?> c ) { return mirror.get( ((ImagePlusCursor<?>)c).getStorageIndex() ); }
 	
 	protected static int[] getCorrectDimensionality( final ImagePlus imp )
 	{
@@ -128,13 +128,13 @@ public class ImagePlusContainer<T extends Type<T>, A extends ArrayDataAccess<A>>
 	}	
 
 	@Override
-	public Cursor<T> createCursor( final Image<T> image ) 
+	public IterableCursor<T> createIterableCursor( final Image<T> image ) 
 	{
 		return new ImagePlusCursor<T>( this, image, linkedType.duplicateTypeOnSameDirectAccessContainer() );
 	}
 
 	@Override
-	public LocalizableCursor<T> createLocalizableCursor( final Image<T> image ) 
+	public LocalizableIterableCursor<T> createLocalizableCursor( final Image<T> image ) 
 	{
 		return new ImagePlusLocalizableCursor<T>( this, image, linkedType.duplicateTypeOnSameDirectAccessContainer() );
 	}

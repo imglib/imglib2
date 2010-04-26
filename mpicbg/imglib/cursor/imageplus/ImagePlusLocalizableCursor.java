@@ -30,11 +30,11 @@
 package mpicbg.imglib.cursor.imageplus;
 
 import mpicbg.imglib.container.imageplus.ImagePlusContainer;
-import mpicbg.imglib.cursor.LocalizableCursor;
+import mpicbg.imglib.cursor.LocalizableIterableCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.type.Type;
 
-public class ImagePlusLocalizableCursor<T extends Type<T>> extends ImagePlusCursor<T> implements LocalizableCursor<T>
+public class ImagePlusLocalizableCursor<T extends Type<T>> extends ImagePlusCursor<T> implements LocalizableIterableCursor<T>
 {
 	final protected int numDimensions; 	
 	final protected int[] position, dimensions;

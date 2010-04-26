@@ -28,9 +28,9 @@ import mpicbg.imglib.algorithm.fft.FourierTransform.Rearrangement;
 import mpicbg.imglib.algorithm.gauss.GaussianConvolution;
 import mpicbg.imglib.algorithm.math.MathLib;
 import mpicbg.imglib.container.ContainerFactory;
-import mpicbg.imglib.cursor.Cursor;
+import mpicbg.imglib.cursor.IterableCursor;
 import mpicbg.imglib.cursor.PositionableCursor;
-import mpicbg.imglib.cursor.LocalizableCursor;
+import mpicbg.imglib.cursor.LocalizableIterableCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.ImageFactory;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyValueFactory;
@@ -123,7 +123,7 @@ public class FourierConvolution<T extends RealType<T>, S extends RealType<S>> im
 		
 		final Image<FloatType> kernelImg = new ImageFactory<FloatType>( new FloatType(), factory ).createImage( imageSize );
 		
-		final LocalizableCursor<FloatType> cursor = kernelImg.createPositionableCursor();
+		final LocalizableIterableCursor<FloatType> cursor = kernelImg.createLocalizableCursor();
 		final int[] position = new int[ numDimensions ];
 		
 		while ( cursor.hasNext() )
@@ -242,7 +242,7 @@ public class FourierConvolution<T extends RealType<T>, S extends RealType<S>> im
 			// copy the kernel into the kernelTemplate,
 			// the key here is that the center pixel of the kernel (e.g. 13,13,13)
 			// is located at (0,0,0)
-			final LocalizableCursor<S> kernelCursor = kernel.createLocalizableCursor();
+			final LocalizableIterableCursor<S> kernelCursor = kernel.createLocalizableCursor();
 			final PositionableCursor<S> kernelTemplateCursor = kernelTemplate.createPositionableCursor();
 			
 			final int[] position = new int[ numDimensions ];
@@ -287,8 +287,8 @@ public class FourierConvolution<T extends RealType<T>, S extends RealType<S>> im
 		//
 		// Multiply in Fourier Space
 		//
-		final Cursor<ComplexFloatType> cursorImgFFT = imgFFT.createCursor();
-		final Cursor<ComplexFloatType> cursorKernelFFT = kernelFFT.createCursor();
+		final IterableCursor<ComplexFloatType> cursorImgFFT = imgFFT.createIterableCursor();
+		final IterableCursor<ComplexFloatType> cursorKernelFFT = kernelFFT.createIterableCursor();
 		
 		while ( cursorImgFFT.hasNext() )
 		{

@@ -25,14 +25,12 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  *
- * @author Stephan Preibisch & Stephan Saalfeld
  */
 package mpicbg.imglib.cursor;
 
 import mpicbg.imglib.location.LocalizablePlane;
 import mpicbg.imglib.type.Type;
 
-public interface LocalizablePlaneCursor<T extends Type<T>> extends  Cursor<T>, LocalizablePlane
+public interface LocalizablePlaneCursor<T extends Type<T>> extends  IterableCursor<T>, LocalizablePlane
 {
-
 }

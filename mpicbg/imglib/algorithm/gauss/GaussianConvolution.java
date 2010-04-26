@@ -27,7 +27,7 @@ import mpicbg.imglib.container.array.Array;
 import mpicbg.imglib.container.basictypecontainer.FloatAccess;
 import mpicbg.imglib.container.basictypecontainer.array.FloatArray;
 import mpicbg.imglib.cursor.PositionableCursor;
-import mpicbg.imglib.cursor.LocalizableCursor;
+import mpicbg.imglib.cursor.LocalizableIterableCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.multithreading.SimpleMultiThreading;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
@@ -167,7 +167,7 @@ public class GaussianConvolution< T extends NumericType<T>> implements MultiThre
 	                	//System.out.println("Thread " + myNumber + " folds in dimension " + currentDim);
 
 	                	final PositionableCursor<T> inputIterator;
-	                	final LocalizableCursor<T> outputIterator;
+	                	final LocalizableIterableCursor<T> outputIterator;
 	                	
 	                	if ( numDimensions % 2 == 0 ) // even number of dimensions ( 2d, 4d, 6d, ... )
 	                	{
@@ -239,7 +239,7 @@ public class GaussianConvolution< T extends NumericType<T>> implements MultiThre
         return true;
 	}
 	
-	protected void convolve( final PositionableCursor<T> inputIterator, final LocalizableCursor<T> outputIterator, 
+	protected void convolve( final PositionableCursor<T> inputIterator, final LocalizableIterableCursor<T> outputIterator, 
 															   final int dim, final float[] kernel,
 															   final long startPos, final long loopSize )
 	{		

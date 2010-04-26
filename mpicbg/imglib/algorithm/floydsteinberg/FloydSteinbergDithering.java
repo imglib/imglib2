@@ -23,7 +23,7 @@ import mpicbg.imglib.algorithm.OutputAlgorithm;
 import mpicbg.imglib.algorithm.math.MathLib;
 import mpicbg.imglib.container.array.ArrayContainerFactory;
 import mpicbg.imglib.cursor.PositionableCursor;
-import mpicbg.imglib.cursor.LocalizableCursor;
+import mpicbg.imglib.cursor.LocalizableIterableCursor;
 import mpicbg.imglib.cursor.array.ArrayLocalizableCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.ImageFactory;
@@ -78,12 +78,12 @@ public class FloydSteinbergDithering<T extends RealType<T>> implements OutputAlg
 		// we create a Cursor that traverses (top -> bottom) and (left -> right) in n dimensions,
 		// which is a Cursor on a normal Array, therefore we use a FakeArray which just gives us position
 		// information without allocating memory
-		final LocalizableCursor<FakeType> cursor = ArrayLocalizableCursor.createLinearCursor( dim );
+		final LocalizableIterableCursor<FakeType> cursor = ArrayLocalizableCursor.createLinearCursor( dim );
 
 		// we also need a Cursors for the input, the output and the kernel image
 		final PositionableCursor<T> cursorInput = img.createPositionableCursor( new OutOfBoundsStrategyValueFactory<T>() );
 		final PositionableCursor<BitType> cursorOutput = result.createPositionableCursor();
-		final LocalizableCursor<FloatType> cursorKernel = errorDiffusionKernel.createLocalizableCursor();
+		final LocalizableIterableCursor<FloatType> cursorKernel = errorDiffusionKernel.createLocalizableCursor();
 		
 		while( cursor.hasNext() )
 		{
@@ -199,7 +199,7 @@ public class FloydSteinbergDithering<T extends RealType<T>> implements OutputAlg
 		else
 		{
 			final Image<FloatType> kernel = factory.createImage( MathLib.getArrayFromValue( 3, numDimensions) );				
-			final LocalizableCursor<FloatType> cursor = kernel.createLocalizableCursor();
+			final LocalizableIterableCursor<FloatType> cursor = kernel.createLocalizableCursor();
 			
 			final int numValues = (int)kernel.getNumPixels() / 2;
 			final float[] rndValues = new float[ numValues ];

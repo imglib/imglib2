@@ -1,11 +1,11 @@
 package mpicbg.imglib.cursor.dynamic;
 
 import mpicbg.imglib.container.dynamic.DynamicContainer;
-import mpicbg.imglib.cursor.LocalizableCursor;
+import mpicbg.imglib.cursor.LocalizableIterableCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.type.Type;
 
-public class DynamicLocalizableCursor<T extends Type<T>> extends DynamicCursor<T> implements LocalizableCursor<T>
+public class DynamicLocalizableCursor<T extends Type<T>> extends DynamicCursor<T> implements LocalizableIterableCursor<T>
 {
 	final protected int numDimensions; 	
 	final protected int[] position, dimensions;

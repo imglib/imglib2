@@ -39,8 +39,9 @@ import mpicbg.imglib.algorithm.math.MathLib;
 import mpicbg.imglib.container.Container;
 import mpicbg.imglib.container.ContainerFactory;
 import mpicbg.imglib.cursor.Cursor;
+import mpicbg.imglib.cursor.IterableCursor;
 import mpicbg.imglib.cursor.PositionableCursor;
-import mpicbg.imglib.cursor.LocalizableCursor;
+import mpicbg.imglib.cursor.LocalizableIterableCursor;
 import mpicbg.imglib.cursor.LocalizablePlaneCursor;
 import mpicbg.imglib.cursor.array.ArrayLocalizableCursor;
 import mpicbg.imglib.image.display.Display;
@@ -174,24 +175,24 @@ public class Image<T extends Type<T>> implements ImageProperties, Dimensions, It
 	public T createType() { return imageFactory.createType(); }
 	
 	/**
-	 * Return a {@link Cursor} that will traverse the image's pixel data in a memory-optimized fashion.
-	 * @return Cursor<T> - the typed {@link Cursor}
+	 * Return a {@link IterableCursor} that will traverse the image's pixel data in a memory-optimized fashion.
+	 * @return IterableCursor<T> - the typed {@link IterableCursor}
 	 */
-	public Cursor<T> createCursor()
+	public IterableCursor<T> createIterableCursor()
 	{
-		Cursor<T> cursor = container.createCursor( this );
+		IterableCursor< T > cursor = container.createIterableCursor( this );
 		addCursor( cursor );
 		return cursor;	
 	}
 	
 	/**
-	 * Return a {@link LocalizableCursor} that will traverse the image's pixel data in a memory-optimized fashion 
+	 * Return a {@link LocalizableIterableCursor} that will traverse the image's pixel data in a memory-optimized fashion 
 	 * and keeps track of its position
-	 * @return LocalizableCursor<T> - the typed {@link LocalizableCursor}
+	 * @return LocalizableCursor<T> - the typed {@link LocalizableIterableCursor}
 	 */
-	public LocalizableCursor<T> createLocalizableCursor()
+	public LocalizableIterableCursor<T> createLocalizableCursor()
 	{
-		LocalizableCursor<T> cursor = container.createLocalizableCursor( this );
+		LocalizableIterableCursor<T> cursor = container.createLocalizableCursor( this );
 		addCursor( cursor );
 		return cursor;		
 	}
@@ -338,8 +339,8 @@ public class Image<T extends Type<T>> implements ImageProperties, Dimensions, It
 	{
 		final Image<T> clone = this.createNewImage();
 		
-		final Cursor<T> c1 = this.createCursor();
-		final Cursor<T> c2 = clone.createCursor();
+		final IterableCursor<T> c1 = this.createIterableCursor();
+		final IterableCursor<T> c2 = clone.createIterableCursor();
 		
 		while ( c1.hasNext() )
 		{
@@ -453,7 +454,7 @@ public class Image<T extends Type<T>> implements ImageProperties, Dimensions, It
 	}
 
 	@Override
-	public Iterator<T> iterator() { return this.createCursor(); }
+	public Iterator<T> iterator() { return this.createIterableCursor(); }
 
 	public T[] toArray()
 	{

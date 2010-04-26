@@ -31,16 +31,14 @@ package mpicbg.imglib.cursor;
 
 import mpicbg.imglib.container.Container;
 import mpicbg.imglib.image.Image;
-import mpicbg.imglib.location.Iterator;
-import mpicbg.imglib.location.VoidIterator;
 import mpicbg.imglib.type.Type;
 
 /**
  * We use the class {@link AbstractCursor} instead of implementing methods here so that other classes can
- * only implement {@link Cursor} and extend other classes instead. As each {@link AbstractCursor} is also
- * a {@link Cursor} there are no disadvantages for the {@link Cursor} implementations.
+ * only implement {@link IterableCursor} and extend other classes instead. As each {@link AbstractCursor} is also
+ * a {@link IterableCursor} there are no disadvantages for the {@link IterableCursor} implementations.
  * 
- * @author Stephan
+ * @author Stephan Preibishc and Stephan Saalfeld
  *
  * @param <T>
  */
@@ -49,13 +47,13 @@ public abstract class AbstractCursor<T extends Type<T>> implements Cursor<T>
 	final protected Image<T> image;
 	final protected Container<T> container;
 	protected boolean isClosed = false;
-	
-	protected Iterator< ? > linkedIterator = VoidIterator.getInstance();
+	final protected int numDimensions;
 	
 	public AbstractCursor( final Container<T> container, final Image<T> image )
 	{
 		this.image = image;
 		this.container = container;
+		numDimensions = image.numDimensions();
 	}
 
 	@Override
@@ -68,31 +66,4 @@ public abstract class AbstractCursor<T extends Type<T>> implements Cursor<T>
 	public Image<T> getImage() { return image; }
 	@Override
 	public boolean isActive() { return !isClosed; }
-	
-	@Override
-	public void remove() {}
-	
-	@Override
-	public T next(){ fwd(); return type(); }
-
-	@Override
-	public void jumpFwd( final long steps )
-	{ 
-		for ( long j = 0; j < steps; ++j )
-			fwd();
-	}
-	
-	@Override
-	public boolean hasNextLinked(){ return hasNext() && linkedIterator.hasNext(); }
-
-	@Override
-	final public void linkIterator( final Iterator< ? > iterable ){ linkedIterator = iterable; }
-	
-	@Override
-	final public Iterator< ? > unlinkIterator()
-	{
-		final Iterator< ? > iterable = linkedIterator;
-		linkedIterator = VoidIterator.getInstance();
-		return iterable;
-	}
 }

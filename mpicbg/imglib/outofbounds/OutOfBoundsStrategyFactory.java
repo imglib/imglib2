@@ -30,12 +30,12 @@
 package mpicbg.imglib.outofbounds;
 
 import mpicbg.imglib.Factory;
-import mpicbg.imglib.cursor.LocalizableCursor;
+import mpicbg.imglib.cursor.LocalizableIterableCursor;
 import mpicbg.imglib.type.Type;
 
 public abstract class OutOfBoundsStrategyFactory<T extends Type<T>> implements Factory
 {
-	public abstract OutOfBoundsStrategy<T> createStrategy( LocalizableCursor<T> cursor ); 
+	public abstract OutOfBoundsStrategy<T> createStrategy( LocalizableIterableCursor<T> cursor ); 
 	
 	@Override
 	public String getErrorMessage()

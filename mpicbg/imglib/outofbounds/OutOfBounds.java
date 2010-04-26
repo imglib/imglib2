@@ -27,34 +27,57 @@
  *
  * @author Stephan Preibisch & Stephan Saalfeld
  */
-package mpicbg.imglib.container;
+package mpicbg.imglib.outofbounds;
 
-import mpicbg.imglib.Dimensions;
 import mpicbg.imglib.cursor.IterableCursor;
-import mpicbg.imglib.cursor.PositionableCursor;
-import mpicbg.imglib.cursor.LocalizableIterableCursor;
-import mpicbg.imglib.cursor.LocalizablePlaneCursor;
-import mpicbg.imglib.image.Image;
-import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
 import mpicbg.imglib.type.Type;
 
-public interface Container<T extends Type<T>> extends Dimensions
+public abstract class OutOfBounds<T extends Type<T>>
 {
-	public IterableCursor<T> createIterableCursor( Image<T> image );
-	public LocalizableIterableCursor<T> createLocalizableCursor( Image<T> image );
-	public LocalizablePlaneCursor<T> createLocalizablePlaneCursor( Image<T> image );
-	public PositionableCursor<T> createPositionableCursor( Image<T> image );
-	public PositionableCursor<T> createPositionableCursor( Image<T> image, OutOfBoundsStrategyFactory<T> outOfBoundsFactory );
+	final IterableCursor<T> parentCursor;
 	
-	public void close();
+	public OutOfBounds( final IterableCursor<T> parentCursor )
+	{
+		this.parentCursor = parentCursor;
+	}
+	
+	/**
+	 * @returns a link to the parent Cursor of this Strategy
+	 */
+	public IterableCursor<T> getParentCursor() { return parentCursor; }
 
-	public ContainerFactory getFactory();
-	
-	public long getId();
-	
-	public long getNumPixels();
-		
-	public boolean compareStorageContainerDimensions( final Container<?> img );
-	public boolean compareStorageContainerCompatibility( final Container<?> img );
+	/**
+	 * Fired by the parent cursor in case that it moves while being out of image bounds
+	 */
+	public abstract void notifyOutOfBOunds();
 
+	/**
+	 * Fired by the parent cursor in case that it moves while being out of image bounds
+	 */
+	public abstract void notifyOutOfBOunds( int steps, int dim );
+
+	/**
+	 * Fired by the parent cursor in case that it moves while being out of image bounds
+	 */
+	public abstract void notifyOutOfBOundsFwd( int dim );
+
+	/**
+	 * Fired by the parent cursor in case that it moves while being out of image bounds
+	 */
+	public abstract void notifyOutOfBoundsBck( int dim );
+	
+	/**
+	 * Fired by the parent cursor in case that it leaves image bounds
+	 */
+	public abstract void initOutOfBOunds();
+	
+	/**
+	 * @returns the Type that stores the current value of the OutOfBoundsStrategy
+	 */
+	public abstract T getType();
+	
+	/**
+	 * Closed possibly created cursors or images
+	 */
+	public abstract void close();
 }

@@ -28,7 +28,7 @@
 package mpicbg.imglib.cursor.shapelist;
 
 import mpicbg.imglib.container.shapelist.ShapeList;
-import mpicbg.imglib.cursor.AbstractCursor;
+import mpicbg.imglib.cursor.AbstractIterableCursor;
 import mpicbg.imglib.cursor.PositionableCursor;
 import mpicbg.imglib.cursor.special.LocalNeighborhoodCursor;
 import mpicbg.imglib.cursor.special.LocalNeighborhoodCursorFactory;
@@ -46,7 +46,7 @@ import mpicbg.imglib.type.Type;
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  * @version 0.1a
  */
-public class ShapeListPositionableCursor< T extends Type< T > > extends AbstractCursor< T > implements PositionableCursor< T >
+public class ShapeListPositionableCursor< T extends Type< T > > extends AbstractIterableCursor< T > implements PositionableCursor< T >
 {
 	private int numNeighborhoodCursors = 0;
 	 

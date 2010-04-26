@@ -18,7 +18,7 @@ package mpicbg.imglib.algorithm.transformation;
 
 import mpicbg.imglib.algorithm.OutputAlgorithm;
 import mpicbg.imglib.algorithm.math.MathLib;
-import mpicbg.imglib.cursor.LocalizableCursor;
+import mpicbg.imglib.cursor.LocalizableIterableCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.ImageFactory;
 import mpicbg.imglib.interpolation.Interpolator;
@@ -149,7 +149,7 @@ public class ImageTransform<T extends Type<T>> implements OutputAlgorithm<T>
 		// create the new output image
 		transformed = outputImageFactory.createImage( newDim );
 
-		final LocalizableCursor<T> transformedIterator = transformed.createLocalizableCursor();
+		final LocalizableIterableCursor<T> transformedIterator = transformed.createLocalizableCursor();
 		final Interpolator<T> interpolator = img.createInterpolator( interpolatorFactory );
 		
 		try

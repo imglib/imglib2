@@ -30,11 +30,11 @@
 package mpicbg.imglib.cursor.array;
 
 import mpicbg.imglib.container.array.Array;
-import mpicbg.imglib.cursor.AbstractCursor;
+import mpicbg.imglib.cursor.AbstractIterableCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.type.Type;
 
-public class ArrayCursor<T extends Type<T>> extends AbstractCursor<T>
+public class ArrayCursor<T extends Type<T>> extends AbstractIterableCursor<T>
 {
 	protected final T type;
 	protected final Array<T,?> container;

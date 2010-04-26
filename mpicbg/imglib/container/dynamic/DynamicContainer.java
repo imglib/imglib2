@@ -83,7 +83,7 @@ public abstract class DynamicContainer<T extends Type<T>, A extends DynamicConta
 	public long getNumPixels() { return numPixels; }
 
 	@Override
-	public DynamicCursor<T> createCursor( final Image<T> image )
+	public DynamicCursor<T> createIterableCursor( final Image<T> image )
 	{
 		// create a Cursor using a Type that is linked to the container
 		return new DynamicCursor<T>( this, image, linkedType.duplicateTypeOnSameDirectAccessContainer() );

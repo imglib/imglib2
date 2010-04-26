@@ -29,13 +29,10 @@
  */
 package mpicbg.imglib.cursor;
 
-import mpicbg.imglib.cursor.special.LocalNeighborhoodCursor;
-import mpicbg.imglib.cursor.special.RegionOfInterestCursor;
 import mpicbg.imglib.location.LinkableRasterPositionable;
+import mpicbg.imglib.location.RasterLocalizable;
 import mpicbg.imglib.type.Type;
 
-public interface PositionableCursor<T extends Type<T>> extends LocalizableCursor<T>, LinkableRasterPositionable
-{
-	public LocalNeighborhoodCursor<T> createLocalNeighborhoodCursor();	
-	public RegionOfInterestCursor<T> createRegionOfInterestCursor( final int[] offset, final int[] size );	
+public interface PositionableCursor<T extends Type<T>> extends Cursor<T>, RasterLocalizable, LinkableRasterPositionable
+{		
 }

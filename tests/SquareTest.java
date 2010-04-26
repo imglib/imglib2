@@ -11,7 +11,7 @@ import javax.swing.JFileChooser;
 import mpicbg.imglib.container.Container;
 import mpicbg.imglib.container.array.ArrayContainerFactory;
 import mpicbg.imglib.container.imageplus.ImagePlusContainer;
-import mpicbg.imglib.cursor.Cursor;
+import mpicbg.imglib.cursor.IterableCursor;
 import mpicbg.imglib.exception.ImgLibException;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.display.imagej.ImageJFunctions;
@@ -48,8 +48,8 @@ public class SquareTest {
     //Image<T> outputImage = factory.createImage(new int[] {512, 512});
     Image<T> outputImage = inputImage.createNewImage();
 
-    Cursor<T> inputCursor = inputImage.createCursor();
-    Cursor<T> outputCursor = outputImage.createCursor();
+    IterableCursor<T> inputCursor = inputImage.createIterableCursor();
+    IterableCursor<T> outputCursor = outputImage.createIterableCursor();
     while (inputCursor.hasNext()) {
       inputCursor.fwd();
       outputCursor.fwd();
@@ -88,6 +88,8 @@ public class SquareTest {
       imp = ImageJFunctions.copyToImagePlus(img);
     }
     if (title != null) imp.setTitle(title);
+    img.getDisplay().setMinMax();
+    imp.getProcessor().setMinAndMax( img.getDisplay().getMin(), img.getDisplay().getMax() );
     imp.show();
   }
   

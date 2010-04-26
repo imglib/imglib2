@@ -29,12 +29,12 @@
  */
 package mpicbg.imglib.location;
 
-import mpicbg.imglib.cursor.Cursor;
+import mpicbg.imglib.cursor.IterableCursor;
 import mpicbg.imglib.cursor.PositionableCursor;
 
 /**
  * The {@link RasterLocalizable} interface can localize itself in an n-dimensional
- * discrete space.  Not only {@link Cursor}s can use this 
+ * discrete space.  Not only {@link IterableCursor}s can use this 
  * interface, it might be used by much more classes as {@link PositionableCursor}s
  * can take any {@link RasterLocalizable} as input for where they should move to.
  *  

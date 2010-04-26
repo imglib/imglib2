@@ -30,7 +30,7 @@
 package mpicbg.imglib.outofbounds;
 
 import mpicbg.imglib.algorithm.math.MathLib;
-import mpicbg.imglib.cursor.LocalizableCursor;
+import mpicbg.imglib.cursor.LocalizableIterableCursor;
 import mpicbg.imglib.type.numeric.RealType;
 
 public class OutOfBoundsStrategyMirrorExpWindowingFactory<T extends RealType<T>> extends OutOfBoundsStrategyFactory<T>
@@ -74,7 +74,7 @@ public class OutOfBoundsStrategyMirrorExpWindowingFactory<T extends RealType<T>>
 	public int[] getFadeOutDistance() { return fadeOutDistance.clone(); }
 
 	@Override
-	public OutOfBoundsStrategyMirrorExpWindowing<T> createStrategy( final LocalizableCursor<T> cursor )
+	public OutOfBoundsStrategyMirrorExpWindowing<T> createStrategy( final LocalizableIterableCursor<T> cursor )
 	{
 		if ( Float.isNaN(commonRelativeDistanceFadeOut) )
 		{					

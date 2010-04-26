@@ -30,13 +30,15 @@
 package mpicbg.imglib.cursor.special;
 
 import mpicbg.imglib.container.Container;
-import mpicbg.imglib.cursor.AbstractCursor;
+import mpicbg.imglib.cursor.AbstractIterableCursor;
 import mpicbg.imglib.cursor.PositionableCursor;
 import mpicbg.imglib.cursor.array.ArrayLocalizableCursor;
+import mpicbg.imglib.image.Image;
+import mpicbg.imglib.location.RasterLocalizable;
 import mpicbg.imglib.type.Type;
 import mpicbg.imglib.type.label.FakeType;
 
-public class LocalNeighborhoodCursor<T extends Type<T>> extends AbstractCursor<T>
+public class LocalNeighborhoodCursor<T extends Type<T>> extends AbstractIterableCursor<T>
 {
 	/**
 	 * Here we "misuse" a ArrayLocalizableCursor to iterate over cells,
@@ -44,20 +46,19 @@ public class LocalNeighborhoodCursor<T extends Type<T>> extends AbstractCursor<T
 	 */
 	final ArrayLocalizableCursor<FakeType> neigborhoodCursor;
 
-	final PositionableCursor<T> cursor;
-	final int[] position, tmp;
-	final int numDimensions, centralPositionIndex;
+	final RasterLocalizable localizable;
+	final PositionableCursor< T > cursor;
+	
+	final int[] tmp;
+	final int centralPositionIndex;
 	boolean isActive, debug = false;
 	
-	public LocalNeighborhoodCursor( final PositionableCursor<T> cursor )
+	LocalNeighborhoodCursor( final RasterLocalizable localizable, final Image< T > image )
 	{
-		super( cursor.getImage().getContainer(), cursor.getImage() );
+		super( image.getContainer(), image );
 		
-		numDimensions = cursor.getImage().numDimensions();
-		
-		this.cursor = cursor;
-		position = new int[ numDimensions ];
-		cursor.localize( position );
+		this.localizable = localizable;
+		cursor = image.createPositionableCursor();
 		
 		tmp = new int[ numDimensions ];
 				
@@ -84,19 +85,13 @@ public class LocalNeighborhoodCursor<T extends Type<T>> extends AbstractCursor<T
 		isActive = false;
 	}
 
-	public void update()
-	{
-		cursor.localize( position );
-		this.neigborhoodCursor.reset();		
-	}
-
 	@Override
 	public T type() { return cursor.type(); }
 	
 	@Override
 	public void reset()
 	{
-		cursor.setPosition( position );
+		cursor.setPosition( localizable );
 		this.neigborhoodCursor.reset();
 		
 		linkedIterator.reset();

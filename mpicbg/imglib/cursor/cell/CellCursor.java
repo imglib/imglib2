@@ -31,11 +31,11 @@ package mpicbg.imglib.cursor.cell;
 
 import mpicbg.imglib.container.cell.Cell;
 import mpicbg.imglib.container.cell.CellContainer;
-import mpicbg.imglib.cursor.AbstractCursor;
+import mpicbg.imglib.cursor.AbstractIterableCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.type.Type;
 
-public class CellCursor<T extends Type<T>> extends AbstractCursor<T>
+public class CellCursor<T extends Type<T>> extends AbstractIterableCursor<T>
 {
 	final protected T type;
 	

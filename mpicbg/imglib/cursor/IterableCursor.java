@@ -32,7 +32,7 @@ package mpicbg.imglib.cursor;
 import mpicbg.imglib.container.Container;
 import mpicbg.imglib.container.array.Array;
 import mpicbg.imglib.image.Image;
-import mpicbg.imglib.sampler.Sampler;
+import mpicbg.imglib.location.LinkableIterator;
 import mpicbg.imglib.type.Type;
 
 /**
@@ -40,18 +40,18 @@ import mpicbg.imglib.type.Type;
  * 
  * <h3>Implementation</h3>
  * 
- * The {@link Cursor} is responsible for iterating over the image. Therefore it has to be implemented 
+ * The {@link IterableCursor} is responsible for iterating over the image. Therefore it has to be implemented 
  * for each type of {@link Container} like {@link Array}, {@link CellContainer}, ... 
  * 
  * <h3>Type support</h3>
  * 
- * The {@link Cursor} does not know which {@link Type} of {@link Image} it is working on as there this
- * is not important for its positioning. It is typed to the {@link Type} so that the {@link Cursor} is
+ * The {@link IterableCursor} does not know which {@link Type} of {@link Image} it is working on as there this
+ * is not important for its positioning. It is typed to the {@link Type} so that the {@link IterableCursor} is
  * able to return the correct instance of {@link Type} when calling the getType() method.
  * 
  * <h3>Traversal policy</h3>
  * 
- * The {@link Cursor} class itself is only capable of iterating over all pixels of the {@link Image}, 
+ * The {@link IterableCursor} class itself is only capable of iterating over all pixels of the {@link Image}, 
  * there is no guaranteed order in which the pixels are iterated, this depends on the implementation for
  * the specific {@link Container}.
  * <p>
@@ -96,16 +96,8 @@ import mpicbg.imglib.type.Type;
  * 
  * @author Stephan Preibisch & Stephan Saalfeld
  *
- * @param <T> - the {@link Type} this {@link Cursor} works on
+ * @param <T> - the {@link Type} this {@link IterableCursor} works on
  */
-public interface Cursor< T extends Type< T > > extends Sampler< T >
+public interface IterableCursor< T extends Type< T > > extends Cursor< T >, LinkableIterator< T >
 {	
-	public boolean isActive();	
-
-	public Image<T> getImage();
-	
-	public int getArrayIndex();
-	public Container<T> getContainer();
-	
-	public void close();
 }

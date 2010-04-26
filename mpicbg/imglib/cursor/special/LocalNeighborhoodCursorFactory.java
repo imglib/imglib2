@@ -29,20 +29,38 @@
  */
 package mpicbg.imglib.cursor.special;
 
+import mpicbg.imglib.cursor.LocalizableCursor;
 import mpicbg.imglib.cursor.PositionableCursor;
+import mpicbg.imglib.image.Image;
+import mpicbg.imglib.location.Localizable;
 import mpicbg.imglib.type.Type;
 
 public class LocalNeighborhoodCursorFactory 
 {
-	public static <T extends Type<T>>LocalNeighborhoodCursor<T> createLocalNeighborhoodCursor( final PositionableCursor<T> cursor )
+	public static < T extends Type< T > >LocalNeighborhoodCursor<T> createLocalNeighborhoodCursor(
+			final Localizable localizable,
+			final Image< T > image )
 	{
-		if ( cursor.getImage().numDimensions() == 3 )
+		if ( image.numDimensions() == 3 )
 		{
-			return new LocalNeighborhoodCursor3D<T>( cursor );
+			return new LocalNeighborhoodCursor3D< T >( localizable, image );
 		}
 		else
 		{
-			return new LocalNeighborhoodCursor<T>( cursor );
+			return new LocalNeighborhoodCursor< T >( localizable, image );
+		}
+	}
+	
+	public static < T extends Type< T > >LocalNeighborhoodCursor<T> createLocalNeighborhoodCursor(
+			final LocalizableCursor< T > cursor )
+	{
+		if ( cursor.getImage().numDimensions() == 3 )
+		{
+			return new LocalNeighborhoodCursor3D< T >( cursor );
+		}
+		else
+		{
+			return new LocalNeighborhoodCursor< T >( cursor );
 		}
 	}
 }

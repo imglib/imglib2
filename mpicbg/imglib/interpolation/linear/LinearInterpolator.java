@@ -252,6 +252,7 @@ public class LinearInterpolator<T extends NumericType<T>> extends AbstractInterp
 		return tree[ 0 ][ 0 ];
 	}
 	
+	
 	/* LinkablePositionable */
 	
 	@Override

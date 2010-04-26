@@ -32,12 +32,12 @@ package mpicbg.imglib.cursor.array;
 import mpicbg.imglib.container.array.Array;
 import mpicbg.imglib.container.basictypecontainer.FakeAccess;
 import mpicbg.imglib.container.basictypecontainer.array.FakeArray;
-import mpicbg.imglib.cursor.LocalizableCursor;
+import mpicbg.imglib.cursor.LocalizableIterableCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.type.Type;
 import mpicbg.imglib.type.label.FakeType;
 
-public class ArrayLocalizableCursor<T extends Type<T>> extends ArrayCursor<T> implements LocalizableCursor<T>
+public class ArrayLocalizableCursor<T extends Type<T>> extends ArrayCursor<T> implements LocalizableIterableCursor<T>
 {
 	final protected int numDimensions; 	
 	final protected int[] position, dimensions;

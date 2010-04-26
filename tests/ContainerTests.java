@@ -12,9 +12,9 @@ import mpicbg.imglib.container.ContainerFactory;
 import mpicbg.imglib.container.array.ArrayContainerFactory;
 import mpicbg.imglib.container.cell.CellContainerFactory;
 import mpicbg.imglib.container.imageplus.ImagePlusContainerFactory;
-import mpicbg.imglib.cursor.Cursor;
+import mpicbg.imglib.cursor.IterableCursor;
 import mpicbg.imglib.cursor.PositionableCursor;
-import mpicbg.imglib.cursor.LocalizableCursor;
+import mpicbg.imglib.cursor.LocalizableIterableCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.ImageFactory;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyPeriodicFactory;
@@ -121,7 +121,7 @@ public class ContainerTests
 		final float[] reference = new float[ (int)img.getNumPixels() ];
 		
 		// iterate over image and reference array and fill with data
-		final Cursor<FloatType> cursor = img.createCursor();			
+		final IterableCursor<FloatType> cursor = img.createIterableCursor();			
 		int i = 0;
 		
 		while( cursor.hasNext() )
@@ -142,7 +142,7 @@ public class ContainerTests
 	{
 		boolean allEqual = true;
 		
-		final Cursor<FloatType> cursor = img.createCursor();
+		final IterableCursor<FloatType> cursor = img.createIterableCursor();
 		int i = 0;
 		
 		while( cursor.hasNext() )
@@ -170,8 +170,8 @@ public class ContainerTests
 		final float[] reference = createReference( img1 );
 		
 		// copy into a second image using simple cursors
-		final Cursor<FloatType> cursor1 = img1.createCursor();
-		final Cursor<FloatType> cursor2 = img2.createCursor();			
+		final IterableCursor<FloatType> cursor1 = img1.createIterableCursor();
+		final IterableCursor<FloatType> cursor2 = img2.createIterableCursor();			
 		
 		while( cursor1.hasNext() )
 		{
@@ -197,7 +197,7 @@ public class ContainerTests
 		cursor2.close();
 
 		// copy back into a second image using localizable and positionable cursors			
-		final LocalizableCursor<FloatType> localizableCursor1 = img1.createLocalizableCursor();			
+		final LocalizableIterableCursor<FloatType> localizableCursor1 = img1.createLocalizableCursor();			
 		final PositionableCursor<FloatType> positionableCursor2 = img2.createPositionableCursor();			
 		
 		int i = 0;

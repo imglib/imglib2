@@ -27,34 +27,20 @@
  *
  * @author Stephan Preibisch & Stephan Saalfeld
  */
-package mpicbg.imglib.container;
+package mpicbg.imglib.cursor;
 
-import mpicbg.imglib.Dimensions;
 import mpicbg.imglib.cursor.IterableCursor;
-import mpicbg.imglib.cursor.PositionableCursor;
-import mpicbg.imglib.cursor.LocalizableIterableCursor;
-import mpicbg.imglib.cursor.LocalizablePlaneCursor;
-import mpicbg.imglib.image.Image;
-import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
+import mpicbg.imglib.location.RasterLocalizable;
 import mpicbg.imglib.type.Type;
 
-public interface Container<T extends Type<T>> extends Dimensions
+/**
+ * 
+ * @param <T>
+ *
+ * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
+ */
+
+public interface LocalizableIterableCursor<T extends Type< T > > extends
+		LocalizableCursor< T >, IterableCursor<T>, RasterLocalizable
 {
-	public IterableCursor<T> createIterableCursor( Image<T> image );
-	public LocalizableIterableCursor<T> createLocalizableCursor( Image<T> image );
-	public LocalizablePlaneCursor<T> createLocalizablePlaneCursor( Image<T> image );
-	public PositionableCursor<T> createPositionableCursor( Image<T> image );
-	public PositionableCursor<T> createPositionableCursor( Image<T> image, OutOfBoundsStrategyFactory<T> outOfBoundsFactory );
-	
-	public void close();
-
-	public ContainerFactory getFactory();
-	
-	public long getId();
-	
-	public long getNumPixels();
-		
-	public boolean compareStorageContainerDimensions( final Container<?> img );
-	public boolean compareStorageContainerCompatibility( final Container<?> img );
-
 }

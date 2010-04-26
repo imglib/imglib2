@@ -102,7 +102,7 @@ public class ShapeList< T extends Type< T > > extends AbstractContainer< T >
 	public ShapeListContainerFactory getFactory() { return factory; }
 	
 	@Override
-	public ShapeListPositionableCursor< T > createCursor( final Image< T > image ) 
+	public ShapeListPositionableCursor< T > createIterableCursor( final Image< T > image ) 
 	{ 
 		return createPositionableCursor( image );
 	}

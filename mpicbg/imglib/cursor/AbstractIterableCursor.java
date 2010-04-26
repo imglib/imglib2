@@ -27,34 +27,56 @@
  *
  * @author Stephan Preibisch & Stephan Saalfeld
  */
-package mpicbg.imglib.container;
+package mpicbg.imglib.cursor;
 
-import mpicbg.imglib.Dimensions;
-import mpicbg.imglib.cursor.IterableCursor;
-import mpicbg.imglib.cursor.PositionableCursor;
-import mpicbg.imglib.cursor.LocalizableIterableCursor;
-import mpicbg.imglib.cursor.LocalizablePlaneCursor;
+import mpicbg.imglib.container.Container;
 import mpicbg.imglib.image.Image;
-import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
+import mpicbg.imglib.location.Iterator;
+import mpicbg.imglib.location.VoidIterator;
 import mpicbg.imglib.type.Type;
 
-public interface Container<T extends Type<T>> extends Dimensions
+/**
+ * We use the class {@link AbstractIterableCursor} instead of implementing methods here so that other classes can
+ * only implement {@link IterableCursor} and extend other classes instead. As each {@link AbstractIterableCursor} is also
+ * a {@link IterableCursor} there are no disadvantages for the {@link IterableCursor} implementations.
+ * 
+ * @author Stephan Preibisch and Stephan Saalfeld
+ *
+ * @param <T>
+ */
+public abstract class AbstractIterableCursor< T extends Type< T > > extends AbstractCursor< T > implements IterableCursor< T >
 {
-	public IterableCursor<T> createIterableCursor( Image<T> image );
-	public LocalizableIterableCursor<T> createLocalizableCursor( Image<T> image );
-	public LocalizablePlaneCursor<T> createLocalizablePlaneCursor( Image<T> image );
-	public PositionableCursor<T> createPositionableCursor( Image<T> image );
-	public PositionableCursor<T> createPositionableCursor( Image<T> image, OutOfBoundsStrategyFactory<T> outOfBoundsFactory );
+	protected Iterator< ? > linkedIterator = VoidIterator.getInstance();
 	
-	public void close();
+	public AbstractIterableCursor( final Container<T> container, final Image<T> image )
+	{
+		super( container, image );
+	}
 
-	public ContainerFactory getFactory();
+	@Override
+	public void remove() {}
 	
-	public long getId();
-	
-	public long getNumPixels();
-		
-	public boolean compareStorageContainerDimensions( final Container<?> img );
-	public boolean compareStorageContainerCompatibility( final Container<?> img );
+	@Override
+	public T next(){ fwd(); return type(); }
 
+	@Override
+	public void jumpFwd( final long steps )
+	{ 
+		for ( long j = 0; j < steps; ++j )
+			fwd();
+	}
+	
+	@Override
+	public boolean hasNextLinked(){ return hasNext() && linkedIterator.hasNext(); }
+
+	@Override
+	final public void linkIterator( final Iterator< ? > iterable ){ linkedIterator = iterable; }
+	
+	@Override
+	final public Iterator< ? > unlinkIterator()
+	{
+		final Iterator< ? > iterable = linkedIterator;
+		linkedIterator = VoidIterator.getInstance();
+		return iterable;
+	}
 }

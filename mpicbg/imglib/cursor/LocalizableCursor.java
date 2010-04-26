@@ -25,19 +25,19 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  *
- * @author Stephan Preibisch & Stephan Saalfeld
  */
 package mpicbg.imglib.cursor;
 
-import mpicbg.imglib.cursor.Cursor;
 import mpicbg.imglib.location.RasterLocalizable;
 import mpicbg.imglib.type.Type;
 
-public interface LocalizableCursor<T extends Type<T>> extends Cursor<T>, RasterLocalizable
+/**
+ * 
+ * @param <T>
+ *
+ * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
+ */
+public interface LocalizableCursor< T extends Type< T > > extends
+		Cursor< T >, RasterLocalizable
 {
-	@Deprecated
-	/**
-	 * Use {@link RasterLocalizable#localize(int[])} instead.
-	 */
-	public void getPosition( int[] location );
 }

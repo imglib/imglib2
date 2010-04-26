@@ -12,7 +12,7 @@ import mpicbg.imglib.container.cell.CellContainerFactory;
 import mpicbg.imglib.container.shapelist.ShapeList;
 import mpicbg.imglib.container.shapelist.ShapeListCached;
 import mpicbg.imglib.cursor.PositionableCursor;
-import mpicbg.imglib.cursor.LocalizableCursor;
+import mpicbg.imglib.cursor.LocalizableIterableCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.ImageFactory;
 import mpicbg.imglib.image.display.imagej.ImageJFunctions;
@@ -73,7 +73,7 @@ public class TestShapeList
 		timer.start();
 		final ArrayContainerFactory arrayFactory = new ArrayContainerFactory();
 		final Image< ByteType > arrayImage = new ImageFactory< ByteType >( new ByteType(), arrayFactory ).createImage( new int[]{ 200, 200, depth }, "ArrayContainer" );
-		final LocalizableCursor< ByteType > cArray = arrayImage.createLocalizableCursor();
+		final LocalizableIterableCursor< ByteType > cArray = arrayImage.createLocalizableCursor();
 		final PositionableCursor< ByteType > cShapeList = shapeListImage.createPositionableCursor();
 		while ( cArray.hasNext() )
 		{

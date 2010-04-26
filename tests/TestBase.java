@@ -5,7 +5,7 @@ import java.util.Arrays;
 import mpicbg.imglib.container.array.ArrayContainerFactory;
 
 import mpicbg.imglib.cursor.PositionableCursor;
-import mpicbg.imglib.cursor.LocalizableCursor;
+import mpicbg.imglib.cursor.LocalizableIterableCursor;
 
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.ImageFactory;
@@ -42,7 +42,7 @@ public class TestBase {
 	 * Check whether an image is identical to a generated image
 	 */
 	protected<T extends RealType<T>> boolean match( Image<T> image, Function function ) {
-		LocalizableCursor<T> cursor = image.createLocalizableCursor();
+		LocalizableIterableCursor<T> cursor = image.createLocalizableCursor();
 		int[] pos = new int[cursor.numDimensions()];
 		while( cursor.hasNext() ) {
 			cursor.fwd();
@@ -58,7 +58,7 @@ public class TestBase {
 	 * Check whether an image is identical to a generated image, with fuzz
 	 */
 	protected<T extends RealType<T>> boolean match( Image<T> image, Function function, float tolerance ) {
-		LocalizableCursor<T> cursor = image.createLocalizableCursor();
+		LocalizableIterableCursor<T> cursor = image.createLocalizableCursor();
 		int[] pos = new int[cursor.numDimensions()];
 		while( cursor.hasNext() ) {
 			cursor.fwd();
@@ -88,7 +88,7 @@ public class TestBase {
 	 */
 	protected<T extends RealType<T>> void signature( Image<T> image, float[] result ) {
 		Arrays.fill( result, 0 );
-		LocalizableCursor<T> cursor = image.createLocalizableCursor();
+		LocalizableIterableCursor<T> cursor = image.createLocalizableCursor();
 		int dim = cursor.numDimensions();
 		int[] pos = new int[dim];
 		while( cursor.hasNext() ) {
@@ -165,7 +165,7 @@ public class TestBase {
 	protected<T extends RealType<T>> Image<T> makeImage( T type, Function function, int[] dims ) {
 		ImageFactory<T> factory = new ImageFactory<T>(type, new ArrayContainerFactory());
 		Image<T> result = factory.createImage( dims );
-		LocalizableCursor<T> cursor = result.createLocalizableCursor();
+		LocalizableIterableCursor<T> cursor = result.createLocalizableCursor();
 		int[] pos = new int[cursor.numDimensions()];
 		while( cursor.hasNext() ) {
 			cursor.fwd();

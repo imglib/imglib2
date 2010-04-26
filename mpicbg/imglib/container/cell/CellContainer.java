@@ -34,7 +34,7 @@ import java.util.ArrayList;
 import mpicbg.imglib.container.ContainerFactory;
 import mpicbg.imglib.container.AbstractDirectAccessContainer;
 import mpicbg.imglib.container.basictypecontainer.array.ArrayDataAccess;
-import mpicbg.imglib.cursor.Cursor;
+import mpicbg.imglib.cursor.IterableCursor;
 import mpicbg.imglib.cursor.array.ArrayPositionableCursor;
 import mpicbg.imglib.cursor.array.ArrayLocalizableCursor;
 import mpicbg.imglib.cursor.cell.CellCursor;
@@ -104,7 +104,7 @@ public class CellContainer<T extends Type<T>, A extends ArrayDataAccess<A>> exte
 	}
 	
 	@Override
-	public A update( final Cursor<?> c ) { return data.get( ((CellCursor<?>)c).getStorageIndex() ).getData(); }
+	public A update( final IterableCursor<?> c ) { return data.get( ((CellCursor<?>)c).getStorageIndex() ).getData(); }
 	
 	public ArrayList<Cell<T, A>> createCellArray( final int numCells ) { return new ArrayList<Cell<T, A>>( numCells ); }	
 	
@@ -171,7 +171,7 @@ public class CellContainer<T extends Type<T>, A extends ArrayDataAccess<A>> exte
 	}
 
 	@Override
-	public CellCursor<T> createCursor( final Image<T> image ) 
+	public CellCursor<T> createIterableCursor( final Image<T> image ) 
 	{ 
 		// create a Cursor using a Type that is linked to the container
 		CellCursor<T> c = new CellCursor<T>( this, image, linkedType.duplicateTypeOnSameDirectAccessContainer() );
