@@ -104,7 +104,7 @@ public class CellContainer<T extends Type<T>, A extends ArrayDataAccess<A>> exte
 	}
 	
 	@Override
-	public A update( final Cursor<?> c ) { return data.get( c.getStorageIndex() ).getData(); }
+	public A update( final Cursor<?> c ) { return data.get( ((CellCursor<?>)c).getStorageIndex() ).getData(); }
 	
 	public ArrayList<Cell<T, A>> createCellArray( final int numCells ) { return new ArrayList<Cell<T, A>>( numCells ); }	
 	

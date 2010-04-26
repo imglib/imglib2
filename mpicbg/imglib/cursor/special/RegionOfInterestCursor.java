@@ -29,6 +29,7 @@
  */
 package mpicbg.imglib.cursor.special;
 
+import mpicbg.imglib.container.Container;
 import mpicbg.imglib.cursor.AbstractCursor;
 import mpicbg.imglib.cursor.PositionableCursor;
 import mpicbg.imglib.cursor.LocalizableCursor;
@@ -49,7 +50,7 @@ public class RegionOfInterestCursor<T extends Type<T>> extends AbstractCursor<T>
 	
 	public RegionOfInterestCursor( final PositionableCursor<T> cursor, final int[] offset, final int size[] )
 	{
-		super( cursor.getStorageContainer(), cursor.getImage() );
+		super( cursor.getContainer(), cursor.getImage() );
 		
 		this.offset = offset.clone();
 		this.size = size.clone();		
@@ -141,7 +142,7 @@ public class RegionOfInterestCursor<T extends Type<T>> extends AbstractCursor<T>
 	public int getArrayIndex() { return cursor.getArrayIndex(); }
 
 	@Override
-	public int getStorageIndex() { return cursor.getStorageIndex();	}
+	public Container<T> getContainer() { return cursor.getContainer();	}
 
 	@Override
 	public boolean isActive() { return cursor.isActive() && isActive; }

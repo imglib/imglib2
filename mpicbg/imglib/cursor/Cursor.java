@@ -106,8 +106,7 @@ public interface Cursor< T extends Type< T > > extends Sampler< T >, LinkableIte
 	public Image<T> getImage();
 	
 	public int getArrayIndex();
-	public int getStorageIndex();
-	public Container<T> getStorageContainer();
+	public Container<T> getContainer();
 	
 	public void close();
 }

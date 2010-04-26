@@ -104,10 +104,7 @@ public class DynamicCursor<T extends Type<T>> extends AbstractCursor<T>
 	public int getInternalIndex() { return internalIndex; }
 
 	@Override
-	public DynamicContainer<T,?> getStorageContainer(){ return container; }
-
-	@Override
-	public int getStorageIndex() { return internalIndex; }
+	public DynamicContainer<T,?> getContainer(){ return container; }
 	
 	@Override
 	public String toString() { return type.toString(); }		

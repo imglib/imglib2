@@ -91,7 +91,7 @@ public class ImagePlusContainer<T extends Type<T>, A extends ArrayDataAccess<A>>
 	}
 
 	@Override
-	public A update( final Cursor<?> c ) { return mirror.get( c.getStorageIndex() ); }
+	public A update( final Cursor<?> c ) { return mirror.get( ((ImagePlusCursor<?>)c).getStorageIndex() ); }
 	
 	protected static int[] getCorrectDimensionality( final ImagePlus imp )
 	{

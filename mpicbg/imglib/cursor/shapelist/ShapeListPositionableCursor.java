@@ -219,7 +219,7 @@ public class ShapeListPositionableCursor< T extends Type< T > > extends Abstract
 	public void close(){}
 
 	@Override
-	public int getStorageIndex(){ return 0; }
+	public ShapeList<T> getContainer(){ return container; }
 
 	@Override
 	public void reset()

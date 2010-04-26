@@ -29,6 +29,7 @@
  */
 package mpicbg.imglib.cursor.special;
 
+import mpicbg.imglib.container.Container;
 import mpicbg.imglib.cursor.AbstractCursor;
 import mpicbg.imglib.cursor.PositionableCursor;
 import mpicbg.imglib.cursor.array.ArrayLocalizableCursor;
@@ -50,7 +51,7 @@ public class LocalNeighborhoodCursor<T extends Type<T>> extends AbstractCursor<T
 	
 	public LocalNeighborhoodCursor( final PositionableCursor<T> cursor )
 	{
-		super( cursor.getStorageContainer(), cursor.getImage() );
+		super( cursor.getImage().getContainer(), cursor.getImage() );
 		
 		numDimensions = cursor.getImage().numDimensions();
 		
@@ -70,7 +71,7 @@ public class LocalNeighborhoodCursor<T extends Type<T>> extends AbstractCursor<T
 		for ( int d = 0; d < numDimensions; ++d )
 			dim[ d ] = 1;
 
-		centralPositionIndex = neigborhoodCursor.getStorageContainer().getPos( dim );
+		centralPositionIndex = neigborhoodCursor.getContainer().getPos( dim );
 	}
 	
 	@Override
@@ -100,6 +101,9 @@ public class LocalNeighborhoodCursor<T extends Type<T>> extends AbstractCursor<T
 		
 		linkedIterator.reset();
 	}
+	
+	@Override
+	public Container<T> getContainer() { return cursor.getContainer();	}
 
 	@Override
 	public void fwd()
@@ -123,9 +127,6 @@ public class LocalNeighborhoodCursor<T extends Type<T>> extends AbstractCursor<T
 	
 	@Override
 	public int getArrayIndex() { return cursor.getArrayIndex(); }
-
-	@Override
-	public int getStorageIndex() { return cursor.getStorageIndex();	}
 
 	@Override
 	public boolean isActive() { return cursor.isActive() && isActive; }

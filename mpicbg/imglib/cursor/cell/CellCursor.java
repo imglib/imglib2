@@ -158,9 +158,8 @@ public class CellCursor<T extends Type<T>> extends AbstractCursor<T>
 	}	
 
 	@Override
-	public CellContainer<T,?> getStorageContainer(){ return container; }
+	public CellContainer<T,?> getContainer(){ return container; }
 
-	@Override
 	public int getStorageIndex() { return cellInstance.getCellId(); }	
 
 	@Override

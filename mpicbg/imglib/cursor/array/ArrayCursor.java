@@ -91,10 +91,7 @@ public class ArrayCursor<T extends Type<T>> extends AbstractCursor<T>
 	}
 
 	@Override
-	public Array<T,?> getStorageContainer(){ return container; }
-
-	@Override
-	public int getStorageIndex() { return 0; }
+	public Array<T,?> getContainer(){ return container; }
 	
 	@Override
 	public String toString() { return type.toString(); }		

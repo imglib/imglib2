@@ -67,8 +67,6 @@ public abstract class AbstractCursor<T extends Type<T>> implements Cursor<T>
 	@Override
 	public Image<T> getImage() { return image; }
 	@Override
-	public Container<T> getStorageContainer() { return container; }
-	@Override
 	public boolean isActive() { return !isClosed; }
 	
 	@Override

@@ -100,9 +100,8 @@ public class ImagePlusCursor<T extends Type<T>> extends AbstractCursor<T>
 	}
 
 	@Override
-	public ImagePlusContainer<T,?> getStorageContainer(){ return container; }
+	public ImagePlusContainer<T,?> getContainer(){ return container; }
 
-	@Override
 	public int getStorageIndex() { return slice; }
 
 	@Override
