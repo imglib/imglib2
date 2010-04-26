@@ -34,7 +34,7 @@ import mpicbg.imglib.cursor.LocalizableIterableCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.type.Type;
 
-public class CellLocalizableCursor<T extends Type<T>> extends CellCursor<T> implements LocalizableIterableCursor<T>
+public class CellLocalizableCursor<T extends Type<T>> extends CellIterableCursor<T> implements LocalizableIterableCursor<T>
 {
 	/* Inherited from CellCursor<T>
 	protected final CellContainer<?,?> img;

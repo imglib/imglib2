@@ -36,14 +36,14 @@ import mpicbg.imglib.cursor.AbstractIterableCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.type.Type;
 
-public class DynamicCursor<T extends Type<T>> extends AbstractIterableCursor<T>
+public class DynamicIterableCursor<T extends Type<T>> extends AbstractIterableCursor<T>
 {
 	protected final T type;
 	protected final DynamicContainer<T,? extends DataAccess> container;
 	protected final DynamicContainerAccessor accessor;
 	int internalIndex;
 	
-	public DynamicCursor( final DynamicContainer<T,? extends DynamicContainerAccessor> container, final Image<T> image, final T type ) 
+	public DynamicIterableCursor( final DynamicContainer<T,? extends DynamicContainerAccessor> container, final Image<T> image, final T type ) 
 	{
 		super( container, image );
 		

@@ -41,7 +41,7 @@ import mpicbg.imglib.cursor.IterableCursor;
 import mpicbg.imglib.cursor.PositionableCursor;
 import mpicbg.imglib.cursor.LocalizableIterableCursor;
 import mpicbg.imglib.cursor.LocalizablePlaneCursor;
-import mpicbg.imglib.cursor.imageplus.ImagePlusCursor;
+import mpicbg.imglib.cursor.imageplus.ImagePlusIterableCursor;
 import mpicbg.imglib.cursor.imageplus.ImagePlusPositionableCursor;
 import mpicbg.imglib.cursor.imageplus.ImagePlusPositionableOutOfBoundsCursor;
 import mpicbg.imglib.cursor.imageplus.ImagePlusLocalizableCursor;
@@ -92,7 +92,7 @@ public class ImagePlusContainer<T extends Type<T>, A extends ArrayDataAccess<A>>
 	}
 
 	@Override
-	public A update( final Cursor<?> c ) { return mirror.get( ((ImagePlusCursor<?>)c).getStorageIndex() ); }
+	public A update( final Cursor<?> c ) { return mirror.get( ((ImagePlusIterableCursor<?>)c).getStorageIndex() ); }
 	
 	protected static int[] getCorrectDimensionality( final ImagePlus imp )
 	{
@@ -131,7 +131,7 @@ public class ImagePlusContainer<T extends Type<T>, A extends ArrayDataAccess<A>>
 	@Override
 	public IterableCursor<T> createIterableCursor( final Image<T> image ) 
 	{
-		return new ImagePlusCursor<T>( this, image, linkedType.duplicateTypeOnSameDirectAccessContainer() );
+		return new ImagePlusIterableCursor<T>( this, image, linkedType.duplicateTypeOnSameDirectAccessContainer() );
 	}
 
 	@Override

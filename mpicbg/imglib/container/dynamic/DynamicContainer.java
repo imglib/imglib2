@@ -33,7 +33,7 @@ import mpicbg.imglib.container.AbstractDirectAccessContainer;
 import mpicbg.imglib.container.array.Array;
 import mpicbg.imglib.cursor.PositionableCursor;
 import mpicbg.imglib.cursor.LocalizablePlaneCursor;
-import mpicbg.imglib.cursor.dynamic.DynamicCursor;
+import mpicbg.imglib.cursor.dynamic.DynamicIterableCursor;
 import mpicbg.imglib.cursor.dynamic.DynamicPositionableCursor;
 import mpicbg.imglib.cursor.dynamic.DynamicPositionableOutOfBoundsCursor;
 import mpicbg.imglib.cursor.dynamic.DynamicLocalizableCursor;
@@ -83,10 +83,10 @@ public abstract class DynamicContainer<T extends Type<T>, A extends DynamicConta
 	public long getNumPixels() { return numPixels; }
 
 	@Override
-	public DynamicCursor<T> createIterableCursor( final Image<T> image )
+	public DynamicIterableCursor<T> createIterableCursor( final Image<T> image )
 	{
 		// create a Cursor using a Type that is linked to the container
-		return new DynamicCursor<T>( this, image, linkedType.duplicateTypeOnSameDirectAccessContainer() );
+		return new DynamicIterableCursor<T>( this, image, linkedType.duplicateTypeOnSameDirectAccessContainer() );
 	}
 
 	@Override

@@ -36,7 +36,7 @@ import mpicbg.imglib.container.basictypecontainer.DataAccess;
 import mpicbg.imglib.cursor.Cursor;
 import mpicbg.imglib.cursor.IterableCursor;
 import mpicbg.imglib.cursor.array.ArrayIterableCursor;
-import mpicbg.imglib.cursor.cell.CellCursor;
+import mpicbg.imglib.cursor.cell.CellIterableCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.display.Display;
 import mpicbg.imglib.type.numeric.real.FloatType;
@@ -88,7 +88,7 @@ public interface Type<T extends Type<T>>
 	 * prevent multiple implementations of {@link Type}.
 	 * That's why {@link Type} asks the {@link DataAccess} to give the actual basic array by passing the {@link IterableCursor}
 	 * that calls the method. The {@link DataAccess} is also an {@link Array}, {@link CellDirectAccessContainer}, ... which
-	 * can then communicate with the {@link ArrayIterableCursor}, {@link CellCursor}, ... and return the current basic type array. 
+	 * can then communicate with the {@link ArrayIterableCursor}, {@link CellIterableCursor}, ... and return the current basic type array. 
 	 * 
 	 * A typical implementation of this method looks like that (this is the {@link FloatType} implementation):
 	 * 

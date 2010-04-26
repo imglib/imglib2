@@ -35,7 +35,7 @@ import mpicbg.imglib.cursor.AbstractIterableCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.type.Type;
 
-public class CellCursor<T extends Type<T>> extends AbstractIterableCursor<T>
+public class CellIterableCursor<T extends Type<T>> extends AbstractIterableCursor<T>
 {
 	final protected T type;
 	
@@ -69,7 +69,7 @@ public class CellCursor<T extends Type<T>> extends AbstractIterableCursor<T>
 	 */
 	protected Cell<T,?> cellInstance;
 	
-	public CellCursor( final CellContainer<T,?> container, final Image<T> image, final T type )
+	public CellIterableCursor( final CellContainer<T,?> container, final Image<T> image, final T type )
 	{
 		super( container, image );
 		

@@ -34,14 +34,14 @@ import mpicbg.imglib.cursor.AbstractIterableCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.type.Type;
 
-public class ImagePlusCursor<T extends Type<T>> extends AbstractIterableCursor<T>
+public class ImagePlusIterableCursor<T extends Type<T>> extends AbstractIterableCursor<T>
 {
 	protected final T type;
 	protected final ImagePlusContainer<T,?> container;
 	protected final int slicePixelCountMinus1, maxSliceMinus1;
 	protected int slice; // TODO: support hyperstacks	
 
-	public ImagePlusCursor( final ImagePlusContainer<T,?> container, final Image<T> image, final T type )
+	public ImagePlusIterableCursor( final ImagePlusContainer<T,?> container, final Image<T> image, final T type )
 	{
 		super( container, image );
 

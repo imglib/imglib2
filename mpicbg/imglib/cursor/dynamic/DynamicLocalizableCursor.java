@@ -5,7 +5,7 @@ import mpicbg.imglib.cursor.LocalizableIterableCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.type.Type;
 
-public class DynamicLocalizableCursor<T extends Type<T>> extends DynamicCursor<T> implements LocalizableIterableCursor<T>
+public class DynamicLocalizableCursor<T extends Type<T>> extends DynamicIterableCursor<T> implements LocalizableIterableCursor<T>
 {
 	final protected int numDimensions; 	
 	final protected int[] position, dimensions;
