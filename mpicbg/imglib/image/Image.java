@@ -43,7 +43,7 @@ import mpicbg.imglib.cursor.IterableCursor;
 import mpicbg.imglib.cursor.PositionableCursor;
 import mpicbg.imglib.cursor.LocalizableIterableCursor;
 import mpicbg.imglib.cursor.LocalizablePlaneCursor;
-import mpicbg.imglib.cursor.array.ArrayLocalizableIterableCursor;
+import mpicbg.imglib.cursor.array.ArrayLocalizableCursor;
 import mpicbg.imglib.image.display.Display;
 import mpicbg.imglib.interpolation.Interpolator;
 import mpicbg.imglib.interpolation.InterpolatorFactory;
@@ -465,7 +465,7 @@ public class Image<T extends Type<T>> implements ImageProperties, Dimensions, It
 		
 		final T[] pixels = createType().createArray1D( (int)numPixels );
 		
-		final ArrayLocalizableIterableCursor<FakeType> cursor1 = ArrayLocalizableIterableCursor.createLinearCursor( getDimensions() );
+		final ArrayLocalizableCursor<FakeType> cursor1 = ArrayLocalizableCursor.createLinearCursor( getDimensions() );
 		final PositionableCursor<T> cursor2 = this.createPositionableCursor();
 		
 		int i = 0;

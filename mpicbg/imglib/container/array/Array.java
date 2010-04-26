@@ -35,7 +35,7 @@ import mpicbg.imglib.cursor.Cursor;
 import mpicbg.imglib.cursor.array.ArrayIterableCursor;
 import mpicbg.imglib.cursor.array.ArrayPositionableCursor;
 import mpicbg.imglib.cursor.array.ArrayPositionableOutOfBoundsCursor;
-import mpicbg.imglib.cursor.array.ArrayLocalizableIterableCursor;
+import mpicbg.imglib.cursor.array.ArrayLocalizableCursor;
 import mpicbg.imglib.cursor.array.ArrayLocalizablePlaneCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
@@ -73,10 +73,10 @@ public class Array<T extends Type<T>, A extends DataAccess> extends AbstractDire
 	}
 
 	@Override
-	public ArrayLocalizableIterableCursor<T> createLocalizableCursor( final Image<T> image ) 
+	public ArrayLocalizableCursor<T> createLocalizableCursor( final Image<T> image ) 
 	{ 
 		// create a Cursor using a Type that is linked to the container
-		ArrayLocalizableIterableCursor<T> c = new ArrayLocalizableIterableCursor<T>( this, image, linkedType.duplicateTypeOnSameDirectAccessContainer() );
+		ArrayLocalizableCursor<T> c = new ArrayLocalizableCursor<T>( this, image, linkedType.duplicateTypeOnSameDirectAccessContainer() );
 		return c;
 	}
 

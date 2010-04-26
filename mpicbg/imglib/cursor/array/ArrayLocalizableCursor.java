@@ -38,13 +38,13 @@ import mpicbg.imglib.image.Image;
 import mpicbg.imglib.type.Type;
 import mpicbg.imglib.type.label.FakeType;
 
-public class ArrayLocalizableIterableCursor<T extends Type<T>> extends AbstractLocalizableIterableCursor<T> implements LocalizableIterableCursor<T>
+public class ArrayLocalizableCursor<T extends Type<T>> extends AbstractLocalizableIterableCursor<T> implements LocalizableIterableCursor<T>
 {
 	protected final T type;
 	protected final Array<T,?> container;
 	protected final int sizeMinus1;
 	
-	public ArrayLocalizableIterableCursor( final Array<T,?> container, final Image<T> image, final T type ) 
+	public ArrayLocalizableCursor( final Array<T,?> container, final Image<T> image, final T type ) 
 	{
 		super( container, image );
 
@@ -55,10 +55,10 @@ public class ArrayLocalizableIterableCursor<T extends Type<T>> extends AbstractL
 		reset();
 	}	
 	
-	public static ArrayLocalizableIterableCursor<FakeType> createLinearCursor( final int[] dim )
+	public static ArrayLocalizableCursor<FakeType> createLinearCursor( final int[] dim )
 	{
 		final Array<FakeType, FakeAccess> array = new Array<FakeType, FakeAccess>( null, new FakeArray(), dim, 1 );
-		return new ArrayLocalizableIterableCursor<FakeType>( array, null, new FakeType() );
+		return new ArrayLocalizableCursor<FakeType>( array, null, new FakeType() );
 	}
 
 	@Override
