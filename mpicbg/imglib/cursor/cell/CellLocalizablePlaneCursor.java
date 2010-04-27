@@ -161,7 +161,7 @@ public class CellLocalizablePlaneCursor<T extends Type<T>> extends CellLocalizab
 		cellInstance = container.getCell( cell );		
 
 		cellInstance.getDimensions( cellDimensions );
-		cellInstance.getOffset( cellOffset );
+		cellInstance.offset( cellOffset );
 
 		this.planeSizeA = cellDimensions[ planeDimA ];
 		

@@ -29,6 +29,7 @@
  */
 package mpicbg.imglib.cursor;
 
+import mpicbg.imglib.algorithm.math.MathLib;
 import mpicbg.imglib.container.Container;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.location.Iterator;
@@ -48,10 +49,16 @@ public abstract class AbstractIterableCursor< T extends Type< T > > extends Abst
 {
 	protected Iterator< ? > linkedIterator = VoidIterator.getInstance();
 	
+	final protected long[] position;
+	
 	public AbstractIterableCursor( final Container<T> container, final Image<T> image )
 	{
 		super( container, image );
+		position = new long[ numDimensions ];
 	}
+	
+	@Override
+	public int numDimensions(){ return numDimensions; }
 
 	@Override
 	public void remove() {}
@@ -79,4 +86,43 @@ public abstract class AbstractIterableCursor< T extends Type< T > > extends Abst
 		linkedIterator = VoidIterator.getInstance();
 		return iterable;
 	}
+	
+	
+	/* RasterLocalizable */
+	
+	@Override
+	public void localize( float[] position )
+	{
+		localize( this.position );
+		for ( int d = 0; d < numDimensions; d++ )
+			position[ d ] = this.position[ d ];
+	}
+
+	@Override
+	public void localize( double[] position )
+	{
+		localize( this.position );
+		for ( int d = 0; d < numDimensions; d++ )
+			position[ d ] = this.position[ d ];
+	}
+
+	@Override
+	public void localize( int[] position )
+	{
+		localize( this.position );
+		for ( int d = 0; d < numDimensions; d++ )
+			position[ d ] = ( int )this.position[ d ];
+	}
+	
+	@Override
+	public float getFloatPosition( final int d ){ return getLongPosition( d ); }
+	
+	@Override
+	public double getDoublePosition( final int d ){ return getLongPosition( d ); }
+	
+	@Override
+	public int getIntPosition( final int d ){ return ( int )getLongPosition( d ); }
+	
+	@Override
+	public String getLocationAsString(){ return MathLib.printCoordinates( position ); }
 }

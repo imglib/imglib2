@@ -34,7 +34,7 @@ import mpicbg.imglib.cursor.AbstractIterableCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.type.Type;
 
-public class ArrayIterableCursor<T extends Type<T>> extends AbstractIterableCursor<T>
+public class ArrayIterableCursor< T extends Type< T > > extends AbstractIterableCursor< T >
 {
 	protected final T type;
 	protected final Array<T,?> container;
@@ -93,5 +93,17 @@ public class ArrayIterableCursor<T extends Type<T>> extends AbstractIterableCurs
 	public Array<T,?> getContainer(){ return container; }
 	
 	@Override
-	public String toString() { return type.toString(); }		
+	public String toString() { return type.toString(); }
+
+	@Override
+	public long getLongPosition( final int dim )
+	{
+		return container.indexToPosition( type.getIndex(), dim );
+	}
+
+	@Override
+	public void localize( final long[] position )
+	{
+		container.indexToPosition( type.getIndex(), position );
+	}
 }

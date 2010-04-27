@@ -79,9 +79,17 @@ public class Cell< T extends Type<T>, A extends ArrayDataAccess<A>> //extends Ar
 	
 	public int getCellId() { return cellId; }
 	
-	public void getOffset( final int[] offset )
+	public long getLongOffset( final int dim ){ return offset[ dim ]; }
+	
+	public void offset( final int[] offset )
 	{
-		for ( int i = 0; i < numDimensions; i++ )
+		for ( int i = 0; i < numDimensions; ++i )
+			offset[ i ] = this.offset[ i ];
+	}
+	
+	public void offset( final long[] offset )
+	{
+		for ( int i = 0; i < numDimensions; ++i )
 			offset[ i ] = this.offset[ i ];
 	}
 	
@@ -94,4 +102,23 @@ public class Cell< T extends Type<T>, A extends ArrayDataAccess<A>> //extends Ar
 		return i;
 	}
 	
+	final public void indexToGlobalPosition( int i, final long[] l )
+	{
+		for ( int d = numDimensions - 1; d >= 0; --d )
+		{
+			final int ld = i / step[ d ];
+			i -= ld * step[ d ];
+//			i %= step[ d ];
+			
+			l[ d ] = ld + offset[ d ];
+		}
+	}
+	
+	final public long indexToGlobalPosition( int i, final int dim )
+	{
+		for ( int d = numDimensions - 1; d > dim; --d )
+			i %= step[ d ];
+		
+		return i / step[ dim ] + offset[ dim ];
+	}
 }

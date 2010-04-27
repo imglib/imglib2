@@ -96,7 +96,7 @@ public class CellLocalizableCursor<T extends Type<T>> extends CellIterableCursor
 
 		cellMaxI = cellInstance.getNumPixels();	
 		cellInstance.getDimensions( cellDimensions );
-		cellInstance.getOffset( cellOffset );
+		cellInstance.offset( cellOffset );
 		
 		type.updateContainer( this );
 	}

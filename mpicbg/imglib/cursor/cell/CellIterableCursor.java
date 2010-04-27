@@ -159,5 +159,17 @@ public class CellIterableCursor<T extends Type<T>> extends AbstractIterableCurso
 	public int getStorageIndex() { return cellInstance.getCellId(); }	
 
 	@Override
-	public String toString() { return type.toString(); }	
+	public String toString() { return type.toString(); }
+
+	@Override
+	public long getLongPosition( final int dim )
+	{
+		return cellInstance.indexToGlobalPosition( type.getIndex(), dim );
+	}
+
+	@Override
+	public void localize( final long[] position )
+	{
+		cellInstance.indexToGlobalPosition( type.getIndex(), position );
+	}	
 }

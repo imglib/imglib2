@@ -98,6 +98,6 @@ import mpicbg.imglib.type.Type;
  *
  * @param <T> - the {@link Type} this {@link IterableCursor} works on
  */
-public interface IterableCursor< T extends Type< T > > extends Cursor< T >, LinkableIterator< T >
+public interface IterableCursor< T extends Type< T > > extends LocalizableCursor< T >, LinkableIterator< T > 
 {	
 }

@@ -134,7 +134,7 @@ public class CellPositionableCursor<T extends Type<T>> extends CellLocalizableCu
 
 		cellMaxI = cellInstance.getNumPixels();	
 		cellInstance.getDimensions( cellDimensions );
-		cellInstance.getOffset( cellOffset );
+		cellInstance.offset( cellOffset );
 		
 		for ( int d = 0; d < numDimensions; d++ )
 			cellEnd[ d ] = cellOffset[ d ] + cellDimensions[ d ];

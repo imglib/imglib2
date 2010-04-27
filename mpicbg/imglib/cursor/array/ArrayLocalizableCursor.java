@@ -92,7 +92,7 @@ public class ArrayLocalizableCursor<T extends Type<T>> extends AbstractLocalizab
 	public void jumpFwd( final long steps )
 	{	
 		type.incIndex( (int)steps );		
-		container.getPositionForIndex( type.getIndex(), position );
+		container.indexToPosition( type.getIndex(), position );
 		
 		linkedIterator.jumpFwd( steps );
 	}

@@ -127,15 +127,36 @@ public class Array<T extends Type<T>, A extends DataAccess> extends AbstractDire
 		return i;
 	}
 	
-	public void getPositionForIndex( int i, final int[] l )
+	final public void indexToPosition( int i, final int[] l )
 	{
 		for ( int d = numDimensions - 1; d >= 0; --d )
 		{
-			l[ d ] = i / step[ d ];
-			i -= l[ d ] * step[ d ];
+			final int ld = i / step[ d ];
+			l[ d ] = ld;
+			i -= ld * step[ d ];
+//			i %= step[ d ];
 		}
 	}
-
+	
+	final public void indexToPosition( int i, final long[] l )
+	{
+		for ( int d = numDimensions - 1; d >= 0; --d )
+		{
+			final int ld = i / step[ d ];
+			l[ d ] = ld;
+			i -= ld * step[ d ];
+//			i %= step[ d ];
+		}
+	}
+	
+	final public int indexToPosition( int i, final int dim )
+	{
+		for ( int d = numDimensions - 1; d > dim; --d )
+			i %= step[ d ];
+		
+		return i / step[ dim ];
+	}
+	
 	@Override
 	public void close() { data.close();	}	
 }
