@@ -382,6 +382,7 @@ public class CellPositionableCursor<T extends Type<T>> extends CellLocalizableCu
 	{
 		cursor.close();
 		lastCell = -1;
+		super.close();
 	}
 	
 	@Override

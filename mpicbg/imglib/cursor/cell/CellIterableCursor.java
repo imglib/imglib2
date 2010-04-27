@@ -113,6 +113,7 @@ public class CellIterableCursor<T extends Type<T>> extends AbstractIterableCurso
 	public void close() 
 	{ 		
 		lastCell = -1;
+		super.close();
 	}
 
 	@Override

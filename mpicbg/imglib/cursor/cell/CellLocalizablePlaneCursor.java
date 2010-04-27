@@ -295,5 +295,6 @@ public class CellLocalizablePlaneCursor<T extends Type<T>> extends CellLocalizab
 	{
 		cursor.close();
 		lastCell = -1;
+		super.close();		
 	}
 }

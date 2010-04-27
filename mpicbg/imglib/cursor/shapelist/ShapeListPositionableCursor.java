@@ -182,9 +182,6 @@ public class ShapeListPositionableCursor< T extends Type< T > > extends Abstract
 	}
 
 	@Override
-	public void close(){}
-
-	@Override
 	public ShapeList<T> getContainer(){ return container; }
 
 	@Override

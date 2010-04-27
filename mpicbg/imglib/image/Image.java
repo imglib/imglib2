@@ -411,9 +411,8 @@ public class Image<T extends Type<T>> implements ImageProperties, Dimensions, It
 	 * Remove a {@link Cursor} from the {@link ArrayList} of instantiated {@link Cursor}s.
 	 * @param c - {@link Cursor} to be removed
 	 */
-	protected synchronized void removeCursor( final Cursor<T> c )
+	public synchronized void removeCursor( final Cursor<T> c )
 	{
-		c.close();
 		cursors.remove( c );
 	}
 	

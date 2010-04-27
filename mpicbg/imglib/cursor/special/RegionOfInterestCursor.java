@@ -46,7 +46,6 @@ public class RegionOfInterestCursor<T extends Type<T>> extends AbstractIterableC
 	
 	final int numDimensions, numPixels, numPixelsMinus1;
 	
-	boolean isActive, debug = false;
 	int i;
 	
 	public RegionOfInterestCursor( final Image< T > image, final int[] offset, final int size[] )
@@ -78,7 +77,7 @@ public class RegionOfInterestCursor<T extends Type<T>> extends AbstractIterableC
 	public void close()  
 	{
 		cursor.close();
-		isActive = false; 
+		super.close();
 	}
 
 	@Override

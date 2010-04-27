@@ -52,7 +52,6 @@ public class LocalNeighborhoodCursor<T extends Type<T>> extends AbstractIterable
 	
 	final int[] tmp;
 	final int centralPositionIndex;
-	boolean isActive, debug = false;
 	
 	LocalNeighborhoodCursor( final RasterLocalizable localizable, final Image< T > image, final OutOfBoundsStrategyFactory<T> outofboundsFactory )
 	{
@@ -72,7 +71,6 @@ public class LocalNeighborhoodCursor<T extends Type<T>> extends AbstractIterable
 			dim[ d ] = 3;
 
 		neigborhoodCursor = ArrayLocalizableCursor.createLinearCursor( dim );
-		isActive = true;
 
 		for ( int d = 0; d < numDimensions; ++d )
 			dim[ d ] = 1;
@@ -87,7 +85,7 @@ public class LocalNeighborhoodCursor<T extends Type<T>> extends AbstractIterable
 	public void close() 
 	{
 		neigborhoodCursor.close();
-		isActive = false;
+		super.close();
 	}
 
 	@Override

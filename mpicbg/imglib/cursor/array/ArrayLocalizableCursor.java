@@ -117,7 +117,4 @@ public class ArrayLocalizableCursor<T extends Type<T>> extends AbstractLocalizab
 
 	@Override
 	public Array<T,?> getContainer(){ return container; }
-
-	@Override
-	public void close() {}	
 }

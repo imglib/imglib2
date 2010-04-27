@@ -63,4 +63,10 @@ public abstract class AbstractCursor<T extends Type<T>> implements Cursor<T>
 	public int getArrayIndex() { return type().getIndex(); }
 	@Override
 	public Image<T> getImage() { return image; }
+	@Override
+	public void close()
+	{
+		if ( image != null)
+			image.removeCursor( this ); 
+	}
 }

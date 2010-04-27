@@ -127,7 +127,4 @@ public class ArrayPositionableCursor<T extends Type<T>> extends AbstractPosition
 
 	@Override
 	public Array<T,?> getContainer(){ return container; }
-
-	@Override
-	public void close() {}
 }
