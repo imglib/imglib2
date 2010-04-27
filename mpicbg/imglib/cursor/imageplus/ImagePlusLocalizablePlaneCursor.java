@@ -160,8 +160,6 @@ public class ImagePlusLocalizablePlaneCursor<T extends Type<T>> extends ImagePlu
 		
 		maxPos = planeSizeA * planeSizeB;
 		pos = 0;
-		
-		isClosed = false;
 
 		if ( incPlaneA == -1 )
 		{
@@ -234,8 +232,6 @@ public class ImagePlusLocalizablePlaneCursor<T extends Type<T>> extends ImagePlu
 		
 		maxPos = planeSizeA * planeSizeB;
 		pos = 0;
-		
-		isClosed = false;
 
 		if ( incPlaneA == -1 )
 		{

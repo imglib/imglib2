@@ -46,7 +46,6 @@ public abstract class AbstractCursor<T extends Type<T>> implements Cursor<T>
 {
 	final protected Image<T> image;
 	final protected Container<T> container;
-	protected boolean isClosed = false;
 	final protected int numDimensions;
 	
 	public AbstractCursor( final Container<T> container, final Image<T> image )
@@ -64,6 +63,4 @@ public abstract class AbstractCursor<T extends Type<T>> implements Cursor<T>
 	public int getArrayIndex() { return type().getIndex(); }
 	@Override
 	public Image<T> getImage() { return image; }
-	@Override
-	public boolean isActive() { return !isClosed; }	
 }

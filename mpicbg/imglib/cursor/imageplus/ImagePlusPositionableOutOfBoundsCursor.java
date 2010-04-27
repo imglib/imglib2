@@ -75,7 +75,6 @@ public class ImagePlusPositionableOutOfBoundsCursor<T extends Type<T>> extends I
 	{
 		if ( outOfBoundsStrategy != null )
 		{
-			isClosed = false;
 			isOutOfBounds = false;
 			type.updateIndex( -1 );
 			

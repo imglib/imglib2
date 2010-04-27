@@ -100,14 +100,10 @@ import mpicbg.imglib.type.Type;
  */
 public interface Cursor< T extends Type< T > > extends Sampler< T >
 {	
-	public boolean isActive();	
-
 	public Image<T> getImage();
 	
 	public int getArrayIndex();
 	public Container<T> getContainer();
 	
 	public void close();
-	
-	public void reset();
 }

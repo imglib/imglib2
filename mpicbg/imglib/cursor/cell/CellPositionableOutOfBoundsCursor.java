@@ -80,7 +80,6 @@ public class CellPositionableOutOfBoundsCursor<T extends Type<T>> extends CellPo
 			type.updateIndex( -1 );
 			cell = 0;
 			getCellData( cell );
-			isClosed = false;
 			isOutOfBounds = false;
 			
 			position[ 0 ] = -1;

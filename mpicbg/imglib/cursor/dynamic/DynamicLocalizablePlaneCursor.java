@@ -95,7 +95,6 @@ public class DynamicLocalizablePlaneCursor<T extends Type<T>> extends DynamicLoc
 		}
 
 		setPosition( dimPos );		
-		isClosed = false;
 		
 		type.updateContainer( this );				
 		internalIndex -= incPlaneA;					
@@ -139,7 +138,6 @@ public class DynamicLocalizablePlaneCursor<T extends Type<T>> extends DynamicLoc
 		}
 
 		setPosition( dimPos );		
-		isClosed = false;
 		
 		type.updateContainer( this );				
 		internalIndex -= incPlaneA;					

@@ -400,21 +400,6 @@ public class Image<T extends Type<T>> implements ImageProperties, Dimensions, It
 	 * @return - {@link ArrayList} containing the {@link Cursor}s
 	 */
 	public ArrayList< Cursor< T > > getCursors(){ return new ArrayList< Cursor< T > >( cursors ); }	
-
-	/**
-	 * Return all active {@link Cursor}s currently instantiated for this {@link Image}.
-	 * @return - {@link ArrayList} containing the {@link Cursor}s
-	 */
-	public ArrayList<Cursor<T>> getActiveCursors() 
-	{ 
-		final ArrayList<Cursor<T>> activeCursors = new ArrayList<Cursor<T>>();
-		
-		for (Cursor<T> i : cursors)
-			if (i.isActive())
-				activeCursors.add(i);
-		
-		return activeCursors; 
-	}	
 	
 	/**
 	 * Adds a {@link Cursor} to the {@link ArrayList} of instantiated {@link Cursor}s.
@@ -437,21 +422,6 @@ public class Image<T extends Type<T>> implements ImageProperties, Dimensions, It
 	 * @return - the number of {@link Cursor}s
 	 */
 	public int getNumCursors() { return cursors.size(); }
-	
-	/**
-	 * Returns the number of active {@link Cursor}s instantiated on this {@link Image}.
-	 * @return - the number of active {@link Cursor}s
-	 */
-	public int getNumActiveCursors() 
-	{
-		int active = 0;
-		
-		for (Cursor<?> i : cursors)
-			if (i.isActive())
-				active++;
-		
-		return active;
-	}
 
 	@Override
 	public Iterator<T> iterator() { return this.createIterableCursor(); }

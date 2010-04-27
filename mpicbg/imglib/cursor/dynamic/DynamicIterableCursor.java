@@ -84,7 +84,6 @@ public class DynamicIterableCursor<T extends Type<T>> extends AbstractIterableCu
 	@Override
 	public void close() 
 	{ 
-		isClosed = true;
 		internalIndex = Integer.MAX_VALUE;
 	}
 
@@ -96,7 +95,6 @@ public class DynamicIterableCursor<T extends Type<T>> extends AbstractIterableCu
 		type.updateContainer( this );
 		accessor.updateIndex( internalIndex );
 		internalIndex = -1;
-		isClosed = false;
 		
 		linkedIterator.reset();
 	}

@@ -76,7 +76,6 @@ public class ArrayIterableCursor<T extends Type<T>> extends AbstractIterableCurs
 	@Override
 	public void close() 
 	{ 
-		isClosed = true;
 		type.updateIndex( sizeMinus1 + 1 );
 	}
 
@@ -85,8 +84,7 @@ public class ArrayIterableCursor<T extends Type<T>> extends AbstractIterableCurs
 	{ 
 		type.updateIndex( -1 ); 
 		type.updateContainer( this );
-		isClosed = false;
-		
+
 		linkedIterator.reset();
 	}
 

@@ -74,7 +74,6 @@ public class DynamicPositionableOutOfBoundsCursor<T extends Type<T>> extends Dyn
 			type.updateContainer( this );
 			accessor.updateIndex( internalIndex );
 			internalIndex = -1;
-			isClosed = false;
 			
 			position[ 0 ] = -1;
 			

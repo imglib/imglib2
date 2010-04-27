@@ -150,9 +150,6 @@ public class RegionOfInterestCursor<T extends Type<T>> extends AbstractIterableC
 	public Container<T> getContainer() { return cursor.getContainer();	}
 
 	@Override
-	public boolean isActive() { return cursor.isActive() && isActive; }
-
-	@Override
 	public void localize( final float[] position )
 	{
 		for ( int d = 0; d < numDimensions; ++d )

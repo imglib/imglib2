@@ -84,7 +84,6 @@ public class ImagePlusLocalizableCursor<T extends Type<T>> extends ImagePlusIter
 	{
 		if ( dimensions != null )
 		{
-			isClosed = false;
 			type.updateIndex( -1 );
 			
 			position[ 0 ] = -1;

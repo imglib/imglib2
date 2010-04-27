@@ -51,7 +51,11 @@ public class ArrayPositionableCursor<T extends Type<T>> extends AbstractPosition
 		this.type = type;
 		step = Array.createAllocationSteps( container.getDimensions() );
 		
-		reset();
+		for ( int d = 0; d < numDimensions; d++ )
+			position[ d ] = 0;
+
+		setPosition( position );
+		type.updateContainer( this );
 	}	
 	
 	public static ArrayPositionableCursor<FakeType> createLinearByDimCursor( final int[] dim )
@@ -120,22 +124,10 @@ public class ArrayPositionableCursor<T extends Type<T>> extends AbstractPosition
 		
 		linkedRasterPositionable.setPosition( position, dim );
 	}
-	
-	@Override
-	public void reset()
-	{
-		isClosed = false;
-		
-		for ( int d = 0; d < numDimensions; d++ )
-			position[ d ] = 0;
-
-		setPosition( position );
-		type.updateContainer( this );
-	}
 
 	@Override
 	public Array<T,?> getContainer(){ return container; }
 
 	@Override
-	public void close() { this.isClosed = true; }
+	public void close() {}
 }

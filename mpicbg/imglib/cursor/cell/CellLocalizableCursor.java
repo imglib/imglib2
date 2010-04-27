@@ -109,7 +109,6 @@ public class CellLocalizableCursor<T extends Type<T>> extends CellIterableCursor
 			type.updateIndex( -1 );
 			cell = 0;
 			getCellData( cell );
-			isClosed = false;
 			
 			position[ 0 ] = -1;
 			

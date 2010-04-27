@@ -49,15 +49,8 @@ public class ArrayPositionableOutOfBoundsCursor<T extends Type<T>> extends Array
 		this.outOfBoundsStrategyFactory = outOfBoundsStrategyFactory;
 		this.outOfBoundsStrategy = outOfBoundsStrategyFactory.createStrategy( this );
 		
-		reset();
-	}	
-	
-	@Override
-	public void reset()
-	{
 		isOutOfBounds = false;
-		super.reset();
-	}
+	}	
 	
 	@Override
 	public T type() 

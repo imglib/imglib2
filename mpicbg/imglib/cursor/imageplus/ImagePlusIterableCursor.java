@@ -83,7 +83,6 @@ public class ImagePlusIterableCursor<T extends Type<T>> extends AbstractIterable
 	@Override
 	public void close()
 	{
-		isClosed = true;
 		type.updateIndex( slicePixelCountMinus1 + 1 );
 		slice = maxSliceMinus1 + 1;
 	}
@@ -94,7 +93,6 @@ public class ImagePlusIterableCursor<T extends Type<T>> extends AbstractIterable
 		slice = 0;
 		type.updateIndex( -1 );
 		type.updateContainer( this );
-		isClosed = false;
 		
 		linkedIterator.reset();
 	}

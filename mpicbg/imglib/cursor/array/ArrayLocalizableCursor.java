@@ -102,7 +102,6 @@ public class ArrayLocalizableCursor<T extends Type<T>> extends AbstractLocalizab
 	{
 		if ( dimensions != null )
 		{
-			isClosed = false;
 			type.updateIndex( -1 );
 			
 			position[ 0 ] = -1;
@@ -120,5 +119,5 @@ public class ArrayLocalizableCursor<T extends Type<T>> extends AbstractLocalizab
 	public Array<T,?> getContainer(){ return container; }
 
 	@Override
-	public void close() { this.isClosed = true; }	
+	public void close() {}	
 }

@@ -66,7 +66,6 @@ public class DynamicLocalizableCursor<T extends Type<T>> extends DynamicIterable
 			type.updateContainer( this );
 			accessor.updateIndex( internalIndex );
 			internalIndex = -1;
-			isClosed = false;
 			
 			position[ 0 ] = -1;
 			

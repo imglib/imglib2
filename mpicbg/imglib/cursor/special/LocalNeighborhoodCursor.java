@@ -127,7 +127,4 @@ public class LocalNeighborhoodCursor<T extends Type<T>> extends AbstractIterable
 	
 	@Override
 	public int getArrayIndex() { return cursor.getArrayIndex(); }
-
-	@Override
-	public boolean isActive() { return cursor.isActive() && isActive; }
 }

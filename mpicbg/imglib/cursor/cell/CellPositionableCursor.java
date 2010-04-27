@@ -157,7 +157,6 @@ public class CellPositionableCursor<T extends Type<T>> extends CellLocalizableCu
 			type.updateIndex( -1 );
 			cell = 0;
 			getCellData( cell );
-			isClosed = false;
 			
 			position[ 0 ] = -1;
 			
@@ -382,11 +381,7 @@ public class CellPositionableCursor<T extends Type<T>> extends CellLocalizableCu
 	public void close()
 	{
 		cursor.close();
-		if (!isClosed)
-		{
-			lastCell = -1;
-			isClosed = true;
-		}		
+		lastCell = -1;
 	}
 	
 	@Override

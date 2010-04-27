@@ -74,7 +74,6 @@ public class ShapeListPositionableOutOfBoundsCursor<T extends Type<T>> extends S
 	{
 		if ( outOfBoundsStrategy != null )
 		{
-			isClosed = false;
 			isOutOfBounds = false;
 			super.reset();
 		}

@@ -218,7 +218,6 @@ public class CellLocalizablePlaneCursor<T extends Type<T>> extends CellLocalizab
 		
 		setPosition( dimPos );
 		
-		isClosed = false;		
 		position[ planeDimA ] = -1;				
 		type.decIndex( incPlaneA );
 	}
@@ -247,7 +246,6 @@ public class CellLocalizablePlaneCursor<T extends Type<T>> extends CellLocalizab
 		
 		setPosition( dimPos );
 		
-		isClosed = false;		
 		position[ planeDimA ] = -1;				
 		type.decIndex( incPlaneA );
 	}
@@ -296,10 +294,6 @@ public class CellLocalizablePlaneCursor<T extends Type<T>> extends CellLocalizab
 	public void close()
 	{
 		cursor.close();
-		if (!isClosed)
-		{
-			lastCell = -1;
-			isClosed = true;
-		}		
+		lastCell = -1;
 	}
 }

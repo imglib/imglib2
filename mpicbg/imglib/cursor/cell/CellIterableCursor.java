@@ -104,7 +104,6 @@ public class CellIterableCursor<T extends Type<T>> extends AbstractIterableCurso
 		type.updateIndex( -1 );
 		cell = 0;
 		getCellData(cell);
-		isClosed = false;
 		
 		linkedIterator.reset();
 	}
@@ -112,12 +111,8 @@ public class CellIterableCursor<T extends Type<T>> extends AbstractIterableCurso
 	
 	@Override
 	public void close() 
-	{ 
-		if (!isClosed)
-		{
-			lastCell = -1;
-			isClosed = true;
-		}
+	{ 		
+		lastCell = -1;
 	}
 
 	@Override

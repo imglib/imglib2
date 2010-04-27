@@ -101,7 +101,6 @@ public class ArrayLocalizablePlaneCursor<T extends Type<T>> extends ArrayLocaliz
 		}
 
 		setPosition( dimPos );		
-		isClosed = false;
 		
 		type.decIndex( incPlaneA );					
 		position[ planeDimA ] = -1;
@@ -145,7 +144,6 @@ public class ArrayLocalizablePlaneCursor<T extends Type<T>> extends ArrayLocaliz
 		}
 
 		setPosition( dimPos );		
-		isClosed = false;
 		
 		type.decIndex( incPlaneA );					
 		position[ planeDimA ] = -1;
