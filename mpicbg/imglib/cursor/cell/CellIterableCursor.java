@@ -171,5 +171,5 @@ public class CellIterableCursor<T extends Type<T>> extends AbstractIterableCurso
 	public void localize( final long[] position )
 	{
 		cellInstance.indexToGlobalPosition( type.getIndex(), position );
-	}	
+	}
 }
