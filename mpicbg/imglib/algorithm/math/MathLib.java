@@ -405,6 +405,23 @@ public class MathLib
 		
 		return out;
 	}
+	
+	public static String printCoordinates( final long[] value )
+	{
+		String out = "(Array empty)";
+		
+		if ( value == null || value.length == 0 )
+			return out;
+		else
+			out = "(" + value[0];
+		
+		for ( int i = 1; i < value.length; i++ )
+			out += ", " + value[ i ];
+		
+		out += ")";
+		
+		return out;
+	}
 
 	public static String printCoordinates( final boolean[] value )
 	{
