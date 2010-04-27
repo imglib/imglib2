@@ -106,5 +106,17 @@ public class DynamicIterableCursor<T extends Type<T>> extends AbstractIterableCu
 	public DynamicContainer<T,?> getContainer(){ return container; }
 	
 	@Override
-	public String toString() { return type.toString(); }		
+	public String toString() { return type.toString(); }
+	
+	@Override
+	public long getLongPosition( final int dim )
+	{
+		return container.indexToPosition( type.getIndex(), dim );
+	}
+
+	@Override
+	public void localize( final long[] position )
+	{
+		container.indexToPosition( type.getIndex(), position );
+	}
 }

@@ -116,4 +116,34 @@ public abstract class DynamicContainer<T extends Type<T>, A extends DynamicConta
 		// create a Cursor using a Type that is linked to the container
 		return new DynamicLocalizablePlaneCursor<T>( this, image, linkedType.duplicateTypeOnSameDirectAccessContainer() );
 	}
+	
+	final public void indexToPosition( int i, final int[] l )
+	{
+		for ( int d = numDimensions - 1; d >= 0; --d )
+		{
+			final int ld = i / step[ d ];
+			l[ d ] = ld;
+			i -= ld * step[ d ];
+//			i %= step[ d ];
+		}
+	}
+	
+	final public void indexToPosition( int i, final long[] l )
+	{
+		for ( int d = numDimensions - 1; d >= 0; --d )
+		{
+			final int ld = i / step[ d ];
+			l[ d ] = ld;
+			i -= ld * step[ d ];
+//			i %= step[ d ];
+		}
+	}
+	
+	final public int indexToPosition( int i, final int dim )
+	{
+		for ( int d = numDimensions - 1; d > dim; --d )
+			i %= step[ d ];
+		
+		return i / step[ dim ];
+	}
 }
