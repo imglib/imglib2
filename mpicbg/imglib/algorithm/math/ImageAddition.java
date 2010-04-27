@@ -1,10 +1,6 @@
 package mpicbg.imglib.algorithm.math;
 
-import ij.IJ;
-
 import java.util.ArrayList;
-import java.util.Arrays;
-
 
 import mpicbg.imglib.algorithm.Benchmark;
 import mpicbg.imglib.algorithm.OutputAlgorithm;
@@ -50,9 +46,16 @@ public class ImageAddition<T extends NumericType<T>> implements OutputAlgorithm<
 	 */
 	protected static void offsetPosition(final int[] one, final int[] two, final int[] out)
 	{
-		for (int i = 0; i < one.length; ++i)
+		if (two != null)
 		{
-			out[i] = one[i] - two[i];
+			for (int i = 0; i < one.length; ++i)
+			{
+				out[i] = one[i] - two[i];
+			}
+		}
+		else
+		{
+			System.arraycopy(one, 0, out, 0, one.length);
 		}
 	}
 
@@ -117,19 +120,18 @@ public class ImageAddition<T extends NumericType<T>> implements OutputAlgorithm<
 	}
 	
 	public boolean addInputImage(Image<T> im)
-	{
-		int[] offset = new int[nd];
-		T factor = type.clone();
-		factor.setOne();
-		Arrays.fill(offset, 0);
-		return addInputImage(im, offset, factor);		
+	{		
+		return addInputImage(im, null, null);
 	}
 
 	/**
 	 * Add an input {@link Image}, whose origin will be located in the output Image at the location
 	 * determined by offset.
 	 * @param im the input Image to add to the list.
-	 * @param offset the location of this Image's top-left corner in the output Image.
+	 * @param offset the location of this Image's top-left corner in the output Image. Pass in null
+	 * to set to the default value of zero.
+	 * @param factor the factor by which to multiply this image by during the addition.  Pass in
+	 * null to set to the default value of one. 
 	 * @return true if successful.
 	 */
 	public boolean addInputImage(Image<T> im, int[] offset, T factor)
@@ -142,7 +144,10 @@ public class ImageAddition<T extends NumericType<T>> implements OutputAlgorithm<
 	 * determined by offset, and whose out-of-bounds values will be determined by the given
 	 * {@link OutOfBoundsStrategyFactory}.
 	 * @param im the input Image to add to the list.
-	 * @param offset the location of this Image's top-left corner in the output Image.
+	 * @param offset the location of this Image's top-left corner in the output Image. Pass in null
+	 * to set to the default value of zero.
+	 * @param factor the factor by which to multiply this image by during the addition.  Pass in
+	 * null to set to the default value of one. 
 	 * @param outsideFactory the OutOfBoundsStrategyFactory used to determine the out-of-bounds
 	 * values for this Image.
 	 * @return true if successful.
@@ -152,10 +157,21 @@ public class ImageAddition<T extends NumericType<T>> implements OutputAlgorithm<
 	{
 		if (im.getNumDimensions() == nd)
 		{
+			T f = factor;
+			if (f == null)
+			{
+				f = type.clone();
+				f.setOne();
+			}
+			else
+			{
+				f = f.clone();
+			}
+			
 			inputImages.add(im);
 			imageOriginOffset.add(offset);
 			outsideStrategies.add(outsideFactory);
-			factors.add(factor.clone());
+			factors.add(f);
 			return true;
 		}
 		else
