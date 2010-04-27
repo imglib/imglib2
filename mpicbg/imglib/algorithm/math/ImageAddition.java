@@ -1,5 +1,7 @@
 package mpicbg.imglib.algorithm.math;
 
+import ij.IJ;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -29,6 +31,8 @@ public class ImageAddition<T extends NumericType<T>> implements OutputAlgorithm<
 	private final ArrayList<Image<T>> inputImages;
 	private final ArrayList<int[]> imageOriginOffset;
 	private final ArrayList<OutOfBoundsStrategyFactory<T>> outsideStrategies;
+	private final ArrayList<T> factors;
+	private final T type;
 	private Image<T> outputImage;
 	private ImageFactory<T> factory;
 	private long pTime;
@@ -96,12 +100,13 @@ public class ImageAddition<T extends NumericType<T>> implements OutputAlgorithm<
 	 */
 	public ImageAddition(int[] outSize, ImageFactory<T> imageFactory)
 	{
-		T type = imageFactory.createType();
+		type = imageFactory.createType();
 		type.setZero();
 		
 		inputImages = new ArrayList<Image<T>>();
 		imageOriginOffset = new ArrayList<int[]>();
 		outsideStrategies = new ArrayList<OutOfBoundsStrategyFactory<T>>();
+		factors = new ArrayList<T>();
 		factory = imageFactory;
 		outputSize = outSize;
 		errorMsg = "";
@@ -114,8 +119,10 @@ public class ImageAddition<T extends NumericType<T>> implements OutputAlgorithm<
 	public boolean addInputImage(Image<T> im)
 	{
 		int[] offset = new int[nd];
+		T factor = type.clone();
+		factor.setOne();
 		Arrays.fill(offset, 0);
-		return addInputImage(im, offset);		
+		return addInputImage(im, offset, factor);		
 	}
 
 	/**
@@ -125,9 +132,9 @@ public class ImageAddition<T extends NumericType<T>> implements OutputAlgorithm<
 	 * @param offset the location of this Image's top-left corner in the output Image.
 	 * @return true if successful.
 	 */
-	public boolean addInputImage(Image<T> im, int[] offset)
+	public boolean addInputImage(Image<T> im, int[] offset, T factor)
 	{
-		return addInputImage(im, offset, defaultOutside);
+		return addInputImage(im, offset, factor, defaultOutside);
 	}
 	
 	/**
@@ -140,7 +147,7 @@ public class ImageAddition<T extends NumericType<T>> implements OutputAlgorithm<
 	 * values for this Image.
 	 * @return true if successful.
 	 */
-	public boolean addInputImage(Image<T> im, int[] offset,
+	public boolean addInputImage(Image<T> im, int[] offset, T factor,
 			OutOfBoundsStrategyFactory<T> outsideFactory)
 	{
 		if (im.getNumDimensions() == nd)
@@ -148,6 +155,7 @@ public class ImageAddition<T extends NumericType<T>> implements OutputAlgorithm<
 			inputImages.add(im);
 			imageOriginOffset.add(offset);
 			outsideStrategies.add(outsideFactory);
+			factors.add(factor.clone());
 			return true;
 		}
 		else
@@ -164,6 +172,8 @@ public class ImageAddition<T extends NumericType<T>> implements OutputAlgorithm<
 	{
 		inputImages.clear();
 		imageOriginOffset.clear();
+		factors.clear();
+		outsideStrategies.clear();
 		outputImage = null;
 		pTime = -1;
 	}
@@ -228,7 +238,7 @@ public class ImageAddition<T extends NumericType<T>> implements OutputAlgorithm<
 			cursors.add(inputImages.get(i).createLocalizableByDimCursor(outsideStrategies.get(i)));
 		}
 		
-		success = processHelper(outputCursor, cursors, imageOriginOffset);
+		success = processHelper(outputCursor, cursors, imageOriginOffset, factors);
 		
 		for (LocalizableByDimCursor<T> c : cursors)
 		{
@@ -243,7 +253,7 @@ public class ImageAddition<T extends NumericType<T>> implements OutputAlgorithm<
 	}
 	
 	/**
-	 * The guts of the addition are offloaded to this method, which may be overloaded to do
+	 * The guts of the addition are off-loaded to this method, which may be overloaded to do
 	 * other kinds of addition-like operations. 
 	 * @param outputCursor A {@link LocalizableCursor} corresponding to the output Image.
 	 * @param cursors an {@link ArrayList} of {@link LocalizableByDimCursor}s, each one
@@ -254,10 +264,12 @@ public class ImageAddition<T extends NumericType<T>> implements OutputAlgorithm<
 	 */
 	protected boolean processHelper(LocalizableCursor<T> outputCursor,
 			ArrayList<LocalizableByDimCursor<T>> cursors, 
-			ArrayList<int[]> imageOriginOffset)
+			ArrayList<int[]> imageOriginOffset,
+			ArrayList<T> factors)
 	{
 		final int[] inPos = new int[nd];
 		final int[] outPos = new int[nd];
+		T temp = type.clone();
 		
 		while(outputCursor.hasNext())
 		{
@@ -270,7 +282,9 @@ public class ImageAddition<T extends NumericType<T>> implements OutputAlgorithm<
 				//Otherwise, this will get very screwy.
 				offsetPosition(outPos, imageOriginOffset.get(i), inPos);
 				cursors.get(i).setPosition(inPos);
-				outputCursor.getType().add(cursors.get(i).getType());
+				temp.set(cursors.get(i).getType());
+				temp.mul(factors.get(i));
+				outputCursor.getType().add(temp);
 			}
 				
 		}
