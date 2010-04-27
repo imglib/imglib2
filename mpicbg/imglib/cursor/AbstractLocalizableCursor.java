@@ -43,7 +43,7 @@ public abstract class AbstractLocalizableCursor< T extends Type< T > > extends A
 		super( container, image );
 		
 		this.position = new int[ numDimensions ];
-		this.dimensions = image.getDimensions();
+		this.dimensions = container.getDimensions();
 	}
 	
 	@Override

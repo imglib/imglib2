@@ -53,7 +53,7 @@ public abstract class AbstractCursor<T extends Type<T>> implements Cursor<T>
 	{
 		this.image = image;
 		this.container = container;
-		numDimensions = image.numDimensions();
+		numDimensions = container.numDimensions();
 	}
 
 	@Override
