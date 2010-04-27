@@ -125,4 +125,16 @@ public class LocalNeighborhoodCursor<T extends Type<T>> extends AbstractIterable
 	
 	@Override
 	public int getArrayIndex() { return cursor.getArrayIndex(); }
+
+	@Override
+	public long getLongPosition( final int dim )
+	{
+		return cursor.getLongPosition( dim );
+	}
+
+	@Override
+	public void localize( final long[] position )
+	{
+		cursor.localize( position );
+	}
 }
