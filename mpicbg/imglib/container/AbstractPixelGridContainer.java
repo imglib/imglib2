@@ -48,6 +48,11 @@ public abstract class AbstractPixelGridContainer< T extends Type< T > > extends 
 		return getNumPixels( dim ) * entitiesPerPixel;
 	}
 		
+	public static long getNumEntities( final int[] dim, final int entitiesPerPixel )
+	{
+		return getNumPixels( dim ) * entitiesPerPixel;
+	}
+		
 	@Override
 	public long getNumEntities() { return numEntities; }
 	@Override
