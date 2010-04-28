@@ -107,7 +107,7 @@ public class ImagePlusIterableCursor<T extends Type<T>> extends AbstractIterable
 	public String toString() { return type.toString(); }
 
 	@Override
-	public long getLongPosition( final int dim )
+	public int getIntPosition( final int dim )
 	{
 		switch ( dim )
 		{
@@ -121,7 +121,22 @@ public class ImagePlusIterableCursor<T extends Type<T>> extends AbstractIterable
 			return 0;
 		}
 	}
+	
+	@Override
+	public long getLongPosition( final int dim )
+	{
+		return getIntPosition( dim );
+	}
 
+	@Override
+	public void localize( final int[] position )
+	{
+		final int i = type.getIndex();
+		position[ 0 ] = i % container.getWidth();
+		position[ 1 ] = i / container.getWidth();
+		position[ 2 ] = slice;
+	}
+	
 	@Override
 	public void localize( long[] position )
 	{
@@ -130,4 +145,5 @@ public class ImagePlusIterableCursor<T extends Type<T>> extends AbstractIterable
 		position[ 1 ] = i / container.getWidth();
 		position[ 2 ] = slice;
 	}
+	
 }

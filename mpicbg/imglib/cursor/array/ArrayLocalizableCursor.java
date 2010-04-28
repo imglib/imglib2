@@ -33,12 +33,11 @@ import mpicbg.imglib.container.array.Array;
 import mpicbg.imglib.container.basictypecontainer.FakeAccess;
 import mpicbg.imglib.container.basictypecontainer.array.FakeArray;
 import mpicbg.imglib.cursor.AbstractLocalizableIterableCursor;
-import mpicbg.imglib.cursor.LocalizableIterableCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.type.Type;
 import mpicbg.imglib.type.label.FakeType;
 
-public class ArrayLocalizableCursor<T extends Type<T>> extends AbstractLocalizableIterableCursor<T> implements LocalizableIterableCursor<T>
+public class ArrayLocalizableCursor<T extends Type<T>> extends AbstractLocalizableIterableCursor<T>
 {
 	protected final T type;
 	protected final Array<T,?> container;

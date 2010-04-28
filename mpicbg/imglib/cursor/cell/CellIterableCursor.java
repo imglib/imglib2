@@ -93,6 +93,9 @@ public class CellIterableCursor<T extends Type<T>> extends AbstractIterableCurso
 		type.updateContainer( this );
 	}
 	
+	@Override
+	public CellContainer<T,?> getContainer(){ return container; }
+	
 	public Cell<T,?> getCurrentCell() { return cellInstance; }
 	
 	@Override
@@ -152,9 +155,6 @@ public class CellIterableCursor<T extends Type<T>> extends AbstractIterableCurso
 		
 		linkedIterator.fwd();
 	}	
-
-	@Override
-	public CellContainer<T,?> getContainer(){ return container; }
 
 	public int getStorageIndex() { return cellInstance.getCellId(); }	
 

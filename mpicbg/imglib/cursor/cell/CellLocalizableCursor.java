@@ -29,36 +29,45 @@
  */
 package mpicbg.imglib.cursor.cell;
 
+import mpicbg.imglib.container.cell.Cell;
 import mpicbg.imglib.container.cell.CellContainer;
-import mpicbg.imglib.cursor.LocalizableIterableCursor;
+import mpicbg.imglib.cursor.AbstractLocalizableIterableCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.type.Type;
 
-public class CellLocalizableCursor<T extends Type<T>> extends CellIterableCursor<T> implements LocalizableIterableCursor<T>
+public class CellLocalizableCursor<T extends Type<T>> extends AbstractLocalizableIterableCursor<T>
 {
-	/* Inherited from CellCursor<T>
-	protected final CellContainer<?,?> img;
+	final protected T type;
+	
+	/*
+	 * Pointer to the CellContainer we are iterating on
+	 */
+	protected final CellContainer<T,?> container;
+	
+	/*
+	 * The number of cells inside the image
+	 */
 	protected final int numCells;
+	
+	/*
+	 * The index of the current cell
+	 */
 	protected int cell;
+	
+	/*
+	 * The index of the last cell
+	 */
 	protected int lastCell;
+	
+	/*
+	 * The index+1 of the last pixel in the cell 
+	 */
 	protected int cellMaxI;
-	protected Cell<?,?> cellInstance;
-	*/
-
-	/*
-	 * The number of dimensions of the image
-	 */
-	final protected int numDimensions;
 	
 	/*
-	 * The position of the cursor inside the image
+	 * The instance of the current cell
 	 */
-	final protected int[] position;
-	
-	/*
-	 * The image dimensions
-	 */
-	final protected int[] dimensions;
+	protected Cell<T,?> cellInstance;
 	
 	/*
 	 * The dimension of the current cell
@@ -72,15 +81,15 @@ public class CellLocalizableCursor<T extends Type<T>> extends CellIterableCursor
 	
 	public CellLocalizableCursor( final CellContainer<T,?> container, final Image<T> image, final T type )
 	{
-		super( container, image, type);
+		super( container, image );
+		
+		this.type = type;
+		this.cellDimensions = new int[ numDimensions ];
+		this.cellOffset = new int[ numDimensions ];		
 
-		numDimensions = container.numDimensions(); 
-		
-		position = new int[ numDimensions ];
-		dimensions = container.getDimensions();
-		
-		cellDimensions = new int[ numDimensions ];
-		cellOffset = new int[ numDimensions ];		
+		this.container = container;
+		this.numCells = container.getNumCells();
+		this.lastCell = -1;
 		
 		// unluckily we have to call it twice, in the superclass position is not initialized yet
 		reset();		
@@ -104,23 +113,31 @@ public class CellLocalizableCursor<T extends Type<T>> extends CellIterableCursor
 	@Override
 	public void reset()
 	{
-		if ( position != null )
-		{
-			type.updateIndex( -1 );
-			cell = 0;
-			getCellData( cell );
-			
-			position[ 0 ] = -1;
-			
-			for ( int d = 1; d < numDimensions; d++ )
-				position[ d ] = 0;
-			
-			type.updateContainer( this );
-		}
+		type.updateIndex( -1 );
+		cell = 0;
+		getCellData( cell );
+		
+		position[ 0 ] = -1;
+		
+		for ( int d = 1; d < numDimensions; d++ )
+			position[ d ] = 0;
+		
+		type.updateContainer( this );
 		
 		linkedIterator.reset();
 	}
 	
+	@Override
+	public boolean hasNext()
+	{	
+		if ( cell < numCells - 1 )
+			return true;
+		else if ( type.getIndex() < cellMaxI - 1 )
+			return true;
+		else
+			return false;
+	}	
+
 	@Override
 	public void fwd()
 	{
@@ -160,65 +177,10 @@ public class CellLocalizableCursor<T extends Type<T>> extends CellIterableCursor
 		
 		linkedIterator.fwd();
 	}	
-
 	
 	@Override
-	public void localize( final float[] position )
-	{
-		for ( int d = 0; d < numDimensions; d++ )
-			position[ d ] = this.position[ d ];
-	}
+	public T type() { return type; }
 	
 	@Override
-	public void localize( final double[] position )
-	{
-		for ( int d = 0; d < numDimensions; d++ )
-			position[ d ] = this.position[ d ];
-	}
-	
-	@Override
-	public void localize( final int[] position )
-	{
-		for ( int d = 0; d < numDimensions; d++ )
-			position[ d ] = ( int )this.position[ d ];
-	}
-	
-	@Override
-	public void localize( final long[] position )
-	{
-		for ( int d = 0; d < numDimensions; d++ )
-			position[ d ] = this.position[ d ];
-	}
-	
-
-	@Override
-	public float getFloatPosition( final int d ){ return position[ d ]; }
-	
-	@Override
-	public double getDoublePosition( final int d ){ return position[ d ]; }
-	
-	@Override
-	public int getIntPosition( final int dim ){ return ( int )position[ dim ]; }	
-	
-	@Override
-	public long getLongPosition( final int dim ){ return position[ dim ]; }	
-	
-	@Override
-	public String getLocationAsString()
-	{
-		String pos = "(" + position[ 0 ];
-		
-		for ( int d = 1; d < numDimensions; d++ )
-			pos += ", " + position[ d ];
-		
-		pos += ")";
-		
-		return pos;
-	}
-	
-	@Override
-	public String toString() { return getLocationAsString() + " = " + type(); }
-	
-	@Override
-	public int numDimensions(){ return numDimensions; }
+	public CellContainer<T,?> getContainer(){ return container; }	
 }
