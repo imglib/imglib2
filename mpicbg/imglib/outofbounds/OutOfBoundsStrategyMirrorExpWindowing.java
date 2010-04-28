@@ -40,7 +40,7 @@ public class OutOfBoundsStrategyMirrorExpWindowing<T extends RealType<T>> extend
 	final PositionableCursor<T> mirrorCursor;
 	final T type, mirrorType;
 	final int numDimensions;
-	final int[] dimension, position, mirroredPosition, currentDirection, tmp;
+	final long[] dimension, position, mirroredPosition, currentDirection, tmp;
 	
 	final float[][] weights;
 	final float cutOff = 0.0001f;
@@ -56,10 +56,10 @@ public class OutOfBoundsStrategyMirrorExpWindowing<T extends RealType<T>> extend
 			
 		this.numDimensions = parentCursor.getImage().numDimensions();
 		this.dimension = parentCursor.getImage().getDimensions();
-		this.position = new int[ numDimensions ];
-		this.mirroredPosition = new int[ numDimensions ];
-		this.currentDirection = new int[ numDimensions ];
-		this.tmp = new int[ numDimensions ];
+		this.position = new long[ numDimensions ];
+		this.mirroredPosition = new long[ numDimensions ];
+		this.currentDirection = new long[ numDimensions ];
+		this.tmp = new long[ numDimensions ];
 				
 		// create lookup table for the weights
 		weights = new float[ numDimensions ][];
@@ -116,19 +116,19 @@ public class OutOfBoundsStrategyMirrorExpWindowing<T extends RealType<T>> extend
 			currentDirection[ d ] = currentDirection[ d ] - mirroredPosition[ d ];
 	}
 	
-	final protected float getWeight( final int[] position )
+	final protected float getWeight( final long[] position )
 	{
 		float weight = 1;
 		
 		for ( int d = 0; d < numDimensions; ++d )
 		{
-			final int pos = position[ d ];
+			final int pos = (int)position[ d ];
 			final int distance;
 			
 			if ( pos < 0 )
 				distance = -pos - 1;
 			else if ( pos >= dimension[ d ] )
-				distance = pos - dimension[ d ];
+				distance = pos - (int)dimension[ d ];
 			else
 				continue;
 			
@@ -241,7 +241,7 @@ public class OutOfBoundsStrategyMirrorExpWindowing<T extends RealType<T>> extend
 	@Override
 	public void initOutOfBOunds() { notifyOutOfBOunds(); }
 	
-	protected void getMirrorCoordinate( final int[] position, final int mirroredPosition[] )
+	protected void getMirrorCoordinate( final long[] position, final long mirroredPosition[] )
 	{
 		for ( int d = 0; d < numDimensions; d++ )
 		{
