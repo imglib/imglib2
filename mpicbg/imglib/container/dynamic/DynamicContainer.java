@@ -44,14 +44,20 @@ import mpicbg.imglib.type.Type;
 
 public abstract class DynamicContainer<T extends Type<T>, A extends DynamicContainerAccessor> extends AbstractDirectAccessContainer<T, A>
 {
-	final protected int[] step;
+	final protected int[] step, dim;
 	
 	// we have to overwrite those as this can change during the processing
 	protected int numPixels, numEntities;
 	
-	public DynamicContainer( final DynamicContainerFactory factory, final int[] dim, final int entitiesPerPixel )
+	public DynamicContainer( final DynamicContainerFactory factory, final long[] dimLong, final int entitiesPerPixel )
 	{
-		super( factory, dim, entitiesPerPixel );
+		super( factory, dimLong, entitiesPerPixel );
+
+		/* Convert long dimensions to int dimensions as more is not supported */
+		this.dim = new int[ numDimensions ];
+		
+		for ( int d = 0; d < numDimensions; ++d )
+			this.dim[ d ] = (int)dim[ d ];
 		
 		this.step = Array.createAllocationSteps( dim );
 		this.numPixels = (int)super.numPixels; 
@@ -146,4 +152,21 @@ public abstract class DynamicContainer<T extends Type<T>, A extends DynamicConta
 		
 		return i / step[ dim ];
 	}
+	
+	public int[] getDimensionsInt() { return dim.clone(); }
+	
+	public void getDimensions( final int[] dimensions )
+	{
+		for (int i = 0; i < numDimensions; i++)
+			dimensions[i] = this.dim[i];
+	}
+
+	public int getDimensionInt( final int dim )
+	{
+		if ( dim < numDimensions && dim > -1 )
+			return this.dim[ dim ];
+		else
+			return 1;		
+	}
+	
 }

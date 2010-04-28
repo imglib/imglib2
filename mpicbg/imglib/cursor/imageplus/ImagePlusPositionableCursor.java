@@ -50,7 +50,7 @@ public class ImagePlusPositionableCursor<T extends Type<T>> extends ImagePlusLoc
 	{
 		super( container, image, type );
 		
-		step = Array.createAllocationSteps( container.getDimensions() );
+		step = Array.createAllocationSteps( container.getDimensionsInt() );
 		tmp = new int[ numDimensions ];
 	}	
 

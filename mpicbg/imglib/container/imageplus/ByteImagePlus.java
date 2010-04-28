@@ -40,7 +40,7 @@ public class ByteImagePlus<T extends Type<T>> extends ImagePlusContainer<T, Byte
 {
 	final ImagePlus image;	
 	
-	public ByteImagePlus( final ImagePlusContainerFactory factory, final int[] dim, final int entitiesPerPixel ) 
+	public ByteImagePlus( final ImagePlusContainerFactory factory, final long[] dim, final int entitiesPerPixel ) 
 	{
 		super( factory, dim, entitiesPerPixel );
 	

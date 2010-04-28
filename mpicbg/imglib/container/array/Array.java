@@ -49,12 +49,12 @@ public class Array<T extends Type<T>, A extends DataAccess> extends AbstractDire
 	// the DataAccess created by the ArrayContainerFactory
 	final A data;
 
-	public Array( final ArrayContainerFactory factory, final A data, final long[] dim, final int entitiesPerPixel )
+	public Array( final ArrayContainerFactory factory, final A data, final long[] dimLong, final int entitiesPerPixel )
 	{
-		super( factory, dim, entitiesPerPixel );
+		super( factory, dimLong, entitiesPerPixel );
 		
 		/* Convert long dimensions to int dimensions as more is not supported */
-		this.dim = new int[ dim.length ];
+		this.dim = new int[ numDimensions ];
 		
 		for ( int d = 0; d < numDimensions; ++d )
 			this.dim[ d ] = (int)dim[ d ];

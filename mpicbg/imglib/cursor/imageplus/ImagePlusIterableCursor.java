@@ -47,8 +47,8 @@ public class ImagePlusIterableCursor<T extends Type<T>> extends AbstractIterable
 
 		this.type = type;
 		this.container = container;
-		slicePixelCountMinus1 = container.getDimension( 0 ) * container.getDimension( 1 ) - 1; 
-		maxSliceMinus1 = container.getDimension( 2 ) - 1;
+		slicePixelCountMinus1 = container.getDimensionInt( 0 ) * container.getDimensionInt( 1 ) - 1; 
+		maxSliceMinus1 = container.getDimensionInt( 2 ) - 1;
 		
 		reset();
 	}

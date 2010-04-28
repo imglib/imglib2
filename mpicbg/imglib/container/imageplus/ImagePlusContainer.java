@@ -55,12 +55,19 @@ public class ImagePlusContainer<T extends Type<T>, A extends ArrayDataAccess<A>>
 {
 	final ImagePlusContainerFactory factory;
 	final int width, height, depth;
-
+	final int[] dim;
+	
 	final ArrayList<A> mirror;
 
-	ImagePlusContainer( final ImagePlusContainerFactory factory, final int[] dim, final int entitiesPerPixel ) 
+	ImagePlusContainer( final ImagePlusContainerFactory factory, final long[] dimLong, final int entitiesPerPixel ) 
 	{
-		super( factory, dim, entitiesPerPixel );
+		super( factory, dimLong, entitiesPerPixel );
+		
+		/* Convert long dimensions to int dimensions as more is not supported */
+		this.dim = new int[ numDimensions ];
+		
+		for ( int d = 0; d < numDimensions; ++d )
+			this.dim[ d ] = (int)dim[ d ];
 		
 		this.factory = factory;
 		this.width = dim[ 0 ];
@@ -78,7 +85,7 @@ public class ImagePlusContainer<T extends Type<T>, A extends ArrayDataAccess<A>>
 		mirror = new ArrayList<A>( depth );
 	}
 	
-	ImagePlusContainer( final ImagePlusContainerFactory factory, final A creator, final int[] dim, final int entitiesPerPixel ) 
+	ImagePlusContainer( final ImagePlusContainerFactory factory, final A creator, final long[] dim, final int entitiesPerPixel ) 
 	{
 		this( factory, dim, entitiesPerPixel );				
 		
@@ -94,7 +101,7 @@ public class ImagePlusContainer<T extends Type<T>, A extends ArrayDataAccess<A>>
 	@Override
 	public A update( final Cursor<?> c ) { return mirror.get( ((ImagePlusIterableCursor<?>)c).getStorageIndex() ); }
 	
-	protected static int[] getCorrectDimensionality( final ImagePlus imp )
+	protected static long[] getCorrectDimensionality( final ImagePlus imp )
 	{
 		int numDimensions = 3;
 				
@@ -104,7 +111,7 @@ public class ImagePlusContainer<T extends Type<T>, A extends ArrayDataAccess<A>>
 		if ( imp.getHeight() == 1 )
 			--numDimensions;
 		
-		final int[] dim = new int[ numDimensions ];
+		final long[] dim = new long[ numDimensions ];
 		dim[ 0 ] = imp.getWidth();
 
 		if ( numDimensions >= 2 )
@@ -160,6 +167,22 @@ public class ImagePlusContainer<T extends Type<T>, A extends ArrayDataAccess<A>>
 	
 	public ImagePlusContainerFactory getFactory() { return factory; }
 
+	public int[] getDimensionsInt() { return dim.clone(); }
+	
+	public void getDimensions( final int[] dimensions )
+	{
+		for (int i = 0; i < numDimensions; i++)
+			dimensions[i] = this.dim[i];
+	}
+
+	public int getDimensionInt( final int dim )
+	{
+		if ( dim < numDimensions && dim > -1 )
+			return this.dim[ dim ];
+		else
+			return 1;		
+	}
+	
 	@Override
 	public void close()
 	{
