@@ -44,6 +44,8 @@ import mpicbg.imglib.type.Type;
 
 public abstract class DynamicContainer<T extends Type<T>, A extends DynamicContainerAccessor> extends AbstractDirectAccessContainer<T, A>
 {
+	//TODO: When changing dimensions, change long[] super.dim as well!!!!!
+	
 	final protected int[] step, dim;
 	
 	// we have to overwrite those as this can change during the processing
