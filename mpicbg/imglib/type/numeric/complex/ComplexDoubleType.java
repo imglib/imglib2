@@ -62,7 +62,7 @@ public class ComplexDoubleType extends AbstractComplexType<ComplexDoubleType> im
 	public ComplexDoubleType() { this( 0, 0 ); }
 
 	@Override
-	public DirectAccessContainer<ComplexDoubleType, ? extends DoubleAccess> createSuitableDirectAccessContainer( final DirectAccessContainerFactory storageFactory, final int dim[] )
+	public DirectAccessContainer<ComplexDoubleType, ? extends DoubleAccess> createSuitableDirectAccessContainer( final DirectAccessContainerFactory storageFactory, final long dim[] )
 	{
 		// create the container
 		final DirectAccessContainer<ComplexDoubleType, ? extends DoubleAccess> container = storageFactory.createDoubleInstance( dim, 2 );

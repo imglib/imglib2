@@ -39,7 +39,7 @@ import mpicbg.imglib.type.AbstractType;
 public class FakeType extends AbstractType<FakeType>
 {	
 	@Override
-	public DirectAccessContainer<FakeType,?> createSuitableDirectAccessContainer( final DirectAccessContainerFactory storageFactory, final int dim[] ) { return null; }
+	public DirectAccessContainer<FakeType,?> createSuitableDirectAccessContainer( final DirectAccessContainerFactory storageFactory, final long dim[] ) { return null; }
 
 	@Override
 	public void updateContainer( Cursor<?> c ) {}

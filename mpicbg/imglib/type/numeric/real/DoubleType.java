@@ -62,7 +62,7 @@ public class DoubleType extends AbstractRealType<DoubleType> implements RealType
 	public DoubleType() { this( 0 ); }
 
 	@Override
-	public DirectAccessContainer<DoubleType, ? extends DoubleAccess> createSuitableDirectAccessContainer( final DirectAccessContainerFactory storageFactory, final int dim[] )
+	public DirectAccessContainer<DoubleType, ? extends DoubleAccess> createSuitableDirectAccessContainer( final DirectAccessContainerFactory storageFactory, final long dim[] )
 	{
 		// create the container
 		final DirectAccessContainer<DoubleType, ? extends DoubleAccess> container = storageFactory.createDoubleInstance( dim, 1 );

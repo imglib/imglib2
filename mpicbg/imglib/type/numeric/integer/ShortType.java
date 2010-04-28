@@ -45,7 +45,7 @@ public class ShortType extends GenericShortType<ShortType>
 	public ShortType() { this( (short)0 ); }
 	
 	@Override
-	public DirectAccessContainer<ShortType, ? extends ShortAccess> createSuitableDirectAccessContainer( final DirectAccessContainerFactory storageFactory, final int dim[] )
+	public DirectAccessContainer<ShortType, ? extends ShortAccess> createSuitableDirectAccessContainer( final DirectAccessContainerFactory storageFactory, final long dim[] )
 	{
 		// create the container
 		final DirectAccessContainer<ShortType, ? extends ShortAccess> container = storageFactory.createShortInstance( dim, 1 );

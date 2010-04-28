@@ -45,7 +45,7 @@ public class IntType extends GenericIntType<IntType>
 	public IntType() { super( 0 ); }
 		
 	@Override
-	public DirectAccessContainer<IntType, ? extends IntAccess> createSuitableDirectAccessContainer( final DirectAccessContainerFactory storageFactory, final int dim[] )
+	public DirectAccessContainer<IntType, ? extends IntAccess> createSuitableDirectAccessContainer( final DirectAccessContainerFactory storageFactory, final long dim[] )
 	{
 		// create the container
 		final DirectAccessContainer<IntType, ? extends IntAccess> container = storageFactory.createIntInstance( dim, 1 );

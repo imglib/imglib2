@@ -45,7 +45,7 @@ public class ByteType extends GenericByteType<ByteType>
 	public ByteType() { super( (byte)0 ); }
 
 	@Override
-	public DirectAccessContainer<ByteType, ? extends ByteAccess> createSuitableDirectAccessContainer( final DirectAccessContainerFactory storageFactory, final int dim[] )
+	public DirectAccessContainer<ByteType, ? extends ByteAccess> createSuitableDirectAccessContainer( final DirectAccessContainerFactory storageFactory, final long dim[] )
 	{
 		// create the container
 		final DirectAccessContainer<ByteType, ? extends ByteAccess> container = storageFactory.createByteInstance( dim, 1 );

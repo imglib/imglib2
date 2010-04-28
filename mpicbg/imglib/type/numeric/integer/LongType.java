@@ -62,7 +62,7 @@ final public class LongType extends AbstractIntegerType<LongType>
 	public LongType() { this( 0 ); }
 
 	@Override
-	public DirectAccessContainer<LongType, ? extends LongAccess> createSuitableDirectAccessContainer( final DirectAccessContainerFactory storageFactory, final int dim[] )
+	public DirectAccessContainer<LongType, ? extends LongAccess> createSuitableDirectAccessContainer( final DirectAccessContainerFactory storageFactory, final long dim[] )
 	{
 		// create the container
 		final DirectAccessContainer<LongType, ? extends LongAccess> container = storageFactory.createLongInstance( dim, 1 );

@@ -74,7 +74,7 @@ public class BasePairCharType extends AbstractType<BasePairCharType> implements 
 	public BasePairCharType() { this( Base.N ); }
 
 	@Override
-	public DirectAccessContainer<BasePairCharType, ? extends CharAccess> createSuitableDirectAccessContainer( final DirectAccessContainerFactory storageFactory, final int dim[] )
+	public DirectAccessContainer<BasePairCharType, ? extends CharAccess> createSuitableDirectAccessContainer( final DirectAccessContainerFactory storageFactory, final long dim[] )
 	{
 		// create the container
 		final DirectAccessContainer<BasePairCharType, ? extends CharAccess> container = storageFactory.createCharInstance( dim, 1 );

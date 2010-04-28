@@ -67,7 +67,7 @@ public class BitType extends AbstractIntegerType<BitType> implements LogicType<B
 	public BitType() { this( false ); }
 	
 	@Override
-	public DirectAccessContainer<BitType, ? extends BitAccess> createSuitableDirectAccessContainer( final DirectAccessContainerFactory storageFactory, final int dim[] )
+	public DirectAccessContainer<BitType, ? extends BitAccess> createSuitableDirectAccessContainer( final DirectAccessContainerFactory storageFactory, final long dim[] )
 	{
 		// create the container
 		final DirectAccessContainer<BitType, ? extends BitAccess> container = storageFactory.createBitInstance( dim, 1 );

@@ -58,7 +58,7 @@ public class ImageJVirtualStack<T extends Type<T>> extends ImageStack
 	 */
 	public ImageJVirtualStack( final Image<T> img, final int type, final int[] dim, final int[] dimensionPositions )
 	{
-		super( img.getDimension( dim[ 0 ] ), img.getDimension( dim[ 1 ] ), img.getDimension( dim[ 2 ] ) );
+		super( (int)img.getDimension( dim[ 0 ] ), (int)img.getDimension( dim[ 1 ] ), (int)img.getDimension( dim[ 2 ] ) );
 		
 		this.img = img;
 		this.type = type;
@@ -70,11 +70,35 @@ public class ImageJVirtualStack<T extends Type<T>> extends ImageStack
 		
 		this.dimensionPositions = dimensionPositions;
 		
-		sizeX = img.getDimension( dim[ 0 ] );
-		sizeY = img.getDimension( dim[ 1 ] );
-		sizeZ = img.getDimension( dim[ 2 ] );
+		sizeX = (int)img.getDimension( dim[ 0 ] );
+		sizeY = (int)img.getDimension( dim[ 1 ] );
+		sizeZ = (int)img.getDimension( dim[ 2 ] );
 	}
 
+	/**
+	 * Constructs a virtual stack of up to 3 arbitrary dimensions
+	 * 
+	 *   Image<T> img - the image
+	 *   int type - the type of the Virtual Stack (ImageJFunctions.GRAY8, ImageJFunctions.GRAY32 or ImageJFunctions.COLOR_RGB)
+	 *   int[] dim - which dimensions to display, can be up to three, but at least one. However
+	 *   the array has to always have a size of 3. 
+	 *   int[] dimensionPositions - the positions inside all dimensions that might be untouched
+	 */
+	public ImageJVirtualStack( final Image<T> img, final int type, final long[] dim, final long[] dimensionPositions )
+	{
+		this( img, longToInt( dim ), longToInt( dimensionPositions ) );
+	}	
+	
+	public static int[] longToInt( final long[] values )
+	{
+		final int[] intValues = new int[ values.length ];
+		
+		for ( int d = 0; d < values.length; ++d )
+			intValues[ d ] = (int)values[ d ];
+		
+		return intValues;	
+	}
+	
 	/**
 	 * Constructs a virtual stack of type ImageJFunctions.GRAY32 of up to 3 arbitrary dimensions
 	 * 
@@ -124,8 +148,8 @@ public class ImageJVirtualStack<T extends Type<T>> extends ImageStack
  
     public static <T extends Type<T>> float[] extractSliceFloat( final Image<T> img, final Display<T> display, final int dimX, final int dimY, final int[] dimensionPositions )
     {
-		final int sizeX = img.getDimension( dimX );
-		final int sizeY = img.getDimension( dimY );
+		final int sizeX = (int)img.getDimension( dimX );
+		final int sizeY = (int)img.getDimension( dimY );
     	
     	final LocalizablePlaneCursor<T> cursor = img.createLocalizablePlaneCursor();		
 		cursor.reset( dimX, dimY, dimensionPositions );   	
@@ -157,8 +181,8 @@ public class ImageJVirtualStack<T extends Type<T>> extends ImageStack
 
     public static <T extends Type<T>> int[] extractSliceRGB( final Image<T> img, final Display<T> display, final int dimX, final int dimY, final int[] dimensionPositions )
     {
-		final int sizeX = img.getDimension( dimX );
-		final int sizeY = img.getDimension( dimY );
+		final int sizeX = (int)img.getDimension( dimX );
+		final int sizeY = (int)img.getDimension( dimY );
     	
     	final LocalizablePlaneCursor<T> cursor = img.createLocalizablePlaneCursor();		
 		cursor.reset( dimX, dimY, dimensionPositions );   	
@@ -188,8 +212,8 @@ public class ImageJVirtualStack<T extends Type<T>> extends ImageStack
 
     public static <T extends Type<T>> byte[] extractSliceByte( final Image<T> img, final Display<T> display, final int dimX, final int dimY, final int[] dimensionPositions )
     {
-		final int sizeX = img.getDimension( dimX );
-		final int sizeY = img.getDimension( dimY );
+		final int sizeX = (int)img.getDimension( dimX );
+		final int sizeY = (int)img.getDimension( dimY );
     	
     	final LocalizablePlaneCursor<T> cursor = img.createLocalizablePlaneCursor();		
 		cursor.reset( dimX, dimY, dimensionPositions );   	
