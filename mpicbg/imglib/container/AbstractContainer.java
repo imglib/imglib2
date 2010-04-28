@@ -51,7 +51,29 @@ public abstract class AbstractContainer<T extends Type<T>> implements Container<
 		this.id = Image.createUniqueId();
 	}
 	
+	/**
+	 * Calculate the number of pixels in a hypercube of given dimensions.
+	 * 
+	 * @param dim
+	 * @return
+	 */
 	public static long getNumPixels( final long[] dim )
+	{
+		long numPixels = 1;		
+		
+		for (int i = 0; i < dim.length; i++)
+			numPixels *= dim[i];
+		
+		return numPixels;		
+	}
+	
+	/**
+	 * Calculate the number of pixels in a hypercube of given dimensions.
+	 * 
+	 * @param dim
+	 * @return
+	 */
+	public static long getNumPixels( final int[] dim )
 	{
 		long numPixels = 1;		
 		
