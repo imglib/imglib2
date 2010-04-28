@@ -121,7 +121,7 @@ public class ArrayPositionableCursor<T extends Type<T>> extends AbstractPosition
 		for ( int d = 0; d < numDimensions; ++d )
 			this.position[ d ] = ( int )position[ d ];
 		
-		type.updateIndex( container.getPos( this.position ) );
+		type.updateIndex( (int)container.getPos( this.position ) );
 		
 		linkedRasterPositionable.setPosition( position );
 	}
@@ -130,7 +130,7 @@ public class ArrayPositionableCursor<T extends Type<T>> extends AbstractPosition
 	public void setPosition( final int position, final int dim )
 	{
 		this.position[ dim ] = position;
-		type.updateIndex( container.getPos( this.position ) );
+		type.updateIndex( (int)container.getPos( this.position ) );
 		
 		linkedRasterPositionable.setPosition( position, dim );
 	}

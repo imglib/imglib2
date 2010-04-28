@@ -108,9 +108,9 @@ public class ArrayLocalizablePlaneCursor<T extends Type<T>> extends ArrayLocaliz
 		type.decIndex( incPlaneA );					
 		position[ planeDimA ] = -1;
 		
-		dimPos[ planeDimA ] = dimensions[ planeDimA ] - 1;		
+		dimPos[ planeDimA ] = (int)dimensions[ planeDimA ] - 1;		
 		if ( planeDimB > -1 && planeDimB < steps.length )
-			dimPos[ planeDimB ] = dimensions[ planeDimB ] - 1;
+			dimPos[ planeDimB ] = (int)dimensions[ planeDimB ] - 1;
 		
 		maxI = container.getPos( dimPos );
 		
@@ -151,9 +151,9 @@ public class ArrayLocalizablePlaneCursor<T extends Type<T>> extends ArrayLocaliz
 		type.decIndex( incPlaneA );					
 		position[ planeDimA ] = -1;
 		
-		dimPos[ planeDimA ] = dimensions[ planeDimA ] - 1;		
+		dimPos[ planeDimA ] = (int)dimensions[ planeDimA ] - 1;		
 		if ( planeDimB > -1 && planeDimB < steps.length )
-			dimPos[ planeDimB ] = dimensions[ planeDimB ] - 1;
+			dimPos[ planeDimB ] = (int)dimensions[ planeDimB ] - 1;
 		
 		maxI = container.getPos( dimPos );
 		
@@ -184,7 +184,7 @@ public class ArrayLocalizablePlaneCursor<T extends Type<T>> extends ArrayLocaliz
 		for ( int d = 0; d < numDimensions; d++ )
 			this.position[ d ] = ( int )position[ d ];
 		
-		type.updateIndex( container.getPos( this.position ) );
+		type.updateIndex( (int)container.getPos( this.position ) );
 	}
 
 	protected void setPosition( final int[] position )

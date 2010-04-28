@@ -148,6 +148,15 @@ public class Array<T extends Type<T>, A extends DataAccess> extends AbstractDire
 		
 		return i;
 	}
+
+	public final long getPos( final long[] l )
+	{ 
+		long i = l[ 0 ];
+		for ( int d = 1; d < numDimensions; ++d )
+			i += l[ d ] * step[ d ];
+		
+		return i;
+	}
 	
 	final public void indexToPosition( int i, final int[] l )
 	{
