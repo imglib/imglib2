@@ -36,45 +36,45 @@ import mpicbg.imglib.type.Type;
 public class DynamicContainerFactory extends DirectAccessContainerFactory
 {
 	@Override
-	public <T extends Type<T>> DirectAccessContainer<T, BitDynamicContainerAccessor> createBitInstance( final int[] dimensions, final int entitiesPerPixel)
+	public <T extends Type<T>> DirectAccessContainer<T, BitDynamicContainerAccessor> createBitInstance( final long[] dimensions, final int entitiesPerPixel)
 	{
 		return new BitDynamicContainer<T>( this, dimensions, entitiesPerPixel );
 	}
 
 	@Override
-	public <T extends Type<T>> DirectAccessContainer<T, ByteDynamicContainerAccessor> createByteInstance( final int[] dimensions, final int entitiesPerPixel)
+	public <T extends Type<T>> DirectAccessContainer<T, ByteDynamicContainerAccessor> createByteInstance( final long[] dimensions, final int entitiesPerPixel)
 	{
 		return new ByteDynamicContainer<T>( this, dimensions, entitiesPerPixel );	}
 
 	@Override
-	public <T extends Type<T>> DirectAccessContainer<T, CharDynamicContainerAccessor> createCharInstance( final int[] dimensions, final int entitiesPerPixel)
+	public <T extends Type<T>> DirectAccessContainer<T, CharDynamicContainerAccessor> createCharInstance( final long[] dimensions, final int entitiesPerPixel)
 	{
 		return new CharDynamicContainer<T>( this, dimensions, entitiesPerPixel );	}
 
 	@Override
-	public <T extends Type<T>> DirectAccessContainer<T, DoubleDynamicContainerAccessor> createDoubleInstance( final int[] dimensions, final int entitiesPerPixel)
+	public <T extends Type<T>> DirectAccessContainer<T, DoubleDynamicContainerAccessor> createDoubleInstance( final long[] dimensions, final int entitiesPerPixel)
 	{
 		return new DoubleDynamicContainer<T>( this, dimensions, entitiesPerPixel );	}
 
 	@Override
-	public <T extends Type<T>> DirectAccessContainer<T, FloatDynamicContainerAccessor> createFloatInstance( final int[] dimensions, final int entitiesPerPixel)
+	public <T extends Type<T>> DirectAccessContainer<T, FloatDynamicContainerAccessor> createFloatInstance( final long[] dimensions, final int entitiesPerPixel)
 	{
 		return new FloatDynamicContainer<T>( this, dimensions, entitiesPerPixel );
 	}
 
 	@Override
-	public <T extends Type<T>> DirectAccessContainer<T, IntDynamicContainerAccessor> createIntInstance( final int[] dimensions, final int entitiesPerPixel)
+	public <T extends Type<T>> DirectAccessContainer<T, IntDynamicContainerAccessor> createIntInstance( final long[] dimensions, final int entitiesPerPixel)
 	{
 		return new IntDynamicContainer<T>( this, dimensions, entitiesPerPixel );	}
 
 	@Override
-	public <T extends Type<T>> DirectAccessContainer<T, LongDynamicContainerAccessor> createLongInstance( final int[] dimensions, final int entitiesPerPixel)
+	public <T extends Type<T>> DirectAccessContainer<T, LongDynamicContainerAccessor> createLongInstance( final long[] dimensions, final int entitiesPerPixel)
 	{
 		return new LongDynamicContainer<T>( this, dimensions, entitiesPerPixel );	
 	}
 
 	@Override
-	public <T extends Type<T>> DirectAccessContainer<T, ShortDynamicContainerAccessor> createShortInstance( final int[] dimensions, final int entitiesPerPixel)
+	public <T extends Type<T>> DirectAccessContainer<T, ShortDynamicContainerAccessor> createShortInstance( final long[] dimensions, final int entitiesPerPixel)
 	{
 		return new ShortDynamicContainer<T>( this, dimensions, entitiesPerPixel );	}
 

@@ -17,7 +17,7 @@ public class DynamicLocalizableCursor<T extends Type<T>> extends DynamicIterable
 		this.numDimensions = container.numDimensions();
 
 		this.position = image.createPositionArray();
-		this.dimensions = container.getDimensions();
+		this.dimensions = container.getDimensionsInt();
 		
 		// unluckily we have to call it twice, in the superclass position is not initialized yet
 		reset();
