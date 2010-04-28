@@ -45,7 +45,7 @@ import mpicbg.imglib.type.Type;
 
 public class ArrayContainerFactory extends DirectAccessContainerFactory
 {
-	public static int getNumEntitiesRangeCheck( final long[] dimensions, final int entitiesPerPixel )
+	public static int getNumEntitiesRangeCheck( final int[] dimensions, final int entitiesPerPixel )
 	{
 		final long numEntities = AbstractPixelGridContainer.getNumEntities(dimensions, entitiesPerPixel);
 		
@@ -56,7 +56,7 @@ public class ArrayContainerFactory extends DirectAccessContainerFactory
 	}
 	
 	@Override
-	public <T extends Type<T>> DirectAccessContainer<T, BitAccess> createBitInstance( long[] dimensions, final int entitiesPerPixel)
+	public <T extends Type<T>> DirectAccessContainer<T, BitAccess> createBitInstance( int[] dimensions, final int entitiesPerPixel)
 	{
 		final int numEntities = getNumEntitiesRangeCheck( dimensions, entitiesPerPixel );
 		
@@ -64,7 +64,7 @@ public class ArrayContainerFactory extends DirectAccessContainerFactory
 	}
 	
 	@Override
-	public <T extends Type<T>> DirectAccessContainer<T, ByteAccess> createByteInstance( final long[] dimensions, final int entitiesPerPixel)
+	public <T extends Type<T>> DirectAccessContainer<T, ByteAccess> createByteInstance( final int[] dimensions, final int entitiesPerPixel)
 	{
 		final int numEntities = getNumEntitiesRangeCheck( dimensions, entitiesPerPixel );
 		
@@ -72,7 +72,7 @@ public class ArrayContainerFactory extends DirectAccessContainerFactory
 	}
 
 	@Override
-	public <T extends Type<T>> DirectAccessContainer<T, CharAccess> createCharInstance(long[] dimensions, final int entitiesPerPixel)
+	public <T extends Type<T>> DirectAccessContainer<T, CharAccess> createCharInstance(int[] dimensions, final int entitiesPerPixel)
 	{
 		final int numEntities = getNumEntitiesRangeCheck( dimensions, entitiesPerPixel );
 		
@@ -80,7 +80,7 @@ public class ArrayContainerFactory extends DirectAccessContainerFactory
 	}
 
 	@Override
-	public <T extends Type<T>> DirectAccessContainer<T, DoubleAccess> createDoubleInstance(long[] dimensions, final int entitiesPerPixel)
+	public <T extends Type<T>> DirectAccessContainer<T, DoubleAccess> createDoubleInstance(int[] dimensions, final int entitiesPerPixel)
 	{
 		final int numEntities = getNumEntitiesRangeCheck( dimensions, entitiesPerPixel );
 		
@@ -88,7 +88,7 @@ public class ArrayContainerFactory extends DirectAccessContainerFactory
 	}
 
 	@Override
-	public <T extends Type<T>> DirectAccessContainer<T, FloatAccess> createFloatInstance(long[] dimensions, final int entitiesPerPixel)
+	public <T extends Type<T>> DirectAccessContainer<T, FloatAccess> createFloatInstance(int[] dimensions, final int entitiesPerPixel)
 	{
 		final int numEntities = getNumEntitiesRangeCheck( dimensions, entitiesPerPixel );
 		
@@ -96,7 +96,7 @@ public class ArrayContainerFactory extends DirectAccessContainerFactory
 	}
 
 	@Override
-	public <T extends Type<T>> DirectAccessContainer<T, IntAccess> createIntInstance(long[] dimensions, final int entitiesPerPixel)
+	public <T extends Type<T>> DirectAccessContainer<T, IntAccess> createIntInstance(int[] dimensions, final int entitiesPerPixel)
 	{
 		final int numEntities = getNumEntitiesRangeCheck( dimensions, entitiesPerPixel );
 		
@@ -104,7 +104,7 @@ public class ArrayContainerFactory extends DirectAccessContainerFactory
 	}
 
 	@Override
-	public <T extends Type<T>> DirectAccessContainer<T, LongAccess> createLongInstance(long[] dimensions, final int entitiesPerPixel)
+	public <T extends Type<T>> DirectAccessContainer<T, LongAccess> createLongInstance(int[] dimensions, final int entitiesPerPixel)
 	{
 		final int numEntities = getNumEntitiesRangeCheck( dimensions, entitiesPerPixel );
 		
@@ -112,7 +112,7 @@ public class ArrayContainerFactory extends DirectAccessContainerFactory
 	}
 
 	@Override
-	public <T extends Type<T>> DirectAccessContainer<T, ShortAccess> createShortInstance(long[] dimensions, final int entitiesPerPixel)
+	public <T extends Type<T>> DirectAccessContainer<T, ShortAccess> createShortInstance(int[] dimensions, final int entitiesPerPixel)
 	{
 		final int numEntities = getNumEntitiesRangeCheck( dimensions, entitiesPerPixel );
 		

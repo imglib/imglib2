@@ -45,7 +45,7 @@ public class ImagePlusLocalizableCursor<T extends Type<T>> extends ImagePlusIter
 
 		numDimensions = container.numDimensions(); 		
 		position = new int[ numDimensions ];
-		dimensions = container.getDimensionsInt();
+		dimensions = container.getDimensions();
 		
 		// unluckily we have to call it twice, in the superclass position is not initialized yet
 		reset();

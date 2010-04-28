@@ -58,7 +58,7 @@ public class ShapeListContainerFactory extends ContainerFactory
 	 * 
 	 * @return {@link Container} - the instantiated Container
 	 */
-	public <T extends Type<T>> ShapeList<T> createContainer( final long[] dim, final T type )
+	public <T extends Type<T>> ShapeList<T> createContainer( final int[] dim, final T type )
 	{
 		if ( useCaching )
 			return new ShapeListCached<T>( this, dim, type );

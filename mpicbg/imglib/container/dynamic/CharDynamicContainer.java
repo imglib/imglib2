@@ -39,7 +39,7 @@ public class CharDynamicContainer <T extends Type<T>> extends DynamicContainer<T
 {
 	final ArrayList<Character> data;
 	
-	public CharDynamicContainer( final DynamicContainerFactory factory, final long[] dim, final int entitiesPerPixel )
+	public CharDynamicContainer( final DynamicContainerFactory factory, final int[] dim, final int entitiesPerPixel )
 	{
 		super( factory, dim, entitiesPerPixel );
 		

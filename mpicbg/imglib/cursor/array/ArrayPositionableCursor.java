@@ -49,26 +49,16 @@ public class ArrayPositionableCursor<T extends Type<T>> extends AbstractPosition
 		
 		this.container = container;
 		this.type = type;
-		step = Array.createAllocationSteps( container.getDimensionsInt() );
+		step = Array.createAllocationSteps( container.getDimensions() );
 		
 		for ( int d = 0; d < numDimensions; d++ )
 			position[ d ] = 0;
 
 		setPosition( position );
 		type.updateContainer( this );
-	}
+	}	
 	
 	public static ArrayPositionableCursor<FakeType> createLinearByDimCursor( final int[] dim )
-	{
-		final long[] dimLong = new long[ dim.length ];
-		
-		for ( int d = 0; d < dim.length; ++d )
-			dimLong[ d ] = dim[ d ];
-		
-		return createLinearByDimCursor( dimLong );
-	}
-	
-	public static ArrayPositionableCursor<FakeType> createLinearByDimCursor( final long[] dim )
 	{
 		final Array<FakeType, FakeAccess> array = new Array<FakeType, FakeAccess>( null, new FakeArray(), dim, 1 );
 		return new ArrayPositionableCursor<FakeType>( array, null, new FakeType() );
@@ -121,7 +111,7 @@ public class ArrayPositionableCursor<T extends Type<T>> extends AbstractPosition
 		for ( int d = 0; d < numDimensions; ++d )
 			this.position[ d ] = ( int )position[ d ];
 		
-		type.updateIndex( (int)container.getPos( this.position ) );
+		type.updateIndex( container.getPos( this.position ) );
 		
 		linkedRasterPositionable.setPosition( position );
 	}
@@ -130,7 +120,7 @@ public class ArrayPositionableCursor<T extends Type<T>> extends AbstractPosition
 	public void setPosition( final int position, final int dim )
 	{
 		this.position[ dim ] = position;
-		type.updateIndex( (int)container.getPos( this.position ) );
+		type.updateIndex( container.getPos( this.position ) );
 		
 		linkedRasterPositionable.setPosition( position, dim );
 	}

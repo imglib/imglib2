@@ -63,7 +63,7 @@ public class ComplexFloatType extends AbstractComplexType<ComplexFloatType> impl
 	public ComplexFloatType() { this( 0, 0 ); }
 
 	@Override
-	public DirectAccessContainer<ComplexFloatType, ? extends FloatAccess> createSuitableDirectAccessContainer( final DirectAccessContainerFactory storageFactory, final long dim[] )
+	public DirectAccessContainer<ComplexFloatType, ? extends FloatAccess> createSuitableDirectAccessContainer( final DirectAccessContainerFactory storageFactory, final int dim[] )
 	{
 		// create the container
 		final DirectAccessContainer<ComplexFloatType, ? extends FloatAccess> container = storageFactory.createFloatInstance( dim, 2 );

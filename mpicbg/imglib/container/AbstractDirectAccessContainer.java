@@ -36,7 +36,7 @@ public abstract class AbstractDirectAccessContainer< T extends Type< T >, A exte
 {
 	protected T linkedType; 
 	
-	public AbstractDirectAccessContainer( final ContainerFactory factory, final long[] dim, final int entitiesPerPixel )
+	public AbstractDirectAccessContainer( final ContainerFactory factory, int[] dim, final int entitiesPerPixel )
 	{
 		super( factory, dim, entitiesPerPixel );
 	}

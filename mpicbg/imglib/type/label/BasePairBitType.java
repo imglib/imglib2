@@ -73,7 +73,7 @@ public class BasePairBitType extends AbstractType<BasePairBitType> implements Ba
 	public BasePairBitType() { this( Base.N ); }
 	
 	@Override
-	public DirectAccessContainer<BasePairBitType, ? extends BitAccess> createSuitableDirectAccessContainer( final DirectAccessContainerFactory storageFactory, final long dim[] )	
+	public DirectAccessContainer<BasePairBitType, ? extends BitAccess> createSuitableDirectAccessContainer( final DirectAccessContainerFactory storageFactory, final int dim[] )	
 	{
 		// create the container
 		final DirectAccessContainer<BasePairBitType, ? extends BitAccess> container = storageFactory.createBitInstance( dim, 3 );

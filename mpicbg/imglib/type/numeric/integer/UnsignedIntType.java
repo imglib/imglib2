@@ -58,7 +58,7 @@ public class UnsignedIntType extends GenericIntType<UnsignedIntType>
 	public static long getUnsignedInt( final int signedInt ) { return signedInt & 0xffffffff; }
 
 	@Override
-	public DirectAccessContainer<UnsignedIntType, ? extends IntAccess> createSuitableDirectAccessContainer( final DirectAccessContainerFactory storageFactory, final long dim[] )
+	public DirectAccessContainer<UnsignedIntType, ? extends IntAccess> createSuitableDirectAccessContainer( final DirectAccessContainerFactory storageFactory, final int dim[] )
 	{
 		// create the container
 		final DirectAccessContainer<UnsignedIntType, ? extends IntAccess> container = storageFactory.createIntInstance( dim, 1 );

@@ -40,7 +40,7 @@ public class IntImagePlus<T extends Type<T>> extends ImagePlusContainer<T, IntAr
 {
 	final ImagePlus image;	
 	
-	public IntImagePlus( final ImagePlusContainerFactory factory, final long[] dim, final int entitiesPerPixel ) 
+	public IntImagePlus( final ImagePlusContainerFactory factory, final int[] dim, final int entitiesPerPixel ) 
 	{
 		super( factory, dim, entitiesPerPixel );
 

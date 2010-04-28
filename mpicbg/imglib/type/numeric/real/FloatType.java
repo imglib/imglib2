@@ -63,7 +63,7 @@ public class FloatType extends AbstractRealType<FloatType> implements RealType<F
 	public FloatType() { this( 0 ); }
 
 	@Override
-	public DirectAccessContainer<FloatType, ? extends FloatAccess> createSuitableDirectAccessContainer( final DirectAccessContainerFactory storageFactory, final long dim[] )
+	public DirectAccessContainer<FloatType, ? extends FloatAccess> createSuitableDirectAccessContainer( final DirectAccessContainerFactory storageFactory, final int dim[] )
 	{
 		// create the container
 		final DirectAccessContainer<FloatType, ? extends FloatAccess> container = storageFactory.createFloatInstance( dim, 1 );

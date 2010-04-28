@@ -53,14 +53,14 @@ public class CellContainer<T extends Type<T>, A extends ArrayDataAccess<A>> exte
 	final protected int[] numCellsDim, cellSize;
 	final protected int numCells;
 	
-	public CellContainer( final ContainerFactory factory, final A creator, final long[] dim, final int[] cellSize, final int entitiesPerPixel )
+	public CellContainer( final ContainerFactory factory, final A creator, final int[] dim, final int[] cellSize, final int entitiesPerPixel )
 	{
 		super(factory, dim, entitiesPerPixel);
 		
 		// check that cellsize is not bigger than the image
 		for ( int d = 0; d < numDimensions(); d++ )
 			if ( cellSize[ d ] > dim[ d ] )
-				cellSize[ d ] = ( int )dim[ d ];
+				cellSize[ d ] = dim[ d ];
 			
 		this.cellSize = cellSize;
 		numCellsDim = new int[ numDimensions() ];				
@@ -68,7 +68,7 @@ public class CellContainer<T extends Type<T>, A extends ArrayDataAccess<A>> exte
 		int tmp = 1;		
 		for ( int d = 0; d < numDimensions(); d++ )
 		{
-			numCellsDim[ d ] = ( int )( dim[ d ] - 1 ) / cellSize[ d ] + 1;
+			numCellsDim[ d ] = ( dim[ d ] - 1) / cellSize[ d ] + 1;
 			tmp *= numCellsDim[ d ];
 		}
 		numCells = tmp;
@@ -92,7 +92,7 @@ public class CellContainer<T extends Type<T>, A extends ArrayDataAccess<A>> exte
 				// the last cell in each dimension might have another size
 				if ( cursor.getIntPosition( d ) == numCellsDim[ d ] - 1 )
 					if ( dim[ d ] % cellSize[ d ] != 0 )
-						finalSize[ d ] = ( int )( dim[ d ] % cellSize[ d ] );
+						finalSize[ d ] = dim[ d ] % cellSize[ d ];
 				
 				finalOffset[ d ] = cursor.getIntPosition( d ) * cellSize[ d ];
 			}			

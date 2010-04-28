@@ -58,7 +58,7 @@ public class UnsignedByteType extends GenericByteType<UnsignedByteType>
 	public static int getUnsignedByte( final byte signedByte ) { return signedByte & 0xff; }
 
 	@Override
-	public DirectAccessContainer<UnsignedByteType, ? extends ByteAccess> createSuitableDirectAccessContainer( final DirectAccessContainerFactory storageFactory, final long dim[] )
+	public DirectAccessContainer<UnsignedByteType, ? extends ByteAccess> createSuitableDirectAccessContainer( final DirectAccessContainerFactory storageFactory, final int dim[] )
 	{
 		// create the container
 		final DirectAccessContainer<UnsignedByteType, ? extends ByteAccess> container = storageFactory.createByteInstance( dim, 1 );

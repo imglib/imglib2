@@ -55,7 +55,7 @@ public class ShapeList< T extends Type< T > > extends AbstractContainer< T >
 	final protected ArrayList< ArrayList< T > > typeLists;
 	final protected T background;
 	
-	public ShapeList( final ShapeListContainerFactory factory, final long[] dim, final T background )
+	public ShapeList( final ShapeListContainerFactory factory, final int[] dim, final T background )
 	{
 		super( factory, dim );
 		this.factory = factory;
@@ -75,7 +75,7 @@ public class ShapeList< T extends Type< T > > extends AbstractContainer< T >
 		this.background = background;
 	}
 
-	public ShapeList( final long[] dim, final T background )
+	public ShapeList( final int[] dim, final T background )
 	{
 		this( new ShapeListContainerFactory(), dim, background );
 	}

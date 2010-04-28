@@ -39,7 +39,7 @@ public class IntDynamicContainer <T extends Type<T>> extends DynamicContainer<T,
 {
 	final ArrayList<Integer> data;
 	
-	public IntDynamicContainer( final DynamicContainerFactory factory, final long[] dim, final int entitiesPerPixel )
+	public IntDynamicContainer( final DynamicContainerFactory factory, final int[] dim, final int entitiesPerPixel )
 	{
 		super( factory, dim, entitiesPerPixel );
 		

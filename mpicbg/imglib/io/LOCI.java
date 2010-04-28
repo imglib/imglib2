@@ -186,9 +186,9 @@ public class LOCI
 			final Image<Unsigned12BitType> img;
 			
 			if ( end-start == 1)				
-				img = factory.createImage( new long[]{ width, height }, fileName);
+				img = factory.createImage( new int[]{ width, height }, fileName);
 			else
-				img = factory.createImage( new long[]{ width, height, end - start }, fileName);
+				img = factory.createImage( new int[]{ width, height, end - start }, fileName);
 
 			if (img == null)
 			{
@@ -343,9 +343,9 @@ public class LOCI
 			final Image<ShortType> img;
 			
 			if ( end-start == 1)				
-				img = factory.createImage( new long[]{ width, height }, fileName);
+				img = factory.createImage( new int[]{ width, height }, fileName);
 			else
-				img = factory.createImage( new long[]{ width, height, end - start }, fileName);
+				img = factory.createImage( new int[]{ width, height, end - start }, fileName);
 
 			if (img == null)
 			{
@@ -560,9 +560,9 @@ public class LOCI
 			final Image<FloatType> img;		
 			
 			if ( end-start == 1)				
-				img = factory.createImage( new long[]{ width, height }, fileName);
+				img = factory.createImage( new int[]{ width, height }, fileName);
 			else
-				img = factory.createImage( new long[]{ width, height, end - start }, fileName);
+				img = factory.createImage( new int[]{ width, height, end - start }, fileName);
 
 			if (img == null)
 			{
@@ -732,9 +732,9 @@ public class LOCI
 			final Image<ByteType> img;
 			
 			if ( end-start == 1)				
-				img = factory.createImage( new long[]{ width, height }, fileName);
+				img = factory.createImage( new int[]{ width, height }, fileName);
 			else
-				img = factory.createImage( new long[]{ width, height, end - start }, fileName);
+				img = factory.createImage( new int[]{ width, height, end - start }, fileName);
 
 			if (img == null)
 			{
@@ -874,9 +874,9 @@ public class LOCI
 			final Image<UnsignedByteType> img;
 			
 			if ( end-start == 1)				
-				img = factory.createImage( new long[]{ width, height }, fileName);
+				img = factory.createImage( new int[]{ width, height }, fileName);
 			else
-				img = factory.createImage( new long[]{ width, height, end - start }, fileName);
+				img = factory.createImage( new int[]{ width, height, end - start }, fileName);
 
 			if (img == null)
 			{
@@ -1001,9 +1001,9 @@ public class LOCI
 			final Image<RGBALegacyType> img;
 			
 			if ( end-start == 1)				
-				img = factory.createImage( new long[]{ width, height }, fileName);
+				img = factory.createImage( new int[]{ width, height }, fileName);
 			else
-				img = factory.createImage( new long[]{ width, height, end - start }, fileName);
+				img = factory.createImage( new int[]{ width, height, end - start }, fileName);
 
 			if (img == null)
 			{

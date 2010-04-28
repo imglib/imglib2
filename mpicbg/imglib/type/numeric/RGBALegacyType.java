@@ -65,7 +65,7 @@ final public class RGBALegacyType extends AbstractType<RGBALegacyType> implement
 	public RGBALegacyType() { this( 0 ); }
 	
 	@Override
-	public DirectAccessContainer<RGBALegacyType, ? extends IntAccess> createSuitableDirectAccessContainer( final DirectAccessContainerFactory storageFactory, final long dim[] )
+	public DirectAccessContainer<RGBALegacyType, ? extends IntAccess> createSuitableDirectAccessContainer( final DirectAccessContainerFactory storageFactory, final int dim[] )
 	{
 		// create the container
 		final DirectAccessContainer<RGBALegacyType, ? extends IntAccess> container = storageFactory.createIntInstance( dim, 1 );

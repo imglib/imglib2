@@ -39,7 +39,7 @@ public class OutOfBoundsStrategyPeriodic<T extends Type<T>> extends OutOfBoundsS
 	final PositionableCursor<T> circleCursor;
 	final T type, circleType;
 	final int numDimensions;
-	final long[] dimension, position, circledPosition;
+	final int[] dimension, position, circledPosition;
 	
 	public OutOfBoundsStrategyPeriodic( final PositionableCursor<T> parentCursor )
 	{
@@ -52,8 +52,8 @@ public class OutOfBoundsStrategyPeriodic<T extends Type<T>> extends OutOfBoundsS
 			
 		this.numDimensions = parentCursor.getImage().numDimensions();
 		this.dimension = parentCursor.getImage().getDimensions();
-		this.position = new long[ numDimensions ];
-		this.circledPosition = new long[ numDimensions ];
+		this.position = new int[ numDimensions ];
+		this.circledPosition = new int[ numDimensions ];
 	}
 
 	@Override
@@ -106,7 +106,7 @@ public class OutOfBoundsStrategyPeriodic<T extends Type<T>> extends OutOfBoundsS
 		type.set( circleType );
 	}
 	
-	final private static long getCircleCoordinateDim( final long pos, final long dim )
+	final private static int getCircleCoordinateDim( final int pos, final int dim )
 	{		
 		if ( pos > -1 )
 			return pos % dim;
@@ -114,7 +114,7 @@ public class OutOfBoundsStrategyPeriodic<T extends Type<T>> extends OutOfBoundsS
 			return (dim-1) + (pos+1) % dim;		
 	}
 	
-	final private static void getCircleCoordinate( final long[] position, final long circledPosition[], final long[] dimensions, final int numDimensions )
+	final private static void getCircleCoordinate( final int[] position, final int circledPosition[], final int[] dimensions, final int numDimensions )
 	{
 		for ( int d = 0; d < numDimensions; d++ )
 			circledPosition[ d ] = getCircleCoordinateDim( position[ d ], dimensions[ d ] );

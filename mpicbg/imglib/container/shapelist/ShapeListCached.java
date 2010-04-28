@@ -45,19 +45,19 @@ public class ShapeListCached<T extends Type<T> > extends ShapeList<T>
 {
 	ShapeListCache<T> cache;
 		
-	public ShapeListCached( final ShapeListContainerFactory factory, final long[] dim, final T background )
+	public ShapeListCached( final ShapeListContainerFactory factory, final int[] dim, final T background )
 	{
 		super( factory, dim, background );
 		
 		this.cache = new ShapeListCacheFIFO<T>( factory.getCacheSize(), this );
 	}
 	
-	public ShapeListCached( final long[] dim, final T background, final int cacheSize )
+	public ShapeListCached( final int[] dim, final T background, final int cacheSize )
 	{
 		this( new ShapeListContainerFactory( cacheSize ), dim, background );
 	}
 
-	public ShapeListCached( final long[] dim, final T background )
+	public ShapeListCached( final int[] dim, final T background )
 	{
 		this( dim, background, 32 );
 	}

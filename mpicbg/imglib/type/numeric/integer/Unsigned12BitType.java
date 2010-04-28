@@ -68,7 +68,7 @@ public class Unsigned12BitType extends AbstractIntegerType<Unsigned12BitType>
 	public Unsigned12BitType() { this( (short)0 ); }
 	
 	@Override
-	public DirectAccessContainer<Unsigned12BitType, ? extends BitAccess> createSuitableDirectAccessContainer( final DirectAccessContainerFactory storageFactory, final long dim[] )
+	public DirectAccessContainer<Unsigned12BitType, ? extends BitAccess> createSuitableDirectAccessContainer( final DirectAccessContainerFactory storageFactory, final int dim[] )
 	{
 		// create the container
 		final DirectAccessContainer<Unsigned12BitType, ? extends BitAccess> container = storageFactory.createBitInstance( dim, 12 );

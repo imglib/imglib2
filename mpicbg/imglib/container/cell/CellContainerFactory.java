@@ -76,12 +76,12 @@ public class CellContainerFactory extends DirectAccessContainerFactory
 		this.cellSize = cellSize;
 	}
 	
-	protected long[] checkDimensions( long[] dimensions )
+	protected int[] checkDimensions( int dimensions[] )
 	{
 		if ( dimensions == null || dimensions.length == 0 )
 		{
 			System.err.println("CellContainerFactory(): dimensionality is null. Creating a 1D cell with size 1.");
-			dimensions = new long[]{1};
+			dimensions = new int[]{1};
 		}
 
 		for ( int i = 0; i < dimensions.length; i++ )
@@ -96,7 +96,7 @@ public class CellContainerFactory extends DirectAccessContainerFactory
 		return dimensions;
 	}
 	
-	protected int[] checkCellSize( int[] cellSize, long[] dimensions )
+	protected int[] checkCellSize( int[] cellSize, int[] dimensions )
 	{		
 		if ( cellSize == null )
 		{
@@ -127,7 +127,7 @@ public class CellContainerFactory extends DirectAccessContainerFactory
 	}
 
 	@Override
-	public <T extends Type<T>> DirectAccessContainer<T, BitArray> createBitInstance( long[] dimensions, int entitiesPerPixel )
+	public <T extends Type<T>> DirectAccessContainer<T, BitArray> createBitInstance( int[] dimensions, int entitiesPerPixel )
 	{
 		dimensions = checkDimensions( dimensions );
 		int[] cellSize = checkCellSize( this.cellSize, dimensions );
@@ -136,7 +136,7 @@ public class CellContainerFactory extends DirectAccessContainerFactory
 	}
 	
 	@Override
-	public <T extends Type<T>> DirectAccessContainer<T, ByteArray> createByteInstance( long[] dimensions, int entitiesPerPixel )
+	public <T extends Type<T>> DirectAccessContainer<T, ByteArray> createByteInstance( int[] dimensions, int entitiesPerPixel )
 	{
 		dimensions = checkDimensions( dimensions );
 		int[] cellSize = checkCellSize( this.cellSize, dimensions );
@@ -145,7 +145,7 @@ public class CellContainerFactory extends DirectAccessContainerFactory
 	}
 
 	@Override
-	public <T extends Type<T>> DirectAccessContainer<T, CharArray> createCharInstance( long[] dimensions, int entitiesPerPixel )
+	public <T extends Type<T>> DirectAccessContainer<T, CharArray> createCharInstance(int[] dimensions, int entitiesPerPixel)
 	{
 		dimensions = checkDimensions( dimensions );
 		int[] cellSize = checkCellSize( this.cellSize, dimensions );
@@ -154,7 +154,7 @@ public class CellContainerFactory extends DirectAccessContainerFactory
 	}
 
 	@Override
-	public <T extends Type<T>> DirectAccessContainer<T, DoubleArray> createDoubleInstance( long[] dimensions, int entitiesPerPixel )
+	public <T extends Type<T>> DirectAccessContainer<T, DoubleArray> createDoubleInstance(int[] dimensions, int entitiesPerPixel)
 	{
 		dimensions = checkDimensions( dimensions );
 		int[] cellSize = checkCellSize( this.cellSize, dimensions );
@@ -163,7 +163,7 @@ public class CellContainerFactory extends DirectAccessContainerFactory
 	}
 
 	@Override
-	public <T extends Type<T>> DirectAccessContainer<T, FloatArray> createFloatInstance( long[] dimensions, int entitiesPerPixel)
+	public <T extends Type<T>> DirectAccessContainer<T, FloatArray> createFloatInstance(int[] dimensions, int entitiesPerPixel)
 	{
 		dimensions = checkDimensions( dimensions );
 		int[] cellSize = checkCellSize( this.cellSize, dimensions );
@@ -172,7 +172,7 @@ public class CellContainerFactory extends DirectAccessContainerFactory
 	}
 
 	@Override
-	public <T extends Type<T>> DirectAccessContainer<T, IntArray> createIntInstance( long[] dimensions, int entitiesPerPixel )
+	public <T extends Type<T>> DirectAccessContainer<T, IntArray> createIntInstance(int[] dimensions, int entitiesPerPixel)
 	{
 		dimensions = checkDimensions( dimensions );
 		int[] cellSize = checkCellSize( this.cellSize, dimensions );
@@ -181,7 +181,7 @@ public class CellContainerFactory extends DirectAccessContainerFactory
 	}
 
 	@Override
-	public <T extends Type<T>> DirectAccessContainer<T, LongArray> createLongInstance( long[] dimensions, int entitiesPerPixel )
+	public <T extends Type<T>> DirectAccessContainer<T, LongArray> createLongInstance(int[] dimensions, int entitiesPerPixel)
 	{
 		dimensions = checkDimensions( dimensions );
 		int[] cellSize = checkCellSize( this.cellSize, dimensions );
@@ -190,7 +190,7 @@ public class CellContainerFactory extends DirectAccessContainerFactory
 	}
 
 	@Override
-	public <T extends Type<T>> DirectAccessContainer<T, ShortArray> createShortInstance( long[] dimensions, int entitiesPerPixel )
+	public <T extends Type<T>> DirectAccessContainer<T, ShortArray> createShortInstance(int[] dimensions, int entitiesPerPixel)
 	{
 		dimensions = checkDimensions( dimensions );
 		int[] cellSize = checkCellSize( this.cellSize, dimensions );

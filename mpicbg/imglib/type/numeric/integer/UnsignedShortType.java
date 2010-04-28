@@ -58,7 +58,7 @@ public class UnsignedShortType extends GenericShortType<UnsignedShortType>
 	public static int getUnsignedShort( final short signedShort ) { return signedShort & 0xffff; }
 	
 	@Override
-	public DirectAccessContainer<UnsignedShortType, ? extends ShortAccess> createSuitableDirectAccessContainer( final DirectAccessContainerFactory storageFactory, final long dim[] )
+	public DirectAccessContainer<UnsignedShortType, ? extends ShortAccess> createSuitableDirectAccessContainer( final DirectAccessContainerFactory storageFactory, final int dim[] )
 	{
 		// create the container
 		final DirectAccessContainer<UnsignedShortType, ? extends ShortAccess> container = storageFactory.createShortInstance( dim, 1 );

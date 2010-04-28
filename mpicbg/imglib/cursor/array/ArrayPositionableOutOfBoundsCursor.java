@@ -146,7 +146,7 @@ public class ArrayPositionableOutOfBoundsCursor<T extends Type<T>> extends Array
 					type.updateContainer( this );
 					
 					// get the offset inside the image
-					type.updateIndex( (int)container.getPos( position ) );
+					type.updateIndex( container.getPos( position ) );
 				}
 				else
 				{
@@ -242,7 +242,7 @@ public class ArrayPositionableOutOfBoundsCursor<T extends Type<T>> extends Array
 		else
 		{
 			// jumped around inside the image
-			type.updateIndex( (int)container.getPos( this.position ) );
+			type.updateIndex( container.getPos( this.position ) );
 
 			linkedRasterPositionable.setPosition( position, dim );
 		}

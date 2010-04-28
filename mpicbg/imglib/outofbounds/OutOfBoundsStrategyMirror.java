@@ -30,6 +30,7 @@
 package mpicbg.imglib.outofbounds;
 
 import mpicbg.imglib.cursor.PositionableCursor;
+import mpicbg.imglib.cursor.LocalizableIterableCursor;
 import mpicbg.imglib.type.Type;
 
 public class OutOfBoundsStrategyMirror<T extends Type<T>> extends OutOfBoundsStrategy<T>
@@ -38,7 +39,7 @@ public class OutOfBoundsStrategyMirror<T extends Type<T>> extends OutOfBoundsStr
 	final PositionableCursor<T> mirrorCursor;
 	final T type, mirrorType;
 	final int numDimensions;
-	final long[] dimension, position, mirroredPosition, currentDirection, tmp;
+	final int[] dimension, position, mirroredPosition, currentDirection, tmp;
 	
 	public OutOfBoundsStrategyMirror( final PositionableCursor<T> parentCursor )
 	{
@@ -51,10 +52,10 @@ public class OutOfBoundsStrategyMirror<T extends Type<T>> extends OutOfBoundsStr
 			
 		this.numDimensions = parentCursor.getImage().numDimensions();
 		this.dimension = parentCursor.getImage().getDimensions();
-		this.position = new long[ numDimensions ];
-		this.mirroredPosition = new long[ numDimensions ];
-		this.currentDirection = new long[ numDimensions ];
-		this.tmp = new long[ numDimensions ];
+		this.position = new int[ numDimensions ];
+		this.mirroredPosition = new int[ numDimensions ];
+		this.currentDirection = new int[ numDimensions ];
+		this.tmp = new int[ numDimensions ];
 	}
 
 	@Override
@@ -176,7 +177,7 @@ public class OutOfBoundsStrategyMirror<T extends Type<T>> extends OutOfBoundsStr
 	@Override
 	public void initOutOfBOunds() { notifyOutOfBOunds(); }
 	
-	protected void getMirrorCoordinate( final long[] position, final long mirroredPosition[] )
+	protected void getMirrorCoordinate( final int[] position, final int mirroredPosition[] )
 	{
 		for ( int d = 0; d < numDimensions; d++ )
 		{

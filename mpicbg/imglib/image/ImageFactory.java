@@ -50,12 +50,12 @@ public class ImageFactory<T extends Type<T>> implements Factory
 	
 	public T createType() { return type.createVariable();	}
 
-	public Image<T> createImage( final long dim[], final String name )
+	public Image<T> createImage( final int dim[], final String name )
 	{
 		return new Image<T>( this, dim, name );
 	}
 
-	public Image<T> createImage( final long dim[] ) { return createImage( dim, null ); }
+	public Image<T> createImage( final int dim[] ) { return createImage( dim, null ); }
 	
 	@Override
 	public void printProperties()

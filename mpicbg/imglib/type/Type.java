@@ -65,7 +65,7 @@ public interface Type<T extends Type<T>>
 	 * @param dim - the dimensions
 	 * @return - the instantiated DirectAccessContainer where only the {@link Type} knowns the BasicType it contains.
 	 */
-	public DirectAccessContainer<T,?> createSuitableDirectAccessContainer( final DirectAccessContainerFactory storageFactory, final long dim[] );
+	public DirectAccessContainer<T,?> createSuitableDirectAccessContainer( final DirectAccessContainerFactory storageFactory, final int dim[] );
 	
 	/**
 	 * The {@link Type} creates the default {@link Display} for displaying the image contents. Only {@link Type} can do this as in {@link Image}

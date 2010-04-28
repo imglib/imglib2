@@ -44,7 +44,7 @@ public abstract class ContainerFactory implements Factory
 	 * 
 	 * @return {@link Container} - the instantiated Container
 	 */
-	public abstract <T extends Type<T>> Container<T> createContainer( final long[] dim, final T type );
+	public abstract <T extends Type<T>> Container<T> createContainer( final int[] dim, final T type );
 	
 	public void setOptimizedContainerUse ( final boolean useOptimizedContainers ) { this.useOptimizedContainers = useOptimizedContainers; }
 	public boolean useOptimizedContainers() { return useOptimizedContainers; }	

@@ -36,39 +36,39 @@ import mpicbg.imglib.type.Type;
 
 public abstract class AbstractLocalizableCursor< T extends Type< T > > extends AbstractCursor< T > implements LocalizableCursor< T > 
 {
-	final protected long[] position, dimensions;
+	final protected int[] position, dimensions;
 	
 	public AbstractLocalizableCursor( final Container<T> container, final Image<T> image )
 	{
 		super( container, image );
 		
-		this.position = new long[ numDimensions ];
+		this.position = new int[ numDimensions ];
 		this.dimensions = container.getDimensions();
 	}
 	
 	@Override
-	public void localize( final float[] position )
+	public void localize( float[] position )
 	{
 		for ( int d = 0; d < numDimensions; d++ )
 			position[ d ] = this.position[ d ];
 	}
 
 	@Override
-	public void localize( final double[] position )
+	public void localize( double[] position )
 	{
 		for ( int d = 0; d < numDimensions; d++ )
 			position[ d ] = this.position[ d ];
 	}
 
 	@Override
-	public void localize( final int[] position )
+	public void localize( int[] position )
 	{
 		for ( int d = 0; d < numDimensions; d++ )
-			position[ d ] = ( int )this.position[ d ];
+			position[ d ] = this.position[ d ];
 	}
 	
 	@Override
-	public void localize( final long[] position )
+	public void localize( long[] position )
 	{
 		for ( int d = 0; d < numDimensions; d++ )
 			position[ d ] = this.position[ d ];
@@ -87,7 +87,7 @@ public abstract class AbstractLocalizableCursor< T extends Type< T > > extends A
 	}
 	
 	@Override
-	public int getIntPosition( final int dim ){ return ( int )position[ dim ]; }
+	public int getIntPosition( final int dim ){ return position[ dim ]; }
 	
 	@Override
 	public long getLongPosition( final int dim ){ return position[ dim ]; }	
@@ -95,7 +95,7 @@ public abstract class AbstractLocalizableCursor< T extends Type< T > > extends A
 	public int numDimensions(){ return numDimensions; }
 
 	@Override
-	public String getLocationAsString(){ return MathLib.printCoordinates( position ); }
+	public String getLocationAsString() { return MathLib.printCoordinates( position ); }
 	
 	@Override
 	public String toString() { return getLocationAsString() + " = " + type(); }		

@@ -36,11 +36,11 @@ public abstract class AbstractContainer<T extends Type<T>> implements Container<
 {
 	final protected int numDimensions;
 	final protected long numPixels, id;
-	protected final long[] dim;
+	protected final int[] dim;
 	
 	final ContainerFactory factory;
 
-	public AbstractContainer( final ContainerFactory factory, long[] dim )
+	public AbstractContainer( final ContainerFactory factory, int[] dim )
 	{
 		this.numDimensions = dim.length;
 		
@@ -51,28 +51,6 @@ public abstract class AbstractContainer<T extends Type<T>> implements Container<
 		this.id = Image.createUniqueId();
 	}
 	
-	/**
-	 * Calculate the number of pixels in a hypercube of given dimensions.
-	 * 
-	 * @param dim
-	 * @return
-	 */
-	public static long getNumPixels( final long[] dim )
-	{
-		long numPixels = 1;		
-		
-		for (int i = 0; i < dim.length; i++)
-			numPixels *= dim[i];
-		
-		return numPixels;		
-	}
-	
-	/**
-	 * Calculate the number of pixels in a hypercube of given dimensions.
-	 * 
-	 * @param dim
-	 * @return
-	 */
 	public static long getNumPixels( final int[] dim )
 	{
 		long numPixels = 1;		
@@ -91,17 +69,17 @@ public abstract class AbstractContainer<T extends Type<T>> implements Container<
 	@Override
 	public int numDimensions() { return dim.length; }
 	@Override
-	public long[] getDimensions() { return dim.clone(); }
+	public int[] getDimensions() { return dim.clone(); }
 	
 	@Override
-	public void getDimensions( final long[] dimensions )
+	public void getDimensions( final int[] dimensions )
 	{
 		for (int i = 0; i < numDimensions; i++)
 			dimensions[i] = this.dim[i];
 	}
 
 	@Override
-	public long getDimension( final int dim )
+	public int getDimension( final int dim )
 	{
 		if ( dim < numDimensions && dim > -1 )
 			return this.dim[ dim ];

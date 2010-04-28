@@ -43,9 +43,9 @@ public class ImagePlusLocalizablePlaneCursor<T extends Type<T>> extends ImagePlu
 	{
 		super( container, image, type );
 		
-		this.width = container.getDimensionInt( 0 );
-		this.height = container.getDimensionInt( 1 );
-		this.depth = container.getDimensionInt( 2 );
+		this.width = image.getDimension( 0 );
+		this.height = image.getDimension( 1 );
+		this.depth = image.getDimension( 2 );
 	}	
 	
 	@Override 

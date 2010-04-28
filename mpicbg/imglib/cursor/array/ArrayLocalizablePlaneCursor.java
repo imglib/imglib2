@@ -37,13 +37,10 @@ import mpicbg.imglib.type.Type;
 public class ArrayLocalizablePlaneCursor<T extends Type<T>> extends ArrayLocalizableCursor<T> implements LocalizablePlaneCursor<T>
 {
 	protected int planeDimA, planeDimB, planeSizeA, planeSizeB, incPlaneA, incPlaneB, maxI;
-	final Array<T,?> container;
 	
 	public ArrayLocalizablePlaneCursor( final Array<T,?> container, final Image<T> image, final T type ) 
 	{
 		super( container, image, type );
-		
-		this.container = container;
 	}	
 	
 	@Override 
@@ -82,10 +79,10 @@ public class ArrayLocalizablePlaneCursor<T extends Type<T>> extends ArrayLocaliz
 		this.planeDimA = planeDimA;
 		this.planeDimB = planeDimB;
 		
-		this.planeSizeA = container.getDimensionInt( planeDimA );
-		this.planeSizeB = container.getDimensionInt( planeDimB );
+		this.planeSizeA = container.getDimension( planeDimA );
+		this.planeSizeB = container.getDimension( planeDimB );
 		
-		final int[] steps = Array.createAllocationSteps( container.getDimensionsInt() );
+		final int[] steps = Array.createAllocationSteps( container.getDimensions() );
 
 		// store the current position
     	final int[] dimPos = dimensionPositions.clone();
@@ -108,9 +105,9 @@ public class ArrayLocalizablePlaneCursor<T extends Type<T>> extends ArrayLocaliz
 		type.decIndex( incPlaneA );					
 		position[ planeDimA ] = -1;
 		
-		dimPos[ planeDimA ] = (int)dimensions[ planeDimA ] - 1;		
+		dimPos[ planeDimA ] = dimensions[ planeDimA ] - 1;		
 		if ( planeDimB > -1 && planeDimB < steps.length )
-			dimPos[ planeDimB ] = (int)dimensions[ planeDimB ] - 1;
+			dimPos[ planeDimB ] = dimensions[ planeDimB ] - 1;
 		
 		maxI = container.getPos( dimPos );
 		
@@ -123,10 +120,10 @@ public class ArrayLocalizablePlaneCursor<T extends Type<T>> extends ArrayLocaliz
 		this.planeDimA = planeDimA;
 		this.planeDimB = planeDimB;
 		
-		this.planeSizeA = container.getDimensionInt( planeDimA );
-		this.planeSizeB = container.getDimensionInt( planeDimB );
+		this.planeSizeA = container.getDimension( planeDimA );
+		this.planeSizeB = container.getDimension( planeDimB );
 		
-		final int[] steps = Array.createAllocationSteps( container.getDimensionsInt() );
+		final int[] steps = Array.createAllocationSteps( container.getDimensions() );
 
 		// store the current position
     	final int[] dimPos = new int[ dimensionPositions.length ]; 
@@ -151,9 +148,9 @@ public class ArrayLocalizablePlaneCursor<T extends Type<T>> extends ArrayLocaliz
 		type.decIndex( incPlaneA );					
 		position[ planeDimA ] = -1;
 		
-		dimPos[ planeDimA ] = (int)dimensions[ planeDimA ] - 1;		
+		dimPos[ planeDimA ] = dimensions[ planeDimA ] - 1;		
 		if ( planeDimB > -1 && planeDimB < steps.length )
-			dimPos[ planeDimB ] = (int)dimensions[ planeDimB ] - 1;
+			dimPos[ planeDimB ] = dimensions[ planeDimB ] - 1;
 		
 		maxI = container.getPos( dimPos );
 		
@@ -184,7 +181,7 @@ public class ArrayLocalizablePlaneCursor<T extends Type<T>> extends ArrayLocaliz
 		for ( int d = 0; d < numDimensions; d++ )
 			this.position[ d ] = ( int )position[ d ];
 		
-		type.updateIndex( (int)container.getPos( this.position ) );
+		type.updateIndex( container.getPos( this.position ) );
 	}
 
 	protected void setPosition( final int[] position )

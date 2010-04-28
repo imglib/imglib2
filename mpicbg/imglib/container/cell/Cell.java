@@ -35,7 +35,7 @@ import mpicbg.imglib.container.array.Array;
 import mpicbg.imglib.container.basictypecontainer.array.ArrayDataAccess;
 import mpicbg.imglib.type.Type;
 
-public class Cell< T extends Type< T >, A extends ArrayDataAccess< A > >
+public class Cell< T extends Type<T>, A extends ArrayDataAccess<A>> //extends Array<T,A>
 {
 	final protected int[] offset, step, dim;	
 	final protected int cellId, numDimensions, numPixels, numEntities;
@@ -49,8 +49,8 @@ public class Cell< T extends Type< T >, A extends ArrayDataAccess< A > >
 		this.cellId = cellId;
 		this.numDimensions = dim.length;
 		this.dim = dim;
-		this.numPixels = ( int )AbstractContainer.getNumPixels( dim );
-		this.numEntities = ( int )AbstractPixelGridContainer.getNumEntities( dim, entitiesPerPixel );
+		this.numPixels = (int)AbstractContainer.getNumPixels( dim );
+		this.numEntities = (int)AbstractPixelGridContainer.getNumEntities( dim, entitiesPerPixel );
 		
 		step = new int[ numDimensions ];
 		

@@ -73,8 +73,8 @@ public class DynamicLocalizablePlaneCursor<T extends Type<T>> extends DynamicLoc
 		this.planeDimA = planeDimA;
 		this.planeDimB = planeDimB;
 		
-		this.planeSizeA = container.getDimensionInt( planeDimA );
-		this.planeSizeB = container.getDimensionInt( planeDimB );
+		this.planeSizeA = container.getDimension( planeDimA );
+		this.planeSizeB = container.getDimension( planeDimB );
 		
 		final int[] steps = container.getSteps();
 
@@ -114,8 +114,8 @@ public class DynamicLocalizablePlaneCursor<T extends Type<T>> extends DynamicLoc
 		this.planeDimA = planeDimA;
 		this.planeDimB = planeDimB;
 		
-		this.planeSizeA = container.getDimensionInt( planeDimA );
-		this.planeSizeB = container.getDimensionInt( planeDimB );
+		this.planeSizeA = container.getDimension( planeDimA );
+		this.planeSizeB = container.getDimension( planeDimB );
 		
 		final int[] steps = container.getSteps();
 
