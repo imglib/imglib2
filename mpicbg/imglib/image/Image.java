@@ -67,7 +67,7 @@ public class Image<T extends Type<T>> implements ImageProperties, Dimensions, It
 	/* TODO Should this be in the multi-channel image?  Should that be in the image or not?  Better not! */
 	protected Display<T> display;
 
-	private Image( Container<T> container, ImageFactory<T> imageFactory, int dim[], String name )
+	private Image( Container<T> container, ImageFactory<T> imageFactory, long[] dim, String name )
 	{
 		if (name == null || name.length() == 0)
 			this.name = "image" + i.getAndIncrement();
@@ -77,7 +77,7 @@ public class Image<T extends Type<T>> implements ImageProperties, Dimensions, It
 		if ( dim == null || dim.length < 1 )
 		{
 			System.err.print("Cannot instantiate Image, dimensions are null. Creating a 1D image of size 1.");
-			dim = new int[]{1};
+			dim = new long[]{1};
 		}
 
 		for (int i = 0; i < dim.length; i++)
@@ -117,7 +117,7 @@ public class Image<T extends Type<T>> implements ImageProperties, Dimensions, It
 		this( container, new ImageFactory<T>( type, container.getFactory() ), container.getDimensions(), name );
 	}
 	
-	protected Image( final ImageFactory<T> imageFactory, final int dim[], final String name )	
+	protected Image( final ImageFactory<T> imageFactory, final long dim[], final String name )	
 	{	
 		this ( null, imageFactory, dim, name );		
 	}
@@ -127,7 +127,7 @@ public class Image<T extends Type<T>> implements ImageProperties, Dimensions, It
 	 * @param dimensions - the dimensions of the {@link Image}
 	 * @return - a new empty {@link Image}
 	 */
-	public Image<T> createNewImage( final int[] dimensions, final String name )
+	public Image<T> createNewImage( final long[] dimensions, final String name )
 	{
 		final Image< T > newImage = imageFactory.createImage( dimensions, name );
 		newImage.setCalibration( getCalibration() );
@@ -139,7 +139,7 @@ public class Image<T extends Type<T>> implements ImageProperties, Dimensions, It
 	 * @param dimensions - the dimensions of the {@link Image}
 	 * @return - a new empty {@link Image}
 	 */
-	public Image<T> createNewImage( final int[] dimensions ) { return createNewImage( dimensions, null ); }
+	public Image<T> createNewImage( final long[] dimensions ) { return createNewImage( dimensions, null ); }
 
 	/**
 	 * Creates a new {@link Image} with the same dimensions, {@link ContainerFactory} and {@link Type} as this one as this one.
@@ -304,7 +304,7 @@ public class Image<T extends Type<T>> implements ImageProperties, Dimensions, It
 	@Override
 	public int numDimensions() { return getContainer().numDimensions(); }
 	@Override
-	public int[] getDimensions() { return getContainer().getDimensions(); }
+	public long[] getDimensions() { return getContainer().getDimensions(); }
 	@Override
 	public long getNumPixels() { return getContainer().getNumPixels(); }
 
@@ -321,14 +321,14 @@ public class Image<T extends Type<T>> implements ImageProperties, Dimensions, It
 	}
 	
 	@Override
-	public void getDimensions( final int[] dimensions )
+	public void getDimensions( final long[] dimensions )
 	{
 		for (int i = 0; i < getContainer().numDimensions(); i++)
 			dimensions[i] = getContainer().getDimension( i );
 	}
 
 	@Override
-	public int getDimension( final int dim ) { return getContainer().getDimension( dim ); }
+	public long getDimension( final int dim ) { return getContainer().getDimension( dim ); }
 	
 	/**
 	 * Clones this {@link Image}, i.e. creates this {@link Image} containing the same content.

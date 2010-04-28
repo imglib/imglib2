@@ -15,5 +15,5 @@ public abstract class PixelGridContainerFactory extends ContainerFactory
 	 * @return {@link Container} - the instantiated Container
 	 */
 	@Override
-	public abstract <T extends Type<T>> PixelGridContainer<T> createContainer( final int[] dim, final T type );
+	public abstract <T extends Type<T>> PixelGridContainer<T> createContainer( final long[] dim, final T type );
 }

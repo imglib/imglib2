@@ -36,14 +36,14 @@ public abstract class AbstractPixelGridContainer< T extends Type< T > > extends 
 	final protected int entitiesPerPixel;
 	protected long numEntities;
 	
-	public AbstractPixelGridContainer( final ContainerFactory factory, int[] dim, final int entitiesPerPixel )
+	public AbstractPixelGridContainer( final ContainerFactory factory, final long[] dim, final int entitiesPerPixel )
 	{
 		super( factory, dim );
 		this.entitiesPerPixel = entitiesPerPixel;
 		this.numEntities = numPixels * entitiesPerPixel;
 	}
 	
-	public static long getNumEntities( final int[] dim, final int entitiesPerPixel )
+	public static long getNumEntities( final long[] dim, final int entitiesPerPixel )
 	{
 		return getNumPixels( dim ) * entitiesPerPixel;
 	}

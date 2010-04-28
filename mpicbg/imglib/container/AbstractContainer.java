@@ -36,11 +36,11 @@ public abstract class AbstractContainer<T extends Type<T>> implements Container<
 {
 	final protected int numDimensions;
 	final protected long numPixels, id;
-	protected final int[] dim;
+	protected final long[] dim;
 	
 	final ContainerFactory factory;
 
-	public AbstractContainer( final ContainerFactory factory, int[] dim )
+	public AbstractContainer( final ContainerFactory factory, long[] dim )
 	{
 		this.numDimensions = dim.length;
 		
@@ -51,7 +51,7 @@ public abstract class AbstractContainer<T extends Type<T>> implements Container<
 		this.id = Image.createUniqueId();
 	}
 	
-	public static long getNumPixels( final int[] dim )
+	public static long getNumPixels( final long[] dim )
 	{
 		long numPixels = 1;		
 		
@@ -69,17 +69,17 @@ public abstract class AbstractContainer<T extends Type<T>> implements Container<
 	@Override
 	public int numDimensions() { return dim.length; }
 	@Override
-	public int[] getDimensions() { return dim.clone(); }
+	public long[] getDimensions() { return dim.clone(); }
 	
 	@Override
-	public void getDimensions( final int[] dimensions )
+	public void getDimensions( final long[] dimensions )
 	{
 		for (int i = 0; i < numDimensions; i++)
 			dimensions[i] = this.dim[i];
 	}
 
 	@Override
-	public int getDimension( final int dim )
+	public long getDimension( final int dim )
 	{
 		if ( dim < numDimensions && dim > -1 )
 			return this.dim[ dim ];

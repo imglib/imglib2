@@ -43,17 +43,23 @@ import mpicbg.imglib.type.Type;
 
 public class Array<T extends Type<T>, A extends DataAccess> extends AbstractDirectAccessContainer<T, A>
 {
-	final protected int[] step;
+	final protected int[] step, dim;
 	final ArrayContainerFactory factory;
 	
 	// the DataAccess created by the ArrayContainerFactory
 	final A data;
 
-	public Array( final ArrayContainerFactory factory, final A data, final int[] dim, final int entitiesPerPixel )
+	public Array( final ArrayContainerFactory factory, final A data, final long[] dim, final int entitiesPerPixel )
 	{
 		super( factory, dim, entitiesPerPixel );
 		
-		step = Array.createAllocationSteps( dim );
+		/* Convert long dimensions to int dimensions as more is not supported */
+		this.dim = new int[ dim.length ];
+		
+		for ( int d = 0; d < numDimensions; ++d )
+			this.dim[ d ] = (int)dim[ d ];
+		
+		step = Array.createAllocationSteps( this.dim );
 		this.factory = factory;
 		this.data = data;
 	}
@@ -74,7 +80,7 @@ public class Array<T extends Type<T>, A extends DataAccess> extends AbstractDire
 
 	@Override
 	public ArrayLocalizableCursor<T> createLocalizableCursor( final Image<T> image ) 
-	{ 
+	{
 		// create a Cursor using a Type that is linked to the container
 		ArrayLocalizableCursor<T> c = new ArrayLocalizableCursor<T>( this, image, linkedType.duplicateTypeOnSameDirectAccessContainer() );
 		return c;
