@@ -123,6 +123,22 @@ public class Array<T extends Type<T>, A extends DataAccess> extends AbstractDire
 		for ( int d = 1; d < dim.length; ++d )
 			  steps[ d ] = steps[ d - 1 ] * dim[ d - 1 ];
 	}
+
+	public int[] getDimensionsInt() { return dim.clone(); }
+	
+	public void getDimensions( final int[] dimensions )
+	{
+		for (int i = 0; i < numDimensions; i++)
+			dimensions[i] = this.dim[i];
+	}
+
+	public int getDimensionInt( final int dim )
+	{
+		if ( dim < numDimensions && dim > -1 )
+			return this.dim[ dim ];
+		else
+			return 1;		
+	}
 	
 	public final int getPos( final int[] l )
 	{ 
