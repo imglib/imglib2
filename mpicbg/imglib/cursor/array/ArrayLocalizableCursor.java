@@ -61,8 +61,7 @@ public class ArrayLocalizableCursor<T extends Type<T>> extends AbstractLocalizab
 		for ( int d = 0; d < dim.length; ++d )
 			dimLong[ d ] = dim[ d ];
 		
-		final Array<FakeType, FakeAccess> array = new Array<FakeType, FakeAccess>( null, new FakeArray(), dimLong, 1 );
-		return new ArrayLocalizableCursor<FakeType>( array, null, new FakeType() );
+		return createLinearCursor( dimLong );
 	}
 
 	public static ArrayLocalizableCursor<FakeType> createLinearCursor( final long[] dim )
