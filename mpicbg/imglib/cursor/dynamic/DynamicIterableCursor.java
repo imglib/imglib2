@@ -36,14 +36,15 @@ import mpicbg.imglib.cursor.AbstractIterableCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.type.Type;
 
-public class DynamicIterableCursor<T extends Type<T>> extends AbstractIterableCursor<T>
+public class DynamicIterableCursor< T extends Type< T >> extends AbstractIterableCursor< T > implements DynamicStorageAccess
 {
 	protected final T type;
-	protected final DynamicContainer<T,? extends DataAccess> container;
+	protected final DynamicContainer< T, ? extends DataAccess > container;
 	protected final DynamicContainerAccessor accessor;
-	int internalIndex;
+
+	protected int internalIndex;
 	
-	public DynamicIterableCursor( final DynamicContainer<T,? extends DynamicContainerAccessor> container, final Image<T> image, final T type ) 
+	public DynamicIterableCursor( final DynamicContainer< T, ? extends DynamicContainerAccessor > container, final Image< T > image, final T type )
 	{
 		super( container, image );
 		
@@ -55,6 +56,7 @@ public class DynamicIterableCursor<T extends Type<T>> extends AbstractIterableCu
 		reset();
 	}
 	
+	@Override
 	public DynamicContainerAccessor getAccessor() { return accessor; }
 
 	@Override
@@ -100,6 +102,7 @@ public class DynamicIterableCursor<T extends Type<T>> extends AbstractIterableCu
 		linkedIterator.reset();
 	}
 	
+	@Override
 	public int getInternalIndex() { return internalIndex; }
 
 	@Override

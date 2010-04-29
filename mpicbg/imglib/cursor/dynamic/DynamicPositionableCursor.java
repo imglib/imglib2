@@ -29,29 +29,40 @@
  */
 package mpicbg.imglib.cursor.dynamic;
 
+import mpicbg.imglib.container.basictypecontainer.DataAccess;
 import mpicbg.imglib.container.dynamic.DynamicContainer;
-import mpicbg.imglib.cursor.PositionableCursor;
+import mpicbg.imglib.container.dynamic.DynamicContainerAccessor;
+import mpicbg.imglib.cursor.AbstractPositionableCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.location.RasterLocalizable;
 import mpicbg.imglib.location.RasterPositionable;
 import mpicbg.imglib.location.VoidPositionable;
 import mpicbg.imglib.type.Type;
 
-public class DynamicPositionableCursor<T extends Type<T>> extends DynamicLocalizableCursor<T> implements PositionableCursor<T>
+public class DynamicPositionableCursor< T extends Type< T > > extends AbstractPositionableCursor< T > implements DynamicStorageAccess
 {
+	final protected T type;
+	final protected DynamicContainer< T, ? extends DataAccess > container;
+	final protected DynamicContainerAccessor accessor;
+
+	protected int internalIndex;
+	
 	final protected int[] step;
-	final int tmp[];
+	protected int numNeighborhoodCursors = 0;
 	
-	int numNeighborhoodCursors = 0;
-	
-	protected RasterPositionable linkedRasterPositionable = VoidPositionable.getInstance();
-	
-	public DynamicPositionableCursor( final DynamicContainer<T,?> container, final Image<T> image, final T type ) 
+	public DynamicPositionableCursor( final DynamicContainer< T, ? > container, final Image< T > image, final T type ) 
 	{
-		super( container, image, type );
+		super( container, image );
+		
+		this.type = type;
+		this.container = container;
+		accessor = container.createAccessor();
 		
 		step = container.getSteps();
-		tmp = new int[ numDimensions ];
+		
+		type.updateIndex( 0 );
+		type.updateContainer( this );
+		accessor.updateIndex( 0 );
 	}	
 	
 	@Override
@@ -145,7 +156,6 @@ public class DynamicPositionableCursor<T extends Type<T>> extends DynamicLocaliz
 	}
 
 	@Override
-	/* TODO change position to long accuracy */
 	public void setPosition( final long[] position )
 	{
 		for ( int d = 0; d < numDimensions; ++d )
@@ -188,4 +198,16 @@ public class DynamicPositionableCursor<T extends Type<T>> extends DynamicLocaliz
 		linkedRasterPositionable = VoidPositionable.getInstance();
 		return rasterPositionable;
 	}
+
+	@Override
+	public DynamicContainerAccessor getAccessor() { return accessor; }
+
+	@Override
+	public int getInternalIndex() { return internalIndex; }
+
+	@Override
+	public DynamicContainer< T, ? > getContainer(){ return container; }
+	
+	@Override
+	public T type() { return type; }
 }

@@ -35,10 +35,10 @@ import mpicbg.imglib.outofbounds.OutOfBoundsStrategy;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
 import mpicbg.imglib.type.Type;
 
-public class DynamicPositionableOutOfBoundsCursor<T extends Type<T>> extends DynamicPositionableCursor<T>
+public class DynamicPositionableOutOfBoundsCursor< T extends Type< T > > extends DynamicPositionableCursor< T >
 {
-	final OutOfBoundsStrategyFactory<T> outOfBoundsStrategyFactory;
-	final OutOfBoundsStrategy<T> outOfBoundsStrategy;
+	final OutOfBoundsStrategyFactory< T > outOfBoundsStrategyFactory;
+	final OutOfBoundsStrategy< T > outOfBoundsStrategy;
 	
 	boolean isOutOfBounds = false;
 	
@@ -48,41 +48,7 @@ public class DynamicPositionableOutOfBoundsCursor<T extends Type<T>> extends Dyn
 		
 		this.outOfBoundsStrategyFactory = outOfBoundsStrategyFactory;
 		this.outOfBoundsStrategy = outOfBoundsStrategyFactory.createStrategy( this );
-		
-		reset();
 	}	
-	
-	@Override
-	public boolean hasNext()
-	{
-		if ( !isOutOfBounds && internalIndex < container.getNumPixels() - 1 )
-			return true;
-		else
-			return false;
-	}
-
-	@Override
-	public void reset()
-	{
-		if ( outOfBoundsStrategy != null )
-		{
-			isOutOfBounds = false;		
-			
-			// in this way he returns the value of index 0 even if not moved at all
-			type.updateIndex( 0 );
-			internalIndex = 0;
-			type.updateContainer( this );
-			accessor.updateIndex( internalIndex );
-			internalIndex = -1;
-			
-			position[ 0 ] = -1;
-			
-			for ( int d = 1; d < numDimensions; d++ )
-				position[ d ] = 0;		
-		}
-		
-		linkedIterator.reset();
-	}
 	
 	@Override
 	public T type() 
@@ -92,38 +58,7 @@ public class DynamicPositionableOutOfBoundsCursor<T extends Type<T>> extends Dyn
 		else
 			return type; 
 	}
-		
-	@Override
-	public void fwd()
-	{
-		if ( !isOutOfBounds )
-		{
-			++internalIndex;
-			accessor.updateIndex( internalIndex );
-			
-			for ( int d = 0; d < numDimensions; d++ )
-			{
-				if ( position[ d ] < dimensions[ d ] - 1 )
-				{
-					position[ d ]++;
-					
-					for ( int e = 0; e < d; e++ )
-						position[ e ] = 0;
-					
-					linkedIterator.fwd();
-
-					return;
-				}
-			}
-			
-			// if it did not return we moved out of image bounds
-			isOutOfBounds = true;
-			++position[0];
-			outOfBoundsStrategy.initOutOfBOunds(  );
-		}
-		
-		linkedIterator.fwd();
-	}
+	
 
 	@Override
 	public void fwd( final int dim )
