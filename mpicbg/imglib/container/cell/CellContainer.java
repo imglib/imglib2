@@ -42,21 +42,22 @@ import mpicbg.imglib.cursor.cell.CellPositionableCursor;
 import mpicbg.imglib.cursor.cell.CellPositionableOutOfBoundsCursor;
 import mpicbg.imglib.cursor.cell.CellLocalizableCursor;
 import mpicbg.imglib.cursor.cell.CellLocalizablePlaneCursor;
+import mpicbg.imglib.cursor.cell.CellStorageAccess;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
 import mpicbg.imglib.type.Type;
 import mpicbg.imglib.type.label.FakeType;
 
-public class CellContainer<T extends Type<T>, A extends ArrayDataAccess<A>> extends AbstractDirectAccessContainer<T, A>
+public class CellContainer< T extends Type< T >, A extends ArrayDataAccess< A > > extends AbstractDirectAccessContainer< T, A >
 {
-	final protected ArrayList<Cell<T,A>> data;
+	final protected ArrayList< Cell< T, A > > data;
 	final protected int[] numCellsDim, cellSize;
 	final protected int numCells;
 	
 	public CellContainer( final ContainerFactory factory, final A creator, final int[] dim, final int[] cellSize, final int entitiesPerPixel )
 	{
-		super(factory, dim, entitiesPerPixel);
-		
+		super( factory, dim, entitiesPerPixel );
+
 		// check that cellsize is not bigger than the image
 		for ( int d = 0; d < numDimensions(); d++ )
 			if ( cellSize[ d ] > dim[ d ] )
@@ -104,7 +105,7 @@ public class CellContainer<T extends Type<T>, A extends ArrayDataAccess<A>> exte
 	}
 	
 	@Override
-	public A update( final Cursor<?> c ) { return data.get( ((CellIterableCursor<?>)c).getStorageIndex() ).getData(); }
+	public A update( final Cursor<?> c ) { return data.get( ( ( CellStorageAccess )c ).getStorageIndex() ).getData(); }
 	
 	public ArrayList<Cell<T, A>> createCellArray( final int numCells ) { return new ArrayList<Cell<T, A>>( numCells ); }	
 	
@@ -114,6 +115,7 @@ public class CellContainer<T extends Type<T>, A extends ArrayDataAccess<A>> exte
 	}
 
 	public Cell<T, A> getCell( final int cellId ) { return data.get( cellId ); }
+	
 	public int getCellIndex( final ArrayPositionableCursor<FakeType> cursor, final int[] cellPos )
 	{
 		cursor.setPosition( cellPos );

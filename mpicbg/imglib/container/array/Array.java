@@ -41,7 +41,7 @@ import mpicbg.imglib.image.Image;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
 import mpicbg.imglib.type.Type;
 
-public class Array<T extends Type<T>, A extends DataAccess> extends AbstractDirectAccessContainer<T, A>
+public class Array< T extends Type< T >, A extends DataAccess > extends AbstractDirectAccessContainer< T, A >
 {
 	final protected int[] step;
 	final ArrayContainerFactory factory;

@@ -8,11 +8,13 @@ import java.awt.Rectangle;
 
 import mpicbg.imglib.algorithm.transformation.ImageTransform;
 import mpicbg.imglib.container.array.ArrayContainerFactory;
+import mpicbg.imglib.container.cell.CellContainer;
 import mpicbg.imglib.container.cell.CellContainerFactory;
 import mpicbg.imglib.container.shapelist.ShapeList;
 import mpicbg.imglib.container.shapelist.ShapeListCached;
 import mpicbg.imglib.cursor.PositionableCursor;
 import mpicbg.imglib.cursor.LocalizableIterableCursor;
+import mpicbg.imglib.cursor.cell.CellLocalizableCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.ImageFactory;
 import mpicbg.imglib.image.display.imagej.ImageJFunctions;
@@ -90,10 +92,33 @@ public class TestShapeList
 		System.out.println( "Copying into an ArrayContainer took " + timer.stop() + " ms." );
 		/* ----------------------------------------------------------------- */
 		
+		
+		
+		/* Copy content into another container */
+		
+		timer.start();
+		final CellContainerFactory cellFactory = new CellContainerFactory();
+		final Image< ByteType > cellImage = new ImageFactory< ByteType >( new ByteType(), cellFactory ).createImage( new int[]{ 200, 200, depth }, "CellContainer" );
+		final LocalizableIterableCursor< ByteType > cCell = cellImage.createLocalizableCursor();
+		while ( cCell.hasNext() )
+		{
+			cCell.fwd();
+			cShapeList.moveTo( cCell );
+			cCell.type().set( cShapeList.type() );
+			cCell.type().mul( cCell.getArrayIndex() / 1000.0f );
+		}
+
+		cellImage.getDisplay().setMinMax();
+		final ImagePlus cellImp = ImageJFunctions.displayAsVirtualStack( cellImage );
+		cellImp.show();
+		//arrayImp.getProcessor().setMinAndMax( 0, 255 );
+		//arrayImp.updateAndDraw();
+		System.out.println( "Copying into a CellContainer took " + timer.stop() + " ms." );
+		/* ----------------------------------------------------------------- */
+		
 
 		/* Copy content rotated into another container */
 		timer.start();
-		final CellContainerFactory cellFactory = new CellContainerFactory();
 		final AffineModel3D affine = new AffineModel3D();
 		affine.set(
 				0.7660444f, -0.6427875f, 0.0f, 0.0f,
@@ -115,7 +140,7 @@ public class TestShapeList
 			return;
 		}
 		
-		final Image<ByteType> cellImage = transform.getResult();
+		final Image<ByteType> rotatedCellImage = transform.getResult();
 		
 		/*
 		final Image< ByteType > cellImage = new ImageFactory< ByteType >( new ByteType(), cellFactory ).createImage( new int[]{ 200, 200, depth }, "Rotated CellContainer" );
@@ -146,9 +171,9 @@ public class TestShapeList
 		}
 		*/
 		
-		cellImage.getDisplay().setMinMax();
-		final ImagePlus cellImp = ImageJFunctions.displayAsVirtualStack( cellImage );
-		cellImp.show();
+		rotatedCellImage.getDisplay().setMinMax();
+		final ImagePlus rotatedCellImp = ImageJFunctions.displayAsVirtualStack( rotatedCellImage );
+		rotatedCellImp.show();
 		//cellImp.getProcessor().setMinAndMax( 0, 255 );
 		//cellImp.updateAndDraw();
 		System.out.println( "Transforming with an AffineModel3D took " + timer.stop() + " ms." );

@@ -35,45 +35,45 @@ import mpicbg.imglib.cursor.AbstractLocalizableIterableCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.type.Type;
 
-public class CellLocalizableCursor<T extends Type<T>> extends AbstractLocalizableIterableCursor<T>
+public class CellLocalizableCursor<T extends Type<T>> extends AbstractLocalizableIterableCursor<T> implements CellStorageAccess
 {
 	final protected T type;
-	
+
 	/*
 	 * Pointer to the CellContainer we are iterating on
 	 */
-	protected final CellContainer<T,?> container;
-	
+	protected final CellContainer< T, ? > container;
+
 	/*
 	 * The number of cells inside the image
 	 */
 	protected final int numCells;
-	
+
 	/*
 	 * The index of the current cell
 	 */
 	protected int cell;
-	
+
 	/*
 	 * The index of the last cell
 	 */
 	protected int lastCell;
-	
+
 	/*
-	 * The index+1 of the last pixel in the cell 
+	 * The index+1 of the last pixel in the cell
 	 */
 	protected int cellMaxI;
-	
+
 	/*
 	 * The instance of the current cell
 	 */
-	protected Cell<T,?> cellInstance;
-	
+	protected Cell< T, ? > cellInstance;
+
 	/*
 	 * The dimension of the current cell
 	 */
 	final protected int[] cellDimensions;
-	
+
 	/*
 	 * The offset of the current cell in the image
 	 */
@@ -182,5 +182,8 @@ public class CellLocalizableCursor<T extends Type<T>> extends AbstractLocalizabl
 	public T type() { return type; }
 	
 	@Override
-	public CellContainer<T,?> getContainer(){ return container; }	
+	public CellContainer<T,?> getContainer(){ return container; }
+	
+	@Override
+	public int getStorageIndex() { return cellInstance.getCellId(); }
 }

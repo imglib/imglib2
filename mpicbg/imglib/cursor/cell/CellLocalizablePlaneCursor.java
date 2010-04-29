@@ -37,7 +37,7 @@ import mpicbg.imglib.image.Image;
 import mpicbg.imglib.type.Type;
 import mpicbg.imglib.type.label.FakeType;
 
-public class CellLocalizablePlaneCursor<T extends Type<T>> extends CellLocalizableCursor<T> implements LocalizablePlaneCursor<T>
+public class CellLocalizablePlaneCursor< T extends Type< T > > extends CellLocalizableCursor< T > implements LocalizablePlaneCursor< T >
 {
 	/**
 	 * Here we "misuse" a ArrayLocalizableCursor to iterate over cells,

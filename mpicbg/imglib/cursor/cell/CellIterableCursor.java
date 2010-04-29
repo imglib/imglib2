@@ -35,41 +35,29 @@ import mpicbg.imglib.cursor.AbstractIterableCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.type.Type;
 
-public class CellIterableCursor<T extends Type<T>> extends AbstractIterableCursor<T>
+public class CellIterableCursor< T extends Type< T > > extends AbstractIterableCursor< T > implements CellStorageAccess
 {
 	final protected T type;
 	
-	/*
-	 * Pointer to the CellContainer we are iterating on
-	 */
+	/* Pointer to the CellContainer we are iterating on */
 	protected final CellContainer<T,?> container;
 	
-	/*
-	 * The number of cells inside the image
-	 */
+	/* The number of cells inside the image */
 	protected final int numCells;
 	
-	/*
-	 * The index of the current cell
-	 */
+	/* The index of the current cell */
 	protected int cell;
 	
-	/*
-	 * The index of the last cell
-	 */
+	/* The index of the last cell */
 	protected int lastCell;
 	
-	/*
-	 * The index+1 of the last pixel in the cell 
-	 */
+	/* The index+1 of the last pixel in the cell */
 	protected int cellMaxI;
 	
-	/*
-	 * The instance of the current cell
-	 */
-	protected Cell<T,?> cellInstance;
+	/* The instance of the current cell */
+	protected Cell< T, ? > cellInstance;
 	
-	public CellIterableCursor( final CellContainer<T,?> container, final Image<T> image, final T type )
+	public CellIterableCursor( final CellContainer< T, ? > container, final Image< T > image, final T type )
 	{
 		super( container, image );
 		
@@ -137,25 +125,17 @@ public class CellIterableCursor<T extends Type<T>> extends AbstractIterableCurso
 		{
 			type.incIndex();
 		}
-		else //if (cell < numCells - 1)
+		else
 		{
 			cell++;
 			type.updateIndex( 0 );			
 			getCellData(cell);
 		}
-		/*
-		else
-		{			
-			// we have to run out of the image so that the next hasNext() fails
-			lastCell= -1;						
-			type.i = cellMaxI;
-			cells = numCells;
-		}
-		*/
 		
 		linkedIterator.fwd();
 	}	
 
+	@Override
 	public int getStorageIndex() { return cellInstance.getCellId(); }	
 
 	@Override

@@ -37,9 +37,9 @@ import mpicbg.imglib.image.Image;
 import mpicbg.imglib.type.Type;
 import mpicbg.imglib.type.label.FakeType;
 
-public class ArrayPositionableCursor<T extends Type<T>> extends AbstractPositionableCursor<T>
+public class ArrayPositionableCursor< T extends Type< T > > extends AbstractPositionableCursor< T >
 {
-	final T type;
+	final protected T type;
 	final protected int[] step;
 	final Array<T,?> container;
 	

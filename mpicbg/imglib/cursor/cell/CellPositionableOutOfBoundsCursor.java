@@ -35,7 +35,7 @@ import mpicbg.imglib.outofbounds.OutOfBoundsStrategy;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
 import mpicbg.imglib.type.Type;
 
-public class CellPositionableOutOfBoundsCursor<T extends Type<T>> extends CellPositionableCursor<T>
+public class CellPositionableOutOfBoundsCursor< T extends Type< T > > extends CellPositionableCursor< T >
 {
 	final OutOfBoundsStrategyFactory<T> outOfBoundsStrategyFactory;
 	final OutOfBoundsStrategy<T> outOfBoundsStrategy;
@@ -48,19 +48,6 @@ public class CellPositionableOutOfBoundsCursor<T extends Type<T>> extends CellPo
 		
 		this.outOfBoundsStrategyFactory = outOfBoundsStrategyFactory;
 		this.outOfBoundsStrategy = outOfBoundsStrategyFactory.createStrategy( this );
-		
-		reset();
-	}	
-
-	@Override
-	public boolean hasNext()
-	{			
-		if ( !isOutOfBounds && cell < numCells - 1 )
-			return true;
-		else if ( type.getIndex() < cellMaxI - 1 )
-			return true;
-		else
-			return false;
 	}	
 
 	@Override
@@ -70,74 +57,6 @@ public class CellPositionableOutOfBoundsCursor<T extends Type<T>> extends CellPo
 			return outOfBoundsStrategy.getType();
 		else
 			return type; 
-	}
-	
-	@Override
-	public void reset()
-	{
-		if ( outOfBoundsStrategy != null )
-		{
-			type.updateIndex( -1 );
-			cell = 0;
-			getCellData( cell );
-			isOutOfBounds = false;
-			
-			position[ 0 ] = -1;
-			
-			for ( int d = 1; d < numDimensions; d++ )
-			{
-				position[ d ] = 0;
-				cellPosition[ d ] = 0;
-			}
-			
-			type.updateContainer( this );
-		}
-		
-		linkedIterator.reset();
-	}
-
-	@Override
-	public void fwd()
-	{
-		if ( !isOutOfBounds )
-		{
-			if ( type.getIndex() < cellMaxI - 1 )
-			{
-				type.incIndex();
-				
-				for ( int d = 0; d < numDimensions; d++ )
-				{
-					if ( position[ d ] < cellDimensions[ d ] + cellOffset[ d ] - 1 )
-					{
-						position[ d ]++;
-						
-						for ( int e = 0; e < d; e++ )
-							position[ e ] = cellOffset[ e ];
-						
-						break;
-					}
-				}				
-			}
-			else if (cell < numCells - 1)
-			{
-				cell++;
-				type.updateIndex( 0 );			
-				getCellData(cell);
-				for ( int d = 0; d < numDimensions; d++ )
-					position[ d ] = cellOffset[ d ];
-			}
-			else
-			{
-				// we moved out of image bounds
-				isOutOfBounds = true;
-				lastCell = -1;						
-				cell = numCells;
-				position[0]++;
-				outOfBoundsStrategy.initOutOfBOunds(  );
-			}
-		}
-		
-		linkedIterator.fwd();
 	}
 	
 	@Override

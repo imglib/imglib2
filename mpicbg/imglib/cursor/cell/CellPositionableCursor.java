@@ -30,8 +30,9 @@
 package mpicbg.imglib.cursor.cell;
 
 import mpicbg.imglib.container.array.Array;
+import mpicbg.imglib.container.cell.Cell;
 import mpicbg.imglib.container.cell.CellContainer;
-import mpicbg.imglib.cursor.PositionableCursor;
+import mpicbg.imglib.cursor.AbstractPositionableCursor;
 import mpicbg.imglib.cursor.array.ArrayPositionableCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.location.RasterLocalizable;
@@ -40,36 +41,47 @@ import mpicbg.imglib.location.VoidPositionable;
 import mpicbg.imglib.type.Type;
 import mpicbg.imglib.type.label.FakeType;
 
-public class CellPositionableCursor<T extends Type<T>> extends CellLocalizableCursor<T> implements PositionableCursor<T>
+public class CellPositionableCursor< T extends Type< T > > extends AbstractPositionableCursor< T > implements CellStorageAccess
 {
 	/**
 	 * Here we "misuse" a ArrayLocalizableCursor to iterate over cells,
-	 * it always gives us the location of the current cell we are instantiating 
+	 * it always gives us the location of the current cell we are instantiating
 	 */
-	final ArrayPositionableCursor<FakeType> cursor;
+	final ArrayPositionableCursor< FakeType > cursor;
+	   
+	final protected T type;
+	
+	protected final CellContainer< T, ? > container;
 	
 	/*
-	protected final CellContainer<?,?> img;
-	
+	 * The number of cells inside the image
+	 */
 	protected final int numCells;
-	protected int cell, lastCell, cellMaxI;
-	protected int[] cellSize;
-	protected final int[] dim;
-	protected CellElement<?,?> cellInstance;
-	*/
-
-	/* Inherited from CellLocalizableCursor<T>
-	final protected int numDimensions;
-	final protected int[] position;
-	final protected int[] dimensions;
-	final protected int[] cellDimensions;
-	final protected int[] cellOffset;
-	*/
 	
 	/*
-	 * The number of cells in the image
+	 * The index of the current cell
 	 */
-	final protected int numCells;
+	protected int cell;
+	
+	/*
+	 * The index of the last cell
+	 */
+	protected int lastCell;
+	
+	/*
+	 * The instance of the current cell
+	 */
+	protected Cell< T,? > cellInstance;
+	
+	/*
+	 * The dimension of the current cell
+	 */
+	final protected int[] cellDimensions;
+	
+	/*
+	 * The offset of the current cell in the image
+	 */
+	final protected int[] cellOffset;
 	
 	/*
 	 * The number of cells in each dimension
@@ -96,15 +108,12 @@ public class CellPositionableCursor<T extends Type<T>> extends CellLocalizableCu
 	 */
 	final protected int[] cellStep;
 	
-	int numNeighborhoodCursors = 0;
-	
-	final int[] tmp;
-	
-	protected RasterPositionable linkedRasterPositionable = VoidPositionable.getInstance();
-	
 	public CellPositionableCursor( final CellContainer<T,?> container, final Image<T> image, final T type )
 	{
-		super( container, image, type);
+		super( container, image );
+		
+		this.container = container;
+		this.type = type;
 		
 		this.numCells = container.getNumCells();
 		this.numCellsDim = container.getNumCellsDim();
@@ -113,15 +122,20 @@ public class CellPositionableCursor<T extends Type<T>> extends CellLocalizableCu
 		this.cellEnd = new int[ numDimensions ];
 		this.step = new int[ numDimensions ];
 		this.cellStep = new int[ numDimensions ];
-		this.tmp = new int[ numDimensions ];
+		this.cellDimensions = new int[ numDimensions ];
+		this.cellOffset = new int[ numDimensions ];
 		
 		this.cursor = ArrayPositionableCursor.createLinearByDimCursor( numCellsDim );
-		cursor.setPosition( new int[ container.numDimensions() ] );
+		cursor.setPosition( new int[ numDimensions ] );
 		
 		// the steps when moving from cell to cell
 		Array.createAllocationSteps( numCellsDim, cellStep );
 		
-		reset();
+		type.updateIndex( 0 );
+		cell = 0;
+		lastCell = -1;
+		getCellData( cell );
+		type.updateContainer( this );
 	}
 	
 	protected void getCellData( final int cell )
@@ -132,7 +146,6 @@ public class CellPositionableCursor<T extends Type<T>> extends CellLocalizableCu
 		lastCell = cell;		
 		cellInstance = container.getCell( cell );		
 
-		cellMaxI = cellInstance.getNumPixels();	
 		cellInstance.getDimensions( cellDimensions );
 		cellInstance.offset( cellOffset );
 		
@@ -147,29 +160,6 @@ public class CellPositionableCursor<T extends Type<T>> extends CellLocalizableCu
 		// Array.createAllocationSteps( numCellsDim, cellStep );
 		
 		type.updateContainer( this );
-	}
-	
-	@Override
-	public void reset()
-	{
-		if ( cellEnd != null )
-		{
-			type.updateIndex( -1 );
-			cell = 0;
-			getCellData( cell );
-			
-			position[ 0 ] = -1;
-			
-			for ( int d = 1; d < numDimensions; d++ )
-			{
-				position[ d ] = 0;
-				cellPosition[ d ] = 0;
-			}
-			
-			type.updateContainer( this );
-		}
-		
-		linkedIterator.reset();
 	}
 	
 	@Override
@@ -230,7 +220,6 @@ public class CellPositionableCursor<T extends Type<T>> extends CellLocalizableCu
 	}
 	
 	@Override
-	/* TODO change position to long accuracy */
 	public void move( final long distance, final int dim )
 	{
 		move( ( int )distance, dim );		
@@ -398,4 +387,13 @@ public class CellPositionableCursor<T extends Type<T>> extends CellLocalizableCu
 		linkedRasterPositionable = VoidPositionable.getInstance();
 		return rasterPositionable;
 	}
+
+	@Override
+	public int getStorageIndex(){ return cellInstance.getCellId(); }
+
+	@Override
+	public CellContainer< T, ? > getContainer(){ return container; }
+
+	@Override
+	public T type() { return type; }
 }
