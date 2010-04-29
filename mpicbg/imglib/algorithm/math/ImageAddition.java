@@ -219,6 +219,11 @@ public class ImageAddition<T extends NumericType<T>> implements OutputAlgorithm<
 		factory = imageFactory;		
 	}
 	
+	public T getType()
+	{
+		return type.clone();
+	}
+	
 	@Override
 	public Image<T> getResult()
 	{
