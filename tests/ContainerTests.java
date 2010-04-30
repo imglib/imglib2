@@ -11,6 +11,7 @@ import mpicbg.imglib.algorithm.math.MathLib;
 import mpicbg.imglib.container.ContainerFactory;
 import mpicbg.imglib.container.array.ArrayContainerFactory;
 import mpicbg.imglib.container.cell.CellContainerFactory;
+import mpicbg.imglib.container.dynamic.DynamicContainerFactory;
 import mpicbg.imglib.container.imageplus.ImagePlusContainerFactory;
 import mpicbg.imglib.cursor.IterableCursor;
 import mpicbg.imglib.cursor.PositionableCursor;
@@ -66,6 +67,22 @@ public class ContainerTests
 	/**
 	 * Test CellContainer
 	 */
+	@Test public void testDynamicContainer()
+	{
+		for ( int i = 0; i < dim.length; ++i )
+		{
+			assertTrue( "ArrayContainer vs DynamicContainer failed for dim = " + MathLib.printCoordinates( dim[ i ] ),
+			            testContainer( dim[ i ], new ArrayContainerFactory(), new DynamicContainerFactory( ) ) );
+			assertTrue( "DynamicContainer vs ArrayContainer failed for dim = " + MathLib.printCoordinates( dim[ i ] ), 
+			            testContainer( dim[ i ], new DynamicContainerFactory(), new ArrayContainerFactory() ) );
+			assertTrue( "DynamicContainer vs DynamicContainer failed for dim = " + MathLib.printCoordinates( dim[ i ] ),
+			            testContainer( dim[ i ], new DynamicContainerFactory( ), new DynamicContainerFactory() ) );
+		}
+	}
+	
+	/**
+	 * Test CellContainer
+	 */
 	@Test public void testImagePlusContainer()
 	{
 		for ( int i = 0; i < dim.length; ++i )
@@ -90,6 +107,7 @@ public class ContainerTests
 		assertTrue( "ArrayContainer MultiThreading failed", testThreading( new ArrayContainerFactory() ) );
 		assertTrue( "CellContainer MultiThreading failed", testThreading( new CellContainerFactory() ) );
 		assertTrue( "ImagePlusContainer MultiThreading failed", testThreading( new ImagePlusContainerFactory() ) );	
+		assertTrue( "DynamicContainer MultiThreading failed", testThreading( new DynamicContainerFactory() ) );	
 	}
 	
 	protected boolean testThreading( final ContainerFactory factory )
