@@ -36,10 +36,17 @@ import mpicbg.imglib.cursor.AbstractIterableCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.type.Type;
 
-public class DynamicIterableCursor< T extends Type< T >> extends AbstractIterableCursor< T > implements DynamicStorageAccess
+public class DynamicIterableCursor< T extends Type< T > >
+		extends AbstractIterableCursor< T >
+		implements DynamicStorageAccess
 {
+	/* the type instance accessing the pixel value the cursor points at */
 	protected final T type;
+	
+	/* a stronger typed pointer to Container< T > */
 	protected final DynamicContainer< T, ? extends DataAccess > container;
+	
+	/* access proxy */
 	protected final DynamicContainerAccessor accessor;
 
 	protected int internalIndex;

@@ -31,27 +31,37 @@ package mpicbg.imglib.cursor.imageplus;
 
 import mpicbg.imglib.container.array.Array;
 import mpicbg.imglib.container.imageplus.ImagePlusContainer;
-import mpicbg.imglib.cursor.PositionableCursor;
+import mpicbg.imglib.cursor.AbstractPositionableCursor;
 import mpicbg.imglib.image.Image;
-import mpicbg.imglib.location.RasterLocalizable;
-import mpicbg.imglib.location.RasterPositionable;
-import mpicbg.imglib.location.VoidPositionable;
 import mpicbg.imglib.type.Type;
 
 
-public class ImagePlusPositionableCursor<T extends Type<T>> extends ImagePlusLocalizableCursor<T> implements PositionableCursor<T>
+public class ImagePlusPositionableCursor< T extends Type< T > >
+		extends AbstractPositionableCursor< T >
+		implements ImagePlusStorageAccess
 {
-	final protected int[] step, tmp;
-	int numNeighborhoodCursors = 0;
+	/* the type instance accessing the pixel value the cursor points at */
+	protected final T type;
 	
-	protected RasterPositionable linkedRasterPositionable = VoidPositionable.getInstance();
+	/* a stronger typed pointer to Container< T > */
+	protected final ImagePlusContainer< T, ? > container;
+	
+	/* precalculated step sizes for row.column,... access in a linear array */
+	final protected int[] step;
+	
+	protected int slice; // TODO: support hyperstacks
+	
+	/* TODO do we need this still? */
+	int numNeighborhoodCursors = 0;
 	
 	public ImagePlusPositionableCursor( final ImagePlusContainer<T,?> container, final Image<T> image, final T type ) 
 	{
-		super( container, image, type );
+		super( container, image );
+		
+		this.type = type;
+		this.container = container;
 		
 		step = Array.createAllocationSteps( container.getDimensions() );
-		tmp = new int[ numDimensions ];
 	}	
 
 	@Override
@@ -88,50 +98,6 @@ public class ImagePlusPositionableCursor<T extends Type<T>> extends ImagePlusLoc
 		}
 
 		linkedRasterPositionable.move( steps, dim );
-	}
-	
-	@Override
-	public void move( final long distance, final int dim )
-	{
-		move( ( int )distance, dim );		
-	}
-	
-	@Override
-	public void moveTo( final int[] position )
-	{		
-		for ( int d = 0; d < numDimensions; ++d )
-		{
-			final int dist = position[ d ] - getIntPosition( d );
-			
-			if ( dist != 0 )				
-				move( dist, d );
-		}
-	}
-	
-	@Override
-	public void moveTo( final long[] position )
-	{
-		for ( int d = 0; d < numDimensions; ++d )
-		{
-			final long dist = position[ d ] - getLongPosition( d );
-			
-			if ( dist != 0 )				
-				move( dist, d );
-		}
-	}
-	
-	@Override
-	public void moveTo( final RasterLocalizable localizable )
-	{
-		localizable.localize( tmp );
-		moveTo( tmp );
-	}
-
-	@Override
-	public void setPosition( final RasterLocalizable localizable )
-	{
-		localizable.localize( tmp );
-		setPosition( tmp );
 	}
 	
 	@Override
@@ -205,24 +171,13 @@ public class ImagePlusPositionableCursor<T extends Type<T>> extends ImagePlusLoc
 
 		linkedRasterPositionable.setPosition( position, dim );
 	}
-	
-	@Override
-	public void setPosition( final long position, final int dim )
-	{
-		setPosition( ( int )position, dim );
-	}
-	
-	@Override
-	public void linkRasterPositionable( final RasterPositionable rasterPositionable )
-	{
-		linkedRasterPositionable = rasterPositionable;
-	}
 
 	@Override
-	public RasterPositionable unlinkRasterPositionable()
-	{
-		final RasterPositionable rasterPositionable = linkedRasterPositionable;
-		linkedRasterPositionable = VoidPositionable.getInstance();
-		return rasterPositionable;
-	}
+	public ImagePlusContainer< T, ? > getContainer(){ return container; }
+
+	@Override
+	public T type(){ return type; }
+
+	@Override
+	public int getStorageIndex(){ return slice; }
 }

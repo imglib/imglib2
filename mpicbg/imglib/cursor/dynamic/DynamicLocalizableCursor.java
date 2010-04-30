@@ -1,25 +1,39 @@
 package mpicbg.imglib.cursor.dynamic;
 
+import mpicbg.imglib.container.basictypecontainer.DataAccess;
 import mpicbg.imglib.container.dynamic.DynamicContainer;
-import mpicbg.imglib.cursor.LocalizableIterableCursor;
+import mpicbg.imglib.container.dynamic.DynamicContainerAccessor;
+import mpicbg.imglib.cursor.AbstractLocalizableIterableCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.type.Type;
 
-public class DynamicLocalizableCursor<T extends Type<T>> extends DynamicIterableCursor<T> implements LocalizableIterableCursor<T>
+public class DynamicLocalizableCursor< T extends Type< T > >
+		extends AbstractLocalizableIterableCursor< T >
+		implements DynamicStorageAccess
 {
-	final protected int numDimensions; 	
-	final protected int[] position, dimensions;
+	/* the type instance accessing the pixel value the cursor points at */
+	protected final T type;
+	
+	/* a stronger typed pointer to Container< T > */
+	protected final DynamicContainer< T, ? extends DataAccess > container;
+	
+	/* access proxy */
+	protected final DynamicContainerAccessor accessor;
 
-	public DynamicLocalizableCursor( final DynamicContainer<T,?> container, final Image<T> image, final T type )
+	protected int internalIndex;
+	
+	public DynamicLocalizableCursor(
+			final DynamicContainer< T, ? > container,
+			final Image< T > image,
+			final T type )
 	{
-		super( container, image, type );
+		super( container, image );
 		
-		this.numDimensions = container.numDimensions();
-
-		this.position = image.createPositionArray();
-		this.dimensions = container.getDimensions();
+		this.type = type;
+		this.container = container;
+	
+		accessor = container.createAccessor();
 		
-		// unluckily we have to call it twice, in the superclass position is not initialized yet
 		reset();
 	}
 	
@@ -46,13 +60,6 @@ public class DynamicLocalizableCursor<T extends Type<T>> extends DynamicIterable
 	}
 
 	@Override
-	public void jumpFwd( final long steps )
-	{ 
-		for ( long j = 0; j < steps; ++j )
-			fwd();
-	}
-	
-	@Override
 	public boolean hasNext() { return internalIndex < container.getNumPixels() - 1; }
 	
 
@@ -76,65 +83,15 @@ public class DynamicLocalizableCursor<T extends Type<T>> extends DynamicIterable
 		linkedIterator.reset();
 	}
 
+	@Override
+	public DynamicContainer< T, ? > getContainer(){ return container; }
 	
 	@Override
-	public void localize( final float[] position )
-	{
-		for ( int d = 0; d < numDimensions; d++ )
-			position[ d ] = this.position[ d ];
-	}
-	
-	@Override
-	public void localize( final double[] position )
-	{
-		for ( int d = 0; d < numDimensions; d++ )
-			position[ d ] = this.position[ d ];
-	}
-	
-	@Override
-	public void localize( final int[] position )
-	{
-		for ( int d = 0; d < numDimensions; d++ )
-			position[ d ] = this.position[ d ];
-	}
-	
-	@Override
-	public void localize( final long[] position )
-	{
-		for ( int d = 0; d < numDimensions; d++ )
-			position[ d ] = this.position[ d ];
-	}
-
-	
-	@Override
-	public float getFloatPosition( final int dim ){ return position[ dim ]; }
-	
-	@Override
-	public double getDoublePosition( final int dim ){ return position[ dim ]; }
-	
-	@Override
-	public int getIntPosition( final int dim ){ return position[ dim ]; }
-	
-	@Override
-	public long getLongPosition( final int dim ){ return position[ dim ]; }
-	
+	public T type() { return type; }
 
 	@Override
-	public String getLocationAsString()
-	{
-		String pos = "(" + position[ 0 ];
-		
-		for ( int d = 1; d < numDimensions; d++ )
-			pos += ", " + position[ d ];
-		
-		pos += ")";
-		
-		return pos;
-	}
-	
+	public DynamicContainerAccessor getAccessor() { return accessor; }
+
 	@Override
-	public String toString() { return getLocationAsString() + " = " + type(); }
-	
-	@Override
-	public int numDimensions(){ return numDimensions; }
+	public int getInternalIndex() { return internalIndex; }
 }

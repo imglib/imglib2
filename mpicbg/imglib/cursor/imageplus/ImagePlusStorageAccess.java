@@ -24,52 +24,16 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
+ *
  */
-package mpicbg.imglib.cursor;
-
-import mpicbg.imglib.container.Container;
-import mpicbg.imglib.image.Image;
-import mpicbg.imglib.type.Type;
+package mpicbg.imglib.cursor.imageplus;
 
 /**
- * We use the class {@link AbstractCursor} instead of implementing methods here so that other classes can
- * only implement {@link IterableCursor} and extend other classes instead. As each {@link AbstractCursor} is also
- * a {@link IterableCursor} there are no disadvantages for the {@link IterableCursor} implementations.
  * 
- * @author Stephan Preibisch and Stephan Saalfeld
  *
- * @param < T > the {@link Type} to be returned by {@link #type()}
+ * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-public abstract class AbstractCursor< T extends Type< T >> implements Cursor< T >
+public interface ImagePlusStorageAccess
 {
-	/* the image whose pixels this AbstractCursor is accessing, can be null */
-	final protected Image< T > image;
-
-	/* the Container that provides access to the pixels, cannot be null */
-	final protected Container< T > container;
-
-	/* a copy of container.numDimensions() for slightly faster access */
-	final protected int numDimensions;
-	
-	public AbstractCursor( final Container<T> container, final Image<T> image )
-	{
-		this.image = image;
-		this.container = container;
-		numDimensions = container.numDimensions();
-	}
-
-	@Override
-	@Deprecated
-	final public T getType(){ return type(); } 
-	
-	@Override
-	public int getArrayIndex() { return type().getIndex(); }
-	@Override
-	public Image<T> getImage() { return image; }
-	@Override
-	public void close()
-	{
-		if ( image != null)
-			image.removeCursor( this ); 
-	}
+	public int getStorageIndex();
 }

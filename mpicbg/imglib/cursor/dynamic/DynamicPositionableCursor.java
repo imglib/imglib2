@@ -39,15 +39,23 @@ import mpicbg.imglib.location.RasterPositionable;
 import mpicbg.imglib.location.VoidPositionable;
 import mpicbg.imglib.type.Type;
 
-public class DynamicPositionableCursor< T extends Type< T > > extends AbstractPositionableCursor< T > implements DynamicStorageAccess
+public class DynamicPositionableCursor< T extends Type< T > >
+		extends AbstractPositionableCursor< T >
+		implements DynamicStorageAccess
 {
-	final protected T type;
-	final protected DynamicContainer< T, ? extends DataAccess > container;
-	final protected DynamicContainerAccessor accessor;
+	/* the type instance accessing the pixel value the cursor points at */
+	protected final T type;
+	
+	/* a stronger typed pointer to Container< T > */
+	protected final DynamicContainer< T, ? extends DataAccess > container;
+	
+	/* access proxy */
+	protected final DynamicContainerAccessor accessor;
 
 	protected int internalIndex;
 	
 	final protected int[] step;
+	
 	protected int numNeighborhoodCursors = 0;
 	
 	public DynamicPositionableCursor( final DynamicContainer< T, ? > container, final Image< T > image, final T type ) 

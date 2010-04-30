@@ -35,7 +35,8 @@ import mpicbg.imglib.outofbounds.OutOfBoundsStrategy;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
 import mpicbg.imglib.type.Type;
 
-public class DynamicPositionableOutOfBoundsCursor< T extends Type< T > > extends DynamicPositionableCursor< T >
+public class DynamicPositionableOutOfBoundsCursor< T extends Type< T > >
+		extends DynamicPositionableCursor< T >
 {
 	final OutOfBoundsStrategyFactory< T > outOfBoundsStrategyFactory;
 	final OutOfBoundsStrategy< T > outOfBoundsStrategy;

@@ -108,7 +108,6 @@ public class DynamicLocalizablePlaneCursor<T extends Type<T>> extends DynamicLoc
 	}
 	
 	@Override
-	/* TODO change position to long accuracy */
 	public void reset( final int planeDimA, final int planeDimB, final long[] dimensionPositions )
 	{
 		this.planeDimA = planeDimA;

@@ -75,22 +75,17 @@ public abstract class AbstractLocalizableCursor< T extends Type< T > > extends A
 	}
 	
 	@Override
-	public float getFloatPosition( final int d )
-	{
-		return position[ d ];
-	}
+	public float getFloatPosition( final int dim ){ return position[ dim ]; }
 	
 	@Override
-	public double getDoublePosition( final int d )
-	{
-		return position[ d ];
-	}
+	public double getDoublePosition( final int dim ){ return position[ dim ]; }
 	
 	@Override
 	public int getIntPosition( final int dim ){ return position[ dim ]; }
-	
+
 	@Override
-	public long getLongPosition( final int dim ){ return position[ dim ]; }	
+	public long getLongPosition( final int dim ){ return position[ dim ]; }
+	
 	@Override
 	public int numDimensions(){ return numDimensions; }
 

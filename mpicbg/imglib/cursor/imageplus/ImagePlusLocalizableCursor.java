@@ -30,24 +30,33 @@
 package mpicbg.imglib.cursor.imageplus;
 
 import mpicbg.imglib.container.imageplus.ImagePlusContainer;
-import mpicbg.imglib.cursor.LocalizableIterableCursor;
+import mpicbg.imglib.cursor.AbstractLocalizableIterableCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.type.Type;
 
-public class ImagePlusLocalizableCursor<T extends Type<T>> extends ImagePlusIterableCursor<T> implements LocalizableIterableCursor<T>
+public class ImagePlusLocalizableCursor< T extends Type< T > >
+		extends AbstractLocalizableIterableCursor< T >
+		implements ImagePlusStorageAccess
 {
-	final protected int numDimensions; 	
-	final protected int[] position, dimensions;
+	/* the type instance accessing the pixel value the cursor points at */
+	protected final T type;
 	
+	/* a stronger typed pointer to Container< T > */
+	protected final ImagePlusContainer< T, ? > container;
+	
+	protected final int slicePixelCountMinus1, maxSliceMinus1;
+	
+	protected int slice; // TODO: support hyperstacks	
+
 	public ImagePlusLocalizableCursor( final ImagePlusContainer<T,?> container, final Image<T> image, final T type ) 
 	{
-		super( container, image, type );
+		super( container, image );
 
-		numDimensions = container.numDimensions(); 		
-		position = new int[ numDimensions ];
-		dimensions = container.getDimensions();
+		this.type = type;
+		this.container = container;
+		slicePixelCountMinus1 = container.getDimension( 0 ) * container.getDimension( 1 ) - 1; 
+		maxSliceMinus1 = container.getDimension( 2 ) - 1;
 		
-		// unluckily we have to call it twice, in the superclass position is not initialized yet
 		reset();
 	}	
 	
@@ -99,65 +108,21 @@ public class ImagePlusLocalizableCursor<T extends Type<T>> extends ImagePlusIter
 		linkedIterator.reset();
 	}
 
+	@Override
+	public int getStorageIndex(){ return slice; }
 
 	@Override
-	public void localize( float[] position )
-	{
-		for ( int d = 0; d < numDimensions; d++ )
-			position[ d ] = this.position[ d ];
-	}
-	
-	@Override
-	public void localize( double[] position )
-	{
-		for ( int d = 0; d < numDimensions; d++ )
-			position[ d ] = this.position[ d ];
-	}
-	
-	@Override
-	public void localize( int[] position )
-	{
-		for ( int d = 0; d < numDimensions; d++ )
-			position[ d ] = this.position[ d ];
-	}
-	
-	@Override
-	public void localize( long[] position )
-	{
-		for ( int d = 0; d < numDimensions; d++ )
-			position[ d ] = this.position[ d ];
-	}
-	
-	
-	@Override
-	public float getFloatPosition( final int dim ){ return position[ dim ]; }
-	
-	@Override
-	public double getDoublePosition( final int dim ){ return position[ dim ]; }
-	
-	@Override
-	public int getIntPosition( final int dim ){ return position[ dim ]; }
+	public ImagePlusContainer< T, ? > getContainer(){ return container; }
 
 	@Override
-	public long getLongPosition( final int dim ){ return position[ dim ]; }
-	
-	
+	public T type(){ return type; }
+
 	@Override
-	public String getLocationAsString()
+	public boolean hasNext()
 	{
-		String pos = "(" + position[ 0 ];
-		
-		for ( int d = 1; d < numDimensions; d++ )
-			pos += ", " + position[ d ];
-		
-		pos += ")";
-		
-		return pos;
+		if ( type.getIndex() < slicePixelCountMinus1 || slice < maxSliceMinus1 )
+			return true;
+		else
+			return false;
 	}
-	
-	@Override
-	public String toString() { return getLocationAsString() + " = " + type(); }
-	
-	@Override
-	public int numDimensions(){ return numDimensions; }
 }

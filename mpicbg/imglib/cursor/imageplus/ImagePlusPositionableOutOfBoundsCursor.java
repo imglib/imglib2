@@ -35,32 +35,25 @@ import mpicbg.imglib.outofbounds.OutOfBoundsStrategy;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
 import mpicbg.imglib.type.Type;
 
-public class ImagePlusPositionableOutOfBoundsCursor<T extends Type<T>> extends ImagePlusPositionableCursor<T>
+public class ImagePlusPositionableOutOfBoundsCursor< T extends Type< T > > extends ImagePlusPositionableCursor< T >
 {
 	final OutOfBoundsStrategyFactory<T> outOfBoundsStrategyFactory;
 	final OutOfBoundsStrategy<T> outOfBoundsStrategy;
 	
 	boolean isOutOfBounds = false;
 	
-	public ImagePlusPositionableOutOfBoundsCursor( final ImagePlusContainer<T,?> container, final Image<T> image, final T type, final OutOfBoundsStrategyFactory<T> outOfBoundsStrategyFactory ) 
+	public ImagePlusPositionableOutOfBoundsCursor(
+			final ImagePlusContainer< T, ? > container,
+			final Image< T > image,
+			final T type,
+			final OutOfBoundsStrategyFactory< T > outOfBoundsStrategyFactory )
 	{
 		super( container, image, type );
-		
+
 		this.outOfBoundsStrategyFactory = outOfBoundsStrategyFactory;
 		this.outOfBoundsStrategy = outOfBoundsStrategyFactory.createStrategy( this );
-		
-		reset();
 	}	
 	
-	@Override
-	public boolean hasNext()
-	{
-		if ( !isOutOfBounds && ( type.getIndex() < slicePixelCountMinus1 || slice < maxSliceMinus1 ) )
-			return true;
-		else
-			return false;
-	}
-
 	@Override
 	public T type() 
 	{ 
@@ -70,64 +63,7 @@ public class ImagePlusPositionableOutOfBoundsCursor<T extends Type<T>> extends I
 			return type; 
 	}
 	
-	@Override
-	public void reset()
-	{
-		if ( outOfBoundsStrategy != null )
-		{
-			isOutOfBounds = false;
-			type.updateIndex( -1 );
-			
-			position[ 0 ] = -1;
-			slice = 0;
-			
-			for ( int d = 1; d < numDimensions; d++ )
-				position[ d ] = 0;
-			
-			type.updateContainer( this );
-		}
-		
-		linkedIterator.reset();
-	}
 	
-	@Override
-	public void fwd()
-	{
-		if ( !isOutOfBounds )
-		{
-			type.incIndex();
-			
-			if ( type.getIndex() > slicePixelCountMinus1 ) 
-			{
-				slice++;
-				type.updateIndex( 0 );
-				type.updateContainer( this );
-			}
-			
-			for ( int d = 0; d < numDimensions; d++ )
-			{
-				if ( position[ d ] < dimensions[ d ] - 1 )
-				{
-					position[ d ]++;
-					
-					for ( int e = 0; e < d; e++ )
-						position[ e ] = 0;
-					
-					linkedIterator.fwd();
-					
-					return;
-				}
-			}
-			
-			// if it did not return we moved out of image bounds
-			isOutOfBounds = true;
-			position[0]++;
-			outOfBoundsStrategy.initOutOfBOunds(  );
-		}
-		
-		linkedIterator.fwd();
-	}
-
 	@Override
 	public void fwd( final int dim )
 	{
@@ -167,6 +103,7 @@ public class ImagePlusPositionableOutOfBoundsCursor<T extends Type<T>> extends I
 		linkedRasterPositionable.fwd( dim );
 	}
 
+	
 	@Override
 	public void move( final int steps, final int dim )
 	{

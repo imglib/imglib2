@@ -35,7 +35,7 @@ import mpicbg.imglib.cursor.AbstractLocalizableIterableCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.type.Type;
 
-public class CellLocalizableCursor<T extends Type<T>> extends AbstractLocalizableIterableCursor<T> implements CellStorageAccess
+public class CellLocalizableCursor< T extends Type< T > > extends AbstractLocalizableIterableCursor< T > implements CellStorageAccess
 {
 	final protected T type;
 
@@ -79,7 +79,7 @@ public class CellLocalizableCursor<T extends Type<T>> extends AbstractLocalizabl
 	 */
 	final protected int[] cellOffset;
 	
-	public CellLocalizableCursor( final CellContainer<T,?> container, final Image<T> image, final T type )
+	public CellLocalizableCursor( final CellContainer< T, ? > container, final Image< T > image, final T type )
 	{
 		super( container, image );
 		

@@ -34,11 +34,16 @@ import mpicbg.imglib.cursor.AbstractIterableCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.type.Type;
 
-public class ImagePlusIterableCursor<T extends Type<T>> extends AbstractIterableCursor<T>
+public class ImagePlusIterableCursor< T extends Type< T > > extends AbstractIterableCursor< T > implements ImagePlusStorageAccess
 {
+	/* the type instance accessing the pixel value the cursor points at */
 	protected final T type;
-	protected final ImagePlusContainer<T,?> container;
+	
+	/* a stronger typed pointer to Container< T > */
+	protected final ImagePlusContainer< T, ? > container;
+	
 	protected final int slicePixelCountMinus1, maxSliceMinus1;
+	
 	protected int slice; // TODO: support hyperstacks	
 
 	public ImagePlusIterableCursor( final ImagePlusContainer<T,?> container, final Image<T> image, final T type )
@@ -54,7 +59,7 @@ public class ImagePlusIterableCursor<T extends Type<T>> extends AbstractIterable
 	}
 
 	@Override
-	public T type() { return type; }
+	public T type(){ return type; }
 
 	@Override
 	public boolean hasNext()
@@ -99,12 +104,13 @@ public class ImagePlusIterableCursor<T extends Type<T>> extends AbstractIterable
 	}
 
 	@Override
-	public ImagePlusContainer<T,?> getContainer(){ return container; }
-
-	public int getStorageIndex() { return slice; }
+	public ImagePlusContainer< T, ? > getContainer(){ return container; }
 
 	@Override
-	public String toString() { return type.toString(); }
+	public int getStorageIndex(){ return slice; }
+
+	@Override
+	public String toString(){ return type.toString(); }
 
 	@Override
 	public int getIntPosition( final int dim )

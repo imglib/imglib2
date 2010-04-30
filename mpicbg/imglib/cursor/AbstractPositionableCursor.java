@@ -36,10 +36,12 @@ import mpicbg.imglib.location.RasterPositionable;
 import mpicbg.imglib.location.VoidPositionable;
 import mpicbg.imglib.type.Type;
 
-public abstract class AbstractPositionableCursor< T extends Type< T > > extends AbstractLocalizableCursor<T> implements PositionableCursor<T>
+public abstract class AbstractPositionableCursor< T extends Type< T > > extends AbstractLocalizableCursor< T > implements PositionableCursor<T>
 {
+	/* internal register for position calculation */
 	final protected int[] tmp;
 	
+	/* linked RasterPositionable following the raster moves */
 	protected RasterPositionable linkedRasterPositionable = VoidPositionable.getInstance();	
 	
 	public AbstractPositionableCursor( final Container<T> container, final Image<T> image )

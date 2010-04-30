@@ -46,6 +46,7 @@ import mpicbg.imglib.cursor.imageplus.ImagePlusPositionableCursor;
 import mpicbg.imglib.cursor.imageplus.ImagePlusPositionableOutOfBoundsCursor;
 import mpicbg.imglib.cursor.imageplus.ImagePlusLocalizableCursor;
 import mpicbg.imglib.cursor.imageplus.ImagePlusLocalizablePlaneCursor;
+import mpicbg.imglib.cursor.imageplus.ImagePlusStorageAccess;
 import mpicbg.imglib.exception.ImgLibException;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
@@ -92,7 +93,7 @@ public class ImagePlusContainer<T extends Type<T>, A extends ArrayDataAccess<A>>
 	}
 
 	@Override
-	public A update( final Cursor<?> c ) { return mirror.get( ((ImagePlusIterableCursor<?>)c).getStorageIndex() ); }
+	public A update( final Cursor<?> c ){ return mirror.get( ( ( ImagePlusStorageAccess )c ).getStorageIndex() ); }
 	
 	protected static int[] getCorrectDimensionality( final ImagePlus imp )
 	{
