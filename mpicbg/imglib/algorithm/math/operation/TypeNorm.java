@@ -34,8 +34,7 @@ public class TypeNorm<S extends ComplexType<S>, T extends ComplexType<T>> implem
 	public S operate(List<T> typeList) {
 		final S accum = outType.clone(), prod = outType.clone(), conj = outType.clone();
 		
-		accum.setReal(0);
-		accum.setComplex(0);
+		accum.setZero();
 		
 		for (T t : typeList)
 		{
