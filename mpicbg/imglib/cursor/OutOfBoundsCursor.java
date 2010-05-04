@@ -27,18 +27,16 @@
  *
  * @author Stephan Preibisch & Stephan Saalfeld
  */
-package mpicbg.imglib.outofbounds;
+package mpicbg.imglib.cursor;
 
-import mpicbg.imglib.cursor.LocalizableIterableCursor;
-import mpicbg.imglib.cursor.PositionableCursor;
 import mpicbg.imglib.type.Type;
 
-public class OutOfBoundsStrategyMirrorFactory<T extends Type<T>> extends OutOfBoundsStrategyFactory<T>
+public interface OutOfBoundsCursor< T extends Type< T > > extends PositionableCursor< T >
 {
-	@Override
-	public OutOfBoundsStrategyMirror<T> createStrategy( final PositionableCursor<T> cursor )
-	{
-		return new OutOfBoundsStrategyMirror<T>( cursor );
-	}
-
+	/**
+	 * True if located out of image bounds.
+	 * 
+	 * @return
+	 */
+	public boolean isOutOfBounds();
 }

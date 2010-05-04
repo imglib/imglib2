@@ -41,14 +41,14 @@ public class ArrayPositionableCursor< T extends Type< T > > extends AbstractPosi
 {
 	final protected T type;
 	final protected int[] step;
-	final Array<T,?> container;
+	final Array< T, ? > container;
 	
-	public ArrayPositionableCursor( final Array<T,?> container, final Image<T> image, final T type ) 
+	public ArrayPositionableCursor( final Array< T, ? > container, final Image< T > image ) 
 	{
 		super( container, image );
 		
 		this.container = container;
-		this.type = type;
+		this.type = container.createLinkedType();
 		step = Array.createAllocationSteps( container.getDimensions() );
 		
 		for ( int d = 0; d < numDimensions; d++ )
@@ -61,7 +61,8 @@ public class ArrayPositionableCursor< T extends Type< T > > extends AbstractPosi
 	public static ArrayPositionableCursor<FakeType> createLinearByDimCursor( final int[] dim )
 	{
 		final Array<FakeType, FakeAccess> array = new Array<FakeType, FakeAccess>( null, new FakeArray(), dim, 1 );
-		return new ArrayPositionableCursor<FakeType>( array, null, new FakeType() );
+		array.setLinkedType( new FakeType() );
+		return new ArrayPositionableCursor<FakeType>( array, null );
 	}
 
 	@Override

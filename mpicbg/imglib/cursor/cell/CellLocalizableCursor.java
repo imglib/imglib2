@@ -79,11 +79,11 @@ public class CellLocalizableCursor< T extends Type< T > > extends AbstractLocali
 	 */
 	final protected int[] cellOffset;
 	
-	public CellLocalizableCursor( final CellContainer< T, ? > container, final Image< T > image, final T type )
+	public CellLocalizableCursor( final CellContainer< T, ? > container, final Image< T > image )
 	{
 		super( container, image );
 		
-		this.type = type;
+		this.type = container.createLinkedType();
 		this.cellDimensions = new int[ numDimensions ];
 		this.cellOffset = new int[ numDimensions ];		
 

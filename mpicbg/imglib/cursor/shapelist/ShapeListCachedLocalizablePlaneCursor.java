@@ -29,18 +29,20 @@
  */
 package mpicbg.imglib.cursor.shapelist;
 
-import mpicbg.imglib.container.shapelist.ShapeList;
+import mpicbg.imglib.container.shapelist.ShapeListCached;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.type.Type;
 
-public class ShapeListCachedLocalizablePlaneCursor<T extends Type<T>> extends ShapeListLocalizablePlaneCursor<T>
+public class ShapeListCachedLocalizablePlaneCursor< T extends Type< T > > extends ShapeListLocalizablePlaneCursor< T >
 {
-	final ShapeListCache<T> cache;
+	final ShapeListCache< T > cache;
 
-	public ShapeListCachedLocalizablePlaneCursor( final ShapeList< T > container, final Image< T > image, final ShapeListCache<T> cache ) 
+	public ShapeListCachedLocalizablePlaneCursor(
+			final ShapeListCached< T > container,
+			final Image< T > image ) 
 	{
 		super( container, image );
-		this.cache = cache;
+		this.cache = container.getShapeListCachingStrategy().createInstance();
 	}	
 	
 	@Override

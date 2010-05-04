@@ -54,11 +54,13 @@ public class ImagePlusPositionableCursor< T extends Type< T > >
 	/* TODO do we need this still? */
 	int numNeighborhoodCursors = 0;
 	
-	public ImagePlusPositionableCursor( final ImagePlusContainer<T,?> container, final Image<T> image, final T type ) 
+	public ImagePlusPositionableCursor(
+			final ImagePlusContainer< T, ? > container,
+			final Image< T > image ) 
 	{
 		super( container, image );
 		
-		this.type = type;
+		this.type = container.createLinkedType();
 		this.container = container;
 		
 		step = Array.createAllocationSteps( container.getDimensions() );

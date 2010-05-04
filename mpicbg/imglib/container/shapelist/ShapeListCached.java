@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2009--2010, Stephan Preibisch & Albert Cardona
+ * Copyright (c) 2009--2010, Albert Cardona, Stephan Preibisch & Stephan Saalfeld
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -24,34 +24,38 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- *
- * @author Stephan Preibisch & Albert Cardona
  */
 package mpicbg.imglib.container.shapelist;
 
+import mpicbg.imglib.cursor.PositionableCursor;
 import mpicbg.imglib.cursor.shapelist.ShapeListCache;
 import mpicbg.imglib.cursor.shapelist.ShapeListCacheFIFO;
 import mpicbg.imglib.cursor.shapelist.ShapeListCachedPositionableCursor;
 import mpicbg.imglib.cursor.shapelist.ShapeListCachedPositionableOutOfBoundsCursor;
 import mpicbg.imglib.cursor.shapelist.ShapeListCachedLocalizablePlaneCursor;
 import mpicbg.imglib.cursor.shapelist.ShapeListPositionableCursor;
-import mpicbg.imglib.cursor.shapelist.ShapeListPositionableOutOfBoundsCursor;
 import mpicbg.imglib.cursor.shapelist.ShapeListLocalizablePlaneCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
 import mpicbg.imglib.type.Type;
 
-public class ShapeListCached<T extends Type<T> > extends ShapeList<T>
+/**
+ * 
+ * @param <T>
+ *
+ * @author Albert Cardona, Stephan Preibisch and Stephan Saalfeld
+ */
+public class ShapeListCached< T extends Type< T > > extends ShapeList< T >
 {
-	ShapeListCache<T> cache;
-		
+	ShapeListCache< T > cache;
+
 	public ShapeListCached( final ShapeListContainerFactory factory, final int[] dim, final T background )
 	{
 		super( factory, dim, background );
-		
-		this.cache = new ShapeListCacheFIFO<T>( factory.getCacheSize(), this );
+
+		this.cache = new ShapeListCacheFIFO< T >( factory.getCacheSize(), this );
 	}
-	
+
 	public ShapeListCached( final int[] dim, final T background, final int cacheSize )
 	{
 		this( new ShapeListContainerFactory( cacheSize ), dim, background );
@@ -61,25 +65,32 @@ public class ShapeListCached<T extends Type<T> > extends ShapeList<T>
 	{
 		this( dim, background, 32 );
 	}
-	
-	public ShapeListCache<T> getShapeListCachingStrategy() { return cache; }
-	public void setShapeListCachingStrategy( final ShapeListCache<T> cache ) { this.cache = cache; }
+
+	public ShapeListCache< T > getShapeListCachingStrategy()
+	{
+		return cache;
+	}
+
+	public void setShapeListCachingStrategy( final ShapeListCache< T > cache )
+	{
+		this.cache = cache;
+	}
 
 	@Override
-	public ShapeListLocalizablePlaneCursor< T > createLocalizablePlaneCursor( final Image< T > image ) 
-	{ 
-		return new ShapeListCachedLocalizablePlaneCursor< T >( this, image, cache.getCursorCacheInstance() );
-	}
-	
-	@Override
-	public ShapeListPositionableCursor< T > createPositionableCursor( final Image< T > image ) 
+	public ShapeListLocalizablePlaneCursor< T > createLocalizablePlaneCursor( final Image< T > image )
 	{
-		return new ShapeListCachedPositionableCursor< T >( this, image, cache.getCursorCacheInstance() );
+		return new ShapeListCachedLocalizablePlaneCursor< T >( this, image );
 	}
-	
+
 	@Override
-	public ShapeListPositionableOutOfBoundsCursor< T > createPositionableCursor( final Image< T > image, final OutOfBoundsStrategyFactory< T > outOfBoundsFactory ) 
+	public ShapeListPositionableCursor< T > createPositionableCursor( final Image< T > image )
 	{
-		return new ShapeListCachedPositionableOutOfBoundsCursor< T >( this, image, outOfBoundsFactory, cache.getCursorCacheInstance() );
+		return new ShapeListCachedPositionableCursor< T >( this, image );
+	}
+
+	@Override
+	public PositionableCursor< T > createPositionableCursor( final Image< T > image, final OutOfBoundsStrategyFactory< T > outOfBoundsFactory )
+	{
+		return new ShapeListCachedPositionableOutOfBoundsCursor< T >( this, image, outOfBoundsFactory );
 	}
 }

@@ -43,12 +43,12 @@ public class ArrayLocalizableCursor<T extends Type<T>> extends AbstractLocalizab
 	protected final Array<T,?> container;
 	protected final int sizeMinus1;
 	
-	public ArrayLocalizableCursor( final Array<T,?> container, final Image<T> image, final T type ) 
+	public ArrayLocalizableCursor( final Array< T, ? > container, final Image< T > image ) 
 	{
 		super( container, image );
 
 		this.container = container;
-		this.type = type;		
+		this.type = container.createLinkedType();
 		this.sizeMinus1 = (int)container.getNumPixels() - 1;
 		
 		reset();
@@ -57,7 +57,8 @@ public class ArrayLocalizableCursor<T extends Type<T>> extends AbstractLocalizab
 	public static ArrayLocalizableCursor<FakeType> createLinearCursor( final int[] dim )
 	{
 		final Array<FakeType, FakeAccess> array = new Array<FakeType, FakeAccess>( null, new FakeArray(), dim, 1 );
-		return new ArrayLocalizableCursor<FakeType>( array, null, new FakeType() );
+		array.setLinkedType( new FakeType() );
+		return new ArrayLocalizableCursor<FakeType>( array, null );
 	}
 
 	@Override

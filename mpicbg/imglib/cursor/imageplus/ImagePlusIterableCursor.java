@@ -46,11 +46,13 @@ public class ImagePlusIterableCursor< T extends Type< T > > extends AbstractIter
 	
 	protected int slice; // TODO: support hyperstacks	
 
-	public ImagePlusIterableCursor( final ImagePlusContainer<T,?> container, final Image<T> image, final T type )
+	public ImagePlusIterableCursor(
+			final ImagePlusContainer< T, ? > container,
+			final Image< T > image )
 	{
 		super( container, image );
 
-		this.type = type;
+		this.type = container.createLinkedType();
 		this.container = container;
 		slicePixelCountMinus1 = container.getDimension( 0 ) * container.getDimension( 1 ) - 1; 
 		maxSliceMinus1 = container.getDimension( 2 ) - 1;

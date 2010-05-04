@@ -38,4 +38,5 @@ public interface DirectAccessContainer<T extends Type<T>, A extends DataAccess> 
 {
 	public A update( final Cursor<?> c );
 	public void setLinkedType( final T type );
+	public T createLinkedType();
 }

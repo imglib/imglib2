@@ -51,11 +51,13 @@ public class DynamicIterableCursor< T extends Type< T > >
 
 	protected int internalIndex;
 	
-	public DynamicIterableCursor( final DynamicContainer< T, ? extends DynamicContainerAccessor > container, final Image< T > image, final T type )
+	public DynamicIterableCursor(
+			final DynamicContainer< T, ? extends DynamicContainerAccessor > container,
+			final Image< T > image )
 	{
 		super( container, image );
 		
-		this.type = type;
+		this.type = container.createLinkedType();
 		this.container = container;
 	
 		accessor = container.createAccessor();

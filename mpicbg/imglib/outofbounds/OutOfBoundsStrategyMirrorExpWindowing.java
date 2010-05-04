@@ -30,11 +30,12 @@
 package mpicbg.imglib.outofbounds;
 
 import mpicbg.imglib.algorithm.math.MathLib;
+import mpicbg.imglib.cursor.OutOfBoundsCursor;
 import mpicbg.imglib.cursor.PositionableCursor;
 import mpicbg.imglib.cursor.LocalizableIterableCursor;
 import mpicbg.imglib.type.numeric.RealType;
 
-public class OutOfBoundsStrategyMirrorExpWindowing<T extends RealType<T>> extends OutOfBoundsStrategy<T>
+public class OutOfBoundsStrategyMirrorExpWindowing<T extends RealType<T>> extends OutOfBoundsMirrorSingleBoundary< T >
 {
 	final PositionableCursor<T> parentCursor;
 	final PositionableCursor<T> mirrorCursor;
@@ -45,7 +46,7 @@ public class OutOfBoundsStrategyMirrorExpWindowing<T extends RealType<T>> extend
 	final float[][] weights;
 	final float cutOff = 0.0001f;
 	
-	public OutOfBoundsStrategyMirrorExpWindowing( final PositionableCursor<T> parentCursor, final int[] fadeOutDistance, final float exponent )
+	public OutOfBoundsStrategyMirrorExpWindowing( final OutOfBoundsCursor<T> parentCursor, final int[] fadeOutDistance, final float exponent )
 	{
 		super( parentCursor );
 		
@@ -93,7 +94,7 @@ public class OutOfBoundsStrategyMirrorExpWindowing<T extends RealType<T>> extend
 	
 
 	@Override
-	public T getType(){ return type; }
+	public T type(){ return type; }
 	
 	@Override
 	final public void notifyOutOfBOunds()

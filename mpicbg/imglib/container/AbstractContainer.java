@@ -72,7 +72,7 @@ public abstract class AbstractContainer<T extends Type<T>> implements Container<
 	public int[] getDimensions() { return dim.clone(); }
 	
 	@Override
-	public void getDimensions( final int[] dimensions )
+	public void dimensions( final int[] dimensions )
 	{
 		for (int i = 0; i < numDimensions; i++)
 			dimensions[i] = this.dim[i];

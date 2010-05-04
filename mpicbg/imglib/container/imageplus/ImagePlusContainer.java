@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2009--2010, Stephan Preibisch & Johannes Schindelin
+ * Copyright (c) 2009--2010, Stephan Preibisch, Stephan Saalfeld & Johannes Schindelin
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -24,8 +24,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- *
- * @author Johannes Schindelin & Stephan Preibisch
  */
 package mpicbg.imglib.container.imageplus;
 
@@ -52,114 +50,132 @@ import mpicbg.imglib.image.Image;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
 import mpicbg.imglib.type.Type;
 
-public class ImagePlusContainer<T extends Type<T>, A extends ArrayDataAccess<A>> extends AbstractDirectAccessContainer<T,A> implements Container<T>
+/**
+ * 
+ * @param <T>
+ * @param <A>
+ * 
+ * @author Stephan Preibisch, Stephan Saalfeld and Johannes Schindelin
+ */
+public class ImagePlusContainer< T extends Type< T >, A extends ArrayDataAccess< A > >
+		extends AbstractDirectAccessContainer< T, A >
+		implements Container< T >
 {
 	final ImagePlusContainerFactory factory;
+
 	final int width, height, depth;
 
-	final ArrayList<A> mirror;
+	final ArrayList< A > mirror;
 
-	ImagePlusContainer( final ImagePlusContainerFactory factory, final int[] dim, final int entitiesPerPixel ) 
+	ImagePlusContainer( final ImagePlusContainerFactory factory, final int[] dim, final int entitiesPerPixel )
 	{
 		super( factory, dim, entitiesPerPixel );
-		
+
 		this.factory = factory;
 		this.width = dim[ 0 ];
-		
-		if( dim.length < 2 )
-			this.height = 1;
-		else
-			this.height = dim[ 1 ];
-		
-		if ( dim.length < 3 )
-			this.depth = 1;
-		else
-			this.depth = dim[ 2 ];
-		
-		mirror = new ArrayList<A>( depth );
-	}
-	
-	ImagePlusContainer( final ImagePlusContainerFactory factory, final A creator, final int[] dim, final int entitiesPerPixel ) 
-	{
-		this( factory, dim, entitiesPerPixel );				
-		
-		for ( int i = 0; i < depth; ++i )
-			mirror.add( creator.createArray( width * height * entitiesPerPixel ));
+
+		if ( dim.length < 2 ) this.height = 1;
+		else this.height = dim[ 1 ];
+
+		if ( dim.length < 3 ) this.depth = 1;
+		else this.depth = dim[ 2 ];
+
+		mirror = new ArrayList< A >( depth );
 	}
 
-	public ImagePlus getImagePlus() throws ImgLibException 
-	{ 
-		throw new ImgLibException( this, "has no ImagePlus instance, it is not a standard type of ImagePlus" ); 
+	ImagePlusContainer( final ImagePlusContainerFactory factory, final A creator, final int[] dim, final int entitiesPerPixel )
+	{
+		this( factory, dim, entitiesPerPixel );
+
+		for ( int i = 0; i < depth; ++i )
+			mirror.add( creator.createArray( width * height * entitiesPerPixel ) );
+	}
+
+	public ImagePlus getImagePlus() throws ImgLibException
+	{
+		throw new ImgLibException( this, "has no ImagePlus instance, it is not a standard type of ImagePlus" );
 	}
 
 	@Override
-	public A update( final Cursor<?> c ){ return mirror.get( ( ( ImagePlusStorageAccess )c ).getStorageIndex() ); }
-	
+	public A update( final Cursor< ? > c )
+	{
+		return mirror.get( ( ( ImagePlusStorageAccess ) c ).getStorageIndex() );
+	}
+
 	protected static int[] getCorrectDimensionality( final ImagePlus imp )
 	{
 		int numDimensions = 3;
-				
-		if ( imp.getStackSize() == 1 )
-			--numDimensions;
-		
-		if ( imp.getHeight() == 1 )
-			--numDimensions;
-		
+
+		if ( imp.getStackSize() == 1 ) --numDimensions;
+
+		if ( imp.getHeight() == 1 ) --numDimensions;
+
 		final int[] dim = new int[ numDimensions ];
 		dim[ 0 ] = imp.getWidth();
 
-		if ( numDimensions >= 2 )
-			dim[ 1 ] = imp.getHeight();
-		
-		if ( numDimensions == 3 )
-			dim[ 2 ] = imp.getStackSize();
-		
+		if ( numDimensions >= 2 ) dim[ 1 ] = imp.getHeight();
+
+		if ( numDimensions == 3 ) dim[ 2 ] = imp.getStackSize();
+
 		return dim;
 	}
 
-	public int getWidth() { return width; }
-	public int getHeight() { return height; }
-	public int getDepth() { return depth; }
-
-	public final int getPos( final int[] l ) 
+	public int getWidth()
 	{
-		if ( numDimensions > 1 )
-			return l[ 1 ] * width + l[ 0 ];
-		else
-			return l[ 0 ];
-	}	
+		return width;
+	}
 
-	@Override
-	public IterableCursor<T> createIterableCursor( final Image<T> image ) 
+	public int getHeight()
 	{
-		return new ImagePlusIterableCursor<T>( this, image, linkedType.duplicateTypeOnSameDirectAccessContainer() );
+		return height;
+	}
+
+	public int getDepth()
+	{
+		return depth;
+	}
+
+	public final int getPos( final int[] l )
+	{
+		if ( numDimensions > 1 ) return l[ 1 ] * width + l[ 0 ];
+		else return l[ 0 ];
 	}
 
 	@Override
-	public LocalizableIterableCursor<T> createLocalizableCursor( final Image<T> image ) 
+	public IterableCursor< T > createIterableCursor( final Image< T > image )
 	{
-		return new ImagePlusLocalizableCursor<T>( this, image, linkedType.duplicateTypeOnSameDirectAccessContainer() );
+		return new ImagePlusIterableCursor< T >( this, image );
 	}
 
 	@Override
-	public LocalizablePlaneCursor<T> createLocalizablePlaneCursor( final Image<T> image ) 
+	public LocalizableIterableCursor< T > createLocalizableCursor( final Image< T > image )
 	{
-		return new ImagePlusLocalizablePlaneCursor<T>( this, image, linkedType.duplicateTypeOnSameDirectAccessContainer() );
+		return new ImagePlusLocalizableCursor< T >( this, image );
 	}
 
 	@Override
-	public PositionableCursor<T> createPositionableCursor( final Image<T> image ) 
+	public LocalizablePlaneCursor< T > createLocalizablePlaneCursor( final Image< T > image )
 	{
-		return new ImagePlusPositionableCursor<T>( this, image, linkedType.duplicateTypeOnSameDirectAccessContainer() );
+		return new ImagePlusLocalizablePlaneCursor< T >( this, image, linkedType.duplicateTypeOnSameDirectAccessContainer() );
 	}
 
 	@Override
-	public PositionableCursor<T> createPositionableCursor( final Image<T> image, OutOfBoundsStrategyFactory<T> outOfBoundsFactory ) 
+	public PositionableCursor< T > createPositionableCursor( final Image< T > image )
 	{
-		return new ImagePlusPositionableOutOfBoundsCursor<T>( this, image, linkedType.duplicateTypeOnSameDirectAccessContainer(), outOfBoundsFactory );
+		return new ImagePlusPositionableCursor< T >( this, image );
 	}
-	
-	public ImagePlusContainerFactory getFactory() { return factory; }
+
+	@Override
+	public ImagePlusPositionableOutOfBoundsCursor< T > createPositionableCursor( final Image< T > image, OutOfBoundsStrategyFactory< T > outOfBoundsFactory )
+	{
+		return new ImagePlusPositionableOutOfBoundsCursor< T >( this, image, outOfBoundsFactory );
+	}
+
+	@Override
+	public ImagePlusContainerFactory getFactory()
+	{
+		return factory;
+	}
 
 	@Override
 	public void close()

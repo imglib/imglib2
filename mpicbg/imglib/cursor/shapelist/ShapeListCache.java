@@ -9,18 +9,18 @@ import mpicbg.imglib.type.label.FakeType;
 
 public abstract class ShapeListCache< T extends Type< T > >
 {
-	final Array<FakeType, FakeAccess> fakeArray;
-	final ShapeListCached<T> container;
-	final int cacheSize;
+	final protected Array< FakeType, FakeAccess > fakeArray;
+	final protected ShapeListCached<T> container;
+	final protected int cacheSize;
 
-	public ShapeListCache( final int cacheSize, final ShapeListCached<T> container )
+	public ShapeListCache( final int cacheSize, final ShapeListCached< T > container )
 	{		
 		this.container = container;
 		this.cacheSize = cacheSize;
 		
-		fakeArray = new Array<FakeType, FakeAccess>( null, new FakeArray(), container.getDimensions(), 1 );
+		fakeArray = new Array< FakeType, FakeAccess >( null, new FakeArray(), container.getDimensions(), 1 );
 	}
 	
 	public abstract T lookUp( final int[] position );	
-	public abstract ShapeListCache<T> getCursorCacheInstance();
+	public abstract ShapeListCache<T> createInstance();
 }

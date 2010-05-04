@@ -108,12 +108,14 @@ public class CellPositionableCursor< T extends Type< T > > extends AbstractPosit
 	 */
 	final protected int[] cellStep;
 	
-	public CellPositionableCursor( final CellContainer<T,?> container, final Image<T> image, final T type )
+	public CellPositionableCursor(
+			final CellContainer< T, ? > container,
+			final Image< T > image )
 	{
 		super( container, image );
 		
 		this.container = container;
-		this.type = type;
+		this.type = container.createLinkedType();
 		
 		this.numCells = container.getNumCells();
 		this.numCellsDim = container.getNumCellsDim();

@@ -29,55 +29,14 @@
  */
 package mpicbg.imglib.outofbounds;
 
-import mpicbg.imglib.cursor.IterableCursor;
+import mpicbg.imglib.cursor.OutOfBoundsCursor;
 import mpicbg.imglib.type.Type;
 
-public abstract class OutOfBounds<T extends Type<T>>
+public class OutOfBoundsMirrorSingleBoundaryFactory< T extends Type< T >> extends OutOfBoundsStrategyFactory< T >
 {
-	final IterableCursor<T> parentCursor;
-	
-	public OutOfBounds( final IterableCursor<T> parentCursor )
+	@Override
+	public OutOfBoundsMirrorSingleBoundary< T > createStrategy( final OutOfBoundsCursor< T > cursor )
 	{
-		this.parentCursor = parentCursor;
+		return new OutOfBoundsMirrorSingleBoundary< T >( cursor );
 	}
-	
-	/**
-	 * @returns a link to the parent Cursor of this Strategy
-	 */
-	public IterableCursor<T> getParentCursor() { return parentCursor; }
-
-	/**
-	 * Fired by the parent cursor in case that it moves while being out of image bounds
-	 */
-	public abstract void notifyOutOfBOunds();
-
-	/**
-	 * Fired by the parent cursor in case that it moves while being out of image bounds
-	 */
-	public abstract void notifyOutOfBOunds( int steps, int dim );
-
-	/**
-	 * Fired by the parent cursor in case that it moves while being out of image bounds
-	 */
-	public abstract void notifyOutOfBOundsFwd( int dim );
-
-	/**
-	 * Fired by the parent cursor in case that it moves while being out of image bounds
-	 */
-	public abstract void notifyOutOfBoundsBck( int dim );
-	
-	/**
-	 * Fired by the parent cursor in case that it leaves image bounds
-	 */
-	public abstract void initOutOfBOunds();
-	
-	/**
-	 * @returns the Type that stores the current value of the OutOfBoundsStrategy
-	 */
-	public abstract T getType();
-	
-	/**
-	 * Closed possibly created cursors or images
-	 */
-	public abstract void close();
 }

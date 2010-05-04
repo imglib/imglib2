@@ -48,11 +48,13 @@ public class ImagePlusLocalizableCursor< T extends Type< T > >
 	
 	protected int slice; // TODO: support hyperstacks	
 
-	public ImagePlusLocalizableCursor( final ImagePlusContainer<T,?> container, final Image<T> image, final T type ) 
+	public ImagePlusLocalizableCursor(
+			final ImagePlusContainer< T, ? > container,
+			final Image< T > image ) 
 	{
 		super( container, image );
 
-		this.type = type;
+		this.type = container.createLinkedType();
 		this.container = container;
 		slicePixelCountMinus1 = container.getDimension( 0 ) * container.getDimension( 1 ) - 1; 
 		maxSliceMinus1 = container.getDimension( 2 ) - 1;

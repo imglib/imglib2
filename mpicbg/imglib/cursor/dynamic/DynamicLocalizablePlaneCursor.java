@@ -38,9 +38,11 @@ public class DynamicLocalizablePlaneCursor<T extends Type<T>> extends DynamicLoc
 {
 	protected int planeDimA, planeDimB, planeSizeA, planeSizeB, incPlaneA, incPlaneB, maxI;
 	
-	public DynamicLocalizablePlaneCursor( final DynamicContainer<T,?> container, final Image<T> image, final T type ) 
+	public DynamicLocalizablePlaneCursor(
+			final DynamicContainer< T, ? > container,
+			final Image< T > image ) 
 	{
-		super( container, image, type );
+		super( container, image );
 	}	
 	
 	@Override 

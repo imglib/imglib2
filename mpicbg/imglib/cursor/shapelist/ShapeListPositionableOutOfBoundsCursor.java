@@ -30,208 +30,26 @@
 package mpicbg.imglib.cursor.shapelist;
 
 import mpicbg.imglib.container.shapelist.ShapeList;
+import mpicbg.imglib.cursor.AbstractOutOfBoundsCursor;
 import mpicbg.imglib.image.Image;
-import mpicbg.imglib.outofbounds.OutOfBoundsStrategy;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
 import mpicbg.imglib.type.Type;
 
-public class ShapeListPositionableOutOfBoundsCursor<T extends Type<T>> extends ShapeListPositionableCursor<T>
+public class ShapeListPositionableOutOfBoundsCursor< T extends Type< T > >
+		extends AbstractOutOfBoundsCursor< T >
 {
-	final OutOfBoundsStrategyFactory<T> outOfBoundsStrategyFactory;
-	final OutOfBoundsStrategy<T> outOfBoundsStrategy;
+	final protected ShapeList< T > container;
 	
-	boolean isOutOfBounds = false;
-	
-	public ShapeListPositionableOutOfBoundsCursor( final ShapeList<T> container, final Image<T> image, final OutOfBoundsStrategyFactory<T> outOfBoundsStrategyFactory ) 
+	public ShapeListPositionableOutOfBoundsCursor(
+			final ShapeList< T > container,
+			final Image< T > image,
+			final OutOfBoundsStrategyFactory< T > outOfBoundsStrategyFactory ) 
 	{
-		super( container, image );
+		super( container, image, outOfBoundsStrategyFactory );
 		
-		this.outOfBoundsStrategyFactory = outOfBoundsStrategyFactory;
-		this.outOfBoundsStrategy = outOfBoundsStrategyFactory.createStrategy( this );
-		
-		reset();
-	}	
-	
-	/**
-	 * TODO Not the most efficient way to calculate this on demand.  Better: count an index while moving...
-	 */
-	@Override
-	public boolean hasNext()
-	{
-		if ( isOutOfBounds ) return false;
-		
-		for ( int d = numDimensions - 1; d >= 0; --d )
-		{
-			final int sizeD = dimensions[ d ] - 1;
-			if ( position[ d ] < sizeD )
-				return true;
-		}
-		return false;
+		this.container = container;
 	}
 
 	@Override
-	public void reset()
-	{
-		if ( outOfBoundsStrategy != null )
-		{
-			isOutOfBounds = false;
-			super.reset();
-		}
-		else
-			linkedIterator.reset();
-	}
-	
-	@Override
-	public T type() 
-	{
-		if ( isOutOfBounds )
-			return outOfBoundsStrategy.getType();
-		else
-			return super.type(); 
-	}
-		
-	@Override
-	public void fwd()
-	{
-		if ( !isOutOfBounds )
-		{
-			for ( int d = 0; d < numDimensions; ++d )
-			{
-				if ( ++position[ d ] >= dimensions[ d ] )
-					position[ d ] = 0;
-				else
-				{
-					linkedIterator.fwd();
-					return;
-				}
-			}
-			
-			isOutOfBounds = true;
-			++position[ 0 ];
-			outOfBoundsStrategy.initOutOfBOunds();
-		}
-		
-		linkedIterator.fwd();
-	}
-
-	@Override
-	public void fwd( final int dim )
-	{
-		++position[ dim ];
-
-		if ( isOutOfBounds )
-		{
-			if ( position[ dim ] == 0 )
-				setPosition( position );
-			else
-				outOfBoundsStrategy.notifyOutOfBOundsFwd( dim );
-		}
-		else
-		{			
-			if ( position[ dim ] >= dimensions[ dim ] )
-			{
-				isOutOfBounds = true;
-				outOfBoundsStrategy.initOutOfBOunds();
-			}
-		}
-
-		linkedRasterPositionable.fwd( dim );
-	}
-
-	@Override
-	public void move( final int steps, final int dim )
-	{
-		position[ dim ] += steps;
-
-		if ( isOutOfBounds )
-		{
-			if ( position[ dim ] >= 0 && position[ dim ] < dimensions[ dim ] )
-			{
-				isOutOfBounds = false;
-				for ( int d = 0; d < numDimensions && !isOutOfBounds; ++d )
-					isOutOfBounds = position[ d ] < 0 || position[ d ] >= dimensions[ d ];
-				
-				if ( isOutOfBounds )
-					outOfBoundsStrategy.notifyOutOfBOunds( steps, dim  );
-			}
-			else
-				outOfBoundsStrategy.notifyOutOfBOunds( steps, dim  );
-		}
-		else
-		{			
-			if ( position[ dim ] < 0 || position[ dim ] >= dimensions[ dim ] )
-			{
-				isOutOfBounds = true;
-				outOfBoundsStrategy.initOutOfBOunds();
-			}
-		}
-
-		linkedRasterPositionable.move( steps, dim );
-	}
-	
-	@Override
-	public void bck( final int dim )
-	{
-		--position[ dim ];
-
-		if ( isOutOfBounds )
-		{
-			if ( position[ dim ] < dimensions[ dim ] )
-				setPosition( position );
-			else
-				outOfBoundsStrategy.notifyOutOfBOundsFwd( dim );
-		}
-		else
-		{			
-			if ( position[ dim ] == -1 )
-			{
-				isOutOfBounds = true;
-				outOfBoundsStrategy.initOutOfBOunds();
-			}
-		}
-
-		linkedRasterPositionable.bck( dim );
-	}
-
-	@Override
-	public void setPosition( final int[] position )
-	{
-		final boolean wasOutOfBounds = isOutOfBounds;
-		isOutOfBounds = false;
-		
-		for ( int d = 0; d < numDimensions; ++d )
-		{
-			this.position[ d ] = position[ d ];
-			if ( position[ d ] < 0 || position[ d ] >= dimensions[ d ])
-				isOutOfBounds = true;
-		}
-		
-		if ( isOutOfBounds )
-		{
-			if ( wasOutOfBounds )
-				outOfBoundsStrategy.notifyOutOfBOunds();
-			else
-				outOfBoundsStrategy.initOutOfBOunds();
-		}
-
-		linkedRasterPositionable.setPosition( position );
-	}
-
-	@Override
-	public void setPosition( final int position, final int dim )
-	{
-		this.position[ dim ] = position;
-
-		if ( isOutOfBounds )
-		{
-			setPosition( this.position );
-		}
-		else if ( position < 0 || position >= dimensions[ dim ] )
-		{
-			isOutOfBounds = true;
-			outOfBoundsStrategy.initOutOfBOunds();
-
-			linkedRasterPositionable.setPosition( position, dim );
-		}
-	}
+	public ShapeList< T > getContainer(){ return container; }
 }

@@ -24,227 +24,26 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- *
- * @author Stephan Preibisch & Stephan Saalfeld
  */
 package mpicbg.imglib.cursor.array;
 
 import mpicbg.imglib.container.array.Array;
+import mpicbg.imglib.cursor.AbstractOutOfBoundsCursor;
 import mpicbg.imglib.image.Image;
-import mpicbg.imglib.outofbounds.OutOfBoundsStrategy;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
 import mpicbg.imglib.type.Type;
 
-public class ArrayPositionableOutOfBoundsCursor<T extends Type<T>> extends ArrayPositionableCursor<T>
+public class ArrayPositionableOutOfBoundsCursor< T extends Type< T > > extends AbstractOutOfBoundsCursor< T >
 {
-	final OutOfBoundsStrategyFactory<T> outOfBoundsStrategyFactory;
-	final OutOfBoundsStrategy<T> outOfBoundsStrategy;
+	final protected Array< T, ? > container;
 	
-	boolean isOutOfBounds = false;
-	
-	public ArrayPositionableOutOfBoundsCursor( final Array<T,?> container, final Image<T> image, final T type, final OutOfBoundsStrategyFactory<T> outOfBoundsStrategyFactory ) 
+	public ArrayPositionableOutOfBoundsCursor( final Array< T, ? > container, final Image< T > image, final OutOfBoundsStrategyFactory< T > outOfBoundsStrategyFactory ) 
 	{
-		super( container, image, type );
+		super( container, image, outOfBoundsStrategyFactory );
 		
-		this.outOfBoundsStrategyFactory = outOfBoundsStrategyFactory;
-		this.outOfBoundsStrategy = outOfBoundsStrategyFactory.createStrategy( this );
-		
-		isOutOfBounds = false;
-	}	
-	
-	@Override
-	public T type() 
-	{ 
-		if ( isOutOfBounds )
-			return outOfBoundsStrategy.getType();
-		else
-			return type; 
-	}
-		
-	@Override
-	public void fwd( final int dim )
-	{
-		++position[ dim ];
-
-		if ( isOutOfBounds )
-		{
-			// reenter the image?
-			if ( position[ dim ] == 0 )
-				setPosition( position );
-			else // moved out of image bounds
-				outOfBoundsStrategy.notifyOutOfBOundsFwd( dim );
-		}
-		else
-		{			
-			if ( position[ dim ] < dimensions[ dim ] )
-			{
-				// moved within the image
-				type.incIndex( step[ dim ] );
-			}
-			else
-			{
-				// left the image
-				isOutOfBounds = true;
-				outOfBoundsStrategy.initOutOfBOunds(  );
-			}
-		}
-
-		linkedRasterPositionable.fwd( dim );
+		this.container = container;
 	}
 
 	@Override
-	public void bck( final int dim )
-	{
-		position[ dim ]--;	
-
-		if ( isOutOfBounds )
-		{
-			// reenter the image?
-			if ( position[ dim ] == dimensions[ dim ] - 1 )
-				setPosition( position );
-			else // moved out of image bounds
-				outOfBoundsStrategy.notifyOutOfBoundsBck( dim );
-		}
-		else
-		{			
-			if ( position[ dim ] > -1 )
-			{
-				// moved within the image
-				type.decIndex( step[ dim ] );
-			}
-			else
-			{
-				// left the image
-				isOutOfBounds = true;
-				outOfBoundsStrategy.initOutOfBOunds(  );
-			}
-		}
-
-		linkedRasterPositionable.bck( dim );
-	}
-
-	@Override
-	public void move( final int steps, final int dim )
-	{
-		position[ dim ] += steps;
-
-		if ( isOutOfBounds )
-		{
-			// reenter the image?
-			if ( position[ dim ] >= 0 && position[ dim ] < dimensions[ dim ] )
-			{
-				isOutOfBounds = false;
-				
-				for ( int d = 0; d < numDimensions && !isOutOfBounds; d++ )
-					if ( position[ d ] < 0 || position[ d ] >= dimensions[ d ])
-						isOutOfBounds = true;
-				
-				if ( !isOutOfBounds )
-				{
-					// we re-entered the image
-					// new location is inside the image					
-					type.updateContainer( this );
-					
-					// get the offset inside the image
-					type.updateIndex( container.getPos( position ) );
-				}
-				else
-				{
-					outOfBoundsStrategy.notifyOutOfBOunds( steps, dim  );
-				}
-			}
-			else // moved out of image bounds
-			{
-				outOfBoundsStrategy.notifyOutOfBOunds( steps, dim  );
-			}
-		}
-		else
-		{			
-			if ( position[ dim ] >= 0 && position[ dim ] < dimensions[ dim ] )
-			{
-				// moved within the image
-				//type.i += step[ dim ] * steps;
-				type.incIndex( step[ dim ] * steps );
-			}
-			else
-			{
-				// left the image
-				isOutOfBounds = true;
-				outOfBoundsStrategy.initOutOfBOunds(  );
-			}
-		}
-
-		linkedRasterPositionable.move( steps, dim );
-	}
-	
-	@Override
-	public void setPosition( final int[] position )
-	{
-		// save current state
-		final boolean wasOutOfBounds = isOutOfBounds;
-		isOutOfBounds = false;
-		
-		// update positions and check if we are inside the image
-		for ( int d = 0; d < numDimensions; d++ )
-		{
-			this.position[ d ] = position[ d ];
-			
-			if ( position[ d ] < 0 || position[ d ] >= dimensions[ d ])
-			{
-				// we are out of image bounds
-				isOutOfBounds = true;
-			}
-		}
-		
-		if ( isOutOfBounds )
-		{
-			// new location is out of image bounds
-		
-			if ( wasOutOfBounds ) // just moved out of image bounds
-				outOfBoundsStrategy.notifyOutOfBOunds(  );
-			else // we left the image with this setPosition() call
-				outOfBoundsStrategy.initOutOfBOunds(  );
-		}
-		else
-		{
-			// new location is inside the image
-			
-			if ( wasOutOfBounds ) // we reenter the image with this setPosition() call
-				type.updateContainer( this );
-			
-			// get the offset inside the image
-			type.updateIndex( container.getPos( position ) );			
-		}
-
-		linkedRasterPositionable.setPosition( position );
-	}
-
-	@Override
-	public void setPosition( final int position, final int dim )
-	{
-		this.position[ dim ] = position;
-
-		// we are out of image bounds or in the initial starting position
-		if ( isOutOfBounds || type.getIndex() == -1 )
-		{
-			// if just this dimensions moves inside does not necessarily mean that
-			// the other ones do as well, so we have to do a full check here
-			setPosition( this.position );
-		}
-		else if ( position < 0 || position >= dimensions[ dim ]) // we can just check in this dimension if it is still inside
-		{
-			// cursor has left the image
-			isOutOfBounds = true;
-			outOfBoundsStrategy.initOutOfBOunds();
-
-			linkedRasterPositionable.setPosition( position, dim );
-		}
-		else
-		{
-			// jumped around inside the image
-			type.updateIndex( container.getPos( this.position ) );
-
-			linkedRasterPositionable.setPosition( position, dim );
-		}
-	}	
+	public Array< T, ? > getContainer(){ return container; }
 }

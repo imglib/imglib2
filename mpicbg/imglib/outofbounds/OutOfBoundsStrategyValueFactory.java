@@ -24,39 +24,48 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- *
- * @author Stephan Preibisch & Stephan Saalfeld
  */
 package mpicbg.imglib.outofbounds;
 
-import mpicbg.imglib.cursor.LocalizableIterableCursor;
-import mpicbg.imglib.cursor.PositionableCursor;
+import mpicbg.imglib.cursor.OutOfBoundsCursor;
 import mpicbg.imglib.type.Type;
 
-public class OutOfBoundsStrategyValueFactory<T extends Type<T>> extends OutOfBoundsStrategyFactory<T>
+/**
+ * 
+ * @param <T>
+ *
+ * @author Stephan Preibisch and Stephan Saalfeld
+ */
+public class OutOfBoundsStrategyValueFactory< T extends Type< T > >
+		extends OutOfBoundsStrategyFactory< T >
 {
-	T value;
-	
-	public OutOfBoundsStrategyValueFactory( )
+	protected T value;
+
+	public OutOfBoundsStrategyValueFactory()
 	{
 		this.value = null;
 	}
-	
+
 	public OutOfBoundsStrategyValueFactory( final T value )
 	{
 		this.value = value;
 	}
-		
-	public void setValue( T value ) { this.value = value; }
-	public T getValue() { return value; }
-	
-	@Override
-	public OutOfBoundsStrategyValue<T> createStrategy( final PositionableCursor<T> cursor )
+
+	public void setValue( final T value )
 	{
-		if ( value == null )
-			return new OutOfBoundsStrategyValue<T>( cursor, cursor.getImage().createType() );
-		else
-			return new OutOfBoundsStrategyValue<T>( cursor, value );
+		this.value = value;
+	}
+
+	public T getValue()
+	{
+		return value;
+	}
+
+	@Override
+	public OutOfBoundsStrategyValue< T > createStrategy( final OutOfBoundsCursor< T > cursor )
+	{
+		if ( value == null ) return new OutOfBoundsStrategyValue< T >( cursor, cursor.getImage().createType() );
+		else return new OutOfBoundsStrategyValue< T >( cursor, value );
 	}
 
 }

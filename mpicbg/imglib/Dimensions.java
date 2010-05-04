@@ -32,6 +32,6 @@ package mpicbg.imglib;
 public interface Dimensions extends Dimensionality
 {
 	public int[] getDimensions();
-	public void getDimensions( int[] position );
+	public void dimensions( int[] position );
 	public int getDimension( int dim );
 }

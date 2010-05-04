@@ -29,28 +29,27 @@
  */
 package mpicbg.imglib.cursor.shapelist;
 
-import mpicbg.imglib.container.shapelist.ShapeList;
+import mpicbg.imglib.container.shapelist.ShapeListCached;
+import mpicbg.imglib.cursor.AbstractOutOfBoundsCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
 import mpicbg.imglib.type.Type;
 
-public class ShapeListCachedPositionableOutOfBoundsCursor<T extends Type<T>> extends ShapeListPositionableOutOfBoundsCursor<T>
+public class ShapeListCachedPositionableOutOfBoundsCursor< T extends Type< T > >
+		extends AbstractOutOfBoundsCursor< T >
 {
-	final ShapeListCache<T> cache;
-
-	public ShapeListCachedPositionableOutOfBoundsCursor( final ShapeList<T> container, final Image<T> image, final OutOfBoundsStrategyFactory<T> outOfBoundsStrategyFactory, final ShapeListCache<T> cache ) 
+	final protected ShapeListCached< T > container;
+	
+	public ShapeListCachedPositionableOutOfBoundsCursor(
+			final ShapeListCached< T > container,
+			final Image< T > image,
+			final OutOfBoundsStrategyFactory< T > outOfBoundsStrategyFactory ) 
 	{
 		super( container, image, outOfBoundsStrategyFactory );
 		
-		this.cache = cache;
-	}	
-		
-	@Override
-	public T type() 
-	{
-		if ( isOutOfBounds )
-			return outOfBoundsStrategy.getType();
-		else
-			return cache.lookUp( position ); 
+		this.container = container;
 	}
+
+	@Override
+	public ShapeListCached< T > getContainer(){ return container; }
 }

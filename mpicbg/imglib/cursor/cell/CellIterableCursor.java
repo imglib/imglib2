@@ -57,11 +57,11 @@ public class CellIterableCursor< T extends Type< T > > extends AbstractIterableC
 	/* The instance of the current cell */
 	protected Cell< T, ? > cellInstance;
 	
-	public CellIterableCursor( final CellContainer< T, ? > container, final Image< T > image, final T type )
+	public CellIterableCursor( final CellContainer< T, ? > container, final Image< T > image )
 	{
 		super( container, image );
 		
-		this.type = type;
+		this.type = container.createLinkedType();
 		this.container = container;
 		this.numCells = container.getNumCells();
 		this.lastCell = -1;

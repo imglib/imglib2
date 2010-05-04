@@ -53,7 +53,9 @@ public class ShapeListPositionableCursor< T extends Type< T > > extends Abstract
 	
 	protected RasterPositionable linkedRasterPositionable = VoidPositionable.getInstance();
 	
-	public ShapeListPositionableCursor( final ShapeList< T > container, final Image< T > image ) 
+	public ShapeListPositionableCursor(
+			final ShapeList< T > container,
+			final Image< T > image ) 
 	{
 		super( container, image );
 		this.container = container;

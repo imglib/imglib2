@@ -67,9 +67,9 @@ public class CellLocalizablePlaneCursor< T extends Type< T > > extends CellLocal
 	protected int planeDimA, planeDimB, planeSizeA, planeSizeB, incPlaneA, incPlaneB;
 	final protected int[] step, cellPosition, tmp, cellEnd, numCellsDim, cellStep;
 	
-	public CellLocalizablePlaneCursor( final CellContainer<T,?> container, final Image<T> image, final T type )
+	public CellLocalizablePlaneCursor( final CellContainer< T, ? > container, final Image< T > image )
 	{
-		super( container, image, type);
+		super( container, image );
 		
 		step = new int[ numDimensions ];
 		cellPosition = new int[ numDimensions ];

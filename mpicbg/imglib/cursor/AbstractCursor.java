@@ -40,21 +40,17 @@ import mpicbg.imglib.type.Type;
  *
  * @param < T > the {@link Type} to be returned by {@link #type()}
  */
-public abstract class AbstractCursor< T extends Type< T >> implements Cursor< T >
+public abstract class AbstractCursor< T extends Type< T > > implements Cursor< T >
 {
 	/* the image whose pixels this AbstractCursor is accessing, can be null */
 	final protected Image< T > image;
 
-	/* the Container that provides access to the pixels, cannot be null */
-	final protected Container< T > container;
-
 	/* a copy of container.numDimensions() for slightly faster access */
 	final protected int numDimensions;
 	
-	public AbstractCursor( final Container<T> container, final Image<T> image )
+	public AbstractCursor( final Container< T > container, final Image< T > image )
 	{
 		this.image = image;
-		this.container = container;
 		numDimensions = container.numDimensions();
 	}
 
@@ -64,12 +60,17 @@ public abstract class AbstractCursor< T extends Type< T >> implements Cursor< T 
 	
 	@Override
 	public int getArrayIndex() { return type().getIndex(); }
+	
 	@Override
 	public Image<T> getImage() { return image; }
+	
 	@Override
 	public void close()
 	{
 		if ( image != null)
 			image.removeCursor( this ); 
 	}
+	
+	@Override
+	public int numDimensions(){ return numDimensions; }
 }

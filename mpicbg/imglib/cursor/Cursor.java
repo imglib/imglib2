@@ -29,6 +29,7 @@
  */
 package mpicbg.imglib.cursor;
 
+import mpicbg.imglib.Dimensionality;
 import mpicbg.imglib.container.Container;
 import mpicbg.imglib.container.array.Array;
 import mpicbg.imglib.image.Image;
@@ -98,12 +99,13 @@ import mpicbg.imglib.type.Type;
  *
  * @param <T> - the {@link Type} this {@link Cursor} works on
  */
-public interface Cursor< T extends Type< T > > extends Sampler< T >
+public interface Cursor< T extends Type< T > > extends Sampler< T >, Dimensionality
 {	
-	public Image<T> getImage();
-	
+	public Image< T > getImage();
+
 	public int getArrayIndex();
-	public Container<T> getContainer();
-	
+
+	public Container< T > getContainer();
+
 	public void close();
 }

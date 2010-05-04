@@ -47,5 +47,5 @@ public class ShapeListCacheFIFO<T extends Type< T > > extends ShapeListCache<T>
 	}
 
 	@Override
-	public ShapeListCache<T> getCursorCacheInstance() { return new ShapeListCacheFIFO<T>( cacheSize, container );	}
+	public ShapeListCache< T > createInstance() { return new ShapeListCacheFIFO< T >( cacheSize, container );	}
 }

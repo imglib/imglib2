@@ -24,14 +24,13 @@ public class DynamicLocalizableCursor< T extends Type< T > >
 	
 	public DynamicLocalizableCursor(
 			final DynamicContainer< T, ? > container,
-			final Image< T > image,
-			final T type )
+			final Image< T > image )
 	{
 		super( container, image );
 		
-		this.type = type;
 		this.container = container;
-	
+		this.type = container.createLinkedType();
+		
 		accessor = container.createAccessor();
 		
 		reset();

@@ -35,53 +35,40 @@ import mpicbg.imglib.cursor.PositionableCursor;
 import mpicbg.imglib.location.RasterLocalizable;
 import mpicbg.imglib.type.Type;
 
-public class OutOfBoundsStrategyValue< T extends Type< T > > implements OutOfBoundsStrategy< T >
+public abstract class AbstractOutOfBoundsMirror< T extends Type< T > > implements OutOfBoundsStrategy< T >
 {
-	final T value;
-	
 	final protected PositionableCursor< T > outOfBoundsPositionable;
 	
 	final protected int numDimensions;
 	
 	final protected int[] dimension, position;
 	
-	protected boolean[] dimIsOutOfBounds;
+	/* true when increasing, false when decreasing */
+	final protected boolean[] inc;
+	
+	final protected int[] p;
 	
 	protected boolean isOutOfBounds = false;
 	
-	public OutOfBoundsStrategyValue(
-			final OutOfBoundsCursor< T > source,
-			final T value )
+	AbstractOutOfBoundsMirror( final OutOfBoundsCursor< T > source )
 	{
-		this( source, source.getImage().createPositionableCursor(), value );
+		this( source, source.getImage().createPositionableCursor() );
 	}
 	
-	OutOfBoundsStrategyValue(
+	AbstractOutOfBoundsMirror(
 			final OutOfBoundsCursor< T > source,
-			final PositionableCursor< T > outOfBoundsPositionable,
-			final T value )
+			final PositionableCursor< T > outOfBoundsPositionable )
 	{
 		this.outOfBoundsPositionable = outOfBoundsPositionable;
-		this.value = value;
 		numDimensions = source.getImage().numDimensions();
 		dimension = source.getImage().getDimensions();
 		position = new int[ numDimensions ];
-		dimIsOutOfBounds = new boolean[ numDimensions ];
+		inc = new boolean[ numDimensions ];
+		for ( int i = 0; i < dimension.length; ++i )
+			inc[ i ] = true;
+		
+		p = new int[ numDimensions ];
 	}
-	
-	final private void checkOutOfBounds()
-	{
-		for ( int d = 0; d < numDimensions; ++d )
-		{
-			if ( dimIsOutOfBounds[ d ] )
-			{
-				isOutOfBounds = true;
-				return;
-			}
-		}
-		isOutOfBounds = false;
-	}
-	
 	
 	/* Dimensionality */
 	
@@ -92,24 +79,13 @@ public class OutOfBoundsStrategyValue< T extends Type< T > > implements OutOfBou
 	/* OutOfBounds */
 	
 	@Override
-	public boolean isOutOfBounds()
-	{
-		checkOutOfBounds();
-		return isOutOfBounds;
-	}
+	public boolean isOutOfBounds(){ return isOutOfBounds; }
 
 	
 	/* Sampler */
 	
 	@Override
-	final public T type()
-	{
-		//System.out.println( getLocationAsString() + " " + isOutOfBounds );
-		if ( isOutOfBounds )
-			return value;
-		else
-			return outOfBoundsPositionable.type();
-	}
+	public T type(){ return outOfBoundsPositionable.type(); }
 	
 	@Override
 	@Deprecated
@@ -168,46 +144,6 @@ public class OutOfBoundsStrategyValue< T extends Type< T > > implements OutOfBou
 	/* RasterPositionable */
 	
 	@Override
-	public void fwd( final int dim )
-	{
-		final boolean wasOutOfBounds = isOutOfBounds;
-		final int x = ++position[ dim ];
-		if ( x == 0 )
-		{
-			dimIsOutOfBounds[ dim ] = false;
-			checkOutOfBounds();
-		}
-		else if ( x == dimension[ dim ] )
-			dimIsOutOfBounds[ dim ] = isOutOfBounds = true;
-		
-		if ( isOutOfBounds ) return;
-		if ( wasOutOfBounds )
-			outOfBoundsPositionable.setPosition( position );
-		else
-			outOfBoundsPositionable.fwd( dim );
-	}
-	
-	@Override
-	public void bck( final int dim )
-	{
-		final boolean wasOutOfBounds = isOutOfBounds;
-		final int x = position[ dim ]--;
-		if ( x == 0 )
-			dimIsOutOfBounds[ dim ] = isOutOfBounds = true;
-		else if ( x == dimension[ dim ] )
-		{
-			dimIsOutOfBounds[ dim ] = false;
-			checkOutOfBounds();
-		}
-		
-		if ( isOutOfBounds ) return;
-		if ( wasOutOfBounds )
-			outOfBoundsPositionable.setPosition( position );
-		else
-			outOfBoundsPositionable.bck( dim );
-	}
-	
-	@Override
 	public void move( final int distance, final int dim )
 	{
 		if ( distance > 0 )
@@ -250,22 +186,6 @@ public class OutOfBoundsStrategyValue< T extends Type< T > > implements OutOfBou
 	}
 	
 	@Override
-	public void setPosition( final int position, final int dim )
-	{
-		this.position[ dim ] = position;
-		if ( position < 0 || position >= dimension[ dim ] )
-			dimIsOutOfBounds[ dim ] = isOutOfBounds = true;
-		else
-		{
-			dimIsOutOfBounds[ dim ] = false;
-			checkOutOfBounds();
-			
-			if ( isOutOfBounds ) return;
-			outOfBoundsPositionable.setPosition( position, dim );
-		}
-	}
-	
-	@Override
 	public void setPosition( final long position, final int dim )
 	{
 		setPosition( ( int )position, dim );
@@ -292,7 +212,6 @@ public class OutOfBoundsStrategyValue< T extends Type< T > > implements OutOfBou
 			setPosition( position[ d ], d );
 	}
 	
-
 	@Override
 	public void close()
 	{

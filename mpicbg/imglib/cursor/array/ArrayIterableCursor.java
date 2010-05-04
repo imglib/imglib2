@@ -37,14 +37,14 @@ import mpicbg.imglib.type.Type;
 public class ArrayIterableCursor< T extends Type< T > > extends AbstractIterableCursor< T >
 {
 	protected final T type;
-	protected final Array<T,?> container;
+	protected final Array< T, ? > container;
 	protected final int sizeMinus1;
 	
-	public ArrayIterableCursor( final Array<T,?> container, final Image<T> image, final T type ) 
+	public ArrayIterableCursor( final Array< T, ? > container, final Image< T > image ) 
 	{
 		super( container, image );
 
-		this.type = type;
+		this.type = container.createLinkedType();
 		this.container = container;
 		this.sizeMinus1 = (int)container.getNumPixels() - 1;
 		

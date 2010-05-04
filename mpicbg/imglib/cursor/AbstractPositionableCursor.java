@@ -44,7 +44,7 @@ public abstract class AbstractPositionableCursor< T extends Type< T > > extends 
 	/* linked RasterPositionable following the raster moves */
 	protected RasterPositionable linkedRasterPositionable = VoidPositionable.getInstance();	
 	
-	public AbstractPositionableCursor( final Container<T> container, final Image<T> image )
+	public AbstractPositionableCursor( final Container< T > container, final Image< T > image )
 	{
 		super( container, image );
 		
@@ -100,6 +100,9 @@ public abstract class AbstractPositionableCursor< T extends Type< T > > extends 
 		localizable.localize( tmp );
 		setPosition( tmp );
 	}
+	
+	
+	/* LinkableRasterPositionable */
 	
 	@Override
 	public void linkRasterPositionable( final RasterPositionable rasterPositionable )

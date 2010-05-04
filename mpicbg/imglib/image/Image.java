@@ -320,8 +320,14 @@ public class Image<T extends Type<T>> implements ImageProperties, Dimensions, It
 		return "Image '" + this.getName() + "', dim=" + MathLib.printCoordinates( getContainer().getDimensions() );
 	}
 	
-	@Override
+	@Deprecated
 	public void getDimensions( final int[] dimensions )
+	{
+		dimensions( dimensions );
+	}
+	
+	@Override
+	public void dimensions( final int[] dimensions )
 	{
 		for (int i = 0; i < getContainer().numDimensions(); i++)
 			dimensions[i] = getContainer().getDimension( i );

@@ -24,8 +24,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- *
- * @author Stephan Preibisch & Stephan Saalfeld
  */
 package mpicbg.imglib.interpolation.linear;
 
@@ -40,12 +38,19 @@ import mpicbg.imglib.location.link.LocalizableFloorRasterPositionable;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
 import mpicbg.imglib.type.numeric.NumericType;
 
-public class LinearInterpolator<T extends NumericType<T>> extends AbstractInterpolator<T>
+/**
+ * 
+ * @param <T>
+ *
+ * @author Stephan Preibisch and Stephan Saalfeld
+ */
+public class LinearInterpolator< T extends NumericType< T > > extends AbstractInterpolator< T >
 {
-	final protected PositionableCursor<T> cursor;
-	final private LocalizableFloorRasterPositionable floorLink; 
+	final protected PositionableCursor< T > cursor;
+
+	final private LocalizableFloorRasterPositionable floorLink;
+
 	final protected T tmp1, tmp2;
-	
 	
 	// the offset in each dimension and a temporary array for computing the global coordinates
 	final int[] floorLocation;

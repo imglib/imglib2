@@ -34,5 +34,5 @@ import mpicbg.imglib.location.RasterLocalizable;
 import mpicbg.imglib.type.Type;
 
 public interface PositionableCursor<T extends Type<T>> extends Cursor<T>, RasterLocalizable, LinkableRasterPositionable
-{		
+{
 }

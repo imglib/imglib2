@@ -87,11 +87,8 @@ public abstract class AbstractLocalizableCursor< T extends Type< T > > extends A
 	public long getLongPosition( final int dim ){ return position[ dim ]; }
 	
 	@Override
-	public int numDimensions(){ return numDimensions; }
-
-	@Override
 	public String getLocationAsString() { return MathLib.printCoordinates( position ); }
 	
 	@Override
-	public String toString() { return getLocationAsString() + " = " + type(); }		
+	public String toString() { return getLocationAsString() + " = " + type(); }
 }

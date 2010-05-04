@@ -27,7 +27,7 @@
  */
 package mpicbg.imglib.cursor.shapelist;
 
-import mpicbg.imglib.container.shapelist.ShapeList;
+import mpicbg.imglib.container.shapelist.ShapeListCached;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.type.Type;
 
@@ -35,10 +35,12 @@ public class ShapeListCachedPositionableCursor< T extends Type< T > > extends Sh
 {
 	final ShapeListCache<T> cache;
 	
-	public ShapeListCachedPositionableCursor( final ShapeList< T > container, final Image< T > image, final ShapeListCache<T> cache ) 
+	public ShapeListCachedPositionableCursor(
+			final ShapeListCached< T > container,
+			final Image< T > image ) 
 	{
 		super( container, image );
-		this.cache = cache;
+		this.cache = container.getShapeListCachingStrategy().createInstance();
 	}
 	
 	@Override

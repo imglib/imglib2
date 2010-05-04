@@ -43,4 +43,11 @@ public abstract class AbstractDirectAccessContainer< T extends Type< T >, A exte
 	
 	@Override
 	public void setLinkedType( final T type ) { this.linkedType = type; }
+	
+	@Override
+	public T createLinkedType()
+	{
+		try{ return linkedType.duplicateTypeOnSameDirectAccessContainer(); }
+		catch ( NullPointerException e ){ return null; }
+	}
 }

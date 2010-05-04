@@ -58,11 +58,13 @@ public class DynamicPositionableCursor< T extends Type< T > >
 	
 	protected int numNeighborhoodCursors = 0;
 	
-	public DynamicPositionableCursor( final DynamicContainer< T, ? > container, final Image< T > image, final T type ) 
+	public DynamicPositionableCursor(
+			final DynamicContainer< T, ? > container,
+			final Image< T > image ) 
 	{
 		super( container, image );
 		
-		this.type = type;
+		this.type = container.createLinkedType();
 		this.container = container;
 		accessor = container.createAccessor();
 		

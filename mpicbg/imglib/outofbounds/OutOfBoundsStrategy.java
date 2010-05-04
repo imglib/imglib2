@@ -25,60 +25,21 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  *
- * @author Stephan Preibisch & Stephan Saalfeld
  */
 package mpicbg.imglib.outofbounds;
 
-import mpicbg.imglib.cursor.IterableCursor;
-import mpicbg.imglib.cursor.PositionableCursor;
+import mpicbg.imglib.location.RasterLocalizable;
+import mpicbg.imglib.location.RasterPositionable;
+import mpicbg.imglib.sampler.Sampler;
 import mpicbg.imglib.type.Type;
 
-public abstract class OutOfBoundsStrategy<T extends Type<T>>
+/**
+ * 
+ *
+ * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
+ */
+public interface OutOfBoundsStrategy< T extends Type< T > > extends RasterLocalizable, RasterPositionable, Sampler< T >
 {
-	final PositionableCursor<T> parentCursor;
-	
-	public OutOfBoundsStrategy( final PositionableCursor<T> parentCursor )
-	{
-		this.parentCursor = parentCursor;
-	}
-	
-	/**
-	 * @returns a link to the parent Cursor of this Strategy
-	 */
-	public PositionableCursor<T> getParentCursor() { return parentCursor; }
-
-	/**
-	 * Fired by the parent cursor in case that it moves while being out of image bounds
-	 */
-	public abstract void notifyOutOfBOunds();
-
-	/**
-	 * Fired by the parent cursor in case that it moves while being out of image bounds
-	 */
-	public abstract void notifyOutOfBOunds( int steps, int dim );
-
-	/**
-	 * Fired by the parent cursor in case that it moves while being out of image bounds
-	 */
-	public abstract void notifyOutOfBOundsFwd( int dim );
-
-	/**
-	 * Fired by the parent cursor in case that it moves while being out of image bounds
-	 */
-	public abstract void notifyOutOfBoundsBck( int dim );
-	
-	/**
-	 * Fired by the parent cursor in case that it leaves image bounds
-	 */
-	public abstract void initOutOfBOunds();
-	
-	/**
-	 * @returns the Type that stores the current value of the OutOfBoundsStrategy
-	 */
-	public abstract T getType();
-	
-	/**
-	 * Closed possibly created cursors or images
-	 */
-	public abstract void close();
+	public boolean isOutOfBounds();
+	public void close();
 }
