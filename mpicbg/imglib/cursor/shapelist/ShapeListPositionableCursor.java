@@ -63,8 +63,6 @@ public class ShapeListPositionableCursor< T extends Type< T > > extends Abstract
 		
 		position = new int[ numDimensions ];
 		dimensions = container.getDimensions();
-		
-		position[ 0 ] = -1;
 	}
 	
 	@Override
