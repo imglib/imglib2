@@ -84,7 +84,7 @@ public class ShapeListLocalizablePlaneCursor<T extends Type<T>> extends ShapeLis
 		
 		setPosition( dimensionPositions );
 		position[ planeDimA ] = -1;
-		position[ planeDimA ] = 0;			
+		position[ planeDimB ] = 0;			
 	}
 
 	@Override
@@ -95,7 +95,7 @@ public class ShapeListLocalizablePlaneCursor<T extends Type<T>> extends ShapeLis
 		
 		setPosition( dimensionPositions );
 		position[ planeDimA ] = -1;
-		position[ planeDimA ] = 0;				
+		position[ planeDimB ] = 0;				
 	}
 
 	
