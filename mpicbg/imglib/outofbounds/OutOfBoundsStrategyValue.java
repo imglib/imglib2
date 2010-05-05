@@ -45,7 +45,7 @@ public class OutOfBoundsStrategyValue< T extends Type< T > > implements OutOfBou
 	
 	final protected int[] dimension, position;
 	
-	protected boolean[] dimIsOutOfBounds;
+	final protected boolean[] dimIsOutOfBounds;
 	
 	protected boolean isOutOfBounds = false;
 	
@@ -171,13 +171,13 @@ public class OutOfBoundsStrategyValue< T extends Type< T > > implements OutOfBou
 	public void fwd( final int dim )
 	{
 		final boolean wasOutOfBounds = isOutOfBounds;
-		final int x = ++position[ dim ];
-		if ( x == 0 )
+		final int p = ++position[ dim ];
+		if ( p == 0 )
 		{
 			dimIsOutOfBounds[ dim ] = false;
 			checkOutOfBounds();
 		}
-		else if ( x == dimension[ dim ] )
+		else if ( p == dimension[ dim ] )
 			dimIsOutOfBounds[ dim ] = isOutOfBounds = true;
 		
 		if ( isOutOfBounds ) return;
@@ -191,10 +191,10 @@ public class OutOfBoundsStrategyValue< T extends Type< T > > implements OutOfBou
 	public void bck( final int dim )
 	{
 		final boolean wasOutOfBounds = isOutOfBounds;
-		final int x = position[ dim ]--;
-		if ( x == 0 )
+		final int p = position[ dim ]--;
+		if ( p == 0 )
 			dimIsOutOfBounds[ dim ] = isOutOfBounds = true;
-		else if ( x == dimension[ dim ] )
+		else if ( p == dimension[ dim ] )
 		{
 			dimIsOutOfBounds[ dim ] = false;
 			checkOutOfBounds();
