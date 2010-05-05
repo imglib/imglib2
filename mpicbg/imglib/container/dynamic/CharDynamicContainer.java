@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2009--2010, Stephan Preibisch
+ * Copyright (c) 2009--2010, Stephan Preibisch & Stephan Saalfeld
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -32,30 +32,36 @@ package mpicbg.imglib.container.dynamic;
 import java.util.ArrayList;
 
 import mpicbg.imglib.cursor.Cursor;
-import mpicbg.imglib.cursor.dynamic.DynamicIterableCursor;
+import mpicbg.imglib.cursor.dynamic.DynamicStorageAccess;
 import mpicbg.imglib.type.Type;
 
-public class CharDynamicContainer <T extends Type<T>> extends DynamicContainer<T, CharDynamicContainerAccessor>
+/**
+ * 
+ * @param <T>
+ *
+ * @author Stephan Preibisch and Stephan Saalfeld
+ */
+public class CharDynamicContainer< T extends Type< T > > extends DynamicContainer< T, CharDynamicContainerAccessor >
 {
-	final ArrayList<Character> data;
-	
+	final ArrayList< Character > data;
+
 	public CharDynamicContainer( final DynamicContainerFactory factory, final int[] dim, final int entitiesPerPixel )
 	{
 		super( factory, dim, entitiesPerPixel );
-		
-		data = new ArrayList<Character>();
-		
-		for ( int i = 0; i < numPixels*entitiesPerPixel; ++i )
+
+		data = new ArrayList< Character >();
+
+		for ( int i = 0; i < numPixels * entitiesPerPixel; ++i )
 			data.add( ' ' );
 	}
-	
+
 	@Override
-	public CharDynamicContainerAccessor update( final Cursor<?> c )
+	public CharDynamicContainerAccessor update( final Cursor< ? > c )
 	{
-		final DynamicIterableCursor<?> cursor = (DynamicIterableCursor<?>)c;
-		final CharDynamicContainerAccessor accessor = (CharDynamicContainerAccessor) cursor.getAccessor();
+		final DynamicStorageAccess cursor = ( DynamicStorageAccess ) c;
+		final CharDynamicContainerAccessor accessor = ( CharDynamicContainerAccessor ) cursor.getAccessor();
 		accessor.updateIndex( cursor.getInternalIndex() );
-		
+
 		return accessor;
 	}
 
@@ -65,7 +71,10 @@ public class CharDynamicContainer <T extends Type<T>> extends DynamicContainer<T
 		return new CharDynamicContainerAccessor( this, entitiesPerPixel );
 	}
 
-	@Override 
-	public void close() { data.clear(); }
-	
+	@Override
+	public void close()
+	{
+		data.clear();
+	}
+
 }

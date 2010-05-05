@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2009--2010, Stephan Preibisch
+ * Copyright (c) 2009--2010, Stephan Preibisch & Stephan Saalfeld
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -24,8 +24,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- *
- * @author Stephan Preibisch
  */
 package mpicbg.imglib.container.dynamic;
 
@@ -35,7 +33,13 @@ import mpicbg.imglib.cursor.Cursor;
 import mpicbg.imglib.cursor.dynamic.DynamicStorageAccess;
 import mpicbg.imglib.type.Type;
 
-public class BitDynamicContainer <T extends Type<T>> extends DynamicContainer<T, BitDynamicContainerAccessor>
+/**
+ * 
+ * @param <T>
+ *
+ * @author Stephan Preibisch and Stephan Saalfeld
+ */
+public class BitDynamicContainer <T extends Type<T> > extends DynamicContainer<T, BitDynamicContainerAccessor>
 {
 	final static int bitsPerEntity = Integer.SIZE;
 	final ArrayList<Integer> data;

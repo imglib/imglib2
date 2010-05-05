@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2009--2010, Stephan Preibisch
+ * Copyright (c) 2009--2010, Stephan Preibisch & Stephan Saalfeld
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -24,38 +24,42 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- *
- * @author Stephan Preibisch
  */
 package mpicbg.imglib.container.dynamic;
 
 import java.util.ArrayList;
 
 import mpicbg.imglib.cursor.Cursor;
-import mpicbg.imglib.cursor.dynamic.DynamicIterableCursor;
+import mpicbg.imglib.cursor.dynamic.DynamicStorageAccess;
 import mpicbg.imglib.type.Type;
 
-public class FloatDynamicContainer <T extends Type<T>> extends DynamicContainer<T, FloatDynamicContainerAccessor>
+/**
+ * 
+ * @param <T>
+ *
+ * @author Stephan Preibisch and Stephan Saalfeld
+ */
+public class FloatDynamicContainer< T extends Type< T > > extends DynamicContainer< T, FloatDynamicContainerAccessor >
 {
-	final ArrayList<Float> data;
-	
+	final ArrayList< Float > data;
+
 	public FloatDynamicContainer( final DynamicContainerFactory factory, final int[] dim, final int entitiesPerPixel )
 	{
 		super( factory, dim, entitiesPerPixel );
-		
-		data = new ArrayList<Float>();
-		
-		for ( int i = 0; i < numPixels*entitiesPerPixel; ++i )
+
+		data = new ArrayList< Float >();
+
+		for ( int i = 0; i < numPixels * entitiesPerPixel; ++i )
 			data.add( 0.0f );
 	}
-	
+
 	@Override
-	public FloatDynamicContainerAccessor update( final Cursor<?> c )
+	public FloatDynamicContainerAccessor update( final Cursor< ? > c )
 	{
-		final DynamicIterableCursor<?> cursor = (DynamicIterableCursor<?>)c;
-		final FloatDynamicContainerAccessor accessor = (FloatDynamicContainerAccessor) cursor.getAccessor();
+		final DynamicStorageAccess cursor = ( DynamicStorageAccess ) c;
+		final FloatDynamicContainerAccessor accessor = ( FloatDynamicContainerAccessor ) cursor.getAccessor();
 		accessor.updateIndex( cursor.getInternalIndex() );
-		
+
 		return accessor;
 	}
 
@@ -65,7 +69,10 @@ public class FloatDynamicContainer <T extends Type<T>> extends DynamicContainer<
 		return new FloatDynamicContainerAccessor( this, entitiesPerPixel );
 	}
 
-	@Override 
-	public void close() { data.clear(); }
-	
+	@Override
+	public void close()
+	{
+		data.clear();
+	}
+
 }
