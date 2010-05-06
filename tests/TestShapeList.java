@@ -137,10 +137,10 @@ public class TestShapeList
 			new ImageTransform< ByteType >(
 					arrayImage,
 					affine,
-//					new LinearInterpolatorFactory< ByteType >(
-					new NearestNeighborInterpolatorFactory< ByteType >(
-//							new OutOfBoundsMirrorSingleBoundaryFactory< ByteType >() ) );
-							new OutOfBoundsStrategyValueFactory< ByteType >( new ByteType( ( byte )112 ) ) ) );
+					new LinearInterpolatorFactory< ByteType >(
+//					new NearestNeighborInterpolatorFactory< ByteType >(
+							new OutOfBoundsMirrorSingleBoundaryFactory< ByteType >() ) );
+//							new OutOfBoundsStrategyValueFactory< ByteType >( new ByteType( ( byte )112 ) ) ) );
 		transform.setOutputImageFactory(
 				new ImageFactory< ByteType >( new ByteType(), cellFactory ) );
 		

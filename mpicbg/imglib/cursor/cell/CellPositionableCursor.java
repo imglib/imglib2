@@ -195,7 +195,7 @@ public class CellPositionableCursor< T extends Type< T > > extends AbstractPosit
 
 				getCellData(cell);					
 				position[ dim ]++;	
-				type.updateIndex( cellInstance.getPosGlobal( position ) );
+				type.updateIndex( cellInstance.globalPositionToIndex( position ) );
 			}
 			// else moving out of image...			
 		}
@@ -286,7 +286,7 @@ public class CellPositionableCursor< T extends Type< T > > extends AbstractPosit
 				getCellData(cell);					
 				
 				position[ dim ]--;
-				type.updateIndex( cellInstance.getPosGlobal( position ) );
+				type.updateIndex( cellInstance.globalPositionToIndex( position ) );
 			}
 			else //if ( cellPosition[ dim ] > 0 )
 			{
@@ -320,7 +320,7 @@ public class CellPositionableCursor< T extends Type< T > > extends AbstractPosit
 		cell = container.getCellIndex( cursor, cellPosition );
 
 		getCellData(cell);
-		type.updateIndex( cellInstance.getPosGlobal( position ) );
+		type.updateIndex( cellInstance.globalPositionToIndex( position ) );
 
 		linkedRasterPositionable.setPosition( position );
 	}
@@ -339,7 +339,7 @@ public class CellPositionableCursor< T extends Type< T > > extends AbstractPosit
 		cell = container.getCellIndex( cursor, cellPosition );
 
 		getCellData(cell);
-		type.updateIndex( cellInstance.getPosGlobal( this.position ) );
+		type.updateIndex( cellInstance.globalPositionToIndex( this.position ) );
 
 		linkedRasterPositionable.setPosition( position );
 	}
@@ -356,7 +356,7 @@ public class CellPositionableCursor< T extends Type< T > > extends AbstractPosit
 		cell = container.getCellIndex( cursor, cellPosition[ dim ], dim );
 		
 		getCellData(cell);
-		type.updateIndex( cellInstance.getPosGlobal( this.position ) );
+		type.updateIndex( cellInstance.globalPositionToIndex( this.position ) );
 
 		linkedRasterPositionable.setPosition( position, dim );
 	}

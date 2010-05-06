@@ -66,7 +66,7 @@ public class ArrayPositionableCursor< T extends Type< T > > extends AbstractPosi
 	}
 
 	@Override
-	public T type() { return type; }	
+	public T type() { return type; }
 	
 	@Override
 	public void fwd( final int dim )

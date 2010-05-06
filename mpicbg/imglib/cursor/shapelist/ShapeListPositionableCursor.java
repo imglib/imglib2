@@ -72,6 +72,18 @@ public class ShapeListPositionableCursor< T extends Type< T > > extends Abstract
 	}
 	
 	@Override
+	public boolean isOutOfBounds()
+	{
+		for ( int d = 0; d < numDimensions; ++d )
+		{
+			final int x = position[ d ];
+			if ( x < 0 || x >= dimensions[ d ] )
+				return true;
+		}
+		return false;
+	}
+	
+	@Override
 	public void fwd( final int dim )
 	{
 		++position[ dim ];

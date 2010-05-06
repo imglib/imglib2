@@ -30,7 +30,6 @@
 package mpicbg.imglib.outofbounds;
 
 import mpicbg.imglib.algorithm.math.MathLib;
-import mpicbg.imglib.cursor.OutOfBoundsCursor;
 import mpicbg.imglib.cursor.PositionableCursor;
 import mpicbg.imglib.location.RasterLocalizable;
 import mpicbg.imglib.type.Type;
@@ -48,15 +47,17 @@ public abstract class AbstractOutOfBoundsMirror< T extends Type< T > > implement
 	
 	final protected int[] p;
 	
+	final protected boolean[] dimIsOutOfBounds;
+	
 	protected boolean isOutOfBounds = false;
 	
-	AbstractOutOfBoundsMirror( final OutOfBoundsCursor< T > source )
+	AbstractOutOfBoundsMirror( final PositionableCursor< T > source )
 	{
 		this( source, source.getImage().createPositionableCursor() );
 	}
 	
 	AbstractOutOfBoundsMirror(
-			final OutOfBoundsCursor< T > source,
+			final PositionableCursor< T > source,
 			final PositionableCursor< T > outOfBoundsPositionable )
 	{
 		this.outOfBoundsPositionable = outOfBoundsPositionable;
@@ -68,6 +69,20 @@ public abstract class AbstractOutOfBoundsMirror< T extends Type< T > > implement
 			inc[ i ] = true;
 		
 		p = new int[ numDimensions ];
+		dimIsOutOfBounds = new boolean[ numDimensions ];
+	}
+	
+	final protected void checkOutOfBounds()
+	{
+		for ( int d = 0; d < numDimensions; ++d )
+		{
+			if ( dimIsOutOfBounds[ d ] )
+			{
+				isOutOfBounds = true;
+				return;
+			}
+		}
+		isOutOfBounds = false;
 	}
 	
 	/* Dimensionality */

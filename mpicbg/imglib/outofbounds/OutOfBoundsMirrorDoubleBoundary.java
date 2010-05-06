@@ -27,42 +27,43 @@
  */
 package mpicbg.imglib.outofbounds;
 
+import mpicbg.imglib.cursor.OutOfBoundsCursor;
 import mpicbg.imglib.cursor.PositionableCursor;
 import mpicbg.imglib.type.Type;
 
 /**
- * Coordinates out of image bounds are mirrored at boundary coordinates. So
- * boundary pixels are not repeated.
+ * Coordinates out of image bounds are mirrored between boundary coordinates.
+ * So boundary pixels are repeated.
  * 
  * <pre>
  * Example:
  * 
  * width=4
- *
+ * 
  *                                  |<-inside->|
  * x:    -9 -8 -7 -6 -5 -4 -3 -2 -1  0  1  2  3  4  5  6  7  8  9
- * f(x):  3  2  1  0  1  2  3  2  1  0  1  2  3  2  1  0  1  2  3
+ * f(x):  0  0  1  2  3  3  2  1  0  0  1  2  3  3  2  1  0  0  1
  * </pre>
  * 
  * @param <T>
  *
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-public class OutOfBoundsMirrorSingleBoundary< T extends Type< T > > extends AbstractOutOfBoundsMirror< T >
+public class OutOfBoundsMirrorDoubleBoundary< T extends Type< T > > extends AbstractOutOfBoundsMirror< T >
 {
-	OutOfBoundsMirrorSingleBoundary( final PositionableCursor< T > source )
+	OutOfBoundsMirrorDoubleBoundary( final OutOfBoundsCursor< T > source )
 	{
 		this( source, source.getImage().createPositionableCursor() );
 	}
 	
-	OutOfBoundsMirrorSingleBoundary(
-			final PositionableCursor< T > source,
+	OutOfBoundsMirrorDoubleBoundary(
+			final OutOfBoundsCursor< T > source,
 			final PositionableCursor< T > outOfBoundsPositionable )
 	{
 		super( source, outOfBoundsPositionable );
 		
 		for ( int i = 0; i < dimension.length; ++i )
-			p[ i ] = 2 * dimension[ i ] - 2;
+			p[ i ] = 2 * dimension[ i ];
 	}
 	
 	/* RasterPositionable */
@@ -70,19 +71,11 @@ public class OutOfBoundsMirrorSingleBoundary< T extends Type< T > > extends Abst
 	@Override
 	final public void fwd( final int dim ) 
 	{
-		final int p = ++position[ dim ];
-		if ( p == 0 )
-		{
-			dimIsOutOfBounds[ dim ] = false;
-			if ( isOutOfBounds ) checkOutOfBounds();
-		}
-		else if ( p == dimension[ dim ] )
-			dimIsOutOfBounds[ dim ] = isOutOfBounds = true;
-		
-		final int q = outOfBoundsPositionable.getIntPosition( dim );
+		isOutOfBounds = ( ++position[ dim ] >= dimension[ dim ] );
+		final int x = outOfBoundsPositionable.getIntPosition( dim );
 		if ( inc[ dim ] )
 		{
-			if ( q + 1 == dimension[ dim ] )
+			if ( x + 1 == dimension[ dim ] )
 			{
 				inc[ dim ] = false;
 				outOfBoundsPositionable.bck( dim );
@@ -92,7 +85,7 @@ public class OutOfBoundsMirrorSingleBoundary< T extends Type< T > > extends Abst
 		}
 		else
 		{
-			if ( q == 0 )
+			if ( x == 0 )
 			{
 				inc[ dim ] = true;
 				outOfBoundsPositionable.fwd( dim  );
@@ -105,20 +98,11 @@ public class OutOfBoundsMirrorSingleBoundary< T extends Type< T > > extends Abst
 	@Override
 	final public void bck( final int dim ) 
 	{
-		final int p = position[ dim ]--;
-		if ( p == 0 )
-			dimIsOutOfBounds[ dim ] = isOutOfBounds = true;
-		else if ( p == dimension[ dim ] )
-		{
-			dimIsOutOfBounds[ dim ] = false;
-			if ( isOutOfBounds ) checkOutOfBounds();
-		}
-			
-		
-		final int q = outOfBoundsPositionable.getIntPosition( dim );
+		isOutOfBounds = ( --position[ dim ] < 0 );
+		final int x = outOfBoundsPositionable.getIntPosition( dim );
 		if ( inc[ dim ] )
 		{
-			if ( q == 0 )
+			if ( x == 0 )
 			{
 				inc[ dim ] = false;
 				outOfBoundsPositionable.fwd( dim );
@@ -128,7 +112,7 @@ public class OutOfBoundsMirrorSingleBoundary< T extends Type< T > > extends Abst
 		}
 		else
 		{
-			if ( q + 1 == dimension[ dim ] )
+			if ( x + 1 == dimension[ dim ] )
 			{
 				inc[ dim ] = true;
 				outOfBoundsPositionable.bck( dim  );
@@ -142,11 +126,12 @@ public class OutOfBoundsMirrorSingleBoundary< T extends Type< T > > extends Abst
 	final public void setPosition( int position, final int dim )
 	{
 		this.position[ dim ] = position;
+		final int p = this.p[ dim ];
 		final int mod = dimension[ dim ];
 		final boolean pos;
 		if ( position < 0 )
 		{
-			dimIsOutOfBounds[ dim ] = isOutOfBounds = true;
+			isOutOfBounds = true;
 			position = -position;
 			pos = false;
 		}
@@ -155,9 +140,7 @@ public class OutOfBoundsMirrorSingleBoundary< T extends Type< T > > extends Abst
 		
 		if ( position >= mod )
 		{
-			dimIsOutOfBounds[ dim ] = isOutOfBounds = true;
-			final int p = this.p[ dim ];
-			
+			isOutOfBounds = true;
 			if ( position <= p )
 			{
 				position = p - position;
@@ -182,13 +165,7 @@ public class OutOfBoundsMirrorSingleBoundary< T extends Type< T > > extends Abst
 		}
 		else
 		{
-			if ( pos )
-			{
-				dimIsOutOfBounds[ dim ] = false;
-				if ( isOutOfBounds )
-					checkOutOfBounds();
-			}
-			
+			isOutOfBounds = false;
 			inc[ dim ] = pos;
 		}
 		

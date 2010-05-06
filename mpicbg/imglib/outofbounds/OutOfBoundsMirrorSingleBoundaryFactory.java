@@ -29,13 +29,13 @@
  */
 package mpicbg.imglib.outofbounds;
 
-import mpicbg.imglib.cursor.OutOfBoundsCursor;
+import mpicbg.imglib.cursor.PositionableCursor;
 import mpicbg.imglib.type.Type;
 
 public class OutOfBoundsMirrorSingleBoundaryFactory< T extends Type< T >> extends OutOfBoundsStrategyFactory< T >
 {
 	@Override
-	public OutOfBoundsMirrorSingleBoundary< T > createStrategy( final OutOfBoundsCursor< T > cursor )
+	public OutOfBoundsMirrorSingleBoundary< T > createStrategy( final PositionableCursor< T > cursor )
 	{
 		return new OutOfBoundsMirrorSingleBoundary< T >( cursor );
 	}

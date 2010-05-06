@@ -146,7 +146,7 @@ public class CellLocalizablePlaneCursor< T extends Type< T > > extends CellLocal
 				position[ planeDimB ] = cellOffset[ planeDimB ];
 			
 			// get the correct index inside the cell
-			type.updateIndex( cellInstance.getPosGlobal( position ) );			
+			type.updateIndex( cellInstance.globalPositionToIndex( position ) );			
 		}
 		
 		linkedIterator.fwd();
@@ -192,7 +192,7 @@ public class CellLocalizablePlaneCursor< T extends Type< T > > extends CellLocal
 			this.incPlaneB = 0;
 		}
 		
-		this.cellMaxI = cellInstance.getPosGlobal( tmp );
+		this.cellMaxI = cellInstance.globalPositionToIndex( tmp );
 		
 		type.updateContainer( this );
 	}
@@ -287,7 +287,7 @@ public class CellLocalizablePlaneCursor< T extends Type< T > > extends CellLocal
 		cell = container.getCellIndex( cursor, cellPosition );
 
 		getCellData(cell);
-		type.updateIndex( cellInstance.getPosGlobal( position ) );
+		type.updateIndex( cellInstance.globalPositionToIndex( position ) );
 	}
 
 	@Override

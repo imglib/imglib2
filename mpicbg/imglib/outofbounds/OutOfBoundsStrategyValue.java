@@ -30,7 +30,6 @@
 package mpicbg.imglib.outofbounds;
 
 import mpicbg.imglib.algorithm.math.MathLib;
-import mpicbg.imglib.cursor.OutOfBoundsCursor;
 import mpicbg.imglib.cursor.PositionableCursor;
 import mpicbg.imglib.location.RasterLocalizable;
 import mpicbg.imglib.type.Type;
@@ -50,14 +49,14 @@ public class OutOfBoundsStrategyValue< T extends Type< T > > implements OutOfBou
 	protected boolean isOutOfBounds = false;
 	
 	public OutOfBoundsStrategyValue(
-			final OutOfBoundsCursor< T > source,
+			final PositionableCursor< T > source,
 			final T value )
 	{
 		this( source, source.getImage().createPositionableCursor(), value );
 	}
 	
 	OutOfBoundsStrategyValue(
-			final OutOfBoundsCursor< T > source,
+			final PositionableCursor< T > source,
 			final PositionableCursor< T > outOfBoundsPositionable,
 			final T value )
 	{

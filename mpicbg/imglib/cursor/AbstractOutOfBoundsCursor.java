@@ -42,7 +42,7 @@ import mpicbg.imglib.type.Type;
  *
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-public abstract class AbstractOutOfBoundsCursor< T extends Type< T > > extends AbstractCursor< T > implements OutOfBoundsCursor< T >
+public abstract class AbstractOutOfBoundsCursor< T extends Type< T > > extends AbstractCursor< T > implements PositionableCursor< T >
 {
 	/* performs the actual moves and generates/queries a Type */
 	final protected OutOfBoundsStrategy< T > outOfBounds;

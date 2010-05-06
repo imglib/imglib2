@@ -24,8 +24,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- *
- * @author Stephan Preibisch & Stephan Saalfeld
  */
 package mpicbg.imglib.container.cell;
 
@@ -35,7 +33,14 @@ import mpicbg.imglib.container.array.Array;
 import mpicbg.imglib.container.basictypecontainer.array.ArrayDataAccess;
 import mpicbg.imglib.type.Type;
 
-public class Cell< T extends Type<T>, A extends ArrayDataAccess<A>> //extends Array<T,A>
+/**
+ * 
+ * @param <T>
+ * @param <A>
+ *
+ * @author Stephan Preibisch and Stephan Saalfeld
+ */
+public class Cell< T extends Type< T >, A extends ArrayDataAccess< A > > // extends Array< T, A >
 {
 	final protected int[] offset, step, dim;	
 	final protected int cellId, numDimensions, numPixels, numEntities;
@@ -81,24 +86,43 @@ public class Cell< T extends Type<T>, A extends ArrayDataAccess<A>> //extends Ar
 	
 	public long getLongOffset( final int dim ){ return offset[ dim ]; }
 	
+	
+	/**
+	 * Read the {@link Cell} offset coordinates into an int[]
+	 * 
+	 * @param offset
+	 */
 	public void offset( final int[] offset )
 	{
 		for ( int i = 0; i < numDimensions; ++i )
 			offset[ i ] = this.offset[ i ];
 	}
 	
+	/**
+	 * Read the {@link Cell} offset coordinates into a long[]
+	 * 
+	 * @param offset
+	 */
 	public void offset( final long[] offset )
 	{
 		for ( int i = 0; i < numDimensions; ++i )
 			offset[ i ] = this.offset[ i ];
 	}
 	
-	public final int getPosGlobal( final int[] l ) 
-	{ 
+	/**
+	 * Calculate the {@link Cell} index for a global position.  Note that this
+	 * method does not check if the global position is actually contained in
+	 * the {@link Cell}.
+	 * 
+	 * @param l
+	 * @return
+	 */
+	public final int globalPositionToIndex( final int[] l )
+	{
 		int i = l[ 0 ] - offset[ 0 ];
 		for ( int d = 1; d < dim.length; ++d )
-			i += (l[ d ] - offset[ d ]) * step[ d ];
-		
+			i += ( l[ d ] - offset[ d ] ) * step[ d ];
+
 		return i;
 	}
 	

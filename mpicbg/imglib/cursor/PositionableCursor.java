@@ -35,4 +35,10 @@ import mpicbg.imglib.type.Type;
 
 public interface PositionableCursor<T extends Type<T>> extends Cursor<T>, RasterLocalizable, LinkableRasterPositionable
 {
+	/**
+	 * True if located out of image bounds.
+	 * 
+	 * @return
+	 */
+	public boolean isOutOfBounds();
 }

@@ -52,6 +52,18 @@ public abstract class AbstractPositionableCursor< T extends Type< T > > extends 
 	}
 	
 	@Override
+	public boolean isOutOfBounds()
+	{
+		for ( int d = 0; d < numDimensions; ++d )
+		{
+			final int x = position[ d ];
+			if ( x < 0 || x >= dimensions[ d ] )
+				return true;
+		}
+		return false;
+	}
+	
+	@Override
 	public void move( final long distance, final int dim )
 	{
 		move( ( int )distance, dim );		
