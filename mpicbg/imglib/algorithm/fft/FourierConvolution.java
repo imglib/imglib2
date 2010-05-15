@@ -28,12 +28,11 @@ import mpicbg.imglib.algorithm.fft.FourierTransform.Rearrangement;
 import mpicbg.imglib.algorithm.gauss.GaussianConvolution;
 import mpicbg.imglib.algorithm.math.MathLib;
 import mpicbg.imglib.container.ContainerFactory;
-import mpicbg.imglib.cursor.IterableCursor;
-import mpicbg.imglib.cursor.PositionableCursor;
-import mpicbg.imglib.cursor.LocalizableIterableCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.ImageFactory;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyValueFactory;
+import mpicbg.imglib.sampler.PositionableRasterSampler;
+import mpicbg.imglib.sampler.RasterIterator;
 import mpicbg.imglib.type.numeric.RealType;
 import mpicbg.imglib.type.numeric.complex.ComplexFloatType;
 import mpicbg.imglib.type.numeric.real.FloatType;
@@ -123,7 +122,7 @@ public class FourierConvolution<T extends RealType<T>, S extends RealType<S>> im
 		
 		final Image<FloatType> kernelImg = new ImageFactory<FloatType>( new FloatType(), factory ).createImage( imageSize );
 		
-		final LocalizableIterableCursor<FloatType> cursor = kernelImg.createLocalizableCursor();
+		final RasterIterator<FloatType> cursor = kernelImg.createLocalizableCursor();
 		final int[] position = new int[ numDimensions ];
 		
 		while ( cursor.hasNext() )
@@ -168,7 +167,7 @@ public class FourierConvolution<T extends RealType<T>, S extends RealType<S>> im
 		for ( int d = 0; d < numDimensions; ++d )
 			center[ d ] = kernel.getDimension( d ) / 2;
 				
-		final PositionableCursor<T> c = kernel.createPositionableCursor();
+		final PositionableRasterSampler<T> c = kernel.createPositionableCursor();
 		c.setPosition( center );
 		c.type().setOne();
 		c.close();
@@ -242,8 +241,8 @@ public class FourierConvolution<T extends RealType<T>, S extends RealType<S>> im
 			// copy the kernel into the kernelTemplate,
 			// the key here is that the center pixel of the kernel (e.g. 13,13,13)
 			// is located at (0,0,0)
-			final LocalizableIterableCursor<S> kernelCursor = kernel.createLocalizableCursor();
-			final PositionableCursor<S> kernelTemplateCursor = kernelTemplate.createPositionableCursor();
+			final RasterIterator<S> kernelCursor = kernel.createLocalizableCursor();
+			final PositionableRasterSampler<S> kernelTemplateCursor = kernelTemplate.createPositionableCursor();
 			
 			final int[] position = new int[ numDimensions ];
 			while ( kernelCursor.hasNext() )
@@ -287,8 +286,8 @@ public class FourierConvolution<T extends RealType<T>, S extends RealType<S>> im
 		//
 		// Multiply in Fourier Space
 		//
-		final IterableCursor<ComplexFloatType> cursorImgFFT = imgFFT.createIterableCursor();
-		final IterableCursor<ComplexFloatType> cursorKernelFFT = kernelFFT.createIterableCursor();
+		final RasterIterator<ComplexFloatType> cursorImgFFT = imgFFT.createIterableCursor();
+		final RasterIterator<ComplexFloatType> cursorKernelFFT = kernelFFT.createIterableCursor();
 		
 		while ( cursorImgFFT.hasNext() )
 		{

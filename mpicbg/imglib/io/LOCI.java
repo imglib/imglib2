@@ -26,9 +26,9 @@ import loci.formats.MetadataTools;
 import loci.formats.meta.IMetadata;
 import loci.formats.meta.MetadataRetrieve;
 import mpicbg.imglib.container.ContainerFactory;
-import mpicbg.imglib.cursor.LocalizablePlaneCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.ImageFactory;
+import mpicbg.imglib.sampler.RasterPlaneIterator;
 import mpicbg.imglib.type.numeric.RealType;
 import mpicbg.imglib.type.numeric.RGBALegacyType;
 import mpicbg.imglib.type.numeric.integer.ByteType;
@@ -211,7 +211,7 @@ public class LOCI
 			final int planeX = 0;
 			final int planeY = 1;
 									
-			final LocalizablePlaneCursor<Unsigned12BitType> it = img.createLocalizablePlaneCursor();
+			final RasterPlaneIterator<Unsigned12BitType> it = img.createLocalizablePlaneCursor();
 			
 			for (int z = start; z < end; z++)
 			{	
@@ -368,7 +368,7 @@ public class LOCI
 			final int planeX = 0;
 			final int planeY = 1;
 									
-			final LocalizablePlaneCursor<ShortType> it = img.createLocalizablePlaneCursor();
+			final RasterPlaneIterator<ShortType> it = img.createLocalizablePlaneCursor();
 			
 			for (int z = start; z < end; z++)
 			{	
@@ -585,7 +585,7 @@ public class LOCI
 			final int planeX = 0;
 			final int planeY = 1;
 									
-			final LocalizablePlaneCursor<FloatType> it = img.createLocalizablePlaneCursor();
+			final RasterPlaneIterator<FloatType> it = img.createLocalizablePlaneCursor();
 			
 			for (int z = start; z < end; z++)
 			{	
@@ -757,7 +757,7 @@ public class LOCI
 			final int planeX = 0;
 			final int planeY = 1;
 									
-			LocalizablePlaneCursor<ByteType> it = img.createLocalizablePlaneCursor();
+			RasterPlaneIterator<ByteType> it = img.createLocalizablePlaneCursor();
 			final ByteType type = it.type();
 
 			
@@ -899,7 +899,7 @@ public class LOCI
 			final int planeX = 0;
 			final int planeY = 1;
 									
-			LocalizablePlaneCursor<UnsignedByteType> it = img.createLocalizablePlaneCursor();
+			RasterPlaneIterator<UnsignedByteType> it = img.createLocalizablePlaneCursor();
 			final UnsignedByteType type = it.type();
 
 			
@@ -1026,7 +1026,7 @@ public class LOCI
 			final int planeX = 0;
 			final int planeY = 1;
 									
-			final LocalizablePlaneCursor<RGBALegacyType> it = img.createLocalizablePlaneCursor();
+			final RasterPlaneIterator<RGBALegacyType> it = img.createLocalizablePlaneCursor();
 			
 			for (int z = start; z < end; z++)
 			{	

@@ -29,8 +29,8 @@ package mpicbg.imglib.container.dynamic;
 
 import java.util.ArrayList;
 
-import mpicbg.imglib.cursor.Cursor;
-import mpicbg.imglib.cursor.dynamic.DynamicIterableCursor;
+import mpicbg.imglib.sampler.RasterSampler;
+import mpicbg.imglib.sampler.dynamic.DynamicIterableCursor;
 import mpicbg.imglib.type.Type;
 
 /**
@@ -54,7 +54,7 @@ public class ByteDynamicContainer <T extends Type<T>> extends DynamicContainer<T
 	}
 	
 	@Override
-	public ByteDynamicContainerAccessor update( final Cursor<?> c )
+	public ByteDynamicContainerAccessor update( final RasterSampler<?> c )
 	{
 		final DynamicIterableCursor<?> cursor = (DynamicIterableCursor<?>)c;
 		final ByteDynamicContainerAccessor accessor = (ByteDynamicContainerAccessor) cursor.getAccessor();

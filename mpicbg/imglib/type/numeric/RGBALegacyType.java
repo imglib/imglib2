@@ -34,9 +34,9 @@ import mpicbg.imglib.container.DirectAccessContainer;
 import mpicbg.imglib.container.DirectAccessContainerFactory;
 import mpicbg.imglib.container.basictypecontainer.IntAccess;
 import mpicbg.imglib.container.basictypecontainer.array.IntArray;
-import mpicbg.imglib.cursor.Cursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.display.imagej.RGBALegacyTypeDisplay;
+import mpicbg.imglib.sampler.RasterSampler;
 import mpicbg.imglib.type.AbstractType;
 
 final public class RGBALegacyType extends AbstractType<RGBALegacyType> implements NumericType<RGBALegacyType>
@@ -80,7 +80,7 @@ final public class RGBALegacyType extends AbstractType<RGBALegacyType> implement
 	}
 
 	@Override
-	public void updateContainer( final Cursor<?> c ) 
+	public void updateContainer( final RasterSampler<?> c ) 
 	{ 
 		b = storage.update( c );
 	}

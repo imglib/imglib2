@@ -8,20 +8,15 @@ import java.awt.Rectangle;
 
 import mpicbg.imglib.algorithm.transformation.ImageTransform;
 import mpicbg.imglib.container.array.ArrayContainerFactory;
-import mpicbg.imglib.container.cell.CellContainer;
 import mpicbg.imglib.container.cell.CellContainerFactory;
 import mpicbg.imglib.container.shapelist.ShapeList;
-import mpicbg.imglib.container.shapelist.ShapeListCached;
-import mpicbg.imglib.cursor.PositionableCursor;
-import mpicbg.imglib.cursor.LocalizableIterableCursor;
-import mpicbg.imglib.cursor.cell.CellLocalizableCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.ImageFactory;
 import mpicbg.imglib.image.display.imagej.ImageJFunctions;
 import mpicbg.imglib.interpolation.linear.LinearInterpolatorFactory;
-import mpicbg.imglib.interpolation.nearestneighbor.NearestNeighborInterpolatorFactory;
 import mpicbg.imglib.outofbounds.OutOfBoundsMirrorSingleBoundaryFactory;
-import mpicbg.imglib.outofbounds.OutOfBoundsStrategyValueFactory;
+import mpicbg.imglib.sampler.PositionableRasterSampler;
+import mpicbg.imglib.sampler.RasterIterator;
 import mpicbg.imglib.type.numeric.RealType;
 import mpicbg.imglib.type.numeric.integer.ByteType;
 import mpicbg.models.AffineModel3D;
@@ -76,8 +71,8 @@ public class TestShapeList
 		timer.start();
 		final ArrayContainerFactory arrayFactory = new ArrayContainerFactory();
 		final Image< ByteType > arrayImage = new ImageFactory< ByteType >( new ByteType(), arrayFactory ).createImage( new int[]{ 200, 200, depth }, "ArrayContainer" );
-		final LocalizableIterableCursor< ByteType > cArray = arrayImage.createLocalizableCursor();
-		final PositionableCursor< ByteType > cShapeList = shapeListImage.createPositionableCursor();
+		final RasterIterator< ByteType > cArray = arrayImage.createLocalizableCursor();
+		final PositionableRasterSampler< ByteType > cShapeList = shapeListImage.createPositionableCursor();
 		while ( cArray.hasNext() )
 		{
 			cArray.fwd();
@@ -100,7 +95,7 @@ public class TestShapeList
 		timer.start();
 		final CellContainerFactory cellFactory = new CellContainerFactory();
 		final Image< ByteType > cellImage = new ImageFactory< ByteType >( new ByteType(), cellFactory ).createImage( new int[]{ 200, 200, depth }, "CellContainer" );
-		final LocalizableIterableCursor< ByteType > cCell = cellImage.createLocalizableCursor();
+		final RasterIterator< ByteType > cCell = cellImage.createLocalizableCursor();
 		while ( cCell.hasNext() )
 		{
 			cCell.fwd();

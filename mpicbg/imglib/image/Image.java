@@ -38,22 +38,21 @@ import mpicbg.imglib.Dimensions;
 import mpicbg.imglib.algorithm.math.MathLib;
 import mpicbg.imglib.container.Container;
 import mpicbg.imglib.container.ContainerFactory;
-import mpicbg.imglib.cursor.Cursor;
-import mpicbg.imglib.cursor.IterableCursor;
-import mpicbg.imglib.cursor.PositionableCursor;
-import mpicbg.imglib.cursor.LocalizableIterableCursor;
-import mpicbg.imglib.cursor.LocalizablePlaneCursor;
-import mpicbg.imglib.cursor.array.ArrayLocalizableCursor;
 import mpicbg.imglib.image.display.Display;
 import mpicbg.imglib.interpolation.Interpolator;
 import mpicbg.imglib.interpolation.InterpolatorFactory;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
+import mpicbg.imglib.sampler.RasterPlaneIterator;
+import mpicbg.imglib.sampler.PositionableRasterSampler;
+import mpicbg.imglib.sampler.RasterIterator;
+import mpicbg.imglib.sampler.RasterSampler;
+import mpicbg.imglib.sampler.array.ArrayLocalizableCursor;
 import mpicbg.imglib.type.Type;
 import mpicbg.imglib.type.label.FakeType;
 
 public class Image<T extends Type<T>> implements ImageProperties, Dimensions, Iterable<T>
 {
-	final protected ArrayList<Cursor<T>> cursors;
+	final protected ArrayList<RasterSampler<T>> cursors;
 	final ContainerFactory containerFactory;
 	final Container<T> container;
 	final ImageFactory<T> imageFactory;
@@ -88,7 +87,7 @@ public class Image<T extends Type<T>> implements ImageProperties, Dimensions, It
 				dim[i] = 1;	
 			}
 		}
-		this.cursors = new ArrayList<Cursor<T>>();		
+		this.cursors = new ArrayList<RasterSampler<T>>();		
 		this.containerFactory = imageFactory.getContainerFactory();		
 		this.imageFactory = imageFactory;
 
@@ -175,12 +174,12 @@ public class Image<T extends Type<T>> implements ImageProperties, Dimensions, It
 	public T createType() { return imageFactory.createType(); }
 	
 	/**
-	 * Return a {@link IterableCursor} that will traverse the image's pixel data in a memory-optimized fashion.
-	 * @return IterableCursor<T> - the typed {@link IterableCursor}
+	 * Return a {@link RasterIterator} that will traverse the image's pixel data in a memory-optimized fashion.
+	 * @return IterableCursor<T> - the typed {@link RasterIterator}
 	 */
-	public IterableCursor<T> createIterableCursor()
+	public RasterIterator<T> createIterableCursor()
 	{
-		IterableCursor< T > cursor = container.createIterableCursor( this );
+		RasterIterator< T > cursor = container.createIterableCursor( this );
 		addCursor( cursor );
 		return cursor;	
 	}
@@ -190,34 +189,34 @@ public class Image<T extends Type<T>> implements ImageProperties, Dimensions, It
 	 * and keeps track of its position
 	 * @return LocalizableCursor<T> - the typed {@link LocalizableIterableCursor}
 	 */
-	public LocalizableIterableCursor<T> createLocalizableCursor()
+	public RasterIterator<T> createLocalizableCursor()
 	{
-		LocalizableIterableCursor<T> cursor = container.createLocalizableCursor( this );
+		RasterIterator<T> cursor = container.createLocalizableCursor( this );
 		addCursor( cursor );
 		return cursor;		
 	}
 	
 	/**
-	 * Creates a {@link LocalizablePlaneCursor} which is optimized to iterate arbitrary 2-dimensional planes within an {@link Image}.
+	 * Creates a {@link RasterPlaneIterator} which is optimized to iterate arbitrary 2-dimensional planes within an {@link Image}.
 	 * This is very important for the {@link Display}.
 	 * 
-	 * @return - {@link LocalizablePlaneCursor}
+	 * @return - {@link RasterPlaneIterator}
 	 */
-	public LocalizablePlaneCursor<T> createLocalizablePlaneCursor()
+	public RasterPlaneIterator<T> createLocalizablePlaneCursor()
 	{
-		LocalizablePlaneCursor<T> cursor = container.createLocalizablePlaneCursor( this );
+		RasterPlaneIterator<T> cursor = container.createLocalizablePlaneCursor( this );
 		addCursor( cursor );
 		return cursor;				
 	}
 	
 	/**
-	 * Creates a {@link PositionableCursor} which is able to move freely within the {@link Image}.
-	 * When exiting the {@link Image} this {@link PositionableCursor} will fail!! Therefore it is faster.
-	 * @return - a {@link PositionableCursor} that cannot leave the {@link Image}
+	 * Creates a {@link PositionableRasterSampler} which is able to move freely within the {@link Image}.
+	 * When exiting the {@link Image} this {@link PositionableRasterSampler} will fail!! Therefore it is faster.
+	 * @return - a {@link PositionableRasterSampler} that cannot leave the {@link Image}
 	 */
-	public PositionableCursor<T> createPositionableCursor()
+	public PositionableRasterSampler<T> createPositionableCursor()
 	{
-		PositionableCursor<T> cursor = container.createPositionableCursor( this );
+		PositionableRasterSampler<T> cursor = container.createPositionableCursor( this );
 		addCursor( cursor );
 		return cursor;						
 	}
@@ -226,20 +225,20 @@ public class Image<T extends Type<T>> implements ImageProperties, Dimensions, It
 	/**
 	 * Use {@link #createPositionableCursor()} instead.
 	 */
-	public PositionableCursor<T> createLocalizableByDimCursor()
+	public PositionableRasterSampler<T> createLocalizableByDimCursor()
 	{
 		return createPositionableCursor();
 	}
 
 	/**
-	 * Creates a {@link PositionableCursor} which is able to move freely within and out of {@link Image} bounds.
+	 * Creates a {@link PositionableRasterSampler} which is able to move freely within and out of {@link Image} bounds.
 	 * given a {@link OutOfBoundsStrategyFactory} which defines the behaviour out of {@link Image} bounds.
 	 * @param factory - the {@link OutOfBoundsStrategyFactory}
-	 * @return - a {@link PositionableCursor} that can leave the {@link Image}
+	 * @return - a {@link PositionableRasterSampler} that can leave the {@link Image}
 	 */
-	public PositionableCursor<T> createPositionableCursor( final OutOfBoundsStrategyFactory<T> factory )
+	public PositionableRasterSampler<T> createPositionableCursor( final OutOfBoundsStrategyFactory<T> factory )
 	{
-		PositionableCursor<T> cursor = container.createPositionableCursor( this, factory );
+		PositionableRasterSampler<T> cursor = container.createPositionableCursor( this, factory );
 		addCursor( cursor );
 		return cursor;								
 	}
@@ -248,7 +247,7 @@ public class Image<T extends Type<T>> implements ImageProperties, Dimensions, It
 	/**
 	 * Use {@link #createPositionableCursor( OutOfBoundsStrategyFactory<T> )} instead.
 	 */
-	public PositionableCursor<T> createLocalizableByDimCursor( final OutOfBoundsStrategyFactory<T> factory )
+	public PositionableRasterSampler<T> createLocalizableByDimCursor( final OutOfBoundsStrategyFactory<T> factory )
 	{
 		return createPositionableCursor( factory);
 	}
@@ -280,7 +279,7 @@ public class Image<T extends Type<T>> implements ImageProperties, Dimensions, It
 	final public synchronized static long createUniqueId() { return j.getAndIncrement(); }
 	
 	/**
-	 * Closes the {@link Image} by closing all {@link Cursor}s and the {@link Container}
+	 * Closes the {@link Image} by closing all {@link RasterSampler}s and the {@link Container}
 	 */
 	public void close()
 	{ 
@@ -289,11 +288,11 @@ public class Image<T extends Type<T>> implements ImageProperties, Dimensions, It
 	}
 	
 	/**
-	 * Creates an int array of the same dimensionality as this {@link Image} which can be used for addressing {@link Cursor}s. 
+	 * Creates an int array of the same dimensionality as this {@link Image} which can be used for addressing {@link RasterSampler}s. 
 	 * @return - empty int[]
 	 * 
 	 * TODO Do we really need this?  I just replaces
-	 * int[] t = new int[ img1.getNumDimensions() ]; by
+	 * int[] t = new int[ img1.numDimensions() ]; by
 	 * int[] t = img1.getPositionArray()
 	 *
 	 * Saalfeld: remove! ;)  Preibisch: keep (esoteric reasons)
@@ -306,7 +305,7 @@ public class Image<T extends Type<T>> implements ImageProperties, Dimensions, It
 	@Override
 	public int[] getDimensions() { return getContainer().getDimensions(); }
 	@Override
-	public long getNumPixels() { return getContainer().getNumPixels(); }
+	public long numPixels() { return getContainer().numPixels(); }
 
 	@Override
 	public String getName() { return name; }
@@ -338,15 +337,15 @@ public class Image<T extends Type<T>> implements ImageProperties, Dimensions, It
 	
 	/**
 	 * Clones this {@link Image}, i.e. creates this {@link Image} containing the same content.
-	 * No {@link Cursor}s will be instantiated and the name will be given automatically.
+	 * No {@link RasterSampler}s will be instantiated and the name will be given automatically.
 	 */
 	@Override
 	public Image<T> clone()
 	{
 		final Image<T> clone = this.createNewImage();
 		
-		final IterableCursor<T> c1 = this.createIterableCursor();
-		final IterableCursor<T> c2 = clone.createIterableCursor();
+		final RasterIterator<T> c1 = this.createIterableCursor();
+		final RasterIterator<T> c2 = clone.createIterableCursor();
 		
 		while ( c1.hasNext() )
 		{
@@ -384,47 +383,47 @@ public class Image<T extends Type<T>> implements ImageProperties, Dimensions, It
 	}
 	
 	/**
-	 * Closes all {@link Cursor}s operating on this {@link Image}.
+	 * Closes all {@link RasterSampler}s operating on this {@link Image}.
 	 */
 	public void closeAllCursors()
 	{
-		for ( final Cursor<?> i : cursors )
+		for ( final RasterSampler<?> i : cursors )
 			i.close();
 	}
 	
 	/**
-	 * Put all {@link Cursor}s currently instantiated into a {@link Collection}.
+	 * Put all {@link RasterSampler}s currently instantiated into a {@link Collection}.
 	 * 
 	 */
-	public void getCursors( final Collection< Cursor< T > > collection )
+	public void getCursors( final Collection< RasterSampler< T > > collection )
 	{
 		collection.addAll( cursors );
 	}
 	
 	/**
-	 * Return all {@link Cursor}s currently instantiated for this {@link Image} in a new {@link ArrayList}.
-	 * @return - {@link ArrayList} containing the {@link Cursor}s
+	 * Return all {@link RasterSampler}s currently instantiated for this {@link Image} in a new {@link ArrayList}.
+	 * @return - {@link ArrayList} containing the {@link RasterSampler}s
 	 */
-	public ArrayList< Cursor< T > > getCursors(){ return new ArrayList< Cursor< T > >( cursors ); }	
+	public ArrayList< RasterSampler< T > > getCursors(){ return new ArrayList< RasterSampler< T > >( cursors ); }	
 	
 	/**
-	 * Adds a {@link Cursor} to the {@link ArrayList} of instantiated {@link Cursor}s.
-	 * @param c - new {@link Cursor}
+	 * Adds a {@link RasterSampler} to the {@link ArrayList} of instantiated {@link RasterSampler}s.
+	 * @param c - new {@link RasterSampler}
 	 */
-	protected synchronized void addCursor( final Cursor<T> c ) { cursors.add( c );	}
+	protected synchronized void addCursor( final RasterSampler<T> c ) { cursors.add( c );	}
 	
 	/**
-	 * Remove a {@link Cursor} from the {@link ArrayList} of instantiated {@link Cursor}s.
-	 * @param c - {@link Cursor} to be removed
+	 * Remove a {@link RasterSampler} from the {@link ArrayList} of instantiated {@link RasterSampler}s.
+	 * @param c - {@link RasterSampler} to be removed
 	 */
-	public synchronized void removeCursor( final Cursor<T> c )
+	public synchronized void removeCursor( final RasterSampler<T> c )
 	{
 		cursors.remove( c );
 	}
 	
 	/**
-	 * Returns the number of {@link Cursor}s instantiated on this {@link Image}.
-	 * @return - the number of {@link Cursor}s
+	 * Returns the number of {@link RasterSampler}s instantiated on this {@link Image}.
+	 * @return - the number of {@link RasterSampler}s
 	 */
 	public int getNumCursors() { return cursors.size(); }
 
@@ -433,7 +432,7 @@ public class Image<T extends Type<T>> implements ImageProperties, Dimensions, It
 
 	public T[] toArray()
 	{
-		final long numPixels = getNumPixels();
+		final long numPixels = numPixels();
 		
 		if ( numPixels > (long)Integer.MAX_VALUE )
 			throw new RuntimeException( "Number of pixels in Container too big for a T[] array: " + numPixels + " > " + Integer.MAX_VALUE );
@@ -441,7 +440,7 @@ public class Image<T extends Type<T>> implements ImageProperties, Dimensions, It
 		final T[] pixels = createType().createArray1D( (int)numPixels );
 		
 		final ArrayLocalizableCursor<FakeType> cursor1 = ArrayLocalizableCursor.createLinearCursor( getDimensions() );
-		final PositionableCursor<T> cursor2 = this.createPositionableCursor();
+		final PositionableRasterSampler<T> cursor2 = this.createPositionableCursor();
 		
 		int i = 0;
 		while ( cursor1.hasNext() )

@@ -29,9 +29,9 @@
  */
 package mpicbg.imglib.image.display.imagej;
 
-import mpicbg.imglib.cursor.LocalizablePlaneCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.display.Display;
+import mpicbg.imglib.sampler.RasterPlaneIterator;
 import mpicbg.imglib.type.Type;
 import ij.ImagePlus;
 import ij.ImageStack;
@@ -127,7 +127,7 @@ public class ImageJVirtualStack<T extends Type<T>> extends ImageStack
 		final int sizeX = img.getDimension( dimX );
 		final int sizeY = img.getDimension( dimY );
     	
-    	final LocalizablePlaneCursor<T> cursor = img.createLocalizablePlaneCursor();		
+    	final RasterPlaneIterator<T> cursor = img.createLocalizablePlaneCursor();		
 		cursor.reset( dimX, dimY, dimensionPositions );   	
 		
 		// store the slice image
@@ -160,7 +160,7 @@ public class ImageJVirtualStack<T extends Type<T>> extends ImageStack
 		final int sizeX = img.getDimension( dimX );
 		final int sizeY = img.getDimension( dimY );
     	
-    	final LocalizablePlaneCursor<T> cursor = img.createLocalizablePlaneCursor();		
+    	final RasterPlaneIterator<T> cursor = img.createLocalizablePlaneCursor();		
 		cursor.reset( dimX, dimY, dimensionPositions );   	
 		
 		// store the slice image
@@ -191,7 +191,7 @@ public class ImageJVirtualStack<T extends Type<T>> extends ImageStack
 		final int sizeX = img.getDimension( dimX );
 		final int sizeY = img.getDimension( dimY );
     	
-    	final LocalizablePlaneCursor<T> cursor = img.createLocalizablePlaneCursor();		
+    	final RasterPlaneIterator<T> cursor = img.createLocalizablePlaneCursor();		
 		cursor.reset( dimX, dimY, dimensionPositions );   	
 		
 		// store the slice image

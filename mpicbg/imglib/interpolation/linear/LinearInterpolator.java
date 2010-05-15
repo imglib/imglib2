@@ -28,7 +28,6 @@
 package mpicbg.imglib.interpolation.linear;
 
 import mpicbg.imglib.algorithm.math.MathLib;
-import mpicbg.imglib.cursor.PositionableCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.interpolation.InterpolatorFactory;
 import mpicbg.imglib.interpolation.AbstractInterpolator;
@@ -36,6 +35,7 @@ import mpicbg.imglib.location.Positionable;
 import mpicbg.imglib.location.RasterPositionable;
 import mpicbg.imglib.location.link.LocalizableFloorRasterPositionable;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
+import mpicbg.imglib.sampler.PositionableRasterSampler;
 import mpicbg.imglib.type.numeric.NumericType;
 
 /**
@@ -46,7 +46,7 @@ import mpicbg.imglib.type.numeric.NumericType;
  */
 public class LinearInterpolator< T extends NumericType< T > > extends AbstractInterpolator< T >
 {
-	final protected PositionableCursor< T > cursor;
+	final protected PositionableRasterSampler< T > cursor;
 
 	final private LocalizableFloorRasterPositionable floorLink;
 

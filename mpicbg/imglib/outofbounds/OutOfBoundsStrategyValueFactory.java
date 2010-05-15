@@ -27,7 +27,7 @@
  */
 package mpicbg.imglib.outofbounds;
 
-import mpicbg.imglib.cursor.PositionableCursor;
+import mpicbg.imglib.sampler.PositionableRasterSampler;
 import mpicbg.imglib.type.Type;
 
 /**
@@ -62,7 +62,7 @@ public class OutOfBoundsStrategyValueFactory< T extends Type< T > >
 	}
 
 	@Override
-	public OutOfBoundsStrategyValue< T > createStrategy( final PositionableCursor< T > cursor )
+	public OutOfBoundsStrategyValue< T > createStrategy( final PositionableRasterSampler< T > cursor )
 	{
 		if ( value == null ) return new OutOfBoundsStrategyValue< T >( cursor, cursor.getImage().createType() );
 		else return new OutOfBoundsStrategyValue< T >( cursor, value );

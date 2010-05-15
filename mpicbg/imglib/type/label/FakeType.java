@@ -31,9 +31,9 @@ package mpicbg.imglib.type.label;
 
 import mpicbg.imglib.container.DirectAccessContainer;
 import mpicbg.imglib.container.DirectAccessContainerFactory;
-import mpicbg.imglib.cursor.Cursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.display.Display;
+import mpicbg.imglib.sampler.RasterSampler;
 import mpicbg.imglib.type.AbstractType;
 
 public class FakeType extends AbstractType<FakeType>
@@ -42,7 +42,7 @@ public class FakeType extends AbstractType<FakeType>
 	public DirectAccessContainer<FakeType,?> createSuitableDirectAccessContainer( final DirectAccessContainerFactory storageFactory, final int dim[] ) { return null; }
 
 	@Override
-	public void updateContainer( Cursor<?> c ) {}
+	public void updateContainer( RasterSampler<?> c ) {}
 	
 	@Override
 	public FakeType duplicateTypeOnSameDirectAccessContainer() { return new FakeType(); }

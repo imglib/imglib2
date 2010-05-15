@@ -29,15 +29,15 @@ package mpicbg.imglib.container.dynamic;
 
 import mpicbg.imglib.container.AbstractDirectAccessContainer;
 import mpicbg.imglib.container.array.Array;
-import mpicbg.imglib.cursor.PositionableCursor;
-import mpicbg.imglib.cursor.LocalizablePlaneCursor;
-import mpicbg.imglib.cursor.dynamic.DynamicIterableCursor;
-import mpicbg.imglib.cursor.dynamic.DynamicPositionableCursor;
-import mpicbg.imglib.cursor.dynamic.DynamicPositionableOutOfBoundsCursor;
-import mpicbg.imglib.cursor.dynamic.DynamicLocalizableCursor;
-import mpicbg.imglib.cursor.dynamic.DynamicLocalizablePlaneCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
+import mpicbg.imglib.sampler.RasterPlaneIterator;
+import mpicbg.imglib.sampler.PositionableRasterSampler;
+import mpicbg.imglib.sampler.dynamic.DynamicIterableCursor;
+import mpicbg.imglib.sampler.dynamic.DynamicLocalizableCursor;
+import mpicbg.imglib.sampler.dynamic.DynamicLocalizablePlaneCursor;
+import mpicbg.imglib.sampler.dynamic.DynamicPositionableCursor;
+import mpicbg.imglib.sampler.dynamic.DynamicPositionableOutOfBoundsCursor;
 import mpicbg.imglib.type.Type;
 
 /**
@@ -97,7 +97,7 @@ public abstract class DynamicContainer< T extends Type< T >, A extends DynamicCo
 	}
 
 	@Override
-	public long getNumPixels()
+	public long numPixels()
 	{
 		return numPixels;
 	}
@@ -109,7 +109,7 @@ public abstract class DynamicContainer< T extends Type< T >, A extends DynamicCo
 	}
 
 	@Override
-	public PositionableCursor< T > createPositionableCursor( final Image< T > image )
+	public PositionableRasterSampler< T > createPositionableCursor( final Image< T > image )
 	{
 		return new DynamicPositionableCursor< T >( this, image );
 	}
@@ -127,7 +127,7 @@ public abstract class DynamicContainer< T extends Type< T >, A extends DynamicCo
 	}
 
 	@Override
-	public LocalizablePlaneCursor< T > createLocalizablePlaneCursor( final Image< T > image )
+	public RasterPlaneIterator< T > createLocalizablePlaneCursor( final Image< T > image )
 	{
 		return new DynamicLocalizablePlaneCursor< T >( this, image );
 	}

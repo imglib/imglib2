@@ -33,18 +33,18 @@ import mpicbg.imglib.container.Container;
 import mpicbg.imglib.container.ContainerFactory;
 import mpicbg.imglib.container.AbstractDirectAccessContainer;
 import mpicbg.imglib.container.basictypecontainer.array.ArrayDataAccess;
-import mpicbg.imglib.cursor.Cursor;
-import mpicbg.imglib.cursor.array.ArrayPositionableCursor;
-import mpicbg.imglib.cursor.array.ArrayLocalizableCursor;
-import mpicbg.imglib.cursor.cell.CellIterableCursor;
-import mpicbg.imglib.cursor.cell.CellPositionableCursor;
-import mpicbg.imglib.cursor.cell.CellPositionableOutOfBoundsCursor;
-import mpicbg.imglib.cursor.cell.CellLocalizableCursor;
-import mpicbg.imglib.cursor.cell.CellLocalizablePlaneCursor;
-import mpicbg.imglib.cursor.cell.CellStorageAccess;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.location.Iterator;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
+import mpicbg.imglib.sampler.RasterSampler;
+import mpicbg.imglib.sampler.array.ArrayLocalizableCursor;
+import mpicbg.imglib.sampler.array.ArrayPositionableCursor;
+import mpicbg.imglib.sampler.cell.CellIterableCursor;
+import mpicbg.imglib.sampler.cell.CellLocalizableCursor;
+import mpicbg.imglib.sampler.cell.CellLocalizablePlaneCursor;
+import mpicbg.imglib.sampler.cell.CellPositionableCursor;
+import mpicbg.imglib.sampler.cell.CellPositionableOutOfBoundsCursor;
+import mpicbg.imglib.sampler.cell.CellStorageAccess;
 import mpicbg.imglib.type.Type;
 import mpicbg.imglib.type.label.FakeType;
 
@@ -120,7 +120,7 @@ public class CellContainer< T extends Type< T >, A extends ArrayDataAccess< A > 
 	}
 
 	@Override
-	public A update( final Cursor< ? > c )
+	public A update( final RasterSampler< ? > c )
 	{
 		return data.get( ( ( CellStorageAccess ) c ).getStorageIndex() ).getData();
 	}

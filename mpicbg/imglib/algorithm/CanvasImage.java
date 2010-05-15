@@ -17,10 +17,10 @@
 package mpicbg.imglib.algorithm;
 
 import mpicbg.imglib.algorithm.Benchmark;
-import mpicbg.imglib.cursor.PositionableCursor;
-import mpicbg.imglib.cursor.LocalizableIterableCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
+import mpicbg.imglib.sampler.PositionableRasterSampler;
+import mpicbg.imglib.sampler.RasterIterator;
 import mpicbg.imglib.type.Type;
 
 public class CanvasImage<T extends Type<T>> implements OutputAlgorithm<T>, Benchmark
@@ -111,8 +111,8 @@ public class CanvasImage<T extends Type<T>> implements OutputAlgorithm<T>, Bench
 	{
 		final long startTime = System.currentTimeMillis();
 
-		final LocalizableIterableCursor<T> outputCursor = output.createLocalizableCursor();
-		final PositionableCursor<T> inputCursor;
+		final RasterIterator<T> outputCursor = output.createLocalizableCursor();
+		final PositionableRasterSampler<T> inputCursor;
 		
 		if ( outOfBoundsFactory == null)
 			inputCursor = input.createPositionableCursor( );

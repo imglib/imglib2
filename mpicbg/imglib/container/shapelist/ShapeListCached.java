@@ -27,16 +27,16 @@
  */
 package mpicbg.imglib.container.shapelist;
 
-import mpicbg.imglib.cursor.PositionableCursor;
-import mpicbg.imglib.cursor.shapelist.ShapeListCache;
-import mpicbg.imglib.cursor.shapelist.ShapeListCacheFIFO;
-import mpicbg.imglib.cursor.shapelist.ShapeListCachedPositionableCursor;
-import mpicbg.imglib.cursor.shapelist.ShapeListCachedPositionableOutOfBoundsCursor;
-import mpicbg.imglib.cursor.shapelist.ShapeListCachedLocalizablePlaneCursor;
-import mpicbg.imglib.cursor.shapelist.ShapeListPositionableCursor;
-import mpicbg.imglib.cursor.shapelist.ShapeListLocalizablePlaneCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
+import mpicbg.imglib.sampler.PositionableRasterSampler;
+import mpicbg.imglib.sampler.shapelist.ShapeListCache;
+import mpicbg.imglib.sampler.shapelist.ShapeListCacheFIFO;
+import mpicbg.imglib.sampler.shapelist.ShapeListCachedLocalizablePlaneCursor;
+import mpicbg.imglib.sampler.shapelist.ShapeListCachedPositionableCursor;
+import mpicbg.imglib.sampler.shapelist.ShapeListCachedPositionableOutOfBoundsCursor;
+import mpicbg.imglib.sampler.shapelist.ShapeListLocalizablePlaneCursor;
+import mpicbg.imglib.sampler.shapelist.ShapeListPositionableCursor;
 import mpicbg.imglib.type.Type;
 
 /**
@@ -89,7 +89,7 @@ public class ShapeListCached< T extends Type< T > > extends ShapeList< T >
 	}
 
 	@Override
-	public PositionableCursor< T > createPositionableCursor( final Image< T > image, final OutOfBoundsStrategyFactory< T > outOfBoundsFactory )
+	public PositionableRasterSampler< T > createPositionableCursor( final Image< T > image, final OutOfBoundsStrategyFactory< T > outOfBoundsFactory )
 	{
 		return new ShapeListCachedPositionableOutOfBoundsCursor< T >( this, image, outOfBoundsFactory );
 	}

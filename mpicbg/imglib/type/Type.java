@@ -33,12 +33,12 @@ import mpicbg.imglib.container.DirectAccessContainer;
 import mpicbg.imglib.container.DirectAccessContainerFactory;
 import mpicbg.imglib.container.array.Array;
 import mpicbg.imglib.container.basictypecontainer.DataAccess;
-import mpicbg.imglib.cursor.Cursor;
-import mpicbg.imglib.cursor.IterableCursor;
-import mpicbg.imglib.cursor.array.ArrayIterableCursor;
-import mpicbg.imglib.cursor.cell.CellIterableCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.display.Display;
+import mpicbg.imglib.sampler.RasterIterator;
+import mpicbg.imglib.sampler.RasterSampler;
+import mpicbg.imglib.sampler.array.ArrayIterableCursor;
+import mpicbg.imglib.sampler.cell.CellIterableCursor;
 import mpicbg.imglib.type.numeric.real.FloatType;
 
 /**
@@ -46,7 +46,7 @@ import mpicbg.imglib.type.numeric.real.FloatType;
  * a DirectAccessContainer. There is no differentiation between the two cases except for the constructor to avoid double implementations. 
  * 
  * The {@link Type} is the only class that is aware of the actual data type, i.e. which basic type ({@link DataAccess}) is used to 
- * store the data. On the other hand it does not know the storage type ({@link Array}, {@link IterableCursor}, ...). This is not necessary for
+ * store the data. On the other hand it does not know the storage type ({@link Array}, {@link RasterIterator}, ...). This is not necessary for
  * computation and avoid complicated re-implementations. The method public void updateDataArray( Cursor<?> c );	links the DirectAccessContainer and
  * the cursor which define the current position as well as the current storage array.
  * 
@@ -79,14 +79,14 @@ public interface Type<T extends Type<T>>
 	public Display<T> getDefaultDisplay( Image<T> image );
 	
 	/**
-	 * This method is used by the {@link IterableCursor}s to update the data current data array
+	 * This method is used by the {@link RasterIterator}s to update the data current data array
 	 * of the {@link Type}, for example when moving from one {@link Cell} to the next.
-	 * If it is only an {@link Array} the {@link IterableCursor}s never have to call that function.
+	 * If it is only an {@link Array} the {@link RasterIterator}s never have to call that function.
 	 * 
 	 * The idea behind this concept is maybe not obvious. The {@link Type} knows which basic type
 	 * is used (float, int, byte, ...) but does not know how it is stored ({@link Array}, {@link CellDirectAccessContainer}, ...) to
 	 * prevent multiple implementations of {@link Type}.
-	 * That's why {@link Type} asks the {@link DataAccess} to give the actual basic array by passing the {@link IterableCursor}
+	 * That's why {@link Type} asks the {@link DataAccess} to give the actual basic array by passing the {@link RasterIterator}
 	 * that calls the method. The {@link DataAccess} is also an {@link Array}, {@link CellDirectAccessContainer}, ... which
 	 * can then communicate with the {@link ArrayIterableCursor}, {@link CellIterableCursor}, ... and return the current basic type array. 
 	 * 
@@ -94,14 +94,14 @@ public interface Type<T extends Type<T>>
 	 * 
 	 * 		float[] v = floatStorage.getCurrentStorageArray( c ); 
 	 *  
-	 * @param c - the {@link IterableCursor} gives a link to itself so that the {@link Type} 
+	 * @param c - the {@link RasterIterator} gives a link to itself so that the {@link Type} 
 	 * tell its {@link DataAccess} to get the new basic type array.
 	 */
-	public void updateContainer( Cursor<?> c );	
+	public void updateContainer( RasterSampler<?> c );	
 
 	/**
 	 * Increments the array position of the {@link Type}, 
-	 * this is called by the {@link IterableCursor}s which iterate over the image.
+	 * this is called by the {@link RasterIterator}s which iterate over the image.
 	 * 
 	 * @param i - how many steps
 	 */
@@ -109,7 +109,7 @@ public interface Type<T extends Type<T>>
 	
 	/**
 	 * Returns the current index in the storage array,
-	 * this is called by the {@link IterableCursor}s which iterate over the image.
+	 * this is called by the {@link RasterIterator}s which iterate over the image.
 	 * 
 	 * @return - int index
 	 */
@@ -117,13 +117,13 @@ public interface Type<T extends Type<T>>
 	
 	/**
 	 * Increases the array index,
-	 * this is called by the {@link IterableCursor}s which iterate over the image.
+	 * this is called by the {@link RasterIterator}s which iterate over the image.
 	 */
 	public void incIndex();
 	
 	/**
 	 * Increases the index by increment steps,
-	 * this is called by the {@link IterableCursor}s which iterate over the image.
+	 * this is called by the {@link RasterIterator}s which iterate over the image.
 	 * 
 	 * @param increment - how many steps
 	 */
@@ -131,13 +131,13 @@ public interface Type<T extends Type<T>>
 	
 	/**
 	 * Decreases the array index,
-	 * this is called by the {@link IterableCursor}s which iterate over the image.
+	 * this is called by the {@link RasterIterator}s which iterate over the image.
 	 */
 	public void decIndex();
 
 	/**
 	 * Decreases the index by increment steps,
-	 * this is called by the {@link IterableCursor}s which iterate over the image.
+	 * this is called by the {@link RasterIterator}s which iterate over the image.
 	 * 
 	 * @param increment - how many steps
 	 */

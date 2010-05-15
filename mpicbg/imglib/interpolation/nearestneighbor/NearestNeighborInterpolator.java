@@ -29,7 +29,6 @@
  */
 package mpicbg.imglib.interpolation.nearestneighbor;
 
-import mpicbg.imglib.cursor.PositionableCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.interpolation.InterpolatorFactory;
 import mpicbg.imglib.interpolation.AbstractInterpolator;
@@ -37,11 +36,12 @@ import mpicbg.imglib.location.Positionable;
 import mpicbg.imglib.location.RasterPositionable;
 import mpicbg.imglib.location.link.LocalizableRoundRasterPositionable;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
+import mpicbg.imglib.sampler.PositionableRasterSampler;
 import mpicbg.imglib.type.Type;
 
 public class NearestNeighborInterpolator<T extends Type<T>> extends AbstractInterpolator<T>
 {
-	final protected PositionableCursor<T> cursor;
+	final protected PositionableRasterSampler<T> cursor;
 	final private LocalizableRoundRasterPositionable roundLink; 
 	
 	protected NearestNeighborInterpolator( final Image<T> img, final InterpolatorFactory<T> interpolatorFactory, final OutOfBoundsStrategyFactory<T> outOfBoundsStrategyFactory )

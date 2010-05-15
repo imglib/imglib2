@@ -39,12 +39,12 @@ import mpicbg.imglib.container.cell.CellContainerFactory;
 import mpicbg.imglib.container.dynamic.DynamicContainerFactory;
 import mpicbg.imglib.container.shapelist.ShapeList;
 import mpicbg.imglib.container.shapelist.ShapeListContainerFactory;
-import mpicbg.imglib.cursor.LocalizableIterableCursor;
-import mpicbg.imglib.cursor.PositionableCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.ImageFactory;
 import mpicbg.imglib.location.RasterLocalizable;
 import mpicbg.imglib.outofbounds.OutOfBoundsMirrorSingleBoundaryFactory;
+import mpicbg.imglib.sampler.PositionableRasterSampler;
+import mpicbg.imglib.sampler.RasterIterator;
 import mpicbg.imglib.type.numeric.integer.IntType;
 
 import org.junit.After;
@@ -69,10 +69,10 @@ public class OutOfBoundsMirrorSingleBoundaryTest
 	static private Image< IntType > dynamicImage;
 	static private Image< IntType > shapeListImage;
 	
-	static private PositionableCursor< IntType > cArray;
-	static private PositionableCursor< IntType > cCell;
-	static private PositionableCursor< IntType > cDynamic;
-	static private PositionableCursor< IntType > cShapeList;
+	static private PositionableRasterSampler< IntType > cArray;
+	static private PositionableRasterSampler< IntType > cCell;
+	static private PositionableRasterSampler< IntType > cDynamic;
+	static private PositionableRasterSampler< IntType > cShapeList;
 	
 	/**
 	 * @throws java.lang.Exception
@@ -128,7 +128,7 @@ public class OutOfBoundsMirrorSingleBoundaryTest
 			t.set( i++ );
 
 		final int[] position = new int[ dim.length ];
-		for ( final LocalizableIterableCursor< IntType > c = cellImage.createLocalizableCursor(); c.hasNext(); )
+		for ( final RasterIterator< IntType > c = cellImage.createLocalizableCursor(); c.hasNext(); )
 		{
 			c.fwd();
 			c.localize( position );

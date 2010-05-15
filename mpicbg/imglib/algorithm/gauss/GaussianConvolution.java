@@ -26,11 +26,11 @@ import mpicbg.imglib.container.DirectAccessContainer;
 import mpicbg.imglib.container.array.Array;
 import mpicbg.imglib.container.basictypecontainer.FloatAccess;
 import mpicbg.imglib.container.basictypecontainer.array.FloatArray;
-import mpicbg.imglib.cursor.PositionableCursor;
-import mpicbg.imglib.cursor.LocalizableIterableCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.multithreading.SimpleMultiThreading;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
+import mpicbg.imglib.sampler.PositionableRasterSampler;
+import mpicbg.imglib.sampler.RasterIterator;
 import mpicbg.imglib.type.numeric.NumericType;
 import mpicbg.imglib.type.numeric.real.FloatType;
 
@@ -141,7 +141,7 @@ public class GaussianConvolution< T extends NumericType<T>> implements MultiThre
 		}
     	
         final Image<T> temp = image.createNewImage();        
-    	final long imageSize = image.getNumPixels();
+    	final long imageSize = image.numPixels();
 
         //
         // Folding loop
@@ -166,8 +166,8 @@ public class GaussianConvolution< T extends NumericType<T>> implements MultiThre
 
 	                	//System.out.println("Thread " + myNumber + " folds in dimension " + currentDim);
 
-	                	final PositionableCursor<T> inputIterator;
-	                	final LocalizableIterableCursor<T> outputIterator;
+	                	final PositionableRasterSampler<T> inputIterator;
+	                	final RasterIterator<T> outputIterator;
 	                	
 	                	if ( numDimensions % 2 == 0 ) // even number of dimensions ( 2d, 4d, 6d, ... )
 	                	{
@@ -239,7 +239,7 @@ public class GaussianConvolution< T extends NumericType<T>> implements MultiThre
         return true;
 	}
 	
-	protected void convolve( final PositionableCursor<T> inputIterator, final LocalizableIterableCursor<T> outputIterator, 
+	protected void convolve( final PositionableRasterSampler<T> inputIterator, final RasterIterator<T> outputIterator, 
 															   final int dim, final float[] kernel,
 															   final long startPos, final long loopSize )
 	{		
@@ -367,7 +367,7 @@ public class GaussianConvolution< T extends NumericType<T>> implements MultiThre
 					final int filterSize = kernel[ 0 ].length;
 					final int filterSizeHalf = filterSize / 2;
 					
-					final PositionableCursor<FloatType> it = imageFloat.createPositionableCursor( outOfBoundsFactoryFloat );
+					final PositionableRasterSampler<FloatType> it = imageFloat.createPositionableCursor( outOfBoundsFactoryFloat );
 
 					// fold in x
 					int kernelPos, count;
@@ -428,7 +428,7 @@ public class GaussianConvolution< T extends NumericType<T>> implements MultiThre
 					int kernelPos, count;
 
 					final float[] out =  outputArray.getCurrentStorageArray();
-					final PositionableCursor<FloatType> it = convolvedFloat.createPositionableCursor( outOfBoundsFactoryFloat );
+					final PositionableRasterSampler<FloatType> it = convolvedFloat.createPositionableCursor( outOfBoundsFactoryFloat );
 					final double[] kernel1 = kernel[ 1 ].clone();
 					final int filterSize = kernel[ 1 ].length;
 					final int filterSizeHalf = filterSize / 2;
@@ -505,7 +505,7 @@ public class GaussianConvolution< T extends NumericType<T>> implements MultiThre
 					final int filterSizeHalf = filterSize / 2;
 
 					final float[] out = outputArray.getCurrentStorageArray();
-					final PositionableCursor<FloatType> it = convolvedFloat.createPositionableCursor( outOfBoundsFactoryFloat );
+					final PositionableRasterSampler<FloatType> it = convolvedFloat.createPositionableCursor( outOfBoundsFactoryFloat );
 
 					final int inc = getPos( 0, 0, 1, width, height );
 					final int posLUT[] = new int[kernel1.length];

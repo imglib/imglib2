@@ -34,20 +34,19 @@ import ij.ImagePlus;
 import mpicbg.imglib.container.AbstractDirectAccessContainer;
 import mpicbg.imglib.container.Container;
 import mpicbg.imglib.container.basictypecontainer.array.ArrayDataAccess;
-import mpicbg.imglib.cursor.Cursor;
-import mpicbg.imglib.cursor.IterableCursor;
-import mpicbg.imglib.cursor.PositionableCursor;
-import mpicbg.imglib.cursor.LocalizableIterableCursor;
-import mpicbg.imglib.cursor.LocalizablePlaneCursor;
-import mpicbg.imglib.cursor.imageplus.ImagePlusIterableCursor;
-import mpicbg.imglib.cursor.imageplus.ImagePlusPositionableCursor;
-import mpicbg.imglib.cursor.imageplus.ImagePlusPositionableOutOfBoundsCursor;
-import mpicbg.imglib.cursor.imageplus.ImagePlusLocalizableCursor;
-import mpicbg.imglib.cursor.imageplus.ImagePlusLocalizablePlaneCursor;
-import mpicbg.imglib.cursor.imageplus.ImagePlusStorageAccess;
 import mpicbg.imglib.exception.ImgLibException;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
+import mpicbg.imglib.sampler.RasterPlaneIterator;
+import mpicbg.imglib.sampler.PositionableRasterSampler;
+import mpicbg.imglib.sampler.RasterIterator;
+import mpicbg.imglib.sampler.RasterSampler;
+import mpicbg.imglib.sampler.imageplus.ImagePlusIterableCursor;
+import mpicbg.imglib.sampler.imageplus.ImagePlusLocalizableCursor;
+import mpicbg.imglib.sampler.imageplus.ImagePlusLocalizablePlaneCursor;
+import mpicbg.imglib.sampler.imageplus.ImagePlusPositionableCursor;
+import mpicbg.imglib.sampler.imageplus.ImagePlusPositionableOutOfBoundsCursor;
+import mpicbg.imglib.sampler.imageplus.ImagePlusStorageAccess;
 import mpicbg.imglib.type.Type;
 
 /**
@@ -97,7 +96,7 @@ public class ImagePlusContainer< T extends Type< T >, A extends ArrayDataAccess<
 	}
 
 	@Override
-	public A update( final Cursor< ? > c )
+	public A update( final RasterSampler< ? > c )
 	{
 		return mirror.get( ( ( ImagePlusStorageAccess ) c ).getStorageIndex() );
 	}
@@ -142,25 +141,25 @@ public class ImagePlusContainer< T extends Type< T >, A extends ArrayDataAccess<
 	}
 
 	@Override
-	public IterableCursor< T > createIterableCursor( final Image< T > image )
+	public RasterIterator< T > createIterableCursor( final Image< T > image )
 	{
 		return new ImagePlusIterableCursor< T >( this, image );
 	}
 
 	@Override
-	public LocalizableIterableCursor< T > createLocalizableCursor( final Image< T > image )
+	public RasterIterator< T > createLocalizableCursor( final Image< T > image )
 	{
 		return new ImagePlusLocalizableCursor< T >( this, image );
 	}
 
 	@Override
-	public LocalizablePlaneCursor< T > createLocalizablePlaneCursor( final Image< T > image )
+	public RasterPlaneIterator< T > createLocalizablePlaneCursor( final Image< T > image )
 	{
 		return new ImagePlusLocalizablePlaneCursor< T >( this, image, linkedType.duplicateTypeOnSameDirectAccessContainer() );
 	}
 
 	@Override
-	public PositionableCursor< T > createPositionableCursor( final Image< T > image )
+	public PositionableRasterSampler< T > createPositionableCursor( final Image< T > image )
 	{
 		return new ImagePlusPositionableCursor< T >( this, image );
 	}

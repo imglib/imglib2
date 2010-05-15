@@ -29,19 +29,19 @@
  */
 package mpicbg.imglib.outofbounds;
 
-import mpicbg.imglib.cursor.PositionableCursor;
 import mpicbg.imglib.cursor.LocalizableIterableCursor;
+import mpicbg.imglib.sampler.PositionableRasterSampler;
 import mpicbg.imglib.type.Type;
 
 public class OutOfBoundsStrategyPeriodic<T extends Type<T>> extends OutOfBoundsStrategy<T>
 {
-	final PositionableCursor<T> parentCursor;
-	final PositionableCursor<T> circleCursor;
+	final PositionableRasterSampler<T> parentCursor;
+	final PositionableRasterSampler<T> circleCursor;
 	final T type, circleType;
 	final int numDimensions;
 	final int[] dimension, position, circledPosition;
 	
-	public OutOfBoundsStrategyPeriodic( final PositionableCursor<T> parentCursor )
+	public OutOfBoundsStrategyPeriodic( final PositionableRasterSampler<T> parentCursor )
 	{
 		super( parentCursor );
 		

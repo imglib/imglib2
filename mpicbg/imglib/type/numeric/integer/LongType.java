@@ -34,7 +34,7 @@ import mpicbg.imglib.container.DirectAccessContainer;
 import mpicbg.imglib.container.DirectAccessContainerFactory;
 import mpicbg.imglib.container.basictypecontainer.LongAccess;
 import mpicbg.imglib.container.basictypecontainer.array.LongArray;
-import mpicbg.imglib.cursor.Cursor;
+import mpicbg.imglib.sampler.RasterSampler;
 
 final public class LongType extends AbstractIntegerType<LongType>
 {
@@ -77,7 +77,7 @@ final public class LongType extends AbstractIntegerType<LongType>
 	}
 
 	@Override
-	public void updateContainer( final Cursor<?> c ) 
+	public void updateContainer( final RasterSampler<?> c ) 
 	{ 
 		b = storage.update( c ); 
 	}

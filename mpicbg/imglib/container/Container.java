@@ -24,37 +24,40 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- *
- * @author Stephan Preibisch & Stephan Saalfeld
  */
 package mpicbg.imglib.container;
 
 import mpicbg.imglib.Dimensions;
-import mpicbg.imglib.cursor.IterableCursor;
-import mpicbg.imglib.cursor.PositionableCursor;
-import mpicbg.imglib.cursor.LocalizableIterableCursor;
-import mpicbg.imglib.cursor.LocalizablePlaneCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
+import mpicbg.imglib.sampler.RasterPlaneIterator;
+import mpicbg.imglib.sampler.PositionableRasterSampler;
+import mpicbg.imglib.sampler.RasterIterator;
 import mpicbg.imglib.type.Type;
 
-public interface Container<T extends Type<T>> extends Dimensions
+/**
+ * 
+ * @param <T>
+ *
+ * @author Stephan Preibisch and Stephan Saalfeld
+ */
+public interface Container< T extends Type< T >> extends Dimensions
 {
-	public IterableCursor<T> createIterableCursor( Image<T> image );
-	public LocalizableIterableCursor<T> createLocalizableCursor( Image<T> image );
-	public LocalizablePlaneCursor<T> createLocalizablePlaneCursor( Image<T> image );
-	public PositionableCursor<T> createPositionableCursor( Image<T> image );
-	public PositionableCursor<T> createPositionableCursor( Image<T> image, OutOfBoundsStrategyFactory<T> outOfBoundsFactory );
-	
+	public RasterIterator< T > createIterableCursor( Image< T > image );
+	public RasterIterator< T > createLocalizableCursor( Image< T > image );
+	public RasterPlaneIterator< T > createLocalizablePlaneCursor( Image< T > image );
+	public PositionableRasterSampler< T > createPositionableCursor( Image< T > image );
+	public PositionableRasterSampler< T > createPositionableCursor( Image< T > image, OutOfBoundsStrategyFactory< T > outOfBoundsFactory );
+
 	public void close();
 
 	public ContainerFactory getFactory();
-	
+
 	public long getId();
-	
-	public long getNumPixels();
-		
-	public boolean compareStorageContainerDimensions( final Container<?> img );
-	public boolean compareStorageContainerCompatibility( final Container<?> img );
+
+	public long numPixels();
+
+	public boolean compareStorageContainerDimensions( final Container< ? > img );
+	public boolean compareStorageContainerCompatibility( final Container< ? > img );
 
 }

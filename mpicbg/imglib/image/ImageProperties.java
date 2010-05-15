@@ -33,7 +33,7 @@ import mpicbg.imglib.Dimensions;
 
 public interface ImageProperties extends Dimensions
 {		
-	public long getNumPixels();
+	public long numPixels();
 	
 	public String getName();
 	public void setName( String name );

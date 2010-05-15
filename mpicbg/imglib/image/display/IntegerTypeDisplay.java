@@ -29,8 +29,8 @@
  */
 package mpicbg.imglib.image.display;
 
-import mpicbg.imglib.cursor.IterableCursor;
 import mpicbg.imglib.image.Image;
+import mpicbg.imglib.sampler.RasterIterator;
 import mpicbg.imglib.type.numeric.IntegerType;
 
 public class IntegerTypeDisplay<T extends IntegerType<T>> extends Display<T>
@@ -47,7 +47,7 @@ public class IntegerTypeDisplay<T extends IntegerType<T>> extends Display<T>
 	@Override
 	public void setMinMax()
 	{
-		final IterableCursor<T> c = img.createIterableCursor();
+		final RasterIterator<T> c = img.createIterableCursor();
 		
 		if ( !c.hasNext() )
 		{

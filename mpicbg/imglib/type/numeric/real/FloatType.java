@@ -34,7 +34,7 @@ import mpicbg.imglib.container.DirectAccessContainer;
 import mpicbg.imglib.container.DirectAccessContainerFactory;
 import mpicbg.imglib.container.basictypecontainer.FloatAccess;
 import mpicbg.imglib.container.basictypecontainer.array.FloatArray;
-import mpicbg.imglib.cursor.Cursor;
+import mpicbg.imglib.sampler.RasterSampler;
 import mpicbg.imglib.type.numeric.RealType;
 
 public class FloatType extends AbstractRealType<FloatType> implements RealType<FloatType>
@@ -78,7 +78,7 @@ public class FloatType extends AbstractRealType<FloatType> implements RealType<F
 	}
 
 	@Override
-	public void updateContainer( final Cursor<?> c ) 
+	public void updateContainer( final RasterSampler<?> c ) 
 	{ 
 		b = storage.update( c ); 
 	}

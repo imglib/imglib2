@@ -33,9 +33,9 @@ import mpicbg.imglib.container.DirectAccessContainer;
 import mpicbg.imglib.container.DirectAccessContainerFactory;
 import mpicbg.imglib.container.basictypecontainer.CharAccess;
 import mpicbg.imglib.container.basictypecontainer.array.CharArray;
-import mpicbg.imglib.cursor.Cursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.display.BasePairTypeDisplay;
+import mpicbg.imglib.sampler.RasterSampler;
 import mpicbg.imglib.type.BasePairType;
 import mpicbg.imglib.type.AbstractType;
 import mpicbg.imglib.type.label.BasePairBitType.Base;
@@ -89,7 +89,7 @@ public class BasePairCharType extends AbstractType<BasePairCharType> implements 
 	}
 	
 	@Override
-	public void updateContainer( final Cursor<?> c ) 
+	public void updateContainer( final RasterSampler<?> c ) 
 	{ 
 		b = storage.update( c ); 
 	}

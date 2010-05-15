@@ -32,9 +32,9 @@ package mpicbg.imglib.image.display.imagej;
 import java.util.Collection;
 
 import mpicbg.imglib.algorithm.math.MathLib;
-import mpicbg.imglib.cursor.array.ArrayLocalizableCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.display.Display;
+import mpicbg.imglib.sampler.array.ArrayLocalizableCursor;
 import mpicbg.imglib.type.Type;
 import mpicbg.imglib.type.label.FakeType;
 import mpicbg.imglib.type.numeric.RGBALegacyType;

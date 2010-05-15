@@ -88,7 +88,7 @@ public abstract class AbstractContainer<T extends Type<T>> implements Container<
 	}
 	
 	@Override
-	public long getNumPixels() { return numPixels; }
+	public long numPixels() { return numPixels; }
 
 	@Override
 	public String toString()

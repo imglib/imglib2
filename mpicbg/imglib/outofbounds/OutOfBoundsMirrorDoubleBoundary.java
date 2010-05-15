@@ -28,7 +28,7 @@
 package mpicbg.imglib.outofbounds;
 
 import mpicbg.imglib.cursor.OutOfBoundsCursor;
-import mpicbg.imglib.cursor.PositionableCursor;
+import mpicbg.imglib.sampler.PositionableRasterSampler;
 import mpicbg.imglib.type.Type;
 
 /**
@@ -51,14 +51,14 @@ import mpicbg.imglib.type.Type;
  */
 public class OutOfBoundsMirrorDoubleBoundary< T extends Type< T > > extends AbstractOutOfBoundsMirror< T >
 {
-	OutOfBoundsMirrorDoubleBoundary( final OutOfBoundsCursor< T > source )
+	OutOfBoundsMirrorDoubleBoundary( final PositionableRasterSampler< T > source )
 	{
 		this( source, source.getImage().createPositionableCursor() );
 	}
 	
 	OutOfBoundsMirrorDoubleBoundary(
 			final OutOfBoundsCursor< T > source,
-			final PositionableCursor< T > outOfBoundsPositionable )
+			final PositionableRasterSampler< T > outOfBoundsPositionable )
 	{
 		super( source, outOfBoundsPositionable );
 		

@@ -33,10 +33,10 @@ import mpicbg.imglib.container.DirectAccessContainer;
 import mpicbg.imglib.container.DirectAccessContainerFactory;
 import mpicbg.imglib.container.basictypecontainer.BitAccess;
 import mpicbg.imglib.container.basictypecontainer.array.BitArray;
-import mpicbg.imglib.cursor.Cursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.display.BasePairTypeDisplay;
 import mpicbg.imglib.image.display.Display;
+import mpicbg.imglib.sampler.RasterSampler;
 import mpicbg.imglib.type.BasePairType;
 import mpicbg.imglib.type.AbstractType;
 
@@ -88,7 +88,7 @@ public class BasePairBitType extends AbstractType<BasePairBitType> implements Ba
 	}
 	
 	@Override
-	public void updateContainer( final Cursor<?> c ) 
+	public void updateContainer( final RasterSampler<?> c ) 
 	{
 		b = storage.update( c );	
 	}

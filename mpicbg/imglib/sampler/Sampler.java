@@ -29,7 +29,6 @@
  */
 package mpicbg.imglib.sampler;
 
-import mpicbg.imglib.cursor.IterableCursor;
 import mpicbg.imglib.interpolation.Interpolator;
 import mpicbg.imglib.type.Type;
 
@@ -38,7 +37,7 @@ import mpicbg.imglib.type.Type;
  * This {@link Type} instance may point to an actual pixel stored in a
  * {@link Container} or be generated differently.
  * 
- * The {@link Sampler} interface unifies pixel access for {@link IterableCursor},
+ * The {@link Sampler} interface unifies pixel access for {@link RasterIterator},
  * {@link Interpolator} and later Integrators.  Cursor and Interpolator are
  * point samplers, whereas many operations require integrating a region in a
  * functionally defined way.  The {@link Sampler} interface is the basis of all

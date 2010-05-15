@@ -29,9 +29,9 @@
  */
 package mpicbg.imglib.image.display.imagej;
 
-import mpicbg.imglib.cursor.IterableCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.display.Display;
+import mpicbg.imglib.sampler.RasterIterator;
 import mpicbg.imglib.type.numeric.RGBALegacyType;
 
 public class RGBALegacyTypeDisplay extends Display<RGBALegacyType>
@@ -73,7 +73,7 @@ public class RGBALegacyTypeDisplay extends Display<RGBALegacyType>
 	@Override
 	public void setMinMax()
 	{
-		final IterableCursor<RGBALegacyType> c = img.createIterableCursor();
+		final RasterIterator<RGBALegacyType> c = img.createIterableCursor();
 		final RGBALegacyType t = c.type();
 		
 		if ( !c.hasNext() )

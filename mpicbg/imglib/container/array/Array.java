@@ -30,14 +30,14 @@ package mpicbg.imglib.container.array;
 import mpicbg.imglib.container.AbstractDirectAccessContainer;
 import mpicbg.imglib.container.Container;
 import mpicbg.imglib.container.basictypecontainer.DataAccess;
-import mpicbg.imglib.cursor.Cursor;
-import mpicbg.imglib.cursor.array.ArrayIterableCursor;
-import mpicbg.imglib.cursor.array.ArrayPositionableCursor;
-import mpicbg.imglib.cursor.array.ArrayPositionableOutOfBoundsCursor;
-import mpicbg.imglib.cursor.array.ArrayLocalizableCursor;
-import mpicbg.imglib.cursor.array.ArrayLocalizablePlaneCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
+import mpicbg.imglib.sampler.RasterSampler;
+import mpicbg.imglib.sampler.array.ArrayIterableCursor;
+import mpicbg.imglib.sampler.array.ArrayLocalizableCursor;
+import mpicbg.imglib.sampler.array.ArrayLocalizablePlaneCursor;
+import mpicbg.imglib.sampler.array.ArrayPositionableCursor;
+import mpicbg.imglib.sampler.array.ArrayPositionableOutOfBoundsCursor;
 import mpicbg.imglib.type.Type;
 
 /**
@@ -71,7 +71,7 @@ public class Array< T extends Type< T >, A extends DataAccess > extends Abstract
 	}
 
 	@Override
-	public A update( final Cursor< ? > c )
+	public A update( final RasterSampler< ? > c )
 	{
 		return data;
 	}

@@ -36,8 +36,8 @@ import mpicbg.imglib.container.imageplus.FloatImagePlus;
 import mpicbg.imglib.container.imageplus.ImagePlusContainerFactory;
 import mpicbg.imglib.container.imageplus.IntImagePlus;
 import mpicbg.imglib.container.imageplus.ShortImagePlus;
-import mpicbg.imglib.cursor.IterableCursor;
 import mpicbg.imglib.image.Image;
+import mpicbg.imglib.sampler.RasterIterator;
 import mpicbg.imglib.type.Type;
 import mpicbg.imglib.type.TypeConverter;
 import mpicbg.imglib.type.numeric.RealType;
@@ -214,8 +214,8 @@ public class ImagePlusAdapter
 		ImageFactory<FloatType> factory = new ImageFactory<FloatType>( new FloatType(), new ImagePlusContainerFactory() );
 		Image<FloatType> output = factory.createImage( input.getDimensions(), input.getName() );
 	
-		IterableCursor<T> in = input.createIterableCursor();
-		IterableCursor<FloatType> out = output.createIterableCursor();
+		RasterIterator<T> in = input.createIterableCursor();
+		RasterIterator<FloatType> out = output.createIterableCursor();
 		
 		TypeConverter tc = TypeConverter.getTypeConverter( in.type(), out.type() );
 		

@@ -33,7 +33,7 @@ import mpicbg.imglib.container.DirectAccessContainer;
 import mpicbg.imglib.container.DirectAccessContainerFactory;
 import mpicbg.imglib.container.basictypecontainer.DoubleAccess;
 import mpicbg.imglib.container.basictypecontainer.array.DoubleArray;
-import mpicbg.imglib.cursor.Cursor;
+import mpicbg.imglib.sampler.RasterSampler;
 import mpicbg.imglib.type.numeric.RealType;
 
 public class DoubleType extends AbstractRealType<DoubleType> implements RealType<DoubleType>
@@ -77,7 +77,7 @@ public class DoubleType extends AbstractRealType<DoubleType> implements RealType
 	}
 	
 	@Override
-	public void updateContainer( final Cursor<?> c ) 
+	public void updateContainer( final RasterSampler<?> c ) 
 	{ 
 		b = storage.update( c ); 
 	}

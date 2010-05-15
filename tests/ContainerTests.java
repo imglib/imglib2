@@ -13,12 +13,11 @@ import mpicbg.imglib.container.array.ArrayContainerFactory;
 import mpicbg.imglib.container.cell.CellContainerFactory;
 import mpicbg.imglib.container.dynamic.DynamicContainerFactory;
 import mpicbg.imglib.container.imageplus.ImagePlusContainerFactory;
-import mpicbg.imglib.cursor.IterableCursor;
-import mpicbg.imglib.cursor.PositionableCursor;
-import mpicbg.imglib.cursor.LocalizableIterableCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.ImageFactory;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyPeriodicFactory;
+import mpicbg.imglib.sampler.PositionableRasterSampler;
+import mpicbg.imglib.sampler.RasterIterator;
 import mpicbg.imglib.type.numeric.real.FloatType;
 
 public class ContainerTests
@@ -136,10 +135,10 @@ public class ContainerTests
 		final Random rnd = new Random( 1241234 );
 		
 		// create reference array
-		final float[] reference = new float[ (int)img.getNumPixels() ];
+		final float[] reference = new float[ (int)img.numPixels() ];
 		
 		// iterate over image and reference array and fill with data
-		final IterableCursor<FloatType> cursor = img.createIterableCursor();			
+		final RasterIterator<FloatType> cursor = img.createIterableCursor();			
 		int i = 0;
 		
 		while( cursor.hasNext() )
@@ -160,7 +159,7 @@ public class ContainerTests
 	{
 		boolean allEqual = true;
 		
-		final IterableCursor<FloatType> cursor = img.createIterableCursor();
+		final RasterIterator<FloatType> cursor = img.createIterableCursor();
 		int i = 0;
 		
 		while( cursor.hasNext() )
@@ -188,8 +187,8 @@ public class ContainerTests
 		final float[] reference = createReference( img1 );
 		
 		// copy into a second image using simple cursors
-		final IterableCursor<FloatType> cursor1 = img1.createIterableCursor();
-		final IterableCursor<FloatType> cursor2 = img2.createIterableCursor();			
+		final RasterIterator<FloatType> cursor1 = img1.createIterableCursor();
+		final RasterIterator<FloatType> cursor2 = img2.createIterableCursor();			
 		
 		while( cursor1.hasNext() )
 		{
@@ -215,8 +214,8 @@ public class ContainerTests
 		cursor2.close();
 
 		// copy back into a second image using localizable and positionable cursors			
-		final LocalizableIterableCursor<FloatType> localizableCursor1 = img1.createLocalizableCursor();			
-		final PositionableCursor<FloatType> positionableCursor2 = img2.createPositionableCursor();			
+		final RasterIterator<FloatType> localizableCursor1 = img1.createLocalizableCursor();			
+		final PositionableRasterSampler<FloatType> positionableCursor2 = img2.createPositionableCursor();			
 		
 		int i = 0;
 		
@@ -236,7 +235,7 @@ public class ContainerTests
 		positionableCursor2.close();
 		
 		// copy again to the first image using a PositionableOutsideCursor and a PositionableCursor
-		final PositionableCursor<FloatType> outsideCursor2 = img2.createPositionableCursor( new OutOfBoundsStrategyPeriodicFactory<FloatType>() );
+		final PositionableRasterSampler<FloatType> outsideCursor2 = img2.createPositionableCursor( new OutOfBoundsStrategyPeriodicFactory<FloatType>() );
 		localizableCursor1.reset();
 		
 		final int[] pos = new int[ numDimensions ];			

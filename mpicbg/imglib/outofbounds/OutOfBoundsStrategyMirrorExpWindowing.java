@@ -31,14 +31,14 @@ package mpicbg.imglib.outofbounds;
 
 import mpicbg.imglib.algorithm.math.MathLib;
 import mpicbg.imglib.cursor.OutOfBoundsCursor;
-import mpicbg.imglib.cursor.PositionableCursor;
 import mpicbg.imglib.cursor.LocalizableIterableCursor;
+import mpicbg.imglib.sampler.PositionableRasterSampler;
 import mpicbg.imglib.type.numeric.RealType;
 
 public class OutOfBoundsStrategyMirrorExpWindowing<T extends RealType<T>> extends OutOfBoundsMirrorSingleBoundary< T >
 {
-	final PositionableCursor<T> parentCursor;
-	final PositionableCursor<T> mirrorCursor;
+	final PositionableRasterSampler<T> parentCursor;
+	final PositionableRasterSampler<T> mirrorCursor;
 	final T type, mirrorType;
 	final int numDimensions;
 	final int[] dimension, position, mirroredPosition, currentDirection, tmp;

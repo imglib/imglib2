@@ -31,12 +31,12 @@ import java.awt.Shape;
 import java.util.ArrayList;
 
 import mpicbg.imglib.container.AbstractContainer;
-import mpicbg.imglib.cursor.PositionableCursor;
-import mpicbg.imglib.cursor.shapelist.ShapeListPositionableCursor;
-import mpicbg.imglib.cursor.shapelist.ShapeListPositionableOutOfBoundsCursor;
-import mpicbg.imglib.cursor.shapelist.ShapeListLocalizablePlaneCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
+import mpicbg.imglib.sampler.PositionableRasterSampler;
+import mpicbg.imglib.sampler.shapelist.ShapeListLocalizablePlaneCursor;
+import mpicbg.imglib.sampler.shapelist.ShapeListPositionableCursor;
+import mpicbg.imglib.sampler.shapelist.ShapeListPositionableOutOfBoundsCursor;
 import mpicbg.imglib.type.Type;
 
 /**
@@ -127,7 +127,7 @@ public class ShapeList< T extends Type< T > > extends AbstractContainer< T >
 	}
 	
 	@Override
-	public PositionableCursor< T > createPositionableCursor( final Image< T > image, final OutOfBoundsStrategyFactory< T > outOfBoundsFactory ) 
+	public PositionableRasterSampler< T > createPositionableCursor( final Image< T > image, final OutOfBoundsStrategyFactory< T > outOfBoundsFactory ) 
 	{
 		return new ShapeListPositionableOutOfBoundsCursor< T >( this, image, outOfBoundsFactory );
 	}
