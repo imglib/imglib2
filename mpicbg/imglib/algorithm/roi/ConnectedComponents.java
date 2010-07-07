@@ -1,7 +1,5 @@
 package mpicbg.imglib.algorithm.roi;
 
-import ij.IJ;
-
 import java.util.ArrayList;
 import java.util.Vector;
 import java.util.HashMap;
@@ -92,8 +90,6 @@ public class ConnectedComponents<T extends ComparableType<T>, S extends IntegerT
 			final Vector<S> labelEquiv = new Vector<S>();
 			final HashMap<Integer, S> labelMap = new HashMap<Integer, S>();	
 			
-			IJ.log("Found " + labelList.size() + " total keys");
-
 			for (int i = 0; i < labelList.size(); ++i)
 			{
 				S equiv = labelList.get(i);
@@ -103,19 +99,15 @@ public class ConnectedComponents<T extends ComparableType<T>, S extends IntegerT
 					equiv = nextEquiv;
 					nextEquiv = eqTable.get(equiv.getInteger()).get(0);
 				}
-				IJ.log("For label " + labelList.get(i) + ", equiv label " + equiv + " of "
-						+ eqTable.get(labelList.get(i).getInteger()).size());
 				labelEquiv.add(equiv);
 			}
 			
-			IJ.log("Fixing labels");
 			fixMapOrder(labelList, labelEquiv);
 			
 			labelMap.put(0, zero);
 			
 			for (int i = 0; i < labelList.size(); ++i)
 			{
-				IJ.log("For label " + labelList.get(i) + ", using " + labelEquiv.get(i));
 				labelMap.put(labelList.get(i).getInteger(), labelEquiv.get(i));
 			}
 			
@@ -128,7 +120,6 @@ public class ConnectedComponents<T extends ComparableType<T>, S extends IntegerT
 				S label;
 				outCursor.fwd();
 				label = labelMap.get(outCursor.getType().getInteger());
-				IJ.log("Applying label " + label + " for value " + outCursor.getType());
 				outCursor.getType().set(label);
 			}
 			
@@ -154,13 +145,9 @@ public class ConnectedComponents<T extends ComparableType<T>, S extends IntegerT
 		final int outPos[] = new int[inPos.length];
 		final int roiPos[] = new int[inPos.length];
 		inCursor.setPosition(inPos);
-
-		//IJ.log("Image value " + inCursor.getType() + ", Test Value " + value);
-		IJ.log("At position " + inPos[0] + ", " + inPos[1] + ":");
-		
+	
 		if (inCursor.getType().compareTo(value) == 0)
 		{
-			IJ.log("Found one");
 			S label = zero.clone();
 		
 			while (cursor.hasNext())
@@ -170,17 +157,10 @@ public class ConnectedComponents<T extends ComparableType<T>, S extends IntegerT
 				strelCursor.setPosition(roiPos);
 				if (strelCursor.getType().get())
 				{
-					IJ.log("strel cursor truth");
 					if (cursor.getType().compareTo(value) == 0)
 					{
-						IJ.log("updating label");
 						outCursor.setPosition(outputOffsetPosition(inPos, roiPos, outPos));
 						updateLabel(label, outCursor.getType());
-						IJ.log("label updated to " + label.getInteger());
-					}
-					else
-					{
-						IJ.log("not updating stuff");
 					}
 				}
 			}
@@ -195,18 +175,16 @@ public class ConnectedComponents<T extends ComparableType<T>, S extends IntegerT
 			
 		}
 
-		IJ.log("\n\n");
 		return true;
 	}
 	
 	private void newLabel(S label)
 	{
-		IJ.log("Creating new label " + nextLabel.getInteger());
 		label.set(nextLabel);
 		Vector<S> eqList = new Vector<S>();
+
 		eqList.add(label);
 		labelList.add(label);
-		//IJ.log("Setting eqTable at " + outLabel.getInteger());
 		eqTable.put(label.getInteger(), eqList);
 				
 		nextLabel.add(one);
@@ -216,28 +194,16 @@ public class ConnectedComponents<T extends ComparableType<T>, S extends IntegerT
 	{
 		if (label.compareTo(zero) == 0)
 		{
-			IJ.log("Input label " + label.getInteger() + " found to be zero.  Returning " + neighborLabel.getInteger());
-			//return neighborLabel.clone();
 			label.set(neighborLabel);
 		}
 		else if (label.compareTo(neighborLabel) != 0 && neighborLabel.compareTo(zero) != 0)
 		{
-			IJ.log("Input label " + label.getInteger() + " unequal to neighbor label , which is nonzero: " + neighborLabel.getInteger());
 			mapEquiv(label, neighborLabel);
 			mapEquiv(neighborLabel, label);
 			if (label.compareTo(neighborLabel) > 0)
 			{
-				IJ.log("Label greater than _neighbor_");	
 				label.set(neighborLabel);
 			}
-			else
-			{
-				IJ.log("_Label_ less than neighbor");
-			}
-		}
-		else
-		{
-			IJ.log("Label " + label.getInteger() + ", neighbor " + neighborLabel.getInteger() + ".  Doing nothing");			
 		}
 	}
 	
