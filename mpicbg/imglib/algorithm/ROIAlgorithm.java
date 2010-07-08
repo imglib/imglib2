@@ -8,7 +8,8 @@ import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.ImageFactory;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyValueFactory;
-import mpicbg.imglib.type.numeric.ComplexType;
+import mpicbg.imglib.type.Type;
+//import mpicbg.imglib.type.numeric.ComplexType;
 
 /**
  * ROIAlgorithm implements a framework against which to build operations of one image against
@@ -25,7 +26,7 @@ import mpicbg.imglib.type.numeric.ComplexType;
  * @param <T>
  * @param <S>
  */
-public abstract class ROIAlgorithm <T extends ComplexType<T>, S extends ComplexType<S>>
+public abstract class ROIAlgorithm <T extends Type<T>, S extends Type<S>>
 	implements OutputAlgorithm<S>, Benchmark
 {
 
@@ -81,7 +82,7 @@ public abstract class ROIAlgorithm <T extends ComplexType<T>, S extends ComplexT
 		if (inOutFactory == null)
 		{
 			T typeT = imageIn.createType();
-			typeT.setZero();
+			//typeT.set(c)
 			outsideFactory = new OutOfBoundsStrategyValueFactory<T>(typeT); 
 		}
 		else
@@ -199,7 +200,7 @@ public abstract class ROIAlgorithm <T extends ComplexType<T>, S extends ComplexT
 					+ " values into array of length " + offsetPosition.length);
 		}
 		else if (position.length < originOffset.length){
-			throw new RuntimeException("Position vector has less cardinality than " +
+			throw new RuntimeException("Position vector of lower cardinality than " +
 					"the input image's dimensionality.");
 		}
 			
@@ -209,6 +210,29 @@ public abstract class ROIAlgorithm <T extends ComplexType<T>, S extends ComplexT
 		}
 		return offsetPosition;
 	}
+	
+	/**
+	 * Returns the position in the output Image corresponding to the position of this
+	 * ROIAlgorithm's RegionOfInterestCursor in the input Image.
+	 * 
+	 * @param imPos center location of the current region-of-interest patch.
+	 * @param roiPos position given by the regionOfInterestCursor
+	 * @param outPos the array into which the output position will be placed.
+	 * @return outPos, for convenience.
+	 */
+	protected int[] outputOffsetPosition(int[] imPos, int[] roiPos,  int[] outPos)
+	{
+		
+		positionOffset(imPos, outPos);
+		
+		for (int i = 0; i < imPos.length; ++i)
+		{
+			outPos[i] += roiPos[i];
+		}		
+		
+		return outPos;
+	}
+	
 	
 	@Override
 	public boolean process()

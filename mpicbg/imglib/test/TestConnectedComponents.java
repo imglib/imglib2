@@ -1,21 +1,20 @@
 package mpicbg.imglib.test;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import ij.IJ;
 
 import mpicbg.imglib.algorithm.roi.ConnectedComponents;
 import mpicbg.imglib.algorithm.roi.StructuringElement;
 
 import mpicbg.imglib.cursor.Cursor;
-import mpicbg.imglib.cursor.LocalizableByDimCursor;
 
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.ImagePlusAdapter;
-
 import mpicbg.imglib.image.display.imagej.ImageJFunctions;
 
-import mpicbg.imglib.type.logic.BitType;
-
 import mpicbg.imglib.type.numeric.RealType;
-
 import mpicbg.imglib.type.numeric.integer.IntType;
 
 public class TestConnectedComponents
@@ -24,6 +23,8 @@ public class TestConnectedComponents
 	{
 		Image<T> im = ImagePlusAdapter.wrap(IJ.openImage());
 		Cursor<T> c = im.createCursor();
+		ArrayList<ConnectedComponents<T, IntType>> connectedComponentList = new ArrayList<ConnectedComponents<T, IntType>>();
+		List<StructuringElement> strels;
 	
 		T val = im.createType();
 
@@ -37,24 +38,28 @@ public class TestConnectedComponents
 		}
 		val = val.clone();
 		
-		StructuringElement strel = new StructuringElement(new int[]{3, 3}, "4 Connected");
-		LocalizableByDimCursor<BitType> cursor = strel.createLocalizableByDimCursor();
-
-		cursor.setPosition(new int[]{1, 0});
-		cursor.getType().setOne();
-
-		cursor.setPosition(new int[]{0, 1});
-		cursor.getType().setOne();
-
-		strel.getDisplay().setMinMax();
-		ImageJFunctions.displayAsVirtualStack(strel).show();
-
-		ConnectedComponents<T, IntType> cc = new ConnectedComponents<T, IntType>(new IntType(), im, strel, val);
-
-		cc.process();
-
+		StructuringElement strel4 = ConnectedComponents.halfConnectedRaster(im.getNumDimensions());
+		StructuringElement strel8 = ConnectedComponents.fullConnectedRaster(im.getNumDimensions());
+		StructuringElement strel4all = ConnectedComponents.halfConnectedRandom(im.getNumDimensions());
+		StructuringElement strel8all = ConnectedComponents.fullConnectedRandom(im.getNumDimensions());
+		
+		strels = Arrays.asList(strel4, strel8, strel4all, strel8all);
+		
+		for (StructuringElement s : strels)
+		{
+			s.getDisplay().setMinMax();
+			ImageJFunctions.displayAsVirtualStack(s).show();
+			connectedComponentList.add(new ConnectedComponents<T, IntType>(new IntType(), im, s, val));			
+		}
+		
 		ImageJFunctions.displayAsVirtualStack(im).show();
-		cc.getResult().getDisplay().setMinMax();
-		ImageJFunctions.displayAsVirtualStack(cc.getResult()).show();
+
+		for (ConnectedComponents<T, IntType> cc : connectedComponentList)
+		{
+			cc.process();
+			cc.getResult().getDisplay().setMinMax();
+			ImageJFunctions.displayAsVirtualStack(cc.getResult()).show();
+		}
+		
 	}
 }
