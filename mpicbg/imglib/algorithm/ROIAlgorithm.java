@@ -41,6 +41,7 @@ public abstract class ROIAlgorithm <T extends Type<T>, S extends Type<S>>
 	private String name;
 	private final S typeS;
 	private long pTime;
+	private boolean active;
 
 	/**
 	 * Creates an ROIAlgorithm with default {@link OutOfBoundsStrategyValueFactory}, with value
@@ -78,6 +79,7 @@ public abstract class ROIAlgorithm <T extends Type<T>, S extends Type<S>>
 		name = null;
 		typeS = type.clone();
 		Arrays.fill(initPos, 0);
+		active = true;
 		
 		if (inOutFactory == null)
 		{
@@ -107,10 +109,11 @@ public abstract class ROIAlgorithm <T extends Type<T>, S extends Type<S>>
 	 * the RegionOfInterestCursor
 	 * @param cursor a {@link RegionOfInterestCursor} that iterates over the given
 	 * patch-of-interest
-	 * @return true if the operation on the given patch was successful, false otherwise.  If false
-	 * is returned by this method, process() will abort. 
+	 * @return the value to assign to the output Image at the given position, if operation on the
+	 * given patch was successful, null otherwise.  If null is returned by this method, process()
+	 * will abort. 
 	 */
-	protected abstract boolean patchOperation(final int[] position,
+	protected abstract S patchOperation(final int[] position,
 			final RegionOfInterestCursor<T> cursor);
 	
 	/**
@@ -141,6 +144,11 @@ public abstract class ROIAlgorithm <T extends Type<T>, S extends Type<S>>
 		return patchSize.clone();
 	}
 
+	public S createOutputType()
+	{
+		return typeS.clone();
+	}
+	
 	/**
 	 * Returns the {@link Image} that will eventually become the result of this
 	 * {@link OutputAlgorithm}, and creates it if it has not yet been created.
@@ -241,6 +249,7 @@ public abstract class ROIAlgorithm <T extends Type<T>, S extends Type<S>>
 		final int[] pos = new int[inputImage.getNumDimensions()];
 		final int[] offsetPos = new int[inputImage.getNumDimensions()];
 		final long sTime = System.currentTimeMillis();
+		S outType;
 		
 		while (outputCursor.hasNext())
 		{
@@ -248,11 +257,17 @@ public abstract class ROIAlgorithm <T extends Type<T>, S extends Type<S>>
 			outputCursor.getPosition(pos);
 			roiCursor.reset(positionOffset(pos, offsetPos));
 						
-			if (!patchOperation(pos, roiCursor))
+			outType = patchOperation(pos, roiCursor);
+			
+			if (outType == null)
 			{
 				outputCursor.close();
 				
 				return false;
+			}
+			else
+			{
+				outputCursor.getType().set(outType);
 			}
 		}
 			
@@ -265,12 +280,17 @@ public abstract class ROIAlgorithm <T extends Type<T>, S extends Type<S>>
 	@Override
 	public boolean checkInput()
 	{
-		return roiCursor.isActive();
+		if (!active)
+		{
+			setErrorMessage("This ROIAlgorithm has been closed");
+		}
+		return active;
 	}
 	
 	public void close()
 	{
 		roiCursor.close();
+		active = false;
 	}
 
 	@Override
