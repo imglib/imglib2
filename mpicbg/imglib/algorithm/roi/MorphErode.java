@@ -1,8 +1,8 @@
 package mpicbg.imglib.algorithm.roi;
 
-import mpicbg.imglib.cursor.LocalizableByDimCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
+import mpicbg.imglib.type.ComparableType;
 import mpicbg.imglib.type.numeric.ComplexType;
 
 /**
@@ -12,7 +12,7 @@ import mpicbg.imglib.type.numeric.ComplexType;
  *
  * @param <T> {@link Image} type.
  */
-public class MorphErode<T extends ComplexType<T>> extends StatisticalOperation<T> {
+public class MorphErode<T extends ComparableType<T>> extends StatisticalOperation<T> {
 	public MorphErode(final Image<T> imageIn, final StructuringElement strel,
 			final OutOfBoundsStrategyFactory<T> inOutsideFactory)
 	{
@@ -27,8 +27,8 @@ public class MorphErode<T extends ComplexType<T>> extends StatisticalOperation<T
 	}
 
 	@Override
-	protected void statsOp(final LocalizableByDimCursor<T> cursor) { 
-		cursor.getType().set(super.getList().getFirst());
+	protected void statsOp(T type) {
+		type.set(super.getList().getFirst());
 	}
 
 }

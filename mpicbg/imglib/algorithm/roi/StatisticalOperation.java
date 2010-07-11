@@ -7,6 +7,7 @@ import mpicbg.imglib.cursor.LocalizableByDimCursor;
 import mpicbg.imglib.cursor.special.RegionOfInterestCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
+import mpicbg.imglib.type.ComparableType;
 import mpicbg.imglib.type.numeric.ComplexType;
 import mpicbg.imglib.type.logic.BitType;
 
@@ -20,7 +21,7 @@ import mpicbg.imglib.type.logic.BitType;
  *
  * @param <T> The input- and output-{@link Image} type.
  */
-public abstract class StatisticalOperation<T extends ComplexType<T>> extends ROIAlgorithm<T, T> {
+public abstract class StatisticalOperation<T extends ComparableType<T>> extends ROIAlgorithm<T, T> {
 	//Member classes
 	
 	/**
@@ -34,18 +35,18 @@ public abstract class StatisticalOperation<T extends ComplexType<T>> extends ROI
 	 * 
 	 * @param <R> Image storage type.
 	 */
-	public interface StatisticsCollectionStrategy<R extends ComplexType<R>> 
+	public interface StatisticsCollectionStrategy<R extends ComparableType<R>> 
 	{
 		public void collectStats(LinkedList<R> list, RegionOfInterestCursor<R> cursor, int[] pos);
 	}
 	
 	/**
-	 * Simple, dumb statistics collection implementation.  Resorts every time, hopefully in a
+	 * Simple, dumb statistics collection implementation.  Re-sorts every time, hopefully in a
 	 * O(n log(n)) manner, with respect to strel size.
 	 * 
 	 * @param <R> Image storage type.
 	 */
-	public class SimpleCollectionStrategy<R extends ComplexType<R>> 
+	public class SimpleCollectionStrategy<R extends ComparableType<R>> 
 		implements StatisticsCollectionStrategy<R>
 	{
 		private final LocalizableByDimCursor<BitType> strelCursor;
@@ -112,7 +113,6 @@ public abstract class StatisticalOperation<T extends ComplexType<T>> extends ROI
 	private final StructuringElement strel;
 	private final LinkedList<T> statList;
 	private final int[] lastPosition;
-	private final LocalizableByDimCursor<T> outputCursor;
 	private boolean init = false;
 	private StatisticsCollectionStrategy<T> statsStrategy;
 
@@ -129,7 +129,6 @@ public abstract class StatisticalOperation<T extends ComplexType<T>> extends ROI
 		strel = inStrel;
 		statList = new LinkedList<T>();
 		lastPosition = new int[strel.getNumDimensions()];
-		outputCursor = getOutputImage().createLocalizableByDimCursor();
 		statsStrategy = new SimpleCollectionStrategy<T>();		
 	}
 
@@ -158,43 +157,23 @@ public abstract class StatisticalOperation<T extends ComplexType<T>> extends ROI
 		return lastPosition;
 	}
 	
-	public void close()
-	{
-		super.close();
-		outputCursor.close();
-	}
-
 	@Override
-	public boolean checkInput()
-	{
-		return super.checkInput() && outputCursor.isActive();
-	}
-	
-	@Override
-	protected boolean patchOperation(final int[] position,
+	protected T patchOperation(final int[] position,
 			final RegionOfInterestCursor<T> cursor) {
-		statsStrategy.collectStats(statList, cursor, position);
-		outputCursor.setPosition(position);
+		T outType = super.createOutputType();
+		statsStrategy.collectStats(statList, cursor, position);	
 		
-		statsOp(outputCursor);
+		statsOp(outType);
 		
 		System.arraycopy(position, 0, lastPosition, 0, position.length);
 		init = true;
-		return true;
+		return outType;
 	}
 
-	/*
-	I can't remember the reason behind the decision to pass a cursor to statsOp rather than a type.
-	It's possible that I'll change this later.  It doesn't make sense to me to give a child class the
-	power to set the position of the output Image's cursor.
-	
-	-Larry
-	*/
-	
 	/**
-	 * Perform the order statistic operation, then set the value of the type of the given cursor.
-	 * @param cursor
+	 * Perform the order statistic operation, then set the value of the type
+	 * @param type
 	 */
-	protected abstract void statsOp(LocalizableByDimCursor<T> cursor);
+	protected abstract void statsOp(T type);
 	
 }

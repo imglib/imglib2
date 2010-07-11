@@ -4,6 +4,7 @@ import mpicbg.imglib.algorithm.Benchmark;
 import mpicbg.imglib.algorithm.OutputAlgorithm;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
+import mpicbg.imglib.type.ComparableType;
 import mpicbg.imglib.type.numeric.ComplexType;
 
 /**
@@ -14,7 +15,7 @@ import mpicbg.imglib.type.numeric.ComplexType;
  *
  * @param <T> {@link Image} type.
  */
-public class MorphOpen<T extends ComplexType<T>> implements OutputAlgorithm<T>, Benchmark
+public class MorphOpen<T extends ComparableType<T>> implements OutputAlgorithm<T>, Benchmark
 {
 	
 	private final Image<T> image;
@@ -51,7 +52,12 @@ public class MorphOpen<T extends ComplexType<T>> implements OutputAlgorithm<T>, 
 	@Override
 	public boolean checkInput()
 	{		
-		return true;
+		boolean ok = eroder.checkInput();
+		if (dilater != null)
+		{
+			ok &= dilater.checkInput();
+		}
+		return ok;
 	}
 
 	@Override
@@ -64,6 +70,15 @@ public class MorphOpen<T extends ComplexType<T>> implements OutputAlgorithm<T>, 
 		}
 		
 		return errorMsg;
+	}
+	
+	public void close()
+	{
+		eroder.close();
+		if (dilater != null)
+		{
+			dilater.close();
+		}
 	}
 
 	@Override

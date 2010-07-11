@@ -75,7 +75,6 @@ public class DirectConvolution
 	
 	private final Image<R> kernel;
 	private final int[] kernelSize;
-	private LocalizableByDimCursor<S> outputImageCursor;
 	private final LocalizableByDimCursor<R> kernelCursor;
 	private final boolean doInvert;
 	
@@ -96,7 +95,6 @@ public class DirectConvolution
 		super(type, inputImage, kernel.getDimensions(), outsideFactory);
 		
 		this.kernel = kernel;
-		outputImageCursor = null;
 		kernelSize = kernel.getDimensions();
 		kernelCursor = kernel.createLocalizableByDimCursor();
 		
@@ -105,14 +103,6 @@ public class DirectConvolution
 		doInvert = isconv;
 	}
 	
-	private LocalizableByDimCursor<S> getOutputCursor()
-	{
-		if (outputImageCursor == null)
-		{
-			outputImageCursor = getOutputImage().createLocalizableByDimCursor();
-		}		
-		return outputImageCursor;
-	}
 	
 	private void invertPosition(final int[] pos, final int[] invPos)
 	{
@@ -123,17 +113,14 @@ public class DirectConvolution
 	}
 	
 	@Override
-	protected boolean patchOperation(final int[] position, final RegionOfInterestCursor<T> roiCursor) {
-		final LocalizableByDimCursor<S> outCursor = getOutputCursor();
-		final int[] pos = new int[outCursor.getNumDimensions()];
-		final int[] invPos = new int[outCursor.getNumDimensions()];
-		S accum = outCursor.getImage().createType();
-		S mul = outCursor.getImage().createType();
-		S temp = outCursor.getImage().createType();
+	protected S patchOperation(final int[] position, final RegionOfInterestCursor<T> roiCursor) {
+		final int[] pos = new int[roiCursor.getNumDimensions()];
+		final int[] invPos = new int[roiCursor.getNumDimensions()];		
+		S accum = createOutputType();
+		S mul = createOutputType();
+		S temp = createOutputType();
 		
 		accum.setZero();
-		
-		outCursor.setPosition(position);
 		
 		while(roiCursor.hasNext())
 		{
@@ -162,8 +149,7 @@ public class DirectConvolution
 			accum.add(mul);			
 		}
 				
-		outCursor.getType().set(accum);
-		return true;
+		return accum;
 	}
 
 	@Override

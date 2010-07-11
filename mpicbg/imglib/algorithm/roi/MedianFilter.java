@@ -1,8 +1,8 @@
 package mpicbg.imglib.algorithm.roi;
 
-import mpicbg.imglib.cursor.LocalizableByDimCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
+import mpicbg.imglib.type.ComparableType;
 import mpicbg.imglib.type.numeric.ComplexType;
 
 
@@ -13,7 +13,7 @@ import mpicbg.imglib.type.numeric.ComplexType;
  *
  * @param <T> {@link Image} type.
  */
-public class MedianFilter<T extends ComplexType<T>> extends StatisticalOperation<T> {
+public class MedianFilter<T extends ComparableType<T>> extends StatisticalOperation<T> {
 
 	public MedianFilter(final Image<T> imageIn, final StructuringElement inStrel,
 			final OutOfBoundsStrategyFactory<T> inOutFactory) {
@@ -27,9 +27,9 @@ public class MedianFilter<T extends ComplexType<T>> extends StatisticalOperation
 	}
 
 	@Override
-	protected void statsOp(LocalizableByDimCursor<T> cursor) {		
+	protected void statsOp(T type) {		
 		int n = super.getList().size();
-		cursor.getType().set(super.getList().get(n / 2));
+		type.set(super.getList().get(n / 2));
 	}
 
 }
