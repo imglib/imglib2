@@ -10,6 +10,7 @@ import mpicbg.imglib.algorithm.ROIAlgorithm;
 import mpicbg.imglib.cursor.LocalizableByDimCursor;
 import mpicbg.imglib.cursor.special.RegionOfInterestCursor;
 import mpicbg.imglib.image.Image;
+import mpicbg.imglib.outofbounds.OutOfBoundsStrategyValueFactory;
 import mpicbg.imglib.type.ComparableType;
 import mpicbg.imglib.type.logic.BitType;
 import mpicbg.imglib.type.numeric.IntegerType;
@@ -357,7 +358,7 @@ public class ConnectedComponents<T extends ComparableType<T>, S extends IntegerT
 		
 		nextLabel = one.clone();
 		
-		outCursor = super.getOutputImage().createLocalizableByDimCursor();
+		outCursor = super.getOutputImage().createLocalizableByDimCursor(new OutOfBoundsStrategyValueFactory<S>(zero));
 		inCursor = imageIn.createLocalizableByDimCursor();
 		
 		while(outCursor.hasNext())
@@ -366,7 +367,7 @@ public class ConnectedComponents<T extends ComparableType<T>, S extends IntegerT
 			outCursor.getType().setZero();
 		}
 		
-		outCursor.reset();
+		outCursor.reset();	
 	}
 	
 	protected void fixMapOrder(ArrayList<S> labels, Vector<S> labelEquiv)
@@ -397,6 +398,19 @@ public class ConnectedComponents<T extends ComparableType<T>, S extends IntegerT
 		}
 	}
 	
+	protected void fixEqTable()
+	{
+		for (S s : labelList)
+		{
+			ArrayList<S> list = new ArrayList<S>(eqTable.get(s.getInteger()));			
+			S minEq = list.get(0);
+			for (int i = 1; i < list.size(); ++i)
+			{
+				mapEquiv(minEq, list.get(i));
+			}
+		}
+	}
+	
 	@Override
 	public boolean process()
 	{
@@ -404,6 +418,9 @@ public class ConnectedComponents<T extends ComparableType<T>, S extends IntegerT
 		{			
 			final Vector<S> labelEquiv = new Vector<S>();
 			final HashMap<Integer, S> labelMap = new HashMap<Integer, S>();	
+			
+			//eqTable doesn't always look the way we want it to
+			fixEqTable();
 			
 			/*
 			 * Example equivalence map:
@@ -433,6 +450,7 @@ public class ConnectedComponents<T extends ComparableType<T>, S extends IntegerT
 					equiv = nextEquiv;
 					nextEquiv = eqTable.get(equiv.getInteger()).get(0);
 				}
+				
 				labelEquiv.add(equiv);
 			}
 			
@@ -441,6 +459,7 @@ public class ConnectedComponents<T extends ComparableType<T>, S extends IntegerT
 			 * we had values 1, 3, 5, and 6, where we would prefer 1, 2, 3 and 4.  The call
 			 * to fixMapOrder makes that happen.
 			 */
+
 			fixMapOrder(labelList, labelEquiv);
 			
 			//Make sure we have the zero default included in the lookup table.
@@ -494,7 +513,7 @@ public class ConnectedComponents<T extends ComparableType<T>, S extends IntegerT
 		if (inCursor.getType().compareTo(value) == 0)
 		{
 			S label = zero.clone();
-		
+		    
 			while (cursor.hasNext())
 			{
 				cursor.fwd();
@@ -514,8 +533,8 @@ public class ConnectedComponents<T extends ComparableType<T>, S extends IntegerT
 			{
 				newLabel(label);
 			}
-			
-			return label;			
+
+			return eqTable.get(label.getInteger()).get(0);			
 		}
 		else
 		{
@@ -572,13 +591,15 @@ public class ConnectedComponents<T extends ComparableType<T>, S extends IntegerT
 	protected void mapEquiv(S from, S to)
 	{
 		Vector<S> equivs = eqTable.get(from.getInteger());
+		//Instead of mapping "to", map its minimum equivalent.
+		S toMap = eqTable.get(to.getInteger()).get(0).clone();
 		int c = 0, i = 0;
 		
 		/*
 		 * Possibly could use a binary search, but it would only be worthwhile if we have a lot of
 		 * equivalences.
 		 */		
-		while (i < equivs.size() && (c = equivs.get(i).compareTo(to)) < 0)
+		while (i < equivs.size() && (c = equivs.get(i).compareTo(toMap)) < 0)
 		{
 			++i;
 		}
@@ -586,12 +607,12 @@ public class ConnectedComponents<T extends ComparableType<T>, S extends IntegerT
 		if (i == equivs.size())
 		{
 			//If i is equal to the list size, just add to the end.
-			equivs.add(to);
+			equivs.add(toMap);
 		}
 		else if (c != 0)
 		{
 			//if c == 0, then the value is already stored in the list.
-			equivs.insertElementAt(to, i);
+			equivs.insertElementAt(toMap, i);
 		}
 				
 	}

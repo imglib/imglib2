@@ -9,7 +9,6 @@ import mpicbg.imglib.image.ImageFactory;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyValueFactory;
 import mpicbg.imglib.type.Type;
-//import mpicbg.imglib.type.numeric.ComplexType;
 
 /**
  * ROIAlgorithm implements a framework against which to build operations of one image against
