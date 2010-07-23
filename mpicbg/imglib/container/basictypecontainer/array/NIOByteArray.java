@@ -74,4 +74,8 @@ public class NIOByteArray implements ArrayDataAccess<NIOByteArray>, ByteAccess
 	
 	@Override
 	public NIOByteArray createArray( final int numEntities ) { return new NIOByteArray( numEntities ); }
+
+	@Override
+	public Object getCurrentStorageArrayAsObject() { return getCurrentStorageArray(); }
+
 }

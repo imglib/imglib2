@@ -67,7 +67,7 @@ public class NIODoubleArray implements ArrayDataAccess<NIODoubleArray>, DoubleAc
 	}
 	
 	public double[] getCurrentStorageArray()
-	{ 		  
+	{
 		double[] outData = new double[ data.capacity() ];
 		data.get( outData );
 		return outData;
@@ -75,4 +75,8 @@ public class NIODoubleArray implements ArrayDataAccess<NIODoubleArray>, DoubleAc
 	
 	@Override
 	public NIODoubleArray createArray( final int numEntities ) { return new NIODoubleArray( numEntities ); }
+
+	@Override
+	public Object getCurrentStorageArrayAsObject() { return getCurrentStorageArray(); }
+	
 }

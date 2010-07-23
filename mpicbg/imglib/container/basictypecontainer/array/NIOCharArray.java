@@ -75,4 +75,8 @@ public class NIOCharArray implements ArrayDataAccess<NIOCharArray>, CharAccess
 	
 	@Override
 	public NIOCharArray createArray( final int numEntities ) { return new NIOCharArray( numEntities ); }
+
+	@Override
+	public Object getCurrentStorageArrayAsObject() { return getCurrentStorageArray(); }
+
 }

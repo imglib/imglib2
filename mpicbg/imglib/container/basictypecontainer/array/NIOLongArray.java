@@ -75,4 +75,8 @@ public class NIOLongArray implements ArrayDataAccess<NIOLongArray>, LongAccess
 	
 	@Override
 	public NIOLongArray createArray( final int numEntities ) { return new NIOLongArray( numEntities ); }
+
+	@Override
+	public Object getCurrentStorageArrayAsObject() { return getCurrentStorageArray(); }
+
 }

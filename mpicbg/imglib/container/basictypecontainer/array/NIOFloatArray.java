@@ -76,5 +76,8 @@ public class NIOFloatArray implements ArrayDataAccess<NIOFloatArray>, FloatAcces
 	
 	@Override
 	public NIOFloatArray createArray( final int numEntities ) { return new NIOFloatArray( numEntities ); }
-}
 
+	@Override
+	public Object getCurrentStorageArrayAsObject() { return getCurrentStorageArray(); }
+
+}

@@ -64,4 +64,8 @@ public class ShortArray implements ShortAccess, ArrayDataAccess<ShortArray>
 	public ShortArray createArray( final int numEntities ) { return new ShortArray( numEntities ); }
 
 	public short[] getCurrentStorageArray(){ return data; }
+
+	@Override
+	public Object getCurrentStorageArrayAsObject() { return getCurrentStorageArray(); }
+
 }

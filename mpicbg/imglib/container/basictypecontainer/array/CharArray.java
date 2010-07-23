@@ -64,4 +64,8 @@ public class CharArray implements CharAccess, ArrayDataAccess<CharArray>
 
 	@Override
 	public CharArray createArray( final int numEntities ) { return new CharArray( numEntities ); }
+
+	@Override
+	public Object getCurrentStorageArrayAsObject() { return getCurrentStorageArray(); }
+
 }

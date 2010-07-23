@@ -75,4 +75,8 @@ public class NIOShortArray implements ArrayDataAccess<NIOShortArray>, ShortAcces
 	
 	@Override
 	public NIOShortArray createArray( final int numEntities ) { return new NIOShortArray( numEntities ); }
+
+	@Override
+	public Object getCurrentStorageArrayAsObject() { return getCurrentStorageArray(); }
+
 }

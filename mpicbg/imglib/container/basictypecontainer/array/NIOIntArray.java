@@ -75,4 +75,8 @@ public class NIOIntArray implements ArrayDataAccess<NIOIntArray>, IntAccess
 	
 	@Override
 	public NIOIntArray createArray( final int numEntities ) { return new NIOIntArray( numEntities ); }
+
+	@Override
+	public Object getCurrentStorageArrayAsObject() { return getCurrentStorageArray(); }
+
 }

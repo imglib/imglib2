@@ -64,4 +64,8 @@ public class LongArray implements LongAccess, ArrayDataAccess<LongArray>
 
 	@Override
 	public LongArray createArray( final int numEntities ) { return new LongArray( numEntities ); }
+
+	@Override
+	public Object getCurrentStorageArrayAsObject() { return getCurrentStorageArray(); }
+
 }
