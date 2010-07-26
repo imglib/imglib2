@@ -25,24 +25,30 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  *
- * @author Stephan Preibisch & Stephan Saalfeld
+ * @author Rick Lentz
  */
 package mpicbg.imglib.container.basictypecontainer.array;
 
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+import java.nio.ShortBuffer;
+
 import mpicbg.imglib.container.basictypecontainer.ShortAccess;
 
-public class ShortArray implements ShortAccess, ArrayDataAccess<ShortArray>
+public class NIOShortArray implements ArrayDataAccess<NIOShortArray>, ShortAccess
 {
-	protected short data[];
+	protected ShortBuffer data;
 
-	public ShortArray( final int numEntities )
+	public NIOShortArray( final int numEntities )
 	{
-		this.data = new short[ numEntities ];
+		this.data = ByteBuffer.allocateDirect(numEntities * 8).order( ByteOrder.nativeOrder() ).asShortBuffer();
 	}
-
-	public ShortArray( final short[] data )
+    		
+	public NIOShortArray( final short[] data )
 	{
-		this.data = data;
+		ShortBuffer bufferIn = ShortBuffer.wrap( data );
+		ShortBuffer copy = ByteBuffer.allocateDirect( bufferIn.capacity() ).order( ByteOrder.nativeOrder() ).asShortBuffer();
+		this.data = copy.put( bufferIn );
 	}
 
 	@Override
@@ -51,19 +57,24 @@ public class ShortArray implements ShortAccess, ArrayDataAccess<ShortArray>
 	@Override
 	public short getValue( final int index )
 	{
-		return data[ index ];
+		return data.get( index );
 	}
 
 	@Override
 	public void setValue( final int index, final short value )
 	{
-		data[ index ] = value;		
+		data.put(index, value);		
+	}
+	
+	public short[] getCurrentStorageArray()
+	{ 		  
+		short[] outData = new short[ data.capacity() ];
+		data.get( outData );
+		return outData;
 	}
 	
 	@Override
-	public ShortArray createArray( final int numEntities ) { return new ShortArray( numEntities ); }
-
-	public short[] getCurrentStorageArray(){ return data; }
+	public NIOShortArray createArray( final int numEntities ) { return new NIOShortArray( numEntities ); }
 
 	@Override
 	public Object getCurrentStorageArrayAsObject() { return getCurrentStorageArray(); }

@@ -40,20 +40,35 @@ import mpicbg.imglib.container.basictypecontainer.array.DoubleArray;
 import mpicbg.imglib.container.basictypecontainer.array.FloatArray;
 import mpicbg.imglib.container.basictypecontainer.array.IntArray;
 import mpicbg.imglib.container.basictypecontainer.array.LongArray;
+import mpicbg.imglib.container.basictypecontainer.array.NIOByteArray;
+import mpicbg.imglib.container.basictypecontainer.array.NIOCharArray;
+import mpicbg.imglib.container.basictypecontainer.array.NIODoubleArray;
+import mpicbg.imglib.container.basictypecontainer.array.NIOFloatArray;
+import mpicbg.imglib.container.basictypecontainer.array.NIOIntArray;
+import mpicbg.imglib.container.basictypecontainer.array.NIOLongArray;
+import mpicbg.imglib.container.basictypecontainer.array.NIOShortArray;
 import mpicbg.imglib.container.basictypecontainer.array.ShortArray;
 import mpicbg.imglib.type.Type;
 
 public class ArrayContainerFactory extends DirectAccessContainerFactory
 {
+	protected boolean useNIO = false;
+
+	public void setNIOUse ( final boolean useNIO ) { this.useNIO = useNIO; }
+	public boolean useNIO() { return useNIO; }
+
 	@Override
 	public <T extends Type<T>> DirectAccessContainer<T, BitAccess> createBitInstance( int[] dimensions, final int entitiesPerPixel)
 	{
+		if (useNIO) throw new IllegalStateException("Cannot create NIO bit arrays");
+
 		final int numPixels = PixelGridContainerImpl.getNumEntities(dimensions, entitiesPerPixel);
 		
+		BitAccess access = new BitArray(numPixels);
 		if ( dimensions.length == 3 && useOptimizedContainers )
-			return new Array3D<T, BitAccess>( this, new BitArray( numPixels ), dimensions[0], dimensions[1], dimensions[2], entitiesPerPixel );
+			return new Array3D<T, BitAccess>( this, access, dimensions[0], dimensions[1], dimensions[2], entitiesPerPixel );
 		else
-			return new Array<T, BitAccess>( this, new BitArray( numPixels ), dimensions, entitiesPerPixel );
+			return new Array<T, BitAccess>( this, access, dimensions, entitiesPerPixel );
 	}
 	
 	@Override
@@ -61,10 +76,12 @@ public class ArrayContainerFactory extends DirectAccessContainerFactory
 	{
 		final int numPixels = PixelGridContainerImpl.getNumEntities(dimensions, entitiesPerPixel);
 		
+		ByteAccess access = useNIO ?
+			new NIOByteArray(numPixels) : new ByteArray(numPixels);
 		if ( dimensions.length == 3 && useOptimizedContainers )
-			return new Array3D<T, ByteAccess>( this, new ByteArray( numPixels ), dimensions[0], dimensions[1], dimensions[2], entitiesPerPixel );
+			return new Array3D<T, ByteAccess>( this, access, dimensions[0], dimensions[1], dimensions[2], entitiesPerPixel );
 		else
-			return new Array<T, ByteAccess>( this, new ByteArray( numPixels ), dimensions, entitiesPerPixel );
+			return new Array<T, ByteAccess>( this, access, dimensions, entitiesPerPixel );
 	}
 
 	@Override
@@ -72,10 +89,12 @@ public class ArrayContainerFactory extends DirectAccessContainerFactory
 	{
 		final int numPixels = PixelGridContainerImpl.getNumEntities(dimensions, entitiesPerPixel);
 		
+		CharAccess access = useNIO ?
+			new NIOCharArray(numPixels) : new CharArray(numPixels);
 		if ( dimensions.length == 3 && useOptimizedContainers )
-			return new Array3D<T, CharAccess>( this, new CharArray( numPixels ), dimensions[0], dimensions[1], dimensions[2], entitiesPerPixel );
+			return new Array3D<T, CharAccess>( this, access, dimensions[0], dimensions[1], dimensions[2], entitiesPerPixel );
 		else
-			return new Array<T, CharAccess>( this, new CharArray( numPixels ), dimensions, entitiesPerPixel );
+			return new Array<T, CharAccess>( this, access, dimensions, entitiesPerPixel );
 	}
 
 	@Override
@@ -83,10 +102,12 @@ public class ArrayContainerFactory extends DirectAccessContainerFactory
 	{
 		final int numPixels = PixelGridContainerImpl.getNumEntities(dimensions, entitiesPerPixel);
 		
+		DoubleAccess access = useNIO ?
+			new NIODoubleArray(numPixels) : new DoubleArray(numPixels);
 		if ( dimensions.length == 3 && useOptimizedContainers )
-			return new Array3D<T, DoubleAccess>( this, new DoubleArray( numPixels ), dimensions[0], dimensions[1], dimensions[2], entitiesPerPixel );
+			return new Array3D<T, DoubleAccess>( this, access, dimensions[0], dimensions[1], dimensions[2], entitiesPerPixel );
 		else
-			return new Array<T, DoubleAccess>( this, new DoubleArray( numPixels ), dimensions, entitiesPerPixel );
+			return new Array<T, DoubleAccess>( this, access, dimensions, entitiesPerPixel );
 	}
 
 	@Override
@@ -94,10 +115,12 @@ public class ArrayContainerFactory extends DirectAccessContainerFactory
 	{
 		final int numPixels = PixelGridContainerImpl.getNumEntities(dimensions, entitiesPerPixel);
 		
+		FloatAccess access = useNIO ?
+			new NIOFloatArray(numPixels) : new FloatArray(numPixels);
 		if ( dimensions.length == 3 && useOptimizedContainers )
-			return new Array3D<T, FloatAccess>( this, new FloatArray( numPixels ), dimensions[0], dimensions[1], dimensions[2], entitiesPerPixel );
+			return new Array3D<T, FloatAccess>( this, access, dimensions[0], dimensions[1], dimensions[2], entitiesPerPixel );
 		else
-			return new Array<T, FloatAccess>( this, new FloatArray( numPixels ), dimensions, entitiesPerPixel );
+			return new Array<T, FloatAccess>( this, access, dimensions, entitiesPerPixel );
 	}
 
 	@Override
@@ -105,10 +128,12 @@ public class ArrayContainerFactory extends DirectAccessContainerFactory
 	{
 		final int numPixels = PixelGridContainerImpl.getNumEntities(dimensions, entitiesPerPixel);
 		
+		IntAccess access = useNIO ?
+			new NIOIntArray(numPixels) : new IntArray(numPixels);
 		if ( dimensions.length == 3 && useOptimizedContainers )
-			return new Array3D<T, IntAccess>( this, new IntArray( numPixels ), dimensions[0], dimensions[1], dimensions[2], entitiesPerPixel );
+			return new Array3D<T, IntAccess>( this, access, dimensions[0], dimensions[1], dimensions[2], entitiesPerPixel );
 		else
-			return new Array<T, IntAccess>( this, new IntArray( numPixels ), dimensions, entitiesPerPixel );
+			return new Array<T, IntAccess>( this, access, dimensions, entitiesPerPixel );
 	}
 
 	@Override
@@ -116,10 +141,12 @@ public class ArrayContainerFactory extends DirectAccessContainerFactory
 	{
 		final int numPixels = PixelGridContainerImpl.getNumEntities(dimensions, entitiesPerPixel);
 		
+		LongAccess access = useNIO ?
+			new NIOLongArray(numPixels) : new LongArray(numPixels);
 		if ( dimensions.length == 3 && useOptimizedContainers )
-			return new Array3D<T, LongAccess>( this, new LongArray( numPixels ), dimensions[0], dimensions[1], dimensions[2], entitiesPerPixel );
+			return new Array3D<T, LongAccess>( this, access, dimensions[0], dimensions[1], dimensions[2], entitiesPerPixel );
 		else
-			return new Array<T, LongAccess>( this, new LongArray( numPixels ), dimensions, entitiesPerPixel );
+			return new Array<T, LongAccess>( this, access, dimensions, entitiesPerPixel );
 	}
 
 	@Override
@@ -127,10 +154,12 @@ public class ArrayContainerFactory extends DirectAccessContainerFactory
 	{
 		final int numPixels = PixelGridContainerImpl.getNumEntities(dimensions, entitiesPerPixel);
 		
+		ShortAccess access = useNIO ?
+			new NIOShortArray(numPixels) : new ShortArray(numPixels);
 		if ( dimensions.length == 3 && useOptimizedContainers )
-			return new Array3D<T, ShortAccess>( this, new ShortArray( numPixels ), dimensions[0], dimensions[1], dimensions[2], entitiesPerPixel );
+			return new Array3D<T, ShortAccess>( this, access, dimensions[0], dimensions[1], dimensions[2], entitiesPerPixel );
 		else
-			return new Array<T, ShortAccess>( this, new ShortArray( numPixels ), dimensions, entitiesPerPixel );
+			return new Array<T, ShortAccess>( this, access, dimensions, entitiesPerPixel );
 	}
 
 	@Override

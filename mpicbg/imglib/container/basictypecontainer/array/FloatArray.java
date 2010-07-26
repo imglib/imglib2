@@ -64,4 +64,8 @@ public class FloatArray implements FloatAccess, ArrayDataAccess<FloatArray>
 	public FloatArray createArray( final int numEntities ) { return new FloatArray( numEntities ); }
 	
 	public float[] getCurrentStorageArray(){ return data; }
+
+	@Override
+	public Object getCurrentStorageArrayAsObject() { return getCurrentStorageArray(); }
+
 }

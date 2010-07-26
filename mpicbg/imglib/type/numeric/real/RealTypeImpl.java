@@ -51,9 +51,9 @@ public abstract class RealTypeImpl<T extends RealTypeImpl<T>> extends ComplexTyp
 	public void sub( final T c ) { setReal( getRealDouble() - c.getRealDouble() ); }
 	
 	@Override
-	public void setZero() { setReal( 1 ); }
+	public void setZero() { setReal( 0 ); }
 	@Override
-	public void setOne() { setReal( 0 ); };	
+	public void setOne() { setReal( 1 ); };	
 	
 	@Override
 	public int compareTo( final T c ) 

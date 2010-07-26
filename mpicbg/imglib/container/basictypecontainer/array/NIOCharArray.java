@@ -25,45 +25,56 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  *
- * @author Stephan Preibisch & Stephan Saalfeld
+ * @author Rick Lentz
  */
 package mpicbg.imglib.container.basictypecontainer.array;
 
-import mpicbg.imglib.container.basictypecontainer.ShortAccess;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+import java.nio.CharBuffer;
 
-public class ShortArray implements ShortAccess, ArrayDataAccess<ShortArray>
+import mpicbg.imglib.container.basictypecontainer.CharAccess;
+
+public class NIOCharArray implements ArrayDataAccess<NIOCharArray>, CharAccess
 {
-	protected short data[];
+	protected CharBuffer data;
 
-	public ShortArray( final int numEntities )
+	public NIOCharArray( final int numEntities )
 	{
-		this.data = new short[ numEntities ];
+		this.data = ByteBuffer.allocateDirect(numEntities * 4).order( ByteOrder.nativeOrder() ).asCharBuffer();
 	}
-
-	public ShortArray( final short[] data )
+    		
+	public NIOCharArray( final char[] data )
 	{
-		this.data = data;
+		CharBuffer bufferIn = CharBuffer.wrap( data );
+		CharBuffer copy = ByteBuffer.allocateDirect( bufferIn.capacity() ).order( ByteOrder.nativeOrder() ).asCharBuffer();
+		this.data = copy.put( bufferIn );
 	}
 
 	@Override
 	public void close() { data = null; }
 
 	@Override
-	public short getValue( final int index )
+	public char getValue( final int index )
 	{
-		return data[ index ];
+		return data.get( index );
 	}
 
 	@Override
-	public void setValue( final int index, final short value )
+	public void setValue( final int index, final char value )
 	{
-		data[ index ] = value;		
+		data.put(index, value);		
+	}
+	
+	public char[] getCurrentStorageArray()
+	{ 		  
+		char[] outData = new char[ data.capacity() ];
+		data.get( outData );
+		return outData;
 	}
 	
 	@Override
-	public ShortArray createArray( final int numEntities ) { return new ShortArray( numEntities ); }
-
-	public short[] getCurrentStorageArray(){ return data; }
+	public NIOCharArray createArray( final int numEntities ) { return new NIOCharArray( numEntities ); }
 
 	@Override
 	public Object getCurrentStorageArrayAsObject() { return getCurrentStorageArray(); }
