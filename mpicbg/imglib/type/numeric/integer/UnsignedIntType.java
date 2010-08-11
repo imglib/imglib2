@@ -102,7 +102,7 @@ public class UnsignedIntType extends GenericIntType<UnsignedIntType>
 	public void setInteger( final long f ){ set( f ); }
 
 	@Override
-	public double getMaxValue() { return -Integer.MIN_VALUE + Integer.MAX_VALUE; }
+	public double getMaxValue() { return -((double)Integer.MIN_VALUE) + Integer.MAX_VALUE; }
 	@Override
 	public double getMinValue()  { return 0; }
 	
