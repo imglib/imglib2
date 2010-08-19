@@ -28,6 +28,8 @@
 
 package tests;
 
+import ij.ImageJ;
+
 import java.util.Random;
 
 import mpicbg.imglib.algorithm.math.MathLib;
@@ -42,7 +44,9 @@ import mpicbg.imglib.type.numeric.real.FloatType;
 
 public class HyperSphereIteratorTest
 {
-	public HyperSphereIteratorTest()
+	private HyperSphereIteratorTest(){}
+	
+	final static public void main( final String[] args )
 	{
 		final ImageFactory<FloatType> factory = new ImageFactory<FloatType>( new FloatType(), new ArrayContainerFactory() );
 		
@@ -106,6 +110,7 @@ public class HyperSphereIteratorTest
 		
 		System.out.println( "Computation time: " + (System.currentTimeMillis() - t) + " ms." );
 		
+		new ImageJ();		
 		img1.getDisplay().setMinMax();
 		ImageJFunctions.copyToImagePlus( img1 ).show();		
 	}
