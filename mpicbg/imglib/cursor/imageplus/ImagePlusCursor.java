@@ -40,7 +40,7 @@ public class ImagePlusCursor<T extends Type<T>> extends CursorImpl<T> implements
 	protected final T type;
 	protected final ImagePlusContainer<T,?> container;
 	protected final int slicePixelCountMinus1, maxSliceMinus1;
-	protected int slice; // TODO: support hyperstacks	
+	protected int slice;
 
 	public ImagePlusCursor( final ImagePlusContainer<T,?> container, final Image<T> image, final T type )
 	{
@@ -49,7 +49,7 @@ public class ImagePlusCursor<T extends Type<T>> extends CursorImpl<T> implements
 		this.type = type;
 		this.container = container;
 		slicePixelCountMinus1 = container.getDimension( 0 ) * container.getDimension( 1 ) - 1; 
-		maxSliceMinus1 = container.getDimension( 2 ) - 1;
+		maxSliceMinus1 = container.getSlices() - 1;
 		
 		reset();
 	}

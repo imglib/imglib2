@@ -207,7 +207,7 @@ public class ImagePlusLocalizablePlaneCursor<T extends Type<T>> extends ImagePlu
 	
 	protected void setPosition( final int[] position )
 	{
-		type.updateIndex( container.getPos( position ) );
+		type.updateIndex( container.getIndex( position ) );
 		
 		if ( numDimensions == 3 )
 			slice = position[ 2 ];

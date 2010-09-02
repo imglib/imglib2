@@ -46,7 +46,7 @@ public class ImagePlusContainerFactory extends DirectAccessContainerFactory
 	@Override
 	public <T extends Type<T>> DirectAccessContainer<T, BitArray> createBitInstance(int[] dimensions, final int entitiesPerPixel)
 	{
-		if ( dimensions.length > 3 )
+		if ( dimensions.length > 5 )
 			throw new RuntimeException( "Unsupported dimensionality: "+ dimensions.length );
 
 		return new ImagePlusContainer<T, BitArray>( this, new BitArray( 1 ), dimensions, entitiesPerPixel );
@@ -55,7 +55,7 @@ public class ImagePlusContainerFactory extends DirectAccessContainerFactory
 	@Override
 	public <T extends Type<T>> DirectAccessContainer<T, ByteArray> createByteInstance( final int[] dimensions, final int entitiesPerPixel )
 	{
-		if ( dimensions.length > 3 )
+		if ( dimensions.length > 5 )
 			throw new RuntimeException( "Unsupported dimensionality: "+ dimensions.length );
 						
 		return new ByteImagePlus<T>( this, dimensions, entitiesPerPixel );
@@ -64,7 +64,7 @@ public class ImagePlusContainerFactory extends DirectAccessContainerFactory
 	@Override
 	public <T extends Type<T>> DirectAccessContainer<T, CharArray> createCharInstance(int[] dimensions, final int entitiesPerPixel)
 	{
-		if ( dimensions.length > 3 )
+		if ( dimensions.length > 5 )
 			throw new RuntimeException( "Unsupported dimensionality: "+ dimensions.length );
 		
 		return new ImagePlusContainer<T, CharArray>( this, new CharArray( 1 ), dimensions, entitiesPerPixel );
@@ -73,7 +73,7 @@ public class ImagePlusContainerFactory extends DirectAccessContainerFactory
 	@Override
 	public <T extends Type<T>> DirectAccessContainer<T, DoubleArray> createDoubleInstance(int[] dimensions, final int entitiesPerPixel)
 	{
-		if ( dimensions.length > 3 )
+		if ( dimensions.length > 5 )
 			throw new RuntimeException( "Unsupported dimensionality: "+ dimensions.length );
 		
 		return new ImagePlusContainer<T, DoubleArray>( this, new DoubleArray( 1 ), dimensions, entitiesPerPixel );
@@ -82,7 +82,7 @@ public class ImagePlusContainerFactory extends DirectAccessContainerFactory
 	@Override
 	public <T extends Type<T>> DirectAccessContainer<T, FloatArray> createFloatInstance(int[] dimensions, final int entitiesPerPixel)
 	{
-		if ( dimensions.length > 3 )
+		if ( dimensions.length > 5 )
 			throw new RuntimeException( "Unsupported dimensionality: "+ dimensions.length );
 						
 		return new FloatImagePlus<T>( this, dimensions, entitiesPerPixel );
@@ -91,7 +91,7 @@ public class ImagePlusContainerFactory extends DirectAccessContainerFactory
 	@Override
 	public <T extends Type<T>> DirectAccessContainer<T, IntArray> createIntInstance(int[] dimensions, final int entitiesPerPixel)
 	{
-		if ( dimensions.length > 3 )
+		if ( dimensions.length > 5 )
 			throw new RuntimeException( "Unsupported dimensionality: "+ dimensions.length );
 						
 		return new IntImagePlus<T>( this, dimensions, entitiesPerPixel );
@@ -100,7 +100,7 @@ public class ImagePlusContainerFactory extends DirectAccessContainerFactory
 	@Override
 	public <T extends Type<T>> DirectAccessContainer<T, LongArray> createLongInstance(int[] dimensions, final int entitiesPerPixel)
 	{
-		if ( dimensions.length > 3 )
+		if ( dimensions.length > 5 )
 			throw new RuntimeException( "Unsupported dimensionality: "+ dimensions.length );
 		
 		return new ImagePlusContainer<T, LongArray>( this, new LongArray( 1 ), dimensions, entitiesPerPixel );
@@ -109,7 +109,7 @@ public class ImagePlusContainerFactory extends DirectAccessContainerFactory
 	@Override
 	public <T extends Type<T>> DirectAccessContainer<T, ShortArray> createShortInstance(int[] dimensions, final int entitiesPerPixel)
 	{
-		if ( dimensions.length > 3 )
+		if ( dimensions.length > 5 )
 			throw new RuntimeException( "Unsupported dimensionality: "+ dimensions.length );
 						
 		return new ShortImagePlus<T>( this, dimensions, entitiesPerPixel );

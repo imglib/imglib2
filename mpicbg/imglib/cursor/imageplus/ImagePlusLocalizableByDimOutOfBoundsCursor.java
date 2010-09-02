@@ -182,7 +182,7 @@ public class ImagePlusLocalizableByDimOutOfBoundsCursor<T extends Type<T>> exten
 					// new location is inside the image
 					
 					// get the offset inside the image
-					type.updateIndex( container.getPos( position ) );
+					type.updateIndex( container.getIndex( position ) );
 					if ( numDimensions == 3 )
 						slice = position[ 2 ];
 					else
@@ -294,7 +294,7 @@ public class ImagePlusLocalizableByDimOutOfBoundsCursor<T extends Type<T>> exten
 			// new location is inside the image
 						
 			// get the offset inside the image
-			type.updateIndex( container.getPos( position ) );
+			type.updateIndex( container.getIndex( position ) );
 			if ( numDimensions == 3 )
 				slice = position[ 2 ];
 			else
@@ -334,7 +334,7 @@ public class ImagePlusLocalizableByDimOutOfBoundsCursor<T extends Type<T>> exten
 			}
 			else
 			{
-				type.updateIndex( container.getPos( this.position ) );
+				type.updateIndex( container.getIndex( this.position ) );
 			}
 		}		
 	}

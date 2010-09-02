@@ -29,8 +29,9 @@
  */
 package mpicbg.imglib.container.imageplus;
 
-import ij.IJ;
 import ij.ImagePlus;
+import ij.ImageStack;
+import ij.process.ByteProcessor;
 
 import mpicbg.imglib.container.basictypecontainer.array.FloatArray;
 import mpicbg.imglib.exception.ImgLibException;
@@ -46,17 +47,24 @@ public class FloatImagePlus<T extends Type<T>> extends ImagePlusContainer<T, Flo
 		
 		if ( entitiesPerPixel == 1 )
 		{
-			image = IJ.createImage( "image", "32-Bit Black", width, height, depth );
-	
-			for ( int i = 0; i < depth; ++i )
-				mirror.add( new FloatArray( (float[])image.getStack().getProcessor( i+1 ).getPixels() ) );
+			final ImageStack stack = new ImageStack( width, height );
+			for ( int i = 0; i < slices; ++i )
+				stack.addSlice( "", new ByteProcessor( width, height ) );
+			image = new ImagePlus( "image", stack );
+			image.setDimensions( channels, slices, frames );
+			if ( slices > 1 )
+				image.setOpenAsHyperStack( true );
+			
+			for ( int c = 0; c < channels; ++c )
+				for ( int t = 0; t < frames; ++t )
+					for ( int z = 0; z < depth; ++z )
+						mirror.add( new FloatArray( ( float[] )image.getStack().getProcessor( image.getStackIndex( c + 1, z + 1 , t + 1 ) ).getPixels() ) );
 		}
 		else
 		{
 			image = null;
-
-			for ( int i = 0; i < depth; ++i )
-				mirror.add( new FloatArray( width * height * entitiesPerPixel ));
+			for ( int i = 0; i < slices; ++i )
+				mirror.add( new FloatArray( width * height * entitiesPerPixel ) );
 		}
 	}
 
@@ -66,8 +74,10 @@ public class FloatImagePlus<T extends Type<T>> extends ImagePlusContainer<T, Flo
 		
 		this.image = image;
 		
-		for ( int i = 0; i < depth; ++i )
-			mirror.add( new FloatArray( (float[])image.getStack().getProcessor( i+1 ).getPixels() ) );
+		for ( int c = 0; c < channels; ++c )
+			for ( int t = 0; t < frames; ++t )
+				for ( int z = 0; z < depth; ++z )
+					mirror.add( new FloatArray( ( float[] )image.getStack().getProcessor( image.getStackIndex( c + 1, z + 1 , t + 1 ) ).getPixels() ) );
 	}
 
 	@Override

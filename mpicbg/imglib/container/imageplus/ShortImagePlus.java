@@ -29,8 +29,9 @@
  */
 package mpicbg.imglib.container.imageplus;
 
-import ij.IJ;
 import ij.ImagePlus;
+import ij.ImageStack;
+import ij.process.ByteProcessor;
 
 import mpicbg.imglib.container.basictypecontainer.array.ShortArray;
 import mpicbg.imglib.exception.ImgLibException;
@@ -43,20 +44,27 @@ public class ShortImagePlus<T extends Type<T>> extends ImagePlusContainer<T, Sho
 	public ShortImagePlus( final ImagePlusContainerFactory factory, final int[] dim, final int entitiesPerPixel ) 
 	{
 		super( factory, dim, entitiesPerPixel );
-
+		
 		if ( entitiesPerPixel == 1 )
 		{
-			image = IJ.createImage( "image", "16-Bit Black", width, height, depth );
-	
-			for ( int i = 0; i < depth; ++i )
-				mirror.add( new ShortArray( (short[])image.getStack().getProcessor( i+1 ).getPixels() ) );
+			final ImageStack stack = new ImageStack( width, height );
+			for ( int i = 0; i < slices; ++i )
+				stack.addSlice( "", new ByteProcessor( width, height ) );
+			image = new ImagePlus( "image", stack );
+			image.setDimensions( channels, slices, frames );
+			if ( slices > 1 )
+				image.setOpenAsHyperStack( true );
+			
+			for ( int c = 0; c < channels; ++c )
+				for ( int t = 0; t < frames; ++t )
+					for ( int z = 0; z < depth; ++z )
+						mirror.add( new ShortArray( ( short[] )image.getStack().getProcessor( image.getStackIndex( c + 1, z + 1 , t + 1 ) ).getPixels() ) );
 		}
 		else
 		{
 			image = null;
-	
-			for ( int i = 0; i < depth; ++i )
-				mirror.add( new ShortArray( width * height * entitiesPerPixel ));
+			for ( int i = 0; i < slices; ++i )
+				mirror.add( new ShortArray( width * height * entitiesPerPixel ) );
 		}
 	}
 
@@ -66,8 +74,10 @@ public class ShortImagePlus<T extends Type<T>> extends ImagePlusContainer<T, Sho
 		
 		this.image = image;
 		
-		for ( int i = 0; i < depth; ++i )
-			mirror.add( new ShortArray( (short[])image.getStack().getProcessor( i+1 ).getPixels() ) );
+		for ( int c = 0; c < channels; ++c )
+			for ( int t = 0; t < frames; ++t )
+				for ( int z = 0; z < depth; ++z )
+					mirror.add( new ShortArray( ( short[] )image.getStack().getProcessor( image.getStackIndex( c + 1, z + 1 , t + 1 ) ).getPixels() ) );
 	}
 
 	@Override

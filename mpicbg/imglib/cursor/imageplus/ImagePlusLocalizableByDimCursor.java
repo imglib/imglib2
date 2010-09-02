@@ -167,7 +167,7 @@ public class ImagePlusLocalizableByDimCursor<T extends Type<T>> extends ImagePlu
 	@Override
 	public void setPosition( final int[] position )
 	{
-		type.updateIndex( container.getPos( position ) );
+		type.updateIndex( container.getIndex( position ) );
 		
 		for ( int d = 0; d < numDimensions; d++ )
 			this.position[ d ] = position[ d ];
@@ -192,7 +192,7 @@ public class ImagePlusLocalizableByDimCursor<T extends Type<T>> extends ImagePlu
 		}
 		else
 		{
-			type.updateIndex( container.getPos( this.position ) );
+			type.updateIndex( container.getIndex( this.position ) );
 		}
 	}
 }

@@ -32,8 +32,8 @@ package mpicbg.imglib.container.imageplus;
 import java.util.ArrayList;
 
 import ij.ImagePlus;
+import ij.ImageStack;
 
-import mpicbg.imglib.container.Container3D;
 import mpicbg.imglib.container.DirectAccessContainerImpl;
 import mpicbg.imglib.container.basictypecontainer.array.ArrayDataAccess;
 import mpicbg.imglib.cursor.Cursor;
@@ -50,10 +50,10 @@ import mpicbg.imglib.image.Image;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
 import mpicbg.imglib.type.Type;
 
-public class ImagePlusContainer<T extends Type<T>, A extends ArrayDataAccess<A>> extends DirectAccessContainerImpl<T,A> implements Container3D<T>
+public class ImagePlusContainer<T extends Type<T>, A extends ArrayDataAccess<A>> extends DirectAccessContainerImpl<T,A>
 {
-	final ImagePlusContainerFactory factory;
-	final int width, height, depth;
+	final protected ImagePlusContainerFactory factory;
+	final protected int width, height, depth, frames, channels, slices;
 
 	final ArrayList<A> mirror;
 
@@ -61,27 +61,43 @@ public class ImagePlusContainer<T extends Type<T>, A extends ArrayDataAccess<A>>
 	{
 		super( factory, dim, entitiesPerPixel );
 		
+		if ( dim.length > 0 )
+			width = dim[ 0 ];
+		else
+			width = 1;
+
+		if ( dim.length > 1 )
+			height = dim[ 1 ];
+		else
+			height = 1;
+
+		if ( dim.length > 2 )
+			depth = dim[ 2 ];
+		else
+			depth = 1;
+
+		if ( dim.length > 3 )
+			frames = dim[ 3 ];
+		else
+			frames = 1;
+
+		if ( dim.length > 4 )
+			channels = dim[ 4 ];
+		else
+			channels = 1;
+		
+		slices = depth * frames * channels;
+			
 		this.factory = factory;
-		this.width = dim[ 0 ];
 		
-		if( dim.length < 2 )
-			this.height = 1;
-		else
-			this.height = dim[ 1 ];
-		
-		if ( dim.length < 3 )
-			this.depth = 1;
-		else
-			this.depth = dim[ 2 ];
-		
-		mirror = new ArrayList<A>( depth );
+		mirror = new ArrayList<A>( slices );
 	}
 	
 	ImagePlusContainer( final ImagePlusContainerFactory factory, final A creator, final int[] dim, final int entitiesPerPixel ) 
 	{
 		this( factory, dim, entitiesPerPixel );				
 		
-		for ( int i = 0; i < depth; ++i )
+		for ( int i = 0; i < slices; ++i )
 			mirror.add( creator.createArray( width * height * entitiesPerPixel ));
 	}
 
@@ -95,37 +111,42 @@ public class ImagePlusContainer<T extends Type<T>, A extends ArrayDataAccess<A>>
 	
 	protected static int[] getCorrectDimensionality( final ImagePlus imp )
 	{
-		int[] impDimensions = imp.getDimensions();
-		int   numDimensions = 0;
-		for (int d : impDimensions)
-			if ( d > 1 )
-				numDimensions++;
-		final int[] dim = new int [ numDimensions ];
-		int i = 0;
-		for (int d : impDimensions)
-			if ( d > 1 )
-			{
-				dim[i] = d;
-				i++;
-			}
-
-		return dim;
+		final int[] impDimensions = new int[]{
+				imp.getWidth(),
+				imp.getHeight(),
+				imp.getNSlices(),
+				imp.getNFrames(),
+				imp.getNChannels()
+		};
+		
+		return impDimensions;
 	}
 
-	@Override
 	public int getWidth() { return width; }
-	@Override
+	
 	public int getHeight() { return height; }
-	@Override
+	
+	public int getChannels() { return channels; }
+	
 	public int getDepth() { return depth; }
+	
+	public int getFrames() { return frames; }
 
-	public final int getPos( final int[] l ) 
+	/**
+	 * Note: this is NOT the number of z-slices!
+	 * 
+	 * @return depth * frames * channels which reflects the number of slices
+	 * of the {@link ImageStack} used to store pixels in {@link ImagePlus}.
+	 */
+	public int getSlices() { return slices; }
+
+	public final int getIndex( final int[] l ) 
 	{
 		if ( numDimensions > 1 )
 			return l[ 1 ] * width + l[ 0 ];
 		else
 			return l[ 0 ];
-	}	
+	}
 
 	@Override
 	public Cursor<T> createCursor( final Image<T> image ) 
