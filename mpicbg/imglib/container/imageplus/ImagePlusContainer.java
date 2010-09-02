@@ -111,13 +111,20 @@ public class ImagePlusContainer<T extends Type<T>, A extends ArrayDataAccess<A>>
 	
 	protected static int[] getCorrectDimensionality( final ImagePlus imp )
 	{
-		final int[] impDimensions = new int[]{
-				imp.getWidth(),
-				imp.getHeight(),
-				imp.getNSlices(),
-				imp.getNFrames(),
-				imp.getNChannels()
-		};
+		/* ImagePlus is at least 2d, x,y are mapped to an index on a stack slice */
+		int n = 2;
+		final int[] impDimensions = imp.getDimensions();
+		for ( int d = 2; d < impDimensions.length; ++d )
+			if ( impDimensions[ d ] > 1 ) ++n;
+		
+		final int[] dim = new int[ n ];
+		dim[ 0 ] = impDimensions[ 0 ];
+		dim[ 1 ] = impDimensions[ 0 ];
+		
+		n = 1;
+		for ( int d = 2; d < impDimensions.length; ++d )
+			if ( impDimensions[ d ] > 1 )
+				dim[ ++n ] = impDimensions[ d ];
 		
 		return impDimensions;
 	}
@@ -140,6 +147,12 @@ public class ImagePlusContainer<T extends Type<T>, A extends ArrayDataAccess<A>>
 	 */
 	public int getSlices() { return slices; }
 
+	/**
+	 * For a given >=2d location, estimate the pixel index in the stack slice.
+	 * 
+	 * @param l
+	 * @return
+	 */
 	public final int getIndex( final int[] l ) 
 	{
 		if ( numDimensions > 1 )
