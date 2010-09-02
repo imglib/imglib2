@@ -95,23 +95,20 @@ public class ImagePlusContainer<T extends Type<T>, A extends ArrayDataAccess<A>>
 	
 	protected static int[] getCorrectDimensionality( final ImagePlus imp )
 	{
-		int numDimensions = 3;
-				
-		if ( imp.getStackSize() == 1 )
-			--numDimensions;
-		
-		if ( imp.getHeight() == 1 )
-			--numDimensions;
-		
-		final int[] dim = new int[ numDimensions ];
-		dim[ 0 ] = imp.getWidth();
+		int[] impDimensions = imp.getDimensions();
+		int   numDimensions = 0;
+		for (int d : impDimensions)
+			if ( d > 1 )
+				numDimensions++;
+		final int[] dim = new int [ numDimensions ];
+		int i = 0;
+		for (int d : impDimensions)
+			if ( d > 1 )
+			{
+				dim[i] = d;
+				i++;
+			}
 
-		if ( numDimensions >= 2 )
-			dim[ 1 ] = imp.getHeight();
-		
-		if ( numDimensions == 3 )
-			dim[ 2 ] = imp.getStackSize();
-		
 		return dim;
 	}
 
