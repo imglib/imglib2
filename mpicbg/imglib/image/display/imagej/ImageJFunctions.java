@@ -379,7 +379,7 @@ public class ImageJFunctions
         }
         
         ImagePlus imp =  new ImagePlus( name, stack );
-        imp.getProcessor().setMinAndMax( img.getDisplay().getMin(), img.getDisplay().getMax() );
+        //imp.getProcessor().setMinAndMax( img.getDisplay().getMin(), img.getDisplay().getMax() );
         
         return imp;
 	}		

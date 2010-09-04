@@ -25,45 +25,55 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  *
- * @author Stephan Preibisch & Stephan Saalfeld
+ * @author Rick Lentz
  */
 package mpicbg.imglib.container.basictypecontainer.array;
 
-import mpicbg.imglib.container.basictypecontainer.ShortAccess;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 
-public class ShortArray implements ShortAccess, ArrayDataAccess<ShortArray>
+import mpicbg.imglib.container.basictypecontainer.ByteAccess;
+
+public class NIOByteArray implements ArrayDataAccess<NIOByteArray>, ByteAccess
 {
-	protected short data[];
-
-	public ShortArray( final int numEntities )
+	protected ByteBuffer data;
+	
+	public NIOByteArray( final int numEntities )
 	{
-		this.data = new short[ numEntities ];
+		this.data = ByteBuffer.allocateDirect(numEntities * 4).order( ByteOrder.nativeOrder() );
 	}
-
-	public ShortArray( final short[] data )
+    		
+	public NIOByteArray( final byte[] data )
 	{
-		this.data = data;
+		ByteBuffer bufferIn = ByteBuffer.wrap( data );
+		ByteBuffer copy = ByteBuffer.allocateDirect( bufferIn.capacity() ).order( ByteOrder.nativeOrder() );
+		this.data = copy.put( bufferIn );
 	}
 
 	@Override
 	public void close() { data = null; }
 
 	@Override
-	public short getValue( final int index )
+	public byte getValue( final int index )
 	{
-		return data[ index ];
+		return data.get( index );
 	}
 
 	@Override
-	public void setValue( final int index, final short value )
+	public void setValue( final int index, final byte value )
 	{
-		data[ index ] = value;		
+		data.put(index, value);		
+	}
+	
+	public byte[] getCurrentStorageArray()
+	{ 		  
+		byte[] outData = new byte[ data.capacity() ];
+		data.get( outData );
+		return outData;
 	}
 	
 	@Override
-	public ShortArray createArray( final int numEntities ) { return new ShortArray( numEntities ); }
-
-	public short[] getCurrentStorageArray(){ return data; }
+	public NIOByteArray createArray( final int numEntities ) { return new NIOByteArray( numEntities ); }
 
 	@Override
 	public Object getCurrentStorageArrayAsObject() { return getCurrentStorageArray(); }
