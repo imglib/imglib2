@@ -70,6 +70,30 @@ public class ImagePlusContainer<T extends Type<T>, A extends ArrayDataAccess<A>>
 	final protected int width, height, depth, frames, channels, slices;
 
 	final ArrayList< A > mirror;
+	
+	protected ImagePlusContainer(
+			final ImagePlusContainerFactory factory,
+			final int width,
+			final int height,
+			final int depth,
+			final int frames,
+			final int channels,
+			final int entitiesPerPixel )
+	{
+		super( factory, reduceAndReorderDimensions( new int[]{ width, height, channels, depth, frames } ), entitiesPerPixel );
+		
+		this.width = width;
+		this.height = height;
+		this.depth = depth;
+		this.frames = frames;
+		this.channels = channels;
+		
+		slices = depth * frames * channels;
+		
+		this.factory = factory;
+		
+		mirror = new ArrayList< A >( slices ); 
+	}
 
 	ImagePlusContainer( final ImagePlusContainerFactory factory, final int[] dim, final int entitiesPerPixel ) 
 	{
@@ -104,7 +128,7 @@ public class ImagePlusContainer<T extends Type<T>, A extends ArrayDataAccess<A>>
 			
 		this.factory = factory;
 		
-		mirror = new ArrayList<A>( slices );
+		mirror = new ArrayList< A >( slices );
 	}
 	
 	ImagePlusContainer( final ImagePlusContainerFactory factory, final A creator, final int[] dim, final int entitiesPerPixel ) 
@@ -112,7 +136,7 @@ public class ImagePlusContainer<T extends Type<T>, A extends ArrayDataAccess<A>>
 		this( factory, dim, entitiesPerPixel );				
 		
 		for ( int i = 0; i < slices; ++i )
-			mirror.add( creator.createArray( width * height * entitiesPerPixel ));
+			mirror.add( creator.createArray( width * height * entitiesPerPixel ) );
 	}
 
 	public ImagePlus getImagePlus() throws ImgLibException 
@@ -127,8 +151,8 @@ public class ImagePlusContainer<T extends Type<T>, A extends ArrayDataAccess<A>>
 	}
 	
 	/**
-	 * Estimate the minimal required number of dimensions, whereas width and
-	 * height are always first.
+	 * Estimate the minimal required number of dimensions for a given
+	 * {@link ImagePlus}, whereas width and height are always first.
 	 * 
 	 * E.g. a gray-scale 2d time series would have three dimensions
 	 * [width,height,frames], a gray-scale 3d stack [width,height,depth] and a
@@ -148,11 +172,15 @@ public class ImagePlusContainer<T extends Type<T>, A extends ArrayDataAccess<A>>
 	 * @param imp
 	 * @return
 	 */
-	protected static int[] reduceDimensions( final ImagePlus imp )
+	protected static int[] reduceAndReorderDimensions( final ImagePlus imp )
+	{
+		return reduceAndReorderDimensions( imp.getDimensions() );
+	}
+	
+	protected static int[] reduceAndReorderDimensions( final int[] impDimensions )
 	{
 		/* ImagePlus is at least 2d, x,y are mapped to an index on a stack slice */
 		int n = 2;
-		final int[] impDimensions = imp.getDimensions();
 		for ( int d = 2; d < impDimensions.length; ++d )
 			if ( impDimensions[ d ] > 1 ) ++n;
 		
@@ -161,9 +189,18 @@ public class ImagePlusContainer<T extends Type<T>, A extends ArrayDataAccess<A>>
 		dim[ 1 ] = impDimensions[ 1 ];
 		
 		n = 1;
-		for ( int d = 2; d < impDimensions.length; ++d )
-			if ( impDimensions[ d ] > 1 )
-				dim[ ++n ] = impDimensions[ d ];
+		
+		/* depth */
+		if ( impDimensions[ 3 ] > 1 )
+			dim[ ++n ] = impDimensions[ 3 ];
+		
+		/* frames */
+		if ( impDimensions[ 4 ] > 1 )
+			dim[ ++n ] = impDimensions[ 4 ];
+		
+		/* channels */
+		if ( impDimensions[ 2 ] > 1 )
+			dim[ ++n ] = impDimensions[ 2 ];
 		
 		return dim;
 	}

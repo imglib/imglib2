@@ -42,7 +42,7 @@ import mpicbg.imglib.type.Type;
  */
 public class FloatImagePlus<T extends Type<T>> extends ImagePlusContainer<T, FloatArray> 
 {
-	final ImagePlus image;	
+	final ImagePlus imp;	
 	
 	public FloatImagePlus( final ImagePlusContainerFactory factory, final int[] dim, final int entitiesPerPixel ) 
 	{
@@ -53,51 +53,58 @@ public class FloatImagePlus<T extends Type<T>> extends ImagePlusContainer<T, Flo
 			final ImageStack stack = new ImageStack( width, height );
 			for ( int i = 0; i < slices; ++i )
 				stack.addSlice( "", new FloatProcessor( width, height ) );
-			image = new ImagePlus( "image", stack );
-			image.setDimensions( channels, depth, frames );
+			imp = new ImagePlus( "image", stack );
+			imp.setDimensions( channels, depth, frames );
 			if ( slices > 1 )
-				image.setOpenAsHyperStack( true );
+				imp.setOpenAsHyperStack( true );
 			
 			for ( int c = 0; c < channels; ++c )
 				for ( int t = 0; t < frames; ++t )
 					for ( int z = 0; z < depth; ++z )
-						mirror.add( new FloatArray( ( float[] )image.getStack().getProcessor( image.getStackIndex( c + 1, z + 1 , t + 1 ) ).getPixels() ) );
+						mirror.add( new FloatArray( ( float[] )imp.getStack().getProcessor( imp.getStackIndex( c + 1, z + 1 , t + 1 ) ).getPixels() ) );
 		}
 		else
 		{
-			image = null;
+			imp = null;
 			for ( int i = 0; i < slices; ++i )
 				mirror.add( new FloatArray( width * height * entitiesPerPixel ) );
 		}
 	}
 
-	public FloatImagePlus( final ImagePlus image, final ImagePlusContainerFactory factory ) 
+	public FloatImagePlus( final ImagePlus imp, final ImagePlusContainerFactory factory ) 
 	{
-		super( factory, ImagePlusContainer.reduceDimensions(image), 1 );
+		super(
+				factory,
+				imp.getWidth(),
+				imp.getHeight(),
+				imp.getNSlices(),
+				imp.getNFrames(),
+				imp.getNChannels(),
+				1 );
 		
-		this.image = image;
+		this.imp = imp;
 		
 		for ( int c = 0; c < channels; ++c )
 			for ( int t = 0; t < frames; ++t )
 				for ( int z = 0; z < depth; ++z )
-					mirror.add( new FloatArray( ( float[] )image.getStack().getProcessor( image.getStackIndex( c + 1, z + 1 , t + 1 ) ).getPixels() ) );
+					mirror.add( new FloatArray( ( float[] )imp.getStack().getProcessor( imp.getStackIndex( c + 1, z + 1 , t + 1 ) ).getPixels() ) );
 	}
 
 	@Override
 	public void close() 
 	{
 		super.close();
-		if ( image != null )
-			image.close(); 
+		if ( imp != null )
+			imp.close(); 
 	}
 
 	@Override
 	public ImagePlus getImagePlus() throws ImgLibException 
 	{
-		if ( image == null )
+		if ( imp == null )
 			throw new ImgLibException( this, "has no ImagePlus instance, it is not a standard type of ImagePlus (" + entitiesPerPixel + " entities per pixel)" ); 
 		else
-			return image;
+			return imp;
 	}
 }
 
