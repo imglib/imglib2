@@ -73,7 +73,7 @@ public class IntImagePlus<T extends Type<T>> extends ImagePlusContainer<T, IntAr
 
 	public IntImagePlus( final ImagePlus image, final ImagePlusContainerFactory factory ) 
 	{
-		super( factory, ImagePlusContainer.getCorrectDimensionality(image), 1 );
+		super( factory, ImagePlusContainer.reduceDimensions(image), 1 );
 		
 		this.image = image;
 		

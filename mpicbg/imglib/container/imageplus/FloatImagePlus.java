@@ -73,7 +73,7 @@ public class FloatImagePlus<T extends Type<T>> extends ImagePlusContainer<T, Flo
 
 	public FloatImagePlus( final ImagePlus image, final ImagePlusContainerFactory factory ) 
 	{
-		super( factory, ImagePlusContainer.getCorrectDimensionality(image), 1 );
+		super( factory, ImagePlusContainer.reduceDimensions(image), 1 );
 		
 		this.image = image;
 		

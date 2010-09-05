@@ -148,7 +148,7 @@ public class ImagePlusContainer<T extends Type<T>, A extends ArrayDataAccess<A>>
 	 * @param imp
 	 * @return
 	 */
-	protected static int[] getCorrectDimensionality( final ImagePlus imp )
+	protected static int[] reduceDimensions( final ImagePlus imp )
 	{
 		/* ImagePlus is at least 2d, x,y are mapped to an index on a stack slice */
 		int n = 2;
@@ -158,14 +158,14 @@ public class ImagePlusContainer<T extends Type<T>, A extends ArrayDataAccess<A>>
 		
 		final int[] dim = new int[ n ];
 		dim[ 0 ] = impDimensions[ 0 ];
-		dim[ 1 ] = impDimensions[ 0 ];
+		dim[ 1 ] = impDimensions[ 1 ];
 		
 		n = 1;
 		for ( int d = 2; d < impDimensions.length; ++d )
 			if ( impDimensions[ d ] > 1 )
 				dim[ ++n ] = impDimensions[ d ];
 		
-		return impDimensions;
+		return dim;
 	}
 
 	public int getWidth() { return width; }
