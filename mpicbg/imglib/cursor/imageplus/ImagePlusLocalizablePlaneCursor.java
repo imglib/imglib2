@@ -24,8 +24,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- *
- * @author Stephan Preibisch & Stephan Saalfeld
  */
 package mpicbg.imglib.cursor.imageplus;
 
@@ -34,6 +32,13 @@ import mpicbg.imglib.cursor.LocalizablePlaneCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.type.Type;
 
+/**
+ * TODO Not yet 5d!!!!!!
+ * 
+ * @param <T>
+ *
+ * @author Stephan Preibisch and Stephan Saalfeld
+ */
 public class ImagePlusLocalizablePlaneCursor<T extends Type<T>> extends ImagePlusLocalizableCursor<T> implements LocalizablePlaneCursor<T>
 {
 	protected int planeDimA, planeDimB, planeSizeA, planeSizeB, incPlaneA, incPlaneB, maxI, pos, maxPos;
@@ -68,7 +73,7 @@ public class ImagePlusLocalizablePlaneCursor<T extends Type<T>> extends ImagePlu
 			
 			if ( incPlaneA == -1 )
 			{
-				++slice;
+				++sliceIndex;
 				type.updateContainer( this );
 			}
 			else
@@ -83,7 +88,7 @@ public class ImagePlusLocalizablePlaneCursor<T extends Type<T>> extends ImagePlu
 			
 			if ( incPlaneB == -1 )
 			{
-				++slice;
+				++sliceIndex;
 				type.updateContainer( this );
 			}
 			else
@@ -93,7 +98,7 @@ public class ImagePlusLocalizablePlaneCursor<T extends Type<T>> extends ImagePlu
 
 			if ( incPlaneA == -1 )
 			{
-				slice = 0;
+				sliceIndex = 0;
 				type.updateContainer( this );
 			}
 			else
@@ -163,7 +168,7 @@ public class ImagePlusLocalizablePlaneCursor<T extends Type<T>> extends ImagePlu
 
 		if ( incPlaneA == -1 )
 		{
-			--slice;
+			--sliceIndex;
 		}
 		else
 		{
@@ -210,9 +215,9 @@ public class ImagePlusLocalizablePlaneCursor<T extends Type<T>> extends ImagePlu
 		type.updateIndex( container.getIndex( position ) );
 		
 		if ( numDimensions == 3 )
-			slice = position[ 2 ];
+			sliceIndex = position[ 2 ];
 		else
-			slice = 0;
+			sliceIndex = 0;
 		
 		for ( int d = 0; d < numDimensions; d++ )
 			this.position[ d ] = position[ d ];

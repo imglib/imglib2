@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2009--2010, Stephan Preibisch & Stephan Saalfeld
+ * Copyright (c) 2009--2010, Preibisch & Saalfeld
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -24,8 +24,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- *
- * @author Stephan Preibisch & Stephan Saalfeld
  */
 package mpicbg.imglib.cursor.imageplus;
 
@@ -34,6 +32,12 @@ import mpicbg.imglib.cursor.LocalizableCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.type.Type;
 
+/**
+ * Localizing Iterator for a {@link ImagePlusContainer ImagePlusContainers}
+ * @param <T>
+ *
+ * @author Stephan Preibisch and Stephan Saalfeld
+ */
 public class ImagePlusLocalizableCursor<T extends Type<T>> extends ImagePlusCursor<T> implements LocalizableCursor<T>
 {
 	final protected int numDimensions; 	
@@ -55,27 +59,21 @@ public class ImagePlusLocalizableCursor<T extends Type<T>> extends ImagePlusCurs
 	public void fwd()
 	{ 
 		type.incIndex();
-		
-		if ( type.getIndex() > slicePixelCountMinus1 ) 
+
+		if ( type.getIndex() > lastIndex )
 		{
-			++slice;
+			++sliceIndex;
 			type.updateIndex( 0 );
 			type.updateContainer( this );
 		}
 		
-		for ( int d = 0; d < numDimensions; d++ )
+		for ( int d = 0; d < numDimensions; ++d )
 		{
-			if ( position[ d ] < dimensions[ d ] - 1 )
-			{
-				position[ d ]++;
-				
-				for ( int e = 0; e < d; e++ )
-					position[ e ] = 0;
-				
+			if ( ++position[ d ] >= dimensions[ d ] )
+				position[ d ] = 0;
+			else
 				return;
-			}
 		}
-				
 	}
 
 	@Override
@@ -92,7 +90,7 @@ public class ImagePlusLocalizableCursor<T extends Type<T>> extends ImagePlusCurs
 		for ( int d = 1; d < numDimensions; d++ )
 			position[ d ] = 0;
 		
-		slice = 0;
+		sliceIndex = 0;
 		
 		type.updateContainer( this );
 	}

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2009--2010, Stephan Preibisch & Johannes Schindelin
+ * Copyright (c) 2009--2010, Funke, Preibisch, Saalfeld & Schindelin
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -24,8 +24,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- *
- * @author Johannes Schindelin & Stephan Preibisch
  */
 package mpicbg.imglib.container.imageplus;
 
@@ -41,6 +39,11 @@ import mpicbg.imglib.container.basictypecontainer.array.LongArray;
 import mpicbg.imglib.container.basictypecontainer.array.ShortArray;
 import mpicbg.imglib.type.Type;
 
+/**
+ * Factory that creates an appropriate {@link ImagePlusContainer}.
+ * 
+ * @author Jan Funke, Stephan Preibisch, Stephan Saalfeld, Johannes Schindelin
+ */
 public class ImagePlusContainerFactory extends DirectAccessContainerFactory
 {
 	@Override
@@ -80,12 +83,12 @@ public class ImagePlusContainerFactory extends DirectAccessContainerFactory
 	}
 
 	@Override
-	public <T extends Type<T>> DirectAccessContainer<T, FloatArray> createFloatInstance(int[] dimensions, final int entitiesPerPixel)
+	public < T extends Type< T > > DirectAccessContainer< T, FloatArray > createFloatInstance( int[] dimensions, final int entitiesPerPixel )
 	{
 		if ( dimensions.length > 5 )
-			throw new RuntimeException( "Unsupported dimensionality: "+ dimensions.length );
-						
-		return new FloatImagePlus<T>( this, dimensions, entitiesPerPixel );
+			throw new RuntimeException( "Unsupported dimensionality: " + dimensions.length );
+
+		return new FloatImagePlus< T >( this, dimensions, entitiesPerPixel );
 	}
 
 	@Override

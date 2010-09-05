@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2009--2010, Stephan Preibisch & Johannes Schindelin
+ * Copyright (c) 2009--2010, Funke, Preibisch, Saalfeld & Schindelin
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -24,8 +24,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- *
- * @author Stephan Preibisch & Johannes Schindelin
  */
 package mpicbg.imglib.container.imageplus;
 
@@ -37,6 +35,11 @@ import mpicbg.imglib.container.basictypecontainer.array.ByteArray;
 import mpicbg.imglib.exception.ImgLibException;
 import mpicbg.imglib.type.Type;
 
+/**
+ * {@link ImagePlusContainer} for byte-stored data.
+ * 
+ * @author Jan Funke, Stephan Preibisch, Stephan Saalfeld, Johannes Schindelin
+ */
 public class ByteImagePlus<T extends Type<T>> extends ImagePlusContainer<T, ByteArray>
 {
 	final ImagePlus image;	
@@ -51,7 +54,7 @@ public class ByteImagePlus<T extends Type<T>> extends ImagePlusContainer<T, Byte
 			for ( int i = 0; i < slices; ++i )
 				stack.addSlice( "", new ByteProcessor( width, height ) );
 			image = new ImagePlus( "image", stack );
-			image.setDimensions( channels, slices, frames );
+			image.setDimensions( channels, depth, frames );
 			if ( slices > 1 )
 				image.setOpenAsHyperStack( true );
 			

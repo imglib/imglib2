@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2009--2010, Stephan Preibisch & Johannes Schindelin
+ * Copyright (c) 2009--2010, Funke, Preibisch, Saalfeld & Schindelin
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -24,8 +24,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- *
- * @author Johannes Schindelin & Stephan Preibisch
  */
 package mpicbg.imglib.container.imageplus;
 
@@ -34,6 +32,7 @@ import java.util.ArrayList;
 import ij.ImagePlus;
 import ij.ImageStack;
 
+import mpicbg.imglib.container.Container;
 import mpicbg.imglib.container.DirectAccessContainerImpl;
 import mpicbg.imglib.container.basictypecontainer.array.ArrayDataAccess;
 import mpicbg.imglib.cursor.Cursor;
@@ -50,12 +49,27 @@ import mpicbg.imglib.image.Image;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
 import mpicbg.imglib.type.Type;
 
+/**
+ * A {@link Container} that stores data in an aray of 2d-slices each as a
+ * linear array of basic types.  For types that are supported by ImageJ (byte,
+ * short, int, float), an actual ImagePlus is created or used to store the
+ * data.  Alternatively, an {@link ImagePlusContainer} can be created using
+ * an already existing {@link ImagePlus} instance. 
+ * 
+ * {@link ImagePlusContainer ImagePlusContainers} provides a legacy layer to
+ * apply imglib-based algorithm implementations directly on the data stored in
+ * an ImageJ {@link ImagePlus}.  For all types that are suported by ImageJ, the
+ * {@link ImagePlusContainer} provides access to the pixels of an
+ * {@link ImagePlus} instance that can be accessed ({@see #getImagePlus()}.
+ * 
+ * @author Jan Funke, Stephan Preibisch, Stephan Saalfeld, Johannes Schindelin
+ */
 public class ImagePlusContainer<T extends Type<T>, A extends ArrayDataAccess<A>> extends DirectAccessContainerImpl<T,A>
 {
 	final protected ImagePlusContainerFactory factory;
 	final protected int width, height, depth, frames, channels, slices;
 
-	final ArrayList<A> mirror;
+	final ArrayList< A > mirror;
 
 	ImagePlusContainer( final ImagePlusContainerFactory factory, final int[] dim, final int entitiesPerPixel ) 
 	{
@@ -107,8 +121,33 @@ public class ImagePlusContainer<T extends Type<T>, A extends ArrayDataAccess<A>>
 	}
 
 	@Override
-	public A update( final Cursor<?> c ) { return mirror.get( c.getStorageIndex() ); }
+	public A update( final Cursor< ? > c )
+	{
+		return mirror.get( c.getStorageIndex() );
+	}
 	
+	/**
+	 * Estimate the minimal required number of dimensions, whereas width and
+	 * height are always first.
+	 * 
+	 * E.g. a gray-scale 2d time series would have three dimensions
+	 * [width,height,frames], a gray-scale 3d stack [width,height,depth] and a
+	 * 2d composite image [width,height,channels] as well.  A composite 3d
+	 * stack has four dimensions [width,height,depth,channels], as a time
+	 * series five [width,height,depth,frames,channels].
+	 * 
+	 * <em>Note that the order of the dimensions is slightly different from
+	 * that as used in the data stack in {@link ImagePlus}.  We considered this
+	 * more logical since interleaving the color channel in the middle of the
+	 * spatial dimensions makes sense only for display purposes but complicates
+	 * algorithm logics.  Note as well that this has no consequences for import,
+	 * export and processing of the data,
+	 * {@link ImagePlusContainer ImagePlusContainers}, internally, work on a
+	 * re-ordered list of the {@link ImagePlus} slices.</em> 
+	 * 
+	 * @param imp
+	 * @return
+	 */
 	protected static int[] getCorrectDimensionality( final ImagePlus imp )
 	{
 		/* ImagePlus is at least 2d, x,y are mapped to an index on a stack slice */

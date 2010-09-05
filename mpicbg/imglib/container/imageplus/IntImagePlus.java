@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2009--2010, Stephan Preibisch & Johannes Schindelin
+ * Copyright (c) 2009--2010, Funke, Preibisch, Saalfeld & Schindelin
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -24,19 +24,22 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- *
- * @author Stephan Preibisch & Johannes Schindelin
  */
 package mpicbg.imglib.container.imageplus;
 
 import ij.ImagePlus;
 import ij.ImageStack;
-import ij.process.ByteProcessor;
+import ij.process.ColorProcessor;
 
 import mpicbg.imglib.container.basictypecontainer.array.IntArray;
 import mpicbg.imglib.exception.ImgLibException;
 import mpicbg.imglib.type.Type;
 
+/**
+ * {@link ImagePlusContainer} for integer-stored data.
+ * 
+ * @author Jan Funke, Stephan Preibisch, Stephan Saalfeld, Johannes Schindelin
+ */
 public class IntImagePlus<T extends Type<T>> extends ImagePlusContainer<T, IntArray> 
 {
 	final ImagePlus image;	
@@ -49,16 +52,16 @@ public class IntImagePlus<T extends Type<T>> extends ImagePlusContainer<T, IntAr
 		{
 			final ImageStack stack = new ImageStack( width, height );
 			for ( int i = 0; i < slices; ++i )
-				stack.addSlice( "", new ByteProcessor( width, height ) );
+				stack.addSlice( "", new ColorProcessor( width, height ) );
 			image = new ImagePlus( "image", stack );
-			image.setDimensions( channels, slices, frames );
+			image.setDimensions( channels, depth, frames );
 			if ( slices > 1 )
 				image.setOpenAsHyperStack( true );
 			
 			for ( int c = 0; c < channels; ++c )
 				for ( int t = 0; t < frames; ++t )
 					for ( int z = 0; z < depth; ++z )
-						mirror.add( new IntArray( ( int[] )image.getStack().getProcessor( image.getStackIndex( c + 1, z + 1 , t + 1 ) ).getPixels() ) );
+						mirror.add( new IntArray( ( int[] )image.getStack().getPixels( image.getStackIndex( c + 1, z + 1 , t + 1 ) ) ) );
 		}
 		else
 		{
