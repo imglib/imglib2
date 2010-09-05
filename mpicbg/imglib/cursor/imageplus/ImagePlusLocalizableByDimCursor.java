@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2009--2010, Preibisch & Saalfeld
+ * Copyright (c) 2009--2010, Stephan Preibisch & Stephan Saalfeld
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without

@@ -31,8 +31,11 @@ public class ContainerTests
 			{ 172, 131 },
 			{  15,  13, 33 },		
 			{ 110,  38, 30 },
-			{ 109,  34, 111 }, 
-			{  21,  34,  29, 13 }
+			{ 109,  34, 111 },
+			{  12,  43,  92, 10 },
+			{  21,  34,  29, 13 },
+			{   5,  12,  30,  4,  21 },
+			{  14,  21,  13,  9,  12 }
 		}; 
 	
 	/**
@@ -70,7 +73,7 @@ public class ContainerTests
 	{
 		for ( int i = 0; i < dim.length; ++i )
 		{
-			if ( dim[ i ].length < 4 )
+			if ( dim[ i ].length < 6 )
 			{
 				assertTrue( "ArrayContainer vs ImagePlusContainer failed for dim = " + MathLib.printCoordinates( dim[ i ] ),
 				            testContainer( dim[ i ], new ArrayContainerFactory(), new ImagePlusContainerFactory() ) );
