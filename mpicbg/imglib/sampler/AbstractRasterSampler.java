@@ -68,7 +68,7 @@ public abstract class AbstractRasterSampler< T extends Type< T > > implements Ra
 	public void close()
 	{
 		if ( image != null)
-			image.removeCursor( this ); 
+			image.removeRasterSampler( this ); 
 	}
 	
 	@Override

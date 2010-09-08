@@ -24,8 +24,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- *
- * @author Stephan Preibisch & Stephan Saalfeld
  */
 package mpicbg.imglib.sampler.cell;
 
@@ -37,17 +35,23 @@ import mpicbg.imglib.location.RasterLocalizable;
 import mpicbg.imglib.location.RasterPositionable;
 import mpicbg.imglib.location.VoidPositionable;
 import mpicbg.imglib.sampler.AbstractBasicPositionableRasterSampler;
-import mpicbg.imglib.sampler.array.ArrayPositionableCursor;
+import mpicbg.imglib.sampler.array.ArrayPositionableRasterSampler;
 import mpicbg.imglib.type.Type;
 import mpicbg.imglib.type.label.FakeType;
 
-public class CellPositionableCursor< T extends Type< T > > extends AbstractBasicPositionableRasterSampler< T > implements CellStorageAccess
+/**
+ * 
+ * @param <T>
+ *
+ * @author Stephan Preibisch and Stephan Saalfeld
+ */
+public class CellPositionableRasterSampler< T extends Type< T > > extends AbstractBasicPositionableRasterSampler< T > implements CellStorageAccess
 {
 	/**
 	 * Here we "misuse" a ArrayLocalizableCursor to iterate over cells,
 	 * it always gives us the location of the current cell we are instantiating
 	 */
-	final ArrayPositionableCursor< FakeType > cursor;
+	final ArrayPositionableRasterSampler< FakeType > cursor;
 	   
 	final protected T type;
 	
@@ -108,7 +112,7 @@ public class CellPositionableCursor< T extends Type< T > > extends AbstractBasic
 	 */
 	final protected int[] cellStep;
 	
-	public CellPositionableCursor(
+	public CellPositionableRasterSampler(
 			final CellContainer< T, ? > container,
 			final Image< T > image )
 	{
@@ -127,7 +131,7 @@ public class CellPositionableCursor< T extends Type< T > > extends AbstractBasic
 		this.cellDimensions = new int[ numDimensions ];
 		this.cellOffset = new int[ numDimensions ];
 		
-		this.cursor = ArrayPositionableCursor.createLinearByDimCursor( numCellsDim );
+		this.cursor = ArrayPositionableRasterSampler.createLinearByDimCursor( numCellsDim );
 		cursor.setPosition( new int[ numDimensions ] );
 		
 		// the steps when moving from cell to cell

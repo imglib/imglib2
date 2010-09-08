@@ -32,67 +32,41 @@ package mpicbg.imglib.sampler.cell;
 import mpicbg.imglib.container.cell.Cell;
 import mpicbg.imglib.container.cell.CellContainer;
 import mpicbg.imglib.image.Image;
-import mpicbg.imglib.sampler.AbstractLocalizingRasterIterator;
+import mpicbg.imglib.sampler.AbstractBasicRasterIterator;
 import mpicbg.imglib.type.Type;
 
-public class CellLocalizableCursor< T extends Type< T > > extends AbstractLocalizingRasterIterator< T > implements CellStorageAccess
+public class CellBasicRasterIterator< T extends Type< T > > extends AbstractBasicRasterIterator< T > implements CellStorageAccess
 {
 	final protected T type;
-
-	/*
-	 * Pointer to the CellContainer we are iterating on
-	 */
-	protected final CellContainer< T, ? > container;
-
-	/*
-	 * The number of cells inside the image
-	 */
-	protected final int numCells;
-
-	/*
-	 * The index of the current cell
-	 */
-	protected int cell;
-
-	/*
-	 * The index of the last cell
-	 */
-	protected int lastCell;
-
-	/*
-	 * The index+1 of the last pixel in the cell
-	 */
-	protected int cellMaxI;
-
-	/*
-	 * The instance of the current cell
-	 */
-	protected Cell< T, ? > cellInstance;
-
-	/*
-	 * The dimension of the current cell
-	 */
-	final protected int[] cellDimensions;
-
-	/*
-	 * The offset of the current cell in the image
-	 */
-	final protected int[] cellOffset;
 	
-	public CellLocalizableCursor( final CellContainer< T, ? > container, final Image< T > image )
+	/* Pointer to the CellContainer we are iterating on */
+	protected final CellContainer<T,?> container;
+	
+	/* The number of cells inside the image */
+	protected final int numCells;
+	
+	/* The index of the current cell */
+	protected int cell;
+	
+	/* The index of the last cell */
+	protected int lastCell;
+	
+	/* The index+1 of the last pixel in the cell */
+	protected int cellMaxI;
+	
+	/* The instance of the current cell */
+	protected Cell< T, ? > cellInstance;
+	
+	public CellBasicRasterIterator( final CellContainer< T, ? > container, final Image< T > image )
 	{
 		super( container, image );
 		
 		this.type = container.createLinkedType();
-		this.cellDimensions = new int[ numDimensions ];
-		this.cellOffset = new int[ numDimensions ];		
-
 		this.container = container;
 		this.numCells = container.getNumCells();
 		this.lastCell = -1;
 		
-		// unluckily we have to call it twice, in the superclass position is not initialized yet
-		reset();		
+		reset();
 	}
 	
 	protected void getCellData( final int cell )
@@ -101,32 +75,38 @@ public class CellLocalizableCursor< T extends Type< T > > extends AbstractLocali
 			return;
 		
 		lastCell = cell;		
-		cellInstance = container.getCell( cell );		
-
+		cellInstance = container.getCell( cell );				
 		cellMaxI = cellInstance.getNumPixels();	
-		cellInstance.getDimensions( cellDimensions );
-		cellInstance.offset( cellOffset );
 		
 		type.updateContainer( this );
 	}
+	
+	@Override
+	public CellContainer<T,?> getContainer(){ return container; }
+	
+	public Cell<T,?> getCurrentCell() { return cellInstance; }
+	
+	@Override
+	public T type() { return type; }
 	
 	@Override
 	public void reset()
 	{
 		type.updateIndex( -1 );
 		cell = 0;
-		getCellData( cell );
-		
-		position[ 0 ] = -1;
-		
-		for ( int d = 1; d < numDimensions; d++ )
-			position[ d ] = 0;
-		
-		type.updateContainer( this );
+		getCellData(cell);
 		
 		linkedIterator.reset();
 	}
 	
+	
+	@Override
+	public void close() 
+	{ 		
+		lastCell = -1;
+		super.close();
+	}
+
 	@Override
 	public boolean hasNext()
 	{	
@@ -137,53 +117,39 @@ public class CellLocalizableCursor< T extends Type< T > > extends AbstractLocali
 		else
 			return false;
 	}	
-
+	
 	@Override
 	public void fwd()
 	{
 		if ( type.getIndex() < cellMaxI - 1 )
 		{
 			type.incIndex();
-			
-			for ( int d = 0; d < numDimensions; d++ )
-			{
-				if ( position[ d ] < cellDimensions[ d ] + cellOffset[ d ] - 1 )
-				{
-					position[ d ]++;
-					
-					for ( int e = 0; e < d; e++ )
-						position[ e ] = cellOffset[ e ];
-					
-					break;
-				}
-			}
-			
 		}
-		else if (cell < numCells - 1)
+		else
 		{
 			cell++;
 			type.updateIndex( 0 );			
 			getCellData(cell);
-			for ( int d = 0; d < numDimensions; d++ )
-				position[ d ] = cellOffset[ d ];
-		}
-		else
-		{			
-			// we have to run out of the image so that the next hasNext() fails
-			lastCell = -1;						
-			type.updateIndex( cellMaxI );
-			cell = numCells;
 		}
 		
 		linkedIterator.fwd();
 	}	
-	
+
 	@Override
-	public T type() { return type; }
-	
+	public int getStorageIndex() { return cellInstance.getCellId(); }	
+
 	@Override
-	public CellContainer<T,?> getContainer(){ return container; }
-	
+	public String toString() { return type.toString(); }
+
 	@Override
-	public int getStorageIndex() { return cellInstance.getCellId(); }
+	public long getLongPosition( final int dim )
+	{
+		return cellInstance.indexToGlobalPosition( type.getIndex(), dim );
+	}
+
+	@Override
+	public void localize( final long[] position )
+	{
+		cellInstance.indexToGlobalPosition( type.getIndex(), position );
+	}
 }

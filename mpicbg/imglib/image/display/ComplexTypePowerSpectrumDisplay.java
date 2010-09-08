@@ -43,7 +43,7 @@ public class ComplexTypePowerSpectrumDisplay<T extends ComplexType<T>> extends D
 	@Override
 	public void setMinMax()
 	{
-		final RasterIterator<T> c = img.createIterableCursor();
+		final RasterIterator<T> c = img.createRasterIterator();
 		
 		if ( !c.hasNext() )
 		{

@@ -34,9 +34,9 @@ import mpicbg.imglib.container.AbstractContainer;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
 import mpicbg.imglib.sampler.PositionableRasterSampler;
-import mpicbg.imglib.sampler.shapelist.ShapeListLocalizablePlaneCursor;
-import mpicbg.imglib.sampler.shapelist.ShapeListPositionableCursor;
-import mpicbg.imglib.sampler.shapelist.ShapeListPositionableOutOfBoundsCursor;
+import mpicbg.imglib.sampler.shapelist.ShapeListRasterPlaneIterator;
+import mpicbg.imglib.sampler.shapelist.ShapeListPositionableRasterSampler;
+import mpicbg.imglib.sampler.shapelist.ShapeListOutOfBoundsPositionableRasterSampler;
 import mpicbg.imglib.type.Type;
 
 /**
@@ -103,33 +103,33 @@ public class ShapeList< T extends Type< T > > extends AbstractContainer< T >
 	public ShapeListContainerFactory getFactory() { return factory; }
 	
 	@Override
-	public ShapeListPositionableCursor< T > createIterableCursor( final Image< T > image ) 
+	public ShapeListPositionableRasterSampler< T > createRasterIterator( final Image< T > image ) 
 	{ 
-		return createPositionableCursor( image );
+		return createPositionableRasterSampler( image );
 	}
 
 	@Override
-	public ShapeListPositionableCursor< T > createLocalizableCursor( final Image< T > image ) 
+	public ShapeListPositionableRasterSampler< T > createLocalizingRasterIterator( final Image< T > image ) 
 	{ 
-		return createPositionableCursor( image );
+		return createPositionableRasterSampler( image );
 	}
 
 	@Override
-	public ShapeListLocalizablePlaneCursor< T > createLocalizablePlaneCursor( final Image< T > image ) 
+	public ShapeListRasterPlaneIterator< T > createRasterPlaneIterator( final Image< T > image ) 
 	{ 
-		return new ShapeListLocalizablePlaneCursor< T >( this, image );
+		return new ShapeListRasterPlaneIterator< T >( this, image );
 	}
 	
 	@Override
-	public ShapeListPositionableCursor< T > createPositionableCursor( final Image< T > image ) 
+	public ShapeListPositionableRasterSampler< T > createPositionableRasterSampler( final Image< T > image ) 
 	{
-		return new ShapeListPositionableCursor< T >( this, image );
+		return new ShapeListPositionableRasterSampler< T >( this, image );
 	}
 	
 	@Override
-	public PositionableRasterSampler< T > createPositionableCursor( final Image< T > image, final OutOfBoundsStrategyFactory< T > outOfBoundsFactory ) 
+	public PositionableRasterSampler< T > createPositionableRasterSampler( final Image< T > image, final OutOfBoundsStrategyFactory< T > outOfBoundsFactory ) 
 	{
-		return new ShapeListPositionableOutOfBoundsCursor< T >( this, image, outOfBoundsFactory );
+		return new ShapeListOutOfBoundsPositionableRasterSampler< T >( this, image, outOfBoundsFactory );
 	}
 	
 	@Override

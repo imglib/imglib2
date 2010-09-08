@@ -122,7 +122,7 @@ public class FourierConvolution<T extends RealType<T>, S extends RealType<S>> im
 		
 		final Image<FloatType> kernelImg = new ImageFactory<FloatType>( new FloatType(), factory ).createImage( imageSize );
 		
-		final RasterIterator<FloatType> cursor = kernelImg.createLocalizableCursor();
+		final RasterIterator<FloatType> cursor = kernelImg.createLocalizingRasterIterator();
 		final int[] position = new int[ numDimensions ];
 		
 		while ( cursor.hasNext() )
@@ -167,7 +167,7 @@ public class FourierConvolution<T extends RealType<T>, S extends RealType<S>> im
 		for ( int d = 0; d < numDimensions; ++d )
 			center[ d ] = kernel.getDimension( d ) / 2;
 				
-		final PositionableRasterSampler<T> c = kernel.createPositionableCursor();
+		final PositionableRasterSampler<T> c = kernel.createPositionableRasterSampler();
 		c.setPosition( center );
 		c.type().setOne();
 		c.close();
@@ -241,8 +241,8 @@ public class FourierConvolution<T extends RealType<T>, S extends RealType<S>> im
 			// copy the kernel into the kernelTemplate,
 			// the key here is that the center pixel of the kernel (e.g. 13,13,13)
 			// is located at (0,0,0)
-			final RasterIterator<S> kernelCursor = kernel.createLocalizableCursor();
-			final PositionableRasterSampler<S> kernelTemplateCursor = kernelTemplate.createPositionableCursor();
+			final RasterIterator<S> kernelCursor = kernel.createLocalizingRasterIterator();
+			final PositionableRasterSampler<S> kernelTemplateCursor = kernelTemplate.createPositionableRasterSampler();
 			
 			final int[] position = new int[ numDimensions ];
 			while ( kernelCursor.hasNext() )
@@ -286,8 +286,8 @@ public class FourierConvolution<T extends RealType<T>, S extends RealType<S>> im
 		//
 		// Multiply in Fourier Space
 		//
-		final RasterIterator<ComplexFloatType> cursorImgFFT = imgFFT.createIterableCursor();
-		final RasterIterator<ComplexFloatType> cursorKernelFFT = kernelFFT.createIterableCursor();
+		final RasterIterator<ComplexFloatType> cursorImgFFT = imgFFT.createRasterIterator();
+		final RasterIterator<ComplexFloatType> cursorKernelFFT = kernelFFT.createRasterIterator();
 		
 		while ( cursorImgFFT.hasNext() )
 		{

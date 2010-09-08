@@ -149,7 +149,7 @@ public class ImageTransform<T extends Type<T>> implements OutputAlgorithm<T>
 		// create the new output image
 		transformed = outputImageFactory.createImage( newDim );
 
-		final RasterIterator<T> transformedIterator = transformed.createLocalizableCursor();
+		final RasterIterator<T> transformedIterator = transformed.createLocalizingRasterIterator();
 		final Interpolator<T> interpolator = img.createInterpolator( interpolatorFactory );
 		
 		try

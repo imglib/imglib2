@@ -37,13 +37,13 @@ import mpicbg.imglib.image.Image;
 import mpicbg.imglib.location.Iterator;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
 import mpicbg.imglib.sampler.RasterSampler;
-import mpicbg.imglib.sampler.array.ArrayLocalizableCursor;
-import mpicbg.imglib.sampler.array.ArrayPositionableCursor;
-import mpicbg.imglib.sampler.cell.CellIterableCursor;
-import mpicbg.imglib.sampler.cell.CellLocalizableCursor;
-import mpicbg.imglib.sampler.cell.CellLocalizablePlaneCursor;
-import mpicbg.imglib.sampler.cell.CellPositionableCursor;
-import mpicbg.imglib.sampler.cell.CellPositionableOutOfBoundsCursor;
+import mpicbg.imglib.sampler.array.ArrayLocalizingRasterIterator;
+import mpicbg.imglib.sampler.array.ArrayPositionableRasterSampler;
+import mpicbg.imglib.sampler.cell.CellBasicRasterIterator;
+import mpicbg.imglib.sampler.cell.CellLocalizingRasterIterator;
+import mpicbg.imglib.sampler.cell.CellRasterPlaneIterator;
+import mpicbg.imglib.sampler.cell.CellPositionableRasterSampler;
+import mpicbg.imglib.sampler.cell.CellOutOfBoundsPositionableRasterSampler;
 import mpicbg.imglib.sampler.cell.CellStorageAccess;
 import mpicbg.imglib.type.Type;
 import mpicbg.imglib.type.label.FakeType;
@@ -95,7 +95,7 @@ public class CellContainer< T extends Type< T >, A extends ArrayDataAccess< A > 
 		// Here we "misuse" an ArrayLocalizableCursor to iterate over cells,
 		// it always gives us the location of the current cell we are
 		// instantiating.
-		final ArrayLocalizableCursor< FakeType > cursor = ArrayLocalizableCursor.createLinearCursor( numCellsDim );
+		final ArrayLocalizingRasterIterator< FakeType > cursor = ArrayLocalizingRasterIterator.createLinearCursor( numCellsDim );
 
 		for ( int c = 0; c < numCells; c++ )
 		{
@@ -140,14 +140,14 @@ public class CellContainer< T extends Type< T >, A extends ArrayDataAccess< A > 
 		return data.get( cellId );
 	}
 
-	public int getCellIndex( final ArrayPositionableCursor< FakeType > cursor, final int[] cellPos )
+	public int getCellIndex( final ArrayPositionableRasterSampler< FakeType > cursor, final int[] cellPos )
 	{
 		cursor.setPosition( cellPos );
 		return cursor.getArrayIndex();
 	}
 
 	// many cursors using the same cursor for getting their position
-	public int getCellIndex( final ArrayPositionableCursor< FakeType > cursor, final int cellPos, final int dim )
+	public int getCellIndex( final ArrayPositionableRasterSampler< FakeType > cursor, final int cellPos, final int dim )
 	{
 		cursor.setPosition( cellPos, dim );
 		return cursor.getArrayIndex();
@@ -174,7 +174,7 @@ public class CellContainer< T extends Type< T >, A extends ArrayDataAccess< A > 
 		return position / cellSize[ dim ];
 	}
 
-	public int getCellIndexFromImageCoordinates( final ArrayPositionableCursor< FakeType > cursor, final int[] position )
+	public int getCellIndexFromImageCoordinates( final ArrayPositionableRasterSampler< FakeType > cursor, final int[] position )
 	{
 		return getCellIndex( cursor, getCellPosition( position ) );
 	}
@@ -213,37 +213,37 @@ public class CellContainer< T extends Type< T >, A extends ArrayDataAccess< A > 
 	}
 
 	@Override
-	public CellIterableCursor< T > createIterableCursor( final Image< T > image )
+	public CellBasicRasterIterator< T > createRasterIterator( final Image< T > image )
 	{
-		CellIterableCursor< T > c = new CellIterableCursor< T >( this, image );
+		CellBasicRasterIterator< T > c = new CellBasicRasterIterator< T >( this, image );
 		return c;
 	}
 
 	@Override
-	public CellLocalizableCursor< T > createLocalizableCursor( final Image< T > image )
+	public CellLocalizingRasterIterator< T > createLocalizingRasterIterator( final Image< T > image )
 	{
-		CellLocalizableCursor< T > c = new CellLocalizableCursor< T >( this, image );
+		CellLocalizingRasterIterator< T > c = new CellLocalizingRasterIterator< T >( this, image );
 		return c;
 	}
 
 	@Override
-	public CellLocalizablePlaneCursor< T > createLocalizablePlaneCursor( final Image< T > image )
+	public CellRasterPlaneIterator< T > createRasterPlaneIterator( final Image< T > image )
 	{
-		CellLocalizablePlaneCursor< T > c = new CellLocalizablePlaneCursor< T >( this, image );
+		CellRasterPlaneIterator< T > c = new CellRasterPlaneIterator< T >( this, image );
 		return c;
 	}
 
 	@Override
-	public CellPositionableCursor< T > createPositionableCursor( final Image< T > image )
+	public CellPositionableRasterSampler< T > createPositionableRasterSampler( final Image< T > image )
 	{
-		CellPositionableCursor< T > c = new CellPositionableCursor< T >( this, image );
+		CellPositionableRasterSampler< T > c = new CellPositionableRasterSampler< T >( this, image );
 		return c;
 	}
 
 	@Override
-	public CellPositionableOutOfBoundsCursor< T > createPositionableCursor( final Image< T > image, final OutOfBoundsStrategyFactory< T > outOfBoundsFactory )
+	public CellOutOfBoundsPositionableRasterSampler< T > createPositionableRasterSampler( final Image< T > image, final OutOfBoundsStrategyFactory< T > outOfBoundsFactory )
 	{
-		CellPositionableOutOfBoundsCursor< T > c = new CellPositionableOutOfBoundsCursor< T >( this, image, outOfBoundsFactory );
+		CellOutOfBoundsPositionableRasterSampler< T > c = new CellOutOfBoundsPositionableRasterSampler< T >( this, image, outOfBoundsFactory );
 		return c;
 	}
 }

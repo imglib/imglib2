@@ -25,28 +25,31 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-package mpicbg.imglib.sampler.cell;
+package mpicbg.imglib.sampler.array;
 
-import mpicbg.imglib.container.cell.CellContainer;
+import mpicbg.imglib.container.array.Array;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
 import mpicbg.imglib.sampler.AbstractOutOfBoundsPositionableRasterSampler;
 import mpicbg.imglib.type.Type;
 
-public class CellPositionableOutOfBoundsCursor< T extends Type< T > > extends AbstractOutOfBoundsPositionableRasterSampler< T >
+/**
+ * 
+ * @param <T>
+ *
+ * @author Stephan Preibisch and Stephan Saalfeld
+ */
+public class ArrayOutOfBoundsPositionableRasterSampler< T extends Type< T > > extends AbstractOutOfBoundsPositionableRasterSampler< T >
 {
-	final protected CellContainer< T, ? > container;
-
-	public CellPositionableOutOfBoundsCursor(
-			final CellContainer< T, ? > container,
-			final Image< T > image,
-			final OutOfBoundsStrategyFactory< T > outOfBoundsStrategyFactory )
+	final protected Array< T, ? > container;
+	
+	public ArrayOutOfBoundsPositionableRasterSampler( final Array< T, ? > container, final Image< T > image, final OutOfBoundsStrategyFactory< T > outOfBoundsStrategyFactory ) 
 	{
 		super( container, image, outOfBoundsStrategyFactory );
-
+		
 		this.container = container;
 	}
 
 	@Override
-	public CellContainer< T, ? > getContainer(){ return container; }	
+	public Array< T, ? > getContainer(){ return container; }
 }

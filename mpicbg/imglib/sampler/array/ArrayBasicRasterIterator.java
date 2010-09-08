@@ -28,92 +28,86 @@
 package mpicbg.imglib.sampler.array;
 
 import mpicbg.imglib.container.array.Array;
-import mpicbg.imglib.container.basictypecontainer.FakeAccess;
-import mpicbg.imglib.container.basictypecontainer.array.FakeArray;
 import mpicbg.imglib.image.Image;
-import mpicbg.imglib.sampler.AbstractLocalizingRasterIterator;
+import mpicbg.imglib.sampler.AbstractBasicRasterIterator;
 import mpicbg.imglib.type.Type;
-import mpicbg.imglib.type.label.FakeType;
 
 /**
  * 
  * @param <T>
  *
- * @author Stephan Preibisch and Stephan Saalfeld
+ * @author Stephan Preibisch and Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-public class ArrayLocalizableCursor< T extends Type< T >> extends AbstractLocalizingRasterIterator< T >
+public class ArrayBasicRasterIterator< T extends Type< T > > extends AbstractBasicRasterIterator< T >
 {
 	protected final T type;
-
 	protected final Array< T, ? > container;
-
 	protected final int sizeMinus1;
-
-	public ArrayLocalizableCursor( final Array< T, ? > container, final Image< T > image )
+	
+	public ArrayBasicRasterIterator( final Array< T, ? > container, final Image< T > image ) 
 	{
 		super( container, image );
 
-		this.container = container;
 		this.type = container.createLinkedType();
-		this.sizeMinus1 = ( int )container.numPixels() - 1;
-
+		this.container = container;
+		this.sizeMinus1 = (int)container.numPixels() - 1;
+		
 		reset();
 	}
-
-	public static ArrayLocalizableCursor< FakeType > createLinearCursor( final int[] dim )
-	{
-		final Array< FakeType, FakeAccess > array = new Array< FakeType, FakeAccess >( null, new FakeArray(), dim, 1 );
-		array.setLinkedType( new FakeType() );
-		return new ArrayLocalizableCursor< FakeType >( array, null );
-	}
-
+	
 	@Override
-	public T type(){ return type; }
-
+	public T type() { return type; }
+	
 	@Override
 	public boolean hasNext(){ return type.getIndex() < sizeMinus1; }
+
+	@Override
+	public void jumpFwd( final long steps )
+	{
+		type.incIndex( (int)steps );
+		
+		linkedIterator.jumpFwd( steps );
+	}
 
 	@Override
 	public void fwd()
 	{
 		type.incIndex();
-
-		for ( int d = 0; d < numDimensions; ++d )
-		{
-			if ( ++position[ d ] >= dimensions[ d ] ) position[ d ] = 0;
-			else break;
-		}
-
+		
 		linkedIterator.fwd();
 	}
 
 	@Override
-	public void jumpFwd( final long steps )
-	{
-		type.incIndex( ( int ) steps );
-		container.indexToPosition( type.getIndex(), position );
-
-		linkedIterator.jumpFwd( steps );
+	public void close() 
+	{ 
+		type.updateIndex( sizeMinus1 + 1 );
+		super.close();
 	}
 
 	@Override
 	public void reset()
-	{
-		if ( dimensions != null )
-		{
-			type.updateIndex( -1 );
-
-			position[ 0 ] = -1;
-
-			for ( int d = 1; d < numDimensions; d++ )
-				position[ d ] = 0;
-
-			type.updateContainer( this );
-		}
+	{ 
+		type.updateIndex( -1 ); 
+		type.updateContainer( this );
 
 		linkedIterator.reset();
 	}
 
 	@Override
-	public Array< T, ? > getContainer(){ return container; }
+	public Array<T,?> getContainer(){ return container; }
+	
+	@Override
+	public String toString() { return type.toString(); }
+
+	@Override
+	public long getLongPosition( final int dim )
+	{
+		return container.indexToPosition( type.getIndex(), dim );
+	}
+
+	@Override
+	public void localize( final long[] position )
+	{
+		container.indexToPosition( type.getIndex(), position );
+	}
 }

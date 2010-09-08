@@ -24,8 +24,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- *
- * @author Stephan Preibisch & Stephan Saalfeld
  */
 package mpicbg.imglib.image;
 
@@ -46,16 +44,22 @@ import mpicbg.imglib.sampler.RasterPlaneIterator;
 import mpicbg.imglib.sampler.PositionableRasterSampler;
 import mpicbg.imglib.sampler.RasterIterator;
 import mpicbg.imglib.sampler.RasterSampler;
-import mpicbg.imglib.sampler.array.ArrayLocalizableCursor;
+import mpicbg.imglib.sampler.array.ArrayLocalizingRasterIterator;
 import mpicbg.imglib.type.Type;
 import mpicbg.imglib.type.label.FakeType;
 
-public class Image<T extends Type<T>> implements ImageProperties, Dimensions, Iterable<T>
+/**
+ * 
+ * @param <T>
+ *
+ * @author Stephan Preibisch and Stephan Saalfeld
+ */
+public class Image< T extends Type< T > > implements ImageProperties, Dimensions, Iterable< T >
 {
-	final protected ArrayList<RasterSampler<T>> cursors;
+	final protected ArrayList< RasterSampler< T > > rasterSamplers;
 	final ContainerFactory containerFactory;
-	final Container<T> container;
-	final ImageFactory<T> imageFactory;
+	final Container< T > container;
+	final ImageFactory< T > imageFactory;
 	final T type;
 
 	final static AtomicLong i = new AtomicLong(), j = new AtomicLong();
@@ -64,43 +68,42 @@ public class Image<T extends Type<T>> implements ImageProperties, Dimensions, It
 	final protected float[] calibration;
 
 	/* TODO Should this be in the multi-channel image?  Should that be in the image or not?  Better not! */
-	protected Display<T> display;
+	protected Display< T > display;
 
-	private Image( Container<T> container, ImageFactory<T> imageFactory, int dim[], String name )
+	private Image( Container< T > container, ImageFactory< T > imageFactory, int dim[], String name )
 	{
-		if (name == null || name.length() == 0)
+		if ( name == null || name.length() == 0 )
 			this.name = "image" + i.getAndIncrement();
 		else
 			this.name = name;
 
 		if ( dim == null || dim.length < 1 )
 		{
-			System.err.print("Cannot instantiate Image, dimensions are null. Creating a 1D image of size 1.");
-			dim = new int[]{1};
+			System.err.print( "Cannot instantiate Image, dimensions are null. Creating a 1D image of size 1." );
+			dim = new int[] { 1 };
 		}
 
-		for (int i = 0; i < dim.length; i++)
+		for ( int i = 0; i < dim.length; i++ )
 		{
-			if ( dim[i] <= 0 )
+			if ( dim[ i ] <= 0 )
 			{
-				System.err.print("Warning: Image dimension " + (i+1) + " does not make sense: size=" + dim[i] + ". Replacing it by 1.");
-				dim[i] = 1;	
+				System.err.print( "Warning: Image dimension " + ( i + 1 ) + " does not make sense: size=" + dim[ i ] + ". Replacing it by 1." );
+				dim[ i ] = 1;
 			}
 		}
-		this.cursors = new ArrayList<RasterSampler<T>>();		
-		this.containerFactory = imageFactory.getContainerFactory();		
+		this.rasterSamplers = new ArrayList< RasterSampler< T >>();
+		this.containerFactory = imageFactory.getContainerFactory();
 		this.imageFactory = imageFactory;
 
-		// createType() needs the imageFactory
 		this.type = createType();
-		
+
 		if ( container == null )
-			this.container = containerFactory.createContainer( dim, type );//createContainer( dim );
+			this.container = containerFactory.createContainer( dim, type );
 		else
 			this.container = container;
-		
-		setDefaultDisplay();	
-		
+
+		setDefaultDisplay();
+
 		calibration = new float[ getContainer().numDimensions() ];
 		for ( int d = 0; d < getContainer().numDimensions(); ++d )
 			calibration[ d ] = 1;
@@ -177,79 +180,90 @@ public class Image<T extends Type<T>> implements ImageProperties, Dimensions, It
 	 * Return a {@link RasterIterator} that will traverse the image's pixel data in a memory-optimized fashion.
 	 * @return IterableCursor<T> - the typed {@link RasterIterator}
 	 */
-	public RasterIterator<T> createIterableCursor()
+	public RasterIterator<T> createRasterIterator()
 	{
-		RasterIterator< T > cursor = container.createIterableCursor( this );
-		addCursor( cursor );
+		RasterIterator< T > cursor = container.createRasterIterator( this );
+		addRasterSampler( cursor );
 		return cursor;	
 	}
 	
 	/**
-	 * Return a {@link LocalizableIterableCursor} that will traverse the image's pixel data in a memory-optimized fashion 
-	 * and keeps track of its position
-	 * @return LocalizableCursor<T> - the typed {@link LocalizableIterableCursor}
+	 * Return a {@link RasterIterator} that will traverse all image pixels in
+	 * access-optimal order and tracks its location at each moving operation.
+	 * 
+	 * This {@link RasterIterator} is the preferred choice for implementations
+	 * that require the iterator's location at each iteration step (e.g. for
+	 * rendering a transformed image)
+	 *  
+	 * @return RasterIterator<T> - the typed {@link RasterIterator}
 	 */
-	public RasterIterator<T> createLocalizableCursor()
+	public RasterIterator<T> createLocalizingRasterIterator()
 	{
-		RasterIterator<T> cursor = container.createLocalizableCursor( this );
-		addCursor( cursor );
+		RasterIterator<T> cursor = container.createLocalizingRasterIterator( this );
+		addRasterSampler( cursor );
 		return cursor;		
 	}
 	
 	/**
-	 * Creates a {@link RasterPlaneIterator} which is optimized to iterate arbitrary 2-dimensional planes within an {@link Image}.
-	 * This is very important for the {@link Display}.
+	 * Creates a {@link RasterPlaneIterator} which is optimized to iterate
+	 * arbitrary 2-dimensional planes within an {@link Image}.  This is very
+	 * important for the {@link Display}.
 	 * 
 	 * @return - {@link RasterPlaneIterator}
 	 */
 	public RasterPlaneIterator<T> createLocalizablePlaneCursor()
 	{
-		RasterPlaneIterator<T> cursor = container.createLocalizablePlaneCursor( this );
-		addCursor( cursor );
+		RasterPlaneIterator<T> cursor = container.createRasterPlaneIterator( this );
+		addRasterSampler( cursor );
 		return cursor;				
 	}
 	
 	/**
-	 * Creates a {@link PositionableRasterSampler} which is able to move freely within the {@link Image}.
-	 * When exiting the {@link Image} this {@link PositionableRasterSampler} will fail!! Therefore it is faster.
+	 * Creates a {@link PositionableRasterSampler} which is able to move freely
+	 * within the {@link Image} without checking for image boundaries.  The
+	 * behavior at locations outside of image bounds is not defined.
+	 * 
 	 * @return - a {@link PositionableRasterSampler} that cannot leave the {@link Image}
 	 */
-	public PositionableRasterSampler<T> createPositionableCursor()
+	public PositionableRasterSampler< T > createPositionableRasterSampler()
 	{
-		PositionableRasterSampler<T> cursor = container.createPositionableCursor( this );
-		addCursor( cursor );
+		PositionableRasterSampler<T> cursor = container.createPositionableRasterSampler( this );
+		addRasterSampler( cursor );
 		return cursor;						
 	}
 	
-	@Deprecated
 	/**
-	 * Use {@link #createPositionableCursor()} instead.
+	 * @deprecated Use {@link #createPositionableCursor()} instead.
 	 */
+	@Deprecated
 	public PositionableRasterSampler<T> createLocalizableByDimCursor()
 	{
-		return createPositionableCursor();
+		return createPositionableRasterSampler();
 	}
 
 	/**
-	 * Creates a {@link PositionableRasterSampler} which is able to move freely within and out of {@link Image} bounds.
-	 * given a {@link OutOfBoundsStrategyFactory} which defines the behaviour out of {@link Image} bounds.
+	 * Creates a {@link PositionableRasterSampler} which is able to move freely
+	 * within and outside of {@link Image} bounds given a
+	 * {@link OutOfBoundsStrategyFactory} that defines the behavior out of
+	 * {@link Image} bounds.
+	 * 
 	 * @param factory - the {@link OutOfBoundsStrategyFactory}
 	 * @return - a {@link PositionableRasterSampler} that can leave the {@link Image}
 	 */
-	public PositionableRasterSampler<T> createPositionableCursor( final OutOfBoundsStrategyFactory<T> factory )
+	public PositionableRasterSampler<T> createPositionableRasterSampler( final OutOfBoundsStrategyFactory<T> factory )
 	{
-		PositionableRasterSampler<T> cursor = container.createPositionableCursor( this, factory );
-		addCursor( cursor );
+		PositionableRasterSampler<T> cursor = container.createPositionableRasterSampler( this, factory );
+		addRasterSampler( cursor );
 		return cursor;								
 	}
 	
-	@Deprecated
 	/**
-	 * Use {@link #createPositionableCursor( OutOfBoundsStrategyFactory<T> )} instead.
+	 * @deprecated Use {@link #createPositionableCursor( OutOfBoundsStrategyFactory<T> )} instead.
 	 */
+	@Deprecated
 	public PositionableRasterSampler<T> createLocalizableByDimCursor( final OutOfBoundsStrategyFactory<T> factory )
 	{
-		return createPositionableCursor( factory);
+		return createPositionableRasterSampler( factory);
 	}
 
 	/**
@@ -283,7 +297,7 @@ public class Image<T extends Type<T>> implements ImageProperties, Dimensions, It
 	 */
 	public void close()
 	{ 
-		closeAllCursors();
+		closeAllRasterSamplers();
 		container.close();
 	}
 	
@@ -293,7 +307,7 @@ public class Image<T extends Type<T>> implements ImageProperties, Dimensions, It
 	 * 
 	 * TODO Do we really need this?  I just replaces
 	 * int[] t = new int[ img1.numDimensions() ]; by
-	 * int[] t = img1.getPositionArray()
+	 * int[] t = img1.createPositionArray()
 	 *
 	 * Saalfeld: remove! ;)  Preibisch: keep (esoteric reasons)
 	 */
@@ -319,6 +333,11 @@ public class Image<T extends Type<T>> implements ImageProperties, Dimensions, It
 		return "Image '" + this.getName() + "', dim=" + MathLib.printCoordinates( getContainer().getDimensions() );
 	}
 	
+	/**
+	 * @deprecated Use {@link #dimensions(int[])} instead.
+	 * 
+	 * @param dimensions
+	 */
 	@Deprecated
 	public void getDimensions( final int[] dimensions )
 	{
@@ -344,8 +363,8 @@ public class Image<T extends Type<T>> implements ImageProperties, Dimensions, It
 	{
 		final Image<T> clone = this.createNewImage();
 		
-		final RasterIterator<T> c1 = this.createIterableCursor();
-		final RasterIterator<T> c2 = clone.createIterableCursor();
+		final RasterIterator<T> c1 = this.createRasterIterator();
+		final RasterIterator<T> c2 = clone.createRasterIterator();
 		
 		while ( c1.hasNext() )
 		{
@@ -376,18 +395,18 @@ public class Image<T extends Type<T>> implements ImageProperties, Dimensions, It
 	/**
 	 * Remove all cursors
 	 */
-	public void removeAllCursors()
+	public void removeAllRasterSamplers()
 	{
-		closeAllCursors();
-		cursors.clear();
+		closeAllRasterSamplers();
+		rasterSamplers.clear();
 	}
 	
 	/**
 	 * Closes all {@link RasterSampler}s operating on this {@link Image}.
 	 */
-	public void closeAllCursors()
+	public void closeAllRasterSamplers()
 	{
-		for ( final RasterSampler<?> i : cursors )
+		for ( final RasterSampler<?> i : rasterSamplers )
 			i.close();
 	}
 	
@@ -395,40 +414,40 @@ public class Image<T extends Type<T>> implements ImageProperties, Dimensions, It
 	 * Put all {@link RasterSampler}s currently instantiated into a {@link Collection}.
 	 * 
 	 */
-	public void getCursors( final Collection< RasterSampler< T > > collection )
+	public void getRasterSamplers( final Collection< RasterSampler< T > > collection )
 	{
-		collection.addAll( cursors );
+		collection.addAll( rasterSamplers );
 	}
 	
 	/**
 	 * Return all {@link RasterSampler}s currently instantiated for this {@link Image} in a new {@link ArrayList}.
 	 * @return - {@link ArrayList} containing the {@link RasterSampler}s
 	 */
-	public ArrayList< RasterSampler< T > > getCursors(){ return new ArrayList< RasterSampler< T > >( cursors ); }	
+	public ArrayList< RasterSampler< T > > getRasterSamplers(){ return new ArrayList< RasterSampler< T > >( rasterSamplers ); }	
 	
 	/**
 	 * Adds a {@link RasterSampler} to the {@link ArrayList} of instantiated {@link RasterSampler}s.
 	 * @param c - new {@link RasterSampler}
 	 */
-	protected synchronized void addCursor( final RasterSampler<T> c ) { cursors.add( c );	}
+	protected synchronized void addRasterSampler( final RasterSampler<T> c ) { rasterSamplers.add( c );	}
 	
 	/**
 	 * Remove a {@link RasterSampler} from the {@link ArrayList} of instantiated {@link RasterSampler}s.
 	 * @param c - {@link RasterSampler} to be removed
 	 */
-	public synchronized void removeCursor( final RasterSampler<T> c )
+	public synchronized void removeRasterSampler( final RasterSampler<T> c )
 	{
-		cursors.remove( c );
+		rasterSamplers.remove( c );
 	}
 	
 	/**
 	 * Returns the number of {@link RasterSampler}s instantiated on this {@link Image}.
 	 * @return - the number of {@link RasterSampler}s
 	 */
-	public int getNumCursors() { return cursors.size(); }
+	public int numRasterSamplers() { return rasterSamplers.size(); }
 
 	@Override
-	public Iterator<T> iterator() { return this.createIterableCursor(); }
+	public Iterator<T> iterator() { return this.createRasterIterator(); }
 
 	public T[] toArray()
 	{
@@ -439,20 +458,20 @@ public class Image<T extends Type<T>> implements ImageProperties, Dimensions, It
 		
 		final T[] pixels = createType().createArray1D( (int)numPixels );
 		
-		final ArrayLocalizableCursor<FakeType> cursor1 = ArrayLocalizableCursor.createLinearCursor( getDimensions() );
-		final PositionableRasterSampler<T> cursor2 = this.createPositionableCursor();
+		final ArrayLocalizingRasterIterator<FakeType> iterator = ArrayLocalizingRasterIterator.createLinearCursor( getDimensions() );
+		final PositionableRasterSampler<T> positionable = this.createPositionableRasterSampler();
 		
 		int i = 0;
-		while ( cursor1.hasNext() )
+		while ( iterator.hasNext() )
 		{
-			cursor1.fwd();
-			cursor2.moveTo( cursor1 );
+			iterator.fwd();
+			positionable.moveTo( iterator );
 			
-			pixels[ i++ ] = cursor2.type().clone();			
+			pixels[ i++ ] = positionable.type().clone();			
 		}
 		
-		cursor1.close();
-		cursor2.close();
+		iterator.close();
+		positionable.close();
 		
 		return pixels;
 	}	

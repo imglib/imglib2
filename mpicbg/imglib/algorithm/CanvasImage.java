@@ -111,13 +111,13 @@ public class CanvasImage<T extends Type<T>> implements OutputAlgorithm<T>, Bench
 	{
 		final long startTime = System.currentTimeMillis();
 
-		final RasterIterator<T> outputCursor = output.createLocalizableCursor();
+		final RasterIterator<T> outputCursor = output.createLocalizingRasterIterator();
 		final PositionableRasterSampler<T> inputCursor;
 		
 		if ( outOfBoundsFactory == null)
-			inputCursor = input.createPositionableCursor( );
+			inputCursor = input.createPositionableRasterSampler( );
 		else
-			inputCursor = input.createPositionableCursor( outOfBoundsFactory );
+			inputCursor = input.createPositionableRasterSampler( outOfBoundsFactory );
 
 		while ( outputCursor.hasNext() )
 		{

@@ -63,7 +63,7 @@ public class OutOfBoundsStrategyPeriodic<T extends Type<T>> implements OutOfBoun
 	
 	public OutOfBoundsStrategyPeriodic( final PositionableRasterSampler< T > source )
 	{
-		this( source, source.getImage().createPositionableCursor() );
+		this( source, source.getImage().createPositionableRasterSampler() );
 	}
 	
 	OutOfBoundsStrategyPeriodic(

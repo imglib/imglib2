@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2009--2010, Stephan Preibisch & Stephan Saalfeld
+ * Copyright (c) 2010, Cardona, Preibisch & Saalfeld
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -24,23 +24,27 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- *
  */
-package mpicbg.imglib.sampler.dynamic;
+package mpicbg.imglib.sampler.shapelist;
 
-import mpicbg.imglib.container.dynamic.DynamicContainer;
+import mpicbg.imglib.container.shapelist.ShapeListCached;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
 import mpicbg.imglib.sampler.AbstractOutOfBoundsPositionableRasterSampler;
 import mpicbg.imglib.type.Type;
 
-public class DynamicPositionableOutOfBoundsCursor< T extends Type< T > >
-		extends AbstractOutOfBoundsPositionableRasterSampler< T >
+/**
+ * 
+ * @param <T>
+ *
+ * @author Cardona, Preibisch and Saalfeld
+ */
+public class ShapeListCachedOutOfBoundsPositionableRasterSampler< T extends Type< T > > extends AbstractOutOfBoundsPositionableRasterSampler< T >
 {
-	final protected DynamicContainer< T, ? > container;
+	final protected ShapeListCached< T > container;
 	
-	public DynamicPositionableOutOfBoundsCursor(
-			final DynamicContainer< T, ? > container,
+	public ShapeListCachedOutOfBoundsPositionableRasterSampler(
+			final ShapeListCached< T > container,
 			final Image< T > image,
 			final OutOfBoundsStrategyFactory< T > outOfBoundsStrategyFactory ) 
 	{
@@ -50,5 +54,5 @@ public class DynamicPositionableOutOfBoundsCursor< T extends Type< T > >
 	}
 
 	@Override
-	public DynamicContainer< T, ? > getContainer(){ return container; }
+	public ShapeListCached< T > getContainer(){ return container; }
 }

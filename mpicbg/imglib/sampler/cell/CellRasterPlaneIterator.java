@@ -24,8 +24,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- *
- * @author Stephan Preibisch & Stephan Saalfeld
  */
 package mpicbg.imglib.sampler.cell;
 
@@ -33,17 +31,23 @@ import mpicbg.imglib.container.array.Array;
 import mpicbg.imglib.container.cell.CellContainer;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.sampler.RasterPlaneIterator;
-import mpicbg.imglib.sampler.array.ArrayPositionableCursor;
+import mpicbg.imglib.sampler.array.ArrayPositionableRasterSampler;
 import mpicbg.imglib.type.Type;
 import mpicbg.imglib.type.label.FakeType;
 
-public class CellLocalizablePlaneCursor< T extends Type< T > > extends CellLocalizableCursor< T > implements RasterPlaneIterator< T >
+/**
+ * 
+ * @param <T>
+ *
+ * @author Stephan Preibisch and Stephan Saalfeld
+ */
+public class CellRasterPlaneIterator< T extends Type< T > > extends CellLocalizingRasterIterator< T > implements RasterPlaneIterator< T >
 {
 	/**
 	 * Here we "misuse" a ArrayLocalizableCursor to iterate over cells,
 	 * it always gives us the location of the current cell we are instantiating 
 	 */
-	final ArrayPositionableCursor<FakeType> cursor;
+	final ArrayPositionableRasterSampler<FakeType> cursor;
 
 	/*
 	protected final CellContainer<?,?> img;
@@ -67,7 +71,7 @@ public class CellLocalizablePlaneCursor< T extends Type< T > > extends CellLocal
 	protected int planeDimA, planeDimB, planeSizeA, planeSizeB, incPlaneA, incPlaneB;
 	final protected int[] step, cellPosition, tmp, cellEnd, numCellsDim, cellStep;
 	
-	public CellLocalizablePlaneCursor( final CellContainer< T, ? > container, final Image< T > image )
+	public CellRasterPlaneIterator( final CellContainer< T, ? > container, final Image< T > image )
 	{
 		super( container, image );
 		
@@ -79,7 +83,7 @@ public class CellLocalizablePlaneCursor< T extends Type< T > > extends CellLocal
 		numCellsDim = container.getNumCellsDim();
 		cellStep = new int[ numDimensions ];
 		
-		cursor = ArrayPositionableCursor.createLinearByDimCursor( numCellsDim ); 
+		cursor = ArrayPositionableRasterSampler.createLinearByDimCursor( numCellsDim ); 
 		cursor.setPosition( new int[ container.numDimensions() ] );
 		
 		// the steps when moving from cell to cell

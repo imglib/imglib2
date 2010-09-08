@@ -24,24 +24,27 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- *
- * @author Stephan Preibisch & Stephan Saalfeld
  */
-package mpicbg.imglib.sampler.shapelist;
+package mpicbg.imglib.sampler.dynamic;
 
-import mpicbg.imglib.container.shapelist.ShapeListCached;
+import mpicbg.imglib.container.dynamic.DynamicContainer;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
 import mpicbg.imglib.sampler.AbstractOutOfBoundsPositionableRasterSampler;
 import mpicbg.imglib.type.Type;
 
-public class ShapeListCachedPositionableOutOfBoundsCursor< T extends Type< T > >
-		extends AbstractOutOfBoundsPositionableRasterSampler< T >
+/**
+ * 
+ * @param <T>
+ *
+ * @author Stephan Preibisch and Stephan Saalfeld
+ */
+public class DynamicOutOfBoundsPositionableRasterSampler< T extends Type< T > > extends AbstractOutOfBoundsPositionableRasterSampler< T >
 {
-	final protected ShapeListCached< T > container;
+	final protected DynamicContainer< T, ? > container;
 	
-	public ShapeListCachedPositionableOutOfBoundsCursor(
-			final ShapeListCached< T > container,
+	public DynamicOutOfBoundsPositionableRasterSampler(
+			final DynamicContainer< T, ? > container,
 			final Image< T > image,
 			final OutOfBoundsStrategyFactory< T > outOfBoundsStrategyFactory ) 
 	{
@@ -51,5 +54,5 @@ public class ShapeListCachedPositionableOutOfBoundsCursor< T extends Type< T > >
 	}
 
 	@Override
-	public ShapeListCached< T > getContainer(){ return container; }
+	public DynamicContainer< T, ? > getContainer(){ return container; }
 }

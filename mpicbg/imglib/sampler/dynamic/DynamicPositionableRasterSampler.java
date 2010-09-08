@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2009--2010, Stephan Preibisch
+ * Copyright (c) 2009--2010, Stephan Preibisch & Stephan Saalfeld
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -24,8 +24,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- *
- * @author Stephan Preibisch
  */
 package mpicbg.imglib.sampler.dynamic;
 
@@ -39,9 +37,13 @@ import mpicbg.imglib.location.VoidPositionable;
 import mpicbg.imglib.sampler.AbstractBasicPositionableRasterSampler;
 import mpicbg.imglib.type.Type;
 
-public class DynamicPositionableCursor< T extends Type< T > >
-		extends AbstractBasicPositionableRasterSampler< T >
-		implements DynamicStorageAccess
+/**
+ * 
+ * @param <T>
+ *
+ * @author Stephan Preibisch and Stephan Saalfeld
+ */
+public class DynamicPositionableRasterSampler< T extends Type< T > > extends AbstractBasicPositionableRasterSampler< T > implements DynamicStorageAccess
 {
 	/* the type instance accessing the pixel value the cursor points at */
 	protected final T type;
@@ -58,7 +60,7 @@ public class DynamicPositionableCursor< T extends Type< T > >
 	
 	protected int numNeighborhoodCursors = 0;
 	
-	public DynamicPositionableCursor(
+	public DynamicPositionableRasterSampler(
 			final DynamicContainer< T, ? > container,
 			final Image< T > image ) 
 	{

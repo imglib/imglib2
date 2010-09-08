@@ -42,9 +42,8 @@ import mpicbg.imglib.type.Type;
  * @param <T>
  *
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
- * @version 0.1a
  */
-public class ShapeListPositionableCursor< T extends Type< T > > extends AbstractBasicRasterIterator< T > implements PositionableRasterSampler< T >, RasterIterator< T >
+public class ShapeListPositionableRasterSampler< T extends Type< T > > extends AbstractBasicRasterIterator< T > implements PositionableRasterSampler< T >, RasterIterator< T >
 {
 	final protected ShapeList< T > container;
 	
@@ -53,7 +52,7 @@ public class ShapeListPositionableCursor< T extends Type< T > > extends Abstract
 	
 	protected RasterPositionable linkedRasterPositionable = VoidPositionable.getInstance();
 	
-	public ShapeListPositionableCursor(
+	public ShapeListPositionableRasterSampler(
 			final ShapeList< T > container,
 			final Image< T > image ) 
 	{

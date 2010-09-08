@@ -42,7 +42,7 @@ public class TestBase {
 	 * Check whether an image is identical to a generated image
 	 */
 	protected<T extends RealType<T>> boolean match( Image<T> image, Function function ) {
-		RasterIterator<T> cursor = image.createLocalizableCursor();
+		RasterIterator<T> cursor = image.createLocalizingRasterIterator();
 		int[] pos = new int[cursor.numDimensions()];
 		while( cursor.hasNext() ) {
 			cursor.fwd();
@@ -58,7 +58,7 @@ public class TestBase {
 	 * Check whether an image is identical to a generated image, with fuzz
 	 */
 	protected<T extends RealType<T>> boolean match( Image<T> image, Function function, float tolerance ) {
-		RasterIterator<T> cursor = image.createLocalizableCursor();
+		RasterIterator<T> cursor = image.createLocalizingRasterIterator();
 		int[] pos = new int[cursor.numDimensions()];
 		while( cursor.hasNext() ) {
 			cursor.fwd();
@@ -88,7 +88,7 @@ public class TestBase {
 	 */
 	protected<T extends RealType<T>> void signature( Image<T> image, float[] result ) {
 		Arrays.fill( result, 0 );
-		RasterIterator<T> cursor = image.createLocalizableCursor();
+		RasterIterator<T> cursor = image.createLocalizingRasterIterator();
 		int dim = cursor.numDimensions();
 		int[] pos = new int[dim];
 		while( cursor.hasNext() ) {
@@ -145,7 +145,7 @@ public class TestBase {
 	 * Convenience helper to access single pixels
 	 */
 	protected<T extends RealType<T>> float get( Image<T> image, int[] pos ) {
-		PositionableRasterSampler<T> cursor = image.createPositionableCursor();
+		PositionableRasterSampler<T> cursor = image.createPositionableRasterSampler();
 		cursor.setPosition( pos );
 		float result = cursor.type().getRealFloat();
 		cursor.close();
@@ -165,7 +165,7 @@ public class TestBase {
 	protected<T extends RealType<T>> Image<T> makeImage( T type, Function function, int[] dims ) {
 		ImageFactory<T> factory = new ImageFactory<T>(type, new ArrayContainerFactory());
 		Image<T> result = factory.createImage( dims );
-		RasterIterator<T> cursor = result.createLocalizableCursor();
+		RasterIterator<T> cursor = result.createLocalizingRasterIterator();
 		int[] pos = new int[cursor.numDimensions()];
 		while( cursor.hasNext() ) {
 			cursor.fwd();

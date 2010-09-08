@@ -131,7 +131,7 @@ public class LinearInterpolator< T extends NumericType< T > > extends AbstractIn
 		//
 		// yiels the interpolated value in 3 dimensions
 		
-		cursor = img.createPositionableCursor( outOfBoundsStrategyFactory );
+		cursor = img.createPositionableRasterSampler( outOfBoundsStrategyFactory );
 		linkedRasterPositionable = linkedPositionable = floorLink = new LocalizableFloorRasterPositionable( this, cursor );
 		
 		tmp1 = img.createType();

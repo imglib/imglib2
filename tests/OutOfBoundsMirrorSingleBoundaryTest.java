@@ -128,7 +128,7 @@ public class OutOfBoundsMirrorSingleBoundaryTest
 			t.set( i++ );
 
 		final int[] position = new int[ dim.length ];
-		for ( final RasterIterator< IntType > c = cellImage.createLocalizableCursor(); c.hasNext(); )
+		for ( final RasterIterator< IntType > c = cellImage.createLocalizingRasterIterator(); c.hasNext(); )
 		{
 			c.fwd();
 			c.localize( position );
@@ -151,10 +151,10 @@ public class OutOfBoundsMirrorSingleBoundaryTest
 				for ( int x = 0; x < dim[ 0 ]; ++x )
 					shapeList.addShape( new Rectangle( x, y, 1, 1 ), new IntType( i++ ), new int[]{ z } );
 		
-		cArray = arrayImage.createPositionableCursor( new OutOfBoundsMirrorFactory< IntType >( true ) );
-		cCell = cellImage.createPositionableCursor( new OutOfBoundsMirrorFactory< IntType >( true ) );
-		cDynamic = dynamicImage.createPositionableCursor( new OutOfBoundsMirrorFactory< IntType >( true ) );
-		cShapeList = shapeListImage.createPositionableCursor( new OutOfBoundsMirrorFactory< IntType >( true ) );
+		cArray = arrayImage.createPositionableRasterSampler( new OutOfBoundsMirrorFactory< IntType >( true ) );
+		cCell = cellImage.createPositionableRasterSampler( new OutOfBoundsMirrorFactory< IntType >( true ) );
+		cDynamic = dynamicImage.createPositionableRasterSampler( new OutOfBoundsMirrorFactory< IntType >( true ) );
+		cShapeList = shapeListImage.createPositionableRasterSampler( new OutOfBoundsMirrorFactory< IntType >( true ) );
 	}
 
 	/**

@@ -29,7 +29,7 @@ implements Algorithm, Benchmark
 		{
 			if (voteCursor == null)
 			{
-				voteCursor = voteSpace.createPositionableCursor();
+				voteCursor = voteSpace.createPositionableRasterSampler();
 			}
 			voteCursor.setPosition(loc);
 			

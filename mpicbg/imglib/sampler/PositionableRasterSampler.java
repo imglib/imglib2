@@ -32,6 +32,12 @@ import mpicbg.imglib.location.RasterLocalizable;
 import mpicbg.imglib.type.Type;
 
 /**
+ * This interface is for convenience only, it combines a set of interfaces and
+ * might be used for type definition in your implementation.  Instead of this
+ * interface, you can use a generic type that includes only the interfaces you
+ * need, e.g.
+ * 
+ * < T extends RasterSampler< ? >, RasterPositionable > 
  * 
  * @param <T>
  *

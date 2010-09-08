@@ -344,7 +344,7 @@ public class Affine3DImageTransform<T extends Type<T>> implements OutputAlgorith
 		{	
 			final Point3f loc = new Point3f(0,0,0);
 			
-			final RasterIterator<T> transformedIterator = transformed.createLocalizableCursor();
+			final RasterIterator<T> transformedIterator = transformed.createLocalizingRasterIterator();
 			final Interpolator<T> interpolator = img.createInterpolator( interpolatorFactory );
 	
 			//final T transformedValue = transformedIterator.getType();		

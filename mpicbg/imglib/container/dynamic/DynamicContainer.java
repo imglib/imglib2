@@ -33,11 +33,11 @@ import mpicbg.imglib.image.Image;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
 import mpicbg.imglib.sampler.RasterPlaneIterator;
 import mpicbg.imglib.sampler.PositionableRasterSampler;
-import mpicbg.imglib.sampler.dynamic.DynamicIterableCursor;
-import mpicbg.imglib.sampler.dynamic.DynamicLocalizableCursor;
-import mpicbg.imglib.sampler.dynamic.DynamicLocalizablePlaneCursor;
-import mpicbg.imglib.sampler.dynamic.DynamicPositionableCursor;
-import mpicbg.imglib.sampler.dynamic.DynamicPositionableOutOfBoundsCursor;
+import mpicbg.imglib.sampler.dynamic.DynamicBasicRasterIterator;
+import mpicbg.imglib.sampler.dynamic.DynamicLocalizingRasterIterator;
+import mpicbg.imglib.sampler.dynamic.DynamicRasterPlaneIterator;
+import mpicbg.imglib.sampler.dynamic.DynamicPositionableRasterSampler;
+import mpicbg.imglib.sampler.dynamic.DynamicOutOfBoundsPositionableRasterSampler;
 import mpicbg.imglib.type.Type;
 
 /**
@@ -103,33 +103,33 @@ public abstract class DynamicContainer< T extends Type< T >, A extends DynamicCo
 	}
 
 	@Override
-	public DynamicIterableCursor< T > createIterableCursor( final Image< T > image )
+	public DynamicBasicRasterIterator< T > createRasterIterator( final Image< T > image )
 	{
-		return new DynamicIterableCursor< T >( this, image );
+		return new DynamicBasicRasterIterator< T >( this, image );
 	}
 
 	@Override
-	public PositionableRasterSampler< T > createPositionableCursor( final Image< T > image )
+	public PositionableRasterSampler< T > createPositionableRasterSampler( final Image< T > image )
 	{
-		return new DynamicPositionableCursor< T >( this, image );
+		return new DynamicPositionableRasterSampler< T >( this, image );
 	}
 
 	@Override
-	public DynamicPositionableOutOfBoundsCursor< T > createPositionableCursor( final Image< T > image, final OutOfBoundsStrategyFactory< T > outOfBoundsFactory )
+	public DynamicOutOfBoundsPositionableRasterSampler< T > createPositionableRasterSampler( final Image< T > image, final OutOfBoundsStrategyFactory< T > outOfBoundsFactory )
 	{
-		return new DynamicPositionableOutOfBoundsCursor< T >( this, image, outOfBoundsFactory );
+		return new DynamicOutOfBoundsPositionableRasterSampler< T >( this, image, outOfBoundsFactory );
 	}
 
 	@Override
-	public DynamicLocalizableCursor< T > createLocalizableCursor( final Image< T > image )
+	public DynamicLocalizingRasterIterator< T > createLocalizingRasterIterator( final Image< T > image )
 	{
-		return new DynamicLocalizableCursor< T >( this, image );
+		return new DynamicLocalizingRasterIterator< T >( this, image );
 	}
 
 	@Override
-	public RasterPlaneIterator< T > createLocalizablePlaneCursor( final Image< T > image )
+	public RasterPlaneIterator< T > createRasterPlaneIterator( final Image< T > image )
 	{
-		return new DynamicLocalizablePlaneCursor< T >( this, image );
+		return new DynamicRasterPlaneIterator< T >( this, image );
 	}
 
 	final public void indexToPosition( int i, final int[] l )

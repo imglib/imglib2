@@ -214,8 +214,8 @@ public class ImagePlusAdapter
 		ImageFactory<FloatType> factory = new ImageFactory<FloatType>( new FloatType(), new ImagePlusContainerFactory() );
 		Image<FloatType> output = factory.createImage( input.getDimensions(), input.getName() );
 	
-		RasterIterator<T> in = input.createIterableCursor();
-		RasterIterator<FloatType> out = output.createIterableCursor();
+		RasterIterator<T> in = input.createRasterIterator();
+		RasterIterator<FloatType> out = output.createRasterIterator();
 		
 		TypeConverter tc = TypeConverter.getTypeConverter( in.type(), out.type() );
 		

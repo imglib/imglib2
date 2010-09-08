@@ -24,23 +24,27 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- *
- * @author Stephan Preibisch & Stephan Saalfeld
  */
 package mpicbg.imglib.sampler.special;
 
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.location.RasterLocalizable;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
-import mpicbg.imglib.sampler.LocalizableRasterSampler;
+import mpicbg.imglib.sampler.RasterSampler;
 import mpicbg.imglib.type.Type;
 
+/**
+ * 
+ * 
+ *
+ * @author Stephan Preibisch and Stephan Saalfeld
+ */
 public class LocalNeighborhoodCursorFactory 
 {
 	public static < T extends Type< T > > LocalNeighborhoodCursor<T> createLocalNeighborhoodCursor(
 			final RasterLocalizable localizable,
 			final Image< T > image,
-			final OutOfBoundsStrategyFactory<T> outsideFactory )
+			final OutOfBoundsStrategyFactory< T > outsideFactory )
 	{
 		if ( image.numDimensions() == 3 )
 		{
@@ -57,12 +61,12 @@ public class LocalNeighborhoodCursorFactory
 		return createLocalNeighborhoodCursor( localizable, image, null ); 
 	}
 	
-	public static < T extends Type< T > >LocalNeighborhoodCursor<T> createLocalNeighborhoodCursor( final LocalizableRasterSampler< T > cursor, final OutOfBoundsStrategyFactory<T> outsideFactory )
+	public static < T extends Type< T >, S extends RasterLocalizable & RasterSampler< T > >LocalNeighborhoodCursor< T > createLocalNeighborhoodCursor( final S cursor, final OutOfBoundsStrategyFactory< T > outsideFactory )
 	{
 		return createLocalNeighborhoodCursor( cursor, cursor.getImage(), outsideFactory ); 
 	}
 	
-	public static < T extends Type< T > >LocalNeighborhoodCursor<T> createLocalNeighborhoodCursor( final LocalizableRasterSampler< T > cursor )
+	public static < T extends Type< T >, S extends RasterLocalizable & RasterSampler< T > >LocalNeighborhoodCursor< T > createLocalNeighborhoodCursor( final S cursor )
 	{
 		return createLocalNeighborhoodCursor( cursor, cursor.getImage(), null ); 
 	}

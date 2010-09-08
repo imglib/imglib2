@@ -35,7 +35,7 @@ import mpicbg.imglib.location.RasterLocalizable;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
 import mpicbg.imglib.sampler.AbstractBasicRasterIterator;
 import mpicbg.imglib.sampler.PositionableRasterSampler;
-import mpicbg.imglib.sampler.array.ArrayLocalizableCursor;
+import mpicbg.imglib.sampler.array.ArrayLocalizingRasterIterator;
 import mpicbg.imglib.type.Type;
 import mpicbg.imglib.type.label.FakeType;
 
@@ -45,7 +45,7 @@ public class LocalNeighborhoodCursor<T extends Type<T>> extends AbstractBasicRas
 	 * Here we "misuse" a ArrayLocalizableCursor to iterate over cells,
 	 * it always gives us the location of the current cell we are instantiating 
 	 */
-	final ArrayLocalizableCursor<FakeType> neigborhoodCursor;
+	final ArrayLocalizingRasterIterator<FakeType> neigborhoodCursor;
 
 	final RasterLocalizable localizable;
 	final PositionableRasterSampler< T > cursor;
@@ -60,9 +60,9 @@ public class LocalNeighborhoodCursor<T extends Type<T>> extends AbstractBasicRas
 		this.localizable = localizable;
 		
 		if ( outofboundsFactory == null )
-			cursor = image.createPositionableCursor();
+			cursor = image.createPositionableRasterSampler();
 		else
-			cursor = image.createPositionableCursor( outofboundsFactory );
+			cursor = image.createPositionableRasterSampler( outofboundsFactory );
 		
 		tmp = new int[ numDimensions ];
 				
@@ -70,7 +70,7 @@ public class LocalNeighborhoodCursor<T extends Type<T>> extends AbstractBasicRas
 		for ( int d = 0; d < numDimensions; ++d )
 			dim[ d ] = 3;
 
-		neigborhoodCursor = ArrayLocalizableCursor.createLinearCursor( dim );
+		neigborhoodCursor = ArrayLocalizingRasterIterator.createLinearCursor( dim );
 
 		for ( int d = 0; d < numDimensions; ++d )
 			dim[ d ] = 1;

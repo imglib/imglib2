@@ -73,7 +73,7 @@ public class RGBALegacyTypeDisplay extends Display<RGBALegacyType>
 	@Override
 	public void setMinMax()
 	{
-		final RasterIterator<RGBALegacyType> c = img.createIterableCursor();
+		final RasterIterator<RGBALegacyType> c = img.createRasterIterator();
 		final RGBALegacyType t = c.type();
 		
 		if ( !c.hasNext() )

@@ -24,70 +24,76 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- *
- * @author Stephan Preibisch & Stephan Saalfeld
  */
-package mpicbg.imglib.sampler.imageplus;
+package mpicbg.imglib.sampler.array;
 
-import mpicbg.imglib.container.imageplus.ImagePlusContainer;
+import mpicbg.imglib.container.array.Array;
+import mpicbg.imglib.container.basictypecontainer.FakeAccess;
+import mpicbg.imglib.container.basictypecontainer.array.FakeArray;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.sampler.AbstractLocalizingRasterIterator;
 import mpicbg.imglib.type.Type;
+import mpicbg.imglib.type.label.FakeType;
 
-public class ImagePlusLocalizableCursor< T extends Type< T > >
-		extends AbstractLocalizingRasterIterator< T >
-		implements ImagePlusStorageAccess
+/**
+ * 
+ * @param <T>
+ *
+ * @author Stephan Preibisch and Stephan Saalfeld
+ */
+public class ArrayLocalizingRasterIterator< T extends Type< T >> extends AbstractLocalizingRasterIterator< T >
 {
-	/* the type instance accessing the pixel value the cursor points at */
 	protected final T type;
-	
-	/* a stronger typed pointer to Container< T > */
-	protected final ImagePlusContainer< T, ? > container;
-	
-	protected final int slicePixelCountMinus1, maxSliceMinus1;
-	
-	protected int slice; // TODO: support hyperstacks	
 
-	public ImagePlusLocalizableCursor(
-			final ImagePlusContainer< T, ? > container,
-			final Image< T > image ) 
+	protected final Array< T, ? > container;
+
+	protected final int sizeMinus1;
+
+	public ArrayLocalizingRasterIterator( final Array< T, ? > container, final Image< T > image )
 	{
 		super( container, image );
 
-		this.type = container.createLinkedType();
 		this.container = container;
-		slicePixelCountMinus1 = container.getDimension( 0 ) * container.getDimension( 1 ) - 1; 
-		maxSliceMinus1 = container.getDimension( 2 ) - 1;
-		
+		this.type = container.createLinkedType();
+		this.sizeMinus1 = ( int )container.numPixels() - 1;
+
 		reset();
-	}	
-	
+	}
+
+	public static ArrayLocalizingRasterIterator< FakeType > createLinearCursor( final int[] dim )
+	{
+		final Array< FakeType, FakeAccess > array = new Array< FakeType, FakeAccess >( null, new FakeArray(), dim, 1 );
+		array.setLinkedType( new FakeType() );
+		return new ArrayLocalizingRasterIterator< FakeType >( array, null );
+	}
+
+	@Override
+	public T type(){ return type; }
+
+	@Override
+	public boolean hasNext(){ return type.getIndex() < sizeMinus1; }
+
 	@Override
 	public void fwd()
-	{ 
+	{
 		type.incIndex();
-		
-		if ( type.getIndex() > slicePixelCountMinus1 ) 
+
+		for ( int d = 0; d < numDimensions; ++d )
 		{
-			++slice;
-			type.updateIndex( 0 );
-			type.updateContainer( this );
+			if ( ++position[ d ] >= dimensions[ d ] ) position[ d ] = 0;
+			else break;
 		}
-		
-		for ( int d = 0; d < numDimensions; d++ )
-		{
-			if ( position[ d ] < dimensions[ d ] - 1 )
-			{
-				position[ d ]++;
-				
-				for ( int e = 0; e < d; e++ )
-					position[ e ] = 0;
-				
-				break;
-			}
-		}
-		
+
 		linkedIterator.fwd();
+	}
+
+	@Override
+	public void jumpFwd( final long steps )
+	{
+		type.incIndex( ( int ) steps );
+		container.indexToPosition( type.getIndex(), position );
+
+		linkedIterator.jumpFwd( steps );
 	}
 
 	@Override
@@ -96,35 +102,18 @@ public class ImagePlusLocalizableCursor< T extends Type< T > >
 		if ( dimensions != null )
 		{
 			type.updateIndex( -1 );
-			
+
 			position[ 0 ] = -1;
-			
+
 			for ( int d = 1; d < numDimensions; d++ )
 				position[ d ] = 0;
-			
-			slice = 0;
-			
+
 			type.updateContainer( this );
 		}
-		
+
 		linkedIterator.reset();
 	}
 
 	@Override
-	public int getStorageIndex(){ return slice; }
-
-	@Override
-	public ImagePlusContainer< T, ? > getContainer(){ return container; }
-
-	@Override
-	public T type(){ return type; }
-
-	@Override
-	public boolean hasNext()
-	{
-		if ( type.getIndex() < slicePixelCountMinus1 || slice < maxSliceMinus1 )
-			return true;
-		else
-			return false;
-	}
+	public Array< T, ? > getContainer(){ return container; }
 }

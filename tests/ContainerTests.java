@@ -138,7 +138,7 @@ public class ContainerTests
 		final float[] reference = new float[ (int)img.numPixels() ];
 		
 		// iterate over image and reference array and fill with data
-		final RasterIterator<FloatType> cursor = img.createIterableCursor();			
+		final RasterIterator<FloatType> cursor = img.createRasterIterator();			
 		int i = 0;
 		
 		while( cursor.hasNext() )
@@ -159,7 +159,7 @@ public class ContainerTests
 	{
 		boolean allEqual = true;
 		
-		final RasterIterator<FloatType> cursor = img.createIterableCursor();
+		final RasterIterator<FloatType> cursor = img.createRasterIterator();
 		int i = 0;
 		
 		while( cursor.hasNext() )
@@ -187,8 +187,8 @@ public class ContainerTests
 		final float[] reference = createReference( img1 );
 		
 		// copy into a second image using simple cursors
-		final RasterIterator<FloatType> cursor1 = img1.createIterableCursor();
-		final RasterIterator<FloatType> cursor2 = img2.createIterableCursor();			
+		final RasterIterator<FloatType> cursor1 = img1.createRasterIterator();
+		final RasterIterator<FloatType> cursor2 = img2.createRasterIterator();			
 		
 		while( cursor1.hasNext() )
 		{
@@ -214,8 +214,8 @@ public class ContainerTests
 		cursor2.close();
 
 		// copy back into a second image using localizable and positionable cursors			
-		final RasterIterator<FloatType> localizableCursor1 = img1.createLocalizableCursor();			
-		final PositionableRasterSampler<FloatType> positionableCursor2 = img2.createPositionableCursor();			
+		final RasterIterator<FloatType> localizableCursor1 = img1.createLocalizingRasterIterator();			
+		final PositionableRasterSampler<FloatType> positionableCursor2 = img2.createPositionableRasterSampler();			
 		
 		int i = 0;
 		
@@ -235,7 +235,7 @@ public class ContainerTests
 		positionableCursor2.close();
 		
 		// copy again to the first image using a PositionableOutsideCursor and a PositionableCursor
-		final PositionableRasterSampler<FloatType> outsideCursor2 = img2.createPositionableCursor( new OutOfBoundsStrategyPeriodicFactory<FloatType>() );
+		final PositionableRasterSampler<FloatType> outsideCursor2 = img2.createPositionableRasterSampler( new OutOfBoundsStrategyPeriodicFactory<FloatType>() );
 		localizableCursor1.reset();
 		
 		final int[] pos = new int[ numDimensions ];			

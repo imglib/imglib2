@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2009--2010, Stephan Preibisch
+ * Copyright (c) 2009--2010, Stephan Preibisch & Stephan Saalfeld
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -24,111 +24,138 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- *
- * @author Stephan Preibisch
  */
-package mpicbg.imglib.sampler.dynamic;
+package mpicbg.imglib.sampler.imageplus;
 
-import mpicbg.imglib.container.basictypecontainer.DataAccess;
-import mpicbg.imglib.container.dynamic.DynamicContainer;
-import mpicbg.imglib.container.dynamic.DynamicContainerAccessor;
+import mpicbg.imglib.container.imageplus.ImagePlusContainer;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.sampler.AbstractBasicRasterIterator;
 import mpicbg.imglib.type.Type;
 
-public class DynamicIterableCursor< T extends Type< T > >
-		extends AbstractBasicRasterIterator< T >
-		implements DynamicStorageAccess
+/**
+ * 
+ * @param <T>
+ *
+ * @author Stephan Preibisch and Stephan Saalfeld
+ */
+public class ImagePlusBasicRasterIterator< T extends Type< T > > extends AbstractBasicRasterIterator< T > implements ImagePlusStorageAccess
 {
 	/* the type instance accessing the pixel value the cursor points at */
 	protected final T type;
 	
 	/* a stronger typed pointer to Container< T > */
-	protected final DynamicContainer< T, ? extends DataAccess > container;
+	protected final ImagePlusContainer< T, ? > container;
 	
-	/* access proxy */
-	protected final DynamicContainerAccessor accessor;
+	protected final int slicePixelCountMinus1, maxSliceMinus1;
+	
+	protected int slice; // TODO: support hyperstacks	
 
-	protected int internalIndex;
-	
-	public DynamicIterableCursor(
-			final DynamicContainer< T, ? extends DynamicContainerAccessor > container,
+	public ImagePlusBasicRasterIterator(
+			final ImagePlusContainer< T, ? > container,
 			final Image< T > image )
 	{
 		super( container, image );
-		
+
 		this.type = container.createLinkedType();
 		this.container = container;
-	
-		accessor = container.createAccessor();
+		slicePixelCountMinus1 = container.getDimension( 0 ) * container.getDimension( 1 ) - 1; 
+		maxSliceMinus1 = container.getDimension( 2 ) - 1;
 		
 		reset();
 	}
-	
-	@Override
-	public DynamicContainerAccessor getAccessor() { return accessor; }
 
 	@Override
-	public T type() { return type; }
+	public T type(){ return type; }
 
 	@Override
-	public boolean hasNext() { return internalIndex < container.numPixels() - 1; }
-
-	@Override
-	public void jumpFwd( final long steps ) 
-	{ 
-		internalIndex += steps;
-		accessor.updateIndex( internalIndex );
-		
-		linkedIterator.jumpFwd( steps );
+	public boolean hasNext()
+	{
+		if ( type.getIndex() < slicePixelCountMinus1 || slice < maxSliceMinus1 )
+			return true;
+		else
+			return false;
 	}
 
 	@Override
 	public void fwd() 
-	{ 
-		++internalIndex; 
-		accessor.updateIndex( internalIndex );
+	{
+		type.incIndex();
+		
+		if ( type.getIndex() > slicePixelCountMinus1 ) 
+		{
+			slice++;
+			type.updateIndex( 0 );
+			type.updateContainer( this );
+		}
 		
 		linkedIterator.fwd();
 	}
 
 	@Override
-	public void close() 
-	{ 
-		internalIndex = Integer.MAX_VALUE;
-		super.close();
+	public void close()
+	{
+		type.updateIndex( slicePixelCountMinus1 + 1 );
+		slice = maxSliceMinus1 + 1;
+		super.close();		
 	}
 
 	@Override
 	public void reset()
-	{		
-		type.updateIndex( 0 );
-		internalIndex = 0;
+	{
+		slice = 0;
+		type.updateIndex( -1 );
 		type.updateContainer( this );
-		accessor.updateIndex( internalIndex );
-		internalIndex = -1;
 		
 		linkedIterator.reset();
 	}
-	
-	@Override
-	public int getInternalIndex() { return internalIndex; }
 
 	@Override
-	public DynamicContainer<T,?> getContainer(){ return container; }
-	
+	public ImagePlusContainer< T, ? > getContainer(){ return container; }
+
 	@Override
-	public String toString() { return type.toString(); }
+	public int getStorageIndex(){ return slice; }
+
+	@Override
+	public String toString(){ return type.toString(); }
+
+	@Override
+	public int getIntPosition( final int dim )
+	{
+		switch ( dim )
+		{
+		case 0:
+			return type.getIndex() % container.getWidth();
+		case 1:
+			return type.getIndex() / container.getWidth();
+		case 2:
+			return slice;
+		default:
+			return 0;
+		}
+	}
 	
 	@Override
 	public long getLongPosition( final int dim )
 	{
-		return container.indexToPosition( type.getIndex(), dim );
+		return getIntPosition( dim );
 	}
 
 	@Override
-	public void localize( final long[] position )
+	public void localize( final int[] position )
 	{
-		container.indexToPosition( type.getIndex(), position );
+		final int i = type.getIndex();
+		position[ 0 ] = i % container.getWidth();
+		position[ 1 ] = i / container.getWidth();
+		position[ 2 ] = slice;
 	}
+	
+	@Override
+	public void localize( long[] position )
+	{
+		final int i = type.getIndex();
+		position[ 0 ] = i % container.getWidth();
+		position[ 1 ] = i / container.getWidth();
+		position[ 2 ] = slice;
+	}
+	
 }

@@ -24,8 +24,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- *
- * @author Stephan Preibisch & Stephan Saalfeld
  */
 package mpicbg.imglib.sampler.array;
 
@@ -37,13 +35,19 @@ import mpicbg.imglib.sampler.AbstractBasicPositionableRasterSampler;
 import mpicbg.imglib.type.Type;
 import mpicbg.imglib.type.label.FakeType;
 
-public class ArrayPositionableCursor< T extends Type< T > > extends AbstractBasicPositionableRasterSampler< T >
+/**
+ * 
+ * @param <T>
+ *
+ * @author Stephan Preibisch and Stephan Saalfeld
+ */
+public class ArrayPositionableRasterSampler< T extends Type< T > > extends AbstractBasicPositionableRasterSampler< T >
 {
 	final protected T type;
 	final protected int[] step;
 	final Array< T, ? > container;
 	
-	public ArrayPositionableCursor( final Array< T, ? > container, final Image< T > image ) 
+	public ArrayPositionableRasterSampler( final Array< T, ? > container, final Image< T > image ) 
 	{
 		super( container, image );
 		
@@ -58,11 +62,11 @@ public class ArrayPositionableCursor< T extends Type< T > > extends AbstractBasi
 		type.updateContainer( this );
 	}	
 	
-	public static ArrayPositionableCursor<FakeType> createLinearByDimCursor( final int[] dim )
+	public static ArrayPositionableRasterSampler<FakeType> createLinearByDimCursor( final int[] dim )
 	{
 		final Array<FakeType, FakeAccess> array = new Array<FakeType, FakeAccess>( null, new FakeArray(), dim, 1 );
 		array.setLinkedType( new FakeType() );
-		return new ArrayPositionableCursor<FakeType>( array, null );
+		return new ArrayPositionableRasterSampler<FakeType>( array, null );
 	}
 
 	@Override

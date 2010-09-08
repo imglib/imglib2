@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2010, Stephan Saalfeld
+ * Copyright (c) 2009--2010, Stephan Preibisch & Stephan Saalfeld
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -25,27 +25,34 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-package mpicbg.imglib.sampler.shapelist;
+package mpicbg.imglib.sampler.imageplus;
 
-import mpicbg.imglib.container.shapelist.ShapeListCached;
+import mpicbg.imglib.container.imageplus.ImagePlusContainer;
 import mpicbg.imglib.image.Image;
+import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
+import mpicbg.imglib.sampler.AbstractOutOfBoundsPositionableRasterSampler;
 import mpicbg.imglib.type.Type;
 
-public class ShapeListCachedPositionableCursor< T extends Type< T > > extends ShapeListPositionableCursor< T >
+/**
+ * 
+ * @param <T>
+ *
+ * @author Stephan Preibisch and Stephan Saalfeld
+ */
+public class ImagePlusOutOfBoundsPositionableRasterSampler< T extends Type< T > > extends AbstractOutOfBoundsPositionableRasterSampler< T >
 {
-	final ShapeListCache<T> cache;
+	final protected ImagePlusContainer< T, ? > container;
 	
-	public ShapeListCachedPositionableCursor(
-			final ShapeListCached< T > container,
-			final Image< T > image ) 
+	public ImagePlusOutOfBoundsPositionableRasterSampler(
+			final ImagePlusContainer< T, ? > container,
+			final Image< T > image,
+			final OutOfBoundsStrategyFactory< T > outOfBoundsStrategyFactory ) 
 	{
-		super( container, image );
-		this.cache = container.getShapeListCachingStrategy().createInstance();
+		super( container, image, outOfBoundsStrategyFactory );
+		
+		this.container = container;
 	}
-	
+
 	@Override
-	public T type()
-	{
-		return cache.lookUp( position );
-	}
+	public ImagePlusContainer< T, ? > getContainer(){ return container; }
 }

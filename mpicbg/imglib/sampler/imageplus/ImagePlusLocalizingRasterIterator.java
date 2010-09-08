@@ -24,20 +24,22 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- *
- * @author Stephan Preibisch & Stephan Saalfeld
  */
 package mpicbg.imglib.sampler.imageplus;
 
-import mpicbg.imglib.container.array.Array;
 import mpicbg.imglib.container.imageplus.ImagePlusContainer;
 import mpicbg.imglib.image.Image;
-import mpicbg.imglib.sampler.AbstractBasicPositionableRasterSampler;
+import mpicbg.imglib.sampler.AbstractLocalizingRasterIterator;
 import mpicbg.imglib.type.Type;
 
-
-public class ImagePlusPositionableCursor< T extends Type< T > >
-		extends AbstractBasicPositionableRasterSampler< T >
+/**
+ * 
+ * @param <T>
+ *
+ * @author Stephan Preibisch and Stephan Saalfeld
+ */
+public class ImagePlusLocalizingRasterIterator< T extends Type< T > >
+		extends AbstractLocalizingRasterIterator< T >
 		implements ImagePlusStorageAccess
 {
 	/* the type instance accessing the pixel value the cursor points at */
@@ -46,133 +48,74 @@ public class ImagePlusPositionableCursor< T extends Type< T > >
 	/* a stronger typed pointer to Container< T > */
 	protected final ImagePlusContainer< T, ? > container;
 	
-	/* precalculated step sizes for row.column,... access in a linear array */
-	final protected int[] step;
+	protected final int slicePixelCountMinus1, maxSliceMinus1;
 	
-	protected int slice; // TODO: support hyperstacks
-	
-	/* TODO do we need this still? */
-	int numNeighborhoodCursors = 0;
-	
-	public ImagePlusPositionableCursor(
+	protected int slice; // TODO: support hyperstacks	
+
+	public ImagePlusLocalizingRasterIterator(
 			final ImagePlusContainer< T, ? > container,
 			final Image< T > image ) 
 	{
 		super( container, image );
-		
+
 		this.type = container.createLinkedType();
 		this.container = container;
+		slicePixelCountMinus1 = container.getDimension( 0 ) * container.getDimension( 1 ) - 1; 
+		maxSliceMinus1 = container.getDimension( 2 ) - 1;
 		
-		step = Array.createAllocationSteps( container.getDimensions() );
+		reset();
 	}	
-
+	
 	@Override
-	public void fwd( final int dim )
-	{
-		position[ dim ]++;
-
-		if ( dim == 2 )
+	public void fwd()
+	{ 
+		type.incIndex();
+		
+		if ( type.getIndex() > slicePixelCountMinus1 ) 
 		{
 			++slice;
+			type.updateIndex( 0 );
 			type.updateContainer( this );
 		}
-		else
-		{
-			type.incIndex( step[ dim ] );
-		}
-
-		linkedRasterPositionable.fwd( dim );
-	}
-
-	@Override
-	public void move( final int steps, final int dim )
-	{
-		position[ dim ] += steps;	
-
-		if ( dim == 2 )
-		{
-			slice += steps;
-			type.updateContainer( this );
-		}
-		else
-		{
-			type.incIndex( step[ dim ] * steps );
-		}
-
-		linkedRasterPositionable.move( steps, dim );
-	}
-	
-	@Override
-	public void bck( final int dim )
-	{		
-		position[ dim ]--;
-		
-		if ( dim == 2 )
-		{
-			--slice;
-			type.updateContainer( this );
-		}
-		else
-		{
-			type.decIndex( step[ dim ] );
-		}
-
-		linkedRasterPositionable.bck( dim );
-	}
-
-	@Override
-	public void setPosition( final int[] position )
-	{
-		type.updateIndex( container.getPos( position ) );
 		
 		for ( int d = 0; d < numDimensions; d++ )
-			this.position[ d ] = position[ d ];
-		
-		if ( numDimensions == 3 )
-			slice = position[ 2 ];
-		else
-			slice = 0;
-		
-		type.updateContainer( this );
-
-		linkedRasterPositionable.setPosition( position );
-	}
-	
-	@Override
-	public void setPosition( final long[] position )
-	{
-		for ( int d = 0; d < numDimensions; d++ )
-			this.position[ d ] = ( int )position[ d ];
-		
-		type.updateIndex( container.getPos( this.position ) );
-		
-		if ( numDimensions == 3 )
-			slice = this.position[ 2 ];
-		else
-			slice = 0;
-		
-		type.updateContainer( this );
-
-		linkedRasterPositionable.setPosition( position );
-	}
-
-	@Override
-	public void setPosition( final int position, final int dim )
-	{
-		this.position[ dim ] = position;
-
-		if ( dim == 2 )
 		{
-			slice = position;
+			if ( position[ d ] < dimensions[ d ] - 1 )
+			{
+				position[ d ]++;
+				
+				for ( int e = 0; e < d; e++ )
+					position[ e ] = 0;
+				
+				break;
+			}
+		}
+		
+		linkedIterator.fwd();
+	}
+
+	@Override
+	public void reset()
+	{
+		if ( dimensions != null )
+		{
+			type.updateIndex( -1 );
+			
+			position[ 0 ] = -1;
+			
+			for ( int d = 1; d < numDimensions; d++ )
+				position[ d ] = 0;
+			
+			slice = 0;
+			
 			type.updateContainer( this );
 		}
-		else
-		{
-			type.updateIndex( container.getPos( this.position ) );
-		}
-
-		linkedRasterPositionable.setPosition( position, dim );
+		
+		linkedIterator.reset();
 	}
+
+	@Override
+	public int getStorageIndex(){ return slice; }
 
 	@Override
 	public ImagePlusContainer< T, ? > getContainer(){ return container; }
@@ -181,5 +124,11 @@ public class ImagePlusPositionableCursor< T extends Type< T > >
 	public T type(){ return type; }
 
 	@Override
-	public int getStorageIndex(){ return slice; }
+	public boolean hasNext()
+	{
+		if ( type.getIndex() < slicePixelCountMinus1 || slice < maxSliceMinus1 )
+			return true;
+		else
+			return false;
+	}
 }

@@ -21,7 +21,7 @@ public class NormalizeImageFloat <T extends RealType<T>> implements OutputAlgori
 	public static <T extends RealType<T>> double sumImage( final Image<T> image )
 	{
 		final RealSum sum = new RealSum();
-		final RasterIterator<T> cursor = image.createIterableCursor();
+		final RasterIterator<T> cursor = image.createRasterIterator();
 		
 		while (cursor.hasNext())
 		{
@@ -61,8 +61,8 @@ public class NormalizeImageFloat <T extends RealType<T>> implements OutputAlgori
 		}		
 		
 		outputImage = factory.createImage(dims);
-		pushCursor = outputImage.createPositionableCursor();
-		pullCursor = image.createLocalizableCursor();
+		pushCursor = outputImage.createPositionableRasterSampler();
+		pullCursor = image.createLocalizingRasterIterator();
 			
 		while(pullCursor.hasNext())
 		{			

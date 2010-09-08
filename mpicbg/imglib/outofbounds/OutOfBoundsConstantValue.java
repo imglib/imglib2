@@ -56,7 +56,7 @@ public class OutOfBoundsConstantValue< T extends Type< T > > implements OutOfBou
 			final PositionableRasterSampler< T > source,
 			final T value )
 	{
-		this( source, source.getImage().createPositionableCursor(), value );
+		this( source, source.getImage().createPositionableRasterSampler(), value );
 	}
 	
 	OutOfBoundsConstantValue(

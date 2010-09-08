@@ -430,7 +430,7 @@ public class PhaseCorrelation<T extends RealType<T>, S extends RealType<S>> impl
 		for ( int i = 0; i < numPeaks; ++i )
 			peakList.add( new PhaseCorrelationPeak( new int[ numDimensions ], -Float.MAX_VALUE) );
 
-		final RasterIterator<FloatType> cursor = invPCM.createLocalizableCursor();		
+		final RasterIterator<FloatType> cursor = invPCM.createLocalizingRasterIterator();		
 		final LocalNeighborhoodCursor<FloatType> localCursor = LocalNeighborhoodCursorFactory.createLocalNeighborhoodCursor( cursor, new OutOfBoundsStrategyPeriodicFactory<FloatType>() );
 				
 		final int[] originalOffset1 = fft1.getOriginalOffset();
@@ -525,8 +525,8 @@ public class PhaseCorrelation<T extends RealType<T>, S extends RealType<S>> impl
 	
 	protected void multiplyInPlace( final Image<ComplexFloatType> fftImage1, final Image<ComplexFloatType> fftImage2 )
 	{
-		final RasterIterator<ComplexFloatType> cursor1 = fftImage1.createIterableCursor();
-		final RasterIterator<ComplexFloatType> cursor2 = fftImage2.createIterableCursor();
+		final RasterIterator<ComplexFloatType> cursor1 = fftImage1.createRasterIterator();
+		final RasterIterator<ComplexFloatType> cursor2 = fftImage2.createRasterIterator();
 		
 		while ( cursor1.hasNext() )
 		{
@@ -573,7 +573,7 @@ public class PhaseCorrelation<T extends RealType<T>, S extends RealType<S>> impl
 	
 	private static final void normalizeComplexImage( final Image<ComplexFloatType> fftImage, final float normalizationThreshold )
 	{
-		final RasterIterator<ComplexFloatType> cursor = fftImage.createIterableCursor();
+		final RasterIterator<ComplexFloatType> cursor = fftImage.createRasterIterator();
 
 		while ( cursor.hasNext() )
 		{
@@ -586,7 +586,7 @@ public class PhaseCorrelation<T extends RealType<T>, S extends RealType<S>> impl
 	
 	private static final void normalizeAndConjugateComplexImage( final Image<ComplexFloatType> fftImage, final float normalizationThreshold )
 	{
-		final RasterIterator<ComplexFloatType> cursor = fftImage.createIterableCursor();
+		final RasterIterator<ComplexFloatType> cursor = fftImage.createRasterIterator();
 		
 		while ( cursor.hasNext() )
 		{

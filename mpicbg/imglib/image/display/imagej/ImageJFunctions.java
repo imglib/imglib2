@@ -34,7 +34,7 @@ import java.util.Collection;
 import mpicbg.imglib.algorithm.math.MathLib;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.display.Display;
-import mpicbg.imglib.sampler.array.ArrayLocalizableCursor;
+import mpicbg.imglib.sampler.array.ArrayLocalizingRasterIterator;
 import mpicbg.imglib.type.Type;
 import mpicbg.imglib.type.label.FakeType;
 import mpicbg.imglib.type.numeric.RGBALegacyType;
@@ -267,7 +267,7 @@ public class ImageJFunctions
 			// Here we "misuse" a ArrayLocalizableCursor to iterate through the dimensions (d > 2),
 			// he will iterate all dimensions as we want ( iterate through d=3, inc 4, iterate through 3, inc 4, ... )  
 			//
-			final ArrayLocalizableCursor<FakeType> cursor = ArrayLocalizableCursor.createLinearCursor( extraDimensions ); 
+			final ArrayLocalizingRasterIterator<FakeType> cursor = ArrayLocalizingRasterIterator.createLinearCursor( extraDimensions ); 
 
 			while ( cursor.hasNext() )
 			{

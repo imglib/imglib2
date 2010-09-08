@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2009--2010, Stephan Preibisch
+ * Copyright (c) 2009--2010, Stephan Preibisch & Stephan Saalfeld
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -24,47 +24,58 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- *
- * @author Stephan Preibisch
  */
-package mpicbg.imglib.sampler.dynamic;
+package mpicbg.imglib.sampler.shapelist;
 
-import mpicbg.imglib.container.dynamic.DynamicContainer;
+import mpicbg.imglib.container.shapelist.ShapeList;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.sampler.RasterPlaneIterator;
 import mpicbg.imglib.type.Type;
 
-public class DynamicLocalizablePlaneCursor<T extends Type<T>> extends DynamicLocalizableCursor<T> implements RasterPlaneIterator<T>
+/**
+ * 
+ * @param <T>
+ *
+ * @author Stephan Preibisch and Stephan Saalfeld
+ */
+public class ShapeListRasterPlaneIterator< T extends Type< T > > extends ShapeListPositionableRasterSampler< T > implements RasterPlaneIterator< T >
 {
-	protected int planeDimA, planeDimB, planeSizeA, planeSizeB, incPlaneA, incPlaneB, maxI;
+	protected int planeDimA, planeDimB;
 	
-	public DynamicLocalizablePlaneCursor(
-			final DynamicContainer< T, ? > container,
+	public ShapeListRasterPlaneIterator(
+			final ShapeList< T > container,
 			final Image< T > image ) 
 	{
 		super( container, image );
 	}	
 	
+	/**
+	 * TODO Not the most efficient way to calculate this on demand.  Better: count an index while moving...
+	 */
 	@Override 
-	public boolean hasNext() { return internalIndex < maxI; }
+	public boolean hasNext()
+	{
+		final int sizeB = dimensions[ planeDimB ] - 1;
+		if ( position[ planeDimB ] < sizeB )
+			return true;
+		else if ( position[ planeDimB ] > sizeB )
+			return false;
+		
+		final int sizeA = dimensions[ planeDimA ] - 1;
+		if ( position[ planeDimA ] < sizeA )
+			return true;
+		
+		return false;
+	}
 	
 	@Override
 	public void fwd()
-	{ 
-		if ( position[ planeDimA ] < dimensions[ planeDimA ] - 1)
-		{
-			position[ planeDimA ]++;
-			internalIndex += incPlaneA;
-		}
-		else if ( position[ planeDimB ] < dimensions[ planeDimB ] - 1)
+	{
+		if ( ++position[ planeDimA ] >= dimensions[ planeDimA ] )
 		{
 			position[ planeDimA ] = 0;
-			position[ planeDimB ]++;
-			
-			internalIndex += incPlaneB;
-			internalIndex -= (planeSizeA - 1) * incPlaneA;
+			++position[ planeDimB ];
 		}
-		accessor.updateIndex( internalIndex );
 		
 		linkedIterator.fwd();
 	}
@@ -75,82 +86,23 @@ public class DynamicLocalizablePlaneCursor<T extends Type<T>> extends DynamicLoc
 		this.planeDimA = planeDimA;
 		this.planeDimB = planeDimB;
 		
-		this.planeSizeA = container.getDimension( planeDimA );
-		this.planeSizeB = container.getDimension( planeDimB );
-		
-		final int[] steps = container.getSteps();
-
-		// store the current position
-    	final int[] dimPos = dimensionPositions.clone();
-		
-		incPlaneA = steps[ planeDimA ];
-		dimPos[ planeDimA ] = 0;
-		
-		if ( planeDimB > -1 && planeDimB < steps.length )
-		{
-			incPlaneB = steps[ planeDimB ];
-			dimPos[ planeDimB ] = 0;
-		}
-		else
-		{
-			incPlaneB = 0;
-		}
-
-		setPosition( dimPos );		
-		
-		type.updateContainer( this );				
-		internalIndex -= incPlaneA;					
+		setPosition( dimensionPositions );
 		position[ planeDimA ] = -1;
-		
-		dimPos[ planeDimA ] = dimensions[ planeDimA ] - 1;		
-		if ( planeDimB > -1 && planeDimB < steps.length )
-			dimPos[ planeDimB ] = dimensions[ planeDimB ] - 1;
-		
-		maxI = container.getPos( dimPos );		
+		position[ planeDimB ] = 0;			
 	}
-	
+
 	@Override
 	public void reset( final int planeDimA, final int planeDimB, final long[] dimensionPositions )
 	{
 		this.planeDimA = planeDimA;
 		this.planeDimB = planeDimB;
 		
-		this.planeSizeA = container.getDimension( planeDimA );
-		this.planeSizeB = container.getDimension( planeDimB );
-		
-		final int[] steps = container.getSteps();
-
-		// store the current position
-    	final int[] dimPos = new int[ dimensionPositions.length ];
-    	for ( int i = 0; i < dimensionPositions.length; ++i )
-    		dimPos[ i ] = ( int )dimensionPositions[ i ];
-		
-		incPlaneA = steps[ planeDimA ];
-		dimPos[ planeDimA ] = 0;
-		
-		if ( planeDimB > -1 && planeDimB < steps.length )
-		{
-			incPlaneB = steps[ planeDimB ];
-			dimPos[ planeDimB ] = 0;
-		}
-		else
-		{
-			incPlaneB = 0;
-		}
-
-		setPosition( dimPos );		
-		
-		type.updateContainer( this );				
-		internalIndex -= incPlaneA;					
+		setPosition( dimensionPositions );
 		position[ planeDimA ] = -1;
-		
-		dimPos[ planeDimA ] = dimensions[ planeDimA ] - 1;		
-		if ( planeDimB > -1 && planeDimB < steps.length )
-			dimPos[ planeDimB ] = dimensions[ planeDimB ] - 1;
-		
-		maxI = container.getPos( dimPos );
+		position[ planeDimB ] = 0;				
 	}
 
+	
 	@Override
 	public void reset( final int planeDimA, final int planeDimB )
 	{
@@ -164,7 +116,7 @@ public class DynamicLocalizablePlaneCursor<T extends Type<T>> extends DynamicLoc
 	public void reset()
 	{
 		if ( dimensions != null )
-			reset( 0, 1, image.createPositionArray() );
+			reset( 0, 1, new int[ numDimensions ] );
 		
 		linkedIterator.reset();
 	}
@@ -179,12 +131,13 @@ public class DynamicLocalizablePlaneCursor<T extends Type<T>> extends DynamicLoc
 	@Override
 	public int getIntPosition( final int dim ){ return position[ dim ]; }
 	
-	protected void setPosition( final int[] position )
+	@Override
+	public void setPosition( final int[] position )
 	{
-		internalIndex = container.getPos( position );
-		type.updateContainer( this );				
-		
 		for ( int d = 0; d < numDimensions; d++ )
 			this.position[ d ] = position[ d ];
+
+		linkedRasterPositionable.setPosition( position );
 	}
+	
 }

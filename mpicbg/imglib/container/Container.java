@@ -41,13 +41,13 @@ import mpicbg.imglib.type.Type;
  *
  * @author Stephan Preibisch and Stephan Saalfeld
  */
-public interface Container< T extends Type< T >> extends Dimensions
+public interface Container< T extends Type< T > > extends Dimensions
 {
-	public RasterIterator< T > createIterableCursor( Image< T > image );
-	public RasterIterator< T > createLocalizableCursor( Image< T > image );
-	public RasterPlaneIterator< T > createLocalizablePlaneCursor( Image< T > image );
-	public PositionableRasterSampler< T > createPositionableCursor( Image< T > image );
-	public PositionableRasterSampler< T > createPositionableCursor( Image< T > image, OutOfBoundsStrategyFactory< T > outOfBoundsFactory );
+	public RasterIterator< T > createRasterIterator( Image< T > image );
+	public RasterIterator< T > createLocalizingRasterIterator( Image< T > image );
+	public RasterPlaneIterator< T > createRasterPlaneIterator( Image< T > image );
+	public PositionableRasterSampler< T > createPositionableRasterSampler( Image< T > image );
+	public PositionableRasterSampler< T > createPositionableRasterSampler( Image< T > image, OutOfBoundsStrategyFactory< T > outOfBoundsFactory );
 
 	public void close();
 

@@ -48,7 +48,7 @@ public class NearestNeighborInterpolator<T extends Type<T>> extends AbstractInte
 	{
 		super(img, interpolatorFactory, outOfBoundsStrategyFactory);
 		
-		cursor = img.createPositionableCursor( outOfBoundsStrategyFactory );
+		cursor = img.createPositionableRasterSampler( outOfBoundsStrategyFactory );
 		linkedRasterPositionable = linkedPositionable = roundLink = new LocalizableRoundRasterPositionable( this, cursor );
 		
 		

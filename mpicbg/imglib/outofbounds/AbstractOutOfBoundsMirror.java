@@ -53,7 +53,7 @@ public abstract class AbstractOutOfBoundsMirror< T extends Type< T > > implement
 	
 	AbstractOutOfBoundsMirror( final PositionableRasterSampler< T > source )
 	{
-		this( source, source.getImage().createPositionableCursor() );
+		this( source, source.getImage().createPositionableRasterSampler() );
 	}
 	
 	AbstractOutOfBoundsMirror(

@@ -32,11 +32,11 @@ import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
 import mpicbg.imglib.sampler.PositionableRasterSampler;
 import mpicbg.imglib.sampler.shapelist.ShapeListCache;
 import mpicbg.imglib.sampler.shapelist.ShapeListCacheFIFO;
-import mpicbg.imglib.sampler.shapelist.ShapeListCachedLocalizablePlaneCursor;
-import mpicbg.imglib.sampler.shapelist.ShapeListCachedPositionableCursor;
-import mpicbg.imglib.sampler.shapelist.ShapeListCachedPositionableOutOfBoundsCursor;
-import mpicbg.imglib.sampler.shapelist.ShapeListLocalizablePlaneCursor;
-import mpicbg.imglib.sampler.shapelist.ShapeListPositionableCursor;
+import mpicbg.imglib.sampler.shapelist.ShapeListCachedRasterPlaneIterator;
+import mpicbg.imglib.sampler.shapelist.ShapeListCachedPositionableRasterSampler;
+import mpicbg.imglib.sampler.shapelist.ShapeListCachedOutOfBoundsPositionableRasterSampler;
+import mpicbg.imglib.sampler.shapelist.ShapeListRasterPlaneIterator;
+import mpicbg.imglib.sampler.shapelist.ShapeListPositionableRasterSampler;
 import mpicbg.imglib.type.Type;
 
 /**
@@ -77,20 +77,20 @@ public class ShapeListCached< T extends Type< T > > extends ShapeList< T >
 	}
 
 	@Override
-	public ShapeListLocalizablePlaneCursor< T > createLocalizablePlaneCursor( final Image< T > image )
+	public ShapeListRasterPlaneIterator< T > createRasterPlaneIterator( final Image< T > image )
 	{
-		return new ShapeListCachedLocalizablePlaneCursor< T >( this, image );
+		return new ShapeListCachedRasterPlaneIterator< T >( this, image );
 	}
 
 	@Override
-	public ShapeListPositionableCursor< T > createPositionableCursor( final Image< T > image )
+	public ShapeListPositionableRasterSampler< T > createPositionableRasterSampler( final Image< T > image )
 	{
-		return new ShapeListCachedPositionableCursor< T >( this, image );
+		return new ShapeListCachedPositionableRasterSampler< T >( this, image );
 	}
 
 	@Override
-	public PositionableRasterSampler< T > createPositionableCursor( final Image< T > image, final OutOfBoundsStrategyFactory< T > outOfBoundsFactory )
+	public PositionableRasterSampler< T > createPositionableRasterSampler( final Image< T > image, final OutOfBoundsStrategyFactory< T > outOfBoundsFactory )
 	{
-		return new ShapeListCachedPositionableOutOfBoundsCursor< T >( this, image, outOfBoundsFactory );
+		return new ShapeListCachedOutOfBoundsPositionableRasterSampler< T >( this, image, outOfBoundsFactory );
 	}
 }

@@ -24,51 +24,72 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- *
- * @author Stephan Preibisch & Stephan Saalfeld
  */
-package mpicbg.imglib.sampler.array;
+package mpicbg.imglib.sampler.dynamic;
 
-import mpicbg.imglib.container.array.Array;
+import mpicbg.imglib.container.basictypecontainer.DataAccess;
+import mpicbg.imglib.container.dynamic.DynamicContainer;
+import mpicbg.imglib.container.dynamic.DynamicContainerAccessor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.sampler.AbstractBasicRasterIterator;
 import mpicbg.imglib.type.Type;
 
-public class ArrayIterableCursor< T extends Type< T > > extends AbstractBasicRasterIterator< T >
+/**
+ * 
+ * @param <T>
+ *
+ * @author Stephan Preibisch and Stephan Saalfeld
+ */
+public class DynamicBasicRasterIterator< T extends Type< T > > extends AbstractBasicRasterIterator< T > implements DynamicStorageAccess
 {
+	/* the type instance accessing the pixel value the cursor points at */
 	protected final T type;
-	protected final Array< T, ? > container;
-	protected final int sizeMinus1;
 	
-	public ArrayIterableCursor( final Array< T, ? > container, final Image< T > image ) 
+	/* a stronger typed pointer to Container< T > */
+	protected final DynamicContainer< T, ? extends DataAccess > container;
+	
+	/* access proxy */
+	protected final DynamicContainerAccessor accessor;
+
+	protected int internalIndex;
+	
+	public DynamicBasicRasterIterator(
+			final DynamicContainer< T, ? extends DynamicContainerAccessor > container,
+			final Image< T > image )
 	{
 		super( container, image );
-
+		
 		this.type = container.createLinkedType();
 		this.container = container;
-		this.sizeMinus1 = (int)container.numPixels() - 1;
+	
+		accessor = container.createAccessor();
 		
 		reset();
 	}
 	
 	@Override
-	public T type() { return type; }
-	
-	@Override
-	public boolean hasNext(){ return type.getIndex() < sizeMinus1; }
+	public DynamicContainerAccessor getAccessor() { return accessor; }
 
 	@Override
-	public void jumpFwd( final long steps )
-	{
-		type.incIndex( (int)steps );
+	public T type() { return type; }
+
+	@Override
+	public boolean hasNext() { return internalIndex < container.numPixels() - 1; }
+
+	@Override
+	public void jumpFwd( final long steps ) 
+	{ 
+		internalIndex += steps;
+		accessor.updateIndex( internalIndex );
 		
 		linkedIterator.jumpFwd( steps );
 	}
 
 	@Override
-	public void fwd()
-	{
-		type.incIndex();
+	public void fwd() 
+	{ 
+		++internalIndex; 
+		accessor.updateIndex( internalIndex );
 		
 		linkedIterator.fwd();
 	}
@@ -76,25 +97,31 @@ public class ArrayIterableCursor< T extends Type< T > > extends AbstractBasicRas
 	@Override
 	public void close() 
 	{ 
-		type.updateIndex( sizeMinus1 + 1 );
+		internalIndex = Integer.MAX_VALUE;
 		super.close();
 	}
 
 	@Override
 	public void reset()
-	{ 
-		type.updateIndex( -1 ); 
+	{		
+		type.updateIndex( 0 );
+		internalIndex = 0;
 		type.updateContainer( this );
-
+		accessor.updateIndex( internalIndex );
+		internalIndex = -1;
+		
 		linkedIterator.reset();
 	}
+	
+	@Override
+	public int getInternalIndex() { return internalIndex; }
 
 	@Override
-	public Array<T,?> getContainer(){ return container; }
+	public DynamicContainer<T,?> getContainer(){ return container; }
 	
 	@Override
 	public String toString() { return type.toString(); }
-
+	
 	@Override
 	public long getLongPosition( final int dim )
 	{

@@ -32,9 +32,10 @@ package mpicbg.imglib.sampler;
 import mpicbg.imglib.algorithm.math.MathLib;
 import mpicbg.imglib.container.Container;
 import mpicbg.imglib.image.Image;
+import mpicbg.imglib.location.RasterLocalizable;
 import mpicbg.imglib.type.Type;
 
-public abstract class AbstractLocalizableRasterSampler< T extends Type< T > > extends AbstractRasterSampler< T > implements LocalizableRasterSampler< T > 
+public abstract class AbstractLocalizableRasterSampler< T extends Type< T > > extends AbstractRasterSampler< T > implements RasterSampler< T >, RasterLocalizable
 {
 	final protected int[] position, dimensions;
 	

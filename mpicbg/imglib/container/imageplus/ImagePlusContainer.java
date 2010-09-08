@@ -41,11 +41,11 @@ import mpicbg.imglib.sampler.RasterPlaneIterator;
 import mpicbg.imglib.sampler.PositionableRasterSampler;
 import mpicbg.imglib.sampler.RasterIterator;
 import mpicbg.imglib.sampler.RasterSampler;
-import mpicbg.imglib.sampler.imageplus.ImagePlusIterableCursor;
-import mpicbg.imglib.sampler.imageplus.ImagePlusLocalizableCursor;
-import mpicbg.imglib.sampler.imageplus.ImagePlusLocalizablePlaneCursor;
-import mpicbg.imglib.sampler.imageplus.ImagePlusPositionableCursor;
-import mpicbg.imglib.sampler.imageplus.ImagePlusPositionableOutOfBoundsCursor;
+import mpicbg.imglib.sampler.imageplus.ImagePlusBasicRasterIterator;
+import mpicbg.imglib.sampler.imageplus.ImagePlusLocalizingRasterIterator;
+import mpicbg.imglib.sampler.imageplus.ImagePlusRasterPlaneIterator;
+import mpicbg.imglib.sampler.imageplus.ImagePlusPositionableRasterSampler;
+import mpicbg.imglib.sampler.imageplus.ImagePlusOutOfBoundsPositionableRasterSampler;
 import mpicbg.imglib.sampler.imageplus.ImagePlusStorageAccess;
 import mpicbg.imglib.type.Type;
 
@@ -141,33 +141,33 @@ public class ImagePlusContainer< T extends Type< T >, A extends ArrayDataAccess<
 	}
 
 	@Override
-	public RasterIterator< T > createIterableCursor( final Image< T > image )
+	public RasterIterator< T > createRasterIterator( final Image< T > image )
 	{
-		return new ImagePlusIterableCursor< T >( this, image );
+		return new ImagePlusBasicRasterIterator< T >( this, image );
 	}
 
 	@Override
-	public RasterIterator< T > createLocalizableCursor( final Image< T > image )
+	public RasterIterator< T > createLocalizingRasterIterator( final Image< T > image )
 	{
-		return new ImagePlusLocalizableCursor< T >( this, image );
+		return new ImagePlusLocalizingRasterIterator< T >( this, image );
 	}
 
 	@Override
-	public RasterPlaneIterator< T > createLocalizablePlaneCursor( final Image< T > image )
+	public RasterPlaneIterator< T > createRasterPlaneIterator( final Image< T > image )
 	{
-		return new ImagePlusLocalizablePlaneCursor< T >( this, image, linkedType.duplicateTypeOnSameDirectAccessContainer() );
+		return new ImagePlusRasterPlaneIterator< T >( this, image, linkedType.duplicateTypeOnSameDirectAccessContainer() );
 	}
 
 	@Override
-	public PositionableRasterSampler< T > createPositionableCursor( final Image< T > image )
+	public PositionableRasterSampler< T > createPositionableRasterSampler( final Image< T > image )
 	{
-		return new ImagePlusPositionableCursor< T >( this, image );
+		return new ImagePlusPositionableRasterSampler< T >( this, image );
 	}
 
 	@Override
-	public ImagePlusPositionableOutOfBoundsCursor< T > createPositionableCursor( final Image< T > image, OutOfBoundsStrategyFactory< T > outOfBoundsFactory )
+	public ImagePlusOutOfBoundsPositionableRasterSampler< T > createPositionableRasterSampler( final Image< T > image, OutOfBoundsStrategyFactory< T > outOfBoundsFactory )
 	{
-		return new ImagePlusPositionableOutOfBoundsCursor< T >( this, image, outOfBoundsFactory );
+		return new ImagePlusOutOfBoundsPositionableRasterSampler< T >( this, image, outOfBoundsFactory );
 	}
 
 	@Override

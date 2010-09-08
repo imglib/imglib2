@@ -47,7 +47,7 @@ public class RealTypeDisplay<T extends RealType<T>> extends Display<T>
 	@Override
 	public void setMinMax()
 	{
-		final RasterIterator<T> c = img.createIterableCursor();
+		final RasterIterator<T> c = img.createRasterIterator();
 		
 		if ( !c.hasNext() )
 		{

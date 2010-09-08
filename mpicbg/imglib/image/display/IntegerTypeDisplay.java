@@ -47,7 +47,7 @@ public class IntegerTypeDisplay<T extends IntegerType<T>> extends Display<T>
 	@Override
 	public void setMinMax()
 	{
-		final RasterIterator<T> c = img.createIterableCursor();
+		final RasterIterator<T> c = img.createRasterIterator();
 		
 		if ( !c.hasNext() )
 		{

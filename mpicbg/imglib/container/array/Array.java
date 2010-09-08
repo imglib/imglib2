@@ -33,11 +33,11 @@ import mpicbg.imglib.container.basictypecontainer.DataAccess;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
 import mpicbg.imglib.sampler.RasterSampler;
-import mpicbg.imglib.sampler.array.ArrayIterableCursor;
-import mpicbg.imglib.sampler.array.ArrayLocalizableCursor;
-import mpicbg.imglib.sampler.array.ArrayLocalizablePlaneCursor;
-import mpicbg.imglib.sampler.array.ArrayPositionableCursor;
-import mpicbg.imglib.sampler.array.ArrayPositionableOutOfBoundsCursor;
+import mpicbg.imglib.sampler.array.ArrayBasicRasterIterator;
+import mpicbg.imglib.sampler.array.ArrayLocalizingRasterIterator;
+import mpicbg.imglib.sampler.array.ArrayRasterPlaneIterator;
+import mpicbg.imglib.sampler.array.ArrayPositionableRasterSampler;
+import mpicbg.imglib.sampler.array.ArrayOutOfBoundsPositionableRasterSampler;
 import mpicbg.imglib.type.Type;
 
 /**
@@ -83,37 +83,37 @@ public class Array< T extends Type< T >, A extends DataAccess > extends Abstract
 	}
 
 	@Override
-	public ArrayIterableCursor< T > createIterableCursor( final Image< T > image )
+	public ArrayBasicRasterIterator< T > createRasterIterator( final Image< T > image )
 	{
-		ArrayIterableCursor< T > c = new ArrayIterableCursor< T >( this, image );
+		ArrayBasicRasterIterator< T > c = new ArrayBasicRasterIterator< T >( this, image );
 		return c;
 	}
 
 	@Override
-	public ArrayLocalizableCursor< T > createLocalizableCursor( final Image< T > image )
+	public ArrayLocalizingRasterIterator< T > createLocalizingRasterIterator( final Image< T > image )
 	{
-		ArrayLocalizableCursor< T > c = new ArrayLocalizableCursor< T >( this, image );
+		ArrayLocalizingRasterIterator< T > c = new ArrayLocalizingRasterIterator< T >( this, image );
 		return c;
 	}
 
 	@Override
-	public ArrayLocalizablePlaneCursor< T > createLocalizablePlaneCursor( final Image< T > image )
+	public ArrayRasterPlaneIterator< T > createRasterPlaneIterator( final Image< T > image )
 	{
-		ArrayLocalizablePlaneCursor< T > c = new ArrayLocalizablePlaneCursor< T >( this, image );
+		ArrayRasterPlaneIterator< T > c = new ArrayRasterPlaneIterator< T >( this, image );
 		return c;
 	}
 
 	@Override
-	public ArrayPositionableCursor< T > createPositionableCursor( final Image< T > image )
+	public ArrayPositionableRasterSampler< T > createPositionableRasterSampler( final Image< T > image )
 	{
-		ArrayPositionableCursor< T > c = new ArrayPositionableCursor< T >( this, image );
+		ArrayPositionableRasterSampler< T > c = new ArrayPositionableRasterSampler< T >( this, image );
 		return c;
 	}
 
 	@Override
-	public ArrayPositionableOutOfBoundsCursor< T > createPositionableCursor( final Image< T > image, final OutOfBoundsStrategyFactory< T > outOfBoundsFactory )
+	public ArrayOutOfBoundsPositionableRasterSampler< T > createPositionableRasterSampler( final Image< T > image, final OutOfBoundsStrategyFactory< T > outOfBoundsFactory )
 	{
-		ArrayPositionableOutOfBoundsCursor< T > c = new ArrayPositionableOutOfBoundsCursor< T >( this, image, outOfBoundsFactory );
+		ArrayOutOfBoundsPositionableRasterSampler< T > c = new ArrayOutOfBoundsPositionableRasterSampler< T >( this, image, outOfBoundsFactory );
 		return c;
 	}
 

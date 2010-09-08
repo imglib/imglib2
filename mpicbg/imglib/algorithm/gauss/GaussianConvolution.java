@@ -173,36 +173,36 @@ public class GaussianConvolution< T extends NumericType<T>> implements MultiThre
 	                	{
 	                		if ( currentDim == 0 ) // first dimension convolve to the temporary image
 	                		{
-			                	inputIterator = image.createPositionableCursor( outOfBoundsFactory );
-			                    outputIterator = temp.createLocalizableCursor();	                			
+			                	inputIterator = image.createPositionableRasterSampler( outOfBoundsFactory );
+			                    outputIterator = temp.createLocalizingRasterIterator();	                			
 	                		}
 	                		else if ( currentDim % 2 == 1 ) // for odd dimension ids we convolve to the output image, because that might be the last convolution  
 	                		{
-			                	inputIterator = temp.createPositionableCursor( outOfBoundsFactory );
-			                    outputIterator = convolved.createLocalizableCursor();
+			                	inputIterator = temp.createPositionableRasterSampler( outOfBoundsFactory );
+			                    outputIterator = convolved.createLocalizingRasterIterator();
 	                		}
 	                		else //if ( currentDim % 2 == 0 ) // for even dimension ids we convolve to the temp image, it is not the last convolution for sure
 	                		{
-			                	inputIterator = convolved.createPositionableCursor( outOfBoundsFactory );
-			                    outputIterator = temp.createLocalizableCursor();
+			                	inputIterator = convolved.createPositionableRasterSampler( outOfBoundsFactory );
+			                    outputIterator = temp.createLocalizingRasterIterator();
 	                		}	                		
 	                	}
 	                	else // ( numDimensions % 2 != 0 ) // even number of dimensions ( 1d, 3d, 5d, ... )
 	                	{
 	                		if ( currentDim == 0 ) // first dimension convolve to the output image, in the 1d case we are done then already
 	                		{
-			                	inputIterator = image.createPositionableCursor( outOfBoundsFactory );
-			                    outputIterator = convolved.createLocalizableCursor();	                			
+			                	inputIterator = image.createPositionableRasterSampler( outOfBoundsFactory );
+			                    outputIterator = convolved.createLocalizingRasterIterator();	                			
 	                		}
 	                		else if ( currentDim % 2 == 1 ) // for odd dimension ids we convolve to the output image, because that might be the last convolution  
 	                		{
-			                	inputIterator = convolved.createPositionableCursor( outOfBoundsFactory );
-			                    outputIterator = temp.createLocalizableCursor();
+			                	inputIterator = convolved.createPositionableRasterSampler( outOfBoundsFactory );
+			                    outputIterator = temp.createLocalizingRasterIterator();
 	                		}
 	                		else //if ( currentDim % 2 == 0 ) // for even dimension ids we convolve to the temp image, it is not the last convolution for sure
 	                		{
-			                	inputIterator = temp.createPositionableCursor( outOfBoundsFactory );
-			                    outputIterator = convolved.createLocalizableCursor();
+			                	inputIterator = temp.createPositionableRasterSampler( outOfBoundsFactory );
+			                    outputIterator = convolved.createLocalizingRasterIterator();
 	                		}	 
 	                	}
 	                	
@@ -367,7 +367,7 @@ public class GaussianConvolution< T extends NumericType<T>> implements MultiThre
 					final int filterSize = kernel[ 0 ].length;
 					final int filterSizeHalf = filterSize / 2;
 					
-					final PositionableRasterSampler<FloatType> it = imageFloat.createPositionableCursor( outOfBoundsFactoryFloat );
+					final PositionableRasterSampler<FloatType> it = imageFloat.createPositionableRasterSampler( outOfBoundsFactoryFloat );
 
 					// fold in x
 					int kernelPos, count;
@@ -428,7 +428,7 @@ public class GaussianConvolution< T extends NumericType<T>> implements MultiThre
 					int kernelPos, count;
 
 					final float[] out =  outputArray.getCurrentStorageArray();
-					final PositionableRasterSampler<FloatType> it = convolvedFloat.createPositionableCursor( outOfBoundsFactoryFloat );
+					final PositionableRasterSampler<FloatType> it = convolvedFloat.createPositionableRasterSampler( outOfBoundsFactoryFloat );
 					final double[] kernel1 = kernel[ 1 ].clone();
 					final int filterSize = kernel[ 1 ].length;
 					final int filterSizeHalf = filterSize / 2;
@@ -505,7 +505,7 @@ public class GaussianConvolution< T extends NumericType<T>> implements MultiThre
 					final int filterSizeHalf = filterSize / 2;
 
 					final float[] out = outputArray.getCurrentStorageArray();
-					final PositionableRasterSampler<FloatType> it = convolvedFloat.createPositionableCursor( outOfBoundsFactoryFloat );
+					final PositionableRasterSampler<FloatType> it = convolvedFloat.createPositionableRasterSampler( outOfBoundsFactoryFloat );
 
 					final int inc = getPos( 0, 0, 1, width, height );
 					final int posLUT[] = new int[kernel1.length];

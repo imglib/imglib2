@@ -54,7 +54,7 @@ public class RegionOfInterestCursor<T extends Type<T>> extends AbstractBasicRast
 		
 		this.offset = offset.clone();
 		this.size = size.clone();		
-		this.cursor = image.createPositionableCursor();
+		this.cursor = image.createPositionableRasterSampler();
 		
 		this.numDimensions = cursor.getImage().numDimensions();
 		this.roiPosition = new int[ numDimensions ];

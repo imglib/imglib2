@@ -30,7 +30,7 @@ package mpicbg.imglib.container.dynamic;
 import java.util.ArrayList;
 
 import mpicbg.imglib.sampler.RasterSampler;
-import mpicbg.imglib.sampler.dynamic.DynamicIterableCursor;
+import mpicbg.imglib.sampler.dynamic.DynamicBasicRasterIterator;
 import mpicbg.imglib.type.Type;
 
 /**
@@ -56,7 +56,7 @@ public class ByteDynamicContainer <T extends Type<T>> extends DynamicContainer<T
 	@Override
 	public ByteDynamicContainerAccessor update( final RasterSampler<?> c )
 	{
-		final DynamicIterableCursor<?> cursor = (DynamicIterableCursor<?>)c;
+		final DynamicBasicRasterIterator<?> cursor = (DynamicBasicRasterIterator<?>)c;
 		final ByteDynamicContainerAccessor accessor = (ByteDynamicContainerAccessor) cursor.getAccessor();
 		accessor.updateIndex( cursor.getInternalIndex() );
 		

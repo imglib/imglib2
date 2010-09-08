@@ -62,7 +62,7 @@ public class BasicTests extends TestBase {
 	 * Ensure that all pixels are iterated over
 	 */
 	@Test public void testCursorCoverage() {
-		RasterIterator<FloatType> cursor = testImage.createLocalizableCursor();
+		RasterIterator<FloatType> cursor = testImage.createLocalizingRasterIterator();
 		int count = 0;
 		int[] pos = new int[cursor.numDimensions()];
 		while( cursor.hasNext() ) {

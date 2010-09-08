@@ -48,8 +48,8 @@ public class SquareTest {
     //Image<T> outputImage = factory.createImage(new int[] {512, 512});
     Image<T> outputImage = inputImage.createNewImage();
 
-    RasterIterator<T> inputCursor = inputImage.createIterableCursor();
-    RasterIterator<T> outputCursor = outputImage.createIterableCursor();
+    RasterIterator<T> inputCursor = inputImage.createRasterIterator();
+    RasterIterator<T> outputCursor = outputImage.createRasterIterator();
     while (inputCursor.hasNext()) {
       inputCursor.fwd();
       outputCursor.fwd();

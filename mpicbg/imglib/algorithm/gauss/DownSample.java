@@ -135,7 +135,7 @@ public class DownSample<T extends RealType<T>> implements MultiThreaded, OutputA
 		downSampled = input.createNewImage( newSize );
 		
 		final Interpolator<T> interpolator = gaussConvolved.createInterpolator( new NearestNeighborInterpolatorFactory< T >( new OutOfBoundsMirrorFactory< T >( true ) ) );		
-		final RasterIterator<T> cursor = downSampled.createLocalizableCursor();
+		final RasterIterator<T> cursor = downSampled.createLocalizingRasterIterator();
 		
 		final int[] pos = new int[ numDimensions ];
 		final float[] scaledPos = new float[ numDimensions ];		

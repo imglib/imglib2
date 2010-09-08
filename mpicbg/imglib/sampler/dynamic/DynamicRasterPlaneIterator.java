@@ -24,35 +24,33 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- *
- * @author Stephan Preibisch & Stephan Saalfeld
  */
-package mpicbg.imglib.sampler.array;
+package mpicbg.imglib.sampler.dynamic;
 
-import mpicbg.imglib.container.array.Array;
+import mpicbg.imglib.container.dynamic.DynamicContainer;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.sampler.RasterPlaneIterator;
 import mpicbg.imglib.type.Type;
 
-public class ArrayLocalizablePlaneCursor<T extends Type<T>> extends ArrayLocalizableCursor<T> implements RasterPlaneIterator<T>
+/**
+ * 
+ * @param <T>
+ *
+ * @author Stephan Preibisch and Stephan Saalfeld
+ */
+public class DynamicRasterPlaneIterator<T extends Type<T>> extends DynamicLocalizingRasterIterator<T> implements RasterPlaneIterator<T>
 {
 	protected int planeDimA, planeDimB, planeSizeA, planeSizeB, incPlaneA, incPlaneB, maxI;
 	
-	public ArrayLocalizablePlaneCursor( final Array<T,?> container, final Image<T> image ) 
+	public DynamicRasterPlaneIterator(
+			final DynamicContainer< T, ? > container,
+			final Image< T > image ) 
 	{
 		super( container, image );
 	}	
 	
 	@Override 
-	public boolean hasNext()
-	{
-		return type.getIndex() < maxI;
-		
-		/*if ( type.i < maxI )
-			return true;
-		else
-			return false;*/
-	}
+	public boolean hasNext() { return internalIndex < maxI; }
 	
 	@Override
 	public void fwd()
@@ -60,15 +58,17 @@ public class ArrayLocalizablePlaneCursor<T extends Type<T>> extends ArrayLocaliz
 		if ( position[ planeDimA ] < dimensions[ planeDimA ] - 1)
 		{
 			position[ planeDimA ]++;
-			type.incIndex( incPlaneA );
+			internalIndex += incPlaneA;
 		}
 		else if ( position[ planeDimB ] < dimensions[ planeDimB ] - 1)
 		{
 			position[ planeDimA ] = 0;
 			position[ planeDimB ]++;
-			type.incIndex( incPlaneB );
-			type.decIndex( (planeSizeA - 1) * incPlaneA );
+			
+			internalIndex += incPlaneB;
+			internalIndex -= (planeSizeA - 1) * incPlaneA;
 		}
+		accessor.updateIndex( internalIndex );
 		
 		linkedIterator.fwd();
 	}
@@ -82,7 +82,7 @@ public class ArrayLocalizablePlaneCursor<T extends Type<T>> extends ArrayLocaliz
 		this.planeSizeA = container.getDimension( planeDimA );
 		this.planeSizeB = container.getDimension( planeDimB );
 		
-		final int[] steps = Array.createAllocationSteps( container.getDimensions() );
+		final int[] steps = container.getSteps();
 
 		// store the current position
     	final int[] dimPos = dimensionPositions.clone();
@@ -102,20 +102,19 @@ public class ArrayLocalizablePlaneCursor<T extends Type<T>> extends ArrayLocaliz
 
 		setPosition( dimPos );		
 		
-		type.decIndex( incPlaneA );					
+		type.updateContainer( this );				
+		internalIndex -= incPlaneA;					
 		position[ planeDimA ] = -1;
 		
 		dimPos[ planeDimA ] = dimensions[ planeDimA ] - 1;		
 		if ( planeDimB > -1 && planeDimB < steps.length )
 			dimPos[ planeDimB ] = dimensions[ planeDimB ] - 1;
 		
-		maxI = container.getPos( dimPos );
-		
-		type.updateContainer( this );				
+		maxI = container.getPos( dimPos );		
 	}
 	
 	@Override
-	public void reset( int planeDimA, int planeDimB, long[] dimensionPositions )
+	public void reset( final int planeDimA, final int planeDimB, final long[] dimensionPositions )
 	{
 		this.planeDimA = planeDimA;
 		this.planeDimB = planeDimB;
@@ -123,10 +122,10 @@ public class ArrayLocalizablePlaneCursor<T extends Type<T>> extends ArrayLocaliz
 		this.planeSizeA = container.getDimension( planeDimA );
 		this.planeSizeB = container.getDimension( planeDimB );
 		
-		final int[] steps = Array.createAllocationSteps( container.getDimensions() );
+		final int[] steps = container.getSteps();
 
 		// store the current position
-    	final int[] dimPos = new int[ dimensionPositions.length ]; 
+    	final int[] dimPos = new int[ dimensionPositions.length ];
     	for ( int i = 0; i < dimensionPositions.length; ++i )
     		dimPos[ i ] = ( int )dimensionPositions[ i ];
 		
@@ -145,7 +144,8 @@ public class ArrayLocalizablePlaneCursor<T extends Type<T>> extends ArrayLocaliz
 
 		setPosition( dimPos );		
 		
-		type.decIndex( incPlaneA );					
+		type.updateContainer( this );				
+		internalIndex -= incPlaneA;					
 		position[ planeDimA ] = -1;
 		
 		dimPos[ planeDimA ] = dimensions[ planeDimA ] - 1;		
@@ -153,9 +153,6 @@ public class ArrayLocalizablePlaneCursor<T extends Type<T>> extends ArrayLocaliz
 			dimPos[ planeDimB ] = dimensions[ planeDimB ] - 1;
 		
 		maxI = container.getPos( dimPos );
-		
-		type.updateContainer( this );
-		
 	}
 
 	@Override
@@ -171,22 +168,25 @@ public class ArrayLocalizablePlaneCursor<T extends Type<T>> extends ArrayLocaliz
 	public void reset()
 	{
 		if ( dimensions != null )
-			reset( 0, 1, new int[ numDimensions ] );
+			reset( 0, 1, image.createPositionArray() );
 		
 		linkedIterator.reset();
 	}
-	
-	protected void setPosition( final long[] position )
+
+	@Override
+	public void localize( int[] position )
 	{
 		for ( int d = 0; d < numDimensions; d++ )
-			this.position[ d ] = ( int )position[ d ];
-		
-		type.updateIndex( container.getPos( this.position ) );
+			position[ d ] = this.position[ d ];
 	}
-
+	
+	@Override
+	public int getIntPosition( final int dim ){ return position[ dim ]; }
+	
 	protected void setPosition( final int[] position )
 	{
-		type.updateIndex( container.getPos( position ) );
+		internalIndex = container.getPos( position );
+		type.updateContainer( this );				
 		
 		for ( int d = 0; d < numDimensions; d++ )
 			this.position[ d ] = position[ d ];

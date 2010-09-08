@@ -66,7 +66,7 @@ public class Bandpass<T extends NumericType<T>> implements OutputAlgorithm<T>, B
 			img = this.output;
 		}
 		
-		final RasterIterator<T> cursor = img.createLocalizableCursor();
+		final RasterIterator<T> cursor = img.createLocalizingRasterIterator();
 		final int[] pos = img.createPositionArray();
 		
 		final boolean actAsBandPass = bandPass;

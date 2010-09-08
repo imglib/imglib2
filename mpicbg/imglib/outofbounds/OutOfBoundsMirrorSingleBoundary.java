@@ -52,7 +52,7 @@ public class OutOfBoundsMirrorSingleBoundary< T extends Type< T > > extends Abst
 {
 	OutOfBoundsMirrorSingleBoundary( final PositionableRasterSampler< T > source )
 	{
-		this( source, source.getImage().createPositionableCursor() );
+		this( source, source.getImage().createPositionableRasterSampler() );
 	}
 	
 	OutOfBoundsMirrorSingleBoundary(

@@ -33,6 +33,7 @@ import mpicbg.imglib.container.Container;
 import mpicbg.imglib.container.array.Array;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.location.LinkableIterator;
+import mpicbg.imglib.location.RasterLocalizable;
 import mpicbg.imglib.type.Type;
 
 /**
@@ -70,8 +71,8 @@ import mpicbg.imglib.type.Type;
  * then, it is ensured that
  * <pre>
  * 		{
- * 			Cursor&lt T &gt cursor1 = img1.createCursor();
- * 			Cursor&lt S &gt cursor2 = img2.createCursor();
+ * 			RasterIterator&lt T &gt cursor1 = img1.createBasicIterator();
+ * 			RasterIterator&lt S &gt cursor2 = img2.createBasicIterator();
  * 			while ( cursor1.hasNext() )
 			{
 				cursor1.fwd();
@@ -81,8 +82,9 @@ import mpicbg.imglib.type.Type;
  * </pre>
  * will visit the <em>same pixel positions</em>.
  * <p>
- * If the two {@link Container} are not the same, then {@link LocalizableIterableCursor} and {@link PositionableRasterSampler} 
- * have to be used:
+ * If the two {@link Container} are not the same, then
+ * {@link RasterLocalizable} and {@link PositionableRasterSampler} have to be
+ * used:
  * <pre>
  * 		else {
  * 			LocalizableCursor&lt T &gt cursor1 = img1.createLocalizableCursor();
@@ -97,11 +99,17 @@ import mpicbg.imglib.type.Type;
  * This snippet will also traverse images the same way, but this is less efficient than the previous solution 
  * with identical containers.
  *<p>
+ * This interface is for convenience only, it combines a set of interfaces and
+ * might be used for type definition in your implementation.  Instead of this
+ * interface, you can use a generic type that includes only the interfaces you
+ * need, e.g.
+ * 
+ * < T extends RasterSampler< ? >, Iterator< ? > > 
  * 
  * @author Stephan Preibisch & Stephan Saalfeld
  *
  * @param <T> - the {@link Type} this {@link RasterIterator} works on
  */
-public interface RasterIterator< T extends Type< T > > extends LocalizableRasterSampler< T >, LinkableIterator< T > 
+public interface RasterIterator< T extends Type< T > > extends RasterSampler< T >, RasterLocalizable, LinkableIterator< T > 
 {	
 }

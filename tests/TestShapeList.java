@@ -71,8 +71,8 @@ public class TestShapeList
 		timer.start();
 		final ArrayContainerFactory arrayFactory = new ArrayContainerFactory();
 		final Image< ByteType > arrayImage = new ImageFactory< ByteType >( new ByteType(), arrayFactory ).createImage( new int[]{ 200, 200, depth }, "ArrayContainer" );
-		final RasterIterator< ByteType > cArray = arrayImage.createLocalizableCursor();
-		final PositionableRasterSampler< ByteType > cShapeList = shapeListImage.createPositionableCursor();
+		final RasterIterator< ByteType > cArray = arrayImage.createLocalizingRasterIterator();
+		final PositionableRasterSampler< ByteType > cShapeList = shapeListImage.createPositionableRasterSampler();
 		while ( cArray.hasNext() )
 		{
 			cArray.fwd();
@@ -95,7 +95,7 @@ public class TestShapeList
 		timer.start();
 		final CellContainerFactory cellFactory = new CellContainerFactory();
 		final Image< ByteType > cellImage = new ImageFactory< ByteType >( new ByteType(), cellFactory ).createImage( new int[]{ 200, 200, depth }, "CellContainer" );
-		final RasterIterator< ByteType > cCell = cellImage.createLocalizableCursor();
+		final RasterIterator< ByteType > cCell = cellImage.createLocalizingRasterIterator();
 		while ( cCell.hasNext() )
 		{
 			cCell.fwd();
@@ -134,7 +134,7 @@ public class TestShapeList
 					affine,
 					new LinearInterpolatorFactory< ByteType >(
 //					new NearestNeighborInterpolatorFactory< ByteType >(
-							new OutOfBoundsMirrorFactory< ByteType >() ) );
+							new OutOfBoundsMirrorFactory< ByteType >( true ) ) );
 //							new OutOfBoundsStrategyValueFactory< ByteType >( new ByteType( ( byte )112 ) ) ) );
 		transform.setOutputImageFactory(
 				new ImageFactory< ByteType >( new ByteType(), cellFactory ) );
