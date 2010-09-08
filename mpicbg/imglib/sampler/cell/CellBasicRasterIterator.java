@@ -24,8 +24,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- *
- * @author Stephan Preibisch & Stephan Saalfeld
  */
 package mpicbg.imglib.sampler.cell;
 
@@ -35,6 +33,12 @@ import mpicbg.imglib.image.Image;
 import mpicbg.imglib.sampler.AbstractBasicRasterIterator;
 import mpicbg.imglib.type.Type;
 
+/**
+ * 
+ * @param <T>
+ *
+ * @author Stephan Preibisch and Stephan Saalfeld
+ */
 public class CellBasicRasterIterator< T extends Type< T > > extends AbstractBasicRasterIterator< T > implements CellStorageAccess
 {
 	final protected T type;

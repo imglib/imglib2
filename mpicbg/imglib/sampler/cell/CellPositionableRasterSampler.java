@@ -65,12 +65,12 @@ public class CellPositionableRasterSampler< T extends Type< T > > extends Abstra
 	/*
 	 * The index of the current cell
 	 */
-	protected int cell;
+	protected int cellIndex;
 	
 	/*
 	 * The index of the last cell
 	 */
-	protected int lastCell;
+	protected int lastCellIndex;
 	
 	/*
 	 * The instance of the current cell
@@ -138,18 +138,18 @@ public class CellPositionableRasterSampler< T extends Type< T > > extends Abstra
 		Array.createAllocationSteps( numCellsDim, cellStep );
 		
 		type.updateIndex( 0 );
-		cell = 0;
-		lastCell = -1;
-		getCellData( cell );
+		cellIndex = 0;
+		lastCellIndex = -1;
+		getCellData( cellIndex );
 		type.updateContainer( this );
 	}
 	
 	protected void getCellData( final int cell )
 	{
-		if ( cell == lastCell )
+		if ( cell == lastCellIndex )
 			return;
 		
-		lastCell = cell;		
+		lastCellIndex = cell;		
 		cellInstance = container.getCell( cell );		
 
 		cellInstance.getDimensions( cellDimensions );
@@ -183,11 +183,11 @@ public class CellPositionableRasterSampler< T extends Type< T > > extends Abstra
 			{
 				// next cell in dim direction is not the last one
 				cellPosition[ dim ]++;
-				cell += cellStep[ dim ];
+				cellIndex += cellStep[ dim ];
 				
 				// we can directly compute the array index i in the next cell
 				type.decIndex( ( position[ dim ] - cellOffset[ dim ] ) * step[ dim ] );
-				getCellData(cell);
+				getCellData(cellIndex);
 				
 				position[ dim ]++;	
 			} 
@@ -195,9 +195,9 @@ public class CellPositionableRasterSampler< T extends Type< T > > extends Abstra
 			{
 				// next cell in dim direction is the last one, we cannot propagate array index i					
 				cellPosition[ dim ]++;
-				cell += cellStep[ dim ];
+				cellIndex += cellStep[ dim ];
 
-				getCellData(cell);					
+				getCellData(cellIndex);					
 				position[ dim ]++;	
 				type.updateIndex( cellInstance.globalPositionToIndex( position ) );
 			}
@@ -285,9 +285,9 @@ public class CellPositionableRasterSampler< T extends Type< T > > extends Abstra
 			{
 				// current cell is the last one, so we cannot propagate the i
 				cellPosition[ dim ]--;
-				cell -= cellStep[ dim ];
+				cellIndex -= cellStep[ dim ];
 
-				getCellData(cell);					
+				getCellData(cellIndex);					
 				
 				position[ dim ]--;
 				type.updateIndex( cellInstance.globalPositionToIndex( position ) );
@@ -296,10 +296,10 @@ public class CellPositionableRasterSampler< T extends Type< T > > extends Abstra
 			{
 				// current cell in dim direction is not the last one
 				cellPosition[ dim ]--;
-				cell -= cellStep[ dim ];
+				cellIndex -= cellStep[ dim ];
 				
 				type.decIndex( ( position[ dim ] - cellOffset[ dim ]) * step[ dim ] );
-				getCellData(cell);
+				getCellData(cellIndex);
 				type.incIndex( ( cellDimensions[ dim ] - 1 ) * step[ dim ] );
 				
 				position[ dim ]--;	
@@ -314,16 +314,16 @@ public class CellPositionableRasterSampler< T extends Type< T > > extends Abstra
 	@Override
 	public void setPosition( final int[] position )
 	{
-		for ( int d = 0; d < numDimensions; d++ )
+		for ( int d = 0; d < numDimensions; ++d )
 			this.position[ d ] = position[ d ];
 
 		// the cell position in "cell space" from the image coordinates 
 		container.getCellPosition( position, cellPosition );
 		
 		// get the cell index
-		cell = container.getCellIndex( cursor, cellPosition );
+		cellIndex = container.getCellIndex( cursor, cellPosition );
 
-		getCellData(cell);
+		getCellData( cellIndex );
 		type.updateIndex( cellInstance.globalPositionToIndex( position ) );
 
 		linkedRasterPositionable.setPosition( position );
@@ -333,16 +333,16 @@ public class CellPositionableRasterSampler< T extends Type< T > > extends Abstra
 	/* TODO change position to long accuracy */
 	public void setPosition( final long[] position )
 	{
-		for ( int d = 0; d < numDimensions; d++ )
+		for ( int d = 0; d < numDimensions; ++d )
 			this.position[ d ] = ( int )position[ d ];
 
 		// the cell position in "cell space" from the image coordinates 
 		container.getCellPosition( this.position, cellPosition );
 		
 		// get the cell index
-		cell = container.getCellIndex( cursor, cellPosition );
+		cellIndex = container.getCellIndex( cursor, cellPosition );
 
-		getCellData(cell);
+		getCellData(cellIndex);
 		type.updateIndex( cellInstance.globalPositionToIndex( this.position ) );
 
 		linkedRasterPositionable.setPosition( position );
@@ -357,9 +357,9 @@ public class CellPositionableRasterSampler< T extends Type< T > > extends Abstra
 		cellPosition[ dim ] = container.getCellPosition( position, dim );
 
 		// get the cell index
-		cell = container.getCellIndex( cursor, cellPosition[ dim ], dim );
+		cellIndex = container.getCellIndex( cursor, cellPosition[ dim ], dim );
 		
-		getCellData(cell);
+		getCellData(cellIndex);
 		type.updateIndex( cellInstance.globalPositionToIndex( this.position ) );
 
 		linkedRasterPositionable.setPosition( position, dim );
@@ -376,7 +376,7 @@ public class CellPositionableRasterSampler< T extends Type< T > > extends Abstra
 	public void close()
 	{
 		cursor.close();
-		lastCell = -1;
+		lastCellIndex = -1;
 		super.close();
 	}
 	

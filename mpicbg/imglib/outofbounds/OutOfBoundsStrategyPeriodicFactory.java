@@ -27,12 +27,13 @@
  */
 package mpicbg.imglib.outofbounds;
 
+import mpicbg.imglib.image.Image;
 import mpicbg.imglib.sampler.PositionableRasterSampler;
 import mpicbg.imglib.type.Type;
 
 /**
- * 
- * @param <T>
+ * Create appropriate strategies that virtually extend an {@link Image}
+ * periodically.
  *
  * @author Stephan Preibisch and Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */

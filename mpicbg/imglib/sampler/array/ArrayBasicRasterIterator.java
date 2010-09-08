@@ -36,7 +36,7 @@ import mpicbg.imglib.type.Type;
  * 
  * @param <T>
  *
- * @author Stephan Preibisch and Stephan Saalfeld <saalfeld@mpi-cbg.de>
+ * @author Stephan Preibisch and Stephan Saalfeld
  */
 public class ArrayBasicRasterIterator< T extends Type< T > > extends AbstractBasicRasterIterator< T >
 {
