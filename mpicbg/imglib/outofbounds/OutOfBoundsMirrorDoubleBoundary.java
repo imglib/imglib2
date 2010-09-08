@@ -27,7 +27,6 @@
  */
 package mpicbg.imglib.outofbounds;
 
-import mpicbg.imglib.cursor.OutOfBoundsCursor;
 import mpicbg.imglib.sampler.PositionableRasterSampler;
 import mpicbg.imglib.type.Type;
 
@@ -57,7 +56,7 @@ public class OutOfBoundsMirrorDoubleBoundary< T extends Type< T > > extends Abst
 	}
 	
 	OutOfBoundsMirrorDoubleBoundary(
-			final OutOfBoundsCursor< T > source,
+			final PositionableRasterSampler< T > source,
 			final PositionableRasterSampler< T > outOfBoundsPositionable )
 	{
 		super( source, outOfBoundsPositionable );

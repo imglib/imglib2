@@ -29,8 +29,8 @@ import mpicbg.imglib.algorithm.math.MathLib;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyMirrorExpWindowingFactory;
-import mpicbg.imglib.outofbounds.OutOfBoundsMirrorSingleBoundaryFactory;
-import mpicbg.imglib.outofbounds.OutOfBoundsStrategyValueFactory;
+import mpicbg.imglib.outofbounds.OutOfBoundsMirrorFactory;
+import mpicbg.imglib.outofbounds.OutOfBoundsConstantValueFactory;
 import mpicbg.imglib.type.numeric.ComplexType;
 import mpicbg.imglib.type.numeric.RealType;
 
@@ -222,7 +222,7 @@ public class FourierTransform<T extends RealType<T>, S extends ComplexType<S>> i
 			case EXTEND_MIRROR:
 			{	
 				extendedZeroPaddedSize = getZeroPaddingSize( getExtendedImageSize( img, imageExtension ), fftOptimization );
-				outOfBoundsFactory = new OutOfBoundsMirrorSingleBoundaryFactory<T>();
+				outOfBoundsFactory = new OutOfBoundsMirrorFactory< T >( true );
 				break;
 				
 			}			
@@ -239,7 +239,7 @@ public class FourierTransform<T extends RealType<T>, S extends ComplexType<S>> i
 				else
 					extendedZeroPaddedSize = getZeroPaddingSize( inputSize, fftOptimization );
 				
-				outOfBoundsFactory = new OutOfBoundsStrategyValueFactory<T>( img.createType() );
+				outOfBoundsFactory = new OutOfBoundsConstantValueFactory<T>( img.createType() );
 				break;
 			}		
 		}

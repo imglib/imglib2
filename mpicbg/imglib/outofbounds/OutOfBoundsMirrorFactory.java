@@ -24,19 +24,37 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- *
- * @author Stephan Preibisch & Stephan Saalfeld
  */
 package mpicbg.imglib.outofbounds;
 
+import mpicbg.imglib.image.Image;
 import mpicbg.imglib.sampler.PositionableRasterSampler;
 import mpicbg.imglib.type.Type;
 
-public class OutOfBoundsMirrorSingleBoundaryFactory< T extends Type< T >> extends OutOfBoundsStrategyFactory< T >
+
+/**
+ * Create appropriate strategies that virtually mirror an {@link Image} at its
+ * boundaries.  Boundary pixels are either duplicated or not.
+ * 
+ * @param <T>
+ *
+ * @author Stephan Preibisch and Stephan Saalfeld <saalfeld@mpi-cbg.de>
+ */
+public class OutOfBoundsMirrorFactory< T extends Type< T > > extends OutOfBoundsStrategyFactory< T >
 {
-	@Override
-	public OutOfBoundsMirrorSingleBoundary< T > createStrategy( final PositionableRasterSampler< T > cursor )
+	final protected boolean singleBoundary;
+	
+	public OutOfBoundsMirrorFactory( final boolean singleBoundary )
 	{
-		return new OutOfBoundsMirrorSingleBoundary< T >( cursor );
+		this.singleBoundary = singleBoundary;
+	}
+	
+	@Override
+	public AbstractOutOfBoundsMirror< T > createStrategy( final PositionableRasterSampler< T > cursor )
+	{
+		if ( singleBoundary )
+			return new OutOfBoundsMirrorSingleBoundary< T >( cursor );
+		else
+			return new OutOfBoundsMirrorDoubleBoundary< T >( cursor );
 	}
 }

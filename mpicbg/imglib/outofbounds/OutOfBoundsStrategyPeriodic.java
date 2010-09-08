@@ -24,105 +24,280 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- *
- * @author Stephan Preibisch & Stephan Saalfeld
  */
 package mpicbg.imglib.outofbounds;
 
-import mpicbg.imglib.cursor.LocalizableIterableCursor;
+import mpicbg.imglib.algorithm.math.MathLib;
+import mpicbg.imglib.location.RasterLocalizable;
 import mpicbg.imglib.sampler.PositionableRasterSampler;
 import mpicbg.imglib.type.Type;
 
-public class OutOfBoundsStrategyPeriodic<T extends Type<T>> extends OutOfBoundsStrategy<T>
+/**
+ * Coordinates out of image bounds are periodically repeated.
+ * 
+ * <pre>
+ * Example:
+ * 
+ * width=4
+ * 
+ *                                  |<-inside->|
+ * x:    -9 -8 -7 -6 -5 -4 -3 -2 -1  0  1  2  3  4  5  6  7  8  9
+ * f(x):  3  0  1  2  3  0  1  2  3  0  1  2  3  0  1  2  3  0  1
+ * </pre>
+ * 
+ * @param <T>
+ *
+ * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
+ */
+public class OutOfBoundsStrategyPeriodic<T extends Type<T>> implements OutOfBoundsStrategy< T >
 {
-	final PositionableRasterSampler<T> parentCursor;
-	final PositionableRasterSampler<T> circleCursor;
-	final T type, circleType;
-	final int numDimensions;
-	final int[] dimension, position, circledPosition;
+	final protected PositionableRasterSampler< T > outOfBoundsPositionable;
 	
-	public OutOfBoundsStrategyPeriodic( final PositionableRasterSampler<T> parentCursor )
+	final protected int numDimensions;
+	
+	final protected int[] dimension, position;
+	
+	final protected boolean[] dimIsOutOfBounds;
+	
+	protected boolean isOutOfBounds = false;
+	
+	public OutOfBoundsStrategyPeriodic( final PositionableRasterSampler< T > source )
 	{
-		super( parentCursor );
-		
-		this.parentCursor = parentCursor;
-		this.circleCursor = parentCursor.getImage().createPositionableCursor();
-		this.circleType = circleCursor.type();
-		this.type = circleType.createVariable();
-			
-		this.numDimensions = parentCursor.getImage().numDimensions();
-		this.dimension = parentCursor.getImage().getDimensions();
-		this.position = new int[ numDimensions ];
-		this.circledPosition = new int[ numDimensions ];
+		this( source, source.getImage().createPositionableCursor() );
 	}
-
-	@Override
-	public T getType(){ return type; }
 	
-	@Override
-	final public void notifyOutOfBOunds()
+	OutOfBoundsStrategyPeriodic(
+			final PositionableRasterSampler< T > source,
+			final PositionableRasterSampler< T > outOfBoundsPositionable )
 	{
-		parentCursor.localize( position );
-		getCircleCoordinate( position, circledPosition, dimension, numDimensions );		
-		circleCursor.setPosition( circledPosition );
-
-		type.set( circleType );
+		this.outOfBoundsPositionable = outOfBoundsPositionable;
+		numDimensions = source.getImage().numDimensions();
+		dimension = source.getImage().getDimensions();
+		position = new int[ numDimensions ];
+		
+		dimIsOutOfBounds = new boolean[ numDimensions ];
 	}
-
-	@Override
-	public void notifyOutOfBOunds( final int steps, final int dim ) 
+	
+	final protected void checkOutOfBounds()
 	{
-		final int oldPos = circleCursor.getIntPosition( dim ); 
-		
-		circleCursor.move( getCircleCoordinateDim( oldPos + steps, dimension[ dim ] )  - oldPos, dim );
-		type.set( circleType );
+		for ( int d = 0; d < numDimensions; ++d )
+		{
+			if ( dimIsOutOfBounds[ d ] )
+			{
+				isOutOfBounds = true;
+				return;
+			}
+		}
+		isOutOfBounds = false;
 	}
 	
+	/* Dimensionality */
+	
 	@Override
-	public void notifyOutOfBOundsFwd( final int dim ) 
-	{		
-		final int oldPos = circleCursor.getIntPosition( dim ); 
-		
-		circleCursor.move( getCircleCoordinateDim( oldPos + 1, dimension[ dim ] )  - oldPos, dim );
-		type.set( circleType );
-	}
+	public int numDimensions(){ return numDimensions; }
+	
+	
+	/* OutOfBounds */
+	
+	@Override
+	public boolean isOutOfBounds(){ return isOutOfBounds; }
 
-	@Override
-	public void notifyOutOfBoundsBck( final int dim ) 
-	{
-		final int oldPos = circleCursor.getIntPosition( dim ); 
-		
-		circleCursor.move( getCircleCoordinateDim( oldPos - 1, dimension[ dim ] )  - oldPos, dim );
-		type.set( circleType );
-	}
+	
+	/* Sampler */
 	
 	@Override
-	public void initOutOfBOunds() 
-	{ 
-		parentCursor.localize( position );
-		getCircleCoordinate( position, circledPosition, dimension, numDimensions );		
-		circleCursor.setPosition( circledPosition );
-
-		type.set( circleType );
-	}
+	public T type(){ return outOfBoundsPositionable.type(); }
 	
-	final private static int getCircleCoordinateDim( final int pos, final int dim )
-	{		
-		if ( pos > -1 )
-			return pos % dim;
-		else
-			return (dim-1) + (pos+1) % dim;		
-	}
+	@Override
+	@Deprecated
+	final public T getType(){ return type(); }
 	
-	final private static void getCircleCoordinate( final int[] position, final int circledPosition[], final int[] dimensions, final int numDimensions )
+	
+	/* RasterLocalizable */
+	
+	@Override
+	public void localize( float[] position )
 	{
 		for ( int d = 0; d < numDimensions; d++ )
-			circledPosition[ d ] = getCircleCoordinateDim( position[ d ], dimensions[ d ] );
+			position[ d ] = this.position[ d ];
+	}
+
+	@Override
+	public void localize( double[] position )
+	{
+		for ( int d = 0; d < numDimensions; d++ )
+			position[ d ] = this.position[ d ];
+	}
+
+	@Override
+	public void localize( int[] position )
+	{
+		for ( int d = 0; d < numDimensions; d++ )
+			position[ d ] = this.position[ d ];
+	}
+	
+	@Override
+	public void localize( long[] position )
+	{
+		for ( int d = 0; d < numDimensions; d++ )
+			position[ d ] = this.position[ d ];
+	}
+	
+	@Override
+	public float getFloatPosition( final int dim ){ return position[ dim ]; }
+	
+	@Override
+	public double getDoublePosition( final int dim ){ return position[ dim ]; }
+	
+	@Override
+	public int getIntPosition( final int dim ){ return position[ dim ]; }
+
+	@Override
+	public long getLongPosition( final int dim ){ return position[ dim ]; }
+	
+	@Override
+	public String getLocationAsString() { return MathLib.printCoordinates( position ); }
+	
+	@Override
+	public String toString() { return getLocationAsString() + " = " + type(); }
+	
+	
+	/* RasterPositionable */
+	
+	@Override
+	final public void fwd( final int dim )
+	{
+		final int p = ++position[ dim ];
+		if ( p == 0 )
+		{
+			dimIsOutOfBounds[ dim ] = false;
+			if ( isOutOfBounds ) checkOutOfBounds();
+		}
+		else if ( p == dimension[ dim ] )
+			dimIsOutOfBounds[ dim ] = isOutOfBounds = true;
+		
+		final int q = outOfBoundsPositionable.getIntPosition( dim ) + 1;
+		if ( q == dimension[ dim ] )
+			outOfBoundsPositionable.setPosition( 0, dim );
+		else
+			outOfBoundsPositionable.fwd( dim  );
+	}
+	
+	@Override
+	final public void bck( final int dim )
+	{
+		final int p = position[ dim ]--;
+		if ( p == 0 )
+			dimIsOutOfBounds[ dim ] = isOutOfBounds = true;
+		else if ( p == dimension[ dim ] )
+		{
+			dimIsOutOfBounds[ dim ] = false;
+			if ( isOutOfBounds ) checkOutOfBounds();
+		}
+		
+		final int q = outOfBoundsPositionable.getIntPosition( dim );
+		if ( q == 0 )
+			outOfBoundsPositionable.setPosition( dimension[ dim ] - 1, dim );
+		else
+			outOfBoundsPositionable.bck( dim  );
+	}
+	
+	@Override
+	final public void setPosition( final int position, final int dim )
+	{
+		this.position[ dim ] = position;
+		final int mod = dimension[ dim ];
+		if ( position < 0 )
+		{
+			outOfBoundsPositionable.setPosition( mod - 1 + ( ( position + 1 ) % mod ), dim );
+			dimIsOutOfBounds[ dim ] = isOutOfBounds = true;
+		}
+		else if ( position >= mod )
+		{
+			outOfBoundsPositionable.setPosition( position % mod, dim );
+			dimIsOutOfBounds[ dim ] = isOutOfBounds = true;
+		}
+		else
+		{
+			outOfBoundsPositionable.setPosition( position, dim );
+			dimIsOutOfBounds[ dim ] = false;
+			if ( isOutOfBounds )
+				checkOutOfBounds();
+		}
+	}
+	
+	@Override
+	public void move( final int distance, final int dim )
+	{
+		if ( distance > 0 )
+		{
+			for ( int i = 0; i < distance; ++i )
+				fwd( dim );
+		}
+		else
+		{
+			for ( int i = -distance; i > 0; --i )
+				bck( dim );
+		}
+	}
+	
+	@Override
+	public void move( final long distance, final int dim )
+	{
+		move( ( int )distance, dim );
+	}
+	
+	@Override
+	public void moveTo( final RasterLocalizable localizable )
+	{
+		for ( int d = 0; d < numDimensions; ++d )
+			move( localizable.getIntPosition( d ) - position[ d ], d );
+	}
+	
+	@Override
+	public void moveTo( final int[] position )
+	{
+		for ( int d = 0; d < numDimensions; ++d )
+			move( position[ d ] - this.position[ d ], d );
+	}
+	
+	@Override
+	public void moveTo( final long[] position )
+	{
+		for ( int d = 0; d < numDimensions; ++d )
+			move( position[ d ] - this.position[ d ], d );
+	}
+	
+	@Override
+	public void setPosition( final long position, final int dim )
+	{
+		setPosition( ( int )position, dim );
+	}
+	
+	@Override
+	public void setPosition( final RasterLocalizable localizable )
+	{
+		for ( int d = 0; d < numDimensions; ++d )
+			setPosition( localizable.getIntPosition( d ), d );
+	}
+	
+	@Override
+	public void setPosition( final int[] position )
+	{
+		for ( int d = 0; d < position.length; ++d )
+			setPosition( position[ d ], d );
+	}
+	
+	@Override
+	public void setPosition( final long[] position )
+	{
+		for ( int d = 0; d < position.length; ++d )
+			setPosition( position[ d ], d );
 	}
 	
 	@Override
 	public void close()
 	{
-		circleCursor.close();
+		outOfBoundsPositionable.close();
 	}
 }

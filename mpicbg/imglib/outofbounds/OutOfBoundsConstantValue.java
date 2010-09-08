@@ -24,8 +24,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- *
- * @author Stephan Preibisch & Stephan Saalfeld
  */
 package mpicbg.imglib.outofbounds;
 
@@ -34,7 +32,13 @@ import mpicbg.imglib.location.RasterLocalizable;
 import mpicbg.imglib.sampler.PositionableRasterSampler;
 import mpicbg.imglib.type.Type;
 
-public class OutOfBoundsStrategyValue< T extends Type< T > > implements OutOfBoundsStrategy< T >
+/**
+ * 
+ * @param <T>
+ *
+ * @author Stephan Preibisch and Stephan Saalfeld <saalfeld@mpi-cbg.de>
+ */
+public class OutOfBoundsConstantValue< T extends Type< T > > implements OutOfBoundsStrategy< T >
 {
 	final T value;
 	
@@ -48,14 +52,14 @@ public class OutOfBoundsStrategyValue< T extends Type< T > > implements OutOfBou
 	
 	protected boolean isOutOfBounds = false;
 	
-	public OutOfBoundsStrategyValue(
+	public OutOfBoundsConstantValue(
 			final PositionableRasterSampler< T > source,
 			final T value )
 	{
 		this( source, source.getImage().createPositionableCursor(), value );
 	}
 	
-	OutOfBoundsStrategyValue(
+	OutOfBoundsConstantValue(
 			final PositionableRasterSampler< T > source,
 			final PositionableRasterSampler< T > outOfBoundsPositionable,
 			final T value )

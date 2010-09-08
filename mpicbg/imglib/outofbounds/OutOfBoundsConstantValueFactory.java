@@ -36,17 +36,17 @@ import mpicbg.imglib.type.Type;
  *
  * @author Stephan Preibisch and Stephan Saalfeld
  */
-public class OutOfBoundsStrategyValueFactory< T extends Type< T > >
+public class OutOfBoundsConstantValueFactory< T extends Type< T > >
 		extends OutOfBoundsStrategyFactory< T >
 {
 	protected T value;
 
-	public OutOfBoundsStrategyValueFactory()
+	public OutOfBoundsConstantValueFactory()
 	{
 		this.value = null;
 	}
 
-	public OutOfBoundsStrategyValueFactory( final T value )
+	public OutOfBoundsConstantValueFactory( final T value )
 	{
 		this.value = value;
 	}
@@ -62,10 +62,10 @@ public class OutOfBoundsStrategyValueFactory< T extends Type< T > >
 	}
 
 	@Override
-	public OutOfBoundsStrategyValue< T > createStrategy( final PositionableRasterSampler< T > cursor )
+	public OutOfBoundsConstantValue< T > createStrategy( final PositionableRasterSampler< T > cursor )
 	{
-		if ( value == null ) return new OutOfBoundsStrategyValue< T >( cursor, cursor.getImage().createType() );
-		else return new OutOfBoundsStrategyValue< T >( cursor, value );
+		if ( value == null ) return new OutOfBoundsConstantValue< T >( cursor, cursor.getImage().createType() );
+		else return new OutOfBoundsConstantValue< T >( cursor, value );
 	}
 
 }

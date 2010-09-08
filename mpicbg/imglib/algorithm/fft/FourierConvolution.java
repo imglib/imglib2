@@ -30,7 +30,7 @@ import mpicbg.imglib.algorithm.math.MathLib;
 import mpicbg.imglib.container.ContainerFactory;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.ImageFactory;
-import mpicbg.imglib.outofbounds.OutOfBoundsStrategyValueFactory;
+import mpicbg.imglib.outofbounds.OutOfBoundsConstantValueFactory;
 import mpicbg.imglib.sampler.PositionableRasterSampler;
 import mpicbg.imglib.sampler.RasterIterator;
 import mpicbg.imglib.type.numeric.RealType;
@@ -172,7 +172,7 @@ public class FourierConvolution<T extends RealType<T>, S extends RealType<S>> im
 		c.type().setOne();
 		c.close();
 		
-		final GaussianConvolution<T> gauss = new GaussianConvolution<T>( kernel, new OutOfBoundsStrategyValueFactory<T>(), sigma );
+		final GaussianConvolution<T> gauss = new GaussianConvolution<T>( kernel, new OutOfBoundsConstantValueFactory<T>(), sigma );
 		
 		if ( !gauss.checkInput() || !gauss.process() )
 		{

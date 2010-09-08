@@ -24,7 +24,7 @@ import mpicbg.imglib.algorithm.math.MathLib;
 import mpicbg.imglib.container.array.ArrayContainerFactory;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.ImageFactory;
-import mpicbg.imglib.outofbounds.OutOfBoundsStrategyValueFactory;
+import mpicbg.imglib.outofbounds.OutOfBoundsConstantValueFactory;
 import mpicbg.imglib.sampler.PositionableRasterSampler;
 import mpicbg.imglib.sampler.RasterIterator;
 import mpicbg.imglib.sampler.array.ArrayLocalizableCursor;
@@ -81,7 +81,7 @@ public class FloydSteinbergDithering<T extends RealType<T>> implements OutputAlg
 		final RasterIterator<FakeType> cursor = ArrayLocalizableCursor.createLinearCursor( dim );
 
 		// we also need a Cursors for the input, the output and the kernel image
-		final PositionableRasterSampler<T> cursorInput = img.createPositionableCursor( new OutOfBoundsStrategyValueFactory<T>() );
+		final PositionableRasterSampler<T> cursorInput = img.createPositionableCursor( new OutOfBoundsConstantValueFactory<T>() );
 		final PositionableRasterSampler<BitType> cursorOutput = result.createPositionableCursor();
 		final RasterIterator<FloatType> cursorKernel = errorDiffusionKernel.createLocalizableCursor();
 		

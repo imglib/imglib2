@@ -24,21 +24,24 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- *
- * @author Stephan Preibisch & Stephan Saalfeld
  */
 package mpicbg.imglib.outofbounds;
 
-import mpicbg.imglib.cursor.LocalizableIterableCursor;
 import mpicbg.imglib.sampler.PositionableRasterSampler;
 import mpicbg.imglib.type.Type;
 
-public class OutOfBoundsStrategyPeriodicFactory<T extends Type<T>> extends OutOfBoundsStrategyFactory<T>
+/**
+ * 
+ * @param <T>
+ *
+ * @author Stephan Preibisch and Stephan Saalfeld <saalfeld@mpi-cbg.de>
+ */
+public class OutOfBoundsStrategyPeriodicFactory< T extends Type< T > > extends OutOfBoundsStrategyFactory< T >
 {
 	@Override
-	public OutOfBoundsStrategyPeriodic<T> createStrategy( final PositionableRasterSampler<T> cursor )
+	public OutOfBoundsStrategyPeriodic< T > createStrategy( final PositionableRasterSampler< T > cursor )
 	{
-		return new OutOfBoundsStrategyPeriodic<T>( cursor );
+		return new OutOfBoundsStrategyPeriodic< T >( cursor );
 	}
 
 }

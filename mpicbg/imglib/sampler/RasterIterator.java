@@ -36,26 +36,30 @@ import mpicbg.imglib.location.LinkableIterator;
 import mpicbg.imglib.type.Type;
 
 /**
- * <h2>The Cursor interface</h2>
+ * <h2>The {@link RasterIterator} interface</h2>
  * 
  * <h3>Implementation</h3>
  * 
- * The {@link RasterIterator} is responsible for iterating over the image. Therefore it has to be implemented 
- * for each type of {@link Container} like {@link Array}, {@link CellContainer}, ... 
+ * {@link RasterIterator RasterIterators} are used to iterate over a raster of
+ * pixels.  They depend on the way how pixels are stored and thus need to be
+ * implemented for each {@link Container} like {@link Array}, {@link CellContainer}, ... 
  * 
- * <h3>Type support</h3>
+ * <h3>Data access</h3>
  * 
- * The {@link RasterIterator} does not know which {@link Type} of {@link Image} it is working on as there this
- * is not important for its positioning. It is typed to the {@link Type} so that the {@link RasterIterator} is
- * able to return the correct instance of {@link Type} when calling the getType() method.
+ * {@link RasterIterator RasterIterator} doe not know about the {@link Image}
+ * {@link Type} as it is not important for iteration.  However, {@link Type} is
+ * a generic parameter such that the correct instance of {@link Type} is
+ * returned by {@link #type()}.
  * 
  * <h3>Traversal policy</h3>
  * 
- * The {@link RasterIterator} class itself is only capable of iterating over all pixels of the {@link Image}, 
- * there is no guaranteed order in which the pixels are iterated, this depends on the implementation for
- * the specific {@link Container}.
+ * There is no particular guaranty regarding the order of iteration other than
+ * that all pixels are visited once before {@link #hasNext()} returns true.
+ * The actual order of iteration depends on the {@link Container} and is
+ * expected to be optimal in terms of access performance.
  * <p>
- * However, it is <b>guaranteed</b> that for two images having the same {@link Container}, the 
+ * However, it is <em>guaranteed</em> that for two same
+ * {@link Container Containers} with equal dimensions and properties, the 
  * traverse path will be the same.  For instance, if the following is true:
  * <p>
  * <pre>
@@ -63,7 +67,7 @@ import mpicbg.imglib.type.Type;
   		Container&lt S &gt c2 = img2.getContainer();
  		if ( c1.compareStorageContainerCompatibility( c2 ) )  
  * </pre>
- * then, it is ensured that 
+ * then, it is ensured that
  * <pre>
  * 		{
  * 			Cursor&lt T &gt cursor1 = img1.createCursor();
@@ -75,7 +79,7 @@ import mpicbg.imglib.type.Type;
 			}
 		}
  * </pre>
- * will visit the <b>same pixel positions</b>.
+ * will visit the <em>same pixel positions</em>.
  * <p>
  * If the two {@link Container} are not the same, then {@link LocalizableIterableCursor} and {@link PositionableRasterSampler} 
  * have to be used:

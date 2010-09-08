@@ -368,7 +368,7 @@ public class LOCI
 			final int planeX = 0;
 			final int planeY = 1;
 									
-			final RasterPlaneIterator<ShortType> it = img.createLocalizablePlaneCursor();
+			final RasterPlaneIterator< ShortType > it = img.createLocalizablePlaneCursor();
 			
 			for (int z = start; z < end; z++)
 			{	
@@ -425,7 +425,7 @@ public class LOCI
 		{
 			final MetadataRetrieve retrieve = (MetadataRetrieve)reader.getMetadataStore();
 			
-			float cal = retrieve.getDimensionsPhysicalSizeX( 0, 0 ).floatValue();
+			float cal = retrieve.getPixelsPhysicalSizeX( 0 ).floatValue();
 			if ( cal == 0)
 			{
 				cal = 1;
@@ -436,7 +436,7 @@ public class LOCI
 			
 			if ( img.numDimensions() >= 2 )
 			{
-				cal = retrieve.getDimensionsPhysicalSizeY( 0, 0 ).floatValue();
+				cal = retrieve.getPixelsPhysicalSizeY( 0 ).floatValue();
 				if ( cal == 0)
 				{
 					cal = 1;
@@ -447,7 +447,7 @@ public class LOCI
 			
 			if ( img.numDimensions() >= 3 )
 			{
-				cal = retrieve.getDimensionsPhysicalSizeZ( 0, 0 ).floatValue();
+				cal = retrieve.getPixelsPhysicalSizeZ( 0 ).floatValue();
 				if ( cal == 0)
 				{
 					cal = 1;
@@ -458,7 +458,7 @@ public class LOCI
 
 			if ( img.numDimensions() >= 4 )
 			{
-				cal = retrieve.getDimensionsTimeIncrement( 0, 0 ).floatValue();
+				cal = retrieve.getPixelsTimeIncrement( 0 ).floatValue();
 				if ( cal == 0)
 				{
 					cal = 1;

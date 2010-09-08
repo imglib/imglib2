@@ -31,8 +31,8 @@ import mpicbg.imglib.sampler.PositionableRasterSampler;
 import mpicbg.imglib.type.Type;
 
 /**
- * Coordinates out of image bounds are mirrored at boundary coordinates. So
- * boundary pixels are not repeated.
+ * Coordinates out of image bounds are mirrored at boundary coordinates.
+ * Boundary pixels are not repeated.
  * 
  * <pre>
  * Example:

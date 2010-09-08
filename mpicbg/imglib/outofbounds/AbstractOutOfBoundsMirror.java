@@ -85,6 +85,7 @@ public abstract class AbstractOutOfBoundsMirror< T extends Type< T > > implement
 		isOutOfBounds = false;
 	}
 	
+	
 	/* Dimensionality */
 	
 	@Override
