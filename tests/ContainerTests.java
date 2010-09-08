@@ -258,8 +258,14 @@ public class ContainerTests
 				outsideCursor2.setPosition( pos );
 			else
 				outsideCursor2.moveTo( pos );
+			
+			System.out.println( MathLib.printCoordinates( pos ) );
 	
-			localizableCursor1.type().set( outsideCursor2.type() );
+			try
+			{
+				localizableCursor1.type().set( outsideCursor2.type() );
+			}
+			catch ( Exception e ){ System.exit( 1 ); } 
 		}
 
 		final boolean success = test( img1, reference );
