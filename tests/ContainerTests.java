@@ -11,7 +11,6 @@ import mpicbg.imglib.algorithm.math.MathLib;
 import mpicbg.imglib.container.ContainerFactory;
 import mpicbg.imglib.container.array.ArrayContainerFactory;
 import mpicbg.imglib.container.cell.CellContainerFactory;
-import mpicbg.imglib.container.dynamic.DynamicContainerFactory;
 import mpicbg.imglib.container.imageplus.ImagePlusContainerFactory;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.ImageFactory;
@@ -31,8 +30,11 @@ public class ContainerTests
 			{ 172, 131 },
 			{  15,  13, 33 },		
 			{ 110,  38, 30 },
-			{ 109,  34, 111 }, 
-			{  21,  34,  29, 13 }
+			{ 109,  34, 111 },
+			{  12,  43,  92, 10 },
+			{  21,  34,  29, 13 },
+			{   5,  12,  30,  4,  21 },
+			{  14,  21,  13,  9,  12 }
 		}; 
 	
 	/**
@@ -66,27 +68,11 @@ public class ContainerTests
 	/**
 	 * Test CellContainer
 	 */
-	@Test public void testDynamicContainer()
-	{
-		for ( int i = 0; i < dim.length; ++i )
-		{
-			assertTrue( "ArrayContainer vs DynamicContainer failed for dim = " + MathLib.printCoordinates( dim[ i ] ),
-			            testContainer( dim[ i ], new ArrayContainerFactory(), new DynamicContainerFactory( ) ) );
-			assertTrue( "DynamicContainer vs ArrayContainer failed for dim = " + MathLib.printCoordinates( dim[ i ] ), 
-			            testContainer( dim[ i ], new DynamicContainerFactory(), new ArrayContainerFactory() ) );
-			assertTrue( "DynamicContainer vs DynamicContainer failed for dim = " + MathLib.printCoordinates( dim[ i ] ),
-			            testContainer( dim[ i ], new DynamicContainerFactory( ), new DynamicContainerFactory() ) );
-		}
-	}
-	
-	/**
-	 * Test CellContainer
-	 */
 	@Test public void testImagePlusContainer()
 	{
 		for ( int i = 0; i < dim.length; ++i )
 		{
-			if ( dim[ i ].length < 4 )
+			if ( dim[ i ].length < 6 )
 			{
 				assertTrue( "ArrayContainer vs ImagePlusContainer failed for dim = " + MathLib.printCoordinates( dim[ i ] ),
 				            testContainer( dim[ i ], new ArrayContainerFactory(), new ImagePlusContainerFactory() ) );
@@ -106,7 +92,6 @@ public class ContainerTests
 		assertTrue( "ArrayContainer MultiThreading failed", testThreading( new ArrayContainerFactory() ) );
 		assertTrue( "CellContainer MultiThreading failed", testThreading( new CellContainerFactory() ) );
 		assertTrue( "ImagePlusContainer MultiThreading failed", testThreading( new ImagePlusContainerFactory() ) );	
-		assertTrue( "DynamicContainer MultiThreading failed", testThreading( new DynamicContainerFactory() ) );	
 	}
 	
 	protected boolean testThreading( final ContainerFactory factory )
@@ -135,7 +120,7 @@ public class ContainerTests
 		final Random rnd = new Random( 1241234 );
 		
 		// create reference array
-		final float[] reference = new float[ (int)img.numPixels() ];
+		final float[] reference = new float[ ( int )img.numPixels() ];
 		
 		// iterate over image and reference array and fill with data
 		final RasterIterator<FloatType> cursor = img.createRasterIterator();			
@@ -188,7 +173,7 @@ public class ContainerTests
 		
 		// copy into a second image using simple cursors
 		final RasterIterator<FloatType> cursor1 = img1.createRasterIterator();
-		final RasterIterator<FloatType> cursor2 = img2.createRasterIterator();			
+		final RasterIterator<FloatType> cursor2 = img2.createRasterIterator();
 		
 		while( cursor1.hasNext() )
 		{
@@ -215,7 +200,7 @@ public class ContainerTests
 
 		// copy back into a second image using localizable and positionable cursors			
 		final RasterIterator<FloatType> localizableCursor1 = img1.createLocalizingRasterIterator();			
-		final PositionableRasterSampler<FloatType> positionableCursor2 = img2.createPositionableRasterSampler();			
+		final PositionableRasterSampler<FloatType> localizableByDimCursor2 = img2.createPositionableRasterSampler();			
 		
 		int i = 0;
 		
@@ -225,16 +210,16 @@ public class ContainerTests
 			++i;
 			
 			if ( i % 2 == 0 )
-				positionableCursor2.moveTo( localizableCursor1 );
+				localizableByDimCursor2.moveTo( localizableCursor1 );
 			else
-				positionableCursor2.setPosition( localizableCursor1 );
+				localizableByDimCursor2.setPosition( localizableCursor1 );
 			
-			positionableCursor2.type().set( localizableCursor1.type() );
+			localizableByDimCursor2.type().set( localizableCursor1.type() );
 		}
 		
-		positionableCursor2.close();
+		localizableByDimCursor2.close();
 		
-		// copy again to the first image using a PositionableOutsideCursor and a PositionableCursor
+		// copy again to the first image using a LocalizableByDimOutsideCursor and a LocalizableByDimCursor
 		final PositionableRasterSampler<FloatType> outsideCursor2 = img2.createPositionableRasterSampler( new OutOfBoundsStrategyPeriodicFactory<FloatType>() );
 		localizableCursor1.reset();
 		
@@ -258,14 +243,8 @@ public class ContainerTests
 				outsideCursor2.setPosition( pos );
 			else
 				outsideCursor2.moveTo( pos );
-			
-			System.out.println( MathLib.printCoordinates( pos ) );
 	
-			try
-			{
-				localizableCursor1.type().set( outsideCursor2.type() );
-			}
-			catch ( Exception e ){ System.exit( 1 ); } 
+			localizableCursor1.type().set( outsideCursor2.type() );
 		}
 
 		final boolean success = test( img1, reference );
