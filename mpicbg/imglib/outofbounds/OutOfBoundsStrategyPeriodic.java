@@ -116,28 +116,28 @@ public class OutOfBoundsStrategyPeriodic<T extends Type<T>> implements OutOfBoun
 	/* RasterLocalizable */
 	
 	@Override
-	public void localize( float[] position )
+	public void localize( final float[] position )
 	{
 		for ( int d = 0; d < numDimensions; d++ )
 			position[ d ] = this.position[ d ];
 	}
 
 	@Override
-	public void localize( double[] position )
+	public void localize( final double[] position )
 	{
 		for ( int d = 0; d < numDimensions; d++ )
 			position[ d ] = this.position[ d ];
 	}
 
 	@Override
-	public void localize( int[] position )
+	public void localize( final int[] position )
 	{
 		for ( int d = 0; d < numDimensions; d++ )
 			position[ d ] = this.position[ d ];
 	}
 	
 	@Override
-	public void localize( long[] position )
+	public void localize( final long[] position )
 	{
 		for ( int d = 0; d < numDimensions; d++ )
 			position[ d ] = this.position[ d ];
