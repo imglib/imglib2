@@ -306,19 +306,5 @@ public class ShapeListPositionableRasterSampler< T extends Type< T > > extends A
 	}
 	
 	@Override
-	public void linkRasterPositionable( final RasterPositionable rasterPositionable )
-	{
-		linkedRasterPositionable = rasterPositionable;
-	}
-
-	@Override
-	public RasterPositionable unlinkRasterPositionable()
-	{
-		final RasterPositionable rasterPositionable = linkedRasterPositionable;
-		linkedRasterPositionable = VoidPositionable.getInstance();
-		return rasterPositionable;
-	}
-	
-	@Override
 	public int numDimensions(){ return numDimensions; }
 }

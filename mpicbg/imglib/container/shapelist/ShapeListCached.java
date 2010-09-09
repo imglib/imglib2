@@ -32,10 +32,8 @@ import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
 import mpicbg.imglib.sampler.PositionableRasterSampler;
 import mpicbg.imglib.sampler.shapelist.ShapeListCache;
 import mpicbg.imglib.sampler.shapelist.ShapeListCacheFIFO;
-import mpicbg.imglib.sampler.shapelist.ShapeListCachedRasterPlaneIterator;
 import mpicbg.imglib.sampler.shapelist.ShapeListCachedPositionableRasterSampler;
 import mpicbg.imglib.sampler.shapelist.ShapeListCachedOutOfBoundsPositionableRasterSampler;
-import mpicbg.imglib.sampler.shapelist.ShapeListRasterPlaneIterator;
 import mpicbg.imglib.sampler.shapelist.ShapeListPositionableRasterSampler;
 import mpicbg.imglib.type.Type;
 
@@ -74,12 +72,6 @@ public class ShapeListCached< T extends Type< T > > extends ShapeList< T >
 	public void setShapeListCachingStrategy( final ShapeListCache< T > cache )
 	{
 		this.cache = cache;
-	}
-
-	@Override
-	public ShapeListRasterPlaneIterator< T > createRasterPlaneIterator( final Image< T > image )
-	{
-		return new ShapeListCachedRasterPlaneIterator< T >( this, image );
 	}
 
 	@Override

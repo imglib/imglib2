@@ -24,67 +24,99 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- *
- * @author Stephan Preibisch & Stephan Saalfeld
  */
 package mpicbg.imglib.interpolation.nearestneighbor;
 
 import mpicbg.imglib.image.Image;
+import mpicbg.imglib.interpolation.Interpolator;
 import mpicbg.imglib.interpolation.InterpolatorFactory;
-import mpicbg.imglib.interpolation.AbstractInterpolator;
-import mpicbg.imglib.location.Positionable;
-import mpicbg.imglib.location.RasterPositionable;
-import mpicbg.imglib.location.link.LocalizableRoundRasterPositionable;
+import mpicbg.imglib.location.transform.RoundRasterPositionable;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
 import mpicbg.imglib.sampler.PositionableRasterSampler;
 import mpicbg.imglib.type.Type;
 
-public class NearestNeighborInterpolator<T extends Type<T>> extends AbstractInterpolator<T>
+/**
+ * 
+ * @param <T>
+ *
+ * @author Stephan Preibisch and Stephan Saalfeld
+ */
+public class NearestNeighborInterpolator< T extends Type< T > > extends RoundRasterPositionable< PositionableRasterSampler< T > > implements Interpolator< T >
 {
-	final protected PositionableRasterSampler<T> cursor;
-	final private LocalizableRoundRasterPositionable roundLink; 
+	final protected InterpolatorFactory< T > interpolatorFactory;
+	final protected OutOfBoundsStrategyFactory< T > outOfBoundsStrategyFactory;
+	final protected Image< T > image;
 	
-	protected NearestNeighborInterpolator( final Image<T> img, final InterpolatorFactory<T> interpolatorFactory, final OutOfBoundsStrategyFactory<T> outOfBoundsStrategyFactory )
+	final static private < T extends Type< T > > PositionableRasterSampler< T > createSampler( final Image< T > image, final OutOfBoundsStrategyFactory<T> outOfBoundsStrategyFactory )
 	{
-		super(img, interpolatorFactory, outOfBoundsStrategyFactory);
+		return image.createPositionableRasterSampler( outOfBoundsStrategyFactory );
+	}
+	
+	protected NearestNeighborInterpolator( final Image<T> image, final InterpolatorFactory<T> interpolatorFactory, final OutOfBoundsStrategyFactory<T> outOfBoundsStrategyFactory )
+	{
+		super( createSampler( image, outOfBoundsStrategyFactory ) );
 		
-		cursor = img.createPositionableRasterSampler( outOfBoundsStrategyFactory );
-		linkedRasterPositionable = linkedPositionable = roundLink = new LocalizableRoundRasterPositionable( this, cursor );
-		
-		
-		moveTo( position );		
+		this.interpolatorFactory = interpolatorFactory;
+		this.outOfBoundsStrategyFactory = outOfBoundsStrategyFactory;
+		this.image = image;
 	}
-
-	@Override
-	public void close() { cursor.close(); }
-
-	@Override
-	public T type() { return cursor.type(); }
 	
 	
-	/* LinkablePositionable */
+	/* Dimensionality */
 	
 	@Override
-	public void linkPositionable( final Positionable positionable )
+	final public int numDimensions()
 	{
-		roundLink.linkPositionable( positionable );
+		return image.numDimensions();
 	}
 
+	/**
+	 * Returns the typed interpolator factory the Interpolator has been
+	 * instantiated with.
+	 * 
+	 * @return - the interpolator factory
+	 */
 	@Override
-	public Positionable unlinkPositionable()
+	public InterpolatorFactory< T > getInterpolatorFactory()
 	{
-		return roundLink.unlinkPositionable();
+		return interpolatorFactory;
 	}
 
+	/**
+	 * Returns the {@link OutOfBoundsStrategyFactory} used for interpolation
+	 * 
+	 * @return - the {@link OutOfBoundsStrategyFactory}
+	 */
 	@Override
-	public void linkRasterPositionable( final RasterPositionable rasterPositionable )
+	public OutOfBoundsStrategyFactory< T > getOutOfBoundsStrategyFactory()
 	{
-		roundLink.linkRasterPositionable( rasterPositionable );
+		return outOfBoundsStrategyFactory;
 	}
 
+	/**
+	 * Returns the typed image the interpolator is working on
+	 * 
+	 * @return - the image
+	 */
 	@Override
-	public RasterPositionable unlinkRasterPositionable()
+	public Image< T > getImage()
 	{
-		return roundLink.unlinkRasterPositionable();
+		return image;
+	}
+	
+	
+	/* RasterSampler */
+
+	@Override
+	public void close() { target.close(); }
+
+	@Override
+	public T type() { return target.type(); }
+	
+	@Override
+	@Deprecated
+	final public T getType()
+	{
+		return type();
 	}
 }

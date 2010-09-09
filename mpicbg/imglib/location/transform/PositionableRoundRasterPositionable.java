@@ -26,22 +26,20 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  */
-package mpicbg.imglib.location.link;
+package mpicbg.imglib.location.transform;
 
-import mpicbg.imglib.location.LinkablePositionable;
 import mpicbg.imglib.location.Localizable;
 import mpicbg.imglib.location.Positionable;
 import mpicbg.imglib.location.RasterLocalizable;
 import mpicbg.imglib.location.RasterPositionable;
-import mpicbg.imglib.location.VoidPositionable;
 
 /**
  * Links a {@link Localizable} with a {@link RasterPositionable} by
- * transferring real coordinates to floor discrete coordinates.  For practical
- * useage, the floor operation is defined as the integer smaller than the real
+ * transferring real coordinates to rounded discrete coordinates.  For practical
+ * useage, the round operation is defined as the integer smaller than the real
  * value:
  * 
- * f = r < 0 ? (long)r - 1 : (long)r
+ * f = r < 0 ? (long)( r - 0.5 ) : (long)( r + 0.5 )
  * 
  * The {@link RasterPositionable} is not the linked {@link Positionable} of
  * this link, that is, other {@link Positionable Positionables} can be linked
@@ -49,20 +47,17 @@ import mpicbg.imglib.location.VoidPositionable;
  * 
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-public class LocalizableFloorRasterPositionable implements LinkablePositionable
+public class PositionableRoundRasterPositionable< LocalizablePositionable extends Localizable & Positionable > implements Positionable
 {
+	final protected LocalizablePositionable source;
 	final protected RasterPositionable target;
-	final protected Localizable source;
 	
 	final private int numDimensions;
 	
 	final private long[] floor;
 	final private double[] position;
 	
-	protected RasterPositionable linkedRasterPositionable = VoidPositionable.getInstance();
-	protected Positionable linkedPositionable = VoidPositionable.getInstance();
-	
-	public LocalizableFloorRasterPositionable( final Localizable source, final RasterPositionable target )
+	public PositionableRoundRasterPositionable( final LocalizablePositionable source, final RasterPositionable target )
 	{
 		this.source = source;
 		this.target = target;
@@ -73,26 +68,26 @@ public class LocalizableFloorRasterPositionable implements LinkablePositionable
 		floor = new long[ numDimensions ];
 	}
 	
-	final static private long floor( final double r )
+	final static private long round( final double r )
 	{
-		return r < 0 ? ( long )r - 1 : ( long )r;
+		return r < 0 ? ( long )( r - 0.5 ) : ( long )( r + 0.5 );
 	}
 	
-	final static private long floor( final float r )
+	final static private long round( final float r )
 	{
-		return r < 0 ? ( long )r - 1 : ( long )r;
+		return r < 0 ? ( long )( r - 0.5f ) : ( long )( r + 0.5f );
 	}
 	
-	final static private void floor( final double[] r, final long[] f )
+	final static private void round( final double[] r, final long[] f )
 	{
 		for ( int i = 0; i < r.length; ++i )
-			f[ i ] = floor( r[ i ] );
+			f[ i ] = round( r[ i ] );
 	}
 	
-	final static private void floor( final float[] r, final long[] f )
+	final static private void round( final float[] r, final long[] f )
 	{
 		for ( int i = 0; i < r.length; ++i )
-			f[ i ] = floor( r[ i ] );
+			f[ i ] = round( r[ i ] );
 	}
 	
 	
@@ -107,75 +102,75 @@ public class LocalizableFloorRasterPositionable implements LinkablePositionable
 	@Override
 	public void move( final float distance, final int dim )
 	{
-		target.setPosition( floor( source.getDoublePosition( dim ) ), dim );
-		linkedPositionable.move( distance, dim );
+		source.move( distance, dim );
+		target.setPosition( round( source.getDoublePosition( dim ) ), dim );
 	}
 
 	@Override
 	public void move( final double distance, final int dim )
 	{
-		target.setPosition( floor( source.getDoublePosition( dim ) ), dim );
-		linkedPositionable.move( distance, dim );
+		source.move( distance, dim );
+		target.setPosition( round( source.getDoublePosition( dim ) ), dim );
 	}
 
 	@Override
 	public void moveTo( final Localizable localizable )
 	{
-		source.localize( position );
+		localizable.localize( position );
 		moveTo( position );
 	}
 
 	@Override
 	public void moveTo( final float[] position )
 	{
-		floor( position, floor );
+		source.moveTo( position );
+		round( position, floor );
 		target.moveTo( floor );
-		linkedPositionable.moveTo( position );
 	}
 
 	@Override
 	public void moveTo( final double[] position )
 	{
-		floor( position, floor );
+		source.moveTo( position );
+		round( position, floor );
 		target.moveTo( floor );
-		linkedPositionable.moveTo( position );
 	}
 
 	@Override
 	public void setPosition( final Localizable localizable )
 	{
-		source.localize( position );
+		localizable.localize( position );
 		setPosition( position );
 	}
 
 	@Override
 	public void setPosition( final float[] position )
 	{
-		floor( position, floor );
+		source.setPosition( position );
+		round( position, floor );
 		target.setPosition( floor );
-		linkedPositionable.setPosition( position );
 	}
 
 	@Override
 	public void setPosition( final double[] position )
 	{
-		floor( position, floor );
+		source.setPosition( position );
+		round( position, floor );
 		target.setPosition( floor );
-		linkedPositionable.setPosition( position );
 	}
 
 	@Override
 	public void setPosition( final float position, final int dim )
 	{
-		target.setPosition( floor( position ), dim );
-		linkedPositionable.setPosition( position, dim );
+		source.setPosition( position, dim );
+		target.setPosition( round( position ), dim );
 	}
 
 	@Override
 	public void setPosition( final double position, final int dim )
 	{
-		target.setPosition( floor( position ), dim );
-		linkedPositionable.setPosition( position, dim );
+		source.setPosition( position, dim );
+		target.setPosition( round( position ), dim );
 	}
 
 	
@@ -184,117 +179,84 @@ public class LocalizableFloorRasterPositionable implements LinkablePositionable
 	@Override
 	public void bck( final int dim )
 	{
+		source.bck( dim );
 		target.bck( dim );
-		linkedRasterPositionable.bck( dim );
 	}
 
 	@Override
 	public void fwd( final int dim )
 	{
+		source.fwd( dim );
 		target.fwd( dim );
-		linkedRasterPositionable.fwd( dim );
 	}
 
 	@Override
 	public void move( final int distance, final int dim )
 	{
+		source.move( distance, dim );
 		target.move( distance, dim );
-		linkedRasterPositionable.move( distance, dim );
-	}
+	}		
 
 	@Override
 	public void move( final long distance, final int dim )
 	{
+		source.move( distance, dim );
 		target.move( distance, dim );
-		linkedRasterPositionable.move( distance, dim );
 	}
 
 	@Override
 	public void moveTo( final RasterLocalizable localizable )
 	{
+		source.moveTo( localizable );
 		target.moveTo( localizable );
-		linkedRasterPositionable.moveTo( localizable );
 	}
 
 	@Override
 	public void moveTo( final int[] position )
 	{
+		source.moveTo( position );
 		target.moveTo( position );
-		linkedRasterPositionable.moveTo( position );
 	}
 
 	@Override
 	public void moveTo( final long[] position )
 	{
+		source.moveTo( position );
 		target.moveTo( position );
-		linkedRasterPositionable.moveTo( position );
 	}
 	
 	@Override
 	public void setPosition( RasterLocalizable localizable )
 	{
+		source.setPosition( localizable );
 		target.setPosition( localizable );
-		linkedRasterPositionable.setPosition( localizable );
 	}
 	
 	@Override
 	public void setPosition( final int[] position )
 	{
+		source.setPosition( position );
 		target.setPosition( position );
-		linkedRasterPositionable.setPosition( position );
 	}
 	
 	@Override
 	public void setPosition( long[] position )
 	{
+		source.setPosition( position );
 		target.setPosition( position );
-		linkedRasterPositionable.setPosition( position );
 	}
 
 	@Override
 	public void setPosition( int position, int dim )
 	{
+		source.setPosition( position, dim );
 		target.setPosition( position, dim );
-		linkedRasterPositionable.setPosition( position, dim );
 	}
 
 	@Override
 	public void setPosition( long position, int dim )
 	{
+		source.setPosition( position, dim );
 		target.setPosition( position, dim );
-		linkedRasterPositionable.setPosition( position, dim );
-	}
-	
-	
-	/* LinkablePositionable */
-	
-	@Override
-	public void linkPositionable( final Positionable positionable )
-	{
-		linkedRasterPositionable = positionable;
-		linkedPositionable = positionable;
-	}
-
-	@Override
-	public Positionable unlinkPositionable()
-	{
-		final Positionable positionable = linkedPositionable;
-		linkedPositionable = VoidPositionable.getInstance();
-		linkedRasterPositionable = VoidPositionable.getInstance();
-		return positionable;
-	}
-
-	@Override
-	public void linkRasterPositionable( final RasterPositionable rasterPositionable )
-	{
-		linkedRasterPositionable = rasterPositionable;
-	}
-
-	@Override
-	public RasterPositionable unlinkRasterPositionable()
-	{
-		final RasterPositionable rasterPositionable = linkedRasterPositionable;
-		linkedRasterPositionable = VoidPositionable.getInstance();
-		return rasterPositionable;
 	}
 }

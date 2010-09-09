@@ -29,13 +29,12 @@ package mpicbg.imglib.interpolation.linear;
 
 import mpicbg.imglib.algorithm.math.MathLib;
 import mpicbg.imglib.image.Image;
+import mpicbg.imglib.interpolation.Interpolator;
 import mpicbg.imglib.interpolation.InterpolatorFactory;
-import mpicbg.imglib.interpolation.AbstractInterpolator;
-import mpicbg.imglib.location.Positionable;
-import mpicbg.imglib.location.RasterPositionable;
-import mpicbg.imglib.location.link.LocalizableFloorRasterPositionable;
+import mpicbg.imglib.location.transform.FloorRasterPositionable;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
 import mpicbg.imglib.sampler.PositionableRasterSampler;
+import mpicbg.imglib.type.Type;
 import mpicbg.imglib.type.numeric.NumericType;
 
 /**
@@ -44,16 +43,19 @@ import mpicbg.imglib.type.numeric.NumericType;
  *
  * @author Stephan Preibisch and Stephan Saalfeld
  */
-public class LinearInterpolator< T extends NumericType< T > > extends AbstractInterpolator< T >
+public class LinearInterpolator< T extends NumericType< T > > extends FloorRasterPositionable< PositionableRasterSampler< T > > implements Interpolator< T >
 {
-	final protected PositionableRasterSampler< T > cursor;
-
-	final private LocalizableFloorRasterPositionable floorLink;
-
-	final protected T tmp1, tmp2;
+	final protected InterpolatorFactory< T > interpolatorFactory;
+	final protected OutOfBoundsStrategyFactory< T > outOfBoundsStrategyFactory;
+	final protected Image< T > image;
+	final protected int numDimensions;
 	
-	// the offset in each dimension and a temporary array for computing the global coordinates
-	final int[] floorLocation;
+	final static private < T extends Type< T > > PositionableRasterSampler< T > createSampler( final Image< T > image, final OutOfBoundsStrategyFactory<T> outOfBoundsStrategyFactory )
+	{
+		return image.createPositionableRasterSampler( outOfBoundsStrategyFactory );
+	}
+	
+	final protected T tmp1, tmp2;
 	
 	// the weights and inverse weights in each dimension
 	final float[][] weights;
@@ -68,15 +70,21 @@ public class LinearInterpolator< T extends NumericType< T > > extends AbstractIn
 	// the locations where to initially grab pixels from
 	final boolean[][] positions;
 	
-	protected LinearInterpolator( final Image<T> img, final InterpolatorFactory<T> interpolatorFactory, final OutOfBoundsStrategyFactory<T> outOfBoundsStrategyFactory )
+	protected LinearInterpolator( final Image<T> image, final InterpolatorFactory<T> interpolatorFactory, final OutOfBoundsStrategyFactory<T> outOfBoundsStrategyFactory )
 	{
-		this( img, interpolatorFactory, outOfBoundsStrategyFactory, true );
+		this( image, interpolatorFactory, outOfBoundsStrategyFactory, true );
 	}
 	
-	protected LinearInterpolator( final Image<T> img, final InterpolatorFactory<T> interpolatorFactory, final OutOfBoundsStrategyFactory<T> outOfBoundsStrategyFactory, boolean initGenericStructures )
+	protected LinearInterpolator( final Image<T> image, final InterpolatorFactory<T> interpolatorFactory, final OutOfBoundsStrategyFactory<T> outOfBoundsStrategyFactory, boolean initGenericStructures )
 	{
-		super(img, interpolatorFactory, outOfBoundsStrategyFactory);
-
+		super( createSampler( image, outOfBoundsStrategyFactory ) );
+		
+		this.interpolatorFactory = interpolatorFactory;
+		this.outOfBoundsStrategyFactory = outOfBoundsStrategyFactory;
+		this.image = image;
+		
+		numDimensions = image.numDimensions();
+		
 		// Principle of interpolation used
 		//
 		// example: 3d
@@ -131,13 +139,9 @@ public class LinearInterpolator< T extends NumericType< T > > extends AbstractIn
 		//
 		// yiels the interpolated value in 3 dimensions
 		
-		cursor = img.createPositionableRasterSampler( outOfBoundsStrategyFactory );
-		linkedRasterPositionable = linkedPositionable = floorLink = new LocalizableFloorRasterPositionable( this, cursor );
-		
-		tmp1 = img.createType();
-		tmp2 = img.createType();
+		tmp1 = image.createType();
+		tmp2 = image.createType();
 
-		floorLocation = new int[ numDimensions ];
 		weights = new float[ numDimensions ][ 2 ];
 
 		if ( initGenericStructures )
@@ -174,7 +178,7 @@ public class LinearInterpolator< T extends NumericType< T > > extends AbstractIn
 				tree[ d ] = tmp1.createArray1D( MathLib.pow( 2, d ));
 				
 				for ( int i = 0; i < tree[ d ].length; i++ )
-					tree[ d ][ i ] = img.createType();
+					tree[ d ][ i ] = image.createType();
 	
 				halfTreeLevelSizes[ d ] = tree[ d ].length / 2;
 			}
@@ -195,9 +199,7 @@ public class LinearInterpolator< T extends NumericType< T > > extends AbstractIn
 			// 	1 1 1 [7] 
 			
 			positions = new boolean[ MathLib.pow( 2, numDimensions ) ][ numDimensions ];
-			MathLib.setCoordinateRecursive( numDimensions - 1, numDimensions, new int[ numDimensions ], positions );
-						
-			moveTo( position );
+			MathLib.setCoordinateRecursive( numDimensions() - 1, numDimensions, new int[ numDimensions ], positions );
 		}
 		else
 		{
@@ -207,8 +209,52 @@ public class LinearInterpolator< T extends NumericType< T > > extends AbstractIn
 		}
 	}
 	
+
+	/* Dimensionality */
+	
 	@Override
-	public void close() { cursor.close(); }
+	final public int numDimensions()
+	{
+		return numDimensions;
+	}
+
+	/**
+	 * Returns the typed interpolator factory the Interpolator has been
+	 * instantiated with.
+	 * 
+	 * @return - the interpolator factory
+	 */
+	@Override
+	public InterpolatorFactory< T > getInterpolatorFactory()
+	{
+		return interpolatorFactory;
+	}
+
+	/**
+	 * Returns the {@link OutOfBoundsStrategyFactory} used for interpolation
+	 * 
+	 * @return - the {@link OutOfBoundsStrategyFactory}
+	 */
+	@Override
+	public OutOfBoundsStrategyFactory< T > getOutOfBoundsStrategyFactory()
+	{
+		return outOfBoundsStrategyFactory;
+	}
+
+	/**
+	 * Returns the typed image the interpolator is working on
+	 * 
+	 * @return - the image
+	 */
+	@Override
+	public Image< T > getImage()
+	{
+		return image;
+	}
+	
+	
+	@Override
+	public void close() { target.close(); }
 
 	@Override
 	public T type()
@@ -216,7 +262,7 @@ public class LinearInterpolator< T extends NumericType< T > > extends AbstractIn
 		/* calculate weights [0...1] and their inverse (1-weight) [1...0] in each dimension */
 		for (int d = 0; d < numDimensions; d++)
 		{
-			final float w = position[ d ] - cursor.getIntPosition( d );
+			final float w = position[ d ] - target.getIntPosition( d );
 			weights[ d ][ 1 ] = w;
 			weights[ d ][ 0 ] = 1 - w;
 		}
@@ -227,14 +273,14 @@ public class LinearInterpolator< T extends NumericType< T > > extends AbstractIn
 		{
 			for ( int d = 0; d < numDimensions; ++d )
 				if ( positions[ i ][ d ] )
-					cursor.fwd( d );
+					target.fwd( d );
 
-			tree[ numDimensions ][ i ].set( cursor.type() );
+			tree[ numDimensions ][ i ].set( target.type() );
 			
 			// move back to the offset position
 			for ( int d = 0; d < numDimensions; ++d )
 				if ( positions[ i ][ d ] )
-					cursor.bck(d);
+					target.bck(d);
 		}
 		
 		/* interpolate down the tree as shown above */
@@ -257,30 +303,10 @@ public class LinearInterpolator< T extends NumericType< T > > extends AbstractIn
 		return tree[ 0 ][ 0 ];
 	}
 	
-	
-	/* LinkablePositionable */
-	
 	@Override
-	public void linkPositionable( final Positionable positionable )
+	@Deprecated
+	final public T getType()
 	{
-		floorLink.linkPositionable( positionable );
-	}
-
-	@Override
-	public Positionable unlinkPositionable()
-	{
-		return floorLink.unlinkPositionable();
-	}
-
-	@Override
-	public void linkRasterPositionable( final RasterPositionable rasterPositionable )
-	{
-		floorLink.linkRasterPositionable( rasterPositionable );
-	}
-
-	@Override
-	public RasterPositionable unlinkRasterPositionable()
-	{
-		return floorLink.unlinkRasterPositionable();
+		return type();
 	}
 }

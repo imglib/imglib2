@@ -40,11 +40,11 @@ import mpicbg.imglib.image.display.Display;
 import mpicbg.imglib.interpolation.Interpolator;
 import mpicbg.imglib.interpolation.InterpolatorFactory;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
-import mpicbg.imglib.sampler.RasterPlaneIterator;
 import mpicbg.imglib.sampler.PositionableRasterSampler;
 import mpicbg.imglib.sampler.RasterIterator;
 import mpicbg.imglib.sampler.RasterSampler;
 import mpicbg.imglib.sampler.array.ArrayLocalizingRasterIterator;
+import mpicbg.imglib.sampler.special.OrthoSliceIterator;
 import mpicbg.imglib.type.Type;
 import mpicbg.imglib.type.label.FakeType;
 
@@ -205,20 +205,6 @@ public class Image< T extends Type< T > > implements ImageProperties, Dimensions
 	}
 	
 	/**
-	 * Creates a {@link RasterPlaneIterator} which is optimized to iterate
-	 * arbitrary 2-dimensional planes within an {@link Image}.  This is very
-	 * important for the {@link Display}.
-	 * 
-	 * @return - {@link RasterPlaneIterator}
-	 */
-	public RasterPlaneIterator<T> createLocalizablePlaneCursor()
-	{
-		RasterPlaneIterator<T> cursor = container.createRasterPlaneIterator( this );
-		addRasterSampler( cursor );
-		return cursor;				
-	}
-	
-	/**
 	 * Creates a {@link PositionableRasterSampler} which is able to move freely
 	 * within the {@link Image} without checking for image boundaries.  The
 	 * behavior at locations outside of image bounds is not defined.
@@ -256,6 +242,12 @@ public class Image< T extends Type< T > > implements ImageProperties, Dimensions
 		addRasterSampler( cursor );
 		return cursor;								
 	}
+	
+	public OrthoSliceIterator< T > createOrthoSliceIterator( final int x, final int y, final int[] position )
+	{
+		return container.createOrthoSliceIterator( this, x, y, position );
+	}
+	
 	
 	/**
 	 * @deprecated Use {@link #createPositionableCursor( OutOfBoundsStrategyFactory<T> )} instead.
@@ -406,7 +398,8 @@ public class Image< T extends Type< T > > implements ImageProperties, Dimensions
 	 */
 	public void closeAllRasterSamplers()
 	{
-		for ( final RasterSampler<?> i : rasterSamplers )
+		final ArrayList< RasterSampler< ? > > copy = new ArrayList< RasterSampler<?> >( rasterSamplers );
+		for ( final RasterSampler<?> i : copy )
 			i.close();
 	}
 	

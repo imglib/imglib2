@@ -36,13 +36,13 @@ import mpicbg.imglib.location.RasterLocalizable;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
 import mpicbg.imglib.type.Type;
 
-public class NearestNeighborInterpolator1D<T extends Type<T>> extends NearestNeighborInterpolator<T>
+public class NearestNeighborInterpolator1D< T extends Type< T > > extends NearestNeighborInterpolator< T >
 {
 	private float x;
 	
-	protected NearestNeighborInterpolator1D( final Image<T> img, final InterpolatorFactory<T> interpolatorFactory, final OutOfBoundsStrategyFactory<T> outOfBoundsStrategyFactory )
+	protected NearestNeighborInterpolator1D( final Image< T > image, final InterpolatorFactory< T > interpolatorFactory, final OutOfBoundsStrategyFactory< T > outOfBoundsStrategyFactory )
 	{
-		super( img, interpolatorFactory, outOfBoundsStrategyFactory );
+		super( image, interpolatorFactory, outOfBoundsStrategyFactory );
 		x = 0;
 	}
 	
@@ -80,7 +80,6 @@ public class NearestNeighborInterpolator1D<T extends Type<T>> extends NearestNei
 	public void move( final double distance, final int dim )
 	{
 		x += distance;
-		linkedPositionable.move( distance, dim );
 	}
 	
 	@Override

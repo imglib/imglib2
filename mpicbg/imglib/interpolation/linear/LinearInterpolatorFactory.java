@@ -45,9 +45,9 @@ public class LinearInterpolatorFactory<T extends RealType<T>> extends Interpolat
 	@Override
 	public LinearInterpolator<T> createInterpolator( final Image<T> img )
 	{
-//		/* TODO Just for testing */
-//		if ( true ) return new LinearInterpolator<T>( img, this, outOfBoundsStrategyFactory );
-//		
+		/* TODO Just for testing */
+		if ( true ) return new LinearInterpolator<T>( img, this, outOfBoundsStrategyFactory );
+		
 		if ( img.numDimensions() == 1 )
 		{
 			return new LinearInterpolator1D<T>( img, this, outOfBoundsStrategyFactory );

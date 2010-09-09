@@ -27,8 +27,8 @@
  */
 package mpicbg.imglib.sampler;
 
-import mpicbg.imglib.location.LinkableRasterPositionable;
 import mpicbg.imglib.location.RasterLocalizable;
+import mpicbg.imglib.location.RasterPositionable;
 import mpicbg.imglib.type.Type;
 
 /**
@@ -43,7 +43,7 @@ import mpicbg.imglib.type.Type;
  *
  * @author Stephan Preibisch and Stephan Saalfeld
  */
-public interface PositionableRasterSampler< T extends Type< T > > extends RasterSampler< T >, RasterLocalizable, LinkableRasterPositionable
+public interface PositionableRasterSampler< T extends Type< T > > extends RasterSampler< T >, RasterLocalizable, RasterPositionable
 {
 	/**
 	 * True if located out of image bounds.

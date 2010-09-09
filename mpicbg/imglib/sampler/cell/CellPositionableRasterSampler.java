@@ -32,8 +32,6 @@ import mpicbg.imglib.container.cell.Cell;
 import mpicbg.imglib.container.cell.CellContainer;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.location.RasterLocalizable;
-import mpicbg.imglib.location.RasterPositionable;
-import mpicbg.imglib.location.VoidPositionable;
 import mpicbg.imglib.sampler.AbstractBasicPositionableRasterSampler;
 import mpicbg.imglib.sampler.array.ArrayPositionableRasterSampler;
 import mpicbg.imglib.type.Type;
@@ -380,20 +378,6 @@ public class CellPositionableRasterSampler< T extends Type< T > > extends Abstra
 		super.close();
 	}
 	
-	@Override
-	public void linkRasterPositionable( final RasterPositionable rasterPositionable )
-	{
-		linkedRasterPositionable = rasterPositionable;
-	}
-
-	@Override
-	public RasterPositionable unlinkRasterPositionable()
-	{
-		final RasterPositionable rasterPositionable = linkedRasterPositionable;
-		linkedRasterPositionable = VoidPositionable.getInstance();
-		return rasterPositionable;
-	}
-
 	@Override
 	public int getStorageIndex(){ return cellInstance.getCellId(); }
 

@@ -197,24 +197,7 @@ public abstract class AbstractOutOfBoundsPositionableRasterSampler< T extends Ty
 	}
 	
 	
-	/* LinkableRasterPositionable */
-	
-	@Override
-	public void linkRasterPositionable( final RasterPositionable rasterPositionable )
-	{
-		linkedRasterPositionable = rasterPositionable;
-	}
-
-	@Override
-	public RasterPositionable unlinkRasterPositionable()
-	{
-		final RasterPositionable rasterPositionable = linkedRasterPositionable;
-		linkedRasterPositionable = VoidPositionable.getInstance();
-		return rasterPositionable;
-	}
-	
-	
-	/* Cursor */
+	/* RasterSampler */
 	
 	@Override
 	public void close()

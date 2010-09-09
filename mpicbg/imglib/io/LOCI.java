@@ -28,7 +28,7 @@ import loci.formats.meta.MetadataRetrieve;
 import mpicbg.imglib.container.ContainerFactory;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.ImageFactory;
-import mpicbg.imglib.sampler.RasterPlaneIterator;
+import mpicbg.imglib.sampler.special.OrthoSliceIterator;
 import mpicbg.imglib.type.numeric.RealType;
 import mpicbg.imglib.type.numeric.RGBALegacyType;
 import mpicbg.imglib.type.numeric.integer.ByteType;
@@ -211,15 +211,13 @@ public class LOCI
 			final int planeX = 0;
 			final int planeY = 1;
 									
-			final RasterPlaneIterator<Unsigned12BitType> it = img.createLocalizablePlaneCursor();
-			
 			for (int z = start; z < end; z++)
 			{	
 				//System.out.println((z+1) + "/" + (end));
 				
 				// set the z plane iterator to the current z plane
 				planePos[ 2 ] = z - start;
-				it.reset( planeX, planeY, planePos );
+				final OrthoSliceIterator<Unsigned12BitType> it = img.createOrthoSliceIterator( planeX, planeY, planePos );
 				
 				// read the data from LOCI
 				for (int c = 0; c < channels; c++)
@@ -247,10 +245,9 @@ public class LOCI
 							it.type().set( getShortValue( b[ 0 ], ( it.getIntPosition( planeX )+it.getIntPosition( planeY )*width ) * 2, isLittleEndian ) );
 						}
 					}						
-				}				
+				}
+				it.close();
 			}
-			
-			it.close();
 			
 			return img;			
 			
@@ -368,15 +365,13 @@ public class LOCI
 			final int planeX = 0;
 			final int planeY = 1;
 									
-			final RasterPlaneIterator< ShortType > it = img.createLocalizablePlaneCursor();
-			
 			for (int z = start; z < end; z++)
 			{	
 				//System.out.println((z+1) + "/" + (end));
 				
 				// set the z plane iterator to the current z plane
 				planePos[ 2 ] = z - start;
-				it.reset( planeX, planeY, planePos );
+				final OrthoSliceIterator< ShortType > it = img.createOrthoSliceIterator( planeX, planeY, planePos );
 				
 				// read the data from LOCI
 				for (int c = 0; c < channels; c++)
@@ -404,10 +399,9 @@ public class LOCI
 							it.type().set( getShortValue( b[ 0 ], ( it.getIntPosition( planeX )+it.getIntPosition( planeY )*width ) * 2, isLittleEndian ) );
 						}
 					}						
-				}				
+				}
+				it.close();
 			}
-			
-			it.close();
 			
 			return img;			
 			
@@ -585,15 +579,13 @@ public class LOCI
 			final int planeX = 0;
 			final int planeY = 1;
 									
-			final RasterPlaneIterator<FloatType> it = img.createLocalizablePlaneCursor();
-			
 			for (int z = start; z < end; z++)
 			{	
 				//System.out.println((z+1) + "/" + (end));
 				
 				// set the z plane iterator to the current z plane
 				planePos[ 2 ] = z - start;
-				it.reset( planeX, planeY, planePos );
+				final OrthoSliceIterator< FloatType > it = img.createOrthoSliceIterator( planeX, planeY, planePos );
 				
 				// read the data from LOCI
 				for (int c = 0; c < channels; c++)
@@ -642,10 +634,9 @@ public class LOCI
 						}
 
 					}
-				}				
+				}
+				it.close();
 			}
-			
-			it.close();
 			
 			return img;			
 			
@@ -756,10 +747,6 @@ public class LOCI
 			final int[] planePos = new int[3];
 			final int planeX = 0;
 			final int planeY = 1;
-									
-			RasterPlaneIterator<ByteType> it = img.createLocalizablePlaneCursor();
-			final ByteType type = it.type();
-
 			
 			for (int z = start; z < end; z++)
 			{	
@@ -767,8 +754,9 @@ public class LOCI
 				
 				// set the z plane iterator to the current z plane
 				planePos[ 2 ] = z - start;
-				it.reset( planeX, planeY, planePos );
-				
+				final OrthoSliceIterator< ByteType > it = img.createOrthoSliceIterator( planeX, planeY, planePos );
+				final ByteType type = it.type();
+
 				// read the data from LOCI
 				for (int c = 0; c < channels; c++)
 				{
@@ -784,10 +772,9 @@ public class LOCI
 							it.fwd();
 							type.set( b[ 0 ][ it.getIntPosition( planeX )+it.getIntPosition( planeY )*width ] );
 						}						
-				}				
+				}
+				it.close();
 			}
-			
-			it.close();
 			
 			return img;			
 			
@@ -899,18 +886,15 @@ public class LOCI
 			final int planeX = 0;
 			final int planeY = 1;
 									
-			RasterPlaneIterator<UnsignedByteType> it = img.createLocalizablePlaneCursor();
-			final UnsignedByteType type = it.type();
-
-			
 			for (int z = start; z < end; z++)
 			{	
 				//System.out.println((z+1) + "/" + (end));
 				
 				// set the z plane iterator to the current z plane
 				planePos[ 2 ] = z - start;
-				it.reset( planeX, planeY, planePos );
-				
+				final OrthoSliceIterator< UnsignedByteType > it = img.createOrthoSliceIterator( planeX, planeY, planePos );
+				final UnsignedByteType type = it.type();
+
 				// read the data from LOCI
 				for (int c = 0; c < channels; c++)
 				{
@@ -926,10 +910,9 @@ public class LOCI
 							it.fwd();
 							type.set( UnsignedByteType.getUnsignedByte( b[ 0 ][ it.getIntPosition( planeX )+it.getIntPosition( planeY )*width ] ) );
 						}						
-				}				
+				}
+				it.close();
 			}
-			
-			it.close();
 			
 			return img;			
 			
@@ -1026,14 +1009,12 @@ public class LOCI
 			final int planeX = 0;
 			final int planeY = 1;
 									
-			final RasterPlaneIterator<RGBALegacyType> it = img.createLocalizablePlaneCursor();
-			
 			for (int z = start; z < end; z++)
 			{	
 				// set the z plane iterator to the current z plane
 				planePos[ 2 ] = z - start;
-				it.reset( planeX, planeY, planePos );
-				
+				final OrthoSliceIterator< RGBALegacyType > it = img.createOrthoSliceIterator( planeX, planeY, planePos );
+
 				// read the data from LOCI
 				for (int c = 0; c < channels; c++)
 				{
@@ -1052,10 +1033,9 @@ public class LOCI
 						col[ channels - channel - 1 ] = b[ channel ][ it.getIntPosition( planeX )+it.getIntPosition( planeY )*width ];						
 					
 					it.type().set( RGBALegacyType.rgba( col[ 0 ], col[ 1 ], col[ 2 ], 0) );
-				}						
+				}
+				it.close();
 			}
-			
-			it.close();
 			
 			return img;			
 			

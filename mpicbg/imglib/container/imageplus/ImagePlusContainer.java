@@ -37,13 +37,11 @@ import mpicbg.imglib.container.basictypecontainer.array.ArrayDataAccess;
 import mpicbg.imglib.exception.ImgLibException;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
-import mpicbg.imglib.sampler.RasterPlaneIterator;
 import mpicbg.imglib.sampler.PositionableRasterSampler;
 import mpicbg.imglib.sampler.RasterIterator;
 import mpicbg.imglib.sampler.RasterSampler;
 import mpicbg.imglib.sampler.imageplus.ImagePlusBasicRasterIterator;
 import mpicbg.imglib.sampler.imageplus.ImagePlusLocalizingRasterIterator;
-import mpicbg.imglib.sampler.imageplus.ImagePlusRasterPlaneIterator;
 import mpicbg.imglib.sampler.imageplus.ImagePlusPositionableRasterSampler;
 import mpicbg.imglib.sampler.imageplus.ImagePlusOutOfBoundsPositionableRasterSampler;
 import mpicbg.imglib.sampler.imageplus.ImagePlusStorageAccess;
@@ -150,12 +148,6 @@ public class ImagePlusContainer< T extends Type< T >, A extends ArrayDataAccess<
 	public RasterIterator< T > createLocalizingRasterIterator( final Image< T > image )
 	{
 		return new ImagePlusLocalizingRasterIterator< T >( this, image );
-	}
-
-	@Override
-	public RasterPlaneIterator< T > createRasterPlaneIterator( final Image< T > image )
-	{
-		return new ImagePlusRasterPlaneIterator< T >( this, image, linkedType.duplicateTypeOnSameDirectAccessContainer() );
 	}
 
 	@Override

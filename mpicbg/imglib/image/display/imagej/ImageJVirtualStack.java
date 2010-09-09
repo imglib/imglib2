@@ -31,7 +31,7 @@ package mpicbg.imglib.image.display.imagej;
 
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.display.Display;
-import mpicbg.imglib.sampler.RasterPlaneIterator;
+import mpicbg.imglib.sampler.special.OrthoSliceIterator;
 import mpicbg.imglib.type.Type;
 import ij.ImagePlus;
 import ij.ImageStack;
@@ -127,8 +127,7 @@ public class ImageJVirtualStack<T extends Type<T>> extends ImageStack
 		final int sizeX = img.getDimension( dimX );
 		final int sizeY = img.getDimension( dimY );
     	
-    	final RasterPlaneIterator<T> cursor = img.createLocalizablePlaneCursor();		
-		cursor.reset( dimX, dimY, dimensionPositions );   	
+    	final OrthoSliceIterator< T > cursor = img.createOrthoSliceIterator( dimX, dimY, dimensionPositions );		
 		
 		// store the slice image
     	float[] sliceImg = new float[ sizeX * sizeY ];
@@ -160,8 +159,7 @@ public class ImageJVirtualStack<T extends Type<T>> extends ImageStack
 		final int sizeX = img.getDimension( dimX );
 		final int sizeY = img.getDimension( dimY );
     	
-    	final RasterPlaneIterator<T> cursor = img.createLocalizablePlaneCursor();		
-		cursor.reset( dimX, dimY, dimensionPositions );   	
+		final OrthoSliceIterator< T > cursor = img.createOrthoSliceIterator( dimX, dimY, dimensionPositions );		
 		
 		// store the slice image
     	int[] sliceImg = new int[ sizeX * sizeY ];
@@ -191,8 +189,7 @@ public class ImageJVirtualStack<T extends Type<T>> extends ImageStack
 		final int sizeX = img.getDimension( dimX );
 		final int sizeY = img.getDimension( dimY );
     	
-    	final RasterPlaneIterator<T> cursor = img.createLocalizablePlaneCursor();		
-		cursor.reset( dimX, dimY, dimensionPositions );   	
+		final OrthoSliceIterator< T > cursor = img.createOrthoSliceIterator( dimX, dimY, dimensionPositions );		
 		
 		// store the slice image
     	byte[] sliceImg = new byte[ sizeX * sizeY ];

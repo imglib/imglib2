@@ -35,7 +35,6 @@ import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
 import mpicbg.imglib.sampler.RasterSampler;
 import mpicbg.imglib.sampler.array.ArrayBasicRasterIterator;
 import mpicbg.imglib.sampler.array.ArrayLocalizingRasterIterator;
-import mpicbg.imglib.sampler.array.ArrayRasterPlaneIterator;
 import mpicbg.imglib.sampler.array.ArrayPositionableRasterSampler;
 import mpicbg.imglib.sampler.array.ArrayOutOfBoundsPositionableRasterSampler;
 import mpicbg.imglib.type.Type;
@@ -93,13 +92,6 @@ public class Array< T extends Type< T >, A extends DataAccess > extends Abstract
 	public ArrayLocalizingRasterIterator< T > createLocalizingRasterIterator( final Image< T > image )
 	{
 		ArrayLocalizingRasterIterator< T > c = new ArrayLocalizingRasterIterator< T >( this, image );
-		return c;
-	}
-
-	@Override
-	public ArrayRasterPlaneIterator< T > createRasterPlaneIterator( final Image< T > image )
-	{
-		ArrayRasterPlaneIterator< T > c = new ArrayRasterPlaneIterator< T >( this, image );
 		return c;
 	}
 

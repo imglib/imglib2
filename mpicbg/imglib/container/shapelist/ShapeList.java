@@ -34,7 +34,6 @@ import mpicbg.imglib.container.AbstractContainer;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
 import mpicbg.imglib.sampler.PositionableRasterSampler;
-import mpicbg.imglib.sampler.shapelist.ShapeListRasterPlaneIterator;
 import mpicbg.imglib.sampler.shapelist.ShapeListPositionableRasterSampler;
 import mpicbg.imglib.sampler.shapelist.ShapeListOutOfBoundsPositionableRasterSampler;
 import mpicbg.imglib.type.Type;
@@ -114,12 +113,6 @@ public class ShapeList< T extends Type< T > > extends AbstractContainer< T >
 		return createPositionableRasterSampler( image );
 	}
 
-	@Override
-	public ShapeListRasterPlaneIterator< T > createRasterPlaneIterator( final Image< T > image ) 
-	{ 
-		return new ShapeListRasterPlaneIterator< T >( this, image );
-	}
-	
 	@Override
 	public ShapeListPositionableRasterSampler< T > createPositionableRasterSampler( final Image< T > image ) 
 	{

@@ -112,21 +112,4 @@ public abstract class AbstractBasicPositionableRasterSampler< T extends Type< T 
 		localizable.localize( tmp );
 		setPosition( tmp );
 	}
-	
-	
-	/* LinkableRasterPositionable */
-	
-	@Override
-	public void linkRasterPositionable( final RasterPositionable rasterPositionable )
-	{
-		linkedRasterPositionable = rasterPositionable;
-	}
-
-	@Override
-	public RasterPositionable unlinkRasterPositionable()
-	{
-		final RasterPositionable rasterPositionable = linkedRasterPositionable;
-		linkedRasterPositionable = VoidPositionable.getInstance();
-		return rasterPositionable;
-	}	
 }

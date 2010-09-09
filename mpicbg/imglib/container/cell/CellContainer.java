@@ -41,7 +41,6 @@ import mpicbg.imglib.sampler.array.ArrayLocalizingRasterIterator;
 import mpicbg.imglib.sampler.array.ArrayPositionableRasterSampler;
 import mpicbg.imglib.sampler.cell.CellBasicRasterIterator;
 import mpicbg.imglib.sampler.cell.CellLocalizingRasterIterator;
-import mpicbg.imglib.sampler.cell.CellRasterPlaneIterator;
 import mpicbg.imglib.sampler.cell.CellPositionableRasterSampler;
 import mpicbg.imglib.sampler.cell.CellOutOfBoundsPositionableRasterSampler;
 import mpicbg.imglib.sampler.cell.CellStorageAccess;
@@ -223,13 +222,6 @@ public class CellContainer< T extends Type< T >, A extends ArrayDataAccess< A > 
 	public CellLocalizingRasterIterator< T > createLocalizingRasterIterator( final Image< T > image )
 	{
 		CellLocalizingRasterIterator< T > c = new CellLocalizingRasterIterator< T >( this, image );
-		return c;
-	}
-
-	@Override
-	public CellRasterPlaneIterator< T > createRasterPlaneIterator( final Image< T > image )
-	{
-		CellRasterPlaneIterator< T > c = new CellRasterPlaneIterator< T >( this, image );
 		return c;
 	}
 

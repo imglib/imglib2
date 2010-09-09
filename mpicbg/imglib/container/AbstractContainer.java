@@ -30,6 +30,7 @@
 package mpicbg.imglib.container;
 
 import mpicbg.imglib.image.Image;
+import mpicbg.imglib.sampler.special.OrthoSliceIterator;
 import mpicbg.imglib.type.Type;
 
 public abstract class AbstractContainer<T extends Type<T>> implements Container<T>
@@ -133,5 +134,11 @@ public abstract class AbstractContainer<T extends Type<T>> implements Container<
 		{
 			return false;
 		}
+	}
+	
+	@Override
+	public OrthoSliceIterator< T > createOrthoSliceIterator( final Image< T > image, final int x, final int y, final int[] position )
+	{
+		return new OrthoSliceIterator< T >( image, x, y, position );
 	}
 }

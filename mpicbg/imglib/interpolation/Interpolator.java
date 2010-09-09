@@ -24,44 +24,50 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- *
- * @author Stephan Preibisch & Stephan Saalfeld
  */
 package mpicbg.imglib.interpolation;
 
 import mpicbg.imglib.image.Image;
-import mpicbg.imglib.location.LinkablePositionable;
 import mpicbg.imglib.location.Localizable;
+import mpicbg.imglib.location.Positionable;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
 import mpicbg.imglib.sampler.Sampler;
 import mpicbg.imglib.type.Type;
 
-public interface Interpolator<T extends Type<T>> extends Sampler< T >, Localizable, LinkablePositionable
+/**
+ * 
+ * @param <T>
+ *
+ * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
+ */
+public interface Interpolator< T extends Type< T > > extends Sampler< T >, Localizable, Positionable
 {
 	/**
-	 * Returns the typed interpolator factory the Interpolator has been instantiated with.
+	 * Returns the typed interpolator factory the Interpolator has been
+	 * instantiated with.
 	 * 
 	 * @return - the interpolator factory
 	 */
-	public InterpolatorFactory<T> getInterpolatorFactory();
-	
+	public InterpolatorFactory< T > getInterpolatorFactory();
+
 	/**
 	 * Returns the {@link OutOfBoundsStrategyFactory} used for interpolation
 	 * 
 	 * @return - the {@link OutOfBoundsStrategyFactory}
 	 */
-	public OutOfBoundsStrategyFactory<T> getOutOfBoundsStrategyFactory();
-	
+	public OutOfBoundsStrategyFactory< T > getOutOfBoundsStrategyFactory();
+
 	/**
 	 * Returns the typed image the interpolator is working on
 	 * 
 	 * @return - the image
 	 */
-	public Image<T> getImage();
-	
+	public Image< T > getImage();
+
 	/**
-	 * Closes the interpolator and with it any cursors or other containers, images or datastructures
-	 * that might have been created to make the interpolation work
+	 * Closes the interpolator and with it any cursors or other containers,
+	 * images or datastructures that might have been created to make the
+	 * interpolation work
 	 */
 	public void close();	
 }

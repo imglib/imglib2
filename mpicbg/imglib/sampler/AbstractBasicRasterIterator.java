@@ -29,6 +29,8 @@
  */
 package mpicbg.imglib.sampler;
 
+import javax.naming.OperationNotSupportedException;
+
 import mpicbg.imglib.algorithm.math.MathLib;
 import mpicbg.imglib.container.Container;
 import mpicbg.imglib.image.Image;
@@ -71,20 +73,6 @@ public abstract class AbstractBasicRasterIterator< T extends Type< T > > extends
 	{ 
 		for ( long j = 0; j < steps; ++j )
 			fwd();
-	}
-	
-	@Override
-	public boolean hasNextLinked(){ return hasNext() && linkedIterator.hasNext(); }
-
-	@Override
-	final public void linkIterator( final Iterator< ? > iterable ){ linkedIterator = iterable; }
-	
-	@Override
-	final public Iterator< ? > unlinkIterator()
-	{
-		final Iterator< ? > iterable = linkedIterator;
-		linkedIterator = VoidIterator.getInstance();
-		return iterable;
 	}
 	
 	

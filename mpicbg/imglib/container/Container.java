@@ -30,9 +30,9 @@ package mpicbg.imglib.container;
 import mpicbg.imglib.Dimensions;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
-import mpicbg.imglib.sampler.RasterPlaneIterator;
 import mpicbg.imglib.sampler.PositionableRasterSampler;
 import mpicbg.imglib.sampler.RasterIterator;
+import mpicbg.imglib.sampler.special.OrthoSliceIterator;
 import mpicbg.imglib.type.Type;
 
 /**
@@ -43,12 +43,12 @@ import mpicbg.imglib.type.Type;
  */
 public interface Container< T extends Type< T > > extends Dimensions
 {
-	public RasterIterator< T > createRasterIterator( Image< T > image );
-	public RasterIterator< T > createLocalizingRasterIterator( Image< T > image );
-	public RasterPlaneIterator< T > createRasterPlaneIterator( Image< T > image );
-	public PositionableRasterSampler< T > createPositionableRasterSampler( Image< T > image );
-	public PositionableRasterSampler< T > createPositionableRasterSampler( Image< T > image, OutOfBoundsStrategyFactory< T > outOfBoundsFactory );
-
+	public RasterIterator< T > createRasterIterator( final Image< T > image );
+	public RasterIterator< T > createLocalizingRasterIterator( final Image< T > image );
+	public PositionableRasterSampler< T > createPositionableRasterSampler( final Image< T > image );
+	public PositionableRasterSampler< T > createPositionableRasterSampler( final Image< T > image, final OutOfBoundsStrategyFactory< T > outOfBoundsFactory );
+	public OrthoSliceIterator< T > createOrthoSliceIterator( final Image< T > image, final int x, final int y, final int[] position );
+	
 	public void close();
 
 	public ContainerFactory getFactory();

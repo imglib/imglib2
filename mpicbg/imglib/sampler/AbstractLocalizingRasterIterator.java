@@ -60,18 +60,4 @@ public abstract class AbstractLocalizingRasterIterator< T extends Type< T > > ex
 		for ( long j = 0; j < steps; ++j )
 			fwd();
 	}
-	
-	@Override
-	public boolean hasNextLinked(){ return hasNext() && linkedIterator.hasNext(); }
-	
-	@Override
-	final public void linkIterator( final Iterator< ? > iterable ){ linkedIterator = iterable; }
-	
-	@Override
-	final public Iterator< ? > unlinkIterator()
-	{
-		final Iterator< ? > iterable = linkedIterator;
-		linkedIterator = VoidIterator.getInstance();
-		return iterable;
-	}
 }

@@ -31,11 +31,9 @@ import mpicbg.imglib.container.AbstractDirectAccessContainer;
 import mpicbg.imglib.container.array.Array;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
-import mpicbg.imglib.sampler.RasterPlaneIterator;
 import mpicbg.imglib.sampler.PositionableRasterSampler;
 import mpicbg.imglib.sampler.dynamic.DynamicBasicRasterIterator;
 import mpicbg.imglib.sampler.dynamic.DynamicLocalizingRasterIterator;
-import mpicbg.imglib.sampler.dynamic.DynamicRasterPlaneIterator;
 import mpicbg.imglib.sampler.dynamic.DynamicPositionableRasterSampler;
 import mpicbg.imglib.sampler.dynamic.DynamicOutOfBoundsPositionableRasterSampler;
 import mpicbg.imglib.type.Type;
@@ -124,12 +122,6 @@ public abstract class DynamicContainer< T extends Type< T >, A extends DynamicCo
 	public DynamicLocalizingRasterIterator< T > createLocalizingRasterIterator( final Image< T > image )
 	{
 		return new DynamicLocalizingRasterIterator< T >( this, image );
-	}
-
-	@Override
-	public RasterPlaneIterator< T > createRasterPlaneIterator( final Image< T > image )
-	{
-		return new DynamicRasterPlaneIterator< T >( this, image );
 	}
 
 	final public void indexToPosition( int i, final int[] l )
