@@ -50,11 +50,6 @@ public class LinearInterpolator< T extends NumericType< T > > extends FloorRaste
 	final protected Image< T > image;
 	final protected int numDimensions;
 	
-	final static private < T extends Type< T > > PositionableRasterSampler< T > createSampler( final Image< T > image, final OutOfBoundsStrategyFactory<T> outOfBoundsStrategyFactory )
-	{
-		return image.createPositionableRasterSampler( outOfBoundsStrategyFactory );
-	}
-	
 	final protected T tmp1, tmp2;
 	
 	// the weights and inverse weights in each dimension
@@ -69,6 +64,11 @@ public class LinearInterpolator< T extends NumericType< T > > extends FloorRaste
 		
 	// the locations where to initially grab pixels from
 	final boolean[][] positions;
+	
+	final static private < T extends Type< T > > PositionableRasterSampler< T > createSampler( final Image< T > image, final OutOfBoundsStrategyFactory<T> outOfBoundsStrategyFactory )
+	{
+		return image.createPositionableRasterSampler( outOfBoundsStrategyFactory );
+	}
 	
 	protected LinearInterpolator( final Image<T> image, final InterpolatorFactory<T> interpolatorFactory, final OutOfBoundsStrategyFactory<T> outOfBoundsStrategyFactory )
 	{

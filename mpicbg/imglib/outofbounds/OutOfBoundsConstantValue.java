@@ -36,13 +36,13 @@ import mpicbg.imglib.type.Type;
  * 
  * @param <T>
  *
- * @author Stephan Preibisch and Stephan Saalfeld <saalfeld@mpi-cbg.de>
+ * @author Stephan Preibisch and Stephan Saalfeld
  */
 public class OutOfBoundsConstantValue< T extends Type< T > > implements OutOfBoundsStrategy< T >
 {
-	final T value;
+	final protected T value;
 	
-	final protected PositionableRasterSampler< T > outOfBoundsPositionable;
+	final protected PositionableRasterSampler< T > sampler;
 	
 	final protected int numDimensions;
 	
@@ -59,12 +59,12 @@ public class OutOfBoundsConstantValue< T extends Type< T > > implements OutOfBou
 		this( source, source.getImage().createPositionableRasterSampler(), value );
 	}
 	
-	OutOfBoundsConstantValue(
+	protected OutOfBoundsConstantValue(
 			final PositionableRasterSampler< T > source,
-			final PositionableRasterSampler< T > outOfBoundsPositionable,
+			final PositionableRasterSampler< T > sampler,
 			final T value )
 	{
-		this.outOfBoundsPositionable = outOfBoundsPositionable;
+		this.sampler = sampler;
 		this.value = value;
 		numDimensions = source.getImage().numDimensions();
 		dimension = source.getImage().getDimensions();
@@ -111,7 +111,7 @@ public class OutOfBoundsConstantValue< T extends Type< T > > implements OutOfBou
 		if ( isOutOfBounds )
 			return value;
 		else
-			return outOfBoundsPositionable.type();
+			return sampler.type();
 	}
 	
 	@Override
@@ -185,9 +185,9 @@ public class OutOfBoundsConstantValue< T extends Type< T > > implements OutOfBou
 		
 		if ( isOutOfBounds ) return;
 		if ( wasOutOfBounds )
-			outOfBoundsPositionable.setPosition( position );
+			sampler.setPosition( position );
 		else
-			outOfBoundsPositionable.fwd( dim );
+			sampler.fwd( dim );
 	}
 	
 	@Override
@@ -205,9 +205,9 @@ public class OutOfBoundsConstantValue< T extends Type< T > > implements OutOfBou
 		
 		if ( isOutOfBounds ) return;
 		if ( wasOutOfBounds )
-			outOfBoundsPositionable.setPosition( position );
+			sampler.setPosition( position );
 		else
-			outOfBoundsPositionable.bck( dim );
+			sampler.bck( dim );
 	}
 	
 	@Override
@@ -264,7 +264,7 @@ public class OutOfBoundsConstantValue< T extends Type< T > > implements OutOfBou
 			checkOutOfBounds();
 			
 			if ( isOutOfBounds ) return;
-			outOfBoundsPositionable.setPosition( position, dim );
+			sampler.setPosition( position, dim );
 		}
 	}
 	
@@ -299,6 +299,6 @@ public class OutOfBoundsConstantValue< T extends Type< T > > implements OutOfBou
 	@Override
 	public void close()
 	{
-		outOfBoundsPositionable.close();
+		sampler.close();
 	}
 }

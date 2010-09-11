@@ -31,7 +31,7 @@ package mpicbg.imglib.interpolation;
 
 import mpicbg.imglib.type.Type;
 
-public interface Interpolator3D<T extends Type<T>> extends Interpolator<T>
+public interface Interpolator3D< T extends Type< T > > extends Interpolator< T >
 {
 	/**
 	 * Moves the interpolator to a random position inside or out of image bounds.
