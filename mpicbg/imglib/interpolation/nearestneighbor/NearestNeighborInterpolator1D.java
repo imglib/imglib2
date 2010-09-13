@@ -24,36 +24,118 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- *
- * @author Stephan Preibisch & Stephan Saalfeld
  */
 package mpicbg.imglib.interpolation.nearestneighbor;
 
 import mpicbg.imglib.image.Image;
+import mpicbg.imglib.interpolation.Interpolator;
 import mpicbg.imglib.interpolation.InterpolatorFactory;
 import mpicbg.imglib.location.Localizable;
 import mpicbg.imglib.location.RasterLocalizable;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
+import mpicbg.imglib.sampler.PositionableRasterSampler;
 import mpicbg.imglib.type.Type;
 
-public class NearestNeighborInterpolator1D< T extends Type< T > > extends NearestNeighborInterpolator< T >
+/**
+ * 
+ * @param <T>
+ *
+ * @author Stephan Preibisch and Stephan Saalfeld
+ */
+public class NearestNeighborInterpolator1D< T extends Type< T > > implements Interpolator< T >
 {
+	final protected InterpolatorFactory< T > interpolatorFactory;
+	final protected OutOfBoundsStrategyFactory< T > outOfBoundsStrategyFactory;
+	final protected Image< T > image;
+	final protected PositionableRasterSampler< T > target;
+	
+	/* current position, required for relative movement */
 	private float x;
 	
 	protected NearestNeighborInterpolator1D( final Image< T > image, final InterpolatorFactory< T > interpolatorFactory, final OutOfBoundsStrategyFactory< T > outOfBoundsStrategyFactory )
 	{
-		super( image, interpolatorFactory, outOfBoundsStrategyFactory );
+		this.interpolatorFactory = interpolatorFactory;
+		this.outOfBoundsStrategyFactory = outOfBoundsStrategyFactory;
+		this.image = image;
+		this.target = image.createPositionableRasterSampler( outOfBoundsStrategyFactory );
+		
 		x = 0;
 	}
 	
+	final static private int round( final double r )
+	{
+		return r < 0 ? ( int )( r - 0.5 ) : ( int )( r + 0.5 );
+	}
+	
+	final static private int round( final float r )
+	{
+		return r < 0 ? ( int )( r - 0.5f ) : ( int )( r + 0.5f );
+	}
 
+	
+	/* Dimensionality */
+	
+	@Override
+	final public int numDimensions()
+	{
+		return 1;
+	}
+	
+	
+	/* Interpolator */
+	
+	@Override
+	public InterpolatorFactory< T > getInterpolatorFactory()
+	{
+		return interpolatorFactory;
+	}
+
+	@Override
+	public OutOfBoundsStrategyFactory< T > getOutOfBoundsStrategyFactory()
+	{
+		return outOfBoundsStrategyFactory;
+	}
+
+	@Override
+	public Image< T > getImage()
+	{
+		return image;
+	}
+	
+	@Override
+	public void close() { target.close(); }
+	
+	
+	/* Sampler */
+	
+	@Override
+	public T type()
+	{
+		return target.type();
+	}
+	
+	@Override
+	@Deprecated
+	public T getType(){ return type(); }
+	
+	
 	/* Localizable */
 	
 	@Override
-	public double getDoublePosition( final int dim ){ return x; }
+	public double getDoublePosition( final int dim )
+	{
+		assert dim == 0 : getClass().getCanonicalName() + " cannot process " + ( dim + 1 ) + " dimensions.";
+		
+		return x;
+	}
 
 	@Override
-	public float getFloatPosition( final int dim ){ return x; }
+	public float getFloatPosition( final int dim )
+	{
+		assert dim == 0 : getClass().getCanonicalName() + " cannot process " + ( dim + 1 ) + " dimensions.";
+		
+		return x;
+	}
 
 	@Override
 	public String getLocationAsString()
@@ -79,70 +161,104 @@ public class NearestNeighborInterpolator1D< T extends Type< T > > extends Neares
 	@Override
 	public void move( final double distance, final int dim )
 	{
+		assert dim == 0 : getClass().getCanonicalName() + " cannot process " + ( dim + 1 ) + " dimensions.";
+		
 		x += distance;
+		final int roundPosition = round( x );
+		final int roundDistance = roundPosition - target.getIntPosition( dim );
+		if ( roundDistance == 0 )
+			return;
+		else
+			target.move( roundDistance, 0 );
 	}
 	
 	@Override
 	public void move( final float distance, final int dim )
 	{
+		assert dim == 0 : getClass().getCanonicalName() + " cannot process " + ( dim + 1 ) + " dimensions.";
+		
 		x += distance;
-		linkedPositionable.move( distance, dim );
-	}
-
-	@Override
-	public void moveTo( final double[] position )
-	{
-		x = ( float )position[ 0 ];
-		linkedPositionable.moveTo( position );
-	}
-
-	@Override
-	public void moveTo( final float[] position )
-	{
-		x = position[ 0 ];
-		linkedPositionable.moveTo( position );
+		final int roundPosition = round( x );
+		final int roundDistance = roundPosition - target.getIntPosition( dim );
+		if ( roundDistance == 0 )
+			return;
+		else
+			target.move( roundDistance, 0 );
 	}
 
 	@Override
 	public void moveTo( final Localizable localizable )
 	{
 		x = localizable.getFloatPosition( 0 );
-		linkedPositionable.moveTo( localizable );
+		final int roundX = round( x );
+		final int roundXDistance = roundX - target.getIntPosition( 0 );
+		if ( roundXDistance == 0 )
+			return;
+		else
+			target.move( roundXDistance, 0 );
+	}
+
+	@Override
+	public void moveTo( final double[] position )
+	{
+		x = ( float )position[ 0 ];
+		final int roundX = round( x );
+		final int roundXDistance = roundX - target.getIntPosition( 0 );
+		if ( roundXDistance == 0 )
+			return;
+		else
+			target.move( roundXDistance, 0 );
+	}
+
+	@Override
+	public void moveTo( final float[] position )
+	{
+		x = position[ 0 ];
+		final int roundX = round( x );
+		final int roundXDistance = roundX - target.getIntPosition( 0 );
+		if ( roundXDistance == 0 )
+			return;
+		else
+			target.move( roundXDistance, 0 );
 	}
 
 	@Override
 	public void setPosition( final Localizable localizable )
 	{
 		x = localizable.getFloatPosition( 0 );
-		linkedPositionable.setPosition( localizable );
+		target.setPosition( round( x ), 0 );
 	}
 
 	@Override
 	public void setPosition( final float[] position )
 	{
 		x = position[ 0 ];
-		linkedPositionable.setPosition( position );
+		target.setPosition( round( x ), 0 );
 	}
 
 	@Override
 	public void setPosition( final double[] position )
 	{
 		x = ( float )position[ 0 ];
-		linkedPositionable.setPosition( position );
+		target.setPosition( round( x ), 0 );
 	}
 
 	@Override
 	public void setPosition( final float position, final int dim )
 	{
+		assert dim == 0 : getClass().getCanonicalName() + " cannot process " + ( dim + 1 ) + " dimensions.";
+
 		x = position;
-		linkedPositionable.setPosition( position, dim );
+		target.setPosition( round( position ), 0 );
 	}
 
 	@Override
 	public void setPosition( final double position, final int dim )
 	{
+		assert dim == 0 : getClass().getCanonicalName() + " cannot process " + ( dim + 1 ) + " dimensions.";
+
 		x = ( float )position;
-		linkedPositionable.setPosition( position, dim );
+		target.setPosition( round( position ), 0 );
 	}
 	
 	
@@ -151,84 +267,114 @@ public class NearestNeighborInterpolator1D< T extends Type< T > > extends Neares
 	@Override
 	public void bck( final int dim )
 	{
+		assert dim == 0 : getClass().getCanonicalName() + " cannot process " + ( dim + 1 ) + " dimensions.";
+
 		x -= 1;
-		linkedRasterPositionable.bck( dim );
+		target.bck( 0 );
 	}
 
 	@Override
 	public void fwd( final int dim )
 	{
+		assert dim == 0 : getClass().getCanonicalName() + " cannot process " + ( dim + 1 ) + " dimensions.";
+
 		x += 1;
-		linkedRasterPositionable.fwd( dim );
+		target.fwd( 0 );
 	}
 
 	@Override
 	public void move( final int distance, final int dim )
 	{
+		assert dim == 0 : getClass().getCanonicalName() + " cannot process " + ( dim + 1 ) + " dimensions.";
+
 		x += distance;
-		linkedRasterPositionable.move( distance, dim );
+		target.move( distance, 0 );
 	}
 
 	@Override
 	public void move( final long distance, final int dim )
 	{
+		assert dim == 0 : getClass().getCanonicalName() + " cannot process " + ( dim + 1 ) + " dimensions.";
+
 		x += distance;
-		linkedRasterPositionable.move( distance, dim );
+		target.move( distance, 0 );
 	}
 
 	@Override
 	public void moveTo( final RasterLocalizable localizable )
 	{
-		x = localizable.getIntPosition( 0 );
-		linkedRasterPositionable.moveTo( localizable );
+		final int roundX = localizable.getIntPosition( 0 );
+		x = roundX;
+		final int roundXDistance = roundX - target.getIntPosition( 0 );
+		if ( roundXDistance == 0 )
+			return;
+		else
+			target.move( roundXDistance, 0 );
 	}
 
 	@Override
 	public void moveTo( final int[] position )
 	{
-		x = position[ 0 ];
-		linkedRasterPositionable.moveTo( position );
+		final int roundX = position[ 0 ];
+		x = roundX;
+		final int roundXDistance = roundX - target.getIntPosition( 0 );
+		if ( roundXDistance == 0 )
+			return;
+		else
+			target.move( roundXDistance, 0 );
 	}
 
 	@Override
 	public void moveTo( final long[] position )
 	{
-		x = position[ 0 ];
-		linkedRasterPositionable.moveTo( position );
+		final int roundX = ( int )position[ 0 ];
+		x = roundX;
+		final int roundXDistance = roundX - target.getIntPosition( 0 );
+		if ( roundXDistance == 0 )
+			return;
+		else
+			target.move( roundXDistance, 0 );
 	}
 
 	@Override
 	public void setPosition( final RasterLocalizable localizable )
 	{
-		x = localizable.getIntPosition( 0 );
-		linkedRasterPositionable.setPosition( localizable );
+		final int roundX = localizable.getIntPosition( 0 );
+		x = roundX;
+		target.setPosition( roundX, 0 );
 	}
 
 	@Override
 	public void setPosition( final int[] position )
 	{
-		x = position[ 0 ];
-		linkedRasterPositionable.setPosition( position );
+		final int roundX = position[ 0 ];
+		x = roundX;
+		target.setPosition( roundX, 0 );
 	}
 
 	@Override
 	public void setPosition( final long[] position )
 	{
-		x = position[ 0 ];
-		linkedRasterPositionable.setPosition( position );
+		final int roundX = ( int )position[ 0 ];
+		x = roundX;
+		target.setPosition( roundX, 0 );
 	}
 
 	@Override
 	public void setPosition( final int position, final int dim )
 	{
+		assert dim == 0 : getClass().getCanonicalName() + " cannot process " + ( dim + 1 ) + " dimensions.";
+
 		x = position;
-		linkedRasterPositionable.setPosition( position, dim );
+		target.setPosition( position, 0 );
 	}
 
 	@Override
 	public void setPosition( final long position, final int dim )
 	{
+		assert dim == 0 : getClass().getCanonicalName() + " cannot process " + ( dim + 1 ) + " dimensions.";
+
 		x = position;
-		linkedRasterPositionable.setPosition( position, dim );
+		target.setPosition( position, 0 );
 	}
 }

@@ -117,12 +117,11 @@ public class LinearInterpolator1D< T extends NumericType< T > > implements Inter
 	{
 		// weights
 		final float t = x - target.getFloatPosition( 0 );
-		final float t1 = 1 - t;
+		final float t1 = 1.0f - t;
 
-		tmp1.set( target.type() );
-		tmp1.mul( t1 );
-		tmp2.set( tmp1 );
-
+		tmp2.set( target.type() );
+		tmp2.mul( t1 );
+		
 		target.fwd( 0 );
 		tmp1.set( target.type() );
 		tmp1.mul( t );
@@ -321,7 +320,7 @@ public class LinearInterpolator1D< T extends NumericType< T > > implements Inter
 	public void moveTo( final RasterLocalizable localizable )
 	{
 		final int floorX = localizable.getIntPosition( 0 );
-		x = localizable.getIntPosition( 0 );
+		x = floorX;
 		final int floorDistance = floorX - target.getIntPosition( 0 );
 		if ( floorDistance == 0 )
 			return;

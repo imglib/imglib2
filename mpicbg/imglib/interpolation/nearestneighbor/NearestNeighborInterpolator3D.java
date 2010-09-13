@@ -489,133 +489,133 @@ public class NearestNeighborInterpolator3D< T extends Type< T > > implements Int
 	@Override
 	public void moveTo( final RasterLocalizable localizable )
 	{
-		final int floorX = localizable.getIntPosition( 0 );
-		x = floorX;
-		final int floorXDistance = floorX - target.getIntPosition( 0 );
-		if ( floorXDistance == 0 )
+		final int roundX = localizable.getIntPosition( 0 );
+		x = roundX;
+		final int roundXDistance = roundX - target.getIntPosition( 0 );
+		if ( roundXDistance == 0 )
 			return;
 		else
-			target.move( floorXDistance, 0 );
+			target.move( roundXDistance, 0 );
 		
-		final int floorY = localizable.getIntPosition( 1 );
-		y = floorY;
-		final int floorYDistance = floorY - target.getIntPosition( 1 );
-		if ( floorYDistance == 0 )
+		final int roundY = localizable.getIntPosition( 1 );
+		y = roundY;
+		final int roundYDistance = roundY - target.getIntPosition( 1 );
+		if ( roundYDistance == 0 )
 			return;
 		else
-			target.move( floorYDistance, 1 );
+			target.move( roundYDistance, 1 );
 		
-		final int floorZ = localizable.getIntPosition( 2 );
-		z = floorZ;
-		final int floorZDistance = floorZ - target.getIntPosition( 2 );
-		if ( floorZDistance == 0 )
+		final int roundZ = localizable.getIntPosition( 2 );
+		z = roundZ;
+		final int roundZDistance = roundZ - target.getIntPosition( 2 );
+		if ( roundZDistance == 0 )
 			return;
 		else
-			target.move( floorZDistance, 2 );
+			target.move( roundZDistance, 2 );
 	}
 
 	@Override
 	public void moveTo( final int[] position )
 	{
-		final int floorX = position[ 0 ];
-		x = floorX;
-		final int floorXDistance = floorX - target.getIntPosition( 0 );
-		if ( floorXDistance == 0 )
+		final int roundX = position[ 0 ];
+		x = roundX;
+		final int roundXDistance = roundX - target.getIntPosition( 0 );
+		if ( roundXDistance == 0 )
 			return;
 		else
-			target.move( floorXDistance, 0 );
+			target.move( roundXDistance, 0 );
 		
-		final int floorY = position[ 1 ];
-		y = floorY;
-		final int floorYDistance = floorY - target.getIntPosition( 1 );
-		if ( floorYDistance == 0 )
+		final int roundY = position[ 1 ];
+		y = roundY;
+		final int roundYDistance = roundY - target.getIntPosition( 1 );
+		if ( roundYDistance == 0 )
 			return;
 		else
-			target.move( floorYDistance, 1 );
+			target.move( roundYDistance, 1 );
 		
-		final int floorZ = position[ 2 ];
-		z = floorZ;
-		final int floorZDistance = floorZ - target.getIntPosition( 2 );
-		if ( floorZDistance == 0 )
+		final int roundZ = position[ 2 ];
+		z = roundZ;
+		final int roundZDistance = roundZ - target.getIntPosition( 2 );
+		if ( roundZDistance == 0 )
 			return;
 		else
-			target.move( floorZDistance, 2 );
+			target.move( roundZDistance, 2 );
 	}
 
 	@Override
 	public void moveTo( final long[] position )
 	{
-		final int floorX = ( int )position[ 0 ];
-		x = floorX;
-		final int floorXDistance = floorX - target.getIntPosition( 0 );
-		if ( floorXDistance == 0 )
+		final int roundX = ( int )position[ 0 ];
+		x = roundX;
+		final int roundXDistance = roundX - target.getIntPosition( 0 );
+		if ( roundXDistance == 0 )
 			return;
 		else
-			target.move( floorXDistance, 0 );
+			target.move( roundXDistance, 0 );
 		
-		final int floorY = ( int )position[ 1 ];
-		y = floorY;
-		final int floorYDistance = floorY - target.getIntPosition( 1 );
-		if ( floorYDistance == 0 )
+		final int roundY = ( int )position[ 1 ];
+		y = roundY;
+		final int roundYDistance = roundY - target.getIntPosition( 1 );
+		if ( roundYDistance == 0 )
 			return;
 		else
-			target.move( floorYDistance, 1 );
+			target.move( roundYDistance, 1 );
 		
-		final int floorZ = ( int )position[ 2 ];
-		z = floorZ;
-		final int floorZDistance = floorZ - target.getIntPosition( 2 );
-		if ( floorZDistance == 0 )
+		final int roundZ = ( int )position[ 2 ];
+		z = roundZ;
+		final int roundZDistance = roundZ - target.getIntPosition( 2 );
+		if ( roundZDistance == 0 )
 			return;
 		else
-			target.move( floorZDistance, 2 );
+			target.move( roundZDistance, 2 );
 	}
 
 	@Override
 	public void setPosition( final RasterLocalizable localizable )
 	{
-		final int floorX = localizable.getIntPosition( 0 );
-		x = floorX;
-		target.setPosition( floorX, 0 );
+		final int roundX = localizable.getIntPosition( 0 );
+		x = roundX;
+		target.setPosition( roundX, 0 );
 		
-		final int floorY = localizable.getIntPosition( 1 );
-		y = floorY;
-		target.setPosition( floorY, 1 );
+		final int roundY = localizable.getIntPosition( 1 );
+		y = roundY;
+		target.setPosition( roundY, 1 );
 		
-		final int floorZ = localizable.getIntPosition( 2 );
-		z = floorZ;
-		target.setPosition( floorZ, 2 );
+		final int roundZ = localizable.getIntPosition( 2 );
+		z = roundZ;
+		target.setPosition( roundZ, 2 );
 	}
 
 	@Override
 	public void setPosition( final int[] position )
 	{
-		final int floorX = position[ 0 ];
-		x = floorX;
-		target.setPosition( floorX, 0 );
+		final int roundX = position[ 0 ];
+		x = roundX;
+		target.setPosition( roundX, 0 );
 		
-		final int floorY = position[ 1 ];
-		y = floorY;
-		target.setPosition( floorY, 1 );
+		final int roundY = position[ 1 ];
+		y = roundY;
+		target.setPosition( roundY, 1 );
 		
-		final int floorZ = position[ 2 ];
-		z = floorZ;
-		target.setPosition( floorZ, 2 );
+		final int roundZ = position[ 2 ];
+		z = roundZ;
+		target.setPosition( roundZ, 2 );
 	}
 
 	@Override
 	public void setPosition( final long[] position )
 	{
-		final int floorX = ( int )position[ 0 ];
-		x = floorX;
-		target.setPosition( floorX, 0 );
+		final int roundX = ( int )position[ 0 ];
+		x = roundX;
+		target.setPosition( roundX, 0 );
 		
-		final int floorY = ( int )position[ 1 ];
-		y = floorY;
-		target.setPosition( floorY, 1 );
+		final int roundY = ( int )position[ 1 ];
+		y = roundY;
+		target.setPosition( roundY, 1 );
 		
-		final int floorZ = ( int )position[ 2 ];
-		z = floorZ;
-		target.setPosition( floorZ, 2 );
+		final int roundZ = ( int )position[ 2 ];
+		z = roundZ;
+		target.setPosition( roundZ, 2 );
 	}
 
 	@Override

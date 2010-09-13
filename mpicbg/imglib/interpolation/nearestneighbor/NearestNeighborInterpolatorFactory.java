@@ -30,6 +30,7 @@
 package mpicbg.imglib.interpolation.nearestneighbor;
 
 import mpicbg.imglib.image.Image;
+import mpicbg.imglib.interpolation.Interpolator;
 import mpicbg.imglib.interpolation.InterpolatorFactory;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
 import mpicbg.imglib.type.Type;
@@ -42,7 +43,7 @@ public class NearestNeighborInterpolatorFactory<T extends Type<T>> extends Inter
 	}
 
 	@Override
-	public NearestNeighborInterpolator<T> createInterpolator( final Image<T> img )
+	public Interpolator<T> createInterpolator( final Image<T> img )
 	{
 		if ( img.numDimensions() == 1)
 			return new NearestNeighborInterpolator1D<T>( img, this, outOfBoundsStrategyFactory );

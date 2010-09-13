@@ -24,31 +24,93 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- *
- * @author Stephan Preibisch & Stephan Saalfeld
  */
 package mpicbg.imglib.interpolation.linear;
 
 import mpicbg.imglib.image.Image;
+import mpicbg.imglib.interpolation.Interpolator;
 import mpicbg.imglib.interpolation.InterpolatorFactory;
 import mpicbg.imglib.location.Localizable;
 import mpicbg.imglib.location.RasterLocalizable;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
+import mpicbg.imglib.sampler.PositionableRasterSampler;
 import mpicbg.imglib.type.numeric.NumericType;
 
-public class LinearInterpolator3D<T extends NumericType<T>> extends LinearInterpolator<T>
+/**
+ * 
+ * @param <T>
+ *
+ * @author Stephan Preibisch and Stephan Saalfeld
+ */
+public class LinearInterpolator3D< T extends NumericType< T > > implements Interpolator< T > 
 {
+	final protected InterpolatorFactory< T > interpolatorFactory;
+	final protected OutOfBoundsStrategyFactory< T > outOfBoundsStrategyFactory;
+	final protected Image< T > image;
+	final protected T tmp1, tmp2;
+	final protected PositionableRasterSampler< T > target;
+	
+	/* current position, required for relative movement */
 	protected float x, y, z;
 	
-	protected LinearInterpolator3D( final Image<T> img, final InterpolatorFactory<T> interpolatorFactory, final OutOfBoundsStrategyFactory<T> outOfBoundsStrategyFactory )
+	protected LinearInterpolator3D( final Image< T > image, final InterpolatorFactory< T > interpolatorFactory, final OutOfBoundsStrategyFactory< T > outOfBoundsStrategyFactory )
 	{
-		super( img, interpolatorFactory, outOfBoundsStrategyFactory, false );
+		this.interpolatorFactory = interpolatorFactory;
+		this.outOfBoundsStrategyFactory = outOfBoundsStrategyFactory;
+		this.image = image;
+		this.target = image.createPositionableRasterSampler( outOfBoundsStrategyFactory );
+		
+		tmp1 = image.createType();
+		tmp2 = image.createType();
+		
+		x = y = 0;
 	}
 	
-	protected LinearInterpolator3D( final Image<T> img, final InterpolatorFactory<T> interpolatorFactory, final OutOfBoundsStrategyFactory<T> outOfBoundsStrategyFactory, boolean initGenericStructures )
+	final static private int floor( final double r )
 	{
-		super( img, interpolatorFactory, outOfBoundsStrategyFactory, initGenericStructures );
+		return r < 0 ? ( int )r - 1 : ( int )r;
 	}
+	
+	final static private int floor( final float r )
+	{
+		return r < 0 ? ( int )r - 1 : ( int )r;
+	}
+	
+	
+	/* Dimensionality */
+	
+	@Override
+	final public int numDimensions()
+	{
+		return 1;
+	}
+	
+	
+	/* Interpolator */
+	
+	@Override
+	public InterpolatorFactory< T > getInterpolatorFactory()
+	{
+		return interpolatorFactory;
+	}
+
+	@Override
+	public OutOfBoundsStrategyFactory< T > getOutOfBoundsStrategyFactory()
+	{
+		return outOfBoundsStrategyFactory;
+	}
+
+	@Override
+	public Image< T > getImage()
+	{
+		return image;
+	}
+	
+	@Override
+	public void close() { target.close(); }
+	
+	
+	/* Sampler */
 	
 	@Override
 	public T type()
@@ -66,75 +128,63 @@ public class LinearInterpolator3D<T extends NumericType<T>> extends LinearInterp
 		//     y0    y1
 
 		// weights
-		final float t = position[ 0 ] - cursor.getFloatPosition( 0 );
-		final float u = position[ 1 ] - cursor.getFloatPosition( 1 );
-		final float v = position[ 2 ] - cursor.getFloatPosition( 2 );
+		final float t = x - target.getFloatPosition( 0 );
+		final float u = y - target.getFloatPosition( 1 );
+		final float v = z - target.getFloatPosition( 2 );
 
 		final float t1 = 1 - t;
 		final float u1 = 1 - u;
 		final float v1 = 1 - v;
 
-		//final float tmp2 = t1*u1*v1*y0 + t*u1*v1*y1 + t*u*v1*y2 + t1*u*v1*y3 +
-		//			     	  t1*u1*v*y4  + t*u1*v*y5  + t*u*v*y6  + t1*u*v*y7;
-
-		//final float y0 = strategy.get(baseX1    , baseX2,     baseX3);
-		tmp1.set( cursor.type() );
-		tmp1.mul( t1 );
-		tmp1.mul( u1 );
-		tmp1.mul( v1 );
-		tmp2.set( tmp1 );
-
-		//final float y1 = strategy.get(baseX1 + 1, baseX2,     baseX3);
-		cursor.fwd( 0 );
-		tmp1.set( cursor.type() );
+		tmp2.set( target.type() );
+		tmp2.mul( t1 );
+		tmp2.mul( u1 );
+		tmp2.mul( v1 );
+		
+		target.fwd( 0 );
+		tmp1.set( target.type() );
 		tmp1.mul( t );
 		tmp1.mul( u1 );
 		tmp1.mul( v1 );
 		tmp2.add( tmp1 );
 
-		//final float y2 = strategy.get(baseX1 + 1, baseX2 + 1, baseX3);
-		cursor.fwd( 1 );
-		tmp1.set( cursor.type() );
+		target.fwd( 1 );
+		tmp1.set( target.type() );
 		tmp1.mul( t );
 		tmp1.mul( u );
 		tmp1.mul( v1 );
 		tmp2.add( tmp1 );
 
-		//final float y3 = strategy.get(baseX1    , baseX2 + 1, baseX3);
-		cursor.bck( 0 );
-		tmp1.set( cursor.type() );
+		target.bck( 0 );
+		tmp1.set( target.type() );
 		tmp1.mul( t1 );
 		tmp1.mul( u );
 		tmp1.mul( v1 );
 		tmp2.add( tmp1 );
 
-		//final float y7 = strategy.get(baseX1    , baseX2 + 1, baseX3 + 1);
-		cursor.fwd( 2 );
-		tmp1.set( cursor.type() );
+		target.fwd( 2 );
+		tmp1.set( target.type() );
 		tmp1.mul( t1 );
 		tmp1.mul( u );
 		tmp1.mul( v );
 		tmp2.add( tmp1 );
 
-		//final float y6 = strategy.get(baseX1 + 1, baseX2 + 1, baseX3 + 1);
-		cursor.fwd( 0 );
-		tmp1.set( cursor.type() );
+		target.fwd( 0 );
+		tmp1.set( target.type() );
 		tmp1.mul( t );
 		tmp1.mul( u );
 		tmp1.mul( v );
 		tmp2.add( tmp1 );
 
-		//final float y5 = strategy.get(baseX1 + 1, baseX2,     baseX3 + 1);
-		cursor.bck( 1 );
-		tmp1.set( cursor.type() );
+		target.bck( 1 );
+		tmp1.set( target.type() );
 		tmp1.mul( t );
 		tmp1.mul( u1 );
 		tmp1.mul( v );
 		tmp2.add( tmp1 );
 
-		//final float y4 = strategy.get(baseX1    , baseX2,	  baseX3 + 1);
-		cursor.bck( 0 );
-		tmp1.set( cursor.type() );
+		target.bck( 0 );
+		tmp1.set( target.type() );
 		tmp1.mul( t1 );
 		tmp1.mul( u1 );
 		tmp1.mul( v );
@@ -142,6 +192,10 @@ public class LinearInterpolator3D<T extends NumericType<T>> extends LinearInterp
 		
 		return tmp2;
 	}
+	
+	@Override
+	@Deprecated
+	public T getType(){ return type(); }
 	
 	
 	/* Localizable */
@@ -187,6 +241,8 @@ public class LinearInterpolator3D<T extends NumericType<T>> extends LinearInterp
 	@Override
 	public void localize( final float[] position )
 	{
+		assert position.length >= 3 : getClass().getCanonicalName() + " cannot process " + ( position.length ) + " dimensions.";
+		
 		position[ 0 ] = x;
 		position[ 1 ] = y;
 		position[ 2 ] = z;
@@ -195,6 +251,8 @@ public class LinearInterpolator3D<T extends NumericType<T>> extends LinearInterp
 	@Override
 	public void localize( final double[] position )
 	{
+		assert position.length >= 3 : getClass().getCanonicalName() + " cannot process " + ( position.length ) + " dimensions.";
+		
 		position[ 0 ] = x;
 		position[ 1 ] = y;
 		position[ 2 ] = z;
@@ -206,94 +264,203 @@ public class LinearInterpolator3D<T extends NumericType<T>> extends LinearInterp
 	@Override
 	public void move( final double distance, final int dim )
 	{
+		assert dim < 3 : getClass().getCanonicalName() + " cannot process " + ( dim + 1 ) + " dimensions.";
+		
+		final int floorPosition;
 		switch ( dim )
 		{
 		case 0:
 			x += distance;
+			floorPosition = floor( x );
 			break;
 		case 1:
 			y += distance;
+			floorPosition = floor( y );
 			break;
 		case 2:
 			z += distance;
+			floorPosition = floor( z );
+			break;
+		default:
+			floorPosition = 0;
 		}
-		linkedPositionable.move( distance, dim );
+		final int floorDistance = floorPosition - target.getIntPosition( dim );
+		if ( floorDistance == 0 )
+			return;
+		else
+			target.move( floorDistance, dim );
 	}
 	
 	@Override
 	public void move( final float distance, final int dim )
 	{
+		assert dim < 3 : getClass().getCanonicalName() + " cannot process " + ( dim + 1 ) + " dimensions.";
+		
+		final int floorPosition;
 		switch ( dim )
 		{
 		case 0:
 			x += distance;
+			floorPosition = floor( x );
 			break;
 		case 1:
 			y += distance;
+			floorPosition = floor( y );
 			break;
 		case 2:
 			z += distance;
+			floorPosition = floor( z );
+			break;
+		default:
+			floorPosition = 0;
 		}
-		linkedPositionable.move( distance, dim );
-	}
-
-	@Override
-	public void moveTo( final double[] position )
-	{
-		x = ( float )position[ 0 ];
-		y = ( float )position[ 1 ];
-		z = ( float )position[ 2 ];
-		linkedPositionable.moveTo( position );
-	}
-
-	@Override
-	public void moveTo( final float[] position )
-	{
-		x = position[ 0 ];
-		y = position[ 1 ];
-		z = position[ 2 ];
-		linkedPositionable.moveTo( position );
+		final int floorDistance = floorPosition - target.getIntPosition( dim );
+		if ( floorDistance == 0 )
+			return;
+		else
+			target.move( floorDistance, dim );
 	}
 
 	@Override
 	public void moveTo( final Localizable localizable )
 	{
+		assert localizable.numDimensions() == 3 : getClass().getCanonicalName() + " cannot process other than 3 dimensions.";
+
 		x = localizable.getFloatPosition( 0 );
+		final int floorX = floor( x );
+		final int floorXDistance = floorX - target.getIntPosition( 0 );
+		if ( floorXDistance == 0 )
+			return;
+		else
+			target.move( floorXDistance, 0 );
+		
 		y = localizable.getFloatPosition( 1 );
+		final int floorY = floor( y );
+		final int floorYDistance = floorY - target.getIntPosition( 1 );
+		if ( floorYDistance == 0 )
+			return;
+		else
+			target.move( floorYDistance, 1 );
+		
 		z = localizable.getFloatPosition( 2 );
-		linkedPositionable.moveTo( localizable );
+		final int floorZ = floor( z );
+		final int floorZDistance = floorZ - target.getIntPosition( 2 );
+		if ( floorZDistance == 0 )
+			return;
+		else
+			target.move( floorZDistance, 2 );
+	}
+
+	@Override
+	public void moveTo( final double[] position )
+	{
+		assert position.length == 3 : getClass().getCanonicalName() + " cannot process other than 3 dimensions.";
+
+		x = ( float )position[ 0 ];
+		final int floorX = floor( x );
+		final int floorXDistance = floorX - target.getIntPosition( 0 );
+		if ( floorXDistance == 0 )
+			return;
+		else
+			target.move( floorXDistance, 0 );
+		
+		y = ( float )position[ 1 ];
+		final int floorY = floor( y );
+		final int floorYDistance = floorY - target.getIntPosition( 1 );
+		if ( floorYDistance == 0 )
+			return;
+		else
+			target.move( floorYDistance, 1 );
+		
+		z = ( float )position[ 2 ];
+		final int floorZ = floor( z );
+		final int floorZDistance = floorZ - target.getIntPosition( 2 );
+		if ( floorZDistance == 0 )
+			return;
+		else
+			target.move( floorZDistance, 2 );
+	}
+
+	@Override
+	public void moveTo( final float[] position )
+	{
+		assert position.length == 3 : getClass().getCanonicalName() + " cannot process other than 3 dimensions.";
+
+		x = position[ 0 ];
+		final int floorX = floor( x );
+		final int floorXDistance = floorX - target.getIntPosition( 0 );
+		if ( floorXDistance == 0 )
+			return;
+		else
+			target.move( floorXDistance, 0 );
+		
+		y = position[ 1 ];
+		final int floorY = floor( y );
+		final int floorYDistance = floorY - target.getIntPosition( 1 );
+		if ( floorYDistance == 0 )
+			return;
+		else
+			target.move( floorYDistance, 1 );
+		
+		z = position[ 2 ];
+		final int floorZ = floor( z );
+		final int floorZDistance = floorZ - target.getIntPosition( 2 );
+		if ( floorZDistance == 0 )
+			return;
+		else
+			target.move( floorZDistance, 2 );
 	}
 
 	@Override
 	public void setPosition( final Localizable localizable )
 	{
+		assert localizable.numDimensions() >= 3 : getClass().getCanonicalName() + " cannot process " + ( localizable.numDimensions() ) + " dimensions.";
+		
 		x = localizable.getFloatPosition( 0 );
+		target.setPosition( floor( x ), 0 );
+		
 		y = localizable.getFloatPosition( 1 );
+		target.setPosition( floor( y ), 1 );
+
 		z = localizable.getFloatPosition( 2 );
-		linkedPositionable.setPosition( localizable );
+		target.setPosition( floor( z ), 2 );
 	}
 
 	@Override
 	public void setPosition( final float[] position )
 	{
+		assert position.length >= 3 : getClass().getCanonicalName() + " cannot process " + ( position.length ) + " dimensions.";
+		
 		x = position[ 0 ];
+		target.setPosition( floor( x ), 0 );
+		
 		y = position[ 1 ];
+		target.setPosition( floor( y ), 1 );
+
 		z = position[ 2 ];
-		linkedPositionable.setPosition( position );
-	}
+		target.setPosition( floor( z ), 2 );
+}
 
 	@Override
 	public void setPosition( final double[] position )
 	{
+		assert position.length >= 3 : getClass().getCanonicalName() + " cannot process " + ( position.length ) + " dimensions.";
+		
 		x = ( float )position[ 0 ];
+		target.setPosition( floor( x ), 0 );
+		
 		y = ( float )position[ 1 ];
+		target.setPosition( floor( y ), 1 );
+
 		z = ( float )position[ 2 ];
-		linkedPositionable.setPosition( position );
+		target.setPosition( floor( z ), 2 );
 	}
 
 	@Override
 	public void setPosition( final float position, final int dim )
 	{
+		assert dim < 3 : getClass().getCanonicalName() + " cannot process " + ( dim + 1 ) + " dimensions.";
+
 		switch ( dim )
 		{
 		case 0:
@@ -305,12 +472,14 @@ public class LinearInterpolator3D<T extends NumericType<T>> extends LinearInterp
 		case 2:
 			z = position;
 		}
-		linkedPositionable.setPosition( position, dim );
+		target.setPosition( floor( position ), dim );
 	}
 
 	@Override
 	public void setPosition( final double position, final int dim )
 	{
+		assert dim < 3 : getClass().getCanonicalName() + " cannot process " + ( dim + 1 ) + " dimensions.";
+
 		switch ( dim )
 		{
 		case 0:
@@ -322,7 +491,7 @@ public class LinearInterpolator3D<T extends NumericType<T>> extends LinearInterp
 		case 2:
 			z = ( float )position;
 		}
-		linkedPositionable.setPosition( position, dim );
+		target.setPosition( floor( position ), dim );
 	}
 	
 	
@@ -331,6 +500,8 @@ public class LinearInterpolator3D<T extends NumericType<T>> extends LinearInterp
 	@Override
 	public void bck( final int dim )
 	{
+		assert dim < 3 : getClass().getCanonicalName() + " cannot process " + ( dim + 1 ) + " dimensions.";
+
 		switch ( dim )
 		{
 		case 0:
@@ -342,12 +513,14 @@ public class LinearInterpolator3D<T extends NumericType<T>> extends LinearInterp
 		case 2:
 			z -= 1;
 		}
-		linkedRasterPositionable.bck( dim );
+		target.bck( dim );
 	}
 
 	@Override
 	public void fwd( final int dim )
 	{
+		assert dim < 3 : getClass().getCanonicalName() + " cannot process " + ( dim + 1 ) + " dimensions.";
+
 		switch ( dim )
 		{
 		case 0:
@@ -359,12 +532,14 @@ public class LinearInterpolator3D<T extends NumericType<T>> extends LinearInterp
 		case 2:
 			z += 1;
 		}
-		linkedRasterPositionable.fwd( dim );
+		target.fwd( dim );
 	}
 
 	@Override
 	public void move( final int distance, final int dim )
 	{
+		assert dim < 3 : getClass().getCanonicalName() + " cannot process " + ( dim + 1 ) + " dimensions.";
+
 		switch ( dim )
 		{
 		case 0:
@@ -376,12 +551,14 @@ public class LinearInterpolator3D<T extends NumericType<T>> extends LinearInterp
 		case 2:
 			z += distance;
 		}
-		linkedRasterPositionable.move( distance, dim );
+		target.move( distance, dim );
 	}
 
 	@Override
 	public void move( final long distance, final int dim )
 	{
+		assert dim < 3 : getClass().getCanonicalName() + " cannot process " + ( dim + 1 ) + " dimensions.";
+
 		switch ( dim )
 		{
 		case 0:
@@ -393,66 +570,158 @@ public class LinearInterpolator3D<T extends NumericType<T>> extends LinearInterp
 		case 2:
 			z += distance;
 		}
-		linkedRasterPositionable.move( distance, dim );
+		target.move( distance, dim );
 	}
 
 	@Override
 	public void moveTo( final RasterLocalizable localizable )
 	{
-		x = localizable.getIntPosition( 0 );
-		y = localizable.getIntPosition( 1 );
-		z = localizable.getIntPosition( 2 );
-		linkedRasterPositionable.moveTo( localizable );
+		assert localizable.numDimensions() >= 3 : getClass().getCanonicalName() + " cannot process " + ( localizable.numDimensions() ) + " dimensions.";
+		
+		final int floorX = localizable.getIntPosition( 0 );
+		x = floorX;
+		final int floorXDistance = floorX - target.getIntPosition( 0 );
+		if ( floorXDistance == 0 )
+			return;
+		else
+			target.move( floorXDistance, 0 );
+		
+		final int floorY = localizable.getIntPosition( 1 );
+		y = floorY;
+		final int floorYDistance = floorY - target.getIntPosition( 1 );
+		if ( floorYDistance == 0 )
+			return;
+		else
+			target.move( floorYDistance, 1 );
+	
+		final int floorZ = localizable.getIntPosition( 2 );
+		z = floorZ;
+		final int floorZDistance = floorZ - target.getIntPosition( 2 );
+		if ( floorZDistance == 0 )
+			return;
+		else
+			target.move( floorZDistance, 2 );
 	}
 
 	@Override
 	public void moveTo( final int[] position )
 	{
-		x = position[ 0 ];
-		y = position[ 1 ];
-		z = position[ 2 ];
-		linkedRasterPositionable.moveTo( position );
+		assert position.length >= 3 : getClass().getCanonicalName() + " cannot process " + ( position.length ) + " dimensions.";
+		
+		final int floorX = position[ 0 ];
+		x = floorX;
+		final int floorXDistance = floorX - target.getIntPosition( 0 );
+		if ( floorXDistance == 0 )
+			return;
+		else
+			target.move( floorXDistance, 0 );
+		
+		final int floorY = position[ 1 ];
+		y = floorY;
+		final int floorYDistance = floorY - target.getIntPosition( 1 );
+		if ( floorYDistance == 0 )
+			return;
+		else
+			target.move( floorYDistance, 1 );
+		
+		final int floorZ = position[ 2 ];
+		z = floorZ;
+		final int floorZDistance = floorZ - target.getIntPosition( 2 );
+		if ( floorZDistance == 0 )
+			return;
+		else
+			target.move( floorZDistance, 2 );
 	}
 
 	@Override
 	public void moveTo( final long[] position )
 	{
-		x = position[ 0 ];
-		y = position[ 1 ];
-		z = position[ 2 ];
-		linkedRasterPositionable.moveTo( position );
+		assert position.length >= 3 : getClass().getCanonicalName() + " cannot process " + ( position.length ) + " dimensions.";
+		
+		final int floorX = ( int )position[ 0 ];
+		x = floorX;
+		final int floorXDistance = floorX - target.getIntPosition( 0 );
+		if ( floorXDistance == 0 )
+			return;
+		else
+			target.move( floorXDistance, 0 );
+		
+		final int floorY = ( int )position[ 1 ];
+		y = floorY;
+		final int floorYDistance = floorY - target.getIntPosition( 1 );
+		if ( floorYDistance == 0 )
+			return;
+		else
+			target.move( floorYDistance, 1 );
+		
+		final int floorZ = ( int )position[ 2 ];
+		z = floorZ;
+		final int floorZDistance = floorZ - target.getIntPosition( 2 );
+		if ( floorZDistance == 0 )
+			return;
+		else
+			target.move( floorZDistance, 2 );
 	}
 
 	@Override
 	public void setPosition( final RasterLocalizable localizable )
 	{
-		x = localizable.getIntPosition( 0 );
-		y = localizable.getIntPosition( 1 );
-		z = localizable.getIntPosition( 2 );
-		linkedRasterPositionable.setPosition( localizable );
+		assert localizable.numDimensions() >= 3 : getClass().getCanonicalName() + " cannot process " + ( localizable.numDimensions() ) + " dimensions.";
+		
+		final int floorX = localizable.getIntPosition( 0 );
+		x = floorX;
+		target.setPosition( floorX, 0 );
+		
+		final int floorY = localizable.getIntPosition( 1 );
+		y = floorY;
+		target.setPosition( floorY, 1 );
+		
+		final int floorZ = localizable.getIntPosition( 2 );
+		z = floorZ;
+		target.setPosition( floorZ, 2 );
 	}
 
 	@Override
 	public void setPosition( final int[] position )
 	{
-		x = position[ 0 ];
-		y = position[ 1 ];
-		z = position[ 2 ];
-		linkedRasterPositionable.setPosition( position );
+		assert position.length >= 3 : getClass().getCanonicalName() + " cannot process " + ( position.length ) + " dimensions.";
+		
+		final int floorX = position[ 0 ];
+		x = floorX;
+		target.setPosition( floorX, 0 );
+		
+		final int floorY = position[ 1 ];
+		y = floorY;
+		target.setPosition( floorY, 1 );
+		
+		final int floorZ = position[ 2 ];
+		z = floorZ;
+		target.setPosition( floorZ, 2 );
 	}
 
 	@Override
 	public void setPosition( final long[] position )
 	{
-		x = position[ 0 ];
-		y = position[ 1 ];
-		z = position[ 2 ];
-		linkedRasterPositionable.setPosition( position );
+		assert position.length >= 3 : getClass().getCanonicalName() + " cannot process " + ( position.length ) + " dimensions.";
+		
+		final int floorX = ( int )position[ 0 ];
+		x = floorX;
+		target.setPosition( floorX, 0 );
+		
+		final int floorY = ( int )position[ 1 ];
+		y = floorY;
+		target.setPosition( floorY, 1 );
+		
+		final int floorZ = ( int )position[ 2 ];
+		z = floorZ;
+		target.setPosition( floorZ, 2 );
 	}
 
 	@Override
 	public void setPosition( final int position, final int dim )
 	{
+		assert dim < 2 : getClass().getCanonicalName() + " cannot process " + ( dim + 1 ) + " dimensions.";
+
 		switch ( dim )
 		{
 		case 0:
@@ -464,12 +733,14 @@ public class LinearInterpolator3D<T extends NumericType<T>> extends LinearInterp
 		case 2:
 			z = position;
 		}
-		linkedRasterPositionable.setPosition( position, dim );
+		target.setPosition( position, dim );
 	}
 
 	@Override
 	public void setPosition( final long position, final int dim )
 	{
+		assert dim < 2 : getClass().getCanonicalName() + " cannot process " + ( dim + 1 ) + " dimensions.";
+
 		switch ( dim )
 		{
 		case 0:
@@ -481,6 +752,6 @@ public class LinearInterpolator3D<T extends NumericType<T>> extends LinearInterp
 		case 2:
 			z = position;
 		}
-		linkedRasterPositionable.setPosition( position, dim );
+		target.setPosition( position, dim );
 	}
 }

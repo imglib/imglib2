@@ -24,88 +24,84 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- *
- * @author Stephan Preibisch & Stephan Saalfeld
  */
 package mpicbg.imglib.interpolation.linear;
 
 import mpicbg.imglib.image.Image;
+import mpicbg.imglib.interpolation.Interpolator;
 import mpicbg.imglib.interpolation.InterpolatorFactory;
+import mpicbg.imglib.location.Localizable;
+import mpicbg.imglib.location.RasterLocalizable;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
+import mpicbg.imglib.sampler.PositionableRasterSampler;
+import mpicbg.imglib.type.numeric.NumericType;
 import mpicbg.imglib.type.numeric.RealType;
 
-public class LinearInterpolator3DRealType<T extends RealType<T>> extends LinearInterpolator3D<T> 
+/**
+ * 
+ * @param <T>
+ * 
+ * @author Stephan Preibisch and Stephan Saalfeld
+ */
+public class LinearInterpolator3DRealType< T extends RealType< T > > extends LinearInterpolator3D< T >
 {
-	protected LinearInterpolator3DRealType( final Image<T> img, final InterpolatorFactory<T> interpolatorFactory, final OutOfBoundsStrategyFactory<T> outOfBoundsStrategyFactory )
+	protected LinearInterpolator3DRealType( final Image< T > img, final InterpolatorFactory< T > interpolatorFactory, final OutOfBoundsStrategyFactory< T > outOfBoundsStrategyFactory )
 	{
-		super( img, interpolatorFactory, outOfBoundsStrategyFactory, false );
-		setPosition( position );
+		super( img, interpolatorFactory, outOfBoundsStrategyFactory );
 	}
-	
+
 	@Override
 	public T type()
 	{
-		//System.out.println( cursor.getLocationAsString() );
-		
 		// How to iterate the cube
 		//
-		//       y7     y6
-		//        *------>*
-		//       ^       /|
-		//   y3 /    y2 / v
-		//     *<------*  * y5
-		//     |    x  ^ /
-		//     |       |/
-		//     *------>*
-		//     y0    y1
+		// y7 y6
+		// *------>*
+		// ^ /|
+		// y3 / y2 / v
+		// *<------* * y5
+		// | x ^ /
+		// | |/
+		// *------>*
+		// y0 y1
 
-        //final float y0 = strategy.get(baseX1    , baseX2,     baseX3);
-        final float y0 = cursor.type().getRealFloat(); 
-        
-        //final float y1 = strategy.get(baseX1 + 1, baseX2,     baseX3);
-        cursor.fwd( 0 );
-        final float y1 = cursor.type().getRealFloat(); 
-        
-        //final float y2 = strategy.get(baseX1 + 1, baseX2 + 1, baseX3);
-        cursor.fwd( 1 );
-        final float y2 = cursor.type().getRealFloat(); 
-                
-        //final float y3 = strategy.get(baseX1    , baseX2 + 1, baseX3);
-        cursor.bck( 0 );
-        final float y3 = cursor.type().getRealFloat(); 
-        
-        //final float y7 = strategy.get(baseX1    , baseX2 + 1, baseX3 + 1);
-        cursor.fwd( 2 );
-        final float y7 = cursor.type().getRealFloat();
+		final float y0 = target.type().getRealFloat();
+		target.fwd( 0 );
+		final float y1 = target.type().getRealFloat();
+		target.fwd( 1 );
+		final float y2 = target.type().getRealFloat();
+		target.bck( 0 );
+		final float y3 = target.type().getRealFloat();
+		target.fwd( 2 );
+		final float y7 = target.type().getRealFloat();
+		target.fwd( 0 );
+		final float y6 = target.type().getRealFloat();
+		target.bck( 1 );
+		final float y5 = target.type().getRealFloat();
+		target.bck( 0 );
+		final float y4 = target.type().getRealFloat();
+		target.bck( 2 );
 
-        //final float y6 = strategy.get(baseX1 + 1, baseX2 + 1, baseX3 + 1);
-        cursor.fwd( 0 );
-        final float y6 = cursor.type().getRealFloat();
+		// weights
+		final float t = x - target.getIntPosition( 0 );
+		final float u = y - target.getIntPosition( 1 );
+		final float v = z - target.getIntPosition( 2 );
 
-        //final float y5 = strategy.get(baseX1 + 1, baseX2,     baseX3 + 1);
-        cursor.bck( 1 );
-        final float y5 = cursor.type().getRealFloat();
-        
-        //final float y4 = strategy.get(baseX1    , baseX2,	  baseX3 + 1);
-        cursor.bck( 0 );
-        final float y4 = cursor.type().getRealFloat();
-        
-        cursor.bck( 2 );
+		final float t1 = 1 - t;
+		final float u1 = 1 - u;
+		final float v1 = 1 - v;
 
-        // weights
-        final float t = x - cursor.getIntPosition( 0 ); 
-        final float u = y - cursor.getIntPosition( 1 ); 
-        final float v = z - cursor.getIntPosition( 2 );
+		tmp1.setReal(
+				t1 * u1 * v1 * y0 +
+				t * u1 * v1 * y1 +
+				t * u * v1 * y2 +
+				t1 * u * v1 * y3 +
+				
+				t1 * u1 * v * y4 +
+				t * u1 * v * y5 +
+				t * u * v * y6 +
+				t1 * u * v * y7 );
 
-        final float t1 = 1 - t;
-        final float u1 = 1 - u;
-        final float v1 = 1 - v;
-
-        final float value = t1*u1*v1*y0 + t*u1*v1*y1 + t*u*v1*y2 + t1*u*v1*y3 + 
-                            t1*u1*v*y4  + t*u1*v*y5  + t*u*v*y6  + t1*u*v*y7;
-        
-        tmp2.setReal( value );
-        
-		return tmp2; 
+		return tmp1;
 	}
 }
