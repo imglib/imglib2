@@ -24,8 +24,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- *
- * @author Stephan Preibisch & Stephan Saalfeld
  */
 package mpicbg.imglib.type.label;
 
@@ -35,11 +33,16 @@ import mpicbg.imglib.container.basictypecontainer.CharAccess;
 import mpicbg.imglib.container.basictypecontainer.array.CharArray;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.display.BasePairTypeDisplay;
-import mpicbg.imglib.sampler.RasterSampler;
 import mpicbg.imglib.type.BasePairType;
 import mpicbg.imglib.type.AbstractType;
 import mpicbg.imglib.type.label.BasePairBitType.Base;
 
+/**
+ * 
+ * 
+ *
+ * @author Stephan Preibisch and Stephan Saalfeld
+ */
 public class BasePairCharType extends AbstractType<BasePairCharType> implements BasePairType<BasePairCharType>
 {
 	// the DirectAccessContainer
@@ -89,7 +92,7 @@ public class BasePairCharType extends AbstractType<BasePairCharType> implements 
 	}
 	
 	@Override
-	public void updateContainer( final RasterSampler<?> c ) 
+	public void updateContainer( final Object c ) 
 	{ 
 		b = storage.update( c ); 
 	}

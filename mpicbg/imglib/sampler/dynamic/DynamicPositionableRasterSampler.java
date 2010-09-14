@@ -82,8 +82,6 @@ public class DynamicPositionableRasterSampler< T extends Type< T > > extends Abs
 		accessor.updateIndex( internalIndex );
 
 		++position[ dim ];
-		
-		linkedRasterPositionable.fwd( dim );
 	}
 
 	@Override
@@ -93,8 +91,6 @@ public class DynamicPositionableRasterSampler< T extends Type< T > > extends Abs
 		accessor.updateIndex( internalIndex );
 
 		position[ dim ] += steps;
-
-		linkedRasterPositionable.move( steps, dim );
 	}
 	
 	@Override
@@ -111,8 +107,6 @@ public class DynamicPositionableRasterSampler< T extends Type< T > > extends Abs
 		accessor.updateIndex( internalIndex );
  
 		--position[ dim ];
-		
-		linkedRasterPositionable.bck( dim );
 	}
 		
 	@Override
@@ -161,8 +155,6 @@ public class DynamicPositionableRasterSampler< T extends Type< T > > extends Abs
 		
 		for ( int d = 0; d < numDimensions; ++d )
 			this.position[ d ] = position[ d ];
-
-		linkedRasterPositionable.setPosition( position );
 	}
 
 	@Override
@@ -173,8 +165,6 @@ public class DynamicPositionableRasterSampler< T extends Type< T > > extends Abs
 		
 		internalIndex = container.getPos( this.position );
 		accessor.updateIndex( internalIndex );
-
-		linkedRasterPositionable.setPosition( position );
 	}
 
 	@Override
@@ -184,8 +174,6 @@ public class DynamicPositionableRasterSampler< T extends Type< T > > extends Abs
 
 		internalIndex = container.getPos( this.position );
 		accessor.updateIndex( internalIndex );
-
-		linkedRasterPositionable.setPosition( position, dim );
 	}
 
 	@Override
@@ -205,5 +193,5 @@ public class DynamicPositionableRasterSampler< T extends Type< T > > extends Abs
 	public DynamicContainer< T, ? > getContainer(){ return container; }
 	
 	@Override
-	public T type() { return type; }
+	public T type(){ return type; }
 }

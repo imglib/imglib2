@@ -29,34 +29,34 @@ package mpicbg.imglib.sampler;
 
 import mpicbg.imglib.container.Container;
 import mpicbg.imglib.image.Image;
-import mpicbg.imglib.location.Iterator;
-import mpicbg.imglib.location.VoidIterator;
 import mpicbg.imglib.type.Type;
 
 /**
  * 
  * @param <T>
- *
+ * 
  * @author Stephan Preibisch and Stephan Saalfeld
  */
 public abstract class AbstractLocalizingRasterIterator< T extends Type< T > > extends AbstractLocalizableRasterSampler< T > implements RasterIterator< T >
 {
-	protected Iterator< ? > linkedIterator = VoidIterator.getInstance();
-
-	public AbstractLocalizingRasterIterator( final Container<T> container, final Image<T> image )
+	public AbstractLocalizingRasterIterator( final Container< T > container, final Image< T > image )
 	{
 		super( container, image );
 	}
-	
+
 	@Override
-	public void remove() {}
-	
+	public void remove(){}
+
 	@Override
-	public T next(){ fwd(); return type(); }
+	public T next()
+	{
+		fwd();
+		return type();
+	}
 
 	@Override
 	public void jumpFwd( final long steps )
-	{ 
+	{
 		for ( long j = 0; j < steps; ++j )
 			fwd();
 	}

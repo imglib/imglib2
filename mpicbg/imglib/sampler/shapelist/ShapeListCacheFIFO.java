@@ -42,15 +42,16 @@ import mpicbg.imglib.type.Type;
  */
 public class ShapeListCacheFIFO<T extends Type< T > > extends ShapeListCache<T>
 {
-	final Map<Integer, T> cache;
+	final Map< Integer, T > cache;
+
 	final LinkedList< Integer > queue;
 
 	public ShapeListCacheFIFO( final int cacheSize, final ShapeListCached<T> container )
 	{		
 		super( cacheSize, container );
 		
-		cache = new HashMap<Integer, T>( cacheSize );
-		queue = new LinkedList<Integer>( );
+		cache = new HashMap< Integer, T >( cacheSize );
+		queue = new LinkedList< Integer >();
 		
 		for ( int i = 0; i < cacheSize; ++i )
 			queue.add( Integer.MIN_VALUE );		
@@ -59,7 +60,7 @@ public class ShapeListCacheFIFO<T extends Type< T > > extends ShapeListCache<T>
 	@Override
 	public T lookUp( final int[] position )
 	{
-		final int index = fakeArray.getPos( position );
+		final int index = fakeArray.positionToIndex( position );
 
 		final T value = cache.get( index );
 		
@@ -80,5 +81,8 @@ public class ShapeListCacheFIFO<T extends Type< T > > extends ShapeListCache<T>
 	}
 
 	@Override
-	public ShapeListCache< T > createInstance() { return new ShapeListCacheFIFO< T >( cacheSize, container );	}
+	public ShapeListCache< T > createInstance()
+	{
+		return new ShapeListCacheFIFO< T >( cacheSize, container );
+	}
 }

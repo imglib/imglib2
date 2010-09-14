@@ -32,7 +32,6 @@ import mpicbg.imglib.container.Container;
 import mpicbg.imglib.container.basictypecontainer.DataAccess;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
-import mpicbg.imglib.sampler.RasterSampler;
 import mpicbg.imglib.sampler.array.ArrayBasicRasterIterator;
 import mpicbg.imglib.sampler.array.ArrayLocalizingRasterIterator;
 import mpicbg.imglib.sampler.array.ArrayPositionableRasterSampler;
@@ -70,7 +69,7 @@ public class Array< T extends Type< T >, A extends DataAccess > extends Abstract
 	}
 
 	@Override
-	public A update( final RasterSampler< ? > c )
+	public A update( final Object o )
 	{
 		return data;
 	}
@@ -123,35 +122,37 @@ public class Array< T extends Type< T >, A extends DataAccess > extends Abstract
 			steps[ d ] = steps[ d - 1 ] * dim[ d - 1 ];
 	}
 
-	public final int getPos( final int[] l )
+	public final int positionToIndex( final int[] position )
 	{
-		int i = l[ 0 ];
+		int i = position[ 0 ];
 		for ( int d = 1; d < numDimensions; ++d )
-			i += l[ d ] * step[ d ];
+			i += position[ d ] * step[ d ];
 
 		return i;
 	}
 
 	final public void indexToPosition( int i, final int[] l )
 	{
-		for ( int d = numDimensions - 1; d >= 0; --d )
+		for ( int d = numDimensions - 1; d > 0; --d )
 		{
 			final int ld = i / step[ d ];
 			l[ d ] = ld;
 			i -= ld * step[ d ];
 			// i %= step[ d ];
 		}
+		l[ 0 ] = i;
 	}
 
 	final public void indexToPosition( int i, final long[] l )
 	{
-		for ( int d = numDimensions - 1; d >= 0; --d )
+		for ( int d = numDimensions - 1; d > 0; --d )
 		{
 			final int ld = i / step[ d ];
 			l[ d ] = ld;
 			i -= ld * step[ d ];
 			// i %= step[ d ];
 		}
+		l[ 0 ] = i;
 	}
 
 	final public int indexToPosition( int i, final int dim )

@@ -202,8 +202,6 @@ public class ShapeListPositionableRasterSampler< T extends Type< T > > extends A
 		
 		for ( int d = 1; d < numDimensions; ++d )
 			position[ d ] = 0;
-		
-		linkedIterator.reset();
 	}
 
 	/**
@@ -235,8 +233,6 @@ public class ShapeListPositionableRasterSampler< T extends Type< T > > extends A
 			else
 				break;
 		}
-		
-		linkedIterator.fwd();
 	}
 
 	@Override

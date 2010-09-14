@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2009--2010, Stephan Preibisch & Johannes Schindelin
+ * Copyright (c) 2009--2010, Funke, Preibisch, Saalfeld & Schindelin
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -24,67 +24,87 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- *
- * @author Stephan Preibisch & Johannes Schindelin
  */
 package mpicbg.imglib.container.imageplus;
 
-import ij.IJ;
 import ij.ImagePlus;
+import ij.ImageStack;
+import ij.process.ColorProcessor;
 
 import mpicbg.imglib.container.basictypecontainer.array.IntArray;
 import mpicbg.imglib.exception.ImgLibException;
 import mpicbg.imglib.type.Type;
 
+/**
+ * {@link ImagePlusContainer} for integer-stored data.
+ * 
+ * @author Jan Funke, Stephan Preibisch, Stephan Saalfeld, Johannes Schindelin
+ */
 public class IntImagePlus<T extends Type<T>> extends ImagePlusContainer<T, IntArray> 
 {
-	final ImagePlus image;	
+	final ImagePlus imp;	
 	
 	public IntImagePlus( final ImagePlusContainerFactory factory, final int[] dim, final int entitiesPerPixel ) 
 	{
 		super( factory, dim, entitiesPerPixel );
-
+		
 		if ( entitiesPerPixel == 1 )
 		{
-			image = IJ.createImage( "image", "RGB Black", width, height, depth );
-	
-			for ( int i = 0; i < depth; ++i )
-				mirror.add( new IntArray( (int[])image.getStack().getProcessor( i+1 ).getPixels() ) );
+			final ImageStack stack = new ImageStack( width, height );
+			for ( int i = 0; i < slices; ++i )
+				stack.addSlice( "", new ColorProcessor( width, height ) );
+			imp = new ImagePlus( "image", stack );
+			imp.setDimensions( channels, depth, frames );
+			if ( slices > 1 )
+				imp.setOpenAsHyperStack( true );
+			
+			for ( int c = 0; c < channels; ++c )
+				for ( int t = 0; t < frames; ++t )
+					for ( int z = 0; z < depth; ++z )
+						mirror.add( new IntArray( ( int[] )imp.getStack().getPixels( imp.getStackIndex( c + 1, z + 1 , t + 1 ) ) ) );
 		}
 		else
 		{
-			image = null;
-	
-			for ( int i = 0; i < depth; ++i )
-				mirror.add( new IntArray( width * height * entitiesPerPixel ));
+			imp = null;
+			for ( int i = 0; i < slices; ++i )
+				mirror.add( new IntArray( width * height * entitiesPerPixel ) );
 		}
 	}
 
-	public IntImagePlus( final ImagePlus image, final ImagePlusContainerFactory factory ) 
+	public IntImagePlus( final ImagePlus imp, final ImagePlusContainerFactory factory ) 
 	{
-		super( factory, ImagePlusContainer.getCorrectDimensionality(image), 1 );
+		super(
+				factory,
+				imp.getWidth(),
+				imp.getHeight(),
+				imp.getNSlices(),
+				imp.getNFrames(),
+				imp.getNChannels(),
+				1 );
 		
-		this.image = image;
+		this.imp = imp;
 		
-		for ( int i = 0; i < depth; ++i )
-			mirror.add( new IntArray( (int[])image.getStack().getProcessor( i+1 ).getPixels() ) );
+		for ( int c = 0; c < channels; ++c )
+			for ( int t = 0; t < frames; ++t )
+				for ( int z = 0; z < depth; ++z )
+					mirror.add( new IntArray( ( int[] )imp.getStack().getProcessor( imp.getStackIndex( c + 1, z + 1 , t + 1 ) ).getPixels() ) );
 	}
 
 	@Override
 	public void close() 
 	{
 		super.close();
-		if ( image != null )
-			image.close(); 
+		if ( imp != null )
+			imp.close(); 
 	}
 
 	@Override
 	public ImagePlus getImagePlus() throws ImgLibException 
 	{
-		if ( image == null )
+		if ( imp == null )
 			throw new ImgLibException( this, "has no ImagePlus instance, it is not a standard type of ImagePlus (" + entitiesPerPixel + " entities per pixel)" ); 
 		else
-			return image;
+			return imp;
 	}
 }
 

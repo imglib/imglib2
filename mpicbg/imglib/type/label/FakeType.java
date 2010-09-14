@@ -24,8 +24,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- *
- * @author Stephan Preibisch & Stephan Saalfeld
  */
 package mpicbg.imglib.type.label;
 
@@ -33,34 +31,39 @@ import mpicbg.imglib.container.DirectAccessContainer;
 import mpicbg.imglib.container.DirectAccessContainerFactory;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.display.Display;
-import mpicbg.imglib.sampler.RasterSampler;
 import mpicbg.imglib.type.AbstractType;
 
-public class FakeType extends AbstractType<FakeType>
+/**
+ * 
+ * 
+ *
+ * @author Stephan Preibisch and Stephan Saalfeld
+ */
+public class FakeType extends AbstractType< FakeType >
 {	
 	@Override
-	public DirectAccessContainer<FakeType,?> createSuitableDirectAccessContainer( final DirectAccessContainerFactory storageFactory, final int dim[] ) { return null; }
+	public DirectAccessContainer< FakeType, ? > createSuitableDirectAccessContainer( final DirectAccessContainerFactory storageFactory, final int dim[] ){ return null; }
 
 	@Override
-	public void updateContainer( RasterSampler<?> c ) {}
+	public void updateContainer( final Object c ){}
 	
 	@Override
-	public FakeType duplicateTypeOnSameDirectAccessContainer() { return new FakeType(); }
+	public FakeType duplicateTypeOnSameDirectAccessContainer(){ return new FakeType(); }
 
 	@Override
-	public Display<FakeType> getDefaultDisplay( Image<FakeType> image ) { return null; }
+	public Display< FakeType > getDefaultDisplay( final Image<FakeType> image ){ return null; }
 
 	@Override
-	public void set( final FakeType c ) {}
+	public void set( final FakeType c ){}
 	
 	@Override
-	public FakeType[] createArray1D(int size1){ return new FakeType[ size1 ]; }
+	public FakeType[] createArray1D( final int size1 ){ return new FakeType[ size1 ]; }
 
 	@Override
-	public FakeType[][] createArray2D(int size1, int size2){ return new FakeType[ size1 ][ size2 ]; }
+	public FakeType[][] createArray2D( int size1, int size2 ){ return new FakeType[ size1 ][ size2 ]; }
 
 	@Override
-	public FakeType[][][] createArray3D(int size1, int size2, int size3) { return new FakeType[ size1 ][ size2 ][ size3 ]; }
+	public FakeType[][][] createArray3D( int size1, int size2, int size3 ){ return new FakeType[ size1 ][ size2 ][ size3 ]; }
 	
 	@Override
 	public FakeType createVariable(){ return new FakeType(); }
@@ -69,5 +72,5 @@ public class FakeType extends AbstractType<FakeType>
 	public FakeType clone(){ return createVariable(); }
 
 	@Override
-	public String toString() { return ""; }
+	public String toString(){ return ""; }
 }

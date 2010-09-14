@@ -33,33 +33,34 @@ import mpicbg.imglib.sampler.AbstractBasicRasterIterator;
 import mpicbg.imglib.type.Type;
 
 /**
- * 
+ * Basic Iterator for a {@link ImagePlusContainer ImagePlusContainers}
  * @param <T>
  *
  * @author Stephan Preibisch and Stephan Saalfeld
  */
 public class ImagePlusBasicRasterIterator< T extends Type< T > > extends AbstractBasicRasterIterator< T > implements ImagePlusStorageAccess
 {
-	/* the type instance accessing the pixel value the cursor points at */
 	protected final T type;
 	
-	/* a stronger typed pointer to Container< T > */
 	protected final ImagePlusContainer< T, ? > container;
 	
-	protected final int slicePixelCountMinus1, maxSliceMinus1;
+	final protected int numSlicePixels, lastIndex, lastSliceIndex;
 	
-	protected int slice; // TODO: support hyperstacks	
+	protected int sliceIndex;
+	
+	final protected int[] sliceSteps;
 
-	public ImagePlusBasicRasterIterator(
-			final ImagePlusContainer< T, ? > container,
-			final Image< T > image )
+	public ImagePlusBasicRasterIterator( final ImagePlusContainer< T, ? > container, final Image< T > image )
 	{
 		super( container, image );
 
 		this.type = container.createLinkedType();
 		this.container = container;
-		slicePixelCountMinus1 = container.getDimension( 0 ) * container.getDimension( 1 ) - 1; 
-		maxSliceMinus1 = container.getDimension( 2 ) - 1;
+		numSlicePixels = container.getWidth() * container.getHeight();
+		lastIndex = numSlicePixels - 1;
+		lastSliceIndex = container.numSlices() - 1;
+
+		sliceSteps = ImagePlusContainer.createSliceSteps( container.getDimensions() );
 		
 		reset();
 	}
@@ -67,53 +68,89 @@ public class ImagePlusBasicRasterIterator< T extends Type< T > > extends Abstrac
 	@Override
 	public T type(){ return type; }
 
+	/**
+	 * Note: This test is fragile in a sense that it returns true for elements
+	 * after the last element as well.
+	 * 
+	 * @return false for the last element 
+	 */
 	@Override
 	public boolean hasNext()
 	{
-		if ( type.getIndex() < slicePixelCountMinus1 || slice < maxSliceMinus1 )
-			return true;
-		else
-			return false;
+		return type.getIndex() < lastIndex || sliceIndex < lastSliceIndex;
 	}
 
 	@Override
-	public void fwd() 
+	public void fwd()
 	{
 		type.incIndex();
-		
-		if ( type.getIndex() > slicePixelCountMinus1 ) 
+
+		if ( type.getIndex() > lastIndex )
 		{
-			slice++;
+			++sliceIndex;
 			type.updateIndex( 0 );
 			type.updateContainer( this );
 		}
-		
-		linkedIterator.fwd();
 	}
-
+	
 	@Override
 	public void close()
 	{
-		type.updateIndex( slicePixelCountMinus1 + 1 );
-		slice = maxSliceMinus1 + 1;
-		super.close();		
+		type.updateIndex( lastIndex + 1 );
+		sliceIndex = lastSliceIndex + 1;
+		super.close();
 	}
 
 	@Override
 	public void reset()
 	{
-		slice = 0;
+		sliceIndex = 0;
 		type.updateIndex( -1 );
 		type.updateContainer( this );
-		
-		linkedIterator.reset();
 	}
 
 	@Override
 	public ImagePlusContainer< T, ? > getContainer(){ return container; }
 
 	@Override
-	public int getStorageIndex(){ return slice; }
+	public int getStorageIndex(){ return sliceIndex; }
+	
+	final private void sliceIndexToPosition( final int[] position )
+	{
+		int i = sliceIndex;
+		for ( int d = numDimensions - 1; d > 2; --d )
+		{
+			final int ld = i / sliceSteps[ d ];
+			position[ d ] = ld;
+			i -= ld * sliceSteps[ d ];
+			// i %= step[ d ];
+		}
+		position[ 2 ] = i;
+	}
+
+	final private void sliceIndexToPosition( final long[] position )
+	{
+		int i = sliceIndex;
+		for ( int d = numDimensions - 1; d > 2; --d )
+		{
+			final int ld = i / sliceSteps[ d ];
+			position[ d ] = ld;
+			i -= ld * sliceSteps[ d ];
+			// i %= step[ d ];
+		}
+		position[ 2 ] = i;
+	}
+
+	final private int sliceIndexToPosition( final int dim )
+	{
+		int i = sliceIndex;
+		for ( int d = numDimensions - 1; d > dim; --d )
+			i %= sliceSteps[ d ];
+
+		return i / sliceSteps[ dim ];
+	}
+
+	
 
 	@Override
 	public String toString(){ return type.toString(); }
@@ -127,10 +164,8 @@ public class ImagePlusBasicRasterIterator< T extends Type< T > > extends Abstrac
 			return type.getIndex() % container.getWidth();
 		case 1:
 			return type.getIndex() / container.getWidth();
-		case 2:
-			return slice;
 		default:
-			return 0;
+			return sliceIndexToPosition( dim );
 		}
 	}
 	
@@ -144,18 +179,22 @@ public class ImagePlusBasicRasterIterator< T extends Type< T > > extends Abstrac
 	public void localize( final int[] position )
 	{
 		final int i = type.getIndex();
-		position[ 0 ] = i % container.getWidth();
-		position[ 1 ] = i / container.getWidth();
-		position[ 2 ] = slice;
+		final int y = i / container.getWidth();
+		position[ 1 ] = y;
+		position[ 0 ] = i - y * container.getWidth();
+		if ( numDimensions > 2 )
+			sliceIndexToPosition( position );
 	}
 	
 	@Override
 	public void localize( long[] position )
 	{
 		final int i = type.getIndex();
-		position[ 0 ] = i % container.getWidth();
-		position[ 1 ] = i / container.getWidth();
-		position[ 2 ] = slice;
+		final int y = i / container.getWidth();
+		position[ 1 ] = y;
+		position[ 0 ] = i - y * container.getWidth();
+		if ( numDimensions > 2 )
+			sliceIndexToPosition( position );
 	}
 	
 }

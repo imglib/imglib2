@@ -81,8 +81,6 @@ public class DynamicBasicRasterIterator< T extends Type< T > > extends AbstractB
 	{ 
 		internalIndex += steps;
 		accessor.updateIndex( internalIndex );
-		
-		linkedIterator.jumpFwd( steps );
 	}
 
 	@Override
@@ -90,8 +88,6 @@ public class DynamicBasicRasterIterator< T extends Type< T > > extends AbstractB
 	{ 
 		++internalIndex; 
 		accessor.updateIndex( internalIndex );
-		
-		linkedIterator.fwd();
 	}
 
 	@Override
@@ -109,8 +105,6 @@ public class DynamicBasicRasterIterator< T extends Type< T > > extends AbstractB
 		type.updateContainer( this );
 		accessor.updateIndex( internalIndex );
 		internalIndex = -1;
-		
-		linkedIterator.reset();
 	}
 	
 	@Override

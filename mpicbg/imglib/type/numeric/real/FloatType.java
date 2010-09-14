@@ -24,8 +24,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- *
- * @author Stephan Preibisch & Stephan Saalfeld
  */
 package mpicbg.imglib.type.numeric.real;
 
@@ -34,9 +32,14 @@ import mpicbg.imglib.container.DirectAccessContainer;
 import mpicbg.imglib.container.DirectAccessContainerFactory;
 import mpicbg.imglib.container.basictypecontainer.FloatAccess;
 import mpicbg.imglib.container.basictypecontainer.array.FloatArray;
-import mpicbg.imglib.sampler.RasterSampler;
 import mpicbg.imglib.type.numeric.RealType;
 
+/**
+ * 
+ * 
+ *
+ * @author Stephan Preibisch and Stephan Saalfeld
+ */
 public class FloatType extends AbstractRealType<FloatType> implements RealType<FloatType>
 {
 	// the DirectAccessContainer
@@ -78,7 +81,7 @@ public class FloatType extends AbstractRealType<FloatType> implements RealType<F
 	}
 
 	@Override
-	public void updateContainer( final RasterSampler<?> c ) 
+	public void updateContainer( final Object c ) 
 	{ 
 		b = storage.update( c ); 
 	}

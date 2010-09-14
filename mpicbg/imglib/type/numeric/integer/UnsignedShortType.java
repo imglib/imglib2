@@ -24,8 +24,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- *
- * @author Stephan Preibisch & Stephan Saalfeld
  */
 package mpicbg.imglib.type.numeric.integer;
 
@@ -34,46 +32,72 @@ import mpicbg.imglib.container.DirectAccessContainer;
 import mpicbg.imglib.container.DirectAccessContainerFactory;
 import mpicbg.imglib.container.basictypecontainer.ShortAccess;
 
-public class UnsignedShortType extends GenericShortType<UnsignedShortType>
+/**
+ * 
+ * 
+ *
+ * @author Stephan Preibisch and Stephan Saalfeld
+ */
+public class UnsignedShortType extends GenericShortType< UnsignedShortType >
 {
 	// this is the constructor if you want it to read from an array
-	public UnsignedShortType( DirectAccessContainer<UnsignedShortType, ? extends ShortAccess> shortStorage ) { super( shortStorage ); }
+	public UnsignedShortType( DirectAccessContainer< UnsignedShortType, ? extends ShortAccess > shortStorage )
+	{
+		super( shortStorage );
+	}
 
 	// this is the constructor if you want it to be a variable
-	public UnsignedShortType( final int value ) { super( getCodedSignedShortChecked(value) ); }
+	public UnsignedShortType( final int value )
+	{
+		super( getCodedSignedShortChecked( value ) );
+	}
 
 	// this is the constructor if you want it to be a variable
-	public UnsignedShortType() { this( 0 ); }
-	
+	public UnsignedShortType()
+	{
+		this( 0 );
+	}
+
 	public static short getCodedSignedShortChecked( int unsignedShort )
 	{
 		if ( unsignedShort < 0 )
 			unsignedShort = 0;
 		else if ( unsignedShort > 65535 )
 			unsignedShort = 65535;
-		
+
 		return getCodedSignedShort( unsignedShort );
 	}
-	public static short getCodedSignedShort( final int unsignedShort ) { return (short)( unsignedShort & 0xffff );	}
-	public static int getUnsignedShort( final short signedShort ) { return signedShort & 0xffff; }
-	
+
+	public static short getCodedSignedShort( final int unsignedShort )
+	{
+		return ( short ) ( unsignedShort & 0xffff );
+	}
+
+	public static int getUnsignedShort( final short signedShort )
+	{
+		return signedShort & 0xffff;
+	}
+
 	@Override
-	public DirectAccessContainer<UnsignedShortType, ? extends ShortAccess> createSuitableDirectAccessContainer( final DirectAccessContainerFactory storageFactory, final int dim[] )
+	public DirectAccessContainer< UnsignedShortType, ? extends ShortAccess > createSuitableDirectAccessContainer( final DirectAccessContainerFactory storageFactory, final int dim[] )
 	{
 		// create the container
-		final DirectAccessContainer<UnsignedShortType, ? extends ShortAccess> container = storageFactory.createShortInstance( dim, 1 );
-		
+		final DirectAccessContainer< UnsignedShortType, ? extends ShortAccess > container = storageFactory.createShortInstance( dim, 1 );
+
 		// create a Type that is linked to the container
 		final UnsignedShortType linkedType = new UnsignedShortType( container );
-		
+
 		// pass it to the DirectAccessContainer
 		container.setLinkedType( linkedType );
-		
+
 		return container;
 	}
-	
+
 	@Override
-	public UnsignedShortType duplicateTypeOnSameDirectAccessContainer() { return new UnsignedShortType( storage ); }
+	public UnsignedShortType duplicateTypeOnSameDirectAccessContainer()
+	{
+		return new UnsignedShortType( storage );
+	}
 
 	@Override
 	public void mul( final float c )
@@ -86,25 +110,54 @@ public class UnsignedShortType extends GenericShortType<UnsignedShortType>
 	public void mul( final double c )
 	{
 		final int a = getUnsignedShort( getValue() );
-		setValue( getCodedSignedShort( ( int )MathLib.round( a * c ) ) );
+		setValue( getCodedSignedShort( ( int ) MathLib.round( a * c ) ) );
 	}
 
-	public int get() { return getUnsignedShort( getValue() ); }
-	public void set( final int f ) { setValue( getCodedSignedShort( f ) ); }
-	
-	@Override
-	public int getInteger(){ return get(); }
-	@Override
-	public long getIntegerLong() { return get(); }
-	@Override
-	public void setInteger( final int f ){ set( f ); }
-	@Override
-	public void setInteger( final long f ){ set( (int)f ); }
+	public int get()
+	{
+		return getUnsignedShort( getValue() );
+	}
+
+	public void set( final int f )
+	{
+		setValue( getCodedSignedShort( f ) );
+	}
 
 	@Override
-	public double getMaxValue() { return -Short.MIN_VALUE + Short.MAX_VALUE; }
+	public int getInteger()
+	{
+		return get();
+	}
+
 	@Override
-	public double getMinValue()  { return 0; }
+	public long getIntegerLong()
+	{
+		return get();
+	}
+
+	@Override
+	public void setInteger( final int f )
+	{
+		set( f );
+	}
+
+	@Override
+	public void setInteger( final long f )
+	{
+		set( ( int ) f );
+	}
+
+	@Override
+	public double getMaxValue()
+	{
+		return -Short.MIN_VALUE + Short.MAX_VALUE;
+	}
+
+	@Override
+	public double getMinValue()
+	{
+		return 0;
+	}
 
 	@Override
 	public void div( final UnsignedShortType c )
@@ -113,31 +166,46 @@ public class UnsignedShortType extends GenericShortType<UnsignedShortType>
 	}
 
 	@Override
-	public int compareTo( final UnsignedShortType c ) 
+	public int compareTo( final UnsignedShortType c )
 	{
 		final int a = get();
 		final int b = c.get();
-		
+
 		if ( a > b )
 			return 1;
 		else if ( a < b )
 			return -1;
-		else 
+		else
 			return 0;
 	}
 
 	@Override
-	public UnsignedShortType[] createArray1D( final int size1 ){ return new UnsignedShortType[ size1 ]; }
+	public UnsignedShortType[] createArray1D( final int size1 )
+	{
+		return new UnsignedShortType[ size1 ];
+	}
 
 	@Override
-	public UnsignedShortType[][] createArray2D( final int size1, final int size2 ){ return new UnsignedShortType[ size1 ][ size2 ]; }
+	public UnsignedShortType[][] createArray2D( final int size1, final int size2 )
+	{
+		return new UnsignedShortType[ size1 ][ size2 ];
+	}
 
 	@Override
-	public UnsignedShortType[][][] createArray3D( final int size1, final int size2, final int size3 ) { return new UnsignedShortType[ size1 ][ size2 ][ size3 ]; }
-	
-	@Override
-	public UnsignedShortType createVariable(){ return new UnsignedShortType( 0 ); }
+	public UnsignedShortType[][][] createArray3D( final int size1, final int size2, final int size3 )
+	{
+		return new UnsignedShortType[ size1 ][ size2 ][ size3 ];
+	}
 
 	@Override
-	public UnsignedShortType clone(){ return new UnsignedShortType( get() ); }
+	public UnsignedShortType createVariable()
+	{
+		return new UnsignedShortType( 0 );
+	}
+
+	@Override
+	public UnsignedShortType clone()
+	{
+		return new UnsignedShortType( get() );
+	}
 }

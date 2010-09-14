@@ -29,37 +29,36 @@ package mpicbg.imglib.container.dynamic;
 
 import java.util.ArrayList;
 
-import mpicbg.imglib.sampler.RasterSampler;
-import mpicbg.imglib.sampler.dynamic.DynamicBasicRasterIterator;
+import mpicbg.imglib.sampler.dynamic.DynamicStorageAccess;
 import mpicbg.imglib.type.Type;
 
 /**
  * 
  * @param <T>
- *
+ * 
  * @author Stephan Preibisch and Stephan Saalfeld
  */
-public class ByteDynamicContainer <T extends Type<T>> extends DynamicContainer<T, ByteDynamicContainerAccessor>
+public class ByteDynamicContainer< T extends Type< T >> extends DynamicContainer< T, ByteDynamicContainerAccessor >
 {
-	final ArrayList<Byte> data;
-	
+	final ArrayList< Byte > data;
+
 	public ByteDynamicContainer( final DynamicContainerFactory factory, final int[] dim, final int entitiesPerPixel )
 	{
 		super( factory, dim, entitiesPerPixel );
-		
-		data = new ArrayList<Byte>();
-		
-		for ( int i = 0; i < numPixels*entitiesPerPixel; ++i )
-			data.add( (byte)0 );
+
+		data = new ArrayList< Byte >();
+
+		for ( int i = 0; i < numPixels * entitiesPerPixel; ++i )
+			data.add( ( byte ) 0 );
 	}
-	
+
 	@Override
-	public ByteDynamicContainerAccessor update( final RasterSampler<?> c )
+	public ByteDynamicContainerAccessor update( final Object access )
 	{
-		final DynamicBasicRasterIterator<?> cursor = (DynamicBasicRasterIterator<?>)c;
-		final ByteDynamicContainerAccessor accessor = (ByteDynamicContainerAccessor) cursor.getAccessor();
-		accessor.updateIndex( cursor.getInternalIndex() );
-		
+		final DynamicStorageAccess c = ( DynamicStorageAccess )access;
+		final ByteDynamicContainerAccessor accessor = ( ByteDynamicContainerAccessor ) c.getAccessor();
+		accessor.updateIndex( c.getInternalIndex() );
+
 		return accessor;
 	}
 
@@ -69,7 +68,10 @@ public class ByteDynamicContainer <T extends Type<T>> extends DynamicContainer<T
 		return new ByteDynamicContainerAccessor( this, entitiesPerPixel );
 	}
 
-	@Override 
-	public void close() { data.clear(); }
-	
+	@Override
+	public void close()
+	{
+		data.clear();
+	}
+
 }

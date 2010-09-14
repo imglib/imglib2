@@ -28,13 +28,8 @@
 package mpicbg.imglib.interpolation.linear;
 
 import mpicbg.imglib.image.Image;
-import mpicbg.imglib.interpolation.Interpolator;
 import mpicbg.imglib.interpolation.InterpolatorFactory;
-import mpicbg.imglib.location.Localizable;
-import mpicbg.imglib.location.RasterLocalizable;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
-import mpicbg.imglib.sampler.PositionableRasterSampler;
-import mpicbg.imglib.type.numeric.NumericType;
 import mpicbg.imglib.type.numeric.RealType;
 
 /**

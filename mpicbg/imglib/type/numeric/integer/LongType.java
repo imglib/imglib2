@@ -24,8 +24,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- *
- * @author Stephan Preibisch & Stephan Saalfeld
  */
 package mpicbg.imglib.type.numeric.integer;
 
@@ -34,18 +32,23 @@ import mpicbg.imglib.container.DirectAccessContainer;
 import mpicbg.imglib.container.DirectAccessContainerFactory;
 import mpicbg.imglib.container.basictypecontainer.LongAccess;
 import mpicbg.imglib.container.basictypecontainer.array.LongArray;
-import mpicbg.imglib.sampler.RasterSampler;
 
-final public class LongType extends AbstractIntegerType<LongType>
+/**
+ * 
+ * 
+ * 
+ * @author Stephan Preibisch and Stephan Saalfeld
+ */
+final public class LongType extends AbstractIntegerType< LongType >
 {
 	// the DirectAccessContainer
-	final DirectAccessContainer<LongType, ? extends LongAccess> storage;
-	
-	// the (sub)DirectAccessContainer that holds the information 
+	final DirectAccessContainer< LongType, ? extends LongAccess > storage;
+
+	// the (sub)DirectAccessContainer that holds the information
 	LongAccess b;
-	
+
 	// this is the constructor if you want it to read from an array
-	public LongType( DirectAccessContainer<LongType, ? extends LongAccess> longStorage )
+	public LongType( DirectAccessContainer< LongType, ? extends LongAccess > longStorage )
 	{
 		storage = longStorage;
 	}
@@ -54,54 +57,89 @@ final public class LongType extends AbstractIntegerType<LongType>
 	public LongType( final long value )
 	{
 		storage = null;
-		b = new LongArray ( 1 );
+		b = new LongArray( 1 );
 		set( value );
 	}
 
 	// this is the constructor if you want it to be a variable
-	public LongType() { this( 0 ); }
+	public LongType()
+	{
+		this( 0 );
+	}
 
 	@Override
-	public DirectAccessContainer<LongType, ? extends LongAccess> createSuitableDirectAccessContainer( final DirectAccessContainerFactory storageFactory, final int dim[] )
+	public DirectAccessContainer< LongType, ? extends LongAccess > createSuitableDirectAccessContainer( final DirectAccessContainerFactory storageFactory, final int dim[] )
 	{
 		// create the container
-		final DirectAccessContainer<LongType, ? extends LongAccess> container = storageFactory.createLongInstance( dim, 1 );
-		
+		final DirectAccessContainer< LongType, ? extends LongAccess > container = storageFactory.createLongInstance( dim, 1 );
+
 		// create a Type that is linked to the container
 		final LongType linkedType = new LongType( container );
-		
+
 		// pass it to the DirectAccessContainer
 		container.setLinkedType( linkedType );
-		
+
 		return container;
 	}
 
 	@Override
-	public void updateContainer( final RasterSampler<?> c ) 
-	{ 
-		b = storage.update( c ); 
+	public void updateContainer( final Object c )
+	{
+		b = storage.update( c );
 	}
 
 	@Override
-	public LongType duplicateTypeOnSameDirectAccessContainer() { return new LongType( storage ); }
-	
-	public long get(){ return b.getValue( i ); }
-	public void set( final long f ){ b.setValue( i, f ); }
+	public LongType duplicateTypeOnSameDirectAccessContainer()
+	{
+		return new LongType( storage );
+	}
+
+	public long get()
+	{
+		return b.getValue( i );
+	}
+
+	public void set( final long f )
+	{
+		b.setValue( i, f );
+	}
 
 	@Override
-	public int getInteger(){ return (int)get(); }
+	public int getInteger()
+	{
+		return ( int ) get();
+	}
+
 	@Override
-	public long getIntegerLong() { return get(); }
+	public long getIntegerLong()
+	{
+		return get();
+	}
+
 	@Override
-	public void setInteger( final int f ){ set( f ); }
+	public void setInteger( final int f )
+	{
+		set( f );
+	}
+
 	@Override
-	public void setInteger( final long f ){ set( f ); }
-	
+	public void setInteger( final long f )
+	{
+		set( f );
+	}
+
 	@Override
-	public double getMaxValue() { return Long.MAX_VALUE; }
+	public double getMaxValue()
+	{
+		return Long.MAX_VALUE;
+	}
+
 	@Override
-	public double getMinValue()  { return Long.MIN_VALUE; }
-	
+	public double getMinValue()
+	{
+		return Long.MIN_VALUE;
+	}
+
 	@Override
 	public void mul( final float c )
 	{
@@ -113,7 +151,7 @@ final public class LongType extends AbstractIntegerType<LongType>
 	{
 		set( MathLib.round( get() * c ) );
 	}
-	
+
 	@Override
 	public void add( final LongType c )
 	{
@@ -139,26 +177,35 @@ final public class LongType extends AbstractIntegerType<LongType>
 	}
 
 	@Override
-	public int compareTo( final LongType c ) 
-	{ 
+	public int compareTo( final LongType c )
+	{
 		final long a = get();
 		final long b = c.get();
 		if ( a > b )
 			return 1;
 		else if ( a < b )
 			return -1;
-		else 
+		else
 			return 0;
 	}
-	
-	@Override
-	public void set( final LongType c ){ set( c.get() ); }
 
 	@Override
-	public void setOne() { set( 1 ); }
+	public void set( final LongType c )
+	{
+		set( c.get() );
+	}
 
 	@Override
-	public void setZero() { set( 0 ); }
+	public void setOne()
+	{
+		set( 1 );
+	}
+
+	@Override
+	public void setZero()
+	{
+		set( 0 );
+	}
 
 	@Override
 	public void inc()
@@ -175,17 +222,32 @@ final public class LongType extends AbstractIntegerType<LongType>
 	}
 
 	@Override
-	public LongType[] createArray1D(int size1){ return new LongType[ size1 ]; }
+	public LongType[] createArray1D( int size1 )
+	{
+		return new LongType[ size1 ];
+	}
 
 	@Override
-	public LongType[][] createArray2D(int size1, int size2){ return new LongType[ size1 ][ size2 ]; }
+	public LongType[][] createArray2D( int size1, int size2 )
+	{
+		return new LongType[ size1 ][ size2 ];
+	}
 
 	@Override
-	public LongType[][][] createArray3D(int size1, int size2, int size3) { return new LongType[ size1 ][ size2 ][ size3 ]; }
+	public LongType[][][] createArray3D( int size1, int size2, int size3 )
+	{
+		return new LongType[ size1 ][ size2 ][ size3 ];
+	}
 
 	@Override
-	public LongType createVariable(){ return new LongType( 0 ); }
+	public LongType createVariable()
+	{
+		return new LongType( 0 );
+	}
 
 	@Override
-	public LongType clone(){ return new LongType( get() ); }
+	public LongType clone()
+	{
+		return new LongType( get() );
+	}
 }

@@ -30,8 +30,6 @@ package mpicbg.imglib.sampler;
 import mpicbg.imglib.container.Container;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.location.RasterLocalizable;
-import mpicbg.imglib.location.RasterPositionable;
-import mpicbg.imglib.location.VoidPositionable;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategy;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
 import mpicbg.imglib.type.Type;
@@ -46,10 +44,6 @@ public abstract class AbstractOutOfBoundsPositionableRasterSampler< T extends Ty
 {
 	/* performs the actual moves and generates/queries a Type */
 	final protected OutOfBoundsStrategy< T > outOfBounds;
-	
-	/* linked RasterPositionable following the raster moves */
-	protected RasterPositionable linkedRasterPositionable = VoidPositionable.getInstance();	
-	
 	
 	public AbstractOutOfBoundsPositionableRasterSampler( final Container< T > container, final Image< T > image, final OutOfBoundsStrategy< T > outOfBounds )
 	{
@@ -115,85 +109,73 @@ public abstract class AbstractOutOfBoundsPositionableRasterSampler< T extends Ty
 	@Override
 	final public void fwd( final int dim )
 	{
-		outOfBounds.fwd( dim );		
-		linkedRasterPositionable.fwd( dim );
+		outOfBounds.fwd( dim );
 	}
 	
 	@Override
 	final public void bck( final int dim )
 	{
-		outOfBounds.bck( dim );		
-		linkedRasterPositionable.bck( dim );
+		outOfBounds.bck( dim );
 	}
 	
 	@Override
 	final public void move( final int distance, final int dim )
 	{
 		outOfBounds.move( distance, dim );
-		linkedRasterPositionable.move( distance, dim );
 	}
 	
 	@Override
 	final public void move( final long distance, final int dim )
 	{
 		outOfBounds.move( distance, dim );
-		linkedRasterPositionable.move( distance, dim );
 	}
 	
 	@Override
 	final public void moveTo( final RasterLocalizable localizable )
 	{
 		outOfBounds.moveTo( localizable );
-		linkedRasterPositionable.moveTo( localizable );
 	}
 	
 	@Override
 	final public void moveTo( final int[] position )
 	{
 		outOfBounds.moveTo( position );
-		linkedRasterPositionable.moveTo( position );
 	}
 	
 	@Override
 	final public void moveTo( final long[] position )
 	{
 		outOfBounds.moveTo( position );
-		linkedRasterPositionable.moveTo( position );
 	}
 	
 	@Override
 	final public void setPosition( final int distance, final int dim )
 	{
 		outOfBounds.setPosition( distance, dim );
-		linkedRasterPositionable.setPosition( distance, dim );
 	}
 	
 	@Override
 	final public void setPosition( final long distance, final int dim )
 	{
 		outOfBounds.setPosition( distance, dim );
-		linkedRasterPositionable.setPosition( distance, dim );
 	}
 	
 	@Override
 	final public void setPosition( final RasterLocalizable localizable )
 	{
 		outOfBounds.setPosition( localizable );
-		linkedRasterPositionable.setPosition( localizable );
 	}
 	
 	@Override
 	final public void setPosition( final int[] position )
 	{
 		outOfBounds.setPosition( position );
-		linkedRasterPositionable.setPosition( position );
 	}
 	
 	@Override
 	final public void setPosition( final long[] position )
 	{
 		outOfBounds.setPosition( position );
-		linkedRasterPositionable.setPosition( position );
 	}
 	
 	

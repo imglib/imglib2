@@ -98,8 +98,6 @@ public class RegionOfInterestCursor<T extends Type<T>> extends AbstractBasicRast
 		}
 		
 		roiPosition[ 0 ] = -1;
-		
-		linkedIterator.reset();
 	}
 
 	@Override
@@ -138,8 +136,6 @@ public class RegionOfInterestCursor<T extends Type<T>> extends AbstractBasicRast
 				}
 			}
 		}
-		
-		linkedIterator.fwd();
 	}
 	
 	@Override

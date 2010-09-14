@@ -31,12 +31,12 @@ package mpicbg.imglib.container.basictypecontainer.array;
 
 import mpicbg.imglib.container.basictypecontainer.DoubleAccess;
 
-public class DoubleArray implements DoubleAccess, ArrayDataAccess<DoubleArray>
+public class DoubleArray implements DoubleAccess, ArrayDataAccess< DoubleArray >
 {
 	protected double data[];
 
 	public DoubleArray( final int numEntities )
-	{ 
+	{
 		this.data = new double[ numEntities ];
 	}
 
@@ -44,9 +44,12 @@ public class DoubleArray implements DoubleAccess, ArrayDataAccess<DoubleArray>
 	{
 		this.data = data;
 	}
-	
+
 	@Override
-	public void close() { data = null; }
+	public void close()
+	{
+		data = null;
+	}
 
 	@Override
 	public double getValue( final int index )
@@ -57,11 +60,17 @@ public class DoubleArray implements DoubleAccess, ArrayDataAccess<DoubleArray>
 	@Override
 	public void setValue( final int index, final double value )
 	{
-		data[ index ] = value;		
+		data[ index ] = value;
 	}
-	
+
 	@Override
-	public DoubleArray createArray( final int numEntities ) { return new DoubleArray( numEntities ); }
-	
-	public double[] getCurrentStorageArray(){ return data; }
+	public DoubleArray createArray( final int numEntities )
+	{
+		return new DoubleArray( numEntities );
+	}
+
+	public double[] getCurrentStorageArray()
+	{
+		return data;
+	}
 }

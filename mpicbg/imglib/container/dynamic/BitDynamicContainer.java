@@ -29,7 +29,6 @@ package mpicbg.imglib.container.dynamic;
 
 import java.util.ArrayList;
 
-import mpicbg.imglib.sampler.RasterSampler;
 import mpicbg.imglib.sampler.dynamic.DynamicStorageAccess;
 import mpicbg.imglib.type.Type;
 
@@ -39,7 +38,7 @@ import mpicbg.imglib.type.Type;
  *
  * @author Stephan Preibisch and Stephan Saalfeld
  */
-public class BitDynamicContainer <T extends Type<T> > extends DynamicContainer<T, BitDynamicContainerAccessor>
+public class BitDynamicContainer< T extends Type< T > > extends DynamicContainer< T, BitDynamicContainerAccessor >
 {
 	final static int bitsPerEntity = Integer.SIZE;
 	final ArrayList<Integer> data;
@@ -62,11 +61,11 @@ public class BitDynamicContainer <T extends Type<T> > extends DynamicContainer<T
 	}
 	
 	@Override
-	public BitDynamicContainerAccessor update( final RasterSampler<?> c )
+	public BitDynamicContainerAccessor update( final Object access )
 	{
-		final DynamicStorageAccess cursor = ( DynamicStorageAccess )c;
-		final BitDynamicContainerAccessor accessor = (BitDynamicContainerAccessor) cursor.getAccessor();
-		accessor.updateIndex( cursor.getInternalIndex() );
+		final DynamicStorageAccess c = ( DynamicStorageAccess )access;
+		final BitDynamicContainerAccessor accessor = ( BitDynamicContainerAccessor )c.getAccessor();
+		accessor.updateIndex( c.getInternalIndex() );
 		
 		return accessor;
 	}

@@ -99,8 +99,6 @@ public class CellBasicRasterIterator< T extends Type< T > > extends AbstractBasi
 		type.updateIndex( -1 );
 		cell = 0;
 		getCellData(cell);
-		
-		linkedIterator.reset();
 	}
 	
 	
@@ -135,8 +133,6 @@ public class CellBasicRasterIterator< T extends Type< T > > extends AbstractBasi
 			type.updateIndex( 0 );			
 			getCellData(cell);
 		}
-		
-		linkedIterator.fwd();
 	}	
 
 	@Override

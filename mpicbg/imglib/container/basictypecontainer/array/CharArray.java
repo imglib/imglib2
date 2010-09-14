@@ -31,7 +31,7 @@ package mpicbg.imglib.container.basictypecontainer.array;
 
 import mpicbg.imglib.container.basictypecontainer.CharAccess;
 
-public class CharArray implements CharAccess, ArrayDataAccess<CharArray>
+public class CharArray implements CharAccess, ArrayDataAccess< CharArray >
 {
 	protected char data[];
 
@@ -46,7 +46,10 @@ public class CharArray implements CharAccess, ArrayDataAccess<CharArray>
 	}
 
 	@Override
-	public void close() { data = null; }
+	public void close()
+	{
+		data = null;
+	}
 
 	@Override
 	public char getValue( final int index )
@@ -57,11 +60,17 @@ public class CharArray implements CharAccess, ArrayDataAccess<CharArray>
 	@Override
 	public void setValue( final int index, final char value )
 	{
-		data[ index ] = value;		
+		data[ index ] = value;
 	}
-	
-	public char[] getCurrentStorageArray(){ return data; }
+
+	public char[] getCurrentStorageArray()
+	{
+		return data;
+	}
 
 	@Override
-	public CharArray createArray( final int numEntities ) { return new CharArray( numEntities ); }
+	public CharArray createArray( final int numEntities )
+	{
+		return new CharArray( numEntities );
+	}
 }

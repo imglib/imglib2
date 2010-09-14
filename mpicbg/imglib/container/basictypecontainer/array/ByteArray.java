@@ -31,7 +31,7 @@ package mpicbg.imglib.container.basictypecontainer.array;
 
 import mpicbg.imglib.container.basictypecontainer.ByteAccess;
 
-public class ByteArray implements ByteAccess, ArrayDataAccess<ByteArray>
+public class ByteArray implements ByteAccess, ArrayDataAccess< ByteArray >
 {
 	protected byte data[];
 
@@ -46,7 +46,10 @@ public class ByteArray implements ByteAccess, ArrayDataAccess<ByteArray>
 	}
 
 	@Override
-	public void close() { data = null; }
+	public void close()
+	{
+		data = null;
+	}
 
 	@Override
 	public byte getValue( final int index )
@@ -57,11 +60,17 @@ public class ByteArray implements ByteAccess, ArrayDataAccess<ByteArray>
 	@Override
 	public void setValue( final int index, final byte value )
 	{
-		data[ index ] = value;		
+		data[ index ] = value;
 	}
-	
-	public byte[] getCurrentStorageArray(){ return data; }
+
+	public byte[] getCurrentStorageArray()
+	{
+		return data;
+	}
 
 	@Override
-	public ByteArray createArray( final int numEntities ) { return new ByteArray( numEntities ); }
+	public ByteArray createArray( final int numEntities )
+	{
+		return new ByteArray( numEntities );
+	}
 }

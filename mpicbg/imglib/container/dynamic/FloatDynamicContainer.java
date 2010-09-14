@@ -29,14 +29,13 @@ package mpicbg.imglib.container.dynamic;
 
 import java.util.ArrayList;
 
-import mpicbg.imglib.sampler.RasterSampler;
 import mpicbg.imglib.sampler.dynamic.DynamicStorageAccess;
 import mpicbg.imglib.type.Type;
 
 /**
  * 
  * @param <T>
- *
+ * 
  * @author Stephan Preibisch and Stephan Saalfeld
  */
 public class FloatDynamicContainer< T extends Type< T > > extends DynamicContainer< T, FloatDynamicContainerAccessor >
@@ -54,11 +53,11 @@ public class FloatDynamicContainer< T extends Type< T > > extends DynamicContain
 	}
 
 	@Override
-	public FloatDynamicContainerAccessor update( final RasterSampler< ? > c )
+	public FloatDynamicContainerAccessor update( final Object access )
 	{
-		final DynamicStorageAccess cursor = ( DynamicStorageAccess ) c;
-		final FloatDynamicContainerAccessor accessor = ( FloatDynamicContainerAccessor ) cursor.getAccessor();
-		accessor.updateIndex( cursor.getInternalIndex() );
+		final DynamicStorageAccess c = ( DynamicStorageAccess )access;
+		final FloatDynamicContainerAccessor accessor = ( FloatDynamicContainerAccessor ) c.getAccessor();
+		accessor.updateIndex( c.getInternalIndex() );
 
 		return accessor;
 	}
@@ -74,5 +73,4 @@ public class FloatDynamicContainer< T extends Type< T > > extends DynamicContain
 	{
 		data.clear();
 	}
-
 }

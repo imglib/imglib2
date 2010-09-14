@@ -62,9 +62,9 @@ public class ArrayPositionableRasterSampler< T extends Type< T > > extends Abstr
 		type.updateContainer( this );
 	}	
 	
-	public static ArrayPositionableRasterSampler<FakeType> createLinearByDimCursor( final int[] dim )
+	public static ArrayPositionableRasterSampler< FakeType > createLinearByDimCursor( final int[] dim )
 	{
-		final Array<FakeType, FakeAccess> array = new Array<FakeType, FakeAccess>( null, new FakeArray(), dim, 1 );
+		final Array<FakeType, FakeAccess> array = new Array< FakeType, FakeAccess >( null, new FakeArray(), dim, 1 );
 		array.setLinkedType( new FakeType() );
 		return new ArrayPositionableRasterSampler<FakeType>( array, null );
 	}
@@ -77,8 +77,6 @@ public class ArrayPositionableRasterSampler< T extends Type< T > > extends Abstr
 	{
 		type.incIndex( step[ dim ] );
 		++position[ dim ];
-		
-		linkedRasterPositionable.fwd( dim );
 	}
 
 	@Override
@@ -86,8 +84,6 @@ public class ArrayPositionableRasterSampler< T extends Type< T > > extends Abstr
 	{
 		type.decIndex( step[ dim ] );
 		--position[ dim ];
-		
-		linkedRasterPositionable.bck( dim );
 	}
 	
 	@Override
@@ -95,19 +91,15 @@ public class ArrayPositionableRasterSampler< T extends Type< T > > extends Abstr
 	{
 		type.incIndex( step[ dim ] * steps );
 		position[ dim ] += steps;
-		
-		linkedRasterPositionable.move( steps, dim );
 	}
 					
 	@Override
 	public void setPosition( final int[] position )
 	{
-		type.updateIndex( container.getPos( position ) );
+		type.updateIndex( container.positionToIndex( position ) );
 		
 		for ( int d = 0; d < numDimensions; ++d )
 			this.position[ d ] = position[ d ];
-		
-		linkedRasterPositionable.setPosition( position );
 	}
 	
 	@Override
@@ -116,18 +108,14 @@ public class ArrayPositionableRasterSampler< T extends Type< T > > extends Abstr
 		for ( int d = 0; d < numDimensions; ++d )
 			this.position[ d ] = ( int )position[ d ];
 		
-		type.updateIndex( container.getPos( this.position ) );
-		
-		linkedRasterPositionable.setPosition( position );
+		type.updateIndex( container.positionToIndex( this.position ) );
 	}
 
 	@Override
 	public void setPosition( final int position, final int dim )
 	{
 		this.position[ dim ] = position;
-		type.updateIndex( container.getPos( this.position ) );
-		
-		linkedRasterPositionable.setPosition( position, dim );
+		type.updateIndex( container.positionToIndex( this.position ) );
 	}
 
 	@Override

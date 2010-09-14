@@ -24,8 +24,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- *
- * @author Stephan Preibisch & Stephan Saalfeld
  */
 package mpicbg.imglib.type.numeric.integer;
 
@@ -33,64 +31,126 @@ import mpicbg.imglib.container.DirectAccessContainer;
 import mpicbg.imglib.container.DirectAccessContainerFactory;
 import mpicbg.imglib.container.basictypecontainer.IntAccess;
 
-public class IntType extends GenericIntType<IntType>
+/**
+ *
+ * 
+ *
+ * @author Stephan Preibisch and Stephan Saalfeld
+ */
+public class IntType extends GenericIntType< IntType >
 {
 	// this is the constructor if you want it to read from an array
-	public IntType( DirectAccessContainer<IntType, ? extends IntAccess> intStorage ) { super( intStorage ); }
-	
-	// this is the constructor if you want it to be a variable
-	public IntType( final int value ) { super( value ); }
+	public IntType( DirectAccessContainer< IntType, ? extends IntAccess > intStorage )
+	{
+		super( intStorage );
+	}
 
 	// this is the constructor if you want it to be a variable
-	public IntType() { super( 0 ); }
-		
+	public IntType( final int value )
+	{
+		super( value );
+	}
+
+	// this is the constructor if you want it to be a variable
+	public IntType()
+	{
+		super( 0 );
+	}
+
 	@Override
-	public DirectAccessContainer<IntType, ? extends IntAccess> createSuitableDirectAccessContainer( final DirectAccessContainerFactory storageFactory, final int dim[] )
+	public DirectAccessContainer< IntType, ? extends IntAccess > createSuitableDirectAccessContainer( final DirectAccessContainerFactory storageFactory, final int dim[] )
 	{
 		// create the container
-		final DirectAccessContainer<IntType, ? extends IntAccess> container = storageFactory.createIntInstance( dim, 1 );
-		
+		final DirectAccessContainer< IntType, ? extends IntAccess > container = storageFactory.createIntInstance( dim, 1 );
+
 		// create a Type that is linked to the container
 		final IntType linkedType = new IntType( container );
-		
+
 		// pass it to the DirectAccessContainer
 		container.setLinkedType( linkedType );
-		
+
 		return container;
 	}
-	
-	@Override
-	public IntType duplicateTypeOnSameDirectAccessContainer() { return new IntType( storage ); }
-
-	public int get() { return getValue(); }
-	public void set( final int b ) { setValue( b ); }
 
 	@Override
-	public int getInteger(){ return get(); }
-	@Override
-	public long getIntegerLong() { return get(); }
-	@Override
-	public void setInteger( final int f ){ set( f ); }
-	@Override
-	public void setInteger( final long f ){ set( (int)f ); }
+	public IntType duplicateTypeOnSameDirectAccessContainer()
+	{
+		return new IntType( storage );
+	}
+
+	public int get()
+	{
+		return getValue();
+	}
+
+	public void set( final int b )
+	{
+		setValue( b );
+	}
 
 	@Override
-	public double getMaxValue() { return Integer.MAX_VALUE; }
-	@Override
-	public double getMinValue()  { return Integer.MIN_VALUE; }
+	public int getInteger()
+	{
+		return get();
+	}
 
 	@Override
-	public IntType[] createArray1D(int size1){ return new IntType[ size1 ]; }
+	public long getIntegerLong()
+	{
+		return get();
+	}
 
 	@Override
-	public IntType[][] createArray2D(int size1, int size2){ return new IntType[ size1 ][ size2 ]; }
+	public void setInteger( final int f )
+	{
+		set( f );
+	}
 
 	@Override
-	public IntType[][][] createArray3D(int size1, int size2, int size3) { return new IntType[ size1 ][ size2 ][ size3 ]; }
+	public void setInteger( final long f )
+	{
+		set( ( int ) f );
+	}
 
 	@Override
-	public IntType createVariable(){ return new IntType( 0 ); }
+	public double getMaxValue()
+	{
+		return Integer.MAX_VALUE;
+	}
 
 	@Override
-	public IntType clone(){ return new IntType( getValue() ); }
+	public double getMinValue()
+	{
+		return Integer.MIN_VALUE;
+	}
+
+	@Override
+	public IntType[] createArray1D( int size1 )
+	{
+		return new IntType[ size1 ];
+	}
+
+	@Override
+	public IntType[][] createArray2D( int size1, int size2 )
+	{
+		return new IntType[ size1 ][ size2 ];
+	}
+
+	@Override
+	public IntType[][][] createArray3D( int size1, int size2, int size3 )
+	{
+		return new IntType[ size1 ][ size2 ][ size3 ];
+	}
+
+	@Override
+	public IntType createVariable()
+	{
+		return new IntType( 0 );
+	}
+
+	@Override
+	public IntType clone()
+	{
+		return new IntType( getValue() );
+	}
 }

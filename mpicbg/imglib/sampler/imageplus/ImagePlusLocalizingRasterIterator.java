@@ -29,106 +29,123 @@ package mpicbg.imglib.sampler.imageplus;
 
 import mpicbg.imglib.container.imageplus.ImagePlusContainer;
 import mpicbg.imglib.image.Image;
-import mpicbg.imglib.sampler.AbstractLocalizingRasterIterator;
 import mpicbg.imglib.type.Type;
 
 /**
- * 
+ * Localizing Iterator for {@link ImagePlusContainer ImagePlusContainers}
  * @param <T>
  *
  * @author Stephan Preibisch and Stephan Saalfeld
  */
-public class ImagePlusLocalizingRasterIterator< T extends Type< T > >
-		extends AbstractLocalizingRasterIterator< T >
-		implements ImagePlusStorageAccess
+public class ImagePlusLocalizingRasterIterator< T extends Type< T > > extends ImagePlusBasicRasterIterator< T >
 {
-	/* the type instance accessing the pixel value the cursor points at */
-	protected final T type;
-	
-	/* a stronger typed pointer to Container< T > */
-	protected final ImagePlusContainer< T, ? > container;
-	
-	protected final int slicePixelCountMinus1, maxSliceMinus1;
-	
-	protected int slice; // TODO: support hyperstacks	
+	final protected int[] position, dimensions;
 
-	public ImagePlusLocalizingRasterIterator(
-			final ImagePlusContainer< T, ? > container,
-			final Image< T > image ) 
+	public ImagePlusLocalizingRasterIterator( final ImagePlusContainer< T, ? > container, final Image< T > image ) 
 	{
 		super( container, image );
 
-		this.type = container.createLinkedType();
-		this.container = container;
-		slicePixelCountMinus1 = container.getDimension( 0 ) * container.getDimension( 1 ) - 1; 
-		maxSliceMinus1 = container.getDimension( 2 ) - 1;
+		position = new int[ numDimensions ];
+		dimensions = container.getDimensions();
 		
 		reset();
-	}	
+	}
+	
+	/* RasterIterator */
 	
 	@Override
 	public void fwd()
 	{ 
 		type.incIndex();
-		
-		if ( type.getIndex() > slicePixelCountMinus1 ) 
+
+		if ( type.getIndex() > lastIndex )
 		{
-			++slice;
+			++sliceIndex;
 			type.updateIndex( 0 );
 			type.updateContainer( this );
 		}
 		
-		for ( int d = 0; d < numDimensions; d++ )
+		for ( int d = 0; d < numDimensions; ++d )
 		{
-			if ( position[ d ] < dimensions[ d ] - 1 )
-			{
-				position[ d ]++;
-				
-				for ( int e = 0; e < d; e++ )
-					position[ e ] = 0;
-				
-				break;
-			}
+			if ( ++position[ d ] >= dimensions[ d ] )
+				position[ d ] = 0;
+			else
+				return;
 		}
-		
-		linkedIterator.fwd();
 	}
 
 	@Override
 	public void reset()
 	{
-		if ( dimensions != null )
-		{
-			type.updateIndex( -1 );
-			
-			position[ 0 ] = -1;
-			
-			for ( int d = 1; d < numDimensions; d++ )
-				position[ d ] = 0;
-			
-			slice = 0;
-			
-			type.updateContainer( this );
-		}
+		type.updateIndex( -1 );
 		
-		linkedIterator.reset();
+		position[ 0 ] = -1;
+		
+		for ( int d = 1; d < numDimensions; d++ )
+			position[ d ] = 0;
+		
+		sliceIndex = 0;
+		
+		type.updateContainer( this );
 	}
-
+	
+	
+	/* Localizable */
+	
 	@Override
-	public int getStorageIndex(){ return slice; }
-
-	@Override
-	public ImagePlusContainer< T, ? > getContainer(){ return container; }
-
-	@Override
-	public T type(){ return type; }
-
-	@Override
-	public boolean hasNext()
+	public float getFloatPosition( final int dim )
 	{
-		if ( type.getIndex() < slicePixelCountMinus1 || slice < maxSliceMinus1 )
-			return true;
-		else
-			return false;
+		return position[ dim ];
+	}
+	
+	@Override
+	public double getDoublePosition( final int dim )
+	{
+		return position[ dim ];
+	}
+	
+	
+	@Override
+	public void localize( final float[] position )
+	{
+		for ( int d = 0; d < numDimensions; ++d )
+			position[ d ] = this.position[ d ];
+	}
+	
+	@Override
+	public void localize( final double[] position )
+	{
+		for ( int d = 0; d < numDimensions; ++d )
+			position[ d ] = this.position[ d ];
+	}
+	
+	
+	/* RasterLocalizable */
+	
+	@Override
+	public int getIntPosition( final int dim )
+	{
+		return position[ dim ];
+	}
+	
+	@Override
+	public long getLongPosition( final int dim )
+	{
+		return position[ dim ];
+	}
+	
+	
+	@Override
+	public void localize( final long[] position )
+	{
+		for ( int d = 0; d < numDimensions; ++d )
+			position[ d ] = this.position[ d ];
+	}
+	
+	@Override
+	public void localize( final int[] position )
+	{
+		for ( int d = 0; d < numDimensions; ++d )
+			position[ d ] = this.position[ d ];
 	}
 }

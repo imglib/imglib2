@@ -24,8 +24,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- *
- * @author Stephan Preibisch & Stephan Saalfeld
  */
 package mpicbg.imglib.interpolation.nearestneighbor;
 
@@ -35,23 +33,29 @@ import mpicbg.imglib.interpolation.InterpolatorFactory;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
 import mpicbg.imglib.type.Type;
 
-public class NearestNeighborInterpolatorFactory<T extends Type<T>> extends InterpolatorFactory<T>
+/**
+ * 
+ * @param <T>
+ *
+ * @author Stephan Preibisch and Stephan Saalfeld
+ */
+public class NearestNeighborInterpolatorFactory< T extends Type< T > > extends InterpolatorFactory< T >
 {
-	public NearestNeighborInterpolatorFactory( final OutOfBoundsStrategyFactory<T> outOfBoundsStrategyFactory )
+	public NearestNeighborInterpolatorFactory( final OutOfBoundsStrategyFactory< T > outOfBoundsStrategyFactory )
 	{
-		super(outOfBoundsStrategyFactory);
+		super( outOfBoundsStrategyFactory );
 	}
 
 	@Override
-	public Interpolator<T> createInterpolator( final Image<T> img )
+	public Interpolator< T > createInterpolator( final Image< T > img )
 	{
-		if ( img.numDimensions() == 1)
-			return new NearestNeighborInterpolator1D<T>( img, this, outOfBoundsStrategyFactory );
-		else if ( img.numDimensions() == 2)
-			return new NearestNeighborInterpolator2D<T>( img, this, outOfBoundsStrategyFactory );
-		else if ( img.numDimensions() == 3)
-			return new NearestNeighborInterpolator3D<T>( img, this, outOfBoundsStrategyFactory );
+		if ( img.numDimensions() == 1 )
+			return new NearestNeighborInterpolator1D< T >( img, this, outOfBoundsStrategyFactory );
+		else if ( img.numDimensions() == 2 )
+			return new NearestNeighborInterpolator2D< T >( img, this, outOfBoundsStrategyFactory );
+		else if ( img.numDimensions() == 3 )
+			return new NearestNeighborInterpolator3D< T >( img, this, outOfBoundsStrategyFactory );
 		else
-			return new NearestNeighborInterpolator<T>( img, this, outOfBoundsStrategyFactory );
+			return new NearestNeighborInterpolator< T >( img, this, outOfBoundsStrategyFactory );
 	}
 }

@@ -35,69 +35,77 @@ import mpicbg.imglib.type.Type;
 /**
  * 
  * @param <T>
- *
+ * 
  * @author Stephan Preibisch and Stephan Saalfeld
  */
 public class ArrayBasicRasterIterator< T extends Type< T > > extends AbstractBasicRasterIterator< T >
 {
 	protected final T type;
+
 	protected final Array< T, ? > container;
-	protected final int sizeMinus1;
-	
-	public ArrayBasicRasterIterator( final Array< T, ? > container, final Image< T > image ) 
+
+	protected final int lastIndex;
+
+	public ArrayBasicRasterIterator( final Array< T, ? > container, final Image< T > image )
 	{
 		super( container, image );
 
 		this.type = container.createLinkedType();
 		this.container = container;
-		this.sizeMinus1 = (int)container.numPixels() - 1;
-		
+		this.lastIndex = ( int ) container.numPixels() - 1;
+
 		reset();
 	}
-	
+
 	@Override
-	public T type() { return type; }
-	
+	public T type()
+	{
+		return type;
+	}
+
 	@Override
-	public boolean hasNext(){ return type.getIndex() < sizeMinus1; }
+	public boolean hasNext()
+	{
+		return type.getIndex() < lastIndex;
+	}
 
 	@Override
 	public void jumpFwd( final long steps )
 	{
-		type.incIndex( (int)steps );
-		
-		linkedIterator.jumpFwd( steps );
+		type.incIndex( ( int ) steps );
 	}
 
 	@Override
 	public void fwd()
 	{
 		type.incIndex();
-		
-		linkedIterator.fwd();
 	}
 
 	@Override
-	public void close() 
-	{ 
-		type.updateIndex( sizeMinus1 + 1 );
+	public void close()
+	{
+		type.updateIndex( lastIndex + 1 );
 		super.close();
 	}
 
 	@Override
 	public void reset()
-	{ 
-		type.updateIndex( -1 ); 
+	{
+		type.updateIndex( -1 );
 		type.updateContainer( this );
-
-		linkedIterator.reset();
 	}
 
 	@Override
-	public Array<T,?> getContainer(){ return container; }
-	
+	public Array< T, ? > getContainer()
+	{
+		return container;
+	}
+
 	@Override
-	public String toString() { return type.toString(); }
+	public String toString()
+	{
+		return type.toString();
+	}
 
 	@Override
 	public long getLongPosition( final int dim )

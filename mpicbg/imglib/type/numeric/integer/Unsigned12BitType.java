@@ -24,8 +24,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- *
- * @author Stephan Preibisch
  */
 
 package mpicbg.imglib.type.numeric.integer;
@@ -34,9 +32,14 @@ import mpicbg.imglib.container.DirectAccessContainer;
 import mpicbg.imglib.container.DirectAccessContainerFactory;
 import mpicbg.imglib.container.basictypecontainer.BitAccess;
 import mpicbg.imglib.container.basictypecontainer.array.BitArray;
-import mpicbg.imglib.sampler.RasterSampler;
 import mpicbg.imglib.type.numeric.integer.AbstractIntegerType;
 
+/**
+ * 
+ * 
+ *
+ * @author Stephan Preibisch and Stephan Saalfeld
+ */
 public class Unsigned12BitType extends AbstractIntegerType<Unsigned12BitType>
 {
 	// the DirectAccessContainer
@@ -83,7 +86,7 @@ public class Unsigned12BitType extends AbstractIntegerType<Unsigned12BitType>
 	}
 		
 	@Override
-	public void updateContainer( final RasterSampler<?> c ) 
+	public void updateContainer( final Object c ) 
 	{ 
 		b = storage.update( c );
 	}

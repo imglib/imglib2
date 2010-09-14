@@ -24,8 +24,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- *
- * @author Stephan Preibisch & Stephan Saalfeld
  */
 package mpicbg.imglib.interpolation.linear;
 
@@ -33,40 +31,46 @@ import mpicbg.imglib.image.Image;
 import mpicbg.imglib.interpolation.Interpolator;
 import mpicbg.imglib.interpolation.InterpolatorFactory;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
+import mpicbg.imglib.type.numeric.NumericType;
 import mpicbg.imglib.type.numeric.RealType;
 
-public class LinearInterpolatorFactory<T extends RealType<T>> extends InterpolatorFactory<T>
+/**
+ * 
+ * @param <T>
+ *
+ * @author Stephan Preibisch and Stephan Saalfeld
+ */
+public class LinearInterpolatorFactory< T extends NumericType< T > > extends InterpolatorFactory< T >
 {
-	public LinearInterpolatorFactory( final OutOfBoundsStrategyFactory<T> outOfBoundsStrategyFactory )
+	public LinearInterpolatorFactory( final OutOfBoundsStrategyFactory< T > outOfBoundsStrategyFactory )
 	{
-		super(outOfBoundsStrategyFactory);
+		super( outOfBoundsStrategyFactory );
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings( "unchecked" )
 	@Override
-	public Interpolator<T> createInterpolator( final Image<T> img )
+	public Interpolator< T > createInterpolator( final Image< T > img )
 	{
-		/* TODO Just for testing */
-		if ( true ) return new LinearInterpolator<T>( img, this, outOfBoundsStrategyFactory );
-		
 		if ( img.numDimensions() == 1 )
 		{
-			return new LinearInterpolator1D<T>( img, this, outOfBoundsStrategyFactory );
+			return new LinearInterpolator1D< T >( img, this, outOfBoundsStrategyFactory );
 		}
 		else if ( img.numDimensions() == 2 )
 		{
-			return new LinearInterpolator2D<T>( img, this, outOfBoundsStrategyFactory );
+			return new LinearInterpolator2D< T >( img, this, outOfBoundsStrategyFactory );
 		}
-		else if ( img.numDimensions() == 3 )	
+		else if ( img.numDimensions() == 3 )
 		{
-			if ( RealType.class.isInstance( img.createType() ))
-				return (LinearInterpolator<T>)new LinearInterpolator3DRealType( img, this, outOfBoundsStrategyFactory );
+			if ( RealType.class.isInstance( img.createType() ) )
+			{
+				return new LinearInterpolator3DRealType( img, this, outOfBoundsStrategyFactory );
+			}
 			else
-				return new LinearInterpolator3D<T>( img, this, outOfBoundsStrategyFactory );
+				return new LinearInterpolator3D< T >( img, this, outOfBoundsStrategyFactory );
 		}
 		else
 		{
-			return new LinearInterpolator<T>( img, this, outOfBoundsStrategyFactory );
+			return new LinearInterpolator< T >( img, this, outOfBoundsStrategyFactory );
 		}
 	}
 }

@@ -24,8 +24,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- *
- * @author Stephan Preibisch & Stephan Saalfeld
  */
 package mpicbg.imglib.type;
 
@@ -36,158 +34,199 @@ import mpicbg.imglib.container.basictypecontainer.DataAccess;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.display.Display;
 import mpicbg.imglib.sampler.RasterIterator;
-import mpicbg.imglib.sampler.RasterSampler;
 import mpicbg.imglib.sampler.array.ArrayBasicRasterIterator;
 import mpicbg.imglib.sampler.cell.CellBasicRasterIterator;
 import mpicbg.imglib.type.numeric.real.FloatType;
 
 /**
- * The {@link Type} class is responsible for computing. It can be instaniated as a variable holding one single value only or with
- * a DirectAccessContainer. There is no differentiation between the two cases except for the constructor to avoid double implementations. 
+ * The {@link Type} class is responsible for computing. It can be instaniated as
+ * a variable holding one single value only or with a DirectAccessContainer.
+ * There is no differentiation between the two cases except for the constructor
+ * to avoid double implementations.
  * 
- * The {@link Type} is the only class that is aware of the actual data type, i.e. which basic type ({@link DataAccess}) is used to 
- * store the data. On the other hand it does not know the storage type ({@link Array}, {@link RasterIterator}, ...). This is not necessary for
- * computation and avoid complicated re-implementations. The method public void updateDataArray( Cursor<?> c );	links the DirectAccessContainer and
- * the cursor which define the current position as well as the current storage array.
+ * The {@link Type} is the only class that is aware of the actual data type,
+ * i.e. which basic type ({@link DataAccess}) is used to store the data. On the
+ * other hand it does not know the storage type ({@link Array},
+ * {@link RasterIterator}, ...). This is not necessary for computation and avoid
+ * complicated re-implementations. The method public void updateDataArray(
+ * Cursor<?> c ); links the DirectAccessContainer and the cursor which define
+ * the current position as well as the current storage array.
  * 
- * @author Stephan Preibisch
- *
- * @param <T> - the specialized version
+ * @author Stephan Preibisch and Stephan Saalfeld
+ * 
+ * @param <T> the specialized version
  */
-public interface Type<T extends Type<T>>
+public interface Type< T extends Type< T > >
 {
 	/**
-	 * The {@link Type} creates the DirectAccessContainer used for storing image data; based on the given storage strategy and its size. It 
-	 * basically only decides here which BasicType it uses (float, int, byte, bit, ...) and how many entities per pixel it needs
-	 * (e.g. 2 floats per pixel for a complex number). This enables the separation of {@link Image} and the basic types.
+	 * The {@link Type} creates the DirectAccessContainer used for storing image
+	 * data; based on the given storage strategy and its size. It basically only
+	 * decides here which BasicType it uses (float, int, byte, bit, ...) and how
+	 * many entities per pixel it needs (e.g. 2 floats per pixel for a complex
+	 * number). This enables the separation of {@link Image} and the basic
+	 * types.
 	 * 
-	 * @param storageFactory - Which storage strategy is used
-	 * @param dim - the dimensions
-	 * @return - the instantiated DirectAccessContainer where only the {@link Type} knowns the BasicType it contains.
+	 * @param storageFactory
+	 *            - Which storage strategy is used
+	 * @param dim
+	 *            - the dimensions
+	 * @return - the instantiated DirectAccessContainer where only the
+	 *         {@link Type} knowns the BasicType it contains.
 	 */
-	public DirectAccessContainer<T,?> createSuitableDirectAccessContainer( final DirectAccessContainerFactory storageFactory, final int dim[] );
-	
+	public DirectAccessContainer< T, ? > createSuitableDirectAccessContainer( final DirectAccessContainerFactory storageFactory, final int dim[] );
+
 	/**
-	 * The {@link Type} creates the default {@link Display} for displaying the image contents. Only {@link Type} can do this as in {@link Image}
-	 * the {@link Type} is only a Generic. Later the user can create its own {@link Display}s if wanted.
+	 * The {@link Type} creates the default {@link Display} for displaying the
+	 * image contents. Only {@link Type} can do this as in {@link Image} the
+	 * {@link Type} is only a Generic. Later the user can create its own
+	 * {@link Display}s if wanted.
 	 * 
 	 * This could be basically a static function.
 	 * 
-	 * @param image - the image to create the {@link Display} for
+	 * @param image
+	 *            - the image to create the {@link Display} for
 	 * @return the {@link Display}
 	 */
-	public Display<T> getDefaultDisplay( Image<T> image );
-	
-	/**
-	 * This method is used by the {@link RasterIterator}s to update the data current data array
-	 * of the {@link Type}, for example when moving from one {@link Cell} to the next.
-	 * If it is only an {@link Array} the {@link RasterIterator}s never have to call that function.
-	 * 
-	 * The idea behind this concept is maybe not obvious. The {@link Type} knows which basic type
-	 * is used (float, int, byte, ...) but does not know how it is stored ({@link Array}, {@link CellDirectAccessContainer}, ...) to
-	 * prevent multiple implementations of {@link Type}.
-	 * That's why {@link Type} asks the {@link DataAccess} to give the actual basic array by passing the {@link RasterIterator}
-	 * that calls the method. The {@link DataAccess} is also an {@link Array}, {@link CellDirectAccessContainer}, ... which
-	 * can then communicate with the {@link ArrayBasicRasterIterator}, {@link CellBasicRasterIterator}, ... and return the current basic type array. 
-	 * 
-	 * A typical implementation of this method looks like that (this is the {@link FloatType} implementation):
-	 * 
-	 * 		float[] v = floatStorage.getCurrentStorageArray( c ); 
-	 *  
-	 * @param c - the {@link RasterIterator} gives a link to itself so that the {@link Type} 
-	 * tell its {@link DataAccess} to get the new basic type array.
-	 */
-	public void updateContainer( RasterSampler<?> c );	
+	public Display< T > getDefaultDisplay( Image< T > image );
 
 	/**
-	 * Increments the array position of the {@link Type}, 
-	 * this is called by the {@link RasterIterator}s which iterate over the image.
+	 * This method is used by the {@link RasterIterator}s to update the data
+	 * current data array of the {@link Type}, for example when moving from one
+	 * {@link Cell} to the next. If it is only an {@link Array} the
+	 * {@link RasterIterator}s never have to call that function.
 	 * 
-	 * @param i - how many steps
+	 * The idea behind this concept is maybe not obvious. The {@link Type} knows
+	 * which basic type is used (float, int, byte, ...) but does not know how it
+	 * is stored ({@link Array}, {@link CellDirectAccessContainer}, ...) to
+	 * prevent multiple implementations of {@link Type}. That's why {@link Type}
+	 * asks the {@link DataAccess} to give the actual basic array by passing the
+	 * {@link RasterIterator} that calls the method. The {@link DataAccess} is
+	 * also an {@link Array}, {@link CellDirectAccessContainer}, ... which can
+	 * then communicate with the {@link ArrayBasicRasterIterator},
+	 * {@link CellBasicRasterIterator}, ... and return the current basic type
+	 * array.
+	 * 
+	 * A typical implementation of this method looks like that (this is the
+	 * {@link FloatType} implementation):
+	 * 
+	 * float[] v = floatStorage.getCurrentStorageArray( c );
+	 * 
+	 * @param c
+	 *            - the {@link RasterIterator} gives a link to itself so that
+	 *            the {@link Type} tell its {@link DataAccess} to get the new
+	 *            basic type array.
+	 */
+	public void updateContainer( Object c );
+
+	/**
+	 * Increments the array position of the {@link Type}, this is called by the
+	 * {@link RasterIterator}s which iterate over the image.
+	 * 
+	 * @param i
+	 *            - how many steps
 	 */
 	public void updateIndex( final int i );
-	
+
 	/**
-	 * Returns the current index in the storage array,
-	 * this is called by the {@link RasterIterator}s which iterate over the image.
+	 * Returns the current index in the storage array, this is called by the
+	 * {@link RasterIterator}s which iterate over the image.
 	 * 
 	 * @return - int index
 	 */
 	public int getIndex();
-	
+
 	/**
-	 * Increases the array index,
-	 * this is called by the {@link RasterIterator}s which iterate over the image.
+	 * Increases the array index, this is called by the {@link RasterIterator}s
+	 * which iterate over the image.
 	 */
 	public void incIndex();
-	
+
 	/**
-	 * Increases the index by increment steps,
-	 * this is called by the {@link RasterIterator}s which iterate over the image.
+	 * Increases the index by increment steps, this is called by the
+	 * {@link RasterIterator}s which iterate over the image.
 	 * 
-	 * @param increment - how many steps
+	 * @param increment
+	 *            - how many steps
 	 */
 	public void incIndex( final int increment );
-	
+
 	/**
-	 * Decreases the array index,
-	 * this is called by the {@link RasterIterator}s which iterate over the image.
+	 * Decreases the array index, this is called by the {@link RasterIterator}s
+	 * which iterate over the image.
 	 */
 	public void decIndex();
 
 	/**
-	 * Decreases the index by increment steps,
-	 * this is called by the {@link RasterIterator}s which iterate over the image.
+	 * Decreases the index by increment steps, this is called by the
+	 * {@link RasterIterator}s which iterate over the image.
 	 * 
-	 * @param increment - how many steps
+	 * @param increment
+	 *            - how many steps
 	 */
 	public void decIndex( final int decrement );
-	
+
 	/**
 	 * Creates a new {@link Type} which can only store one value.
+	 * 
 	 * @return - a new {@link Type} instance
 	 */
 	public T createVariable();
-	
+
 	/**
-	 * Creates a new {@link Type} which can only store one value but contains the value of this {@link Type}
+	 * Creates a new {@link Type} which can only store one value but contains
+	 * the value of this {@link Type}
+	 * 
 	 * @return - a new {@link Type} instance
 	 */
 	public T clone();
 
 	/**
-	 * Creates a new {@link Type} which stores in the same physical array. This is only used internally.
-	 * @return - a new {@link Type} instance working on the same {@link DirectAccessContainer}
+	 * Creates a new {@link Type} which stores in the same physical array. This
+	 * is only used internally.
+	 * 
+	 * @return - a new {@link Type} instance working on the same
+	 *         {@link DirectAccessContainer}
 	 */
 	public T duplicateTypeOnSameDirectAccessContainer();
 
 	/**
 	 * Sets the value of another {@link Type}.
-	 * @param c - the new value
+	 * 
+	 * @param c
+	 *            - the new value
 	 */
-	public void set( T c );	
-	
+	public void set( T c );
+
 	/**
-	 * Creates a 1d array of the generic {@link Type} 
-	 * @param size1 - the size of the array
+	 * Creates a 1d array of the generic {@link Type}
+	 * 
+	 * @param size1
+	 *            - the size of the array
 	 * @return - T[] array
 	 */
 	public T[] createArray1D( int size1 );
 
 	/**
-	 * Creates a 2d array of the generic {@link Type} 
-	 * @param size1 - the size of the array
-	 * @param size2 - the size of the array
+	 * Creates a 2d array of the generic {@link Type}
+	 * 
+	 * @param size1
+	 *            - the size of the array
+	 * @param size2
+	 *            - the size of the array
 	 * @return - T[][] array
 	 */
 	public T[][] createArray2D( int size1, int size2 );
-	
+
 	/**
-	 * Creates a 3d array of the generic {@link Type} 
-	 * @param size1 - the size of the array
-	 * @param size2 - the size of the array
-	 * @param size3 - the size of the array
+	 * Creates a 3d array of the generic {@link Type}
+	 * 
+	 * @param size1
+	 *            - the size of the array
+	 * @param size2
+	 *            - the size of the array
+	 * @param size3
+	 *            - the size of the array
 	 * @return - T[][][] array
 	 */
-	public T[][][] createArray3D( int size1, int size2, int size3 );	
+	public T[][][] createArray3D( int size1, int size2, int size3 );
 }

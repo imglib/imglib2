@@ -24,8 +24,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- *
- * @author Stephan Preibisch & Stephan Saalfeld
  */
 package mpicbg.imglib.type.numeric.complex;
 
@@ -33,23 +31,28 @@ import mpicbg.imglib.container.DirectAccessContainer;
 import mpicbg.imglib.container.DirectAccessContainerFactory;
 import mpicbg.imglib.container.basictypecontainer.DoubleAccess;
 import mpicbg.imglib.container.basictypecontainer.array.DoubleArray;
-import mpicbg.imglib.sampler.RasterSampler;
 import mpicbg.imglib.type.numeric.ComplexType;
 
-public class ComplexDoubleType extends AbstractComplexType<ComplexDoubleType> implements ComplexType<ComplexDoubleType>
+/**
+ * 
+ * 
+ * 
+ * @author Stephan Preibisch and Stephan Saalfeld
+ */
+public class ComplexDoubleType extends AbstractComplexType< ComplexDoubleType > implements ComplexType< ComplexDoubleType >
 {
 	// the DirectAccessContainer
-	final DirectAccessContainer<ComplexDoubleType, ? extends DoubleAccess> storage;
-	
-	// the (sub)DirectAccessContainer that holds the information 
+	final DirectAccessContainer< ComplexDoubleType, ? extends DoubleAccess > storage;
+
+	// the (sub)DirectAccessContainer that holds the information
 	DoubleAccess b;
-	
+
 	// this is the constructor if you want it to read from an array
-	public ComplexDoubleType( DirectAccessContainer<ComplexDoubleType, ? extends DoubleAccess> complexfloatStorage )
+	public ComplexDoubleType( DirectAccessContainer< ComplexDoubleType, ? extends DoubleAccess > complexfloatStorage )
 	{
 		storage = complexfloatStorage;
 	}
-	
+
 	// this is the constructor if you want it to be a variable
 	public ComplexDoubleType( final float real, final float complex )
 	{
@@ -59,75 +62,126 @@ public class ComplexDoubleType extends AbstractComplexType<ComplexDoubleType> im
 	}
 
 	// this is the constructor if you want it to be a variable
-	public ComplexDoubleType() { this( 0, 0 ); }
+	public ComplexDoubleType()
+	{
+		this( 0, 0 );
+	}
 
 	@Override
-	public DirectAccessContainer<ComplexDoubleType, ? extends DoubleAccess> createSuitableDirectAccessContainer( final DirectAccessContainerFactory storageFactory, final int dim[] )
+	public DirectAccessContainer< ComplexDoubleType, ? extends DoubleAccess > createSuitableDirectAccessContainer( final DirectAccessContainerFactory storageFactory, final int dim[] )
 	{
 		// create the container
-		final DirectAccessContainer<ComplexDoubleType, ? extends DoubleAccess> container = storageFactory.createDoubleInstance( dim, 2 );
-		
+		final DirectAccessContainer< ComplexDoubleType, ? extends DoubleAccess > container = storageFactory.createDoubleInstance( dim, 2 );
+
 		// create a Type that is linked to the container
 		final ComplexDoubleType linkedType = new ComplexDoubleType( container );
-		
+
 		// pass it to the DirectAccessContainer
 		container.setLinkedType( linkedType );
-		
+
 		return container;
 	}
 
 	@Override
-	public void updateContainer( final RasterSampler<?> c ) 
-	{ 
-		b = storage.update( c );		
+	public void updateContainer( final Object c )
+	{
+		b = storage.update( c );
 	}
-	
-	@Override
-	public ComplexDoubleType duplicateTypeOnSameDirectAccessContainer() { return new ComplexDoubleType( storage ); }
 
 	@Override
-	public float getRealFloat() { return (float)b.getValue( realI ); }
+	public ComplexDoubleType duplicateTypeOnSameDirectAccessContainer()
+	{
+		return new ComplexDoubleType( storage );
+	}
+
 	@Override
-	public double getRealDouble() { return b.getValue( realI ); }
+	public float getRealFloat()
+	{
+		return ( float ) b.getValue( realI );
+	}
+
 	@Override
-	public float getComplexFloat() { return (float)b.getValue( complexI ); }
+	public double getRealDouble()
+	{
+		return b.getValue( realI );
+	}
+
 	@Override
-	public double getComplexDouble() { return b.getValue( complexI ); }
-	
+	public float getComplexFloat()
+	{
+		return ( float ) b.getValue( complexI );
+	}
+
 	@Override
-	public void setReal( final float real ){ b.setValue( realI, real ); }
+	public double getComplexDouble()
+	{
+		return b.getValue( complexI );
+	}
+
 	@Override
-	public void setReal( final double real ){ b.setValue( realI, real ); }
+	public void setReal( final float real )
+	{
+		b.setValue( realI, real );
+	}
+
 	@Override
-	public void setComplex( final float complex ){ b.setValue( complexI, complex ); }
+	public void setReal( final double real )
+	{
+		b.setValue( realI, real );
+	}
+
 	@Override
-	public void setComplex( final double complex ){ b.setValue( complexI, complex ); }
-	
-	public void set( final float real, final float complex ) 
-	{ 
+	public void setComplex( final float complex )
+	{
+		b.setValue( complexI, complex );
+	}
+
+	@Override
+	public void setComplex( final double complex )
+	{
+		b.setValue( complexI, complex );
+	}
+
+	public void set( final float real, final float complex )
+	{
 		b.setValue( realI, real );
 		b.setValue( complexI, complex );
 	}
 
 	@Override
-	public void set( final ComplexDoubleType c ) 
-	{ 
+	public void set( final ComplexDoubleType c )
+	{
 		setReal( c.getRealDouble() );
 		setComplex( c.getComplexDouble() );
 	}
 
 	@Override
-	public ComplexDoubleType[] createArray1D(int size1){ return new ComplexDoubleType[ size1 ]; }
+	public ComplexDoubleType[] createArray1D( int size1 )
+	{
+		return new ComplexDoubleType[ size1 ];
+	}
 
 	@Override
-	public ComplexDoubleType[][] createArray2D(int size1, int size2){ return new ComplexDoubleType[ size1 ][ size2 ]; }
+	public ComplexDoubleType[][] createArray2D( int size1, int size2 )
+	{
+		return new ComplexDoubleType[ size1 ][ size2 ];
+	}
 
 	@Override
-	public ComplexDoubleType[][][] createArray3D(int size1, int size2, int size3) { return new ComplexDoubleType[ size1 ][ size2 ][ size3 ]; }
-	
+	public ComplexDoubleType[][][] createArray3D( int size1, int size2, int size3 )
+	{
+		return new ComplexDoubleType[ size1 ][ size2 ][ size3 ];
+	}
+
 	@Override
-	public ComplexDoubleType createVariable(){ return new ComplexDoubleType( 0, 0 ); }
-	
+	public ComplexDoubleType createVariable()
+	{
+		return new ComplexDoubleType( 0, 0 );
+	}
+
 	@Override
-	public ComplexDoubleType clone(){ return new ComplexDoubleType( getRealFloat(), getComplexFloat() ); }	
+	public ComplexDoubleType clone()
+	{
+		return new ComplexDoubleType( getRealFloat(), getComplexFloat() );
+	}
 }

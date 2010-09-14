@@ -127,8 +127,6 @@ public class CellLocalizingRasterIterator< T extends Type< T > > extends Abstrac
 			position[ d ] = 0;
 		
 		type.updateContainer( this );
-		
-		linkedIterator.reset();
 	}
 	
 	@Override
@@ -167,7 +165,7 @@ public class CellLocalizingRasterIterator< T extends Type< T > > extends Abstrac
 		{
 			cell++;
 			type.updateIndex( 0 );			
-			getCellData(cell);
+			getCellData( cell );
 			for ( int d = 0; d < numDimensions; d++ )
 				position[ d ] = cellOffset[ d ];
 		}
@@ -178,8 +176,6 @@ public class CellLocalizingRasterIterator< T extends Type< T > > extends Abstrac
 			type.updateIndex( cellMaxI );
 			cell = numCells;
 		}
-		
-		linkedIterator.fwd();
 	}	
 	
 	@Override

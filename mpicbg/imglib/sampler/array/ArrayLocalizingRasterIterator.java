@@ -47,7 +47,7 @@ public class ArrayLocalizingRasterIterator< T extends Type< T >> extends Abstrac
 
 	protected final Array< T, ? > container;
 
-	protected final int sizeMinus1;
+	protected final int lastIndex;
 
 	public ArrayLocalizingRasterIterator( final Array< T, ? > container, final Image< T > image )
 	{
@@ -55,11 +55,19 @@ public class ArrayLocalizingRasterIterator< T extends Type< T >> extends Abstrac
 
 		this.container = container;
 		this.type = container.createLinkedType();
-		this.sizeMinus1 = ( int )container.numPixels() - 1;
+		this.lastIndex = ( int )container.numPixels() - 1;
 
 		reset();
 	}
 
+	/**
+	 * TODO Now, that Samplers and Iterators are separated, we do not need that
+	 * FakeCursor any more, but should implement a pure Localizer without an
+	 * empty `FakeType' attached.
+	 *  
+	 * @param dim
+	 * @return
+	 */
 	public static ArrayLocalizingRasterIterator< FakeType > createLinearCursor( final int[] dim )
 	{
 		final Array< FakeType, FakeAccess > array = new Array< FakeType, FakeAccess >( null, new FakeArray(), dim, 1 );
@@ -71,7 +79,7 @@ public class ArrayLocalizingRasterIterator< T extends Type< T >> extends Abstrac
 	public T type(){ return type; }
 
 	@Override
-	public boolean hasNext(){ return type.getIndex() < sizeMinus1; }
+	public boolean hasNext(){ return type.getIndex() < lastIndex; }
 
 	@Override
 	public void fwd()
@@ -83,8 +91,6 @@ public class ArrayLocalizingRasterIterator< T extends Type< T >> extends Abstrac
 			if ( ++position[ d ] >= dimensions[ d ] ) position[ d ] = 0;
 			else break;
 		}
-
-		linkedIterator.fwd();
 	}
 
 	@Override
@@ -92,8 +98,6 @@ public class ArrayLocalizingRasterIterator< T extends Type< T >> extends Abstrac
 	{
 		type.incIndex( ( int ) steps );
 		container.indexToPosition( type.getIndex(), position );
-
-		linkedIterator.jumpFwd( steps );
 	}
 
 	@Override
@@ -110,8 +114,6 @@ public class ArrayLocalizingRasterIterator< T extends Type< T >> extends Abstrac
 
 			type.updateContainer( this );
 		}
-
-		linkedIterator.reset();
 	}
 
 	@Override

@@ -31,7 +31,7 @@ package mpicbg.imglib.container.basictypecontainer.array;
 
 import mpicbg.imglib.container.basictypecontainer.LongAccess;
 
-public class LongArray implements LongAccess, ArrayDataAccess<LongArray>
+public class LongArray implements LongAccess, ArrayDataAccess< LongArray >
 {
 	protected long data[];
 
@@ -46,7 +46,10 @@ public class LongArray implements LongAccess, ArrayDataAccess<LongArray>
 	}
 
 	@Override
-	public void close() { data = null; }
+	public void close()
+	{
+		data = null;
+	}
 
 	@Override
 	public long getValue( final int index )
@@ -57,11 +60,17 @@ public class LongArray implements LongAccess, ArrayDataAccess<LongArray>
 	@Override
 	public void setValue( final int index, final long value )
 	{
-		data[ index ] = value;		
+		data[ index ] = value;
 	}
-	
-	public long[] getCurrentStorageArray(){ return data; }
+
+	public long[] getCurrentStorageArray()
+	{
+		return data;
+	}
 
 	@Override
-	public LongArray createArray( final int numEntities ) { return new LongArray( numEntities ); }
+	public LongArray createArray( final int numEntities )
+	{
+		return new LongArray( numEntities );
+	}
 }

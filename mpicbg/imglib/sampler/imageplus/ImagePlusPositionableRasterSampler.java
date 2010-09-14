@@ -44,27 +44,25 @@ public class ImagePlusPositionableRasterSampler< T extends Type< T > > extends A
 	/* the type instance accessing the pixel value the cursor points at */
 	protected final T type;
 	
-	/* a stronger typed pointer to Container< T > */
 	protected final ImagePlusContainer< T, ? > container;
 	
 	/* precalculated step sizes for row.column,... access in a linear array */
-	final protected int[] step;
+	final protected int[] step, sliceSteps;
 	
-	protected int slice; // TODO: support hyperstacks
+	protected int sliceIndex;
 	
 	/* TODO do we need this still? */
 	int numNeighborhoodCursors = 0;
 	
-	public ImagePlusPositionableRasterSampler(
-			final ImagePlusContainer< T, ? > container,
-			final Image< T > image ) 
+	public ImagePlusPositionableRasterSampler( final ImagePlusContainer< T, ? > container, final Image< T > image ) 
 	{
 		super( container, image );
 		
 		this.type = container.createLinkedType();
 		this.container = container;
-		
 		step = Array.createAllocationSteps( container.getDimensions() );
+		sliceSteps = ImagePlusContainer.createSliceSteps( dimensions );
+		sliceIndex = 0;
 	}	
 
 	@Override
@@ -72,17 +70,15 @@ public class ImagePlusPositionableRasterSampler< T extends Type< T > > extends A
 	{
 		position[ dim ]++;
 
-		if ( dim == 2 )
+		if ( dim > 1 )
 		{
-			++slice;
+			sliceIndex += sliceSteps[ dim ];
 			type.updateContainer( this );
 		}
 		else
 		{
 			type.incIndex( step[ dim ] );
 		}
-
-		linkedRasterPositionable.fwd( dim );
 	}
 
 	@Override
@@ -90,17 +86,15 @@ public class ImagePlusPositionableRasterSampler< T extends Type< T > > extends A
 	{
 		position[ dim ] += steps;	
 
-		if ( dim == 2 )
+		if ( dim > 1 )
 		{
-			slice += steps;
+			sliceIndex += sliceSteps[ dim ] * steps;
 			type.updateContainer( this );
 		}
 		else
 		{
 			type.incIndex( step[ dim ] * steps );
 		}
-
-		linkedRasterPositionable.move( steps, dim );
 	}
 	
 	@Override
@@ -108,35 +102,30 @@ public class ImagePlusPositionableRasterSampler< T extends Type< T > > extends A
 	{		
 		position[ dim ]--;
 		
-		if ( dim == 2 )
+		if ( dim > 1 )
 		{
-			--slice;
+			sliceIndex -= sliceSteps[ dim ];
 			type.updateContainer( this );
 		}
 		else
 		{
 			type.decIndex( step[ dim ] );
 		}
-
-		linkedRasterPositionable.bck( dim );
 	}
 
 	@Override
 	public void setPosition( final int[] position )
 	{
-		type.updateIndex( container.getPos( position ) );
+		type.updateIndex( container.getIndex( position ) );
 		
 		for ( int d = 0; d < numDimensions; d++ )
 			this.position[ d ] = position[ d ];
 		
-		if ( numDimensions == 3 )
-			slice = position[ 2 ];
-		else
-			slice = 0;
+		sliceIndex = 0;
+		for ( int d = 2; d < numDimensions; ++d )
+			sliceIndex += position[ d ] * sliceSteps[ d ];
 		
 		type.updateContainer( this );
-
-		linkedRasterPositionable.setPosition( position );
 	}
 	
 	@Override
@@ -145,16 +134,13 @@ public class ImagePlusPositionableRasterSampler< T extends Type< T > > extends A
 		for ( int d = 0; d < numDimensions; d++ )
 			this.position[ d ] = ( int )position[ d ];
 		
-		type.updateIndex( container.getPos( this.position ) );
+		type.updateIndex( container.getIndex( this.position ) );
 		
-		if ( numDimensions == 3 )
-			slice = this.position[ 2 ];
-		else
-			slice = 0;
+		sliceIndex = 0;
+		for ( int d = 2; d < numDimensions; ++d )
+			sliceIndex += position[ d ] * sliceSteps[ d ];
 		
 		type.updateContainer( this );
-
-		linkedRasterPositionable.setPosition( position );
 	}
 
 	@Override
@@ -162,17 +148,15 @@ public class ImagePlusPositionableRasterSampler< T extends Type< T > > extends A
 	{
 		this.position[ dim ] = position;
 
-		if ( dim == 2 )
+		if ( dim > 1 )
 		{
-			slice = position;
+			sliceIndex = position * sliceSteps[ dim ];
 			type.updateContainer( this );
 		}
 		else
 		{
-			type.updateIndex( container.getPos( this.position ) );
+			type.updateIndex( container.getIndex( this.position ) );
 		}
-
-		linkedRasterPositionable.setPosition( position, dim );
 	}
 
 	@Override
@@ -182,5 +166,5 @@ public class ImagePlusPositionableRasterSampler< T extends Type< T > > extends A
 	public T type(){ return type; }
 
 	@Override
-	public int getStorageIndex(){ return slice; }
+	public int getStorageIndex(){ return sliceIndex; }
 }

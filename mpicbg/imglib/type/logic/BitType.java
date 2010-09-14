@@ -24,10 +24,7 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- *
- * @author Stephan Preibisch & Stephan Saalfeld
  */
-
 package mpicbg.imglib.type.logic;
 
 import mpicbg.imglib.container.DirectAccessContainer;
@@ -36,25 +33,30 @@ import mpicbg.imglib.container.basictypecontainer.BitAccess;
 import mpicbg.imglib.container.basictypecontainer.array.BitArray;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.display.BitTypeDisplay;
-import mpicbg.imglib.sampler.RasterSampler;
 import mpicbg.imglib.type.LogicType;
 import mpicbg.imglib.type.numeric.RealType;
 import mpicbg.imglib.type.numeric.integer.AbstractIntegerType;
 
-public class BitType extends AbstractIntegerType<BitType> implements LogicType<BitType>, RealType<BitType>
+/**
+ * 
+ * 
+ *
+ * @author Stephan Preibisch and Stephan Saalfeld
+ */
+public class BitType extends AbstractIntegerType< BitType > implements LogicType< BitType >, RealType< BitType >
 {
 	// the DirectAccessContainer
-	final DirectAccessContainer<BitType, ? extends BitAccess> storage;
-	
-	// the (sub)DirectAccessContainer that holds the information 
+	final DirectAccessContainer< BitType, ? extends BitAccess > storage;
+
+	// the (sub)DirectAccessContainer that holds the information
 	BitAccess b;
-	
+
 	// this is the constructor if you want it to read from an array
-	public BitType( DirectAccessContainer<BitType, ? extends BitAccess> bitStorage )
+	public BitType( DirectAccessContainer< BitType, ? extends BitAccess > bitStorage )
 	{
 		storage = bitStorage;
 	}
-	
+
 	// this is the constructor if you want it to be a variable
 	public BitType( final boolean value )
 	{
@@ -64,161 +66,244 @@ public class BitType extends AbstractIntegerType<BitType> implements LogicType<B
 	}
 
 	// this is the constructor if you want it to be a variable
-	public BitType() { this( false ); }
-	
-	@Override
-	public DirectAccessContainer<BitType, ? extends BitAccess> createSuitableDirectAccessContainer( final DirectAccessContainerFactory storageFactory, final int dim[] )
+	public BitType()
 	{
-		// create the container
-		final DirectAccessContainer<BitType, ? extends BitAccess> container = storageFactory.createBitInstance( dim, 1 );
-		
-		// create a Type that is linked to the container
-		final BitType linkedType = new BitType( container );
-		
-		// pass it to the DirectAccessContainer
-		container.setLinkedType( linkedType );
-		
-		return container;
+		this( false );
 	}
-		
-	@Override
-	public void updateContainer( final RasterSampler<?> c ) 
-	{ 
-		b = storage.update( c );
-	}
-	
-	@Override
-	public BitType duplicateTypeOnSameDirectAccessContainer() { return new BitType( storage ); }
 
 	@Override
-	public BitTypeDisplay getDefaultDisplay( final Image<BitType> image )
+	public DirectAccessContainer< BitType, ? extends BitAccess > createSuitableDirectAccessContainer( final DirectAccessContainerFactory storageFactory, final int dim[] )
+	{
+		// create the container
+		final DirectAccessContainer< BitType, ? extends BitAccess > container = storageFactory.createBitInstance( dim, 1 );
+
+		// create a Type that is linked to the container
+		final BitType linkedType = new BitType( container );
+
+		// pass it to the DirectAccessContainer
+		container.setLinkedType( linkedType );
+
+		return container;
+	}
+
+	@Override
+	public void updateContainer( final Object c )
+	{
+		b = storage.update( c );
+	}
+
+	@Override
+	public BitType duplicateTypeOnSameDirectAccessContainer()
+	{
+		return new BitType( storage );
+	}
+
+	@Override
+	public BitTypeDisplay getDefaultDisplay( final Image< BitType > image )
 	{
 		return new BitTypeDisplay( image );
 	}
 
-	public boolean get() { return b.getValue( i ); }
-	public void set( final boolean value ) { b.setValue( i, value ); }
+	public boolean get()
+	{
+		return b.getValue( i );
+	}
+
+	public void set( final boolean value )
+	{
+		b.setValue( i, value );
+	}
 
 	@Override
-	public int getInteger(){ return get() ? 1 : 0; }
+	public int getInteger()
+	{
+		return get() ? 1 : 0;
+	}
+
 	@Override
-	public long getIntegerLong() { return get() ? 1 : 0; }
+	public long getIntegerLong()
+	{
+		return get() ? 1 : 0;
+	}
+
 	@Override
 	public void setInteger( final int f )
 	{
-		if ( f >= 1 ) 
+		if ( f >= 1 )
 			set( true );
 		else
 			set( false );
 	}
+
 	@Override
 	public void setInteger( final long f )
 	{
-		if ( f >= 1 ) 
+		if ( f >= 1 )
 			set( true );
 		else
 			set( false );
 	}
 
 	@Override
-	public double getMaxValue() { return 1; }
-	@Override
-	public double getMinValue()  { return 0; }
-	
-	@Override
-	public void set( final BitType c ) { b.setValue(i, c.get() ); }
-
-	@Override
-	public void and( final BitType c ) { b.setValue(i, b.getValue(i) && c.get() ); }
-	
-	@Override
-	public void or( final BitType c ) { b.setValue(i, b.getValue(i) || c.get() ); }
-	
-	@Override
-	public void xor( final BitType c ) { b.setValue(i, b.getValue(i) ^ c.get() ); }
-	
-	@Override
-	public void not() { b.setValue(i, !b.getValue(i) ); }
-	
-	@Override
-	public void add( final BitType c ) { xor( c ); }
-
-	@Override
-	public void div( final BitType c ) { and( c ); }
-
-	@Override
-	public void mul( final BitType c ) { and( c ); }
-
-	@Override
-	public void sub( final BitType c ) { xor( c ); }
-	
-	@Override
-	public void mul( final float c ) 
-	{ 
-		if ( c >= 0.5f )
-			b.setValue(i, b.getValue(i) && true );
-		else
-			b.setValue(i, b.getValue(i) && false );
-	}
-
-	@Override
-	public void mul( final double c ) 
-	{ 
-		if ( c >= 0.5f )
-			b.setValue(i, b.getValue(i) && true );
-		else
-			b.setValue(i, b.getValue(i) && false );
-	}
-		
-	@Override
-	public void setOne() { b.setValue( i, true ); }
-
-	@Override
-	public void setZero() { b.setValue( i, false ); }
-	
-	@Override
-	public void inc() { b.setValue( i, !b.getValue( i) ); }
-
-	@Override
-	public void dec() { inc(); }
-
-	@Override
-	public int compareTo( final BitType c ) 
+	public double getMaxValue()
 	{
-		final boolean b1 = b.getValue(i);
+		return 1;
+	}
+
+	@Override
+	public double getMinValue()
+	{
+		return 0;
+	}
+
+	@Override
+	public void set( final BitType c )
+	{
+		b.setValue( i, c.get() );
+	}
+
+	@Override
+	public void and( final BitType c )
+	{
+		b.setValue( i, b.getValue( i ) && c.get() );
+	}
+
+	@Override
+	public void or( final BitType c )
+	{
+		b.setValue( i, b.getValue( i ) || c.get() );
+	}
+
+	@Override
+	public void xor( final BitType c )
+	{
+		b.setValue( i, b.getValue( i ) ^ c.get() );
+	}
+
+	@Override
+	public void not()
+	{
+		b.setValue( i, !b.getValue( i ) );
+	}
+
+	@Override
+	public void add( final BitType c )
+	{
+		xor( c );
+	}
+
+	@Override
+	public void div( final BitType c )
+	{
+		and( c );
+	}
+
+	@Override
+	public void mul( final BitType c )
+	{
+		and( c );
+	}
+
+	@Override
+	public void sub( final BitType c )
+	{
+		xor( c );
+	}
+
+	@Override
+	public void mul( final float c )
+	{
+		if ( c >= 0.5f )
+			b.setValue( i, b.getValue( i ) && true );
+		else
+			b.setValue( i, b.getValue( i ) && false );
+	}
+
+	@Override
+	public void mul( final double c )
+	{
+		if ( c >= 0.5f )
+			b.setValue( i, b.getValue( i ) && true );
+		else
+			b.setValue( i, b.getValue( i ) && false );
+	}
+
+	@Override
+	public void setOne()
+	{
+		b.setValue( i, true );
+	}
+
+	@Override
+	public void setZero()
+	{
+		b.setValue( i, false );
+	}
+
+	@Override
+	public void inc()
+	{
+		b.setValue( i, !b.getValue( i ) );
+	}
+
+	@Override
+	public void dec()
+	{
+		inc();
+	}
+
+	@Override
+	public int compareTo( final BitType c )
+	{
+		final boolean b1 = b.getValue( i );
 		final boolean b2 = c.get();
-		
+
 		if ( b1 && !b2 )
 			return 1;
 		else if ( !b1 && b2 )
 			return -1;
-		else 
+		else
 			return 0;
 	}
 
 	@Override
-	public BitType[] createArray1D(int size1){ return new BitType[ size1 ]; }
-
-	@Override
-	public BitType[][] createArray2D(int size1, int size2){ return new BitType[ size1 ][ size2 ]; }
-
-	@Override
-	public BitType[][][] createArray3D(int size1, int size2, int size3) { return new BitType[ size1 ][ size2 ][ size3 ]; }
-	
-	@Override
-	public BitType createVariable(){ return new BitType(); }
-
-	@Override
-	public BitType clone(){ return new BitType( b.getValue(i) ); }
-
-	@Override
-	public String toString() 
+	public BitType[] createArray1D( int size1 )
 	{
-		final boolean value = b.getValue(i);
-		
-		if ( value ) 
-			return "1"; 
-		else 
-			return "0"; 			
+		return new BitType[ size1 ];
+	}
+
+	@Override
+	public BitType[][] createArray2D( int size1, int size2 )
+	{
+		return new BitType[ size1 ][ size2 ];
+	}
+
+	@Override
+	public BitType[][][] createArray3D( int size1, int size2, int size3 )
+	{
+		return new BitType[ size1 ][ size2 ][ size3 ];
+	}
+
+	@Override
+	public BitType createVariable()
+	{
+		return new BitType();
+	}
+
+	@Override
+	public BitType clone()
+	{
+		return new BitType( b.getValue( i ) );
+	}
+
+	@Override
+	public String toString()
+	{
+		final boolean value = b.getValue( i );
+
+		if ( value )
+			return "1";
+		else
+			return "0";
 	}
 }

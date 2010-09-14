@@ -29,55 +29,54 @@
  */
 package mpicbg.imglib.sampler;
 
-import javax.naming.OperationNotSupportedException;
+import java.util.Iterator;
 
 import mpicbg.imglib.algorithm.math.MathLib;
 import mpicbg.imglib.container.Container;
 import mpicbg.imglib.image.Image;
-import mpicbg.imglib.location.Iterator;
-import mpicbg.imglib.location.VoidIterator;
+import mpicbg.imglib.location.RasterLocalizable;
 import mpicbg.imglib.type.Type;
 
 /**
- * We use the class {@link AbstractBasicRasterIterator} instead of implementing methods here so that other classes can
- * only implement {@link RasterIterator} and extend other classes instead. As each {@link AbstractBasicRasterIterator} is also
- * a {@link RasterIterator} there are no disadvantages for the {@link RasterIterator} implementations.
+ * Generic implementation of the {@link RasterLocalizable} mapping to abstract
+ * {@link #localize(long[])} and {@link #getLongPosition(int)}.  Generic
+ * implementation of {@link Iterator} mapping to abstract {@link #fwd()} and
+ * {@link #type()}.  
  * 
  * @author Stephan Preibisch and Stephan Saalfeld
- *
+ * 
  * @param <T>
  */
 public abstract class AbstractBasicRasterIterator< T extends Type< T > > extends AbstractRasterSampler< T > implements RasterIterator< T >
 {
-	protected Iterator< ? > linkedIterator = VoidIterator.getInstance();
+	final private long[] position;
 	
-	final protected long[] position;
-	
-	public AbstractBasicRasterIterator( final Container<T> container, final Image<T> image )
+	public AbstractBasicRasterIterator( final Container< T > container, final Image< T > image )
 	{
 		super( container, image );
 		position = new long[ numDimensions ];
 	}
-	
-	@Override
-	public int numDimensions(){ return numDimensions; }
 
 	@Override
-	public void remove() {}
-	
+	public void remove()
+	{}
+
 	@Override
-	public T next(){ fwd(); return type(); }
+	public T next()
+	{
+		fwd();
+		return type();
+	}
 
 	@Override
 	public void jumpFwd( final long steps )
-	{ 
+	{
 		for ( long j = 0; j < steps; ++j )
 			fwd();
 	}
-	
-	
+
 	/* RasterLocalizable */
-	
+
 	@Override
 	public void localize( float[] position )
 	{
@@ -99,18 +98,32 @@ public abstract class AbstractBasicRasterIterator< T extends Type< T > > extends
 	{
 		localize( this.position );
 		for ( int d = 0; d < numDimensions; d++ )
-			position[ d ] = ( int )this.position[ d ];
+			position[ d ] = ( int ) this.position[ d ];
 	}
-	
+
 	@Override
-	public float getFloatPosition( final int d ){ return getLongPosition( d ); }
-	
+	public float getFloatPosition( final int d )
+	{
+		return getLongPosition( d );
+	}
+
 	@Override
-	public double getDoublePosition( final int d ){ return getLongPosition( d ); }
-	
+	public double getDoublePosition( final int d )
+	{
+		return getLongPosition( d );
+	}
+
 	@Override
-	public int getIntPosition( final int d ){ return ( int )getLongPosition( d ); }
-	
+	public int getIntPosition( final int d )
+	{
+		return ( int ) getLongPosition( d );
+	}
+
 	@Override
-	public String getLocationAsString(){ return MathLib.printCoordinates( position ); }
+	public String getLocationAsString()
+	{
+		final int[] position = new int[ numDimensions ];
+		localize( position );
+		return MathLib.printCoordinates( position );
+	}
 }

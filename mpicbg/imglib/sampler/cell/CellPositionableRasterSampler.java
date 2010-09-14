@@ -195,31 +195,28 @@ public class CellPositionableRasterSampler< T extends Type< T > > extends Abstra
 				cellPosition[ dim ]++;
 				cellIndex += cellStep[ dim ];
 
-				getCellData(cellIndex);					
+				getCellData( cellIndex );					
 				position[ dim ]++;	
 				type.updateIndex( cellInstance.globalPositionToIndex( position ) );
 			}
 			// else moving out of image...			
 		}
-
-		linkedRasterPositionable.fwd( dim );
 	}
 
 	@Override
 	public void move( final int steps, final int dim )
 	{
-		position[ dim ] += steps;	
+		final int p = position[ dim ] + steps;
 
-		if ( position[ dim ] < cellEnd[ dim ] && position[ dim ] >= cellOffset[ dim ] )
+		if ( p < cellEnd[ dim ] && p >= cellOffset[ dim ] )
 		{
 			// still inside the cell
+			position[ dim ] = p;
 			type.incIndex( step[ dim ] * steps );
-			
-			linkedRasterPositionable.move( steps, dim );
 		}
 		else
 		{
-			setPosition( position[ dim ], dim );
+			setPosition( p, dim );
 		}
 	}
 	
@@ -235,9 +232,11 @@ public class CellPositionableRasterSampler< T extends Type< T > > extends Abstra
 	{		
 		for ( int d = 0; d < numDimensions; ++d )
 		{
-			final int dist = position[ d ] - getIntPosition( d );
+			final int dist = position[ d ] - this.position[ d ];
 			
-			if ( dist != 0 )				
+			if ( dist == 0 )
+				continue;
+			else
 				move( dist, d );
 		}
 	}
@@ -247,9 +246,11 @@ public class CellPositionableRasterSampler< T extends Type< T > > extends Abstra
 	{
 		for ( int d = 0; d < numDimensions; ++d )
 		{
-			final long dist = position[ d ] - getIntPosition( d );
+			final long dist = position[ d ] - this.position[ d ];
 			
-			if ( dist != 0 )				
+			if ( dist == 0 )
+				continue;
+			else
 				move( dist, d );
 		}
 	}	
@@ -304,8 +305,6 @@ public class CellPositionableRasterSampler< T extends Type< T > > extends Abstra
 			} 
 			//else we are moving out of the image
 		}
-
-		linkedRasterPositionable.bck( dim );
 	}
 	
 
@@ -323,8 +322,6 @@ public class CellPositionableRasterSampler< T extends Type< T > > extends Abstra
 
 		getCellData( cellIndex );
 		type.updateIndex( cellInstance.globalPositionToIndex( position ) );
-
-		linkedRasterPositionable.setPosition( position );
 	}
 
 	@Override
@@ -340,10 +337,8 @@ public class CellPositionableRasterSampler< T extends Type< T > > extends Abstra
 		// get the cell index
 		cellIndex = container.getCellIndex( cursor, cellPosition );
 
-		getCellData(cellIndex);
+		getCellData( cellIndex );
 		type.updateIndex( cellInstance.globalPositionToIndex( this.position ) );
-
-		linkedRasterPositionable.setPosition( position );
 	}
 
 	@Override
@@ -357,10 +352,8 @@ public class CellPositionableRasterSampler< T extends Type< T > > extends Abstra
 		// get the cell index
 		cellIndex = container.getCellIndex( cursor, cellPosition[ dim ], dim );
 		
-		getCellData(cellIndex);
+		getCellData( cellIndex );
 		type.updateIndex( cellInstance.globalPositionToIndex( this.position ) );
-
-		linkedRasterPositionable.setPosition( position, dim );
 	}
 	
 	@Override

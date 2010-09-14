@@ -31,55 +31,62 @@ package mpicbg.imglib.container.basictypecontainer.array;
 
 import mpicbg.imglib.container.basictypecontainer.BitAccess;
 
-public class BitArray implements BitAccess, ArrayDataAccess<BitArray>
+public class BitArray implements BitAccess, ArrayDataAccess< BitArray >
 {
 	final static int bitsPerEntity = Integer.SIZE;
 
 	final int numEntities;
+
 	protected int data[];
-	
+
 	public BitArray( final int numEntities )
 	{
 		this.numEntities = numEntities;
-		
+
 		final int numElements;
-		
+
 		if ( this.numEntities % bitsPerEntity == 0 )
 			numElements = this.numEntities / bitsPerEntity;
 		else
 			numElements = this.numEntities / bitsPerEntity + 1;
-			
+
 		this.data = new int[ numElements ];
 	}
 
 	@Override
-	public void close() { data = null; }
-
-	@Override
-	public boolean getValue( final int index ) 
+	public void close()
 	{
-		final int arrayIndex = index / bitsPerEntity;
-		final int arrayOffset = index % bitsPerEntity;
-
-		final int entry = data[ arrayIndex ];		
-		final int value = (entry & ( 1 << arrayOffset ) );
-		
-		return value != 0; 
+		data = null;
 	}
 
 	@Override
-	public void setValue( final int index, final boolean value ) 
+	public boolean getValue( final int index )
 	{
 		final int arrayIndex = index / bitsPerEntity;
 		final int arrayOffset = index % bitsPerEntity;
-		
+
+		final int entry = data[ arrayIndex ];
+		final int value = ( entry & ( 1 << arrayOffset ) );
+
+		return value != 0;
+	}
+
+	@Override
+	public void setValue( final int index, final boolean value )
+	{
+		final int arrayIndex = index / bitsPerEntity;
+		final int arrayOffset = index % bitsPerEntity;
+
 		if ( value )
 			data[ arrayIndex ] = data[ arrayIndex ] | ( 1 << arrayOffset );
 		else
-			data[ arrayIndex ] = data[ arrayIndex ] & ~( 1 << arrayOffset ); 
+			data[ arrayIndex ] = data[ arrayIndex ] & ~( 1 << arrayOffset );
 	}
-	
+
 	@Override
-	public BitArray createArray( final int numEntities ) { return new BitArray( numEntities ); }
-	
+	public BitArray createArray( final int numEntities )
+	{
+		return new BitArray( numEntities );
+	}
+
 }

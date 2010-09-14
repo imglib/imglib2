@@ -31,7 +31,7 @@ package mpicbg.imglib.container.basictypecontainer.array;
 
 import mpicbg.imglib.container.basictypecontainer.ShortAccess;
 
-public class ShortArray implements ShortAccess, ArrayDataAccess<ShortArray>
+public class ShortArray implements ShortAccess, ArrayDataAccess< ShortArray >
 {
 	protected short data[];
 
@@ -46,7 +46,10 @@ public class ShortArray implements ShortAccess, ArrayDataAccess<ShortArray>
 	}
 
 	@Override
-	public void close() { data = null; }
+	public void close()
+	{
+		data = null;
+	}
 
 	@Override
 	public short getValue( final int index )
@@ -57,11 +60,17 @@ public class ShortArray implements ShortAccess, ArrayDataAccess<ShortArray>
 	@Override
 	public void setValue( final int index, final short value )
 	{
-		data[ index ] = value;		
+		data[ index ] = value;
 	}
-	
-	@Override
-	public ShortArray createArray( final int numEntities ) { return new ShortArray( numEntities ); }
 
-	public short[] getCurrentStorageArray(){ return data; }
+	@Override
+	public ShortArray createArray( final int numEntities )
+	{
+		return new ShortArray( numEntities );
+	}
+
+	public short[] getCurrentStorageArray()
+	{
+		return data;
+	}
 }

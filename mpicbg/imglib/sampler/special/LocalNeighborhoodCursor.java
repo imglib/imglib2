@@ -75,7 +75,7 @@ public class LocalNeighborhoodCursor<T extends Type<T>> extends AbstractBasicRas
 		for ( int d = 0; d < numDimensions; ++d )
 			dim[ d ] = 1;
 
-		centralPositionIndex = neigborhoodCursor.getContainer().getPos( dim );
+		centralPositionIndex = neigborhoodCursor.getContainer().positionToIndex( dim );
 	}
 	
 	@Override
@@ -96,8 +96,6 @@ public class LocalNeighborhoodCursor<T extends Type<T>> extends AbstractBasicRas
 	{
 		cursor.setPosition( localizable );
 		this.neigborhoodCursor.reset();
-		
-		linkedIterator.reset();
 	}
 	
 	@Override
@@ -117,8 +115,6 @@ public class LocalNeighborhoodCursor<T extends Type<T>> extends AbstractBasicRas
 			tmp[ d ] = localizable.getIntPosition( d ) + ( tmp[d] - 1 );
 		
 		cursor.moveTo( tmp );
-		
-		linkedIterator.fwd();
 	}
 	
 	public int getRelativePosition( final int d ) { return neigborhoodCursor.getIntPosition( d ); }

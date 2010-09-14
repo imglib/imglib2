@@ -31,7 +31,7 @@ package mpicbg.imglib.container.basictypecontainer.array;
 
 import mpicbg.imglib.container.basictypecontainer.FloatAccess;
 
-public class FloatArray implements FloatAccess, ArrayDataAccess<FloatArray>
+public class FloatArray implements FloatAccess, ArrayDataAccess< FloatArray >
 {
 	protected float data[];
 
@@ -46,7 +46,10 @@ public class FloatArray implements FloatAccess, ArrayDataAccess<FloatArray>
 	}
 
 	@Override
-	public void close() { data = null; }
+	public void close()
+	{
+		data = null;
+	}
 
 	@Override
 	public float getValue( final int index )
@@ -57,11 +60,17 @@ public class FloatArray implements FloatAccess, ArrayDataAccess<FloatArray>
 	@Override
 	public void setValue( final int index, final float value )
 	{
-		data[ index ] = value;		
+		data[ index ] = value;
 	}
-	
+
 	@Override
-	public FloatArray createArray( final int numEntities ) { return new FloatArray( numEntities ); }
-	
-	public float[] getCurrentStorageArray(){ return data; }
+	public FloatArray createArray( final int numEntities )
+	{
+		return new FloatArray( numEntities );
+	}
+
+	public float[] getCurrentStorageArray()
+	{
+		return data;
+	}
 }

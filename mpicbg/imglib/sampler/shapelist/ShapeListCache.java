@@ -43,7 +43,7 @@ import mpicbg.imglib.type.label.FakeType;
 public abstract class ShapeListCache< T extends Type< T > >
 {
 	final protected Array< FakeType, FakeAccess > fakeArray;
-	final protected ShapeListCached<T> container;
+	final protected ShapeListCached< T > container;
 	final protected int cacheSize;
 
 	public ShapeListCache( final int cacheSize, final ShapeListCached< T > container )
@@ -55,5 +55,5 @@ public abstract class ShapeListCache< T extends Type< T > >
 	}
 	
 	public abstract T lookUp( final int[] position );	
-	public abstract ShapeListCache<T> createInstance();
+	public abstract ShapeListCache< T > createInstance();
 }

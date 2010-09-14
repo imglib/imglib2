@@ -32,7 +32,7 @@ package mpicbg.imglib.container;
 import mpicbg.imglib.container.basictypecontainer.DataAccess;
 import mpicbg.imglib.type.Type;
 
-public abstract class AbstractDirectAccessContainer< T extends Type< T >, A extends DataAccess > extends AbstractPixelGridContainer< T > implements DirectAccessContainer<T, A>
+public abstract class AbstractDirectAccessContainer< T extends Type< T >, A extends DataAccess > extends AbstractPixelGridContainer< T > implements DirectAccessContainer< T, A >
 {
 	protected T linkedType; 
 	

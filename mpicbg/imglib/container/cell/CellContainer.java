@@ -36,7 +36,6 @@ import mpicbg.imglib.container.basictypecontainer.array.ArrayDataAccess;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.location.Iterator;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
-import mpicbg.imglib.sampler.RasterSampler;
 import mpicbg.imglib.sampler.array.ArrayLocalizingRasterIterator;
 import mpicbg.imglib.sampler.array.ArrayPositionableRasterSampler;
 import mpicbg.imglib.sampler.cell.CellBasicRasterIterator;
@@ -60,7 +59,7 @@ import mpicbg.imglib.type.label.FakeType;
  * @param <T>
  * @param <A>
  *
- * @author StephanPreibisch and Stephan Saalfeld
+ * @author Stephan Preibisch and Stephan Saalfeld
  */
 public class CellContainer< T extends Type< T >, A extends ArrayDataAccess< A > > extends AbstractDirectAccessContainer< T, A >
 {
@@ -119,9 +118,9 @@ public class CellContainer< T extends Type< T >, A extends ArrayDataAccess< A > 
 	}
 
 	@Override
-	public A update( final RasterSampler< ? > c )
+	public A update( final Object c )
 	{
-		return data.get( ( ( CellStorageAccess ) c ).getStorageIndex() ).getData();
+		return data.get( ( ( CellStorageAccess )c ).getStorageIndex() ).getData();
 	}
 
 	public ArrayList< Cell< T, A >> createCellArray( final int numCells )

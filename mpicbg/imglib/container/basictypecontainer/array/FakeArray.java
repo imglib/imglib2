@@ -31,13 +31,16 @@ package mpicbg.imglib.container.basictypecontainer.array;
 
 import mpicbg.imglib.container.basictypecontainer.FakeAccess;
 
-public class FakeArray implements FakeAccess, ArrayDataAccess<FakeArray>
+public class FakeArray implements FakeAccess, ArrayDataAccess< FakeArray >
 {
-	public FakeArray( ){}
+	public FakeArray(){}
 
 	@Override
-	public void close() {}
+	public void close(){}
 
 	@Override
-	public FakeArray createArray( final int numEntities ) { return null; }
+	public FakeArray createArray( final int numEntities )
+	{
+		return null;
+	}
 }

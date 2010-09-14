@@ -33,43 +33,44 @@ import mpicbg.imglib.container.basictypecontainer.BitAccess;
 
 public class BitDynamicContainerAccessor extends DynamicContainerAccessor implements BitAccess
 {
-	final BitDynamicContainer<?> container;
-	
-	public BitDynamicContainerAccessor( BitDynamicContainer<?> container, final int entitiesPerPixel )
+	final BitDynamicContainer< ? > container;
+
+	public BitDynamicContainerAccessor( BitDynamicContainer< ? > container, final int entitiesPerPixel )
 	{
 		super( entitiesPerPixel );
-		
+
 		this.container = container;
 	}
-		
-	@Override
-	public void close() {}
 
 	@Override
-	public boolean getValue( final int index ) 
-	{ 
+	public void close()
+	{}
+
+	@Override
+	public boolean getValue( final int index )
+	{
 		final int realIndex = currentIndex + index;
-		
+
 		final int arrayIndex = realIndex / BitDynamicContainer.bitsPerEntity;
 		final int arrayOffset = realIndex % BitDynamicContainer.bitsPerEntity;
 
 		final int entry = container.data.get( arrayIndex );
-		final int value = (entry & ( 1 << arrayOffset ) );
-		
-		return value != 0; 
+		final int value = ( entry & ( 1 << arrayOffset ) );
+
+		return value != 0;
 	}
 
 	@Override
-	public void setValue( final int index, final boolean value ) 
-	{ 
+	public void setValue( final int index, final boolean value )
+	{
 		final int realIndex = currentIndex + index;
 
 		final int arrayIndex = realIndex / BitDynamicContainer.bitsPerEntity;
 		final int arrayOffset = realIndex % BitDynamicContainer.bitsPerEntity;
-			
+
 		if ( value )
 			container.data.set( arrayIndex, container.data.get( arrayIndex ) | ( 1 << arrayOffset ) );
 		else
-			container.data.set( arrayIndex, container.data.get( arrayIndex ) & ~( 1 << arrayOffset ) ); 
+			container.data.set( arrayIndex, container.data.get( arrayIndex ) & ~( 1 << arrayOffset ) );
 	}
 }

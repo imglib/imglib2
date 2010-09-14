@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2009--2010, Stephan Preibisch and Stephan Saalfeld
+ * Copyright (c) 2009--2010, Stephan Preibisch & Stephan Saalfeld
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -29,14 +29,13 @@ package mpicbg.imglib.container.dynamic;
 
 import java.util.ArrayList;
 
-import mpicbg.imglib.sampler.RasterSampler;
 import mpicbg.imglib.sampler.dynamic.DynamicStorageAccess;
 import mpicbg.imglib.type.Type;
 
 /**
  * 
  * @param <T>
- *
+ * 
  * @author Stephan Preibisch and Stephan Saalfeld
  */
 public class DoubleDynamicContainer< T extends Type< T > > extends DynamicContainer< T, DoubleDynamicContainerAccessor >
@@ -54,11 +53,11 @@ public class DoubleDynamicContainer< T extends Type< T > > extends DynamicContai
 	}
 
 	@Override
-	public DoubleDynamicContainerAccessor update( final RasterSampler< ? > c )
+	public DoubleDynamicContainerAccessor update( final Object access )
 	{
-		final DynamicStorageAccess cursor = ( DynamicStorageAccess ) c;
-		final DoubleDynamicContainerAccessor accessor = ( DoubleDynamicContainerAccessor ) cursor.getAccessor();
-		accessor.updateIndex( cursor.getInternalIndex() );
+		final DynamicStorageAccess c = ( DynamicStorageAccess )access;
+		final DoubleDynamicContainerAccessor accessor = ( DoubleDynamicContainerAccessor ) c.getAccessor();
+		accessor.updateIndex( c.getInternalIndex() );
 
 		return accessor;
 	}

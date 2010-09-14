@@ -24,21 +24,18 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- *
- * @author Stephan Preibisch
  */
 package mpicbg.imglib.container.dynamic;
 
 import java.util.ArrayList;
 
-import mpicbg.imglib.sampler.RasterSampler;
 import mpicbg.imglib.sampler.dynamic.DynamicStorageAccess;
 import mpicbg.imglib.type.Type;
 
 /**
  * 
  * @param <T>
- *
+ * 
  * @author Stephan Preibisch and Stephan Saalfeld
  */
 public class CharDynamicContainer< T extends Type< T > > extends DynamicContainer< T, CharDynamicContainerAccessor >
@@ -56,11 +53,11 @@ public class CharDynamicContainer< T extends Type< T > > extends DynamicContaine
 	}
 
 	@Override
-	public CharDynamicContainerAccessor update( final RasterSampler< ? > c )
+	public CharDynamicContainerAccessor update( final Object access )
 	{
-		final DynamicStorageAccess cursor = ( DynamicStorageAccess ) c;
-		final CharDynamicContainerAccessor accessor = ( CharDynamicContainerAccessor ) cursor.getAccessor();
-		accessor.updateIndex( cursor.getInternalIndex() );
+		final DynamicStorageAccess c = ( DynamicStorageAccess )access;
+		final CharDynamicContainerAccessor accessor = ( CharDynamicContainerAccessor ) c.getAccessor();
+		accessor.updateIndex( c.getInternalIndex() );
 
 		return accessor;
 	}

@@ -85,8 +85,6 @@ public class DynamicLocalizingRasterIterator< T extends Type< T > > extends Abst
 				break;
 			}
 		}
-		
-		linkedIterator.fwd();
 	}
 
 	@Override
@@ -109,8 +107,6 @@ public class DynamicLocalizingRasterIterator< T extends Type< T > > extends Abst
 			for ( int d = 1; d < numDimensions; d++ )
 				position[ d ] = 0;		
 		}
-		
-		linkedIterator.reset();
 	}
 
 	@Override
