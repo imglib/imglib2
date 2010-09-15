@@ -16,6 +16,8 @@
  */
 package mpicbg.imglib.algorithm.math;
 
+import java.util.List;
+
 import javax.media.j3d.Transform3D;
 import javax.vecmath.Matrix4f;
 
@@ -115,6 +117,50 @@ public class MathLib
 			median = (temp[length / 2] + temp[(length / 2) - 1]) / 2;
 
 		return median;
+	}
+
+	public static double computeAverage( final List<Double> values )
+	{
+		final double size = values.size();
+		double avg = 0;
+		
+		for ( final double v : values )
+			avg += v / size;
+
+		return avg;
+	}
+
+	public static float computeAverage( final List<Float> values )
+	{
+		final double size = values.size();
+		double avg = 0;
+		
+		for ( final double v : values )
+			avg += v / size;
+
+		return (float)avg;
+	}
+
+	public static float computeMinimum( final List<Float> values )
+	{
+		float min = Float.MAX_VALUE;
+		
+		for ( final float v : values )
+			if ( v < min )
+				min = v;
+		
+		return min;
+	}
+
+	public static float computeMaximum( final List<Float> values )
+	{
+		float max = -Float.MAX_VALUE;
+		
+		for ( final float v : values )
+			if ( v > max )
+				max = v;
+		
+		return max;
 	}
 
 	public static float computeAverage( final float[] values )
