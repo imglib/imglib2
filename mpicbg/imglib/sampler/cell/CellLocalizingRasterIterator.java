@@ -108,7 +108,7 @@ public class CellLocalizingRasterIterator< T extends Type< T > > extends Abstrac
 		cellInstance = container.getCell( cell );		
 
 		cellMaxI = cellInstance.getNumPixels();	
-		cellInstance.getDimensions( cellDimensions );
+		cellInstance.dimensions( cellDimensions );
 		cellInstance.offset( cellOffset );
 		
 		type.updateContainer( this );

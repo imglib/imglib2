@@ -150,7 +150,7 @@ public class CellPositionableRasterSampler< T extends Type< T > > extends Abstra
 		lastCellIndex = cell;		
 		cellInstance = container.getCell( cell );		
 
-		cellInstance.getDimensions( cellDimensions );
+		cellInstance.dimensions( cellDimensions );
 		cellInstance.offset( cellOffset );
 		
 		for ( int d = 0; d < numDimensions; d++ )

@@ -43,10 +43,7 @@ public class CellOutOfBoundsPositionableRasterSampler< T extends Type< T > > ext
 {
 	final protected CellContainer< T, ? > container;
 
-	public CellOutOfBoundsPositionableRasterSampler(
-			final CellContainer< T, ? > container,
-			final Image< T > image,
-			final OutOfBoundsStrategyFactory< T > outOfBoundsStrategyFactory )
+	public CellOutOfBoundsPositionableRasterSampler( final CellContainer< T, ? > container, final Image< T > image, final OutOfBoundsStrategyFactory< T > outOfBoundsStrategyFactory )
 	{
 		super( container, image, outOfBoundsStrategyFactory );
 
