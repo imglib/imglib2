@@ -1,2 +1,4 @@
-build-eclipse
-/imglib.jar
+target
+.classpath
+.project
+.settings
