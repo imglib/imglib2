@@ -1,3 +1,5 @@
+Imglib library for multidimensional, type-agnostic image processing.
+
 Copyright (c) 2009, Stephan Preibisch & Stephan Saalfeld.
 All rights reserved.
 
