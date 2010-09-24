@@ -194,6 +194,19 @@
     </repository>
   </repositories>
 
+  <distributionManagement>
+    <repository>
+      <id>imagej.releases</id>
+      <name>ImageJ Releases Repository</name>
+      <url>dav:http://dev.imagejdev.org:8081/content/repositories/releases</url>
+    </repository>
+    <snapshotRepository>
+      <id>imagej.snapshots</id>
+      <name>ImageJ Snapshots Repository</name>
+      <url>dav:http://dev.imagejdev.org:8081/content/repositories/snapshots</url>
+    </snapshotRepository>
+  </distributionManagement>
+
   <reporting>
     <plugins>
       <!-- NB: Generate javadocs as part of site generation. -->
