@@ -115,8 +115,8 @@
   </mailingLists>
 
   <scm>
-    <connection>scm:git:git://dev.imagejdev.org/imglib</connection>
-    <developerConnection>scm:git:git@dev.imagejdev.org:imglib</developerConnection>
+    <connection>scm:git://dev.imagejdev.org/imglib</connection>
+    <developerConnection>scm:git@dev.imagejdev.org:imglib</developerConnection>
     <tag>HEAD</tag>
     <url>http://dev.imagejdev.org/trac/imglib</url>
   </scm>
