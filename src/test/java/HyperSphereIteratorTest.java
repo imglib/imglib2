@@ -26,8 +26,6 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-package tests;
-
 import ij.ImageJ;
 
 import java.util.Random;

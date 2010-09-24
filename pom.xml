@@ -10,7 +10,7 @@
   <version>2.0-SNAPSHOT</version>
 
   <name>Imglib</name>
-  <description>A type-agnostic image processing library.</description>
+  <description>A multidimensional, type-agnostic image processing library.</description>
   <url>http://pacific.mpi-cbg.de/wiki/index.php/Imglib</url>
   <inceptionYear>2009</inceptionYear>
 
@@ -144,8 +144,8 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
         <configuration>
-          <source>1.5</source>
-          <target>1.5</target>
+          <source>1.6</source>
+          <target>1.6</target>
         </configuration>
       </plugin>
       <plugin>
@@ -193,6 +193,19 @@
       <url>http://dev.imagejdev.org:8081/content/repositories/thirdparty</url>
     </repository>
   </repositories>
+
+  <distributionManagement>
+    <repository>
+      <id>imagej.releases</id>
+      <name>ImageJ Releases Repository</name>
+      <url>dav:http://dev.imagejdev.org:8081/content/repositories/releases</url>
+    </repository>
+    <snapshotRepository>
+      <id>imagej.snapshots</id>
+      <name>ImageJ Snapshots Repository</name>
+      <url>dav:http://dev.imagejdev.org:8081/content/repositories/snapshots</url>
+    </snapshotRepository>
+  </distributionManagement>
 
   <reporting>
     <plugins>
