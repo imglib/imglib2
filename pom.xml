@@ -4,224 +4,33 @@
     http://maven.apache.org/maven-v4_0_0.xsd">
 
   <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>mpicbg</groupId>
+    <artifactId>imglib-base-pom</artifactId>
+    <version>1.00</version>
+  </parent>
 
   <groupId>mpicbg</groupId>
-  <artifactId>imglib</artifactId>
-  <version>2.0-SNAPSHOT</version>
-
-  <name>Imglib</name>
-  <description>A multidimensional, type-agnostic image processing library.</description>
+  <artifactId>imglib-projects</artifactId>
+  <packaging>pom</packaging>
+  <version>1.00</version>
+  <name>Imglib projects</name>
+  <description>Umbrella project for Imglib projects.</description>
   <url>http://pacific.mpi-cbg.de/wiki/index.php/Imglib</url>
-  <inceptionYear>2009</inceptionYear>
 
-  <organization>
-    <name>Fiji Is Just ImageJ</name>
-    <url>http://pacific.mpi-cbg.de/</url>
-  </organization>
-
-  <licenses>
-    <license>
-      <name>BSD</name>
-      <distribution>repo</distribution>
-    </license>
-  </licenses>
-
-  <dependencies>
-    <dependency>
-      <groupId>imagej</groupId>
-      <artifactId>ij</artifactId>
-      <version>1.43</version>
-    </dependency>
-    <dependency>
-      <groupId>loci</groupId>
-      <artifactId>bio-formats</artifactId>
-      <version>5.0-SNAPSHOT</version>
-    </dependency>
-    <!-- TODO: define a real POM for mpicbg project -->
-    <dependency>
-      <groupId>mpicbg</groupId>
-      <artifactId>mpicbg</artifactId>
-      <version>20100908</version>
-    </dependency>
-    <!-- TODO: define a real POM for mines-jtk project -->
-    <dependency>
-      <groupId>edu.mines</groupId>
-      <artifactId>mines-jtk</artifactId>
-      <version>20100113</version>
-    </dependency>
-  </dependencies>
-
-  <developers>
-    <developer>
-      <id>saalfeld</id>
-      <name>Stephan Saalfeld</name>
-      <email>saalfeld@mpi-cbg.de</email>
-      <url>http://fly.mpi-cbg.de/~saalfeld/</url>
-      <organization>MPI-CBG at Dresden</organization>
-      <organizationUrl>http://mpi-cbg.de/</organizationUrl>
-      <roles>
-        <role>architect</role>
-        <role>developer</role>
-      </roles>
-      <timezone>+1</timezone>
-      <properties>
-        <picUrl>http://fly.mpi-cbg.de/~saalfeld/saalfeld.jpg</picUrl>
-      </properties>
-    </developer>
-    <developer>
-      <id>preibisch</id>
-      <name>Stephan Preibisch</name>
-      <email>preibisch@mpi-cbg.de</email>
-      <url>http://fly.mpi-cbg.de/~preibisch/</url>
-      <organization>MPI-CBG at Dresden</organization>
-      <organizationUrl>http://mpi-cbg.de/</organizationUrl>
-      <roles>
-        <role>architect</role>
-        <role>developer</role>
-      </roles>
-      <timezone>+1</timezone>
-    </developer>
-  </developers>
-
-  <issueManagement>
-    <!--
-    <system>Trac</system>
-    <url>http://dev.imagejdev.org/trac/imglib/</url>
-    -->
-    <system>Bugzilla</system>
-    <url>http://pacific.mpi-cbg.de/cgi-bin/bugzilla/</url>
-  </issueManagement>
-
-  <ciManagement>
-    <system>Hudson</system>
-    <url>http://dev.imagejdev.org:8080/</url>
-  </ciManagement>
-
-  <mailingLists>
-    <mailingList>
-      <name>Fiji-users</name>
-      <subscribe>http://groups.google.com/group/fiji-users</subscribe>
-      <unsubscribe>http://groups.google.com/group/fiji-users</unsubscribe>
-      <post>fiji-users@googlegroups.com</post>
-      <archive>http://groups.google.com/group/fiji-users</archive>
-    </mailingList>
-    <mailingList>
-      <name>Fiji-devel</name>
-      <subscribe>http://groups.google.com/group/fiji-devel</subscribe>
-      <unsubscribe>http://groups.google.com/group/fiji-devel</unsubscribe>
-      <post>fiji-devel@googlegroups.com</post>
-      <archive>http://groups.google.com/group/fiji-devel</archive>
-    </mailingList>
-  </mailingLists>
-
-  <scm>
-    <connection>scm:git://dev.imagejdev.org/imglib</connection>
-    <developerConnection>scm:git@dev.imagejdev.org:imglib</developerConnection>
-    <tag>HEAD</tag>
-    <url>http://dev.imagejdev.org/trac/imglib</url>
-  </scm>
-
-  <build>
-    <defaultGoal>install</defaultGoal>
-    <extensions>
-      <extension>
-        <groupId>org.apache.maven.wagon</groupId>
-        <artifactId>wagon-webdav</artifactId>
-        <version>1.0-beta-2</version>
-      </extension>
-    </extensions>
-    <pluginManagement>
-      <plugins>
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-assembly-plugin</artifactId>
-          <version>2.2-beta-5</version>
-        </plugin>
-      </plugins>
-    </pluginManagement>
-    <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <configuration>
-          <source>1.6</source>
-          <target>1.6</target>
-        </configuration>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-jar-plugin</artifactId>
-        <configuration>
-          <archive>
-            <manifest>
-              <addClasspath>true</addClasspath>
-              <packageName>mpicbg.imglib</packageName>
-            </manifest>
-          </archive>
-        </configuration>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-assembly-plugin</artifactId>
-        <version>2.2-beta-5</version>
-      </plugin>
-    </plugins>
-  </build>
+  <modules>
+    <module>imglib</module>
+    <module>imglib-algorithms</module>
+    <module>imglib-io</module>
+    <module>imglib-imagej</module>
+  </modules>
 
   <repositories>
-    <!-- NB: for imagej -->
+    <!-- NB: for imglib-base-pom -->
     <repository>
       <id>imagej.releases</id>
       <url>http://dev.imagejdev.org:8081/content/repositories/releases</url>
     </repository>
-    <repository>
-      <id>imagej.snapshots</id>
-      <url>http://dev.imagejdev.org:8081/content/repositories/snapshots</url>
-    </repository>
-    <!-- NB: for bio-formats -->
-    <repository>
-      <id>loci.releases</id>
-      <url>http://dev.loci.wisc.edu:8081/content/repositories/releases</url>
-    </repository>
-    <repository>
-      <id>loci.snapshots</id>
-      <url>http://dev.loci.wisc.edu:8081/content/repositories/snapshots</url>
-    </repository>
-    <!-- NB: for various dependencies -->
-    <repository>
-      <id>imagej.thirdparty</id>
-      <url>http://dev.imagejdev.org:8081/content/repositories/thirdparty</url>
-    </repository>
   </repositories>
-
-  <distributionManagement>
-    <repository>
-      <id>imagej.releases</id>
-      <name>ImageJ Releases Repository</name>
-      <url>dav:http://dev.imagejdev.org:8081/content/repositories/releases</url>
-    </repository>
-    <snapshotRepository>
-      <id>imagej.snapshots</id>
-      <name>ImageJ Snapshots Repository</name>
-      <url>dav:http://dev.imagejdev.org:8081/content/repositories/snapshots</url>
-    </snapshotRepository>
-  </distributionManagement>
-
-  <reporting>
-    <plugins>
-      <!-- NB: Generate javadocs as part of site generation. -->
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-javadoc-plugin</artifactId>
-        <version>2.7</version>
-      </plugin>
-    </plugins>
-  </reporting>
-
-  <!-- NB: Avoid platform encoding warning when copying filtered resources. -->
-  <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-  </properties>
 
 </project>
