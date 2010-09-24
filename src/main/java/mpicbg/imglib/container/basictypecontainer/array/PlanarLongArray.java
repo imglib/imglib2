@@ -31,49 +31,79 @@ package mpicbg.imglib.container.basictypecontainer.array;
 
 import mpicbg.imglib.container.basictypecontainer.LongAccess;
 
-public class PlanarLongArray implements LongAccess, ArrayDataAccess<PlanarLongArray>
+/**
+ * A 2D long array dimensioned planeCount x elementsPerPlane.
+ * Allows for efficient access to individual image planes.
+ *
+ * @author Curtis Rueden ctrueden at wisc.edu
+ */
+public class PlanarLongArray implements LongAccess,
+  ArrayDataAccess<PlanarLongArray>, PlanarAccess<long[]>
 {
-	protected long[][] data;
+  protected int elementsPerPlane;
+  protected long[][] data;
 
-	public PlanarLongArray( final int elementsPerPlane, final int numEntities )
-	{
-		if (numEntities % elementsPerPlane != 0) {
-			throw new IllegalArgumentException(
-				"Elements per plane must divide total number of entities");
-		}
-		this.data = new long[ numEntities / elementsPerPlane ][ elementsPerPlane ];
-	}
+  public PlanarLongArray(final int elementsPerPlane, final int numEntities) {
+    if (numEntities % elementsPerPlane != 0) {
+      throw new IllegalArgumentException(
+        "Elements per plane must divide total number of entities");
+    }
+    this.elementsPerPlane = elementsPerPlane;
+    final int planeCount = numEntities / elementsPerPlane;
+    this.data = new long[planeCount][];
+  }
 
-	public PlanarLongArray( final long[][] data )
-	{
-		this.data = data;
-	}
+  public PlanarLongArray(final long[][] data) {
+    this.data = data;
+  }
 
-	@Override
-	public void close() { data = null; }
+  // -- PlanarLongArray methods --
 
-	@Override
-	public long getValue( final int index )
-	{
-		return data[ index / data.length ][ index % data.length ];
-	}
+  public long[][] getCurrentStorageArray() { return data; }
 
-	@Override
-	public void setValue( final int index, final long value )
-	{
-		data[ index / data.length ][ index % data.length ] = value;
-	}
+  // -- LongAccess methods --
 
-	public long[][] getCurrentStorageArray(){ return data; }
+  @Override
+  public long getValue(final int index) {
+    final int no = index / elementsPerPlane;
+    if (data[no] == null) return 0;
+    return data[no][index % elementsPerPlane];
+  }
 
-	@Override
-	public PlanarLongArray createArray( final int numEntities ) {
-		throw new RuntimeException("Unsupported operation");
-	}
+  @Override
+  public void setValue(final int index, final long value) {
+    final int no = index / elementsPerPlane;
+    if (data[no] == null) data[no] = new long[elementsPerPlane];
+    data[no][index % elementsPerPlane] = value;
+  }
 
-	@Override
-	public Object getCurrentStorageArrayAsObject() {
-		return getCurrentStorageArray();
-	}
+  // -- DataAccess methods --
+
+  @Override
+  public void close() { data = null; }
+
+  // -- ArrayDataAccess methods --
+
+  @Override
+  public PlanarLongArray createArray(final int numEntities) {
+    throw new RuntimeException("Unsupported operation");
+  }
+
+  @Override
+  public Object getCurrentStorageArrayAsObject() {
+    return getCurrentStorageArray();
+  }
+
+  // -- PlanarAccess methods --
+
+  @Override
+  public long[] getPlane(int no) {
+    return data[no];
+  }
+
+  @Override
+  public void setPlane(int no, long[] plane) {
+    data[no] = plane;
+  }
 
 }

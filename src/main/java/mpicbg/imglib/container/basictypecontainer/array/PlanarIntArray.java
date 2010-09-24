@@ -31,49 +31,79 @@ package mpicbg.imglib.container.basictypecontainer.array;
 
 import mpicbg.imglib.container.basictypecontainer.IntAccess;
 
-public class PlanarIntArray implements IntAccess, ArrayDataAccess<PlanarIntArray>
+/**
+ * A 2D int array dimensioned planeCount x elementsPerPlane.
+ * Allows for efficient access to individual image planes.
+ *
+ * @author Curtis Rueden ctrueden at wisc.edu
+ */
+public class PlanarIntArray implements IntAccess,
+  ArrayDataAccess<PlanarIntArray>, PlanarAccess<int[]>
 {
-	protected int[][] data;
+  protected int elementsPerPlane;
+  protected int[][] data;
 
-	public PlanarIntArray( final int elementsPerPlane, final int numEntities )
-	{
-		if (numEntities % elementsPerPlane != 0) {
-			throw new IllegalArgumentException(
-				"Elements per plane must divide total number of entities");
-		}
-		this.data = new int[ numEntities / elementsPerPlane ][ elementsPerPlane ];
-	}
+  public PlanarIntArray(final int elementsPerPlane, final int numEntities) {
+    if (numEntities % elementsPerPlane != 0) {
+      throw new IllegalArgumentException(
+        "Elements per plane must divide total number of entities");
+    }
+    this.elementsPerPlane = elementsPerPlane;
+    final int planeCount = numEntities / elementsPerPlane;
+    this.data = new int[planeCount][];
+  }
 
-	public PlanarIntArray( final int[][] data )
-	{
-		this.data = data;
-	}
+  public PlanarIntArray(final int[][] data) {
+    this.data = data;
+  }
 
-	@Override
-	public void close() { data = null; }
+  // -- PlanarIntArray methods --
 
-	@Override
-	public int getValue( final int index )
-	{
-		return data[ index / data.length ][ index % data.length ];
-	}
+  public int[][] getCurrentStorageArray() { return data; }
 
-	@Override
-	public void setValue( final int index, final int value )
-	{
-		data[ index / data.length ][ index % data.length ] = value;
-	}
+  // -- IntAccess methods --
 
-	@Override
-	public PlanarIntArray createArray( final int numEntities ) {
-		throw new RuntimeException("Unsupported operation");
-	}
+  @Override
+  public int getValue(final int index) {
+    final int no = index / elementsPerPlane;
+    if (data[no] == null) return 0;
+    return data[no][index % elementsPerPlane];
+  }
 
-	public int[][] getCurrentStorageArray(){ return data; }
+  @Override
+  public void setValue(final int index, final int value) {
+    final int no = index / elementsPerPlane;
+    if (data[no] == null) data[no] = new int[elementsPerPlane];
+    data[no][index % elementsPerPlane] = value;
+  }
 
-	@Override
-	public Object getCurrentStorageArrayAsObject() {
-		return getCurrentStorageArray();
-	}
+  // -- DataAccess methods --
+
+  @Override
+  public void close() { data = null; }
+
+  // -- ArrayDataAccess methods --
+
+  @Override
+  public PlanarIntArray createArray(final int numEntities) {
+    throw new RuntimeException("Unsupported operation");
+  }
+
+  @Override
+  public Object getCurrentStorageArrayAsObject() {
+    return getCurrentStorageArray();
+  }
+
+  // -- PlanarAccess methods --
+
+  @Override
+  public int[] getPlane(int no) {
+    return data[no];
+  }
+
+  @Override
+  public void setPlane(int no, int[] plane) {
+    data[no] = plane;
+  }
 
 }

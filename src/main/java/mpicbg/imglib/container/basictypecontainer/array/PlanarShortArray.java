@@ -31,49 +31,79 @@ package mpicbg.imglib.container.basictypecontainer.array;
 
 import mpicbg.imglib.container.basictypecontainer.ShortAccess;
 
-public class PlanarShortArray implements ShortAccess, ArrayDataAccess<PlanarShortArray>
+/**
+ * A 2D short array dimensioned planeCount x elementsPerPlane.
+ * Allows for efficient access to individual image planes.
+ *
+ * @author Curtis Rueden ctrueden at wisc.edu
+ */
+public class PlanarShortArray implements ShortAccess,
+  ArrayDataAccess<PlanarShortArray>, PlanarAccess<short[]>
 {
-	protected short[][] data;
+  protected int elementsPerPlane;
+  protected short[][] data;
 
-	public PlanarShortArray( final int elementsPerPlane, final int numEntities )
-	{
-		if (numEntities % elementsPerPlane != 0) {
-			throw new IllegalArgumentException(
-				"Elements per plane must divide total number of entities");
-		}
-		this.data = new short[ numEntities / elementsPerPlane ][ elementsPerPlane ];
-	}
+  public PlanarShortArray(final int elementsPerPlane, final int numEntities) {
+    if (numEntities % elementsPerPlane != 0) {
+      throw new IllegalArgumentException(
+        "Elements per plane must divide total number of entities");
+    }
+    this.elementsPerPlane = elementsPerPlane;
+    final int planeCount = numEntities / elementsPerPlane;
+    this.data = new short[planeCount][];
+  }
 
-	public PlanarShortArray( final short[][] data )
-	{
-		this.data = data;
-	}
+  public PlanarShortArray(final short[][] data) {
+    this.data = data;
+  }
 
-	@Override
-	public void close() { data = null; }
+  // -- PlanarShortArray methods --
 
-	@Override
-	public short getValue( final int index )
-	{
-		return data[ index / data.length ][ index % data.length ];
-	}
+  public short[][] getCurrentStorageArray() { return data; }
 
-	@Override
-	public void setValue( final int index, final short value )
-	{
-		data[ index / data.length ][ index % data.length ] = value;
-	}
+  // -- ShortAccess methods --
 
-	@Override
-	public PlanarShortArray createArray( final int numEntities ) {
-		throw new RuntimeException("Unsupported operation");
-	}
+  @Override
+  public short getValue(final int index) {
+    final int no = index / elementsPerPlane;
+    if (data[no] == null) return 0;
+    return data[no][index % elementsPerPlane];
+  }
 
-	public short[][] getCurrentStorageArray(){ return data; }
+  @Override
+  public void setValue(final int index, final short value) {
+    final int no = index / elementsPerPlane;
+    if (data[no] == null) data[no] = new short[elementsPerPlane];
+    data[no][index % elementsPerPlane] = value;
+  }
 
-	@Override
-	public Object getCurrentStorageArrayAsObject() {
-		return getCurrentStorageArray();
-	}
+  // -- DataAccess methods --
+
+  @Override
+  public void close() { data = null; }
+
+  // -- ArrayDataAccess methods --
+
+  @Override
+  public PlanarShortArray createArray(final int numEntities) {
+    throw new RuntimeException("Unsupported operation");
+  }
+
+  @Override
+  public Object getCurrentStorageArrayAsObject() {
+    return getCurrentStorageArray();
+  }
+
+  // -- PlanarAccess methods --
+
+  @Override
+  public short[] getPlane(int no) {
+    return data[no];
+  }
+
+  @Override
+  public void setPlane(int no, short[] plane) {
+    data[no] = plane;
+  }
 
 }

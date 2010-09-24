@@ -31,49 +31,79 @@ package mpicbg.imglib.container.basictypecontainer.array;
 
 import mpicbg.imglib.container.basictypecontainer.FloatAccess;
 
-public class PlanarFloatArray implements FloatAccess, ArrayDataAccess<PlanarFloatArray>
+/**
+ * A 2D float array dimensioned planeCount x elementsPerPlane.
+ * Allows for efficient access to individual image planes.
+ *
+ * @author Curtis Rueden ctrueden at wisc.edu
+ */
+public class PlanarFloatArray implements FloatAccess,
+  ArrayDataAccess<PlanarFloatArray>, PlanarAccess<float[]>
 {
-	protected float[][] data;
+  protected int elementsPerPlane;
+  protected float[][] data;
 
-	public PlanarFloatArray( final int elementsPerPlane, final int numEntities )
-	{
-		if (numEntities % elementsPerPlane != 0) {
-			throw new IllegalArgumentException(
-				"Elements per plane must divide total number of entities");
-		}
-		this.data = new float[ numEntities / elementsPerPlane ][ elementsPerPlane ];
-	}
+  public PlanarFloatArray(final int elementsPerPlane, final int numEntities) {
+    if (numEntities % elementsPerPlane != 0) {
+      throw new IllegalArgumentException(
+        "Elements per plane must divide total number of entities");
+    }
+    this.elementsPerPlane = elementsPerPlane;
+    final int planeCount = numEntities / elementsPerPlane;
+    this.data = new float[planeCount][];
+  }
 
-	public PlanarFloatArray( final float[][] data )
-	{
-		this.data = data;
-	}
+  public PlanarFloatArray(final float[][] data) {
+    this.data = data;
+  }
 
-	@Override
-	public void close() { data = null; }
+  // -- PlanarFloatArray methods --
 
-	@Override
-	public float getValue( final int index )
-	{
-		return data[ index / data.length ][ index % data.length ];
-	}
+  public float[][] getCurrentStorageArray() { return data; }
 
-	@Override
-	public void setValue( final int index, final float value )
-	{
-		data[ index / data.length ][ index % data.length ] = value;
-	}
+  // -- FloatAccess methods --
 
-	@Override
-	public PlanarFloatArray createArray( final int numEntities ) {
-		throw new RuntimeException("Unsupported operation");
-	}
+  @Override
+  public float getValue(final int index) {
+    final int no = index / elementsPerPlane;
+    if (data[no] == null) return 0;
+    return data[no][index % elementsPerPlane];
+  }
 
-	public float[][] getCurrentStorageArray(){ return data; }
+  @Override
+  public void setValue(final int index, final float value) {
+    final int no = index / elementsPerPlane;
+    if (data[no] == null) data[no] = new float[elementsPerPlane];
+    data[no][index % elementsPerPlane] = value;
+  }
 
-	@Override
-	public Object getCurrentStorageArrayAsObject() {
-		return getCurrentStorageArray();
-	}
+  // -- DataAccess methods --
+
+  @Override
+  public void close() { data = null; }
+
+  // -- ArrayDataAccess methods --
+
+  @Override
+  public PlanarFloatArray createArray(final int numEntities) {
+    throw new RuntimeException("Unsupported operation");
+  }
+
+  @Override
+  public Object getCurrentStorageArrayAsObject() {
+    return getCurrentStorageArray();
+  }
+
+  // -- PlanarAccess methods --
+
+  @Override
+  public float[] getPlane(int no) {
+    return data[no];
+  }
+
+  @Override
+  public void setPlane(int no, float[] plane) {
+    data[no] = plane;
+  }
 
 }

@@ -31,49 +31,79 @@ package mpicbg.imglib.container.basictypecontainer.array;
 
 import mpicbg.imglib.container.basictypecontainer.ByteAccess;
 
-public class PlanarByteArray implements ByteAccess, ArrayDataAccess<PlanarByteArray>
+/**
+ * A 2D byte array dimensioned planeCount x elementsPerPlane.
+ * Allows for efficient access to individual image planes.
+ *
+ * @author Curtis Rueden ctrueden at wisc.edu
+ */
+public class PlanarByteArray implements ByteAccess,
+  ArrayDataAccess<PlanarByteArray>, PlanarAccess<byte[]>
 {
-	protected byte[][] data;
+  protected int elementsPerPlane;
+  protected byte[][] data;
 
-	public PlanarByteArray( final int elementsPerPlane, final int numEntities )
-	{
-		if (numEntities % elementsPerPlane != 0) {
-			throw new IllegalArgumentException(
-				"Elements per plane must divide total number of entities");
-		}
-		this.data = new byte[ numEntities / elementsPerPlane ][ elementsPerPlane ];
-	}
+  public PlanarByteArray(final int elementsPerPlane, final int numEntities) {
+    if (numEntities % elementsPerPlane != 0) {
+      throw new IllegalArgumentException(
+        "Elements per plane must divide total number of entities");
+    }
+    this.elementsPerPlane = elementsPerPlane;
+    final int planeCount = numEntities / elementsPerPlane;
+    this.data = new byte[planeCount][];
+  }
 
-	public PlanarByteArray( final byte[][] data )
-	{
-		this.data = data;
-	}
+  public PlanarByteArray(final byte[][] data) {
+    this.data = data;
+  }
 
-	@Override
-	public void close() { data = null; }
+  // -- PlanarByteArray methods --
 
-	@Override
-	public byte getValue( final int index )
-	{
-		return data[ index / data.length ][ index % data.length ];
-	}
+  public byte[][] getCurrentStorageArray() { return data; }
 
-	@Override
-	public void setValue( final int index, final byte value )
-	{
-		data[ index / data.length ][ index % data.length ] = value;
-	}
+  // -- ByteAccess methods --
 
-	public byte[][] getCurrentStorageArray(){ return data; }
+  @Override
+  public byte getValue(final int index) {
+    final int no = index / elementsPerPlane;
+    if (data[no] == null) return 0;
+    return data[no][index % elementsPerPlane];
+  }
 
-	@Override
-	public Object getCurrentStorageArrayAsObject(){
-		return getCurrentStorageArray();
-	}
+  @Override
+  public void setValue(final int index, final byte value) {
+    final int no = index / elementsPerPlane;
+    if (data[no] == null) data[no] = new byte[elementsPerPlane];
+    data[no][index % elementsPerPlane] = value;
+  }
 
-	@Override
-	public PlanarByteArray createArray( final int numEntities ) {
-		throw new RuntimeException("Unsupported operation");
-	}
+  // -- DataAccess methods --
+
+  @Override
+  public void close() { data = null; }
+
+  // -- ArrayDataAccess methods --
+
+  @Override
+  public PlanarByteArray createArray(final int numEntities) {
+    throw new RuntimeException("Unsupported operation");
+  }
+
+  @Override
+  public Object getCurrentStorageArrayAsObject() {
+    return getCurrentStorageArray();
+  }
+
+  // -- PlanarAccess methods --
+
+  @Override
+  public byte[] getPlane(int no) {
+    return data[no];
+  }
+
+  @Override
+  public void setPlane(int no, byte[] plane) {
+    data[no] = plane;
+  }
 
 }

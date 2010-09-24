@@ -31,49 +31,79 @@ package mpicbg.imglib.container.basictypecontainer.array;
 
 import mpicbg.imglib.container.basictypecontainer.DoubleAccess;
 
-public class PlanarDoubleArray implements DoubleAccess, ArrayDataAccess<PlanarDoubleArray>
+/**
+ * A 2D double array dimensioned planeCount x elementsPerPlane.
+ * Allows for efficient access to individual image planes.
+ *
+ * @author Curtis Rueden ctrueden at wisc.edu
+ */
+public class PlanarDoubleArray implements DoubleAccess,
+  ArrayDataAccess<PlanarDoubleArray>, PlanarAccess<double[]>
 {
-	protected double[][] data;
+  protected int elementsPerPlane;
+  protected double[][] data;
 
-	public PlanarDoubleArray( final int elementsPerPlane, final int numEntities )
-	{
-		if (numEntities % elementsPerPlane != 0) {
-			throw new IllegalArgumentException(
-				"Elements per plane must divide total number of entities");
-		}
-		this.data = new double[ numEntities / elementsPerPlane ][ elementsPerPlane ];
-	}
+  public PlanarDoubleArray(final int elementsPerPlane, final int numEntities) {
+    if (numEntities % elementsPerPlane != 0) {
+      throw new IllegalArgumentException(
+        "Elements per plane must divide total number of entities");
+    }
+    this.elementsPerPlane = elementsPerPlane;
+    final int planeCount = numEntities / elementsPerPlane;
+    this.data = new double[planeCount][];
+  }
 
-	public PlanarDoubleArray( final double[][] data )
-	{
-		this.data = data;
-	}
+  public PlanarDoubleArray(final double[][] data) {
+    this.data = data;
+  }
 
-	@Override
-	public void close() { data = null; }
+  // -- PlanarDoubleArray methods --
 
-	@Override
-	public double getValue( final int index )
-	{
-		return data[ index / data.length ][ index % data.length ];
-	}
+  public double[][] getCurrentStorageArray() { return data; }
 
-	@Override
-	public void setValue( final int index, final double value )
-	{
-		data[ index / data.length ][ index % data.length ] = value;
-	}
+  // -- DoubleAccess methods --
 
-	@Override
-	public PlanarDoubleArray createArray( final int numEntities ) {
-		throw new RuntimeException("Unsupported operation");
-	}
+  @Override
+  public double getValue(final int index) {
+    final int no = index / elementsPerPlane;
+    if (data[no] == null) return 0;
+    return data[no][index % elementsPerPlane];
+  }
 
-	public double[][] getCurrentStorageArray(){ return data; }
+  @Override
+  public void setValue(final int index, final double value) {
+    final int no = index / elementsPerPlane;
+    if (data[no] == null) data[no] = new double[elementsPerPlane];
+    data[no][index % elementsPerPlane] = value;
+  }
 
-	@Override
-	public Object getCurrentStorageArrayAsObject() {
-		return getCurrentStorageArray();
-	}
+  // -- DataAccess methods --
+
+  @Override
+  public void close() { data = null; }
+
+  // -- ArrayDataAccess methods --
+
+  @Override
+  public PlanarDoubleArray createArray(final int numEntities) {
+    throw new RuntimeException("Unsupported operation");
+  }
+
+  @Override
+  public Object getCurrentStorageArrayAsObject() {
+    return getCurrentStorageArray();
+  }
+
+  // -- PlanarAccess methods --
+
+  @Override
+  public double[] getPlane(int no) {
+    return data[no];
+  }
+
+  @Override
+  public void setPlane(int no, double[] plane) {
+    data[no] = plane;
+  }
 
 }

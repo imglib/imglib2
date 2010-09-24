@@ -31,49 +31,79 @@ package mpicbg.imglib.container.basictypecontainer.array;
 
 import mpicbg.imglib.container.basictypecontainer.CharAccess;
 
-public class PlanarCharArray implements CharAccess, ArrayDataAccess<PlanarCharArray>
+/**
+ * A 2D char array dimensioned planeCount x elementsPerPlane.
+ * Allows for efficient access to individual image planes.
+ *
+ * @author Curtis Rueden ctrueden at wisc.edu
+ */
+public class PlanarCharArray implements CharAccess,
+  ArrayDataAccess<PlanarCharArray>, PlanarAccess<char[]>
 {
-	protected char[][] data;
+  protected int elementsPerPlane;
+  protected char[][] data;
 
-	public PlanarCharArray( final int elementsPerPlane, int numEntities )
-	{
-		if (numEntities % elementsPerPlane != 0) {
-			throw new IllegalArgumentException(
-				"Elements per plane must divide total number of entities");
-		}
-		this.data = new char[ numEntities / elementsPerPlane ][ elementsPerPlane ];
-	}
+  public PlanarCharArray(final int elementsPerPlane, final int numEntities) {
+    if (numEntities % elementsPerPlane != 0) {
+      throw new IllegalArgumentException(
+        "Elements per plane must divide total number of entities");
+    }
+    this.elementsPerPlane = elementsPerPlane;
+    final int planeCount = numEntities / elementsPerPlane;
+    this.data = new char[planeCount][];
+  }
 
-	public PlanarCharArray( final char[][] data )
-	{
-		this.data = data;
-	}
+  public PlanarCharArray(final char[][] data) {
+    this.data = data;
+  }
 
-	@Override
-	public void close() { data = null; }
+  // -- PlanarByteArray methods --
 
-	@Override
-	public char getValue( final int index )
-	{
-		return data[ index / data.length ][ index % data.length ];
-	}
+  public char[][] getCurrentStorageArray() { return data; }
 
-	@Override
-	public void setValue( final int index, final char value )
-	{
-		data[ index / data.length ][ index % data.length ] = value;
-	}
+  // -- ByteAccess methods --
 
-	public char[][] getCurrentStorageArray(){ return data; }
+  @Override
+  public char getValue(final int index) {
+    final int no = index / elementsPerPlane;
+    if (data[no] == null) return 0;
+    return data[no][index % elementsPerPlane];
+  }
 
-	@Override
-	public PlanarCharArray createArray( final int numEntities ) {
-		throw new RuntimeException("Unsupported operation");
-	}
+  @Override
+  public void setValue(final int index, final char value) {
+    final int no = index / elementsPerPlane;
+    if (data[no] == null) data[no] = new char[elementsPerPlane];
+    data[no][index % elementsPerPlane] = value;
+  }
 
-	@Override
-	public Object getCurrentStorageArrayAsObject() {
-		return getCurrentStorageArray();
-	}
+  // -- DataAccess methods --
+
+  @Override
+  public void close() { data = null; }
+
+  // -- ArrayDataAccess methods --
+
+  @Override
+  public PlanarCharArray createArray(final int numEntities) {
+    throw new RuntimeException("Unsupported operation");
+  }
+
+  @Override
+  public Object getCurrentStorageArrayAsObject() {
+    return getCurrentStorageArray();
+  }
+
+  // -- PlanarAccess methods --
+
+  @Override
+  public char[] getPlane(int no) {
+    return data[no];
+  }
+
+  @Override
+  public void setPlane(int no, char[] plane) {
+    data[no] = plane;
+  }
 
 }
