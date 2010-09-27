@@ -135,19 +135,19 @@ public class Cell< T extends Type< T >, A extends ArrayDataAccess< A > > // exte
 	 * method does not check if the global position is actually contained in the
 	 * {@link Cell}.
 	 * 
-	 * @param l
+	 * @param position
 	 * @return
 	 */
-	public final int globalPositionToIndex( final int[] l )
+	public final int globalPositionToIndex( final int[] position )
 	{
-		int i = l[ 0 ] - offset[ 0 ];
+		int i = position[ 0 ] - offset[ 0 ];
 		for ( int d = 1; d < dim.length; ++d )
-			i += ( l[ d ] - offset[ d ] ) * step[ d ];
+			i += ( position[ d ] - offset[ d ] ) * step[ d ];
 
 		return i;
 	}
 
-	final public void indexToGlobalPosition( int i, final long[] l )
+	final public void indexToGlobalPosition( int i, final long[] position )
 	{
 		for ( int d = numDimensions - 1; d >= 0; --d )
 		{
@@ -155,7 +155,7 @@ public class Cell< T extends Type< T >, A extends ArrayDataAccess< A > > // exte
 			i -= ld * step[ d ];
 			// i %= step[ d ];
 
-			l[ d ] = ld + offset[ d ];
+			position[ d ] = ld + offset[ d ];
 		}
 	}
 

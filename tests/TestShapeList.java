@@ -104,13 +104,13 @@ public class TestShapeList
 			cCell.type().mul( cCell.getArrayIndex() / 1000.0f );
 		}
 
-		cellImage.getDisplay().setMinMax();
-		final ImagePlus cellImp = ImageJFunctions.displayAsVirtualStack( cellImage );
-		cellImp.show();
-		//arrayImp.getProcessor().setMinAndMax( 0, 255 );
-		//arrayImp.updateAndDraw();
-		System.out.println( "Copying into a CellContainer took " + timer.stop() + " ms." );
-		/* ----------------------------------------------------------------- */
+//		cellImage.getDisplay().setMinMax();
+//		final ImagePlus cellImp = ImageJFunctions.displayAsVirtualStack( cellImage );
+//		cellImp.show();
+//		//arrayImp.getProcessor().setMinAndMax( 0, 255 );
+//		//arrayImp.updateAndDraw();
+//		System.out.println( "Copying into a CellContainer took " + timer.stop() + " ms." );
+//		/* ----------------------------------------------------------------- */
 		
 
 		/* Copy content rotated into another container */
@@ -187,7 +187,7 @@ public class TestShapeList
 		
 		shapeListImp.updateAndDraw();
 		arrayImp.updateAndDraw();
-		cellImp.updateAndDraw();
+		//cellImp.updateAndDraw();
 		
 		
 		try

@@ -272,38 +272,38 @@ public class CellPositionableRasterSampler< T extends Type< T > > extends Abstra
 	@Override
 	public void bck( final int dim )
 	{
-		if ( position[ dim ] - 1 >= cellOffset[ dim ])
-		{
-			// still inside the cell
-			type.decIndex( step[ dim ] );
-			position[ dim ]--;	
-		}
-		else
+		if ( position[ dim ] == cellOffset[ dim ])
 		{	
+			cellIndex -= cellStep[ dim ];
+
 			if ( cellPosition[ dim ] == numCellsDim[ dim ] - 1 && numCells != 1)
 			{
+				--cellPosition[ dim ];
+				
 				// current cell is the last one, so we cannot propagate the i
-				cellPosition[ dim ]--;
-				cellIndex -= cellStep[ dim ];
-
 				getCellData(cellIndex);					
 				
-				position[ dim ]--;
+				--position[ dim ];
 				type.updateIndex( cellInstance.globalPositionToIndex( position ) );
 			}
 			else //if ( cellPosition[ dim ] > 0 )
 			{
-				// current cell in dim direction is not the last one
-				cellPosition[ dim ]--;
-				cellIndex -= cellStep[ dim ];
+				--cellPosition[ dim ];
 				
+				// current cell in dim direction is not the last one
 				type.decIndex( ( position[ dim ] - cellOffset[ dim ]) * step[ dim ] );
 				getCellData(cellIndex);
 				type.incIndex( ( cellDimensions[ dim ] - 1 ) * step[ dim ] );
 				
-				position[ dim ]--;	
+				--position[ dim ];
 			} 
 			//else we are moving out of the image
+		}
+		else
+		{
+			// still inside the cell
+			type.decIndex( step[ dim ] );
+			--position[ dim ];
 		}
 	}
 	

@@ -37,17 +37,17 @@ public class ContainerTests
 			{  14,  21,  13,  9,  12 }
 		}; 
 	
-	/**
-	 * Test only the ArrayContainers
-	 */
-	@Test public void testArrayContainer()
-	{
-		for ( int i = 0; i < dim.length; ++i )
-		{
-			assertTrue( "ArrayContainer failed for: dim=" + MathLib.printCoordinates( dim[ i ] ), 
-			            testContainer( dim[ i ], new ArrayContainerFactory(), new ArrayContainerFactory() ) );
-		}
-	}
+//	/**
+//	 * Test only the ArrayContainers
+//	 */
+//	@Test public void testArrayContainer()
+//	{
+//		for ( int i = 0; i < dim.length; ++i )
+//		{
+//			assertTrue( "ArrayContainer failed for: dim=" + MathLib.printCoordinates( dim[ i ] ), 
+//			            testContainer( dim[ i ], new ArrayContainerFactory(), new ArrayContainerFactory() ) );
+//		}
+//	}
 
 	/**
 	 * Test CellContainer
@@ -200,7 +200,7 @@ public class ContainerTests
 
 		// copy back into a second image using localizable and positionable cursors			
 		final RasterIterator<FloatType> localizableCursor1 = img1.createLocalizingRasterIterator();			
-		final PositionableRasterSampler<FloatType> localizableByDimCursor2 = img2.createPositionableRasterSampler();			
+		final PositionableRasterSampler<FloatType> positionable2 = img2.createPositionableRasterSampler();			
 		
 		int i = 0;
 		
@@ -210,14 +210,14 @@ public class ContainerTests
 			++i;
 			
 			if ( i % 2 == 0 )
-				localizableByDimCursor2.moveTo( localizableCursor1 );
+				positionable2.moveTo( localizableCursor1 );
 			else
-				localizableByDimCursor2.setPosition( localizableCursor1 );
+				positionable2.setPosition( localizableCursor1 );
 			
-			localizableByDimCursor2.type().set( localizableCursor1.type() );
+			positionable2.type().set( localizableCursor1.type() );
 		}
 		
-		localizableByDimCursor2.close();
+		positionable2.close();
 		
 		// copy again to the first image using a LocalizableByDimOutsideCursor and a LocalizableByDimCursor
 		final PositionableRasterSampler<FloatType> outsideCursor2 = img2.createPositionableRasterSampler( new OutOfBoundsStrategyPeriodicFactory<FloatType>() );
@@ -227,25 +227,36 @@ public class ContainerTests
 		i = 0;
 		int direction = 1;
 		
-		while ( localizableCursor1.hasNext() )
-		{
-			localizableCursor1.fwd();
-			localizableCursor1.localize( pos );
-			++i;
-			
-			// how many times far away from the original image do we grab the pixel
-			final int distance = i % 5;
-			direction *= -1;				
-			
-			pos[ i % numDimensions ] += img1.getDimension( i % numDimensions ) * distance * direction;
-
-			if ( i % 7 == 0 )
-				outsideCursor2.setPosition( pos );
-			else
-				outsideCursor2.moveTo( pos );
+		try{
+			while ( localizableCursor1.hasNext() )
+			{
+				localizableCursor1.fwd();
+				localizableCursor1.localize( pos );
+				++i;
+				
+				// how many times far away from the original image do we grab the pixel
+				final int distance = i % 5;
+				direction *= -1;				
+				
+				pos[ i % numDimensions ] += img1.getDimension( i % numDimensions ) * distance * direction;
 	
-			localizableCursor1.type().set( outsideCursor2.type() );
+				if ( i % 7 == 0 )
+					outsideCursor2.setPosition( pos );
+				else
+					outsideCursor2.moveTo( pos );
+				
+				final FloatType t1 = localizableCursor1.type();
+				final FloatType t2 = outsideCursor2.type();
+				
+				final float f1 = t1.getRealFloat();
+				final float f2 = t2.getRealFloat();
+				
+				t1.set( t2 );
+				
+				System.out.println( ( i % 7 == 0 ? "setPosition() " : "moveTo() " ) + MathLib.printCoordinates( pos ) );
+			}
 		}
+		catch ( ArrayIndexOutOfBoundsException e ){ System.err.println( ( i % 7 == 0 ? "setPosition() " : "moveTo() " ) + MathLib.printCoordinates( pos ) ); e.printStackTrace(); System.exit( 1 ); }
 
 		final boolean success = test( img1, reference );
 		
