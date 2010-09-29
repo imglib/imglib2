@@ -18,7 +18,7 @@ package mpicbg.imglib.algorithm.math.function;
 
 import mpicbg.imglib.type.numeric.RealType;
 
-public class Subtract<S extends RealType<S>, T extends RealType<T>, U extends RealType<U>> implements Function<S,T,U>
+public class SubtractReal<S extends RealType<S>, T extends RealType<T>, U extends RealType<U>> implements Function<S,T,U>
 {
 	@Override
 	public void compute( final S input1, final T input2, final U output)

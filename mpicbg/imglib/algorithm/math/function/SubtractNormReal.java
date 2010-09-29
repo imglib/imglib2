@@ -18,11 +18,11 @@ package mpicbg.imglib.algorithm.math.function;
 
 import mpicbg.imglib.type.numeric.RealType;
 
-public class SubtractNormalized<S extends RealType<S>, T extends RealType<T>, U extends RealType<U>> implements Function<S,T,U>
+public class SubtractNormReal<S extends RealType<S>, T extends RealType<T>, U extends RealType<U>> implements Function<S,T,U>
 {
 	final double normalizationFactor;
 	
-	public SubtractNormalized( final double normalizationFactor )
+	public SubtractNormReal( final double normalizationFactor )
 	{
 		this.normalizationFactor = normalizationFactor;
 	}
