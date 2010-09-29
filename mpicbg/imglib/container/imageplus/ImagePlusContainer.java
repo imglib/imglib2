@@ -33,6 +33,7 @@ import java.util.ArrayList;
 
 import ij.ImagePlus;
 
+import mpicbg.imglib.container.Container;
 import mpicbg.imglib.container.Container3D;
 import mpicbg.imglib.container.DirectAccessContainerImpl;
 import mpicbg.imglib.container.basictypecontainer.array.ArrayDataAccess;
@@ -167,5 +168,21 @@ public class ImagePlusContainer<T extends Type<T>, A extends ArrayDataAccess<A>>
 	{
 		for ( final A array : mirror )
 			array.close();
+	}
+
+	@Override
+	public boolean compareStorageContainerCompatibility( final Container<?> container )
+	{
+		if ( compareStorageContainerDimensions( container ))
+		{			
+			if ( getFactory().getClass().isInstance( container.getFactory() ))
+				return true;
+			else
+				return false;
+		}
+		else
+		{
+			return false;
+		}
 	}
 }

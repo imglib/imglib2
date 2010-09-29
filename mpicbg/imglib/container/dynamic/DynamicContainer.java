@@ -29,6 +29,7 @@
  */
 package mpicbg.imglib.container.dynamic;
 
+import mpicbg.imglib.container.Container;
 import mpicbg.imglib.container.DirectAccessContainerImpl;
 import mpicbg.imglib.container.array.Array;
 import mpicbg.imglib.cursor.LocalizableByDimCursor;
@@ -116,4 +117,20 @@ public abstract class DynamicContainer<T extends Type<T>, A extends DynamicConta
 		// create a Cursor using a Type that is linked to the container
 		return new DynamicLocalizablePlaneCursor<T>( this, image, linkedType.duplicateTypeOnSameDirectAccessContainer() );
 	}
+	
+	@Override
+	public boolean compareStorageContainerCompatibility( final Container<?> container )
+	{
+		if ( compareStorageContainerDimensions( container ))
+		{			
+			if ( getFactory().getClass().isInstance( container.getFactory() ))
+				return true;
+			else
+				return false;
+		}
+		else
+		{
+			return false;
+		}
+	}	
 }
