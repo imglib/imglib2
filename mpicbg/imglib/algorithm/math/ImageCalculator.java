@@ -46,7 +46,7 @@ public class ImageCalculator<S extends Type<S>, T extends Type<T>, U extends Typ
 	
 	public ImageCalculator( final Image<S> image1, final Image<T> image2, final ImageFactory<U> factory, final Function<S,T,U> function )
 	{
-		this( image1, image2, createFromFactory( factory, image1.getDimensions() ), function );
+		this( image1, image2, createImageFromFactory( factory, image1.getDimensions() ), function );
 	}
 	
 	@Override
@@ -143,7 +143,7 @@ public class ImageCalculator<S extends Type<S>, T extends Type<T>, U extends Typ
 		
 		processingTime = System.currentTimeMillis() - startTime;
         
-		return false;
+		return true;
 	}
 
 	@Override
@@ -152,7 +152,7 @@ public class ImageCalculator<S extends Type<S>, T extends Type<T>, U extends Typ
 	@Override
 	public long getProcessingTime() { return processingTime; }
 	
-	protected static <U extends Type<U>> Image<U> createFromFactory( final ImageFactory<U> factory, final int[] size )
+	protected static <U extends Type<U>> Image<U> createImageFromFactory( final ImageFactory<U> factory, final int[] size )
 	{
 		if ( factory == null || size == null )
 			return null;
