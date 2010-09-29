@@ -98,6 +98,10 @@ public class PlanarShortArray implements ShortAccess,
 
   @Override
   public short[] getPlane(int no) {
+  	if (data[no] == null) {
+  		// allocate plane with empty data
+  		data[no] = new short[elementsPerPlane];
+  	}
     return data[no];
   }
 

@@ -98,6 +98,10 @@ public class PlanarCharArray implements CharAccess,
 
   @Override
   public char[] getPlane(int no) {
+  	if (data[no] == null) {
+  		// allocate plane with empty data
+  		data[no] = new char[elementsPerPlane];
+  	}
     return data[no];
   }
 

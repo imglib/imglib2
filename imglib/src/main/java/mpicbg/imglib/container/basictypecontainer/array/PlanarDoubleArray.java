@@ -98,6 +98,10 @@ public class PlanarDoubleArray implements DoubleAccess,
 
   @Override
   public double[] getPlane(int no) {
+  	if (data[no] == null) {
+  		// allocate plane with empty data
+  		data[no] = new double[elementsPerPlane];
+  	}
     return data[no];
   }
 

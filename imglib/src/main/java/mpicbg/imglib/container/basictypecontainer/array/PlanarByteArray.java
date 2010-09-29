@@ -98,6 +98,10 @@ public class PlanarByteArray implements ByteAccess,
 
   @Override
   public byte[] getPlane(int no) {
+  	if (data[no] == null) {
+  		// allocate plane with empty data
+  		data[no] = new byte[elementsPerPlane];
+  	}
     return data[no];
   }
 

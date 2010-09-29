@@ -98,6 +98,10 @@ public class PlanarIntArray implements IntAccess,
 
   @Override
   public int[] getPlane(int no) {
+  	if (data[no] == null) {
+  		// allocate plane with empty data
+  		data[no] = new int[elementsPerPlane];
+  	}
     return data[no];
   }
 

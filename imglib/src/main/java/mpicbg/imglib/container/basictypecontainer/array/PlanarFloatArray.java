@@ -98,6 +98,10 @@ public class PlanarFloatArray implements FloatAccess,
 
   @Override
   public float[] getPlane(int no) {
+  	if (data[no] == null) {
+  		// allocate plane with empty data
+  		data[no] = new float[elementsPerPlane];
+  	}
     return data[no];
   }
 

@@ -98,6 +98,10 @@ public class PlanarLongArray implements LongAccess,
 
   @Override
   public long[] getPlane(int no) {
+  	if (data[no] == null) {
+  		// allocate plane with empty data
+  		data[no] = new long[elementsPerPlane];
+  	}
     return data[no];
   }
 
