@@ -134,7 +134,7 @@ public class GaussianConvolution< T extends NumericType<T>> implements MultiThre
 		if ( Array3D.class.isInstance( image.getContainer() ) && FloatType.class.isInstance( image.createType() ))
 		{
     		//System.out.println( "GaussianConvolution: Input is instance of Image<Float> using an Array3D, fast forward algorithm");
-    		computeGaussFloatArray3D();
+			computeGaussFloat3D();
     		
     		processingTime = System.currentTimeMillis() - startTime;
     		
@@ -315,6 +315,21 @@ public class GaussianConvolution< T extends NumericType<T>> implements MultiThre
         }
 	}	
 	
+	
+	@SuppressWarnings("unchecked")
+	protected void computeGaussFloat3D()
+	{
+		/* inconvertible types due to javac bug 6548436: final OutOfBoundsStrategyFactory<FloatType> outOfBoundsFactoryFloat = (OutOfBoundsStrategyFactory<FloatType>)outOfBoundsFactory;  */
+		final OutOfBoundsStrategyFactory<FloatType> outOfBoundsFactoryFloat = (OutOfBoundsStrategyFactory)outOfBoundsFactory;
+		
+		/* inconvertible types due to javac bug 6548436: final Image<FloatType> imageFloat = (Image<FloatType>) image; */
+		final Image<FloatType> imageFloat = (Image)image;
+		/* inconvertible types due to javac bug 6548436: final Image<FloatType> convolvedFloat = (Image<FloatType>) convolved; */
+		final Image<FloatType> convolvedFloat = (Image)convolved;
+		
+		computeGaussFloatArray3D( imageFloat, convolvedFloat, outOfBoundsFactoryFloat, kernel, numThreads );
+	}
+	
 	/**
 	 * This class does the gaussian filtering of an image. On the edges of
 	 * the image it does mirror the pixels. It also uses the seperability of
@@ -326,32 +341,22 @@ public class GaussianConvolution< T extends NumericType<T>> implements MultiThre
 	 *
 	 * @author   Stephan Preibisch
 	 */
-
 	@SuppressWarnings("unchecked")
-	public void computeGaussFloatArray3D()
-	{
-		/* inconvertible types due to javac bug 6548436: final OutOfBoundsStrategyFactory<FloatType> outOfBoundsFactoryFloat = (OutOfBoundsStrategyFactory<FloatType>)outOfBoundsFactory;  */
-		final OutOfBoundsStrategyFactory<FloatType> outOfBoundsFactoryFloat = (OutOfBoundsStrategyFactory)outOfBoundsFactory;
+	protected static void computeGaussFloatArray3D( final Image<FloatType> image, final Image<FloatType> convolved, final OutOfBoundsStrategyFactory<FloatType> outOfBoundsFactory, final double[][] kernel, final int numThreads )
+	{		
+		final FloatArray inputArray = (FloatArray) ( (DirectAccessContainer<FloatType, FloatAccess>) image.getContainer() ).update( null );
+		final FloatArray outputArray = (FloatArray) ( (DirectAccessContainer<FloatType, FloatAccess>) convolved.getContainer() ).update( null );
 		
-		/* inconvertible types due to javac bug 6548436: final Image<FloatType> imageFloat = (Image<FloatType>) image; */
-		final Image<FloatType> imageFloat = (Image)image;
-		/* inconvertible types due to javac bug 6548436: final Image<FloatType> convolvedFloat = (Image<FloatType>) convolved; */
-		final Image<FloatType> convolvedFloat = (Image)convolved;
+		final Array3D input = (Array3D) image.getContainer();
+		final Array3D output = (Array3D) convolved.getContainer();
 		
-		final FloatArray inputArray = (FloatArray) ( (DirectAccessContainer<FloatType, FloatAccess>) imageFloat.getContainer() ).update( null );
-		final FloatArray outputArray = (FloatArray) ( (DirectAccessContainer<FloatType, FloatAccess>) convolvedFloat.getContainer() ).update( null );
-		
-		final Array3D input = (Array3D) imageFloat.getContainer();
-		final Array3D output = (Array3D) convolvedFloat.getContainer();
-		
-  		final int width = imageFloat.getDimension( 0 );
-		final int height = imageFloat.getDimension( 1 );
-		final int depth = imageFloat.getDimension( 2 );
+  		final int width = image.getDimension( 0 );
+		final int height = image.getDimension( 1 );
+		final int depth = image.getDimension( 2 );
 
 		final AtomicInteger ai = new AtomicInteger(0);
 		final Thread[] threads = SimpleMultiThreading.newThreads( numThreads );
-		final int numThreads = threads.length;
-
+		
 		for (int ithread = 0; ithread < threads.length; ++ithread)
 			threads[ithread] = new Thread(new Runnable()
 			{
@@ -366,7 +371,7 @@ public class GaussianConvolution< T extends NumericType<T>> implements MultiThre
 					final int filterSize = kernel[ 0 ].length;
 					final int filterSizeHalf = filterSize / 2;
 					
-					final LocalizableByDimCursor3D<FloatType> it = (LocalizableByDimCursor3D<FloatType>)imageFloat.createLocalizableByDimCursor( outOfBoundsFactoryFloat );
+					final LocalizableByDimCursor3D<FloatType> it = (LocalizableByDimCursor3D<FloatType>)image.createLocalizableByDimCursor( outOfBoundsFactory );
 
 					// fold in x
 					int kernelPos, count;
@@ -424,7 +429,7 @@ public class GaussianConvolution< T extends NumericType<T>> implements MultiThre
 					int kernelPos, count;
 
 					final float[] out =  outputArray.getCurrentStorageArray();
-					final LocalizableByDimCursor3D<FloatType> it = (LocalizableByDimCursor3D<FloatType>)convolvedFloat.createLocalizableByDimCursor( outOfBoundsFactoryFloat );
+					final LocalizableByDimCursor3D<FloatType> it = (LocalizableByDimCursor3D<FloatType>)convolved.createLocalizableByDimCursor( outOfBoundsFactory );
 					final double[] kernel1 = kernel[ 1 ].clone();
 					final int filterSize = kernel[ 1 ].length;
 					final int filterSizeHalf = filterSize / 2;
@@ -498,7 +503,7 @@ public class GaussianConvolution< T extends NumericType<T>> implements MultiThre
 					final int filterSizeHalf = filterSize / 2;
 
 					final float[] out = outputArray.getCurrentStorageArray();
-					final LocalizableByDimCursor3D<FloatType> it = (LocalizableByDimCursor3D<FloatType>)convolvedFloat.createLocalizableByDimCursor( outOfBoundsFactoryFloat );
+					final LocalizableByDimCursor3D<FloatType> it = (LocalizableByDimCursor3D<FloatType>)convolved.createLocalizableByDimCursor( outOfBoundsFactory );
 
 					final int inc = output.getPos(0, 0, 1);
 					final int posLUT[] = new int[kernel1.length];
