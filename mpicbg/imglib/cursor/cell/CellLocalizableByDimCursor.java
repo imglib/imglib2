@@ -179,6 +179,48 @@ public class CellLocalizableByDimCursor<T extends Type<T>> extends CellLocalizab
 	}
 
 	@Override
+	public void fwd()
+	{
+		if ( type.getIndex() < cellMaxI - 1 )
+		{
+			type.incIndex();
+			
+			for ( int d = 0; d < numDimensions; d++ )
+			{
+				if ( position[ d ] < cellDimensions[ d ] + cellOffset[ d ] - 1 )
+				{
+					position[ d ]++;
+					
+					for ( int e = 0; e < d; e++ )
+						position[ e ] = cellOffset[ e ];
+					
+					break;
+				}
+			}
+			
+		}
+		else if (cell < numCells - 1)
+		{
+			cell++;
+			type.updateIndex( 0 );			
+			getCellData(cell);
+			for ( int d = 0; d < numDimensions; d++ )
+				position[ d ] = cellOffset[ d ];
+			
+			// the cell position in "cell space" from the image coordinates 
+			container.getCellPosition( position, cellPosition );			
+			cursor.setPosition( cellPosition );
+		}
+		else
+		{			
+			// we have to run out of the image so that the next hasNext() fails
+			lastCell = -1;						
+			type.updateIndex( cellMaxI );
+			cell = numCells;
+		}
+	}	
+	
+	@Override
 	public void reset()
 	{
 		if ( cellEnd == null )
@@ -190,12 +232,15 @@ public class CellLocalizableByDimCursor<T extends Type<T>> extends CellLocalizab
 		isClosed = false;
 		
 		position[ 0 ] = -1;
-		
+		cellPosition[ 0 ] = 0;
+	
 		for ( int d = 1; d < numDimensions; d++ )
 		{
 			position[ d ] = 0;
 			cellPosition[ d ] = 0;
 		}
+
+		cursor.setPosition( cellPosition );
 		
 		type.updateContainer( this );
 	}

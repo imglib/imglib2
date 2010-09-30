@@ -86,13 +86,16 @@ public class CellLocalizableByDimOutOfBoundsCursor<T extends Type<T>> extends Ce
 		isOutOfBounds = false;
 		
 		position[ 0 ] = -1;
+		cellPosition[ 0 ] = 0;
 		
 		for ( int d = 1; d < numDimensions; d++ )
 		{
 			position[ d ] = 0;
 			cellPosition[ d ] = 0;
 		}
-		
+	
+		cursor.setPosition( cellPosition );
+
 		type.updateContainer( this );
 	}
 
@@ -125,6 +128,10 @@ public class CellLocalizableByDimOutOfBoundsCursor<T extends Type<T>> extends Ce
 				getCellData(cell);
 				for ( int d = 0; d < numDimensions; d++ )
 					position[ d ] = cellOffset[ d ];
+				
+				// the cell position in "cell space" from the image coordinates 
+				container.getCellPosition( position, cellPosition );
+				cursor.setPosition( cellPosition );
 			}
 			else
 			{
@@ -244,7 +251,7 @@ public class CellLocalizableByDimOutOfBoundsCursor<T extends Type<T>> extends Ce
 			isOutOfBounds = true;
 			lastCell = -1;						
 			cell = numCells;
-			position[0]++;
+			position[ dim ]++;
 			outOfBoundsStrategy.initOutOfBOunds(  );
 		}
 	}
@@ -301,7 +308,7 @@ public class CellLocalizableByDimOutOfBoundsCursor<T extends Type<T>> extends Ce
 			isOutOfBounds = true;
 			lastCell = -1;						
 			cell = numCells;
-			position[0]++;
+			position[ dim ]--;
 			outOfBoundsStrategy.initOutOfBOunds(  );			
 		}
 	}
