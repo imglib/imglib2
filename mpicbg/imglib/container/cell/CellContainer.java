@@ -163,7 +163,7 @@ public class CellContainer< T extends Type< T >, A extends ArrayDataAccess< A > 
 
 	public void getCellPosition( final int[] position, final int[] cellPos )
 	{
-		for ( int d = 0; d < numDimensions; d++ )
+		for ( int d = 0; d < numDimensions; ++d )
 			cellPos[ d ] = position[ d ] / cellSize[ d ];
 	}
 

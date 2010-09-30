@@ -96,10 +96,10 @@ public class ArrayPositionableRasterSampler< T extends Type< T > > extends Abstr
 	@Override
 	public void setPosition( final int[] position )
 	{
-		type.updateIndex( container.positionToIndex( position ) );
-		
 		for ( int d = 0; d < numDimensions; ++d )
 			this.position[ d ] = position[ d ];
+		
+		type.updateIndex( container.positionToIndex( this.position ) );
 	}
 	
 	@Override
@@ -115,6 +115,7 @@ public class ArrayPositionableRasterSampler< T extends Type< T > > extends Abstr
 	public void setPosition( final int position, final int dim )
 	{
 		this.position[ dim ] = position;
+		
 		type.updateIndex( container.positionToIndex( this.position ) );
 	}
 

@@ -176,7 +176,8 @@ public class CellPositionableRasterSampler< T extends Type< T > > extends Abstra
 			position[ dim ]++;	
 		}
 		else
-		{	
+		{
+			cursor.fwd( dim );
 			if ( cellPosition[ dim ] < numCellsDim[ dim ] - 2 )
 			{
 				// next cell in dim direction is not the last one
@@ -273,7 +274,8 @@ public class CellPositionableRasterSampler< T extends Type< T > > extends Abstra
 	public void bck( final int dim )
 	{
 		if ( position[ dim ] == cellOffset[ dim ])
-		{	
+		{
+			cursor.bck( dim );
 			cellIndex -= cellStep[ dim ];
 
 			if ( cellPosition[ dim ] == numCellsDim[ dim ] - 1 && numCells != 1)

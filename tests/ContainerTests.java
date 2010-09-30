@@ -37,17 +37,17 @@ public class ContainerTests
 			{  14,  21,  13,  9,  12 }
 		}; 
 	
-//	/**
-//	 * Test only the ArrayContainers
-//	 */
-//	@Test public void testArrayContainer()
-//	{
-//		for ( int i = 0; i < dim.length; ++i )
-//		{
-//			assertTrue( "ArrayContainer failed for: dim=" + MathLib.printCoordinates( dim[ i ] ), 
-//			            testContainer( dim[ i ], new ArrayContainerFactory(), new ArrayContainerFactory() ) );
-//		}
-//	}
+	/**
+	 * Test only the ArrayContainers
+	 */
+	@Test public void testArrayContainer()
+	{
+		for ( int i = 0; i < dim.length; ++i )
+		{
+			assertTrue( "ArrayContainer failed for: dim=" + MathLib.printCoordinates( dim[ i ] ), 
+			            testContainer( dim[ i ], new ArrayContainerFactory(), new ArrayContainerFactory() ) );
+		}
+	}
 
 	/**
 	 * Test CellContainer
@@ -253,7 +253,6 @@ public class ContainerTests
 				
 				t1.set( t2 );
 				
-				System.out.println( ( i % 7 == 0 ? "setPosition() " : "moveTo() " ) + MathLib.printCoordinates( pos ) );
 			}
 		}
 		catch ( ArrayIndexOutOfBoundsException e ){ System.err.println( ( i % 7 == 0 ? "setPosition() " : "moveTo() " ) + MathLib.printCoordinates( pos ) ); e.printStackTrace(); System.exit( 1 ); }

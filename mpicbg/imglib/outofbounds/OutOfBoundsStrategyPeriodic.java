@@ -257,17 +257,8 @@ public class OutOfBoundsStrategyPeriodic< T extends Type< T > > implements OutOf
 	@Override
 	public void moveTo( final int[] position )
 	{
-		String s = MathLib.printCoordinates( this.position ) + " -> ";
-		final int[] oobp = new int[ numDimensions ];
-		outOfBoundsPositionable.localize( oobp );
-		String o = MathLib.printCoordinates( oobp ) + " -> ";
 		for ( int d = 0; d < numDimensions; ++d )
 			move( position[ d ] - this.position[ d ], d );
-		
-		s += MathLib.printCoordinates( this.position );
-		outOfBoundsPositionable.localize( oobp );
-		o += MathLib.printCoordinates( oobp );
-		System.out.println( "OOBP: " + s + "   " + o );
 	}
 	
 	@Override
