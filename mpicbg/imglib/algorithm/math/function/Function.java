@@ -18,7 +18,7 @@ package mpicbg.imglib.algorithm.math.function;
 
 import mpicbg.imglib.type.Type;
 
-public interface Function< S extends Type<S>, T extends Type<T>, U extends Type<U> >
+public interface Function< A extends Type<A>, B extends Type<B>, C extends Type<C> >
 {
-	public void compute( S input1, T input2, U output );
+	public void compute( A input1, B input2, C output );
 }

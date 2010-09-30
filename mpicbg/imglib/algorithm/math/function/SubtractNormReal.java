@@ -18,7 +18,7 @@ package mpicbg.imglib.algorithm.math.function;
 
 import mpicbg.imglib.type.numeric.RealType;
 
-public class SubtractNormReal<S extends RealType<S>, T extends RealType<T>, U extends RealType<U>> implements Function<S,T,U>
+public class SubtractNormReal< A extends RealType<A>, B extends RealType<B>, C extends RealType<C> > implements Function< A, B, C >
 {
 	final double normalizationFactor;
 	
@@ -28,7 +28,7 @@ public class SubtractNormReal<S extends RealType<S>, T extends RealType<T>, U ex
 	}
 	
 	@Override
-	public void compute( final S input1, final T input2, final U output )
+	public void compute( final A input1, final B input2, final C output )
 	{
 		output.setReal( ( input1.getRealDouble() - input2.getRealDouble() ) * normalizationFactor );	
 	}
