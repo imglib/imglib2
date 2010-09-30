@@ -443,7 +443,13 @@ public class Image<T extends Type<T>> implements ImageProperties, Dimensionality
 	public boolean addAll( final Collection<? extends T> c ) { throw new UnsupportedOperationException( "Image.addAll(): not supported." ); }
 
 	@Override
-	public void clear() { this.close(); }
+	public void clear() 
+	{
+		final T zeroValue = this.createType();
+		
+		for ( final T type : this )
+			type.set( zeroValue );
+	}
 
 	@Override
 	public boolean contains( final Object o )  { throw new UnsupportedOperationException( "Image.contains(): not supported." ); }
