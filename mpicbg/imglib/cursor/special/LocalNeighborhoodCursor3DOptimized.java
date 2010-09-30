@@ -29,6 +29,7 @@
  */
 package mpicbg.imglib.cursor.special;
 
+import mpicbg.imglib.cursor.LocalizableByDimCursor;
 import mpicbg.imglib.cursor.LocalizableByDimCursor3D;
 import mpicbg.imglib.type.Type;
 
@@ -47,6 +48,8 @@ public class LocalNeighborhoodCursor3DOptimized<T extends Type<T>> extends Local
 		this.z = cursor.getZ();
 	}
 	
+	public LocalizableByDimCursor<T> getParentCursor() { return cursor; }
+
 	@Override
 	public void reset()
 	{

@@ -113,6 +113,8 @@ public class LocalNeighborhoodCursor<T extends Type<T>> extends CursorImpl<T>
 		cursor.moveTo( tmp );		
 	}
 	
+	public LocalizableByDimCursor<T> getParentCursor() { return cursor; }
+	
 	public int getRelativePosition( final int d ) { return neigborhoodCursor.getPosition( d ); }
 	
 	@Override
