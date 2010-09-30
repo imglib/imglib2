@@ -76,7 +76,7 @@ public class SquareTest {
     ImagePlus imp = null;
     Container<T> c = img.getContainer();
     if (c instanceof ImagePlusContainer<?, ?>) {
-      ImagePlusContainer<T, ?> ipc = (ImagePlusContainer<T, ?>) c;
+      ImagePlusContainer<?, ?> ipc = (ImagePlusContainer<?, ?>) c;
       try {
         imp = ipc.getImagePlus();
       }
