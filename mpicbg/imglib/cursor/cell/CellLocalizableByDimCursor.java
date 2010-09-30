@@ -211,6 +211,7 @@ public class CellLocalizableByDimCursor<T extends Type<T>> extends CellLocalizab
 		}
 		else
 		{	
+			cursor.fwd( dim );
 			if ( cellPosition[ dim ] < numCellsDim[ dim ] - 2 )
 			{
 				// next cell in dim direction is not the last one
@@ -296,7 +297,8 @@ public class CellLocalizableByDimCursor<T extends Type<T>> extends CellLocalizab
 			position[ dim ]--;	
 		}
 		else
-		{	
+		{
+			cursor.bck( dim );
 			if ( cellPosition[ dim ] == numCellsDim[ dim ] - 1 && numCells != 1)
 			{
 				// current cell is the last one, so we cannot propagate the i

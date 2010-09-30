@@ -31,6 +31,7 @@ package mpicbg.imglib.container.cell;
 
 import java.util.ArrayList;
 
+import mpicbg.imglib.container.Container;
 import mpicbg.imglib.container.ContainerFactory;
 import mpicbg.imglib.container.DirectAccessContainerImpl;
 import mpicbg.imglib.container.basictypecontainer.array.ArrayDataAccess;
@@ -208,5 +209,31 @@ public class CellContainer<T extends Type<T>, A extends ArrayDataAccess<A>> exte
 		// create a Cursor using a Type that is linked to the container
 		CellLocalizableByDimOutOfBoundsCursor<T> c = new CellLocalizableByDimOutOfBoundsCursor<T>( this, image, linkedType.duplicateTypeOnSameDirectAccessContainer(), outOfBoundsFactory );
 		return c;
+	}
+
+	@Override
+	public boolean compareStorageContainerCompatibility( final Container<?> container )
+	{
+		if ( compareStorageContainerDimensions( container ))
+		{			
+			if ( getFactory().getClass().isInstance( container.getFactory() ))
+			{
+				final CellContainer<?,?> otherCellContainer = (CellContainer<?,?>)container;
+				
+				for ( int d = 0; d < numDimensions; ++d )
+					if ( this.getCellSize( d ) != otherCellContainer.getCellSize( d ) )
+						return false;
+				
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
+		else
+		{
+			return false;
+		}
 	}	
 }

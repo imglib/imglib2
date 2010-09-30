@@ -29,6 +29,7 @@
  */
 package mpicbg.imglib.container.array;
 
+import mpicbg.imglib.container.Container;
 import mpicbg.imglib.container.DirectAccessContainerImpl;
 import mpicbg.imglib.container.basictypecontainer.DataAccess;
 import mpicbg.imglib.cursor.Cursor;
@@ -128,5 +129,21 @@ public class Array<T extends Type<T>, A extends DataAccess> extends DirectAccess
 	}
 
 	@Override
-	public void close() { data.close();	}	
+	public void close() { data.close();	}
+
+	@Override
+	public boolean compareStorageContainerCompatibility( final Container<?> container )
+	{
+		if ( compareStorageContainerDimensions( container ))
+		{			
+			if ( getFactory().getClass().isInstance( container.getFactory() ))
+				return true;
+			else
+				return false;
+		}
+		else
+		{
+			return false;
+		}
+	}
 }

@@ -214,6 +214,8 @@ public class CellLocalizableByDimOutOfBoundsCursor<T extends Type<T>> extends Ce
 		}
 		else if ( cellPosition[ dim ] < numCellsDim[ dim ] - 2 )
 		{
+			cursor.fwd( dim );
+			
 			// next cell in dim direction is not the last one
 			cellPosition[ dim ]++;
 			cell += cellStep[ dim ];
@@ -226,6 +228,8 @@ public class CellLocalizableByDimOutOfBoundsCursor<T extends Type<T>> extends Ce
 		} 
 		else if ( cellPosition[ dim ] == numCellsDim[ dim ] - 2 ) 
 		{
+			cursor.fwd( dim );
+			
 			// next cell in dim direction is the last one, we cannot propagte array index i					
 			cellPosition[ dim ]++;
 			cell += cellStep[ dim ];
@@ -266,6 +270,8 @@ public class CellLocalizableByDimOutOfBoundsCursor<T extends Type<T>> extends Ce
 		}
 		else if ( cellPosition[ dim ] == numCellsDim[ dim ] - 1 && numCells != 1)
 		{
+			cursor.bck( dim );
+			
 			// current cell is the last one, so we cannot propagate the i
 			cellPosition[ dim ]--;
 			cell -= cellStep[ dim ];
@@ -277,6 +283,8 @@ public class CellLocalizableByDimOutOfBoundsCursor<T extends Type<T>> extends Ce
 		}
 		else if ( cellPosition[ dim ] > 0 )
 		{
+			cursor.bck( dim );
+
 			// current cell in dim direction is not the last one
 			cellPosition[ dim ]--;
 			cell -= cellStep[ dim ];

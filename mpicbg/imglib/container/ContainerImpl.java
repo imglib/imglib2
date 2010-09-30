@@ -119,6 +119,7 @@ public abstract class ContainerImpl<T extends Type<T>> implements Container<T>
 		return true;
 	}		
 
+	/*
 	@Override
 	public boolean compareStorageContainerCompatibility( final Container<?> container )
 	{
@@ -134,5 +135,5 @@ public abstract class ContainerImpl<T extends Type<T>> implements Container<T>
 			return false;
 		}
 	}		
-	
+	*/
 }

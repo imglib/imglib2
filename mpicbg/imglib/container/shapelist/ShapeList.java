@@ -30,6 +30,7 @@ package mpicbg.imglib.container.shapelist;
 import java.awt.Shape;
 import java.util.ArrayList;
 
+import mpicbg.imglib.container.Container;
 import mpicbg.imglib.container.ContainerImpl;
 import mpicbg.imglib.cursor.shapelist.ShapeListLocalizableByDimCursor;
 import mpicbg.imglib.cursor.shapelist.ShapeListLocalizableByDimOutOfBoundsCursor;
@@ -183,5 +184,21 @@ public class ShapeList< T extends Type< T > > extends ContainerImpl< T >
 			f *= dim[ d ];
 		}
 		return getShapeType( position[ 0 ], position[ 1 ], p );
+	}
+
+	@Override
+	public boolean compareStorageContainerCompatibility( final Container<?> container )
+	{
+		if ( compareStorageContainerDimensions( container ))
+		{			
+			if ( getFactory().getClass().isInstance( container.getFactory() ))
+				return true;
+			else
+				return false;
+		}
+		else
+		{
+			return false;
+		}
 	}
 }
