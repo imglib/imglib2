@@ -55,7 +55,7 @@ public class UnsignedIntType extends GenericIntType<UnsignedIntType>
 		return getCodedSignedInt( unsignedInt );
 	}
 	public static int getCodedSignedInt( final long unsignedInt ) { return (int)( unsignedInt & 0xffffffff ); }
-	public static long getUnsignedInt( final int signedInt ) { return signedInt & 0xffffffff; }
+	public static long getUnsignedInt( final int signedInt ) { return ((long)signedInt) & 0xffffffff; }
 
 	@Override
 	public DirectAccessContainer<UnsignedIntType, ? extends IntAccess> createSuitableDirectAccessContainer( final DirectAccessContainerFactory storageFactory, final int dim[] )
