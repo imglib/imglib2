@@ -40,7 +40,7 @@ import mpicbg.imglib.type.numeric.NumericType;
 
 public class DifferenceOfGaussian < A extends Type<A>, B extends NumericType<B> > implements Algorithm, MultiThreaded, Benchmark
 {
-	static enum SpecialPoint { NONE, MIN, MAX };
+	public static enum SpecialPoint { NONE, MIN, MAX };
 	
 	final Image<A> image;
 	final ImageFactory<B> factory;
