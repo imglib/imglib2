@@ -21,6 +21,9 @@ import java.util.List;
 import javax.media.j3d.Transform3D;
 import javax.vecmath.Matrix4f;
 
+import mpicbg.imglib.type.ComparableType;
+import mpicbg.imglib.type.Type;
+import mpicbg.imglib.type.numeric.AdvancedMathType;
 import mpicbg.models.AffineModel3D;
 import mpicbg.models.CoordinateTransform;
 
@@ -362,7 +365,7 @@ public class MathLib
 	}
 	
     /**
-     * This class creates a gaussian kernel
+     * This method creates a gaussian kernel
      *
      * @param sigma Standard Derivation of the gaussian function
      * @param normalize Normalize integral of gaussian function to 1 or not...
@@ -408,6 +411,103 @@ public class MathLib
 
             return gaussianKernel;
     }
+
+    /**
+     * This method creates a gaussian kernel
+     *
+     * @param sigma Standard Derivation of the gaussian function in the desired {@link Type}
+     * @param kernelSize The antipated size of the kernel, for a 3-sigma kernel size suggestion call MathLib.getSuggestedKernelDiameter( double sigma )
+     * @param normalize Normalize integral of gaussian function to 1 or not...
+     * @return T[] The gaussian kernel
+     *
+     * @author  Stephan Preibisch & Stephan Saalfeld
+     */
+    public static < T extends AdvancedMathType<T> > T[] createGaussianKernel1D( final T sigma, int kernelSize, final boolean normalize )
+    {
+            final T[] gaussianKernel;
+            
+            final T zero = sigma.createVariable();
+            final T two = sigma.createVariable();
+            final T one = sigma.createVariable();
+            final T minusOne = sigma.createVariable();
+            final T two_sq_sigma = zero.createVariable(); 
+            final T sum = sigma.createVariable();
+            final T value = sigma.createVariable();
+            final T xPos = sigma.createVariable();
+            
+            zero.setZero();
+            one.setOne();
+            
+            two.setOne();            
+            two.add( one );
+            
+            minusOne.setZero();
+            minusOne.sub( one );
+
+            if ( sigma.compareTo( zero ) <= 0 )
+            {
+            		kernelSize = 3;
+                    gaussianKernel = zero.createArray1D( 3 );
+                    gaussianKernel[ 1 ].set( one );
+            }
+            else
+            {
+            		// kernelsize has to be at least 3
+            		kernelSize = Math.max( 3, kernelSize );
+            		
+            		// kernelsize has to be odd
+            		if ( kernelSize % 2 == 0 )
+            			++kernelSize;
+            		
+                    // two_sq_sigma = 2 * sigma * sigma;
+                    two_sq_sigma.set( two );
+                    two_sq_sigma.mul( sigma );
+                    two_sq_sigma.mul( sigma );
+                    
+                    gaussianKernel = zero.createArray1D( kernelSize );
+                    
+                    for ( int i = 0; i < gaussianKernel.length; ++i )
+                    	gaussianKernel[ i ] = zero.createVariable();
+
+                    // set the xPos to kernelSize/2
+                    xPos.setZero();
+                    for ( int x = 1; x <= kernelSize / 2; ++x )
+                    	xPos.add( one );
+                    	
+                    	
+                    for ( int x = kernelSize / 2; x >= 0; --x )
+                    {
+                        //final double val = Math.exp( -(x * x) / two_sq_sigma );
+                    	value.set( xPos );
+                    	value.mul( xPos );
+                    	value.mul( minusOne );
+                    	value.div( two_sq_sigma );
+                    	value.exp();
+                    		
+                        gaussianKernel[ kernelSize / 2 - x ].set( value );
+                        gaussianKernel[ kernelSize / 2 + x ].set( value );
+                        
+                        xPos.sub( one );
+                    }
+            }
+
+            if (normalize)
+            {
+                    sum.setZero();
+                    
+                    for ( final T val : gaussianKernel )
+                            sum.add(  val );
+
+                    for (int i = 0; i < gaussianKernel.length; ++i)
+                            gaussianKernel[ i ].div( sum );
+            }
+
+            for ( int i = 0; i < gaussianKernel.length; ++i )
+            	System.out.println( gaussianKernel[ i ] );
+            
+            return gaussianKernel;
+    }
+    
     
     public static int getSuggestedKernelDiameter( final double sigma )
     {
@@ -552,6 +652,30 @@ public class MathLib
 		}
 	}
 	
+	public static <T extends ComparableType<T>> T max( final T value1, final T value2 )
+	{
+		final T result = value1.createVariable();
+		
+		if( value1.compareTo( value2 ) >= 0 )
+			result.set( value1 );
+		else
+			result.set( value2 );
+		
+		return result;
+	}
+
+	public static <T extends ComparableType<T>> T min( final T value1, final T value2 )
+	{
+		final T result = value1.createVariable();
+		
+		if( value1.compareTo( value2 ) <= 0 )
+			result.set( value1 );
+		else
+			result.set( value2 );
+		
+		return result;
+	}
+
 	public static boolean[][] getRecursiveCoordinates( final int numDimensions )
 	{
 		boolean[][] positions = new boolean[ MathLib.pow( 2, numDimensions ) ][ numDimensions ];
