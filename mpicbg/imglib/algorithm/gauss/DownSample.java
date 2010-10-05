@@ -122,7 +122,7 @@ public class DownSample<T extends RealType<T>> implements MultiThreaded, OutputA
 			sigma[ d ] = Math.sqrt( s * s - sourceSigma * sourceSigma );
 		}
 		
-		final GaussianConvolution<T> gauss = new GaussianConvolutionRealType<T>( input, new OutOfBoundsStrategyMirrorFactory<T>(), sigma );
+		final GaussianConvolution<T> gauss = new GaussianConvolution<T>( input, new OutOfBoundsStrategyMirrorFactory<T>(), sigma );
 		gauss.setNumThreads( getNumThreads() );
 		
 		if ( !gauss.checkInput() || !gauss.process() )

@@ -1,333 +1,82 @@
-/**
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License 2
- * as published by the Free Software Foundation.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
- * 
- * @author Stephan Preibisch
- */
 package mpicbg.imglib.algorithm.gauss;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
-import mpicbg.imglib.algorithm.Benchmark;
-import mpicbg.imglib.algorithm.MultiThreaded;
-import mpicbg.imglib.algorithm.OutputAlgorithm;
-import mpicbg.imglib.algorithm.math.MathLib;
 import mpicbg.imglib.container.DirectAccessContainer;
 import mpicbg.imglib.container.array.Array3D;
 import mpicbg.imglib.container.basictypecontainer.FloatAccess;
 import mpicbg.imglib.container.basictypecontainer.array.FloatArray;
-import mpicbg.imglib.cursor.LocalizableByDimCursor;
 import mpicbg.imglib.cursor.LocalizableByDimCursor3D;
-import mpicbg.imglib.cursor.LocalizableCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.multithreading.SimpleMultiThreading;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
 import mpicbg.imglib.type.numeric.NumericType;
 import mpicbg.imglib.type.numeric.real.FloatType;
 
-public class GaussianConvolution< T extends NumericType<T>> implements MultiThreaded, OutputAlgorithm<T>, Benchmark
-{	
-	final Image<T> image, convolved;
-	final OutOfBoundsStrategyFactory<T> outOfBoundsFactory;
-	final int numDimensions;
-	final double[] sigma;
-    final double[][] kernel;
-
-	long processingTime;
-	int numThreads;
-	String errorMessage = "";
-
+public class GaussianConvolution < T extends NumericType<T> > extends GaussianConvolution3<T, T, T>
+{
 	public GaussianConvolution( final Image<T> image, final OutOfBoundsStrategyFactory<T> outOfBoundsFactory, final double[] sigma )
 	{
-		this.image = image;
-		this.convolved = image.createNewImage();
-		this.sigma = sigma;
-		this.processingTime = -1;
-		setNumThreads();
-		
-		this.outOfBoundsFactory = outOfBoundsFactory;
-		this.numDimensions = image.getNumDimensions();
-
-		this.kernel = new double[ numDimensions ][];
-		
-		for ( int d = 0; d < numDimensions; ++d )
-			this.kernel[ d ] = MathLib.createGaussianKernel1DDouble( sigma[ d ], true );
+		super( image, null, null, outOfBoundsFactory, null, null, sigma );
 	}
-
+	
 	public GaussianConvolution( final Image<T> image, final OutOfBoundsStrategyFactory<T> outOfBoundsFactory, final double sigma )
 	{
-		this ( image, outOfBoundsFactory, createArray(image, sigma));
+		this( image, outOfBoundsFactory, createArray( image, sigma ) );
 	}
 	
-	protected static double[] createArray( final Image<?> image, final double sigma )
+	protected Image<T> getTempImage1( final int currentDim )
 	{
-		final double[] sigmas = new double[ image.getNumDimensions() ];
+		if ( currentDim == 0 )
+			temp1 = image;
+		else if ( currentDim == 1 )
+			temp1 = image.createNewImage();
 		
-		for ( int d = 0; d < image.getNumDimensions(); ++d )
-			sigmas[ d ] = sigma;
-		
-		return sigmas;
+		return temp1;
 	}
-	
-	@Override
-	public long getProcessingTime() { return processingTime; }
-	
-	@Override
-	public void setNumThreads() { this.numThreads = Runtime.getRuntime().availableProcessors(); }
 
-	@Override
-	public void setNumThreads( final int numThreads ) { this.numThreads = numThreads; }
-
-	@Override
-	public int getNumThreads() { return numThreads; }	
-	
-	/**
-	 * The sigma the image was convolved with
-	 * @return - double sigma
-	 */
-	public double[] getSigmas() { return sigma; }
-	
-	public int getKernelSize( final int dim ) { return kernel[ dim ].length; }
-	
-	@Override
-	public Image<T> getResult() { return convolved;	}
-
-	@Override
-	public boolean checkInput() 
+	protected Image<T> getTempImage2( final int currentDim )
 	{
-		if ( errorMessage.length() > 0 )
-		{
-			return false;
-		}
-		else if ( image == null )
-		{
-			errorMessage = "GaussianConvolution: [Image<T> img] is null.";
-			return false;
-		}
-		else if ( outOfBoundsFactory == null )
-		{
-			errorMessage = "GaussianConvolution: [OutOfBoundsStrategyFactory<T>] is null.";
-			return false;
-		}
-		else
-			return true;
+		if ( currentDim == 0 )
+			temp2 = image.createNewImage();
+		
+		return temp2;
 	}
-
-	@Override
-	public String getErrorMessage() { return errorMessage; }
-
-	@Override
-	public boolean process() 
-	{		
-		final long startTime = System.currentTimeMillis();
 	
+	protected Image<T> getConvolvedImage()
+	{
+        final Image<T> output;
+        
+        if ( numDimensions % 2 == 0 )
+        {
+        	output = temp1;
+            
+        	// close other temporary datastructure
+            temp2.close();
+        }
+        else
+        {
+        	output = temp2;
+
+        	// close other temporary datastructure
+            temp1.close();
+        }
+		
+		return output;		
+	}
+	
+	protected boolean processWithOptimizedMethod()
+	{
 		if ( Array3D.class.isInstance( image.getContainer() ) && FloatType.class.isInstance( image.createType() ))
 		{
-    		//System.out.println( "GaussianConvolution: Input is instance of Image<Float> using an Array3D, fast forward algorithm");
-			computeGaussFloat3D();
-    		
-    		processingTime = System.currentTimeMillis() - startTime;
-    		
+ 			convolved = computeGaussFloatArray3D( image, outOfBoundsFactory, kernel, getNumThreads() );
+    		    		
     		return true;
 		}
-    	
-        final Image<T> temp = image.createNewImage();        
-    	final long imageSize = image.getNumPixels();
-
-        //
-        // Folding loop
-        //
-        for ( int dim = 0; dim < numDimensions; dim++ )
-        {
-         	final int currentDim = dim;
-        	
-			final AtomicInteger ai = new AtomicInteger(0);					
-	        final Thread[] threads = SimpleMultiThreading.newThreads( numThreads );
-	        
-	        final long threadChunkSize = imageSize / threads.length;
-	        final long threadChunkMod = imageSize % threads.length;
-	
-	        for (int ithread = 0; ithread < threads.length; ++ithread)
-	            threads[ithread] = new Thread(new Runnable()
-	            {
-	                public void run()
-	                {
-	                	// Thread ID
-	                	final int myNumber = ai.getAndIncrement();
-
-	                	//System.out.println("Thread " + myNumber + " folds in dimension " + currentDim);
-
-	                	final LocalizableByDimCursor<T> inputIterator;
-	                	final LocalizableCursor<T> outputIterator;
-	                	
-	                	if ( numDimensions % 2 == 0 ) // even number of dimensions ( 2d, 4d, 6d, ... )
-	                	{
-	                		if ( currentDim == 0 ) // first dimension convolve to the temporary image
-	                		{
-			                	inputIterator = image.createLocalizableByDimCursor( outOfBoundsFactory );
-			                    outputIterator = temp.createLocalizableCursor();	                			
-	                		}
-	                		else if ( currentDim % 2 == 1 ) // for odd dimension ids we convolve to the output image, because that might be the last convolution  
-	                		{
-			                	inputIterator = temp.createLocalizableByDimCursor( outOfBoundsFactory );
-			                    outputIterator = convolved.createLocalizableCursor();
-	                		}
-	                		else //if ( currentDim % 2 == 0 ) // for even dimension ids we convolve to the temp image, it is not the last convolution for sure
-	                		{
-			                	inputIterator = convolved.createLocalizableByDimCursor( outOfBoundsFactory );
-			                    outputIterator = temp.createLocalizableCursor();
-	                		}	                		
-	                	}
-	                	else // ( numDimensions % 2 != 0 ) // even number of dimensions ( 1d, 3d, 5d, ... )
-	                	{
-	                		if ( currentDim == 0 ) // first dimension convolve to the output image, in the 1d case we are done then already
-	                		{
-			                	inputIterator = image.createLocalizableByDimCursor( outOfBoundsFactory );
-			                    outputIterator = convolved.createLocalizableCursor();	                			
-	                		}
-	                		else if ( currentDim % 2 == 1 ) // for odd dimension ids we convolve to the output image, because that might be the last convolution  
-	                		{
-			                	inputIterator = convolved.createLocalizableByDimCursor( outOfBoundsFactory );
-			                    outputIterator = temp.createLocalizableCursor();
-	                		}
-	                		else //if ( currentDim % 2 == 0 ) // for even dimension ids we convolve to the temp image, it is not the last convolution for sure
-	                		{
-			                	inputIterator = temp.createLocalizableByDimCursor( outOfBoundsFactory );
-			                    outputIterator = convolved.createLocalizableCursor();
-	                		}	 
-	                	}
-	                	
-	                	// move to the starting position of the current thread
-	                	final long startPosition = myNumber * threadChunkSize;
-
-	                    // the last thread may has to run longer if the number of pixels cannot be divided by the number of threads
-	                    final long loopSize;		                    
-	                    if ( myNumber == numThreads - 1 )
-	                    	loopSize = threadChunkSize + threadChunkMod;
-	                    else
-	                    	loopSize = threadChunkSize;
-	                	
-	                    // convolve the image in the current dimension using the given cursors
-	                    float[] kernelF = new float[ kernel[ currentDim ].length ];
-	                    
-	                    for ( int i = 0; i < kernelF.length; ++i )
-	                    	kernelF[ i ] = (float)kernel[ currentDim ][ i ];
-	                    
-	                    convolve( inputIterator, outputIterator, currentDim, kernelF, startPosition, loopSize );
-		                
-		                inputIterator.close();
-		                outputIterator.close();		               
-	                }
-	            });
-	        SimpleMultiThreading.startAndJoin(threads);
-        }
-
-        // close temporary datastructure
-        temp.close();
-        
-        processingTime = System.currentTimeMillis() - startTime;
-        
-        return true;
-	}
-	
-	protected void convolve( final LocalizableByDimCursor<T> inputIterator, final LocalizableCursor<T> outputIterator, 
-															   final int dim, final float[] kernel,
-															   final long startPos, final long loopSize )
-	{		
-    	// move to the starting position of the current thread
-    	outputIterator.fwd( startPos );
-   	 
-        final int filterSize = kernel.length;
-        final int filterSizeMinus1 = filterSize - 1;
-        final int filterSizeHalf = filterSize / 2;
-        final int filterSizeHalfMinus1 = filterSizeHalf - 1;
-        final int numDimensions = inputIterator.getImage().getNumDimensions();
-        
-    	final int iteratorPosition = filterSizeHalf;
-    	
-    	final int[] to = new int[ numDimensions ];
-    	
-    	final T sum = inputIterator.getType().createVariable();
-    	final T tmp = inputIterator.getType().createVariable();
-        
-    	
-        // do as many pixels as wanted by this thread
-        for ( long j = 0; j < loopSize; ++j )
-        {
-        	outputIterator.fwd();			                			                	
-
-        	// set the sum to zero
-        	sum.setZero();
-        	
-        	//
-        	// we move filtersize/2 of the convolved pixel in the input image
-        	//
-        	
-        	// get the current positon in the output image
-    		outputIterator.getPosition( to );
-    		
-    		// position in the input image is filtersize/2 to the left
-    		to[ dim ] -= iteratorPosition;
-    		
-    		// set the input cursor to this very position
-    		inputIterator.setPosition( to );
-
-    		// iterate over the kernel length across the input image
-        	for ( int f = -filterSizeHalf; f <= filterSizeHalfMinus1; ++f )
-    		{
-        		// get value from the input image
-        		tmp.set( inputIterator.getType() );
-
-         		// multiply the kernel
-        		tmp.mul( kernel[ f + filterSizeHalf ] );
-        		
-        		// add up the sum
-        		sum.add( tmp );
-        		
-        		// move the cursor forward for the next iteration
-    			inputIterator.fwd( dim );
-    		}
-
-        	//
-        	// for the last pixel we do not move forward
-        	//
-        	    		
-    		// get value from the input image
-    		tmp.set( inputIterator.getType() );
-    		    		
-    		// multiply the kernel
-    		tmp.mul( kernel[ filterSizeMinus1 ] );
-    		
-    		// add up the sum
-    		sum.add( tmp );
-    		    		
-            outputIterator.getType().set( sum );			                		        	
-        }
-	}	
-	
-	
-	@SuppressWarnings("unchecked")
-	protected void computeGaussFloat3D()
-	{
-		/* inconvertible types due to javac bug 6548436: final OutOfBoundsStrategyFactory<FloatType> outOfBoundsFactoryFloat = (OutOfBoundsStrategyFactory<FloatType>)outOfBoundsFactory;  */
-		final OutOfBoundsStrategyFactory<FloatType> outOfBoundsFactoryFloat = (OutOfBoundsStrategyFactory)outOfBoundsFactory;
-		
-		/* inconvertible types due to javac bug 6548436: final Image<FloatType> imageFloat = (Image<FloatType>) image; */
-		final Image<FloatType> imageFloat = (Image)image;
-		/* inconvertible types due to javac bug 6548436: final Image<FloatType> convolvedFloat = (Image<FloatType>) convolved; */
-		final Image<FloatType> convolvedFloat = (Image)convolved;
-		
-		computeGaussFloatArray3D( imageFloat, convolvedFloat, outOfBoundsFactoryFloat, kernel, numThreads );
+		else
+		{
+			return false;
+		}
 	}
 	
 	/**
@@ -342,17 +91,26 @@ public class GaussianConvolution< T extends NumericType<T>> implements MultiThre
 	 * @author   Stephan Preibisch
 	 */
 	@SuppressWarnings("unchecked")
-	protected static void computeGaussFloatArray3D( final Image<FloatType> image, final Image<FloatType> convolved, final OutOfBoundsStrategyFactory<FloatType> outOfBoundsFactory, final double[][] kernel, final int numThreads )
-	{		
-		final FloatArray inputArray = (FloatArray) ( (DirectAccessContainer<FloatType, FloatAccess>) image.getContainer() ).update( null );
+	protected static <T extends NumericType<T>> Image<T> computeGaussFloatArray3D( final Image<T> image, final OutOfBoundsStrategyFactory<T> outOfBoundsFactory, final double[][] kernel, final int numThreads )
+	{
+		/* inconvertible types due to javac bug 6548436: final OutOfBoundsStrategyFactory<FloatType> outOfBoundsFactoryFloat = (OutOfBoundsStrategyFactory<FloatType>)outOfBoundsFactory;  */
+		final OutOfBoundsStrategyFactory<FloatType> outOfBoundsFactoryFloat = (OutOfBoundsStrategyFactory)outOfBoundsFactory;
+
+		/* inconvertible types due to javac bug 6548436: final Image<FloatType> imageFloat = (Image<FloatType>) image; */
+		final Image<FloatType> imageFloat = (Image)image;
+		
+		/* inconvertible types due to javac bug 6548436: final Image<FloatType> convolvedFloat = (Image<FloatType>) convolved; */
+		final Image<FloatType> convolved = imageFloat.createNewImage();
+		
+		final FloatArray inputArray = (FloatArray) ( (DirectAccessContainer<FloatType, FloatAccess>) imageFloat.getContainer() ).update( null );
 		final FloatArray outputArray = (FloatArray) ( (DirectAccessContainer<FloatType, FloatAccess>) convolved.getContainer() ).update( null );
 		
-		final Array3D input = (Array3D) image.getContainer();
+		final Array3D input = (Array3D) imageFloat.getContainer();
 		final Array3D output = (Array3D) convolved.getContainer();
 		
-  		final int width = image.getDimension( 0 );
-		final int height = image.getDimension( 1 );
-		final int depth = image.getDimension( 2 );
+  		final int width = imageFloat.getDimension( 0 );
+		final int height = imageFloat.getDimension( 1 );
+		final int depth = imageFloat.getDimension( 2 );
 
 		final AtomicInteger ai = new AtomicInteger(0);
 		final Thread[] threads = SimpleMultiThreading.newThreads( numThreads );
@@ -371,7 +129,7 @@ public class GaussianConvolution< T extends NumericType<T>> implements MultiThre
 					final int filterSize = kernel[ 0 ].length;
 					final int filterSizeHalf = filterSize / 2;
 					
-					final LocalizableByDimCursor3D<FloatType> it = (LocalizableByDimCursor3D<FloatType>)image.createLocalizableByDimCursor( outOfBoundsFactory );
+					final LocalizableByDimCursor3D<FloatType> it = (LocalizableByDimCursor3D<FloatType>)imageFloat.createLocalizableByDimCursor( outOfBoundsFactoryFloat );
 
 					// fold in x
 					int kernelPos, count;
@@ -429,7 +187,7 @@ public class GaussianConvolution< T extends NumericType<T>> implements MultiThre
 					int kernelPos, count;
 
 					final float[] out =  outputArray.getCurrentStorageArray();
-					final LocalizableByDimCursor3D<FloatType> it = (LocalizableByDimCursor3D<FloatType>)convolved.createLocalizableByDimCursor( outOfBoundsFactory );
+					final LocalizableByDimCursor3D<FloatType> it = (LocalizableByDimCursor3D<FloatType>)convolved.createLocalizableByDimCursor( outOfBoundsFactoryFloat );
 					final double[] kernel1 = kernel[ 1 ].clone();
 					final int filterSize = kernel[ 1 ].length;
 					final int filterSizeHalf = filterSize / 2;
@@ -503,7 +261,7 @@ public class GaussianConvolution< T extends NumericType<T>> implements MultiThre
 					final int filterSizeHalf = filterSize / 2;
 
 					final float[] out = outputArray.getCurrentStorageArray();
-					final LocalizableByDimCursor3D<FloatType> it = (LocalizableByDimCursor3D<FloatType>)convolved.createLocalizableByDimCursor( outOfBoundsFactory );
+					final LocalizableByDimCursor3D<FloatType> it = (LocalizableByDimCursor3D<FloatType>)convolved.createLocalizableByDimCursor( outOfBoundsFactoryFloat );
 
 					final int inc = output.getPos(0, 0, 1);
 					final int posLUT[] = new int[kernel1.length];
@@ -557,5 +315,7 @@ public class GaussianConvolution< T extends NumericType<T>> implements MultiThre
 				}
 			});
 		SimpleMultiThreading.startAndJoin(threads);
-	}	
+		
+		return (Image<T>) convolved;
+	}		
 }
