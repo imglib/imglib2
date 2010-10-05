@@ -16,7 +16,11 @@
  */
 package mpicbg.imglib.algorithm.math;
 
+import java.util.Vector;
+import java.util.concurrent.atomic.AtomicInteger;
+
 import mpicbg.imglib.algorithm.Benchmark;
+import mpicbg.imglib.algorithm.MultiThreaded;
 import mpicbg.imglib.algorithm.OutputAlgorithm;
 import mpicbg.imglib.algorithm.math.function.Converter;
 import mpicbg.imglib.cursor.Cursor;
@@ -24,15 +28,18 @@ import mpicbg.imglib.cursor.LocalizableByDimCursor;
 import mpicbg.imglib.cursor.LocalizableCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.ImageFactory;
+import mpicbg.imglib.multithreading.Chunk;
+import mpicbg.imglib.multithreading.SimpleMultiThreading;
 import mpicbg.imglib.type.Type;
 
-public class ImageConverter< S extends Type<S>, T extends Type<T> > implements OutputAlgorithm<T>, Benchmark
+public class ImageConverter< S extends Type<S>, T extends Type<T> > implements OutputAlgorithm<T>, MultiThreaded, Benchmark
 {
 	final Image<S> image; 
 	final Image<T> output;
 	final Converter<S,T> converter;
 
 	long processingTime;
+	int numThreads;
 	String errorMessage = "";
 	
 	public ImageConverter( final Image<S> image, final Image<T> output, final Converter<S,T> converter )
@@ -40,6 +47,8 @@ public class ImageConverter< S extends Type<S>, T extends Type<T> > implements O
 		this.image = image;
 		this.output = output;
 		this.converter = converter;
+		
+		setNumThreads();
 	}
 	
 	public ImageConverter( final Image<S> image, final ImageFactory<T> factory, final Converter<S,T> converter )
@@ -87,49 +96,102 @@ public class ImageConverter< S extends Type<S>, T extends Type<T> > implements O
 	public boolean process()
 	{
 		final long startTime = System.currentTimeMillis();
+
+		final long imageSize = image.getNumPixels();
+
+		final AtomicInteger ai = new AtomicInteger(0);					
+        final Thread[] threads = SimpleMultiThreading.newThreads( numThreads );
+
+        final Vector<Chunk> threadChunks = SimpleMultiThreading.divideIntoChunks( imageSize, numThreads );
         
-		// check if all container types are comparable so that we can use simple iterators
-		// we assume transivity here
-		if ( image.getContainer().compareStorageContainerCompatibility( output.getContainer() ) )
-		{
-			// we can simply use iterators
-			final Cursor<S> cursorIn = image.createCursor();
-			final Cursor<T> cursorOut = output.createCursor();
-			
-			while ( cursorOut.hasNext() )
-			{
-				cursorIn.fwd();
-				cursorOut.fwd();
-				
-				converter.convert( cursorIn.getType(), cursorOut.getType() );
-			}
-			
-			cursorIn.close();
-			cursorOut.close();
-		}
-		else
-		{
-			// we need a combination of Localizable and LocalizableByDim
-			final LocalizableByDimCursor<S> cursorIn = image.createLocalizableByDimCursor();
-			final LocalizableCursor<T> cursorOut = output.createLocalizableCursor();
-			
-			while ( cursorOut.hasNext() )
-			{
-				cursorOut.fwd();
-				cursorIn.setPosition( cursorOut );
-				
-				converter.convert( cursorIn.getType(), cursorOut.getType() );
-			}
-			
-			cursorIn.close();
-			cursorOut.close();			
-		}
-		
+        final boolean isCompatible = image.getContainer().compareStorageContainerCompatibility( output.getContainer() ); 
+	
+        for (int ithread = 0; ithread < threads.length; ++ithread)
+            threads[ithread] = new Thread(new Runnable()
+            {
+                public void run()
+                {
+                	// Thread ID
+                	final int myNumber = ai.getAndIncrement();
+        
+                	// get chunk of pixels to process
+                	final Chunk myChunk = threadChunks.get( myNumber );
+                	
+					// check if all container types are comparable so that we can use simple iterators
+					// we assume transivity here
+					if (  isCompatible )
+					{
+						// we can simply use iterators
+						computeSimple( myChunk.getStartPosition(), myChunk.getLoopSize() );
+					}
+					else
+					{
+						// we need a combination of Localizable and LocalizableByDim
+						computeAdvanced( myChunk.getStartPosition(), myChunk.getLoopSize() );
+					}
+
+                }
+            });
+        
+        SimpleMultiThreading.startAndJoin( threads );
+        
 		processingTime = System.currentTimeMillis() - startTime;
         
 		return true;
 	}
+	
+	protected void computeSimple( final long startPos, final long loopSize )
+	{
+		final Cursor<S> cursorIn = image.createCursor();
+		final Cursor<T> cursorOut = output.createCursor();
+		
+		// move to the starting position of the current thread
+		cursorIn.fwd( startPos );
+		cursorOut.fwd( startPos );
+    	
+        // do as many pixels as wanted by this thread
+        for ( long j = 0; j < loopSize; ++j )
+        {
+			cursorIn.fwd();
+			cursorOut.fwd();
+			
+			converter.convert( cursorIn.getType(), cursorOut.getType() );
+		}
+		
+		cursorIn.close();
+		cursorOut.close();		
+	}
+	
+	protected void computeAdvanced( final long startPos, final long loopSize )
+	{
+		final LocalizableByDimCursor<S> cursorIn = image.createLocalizableByDimCursor();
+		final LocalizableCursor<T> cursorOut = output.createLocalizableCursor();
+		
+		// move to the starting position of the current thread
+		cursorOut.fwd( startPos );
+    	
+        // do as many pixels as wanted by this thread
+        for ( long j = 0; j < loopSize; ++j )
+        {
+			cursorOut.fwd();
+			cursorIn.setPosition( cursorOut );
+			
+			converter.convert( cursorIn.getType(), cursorOut.getType() );
+		}
+		
+		cursorIn.close();
+		cursorOut.close();					
+	}
 
+	@Override
+	public void setNumThreads() { this.numThreads = Runtime.getRuntime().availableProcessors(); }
+
+	@Override
+	public void setNumThreads( final int numThreads ) { this.numThreads = numThreads; }
+
+	@Override
+	public int getNumThreads() { return numThreads; }	
+	
 	@Override
 	public String getErrorMessage() { return errorMessage; }
 
