@@ -316,6 +316,6 @@ public class GaussianConvolution < T extends NumericType<T> > extends GaussianCo
 			});
 		SimpleMultiThreading.startAndJoin(threads);
 		
-		return (Image<T>) convolved;
+		return (Image) convolved;
 	}		
 }
