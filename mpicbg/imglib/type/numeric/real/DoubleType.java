@@ -35,10 +35,10 @@ import mpicbg.imglib.container.DirectAccessContainerFactory;
 import mpicbg.imglib.container.basictypecontainer.DoubleAccess;
 import mpicbg.imglib.container.basictypecontainer.array.DoubleArray;
 import mpicbg.imglib.cursor.Cursor;
-import mpicbg.imglib.type.numeric.AdvancedMathType;
+import mpicbg.imglib.type.numeric.ExponentialMathType;
 import mpicbg.imglib.type.numeric.RealType;
 
-public class DoubleType extends RealTypeImpl<DoubleType> implements RealType<DoubleType>, AdvancedMathType<DoubleType>
+public class DoubleType extends RealTypeImpl<DoubleType> implements RealType<DoubleType>, ExponentialMathType<DoubleType>
 {
 	// the DirectAccessContainer
 	final DirectAccessContainer<DoubleType, ? extends DoubleAccess> storage;
@@ -123,20 +123,8 @@ public class DoubleType extends RealTypeImpl<DoubleType> implements RealType<Dou
 	public DoubleType clone(){ return new DoubleType( get() ); }
 
 	@Override
-	public void cos() { set( Math.cos( get() ) ); }
-
-	@Override
 	public void exp() { set( Math.exp( get() ) ); }
 
 	@Override
-	public void log() { set( Math.log( get() ) ); }
-
-	@Override
 	public void round() { set( MathLib.round( get() ) ); }
-
-	@Override
-	public void sin() { set( Math.sin( get() ) ); }
-
-	@Override
-	public void tan() { set( Math.tan( get() ) ); }
 }
