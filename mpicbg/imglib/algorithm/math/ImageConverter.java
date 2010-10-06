@@ -100,7 +100,7 @@ public class ImageConverter< S extends Type<S>, T extends Type<T> > implements O
 		final long imageSize = image.getNumPixels();
 
 		final AtomicInteger ai = new AtomicInteger(0);					
-        final Thread[] threads = SimpleMultiThreading.newThreads( numThreads );
+        final Thread[] threads = SimpleMultiThreading.newThreads( getNumThreads() );
 
         final Vector<Chunk> threadChunks = SimpleMultiThreading.divideIntoChunks( imageSize, numThreads );
         
