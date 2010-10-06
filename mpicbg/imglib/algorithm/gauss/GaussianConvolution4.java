@@ -8,38 +8,35 @@ import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.ImageFactory;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
 import mpicbg.imglib.type.Type;
-import mpicbg.imglib.type.numeric.AdvancedMathType;
+import mpicbg.imglib.type.numeric.ExponentialMathType;
 
-public class GaussianConvolution4< A extends Type<A>, B extends AdvancedMathType<B>, C extends Type<C> > extends GaussianConvolution3<A, B, C>
+public class GaussianConvolution4< A extends Type<A>, B extends ExponentialMathType<B>, C extends Type<C> > extends GaussianConvolution3<A, B, C>
 {
 	final B[] sigma;
     final B[][] kernel;
-    
-    final int[] kernelSize;
     
     final B entity;
     
 	public GaussianConvolution4( final Image<A> image, final ImageFactory<B> factoryProcess, final ImageFactory<C> factoryOut, 
 											 final OutOfBoundsStrategyFactory<B> outOfBoundsFactory, 
-											 final Converter<A, B> converterIn, final Converter<B, C> converterOut, final B[] sigma, final int[] kernelSize )
+											 final Converter<A, B> converterIn, final Converter<B, C> converterOut, final B[] sigma )
 	{
 		super( image, factoryProcess, factoryOut, outOfBoundsFactory, converterIn, converterOut, 0 );
 		
 		this.sigma = sigma;
-		this.kernelSize = kernelSize;
 		this.entity = sigma[ 0 ].createVariable();
 
 		this.kernel = entity.createArray2D( numDimensions, 1 );
 		
 		for ( int d = 0; d < numDimensions; ++d )
-			this.kernel[ d ] = MathLib.createGaussianKernel1D( sigma[ d ], kernelSize[ d ], true );		
+			this.kernel[ d ] = MathLib.createGaussianKernel1D( sigma[ d ], true );		
 	}
 
 	public GaussianConvolution4( final Image<A> image, final ImageFactory<B> factoryProcess, final ImageFactory<C> factoryOut, 
 			 						   		 final OutOfBoundsStrategyFactory<B> outOfBoundsFactory, 
-			 						   		 final Converter<A, B> converterIn, final Converter<B, C> converterOut, final B sigma, final int kernelSize )
+			 						   		 final Converter<A, B> converterIn, final Converter<B, C> converterOut, final B sigma )
 	{
-		this ( image, factoryProcess, factoryOut, outOfBoundsFactory, converterIn, converterOut, createArray( image, sigma ), createArray2( image, kernelSize ) );
+		this ( image, factoryProcess, factoryOut, outOfBoundsFactory, converterIn, converterOut, createArray( image, sigma ) );
 	}
 
 	protected void convolveDim( final LocalizableByDimCursor<B> inputIterator, final LocalizableCursor<B> outputIterator, final int currentDim, final long startPos, final long loopSize )

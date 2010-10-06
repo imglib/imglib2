@@ -23,7 +23,7 @@ import javax.vecmath.Matrix4f;
 
 import mpicbg.imglib.type.ComparableType;
 import mpicbg.imglib.type.Type;
-import mpicbg.imglib.type.numeric.AdvancedMathType;
+import mpicbg.imglib.type.numeric.ExponentialMathType;
 import mpicbg.models.AffineModel3D;
 import mpicbg.models.CoordinateTransform;
 
@@ -416,15 +416,15 @@ public class MathLib
      * This method creates a gaussian kernel
      *
      * @param sigma Standard Derivation of the gaussian function in the desired {@link Type}
-     * @param kernelSize The antipated size of the kernel, for a 3-sigma kernel size suggestion call MathLib.getSuggestedKernelDiameter( double sigma )
      * @param normalize Normalize integral of gaussian function to 1 or not...
      * @return T[] The gaussian kernel
      *
      * @author  Stephan Preibisch & Stephan Saalfeld
      */
-    public static < T extends AdvancedMathType<T> > T[] createGaussianKernel1D( final T sigma, int kernelSize, final boolean normalize )
+    public static < T extends ExponentialMathType<T> > T[] createGaussianKernel1D( final T sigma, final boolean normalize )
     {
             final T[] gaussianKernel;
+            int kernelSize;
             
             final T zero = sigma.createVariable();
             final T two = sigma.createVariable();
@@ -434,12 +434,14 @@ public class MathLib
             final T sum = sigma.createVariable();
             final T value = sigma.createVariable();
             final T xPos = sigma.createVariable();
+            final T cs = sigma.createVariable();
             
             zero.setZero();
             one.setOne();
             
             two.setOne();            
             two.add( one );
+            
             
             minusOne.setZero();
             minusOne.sub( one );
@@ -452,7 +454,16 @@ public class MathLib
             }
             else
             {
-            		// kernelsize has to be at least 3
+                	//size = Math.max(3, (int) (2 * (int) (3 * sigma + 0.5) + 1));
+                	cs.set( sigma ); 
+                	cs.mul( 3.0 );
+                	cs.round();
+                	cs.mul( 2.0 );
+                	cs.add( one );
+                	
+                	kernelSize = MathLib.round( cs.getRealFloat() );
+                	
+                	// kernelsize has to be at least 3
             		kernelSize = Math.max( 3, kernelSize );
             		
             		// kernelsize has to be odd
