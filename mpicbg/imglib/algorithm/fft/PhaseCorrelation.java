@@ -260,7 +260,10 @@ public class PhaseCorrelation<T extends RealType<T>, S extends RealType<S>> impl
 						if ( i % numThreads == myNumber )
 						{
 							final PhaseCorrelationPeak peak = newPeakList.get( i );
-							peak.setCrossCorrelationPeak( (float)testCrossCorrelation( peak.getPosition(), image1, image2, minOverlapPx ) );
+							final long[] numPixels = new long[ 1 ];
+							
+							peak.setCrossCorrelationPeak( (float)testCrossCorrelation( peak.getPosition(), image1, image2, minOverlapPx, numPixels ) );
+							peak.setNumPixels( numPixels[ 0 ] );
 							
 							// sort by cross correlation peak
 							peak.setSortPhaseCorrelation( false );
@@ -279,15 +282,25 @@ public class PhaseCorrelation<T extends RealType<T>, S extends RealType<S>> impl
 
 	public static <T extends RealType<T>, S extends RealType<S>> double testCrossCorrelation( final int[] shift, final Image<T> image1, final Image<S> image2 )
 	{
-		return testCrossCorrelation( shift, image1, image2, MathLib.getArrayFromValue( 5, image1.getNumDimensions()) );
+		return testCrossCorrelation( shift, image1, image2, 5 );
 	}
 
 	public static <T extends RealType<T>, S extends RealType<S>> double testCrossCorrelation( final int[] shift, final Image<T> image1, final Image<S> image2, final int minOverlapPx )
 	{
-		return testCrossCorrelation( shift, image1, image2, MathLib.getArrayFromValue( minOverlapPx, image1.getNumDimensions()) );
+		return testCrossCorrelation( shift, image1, image2, minOverlapPx, null );
 	}
-	
+
+	public static <T extends RealType<T>, S extends RealType<S>> double testCrossCorrelation( final int[] shift, final Image<T> image1, final Image<S> image2, final int minOverlapPx, final long[] numPixels )
+	{
+		return testCrossCorrelation( shift, image1, image2, MathLib.getArrayFromValue( minOverlapPx, image1.getNumDimensions()), numPixels );
+	}
+
 	public static <T extends RealType<T>, S extends RealType<S>> double testCrossCorrelation( final int[] shift, final Image<T> image1, final Image<S> image2, final int[] minOverlapPx )
+	{
+		return testCrossCorrelation( shift, image1, image2, minOverlapPx, null );
+	}
+
+	public static <T extends RealType<T>, S extends RealType<S>> double testCrossCorrelation( final int[] shift, final Image<T> image1, final Image<S> image2, final int[] minOverlapPx, final long[] numPixels )
 	{
 		final int numDimensions = image1.getNumDimensions();
 		double correlationCoefficient = 0;
@@ -296,7 +309,7 @@ public class PhaseCorrelation<T extends RealType<T>, S extends RealType<S>> impl
 		final int[] offsetImage1 = new int[ numDimensions ];
 		final int[] offsetImage2 = new int[ numDimensions ];
 		
-		int numPixels = 1;
+		long numPx = 1;
 		
 		for ( int d = 0; d < numDimensions; ++d )
 		{
@@ -316,7 +329,12 @@ public class PhaseCorrelation<T extends RealType<T>, S extends RealType<S>> impl
 				
 				// they are not overlapping ( this might happen due to fft zeropadding and extension
 				if ( shift[ d ] >= image1.getDimension( d ) )
+				{
+					if ( numPixels != null && numPixels.length > 0 )
+						numPixels[ 0 ] = 0;
+					
 					return 0;
+				}
 				
 				offsetImage1[ d ] = shift[ d ];
 				offsetImage2[ d ] = 0;
@@ -338,19 +356,32 @@ public class PhaseCorrelation<T extends RealType<T>, S extends RealType<S>> impl
 				
 				// they are not overlapping ( this might happen due to fft zeropadding and extension
 				if ( shift[ d ] >= image2.getDimension( d ) )
+				{
+					if ( numPixels != null && numPixels.length > 0 )
+						numPixels[ 0 ] = 0;
+					
 					return 0;
+				}
 
 				offsetImage1[ d ] = 0;
 				offsetImage2[ d ] = -shift[ d ];
 				overlapSize[ d ] = Math.min( image2.getDimension( d ) + shift[ d ],  image1.getDimension( d ) );				
 			}
 			
-			numPixels *= overlapSize[ d ];
+			numPx *= overlapSize[ d ];
 			
 			if ( overlapSize[ d ] < minOverlapPx[ d ] )
+			{
+				if ( numPixels != null && numPixels.length > 0 )
+					numPixels[ 0 ] = 0;
+				
 				return 0;
+			}
 		}
-		
+
+		if ( numPixels != null && numPixels.length > 0 )
+			numPixels[ 0 ] = numPx;
+
 		final LocalizableByDimCursor<T> cursor1 = image1.createLocalizableByDimCursor();
 		final LocalizableByDimCursor<S> cursor2 = image2.createLocalizableByDimCursor();
 		
@@ -372,8 +403,8 @@ public class PhaseCorrelation<T extends RealType<T>, S extends RealType<S>> impl
 			avg2 += cursor2.getType().getRealFloat();
 		}
 
-		avg1 /= (double) numPixels;
-		avg2 /= (double) numPixels;
+		avg1 /= (double) numPx;
+		avg2 /= (double) numPx;
 				
 		//
 		// compute cross correlation
@@ -400,9 +431,9 @@ public class PhaseCorrelation<T extends RealType<T>, S extends RealType<S>> impl
 			var2 += dist2 * dist2;
 		}		
 		
-		var1 /= (double) numPixels;
-		var2 /= (double) numPixels;
-		coVar /= (double) numPixels;
+		var1 /= (double) numPx;
+		var2 /= (double) numPx;
+		coVar /= (double) numPx;
 
 		double stDev1 = Math.sqrt(var1);
 		double stDev2 = Math.sqrt(var2);

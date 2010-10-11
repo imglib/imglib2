@@ -27,6 +27,7 @@ public class PhaseCorrelationPeak implements Comparable<PhaseCorrelationPeak>
 	int[] position = null;
 	int[] originalInvPCMPosition = null;
 	float phaseCorrelationPeak = 0, crossCorrelationPeak = 0;
+	long numPixels = 0;
 	boolean sortPhaseCorrelation = true;
 	
 	public PhaseCorrelationPeak( final int[] position, final float phaseCorrelationPeak, final float crossCorrelationPeak )
@@ -56,12 +57,14 @@ public class PhaseCorrelationPeak implements Comparable<PhaseCorrelationPeak>
 	public void setPhaseCorrelationPeak( final float phaseCorrelationPeak ) { this.phaseCorrelationPeak = phaseCorrelationPeak; }
 	public void setCrossCorrelationPeak( final float crossCorrelationPeak ) { this.crossCorrelationPeak = crossCorrelationPeak; }
 	public void setSortPhaseCorrelation( final boolean sortPhaseCorrelation ) { this.sortPhaseCorrelation = sortPhaseCorrelation; }
+	public void setNumPixels( final long numPixels ) { this.numPixels = numPixels; }
 	
 	public int[] getPosition() { return position.clone(); }
 	public int[] getOriginalInvPCMPosition() { return originalInvPCMPosition; }
 	public float getPhaseCorrelationPeak() { return phaseCorrelationPeak; }
 	public float getCrossCorrelationPeak() { return crossCorrelationPeak; }
 	public boolean getSortPhaseCorrelation() { return sortPhaseCorrelation; }
+	public long getNumPixels() { return numPixels; }
 
 	@Override
 	public int compareTo( final PhaseCorrelationPeak o )
@@ -76,13 +79,22 @@ public class PhaseCorrelationPeak implements Comparable<PhaseCorrelationPeak>
 				return -1;
 		}
 		else
-		{
+		{		
 			if ( this.crossCorrelationPeak > o.crossCorrelationPeak )
+			{
 				return 1;
+			}
 			else if ( this.crossCorrelationPeak == o.crossCorrelationPeak )
-				return 0;
+			{
+				if ( this.numPixels >= o.numPixels )
+					return 1;
+				else
+					return 0;
+			}
 			else
-				return -1;			
+			{
+				return -1;
+			}
 		}
 	}
 	
