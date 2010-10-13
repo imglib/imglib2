@@ -40,7 +40,7 @@ import mpicbg.imglib.type.numeric.NumericType;
 
 public class DifferenceOfGaussian < A extends Type<A>, B extends NumericType<B> > implements Algorithm, MultiThreaded, Benchmark
 {
-	public static enum SpecialPoint { NONE, MIN, MAX };
+	public static enum SpecialPoint { INVALID, MIN, MAX };
 	
 	final Image<A> image;
 	final ImageFactory<B> factory;
@@ -166,7 +166,7 @@ public class DifferenceOfGaussian < A extends Type<A>, B extends NumericType<B> 
 		else if ( isMax )
 			return SpecialPoint.MIN;
 		else
-			return SpecialPoint.NONE;
+			return SpecialPoint.INVALID;
 	}
 	
 	@Override
@@ -319,7 +319,7 @@ MainLoop:           while ( cursor.hasNext() )
 
                 			// we have to compare for example 26 neighbors in the 3d case (3^3 - 1) relative to the current position
                 			final SpecialPoint specialPoint = isSpecialPoint( neighborhoodCursor, currentValue ); 
-                			if ( specialPoint != SpecialPoint.NONE )
+                			if ( specialPoint != SpecialPoint.INVALID )
                 				myPeaks.add( new DifferenceOfGaussianPeak<B>( position, currentValue, specialPoint ) );
                 			
                 			// reset the position of the parent cursor

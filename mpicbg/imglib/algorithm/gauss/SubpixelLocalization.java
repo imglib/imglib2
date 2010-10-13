@@ -1,51 +1,108 @@
 package mpicbg.imglib.algorithm.gauss;
 
+import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
+
 import Jama.Matrix;
 import Jama.SingularValueDecomposition;
 import mpicbg.imglib.algorithm.Algorithm;
 import mpicbg.imglib.algorithm.Benchmark;
+import mpicbg.imglib.algorithm.MultiThreaded;
+import mpicbg.imglib.algorithm.gauss.DifferenceOfGaussian.SpecialPoint;
 import mpicbg.imglib.container.array.ArrayContainerFactory;
 import mpicbg.imglib.cursor.LocalizableByDimCursor;
 import mpicbg.imglib.cursor.LocalizableCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.ImageFactory;
+import mpicbg.imglib.image.display.imagej.ImageJFunctions;
+import mpicbg.imglib.multithreading.SimpleMultiThreading;
 import mpicbg.imglib.type.numeric.RealType;
 import mpicbg.imglib.type.numeric.real.DoubleType;
 
-public class SubpixelLocalization< T extends RealType<T> > implements Algorithm, Benchmark
+public class SubpixelLocalization< T extends RealType<T> > implements Algorithm, Benchmark, MultiThreaded
 {
-	public static enum NoStableMaxima { TRASH, USE_INITIAL_LOCATION };
-	
 	Image<T> laPlacian;
-	DifferenceOfGaussianPeak<T> peak;
+	List<DifferenceOfGaussianPeak<T>> peaks;
 	
-	NoStableMaxima noStableMaxima = NoStableMaxima.USE_INITIAL_LOCATION;
 	int maxNumMoves = 10;
 	
 	final ImageFactory<DoubleType> doubleArrayFactory;
+	boolean[] allowedToMoveInDim;
 	
 	long processingTime;
+	int numThreads = 1;
 	String errorMessage = "";
 	
-	public SubpixelLocalization( final Image<T> laPlacian, final DifferenceOfGaussianPeak<T> peak )
+	public SubpixelLocalization( final Image<T> laPlacian, final List<DifferenceOfGaussianPeak<T>> peaks )
 	{
+		setNumThreads();
 		this.laPlacian = laPlacian;
-		this.peak = peak;
+		this.peaks = peaks;
+		this.allowedToMoveInDim = new boolean[ laPlacian.getNumDimensions() ];
+		
+		// principally one can move in any dimension
+		for ( int d = 0; d < allowedToMoveInDim.length; ++d )
+			allowedToMoveInDim[ d ] = true;
 		
 		this.doubleArrayFactory = new ImageFactory<DoubleType>( new DoubleType(), new ArrayContainerFactory() );
 	}
 	
 	public void setLaPlaceImage( final Image<T> laPlacian ) { this.laPlacian = laPlacian; }
-	public void setDoGPeak( final DifferenceOfGaussianPeak<T> peak ) { this.peak = peak; }
-
-	public Image<T> getLaPlaceImage() { return laPlacian; }
-	public DifferenceOfGaussianPeak<T> getDoGPeak() { return peak; }	
+	public void setDoGPeaks( final List< DifferenceOfGaussianPeak<T> > peaks ) { this.peaks = peaks; }
+	public void setMaxNumMoves( final int maxNumMoves ) { this.maxNumMoves = maxNumMoves; }
+	public void setAllowedToMoveInDim( final boolean[] allowedToMoveInDim ) { this.allowedToMoveInDim = allowedToMoveInDim.clone(); }
 	
-	@Override
+	public Image<T> getLaPlaceImage() { return laPlacian; }
+	public List<DifferenceOfGaussianPeak<T>> getDoGPeaks() { return peaks; }
+	public int getMaxNumMoves() { return maxNumMoves; }
+	public boolean[] getAllowedToMoveInDim() { return allowedToMoveInDim.clone(); }
+
+	protected boolean handleFailure( final DifferenceOfGaussianPeak<T> peak, final String error )
+	{
+		peak.setPeakType( SpecialPoint.INVALID );
+		peak.setErrorMessage( error );
+
+		return false;
+	}
+	
+	@Override 
 	public boolean process()
 	{
-		// the initial starting position
-		final int[] position = peak.getPosition();
+	    final AtomicInteger ai = new AtomicInteger( 0 );					
+	    final Thread[] threads = SimpleMultiThreading.newThreads( getNumThreads() );
+	    final int numThreads = threads.length;
+	    
+		for (int ithread = 0; ithread < threads.length; ++ithread)
+	        threads[ithread] = new Thread(new Runnable()
+	        {
+	            public void run()
+	            {
+	            	final int myNumber = ai.getAndIncrement();
+	            	
+	            	for ( int i = 0; i < peaks.size(); ++i )
+	            	{
+	            		if ( i % numThreads == myNumber )
+	            		{
+	            			final DifferenceOfGaussianPeak<T> peak;	            			
+	            			synchronized ( peaks ) { peak = peaks.get( i ); }
+	            			
+	            			analyzePeak( peak );
+	            		}
+	            	}
+	            }
+	        });
+		
+		SimpleMultiThreading.startAndJoin( threads );
+		
+		return true;
+	}
+	
+	public boolean analyzePeak( final DifferenceOfGaussianPeak<T> peak )
+	{
+		final int numDimensions = laPlacian.getNumDimensions(); 
+
+		// the subpixel values
+		final double[] subpixelLocation = new double[ numDimensions ];
 		
 		// the current position for the quadratic fit
 		final int[] currentPosition = peak.getPosition();
@@ -58,7 +115,10 @@ public class SubpixelLocalization< T extends RealType<T> > implements Algorithm,
 		Image<DoubleType> derivativeVector = doubleArrayFactory.createImage( new int[] { cursor.getNumDimensions() } );
 		
 		// the inverse hessian matrix
-		Matrix inverseHessian;
+		Matrix A, B, X;
+		
+		// the current value of the center
+		T value = peak.value.createVariable();
 		
 		boolean foundStableMaxima = true, pointsValid = false;
 		int numMoves = 0;
@@ -78,6 +138,9 @@ public class SubpixelLocalization< T extends RealType<T> > implements Algorithm,
 			// move the cursor to the current positon
 			cursor.setPosition( currentPosition );
 			
+			// store the center value
+			value.set( cursor.getType() );
+			
 			// compute the n-dimensional hessian matrix [numDimensions][numDimensions]
 			// containing all second derivatives, e.g. for 3d:
 			//
@@ -85,21 +148,106 @@ public class SubpixelLocalization< T extends RealType<T> > implements Algorithm,
 			// yx yy yz
 			// zx zy zz			
 			hessianMatrix = getHessianMatrix( cursor, hessianMatrix );
+						
+			// compute the inverse of the hessian matrix
+			A = invertMatrix( hessianMatrix );
+			
+			if ( A == null )
+			{
+				cursor.close();
+				hessianMatrix.close();
+				derivativeVector.close();
+
+				return handleFailure( peak, "Cannot invert hessian matrix" );
+			}
 			
 			// compute the n-dimensional derivative vector
 			derivativeVector = getDerivativeVector( cursor, derivativeVector );
+			B = getMatrix( derivativeVector );
 			
-			// compute the inverse of the hessian matrix
-			inverseHessian = invertMatrix( hessianMatrix );
+			if ( B == null )
+			{
+				cursor.close();
+				hessianMatrix.close();
+				derivativeVector.close();
+
+				return handleFailure( peak, "Cannot compute derivative vector" );
+			}
 			
-			if ( inverseHessian == null )
-				continue;
+			// compute the extremum of the n-dimensinal quadratic fit
+			X = ( A.uminus() ).times( B );
+			
+			for ( int d = 0; d < numDimensions; ++d )
+				subpixelLocation[ d ] = X.get( d, 0 );
+			
+			// test all dimensions for their change
+			// if the absolute value of the subpixel location
+			// is bigger than 0.5 we move into that direction
+			foundStableMaxima = true;
+			
+			for ( int d = 0; d < numDimensions; ++d )
+			{
+				if ( Math.abs( subpixelLocation[ d ] ) > 0.5 )
+				{
+					if ( allowedToMoveInDim[ d ] )
+					{
+						currentPosition[ d ] += Math.signum( subpixelLocation[ d ] );
+						foundStableMaxima = false;
+					}
+					else
+					{
+						subpixelLocation[ d ] = Math.signum( subpixelLocation[ d ] ) * 0.5;
+					}
+				}				
+			}
+			
+			// check validity of the new location if there is a need to move
+			pointsValid = true;
+
+			if ( !foundStableMaxima ) 
+				for ( int d = 0; d < numDimensions; ++d )
+					if ( currentPosition[ d ] <= 0 || currentPosition[ d ] >= laPlacian.getDimension( d ) - 1 ) 
+						pointsValid = false;
+			
 		} 
 		while ( numMoves <= maxNumMoves && !foundStableMaxima && pointsValid );
+
+		cursor.close();
+		hessianMatrix.close();
+		derivativeVector.close();
 		
+		if ( !foundStableMaxima )
+			return handleFailure( peak, "No stable extremum found." );
+
+		if ( !pointsValid )
+			return handleFailure( peak, "Moved outside of the image." );
 		
+		// compute the function value (intensity) of the fit
+		double quadrFuncValue = 0;
 		
-		return false;
+		for ( int d = 0; d < numDimensions ; ++d )
+			quadrFuncValue += X.get( d, 0 ) * B.get( d, 0 );
+		
+		quadrFuncValue /= 2.0;
+				
+		// set the results if everything went well
+		
+		// subpixel location
+		for ( int d = 0; d < numDimensions; ++d )
+			peak.setSubPixelLocationOffset( (float)subpixelLocation[ d ], d );
+
+		// pixel location
+		peak.setPixelLocation( currentPosition );
+
+		// quadratic fit value
+		final T quadraticFit = peak.getImgValue().createVariable();
+		quadraticFit.setReal( quadrFuncValue );
+		peak.setFitValue( quadraticFit );
+		
+		// normal value
+		peak.setImgValue( value );
+		
+		return true;
 	}
 
 	/**
@@ -110,10 +258,7 @@ public class SubpixelLocalization< T extends RealType<T> > implements Algorithm,
 		final Matrix matrix = getMatrix( matrixImage );
 		
 		if ( matrix == null )
-		{
-			errorMessage = "hessian matrix is not two-dimensional(?).";
 			return null;
-		}
 		
 		return computePseudoInverseMatrix( matrix, 0.001 );
 	}
@@ -142,24 +287,46 @@ public class SubpixelLocalization< T extends RealType<T> > implements Algorithm,
 	 * Converts an {@link Image} into a matrix
 	 * 
 	 * @param maxtrixImage - the input {@link Image}
-	 * @return a {@link Matrix} or null if the {@link Image} is not two-dimensional
+	 * @return a {@link Matrix} or null if the {@link Image} is not one or two-dimensional
 	 */
 	public static <S extends RealType<S>> Matrix getMatrix( final Image<S> maxtrixImage )
 	{
-		if ( maxtrixImage.getNumDimensions() != 2 )
+		final int numDimensions = maxtrixImage.getNumDimensions();
+		
+		if ( numDimensions > 2 )
 			return null;
 		
-		final Matrix matrix = new Matrix( maxtrixImage.getDimension( 0 ), maxtrixImage.getDimension( 1 ) );
+		final Matrix matrix;
 		
-		final LocalizableCursor<S> cursor = maxtrixImage.createLocalizableCursor();
-		
-		while ( cursor.hasNext() )
+		if ( numDimensions == 1)
 		{
-			cursor.fwd();			
-			matrix.set( cursor.getPosition( 0 ), cursor.getPosition( 1 ), cursor.getType().getRealDouble() );
+			matrix = new Matrix( maxtrixImage.getDimension( 0 ), 1 );
+
+			final LocalizableCursor<S> cursor = maxtrixImage.createLocalizableCursor();
+			
+			while ( cursor.hasNext() )
+			{
+				cursor.fwd();			
+				matrix.set( cursor.getPosition( 0 ), 0, cursor.getType().getRealDouble() );
+			}
+			
+			cursor.close();
+
 		}
-		
-		cursor.close();
+		else 
+		{
+			matrix = new Matrix( maxtrixImage.getDimension( 0 ), maxtrixImage.getDimension( 1 ) );
+			
+			final LocalizableCursor<S> cursor = maxtrixImage.createLocalizableCursor();
+			
+			while ( cursor.hasNext() )
+			{
+				cursor.fwd();			
+				matrix.set( cursor.getPosition( 0 ), cursor.getPosition( 1 ), cursor.getType().getRealDouble() );
+			}
+			
+			cursor.close();
+		}
 		
 		return matrix;
 	}
@@ -259,7 +426,7 @@ public class SubpixelLocalization< T extends RealType<T> > implements Algorithm,
 			
 			// back to the original position
 			cursor.fwd( dim );
-			
+						
 			derivativeCursor.getType().setReal( (a2 - a0)/2 );
 		}
 		
@@ -332,7 +499,7 @@ public class SubpixelLocalization< T extends RealType<T> > implements Algorithm,
 				
 				// back to the original position
 				cursor.fwd( dimA );		
-				
+
 				hessianCursor.getType().set( a2 - temp + a0 );
 			}
 			else if ( dimB > dimA ) // we compute all elements above the diagonal (see below for explanation)
@@ -404,15 +571,29 @@ public class SubpixelLocalization< T extends RealType<T> > implements Algorithm,
 			errorMessage = "SubpixelLocalization: [Image<T> img] is null.";
 			return false;
 		}
-		else if ( peak == null )
+		else if ( peaks == null )
 		{
-			errorMessage = "SubpixelLocalization: [DifferenceOfGaussianPeak<T> peaks] is null.";
+			errorMessage = "SubpixelLocalization: [List<DifferenceOfGaussianPeak<T>> peaks] is null.";
+			return false;
+		}
+		else if ( peaks.size() == 0 )
+		{
+			errorMessage = "SubpixelLocalization: [List<DifferenceOfGaussianPeak<T>> peaks] is empty.";
 			return false;
 		}
 		else
 			return true;
 	}	
 
+	@Override
+	public void setNumThreads() { this.numThreads = Runtime.getRuntime().availableProcessors(); }
+
+	@Override
+	public void setNumThreads( final int numThreads ) { this.numThreads = numThreads; }
+
+	@Override
+	public int getNumThreads() { return numThreads; }	
+	
 	@Override
 	public String getErrorMessage() { return errorMessage; }
 

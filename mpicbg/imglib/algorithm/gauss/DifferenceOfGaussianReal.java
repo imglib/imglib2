@@ -113,7 +113,7 @@ public class DifferenceOfGaussianReal< A extends RealType<A>, B extends RealType
 		else if ( isMax )
 			return SpecialPoint.MIN;
 		else
-			return SpecialPoint.NONE;
+			return SpecialPoint.INVALID;
 	}
 		
 	@Override
