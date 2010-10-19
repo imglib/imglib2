@@ -47,7 +47,7 @@ import mpicbg.imglib.type.numeric.NumericType;
  */
 public class GaussianConvolution3< A extends Type<A>, B extends NumericType<B>, C extends Type<C> > implements MultiThreaded, OutputAlgorithm<C>, Benchmark
 {	
-	final Image<A> image;	
+	Image<A> image;	
 	final ImageFactory<B> factoryProcess;
 	final ImageFactory<C> factoryOut;
 	Image<C> convolved;
@@ -58,7 +58,7 @@ public class GaussianConvolution3< A extends Type<A>, B extends NumericType<B>, 
 	final Converter<B, C> converterOut;
 	
 	final OutOfBoundsStrategyFactory<B> outOfBoundsFactory;
-	final int numDimensions;
+	int numDimensions;
 	final double[] sigma;
     final double[][] kernel;
 
@@ -78,15 +78,14 @@ public class GaussianConvolution3< A extends Type<A>, B extends NumericType<B>, 
 		
 		this.sigma = sigma;
 		this.processingTime = -1;
-		setNumThreads();
 		
 		this.outOfBoundsFactory = outOfBoundsFactory;
-		this.numDimensions = image.getNumDimensions();
+		numDimensions = image.getNumDimensions();
 
 		this.kernel = new double[ numDimensions ][];
 		
-		for ( int d = 0; d < numDimensions; ++d )
-			this.kernel[ d ] = MathLib.createGaussianKernel1DDouble( sigma[ d ], true );
+		setNumThreads();
+		computeKernel();
 	}
 
 	public GaussianConvolution3( final Image<A> image, final ImageFactory<B> factoryProcess, final ImageFactory<C> factoryOut, final OutOfBoundsStrategyFactory<B> outOfBoundsFactory, 
@@ -104,6 +103,29 @@ public class GaussianConvolution3< A extends Type<A>, B extends NumericType<B>, 
 		
 		return sigmas;
 	}
+
+	protected void computeKernel()
+	{
+		for ( int d = 0; d < numDimensions; ++d )
+			this.kernel[ d ] = MathLib.createGaussianKernel1DDouble( sigma[ d ], true );		
+	}
+	
+	public void setSigma( final double sigma ) { setSigma( createArray( image, sigma ) ); } 
+	public void setSigma( final double sigma[] ) 
+	{
+		for ( int d = 0; d < numDimensions; ++d )
+			this.sigma[ d ] = sigma[ d ];
+		
+		computeKernel();
+	}
+	public double[] getSigma() { return sigma.clone(); }
+	
+	public void setImage( final Image<A> image ) 
+	{ 
+		this.image = image;
+		this.numDimensions = image.getNumDimensions();
+	}
+	public Image<A> getImage() { return image; }
 		
 	@Override
 	public long getProcessingTime() { return processingTime; }
