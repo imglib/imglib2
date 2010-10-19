@@ -29,6 +29,10 @@ import mpicbg.models.CoordinateTransform;
 
 public class MathLib
 {	
+	public static double log2( final double value )
+	{
+		return Math.log( value ) / Math.log( 2.0 ); 
+	}	
 	
 	public static double[] getArrayFromValue( final double value, final int numDimensions )
 	{
@@ -665,26 +669,18 @@ public class MathLib
 	
 	public static <T extends ComparableType<T>> T max( final T value1, final T value2 )
 	{
-		final T result = value1.createVariable();
-		
 		if( value1.compareTo( value2 ) >= 0 )
-			result.set( value1 );
+			return value1;
 		else
-			result.set( value2 );
-		
-		return result;
+			return value2;
 	}
 
 	public static <T extends ComparableType<T>> T min( final T value1, final T value2 )
 	{
-		final T result = value1.createVariable();
-		
 		if( value1.compareTo( value2 ) <= 0 )
-			result.set( value1 );
+			return value1;
 		else
-			result.set( value2 );
-		
-		return result;
+			return value2;
 	}
 
 	public static boolean[][] getRecursiveCoordinates( final int numDimensions )
