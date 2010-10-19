@@ -33,6 +33,8 @@ import java.util.Iterator;
 import java.util.concurrent.atomic.AtomicLong;
 
 import mpicbg.imglib.Dimensions;
+import mpicbg.imglib.IterableRaster;
+import mpicbg.imglib.RandomAccessibleRaster;
 import mpicbg.imglib.algorithm.math.MathLib;
 import mpicbg.imglib.container.Container;
 import mpicbg.imglib.container.ContainerFactory;
@@ -54,7 +56,7 @@ import mpicbg.imglib.type.label.FakeType;
  *
  * @author Stephan Preibisch and Stephan Saalfeld
  */
-public class Image< T extends Type< T > > implements ImageProperties, Dimensions, Iterable< T >
+public class Image< T extends Type< T > > implements ImageProperties, Dimensions, IterableRaster< T >, RandomAccessibleRaster< T >
 {
 	final protected ArrayList< RasterSampler< T > > rasterSamplers;
 	final ContainerFactory containerFactory;
@@ -180,6 +182,7 @@ public class Image< T extends Type< T > > implements ImageProperties, Dimensions
 	 * Return a {@link RasterIterator} that will traverse the image's pixel data in a memory-optimized fashion.
 	 * @return IterableCursor<T> - the typed {@link RasterIterator}
 	 */
+	@Override
 	public RasterIterator<T> createRasterIterator()
 	{
 		RasterIterator< T > cursor = container.createRasterIterator( this );
@@ -197,6 +200,7 @@ public class Image< T extends Type< T > > implements ImageProperties, Dimensions
 	 *  
 	 * @return RasterIterator<T> - the typed {@link RasterIterator}
 	 */
+	@Override
 	public RasterIterator<T> createLocalizingRasterIterator()
 	{
 		RasterIterator<T> cursor = container.createLocalizingRasterIterator( this );
@@ -211,6 +215,7 @@ public class Image< T extends Type< T > > implements ImageProperties, Dimensions
 	 * 
 	 * @return - a {@link PositionableRasterSampler} that cannot leave the {@link Image}
 	 */
+	@Override
 	public PositionableRasterSampler< T > createPositionableRasterSampler()
 	{
 		PositionableRasterSampler<T> cursor = container.createPositionableRasterSampler( this );
@@ -236,6 +241,7 @@ public class Image< T extends Type< T > > implements ImageProperties, Dimensions
 	 * @param factory - the {@link OutOfBoundsStrategyFactory}
 	 * @return - a {@link PositionableRasterSampler} that can leave the {@link Image}
 	 */
+	@Override
 	public PositionableRasterSampler<T> createPositionableRasterSampler( final OutOfBoundsStrategyFactory<T> factory )
 	{
 		PositionableRasterSampler<T> cursor = container.createPositionableRasterSampler( this, factory );

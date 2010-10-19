@@ -24,37 +24,89 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- *
- * @author Stephan Preibisch & Stephan Saalfeld
  */
 package mpicbg.imglib.location;
 
+import mpicbg.imglib.container.Container;
+import mpicbg.imglib.container.array.Array;
 import mpicbg.imglib.image.Image;
+import mpicbg.imglib.sampler.AbstractBasicRasterIterator;
+import mpicbg.imglib.sampler.RasterIterator;
+import mpicbg.imglib.type.Type;
 
-/** 
- * The {@link Iterator} interface provides basic functionality for
- * iterating over an {@link Image}.  {@link Iterator Iterators} are expected
- * to run over all pixels of an image in an optimal order.
- *  
- * @author Stephan Preibisch & Stephan Saalfeld
+/**
+ * 
+ * @param <T>
+ * 
+ * @author Stephan Saalfeld
  */
-public interface Iterator
+public class BasicFlatRasterIterator implements Iterator
 {
-	/**
-	 * Move steps &times; forward.
-	 * 
-	 * @param steps
-	 */
-	public void jumpFwd( long steps );
+	final protected int[] dimensions;
+	final protected int lastIndex;
+	protected int index = -1;
 	
-	/**
-	 * Move forward.
-	 */
-	public void fwd();
+	public BasicFlatRasterIterator( final int[] dimensions )
+	{
+		this.dimensions = dimensions.clone();
+		int n = 1;
+		for ( int i = 0; i < dimensions.length; ++i )
+			n *= dimensions[ i ];
+		lastIndex = n - 1;
+	}
+
+	public BasicFlatRasterIterator( final Image< ? > image )
+	{
+		this( image.getDimensions() );
+	}
+
+	@Override
+	public void jumpFwd( final long steps )
+	{
+		index += steps;
+	}
+
+	@Override
+	public void fwd()
+	{
+		++index;
+	}
+
+	@Override
+	public void reset()
+	{
+		index = -1;
+	}
+
+	@Override
+	public String toString()
+	{
+		final int[] l = new int[ dimensions.length ];
+		localize( l );
+	}
+
+	@Override
+	public long getLongPosition( final int dim )
+	{
+		return Container< Type<T> >.indexToPosition( type.getIndex(), dim );
+	}
 	
-	/**
-	 * Reset the {@link Iterator}, that is put it to where it would be if
-	 * newly created.
-	 */
-	public void reset();
+	@Override
+
+	@Override
+	public void localize( final long[] position )
+	{
+		int id = index;
+		for ( int d = 0; d < dimensions.length && id > 0; ++d )
+		{
+			final int dd = dimensions[ d ];
+			final int id1 = id / dimensions[ d ];
+			l[ d ] = 
+			final int ld = i / step[ d ];
+			l[ d ] = ld;
+			i -= ld * step[ d ];
+			// i %= step[ d ];
+		}
+		l[ 0 ] = i;
+	}
 }

@@ -28,13 +28,12 @@
 package mpicbg.imglib.location;
 
 /**
- * An {@link Iterator} that just does nothing.  This is the default linked
- * {@link Iterator} of any Iterable.  This object doing nothing, it is
- * implemented as a Singleton.
+ * An {@link Iterator} that just does nothing.  This object doing nothing, it
+ * is implemented as a Singleton.
  *
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-final public class VoidIterator implements Iterator< Object >
+final public class VoidIterator implements Iterator, java.util.Iterator< Object >
 {
 	final static private VoidIterator instance = new VoidIterator();
 	

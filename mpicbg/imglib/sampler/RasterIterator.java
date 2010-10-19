@@ -32,6 +32,7 @@ package mpicbg.imglib.sampler;
 import mpicbg.imglib.container.Container;
 import mpicbg.imglib.container.array.Array;
 import mpicbg.imglib.image.Image;
+import mpicbg.imglib.location.Iterator;
 import mpicbg.imglib.location.RasterLocalizable;
 import mpicbg.imglib.type.Type;
 
@@ -109,6 +110,6 @@ import mpicbg.imglib.type.Type;
  *
  * @param <T> - the {@link Type} this {@link RasterIterator} works on
  */
-public interface RasterIterator< T extends Type< T > > extends RasterSampler< T >, RasterLocalizable, mpicbg.imglib.location.Iterator< T > 
+public interface RasterIterator< T extends Type< T > > extends RasterSampler< T >, RasterLocalizable, Iterator, java.util.Iterator< T >
 {	
 }

@@ -25,36 +25,37 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  *
- * @author Stephan Preibisch & Stephan Saalfeld
  */
-package mpicbg.imglib.location;
+package mpicbg.imglib;
 
-import mpicbg.imglib.image.Image;
+import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
+import mpicbg.imglib.sampler.PositionableRasterSampler;
+import mpicbg.imglib.type.Type;
 
-/** 
- * The {@link Iterator} interface provides basic functionality for
- * iterating over an {@link Image}.  {@link Iterator Iterators} are expected
- * to run over all pixels of an image in an optimal order.
- *  
- * @author Stephan Preibisch & Stephan Saalfeld
+/**
+ * A Raster whose data elements (pixels) can be accessed at random locations.
+ *
+ * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-public interface Iterator
+public interface RandomAccessibleRaster< T extends Type< T > >
 {
 	/**
-	 * Move steps &times; forward.
+	 * Create a {@link PositionableRasterSampler} that can move freely within
+	 * the Raster without checking for boundaries.  The behavior at locations
+	 * out of bounds is not defined.
 	 * 
-	 * @param steps
+	 * @return {@link PositionableRasterSampler} that does not check bounds
 	 */
-	public void jumpFwd( long steps );
+	public PositionableRasterSampler< T > createPositionableRasterSampler();
 	
 	/**
-	 * Move forward.
+	 * Create a {@link PositionableRasterSampler} that can move freely within
+	 * and out of bounds with an {@link OutOfBoundsStrategyFactory} defining
+	 * the behavior out of bounds.
+	 * 
+	 * @param factory - the {@link OutOfBoundsStrategyFactory}
+	 * @return {@link PositionableRasterSampler} that does check bounds and
+	 *   generates/hallucinates out of bounds data 
 	 */
-	public void fwd();
-	
-	/**
-	 * Reset the {@link Iterator}, that is put it to where it would be if
-	 * newly created.
-	 */
-	public void reset();
+	public PositionableRasterSampler< T > createPositionableRasterSampler( final OutOfBoundsStrategyFactory< T > factory );
 }

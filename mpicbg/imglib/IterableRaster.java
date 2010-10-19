@@ -25,36 +25,36 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  *
- * @author Stephan Preibisch & Stephan Saalfeld
  */
-package mpicbg.imglib.location;
+package mpicbg.imglib;
 
-import mpicbg.imglib.image.Image;
+import mpicbg.imglib.sampler.RasterIterator;
+import mpicbg.imglib.type.Type;
 
-/** 
- * The {@link Iterator} interface provides basic functionality for
- * iterating over an {@link Image}.  {@link Iterator Iterators} are expected
- * to run over all pixels of an image in an optimal order.
- *  
- * @author Stephan Preibisch & Stephan Saalfeld
+/**
+ * A Raster whose data elements (pixels) can be iterated.
+ *
+ * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-public interface Iterator
+public interface IterableRaster< T extends Type< T > > extends Iterable< T >
 {
 	/**
-	 * Move steps &times; forward.
+	 * Create a {@link RasterIterator} that will iterate all data elements in
+	 * memory-optimal order.
 	 * 
-	 * @param steps
+	 * @return RasterIterator<T> - the typed {@link RasterIterator}
 	 */
-	public void jumpFwd( long steps );
+	public RasterIterator< T > createRasterIterator();
 	
 	/**
-	 * Move forward.
+	 * Create a {@link RasterIterator} that will iterate all data elements in
+	 * memory-optimal order and tracks its location at each moving operation.
+	 * 
+	 * This {@link RasterIterator} is the preferred choice for implementations
+	 * that require the iterator's location at each iteration step (e.g. for
+	 * rendering a transformed image)
+	 *  
+	 * @return RasterIterator<T> - the typed {@link RasterIterator}
 	 */
-	public void fwd();
-	
-	/**
-	 * Reset the {@link Iterator}, that is put it to where it would be if
-	 * newly created.
-	 */
-	public void reset();
+	public RasterIterator< T > createLocalizingRasterIterator();
 }
