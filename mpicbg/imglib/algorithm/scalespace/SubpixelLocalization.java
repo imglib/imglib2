@@ -1,4 +1,20 @@
-package mpicbg.imglib.algorithm.gauss;
+/**
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License 2
+ * as published by the Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ * 
+ * @author Stephan Preibisch
+ */
+package mpicbg.imglib.algorithm.scalespace;
 
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -8,7 +24,7 @@ import Jama.SingularValueDecomposition;
 import mpicbg.imglib.algorithm.Algorithm;
 import mpicbg.imglib.algorithm.Benchmark;
 import mpicbg.imglib.algorithm.MultiThreaded;
-import mpicbg.imglib.algorithm.gauss.DifferenceOfGaussian.SpecialPoint;
+import mpicbg.imglib.algorithm.scalespace.DifferenceOfGaussian.SpecialPoint;
 import mpicbg.imglib.container.array.ArrayContainerFactory;
 import mpicbg.imglib.cursor.LocalizableByDimCursor;
 import mpicbg.imglib.cursor.LocalizableCursor;
@@ -23,7 +39,7 @@ public class SubpixelLocalization< T extends RealType<T> > implements Algorithm,
 	Image<T> laPlacian;
 	List<DifferenceOfGaussianPeak<T>> peaks;
 	
-	int maxNumMoves = 10;
+	int maxNumMoves = 4;
 	
 	final ImageFactory<DoubleType> doubleArrayFactory;
 	boolean[] allowedToMoveInDim;
@@ -67,6 +83,8 @@ public class SubpixelLocalization< T extends RealType<T> > implements Algorithm,
 	@Override 
 	public boolean process()
 	{
+		final long startTime = System.currentTimeMillis();
+		
 	    final AtomicInteger ai = new AtomicInteger( 0 );					
 	    final Thread[] threads = SimpleMultiThreading.newThreads( getNumThreads() );
 	    final int numThreads = threads.length;
@@ -92,6 +110,8 @@ public class SubpixelLocalization< T extends RealType<T> > implements Algorithm,
 	        });
 		
 		SimpleMultiThreading.startAndJoin( threads );
+		
+		processingTime = System.currentTimeMillis() - startTime;
 		
 		return true;
 	}

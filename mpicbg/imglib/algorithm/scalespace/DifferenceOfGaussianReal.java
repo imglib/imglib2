@@ -14,9 +14,10 @@
  * 
  * @author Stephan Preibisch
  */
-package mpicbg.imglib.algorithm.gauss;
+package mpicbg.imglib.algorithm.scalespace;
 
 import mpicbg.imglib.algorithm.OutputAlgorithm;
+import mpicbg.imglib.algorithm.gauss.GaussianConvolution2;
 import mpicbg.imglib.algorithm.math.function.Function;
 import mpicbg.imglib.algorithm.math.function.RealTypeConverter;
 import mpicbg.imglib.algorithm.math.function.SubtractNormReal;

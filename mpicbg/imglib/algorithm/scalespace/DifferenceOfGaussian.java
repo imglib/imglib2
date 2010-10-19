@@ -14,7 +14,7 @@
  * 
  * @author Stephan Preibisch
  */
-package mpicbg.imglib.algorithm.gauss;
+package mpicbg.imglib.algorithm.scalespace;
 
 import java.util.ArrayList;
 import java.util.Vector;
@@ -24,6 +24,7 @@ import mpicbg.imglib.algorithm.Algorithm;
 import mpicbg.imglib.algorithm.Benchmark;
 import mpicbg.imglib.algorithm.MultiThreaded;
 import mpicbg.imglib.algorithm.OutputAlgorithm;
+import mpicbg.imglib.algorithm.gauss.GaussianConvolution2;
 import mpicbg.imglib.algorithm.math.ImageCalculatorInPlace;
 import mpicbg.imglib.algorithm.math.function.Converter;
 import mpicbg.imglib.algorithm.math.function.Function;
@@ -35,10 +36,11 @@ import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.ImageFactory;
 import mpicbg.imglib.multithreading.SimpleMultiThreading;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
+import mpicbg.imglib.type.ComparableType;
 import mpicbg.imglib.type.Type;
 import mpicbg.imglib.type.numeric.NumericType;
 
-public class DifferenceOfGaussian < A extends Type<A>, B extends NumericType<B> > implements Algorithm, MultiThreaded, Benchmark
+public class DifferenceOfGaussian < A extends Type<A>, B extends NumericType<B> & ComparableType<B> > implements Algorithm, MultiThreaded, Benchmark
 {
 	public static enum SpecialPoint { INVALID, MIN, MAX };
 	
@@ -168,13 +170,15 @@ public class DifferenceOfGaussian < A extends Type<A>, B extends NumericType<B> 
 		else
 			return SpecialPoint.INVALID;
 	}
-	
+		
 	@Override
 	public boolean process()
 	{
 		final long startTime = System.currentTimeMillis();
 		
-		// perform the gaussian convolutions transferring it to the new (potentially higher precision) type T				
+		//
+		// perform the gaussian convolutions transferring it to the new (potentially higher precision) type T
+		//
 		final OutputAlgorithm<B> conv1 = getGaussianConvolution( sigma1, Math.max( 1, getNumThreads() / 2 ) );
 		final OutputAlgorithm<B> conv2 = getGaussianConvolution( sigma2, Math.max( 1, getNumThreads() / 2 ) );
 		        
@@ -209,7 +213,7 @@ public class DifferenceOfGaussian < A extends Type<A>, B extends NumericType<B> 
         }
         else
         {
-        	System.out.println( "Cannot compute gaussian convolutions: " + conv1.getErrorMessage() + " & " + conv2.getErrorMessage() );
+        	errorMessage =  "Cannot compute gaussian convolutions: " + conv1.getErrorMessage() + " & " + conv2.getErrorMessage();
         
         	gauss1 = gauss2 = null;
         	return false;
@@ -226,23 +230,15 @@ public class DifferenceOfGaussian < A extends Type<A>, B extends NumericType<B> 
         	return false;        	
         }
 
-        /*
-        gauss1.setName( "gauss1" );
-        gauss2.setName( "gauss2" );
-        
-        gauss1.getDisplay().setMinMax();
-        gauss2.getDisplay().setMinMax();
-        
-        ImageJFunctions.copyToImagePlus( gauss1 ).show();
-        ImageJFunctions.copyToImagePlus( gauss2 ).show();
-        */
-        
+        //
+        // subtract the images to get the LaPlace image
+        //
         final Function<B, B, B> function = getNormalizedSubtraction();        
         final ImageCalculatorInPlace<B, B> imageCalc = new ImageCalculatorInPlace<B, B>( gauss2, gauss1, function );
         
         if ( !imageCalc.checkInput() || !imageCalc.process() )
         {
-        	System.out.println( "Cannot subtract images: " + imageCalc.getErrorMessage() );
+        	errorMessage =  "Cannot subtract images: " + imageCalc.getErrorMessage();
         	
         	gauss1.close();
         	gauss2.close();
@@ -261,12 +257,24 @@ public class DifferenceOfGaussian < A extends Type<A>, B extends NumericType<B> 
         //
         // Now we find minima and maxima in the DoG image
         //        
+		peaks.clear();
+		peaks.addAll( findPeaks( gauss2 ) );
+
+		gauss2.close(); 
+        		
+        processingTime = System.currentTimeMillis() - startTime;
+		
+		return true;
+	}
+	
+	public ArrayList<DifferenceOfGaussianPeak<B>> findPeaks( final Image<B> laPlace )
+	{
 	    final AtomicInteger ai = new AtomicInteger( 0 );					
 	    final Thread[] threads = SimpleMultiThreading.newThreads( getNumThreads() );
 	    final int numThreads = threads.length;
-	    final int numDimensions = gauss2.getNumDimensions();
+	    final int numDimensions = laPlace.getNumDimensions();
 	    
-	    final Vector<ArrayList<DifferenceOfGaussianPeak<B>>> threadPeaksList = new Vector<ArrayList<DifferenceOfGaussianPeak<B>>>();
+	    final Vector< ArrayList<DifferenceOfGaussianPeak<B>> > threadPeaksList = new Vector< ArrayList<DifferenceOfGaussianPeak<B>> >();
 	    
 	    for ( int i = 0; i < numThreads; ++i )
 	    	threadPeaksList.add( new ArrayList<DifferenceOfGaussianPeak<B>>() );
@@ -279,11 +287,11 @@ public class DifferenceOfGaussian < A extends Type<A>, B extends NumericType<B> 
 	            	final int myNumber = ai.getAndIncrement();
             	
 	            	final ArrayList<DifferenceOfGaussianPeak<B>> myPeaks = threadPeaksList.get( myNumber );	
-	            	final LocalizableByDimCursor<B> cursor = gauss2.createLocalizableByDimCursor();	            	
+	            	final LocalizableByDimCursor<B> cursor = laPlace.createLocalizableByDimCursor();	            	
 	            	final LocalNeighborhoodCursor<B> neighborhoodCursor = LocalNeighborhoodCursorFactory.createLocalNeighborhoodCursor( cursor );
 	            	
 	            	final int[] position = new int[ numDimensions ];
-	            	final int[] dimensionsMinus2 = gauss2.getDimensions();
+	            	final int[] dimensionsMinus2 = laPlace.getDimensions();
 
             		for ( int d = 0; d < numDimensions; ++d )
             			dimensionsMinus2[ d ] -= 2;
@@ -310,9 +318,6 @@ MainLoop:           while ( cursor.hasNext() )
 	                		// it can never be a desired peak as it is too low
 	                		if ( !isPeakHighEnough( currentValue ) )
                 				continue;
-	                		
-                			//if ( Math.abs( currentValue ) < minPeakValue )
-                			//	continue;
 
                 			// update to the current position
                 			neighborhoodCursor.update();
@@ -332,19 +337,15 @@ MainLoop:           while ( cursor.hasNext() )
         });
 	
 		SimpleMultiThreading.startAndJoin( threads );		
-		
-		gauss2.close(); 
-		
+
 		// put together the list from the various threads	
-		peaks.clear();
+		final ArrayList<DifferenceOfGaussianPeak<B>> peaks = new ArrayList<DifferenceOfGaussianPeak<B>>();
 		
 		for ( final ArrayList<DifferenceOfGaussianPeak<B>> peakList : threadPeaksList )
-			peaks.addAll( peakList );
-        		
-        processingTime = System.currentTimeMillis() - startTime;
+			peaks.addAll( peakList );		
 		
-		return true;
-	}		
+		return peaks;
+	}
 	
 	@Override
 	public boolean checkInput()

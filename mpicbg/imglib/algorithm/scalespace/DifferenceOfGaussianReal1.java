@@ -1,6 +1,7 @@
-package mpicbg.imglib.algorithm.gauss;
+package mpicbg.imglib.algorithm.scalespace;
 
 import mpicbg.imglib.algorithm.OutputAlgorithm;
+import mpicbg.imglib.algorithm.gauss.GaussianConvolutionReal;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
 import mpicbg.imglib.type.numeric.RealType;

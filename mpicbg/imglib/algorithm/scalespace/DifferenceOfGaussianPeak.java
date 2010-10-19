@@ -1,11 +1,28 @@
-package mpicbg.imglib.algorithm.gauss;
+/**
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License 2
+ * as published by the Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ * 
+ * @author Stephan Preibisch
+ */
+package mpicbg.imglib.algorithm.scalespace;
 
-import mpicbg.imglib.algorithm.gauss.DifferenceOfGaussian.SpecialPoint;
 import mpicbg.imglib.algorithm.math.MathLib;
+import mpicbg.imglib.algorithm.scalespace.DifferenceOfGaussian.SpecialPoint;
 import mpicbg.imglib.cursor.Localizable;
+import mpicbg.imglib.type.ComparableType;
 import mpicbg.imglib.type.numeric.NumericType;
 
-public class DifferenceOfGaussianPeak< T extends NumericType<T> > implements Localizable
+public class DifferenceOfGaussianPeak< T extends NumericType<T> & ComparableType<T> > implements Localizable
 {
 	SpecialPoint specialPoint;
 	String errorMessage;
@@ -24,7 +41,7 @@ public class DifferenceOfGaussianPeak< T extends NumericType<T> > implements Loc
 		this.sumValue = value.clone();
 		this.fitValue = value.createVariable();
 		this.fitValue.setZero();
-
+		
 		this.errorMessage = "";
 	}
 	
@@ -33,7 +50,7 @@ public class DifferenceOfGaussianPeak< T extends NumericType<T> > implements Loc
 	public boolean isValid() { return specialPoint != SpecialPoint.INVALID; }
 	public SpecialPoint getPeakType() { return specialPoint; }
 	public float[] getSubPixelPositionOffset() { return subPixelLocationOffset.clone(); }
-	public float getSubPixelPositionOffset( final int dim) { return subPixelLocationOffset[ dim ]; }
+	public float getSubPixelPositionOffset( final int dim ) { return subPixelLocationOffset[ dim ]; }
 	public float[] getSubPixelPosition() 
 	{
 		final float[] loc = subPixelLocationOffset.clone();
@@ -43,7 +60,7 @@ public class DifferenceOfGaussianPeak< T extends NumericType<T> > implements Loc
 		
 		return loc; 
 	}
-	public float getSubPixelPosition( final int dim) { return subPixelLocationOffset[ dim ] + pixelLocation[ dim ]; }
+	public float getSubPixelPosition( final int dim ) { return subPixelLocationOffset[ dim ] + pixelLocation[ dim ]; }
 	public T getValue() { return sumValue; }
 	public T getImgValue() { return value; }
 	public T getFitValue() { return fitValue; }
