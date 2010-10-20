@@ -24,8 +24,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- *
- * @author Stephan Preibisch & Stephan Saalfeld
  */
 package mpicbg.imglib.cursor.imageplus;
 
@@ -36,6 +34,14 @@ import mpicbg.imglib.outofbounds.OutOfBoundsStrategy;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
 import mpicbg.imglib.type.Type;
 
+/**
+ * Positionable with OutOfBoundsStrategy for a
+ * {@link ImagePlusContainer ImagePlusContainers}
+ * 
+ * @param <T>
+ *
+ * @author Stephan Preibisch and Stephan Saalfeld
+ */
 public class ImagePlusLocalizableByDimOutOfBoundsCursor<T extends Type<T>> extends ImagePlusLocalizableByDimCursor<T> implements LocalizableByDimCursor<T>
 {
 	final OutOfBoundsStrategyFactory<T> outOfBoundsStrategyFactory;
@@ -56,7 +62,7 @@ public class ImagePlusLocalizableByDimOutOfBoundsCursor<T extends Type<T>> exten
 	@Override
 	public boolean hasNext()
 	{
-		if ( !isOutOfBounds && ( type.getIndex() < slicePixelCountMinus1 || slice < maxSliceMinus1 ) )
+		if ( !isOutOfBounds && ( type.getIndex() < lastIndex || sliceIndex < lastSliceIndex ) )
 			return true;
 		else
 			return false;
@@ -82,7 +88,7 @@ public class ImagePlusLocalizableByDimOutOfBoundsCursor<T extends Type<T>> exten
 		type.updateIndex( -1 );
 		
 		position[ 0 ] = -1;
-		slice = 0;
+		sliceIndex = 0;
 		
 		for ( int d = 1; d < numDimensions; d++ )
 			position[ d ] = 0;
@@ -96,38 +102,37 @@ public class ImagePlusLocalizableByDimOutOfBoundsCursor<T extends Type<T>> exten
 		if ( !isOutOfBounds )
 		{
 			type.incIndex();
-			
-			if ( type.getIndex() > slicePixelCountMinus1 ) 
+
+			if ( type.getIndex() > lastIndex )
 			{
-				slice++;
+				sliceIndex++;
 				type.updateIndex( 0 );
 				type.updateContainer( this );
 			}
 			
-			for ( int d = 0; d < numDimensions; d++ )
+			int d;
+			for ( d = 0; d < numDimensions; ++d )
 			{
-				if ( position[ d ] < dimensions[ d ] - 1 )
-				{
-					position[ d ]++;
-					
-					for ( int e = 0; e < d; e++ )
-						position[ e ] = 0;
-					
-					return;
-				}
+				if ( ++position[ d ] >= dimensions[ d ] )
+					position[ d ] = 0;
+				else
+					break;
 			}
 			
-			// if it did not return we moved out of image bounds
-			isOutOfBounds = true;
-			position[0]++;
-			outOfBoundsStrategy.initOutOfBOunds(  );
+			if ( d == numDimensions )
+			{
+				/* we moved out of image bounds */
+				isOutOfBounds = true;
+				position[0]++;
+				outOfBoundsStrategy.initOutOfBOunds(  );
+			}
 		}
 	}
 
 	@Override
 	public void fwd( final int dim )
 	{
-		position[ dim ]++;
+		++position[ dim ];
 
 		if ( isOutOfBounds )
 		{
@@ -142,9 +147,9 @@ public class ImagePlusLocalizableByDimOutOfBoundsCursor<T extends Type<T>> exten
 			if ( position[ dim ] < dimensions[ dim ] )
 			{
 				// moved within the image
-				if ( dim == 2 )
+				if ( dim > 1 )
 				{
-					++slice;
+					sliceIndex += sliceSteps[ dim ];
 					type.updateContainer( this );
 				}
 				else
@@ -156,7 +161,7 @@ public class ImagePlusLocalizableByDimOutOfBoundsCursor<T extends Type<T>> exten
 			{
 				// left the image
 				isOutOfBounds = true;
-				outOfBoundsStrategy.initOutOfBOunds(  );
+				outOfBoundsStrategy.initOutOfBOunds();
 			}
 		}
 	}
@@ -174,19 +179,17 @@ public class ImagePlusLocalizableByDimOutOfBoundsCursor<T extends Type<T>> exten
 				isOutOfBounds = false;
 				
 				for ( int d = 0; d < numDimensions && !isOutOfBounds; d++ )
-					if ( position[ d ] < 0 || position[ d ] >= dimensions[ d ])
-						isOutOfBounds = true;
+					isOutOfBounds = position[ d ] < 0 || position[ d ] >= dimensions[ d ];
 				
 				if ( !isOutOfBounds )
 				{
 					// new location is inside the image
 					
 					// get the offset inside the image
-					type.updateIndex( container.getPos( position ) );
-					if ( numDimensions == 3 )
-						slice = position[ 2 ];
-					else
-						slice = 0;
+					type.updateIndex( container.getIndex( position ) );
+					sliceIndex = 0;
+					for ( int d = 2; d < numDimensions; ++d )
+						sliceIndex += position[ d ] * sliceSteps[ d ];
 					
 					type.updateContainer( this );			
 				}
@@ -205,9 +208,9 @@ public class ImagePlusLocalizableByDimOutOfBoundsCursor<T extends Type<T>> exten
 			if ( position[ dim ] >= 0 && position[ dim ] < dimensions[ dim ] )
 			{
 				// moved within the image
-				if ( dim == 2 )
+				if ( dim > 1 )
 				{
-					slice += steps;
+					sliceIndex += steps * sliceSteps[ dim ];
 					type.updateContainer( this );
 				}
 				else
@@ -242,9 +245,9 @@ public class ImagePlusLocalizableByDimOutOfBoundsCursor<T extends Type<T>> exten
 			if ( position[ dim ] > -1 )
 			{
 				// moved within the image
-				if ( dim == 2 )
+				if ( dim > 1 )
 				{
-					--slice;
+					sliceIndex -= sliceSteps[ dim ];
 					type.updateContainer( this );
 				}
 				else
@@ -274,10 +277,7 @@ public class ImagePlusLocalizableByDimOutOfBoundsCursor<T extends Type<T>> exten
 			this.position[ d ] = position[ d ];
 			
 			if ( position[ d ] < 0 || position[ d ] >= dimensions[ d ])
-			{
-				// we are out of image bounds
 				isOutOfBounds = true;
-			}
 		}
 		
 		if ( isOutOfBounds )
@@ -294,11 +294,10 @@ public class ImagePlusLocalizableByDimOutOfBoundsCursor<T extends Type<T>> exten
 			// new location is inside the image
 						
 			// get the offset inside the image
-			type.updateIndex( container.getPos( position ) );
-			if ( numDimensions == 3 )
-				slice = position[ 2 ];
-			else
-				slice = 0;
+			type.updateIndex( container.getIndex( position ) );
+			sliceIndex = 0;
+			for ( int d = 2; d < numDimensions; ++d )
+				sliceIndex += position[ d ] * sliceSteps[ d ];
 			
 			type.updateContainer( this );			
 		}
@@ -327,14 +326,14 @@ public class ImagePlusLocalizableByDimOutOfBoundsCursor<T extends Type<T>> exten
 		{
 			// jumped around inside the image
 			
-			if ( dim == 2 )
+			if ( dim > 1 )
 			{
-				slice = position;
+				sliceIndex = position * sliceSteps[ dim ];
 				type.updateContainer( this );
 			}
 			else
 			{
-				type.updateIndex( container.getPos( this.position ) );
+				type.updateIndex( container.getIndex( this.position ) );
 			}
 		}		
 	}

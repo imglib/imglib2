@@ -24,8 +24,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- *
- * @author Stephan Preibisch & Stephan Saalfeld
  */
 package mpicbg.imglib.cursor.imageplus;
 
@@ -39,46 +37,67 @@ import mpicbg.imglib.cursor.special.RegionOfInterestCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.type.Type;
 
-
-public class ImagePlusLocalizableByDimCursor<T extends Type<T>> extends ImagePlusLocalizableCursor<T> implements LocalizableByDimCursor<T>
+/**
+ * Positionable for a {@link ImagePlusContainer ImagePlusContainers}
+ * @param <T>
+ *
+ * @author Stephan Preibisch and Stephan Saalfeld
+ */
+public class ImagePlusLocalizableByDimCursor< T extends Type< T > >
+		extends ImagePlusLocalizableCursor< T >
+		implements LocalizableByDimCursor< T >
 {
-	final protected int[] step, tmp;
-	int numNeighborhoodCursors = 0;
+	final protected int[] step, tmp, sliceSteps;
 	
-	public ImagePlusLocalizableByDimCursor( final ImagePlusContainer<T,?> container, final Image<T> image, final T type ) 
+	int numNeighborhoodCursors = 0;
+
+	public ImagePlusLocalizableByDimCursor( final ImagePlusContainer< T, ? > container, final Image< T > image, final T type )
 	{
 		super( container, image, type );
 		
+		final int[] dimensions = container.getDimensions();
 		step = Array.createAllocationSteps( container.getDimensions() );
+		sliceSteps = new int[ dimensions.length ];
+		if ( dimensions.length > 2 )
+		{
+			sliceSteps[ 2 ] = 1;
+			for ( int i = 3; i < dimensions.length; ++i )
+			{
+				final int j = i - 1;
+				sliceSteps[ i ] = dimensions[ j ] * sliceSteps[ j ];
+			}
+		}
+			
+		
 		tmp = new int[ numDimensions ];
 	}	
 
 	@Override
-	public synchronized LocalNeighborhoodCursor<T> createLocalNeighborhoodCursor()
+	public synchronized LocalNeighborhoodCursor< T > createLocalNeighborhoodCursor()
 	{
-		if ( numNeighborhoodCursors == 0)
+		if ( numNeighborhoodCursors == 0 )
 		{
 			++numNeighborhoodCursors;
 			return LocalNeighborhoodCursorFactory.createLocalNeighborhoodCursor( this );
 		}
 		else
 		{
-			System.out.println("ImagePlusLocalizableByDimCursor.createLocalNeighborhoodCursor(): There is only one special cursor per cursor allowed.");
+			System.err.println( getClass().getCanonicalName() + ".createLocalNeighborhoodCursor(): There is only one special cursor per cursor allowed." );
 			return null;
 		}
 	}
 
 	@Override
-	public synchronized RegionOfInterestCursor<T> createRegionOfInterestCursor( final int[] offset, final int[] size )
+	public synchronized RegionOfInterestCursor< T > createRegionOfInterestCursor( final int[] offset, final int[] size )
 	{
-		if ( numNeighborhoodCursors == 0)
+		if ( numNeighborhoodCursors == 0 )
 		{
 			++numNeighborhoodCursors;
-			return new RegionOfInterestCursor<T>( this, offset, size );
+			return new RegionOfInterestCursor< T >( this, offset, size );
 		}
 		else
 		{
-			System.out.println("ImagePlusLocalizableByDimCursor.createRegionOfInterestCursor(): There is only one special cursor per cursor allowed.");
+			System.err.println( getClass().getCanonicalName() + ".createRegionOfInterestCursor(): There is only one special cursor per cursor allowed." );
 			return null;
 		}
 	}
@@ -88,9 +107,9 @@ public class ImagePlusLocalizableByDimCursor<T extends Type<T>> extends ImagePlu
 	{
 		position[ dim ]++;
 
-		if ( dim == 2 )
+		if ( dim > 1 )
 		{
-			++slice;
+			sliceIndex += sliceSteps[ dim ];
 			type.updateContainer( this );
 		}
 		else
@@ -104,9 +123,9 @@ public class ImagePlusLocalizableByDimCursor<T extends Type<T>> extends ImagePlu
 	{
 		position[ dim ] += steps;	
 
-		if ( dim == 2 )
+		if ( dim > 1 )
 		{
-			slice += steps;
+			sliceIndex += sliceSteps[ dim ] * steps;
 			type.updateContainer( this );
 		}
 		else
@@ -153,9 +172,9 @@ public class ImagePlusLocalizableByDimCursor<T extends Type<T>> extends ImagePlu
 	{		
 		position[ dim ]--;
 		
-		if ( dim == 2 )
+		if ( dim > 1 )
 		{
-			--slice;
+			sliceIndex -= sliceSteps[ dim ];
 			type.updateContainer( this );
 		}
 		else
@@ -167,15 +186,14 @@ public class ImagePlusLocalizableByDimCursor<T extends Type<T>> extends ImagePlu
 	@Override
 	public void setPosition( final int[] position )
 	{
-		type.updateIndex( container.getPos( position ) );
+		type.updateIndex( container.getIndex( position ) );
 		
 		for ( int d = 0; d < numDimensions; d++ )
 			this.position[ d ] = position[ d ];
 		
-		if ( numDimensions == 3 )
-			slice = position[ 2 ];
-		else
-			slice = 0;
+		sliceIndex = 0;
+		for ( int d = 2; d < numDimensions; ++d )
+			sliceIndex += position[ d ] * sliceSteps[ d ];
 		
 		type.updateContainer( this );		
 	}
@@ -185,14 +203,14 @@ public class ImagePlusLocalizableByDimCursor<T extends Type<T>> extends ImagePlu
 	{
 		this.position[ dim ] = position;
 
-		if ( dim == 2 )
+		if ( dim > 1 )
 		{
-			slice = position;
+			sliceIndex = position * sliceSteps[ dim ];
 			type.updateContainer( this );
 		}
 		else
 		{
-			type.updateIndex( container.getPos( this.position ) );
+			type.updateIndex( container.getIndex( this.position ) );
 		}
 	}
 }
