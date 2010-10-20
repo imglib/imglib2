@@ -54,6 +54,7 @@ public class DifferenceOfGaussian < A extends Type<A>, B extends NumericType<B> 
 	final ArrayList<DifferenceOfGaussianPeak<B>> peaks = new ArrayList<DifferenceOfGaussianPeak<B>>();
 	final Converter<A, B> converter;
 	
+	boolean computeConvolutionsParalell;
 	long processingTime;
 	int numThreads;
 	String errorMessage = "";
@@ -63,6 +64,7 @@ public class DifferenceOfGaussian < A extends Type<A>, B extends NumericType<B> 
 			    final double sigma1, final double sigma2, final B minPeakValue, final B normalizationFactor )
 	{
 		this.processingTime = -1;
+		this.computeConvolutionsParalell = true;
 		setNumThreads();
 	
 		this.image = img;
@@ -88,6 +90,8 @@ public class DifferenceOfGaussian < A extends Type<A>, B extends NumericType<B> 
 	}
 	
 	public ArrayList<DifferenceOfGaussianPeak<B>> getPeaks() { return peaks; }
+	public void setComputeConvolutionsParalell( final boolean paralell ) { this.computeConvolutionsParalell = paralell; }
+	public boolean getComputeConvolutionsParalell() { return computeConvolutionsParalell; }
 	
 	/**
 	 * This method returns the {@link OutputAlgorithm} that will compute the Gaussian Convolutions, more efficient versions can override this method
@@ -179,16 +183,16 @@ public class DifferenceOfGaussian < A extends Type<A>, B extends NumericType<B> 
 		//
 		// perform the gaussian convolutions transferring it to the new (potentially higher precision) type T
 		//
-		final OutputAlgorithm<B> conv1 = getGaussianConvolution( sigma1, Math.max( 1, getNumThreads() / 2 ) );
-		final OutputAlgorithm<B> conv2 = getGaussianConvolution( sigma2, Math.max( 1, getNumThreads() / 2 ) );
+		final int divisor = computeConvolutionsParalell ? 2 : 1;
+		final OutputAlgorithm<B> conv1 = getGaussianConvolution( sigma1, Math.max( 1, getNumThreads() / divisor ) );
+		final OutputAlgorithm<B> conv2 = getGaussianConvolution( sigma2, Math.max( 1, getNumThreads() / divisor ) );
 		        
         final Image<B> gauss1, gauss2;
         
         if ( conv1.checkInput() && conv2.checkInput() )
-        {
-        	
+        {       	
             final AtomicInteger ai = new AtomicInteger(0);					
-            Thread[] threads = SimpleMultiThreading.newThreads( 2 );
+            Thread[] threads = SimpleMultiThreading.newThreads( divisor );
 
         	for (int ithread = 0; ithread < threads.length; ++ithread)
                 threads[ithread] = new Thread(new Runnable()
@@ -196,12 +200,13 @@ public class DifferenceOfGaussian < A extends Type<A>, B extends NumericType<B> 
                     public void run()
                     {
                     	final int myNumber = ai.getAndIncrement();
-                    	if ( myNumber == 0 )
+                    	if ( myNumber == 0 || !computeConvolutionsParalell )
                     	{
                     		if ( !conv1.process() )
                             	System.out.println( "Cannot compute gaussian convolution 1: " + conv1.getErrorMessage() );                    		
                     	}
-                    	else
+                    	
+                    	if ( myNumber == 1 || !computeConvolutionsParalell )
                     	{
                     		if ( !conv2.process() )
                     			System.out.println( "Cannot compute gaussian convolution 2: " + conv2.getErrorMessage() );

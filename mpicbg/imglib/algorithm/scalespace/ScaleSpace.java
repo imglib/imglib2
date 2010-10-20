@@ -121,7 +121,7 @@ public class ScaleSpace< A extends Type<A>, B extends RealType<B> > implements O
 		double[] sigma = getSigmas( input, initialSigma, minImageSize, stepsPerOctave );
 		double[] sigmaInc = getIncrementalSigmas( sigma, imageSigma );
 		double norm = getNormalizationFactor( stepsPerOctave );
-
+				
 		//
 		// build scale space
 		//
