@@ -126,7 +126,7 @@ public class MathLib
 		return median;
 	}
 
-	public static double computeAverage( final List<Double> values )
+	public static double computeAverageDouble( final List<Double> values )
 	{
 		final double size = values.size();
 		double avg = 0;
@@ -137,7 +137,7 @@ public class MathLib
 		return avg;
 	}
 
-	public static float computeAverage( final List<Float> values )
+	public static float computeAverageFloat( final List<Float> values )
 	{
 		final double size = values.size();
 		double avg = 0;
