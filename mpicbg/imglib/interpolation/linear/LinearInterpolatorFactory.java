@@ -41,7 +41,7 @@ public class LinearInterpolatorFactory<T extends RealType<T>> extends Interpolat
 		super(outOfBoundsStrategyFactory);
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public LinearInterpolator<T> createInterpolator( final Image<T> img )
 	{
