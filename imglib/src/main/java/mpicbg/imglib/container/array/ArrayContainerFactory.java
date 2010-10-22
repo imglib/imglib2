@@ -54,38 +54,22 @@ import mpicbg.imglib.container.basictypecontainer.array.NIOFloatArray;
 import mpicbg.imglib.container.basictypecontainer.array.NIOIntArray;
 import mpicbg.imglib.container.basictypecontainer.array.NIOLongArray;
 import mpicbg.imglib.container.basictypecontainer.array.NIOShortArray;
-import mpicbg.imglib.container.basictypecontainer.array.PlanarByteArray;
-import mpicbg.imglib.container.basictypecontainer.array.PlanarCharArray;
-import mpicbg.imglib.container.basictypecontainer.array.PlanarDoubleArray;
-import mpicbg.imglib.container.basictypecontainer.array.PlanarFloatArray;
-import mpicbg.imglib.container.basictypecontainer.array.PlanarIntArray;
-import mpicbg.imglib.container.basictypecontainer.array.PlanarLongArray;
-import mpicbg.imglib.container.basictypecontainer.array.PlanarShortArray;
 import mpicbg.imglib.container.basictypecontainer.array.ShortArray;
 import mpicbg.imglib.type.Type;
 
 public class ArrayContainerFactory extends DirectAccessContainerFactory
 {
 	protected boolean useNIO = false;
-	protected boolean planar = false;
 
 	public void setNIOUse ( final boolean useNIO ) {
-		if (planar && useNIO) throw new IllegalStateException("Planar NIO arrays not supported.");
 		this.useNIO = useNIO;
 	}
 	public boolean useNIO() { return useNIO; }
-
-	public void setPlanar ( final boolean planar ) {
-		if (useNIO && planar) throw new IllegalStateException("Planar NIO arrays not supported.");
-		this.planar = planar;
-	}
-	public boolean isPlanar() { return planar; }
 
 	@Override
 	public <T extends Type<T>> DirectAccessContainer<T, BitAccess> createBitInstance( int[] dimensions, final int entitiesPerPixel)
 	{
 		if (useNIO) throw new IllegalStateException("Cannot create NIO bit arrays");
-		if (planar) throw new IllegalStateException("Cannot create planar bit arrays");
 
 		final int numPixels = PixelGridContainerImpl.getNumEntities(dimensions, entitiesPerPixel);
 
@@ -103,10 +87,6 @@ public class ArrayContainerFactory extends DirectAccessContainerFactory
 
 		ByteAccess access;
 		if (useNIO) access = new NIOByteArray(numPixels);
-		else if (planar && dimensions.length >= 2) {
-			final int elementsPerPlane = dimensions[0] * dimensions[1];
-			access = new PlanarByteArray(elementsPerPlane, numPixels);
-		}
 		else access = new ByteArray(numPixels);
 		if ( dimensions.length == 3 && useOptimizedContainers )
 			return new Array3D<T, ByteAccess>( this, access, dimensions[0], dimensions[1], dimensions[2], entitiesPerPixel );
@@ -121,10 +101,6 @@ public class ArrayContainerFactory extends DirectAccessContainerFactory
 
 		CharAccess access;
 		if (useNIO) access = new NIOCharArray(numPixels);
-		else if (planar && dimensions.length >= 2) {
-			final int elementsPerPlane = dimensions[0] * dimensions[1];
-			access = new PlanarCharArray(elementsPerPlane, numPixels);
-		}
 		else access = new CharArray(numPixels);
 
 		if ( dimensions.length == 3 && useOptimizedContainers )
@@ -140,10 +116,6 @@ public class ArrayContainerFactory extends DirectAccessContainerFactory
 
 		DoubleAccess access;
 		if (useNIO) access = new NIODoubleArray(numPixels);
-		else if (planar && dimensions.length >= 2) {
-			final int elementsPerPlane = dimensions[0] * dimensions[1];
-			access = new PlanarDoubleArray(elementsPerPlane, numPixels);
-		}
 		else access = new DoubleArray(numPixels);
 		if ( dimensions.length == 3 && useOptimizedContainers )
 			return new Array3D<T, DoubleAccess>( this, access, dimensions[0], dimensions[1], dimensions[2], entitiesPerPixel );
@@ -158,10 +130,6 @@ public class ArrayContainerFactory extends DirectAccessContainerFactory
 
 		FloatAccess access;
 		if (useNIO) access = new NIOFloatArray(numPixels);
-		else if (planar && dimensions.length >= 2) {
-			final int elementsPerPlane = dimensions[0] * dimensions[1];
-			access = new PlanarFloatArray(elementsPerPlane, numPixels);
-		}
 		else access = new FloatArray(numPixels);
 		if ( dimensions.length == 3 && useOptimizedContainers )
 			return new Array3D<T, FloatAccess>( this, access, dimensions[0], dimensions[1], dimensions[2], entitiesPerPixel );
@@ -176,10 +144,6 @@ public class ArrayContainerFactory extends DirectAccessContainerFactory
 
 		IntAccess access;
 		if (useNIO) access = new NIOIntArray(numPixels);
-		else if (planar && dimensions.length >= 2) {
-			final int elementsPerPlane = dimensions[0] * dimensions[1];
-			access = new PlanarIntArray(elementsPerPlane, numPixels);
-		}
 		else access = new IntArray(numPixels);
 		if ( dimensions.length == 3 && useOptimizedContainers )
 			return new Array3D<T, IntAccess>( this, access, dimensions[0], dimensions[1], dimensions[2], entitiesPerPixel );
@@ -194,10 +158,6 @@ public class ArrayContainerFactory extends DirectAccessContainerFactory
 
 		LongAccess access;
 		if (useNIO) access = new NIOLongArray(numPixels);
-		else if (planar && dimensions.length >= 2) {
-			final int elementsPerPlane = dimensions[0] * dimensions[1];
-			access = new PlanarLongArray(elementsPerPlane, numPixels);
-		}
 		else access = new LongArray(numPixels);
 		if ( dimensions.length == 3 && useOptimizedContainers )
 			return new Array3D<T, LongAccess>( this, access, dimensions[0], dimensions[1], dimensions[2], entitiesPerPixel );
@@ -212,10 +172,6 @@ public class ArrayContainerFactory extends DirectAccessContainerFactory
 
 		ShortAccess access;
 		if (useNIO) access = new NIOShortArray(numPixels);
-		else if (planar && dimensions.length >= 2) {
-			final int elementsPerPlane = dimensions[0] * dimensions[1];
-			access = new PlanarShortArray(elementsPerPlane, numPixels);
-		}
 		else access = new ShortArray(numPixels);
 		if ( dimensions.length == 3 && useOptimizedContainers )
 			return new Array3D<T, ShortAccess>( this, access, dimensions[0], dimensions[1], dimensions[2], entitiesPerPixel );

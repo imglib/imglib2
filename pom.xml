@@ -21,8 +21,8 @@
   <modules>
     <module>imglib</module>
     <module>imglib-algorithms</module>
+    <module>imglib-ij</module>
     <module>imglib-io</module>
-    <module>imglib-imagej</module>
   </modules>
 
   <repositories>
