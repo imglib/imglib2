@@ -33,24 +33,31 @@ import mpicbg.imglib.image.Image;
 import mpicbg.imglib.type.Type;
 
 /**
- * TODO Not yet 5d!!!!!!
- * 
  * @param <T>
  *
- * @author Stephan Preibisch and Stephan Saalfeld
+ * @author Stephan Preibisch, Curtis Rueden and Stephan Saalfeld
  */
-public class PlanarLocalizablePlaneCursor<T extends Type<T>> extends PlanarLocalizableCursor<T> implements LocalizablePlaneCursor<T>
+public class PlanarLocalizablePlaneCursor< T extends Type<T>> extends PlanarLocalizableCursor< T > implements LocalizablePlaneCursor< T >
 {
-	protected int planeDimA, planeDimB, planeSizeA, planeSizeB, incPlaneA, incPlaneB, maxI, pos, maxPos;
-	final protected int width, height, depth;
+	private int xIndex, yIndex, xSize, ySize, pos, maxPos;
+	final private int[] sliceSteps;
+	private int width, planeSize;
 	
-	public PlanarLocalizablePlaneCursor( final PlanarContainer<T,?> container, final Image<T> image, final T type ) 
+	public PlanarLocalizablePlaneCursor( final PlanarContainer< T,? > container, final Image< T > image, final T type ) 
 	{
 		super( container, image, type );
-		
-		this.width = image.getDimension( 0 );
-		this.height = image.getDimension( 1 );
-		this.depth = image.getDimension( 2 );
+		sliceSteps = new int[ image.getNumDimensions() + 1 ];
+		if ( sliceSteps.length > 2 )
+		{
+			sliceSteps[ 2 ] = 1;
+			for ( int i = 3; i < sliceSteps.length; ++i )
+			{
+				final int j = i - 1;
+				sliceSteps[ i ] = dimensions[ j ] * sliceSteps[ j ];
+			}
+		}
+		width = image.getDimension( 0 );
+		planeSize = width * image.getDimension( 1 );
 	}	
 	
 	@Override 
@@ -66,53 +73,67 @@ public class PlanarLocalizablePlaneCursor<T extends Type<T>> extends PlanarLocal
 	public void fwd()
 	{
 		++pos;
-
-		if ( position[ planeDimA ] < dimensions[ planeDimA ] - 1 )
+		
+		boolean needUpdate = false;
+		
+		if ( ++position[ xIndex ] == xSize )
 		{
-			++position[ planeDimA ];
+			/* reset x */
+			position[ xIndex ] = 0;
+			switch ( xIndex )
+			{
+			case 0:
+				type.decIndex( width );
+				break;
+			case 1:
+				type.decIndex( planeSize );
+				break;
+			default:
+				sliceIndex -= sliceSteps[ xIndex + 1 ];
+				needUpdate = true;
+			}
 			
-			if ( incPlaneA == -1 )
+			/* increase y */
+			++position[ yIndex ];
+			switch ( yIndex )
 			{
-				++sliceIndex;
-				type.updateContainer( this );
+			case 0:
+				type.incIndex();
+				break;
+			case 1:
+				type.incIndex( width );
+				break;
+			default:
+				sliceIndex += sliceSteps[ yIndex ];
+				needUpdate = true;
 			}
-			else
-			{
-				type.incIndex( incPlaneA );
-			}
-		}		
-		else if ( position[ planeDimB ] < dimensions[ planeDimB ] - 1)
-		{
-			position[ planeDimA ] = 0;
-			++position[ planeDimB ];
-			
-			if ( incPlaneB == -1 )
-			{
-				++sliceIndex;
-				type.updateContainer( this );
-			}
-			else
-			{
-				type.incIndex( incPlaneB );
-			}
-
-			if ( incPlaneA == -1 )
-			{
-				sliceIndex = 0;
-				type.updateContainer( this );
-			}
-			else
-			{
-				type.decIndex( (planeSizeA - 1) * incPlaneA );	
-			}						
 		}
+		else
+		{
+			/* increase x */
+			switch ( xIndex )
+			{
+			case 0:
+				type.incIndex();
+				break;
+			case 1:
+				type.incIndex( width );
+				break;
+			default:
+				sliceIndex += sliceSteps[ xIndex ];
+				needUpdate = true;
+			}
+		}
+		
+		if ( needUpdate )
+			type.updateContainer( this );
 	}
 
 	@Override
 	public void reset( final int planeDimA, final int planeDimB, final int[] dimensionPositions )
 	{
-		this.planeDimA = planeDimA;
-		this.planeDimB = planeDimB;
+		this.xIndex = planeDimA;
+		this.yIndex = planeDimB;
 
 		// store the current position
     	final int[] dimPos = dimensionPositions.clone();
@@ -121,59 +142,24 @@ public class PlanarLocalizablePlaneCursor<T extends Type<T>> extends PlanarLocal
 		dimPos[ planeDimB ] = 0;
 		setPosition( dimPos );				
     	
-    	if ( planeDimA == 0 )
-    	{
-    		incPlaneA = 1;
-    		planeSizeA = width;
-    	}
-    	else if ( planeDimA == 1 )
-    	{
-    		incPlaneA = width;
-    		planeSizeA = height;
-    	}
-    	else if ( planeDimA == 2 )
-    	{
-    		incPlaneA = -1;
-    		planeSizeA = depth;
-    	}
-    	else
-    	{
-    		throw new RuntimeException("PlanarLocalizablePlaneCursor cannot have only 3 dimensions, cannot handle dimension index of planeDimA " + planeDimA );
-    	}
-
-    	if ( planeDimB == 0 )
-    	{
-    		incPlaneB = 1;
-    		planeSizeB = width;
-    	}
-    	else if ( planeDimB == 1 )
-    	{
-    		incPlaneB = width;
-    		planeSizeB = height;
-    	}
-    	else if ( planeDimB == 2 )
-    	{
-    		incPlaneB = -1;
-    		planeSizeB = depth;
-    	}
-    	else
-    	{
-    		throw new RuntimeException("PlanarLocalizablePlaneCursor cannot have only 3 dimensions, cannot handle dimension index planeDimB " + planeDimB );
-    	}    	
-		
-		maxPos = planeSizeA * planeSizeB;
+    	xSize = image.getDimension( planeDimA );
+    	ySize = image.getDimension( planeDimB );
+    	
+    	maxPos = xSize * ySize;
 		pos = 0;
 		
 		isClosed = false;
 
-		if ( incPlaneA == -1 )
+		switch ( planeDimA )
 		{
-			--sliceIndex;
-		}
-		else
-		{
-			type.decIndex( incPlaneA );
-			type.updateContainer( this );				
+		case 0:
+			type.decIndex();
+			break;
+		case 1:
+			type.decIndex( -width );
+			break;
+		default:
+			sliceIndex -= sliceSteps[ planeDimA ];
 		}
 		
 		position[ planeDimA ] = -1;
@@ -198,10 +184,10 @@ public class PlanarLocalizablePlaneCursor<T extends Type<T>> extends PlanarLocal
 	}
 
 	@Override
-	public void getPosition( final int[] position )
+	public void getPosition( final int[] p )
 	{
 		for ( int d = 0; d < numDimensions; d++ )
-			position[ d ] = this.position[ d ];
+			p[ d ] = this.position[ d ];
 	}
 	
 	@Override
@@ -210,17 +196,18 @@ public class PlanarLocalizablePlaneCursor<T extends Type<T>> extends PlanarLocal
 	@Override
 	public int getPosition( final int dim ){ return position[ dim ]; }
 	
-	protected void setPosition( final int[] position )
+	private void setPosition( final int[] position )
 	{
 		type.updateIndex( container.getIndex( position ) );
 		
-		if ( numDimensions == 3 )
-			sliceIndex = position[ 2 ];
-		else
-			sliceIndex = 0;
-		
 		for ( int d = 0; d < numDimensions; d++ )
 			this.position[ d ] = position[ d ];
+		
+		sliceIndex = 0;
+		for ( int d = 2; d < numDimensions; ++d )
+			sliceIndex += position[ d ] * sliceSteps[ d ];
+		
+		type.updateContainer( this );
 	}
 	
 }

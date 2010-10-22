@@ -36,9 +36,6 @@ import mpicbg.imglib.container.DirectAccessContainerImpl;
 import mpicbg.imglib.container.basictypecontainer.PlanarAccess;
 import mpicbg.imglib.container.basictypecontainer.array.ArrayDataAccess;
 import mpicbg.imglib.cursor.Cursor;
-import mpicbg.imglib.cursor.LocalizableByDimCursor;
-import mpicbg.imglib.cursor.LocalizableCursor;
-import mpicbg.imglib.cursor.LocalizablePlaneCursor;
 import mpicbg.imglib.cursor.planar.PlanarCursor;
 import mpicbg.imglib.cursor.planar.PlanarLocalizableByDimCursor;
 import mpicbg.imglib.cursor.planar.PlanarLocalizableByDimOutOfBoundsCursor;
@@ -68,11 +65,16 @@ public class PlanarContainer<T extends Type<T>, A extends ArrayDataAccess<A>> ex
 	final protected PlanarContainerFactory factory;
 	final protected int slices;
 
-	final ArrayList< A > mirror;
+	final protected ArrayList< A > mirror;
 	
 	public PlanarContainer( final int[] dim, final int entitiesPerPixel ) 
 	{
-		this( new PlanarContainerFactory(), null, dim, entitiesPerPixel );
+		this( new PlanarContainerFactory(), dim, entitiesPerPixel );
+	}
+	
+	protected PlanarContainer( final PlanarContainerFactory factory, final int[] dim, final int entitiesPerPixel )
+	{
+		this( factory, null, dim, entitiesPerPixel );
 	}
 
 	PlanarContainer( final PlanarContainerFactory factory, final A creator, final int[] dim, final int entitiesPerPixel ) 
@@ -124,31 +126,31 @@ public class PlanarContainer<T extends Type<T>, A extends ArrayDataAccess<A>> ex
 	}
 
 	@Override
-	public Cursor<T> createCursor( final Image<T> image ) 
+	public PlanarCursor<T> createCursor( final Image<T> image ) 
 	{
 		return new PlanarCursor<T>( this, image, linkedType.duplicateTypeOnSameDirectAccessContainer() );
 	}
 
 	@Override
-	public LocalizableCursor<T> createLocalizableCursor( final Image<T> image ) 
+	public PlanarLocalizableCursor<T> createLocalizableCursor( final Image<T> image ) 
 	{
 		return new PlanarLocalizableCursor<T>( this, image, linkedType.duplicateTypeOnSameDirectAccessContainer() );
 	}
 
 	@Override
-	public LocalizablePlaneCursor<T> createLocalizablePlaneCursor( final Image<T> image ) 
+	public PlanarLocalizablePlaneCursor<T> createLocalizablePlaneCursor( final Image<T> image ) 
 	{
 		return new PlanarLocalizablePlaneCursor<T>( this, image, linkedType.duplicateTypeOnSameDirectAccessContainer() );
 	}
 
 	@Override
-	public LocalizableByDimCursor<T> createLocalizableByDimCursor( final Image<T> image ) 
+	public PlanarLocalizableByDimCursor<T> createLocalizableByDimCursor( final Image<T> image ) 
 	{
 		return new PlanarLocalizableByDimCursor<T>( this, image, linkedType.duplicateTypeOnSameDirectAccessContainer() );
 	}
 
 	@Override
-	public LocalizableByDimCursor<T> createLocalizableByDimCursor( final Image<T> image, OutOfBoundsStrategyFactory<T> outOfBoundsFactory ) 
+	public PlanarLocalizableByDimOutOfBoundsCursor<T> createLocalizableByDimCursor( final Image<T> image, OutOfBoundsStrategyFactory<T> outOfBoundsFactory ) 
 	{
 		return new PlanarLocalizableByDimOutOfBoundsCursor<T>( this, image, linkedType.duplicateTypeOnSameDirectAccessContainer(), outOfBoundsFactory );
 	}

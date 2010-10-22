@@ -28,8 +28,7 @@
 package mpicbg.imglib.cursor.imageplus;
 
 import mpicbg.imglib.container.imageplus.ImagePlusContainer;
-import mpicbg.imglib.cursor.Cursor;
-import mpicbg.imglib.cursor.CursorImpl;
+import mpicbg.imglib.cursor.planar.PlanarCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.type.Type;
 
@@ -39,79 +38,17 @@ import mpicbg.imglib.type.Type;
  *
  * @author Stephan Preibisch and Stephan Saalfeld
  */
-public class ImagePlusCursor< T extends Type< T >> extends CursorImpl< T > implements Cursor< T >
+public class ImagePlusCursor< T extends Type< T >> extends PlanarCursor< T >
 {
-	protected final T type;
-
-	protected final ImagePlusContainer< T, ? > container;
-
-	protected final int lastIndex, lastSliceIndex;
-
-	protected int sliceIndex;
-
+	final protected ImagePlusContainer< T, ? > container;
+	
 	public ImagePlusCursor( final ImagePlusContainer< T, ? > container, final Image< T > image, final T type )
 	{
-		super( container, image );
-
-		this.type = type;
+		super( container, image, type );
+		
 		this.container = container;
-		lastIndex = container.getDimension( 0 ) * container.getDimension( 1 ) - 1;
-		lastSliceIndex = container.getSlices() - 1;
-
-		reset();
-	}
-
-	@Override
-	public T getType() { return type; }
-
-	/**
-	 * Note: This test is fragile in a sense that it returns true for elements
-	 * after the last element as well.
-	 * 
-	 * @return false for the last element 
-	 */
-	@Override
-	public boolean hasNext()
-	{
-		return type.getIndex() < lastIndex || sliceIndex < lastSliceIndex;
-	}
-
-	@Override
-	public void fwd()
-	{
-		type.incIndex();
-
-		if ( type.getIndex() > lastIndex )
-		{
-			++sliceIndex;
-			type.updateIndex( 0 );
-			type.updateContainer( this );
-		}
-	}
-
-	@Override
-	public void close()
-	{
-		isClosed = true;
-		type.updateIndex( lastIndex + 1 );
-		sliceIndex = lastSliceIndex + 1;
-	}
-
-	@Override
-	public void reset()
-	{
-		sliceIndex = 0;
-		type.updateIndex( -1 );
-		type.updateContainer( this );
-		isClosed = false;
 	}
 
 	@Override
 	public ImagePlusContainer< T, ? > getStorageContainer() { return container;	}
-
-	@Override
-	public int getStorageIndex() { return sliceIndex; }
-
-	@Override
-	public String toString() { return type.toString(); }
 }

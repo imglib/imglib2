@@ -27,18 +27,10 @@
  */
 package mpicbg.imglib.container.imageplus;
 
-import java.util.ArrayList;
-
 import ij.ImagePlus;
-import ij.ImageStack;
-
 import mpicbg.imglib.container.Container;
-import mpicbg.imglib.container.DirectAccessContainerImpl;
 import mpicbg.imglib.container.basictypecontainer.array.ArrayDataAccess;
-import mpicbg.imglib.cursor.Cursor;
-import mpicbg.imglib.cursor.LocalizableByDimCursor;
-import mpicbg.imglib.cursor.LocalizableCursor;
-import mpicbg.imglib.cursor.LocalizablePlaneCursor;
+import mpicbg.imglib.container.planar.PlanarContainer;
 import mpicbg.imglib.cursor.imageplus.ImagePlusCursor;
 import mpicbg.imglib.cursor.imageplus.ImagePlusLocalizableByDimCursor;
 import mpicbg.imglib.cursor.imageplus.ImagePlusLocalizableByDimOutOfBoundsCursor;
@@ -64,12 +56,10 @@ import mpicbg.imglib.type.Type;
  * 
  * @author Jan Funke, Stephan Preibisch, Stephan Saalfeld, Johannes Schindelin
  */
-public class ImagePlusContainer<T extends Type<T>, A extends ArrayDataAccess<A>> extends DirectAccessContainerImpl<T,A>
+public class ImagePlusContainer<T extends Type<T>, A extends ArrayDataAccess<A>> extends PlanarContainer<T,A>
 {
 	final protected ImagePlusContainerFactory factory;
-	final protected int width, height, depth, frames, channels, slices;
-
-	final ArrayList< A > mirror;
+	final protected int width, height, depth, frames, channels;
 	
 	protected ImagePlusContainer(
 			final ImagePlusContainerFactory factory,
@@ -88,17 +78,15 @@ public class ImagePlusContainer<T extends Type<T>, A extends ArrayDataAccess<A>>
 		this.frames = frames;
 		this.channels = channels;
 		
-		slices = depth * frames * channels;
-		
-		this.factory = factory;
-		
-		mirror = new ArrayList< A >( slices ); 
+		this.factory = factory; 
 	}
 
 	ImagePlusContainer( final ImagePlusContainerFactory factory, final int[] dim, final int entitiesPerPixel ) 
 	{
 		super( factory, dim, entitiesPerPixel );
 		
+		assert dim.length < 6 : "ImagePlusContainer can only handle up to 5 dimensions.";
+
 		if ( dim.length > 0 )
 			width = dim[ 0 ];
 		else
@@ -124,11 +112,7 @@ public class ImagePlusContainer<T extends Type<T>, A extends ArrayDataAccess<A>>
 		else
 			channels = 1;
 		
-		slices = depth * frames * channels;
-			
 		this.factory = factory;
-		
-		mirror = new ArrayList< A >( slices );
 	}
 	
 	ImagePlusContainer( final ImagePlusContainerFactory factory, final A creator, final int[] dim, final int entitiesPerPixel ) 
@@ -144,12 +128,6 @@ public class ImagePlusContainer<T extends Type<T>, A extends ArrayDataAccess<A>>
 		throw new ImgLibException( this, "has no ImagePlus instance, it is not a standard type of ImagePlus" ); 
 	}
 
-	@Override
-	public A update( final Cursor< ? > c )
-	{
-		return mirror.get( c.getStorageIndex() );
-	}
-	
 	/**
 	 * Estimate the minimal required number of dimensions for a given
 	 * {@link ImagePlus}, whereas width and height are always first.
@@ -215,80 +193,37 @@ public class ImagePlusContainer<T extends Type<T>, A extends ArrayDataAccess<A>>
 	
 	public int getFrames() { return frames; }
 
-	/**
-	 * Note: this is NOT the number of z-slices!
-	 * 
-	 * @return depth * frames * channels which reflects the number of slices
-	 * of the {@link ImageStack} used to store pixels in {@link ImagePlus}.
-	 */
-	public int getSlices() { return slices; }
-
-	/**
-	 * For a given >=2d location, estimate the pixel index in the stack slice.
-	 * 
-	 * @param l
-	 * @return
-	 */
-	public final int getIndex( final int[] l ) 
-	{
-		if ( numDimensions > 1 )
-			return l[ 1 ] * width + l[ 0 ];
-		else
-			return l[ 0 ];
-	}
-
 	@Override
-	public Cursor<T> createCursor( final Image<T> image ) 
+	public ImagePlusCursor<T> createCursor( final Image<T> image ) 
 	{
 		return new ImagePlusCursor<T>( this, image, linkedType.duplicateTypeOnSameDirectAccessContainer() );
 	}
 
 	@Override
-	public LocalizableCursor<T> createLocalizableCursor( final Image<T> image ) 
+	public ImagePlusLocalizableCursor<T> createLocalizableCursor( final Image<T> image ) 
 	{
 		return new ImagePlusLocalizableCursor<T>( this, image, linkedType.duplicateTypeOnSameDirectAccessContainer() );
 	}
 
 	@Override
-	public LocalizablePlaneCursor<T> createLocalizablePlaneCursor( final Image<T> image ) 
+	public ImagePlusLocalizablePlaneCursor<T> createLocalizablePlaneCursor( final Image<T> image ) 
 	{
 		return new ImagePlusLocalizablePlaneCursor<T>( this, image, linkedType.duplicateTypeOnSameDirectAccessContainer() );
 	}
 
 	@Override
-	public LocalizableByDimCursor<T> createLocalizableByDimCursor( final Image<T> image ) 
+	public ImagePlusLocalizableByDimCursor<T> createLocalizableByDimCursor( final Image<T> image ) 
 	{
 		return new ImagePlusLocalizableByDimCursor<T>( this, image, linkedType.duplicateTypeOnSameDirectAccessContainer() );
 	}
 
 	@Override
-	public LocalizableByDimCursor<T> createLocalizableByDimCursor( final Image<T> image, OutOfBoundsStrategyFactory<T> outOfBoundsFactory ) 
+	public ImagePlusLocalizableByDimOutOfBoundsCursor<T> createLocalizableByDimCursor( final Image<T> image, OutOfBoundsStrategyFactory<T> outOfBoundsFactory ) 
 	{
 		return new ImagePlusLocalizableByDimOutOfBoundsCursor<T>( this, image, linkedType.duplicateTypeOnSameDirectAccessContainer(), outOfBoundsFactory );
 	}
 	
+	@Override
 	public ImagePlusContainerFactory getFactory() { return factory; }
 
-	@Override
-	public void close()
-	{
-		for ( final A array : mirror )
-			array.close();
-	}
-
-	@Override
-	public boolean compareStorageContainerCompatibility( final Container<?> container )
-	{
-		if ( compareStorageContainerDimensions( container ))
-		{			
-			if ( getFactory().getClass().isInstance( container.getFactory() ))
-				return true;
-			else
-				return false;
-		}
-		else
-		{
-			return false;
-		}
-	}
 }

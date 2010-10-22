@@ -28,7 +28,6 @@
 package mpicbg.imglib.cursor.planar;
 
 import mpicbg.imglib.container.planar.PlanarContainer;
-import mpicbg.imglib.cursor.Cursor;
 import mpicbg.imglib.cursor.CursorImpl;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.type.Type;
@@ -39,7 +38,7 @@ import mpicbg.imglib.type.Type;
  *
  * @author Stephan Preibisch and Stephan Saalfeld
  */
-public class PlanarCursor< T extends Type< T >> extends CursorImpl< T > implements Cursor< T >
+public class PlanarCursor< T extends Type< T >> extends CursorImpl< T >
 {
 	protected final T type;
 

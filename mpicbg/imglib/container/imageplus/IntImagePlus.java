@@ -48,6 +48,7 @@ public class IntImagePlus<T extends Type<T>> extends ImagePlusContainer<T, IntAr
 	{
 		super( factory, dim, entitiesPerPixel );
 		
+		mirror.clear();
 		if ( entitiesPerPixel == 1 )
 		{
 			final ImageStack stack = new ImageStack( width, height );

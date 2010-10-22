@@ -28,7 +28,7 @@
 package mpicbg.imglib.cursor.imageplus;
 
 import mpicbg.imglib.container.imageplus.ImagePlusContainer;
-import mpicbg.imglib.cursor.LocalizableCursor;
+import mpicbg.imglib.cursor.planar.PlanarLocalizableCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.type.Type;
 
@@ -38,90 +38,17 @@ import mpicbg.imglib.type.Type;
  *
  * @author Stephan Preibisch and Stephan Saalfeld
  */
-public class ImagePlusLocalizableCursor<T extends Type<T>> extends ImagePlusCursor<T> implements LocalizableCursor<T>
+public class ImagePlusLocalizableCursor<T extends Type<T>> extends PlanarLocalizableCursor< T >
 {
-	final protected int numDimensions; 	
-	final protected int[] position, dimensions;
+	final protected ImagePlusContainer< T, ? > container;
 	
 	public ImagePlusLocalizableCursor( final ImagePlusContainer<T,?> container, final Image<T> image, final T type ) 
 	{
 		super( container, image, type );
-
-		numDimensions = container.getNumDimensions(); 		
-		position = new int[ numDimensions ];
-		dimensions = container.getDimensions();
 		
-		// unluckily we have to call it twice, in the superclass position is not initialized yet
-		reset();
-	}	
-	
-	@Override
-	public void fwd()
-	{ 
-		type.incIndex();
-
-		if ( type.getIndex() > lastIndex )
-		{
-			++sliceIndex;
-			type.updateIndex( 0 );
-			type.updateContainer( this );
-		}
-		
-		for ( int d = 0; d < numDimensions; ++d )
-		{
-			if ( ++position[ d ] >= dimensions[ d ] )
-				position[ d ] = 0;
-			else
-				return;
-		}
+		this.container = container;
 	}
 
 	@Override
-	public void reset()
-	{
-		if ( dimensions == null )
-			return;
-		
-		isClosed = false;
-		type.updateIndex( -1 );
-		
-		position[ 0 ] = -1;
-		
-		for ( int d = 1; d < numDimensions; d++ )
-			position[ d ] = 0;
-		
-		sliceIndex = 0;
-		
-		type.updateContainer( this );
-	}
-
-
-	@Override
-	public void getPosition( int[] position )
-	{
-		for ( int d = 0; d < numDimensions; d++ )
-			position[ d ] = this.position[ d ];
-	}
-	
-	@Override
-	public int[] getPosition(){ return position.clone(); }
-	
-	@Override
-	public int getPosition( final int dim ){ return position[ dim ]; }
-	
-	@Override
-	public String getPositionAsString()
-	{
-		String pos = "(" + position[ 0 ];
-		
-		for ( int d = 1; d < numDimensions; d++ )
-			pos += ", " + position[ d ];
-		
-		pos += ")";
-		
-		return pos;
-	}
-	
-	@Override
-	public String toString() { return getPositionAsString() + " = " + getType(); }
+	public ImagePlusContainer< T, ? > getStorageContainer() { return container;	}
 }

@@ -12,6 +12,7 @@ import mpicbg.imglib.container.ContainerFactory;
 import mpicbg.imglib.container.array.ArrayContainerFactory;
 import mpicbg.imglib.container.cell.CellContainerFactory;
 import mpicbg.imglib.container.imageplus.ImagePlusContainerFactory;
+import mpicbg.imglib.container.planar.PlanarContainerFactory;
 import mpicbg.imglib.cursor.Cursor;
 import mpicbg.imglib.cursor.LocalizableByDimCursor;
 import mpicbg.imglib.cursor.LocalizableCursor;
@@ -67,7 +68,7 @@ public class ContainerTests
 	}
 
 	/**
-	 * Test CellContainer
+	 * Test ImagePlusContainer
 	 */
 	@Test public void testImagePlusContainer()
 	{
@@ -81,6 +82,25 @@ public class ContainerTests
 				            testContainer( dim[ i ], new ImagePlusContainerFactory(), new ArrayContainerFactory() ) );
 				assertTrue( "ImagePlusContainer vs ImagePlusContainer failed for dim = " + MathLib.printCoordinates( dim[ i ] ),
 				            testContainer( dim[ i ], new ImagePlusContainerFactory(), new ImagePlusContainerFactory() ) );
+			}
+		}
+	}
+	
+	/**
+	 * Test PlanarContainer
+	 */
+	@Test public void testPlanarContainer()
+	{
+		for ( int i = 0; i < dim.length; ++i )
+		{
+			if ( dim[ i ].length < 6 )
+			{
+				assertTrue( "ArrayContainer vs PlanarContainer failed for dim = " + MathLib.printCoordinates( dim[ i ] ),
+				            testContainer( dim[ i ], new ArrayContainerFactory(), new PlanarContainerFactory() ) );
+				assertTrue( "PlanarContainer vs ArrayContainer failed for dim = " + MathLib.printCoordinates( dim[ i ] ), 
+				            testContainer( dim[ i ], new PlanarContainerFactory(), new ArrayContainerFactory() ) );
+				assertTrue( "PlanarContainer vs PlanarContainer failed for dim = " + MathLib.printCoordinates( dim[ i ] ),
+				            testContainer( dim[ i ], new PlanarContainerFactory(), new PlanarContainerFactory() ) );
 			}
 		}
 	}

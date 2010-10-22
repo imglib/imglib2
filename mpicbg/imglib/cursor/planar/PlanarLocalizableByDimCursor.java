@@ -55,16 +55,16 @@ public class PlanarLocalizableByDimCursor< T extends Type< T > >
 	{
 		super( container, image, type );
 		
-		final int[] dimensions = container.getDimensions();
-		step = Array.createAllocationSteps( container.getDimensions() );
-		sliceSteps = new int[ dimensions.length ];
-		if ( dimensions.length > 2 )
+		final int[] dims = container.getDimensions();
+		step = Array.createAllocationSteps( dims );
+		sliceSteps = new int[ dims.length ];
+		if ( dims.length > 2 )
 		{
 			sliceSteps[ 2 ] = 1;
-			for ( int i = 3; i < dimensions.length; ++i )
+			for ( int i = 3; i < dims.length; ++i )
 			{
 				final int j = i - 1;
-				sliceSteps[ i ] = dimensions[ j ] * sliceSteps[ j ];
+				sliceSteps[ i ] = dims[ j ] * sliceSteps[ j ];
 			}
 		}
 			
@@ -142,11 +142,11 @@ public class PlanarLocalizableByDimCursor< T extends Type< T > >
 	}
 
 	@Override
-	public void moveTo( final int[] position )
+	public void moveTo( final int[] pos )
 	{		
 		for ( int d = 0; d < numDimensions; ++d )
 		{
-			final int dist = position[ d ] - getPosition( d );
+			final int dist = pos[ d ] - getPosition( d );
 			
 			if ( dist != 0 )				
 				move( dist, d );

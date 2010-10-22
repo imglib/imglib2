@@ -28,7 +28,6 @@
 package mpicbg.imglib.container.imageplus;
 
 import mpicbg.imglib.container.DirectAccessContainer;
-import mpicbg.imglib.container.DirectAccessContainerFactory;
 import mpicbg.imglib.container.basictypecontainer.array.BitArray;
 import mpicbg.imglib.container.basictypecontainer.array.ByteArray;
 import mpicbg.imglib.container.basictypecontainer.array.CharArray;
@@ -37,6 +36,7 @@ import mpicbg.imglib.container.basictypecontainer.array.FloatArray;
 import mpicbg.imglib.container.basictypecontainer.array.IntArray;
 import mpicbg.imglib.container.basictypecontainer.array.LongArray;
 import mpicbg.imglib.container.basictypecontainer.array.ShortArray;
+import mpicbg.imglib.container.planar.PlanarContainerFactory;
 import mpicbg.imglib.type.Type;
 
 /**
@@ -44,7 +44,7 @@ import mpicbg.imglib.type.Type;
  * 
  * @author Jan Funke, Stephan Preibisch, Stephan Saalfeld, Johannes Schindelin
  */
-public class ImagePlusContainerFactory extends DirectAccessContainerFactory
+public class ImagePlusContainerFactory extends PlanarContainerFactory
 {
 	@Override
 	public < T extends Type< T > > DirectAccessContainer< T, BitArray > createBitInstance( int[] dimensions, final int entitiesPerPixel )
@@ -117,26 +117,4 @@ public class ImagePlusContainerFactory extends DirectAccessContainerFactory
 
 		return new ShortImagePlus< T >( this, dimensions, entitiesPerPixel );
 	}
-
-	@Override
-	public String getErrorMessage()
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void printProperties()
-	{
-	// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void setParameters( String configuration )
-	{
-	// TODO Auto-generated method stub
-
-	}
-
 }

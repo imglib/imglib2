@@ -97,10 +97,10 @@ public class PlanarLocalizableCursor<T extends Type<T>> extends PlanarCursor<T> 
 
 
 	@Override
-	public void getPosition( int[] position )
+	public void getPosition( int[] pos )
 	{
 		for ( int d = 0; d < numDimensions; d++ )
-			position[ d ] = this.position[ d ];
+			pos[ d ] = this.position[ d ];
 	}
 	
 	@Override

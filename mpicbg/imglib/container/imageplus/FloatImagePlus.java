@@ -47,7 +47,8 @@ public class FloatImagePlus<T extends Type<T>> extends ImagePlusContainer<T, Flo
 	public FloatImagePlus( final ImagePlusContainerFactory factory, final int[] dim, final int entitiesPerPixel ) 
 	{
 		super( factory, dim, entitiesPerPixel );
-		
+
+		mirror.clear();
 		if ( entitiesPerPixel == 1 )
 		{
 			final ImageStack stack = new ImageStack( width, height );
@@ -58,9 +59,9 @@ public class FloatImagePlus<T extends Type<T>> extends ImagePlusContainer<T, Flo
 			if ( slices > 1 )
 				imp.setOpenAsHyperStack( true );
 			
-			for ( int c = 0; c < channels; ++c )
-				for ( int t = 0; t < frames; ++t )
-					for ( int z = 0; z < depth; ++z )
+			for ( int t = 0; t < frames; ++t )
+				for ( int z = 0; z < depth; ++z )
+					for ( int c = 0; c < channels; ++c )
 						mirror.add( new FloatArray( ( float[] )imp.getStack().getProcessor( imp.getStackIndex( c + 1, z + 1 , t + 1 ) ).getPixels() ) );
 		}
 		else
