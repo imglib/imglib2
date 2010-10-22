@@ -66,6 +66,7 @@ public class NIOShortArray implements ArrayDataAccess<NIOShortArray>, ShortAcces
 		data.put(index, value);		
 	}
 	
+	@Override
 	public short[] getCurrentStorageArray()
 	{ 		  
 		short[] outData = new short[ data.capacity() ];
@@ -75,8 +76,5 @@ public class NIOShortArray implements ArrayDataAccess<NIOShortArray>, ShortAcces
 	
 	@Override
 	public NIOShortArray createArray( final int numEntities ) { return new NIOShortArray( numEntities ); }
-
-	@Override
-	public Object getCurrentStorageArrayAsObject() { return getCurrentStorageArray(); }
 
 }

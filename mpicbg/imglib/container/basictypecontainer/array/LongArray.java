@@ -60,12 +60,10 @@ public class LongArray implements LongAccess, ArrayDataAccess<LongArray>
 		data[ index ] = value;		
 	}
 	
+	@Override
 	public long[] getCurrentStorageArray(){ return data; }
 
 	@Override
 	public LongArray createArray( final int numEntities ) { return new LongArray( numEntities ); }
-
-	@Override
-	public Object getCurrentStorageArrayAsObject() { return getCurrentStorageArray(); }
 
 }

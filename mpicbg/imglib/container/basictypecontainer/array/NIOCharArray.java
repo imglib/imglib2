@@ -65,7 +65,8 @@ public class NIOCharArray implements ArrayDataAccess<NIOCharArray>, CharAccess
 	{
 		data.put(index, value);		
 	}
-	
+
+	@Override
 	public char[] getCurrentStorageArray()
 	{ 		  
 		char[] outData = new char[ data.capacity() ];
@@ -75,8 +76,5 @@ public class NIOCharArray implements ArrayDataAccess<NIOCharArray>, CharAccess
 	
 	@Override
 	public NIOCharArray createArray( final int numEntities ) { return new NIOCharArray( numEntities ); }
-
-	@Override
-	public Object getCurrentStorageArrayAsObject() { return getCurrentStorageArray(); }
 
 }

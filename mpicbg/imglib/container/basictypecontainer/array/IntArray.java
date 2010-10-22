@@ -63,9 +63,7 @@ public class IntArray implements IntAccess, ArrayDataAccess<IntArray>
 	@Override
 	public IntArray createArray( final int numEntities ) { return new IntArray( numEntities ); }
 
-	public int[] getCurrentStorageArray(){ return data; }
-
 	@Override
-	public Object getCurrentStorageArrayAsObject() { return getCurrentStorageArray(); }
+	public int[] getCurrentStorageArray(){ return data; }
 
 }

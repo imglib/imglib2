@@ -66,6 +66,7 @@ public class NIOIntArray implements ArrayDataAccess<NIOIntArray>, IntAccess
 		data.put(index, value);		
 	}
 	
+	@Override
 	public int[] getCurrentStorageArray()
 	{ 		  
 		int[] outData = new int[ data.capacity() ];
@@ -75,8 +76,5 @@ public class NIOIntArray implements ArrayDataAccess<NIOIntArray>, IntAccess
 	
 	@Override
 	public NIOIntArray createArray( final int numEntities ) { return new NIOIntArray( numEntities ); }
-
-	@Override
-	public Object getCurrentStorageArrayAsObject() { return getCurrentStorageArray(); }
 
 }

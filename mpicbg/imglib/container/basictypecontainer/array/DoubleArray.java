@@ -62,10 +62,8 @@ public class DoubleArray implements DoubleAccess, ArrayDataAccess<DoubleArray>
 	
 	@Override
 	public DoubleArray createArray( final int numEntities ) { return new DoubleArray( numEntities ); }
-	
-	public double[] getCurrentStorageArray(){ return data; }
 
 	@Override
-	public Object getCurrentStorageArrayAsObject() { return getCurrentStorageArray(); }
+	public double[] getCurrentStorageArray(){ return data; }
 
 }

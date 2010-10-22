@@ -42,6 +42,6 @@ public class FakeArray implements FakeAccess, ArrayDataAccess<FakeArray>
 	public FakeArray createArray( final int numEntities ) { return null; }
 
 	@Override
-	public Object getCurrentStorageArrayAsObject() { return null; }
+	public Object getCurrentStorageArray() { return null; }
 
 }

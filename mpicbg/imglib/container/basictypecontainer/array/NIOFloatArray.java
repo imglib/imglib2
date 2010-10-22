@@ -67,6 +67,7 @@ public class NIOFloatArray implements ArrayDataAccess<NIOFloatArray>, FloatAcces
 		data.put(index, value);		
 	}
 	
+	@Override
 	public float[] getCurrentStorageArray()
 	{ 		  
 		float[] outData = new float[ data.capacity() ];
@@ -76,8 +77,5 @@ public class NIOFloatArray implements ArrayDataAccess<NIOFloatArray>, FloatAcces
 	
 	@Override
 	public NIOFloatArray createArray( final int numEntities ) { return new NIOFloatArray( numEntities ); }
-
-	@Override
-	public Object getCurrentStorageArrayAsObject() { return getCurrentStorageArray(); }
 
 }

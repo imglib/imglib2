@@ -60,12 +60,10 @@ public class CharArray implements CharAccess, ArrayDataAccess<CharArray>
 		data[ index ] = value;		
 	}
 	
+	@Override
 	public char[] getCurrentStorageArray(){ return data; }
 
 	@Override
 	public CharArray createArray( final int numEntities ) { return new CharArray( numEntities ); }
-
-	@Override
-	public Object getCurrentStorageArrayAsObject() { return getCurrentStorageArray(); }
 
 }

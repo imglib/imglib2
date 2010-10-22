@@ -60,10 +60,8 @@ public class ByteArray implements ByteAccess, ArrayDataAccess<ByteArray>
 		data[ index ] = value;		
 	}
 	
-	public byte[] getCurrentStorageArray(){ return data; }
-
 	@Override
-	public Object getCurrentStorageArrayAsObject(){ return data; }
+	public byte[] getCurrentStorageArray(){ return data; }
 
 	@Override
 	public ByteArray createArray( final int numEntities ) { return new ByteArray( numEntities ); }

@@ -64,7 +64,8 @@ public class NIOByteArray implements ArrayDataAccess<NIOByteArray>, ByteAccess
 	{
 		data.put(index, value);		
 	}
-	
+
+	@Override
 	public byte[] getCurrentStorageArray()
 	{ 		  
 		byte[] outData = new byte[ data.capacity() ];
@@ -74,8 +75,5 @@ public class NIOByteArray implements ArrayDataAccess<NIOByteArray>, ByteAccess
 	
 	@Override
 	public NIOByteArray createArray( final int numEntities ) { return new NIOByteArray( numEntities ); }
-
-	@Override
-	public Object getCurrentStorageArrayAsObject() { return getCurrentStorageArray(); }
 
 }
