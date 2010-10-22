@@ -22,7 +22,7 @@ import mpicbg.imglib.cursor.Localizable;
 import mpicbg.imglib.type.ComparableType;
 import mpicbg.imglib.type.numeric.NumericType;
 
-public class DifferenceOfGaussianPeak< T extends NumericType<T> & ComparableType<T> > implements Localizable
+public class DifferenceOfGaussianPeak< T extends NumericType<T> > implements Localizable
 {
 	SpecialPoint specialPoint;
 	String errorMessage;
