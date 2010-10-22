@@ -99,10 +99,9 @@ public interface Type<T extends Type<T>>
 	public void updateContainer( Cursor<?> c );	
 
 	/**
-	 * Increments the array position of the {@link Type}, 
-	 * this is called by the {@link Cursor}s which iterate over the image.
+	 * Set the array position of the {@link Type}.
 	 * 
-	 * @param i - how many steps
+	 * @param i - index value
 	 */
 	public void updateIndex( final int i );
 	
