@@ -13,7 +13,7 @@ import mpicbg.imglib.cursor.LocalizableCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.ImageFactory;
 import mpicbg.imglib.type.logic.BitType;
-import mpicbg.imglib.type.numeric.NumericType;
+import mpicbg.imglib.type.numeric.RealType;
 /**
  * This class implements a very simple peak-picker, with optional ellipsoidal peak suppression.
  * Peaks are found by taking the sign of the difference operator in each dimension, differentiating
@@ -34,7 +34,7 @@ import mpicbg.imglib.type.numeric.NumericType;
  * @param <T> the {@link ComparableType} representing information stored in the {@link Image} to
  * pick peaks from.
  */
-public class PickImagePeaks <T extends NumericType<T>> implements OutputAlgorithm<BitType>, Benchmark
+public class PickImagePeaks <T extends RealType<T>> implements OutputAlgorithm<BitType>, Benchmark
 {
 	private final Image<T> image;
 	private long pTime;

@@ -8,7 +8,7 @@ import mpicbg.imglib.cursor.LocalizableCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.ImageFactory;
 import mpicbg.imglib.type.ComparableType;
-import mpicbg.imglib.type.numeric.NumericType;
+import mpicbg.imglib.type.numeric.RealType;
 import mpicbg.imglib.type.numeric.integer.IntType;
 import mpicbg.imglib.type.numeric.integer.LongType;
 import mpicbg.imglib.type.numeric.integer.ShortType;
@@ -37,7 +37,7 @@ import mpicbg.imglib.type.numeric.integer.ShortType;
  * rho = y * sin(theta) - x * cos(theta)
  * @Override 
  */
-public class HoughLineTransform <S extends NumericType<S>, T extends ComparableType<T>> extends HoughTransform<S, T>
+public class HoughLineTransform <S extends RealType<S>, T extends ComparableType<T>> extends HoughTransform<S, T>
 {
 	public static final int DEFAULT_THETA = 180;
 	public final double dTheta;

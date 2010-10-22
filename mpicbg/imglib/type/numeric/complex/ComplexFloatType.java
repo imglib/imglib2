@@ -163,21 +163,6 @@ public class ComplexFloatType extends ComplexTypeImpl<ComplexFloatType> implemen
 		setComplex( a );
 	}
 
-	@Override
-	public int compareTo( final ComplexFloatType c ) 
-	{
-		final float real1 = getRealFloat();
-		final float complex1 = getComplexFloat();
-		final float real2 = c.getRealFloat();
-		final float complex2 = c.getComplexFloat();
-		
-		if ( real1 > real2 || ( real1 == real2 && complex1 > complex2 ) )
-			return 1;
-		else if ( real1 < real2 ||  ( real1 == real2 && complex1 < complex2 ))
-			return -1;
-		else 
-			return 0;
-	}
 
 	@Override
 	public void set( final ComplexFloatType c ) 

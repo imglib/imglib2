@@ -1,8 +1,6 @@
 package mpicbg.imglib.type.numeric;
 
-import mpicbg.imglib.type.ComparableType;
-
-public interface NumericType<T extends NumericType<T>> extends ComparableType<T>
+public interface NumericType<T extends NumericType<T>>
 {
 	public void add( T c );
 	public void sub( T c );

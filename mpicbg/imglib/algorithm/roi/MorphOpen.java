@@ -4,7 +4,7 @@ import mpicbg.imglib.algorithm.Benchmark;
 import mpicbg.imglib.algorithm.OutputAlgorithm;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
-import mpicbg.imglib.type.numeric.ComplexType;
+import mpicbg.imglib.type.numeric.RealType;
 
 /**
  * Open morphological operation. Operates by creating a {@link MorphErode} and a
@@ -14,7 +14,7 @@ import mpicbg.imglib.type.numeric.ComplexType;
  *
  * @param <T> {@link Image} type.
  */
-public class MorphOpen<T extends ComplexType<T>> implements OutputAlgorithm<T>, Benchmark
+public class MorphOpen<T extends RealType<T>> implements OutputAlgorithm<T>, Benchmark
 {
 	
 	private final Image<T> image;

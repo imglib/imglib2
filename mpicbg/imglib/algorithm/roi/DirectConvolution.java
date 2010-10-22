@@ -8,7 +8,7 @@ import mpicbg.imglib.cursor.special.RegionOfInterestCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.ImageFactory;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
-import mpicbg.imglib.type.numeric.ComplexType;
+import mpicbg.imglib.type.numeric.RealType;
 import mpicbg.imglib.type.numeric.integer.ShortType;
 
 /**
@@ -22,7 +22,7 @@ import mpicbg.imglib.type.numeric.integer.ShortType;
  * @param <S> output image type
  */
 public class DirectConvolution
-	<T extends ComplexType<T>, R extends ComplexType<R>, S extends ComplexType<S>>
+	<T extends RealType<T>, R extends RealType<R>, S extends RealType<S>>
 		extends ROIAlgorithm<T, S>
 {
 

@@ -2,7 +2,7 @@ package mpicbg.imglib.algorithm.roi;
 
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
-import mpicbg.imglib.type.numeric.ComplexType;
+import mpicbg.imglib.type.numeric.RealType;
 
 /**
  * DirectCrossCorr performs direct cross-correlation of a kernel against an image.
@@ -13,7 +13,7 @@ import mpicbg.imglib.type.numeric.ComplexType;
  * @param <S> output image type 
  */
 public class DirectCrossCorr
-	<T extends ComplexType<T>, R extends ComplexType<R>, S extends ComplexType<S>>
+	<T extends RealType<T>, R extends RealType<R>, S extends RealType<S>>
 		extends DirectConvolution<T, R, S>
 {
 	public DirectCrossCorr(final S type, final Image<T> inputImage, final Image<R> kernel)

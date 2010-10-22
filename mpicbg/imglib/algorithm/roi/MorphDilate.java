@@ -3,7 +3,7 @@ package mpicbg.imglib.algorithm.roi;
 import mpicbg.imglib.cursor.LocalizableByDimCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
-import mpicbg.imglib.type.numeric.ComplexType;
+import mpicbg.imglib.type.numeric.RealType;
 
 /**
  * Dilation morphological operation.
@@ -12,7 +12,7 @@ import mpicbg.imglib.type.numeric.ComplexType;
  *
  * @param <T> {@link Image} type.
  */
-public class MorphDilate<T extends ComplexType<T>> extends StatisticalOperation<T> {
+public class MorphDilate<T extends RealType<T>> extends StatisticalOperation<T> {
 
 	
 	public MorphDilate(final Image<T> imageIn, final StructuringElement strel,

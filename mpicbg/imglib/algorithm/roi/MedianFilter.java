@@ -3,7 +3,7 @@ package mpicbg.imglib.algorithm.roi;
 import mpicbg.imglib.cursor.LocalizableByDimCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
-import mpicbg.imglib.type.numeric.ComplexType;
+import mpicbg.imglib.type.numeric.RealType;
 
 
 /**
@@ -13,7 +13,7 @@ import mpicbg.imglib.type.numeric.ComplexType;
  *
  * @param <T> {@link Image} type.
  */
-public class MedianFilter<T extends ComplexType<T>> extends StatisticalOperation<T> {
+public class MedianFilter<T extends RealType<T>> extends StatisticalOperation<T> {
 
 	public MedianFilter(final Image<T> imageIn, final StructuringElement inStrel,
 			final OutOfBoundsStrategyFactory<T> inOutFactory) {
