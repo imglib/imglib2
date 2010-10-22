@@ -19,7 +19,6 @@ package mpicbg.imglib.algorithm.scalespace;
 import mpicbg.imglib.algorithm.math.MathLib;
 import mpicbg.imglib.algorithm.scalespace.DifferenceOfGaussian.SpecialPoint;
 import mpicbg.imglib.cursor.Localizable;
-import mpicbg.imglib.type.ComparableType;
 import mpicbg.imglib.type.numeric.NumericType;
 
 public class DifferenceOfGaussianPeak< T extends NumericType<T> > implements Localizable
