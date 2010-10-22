@@ -90,7 +90,7 @@ public class LOCI
 			else if ( pixelType == FormatTools.UINT8 )
 			{
 				/* inconvertible types due to javac bug 6548436: return (Image<T>)openLOCIByteType( path, fileName, new ImageFactory<ByteType>( new ByteType(), containerFactory ), from, to ); */
-				return (Image)openLOCIByteType( path, fileName, new ImageFactory<ByteType>( new ByteType(), containerFactory ), from, to );
+				return (Image)openLOCIUnsignedByteType( path, fileName, new ImageFactory<UnsignedByteType>( new UnsignedByteType(), containerFactory ), from, to );
 			}
 			else
 			{
