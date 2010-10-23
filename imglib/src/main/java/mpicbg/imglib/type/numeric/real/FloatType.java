@@ -194,5 +194,5 @@ public class FloatType extends RealTypeImpl<FloatType> implements RealType<Float
 	public FloatType createVariable(){ return new FloatType( 0 ); }
 	
 	@Override
-	public FloatType clone(){ return new FloatType( get() ); }
+	public FloatType copy(){ return new FloatType( get() ); }
 }

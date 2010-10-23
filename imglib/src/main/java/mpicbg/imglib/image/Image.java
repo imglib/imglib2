@@ -489,7 +489,7 @@ public class Image<T extends Type<T>> implements ImageProperties, Dimensionality
 			cursor1.fwd();
 			cursor2.moveTo( cursor1 );
 			
-			pixels[ i++ ] = cursor2.getType().clone();			
+			pixels[ i++ ] = cursor2.getType().copy();		
 		}
 		
 		cursor1.close();

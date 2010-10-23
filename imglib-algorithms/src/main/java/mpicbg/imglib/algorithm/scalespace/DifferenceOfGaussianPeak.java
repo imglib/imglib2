@@ -36,8 +36,8 @@ public class DifferenceOfGaussianPeak< T extends NumericType<T> > implements Loc
 		this.pixelLocation = pixelLocation.clone();
 		this.subPixelLocationOffset = new float[ pixelLocation.length ];
 		
-		this.value = value.clone();
-		this.sumValue = value.clone();
+		this.value = value.copy();
+		this.sumValue = value.copy();
 		this.fitValue = value.createVariable();
 		this.fitValue.setZero();
 		

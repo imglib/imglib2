@@ -84,7 +84,7 @@ public class DifferenceOfGaussian < A extends Type<A>, B extends NumericType<B> 
 		this.minusOne.setZero();
 		this.minusOne.sub( one );
 		
-		this.negMinPeakValue = minPeakValue.clone();
+		this.negMinPeakValue = minPeakValue.copy();
 		this.negMinPeakValue.mul( minusOne );
 	}
 	
@@ -317,7 +317,7 @@ MainLoop:           while ( cursor.hasNext() )
 
 	                		// if we do not clone it here, it might be moved along with the cursor
 	                		// depending on the container type used
-	                		final B currentValue = cursor.getType().clone();
+	                		final B currentValue = cursor.getType().copy();
 	                		
 	                		// it can never be a desired peak as it is too low
 	                		if ( !isPeakHighEnough( currentValue ) )

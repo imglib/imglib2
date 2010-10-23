@@ -187,5 +187,5 @@ final public class LongType extends IntegerTypeImpl<LongType>
 	public LongType createVariable(){ return new LongType( 0 ); }
 
 	@Override
-	public LongType clone(){ return new LongType( get() ); }
+	public LongType copy(){ return new LongType( get() ); }
 }

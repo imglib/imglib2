@@ -184,5 +184,5 @@ public class ComplexFloatType extends ComplexTypeImpl<ComplexFloatType> implemen
 	public ComplexFloatType createVariable(){ return new ComplexFloatType( 0, 0 ); }
 	
 	@Override
-	public ComplexFloatType clone(){ return new ComplexFloatType( getRealFloat(), getComplexFloat() ); }
+	public ComplexFloatType copy(){ return new ComplexFloatType( getRealFloat(), getComplexFloat() ); }
 }

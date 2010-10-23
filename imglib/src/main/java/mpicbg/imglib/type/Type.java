@@ -151,7 +151,7 @@ public interface Type<T extends Type<T>>
 	 * Creates a new {@link Type} which can only store one value but contains the value of this {@link Type}
 	 * @return - a new {@link Type} instance
 	 */
-	public T clone();
+	public T copy();
 
 	/**
 	 * Creates a new {@link Type} which stores in the same physical array. This is only used internally.

@@ -135,7 +135,7 @@ public class PickImagePeaks <T extends RealType<T>> implements OutputAlgorithm<B
 			for (int[] pos : peakLocList)				
 			{
 				imCursor.setPosition(pos);
-				type = imCursor.getType().clone();
+				type = imCursor.getType().copy();
 				suppressionList.add(new Peak(pos, type));
 			}
 			//sort the list.

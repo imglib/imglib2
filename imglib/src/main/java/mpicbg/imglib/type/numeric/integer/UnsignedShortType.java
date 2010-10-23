@@ -139,5 +139,5 @@ public class UnsignedShortType extends GenericShortType<UnsignedShortType>
 	public UnsignedShortType createVariable(){ return new UnsignedShortType( 0 ); }
 
 	@Override
-	public UnsignedShortType clone(){ return new UnsignedShortType( get() ); }
+	public UnsignedShortType copy(){ return new UnsignedShortType( get() ); }
 }

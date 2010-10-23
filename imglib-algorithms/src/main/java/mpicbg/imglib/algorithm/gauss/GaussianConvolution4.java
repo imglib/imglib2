@@ -140,7 +140,7 @@ public class GaussianConvolution4< A extends Type<A>, B extends ExponentialMathT
 		final B[] sigmas = sigma.createArray1D( image.getNumDimensions() ); 
 			
 		for ( int d = 0; d < image.getNumDimensions(); ++d )
-			sigmas[ d ] = sigma.clone();
+			sigmas[ d ] = sigma.copy();
 		
 		return sigmas;
 	}

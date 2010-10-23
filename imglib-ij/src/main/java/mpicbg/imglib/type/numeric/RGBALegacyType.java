@@ -204,7 +204,7 @@ final public class RGBALegacyType extends TypeImpl<RGBALegacyType> implements Nu
 	public RGBALegacyType createVariable() { return new RGBALegacyType( 0 ); }
 
 	@Override
-	public RGBALegacyType clone() { return new RGBALegacyType( get() ); }
+	public RGBALegacyType copy() { return new RGBALegacyType( get() ); }
 
 	@Override
 	public String toString() 

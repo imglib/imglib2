@@ -92,5 +92,5 @@ public class IntType extends GenericIntType<IntType>
 	public IntType createVariable(){ return new IntType( 0 ); }
 
 	@Override
-	public IntType clone(){ return new IntType( getValue() ); }
+	public IntType copy(){ return new IntType( getValue() ); }
 }

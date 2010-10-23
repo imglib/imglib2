@@ -139,5 +139,5 @@ public class UnsignedIntType extends GenericIntType<UnsignedIntType>
 	public UnsignedIntType createVariable(){ return new UnsignedIntType( 0 ); }
 
 	@Override
-	public UnsignedIntType clone(){ return new UnsignedIntType( get() ); }
+	public UnsignedIntType copy(){ return new UnsignedIntType( get() ); }
 }

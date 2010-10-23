@@ -75,7 +75,7 @@ public abstract class ROIAlgorithm <T extends RealType<T>, S extends RealType<S>
 		imageFactory = null;
 		errorMsg = "";
 		name = null;
-		typeS = type.clone();
+		typeS = type.copy();
 		Arrays.fill(initPos, 0);
 		
 		if (inOutFactory == null)

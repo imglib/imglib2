@@ -66,13 +66,13 @@ public abstract class StatisticalOperation<T extends RealType<T>> extends ROIAlg
 				
 				if (strelCursor.getType().get())
 				{
-					R type = cursor.getType().clone();
+					R type = cursor.getType().copy();
 					int i = 0;
 					while(i < list.size() && type.compareTo(list.get(i)) > 0)
 					{
 						++i;
 					}
-					list.add(i, type.clone());							
+					list.add(i, type.copy());							
 				}
 						
 			}
