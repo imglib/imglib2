@@ -1,6 +1,8 @@
 package mpicbg.imglib.type.numeric;
 
-public interface NumericType<T extends NumericType<T>>
+import mpicbg.imglib.type.Type;
+
+public interface NumericType<T extends NumericType<T>> extends Type<T>
 {
 	public void add( T c );
 	public void sub( T c );

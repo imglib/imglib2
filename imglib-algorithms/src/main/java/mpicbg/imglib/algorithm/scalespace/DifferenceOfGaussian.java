@@ -36,10 +36,11 @@ import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.ImageFactory;
 import mpicbg.imglib.multithreading.SimpleMultiThreading;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
+import mpicbg.imglib.type.ComparableType;
 import mpicbg.imglib.type.Type;
 import mpicbg.imglib.type.numeric.NumericType;
 
-public class DifferenceOfGaussian < A extends Type<A>, B extends NumericType<B> > implements Algorithm, MultiThreaded, Benchmark
+public class DifferenceOfGaussian < A extends Type<A>, B extends NumericType<B> & ComparableType<B> > implements Algorithm, MultiThreaded, Benchmark
 {
 	public static enum SpecialPoint { INVALID, MIN, MAX };
 	
@@ -96,10 +97,10 @@ public class DifferenceOfGaussian < A extends Type<A>, B extends NumericType<B> 
 	 * This method returns the {@link OutputAlgorithm} that will compute the Gaussian Convolutions, more efficient versions can override this method
 	 * 
 	 * @param sigma - the sigma of the convolution
-	 * @param numThreads - the number of threads for this convolution
+	 * @param nThreads - the number of threads for this convolution
 	 * @return
 	 */
-	protected OutputAlgorithm<B> getGaussianConvolution( final double sigma, final int numThreads )
+	protected OutputAlgorithm<B> getGaussianConvolution( final double sigma, final int nThreads )
 	{
 		final GaussianConvolution2<A, B> gauss = new GaussianConvolution2<A, B>( image, factory, outOfBoundsFactory, converter, sigma );
 		
@@ -275,12 +276,12 @@ public class DifferenceOfGaussian < A extends Type<A>, B extends NumericType<B> 
 	{
 	    final AtomicInteger ai = new AtomicInteger( 0 );					
 	    final Thread[] threads = SimpleMultiThreading.newThreads( getNumThreads() );
-	    final int numThreads = threads.length;
+	    final int nThreads = threads.length;
 	    final int numDimensions = laPlace.getNumDimensions();
 	    
 	    final Vector< ArrayList<DifferenceOfGaussianPeak<B>> > threadPeaksList = new Vector< ArrayList<DifferenceOfGaussianPeak<B>> >();
 	    
-	    for ( int i = 0; i < numThreads; ++i )
+	    for ( int i = 0; i < nThreads; ++i )
 	    	threadPeaksList.add( new ArrayList<DifferenceOfGaussianPeak<B>>() );
 
 		for (int ithread = 0; ithread < threads.length; ++ithread)
@@ -305,7 +306,7 @@ MainLoop:           while ( cursor.hasNext() )
 	                	cursor.fwd();
 	                	cursor.getPosition( position );
 	                	
-	                	if ( position[ 0 ] % numThreads == myNumber )
+	                	if ( position[ 0 ] % nThreads == myNumber )
 	                	{
 	                		for ( int d = 0; d < numDimensions; ++d )
 	                		{
@@ -343,12 +344,12 @@ MainLoop:           while ( cursor.hasNext() )
 		SimpleMultiThreading.startAndJoin( threads );		
 
 		// put together the list from the various threads	
-		final ArrayList<DifferenceOfGaussianPeak<B>> peaks = new ArrayList<DifferenceOfGaussianPeak<B>>();
+		final ArrayList<DifferenceOfGaussianPeak<B>> dogPeaks = new ArrayList<DifferenceOfGaussianPeak<B>>();
 		
 		for ( final ArrayList<DifferenceOfGaussianPeak<B>> peakList : threadPeaksList )
-			peaks.addAll( peakList );		
+			dogPeaks.addAll( peakList );		
 		
-		return peaks;
+		return dogPeaks;
 	}
 	
 	@Override
