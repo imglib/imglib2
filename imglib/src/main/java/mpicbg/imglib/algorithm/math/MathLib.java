@@ -21,7 +21,6 @@ import java.util.List;
 import javax.media.j3d.Transform3D;
 import javax.vecmath.Matrix4f;
 
-import mpicbg.imglib.type.ComparableType;
 import mpicbg.imglib.type.Type;
 import mpicbg.imglib.type.numeric.ExponentialMathType;
 import mpicbg.models.AffineModel3D;
@@ -667,7 +666,7 @@ public class MathLib
 		}
 	}
 	
-	public static <T extends ComparableType<T>> T max( final T value1, final T value2 )
+	public static <T extends Type<T> & Comparable<T>> T max( final T value1, final T value2 )
 	{
 		if( value1.compareTo( value2 ) >= 0 )
 			return value1;
@@ -675,7 +674,7 @@ public class MathLib
 			return value2;
 	}
 
-	public static <T extends ComparableType<T>> T min( final T value1, final T value2 )
+	public static <T extends Type<T> & Comparable<T>> T min( final T value1, final T value2 )
 	{
 		if( value1.compareTo( value2 ) <= 0 )
 			return value1;

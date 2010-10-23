@@ -26,9 +26,9 @@ import mpicbg.imglib.cursor.Cursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.multithreading.Chunk;
 import mpicbg.imglib.multithreading.SimpleMultiThreading;
-import mpicbg.imglib.type.ComparableType;
+import mpicbg.imglib.type.Type;
 
-public class ComputeMinMax<T extends ComparableType<T>> implements Algorithm, MultiThreaded, Benchmark
+public class ComputeMinMax<T extends Type<T> & Comparable<T>> implements Algorithm, MultiThreaded, Benchmark
 {
 	final Image<T> image;
 	final T min, max;

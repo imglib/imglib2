@@ -6,7 +6,7 @@ import mpicbg.imglib.algorithm.math.MathLib;
 import mpicbg.imglib.cursor.LocalizableCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.ImageFactory;
-import mpicbg.imglib.type.ComparableType;
+import mpicbg.imglib.type.Type;
 import mpicbg.imglib.type.numeric.RealType;
 import mpicbg.imglib.type.numeric.integer.IntType;
 import mpicbg.imglib.type.numeric.integer.LongType;
@@ -36,7 +36,7 @@ import mpicbg.imglib.type.numeric.integer.ShortType;
  * rho = y * sin(theta) - x * cos(theta)
  * @Override 
  */
-public class HoughLineTransform <S extends RealType<S>, T extends ComparableType<T>> extends HoughTransform<S, T>
+public class HoughLineTransform <S extends RealType<S>, T extends Type<T> & Comparable<T>> extends HoughTransform<S, T>
 {
 	public static final int DEFAULT_THETA = 180;
 	public final double dTheta;
@@ -65,7 +65,7 @@ public class HoughLineTransform <S extends RealType<S>, T extends ComparableType
 	 * @param inputImage the {@link Image} to perform the Hough Line Transform against.
 	 * @return a default {@link HoughLineTransform} with {@link IntType} vote space.
 	 */
-	public static <T extends ComparableType<T>> HoughLineTransform<ShortType, T> shortHoughLine(final Image<T> inputImage)
+	public static <T extends Type<T> & Comparable< T >> HoughLineTransform<ShortType, T> shortHoughLine(final Image<T> inputImage)
 	{
 		return new HoughLineTransform<ShortType, T>(inputImage, new ShortType());
 	}
@@ -77,7 +77,7 @@ public class HoughLineTransform <S extends RealType<S>, T extends ComparableType
 	 * @param inputImage the {@link Image} to perform the Hough Line Transform against.
 	 * @return a default {@link HoughLineTransform} with {@link IntType} vote space.
 	 */
-	public static <T extends ComparableType<T>> HoughLineTransform<IntType, T> integerHoughLine(final Image<T> inputImage)
+	public static <T extends Type<T> & Comparable< T >> HoughLineTransform<IntType, T> integerHoughLine(final Image<T> inputImage)
 	{
 		return new HoughLineTransform<IntType, T>(inputImage, new IntType());
 	}
@@ -92,7 +92,7 @@ public class HoughLineTransform <S extends RealType<S>, T extends ComparableType
 	 * voting space, it would be better to create a {@link HoughLineTransform} instantiated with an
 	 * {@link ImageFactory} capable of handling it.
 	 */
-	public static <T extends ComparableType<T>> HoughLineTransform<LongType, T> longHoughLine(final Image<T> inputImage)
+	public static <T extends Type<T> & Comparable< T >> HoughLineTransform<LongType, T> longHoughLine(final Image<T> inputImage)
 	{
 		return new HoughLineTransform<LongType, T>(inputImage, new LongType());
 	}

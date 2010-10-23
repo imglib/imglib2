@@ -187,5 +187,6 @@ public interface Type<T extends Type<T>>
 	 * @param size3 - the size of the array
 	 * @return - T[][][] array
 	 */
-	public T[][][] createArray3D( int size1, int size2, int size3 );	
+	public T[][][] createArray3D( int size1, int size2, int size3 );
+	
 }

@@ -36,11 +36,10 @@ import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.ImageFactory;
 import mpicbg.imglib.multithreading.SimpleMultiThreading;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
-import mpicbg.imglib.type.ComparableType;
 import mpicbg.imglib.type.Type;
 import mpicbg.imglib.type.numeric.NumericType;
 
-public class DifferenceOfGaussian < A extends Type<A>, B extends NumericType<B> & ComparableType<B> > implements Algorithm, MultiThreaded, Benchmark
+public class DifferenceOfGaussian < A extends Type<A>, B extends NumericType<B> & Comparable<B> > implements Algorithm, MultiThreaded, Benchmark
 {
 	public static enum SpecialPoint { INVALID, MIN, MAX };
 	
