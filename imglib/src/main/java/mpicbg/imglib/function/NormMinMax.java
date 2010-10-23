@@ -14,16 +14,24 @@
  * 
  * @author Stephan Preibisch
  */
-package mpicbg.imglib.algorithm.math;
+package mpicbg.imglib.function;
 
-import mpicbg.imglib.algorithm.math.function.Function;
-import mpicbg.imglib.image.Image;
-import mpicbg.imglib.type.Type;
+import mpicbg.imglib.type.numeric.RealType;
 
-public class ImageCalculatorInPlace <S extends Type<S>, T extends Type<T>> extends ImageCalculator<S, T, S>
+public class NormMinMax< A extends RealType<A> > implements Converter< A, A >
 {
-	public ImageCalculatorInPlace( final Image<S> image1, final Image<T> image2, final Function<S, T, S> function )
+	final double min, tmp;
+	
+	public NormMinMax( final double min, final double max )
 	{
-		super( image1, image2, image1, function );
+		this.min = min;
+		this.tmp = max - min;
 	}
+	
+	@Override
+	public void convert( final A input, final A output )
+	{
+		output.setReal( (input.getRealDouble() - min) / tmp );	
+	}
+
 }

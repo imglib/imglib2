@@ -14,11 +14,15 @@
  * 
  * @author Stephan Preibisch
  */
-package mpicbg.imglib.algorithm.math.function;
+package mpicbg.imglib.function;
 
 import mpicbg.imglib.type.Type;
 
-public interface Function< A extends Type<A>, B extends Type<B>, C extends Type<C> >
+public class VoidConverter< A extends Type<A> > implements Converter<A, A>
 {
-	public void compute( A input1, B input2, C output );
+	@Override
+	public void convert( final A input, final A output )
+	{
+		output.set( input );
+	}
 }
