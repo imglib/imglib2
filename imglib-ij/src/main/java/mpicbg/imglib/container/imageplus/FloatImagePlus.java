@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2009--2010, Funke, Preibisch, Saalfeld & Schindelin
+ * Copyright (c) 2009--2010, Funke, Preibisch, Rueden, Saalfeld & Schindelin
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -38,17 +38,32 @@ import mpicbg.imglib.type.Type;
 /**
  * {@link ImagePlusContainer} for float-stored data.
  * 
- * @author Jan Funke, Stephan Preibisch, Stephan Saalfeld, Johannes Schindelin
+ * @author Jan Funke, Stephan Preibisch, Curtis Rueden, Stephan Saalfeld,
+ *   Johannes Schindelin
  */
 public class FloatImagePlus<T extends Type<T>> extends ImagePlusContainer<T, FloatArray> 
 {
-	final ImagePlus imp;	
+	final protected ImagePlus imp;	
 	
+	/**
+	 * Standard constructor as called by default factories.
+	 * 
+	 * <em>Note that this constructor does not know about the meaning of
+	 * dimensions > 1, and will use them in the {@link ImagePlus} default order
+	 * x,y,c,z,t.  That is, from two dimensions, it will create an x,y image,
+	 * from three dimensions, an x,y,c image, and from four dimensions, an
+	 * x,y,c,z image.</em>
+	 * 
+	 * @param factory
+	 * @param dim
+	 * @param entitiesPerPixel
+	 */
 	public FloatImagePlus( final ImagePlusContainerFactory factory, final int[] dim, final int entitiesPerPixel ) 
 	{
 		super( factory, dim, entitiesPerPixel );
 
 		mirror.clear();
+		
 		if ( entitiesPerPixel == 1 )
 		{
 			final ImageStack stack = new ImageStack( width, height );
@@ -85,9 +100,11 @@ public class FloatImagePlus<T extends Type<T>> extends ImagePlusContainer<T, Flo
 		
 		this.imp = imp;
 		
-		for ( int c = 0; c < channels; ++c )
-			for ( int t = 0; t < frames; ++t )
-				for ( int z = 0; z < depth; ++z )
+		mirror.clear();
+		
+		for ( int t = 0; t < frames; ++t )
+			for ( int z = 0; z < depth; ++z )
+				for ( int c = 0; c < channels; ++c )
 					mirror.add( new FloatArray( ( float[] )imp.getStack().getProcessor( imp.getStackIndex( c + 1, z + 1 , t + 1 ) ).getPixels() ) );
 	}
 

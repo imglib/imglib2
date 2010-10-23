@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2009--2010, Funke, Preibisch, Saalfeld & Schindelin
+ * Copyright (c) 2009--2010, Funke, Preibisch, Rueden, Saalfeld & Schindelin
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -54,7 +54,8 @@ import mpicbg.imglib.type.Type;
  * {@link ImagePlusContainer} provides access to the pixels of an
  * {@link ImagePlus} instance that can be accessed ({@see #getImagePlus()}.
  * 
- * @author Jan Funke, Stephan Preibisch, Stephan Saalfeld, Johannes Schindelin
+ * @author Jan Funke, Stephan Preibisch, Curtis Rueden, Stephan Saalfeld,
+ *   Johannes Schindelin
  */
 public class ImagePlusContainer<T extends Type<T>, A extends ArrayDataAccess<A>> extends PlanarContainer<T,A>
 {
@@ -70,7 +71,7 @@ public class ImagePlusContainer<T extends Type<T>, A extends ArrayDataAccess<A>>
 			final int channels,
 			final int entitiesPerPixel )
 	{
-		super( factory, reduceAndReorderDimensions( new int[]{ width, height, channels, depth, frames } ), entitiesPerPixel );
+		super( factory, reduceDimensions( new int[]{ width, height, channels, depth, frames } ), entitiesPerPixel );
 		
 		this.width = width;
 		this.height = height;
@@ -81,6 +82,19 @@ public class ImagePlusContainer<T extends Type<T>, A extends ArrayDataAccess<A>>
 		this.factory = factory; 
 	}
 
+	/**
+	 * Standard constructor as called by default factories.
+	 * 
+	 * <em>Note that this constructor does not know about the meaning of
+	 * dimensions > 1, and will use them in the {@link ImagePlus} default order
+	 * x,y,c,z,t.  That is, from two dimensions, it will create an x,y image,
+	 * from three dimensions, an x,y,c image, and from four dimensions, an
+	 * x,y,c,z image.</em>
+	 * 
+	 * @param factory
+	 * @param dim
+	 * @param entitiesPerPixel
+	 */
 	ImagePlusContainer( final ImagePlusContainerFactory factory, final int[] dim, final int entitiesPerPixel ) 
 	{
 		super( factory, dim, entitiesPerPixel );
@@ -98,26 +112,28 @@ public class ImagePlusContainer<T extends Type<T>, A extends ArrayDataAccess<A>>
 			height = 1;
 
 		if ( dim.length > 2 )
-			depth = dim[ 2 ];
+			channels = dim[ 2 ];
+		else
+			channels = 1;
+
+		if ( dim.length > 3 )
+			depth = dim[ 3 ];
 		else
 			depth = 1;
 
-		if ( dim.length > 3 )
-			frames = dim[ 3 ];
+		if ( dim.length > 4 )
+			frames = dim[ 4 ];
 		else
 			frames = 1;
-
-		if ( dim.length > 4 )
-			channels = dim[ 4 ];
-		else
-			channels = 1;
 		
 		this.factory = factory;
 	}
 	
 	ImagePlusContainer( final ImagePlusContainerFactory factory, final A creator, final int[] dim, final int entitiesPerPixel ) 
 	{
-		this( factory, dim, entitiesPerPixel );				
+		this( factory, dim, entitiesPerPixel );
+		
+		mirror.clear();
 		
 		for ( int i = 0; i < slices; ++i )
 			mirror.add( creator.createArray( width * height * entitiesPerPixel ) );
@@ -135,27 +151,18 @@ public class ImagePlusContainer<T extends Type<T>, A extends ArrayDataAccess<A>>
 	 * E.g. a gray-scale 2d time series would have three dimensions
 	 * [width,height,frames], a gray-scale 3d stack [width,height,depth] and a
 	 * 2d composite image [width,height,channels] as well.  A composite 3d
-	 * stack has four dimensions [width,height,depth,channels], as a time
-	 * series five [width,height,depth,frames,channels].
-	 * 
-	 * <em>Note that the order of the dimensions is slightly different from
-	 * that as used in the data stack in {@link ImagePlus}.  We considered this
-	 * more logical since interleaving the color channel in the middle of the
-	 * spatial dimensions makes sense only for display purposes but complicates
-	 * algorithm logics.  Note as well that this has no consequences for import,
-	 * export and processing of the data,
-	 * {@link ImagePlusContainer ImagePlusContainers}, internally, work on a
-	 * re-ordered list of the {@link ImagePlus} slices.</em> 
+	 * stack has four dimensions [width,height,channels,depth], as a time
+	 * series five [width,height,channels,depth,frames].
 	 * 
 	 * @param imp
 	 * @return
 	 */
-	protected static int[] reduceAndReorderDimensions( final ImagePlus imp )
+	protected static int[] reduceDimensions( final ImagePlus imp )
 	{
-		return reduceAndReorderDimensions( imp.getDimensions() );
+		return reduceDimensions( imp.getDimensions() );
 	}
 	
-	protected static int[] reduceAndReorderDimensions( final int[] impDimensions )
+	protected static int[] reduceDimensions( final int[] impDimensions )
 	{
 		/* ImagePlus is at least 2d, x,y are mapped to an index on a stack slice */
 		int n = 2;
@@ -168,6 +175,10 @@ public class ImagePlusContainer<T extends Type<T>, A extends ArrayDataAccess<A>>
 		
 		n = 1;
 		
+		/* channels */
+		if ( impDimensions[ 2 ] > 1 )
+			dim[ ++n ] = impDimensions[ 2 ];
+		
 		/* depth */
 		if ( impDimensions[ 3 ] > 1 )
 			dim[ ++n ] = impDimensions[ 3 ];
@@ -175,10 +186,6 @@ public class ImagePlusContainer<T extends Type<T>, A extends ArrayDataAccess<A>>
 		/* frames */
 		if ( impDimensions[ 4 ] > 1 )
 			dim[ ++n ] = impDimensions[ 4 ];
-		
-		/* channels */
-		if ( impDimensions[ 2 ] > 1 )
-			dim[ ++n ] = impDimensions[ 2 ];
 		
 		return dim;
 	}

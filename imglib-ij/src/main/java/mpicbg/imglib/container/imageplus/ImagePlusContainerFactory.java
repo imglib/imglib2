@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2009--2010, Funke, Preibisch, Saalfeld & Schindelin
+ * Copyright (c) 2009--2010, Funke, Preibisch, Rueden, Saalfeld & Schindelin
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -42,7 +42,8 @@ import mpicbg.imglib.type.Type;
 /**
  * Factory that creates an appropriate {@link ImagePlusContainer}.
  * 
- * @author Jan Funke, Stephan Preibisch, Stephan Saalfeld, Johannes Schindelin
+ * @author Jan Funke, Stephan Preibisch, Curtis Rueden, Stephan Saalfeld,
+ *   Johannes Schindelin
  */
 public class ImagePlusContainerFactory extends PlanarContainerFactory
 {
