@@ -12,7 +12,6 @@ import mpicbg.imglib.algorithm.fft.FourierTransform.PreProcessing;
 import mpicbg.imglib.algorithm.fft.FourierTransform.Rearrangement;
 import mpicbg.imglib.algorithm.floydsteinberg.FloydSteinbergDithering;
 import mpicbg.imglib.algorithm.gauss.DownSample;
-import mpicbg.imglib.algorithm.math.MathLib;
 import mpicbg.imglib.container.ContainerFactory;
 import mpicbg.imglib.container.array.ArrayContainerFactory;
 import mpicbg.imglib.image.Image;

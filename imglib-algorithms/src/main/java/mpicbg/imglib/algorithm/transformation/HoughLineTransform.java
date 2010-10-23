@@ -2,7 +2,7 @@ package mpicbg.imglib.algorithm.transformation;
 
 import java.util.ArrayList;
 
-import mpicbg.imglib.algorithm.math.MathLib;
+import mpicbg.imglib.algorithm.MathLib;
 import mpicbg.imglib.cursor.LocalizableCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.ImageFactory;

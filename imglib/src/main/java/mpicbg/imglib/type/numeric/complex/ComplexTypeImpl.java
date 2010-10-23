@@ -1,7 +1,7 @@
 package mpicbg.imglib.type.numeric.complex;
 
+import mpicbg.imglib.algorithm.MathLib;
 import mpicbg.imglib.algorithm.Precision.PrecisionReal;
-import mpicbg.imglib.algorithm.math.MathLib;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.display.ComplexTypePowerSpectrumDisplay;
 import mpicbg.imglib.image.display.Display;

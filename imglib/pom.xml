@@ -32,12 +32,6 @@
   </licenses>
 
   <dependencies>
-    <!-- TODO: define a real POM for mpicbg project -->
-    <dependency>
-      <groupId>mpicbg</groupId>
-      <artifactId>mpicbg</artifactId>
-      <version>20100908</version>
-    </dependency>
     <!-- test -->
     <dependency>
       <groupId>junit</groupId>

@@ -19,8 +19,8 @@ package mpicbg.imglib.algorithm.floydsteinberg;
 import java.util.Random;
 
 import mpicbg.imglib.algorithm.Benchmark;
+import mpicbg.imglib.algorithm.MathLib;
 import mpicbg.imglib.algorithm.OutputAlgorithm;
-import mpicbg.imglib.algorithm.math.MathLib;
 import mpicbg.imglib.container.array.ArrayContainerFactory;
 import mpicbg.imglib.cursor.LocalizableByDimCursor;
 import mpicbg.imglib.cursor.LocalizableCursor;

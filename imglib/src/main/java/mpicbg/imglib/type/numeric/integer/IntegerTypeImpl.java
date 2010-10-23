@@ -1,6 +1,6 @@
 package mpicbg.imglib.type.numeric.integer;
 
-import mpicbg.imglib.algorithm.math.MathLib;
+import mpicbg.imglib.algorithm.MathLib;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.display.Display;
 import mpicbg.imglib.image.display.IntegerTypeDisplay;

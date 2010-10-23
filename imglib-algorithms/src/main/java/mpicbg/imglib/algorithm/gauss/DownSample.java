@@ -17,9 +17,9 @@
 package mpicbg.imglib.algorithm.gauss;
 
 import mpicbg.imglib.algorithm.Benchmark;
+import mpicbg.imglib.algorithm.MathLib;
 import mpicbg.imglib.algorithm.MultiThreaded;
 import mpicbg.imglib.algorithm.OutputAlgorithm;
-import mpicbg.imglib.algorithm.math.MathLib;
 import mpicbg.imglib.cursor.LocalizableCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.interpolation.Interpolator;

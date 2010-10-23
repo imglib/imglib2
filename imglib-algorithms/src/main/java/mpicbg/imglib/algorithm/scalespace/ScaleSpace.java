@@ -19,12 +19,12 @@ package mpicbg.imglib.algorithm.scalespace;
 import java.util.ArrayList;
 
 import mpicbg.imglib.algorithm.Benchmark;
+import mpicbg.imglib.algorithm.MathLib;
 import mpicbg.imglib.algorithm.MultiThreaded;
 import mpicbg.imglib.algorithm.OutputAlgorithm;
 import mpicbg.imglib.algorithm.gauss.GaussianConvolutionReal;
 import mpicbg.imglib.algorithm.math.ImageCalculator;
 import mpicbg.imglib.algorithm.math.ImageConverter;
-import mpicbg.imglib.algorithm.math.MathLib;
 import mpicbg.imglib.algorithm.math.NormalizeImageMinMax;
 import mpicbg.imglib.container.ContainerFactory;
 import mpicbg.imglib.container.array.ArrayContainerFactory;

@@ -21,12 +21,12 @@
 package mpicbg.imglib.algorithm.fft;
 
 import mpicbg.imglib.algorithm.Benchmark;
+import mpicbg.imglib.algorithm.MathLib;
 import mpicbg.imglib.algorithm.MultiThreaded;
 import mpicbg.imglib.algorithm.OutputAlgorithm;
 import mpicbg.imglib.algorithm.fft.FourierTransform.PreProcessing;
 import mpicbg.imglib.algorithm.fft.FourierTransform.Rearrangement;
 import mpicbg.imglib.algorithm.gauss.GaussianConvolution;
-import mpicbg.imglib.algorithm.math.MathLib;
 import mpicbg.imglib.container.ContainerFactory;
 import mpicbg.imglib.cursor.Cursor;
 import mpicbg.imglib.cursor.LocalizableByDimCursor;
