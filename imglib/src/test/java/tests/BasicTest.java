@@ -17,7 +17,7 @@ import org.junit.Test;
  *
  * @author Johannes Schindelin
  */
-public class BasicTests extends TestBase {
+public class BasicTest extends JUnitTestBase {
 	/**
 	 * A very simple test image: 3x3x3, with the pixel (1, 0, 2) set to 1, otherwise 0
 	 */

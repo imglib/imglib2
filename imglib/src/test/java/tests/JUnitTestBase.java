@@ -30,7 +30,7 @@ import mpicbg.imglib.type.numeric.real.FloatType;
  *
  * @author Johannes Schindelin
  */
-public class TestBase {
+public class JUnitTestBase {
 	/**
 	 * An interface for image generators
 	 */
