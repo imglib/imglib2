@@ -40,9 +40,9 @@ import mpicbg.imglib.image.display.imagej.ImageJFunctions;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyValueFactory;
 import mpicbg.imglib.type.numeric.real.FloatType;
 
-public class HyperSphereIteratorTest
+public class HyperSphereIteratorBehavior
 {
-	private HyperSphereIteratorTest(){}
+	private HyperSphereIteratorBehavior(){}
 	
 	final static public void main( final String[] args )
 	{

@@ -29,7 +29,7 @@ import mpicbg.models.TranslationModel3D;
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  * @version 0.1a
  */
-public class TestShapeList
+public class ShapeListBehavior
 {
 	/**
 	 * @param args
