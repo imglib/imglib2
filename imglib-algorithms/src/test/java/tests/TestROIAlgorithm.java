@@ -45,11 +45,10 @@ public class TestROIAlgorithm <T extends RealType<T>> extends ROIAlgorithm<T, T>
 		OpenDialog od = new OpenDialog("Select an Image File", "");
 		
 		ImagePlus implus = IJ.openImage(od.getDirectory() + od.getFileName());
-		Image<R> im = ImagePlusAdapter.wrap(implus);
-		TestROIAlgorithm<R> tra = new TestROIAlgorithm<R>(im);
+		Image<R> im = ImagePlusAdapter.wrap(implus);		
 		Image<R> imout;	
                 Image<R> imloci = LOCI.openLOCI(od.getDirectory() + od.getFileName(), new ArrayContainerFactory());
-
+		TestROIAlgorithm<R> tra = new TestROIAlgorithm<R>(imloci);
 		
 		int[] pos = new int[2];
 
@@ -66,8 +65,9 @@ public class TestROIAlgorithm <T extends RealType<T>> extends ROIAlgorithm<T, T>
 		}
 		checkCursor.close();
 		*/
+		
 		imloci.getDisplay().setMinMax();
-		ImageJFunctions.displayAsVirtualStack(im).show();
+		ImageJFunctions.displayAsVirtualStack(imloci).show();
 		
 		im.getDisplay().setMinMax();
 		ImageJFunctions.displayAsVirtualStack(im).show();
