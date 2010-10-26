@@ -123,7 +123,7 @@ public class Unsigned12BitType extends IntegerTypeImpl<Unsigned12BitType>
 		b.setValue( j9, (value & 256) == 256 );
 		b.setValue( j10, (value & 512) == 512 );
 		b.setValue( j11, (value & 1024) == 1024 );
-		b.setValue( j12, (value & 2048) == 2028 );		
+		b.setValue( j12, (value & 2048) == 2048 );		
 	}
 
 	@Override
