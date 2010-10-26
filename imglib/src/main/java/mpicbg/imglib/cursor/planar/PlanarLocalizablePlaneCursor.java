@@ -83,13 +83,13 @@ public class PlanarLocalizablePlaneCursor< T extends Type<T>> extends PlanarLoca
 			switch ( xIndex )
 			{
 			case 0:
-				type.decIndex( width );
+				type.decIndex( width - 1 );
 				break;
 			case 1:
-				type.decIndex( planeSize );
+				type.decIndex( planeSize - 1 );
 				break;
 			default:
-				sliceIndex -= sliceSteps[ xIndex + 1 ];
+				sliceIndex -= sliceSteps[ xIndex + 1 ] - 1;
 				needUpdate = true;
 			}
 			
