@@ -65,32 +65,32 @@ public class FourierConvolution<T extends RealType<T>, S extends RealType<S>> im
 		setNumThreads();
 	}
 	
-	public boolean replaceImage( final Image<T> image )
+	public boolean replaceImage( final Image<T> img )
 	{
-		if ( !image.getContainer().compareStorageContainerCompatibility( this.image.getContainer() ))
+		if ( !img.getContainer().compareStorageContainerCompatibility( this.image.getContainer() ))
 		{
 			errorMessage = "Image containers are not comparable, cannot exchange image";
 			return false;
 		}
 		else
 		{
-			this.image = image;
+			this.image = img;
 			// the fft has to be recomputed
 			this.imgFFT = null;
 			return true;
 		}
 	}
 
-	public boolean replaceKernel( final Image<S> kernel )
+	public boolean replaceKernel( final Image<S> knl )
 	{
-		if ( !kernel.getContainer().compareStorageContainerCompatibility( this.kernel.getContainer() ))
+		if ( !knl.getContainer().compareStorageContainerCompatibility( this.kernel.getContainer() ))
 		{
 			errorMessage = "Kernel containers are not comparable, cannot exchange image";
 			return false;
 		}
 		else
 		{
-			this.kernel = kernel;
+			this.kernel = knl;
 			// the fft has to be recomputed
 			this.kernelFFT = null;
 			return true;
@@ -287,19 +287,7 @@ public class FourierConvolution<T extends RealType<T>, S extends RealType<S>> im
 		//
 		// Multiply in Fourier Space
 		//
-		final Cursor<ComplexFloatType> cursorImgFFT = imgFFT.createCursor();
-		final Cursor<ComplexFloatType> cursorKernelFFT = kernelFFT.createCursor();
-		
-		while ( cursorImgFFT.hasNext() )
-		{
-			cursorImgFFT.fwd();
-			cursorKernelFFT.fwd();
-			
-			cursorImgFFT.getType().mul( cursorKernelFFT.getType() );
-		}
-		
-		cursorImgFFT.close();
-		cursorKernelFFT.close();
+		multiply( imgFFT, kernelFFT );
 		
 		//
 		// Compute inverse Fourier Transform
@@ -320,6 +308,29 @@ public class FourierConvolution<T extends RealType<T>, S extends RealType<S>> im
 		
 		processingTime = System.currentTimeMillis() - startTime;
         return true;
+	}
+	
+	/**
+	 * Multiply in Fourier Space
+	 * 
+	 * @param a
+	 * @param b
+	 */
+	protected void multiply( final Image< ComplexFloatType > a, final Image< ComplexFloatType > b )
+	{
+		final Cursor<ComplexFloatType> cursorA = a.createCursor();
+		final Cursor<ComplexFloatType> cursorB = b.createCursor();
+		
+		while ( cursorA.hasNext() )
+		{
+			cursorA.fwd();
+			cursorB.fwd();
+			
+			cursorA.getType().mul( cursorB.getType() );
+		}
+		
+		cursorA.close();
+		cursorB.close();
 	}
 	
 	@Override
