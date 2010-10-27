@@ -37,7 +37,7 @@ import mpicbg.imglib.type.Type;
  *
  * @author Stephan Preibisch, Curtis Rueden and Stephan Saalfeld
  */
-public class PlanarLocalizablePlaneCursor< T extends Type<T>> extends PlanarLocalizableCursor< T > implements LocalizablePlaneCursor< T >
+public class PlanarLocalizablePlaneCursor< T extends Type< T > > extends PlanarLocalizableCursor< T > implements LocalizablePlaneCursor< T >
 {
 	private int xIndex, yIndex, xSize, ySize, pos, maxPos;
 	final private int[] sliceSteps;
@@ -46,7 +46,8 @@ public class PlanarLocalizablePlaneCursor< T extends Type<T>> extends PlanarLoca
 	public PlanarLocalizablePlaneCursor( final PlanarContainer< T,? > container, final Image< T > image, final T type ) 
 	{
 		super( container, image, type );
-		sliceSteps = new int[ image.getNumDimensions() + 1 ];
+		
+		sliceSteps = new int[ numDimensions + 1 ];
 		if ( sliceSteps.length > 2 )
 		{
 			sliceSteps[ 2 ] = 1;
@@ -200,7 +201,7 @@ public class PlanarLocalizablePlaneCursor< T extends Type<T>> extends PlanarLoca
 	{
 		type.updateIndex( container.getIndex( position ) );
 		
-		for ( int d = 0; d < numDimensions; d++ )
+		for ( int d = 0; d < numDimensions; ++d )
 			this.position[ d ] = position[ d ];
 		
 		sliceIndex = 0;
