@@ -43,7 +43,12 @@ public class PlanarLocalizableCursor<T extends Type<T>> extends PlanarCursor<T> 
 	final protected int numDimensions; 	
 	final protected int[] position, dimensions;
 	
-	public PlanarLocalizableCursor( final PlanarContainer<T,?> container, final Image<T> image, final T type ) 
+	public PlanarLocalizableCursor( final PlanarContainer<T,?> container, final Image<T> image, final T type )
+	{
+		this( container, image, type, true );
+	}
+	
+	PlanarLocalizableCursor( final PlanarContainer<T,?> container, final Image<T> image, final T type, final boolean reset ) 
 	{
 		super( container, image, type );
 
@@ -52,7 +57,8 @@ public class PlanarLocalizableCursor<T extends Type<T>> extends PlanarCursor<T> 
 		dimensions = container.getDimensions();
 		
 		// unluckily we have to call it twice, in the superclass position is not initialized yet
-		reset();
+		if ( reset )
+			reset();
 	}	
 	
 	@Override

@@ -45,7 +45,7 @@ public class PlanarLocalizablePlaneCursor< T extends Type< T > > extends PlanarL
 	
 	public PlanarLocalizablePlaneCursor( final PlanarContainer< T,? > container, final Image< T > image, final T type ) 
 	{
-		super( container, image, type );
+		super( container, image, type, false );
 		
 		sliceSteps = new int[ numDimensions + 1 ];
 		if ( sliceSteps.length > 2 )
@@ -59,6 +59,8 @@ public class PlanarLocalizablePlaneCursor< T extends Type< T > > extends PlanarL
 		}
 		width = image.getDimension( 0 );
 		planeSize = width * image.getDimension( 1 );
+		
+		reset();
 	}	
 	
 	@Override 
