@@ -17,11 +17,11 @@
 package mpicbg.imglib.algorithm.scalespace;
 
 import mpicbg.imglib.algorithm.OutputAlgorithm;
+import mpicbg.imglib.algorithm.function.RealTypeConverter;
+import mpicbg.imglib.algorithm.function.SubtractNormReal;
 import mpicbg.imglib.algorithm.gauss.GaussianConvolution2;
 import mpicbg.imglib.cursor.special.LocalNeighborhoodCursor;
 import mpicbg.imglib.function.Function;
-import mpicbg.imglib.function.RealTypeConverter;
-import mpicbg.imglib.function.SubtractNormReal;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.ImageFactory;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
