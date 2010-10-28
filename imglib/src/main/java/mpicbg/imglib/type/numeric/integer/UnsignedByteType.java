@@ -29,7 +29,7 @@
  */
 package mpicbg.imglib.type.numeric.integer;
 
-import mpicbg.imglib.algorithm.math.MathLib;
+import mpicbg.imglib.algorithm.MathLib;
 import mpicbg.imglib.container.DirectAccessContainer;
 import mpicbg.imglib.container.DirectAccessContainerFactory;
 import mpicbg.imglib.container.basictypecontainer.ByteAccess;
@@ -140,5 +140,5 @@ public class UnsignedByteType extends GenericByteType<UnsignedByteType>
 	public UnsignedByteType createVariable(){ return new UnsignedByteType( 0 ); }
 
 	@Override
-	public UnsignedByteType clone(){ return new UnsignedByteType( get() ); }
+	public UnsignedByteType copy(){ return new UnsignedByteType( get() ); }
 }

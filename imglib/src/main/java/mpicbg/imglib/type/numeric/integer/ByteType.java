@@ -92,5 +92,5 @@ public class ByteType extends GenericByteType<ByteType>
 	public ByteType createVariable(){ return new ByteType( (byte)0 ); }
 
 	@Override
-	public ByteType clone(){ return new ByteType( getValue() ); }
+	public ByteType copy(){ return new ByteType( getValue() ); }
 }

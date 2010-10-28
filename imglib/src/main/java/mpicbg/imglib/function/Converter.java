@@ -14,24 +14,11 @@
  * 
  * @author Stephan Preibisch
  */
-package mpicbg.imglib.algorithm.math.function;
+package mpicbg.imglib.function;
 
-import mpicbg.imglib.type.numeric.RealType;
+import mpicbg.imglib.type.Type;
 
-public class NormMinMax< A extends RealType<A> > implements Converter< A, A >
+public interface Converter< A extends Type<A>, B extends Type<B> >
 {
-	final double min, tmp;
-	
-	public NormMinMax( final double min, final double max )
-	{
-		this.min = min;
-		this.tmp = max - min;
-	}
-	
-	@Override
-	public void convert( final A input, final A output )
-	{
-		output.setReal( (input.getRealDouble() - min) / tmp );	
-	}
-
+	public void convert( A input, B output );
 }

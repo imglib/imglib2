@@ -20,7 +20,7 @@
  */
 package mpicbg.imglib.algorithm.fft;
 
-import mpicbg.imglib.algorithm.math.MathLib;
+import mpicbg.imglib.algorithm.MathLib;
 
 public class PhaseCorrelationPeak implements Comparable<PhaseCorrelationPeak>
 {

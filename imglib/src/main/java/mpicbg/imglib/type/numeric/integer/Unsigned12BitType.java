@@ -245,5 +245,5 @@ public class Unsigned12BitType extends IntegerTypeImpl<Unsigned12BitType>
 	public Unsigned12BitType createVariable(){ return new Unsigned12BitType(); }
 
 	@Override
-	public Unsigned12BitType clone(){ return new Unsigned12BitType( get() ); }
+	public Unsigned12BitType copy(){ return new Unsigned12BitType( get() ); }
 }

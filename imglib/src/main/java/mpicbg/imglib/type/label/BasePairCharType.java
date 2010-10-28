@@ -203,7 +203,7 @@ public class BasePairCharType extends TypeImpl<BasePairCharType> implements Base
 	public BasePairCharType createVariable(){ return new BasePairCharType( Base.N ); }
 	
 	@Override
-	public BasePairCharType clone(){ return new BasePairCharType( get() ); }
+	public BasePairCharType copy(){ return new BasePairCharType( get() ); }
 	
 	@Override
 	public String toString() { return "" + get(); }

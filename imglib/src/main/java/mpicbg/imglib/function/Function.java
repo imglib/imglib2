@@ -14,23 +14,11 @@
  * 
  * @author Stephan Preibisch
  */
-package mpicbg.imglib.algorithm.math.function;
+package mpicbg.imglib.function;
 
-import mpicbg.imglib.type.numeric.RealType;
+import mpicbg.imglib.type.Type;
 
-public class SubtractNormReal< A extends RealType<A>, B extends RealType<B>, C extends RealType<C> > implements Function< A, B, C >
+public interface Function< A extends Type<A>, B extends Type<B>, C extends Type<C> >
 {
-	final double normalizationFactor;
-	
-	public SubtractNormReal( final double normalizationFactor )
-	{
-		this.normalizationFactor = normalizationFactor;
-	}
-	
-	@Override
-	public void compute( final A input1, final B input2, final C output )
-	{
-		output.setReal( ( input1.getRealDouble() - input2.getRealDouble() ) * normalizationFactor );	
-	}
-
+	public void compute( A input1, B input2, C output );
 }

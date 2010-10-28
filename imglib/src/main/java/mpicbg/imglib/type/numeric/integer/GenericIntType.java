@@ -29,7 +29,7 @@
  */
 package mpicbg.imglib.type.numeric.integer;
 
-import mpicbg.imglib.algorithm.math.MathLib;
+import mpicbg.imglib.algorithm.MathLib;
 import mpicbg.imglib.container.DirectAccessContainer;
 import mpicbg.imglib.container.basictypecontainer.IntAccess;
 import mpicbg.imglib.container.basictypecontainer.array.IntArray;

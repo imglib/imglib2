@@ -29,7 +29,7 @@
  */
 package mpicbg.imglib.outofbounds;
 
-import mpicbg.imglib.algorithm.math.MathLib;
+import mpicbg.imglib.algorithm.MathLib;
 import mpicbg.imglib.cursor.LocalizableByDimCursor;
 import mpicbg.imglib.cursor.LocalizableCursor;
 import mpicbg.imglib.type.numeric.RealType;

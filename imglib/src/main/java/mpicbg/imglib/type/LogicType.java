@@ -30,7 +30,7 @@
 
 package mpicbg.imglib.type;
 
-public interface LogicType<T extends LogicType<T>> extends ComparableType<T>
+public interface LogicType<T extends LogicType<T>> extends Type<T>, Comparable<T>
 {
 	public void and( T c );
 	public void or( T c );

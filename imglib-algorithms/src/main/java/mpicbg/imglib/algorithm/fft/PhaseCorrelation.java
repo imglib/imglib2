@@ -26,9 +26,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import mpicbg.imglib.algorithm.Algorithm;
 import mpicbg.imglib.algorithm.Benchmark;
+import mpicbg.imglib.algorithm.MathLib;
 import mpicbg.imglib.algorithm.MultiThreaded;
 import mpicbg.imglib.algorithm.fft.FourierTransform.Rearrangement;
-import mpicbg.imglib.algorithm.math.MathLib;
 import mpicbg.imglib.cursor.Cursor;
 import mpicbg.imglib.cursor.LocalizableByDimCursor;
 import mpicbg.imglib.cursor.special.LocalNeighborhoodCursor;

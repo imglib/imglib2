@@ -6,8 +6,8 @@ import org.junit.Test;
 
 import java.util.Random;
 
+import mpicbg.imglib.algorithm.MathLib;
 import mpicbg.imglib.algorithm.fft.FFTFunctions;
-import mpicbg.imglib.algorithm.math.MathLib;
 import mpicbg.imglib.container.ContainerFactory;
 import mpicbg.imglib.container.array.ArrayContainerFactory;
 import mpicbg.imglib.container.cell.CellContainerFactory;

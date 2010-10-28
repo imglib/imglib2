@@ -16,10 +16,10 @@
  */
 package mpicbg.imglib.algorithm.gauss;
 
-import mpicbg.imglib.algorithm.math.MathLib;
-import mpicbg.imglib.algorithm.math.function.Converter;
+import mpicbg.imglib.algorithm.MathLib;
 import mpicbg.imglib.cursor.LocalizableByDimCursor;
 import mpicbg.imglib.cursor.LocalizableCursor;
+import mpicbg.imglib.function.Converter;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.ImageFactory;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
@@ -140,7 +140,7 @@ public class GaussianConvolution4< A extends Type<A>, B extends ExponentialMathT
 		final B[] sigmas = sigma.createArray1D( image.getNumDimensions() ); 
 			
 		for ( int d = 0; d < image.getNumDimensions(); ++d )
-			sigmas[ d ] = sigma.clone();
+			sigmas[ d ] = sigma.copy();
 		
 		return sigmas;
 	}

@@ -129,5 +129,5 @@ public class ComplexDoubleType extends ComplexTypeImpl<ComplexDoubleType> implem
 	public ComplexDoubleType createVariable(){ return new ComplexDoubleType( 0, 0 ); }
 	
 	@Override
-	public ComplexDoubleType clone(){ return new ComplexDoubleType( getRealFloat(), getComplexFloat() ); }	
+	public ComplexDoubleType copy(){ return new ComplexDoubleType( getRealFloat(), getComplexFloat() ); }	
 }

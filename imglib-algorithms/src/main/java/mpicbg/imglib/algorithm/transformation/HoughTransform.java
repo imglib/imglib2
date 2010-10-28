@@ -10,8 +10,8 @@ import mpicbg.imglib.container.array.ArrayContainerFactory;
 import mpicbg.imglib.cursor.LocalizableByDimCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.ImageFactory;
-import mpicbg.imglib.type.ComparableType;
-import mpicbg.imglib.type.numeric.NumericType;
+import mpicbg.imglib.type.Type;
+import mpicbg.imglib.type.numeric.RealType;
 /**
  * This abstract class provides some basic functionality for use with arbitrary Hough-like
  * transforms. 
@@ -21,7 +21,7 @@ import mpicbg.imglib.type.numeric.NumericType;
  * @param <S> the data type used for storing votes, usually IntType, but possibly LongType or even DoubleType.
  * @param <T> the data type of the input image.
  */
-public abstract class HoughTransform<S extends NumericType<S>, T extends ComparableType<T>>
+public abstract class HoughTransform<S extends RealType<S>, T extends Type<T> & Comparable<T>>
 implements OutputAlgorithm<S>, Benchmark
 {
 	protected long pTime;

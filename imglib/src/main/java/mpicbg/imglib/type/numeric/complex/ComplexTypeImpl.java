@@ -1,7 +1,7 @@
 package mpicbg.imglib.type.numeric.complex;
 
+import mpicbg.imglib.algorithm.MathLib;
 import mpicbg.imglib.algorithm.Precision.PrecisionReal;
-import mpicbg.imglib.algorithm.math.MathLib;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.display.ComplexTypePowerSpectrumDisplay;
 import mpicbg.imglib.image.display.Display;
@@ -148,21 +148,6 @@ public abstract class ComplexTypeImpl<T extends ComplexTypeImpl<T>> extends Type
 	@Override
 	public PrecisionReal getPreferredRealPrecision() { return PrecisionReal.Double; }
 	
-	@Override
-	public int compareTo( final T c ) 
-	{
-		final double real1 = getRealDouble();
-		final double complex1 = getComplexDouble();
-		final double real2 = c.getRealDouble();
-		final double complex2 = c.getComplexDouble();
-		
-		if ( real1 > real2 || ( real1 == real2 && complex1 > complex2 ) )
-			return 1;
-		else if ( real1 < real2 ||  ( real1 == real2 && complex1 < complex2 ))
-			return -1;
-		else 
-			return 0;
-	}
 
 	@Override
 	public void updateIndex( final int i ) 

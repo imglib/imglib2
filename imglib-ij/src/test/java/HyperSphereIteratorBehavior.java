@@ -30,7 +30,7 @@ import ij.ImageJ;
 
 import java.util.Random;
 
-import mpicbg.imglib.algorithm.math.MathLib;
+import mpicbg.imglib.algorithm.MathLib;
 import mpicbg.imglib.container.array.ArrayContainerFactory;
 import mpicbg.imglib.cursor.LocalizableByDimCursor;
 import mpicbg.imglib.cursor.special.HyperSphereIterator;

@@ -20,44 +20,47 @@ import java.util.Vector;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import mpicbg.imglib.algorithm.Benchmark;
+import mpicbg.imglib.algorithm.MathLib;
 import mpicbg.imglib.algorithm.MultiThreaded;
 import mpicbg.imglib.algorithm.OutputAlgorithm;
-import mpicbg.imglib.algorithm.math.function.Converter;
 import mpicbg.imglib.cursor.Cursor;
 import mpicbg.imglib.cursor.LocalizableByDimCursor;
 import mpicbg.imglib.cursor.LocalizableCursor;
+import mpicbg.imglib.function.Function;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.ImageFactory;
 import mpicbg.imglib.multithreading.Chunk;
 import mpicbg.imglib.multithreading.SimpleMultiThreading;
 import mpicbg.imglib.type.Type;
 
-public class ImageConverter< S extends Type<S>, T extends Type<T> > implements OutputAlgorithm<T>, MultiThreaded, Benchmark
+public class ImageCalculator<S extends Type<S>, T extends Type<T>, U extends Type<U>> implements OutputAlgorithm<U>, MultiThreaded, Benchmark
 {
-	final Image<S> image; 
-	final Image<T> output;
-	final Converter<S,T> converter;
+	final Image<S> image1; 
+	final Image<T> image2; 
+	final Image<U> output;
+	final Function<S,T,U> function;
 
 	long processingTime;
 	int numThreads;
 	String errorMessage = "";
 	
-	public ImageConverter( final Image<S> image, final Image<T> output, final Converter<S,T> converter )
+	public ImageCalculator( final Image<S> image1, final Image<T> image2, final Image<U> output, final Function<S,T,U> function )
 	{
-		this.image = image;
+		this.image1 = image1;
+		this.image2 = image2;
 		this.output = output;
-		this.converter = converter;
+		this.function = function;
 		
 		setNumThreads();
 	}
 	
-	public ImageConverter( final Image<S> image, final ImageFactory<T> factory, final Converter<S,T> converter )
+	public ImageCalculator( final Image<S> image1, final Image<T> image2, final ImageFactory<U> factory, final Function<S,T,U> function )
 	{
-		this( image, createImageFromFactory( factory, image.getDimensions() ), converter );
+		this( image1, image2, createImageFromFactory( factory, image1.getDimensions() ), function );
 	}
 	
 	@Override
-	public Image<T> getResult() { return output; }
+	public Image<U> getResult() { return output; }
 
 	@Override
 	public boolean checkInput()
@@ -66,25 +69,32 @@ public class ImageConverter< S extends Type<S>, T extends Type<T> > implements O
 		{
 			return false;
 		}
-		else if ( image == null )
+		else if ( image1 == null )
 		{
 			errorMessage = "ImageCalculator: [Image<S> image1] is null.";
 			return false;
 		}
+		else if ( image2 == null )
+		{
+			errorMessage = "ImageCalculator: [Image<T> image2] is null.";
+			return false;
+		}
 		else if ( output == null )
 		{
-			errorMessage = "ImageCalculator: [Image<T> output] is null.";
+			errorMessage = "ImageCalculator: [Image<U> output] is null.";
 			return false;
 		}
-		else if ( converter == null )
+		else if ( function == null )
 		{
-			errorMessage = "ImageCalculator: [Converter<S,T>] is null.";
+			errorMessage = "ImageCalculator: [Function<S,T,U>] is null.";
 			return false;
 		}
-		else if ( !image.getContainer().compareStorageContainerDimensions( output.getContainer() ) )
+		else if ( !image1.getContainer().compareStorageContainerDimensions( image2.getContainer() ) || 
+				  !image1.getContainer().compareStorageContainerDimensions( output.getContainer() ) )
 		{
 			errorMessage = "ImageCalculator: Images have different dimensions, not supported:" + 
-				" Image: " + MathLib.printCoordinates( image.getDimensions() ) + 
+				" Image1: " + MathLib.printCoordinates( image1.getDimensions() ) + 
+				" Image2: " + MathLib.printCoordinates( image2.getDimensions() ) +
 				" Output: " + MathLib.printCoordinates( output.getDimensions() );
 			return false;
 		}
@@ -96,16 +106,19 @@ public class ImageConverter< S extends Type<S>, T extends Type<T> > implements O
 	public boolean process()
 	{
 		final long startTime = System.currentTimeMillis();
-
-		final long imageSize = image.getNumPixels();
+   
+		final long imageSize = image1.getNumPixels();
 
 		final AtomicInteger ai = new AtomicInteger(0);					
         final Thread[] threads = SimpleMultiThreading.newThreads( getNumThreads() );
 
         final Vector<Chunk> threadChunks = SimpleMultiThreading.divideIntoChunks( imageSize, numThreads );
+		
+		// check if all container types are comparable so that we can use simple iterators
+		// we assume transivity here
+        final boolean isCompatible = image1.getContainer().compareStorageContainerCompatibility( image2.getContainer() ) &&
+		 							 image1.getContainer().compareStorageContainerCompatibility( output.getContainer() );
         
-        final boolean isCompatible = image.getContainer().compareStorageContainerCompatibility( output.getContainer() ); 
-	
         for (int ithread = 0; ithread < threads.length; ++ithread)
             threads[ithread] = new Thread(new Runnable()
             {
@@ -117,19 +130,16 @@ public class ImageConverter< S extends Type<S>, T extends Type<T> > implements O
                 	// get chunk of pixels to process
                 	final Chunk myChunk = threadChunks.get( myNumber );
                 	
-					// check if all container types are comparable so that we can use simple iterators
-					// we assume transivity here
-					if (  isCompatible )
-					{
-						// we can simply use iterators
-						computeSimple( myChunk.getStartPosition(), myChunk.getLoopSize() );
-					}
-					else
-					{
-						// we need a combination of Localizable and LocalizableByDim
-						computeAdvanced( myChunk.getStartPosition(), myChunk.getLoopSize() );
-					}
-
+                	if ( isCompatible )
+                	{
+            			// we can simply use iterators
+            			computeSimple( myChunk.getStartPosition(), myChunk.getLoopSize() );                		
+                	}
+                	else
+                	{
+            			// we need a combination of Localizable and LocalizableByDim
+            			computeAdvanced( myChunk.getStartPosition(), myChunk.getLoopSize() );                		
+                	}
                 }
             });
         
@@ -142,45 +152,54 @@ public class ImageConverter< S extends Type<S>, T extends Type<T> > implements O
 	
 	protected void computeSimple( final long startPos, final long loopSize )
 	{
-		final Cursor<S> cursorIn = image.createCursor();
-		final Cursor<T> cursorOut = output.createCursor();
+		final Cursor<S> cursor1 = image1.createCursor();
+		final Cursor<T> cursor2 = image2.createCursor();
+		final Cursor<U> cursorOut = output.createCursor();
 		
 		// move to the starting position of the current thread
-		cursorIn.fwd( startPos );
+		cursor1.fwd( startPos );
+		cursor2.fwd( startPos );
 		cursorOut.fwd( startPos );
     	
         // do as many pixels as wanted by this thread
         for ( long j = 0; j < loopSize; ++j )
         {
-			cursorIn.fwd();
+			cursor1.fwd();
+			cursor2.fwd();
 			cursorOut.fwd();
 			
-			converter.convert( cursorIn.getType(), cursorOut.getType() );
+			function.compute( cursor1.getType(), cursor2.getType(), cursorOut.getType() );
 		}
 		
-		cursorIn.close();
+		cursor1.close();
+		cursor2.close();
 		cursorOut.close();		
 	}
 	
 	protected void computeAdvanced( final long startPos, final long loopSize )
 	{
-		final LocalizableByDimCursor<S> cursorIn = image.createLocalizableByDimCursor();
-		final LocalizableCursor<T> cursorOut = output.createLocalizableCursor();
+		System.out.println( startPos + " -> " + (startPos+loopSize) );
+		final LocalizableByDimCursor<S> cursor1 = image1.createLocalizableByDimCursor();
+		final LocalizableByDimCursor<T> cursor2 = image2.createLocalizableByDimCursor();
+		final LocalizableCursor<U> cursorOut = output.createLocalizableCursor();
 		
 		// move to the starting position of the current thread
 		cursorOut.fwd( startPos );
-    	
-        // do as many pixels as wanted by this thread
+        
+		// do as many pixels as wanted by this thread
         for ( long j = 0; j < loopSize; ++j )
-        {
+		{
 			cursorOut.fwd();
-			cursorIn.setPosition( cursorOut );
+			cursor1.setPosition( cursorOut );
+			cursor2.setPosition( cursorOut );
 			
-			converter.convert( cursorIn.getType(), cursorOut.getType() );
+			function.compute( cursor1.getType(), cursor2.getType(), cursorOut.getType() );
 		}
 		
-		cursorIn.close();
-		cursorOut.close();					
+		cursor1.close();
+		cursor2.close();
+		cursorOut.close();			
+		
 	}
 
 	@Override
@@ -191,14 +210,14 @@ public class ImageConverter< S extends Type<S>, T extends Type<T> > implements O
 
 	@Override
 	public int getNumThreads() { return numThreads; }	
-	
+
 	@Override
 	public String getErrorMessage() { return errorMessage; }
 
 	@Override
 	public long getProcessingTime() { return processingTime; }
 	
-	protected static <T extends Type<T>> Image<T> createImageFromFactory( final ImageFactory<T> factory, final int[] size )
+	protected static <U extends Type<U>> Image<U> createImageFromFactory( final ImageFactory<U> factory, final int[] size )
 	{
 		if ( factory == null || size == null )
 			return null;

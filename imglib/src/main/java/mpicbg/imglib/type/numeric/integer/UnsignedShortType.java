@@ -29,7 +29,7 @@
  */
 package mpicbg.imglib.type.numeric.integer;
 
-import mpicbg.imglib.algorithm.math.MathLib;
+import mpicbg.imglib.algorithm.MathLib;
 import mpicbg.imglib.container.DirectAccessContainer;
 import mpicbg.imglib.container.DirectAccessContainerFactory;
 import mpicbg.imglib.container.basictypecontainer.ShortAccess;
@@ -139,5 +139,5 @@ public class UnsignedShortType extends GenericShortType<UnsignedShortType>
 	public UnsignedShortType createVariable(){ return new UnsignedShortType( 0 ); }
 
 	@Override
-	public UnsignedShortType clone(){ return new UnsignedShortType( get() ); }
+	public UnsignedShortType copy(){ return new UnsignedShortType( get() ); }
 }

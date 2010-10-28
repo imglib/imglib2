@@ -29,7 +29,7 @@
  */
 package mpicbg.imglib.type.numeric.integer;
 
-import mpicbg.imglib.algorithm.math.MathLib;
+import mpicbg.imglib.algorithm.MathLib;
 import mpicbg.imglib.container.DirectAccessContainer;
 import mpicbg.imglib.container.DirectAccessContainerFactory;
 import mpicbg.imglib.container.basictypecontainer.IntAccess;
@@ -139,5 +139,5 @@ public class UnsignedIntType extends GenericIntType<UnsignedIntType>
 	public UnsignedIntType createVariable(){ return new UnsignedIntType( 0 ); }
 
 	@Override
-	public UnsignedIntType clone(){ return new UnsignedIntType( get() ); }
+	public UnsignedIntType copy(){ return new UnsignedIntType( get() ); }
 }

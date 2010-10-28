@@ -8,7 +8,7 @@ import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.ImageFactory;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyValueFactory;
-import mpicbg.imglib.type.numeric.ComplexType;
+import mpicbg.imglib.type.numeric.RealType;
 
 /**
  * ROIAlgorithm implements a framework against which to build operations of one image against
@@ -25,7 +25,7 @@ import mpicbg.imglib.type.numeric.ComplexType;
  * @param <T>
  * @param <S>
  */
-public abstract class ROIAlgorithm <T extends ComplexType<T>, S extends ComplexType<S>>
+public abstract class ROIAlgorithm <T extends RealType<T>, S extends RealType<S>>
 	implements OutputAlgorithm<S>, Benchmark
 {
 
@@ -75,7 +75,7 @@ public abstract class ROIAlgorithm <T extends ComplexType<T>, S extends ComplexT
 		imageFactory = null;
 		errorMsg = "";
 		name = null;
-		typeS = type.clone();
+		typeS = type.copy();
 		Arrays.fill(initPos, 0);
 		
 		if (inOutFactory == null)

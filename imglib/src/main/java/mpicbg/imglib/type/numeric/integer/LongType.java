@@ -29,7 +29,7 @@
  */
 package mpicbg.imglib.type.numeric.integer;
 
-import mpicbg.imglib.algorithm.math.MathLib;
+import mpicbg.imglib.algorithm.MathLib;
 import mpicbg.imglib.container.DirectAccessContainer;
 import mpicbg.imglib.container.DirectAccessContainerFactory;
 import mpicbg.imglib.container.basictypecontainer.LongAccess;
@@ -187,5 +187,5 @@ final public class LongType extends IntegerTypeImpl<LongType>
 	public LongType createVariable(){ return new LongType( 0 ); }
 
 	@Override
-	public LongType clone(){ return new LongType( get() ); }
+	public LongType copy(){ return new LongType( get() ); }
 }

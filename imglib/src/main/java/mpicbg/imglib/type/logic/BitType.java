@@ -209,7 +209,7 @@ public class BitType extends IntegerTypeImpl<BitType> implements LogicType<BitTy
 	public BitType createVariable(){ return new BitType(); }
 
 	@Override
-	public BitType clone(){ return new BitType( b.getValue(i) ); }
+	public BitType copy(){ return new BitType( b.getValue(i) ); }
 
 	@Override
 	public String toString() 

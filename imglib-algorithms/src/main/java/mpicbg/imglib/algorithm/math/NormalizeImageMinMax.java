@@ -18,8 +18,8 @@ package mpicbg.imglib.algorithm.math;
 
 import mpicbg.imglib.algorithm.Algorithm;
 import mpicbg.imglib.algorithm.MultiThreaded;
-import mpicbg.imglib.algorithm.math.function.NormMinMax;
 import mpicbg.imglib.cursor.Cursor;
+import mpicbg.imglib.function.NormMinMax;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.type.numeric.RealType;
 import mpicbg.util.RealSum;

@@ -29,7 +29,7 @@
  */
 package mpicbg.imglib.type.numeric;
 
-import mpicbg.imglib.algorithm.math.MathLib;
+import mpicbg.imglib.algorithm.MathLib;
 import mpicbg.imglib.container.DirectAccessContainer;
 import mpicbg.imglib.container.DirectAccessContainerFactory;
 import mpicbg.imglib.container.basictypecontainer.IntAccess;
@@ -183,20 +183,6 @@ final public class RGBALegacyType extends TypeImpl<RGBALegacyType> implements Nu
 	}
 	
 	@Override
-	public int compareTo( final RGBALegacyType c ) 
-	{ 
-		final int value1 = get();		
-		final int value2 = c.get();
-
-		if ( red(value1) + green(value1) + blue(value1) + alpha(value1) > red(value2) + green(value2) + blue(value2) + alpha(value2) )
-			return 1;
-		else if ( red(value1) + green(value1) + blue(value1) + alpha(value1) < red(value2) + green(value2) + blue(value2) + alpha(value2) )
-			return -1;
-		else 
-			return 0;
-	}
-
-	@Override
 	public void set( final RGBALegacyType c ) { set( c.get() ); }
 
 	@Override
@@ -218,7 +204,7 @@ final public class RGBALegacyType extends TypeImpl<RGBALegacyType> implements Nu
 	public RGBALegacyType createVariable() { return new RGBALegacyType( 0 ); }
 
 	@Override
-	public RGBALegacyType clone() { return new RGBALegacyType( get() ); }
+	public RGBALegacyType copy() { return new RGBALegacyType( get() ); }
 
 	@Override
 	public String toString() 

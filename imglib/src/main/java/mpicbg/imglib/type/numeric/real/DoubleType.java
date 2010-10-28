@@ -29,7 +29,7 @@
  */
 package mpicbg.imglib.type.numeric.real;
 
-import mpicbg.imglib.algorithm.math.MathLib;
+import mpicbg.imglib.algorithm.MathLib;
 import mpicbg.imglib.container.DirectAccessContainer;
 import mpicbg.imglib.container.DirectAccessContainerFactory;
 import mpicbg.imglib.container.basictypecontainer.DoubleAccess;
@@ -120,7 +120,7 @@ public class DoubleType extends RealTypeImpl<DoubleType> implements RealType<Dou
 	public DoubleType createVariable(){ return new DoubleType( 0 ); }
 	
 	@Override
-	public DoubleType clone(){ return new DoubleType( get() ); }
+	public DoubleType copy(){ return new DoubleType( get() ); }
 
 	@Override
 	public void exp() { set( Math.exp( get() ) ); }

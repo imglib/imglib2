@@ -7,7 +7,7 @@ import mpicbg.imglib.cursor.LocalizableByDimCursor;
 import mpicbg.imglib.cursor.special.RegionOfInterestCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
-import mpicbg.imglib.type.numeric.ComplexType;
+import mpicbg.imglib.type.numeric.RealType;
 import mpicbg.imglib.type.logic.BitType;
 
 /**
@@ -20,7 +20,7 @@ import mpicbg.imglib.type.logic.BitType;
  *
  * @param <T> The input- and output-{@link Image} type.
  */
-public abstract class StatisticalOperation<T extends ComplexType<T>> extends ROIAlgorithm<T, T> {
+public abstract class StatisticalOperation<T extends RealType<T>> extends ROIAlgorithm<T, T> {
 	//Member classes
 	
 	/**
@@ -34,7 +34,7 @@ public abstract class StatisticalOperation<T extends ComplexType<T>> extends ROI
 	 * 
 	 * @param <R> Image storage type.
 	 */
-	public interface StatisticsCollectionStrategy<R extends ComplexType<R>> 
+	public interface StatisticsCollectionStrategy<R extends RealType<R>> 
 	{
 		public void collectStats(LinkedList<R> list, RegionOfInterestCursor<R> cursor, int[] pos);
 	}
@@ -45,7 +45,7 @@ public abstract class StatisticalOperation<T extends ComplexType<T>> extends ROI
 	 * 
 	 * @param <R> Image storage type.
 	 */
-	public class SimpleCollectionStrategy<R extends ComplexType<R>> 
+	public class SimpleCollectionStrategy<R extends RealType<R>> 
 		implements StatisticsCollectionStrategy<R>
 	{
 		private final LocalizableByDimCursor<BitType> strelCursor;
@@ -66,13 +66,13 @@ public abstract class StatisticalOperation<T extends ComplexType<T>> extends ROI
 				
 				if (strelCursor.getType().get())
 				{
-					R type = cursor.getType().clone();
+					R type = cursor.getType().copy();
 					int i = 0;
 					while(i < list.size() && type.compareTo(list.get(i)) > 0)
 					{
 						++i;
 					}
-					list.add(i, type.clone());							
+					list.add(i, type.copy());							
 				}
 						
 			}
