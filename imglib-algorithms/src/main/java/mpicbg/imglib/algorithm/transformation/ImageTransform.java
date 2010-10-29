@@ -17,14 +17,12 @@
 package mpicbg.imglib.algorithm.transformation;
 
 import mpicbg.imglib.algorithm.OutputAlgorithm;
-import mpicbg.imglib.algorithm.math.MathLib;
 import mpicbg.imglib.cursor.LocalizableCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.ImageFactory;
 import mpicbg.imglib.interpolation.Interpolator;
 import mpicbg.imglib.interpolation.InterpolatorFactory;
 import mpicbg.imglib.type.Type;
-import mpicbg.imglib.util.Util;
 import mpicbg.models.AffineModel2D;
 import mpicbg.models.AffineModel3D;
 import mpicbg.models.Boundable;
@@ -79,7 +77,7 @@ public class ImageTransform<T extends Type<T>> implements OutputAlgorithm<T>
 		final float[] min = new float[ numDimensions ];
 		final float[] max = new float[ numDimensions ];
 		for ( int i = 0; i < numDimensions; ++i )
-			max[ i ] = dimensions[ i ];
+			max[ i ] = dimensions[ i ] - 1;
 		
 		transformAsBoundable.estimateBounds( min, max );
 		
