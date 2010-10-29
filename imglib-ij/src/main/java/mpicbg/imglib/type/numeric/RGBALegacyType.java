@@ -212,4 +212,7 @@ final public class RGBALegacyType extends TypeImpl<RGBALegacyType> implements Nu
 		final int rgba = get();
 		return "(r=" + red( rgba ) + ",g=" + green( rgba ) + ",b=" + blue( rgba ) + ",a=" + alpha( rgba ) + ")";
 	}
+
+	@Override
+	public int getEntitiesPerPixel() { return 1; }
 }

@@ -42,6 +42,9 @@ import mpicbg.imglib.type.label.BasePairBitType.Base;
 
 public class BasePairCharType extends TypeImpl<BasePairCharType> implements BasePairType<BasePairCharType>
 {
+	@Override
+	public int getEntitiesPerPixel() { return 1; } 
+
 	// the DirectAccessContainer
 	final DirectAccessContainer<BasePairCharType, ? extends CharAccess> storage;
 	

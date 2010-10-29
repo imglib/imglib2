@@ -10,6 +10,9 @@ import mpicbg.imglib.util.Util;
 
 public abstract class ComplexTypeImpl<T extends ComplexTypeImpl<T>> extends TypeImpl<T> implements ComplexType<T>
 {
+	@Override
+	public int getEntitiesPerPixel() { return 2; } 
+
 	// the indices for real and complex number
 	int realI = 0, complexI = 1;
 

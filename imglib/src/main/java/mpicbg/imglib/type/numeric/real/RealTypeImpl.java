@@ -9,6 +9,9 @@ import mpicbg.imglib.type.numeric.complex.ComplexTypeImpl;
 public abstract class RealTypeImpl<T extends RealTypeImpl<T>> extends ComplexTypeImpl<T> implements RealType<T>
 {
 	@Override
+	public int getEntitiesPerPixel() { return 1; } 
+
+	@Override
 	public Display<T> getDefaultDisplay( final Image<T> image )
 	{
 		return new RealTypeDisplay<T>( image );
