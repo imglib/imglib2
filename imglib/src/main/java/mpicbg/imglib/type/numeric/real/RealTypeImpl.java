@@ -80,9 +80,7 @@ public abstract class RealTypeImpl<T extends RealTypeImpl<T>> extends ComplexTyp
 	public double getPhaseDouble() { return 0; }
 	
 	@Override
-	public void updateIndex( final int i ) { this.i = i; }
-	@Override
-	public int getIndex() { return i; }
+	public void updateIndex( final int index ) { this.i = index; }
 	
 	@Override
 	public void incIndex() { ++i; }
