@@ -24,8 +24,10 @@ import mpicbg.imglib.image.ImageFactory;
 import mpicbg.imglib.interpolation.Interpolator;
 import mpicbg.imglib.interpolation.InterpolatorFactory;
 import mpicbg.imglib.type.Type;
+import mpicbg.imglib.util.Util;
 import mpicbg.models.AffineModel2D;
 import mpicbg.models.AffineModel3D;
+import mpicbg.models.Boundable;
 import mpicbg.models.InvertibleCoordinateTransform;
 import mpicbg.models.NoninvertibleModelException;
 import mpicbg.models.RigidModel2D;
@@ -34,11 +36,12 @@ import mpicbg.models.TranslationModel3D;
 
 public class ImageTransform<T extends Type<T>> implements OutputAlgorithm<T>
 {
-	final InvertibleCoordinateTransform transform;
-	final Image<T> img;
-	final int numDimensions;
-	final InterpolatorFactory<T> interpolatorFactory;
-	final boolean isAffine;
+	final protected InvertibleCoordinateTransform transform;
+	final protected Boundable transformAsBoundable;
+	final protected Image<T> img;
+	final protected int numDimensions;
+	final protected InterpolatorFactory<T> interpolatorFactory;
+	final protected boolean isAffine;
 
 	ImageFactory<T> outputImageFactory;
 
@@ -48,12 +51,13 @@ public class ImageTransform<T extends Type<T>> implements OutputAlgorithm<T>
 	Image<T> transformed;
 	String errorMessage = "";
 
-	public ImageTransform( final Image<T> img, final InvertibleCoordinateTransform transform, final InterpolatorFactory<T> interpolatorFactory )
+	public < BT extends InvertibleCoordinateTransform & Boundable >ImageTransform( final Image<T> img, final BT transform, final InterpolatorFactory<T> interpolatorFactory )
 	{
 		this.img = img;
 		this.interpolatorFactory = interpolatorFactory;
 		this.numDimensions = img.getNumDimensions();
 		this.transform = transform;
+		this.transformAsBoundable = transform;
 		this.outputImageFactory = img.getImageFactory();
 
 		if ( transform instanceof AffineModel3D ||
@@ -72,7 +76,11 @@ public class ImageTransform<T extends Type<T>> implements OutputAlgorithm<T>
 		// first determine new min-max in all dimensions of the image
 		// by transforming all the corner-points
 		//
-		final float[][] minMaxDim = MathLib.getMinMaxDim( dimensions, transform );
+		final float[] min = new float[ numDimensions ];
+		final float[] max = new float[ numDimensions ];
+		
+		transformAsBoundable.estimateBounds( min, max );
+		
 		offset = new float[ numDimensions ];
 
 		// get the final size for the new image
@@ -80,8 +88,8 @@ public class ImageTransform<T extends Type<T>> implements OutputAlgorithm<T>
 
 		for ( int d = 0; d < numDimensions; ++d )
 		{
-			newDim[ d ] = Math.round( minMaxDim[ d ][ 1 ] ) - Math.round( minMaxDim[ d ][ 0 ] );
-			offset[ d ] = minMaxDim[ d ][ 0 ];
+			newDim[ d ] = ( int )( max[ d ] - min[ d ] + 1.0f );
+			offset[ d ] = min[ d ];
 		}
 	}
 
