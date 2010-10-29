@@ -78,6 +78,8 @@ public class ImageTransform<T extends Type<T>> implements OutputAlgorithm<T>
 		//
 		final float[] min = new float[ numDimensions ];
 		final float[] max = new float[ numDimensions ];
+		for ( int i = 0; i < numDimensions; ++i )
+			max[ i ] = dimensions[ i ];
 		
 		transformAsBoundable.estimateBounds( min, max );
 		
