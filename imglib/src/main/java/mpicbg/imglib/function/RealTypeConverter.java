@@ -14,16 +14,15 @@
  * 
  * @author Stephan Preibisch
  */
-package mpicbg.imglib.algorithm.function;
+package mpicbg.imglib.function;
 
-import mpicbg.imglib.function.Converter;
-import mpicbg.imglib.type.Type;
+import mpicbg.imglib.type.numeric.RealType;
 
-public class VoidConverter< A extends Type<A> > implements Converter<A, A>
+public class RealTypeConverter< A extends RealType<A>, B extends RealType<B> > implements Converter<A, B>
 {
 	@Override
-	public void convert( final A input, final A output )
+	public void convert( final A input, final B output )
 	{
-		output.set( input );
+		output.setReal( input.getRealDouble() );
 	}
 }
