@@ -36,10 +36,6 @@ import ij.process.ByteProcessor;
 import ij.process.ColorProcessor;
 import ij.process.FloatProcessor;
 import ij.process.ImageProcessor;
-
-import java.util.Collection;
-
-import mpicbg.imglib.algorithm.math.MathLib;
 import mpicbg.imglib.cursor.array.ArrayLocalizableCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.display.Display;
@@ -52,7 +48,7 @@ public class ImageJFunctions
 	final public static int GRAY8 = ImagePlus.GRAY8;
 	final public static int GRAY32 = ImagePlus.GRAY32;
 	final public static int COLOR_RGB = ImagePlus.COLOR_RGB;
-
+	/*
 	public static <T extends Type<T>> ImagePlus displayAsVirtualStack( final Collection<InverseTransformDescription<T>> interpolators,
 																	   final int type, int[] dim, final int[] dimensionPositions )
 	{
@@ -126,7 +122,7 @@ public class ImageJFunctions
 
 		return imp;
 	}
-
+	*/
 	public static <T extends Type<T>> ImagePlus displayAsVirtualStack( final Image<T> img )
 	{
 		if ( RGBALegacyType.class.isInstance( img.createType() ) )
