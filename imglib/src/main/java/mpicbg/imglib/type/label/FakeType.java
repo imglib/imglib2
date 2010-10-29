@@ -37,7 +37,10 @@ import mpicbg.imglib.image.display.Display;
 import mpicbg.imglib.type.TypeImpl;
 
 public class FakeType extends TypeImpl<FakeType>
-{	
+{
+	@Override
+	public int getEntitiesPerPixel() { return 0; } 
+	
 	@Override
 	public DirectAccessContainer<FakeType,?> createSuitableDirectAccessContainer( final DirectAccessContainerFactory storageFactory, final int dim[] ) { return null; }
 

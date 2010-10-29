@@ -43,7 +43,10 @@ import mpicbg.imglib.type.TypeImpl;
 public class BasePairBitType extends TypeImpl<BasePairBitType> implements BasePairType<BasePairBitType>
 {
 	public static enum Base { gap, N, A, T, G, C; }
-			
+
+	@Override
+	public int getEntitiesPerPixel() { return 1; } 
+
 	// the DirectAccessContainer
 	final DirectAccessContainer<BasePairBitType, ? extends BitAccess> storage;
 	

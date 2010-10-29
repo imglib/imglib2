@@ -55,6 +55,8 @@ import mpicbg.imglib.type.numeric.real.FloatType;
  */
 public interface Type<T extends Type<T>>
 {
+	public int getEntitiesPerPixel(); 
+	
 	/**
 	 * The {@link Type} creates the DirectAccessContainer used for storing image data; based on the given storage strategy and its size. It 
 	 * basically only decides here which BasicType it uses (float, int, byte, bit, ...) and how many entities per pixel it needs
