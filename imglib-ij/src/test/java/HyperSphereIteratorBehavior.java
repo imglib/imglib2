@@ -30,7 +30,6 @@ import ij.ImageJ;
 
 import java.util.Random;
 
-import mpicbg.imglib.algorithm.MathLib;
 import mpicbg.imglib.container.array.ArrayContainerFactory;
 import mpicbg.imglib.cursor.LocalizableByDimCursor;
 import mpicbg.imglib.cursor.special.HyperSphereIterator;
@@ -39,6 +38,7 @@ import mpicbg.imglib.image.ImageFactory;
 import mpicbg.imglib.image.display.imagej.ImageJFunctions;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyValueFactory;
 import mpicbg.imglib.type.numeric.real.FloatType;
+import mpicbg.imglib.util.Util;
 
 public class HyperSphereIteratorBehavior
 {
@@ -88,7 +88,7 @@ public class HyperSphereIteratorBehavior
 
 			if ( p < probability )
 			{
-				final int radius = MathLib.round( rnd.nextFloat() * maxRadius );
+				final int radius = Util.round( rnd.nextFloat() * maxRadius );
 				final float intensity = rnd.nextFloat();
 				
 				final HyperSphereIterator<FloatType> sphere = new HyperSphereIterator<FloatType>( img1, referenceSphere, radius, new OutOfBoundsStrategyValueFactory<FloatType>() );

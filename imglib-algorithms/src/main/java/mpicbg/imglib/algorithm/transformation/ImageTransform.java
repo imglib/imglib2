@@ -17,7 +17,7 @@
 package mpicbg.imglib.algorithm.transformation;
 
 import mpicbg.imglib.algorithm.OutputAlgorithm;
-import mpicbg.imglib.algorithm.math.ExMathLib;
+import mpicbg.imglib.algorithm.math.MathLib;
 import mpicbg.imglib.cursor.LocalizableCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.ImageFactory;
@@ -72,7 +72,7 @@ public class ImageTransform<T extends Type<T>> implements OutputAlgorithm<T>
 		// first determine new min-max in all dimensions of the image
 		// by transforming all the corner-points
 		//
-		final float[][] minMaxDim = ExMathLib.getMinMaxDim( dimensions, transform );
+		final float[][] minMaxDim = MathLib.getMinMaxDim( dimensions, transform );
 		offset = new float[ numDimensions ];
 
 		// get the final size for the new image

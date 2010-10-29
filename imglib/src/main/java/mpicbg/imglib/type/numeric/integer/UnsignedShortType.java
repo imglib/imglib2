@@ -29,10 +29,10 @@
  */
 package mpicbg.imglib.type.numeric.integer;
 
-import mpicbg.imglib.algorithm.MathLib;
 import mpicbg.imglib.container.DirectAccessContainer;
 import mpicbg.imglib.container.DirectAccessContainerFactory;
 import mpicbg.imglib.container.basictypecontainer.ShortAccess;
+import mpicbg.imglib.util.Util;
 
 public class UnsignedShortType extends GenericShortType<UnsignedShortType>
 {
@@ -79,14 +79,14 @@ public class UnsignedShortType extends GenericShortType<UnsignedShortType>
 	public void mul( final float c )
 	{
 		final int a = getUnsignedShort( getValue() );
-		setValue( getCodedSignedShort( MathLib.round( a * c ) ) );
+		setValue( getCodedSignedShort( Util.round( a * c ) ) );
 	}
 
 	@Override
 	public void mul( final double c )
 	{
 		final int a = getUnsignedShort( getValue() );
-		setValue( getCodedSignedShort( ( int )MathLib.round( a * c ) ) );
+		setValue( getCodedSignedShort( ( int )Util.round( a * c ) ) );
 	}
 
 	public int get() { return getUnsignedShort( getValue() ); }

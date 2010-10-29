@@ -29,13 +29,13 @@
  */
 package mpicbg.imglib.interpolation.linear;
 
-import mpicbg.imglib.algorithm.MathLib;
 import mpicbg.imglib.cursor.LocalizableByDimCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.interpolation.InterpolatorFactory;
 import mpicbg.imglib.interpolation.InterpolatorImpl;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
 import mpicbg.imglib.type.numeric.NumericType;
+import mpicbg.imglib.util.Util;
 
 public class LinearInterpolator<T extends NumericType<T>> extends InterpolatorImpl<T>
 {
@@ -160,7 +160,7 @@ public class LinearInterpolator<T extends NumericType<T>> extends InterpolatorIm
 			
 			for ( int d = 0; d < tree.length; d++ )
 			{
-				tree[ d ] = tmp1.createArray1D( MathLib.pow( 2, d ));
+				tree[ d ] = tmp1.createArray1D( Util.pow( 2, d ));
 				
 				for ( int i = 0; i < tree[ d ].length; i++ )
 					tree[ d ][ i ] = img.createType();
@@ -183,8 +183,8 @@ public class LinearInterpolator<T extends NumericType<T>> extends InterpolatorIm
 			// 	0 1 1 [6] 
 			// 	1 1 1 [7] 
 			
-			positions = new boolean[ MathLib.pow( 2, numDimensions ) ][ numDimensions ];
-			MathLib.setCoordinateRecursive( numDimensions - 1, numDimensions, new int[ numDimensions ], positions );
+			positions = new boolean[ Util.pow( 2, numDimensions ) ][ numDimensions ];
+			Util.setCoordinateRecursive( numDimensions - 1, numDimensions, new int[ numDimensions ], positions );
 						
 			moveTo( position );
 		}

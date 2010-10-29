@@ -20,7 +20,6 @@ import java.util.Vector;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import mpicbg.imglib.algorithm.Benchmark;
-import mpicbg.imglib.algorithm.MathLib;
 import mpicbg.imglib.algorithm.MultiThreaded;
 import mpicbg.imglib.algorithm.OutputAlgorithm;
 import mpicbg.imglib.algorithm.math.ImageConverter;
@@ -34,6 +33,7 @@ import mpicbg.imglib.multithreading.SimpleMultiThreading;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
 import mpicbg.imglib.type.Type;
 import mpicbg.imglib.type.numeric.NumericType;
+import mpicbg.imglib.util.Util;
 
 /**
  * Computes a Gaussian Convolution on any {@link Type}(A) for which is defined how to convert it into a {@link NumericType}(B) on which the convolution is performed and back to the desired output {@link Type}(C). 
@@ -107,7 +107,7 @@ public class GaussianConvolution3< A extends Type<A>, B extends NumericType<B>, 
 	protected void computeKernel()
 	{
 		for ( int d = 0; d < numDimensions; ++d )
-			this.kernel[ d ] = MathLib.createGaussianKernel1DDouble( sigma[ d ], true );		
+			this.kernel[ d ] = Util.createGaussianKernel1DDouble( sigma[ d ], true );		
 	}
 	
 	public void setSigma( final double sigma ) { setSigma( createArray( image, sigma ) ); } 

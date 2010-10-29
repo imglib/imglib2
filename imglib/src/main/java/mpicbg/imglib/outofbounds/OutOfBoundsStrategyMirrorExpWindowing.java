@@ -29,10 +29,10 @@
  */
 package mpicbg.imglib.outofbounds;
 
-import mpicbg.imglib.algorithm.MathLib;
 import mpicbg.imglib.cursor.LocalizableByDimCursor;
 import mpicbg.imglib.cursor.LocalizableCursor;
 import mpicbg.imglib.type.numeric.RealType;
+import mpicbg.imglib.util.Util;
 
 public class OutOfBoundsStrategyMirrorExpWindowing<T extends RealType<T>> extends OutOfBoundsStrategy<T>
 {
@@ -78,7 +78,7 @@ public class OutOfBoundsStrategyMirrorExpWindowing<T extends RealType<T>> extend
 					final float relPos = pos / (float)( maxDistance - 1 );
 	
 					// if exponent equals one means linear function
-					if ( MathLib.isApproxEqual( exponent, 1f, 0.0001f ) )
+					if ( Util.isApproxEqual( exponent, 1f, 0.0001f ) )
 						weights[ d ][ pos ] = 1 - relPos;
 					else
 						weights[ d ][ pos ] = (float)( 1 - ( 1 / Math.pow( exponent, 1 - relPos ) ) ) * ( 1 + 1/(exponent-1) );

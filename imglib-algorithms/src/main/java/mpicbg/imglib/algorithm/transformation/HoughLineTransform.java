@@ -2,7 +2,6 @@ package mpicbg.imglib.algorithm.transformation;
 
 import java.util.ArrayList;
 
-import mpicbg.imglib.algorithm.MathLib;
 import mpicbg.imglib.cursor.LocalizableCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.ImageFactory;
@@ -11,6 +10,7 @@ import mpicbg.imglib.type.numeric.RealType;
 import mpicbg.imglib.type.numeric.integer.IntType;
 import mpicbg.imglib.type.numeric.integer.LongType;
 import mpicbg.imglib.type.numeric.integer.ShortType;
+import mpicbg.imglib.util.Util;
 
 
 /**
@@ -55,7 +55,7 @@ public class HoughLineTransform <S extends RealType<S>, T extends Type<T> & Comp
 	 */
 	public static int defaultRho(final Image<?> inputImage)
 	{
-		return (int)(2 * MathLib.computeLength(inputImage.getDimensions()));
+		return (int)(2 * Util.computeLength(inputImage.getDimensions()));
 	}
 
 	
@@ -137,7 +137,7 @@ public class HoughLineTransform <S extends RealType<S>, T extends Type<T> & Comp
 		/*The furthest a point can be from the origin is the length calculated
 		 * from the dimensions of the Image.
 		 */
-		dRho = 2 * MathLib.computeLength(inputImage.getDimensions()) / (double)inNRho;
+		dRho = 2 * Util.computeLength(inputImage.getDimensions()) / (double)inNRho;
 		threshold = inputImage.createType();
 		nRho = inNRho;
 		nTheta = inNTheta;
@@ -158,7 +158,7 @@ public class HoughLineTransform <S extends RealType<S>, T extends Type<T> & Comp
 	{
 		super(inputImage, new int[]{inNRho, inNTheta}, factory);
 		dTheta = Math.PI / (double)inNTheta;
-		dRho = 2 * MathLib.computeLength(inputImage.getDimensions()) / (double)inNRho;
+		dRho = 2 * Util.computeLength(inputImage.getDimensions()) / (double)inNRho;
 		threshold = inputImage.createType();
 		nRho = inNRho;
 		nTheta = inNTheta;
@@ -177,7 +177,7 @@ public class HoughLineTransform <S extends RealType<S>, T extends Type<T> & Comp
 		final LocalizableCursor<T> imageCursor = getImage().createLocalizableCursor();
 		final int[] position = new int[getImage().getDimensions().length];
 		final double minTheta = -Math.PI/2;
-		final double minRho = -MathLib.computeLength(super.getImage().getDimensions());
+		final double minRho = -Util.computeLength(super.getImage().getDimensions());
 		final long sTime = System.currentTimeMillis();
 		boolean success;
 				

@@ -29,10 +29,10 @@
  */
 package mpicbg.imglib.type.numeric.integer;
 
-import mpicbg.imglib.algorithm.MathLib;
 import mpicbg.imglib.container.DirectAccessContainer;
 import mpicbg.imglib.container.DirectAccessContainerFactory;
 import mpicbg.imglib.container.basictypecontainer.ByteAccess;
+import mpicbg.imglib.util.Util;
 
 public class UnsignedByteType extends GenericByteType<UnsignedByteType>
 {
@@ -80,14 +80,14 @@ public class UnsignedByteType extends GenericByteType<UnsignedByteType>
 	{
 		
 		final int a = getUnsignedByte( getValue() );
-		setValue( getCodedSignedByte( MathLib.round( a * c ) ) );
+		setValue( getCodedSignedByte( Util.round( a * c ) ) );
 	}
 
 	@Override
 	public void mul( final double c )
 	{
 		final int a = getUnsignedByte( getValue() );
-		setValue( getCodedSignedByte( ( int )MathLib.round( a * c ) ) );
+		setValue( getCodedSignedByte( ( int )Util.round( a * c ) ) );
 	}
 
 	public int get(){ return getUnsignedByte( getValue() ); }

@@ -34,7 +34,6 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.concurrent.atomic.AtomicLong;
 
-import mpicbg.imglib.algorithm.MathLib;
 import mpicbg.imglib.container.Container;
 import mpicbg.imglib.container.ContainerFactory;
 import mpicbg.imglib.container.ImageProperties;
@@ -50,6 +49,7 @@ import mpicbg.imglib.interpolation.InterpolatorFactory;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
 import mpicbg.imglib.type.Type;
 import mpicbg.imglib.type.label.FakeType;
+import mpicbg.imglib.util.Util;
 
 public class Image<T extends Type<T>> implements ImageProperties, Dimensionality, Collection<T>
 {
@@ -299,7 +299,7 @@ public class Image<T extends Type<T>> implements ImageProperties, Dimensionality
 	@Override
 	public String toString()
 	{
-		return "Image '" + this.getName() + "', dim=" + MathLib.printCoordinates( getContainer().getDimensions() );
+		return "Image '" + this.getName() + "', dim=" + Util.printCoordinates( getContainer().getDimensions() );
 	}
 	
 	@Override

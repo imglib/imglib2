@@ -29,12 +29,12 @@
  */
 package mpicbg.imglib.interpolation.nearestneighbor;
 
-import mpicbg.imglib.algorithm.MathLib;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.interpolation.Interpolator1D;
 import mpicbg.imglib.interpolation.InterpolatorFactory;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
 import mpicbg.imglib.type.Type;
+import mpicbg.imglib.util.Util;
 
 public class NearestNeighborInterpolator1D<T extends Type<T>> extends NearestNeighborInterpolator<T> implements Interpolator1D<T>
 {
@@ -69,7 +69,7 @@ public class NearestNeighborInterpolator1D<T extends Type<T>> extends NearestNei
 	{		
 		this.x = x;
 		
-		final int ix = MathLib.round( x ); 
+		final int ix = Util.round( x ); 
 		
 		cursor.move( ix - cursor.getPosition( 0 ), 0 );
 	}
@@ -82,7 +82,7 @@ public class NearestNeighborInterpolator1D<T extends Type<T>> extends NearestNei
 	{
 		this.x += x;
 		
-		cursor.move( MathLib.round( this.x ) - cursor.getPosition( 0 ), 0 );
+		cursor.move( Util.round( this.x ) - cursor.getPosition( 0 ), 0 );
 	}
 	
 	@Override
@@ -93,7 +93,7 @@ public class NearestNeighborInterpolator1D<T extends Type<T>> extends NearestNei
 	{
 		this.x = x;
 
-		cursor.setPosition( MathLib.round( x ), 0 );
+		cursor.setPosition( Util.round( x ), 0 );
 	}
 	
 	@Override

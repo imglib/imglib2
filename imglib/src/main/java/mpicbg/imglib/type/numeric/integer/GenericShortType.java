@@ -29,11 +29,11 @@
  */
 package mpicbg.imglib.type.numeric.integer;
 
-import mpicbg.imglib.algorithm.MathLib;
 import mpicbg.imglib.container.DirectAccessContainer;
 import mpicbg.imglib.container.basictypecontainer.ShortAccess;
 import mpicbg.imglib.container.basictypecontainer.array.ShortArray;
 import mpicbg.imglib.cursor.Cursor;
+import mpicbg.imglib.util.Util;
 
 public abstract class GenericShortType<T extends GenericShortType<T>> extends IntegerTypeImpl<T>
 {
@@ -73,14 +73,14 @@ public abstract class GenericShortType<T extends GenericShortType<T>> extends In
 	public void mul( final float c )
 	{
 		final short a = getValue();
-		setValue( ( short )MathLib.round( a * c ) );
+		setValue( ( short )Util.round( a * c ) );
 	}
 
 	@Override
 	public void mul( final double c )
 	{
 		final short a = getValue();
-		setValue( ( short )MathLib.round( a * c ) );
+		setValue( ( short )Util.round( a * c ) );
 	}
 
 	@Override

@@ -39,7 +39,7 @@ import ij.process.ImageProcessor;
 
 import java.util.Collection;
 
-import mpicbg.imglib.algorithm.math.ExMathLib;
+import mpicbg.imglib.algorithm.math.MathLib;
 import mpicbg.imglib.cursor.array.ArrayLocalizableCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.display.Display;
@@ -80,7 +80,7 @@ public class ImageJFunctions
 
 			for ( InverseTransformDescription<T> ti : interpolators )
 			{
-				float[][] minMaxDimLocal = ExMathLib.getMinMaxDim( ti.getImage().getDimensions(), ti.getTransform() );
+				float[][] minMaxDimLocal = MathLib.getMinMaxDim( ti.getImage().getDimensions(), ti.getTransform() );
 
 				for ( int i = 0; i < dim.length; i++ )
 				{

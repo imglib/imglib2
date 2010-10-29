@@ -19,7 +19,6 @@ package mpicbg.imglib.algorithm.scalespace;
 import java.util.ArrayList;
 
 import mpicbg.imglib.algorithm.Benchmark;
-import mpicbg.imglib.algorithm.MathLib;
 import mpicbg.imglib.algorithm.MultiThreaded;
 import mpicbg.imglib.algorithm.OutputAlgorithm;
 import mpicbg.imglib.algorithm.function.SubtractNormReal;
@@ -38,6 +37,7 @@ import mpicbg.imglib.image.ImageFactory;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyMirrorFactory;
 import mpicbg.imglib.type.Type;
 import mpicbg.imglib.type.numeric.RealType;
+import mpicbg.imglib.util.Util;
 
 public class ScaleSpace< A extends Type<A>, B extends RealType<B> > implements OutputAlgorithm<B>, MultiThreaded, Benchmark
 {
@@ -170,7 +170,7 @@ public class ScaleSpace< A extends Type<A>, B extends RealType<B> > implements O
 				for ( int d = 0; d < scaleSpace.getNumDimensions(); ++d )
 				{				
 					final float sizeHalf = peak.getSubPixelPosition( d ) / 2.0f;
-					final int pixelLocation = MathLib.round( sizeHalf );
+					final int pixelLocation = Util.round( sizeHalf );
 					
 					peak.setPixelLocation( pixelLocation, d );
 					peak.setSubPixelLocationOffset( sizeHalf - pixelLocation, d );					
@@ -306,7 +306,7 @@ public class ScaleSpace< A extends Type<A>, B extends RealType<B> > implements O
 		for ( int d = 1; d < img.getNumDimensions(); ++d )
 			minDim = Math.min( minDim, img.getDimension( d ) );
 		
-		final int numOctaves = (int)Math.round( MathLib.log2( minDim ) - MathLib.log2( minImageSize ) + 0.25 );
+		final int numOctaves = (int)Math.round( Util.log2( minDim ) - Util.log2( minImageSize ) + 0.25 );
 		
 		final double[] sigma = new double[ numOctaves * stepsPerOctave + 3 ];
 		

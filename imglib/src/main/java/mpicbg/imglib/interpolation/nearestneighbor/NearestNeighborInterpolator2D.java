@@ -29,12 +29,12 @@
  */
 package mpicbg.imglib.interpolation.nearestneighbor;
 
-import mpicbg.imglib.algorithm.MathLib;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.interpolation.Interpolator2D;
 import mpicbg.imglib.interpolation.InterpolatorFactory;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
 import mpicbg.imglib.type.Type;
+import mpicbg.imglib.util.Util;
 
 public class NearestNeighborInterpolator2D<T extends Type<T>> extends NearestNeighborInterpolator<T> implements Interpolator2D<T>
 {
@@ -78,8 +78,8 @@ public class NearestNeighborInterpolator2D<T extends Type<T>> extends NearestNei
 		this.x = x;
 		this.y = y;
 		
-		final int ix = MathLib.round( x ); 
-		final int iy = MathLib.round( y ); 
+		final int ix = Util.round( x ); 
+		final int iy = Util.round( y ); 
 		
 		cursor.move( ix - cursor.getPosition( 0 ), 0 );
 		cursor.move( iy - cursor.getPosition( 1 ), 1 );
@@ -97,8 +97,8 @@ public class NearestNeighborInterpolator2D<T extends Type<T>> extends NearestNei
 		this.x += x;
 		this.y += y;
 		
-		cursor.move( MathLib.round( this.x ) - cursor.getPosition( 0 ), 0 );
-		cursor.move( MathLib.round( this.y ) - cursor.getPosition( 1 ), 1 );
+		cursor.move( Util.round( this.x ) - cursor.getPosition( 0 ), 0 );
+		cursor.move( Util.round( this.y ) - cursor.getPosition( 1 ), 1 );
 	}
 	
 	@Override
@@ -113,8 +113,8 @@ public class NearestNeighborInterpolator2D<T extends Type<T>> extends NearestNei
 		this.x = x;
 		this.y = y;
 
-		cursor.setPosition( MathLib.round( x ), 0 );
-		cursor.setPosition( MathLib.round( y ), 1 );
+		cursor.setPosition( Util.round( x ), 0 );
+		cursor.setPosition( Util.round( y ), 1 );
 	}
 	
 	@Override

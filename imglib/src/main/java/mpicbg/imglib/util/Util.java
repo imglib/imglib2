@@ -14,14 +14,14 @@
  *
  * @author Stephan Preibisch & Stephan Saalfeld
  */
-package mpicbg.imglib.algorithm;
+package mpicbg.imglib.util;
 
 import java.util.List;
 
 import mpicbg.imglib.type.Type;
 import mpicbg.imglib.type.numeric.ExponentialMathType;
 
-public class MathLib
+public class Util
 {
 	public static double log2( final double value )
 	{
@@ -459,7 +459,7 @@ public class MathLib
                 	cs.mul( 2.0 );
                 	cs.add( one );
 
-                	kernelSize = MathLib.round( cs.getRealFloat() );
+                	kernelSize = Util.round( cs.getRealFloat() );
 
                 	// kernelsize has to be at least 3
             		kernelSize = Math.max( 3, kernelSize );
@@ -625,7 +625,7 @@ public class MathLib
 
 	public static boolean[][] getRecursiveCoordinates( final int numDimensions )
 	{
-		boolean[][] positions = new boolean[ MathLib.pow( 2, numDimensions ) ][ numDimensions ];
+		boolean[][] positions = new boolean[ Util.pow( 2, numDimensions ) ][ numDimensions ];
 
 		setCoordinateRecursive( numDimensions - 1, numDimensions, new int[ numDimensions ], positions );
 

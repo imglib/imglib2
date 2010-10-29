@@ -21,13 +21,13 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import mpicbg.imglib.algorithm.Algorithm;
 import mpicbg.imglib.algorithm.Benchmark;
-import mpicbg.imglib.algorithm.MathLib;
 import mpicbg.imglib.algorithm.MultiThreaded;
 import mpicbg.imglib.cursor.Cursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.multithreading.Chunk;
 import mpicbg.imglib.multithreading.SimpleMultiThreading;
 import mpicbg.imglib.type.Type;
+import mpicbg.imglib.util.Util;
 
 public class ComputeMinMax<T extends Type<T> & Comparable<T>> implements Algorithm, MultiThreaded, Benchmark
 {
@@ -96,11 +96,11 @@ public class ComputeMinMax<T extends Type<T> & Comparable<T>> implements Algorit
         for ( int i = 0; i < threads.length; ++i )
         {
         	T value = minValues.get( i );
-			if ( MathLib.min( min, value ) == value )
+			if ( Util.min( min, value ) == value )
 				min.set( value );
 			
 			value = maxValues.get( i );
-			if ( MathLib.max( max, value ) == value )
+			if ( Util.max( max, value ) == value )
 				max.set( value );        	
         }
         
@@ -131,10 +131,10 @@ public class ComputeMinMax<T extends Type<T> & Comparable<T>> implements Algorit
 			
 			final T value = cursor.getType();
 			
-			if ( MathLib.min( min, value ) == value )
+			if ( Util.min( min, value ) == value )
 				min.set( value );
 			
-			if ( MathLib.max( max, value ) == value )
+			if ( Util.max( max, value ) == value )
 				max.set( value );
 		}
 		

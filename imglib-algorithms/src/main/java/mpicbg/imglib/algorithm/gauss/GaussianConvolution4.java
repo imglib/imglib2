@@ -16,7 +16,6 @@
  */
 package mpicbg.imglib.algorithm.gauss;
 
-import mpicbg.imglib.algorithm.MathLib;
 import mpicbg.imglib.cursor.LocalizableByDimCursor;
 import mpicbg.imglib.cursor.LocalizableCursor;
 import mpicbg.imglib.function.Converter;
@@ -25,6 +24,7 @@ import mpicbg.imglib.image.ImageFactory;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
 import mpicbg.imglib.type.Type;
 import mpicbg.imglib.type.numeric.ExponentialMathType;
+import mpicbg.imglib.util.Util;
 
 public class GaussianConvolution4< A extends Type<A>, B extends ExponentialMathType<B>, C extends Type<C> > extends GaussianConvolution3<A, B, C>
 {
@@ -45,7 +45,7 @@ public class GaussianConvolution4< A extends Type<A>, B extends ExponentialMathT
 		this.kernel = entity.createArray2D( numDimensions, 1 );
 		
 		for ( int d = 0; d < numDimensions; ++d )
-			this.kernel[ d ] = MathLib.createGaussianKernel1D( sigma[ d ], true );		
+			this.kernel[ d ] = Util.createGaussianKernel1D( sigma[ d ], true );		
 	}
 
 	public GaussianConvolution4( final Image<A> image, final ImageFactory<B> factoryProcess, final ImageFactory<C> factoryOut, 

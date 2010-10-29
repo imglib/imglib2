@@ -16,10 +16,10 @@
  */
 package mpicbg.imglib.algorithm.scalespace;
 
-import mpicbg.imglib.algorithm.MathLib;
 import mpicbg.imglib.algorithm.scalespace.DifferenceOfGaussian.SpecialPoint;
 import mpicbg.imglib.cursor.Localizable;
 import mpicbg.imglib.type.numeric.NumericType;
+import mpicbg.imglib.util.Util;
 
 public class DifferenceOfGaussianPeak< T extends NumericType<T> > implements Localizable
 {
@@ -108,7 +108,7 @@ public class DifferenceOfGaussianPeak< T extends NumericType<T> > implements Loc
 	public int getPosition( final int dim ) { return pixelLocation[ dim ]; }
 
 	@Override
-	public String getPositionAsString() { return MathLib.printCoordinates( pixelLocation );	}
+	public String getPositionAsString() { return Util.printCoordinates( pixelLocation );	}
 
 	@Override
 	public void fwd( final long steps ) {}

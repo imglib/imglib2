@@ -1,12 +1,12 @@
 package mpicbg.imglib.type.numeric.complex;
 
-import mpicbg.imglib.algorithm.MathLib;
 import mpicbg.imglib.algorithm.Precision.PrecisionReal;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.display.ComplexTypePowerSpectrumDisplay;
 import mpicbg.imglib.image.display.Display;
 import mpicbg.imglib.type.TypeImpl;
 import mpicbg.imglib.type.numeric.ComplexType;
+import mpicbg.imglib.util.Util;
 
 public abstract class ComplexTypeImpl<T extends ComplexTypeImpl<T>> extends TypeImpl<T> implements ComplexType<T>
 {
@@ -81,7 +81,7 @@ public abstract class ComplexTypeImpl<T extends ComplexTypeImpl<T>> extends Type
 		final float real = getRealFloat();
 		final float complex = getComplexFloat();
 
-		return (float)MathLib.gLog( Math.sqrt( real * real + complex * complex ), 2 );				
+		return (float)Util.gLog( Math.sqrt( real * real + complex * complex ), 2 );				
 	}
 
 	@Override
@@ -90,7 +90,7 @@ public abstract class ComplexTypeImpl<T extends ComplexTypeImpl<T>> extends Type
 		final double real = getRealDouble();
 		final double complex = getComplexDouble();
 
-		return MathLib.gLog( Math.sqrt( real * real + complex * complex ), 2 );				
+		return Util.gLog( Math.sqrt( real * real + complex * complex ), 2 );				
 	}
 	
 	@Override

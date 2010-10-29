@@ -6,7 +6,6 @@ import org.junit.Test;
 
 import java.util.Random;
 
-import mpicbg.imglib.algorithm.MathLib;
 import mpicbg.imglib.algorithm.fft.FFTFunctions;
 import mpicbg.imglib.container.ContainerFactory;
 import mpicbg.imglib.container.array.ArrayContainerFactory;
@@ -20,6 +19,7 @@ import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.ImageFactory;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyPeriodicFactory;
 import mpicbg.imglib.type.numeric.real.FloatType;
+import mpicbg.imglib.util.Util;
 
 public class ContainerTests
 {
@@ -46,7 +46,7 @@ public class ContainerTests
 	{
 		for ( int i = 0; i < dim.length; ++i )
 		{
-			assertTrue( "ArrayContainer failed for: dim=" + MathLib.printCoordinates( dim[ i ] ), 
+			assertTrue( "ArrayContainer failed for: dim=" + Util.printCoordinates( dim[ i ] ), 
 			            testContainer( dim[ i ], new ArrayContainerFactory(), new ArrayContainerFactory() ) );
 		}
 	}
@@ -58,11 +58,11 @@ public class ContainerTests
 	{
 		for ( int i = 0; i < dim.length; ++i )
 		{
-			assertTrue( "ArrayContainer vs CellContainer failed for dim = " + MathLib.printCoordinates( dim[ i ] ),
+			assertTrue( "ArrayContainer vs CellContainer failed for dim = " + Util.printCoordinates( dim[ i ] ),
 			            testContainer( dim[ i ], new ArrayContainerFactory(), new CellContainerFactory( 10 ) ) );
-			assertTrue( "CellContainer vs ArrayContainer failed for dim = " + MathLib.printCoordinates( dim[ i ] ), 
+			assertTrue( "CellContainer vs ArrayContainer failed for dim = " + Util.printCoordinates( dim[ i ] ), 
 			            testContainer( dim[ i ], new CellContainerFactory(), new ArrayContainerFactory() ) );
-			assertTrue( "CellContainer vs CellContainer failed for dim = " + MathLib.printCoordinates( dim[ i ] ),
+			assertTrue( "CellContainer vs CellContainer failed for dim = " + Util.printCoordinates( dim[ i ] ),
 			            testContainer( dim[ i ], new CellContainerFactory( 5 ), new CellContainerFactory() ) );
 		}
 	}
@@ -76,11 +76,11 @@ public class ContainerTests
 		{
 			if ( dim[ i ].length < 6 )
 			{
-				assertTrue( "ArrayContainer vs ImagePlusContainer failed for dim = " + MathLib.printCoordinates( dim[ i ] ),
+				assertTrue( "ArrayContainer vs ImagePlusContainer failed for dim = " + Util.printCoordinates( dim[ i ] ),
 				            testContainer( dim[ i ], new ArrayContainerFactory(), new ImagePlusContainerFactory() ) );
-				assertTrue( "ImagePlusContainer vs ArrayContainer failed for dim = " + MathLib.printCoordinates( dim[ i ] ), 
+				assertTrue( "ImagePlusContainer vs ArrayContainer failed for dim = " + Util.printCoordinates( dim[ i ] ), 
 				            testContainer( dim[ i ], new ImagePlusContainerFactory(), new ArrayContainerFactory() ) );
-				assertTrue( "ImagePlusContainer vs ImagePlusContainer failed for dim = " + MathLib.printCoordinates( dim[ i ] ),
+				assertTrue( "ImagePlusContainer vs ImagePlusContainer failed for dim = " + Util.printCoordinates( dim[ i ] ),
 				            testContainer( dim[ i ], new ImagePlusContainerFactory(), new ImagePlusContainerFactory() ) );
 			}
 		}
@@ -95,11 +95,11 @@ public class ContainerTests
 		{
 			if ( dim[ i ].length < 6 )
 			{
-				assertTrue( "ArrayContainer vs PlanarContainer failed for dim = " + MathLib.printCoordinates( dim[ i ] ),
+				assertTrue( "ArrayContainer vs PlanarContainer failed for dim = " + Util.printCoordinates( dim[ i ] ),
 				            testContainer( dim[ i ], new ArrayContainerFactory(), new PlanarContainerFactory() ) );
-				assertTrue( "PlanarContainer vs ArrayContainer failed for dim = " + MathLib.printCoordinates( dim[ i ] ), 
+				assertTrue( "PlanarContainer vs ArrayContainer failed for dim = " + Util.printCoordinates( dim[ i ] ), 
 				            testContainer( dim[ i ], new PlanarContainerFactory(), new ArrayContainerFactory() ) );
-				assertTrue( "PlanarContainer vs PlanarContainer failed for dim = " + MathLib.printCoordinates( dim[ i ] ),
+				assertTrue( "PlanarContainer vs PlanarContainer failed for dim = " + Util.printCoordinates( dim[ i ] ),
 				            testContainer( dim[ i ], new PlanarContainerFactory(), new PlanarContainerFactory() ) );
 			}
 		}

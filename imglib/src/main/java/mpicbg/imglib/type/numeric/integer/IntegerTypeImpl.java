@@ -1,11 +1,11 @@
 package mpicbg.imglib.type.numeric.integer;
 
-import mpicbg.imglib.algorithm.MathLib;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.display.Display;
 import mpicbg.imglib.image.display.IntegerTypeDisplay;
 import mpicbg.imglib.type.numeric.IntegerType;
 import mpicbg.imglib.type.numeric.real.RealTypeImpl;
+import mpicbg.imglib.util.Util;
 
 public abstract class IntegerTypeImpl<T extends IntegerTypeImpl<T>> extends RealTypeImpl<T> implements IntegerType<T>
 {
@@ -24,9 +24,9 @@ public abstract class IntegerTypeImpl<T extends IntegerTypeImpl<T>> extends Real
 	public double getRealDouble() { return getIntegerLong(); }
 	
 	@Override
-	public void setReal( final float real ){ setInteger( MathLib.round( real ) ); }
+	public void setReal( final float real ){ setInteger( Util.round( real ) ); }
 	@Override
-	public void setReal( final double real ){ setInteger( MathLib.round( real ) ); }	
+	public void setReal( final double real ){ setInteger( Util.round( real ) ); }	
 
 	@Override
 	public void inc() { setInteger( getIntegerLong() + 1 ); }

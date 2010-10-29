@@ -29,9 +29,9 @@
  */
 package mpicbg.imglib.outofbounds;
 
-import mpicbg.imglib.algorithm.MathLib;
 import mpicbg.imglib.cursor.LocalizableCursor;
 import mpicbg.imglib.type.numeric.RealType;
+import mpicbg.imglib.util.Util;
 
 public class OutOfBoundsStrategyMirrorExpWindowingFactory<T extends RealType<T>> extends OutOfBoundsStrategyFactory<T>
 {
@@ -99,7 +99,7 @@ public class OutOfBoundsStrategyMirrorExpWindowingFactory<T extends RealType<T>>
 			fadeOutDistance = new int[ cursor.getNumDimensions() ];
 			
 			for ( int d = 0; d < cursor.getNumDimensions(); ++d )
-				fadeOutDistance[ d ] = Math.max( minFadeOutDistance, MathLib.round( cursor.getImage().getDimension( d ) * commonRelativeDistanceFadeOut ) / 2 );
+				fadeOutDistance[ d ] = Math.max( minFadeOutDistance, Util.round( cursor.getImage().getDimension( d ) * commonRelativeDistanceFadeOut ) / 2 );
 		}
 		
 		return new OutOfBoundsStrategyMirrorExpWindowing<T>( cursor, fadeOutDistance, exponent );

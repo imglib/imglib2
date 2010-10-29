@@ -1,11 +1,11 @@
 package mpicbg.imglib.algorithm.fft;
 
 import mpicbg.imglib.algorithm.Benchmark;
-import mpicbg.imglib.algorithm.MathLib;
 import mpicbg.imglib.algorithm.OutputAlgorithm;
 import mpicbg.imglib.cursor.LocalizableCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.type.numeric.NumericType;
+import mpicbg.imglib.util.Util;
 
 public class Bandpass<T extends NumericType<T>> implements OutputAlgorithm<T>, Benchmark
 {
@@ -76,7 +76,7 @@ public class Bandpass<T extends NumericType<T>> implements OutputAlgorithm<T>, B
 			cursor.fwd();
 			cursor.getPosition( pos );
 			
-			final float dist = MathLib.computeDistance( origin, pos );
+			final float dist = Util.computeDistance( origin, pos );
 			
 			if ( actAsBandPass )
 			{

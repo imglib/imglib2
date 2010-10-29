@@ -21,7 +21,6 @@
 package mpicbg.imglib.algorithm.fft;
 
 import mpicbg.imglib.algorithm.Benchmark;
-import mpicbg.imglib.algorithm.MathLib;
 import mpicbg.imglib.algorithm.MultiThreaded;
 import mpicbg.imglib.algorithm.OutputAlgorithm;
 import mpicbg.imglib.algorithm.fft.FourierTransform.PreProcessing;
@@ -37,6 +36,7 @@ import mpicbg.imglib.outofbounds.OutOfBoundsStrategyValueFactory;
 import mpicbg.imglib.type.numeric.RealType;
 import mpicbg.imglib.type.numeric.complex.ComplexFloatType;
 import mpicbg.imglib.type.numeric.real.FloatType;
+import mpicbg.imglib.util.Util;
 
 public class FourierConvolution<T extends RealType<T>, S extends RealType<S>> implements MultiThreaded, OutputAlgorithm<T>, Benchmark
 {
@@ -117,7 +117,7 @@ public class FourierConvolution<T extends RealType<T>, S extends RealType<S>> im
 		
 		for ( int d = 0; d < numDimensions; ++d )
 		{
-			kernel[ d ] = MathLib.createGaussianKernel1DDouble( sigmas[ d ], true );
+			kernel[ d ] = Util.createGaussianKernel1DDouble( sigmas[ d ], true );
 			imageSize[ d ] = kernel[ d ].length;
 		}
 		
@@ -160,7 +160,7 @@ public class FourierConvolution<T extends RealType<T>, S extends RealType<S>> im
 		final int imgSize[] = new int[ numDimensions ];
 		
 		for ( int d = 0; d < numDimensions; ++d )
-			imgSize[ d ] = MathLib.getSuggestedKernelDiameter( sigma[ d ] );
+			imgSize[ d ] = Util.getSuggestedKernelDiameter( sigma[ d ] );
 		
 		final Image<T> kernel = imgFactory.createImage( imgSize );			
 		final int[] center = new int[ numDimensions ];

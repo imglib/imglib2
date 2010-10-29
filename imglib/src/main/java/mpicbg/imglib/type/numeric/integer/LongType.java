@@ -29,12 +29,12 @@
  */
 package mpicbg.imglib.type.numeric.integer;
 
-import mpicbg.imglib.algorithm.MathLib;
 import mpicbg.imglib.container.DirectAccessContainer;
 import mpicbg.imglib.container.DirectAccessContainerFactory;
 import mpicbg.imglib.container.basictypecontainer.LongAccess;
 import mpicbg.imglib.container.basictypecontainer.array.LongArray;
 import mpicbg.imglib.cursor.Cursor;
+import mpicbg.imglib.util.Util;
 
 final public class LongType extends IntegerTypeImpl<LongType>
 {
@@ -105,13 +105,13 @@ final public class LongType extends IntegerTypeImpl<LongType>
 	@Override
 	public void mul( final float c )
 	{
-		set( MathLib.round( get() * c ) );
+		set( Util.round( get() * c ) );
 	}
 
 	@Override
 	public void mul( final double c )
 	{
-		set( MathLib.round( get() * c ) );
+		set( Util.round( get() * c ) );
 	}
 	
 	@Override

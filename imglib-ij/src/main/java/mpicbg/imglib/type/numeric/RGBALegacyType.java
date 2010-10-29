@@ -29,7 +29,6 @@
  */
 package mpicbg.imglib.type.numeric;
 
-import mpicbg.imglib.algorithm.MathLib;
 import mpicbg.imglib.container.DirectAccessContainer;
 import mpicbg.imglib.container.DirectAccessContainerFactory;
 import mpicbg.imglib.container.basictypecontainer.IntAccess;
@@ -38,6 +37,7 @@ import mpicbg.imglib.cursor.Cursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.display.imagej.RGBALegacyTypeDisplay;
 import mpicbg.imglib.type.TypeImpl;
+import mpicbg.imglib.util.Util;
 
 final public class RGBALegacyType extends TypeImpl<RGBALegacyType> implements NumericType<RGBALegacyType>
 {
@@ -101,12 +101,12 @@ final public class RGBALegacyType extends TypeImpl<RGBALegacyType> implements Nu
 	
 	final public static int rgba( final float r, final float g, final float b, final float a)
 	{
-		return rgba( MathLib.round(r), MathLib.round(g), MathLib.round(b), MathLib.round(a) );
+		return rgba( Util.round(r), Util.round(g), Util.round(b), Util.round(a) );
 	}
 
 	final public static int rgba( final double r, final double g, final double b, final double a)
 	{
-		return rgba( (int)MathLib.round(r), (int)MathLib.round(g), (int)MathLib.round(b), (int)MathLib.round(a) );
+		return rgba( (int)Util.round(r), (int)Util.round(g), (int)Util.round(b), (int)Util.round(a) );
 	}
 	
 	final public static int red( final int value )

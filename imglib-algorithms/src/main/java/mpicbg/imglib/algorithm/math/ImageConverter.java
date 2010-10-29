@@ -20,7 +20,6 @@ import java.util.Vector;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import mpicbg.imglib.algorithm.Benchmark;
-import mpicbg.imglib.algorithm.MathLib;
 import mpicbg.imglib.algorithm.MultiThreaded;
 import mpicbg.imglib.algorithm.OutputAlgorithm;
 import mpicbg.imglib.cursor.Cursor;
@@ -32,6 +31,7 @@ import mpicbg.imglib.image.ImageFactory;
 import mpicbg.imglib.multithreading.Chunk;
 import mpicbg.imglib.multithreading.SimpleMultiThreading;
 import mpicbg.imglib.type.Type;
+import mpicbg.imglib.util.Util;
 
 public class ImageConverter< S extends Type<S>, T extends Type<T> > implements OutputAlgorithm<T>, MultiThreaded, Benchmark
 {
@@ -85,8 +85,8 @@ public class ImageConverter< S extends Type<S>, T extends Type<T> > implements O
 		else if ( !image.getContainer().compareStorageContainerDimensions( output.getContainer() ) )
 		{
 			errorMessage = "ImageCalculator: Images have different dimensions, not supported:" + 
-				" Image: " + MathLib.printCoordinates( image.getDimensions() ) + 
-				" Output: " + MathLib.printCoordinates( output.getDimensions() );
+				" Image: " + Util.printCoordinates( image.getDimensions() ) + 
+				" Output: " + Util.printCoordinates( output.getDimensions() );
 			return false;
 		}
 		else

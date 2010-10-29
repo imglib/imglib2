@@ -23,7 +23,6 @@ package mpicbg.imglib.algorithm.fft;
 import edu.mines.jtk.dsp.FftComplex;
 import edu.mines.jtk.dsp.FftReal;
 import mpicbg.imglib.algorithm.Benchmark;
-import mpicbg.imglib.algorithm.MathLib;
 import mpicbg.imglib.algorithm.MultiThreaded;
 import mpicbg.imglib.algorithm.OutputAlgorithm;
 import mpicbg.imglib.image.Image;
@@ -33,6 +32,7 @@ import mpicbg.imglib.outofbounds.OutOfBoundsStrategyMirrorFactory;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyValueFactory;
 import mpicbg.imglib.type.numeric.ComplexType;
 import mpicbg.imglib.type.numeric.RealType;
+import mpicbg.imglib.util.Util;
 
 public class FourierTransform<T extends RealType<T>, S extends ComplexType<S>> implements MultiThreaded, OutputAlgorithm<S>, Benchmark
 {
@@ -154,9 +154,9 @@ public class FourierTransform<T extends RealType<T>, S extends ComplexType<S>> i
 		{
 			// how much do we want to extend
 			if ( inputSize == null )
-				imageExtension[ d ] = MathLib.round( img.getDimension( d ) * ( 1 + extensionRatio ) ) - img.getDimension( d );
+				imageExtension[ d ] = Util.round( img.getDimension( d ) * ( 1 + extensionRatio ) ) - img.getDimension( d );
 			else
-				imageExtension[ d ] = MathLib.round( inputSize[ d ] * ( 1 + extensionRatio ) ) - img.getDimension( d );
+				imageExtension[ d ] = Util.round( inputSize[ d ] * ( 1 + extensionRatio ) ) - img.getDimension( d );
 			
 			if ( imageExtension[ d ] < minExtension )
 				imageExtension[ d ] = minExtension;

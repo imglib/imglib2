@@ -29,7 +29,6 @@
  */
 package mpicbg.imglib.type.numeric.real;
 
-import mpicbg.imglib.algorithm.MathLib;
 import mpicbg.imglib.container.DirectAccessContainer;
 import mpicbg.imglib.container.DirectAccessContainerFactory;
 import mpicbg.imglib.container.basictypecontainer.DoubleAccess;
@@ -37,6 +36,7 @@ import mpicbg.imglib.container.basictypecontainer.array.DoubleArray;
 import mpicbg.imglib.cursor.Cursor;
 import mpicbg.imglib.type.numeric.ExponentialMathType;
 import mpicbg.imglib.type.numeric.RealType;
+import mpicbg.imglib.util.Util;
 
 public class DoubleType extends RealTypeImpl<DoubleType> implements RealType<DoubleType>, ExponentialMathType<DoubleType>
 {
@@ -126,5 +126,5 @@ public class DoubleType extends RealTypeImpl<DoubleType> implements RealType<Dou
 	public void exp() { set( Math.exp( get() ) ); }
 
 	@Override
-	public void round() { set( MathLib.round( get() ) ); }
+	public void round() { set( Util.round( get() ) ); }
 }
