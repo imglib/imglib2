@@ -47,6 +47,8 @@ public class PlanarCursor< T extends Type< T >> extends CursorImpl< T >
 	protected final int lastIndex, lastSliceIndex;
 
 	protected int sliceIndex;
+	
+	protected boolean hasNext;
 
 	public PlanarCursor( final PlanarContainer< T, ? > container, final Image< T > image, final T type )
 	{
@@ -72,7 +74,7 @@ public class PlanarCursor< T extends Type< T >> extends CursorImpl< T >
 	@Override
 	public boolean hasNext()
 	{
-		return type.getIndex() < lastIndex || sliceIndex < lastSliceIndex;
+		return hasNext;
 	}
 
 	@Override
@@ -80,7 +82,13 @@ public class PlanarCursor< T extends Type< T >> extends CursorImpl< T >
 	{
 		type.incIndex();
 
-		if ( type.getIndex() > lastIndex )
+		final int i = type.getIndex();
+		
+		if ( i < lastIndex )
+			return;
+		else if ( i == lastIndex )
+			hasNext = sliceIndex < lastSliceIndex;
+		else
 		{
 			++sliceIndex;
 			type.updateIndex( 0 );
@@ -103,6 +111,7 @@ public class PlanarCursor< T extends Type< T >> extends CursorImpl< T >
 		type.updateIndex( -1 );
 		type.updateContainer( this );
 		isClosed = false;
+		hasNext = true;
 	}
 
 	@Override
