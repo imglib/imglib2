@@ -55,6 +55,12 @@
       <version>4.8.1</version>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>ijaux</groupId>
+      <artifactId>pixlib</artifactId>
+      <version>20101031</version>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
 
   <developers>
