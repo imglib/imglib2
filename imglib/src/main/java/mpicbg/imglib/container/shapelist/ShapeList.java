@@ -98,7 +98,19 @@ public class ShapeList< T extends Type< T > > extends ContainerImpl< T >
 		shapeLists.get( p ).add( shape ); 
 		typeLists.get( p ).add( type );
 	}
-	
+
+	/** @return a shallow copy of the lists of Shape instances.
+	 *  That is, the Shape instances themselves are the originals. */
+	public synchronized ArrayList< ArrayList< Shape > > getShapeLists() {
+		final ArrayList< ArrayList< Shape > > sl = new ArrayList< ArrayList< Shape > >();
+		for (final ArrayList< Shape > a : shapeLists)
+		{
+			sl.add( new ArrayList< Shape >( a ) );
+		}
+
+		return sl;
+	}
+
 	@Override
 	public ShapeListContainerFactory getFactory() { return factory; }
 	
