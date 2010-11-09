@@ -40,6 +40,8 @@ public class SubpixelLocalization< T extends RealType<T> > implements Algorithm,
 	List<DifferenceOfGaussianPeak<T>> peaks;
 	
 	int maxNumMoves = 4;
+	boolean allowMaximaTolerance = false;
+	float maximaTolerance = 0.01f;
 	
 	final ImageFactory<DoubleType> doubleArrayFactory;
 	boolean[] allowedToMoveInDim;
@@ -62,11 +64,15 @@ public class SubpixelLocalization< T extends RealType<T> > implements Algorithm,
 		this.doubleArrayFactory = new ImageFactory<DoubleType>( new DoubleType(), new ArrayContainerFactory() );
 	}
 	
+	public void setAllowMaximaTolerance( final boolean allowMaximaTolerance ) { this.allowMaximaTolerance = allowMaximaTolerance; }
+	public void setMaximaTolerance( final float maximaTolerance ) { this.maximaTolerance = maximaTolerance; }
 	public void setLaPlaceImage( final Image<T> laPlacian ) { this.laPlacian = laPlacian; }
 	public void setDoGPeaks( final List< DifferenceOfGaussianPeak<T> > peaks ) { this.peaks = peaks; }
 	public void setMaxNumMoves( final int maxNumMoves ) { this.maxNumMoves = maxNumMoves; }
 	public void setAllowedToMoveInDim( final boolean[] allowedToMoveInDim ) { this.allowedToMoveInDim = allowedToMoveInDim.clone(); }
 	
+	public boolean getAllowMaximaTolerance() { return allowMaximaTolerance; }
+	public float getMaximaTolerance() { return maximaTolerance; }
 	public Image<T> getLaPlaceImage() { return laPlacian; }
 	public List<DifferenceOfGaussianPeak<T>> getDoGPeaks() { return peaks; }
 	public int getMaxNumMoves() { return maxNumMoves; }
@@ -206,7 +212,9 @@ public class SubpixelLocalization< T extends RealType<T> > implements Algorithm,
 			
 			for ( int d = 0; d < numDimensions; ++d )
 			{
-				if ( Math.abs( subpixelLocation[ d ] ) > 0.5 )
+				final double threshold = allowMaximaTolerance ? 0.5 + numMoves * maximaTolerance : 0.5;
+				
+				if ( Math.abs( subpixelLocation[ d ] ) > threshold )
 				{
 					if ( allowedToMoveInDim[ d ] )
 					{
