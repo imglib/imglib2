@@ -12,26 +12,32 @@ $TARGET'/dependency/*':\
 $TARGET/imglib-ij-2.0-SNAPSHOT.jar:\
 $TARGET/test-classes
 
-MAIN_CLASS=tests.PerformanceBenchmark
+JAVA=java
 MEM=512m
+MAIN_CLASS=tests.PerformanceBenchmark
+
+# copy dependent JARs first
+cd "$DIR/../../.."
+mvn package dependency:copy-dependencies
+cd -
 
 # 1 million
-java -mx$MEM -cp "$CP" $MAIN_CLASS 1000
+$JAVA -mx$MEM -cp "$CP" $MAIN_CLASS 1000
 # 4 million
-java -mx$MEM -cp "$CP" $MAIN_CLASS 2000
+$JAVA -mx$MEM -cp "$CP" $MAIN_CLASS 2000
 # 7 million
-java -mx$MEM -cp "$CP" $MAIN_CLASS 2646
+$JAVA -mx$MEM -cp "$CP" $MAIN_CLASS 2646
 # 10 million
-java -mx$MEM -cp "$CP" $MAIN_CLASS 3162
+$JAVA -mx$MEM -cp "$CP" $MAIN_CLASS 3162
 # 13 million
-java -mx$MEM -cp "$CP" $MAIN_CLASS 3606
+$JAVA -mx$MEM -cp "$CP" $MAIN_CLASS 3606
 # 16 million
-java -mx$MEM -cp "$CP" $MAIN_CLASS 4000
+$JAVA -mx$MEM -cp "$CP" $MAIN_CLASS 4000
 # 19 million
-java -mx$MEM -cp "$CP" $MAIN_CLASS 4359
+$JAVA -mx$MEM -cp "$CP" $MAIN_CLASS 4359
 # 22 million
-java -mx$MEM -cp "$CP" $MAIN_CLASS 4690
+$JAVA -mx$MEM -cp "$CP" $MAIN_CLASS 4690
 # 25 million
-java -mx$MEM -cp "$CP" $MAIN_CLASS 5000
+$JAVA -mx$MEM -cp "$CP" $MAIN_CLASS 5000
 
-python "$DIR/gen-chart.py" > flot-data.js
+python "$DIR/chart-gen.py" > flot-data.js
