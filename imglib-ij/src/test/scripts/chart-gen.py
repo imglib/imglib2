@@ -12,7 +12,7 @@
 
 # Total charts: 8 (4 for "cheap" and 4 for "expensive")
 
-import math, os
+import math, os, string
 
 # NB: Presumably there is a slick way to avoid having two nearly identical
 # methods (generateIterationChart and generateResolutionChart) iterating over
@@ -35,7 +35,12 @@ def generateIterationChart(name, data, methods, resolution_index):
       else:
         suffix = ']'
       print '[' + str(i) + ', ' + str(data[resolution_index][i][m]) + suffix,
-    print ']'
+    print '],'
+    checked = methods[m] == 'ImageJ' \
+      or methods[m] == 'Imglib (Array)' \
+      or methods[m] == 'Imglib (Planar)' \
+      or methods[m] == 'Raw';
+    print '            checked: ' + string.lower(str(checked))
     print '        },'
   print '    };'
 
