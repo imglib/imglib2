@@ -25,6 +25,7 @@ import mpicbg.imglib.algorithm.Benchmark;
 import mpicbg.imglib.algorithm.MultiThreaded;
 import mpicbg.imglib.algorithm.OutputAlgorithm;
 import mpicbg.imglib.algorithm.function.SubtractNorm;
+import mpicbg.imglib.algorithm.gauss.GaussianConvolution;
 import mpicbg.imglib.algorithm.gauss.GaussianConvolution2;
 import mpicbg.imglib.algorithm.math.ImageCalculatorInPlace;
 import mpicbg.imglib.cursor.LocalizableByDimCursor;
@@ -59,6 +60,27 @@ public class DifferenceOfGaussian < A extends Type<A>, B extends NumericType<B> 
 	int numThreads;
 	String errorMessage = "";
 	
+	/**
+	 * Extracts local minima and maxima of a certain size. It therefore computes the difference of gaussian 
+	 * for an {@link Image} and detects all local minima and maxima in 3x3x3x....3 environment, which is returned
+	 * as an {@link ArrayList} of {@link DifferenceOfGaussianPeak}s. The two sigmas define the scale on which
+	 * extrema are identified, it correlates with the size of the object. 
+	 * Note that not only extrema of this size are found, but they will have the higher absolute values. Note as
+	 * well that the values of the difference of gaussian image is also defined by the distance between the two
+	 * sigmas. A normalization if necessary can be found in the {@link ScaleSpace} class.    
+	 * 
+	 * Also note a technical detail, the method findPeaks(Image<B> img) can be called on any image if the image
+	 * from where the extrema should be computed already exists.
+	 * 
+	 * @param img - The input {@link Image}<A>
+	 * @param factory - The {@link ImageFactory}<B> which defines the datatype in which the computation is performed
+	 * @param converter - The {@link Converter}<A,B> which defines how to convert <A> into <B>
+	 * @param outOfBoundsFactory - The {@link OutOfBoundsStrategyFactory} necessary for the {@link GaussianConvolution}
+	 * @param sigma1 - The lower sigma
+	 * @param sigma2 - The higher sigma
+	 * @param minPeakValue - 
+	 * @param normalizationFactor
+	 */
 	public DifferenceOfGaussian( final Image<A> img, final ImageFactory<B> factory, final Converter<A, B> converter,
 			    final OutOfBoundsStrategyFactory<B> outOfBoundsFactory, 
 			    final double sigma1, final double sigma2, final B minPeakValue, final B normalizationFactor )
@@ -192,90 +214,90 @@ public class DifferenceOfGaussian < A extends Type<A>, B extends NumericType<B> 
 		final OutputAlgorithm<B> conv1 = getGaussianConvolution( sigma1, Math.max( 1, getNumThreads() / divisor ) );
 		final OutputAlgorithm<B> conv2 = getGaussianConvolution( sigma2, Math.max( 1, getNumThreads() / divisor ) );
 		        
-        final Image<B> gauss1, gauss2;
-        
-        if ( conv1.checkInput() && conv2.checkInput() )
-        {       	
-            final AtomicInteger ai = new AtomicInteger(0);					
-            Thread[] threads = SimpleMultiThreading.newThreads( divisor );
-
-        	for (int ithread = 0; ithread < threads.length; ++ithread)
-                threads[ithread] = new Thread(new Runnable()
-                {
-                    public void run()
-                    {
-                    	final int myNumber = ai.getAndIncrement();
-                    	if ( myNumber == 0 || !computeConvolutionsParalell )
-                    	{
-                    		if ( !conv1.process() )
-                            	System.out.println( "Cannot compute gaussian convolution 1: " + conv1.getErrorMessage() );                    		
-                    	}
-                    	
-                    	if ( myNumber == 1 || !computeConvolutionsParalell )
-                    	{
-                    		if ( !conv2.process() )
-                    			System.out.println( "Cannot compute gaussian convolution 2: " + conv2.getErrorMessage() );
-                    	}                    	
-                    }
-                });
-        	
-    		SimpleMultiThreading.startAndJoin( threads );       	
-        }
-        else
-        {
-        	errorMessage =  "Cannot compute gaussian convolutions: " + conv1.getErrorMessage() + " & " + conv2.getErrorMessage();
-        
-        	gauss1 = gauss2 = null;
-        	return false;
-        }
-                
-        if ( conv1.getErrorMessage().length() == 0 && conv2.getErrorMessage().length() == 0 )
-        {
-	        gauss1 = conv1.getResult();
-	        gauss2 = conv2.getResult();
-        }
-        else
-        {
-        	gauss1 = gauss2 = null;
-        	return false;        	
-        }
-
-        //
-        // subtract the images to get the LaPlace image
-        //
-        final Function<B, B, B> function = getNormalizedSubtraction();        
-        final ImageCalculatorInPlace<B, B> imageCalc = new ImageCalculatorInPlace<B, B>( gauss2, gauss1, function );
-        
-        if ( !imageCalc.checkInput() || !imageCalc.process() )
-        {
-        	errorMessage =  "Cannot subtract images: " + imageCalc.getErrorMessage();
-        	
-        	gauss1.close();
-        	gauss2.close();
-        	
-        	return false;
-        }
-
-        gauss1.close();
-        
-        /*
-        gauss2.setName( "laplace" );
-        gauss2.getDisplay().setMinMax();
-        ImageJFunctions.copyToImagePlus( gauss2 ).show();
-        */
-        
-        //
-        // Now we find minima and maxima in the DoG image
-        //        
+		final Image<B> gauss1, gauss2;
+		
+		if ( conv1.checkInput() && conv2.checkInput() )
+		{       	
+		    final AtomicInteger ai = new AtomicInteger(0);					
+		    Thread[] threads = SimpleMultiThreading.newThreads( divisor );
+		
+			for (int ithread = 0; ithread < threads.length; ++ithread)
+		        threads[ithread] = new Thread(new Runnable()
+		        {
+		            public void run()
+		            {
+		            	final int myNumber = ai.getAndIncrement();
+		            	if ( myNumber == 0 || !computeConvolutionsParalell )
+		            	{
+		            		if ( !conv1.process() )
+		                    	System.out.println( "Cannot compute gaussian convolution 1: " + conv1.getErrorMessage() );                    		
+		            	}
+		            	
+		            	if ( myNumber == 1 || !computeConvolutionsParalell )
+		            	{
+		            		if ( !conv2.process() )
+		            			System.out.println( "Cannot compute gaussian convolution 2: " + conv2.getErrorMessage() );
+		            	}                    	
+		            }
+		        });
+			
+			SimpleMultiThreading.startAndJoin( threads );       	
+		}
+		else
+		{
+			errorMessage =  "Cannot compute gaussian convolutions: " + conv1.getErrorMessage() + " & " + conv2.getErrorMessage();
+		
+			gauss1 = gauss2 = null;
+			return false;
+		}
+		        
+		if ( conv1.getErrorMessage().length() == 0 && conv2.getErrorMessage().length() == 0 )
+		{
+		    gauss1 = conv1.getResult();
+		    gauss2 = conv2.getResult();
+		}
+		else
+		{
+			gauss1 = gauss2 = null;
+			return false;        	
+		}
+		
+		//
+		// subtract the images to get the LaPlace image
+		//
+		final Function<B, B, B> function = getNormalizedSubtraction();        
+		final ImageCalculatorInPlace<B, B> imageCalc = new ImageCalculatorInPlace<B, B>( gauss2, gauss1, function );
+		
+		if ( !imageCalc.checkInput() || !imageCalc.process() )
+		{
+			errorMessage =  "Cannot subtract images: " + imageCalc.getErrorMessage();
+			
+			gauss1.close();
+			gauss2.close();
+			
+			return false;
+		}
+		
+		gauss1.close();
+		
+		/*
+		gauss2.setName( "laplace" );
+		gauss2.getDisplay().setMinMax();
+		ImageJFunctions.copyToImagePlus( gauss2 ).show();
+		*/
+		
+		//
+		// Now we find minima and maxima in the DoG image
+		//        
 		peaks.clear();
 		peaks.addAll( findPeaks( gauss2 ) );
-
+		
 		if ( keepDoGImage )
 			dogImage = gauss2;
 		else
 			gauss2.close(); 
-        		
-        processingTime = System.currentTimeMillis() - startTime;
+				
+		processingTime = System.currentTimeMillis() - startTime;
 		
 		return true;
 	}
