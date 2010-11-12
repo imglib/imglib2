@@ -92,7 +92,7 @@ public class DifferenceOfGaussian < A extends Type<A>, B extends NumericType<B> 
 	}
 	
 	public Image<B> getDoGImage() { return dogImage; }
-	public void setKeepDogImage( final boolean keepDoGImage ) { this.keepDoGImage = keepDoGImage; }
+	public void setKeepDoGImage( final boolean keepDoGImage ) { this.keepDoGImage = keepDoGImage; }
 	public boolean getKeepDoGImage() { return keepDoGImage; }
 	public ArrayList<DifferenceOfGaussianPeak<B>> getPeaks() { return peaks; }
 	public void setComputeConvolutionsParalell( final boolean paralell ) { this.computeConvolutionsParalell = paralell; }
