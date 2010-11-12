@@ -40,7 +40,7 @@ import mpicbg.imglib.type.Type;
  */
 public class PlanarLocalizableCursor<T extends Type<T>> extends PlanarCursor<T> implements LocalizableCursor<T>
 {
-	final protected int numDimensions; 	
+	final protected int numDimensions;
 	final protected int[] position, dimensions;
 	
 	public PlanarLocalizableCursor( final PlanarContainer<T,?> container, final Image<T> image, final T type )
@@ -63,15 +63,8 @@ public class PlanarLocalizableCursor<T extends Type<T>> extends PlanarCursor<T> 
 	
 	@Override
 	public void fwd()
-	{ 
-		type.incIndex();
-
-		if ( type.getIndex() > lastIndex )
-		{
-			++sliceIndex;
-			type.updateIndex( 0 );
-			type.updateContainer( this );
-		}
+	{
+		super.fwd();
 		
 		for ( int d = 0; d < numDimensions; ++d )
 		{
@@ -99,6 +92,8 @@ public class PlanarLocalizableCursor<T extends Type<T>> extends PlanarCursor<T> 
 		sliceIndex = 0;
 		
 		type.updateContainer( this );
+		
+		hasNext = true;
 	}
 
 
