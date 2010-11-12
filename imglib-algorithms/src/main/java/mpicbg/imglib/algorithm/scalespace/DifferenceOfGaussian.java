@@ -43,17 +43,18 @@ public class DifferenceOfGaussian < A extends Type<A>, B extends NumericType<B> 
 {
 	public static enum SpecialPoint { INVALID, MIN, MAX };
 	
-	final Image<A> image;
-	final ImageFactory<B> factory;
-	final OutOfBoundsStrategyFactory<B> outOfBoundsFactory;
+	protected final Image<A> image;
+	protected Image<B> dogImage;
+	protected final ImageFactory<B> factory;
+	protected final OutOfBoundsStrategyFactory<B> outOfBoundsFactory;
 	
 	final double sigma1, sigma2;
 	final B normalizationFactor, minPeakValue, negMinPeakValue, zero, one, minusOne;
 	
-	final ArrayList<DifferenceOfGaussianPeak<B>> peaks = new ArrayList<DifferenceOfGaussianPeak<B>>();
-	final Converter<A, B> converter;
+	protected final ArrayList<DifferenceOfGaussianPeak<B>> peaks = new ArrayList<DifferenceOfGaussianPeak<B>>();
+	protected final Converter<A, B> converter;
 	
-	boolean computeConvolutionsParalell;
+	boolean computeConvolutionsParalell, keepDoGImage;
 	long processingTime;
 	int numThreads;
 	String errorMessage = "";
@@ -86,8 +87,13 @@ public class DifferenceOfGaussian < A extends Type<A>, B extends NumericType<B> 
 		
 		this.negMinPeakValue = minPeakValue.copy();
 		this.negMinPeakValue.mul( minusOne );
+		this.dogImage = null;
+		this.keepDoGImage = false;
 	}
 	
+	public Image<B> getDoGImage() { return dogImage; }
+	public void setKeepDoGImage( final boolean keepDoGImage ) { this.keepDoGImage = keepDoGImage; }
+	public boolean getKeepDoGImage() { return keepDoGImage; }
 	public ArrayList<DifferenceOfGaussianPeak<B>> getPeaks() { return peaks; }
 	public void setComputeConvolutionsParalell( final boolean paralell ) { this.computeConvolutionsParalell = paralell; }
 	public boolean getComputeConvolutionsParalell() { return computeConvolutionsParalell; }
@@ -264,7 +270,10 @@ public class DifferenceOfGaussian < A extends Type<A>, B extends NumericType<B> 
 		peaks.clear();
 		peaks.addAll( findPeaks( gauss2 ) );
 
-		gauss2.close(); 
+		if ( keepDoGImage )
+			dogImage = gauss2;
+		else
+			gauss2.close(); 
         		
         processingTime = System.currentTimeMillis() - startTime;
 		

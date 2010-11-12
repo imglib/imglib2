@@ -59,6 +59,12 @@ public class DifferenceOfGaussianPeak< T extends NumericType<T> > implements Loc
 		
 		return loc; 
 	}
+	public void getSubPixelPosition( final float[] loc )
+	{
+		for ( int d = 0; d < loc.length; ++d )
+			loc[ d ] = subPixelLocationOffset[ d ] + pixelLocation[ d ];		
+	}
+
 	public float getSubPixelPosition( final int dim ) { return subPixelLocationOffset[ dim ] + pixelLocation[ dim ]; }
 	public T getValue() { return sumValue; }
 	public T getImgValue() { return value; }
