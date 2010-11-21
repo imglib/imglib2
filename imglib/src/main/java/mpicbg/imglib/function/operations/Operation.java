@@ -10,4 +10,5 @@ public interface Operation< A extends NumericType<A> > extends Function< A, A, A
 	public void fwd();
 	public void compute(A output);
 	public void getImages(Set<Image<A>> images);
+	public void init(A ref);
 }

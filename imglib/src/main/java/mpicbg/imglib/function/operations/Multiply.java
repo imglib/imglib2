@@ -72,4 +72,9 @@ public class Multiply< A extends NumericType<A> > implements Operation<A>
 	public void getImages(final Set<Image<A>> images) {
 		inner.getImages(images);
 	}
+
+	@Override
+	public void init(final A ref) {
+		inner.init(ref);
+	}
 }

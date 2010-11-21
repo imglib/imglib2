@@ -11,7 +11,7 @@ public final class NOp< A extends NumericType<A> > extends AOpN<A> {
 
 	@Override
 	public final void compute(final A output) {
-		other.compute(output);
-		op.compute(num, output, output);
+		other.compute(tmp);
+		op.compute(num, tmp, output);
 	}
 }

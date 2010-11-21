@@ -29,4 +29,7 @@ public abstract class AIN< A extends NumericType<A> > extends AN<A> implements O
 	public void getImages(final Set<Image<A>> images) {
 		images.add(c.getImage());
 	}
+
+	@Override
+	public void init(final A ref) {}
 }

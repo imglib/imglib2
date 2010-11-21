@@ -34,4 +34,7 @@ public final class II< A extends NumericType<A> > implements Op< A > {
 		images.add(cl.getImage());
 		images.add(cr.getImage());
 	}
+
+	@Override
+	public void init(final A ref) {}
 }

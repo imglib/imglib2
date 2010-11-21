@@ -11,6 +11,7 @@ public abstract class AOpN< A extends NumericType<A> > extends AN<A> implements 
 
 	protected final Operation<A> other, op;
 	protected final A num;
+	protected A tmp;
 
 	public AOpN(final Operation<A> other, final Number val, final Operation<A> op) {
 		this.other = other;
@@ -26,5 +27,11 @@ public abstract class AOpN< A extends NumericType<A> > extends AN<A> implements 
 	@Override
 	public void getImages(final Set<Image<A>> images) {
 		other.getImages(images);
+	}
+
+	@Override
+	public void init(final A ref) {
+		tmp = ref.createVariable();
+		other.init(ref);
 	}
 }

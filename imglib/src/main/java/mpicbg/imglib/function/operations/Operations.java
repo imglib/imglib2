@@ -14,12 +14,13 @@ public class Operations {
 		// 1 - Collect all images involved in the operation
 		final Set<Image<A>> images = new HashSet<Image<A>>();
 		op.getImages(images);
-		
+
 		// 2 - Check that they are all compatible: same type, same dimensions, same storage strategy
 		// TODO
 
 		// 3 - Operate on an empty result image
 		final Image<A> first = images.iterator().next();
+		op.init(first.createType());
 		final Image<A> result = first.createNewImage();
 		final Cursor<A> c = result.createCursor();
 		while (c.hasNext()) {

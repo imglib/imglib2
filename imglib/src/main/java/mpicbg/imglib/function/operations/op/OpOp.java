@@ -9,6 +9,7 @@ import mpicbg.imglib.type.numeric.NumericType;
 public final class OpOp< A extends NumericType<A> > implements Op<A> {
 
 	private final Operation<A> other1, other2, op;
+	private A tmp1, tmp2;
 
 	public OpOp(final Operation<A> other1, final Operation<A> other2, final Operation<A> op) {
 		this.other1 = other1;
@@ -18,10 +19,9 @@ public final class OpOp< A extends NumericType<A> > implements Op<A> {
 
 	@Override
 	public final void compute(final A output) {
-		final A output2 = output.copy();
-		other1.compute(output);
-		other2.compute(output2);
-		op.compute(output, output2, output);
+		other1.compute(tmp1);
+		other2.compute(tmp2);
+		op.compute(tmp1, tmp2, output);
 	}
 
 	@Override
@@ -34,5 +34,13 @@ public final class OpOp< A extends NumericType<A> > implements Op<A> {
 	public final void getImages(final Set<Image<A>> images) {
 		other1.getImages(images);
 		other2.getImages(images);
+	}
+	
+	@Override
+	public final void init(final A ref) {
+		this.tmp1 = ref.createVariable();
+		this.tmp2 = ref.createVariable();
+		other1.init(ref);
+		other2.init(ref);
 	}
 }

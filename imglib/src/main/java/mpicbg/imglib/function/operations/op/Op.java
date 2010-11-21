@@ -9,4 +9,5 @@ public interface Op< A extends NumericType<A> > {
 	public void fwd();
 	public void compute(A output);
 	public void getImages(Set<Image<A>> images);
+	public void init(A ref);
 }

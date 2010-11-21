@@ -11,6 +11,7 @@ public final class IOp< A extends NumericType<A> > implements Op< A > {
 
 	private final Operation<A> op, other;
 	private final Cursor<A> cl;
+	private A tmp;
 
 	public IOp(final Image<A> left, final Operation<A> other, final Operation<A> op) {
 		this.cl = left.createCursor();
@@ -20,8 +21,8 @@ public final class IOp< A extends NumericType<A> > implements Op< A > {
 
 	@Override
 	public final void compute(final A output) {
-		other.compute(output);
-		op.compute(cl.getType(), output, output);
+		other.compute(tmp);
+		op.compute(cl.getType(), tmp, output);
 	}
 
 	@Override
@@ -34,5 +35,11 @@ public final class IOp< A extends NumericType<A> > implements Op< A > {
 	public final void getImages(final Set<Image<A>> images) {
 		images.add(cl.getImage());
 		other.getImages(images);
+	}
+
+	@Override
+	public void init(final A ref) {
+		tmp = ref.createVariable();
+		other.init(ref);
 	}
 }
