@@ -18,8 +18,8 @@ public final class OpOp< A extends NumericType<A> > implements Op<A> {
 
 	@Override
 	public final void compute(final A output) {
-		other1.compute(output);
 		final A output2 = output.copy();
+		other1.compute(output);
 		other2.compute(output2);
 		op.compute(output, output2, output);
 	}
