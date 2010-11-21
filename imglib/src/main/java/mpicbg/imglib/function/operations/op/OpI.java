@@ -7,32 +7,32 @@ import mpicbg.imglib.function.operations.Operation;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.type.numeric.NumericType;
 
-public final class OpIOp< A extends NumericType<A> > implements Op< A > {
+public final class OpI< A extends NumericType<A> > implements Op<A> {
 
 	private final Operation<A> op, other;
-	private Cursor<A> cl;
+	private Cursor<A> cr;
 
-	public OpIOp(final Image<A> left, final Operation<A> other, final Operation<A> op) {
-		this.cl = left.createCursor();
+	public OpI(final Operation<A> other, final Image<A> right, final Operation<A> op) {
+		this.cr = right.createCursor();
 		this.other = other;
 		this.op = op;
 	}
 
 	@Override
-	public final void compute(final A output) {
+	public final void compute(A output) {
 		other.compute(output);
-		op.compute(cl.getType(), output, output);
+		op.compute(output, cr.getType(), output);
 	}
 
 	@Override
 	public final void fwd() {
 		other.fwd();
-		cl.fwd();
+		cr.fwd();
 	}
 
 	@Override
 	public void getImages(final Set<Image<A>> images) {
-		images.add(cl.getImage());
 		other.getImages(images);
+		images.add(cr.getImage());
 	}
 }

@@ -7,12 +7,12 @@ import mpicbg.imglib.function.operations.Operation;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.type.numeric.NumericType;
 
-public final class OpII< A extends NumericType<A> > implements Op< A > {
+public final class II< A extends NumericType<A> > implements Op< A > {
 
 	private final Operation<A> op;
-	private Cursor<A> cl, cr;
+	private final Cursor<A> cl, cr;
 
-	public OpII(final Image<A> left, final Image<A> right, final Operation<A> op) {
+	public II(final Image<A> left, final Image<A> right, final Operation<A> op) {
 		this.cl = left.createCursor();
 		this.cr = right.createCursor();
 		this.op = op;
