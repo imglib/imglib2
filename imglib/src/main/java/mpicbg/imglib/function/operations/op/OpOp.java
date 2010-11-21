@@ -31,7 +31,7 @@ public final class OpOp< A extends NumericType<A> > implements Op<A> {
 	}
 
 	@Override
-	public void getImages(final Set<Image<A>> images) {
+	public final void getImages(final Set<Image<A>> images) {
 		other1.getImages(images);
 		other2.getImages(images);
 	}

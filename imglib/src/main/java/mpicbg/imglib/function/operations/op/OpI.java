@@ -10,7 +10,7 @@ import mpicbg.imglib.type.numeric.NumericType;
 public final class OpI< A extends NumericType<A> > implements Op<A> {
 
 	private final Operation<A> op, other;
-	private Cursor<A> cr;
+	private final Cursor<A> cr;
 
 	public OpI(final Operation<A> other, final Image<A> right, final Operation<A> op) {
 		this.cr = right.createCursor();
@@ -19,7 +19,7 @@ public final class OpI< A extends NumericType<A> > implements Op<A> {
 	}
 
 	@Override
-	public final void compute(A output) {
+	public final void compute(final A output) {
 		other.compute(output);
 		op.compute(output, cr.getType(), output);
 	}
@@ -31,7 +31,7 @@ public final class OpI< A extends NumericType<A> > implements Op<A> {
 	}
 
 	@Override
-	public void getImages(final Set<Image<A>> images) {
+	public final void getImages(final Set<Image<A>> images) {
 		other.getImages(images);
 		images.add(cr.getImage());
 	}

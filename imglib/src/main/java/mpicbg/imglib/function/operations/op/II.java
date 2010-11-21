@@ -19,7 +19,7 @@ public final class II< A extends NumericType<A> > implements Op< A > {
 	}
 
 	@Override
-	public final void compute(A output) {
+	public final void compute(final A output) {
 		op.compute(cl.getType(), cr.getType(), output);
 	}
 
@@ -30,7 +30,7 @@ public final class II< A extends NumericType<A> > implements Op< A > {
 	}
 
 	@Override
-	public void getImages(final Set<Image<A>> images) {
+	public final void getImages(final Set<Image<A>> images) {
 		images.add(cl.getImage());
 		images.add(cr.getImage());
 	}
