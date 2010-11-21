@@ -1,0 +1,38 @@
+package mpicbg.imglib.function.operations.op;
+
+import java.util.Set;
+
+import mpicbg.imglib.cursor.Cursor;
+import mpicbg.imglib.function.operations.Operation;
+import mpicbg.imglib.image.Image;
+import mpicbg.imglib.type.numeric.NumericType;
+
+public final class OpIOp< A extends NumericType<A> > implements Op< A > {
+
+	private final Operation<A> op, other;
+	private Cursor<A> cl;
+
+	public OpIOp(final Image<A> left, final Operation<A> other, final Operation<A> op) {
+		this.cl = left.createCursor();
+		this.other = other;
+		this.op = op;
+	}
+
+	@Override
+	public final void compute(final A output) {
+		other.compute(output);
+		op.compute(cl.getType(), output, output);
+	}
+
+	@Override
+	public final void fwd() {
+		other.fwd();
+		cl.fwd();
+	}
+
+	@Override
+	public void getImages(final Set<Image<A>> images) {
+		images.add(cl.getImage());
+		other.getImages(images);
+	}
+}
