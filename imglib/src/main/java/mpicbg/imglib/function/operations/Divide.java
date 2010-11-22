@@ -14,46 +14,45 @@ import mpicbg.imglib.function.operations.op.OpN;
 import mpicbg.imglib.function.operations.op.OpOp;
 import mpicbg.imglib.image.Image;
 
-public class Divide< A extends RealType<A> > implements Operation<A>
+public class Divide< R extends RealType<R> > implements Operation<R>
 {
 
-	final Op<A> inner;
+	final Op<R> inner;
 
-	public Divide(final Image<A> left, final Image<A> right) {
-		this.inner = new II<A>(left, right, this);
+	public Divide(final Image<? extends RealType<?>> left, final Image<? extends RealType<?>> right) {
+		this.inner = new II<R>(left, right, this);
 	}
 
-	public Divide(final Operation<A> op, final Image<A> right) {
-		this.inner = new OpI<A>(op, right, this);
+	public Divide(final Operation<R> op, final Image<? extends RealType<R>> right) {
+		this.inner = new OpI<R>(op, right, this);
 	}
 
-	public Divide(final Image<A> left, final Operation<A> op) {
-		//this(op, left);
-		this.inner = new IOp<A>(left, op, this);
+	public Divide(final Image<? extends RealType<?>> left, final Operation<R> op) {
+		this.inner = new IOp<R>(left, op, this);
 	}
 
-	public Divide(final Operation<A> op1, final Operation<A> op2) {
-		this.inner = new OpOp<A>(op1, op2, this);
+	public Divide(final Operation<R> op1, final Operation<R> op2) {
+		this.inner = new OpOp<R>(op1, op2, this);
 	}
 	
-	public Divide(final Image<A> left, final Number val) {
-		this.inner = new IN<A>(left, val, this);
+	public Divide(final Image<? extends RealType<?>> left, final Number val) {
+		this.inner = new IN<R>(left, val, this);
 	}
 
-	public Divide(final Number val,final Image<A> right) {
-		this.inner = new NI<A>(val, right, this);
+	public Divide(final Number val,final Image<? extends RealType<?>> right) {
+		this.inner = new NI<R>(val, right, this);
 	}
 
-	public Divide(final Operation<A> left, final Number val) {
-		this.inner = new OpN<A>(left, val, this);
+	public Divide(final Operation<R> left, final Number val) {
+		this.inner = new OpN<R>(left, val, this);
 	}
 
-	public Divide(final Number val,final Operation<A> right) {
-		this.inner = new NOp<A>(val, right, this);
+	public Divide(final Number val,final Operation<R> right) {
+		this.inner = new NOp<R>(val, right, this);
 	}
 
 	@Override
-	public final void compute( final A input1, final A input2, final A output ) {
+	public final void compute( final RealType<?> input1, final RealType<?> input2, final R output ) {
 		/*
 		output.set(input1);
 		output.div(input2);
@@ -69,17 +68,17 @@ public class Divide< A extends RealType<A> > implements Operation<A>
 	}
 
 	@Override
-	public final void compute(final A output) {
+	public final void compute(final R output) {
 		inner.compute(output);
 	}
 
 	@Override
-	public void getImages(final Set<Image<A>> images) {
+	public void getImages(final Set<Image<? extends RealType<?>>> images) {
 		inner.getImages(images);
 	}
 
 	@Override
-	public void init(final A ref) {
+	public void init(final R ref) {
 		inner.init(ref);
 	}
 }

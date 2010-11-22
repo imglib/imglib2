@@ -7,20 +7,20 @@ import mpicbg.imglib.function.operations.Operation;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.type.numeric.RealType;
 
-public final class OpI< A extends RealType<A> > implements Op<A> {
+public final class OpI< R extends RealType<R> > implements Op<R> {
 
-	private final Operation<A> op, other;
-	private final Cursor<A> cr;
-	private A tmp;
+	private final Operation<R> op, other;
+	private final Cursor<? extends RealType<?>> cr;
+	private R tmp;
 
-	public OpI(final Operation<A> other, final Image<A> right, final Operation<A> op) {
+	public OpI(final Operation<R> other, final Image<? extends RealType<?>> right, final Operation<R> op) {
 		this.cr = right.createCursor();
 		this.other = other;
 		this.op = op;
 	}
 
 	@Override
-	public final void compute(final A output) {
+	public final void compute(final R output) {
 		other.compute(tmp);
 		op.compute(tmp, cr.getType(), output);
 	}
@@ -32,13 +32,13 @@ public final class OpI< A extends RealType<A> > implements Op<A> {
 	}
 
 	@Override
-	public final void getImages(final Set<Image<A>> images) {
+	public final void getImages(final Set<Image<? extends RealType<?>>> images) {
 		other.getImages(images);
 		images.add(cr.getImage());
 	}
 
 	@Override
-	public void init(final A ref) {
+	public void init(final R ref) {
 		tmp = ref.createVariable();
 		other.init(ref);
 	}

@@ -7,16 +7,16 @@ import mpicbg.imglib.function.operations.Operation;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.type.numeric.RealType;
 
-public abstract class AOpN< A extends RealType<A> > extends AN<A> implements Op<A> {
+public abstract class AOpN< R extends RealType<R> > extends AN<R> implements Op<R> {
 
-	protected final Operation<A> other, op;
-	protected final A num;
-	protected A tmp;
+	protected final Operation<R> other, op;
+	protected final RealType<?> num;
+	protected R tmp;
 
-	public AOpN(final Operation<A> other, final Number val, final Operation<A> op) {
+	public AOpN(final Operation<R> other, final Number val, final Operation<R> op) {
 		this.other = other;
 		this.op = op;
-		this.num = (A) asType(val);
+		this.num = asType(val);
 	}
 
 	@Override
@@ -25,12 +25,12 @@ public abstract class AOpN< A extends RealType<A> > extends AN<A> implements Op<
 	}
 
 	@Override
-	public void getImages(final Set<Image<A>> images) {
+	public void getImages(final Set<Image<? extends RealType<?>>> images) {
 		other.getImages(images);
 	}
 
 	@Override
-	public void init(final A ref) {
+	public void init(final R ref) {
 		tmp = ref.createVariable();
 		other.init(ref);
 	}

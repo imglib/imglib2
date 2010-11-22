@@ -5,9 +5,9 @@ import java.util.Set;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.type.numeric.RealType;
 
-public interface Op< A extends RealType<A> > {
+public interface Op< R extends RealType<R> > {
 	public void fwd();
-	public void compute(A output);
-	public void getImages(Set<Image<A>> images);
-	public void init(A ref);
+	public void compute(R output);
+	public void getImages(Set<Image<? extends RealType<?>>> images);
+	public void init(R ref);
 }

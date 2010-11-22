@@ -6,7 +6,7 @@ import mpicbg.imglib.type.numeric.integer.UnsignedByteType;
 import mpicbg.imglib.type.numeric.real.DoubleType;
 import mpicbg.imglib.type.numeric.real.FloatType;
 
-public abstract class AN< A extends RealType<A> > {
+public abstract class AN< R extends RealType<R> > {
 
 	/*
 	// Can't use it: RealType lacks a generic "set" method.
