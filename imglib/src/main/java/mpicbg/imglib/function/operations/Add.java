@@ -12,9 +12,9 @@ import mpicbg.imglib.function.operations.op.OpI;
 import mpicbg.imglib.function.operations.op.OpN;
 import mpicbg.imglib.function.operations.op.OpOp;
 import mpicbg.imglib.image.Image;
-import mpicbg.imglib.type.numeric.NumericType;
+import mpicbg.imglib.type.numeric.RealType;
 
-public class Add< A extends NumericType<A> > implements Operation<A> {
+public class Add< A extends RealType<A> > implements Operation<A> {
 
 	final Op<A> inner;
 

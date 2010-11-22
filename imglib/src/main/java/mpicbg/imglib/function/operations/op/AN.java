@@ -1,17 +1,17 @@
 package mpicbg.imglib.function.operations.op;
 
-import mpicbg.imglib.type.numeric.NumericType;
+import mpicbg.imglib.type.numeric.RealType;
 import mpicbg.imglib.type.numeric.integer.LongType;
 import mpicbg.imglib.type.numeric.integer.UnsignedByteType;
 import mpicbg.imglib.type.numeric.real.DoubleType;
 import mpicbg.imglib.type.numeric.real.FloatType;
 
-public abstract class AN< A extends NumericType<A> > {
+public abstract class AN< A extends RealType<A> > {
 
 	/*
-	// Can't use it: NumericType lacks a generic "set" method.
-	static private final HashMap<Class<? extends Number>, Class<? extends NumericType<?>>> m
-		= new HashMap<Class<? extends Number>, Class<? extends NumericType<?>>>();
+	// Can't use it: RealType lacks a generic "set" method.
+	static private final HashMap<Class<? extends Number>, Class<? extends RealType<?>>> m
+		= new HashMap<Class<? extends Number>, Class<? extends RealType<?>>>();
 	static {
 		m.put(Integer.class, LongType.class); // int as long!
 		m.put(Short.class, ShortType.class);
@@ -23,7 +23,7 @@ public abstract class AN< A extends NumericType<A> > {
 	*/
 
 	// TODO: Why does it need the cast?
-	protected final NumericType<?> asType(final Number val) {
+	protected final RealType<?> asType(final Number val) {
 		/*// FAILS
 		num = (A) m.get(val.getClass())
 		num.set(val);

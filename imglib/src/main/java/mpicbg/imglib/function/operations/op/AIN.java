@@ -6,9 +6,9 @@ import java.util.Set;
 import mpicbg.imglib.cursor.Cursor;
 import mpicbg.imglib.function.operations.Operation;
 import mpicbg.imglib.image.Image;
-import mpicbg.imglib.type.numeric.NumericType;
+import mpicbg.imglib.type.numeric.RealType;
 
-public abstract class AIN< A extends NumericType<A> > extends AN<A> implements Op<A> {
+public abstract class AIN< A extends RealType<A> > extends AN<A> implements Op<A> {
 
 	protected final Cursor<A> c;
 	protected final A num;

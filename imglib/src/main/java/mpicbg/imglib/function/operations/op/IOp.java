@@ -5,9 +5,9 @@ import java.util.Set;
 import mpicbg.imglib.cursor.Cursor;
 import mpicbg.imglib.function.operations.Operation;
 import mpicbg.imglib.image.Image;
-import mpicbg.imglib.type.numeric.NumericType;
+import mpicbg.imglib.type.numeric.RealType;
 
-public final class IOp< A extends NumericType<A> > implements Op< A > {
+public final class IOp< A extends RealType<A> > implements Op< A > {
 
 	private final Operation<A> op, other;
 	private final Cursor<A> cl;

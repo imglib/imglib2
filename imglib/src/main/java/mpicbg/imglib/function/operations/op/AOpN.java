@@ -5,9 +5,9 @@ import java.util.Set;
 
 import mpicbg.imglib.function.operations.Operation;
 import mpicbg.imglib.image.Image;
-import mpicbg.imglib.type.numeric.NumericType;
+import mpicbg.imglib.type.numeric.RealType;
 
-public abstract class AOpN< A extends NumericType<A> > extends AN<A> implements Op<A> {
+public abstract class AOpN< A extends RealType<A> > extends AN<A> implements Op<A> {
 
 	protected final Operation<A> other, op;
 	protected final A num;

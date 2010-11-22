@@ -2,7 +2,7 @@ package mpicbg.imglib.function.operations;
 
 import java.util.Set;
 
-import mpicbg.imglib.type.numeric.NumericType;
+import mpicbg.imglib.type.numeric.RealType;
 import mpicbg.imglib.function.operations.op.IN;
 import mpicbg.imglib.function.operations.op.NI;
 import mpicbg.imglib.function.operations.op.NOp;
@@ -14,7 +14,7 @@ import mpicbg.imglib.function.operations.op.OpN;
 import mpicbg.imglib.function.operations.op.OpOp;
 import mpicbg.imglib.image.Image;
 
-public class Multiply< A extends NumericType<A> > implements Operation<A>
+public class Multiply< A extends RealType<A> > implements Operation<A>
 {
 
 	final Op<A> inner;
