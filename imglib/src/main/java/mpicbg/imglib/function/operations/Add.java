@@ -53,8 +53,11 @@ public class Add< A extends RealType<A> > implements Operation<A> {
 
 	@Override
 	public final void compute( final A input1, final A input2, final A output ) {
+		/*
 		output.set(input1);
 		output.add(input2);
+		*/
+		output.setReal(input1.getRealFloat() + input2.getRealFloat());
 	}
 
 	@Override
@@ -68,12 +71,12 @@ public class Add< A extends RealType<A> > implements Operation<A> {
 	}
 
 	@Override
-	public void getImages(final Set<Image<A>> images) {
+	public final void getImages(final Set<Image<A>> images) {
 		inner.getImages(images);
 	}
 
 	@Override
-	public void init(final A ref) {
+	public final void init(final A ref) {
 		inner.init(ref);
 	}
 }

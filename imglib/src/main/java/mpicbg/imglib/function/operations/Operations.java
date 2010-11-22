@@ -6,6 +6,7 @@ import java.util.Set;
 import mpicbg.imglib.cursor.Cursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.type.numeric.RealType;
+import mpicbg.imglib.type.numeric.real.FloatType;
 
 public class Operations {
 
@@ -23,12 +24,13 @@ public class Operations {
 		op.init(first.createType());
 		final Image<A> result = first.createNewImage();
 		final Cursor<A> c = result.createCursor();
+		final A f = (A) new FloatType();
 		while (c.hasNext()) {
 			// Advance all cursors
 			op.fwd();
 			c.fwd();
-			op.compute(c.getType()); // TODO: ideally, the computations are done in float,
-									 // and then set back into whatever the type is.
+			op.compute(f);
+			c.getType().setReal(f.getRealFloat());
 		}
 
 		// 4 - Cleanup cursors
