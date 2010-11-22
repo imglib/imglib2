@@ -1,6 +1,6 @@
-package mpicbg.imglib.function.operations.op;
+package mpicbg.imglib.scripting.math.op;
 
-import mpicbg.imglib.function.operations.Operation;
+import mpicbg.imglib.scripting.math.Operation;
 import mpicbg.imglib.type.numeric.RealType;
 
 public final class NOp< R extends RealType<R> > extends AOpN<R> {

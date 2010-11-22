@@ -1,10 +1,10 @@
-package mpicbg.imglib.function.operations.op;
+package mpicbg.imglib.scripting.math.op;
 
 //import java.util.HashMap;
 import java.util.Set;
 
-import mpicbg.imglib.function.operations.Operation;
 import mpicbg.imglib.image.Image;
+import mpicbg.imglib.scripting.math.Operation;
 import mpicbg.imglib.type.numeric.RealType;
 
 public abstract class AOpN< R extends RealType<R> > extends AN<R> implements Op<R> {

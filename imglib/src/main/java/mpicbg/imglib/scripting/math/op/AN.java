@@ -1,4 +1,4 @@
-package mpicbg.imglib.function.operations.op;
+package mpicbg.imglib.scripting.math.op;
 
 import mpicbg.imglib.type.numeric.RealType;
 import mpicbg.imglib.type.numeric.integer.LongType;

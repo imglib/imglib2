@@ -1,4 +1,4 @@
-package mpicbg.imglib.function.operations;
+package mpicbg.imglib.scripting.math;
 
 import java.util.HashSet;
 import java.util.Set;

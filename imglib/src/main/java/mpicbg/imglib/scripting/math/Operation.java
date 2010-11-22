@@ -1,6 +1,6 @@
-package mpicbg.imglib.function.operations;
+package mpicbg.imglib.scripting.math;
 
-import mpicbg.imglib.function.operations.op.Op;
+import mpicbg.imglib.scripting.math.op.Op;
 import mpicbg.imglib.type.numeric.RealType;
 
 public interface Operation< R extends RealType<R> >

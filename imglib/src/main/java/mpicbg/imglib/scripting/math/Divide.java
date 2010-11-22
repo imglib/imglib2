@@ -1,17 +1,17 @@
-package mpicbg.imglib.function.operations;
+package mpicbg.imglib.scripting.math;
 
 import java.util.Set;
 
+import mpicbg.imglib.scripting.math.op.II;
+import mpicbg.imglib.scripting.math.op.IN;
+import mpicbg.imglib.scripting.math.op.IOp;
+import mpicbg.imglib.scripting.math.op.NI;
+import mpicbg.imglib.scripting.math.op.NOp;
+import mpicbg.imglib.scripting.math.op.Op;
+import mpicbg.imglib.scripting.math.op.OpI;
+import mpicbg.imglib.scripting.math.op.OpN;
+import mpicbg.imglib.scripting.math.op.OpOp;
 import mpicbg.imglib.type.numeric.RealType;
-import mpicbg.imglib.function.operations.op.IN;
-import mpicbg.imglib.function.operations.op.NI;
-import mpicbg.imglib.function.operations.op.NOp;
-import mpicbg.imglib.function.operations.op.Op;
-import mpicbg.imglib.function.operations.op.II;
-import mpicbg.imglib.function.operations.op.IOp;
-import mpicbg.imglib.function.operations.op.OpI;
-import mpicbg.imglib.function.operations.op.OpN;
-import mpicbg.imglib.function.operations.op.OpOp;
 import mpicbg.imglib.image.Image;
 
 public class Divide< R extends RealType<R> > implements Operation<R>
