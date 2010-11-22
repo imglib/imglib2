@@ -19,6 +19,7 @@
   <url>http://pacific.mpi-cbg.de/wiki/index.php/Imglib</url>
 
   <modules>
+    <module>GameOfDeath</module>
     <module>imglib</module>
     <module>imglib-algorithms</module>
     <module>imglib-ij</module>
