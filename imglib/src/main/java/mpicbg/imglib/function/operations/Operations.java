@@ -9,7 +9,7 @@ import mpicbg.imglib.type.numeric.NumericType;
 
 public class Operations {
 
-	static public final < A extends NumericType<A> > Image<A> apply(final Operation<A> op)
+	static public final <A extends NumericType<A>> Image<A> apply(final Operation<A> op)
 	{
 		// 1 - Collect all images involved in the operation
 		final Set<Image<A>> images = new HashSet<Image<A>>();
@@ -27,7 +27,8 @@ public class Operations {
 			// Advance all cursors
 			op.fwd();
 			c.fwd();
-			op.compute(c.getType());
+			op.compute(c.getType()); // TODO: ideally, the computations are done in float,
+									 // and then set back into whatever the type is.
 		}
 
 		// 4 - Cleanup cursors
