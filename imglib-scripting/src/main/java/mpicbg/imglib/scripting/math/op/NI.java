@@ -1,7 +1,7 @@
 package mpicbg.imglib.scripting.math.op;
 
 import mpicbg.imglib.image.Image;
-import mpicbg.imglib.scripting.math.Operation;
+import mpicbg.imglib.scripting.math.fn.Operation;
 import mpicbg.imglib.type.numeric.RealType;
 
 public final class NI< R extends RealType<R> > extends AIN<R> {

@@ -3,10 +3,12 @@ package mpicbg.imglib.scripting.math;
 import java.util.Set;
 
 import mpicbg.imglib.image.Image;
+import mpicbg.imglib.scripting.math.fn.Operation;
 import mpicbg.imglib.scripting.math.op.II;
 import mpicbg.imglib.scripting.math.op.IN;
 import mpicbg.imglib.scripting.math.op.IOp;
 import mpicbg.imglib.scripting.math.op.NI;
+import mpicbg.imglib.scripting.math.op.NN;
 import mpicbg.imglib.scripting.math.op.NOp;
 import mpicbg.imglib.scripting.math.op.Op;
 import mpicbg.imglib.scripting.math.op.OpI;
@@ -48,6 +50,10 @@ public class Add< R extends RealType<R> > implements Operation<R> {
 
 	public Add(final Number val,final Operation<R> right) {
 		this.inner = new NOp<R>(val, right, this);
+	}
+	
+	public Add(final Number val1, final Number val2) {
+		this.inner = new NN<R>(val1, val2, this);
 	}
 
 	@Override

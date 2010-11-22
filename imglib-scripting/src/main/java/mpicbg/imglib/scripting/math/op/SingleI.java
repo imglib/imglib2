@@ -7,32 +7,29 @@ import mpicbg.imglib.image.Image;
 import mpicbg.imglib.scripting.math.fn.Operation;
 import mpicbg.imglib.type.numeric.RealType;
 
-public final class II< R extends RealType<R> > implements Op< R > {
-
+public class SingleI< R extends RealType<R> > implements Op<R>
+{
 	private final Operation<R> op;
-	private final Cursor<? extends RealType<?>> cl, cr;
+	private final Cursor<? extends RealType<?>> c;
 
-	public II(final Image<? extends RealType<?>> left, final Image<? extends RealType<?>> right, final Operation<R> op) {
-		this.cl = left.createCursor();
-		this.cr = right.createCursor();
+	public SingleI(final Image<? extends RealType<?>> img, final Operation<R> op) {
+		this.c = img.createCursor();
 		this.op = op;
 	}
 
 	@Override
 	public final void compute(final R output) {
-		op.compute(cl.getType(), cr.getType(), output);
+		op.compute(c.getType(), null, output);
 	}
 
 	@Override
 	public final void fwd() {
-		cl.fwd();
-		cr.fwd();
+		c.fwd();
 	}
 
 	@Override
 	public final void getImages(final Set<Image<? extends RealType<?>>> images) {
-		images.add(cl.getImage());
-		images.add(cr.getImage());
+		images.add(c.getImage());
 	}
 
 	@Override

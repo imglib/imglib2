@@ -2,6 +2,7 @@ package mpicbg.imglib.scripting.math;
 
 import java.util.Set;
 
+import mpicbg.imglib.image.Image;
 import mpicbg.imglib.scripting.math.fn.Operation;
 import mpicbg.imglib.scripting.math.op.II;
 import mpicbg.imglib.scripting.math.op.IN;
@@ -14,56 +15,50 @@ import mpicbg.imglib.scripting.math.op.OpI;
 import mpicbg.imglib.scripting.math.op.OpN;
 import mpicbg.imglib.scripting.math.op.OpOp;
 import mpicbg.imglib.type.numeric.RealType;
-import mpicbg.imglib.image.Image;
 
-public class Subtract< R extends RealType<R> > implements Operation<R>
-{
+public class Min< R extends RealType<R> > implements Operation<R> {
 
 	final Op<R> inner;
 
-	public Subtract(final Image<? extends RealType<?>> left, final Image<? extends RealType<?>> right) {
+	public Min(final Image<? extends RealType<?>> left, final Image<? extends RealType<?>> right) {
 		this.inner = new II<R>(left, right, this);
 	}
 
-	public Subtract(final Operation<R> op, final Image<? extends RealType<R>> right) {
+	public Min(final Operation<R> op, final Image<? extends RealType<R>> right) {
 		this.inner = new OpI<R>(op, right, this);
 	}
 
-	public Subtract(final Image<? extends RealType<?>> left, final Operation<R> op) {
+	public Min(final Image<? extends RealType<?>> left, final Operation<R> op) {
 		this.inner = new IOp<R>(left, op, this);
 	}
 
-	public Subtract(final Operation<R> op1, final Operation<R> op2) {
+	public Min(final Operation<R> op1, final Operation<R> op2) {
 		this.inner = new OpOp<R>(op1, op2, this);
 	}
 	
-	public Subtract(final Image<? extends RealType<?>> left, final Number val) {
+	public Min(final Image<? extends RealType<?>> left, final Number val) {
 		this.inner = new IN<R>(left, val, this);
 	}
 
-	public Subtract(final Number val,final Image<? extends RealType<?>> right) {
+	public Min(final Number val,final Image<? extends RealType<?>> right) {
 		this.inner = new NI<R>(val, right, this);
 	}
 
-	public Subtract(final Operation<R> left, final Number val) {
+	public Min(final Operation<R> left, final Number val) {
 		this.inner = new OpN<R>(left, val, this);
 	}
 
-	public Subtract(final Number val,final Operation<R> right) {
+	public Min(final Number val,final Operation<R> right) {
 		this.inner = new NOp<R>(val, right, this);
 	}
 
-	public Subtract(final Number val1, final Number val2) {
+	public Min(final Number val1, final Number val2) {
 		this.inner = new NN<R>(val1, val2, this);
 	}
 
 	@Override
 	public final void compute( final RealType<?> input1, final RealType<?> input2, final R output ) {
-		/*
-		output.set(input1);
-		output.sub(input2);
-		*/
-		output.setReal(input1.getRealDouble() - input2.getRealDouble());
+		output.setReal(Math.min(input1.getRealDouble(), input2.getRealDouble()));
 	}
 
 	@Override
@@ -86,3 +81,5 @@ public class Subtract< R extends RealType<R> > implements Operation<R>
 		inner.init(ref);
 	}
 }
+
+

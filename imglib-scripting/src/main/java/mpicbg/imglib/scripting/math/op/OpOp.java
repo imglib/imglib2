@@ -3,7 +3,7 @@ package mpicbg.imglib.scripting.math.op;
 import java.util.Set;
 
 import mpicbg.imglib.image.Image;
-import mpicbg.imglib.scripting.math.Operation;
+import mpicbg.imglib.scripting.math.fn.Operation;
 import mpicbg.imglib.type.numeric.RealType;
 
 public final class OpOp< R extends RealType<R> > implements Op<R> {

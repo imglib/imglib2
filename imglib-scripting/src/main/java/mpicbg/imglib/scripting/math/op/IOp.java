@@ -4,7 +4,7 @@ import java.util.Set;
 
 import mpicbg.imglib.cursor.Cursor;
 import mpicbg.imglib.image.Image;
-import mpicbg.imglib.scripting.math.Operation;
+import mpicbg.imglib.scripting.math.fn.Operation;
 import mpicbg.imglib.type.numeric.RealType;
 
 public final class IOp< R extends RealType<R> > implements Op< R > {

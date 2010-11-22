@@ -1,6 +1,6 @@
 package mpicbg.imglib.scripting.math.op;
 
-import mpicbg.imglib.scripting.math.Operation;
+import mpicbg.imglib.scripting.math.fn.Operation;
 import mpicbg.imglib.type.numeric.RealType;
 
 public final class OpN< A extends RealType<A> > extends AOpN<A> {

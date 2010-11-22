@@ -1,4 +1,4 @@
-package mpicbg.imglib.scripting.math;
+package mpicbg.imglib.scripting.math.fn;
 
 import mpicbg.imglib.type.numeric.RealType;
 
