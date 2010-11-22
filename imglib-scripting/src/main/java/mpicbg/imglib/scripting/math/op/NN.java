@@ -14,6 +14,7 @@ public class NN< R extends RealType<R> > extends AN<R> implements Op<R> {
 	
 	public NN(final Number num1, final Number num2, final Operation<R> op) {
 		this.op = op;
+		// Cannot call num1.doubleValue(): byte would not be unsigned byte
 		this.val1 = asType(num1).getRealDouble();
 		this.val2 = asType(num2).getRealDouble();
 	}
