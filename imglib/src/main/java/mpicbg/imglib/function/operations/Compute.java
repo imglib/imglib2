@@ -3,14 +3,14 @@ package mpicbg.imglib.function.operations;
 import java.util.HashSet;
 import java.util.Set;
 
-import mpicbg.imglib.container.array.ArrayContainerFactory;
 import mpicbg.imglib.cursor.Cursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.ImageFactory;
 import mpicbg.imglib.type.numeric.RealType;
+import mpicbg.imglib.type.numeric.real.DoubleType;
 import mpicbg.imglib.type.numeric.real.FloatType;
 
-public class Operations {
+public class Compute {
 
 	static public final <R extends RealType<R>> Image<R> apply(final Operation<R> op, final R output)
 	{
@@ -52,5 +52,10 @@ public class Operations {
 	static public final Image<FloatType> inFloats(final Operation<FloatType> op)
 	{
 		return apply(op, new FloatType());
+	}
+
+	static public final Image<DoubleType> inDoubles(final Operation<DoubleType> op)
+	{
+		return apply(op, new DoubleType());
 	}
 }

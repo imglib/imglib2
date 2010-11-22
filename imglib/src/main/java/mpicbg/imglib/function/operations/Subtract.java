@@ -57,7 +57,7 @@ public class Subtract< R extends RealType<R> > implements Operation<R>
 		output.set(input1);
 		output.sub(input2);
 		*/
-		output.setReal(input1.getRealFloat() - input2.getRealFloat());
+		output.setReal(input1.getRealDouble() - input2.getRealDouble());
 	}
 
 	@Override

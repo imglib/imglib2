@@ -59,7 +59,7 @@ public class Divide< R extends RealType<R> > implements Operation<R>
 		*/
 		// TODO: WARNING could be dividing by zero.
 		// But the FloatType, LongType etc. don't implement any error-catching in any case.
-		output.setReal(input1.getRealFloat() / input2.getRealFloat());
+		output.setReal(input1.getRealDouble() / input2.getRealDouble());
 	}
 
 	@Override
