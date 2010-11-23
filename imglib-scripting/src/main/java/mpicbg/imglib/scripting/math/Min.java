@@ -18,7 +18,7 @@ import mpicbg.imglib.type.numeric.RealType;
 
 public class Min< R extends RealType<R> > implements Operation<R> {
 
-	final Op<R> inner;
+	private final Op<R> inner;
 
 	public Min(final Image<? extends RealType<?>> left, final Image<? extends RealType<?>> right) {
 		this.inner = new II<R>(left, right, this);

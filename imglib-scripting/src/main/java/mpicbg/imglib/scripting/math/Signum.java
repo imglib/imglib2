@@ -13,7 +13,7 @@ import mpicbg.imglib.type.numeric.RealType;
 /** Returns the signum function of the argument; zero if the argument is zero, 1.0f if the argument is greater than zero, -1.0f if the argument is less than zero. */
 public class Signum< R extends RealType<R> > implements Operation<R> {
 
-	final Op<R> inner;
+	private final Op<R> inner;
 
 	public Signum(final Image<? extends RealType<?>> img) {
 		this.inner = new SingleI<R>(img, this);

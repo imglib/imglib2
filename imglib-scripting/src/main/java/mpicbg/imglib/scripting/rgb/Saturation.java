@@ -12,5 +12,6 @@ public class Saturation<R extends RealType<R> > extends HSBOp<R> {
 		super(img);
 	}
 
+	@Override
 	protected final int getIndex() { return 1; }
 }

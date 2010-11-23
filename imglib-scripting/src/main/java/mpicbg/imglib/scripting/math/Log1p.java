@@ -13,7 +13,7 @@ import mpicbg.imglib.type.numeric.RealType;
 /**  Returns the natural logarithm of the sum of the argument and 1. */
 public class Log1p< R extends RealType<R> > implements Operation<R> {
 
-	final Op<R> inner;
+	private final Op<R> inner;
 
 	public Log1p(final Image<? extends RealType<?>> img) {
 		this.inner = new SingleI<R>(img, this);

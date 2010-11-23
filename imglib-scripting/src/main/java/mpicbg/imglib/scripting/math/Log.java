@@ -13,7 +13,7 @@ import mpicbg.imglib.type.numeric.RealType;
 /** Returns the natural logarithm (base e) of a double value. */
 public class Log< R extends RealType<R> > implements Operation<R> {
 
-	final Op<R> inner;
+	private final Op<R> inner;
 
 	public Log(final Image<? extends RealType<?>> img) {
 		this.inner = new SingleI<R>(img, this);

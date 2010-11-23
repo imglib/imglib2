@@ -18,8 +18,7 @@ import mpicbg.imglib.image.Image;
 
 public class Multiply< R extends RealType<R> > implements Operation<R>
 {
-
-	final Op<R> inner;
+	private final Op<R> inner;
 
 	public Multiply(final Image<? extends RealType<?>> left, final Image<? extends RealType<?>> right) {
 		this.inner = new II<R>(left, right, this);
@@ -77,12 +76,12 @@ public class Multiply< R extends RealType<R> > implements Operation<R>
 	}
 
 	@Override
-	public void getImages(final Set<Image<?>> images) {
+	public final void getImages(final Set<Image<?>> images) {
 		inner.getImages(images);
 	}
 
 	@Override
-	public void init(final R ref) {
+	public final void init(final R ref) {
 		inner.init(ref);
 	}
 }

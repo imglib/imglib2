@@ -18,8 +18,7 @@ import mpicbg.imglib.image.Image;
 
 public class Divide< R extends RealType<R> > implements Operation<R>
 {
-
-	final Op<R> inner;
+	private final Op<R> inner;
 
 	public Divide(final Image<? extends RealType<?>> left, final Image<? extends RealType<?>> right) {
 		this.inner = new II<R>(left, right, this);
@@ -59,10 +58,6 @@ public class Divide< R extends RealType<R> > implements Operation<R>
 
 	@Override
 	public final void compute( final RealType<?> input1, final RealType<?> input2, final R output ) {
-		/*
-		output.set(input1);
-		output.div(input2);
-		*/
 		// TODO: WARNING could be dividing by zero.
 		// But the FloatType, LongType etc. don't implement any error-catching in any case.
 		output.setReal(input1.getRealDouble() / input2.getRealDouble());
@@ -79,12 +74,12 @@ public class Divide< R extends RealType<R> > implements Operation<R>
 	}
 
 	@Override
-	public void getImages(final Set<Image<?>> images) {
+	public final void getImages(final Set<Image<?>> images) {
 		inner.getImages(images);
 	}
 
 	@Override
-	public void init(final R ref) {
+	public final void init(final R ref) {
 		inner.init(ref);
 	}
 }

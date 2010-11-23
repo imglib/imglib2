@@ -19,7 +19,7 @@ import mpicbg.imglib.type.numeric.RealType;
 /** Returns sqrt(x2 +y2) without intermediate overflow or underflow. */
 public class Hypot< R extends RealType<R> > implements Operation<R> {
 
-	final Op<R> inner;
+	private final Op<R> inner;
 
 	public Hypot(final Image<? extends RealType<?>> left, final Image<? extends RealType<?>> right) {
 		this.inner = new II<R>(left, right, this);

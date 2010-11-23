@@ -19,7 +19,7 @@ import mpicbg.imglib.type.numeric.RealType;
 /** Converts rectangular coordinates (x, y) to polar (r, theta). */
 public class ATan2< R extends RealType<R> > implements Operation<R> {
 
-	final Op<R> inner;
+	private final Op<R> inner;
 
 	public ATan2(final Image<? extends RealType<?>> left, final Image<? extends RealType<?>> right) {
 		this.inner = new II<R>(left, right, this);

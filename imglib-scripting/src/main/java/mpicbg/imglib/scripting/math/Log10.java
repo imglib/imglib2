@@ -13,7 +13,7 @@ import mpicbg.imglib.type.numeric.RealType;
 /** Returns the base 10 logarithm of a double value. */
 public class Log10< R extends RealType<R> > implements Operation<R> {
 
-	final Op<R> inner;
+	private final Op<R> inner;
 
 	public Log10(final Image<? extends RealType<?>> img) {
 		this.inner = new SingleI<R>(img, this);

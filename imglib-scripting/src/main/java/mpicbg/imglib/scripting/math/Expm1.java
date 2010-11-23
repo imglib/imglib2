@@ -13,7 +13,7 @@ import mpicbg.imglib.type.numeric.RealType;
 /** Returns e^x -1. */
 public class Expm1< R extends RealType<R> > implements Operation<R> {
 
-	final Op<R> inner;
+	private final Op<R> inner;
 
 	public Expm1(final Image<? extends RealType<?>> img) {
 		this.inner = new SingleI<R>(img, this);

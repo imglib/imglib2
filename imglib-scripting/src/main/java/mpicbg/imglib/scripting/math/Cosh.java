@@ -13,7 +13,7 @@ import mpicbg.imglib.type.numeric.RealType;
 /* Returns the hyperbolic cosine of a double value. */
 public class Cosh< R extends RealType<R> > implements Operation<R> {
 
-	final Op<R> inner;
+	private final Op<R> inner;
 
 	public Cosh(final Image<? extends RealType<?>> img) {
 		this.inner = new SingleI<R>(img, this);
@@ -52,4 +52,3 @@ public class Cosh< R extends RealType<R> > implements Operation<R> {
 		inner.init(ref);
 	}
 }
-

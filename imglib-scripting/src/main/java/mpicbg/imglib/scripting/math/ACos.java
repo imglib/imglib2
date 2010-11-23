@@ -12,7 +12,7 @@ import mpicbg.imglib.type.numeric.RealType;
 
 public class ACos< R extends RealType<R> > implements Operation<R> {
 
-	final Op<R> inner;
+	private final Op<R> inner;
 
 	public ACos(final Image<? extends RealType<?>> img) {
 		this.inner = new SingleI<R>(img, this);

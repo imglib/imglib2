@@ -13,7 +13,7 @@ import mpicbg.imglib.type.numeric.RealType;
 /** Returns the double value that is closest in value to the argument and is equal to a mathematical integer. */
 public class Rint< R extends RealType<R> > implements Operation<R> {
 
-	final Op<R> inner;
+	private final Op<R> inner;
 
 	public Rint(final Image<? extends RealType<?>> img) {
 		this.inner = new SingleI<R>(img, this);

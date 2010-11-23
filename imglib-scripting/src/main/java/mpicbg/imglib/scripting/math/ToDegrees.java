@@ -12,7 +12,7 @@ import mpicbg.imglib.type.numeric.RealType;
 
 public class ToDegrees< R extends RealType<R> > implements Operation<R> {
 
-	final Op<R> inner;
+	private final Op<R> inner;
 
 	public ToDegrees(final Image<? extends RealType<?>> img) {
 		this.inner = new SingleI<R>(img, this);
@@ -51,4 +51,3 @@ public class ToDegrees< R extends RealType<R> > implements Operation<R> {
 		inner.init(ref);
 	}
 }
-

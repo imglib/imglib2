@@ -12,7 +12,7 @@ import mpicbg.imglib.type.numeric.RealType;
 
 public class Ceil< R extends RealType<R> > implements Operation<R> {
 
-	final Op<R> inner;
+	private final Op<R> inner;
 
 	public Ceil(final Image<? extends RealType<?>> img) {
 		this.inner = new SingleI<R>(img, this);
