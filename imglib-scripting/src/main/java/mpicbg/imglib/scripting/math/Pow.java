@@ -81,4 +81,3 @@ public class Pow< R extends RealType<R> > implements Operation<R> {
 		inner.init(ref);
 	}
 }
-

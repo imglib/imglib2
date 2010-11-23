@@ -12,5 +12,5 @@ public class Brightness<R extends RealType<R> > extends HSBOp<R> {
 		super(img);
 	}
 
-	protected final int getChannel() { return 2; }
+	protected final int getIndex() { return 2; }
 }

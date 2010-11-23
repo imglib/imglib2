@@ -12,5 +12,5 @@ public class Saturation<R extends RealType<R> > extends HSBOp<R> {
 		super(img);
 	}
 
-	protected final int getChannel() { return 1; }
+	protected final int getIndex() { return 1; }
 }

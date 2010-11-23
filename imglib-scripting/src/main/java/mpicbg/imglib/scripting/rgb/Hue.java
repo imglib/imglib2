@@ -12,5 +12,5 @@ public class Hue<R extends RealType<R> > extends HSBOp<R> {
 		super(img);
 	}
 
-	protected final int getChannel() { return 0; }
+	protected final int getIndex() { return 0; }
 }
