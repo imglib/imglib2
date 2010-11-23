@@ -23,7 +23,7 @@ public class IEEEremainder< R extends RealType<R> > implements Operation<R> {
 		this.inner = new II<R>(left, right, this);
 	}
 
-	public IEEEremainder(final Operation<R> op, final Image<? extends RealType<R>> right) {
+	public IEEEremainder(final Operation<R> op, final Image<? extends RealType<?>> right) {
 		this.inner = new OpI<R>(op, right, this);
 	}
 

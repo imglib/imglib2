@@ -42,8 +42,6 @@ public class Compute {
 						throw new Exception("Images have different dimensions!");
 					}
 				}
-			}
-			for (final Image<?> img : images) {
 				if (img.getContainerFactory().getClass() != first.getContainerFactory().getClass()) {
 					throw new Exception("Images are of different container types!");
 				}
@@ -52,11 +50,11 @@ public class Compute {
 			// 3 - Operate on an empty result image
 			final ImageFactory<R> factory = new ImageFactory<R>(output, first.getContainerFactory());
 			final Image<R> result = factory.createImage(first.getDimensions(), "result");
-
+			
 			final Cursor<R> c = result.createCursor();
 			while (c.hasNext()) {
 				// Advance all cursors
-				op.fwd();
+				op.fwd(); // I tried collecting all cursors into an array and calling fwd() on each member: it's worse!
 				c.fwd();
 				op.compute(c.getType());
 			}

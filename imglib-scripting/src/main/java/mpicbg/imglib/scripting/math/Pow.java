@@ -24,7 +24,7 @@ public class Pow< R extends RealType<R> > implements Operation<R> {
 		this.inner = new II<R>(left, right, this);
 	}
 
-	public Pow(final Operation<R> op, final Image<? extends RealType<R>> right) {
+	public Pow(final Operation<R> op, final Image<? extends RealType<?>> right) {
 		this.inner = new OpI<R>(op, right, this);
 	}
 

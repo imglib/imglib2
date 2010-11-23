@@ -25,7 +25,7 @@ public class Divide< R extends RealType<R> > implements Operation<R>
 		this.inner = new II<R>(left, right, this);
 	}
 
-	public Divide(final Operation<R> op, final Image<? extends RealType<R>> right) {
+	public Divide(final Operation<R> op, final Image<? extends RealType<?>> right) {
 		this.inner = new OpI<R>(op, right, this);
 	}
 

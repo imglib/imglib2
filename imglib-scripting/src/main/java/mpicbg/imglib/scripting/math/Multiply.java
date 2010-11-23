@@ -25,7 +25,7 @@ public class Multiply< R extends RealType<R> > implements Operation<R>
 		this.inner = new II<R>(left, right, this);
 	}
 
-	public Multiply(final Operation<R> op, final Image<? extends RealType<R>> right) {
+	public Multiply(final Operation<R> op, final Image<? extends RealType<?>> right) {
 		this.inner = new OpI<R>(op, right, this);
 	}
 
