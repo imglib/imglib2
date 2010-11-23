@@ -18,24 +18,41 @@ import mpicbg.imglib.type.numeric.real.FloatType;
  *
 Opening 'http://imagej.nih.gov/ij/images/bridge.gif' [512x512x1 type=uint8 image=Image<ByteType>]
 LOCI.openLOCI(): Cannot read metadata, setting calibration to 1
-Start direct...
-Elapsed: 42
-Start script...
-Elapsed: 108
-Start direct...
-Elapsed: 46
-Start script...
-Elapsed: 53
-Start direct...
-Elapsed: 8
-Start script...
-Elapsed: 29
-Start direct...
-Elapsed: 8
-Start script...
-Elapsed: 25
+Start direct (correct illumination)...
+  elapsed: 43
+Start script (correct illumination)...
+  elapsed: 100
+Start direct (correct illumination)...
+  elapsed: 42
+Start script (correct illumination)...
+  elapsed: 63
+Start direct (correct illumination)...
+  elapsed: 9
+Start script (correct illumination)...
+  elapsed: 24
+Start direct (correct illumination)...
+  elapsed: 9
+Start script (correct illumination)...
+  elapsed: 26
+Start direct with heavy operations...
+  elapsed: 421
+Start script with heavy operations...
+  elapsed: 508
+Start direct with heavy operations...
+  elapsed: 389
+Start script with heavy operations...
+  elapsed: 419
+Start direct with heavy operations...
+  elapsed: 375
+Start script with heavy operations...
+  elapsed: 419
+Start direct with heavy operations...
+  elapsed: 376
+Start script with heavy operations...
+  elapsed: 424
 
-In conclusion: the scripting way is about 3x slower
+In conclusion: the scripting way is about 3x slower for relatively simple operations,
+but about 1.1x for heavy operations!
  */
 public class Benchmark {
 
@@ -48,7 +65,7 @@ public class Benchmark {
 			final Image<? extends RealType<?>> brightfield,
 			final Image<? extends RealType<?>> darkfield,
 			final double mean) throws Exception {
-		p("Start script...");
+		p("Start script (correct illumination)...");
 		long t0 = System.currentTimeMillis();
 		Image<FloatType> corrected = Compute.inFloats(
 				new Multiply<FloatType>(
@@ -56,7 +73,7 @@ public class Benchmark {
 								new Subtract<FloatType>(img, brightfield),
 								new Subtract<FloatType>(brightfield, darkfield)),
 						mean));
-		p("Elapsed: " + (System.currentTimeMillis() - t0));
+		p("  elapsed: " + (System.currentTimeMillis() - t0));
 		return corrected;
 	}
 
@@ -65,7 +82,7 @@ public class Benchmark {
 			final Image<? extends RealType<?>> brightfield,
 			final Image<? extends RealType<?>> darkfield,
 			final double mean) {
-		p("Start direct...");
+		p("Start direct (correct illumination)...");
 		long t0 = System.currentTimeMillis();
 		ImageFactory<FloatType> factory = new ImageFactory<FloatType>(new FloatType(), img.getContainerFactory());
 		Image<FloatType> corrected = factory.createImage(img.getDimensions(), "result");
@@ -82,7 +99,45 @@ public class Benchmark {
 								  / (cb.getType().getRealDouble() - cd.getType().getRealDouble()))
 								 * mean);
 		}
-		p("Elapsed: " + (System.currentTimeMillis() - t0));
+		p("  elapsed: " + (System.currentTimeMillis() - t0));
+		return corrected;
+	}
+
+	static public Image<FloatType> scriptHeavyOperations(
+			final Image<? extends RealType<?>> img) throws Exception {
+		p("Start script with heavy operations...");
+		long t0 = System.currentTimeMillis();
+		Image<FloatType> corrected = Compute.inFloats(
+				new Multiply<FloatType>(
+					new ASin<FloatType>(
+						new Sin<FloatType>(
+							new Divide<FloatType>(
+								new Pow<FloatType>(new Sqrt<FloatType>(img), 0.5),
+								new Pow<FloatType>(new Cbrt<FloatType>(img), 1.0/3)))),
+					img));
+		p("  elapsed: " + (System.currentTimeMillis() - t0));
+		return corrected;
+	}
+
+	static public Image<FloatType> heavyOperations(
+			final Image<? extends RealType<?>> img) {
+		p("Start direct with heavy operations...");
+		long t0 = System.currentTimeMillis();
+		ImageFactory<FloatType> factory = new ImageFactory<FloatType>(new FloatType(), img.getContainerFactory());
+		Image<FloatType> corrected = factory.createImage(img.getDimensions(), "result");
+		final Cursor<FloatType> c = corrected.createCursor();
+		final Cursor<? extends RealType<?>> ci = img.createCursor();
+		while (c.hasNext()) {
+			c.fwd();
+			ci.fwd();
+			c.getType().setReal(
+					Math.asin(
+						Math.sin(
+							Math.pow(Math.sqrt(ci.getType().getRealDouble()), 0.5)
+							/ Math.pow(Math.cbrt(ci.getType().getRealDouble()), 1.0/3)))
+					* ci.getType().getRealDouble());					
+		}
+		p("  elapsed: " + (System.currentTimeMillis() - t0));
 		return corrected;
 	}
 
@@ -105,6 +160,10 @@ public class Benchmark {
 			for (int i=0; i<4; i++) {
 				correctIllumination(img, brightfield, darkfield, mean);
 				scriptCorrectIllumination(img, brightfield, darkfield, mean);
+			}
+			for (int i=0; i<4; i++) {
+				heavyOperations(img);
+				scriptHeavyOperations(img);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
