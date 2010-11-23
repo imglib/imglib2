@@ -31,7 +31,7 @@ public final class Random<R extends RealType<R>> implements Operation<R> {
 	public final void fwd() {}
 
 	@Override
-	public final void getImages(final Set<Image<? extends RealType<?>>> images) {}
+	public final void getImages(final Set<Image<?>> images) {}
 
 	@Override
 	public final void init(final R ref) {}

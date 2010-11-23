@@ -73,7 +73,7 @@ public class Hypot< R extends RealType<R> > implements Operation<R> {
 	}
 
 	@Override
-	public final void getImages(final Set<Image<? extends RealType<?>>> images) {
+	public final void getImages(final Set<Image<?>> images) {
 		inner.getImages(images);
 	}
 

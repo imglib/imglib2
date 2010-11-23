@@ -32,7 +32,7 @@ public final class OpI< R extends RealType<R> > implements Op<R> {
 	}
 
 	@Override
-	public final void getImages(final Set<Image<? extends RealType<?>>> images) {
+	public final void getImages(final Set<Image<?>> images) {
 		other.getImages(images);
 		images.add(cr.getImage());
 	}

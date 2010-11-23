@@ -79,7 +79,7 @@ public class Divide< R extends RealType<R> > implements Operation<R>
 	}
 
 	@Override
-	public void getImages(final Set<Image<? extends RealType<?>>> images) {
+	public void getImages(final Set<Image<?>> images) {
 		inner.getImages(images);
 	}
 

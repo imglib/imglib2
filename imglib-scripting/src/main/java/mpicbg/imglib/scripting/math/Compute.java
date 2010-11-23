@@ -17,7 +17,7 @@ public class Compute {
 	static public final <R extends RealType<R>> Image<R> apply(final Operation<R> op, final R output) throws Exception
 	{
 		// 1 - Collect all images involved in the operation
-		final Set<Image<? extends RealType<?>>> images = new HashSet<Image<? extends RealType<?>>>();
+		final Set<Image<?>> images = new HashSet<Image<?>>();
 		op.getImages(images);
 		/*
 		// debug:

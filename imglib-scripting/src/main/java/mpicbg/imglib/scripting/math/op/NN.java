@@ -28,7 +28,7 @@ public class NN< R extends RealType<R> > extends AN<R> implements Op<R> {
 	public final void fwd() {}
 
 	@Override
-	public final void getImages(final Set<Image<? extends RealType<?>>> images) {}
+	public final void getImages(final Set<Image<?>> images) {}
 
 	@Override
 	public final void init(final R ref) {

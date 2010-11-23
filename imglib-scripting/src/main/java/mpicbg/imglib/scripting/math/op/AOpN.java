@@ -24,7 +24,7 @@ public abstract class AOpN< R extends RealType<R> > extends AN<R> implements Op<
 	}
 
 	@Override
-	public void getImages(final Set<Image<? extends RealType<?>>> images) {
+	public void getImages(final Set<Image<?>> images) {
 		other.getImages(images);
 	}
 

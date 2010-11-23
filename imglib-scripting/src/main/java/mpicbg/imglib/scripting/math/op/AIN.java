@@ -26,7 +26,7 @@ public abstract class AIN< R extends RealType<R> > extends AN<R> implements Op<R
 	}
 
 	@Override
-	public void getImages(final Set<Image<? extends RealType<?>>> images) {
+	public void getImages(final Set<Image<?>> images) {
 		images.add(c.getImage());
 	}
 
