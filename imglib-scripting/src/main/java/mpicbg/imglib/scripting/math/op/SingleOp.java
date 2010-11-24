@@ -32,7 +32,7 @@ public final class SingleOp< R extends RealType<R> > implements Op<R> {
 	}
 
 	@Override
-	public void init(final R ref) {
+	public final void init(final R ref) {
 		other.init(ref);
 	}
 }

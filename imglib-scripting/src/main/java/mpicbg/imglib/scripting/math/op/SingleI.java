@@ -7,7 +7,7 @@ import mpicbg.imglib.image.Image;
 import mpicbg.imglib.scripting.math.fn.Operation;
 import mpicbg.imglib.type.numeric.RealType;
 
-public class SingleI< R extends RealType<R> > implements Op<R>
+public final class SingleI< R extends RealType<R> > implements Op<R>
 {
 	private final Operation<R> op;
 	private final Cursor<? extends RealType<?>> c;
@@ -33,5 +33,5 @@ public class SingleI< R extends RealType<R> > implements Op<R>
 	}
 
 	@Override
-	public void init(final R ref) {}
+	public final void init(final R ref) {}
 }

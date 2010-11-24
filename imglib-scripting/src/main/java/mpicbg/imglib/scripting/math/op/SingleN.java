@@ -7,7 +7,7 @@ import mpicbg.imglib.scripting.math.fn.Operation;
 import mpicbg.imglib.type.numeric.RealType;
 
 /** Computes and caches the result, and sets that to the output always. */
-public class SingleN< R extends RealType<R> > extends AN<R> implements Op<R> {
+public final class SingleN< R extends RealType<R> > extends AN<R> implements Op<R> {
 
 	protected final Operation<R> op;
 	protected final RealType<?> num;

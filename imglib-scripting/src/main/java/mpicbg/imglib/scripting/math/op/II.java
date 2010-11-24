@@ -36,5 +36,5 @@ public final class II< R extends RealType<R> > implements Op< R > {
 	}
 
 	@Override
-	public void init(final R ref) {}
+	public final void init(final R ref) {}
 }
