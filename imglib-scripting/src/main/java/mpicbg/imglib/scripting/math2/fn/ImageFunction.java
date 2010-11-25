@@ -1,6 +1,7 @@
 package mpicbg.imglib.scripting.math2.fn;
 
-import java.util.Set;
+
+import java.util.Collection;
 
 import mpicbg.imglib.cursor.Cursor;
 import mpicbg.imglib.image.Image;
@@ -21,7 +22,7 @@ public final class ImageFunction implements IFunction {
 	}
 
 	@Override
-	public final void findImages(final Set<Image<?>> images) {
-		images.add(c.getImage());
+	public final void findCursors(final Collection<Cursor<?>> cursors) {
+		cursors.add(c);
 	}
 }

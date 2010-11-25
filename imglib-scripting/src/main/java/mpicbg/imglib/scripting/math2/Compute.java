@@ -1,5 +1,6 @@
 package mpicbg.imglib.scripting.math2;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -17,12 +18,16 @@ public class Compute {
 	static public final <R extends RealType<R>> Image<R> apply(final IFunction op, final R output) throws Exception
 	{
 		// 1 - Collect all images involved in the operation
+		final ArrayList<Cursor<?>> cursors = new ArrayList<Cursor<?>>();
+		op.findCursors(cursors);
 		final Set<Image<?>> images = new HashSet<Image<?>>();
-		op.findImages(images);
-		/*
+		for (final Cursor<?> c : cursors) {
+			images.add(c.getImage());
+		}
 		// debug:
+		/*
 		System.out.println("number of images: " + images.size());
-		for (Image<? extends RealType<?>> im : images) {
+		for (Image<?> im : images) {
 			System.out.println("image type: " + im.createType().getClass().getSimpleName());
 		}
 		*/
@@ -54,9 +59,10 @@ public class Compute {
 				c.getType().setReal(op.eval());
 			}
 
-			// 4 - Cleanup cursors
-			for (final Image<?> img : images) {
-				img.removeAllCursors();
+			// 4 - Cleanup cursors: only those that were opened
+			for (final Cursor<?> cursor : cursors) {
+				cursor.close();
+				// TODO: remove from the image. But remove(Cursor) is protected!
 			}
 			result.removeAllCursors();
 

@@ -1,8 +1,9 @@
 package mpicbg.imglib.scripting.math2.fn;
 
-import java.util.Set;
 
-import mpicbg.imglib.image.Image;
+import java.util.Collection;
+
+import mpicbg.imglib.cursor.Cursor;
 import mpicbg.imglib.type.numeric.RealType;
 import mpicbg.imglib.type.numeric.integer.IntType;
 import mpicbg.imglib.type.numeric.integer.LongType;
@@ -37,5 +38,5 @@ public final class NumberFunction implements IFunction {
 	}
 
 	@Override
-	public final void findImages(Set<Image<?>> images) {}
+	public final void findCursors(final Collection<Cursor<?>> cursors) {}
 }

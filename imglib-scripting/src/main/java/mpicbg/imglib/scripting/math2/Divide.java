@@ -43,8 +43,27 @@ public class Divide extends BinaryOperation
 		super(val1, val2);
 	}
 
+	public Divide(final Object... elems) throws Exception {
+		super(elems);
+	}
+
+	/** 1 / img */
+	public Divide(final Image<? extends RealType<?>> right) {
+		super(1, right);
+	}
+
+	/** 1 / val */
+	public Divide(final Number val) {
+		super(1, val);
+	}
+
+	/** 1 / fn.eval() */
+	public Divide(final IFunction fn) {
+		super(1, fn);
+	}
+
 	@Override
 	public final double eval() {
-		return a.eval() / b.eval();
+		return a().eval() / b().eval();
 	}
 }

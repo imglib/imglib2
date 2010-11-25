@@ -43,8 +43,12 @@ public class Add extends BinaryOperation
 		super(val1, val2);
 	}
 
+	public Add(final Object... elems) throws Exception {
+		super(elems);
+	}
+
 	@Override
 	public final double eval() {
-		return a.eval() + b.eval();
+		return a().eval() + b().eval();
 	}
 }

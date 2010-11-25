@@ -18,7 +18,7 @@ public class Cbrt extends UnaryOperation {
 	}
 
 	@Override
-	public double eval() {
-		return Math.cbrt(a.eval());
+	public final double eval() {
+		return Math.cbrt(a().eval());
 	}
 }

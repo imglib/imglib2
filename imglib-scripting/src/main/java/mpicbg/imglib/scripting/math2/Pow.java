@@ -45,6 +45,6 @@ public class Pow extends BinaryOperation
 
 	@Override
 	public final double eval() {
-		return Math.pow(a.eval(), b.eval());
+		return Math.pow(a().eval(), b().eval());
 	}
 }

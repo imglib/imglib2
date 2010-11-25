@@ -4,6 +4,7 @@ import mpicbg.imglib.algorithm.roi.MedianFilter;
 import mpicbg.imglib.algorithm.roi.StructuringElement;
 import mpicbg.imglib.container.array.ArrayContainerFactory;
 import mpicbg.imglib.cursor.Cursor;
+import mpicbg.imglib.cursor.LocalizableByDimCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.ImageFactory;
 import mpicbg.imglib.io.LOCI;
@@ -99,6 +100,7 @@ public class Benchmark2 {
 								  / (cb.getType().getRealDouble() - cd.getType().getRealDouble()))
 								 * mean);
 		}
+		corrected.removeAllCursors();
 		p("  elapsed: " + (System.currentTimeMillis() - t0));
 		return corrected;
 	}
@@ -137,8 +139,28 @@ public class Benchmark2 {
 							/ Math.pow(Math.cbrt(ci.getType().getRealDouble()), 1.0/3)))
 					* ci.getType().getRealDouble());					
 		}
+		corrected.removeAllCursors();
 		p("  elapsed: " + (System.currentTimeMillis() - t0));
 		return corrected;
+	}
+	
+	static public Image<FloatType> sum(
+			final Image<? extends RealType<?>> img) throws Exception {
+		LocalizableByDimCursor<? extends RealType<?>> c = img.createLocalizableByDimCursor();
+		c.setPosition(new int[]{348, 95});
+		System.out.println("Original pixel at 348,95: " + c.getType().getRealDouble());
+
+		Image<FloatType> result = Compute.inFloats(new Add(img, img, img, img));
+
+		LocalizableByDimCursor<? extends RealType<?>> r = result.createLocalizableByDimCursor();
+		r.setPosition(new int[]{348, 95});
+		System.out.println("After varargs addition, pixel at 348,95: " + r.getType().getRealDouble()
+				+ " which is 4 * val: " + (c.getType().getRealDouble() * 4 == r.getType().getRealDouble()));
+
+		img.removeAllCursors();
+		result.removeAllCursors();
+		
+		return result;
 	}
 
 	public static void main(String[] args) {
@@ -167,6 +189,10 @@ public class Benchmark2 {
 				heavyOperations(img);
 				scriptHeavyOperations(img);
 			}
+			
+			// Test varargs:
+			sum(img);
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

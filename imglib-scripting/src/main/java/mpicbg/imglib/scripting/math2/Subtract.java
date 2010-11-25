@@ -43,8 +43,12 @@ public class Subtract extends BinaryOperation
 		super(val1, val2);
 	}
 
+	public Subtract(final Object... elems) throws Exception {
+		super(elems);
+	}
+
 	@Override
 	public final double eval() {
-		return a.eval() - b.eval();
+		return a().eval() - b().eval();
 	}
 }

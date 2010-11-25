@@ -1,13 +1,15 @@
 package mpicbg.imglib.scripting.math2.fn;
 
-import java.util.Set;
 
+import java.util.Collection;
+
+import mpicbg.imglib.cursor.Cursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.type.numeric.RealType;
 
 public abstract class BinaryOperation implements IFunction
 {
-	protected final IFunction a, b;
+	private final IFunction a, b;
 
 	public BinaryOperation(final Image<? extends RealType<?>> left, final Image<? extends RealType<?>> right) {
 		this.a = new ImageFunction(left);
@@ -54,9 +56,34 @@ public abstract class BinaryOperation implements IFunction
 		this.b = new NumberFunction(val2);
 	}
 
-	@Override
-	public void findImages(final Set<Image<?>> images) {
-		a.findImages(images);
-		b.findImages(images);
+	/** Compose: "fn(a1, fn(a2, fn(a3, fn(a4, a5))))".
+	 *  Will fail with either {@link IllegalArgumentException} or {@link ClassCastException}
+	 *  when the @param elem contains instances of classes other than {@link Image},
+	 *  {@link Number}, or {@link IFunction}. */
+	public BinaryOperation(final Object... elem) throws Exception {
+		this.a = wrap(elem[0]);
+		IFunction right = wrap(elem[elem.length-1]);
+		for (int i=elem.length-2; i>0; i--) {
+			IFunction fn = getClass().getConstructor(new Class<?>[]{IFunction.class, IFunction.class})
+					.newInstance(wrap(elem[i]), right);
+			right = fn;
+		}
+		this.b = right;
 	}
+
+	static private final IFunction wrap(final Object ob) {
+		if (ob instanceof Image<?>) return new ImageFunction((Image<? extends RealType<?>>)ob);
+		if (ob instanceof IFunction) return (IFunction)ob;
+		if (ob instanceof Number) return new NumberFunction((Number)ob);
+		throw new IllegalArgumentException("Cannot compose a function with " + ob);
+	}
+
+	@Override
+	public final void findCursors(final Collection<Cursor<?>> cursors) {
+		a.findCursors(cursors);
+		b.findCursors(cursors);
+	}
+	
+	public final IFunction a() { return a; }
+	public final IFunction b() { return b; }
 }

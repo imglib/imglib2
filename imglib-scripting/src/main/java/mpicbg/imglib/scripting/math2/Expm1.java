@@ -5,20 +5,20 @@ import mpicbg.imglib.scripting.math2.fn.IFunction;
 import mpicbg.imglib.scripting.math2.fn.UnaryOperation;
 import mpicbg.imglib.type.numeric.RealType;
 
-public class Sqrt extends UnaryOperation {
+public class Expm1 extends UnaryOperation {
 
-	public Sqrt(final Image<? extends RealType<?>> img) {
+	public Expm1(final Image<? extends RealType<?>> img) {
 		super(img);
 	}
-	public Sqrt(final IFunction fn) {
+	public Expm1(final IFunction fn) {
 		super(fn);
 	}
-	public Sqrt(final Number val) {
+	public Expm1(final Number val) {
 		super(val);
 	}
 
 	@Override
-	public double eval() {
-		return Math.sqrt(a().eval());
+	public final double eval() {
+		return Math.expm1(a().eval());
 	}
 }

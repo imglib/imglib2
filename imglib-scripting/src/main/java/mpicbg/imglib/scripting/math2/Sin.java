@@ -19,6 +19,6 @@ public class Sin extends UnaryOperation {
 
 	@Override
 	public double eval() {
-		return Math.sin(a.eval());
+		return Math.sin(a().eval());
 	}
 }
