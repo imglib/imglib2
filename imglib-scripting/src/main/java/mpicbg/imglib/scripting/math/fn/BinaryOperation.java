@@ -54,7 +54,7 @@ public abstract class BinaryOperation<R extends RealType<R>> implements Operatio
 	public BinaryOperation(final Number val1, final Number val2) {
 		this.inner = new NN<R>(val1, val2, this);
 	}
-	
+
 	@Override
 	public void fwd() {
 		inner.fwd();
