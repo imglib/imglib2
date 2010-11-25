@@ -1,4 +1,4 @@
-package mpicbg.imglib.scripting.math2;
+package mpicbg.imglib.scripting.math;
 
 import mpicbg.imglib.algorithm.roi.MedianFilter;
 import mpicbg.imglib.algorithm.roi.StructuringElement;
@@ -124,8 +124,8 @@ public class Benchmark {
 					new ASin(
 						new Sin(
 							new Divide(
-								new Pow(new Sqrt(img), 0.5),
-								new Pow(new Cbrt(img), 1.0/3)))),
+								new Pow(new Sqrt(img), 2),
+								new Pow(new Cbrt(img), 3)))),
 					img));
 		p("  elapsed: " + (System.currentTimeMillis() - t0));
 		return corrected;
@@ -145,8 +145,8 @@ public class Benchmark {
 			c.getType().setReal(
 					Math.asin(
 						Math.sin(
-							Math.pow(Math.sqrt(ci.getType().getRealDouble()), 0.5)
-							/ Math.pow(Math.cbrt(ci.getType().getRealDouble()), 1.0/3)))
+							Math.pow(Math.sqrt(ci.getType().getRealDouble()), 2)
+							/ Math.pow(Math.cbrt(ci.getType().getRealDouble()), 3)))
 					* ci.getType().getRealDouble());					
 		}
 		corrected.removeAllCursors();
