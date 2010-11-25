@@ -12,6 +12,9 @@ import mpicbg.imglib.type.numeric.integer.UnsignedByteType;
 import mpicbg.imglib.type.numeric.real.DoubleType;
 import mpicbg.imglib.type.numeric.real.FloatType;
 
+/** A function that, when evaluated, always returns the same number,
+ *  expressed as a {@code double}.
+ *  When given a {@code byte} or a @Byte, it reads it as unsigned. */
 public final class NumberFunction implements IFunction {
 
 	private final double val;

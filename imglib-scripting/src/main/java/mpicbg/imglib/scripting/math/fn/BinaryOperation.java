@@ -7,6 +7,68 @@ import mpicbg.imglib.cursor.Cursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.type.numeric.RealType;
 
+/* An abstract class to facilitate implementing a function that takes two arguments.
+ * Subclasses must call one of the constructors, which take as arguments two out an {@link Image},
+ * an {@link IFunction}, or a {@link Number}.
+ * 
+ * Suppose you want a function that returns the average value of two values. You could write:
+<code>
+Image<> extends RealType<?>> img1 = ...,
+                                img2 = ...;
+IFunction avg = new Divide(new Add(img1, img2), 2);
+</code>
+ * 
+ *   Or, instead, define your own Average function:
+<code>
+public class Average extends BinaryOperation
+{
+    public Average(final Image<? extends RealType<?>> left, final Image<? extends RealType<?>> right) {
+		super(left, right);
+	}
+
+	public Average(final IFunction fn, final Image<? extends RealType<?>> right) {
+		super(fn, right);
+	}
+
+	public Average(final Image<? extends RealType<?>> left, final IFunction fn) {
+		super(left, fn);
+	}
+
+	public Average(final IFunction fn1, final IFunction fn2) {
+		super(fn1, fn2);
+	}
+	
+	public Average(final Image<? extends RealType<?>> left, final Number val) {
+		super(left, val);
+	}
+
+	public Average(final Number val,final Image<? extends RealType<?>> right) {
+		super(val, right);
+	}
+
+	public Average(final IFunction left, final Number val) {
+		super(left, val);
+	}
+
+	public Average(final Number val,final IFunction right) {
+		super(val, right);
+	}
+	
+	public Average(final Number val1, final Number val2) {
+		super(val1, val2);
+	}
+
+	public Average(final Object... elems) throws Exception {
+		super(elems);
+	}
+	
+	@Override
+	public final double eval() {
+		return (a() + b()) / 2;
+	}
+}
+</code>
+ */
 public abstract class BinaryOperation implements IFunction
 {
 	private final IFunction a, b;
