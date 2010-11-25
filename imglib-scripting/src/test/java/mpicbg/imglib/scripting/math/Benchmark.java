@@ -110,7 +110,10 @@ public class Benchmark {
 								  / (cb.getType().getRealDouble() - cd.getType().getRealDouble()))
 								 * mean);
 		}
-		corrected.removeAllCursors();
+		c.close();
+		ci.close();
+		cb.close();
+		cd.close();
 		p("  elapsed: " + (System.currentTimeMillis() - t0));
 		return corrected;
 	}
@@ -149,7 +152,8 @@ public class Benchmark {
 							/ Math.pow(Math.cbrt(ci.getType().getRealDouble()), 3)))
 					* ci.getType().getRealDouble());					
 		}
-		corrected.removeAllCursors();
+		c.close();
+		ci.close();
 		p("  elapsed: " + (System.currentTimeMillis() - t0));
 		return corrected;
 	}
