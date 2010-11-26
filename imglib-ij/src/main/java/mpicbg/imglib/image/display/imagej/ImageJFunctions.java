@@ -38,10 +38,15 @@ import ij.process.FloatProcessor;
 import ij.process.ImageProcessor;
 import mpicbg.imglib.cursor.array.ArrayLocalizableCursor;
 import mpicbg.imglib.image.Image;
+import mpicbg.imglib.image.ImagePlusAdapter;
 import mpicbg.imglib.image.display.Display;
 import mpicbg.imglib.type.Type;
 import mpicbg.imglib.type.label.FakeType;
 import mpicbg.imglib.type.numeric.RGBALegacyType;
+import mpicbg.imglib.type.numeric.RealType;
+import mpicbg.imglib.type.numeric.integer.UnsignedByteType;
+import mpicbg.imglib.type.numeric.integer.UnsignedShortType;
+import mpicbg.imglib.type.numeric.real.FloatType;
 
 public class ImageJFunctions
 {
@@ -123,6 +128,19 @@ public class ImageJFunctions
 		return imp;
 	}
 	*/
+	
+	public static <T extends RealType<T>> Image< T > wrap( final ImagePlus imp ) { return ImagePlusAdapter.wrap( imp ); }
+	
+	public static Image<UnsignedByteType> wrapByte( final ImagePlus imp ) { return ImagePlusAdapter.wrapByte( imp ); }
+	
+	public static Image<UnsignedShortType> wrapShort( final ImagePlus imp ) { return ImagePlusAdapter.wrapShort( imp ); }
+
+	public static Image<RGBALegacyType> wrapRGBA( final ImagePlus imp ) { return ImagePlusAdapter.wrapRGBA( imp ); }
+	
+	public static Image<FloatType> wrapFloat( final ImagePlus imp ) { return ImagePlusAdapter.wrapFloat( imp ); }
+	
+	public static Image<FloatType> convertFloat( final ImagePlus imp ) { return ImagePlusAdapter.convertFloat( imp ); }	
+	
 	public static <T extends Type<T>> ImagePlus displayAsVirtualStack( final Image<T> img )
 	{
 		if ( RGBALegacyType.class.isInstance( img.createType() ) )
@@ -152,6 +170,15 @@ public class ImageJFunctions
 	public static <T extends Type<T>> ImagePlus displayAsVirtualStack( final Image<T> img, final int type, final int[] dim, final int[] dimensionPositions )
 	{
 		return new ImagePlus( img.getName(), new ImageJVirtualStack<T>( img, type, getDim3(dim), dimensionPositions ) );
+	}
+
+	public static <T extends Type<T>> ImagePlus show( final Image<T> img ) 
+	{ 
+		img.getDisplay().setMinMax();
+		ImagePlus imp = displayAsVirtualStack( img );
+		
+		imp.show();
+		return imp;
 	}
 
 	public static <T extends Type<T>> ImagePlus copyToImagePlus( final Image<T> img )
