@@ -1,35 +1,17 @@
 package mpicbg.imglib.scripting.math;
 
-import mpicbg.imglib.algorithm.gauss.DownSample;
-import mpicbg.imglib.algorithm.gauss.GaussianConvolution;
-import mpicbg.imglib.algorithm.gauss.GaussianConvolution2;
 import mpicbg.imglib.algorithm.gauss.GaussianConvolutionReal;
-import mpicbg.imglib.algorithm.roi.MedianFilter;
-import mpicbg.imglib.algorithm.roi.StructuringElement;
-import mpicbg.imglib.algorithm.transformation.ImageTransform;
 import mpicbg.imglib.container.array.ArrayContainerFactory;
 import mpicbg.imglib.cursor.Cursor;
 import mpicbg.imglib.cursor.LocalizableByDimCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.ImageFactory;
 import mpicbg.imglib.image.display.imagej.ImageJFunctions;
-import mpicbg.imglib.interpolation.linear.LinearInterpolatorFactory;
 import mpicbg.imglib.io.LOCI;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyMirrorFactory;
-import mpicbg.imglib.scripting.math.ASin;
-import mpicbg.imglib.scripting.math.Add;
-import mpicbg.imglib.scripting.math.Cbrt;
-import mpicbg.imglib.scripting.math.Compute;
-import mpicbg.imglib.scripting.math.Divide;
-import mpicbg.imglib.scripting.math.Multiply;
-import mpicbg.imglib.scripting.math.Pow;
-import mpicbg.imglib.scripting.math.Sin;
-import mpicbg.imglib.scripting.math.Sqrt;
-import mpicbg.imglib.scripting.math.Subtract;
 import mpicbg.imglib.type.numeric.RealType;
 import mpicbg.imglib.type.numeric.integer.UnsignedByteType;
 import mpicbg.imglib.type.numeric.real.FloatType;
-import mpicbg.models.AffineModel2D;
 
 /* Tested in a MacBookPro 5,5, 4 Gb RAM, 2.4 Ghz
  * running Ubuntu 10.04 with Java 1.6.0_21

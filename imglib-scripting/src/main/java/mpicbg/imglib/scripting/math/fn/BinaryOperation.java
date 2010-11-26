@@ -1,7 +1,6 @@
 package mpicbg.imglib.scripting.math.fn;
 
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
 
 import mpicbg.imglib.cursor.Cursor;
@@ -134,6 +133,7 @@ public abstract class BinaryOperation implements IFunction
 		this.b = right;
 	}
 
+	@SuppressWarnings("unchecked")
 	static private final IFunction wrap(final Object ob) {
 		if (ob instanceof Image<?>) return new ImageFunction((Image<? extends RealType<?>>)ob);
 		if (ob instanceof IFunction) return (IFunction)ob;
