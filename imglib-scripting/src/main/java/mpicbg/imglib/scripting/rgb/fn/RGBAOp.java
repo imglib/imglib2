@@ -19,4 +19,11 @@ public abstract class RGBAOp implements IFunction {
 	public final void findCursors(final Collection<Cursor<?>> cursors) {
 		cursors.add(c);
 	}
+
+
+	@Override
+	public IFunction duplicate() throws Exception
+	{
+		return getClass().getConstructor(Image.class).newInstance(c.getImage());
+	}
 }

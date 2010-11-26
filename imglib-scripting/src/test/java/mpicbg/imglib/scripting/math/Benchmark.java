@@ -1,13 +1,21 @@
 package mpicbg.imglib.scripting.math;
 
+import mpicbg.imglib.algorithm.gauss.DownSample;
+import mpicbg.imglib.algorithm.gauss.GaussianConvolution;
+import mpicbg.imglib.algorithm.gauss.GaussianConvolution2;
+import mpicbg.imglib.algorithm.gauss.GaussianConvolutionReal;
 import mpicbg.imglib.algorithm.roi.MedianFilter;
 import mpicbg.imglib.algorithm.roi.StructuringElement;
+import mpicbg.imglib.algorithm.transformation.ImageTransform;
 import mpicbg.imglib.container.array.ArrayContainerFactory;
 import mpicbg.imglib.cursor.Cursor;
 import mpicbg.imglib.cursor.LocalizableByDimCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.ImageFactory;
+import mpicbg.imglib.image.display.imagej.ImageJFunctions;
+import mpicbg.imglib.interpolation.linear.LinearInterpolatorFactory;
 import mpicbg.imglib.io.LOCI;
+import mpicbg.imglib.outofbounds.OutOfBoundsStrategyMirrorFactory;
 import mpicbg.imglib.scripting.math.ASin;
 import mpicbg.imglib.scripting.math.Add;
 import mpicbg.imglib.scripting.math.Cbrt;
@@ -21,6 +29,7 @@ import mpicbg.imglib.scripting.math.Subtract;
 import mpicbg.imglib.type.numeric.RealType;
 import mpicbg.imglib.type.numeric.integer.UnsignedByteType;
 import mpicbg.imglib.type.numeric.real.FloatType;
+import mpicbg.models.AffineModel2D;
 
 /* Tested in a MacBookPro 5,5, 4 Gb RAM, 2.4 Ghz
  * running Ubuntu 10.04 with Java 1.6.0_21
@@ -77,14 +86,14 @@ public class Benchmark {
 			final Image<? extends RealType<?>> darkfield,
 			final double mean) throws Exception {
 		p("Start script (correct illumination)...");
-		long t0 = System.currentTimeMillis();
+		long t0 = System.nanoTime();
 		Image<FloatType> corrected = Compute.inFloats(
 				new Multiply(
 						new Divide(
 								new Subtract(img, brightfield),
 								new Subtract(brightfield, darkfield)),
 						mean));
-		p("  elapsed: " + (System.currentTimeMillis() - t0));
+		p("  elapsed: " + (System.nanoTime() - t0)/1000000.0 + " image " + corrected.getName() );
 		return corrected;
 	}
 
@@ -94,7 +103,7 @@ public class Benchmark {
 			final Image<? extends RealType<?>> darkfield,
 			final double mean) {
 		p("Start direct (correct illumination)...");
-		long t0 = System.currentTimeMillis();
+		long t0 = System.nanoTime();
 		ImageFactory<FloatType> factory = new ImageFactory<FloatType>(new FloatType(), img.getContainerFactory());
 		Image<FloatType> corrected = factory.createImage(img.getDimensions(), "result");
 		final Cursor<FloatType> c = corrected.createCursor();
@@ -114,7 +123,7 @@ public class Benchmark {
 		ci.close();
 		cb.close();
 		cd.close();
-		p("  elapsed: " + (System.currentTimeMillis() - t0));
+		p("  elapsed: " + (System.nanoTime() - t0)/1000000.0 + "  image: " + corrected.getName());
 		return corrected;
 	}
 
@@ -179,25 +188,52 @@ public class Benchmark {
 
 	public static void main(String[] args) {
 		try {
-			//String src = "http://imagej.nih.gov/ij/images/bridge.gif";
-			String src = "/home/albert/Desktop/t2/bridge.gif";
+			String src = "http://imagej.nih.gov/ij/images/bridge.gif";
+			//String src = "/home/albert/Desktop/t2/bridge.gif";
 			Image<UnsignedByteType> img = LOCI.openLOCIUnsignedByteType(src, new ArrayContainerFactory());
 			//
 			double mean = 0;
 			for (final UnsignedByteType t : img) mean += t.getRealDouble();
 			mean /= img.size();
 			//
-			MedianFilter<UnsignedByteType> mf =
-				new MedianFilter<UnsignedByteType>(img, StructuringElement.createBall(2, img.getDimension(0) / 2));
-			//mf.process();
-			Image<UnsignedByteType> brightfield = mf.getResult();
+
+			GaussianConvolutionReal<UnsignedByteType> gauss = new GaussianConvolutionReal<UnsignedByteType>( img, new OutOfBoundsStrategyMirrorFactory<UnsignedByteType>(), 60 );
+			gauss.process();
+			
+			System.out.println( gauss.getProcessingTime() );
+			
+			Image<UnsignedByteType> brightfield = gauss.getResult();
+			
+			/*
+			DownSample<UnsignedByteType> downSample = new DownSample<UnsignedByteType>( img, 0.25f );			
+			downSample.process();
+			Image<UnsignedByteType> down = downSample.getResult();
+			
+			ImageJFunctions.show( down );
+			
+			AffineModel2D model = new AffineModel2D();
+			model.set( 4.03f, 0, 0, 4.03f, 0, 0 );
+			
+			ImageTransform<UnsignedByteType> imgTransform = new ImageTransform<UnsignedByteType>( brightfield, model, new LinearInterpolatorFactory<UnsignedByteType>( new OutOfBoundsStrategyMirrorFactory<UnsignedByteType>()) );
+			imgTransform.process();
+			
+			brightfield = imgTransform.getResult();
+			*/
+			
+			ImageJFunctions.show( img );
+			ImageJFunctions.show( brightfield );
+						
 			//
 			Image<UnsignedByteType> darkfield = img.createNewImage(); // empty
 
 			// Test:
 			for (int i=0; i<4; i++) {
 				correctIllumination(img, brightfield, darkfield, mean);
-				scriptCorrectIllumination(img, brightfield, darkfield, mean);
+				Image<FloatType> corrected = scriptCorrectIllumination(img, brightfield, darkfield, mean);
+				
+				if ( i == 0 )
+					ImageJFunctions.show( corrected );
+					
 			}
 			for (int i=0; i<4; i++) {
 				heavyOperations(img);

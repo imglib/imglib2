@@ -22,6 +22,8 @@ public final class NumberFunction implements IFunction {
 	public NumberFunction(final Number num) {
 		this.val = NumberFunction.asType(num).getRealDouble();
 	}
+	
+	public NumberFunction(final double val) { this.val = val; }
 
 	@Override
 	public final double eval() {
@@ -42,4 +44,10 @@ public final class NumberFunction implements IFunction {
 
 	@Override
 	public final void findCursors(final Collection<Cursor<?>> cursors) {}
+
+	@Override
+	public IFunction duplicate()
+	{
+		return new NumberFunction(val);
+	}
 }

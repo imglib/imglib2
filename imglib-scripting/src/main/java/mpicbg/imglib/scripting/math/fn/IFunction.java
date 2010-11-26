@@ -8,4 +8,6 @@ public interface IFunction {
 	public double eval();
 	/** Put any cursors in use by this function (and any nested functions) in @param cursors.*/
 	public void findCursors(Collection<Cursor<?>> cursors);
+	
+	public IFunction duplicate() throws Exception;
 }

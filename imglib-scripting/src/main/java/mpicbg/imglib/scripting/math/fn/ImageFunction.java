@@ -26,4 +26,10 @@ public final class ImageFunction implements IFunction {
 	public final void findCursors(final Collection<Cursor<?>> cursors) {
 		cursors.add(c);
 	}
+
+	@Override
+	public IFunction duplicate()
+	{
+		return new ImageFunction(c.getImage());
+	}
 }

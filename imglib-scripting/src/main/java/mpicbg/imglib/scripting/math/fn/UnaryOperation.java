@@ -62,4 +62,9 @@ public abstract class UnaryOperation implements IFunction
 	/** Call a().eval() to obtain the result as a double of the computation encapsulated by the @field a. 
 	 *  @returns the IFunction @field a*/
 	public final IFunction a() { return a; }
+	
+	public IFunction duplicate() throws Exception
+	{
+		return getClass().getConstructor(IFunction.class).newInstance(a.duplicate());
+	}
 }

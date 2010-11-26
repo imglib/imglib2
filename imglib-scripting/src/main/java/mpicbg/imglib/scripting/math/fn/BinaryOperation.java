@@ -1,6 +1,7 @@
 package mpicbg.imglib.scripting.math.fn;
 
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
 
 import mpicbg.imglib.cursor.Cursor;
@@ -145,7 +146,12 @@ public abstract class BinaryOperation implements IFunction
 		a.findCursors(cursors);
 		b.findCursors(cursors);
 	}
-	
+
 	public final IFunction a() { return a; }
 	public final IFunction b() { return b; }
+
+	public IFunction duplicate() throws Exception
+	{
+		return getClass().getConstructor(IFunction.class, IFunction.class).newInstance(a.duplicate(), b.duplicate());
+	}
 }
