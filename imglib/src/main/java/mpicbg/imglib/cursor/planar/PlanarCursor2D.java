@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2009--2010, Stephan Preibisch & Stephan Saalfeld
+ * Copyright (c) 2009--2010, Stephan Saalfeld
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -28,98 +28,35 @@
 package mpicbg.imglib.cursor.planar;
 
 import mpicbg.imglib.container.planar.PlanarContainer;
-import mpicbg.imglib.cursor.CursorImpl;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.type.Type;
 
 /**
- * Basic Iterator for {@link PlanarContainer PlanarContainers}
+ * Basic Iterator for 2d {@link PlanarContainer PlanarContainers}
  * @param <T>
  *
- * @author Stephan Preibisch and Stephan Saalfeld
+ * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-public class PlanarCursor< T extends Type< T >> extends CursorImpl< T >
+public class PlanarCursor2D< T extends Type< T > > extends PlanarCursor< T >
 {
-	protected final T type;
-
-	protected final PlanarContainer< T, ? > container;
-
-	protected final int lastIndex, lastSliceIndex;
-
-	protected int sliceIndex;
+	final protected int maxIndex;
 	
-	protected boolean hasNext;
-
-	public PlanarCursor( final PlanarContainer< T, ? > container, final Image< T > image, final T type )
+	public PlanarCursor2D( final PlanarContainer< T, ? > container, final Image< T > image, final T type )
 	{
-		super( container, image );
-
-		this.type = type;
-		this.container = container;
-		lastIndex = container.getDimension( 0 ) * container.getDimension( 1 ) - 1;
-		lastSliceIndex = container.getSlices() - 1;
-
-		reset();
+		super( container, image, type );
+		
+		maxIndex = container.getNumPixels() - 1;
 	}
-
-	@Override
-	public T getType() { return type; }
-
-	/**
-	 * Note: This test is fragile in a sense that it returns true for elements
-	 * after the last element as well.
-	 * 
-	 * @return false for the last element 
-	 */
+	
 	@Override
 	public boolean hasNext()
 	{
-		return hasNext;
+		return type.getIndex() < maxIndex;
 	}
 
 	@Override
 	public void fwd()
 	{
 		type.incIndex();
-
-		final int i = type.getIndex();
-		
-		if ( i < lastIndex )
-			return;
-		else if ( i == lastIndex )
-			hasNext = sliceIndex < lastSliceIndex;
-		else
-		{
-			++sliceIndex;
-			type.updateIndex( 0 );
-			type.updateContainer( this );
-		}
 	}
-
-	@Override
-	public void close()
-	{
-		isClosed = true;
-		type.updateIndex( lastIndex + 1 );
-		sliceIndex = lastSliceIndex + 1;
-	}
-
-	@Override
-	public void reset()
-	{
-		sliceIndex = 0;
-		type.updateIndex( -1 );
-		type.updateContainer( this );
-		isClosed = false;
-		hasNext = true;
-	}
-
-	@Override
-	public PlanarContainer< T, ? > getStorageContainer() { return container;	}
-
-	@Override
-	public int getStorageIndex() { return sliceIndex; }
-
-	@Override
-	public String toString() { return type.toString(); }
 }

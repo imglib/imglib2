@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2009--2010, Stephan Preibisch & Stephan Saalfeld
+ * Copyright (c) 2009--2010, Stephan Saalfeld
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -24,67 +24,39 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- *
- * @author Stephan Preibisch & Stephan Saalfeld
  */
-package mpicbg.imglib.cursor.array;
+package mpicbg.imglib.cursor.imageplus;
 
-import mpicbg.imglib.container.array.Array;
-import mpicbg.imglib.cursor.Cursor;
-import mpicbg.imglib.cursor.CursorImpl;
+import mpicbg.imglib.container.imageplus.ImagePlusContainer;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.type.Type;
 
-public class ArrayCursor<T extends Type<T>> extends CursorImpl<T> implements Cursor<T>
+/**
+ * Basic Iterator for 2d {@link ImagePlusContainer ImagePlusContainers}
+ * @param <T>
+ *
+ * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
+ */
+public class ImagePlusCursor2D< T extends Type< T > > extends ImagePlusCursor< T >
 {
-	protected final T type;
-	protected final Array<T,?> container;
-	protected final int maxIndex;
+	final protected int maxIndex;
 	
-	public ArrayCursor( final Array<T,?> container, final Image<T> image, final T type ) 
+	public ImagePlusCursor2D( final ImagePlusContainer< T, ? > container, final Image< T > image, final T type )
 	{
-		super( container, image );
-
-		this.type = type;
-		this.container = container;
-		this.maxIndex = container.getNumPixels() - 1;
+		super( container, image, type );
 		
-		reset();
+		maxIndex = container.getNumPixels() - 1;
 	}
 	
 	@Override
-	public T getType() { return type; }
-	
-	@Override
-	public boolean hasNext() { return type.getIndex() < maxIndex; }
-
-	@Override
-	public void fwd( final long steps ) { type.incIndex( (int)steps ); }
-
-	@Override
-	public void fwd() { type.incIndex(); }
-
-	@Override
-	public void close() 
-	{ 
-		isClosed = true;
-		type.updateIndex( maxIndex + 1 );
+	public boolean hasNext()
+	{
+		return type.getIndex() < maxIndex;
 	}
 
 	@Override
-	public void reset()
-	{ 
-		type.updateIndex( -1 ); 
-		type.updateContainer( this );
-		isClosed = false;
+	public void fwd()
+	{
+		type.incIndex();
 	}
-
-	@Override
-	public Array<T,?> getStorageContainer(){ return container; }
-
-	@Override
-	public int getStorageIndex() { return 0; }
-	
-	@Override
-	public String toString() { return type.toString(); }		
 }

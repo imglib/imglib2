@@ -35,6 +35,7 @@ import mpicbg.imglib.container.basictypecontainer.PlanarAccess;
 import mpicbg.imglib.container.basictypecontainer.array.ArrayDataAccess;
 import mpicbg.imglib.cursor.Cursor;
 import mpicbg.imglib.cursor.planar.PlanarCursor;
+import mpicbg.imglib.cursor.planar.PlanarCursor2D;
 import mpicbg.imglib.cursor.planar.PlanarLocalizableByDimCursor;
 import mpicbg.imglib.cursor.planar.PlanarLocalizableByDimOutOfBoundsCursor;
 import mpicbg.imglib.cursor.planar.PlanarLocalizableCursor;
@@ -122,7 +123,10 @@ public class PlanarContainer<T extends Type<T>, A extends ArrayDataAccess<A>> ex
 	@Override
 	public PlanarCursor<T> createCursor( final Image<T> image )
 	{
-		return new PlanarCursor<T>( this, image, linkedType.duplicateTypeOnSameDirectAccessContainer() );
+		if ( numDimensions == 2 )
+			return new PlanarCursor2D< T >( this, image, linkedType.duplicateTypeOnSameDirectAccessContainer() );
+		else
+			return new PlanarCursor< T >( this, image, linkedType.duplicateTypeOnSameDirectAccessContainer() );
 	}
 
 	@Override

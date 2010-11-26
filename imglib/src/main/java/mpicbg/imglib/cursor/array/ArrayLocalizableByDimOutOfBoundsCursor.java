@@ -56,7 +56,7 @@ public class ArrayLocalizableByDimOutOfBoundsCursor<T extends Type<T>> extends A
 	@Override
 	public boolean hasNext()
 	{
-		if ( !isOutOfBounds && type.getIndex() < sizeMinus1 )
+		if ( !isOutOfBounds && type.getIndex() < maxIndex )
 			return true;
 		else
 			return false;
