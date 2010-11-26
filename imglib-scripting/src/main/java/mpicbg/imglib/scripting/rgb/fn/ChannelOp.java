@@ -14,6 +14,7 @@ public abstract class ChannelOp extends RGBAOp {
 
 	@Override
 	public final double eval() {
+		c.fwd();
 		return (c.getType().get() >> getShift()) & 0xff;
 	}
 }

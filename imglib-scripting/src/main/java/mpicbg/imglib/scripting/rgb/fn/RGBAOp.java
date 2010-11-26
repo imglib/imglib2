@@ -20,7 +20,6 @@ public abstract class RGBAOp implements IFunction {
 		cursors.add(c);
 	}
 
-
 	@Override
 	public IFunction duplicate() throws Exception
 	{

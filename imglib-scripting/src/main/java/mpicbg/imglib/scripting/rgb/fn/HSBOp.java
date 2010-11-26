@@ -18,6 +18,7 @@ public abstract class HSBOp extends RGBAOp {
 
 	@Override
 	public final double eval() {
+		c.fwd();
 		final int v = c.getType().get();
 		Color.RGBtoHSB((v >> 16) & 0xff, (v >> 8) & 0xff, v & 0xff, hsb);
 		return hsb[getIndex()];
