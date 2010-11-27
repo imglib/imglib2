@@ -9,11 +9,11 @@ import mpicbg.imglib.type.numeric.complex.ComplexDoubleType;
 public class InverseFFT<T extends RealType<T>> extends Image<T>
 {
 	public InverseFFT(final FFT<T> fftImage) throws Exception {
-		super(process(fftImage, fftImage.fft).getContainer(), fftImage.value.copy());
+		super(process(fftImage, fftImage.fft).getContainer(), fftImage.value.copy(), "Inverse FFT");
 	}
 
 	public InverseFFT(final Image<ComplexDoubleType> img, final FFT<T> fftImage) throws Exception {
-		super(process(img, fftImage.fft).getContainer(), fftImage.value.copy());
+		super(process(img, fftImage.fft).getContainer(), fftImage.value.copy(), "Inverse FFT");
 	}
 
 	static private final <T extends RealType<T>> Image<T> process(final Image<ComplexDoubleType> fftImage, final FourierTransform<T, ComplexDoubleType> fft) throws Exception {

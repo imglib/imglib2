@@ -6,7 +6,7 @@ import mpicbg.imglib.type.numeric.RealType;
 public class Downsample<T extends RealType<T>> extends Image<T> {
 
 	public Downsample(final Image<T> img, final float factor) throws Exception {
-		super(create(img, factor).getContainer(), img.createType());
+		super(create(img, factor).getContainer(), img.createType(), "Downsampled");
 	}
 
 	static private final <R extends RealType<R>> Image<R> create(final Image<R> img, final float factor) throws Exception {

@@ -5,16 +5,25 @@ import mpicbg.imglib.scripting.math.Compute;
 import mpicbg.imglib.scripting.math.fn.IFunction;
 import mpicbg.imglib.type.numeric.RealType;
 import mpicbg.imglib.type.numeric.integer.LongType;
-import mpicbg.imglib.type.numeric.real.DoubleType;
 
-public class HoughLineTransform extends Process
+public class HoughLineTransform<T extends RealType<T>> extends Image<LongType>
 {
 	/** A {@link mpicbg.imglib.algorithm.transformation.HoughLineTransform} with a LongType vote space.*/
-	public <T extends RealType<T>> HoughLineTransform(final Image<T> img) throws Exception {
-		super(new mpicbg.imglib.algorithm.transformation.HoughLineTransform<LongType, T>(img, new LongType()));
+	public HoughLineTransform(final Image<T> img) throws Exception {
+		super(process(img).getContainer(), new LongType());
 	}
 
+	@SuppressWarnings("unchecked")
 	public HoughLineTransform(final IFunction fn) throws Exception {
-		<DoubleType>this(Compute.inDoubles(fn));
+		this((Image)Compute.inDoubles(fn));
+	}
+
+	static private final <S extends RealType<S>> Image<LongType> process(final Image<S> img) throws Exception {
+		mpicbg.imglib.algorithm.transformation.HoughLineTransform<LongType, S> h = 
+			new mpicbg.imglib.algorithm.transformation.HoughLineTransform<LongType, S>(img, new LongType());
+		if (!h.checkInput() || !h.process()) {
+			throw new Exception("HoughLineTransform: " + h.getErrorMessage());
+		}
+		return h.getResult();
 	}
 }

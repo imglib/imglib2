@@ -21,7 +21,7 @@ public class FFT<T extends RealType<T>> extends Image<ComplexDoubleType>
 
 	@SuppressWarnings("unchecked")
 	public FFT(final Image<T> img) throws Exception {
-		super(process(img).getContainer(), new ComplexDoubleType());
+		super(process(img).getContainer(), new ComplexDoubleType(), "FFT");
 		fft = (FourierTransform<T, ComplexDoubleType>) m.remove(Thread.currentThread());
 		value = img.createType();
 	}
