@@ -2,6 +2,7 @@ package mpicbg.imglib.scripting.algorithm;
 
 import mpicbg.imglib.algorithm.floydsteinberg.FloydSteinbergDithering;
 import mpicbg.imglib.image.Image;
+import mpicbg.imglib.scripting.math.Compute;
 import mpicbg.imglib.scripting.math.fn.IFunction;
 import mpicbg.imglib.type.numeric.RealType;
 import mpicbg.imglib.type.numeric.real.DoubleType;
@@ -20,10 +21,10 @@ public class Dither extends Process
 	}
 
 	public Dither(final IFunction fn) throws Exception {
-		<DoubleType>this(Process.asImage(fn));
+		this(Compute.inDoubles(fn));
 	}
 
 	public Dither(final IFunction fn, final float ditheringThreshold) throws Exception {
-		<DoubleType>this(Process.asImage(fn), ditheringThreshold);
+		<DoubleType>this(Compute.inDoubles(fn), ditheringThreshold);
 	}
 }

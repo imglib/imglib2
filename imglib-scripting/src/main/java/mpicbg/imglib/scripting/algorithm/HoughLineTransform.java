@@ -1,6 +1,7 @@
 package mpicbg.imglib.scripting.algorithm;
 
 import mpicbg.imglib.image.Image;
+import mpicbg.imglib.scripting.math.Compute;
 import mpicbg.imglib.scripting.math.fn.IFunction;
 import mpicbg.imglib.type.numeric.RealType;
 import mpicbg.imglib.type.numeric.integer.LongType;
@@ -14,6 +15,6 @@ public class HoughLineTransform extends Process
 	}
 
 	public HoughLineTransform(final IFunction fn) throws Exception {
-		<DoubleType>this(Process.asImage(fn));
+		<DoubleType>this(Compute.inDoubles(fn));
 	}
 }

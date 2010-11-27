@@ -1,6 +1,7 @@
 package mpicbg.imglib.scripting.algorithm;
 
 import mpicbg.imglib.image.Image;
+import mpicbg.imglib.scripting.math.Compute;
 import mpicbg.imglib.scripting.math.fn.IFunction;
 import mpicbg.imglib.type.numeric.RealType;
 import mpicbg.imglib.type.numeric.real.DoubleType;
@@ -13,6 +14,6 @@ public class BandpassFilter extends Process
 	}
 
 	public BandpassFilter(final IFunction fn, final int beginRadius, final int endRadius) throws Exception {
-		<DoubleType>this(Process.asImage(fn), beginRadius, endRadius);
+		<DoubleType>this(Compute.inDoubles(fn), beginRadius, endRadius);
 	}
 }

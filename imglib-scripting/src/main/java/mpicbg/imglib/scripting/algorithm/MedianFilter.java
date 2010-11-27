@@ -4,6 +4,7 @@ import mpicbg.imglib.algorithm.roi.StructuringElement;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyMirrorFactory;
+import mpicbg.imglib.scripting.math.Compute;
 import mpicbg.imglib.scripting.math.fn.IFunction;
 import mpicbg.imglib.type.numeric.RealType;
 import mpicbg.imglib.type.numeric.real.DoubleType;
@@ -20,10 +21,10 @@ public class MedianFilter extends Process
 	}
 
 	public MedianFilter(final IFunction fn, final float radius) throws Exception {
-		<DoubleType>this(Process.asImage(fn), radius, new OutOfBoundsStrategyMirrorFactory<DoubleType>());
+		<DoubleType>this(Compute.inDoubles(fn), radius, new OutOfBoundsStrategyMirrorFactory<DoubleType>());
 	}
 
 	public MedianFilter(final IFunction fn, final float radius, final OutOfBoundsStrategyMirrorFactory<DoubleType> oobs) throws Exception {
-		<DoubleType>this(Process.asImage(fn), radius, oobs);
+		<DoubleType>this(Compute.inDoubles(fn), radius, oobs);
 	}
 }
