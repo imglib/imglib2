@@ -68,7 +68,7 @@ public class Compute {
 			}
 			catch ( Exception e ) 
 			{
-				System.out.println( "Running single threaded, operations cannot be duplicated." );
+				System.out.println( "Running single threaded, operations cannot be duplicated:\n" + e);
 				numThreads = 1;
 			}
 
