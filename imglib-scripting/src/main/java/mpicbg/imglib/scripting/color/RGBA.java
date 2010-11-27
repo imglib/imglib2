@@ -13,6 +13,8 @@ import mpicbg.imglib.type.numeric.RealType;
  *  this class composes them into an {@link RGBALegacyType} {@link Image}.
  *  
  *  Channel order: A=4, R=3, G=2, B=1.
+ *  
+ *  Expects each channel in floats or doubles, in the range [0, 255].
  *  */
 public final class RGBA extends ColorFunction {
 

@@ -7,6 +7,7 @@ import mpicbg.imglib.type.numeric.RGBALegacyType;
 /** Extracts the blue pixel value. */
 public class Blue extends ChannelOp {
 
+	/** Extract the blue channel of each pixel, in the range [0, 255]. */
 	public Blue(final Image<? extends RGBALegacyType> img) {
 		super(img);
 	}
