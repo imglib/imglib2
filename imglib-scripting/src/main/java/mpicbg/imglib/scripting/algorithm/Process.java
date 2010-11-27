@@ -17,7 +17,11 @@ import mpicbg.imglib.type.numeric.real.DoubleType;
  *  When combined with other {@link IFunction} instances, the {@code eval()}
  *  method returns the resulting, processed pixel values--either from the result
  *  image (from an {@link OutputAlgorithm} instance) or from the origina image
- *  (in the case of a {@link Algorithm} instance that is not an {@link OutputAlgorithm}). */
+ *  (in the case of a {@link Algorithm} instance that is not an {@link OutputAlgorithm}).
+ *  
+ *  A few classes extend Process for simplified usage. See for example
+ *  {@link Gauss}, {@link Dither}, {@link BandpassFilter}, {@Normalize}.
+ *  */
 public class Process implements IFunction {
 
 	private final Cursor<? extends RealType<?>> c;

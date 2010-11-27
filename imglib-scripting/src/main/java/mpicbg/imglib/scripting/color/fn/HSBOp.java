@@ -1,4 +1,4 @@
-package mpicbg.imglib.scripting.rgb.fn;
+package mpicbg.imglib.scripting.color.fn;
 
 import java.awt.Color;
 

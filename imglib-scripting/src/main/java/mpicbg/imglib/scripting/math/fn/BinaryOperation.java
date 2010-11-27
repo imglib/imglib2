@@ -123,22 +123,14 @@ public abstract class BinaryOperation implements IFunction
 	 *  when the @param elem contains instances of classes other than {@link Image},
 	 *  {@link Number}, or {@link IFunction}. */
 	public BinaryOperation(final Object... elem) throws Exception {
-		this.a = wrap(elem[0]);
-		IFunction right = wrap(elem[elem.length-1]);
+		this.a = Util.wrap(elem[0]);
+		IFunction right = Util.wrap(elem[elem.length-1]);
 		for (int i=elem.length-2; i>0; i--) {
 			IFunction fn = getClass().getConstructor(new Class<?>[]{IFunction.class, IFunction.class})
-					.newInstance(wrap(elem[i]), right);
+					.newInstance(Util.wrap(elem[i]), right);
 			right = fn;
 		}
 		this.b = right;
-	}
-
-	@SuppressWarnings("unchecked")
-	static private final IFunction wrap(final Object ob) {
-		if (ob instanceof Image<?>) return new ImageFunction((Image<? extends RealType<?>>)ob);
-		if (ob instanceof IFunction) return (IFunction)ob;
-		if (ob instanceof Number) return new NumberFunction((Number)ob);
-		throw new IllegalArgumentException("Cannot compose a function with " + ob);
 	}
 
 	@Override

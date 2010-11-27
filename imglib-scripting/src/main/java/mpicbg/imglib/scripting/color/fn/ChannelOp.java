@@ -1,4 +1,4 @@
-package mpicbg.imglib.scripting.rgb.fn;
+package mpicbg.imglib.scripting.color.fn;
 
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.type.numeric.RGBALegacyType;

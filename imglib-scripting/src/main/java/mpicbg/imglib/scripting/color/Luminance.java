@@ -1,7 +1,7 @@
-package mpicbg.imglib.scripting.rgb;
+package mpicbg.imglib.scripting.color;
 
 import mpicbg.imglib.image.Image;
-import mpicbg.imglib.scripting.rgb.fn.RGBAOp;
+import mpicbg.imglib.scripting.color.fn.RGBAOp;
 import mpicbg.imglib.type.numeric.RGBALegacyType;
 
 /** Computes the luminance of each RGB value using the weights

@@ -1,6 +1,6 @@
 package mpicbg.imglib.scripting.algorithm;
 
-import mpicbg.imglib.algorithm.gauss.GaussianConvolution;
+import mpicbg.imglib.algorithm.gauss.GaussianConvolutionReal;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyMirrorFactory;
 import mpicbg.imglib.scripting.math.fn.IFunction;
@@ -28,8 +28,8 @@ public class Gauss extends Process
 		<DoubleType>this(Process.asImage(fn), oobs, sigma);
 	}
 
-	static private final <R extends RealType<R>> GaussianConvolution<R> create(final Image<R> img, final OutOfBoundsStrategyMirrorFactory<R> oobs, final float sigma) {
-		final GaussianConvolution<R> g = new GaussianConvolution<R>(img, oobs, sigma);
+	static private final <R extends RealType<R>> GaussianConvolutionReal<R> create(final Image<R> img, final OutOfBoundsStrategyMirrorFactory<R> oobs, final float sigma) {
+		final GaussianConvolutionReal<R> g = new GaussianConvolutionReal<R>(img, oobs, sigma);
 		g.setNumThreads(); // available processors -- the default is zero otherwise!
 		return g;
 	}

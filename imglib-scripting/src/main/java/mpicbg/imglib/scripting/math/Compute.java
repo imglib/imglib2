@@ -19,7 +19,7 @@ import mpicbg.imglib.type.numeric.real.DoubleType;
 import mpicbg.imglib.type.numeric.real.FloatType;
 
 public class Compute {
-
+	
 	static public final <R extends RealType<R>> Image<R> apply(final IFunction op, final R output, int numThreads ) throws Exception
 	{
 		numThreads = Math.max( 1, numThreads );

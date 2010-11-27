@@ -1,7 +1,7 @@
-package mpicbg.imglib.scripting.rgb;
+package mpicbg.imglib.scripting.color;
 
 import mpicbg.imglib.image.Image;
-import mpicbg.imglib.scripting.rgb.fn.HSBOp;
+import mpicbg.imglib.scripting.color.fn.HSBOp;
 import mpicbg.imglib.type.numeric.RGBALegacyType;
 
 /** Extracts the HSB saturation of an RGB pixel. */

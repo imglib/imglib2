@@ -1,7 +1,7 @@
-package mpicbg.imglib.scripting.rgb;
+package mpicbg.imglib.scripting.color;
 
 import mpicbg.imglib.image.Image;
-import mpicbg.imglib.scripting.rgb.fn.ChannelOp;
+import mpicbg.imglib.scripting.color.fn.ChannelOp;
 import mpicbg.imglib.type.numeric.RGBALegacyType;
 
 /** Extracts the red pixel value. */
