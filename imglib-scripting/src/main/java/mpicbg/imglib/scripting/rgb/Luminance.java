@@ -14,6 +14,7 @@ public class Luminance extends RGBAOp {
 
 	@Override
 	public final double eval () {
+		c.fwd();
 		final int v = c.getType().get();
 		return ((v >> 16) & 0xff) * 0.299 + ((v >> 8) & 0xff) * 0.587 + (v & 0xff) * 0.144;
 	}
