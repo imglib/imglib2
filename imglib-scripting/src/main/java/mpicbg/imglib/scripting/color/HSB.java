@@ -1,5 +1,6 @@
 package mpicbg.imglib.scripting.color;
 
+import java.awt.Color;
 import java.util.Collection;
 
 import mpicbg.imglib.cursor.Cursor;
@@ -14,6 +15,8 @@ import mpicbg.imglib.type.numeric.RealType;
  *  in HSB color space.
  *  
  *  Channel order: 3=H, 2=S, 1=B.
+ *  
+ *  Expects each channel in floats or doubles in the range [0,1].
  *  */
 public final class HSB extends ColorFunction {
 
@@ -70,10 +73,10 @@ public final class HSB extends ColorFunction {
 		return new HSB(hue.duplicate(), saturation.duplicate(), brightness.duplicate());
 	}
 
-	/** Returns each ARGB value packed in an {@code int} that is casted to {@code double}. */
+	/** Returns each HSB value packed in an {@code int} that is casted to {@code double}. */
 	@Override
 	public final double eval() {
-		return (((int)hue.eval()) << 16) | (((int)saturation.eval()) << 8) | ((int)brightness.eval());
+		return Color.HSBtoRGB((float)hue.eval(), (float)saturation.eval(), (float)brightness.eval());
 	}
 
 	@Override
