@@ -14,6 +14,7 @@ import mpicbg.imglib.image.ImageFactory;
 import mpicbg.imglib.multithreading.Chunk;
 import mpicbg.imglib.multithreading.SimpleMultiThreading;
 import mpicbg.imglib.scripting.math.fn.IFunction;
+import mpicbg.imglib.scripting.math.fn.ImageFunction;
 import mpicbg.imglib.type.numeric.RealType;
 import mpicbg.imglib.type.numeric.real.DoubleType;
 import mpicbg.imglib.type.numeric.real.FloatType;
@@ -144,5 +145,17 @@ public class Compute {
 	static public final Image<DoubleType> inDoubles(final IFunction op) throws Exception
 	{
 		return inDoubles(Runtime.getRuntime().availableProcessors(), op);
+	}
+
+	/** Convenience method to avoid confusion with script wrappers that are themselves {@link Image}
+	 *  rather than {@link IFunction}. */
+	static public final Image<FloatType> inFloats(final Image<? extends RealType<?>> img) throws Exception {
+		return inFloats(new ImageFunction(img));
+	}
+
+	/** Convenience method to avoid confusion with script wrappers that are themselves {@link Image}
+	 *  rather than {@link IFunction}. */
+	static public final Image<DoubleType> inDoubles(final Image<? extends RealType<?>> img) throws Exception {
+		return inDoubles(new ImageFunction(img));
 	}
 }
