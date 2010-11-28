@@ -69,7 +69,7 @@ public class Benchmark {
 			final double mean) throws Exception {
 		p("Start script (correct illumination)...");
 		long t0 = System.nanoTime();
-		Image<FloatType> corrected = Compute.inFloats(
+		Image<FloatType> corrected = Compute.inFloats(1,
 				new Multiply(
 						new Divide(
 								new Subtract(img, brightfield),
@@ -113,7 +113,7 @@ public class Benchmark {
 			final Image<? extends RealType<?>> img) throws Exception {
 		p("Start script with heavy operations...");
 		long t0 = System.currentTimeMillis();
-		Image<FloatType> corrected = Compute.inFloats(
+		Image<FloatType> corrected = Compute.inFloats(1, 
 				new Multiply(
 					new ASin(
 						new Sin(

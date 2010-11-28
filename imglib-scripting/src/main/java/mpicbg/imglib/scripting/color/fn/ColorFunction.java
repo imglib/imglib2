@@ -1,13 +1,10 @@
 package mpicbg.imglib.scripting.color.fn;
 
 import java.util.Collection;
-import java.util.HashSet;
 
-import mpicbg.imglib.container.ContainerFactory;
-import mpicbg.imglib.container.array.ArrayContainerFactory;
 import mpicbg.imglib.cursor.Cursor;
 import mpicbg.imglib.image.Image;
-import mpicbg.imglib.image.ImageFactory;
+import mpicbg.imglib.scripting.math.Compute;
 import mpicbg.imglib.scripting.math.fn.IFunction;
 import mpicbg.imglib.scripting.math.fn.NumberFunction;
 import mpicbg.imglib.scripting.math.fn.Util;
@@ -51,30 +48,10 @@ public abstract class ColorFunction implements IFunction {
 	}
 
 	public Image<RGBALegacyType> asImage() throws Exception {
-		ContainerFactory containerFactory = null;
-		int[] dimensions = null;
-		final HashSet<Cursor<?>> cs = new HashSet<Cursor<?>>();
-		findCursors(cs);
-		for (final Cursor<?> c : cs) {
-			containerFactory = c.getImage().getContainer().getFactory();
-			dimensions = c.getImage().getDimensions();
-			break;
-		}
-		if (null == dimensions) {
-			throw new Exception(getClass().getSimpleName() + ".asImage(): could not determine image dimensions.");
-		}
-		if (null == containerFactory) {
-			containerFactory = new ArrayContainerFactory();
-		}
-		final ImageFactory<RGBALegacyType> imageFactory = new ImageFactory<RGBALegacyType>(new RGBALegacyType(), containerFactory);
-		final Image<RGBALegacyType> img = imageFactory.createImage(dimensions);
-		// Place all cursors at the start
-		for (final Cursor<?> c : cs) {
-			c.reset();
-		}
-		for (final RGBALegacyType value : img) {
-			value.set( (int) this.eval());
-		}
-		return img;
+		return asImage(Runtime.getRuntime().availableProcessors());
+	}
+	
+	public Image<RGBALegacyType> asImage(final int numThreads) throws Exception {
+		return Compute.apply(this, new RGBALegacyType(), numThreads);
 	}
 }
