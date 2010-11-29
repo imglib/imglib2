@@ -45,7 +45,7 @@ import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
 import mpicbg.imglib.type.Type;
 
 /**
- * A {@link Container} that stores data in an aray of 2d-slices each as a
+ * A {@link Container} that stores data in an array of 2d-slices each as a
  * linear array of basic types.  For types that are supported by ImageJ (byte,
  * short, int, float), an actual Planar is created or used to store the
  * data.  Alternatively, an {@link PlanarContainer} can be created using
@@ -53,7 +53,7 @@ import mpicbg.imglib.type.Type;
  *
  * {@link PlanarContainer PlanarContainers} provides a legacy layer to
  * apply imglib-based algorithm implementations directly on the data stored in
- * an ImageJ {@link Planar}.  For all types that are suported by ImageJ, the
+ * an ImageJ {@link Planar}.  For all types that are supported by ImageJ, the
  * {@link PlanarContainer} provides access to the pixels of an
  * {@link Planar} instance that can be accessed ({@see #getPlanar()}.
  *
@@ -154,7 +154,7 @@ public class PlanarContainer<T extends Type<T>, A extends ArrayDataAccess<A>> ex
 	}
 
 	@Override
-  public PlanarContainerFactory getFactory() { return factory; }
+	public PlanarContainerFactory getFactory() { return factory; }
 
 	@Override
 	public void close()
