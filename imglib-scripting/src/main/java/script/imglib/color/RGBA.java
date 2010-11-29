@@ -79,10 +79,12 @@ public final class RGBA extends ColorFunction {
 		return new RGBA(red.duplicate(), green.duplicate(), blue.duplicate(), alpha.duplicate());
 	}
 
-	/** Returns each ARGB value packed in an {@code int} that is casted to {@code double}. */
+	/** Returns each ARGB value packed in an {@code int} that is casted to {@code double}.
+	 *  The integers are cropped to their lower byte. */
 	@Override
 	public final double eval() {
-		return (((int)alpha.eval()) << 24) | (((int)red.eval()) << 16) | (((int)green.eval()) << 8) | ((int)blue.eval());
+		return ((((int)alpha.eval()) & 0xff) << 24) | ((((int)red.eval()) & 0xff) << 16)
+			    | ((((int)green.eval()) & 0xff) << 8) | (((int)blue.eval()) & 0xff);
 	}
 
 	@Override
