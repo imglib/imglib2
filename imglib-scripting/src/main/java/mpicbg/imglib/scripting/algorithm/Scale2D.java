@@ -1,6 +1,7 @@
 package mpicbg.imglib.scripting.algorithm;
 
 import mpicbg.imglib.image.Image;
+import mpicbg.imglib.outofbounds.OutOfBoundsStrategyMirrorFactory;
 import mpicbg.imglib.type.numeric.NumericType;
 
 /** Scale a 2D or 3D image, resizing only the 2D planes as necessary. The Z axis is left untouched. */
@@ -26,6 +27,7 @@ public class Scale2D<N extends NumericType<N>> extends Affine3D<N>
 	public Scale2D(final Image<N> img, final float scaleX, final float scaleY, final Mode mode) throws Exception {
 		super(img, new float[]{scaleX, 0, 0, 0,
 							   0, scaleY, 0, 0,
-							   0, 0, 1, 0}, mode);
+							   0, 0, 1, 0},
+			  mode, new OutOfBoundsStrategyMirrorFactory<N>());
 	}
 }

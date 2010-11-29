@@ -31,13 +31,13 @@ public class Affine3D<T extends NumericType<T>> extends Image<T>
 
 	/** Expects a matrix of 12 elements
 	 * 
-	 *  For 2D it will do:
+	 *  For 2D image it will do:
 	 *
 	 *  AffineModel2D aff = new AffineModel2D();
 	 *  aff.set(m[0], m[4], m[1], m[5], m[3], m[7]);
 	 * 
 	 * 
-	 *  For 3D it will do:
+	 *  For 3D image it will do:
 	 *  
 	 *  AffineModel3D aff = new AffineModel3D();
 	 *  aff.set(m[0], m[1], m[2], m[3],
@@ -137,7 +137,7 @@ public class Affine3D<T extends NumericType<T>> extends Image<T>
 		}
 
 		final ImageTransform<R> transform;
-		
+
 		if (2 == img.getNumDimensions()) {
 			// Transform the single-plane image in 2D
 			AffineModel2D aff = new AffineModel2D();
