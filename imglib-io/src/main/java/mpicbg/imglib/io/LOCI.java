@@ -26,6 +26,7 @@ import loci.formats.MetadataTools;
 import loci.formats.meta.IMetadata;
 import loci.formats.meta.MetadataRetrieve;
 import mpicbg.imglib.container.ContainerFactory;
+import mpicbg.imglib.container.array.ArrayContainerFactory;
 import mpicbg.imglib.cursor.LocalizablePlaneCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.ImageFactory;
@@ -39,11 +40,16 @@ import mpicbg.imglib.type.numeric.real.FloatType;
 
 public class LOCI
 {
+	public static <T extends RealType<T>> Image<T> open( final String fileName )
+	{
+		return openLOCI( "", fileName, new ArrayContainerFactory() );
+	}
+
 	public static <T extends RealType<T>> Image<T> openLOCI( final String fileName, final ContainerFactory containerFactory )
 	{
 		return openLOCI( "", fileName, containerFactory );
 	}
-	
+
 	public static <T extends RealType<T>> Image<T> openLOCI( final String path, final String fileName, final ContainerFactory containerFactory )
 	{
 		return openLOCI(path, fileName, containerFactory, -1, -1);
