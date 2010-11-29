@@ -21,6 +21,11 @@ import mpicbg.imglib.type.numeric.real.FloatType;
 import mpicbg.models.AffineModel2D;
 import mpicbg.models.AffineModel3D;
 
+/** Performs a mathematically correct transformation of an image.
+ * This means that an image of 2000x2000 scaled by a factor of 2
+ * will result in an image of 3999x3999 pixels.
+ * 
+ * If the above is not what you expect, then use {@link Resample} instead. */
 public class Affine3D<T extends NumericType<T>> extends Image<T>
 {	
 	static enum Mode { LINEAR, NEAREST_NEIGHBOR };
@@ -50,6 +55,9 @@ public class Affine3D<T extends NumericType<T>> extends Image<T>
 	 *  @param img The {@link Image} to transform.
 	 *  @param matrix The values of the transformation matrix, ordered as explained above.
 	 *  @param mode Either LINEAR or NEAREST_NEIGHBOR.
+	 *  
+	 *  
+	 *  See also {@link AffineModel2D, AffineModel3D};
 	 */
 	public Affine3D(final Image<T> img, final float[] matrix, final Mode mode) throws Exception {
 		this(img, matrix, mode, new OutOfBoundsStrategyValueFactory<T>(img.createType())); // default value is zero
