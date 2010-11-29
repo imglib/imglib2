@@ -1,6 +1,6 @@
 package script.imglib.algorithm;
 
-import script.imglib.algorithm.Affine3D.Mode;
+import script.imglib.algorithm.fn.AbstractAffine3D.Mode;
 import script.imglib.color.Alpha;
 import script.imglib.color.Blue;
 import script.imglib.color.Green;
