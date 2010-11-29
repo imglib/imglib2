@@ -56,7 +56,7 @@ public class Affine3D<T extends NumericType<T>> extends Image<T>
 	}
 
 	@SuppressWarnings("unchecked")
-	public Affine3D(final Image<T> img, final float[] matrix, final Number outside, final Mode mode) throws Exception {
+	public Affine3D(final Image<T> img, final float[] matrix, final Mode mode, final Number outside) throws Exception {
 		this(img, matrix, mode, new OutOfBoundsStrategyValueFactory<T>((T)withValue(img, img.createType(), outside))); // default value is zero
 	}
 
