@@ -33,41 +33,61 @@ public class Resample<N extends NumericType<N>> extends Image<N>
 
 	/** Resample an {@link Image} with the best possible mode. */
 	public Resample(final Image<N> img, final Number scale) throws Exception {
-		this(img, scale, BEST);
+		this(img, asDimArray(img, scale), BEST);
 	}
 
 	public Resample(final Image<N> img, final Number scale, final Mode mode) throws Exception {
-		super(process(img, scale, mode).getContainer(), img.createType());
+		this(img, asDimArray(img, scale), mode);
+	}
+
+	public Resample(final Image<N> img, final int[] dimensions) throws Exception {
+		this(img, dimensions, BEST);
+	}
+
+	public Resample(final Image<N> img, final int[] dimensions, final Mode mode) throws Exception {
+		super(process(img, dimensions, mode).getContainer(), img.createType());
+	}
+
+	static private final int[] asDimArray(final Image<?> img, final Number scale) {
+		final int[] dim = new int[img.getNumDimensions()];
+		final double s = scale.doubleValue();
+		for (int i=0; i<dim.length; i++) {
+			dim[i] = (int)((img.getDimension(i) * s) + 0.5);
+		}
+		return dim;
 	}
 
 	@SuppressWarnings("unchecked")
-	static private final <N extends NumericType<N>> Image<N> process(final Image<N> img, final Number scale, final Mode mode) throws Exception {
+	static private final <N extends NumericType<N>> Image<N> process(final Image<N> img, int[] dim, final Mode mode) throws Exception {
+		// Pad dim array with missing dimensions
+		if (dim.length != img.getNumDimensions()) {
+			int[] d = new int[img.getNumDimensions()];
+			int i = 0;
+			for (; i<dim.length; i++) d[i] = dim[i];
+			for (; i<img.getNumDimensions(); i++) d[i] = img.getDimension(i);
+			dim = d;
+		}
 		final Type<?> type = img.createType();
 		if (RGBALegacyType.class.isAssignableFrom(type.getClass())) { // type instanceof RGBALegacyType fails to compile
-			return (Image)processRGBA((Image)img, scale, mode);
+			return (Image)processRGBA((Image)img, dim, mode);
 		} else if (type instanceof RealType<?>) {
-			return (Image)processReal((Image)img, scale, mode);
+			return (Image)processReal((Image)img, dim, mode);
 		} else {
 			throw new Exception("Affine transform: cannot handle type " + type.getClass());
 		}
 	}
 
-	static private final Image<RGBALegacyType> processRGBA(final Image<RGBALegacyType> img, final Number scale, final Mode mode) throws Exception {
+	static private final Image<RGBALegacyType> processRGBA(final Image<RGBALegacyType> img, final int[] dim, final Mode mode) throws Exception {
 		// Process each channel independently and then compose them back
-		return new RGBA(processReal(Compute.inFloats(new Red(img)), scale, mode),
-						processReal(Compute.inFloats(new Green(img)), scale, mode),
-						processReal(Compute.inFloats(new Blue(img)), scale, mode),
-						processReal(Compute.inFloats(new Alpha(img)), scale, mode)).asImage();
+		return new RGBA(processReal(Compute.inFloats(new Red(img)), dim, mode),
+						processReal(Compute.inFloats(new Green(img)), dim, mode),
+						processReal(Compute.inFloats(new Blue(img)), dim, mode),
+						processReal(Compute.inFloats(new Alpha(img)), dim, mode)).asImage();
 	}
 
-	static private final <T extends RealType<T>> Image<T> processReal(final Image<T> img, final Number scale, final Mode mode) throws Exception {
-		final float s = scale.floatValue();
-		final int[] dim = img.getDimensions(),
-					dimres = new int[dim.length];
-		for (int i=0; i<dim.length; i++) {
-			dimres[i] = (int)(dim[i] * s + 0.5f);
-		}
-		final Image<T> res = img.getImageFactory().createImage(dimres);
+	static private final <T extends RealType<T>> Image<T> processReal(final Image<T> img, final int[] dim, final Mode mode) throws Exception {
+
+		final Image<T> res = img.getImageFactory().createImage(dim);
 
 		InterpolatorFactory<T> ifac;
 		switch (mode) {
@@ -83,13 +103,14 @@ public class Resample<N extends NumericType<N>> extends Image<N>
 
 		final Interpolator<T> inter = ifac.createInterpolator(img);
 		final LocalizableCursor<T> c2 = res.createLocalizableCursor();
+		final float[] s = new float[dim.length];
+		for (int i=0; i<s.length; i++) s[i] = (float)img.getDimension(i) / dim[i];
 		final int[] d = new int[dim.length];
 		final float[] p = new float[dim.length];
-		final float si = 1 / s;
 		while (c2.hasNext()) {
 			c2.fwd();
 			c2.getPosition(d);
-			for (int i=0; i<d.length; i++) p[i] = (d[i] * si);
+			for (int i=0; i<d.length; i++) p[i] = d[i] * s[i];
 			inter.moveTo(p);
 			c2.getType().set(inter.getType());			
 		}
