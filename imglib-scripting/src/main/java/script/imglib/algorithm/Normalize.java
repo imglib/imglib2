@@ -36,7 +36,7 @@ public class Normalize<N extends NumericType<N>> extends AbstractNormalize<N>
 		if (fn instanceof ColorFunction) return (Image)processRGBA(Compute.inRGBA((ColorFunction)fn));
 		if (fn instanceof IFunction) return process((IFunction)fn);
 		if (fn instanceof Image<?>) {
-			if (((Image<?>)fn).createType() instanceof RGBALegacyType) {
+			if (((Image)fn).createType() instanceof RGBALegacyType) {
 				return (Image)processRGBA((Image<RGBALegacyType>)fn);
 			} else {
 				return processReal((Image)fn);
@@ -61,8 +61,8 @@ public class Normalize<N extends NumericType<N>> extends AbstractNormalize<N>
 		// Copy img into a new target image
 		final Image<FloatType> target = new Image<FloatType>(img.getContainerFactory().createContainer(img.getDimensions(), new FloatType()), new FloatType());
 
-		if (img.createType() instanceof FloatType) {
-			final Cursor<FloatType> c1 = (Cursor<FloatType>)img.createCursor();
+		if (FloatType.class.isAssignableFrom(img.createType().getClass())) { // instanceof fails
+			final Cursor<FloatType> c1 = (Cursor)img.createCursor();
 			final Cursor<FloatType> c2 = target.createCursor();
 			while (c1.hasNext()) {
 				c1.fwd();
