@@ -153,7 +153,7 @@ public abstract class AbstractAffine3D<T extends NumericType<T>> extends Image<T
 					m[8], m[9], m[10], m[11]);
 			transform = new ImageTransform<R>(img, aff, inter);
 			// Ensure Z dimension is not altered if scaleZ is 1:
-			if (Math.abs(m[10] - 1.0f) < 0.000001) {
+			if (Math.abs(m[10] - 1.0f) < 0.000001 && 0 == m[8] && 0 == m[9]) {
 				int[] d = transform.getNewImageSize();
 				d[2] = img.getDimension(2); // 0-based: '2' is the third dimension
 				transform.setNewImageSize(d);
