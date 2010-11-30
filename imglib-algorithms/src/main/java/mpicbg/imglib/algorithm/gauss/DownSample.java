@@ -20,11 +20,14 @@ import mpicbg.imglib.algorithm.Benchmark;
 import mpicbg.imglib.algorithm.MultiThreaded;
 import mpicbg.imglib.algorithm.OutputAlgorithm;
 import mpicbg.imglib.cursor.LocalizableCursor;
+import mpicbg.imglib.function.RealTypeConverter;
 import mpicbg.imglib.image.Image;
+import mpicbg.imglib.image.ImageFactory;
 import mpicbg.imglib.interpolation.Interpolator;
 import mpicbg.imglib.interpolation.nearestneighbor.NearestNeighborInterpolatorFactory;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyMirrorFactory;
 import mpicbg.imglib.type.numeric.RealType;
+import mpicbg.imglib.type.numeric.real.DoubleType;
 import mpicbg.imglib.util.Util;
 
 public class DownSample<T extends RealType<T>> implements MultiThreaded, OutputAlgorithm<T>, Benchmark
@@ -121,10 +124,11 @@ public class DownSample<T extends RealType<T>> implements MultiThreaded, OutputA
 			final double s = targetSigma * scaling[ d ]; 
 			sigma[ d ] = Math.sqrt( s * s - sourceSigma * sourceSigma );
 		}
-		
-		final GaussianConvolution<T> gauss = new GaussianConvolution<T>( input, new OutOfBoundsStrategyMirrorFactory<T>(), sigma );
+		final ImageFactory<DoubleType> factory = new ImageFactory<DoubleType>( new DoubleType(), input.getContainerFactory() );
+		final GaussianConvolution3<T,DoubleType,T> gauss = new GaussianConvolution3<T,DoubleType,T>( input, factory, input.getImageFactory(), new OutOfBoundsStrategyMirrorFactory<DoubleType>(), 
+				new RealTypeConverter<T, DoubleType>(), new RealTypeConverter<DoubleType, T>(), sigma );
 		gauss.setNumThreads( getNumThreads() );
-		
+
 		if ( !gauss.checkInput() || !gauss.process() )
 		{
 			errorMessage = "Gaussian Convolution failed: " + gauss.getErrorMessage();

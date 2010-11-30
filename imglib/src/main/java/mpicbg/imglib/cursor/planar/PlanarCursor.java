@@ -33,7 +33,7 @@ import mpicbg.imglib.image.Image;
 import mpicbg.imglib.type.Type;
 
 /**
- * Basic Iterator for a {@link PlanarContainer PlanarContainers}
+ * Basic Iterator for {@link PlanarContainer PlanarContainers}
  * @param <T>
  *
  * @author Stephan Preibisch and Stephan Saalfeld

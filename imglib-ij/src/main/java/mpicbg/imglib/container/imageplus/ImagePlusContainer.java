@@ -32,6 +32,7 @@ import mpicbg.imglib.container.Container;
 import mpicbg.imglib.container.basictypecontainer.array.ArrayDataAccess;
 import mpicbg.imglib.container.planar.PlanarContainer;
 import mpicbg.imglib.cursor.imageplus.ImagePlusCursor;
+import mpicbg.imglib.cursor.imageplus.ImagePlusCursor2D;
 import mpicbg.imglib.cursor.imageplus.ImagePlusLocalizableByDimCursor;
 import mpicbg.imglib.cursor.imageplus.ImagePlusLocalizableByDimOutOfBoundsCursor;
 import mpicbg.imglib.cursor.imageplus.ImagePlusLocalizableCursor;
@@ -203,7 +204,10 @@ public class ImagePlusContainer<T extends Type<T>, A extends ArrayDataAccess<A>>
 	@Override
 	public ImagePlusCursor<T> createCursor( final Image<T> image ) 
 	{
-		return new ImagePlusCursor<T>( this, image, linkedType.duplicateTypeOnSameDirectAccessContainer() );
+		if ( numDimensions == 2 )
+			return new ImagePlusCursor2D< T >( this, image, linkedType.duplicateTypeOnSameDirectAccessContainer() );
+		else
+			return new ImagePlusCursor< T >( this, image, linkedType.duplicateTypeOnSameDirectAccessContainer() );
 	}
 
 	@Override

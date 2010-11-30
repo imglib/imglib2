@@ -39,7 +39,7 @@ public class ArrayCursor<T extends Type<T>> extends CursorImpl<T> implements Cur
 {
 	protected final T type;
 	protected final Array<T,?> container;
-	protected final int sizeMinus1;
+	protected final int maxIndex;
 	
 	public ArrayCursor( final Array<T,?> container, final Image<T> image, final T type ) 
 	{
@@ -47,7 +47,7 @@ public class ArrayCursor<T extends Type<T>> extends CursorImpl<T> implements Cur
 
 		this.type = type;
 		this.container = container;
-		this.sizeMinus1 = container.getNumPixels() - 1;
+		this.maxIndex = container.getNumPixels() - 1;
 		
 		reset();
 	}
@@ -56,7 +56,7 @@ public class ArrayCursor<T extends Type<T>> extends CursorImpl<T> implements Cur
 	public T getType() { return type; }
 	
 	@Override
-	public boolean hasNext() { return type.getIndex() < sizeMinus1; }
+	public boolean hasNext() { return type.getIndex() < maxIndex; }
 
 	@Override
 	public void fwd( final long steps ) { type.incIndex( (int)steps ); }
@@ -68,7 +68,7 @@ public class ArrayCursor<T extends Type<T>> extends CursorImpl<T> implements Cur
 	public void close() 
 	{ 
 		isClosed = true;
-		type.updateIndex( sizeMinus1 + 1 );
+		type.updateIndex( maxIndex + 1 );
 	}
 
 	@Override

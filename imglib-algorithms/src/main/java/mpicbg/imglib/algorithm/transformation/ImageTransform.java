@@ -96,14 +96,18 @@ public class ImageTransform<T extends Type<T>> implements OutputAlgorithm<T>
 	public void setOutputImageFactory( final ImageFactory<T> outputImageFactory ) { this.outputImageFactory = outputImageFactory; }
 	public ImageFactory<T> getOutputImageFactory() { return this.outputImageFactory; }
 
-	public float[] getOffset() { return offset; }
+	public float[] getOffset() { return offset.clone(); }
+	public float getOffset( final int dim ) { return offset[ dim ]; }
+	public void setOffset( final int dim, final int size ) { offset[ dim ] = size; }
 	public void setOffset( final float[] offset )
 	{
 		for ( int d = 0; d < numDimensions; ++d )
 			this.offset[ d ] = offset[ d ];
 	}
 
-	public int[] getNewImageSize() { return newDim; }
+	public int[] getNewImageSize() { return newDim.clone(); }
+	public float getNewImageSize( final int dim ) { return newDim[ dim ]; }
+	public void setNewImageSize( final int dim, final int size ) { newDim[ dim ] = size; }
 	public void setNewImageSize( final int[] newDim )
 	{
 		for ( int d = 0; d < numDimensions; ++d )
