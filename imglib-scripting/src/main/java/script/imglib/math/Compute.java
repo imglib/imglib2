@@ -6,6 +6,10 @@ import java.util.Set;
 import java.util.Vector;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import javax.print.attribute.standard.MediaSize.Other;
+
+import com.sun.xml.internal.ws.api.server.Container;
+
 import script.imglib.math.fn.IFunction;
 import script.imglib.math.fn.ImageFunction;
 
@@ -15,14 +19,66 @@ import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.ImageFactory;
 import mpicbg.imglib.multithreading.Chunk;
 import mpicbg.imglib.multithreading.SimpleMultiThreading;
+import mpicbg.imglib.outofbounds.OutOfBoundsStrategy;
 import mpicbg.imglib.type.numeric.NumericType;
 import mpicbg.imglib.type.numeric.RGBALegacyType;
 import mpicbg.imglib.type.numeric.RealType;
 import mpicbg.imglib.type.numeric.real.DoubleType;
 import mpicbg.imglib.type.numeric.real.FloatType;
 
+/** Compute an {@link IFunction} into an {@link Image}. In essence, the {@link IFunction}
+ * defines an operation with one or two pixels as arguments, such as {@link Multiply},
+ * {@link Divide}, etc. The {@link Compute#inFloats(IFunction)} evaluates the function
+ * and places the result in a new {@link Image}. To specify a different type, use the
+ * {@link Compute#apply(IFunction, RealType, int)}, and for {@link RGBALegacyType}, use
+ * {@link Compute#apply(IFunction, RGBALegacyType, int)} or {@link Compute#inRGBA(IFunction)}.
+ * <p>
+ * The underlying machinery first inspects the {@link IFunction} and all its nested
+ * {@link IFunction} instances, collecting all visible {@link Cursor} instances,
+ * using the method {@link Compute#findImages(IFunction)}.
+ * <p>
+ * All {@link Image} instances related to the found {@link Cursor} instances are
+ * inspected to ensure that their {@link mpicbg.imglib.container.Container} are compatible.
+ * If the {@link mpicbg.imglib.container.Container} are not compatible, the content
+ * of the images would not be iterated in a way that would make sense. So an {@link Exception}
+ * will be thrown.
+ * <p>
+ * Finally, the results of evaluating the {@link IFunction} are stored and returned in
+ * an {@link Image}. The dimensions of the returned image are the same as those of the
+ * first image found. If the dimensions do not match, an error will eventually pop up, or
+ * the computation result in images that have unexpected data in chunks of them (for example,
+ * when there is an {@link OutOfBoundsStrategy} that prevents an early error from occurring).
+ * <p>
+ * An example program: correct the background illumination of an image, given the associated
+ * brighfield and a darkfield images, and the mean value of the image:
+ * <p>
+   <pre>
+   public Image<FloatType> scriptCorrectIllumination(
+            final Image<? extends RealType<?>> img,
+            final Image<? extends RealType<?>> brightfield,
+            final Image<? extends RealType<?>> darkfield,
+            final double mean) throws Exception
+   {
+       Image<FloatType> corrected = Compute.inFloats(1,
+           new Multiply(
+               new Divide(
+                   new Subtract(img, brightfield),
+                   new Subtract(brightfield, darkfield)),
+           mean));
+       return corrected;
+   }
+   </pre>
+ * 
+ * @author Albert Cardona
+ * @version 1.0 2010-11-30
+ * @see IFunction
+ * @see Image
+ *
+ */
 public class Compute {
-	
+
+	/** Ensure that the {@link Container} of each {@link Image} of @param images is compatible
+	 * with all the others. */
 	static public final void checkContainers(final Collection<Image<?>> images) throws Exception {
 		if (images.isEmpty())
 			throw new Exception("There aren't any images!");
@@ -50,9 +106,10 @@ public class Compute {
 		}
 		return images;
 	}
-	
-	static public abstract class Loop<R extends NumericType<R>> {
 
+	/** Implements the core functionality of the {@code apply} method. */ 
+	static private abstract class Loop<R extends NumericType<R>>
+	{
 		private final IFunction op;
 		private final Collection<Image<?>> images;
 		private final R output;
@@ -158,7 +215,14 @@ public class Compute {
 		}
 	}
 
-	static public final <R extends RealType<R>> Image<R> apply(final IFunction op, final R output, int numThreads ) throws Exception
+	/** Execute the given {@link IFunction}, which runs for each pixel,
+	 * and store the results in an {@link Image} with the type defined by {@param output},
+	 * which has to be a subclass of {@link RealType}.
+	 * 
+	 * @param op The {@link IFunction} to execute.
+	 * @param output An instance of the type of the result image returned by this method.
+	 * @param numThreads The number of threads for parallel execution. */
+	static public final <R extends RealType<R>> Image<R> apply(final IFunction op, final R output, int numThreads) throws Exception
 	{
 		final Loop<R> loop = new Loop<R>(op, output, numThreads) {
 			public final void loop(final Cursor<R> resultCursor, final long loopSize, final IFunction fn) {
@@ -172,6 +236,12 @@ public class Compute {
 		return loop.run();
 	}
 
+	/** Execute the given {@param op} {@link IFunction}, which runs for each pixel,
+	 * and store the results in an {@link Image} of type {@link RGBALegacyType}.
+	 * 
+	 * @param op The {@link IFunction} to execute.
+	 * @param output An instance of the {@link RGBALegacyType} type of the result image returned by this method.
+	 * @param numThreads The number of threads for parallel execution. */
 	static public final Image<RGBALegacyType> apply(final IFunction op, final RGBALegacyType output, int numThreads ) throws Exception
 	{
 		final Loop<RGBALegacyType> loop = new Loop<RGBALegacyType>(op, output, numThreads) {
@@ -186,50 +256,84 @@ public class Compute {
 		return loop.run();
 	}
 
+	/** Execute the given {@param} op {@link IFunction}, which runs for each pixel,
+	 * and store the results in an {@link Image} of type {@link FloatType}.
+	 * Uses as many concurrent threads as CPUs, defined by {@link Runtime#availableProcessors()}.
+	 * 
+	 * @param op The {@link IFunction} to execute. */
 	static public final Image<FloatType> inFloats(final IFunction op) throws Exception
 	{
 		return inFloats( Runtime.getRuntime().availableProcessors(), op );
 	}
 
+	/** Execute the given {@param op} {@link IFunction}, which runs for each pixel,
+	 * and store the results in an {@link Image} of type {@link FloatType} with
+	 * as many threads as desired.
+	 * 
+	 * @param numThreads The number of threads for parallel execution. 
+	 * @param op The {@link IFunction} to execute. */
 	static public final Image<FloatType> inFloats(final int numThreads, final IFunction op) throws Exception
 	{
 		return apply(op, new FloatType(), numThreads );
 	}
 
+	/** Execute the given {@param op} {@link IFunction}, which runs for each pixel,
+	 * and store the results in an {@link Image} of type {@link DoubleType} with
+	 * as many threads as desired.
+	 * 
+	 * @param numThreads The number of threads for parallel execution. 
+	 * @param op The {@link IFunction} to execute. */
 	static public final Image<DoubleType> inDoubles(final int numThreads, final IFunction op) throws Exception
 	{
 		return apply(op, new DoubleType(), numThreads );
 	}
 
+	/** Execute the given {@param op} {@link IFunction}, which runs for each pixel,
+	 * and store the results in an {@link Image} of type {@link DoubleType}.
+	 * Uses as many concurrent threads as CPUs, defined by {@link Runtime#availableProcessors()}.
+	 * 
+	 * @param op The {@link IFunction} to execute. */
 	static public final Image<DoubleType> inDoubles(final IFunction op) throws Exception
 	{
 		return inDoubles(Runtime.getRuntime().availableProcessors(), op);
 	}
 	
+	/** Execute the given {@param op} {@link IFunction}, which runs for each pixel,
+	 * and store the results in an {@link Image} of type {@link RGBALegacyType} with
+	 * as many threads as desired.
+	 * 
+	 * @param numThreads The number of threads for parallel execution. 
+	 * @param op The {@link IFunction} to execute. */
 	static public final Image<RGBALegacyType> inRGBA(final int numThreads, final IFunction op) throws Exception
 	{
 		return apply(op, new RGBALegacyType(), numThreads);
 	}
 
+	/** Execute the given {@param op} {@link IFunction}, which runs for each pixel,
+	 * and store the results in an {@link Image} of type {@link RGBALegacyType} with
+	 * as many threads as desired.
+	 * Uses as many concurrent threads as CPUs, defined by {@link Runtime#availableProcessors()}.
+	 * 
+	 * @param op The {@link IFunction} to execute. */
 	static public final Image<RGBALegacyType> inRGBA(final IFunction op) throws Exception
 	{
 		return apply(op, new RGBALegacyType(), Runtime.getRuntime().availableProcessors());
 	}
 
 	/** Convenience method to avoid confusion with script wrappers that are themselves {@link Image}
-	 *  rather than {@link IFunction}. */
+	 *  rather than {@link IFunction}; this method ends up creating a copy of the image, in {@link FloatType}. */
 	static public final Image<FloatType> inFloats(final Image<? extends RealType<?>> img) throws Exception {
 		return inFloats(new ImageFunction(img));
 	}
 
 	/** Convenience method to avoid confusion with script wrappers that are themselves {@link Image}
-	 *  rather than {@link IFunction}. */
+	 *  rather than {@link IFunction}; this method ends up creating a copy of the image, in {@link DoubleType}. */
 	static public final Image<DoubleType> inDoubles(final Image<? extends RealType<?>> img) throws Exception {
 		return inDoubles(new ImageFunction(img));
 	}
 
 	/** Convenience method to avoid confusion with script wrappers that are themselves {@link Image}
-	 *  rather than {@link IFunction}.
+	 *  rather than {@link IFunction}; this method ends up creating a copy of the image, in {@link RGBALegacyType}.
 	 *  This method transforms an {@link IFunction} operation that returns a {@code double} for every pixel
 	 *  into an RGBA image, by casting each double to an {@code int}. */
 	static public final Image<RGBALegacyType> inRGBA(final Image<? extends RealType<?>> img) throws Exception
