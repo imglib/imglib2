@@ -8,8 +8,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.print.attribute.standard.MediaSize.Other;
 
-import com.sun.xml.internal.ws.api.server.Container;
-
 import script.imglib.math.fn.IFunction;
 import script.imglib.math.fn.ImageFunction;
 
