@@ -1,15 +1,5 @@
 package script.imglib.test;
 
-import script.imglib.math.ASin;
-import script.imglib.math.Add;
-import script.imglib.math.Cbrt;
-import script.imglib.math.Compute;
-import script.imglib.math.Divide;
-import script.imglib.math.Multiply;
-import script.imglib.math.Pow;
-import script.imglib.math.Sin;
-import script.imglib.math.Sqrt;
-import script.imglib.math.Subtract;
 import mpicbg.imglib.algorithm.gauss.GaussianConvolutionReal;
 import mpicbg.imglib.container.array.ArrayContainerFactory;
 import mpicbg.imglib.cursor.Cursor;
@@ -22,6 +12,18 @@ import mpicbg.imglib.outofbounds.OutOfBoundsStrategyMirrorFactory;
 import mpicbg.imglib.type.numeric.RealType;
 import mpicbg.imglib.type.numeric.integer.UnsignedByteType;
 import mpicbg.imglib.type.numeric.real.FloatType;
+import script.imglib.math.ASin;
+import script.imglib.math.Abs;
+import script.imglib.math.Add;
+import script.imglib.math.Cbrt;
+import script.imglib.math.Compute;
+import script.imglib.math.Difference;
+import script.imglib.math.Divide;
+import script.imglib.math.Multiply;
+import script.imglib.math.Pow;
+import script.imglib.math.Sin;
+import script.imglib.math.Sqrt;
+import script.imglib.math.Subtract;
 
 /* Tested in a MacBookPro 5,5, 4 Gb RAM, 2.4 Ghz
  * running Ubuntu 10.04 with Java 1.6.0_21
@@ -30,41 +32,61 @@ import mpicbg.imglib.type.numeric.real.FloatType;
  *
 Opening '/home/albert/Desktop/t2/bridge.gif' [512x512x1 type=uint8 image=Image<ByteType>]
 LOCI.openLOCI(): Cannot read metadata, setting calibration to 1
+Gauss processing time: 2060
 Start direct (correct illumination)...
-  elapsed: 40
+  elapsed: 108.590441  image: result
 Start script (correct illumination)...
-  elapsed: 40
+  elapsed: 56.862998 image result
 Start direct (correct illumination)...
-  elapsed: 46
+  elapsed: 138.54601  image: result
 Start script (correct illumination)...
-  elapsed: 37
+  elapsed: 18.287601 image result
 Start direct (correct illumination)...
-  elapsed: 9
+  elapsed: 7.65112  image: result
 Start script (correct illumination)...
-  elapsed: 15
+  elapsed: 15.75756 image result
 Start direct (correct illumination)...
-  elapsed: 8
+  elapsed: 8.854321  image: result
 Start script (correct illumination)...
-  elapsed: 15
+  elapsed: 15.40572 image result
 Start direct with heavy operations...
-  elapsed: 421
+  elapsed: 361
 Start script with heavy operations...
-  elapsed: 417
+  elapsed: 390
 Start direct with heavy operations...
-  elapsed: 392
+  elapsed: 402
 Start script with heavy operations...
-  elapsed: 394
+  elapsed: 352
 Start direct with heavy operations...
-  elapsed: 387
+  elapsed: 346
 Start script with heavy operations...
-  elapsed: 395
+  elapsed: 355
 Start direct with heavy operations...
-  elapsed: 388
+  elapsed: 349
 Start script with heavy operations...
-  elapsed: 395
+  elapsed: 372
+Start differenceFn
+  elapsed: 17.939521
+Start differenceCompFn
+  elapsed: 25.551281
+Start differenceFn
+  elapsed: 15.748361
+Start differenceCompFn
+  elapsed: 10.02808
+Start differenceFn
+  elapsed: 6.3574
+Start differenceCompFn
+  elapsed: 9.96048
+Start differenceFn
+  elapsed: 5.7024
+Start differenceCompFn
+  elapsed: 6.0376
+Original pixel at 348,95: 190.0
+After varargs addition, pixel at 348,95: 760.0 which is 4 * val: true
 
 In conclusion: the scripting way is about 1.8x slower for relatively simple operations,
 but about 1x for heavy operations!
+
  */
 public class Benchmark {
 
@@ -178,6 +200,28 @@ public class Benchmark {
 		return result;
 	}
 
+	static public Image<FloatType> differenceFn(
+			final Image<? extends RealType<?>> img) throws Exception {
+		p("Start differenceFn");
+		long t0 = System.nanoTime();
+		try {
+			return Compute.inFloats(new Difference(img, img));
+		} finally {
+			p("  elapsed: " + (System.nanoTime() - t0)/1000000.0);
+		}
+	}
+
+	static public Image<FloatType> differenceCompFn(
+			final Image<? extends RealType<?>> img) throws Exception {
+		p("Start differenceCompFn");
+		long t0 = System.nanoTime();
+		try {
+			return Compute.inFloats(new Abs(new Subtract(img, img)));
+		} finally {
+			p("  elapsed: " + (System.nanoTime() - t0)/1000000.0);
+		}
+	}
+
 	public static void main(String[] args) {
 		try {
 			String src = "http://imagej.nih.gov/ij/images/bridge.gif";
@@ -192,7 +236,7 @@ public class Benchmark {
 			GaussianConvolutionReal<UnsignedByteType> gauss = new GaussianConvolutionReal<UnsignedByteType>( img, new OutOfBoundsStrategyMirrorFactory<UnsignedByteType>(), 60 );
 			gauss.process();
 			
-			System.out.println( gauss.getProcessingTime() );
+			System.out.println( "Gauss processing time: " + gauss.getProcessingTime() );
 			
 			Image<UnsignedByteType> brightfield = gauss.getResult();
 			
@@ -227,11 +271,18 @@ public class Benchmark {
 					ImageJFunctions.show( corrected );
 					
 			}
+
 			for (int i=0; i<4; i++) {
 				heavyOperations(img);
 				scriptHeavyOperations(img);
 			}
-			
+
+			// Compare Difference(img) vs. Abs(Subtract(img1, img2))
+			for (int i=0; i<4; i++) {
+				differenceFn(img);
+				differenceCompFn(img);
+			}
+
 			// Test varargs:
 			sum(img);
 
