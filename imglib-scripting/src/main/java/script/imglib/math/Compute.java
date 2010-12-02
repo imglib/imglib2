@@ -6,8 +6,6 @@ import java.util.Set;
 import java.util.Vector;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import javax.print.attribute.standard.MediaSize.Other;
-
 import script.imglib.math.fn.IFunction;
 import script.imglib.math.fn.ImageFunction;
 
