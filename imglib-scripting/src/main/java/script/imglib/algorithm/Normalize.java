@@ -1,5 +1,15 @@
 package script.imglib.algorithm;
 
+import mpicbg.imglib.algorithm.function.NormMinMax;
+import mpicbg.imglib.algorithm.math.ComputeMinMax;
+import mpicbg.imglib.algorithm.math.ImageConverter;
+import mpicbg.imglib.cursor.Cursor;
+import mpicbg.imglib.function.Converter;
+import mpicbg.imglib.image.Image;
+import mpicbg.imglib.type.numeric.NumericType;
+import mpicbg.imglib.type.numeric.RGBALegacyType;
+import mpicbg.imglib.type.numeric.RealType;
+import mpicbg.imglib.type.numeric.real.FloatType;
 import script.imglib.algorithm.fn.AbstractNormalize;
 import script.imglib.color.Alpha;
 import script.imglib.color.Blue;
@@ -9,13 +19,6 @@ import script.imglib.color.Red;
 import script.imglib.color.fn.ColorFunction;
 import script.imglib.math.Compute;
 import script.imglib.math.fn.IFunction;
-import mpicbg.imglib.algorithm.math.NormalizeImageMinMax;
-import mpicbg.imglib.cursor.Cursor;
-import mpicbg.imglib.image.Image;
-import mpicbg.imglib.type.numeric.NumericType;
-import mpicbg.imglib.type.numeric.RGBALegacyType;
-import mpicbg.imglib.type.numeric.RealType;
-import mpicbg.imglib.type.numeric.real.FloatType;
 
 /** Becomes a normalized version of the given image, within min and max bounds,
  * where all pixels take values between 0 and 1.
@@ -34,7 +37,7 @@ public class Normalize<N extends NumericType<N>> extends AbstractNormalize<N>
 	@SuppressWarnings("unchecked")
 	static final private Image process(final Object fn) throws Exception {
 		if (fn instanceof ColorFunction) return (Image)processRGBA(Compute.inRGBA((ColorFunction)fn));
-		if (fn instanceof IFunction) return process((IFunction)fn);
+		if (fn instanceof IFunction) return processReal((IFunction)fn);
 		if (fn instanceof Image<?>) {
 			if (((Image)fn).createType() instanceof RGBALegacyType) {
 				return (Image)processRGBA((Image<RGBALegacyType>)fn);
@@ -58,35 +61,33 @@ public class Normalize<N extends NumericType<N>> extends AbstractNormalize<N>
 
 	@SuppressWarnings("unchecked")
 	static final private <T extends RealType<T>> Image<FloatType> processReal(final Image<T> img) throws Exception {
+		// Compute min and max
+		final ComputeMinMax<T> cmm = new ComputeMinMax<T>(img);
+		if (!cmm.checkInput() || !cmm.process()) {
+			throw new Exception("Coult not compute min and max: " + cmm.getErrorMessage());
+		}
+		// If min and max are the same, we just return the empty image will all zeros
+		if (0 == cmm.getMin().compareTo(cmm.getMax()) || 0 == cmm.getMax().getRealDouble()) {
+			return new Image<FloatType>(img.getContainerFactory().createContainer(img.getDimensions(), new FloatType()), new FloatType());
+		}
+
 		// Copy img into a new target image
 		final Image<FloatType> target = new Image<FloatType>(img.getContainerFactory().createContainer(img.getDimensions(), new FloatType()), new FloatType());
 
-		if (FloatType.class.isAssignableFrom(img.createType().getClass())) { // instanceof fails
-			final Cursor<FloatType> c1 = (Cursor)img.createCursor();
-			final Cursor<FloatType> c2 = target.createCursor();
-			while (c1.hasNext()) {
-				c1.fwd();
-				c2.fwd();
-				c2.getType().set(c1.getType());
-			}
-			c1.close();
-			c2.close();
-		} else {
-			final Cursor<T> c1 = img.createCursor();
-			final Cursor<FloatType> c2 = target.createCursor();
-			while (c1.hasNext()) {
-				c1.fwd();
-				c2.fwd();
-				c2.getType().setReal(c1.getType().getRealDouble());
-			}
-			c1.close();
-			c2.close();
-		}
 		// Normalize in place the target image
-		final NormalizeImageMinMax<FloatType> nmm = new NormalizeImageMinMax<FloatType>(target);
-		if (!nmm.checkInput() || !nmm.process()) {
-			throw new Exception("Could not normalize image: " + nmm.getErrorMessage());
+		final double min = cmm.getMin().getRealDouble();
+		final double max = cmm.getMax().getRealDouble();
+		final double range = max - min;
+		final ImageConverter<T, FloatType> conv = new ImageConverter<T, FloatType>( img, target, new Converter<T,FloatType>() {
+			@Override
+			public void convert(final T input, final FloatType output) {
+				output.setReal( (input.getRealDouble() - min) / range );
+			}
+		});
+		if (!conv.checkInput() || !conv.process()) {
+			throw new Exception("Could not normalize image: " + conv.getErrorMessage());
 		}
+
 		return target;
 	}
 }
