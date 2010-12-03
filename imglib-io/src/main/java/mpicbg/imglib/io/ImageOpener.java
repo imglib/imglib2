@@ -50,6 +50,7 @@ import loci.formats.FormatTools;
 import loci.formats.IFormatReader;
 import loci.formats.ImageReader;
 import mpicbg.imglib.container.Container;
+import mpicbg.imglib.container.ContainerFactory;
 import mpicbg.imglib.container.basictypecontainer.PlanarAccess;
 import mpicbg.imglib.container.basictypecontainer.array.ArrayDataAccess;
 import mpicbg.imglib.container.basictypecontainer.array.ByteArray;
@@ -93,430 +94,475 @@ public class ImageOpener implements StatusReporter {
 
 	// -- ImageOpener methods --
 
-  /** Reads in an imglib Image from the given source (e.g., file on disk). */
-  public <T extends RealType<T>> Image<T> openImage(String id)
-  throws FormatException, IOException
-  {
-  	notifyListeners(new StatusEvent("Initializing " + id));
+	/**
+	 * Reads in an imglib {@link Image} from the given source
+	 * (e.g., file on disk).
+	 */
+	public <T extends RealType<T>> Image<T> openImage(String id)
+		throws FormatException, IOException
+	{
+		return openImage(id, new PlanarContainerFactory());
+	}
 
-    IFormatReader r = null;
-    r = new ImageReader();
-    r = new ChannelFiller(r);
-    r = new ChannelSeparator(r);
-    r.setId(id);
+	/**
+	 * Reads in an imglib {@link Image} from the given source
+	 * (e.g., file on disk), using the given {@link ContainerFactory}
+	 * to construct the {@link Image}.
+	 */
+	public <T extends RealType<T>> Image<T> openImage(String id,
+		ContainerFactory containerFactory) throws FormatException, IOException
+	{
+		final IFormatReader r = initializeReader(id);
+		final T type = makeType(r.getPixelType());
+		final ImageFactory<T> imageFactory =
+			new ImageFactory<T>(type, containerFactory);
+		return openImage(r, imageFactory);
+	}
 
-    final String[] dimTypes = getDimTypes(r);
-    final int[] dimLengths = getDimLengths(r);
+	/**
+	 * Reads in an imglib {@link Image} from the given source
+	 * (e.g., file on disk), using the given {@link ImageFactory}
+	 * to construct the {@link Image}.
+	 */
+	public <T extends RealType<T>> Image<T> openImage(String id,
+		ImageFactory<T> imageFactory) throws FormatException, IOException
+	{
+		final IFormatReader r = initializeReader(id);
+		return openImage(r, imageFactory);
+	}
 
-    // determine data type
-    final int pixelType = r.getPixelType();
-    final T type = makeType(pixelType);
+	/**
+	 * Reads in an imglib {@link Image} from the given initialized
+	 * {@link IFormatReader}, using the given {@link ImageFactory}.
+	 */
+	public <T extends RealType<T>> Image<T> openImage(IFormatReader r,
+		ImageFactory<T> imageFactory) throws FormatException, IOException
+	{
+		final String[] dimTypes = getDimTypes(r);
+		final int[] dimLengths = getDimLengths(r);
 
-    // TEMP - make suffix out of dimension types, until imglib supports them
-    final File idFile = new File(id);
-    String name = idFile.exists() ? idFile.getName() : id;
-    name = encodeName(name, dimTypes);
+		// TEMP - make suffix out of dimension types, until imglib supports them
+		final String id = r.getCurrentFile();
+		final File idFile = new File(id);
+		String name = idFile.exists() ? idFile.getName() : id;
+		name = encodeName(name, dimTypes);
 
-    // create image object
-    final PlanarContainerFactory containerFactory =
-		  new PlanarContainerFactory();
-    final ImageFactory<T> imageFactory =
-      new ImageFactory<T>(type, containerFactory);
-    final Image<T> img =
-      imageFactory.createImage(dimLengths, name);
+		// create image object
+		final Image<T> img = imageFactory.createImage(dimLengths, name);
 
-    // TODO - create better container types; either:
-    // 1) an array container type using one byte array per plane
-    // 2) an array container type using one matching primitive array per plane
-    // 3) as #1, but with an IFormatReader reference reading planes on demand
-    // 4) as #2, but with an IFormatReader reference reading planes on demand
+		// TODO - create better container types; either:
+		// 1) an array container type using one byte array per plane
+		// 2) as #1, but with an IFormatReader reference reading planes on demand
+		// 3) as PlanarContainer, but with an IFormatReader reference
+		//    reading planes on demand
 
-    // #1 is useful for efficient Bio-Formats import, and useful for tools
-    //   needing byte arrays (e.g., BufferedImage Java3D texturing by reference)
-    // #2 is useful for efficient access to pixels in ImageJ (e.g., getPixels)
-    // #3 is useful for efficient memory use for tools wanting matching
-    //   primitive arrays (e.g., virtual stacks in ImageJ)
-    // #4 is useful for efficient memory use
+		// PlanarContainer is useful for efficient access to pixels in ImageJ
+		// (e.g., getPixels)
+		// #1 is useful for efficient Bio-Formats import, and useful for tools
+		//   needing byte arrays (e.g., BufferedImage Java3D texturing by reference)
+		// #2 is useful for efficient memory use for tools wanting matching
+		//   primitive arrays (e.g., virtual stacks in ImageJ)
+		// #3 is useful for efficient memory use
 
-    // get container
-    final PlanarAccess<?> planarAccess = getPlanarAccess(img);
+		// get container
+		final PlanarAccess<?> planarAccess = getPlanarAccess(img);
+		final T inputType = makeType(r.getPixelType());
+		final T outputType = imageFactory.createType();
+		final boolean compatibleTypes =
+			outputType.getClass().isAssignableFrom(inputType.getClass());
 
-    // populate planes
-    final long startTime = System.currentTimeMillis();
-    final int planeCount = r.getImageCount();
-    if (planarAccess == null) {
-      // use cursor to populate planes
+		final long startTime = System.currentTimeMillis();
 
-      // NB: This solution is general and works regardless of container,
-      // but at the expense of performance both now and later.
+		// populate planes
+		final int planeCount = r.getImageCount();
+		if (planarAccess == null || !compatibleTypes) {
+			// use cursor to populate planes
 
-      final LocalizableByDimCursor<T> cursor =
-        img.createLocalizableByDimCursor();
-      byte[] plane = null;
-      for (int no = 0; no < planeCount; no++) {
-        notifyListeners(new StatusEvent(no, planeCount,
-          "Reading plane " + (no + 1) + "/" + planeCount));
-        if (plane == null) plane = r.openBytes(no);
-        else r.openBytes(no, plane);
-        populatePlane(r, no, plane, cursor);
-      }
-      cursor.close();
-    }
-    else {
-      // populate the container values directly
+			// NB: This solution is general and works regardless of container,
+			// but at the expense of performance both now and later.
 
-      // NB: This solution uses the #2 container type mentioned above.
+			final LocalizableByDimCursor<T> cursor =
+				img.createLocalizableByDimCursor();
+			byte[] plane = null;
+			for (int no = 0; no < planeCount; no++) {
+				notifyListeners(new StatusEvent(no, planeCount,
+					"Reading plane " + (no + 1) + "/" + planeCount));
+				if (plane == null) plane = r.openBytes(no);
+				else r.openBytes(no, plane);
+				populatePlane(r, no, plane, cursor);
+			}
+			cursor.close();
+		}
+		else {
+			// populate the values directly using PlanarAccess interface;
+			// e.g., to a PlanarContainer
 
-    	byte[] plane = null;
-      for (int no=0; no<planeCount; no++) {
-        notifyListeners(new StatusEvent(no, planeCount,
-          "Reading plane " + (no + 1) + "/" + planeCount));
-        if (plane == null) plane = r.openBytes(no);
-        else r.openBytes(no, plane);
-        populatePlane(r, no, plane, planarAccess);
-      }
-    }
-    r.close();
-    final long endTime = System.currentTimeMillis();
-    final float time = (endTime - startTime) / 1000f;
-    notifyListeners(new StatusEvent(planeCount, planeCount,
-      id + ": read " + planeCount + " planes in " + time + "s"));
+			byte[] plane = null;
+			for (int no=0; no<planeCount; no++) {
+				notifyListeners(new StatusEvent(no, planeCount,
+					"Reading plane " + (no + 1) + "/" + planeCount));
+				if (plane == null) plane = r.openBytes(no);
+				else r.openBytes(no, plane);
+				populatePlane(r, no, plane, planarAccess);
+			}
+		}
+		r.close();
 
-    return img;
-  }
+		final long endTime = System.currentTimeMillis();
+		final float time = (endTime - startTime) / 1000f;
+		notifyListeners(new StatusEvent(planeCount, planeCount,
+			id + ": read " + planeCount + " planes in " + time + "s"));
 
-  // TODO: eliminate getPlanarAccess in favor of utility method elsewhere.
+		return img;
+	}
 
-  /** Obtains planar access instance backing the given image, if any. */
-  @SuppressWarnings("unchecked")
-  public static PlanarAccess<ArrayDataAccess<?>> getPlanarAccess(Image<?> im) {
-    PlanarAccess<ArrayDataAccess<?>> planarAccess = null;
-    final Container<?> container = im.getContainer();
-    if (container instanceof PlanarAccess<?>) {
-      planarAccess = (PlanarAccess<ArrayDataAccess<?>>) container;
-    }
-    return planarAccess;
-  }
+	// TODO: eliminate getPlanarAccess in favor of utility method elsewhere.
 
-  /** Converts Bio-Formats pixel type to imglib Type object. */
-  @SuppressWarnings("unchecked")
-  public static <T extends RealType<T>> T makeType(int pixelType) {
-    final RealType<?> type;
-    switch (pixelType) {
-      case FormatTools.UINT8:
-        type = new UnsignedByteType();
-        break;
-      case FormatTools.INT8:
-        type = new ByteType();
-        break;
-      case FormatTools.UINT16:
-        type = new UnsignedShortType();
-        break;
-      case FormatTools.INT16:
-        type = new ShortType();
-        break;
-      case FormatTools.UINT32:
-        type = new UnsignedIntType();
-        break;
-      case FormatTools.INT32:
-        type = new IntType();
-        break;
-      case FormatTools.FLOAT:
-        type = new FloatType();
-        break;
-      case FormatTools.DOUBLE:
-        type = new DoubleType();
-        break;
-      default:
-        type = null;
-    }
-    return (T) type;
-  }
+	/** Obtains planar access instance backing the given image, if any. */
+	@SuppressWarnings("unchecked")
+	public static PlanarAccess<ArrayDataAccess<?>> getPlanarAccess(Image<?> im) {
+		PlanarAccess<ArrayDataAccess<?>> planarAccess = null;
+		final Container<?> container = im.getContainer();
+		if (container instanceof PlanarAccess<?>) {
+			planarAccess = (PlanarAccess<ArrayDataAccess<?>>) container;
+		}
+		return planarAccess;
+	}
 
-  /** Wraps raw primitive array in imglib Array object. */
-  public static ArrayDataAccess<?> makeArray(Object array) {
-    final ArrayDataAccess<?> access;
-    if (array instanceof byte[]) {
-      access = new ByteArray((byte[]) array);
-    }
-    else if (array instanceof char[]) {
-      access = new CharArray((char[]) array);
-    }
-    else if (array instanceof double[]) {
-      access = new DoubleArray((double[]) array);
-    }
-    else if (array instanceof int[]) {
-      access = new IntArray((int[]) array);
-    }
-    else if (array instanceof float[]) {
-      access = new FloatArray((float[]) array);
-    }
-    else if (array instanceof short[]) {
-      access = new ShortArray((short[]) array);
-    }
-    else if (array instanceof long[]) {
-      access = new LongArray((long[]) array);
-    }
-    else access = null;
-    return access;
-  }
+	/** Converts Bio-Formats pixel type to imglib Type object. */
+	@SuppressWarnings("unchecked")
+	public static <T extends RealType<T>> T makeType(int pixelType) {
+		final RealType<?> type;
+		switch (pixelType) {
+			case FormatTools.UINT8:
+				type = new UnsignedByteType();
+				break;
+			case FormatTools.INT8:
+				type = new ByteType();
+				break;
+			case FormatTools.UINT16:
+				type = new UnsignedShortType();
+				break;
+			case FormatTools.INT16:
+				type = new ShortType();
+				break;
+			case FormatTools.UINT32:
+				type = new UnsignedIntType();
+				break;
+			case FormatTools.INT32:
+				type = new IntType();
+				break;
+			case FormatTools.FLOAT:
+				type = new FloatType();
+				break;
+			case FormatTools.DOUBLE:
+				type = new DoubleType();
+				break;
+			default:
+				type = null;
+		}
+		return (T) type;
+	}
 
-  /** Converts the given image name back to a list of dimensional axis types. */
-  public static String decodeName(String name) {
-    final int lBracket = name.lastIndexOf(" [");
-    return name.substring(0, lBracket);
-  }
+	/** Wraps raw primitive array in imglib Array object. */
+	public static ArrayDataAccess<?> makeArray(Object array) {
+		final ArrayDataAccess<?> access;
+		if (array instanceof byte[]) {
+			access = new ByteArray((byte[]) array);
+		}
+		else if (array instanceof char[]) {
+			access = new CharArray((char[]) array);
+		}
+		else if (array instanceof double[]) {
+			access = new DoubleArray((double[]) array);
+		}
+		else if (array instanceof int[]) {
+			access = new IntArray((int[]) array);
+		}
+		else if (array instanceof float[]) {
+			access = new FloatArray((float[]) array);
+		}
+		else if (array instanceof short[]) {
+			access = new ShortArray((short[]) array);
+		}
+		else if (array instanceof long[]) {
+			access = new LongArray((long[]) array);
+		}
+		else access = null;
+		return access;
+	}
 
-  /** Converts the given image name back to a list of dimensional axis types. */
-  public static String[] decodeTypes(String name) {
-    final int lBracket = name.lastIndexOf(" [");
-    if (lBracket < 0) return new String[0];
-    final int rBracket = name.lastIndexOf("]");
-    if (rBracket < lBracket) return new String[0];
-    return name.substring(lBracket + 2, rBracket).split(" ");
-  }
+	/** Converts the given image name back to a list of dimensional axis types. */
+	public static String decodeName(String name) {
+		final int lBracket = name.lastIndexOf(" [");
+		return name.substring(0, lBracket);
+	}
 
-  // -- StatusReporter methods --
+	/** Converts the given image name back to a list of dimensional axis types. */
+	public static String[] decodeTypes(String name) {
+		final int lBracket = name.lastIndexOf(" [");
+		if (lBracket < 0) return new String[0];
+		final int rBracket = name.lastIndexOf("]");
+		if (rBracket < lBracket) return new String[0];
+		return name.substring(lBracket + 2, rBracket).split(" ");
+	}
 
-  /** Adds a listener to those informed when progress occurs. */
-  public void addStatusListener(StatusListener l) {
-  	synchronized (listeners) {
-  		listeners.add(l);
-  	}
-  }
+	// -- StatusReporter methods --
 
-  /** Removes a listener from those informed when progress occurs. */
-  public void removeStatusListener(StatusListener l) {
-  	synchronized (listeners) {
-  		listeners.remove(l);
-  	}
-  }
+	/** Adds a listener to those informed when progress occurs. */
+	public void addStatusListener(StatusListener l) {
+		synchronized (listeners) {
+			listeners.add(l);
+		}
+	}
 
-  /** Notifies registered listeners of progress. */
+	/** Removes a listener from those informed when progress occurs. */
+	public void removeStatusListener(StatusListener l) {
+		synchronized (listeners) {
+			listeners.remove(l);
+		}
+	}
+
+	/** Notifies registered listeners of progress. */
 	public void notifyListeners(StatusEvent e) {
 		synchronized (listeners) {
 			for (StatusListener l : listeners) l.statusUpdated(e);
 		}
 	}
 
-  // -- Helper methods --
+	// -- Helper methods --
 
-  /** Compiles an N-dimensional list of axis types from the given reader. */
-  private String[] getDimTypes(IFormatReader r) {
-    final int sizeX = r.getSizeX();
-    final int sizeY = r.getSizeY();
-    final int sizeZ = r.getSizeZ();
-    final int sizeT = r.getSizeT();
-    final String[] cDimTypes = r.getChannelDimTypes();
-    final int[] cDimLengths = r.getChannelDimLengths();
-    final String dimOrder = r.getDimensionOrder();
-    final List<String> dimTypes = new ArrayList<String>();
+	/** Constructs and initializes a Bio-Formats reader for the given file. */
+	private IFormatReader initializeReader(String id)
+		throws FormatException, IOException
+	{
+		notifyListeners(new StatusEvent("Initializing " + id));
 
-    // add core dimensions
-    for (char dim : dimOrder.toCharArray()) {
-      switch (dim) {
-        case 'X':
-          if (sizeX > 1) dimTypes.add(X);
-          break;
-        case 'Y':
-          if (sizeY > 1) dimTypes.add(Y);
-          break;
-        case 'Z':
-          if (sizeZ > 1) dimTypes.add(Z);
-          break;
-        case 'T':
-          if (sizeT > 1) dimTypes.add(TIME);
-          break;
-        case 'C':
-          for (int c=0; c<cDimTypes.length; c++) {
-            int len = cDimLengths[c];
-            if (len > 1) dimTypes.add(cDimTypes[c]);
-          }
-          break;
-      }
-    }
+		IFormatReader r = null;
+		r = new ImageReader();
+		r = new ChannelFiller(r);
+		r = new ChannelSeparator(r);
+		r.setId(id);
 
-    return dimTypes.toArray(new String[0]);
-  }
+		return r;
+	}
 
-  /** Compiles an N-dimensional list of axis lengths from the given reader. */
-  private int[] getDimLengths(IFormatReader r) {
-    final int sizeX = r.getSizeX();
-    final int sizeY = r.getSizeY();
-    final int sizeZ = r.getSizeZ();
-    final int sizeT = r.getSizeT();
-    //final String[] cDimTypes = r.getChannelDimTypes();
-    final int[] cDimLengths = r.getChannelDimLengths();
-    final String dimOrder = r.getDimensionOrder();
+	/** Compiles an N-dimensional list of axis types from the given reader. */
+	private String[] getDimTypes(IFormatReader r) {
+		final int sizeX = r.getSizeX();
+		final int sizeY = r.getSizeY();
+		final int sizeZ = r.getSizeZ();
+		final int sizeT = r.getSizeT();
+		final String[] cDimTypes = r.getChannelDimTypes();
+		final int[] cDimLengths = r.getChannelDimLengths();
+		final String dimOrder = r.getDimensionOrder();
+		final List<String> dimTypes = new ArrayList<String>();
 
-    final List<Integer> dimLengthsList = new ArrayList<Integer>();
+		// add core dimensions
+		for (char dim : dimOrder.toCharArray()) {
+			switch (dim) {
+				case 'X':
+					if (sizeX > 1) dimTypes.add(X);
+					break;
+				case 'Y':
+					if (sizeY > 1) dimTypes.add(Y);
+					break;
+				case 'Z':
+					if (sizeZ > 1) dimTypes.add(Z);
+					break;
+				case 'T':
+					if (sizeT > 1) dimTypes.add(TIME);
+					break;
+				case 'C':
+					for (int c=0; c<cDimTypes.length; c++) {
+						int len = cDimLengths[c];
+						if (len > 1) dimTypes.add(cDimTypes[c]);
+					}
+					break;
+			}
+		}
 
-    // add core dimensions
-    for (int i=0; i<dimOrder.length(); i++) {
-      final char dim = dimOrder.charAt(i);
-      switch (dim) {
-        case 'X':
-          if (sizeX > 1) dimLengthsList.add(sizeX);
-          break;
-        case 'Y':
-          if (sizeY > 1) dimLengthsList.add(sizeY);
-          break;
-        case 'Z':
-          if (sizeZ > 1) dimLengthsList.add(sizeZ);
-          break;
-        case 'T':
-          if (sizeT > 1) dimLengthsList.add(sizeT);
-          break;
-        case 'C':
-          for (int c=0; c<cDimLengths.length; c++) {
-            int len = cDimLengths[c];
-            if (len > 1) dimLengthsList.add(len);
-          }
-          break;
-      }
-    }
+		return dimTypes.toArray(new String[0]);
+	}
 
-    // convert result to primitive array
-    final int[] dimLengths = new int[dimLengthsList.size()];
-    for (int i=0; i<dimLengths.length; i++){
-      dimLengths[i] = dimLengthsList.get(i);
-    }
-    return dimLengths;
-  }
+	/** Compiles an N-dimensional list of axis lengths from the given reader. */
+	private int[] getDimLengths(IFormatReader r) {
+		final int sizeX = r.getSizeX();
+		final int sizeY = r.getSizeY();
+		final int sizeZ = r.getSizeZ();
+		final int sizeT = r.getSizeT();
+		//final String[] cDimTypes = r.getChannelDimTypes();
+		final int[] cDimLengths = r.getChannelDimLengths();
+		final String dimOrder = r.getDimensionOrder();
 
-  /** Copies the current dimensional position into the given array. */
-  private void getPosition(IFormatReader r, int no, int[] pos) {
-    final int sizeX = r.getSizeX();
-    final int sizeY = r.getSizeY();
-    final int sizeZ = r.getSizeZ();
-    final int sizeT = r.getSizeT();
-    //final String[] cDimTypes = r.getChannelDimTypes();
-    final int[] cDimLengths = r.getChannelDimLengths();
-    final String dimOrder = r.getDimensionOrder();
+		final List<Integer> dimLengthsList = new ArrayList<Integer>();
 
-    final int[] zct = r.getZCTCoords(no);
+		// add core dimensions
+		for (int i=0; i<dimOrder.length(); i++) {
+			final char dim = dimOrder.charAt(i);
+			switch (dim) {
+				case 'X':
+					if (sizeX > 1) dimLengthsList.add(sizeX);
+					break;
+				case 'Y':
+					if (sizeY > 1) dimLengthsList.add(sizeY);
+					break;
+				case 'Z':
+					if (sizeZ > 1) dimLengthsList.add(sizeZ);
+					break;
+				case 'T':
+					if (sizeT > 1) dimLengthsList.add(sizeT);
+					break;
+				case 'C':
+					for (int c=0; c<cDimLengths.length; c++) {
+						int len = cDimLengths[c];
+						if (len > 1) dimLengthsList.add(len);
+					}
+					break;
+			}
+		}
 
-    int index = 0;
-    for (int i=0; i<dimOrder.length(); i++) {
-      final char dim = dimOrder.charAt(i);
-      switch (dim) {
-        case 'X':
-          if (sizeX > 1) index++; // NB: Leave X axis position alone.
-          break;
-        case 'Y':
-          if (sizeY > 1) index++; // NB: Leave Y axis position alone.
-          break;
-        case 'Z':
-          if (sizeZ > 1) pos[index++] = zct[0];
-          break;
-        case 'T':
-          if (sizeT > 1) pos[index++] = zct[2];
-          break;
-        case 'C':
-          final int[] cPos = FormatTools.rasterToPosition(cDimLengths, zct[1]);
-          for (int c=0; c<cDimLengths.length; c++) {
-            if (cDimLengths[c] > 1) pos[index++] = cPos[c];
-          }
-          break;
-      }
-    }
-  }
+		// convert result to primitive array
+		final int[] dimLengths = new int[dimLengthsList.size()];
+		for (int i=0; i<dimLengths.length; i++){
+			dimLengths[i] = dimLengthsList.get(i);
+		}
+		return dimLengths;
+	}
 
-  /**
-   * Creates a name for the image based on the input source
-   * and dimensional axis types.
-   */
-  private String encodeName(String id, String[] dimTypes) {
-    final StringBuilder sb = new StringBuilder(id);
-    boolean first = true;
-    for (String dimType : dimTypes) {
-      if (first) {
-        sb.append(" [");
-        first = false;
-      }
-      else sb.append(" ");
-      sb.append(dimType);
-    }
-    if (!first) sb.append("]");
-    return sb.toString();
-  }
+	/** Copies the current dimensional position into the given array. */
+	private void getPosition(IFormatReader r, int no, int[] pos) {
+		final int sizeX = r.getSizeX();
+		final int sizeY = r.getSizeY();
+		final int sizeZ = r.getSizeZ();
+		final int sizeT = r.getSizeT();
+		//final String[] cDimTypes = r.getChannelDimTypes();
+		final int[] cDimLengths = r.getChannelDimLengths();
+		final String dimOrder = r.getDimensionOrder();
 
-  @SuppressWarnings({"rawtypes", "unchecked"})
-  private void populatePlane(IFormatReader r,
-    int no, byte[] plane, PlanarAccess planarAccess)
-  {
-    final int pixelType = r.getPixelType();
-    final int bpp = FormatTools.getBytesPerPixel(pixelType);
-    final boolean fp = FormatTools.isFloatingPoint(pixelType);
-    final boolean little = r.isLittleEndian();
-    Object planeArray = DataTools.makeDataArray(plane, bpp, fp, little);
-    if (planeArray == plane) {
-      // array was returned by reference; make a copy
-      final byte[] planeCopy = new byte[plane.length];
-      System.arraycopy(plane, 0, planeCopy, 0, plane.length);
-      planeArray = planeCopy;
-    }
-    planarAccess.setPlane(no, makeArray(planeArray));
-  }
+		final int[] zct = r.getZCTCoords(no);
 
-  private <T extends RealType<T>> void populatePlane(IFormatReader r,
-    int no, byte[] plane, LocalizableByDimCursor<T> cursor)
-  {
-    final int sizeX = r.getSizeX();
-    final int sizeY = r.getSizeY();
-    final int pixelType = r.getPixelType();
-    final boolean little = r.isLittleEndian();
+		int index = 0;
+		for (int i=0; i<dimOrder.length(); i++) {
+			final char dim = dimOrder.charAt(i);
+			switch (dim) {
+				case 'X':
+					if (sizeX > 1) index++; // NB: Leave X axis position alone.
+					break;
+				case 'Y':
+					if (sizeY > 1) index++; // NB: Leave Y axis position alone.
+					break;
+				case 'Z':
+					if (sizeZ > 1) pos[index++] = zct[0];
+					break;
+				case 'T':
+					if (sizeT > 1) pos[index++] = zct[2];
+					break;
+				case 'C':
+					final int[] cPos = FormatTools.rasterToPosition(cDimLengths, zct[1]);
+					for (int c=0; c<cDimLengths.length; c++) {
+						if (cDimLengths[c] > 1) pos[index++] = cPos[c];
+					}
+					break;
+			}
+		}
+	}
 
-    final int[] dimLengths = getDimLengths(r);
-    final int[] pos = new int[dimLengths.length];
+	/**
+	 * Creates a name for the image based on the input source
+	 * and dimensional axis types.
+	 */
+	private String encodeName(String id, String[] dimTypes) {
+		final StringBuilder sb = new StringBuilder(id);
+		boolean first = true;
+		for (String dimType : dimTypes) {
+			if (first) {
+				sb.append(" [");
+				first = false;
+			}
+			else sb.append(" ");
+			sb.append(dimType);
+		}
+		if (!first) sb.append("]");
+		return sb.toString();
+	}
 
-    for (int y=0; y<sizeY; y++) {
-      for (int x=0; x<sizeX; x++) {
-        final int index = sizeY * x + y;
-        final double value = decodeWord(plane, index, pixelType, little);
-        // TODO - need IFormatReader method to get N-dimensional position
-        getPosition(r, no, pos);
-        pos[0] = x;
-        pos[1] = y;
-        cursor.setPosition(pos);
-        cursor.getType().setReal(value);
-      }
-    }
-  }
+	@SuppressWarnings({"rawtypes", "unchecked"})
+	private void populatePlane(IFormatReader r,
+		int no, byte[] plane, PlanarAccess planarAccess)
+	{
+		final int pixelType = r.getPixelType();
+		final int bpp = FormatTools.getBytesPerPixel(pixelType);
+		final boolean fp = FormatTools.isFloatingPoint(pixelType);
+		final boolean little = r.isLittleEndian();
+		Object planeArray = DataTools.makeDataArray(plane, bpp, fp, little);
+		if (planeArray == plane) {
+			// array was returned by reference; make a copy
+			final byte[] planeCopy = new byte[plane.length];
+			System.arraycopy(plane, 0, planeCopy, 0, plane.length);
+			planeArray = planeCopy;
+		}
+		planarAccess.setPlane(no, makeArray(planeArray));
+	}
 
-  private static double decodeWord(byte[] plane, int index,
-    int pixelType, boolean little)
-  {
-    final double value;
-    switch (pixelType) {
-      case FormatTools.UINT8:
-        value = plane[index] & 0xff;
-        break;
-      case FormatTools.INT8:
-        value = plane[index];
-        break;
-      case FormatTools.UINT16:
-        value = DataTools.bytesToShort(plane, 2 * index, 2, little) & 0xffff;
-        break;
-      case FormatTools.INT16:
-        value = DataTools.bytesToShort(plane, 2 * index, 2, little);
-        break;
-      case FormatTools.UINT32:
-        value = DataTools.bytesToInt(plane, 4 * index, 4, little) & 0xffffffff;
-        break;
-      case FormatTools.INT32:
-        value = DataTools.bytesToInt(plane, 4 * index, 4, little);
-        break;
-      case FormatTools.FLOAT:
-        value = DataTools.bytesToFloat(plane, 4 * index, 4, little);
-        break;
-      case FormatTools.DOUBLE:
-        value = DataTools.bytesToDouble(plane, 4 * index, 4, little);
-        break;
-      default:
-        value = Double.NaN;
-    }
-    return value;
-  }
+	private <T extends RealType<T>> void populatePlane(IFormatReader r,
+		int no, byte[] plane, LocalizableByDimCursor<T> cursor)
+	{
+		final int sizeX = r.getSizeX();
+		final int sizeY = r.getSizeY();
+		final int pixelType = r.getPixelType();
+		final boolean little = r.isLittleEndian();
+
+		final int[] dimLengths = getDimLengths(r);
+		final int[] pos = new int[dimLengths.length];
+
+		for (int y=0; y<sizeY; y++) {
+			for (int x=0; x<sizeX; x++) {
+				final int index = sizeY * x + y;
+				final double value = decodeWord(plane, index, pixelType, little);
+				// TODO - need IFormatReader method to get N-dimensional position
+				getPosition(r, no, pos);
+				pos[0] = x;
+				pos[1] = y;
+				cursor.setPosition(pos);
+				cursor.getType().setReal(value);
+			}
+		}
+	}
+
+	private static double decodeWord(byte[] plane, int index,
+		int pixelType, boolean little)
+	{
+		final double value;
+		switch (pixelType) {
+			case FormatTools.UINT8:
+				value = plane[index] & 0xff;
+				break;
+			case FormatTools.INT8:
+				value = plane[index];
+				break;
+			case FormatTools.UINT16:
+				value = DataTools.bytesToShort(plane, 2 * index, 2, little) & 0xffff;
+				break;
+			case FormatTools.INT16:
+				value = DataTools.bytesToShort(plane, 2 * index, 2, little);
+				break;
+			case FormatTools.UINT32:
+				value = DataTools.bytesToInt(plane, 4 * index, 4, little) & 0xffffffff;
+				break;
+			case FormatTools.INT32:
+				value = DataTools.bytesToInt(plane, 4 * index, 4, little);
+				break;
+			case FormatTools.FLOAT:
+				value = DataTools.bytesToFloat(plane, 4 * index, 4, little);
+				break;
+			case FormatTools.DOUBLE:
+				value = DataTools.bytesToDouble(plane, 4 * index, 4, little);
+				break;
+			default:
+				value = Double.NaN;
+		}
+		return value;
+	}
 
 }
