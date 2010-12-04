@@ -26,7 +26,10 @@ import script.imglib.math.fn.IFunction;
  * The constructor accepts any of {@link IFunction, ColorFunction, Image}.
  * 
  * Images may be of any RealType or RGBALegacyType. In the latter case, each color
- * channel is normalized independently. */
+ * channel is normalized independently.
+ * 
+ * When the min equals the max, the result is an image with zero values.
+ */
 public class Normalize<N extends NumericType<N>> extends AbstractNormalize<N>
 {
 	@SuppressWarnings("unchecked")
@@ -67,7 +70,7 @@ public class Normalize<N extends NumericType<N>> extends AbstractNormalize<N>
 			throw new Exception("Coult not compute min and max: " + cmm.getErrorMessage());
 		}
 		// If min and max are the same, we just return the empty image will all zeros
-		if (0 == cmm.getMin().compareTo(cmm.getMax()) || 0 == cmm.getMax().getRealDouble()) {
+		if (0 == cmm.getMin().compareTo(cmm.getMax())) {
 			return new Image<FloatType>(img.getContainerFactory().createContainer(img.getDimensions(), new FloatType()), new FloatType());
 		}
 
