@@ -49,7 +49,7 @@ public class DifferenceOfGaussian < A extends Type<A>, B extends NumericType<B> 
 	protected final ImageFactory<B> factory;
 	protected final OutOfBoundsStrategyFactory<B> outOfBoundsFactory;
 	
-	final double sigma1, sigma2;
+	final double[] sigma1, sigma2;
 	final B normalizationFactor, minPeakValue, negMinPeakValue, zero, one, minusOne;
 	
 	protected final ArrayList<DifferenceOfGaussianPeak<B>> peaks = new ArrayList<DifferenceOfGaussianPeak<B>>();
@@ -59,7 +59,26 @@ public class DifferenceOfGaussian < A extends Type<A>, B extends NumericType<B> 
 	long processingTime;
 	int numThreads;
 	String errorMessage = "";
-	
+
+
+	static private final double[] asArray( final int nDim, final double sigma )
+	{
+		final double[] s = new double[ nDim ];
+		for (int i=0; i<nDim; ++i)
+			s[ i ] = sigma;
+		return s;
+	}
+
+	/** Calls the DifferenceOfGaussian constructor with the given sigmas copied into double[] arrays,
+	 * one entry per {@param img} dimension. */
+	public DifferenceOfGaussian( final Image<A> img, final ImageFactory<B> factory, final Converter<A, B> converter,
+		    final OutOfBoundsStrategyFactory<B> outOfBoundsFactory, 
+		    final double sigma1, final double sigma2, final B minPeakValue, final B normalizationFactor )
+	{
+		this( img, factory, converter, outOfBoundsFactory, asArray(img.getNumDimensions(), sigma1),
+				asArray(img.getNumDimensions(), sigma2), minPeakValue, normalizationFactor );
+	}
+
 	/**
 	 * Extracts local minima and maxima of a certain size. It therefore computes the difference of gaussian 
 	 * for an {@link Image} and detects all local minima and maxima in 3x3x3x....3 environment, which is returned
@@ -83,7 +102,7 @@ public class DifferenceOfGaussian < A extends Type<A>, B extends NumericType<B> 
 	 */
 	public DifferenceOfGaussian( final Image<A> img, final ImageFactory<B> factory, final Converter<A, B> converter,
 			    final OutOfBoundsStrategyFactory<B> outOfBoundsFactory, 
-			    final double sigma1, final double sigma2, final B minPeakValue, final B normalizationFactor )
+			    final double[] sigma1, final double[] sigma2, final B minPeakValue, final B normalizationFactor )
 	{
 		this.processingTime = -1;
 		this.computeConvolutionsParalell = true;
@@ -127,7 +146,7 @@ public class DifferenceOfGaussian < A extends Type<A>, B extends NumericType<B> 
 	 * @param nThreads - the number of threads for this convolution
 	 * @return
 	 */
-	protected OutputAlgorithm<B> getGaussianConvolution( final double sigma, final int nThreads )
+	protected OutputAlgorithm<B> getGaussianConvolution( final double[] sigma, final int nThreads )
 	{
 		final GaussianConvolution2<A, B> gauss = new GaussianConvolution2<A, B>( image, factory, outOfBoundsFactory, converter, sigma );
 		
