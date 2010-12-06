@@ -62,6 +62,7 @@ import mpicbg.imglib.container.basictypecontainer.array.LongArray;
 import mpicbg.imglib.container.basictypecontainer.array.ShortArray;
 import mpicbg.imglib.container.planar.PlanarContainerFactory;
 import mpicbg.imglib.cursor.LocalizableByDimCursor;
+import mpicbg.imglib.cursor.LocalizablePlaneCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.ImageFactory;
 import mpicbg.imglib.type.numeric.RealType;
@@ -181,15 +182,15 @@ public class ImageOpener implements StatusReporter {
 			// NB: This solution is general and works regardless of container,
 			// but at the expense of performance both now and later.
 
-			final LocalizableByDimCursor<T> cursor =
-				img.createLocalizableByDimCursor();
+			final LocalizablePlaneCursor<T> cursor =
+				img.createLocalizablePlaneCursor();
 			byte[] plane = null;
 			for (int no = 0; no < planeCount; no++) {
 				notifyListeners(new StatusEvent(no, planeCount,
 					"Reading plane " + (no + 1) + "/" + planeCount));
 				if (plane == null) plane = r.openBytes(no);
 				else r.openBytes(no, plane);
-				populatePlane(r, no, plane, cursor);
+				populatePlaneFast(r, no, plane, cursor);
 			}
 			cursor.close();
 		}
@@ -505,6 +506,33 @@ public class ImageOpener implements StatusReporter {
 		planarAccess.setPlane(no, makeArray(planeArray));
 	}
 
+	
+	private <T extends RealType<T>> void populatePlaneFast(IFormatReader r,
+			int no, byte[] plane, LocalizablePlaneCursor<T> cursor)
+		{
+			final int sizeX = r.getSizeX();
+			final int sizeY = r.getSizeY();
+			final int pixelType = r.getPixelType();
+			final boolean little = r.isLittleEndian();
+
+			final int[] dimLengths = getDimLengths(r);
+			final int[] pos = new int[dimLengths.length];
+
+			final int planeX = 0;
+			final int planeY = 1;
+			
+			getPosition(r, no, pos);
+			cursor.reset( planeX, planeY, pos );
+			
+			while ( cursor.hasNext() )
+			{
+				cursor.fwd();
+				final int index = cursor.getPosition( planeX ) + cursor.getPosition( planeY ) * sizeX;
+				final double value = decodeWord(plane, index, pixelType, little);
+				cursor.getType().setReal(value);
+			}				
+		}
+	
 	private <T extends RealType<T>> void populatePlane(IFormatReader r,
 		int no, byte[] plane, LocalizableByDimCursor<T> cursor)
 	{
