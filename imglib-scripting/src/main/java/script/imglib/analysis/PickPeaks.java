@@ -25,7 +25,7 @@ public class PickPeaks<T extends RealType<T>> extends ArrayList<float[]>
 	 */
 	@SuppressWarnings("unchecked")
 	public PickPeaks(final Object fn, final double[] suppressionRegion) throws Exception {
-		PickImagePeaks<T> pick = new PickImagePeaks<T>(AlgorithmUtil.wrap(fn));
+		PickImagePeaks<T> pick = new PickImagePeaks<T>(AlgorithmUtil.wrapS(fn));
 		if (null != suppressionRegion) pick.setSuppression(suppressionRegion);
 		if (!pick.checkInput() || !pick.process()) {
 			throw new Exception("PickPeaks error: " + pick.getErrorMessage());

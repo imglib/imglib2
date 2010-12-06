@@ -108,6 +108,7 @@ public class Compute {
 	{
 		private final IFunction op;
 		private final Collection<Image<?>> images;
+		private final Collection<Cursor<?>> cursors;
 		private final R output;
 		private int numThreads;
 
@@ -115,13 +116,32 @@ public class Compute {
 			this.op = op;
 			this.output = output;
 			this.numThreads = Math.max(1, numThreads);
-			// Collect all images involved in the operation
-			this.images = findImages(op);
+			// Collect all cursors and their images involved in the operation
+			this.cursors = new HashSet<Cursor<?>>();
+			op.findCursors(this.cursors);
+			//
+			this.images = new HashSet<Image<?>>();
+			for (final Cursor<?> c : cursors) {
+				images.add(c.getImage());
+			}
 		}
 
 		public abstract void loop(final Cursor<R> resultCursor, final long loopSize, final IFunction fn);
 
+		/** Runs the operation on each voxel and ensures all cursors of {@code op}, and all
+		 * interim cursors created for multithreading, are closed. */
 		public Image<R> run() throws Exception {
+			try {
+				return innerRun();
+			} finally {
+				// Cleanup cursors
+				for (Cursor<?> c : this.cursors) {
+					c.close();
+				}
+			}
+		}
+
+		private final Image<R> innerRun() throws Exception {
 			if (images.size() > 0) {
 				// 2 - Check that they are all compatible: same dimensions, same container type
 				checkContainers(images);
@@ -172,21 +192,11 @@ public class Compute {
 								c.fwd( myChunk.getStartPosition() );
 							}
 
-							loop(resultCursor, myChunk.getLoopSize(), fn);
-							
-							/*
-							for ( long j = myChunk.getLoopSize(); j > 0 ; --j )
-							{
-								resultCursor.fwd();
-								resultCursor.getType().setReal( fn.eval() );
-							}
-							*/
+							// Store for cleanup later
+							Loop.this.cursors.addAll(cs);
+							Loop.this.cursors.add(resultCursor);
 
-							// 4 - Cleanup cursors: only those that were opened
-							resultCursor.close();
-							for (Cursor<?> c : cs) {
-								c.close();
-							}
+							loop(resultCursor, myChunk.getLoopSize(), fn);
 						}
 					});
 
@@ -199,12 +209,8 @@ public class Compute {
 				final Image<R> result = factory.createImage( new int[]{1}, "result" );
 
 				final Cursor<R> c = result.createCursor();
+				this.cursors.add(c); // store for cleanup later
 				loop(c, result.size(), op);
-				c.close();
-				/*
-				for ( final R value : result )
-					value.setReal( op.eval() );
-				*/
 
 				return result;
 			}
