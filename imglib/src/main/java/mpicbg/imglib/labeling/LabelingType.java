@@ -1,3 +1,20 @@
+/**
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License 2
+ * as published by the Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ * 
+ * @author Lee Kamentsky
+ *
+ */
 package mpicbg.imglib.labeling;
 
 import java.util.ArrayList;
@@ -19,8 +36,6 @@ import mpicbg.imglib.type.TypeImpl;
  * labelings of type T. Each labeling names a distinct object in the
  * image space.
  * 
- * @author leek
- *
  * @param <T>
  */
 public class LabelingType<T extends Comparable<T>> extends TypeImpl<LabelingType<T>> implements Type<LabelingType<T>> {
