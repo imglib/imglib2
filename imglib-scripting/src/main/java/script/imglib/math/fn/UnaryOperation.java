@@ -38,7 +38,7 @@ import mpicbg.imglib.type.numeric.RealType;
  * The new Add42 function created above will interact with any other of the math functions,
  * or with any other class implementing IFunction.
  */
-public abstract class UnaryOperation implements IFunction
+public abstract class UnaryOperation extends FloatImageOperation
 {
 	private final IFunction a;
 
