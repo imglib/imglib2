@@ -128,16 +128,19 @@ public class Compute {
 
 		public abstract void loop(final Cursor<R> resultCursor, final long loopSize, final IFunction fn);
 
+		protected void cleanupCursors() {
+			for (Cursor<?> c : this.cursors) {
+				c.close();
+			}
+		}
+
 		/** Runs the operation on each voxel and ensures all cursors of {@code op}, and all
 		 * interim cursors created for multithreading, are closed. */
 		public Image<R> run() throws Exception {
 			try {
 				return innerRun();
 			} finally {
-				// Cleanup cursors
-				for (Cursor<?> c : this.cursors) {
-					c.close();
-				}
+				cleanupCursors();
 			}
 		}
 
