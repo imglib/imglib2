@@ -407,30 +407,38 @@ public class ImageOpener implements StatusReporter {
 		for ( int i = 0; i < calibration.length; ++i )
 			calibration[ i ] = 1;
 	
-		final String dimOrder = r.getDimensionOrder().toUpperCase();
-		final MetadataRetrieve retrieve = (MetadataRetrieve)r.getMetadataStore();
-		
-		float cal;
-		
-		final int posX = dimOrder.indexOf( 'X' );
-		cal = retrieve.getPixelsPhysicalSizeX( 0 ).floatValue();
-		if ( posX >= 0 && posX < calibration.length && cal != 0 )
-			calibration[ posX ] = cal; 
-
-		final int posY = dimOrder.indexOf( 'Y' );
-		cal = retrieve.getPixelsPhysicalSizeY( 0 ).floatValue();
-		if ( posY >= 0 && posY < calibration.length && cal != 0 )
-			calibration[ posY ] = cal;
-
-		final int posZ = dimOrder.indexOf( 'Z' );
-		cal = retrieve.getPixelsPhysicalSizeZ( 0 ).floatValue();
-		if ( posZ >= 0 && posZ < calibration.length && cal != 0 )
-			calibration[ posZ ] = cal;
-		
-		final int posT = dimOrder.indexOf( 'T' );
-		cal = retrieve.getPixelsTimeIncrement( 0 ).floatValue();
-		if ( posT >= 0 && posT < calibration.length && cal != 0 )
-			calibration[ posT ] = cal;
+		try
+		{
+			final String dimOrder = r.getDimensionOrder().toUpperCase();
+			final MetadataRetrieve retrieve = (MetadataRetrieve)r.getMetadataStore();
+			
+			Double cal;
+			
+			final int posX = dimOrder.indexOf( 'X' );
+			cal = retrieve.getPixelsPhysicalSizeX( 0 );
+			if ( posX >= 0 && posX < calibration.length && cal != null && cal.floatValue() != 0 )
+				calibration[ posX ] = cal.floatValue(); 
+	
+			final int posY = dimOrder.indexOf( 'Y' );
+			cal = retrieve.getPixelsPhysicalSizeY( 0 );
+			if ( posY >= 0 && posY < calibration.length && cal != null && cal.floatValue() != 0 )
+				calibration[ posY ] = cal.floatValue();
+	
+			final int posZ = dimOrder.indexOf( 'Z' );
+			cal = retrieve.getPixelsPhysicalSizeZ( 0 );
+			if ( posZ >= 0 && posZ < calibration.length && cal != null && cal.floatValue() != 0 )
+				calibration[ posZ ] = cal.floatValue();
+			
+			final int posT = dimOrder.indexOf( 'T' );
+			retrieve.getPixelsTimeIncrement( 0 );
+			cal = retrieve.getPixelsTimeIncrement( 0 );
+			if ( posT >= 0 && posT < calibration.length && cal != null && cal.floatValue() != 0 )
+				calibration[ posT ] = cal.floatValue();
+		}
+		catch ( Exception e ) 
+		{
+			// somehow an error occured reading the calibration
+		}
 		
 		return calibration;
 	}
