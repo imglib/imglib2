@@ -65,11 +65,11 @@ public class ImgLib {
 
 	/** Save an image in the appropriate file format according to
 	 * the filename extension specified in {@param path}. */
-	public static<T extends RealType<T>> void save(Image<T> image, String path) {
+	public static<T extends RealType<T>> boolean save(Image<T> image, String path) {
 		int dot = path.lastIndexOf('.');
 		if (dot < 0 || path.length() - dot - 1 > 4)
 			throw new RuntimeException("Could not infer file type from filename: " + path);
-		save(image, path.substring(dot + 1), path);
+		return save(image, path.substring(dot + 1), path);
 	}
 
 	/** Save an image in the format specified by {@param fileType}, which can be any of:
@@ -77,31 +77,31 @@ public class ImgLib {
 	 *  
 	 *  When saving as TIFF, if the image has more than 2 dimensions, it will be saved
 	 *  as a stack. */
-	public static<T extends RealType<T>> void save(Image<T> image, String fileType, String path) {
+	public static<T extends RealType<T>> boolean save(Image<T> image, String fileType, String path) {
 		// TODO: use LOCI for this
 		ImagePlus imp = ImageJFunctions.displayAsVirtualStack(image);
 		FileSaver saver = new FileSaver(imp);
 		fileType = fileType.toLowerCase();
 		if (fileType.equals("tif") || fileType.equals("tiff")) {
 			if (image.getNumDimensions() > 2) {
-				saver.saveAsTiffStack(path);
+				return saver.saveAsTiffStack(path);
 			} else {
-				saver.saveAsTiff(path);
+				return saver.saveAsTiff(path);
 			}
 		} else if (fileType.equals("zip"))
-			saver.saveAsZip(path);
+			return saver.saveAsZip(path);
 		else if (fileType.equals("gif"))
-			saver.saveAsGif(path);
+			return saver.saveAsGif(path);
 		else if (fileType.equals("jpg") || fileType.equals("jpeg"))
-			saver.saveAsJpeg(path);
+			return saver.saveAsJpeg(path);
 		else if (fileType.equals("bmp"))
-			saver.saveAsBmp(path);
+			return saver.saveAsBmp(path);
 		else if (fileType.equals("pgm"))
-			saver.saveAsPgm(path);
+			return saver.saveAsPgm(path);
 		else if (fileType.equals("png"))
-			saver.saveAsPng(path);
+			return saver.saveAsPng(path);
 		else if (fileType.equals("raw"))
-			saver.saveAsRaw(path);
+			return saver.saveAsRaw(path);
 		else
 			throw new RuntimeException("Unknown fileformat: " + fileType);
 	}
