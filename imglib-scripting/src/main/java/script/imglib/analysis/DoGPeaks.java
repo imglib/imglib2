@@ -1,16 +1,11 @@
 package script.imglib.analysis;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import javax.vecmath.Point2f;
 import javax.vecmath.Point3f;
 import javax.vecmath.Point4f;
-
-import script.imglib.algorithm.fn.AlgorithmUtil;
-import script.imglib.math.Compute;
-import script.imglib.math.fn.IFunction;
 
 import mpicbg.imglib.algorithm.scalespace.DifferenceOfGaussian;
 import mpicbg.imglib.algorithm.scalespace.DifferenceOfGaussianPeak;
@@ -21,6 +16,7 @@ import mpicbg.imglib.image.ImageFactory;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyMirrorFactory;
 import mpicbg.imglib.type.numeric.RealType;
 import mpicbg.imglib.type.numeric.real.FloatType;
+import script.imglib.algorithm.fn.AlgorithmUtil;
 
 /** Perform a difference of Gaussian on the given {@link Image}, and this class itself
  * becomes the {@link List} of found peaks, each as a float[] array that specifies its position.
