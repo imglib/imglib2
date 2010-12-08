@@ -43,12 +43,15 @@ import loci.common.DataTools;
 import loci.common.StatusEvent;
 import loci.common.StatusListener;
 import loci.common.StatusReporter;
+import loci.common.services.ServiceException;
 import loci.formats.ChannelFiller;
 import loci.formats.ChannelSeparator;
 import loci.formats.FormatException;
 import loci.formats.FormatTools;
 import loci.formats.IFormatReader;
 import loci.formats.ImageReader;
+import loci.formats.meta.MetadataRetrieve;
+import loci.formats.services.OMEXMLServiceImpl;
 import mpicbg.imglib.container.Container;
 import mpicbg.imglib.container.ContainerFactory;
 import mpicbg.imglib.container.basictypecontainer.PlanarAccess;
@@ -61,7 +64,6 @@ import mpicbg.imglib.container.basictypecontainer.array.IntArray;
 import mpicbg.imglib.container.basictypecontainer.array.LongArray;
 import mpicbg.imglib.container.basictypecontainer.array.ShortArray;
 import mpicbg.imglib.container.planar.PlanarContainerFactory;
-import mpicbg.imglib.cursor.LocalizableByDimCursor;
 import mpicbg.imglib.cursor.LocalizablePlaneCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.ImageFactory;
@@ -151,6 +153,9 @@ public class ImageOpener implements StatusReporter {
 		// create image object
 		final Image<T> img = imageFactory.createImage(dimLengths, name);
 
+		// set calibration of the image
+		img.setCalibration( getCalibration(r,dimLengths) );
+
 		// TODO - create better container types; either:
 		// 1) an array container type using one byte array per plane
 		// 2) as #1, but with an IFormatReader reference reading planes on demand
@@ -190,7 +195,7 @@ public class ImageOpener implements StatusReporter {
 					"Reading plane " + (no + 1) + "/" + planeCount));
 				if (plane == null) plane = r.openBytes(no);
 				else r.openBytes(no, plane);
-				populatePlaneFast(r, no, plane, cursor);
+				populatePlane(r, no, plane, cursor);
 			}
 			cursor.close();
 		}
@@ -343,6 +348,15 @@ public class ImageOpener implements StatusReporter {
 		r = new ImageReader();
 		r = new ChannelFiller(r);
 		r = new ChannelSeparator(r);
+		
+		try 
+		{
+			r.setMetadataStore( new OMEXMLServiceImpl().createOMEXMLMetadata() );
+		} 
+		catch (ServiceException e) 
+		{
+		}
+		
 		r.setId(id);
 
 		return r;
@@ -384,6 +398,41 @@ public class ImageOpener implements StatusReporter {
 		}
 
 		return dimTypes.toArray(new String[0]);
+	}
+	
+	/** Retrieves calibration for X,Y,Z,T **/
+	private float[] getCalibration( final IFormatReader r, final int[] dimensions )
+	{		
+		float[] calibration = new float[ dimensions.length ];		
+		for ( int i = 0; i < calibration.length; ++i )
+			calibration[ i ] = 1;
+	
+		final String dimOrder = r.getDimensionOrder().toUpperCase();
+		final MetadataRetrieve retrieve = (MetadataRetrieve)r.getMetadataStore();
+		
+		float cal;
+		
+		final int posX = dimOrder.indexOf( 'X' );
+		cal = retrieve.getPixelsPhysicalSizeX( 0 ).floatValue();
+		if ( posX >= 0 && posX < calibration.length && cal != 0 )
+			calibration[ posX ] = cal; 
+
+		final int posY = dimOrder.indexOf( 'Y' );
+		cal = retrieve.getPixelsPhysicalSizeY( 0 ).floatValue();
+		if ( posY >= 0 && posY < calibration.length && cal != 0 )
+			calibration[ posY ] = cal;
+
+		final int posZ = dimOrder.indexOf( 'Z' );
+		cal = retrieve.getPixelsPhysicalSizeZ( 0 ).floatValue();
+		if ( posZ >= 0 && posZ < calibration.length && cal != 0 )
+			calibration[ posZ ] = cal;
+		
+		final int posT = dimOrder.indexOf( 'T' );
+		cal = retrieve.getPixelsTimeIncrement( 0 ).floatValue();
+		if ( posT >= 0 && posT < calibration.length && cal != 0 )
+			calibration[ posT ] = cal;
+		
+		return calibration;
 	}
 
 	/** Compiles an N-dimensional list of axis lengths from the given reader. */
@@ -507,11 +556,10 @@ public class ImageOpener implements StatusReporter {
 	}
 
 	
-	private <T extends RealType<T>> void populatePlaneFast(IFormatReader r,
+	private <T extends RealType<T>> void populatePlane(IFormatReader r,
 			int no, byte[] plane, LocalizablePlaneCursor<T> cursor)
 		{
 			final int sizeX = r.getSizeX();
-			final int sizeY = r.getSizeY();
 			final int pixelType = r.getPixelType();
 			final boolean little = r.isLittleEndian();
 
@@ -533,6 +581,7 @@ public class ImageOpener implements StatusReporter {
 			}				
 		}
 	
+	/*
 	private <T extends RealType<T>> void populatePlane(IFormatReader r,
 		int no, byte[] plane, LocalizableByDimCursor<T> cursor)
 	{
@@ -557,7 +606,8 @@ public class ImageOpener implements StatusReporter {
 			}
 		}
 	}
-
+	*/
+	
 	private static double decodeWord(byte[] plane, int index,
 		int pixelType, boolean little)
 	{
