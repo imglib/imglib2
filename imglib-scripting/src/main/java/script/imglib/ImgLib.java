@@ -1,20 +1,12 @@
 package script.imglib;
 
+import ij.IJ;
 import ij.ImagePlus;
-
 import ij.io.FileSaver;
-
-import java.io.IOException;
-
-import loci.formats.FormatException;
 
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.ImagePlusAdapter;
-
 import mpicbg.imglib.image.display.imagej.ImageJFunctions;
-
-import mpicbg.imglib.io.ImageOpener;
-
 import mpicbg.imglib.type.numeric.RealType;
 
 /* TODO license? */
@@ -33,15 +25,14 @@ public class ImgLib {
 	/** Open an image from a file path or a web URL. */
 	public static<T extends RealType<T>> Image<T> open(String pathOrURL) {
 		try {
-			return new ImageOpener().<T>openImage(pathOrURL);
+			// In the future, when dimensions can be called by name properly:
+			//return new ImageOpener().<T>openImage(pathOrURL);
+			// For now:
+			return wrap(IJ.openImage(pathOrURL));
 		}
-		catch (IOException e) {
+		catch (Exception e) {
 			e.printStackTrace();
 			throw new RuntimeException("Got I/O exception: " + e, e);
-		}
-		catch (FormatException e) {
-			e.printStackTrace();
-			throw new RuntimeException("Got format exception: " + e, e);
 		}
 	}
 
