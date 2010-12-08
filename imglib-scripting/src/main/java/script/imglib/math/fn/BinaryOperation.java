@@ -69,7 +69,7 @@ public class Average extends BinaryOperation
 }
 </code>
  */
-public abstract class BinaryOperation implements IFunction
+public abstract class BinaryOperation extends FloatImageOperation
 {
 	private final IFunction a, b;
 

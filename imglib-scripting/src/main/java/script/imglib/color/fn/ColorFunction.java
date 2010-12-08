@@ -4,6 +4,7 @@ import java.util.Collection;
 
 import script.imglib.math.Compute;
 import script.imglib.math.fn.IFunction;
+import script.imglib.math.fn.ImageComputation;
 import script.imglib.math.fn.NumberFunction;
 import script.imglib.math.fn.Util;
 
@@ -12,7 +13,7 @@ import mpicbg.imglib.image.Image;
 import mpicbg.imglib.type.numeric.RGBALegacyType;
 import mpicbg.imglib.type.numeric.RealType;
 
-public abstract class ColorFunction implements IFunction {
+public abstract class ColorFunction implements IFunction, ImageComputation<RGBALegacyType> {
 
 	protected static final NumberFunction empty = new NumberFunction(0.0d);
 
@@ -48,10 +49,12 @@ public abstract class ColorFunction implements IFunction {
 		return Util.wrap(ob);
 	}
 
+	@Override
 	public Image<RGBALegacyType> asImage() throws Exception {
 		return asImage(Runtime.getRuntime().availableProcessors());
 	}
-	
+
+	@Override
 	public Image<RGBALegacyType> asImage(final int numThreads) throws Exception {
 		return Compute.apply(this, new RGBALegacyType(), numThreads);
 	}

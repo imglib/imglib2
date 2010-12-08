@@ -34,18 +34,19 @@ import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.display.Display;
 import mpicbg.imglib.type.Type;
 import ij.ImagePlus;
-import ij.ImageStack;
+import ij.VirtualStack;
 import ij.process.ByteProcessor;
 import ij.process.ColorProcessor;
 import ij.process.FloatProcessor;
 import ij.process.ImageProcessor;
 
-public class ImageJVirtualStack<T extends Type<T>> extends ImageStack
+public class ImageJVirtualStack<T extends Type<T>> extends VirtualStack
 {
 	final Display<T> display;
 	final Image<T> img;
 	final int type, dimX, dimY, dimZ, sizeX, sizeY, sizeZ;
 	final int[] dimensionPositions;
+	final private int size;
 	
 	/**
 	 * Constructs a virtual stack of up to 3 arbitrary dimensions
@@ -58,12 +59,13 @@ public class ImageJVirtualStack<T extends Type<T>> extends ImageStack
 	 */
 	public ImageJVirtualStack( final Image<T> img, final int type, final int[] dim, final int[] dimensionPositions )
 	{
-		super( img.getDimension( dim[ 0 ] ), img.getDimension( dim[ 1 ] ), img.getDimension( dim[ 2 ] ) );
+		super( img.getDimension( dim[ 0 ] ), img.getDimension( dim[ 1 ] ), null, null );
 		
 		this.img = img;
 		this.type = type;
 		this.display = img.getDisplay();
-		
+		this.size = img.getDimension( dim[ 2 ] );
+
 		this.dimX = dim[ 0 ];
 		this.dimY = dim[ 1 ];
 		this.dimZ = dim[ 2 ];
@@ -92,7 +94,8 @@ public class ImageJVirtualStack<T extends Type<T>> extends ImageStack
     /** Returns an ImageProcessor for the specified slice,
         were 1<=n<=nslices. Returns null if the stack is empty.
     */
-    public ImageProcessor getProcessor( final int n ) 
+	@Override
+    public ImageProcessor getProcessor( final int n )
     {
         final ImageProcessor ip;
         
@@ -221,66 +224,114 @@ public class ImageJVirtualStack<T extends Type<T>> extends ImageStack
     public void addUnsignedShortSlice(String sliceLabel, Object pixels) {}
     
     /** Adds the image in 'ip' to the end of the stack. */
+    @Override
     public void addSlice(String sliceLabel, ImageProcessor ip) {}
     
     /** Adds the image in 'ip' to the stack following slice 'n'. Adds
         the slice to the beginning of the stack if 'n' is zero. */
+    @Override
     public void addSlice(String sliceLabel, ImageProcessor ip, int n) {}
     
     /** Deletes the specified slice, were 1<=n<=nslices. */
+    @Override
     public void deleteSlice(int n) {}
     
     /** Deletes the last slice in the stack. */
+    @Override
     public void deleteLastSlice() {}
         
     /** Updates this stack so its attributes, such as min, max,
         calibration table and color model, are the same as 'ip'. */
+    @Override
     public void update(ImageProcessor ip) {}
     
     /** Returns the pixel array for the specified slice, were 1<=n<=nslices. */
+    @Override
     public Object getPixels(int n) { return getProcessor(n).getPixels(); }
     
     /** Assigns a pixel array to the specified slice,
         were 1<=n<=nslices. */
+    @Override
     public void setPixels(Object pixels, int n) {}
     
     /** Returns the stack as an array of 1D pixel arrays. Note
         that the size of the returned array may be greater than
         the number of slices currently in the stack, with
         unused elements set to null. */
+    @Override
     public Object[] getImageArray() { return null; }
     
     /** Returns the slice labels as an array of Strings. Note
         that the size of the returned array may be greater than
         the number of slices currently in the stack. Returns null
         if the stack is empty or the label of the first slice is null.  */
+    @Override
     public String[] getSliceLabels() { return null; }
     
     /** Returns the label of the specified slice, were 1<=n<=nslices.
         Returns null if the slice does not have a label. For DICOM
         and FITS stacks, labels may contain header information. */
+    @Override
     public String getSliceLabel(int n) { return "" + n; }
     
     /** Returns a shortened version (up to the first 60 characters or first newline and 
         suffix removed) of the label of the specified slice.
         Returns null if the slice does not have a label. */
+    @Override
     public String getShortSliceLabel(int n) { return getSliceLabel(n); }
 
     /** Sets the label of the specified slice, were 1<=n<=nslices. */
+    @Override
     public void setSliceLabel(String label, int n) {}
 
     /** Returns true if this is a 3-slice RGB stack. */
+    @Override
     public boolean isRGB() { return false; }
     
     /** Returns true if this is a 3-slice HSB stack. */
+    @Override
     public boolean isHSB() { return false; }
 
     /** Returns true if this is a virtual (disk resident) stack. 
         This method is overridden by the VirtualStack subclass. */
+    @Override
     public boolean isVirtual() { return true; }
 
     /** Frees memory by deleting a few slices from the end of the stack. */
+    @Override
     public void trim() {}
 
+    @Override
     public String toString() { return ("Virtual Stack of " + img); }
+
+    @Override
+    public int getSize() { return size; }
+
+    @Override
+    public void setBitDepth( int bitDepth ) {}
+
+    @Override
+    public int getBitDepth()
+    {
+    	switch ( type )
+    	{
+    	case ImagePlus.GRAY8:
+    	case ImagePlus.COLOR_256:
+    		return 8;
+    	case ImagePlus.GRAY16:
+    		return 16;
+    	case ImagePlus.GRAY32:
+    		return 32;
+    	case ImagePlus.COLOR_RGB:
+    		return 24;
+    	default:
+    		return 0;
+    	}
+    }
+
+    @Override
+    public String getDirectory() { return null; }
+
+    @Override
+    public String getFileName( int n ) { return null; }
 }
