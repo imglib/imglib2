@@ -37,11 +37,11 @@ import mpicbg.imglib.container.basictypecontainer.array.BitArray;
 import mpicbg.imglib.cursor.Cursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.display.BitTypeDisplay;
-import mpicbg.imglib.type.LogicType;
+import mpicbg.imglib.type.BooleanType;
 import mpicbg.imglib.type.numeric.RealType;
 import mpicbg.imglib.type.numeric.integer.IntegerTypeImpl;
 
-public class BitType extends IntegerTypeImpl<BitType> implements LogicType<BitType>, RealType<BitType>
+public class BitType extends IntegerTypeImpl<BitType> implements BooleanType<BitType>, RealType<BitType>
 {
 	// the DirectAccessContainer
 	final DirectAccessContainer<BitType, ? extends BitAccess> storage;
@@ -96,7 +96,9 @@ public class BitType extends IntegerTypeImpl<BitType> implements LogicType<BitTy
 		return new BitTypeDisplay( image );
 	}
 
+	@Override
 	public boolean get() { return b.getValue( i ); }
+	@Override
 	public void set( final boolean value ) { b.setValue( i, value ); }
 
 	@Override
