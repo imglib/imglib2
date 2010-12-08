@@ -36,7 +36,6 @@ import mpicbg.imglib.algorithm.Algorithm;
 import mpicbg.imglib.algorithm.Benchmark;
 import mpicbg.imglib.cursor.Cursor;
 import mpicbg.imglib.type.Type;
-import ij.IJ;
 
 /**
  * Implements a Histogram over an Image.

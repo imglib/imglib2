@@ -1,20 +1,13 @@
-import ij.IJ;
-
 import java.util.ArrayList;
-import java.util.Collections;
 
 import mpicbg.imglib.algorithm.histogram.Histogram;
-import mpicbg.imglib.algorithm.histogram.HistogramBin;
 import mpicbg.imglib.algorithm.histogram.HistogramBinFactory;
-import mpicbg.imglib.algorithm.histogram.HistogramKey;
-
 import mpicbg.imglib.algorithm.histogram.discrete.DiscreteIntHistogramBinFactory;
 import mpicbg.imglib.container.array.ArrayContainerFactory;
 import mpicbg.imglib.cursor.Cursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.ImageFactory;
 import mpicbg.imglib.type.numeric.integer.UnsignedByteType;
-
 
 public class HistogramTest {
 	
@@ -66,7 +59,7 @@ public class HistogramTest {
 			long cntVal;
 			k.set(expectKey[i]);
 			cntVal = histogram.getBin(k).getCount();
-			IJ.log("For bin " + expectKey[i] + " expected " + expectCnt[i] +
+			System.out.println("For bin " + expectKey[i] + " expected " + expectCnt[i] +
 					", got " + cntVal);
 			check &= cntVal == expectCnt[i];
 		}
@@ -118,7 +111,7 @@ public class HistogramTest {
 		{
 			String indication = passedTests[i] ? "passed" : "FAILED";
 			
-			IJ.log("Test " + (i + 1) + " " + indication);
+			System.out.println("Test " + (i + 1) + " " + indication);
 		}
 	}
 	
