@@ -1,9 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
     http://maven.apache.org/maven-v4_0_0.xsd">
-
   <modelVersion>4.0.0</modelVersion>
+
   <parent>
     <groupId>mpicbg</groupId>
     <artifactId>imglib-base-pom</artifactId>
@@ -27,12 +28,23 @@
   </licenses>
 
   <dependencies>
+    <!-- TODO: define a real POM for mines-jtk project -->
+    <dependency>
+      <groupId>edu.mines</groupId>
+      <artifactId>mines-jtk</artifactId>
+      <version>20100113</version>
+    </dependency>
     <!-- TODO: define a real POM for fiji-plugins project -->
 		<dependency>
 			<groupId>fiji</groupId>
 			<artifactId>fiji-plugins</artifactId>
 			<version>20101208</version>
 		</dependency>
+    <dependency>
+		  <groupId>jama</groupId>
+		  <artifactId>jama</artifactId>
+		  <version>1.0.2</version>
+    </dependency>
     <dependency>
       <groupId>mpicbg</groupId>
       <artifactId>imglib</artifactId>
@@ -44,19 +56,7 @@
       <artifactId>mpicbg</artifactId>
       <version>20100908</version>
     </dependency>
-    <!-- TODO: define a real POM for mines-jtk project -->
-    <dependency>
-      <groupId>edu.mines</groupId>
-      <artifactId>mines-jtk</artifactId>
-      <version>20100113</version>
-    </dependency>
-    <dependency>
-		  <groupId>jama</groupId>
-		  <artifactId>jama</artifactId>
-		  <version>1.0.2</version>
-    </dependency>
 
-    <!-- test -->
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
@@ -100,7 +100,6 @@
   <build>
     <plugins>
       <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-jar-plugin</artifactId>
         <configuration>
           <archive>
