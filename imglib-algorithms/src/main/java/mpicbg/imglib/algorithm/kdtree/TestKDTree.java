@@ -1,9 +1,9 @@
-package fiji.util;
+package mpicbg.imglib.algorithm.kdtree;
 
 import java.util.ArrayList;
 import java.util.Random;
 
-import fiji.util.node.SimpleNode;
+import mpicbg.imglib.algorithm.kdtree.node.SimpleNode;
 
 
 public class TestKDTree

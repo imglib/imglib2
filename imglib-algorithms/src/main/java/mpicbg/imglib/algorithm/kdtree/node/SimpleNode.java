@@ -1,4 +1,4 @@
-package fiji.util.node;
+package mpicbg.imglib.algorithm.kdtree.node;
 
 
 public class SimpleNode implements Leaf<SimpleNode>

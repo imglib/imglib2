@@ -1,4 +1,4 @@
-package fiji.util.node;
+package mpicbg.imglib.algorithm.kdtree.node;
 
 public class NonLeaf<T extends Leaf<T>> implements Node<T>
 {

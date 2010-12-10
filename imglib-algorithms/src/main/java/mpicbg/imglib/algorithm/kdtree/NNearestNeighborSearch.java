@@ -1,11 +1,11 @@
-package fiji.util;
+package mpicbg.imglib.algorithm.kdtree;
 
 import java.util.Arrays;
 import java.util.Comparator;
 
-import fiji.util.node.Leaf;
-import fiji.util.node.Node;
-import fiji.util.node.NonLeaf;
+import mpicbg.imglib.algorithm.kdtree.node.Leaf;
+import mpicbg.imglib.algorithm.kdtree.node.Node;
+import mpicbg.imglib.algorithm.kdtree.node.NonLeaf;
 
 public class NNearestNeighborSearch<T extends Leaf<T>>
 {

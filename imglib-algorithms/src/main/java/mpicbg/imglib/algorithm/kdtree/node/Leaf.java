@@ -1,4 +1,4 @@
-package fiji.util.node;
+package mpicbg.imglib.algorithm.kdtree.node;
 
 public interface Leaf<N extends Leaf<N>> extends Node<N>
 {
