@@ -120,6 +120,22 @@ public class Util
 		return median;
 	}
 
+	/**
+	 * Computes the percentile of a collection of doubles (percentile 0.5 roughly corresponds to median)
+	 * @param values - the values
+	 * @param percentile - the percentile [0...1]
+	 * @return the corresponding value
+	 */
+	public static double computePercentile( final double[] values, final double percentile )
+	{
+		final double temp[] = values.clone();
+		final int length = temp.length;
+		
+		quicksort( temp );
+		
+		return temp[ Math.min( length - 1, Math.max(0 ,(int)Math.round( (length - 1) * percentile ) ) ) ];
+	}
+
 	public static double computeAverageDouble( final List<Double> values )
 	{
 		final double size = values.size();
@@ -186,6 +202,28 @@ public class Util
 		return avg;
 	}
 
+	public static double computeMin( final double[] values )
+	{
+		double min = values[ 0 ];
+
+		for ( final double v : values )
+			if ( v < min )
+				min = v;
+
+		return min;
+	}
+
+	public static double computeMax( final double[] values )
+	{
+		double max = values[ 0 ];
+
+		for ( final double v : values )
+			if ( v > max )
+				max = v;
+
+		return max;
+	}
+	
 	public static float computeMedian( final float[] values )
 	{
 		final float temp[] = values.clone();
@@ -226,6 +264,8 @@ public class Util
 		if (i < right) quicksort(data, i, right);
 	}
 
+	public static void quicksort( final double[] data ) { quicksort( data, 0, data.length - 1 ); }
+
 	public static void quicksort( final double[] data, final int left, final int right )
 	{
 		if (data == null || data.length < 2)return;
@@ -248,6 +288,8 @@ public class Util
 		if (left < j) quicksort(data, left, j);
 		if (i < right) quicksort(data, i, right);
 	}
+
+	public static void quicksort( final float[] data ) { quicksort( data, 0, data.length - 1 ); }
 
 	public static void quicksort( final float[] data, final int left, final int right )
 	{

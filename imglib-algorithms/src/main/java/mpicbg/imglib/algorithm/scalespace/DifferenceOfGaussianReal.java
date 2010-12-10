@@ -29,7 +29,7 @@ import mpicbg.imglib.type.numeric.RealType;
 
 public class DifferenceOfGaussianReal< A extends RealType<A>, B extends RealType<B> > extends DifferenceOfGaussian<A, B>
 {
-	final double normalizationFactor, minPeakValue;
+	double normalizationFactor, minPeakValue;
 	
 	public DifferenceOfGaussianReal( final Image<A> img, final ImageFactory<B> factory,  
 									 final OutOfBoundsStrategyFactory<B> outOfBoundsFactory, 
@@ -47,6 +47,11 @@ public class DifferenceOfGaussianReal< A extends RealType<A>, B extends RealType
 		type.setReal( value );
 		return type;
 	}
+	
+	@Override
+	public void setMinPeakValue( final B value ) { minPeakValue = value.getRealDouble(); }
+	@Override
+	public B getMinPeakValue() { return createVariable( factory, minPeakValue ); }
 
 	/**
 	 * This method returns the {@link OutputAlgorithm} that will compute the Gaussian Convolutions, more efficient versions can override this method

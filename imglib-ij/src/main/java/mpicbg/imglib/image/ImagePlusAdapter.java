@@ -76,7 +76,7 @@ public class ImagePlusAdapter
 			}
 			default :
 			{
-				System.out.println( "mpi.imglib.container.imageplus.ImagePlusAdapter(): Cannot handle type " + imp.getType() );
+				System.out.println( "mpicbg.imglib.image.ImagePlusAdapter(): Cannot handle type " + imp.getType() );
 				return null;
 			}
 		}

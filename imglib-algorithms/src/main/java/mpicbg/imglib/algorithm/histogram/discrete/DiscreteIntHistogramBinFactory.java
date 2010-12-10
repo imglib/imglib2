@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2009--2010, Stephan Preibisch & Stephan Saalfeld
+ * Copyright (c) 2010, Larry Lindsey
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -25,17 +25,58 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  *
- * @author Stephan Preibisch & Stephan Saalfeld
+ * @author Larry Lindsey
  */
 
-package mpicbg.imglib.type;
+package mpicbg.imglib.algorithm.histogram.discrete;
 
-public interface LogicType<T extends LogicType<T>> extends Type<T>, Comparable<T>
+import mpicbg.imglib.algorithm.histogram.HistogramBin;
+import mpicbg.imglib.algorithm.histogram.HistogramBinFactory;
+import mpicbg.imglib.algorithm.histogram.HistogramKey;
+import mpicbg.imglib.type.numeric.IntegerType;
+
+/**
+ * A HistogramBinFactory to be used to create a discrete Histogram over
+ * integer-valued Type's.
+ * @author LarryLindsey
+ *
+ * @param <T> the type of {@link Type} corresponding to this factory, implementing IntegerType.
+ */
+public class DiscreteIntHistogramBinFactory<T extends IntegerType<T>> implements HistogramBinFactory<T>
 {
-	public void and( T c );
-	public void or( T c );
-	public void xor( T c );
+	public class DiscreteIntHistogramBin extends HistogramBin<T>
+	{
+
+		public DiscreteIntHistogramBin(T t, HistogramKey<T> k) {
+			super(t, k);
+		}
+
+		@Override
+		public T getLowerBound() {
+			return getCenter();
+		}
+
+		@Override
+		public T getUpperBound() {
+			return getCenter();
+		}
+		
+	}
 	
-	public void not();
+	@Override
+	public HistogramBin<T> createBin(T type) {		
+		return new DiscreteIntHistogramBin(type, createKey(type));
+	}
+
+	@Override
+	public HistogramKey<T> createKey(T type) {
+		return new HistogramKey<T>((new Double(type.getIntegerLong())).hashCode(),
+				type.copy(), this);
+	}
+
+	@Override
+	public boolean equivalent(T type1, T type2) {
+		return type1.getIntegerLong() == type2.getIntegerLong();
+	}
 	
 }

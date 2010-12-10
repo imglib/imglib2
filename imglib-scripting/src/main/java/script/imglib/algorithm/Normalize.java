@@ -60,7 +60,6 @@ public class Normalize<N extends NumericType<N>> extends AbstractNormalize<N>
 		return processReal(Compute.inFloats(fn));
 	}
 
-	@SuppressWarnings("unchecked")
 	static final private <T extends RealType<T>> Image<FloatType> processReal(final Image<T> img) throws Exception {
 		// Compute min and max
 		final ComputeMinMax<T> cmm = new ComputeMinMax<T>(img);

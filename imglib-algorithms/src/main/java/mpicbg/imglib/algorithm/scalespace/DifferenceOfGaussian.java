@@ -132,6 +132,8 @@ public class DifferenceOfGaussian < A extends Type<A>, B extends NumericType<B> 
 		this.keepDoGImage = false;
 	}
 	
+	public void setMinPeakValue( final B value ) { this.minPeakValue.set( value ); }
+	public B getMinPeakValue() { return minPeakValue.copy(); }
 	public Image<B> getDoGImage() { return dogImage; }
 	public void setKeepDoGImage( final boolean keepDoGImage ) { this.keepDoGImage = keepDoGImage; }
 	public boolean getKeepDoGImage() { return keepDoGImage; }
