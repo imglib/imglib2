@@ -27,9 +27,9 @@ public class NearestNeighborSearch<T extends Leaf<T>>
 	protected T findNearestNeighbor(final T point, final Node<T> node, final int depth) {
 		if (node.isLeaf()) {
 			if (bestPointSoFar == null)
-				bestPointSoFar = (T)node;
+				bestPointSoFar = ((Leaf<T>)node).getEntry();
 
-			T returnNode = (T)node;
+			T returnNode = ((Leaf<T>)node).getEntry();
 
 			if (point.distanceTo(bestPointSoFar) < point.distanceTo(returnNode))
 				returnNode = bestPointSoFar;

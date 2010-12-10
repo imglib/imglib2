@@ -43,7 +43,7 @@ public class NNearestNeighborSearch<T extends Leaf<T>>
 	public int findNNearestNeighbors(final T point, Node<T> node, int depth, int gotAlready, T[] result) {
 		if (node.isLeaf()) {
 			// TODO: urgh!  This _cries out loud_ for a class
-			final T leaf = (T)node;
+			final T leaf = ((Leaf<T>)node).getEntry();
 			if (gotAlready == 0) {
 				result[0] = leaf;
 				return 1;
@@ -52,21 +52,25 @@ public class NNearestNeighborSearch<T extends Leaf<T>>
 			int index;
 			// TODO: double urgh!
 			if (gotAlready < result.length)
+			{
 				for (index = 0; index < gotAlready &&
 						point.distanceTo(result[index]) <
 						point.distanceTo(leaf); index++);
-			else {
-				index = Arrays.binarySearch(result, leaf,
-					new Comparator() {
-					public int compare(Object a, Object b) {
-						float distA = point.distanceTo((T)a);
-						float distB = point.distanceTo((T)b);
-						return distA < distB ? -1 :
-							distA > distB ? +1 : 0;
-					}
-					public boolean equals(Object a, Object b) {
-						return a.equals(b);
-					}});
+			}
+			else 
+			{
+				index = Arrays.binarySearch( result, leaf,
+					new Comparator<T>() 
+					{
+						@Override
+						public int compare( final T a, final T b ) 
+						{
+							final float distA = point.distanceTo( a );
+							final float distB = point.distanceTo( b );
+							return distA < distB ? -1 : distA > distB ? +1 : 0;
+						}
+					});
+				
 				if (index < 0)
 					index = -1 - index;
 			}

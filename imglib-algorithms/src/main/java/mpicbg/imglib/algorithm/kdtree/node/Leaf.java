@@ -9,4 +9,5 @@ public interface Leaf<N extends Leaf<N>> extends Node<N>
 	int getNumDimensions();
 
 	N[] createArray(int n);
+	N getEntry();
 }

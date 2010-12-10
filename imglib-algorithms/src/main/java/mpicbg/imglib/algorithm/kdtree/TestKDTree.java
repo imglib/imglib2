@@ -52,7 +52,6 @@ public class TestKDTree
 		for (int i = 0; i < numTests; ++i) {
 			for (int d = 0; d < numDimensions; ++d)
 				p[d] = rnd.nextFloat() * (2*max - 2*min) + 2*min;
-			final SimpleNode t = new SimpleNode(p);
 		}
 		final long initTime = System.currentTimeMillis() - start;
 
@@ -62,6 +61,7 @@ public class TestKDTree
 				p[d] = rnd.nextFloat() * (2*max - 2*min) + 2*min;
 			final SimpleNode t = new SimpleNode(p);
 			final SimpleNode[] nnKdtree = kd.findNNearestNeighbors(t, neighbors);
+			nnKdtree.clone();
 		}
 		final long kdTime = System.currentTimeMillis() - start;
 		System.out.println("kdtree search took: " + (kdTime-initTime) + " ms.");
@@ -73,6 +73,7 @@ public class TestKDTree
 				p[d] = rnd.nextFloat() * (2*max - 2*min) + 2*min;
 			final SimpleNode t = new SimpleNode(p);
 			final SimpleNode[] nnExhaustive = findNNearestNeighborExhaustive(points, t, neighbors);
+			nnExhaustive.clone();
 		}
 		final long exhaustiveTime = System.currentTimeMillis() - start;
 		System.out.println("exhaustive search took: " + (exhaustiveTime-initTime) + " ms.");
@@ -125,6 +126,7 @@ public class TestKDTree
 			for (int d = 0; d < numDimensions; ++d)
 				p[d] = rnd.nextFloat() * (2*max - 2*min) + 2*min;
 			final SimpleNode t = new SimpleNode(p);
+			t.getClass();
 		}
 		final long initTime = System.currentTimeMillis() - start;
 
@@ -134,6 +136,7 @@ public class TestKDTree
 				p[d] = rnd.nextFloat() * (2*max - 2*min) + 2*min;
 			final SimpleNode t = new SimpleNode(p);
 			final SimpleNode nnKdtree = kd.findNearestNeighbor(t);
+			nnKdtree.getClass();
 		}
 		final long kdTime = System.currentTimeMillis() - start;
 		System.out.println("kdtree search took: " + (kdTime-initTime) + " ms.");
@@ -145,6 +148,7 @@ public class TestKDTree
 				p[d] = rnd.nextFloat() * (2*max - 2*min) + 2*min;
 			final SimpleNode t = new SimpleNode(p);
 			final SimpleNode nnExhaustive = findNearestNeighborExhaustive(points, t);
+			nnExhaustive.getClass();
 		}
 		final long exhaustiveTime = System.currentTimeMillis() - start;
 		System.out.println("exhaustive search took: " + (exhaustiveTime-initTime) + " ms.");

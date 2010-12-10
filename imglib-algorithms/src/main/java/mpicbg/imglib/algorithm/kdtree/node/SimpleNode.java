@@ -69,4 +69,7 @@ public class SimpleNode implements Leaf<SimpleNode>
 	public int getNumDimensions() {
 		return numDimensions;
 	}
+
+	@Override
+	public SimpleNode getEntry() { return this; }
 }
