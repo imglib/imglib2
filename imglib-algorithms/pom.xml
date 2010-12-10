@@ -35,11 +35,6 @@
       <version>20100113</version>
     </dependency>
     <!-- TODO: define a real POM for fiji-plugins project -->
-		<dependency>
-			<groupId>fiji</groupId>
-			<artifactId>fiji-plugins</artifactId>
-			<version>20101208</version>
-		</dependency>
     <dependency>
 		  <groupId>jama</groupId>
 		  <artifactId>jama</artifactId>
