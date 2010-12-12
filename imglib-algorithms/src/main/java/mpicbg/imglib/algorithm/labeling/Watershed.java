@@ -17,15 +17,24 @@
  */
 package mpicbg.imglib.algorithm.labeling;
 
+import java.util.Iterator;
 import java.util.List;
 import java.util.PriorityQueue;
 
+import mpicbg.imglib.algorithm.fft.FourierConvolution;
+import mpicbg.imglib.algorithm.math.ImageConverter;
+import mpicbg.imglib.algorithm.math.PickImagePeaks;
 import mpicbg.imglib.cursor.LocalizableByDimCursor;
 import mpicbg.imglib.cursor.LocalizableCursor;
+import mpicbg.imglib.function.Converter;
+import mpicbg.imglib.function.RealTypeConverter;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.labeling.Labeling;
 import mpicbg.imglib.labeling.LabelingType;
 import mpicbg.imglib.type.numeric.ComplexType;
+import mpicbg.imglib.type.numeric.RealType;
+import mpicbg.imglib.type.numeric.real.FloatType;
+import mpicbg.imglib.util.Util;
 
 /**
  * Watershed algorithms. The watershed algorithm segments and labels an image
@@ -196,5 +205,158 @@ public class Watershed {
 		c.close();
 		outputCursor.close();
 		ic.close();
+	}
+	/**
+	 * This method labels an image where the objects in question have
+	 * edges that are defined by sharp intensity gradients and have
+	 * centers of high intensity and a low intensity background.
+	 * 
+	 * The algorithm:
+	 * Smooth the image by convolving with a Gaussian of sigma = sigma2.
+	 * Find and label local minima and maxima of the given scale (in pixels).
+	 * Label the minima with a single label.
+	 * Take the difference of Gaussians (DoG) - convolve the original image with
+	 * the kernel, G(sigma2) - G(sigma1). The original method uses the Sobel
+	 * transform of a smoothed image which is much the same.
+	 * Perform a seeded watershed using the minima/maxima labels on
+	 * the DoG image.
+	 * Remove the labeling from the pixels labeled as background.
+	 * 
+	 * The method is adapted from Wahlby & Bengtsson, Segmentation of
+	 * Cell Nuclei in Tissue by Combining Seeded Watersheds with Gradient
+	 * Information, Image Analysis: 13th Scandinavian Conference Proceedings,
+	 * pp 408-414, 2003
+	 *  
+	 * @param <T> The type of the image.
+	 * @param <L> The type of the labeling, typically Integer
+	 * @param image The intensity image to be labeled
+	 * @param scale the minimum distance between maxima of objects. Less
+	 * technically, this should be the diameter of the smallest object. 
+	 * @param sigma1 the standard deviation for the larger smoothing. The
+	 * difference between sigma1 and sigma2 should be roughly the width
+	 * of the desired edge in the DoG image. A larger difference will obscure
+	 * small, faint edges.
+	 * @param sigma2 the standard deviation for the smaller smoothing. This
+	 * should be on the order of the largest insignificant feature in the image. 
+	 * @param output - the labeled image
+	 * @param names - an iterator that generates names of type L for the labels.
+	 * The iterator will waste the last name taken on the background label.
+	 * You can use AllConnectedComponents.getIntegerNames() as your name
+	 * generator if you don't care about names.
+	 */
+	static public <T extends RealType<T>, L extends Comparable<L>>
+	boolean gradientWatershed(Image<T> image, double [] scale, 
+			                  double [] sigma1, double [] sigma2, 
+			                  Labeling<L> output,
+			                  int [][] structuringElement,
+			                  Iterator<L> names) {
+		/*
+		 * Get the smoothed image.
+		 */
+		Image<FloatType> kernel = FourierConvolution.createGaussianKernel(
+				image.getContainerFactory(), scale);
+		ImageConverter<T, FloatType> convertToFloat =
+			new ImageConverter<T, FloatType>(image,kernel.getImageFactory(),new RealTypeConverter<T, FloatType>());
+		if (! convertToFloat.process()) return false;
+		
+		Image<FloatType> floatImage = convertToFloat.getResult();
+		convertToFloat = null;
+		FourierConvolution<FloatType, FloatType> convolution = 
+			new FourierConvolution<FloatType, FloatType>(floatImage, kernel);
+		if (! convolution.process()) return false;
+		Image<FloatType> smoothed = convolution.getResult();
+		
+		/*
+		 * Find the local maxima and label them individually.
+		 */
+		PickImagePeaks<FloatType> peakPicker = new PickImagePeaks<FloatType>(smoothed);
+		peakPicker.setSuppression(scale);
+		peakPicker.process();
+		Labeling<L> seeds = output.createNewLabeling();
+		LocalizableByDimCursor<LabelingType<L>> lc = 
+			seeds.createLocalizableByDimCursor();
+		for (int[] peak:peakPicker.getPeakList()) {
+			lc.setPosition(peak);
+			lc.getType().setLabel(names.next());
+		}
+		/*
+		 * Find the local minima and label them all the same.
+		 */
+		List<L> background = lc.getType().intern(names.next());
+		Converter<FloatType, FloatType> invert = new Converter<FloatType,FloatType>() {
+
+			@Override
+			public void convert(FloatType input, FloatType output) {
+				output.setReal(-input.getRealFloat());
+			}
+		};
+		ImageConverter<FloatType, FloatType> invSmoothed = 
+			new ImageConverter<FloatType, FloatType>(smoothed, smoothed, invert);
+		invSmoothed.process();
+		peakPicker = new PickImagePeaks<FloatType>(smoothed);
+		peakPicker.setSuppression(scale);
+		peakPicker.process();
+		for (int [] peak: peakPicker.getPeakList()){
+			lc.setPosition(peak);
+			lc.getType().setLabeling(background);
+		}
+		lc.close();
+		smoothed = null;
+		invSmoothed = null;
+		Image<FloatType> gradientImage = getGradientImage(floatImage, sigma1, sigma2);
+		/*
+		 * Run the seeded watershed on the image.
+		 */
+		seededWatershed(gradientImage, seeds, structuringElement, output);
+		return true;
+	}
+	
+	/**
+	 * Return a difference of gaussian image that measures the gradient
+	 * at a scale defined by the two sigmas of the gaussians.
+	 * @param image
+	 * @param sigma1
+	 * @param sigma2
+	 * @return
+	 */
+	static public Image<FloatType> getGradientImage(Image<FloatType> image, double[] sigma1, double[] sigma2) {
+		/*
+		 * Create the DoG kernel.
+		 */
+		double [][] kernels1d1 = new double[image.getNumDimensions()][];
+		double [][] kernels1d2 = new double[image.getNumDimensions()][];
+		int [] kernelDimensions = image.createPositionArray();
+		int [] offset = image.createPositionArray();
+		for (int i=0; i<kernels1d1.length; i++) {
+			kernels1d1[i] = Util.createGaussianKernel1DDouble(sigma1[i], true);
+			kernels1d2[i] = Util.createGaussianKernel1DDouble(sigma2[i], true);
+			kernelDimensions[i] = kernels1d1[i].length;
+			offset[i] = (kernels1d1[i].length - kernels1d2[i].length) / 2;
+		}
+		Image<FloatType> kernel = image.createNewImage(kernelDimensions);
+		LocalizableCursor<FloatType> kc = kernel.createLocalizableCursor();
+		int [] position = image.createPositionArray();
+		for (FloatType t:kc) {
+			kc.getPosition(position);
+			double value1 = 1;
+			double value2 = 1;
+			for (int i=0; i<kernels1d1.length; i++) {
+				value1 *= kernels1d1[i][position[i]];
+				int position2 = position[i] - offset[i];
+				if ((position2 >= 0) && (position2 < kernels1d2[i].length)) {
+					value2 *= kernels1d2[i][position2];
+				} else {
+					value2 = 0;
+				}
+			}
+			t.setReal(value1 - value2);
+		}
+		kc.close();
+		/*
+		 * Apply the kernel to the image.
+		 */
+		FourierConvolution<FloatType, FloatType> convolution = new FourierConvolution<FloatType, FloatType>(image, kernel);
+		if (! convolution.process()) return null;
+		return convolution.getResult();
 	}
 }
