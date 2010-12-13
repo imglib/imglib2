@@ -345,12 +345,11 @@ A:		for (final SimpleNode node : points) {
 	{
 		if ( testRadiusSearch( 3, 100000, 1000, -100, 100 ) )
 			System.out.println("Radius neighbor test (3) successfull\n");
-		
+
 		if (testNNearestNeighbor(3, 3, 100000, 1000, -5, 5))
 			System.out.println("N-Nearest neighbor test (3) successfull\n");
 
 		if (testNearestNeighbor(3, 100000, 1000, -5, 5))
 			System.out.println("Nearest neighbor test successfull\n");
-
 	}
 }
