@@ -17,26 +17,15 @@
  */
 package mpicbg.imglib.algorithm.labeling;
 
-import java.util.Iterator;
 import java.util.List;
 import java.util.PriorityQueue;
 
-import mpicbg.imglib.algorithm.fft.FourierConvolution;
-import mpicbg.imglib.algorithm.math.ComputeMinMax;
-import mpicbg.imglib.algorithm.math.ImageConverter;
-import mpicbg.imglib.algorithm.math.PickImagePeaks;
 import mpicbg.imglib.cursor.LocalizableByDimCursor;
 import mpicbg.imglib.cursor.LocalizableCursor;
-import mpicbg.imglib.cursor.special.RegionOfInterestCursor;
-import mpicbg.imglib.function.Converter;
-import mpicbg.imglib.function.RealTypeConverter;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.labeling.Labeling;
 import mpicbg.imglib.labeling.LabelingType;
 import mpicbg.imglib.type.numeric.ComplexType;
-import mpicbg.imglib.type.numeric.RealType;
-import mpicbg.imglib.type.numeric.real.FloatType;
-import mpicbg.imglib.util.Util;
 
 /**
  * Watershed algorithms. The watershed algorithm segments and labels an image
