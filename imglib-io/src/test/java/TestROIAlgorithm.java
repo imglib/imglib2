@@ -1,10 +1,8 @@
-import mpicbg.imglib.cursor.LocalizableByDimCursor;
-import mpicbg.imglib.cursor.LocalizableCursor;
-import mpicbg.imglib.cursor.special.RegionOfInterestCursor;
+import mpicbg.imglib.cursor.special.StructuringElementCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.ImagePlusAdapter;
 import mpicbg.imglib.image.display.imagej.ImageJFunctions;
-import mpicbg.imglib.io.LOCI;
+import mpicbg.imglib.io.ImageOpener;
 import mpicbg.imglib.type.numeric.RealType;
 import ij.IJ;
 import ij.ImagePlus;
@@ -19,23 +17,18 @@ import mpicbg.imglib.container.array.ArrayContainerFactory;
 
 public class TestROIAlgorithm <T extends RealType<T>> extends ROIAlgorithm<T, T> {
 
-	
-	private LocalizableByDimCursor<T> outputCursor;
-	
-	public TestROIAlgorithm(Image<T> imageIn) {
-		super(imageIn.createType(), imageIn, new int[]{1, 1});
-		outputCursor = super.getOutputImage().createLocalizableByDimCursor();
+		
+	public TestROIAlgorithm(final Image<T> imageIn) {
+		super(imageIn.getImageFactory(), imageIn, new int[] {1, 1});
 	}
 
 	@Override
-	protected boolean patchOperation(int[] position,
-			RegionOfInterestCursor<T> cursor) {
-		outputCursor.setPosition(position);
-		int i = 0;
+	protected boolean patchOperation(StructuringElementCursor<T> cursor,
+	        T type) {		
 		while (cursor.hasNext())
 		{			
 			cursor.fwd();
-			outputCursor.getType().set(cursor.getType());
+			type.set(cursor.getType());
 		}
 		return true;
 	}
@@ -46,11 +39,19 @@ public class TestROIAlgorithm <T extends RealType<T>> extends ROIAlgorithm<T, T>
 		
 		ImagePlus implus = IJ.openImage(od.getDirectory() + od.getFileName());
 		Image<R> im = ImagePlusAdapter.wrap(implus);		
-		Image<R> imout;	
-                Image<R> imloci = LOCI.openLOCI(od.getDirectory() + od.getFileName(), new ArrayContainerFactory());
-		TestROIAlgorithm<R> tra = new TestROIAlgorithm<R>(imloci);
+		Image<R> imout;		
+		Image<R> imloci;
 		
-		int[] pos = new int[2];
+		try {
+		    imloci = (new ImageOpener()).openImage(od.getDirectory() + od.getFileName(), new ArrayContainerFactory());				   
+		}
+		catch (Exception e)
+		{
+		    imloci = null;
+		}
+		
+		TestROIAlgorithm<R> tra = new TestROIAlgorithm<R>(imloci);
+		//int[] pos = new int[2];
 
 		tra.process();
 		imout = tra.getResult();

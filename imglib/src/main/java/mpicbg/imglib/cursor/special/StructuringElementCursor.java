@@ -1,13 +1,13 @@
 package mpicbg.imglib.cursor.special;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 
 import mpicbg.imglib.cursor.CursorImpl;
 import mpicbg.imglib.cursor.LocalizableByDimCursor;
 import mpicbg.imglib.cursor.LocalizableCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.type.Type;
-import mpicbg.imglib.type.numeric.RealType;
+import mpicbg.imglib.type.numeric.ComplexType;
 
 public class StructuringElementCursor<T extends Type<T>> extends CursorImpl<T>
 	implements LocalizableCursor<T> {
@@ -18,46 +18,81 @@ public class StructuringElementCursor<T extends Type<T>> extends CursorImpl<T>
 	private final int n;
 	private final int numDimensions;
 	private int pathPos;
+	
+	/**
+	 * centerOffsetPos is used in the case where the strel cursor should 
+	 * iterate over a kernel.  In this case, getPosition should return
+	 * non-negative values, but we might still want cursor to iterate in the
+	 * input image over a patch that is centered about the position indicated
+	 * by patchCenterPos.
+	 */
+	private final int[] kernelOffsetPos;
+	
+	/**
+	 * strelPos holds the strel cursor location, which is returned by getPosition.
+	 */
 	private int[] strelPos;
+	/**
+	 * patchCenterPos holds the current location of the patch center cursor.
+	 */
 	private final int[] patchCenterPos;
+	/**
+	 * cursorSetPos gets the location that the LocalizableByDimCursor is set to.
+	 * This is equivalent to patchCenterPos + strelPos + kernelOffsetPos
+	 */
 	private final int[] cursorSetPos;
-
-	private static <R extends RealType<R>> int[][] imageToPath(
-	        final Image<R> im, int[] offset)
+	
+	private static <R extends ComplexType<R>> int[][] imageToPath(
+	        final Image<R> im, int[] strelImageCenter)
     {
-	    ArrayList<int[]> pathArray = new ArrayList<int[]>();
 	    LocalizableCursor<R> cursor = im.createLocalizableCursor();
 	    int[] pos = new int[im.getNumDimensions()];
+	    int count = 0;
+	    int[][] path;
 	    
-        if (offset == null)
+        if (strelImageCenter == null)
         {
             int[] imDim = im.getDimensions();
-            offset = new int[imDim.length];
+            strelImageCenter = new int[imDim.length];
             for (int i = 0; i < imDim.length; ++i)
             {
-                offset[i] = imDim[i] / 2;
+                strelImageCenter[i] = imDim[i] / 2;
             }
         }
         
         while (cursor.hasNext())
         {
-            cursor.fwd();
+            cursor.fwd();            
             if (cursor.getType().getRealDouble() != 0)
             {
-                cursor.getDimensions(pos);
+                ++count;
+            }
+        }
+        
+        cursor.reset();
+        path = new int[count][im.getNumDimensions()];
+        count = 0;
+        
+        while (cursor.hasNext())
+        {
+            cursor.fwd();            
+            if (cursor.getType().getRealDouble() != 0)
+            {      
+               cursor.getPosition(pos);
                 for (int i = 0; i < pos.length; ++i)
                 {
-                    pos[i] += offset[i];
+                    pos[i] -= strelImageCenter[i];
                 }
-                pathArray.add(pos.clone());
+                System.arraycopy(pos, 0, path[count], 0, path[count].length);
+                ++count;
             }
         }
         
         cursor.close();
-        return (int[][]) pathArray.toArray();
+        return path;
     }
 	
-	public static int[][] sizeToPath(final int[] size, int[] offset)
+	public static int[][] sizeToPath(final int[] size, int[] patchCenter)
 	{
 	    int n = 1;
 	    int d = size.length;
@@ -70,18 +105,18 @@ public class StructuringElementCursor<T extends Type<T>> extends CursorImpl<T>
 
 	    path = new int[n][d];
 	    
-        if (offset == null)
+        if (patchCenter == null)
         {
-            offset = new int[d];
+            patchCenter = new int[d];
             for (int j = 0; j < d; ++j)
             {
-                offset[j] = -size[j] / 2;
+                patchCenter[j] = size[j] / 2;
             }
         }
         	    
 	    for (int j = 0; j < d; ++j)
 	    {
-	        path[0][j] = offset[j];
+	        path[0][j] = -patchCenter[j];
 	    }
 	    
 	    for (int i = 1; i < n; ++i)
@@ -91,9 +126,9 @@ public class StructuringElementCursor<T extends Type<T>> extends CursorImpl<T>
 	        
 	        path[i][0]++;
 	        
-	        while(path[i][j] >= (size[j] + offset[j]) && j < d - 1)
+	        while(path[i][j] >= (size[j] - patchCenter[j]) && j < d - 1)
 	        {
-	            path[i][j] = offset[j];
+	            path[i][j] = -patchCenter[j];
 	            path[i][j+1]++;
 	            j++;
 	        }
@@ -103,16 +138,16 @@ public class StructuringElementCursor<T extends Type<T>> extends CursorImpl<T>
 	    return path;
 	}
 	
-	public <R extends RealType<R>> 
+	public <R extends ComplexType<R>> 
 	    StructuringElementCursor(final LocalizableByDimCursor<T> cursor, 
             final Image<R> strelImage) {
         this(cursor, strelImage, null);
     }
 	
-	public <R extends RealType<R>> 
+	public <R extends ComplexType<R>> 
 	    StructuringElementCursor(final LocalizableByDimCursor<T> cursor, 
-            final Image<R> strelImage, final int[] offset) {
-        this(cursor, imageToPath(strelImage, offset));
+            final Image<R> strelImage, final int[] strelImageCenter) {
+        this(cursor, imageToPath(strelImage, strelImageCenter));
     }
 	
 	public StructuringElementCursor(final LocalizableByDimCursor<T> cursor,
@@ -122,15 +157,14 @@ public class StructuringElementCursor<T extends Type<T>> extends CursorImpl<T>
     }
 	
 	public StructuringElementCursor(final LocalizableByDimCursor<T> cursor,
-	        final int[] size, final int[] offset)
+	        final int[] size, final int[] patchCenter)
 	{
-	    this(cursor, sizeToPath(size, offset));
+	    this(cursor, sizeToPath(size, patchCenter));
 	}
 	
 	public StructuringElementCursor(final LocalizableByDimCursor<T> cursor, 
 	        final int[][] inPath) {
-		super(cursor.getStorageContainer(), cursor.getImage());
-		
+		super(cursor.getStorageContainer(), cursor.getImage());		
 		patchCenterCursor = cursor.getImage().createLocalizableCursor();
 		this.cursor = cursor;
 		n = inPath.length;
@@ -138,6 +172,8 @@ public class StructuringElementCursor<T extends Type<T>> extends CursorImpl<T>
 		path = new int[n][numDimensions];
 		patchCenterPos = new int[numDimensions];
 		cursorSetPos = new int[numDimensions];
+		kernelOffsetPos = new int[numDimensions];
+		Arrays.fill(kernelOffsetPos, 0);
 		
 		for (int j = 0; j < n; ++j)
 		{
@@ -148,6 +184,19 @@ public class StructuringElementCursor<T extends Type<T>> extends CursorImpl<T>
 		}
 		
 		reset();
+	}
+	
+	public void setKernelOffset(final int[] ko)
+	{
+	    System.arraycopy(ko, 0, kernelOffsetPos, 0, kernelOffsetPos.length);
+	}
+	
+	public void centerKernel(final int[] dim)
+	{
+	    for (int i = 0; i < kernelOffsetPos.length; ++i)
+	    {
+	        kernelOffsetPos[i] = dim[i] / 2;
+	    }
 	}
 	
 	public void setPatchCenterCursor(final LocalizableCursor<?> newPCC)
@@ -167,6 +216,12 @@ public class StructuringElementCursor<T extends Type<T>> extends CursorImpl<T>
 		patchCenterCursor.close();
 		super.isClosed = true;
 	}
+	
+	public void closeAll()
+	{
+	    cursor.close();
+	    close();
+	}
 
 	@Override
 	public int getStorageIndex() {
@@ -182,6 +237,11 @@ public class StructuringElementCursor<T extends Type<T>> extends CursorImpl<T>
 	public void reset() {
 		pathPos = -1;
 		patchCenterCursor.getPosition(patchCenterPos);
+		
+		for (int i = 0; i < numDimensions; ++i)
+		{
+		    patchCenterPos[i] -= kernelOffsetPos[i];
+		}
 	}
 	
 	@Override
@@ -222,6 +282,12 @@ public class StructuringElementCursor<T extends Type<T>> extends CursorImpl<T>
 	    }
 	}
 	
+	public void patchReset()
+	{
+	    patchCenterCursor.reset();
+	    reset();
+	}
+	
 	@Override
 	public void getPosition(final int[] position) {
 		System.arraycopy(strelPos, 0, position, 0, numDimensions);
@@ -249,9 +315,5 @@ public class StructuringElementCursor<T extends Type<T>> extends CursorImpl<T>
         pos += ")";
         
         return pos;
-	}
-
-	
-	
-	
+	}	
 }

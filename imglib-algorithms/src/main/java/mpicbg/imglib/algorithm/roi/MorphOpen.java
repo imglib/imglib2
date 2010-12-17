@@ -2,8 +2,8 @@ package mpicbg.imglib.algorithm.roi;
 
 import mpicbg.imglib.algorithm.Benchmark;
 import mpicbg.imglib.algorithm.OutputAlgorithm;
+import mpicbg.imglib.cursor.special.StructuringElementCursor;
 import mpicbg.imglib.image.Image;
-import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
 import mpicbg.imglib.type.numeric.RealType;
 
 /**
@@ -21,24 +21,17 @@ public class MorphOpen<T extends RealType<T>> implements OutputAlgorithm<T>, Ben
 	private Image<T> outputImage;
 	private MorphDilate<T> dilater;
 	private final MorphErode<T> eroder;
-	private final StructuringElement strel;
-	private final OutOfBoundsStrategyFactory<T> outsideFactory;
+	private final StructuringElementCursor<T> strelCursor;
 	private long pTime;
 	
-	public MorphOpen(Image<T> imageIn, StructuringElement strelIn)
-	{
-		this(imageIn, strelIn, null);
-	}
-	
-	public MorphOpen(Image<T> imageIn, StructuringElement strelIn,
-			final OutOfBoundsStrategyFactory<T> inOutsideFactory)
+	public MorphOpen(Image<T> imageIn,
+	        StructuringElementCursor<T> inStrelCursor)
 	{
 		image = imageIn;		
-		strel = strelIn;
-		eroder = new MorphErode<T>(image, strel, inOutsideFactory);
+		strelCursor = inStrelCursor;
+		eroder = new MorphErode<T>(image, strelCursor);
 		dilater = null;
 		outputImage = null;
-		outsideFactory = inOutsideFactory;
 		pTime = 0;		
 	}
 	
@@ -74,7 +67,7 @@ public class MorphOpen<T extends RealType<T>> implements OutputAlgorithm<T>, Ben
 		
 		if (eroder.process())
 		{
-			dilater = new MorphDilate<T>(eroder.getResult(), strel, outsideFactory);
+			dilater = new MorphDilate<T>(eroder.getResult(), strelCursor);
 			dilater.setName(image.getName() + " Opened");
 			rVal = dilater.process();			
 		}

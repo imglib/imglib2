@@ -3,6 +3,7 @@ package script.imglib.algorithm;
 import script.imglib.math.Compute;
 import script.imglib.math.fn.IFunction;
 import mpicbg.imglib.algorithm.roi.StructuringElement;
+import mpicbg.imglib.cursor.special.StructuringElementCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyMirrorFactory;
@@ -32,11 +33,15 @@ public class MedianFilter<T extends RealType<T>> extends Image<T>
 
 	static private final <S extends RealType<S>> Image<S> process(final Image<S> img, final float radius, final OutOfBoundsStrategyFactory<S> oobs) throws Exception {
 		final mpicbg.imglib.algorithm.roi.MedianFilter<S> mf =
-			new mpicbg.imglib.algorithm.roi.MedianFilter<S>(img, StructuringElement.createBall(img.getNumDimensions(), radius), oobs);
+			new mpicbg.imglib.algorithm.roi.MedianFilter<S>(img, 
+			        new StructuringElementCursor<S>(
+			                img.createLocalizableByDimCursor(oobs),
+			                StructuringElement.createBall(img.getNumDimensions(), radius)));
 		// TODO: mf.checkInput() returns false even if the image is processed fine.
 		if (!mf.process()) {
 			throw new Exception("MedianFilter: " + mf.getErrorMessage());
 		}
+		mf.closeAll();
 		return mf.getResult();
 	}
 }

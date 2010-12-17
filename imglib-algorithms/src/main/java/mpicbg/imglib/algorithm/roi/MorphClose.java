@@ -2,8 +2,8 @@ package mpicbg.imglib.algorithm.roi;
 
 import mpicbg.imglib.algorithm.Benchmark;
 import mpicbg.imglib.algorithm.OutputAlgorithm;
+import mpicbg.imglib.cursor.special.StructuringElementCursor;
 import mpicbg.imglib.image.Image;
-import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
 import mpicbg.imglib.type.numeric.RealType;
 
 /**
@@ -21,24 +21,17 @@ public class MorphClose<T extends RealType<T>> implements OutputAlgorithm<T>, Be
 	private Image<T> outputImage;
 	private final MorphDilate<T> dilater;
 	private MorphErode<T> eroder;
-	private final StructuringElement strel;
-	private final OutOfBoundsStrategyFactory<T> outsideFactory;
+	private final StructuringElementCursor<T> strelCursor;
 	private long pTime;
 	
-	public MorphClose(Image<T> imageIn, StructuringElement strelIn)
-	{
-		this(imageIn, strelIn, null);
-	}
-	
-	public MorphClose(Image<T> imageIn, StructuringElement strelIn,
-			final OutOfBoundsStrategyFactory<T> inOutsideFactory)
+	public MorphClose(final Image<T> imageIn,
+	        final StructuringElementCursor<T> inStrelCursor)
 	{
 		image = imageIn;		
-		strel = strelIn;
-		dilater = new MorphDilate<T>(image, strel, inOutsideFactory);
+		strelCursor = inStrelCursor;
+		dilater = new MorphDilate<T>(image, strelCursor);
 		eroder = null;
 		outputImage = null;
-		outsideFactory = inOutsideFactory;
 		pTime = 0;
 	}
 	
@@ -74,7 +67,7 @@ public class MorphClose<T extends RealType<T>> implements OutputAlgorithm<T>, Be
 		
 		if (dilater.process())
 		{
-			eroder = new MorphErode<T>(dilater.getResult(), strel, outsideFactory);
+			eroder = new MorphErode<T>(dilater.getResult(), strelCursor);
 			eroder.setName(image.getName() + " Closed");
 			rVal = eroder.process();			
 		}

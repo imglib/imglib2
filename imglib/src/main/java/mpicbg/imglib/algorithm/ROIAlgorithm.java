@@ -2,13 +2,14 @@ package mpicbg.imglib.algorithm;
 
 import java.util.Arrays;
 
-import mpicbg.imglib.cursor.LocalizableCursor;
+import mpicbg.imglib.cursor.LocalizableByDimCursor;
 import mpicbg.imglib.cursor.special.RegionOfInterestCursor;
+import mpicbg.imglib.cursor.special.StructuringElementCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.ImageFactory;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyValueFactory;
-import mpicbg.imglib.type.numeric.RealType;
+import mpicbg.imglib.type.Type;
 
 /**
  * ROIAlgorithm implements a framework against which to build operations of one image against
@@ -25,20 +26,16 @@ import mpicbg.imglib.type.numeric.RealType;
  * @param <T>
  * @param <S>
  */
-public abstract class ROIAlgorithm <T extends RealType<T>, S extends RealType<S>>
+public abstract class ROIAlgorithm <T extends Type<T>, S extends Type<S>>
 	implements OutputAlgorithm<S>, Benchmark
 {
 
-	private final RegionOfInterestCursor<T> roiCursor;
-	private final int[] patchSize;
-	private final int[] originOffset;
 	private final Image<T> inputImage;
-	private final OutOfBoundsStrategyFactory<T> outsideFactory;
-	private Image<S> outputImage;	
-	private ImageFactory<S> imageFactory;		
+	private Image<S> outputImage;
+	private StructuringElementCursor<T> strelCursor;
+	private final ImageFactory<S> imageFactory;		
 	private String errorMsg;
 	private String name;
-	private final S typeS;
 	private long pTime;
 
 	/**
@@ -48,9 +45,27 @@ public abstract class ROIAlgorithm <T extends RealType<T>, S extends RealType<S>
 	 * @param imageIn the image over which to iterate.
 	 * @param patchSize the size of the patch that will be examined at each iteration.
 	 */
-	protected ROIAlgorithm(final S type, final Image<T> imageIn, final int[] patchSize)
+	/*protected ROIAlgorithm(final S type, final Image<T> imageIn, final int[] patchSize)
 	{
 		this(type, imageIn, patchSize, null);
+	}*/
+
+	protected ROIAlgorithm(final ImageFactory<S> imFactory,
+            final Image<T> inputImage,
+            final int[] patchSize)
+	{
+	    this(imFactory, inputImage, patchSize,
+	            new OutOfBoundsStrategyValueFactory<T>(
+	                    inputImage.createType()));
+	}
+	
+	protected ROIAlgorithm(final ImageFactory<S> imFactory,
+	        final Image<T> inputImage, final int[] patchSize, 
+	        final OutOfBoundsStrategyFactory<T> oobFactory)
+	{
+	    this(imFactory, new StructuringElementCursor<T>(
+	            inputImage.createLocalizableByDimCursor(oobFactory),
+	            patchSize));
 	}
 	
 	/**
@@ -60,67 +75,32 @@ public abstract class ROIAlgorithm <T extends RealType<T>, S extends RealType<S>
 	 * @param patchSize the size of the patch that will be examined at each iteration.
 	 * @param inOutFactory an {@link OutOfBoundsStrategyFactory} to handle the border phenomenon.
 	 */
-	protected ROIAlgorithm(final S type, final Image<T> imageIn, final int[] patchSize,
-			final OutOfBoundsStrategyFactory<T> inOutFactory)
+	protected ROIAlgorithm(final ImageFactory<S> imFactory,	        
+	        StructuringElementCursor<T> strelCursor)
 	{		
-		int nd = imageIn.getNumDimensions();
+		int nd = strelCursor.getImage().getNumDimensions();
 		
 		final int[] initPos = new int[nd];
 		
 		pTime = 0;
-		originOffset = new int[nd];
-		inputImage = imageIn;
-		this.patchSize = patchSize.clone();
+		inputImage = strelCursor.getImage();
+		
 		outputImage = null;
-		imageFactory = null;
+		imageFactory = imFactory;
 		errorMsg = "";
 		name = null;
-		typeS = type.copy();
 		Arrays.fill(initPos, 0);
 		
-		if (inOutFactory == null)
-		{
-			T typeT = imageIn.createType();
-			typeT.setZero();
-			outsideFactory = new OutOfBoundsStrategyValueFactory<T>(typeT); 
-		}
-		else
-		{
-			outsideFactory = inOutFactory;
-		}
+		this.strelCursor = strelCursor;
 		
-		roiCursor = imageIn.createLocalizableByDimCursor(outsideFactory)
-			.createRegionOfInterestCursor(initPos, patchSize);
-		
-		for (int i = 0; i < nd; ++i)
-		{
-			//Dividing an int by 2 automatically takes the floor, which is what we want.
-			originOffset[i] = patchSize[i] / 2;
-		}		
 	}
 
-	/**
-	 * Performs this algorithm's operation on the patch represented by a
-	 * {@link RegionOfInterestCursor} 
-	 * @param position the position in the input image at the center of the patch represented by
-	 * the RegionOfInterestCursor
-	 * @param cursor a {@link RegionOfInterestCursor} that iterates over the given
-	 * patch-of-interest
-	 * @return true if the operation on the given patch was successful, false otherwise.  If false
-	 * is returned by this method, process() will abort. 
-	 */
-	protected abstract boolean patchOperation(final int[] position,
-			final RegionOfInterestCursor<T> cursor);
 	
-	/**
-	 * Set the {@link ImageFactory} used to create the output {@link Image} 
-	 * @param factory the {@link ImageFactory} used to create the output {@link Image}
-	 */
-	public void setImageFactory(final ImageFactory<S> factory)
-	{
-		imageFactory = factory;
-	}
+	protected abstract boolean patchOperation(
+			final StructuringElementCursor<T> cursor,
+			final S outputType);
 	
+
 	/**
 	 * Set the name given to the output image.
 	 * @param inName the name to give to the output image.
@@ -135,10 +115,7 @@ public abstract class ROIAlgorithm <T extends RealType<T>, S extends RealType<S>
 		return name;
 	}
 	
-	public int[] getPatchSize()
-	{
-		return patchSize.clone();
-	}
+
 
 	/**
 	 * Returns the {@link Image} that will eventually become the result of this
@@ -150,11 +127,6 @@ public abstract class ROIAlgorithm <T extends RealType<T>, S extends RealType<S>
 	{		
 		if (outputImage == null)
 		{
-			if (imageFactory == null)
-			{			
-				imageFactory = new ImageFactory<S>(typeS, inputImage.getContainerFactory());
-			}
-					
 			if (name == null)
 			{
 				outputImage = imageFactory.createImage(inputImage.getDimensions());
@@ -191,7 +163,7 @@ public abstract class ROIAlgorithm <T extends RealType<T>, S extends RealType<S>
 	 * @param offsetPosition an int array to contain the newly offset position coordinates
 	 * @return offsetPosition, for convenience.
 	 */
-	protected int[] positionOffset(final int[] position, final int[] offsetPosition)
+	/*protected int[] positionOffset(final int[] position, final int[] offsetPosition)
 	{
 		if (offsetPosition.length < position.length)
 		{
@@ -208,26 +180,25 @@ public abstract class ROIAlgorithm <T extends RealType<T>, S extends RealType<S>
 			offsetPosition[i] = position[i] - originOffset[i];
 		}
 		return offsetPosition;
-	}
+	}*/
 	
 	@Override
 	public boolean process()
 	{
-		final LocalizableCursor<S> outputCursor = getOutputImage().createLocalizableCursor();
-		final int[] pos = new int[inputImage.getNumDimensions()];
-		final int[] offsetPos = new int[inputImage.getNumDimensions()];
+		final LocalizableByDimCursor<S> outputCursor =
+		    getOutputImage().createLocalizableByDimCursor();
 		final long sTime = System.currentTimeMillis();
+		strelCursor.patchReset();
 		
-		while (outputCursor.hasNext())
+		while (strelCursor.patchHasNext())
 		{
-			outputCursor.fwd();			
-			outputCursor.getPosition(pos);
-			roiCursor.reset(positionOffset(pos, offsetPos));
-						
-			if (!patchOperation(pos, roiCursor))
+		    strelCursor.patchFwd();
+		    outputCursor.setPosition(strelCursor.getPatchCenterCursor());
+
+		    if (!patchOperation(strelCursor, outputCursor.getType()))
 			{
 				outputCursor.close();
-				
+				strelCursor.patchReset();
 				return false;
 			}
 		}
@@ -241,18 +212,37 @@ public abstract class ROIAlgorithm <T extends RealType<T>, S extends RealType<S>
 	@Override
 	public boolean checkInput()
 	{
-		return roiCursor.isActive();
+		if (strelCursor.isActive())
+		{
+		    return true;
+		}
+		else
+		{
+		    setErrorMessage("StructuringElementCursor is inactive");
+		    return false;
+		}
 	}
 	
 	public void close()
 	{
-		roiCursor.close();
+		strelCursor.close();
+	}
+	
+	public void closeAll()
+	{
+	    strelCursor.closeAll();
+	    close();	    
 	}
 
 	@Override
 	public long getProcessingTime()
 	{
 		return pTime;
+	}
+	
+	protected StructuringElementCursor<T> getStrelCursor()
+	{
+	    return strelCursor;
 	}
 	
 }
