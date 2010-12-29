@@ -2,6 +2,7 @@ package mpicbg.imglib.algorithm.roi;
 
 import mpicbg.imglib.cursor.special.StructuringElementCursor;
 import mpicbg.imglib.image.Image;
+import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
 import mpicbg.imglib.type.numeric.RealType;
 
 
@@ -14,20 +15,34 @@ import mpicbg.imglib.type.numeric.RealType;
  */
 public class MedianFilter<T extends RealType<T>> extends StatisticalOperation<T> {
 
+    public MedianFilter(final Image<T> imageIn,
+            int[] size, OutOfBoundsStrategyFactory<T> oobFactory) {
+        this(imageIn, StructuringElementCursor.sizeToPath(size), oobFactory);       
+    }
+    
+    public MedianFilter(final Image<T> imageIn,
+            int[][] path, OutOfBoundsStrategyFactory<T> oobFactory)
+    {
+        super(imageIn, path, oobFactory);
+        setName(imageIn.getName() + " Median Filter");
+    }
+    
 	public MedianFilter(final Image<T> imageIn,
-	        final StructuringElementCursor<T> inStrelCursor) {
-		super(imageIn, inStrelCursor);
-		setName(imageIn.getName() + " Median Filter");
+	        int[] size) {
+		this(imageIn, StructuringElementCursor.sizeToPath(size));		
+	}
+	
+	public MedianFilter(final Image<T> imageIn,
+	        int[][] path)
+	{
+	    super(imageIn, path);
+	    setName(imageIn.getName() + " Median Filter");
 	}
 
 	@Override
 	protected void statsOp(final T outputType) {		
-		int n = super.getList().size();
-		/*System.out.println("Found list of size " + getList().size());
-		System.out.println("First: " + getList().get(0) +
-		        ", Last: " + getList().get(getList().size() - 1) + 
-		        ", Median: " + getList().get(n / 2));*/
-		outputType.set(super.getList().get(n / 2));
+	    int n = super.getArray().length;		
+		outputType.setReal(super.getArray()[n / 2]);
 	}
 
 }

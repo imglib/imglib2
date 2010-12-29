@@ -4,6 +4,8 @@ import mpicbg.imglib.algorithm.Benchmark;
 import mpicbg.imglib.algorithm.OutputAlgorithm;
 import mpicbg.imglib.cursor.special.StructuringElementCursor;
 import mpicbg.imglib.image.Image;
+import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
+import mpicbg.imglib.outofbounds.OutOfBoundsStrategyValueFactory;
 import mpicbg.imglib.type.numeric.RealType;
 
 /**
@@ -21,18 +23,41 @@ public class MorphClose<T extends RealType<T>> implements OutputAlgorithm<T>, Be
 	private Image<T> outputImage;
 	private final MorphDilate<T> dilater;
 	private MorphErode<T> eroder;
-	private final StructuringElementCursor<T> strelCursor;
+	private final int[][] path;
 	private long pTime;
+	private final OutOfBoundsStrategyFactory<T> oobFactory;
 	
+	 public MorphClose(final Image<T> imageIn,
+            int[] size, OutOfBoundsStrategyFactory<T> oobFactory) {
+        this(imageIn, StructuringElementCursor.sizeToPath(size), oobFactory);       
+    }
+     public MorphClose(final Image<T> imageIn, int[] size) {
+        this(imageIn, StructuringElementCursor.sizeToPath(size));       
+    }
+    
+    public MorphClose(final Image<T> imageIn,
+            int[][] path)
+    {
+       this(imageIn, path, new OutOfBoundsStrategyValueFactory<T>());
+    }
+    
 	public MorphClose(final Image<T> imageIn,
-	        final StructuringElementCursor<T> inStrelCursor)
+	        final int[][] inPath, OutOfBoundsStrategyFactory<T> oobFactory)
 	{
 		image = imageIn;		
-		strelCursor = inStrelCursor;
-		dilater = new MorphDilate<T>(image, strelCursor);
+		path = new int[inPath.length][inPath[0].length];
 		eroder = null;
 		outputImage = null;
 		pTime = 0;
+		this.oobFactory = oobFactory;
+		
+		for (int i = 0; i < inPath.length; ++i)
+		{
+		    System.arraycopy(inPath[i], 0, path[i], 0, inPath[i].length);
+		}
+		
+	      dilater = new MorphDilate<T>(image, path, oobFactory);
+
 	}
 	
 	@Override
@@ -67,7 +92,7 @@ public class MorphClose<T extends RealType<T>> implements OutputAlgorithm<T>, Be
 		
 		if (dilater.process())
 		{
-			eroder = new MorphErode<T>(dilater.getResult(), strelCursor);
+			eroder = new MorphErode<T>(dilater.getResult(), path, oobFactory);
 			eroder.setName(image.getName() + " Closed");
 			rVal = eroder.process();			
 		}

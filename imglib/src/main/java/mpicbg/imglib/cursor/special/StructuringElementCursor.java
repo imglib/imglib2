@@ -42,7 +42,22 @@ public class StructuringElementCursor<T extends Type<T>> extends CursorImpl<T>
 	 */
 	private final int[] cursorSetPos;
 	
-	private static <R extends ComplexType<R>> int[][] imageToPath(
+	public static int[] halveArray(int[] array)
+	{
+	    for (int i = 0; i < array.length; ++i)
+	    {
+	        array[i] /= 2;
+	    }
+	    return array;
+	}
+
+	public static <R extends ComplexType<R>> int[][] imageToPath(
+	        final Image<R> im)
+	{
+	    return imageToPath(im, halveArray(im.getDimensions()));
+	}
+	
+	public static <R extends ComplexType<R>> int[][] imageToPath(
 	        final Image<R> im, int[] strelImageCenter)
     {
 	    LocalizableCursor<R> cursor = im.createLocalizableCursor();
@@ -91,6 +106,11 @@ public class StructuringElementCursor<T extends Type<T>> extends CursorImpl<T>
         cursor.close();
         return path;
     }
+	
+	public static int[][] sizeToPath(final int[] size)
+	{
+	    return sizeToPath(size, halveArray(size.clone()));
+	}
 	
 	public static int[][] sizeToPath(final int[] size, int[] patchCenter)
 	{
@@ -162,6 +182,12 @@ public class StructuringElementCursor<T extends Type<T>> extends CursorImpl<T>
 	    this(cursor, sizeToPath(size, patchCenter));
 	}
 	
+	public StructuringElementCursor(final LocalizableByDimCursor<T> cursor,
+	        final StructuringElementCursor<?> strelCursor)
+	{
+	    this(cursor, strelCursor.path);
+	}
+	
 	public StructuringElementCursor(final LocalizableByDimCursor<T> cursor, 
 	        final int[][] inPath) {
 		super(cursor.getStorageContainer(), cursor.getImage());		
@@ -177,10 +203,7 @@ public class StructuringElementCursor<T extends Type<T>> extends CursorImpl<T>
 		
 		for (int j = 0; j < n; ++j)
 		{
-		    for (int k = 0; k < numDimensions; ++k)
-		    {
-		        path[j][k] = inPath[j][k];
-		    }
+		    System.arraycopy(inPath[j], 0, path[j], 0, inPath[j].length);
 		}
 		
 		reset();
@@ -192,11 +215,9 @@ public class StructuringElementCursor<T extends Type<T>> extends CursorImpl<T>
 	}
 	
 	public void centerKernel(final int[] dim)
-	{
-	    for (int i = 0; i < kernelOffsetPos.length; ++i)
-	    {
-	        kernelOffsetPos[i] = dim[i] / 2;
-	    }
+	{	    
+	    System.arraycopy(dim, 0, kernelOffsetPos, 0, kernelOffsetPos.length);
+	    halveArray(kernelOffsetPos);
 	}
 	
 	public void setPatchCenterCursor(final LocalizableCursor<?> newPCC)
@@ -316,4 +337,9 @@ public class StructuringElementCursor<T extends Type<T>> extends CursorImpl<T>
         
         return pos;
 	}	
+	
+	public int getPathLength()
+	{
+	    return n;
+	}
 }

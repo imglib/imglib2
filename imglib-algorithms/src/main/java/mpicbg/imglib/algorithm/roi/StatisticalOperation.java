@@ -1,12 +1,13 @@
 package mpicbg.imglib.algorithm.roi;
 
-import java.util.Collections;
-import java.util.LinkedList;
+import java.util.Arrays;
 
 import mpicbg.imglib.algorithm.ROIAlgorithm;
 import mpicbg.imglib.cursor.special.StructuringElementCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.ImageFactory;
+import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
+import mpicbg.imglib.outofbounds.OutOfBoundsStrategyValueFactory;
 import mpicbg.imglib.type.numeric.RealType;
 
 /**
@@ -22,50 +23,52 @@ import mpicbg.imglib.type.numeric.RealType;
 public abstract class StatisticalOperation<T extends RealType<T>> extends ROIAlgorithm<T, T> {
 	//Member variables
 	
-	private final LinkedList<T> statList;
+	private final double[] statArray;
+	public long statsTime;
 	
 	//Member functions
 	
-	public StatisticalOperation(final Image<T> imageIn,
-	        final StructuringElementCursor<T> inStrelCursor) {
+	public StatisticalOperation(final Image<T> imageIn, int[][] path) {
+        this(imageIn, path, new OutOfBoundsStrategyValueFactory<T>());
+    }
+	
+	public StatisticalOperation(final Image<T> imageIn, int[][] path, 
+	        OutOfBoundsStrategyFactory<T> oobFactory) {
 		super(new ImageFactory<T>(imageIn.createType(), imageIn.getContainerFactory()),
-		        inStrelCursor);
-
-		statList = new LinkedList<T>();
+		        new StructuringElementCursor<T>(
+		                imageIn.createLocalizableByDimCursor(oobFactory), path));
+		statsTime = 0;
+		statArray = new double[path.length];
 	}
 
 	public void collectStats(final StructuringElementCursor <T> cursor)
     {
-        statList.clear();
-        
+        int i = 0;
         while(cursor.hasNext())
         {
-            T type;
             cursor.fwd();
-            type = cursor.getType().createVariable();
-            type.set(cursor.getType());
-            statList.add(type);
+            statArray[i++] = cursor.getType().getRealDouble();
         }
-        
-        Collections.sort(statList);
+
+        Arrays.sort(statArray);
     }
 	
-	protected LinkedList<T> getList()
+	protected double[] getArray()
 	{
-		return statList;
+	    return statArray;
 	}
-		
+			
 	@Override
 	protected boolean patchOperation(
             final StructuringElementCursor<T> cursor,
             final T outputType) {
+	    long p = System.currentTimeMillis();
 		collectStats(cursor);
-		
+		statsTime += System.currentTimeMillis() - p;
 		statsOp(outputType);
 		
 		return true;
 	}
-
 		
 	/**
 	 * Perform the order statistic operation, then set the value of the given type.

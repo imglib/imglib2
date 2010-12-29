@@ -34,9 +34,10 @@ public class MedianFilter<T extends RealType<T>> extends Image<T>
 	static private final <S extends RealType<S>> Image<S> process(final Image<S> img, final float radius, final OutOfBoundsStrategyFactory<S> oobs) throws Exception {
 		final mpicbg.imglib.algorithm.roi.MedianFilter<S> mf =
 			new mpicbg.imglib.algorithm.roi.MedianFilter<S>(img, 
-			        new StructuringElementCursor<S>(
-			                img.createLocalizableByDimCursor(oobs),
-			                StructuringElement.createBall(img.getNumDimensions(), radius)));
+			        StructuringElementCursor.imageToPath(
+			                StructuringElement.createBall(img.getNumDimensions(), radius),
+			                StructuringElementCursor.halveArray(img.getDimensions())),
+			                oobs);
 		// TODO: mf.checkInput() returns false even if the image is processed fine.
 		if (!mf.process()) {
 			throw new Exception("MedianFilter: " + mf.getErrorMessage());

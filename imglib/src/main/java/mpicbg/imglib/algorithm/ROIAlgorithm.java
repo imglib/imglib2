@@ -155,32 +155,6 @@ public abstract class ROIAlgorithm <T extends Type<T>, S extends Type<S>>
 	{
 		errorMsg = message;
 	}
-
-	/**
-	 * Offsets the given position to reflect the origin of the patch being in its center, rather
-	 * than at the top-left corner as is usually the case.
-	 * @param position the position to be offset
-	 * @param offsetPosition an int array to contain the newly offset position coordinates
-	 * @return offsetPosition, for convenience.
-	 */
-	/*protected int[] positionOffset(final int[] position, final int[] offsetPosition)
-	{
-		if (offsetPosition.length < position.length)
-		{
-			throw new RuntimeException("Cannot copy " + position.length 
-					+ " values into array of length " + offsetPosition.length);
-		}
-		else if (position.length < originOffset.length){
-			throw new RuntimeException("Position vector has less cardinality than " +
-					"the input image's dimensionality.");
-		}
-			
-		for (int i = 0; i < position.length; ++i)
-		{
-			offsetPosition[i] = position[i] - originOffset[i];
-		}
-		return offsetPosition;
-	}*/
 	
 	@Override
 	public boolean process()
