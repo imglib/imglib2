@@ -17,8 +17,8 @@
  */
 
 import mpicbg.imglib.algorithm.histogram.Histogram;
-import mpicbg.imglib.algorithm.histogram.HistogramBinFactory;
-import mpicbg.imglib.algorithm.histogram.discrete.DiscreteIntHistogramBinFactory;
+import mpicbg.imglib.algorithm.histogram.HistogramBinMapper;
+import mpicbg.imglib.algorithm.histogram.IntBinMapper;
 import mpicbg.imglib.container.array.ArrayContainerFactory;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.ImageFactory;
@@ -40,6 +40,11 @@ public class HistogramPerformance<T extends IntegerType<T>> {
 	public void run(T type, int max) {
 		long start, end;
 
+		final T zeroType = type.createVariable();
+		final T maxType = type.createVariable();
+		zeroType.setZero();
+		maxType.setInteger(0);
+		
 		System.out.print("Creating image... ");
 		start = System.currentTimeMillis();
 		final Image<T> img = createImage(type, max);
@@ -50,9 +55,8 @@ public class HistogramPerformance<T extends IntegerType<T>> {
 		// build histogram with Histogram implementation
 		System.out.print("Building histogram... ");
 		start = System.currentTimeMillis();
-		final HistogramBinFactory<T> binFactory = 
-			new DiscreteIntHistogramBinFactory<T>();
-		final Histogram<T> histogram = new Histogram<T>(binFactory, img.createCursor());
+		final HistogramBinMapper<T> binMapper = new IntBinMapper<T>(zeroType, maxType);
+		final Histogram<T> histogram = new Histogram<T>(binMapper, img.createCursor());
 		histogram.process();
 		end = System.currentTimeMillis();
 		long histMillis = end - start;
@@ -74,7 +78,7 @@ public class HistogramPerformance<T extends IntegerType<T>> {
 		final T k = img.createType();
 		for (int i = 0; i < max; i++) {
 			k.setReal(i);
-			final int actual = (int) histogram.getBin(k).getCount();
+			final int actual = (int) histogram.getHistogram()[i];
 			final int expect = bins[i];
 			if (actual != expect) {
 				System.out.println("Error: for bin #" + i +

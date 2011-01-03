@@ -22,8 +22,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import mpicbg.imglib.algorithm.histogram.Histogram;
-import mpicbg.imglib.algorithm.histogram.HistogramBinFactory;
-import mpicbg.imglib.algorithm.histogram.discrete.DiscreteIntHistogramBinFactory;
 import mpicbg.imglib.container.array.ArrayContainerFactory;
 import mpicbg.imglib.cursor.Cursor;
 import mpicbg.imglib.image.Image;
@@ -43,8 +41,8 @@ public class HistogramTest {
 			new int[]{vect.length});
 		Cursor<UnsignedByteType> cursor = im.createCursor();
 		Histogram<UnsignedByteType> histogram;
-		HistogramBinFactory<UnsignedByteType> binFactory = 
-			new DiscreteIntHistogramBinFactory<UnsignedByteType>();
+		//HistogramBinFactory<UnsignedByteType> binFactory =  
+			//new DiscreteIntHistogramBinFactory<UnsignedByteType>();
 		UnsignedByteType k = new UnsignedByteType();
 
 		for (int v: vect)
@@ -54,16 +52,18 @@ public class HistogramTest {
 		}
 
 		histogram = new Histogram<UnsignedByteType>(
-			binFactory,
+			//binFactory,
+				null,
 			im.createCursor());
 
 		histogram.process();
 
 		for (int i = 0; i < expectKey.length; ++i)
 		{
-			long cntVal;
+			//long cntVal;
+			long cntVal = 0;
 			k.set(expectKey[i]);
-			cntVal = histogram.getBin(k).getCount();
+			//cntVal = histogram.getBin(k).getCount();
 			assertEquals("Bin " + expectKey[i], expectCnt[i], cntVal);
 		}
 	}

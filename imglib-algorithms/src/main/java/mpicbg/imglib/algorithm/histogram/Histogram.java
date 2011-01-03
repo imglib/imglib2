@@ -30,11 +30,12 @@
 package mpicbg.imglib.algorithm.histogram;
 
 import java.util.ArrayList;
-import java.util.Hashtable;
+import java.util.Arrays;
 
 import mpicbg.imglib.algorithm.Algorithm;
 import mpicbg.imglib.algorithm.Benchmark;
 import mpicbg.imglib.cursor.Cursor;
+import mpicbg.imglib.image.Image;
 import mpicbg.imglib.type.Type;
 
 /**
@@ -50,18 +51,18 @@ public class Histogram <T extends Type<T>> implements Algorithm, Benchmark
 	/**
 	 * Hold the histogram itself.
 	 */
-	private Hashtable<HistogramKey<T>, HistogramBin<T>>  hashTable;
+	private final int[] histogram;
 	
 	/**
 	 * The Cursor from which the histogram is to be calculated.
 	 */
-	private Cursor<T> cursor;
+	private final Cursor<T> cursor;
 	
 	/**
 	 * The HistogramBinFactory to use for generating HistogramBin's and
 	 * HistogramKey's.
 	 */
-	private final HistogramBinFactory<T> binFactory;	
+	private final HistogramBinMapper<T> binMapper;	
 
 	/**
 	 * Create a Histogram using the given factory, calculating from the given
@@ -72,40 +73,26 @@ public class Histogram <T extends Type<T>> implements Algorithm, Benchmark
 	 * will be calculated
 	 * 
 	 */
-	public Histogram(HistogramBinFactory<T> factory, Cursor<T> c)
-	{
+	public Histogram(final HistogramBinMapper<T> mapper,
+			final Cursor<T> c)
+	{		
 		cursor = c;
-		hashTable = new Hashtable<HistogramKey<T>, HistogramBin<T>>();
-		binFactory = factory;		
+		binMapper = mapper;
+		histogram = new int[binMapper.getNumBins()];
 	}
 	
-	/**
-	 * Returns an ArrayList containing the {@link HistogramKey}s generated
-	 * when calculating this Histogram.
-	 * @return an ArrayList containing the {@link HistogramKey}s generated
-	 * when calculating this Histogram.
-	 */
-	public ArrayList<HistogramKey<T>> getKeys()
+	public Histogram(final HistogramBinMapper<T> mapper,
+			final Image<T> image)
 	{
-		return new ArrayList<HistogramKey<T>>(hashTable.keySet());
+		this(mapper, image.createCursor());
 	}
-
-	/**
-	 * Returns the center {@link Type} corresponding to each
-	 * {@link HistogramKey} generated when calculating this Histogram.
-	 * @return
-	 */
-	public ArrayList<T> getKeyTypes()
+	
+	public void reset()
 	{
-		ArrayList<HistogramKey<T>> keys = getKeys();
-		ArrayList<T> types = new ArrayList<T>(keys.size());
-		for (HistogramKey<T> hk : keys)
-		{
-			types.add(hk.getType());			
-		}
-		
-		return types;
+		Arrays.fill(histogram, 0);
+		cursor.reset();
 	}
+	
 	
 	/**
 	 * Returns the bin corresponding to a given {@link Type}.
@@ -113,32 +100,25 @@ public class Histogram <T extends Type<T>> implements Algorithm, Benchmark
 	 * {@link HistogramBin}
 	 * @return The requested HistogramBin.
 	 */
-	public HistogramBin<T> getBin(T t)
+	public int getBin(final T t)
 	{
-		return getBin(binFactory.createKey(t));
+		return histogram[binMapper.map(t)];
 	}
 	
-	/**
-	 * Returns the bin corresponding to a given {@link HistogramKey}.
-	 * @param key the HistogramKey corresponding to the requested 
-	 * {@link HistogramBin}
-	 * @return The requested HistogramBin.
-	 */
-	public HistogramBin<T> getBin(HistogramKey<T> key)
+	public int[] getHistogram()
 	{
-		if (hashTable.containsKey(key))
+		return histogram; 
+	}
+	
+	public ArrayList<T> getBinCenters()
+	{
+		ArrayList<T> binCenters = new ArrayList<T>(histogram.length);
+		for (int i = 0; i < histogram.length; ++i)
 		{
-			return hashTable.get(key);
+			binCenters.set(i, binMapper.invMap(i));
 		}
-		else
-		{
-			/*
-			 * If the hash table doesn't contain the key in question, create a 
-			 * zero bin and return that.
-			 */
-			HistogramBin<T> zeroBin = binFactory.createBin(key.getType());
-			return zeroBin;
-		}
+		
+		return binCenters;
 	}
 	
 	@Override
@@ -158,21 +138,7 @@ public class Histogram <T extends Type<T>> implements Algorithm, Benchmark
 		while (cursor.hasNext())
 		{			
 			cursor.fwd();
-			//Create a key for the given type
-			HistogramKey<T> key = binFactory.createKey(cursor.getType());
-			//Grab the HistogramBin corresponding to that key, if it exists.
-			HistogramBin<T> bin = hashTable.get(key);
-			
-			if (bin == null)
-			{
-				//If there wasn't a bin already, create one and add it to the 
-				//hash table.
-				bin = binFactory.createBin(key.getType());
-				hashTable.put(key, bin);
-			}
-			
-			//Increment the count of the bin.
-			bin.inc();
+			histogram[binMapper.map(cursor.getType())]++;
 		}
 		
 		pTime = System.currentTimeMillis() - startTime;
