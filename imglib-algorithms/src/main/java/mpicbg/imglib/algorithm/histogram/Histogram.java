@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2010, Larry Lindsey
+ * Copyright (c) 2010, 2011 Larry Lindsey
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -59,16 +59,16 @@ public class Histogram <T extends Type<T>> implements Algorithm, Benchmark
 	private final Cursor<T> cursor;
 	
 	/**
-	 * The HistogramBinFactory to use for generating HistogramBin's and
-	 * HistogramKey's.
+	 * The HistogramBinMapper, used to map Type values to histogram bin
+	 * indices.
 	 */
 	private final HistogramBinMapper<T> binMapper;	
 
 	/**
-	 * Create a Histogram using the given factory, calculating from the given
+	 * Create a Histogram using the given mapper, calculating from the given
 	 * Cursor.
-	 * @param factory the HistogramBinFactory used to generate  
-	 * {@link HistogramKey}s and {@link HistogramBin}s 
+	 * @param mapper the HistogramBinMapper used to map Type values to 
+	 * histogram bin indices. 
 	 * @param c a Cursor corresponding to the Image from which the Histogram
 	 * will be calculated
 	 * 
@@ -81,35 +81,55 @@ public class Histogram <T extends Type<T>> implements Algorithm, Benchmark
 		histogram = new int[binMapper.getNumBins()];
 	}
 	
+	/**
+     * Create a Histogram using the given mapper, calculating from the given
+     * Image.
+     * @param mapper the HistogramBinMapper used to map Type values to 
+     * histogram bin indices. 
+     * @param image an Image from which the Histogram will be calculated
+     * 
+     */
 	public Histogram(final HistogramBinMapper<T> mapper,
 			final Image<T> image)
 	{
 		this(mapper, image.createCursor());
 	}
 	
+	/**
+	 * Resets the histogram array and the Cursor.
+	 */
 	public void reset()
 	{
 		Arrays.fill(histogram, 0);
 		cursor.reset();
 	}
 	
-	
 	/**
-	 * Returns the bin corresponding to a given {@link Type}.
+	 * Returns the bin count corresponding to a given {@link Type}.
 	 * @param t the Type corresponding to the requested 
 	 * {@link HistogramBin}
-	 * @return The requested HistogramBin.
+	 * @return The requested bin count.
 	 */
 	public int getBin(final T t)
 	{
 		return histogram[binMapper.map(t)];
 	}
 	
+	/**
+	 * Returns the histogram array.
+	 * @return the histogram array.
+	 */
 	public int[] getHistogram()
 	{
 		return histogram; 
 	}
 	
+	/**
+	 * Creates and returns a List containing Types that correspond to the
+	 * centers of the histogram bins.
+	 * @return a List containing Types that correspond to the centers of the 
+     * histogram bins.
+	 */
 	public ArrayList<T> getBinCenters()
 	{
 		ArrayList<T> binCenters = new ArrayList<T>(histogram.length);
@@ -134,11 +154,23 @@ public class Histogram <T extends Type<T>> implements Algorithm, Benchmark
 	@Override
 	public boolean process() {
 		long startTime = System.currentTimeMillis();
+		int index;
 		
 		while (cursor.hasNext())
 		{			
 			cursor.fwd();
-			histogram[binMapper.map(cursor.getType())]++;
+			index = binMapper.map(cursor.getType());
+			/*
+		    The following check makes this run for IntegerTypes at 3 to 4
+		    longer than the manual case on my machine.  This is a necessary
+		    check, but if this takes too long, it might be worthwhile to
+		    separate out an UncheckedHistogram, which would instead throw an
+		    ArrayOutOfBoundsException.
+			*/
+			if (index >=0 && index < histogram.length)
+			{
+			    histogram[index]++;
+			}
 		}
 		
 		pTime = System.currentTimeMillis() - startTime;

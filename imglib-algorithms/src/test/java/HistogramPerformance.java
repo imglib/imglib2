@@ -43,8 +43,8 @@ public class HistogramPerformance<T extends IntegerType<T>> {
 		final T zeroType = type.createVariable();
 		final T maxType = type.createVariable();
 		zeroType.setZero();
-		maxType.setInteger(0);
-		
+		maxType.setInteger((int)maxType.getMaxValue());
+
 		System.out.print("Creating image... ");
 		start = System.currentTimeMillis();
 		final Image<T> img = createImage(type, max);
@@ -78,7 +78,7 @@ public class HistogramPerformance<T extends IntegerType<T>> {
 		final T k = img.createType();
 		for (int i = 0; i < max; i++) {
 			k.setReal(i);
-			final int actual = (int) histogram.getHistogram()[i];
+			final int actual = histogram.getHistogram()[i];
 			final int expect = bins[i];
 			if (actual != expect) {
 				System.out.println("Error: for bin #" + i +
