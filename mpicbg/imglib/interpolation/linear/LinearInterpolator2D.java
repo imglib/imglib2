@@ -260,17 +260,13 @@ public class LinearInterpolator2D< T extends NumericType< T > > implements Inter
 		x = localizable.getFloatPosition( 0 );
 		final int floorX = floor( x );
 		final int floorXDistance = floorX - target.getIntPosition( 0 );
-		if ( floorXDistance == 0 )
-			return;
-		else
+		if ( floorXDistance != 0 )
 			target.move( floorXDistance, 0 );
 		
 		y = localizable.getFloatPosition( 1 );
 		final int floorY = floor( y );
 		final int floorYDistance = floorY - target.getIntPosition( 1 );
-		if ( floorYDistance == 0 )
-			return;
-		else
+		if ( floorYDistance != 0 )
 			target.move( floorYDistance, 1 );
 	}
 
@@ -282,17 +278,13 @@ public class LinearInterpolator2D< T extends NumericType< T > > implements Inter
 		x = ( float )position[ 0 ];
 		final int floorX = floor( x );
 		final int floorXDistance = floorX - target.getIntPosition( 0 );
-		if ( floorXDistance == 0 )
-			return;
-		else
+		if ( floorXDistance != 0 )
 			target.move( floorXDistance, 0 );
 		
 		y = ( float )position[ 1 ];
 		final int floorY = floor( y );
 		final int floorYDistance = floorY - target.getIntPosition( 1 );
-		if ( floorYDistance == 0 )
-			return;
-		else
+		if ( floorYDistance != 0 )
 			target.move( floorYDistance, 1 );
 	}
 
@@ -304,17 +296,13 @@ public class LinearInterpolator2D< T extends NumericType< T > > implements Inter
 		x = position[ 0 ];
 		final int floorX = floor( x );
 		final int floorXDistance = floorX - target.getIntPosition( 0 );
-		if ( floorXDistance == 0 )
-			return;
-		else
+		if ( floorXDistance != 0 )
 			target.move( floorXDistance, 0 );
 		
 		y = position[ 1 ];
 		final int floorY = floor( y );
 		final int floorYDistance = floorY - target.getIntPosition( 1 );
-		if ( floorYDistance == 0 )
-			return;
-		else
+		if ( floorYDistance != 0 )
 			target.move( floorYDistance, 1 );
 	}
 
@@ -461,17 +449,13 @@ public class LinearInterpolator2D< T extends NumericType< T > > implements Inter
 		final int floorX = localizable.getIntPosition( 0 );
 		x = floorX;
 		final int floorXDistance = floorX - target.getIntPosition( 0 );
-		if ( floorXDistance == 0 )
-			return;
-		else
+		if ( floorXDistance != 0 )
 			target.move( floorXDistance, 0 );
 		
 		final int floorY = localizable.getIntPosition( 1 );
 		y = floorY;
 		final int floorYDistance = floorY - target.getIntPosition( 1 );
-		if ( floorYDistance == 0 )
-			return;
-		else
+		if ( floorYDistance != 0 )
 			target.move( floorYDistance, 1 );
 	}
 
@@ -483,17 +467,13 @@ public class LinearInterpolator2D< T extends NumericType< T > > implements Inter
 		final int floorX = position[ 0 ];
 		x = floorX;
 		final int floorXDistance = floorX - target.getIntPosition( 0 );
-		if ( floorXDistance == 0 )
-			return;
-		else
+		if ( floorXDistance != 0 )
 			target.move( floorXDistance, 0 );
 		
 		final int floorY = position[ 1 ];
 		y = floorY;
 		final int floorYDistance = floorY - target.getIntPosition( 1 );
-		if ( floorYDistance == 0 )
-			return;
-		else
+		if ( floorYDistance != 0 )
 			target.move( floorYDistance, 1 );
 	}
 
@@ -505,17 +485,13 @@ public class LinearInterpolator2D< T extends NumericType< T > > implements Inter
 		final int floorX = ( int )position[ 0 ];
 		x = floorX;
 		final int floorXDistance = floorX - target.getIntPosition( 0 );
-		if ( floorXDistance == 0 )
-			return;
-		else
+		if ( floorXDistance != 0 )
 			target.move( floorXDistance, 0 );
 		
 		final int floorY = ( int )position[ 1 ];
 		y = floorY;
 		final int floorYDistance = floorY - target.getIntPosition( 1 );
-		if ( floorYDistance == 0 )
-			return;
-		else
+		if ( floorYDistance != 0 )
 			target.move( floorYDistance, 1 );
 	}
 

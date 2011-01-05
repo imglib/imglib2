@@ -200,26 +200,20 @@ public class NearestNeighborInterpolator3D< T extends Type< T > > extends Neares
 		x = localizable.getFloatPosition( 0 );
 		final int roundX = round( x );
 		final int roundXDistance = roundX - target.getIntPosition( 0 );
-		if ( roundXDistance == 0 )
-			return;
-		else
+		if ( roundXDistance != 0 )
 			target.move( roundXDistance, 0 );
 		
 		y = localizable.getFloatPosition( 1 );
 		final int roundY = round( y );
 		final int roundYDistance = roundY - target.getIntPosition( 1 );
-		if ( roundYDistance == 0 )
-			return;
-		else
+		if ( roundYDistance != 0 )
 			target.move( roundYDistance, 1 );
 		
 		z = localizable.getFloatPosition( 2 );
 		final int roundZ = round( z );
 		final int roundZDistance = roundZ - target.getIntPosition( 2 );
-		if ( roundZDistance == 0 )
-			return;
-		else
-			target.move( roundZDistance, 0 );
+		if ( roundZDistance != 0 )
+			target.move( roundZDistance, 2 );
 	}
 
 	@Override
@@ -230,26 +224,20 @@ public class NearestNeighborInterpolator3D< T extends Type< T > > extends Neares
 		x = ( float )position[ 0 ];
 		final int roundX = round( x );
 		final int roundXDistance = roundX - target.getIntPosition( 0 );
-		if ( roundXDistance == 0 )
-			return;
-		else
+		if ( roundXDistance != 0 )
 			target.move( roundXDistance, 0 );
 		
 		y = ( float )position[ 1 ];
 		final int roundY = round( y );
 		final int roundYDistance = roundY - target.getIntPosition( 1 );
-		if ( roundYDistance == 0 )
-			return;
-		else
+		if ( roundYDistance != 0 )
 			target.move( roundYDistance, 1 );
 		
 		z = ( float )position[ 2 ];
 		final int roundZ = round( z );
 		final int roundZDistance = roundZ - target.getIntPosition( 2 );
-		if ( roundZDistance == 0 )
-			return;
-		else
-			target.move( roundZDistance, 0 );
+		if ( roundZDistance != 0 )
+			target.move( roundZDistance, 2 );
 	}
 
 	@Override
@@ -260,26 +248,20 @@ public class NearestNeighborInterpolator3D< T extends Type< T > > extends Neares
 		x = position[ 0 ];
 		final int roundX = round( x );
 		final int roundXDistance = roundX - target.getIntPosition( 0 );
-		if ( roundXDistance == 0 )
-			return;
-		else
+		if ( roundXDistance != 0 )
 			target.move( roundXDistance, 0 );
 		
 		y = position[ 1 ];
 		final int roundY = round( y );
 		final int roundYDistance = roundY - target.getIntPosition( 1 );
-		if ( roundYDistance == 0 )
-			return;
-		else
+		if ( roundYDistance != 0 )
 			target.move( roundYDistance, 1 );
 		
 		z = position[ 2 ];
 		final int roundZ = round( z );
 		final int roundZDistance = roundZ - target.getIntPosition( 2 );
-		if ( roundZDistance == 0 )
-			return;
-		else
-			target.move( roundZDistance, 0 );
+		if ( roundZDistance != 0 )
+			target.move( roundZDistance, 2 );
 	}
 
 	@Override
@@ -444,25 +426,19 @@ public class NearestNeighborInterpolator3D< T extends Type< T > > extends Neares
 		final int roundX = localizable.getIntPosition( 0 );
 		x = roundX;
 		final int roundXDistance = roundX - target.getIntPosition( 0 );
-		if ( roundXDistance == 0 )
-			return;
-		else
+		if ( roundXDistance != 0 )
 			target.move( roundXDistance, 0 );
 		
 		final int roundY = localizable.getIntPosition( 1 );
 		y = roundY;
 		final int roundYDistance = roundY - target.getIntPosition( 1 );
-		if ( roundYDistance == 0 )
-			return;
-		else
+		if ( roundYDistance != 0 )
 			target.move( roundYDistance, 1 );
 		
 		final int roundZ = localizable.getIntPosition( 2 );
 		z = roundZ;
 		final int roundZDistance = roundZ - target.getIntPosition( 2 );
-		if ( roundZDistance == 0 )
-			return;
-		else
+		if ( roundZDistance != 0 )
 			target.move( roundZDistance, 2 );
 	}
 
@@ -472,25 +448,19 @@ public class NearestNeighborInterpolator3D< T extends Type< T > > extends Neares
 		final int roundX = position[ 0 ];
 		x = roundX;
 		final int roundXDistance = roundX - target.getIntPosition( 0 );
-		if ( roundXDistance == 0 )
-			return;
-		else
+		if ( roundXDistance != 0 )
 			target.move( roundXDistance, 0 );
 		
 		final int roundY = position[ 1 ];
 		y = roundY;
 		final int roundYDistance = roundY - target.getIntPosition( 1 );
-		if ( roundYDistance == 0 )
-			return;
-		else
+		if ( roundYDistance != 0 )
 			target.move( roundYDistance, 1 );
 		
 		final int roundZ = position[ 2 ];
 		z = roundZ;
 		final int roundZDistance = roundZ - target.getIntPosition( 2 );
-		if ( roundZDistance == 0 )
-			return;
-		else
+		if ( roundZDistance != 0 )
 			target.move( roundZDistance, 2 );
 	}
 
@@ -500,25 +470,19 @@ public class NearestNeighborInterpolator3D< T extends Type< T > > extends Neares
 		final int roundX = ( int )position[ 0 ];
 		x = roundX;
 		final int roundXDistance = roundX - target.getIntPosition( 0 );
-		if ( roundXDistance == 0 )
-			return;
-		else
+		if ( roundXDistance != 0 )
 			target.move( roundXDistance, 0 );
 		
 		final int roundY = ( int )position[ 1 ];
 		y = roundY;
 		final int roundYDistance = roundY - target.getIntPosition( 1 );
-		if ( roundYDistance == 0 )
-			return;
-		else
+		if ( roundYDistance != 0 )
 			target.move( roundYDistance, 1 );
 		
 		final int roundZ = ( int )position[ 2 ];
 		z = roundZ;
 		final int roundZDistance = roundZ - target.getIntPosition( 2 );
-		if ( roundZDistance == 0 )
-			return;
-		else
+		if ( roundZDistance != 0 )
 			target.move( roundZDistance, 2 );
 	}
 

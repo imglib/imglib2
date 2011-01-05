@@ -117,14 +117,14 @@ public class RoundRasterPositionable< LocalizableRasterPositionable extends Rast
 	public void localize( final float[] pos )
 	{
 		for ( int d = 0; d < pos.length; ++d )
-			pos[ d ] = this.position[ d ];
+			pos[ d ] = position[ d ];
 	}
 
 	@Override
 	public void localize( final double[] pos )
 	{
 		for ( int d = 0; d < pos.length; ++d )
-			pos[ d ] = this.position[ d ];
+			pos[ d ] = position[ d ];
 	}
 	
 
@@ -134,26 +134,26 @@ public class RoundRasterPositionable< LocalizableRasterPositionable extends Rast
 	public void move( final float distance, final int dim )
 	{
 		final float realPosition = position[ dim ] + distance;
-		final int floorPosition = round( realPosition );
+		final int roundPosition = round( realPosition );
 		position[ dim ] = realPosition;
-		final int floorDistance = floorPosition - target.getIntPosition( dim );
-		if ( floorDistance == 0 )
+		final int roundDistance = roundPosition - target.getIntPosition( dim );
+		if ( roundDistance == 0 )
 			return;
 		else
-			target.move( floorDistance, dim );
+			target.move( roundDistance, dim );
 	}
 
 	@Override
 	public void move( final double distance, final int dim )
 	{
 		final float realPosition = position[ dim ] + ( float )distance;
-		final int floorPosition = round( realPosition );
+		final int roundPosition = round( realPosition );
 		position[ dim ] = realPosition;
-		final int floorDistance = floorPosition - target.getIntPosition( dim );
-		if ( floorDistance == 0 )
+		final int roundDistance = roundPosition - target.getIntPosition( dim );
+		if ( roundDistance == 0 )
 			return;
 		else
-			target.move( floorDistance, dim );
+			target.move( roundDistance, dim );
 	}
 
 	@Override
@@ -169,13 +169,13 @@ public class RoundRasterPositionable< LocalizableRasterPositionable extends Rast
 		for ( int d = 0; d < numDimensions; ++d )
 		{
 			final float realPosition = pos[ d ];
-			this.position[ d ] = realPosition;
-			final int floorPosition = round( realPosition );
-			final int floorDistance = floorPosition - target.getIntPosition( d );
-			if ( floorDistance == 0 )
+			position[ d ] = realPosition;
+			final int roundPosition = round( realPosition );
+			final int roundDistance = roundPosition - target.getIntPosition( d );
+			if ( roundDistance == 0 )
 				continue;
 			else
-				target.move( floorDistance, d );
+				target.move( roundDistance, d );
 		}
 	}
 
@@ -185,13 +185,13 @@ public class RoundRasterPositionable< LocalizableRasterPositionable extends Rast
 		for ( int d = 0; d < numDimensions; ++d )
 		{
 			final float realPosition = ( float )pos[ d ];
-			this.position[ d ] = realPosition;
-			final int floorPosition = round( realPosition );
-			final int floorDistance = floorPosition - target.getIntPosition( d );
-			if ( floorDistance == 0 )
+			position[ d ] = realPosition;
+			final int roundPosition = round( realPosition );
+			final int roundDistance = roundPosition - target.getIntPosition( d );
+			if ( roundDistance == 0 )
 				continue;
 			else
-				target.move( floorDistance, d );
+				target.move( roundDistance, d );
 		}
 	}
 
