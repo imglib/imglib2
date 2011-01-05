@@ -37,7 +37,7 @@ public class ImageTransform<T extends Type<T>> implements OutputAlgorithm<T>
 	final InvertibleCoordinateTransform transform;
 	final Image<T> img;
 	final int numDimensions;
-	final InterpolatorFactory<T> interpolatorFactory;
+	final InterpolatorFactory<T,?> interpolatorFactory;
 	final boolean isAffine;
 	
 	ImageFactory<T> outputImageFactory;
@@ -48,7 +48,7 @@ public class ImageTransform<T extends Type<T>> implements OutputAlgorithm<T>
 	Image<T> transformed;
 	String errorMessage = "";
 	
-	public ImageTransform( final Image<T> img, final InvertibleCoordinateTransform transform, final InterpolatorFactory<T> interpolatorFactory )
+	public ImageTransform( final Image<T> img, final InvertibleCoordinateTransform transform, final InterpolatorFactory<T,?> interpolatorFactory )
 	{
 		this.img = img;
 		this.interpolatorFactory = interpolatorFactory;

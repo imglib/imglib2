@@ -34,14 +34,14 @@ public class Affine3DImageTransform<T extends Type<T>> implements OutputAlgorith
 	final Image<T> img;
 	final int numDimensions;
 	final Transform3D transform;
-	final InterpolatorFactory<T> interpolatorFactory;
+	final InterpolatorFactory<T,?> interpolatorFactory;
 	final float[] location;
 	final int[] offset;
 	
 	Image<T> transformed;
 	String errorMessage = "";
 	
-	public Affine3DImageTransform( final Image<T> img, final Transform3D transform, final InterpolatorFactory<T> interpolatorFactory )
+	public Affine3DImageTransform( final Image<T> img, final Transform3D transform, final InterpolatorFactory<T,?> interpolatorFactory )
 	{
 		this.img = img;
 		this.interpolatorFactory = interpolatorFactory;
@@ -60,7 +60,7 @@ public class Affine3DImageTransform<T extends Type<T>> implements OutputAlgorith
 		}
 	}
 
-	public Affine3DImageTransform( final Image<T> img, final AffineModel3D transform, final InterpolatorFactory<T> interpolatorFactory )
+	public Affine3DImageTransform( final Image<T> img, final AffineModel3D transform, final InterpolatorFactory<T,?> interpolatorFactory )
 	{
 		this.img = img;
 		this.interpolatorFactory = interpolatorFactory;
@@ -79,7 +79,7 @@ public class Affine3DImageTransform<T extends Type<T>> implements OutputAlgorith
 		}
 	}
 
-	public Affine3DImageTransform( final Image<T> img, final float[] transform, final InterpolatorFactory<T> interpolatorFactory )
+	public Affine3DImageTransform( final Image<T> img, final float[] transform, final InterpolatorFactory<T,?> interpolatorFactory )
 	{
 		this.img = img;
 		this.interpolatorFactory = interpolatorFactory;
