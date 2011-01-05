@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2009--2010, Stephan Preibisch & Stephan Saalfeld
+ * Copyright (c) 2009--2010, Stephan Saalfeld
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -121,18 +121,18 @@ public class PositionableRoundRasterPositionable< LocalizablePositionable extend
 	}
 
 	@Override
-	public void moveTo( final float[] position )
+	public void moveTo( final float[] pos )
 	{
-		source.moveTo( position );
-		round( position, floor );
+		source.moveTo( pos );
+		round( pos, floor );
 		target.moveTo( floor );
 	}
 
 	@Override
-	public void moveTo( final double[] position )
+	public void moveTo( final double[] pos )
 	{
-		source.moveTo( position );
-		round( position, floor );
+		source.moveTo( pos );
+		round( pos, floor );
 		target.moveTo( floor );
 	}
 
@@ -212,17 +212,17 @@ public class PositionableRoundRasterPositionable< LocalizablePositionable extend
 	}
 
 	@Override
-	public void moveTo( final int[] position )
+	public void moveTo( final int[] pos )
 	{
-		source.moveTo( position );
-		target.moveTo( position );
+		source.moveTo( pos );
+		target.moveTo( pos );
 	}
 
 	@Override
-	public void moveTo( final long[] position )
+	public void moveTo( final long[] pos )
 	{
-		source.moveTo( position );
-		target.moveTo( position );
+		source.moveTo( pos );
+		target.moveTo( pos );
 	}
 	
 	@Override

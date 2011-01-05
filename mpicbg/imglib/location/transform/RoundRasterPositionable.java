@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2009--2010, Stephan Preibisch & Stephan Saalfeld
+ * Copyright (c) 2009--2010, Stephan Saalfeld
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -114,17 +114,17 @@ public class RoundRasterPositionable< LocalizableRasterPositionable extends Rast
 	}
 
 	@Override
-	public void localize( final float[] position )
+	public void localize( final float[] pos )
 	{
-		for ( int d = 0; d < position.length; ++d )
-			position[ d ] = this.position[ d ];
+		for ( int d = 0; d < pos.length; ++d )
+			pos[ d ] = this.position[ d ];
 	}
 
 	@Override
-	public void localize( final double[] position )
+	public void localize( final double[] pos )
 	{
-		for ( int d = 0; d < position.length; ++d )
-			position[ d ] = this.position[ d ];
+		for ( int d = 0; d < pos.length; ++d )
+			pos[ d ] = this.position[ d ];
 	}
 	
 
@@ -164,11 +164,11 @@ public class RoundRasterPositionable< LocalizableRasterPositionable extends Rast
 	}
 
 	@Override
-	public void moveTo( final float[] position )
+	public void moveTo( final float[] pos )
 	{
 		for ( int d = 0; d < numDimensions; ++d )
 		{
-			final float realPosition = position[ d ];
+			final float realPosition = pos[ d ];
 			this.position[ d ] = realPosition;
 			final int floorPosition = round( realPosition );
 			final int floorDistance = floorPosition - target.getIntPosition( d );
@@ -180,11 +180,11 @@ public class RoundRasterPositionable< LocalizableRasterPositionable extends Rast
 	}
 
 	@Override
-	public void moveTo( final double[] position )
+	public void moveTo( final double[] pos )
 	{
 		for ( int d = 0; d < numDimensions; ++d )
 		{
-			final float realPosition = ( float )position[ d ];
+			final float realPosition = ( float )pos[ d ];
 			this.position[ d ] = realPosition;
 			final int floorPosition = round( realPosition );
 			final int floorDistance = floorPosition - target.getIntPosition( d );
@@ -277,19 +277,19 @@ public class RoundRasterPositionable< LocalizableRasterPositionable extends Rast
 	}
 
 	@Override
-	public void moveTo( final int[] position )
+	public void moveTo( final int[] pos )
 	{
 		for ( int d = 0; d < numDimensions; ++d )
-			this.position[ d ] = position[ d ];
-		target.moveTo( position );
+			this.position[ d ] = pos[ d ];
+		target.moveTo( pos );
 	}
 
 	@Override
-	public void moveTo( final long[] position )
+	public void moveTo( final long[] pos )
 	{
 		for ( int d = 0; d < numDimensions; ++d )
-			this.position[ d ] = position[ d ];
-		target.moveTo( position );
+			this.position[ d ] = pos[ d ];
+		target.moveTo( pos );
 	}
 	
 	@Override
