@@ -14,6 +14,7 @@ import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.ImageFactory;
 import mpicbg.imglib.image.display.imagej.ImageJFunctions;
 import mpicbg.imglib.interpolation.linear.LinearInterpolatorFactory;
+import mpicbg.imglib.interpolation.nearestneighbor.NearestNeighborInterpolatorFactory;
 import mpicbg.imglib.outofbounds.OutOfBoundsMirrorFactory;
 import mpicbg.imglib.sampler.PositionableRasterSampler;
 import mpicbg.imglib.sampler.RasterIterator;
@@ -132,8 +133,8 @@ public class TestShapeList
 			new ImageTransform< ByteType >(
 					arrayImage,
 					affine,
-					new LinearInterpolatorFactory< ByteType >(
-//					new NearestNeighborInterpolatorFactory< ByteType >(
+//					new LinearInterpolatorFactory< ByteType >(
+					new NearestNeighborInterpolatorFactory< ByteType >(
 							new OutOfBoundsMirrorFactory< ByteType >( true ) ) );
 //							new OutOfBoundsStrategyValueFactory< ByteType >( new ByteType( ( byte )112 ) ) ) );
 		transform.setOutputImageFactory(
