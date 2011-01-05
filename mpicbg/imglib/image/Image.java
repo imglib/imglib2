@@ -85,12 +85,12 @@ public class Image< T extends Type< T > > implements ImageProperties, Dimensions
 			dim = new int[] { 1 };
 		}
 
-		for ( int i = 0; i < dim.length; i++ )
+		for ( int d = 0; d < dim.length; d++ )
 		{
-			if ( dim[ i ] <= 0 )
+			if ( dim[ d ] <= 0 )
 			{
-				System.err.print( "Warning: Image dimension " + ( i + 1 ) + " does not make sense: size=" + dim[ i ] + ". Replacing it by 1." );
-				dim[ i ] = 1;
+				System.err.print( "Warning: Image dimension " + ( d + 1 ) + " does not make sense: size=" + dim[ d ] + ". Replacing it by 1." );
+				dim[ d ] = 1;
 			}
 		}
 		this.rasterSamplers = new ArrayList< RasterSampler< T >>();
@@ -131,9 +131,9 @@ public class Image< T extends Type< T > > implements ImageProperties, Dimensions
 	 * @param dimensions - the dimensions of the {@link Image}
 	 * @return - a new empty {@link Image}
 	 */
-	public Image<T> createNewImage( final int[] dimensions, final String name )
+	public Image<T> createNewImage( final int[] dimensions, final String newName )
 	{
-		final Image< T > newImage = imageFactory.createImage( dimensions, name );
+		final Image< T > newImage = imageFactory.createImage( dimensions, newName );
 		newImage.setCalibration( getCalibration() );
 		return newImage;
 	}
@@ -149,7 +149,7 @@ public class Image< T extends Type< T > > implements ImageProperties, Dimensions
 	 * Creates a new {@link Image} with the same dimensions, {@link ContainerFactory} and {@link Type} as this one as this one.
 	 * @return - a new empty {@link Image}
 	 */
-	public Image<T> createNewImage( final String name ) { return createNewImage( getContainer().getDimensions(), name); }
+	public Image<T> createNewImage( final String newName ) { return createNewImage( getContainer().getDimensions(), newName); }
 	
 	/**
 	 * Creates a new {@link Image} with the same dimensions, {@link ContainerFactory} and {@link Type} as this one, the name is given automatically.
@@ -269,7 +269,10 @@ public class Image< T extends Type< T > > implements ImageProperties, Dimensions
 	 * @param factory - the {@link InterpolatorFactory} to use
 	 * @return {@link Interpolator}
 	 */
-	public Interpolator<T> createInterpolator( final InterpolatorFactory<T> factory ) { return factory.createInterpolator( this ); }
+	public < I extends Interpolator< T >> I createInterpolator( final InterpolatorFactory< T, I > factory )
+	{
+		return factory.createSampler( this );
+	}
 	
 	/**
 	 * Sets the default {@link Display} of this {@link Image} as defined by the {@link Type}
@@ -345,8 +348,8 @@ public class Image< T extends Type< T > > implements ImageProperties, Dimensions
 	@Override
 	public void dimensions( final int[] dimensions )
 	{
-		for (int i = 0; i < getContainer().numDimensions(); i++)
-			dimensions[i] = getContainer().getDimension( i );
+		for (int d = 0; d < getContainer().numDimensions(); d++)
+			dimensions[d] = getContainer().getDimension( d );
 	}
 
 	@Override
@@ -405,8 +408,8 @@ public class Image< T extends Type< T > > implements ImageProperties, Dimensions
 	public void closeAllRasterSamplers()
 	{
 		final ArrayList< RasterSampler< ? > > copy = new ArrayList< RasterSampler<?> >( rasterSamplers );
-		for ( final RasterSampler<?> i : copy )
-			i.close();
+		for ( final RasterSampler<?> s : copy )
+			s.close();
 	}
 	
 	/**
@@ -460,13 +463,13 @@ public class Image< T extends Type< T > > implements ImageProperties, Dimensions
 		final ArrayLocalizingRasterIterator<FakeType> iterator = ArrayLocalizingRasterIterator.createLinearCursor( getDimensions() );
 		final PositionableRasterSampler<T> positionable = this.createPositionableRasterSampler();
 		
-		int i = 0;
+		int t = 0;
 		while ( iterator.hasNext() )
 		{
 			iterator.fwd();
 			positionable.moveTo( iterator );
 			
-			pixels[ i++ ] = positionable.type().clone();			
+			pixels[ t++ ] = positionable.type().clone();			
 		}
 		
 		iterator.close();

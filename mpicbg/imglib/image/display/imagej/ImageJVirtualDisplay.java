@@ -170,7 +170,7 @@ public class ImageJVirtualDisplay<T extends Type<T>> extends ImageStack
 	
 			try
 			{
-		    	final T type = it.type();
+		    	final T t = it.type();
 		    	final Display<T> display = it.getImage().getDisplay();
 	
 		    	int i = 0;
@@ -190,7 +190,7 @@ public class ImageJVirtualDisplay<T extends Type<T>> extends ImageStack
 			        	transform.applyInverseInPlace( position );
 			        	it.moveTo( position );
 			        	
-		        		sliceImg[ i ] += display.get32Bit(type);
+		        		sliceImg[ i ] += display.get32Bit(t);
 			        	++i;
 		        	}
 		    	}
