@@ -75,9 +75,7 @@ public class HistogramPerformance<T extends IntegerType<T>> {
 		System.out.println(manualMillis + " ms");
 
 		// check results
-		final T k = img.createType();
 		for (int i = 0; i < max; i++) {
-			k.setReal(i);
 			final int actual = histogram.getHistogram()[i];
 			final int expect = bins[i];
 			if (actual != expect) {

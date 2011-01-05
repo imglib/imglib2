@@ -135,7 +135,7 @@ public class Histogram <T extends Type<T>> implements Algorithm, Benchmark
 		ArrayList<T> binCenters = new ArrayList<T>(histogram.length);
 		for (int i = 0; i < histogram.length; ++i)
 		{
-			binCenters.set(i, binMapper.invMap(i));
+			binCenters.add(i, binMapper.invMap(i));
 		}
 		
 		return binCenters;
@@ -169,7 +169,7 @@ public class Histogram <T extends Type<T>> implements Algorithm, Benchmark
 			*/
 			if (index >=0 && index < histogram.length)
 			{
-			    histogram[index]++;
+			    ++histogram[index];
 			}
 		}
 		

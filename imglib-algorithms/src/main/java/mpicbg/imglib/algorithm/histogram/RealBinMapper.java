@@ -58,7 +58,7 @@ public class RealBinMapper <T extends RealType<T>>
 		this.maxBin = maxBin;
 		
 		//Save a little computation time by calculating these only once.
-		binWidth = (maxBin.getRealDouble() - minBin.getRealDouble()) /
+		binWidth = (1 + maxBin.getRealDouble() - minBin.getRealDouble()) /
 			((double) numBins);
 		halfBinWidth = binWidth / 2;
 		
@@ -85,8 +85,7 @@ public class RealBinMapper <T extends RealType<T>>
 		T out = minBin.createVariable();
 		double t = i;
 	
-		t *= binWidth;
-		t -= halfBinWidth;
+		t *= binWidth;		
 		t += minVal;
 		out.setReal(t);
 		return out;
@@ -102,4 +101,9 @@ public class RealBinMapper <T extends RealType<T>>
 		return (int)tVal;
 	}
 
+	public double getBinWidth()
+	{
+	    return binWidth;
+	}
+	
 }
