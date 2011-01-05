@@ -14,25 +14,25 @@
  * 
  * @author Stephan Preibisch
  */
-package mpicbg.imglib.algorithm.function;
+package mpicbg.imglib.algorithm;
 
-import mpicbg.imglib.function.Converter;
-import mpicbg.imglib.type.numeric.RealType;
-
-public class NormMinMax< A extends RealType<A> > implements Converter< A, A >
+/**
+ * This is a convenience implementation of an algorithm that implements {@link Benchmark} 
+ * and {@link Algorithm} so that less code has to be re-implemented.
+ * 
+ * IMPORTANT: It is not meant to be used for any other purpose than that, it should not be 
+ * demanded by any other method or generic construct, use the interfaces instead.
+ *   
+ * @author Stephan Preibisch
+ */
+public abstract class BenchmarkAlgorithm implements Benchmark, Algorithm
 {
-	final double min, tmp;
-	
-	public NormMinMax( final double min, final double max )
-	{
-		this.min = min;
-		this.tmp = max - min;
-	}
+	protected long processingTime = -1;
+	protected String errorMessage = "";
 	
 	@Override
-	public void convert( final A input, final A output )
-	{
-		output.setReal( (input.getRealDouble() - min) / tmp );	
-	}
-
+	public long getProcessingTime() { return processingTime; }
+	
+	@Override
+	public String getErrorMessage() { return errorMessage; }		
 }
