@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2009--2010, Stephan Preibisch & Stephan Saalfeld
+ * Copyright (c) 2009--2010, Stephan Saalfeld
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -70,19 +70,19 @@ public class OutOfBoundsMirrorSingleBoundary< T extends Type< T > > extends Abst
 	@Override
 	final public void fwd( final int dim ) 
 	{
-		final int p = ++position[ dim ];
-		if ( p == 0 )
+		final int x = ++position[ dim ];
+		if ( x == 0 )
 		{
 			dimIsOutOfBounds[ dim ] = false;
 			if ( isOutOfBounds ) checkOutOfBounds();
 		}
-		else if ( p == dimension[ dim ] )
+		else if ( x == dimension[ dim ] )
 			dimIsOutOfBounds[ dim ] = isOutOfBounds = true;
 		
-		final int q = outOfBoundsPositionable.getIntPosition( dim );
+		final int y = outOfBoundsPositionable.getIntPosition( dim );
 		if ( inc[ dim ] )
 		{
-			if ( q + 1 == dimension[ dim ] )
+			if ( y + 1 == dimension[ dim ] )
 			{
 				inc[ dim ] = false;
 				outOfBoundsPositionable.bck( dim );
@@ -92,7 +92,7 @@ public class OutOfBoundsMirrorSingleBoundary< T extends Type< T > > extends Abst
 		}
 		else
 		{
-			if ( q == 0 )
+			if ( y == 0 )
 			{
 				inc[ dim ] = true;
 				outOfBoundsPositionable.fwd( dim  );
@@ -105,20 +105,20 @@ public class OutOfBoundsMirrorSingleBoundary< T extends Type< T > > extends Abst
 	@Override
 	final public void bck( final int dim ) 
 	{
-		final int p = position[ dim ]--;
-		if ( p == 0 )
+		final int x = position[ dim ]--;
+		if ( x == 0 )
 			dimIsOutOfBounds[ dim ] = isOutOfBounds = true;
-		else if ( p == dimension[ dim ] )
+		else if ( x == dimension[ dim ] )
 		{
 			dimIsOutOfBounds[ dim ] = false;
 			if ( isOutOfBounds ) checkOutOfBounds();
 		}
 			
 		
-		final int q = outOfBoundsPositionable.getIntPosition( dim );
+		final int y = outOfBoundsPositionable.getIntPosition( dim );
 		if ( inc[ dim ] )
 		{
-			if ( q == 0 )
+			if ( y == 0 )
 			{
 				inc[ dim ] = false;
 				outOfBoundsPositionable.fwd( dim );
@@ -128,7 +128,7 @@ public class OutOfBoundsMirrorSingleBoundary< T extends Type< T > > extends Abst
 		}
 		else
 		{
-			if ( q + 1 == dimension[ dim ] )
+			if ( y + 1 == dimension[ dim ] )
 			{
 				inc[ dim ] = true;
 				outOfBoundsPositionable.bck( dim  );
@@ -156,11 +156,11 @@ public class OutOfBoundsMirrorSingleBoundary< T extends Type< T > > extends Abst
 		if ( position >= mod )
 		{
 			dimIsOutOfBounds[ dim ] = isOutOfBounds = true;
-			final int p = this.p[ dim ];
+			final int x = this.p[ dim ];
 			
-			if ( position <= p )
+			if ( position <= x )
 			{
-				position = p - position;
+				position = x - position;
 				inc[ dim ] = !pos;
 			}
 			else
@@ -168,10 +168,10 @@ public class OutOfBoundsMirrorSingleBoundary< T extends Type< T > > extends Abst
 				/* catches mod == 1 to no additional cost */
 				try
 				{
-					position %= p;
+					position %= x;
 					if ( position >= mod )
 					{
-						position = p - position;
+						position = x - position;
 						inc[ dim ] = !pos;
 					}
 					else

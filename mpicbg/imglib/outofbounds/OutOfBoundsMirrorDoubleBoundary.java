@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2009--2010, Stephan Preibisch & Stephan Saalfeld
+ * Copyright (c) 2009--2010, Stephan Saalfeld
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -125,7 +125,7 @@ public class OutOfBoundsMirrorDoubleBoundary< T extends Type< T > > extends Abst
 	final public void setPosition( int position, final int dim )
 	{
 		this.position[ dim ] = position;
-		final int p = this.p[ dim ];
+		final int x = this.p[ dim ];
 		final int mod = dimension[ dim ];
 		final boolean pos;
 		if ( position < 0 )
@@ -140,9 +140,9 @@ public class OutOfBoundsMirrorDoubleBoundary< T extends Type< T > > extends Abst
 		if ( position >= mod )
 		{
 			isOutOfBounds = true;
-			if ( position <= p )
+			if ( position <= x )
 			{
-				position = p - position;
+				position = x - position;
 				inc[ dim ] = !pos;
 			}
 			else
@@ -150,10 +150,10 @@ public class OutOfBoundsMirrorDoubleBoundary< T extends Type< T > > extends Abst
 				/* catches mod == 1 to no additional cost */
 				try
 				{
-					position %= p;
+					position %= x;
 					if ( position >= mod )
 					{
-						position = p - position;
+						position = x - position;
 						inc[ dim ] = !pos;
 					}
 					else

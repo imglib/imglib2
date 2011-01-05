@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2009--2010, Stephan Preibisch & Stephan Saalfeld
+ * Copyright (c) 2009--2010, Stephan Saalfeld
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -116,31 +116,31 @@ public class OutOfBoundsStrategyPeriodic< T extends Type< T > > implements OutOf
 	/* RasterLocalizable */
 	
 	@Override
-	public void localize( final float[] position )
+	public void localize( final float[] pos )
 	{
 		for ( int d = 0; d < numDimensions; d++ )
-			position[ d ] = this.position[ d ];
+			pos[ d ] = this.position[ d ];
 	}
 
 	@Override
-	public void localize( final double[] position )
+	public void localize( final double[] pos )
 	{
 		for ( int d = 0; d < numDimensions; d++ )
-			position[ d ] = this.position[ d ];
+			pos[ d ] = this.position[ d ];
 	}
 
 	@Override
-	public void localize( final int[] position )
+	public void localize( final int[] pos )
 	{
 		for ( int d = 0; d < numDimensions; d++ )
-			position[ d ] = this.position[ d ];
+			pos[ d ] = this.position[ d ];
 	}
 	
 	@Override
-	public void localize( final long[] position )
+	public void localize( final long[] pos )
 	{
 		for ( int d = 0; d < numDimensions; d++ )
-			position[ d ] = this.position[ d ];
+			pos[ d ] = this.position[ d ];
 	}
 	
 	@Override
@@ -255,17 +255,17 @@ public class OutOfBoundsStrategyPeriodic< T extends Type< T > > implements OutOf
 	}
 	
 	@Override
-	public void moveTo( final int[] position )
+	public void moveTo( final int[] pos )
 	{
 		for ( int d = 0; d < numDimensions; ++d )
-			move( position[ d ] - this.position[ d ], d );
+			move( pos[ d ] - this.position[ d ], d );
 	}
 	
 	@Override
-	public void moveTo( final long[] position )
+	public void moveTo( final long[] pos )
 	{
 		for ( int d = 0; d < numDimensions; ++d )
-			move( position[ d ] - this.position[ d ], d );
+			move( pos[ d ] - this.position[ d ], d );
 	}
 	
 	@Override

@@ -122,31 +122,31 @@ public class OutOfBoundsConstantValue< T extends Type< T > > implements OutOfBou
 	/* RasterLocalizable */
 	
 	@Override
-	public void localize( float[] position )
+	public void localize( final float[] pos )
 	{
 		for ( int d = 0; d < numDimensions; d++ )
-			position[ d ] = this.position[ d ];
+			pos[ d ] = this.position[ d ];
 	}
 
 	@Override
-	public void localize( double[] position )
+	public void localize( final double[] pos )
 	{
 		for ( int d = 0; d < numDimensions; d++ )
-			position[ d ] = this.position[ d ];
+			pos[ d ] = this.position[ d ];
 	}
 
 	@Override
-	public void localize( int[] position )
+	public void localize( final int[] pos )
 	{
 		for ( int d = 0; d < numDimensions; d++ )
-			position[ d ] = this.position[ d ];
+			pos[ d ] = this.position[ d ];
 	}
 	
 	@Override
-	public void localize( long[] position )
+	public void localize( final long[] pos )
 	{
 		for ( int d = 0; d < numDimensions; d++ )
-			position[ d ] = this.position[ d ];
+			pos[ d ] = this.position[ d ];
 	}
 	
 	@Override
@@ -239,17 +239,17 @@ public class OutOfBoundsConstantValue< T extends Type< T > > implements OutOfBou
 	}
 	
 	@Override
-	public void moveTo( final int[] position )
+	public void moveTo( final int[] pos )
 	{
 		for ( int d = 0; d < numDimensions; ++d )
-			move( position[ d ] - this.position[ d ], d );
+			move( pos[ d ] - this.position[ d ], d );
 	}
 	
 	@Override
-	public void moveTo( final long[] position )
+	public void moveTo( final long[] pos )
 	{
 		for ( int d = 0; d < numDimensions; ++d )
-			move( position[ d ] - this.position[ d ], d );
+			move( pos[ d ] - this.position[ d ], d );
 	}
 	
 	@Override

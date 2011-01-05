@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2009--2010, Stephan Preibisch & Stephan Saalfeld
+ * Copyright (c) 2009--2010, Stephan Saalfeld
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -24,8 +24,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- *
- * @author Stephan Preibisch & Stephan Saalfeld
  */
 package mpicbg.imglib.outofbounds;
 
@@ -34,6 +32,12 @@ import mpicbg.imglib.location.RasterLocalizable;
 import mpicbg.imglib.sampler.PositionableRasterSampler;
 import mpicbg.imglib.type.Type;
 
+/**
+ * 
+ * @param <T>
+ *
+ * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
+ */
 public abstract class AbstractOutOfBoundsMirror< T extends Type< T > > implements OutOfBoundsStrategy< T >
 {
 	final protected PositionableRasterSampler< T > outOfBoundsPositionable;
@@ -111,31 +115,31 @@ public abstract class AbstractOutOfBoundsMirror< T extends Type< T > > implement
 	/* RasterLocalizable */
 	
 	@Override
-	public void localize( float[] position )
+	public void localize( final float[] pos )
 	{
-		for ( int d = 0; d < numDimensions; d++ )
-			position[ d ] = this.position[ d ];
+		for ( int d = 0; d < numDimensions; ++d )
+			pos[ d ] = this.position[ d ];
 	}
 
 	@Override
-	public void localize( double[] position )
+	public void localize( final double[] pos )
 	{
-		for ( int d = 0; d < numDimensions; d++ )
-			position[ d ] = this.position[ d ];
+		for ( int d = 0; d < numDimensions; ++d )
+			pos[ d ] = this.position[ d ];
 	}
 
 	@Override
-	public void localize( int[] position )
+	public void localize( final int[] pos )
 	{
-		for ( int d = 0; d < numDimensions; d++ )
-			position[ d ] = this.position[ d ];
+		for ( int d = 0; d < numDimensions; ++d )
+			pos[ d ] = this.position[ d ];
 	}
 	
 	@Override
-	public void localize( long[] position )
+	public void localize( final long[] pos )
 	{
-		for ( int d = 0; d < numDimensions; d++ )
-			position[ d ] = this.position[ d ];
+		for ( int d = 0; d < numDimensions; ++d )
+			pos[ d ] = this.position[ d ];
 	}
 	
 	@Override
@@ -188,17 +192,17 @@ public abstract class AbstractOutOfBoundsMirror< T extends Type< T > > implement
 	}
 	
 	@Override
-	public void moveTo( final int[] position )
+	public void moveTo( final int[] pos )
 	{
 		for ( int d = 0; d < numDimensions; ++d )
-			move( position[ d ] - this.position[ d ], d );
+			move( pos[ d ] - this.position[ d ], d );
 	}
 	
 	@Override
-	public void moveTo( final long[] position )
+	public void moveTo( final long[] pos )
 	{
 		for ( int d = 0; d < numDimensions; ++d )
-			move( position[ d ] - this.position[ d ], d );
+			move( pos[ d ] - this.position[ d ], d );
 	}
 	
 	@Override

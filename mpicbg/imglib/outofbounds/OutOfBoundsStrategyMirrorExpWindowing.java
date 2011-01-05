@@ -24,8 +24,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- *
- * @author Stephan Preibisch & Stephan Saalfeld
  */
 package mpicbg.imglib.outofbounds;
 
@@ -35,6 +33,12 @@ import mpicbg.imglib.cursor.LocalizableIterableCursor;
 import mpicbg.imglib.sampler.PositionableRasterSampler;
 import mpicbg.imglib.type.numeric.RealType;
 
+/**
+ * 
+ * @param <T>
+ *
+ * @author Stephan Preibisch and Stephan Saalfeld <saalfeld@mpi-cbg.de>
+ */
 public class OutOfBoundsStrategyMirrorExpWindowing<T extends RealType<T>> extends OutOfBoundsMirrorSingleBoundary< T >
 {
 	final PositionableRasterSampler<T> parentCursor;
