@@ -30,7 +30,6 @@ package mpicbg.imglib.interpolation.linear;
 import mpicbg.imglib.algorithm.math.MathLib;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.interpolation.Interpolator;
-import mpicbg.imglib.interpolation.InterpolatorFactory;
 import mpicbg.imglib.location.transform.FloorRasterPositionable;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
 import mpicbg.imglib.sampler.PositionableRasterSampler;
@@ -45,7 +44,6 @@ import mpicbg.imglib.type.numeric.NumericType;
  */
 public class LinearInterpolator< T extends NumericType< T > > extends FloorRasterPositionable< PositionableRasterSampler< T > > implements Interpolator< T >
 {
-	final protected InterpolatorFactory< T > interpolatorFactory;
 	final protected OutOfBoundsStrategyFactory< T > outOfBoundsStrategyFactory;
 	final protected Image< T > image;
 	final protected int numDimensions;
@@ -70,16 +68,15 @@ public class LinearInterpolator< T extends NumericType< T > > extends FloorRaste
 		return image.createPositionableRasterSampler( outOfBoundsStrategyFactory );
 	}
 	
-	protected LinearInterpolator( final Image<T> image, final InterpolatorFactory<T> interpolatorFactory, final OutOfBoundsStrategyFactory<T> outOfBoundsStrategyFactory )
+	protected LinearInterpolator( final Image<T> image, final OutOfBoundsStrategyFactory<T> outOfBoundsStrategyFactory )
 	{
-		this( image, interpolatorFactory, outOfBoundsStrategyFactory, true );
+		this( image, outOfBoundsStrategyFactory, true );
 	}
 	
-	protected LinearInterpolator( final Image<T> image, final InterpolatorFactory<T> interpolatorFactory, final OutOfBoundsStrategyFactory<T> outOfBoundsStrategyFactory, boolean initGenericStructures )
+	protected LinearInterpolator( final Image<T> image, final OutOfBoundsStrategyFactory<T> outOfBoundsStrategyFactory, boolean initGenericStructures )
 	{
 		super( createSampler( image, outOfBoundsStrategyFactory ) );
 		
-		this.interpolatorFactory = interpolatorFactory;
 		this.outOfBoundsStrategyFactory = outOfBoundsStrategyFactory;
 		this.image = image;
 		
@@ -216,18 +213,6 @@ public class LinearInterpolator< T extends NumericType< T > > extends FloorRaste
 	final public int numDimensions()
 	{
 		return numDimensions;
-	}
-
-	/**
-	 * Returns the typed interpolator factory the Interpolator has been
-	 * instantiated with.
-	 * 
-	 * @return - the interpolator factory
-	 */
-	@Override
-	public InterpolatorFactory< T > getInterpolatorFactory()
-	{
-		return interpolatorFactory;
 	}
 
 	/**

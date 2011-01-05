@@ -40,37 +40,37 @@ import mpicbg.imglib.type.numeric.RealType;
  *
  * @author Stephan Preibisch and Stephan Saalfeld
  */
-public class LinearInterpolatorFactory< T extends NumericType< T > > extends InterpolatorFactory< T >
+public class LinearInterpolatorFactory< T extends NumericType< T > > extends InterpolatorFactory< T, Interpolator< T > >
 {
 	public LinearInterpolatorFactory( final OutOfBoundsStrategyFactory< T > outOfBoundsStrategyFactory )
 	{
 		super( outOfBoundsStrategyFactory );
 	}
-
-	@SuppressWarnings( "unchecked" )
+	
 	@Override
-	public Interpolator< T > createInterpolator( final Image< T > img )
+	public Interpolator< T > createSampler( final Image< T > img )
 	{
 		if ( img.numDimensions() == 1 )
 		{
-			return new LinearInterpolator1D< T >( img, this, outOfBoundsStrategyFactory );
+			return new LinearInterpolator1D< T >( img, outOfBoundsStrategyFactory );
 		}
 		else if ( img.numDimensions() == 2 )
 		{
-			return new LinearInterpolator2D< T >( img, this, outOfBoundsStrategyFactory );
+			return new LinearInterpolator2D< T >( img, outOfBoundsStrategyFactory );
 		}
 		else if ( img.numDimensions() == 3 )
 		{
 			if ( RealType.class.isInstance( img.createType() ) )
 			{
-				return new LinearInterpolator3DRealType( img, this, outOfBoundsStrategyFactory );
+				return new LinearInterpolator3D< T >( img, outOfBoundsStrategyFactory ); 
+				//LinearInterpolator3DRealType( img, outOfBoundsStrategyFactory );
 			}
 			else
-				return new LinearInterpolator3D< T >( img, this, outOfBoundsStrategyFactory );
+				return new LinearInterpolator3D< T >( img, outOfBoundsStrategyFactory );
 		}
 		else
 		{
-			return new LinearInterpolator< T >( img, this, outOfBoundsStrategyFactory );
+			return new LinearInterpolator< T >( img, outOfBoundsStrategyFactory );
 		}
 	}
 }

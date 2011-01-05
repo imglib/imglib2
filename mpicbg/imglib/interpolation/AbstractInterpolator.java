@@ -42,7 +42,6 @@ import mpicbg.imglib.type.Type;
  */
 abstract public class AbstractInterpolator< T extends Type< T >, LocalizablePositionable extends Localizable & Positionable > implements Interpolator< T >
 {
-	final protected InterpolatorFactory< T > interpolatorFactory;
 	final protected OutOfBoundsStrategyFactory< T > outOfBoundsStrategyFactory;
 	final protected LocalizablePositionable localizablePositionable;
 
@@ -55,11 +54,9 @@ abstract public class AbstractInterpolator< T extends Type< T >, LocalizablePosi
 
 	protected AbstractInterpolator(
 			final Image< T > img,
-			final InterpolatorFactory< T > interpolatorFactory,
 			final OutOfBoundsStrategyFactory< T > outOfBoundsStrategyFactory,
 			final LocalizablePositionable localizablePositionable )
 	{
-		this.interpolatorFactory = interpolatorFactory;
 		this.outOfBoundsStrategyFactory = outOfBoundsStrategyFactory;
 		this.img = img;
 		this.localizablePositionable = localizablePositionable;
@@ -78,18 +75,6 @@ abstract public class AbstractInterpolator< T extends Type< T >, LocalizablePosi
 	final public T getType()
 	{
 		return type();
-	}
-
-	/**
-	 * Returns the typed interpolator factory the Interpolator has been
-	 * instantiated with.
-	 * 
-	 * @return - the interpolator factory
-	 */
-	@Override
-	public InterpolatorFactory< T > getInterpolatorFactory()
-	{
-		return interpolatorFactory;
 	}
 
 	/**

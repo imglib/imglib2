@@ -29,7 +29,6 @@ package mpicbg.imglib.interpolation.linear;
 
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.interpolation.Interpolator;
-import mpicbg.imglib.interpolation.InterpolatorFactory;
 import mpicbg.imglib.location.Localizable;
 import mpicbg.imglib.location.RasterLocalizable;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
@@ -44,7 +43,6 @@ import mpicbg.imglib.type.numeric.NumericType;
  */
 public class LinearInterpolator1D< T extends NumericType< T > > implements Interpolator< T > 
 {
-	final protected InterpolatorFactory< T > interpolatorFactory;
 	final protected OutOfBoundsStrategyFactory< T > outOfBoundsStrategyFactory;
 	final protected Image< T > image;
 	final protected T tmp1, tmp2;
@@ -53,9 +51,8 @@ public class LinearInterpolator1D< T extends NumericType< T > > implements Inter
 	/* current position, required for relative movement */
 	private float x;
 	
-	protected LinearInterpolator1D( final Image< T > image, final InterpolatorFactory< T > interpolatorFactory, final OutOfBoundsStrategyFactory< T > outOfBoundsStrategyFactory )
+	protected LinearInterpolator1D( final Image< T > image, final OutOfBoundsStrategyFactory< T > outOfBoundsStrategyFactory )
 	{
-		this.interpolatorFactory = interpolatorFactory;
 		this.outOfBoundsStrategyFactory = outOfBoundsStrategyFactory;
 		this.image = image;
 		this.target = image.createPositionableRasterSampler( outOfBoundsStrategyFactory );
@@ -88,12 +85,6 @@ public class LinearInterpolator1D< T extends NumericType< T > > implements Inter
 	
 	/* Interpolator */
 	
-	@Override
-	public InterpolatorFactory< T > getInterpolatorFactory()
-	{
-		return interpolatorFactory;
-	}
-
 	@Override
 	public OutOfBoundsStrategyFactory< T > getOutOfBoundsStrategyFactory()
 	{

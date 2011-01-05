@@ -28,12 +28,9 @@
 package mpicbg.imglib.interpolation.nearestneighbor;
 
 import mpicbg.imglib.image.Image;
-import mpicbg.imglib.interpolation.Interpolator;
-import mpicbg.imglib.interpolation.InterpolatorFactory;
 import mpicbg.imglib.location.Localizable;
 import mpicbg.imglib.location.RasterLocalizable;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
-import mpicbg.imglib.sampler.PositionableRasterSampler;
 import mpicbg.imglib.type.Type;
 
 /**
@@ -42,22 +39,16 @@ import mpicbg.imglib.type.Type;
  *
  * @author Stephan Preibisch and Stephan Saalfeld
  */
-public class NearestNeighborInterpolator1D< T extends Type< T > > implements Interpolator< T >
+public class NearestNeighborInterpolator1D< T extends Type< T > > extends NearestNeighborInterpolator< T >
 {
-	final protected InterpolatorFactory< T > interpolatorFactory;
-	final protected OutOfBoundsStrategyFactory< T > outOfBoundsStrategyFactory;
-	final protected Image< T > image;
-	final protected PositionableRasterSampler< T > target;
 	
 	/* current position, required for relative movement */
 	private float x;
 	
-	protected NearestNeighborInterpolator1D( final Image< T > image, final InterpolatorFactory< T > interpolatorFactory, final OutOfBoundsStrategyFactory< T > outOfBoundsStrategyFactory )
+	protected NearestNeighborInterpolator1D( final Image< T > image, final OutOfBoundsStrategyFactory< T > outOfBoundsStrategyFactory )
 	{
-		this.interpolatorFactory = interpolatorFactory;
-		this.outOfBoundsStrategyFactory = outOfBoundsStrategyFactory;
-		this.image = image;
-		this.target = image.createPositionableRasterSampler( outOfBoundsStrategyFactory );
+		super( image, outOfBoundsStrategyFactory );
+		//this.target = image.createPositionableRasterSampler( outOfBoundsStrategyFactory );
 		
 		x = 0;
 	}
@@ -80,43 +71,6 @@ public class NearestNeighborInterpolator1D< T extends Type< T > > implements Int
 	{
 		return 1;
 	}
-	
-	
-	/* Interpolator */
-	
-	@Override
-	public InterpolatorFactory< T > getInterpolatorFactory()
-	{
-		return interpolatorFactory;
-	}
-
-	@Override
-	public OutOfBoundsStrategyFactory< T > getOutOfBoundsStrategyFactory()
-	{
-		return outOfBoundsStrategyFactory;
-	}
-
-	@Override
-	public Image< T > getImage()
-	{
-		return image;
-	}
-	
-	@Override
-	public void close() { target.close(); }
-	
-	
-	/* Sampler */
-	
-	@Override
-	public T type()
-	{
-		return target.type();
-	}
-	
-	@Override
-	@Deprecated
-	public T getType(){ return type(); }
 	
 	
 	/* Localizable */

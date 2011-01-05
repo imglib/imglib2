@@ -29,14 +29,13 @@
  */
 package mpicbg.imglib.interpolation;
 
-import mpicbg.imglib.Factory;
-import mpicbg.imglib.image.Image;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
+import mpicbg.imglib.sampler.SamplerFactory;
 import mpicbg.imglib.type.Type;
 
-public abstract class InterpolatorFactory<T extends Type<T>> implements Factory
+public abstract class InterpolatorFactory< T extends Type< T >, I extends Interpolator< T > > implements SamplerFactory< T, I >
 {	
-	protected OutOfBoundsStrategyFactory<T> outOfBoundsStrategyFactory;
+	protected OutOfBoundsStrategyFactory< T > outOfBoundsStrategyFactory;
 	
 	public InterpolatorFactory( final OutOfBoundsStrategyFactory<T> outOfBoundsStrategyFactory )
 	{
@@ -53,8 +52,6 @@ public abstract class InterpolatorFactory<T extends Type<T>> implements Factory
 		return outOfBoundsStrategyFactory; 
 	}
 		
-	public abstract Interpolator<T> createInterpolator( final Image<T> img );
-	
 	@Override
 	public String getErrorMessage()
 	{

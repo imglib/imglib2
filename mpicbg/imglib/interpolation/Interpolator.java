@@ -43,14 +43,6 @@ import mpicbg.imglib.type.Type;
 public interface Interpolator< T extends Type< T > > extends Sampler< T >, Localizable, Positionable
 {
 	/**
-	 * Returns the typed interpolator factory the Interpolator has been
-	 * instantiated with.
-	 * 
-	 * @return - the interpolator factory
-	 */
-	public InterpolatorFactory< T > getInterpolatorFactory();
-
-	/**
 	 * Returns the {@link OutOfBoundsStrategyFactory} used for interpolation
 	 * 
 	 * @return - the {@link OutOfBoundsStrategyFactory}

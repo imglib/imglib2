@@ -29,7 +29,6 @@ package mpicbg.imglib.interpolation.nearestneighbor;
 
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.interpolation.Interpolator;
-import mpicbg.imglib.interpolation.InterpolatorFactory;
 import mpicbg.imglib.location.transform.RoundRasterPositionable;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
 import mpicbg.imglib.sampler.PositionableRasterSampler;
@@ -43,20 +42,18 @@ import mpicbg.imglib.type.Type;
  */
 public class NearestNeighborInterpolator< T extends Type< T > > extends RoundRasterPositionable< PositionableRasterSampler< T > > implements Interpolator< T >
 {
-	final protected InterpolatorFactory< T > interpolatorFactory;
 	final protected OutOfBoundsStrategyFactory< T > outOfBoundsStrategyFactory;
 	final protected Image< T > image;
 	
-	final static private < T extends Type< T > > PositionableRasterSampler< T > createSampler( final Image< T > image, final OutOfBoundsStrategyFactory<T> outOfBoundsStrategyFactory )
+	final static private < T extends Type< T > > PositionableRasterSampler< T > createPositionableRasterSampler( final Image< T > image, final OutOfBoundsStrategyFactory<T> outOfBoundsStrategyFactory )
 	{
 		return image.createPositionableRasterSampler( outOfBoundsStrategyFactory );
 	}
 	
-	protected NearestNeighborInterpolator( final Image<T> image, final InterpolatorFactory<T> interpolatorFactory, final OutOfBoundsStrategyFactory<T> outOfBoundsStrategyFactory )
+	protected NearestNeighborInterpolator( final Image<T> image, final OutOfBoundsStrategyFactory<T> outOfBoundsStrategyFactory )
 	{
-		super( createSampler( image, outOfBoundsStrategyFactory ) );
+		super( createPositionableRasterSampler( image, outOfBoundsStrategyFactory ) );
 		
-		this.interpolatorFactory = interpolatorFactory;
 		this.outOfBoundsStrategyFactory = outOfBoundsStrategyFactory;
 		this.image = image;
 	}
@@ -65,21 +62,9 @@ public class NearestNeighborInterpolator< T extends Type< T > > extends RoundRas
 	/* Dimensionality */
 	
 	@Override
-	final public int numDimensions()
+	public int numDimensions()
 	{
 		return image.numDimensions();
-	}
-
-	/**
-	 * Returns the typed interpolator factory the Interpolator has been
-	 * instantiated with.
-	 * 
-	 * @return - the interpolator factory
-	 */
-	@Override
-	public InterpolatorFactory< T > getInterpolatorFactory()
-	{
-		return interpolatorFactory;
 	}
 
 	/**
