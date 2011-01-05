@@ -112,8 +112,18 @@ public class Histogram <T extends Type<T>> implements Algorithm, Benchmark
 	 */
 	public int getBin(final T t)
 	{
-		return histogram[binMapper.map(t)];
+		return getHistogram()[binMapper.map(t)];
 	}
+
+	/**
+	 * Returns the bin count given by the indicated bin index.
+	 * @param i the index of the requested bin
+	 * @return the bin count at the given index
+	 */
+	public int getBin(int i)
+    {
+        return getHistogram()[i];
+    }
 	
 	/**
 	 * Returns the histogram array.
