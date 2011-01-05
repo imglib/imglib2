@@ -173,7 +173,7 @@ public class FloorRasterPositionable< LocalizableRasterPositionable extends Rast
 			final int floorPosition = floor( realPosition );
 			final int floorDistance = floorPosition - target.getIntPosition( d );
 			if ( floorDistance == 0 )
-				return;
+				continue;
 			else
 				target.move( floorDistance, d );
 		}
@@ -189,7 +189,7 @@ public class FloorRasterPositionable< LocalizableRasterPositionable extends Rast
 			final int floorPosition = floor( realPosition );
 			final int floorDistance = floorPosition - target.getIntPosition( d );
 			if ( floorDistance == 0 )
-				return;
+				continue;
 			else
 				target.move( floorDistance, d );
 		}
@@ -203,11 +203,11 @@ public class FloorRasterPositionable< LocalizableRasterPositionable extends Rast
 	}
 
 	@Override
-	public void setPosition( final float[] position )
+	public void setPosition( final float[] pos )
 	{
 		for ( int d = 0; d < numDimensions; ++d )
 		{
-			final float realPosition = position[ d ];
+			final float realPosition = pos[ d ];
 			this.position[ d ] = realPosition;
 			target.setPosition( floor( realPosition ), d );
 		}

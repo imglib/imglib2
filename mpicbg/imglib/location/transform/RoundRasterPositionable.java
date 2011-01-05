@@ -173,7 +173,7 @@ public class RoundRasterPositionable< LocalizableRasterPositionable extends Rast
 			final int floorPosition = round( realPosition );
 			final int floorDistance = floorPosition - target.getIntPosition( d );
 			if ( floorDistance == 0 )
-				return;
+				continue;
 			else
 				target.move( floorDistance, d );
 		}
@@ -189,7 +189,7 @@ public class RoundRasterPositionable< LocalizableRasterPositionable extends Rast
 			final int floorPosition = round( realPosition );
 			final int floorDistance = floorPosition - target.getIntPosition( d );
 			if ( floorDistance == 0 )
-				return;
+				continue;
 			else
 				target.move( floorDistance, d );
 		}
