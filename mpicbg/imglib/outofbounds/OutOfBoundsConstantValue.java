@@ -181,7 +181,10 @@ public class OutOfBoundsConstantValue< T extends Type< T > > implements OutOfBou
 			checkOutOfBounds();
 		}
 		else if ( p == dimension[ dim ] )
+		{
 			dimIsOutOfBounds[ dim ] = isOutOfBounds = true;
+			return;
+		}
 		
 		if ( isOutOfBounds ) return;
 		if ( wasOutOfBounds )
@@ -260,11 +263,15 @@ public class OutOfBoundsConstantValue< T extends Type< T > > implements OutOfBou
 			dimIsOutOfBounds[ dim ] = isOutOfBounds = true;
 		else
 		{
+			final boolean wasOutOfBounds = isOutOfBounds;
 			dimIsOutOfBounds[ dim ] = false;
 			checkOutOfBounds();
 			
 			if ( isOutOfBounds ) return;
-			sampler.setPosition( position, dim );
+			if ( wasOutOfBounds )
+				sampler.setPosition( this.position );
+			else
+				sampler.setPosition( position, dim );
 		}
 	}
 	
