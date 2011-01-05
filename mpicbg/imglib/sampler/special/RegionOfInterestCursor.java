@@ -31,12 +31,12 @@ package mpicbg.imglib.sampler.special;
 
 import mpicbg.imglib.container.Container;
 import mpicbg.imglib.image.Image;
-import mpicbg.imglib.sampler.AbstractBasicRasterIterator;
+import mpicbg.imglib.sampler.AbstractRasterIterator;
 import mpicbg.imglib.sampler.PositionableRasterSampler;
 import mpicbg.imglib.sampler.RasterIterator;
 import mpicbg.imglib.type.Type;
 
-public class RegionOfInterestCursor<T extends Type<T>> extends AbstractBasicRasterIterator<T> implements RasterIterator<T> 
+public class RegionOfInterestCursor<T extends Type<T>> extends AbstractRasterIterator<T> implements RasterIterator<T> 
 {
 	final PositionableRasterSampler<T> cursor;
 	final int[] offset, size, roiPosition;

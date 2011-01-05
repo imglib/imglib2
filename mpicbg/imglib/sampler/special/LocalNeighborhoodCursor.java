@@ -33,13 +33,13 @@ import mpicbg.imglib.container.Container;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.location.RasterLocalizable;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
-import mpicbg.imglib.sampler.AbstractBasicRasterIterator;
+import mpicbg.imglib.sampler.AbstractRasterIterator;
 import mpicbg.imglib.sampler.PositionableRasterSampler;
 import mpicbg.imglib.sampler.array.ArrayLocalizingRasterIterator;
 import mpicbg.imglib.type.Type;
 import mpicbg.imglib.type.label.FakeType;
 
-public class LocalNeighborhoodCursor<T extends Type<T>> extends AbstractBasicRasterIterator<T>
+public class LocalNeighborhoodCursor<T extends Type<T>> extends AbstractRasterIterator<T>
 {
 	/**
 	 * Here we "misuse" a ArrayLocalizableCursor to iterate over cells,

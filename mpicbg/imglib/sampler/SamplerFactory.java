@@ -25,97 +25,18 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-package mpicbg.imglib.sampler.array;
+package mpicbg.imglib.sampler;
 
-import mpicbg.imglib.container.array.Array;
+import mpicbg.imglib.Factory;
 import mpicbg.imglib.image.Image;
-import mpicbg.imglib.sampler.AbstractRasterIterator;
 import mpicbg.imglib.type.Type;
 
 /**
  * 
- * @param <T>
- * 
- * @author Stephan Preibisch and Stephan Saalfeld
+ *
+ * @author Stephan Preibisch and Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-public class ArrayBasicRasterIterator< T extends Type< T > > extends AbstractRasterIterator< T >
+public interface SamplerFactory< T extends Type< T >, S extends Sampler< T > > extends Factory
 {
-	protected final T type;
-
-	protected final Array< T, ? > container;
-
-	protected final int lastIndex;
-
-	public ArrayBasicRasterIterator( final Array< T, ? > container, final Image< T > image )
-	{
-		super( container, image );
-
-		this.type = container.createLinkedType();
-		this.container = container;
-		this.lastIndex = ( int ) container.numPixels() - 1;
-
-		reset();
-	}
-
-	@Override
-	public T type()
-	{
-		return type;
-	}
-
-	@Override
-	public boolean hasNext()
-	{
-		return type.getIndex() < lastIndex;
-	}
-
-	@Override
-	public void jumpFwd( final long steps )
-	{
-		type.incIndex( ( int ) steps );
-	}
-
-	@Override
-	public void fwd()
-	{
-		type.incIndex();
-	}
-
-	@Override
-	public void close()
-	{
-		type.updateIndex( lastIndex + 1 );
-		super.close();
-	}
-
-	@Override
-	public void reset()
-	{
-		type.updateIndex( -1 );
-		type.updateContainer( this );
-	}
-
-	@Override
-	public Array< T, ? > getContainer()
-	{
-		return container;
-	}
-
-	@Override
-	public String toString()
-	{
-		return type.toString();
-	}
-
-	@Override
-	public long getLongPosition( final int dim )
-	{
-		return container.indexToPosition( type.getIndex(), dim );
-	}
-
-	@Override
-	public void localize( final long[] position )
-	{
-		container.indexToPosition( type.getIndex(), position );
-	}
+	public S createSampler( final Image< T > img );
 }

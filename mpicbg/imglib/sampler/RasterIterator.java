@@ -47,7 +47,7 @@ import mpicbg.imglib.type.Type;
  * 
  * <h3>Data access</h3>
  * 
- * {@link RasterIterator RasterIterator} doe not know about the {@link Image}
+ * {@link RasterIterator RasterIterator} do not know about the {@link Image}
  * {@link Type} as it is not important for iteration.  However, {@link Type} is
  * a generic parameter such that the correct instance of {@link Type} is
  * returned by {@link #type()}.
@@ -82,7 +82,7 @@ import mpicbg.imglib.type.Type;
  * </pre>
  * will visit the <em>same pixel positions</em>.
  * <p>
- * If the two {@link Container} are not the same, then
+ * If the two {@link Container Containers} are not the same, then
  * {@link RasterLocalizable} and {@link PositionableRasterSampler} have to be
  * used:
  * <pre>

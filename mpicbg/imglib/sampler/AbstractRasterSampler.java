@@ -32,9 +32,6 @@ import mpicbg.imglib.image.Image;
 import mpicbg.imglib.type.Type;
 
 /**
- * We use the class {@link AbstractRasterSampler} instead of implementing methods here so that other classes can
- * only implement {@link RasterIterator} and extend other classes instead. As each {@link AbstractRasterSampler} is also
- * a {@link RasterIterator} there are no disadvantages for the {@link RasterIterator} implementations.
  * 
  * @author Stephan Preibisch and Stephan Saalfeld
  *
@@ -56,7 +53,7 @@ public abstract class AbstractRasterSampler< T extends Type< T > > implements Ra
 
 	@Override
 	@Deprecated
-	final public T getType(){ return type(); } 
+	final public T getType() { return type(); } 
 	
 	@Override
 	public int getArrayIndex() { return type().getIndex(); }

@@ -38,20 +38,18 @@ import mpicbg.imglib.location.RasterLocalizable;
 import mpicbg.imglib.type.Type;
 
 /**
- * Generic implementation of the {@link RasterLocalizable} mapping to abstract
- * {@link #localize(long[])} and {@link #getLongPosition(int)}.  Generic
- * implementation of {@link Iterator} mapping to abstract {@link #fwd()} and
+ * Generic implementation of {@link Iterator} mapping to abstract {@link #fwd()} and
  * {@link #type()}.  
  * 
  * @author Stephan Preibisch and Stephan Saalfeld
  * 
  * @param <T>
  */
-public abstract class AbstractBasicRasterIterator< T extends Type< T > > extends AbstractRasterSampler< T > implements RasterIterator< T >
+public abstract class AbstractRasterIterator< T extends Type< T > > extends AbstractRasterSampler< T > implements RasterIterator< T >
 {
 	final private long[] position;
 	
-	public AbstractBasicRasterIterator( final Container< T > container, final Image< T > image )
+	public AbstractRasterIterator( final Container< T > container, final Image< T > image )
 	{
 		super( container, image );
 		position = new long[ numDimensions ];
