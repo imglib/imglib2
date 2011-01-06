@@ -15,11 +15,14 @@ import mpicbg.imglib.image.ImageFactory;
 import mpicbg.imglib.image.display.imagej.ImageJFunctions;
 import mpicbg.imglib.interpolation.linear.LinearInterpolatorFactory;
 import mpicbg.imglib.interpolation.nearestneighbor.NearestNeighborInterpolatorFactory;
+import mpicbg.imglib.outofbounds.OutOfBoundsConstantValueFactory;
 import mpicbg.imglib.outofbounds.OutOfBoundsMirrorFactory;
+import mpicbg.imglib.outofbounds.OutOfBoundsStrategyPeriodicFactory;
 import mpicbg.imglib.sampler.PositionableRasterSampler;
 import mpicbg.imglib.sampler.RasterIterator;
 import mpicbg.imglib.type.numeric.RealType;
 import mpicbg.imglib.type.numeric.integer.ByteType;
+import mpicbg.imglib.type.numeric.real.FloatType;
 import mpicbg.models.AffineModel3D;
 import mpicbg.models.TranslationModel3D;
 import mpicbg.util.Timer;
@@ -46,15 +49,15 @@ public class TestShapeList
 		
 
 		/* Create ShapeList */
-		//final ShapeList< ByteType > shapeList = new ShapeListCached<ByteType>( new int[]{ 200, 200, depth },  new ByteType( ) );
-		final ShapeList< ByteType > shapeList = new ShapeList<ByteType>( new int[]{ 200, 200, depth },  new ByteType( ( byte )91 ) );
-		final Image< ByteType > shapeListImage = new Image< ByteType >( shapeList, shapeList.getBackground(), "ShapeListContainer" ); 
+		//final ShapeList< FloatType > shapeList = new ShapeListCached<FloatType>( new int[]{ 200, 200, depth },  new FloatType( ) );
+		final ShapeList< FloatType > shapeList = new ShapeList<FloatType>( new int[]{ 200, 200, depth },  new FloatType( ( byte )91 ) );
+		final Image< FloatType > shapeListImage = new Image< FloatType >( shapeList, shapeList.getBackground(), "ShapeListContainer" ); 
 		
 		/* add some shapes */
 		for ( int i = 0; i < depth; ++i )
 		{
-			shapeList.addShape( new Rectangle( 10 + i, 20, 40, 70 + 2 * i ), new ByteType( ( byte )64 ), new int[]{ i } );
-			shapeList.addShape( new Polygon( new int[]{ 90 + i, 180 - 2 * i, 190 - 4 * i, 120 - 2 * i }, new int[]{ 90, 80 + i, 140 - 3 * i, 130 - 2 * i }, 4 ), new ByteType( ( byte )127 ), new int[]{ i } );
+			shapeList.addShape( new Rectangle( 10 + i, 20, 40, 70 + 2 * i ), new FloatType( ( byte )64 ), new int[]{ i } );
+			shapeList.addShape( new Polygon( new int[]{ 90 + i, 180 - 2 * i, 190 - 4 * i, 120 - 2 * i }, new int[]{ 90, 80 + i, 140 - 3 * i, 130 - 2 * i }, 4 ), new FloatType( ( byte )127 ), new int[]{ i } );
 		}
 		
 		shapeListImage.getDisplay().setMinMax();
@@ -71,9 +74,9 @@ public class TestShapeList
 		
 		timer.start();
 		final ArrayContainerFactory arrayFactory = new ArrayContainerFactory();
-		final Image< ByteType > arrayImage = new ImageFactory< ByteType >( new ByteType(), arrayFactory ).createImage( new int[]{ 200, 200, depth }, "ArrayContainer" );
-		final RasterIterator< ByteType > cArray = arrayImage.createLocalizingRasterIterator();
-		final PositionableRasterSampler< ByteType > cShapeList = shapeListImage.createPositionableRasterSampler();
+		final Image< FloatType > arrayImage = new ImageFactory< FloatType >( new FloatType(), arrayFactory ).createImage( new int[]{ 200, 200, depth }, "ArrayContainer" );
+		final RasterIterator< FloatType > cArray = arrayImage.createLocalizingRasterIterator();
+		final PositionableRasterSampler< FloatType > cShapeList = shapeListImage.createPositionableRasterSampler();
 		while ( cArray.hasNext() )
 		{
 			cArray.fwd();
@@ -95,8 +98,8 @@ public class TestShapeList
 		
 		timer.start();
 		final CellContainerFactory cellFactory = new CellContainerFactory();
-		final Image< ByteType > cellImage = new ImageFactory< ByteType >( new ByteType(), cellFactory ).createImage( new int[]{ 200, 200, depth }, "CellContainer" );
-		final RasterIterator< ByteType > cCell = cellImage.createLocalizingRasterIterator();
+		final Image< FloatType > cellImage = new ImageFactory< FloatType >( new FloatType(), cellFactory ).createImage( new int[]{ 200, 200, depth }, "CellContainer" );
+		final RasterIterator< FloatType > cCell = cellImage.createLocalizingRasterIterator();
 		while ( cCell.hasNext() )
 		{
 			cCell.fwd();
@@ -126,19 +129,20 @@ public class TestShapeList
 		
 		affine.preConcatenate( translation );
 		
-		//final ImageTransform<ByteType> transform = new ImageTransform<ByteType>( shapeListImage, affine, new LinearInterpolatorFactory<ByteType>( new OutOfBoundsStrategyValueFactory<ByteType>() ) );
-		//final ImageTransform<ByteType> transform = new ImageTransform<ByteType>( arrayImage, affine, new LinearInterpolatorFactory<ByteType>( new OutOfBoundsStrategyValueFactory< ByteType >( new ByteType( ( byte )255 ) ) ) );
-		//final ImageTransform<ByteType> transform = new ImageTransform<ByteType>( arrayImage, affine, new LinearInterpolatorFactory<ByteType>( new OutOfBoundsMirrorSingleBoundaryFactory<ByteType>() ) );
-		final ImageTransform< ByteType > transform =
-			new ImageTransform< ByteType >(
+		//final ImageTransform<FloatType> transform = new ImageTransform<FloatType>( shapeListImage, affine, new LinearInterpolatorFactory<FloatType>( new OutOfBoundsStrategyValueFactory<FloatType>() ) );
+		//final ImageTransform<FloatType> transform = new ImageTransform<FloatType>( arrayImage, affine, new LinearInterpolatorFactory<FloatType>( new OutOfBoundsStrategyValueFactory< FloatType >( new FloatType( ( byte )255 ) ) ) );
+		//final ImageTransform<FloatType> transform = new ImageTransform<FloatType>( arrayImage, affine, new LinearInterpolatorFactory<FloatType>( new OutOfBoundsMirrorSingleBoundaryFactory<FloatType>() ) );
+		final ImageTransform< FloatType > transform =
+			new ImageTransform< FloatType >(
 					arrayImage,
 					affine,
-//					new LinearInterpolatorFactory< ByteType >(
-					new NearestNeighborInterpolatorFactory< ByteType >(
-							new OutOfBoundsMirrorFactory< ByteType >( true ) ) );
-//							new OutOfBoundsStrategyValueFactory< ByteType >( new ByteType( ( byte )112 ) ) ) );
+//					new LinearInterpolatorFactory< FloatType >(
+					new NearestNeighborInterpolatorFactory< FloatType >(
+//							new OutOfBoundsMirrorFactory< FloatType >( true ) ) );
+							new OutOfBoundsConstantValueFactory< FloatType >( new FloatType( ( byte )112 ) ) ) );
+//							new OutOfBoundsStrategyPeriodicFactory< FloatType >() ) );
 		transform.setOutputImageFactory(
-				new ImageFactory< ByteType >( new ByteType(), cellFactory ) );
+				new ImageFactory< FloatType >( new FloatType(), cellFactory ) );
 		
 		if ( !transform.checkInput() || !transform.process() )
 		{
@@ -146,11 +150,11 @@ public class TestShapeList
 			return;
 		}
 		
-		final Image<ByteType> rotatedCellImage = transform.getResult();
+		final Image<FloatType> rotatedCellImage = transform.getResult();
 		
 		/*
-		final Image< ByteType > cellImage = new ImageFactory< ByteType >( new ByteType(), cellFactory ).createImage( new int[]{ 200, 200, depth }, "Rotated CellContainer" );
-		final LocalizableCursor< ByteType > cCell = cellImage.createLocalizableCursor();
+		final Image< FloatType > cellImage = new ImageFactory< FloatType >( new FloatType(), cellFactory ).createImage( new int[]{ 200, 200, depth }, "Rotated CellContainer" );
+		final LocalizableCursor< FloatType > cCell = cellImage.createLocalizableCursor();
 		
 		final int[] iLocation = new int[ cellImage.getNumDimensions() ];
 		final float[] fLocation = new float[ cellImage.getNumDimensions() ];

@@ -29,14 +29,14 @@
  */
 package mpicbg.imglib.location;
 
-import mpicbg.imglib.Dimensionality;
+import mpicbg.imglib.EuclideanSpace;
 
 /**
  * An element that can be positioned in n-dimensional discrete space.
  *
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de> and Stephan Preibisch
  */
-public interface RasterPositionable extends Dimensionality
+public interface RasterPositionable extends EuclideanSpace
 {
 	/**
 	 * Move by 1 in one dimension.

@@ -29,7 +29,7 @@
  */
 package mpicbg.imglib.location;
 
-import mpicbg.imglib.Dimensionality;
+import mpicbg.imglib.EuclideanSpace;
 
 /**
  * The {@link Localizable} interface can localize itself in an n-dimensional
@@ -38,7 +38,7 @@ import mpicbg.imglib.Dimensionality;
  * @author Stephan Saalfeld
  *
  */
-public interface Localizable extends Dimensionality
+public interface Localizable extends EuclideanSpace
 {
 	/**
 	 * Write the current position into the passed array.

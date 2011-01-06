@@ -27,7 +27,7 @@
  */
 package mpicbg.imglib.sampler;
 
-import mpicbg.imglib.Dimensionality;
+import mpicbg.imglib.EuclideanSpace;
 import mpicbg.imglib.container.Container;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.type.Type;
@@ -46,7 +46,7 @@ import mpicbg.imglib.type.Type;
  * 
  * @author Stephan Preibisch & Stephan Saalfeld
  */
-public interface RasterSampler< T extends Type< T > > extends Sampler< T >, Dimensionality
+public interface RasterSampler< T extends Type< T > > extends Sampler< T >, EuclideanSpace
 {	
 	public Image< T > getImage();
 

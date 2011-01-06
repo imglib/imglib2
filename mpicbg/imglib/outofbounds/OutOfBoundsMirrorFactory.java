@@ -42,17 +42,19 @@ import mpicbg.imglib.type.Type;
  */
 public class OutOfBoundsMirrorFactory< T extends Type< T > > extends OutOfBoundsStrategyFactory< T >
 {
-	final protected boolean singleBoundary;
+	static public enum Boundary { SINGLE, DOUBLE };
 	
-	public OutOfBoundsMirrorFactory( final boolean singleBoundary )
+	final protected Boundary boundary;
+	
+	public OutOfBoundsMirrorFactory( final Boundary boundary )
 	{
-		this.singleBoundary = singleBoundary;
+		this.boundary = boundary;
 	}
 	
 	@Override
 	public AbstractOutOfBoundsMirror< T > createStrategy( final PositionableRasterSampler< T > cursor )
 	{
-		if ( singleBoundary )
+		if ( boundary == Boundary.SINGLE )
 			return new OutOfBoundsMirrorSingleBoundary< T >( cursor );
 		else
 			return new OutOfBoundsMirrorDoubleBoundary< T >( cursor );

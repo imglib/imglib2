@@ -43,6 +43,7 @@ import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.ImageFactory;
 import mpicbg.imglib.location.RasterLocalizable;
 import mpicbg.imglib.outofbounds.OutOfBoundsMirrorFactory;
+import mpicbg.imglib.outofbounds.OutOfBoundsMirrorFactory.Boundary;
 import mpicbg.imglib.sampler.PositionableRasterSampler;
 import mpicbg.imglib.sampler.RasterIterator;
 import mpicbg.imglib.type.numeric.integer.IntType;
@@ -151,10 +152,10 @@ public class OutOfBoundsMirrorSingleBoundaryTest
 				for ( int x = 0; x < dim[ 0 ]; ++x )
 					shapeList.addShape( new Rectangle( x, y, 1, 1 ), new IntType( i++ ), new int[]{ z } );
 		
-		cArray = arrayImage.createPositionableRasterSampler( new OutOfBoundsMirrorFactory< IntType >( true ) );
-		cCell = cellImage.createPositionableRasterSampler( new OutOfBoundsMirrorFactory< IntType >( true ) );
-		cDynamic = dynamicImage.createPositionableRasterSampler( new OutOfBoundsMirrorFactory< IntType >( true ) );
-		cShapeList = shapeListImage.createPositionableRasterSampler( new OutOfBoundsMirrorFactory< IntType >( true ) );
+		cArray = arrayImage.createPositionableRasterSampler( new OutOfBoundsMirrorFactory< IntType >( Boundary.SINGLE ) );
+		cCell = cellImage.createPositionableRasterSampler( new OutOfBoundsMirrorFactory< IntType >( Boundary.SINGLE ) );
+		cDynamic = dynamicImage.createPositionableRasterSampler( new OutOfBoundsMirrorFactory< IntType >( Boundary.SINGLE ) );
+		cShapeList = shapeListImage.createPositionableRasterSampler( new OutOfBoundsMirrorFactory< IntType >( Boundary.SINGLE ) );
 	}
 
 	/**
