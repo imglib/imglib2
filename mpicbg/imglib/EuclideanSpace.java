@@ -29,7 +29,7 @@
  */
 package mpicbg.imglib;
 
-public interface Dimensionality
+public interface EuclideanSpace
 {
 	public int numDimensions();
 }

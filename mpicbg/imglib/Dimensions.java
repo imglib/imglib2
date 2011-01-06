@@ -29,7 +29,7 @@
  */
 package mpicbg.imglib;
 
-public interface Dimensions extends Dimensionality
+public interface Dimensions extends EuclideanSpace
 {
 	public int[] getDimensions();
 	public void dimensions( int[] position );
