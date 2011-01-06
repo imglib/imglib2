@@ -40,6 +40,15 @@ import mpicbg.imglib.type.Type;
  */
 public interface Function< T extends Type< T >, F extends Function< T, F > > extends EuclideanSpace
 {
+	/**
+	 * Create a {@link Sampler} that provides access to a {@link Type} at real
+	 * coordinates.  The way how real coordinates are addressed is not further
+	 * specified.
+	 * 
+	 * @param <S> type of the Sampler is inferred from S in factory
+	 * @param factory creates the sampler
+	 * @return
+	 */
 	public < S extends Sampler< T > > S sampler( final SamplerFactory< T, S, F > factory ); 
 
 }
