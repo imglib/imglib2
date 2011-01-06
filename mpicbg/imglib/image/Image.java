@@ -33,6 +33,7 @@ import java.util.Iterator;
 import java.util.concurrent.atomic.AtomicLong;
 
 import mpicbg.imglib.Dimensions;
+import mpicbg.imglib.Function;
 import mpicbg.imglib.IterableRaster;
 import mpicbg.imglib.RandomAccessibleRaster;
 import mpicbg.imglib.algorithm.math.MathLib;
@@ -45,6 +46,8 @@ import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
 import mpicbg.imglib.sampler.PositionableRasterSampler;
 import mpicbg.imglib.sampler.RasterIterator;
 import mpicbg.imglib.sampler.RasterSampler;
+import mpicbg.imglib.sampler.Sampler;
+import mpicbg.imglib.sampler.SamplerFactory;
 import mpicbg.imglib.sampler.array.ArrayLocalizingRasterIterator;
 import mpicbg.imglib.sampler.special.OrthoSliceIterator;
 import mpicbg.imglib.type.Type;
@@ -56,7 +59,7 @@ import mpicbg.imglib.type.label.FakeType;
  *
  * @author Stephan Preibisch and Stephan Saalfeld
  */
-public class Image< T extends Type< T > > implements ImageProperties, Dimensions, IterableRaster< T >, RandomAccessibleRaster< T >
+public class Image< T extends Type< T > > implements Function< T, Image< T > >, ImageProperties, Dimensions, IterableRaster< T >, RandomAccessibleRaster< T >
 {
 	final protected ArrayList< RasterSampler< T > > rasterSamplers;
 	final ContainerFactory containerFactory;
@@ -268,8 +271,17 @@ public class Image< T extends Type< T > > implements ImageProperties, Dimensions
 	 * Creates and {@link Interpolator} on this {@link Image} given a certain {@link InterpolatorFactory}.
 	 * @param factory - the {@link InterpolatorFactory} to use
 	 * @return {@link Interpolator}
+	 * 
+	 * @deprecated Use {@link #sampler(SamplerFactory)} instead.
 	 */
+	@Deprecated
 	public < I extends Interpolator< T >> I createInterpolator( final InterpolatorFactory< T, I > factory )
+	{
+		return factory.createSampler( this );
+	}
+	
+	@Override
+	public < S extends Sampler< T > > S sampler( final SamplerFactory< T, S, Image< T > > factory )
 	{
 		return factory.createSampler( this );
 	}

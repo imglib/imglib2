@@ -29,11 +29,12 @@
  */
 package mpicbg.imglib.interpolation;
 
+import mpicbg.imglib.image.Image;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
 import mpicbg.imglib.sampler.SamplerFactory;
 import mpicbg.imglib.type.Type;
 
-public abstract class InterpolatorFactory< T extends Type< T >, I extends Interpolator< T > > implements SamplerFactory< T, I >
+public abstract class InterpolatorFactory< T extends Type< T >, I extends Interpolator< T > > implements SamplerFactory< T, I, Image< T > >
 {	
 	protected OutOfBoundsStrategyFactory< T > outOfBoundsStrategyFactory;
 	

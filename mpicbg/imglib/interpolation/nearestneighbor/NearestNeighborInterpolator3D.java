@@ -50,7 +50,7 @@ public class NearestNeighborInterpolator3D< T extends Type< T > > extends Neares
 		
 		x = 0;
 		y = 0;
-		z = 0;		
+		z = 0;	
 	}
 	
 	final static private int round( final double r )
