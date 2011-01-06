@@ -32,7 +32,9 @@ import mpicbg.imglib.sampler.SamplerFactory;
 import mpicbg.imglib.type.Type;
 
 /**
+ * <p><em>f:R<sup>n</sup>&rarr;T</em></p>
  * 
+ * <p>Function is the the basis of imglib, an Euclidean space that can be sampled at real coordinates for Type&lt;T&gt;.</p> 
  *
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
