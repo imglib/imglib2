@@ -28,7 +28,7 @@
 package mpicbg.imglib.sampler;
 
 import mpicbg.imglib.Factory;
-import mpicbg.imglib.image.Image;
+import mpicbg.imglib.Function;
 import mpicbg.imglib.type.Type;
 
 /**
@@ -36,7 +36,7 @@ import mpicbg.imglib.type.Type;
  *
  * @author Stephan Preibisch and Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-public interface SamplerFactory< T extends Type< T >, S extends Sampler< T > > extends Factory
+public interface SamplerFactory< T extends Type< T >, S extends Sampler< T >, F extends Function< T, F > > extends Factory
 {
-	public S createSampler( final Image< T > img );
+	public S createSampler( final F img );
 }
