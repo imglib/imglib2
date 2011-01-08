@@ -31,6 +31,10 @@ import mpicbg.imglib.type.numeric.integer.IntType;
  * the weighted sum is larger than zero, the result image
  * gets a pixel set to true (or white, meaning inside).
  * 
+ * A weight of zero means that the first image is not present at all
+ * in the interpolated image;
+ * a weight of one means that the first image is present exclusively.
+ * 
  * The code was originally created by Johannes Schindelin
  * in the VIB's vib.BinaryInterpolator class, for ij.ImagePlus.
  */
@@ -38,8 +42,10 @@ public class BinaryInterpolation2D implements OutputAlgorithm<BitType>
 {
 
 	final private Image<BitType> img1, img2;
-	final private float weight;
+	private float weight;
 	private Image<BitType> interpolated;
+	private String errorMessage;
+	private IDT2D idt1, idt2;
 
 	public BinaryInterpolation2D(final Image<BitType> img1, final Image<BitType> img2, final float weight) {
 		this.img1 = img1;
@@ -206,8 +212,6 @@ public class BinaryInterpolation2D implements OutputAlgorithm<BitType>
 	public Image<BitType> getResult() {
 		return interpolated;
 	}
-
-	String errorMessage;
 	
 	@Override
 	public boolean checkInput() {
@@ -241,7 +245,17 @@ public class BinaryInterpolation2D implements OutputAlgorithm<BitType>
 			return new IDT2D(img);
 		}
 	}
-	
+
+	/** After changing the weight, it's totally valid to call process() again,
+	 * and then getResult(). */
+	public void setWeight(final float weight) throws IllegalArgumentException {
+		if (weight < 0 || weight > 1) {
+			throw new IllegalArgumentException("Weight must be between 0 and 1, both inclusive.");
+		}
+		this.weight = weight;
+	}
+
+	/** The first time, it will prepare the distance transform images, which are computed only once. */
 	@Override
 	public boolean process()
 	{
@@ -250,55 +264,61 @@ public class BinaryInterpolation2D implements OutputAlgorithm<BitType>
 		ImageFactory<BitType> f = new ImageFactory<BitType>(new BitType(), new ArrayContainerFactory());
 		this.interpolated = f.createImage(new int[]{img1.getDimension(0), img1.getDimension(1)});
 
-		ExecutorService exec = Executors.newFixedThreadPool(Math.min(2, Runtime.getRuntime().availableProcessors()));
-		Future<IDT2D> fu1 = exec.submit(new NewITD2D(img1));
-		Future<IDT2D> fu2 = exec.submit(new NewITD2D(img2));
-		exec.shutdown();
+		synchronized (this) {
+			if (null == idt1 || null == idt2) {
+				ExecutorService exec = Executors.newFixedThreadPool(Math.min(2, Runtime.getRuntime().availableProcessors()));
+				Future<IDT2D> fu1 = exec.submit(new NewITD2D(img1));
+				Future<IDT2D> fu2 = exec.submit(new NewITD2D(img2));
+				exec.shutdown();
 
-		try {
-			if (img1.getContainer().compareStorageContainerCompatibility(img2.getContainer())) {
-				final Cursor<IntType> c1 = fu1.get().result.createCursor();
-				final Cursor<IntType> c2 = fu2.get().result.createCursor();
-				final Cursor<BitType> ci = interpolated.createCursor();
-
-				while (ci.hasNext()) {
-					c1.fwd();
-					c2.fwd();
-					ci.fwd();
-
-					if ((c1.getType().get() * weight) + (c2.getType().get() * (1 - weight)) > 0) {
-						ci.getType().set(true);
-					}
+				try {
+					this.idt1 = fu1.get();
+					this.idt2 = fu2.get();
+				} catch (InterruptedException ie) {
+					throw new RuntimeException(ie);
+				} catch (ExecutionException e) {
+					throw new RuntimeException(e);
 				}
+			}
+		}
 
-				c1.close();
-				c2.close();
-				ci.close();
-			} else {
-				System.out.println("using option 2");
-				final LocalizableByDimCursor<IntType> c1 = fu1.get().result.createLocalizableByDimCursor();
-				final LocalizableByDimCursor<IntType> c2 = fu2.get().result.createLocalizableByDimCursor();
-				final LocalizableByDimCursor<BitType> ci = interpolated.createLocalizableByDimCursor();
+		if (img1.getContainer().compareStorageContainerCompatibility(img2.getContainer())) {
+			final Cursor<IntType> c1 = idt1.result.createCursor();
+			final Cursor<IntType> c2 = idt2.result.createCursor();
+			final Cursor<BitType> ci = interpolated.createCursor();
 
-				while (ci.hasNext()) {
-					ci.fwd();
-					c1.setPosition(ci);
-					c2.setPosition(ci);
+			while (ci.hasNext()) {
+				c1.fwd();
+				c2.fwd();
+				ci.fwd();
 
-					if (0 <= c1.getType().get() * weight + c2.getType().get() * (1 - weight)) {
-						ci.getType().set(true);
-					}
+				if ((c1.getType().get() * weight) + (c2.getType().get() * (1 - weight)) > 0) {
+					ci.getType().set(true);
 				}
-
-				c1.close();
-				c2.close();
-				ci.close();
 			}
 
-		} catch (InterruptedException ie) {
-			throw new RuntimeException(ie);
-		} catch (ExecutionException e) {
-			throw new RuntimeException(e);
+			c1.close();
+			c2.close();
+			ci.close();
+		} else {
+			System.out.println("using option 2");
+			final LocalizableByDimCursor<IntType> c1 = idt1.result.createLocalizableByDimCursor();
+			final LocalizableByDimCursor<IntType> c2 = idt2.result.createLocalizableByDimCursor();
+			final LocalizableByDimCursor<BitType> ci = interpolated.createLocalizableByDimCursor();
+
+			while (ci.hasNext()) {
+				ci.fwd();
+				c1.setPosition(ci);
+				c2.setPosition(ci);
+
+				if (0 <= c1.getType().get() * weight + c2.getType().get() * (1 - weight)) {
+					ci.getType().set(true);
+				}
+			}
+
+			c1.close();
+			c2.close();
+			ci.close();
 		}
 
 		return true;
