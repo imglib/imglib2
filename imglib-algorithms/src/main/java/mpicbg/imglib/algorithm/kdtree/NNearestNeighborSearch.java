@@ -1,7 +1,22 @@
+/**
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License 2
+ * as published by the Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ * 
+ * @author Johannes Schindelin
+ */
 package mpicbg.imglib.algorithm.kdtree;
 
 import java.util.Arrays;
-import java.util.Comparator;
 
 import mpicbg.imglib.algorithm.kdtree.node.Leaf;
 import mpicbg.imglib.algorithm.kdtree.node.Node;
@@ -43,7 +58,7 @@ public class NNearestNeighborSearch<T extends Leaf<T>>
 	public int findNNearestNeighbors(final T point, Node<T> node, int depth, int gotAlready, T[] result) {
 		if (node.isLeaf()) {
 			// TODO: urgh!  This _cries out loud_ for a class
-			final T leaf = (T)node;
+			final T leaf = ((Leaf<T>)node).getEntry();
 			if (gotAlready == 0) {
 				result[0] = leaf;
 				return 1;
@@ -52,21 +67,15 @@ public class NNearestNeighborSearch<T extends Leaf<T>>
 			int index;
 			// TODO: double urgh!
 			if (gotAlready < result.length)
+			{
 				for (index = 0; index < gotAlready &&
 						point.distanceTo(result[index]) <
 						point.distanceTo(leaf); index++);
-			else {
-				index = Arrays.binarySearch(result, leaf,
-					new Comparator() {
-					public int compare(Object a, Object b) {
-						float distA = point.distanceTo((T)a);
-						float distB = point.distanceTo((T)b);
-						return distA < distB ? -1 :
-							distA > distB ? +1 : 0;
-					}
-					public boolean equals(Object a, Object b) {
-						return a.equals(b);
-					}});
+			}
+			else 
+			{
+				index = Arrays.binarySearch( result, leaf, new DistanceComparator<T>( point ) );
+				
 				if (index < 0)
 					index = -1 - index;
 			}

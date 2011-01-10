@@ -280,11 +280,11 @@ public class LabelingType<T extends Comparable<T>> extends TypeImpl<LabelingType
 			
 		}
 		private long valueAt(Cursor<LabelingType<T>> c) {
-			return mapping.indexOf(c.getType().getLabeling());
+			return c.getType().mapping.indexOf(c.getType().getLabeling());
 		}
 		
 		private long valueAt(LabelingType<T> v) {
-			return mapping.indexOf(v.getLabeling());
+			return v.mapping.indexOf(v.getLabeling());
 		}
 
 		@Override

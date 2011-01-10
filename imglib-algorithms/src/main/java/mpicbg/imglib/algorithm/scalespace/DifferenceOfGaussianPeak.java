@@ -16,12 +16,13 @@
  */
 package mpicbg.imglib.algorithm.scalespace;
 
+import mpicbg.imglib.algorithm.kdtree.node.Leaf;
 import mpicbg.imglib.algorithm.scalespace.DifferenceOfGaussian.SpecialPoint;
 import mpicbg.imglib.cursor.Localizable;
 import mpicbg.imglib.type.numeric.NumericType;
 import mpicbg.imglib.util.Util;
 
-public class DifferenceOfGaussianPeak< T extends NumericType<T> > implements Localizable
+public class DifferenceOfGaussianPeak< T extends NumericType<T> > implements Localizable, Leaf<DifferenceOfGaussianPeak<T>>
 {
 	SpecialPoint specialPoint;
 	String errorMessage;
@@ -29,6 +30,7 @@ public class DifferenceOfGaussianPeak< T extends NumericType<T> > implements Loc
 	final protected int[] pixelLocation;
 	final protected float[] subPixelLocationOffset;
 	final protected T value, fitValue, sumValue;
+	final int numDimensions;
 	
 	public DifferenceOfGaussianPeak( final int[] pixelLocation, final T value, final SpecialPoint specialPoint )
 	{
@@ -36,12 +38,27 @@ public class DifferenceOfGaussianPeak< T extends NumericType<T> > implements Loc
 		this.pixelLocation = pixelLocation.clone();
 		this.subPixelLocationOffset = new float[ pixelLocation.length ];
 		
+		this.numDimensions = pixelLocation.length;
+		
 		this.value = value.copy();
 		this.sumValue = value.copy();
 		this.fitValue = value.createVariable();
 		this.fitValue.setZero();
 		
 		this.errorMessage = "";
+	}
+	
+	public DifferenceOfGaussianPeak<T> copy()
+	{
+		final DifferenceOfGaussianPeak<T> copy = new DifferenceOfGaussianPeak<T>(
+				pixelLocation, 
+				value, 
+				specialPoint );
+		
+		copy.setFitValue( fitValue );
+		copy.setSubPixelLocationOffset( subPixelLocationOffset );
+		
+		return copy;
 	}
 	
 	public boolean isMin() { return specialPoint == SpecialPoint.MIN; }
@@ -121,4 +138,34 @@ public class DifferenceOfGaussianPeak< T extends NumericType<T> > implements Loc
 
 	@Override
 	public void fwd() {}
+
+	@Override
+	public boolean isLeaf() { return true; }
+
+	@Override
+	public float get( final int k ) { return getSubPixelPosition( k ); }
+
+	@Override
+	public float distanceTo( final DifferenceOfGaussianPeak<T> other ) 
+	{
+		double sum = 0;
+		
+		for ( int d = 0; d < numDimensions; ++d )
+		{
+			final double tmp = other.get( d ) - get( d ); 
+			sum += tmp * tmp;
+		}
+
+		return (float)Math.sqrt( sum );
+	}
+
+	@Override
+	public int getNumDimensions() {	return numDimensions; }
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public DifferenceOfGaussianPeak<T>[] createArray( final int n ) { return new DifferenceOfGaussianPeak[ n ]; }
+
+	@Override
+	public DifferenceOfGaussianPeak<T> getEntry() { return this; }
 }

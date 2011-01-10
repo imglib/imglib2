@@ -12,27 +12,35 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  * 
- * @author Stephan Preibisch
+ * @author Johannes Schindelin and Stephan Preibisch
  */
-package mpicbg.imglib.algorithm.function;
+package mpicbg.imglib.algorithm.kdtree;
 
-import mpicbg.imglib.function.Converter;
-import mpicbg.imglib.type.numeric.RealType;
+import java.util.Comparator;
 
-public class NormMinMax< A extends RealType<A> > implements Converter< A, A >
+import mpicbg.imglib.algorithm.kdtree.node.Leaf;
+
+/**
+ * Compares which {@link Leaf} is closer to another {@link Leaf}
+ * 
+ * @author Johannes Schindelin and Stephan Preibisch
+ *
+ * @param <T>
+ */
+public class DistanceComparator< T extends Leaf<T> > implements Comparator<T>
 {
-	final double min, tmp;
+	final T point;
 	
-	public NormMinMax( final double min, final double max )
+	public DistanceComparator( final T point )
 	{
-		this.min = min;
-		this.tmp = max - min;
+		this.point = point;
 	}
 	
 	@Override
-	public void convert( final A input, final A output )
+	public int compare( final T a, final T b ) 
 	{
-		output.setReal( (input.getRealDouble() - min) / tmp );	
+		final double distA = point.distanceTo( a );
+		final double distB = point.distanceTo( b );
+		return distA < distB ? -1 : distA > distB ? +1 : 0;
 	}
-
 }

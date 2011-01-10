@@ -119,7 +119,7 @@ public class HoughLineTransform <S extends RealType<S>, T extends Type<T> & Comp
 	 */
 	public HoughLineTransform(final Image<T> inputImage, final int theta, final S type)
 	{
-		this(inputImage, defaultRho(inputImage), DEFAULT_THETA, type);
+		this(inputImage, defaultRho(inputImage), theta, type);
 	}
 	
 	/**
@@ -198,11 +198,11 @@ public class HoughLineTransform <S extends RealType<S>, T extends Type<T> & Comp
 			
 			imageCursor.fwd();
 			imageCursor.getPosition(position);
-			
-			for (int t = 0; t < nTheta; ++t)
-			{
-				if (imageCursor.getType().compareTo(threshold) > 0)
-				{
+
+            if (imageCursor.getType().compareTo(threshold) > 0)
+            {
+                for (int t = 0; t < nTheta; ++t)
+                {
 					fRho = Math.cos(theta[t]) * (double)position[0] + Math.sin(theta[t]) * (double)position[1];
 					r = Math.round((float)((fRho - minRho)/ dRho));
 					voteLoc[0] = r;
@@ -235,7 +235,7 @@ public class HoughLineTransform <S extends RealType<S>, T extends Type<T> & Comp
 			{
 				double[] rt = new double[2];
 				rt[0] = rho[irt[0]];
-				rt[1] = theta[irt[2]];
+				rt[1] = theta[irt[1]];
 				rtPeaks.add(rt);
 			}
 		}
