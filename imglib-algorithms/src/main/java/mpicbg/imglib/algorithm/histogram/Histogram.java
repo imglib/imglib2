@@ -126,12 +126,32 @@ public class Histogram <T extends Type<T>> implements Algorithm, Benchmark
     }
 	
 	/**
+	 * Returns this Histogram's HistogramBinMapper.
+	 * @return the HistogramBinMapper associated with this Histogram.
+	 */
+	public HistogramBinMapper<T> getBinMapper()
+	{
+	    return binMapper;
+	}
+	
+	/**
 	 * Returns the histogram array.
 	 * @return the histogram array.
 	 */
 	public int[] getHistogram()
 	{
 		return histogram; 
+	}
+	
+	/**
+	 * Creates and returns the a Type whose value corresponds to the center
+	 * of the bin indexed by i.
+	 * @param i the requested bin index.
+	 * @return a Type whose value corresponds to the requested bin center.
+	 */
+	public T getBinCenter(final int i)
+	{
+	    return getBinMapper().invMap(i);
 	}
 	
 	/**
@@ -145,10 +165,20 @@ public class Histogram <T extends Type<T>> implements Algorithm, Benchmark
 		ArrayList<T> binCenters = new ArrayList<T>(histogram.length);
 		for (int i = 0; i < histogram.length; ++i)
 		{
-			binCenters.add(i, binMapper.invMap(i));
+			binCenters.add(i, getBinMapper().invMap(i));
 		}
 		
 		return binCenters;
+	}
+	
+	/**
+	 * Returns the number of bins in this Histogram.
+	 * @return the number of bins in this Histogram
+	 * 
+	 */
+	public int getNumBins()
+	{
+	    return getBinMapper().getNumBins();
 	}
 	
 	@Override
