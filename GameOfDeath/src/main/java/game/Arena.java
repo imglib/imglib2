@@ -14,6 +14,7 @@ import mpicbg.imglib.image.ImageFactory;
 import mpicbg.imglib.image.display.imagej.ImageJFunctions;
 import mpicbg.imglib.image.display.imagej.ImageJVirtualStack;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyMirrorFactory;
+import mpicbg.imglib.outofbounds.OutOfBoundsStrategyPeriodicFactory;
 
 public class Arena
 {
@@ -65,7 +66,7 @@ public class Arena
 			}
 			
 			/* diffusion */
-			final GaussianConvolution<LifeForm> gauss = new GaussianConvolution<LifeForm>( arena, new OutOfBoundsStrategyMirrorFactory<LifeForm>(), 1.5f );
+			final GaussianConvolution<LifeForm> gauss = new GaussianConvolution<LifeForm>( arena, new OutOfBoundsStrategyPeriodicFactory<LifeForm>(), 1.5f );
 			
 			if ( !gauss.checkInput() || ! gauss.process() )
 			{
