@@ -34,20 +34,20 @@ public class RadiusNeighborSearch<T extends Leaf<T>>
 	public KDTree<T> getKDTree() { return kdTree; } 
 
 	
-	public ArrayList<T> findNeighborsUnsorted( final T point, final double radius )
+	public ArrayList<T> findNeighborsUnsorted( final T point, final double r )
 	{
 		this.pointsWithinRadius = new ArrayList<T>();
-		this.radius = radius;
+		this.radius = r;
 		
 		findNeighbors( point, kdTree.getRoot(), 0 );
 		
 		return pointsWithinRadius;
 	}
 
-	public ArrayList<T> findNeighborsSorted( final T point, final double radius )
+	public ArrayList<T> findNeighborsSorted( final T point, final double r )
 	{
 		// first find them unsorted
-		findNeighborsUnsorted( point, radius );
+		findNeighborsUnsorted( point, r );
 
 		// now sort
 		Collections.sort( pointsWithinRadius, new DistanceComparator<T>( point ) );

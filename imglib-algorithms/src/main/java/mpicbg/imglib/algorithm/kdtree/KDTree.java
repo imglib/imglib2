@@ -198,7 +198,7 @@ public class KDTree<T extends Leaf<T>>
 	public String toString(Node<T> node, String indent) {
 		if (node == null)
 			return indent + "null";
-		if (node instanceof Leaf)
+		if ( Leaf.class.isInstance(node) )
 			return indent + node.toString();
 		NonLeaf<T> nonLeaf = (NonLeaf<T>)node;
 		return toString(nonLeaf.left, indent + "\t") + "\n"

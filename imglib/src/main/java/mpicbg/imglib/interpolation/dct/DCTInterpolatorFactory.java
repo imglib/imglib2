@@ -27,47 +27,23 @@
  *
  * @author Stephan Preibisch & Stephan Saalfeld
  */
-package mpicbg.imglib.interpolation.linear;
+package mpicbg.imglib.interpolation.dct;
 
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.interpolation.InterpolatorFactory;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
 import mpicbg.imglib.type.numeric.RealType;
 
-public class LinearInterpolatorFactory<T extends RealType<T>> extends InterpolatorFactory<T>
+public class DCTInterpolatorFactory<T extends RealType<T>> extends InterpolatorFactory<T>
 {
-	public LinearInterpolatorFactory( final OutOfBoundsStrategyFactory<T> outOfBoundsStrategyFactory )
+	public DCTInterpolatorFactory( final OutOfBoundsStrategyFactory<T> outOfBoundsStrategyFactory )
 	{
 		super(outOfBoundsStrategyFactory);
 	}
 
-	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
-	public LinearInterpolator<T> createInterpolator( final Image<T> img )
+	public DCTInterpolator<T> createInterpolator( final Image<T> img )
 	{
-		if ( img.getNumDimensions() == 1 )
-		{
-			return new LinearInterpolator1D<T>( img, this, outOfBoundsStrategyFactory );
-		}
-		else if ( img.getNumDimensions() == 2 )
-		{
-			if ( RealType.class.isInstance( img.createType() ))
-				/* inconvertible types due to javac bug 6548436: return (LinearInterpolator<T>)new LinearInterpolator3DFloat( (Image<FloatType>)img, (LinearInterpolatorFactory<FloatType>)this, (OutOfBoundsStrategyFactory<FloatType>)outOfBoundsStrategyFactory ); */
-				return (LinearInterpolator<T>)new LinearInterpolator2DRealType( (Image)img, (LinearInterpolatorFactory)this, (OutOfBoundsStrategyFactory)outOfBoundsStrategyFactory );
-			else
-				return new LinearInterpolator2D<T>( img, this, outOfBoundsStrategyFactory );
-		}
-		else if ( img.getNumDimensions() == 3 )	
-		{
-			if ( RealType.class.isInstance( img.createType() ))
-				/* inconvertible types due to javac bug 6548436: return (LinearInterpolator<T>)new LinearInterpolator3DFloat( (Image<FloatType>)img, (LinearInterpolatorFactory<FloatType>)this, (OutOfBoundsStrategyFactory<FloatType>)outOfBoundsStrategyFactory ); */
-				return (LinearInterpolator<T>)new LinearInterpolator3DRealType( (Image)img, (LinearInterpolatorFactory)this, (OutOfBoundsStrategyFactory)outOfBoundsStrategyFactory );
-			else
-				return new LinearInterpolator3D<T>( img, this, outOfBoundsStrategyFactory );
-		}
-		else
-		{
-			return new LinearInterpolator<T>( img, this, outOfBoundsStrategyFactory );
-		}
+		return new DCTInterpolator<T>( img, this, outOfBoundsStrategyFactory );
 	}
 }
