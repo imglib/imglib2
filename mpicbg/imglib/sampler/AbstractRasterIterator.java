@@ -34,7 +34,6 @@ import java.util.Iterator;
 import mpicbg.imglib.algorithm.math.MathLib;
 import mpicbg.imglib.container.Container;
 import mpicbg.imglib.image.Image;
-import mpicbg.imglib.location.RasterLocalizable;
 import mpicbg.imglib.type.Type;
 
 /**
@@ -76,27 +75,27 @@ public abstract class AbstractRasterIterator< T extends Type< T > > extends Abst
 	/* RasterLocalizable */
 
 	@Override
-	public void localize( float[] position )
+	public void localize( float[] pos )
 	{
 		localize( this.position );
 		for ( int d = 0; d < numDimensions; d++ )
-			position[ d ] = this.position[ d ];
+			pos[ d ] = this.position[ d ];
 	}
 
 	@Override
-	public void localize( double[] position )
+	public void localize( double[] pos )
 	{
 		localize( this.position );
 		for ( int d = 0; d < numDimensions; d++ )
-			position[ d ] = this.position[ d ];
+			pos[ d ] = this.position[ d ];
 	}
 
 	@Override
-	public void localize( int[] position )
+	public void localize( int[] pos )
 	{
 		localize( this.position );
 		for ( int d = 0; d < numDimensions; d++ )
-			position[ d ] = ( int ) this.position[ d ];
+			pos[ d ] = ( int ) this.position[ d ];
 	}
 
 	@Override
@@ -118,10 +117,10 @@ public abstract class AbstractRasterIterator< T extends Type< T > > extends Abst
 	}
 
 	@Override
-	public String getLocationAsString()
+	public String toString()
 	{
-		final int[] position = new int[ numDimensions ];
-		localize( position );
-		return MathLib.printCoordinates( position );
+		final int[] pos = new int[ numDimensions ];
+		localize( pos );
+		return MathLib.printCoordinates( pos );
 	}
 }

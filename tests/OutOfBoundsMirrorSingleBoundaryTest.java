@@ -398,10 +398,10 @@ public class OutOfBoundsMirrorSingleBoundaryTest
 			cShapeList.setPosition( y[ i ], 1 );
 			cShapeList.setPosition( z[ i ], 2 );
 			
-			assertEquals( "ArrayContainer failed at " + cArray.getLocationAsString(), cArray.type().getInteger(), t[ i ] );
-			assertEquals( "CellContainer failed at " + cCell.getLocationAsString(), cCell.type().getInteger(), t[ i ] );
-			assertEquals( "DynamicContainer failed at " + cDynamic.getLocationAsString(), cDynamic.type().getInteger(), t[ i ] );
-			assertEquals( "ShapeListContainer failed at " + cShapeList.getLocationAsString(), cShapeList.type().getInteger(), t[ i ] );
+			assertEquals( "ArrayContainer failed at " + cArray, cArray.type().getInteger(), t[ i ] );
+			assertEquals( "CellContainer failed at " + cCell, cCell.type().getInteger(), t[ i ] );
+			assertEquals( "DynamicContainer failed at " + cDynamic, cDynamic.type().getInteger(), t[ i ] );
+			assertEquals( "ShapeListContainer failed at " + cShapeList, cShapeList.type().getInteger(), t[ i ] );
 		}
 	}
 }

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2009--2010, Stephan Preibisch & Stephan Saalfeld
+ * Copyright (c) 2010, Stephan Saalfeld
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -9,7 +9,7 @@
  * list of conditions and the following disclaimer.  Redistributions in binary
  * form must reproduce the above copyright notice, this list of conditions and
  * the following disclaimer in the documentation and/or other materials
- * provided with the distribution.  Neither the name of the Fiji project nor
+ * provided with the distribution.  Neither the name of the imglib project nor
  * the names of its contributors may be used to endorse or promote products
  * derived from this software without specific prior written permission.
  * 
@@ -24,14 +24,35 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- *
- * @author Stephan Preibisch & Stephan Saalfeld
  */
 package mpicbg.imglib;
 
-public interface Dimensions extends EuclideanSpace
+/**
+ * <p>{x&isin;Z<sup><em>n</em></sup>|<em>min<sub>d</sub></em>&le;<em>x<sub>d</sub></em>&le;<em>max<sub>d</sub></em>;<em>d</em>&isin;{0&hellip;<em>n</em>-1}}</p>
+ * 
+ * An {@link IntegerInterval} over the discrete source domain.  <em>Note</em>
+ * that this does <em>not</em> imply that for <em>all</em> coordinates in the
+ * {@link IntegerInterval} function values exist or can be generated.  It only
+ * defines where the minimum and maximum source coordinates are.  E.g. an
+ * {@link Iterable} & {@link Raster} has a limited number of values and a
+ * source coordinate for each.  By that, minimum and maximum are defined but
+ * the {@link Function} does not define a value for all coordinates in between.
+ *
+ * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
+ */
+public interface IntegerInterval extends RealInterval
 {
-	public int[] getDimensions();
-	public void dimensions( int[] position );
-	public int getDimension( int dim );
+	/**
+	 * 
+	 * @param d dimension
+	 * @return minimum
+	 */
+	public long min( final int d );
+	
+	/**
+	 * 
+	 * @param d dimension
+	 * @return maximum
+	 */
+	public long max( final int d );
 }

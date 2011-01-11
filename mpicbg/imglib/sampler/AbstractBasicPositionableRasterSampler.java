@@ -75,11 +75,11 @@ public abstract class AbstractBasicPositionableRasterSampler< T extends Type< T 
 	}
 
 	@Override
-	public void moveTo( final int[] position )
+	public void moveTo( final int[] pos )
 	{
 		for ( int d = 0; d < numDimensions; ++d )
 		{
-			final int dist = position[ d ] - getIntPosition( d );
+			final int dist = pos[ d ] - getIntPosition( d );
 
 			if ( dist != 0 )
 				move( dist, d );
@@ -87,11 +87,11 @@ public abstract class AbstractBasicPositionableRasterSampler< T extends Type< T 
 	}
 
 	@Override
-	public void moveTo( final long[] position )
+	public void moveTo( final long[] pos )
 	{
 		for ( int d = 0; d < numDimensions; ++d )
 		{
-			final long dist = position[ d ] - getLongPosition( d );
+			final long dist = pos[ d ] - getLongPosition( d );
 
 			if ( dist != 0 )
 				move( dist, d );

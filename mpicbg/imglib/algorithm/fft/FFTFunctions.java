@@ -28,7 +28,7 @@ import edu.mines.jtk.dsp.FftReal;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.ImageFactory;
 import mpicbg.imglib.multithreading.SimpleMultiThreading;
-import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
+import mpicbg.imglib.outofbounds.RasterOutOfBoundsFactory;
 import mpicbg.imglib.sampler.PositionableRasterSampler;
 import mpicbg.imglib.sampler.array.ArrayLocalizingRasterIterator;
 import mpicbg.imglib.type.Type;
@@ -360,7 +360,7 @@ A:						while( cursorDim.hasNext() )
 	}
 	
 	final public static <T extends RealType<T>, S extends ComplexType<S>> Image<S> 
-						computeFFT( final Image<T> img, final S complexType, final OutOfBoundsStrategyFactory<T> outOfBoundsFactory,
+						computeFFT( final Image<T> img, final S complexType, final RasterOutOfBoundsFactory<T> outOfBoundsFactory,
 						            final int[] imageOffset, final int[] imageSize,
 						            final int numThreads, final boolean scale )
 	{

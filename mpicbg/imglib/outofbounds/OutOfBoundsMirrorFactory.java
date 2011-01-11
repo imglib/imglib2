@@ -40,7 +40,7 @@ import mpicbg.imglib.type.Type;
  *
  * @author Stephan Preibisch and Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-public class OutOfBoundsMirrorFactory< T extends Type< T > > extends OutOfBoundsStrategyFactory< T >
+public class OutOfBoundsMirrorFactory< T extends Type< T > > extends RasterOutOfBoundsFactory< T >
 {
 	static public enum Boundary { SINGLE, DOUBLE };
 	
@@ -52,7 +52,7 @@ public class OutOfBoundsMirrorFactory< T extends Type< T > > extends OutOfBounds
 	}
 	
 	@Override
-	public AbstractOutOfBoundsMirror< T > createStrategy( final PositionableRasterSampler< T > cursor )
+	public AbstractOutOfBoundsMirror< T > create( final PositionableRasterSampler< T > cursor )
 	{
 		if ( boundary == Boundary.SINGLE )
 			return new OutOfBoundsMirrorSingleBoundary< T >( cursor );

@@ -153,9 +153,9 @@ public class OrthoSliceIterator< T extends mpicbg.imglib.type.Type< T > > implem
 	}
 
 	@Override
-	public String getLocationAsString()
+	public String toString()
 	{
-		return sampler.getLocationAsString();
+		return sampler.toString();
 	}
 
 	@Override

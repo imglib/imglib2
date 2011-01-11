@@ -28,7 +28,10 @@
 package mpicbg.imglib.outofbounds;
 
 import mpicbg.imglib.image.Image;
+import mpicbg.imglib.location.RasterLocalizable;
+import mpicbg.imglib.location.RasterPositionable;
 import mpicbg.imglib.sampler.PositionableRasterSampler;
+import mpicbg.imglib.sampler.Sampler;
 import mpicbg.imglib.type.Type;
 
 /**
@@ -37,10 +40,10 @@ import mpicbg.imglib.type.Type;
  *
  * @author Stephan Preibisch and Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-public class OutOfBoundsStrategyPeriodicFactory< T extends Type< T > > extends OutOfBoundsStrategyFactory< T >
+public class OutOfBoundsStrategyPeriodicFactory< T extends Type< T > > extends RasterOutOfBoundsFactory< T >
 {
 	@Override
-	public OutOfBoundsStrategyPeriodic< T > createStrategy( final PositionableRasterSampler< T > cursor )
+	public < P extends RasterPositionable & RasterLocalizable & Sampler< T > > OutOfBoundsStrategyPeriodic< T > create( final P cursor )
 	{
 		return new OutOfBoundsStrategyPeriodic< T >( cursor );
 	}

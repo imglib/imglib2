@@ -53,7 +53,8 @@ public class ArrayPositionableRasterSampler< T extends Type< T > > extends Abstr
 		
 		this.container = container;
 		this.type = container.createLinkedType();
-		step = Array.createAllocationSteps( container.getDimensions() );
+		
+		step = Array.createAllocationSteps( dimensions );
 		
 		for ( int d = 0; d < numDimensions; d++ )
 			position[ d ] = 0;

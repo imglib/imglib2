@@ -28,7 +28,7 @@ import mpicbg.imglib.container.basictypecontainer.FloatAccess;
 import mpicbg.imglib.container.basictypecontainer.array.FloatArray;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.multithreading.SimpleMultiThreading;
-import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
+import mpicbg.imglib.outofbounds.RasterOutOfBoundsFactory;
 import mpicbg.imglib.sampler.PositionableRasterSampler;
 import mpicbg.imglib.sampler.RasterIterator;
 import mpicbg.imglib.type.numeric.NumericType;
@@ -37,7 +37,7 @@ import mpicbg.imglib.type.numeric.real.FloatType;
 public class GaussianConvolution< T extends NumericType<T>> implements MultiThreaded, OutputAlgorithm<T>, Benchmark
 {	
 	final Image<T> image, convolved;
-	final OutOfBoundsStrategyFactory<T> outOfBoundsFactory;
+	final RasterOutOfBoundsFactory<T> outOfBoundsFactory;
 	final int numDimensions;
 	final double[] sigma;
     final double[][] kernel;
@@ -46,7 +46,7 @@ public class GaussianConvolution< T extends NumericType<T>> implements MultiThre
 	int numThreads;
 	String errorMessage = "";
 
-	public GaussianConvolution( final Image<T> image, final OutOfBoundsStrategyFactory<T> outOfBoundsFactory, final double[] sigma )
+	public GaussianConvolution( final Image<T> image, final RasterOutOfBoundsFactory<T> outOfBoundsFactory, final double[] sigma )
 	{
 		this.image = image;
 		this.convolved = image.createNewImage();
@@ -63,7 +63,7 @@ public class GaussianConvolution< T extends NumericType<T>> implements MultiThre
 			this.kernel[ d ] = MathLib.createGaussianKernel1DDouble( sigma[ d ], true );
 	}
 
-	public GaussianConvolution( final Image<T> image, final OutOfBoundsStrategyFactory<T> outOfBoundsFactory, final double sigma )
+	public GaussianConvolution( final Image<T> image, final RasterOutOfBoundsFactory<T> outOfBoundsFactory, final double sigma )
 	{
 		this ( image, outOfBoundsFactory, createArray(image, sigma));
 	}
@@ -335,7 +335,7 @@ public class GaussianConvolution< T extends NumericType<T>> implements MultiThre
 	public void computeGaussFloatArray3D()
 	{
 		/* inconvertible types due to javac bug 6548436: final OutOfBoundsStrategyFactory<FloatType> outOfBoundsFactoryFloat = (OutOfBoundsStrategyFactory<FloatType>)outOfBoundsFactory;  */
-		final OutOfBoundsStrategyFactory<FloatType> outOfBoundsFactoryFloat = (OutOfBoundsStrategyFactory)outOfBoundsFactory;
+		final RasterOutOfBoundsFactory<FloatType> outOfBoundsFactoryFloat = (RasterOutOfBoundsFactory)outOfBoundsFactory;
 		
 		/* inconvertible types due to javac bug 6548436: final Image<FloatType> imageFloat = (Image<FloatType>) image; */
 		final Image<FloatType> imageFloat = (Image)image;

@@ -29,7 +29,7 @@ package mpicbg.imglib.sampler.special;
 
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.location.RasterLocalizable;
-import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
+import mpicbg.imglib.outofbounds.RasterOutOfBoundsFactory;
 import mpicbg.imglib.sampler.RasterSampler;
 import mpicbg.imglib.type.Type;
 
@@ -44,7 +44,7 @@ public class LocalNeighborhoodCursorFactory
 	public static < T extends Type< T > > LocalNeighborhoodCursor<T> createLocalNeighborhoodCursor(
 			final RasterLocalizable localizable,
 			final Image< T > image,
-			final OutOfBoundsStrategyFactory< T > outsideFactory )
+			final RasterOutOfBoundsFactory< T > outsideFactory )
 	{
 		if ( image.numDimensions() == 3 )
 		{
@@ -61,7 +61,7 @@ public class LocalNeighborhoodCursorFactory
 		return createLocalNeighborhoodCursor( localizable, image, null ); 
 	}
 	
-	public static < T extends Type< T >, S extends RasterLocalizable & RasterSampler< T > >LocalNeighborhoodCursor< T > createLocalNeighborhoodCursor( final S cursor, final OutOfBoundsStrategyFactory< T > outsideFactory )
+	public static < T extends Type< T >, S extends RasterLocalizable & RasterSampler< T > >LocalNeighborhoodCursor< T > createLocalNeighborhoodCursor( final S cursor, final RasterOutOfBoundsFactory< T > outsideFactory )
 	{
 		return createLocalNeighborhoodCursor( cursor, cursor.getImage(), outsideFactory ); 
 	}

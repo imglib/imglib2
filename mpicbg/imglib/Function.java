@@ -27,27 +27,57 @@
  */
 package mpicbg.imglib;
 
+import mpicbg.imglib.location.Iterator;
 import mpicbg.imglib.sampler.Sampler;
 import mpicbg.imglib.sampler.SamplerFactory;
 import mpicbg.imglib.type.Type;
 
 /**
- * <p><em>f:R<sup>n</sup>&rarr;T</em></p>
+ * <p><em>f:?&rarr;T</em></p>
  * 
- * <p>Function is the the basis of imglib, an Euclidean space that can be sampled at real coordinates for Type&lt;T&gt;.</p> 
- *
+ * <p>Function is the the basis of imglib, a function over an unspecified
+ * source domain that can be sampled for values from a target domain T.
+ * <em>Note</em> that {@link Sampler Samplers} returned by the {@link Function}
+ * interface alone cannot be addressed in the unspecified source domain and
+ * thus cannot do anything but access a default T.  That is, any implementation
+ * of {@link Function} has to implement another interface that specifies the
+ * source domain over which a T is defined.</p>
+ * 
+ * <p>Image processing usually refers to {@link Function Functions} over real
+ * (f:R<sup>n</sup>&rarr;T) or discrete (f:Z<sup>n</sup>&rarr;T) space with the
+ * latter being a subset of the former.  The source domain may be constrained
+ * further as an interval over such space.  The standard interfaces for image
+ * processing are thus:</p>
+ * 
+ * <dl>
+ * <dt>{@link PositionableFunction}</dt>
+ * <dd>random access at real coordinates</dd>
+ * <dt>{@link PositionableInterval}</dt>
+ * <dd>random access at real coordinates with an {@link OutOfBoundsStrategy}
+ * that generates values beyond the boundaries of the source domain</dd>
+ * <dt>{@link IterableFunction}</dt>
+ * <dd>access to all T in the target domain and their coordinates in the
+ * source domain via {@link Iterator}</dd>
+ * <dt>{@link Raster}</dt>
+ * <dd>random access at integer coordinates</dd>
+ * <dt>{@link RasterInterval}</dt>
+ * <dd>random access at integer coordinates with an {@link OutOfBoundsStrategy}
+ * that generates values beyond the boundaries of the source domain</dd>
+ * <dl>
+ * 
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
 public interface Function< T extends Type< T >, F extends Function< T, F > > extends EuclideanSpace
 {
 	/**
-	 * Create a {@link Sampler} that provides access to a {@link Type} at real
-	 * coordinates.  The way how real coordinates are addressed is not further
-	 * specified.
+	 * Create a {@link Sampler} that provides access to a {@link Type}.
+	 * <em>Note</em> that, with the {@link Function} interface
+	 * alone, the source domain is not further specified and, thus, a
+	 * {@link SamplerFactory} cannot be specified.
 	 * 
 	 * @param <S> type of the Sampler is inferred from S in factory
 	 * @param factory creates the sampler
-	 * @return
+	 * @return sampler
 	 */
 	public < S extends Sampler< T > > S sampler( final SamplerFactory< T, S, F > factory ); 
 

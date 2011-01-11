@@ -177,14 +177,6 @@ final public class FlatRasterIterator implements Iterator, RasterLocalizable
 	final public float getFloatPosition( final int dim ) { return indexToPosition( index, steps, dim ); }
 
 	@Override
-	final public String getLocationAsString()
-	{
-		final int[] l = new int[ dimensions.length ];
-		localize( l );
-		return MathLib.printCoordinates( l );
-	}
-
-	@Override
 	final public void localize( final float[] position ) { indexToPosition( index, steps, position ); }
 
 	@Override
@@ -200,5 +192,10 @@ final public class FlatRasterIterator implements Iterator, RasterLocalizable
 	/* Object */
 	
 	@Override
-	final public String toString() { return getLocationAsString(); }
+	final public String toString()
+	{
+		final int[] l = new int[ dimensions.length ];
+		localize( l );
+		return MathLib.printCoordinates( l );
+	}
 }

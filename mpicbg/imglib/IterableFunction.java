@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2009--2010, Stephan Preibisch & Stephan Saalfeld
+ * Copyright (c) 2010, Stephan Saalfeld
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -9,7 +9,7 @@
  * list of conditions and the following disclaimer.  Redistributions in binary
  * form must reproduce the above copyright notice, this list of conditions and
  * the following disclaimer in the documentation and/or other materials
- * provided with the distribution.  Neither the name of the Fiji project nor
+ * provided with the distribution.  Neither the name of the imglib project nor
  * the names of its contributors may be used to endorse or promote products
  * derived from this software without specific prior written permission.
  * 
@@ -24,37 +24,54 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- *
  */
 package mpicbg.imglib;
 
-import mpicbg.imglib.sampler.RasterIterator;
+import mpicbg.imglib.location.Iterator;
+import mpicbg.imglib.location.Localizable;
+import mpicbg.imglib.sampler.Sampler;
 import mpicbg.imglib.type.Type;
 
 /**
- * A Raster whose data elements (pixels) can be iterated.
+ * <p><em>f</em>:R<sup><em>n</em></sup>&isin;[0,<em>s</em>]&rarr;T</em></p>
+ * 
+ * <p>A {@link Function} over zero bound positive real space that can create a
+ * random access {@link Sampler} that generates values beyond boundaries
+ * through an {@link OutOfBounds}.</p>
+ * 
+ * @param <T>
+ * @param <F>
+ * @param <I>
  *
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-public interface IterableRaster< T extends Type< T > > extends Iterable< T >
+public interface IterableFunction<
+		T extends Type< T >,
+		F extends IterableFunction< T, F, I >,
+		I extends Iterator & Localizable & java.util.Iterator< T > & Sampler< T > > extends Function< T, F >, RealInterval, Iterable< T >
 {
 	/**
-	 * Create a {@link RasterIterator} that will iterate all data elements in
-	 * memory-optimal order.
+	 * <p>Returns a {@link Localizable} {@link Iterator} that iterates with
+	 * optimal speed without calculating the location at each iteration step.
+	 * Localization is performed on demand.</p>
 	 * 
-	 * @return RasterIterator<T> - the typed {@link RasterIterator}
+	 * <p>Use this where localization is required rarely/ not for each
+	 * iteration.</p>
+	 * 
+	 * @return I fast iterating iterator
 	 */
-	public RasterIterator< T > createRasterIterator();
-	
+	@Override
+	public I iterator();
+
 	/**
-	 * Create a {@link RasterIterator} that will iterate all data elements in
-	 * memory-optimal order and tracks its location at each moving operation.
+	 * <p>Returns a {@link Localizable} {@link Iterator} that calculates its
+	 * location at each iteration step.  That is, localization is performed
+	 * with optimal speed.</p>
 	 * 
-	 * This {@link RasterIterator} is the preferred choice for implementations
-	 * that require the iterator's location at each iteration step (e.g. for
-	 * rendering a transformed image)
-	 *  
-	 * @return RasterIterator<T> - the typed {@link RasterIterator}
+	 * <p>Use this where localization is required often/ for each
+	 * iteration.</p>
+	 * 
+	 * @return I fast localizing iterator
 	 */
-	public RasterIterator< T > createLocalizingRasterIterator();
+	public I localizingIterator();
 }

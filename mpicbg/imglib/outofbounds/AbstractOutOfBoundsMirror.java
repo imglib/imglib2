@@ -38,7 +38,7 @@ import mpicbg.imglib.type.Type;
  *
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-public abstract class AbstractOutOfBoundsMirror< T extends Type< T > > implements OutOfBoundsStrategy< T >
+public abstract class AbstractOutOfBoundsMirror< T extends Type< T > > implements RasterOutOfBounds< T >
 {
 	final protected PositionableRasterSampler< T > outOfBoundsPositionable;
 	
@@ -155,10 +155,7 @@ public abstract class AbstractOutOfBoundsMirror< T extends Type< T > > implement
 	public long getLongPosition( final int dim ){ return position[ dim ]; }
 	
 	@Override
-	public String getLocationAsString() { return MathLib.printCoordinates( position ); }
-	
-	@Override
-	public String toString() { return getLocationAsString() + " = " + type(); }
+	public String toString() { return MathLib.printCoordinates( position ) + " = " + type(); }
 	
 	
 	/* RasterPositionable */
@@ -230,11 +227,5 @@ public abstract class AbstractOutOfBoundsMirror< T extends Type< T > > implement
 	{
 		for ( int d = 0; d < position.length; ++d )
 			setPosition( position[ d ], d );
-	}
-	
-	@Override
-	public void close()
-	{
-		outOfBoundsPositionable.close();
 	}
 }

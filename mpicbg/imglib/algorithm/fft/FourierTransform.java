@@ -27,10 +27,11 @@ import mpicbg.imglib.algorithm.MultiThreaded;
 import mpicbg.imglib.algorithm.OutputAlgorithm;
 import mpicbg.imglib.algorithm.math.MathLib;
 import mpicbg.imglib.image.Image;
-import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
+import mpicbg.imglib.outofbounds.RasterOutOfBoundsFactory;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyMirrorExpWindowingFactory;
 import mpicbg.imglib.outofbounds.OutOfBoundsMirrorFactory;
 import mpicbg.imglib.outofbounds.OutOfBoundsConstantValueFactory;
+import mpicbg.imglib.outofbounds.OutOfBoundsMirrorFactory.Boundary;
 import mpicbg.imglib.type.numeric.ComplexType;
 import mpicbg.imglib.type.numeric.RealType;
 
@@ -51,7 +52,7 @@ public class FourierTransform<T extends RealType<T>, S extends ComplexType<S>> i
 	int[] imageExtension;
 	float relativeFadeOutDistance;
 	int minExtension;
-	OutOfBoundsStrategyFactory<T> strategy;
+	RasterOutOfBoundsFactory<T> strategy;
 	int[] originalSize, originalOffset, extendedSize, extendedZeroPaddedSize;
 	
 	// if you want the image to be extended more use that
@@ -115,7 +116,7 @@ public class FourierTransform<T extends RealType<T>, S extends ComplexType<S>> i
 		setPreProcessing( preProcessing );
 	}
 
-	public FourierTransform( final Image<T> image, final S complexType, final OutOfBoundsStrategyFactory<T> strategy ) 
+	public FourierTransform( final Image<T> image, final S complexType, final RasterOutOfBoundsFactory<T> strategy ) 
 	{ 
 		this ( image, complexType );
 		setPreProcessing( PreProcessing.USE_GIVEN_OUTOFBOUNDSSTRATEGY );
@@ -126,7 +127,7 @@ public class FourierTransform<T extends RealType<T>, S extends ComplexType<S>> i
 	public void setRearrangement( final Rearrangement rearrangement ) { this.rearrangement = rearrangement; }
 	public void setFFTOptimization( final FFTOptimization fftOptimization ) { this.fftOptimization = fftOptimization; }
 	public void setRelativeFadeOutDistance( final float relativeFadeOutDistance ) { this.relativeFadeOutDistance = relativeFadeOutDistance; }
-	public void setCustomOutOfBoundsStrategy( final OutOfBoundsStrategyFactory<T> strategy ) { this.strategy = strategy; } 
+	public void setCustomOutOfBoundsStrategy( final RasterOutOfBoundsFactory<T> strategy ) { this.strategy = strategy; } 
 	public void setMinExtension( final int minExtension ) { this.minExtension = minExtension; }	
 	public void setImageExtension( final int[] imageExtension ) { this.imageExtension = imageExtension.clone(); }
 	public boolean setExtendedOriginalImageSize( final int[] inputSize )
@@ -178,7 +179,7 @@ public class FourierTransform<T extends RealType<T>, S extends ComplexType<S>> i
 	public float getRelativeImageExtension() { return relativeImageExtensionRatio; } 
 	public int[] getImageExtension() { return imageExtension.clone(); }
 	public float getRelativeFadeOutDistance() { return relativeFadeOutDistance; }
-	public OutOfBoundsStrategyFactory<T> getCustomOutOfBoundsStrategy() { return strategy; }
+	public RasterOutOfBoundsFactory<T> getCustomOutOfBoundsStrategy() { return strategy; }
 	public int getMinExtension() { return minExtension; }
 	public int[] getOriginalSize() { return originalSize.clone(); }
 	public int[] getOriginalOffset() { return originalOffset.clone(); }
@@ -205,7 +206,7 @@ public class FourierTransform<T extends RealType<T>, S extends ComplexType<S>> i
 		//
 		// perform FFT on the temporary image
 		//			
-		final OutOfBoundsStrategyFactory<T> outOfBoundsFactory;		
+		final RasterOutOfBoundsFactory<T> outOfBoundsFactory;		
 		switch ( preProcessing )
 		{
 			case USE_GIVEN_OUTOFBOUNDSSTRATEGY:
@@ -222,7 +223,7 @@ public class FourierTransform<T extends RealType<T>, S extends ComplexType<S>> i
 			case EXTEND_MIRROR:
 			{	
 				extendedZeroPaddedSize = getZeroPaddingSize( getExtendedImageSize( img, imageExtension ), fftOptimization );
-				outOfBoundsFactory = new OutOfBoundsMirrorFactory< T >( true );
+				outOfBoundsFactory = new OutOfBoundsMirrorFactory< T >( Boundary.SINGLE );
 				break;
 				
 			}			

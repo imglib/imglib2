@@ -32,7 +32,7 @@ package mpicbg.imglib.sampler.special;
 import mpicbg.imglib.container.Container;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.location.RasterLocalizable;
-import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
+import mpicbg.imglib.outofbounds.RasterOutOfBoundsFactory;
 import mpicbg.imglib.sampler.AbstractRasterIterator;
 import mpicbg.imglib.sampler.PositionableRasterSampler;
 import mpicbg.imglib.sampler.array.ArrayLocalizingRasterIterator;
@@ -53,7 +53,7 @@ public class LocalNeighborhoodCursor<T extends Type<T>> extends AbstractRasterIt
 	final int[] tmp;
 	final int centralPositionIndex;
 	
-	LocalNeighborhoodCursor( final RasterLocalizable localizable, final Image< T > image, final OutOfBoundsStrategyFactory<T> outofboundsFactory )
+	LocalNeighborhoodCursor( final RasterLocalizable localizable, final Image< T > image, final RasterOutOfBoundsFactory<T> outofboundsFactory )
 	{
 		super( image.getContainer(), image );
 		

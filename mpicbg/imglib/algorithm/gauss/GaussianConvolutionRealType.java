@@ -2,7 +2,7 @@ package mpicbg.imglib.algorithm.gauss;
 
 import mpicbg.imglib.algorithm.Precision.PrecisionReal;
 import mpicbg.imglib.image.Image;
-import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
+import mpicbg.imglib.outofbounds.RasterOutOfBoundsFactory;
 import mpicbg.imglib.sampler.PositionableRasterSampler;
 import mpicbg.imglib.sampler.RasterIterator;
 import mpicbg.imglib.type.numeric.RealType;
@@ -11,13 +11,13 @@ public class GaussianConvolutionRealType<T extends RealType<T>> extends Gaussian
 {
 	protected PrecisionReal precision = PrecisionReal.Double;
 	
-	public GaussianConvolutionRealType( final Image<T> image, final OutOfBoundsStrategyFactory<T> outOfBoundsFactory, final double[] sigma )
+	public GaussianConvolutionRealType( final Image<T> image, final RasterOutOfBoundsFactory<T> outOfBoundsFactory, final double[] sigma )
 	{
 		super( image, outOfBoundsFactory, sigma );
 		precision = image.createType().getPreferredRealPrecision(); 
 	}
 
-	public GaussianConvolutionRealType( final Image<T> image, final OutOfBoundsStrategyFactory<T> outOfBoundsFactory, final double sigma )
+	public GaussianConvolutionRealType( final Image<T> image, final RasterOutOfBoundsFactory<T> outOfBoundsFactory, final double sigma )
 	{
 		super( image, outOfBoundsFactory, sigma );
 		precision = image.createType().getPreferredRealPrecision(); 

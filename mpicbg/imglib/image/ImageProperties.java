@@ -29,9 +29,7 @@
  */
 package mpicbg.imglib.image;
 
-import mpicbg.imglib.Dimensions;
-
-public interface ImageProperties extends Dimensions
+public interface ImageProperties
 {		
 	public long numPixels();
 	

@@ -30,8 +30,8 @@ package mpicbg.imglib.sampler;
 import mpicbg.imglib.container.Container;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.location.RasterLocalizable;
-import mpicbg.imglib.outofbounds.OutOfBoundsStrategy;
-import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
+import mpicbg.imglib.outofbounds.RasterOutOfBounds;
+import mpicbg.imglib.outofbounds.RasterOutOfBoundsFactory;
 import mpicbg.imglib.type.Type;
 
 /**
@@ -43,20 +43,20 @@ import mpicbg.imglib.type.Type;
 public abstract class AbstractOutOfBoundsPositionableRasterSampler< T extends Type< T > > extends AbstractRasterSampler< T > implements PositionableRasterSampler< T >
 {
 	/* performs the actual moves and generates/queries a Type */
-	final protected OutOfBoundsStrategy< T > outOfBounds;
+	final protected RasterOutOfBounds< T > outOfBounds;
 	
-	public AbstractOutOfBoundsPositionableRasterSampler( final Container< T > container, final Image< T > image, final OutOfBoundsStrategy< T > outOfBounds )
+	public AbstractOutOfBoundsPositionableRasterSampler( final Container< T > container, final Image< T > image, final RasterOutOfBounds< T > outOfBounds )
 	{
 		super( container, image );
 		
 		this.outOfBounds = outOfBounds;
 	}
 	
-	public AbstractOutOfBoundsPositionableRasterSampler( final Container< T > container, final Image< T > image, final OutOfBoundsStrategyFactory< T > outOfBoundsFactory )
+	public AbstractOutOfBoundsPositionableRasterSampler( final Container< T > container, final Image< T > image, final RasterOutOfBoundsFactory< T > outOfBoundsFactory )
 	{
 		super( container, image );
 		
-		this.outOfBounds = outOfBoundsFactory.createStrategy( this );
+		this.outOfBounds = outOfBoundsFactory.create( this );
 	}
 	
 	final public boolean isOutOfBounds(){ return outOfBounds.isOutOfBounds(); }
@@ -98,10 +98,7 @@ public abstract class AbstractOutOfBoundsPositionableRasterSampler< T extends Ty
 	final public float  getFloatPosition( final int dim ){ return outOfBounds.getFloatPosition( dim ); }
 	
 	@Override
-	public String getLocationAsString() { return outOfBounds.getLocationAsString(); }
-	
-	@Override
-	public String toString() { return getLocationAsString() + " = " + type(); }
+	public String toString() { return outOfBounds.toString() + " = " + type(); }
 	
 	
 	/* RasterPositionable */
@@ -176,15 +173,5 @@ public abstract class AbstractOutOfBoundsPositionableRasterSampler< T extends Ty
 	final public void setPosition( final long[] position )
 	{
 		outOfBounds.setPosition( position );
-	}
-	
-	
-	/* RasterSampler */
-	
-	@Override
-	public void close()
-	{
-		super.close();
-		outOfBounds.close();
 	}
 }

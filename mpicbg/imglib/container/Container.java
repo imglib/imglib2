@@ -27,9 +27,9 @@
  */
 package mpicbg.imglib.container;
 
-import mpicbg.imglib.Dimensions;
+import mpicbg.imglib.RasterInterval;
 import mpicbg.imglib.image.Image;
-import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
+import mpicbg.imglib.outofbounds.RasterOutOfBoundsFactory;
 import mpicbg.imglib.sampler.PositionableRasterSampler;
 import mpicbg.imglib.sampler.RasterIterator;
 import mpicbg.imglib.sampler.special.OrthoSliceIterator;
@@ -41,12 +41,12 @@ import mpicbg.imglib.type.Type;
  *
  * @author Stephan Preibisch and Stephan Saalfeld
  */
-public interface Container< T extends Type< T > > extends Dimensions
+public interface Container< T extends Type< T > > extends RasterInterval< T, Container< T >, PositionableRasterSampler< T >, RasterIterator< T > >
 {
 	public RasterIterator< T > createRasterIterator( final Image< T > image );
 	public RasterIterator< T > createLocalizingRasterIterator( final Image< T > image );
 	public PositionableRasterSampler< T > createPositionableRasterSampler( final Image< T > image );
-	public PositionableRasterSampler< T > createPositionableRasterSampler( final Image< T > image, final OutOfBoundsStrategyFactory< T > outOfBoundsFactory );
+	public PositionableRasterSampler< T > createPositionableRasterSampler( final Image< T > image, final RasterOutOfBoundsFactory< T > outOfBoundsFactory );
 	public OrthoSliceIterator< T > createOrthoSliceIterator( final Image< T > image, final int x, final int y, final int[] position );
 	
 	public void close();

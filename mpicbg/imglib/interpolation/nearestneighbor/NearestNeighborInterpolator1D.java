@@ -30,7 +30,7 @@ package mpicbg.imglib.interpolation.nearestneighbor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.location.Localizable;
 import mpicbg.imglib.location.RasterLocalizable;
-import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
+import mpicbg.imglib.outofbounds.RasterOutOfBoundsFactory;
 import mpicbg.imglib.type.Type;
 
 /**
@@ -45,7 +45,7 @@ public class NearestNeighborInterpolator1D< T extends Type< T > > extends Neares
 	/* current position, required for relative movement */
 	private float x;
 	
-	protected NearestNeighborInterpolator1D( final Image< T > image, final OutOfBoundsStrategyFactory< T > outOfBoundsStrategyFactory )
+	protected NearestNeighborInterpolator1D( final Image< T > image, final RasterOutOfBoundsFactory< T > outOfBoundsStrategyFactory )
 	{
 		super( image, outOfBoundsStrategyFactory );
 		//this.target = image.createPositionableRasterSampler( outOfBoundsStrategyFactory );
@@ -92,9 +92,9 @@ public class NearestNeighborInterpolator1D< T extends Type< T > > extends Neares
 	}
 
 	@Override
-	public String getLocationAsString()
+	public String toString()
 	{
-		return new StringBuffer( "(" ).append( x ).append( ")" ).toString();
+		return new StringBuffer( "(" ).append( x ).append( ") = " ).append( type() ).toString();
 	}
 
 	@Override

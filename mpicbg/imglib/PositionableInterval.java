@@ -27,19 +27,28 @@
  */
 package mpicbg.imglib;
 
+import mpicbg.imglib.location.Positionable;
+import mpicbg.imglib.sampler.Sampler;
+import mpicbg.imglib.type.Type;
+
 /**
- * An {@link EuclideanSpace} whose size is constrained.  For coordinates in the
- * range [0...n], function values exist or can be generated.
+ * <p><em>f</em>:{x&isin;R<sup><em>n</em></sup>|[min,max]&rarr;T}</em></p>
+ * 
+ * <p>A {@link Function} over an n-dimensional real interval that can create a
+ * random access {@link Sampler} that generates values beyond boundaries
+ * through an {@link OutOfBounds}.</p>
  *
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-public interface FiniteSpace extends EuclideanSpace
+public interface PositionableInterval<
+		T extends Type< T >,
+		F extends PositionableInterval< T, F, P >,
+		P extends Positionable & Sampler< T > > extends Function< T, F >
 {
 	/**
-	 * Return the size for one dimension.
+	 * Create a random access sampler for real coordinates.
 	 * 
-	 * @param d dimension
-	 * @return size
+	 * @return random access sampler
 	 */
-	public double realSize( final int d );
+	public P positionableSampler();
 }

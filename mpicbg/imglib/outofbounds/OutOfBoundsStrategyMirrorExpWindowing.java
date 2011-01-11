@@ -28,8 +28,6 @@
 package mpicbg.imglib.outofbounds;
 
 import mpicbg.imglib.algorithm.math.MathLib;
-import mpicbg.imglib.cursor.OutOfBoundsCursor;
-import mpicbg.imglib.cursor.LocalizableIterableCursor;
 import mpicbg.imglib.sampler.PositionableRasterSampler;
 import mpicbg.imglib.type.numeric.RealType;
 
@@ -241,7 +239,7 @@ public class OutOfBoundsStrategyMirrorExpWindowing<T extends RealType<T>> extend
 	 * For mirroring, there is no difference between leaving the image and moving while 
 	 * being out of image bounds
 	 * 
-	 * @see mpicbg.imglib.outofbounds.OutOfBoundsStrategy#notifyOutOfBounds()
+	 * @see mpicbg.imglib.outofbounds.RasterOutOfBounds#notifyOutOfBounds()
 	 */
 	@Override
 	public void initOutOfBOunds() { notifyOutOfBOunds(); }

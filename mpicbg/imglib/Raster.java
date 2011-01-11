@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2009--2010, Stephan Saalfeld
+ * Copyright (c) 2010, Stephan Saalfeld
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -9,7 +9,7 @@
  * list of conditions and the following disclaimer.  Redistributions in binary
  * form must reproduce the above copyright notice, this list of conditions and
  * the following disclaimer in the documentation and/or other materials
- * provided with the distribution.  Neither the name of the Fiji project nor
+ * provided with the distribution.  Neither the name of the imglib project nor
  * the names of its contributors may be used to endorse or promote products
  * derived from this software without specific prior written permission.
  * 
@@ -25,20 +25,30 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-package mpicbg.imglib.outofbounds;
+package mpicbg.imglib;
 
-import mpicbg.imglib.location.RasterLocalizable;
 import mpicbg.imglib.location.RasterPositionable;
 import mpicbg.imglib.sampler.Sampler;
 import mpicbg.imglib.type.Type;
 
 /**
+ * <p><em>f:Z<sup>n</sup>&rarr;T</em></p>
+ * 
+ * <p>A {@link Function} over integer space that can create a random access
+ * {@link Sampler}.</p>
  * 
  *
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-public interface OutOfBoundsStrategy< T extends Type< T > > extends RasterLocalizable, RasterPositionable, Sampler< T >
+public interface Raster<
+		T extends Type< T >,
+		F extends Raster< T, F, R >,
+		R extends RasterPositionable & Sampler< T > > extends Function< T, F >
 {
-	public boolean isOutOfBounds();
-	public void close();
+	/**
+	 * Create a random access sampler for integer coordinates.
+	 * 
+	 * @return random access sampler
+	 */
+	public R positionableRasterSampler();
 }

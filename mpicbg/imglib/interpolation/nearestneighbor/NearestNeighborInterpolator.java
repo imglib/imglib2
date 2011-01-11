@@ -30,7 +30,7 @@ package mpicbg.imglib.interpolation.nearestneighbor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.interpolation.Interpolator;
 import mpicbg.imglib.location.transform.RoundRasterPositionable;
-import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
+import mpicbg.imglib.outofbounds.RasterOutOfBoundsFactory;
 import mpicbg.imglib.sampler.PositionableRasterSampler;
 import mpicbg.imglib.type.Type;
 
@@ -42,15 +42,15 @@ import mpicbg.imglib.type.Type;
  */
 public class NearestNeighborInterpolator< T extends Type< T > > extends RoundRasterPositionable< PositionableRasterSampler< T > > implements Interpolator< T >
 {
-	final protected OutOfBoundsStrategyFactory< T > outOfBoundsStrategyFactory;
+	final protected RasterOutOfBoundsFactory< T > outOfBoundsStrategyFactory;
 	final protected Image< T > image;
 	
-	final static private < T extends Type< T > > PositionableRasterSampler< T > createPositionableRasterSampler( final Image< T > image, final OutOfBoundsStrategyFactory<T> outOfBoundsStrategyFactory )
+	final static private < T extends Type< T > > PositionableRasterSampler< T > createPositionableRasterSampler( final Image< T > image, final RasterOutOfBoundsFactory<T> outOfBoundsStrategyFactory )
 	{
 		return image.createPositionableRasterSampler( outOfBoundsStrategyFactory );
 	}
 	
-	protected NearestNeighborInterpolator( final Image<T> image, final OutOfBoundsStrategyFactory<T> outOfBoundsStrategyFactory )
+	protected NearestNeighborInterpolator( final Image<T> image, final RasterOutOfBoundsFactory<T> outOfBoundsStrategyFactory )
 	{
 		super( createPositionableRasterSampler( image, outOfBoundsStrategyFactory ) );
 		
@@ -68,12 +68,12 @@ public class NearestNeighborInterpolator< T extends Type< T > > extends RoundRas
 	}
 
 	/**
-	 * Returns the {@link OutOfBoundsStrategyFactory} used for interpolation
+	 * Returns the {@link RasterOutOfBoundsFactory} used for interpolation
 	 * 
-	 * @return - the {@link OutOfBoundsStrategyFactory}
+	 * @return - the {@link RasterOutOfBoundsFactory}
 	 */
 	@Override
-	public OutOfBoundsStrategyFactory< T > getOutOfBoundsStrategyFactory()
+	public RasterOutOfBoundsFactory< T > getOutOfBoundsStrategyFactory()
 	{
 		return outOfBoundsStrategyFactory;
 	}

@@ -100,7 +100,7 @@ public class RoundRasterPositionable< LocalizableRasterPositionable extends Rast
 	}
 
 	@Override
-	public String getLocationAsString()
+	public String toString()
 	{
 		final StringBuffer pos = new StringBuffer( "(" );
 		pos.append( position[ 0 ] );

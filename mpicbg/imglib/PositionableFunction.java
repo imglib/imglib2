@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2009--2010, Stephan Preibisch & Stephan Saalfeld
+ * Copyright (c) 2010, Stephan Saalfeld
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -9,7 +9,7 @@
  * list of conditions and the following disclaimer.  Redistributions in binary
  * form must reproduce the above copyright notice, this list of conditions and
  * the following disclaimer in the documentation and/or other materials
- * provided with the distribution.  Neither the name of the Fiji project nor
+ * provided with the distribution.  Neither the name of the imglib project nor
  * the names of its contributors may be used to endorse or promote products
  * derived from this software without specific prior written permission.
  * 
@@ -25,31 +25,30 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-package mpicbg.imglib.sampler.cell;
+package mpicbg.imglib;
 
-import mpicbg.imglib.container.cell.CellContainer;
-import mpicbg.imglib.image.Image;
-import mpicbg.imglib.outofbounds.RasterOutOfBoundsFactory;
-import mpicbg.imglib.sampler.AbstractOutOfBoundsPositionableRasterSampler;
+import mpicbg.imglib.location.Positionable;
+import mpicbg.imglib.sampler.Sampler;
 import mpicbg.imglib.type.Type;
 
 /**
+ * <p><em>f:R<sup>n</sup>&rarr;T</em></p>
  * 
- * @param <T>
+ * <p>A {@link Function} over real space that can create a random access
+ * {@link Sampler}.</p>
+ * 
  *
- * @author Stephan Preibisch and Stephan Saalfeld
+ * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-public class CellOutOfBoundsPositionableRasterSampler< T extends Type< T > > extends AbstractOutOfBoundsPositionableRasterSampler< T >
+public interface PositionableFunction<
+		T extends Type< T >,
+		F extends PositionableFunction< T, F, P >,
+		P extends Positionable & Sampler< T > > extends Function< T, F >
 {
-	final protected CellContainer< T, ? > container;
-
-	public CellOutOfBoundsPositionableRasterSampler( final CellContainer< T, ? > container, final Image< T > image, final RasterOutOfBoundsFactory< T > outOfBoundsStrategyFactory )
-	{
-		super( container, image, outOfBoundsStrategyFactory );
-
-		this.container = container;
-	}
-
-	@Override
-	public CellContainer< T, ? > getContainer(){ return container; }	
+	/**
+	 * Create a random access sampler for real coordinates.
+	 * 
+	 * @return random access sampler
+	 */
+	public P positionableSampler();
 }

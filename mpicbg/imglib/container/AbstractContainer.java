@@ -69,21 +69,19 @@ public abstract class AbstractContainer<T extends Type<T>> implements Container<
 	public long getId(){ return id; }
 	@Override
 	public int numDimensions() { return dim.length; }
-	@Override
-	public int[] getDimensions() { return dim.clone(); }
 	
 	@Override
-	public void dimensions( final int[] dimensions )
+	public void size( final int[] dimensions )
 	{
 		for (int i = 0; i < numDimensions; i++)
 			dimensions[i] = this.dim[i];
 	}
 
 	@Override
-	public int getDimension( final int dim )
+	public int size( final int d )
 	{
-		if ( dim < numDimensions && dim > -1 )
-			return this.dim[ dim ];
+		if ( d < numDimensions && d > -1 )
+			return this.dim[ d ];
 		else
 			return 1;		
 	}

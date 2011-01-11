@@ -29,7 +29,7 @@ package mpicbg.imglib.sampler.imageplus;
 
 import mpicbg.imglib.container.imageplus.ImagePlusContainer;
 import mpicbg.imglib.image.Image;
-import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
+import mpicbg.imglib.outofbounds.RasterOutOfBoundsFactory;
 import mpicbg.imglib.sampler.AbstractOutOfBoundsPositionableRasterSampler;
 import mpicbg.imglib.type.Type;
 
@@ -46,7 +46,7 @@ public class ImagePlusOutOfBoundsPositionableRasterSampler< T extends Type< T > 
 	public ImagePlusOutOfBoundsPositionableRasterSampler(
 			final ImagePlusContainer< T, ? > container,
 			final Image< T > image,
-			final OutOfBoundsStrategyFactory< T > outOfBoundsStrategyFactory ) 
+			final RasterOutOfBoundsFactory< T > outOfBoundsStrategyFactory ) 
 	{
 		super( container, image, outOfBoundsStrategyFactory );
 		

@@ -30,25 +30,25 @@
 package mpicbg.imglib.interpolation;
 
 import mpicbg.imglib.image.Image;
-import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
+import mpicbg.imglib.outofbounds.RasterOutOfBoundsFactory;
 import mpicbg.imglib.sampler.SamplerFactory;
 import mpicbg.imglib.type.Type;
 
-public abstract class InterpolatorFactory< T extends Type< T >, I extends Interpolator< T > > implements SamplerFactory< T, I, Image< T > >
+public abstract class InterpolatorFactory< T extends Type< T > > implements SamplerFactory< T, Interpolator< T >, Image< T > >
 {	
-	protected OutOfBoundsStrategyFactory< T > outOfBoundsStrategyFactory;
+	protected RasterOutOfBoundsFactory< T > outOfBoundsStrategyFactory;
 	
-	public InterpolatorFactory( final OutOfBoundsStrategyFactory<T> outOfBoundsStrategyFactory )
+	public InterpolatorFactory( final RasterOutOfBoundsFactory< T > outOfBoundsStrategyFactory )
 	{
 		this.outOfBoundsStrategyFactory = outOfBoundsStrategyFactory;
 	}
 	
-	public void setOutOfBoundsStrategyFactory( final OutOfBoundsStrategyFactory<T> outOfBoundsStrategyFactory ) 
+	public void setOutOfBoundsStrategyFactory( final RasterOutOfBoundsFactory< T > outOfBoundsStrategyFactory ) 
 	{ 
 		this.outOfBoundsStrategyFactory = outOfBoundsStrategyFactory; 
 	}
 	
-	public OutOfBoundsStrategyFactory<T> getOutOfBoundsStrategyFactory() 
+	public RasterOutOfBoundsFactory< T > getOutOfBoundsStrategyFactory() 
 	{ 
 		return outOfBoundsStrategyFactory; 
 	}

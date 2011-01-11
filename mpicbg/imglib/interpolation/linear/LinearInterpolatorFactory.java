@@ -30,7 +30,7 @@ package mpicbg.imglib.interpolation.linear;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.interpolation.Interpolator;
 import mpicbg.imglib.interpolation.InterpolatorFactory;
-import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
+import mpicbg.imglib.outofbounds.RasterOutOfBoundsFactory;
 import mpicbg.imglib.type.numeric.NumericType;
 import mpicbg.imglib.type.numeric.RealType;
 
@@ -40,9 +40,9 @@ import mpicbg.imglib.type.numeric.RealType;
  *
  * @author Stephan Preibisch and Stephan Saalfeld
  */
-public class LinearInterpolatorFactory< T extends NumericType< T > > extends InterpolatorFactory< T, Interpolator< T > >
+public class LinearInterpolatorFactory< T extends NumericType< T > > extends InterpolatorFactory< T >
 {
-	public LinearInterpolatorFactory( final OutOfBoundsStrategyFactory< T > outOfBoundsStrategyFactory )
+	public LinearInterpolatorFactory( final RasterOutOfBoundsFactory< T > outOfBoundsStrategyFactory )
 	{
 		super( outOfBoundsStrategyFactory );
 	}

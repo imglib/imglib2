@@ -31,7 +31,7 @@ import mpicbg.imglib.algorithm.math.MathLib;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.interpolation.Interpolator;
 import mpicbg.imglib.location.transform.FloorRasterPositionable;
-import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
+import mpicbg.imglib.outofbounds.RasterOutOfBoundsFactory;
 import mpicbg.imglib.sampler.PositionableRasterSampler;
 import mpicbg.imglib.type.Type;
 import mpicbg.imglib.type.numeric.NumericType;
@@ -44,7 +44,7 @@ import mpicbg.imglib.type.numeric.NumericType;
  */
 public class LinearInterpolator< T extends NumericType< T > > extends FloorRasterPositionable< PositionableRasterSampler< T > > implements Interpolator< T >
 {
-	final protected OutOfBoundsStrategyFactory< T > outOfBoundsStrategyFactory;
+	final protected RasterOutOfBoundsFactory< T > outOfBoundsStrategyFactory;
 	final protected Image< T > image;
 	final protected int numDimensions;
 	
@@ -63,17 +63,17 @@ public class LinearInterpolator< T extends NumericType< T > > extends FloorRaste
 	// the locations where to initially grab pixels from
 	final boolean[][] positions;
 	
-	final static private < T extends Type< T > > PositionableRasterSampler< T > createSampler( final Image< T > image, final OutOfBoundsStrategyFactory<T> outOfBoundsStrategyFactory )
+	final static private < T extends Type< T > > PositionableRasterSampler< T > createSampler( final Image< T > image, final RasterOutOfBoundsFactory<T> outOfBoundsStrategyFactory )
 	{
 		return image.createPositionableRasterSampler( outOfBoundsStrategyFactory );
 	}
 	
-	protected LinearInterpolator( final Image<T> image, final OutOfBoundsStrategyFactory<T> outOfBoundsStrategyFactory )
+	protected LinearInterpolator( final Image<T> image, final RasterOutOfBoundsFactory<T> outOfBoundsStrategyFactory )
 	{
 		this( image, outOfBoundsStrategyFactory, true );
 	}
 	
-	protected LinearInterpolator( final Image<T> image, final OutOfBoundsStrategyFactory<T> outOfBoundsStrategyFactory, boolean initGenericStructures )
+	protected LinearInterpolator( final Image<T> image, final RasterOutOfBoundsFactory<T> outOfBoundsStrategyFactory, boolean initGenericStructures )
 	{
 		super( createSampler( image, outOfBoundsStrategyFactory ) );
 		
@@ -216,12 +216,12 @@ public class LinearInterpolator< T extends NumericType< T > > extends FloorRaste
 	}
 
 	/**
-	 * Returns the {@link OutOfBoundsStrategyFactory} used for interpolation
+	 * Returns the {@link RasterOutOfBoundsFactory} used for interpolation
 	 * 
-	 * @return - the {@link OutOfBoundsStrategyFactory}
+	 * @return - the {@link RasterOutOfBoundsFactory}
 	 */
 	@Override
-	public OutOfBoundsStrategyFactory< T > getOutOfBoundsStrategyFactory()
+	public RasterOutOfBoundsFactory< T > getOutOfBoundsStrategyFactory()
 	{
 		return outOfBoundsStrategyFactory;
 	}

@@ -41,42 +41,44 @@ import mpicbg.imglib.type.Type;
  */
 public abstract class AbstractLocalizableRasterSampler< T extends Type< T > > extends AbstractRasterSampler< T > implements RasterSampler< T >, RasterLocalizable
 {
-	final protected int[] position, dimensions;
+	final protected int[] position;
+	final protected long[] dimensions;
 	
 	public AbstractLocalizableRasterSampler( final Container<T> container, final Image<T> image )
 	{
 		super( container, image );
 		
 		this.position = new int[ numDimensions ];
-		this.dimensions = container.getDimensions();
+		this.dimensions = new long[ numDimensions ];
+		container.size( this.dimensions );
 	}
 	
 	@Override
-	public void localize( float[] position )
+	public void localize( float[] pos )
 	{
 		for ( int d = 0; d < numDimensions; d++ )
-			position[ d ] = this.position[ d ];
+			pos[ d ] = this.position[ d ];
 	}
 
 	@Override
-	public void localize( double[] position )
+	public void localize( double[] pos )
 	{
 		for ( int d = 0; d < numDimensions; d++ )
-			position[ d ] = this.position[ d ];
+			pos[ d ] = this.position[ d ];
 	}
 
 	@Override
-	public void localize( int[] position )
+	public void localize( int[] pos )
 	{
 		for ( int d = 0; d < numDimensions; d++ )
-			position[ d ] = this.position[ d ];
+			pos[ d ] = this.position[ d ];
 	}
 	
 	@Override
-	public void localize( long[] position )
+	public void localize( long[] pos )
 	{
 		for ( int d = 0; d < numDimensions; d++ )
-			position[ d ] = this.position[ d ];
+			pos[ d ] = this.position[ d ];
 	}
 	
 	@Override
@@ -92,8 +94,5 @@ public abstract class AbstractLocalizableRasterSampler< T extends Type< T > > ex
 	public long getLongPosition( final int dim ){ return position[ dim ]; }
 	
 	@Override
-	public String getLocationAsString(){ return MathLib.printCoordinates( position ); }
-	
-	@Override
-	public String toString(){ return getLocationAsString() + " = " + type(); }
+	public String toString(){ return MathLib.printCoordinates( position ) + " = " + type(); }
 }

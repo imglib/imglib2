@@ -30,7 +30,7 @@ package mpicbg.imglib.interpolation;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.location.Localizable;
 import mpicbg.imglib.location.Positionable;
-import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
+import mpicbg.imglib.outofbounds.RasterOutOfBoundsFactory;
 import mpicbg.imglib.sampler.Sampler;
 import mpicbg.imglib.type.Type;
 
@@ -43,11 +43,11 @@ import mpicbg.imglib.type.Type;
 public interface Interpolator< T extends Type< T > > extends Sampler< T >, Localizable, Positionable
 {
 	/**
-	 * Returns the {@link OutOfBoundsStrategyFactory} used for interpolation
+	 * Returns the {@link RasterOutOfBoundsFactory} used for interpolation
 	 * 
-	 * @return - the {@link OutOfBoundsStrategyFactory}
+	 * @return - the {@link RasterOutOfBoundsFactory}
 	 */
-	public OutOfBoundsStrategyFactory< T > getOutOfBoundsStrategyFactory();
+	public RasterOutOfBoundsFactory< T > getOutOfBoundsStrategyFactory();
 
 	/**
 	 * Returns the typed image the interpolator is working on

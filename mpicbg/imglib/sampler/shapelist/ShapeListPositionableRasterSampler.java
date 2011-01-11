@@ -116,11 +116,11 @@ public class ShapeListPositionableRasterSampler< T extends Type< T > > extends A
 	}
 		
 	@Override
-	public void moveTo( final int[] position )
+	public void moveTo( final int[] pos )
 	{		
 		for ( int d = 0; d < numDimensions; ++d )
 		{
-			final int dist = position[ d ] - getIntPosition( d );
+			final int dist = pos[ d ] - getIntPosition( d );
 			
 			if ( dist != 0 )				
 				move( dist, d );
@@ -128,11 +128,11 @@ public class ShapeListPositionableRasterSampler< T extends Type< T > > extends A
 	}
 	
 	@Override
-	public void moveTo( final long[] position )
+	public void moveTo( final long[] pos )
 	{		
 		for ( int d = 0; d < numDimensions; ++d )
 		{
-			final long dist = position[ d ] - getIntPosition( d );
+			final long dist = pos[ d ] - getIntPosition( d );
 			
 			if ( dist != 0 )				
 				move( dist, d );
@@ -236,31 +236,31 @@ public class ShapeListPositionableRasterSampler< T extends Type< T > > extends A
 	}
 
 	@Override
-	public void localize( final float[] position )
+	public void localize( final float[] pos )
 	{
 		for ( int d = 0; d < numDimensions; ++d )
-			position[ d ] = this.position[ d ];
+			pos[ d ] = this.position[ d ];
 	}
 	
 	@Override
-	public void localize( final double[] position )
+	public void localize( final double[] pos )
 	{
 		for ( int d = 0; d < numDimensions; ++d )
-			position[ d ] = this.position[ d ];
+			pos[ d ] = this.position[ d ];
 	}
 
 	@Override
-	public void localize( final int[] position )
+	public void localize( final int[] pos )
 	{
 		for ( int d = 0; d < numDimensions; ++d )
-			position[ d ] = this.position[ d ];
+			pos[ d ] = this.position[ d ];
 	}
 	
 	@Override
-	public void localize( final long[] position )
+	public void localize( final long[] pos )
 	{
 		for ( int d = 0; d < numDimensions; ++d )
-			position[ d ] = this.position[ d ];
+			pos[ d ] = this.position[ d ];
 	}
 
 	
@@ -289,14 +289,14 @@ public class ShapeListPositionableRasterSampler< T extends Type< T > > extends A
 	}
 
 	@Override
-	public String getLocationAsString()
+	public String toString()
 	{
 		String pos = "(" + position[ 0 ];
 		
 		for ( int d = 1; d < numDimensions; d++ )
 			pos += ", " + position[ d ];
 		
-		pos += ")";
+		pos += ") = " + type();
 		
 		return pos;
 	}

@@ -38,7 +38,7 @@ import mpicbg.imglib.type.Type;
  *
  * @author Stephan Preibisch and Stephan Saalfeld
  */
-public class OutOfBoundsConstantValue< T extends Type< T > > implements OutOfBoundsStrategy< T >
+public class OutOfBoundsConstantValue< T extends Type< T > > implements RasterOutOfBounds< T >
 {
 	final protected T value;
 	
@@ -162,10 +162,7 @@ public class OutOfBoundsConstantValue< T extends Type< T > > implements OutOfBou
 	public long getLongPosition( final int dim ){ return position[ dim ]; }
 	
 	@Override
-	public String getLocationAsString() { return MathLib.printCoordinates( position ); }
-	
-	@Override
-	public String toString() { return getLocationAsString() + " = " + type(); }
+	public String toString() { return MathLib.printCoordinates( position ) + " = " + type(); }
 	
 	
 	/* RasterPositionable */
@@ -300,12 +297,5 @@ public class OutOfBoundsConstantValue< T extends Type< T > > implements OutOfBou
 	{
 		for ( int d = 0; d < position.length; ++d )
 			setPosition( position[ d ], d );
-	}
-	
-
-	@Override
-	public void close()
-	{
-		sampler.close();
 	}
 }

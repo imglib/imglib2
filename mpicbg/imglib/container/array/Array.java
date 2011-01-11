@@ -31,7 +31,7 @@ import mpicbg.imglib.container.AbstractDirectAccessContainer;
 import mpicbg.imglib.container.Container;
 import mpicbg.imglib.container.basictypecontainer.DataAccess;
 import mpicbg.imglib.image.Image;
-import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
+import mpicbg.imglib.outofbounds.RasterOutOfBoundsFactory;
 import mpicbg.imglib.sampler.array.ArrayBasicRasterIterator;
 import mpicbg.imglib.sampler.array.ArrayLocalizingRasterIterator;
 import mpicbg.imglib.sampler.array.ArrayPositionableRasterSampler;
@@ -102,7 +102,7 @@ public class Array< T extends Type< T >, A extends DataAccess > extends Abstract
 	}
 
 	@Override
-	public ArrayOutOfBoundsPositionableRasterSampler< T > createPositionableRasterSampler( final Image< T > image, final OutOfBoundsStrategyFactory< T > outOfBoundsFactory )
+	public ArrayOutOfBoundsPositionableRasterSampler< T > createPositionableRasterSampler( final Image< T > image, final RasterOutOfBoundsFactory< T > outOfBoundsFactory )
 	{
 		ArrayOutOfBoundsPositionableRasterSampler< T > c = new ArrayOutOfBoundsPositionableRasterSampler< T >( this, image, outOfBoundsFactory );
 		return c;

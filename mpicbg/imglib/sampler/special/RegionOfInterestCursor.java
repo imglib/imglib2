@@ -186,20 +186,17 @@ public class RegionOfInterestCursor<T extends Type<T>> extends AbstractRasterIte
 	public long getLongPosition( final int d ) { return roiPosition[ d ]; }
 
 	@Override
-	public String getLocationAsString()
+	public String toString()
 	{
 		String pos = "(" + roiPosition[ 0 ];
 		
 		for ( int d = 1; d < numDimensions; d++ )
 			pos += ", " + roiPosition[ d ];
 		
-		pos += ")";
+		pos += ") = " + type();
 		
 		return pos;
 	}
-	
-	@Override
-	public String toString() { return getLocationAsString() + " = " + type(); }
 	
 	@Override
 	public int numDimensions(){ return numDimensions; }

@@ -28,7 +28,9 @@
 package mpicbg.imglib.outofbounds;
 
 import mpicbg.imglib.Factory;
-import mpicbg.imglib.sampler.PositionableRasterSampler;
+import mpicbg.imglib.location.RasterLocalizable;
+import mpicbg.imglib.location.RasterPositionable;
+import mpicbg.imglib.sampler.Sampler;
 import mpicbg.imglib.type.Type;
 
 /**
@@ -37,9 +39,9 @@ import mpicbg.imglib.type.Type;
  *
  * @author Stephan Preibisch and Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-public abstract class OutOfBoundsStrategyFactory< T extends Type< T > > implements Factory
+public abstract class RasterOutOfBoundsFactory< T extends Type< T > > implements Factory
 {
-	public abstract OutOfBoundsStrategy< T > createStrategy( PositionableRasterSampler< T > cursor ); 
+	public abstract < P extends RasterPositionable & RasterLocalizable & Sampler< T > > RasterOutOfBounds< T > create( P sampler ); 
 	
 	@Override
 	public String getErrorMessage()

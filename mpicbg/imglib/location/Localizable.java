@@ -69,12 +69,4 @@ public interface Localizable extends EuclideanSpace
 	 * @return
 	 */
 	public double getDoublePosition( int dim );
-	
-	/**
-	 * Create a human-readable {@link String} representation of the current
-	 * position.
-	 * 
-	 * @return
-	 */
-	public String getLocationAsString();
 }

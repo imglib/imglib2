@@ -29,7 +29,7 @@ package mpicbg.imglib.interpolation.nearestneighbor;
 
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.interpolation.InterpolatorFactory;
-import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
+import mpicbg.imglib.outofbounds.RasterOutOfBoundsFactory;
 import mpicbg.imglib.type.Type;
 
 /**
@@ -38,9 +38,9 @@ import mpicbg.imglib.type.Type;
  *
  * @author Stephan Preibisch and Stephan Saalfeld
  */
-public class NearestNeighborInterpolatorFactory< T extends Type< T > > extends InterpolatorFactory< T, NearestNeighborInterpolator< T > >
+public class NearestNeighborInterpolatorFactory< T extends Type< T > > extends InterpolatorFactory< T >
 {
-	public NearestNeighborInterpolatorFactory( final OutOfBoundsStrategyFactory< T > outOfBoundsStrategyFactory )
+	public NearestNeighborInterpolatorFactory( final RasterOutOfBoundsFactory< T > outOfBoundsStrategyFactory )
 	{
 		super( outOfBoundsStrategyFactory );
 	}

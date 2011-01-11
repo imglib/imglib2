@@ -18,7 +18,7 @@ package mpicbg.imglib.algorithm;
 
 import mpicbg.imglib.algorithm.Benchmark;
 import mpicbg.imglib.image.Image;
-import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
+import mpicbg.imglib.outofbounds.RasterOutOfBoundsFactory;
 import mpicbg.imglib.sampler.PositionableRasterSampler;
 import mpicbg.imglib.sampler.RasterIterator;
 import mpicbg.imglib.type.Type;
@@ -27,7 +27,7 @@ public class CanvasImage<T extends Type<T>> implements OutputAlgorithm<T>, Bench
 {
 	final Image<T> input;
 	final Image<T> output;
-	final OutOfBoundsStrategyFactory<T> outOfBoundsFactory;
+	final RasterOutOfBoundsFactory<T> outOfBoundsFactory;
 	final int numDimensions;
 	final int[] newSize, offset, location;
 	
@@ -42,7 +42,7 @@ public class CanvasImage<T extends Type<T>> implements OutputAlgorithm<T>, Bench
 	 * @param newSize - the size of the new image
 	 * @param outOfBoundsFactory - what to do when extending the image
 	 */
-	public CanvasImage( final Image<T> input, final int[] newSize, final int[] offset, final OutOfBoundsStrategyFactory<T> outOfBoundsFactory )
+	public CanvasImage( final Image<T> input, final int[] newSize, final int[] offset, final RasterOutOfBoundsFactory<T> outOfBoundsFactory )
 	{
 		this.input = input;
 		this.outOfBoundsFactory = outOfBoundsFactory;
@@ -78,7 +78,7 @@ public class CanvasImage<T extends Type<T>> implements OutputAlgorithm<T>, Bench
 	
 	public int[] getOffset() { return offset.clone(); }
 	
-	public CanvasImage( final Image<T> input, final int[] newSize, final OutOfBoundsStrategyFactory<T> outOfBoundsFactory )
+	public CanvasImage( final Image<T> input, final int[] newSize, final RasterOutOfBoundsFactory<T> outOfBoundsFactory )
 	{		
 		this( input, newSize, computeOffset(input, newSize), outOfBoundsFactory ); 
 	}
@@ -95,7 +95,7 @@ public class CanvasImage<T extends Type<T>> implements OutputAlgorithm<T>, Bench
 	
 	
 	/**
-	 * This constructor can be called if the image is only cropped, then there is no {@link OutOfBoundsStrategyFactory} necessary.
+	 * This constructor can be called if the image is only cropped, then there is no {@link RasterOutOfBoundsFactory} necessary.
 	 * It will fail if the image size is increased.
 	 *   
 	 * @param input - the input image

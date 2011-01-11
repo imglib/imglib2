@@ -57,6 +57,8 @@ import mpicbg.imglib.sampler.PositionableRasterSampler;
  * the {@link PositionableRasterSampler}, that is in a dense sampling
  * situation.  For localizing sparsely (e.g. under an external condition),
  * use {@link FlatRasterIterator} instead.
+ * 
+ * TODO implement it, it's still the basic FlatRasterIterator!!!!!!
  *  
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
@@ -178,14 +180,6 @@ final public class LocalizingFlatRasterIterator implements Iterator, RasterLocal
 	final public float getFloatPosition( final int dim ) { return indexToPosition( index, steps, dim ); }
 
 	@Override
-	final public String getLocationAsString()
-	{
-		final int[] l = new int[ dimensions.length ];
-		localize( l );
-		return MathLib.printCoordinates( l );
-	}
-
-	@Override
 	final public void localize( final float[] position ) { indexToPosition( index, steps, position ); }
 
 	@Override
@@ -201,5 +195,10 @@ final public class LocalizingFlatRasterIterator implements Iterator, RasterLocal
 	/* Object */
 	
 	@Override
-	final public String toString() { return getLocationAsString(); }
+	final public String toString()
+	{
+		final int[] l = new int[ dimensions.length ];
+		localize( l );
+		return MathLib.printCoordinates( l );
+	}
 }

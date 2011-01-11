@@ -31,7 +31,7 @@ import mpicbg.imglib.image.Image;
 import mpicbg.imglib.location.Localizable;
 import mpicbg.imglib.location.Positionable;
 import mpicbg.imglib.location.RasterLocalizable;
-import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
+import mpicbg.imglib.outofbounds.RasterOutOfBoundsFactory;
 import mpicbg.imglib.type.Type;
 
 /**
@@ -42,7 +42,7 @@ import mpicbg.imglib.type.Type;
  */
 abstract public class AbstractInterpolator< T extends Type< T >, LocalizablePositionable extends Localizable & Positionable > implements Interpolator< T >
 {
-	final protected OutOfBoundsStrategyFactory< T > outOfBoundsStrategyFactory;
+	final protected RasterOutOfBoundsFactory< T > outOfBoundsStrategyFactory;
 	final protected LocalizablePositionable localizablePositionable;
 
 	final protected Image< T > img;
@@ -54,7 +54,7 @@ abstract public class AbstractInterpolator< T extends Type< T >, LocalizablePosi
 
 	protected AbstractInterpolator(
 			final Image< T > img,
-			final OutOfBoundsStrategyFactory< T > outOfBoundsStrategyFactory,
+			final RasterOutOfBoundsFactory< T > outOfBoundsStrategyFactory,
 			final LocalizablePositionable localizablePositionable )
 	{
 		this.outOfBoundsStrategyFactory = outOfBoundsStrategyFactory;
@@ -78,12 +78,12 @@ abstract public class AbstractInterpolator< T extends Type< T >, LocalizablePosi
 	}
 
 	/**
-	 * Returns the {@link OutOfBoundsStrategyFactory} used for interpolation
+	 * Returns the {@link RasterOutOfBoundsFactory} used for interpolation
 	 * 
-	 * @return - the {@link OutOfBoundsStrategyFactory}
+	 * @return - the {@link RasterOutOfBoundsFactory}
 	 */
 	@Override
-	public OutOfBoundsStrategyFactory< T > getOutOfBoundsStrategyFactory()
+	public RasterOutOfBoundsFactory< T > getOutOfBoundsStrategyFactory()
 	{
 		return outOfBoundsStrategyFactory;
 	}
@@ -114,9 +114,9 @@ abstract public class AbstractInterpolator< T extends Type< T >, LocalizablePosi
 	}
 
 	@Override
-	public String getLocationAsString()
+	public String toString()
 	{
-		return localizablePositionable.getLocationAsString();
+		return localizablePositionable.toString();
 	}
 
 	@Override

@@ -32,7 +32,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.concurrent.atomic.AtomicLong;
 
-import mpicbg.imglib.Dimensions;
+import mpicbg.imglib.RasterInterval;
 import mpicbg.imglib.Function;
 import mpicbg.imglib.IterableRaster;
 import mpicbg.imglib.RandomAccessibleRaster;
@@ -42,7 +42,7 @@ import mpicbg.imglib.container.ContainerFactory;
 import mpicbg.imglib.image.display.Display;
 import mpicbg.imglib.interpolation.Interpolator;
 import mpicbg.imglib.interpolation.InterpolatorFactory;
-import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
+import mpicbg.imglib.outofbounds.RasterOutOfBoundsFactory;
 import mpicbg.imglib.sampler.PositionableRasterSampler;
 import mpicbg.imglib.sampler.RasterIterator;
 import mpicbg.imglib.sampler.RasterSampler;
@@ -59,7 +59,9 @@ import mpicbg.imglib.type.label.FakeType;
  *
  * @author Stephan Preibisch and Stephan Saalfeld
  */
-public class Image< T extends Type< T > > implements Function< T, Image< T > >, ImageProperties, Dimensions, IterableRaster< T >, RandomAccessibleRaster< T >
+public class Image< T extends Type< T > > implements
+		ImageProperties,
+		RasterInterval< T, Image< T >, PositionableRasterSampler< T >, RasterIterator< T > >
 {
 	final protected ArrayList< RasterSampler< T > > rasterSamplers;
 	final ContainerFactory containerFactory;
@@ -238,14 +240,14 @@ public class Image< T extends Type< T > > implements Function< T, Image< T > >, 
 	/**
 	 * Creates a {@link PositionableRasterSampler} which is able to move freely
 	 * within and outside of {@link Image} bounds given a
-	 * {@link OutOfBoundsStrategyFactory} that defines the behavior out of
+	 * {@link RasterOutOfBoundsFactory} that defines the behavior out of
 	 * {@link Image} bounds.
 	 * 
-	 * @param factory - the {@link OutOfBoundsStrategyFactory}
+	 * @param factory - the {@link RasterOutOfBoundsFactory}
 	 * @return - a {@link PositionableRasterSampler} that can leave the {@link Image}
 	 */
 	@Override
-	public PositionableRasterSampler<T> createPositionableRasterSampler( final OutOfBoundsStrategyFactory<T> factory )
+	public PositionableRasterSampler<T> createPositionableRasterSampler( final RasterOutOfBoundsFactory<T> factory )
 	{
 		PositionableRasterSampler<T> cursor = container.createPositionableRasterSampler( this, factory );
 		addRasterSampler( cursor );
@@ -262,7 +264,7 @@ public class Image< T extends Type< T > > implements Function< T, Image< T > >, 
 	 * @deprecated Use {@link #createPositionableCursor( OutOfBoundsStrategyFactory<T> )} instead.
 	 */
 	@Deprecated
-	public PositionableRasterSampler<T> createLocalizableByDimCursor( final OutOfBoundsStrategyFactory<T> factory )
+	public PositionableRasterSampler<T> createLocalizableByDimCursor( final RasterOutOfBoundsFactory<T> factory )
 	{
 		return createPositionableRasterSampler( factory);
 	}
@@ -347,25 +349,25 @@ public class Image< T extends Type< T > > implements Function< T, Image< T > >, 
 	}
 	
 	/**
-	 * @deprecated Use {@link #dimensions(int[])} instead.
+	 * @deprecated Use {@link #size(int[])} instead.
 	 * 
 	 * @param dimensions
 	 */
 	@Deprecated
 	public void getDimensions( final int[] dimensions )
 	{
-		dimensions( dimensions );
+		size( dimensions );
 	}
 	
 	@Override
-	public void dimensions( final int[] dimensions )
+	public void size( final int[] dimensions )
 	{
 		for (int d = 0; d < getContainer().numDimensions(); d++)
-			dimensions[d] = getContainer().getDimension( d );
+			dimensions[d] = getContainer().size( d );
 	}
 
 	@Override
-	public int getDimension( final int dim ) { return getContainer().getDimension( dim ); }
+	public long size( final int dim ) { return getContainer().size( dim ); }
 	
 	/**
 	 * Clones this {@link Image}, i.e. creates this {@link Image} containing the same content.
