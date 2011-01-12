@@ -85,7 +85,6 @@ public class LanczosInterpolator<T extends RealType<T>> extends InterpolatorImpl
 		roiCursor.reset( offset, size );
 		
 		float convolved = 0;
-		float sumWeights = 0;
 		
 		while ( roiCursor.hasNext() )
 		{
@@ -96,26 +95,21 @@ public class LanczosInterpolator<T extends RealType<T>> extends InterpolatorImpl
 			for ( int d = 0; d < numDimensions; ++d )
 				v *= sinc( position[ d ] - cursor.getPosition( d ), alphaF );
 			
-			sumWeights += v;
-			
 			convolved += roiCursor.getType().getRealFloat() * v;
 		}
 		
-		
 		if ( clipping )
 		{
-			float result = convolved / sumWeights;
+			if ( convolved < minValue )
+				convolved = minValue;
+			else if ( convolved > maxValue )
+				convolved = maxValue;
 			
-			if ( result < minValue )
-				result = minValue;
-			else if ( result > maxValue )
-				result = maxValue;
-			
-			interpolatedValue.setReal( result );
+			interpolatedValue.setReal( convolved );
 		}
 		else
 		{
-			interpolatedValue.setReal( convolved / sumWeights );
+			interpolatedValue.setReal( convolved );
 		}
 		
 		return interpolatedValue; 
