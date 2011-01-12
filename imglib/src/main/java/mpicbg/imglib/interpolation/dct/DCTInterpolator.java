@@ -50,15 +50,12 @@ public class DCTInterpolator<T extends RealType<T>> extends InterpolatorImpl<T>
 	final int numDimensions;
 	final T interpolatedValue;
 	
-	final float[] position;
-	
 	protected DCTInterpolator( final Image<T> img, final InterpolatorFactory<T> interpolatorFactory, final OutOfBoundsStrategyFactory<T> outOfBoundsStrategyFactory )
 	{
 		super( img, interpolatorFactory, outOfBoundsStrategyFactory );
 
 		interpolatedValue = img.createType();
 		numDimensions =  img.getNumDimensions();
-		position = new float[ numDimensions ];
 		
 		// create coefficient image
 		final ImageFactory<FloatType> imgFactory = new ImageFactory<FloatType>( new FloatType(), img.getContainerFactory() );
