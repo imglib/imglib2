@@ -33,6 +33,7 @@ import mpicbg.imglib.cursor.CursorImpl;
 import mpicbg.imglib.cursor.LocalizableByDimCursor;
 import mpicbg.imglib.cursor.LocalizableCursor;
 import mpicbg.imglib.type.Type;
+import mpicbg.imglib.util.Util;
 
 public class RegionOfInterestCursor<T extends Type<T>> extends CursorImpl<T> implements LocalizableCursor<T> 
 {
@@ -122,8 +123,10 @@ public class RegionOfInterestCursor<T extends Type<T>> extends CursorImpl<T> imp
 	{
 		++i;
 		
-		for ( int d = 0; d < numDimensions; d++ )
+		for ( int dim = 0; dim < numDimensions; ++dim )
 		{
+			final int d = dim;
+			
 			if ( currentDirectionDim[ d ] )
 			{
 				if ( roiPosition[ d ] < size[ d ] - 1 )
@@ -132,9 +135,9 @@ public class RegionOfInterestCursor<T extends Type<T>> extends CursorImpl<T> imp
 					++roiPosition[ d ];
 					
 					// revert the direction of all lower dimensions
-					for ( int e = 0; e < d; e++ )
+					for ( int e = 0; e < d; ++e )
 						currentDirectionDim[ e ] = !currentDirectionDim[ e ];
-					
+
 					return;
 				}				
 			}
@@ -146,13 +149,13 @@ public class RegionOfInterestCursor<T extends Type<T>> extends CursorImpl<T> imp
 					--roiPosition[ d ];
 
 					// revert the direction of all lower dimensions
-					for ( int e = 0; e < d; e++ )
+					for ( int e = 0; e < d; ++e )
 						currentDirectionDim[ e ] = !currentDirectionDim[ e ];
-					
+		
 					return;
 				}
 			}
-		}		
+		}
 	}
 	
 	@Override
@@ -194,5 +197,5 @@ public class RegionOfInterestCursor<T extends Type<T>> extends CursorImpl<T> imp
 	}
 	
 	@Override
-	public String toString() { return getPositionAsString() + " = " + getType(); }
+	public String toString() { return Util.printCoordinates( roiPosition ) + " [" + Util.printCoordinates( cursor.getPosition() ) + "] " + getType(); }
 }
