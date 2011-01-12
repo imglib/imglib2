@@ -79,17 +79,23 @@ public class RegionOfInterestCursor<T extends Type<T>> extends CursorImpl<T> imp
 	public T getType() { return cursor.getType(); }
 	
 	
-	public void reset(final int[] offset)
+	public void reset( final int[] o )
 	{
-		reset(offset, null);
+		for ( int d = 0; d < numDimensions; ++d )
+			this.offset[ d ] = o[ d ];
+		
+		reset();
 	}
-	
-	public void reset(final int[] offset, final int[] size)
+
+	public void reset( final int[] o, final int[] s )
 	{
-		System.arraycopy(offset, 0, this.offset, 0, offset.length);
+		for ( int d = 0; d < numDimensions; ++d )
+			this.offset[ d ] = o[ d ];
+
 		if (size != null)
 		{
-			System.arraycopy(size, 0, this.size, 0, size.length);
+			for ( int d = 0; d < numDimensions; ++d )
+				this.size[ d ] = s[ d ];
 		}
 		reset();
 	}
