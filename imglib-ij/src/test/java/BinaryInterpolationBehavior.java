@@ -11,7 +11,7 @@ import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.display.imagej.ImageJFunctions;
 import mpicbg.imglib.type.logic.BitType;
 
-public class TestBinaryInterpolation {
+public class BinaryInterpolationBehavior {
 
 	static public final void main(String[] args) {
 		
