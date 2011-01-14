@@ -36,7 +36,7 @@ public class DifferenceOfGaussianReal< A extends RealType<A>, B extends RealType
 									 final double sigma1, final double sigma2, final double minPeakValue, final double normalizationFactor )
 	{
 		super( img, factory, new RealTypeConverter<A, B>(), outOfBoundsFactory, sigma1, sigma2, createVariable( factory, minPeakValue ), createVariable( factory, normalizationFactor ) );
-
+		
 		this.normalizationFactor = normalizationFactor;
 		this.minPeakValue = minPeakValue;
 	}
@@ -60,7 +60,8 @@ public class DifferenceOfGaussianReal< A extends RealType<A>, B extends RealType
 	 * @param numThreads - the number of threads for this convolution
 	 * @return
 	 */
-	protected OutputAlgorithm<B> getGaussianConvolution( final double sigma, final int numThreads )
+	@Override
+	protected OutputAlgorithm<B> getGaussianConvolution( final double[] sigma, final int numThreads )
 	{
 		final GaussianConvolution2<A,B> gauss = new GaussianConvolution2<A,B>( image, factory, outOfBoundsFactory, new RealTypeConverter<A, B>(), sigma );
 		
