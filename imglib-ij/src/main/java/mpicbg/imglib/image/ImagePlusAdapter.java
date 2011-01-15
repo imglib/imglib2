@@ -76,8 +76,7 @@ public class ImagePlusAdapter
 			}
 			default :
 			{
-				System.out.println( "mpicbg.imglib.image.ImagePlusAdapter(): Cannot handle type " + imp.getType() );
-				return null;
+				throw new RuntimeException("Only 8, 16, 32-bit and RGB supported!");
 			}
 		}
 	}
