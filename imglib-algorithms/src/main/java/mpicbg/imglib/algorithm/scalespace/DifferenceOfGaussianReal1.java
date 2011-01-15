@@ -37,7 +37,8 @@ public class DifferenceOfGaussianReal1< A extends RealType<A> > extends Differen
 	 * @param numThreads - the number of threads for this convolution
 	 * @return
 	 */
-	protected OutputAlgorithm<A> getGaussianConvolution( final double sigma, final int numThreads )
+	@Override
+	protected OutputAlgorithm<A> getGaussianConvolution( final double[] sigma, final int numThreads )
 	{
 		final GaussianConvolutionReal<A> gauss = new GaussianConvolutionReal<A>( image, outOfBoundsFactory, sigma );
 		
