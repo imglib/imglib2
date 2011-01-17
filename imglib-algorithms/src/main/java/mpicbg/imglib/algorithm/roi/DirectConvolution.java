@@ -109,8 +109,8 @@ public class DirectConvolution
 	{
 		super(factory, new StructuringElementCursor<T>(
 		        inputImage.createLocalizableByDimCursor(outsideFactory), 
-		        inputImage.getDimensions(),
-		        zeroArray(inputImage.getNumDimensions())));
+		        kernel.getDimensions(),
+		        zeroArray(kernel.getNumDimensions())));
 
 		getStrelCursor().centerKernel(kernel.getDimensions());
 		
@@ -139,7 +139,6 @@ public class DirectConvolution
 			
 		while(strelCursor.hasNext())
 		{
-		    
 		    
 			mul.setOne();
 			strelCursor.fwd();			

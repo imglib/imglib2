@@ -4,12 +4,7 @@ import java.util.ArrayList;
 
 import mpicbg.imglib.cursor.LocalizableCursor;
 import mpicbg.imglib.image.Image;
-import mpicbg.imglib.image.ImageFactory;
 import mpicbg.imglib.type.Type;
-import mpicbg.imglib.type.numeric.RealType;
-import mpicbg.imglib.type.numeric.integer.IntType;
-import mpicbg.imglib.type.numeric.integer.LongType;
-import mpicbg.imglib.type.numeric.integer.ShortType;
 import mpicbg.imglib.util.Util;
 
 
@@ -36,7 +31,7 @@ import mpicbg.imglib.util.Util;
  * rho = y * sin(theta) - x * cos(theta)
  * @Override 
  */
-public class HoughLineTransform <S extends RealType<S>, T extends Type<T> & Comparable<T>> extends HoughTransform<S, T>
+public class HoughLineTransform <T extends Type<T> & Comparable<T>> extends HoughTransform<T>
 {
 	public static final int DEFAULT_THETA = 180;
 	public final double dTheta;
@@ -47,6 +42,7 @@ public class HoughLineTransform <S extends RealType<S>, T extends Type<T> & Comp
 	private final double[] rho;
 	private final double[] theta;
 	private ArrayList<double[]> rtPeaks;
+	public long voteTime;
 	
 	/**
 	 * Calculates a default number of rho bins, which corresponds to a resolution of one pixel.
@@ -58,45 +54,6 @@ public class HoughLineTransform <S extends RealType<S>, T extends Type<T> & Comp
 		return (int)(2 * Util.computeLength(inputImage.getDimensions()));
 	}
 
-	
-	/**
-	 * Creates a default {@link HoughLineTransform} with {@ShortType} vote space.
-	 * @param <T> the {@link Type} of the {@link Image} in question.
-	 * @param inputImage the {@link Image} to perform the Hough Line Transform against.
-	 * @return a default {@link HoughLineTransform} with {@link IntType} vote space.
-	 */
-	public static <T extends Type<T> & Comparable< T >> HoughLineTransform<ShortType, T> shortHoughLine(final Image<T> inputImage)
-	{
-		return new HoughLineTransform<ShortType, T>(inputImage, new ShortType());
-	}
-
-	
-	/**
-	 * Creates a default {@link HoughLineTransform} with {@IntType} vote space.
-	 * @param <T> the {@link Type} of the {@link Image} in question.
-	 * @param inputImage the {@link Image} to perform the Hough Line Transform against.
-	 * @return a default {@link HoughLineTransform} with {@link IntType} vote space.
-	 */
-	public static <T extends Type<T> & Comparable< T >> HoughLineTransform<IntType, T> integerHoughLine(final Image<T> inputImage)
-	{
-		return new HoughLineTransform<IntType, T>(inputImage, new IntType());
-	}
-	
-	/**
-	 * Creates a default {@link HoughLineTransform} with {@link LongType} vote space.
-	 * @param <T> the {@link Type} of the {@link Image} in question.
-	 * @param inputImage the {@link Image} to perform the Hough Line Transform against.
-	 * @return a default {@link HoughLineTransform} with {@link LongType} vote space.
-	 * 
-	 * Use this for voting against large images, but reasonably small vote space.  If you need a big 
-	 * voting space, it would be better to create a {@link HoughLineTransform} instantiated with an
-	 * {@link ImageFactory} capable of handling it.
-	 */
-	public static <T extends Type<T> & Comparable< T >> HoughLineTransform<LongType, T> longHoughLine(final Image<T> inputImage)
-	{
-		return new HoughLineTransform<LongType, T>(inputImage, new LongType());
-	}
-	
 	/**
 	 * Create a {@link HoughLineTransform} to operate against a given {@link Image}, with
 	 * a specific {@link Type} of vote space.
@@ -104,9 +61,9 @@ public class HoughLineTransform <S extends RealType<S>, T extends Type<T> & Comp
 	 * @param inputImage the {@link Image} to operate against.
 	 * @param type the {@link Type} for the vote space.
 	 */
-	public HoughLineTransform(final Image<T> inputImage, final S type)
+	public HoughLineTransform(final Image<T> inputImage)
 	{
-		this(inputImage, DEFAULT_THETA, type);
+		this(inputImage, DEFAULT_THETA);
 	}
 	
 	/**
@@ -117,9 +74,9 @@ public class HoughLineTransform <S extends RealType<S>, T extends Type<T> & Comp
 	 * @param theta the number of bins for theta-resolution.
 	 * @param type the {@link Type} for the vote space.
 	 */
-	public HoughLineTransform(final Image<T> inputImage, final int theta, final S type)
+	public HoughLineTransform(final Image<T> inputImage, final int theta)
 	{
-		this(inputImage, defaultRho(inputImage), theta, type);
+		this(inputImage, defaultRho(inputImage), theta);
 	}
 	
 	/**
@@ -129,35 +86,14 @@ public class HoughLineTransform <S extends RealType<S>, T extends Type<T> & Comp
 	 * @param theta the number of bins for theta resolution.
 	 * @param type the {@link Type} for the vote space.
 	 */
-	public HoughLineTransform(final Image<T> inputImage, final int inNRho, final int inNTheta, final S type)
+	public HoughLineTransform(final Image<T> inputImage, final int inNRho, final int inNTheta)
 	{
-		super(inputImage, new int[]{inNRho, inNTheta}, type);
+		super(inputImage, new int[]{inNRho, inNTheta});
 		//Theta by definition is in [0..pi].
 		dTheta = Math.PI / (double)inNTheta;
 		/*The furthest a point can be from the origin is the length calculated
 		 * from the dimensions of the Image.
 		 */
-		dRho = 2 * Util.computeLength(inputImage.getDimensions()) / (double)inNRho;
-		threshold = inputImage.createType();
-		nRho = inNRho;
-		nTheta = inNTheta;
-		theta = new double[inNTheta];
-		rho = new double[inNRho];
-		rtPeaks = null;
-	}
-	
-	/**
-	 * Create a {@link HoughLineTransform} to operate against a given {@link Image}, with
-	 * a specific {@link ImageFactory} for the vote space, and 
-	 * specific rho- and theta-resolution.
-	 * @param inputImage the {@link Image} to operate against.
-	 * @param theta the number of bins for theta resolution.
-	 * @param type the {@link Type} for the vote space.
-	 */
-	public HoughLineTransform(final Image<T> inputImage, final ImageFactory<S> factory, final int inNRho, final int inNTheta)
-	{
-		super(inputImage, new int[]{inNRho, inNTheta}, factory);
-		dTheta = Math.PI / (double)inNTheta;
 		dRho = 2 * Util.computeLength(inputImage.getDimensions()) / (double)inNRho;
 		threshold = inputImage.createType();
 		nRho = inNRho;
@@ -173,22 +109,30 @@ public class HoughLineTransform <S extends RealType<S>, T extends Type<T> & Comp
 	}
 
 	@Override
-	public boolean process() {
+	public boolean process()
+	{
 		final LocalizableCursor<T> imageCursor = getImage().createLocalizableCursor();
 		final int[] position = new int[getImage().getDimensions().length];
 		final double minTheta = -Math.PI/2;
 		final double minRho = -Util.computeLength(super.getImage().getDimensions());
 		final long sTime = System.currentTimeMillis();
 		boolean success;
+		
+		voteTime = 0;
 				
 		for (int t = 0; t < nTheta; ++t)
 		{
 			theta[t] = dTheta * (double)t + minTheta;
-		}
+		}		
+		
 		for (int r = 0; r < nRho; ++r)
 		{
 			rho[r] = dRho * (double)r + minRho;
 		}
+
+		System.out.println("" + (System.currentTimeMillis() - sTime) + " ms to init");
+		
+		
 		
 		while (imageCursor.hasNext())
 		{
@@ -207,6 +151,9 @@ public class HoughLineTransform <S extends RealType<S>, T extends Type<T> & Comp
 					r = Math.round((float)((fRho - minRho)/ dRho));
 					voteLoc[0] = r;
 					voteLoc[1] = t;
+					
+					long cTime = System.currentTimeMillis();
+					
 					try
 					{
 						super.placeVote(voteLoc);
@@ -216,6 +163,8 @@ public class HoughLineTransform <S extends RealType<S>, T extends Type<T> & Comp
 						System.err.println("Tried to place vote at " + r + " " + t + " for theta " + theta[t] + ", and rho " + fRho);
 						return false;
 					}
+					
+					voteTime += cTime - System.currentTimeMillis();
 				}
 			}			
 		}		
