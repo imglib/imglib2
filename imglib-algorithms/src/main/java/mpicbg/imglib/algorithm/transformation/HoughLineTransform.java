@@ -125,18 +125,19 @@ public class HoughLineTransform <T extends Type<T> & Comparable<T>>
     {
         final LocalizableCursor<T> imageCursor = getImage().createLocalizableCursor();
         final int[] position = new int[getImage().getDimensions().length];
-        final double[] cosines = new double[theta.length];
-        final double[] sines = new double[theta.length];
-        final double minTheta = -Math.PI/2;
+        final double[] divCosines = new double[theta.length];
+        final double[] divSines = new double[theta.length];
+        final double minTheta = -Math.PI/2;        
         final double minRho = -Util.computeLength(getImage().getDimensions());
+        final double divMinRho = minRho / dRho;
         final long sTime = System.currentTimeMillis();
         boolean success;
 
         for (int t = 0; t < nTheta; ++t)
         {
             theta[t] = dTheta * (double)t + minTheta;
-            sines[t] = Math.sin(theta[t]);
-            cosines[t] = Math.cos(theta[t]);
+            divSines[t] = Math.sin(theta[t]) / dRho;
+            divCosines[t] = Math.cos(theta[t]) / dRho;
         }
 
         for (int r = 0; r < nRho; ++r)
@@ -146,7 +147,7 @@ public class HoughLineTransform <T extends Type<T> & Comparable<T>>
 
         while (imageCursor.hasNext())
         {
-            double fRho;
+            double divFRho;
             int r;
             int[] voteLoc = new int[2];
 
@@ -158,8 +159,8 @@ public class HoughLineTransform <T extends Type<T> & Comparable<T>>
                 for (int t = 0; t < nTheta; ++t)
                 {
                     long mTime = System.currentTimeMillis();
-                    fRho = cosines[t] * position[0] + sines[t] * position[1];
-                    r = (int)( ((fRho - minRho)/ dRho) + 0.5);
+                    divFRho = divCosines[t] * position[0] + divSines[t] * position[1];
+                    r = (int)( (divFRho - divMinRho) + 0.5);
                     voteLoc[0] = r;
                     voteLoc[1] = t;
 
