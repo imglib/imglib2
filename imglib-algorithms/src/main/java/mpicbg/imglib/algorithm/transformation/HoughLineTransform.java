@@ -2,11 +2,16 @@ package mpicbg.imglib.algorithm.transformation;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Vector;
+import java.util.concurrent.atomic.AtomicInteger;
 
+import mpicbg.imglib.algorithm.MultiThreaded;
 import mpicbg.imglib.container.array.ArrayContainerFactory;
 import mpicbg.imglib.cursor.LocalizableCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.ImageFactory;
+import mpicbg.imglib.multithreading.Chunk;
+import mpicbg.imglib.multithreading.SimpleMultiThreading;
 import mpicbg.imglib.type.Type;
 import mpicbg.imglib.type.numeric.integer.IntType;
 import mpicbg.imglib.util.Util;
@@ -36,18 +41,14 @@ import mpicbg.imglib.util.Util;
  * @Override 
  */
 public class HoughLineTransform <T extends Type<T> & Comparable<T>>
-    extends HoughTransform<T>
+    extends HoughTransform<T> implements MultiThreaded
 {
     public static final int DEFAULT_THETA = 180;
-    private final double dTheta;
-    private final double dRho;
     private final T threshold;
-    private final int nRho;
-    private final int nTheta;
-    private final double[] rho;
-    private final double[] theta;
-    private final int[][] voteMap;
+    private final double[] divSines, divCosines, rho, theta;
     private ArrayList<double[]> rtPeaks;
+    private int numThreads;
+    private double divMinRho;
 
     /**
      * Calculates a default number of rho bins, which corresponds to a resolution of one pixel.
@@ -91,47 +92,33 @@ public class HoughLineTransform <T extends Type<T> & Comparable<T>>
      * @param theta the number of bins for theta resolution.
      * @param type the {@link Type} for the vote space.
      */
-    public HoughLineTransform(final Image<T> inputImage, final int inNRho, final int inNTheta)
+    public HoughLineTransform(final Image<T> inputImage, final int nRho, final int nTheta)
     {
-        super(inputImage, new int[]{inNRho, inNTheta});
+        super(inputImage, new int[]{nRho, nTheta});
+        setNumThreads();
+        
+        theta = new double[nTheta];
+        rho = new double[nRho];
+        divSines = new double[nTheta];
+        divCosines = new double[nTheta];
+        rtPeaks = null;
+        threshold = inputImage.createType();
+
+        initConstants(Util.computeLength(inputImage.getDimensions()), nRho, nTheta);
+    }
+
+    private void initConstants(final double imDiag, final int nRho, final int nTheta)
+    {
         //Theta by definition is in [0..pi].
-        dTheta = (float)Math.PI / (float)inNTheta;
+        final double dTheta = Math.PI / nTheta;
         /*The furthest a point can be from the origin is the length calculated
          * from the dimensions of the Image.
          */
-        dRho = 2 * Util.computeLength(inputImage.getDimensions()) / (float)inNRho;
-        threshold = inputImage.createType();
-        nRho = inNRho;
-        nTheta = inNTheta;
-        theta = new double[inNTheta];
-        rho = new double[inNRho];
-        rtPeaks = null;
-
-        voteMap = new int[getVoteSize()[0]][getVoteSize()[1]];
-
-        for (int[] array : voteMap)
-        {
-            Arrays.fill(array, 0);
-        }
-    }
-
-    public void setThreshold(final T inThreshold)
-    {
-        threshold.set(inThreshold);
-    }
-
-    @Override
-    public boolean process()
-    {
-        final LocalizableCursor<T> imageCursor = getImage().createLocalizableCursor();
-        final int[] position = new int[getImage().getDimensions().length];
-        final double[] divCosines = new double[theta.length];
-        final double[] divSines = new double[theta.length];
+        final double dRho = 2 * imDiag / (double)nRho;
         final double minTheta = -Math.PI/2;        
-        final double minRho = -Util.computeLength(getImage().getDimensions());
-        final double divMinRho = minRho / dRho;
-        final long sTime = System.currentTimeMillis();
-        boolean success;
+        final double minRho = -imDiag;
+
+        divMinRho = minRho / dRho;
 
         for (int t = 0; t < nTheta; ++t)
         {
@@ -144,8 +131,69 @@ public class HoughLineTransform <T extends Type<T> & Comparable<T>>
         {
             rho[r] = dRho * (double)r + minRho;
         }
+  
+    }
+    
+    public void setThreshold(final T inThreshold)
+    {
+        threshold.set(inThreshold);
+    }
 
-        while (imageCursor.hasNext())
+    @Override
+    public boolean process()
+    {
+        final long sTime = System.currentTimeMillis();
+        boolean success = false;
+        final int[][] localVoteSpace = new int[getNumThreads()][numel];
+        
+        //(Lifted from ComputeMinMax)
+        final AtomicInteger ai = new AtomicInteger(0);
+        final Thread[] threads = SimpleMultiThreading.newThreads( getNumThreads() );
+        final Vector<Chunk> threadChunks = 
+            SimpleMultiThreading.divideIntoChunks(getImage().getNumPixels(), numThreads);
+
+        for (int i = 0; i < getNumThreads(); ++i)
+        {
+            threads[i] = new Thread(new Runnable()
+            {
+                //Also lifted from ComputeMinMax
+                public void run()
+                {
+                    final int id = ai.getAndIncrement();
+                    final Chunk chunk = threadChunks.get(id);
+                    
+                    threadedProcess(chunk.getStartPosition(), chunk.getLoopSize(),
+                            localVoteSpace[id]);
+                }
+            });
+        }
+        
+        SimpleMultiThreading.startAndJoin(threads);
+        
+        for (int i = 0; i < numel; ++i)
+        {
+                getVoteSpace()[i] = 0;
+                for (int j = 0; j < getNumThreads(); ++j)
+                {
+                    getVoteSpace()[i] += localVoteSpace[j][i];
+                }
+        }
+        
+        success = pickPeaks();
+
+        super.pTime = System.currentTimeMillis() - sTime;
+        return success;
+    }
+
+    protected void threadedProcess(final long startPos, final long loopSize,
+            final int[] localVotes)
+    {
+        final LocalizableCursor<T> imageCursor = getImage().createLocalizableCursor();
+        final int[] position = new int[getImage().getDimensions().length];
+        
+        imageCursor.fwd(startPos);
+        
+        for(long j = 0; j < loopSize; ++j)
         {
             double divFRho;
             int r;
@@ -156,25 +204,19 @@ public class HoughLineTransform <T extends Type<T> & Comparable<T>>
 
             if (imageCursor.getType().compareTo(threshold) > 0)
             {
-                for (int t = 0; t < nTheta; ++t)
+                for (int t = 0; t < theta.length; ++t)
                 {
-                    long mTime = System.currentTimeMillis();
                     divFRho = divCosines[t] * position[0] + divSines[t] * position[1];
                     r = (int)( (divFRho - divMinRho) + 0.5);
                     voteLoc[0] = r;
                     voteLoc[1] = t;
 
-                    super.placeVote(voteLoc);
+                    ++localVotes[locationToIndex(voteLoc)];
                 }
             }
         }
-
-        success = super.pickPeaks();
-
-        super.pTime = System.currentTimeMillis() - sTime;
-        return success;
     }
-
+    
     public ArrayList<double[]> getTranslatedPeakList()
     {
         if (rtPeaks == null)
@@ -192,6 +234,19 @@ public class HoughLineTransform <T extends Type<T> & Comparable<T>>
         }
 
         return rtPeaks;
+    }
+
+    public int getNumThreads() {        
+        return numThreads;
+    }
+
+    public void setNumThreads() {
+        numThreads = Runtime.getRuntime().availableProcessors();
+        
+    }
+
+    public void setNumThreads(int nt) {
+        numThreads = nt;
     }
 
 }

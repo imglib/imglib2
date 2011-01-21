@@ -35,37 +35,40 @@ public abstract class HoughTransform<T extends Type<T> & Comparable<T>>
     private final int[] voteSize;
     private final int[] cumProd;
     protected Image<IntType> voteSpaceImage;
+    protected final int numel;
 
     /**
      * 
      * @param inputImage the image for the HoughTransform to operate over
-     * @param voteSize and integer array indicating the size of the voteSpace.  This is passed
+     * @param inVoteSize and integer array indicating the size of the voteSpace.  This is passed
      * directly into ImageFactory to create a voteSpace image.
      * @param voteFactory the ImageFactory used to generate the voteSpace image.
      */
-    protected HoughTransform(final Image<T> inputImage, final int[] voteSize)
+    protected HoughTransform(final Image<T> inputImage, final int[] inVoteSize)
     {
-        int numel;
-
+        int n;
+        
         pTime = 0;
 
         image = inputImage;		
         peaks = null;
-        peakExclusion = new double[voteSize.length];
-        cumProd = new int[voteSize.length];
+        peakExclusion = new double[inVoteSize.length];
+        cumProd = new int[inVoteSize.length];
         Arrays.fill(peakExclusion, 0);
 
-        numel = voteSize[0];
+        n = inVoteSize[0];
         cumProd[0] = 1;
-        for (int d = 1; d < voteSize.length; ++d)
+        for (int d = 1; d < inVoteSize.length; ++d)
         {
-            cumProd[d] = cumProd[d - 1] * voteSize[d - 1];
-            numel *= voteSize[d];		   
+            cumProd[d] = cumProd[d - 1] * inVoteSize[d - 1];
+            n *= inVoteSize[d];		   
         }
 
-        voteSpace = new int[numel];
+        voteSpace = new int[n];
         voteSpaceImage = null;
-        this.voteSize = voteSize;
+        
+        voteSize = inVoteSize;        
+        numel = n;
     }
 
     protected int locationToIndex(final int[] loc)
@@ -98,7 +101,12 @@ public abstract class HoughTransform<T extends Type<T> & Comparable<T>>
      */
     protected void placeVote(final int[] loc)
     {
-        voteSpace[locationToIndex(loc)]++;
+        ++voteSpace[locationToIndex(loc)];
+    }
+    
+    protected int[] getVoteSpace()
+    {
+        return voteSpace;
     }
 
     /**
