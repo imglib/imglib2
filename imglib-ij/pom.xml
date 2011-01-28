@@ -2,46 +2,35 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
-    http://maven.apache.org/maven-v4_0_0.xsd">
+    http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
     <groupId>mpicbg</groupId>
-    <artifactId>imglib-base-pom</artifactId>
-    <version>1.00</version>
+    <artifactId>imglib-base</artifactId>
+    <version>2.0-SNAPSHOT</version>
   </parent>
 
-  <groupId>mpicbg</groupId>
   <artifactId>imglib-ij</artifactId>
-  <version>2.0-SNAPSHOT</version>
 
   <name>Imglib ImageJ</name>
   <description>Imglib display logic using ImageJ.</description>
-  <url>http://pacific.mpi-cbg.de/wiki/index.php/Imglib</url>
-  <inceptionYear>2009</inceptionYear>
-
-  <licenses>
-    <license>
-      <name>BSD</name>
-      <distribution>repo</distribution>
-    </license>
-  </licenses>
 
   <dependencies>
     <dependency>
-      <groupId>imagej</groupId>
+      <groupId>${imagej.groupId}</groupId>
       <artifactId>ij</artifactId>
-      <version>1.43</version>
+      <version>${imagej1.version}</version>
     </dependency>
     <dependency>
-      <groupId>mpicbg</groupId>
+      <groupId>${project.groupId}</groupId>
       <artifactId>imglib</artifactId>
-      <version>2.0-SNAPSHOT</version>
+      <version>${project.version}</version>
     </dependency>
     <dependency>
-      <groupId>mpicbg</groupId>
+      <groupId>${project.groupId}</groupId>
       <artifactId>imglib-algorithms</artifactId>
-      <version>2.0-SNAPSHOT</version>
+      <version>${project.version}</version>
     </dependency>
     <!-- TODO: define a real POM for mpicbg project -->
     <dependency>
@@ -64,38 +53,6 @@
     </dependency>
   </dependencies>
 
-  <developers>
-    <developer>
-      <id>saalfeld</id>
-      <name>Stephan Saalfeld</name>
-      <email>saalfeld@mpi-cbg.de</email>
-      <url>http://fly.mpi-cbg.de/~saalfeld/</url>
-      <organization>MPI-CBG at Dresden</organization>
-      <organizationUrl>http://mpi-cbg.de/</organizationUrl>
-      <roles>
-        <role>architect</role>
-        <role>developer</role>
-      </roles>
-      <timezone>+1</timezone>
-      <properties>
-        <picUrl>http://fly.mpi-cbg.de/~saalfeld/saalfeld.jpg</picUrl>
-      </properties>
-    </developer>
-    <developer>
-      <id>preibisch</id>
-      <name>Stephan Preibisch</name>
-      <email>preibisch@mpi-cbg.de</email>
-      <url>http://fly.mpi-cbg.de/~preibisch/</url>
-      <organization>MPI-CBG at Dresden</organization>
-      <organizationUrl>http://mpi-cbg.de/</organizationUrl>
-      <roles>
-        <role>architect</role>
-        <role>developer</role>
-      </roles>
-      <timezone>+1</timezone>
-    </developer>
-  </developers>
-
   <build>
     <plugins>
       <plugin>
@@ -111,11 +68,15 @@
     </plugins>
   </build>
 
+  <!-- NB: for imglib-base, in case of partial checkout -->
   <repositories>
-    <!-- NB: for imglib-base-pom -->
     <repository>
       <id>imagej.releases</id>
       <url>http://dev.imagejdev.org:8081/content/repositories/releases</url>
+    </repository>
+    <repository>
+      <id>imagej.snapshots</id>
+      <url>http://dev.imagejdev.org:8081/content/repositories/snapshots</url>
     </repository>
   </repositories>
 
