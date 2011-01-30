@@ -7,6 +7,9 @@ import java.util.Map;
 
 import javax.swing.JFrame;
 
+import mpicbg.imglib.image.Image;
+import mpicbg.imglib.type.numeric.RGBALegacyType;
+
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
@@ -109,5 +112,9 @@ public class BarChart extends JFrame
 		plot.getDomainAxis().setTickLabelPaint(Color.gray);
 		plot.getRangeAxis().setTickLabelPaint(Color.gray);
 		chart.getTitle().setPaint(Color.gray);
+	}
+ 
+ 	public Image<RGBALegacyType> asImage() {
+		return ChartUtils.asImage(chart);
 	}
 }
