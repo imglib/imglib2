@@ -93,7 +93,7 @@ public class BarChart extends JFrame
 		setBackgroundDefault(chart);
 	}
 
- 	static private void setBackgroundDefault(JFreeChart chart) {
+ 	static private void setBackgroundDefault(final JFreeChart chart) {
 		BasicStroke gridStroke = new BasicStroke(1.0f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND, 1.0f, new float[]{2.0f, 1.0f}, 0.0f);
 		CategoryPlot plot = (CategoryPlot) chart.getPlot();
 		plot.setRangeGridlineStroke(gridStroke);
