@@ -34,7 +34,7 @@ package mpicbg.imglib;
  * that this does <em>not</em> imply that for <em>all</em> coordinates in the
  * {@link IntegerInterval} function values exist or can be generated.  It only
  * defines where the minimum and maximum source coordinates are.  E.g. an
- * {@link Iterable} & {@link Raster} has a limited number of values and a
+ * {@link Iterable} & {@link IntegerFunction} has a limited number of values and a
  * source coordinate for each.  By that, minimum and maximum are defined but
  * the {@link Function} does not define a value for all coordinates in between.
  *
@@ -50,6 +50,13 @@ public interface IntegerInterval extends RealInterval
 	public long min( final int d );
 	
 	/**
+	 * Write the minimum of each dimension into long[].
+	 * 
+	 * @param size
+	 */
+	public void min( long[] min );
+	
+	/**
 	 * 
 	 * @param d dimension
 	 * @return maximum
@@ -57,7 +64,14 @@ public interface IntegerInterval extends RealInterval
 	public long max( final int d );
 	
 	/**
-	 * Write the number of pixels in each dimension into long[] size.
+	 * Write the minimum of each dimension into long[].
+	 * 
+	 * @param size
+	 */
+	public void max( long[] max );
+	
+	/**
+	 * Write the number of pixels in each dimension into long[].
 	 * 
 	 * @param size
 	 */

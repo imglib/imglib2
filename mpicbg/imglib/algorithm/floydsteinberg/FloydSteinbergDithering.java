@@ -26,7 +26,7 @@ import mpicbg.imglib.container.array.ArrayLocalizingRasterIterator;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.ImageFactory;
 import mpicbg.imglib.outofbounds.OutOfBoundsConstantValueFactory;
-import mpicbg.imglib.sampler.PositionableRasterSampler;
+import mpicbg.imglib.sampler.PositionableRasterIntervalSampler;
 import mpicbg.imglib.sampler.RasterIterator;
 import mpicbg.imglib.type.label.FakeType;
 import mpicbg.imglib.type.logic.BitType;
@@ -81,8 +81,8 @@ public class FloydSteinbergDithering<T extends RealType<T>> implements OutputAlg
 		final RasterIterator<FakeType> cursor = ArrayLocalizingRasterIterator.createLinearCursor( dim );
 
 		// we also need a Cursors for the input, the output and the kernel image
-		final PositionableRasterSampler<T> cursorInput = img.createPositionableRasterSampler( new OutOfBoundsConstantValueFactory<T>() );
-		final PositionableRasterSampler<BitType> cursorOutput = result.createPositionableRasterSampler();
+		final PositionableRasterIntervalSampler<T> cursorInput = img.createPositionableRasterSampler( new OutOfBoundsConstantValueFactory<T>() );
+		final PositionableRasterIntervalSampler<BitType> cursorOutput = result.createPositionableRasterSampler();
 		final RasterIterator<FloatType> cursorKernel = errorDiffusionKernel.createLocalizingRasterIterator();
 		
 		while( cursor.hasNext() )
@@ -172,7 +172,7 @@ public class FloydSteinbergDithering<T extends RealType<T>> implements OutputAlg
 		{
 			final Image<FloatType> kernel = factory.createImage( new int[] { 3, 3 } );
 			
-			final PositionableRasterSampler<FloatType> cursor = kernel.createPositionableRasterSampler();
+			final PositionableRasterIntervalSampler<FloatType> cursor = kernel.createPositionableRasterSampler();
 			
 			// For the 2d-case as well:
 			// |-  -  -|

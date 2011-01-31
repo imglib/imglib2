@@ -27,8 +27,8 @@
  */
 package mpicbg.imglib.location.transform;
 
-import mpicbg.imglib.location.Localizable;
-import mpicbg.imglib.location.Positionable;
+import mpicbg.imglib.Localizable;
+import mpicbg.imglib.Positionable;
 import mpicbg.imglib.location.RasterLocalizable;
 import mpicbg.imglib.location.RasterPositionable;
 

@@ -8,7 +8,7 @@ import mpicbg.imglib.container.array.ArrayContainerFactory;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.ImageFactory;
 
-import mpicbg.imglib.sampler.PositionableRasterSampler;
+import mpicbg.imglib.sampler.PositionableRasterIntervalSampler;
 import mpicbg.imglib.sampler.RasterIterator;
 import mpicbg.imglib.type.numeric.RealType;
 
@@ -145,7 +145,7 @@ public class TestBase {
 	 * Convenience helper to access single pixels
 	 */
 	protected<T extends RealType<T>> float get( Image<T> image, int[] pos ) {
-		PositionableRasterSampler<T> cursor = image.createPositionableRasterSampler();
+		PositionableRasterIntervalSampler<T> cursor = image.createPositionableRasterSampler();
 		cursor.setPosition( pos );
 		float result = cursor.get().getRealFloat();
 		cursor.close();

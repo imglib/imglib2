@@ -27,8 +27,8 @@
  */
 package mpicbg.imglib.interpolation.nearestneighbor;
 
+import mpicbg.imglib.Localizable;
 import mpicbg.imglib.image.Image;
-import mpicbg.imglib.location.Localizable;
 import mpicbg.imglib.location.RasterLocalizable;
 import mpicbg.imglib.outofbounds.RasterOutOfBoundsFactory;
 import mpicbg.imglib.type.Type;

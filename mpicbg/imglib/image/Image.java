@@ -32,7 +32,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.concurrent.atomic.AtomicLong;
 
-import mpicbg.imglib.RasterInterval;
+import mpicbg.imglib.IntegerIntervalFunction;
 import mpicbg.imglib.Function;
 import mpicbg.imglib.IterableRaster;
 import mpicbg.imglib.RandomAccessibleRaster;
@@ -46,7 +46,7 @@ import mpicbg.imglib.image.display.Display;
 import mpicbg.imglib.interpolation.Interpolator;
 import mpicbg.imglib.interpolation.InterpolatorFactory;
 import mpicbg.imglib.outofbounds.RasterOutOfBoundsFactory;
-import mpicbg.imglib.sampler.PositionableRasterSampler;
+import mpicbg.imglib.sampler.PositionableRasterIntervalSampler;
 import mpicbg.imglib.sampler.RasterIterator;
 import mpicbg.imglib.sampler.RasterSampler;
 import mpicbg.imglib.sampler.special.OrthoSliceIterator;
@@ -61,7 +61,7 @@ import mpicbg.imglib.type.label.FakeType;
  */
 public class Image< T extends Type< T > > implements
 		ImageProperties,
-		RasterInterval< T, Image< T >, PositionableRasterSampler< T >, RasterIterator< T > >
+		IntegerIntervalFunction< T, Image< T >, PositionableRasterIntervalSampler< T >, RasterIterator< T > >
 {
 	final protected ArrayList< RasterSampler< T > > rasterSamplers;
 	final ContainerFactory containerFactory;
@@ -214,16 +214,16 @@ public class Image< T extends Type< T > > implements
 	}
 	
 	/**
-	 * Creates a {@link PositionableRasterSampler} which is able to move freely
+	 * Creates a {@link PositionableRasterIntervalSampler} which is able to move freely
 	 * within the {@link Image} without checking for image boundaries.  The
 	 * behavior at locations outside of image bounds is not defined.
 	 * 
-	 * @return - a {@link PositionableRasterSampler} that cannot leave the {@link Image}
+	 * @return - a {@link PositionableRasterIntervalSampler} that cannot leave the {@link Image}
 	 */
 	@Override
-	public PositionableRasterSampler< T > createPositionableRasterSampler()
+	public PositionableRasterIntervalSampler< T > createPositionableRasterSampler()
 	{
-		PositionableRasterSampler<T> cursor = container.createPositionableRasterSampler( this );
+		PositionableRasterIntervalSampler<T> cursor = container.createPositionableRasterSampler( this );
 		addRasterSampler( cursor );
 		return cursor;						
 	}
@@ -232,24 +232,24 @@ public class Image< T extends Type< T > > implements
 	 * @deprecated Use {@link #createPositionableCursor()} instead.
 	 */
 	@Deprecated
-	public PositionableRasterSampler<T> createLocalizableByDimCursor()
+	public PositionableRasterIntervalSampler<T> createLocalizableByDimCursor()
 	{
 		return createPositionableRasterSampler();
 	}
 
 	/**
-	 * Creates a {@link PositionableRasterSampler} which is able to move freely
+	 * Creates a {@link PositionableRasterIntervalSampler} which is able to move freely
 	 * within and outside of {@link Image} bounds given a
 	 * {@link RasterOutOfBoundsFactory} that defines the behavior out of
 	 * {@link Image} bounds.
 	 * 
 	 * @param factory - the {@link RasterOutOfBoundsFactory}
-	 * @return - a {@link PositionableRasterSampler} that can leave the {@link Image}
+	 * @return - a {@link PositionableRasterIntervalSampler} that can leave the {@link Image}
 	 */
 	@Override
-	public PositionableRasterSampler<T> createPositionableRasterSampler( final RasterOutOfBoundsFactory<T> factory )
+	public PositionableRasterIntervalSampler<T> createPositionableRasterSampler( final RasterOutOfBoundsFactory<T> factory )
 	{
-		PositionableRasterSampler<T> cursor = container.createPositionableRasterSampler( this, factory );
+		PositionableRasterIntervalSampler<T> cursor = container.createPositionableRasterSampler( this, factory );
 		addRasterSampler( cursor );
 		return cursor;								
 	}
@@ -264,7 +264,7 @@ public class Image< T extends Type< T > > implements
 	 * @deprecated Use {@link #createPositionableCursor( OutOfBoundsStrategyFactory<T> )} instead.
 	 */
 	@Deprecated
-	public PositionableRasterSampler<T> createLocalizableByDimCursor( final RasterOutOfBoundsFactory<T> factory )
+	public PositionableRasterIntervalSampler<T> createLocalizableByDimCursor( final RasterOutOfBoundsFactory<T> factory )
 	{
 		return createPositionableRasterSampler( factory);
 	}
@@ -475,7 +475,7 @@ public class Image< T extends Type< T > > implements
 		final T[] pixels = createType().createArray1D( (int)numPixels );
 		
 		final ArrayLocalizingRasterIterator<FakeType> iterator = ArrayLocalizingRasterIterator.createLinearCursor( getDimensions() );
-		final PositionableRasterSampler<T> positionable = this.createPositionableRasterSampler();
+		final PositionableRasterIntervalSampler<T> positionable = this.createPositionableRasterSampler();
 		
 		int t = 0;
 		while ( iterator.hasNext() )

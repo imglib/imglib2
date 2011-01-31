@@ -27,10 +27,10 @@
  */
 package mpicbg.imglib.interpolation;
 
+import mpicbg.imglib.Localizable;
+import mpicbg.imglib.Positionable;
 import mpicbg.imglib.Sampler;
 import mpicbg.imglib.image.Image;
-import mpicbg.imglib.location.Localizable;
-import mpicbg.imglib.location.Positionable;
 import mpicbg.imglib.outofbounds.RasterOutOfBoundsFactory;
 import mpicbg.imglib.type.Type;
 

@@ -28,16 +28,16 @@
  */
 package mpicbg.imglib.sampler.special;
 
+import mpicbg.imglib.Iterator;
 import mpicbg.imglib.image.Image;
-import mpicbg.imglib.location.Iterator;
-import mpicbg.imglib.sampler.PositionableRasterSampler;
+import mpicbg.imglib.sampler.PositionableRasterIntervalSampler;
 import mpicbg.imglib.sampler.RasterIterator;
 
 /**
  * Generic {@link Iterator} for orthogonal 2d-slices.  This implementation
  * iterates row by row from top left to bottom right mapping <em>x</em> and
  * <em>y</em> to two arbitrary dimensions using a
- * {@link PositionableRasterSampler} provided either directly or through an
+ * {@link PositionableRasterIntervalSampler} provided either directly or through an
  * {@link Image}.  While, for most {@link Container Containers}, this is the
  * sufficient implementation, sometimes, a different iteration order is
  * required.  Such {@link Container Containers} are expected to provide their
@@ -51,14 +51,14 @@ public class OrthoSliceIterator< T extends mpicbg.imglib.type.Type< T > > implem
 	final protected int x, y;
 	final protected int w, h, maxX, maxY;
 	
-	final protected PositionableRasterSampler< T > sampler;
+	final protected PositionableRasterIntervalSampler< T > sampler;
 	
 	public OrthoSliceIterator( final Image< T > image, final int x, final int y, final int[] position )
 	{
 		this( image.createPositionableRasterSampler(), x, y, position );
 	}
 	
-	public OrthoSliceIterator( final PositionableRasterSampler< T > sampler, final int x, final int y, final int[] position )
+	public OrthoSliceIterator( final PositionableRasterIntervalSampler< T > sampler, final int x, final int y, final int[] position )
 	{
 		this.sampler = sampler;
 		this.x = x;

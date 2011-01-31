@@ -27,6 +27,8 @@
  */
 package mpicbg.imglib.location;
 
+import mpicbg.imglib.Iterator;
+
 /**
  * An {@link Iterator} that just does nothing.  This object doing nothing, it
  * is implemented as a Singleton.

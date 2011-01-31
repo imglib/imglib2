@@ -24,31 +24,48 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
+ *
+ * @author Stephan Preibisch & Stephan Saalfeld
  */
-package mpicbg.imglib.sampler;
+package mpicbg.imglib;
 
-import mpicbg.imglib.location.RasterLocalizable;
-import mpicbg.imglib.location.RasterPositionable;
-import mpicbg.imglib.type.Type;
 
 /**
- * This interface is for convenience only, it combines a set of interfaces and
- * might be used for type definition in your implementation.  Instead of this
- * interface, you can use a generic type that includes only the interfaces you
- * need, e.g.
- * 
- * < T extends RasterSampler< ? >, RasterPositionable > 
- * 
- * @param <T>
+ * The {@link Localizable} interface can localize itself in an n-dimensional
+ * real space.
+ *  
+ * @author Stephan Saalfeld
  *
- * @author Stephan Preibisch and Stephan Saalfeld
  */
-public interface PositionableRasterSampler< T extends Type< T > > extends RasterSampler< T >, RasterLocalizable, RasterPositionable
+public interface Localizable extends EuclideanSpace
 {
 	/**
-	 * True if located out of image bounds.
+	 * Write the current position into the passed array.
 	 * 
+	 * @param location
+	 */
+	public void localize( float[] position );
+	
+	/**
+	 * Write the current position into the passed array.
+	 * 
+	 * @param location
+	 */
+	public void localize( double[] position );
+	
+	/**
+	 * Return the current position in a given dimension.
+	 * 
+	 * @param dim
 	 * @return
 	 */
-	public boolean isOutOfBounds();
+	public float getFloatPosition( int dim );
+	
+	/**
+	 * Return the current position in a given dimension.
+	 * 
+	 * @param dim
+	 * @return
+	 */
+	public double getDoublePosition( int dim );
 }

@@ -18,7 +18,7 @@ import mpicbg.imglib.interpolation.nearestneighbor.NearestNeighborInterpolatorFa
 import mpicbg.imglib.outofbounds.OutOfBoundsConstantValueFactory;
 import mpicbg.imglib.outofbounds.OutOfBoundsMirrorFactory;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyPeriodicFactory;
-import mpicbg.imglib.sampler.PositionableRasterSampler;
+import mpicbg.imglib.sampler.PositionableRasterIntervalSampler;
 import mpicbg.imglib.sampler.RasterIterator;
 import mpicbg.imglib.type.numeric.RealType;
 import mpicbg.imglib.type.numeric.integer.ByteType;
@@ -76,7 +76,7 @@ public class TestShapeList
 		final ArrayContainerFactory arrayFactory = new ArrayContainerFactory();
 		final Image< FloatType > arrayImage = new ImageFactory< FloatType >( new FloatType(), arrayFactory ).createImage( new int[]{ 200, 200, depth }, "ArrayContainer" );
 		final RasterIterator< FloatType > cArray = arrayImage.createLocalizingRasterIterator();
-		final PositionableRasterSampler< FloatType > cShapeList = shapeListImage.createPositionableRasterSampler();
+		final PositionableRasterIntervalSampler< FloatType > cShapeList = shapeListImage.createPositionableRasterSampler();
 		while ( cArray.hasNext() )
 		{
 			cArray.fwd();

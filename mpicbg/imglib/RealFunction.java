@@ -27,22 +27,19 @@
  */
 package mpicbg.imglib;
 
-import mpicbg.imglib.location.Positionable;
-import mpicbg.imglib.outofbounds.OutOfBounds;
-import mpicbg.imglib.outofbounds.OutOfBoundsFactory;
 
 /**
- * <p><em>f</em>:{x&isin;R<sup><em>n</em></sup>|[min,max]&rarr;T}</em></p>
+ * <p><em>f:R<sup>n</sup>&rarr;T</em></p>
  * 
- * <p>A {@link Function} over an n-dimensional real interval that can create a
- * random access {@link Sampler} that generates values beyond boundaries
- * through an {@link OutOfBounds}.</p>
+ * <p>A {@link Function} over real space that can create a random access
+ * {@link Sampler}.</p>
+ * 
  *
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-public interface PositionableInterval<
+public interface RealFunction<
 		T,
-		F extends PositionableInterval< T, F, P >,
+		F extends RealFunction< T, F, P >,
 		P extends Positionable & Sampler< T > > extends Function< T, F >
 {
 	/**
@@ -50,5 +47,5 @@ public interface PositionableInterval<
 	 * 
 	 * @return random access sampler
 	 */
-	public P positionableSampler( final OutOfBoundsFactory< T, F > factory );
+	public P positionableSampler();
 }

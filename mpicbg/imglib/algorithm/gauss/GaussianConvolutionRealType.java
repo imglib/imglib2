@@ -3,7 +3,7 @@ package mpicbg.imglib.algorithm.gauss;
 import mpicbg.imglib.algorithm.Precision.PrecisionReal;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.outofbounds.RasterOutOfBoundsFactory;
-import mpicbg.imglib.sampler.PositionableRasterSampler;
+import mpicbg.imglib.sampler.PositionableRasterIntervalSampler;
 import mpicbg.imglib.sampler.RasterIterator;
 import mpicbg.imglib.type.numeric.RealType;
 
@@ -27,7 +27,7 @@ public class GaussianConvolutionRealType<T extends RealType<T>> extends Gaussian
 	public PrecisionReal getPrecision() { return precision; }
 	
 	@Override
-	protected void convolve( final PositionableRasterSampler<T> inputIterator, final RasterIterator<T> outputIterator, 
+	protected void convolve( final PositionableRasterIntervalSampler<T> inputIterator, final RasterIterator<T> outputIterator, 
 		 	   				 final int dim, final float[] kernel,
 		 	   				 final long startPos, final long loopSize )
 	{
@@ -37,7 +37,7 @@ public class GaussianConvolutionRealType<T extends RealType<T>> extends Gaussian
 			convolveDouble( inputIterator, outputIterator, dim, kernel, startPos, loopSize );
 	}
 	
-	protected void convolveDouble( final PositionableRasterSampler<T> inputIterator, final RasterIterator<T> outputIterator, final int dim, final float[] kernel, final long startPos, final long loopSize )
+	protected void convolveDouble( final PositionableRasterIntervalSampler<T> inputIterator, final RasterIterator<T> outputIterator, final int dim, final float[] kernel, final long startPos, final long loopSize )
 	{		
 		// move to the starting position of the current thread
 		outputIterator.jumpFwd( startPos );
@@ -106,7 +106,7 @@ public class GaussianConvolutionRealType<T extends RealType<T>> extends Gaussian
 		}
 	}	
 
-	protected void convolveFloat( final PositionableRasterSampler<T> inputIterator, final RasterIterator<T> outputIterator, final int dim, final float[] kernel, final long startPos, final long loopSize )
+	protected void convolveFloat( final PositionableRasterIntervalSampler<T> inputIterator, final RasterIterator<T> outputIterator, final int dim, final float[] kernel, final long startPos, final long loopSize )
 	{		
 		// move to the starting position of the current thread
 		outputIterator.jumpFwd( startPos );

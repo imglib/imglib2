@@ -27,7 +27,9 @@
  *
  * @author Stephan Preibisch & Stephan Saalfeld
  */
-package mpicbg.imglib.location;
+package mpicbg.imglib;
+
+import mpicbg.imglib.location.RasterPositionable;
 
 
 /**
@@ -54,40 +56,28 @@ public interface Positionable extends RasterPositionable
 	public void move( double distance, int dim );
 
 	/**
-	 * Move the element to the same location as a given {@link Localizable}.
-	 * This method is expected to evaluates the distance to move for each
-	 * dimension independently and then perform relative moves which can result
-	 * in more efficient moves, particularly in containers where local parts of
-	 * an image need to be requested on demand and switching between them is
-	 * expensive.  It also is slightly faster for dimensionally sparse moves.
+	 * Move the element relative to its current location using a
+	 * {@link Localizable} as distance vector.
 	 * 
 	 * @param localizable
 	 */
-	public void moveTo( Localizable localizable );
+	public void move( Localizable localizable );
 	
 	/**
-	 * Move the element to some position.  This method is expected to evaluates
-	 * the distance to move for each dimension independently and then perform
-	 * relative moves which can result in more efficient moves, particularly in
-	 * containers where local parts of an image need to be requested on demand
-	 * and switching between them is expensive.  It also is slightly faster for
-	 * dimensionally sparse moves.
+	 * Move the element relative to its current location using a float[] as
+	 * distance vector.
 	 * 
 	 * @param position
 	 */
-	public void moveTo( float[] position );
+	public void move( float[] position );
 	
 	/**
-	 * Move the element to some position.  This method is expected to evaluates
-	 * the distance to move for each dimension independently and then perform
-	 * relative moves which can result in more efficient moves, particularly in
-	 * containers where local parts of an image need to be requested on demand
-	 * and switching between them is expensive.  It also is slightly faster for
-	 * dimensionally sparse moves.
+	 * Move the element relative to its current location using a float[] as
+	 * distance vector.
 	 * 
 	 * @param position
 	 */
-	public void moveTo( double[] position );
+	public void move( double[] position );
 	
 	/**
 	 * Place the element at the same location as a given {@link Localizable}

@@ -38,7 +38,7 @@ import mpicbg.imglib.container.basictypecontainer.array.ArrayDataAccess;
 import mpicbg.imglib.exception.ImgLibException;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.outofbounds.RasterOutOfBoundsFactory;
-import mpicbg.imglib.sampler.PositionableRasterSampler;
+import mpicbg.imglib.sampler.PositionableRasterIntervalSampler;
 import mpicbg.imglib.sampler.RasterIterator;
 import mpicbg.imglib.sampler.imageplus.ImagePlusBasicRasterIterator;
 import mpicbg.imglib.sampler.imageplus.ImagePlusLocalizingRasterIterator;
@@ -248,7 +248,7 @@ public class ImagePlusContainer< T extends Type< T >, A extends ArrayDataAccess<
 	}
 
 	@Override
-	public PositionableRasterSampler< T > createPositionableRasterSampler( final Image< T > image )
+	public PositionableRasterIntervalSampler< T > createPositionableRasterSampler( final Image< T > image )
 	{
 		return new ImagePlusPositionableRasterSampler< T >( this, image );
 	}

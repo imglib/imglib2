@@ -29,7 +29,7 @@ package mpicbg.imglib.outofbounds;
 
 import mpicbg.imglib.algorithm.math.MathLib;
 import mpicbg.imglib.location.RasterLocalizable;
-import mpicbg.imglib.sampler.PositionableRasterSampler;
+import mpicbg.imglib.sampler.PositionableRasterIntervalSampler;
 import mpicbg.imglib.type.Type;
 
 /**
@@ -40,7 +40,7 @@ import mpicbg.imglib.type.Type;
  */
 public abstract class AbstractOutOfBoundsMirror< T extends Type< T > > implements RasterOutOfBounds< T >
 {
-	final protected PositionableRasterSampler< T > outOfBoundsPositionable;
+	final protected PositionableRasterIntervalSampler< T > outOfBoundsPositionable;
 	
 	final protected int numDimensions;
 	
@@ -55,14 +55,14 @@ public abstract class AbstractOutOfBoundsMirror< T extends Type< T > > implement
 	
 	protected boolean isOutOfBounds = false;
 	
-	AbstractOutOfBoundsMirror( final PositionableRasterSampler< T > source )
+	AbstractOutOfBoundsMirror( final PositionableRasterIntervalSampler< T > source )
 	{
 		this( source, source.getImage().createPositionableRasterSampler() );
 	}
 	
 	AbstractOutOfBoundsMirror(
-			final PositionableRasterSampler< T > source,
-			final PositionableRasterSampler< T > outOfBoundsPositionable )
+			final PositionableRasterIntervalSampler< T > source,
+			final PositionableRasterIntervalSampler< T > outOfBoundsPositionable )
 	{
 		this.outOfBoundsPositionable = outOfBoundsPositionable;
 		numDimensions = source.getImage().numDimensions();

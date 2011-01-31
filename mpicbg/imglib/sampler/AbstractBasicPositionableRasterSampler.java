@@ -37,7 +37,7 @@ import mpicbg.imglib.type.Type;
  * 
  * @author Stephan Preibisch and Stephan Saalfeld
  */
-public abstract class AbstractBasicPositionableRasterSampler< T extends Type< T > > extends AbstractLocalizableRasterSampler< T > implements PositionableRasterSampler< T >
+public abstract class AbstractBasicPositionableRasterSampler< T extends Type< T > > extends AbstractLocalizableRasterSampler< T > implements PositionableRasterIntervalSampler< T >
 {
 	/* internal register for position calculation */
 	final protected int[] tmp;

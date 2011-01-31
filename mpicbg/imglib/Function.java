@@ -27,7 +27,6 @@
  */
 package mpicbg.imglib;
 
-import mpicbg.imglib.location.Iterator;
 import mpicbg.imglib.type.Type;
 
 /**
@@ -48,17 +47,17 @@ import mpicbg.imglib.type.Type;
  * processing are thus:</p>
  * 
  * <dl>
- * <dt>{@link PositionableFunction}</dt>
+ * <dt>{@link RealFunction}</dt>
  * <dd>random access at real coordinates</dd>
- * <dt>{@link PositionableInterval}</dt>
+ * <dt>{@link RealIntervalFunction}</dt>
  * <dd>random access at real coordinates with an {@link OutOfBoundsStrategy}
  * that generates values beyond the boundaries of the source domain</dd>
  * <dt>{@link IterableFunction}</dt>
  * <dd>access to all T in the target domain and their coordinates in the
  * source domain via {@link Iterator}</dd>
- * <dt>{@link Raster}</dt>
+ * <dt>{@link IntegerFunction}</dt>
  * <dd>random access at integer coordinates</dd>
- * <dt>{@link RasterInterval}</dt>
+ * <dt>{@link IntegerIntervalFunction}</dt>
  * <dd>random access at integer coordinates with an {@link OutOfBoundsStrategy}
  * that generates values beyond the boundaries of the source domain</dd>
  * <dl>

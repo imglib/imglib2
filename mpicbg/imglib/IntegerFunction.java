@@ -27,26 +27,26 @@
  */
 package mpicbg.imglib;
 
-import mpicbg.imglib.location.Positionable;
+import mpicbg.imglib.location.RasterPositionable;
 
 /**
- * <p><em>f:R<sup>n</sup>&rarr;T</em></p>
+ * <p><em>f:Z<sup>n</sup>&rarr;T</em></p>
  * 
- * <p>A {@link Function} over real space that can create a random access
+ * <p>A {@link Function} over integer space that can create a random access
  * {@link Sampler}.</p>
  * 
  *
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-public interface PositionableFunction<
+public interface IntegerFunction<
 		T,
-		F extends PositionableFunction< T, F, P >,
-		P extends Positionable & Sampler< T > > extends Function< T, F >
+		F extends IntegerFunction< T, F, R >,
+		R extends RasterPositionable & Sampler< T > > extends Function< T, F >
 {
 	/**
-	 * Create a random access sampler for real coordinates.
+	 * Create a random access sampler for integer coordinates.
 	 * 
 	 * @return random access sampler
 	 */
-	public P positionableSampler();
+	public R positionableRasterSampler();
 }

@@ -27,9 +27,9 @@
  */
 package mpicbg.imglib.container;
 
-import mpicbg.imglib.Raster;
-import mpicbg.imglib.RasterInterval;
-import mpicbg.imglib.sampler.PositionableRasterSampler;
+import mpicbg.imglib.IntegerFunction;
+import mpicbg.imglib.IntegerIntervalFunction;
+import mpicbg.imglib.sampler.PositionableRasterIntervalSampler;
 import mpicbg.imglib.sampler.RasterIterator;
 import mpicbg.imglib.type.Type;
 
@@ -42,8 +42,8 @@ public interface Container<
 		T extends Type< T >,
 		F extends Container< T, F > >
 	extends
-		Raster< T, F, PositionableRasterSampler< T > >,
-		RasterInterval< T, F, PositionableRasterSampler< T >, RasterIterator< T > >
+		IntegerFunction< T, F, PositionableRasterIntervalSampler< T > >,
+		IntegerIntervalFunction< T, F, PositionableRasterIntervalSampler< T >, RasterIterator< T > >
 {
 	public ContainerFactory getFactory();
 }

@@ -44,7 +44,7 @@ import mpicbg.imglib.image.ImageFactory;
 import mpicbg.imglib.location.RasterLocalizable;
 import mpicbg.imglib.outofbounds.OutOfBoundsMirrorFactory;
 import mpicbg.imglib.outofbounds.OutOfBoundsMirrorFactory.Boundary;
-import mpicbg.imglib.sampler.PositionableRasterSampler;
+import mpicbg.imglib.sampler.PositionableRasterIntervalSampler;
 import mpicbg.imglib.sampler.RasterIterator;
 import mpicbg.imglib.type.numeric.integer.IntType;
 
@@ -70,10 +70,10 @@ public class OutOfBoundsMirrorSingleBoundaryTest
 	static private Image< IntType > dynamicImage;
 	static private Image< IntType > shapeListImage;
 	
-	static private PositionableRasterSampler< IntType > cArray;
-	static private PositionableRasterSampler< IntType > cCell;
-	static private PositionableRasterSampler< IntType > cDynamic;
-	static private PositionableRasterSampler< IntType > cShapeList;
+	static private PositionableRasterIntervalSampler< IntType > cArray;
+	static private PositionableRasterIntervalSampler< IntType > cCell;
+	static private PositionableRasterIntervalSampler< IntType > cDynamic;
+	static private PositionableRasterIntervalSampler< IntType > cShapeList;
 	
 	/**
 	 * @throws java.lang.Exception

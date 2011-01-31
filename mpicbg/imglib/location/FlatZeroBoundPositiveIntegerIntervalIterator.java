@@ -27,21 +27,22 @@
  */
 package mpicbg.imglib.location;
 
+import mpicbg.imglib.IntegerInterval;
+import mpicbg.imglib.Iterator;
 import mpicbg.imglib.algorithm.math.MathLib;
 import mpicbg.imglib.container.Container;
 import mpicbg.imglib.image.Image;
-import mpicbg.imglib.sampler.PositionableRasterSampler;
+import mpicbg.imglib.sampler.PositionableRasterIntervalSampler;
 
 /**
  * Use this class to iterate a virtual rectangular raster in flat order, that
  * is: row by row, plane by plane, cube by cube, ...  This is useful for
  * iterating an arbitrary {@link Container} in a defined order.  For that,
- * connect a {@link LocalizingFlatRasterIterator} to a
- * {@link PositionableRasterSampler}.
+ * connect a {@link FlatZeroBoundPositiveIntegerIntervalIterator} to a {@link PositionableRasterIntervalSampler}.
  * 
  * <pre>
  * ...
- * LocalizingFlatRasterIterator i = new LocalizingFlatRasterIterator(image);
+ * FlatRasterIterator i = new FlatRasterIterator(image);
  * PositionableRasterSampler s = image.createPositionableRasterSampler();
  * while (i.hasNext()) {
  *   i.fwd();
@@ -52,31 +53,29 @@ import mpicbg.imglib.sampler.PositionableRasterSampler;
  * ...
  * </pre>
  * 
- * Note that {@link LocalizingFlatRasterIterator} is the right choice in
- * situations where, for <em>each</em> pixel, you want to localize and/or set
- * the {@link PositionableRasterSampler}, that is in a dense sampling
- * situation.  For localizing sparsely (e.g. under an external condition),
- * use {@link FlatRasterIterator} instead.
- * 
- * TODO implement it, it's still the basic FlatRasterIterator!!!!!!
+ * Note that {@link FlatZeroBoundPositiveIntegerIntervalIterator} is the right choice in situations where
+ * <em>not</em> for each pixel you want to localize and/or set the
+ * {@link PositionableRasterIntervalSampler}, that is in a sparse sampling situation.
+ * For localizing at each iteration step (as in the simplified example above),
+ * use {@link LocalizingFlatIntegerIntervalIterator} instead.
  *  
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-final public class LocalizingFlatRasterIterator implements Iterator, RasterLocalizable
+final public class FlatZeroBoundPositiveIntegerIntervalIterator implements Iterator, RasterLocalizable
 {
-	final protected int[] dimensions;
-	final protected int[] steps;
-	final protected int n;
-	final protected int lastIndex;
-	protected int index = -1;
+	final private long[] dimensions;
+	final private long[] steps;
+	final private int n;
+	final protected long lastIndex;
+	protected long index = -1;
 	
-	public LocalizingFlatRasterIterator( final int[] dimensions )
+	public FlatZeroBoundPositiveIntegerIntervalIterator( final long[] dimensions )
 	{
 		n = dimensions.length;
 		final int m = n - 1;
 		this.dimensions = dimensions.clone();
-		steps = new int[ n ];
-		int k = steps[ 0 ] = 1;
+		steps = new long[ n ];
+		long k = steps[ 0 ] = 1;
 		for ( int i = 0; i < m; )
 		{
 			k *= dimensions[ i ];
@@ -85,7 +84,10 @@ final public class LocalizingFlatRasterIterator implements Iterator, RasterLocal
 		lastIndex = k * dimensions[ m ] - 1;
 	}
 
-	public LocalizingFlatRasterIterator( final Image< ? > image ) { this( image.getDimensions() ); }
+	public FlatZeroBoundPositiveIntegerIntervalIterator( final IntegerInterval interval )
+	{
+		this( interval.getDimensions() );
+	}
 	
 	final public static void indexToPosition( final int i, final int[] steps, final int[] l )
 	{

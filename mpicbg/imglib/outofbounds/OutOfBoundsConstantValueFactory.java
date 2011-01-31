@@ -27,7 +27,8 @@
  */
 package mpicbg.imglib.outofbounds;
 
-import mpicbg.imglib.sampler.PositionableRasterSampler;
+import mpicbg.imglib.InjectiveIntegerInterval;
+import mpicbg.imglib.sampler.PositionableRasterIntervalSampler;
 import mpicbg.imglib.type.Type;
 
 /**
@@ -37,7 +38,7 @@ import mpicbg.imglib.type.Type;
  * @author Stephan Preibisch and Stephan Saalfeld
  */
 public class OutOfBoundsConstantValueFactory< T extends Type< T > >
-		extends RasterOutOfBoundsFactory< T, Object >
+		extends RasterOutOfBoundsFactory< T, InjectiveIntegerInterval >
 {
 	protected T value;
 
@@ -62,7 +63,7 @@ public class OutOfBoundsConstantValueFactory< T extends Type< T > >
 	}
 
 	@Override
-	public OutOfBoundsConstantValue< T > create( final PositionableRasterSampler< T > sampler )
+	public OutOfBoundsConstantValue< T > create( final PositionableRasterIntervalSampler< T > sampler )
 	{
 		if ( value == null ) return new OutOfBoundsConstantValue< T >( sampler, sampler.create() );
 		else return new OutOfBoundsConstantValue< T >( sampler, value );

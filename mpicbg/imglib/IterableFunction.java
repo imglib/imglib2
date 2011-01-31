@@ -28,8 +28,6 @@
 package mpicbg.imglib;
 
 import mpicbg.imglib.container.Container;
-import mpicbg.imglib.location.Iterator;
-import mpicbg.imglib.location.Localizable;
 
 /**
  * <p><em>f</em>:R<sup><em>n</em></sup>&isin;[0,<em>s</em>]&rarr;T</em></p>

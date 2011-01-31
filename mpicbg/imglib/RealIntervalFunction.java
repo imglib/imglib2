@@ -27,26 +27,27 @@
  */
 package mpicbg.imglib;
 
-import mpicbg.imglib.location.Iterator;
-import mpicbg.imglib.location.RasterLocalizable;
-import mpicbg.imglib.location.RasterPositionable;
-import mpicbg.imglib.outofbounds.RasterOutOfBoundsFactory;
-import mpicbg.imglib.type.Type;
+import mpicbg.imglib.outofbounds.OutOfBounds;
+import mpicbg.imglib.outofbounds.OutOfBoundsFactory;
 
 /**
- * <p><em>f</em>:{x&isin;Z<sup><em>n</em></sup>|[min,max]&rarr;T}</em></p>
+ * <p><em>f</em>:{x&isin;R<sup><em>n</em></sup>|[min,max]&rarr;T}</em></p>
  * 
- * <p>A {@link Function} over an an n-dimensional integer interval that can
- * create a random access {@link Sampler} that generates values beyond
- * boundaries through a {@link RasterOutOfBounds}.</p>
+ * <p>A {@link Function} over an n-dimensional real interval that can create a
+ * random access {@link Sampler} that generates values beyond boundaries
+ * through an {@link OutOfBounds}.</p>
  *
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-public interface RasterInterval<
-		T extends Type< T >,
-		F extends RasterInterval< T, F, R, I >,
-		R extends RasterPositionable & Sampler< T >,
-		I extends RasterLocalizable & Iterator & java.util.Iterator< T > & Sampler< T > > extends IterableFunction< T, F, I >, IntegerInterval
+public interface RealIntervalFunction<
+		T,
+		F extends RealIntervalFunction< T, F, P >,
+		P extends Positionable & Sampler< T > > extends Function< T, F >
 {
-	public R positionableRasterSampler( final RasterOutOfBoundsFactory< T, F > factory );
+	/**
+	 * Create a random access sampler for real coordinates.
+	 * 
+	 * @return random access sampler
+	 */
+	public P positionableSampler( final OutOfBoundsFactory< T, F > factory );
 }

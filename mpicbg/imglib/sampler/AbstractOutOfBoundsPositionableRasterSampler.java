@@ -39,7 +39,7 @@ import mpicbg.imglib.type.Type;
  *
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-public abstract class AbstractOutOfBoundsPositionableRasterSampler< T extends Type< T > > extends AbstractRasterSampler< T > implements PositionableRasterSampler< T >
+public abstract class AbstractOutOfBoundsPositionableRasterSampler< T extends Type< T > > extends AbstractRasterSampler< T > implements PositionableRasterIntervalSampler< T >
 {
 	/* performs the actual moves and generates/queries a Type */
 	final protected RasterOutOfBounds< T > outOfBounds;

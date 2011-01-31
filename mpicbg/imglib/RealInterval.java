@@ -50,9 +50,23 @@ public interface RealInterval extends EuclideanSpace
 	public double realMin( final int d );
 	
 	/**
+	 * Write the minimum of each dimension into double[].
+	 * 
+	 * @param size
+	 */
+	public void realMin( double[] min );
+	
+	/**
 	 * 
 	 * @param d dimension
 	 * @return maximum
 	 */
 	public double realMax( final int d );
+	
+	/**
+	 * Write the minimum of each dimension into double[].
+	 * 
+	 * @param size
+	 */
+	public void realMax( double[] max );
 }

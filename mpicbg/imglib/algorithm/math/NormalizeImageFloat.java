@@ -2,7 +2,7 @@ package mpicbg.imglib.algorithm.math;
 
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.ImageFactory;
-import mpicbg.imglib.sampler.PositionableRasterSampler;
+import mpicbg.imglib.sampler.PositionableRasterIntervalSampler;
 import mpicbg.imglib.sampler.RasterIterator;
 import mpicbg.imglib.type.numeric.*;
 import mpicbg.imglib.type.numeric.real.FloatType;
@@ -52,7 +52,7 @@ public class NormalizeImageFloat <T extends RealType<T>> implements OutputAlgori
 			new ImageFactory<FloatType>(new FloatType(), image.getContainerFactory());  		
 		
 		final RasterIterator<T> pullCursor;
-		final PositionableRasterSampler<FloatType> pushCursor;
+		final PositionableRasterIntervalSampler<FloatType> pushCursor;
 		
 		if (norm == 0)
 		{

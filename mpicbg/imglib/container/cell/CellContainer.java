@@ -29,6 +29,7 @@ package mpicbg.imglib.container.cell;
 
 import java.util.ArrayList;
 
+import mpicbg.imglib.Iterator;
 import mpicbg.imglib.container.Container;
 import mpicbg.imglib.container.ContainerFactory;
 import mpicbg.imglib.container.AbstractDirectAccessContainer;
@@ -36,7 +37,6 @@ import mpicbg.imglib.container.array.ArrayLocalizingRasterIterator;
 import mpicbg.imglib.container.array.ArrayPositionableRasterSampler;
 import mpicbg.imglib.container.basictypecontainer.array.ArrayDataAccess;
 import mpicbg.imglib.image.Image;
-import mpicbg.imglib.location.Iterator;
 import mpicbg.imglib.outofbounds.RasterOutOfBoundsFactory;
 import mpicbg.imglib.sampler.cell.CellBasicRasterIterator;
 import mpicbg.imglib.sampler.cell.CellLocalizingRasterIterator;

@@ -29,13 +29,14 @@
  */
 package mpicbg.imglib.location;
 
-import mpicbg.imglib.sampler.PositionableRasterSampler;
+import mpicbg.imglib.Localizable;
+import mpicbg.imglib.sampler.PositionableRasterIntervalSampler;
 import mpicbg.imglib.sampler.RasterIterator;
 
 /**
  * The {@link RasterLocalizable} interface can localize itself in an n-dimensional
  * discrete space.  Not only {@link RasterIterator}s can use this 
- * interface, it might be used by much more classes as {@link PositionableRasterSampler}s
+ * interface, it might be used by much more classes as {@link PositionableRasterIntervalSampler}s
  * can take any {@link RasterLocalizable} as input for where they should move to.
  *  
  * @author Stephan Preibisch & Stephan Saalfeld

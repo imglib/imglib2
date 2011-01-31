@@ -27,6 +27,9 @@
  */
 package mpicbg.imglib.location;
 
+import mpicbg.imglib.Localizable;
+import mpicbg.imglib.Positionable;
+
 /**
  * A {@link RasterPositionable} that just does nothing.  This is the default
  * linked {@link RasterPositionable} of any {@link RasterPositionable}.  This
@@ -60,16 +63,16 @@ final public class VoidPositionable implements Positionable
 	final public void move( final long distance, final int dim ){}
 	
 	@Override
-	final public void moveTo( final Localizable localizable ){}
+	final public void move( final Localizable localizable ){}
 	
 	@Override
-	final public void moveTo( final RasterLocalizable localizable ){}
+	final public void move( final RasterLocalizable localizable ){}
 	
 	@Override
-	final public void moveTo( final double[] position ){}
+	final public void move( final double[] position ){}
 	
 	@Override
-	final public void moveTo( final float[] position ){}
+	final public void move( final float[] position ){}
 	
 	@Override
 	final public void moveTo( final int[] position ){}
