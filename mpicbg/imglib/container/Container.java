@@ -31,7 +31,6 @@ import mpicbg.imglib.InjectiveIntegerInterval;
 import mpicbg.imglib.IntegerFunction;
 import mpicbg.imglib.IntegerIntervalFunction;
 import mpicbg.imglib.sampler.PositionableRasterIntervalSampler;
-import mpicbg.imglib.sampler.RasterIterator;
 import mpicbg.imglib.type.Type;
 
 /**
@@ -46,7 +45,7 @@ public interface Container<
 		F extends Container< T, F > >
 	extends
 		IntegerFunction< T, F, PositionableRasterIntervalSampler< T > >,
-		IntegerIntervalFunction< T, F, PositionableRasterIntervalSampler< T >, RasterIterator< T > >,
+		IntegerIntervalFunction< T, F, PositionableRasterIntervalSampler< T >, ContainerIterator< T > >,
 		InjectiveIntegerInterval
 {
 	public ContainerFactory factory();

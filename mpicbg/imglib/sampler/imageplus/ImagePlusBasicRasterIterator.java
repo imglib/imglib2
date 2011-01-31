@@ -27,9 +27,9 @@
  */
 package mpicbg.imglib.sampler.imageplus;
 
+import mpicbg.imglib.container.AbstractContainerIterator;
 import mpicbg.imglib.container.imageplus.ImagePlusContainer;
 import mpicbg.imglib.image.Image;
-import mpicbg.imglib.sampler.AbstractRasterIterator;
 import mpicbg.imglib.type.Type;
 
 /**
@@ -38,7 +38,7 @@ import mpicbg.imglib.type.Type;
  *
  * @author Stephan Preibisch and Stephan Saalfeld
  */
-public class ImagePlusBasicRasterIterator< T extends Type< T > > extends AbstractRasterIterator< T > implements ImagePlusStorageAccess
+public class ImagePlusBasicRasterIterator< T extends Type< T > > extends AbstractContainerIterator< T > implements ImagePlusStorageAccess
 {
 	protected final T type;
 	

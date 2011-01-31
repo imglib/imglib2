@@ -21,13 +21,13 @@ import java.util.Random;
 import mpicbg.imglib.algorithm.Benchmark;
 import mpicbg.imglib.algorithm.OutputAlgorithm;
 import mpicbg.imglib.algorithm.math.MathLib;
+import mpicbg.imglib.container.ContainerIterator;
 import mpicbg.imglib.container.array.ArrayContainerFactory;
 import mpicbg.imglib.container.array.ArrayLocalizingRasterIterator;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.ImageFactory;
 import mpicbg.imglib.outofbounds.OutOfBoundsConstantValueFactory;
 import mpicbg.imglib.sampler.PositionableRasterIntervalSampler;
-import mpicbg.imglib.sampler.RasterIterator;
 import mpicbg.imglib.type.label.FakeType;
 import mpicbg.imglib.type.logic.BitType;
 import mpicbg.imglib.type.numeric.RealType;
@@ -78,12 +78,12 @@ public class FloydSteinbergDithering<T extends RealType<T>> implements OutputAlg
 		// we create a Cursor that traverses (top -> bottom) and (left -> right) in n dimensions,
 		// which is a Cursor on a normal Array, therefore we use a FakeArray which just gives us position
 		// information without allocating memory
-		final RasterIterator<FakeType> cursor = ArrayLocalizingRasterIterator.createLinearCursor( dim );
+		final ContainerIterator<FakeType> cursor = ArrayLocalizingRasterIterator.createLinearCursor( dim );
 
 		// we also need a Cursors for the input, the output and the kernel image
 		final PositionableRasterIntervalSampler<T> cursorInput = img.createPositionableRasterSampler( new OutOfBoundsConstantValueFactory<T>() );
 		final PositionableRasterIntervalSampler<BitType> cursorOutput = result.createPositionableRasterSampler();
-		final RasterIterator<FloatType> cursorKernel = errorDiffusionKernel.createLocalizingRasterIterator();
+		final ContainerIterator<FloatType> cursorKernel = errorDiffusionKernel.createLocalizingRasterIterator();
 		
 		while( cursor.hasNext() )
 		{
@@ -199,7 +199,7 @@ public class FloydSteinbergDithering<T extends RealType<T>> implements OutputAlg
 		else
 		{
 			final Image<FloatType> kernel = factory.createImage( MathLib.getArrayFromValue( 3, numDimensions) );				
-			final RasterIterator<FloatType> cursor = kernel.createLocalizingRasterIterator();
+			final ContainerIterator<FloatType> cursor = kernel.createLocalizingRasterIterator();
 			
 			final int numValues = (int)kernel.numPixels() / 2;
 			final float[] rndValues = new float[ numValues ];

@@ -41,14 +41,14 @@ import mpicbg.imglib.SamplerFactory;
 import mpicbg.imglib.algorithm.math.MathLib;
 import mpicbg.imglib.container.Container;
 import mpicbg.imglib.container.ContainerFactory;
+import mpicbg.imglib.container.ContainerIterator;
+import mpicbg.imglib.container.ContainerSampler;
 import mpicbg.imglib.container.array.ArrayLocalizingRasterIterator;
 import mpicbg.imglib.image.display.Display;
 import mpicbg.imglib.interpolation.Interpolator;
 import mpicbg.imglib.interpolation.InterpolatorFactory;
 import mpicbg.imglib.outofbounds.RasterOutOfBoundsFactory;
 import mpicbg.imglib.sampler.PositionableRasterIntervalSampler;
-import mpicbg.imglib.sampler.RasterIterator;
-import mpicbg.imglib.sampler.RasterSampler;
 import mpicbg.imglib.sampler.special.OrthoSliceIterator;
 import mpicbg.imglib.type.Type;
 import mpicbg.imglib.type.label.FakeType;
@@ -61,9 +61,9 @@ import mpicbg.imglib.type.label.FakeType;
  */
 public class Image< T extends Type< T > > implements
 		ImageProperties,
-		IntegerIntervalFunction< T, Image< T >, PositionableRasterIntervalSampler< T >, RasterIterator< T > >
+		IntegerIntervalFunction< T, Image< T >, PositionableRasterIntervalSampler< T >, ContainerIterator< T > >
 {
-	final protected ArrayList< RasterSampler< T > > rasterSamplers;
+	final protected ArrayList< ContainerSampler< T > > rasterSamplers;
 	final ContainerFactory containerFactory;
 	final Container< T > container;
 	final ImageFactory< T > imageFactory;
@@ -98,7 +98,7 @@ public class Image< T extends Type< T > > implements
 				dim[ d ] = 1;
 			}
 		}
-		this.rasterSamplers = new ArrayList< RasterSampler< T >>();
+		this.rasterSamplers = new ArrayList< ContainerSampler< T >>();
 		this.containerFactory = imageFactory.getContainerFactory();
 		this.imageFactory = imageFactory;
 
@@ -184,31 +184,31 @@ public class Image< T extends Type< T > > implements
 	public T createType() { return imageFactory.createType(); }
 	
 	/**
-	 * Return a {@link RasterIterator} that will traverse the image's pixel data in a memory-optimized fashion.
-	 * @return IterableCursor<T> - the typed {@link RasterIterator}
+	 * Return a {@link ContainerIterator} that will traverse the image's pixel data in a memory-optimized fashion.
+	 * @return IterableCursor<T> - the typed {@link ContainerIterator}
 	 */
 	@Override
-	public RasterIterator<T> createRasterIterator()
+	public ContainerIterator<T> createRasterIterator()
 	{
-		RasterIterator< T > cursor = container.createRasterIterator( this );
+		ContainerIterator< T > cursor = container.createRasterIterator( this );
 		addRasterSampler( cursor );
 		return cursor;	
 	}
 	
 	/**
-	 * Return a {@link RasterIterator} that will traverse all image pixels in
+	 * Return a {@link ContainerIterator} that will traverse all image pixels in
 	 * access-optimal order and tracks its location at each moving operation.
 	 * 
-	 * This {@link RasterIterator} is the preferred choice for implementations
+	 * This {@link ContainerIterator} is the preferred choice for implementations
 	 * that require the iterator's location at each iteration step (e.g. for
 	 * rendering a transformed image)
 	 *  
-	 * @return RasterIterator<T> - the typed {@link RasterIterator}
+	 * @return RasterIterator<T> - the typed {@link ContainerIterator}
 	 */
 	@Override
-	public RasterIterator<T> createLocalizingRasterIterator()
+	public ContainerIterator<T> createLocalizingRasterIterator()
 	{
-		RasterIterator<T> cursor = container.createLocalizingRasterIterator( this );
+		ContainerIterator<T> cursor = container.createLocalizingRasterIterator( this );
 		addRasterSampler( cursor );
 		return cursor;		
 	}
@@ -308,7 +308,7 @@ public class Image< T extends Type< T > > implements
 	final public synchronized static long createUniqueId() { return j.getAndIncrement(); }
 	
 	/**
-	 * Closes the {@link Image} by closing all {@link RasterSampler}s and the {@link Container}
+	 * Closes the {@link Image} by closing all {@link ContainerSampler}s and the {@link Container}
 	 */
 	public void close()
 	{ 
@@ -317,7 +317,7 @@ public class Image< T extends Type< T > > implements
 	}
 	
 	/**
-	 * Creates an int array of the same dimensionality as this {@link Image} which can be used for addressing {@link RasterSampler}s. 
+	 * Creates an int array of the same dimensionality as this {@link Image} which can be used for addressing {@link ContainerSampler}s. 
 	 * @return - empty int[]
 	 * 
 	 * TODO Do we really need this?  I just replaces
@@ -371,15 +371,15 @@ public class Image< T extends Type< T > > implements
 	
 	/**
 	 * Clones this {@link Image}, i.e. creates this {@link Image} containing the same content.
-	 * No {@link RasterSampler}s will be instantiated and the name will be given automatically.
+	 * No {@link ContainerSampler}s will be instantiated and the name will be given automatically.
 	 */
 	@Override
 	public Image<T> clone()
 	{
 		final Image<T> clone = this.createNewImage();
 		
-		final RasterIterator<T> c1 = this.createRasterIterator();
-		final RasterIterator<T> c2 = clone.createRasterIterator();
+		final ContainerIterator<T> c1 = this.createRasterIterator();
+		final ContainerIterator<T> c2 = clone.createRasterIterator();
 		
 		while ( c1.hasNext() )
 		{
@@ -417,48 +417,48 @@ public class Image< T extends Type< T > > implements
 	}
 	
 	/**
-	 * Closes all {@link RasterSampler}s operating on this {@link Image}.
+	 * Closes all {@link ContainerSampler}s operating on this {@link Image}.
 	 */
 	public void closeAllRasterSamplers()
 	{
-		final ArrayList< RasterSampler< ? > > copy = new ArrayList< RasterSampler<?> >( rasterSamplers );
-		for ( final RasterSampler<?> s : copy )
+		final ArrayList< ContainerSampler< ? > > copy = new ArrayList< ContainerSampler<?> >( rasterSamplers );
+		for ( final ContainerSampler<?> s : copy )
 			s.close();
 	}
 	
 	/**
-	 * Put all {@link RasterSampler}s currently instantiated into a {@link Collection}.
+	 * Put all {@link ContainerSampler}s currently instantiated into a {@link Collection}.
 	 * 
 	 */
-	public void getRasterSamplers( final Collection< RasterSampler< T > > collection )
+	public void getRasterSamplers( final Collection< ContainerSampler< T > > collection )
 	{
 		collection.addAll( rasterSamplers );
 	}
 	
 	/**
-	 * Return all {@link RasterSampler}s currently instantiated for this {@link Image} in a new {@link ArrayList}.
-	 * @return - {@link ArrayList} containing the {@link RasterSampler}s
+	 * Return all {@link ContainerSampler}s currently instantiated for this {@link Image} in a new {@link ArrayList}.
+	 * @return - {@link ArrayList} containing the {@link ContainerSampler}s
 	 */
-	public ArrayList< RasterSampler< T > > getRasterSamplers(){ return new ArrayList< RasterSampler< T > >( rasterSamplers ); }	
+	public ArrayList< ContainerSampler< T > > getRasterSamplers(){ return new ArrayList< ContainerSampler< T > >( rasterSamplers ); }	
 	
 	/**
-	 * Adds a {@link RasterSampler} to the {@link ArrayList} of instantiated {@link RasterSampler}s.
-	 * @param c - new {@link RasterSampler}
+	 * Adds a {@link ContainerSampler} to the {@link ArrayList} of instantiated {@link ContainerSampler}s.
+	 * @param c - new {@link ContainerSampler}
 	 */
-	protected synchronized void addRasterSampler( final RasterSampler<T> c ) { rasterSamplers.add( c );	}
+	protected synchronized void addRasterSampler( final ContainerSampler<T> c ) { rasterSamplers.add( c );	}
 	
 	/**
-	 * Remove a {@link RasterSampler} from the {@link ArrayList} of instantiated {@link RasterSampler}s.
-	 * @param c - {@link RasterSampler} to be removed
+	 * Remove a {@link ContainerSampler} from the {@link ArrayList} of instantiated {@link ContainerSampler}s.
+	 * @param c - {@link ContainerSampler} to be removed
 	 */
-	public synchronized void removeRasterSampler( final RasterSampler<T> c )
+	public synchronized void removeRasterSampler( final ContainerSampler<T> c )
 	{
 		rasterSamplers.remove( c );
 	}
 	
 	/**
-	 * Returns the number of {@link RasterSampler}s instantiated on this {@link Image}.
-	 * @return - the number of {@link RasterSampler}s
+	 * Returns the number of {@link ContainerSampler}s instantiated on this {@link Image}.
+	 * @return - the number of {@link ContainerSampler}s
 	 */
 	public int numRasterSamplers() { return rasterSamplers.size(); }
 

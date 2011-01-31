@@ -25,33 +25,30 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-package mpicbg.imglib.sampler;
+package mpicbg.imglib.container;
 
+import mpicbg.imglib.EuclideanSpace;
+import mpicbg.imglib.InjectiveIntegerInterval;
+import mpicbg.imglib.Sampler;
 import mpicbg.imglib.type.Type;
 
 /**
+ * {@link ContainerSampler} provides access to a `pixel' value in discrete image
+ * space.  The step-size in any dimension of the image is 1 raster step which
+ * does not necessarily reflect any meaningful analogy in some physical space.
+ * For {@link Container Containers} that store actual sample values for each
+ * pixel, this interface provides access to these pixel samples
  * 
- * @author Stephan Preibisch and Stephan Saalfeld
- *
- * @param < T > the {@link Type} to be returned by {@link #get()}
+ * {@link ContainerSampler} is the common basic interface to access pixel data in
+ * any {@link Container}.  Other {@link Sampler Samplers} build on top of it.
+ * 
+ * @param <T> the {@link Type} of pixels in the {@link Container}
+ * 
+ * @author Stephan Preibisch & Stephan Saalfeld
  */
-public abstract class AbstractRasterSampler< T extends Type< T > > implements RasterSampler< T >
-{
-	/* a copy of container.numDimensions() for slightly faster access */
-	final protected int n;
-	
-	public AbstractRasterSampler( final int n )
-	{
-		this.n = n;
-	}
+public interface ContainerSampler< T extends Type< T > > extends Sampler< T >, EuclideanSpace, InjectiveIntegerInterval
+{	
+	public int getArrayIndex();
 
-	@Override
-	@Deprecated
-	final public T getType() { return get(); } 
-	
-	@Override
-	public int getArrayIndex() { return get().getIndex(); }
-	
-	@Override
-	public int numDimensions(){ return n; }
+	public Container< T, ? > getContainer();
 }

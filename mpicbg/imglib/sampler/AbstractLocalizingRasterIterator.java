@@ -28,6 +28,7 @@
 package mpicbg.imglib.sampler;
 
 import mpicbg.imglib.IntegerInterval;
+import mpicbg.imglib.container.ContainerIterator;
 import mpicbg.imglib.type.Type;
 
 /**
@@ -36,7 +37,7 @@ import mpicbg.imglib.type.Type;
  * 
  * @author Stephan Preibisch and Stephan Saalfeld
  */
-public abstract class AbstractLocalizingRasterIterator< T extends Type< T > > extends AbstractLocalizableRasterSampler< T > implements RasterIterator< T >
+public abstract class AbstractLocalizingRasterIterator< T extends Type< T > > extends AbstractLocalizableRasterSampler< T > implements ContainerIterator< T >
 {
 	public AbstractLocalizingRasterIterator( final IntegerInterval f )
 	{

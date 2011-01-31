@@ -27,7 +27,7 @@
  *
  * @author Stephan Preibisch & Stephan Saalfeld
  */
-package mpicbg.imglib.sampler;
+package mpicbg.imglib.container;
 
 import java.util.Iterator;
 
@@ -36,17 +36,21 @@ import mpicbg.imglib.type.Type;
 
 /**
  * Generic implementation of {@link Iterator} mapping to abstract {@link #fwd()} and
- * {@link #get()}.  
+ * {@link #get()}.
+ * 
+ * <p>For localization, default implementations are available that all build on
+ * the abstract long variant.  For particular cursors, this may be implemented more
+ * efficiently saving at least one loop over <em>n</em>. 
  * 
  * @author Stephan Preibisch and Stephan Saalfeld
  * 
  * @param <T>
  */
-public abstract class AbstractRasterIterator< T extends Type< T > > extends AbstractRasterSampler< T > implements RasterIterator< T >
+public abstract class AbstractContainerIterator< T extends Type< T > > extends AbstractContainerSampler< T > implements ContainerIterator< T >
 {
 	final private long[] position;
 	
-	public AbstractRasterIterator( final int n )
+	public AbstractContainerIterator( final int n )
 	{
 		super( n );
 		position = new long[ n ];
@@ -54,7 +58,9 @@ public abstract class AbstractRasterIterator< T extends Type< T > > extends Abst
 
 	@Override
 	public void remove()
-	{}
+	{
+		
+	}
 
 	@Override
 	public T next()
@@ -63,7 +69,11 @@ public abstract class AbstractRasterIterator< T extends Type< T > > extends Abst
 		return get();
 	}
 
-	@Override
+	/**
+	 * Highly recommended to override this with a more efficient version.
+	 * 
+	 * @param steps
+	 */
 	public void jumpFwd( final long steps )
 	{
 		for ( long j = 0; j < steps; ++j )
@@ -93,7 +103,7 @@ public abstract class AbstractRasterIterator< T extends Type< T > > extends Abst
 	{
 		localize( this.position );
 		for ( int d = 0; d < n; d++ )
-			pos[ d ] = ( int ) this.position[ d ];
+			pos[ d ] = ( int )this.position[ d ];
 	}
 
 	@Override
@@ -111,7 +121,7 @@ public abstract class AbstractRasterIterator< T extends Type< T > > extends Abst
 	@Override
 	public int getIntPosition( final int d )
 	{
-		return ( int ) getLongPosition( d );
+		return ( int )getLongPosition( d );
 	}
 
 	@Override

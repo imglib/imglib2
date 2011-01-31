@@ -27,26 +27,27 @@
  *
  * @author Stephan Preibisch & Stephan Saalfeld
  */
-package mpicbg.imglib.sampler;
+package mpicbg.imglib.container;
 
 import mpicbg.imglib.IntegerLocalizable;
 import mpicbg.imglib.Iterator;
 import mpicbg.imglib.container.array.Array;
 import mpicbg.imglib.image.Image;
+import mpicbg.imglib.sampler.PositionableRasterIntervalSampler;
 import mpicbg.imglib.type.Type;
 
 /**
- * <h2>The {@link RasterIterator} interface</h2>
+ * <h2>The {@link ContainerIterator} interface</h2>
  * 
  * <h3>Implementation</h3>
  * 
- * {@link RasterIterator RasterIterators} are used to iterate over a raster of
+ * {@link ContainerIterator RasterIterators} are used to iterate over a raster of
  * pixels.  They depend on the way how pixels are stored and thus need to be
  * implemented for each {@link Container} like {@link Array}, {@link CellContainer}, ... 
  * 
  * <h3>Data access</h3>
  * 
- * {@link RasterIterator RasterIterator} do not know about the {@link Image}
+ * {@link ContainerIterator RasterIterator} do not know about the {@link Image}
  * {@link Type} as it is not important for iteration.  However, {@link Type} is
  * a generic parameter such that the correct instance of {@link Type} is
  * returned by {@link #get()}.
@@ -107,8 +108,7 @@ import mpicbg.imglib.type.Type;
  * 
  * @author Stephan Preibisch & Stephan Saalfeld
  *
- * @param <T> - the {@link Type} this {@link RasterIterator} works on
+ * @param <T> - the {@link Type} this {@link ContainerIterator} works on
  */
-public interface RasterIterator< T extends Type< T > > extends RasterSampler< T >, IntegerLocalizable, Iterator, java.util.Iterator< T >
-{	
-}
+public interface ContainerIterator< T extends Type< T > > extends ContainerSampler< T >, IntegerLocalizable, Iterator, java.util.Iterator< T >
+{}

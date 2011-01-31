@@ -29,6 +29,7 @@ package mpicbg.imglib.sampler;
 
 import mpicbg.imglib.IntegerInterval;
 import mpicbg.imglib.IntegerLocalizable;
+import mpicbg.imglib.container.AbstractContainerSampler;
 import mpicbg.imglib.outofbounds.RasterOutOfBounds;
 import mpicbg.imglib.outofbounds.RasterOutOfBoundsFactory;
 import mpicbg.imglib.type.Type;
@@ -39,7 +40,7 @@ import mpicbg.imglib.type.Type;
  *
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-public abstract class AbstractOutOfBoundsPositionableRasterSampler< T extends Type< T > > extends AbstractRasterSampler< T > implements PositionableRasterIntervalSampler< T >
+public abstract class AbstractOutOfBoundsPositionableRasterSampler< T extends Type< T > > extends AbstractContainerSampler< T > implements PositionableRasterIntervalSampler< T >
 {
 	/* performs the actual moves and generates/queries a Type */
 	final protected RasterOutOfBounds< T > outOfBounds;

@@ -18,11 +18,11 @@ package mpicbg.imglib.algorithm.transformation;
 
 import mpicbg.imglib.algorithm.OutputAlgorithm;
 import mpicbg.imglib.algorithm.math.MathLib;
+import mpicbg.imglib.container.ContainerIterator;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.ImageFactory;
 import mpicbg.imglib.interpolation.Interpolator;
 import mpicbg.imglib.interpolation.InterpolatorFactory;
-import mpicbg.imglib.sampler.RasterIterator;
 import mpicbg.imglib.type.Type;
 import mpicbg.models.AffineModel2D;
 import mpicbg.models.AffineModel3D;
@@ -149,7 +149,7 @@ public class ImageTransform<T extends Type<T>> implements OutputAlgorithm<T>
 		// create the new output image
 		transformed = outputImageFactory.createImage( newDim );
 
-		final RasterIterator<T> transformedIterator = transformed.createLocalizingRasterIterator();
+		final ContainerIterator<T> transformedIterator = transformed.createLocalizingRasterIterator();
 		final Interpolator<T> interpolator = img.createInterpolator( interpolatorFactory );
 		
 		try

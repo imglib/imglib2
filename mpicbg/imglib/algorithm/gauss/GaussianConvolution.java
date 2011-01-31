@@ -22,6 +22,7 @@ import mpicbg.imglib.algorithm.Benchmark;
 import mpicbg.imglib.algorithm.MultiThreaded;
 import mpicbg.imglib.algorithm.OutputAlgorithm;
 import mpicbg.imglib.algorithm.math.MathLib;
+import mpicbg.imglib.container.ContainerIterator;
 import mpicbg.imglib.container.DirectAccessContainer;
 import mpicbg.imglib.container.array.Array;
 import mpicbg.imglib.container.basictypecontainer.FloatAccess;
@@ -30,7 +31,6 @@ import mpicbg.imglib.image.Image;
 import mpicbg.imglib.multithreading.SimpleMultiThreading;
 import mpicbg.imglib.outofbounds.RasterOutOfBoundsFactory;
 import mpicbg.imglib.sampler.PositionableRasterIntervalSampler;
-import mpicbg.imglib.sampler.RasterIterator;
 import mpicbg.imglib.type.numeric.NumericType;
 import mpicbg.imglib.type.numeric.real.FloatType;
 
@@ -167,7 +167,7 @@ public class GaussianConvolution< T extends NumericType<T>> implements MultiThre
 	                	//System.out.println("Thread " + myNumber + " folds in dimension " + currentDim);
 
 	                	final PositionableRasterIntervalSampler<T> inputIterator;
-	                	final RasterIterator<T> outputIterator;
+	                	final ContainerIterator<T> outputIterator;
 	                	
 	                	if ( numDimensions % 2 == 0 ) // even number of dimensions ( 2d, 4d, 6d, ... )
 	                	{
@@ -239,7 +239,7 @@ public class GaussianConvolution< T extends NumericType<T>> implements MultiThre
         return true;
 	}
 	
-	protected void convolve( final PositionableRasterIntervalSampler<T> inputIterator, final RasterIterator<T> outputIterator, 
+	protected void convolve( final PositionableRasterIntervalSampler<T> inputIterator, final ContainerIterator<T> outputIterator, 
 															   final int dim, final float[] kernel,
 															   final long startPos, final long loopSize )
 	{		

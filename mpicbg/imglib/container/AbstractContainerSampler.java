@@ -25,30 +25,93 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-package mpicbg.imglib.sampler;
+package mpicbg.imglib.container;
 
-import mpicbg.imglib.EuclideanSpace;
-import mpicbg.imglib.Sampler;
-import mpicbg.imglib.container.Container;
 import mpicbg.imglib.type.Type;
 
 /**
- * {@link RasterSampler} provides access to a `pixel' value in discrete image
- * space.  The step-size in any dimension of the image is 1 raster step which
- * does not necessarily reflect any meaningful analogy in some physical space.
- * For {@link Container Containers} that store actual sample values for each
- * pixel, this interface provides access to these pixel samples
  * 
- * {@link RasterSampler} is the common basic interface to access pixel data in
- * any {@link Container}.  Other {@link Sampler Samplers} build on top of it.
- * 
- * @param <T> the {@link Type} of pixels in the {@link Container}
- * 
- * @author Stephan Preibisch & Stephan Saalfeld
+ * @author Stephan Preibisch and Stephan Saalfeld
+ *
+ * @param < T > the {@link Type} to be returned by {@link #get()}
  */
-public interface RasterSampler< T extends Type< T > > extends Sampler< T >, EuclideanSpace
-{	
-	public int getArrayIndex();
+public abstract class AbstractContainerSampler< T extends Type< T > > implements ContainerSampler< T >
+{
+	/* a copy of container.numDimensions() for slightly faster access */
+	final protected int n;
+	
+	public AbstractContainerSampler( final int n )
+	{
+		this.n = n;
+	}
 
-	public Container< T, ? > getContainer();
+	@Override
+	@Deprecated
+	final public T getType() { return get(); }
+	
+	@Override
+	public int getArrayIndex() { return get().getIndex(); }
+	
+	@Override
+	public int numDimensions(){ return n; }
+
+	@Override
+	public long max( final int d )
+	{
+		return getContainer().max( d );
+	}
+
+	@Override
+	public void max( long[] max )
+	{
+		getContainer().max( max );		
+	}
+
+	@Override
+	public long min( int d )
+	{
+		return getContainer().min( d );
+	}
+
+	@Override
+	public void min( long[] min )
+	{
+		getContainer().min( min );
+	}
+
+	@Override
+	public void size( long[] size )
+	{
+		getContainer().size( size );
+	}
+
+	@Override
+	public long size( int d )
+	{
+		return getContainer().size( d );
+	}
+
+	@Override
+	public double realMax( int d )
+	{
+		return getContainer().realMax( d );
+	}
+
+	@Override
+	public void realMax( double[] max )
+	{
+		getContainer().realMax( max );
+	}
+
+	@Override
+	public double realMin( int d )
+	{
+		return getContainer().realMin( d );
+	}
+
+	@Override
+	public void realMin( double[] min )
+	{
+		getContainer().realMin( min );	
+	}
 }

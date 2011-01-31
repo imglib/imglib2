@@ -9,13 +9,13 @@ import java.io.File;
 import javax.swing.JFileChooser;
 
 import mpicbg.imglib.container.Container;
+import mpicbg.imglib.container.ContainerIterator;
 import mpicbg.imglib.container.array.ArrayContainerFactory;
 import mpicbg.imglib.container.imageplus.ImagePlusContainer;
 import mpicbg.imglib.exception.ImgLibException;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.display.imagej.ImageJFunctions;
 import mpicbg.imglib.io.LOCI;
-import mpicbg.imglib.sampler.RasterIterator;
 import mpicbg.imglib.type.numeric.RealType;
 import mpicbg.imglib.type.numeric.real.FloatType;
 
@@ -48,8 +48,8 @@ public class SquareTest {
     //Image<T> outputImage = factory.createImage(new int[] {512, 512});
     Image<T> outputImage = inputImage.createNewImage();
 
-    RasterIterator<T> inputCursor = inputImage.createRasterIterator();
-    RasterIterator<T> outputCursor = outputImage.createRasterIterator();
+    ContainerIterator<T> inputCursor = inputImage.createRasterIterator();
+    ContainerIterator<T> outputCursor = outputImage.createRasterIterator();
     while (inputCursor.hasNext()) {
       inputCursor.fwd();
       outputCursor.fwd();

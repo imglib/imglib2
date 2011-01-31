@@ -17,10 +17,10 @@
 package mpicbg.imglib.algorithm;
 
 import mpicbg.imglib.algorithm.Benchmark;
+import mpicbg.imglib.container.ContainerIterator;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.outofbounds.RasterOutOfBoundsFactory;
 import mpicbg.imglib.sampler.PositionableRasterIntervalSampler;
-import mpicbg.imglib.sampler.RasterIterator;
 import mpicbg.imglib.type.Type;
 
 public class CanvasImage<T extends Type<T>> implements OutputAlgorithm<T>, Benchmark
@@ -111,7 +111,7 @@ public class CanvasImage<T extends Type<T>> implements OutputAlgorithm<T>, Bench
 	{
 		final long startTime = System.currentTimeMillis();
 
-		final RasterIterator<T> outputCursor = output.createLocalizingRasterIterator();
+		final ContainerIterator<T> outputCursor = output.createLocalizingRasterIterator();
 		final PositionableRasterIntervalSampler<T> inputCursor;
 		
 		if ( outOfBoundsFactory == null)

@@ -28,9 +28,9 @@
 package mpicbg.imglib.sampler.special;
 
 import mpicbg.imglib.IntegerLocalizable;
+import mpicbg.imglib.container.ContainerSampler;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.outofbounds.RasterOutOfBoundsFactory;
-import mpicbg.imglib.sampler.RasterSampler;
 import mpicbg.imglib.type.Type;
 
 /**
@@ -61,12 +61,12 @@ public class LocalNeighborhoodCursorFactory
 		return createLocalNeighborhoodCursor( localizable, image, null ); 
 	}
 	
-	public static < T extends Type< T >, S extends IntegerLocalizable & RasterSampler< T > >LocalNeighborhoodCursor< T > createLocalNeighborhoodCursor( final S cursor, final RasterOutOfBoundsFactory< T > outsideFactory )
+	public static < T extends Type< T >, S extends IntegerLocalizable & ContainerSampler< T > >LocalNeighborhoodCursor< T > createLocalNeighborhoodCursor( final S cursor, final RasterOutOfBoundsFactory< T > outsideFactory )
 	{
 		return createLocalNeighborhoodCursor( cursor, cursor.getImage(), outsideFactory ); 
 	}
 	
-	public static < T extends Type< T >, S extends IntegerLocalizable & RasterSampler< T > >LocalNeighborhoodCursor< T > createLocalNeighborhoodCursor( final S cursor )
+	public static < T extends Type< T >, S extends IntegerLocalizable & ContainerSampler< T > >LocalNeighborhoodCursor< T > createLocalNeighborhoodCursor( final S cursor )
 	{
 		return createLocalNeighborhoodCursor( cursor, cursor.getImage(), null ); 
 	}

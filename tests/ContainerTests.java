@@ -10,6 +10,7 @@ import mpicbg.imglib.algorithm.fft.FFTFunctions;
 import mpicbg.imglib.algorithm.math.MathLib;
 import mpicbg.imglib.container.Container;
 import mpicbg.imglib.container.ContainerFactory;
+import mpicbg.imglib.container.ContainerIterator;
 import mpicbg.imglib.container.array.ArrayContainerFactory;
 import mpicbg.imglib.container.cell.CellContainerFactory;
 import mpicbg.imglib.container.imageplus.ImagePlusContainerFactory;
@@ -17,7 +18,6 @@ import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.ImageFactory;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyPeriodicFactory;
 import mpicbg.imglib.sampler.PositionableRasterIntervalSampler;
-import mpicbg.imglib.sampler.RasterIterator;
 import mpicbg.imglib.type.numeric.real.FloatType;
 
 public class ContainerTests
@@ -121,7 +121,7 @@ public class ContainerTests
 		final float[] reference = new float[ ( int )img.size() ];
 		
 		// iterate over image and reference array and fill with data
-		final RasterIterator<FloatType> cursor = img.iterator();			
+		final ContainerIterator<FloatType> cursor = img.iterator();			
 		int i = 0;
 		
 		while( cursor.hasNext() )
@@ -140,7 +140,7 @@ public class ContainerTests
 	{
 		boolean allEqual = true;
 		
-		final RasterIterator< FloatType > cursor = img.iterator();
+		final ContainerIterator< FloatType > cursor = img.iterator();
 		int i = 0;
 		
 		while( cursor.hasNext() )
@@ -164,8 +164,8 @@ public class ContainerTests
 		final float[] reference = createReference( img1 );
 		
 		// copy into a second image using simple cursors
-		final RasterIterator<FloatType> cursor1 = img1.iterator();
-		final RasterIterator<FloatType> cursor2 = img2.iterator();
+		final ContainerIterator<FloatType> cursor1 = img1.iterator();
+		final ContainerIterator<FloatType> cursor2 = img2.iterator();
 		
 		while( cursor1.hasNext() )
 		{
@@ -188,7 +188,7 @@ public class ContainerTests
 		}		
 
 		// copy back into a second image using localizable and positionable cursors			
-		final RasterIterator<FloatType> localizableCursor1 = img1.localizingIterator();			
+		final ContainerIterator<FloatType> localizableCursor1 = img1.localizingIterator();			
 		final PositionableRasterIntervalSampler<FloatType> positionable2 = img2.positionableRasterSampler();			
 		
 		int i = 0;

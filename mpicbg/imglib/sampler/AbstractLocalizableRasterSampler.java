@@ -30,6 +30,8 @@ package mpicbg.imglib.sampler;
 import mpicbg.imglib.IntegerInterval;
 import mpicbg.imglib.IntegerLocalizable;
 import mpicbg.imglib.algorithm.math.MathLib;
+import mpicbg.imglib.container.AbstractContainerSampler;
+import mpicbg.imglib.container.ContainerSampler;
 import mpicbg.imglib.type.Type;
 
 /**
@@ -38,7 +40,7 @@ import mpicbg.imglib.type.Type;
  *
  * @author Stephan Preibisch and Stephan Saalfeld
  */
-public abstract class AbstractLocalizableRasterSampler< T extends Type< T > > extends AbstractRasterSampler< T > implements RasterSampler< T >, IntegerLocalizable
+public abstract class AbstractLocalizableRasterSampler< T extends Type< T > > extends AbstractContainerSampler< T > implements ContainerSampler< T >, IntegerLocalizable
 {
 	final protected int[] position;
 	final protected long[] dimensions;

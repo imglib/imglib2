@@ -29,9 +29,9 @@
 package mpicbg.imglib.sampler.special;
 
 import mpicbg.imglib.Iterator;
+import mpicbg.imglib.container.ContainerIterator;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.sampler.PositionableRasterIntervalSampler;
-import mpicbg.imglib.sampler.RasterIterator;
 
 /**
  * Generic {@link Iterator} for orthogonal 2d-slices.  This implementation
@@ -45,7 +45,7 @@ import mpicbg.imglib.sampler.RasterIterator;
  *
  * @author Stephan Preibisch and Stephan Saalfeld
  */
-public class OrthoSliceIterator< T extends mpicbg.imglib.type.Type< T > > implements RasterIterator< T >
+public class OrthoSliceIterator< T extends mpicbg.imglib.type.Type< T > > implements ContainerIterator< T >
 {
 	/* index of x and y dimensions */
 	final protected int x, y;

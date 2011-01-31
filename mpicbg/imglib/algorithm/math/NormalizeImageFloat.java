@@ -3,11 +3,11 @@ package mpicbg.imglib.algorithm.math;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.ImageFactory;
 import mpicbg.imglib.sampler.PositionableRasterIntervalSampler;
-import mpicbg.imglib.sampler.RasterIterator;
 import mpicbg.imglib.type.numeric.*;
 import mpicbg.imglib.type.numeric.real.FloatType;
 import mpicbg.imglib.algorithm.Benchmark;
 import mpicbg.imglib.algorithm.OutputAlgorithm;
+import mpicbg.imglib.container.ContainerIterator;
 import mpicbg.util.RealSum;
 
 public class NormalizeImageFloat <T extends RealType<T>> implements OutputAlgorithm<FloatType>, Benchmark
@@ -21,7 +21,7 @@ public class NormalizeImageFloat <T extends RealType<T>> implements OutputAlgori
 	public static <T extends RealType<T>> double sumImage( final Image<T> image )
 	{
 		final RealSum sum = new RealSum();
-		final RasterIterator<T> cursor = image.createRasterIterator();
+		final ContainerIterator<T> cursor = image.createRasterIterator();
 		
 		while (cursor.hasNext())
 		{
@@ -51,7 +51,7 @@ public class NormalizeImageFloat <T extends RealType<T>> implements OutputAlgori
 		final ImageFactory<FloatType> factory =
 			new ImageFactory<FloatType>(new FloatType(), image.getContainerFactory());  		
 		
-		final RasterIterator<T> pullCursor;
+		final ContainerIterator<T> pullCursor;
 		final PositionableRasterIntervalSampler<FloatType> pushCursor;
 		
 		if (norm == 0)

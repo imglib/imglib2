@@ -30,6 +30,7 @@ package mpicbg.imglib.sampler;
 import mpicbg.imglib.IntegerInterval;
 import mpicbg.imglib.IntegerLocalizable;
 import mpicbg.imglib.IntegerPositionable;
+import mpicbg.imglib.container.ContainerSampler;
 import mpicbg.imglib.type.Type;
 
 /**
@@ -44,7 +45,7 @@ import mpicbg.imglib.type.Type;
  *
  * @author Stephan Preibisch and Stephan Saalfeld
  */
-public interface PositionableRasterIntervalSampler< T extends Type< T > > extends RasterSampler< T >, IntegerLocalizable, IntegerPositionable, IntegerInterval
+public interface PositionableRasterIntervalSampler< T extends Type< T > > extends ContainerSampler< T >, IntegerLocalizable, IntegerPositionable, IntegerInterval
 {
 	/**
 	 * True if located out of image bounds.

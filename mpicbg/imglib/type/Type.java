@@ -27,6 +27,7 @@
  */
 package mpicbg.imglib.type;
 
+import mpicbg.imglib.container.ContainerIterator;
 import mpicbg.imglib.container.DirectAccessContainer;
 import mpicbg.imglib.container.DirectAccessContainerFactory;
 import mpicbg.imglib.container.array.Array;
@@ -34,7 +35,6 @@ import mpicbg.imglib.container.array.ArrayRasterIterator;
 import mpicbg.imglib.container.basictypecontainer.DataAccess;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.display.Display;
-import mpicbg.imglib.sampler.RasterIterator;
 import mpicbg.imglib.sampler.cell.CellBasicRasterIterator;
 import mpicbg.imglib.type.numeric.real.FloatType;
 
@@ -47,7 +47,7 @@ import mpicbg.imglib.type.numeric.real.FloatType;
  * The {@link Type} is the only class that is aware of the actual data type,
  * i.e. which basic type ({@link DataAccess}) is used to store the data. On the
  * other hand it does not know the storage type ({@link Array},
- * {@link RasterIterator}, ...). This is not necessary for computation and avoid
+ * {@link ContainerIterator}, ...). This is not necessary for computation and avoid
  * complicated re-implementations. The method public void updateDataArray(
  * Cursor<?> c ); links the DirectAccessContainer and the cursor which define
  * the current position as well as the current storage array.
@@ -90,17 +90,17 @@ public interface Type< T extends Type< T > >
 	public Display< T > getDefaultDisplay( Image< T > image );
 
 	/**
-	 * This method is used by the {@link RasterIterator}s to update the data
+	 * This method is used by the {@link ContainerIterator}s to update the data
 	 * current data array of the {@link Type}, for example when moving from one
 	 * {@link Cell} to the next. If it is only an {@link Array} the
-	 * {@link RasterIterator}s never have to call that function.
+	 * {@link ContainerIterator}s never have to call that function.
 	 * 
 	 * The idea behind this concept is maybe not obvious. The {@link Type} knows
 	 * which basic type is used (float, int, byte, ...) but does not know how it
 	 * is stored ({@link Array}, {@link CellDirectAccessContainer}, ...) to
 	 * prevent multiple implementations of {@link Type}. That's why {@link Type}
 	 * asks the {@link DataAccess} to give the actual basic array by passing the
-	 * {@link RasterIterator} that calls the method. The {@link DataAccess} is
+	 * {@link ContainerIterator} that calls the method. The {@link DataAccess} is
 	 * also an {@link Array}, {@link CellDirectAccessContainer}, ... which can
 	 * then communicate with the {@link ArrayRasterIterator},
 	 * {@link CellBasicRasterIterator}, ... and return the current basic type
@@ -112,7 +112,7 @@ public interface Type< T extends Type< T > >
 	 * float[] v = floatStorage.getCurrentStorageArray( c );
 	 * 
 	 * @param c
-	 *            - the {@link RasterIterator} gives a link to itself so that
+	 *            - the {@link ContainerIterator} gives a link to itself so that
 	 *            the {@link Type} tell its {@link DataAccess} to get the new
 	 *            basic type array.
 	 */
@@ -120,7 +120,7 @@ public interface Type< T extends Type< T > >
 
 	/**
 	 * Increments the array position of the {@link Type}, this is called by the
-	 * {@link RasterIterator}s which iterate over the image.
+	 * {@link ContainerIterator}s which iterate over the image.
 	 * 
 	 * @param i
 	 *            - how many steps
@@ -129,21 +129,21 @@ public interface Type< T extends Type< T > >
 
 	/**
 	 * Returns the current index in the storage array, this is called by the
-	 * {@link RasterIterator}s which iterate over the image.
+	 * {@link ContainerIterator}s which iterate over the image.
 	 * 
 	 * @return - int index
 	 */
 	public int getIndex();
 
 	/**
-	 * Increases the array index, this is called by the {@link RasterIterator}s
+	 * Increases the array index, this is called by the {@link ContainerIterator}s
 	 * which iterate over the image.
 	 */
 	public void incIndex();
 
 	/**
 	 * Increases the index by increment steps, this is called by the
-	 * {@link RasterIterator}s which iterate over the image.
+	 * {@link ContainerIterator}s which iterate over the image.
 	 * 
 	 * @param increment
 	 *            - how many steps
@@ -151,14 +151,14 @@ public interface Type< T extends Type< T > >
 	public void incIndex( final int increment );
 
 	/**
-	 * Decreases the array index, this is called by the {@link RasterIterator}s
+	 * Decreases the array index, this is called by the {@link ContainerIterator}s
 	 * which iterate over the image.
 	 */
 	public void decIndex();
 
 	/**
 	 * Decreases the index by increment steps, this is called by the
-	 * {@link RasterIterator}s which iterate over the image.
+	 * {@link ContainerIterator}s which iterate over the image.
 	 * 
 	 * @param increment
 	 *            - how many steps
