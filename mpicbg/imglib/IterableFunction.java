@@ -48,10 +48,10 @@ import mpicbg.imglib.container.Container;
 public interface IterableFunction<
 		T,
 		F extends IterableFunction< T, F, I >,
-		I extends Iterator & Localizable & java.util.Iterator< T > & Sampler< T > > extends Function< T, F >, RealInterval, Iterable< T >
+		I extends Iterator & RealLocalizable & java.util.Iterator< T > & Sampler< T > > extends Function< T, F >, RealInterval, Iterable< T >
 {
 	/**
-	 * <p>Returns a {@link Localizable} {@link Iterator} that iterates with
+	 * <p>Returns a {@link RealLocalizable} {@link Iterator} that iterates with
 	 * optimal speed without calculating the location at each iteration step.
 	 * Localization is performed on demand.</p>
 	 * 
@@ -64,7 +64,7 @@ public interface IterableFunction<
 	public I iterator();
 
 	/**
-	 * <p>Returns a {@link Localizable} {@link Iterator} that calculates its
+	 * <p>Returns a {@link RealLocalizable} {@link Iterator} that calculates its
 	 * location at each iteration step.  That is, localization is performed
 	 * with optimal speed.</p>
 	 * 

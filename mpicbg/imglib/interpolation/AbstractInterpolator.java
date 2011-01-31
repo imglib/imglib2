@@ -27,10 +27,10 @@
  */
 package mpicbg.imglib.interpolation;
 
-import mpicbg.imglib.Localizable;
-import mpicbg.imglib.Positionable;
+import mpicbg.imglib.IntegerLocalizable;
+import mpicbg.imglib.RealLocalizable;
+import mpicbg.imglib.RealPositionable;
 import mpicbg.imglib.image.Image;
-import mpicbg.imglib.location.RasterLocalizable;
 import mpicbg.imglib.outofbounds.RasterOutOfBoundsFactory;
 import mpicbg.imglib.type.Type;
 
@@ -40,7 +40,7 @@ import mpicbg.imglib.type.Type;
  *
  * @author Stephan Preibisch and Stephan Saalfeld
  */
-abstract public class AbstractInterpolator< T extends Type< T >, LocalizablePositionable extends Localizable & Positionable > implements Interpolator< T >
+abstract public class AbstractInterpolator< T extends Type< T >, LocalizablePositionable extends RealLocalizable & RealPositionable > implements Interpolator< T >
 {
 	final protected RasterOutOfBoundsFactory< T > outOfBoundsStrategyFactory;
 	final protected LocalizablePositionable localizablePositionable;
@@ -159,13 +159,13 @@ abstract public class AbstractInterpolator< T extends Type< T >, LocalizablePosi
 	}
 
 	@Override
-	public void moveTo( final Localizable localizable )
+	public void moveTo( final RealLocalizable localizable )
 	{
 		localizablePositionable.moveTo( localizable );
 	}
 
 	@Override
-	public void setPosition( final Localizable localizable )
+	public void setPosition( final RealLocalizable localizable )
 	{
 		localizablePositionable.setPosition( localizable );
 	}
@@ -222,7 +222,7 @@ abstract public class AbstractInterpolator< T extends Type< T >, LocalizablePosi
 	}
 
 	@Override
-	public void moveTo( final RasterLocalizable localizable )
+	public void moveTo( final IntegerLocalizable localizable )
 	{
 		localizablePositionable.moveTo( localizable );
 	}
@@ -240,7 +240,7 @@ abstract public class AbstractInterpolator< T extends Type< T >, LocalizablePosi
 	}
 
 	@Override
-	public void setPosition( final RasterLocalizable localizable )
+	public void setPosition( final IntegerLocalizable localizable )
 	{
 		localizablePositionable.setPosition( localizable );
 	}

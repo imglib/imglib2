@@ -34,6 +34,7 @@ import java.awt.Rectangle;
 //import ij.ImagePlus;
 //import mpicbg.imglib.image.display.imagej.ImageJFunctions;
 
+import mpicbg.imglib.IntegerLocalizable;
 import mpicbg.imglib.container.array.ArrayContainerFactory;
 import mpicbg.imglib.container.cell.CellContainerFactory;
 import mpicbg.imglib.container.dynamic.DynamicContainerFactory;
@@ -41,7 +42,6 @@ import mpicbg.imglib.container.shapelist.ShapeList;
 import mpicbg.imglib.container.shapelist.ShapeListContainerFactory;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.ImageFactory;
-import mpicbg.imglib.location.RasterLocalizable;
 import mpicbg.imglib.outofbounds.OutOfBoundsMirrorFactory;
 import mpicbg.imglib.outofbounds.OutOfBoundsMirrorFactory.Boundary;
 import mpicbg.imglib.sampler.PositionableRasterIntervalSampler;
@@ -166,7 +166,7 @@ public class OutOfBoundsMirrorSingleBoundaryTest
 	{
 	}
 	
-	final private boolean isOutOfBounds( final RasterLocalizable l )
+	final private boolean isOutOfBounds( final IntegerLocalizable l )
 	{
 		for ( int i = 0; i < dim.length; ++i )
 			if ( l.getIntPosition( i ) < 0 || l.getIntPosition( i ) >= dim[ i ] ) return true;

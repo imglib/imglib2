@@ -27,8 +27,6 @@
  */
 package mpicbg.imglib;
 
-import mpicbg.imglib.location.RasterLocalizable;
-import mpicbg.imglib.location.RasterPositionable;
 import mpicbg.imglib.outofbounds.RasterOutOfBoundsFactory;
 import mpicbg.imglib.type.Type;
 
@@ -44,8 +42,8 @@ import mpicbg.imglib.type.Type;
 public interface IntegerIntervalFunction<
 		T extends Type< T >,
 		F extends IntegerIntervalFunction< T, F, R, I >,
-		R extends RasterPositionable & Sampler< T >,
-		I extends RasterLocalizable & Iterator & java.util.Iterator< T > & Sampler< T > > extends IterableFunction< T, F, I >, IntegerInterval
+		R extends IntegerPositionable & Sampler< T >,
+		I extends IntegerLocalizable & Iterator & java.util.Iterator< T > & Sampler< T > > extends IterableFunction< T, F, I >, IntegerInterval
 {
 	public R positionableRasterSampler( final RasterOutOfBoundsFactory< T, F > factory );
 }

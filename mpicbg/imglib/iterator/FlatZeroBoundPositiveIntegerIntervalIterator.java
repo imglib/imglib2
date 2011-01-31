@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2009--2010, Stephan Saalfeld
+ * Copyright (c) 2009--2011, Stephan Preibisch & Stephan Saalfeld
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -9,7 +9,7 @@
  * list of conditions and the following disclaimer.  Redistributions in binary
  * form must reproduce the above copyright notice, this list of conditions and
  * the following disclaimer in the documentation and/or other materials
- * provided with the distribution.  Neither the name of the Fiji project nor
+ * provided with the distribution.  Neither the name of the imglib project nor
  * the names of its contributors may be used to endorse or promote products
  * derived from this software without specific prior written permission.
  * 
@@ -25,13 +25,14 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-package mpicbg.imglib.location;
+package mpicbg.imglib.iterator;
 
 import mpicbg.imglib.IntegerInterval;
+import mpicbg.imglib.IntegerLocalizable;
 import mpicbg.imglib.Iterator;
 import mpicbg.imglib.algorithm.math.MathLib;
 import mpicbg.imglib.container.Container;
-import mpicbg.imglib.image.Image;
+import mpicbg.imglib.location.LocalizingFlatIntegerIntervalIterator;
 import mpicbg.imglib.sampler.PositionableRasterIntervalSampler;
 
 /**
@@ -61,85 +62,77 @@ import mpicbg.imglib.sampler.PositionableRasterIntervalSampler;
  *  
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-final public class FlatZeroBoundPositiveIntegerIntervalIterator implements Iterator, RasterLocalizable
+final public class FlatZeroBoundPositiveIntegerIntervalIterator extends IntegerIntervalIterator
 {
-	final private long[] dimensions;
-	final private long[] steps;
-	final private int n;
-	final protected long lastIndex;
-	protected long index = -1;
+	final static private long[] max( final long[] size )
+	{
+		final long[] max = new long[ size.length ];
+		for ( int d = 0; d < size.length; ++d )
+			max[ d ] = size[ d ] - 1;
+		return max;
+	}
 	
 	public FlatZeroBoundPositiveIntegerIntervalIterator( final long[] dimensions )
 	{
-		n = dimensions.length;
-		final int m = n - 1;
-		this.dimensions = dimensions.clone();
-		steps = new long[ n ];
-		long k = steps[ 0 ] = 1;
-		for ( int i = 0; i < m; )
-		{
-			k *= dimensions[ i ];
-			steps[ ++i ] = k;
-		}
-		lastIndex = k * dimensions[ m ] - 1;
+		super( new long[ dimensions.length ], max( dimensions ) );
 	}
 
 	public FlatZeroBoundPositiveIntegerIntervalIterator( final IntegerInterval interval )
 	{
-		this( interval.getDimensions() );
+		this( size( interval ) );
 	}
 	
-	final public static void indexToPosition( final int i, final int[] steps, final int[] l )
+	final public static void indexToPosition( final long i, final long[] steps, final int[] l )
 	{
-		int x = i;
+		long x = i;
 		for ( int d = steps.length - 1; d > 0; --d )
 		{
-			final int ld = x / steps[ d ];
-			l[ d ] = ld;
+			final long ld = x / steps[ d ];
+			l[ d ] = ( int )ld;
 			x -= ld * steps[ d ];
 		}
-		l[ 0 ] = i;
+		l[ 0 ] = ( int )i;
 	}
 
-	final public static void indexToPosition( final int i, final int[] steps, final long[] l )
+	final public static void indexToPosition( final long i, final long[] steps, final long[] l )
 	{
-		int x = i;
+		long x = i;
 		for ( int d = steps.length - 1; d > 0; --d )
 		{
-			final int ld = x / steps[ d ];
+			final long ld = x / steps[ d ];
 			l[ d ] = ld;
 			x -= ld * steps[ d ];
 		}
 		l[ 0 ] = i;
 	}
 	
-	final public static void indexToPosition( final int i, final int[] steps, final float[] l )
+	final public static void indexToPosition( final long i, final long[] steps, final float[] l )
 	{
-		int x = i;
+		long x = i;
 		for ( int d = steps.length - 1; d > 0; --d )
 		{
-			final int ld = x / steps[ d ];
+			final long ld = x / steps[ d ];
 			l[ d ] = ld;
 			x -= ld * steps[ d ];
 		}
 		l[ 0 ] = i;
 	}
 	
-	final public static void indexToPosition( final int i, final int[] steps, final double[] l )
+	final public static void indexToPosition( final long i, final long[] steps, final double[] l )
 	{
-		int x = i;
+		long x = i;
 		for ( int d = steps.length - 1; d > 0; --d )
 		{
-			final int ld = x / steps[ d ];
+			final long ld = x / steps[ d ];
 			l[ d ] = ld;
 			x -= ld * steps[ d ];
 		}
 		l[ 0 ] = i;
 	}
 	
-	final public static int indexToPosition( final int i, final int[] steps, final int dim )
+	final public static long indexToPosition( final long i, final long[] steps, final int dim )
 	{
-		int x = i;
+		long x = i;
 		for ( int d = steps.length - 1; d > dim; --d )
 			x %= steps[ d ];
 
@@ -158,7 +151,7 @@ final public class FlatZeroBoundPositiveIntegerIntervalIterator implements Itera
 	final public void reset() { index = -1; }
 	
 	
-	/* RasterLocalizable */
+	/* IntegerLocalizable */
 
 	@Override
 	final public long getLongPosition( final int dim ) { return indexToPosition( index, steps, dim ); }
@@ -167,7 +160,7 @@ final public class FlatZeroBoundPositiveIntegerIntervalIterator implements Itera
 	final public void localize( final long[] position ) { indexToPosition( index, steps, position ); }
 
 	@Override
-	final public int getIntPosition( final int dim ) { return indexToPosition( index, steps, dim ); }
+	final public int getIntPosition( final int dim ) { return ( int )indexToPosition( index, steps, dim ); }
 
 	@Override
 	final public void localize( final int[] position ) { indexToPosition( index, steps, position ); }
@@ -176,7 +169,7 @@ final public class FlatZeroBoundPositiveIntegerIntervalIterator implements Itera
 	final public double getDoublePosition( final int dim ) { return indexToPosition( index, steps, dim ); }
 	
 	
-	/* Localizable */
+	/* RealLocalizable */
 
 	@Override
 	final public float getFloatPosition( final int dim ) { return indexToPosition( index, steps, dim ); }
@@ -188,7 +181,7 @@ final public class FlatZeroBoundPositiveIntegerIntervalIterator implements Itera
 	final public void localize( final double[] position ) { indexToPosition( index, steps, position ); }
 
 	
-	/* Dimensionality */
+	/* EuclideanSpace */
 	
 	@Override
 	final public int numDimensions() { return n; }
@@ -199,7 +192,7 @@ final public class FlatZeroBoundPositiveIntegerIntervalIterator implements Itera
 	@Override
 	final public String toString()
 	{
-		final int[] l = new int[ dimensions.length ];
+		final int[] l = new int[ size.length ];
 		localize( l );
 		return MathLib.printCoordinates( l );
 	}

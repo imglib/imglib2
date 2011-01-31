@@ -27,10 +27,12 @@
  */
 package mpicbg.imglib.location;
 
+import mpicbg.imglib.IntegerLocalizable;
 import mpicbg.imglib.Iterator;
 import mpicbg.imglib.algorithm.math.MathLib;
 import mpicbg.imglib.container.Container;
 import mpicbg.imglib.image.Image;
+import mpicbg.imglib.iterator.FlatZeroBoundPositiveIntegerIntervalIterator;
 import mpicbg.imglib.sampler.PositionableRasterIntervalSampler;
 
 /**
@@ -63,7 +65,7 @@ import mpicbg.imglib.sampler.PositionableRasterIntervalSampler;
  *  
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-final public class LocalizingFlatIntegerIntervalIterator implements Iterator, RasterLocalizable
+final public class LocalizingFlatIntegerIntervalIterator implements Iterator, IntegerLocalizable
 {
 	final protected int[] dimensions;
 	final protected int[] steps;

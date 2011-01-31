@@ -27,10 +27,10 @@
  */
 package mpicbg.imglib.interpolation.linear;
 
-import mpicbg.imglib.Localizable;
+import mpicbg.imglib.IntegerLocalizable;
+import mpicbg.imglib.RealLocalizable;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.interpolation.Interpolator;
-import mpicbg.imglib.location.RasterLocalizable;
 import mpicbg.imglib.outofbounds.RasterOutOfBoundsFactory;
 import mpicbg.imglib.sampler.PositionableRasterIntervalSampler;
 import mpicbg.imglib.type.numeric.NumericType;
@@ -313,7 +313,7 @@ public class LinearInterpolator3D< T extends NumericType< T > > implements Inter
 	}
 
 	@Override
-	public void moveTo( final Localizable localizable )
+	public void moveTo( final RealLocalizable localizable )
 	{
 		assert localizable.numDimensions() == 3 : getClass().getCanonicalName() + " cannot process other than 3 dimensions.";
 
@@ -385,7 +385,7 @@ public class LinearInterpolator3D< T extends NumericType< T > > implements Inter
 	}
 
 	@Override
-	public void setPosition( final Localizable localizable )
+	public void setPosition( final RealLocalizable localizable )
 	{
 		assert localizable.numDimensions() >= 3 : getClass().getCanonicalName() + " cannot process " + ( localizable.numDimensions() ) + " dimensions.";
 		
@@ -547,7 +547,7 @@ public class LinearInterpolator3D< T extends NumericType< T > > implements Inter
 	}
 
 	@Override
-	public void moveTo( final RasterLocalizable localizable )
+	public void moveTo( final IntegerLocalizable localizable )
 	{
 		assert localizable.numDimensions() >= 3 : getClass().getCanonicalName() + " cannot process " + ( localizable.numDimensions() ) + " dimensions.";
 		
@@ -619,7 +619,7 @@ public class LinearInterpolator3D< T extends NumericType< T > > implements Inter
 	}
 
 	@Override
-	public void setPosition( final RasterLocalizable localizable )
+	public void setPosition( final IntegerLocalizable localizable )
 	{
 		assert localizable.numDimensions() >= 3 : getClass().getCanonicalName() + " cannot process " + ( localizable.numDimensions() ) + " dimensions.";
 		

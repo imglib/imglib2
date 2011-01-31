@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2009--2010, Stephan Saalfeld
+ * Copyright (c) 2011, Stephan Preibisch & Stephan Saalfeld
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -25,19 +25,62 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-package mpicbg.imglib.outofbounds;
+package mpicbg.imglib.iterator;
 
+import mpicbg.imglib.IntegerInterval;
 import mpicbg.imglib.IntegerLocalizable;
-import mpicbg.imglib.IntegerPositionable;
-import mpicbg.imglib.Sampler;
-import mpicbg.imglib.type.Type;
+import mpicbg.imglib.Iterator;
 
 /**
  * 
  *
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
+ * @version 0.1a
  */
-public interface RasterOutOfBounds< T extends Type< T > > extends IntegerLocalizable, IntegerPositionable, Sampler< T >
+public class IntegerIntervalIterator implements Iterator, IntegerLocalizable
 {
-	public boolean isOutOfBounds();
+	final protected long[] size;
+	final protected long[] steps;
+	final protected int n;
+	final protected long lastIndex;
+	protected long index = -1;
+	
+	final static protected long[] size( final IntegerInterval interval )
+	{
+		final long size[] = new long[ interval.numDimensions() ];
+		interval.size( size );
+		return size;
+	}
+	
+	public IntegerIntervalIterator( final long[] min, final long[] max )
+	{
+		n = min.length;
+		final int m = n - 1;
+		size = new long[ n ];
+		steps = new long[ n ];
+		long k = steps[ 0 ] = 1;
+		for ( int d = 0; d < m; )
+		{
+			final long s = max[ d ] - min[ d ] + 1; 
+			size[ d ] = s;
+			k *= s;
+			steps[ ++d ] = k;
+		}
+		size[ m ] = max[ m ] - min[ m ] + 1;
+		lastIndex = k * size[ m ] - 1;
+	}
+
+	public IntegerIntervalIterator( final IntegerInterval interval )
+	{
+		this( interval.getMin(), interval.getMax() );
+	}
+	
+	static public IntegerIntervalIterator create( final IntegerInterval interval )
+	{
+		final int n = interval.numDimensions();
+		for ( int d = 0; d < n; ++d )
+			if ( interval.min( d ) != 0 )
+				return new IntegerIntervalIterator( interval );
+		return new FlatZeroBoundPositiveIntegerIntervalIterator( interval );
+	}
 }

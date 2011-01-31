@@ -29,10 +29,10 @@
  */
 package mpicbg.imglib.sampler;
 
+import mpicbg.imglib.IntegerLocalizable;
 import mpicbg.imglib.Iterator;
 import mpicbg.imglib.container.array.Array;
 import mpicbg.imglib.image.Image;
-import mpicbg.imglib.location.RasterLocalizable;
 import mpicbg.imglib.type.Type;
 
 /**
@@ -82,7 +82,7 @@ import mpicbg.imglib.type.Type;
  * will visit the <em>same pixel positions</em>.
  * <p>
  * If the two {@link Container Containers} are not the same, then
- * {@link RasterLocalizable} and {@link PositionableRasterIntervalSampler} have to be
+ * {@link IntegerLocalizable} and {@link PositionableRasterIntervalSampler} have to be
  * used:
  * <pre>
  * 		else {
@@ -109,6 +109,6 @@ import mpicbg.imglib.type.Type;
  *
  * @param <T> - the {@link Type} this {@link RasterIterator} works on
  */
-public interface RasterIterator< T extends Type< T > > extends RasterSampler< T >, RasterLocalizable, Iterator, java.util.Iterator< T >
+public interface RasterIterator< T extends Type< T > > extends RasterSampler< T >, IntegerLocalizable, Iterator, java.util.Iterator< T >
 {	
 }

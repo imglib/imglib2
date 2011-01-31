@@ -27,8 +27,8 @@
  */
 package mpicbg.imglib.outofbounds;
 
+import mpicbg.imglib.IntegerLocalizable;
 import mpicbg.imglib.algorithm.math.MathLib;
-import mpicbg.imglib.location.RasterLocalizable;
 import mpicbg.imglib.sampler.PositionableRasterIntervalSampler;
 import mpicbg.imglib.type.Type;
 
@@ -246,7 +246,7 @@ public class OutOfBoundsStrategyPeriodic< T extends Type< T > > implements Raste
 	}
 	
 	@Override
-	public void moveTo( final RasterLocalizable localizable )
+	public void moveTo( final IntegerLocalizable localizable )
 	{
 		for ( int d = 0; d < n; ++d )
 			move( localizable.getIntPosition( d ) - position[ d ], d );
@@ -273,7 +273,7 @@ public class OutOfBoundsStrategyPeriodic< T extends Type< T > > implements Raste
 	}
 	
 	@Override
-	public void setPosition( final RasterLocalizable localizable )
+	public void setPosition( final IntegerLocalizable localizable )
 	{
 		for ( int d = 0; d < n; ++d )
 			setPosition( localizable.getIntPosition( d ), d );

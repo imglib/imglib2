@@ -27,8 +27,8 @@
  */
 package mpicbg.imglib.sampler.special;
 
+import mpicbg.imglib.IntegerLocalizable;
 import mpicbg.imglib.image.Image;
-import mpicbg.imglib.location.RasterLocalizable;
 import mpicbg.imglib.outofbounds.RasterOutOfBoundsFactory;
 import mpicbg.imglib.sampler.RasterSampler;
 import mpicbg.imglib.type.Type;
@@ -42,7 +42,7 @@ import mpicbg.imglib.type.Type;
 public class LocalNeighborhoodCursorFactory 
 {
 	public static < T extends Type< T > > LocalNeighborhoodCursor<T> createLocalNeighborhoodCursor(
-			final RasterLocalizable localizable,
+			final IntegerLocalizable localizable,
 			final Image< T > image,
 			final RasterOutOfBoundsFactory< T > outsideFactory )
 	{
@@ -56,17 +56,17 @@ public class LocalNeighborhoodCursorFactory
 		}
 	}
 
-	public static < T extends Type< T > >LocalNeighborhoodCursor<T> createLocalNeighborhoodCursor( final RasterLocalizable localizable, final Image< T > image )
+	public static < T extends Type< T > >LocalNeighborhoodCursor<T> createLocalNeighborhoodCursor( final IntegerLocalizable localizable, final Image< T > image )
 	{
 		return createLocalNeighborhoodCursor( localizable, image, null ); 
 	}
 	
-	public static < T extends Type< T >, S extends RasterLocalizable & RasterSampler< T > >LocalNeighborhoodCursor< T > createLocalNeighborhoodCursor( final S cursor, final RasterOutOfBoundsFactory< T > outsideFactory )
+	public static < T extends Type< T >, S extends IntegerLocalizable & RasterSampler< T > >LocalNeighborhoodCursor< T > createLocalNeighborhoodCursor( final S cursor, final RasterOutOfBoundsFactory< T > outsideFactory )
 	{
 		return createLocalNeighborhoodCursor( cursor, cursor.getImage(), outsideFactory ); 
 	}
 	
-	public static < T extends Type< T >, S extends RasterLocalizable & RasterSampler< T > >LocalNeighborhoodCursor< T > createLocalNeighborhoodCursor( final S cursor )
+	public static < T extends Type< T >, S extends IntegerLocalizable & RasterSampler< T > >LocalNeighborhoodCursor< T > createLocalNeighborhoodCursor( final S cursor )
 	{
 		return createLocalNeighborhoodCursor( cursor, cursor.getImage(), null ); 
 	}

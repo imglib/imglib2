@@ -27,16 +27,15 @@
  *
  * @author Stephan Preibisch & Stephan Saalfeld
  */
-package mpicbg.imglib.location;
+package mpicbg.imglib;
 
-import mpicbg.imglib.EuclideanSpace;
 
 /**
  * An element that can be positioned in n-dimensional discrete space.
  *
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de> and Stephan Preibisch
  */
-public interface RasterPositionable extends EuclideanSpace
+public interface IntegerPositionable extends EuclideanSpace
 {
 	/**
 	 * Move by 1 in one dimension.
@@ -69,7 +68,7 @@ public interface RasterPositionable extends EuclideanSpace
 	public void move( long distance, int dim );
 
 	/**
-	 * Move the element to the same location as a given {@link RasterLocalizable}.
+	 * Move the element to the same location as a given {@link IntegerLocalizable}.
 	 * This method is expected to evaluates the distance to move for each
 	 * dimension independently and then perform relative moves which can result
 	 * in more efficient moves, particularly in containers where local parts of
@@ -78,7 +77,7 @@ public interface RasterPositionable extends EuclideanSpace
 	 * 
 	 * @param localizable
 	 */
-	public void moveTo( RasterLocalizable localizable );
+	public void moveTo( IntegerLocalizable localizable );
 	
 	/**
 	 * Move the element to some position.  This method is expected to evaluates
@@ -105,11 +104,11 @@ public interface RasterPositionable extends EuclideanSpace
 	public void moveTo( long[] position );
 	
 	/**
-	 * Place the element at the same location as a given {@link RasterLocalizable}
+	 * Place the element at the same location as a given {@link IntegerLocalizable}
 	 * 
 	 * @param localizable
 	 */
-	public void setPosition( RasterLocalizable localizable );
+	public void setPosition( IntegerLocalizable localizable );
 	
 	/**
 	 * Set the position of the element.

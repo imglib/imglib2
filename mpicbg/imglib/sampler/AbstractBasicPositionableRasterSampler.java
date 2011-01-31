@@ -28,7 +28,7 @@
 package mpicbg.imglib.sampler;
 
 import mpicbg.imglib.IntegerInterval;
-import mpicbg.imglib.location.RasterLocalizable;
+import mpicbg.imglib.IntegerLocalizable;
 import mpicbg.imglib.type.Type;
 
 /**
@@ -98,14 +98,14 @@ public abstract class AbstractBasicPositionableRasterSampler< T extends Type< T 
 	}
 
 	@Override
-	public void moveTo( final RasterLocalizable localizable )
+	public void moveTo( final IntegerLocalizable localizable )
 	{
 		localizable.localize( tmp );
 		moveTo( tmp );
 	}
 
 	@Override
-	public void setPosition( final RasterLocalizable localizable )
+	public void setPosition( final IntegerLocalizable localizable )
 	{
 		localizable.localize( tmp );
 		setPosition( tmp );

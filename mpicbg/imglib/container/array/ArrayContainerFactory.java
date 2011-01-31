@@ -70,7 +70,7 @@ public class ArrayContainerFactory extends DirectAccessContainerFactory
 	{
 		final int numEntities = numEntitiesRangeCheck( dimensions, entitiesPerPixel );
 
-		return new Array< T, BitAccess >( this, new BitArray( numEntities ), dimensions, entitiesPerPixel );
+		return new Array< T, BitAccess >( new BitArray( numEntities ), dimensions, entitiesPerPixel );
 	}
 
 	@Override
@@ -78,7 +78,7 @@ public class ArrayContainerFactory extends DirectAccessContainerFactory
 	{
 		final int numEntities = numEntitiesRangeCheck( dimensions, entitiesPerPixel );
 
-		return new Array< T, ByteAccess >( this, new ByteArray( numEntities ), dimensions, entitiesPerPixel );
+		return new Array< T, ByteAccess >( new ByteArray( numEntities ), dimensions, entitiesPerPixel );
 	}
 
 	@Override
@@ -86,7 +86,7 @@ public class ArrayContainerFactory extends DirectAccessContainerFactory
 	{
 		final int numEntities = numEntitiesRangeCheck( dimensions, entitiesPerPixel );
 
-		return new Array< T, CharAccess >( this, new CharArray( numEntities ), dimensions, entitiesPerPixel );
+		return new Array< T, CharAccess >( new CharArray( numEntities ), dimensions, entitiesPerPixel );
 	}
 
 	@Override
@@ -94,7 +94,7 @@ public class ArrayContainerFactory extends DirectAccessContainerFactory
 	{
 		final int numEntities = numEntitiesRangeCheck( dimensions, entitiesPerPixel );
 
-		return new Array< T, DoubleAccess >( this, new DoubleArray( numEntities ), dimensions, entitiesPerPixel );
+		return new Array< T, DoubleAccess >( new DoubleArray( numEntities ), dimensions, entitiesPerPixel );
 	}
 
 	@Override
@@ -102,7 +102,7 @@ public class ArrayContainerFactory extends DirectAccessContainerFactory
 	{
 		final int numEntities = numEntitiesRangeCheck( dimensions, entitiesPerPixel );
 
-		return new Array< T, FloatAccess >( this, new FloatArray( numEntities ), dimensions, entitiesPerPixel );
+		return new Array< T, FloatAccess >( new FloatArray( numEntities ), dimensions, entitiesPerPixel );
 	}
 
 	@Override
@@ -110,7 +110,7 @@ public class ArrayContainerFactory extends DirectAccessContainerFactory
 	{
 		final int numEntities = numEntitiesRangeCheck( dimensions, entitiesPerPixel );
 
-		return new Array< T, IntAccess >( this, new IntArray( numEntities ), dimensions, entitiesPerPixel );
+		return new Array< T, IntAccess >( new IntArray( numEntities ), dimensions, entitiesPerPixel );
 	}
 
 	@Override
@@ -118,7 +118,7 @@ public class ArrayContainerFactory extends DirectAccessContainerFactory
 	{
 		final int numEntities = numEntitiesRangeCheck( dimensions, entitiesPerPixel );
 
-		return new Array< T, LongAccess >( this, new LongArray( numEntities ), dimensions, entitiesPerPixel );
+		return new Array< T, LongAccess >( new LongArray( numEntities ), dimensions, entitiesPerPixel );
 	}
 
 	@Override
@@ -126,6 +126,6 @@ public class ArrayContainerFactory extends DirectAccessContainerFactory
 	{
 		final int numEntities = numEntitiesRangeCheck( dimensions, entitiesPerPixel );
 
-		return new Array< T, ShortAccess >( this, new ShortArray( numEntities ), dimensions, entitiesPerPixel );
+		return new Array< T, ShortAccess >( new ShortArray( numEntities ), dimensions, entitiesPerPixel );
 	}
 }

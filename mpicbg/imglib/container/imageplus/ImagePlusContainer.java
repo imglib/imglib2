@@ -260,7 +260,7 @@ public class ImagePlusContainer< T extends Type< T >, A extends ArrayDataAccess<
 	}
 
 	@Override
-	public ImagePlusContainerFactory getFactory()
+	public ImagePlusContainerFactory factory()
 	{
 		return factory;
 	}

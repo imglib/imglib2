@@ -99,7 +99,7 @@ public class ShapeList< T extends Type< T > > extends AbstractContainer< T >
 	}
 	
 	@Override
-	public ShapeListContainerFactory getFactory() { return factory; }
+	public ShapeListContainerFactory factory() { return factory; }
 	
 	@Override
 	public ShapeListPositionableRasterSampler< T > createRasterIterator( final Image< T > image ) 

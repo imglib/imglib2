@@ -27,10 +27,10 @@
  */
 package mpicbg.imglib.interpolation.linear;
 
-import mpicbg.imglib.Localizable;
+import mpicbg.imglib.IntegerLocalizable;
+import mpicbg.imglib.RealLocalizable;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.interpolation.Interpolator;
-import mpicbg.imglib.location.RasterLocalizable;
 import mpicbg.imglib.outofbounds.RasterOutOfBoundsFactory;
 import mpicbg.imglib.sampler.PositionableRasterIntervalSampler;
 import mpicbg.imglib.type.numeric.NumericType;
@@ -194,7 +194,7 @@ public class LinearInterpolator1D< T extends NumericType< T > > implements Inter
 	}
 
 	@Override
-	public void moveTo( final Localizable localizable )
+	public void moveTo( final RealLocalizable localizable )
 	{
 		x = localizable.getFloatPosition( 0 );
 		final int floorPosition = floor( x );
@@ -230,7 +230,7 @@ public class LinearInterpolator1D< T extends NumericType< T > > implements Inter
 	}
 
 	@Override
-	public void setPosition( final Localizable localizable )
+	public void setPosition( final RealLocalizable localizable )
 	{
 		x = localizable.getFloatPosition( 0 );
 		target.setPosition( floor( x ), 0 );
@@ -308,7 +308,7 @@ public class LinearInterpolator1D< T extends NumericType< T > > implements Inter
 	}
 
 	@Override
-	public void moveTo( final RasterLocalizable localizable )
+	public void moveTo( final IntegerLocalizable localizable )
 	{
 		final int floorX = localizable.getIntPosition( 0 );
 		x = floorX;
@@ -344,7 +344,7 @@ public class LinearInterpolator1D< T extends NumericType< T > > implements Inter
 	}
 	
 	@Override
-	public void setPosition( RasterLocalizable localizable )
+	public void setPosition( IntegerLocalizable localizable )
 	{
 		final int floorX = localizable.getIntPosition( 0 );
 		x = floorX;

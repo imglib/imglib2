@@ -235,7 +235,7 @@ public class FourierConvolution<T extends RealType<T>, S extends RealType<S>> im
 			// instaniate real valued kernel template
 			// which is of the same container type as the image
 			// so that the computation is easy
-			final ImageFactory<S> kernelTemplateFactory = new ImageFactory<S>( kernel.createType(), image.getContainer().getFactory() );
+			final ImageFactory<S> kernelTemplateFactory = new ImageFactory<S>( kernel.createType(), image.getContainer().factory() );
 			final Image<S> kernelTemplate = kernelTemplateFactory.createImage( kernelTemplateDim );
 			
 			// copy the kernel into the kernelTemplate,

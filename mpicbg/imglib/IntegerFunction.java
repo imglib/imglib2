@@ -27,7 +27,6 @@
  */
 package mpicbg.imglib;
 
-import mpicbg.imglib.location.RasterPositionable;
 
 /**
  * <p><em>f:Z<sup>n</sup>&rarr;T</em></p>
@@ -41,7 +40,7 @@ import mpicbg.imglib.location.RasterPositionable;
 public interface IntegerFunction<
 		T,
 		F extends IntegerFunction< T, F, R >,
-		R extends RasterPositionable & Sampler< T > > extends Function< T, F >
+		R extends IntegerPositionable & Sampler< T > > extends Function< T, F >
 {
 	/**
 	 * Create a random access sampler for integer coordinates.

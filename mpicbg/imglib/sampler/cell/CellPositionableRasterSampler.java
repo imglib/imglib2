@@ -27,12 +27,12 @@
  */
 package mpicbg.imglib.sampler.cell;
 
+import mpicbg.imglib.IntegerLocalizable;
 import mpicbg.imglib.container.array.Array;
 import mpicbg.imglib.container.array.ArrayPositionableRasterSampler;
 import mpicbg.imglib.container.cell.Cell;
 import mpicbg.imglib.container.cell.CellContainer;
 import mpicbg.imglib.image.Image;
-import mpicbg.imglib.location.RasterLocalizable;
 import mpicbg.imglib.sampler.AbstractBasicPositionableRasterSampler;
 import mpicbg.imglib.type.Type;
 import mpicbg.imglib.type.label.FakeType;
@@ -257,14 +257,14 @@ public class CellPositionableRasterSampler< T extends Type< T > > extends Abstra
 	}	
 	
 	@Override
-	public void moveTo( final RasterLocalizable localizable )
+	public void moveTo( final IntegerLocalizable localizable )
 	{
 		localizable.localize( tmp );
 		moveTo( tmp );
 	}
 
 	@Override
-	public void setPosition( final RasterLocalizable localizable )
+	public void setPosition( final IntegerLocalizable localizable )
 	{
 		localizable.localize( tmp );
 		setPosition( tmp );

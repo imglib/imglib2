@@ -27,13 +27,13 @@
  */
 package mpicbg.imglib.location.transform;
 
-import mpicbg.imglib.Localizable;
-import mpicbg.imglib.Positionable;
-import mpicbg.imglib.location.RasterLocalizable;
-import mpicbg.imglib.location.RasterPositionable;
+import mpicbg.imglib.IntegerLocalizable;
+import mpicbg.imglib.IntegerPositionable;
+import mpicbg.imglib.RealLocalizable;
+import mpicbg.imglib.RealPositionable;
 
 /**
- * A {@link Positionable} that drives a {@link RasterPositionable} to its
+ * A {@link RealPositionable} that drives a {@link IntegerPositionable} to its
  * floor discrete coordinates.  For practical useage, the floor operation is
  * defined as the integer smaller than the real value:
  * 
@@ -41,7 +41,7 @@ import mpicbg.imglib.location.RasterPositionable;
  * 
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-public class FloorRasterPositionable< LocalizableRasterPositionable extends RasterLocalizable & RasterPositionable > implements Positionable, Localizable
+public class FloorRasterPositionable< LocalizableRasterPositionable extends IntegerLocalizable & IntegerPositionable > implements RealPositionable, RealLocalizable
 {
 	final protected LocalizableRasterPositionable target;
 	
@@ -59,7 +59,7 @@ public class FloorRasterPositionable< LocalizableRasterPositionable extends Rast
 		position = new float[ numDimensions ];
 	}
 	
-	public FloorRasterPositionable( final Localizable origin, final LocalizableRasterPositionable target )
+	public FloorRasterPositionable( final RealLocalizable origin, final LocalizableRasterPositionable target )
 	{
 		this( target );
 		
@@ -157,7 +157,7 @@ public class FloorRasterPositionable< LocalizableRasterPositionable extends Rast
 	}
 
 	@Override
-	public void moveTo( final Localizable localizable )
+	public void moveTo( final RealLocalizable localizable )
 	{
 		localizable.localize( position );
 		moveTo( position );
@@ -196,7 +196,7 @@ public class FloorRasterPositionable< LocalizableRasterPositionable extends Rast
 	}
 
 	@Override
-	public void setPosition( final Localizable localizable )
+	public void setPosition( final RealLocalizable localizable )
 	{
 		localizable.localize( position );
 		setPosition( position );
@@ -270,7 +270,7 @@ public class FloorRasterPositionable< LocalizableRasterPositionable extends Rast
 	}
 
 	@Override
-	public void moveTo( final RasterLocalizable localizable )
+	public void moveTo( final IntegerLocalizable localizable )
 	{
 		localizable.localize( position );
 		target.moveTo( localizable );
@@ -293,7 +293,7 @@ public class FloorRasterPositionable< LocalizableRasterPositionable extends Rast
 	}
 	
 	@Override
-	public void setPosition( RasterLocalizable localizable )
+	public void setPosition( IntegerLocalizable localizable )
 	{
 		localizable.localize( position );
 		target.setPosition( localizable );

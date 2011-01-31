@@ -123,7 +123,7 @@ public class Image< T extends Type< T > > implements
 
 	public Image( final Container<T> container, final T type, final String name )
 	{
-		this( container, new ImageFactory<T>( type, container.getFactory() ), container.getDimensions(), name );
+		this( container, new ImageFactory<T>( type, container.factory() ), container.getDimensions(), name );
 	}
 	
 	protected Image( final ImageFactory<T> imageFactory, final int dim[], final String name )	

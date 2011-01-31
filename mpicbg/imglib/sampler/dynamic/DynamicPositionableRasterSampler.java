@@ -27,11 +27,11 @@
  */
 package mpicbg.imglib.sampler.dynamic;
 
+import mpicbg.imglib.IntegerLocalizable;
 import mpicbg.imglib.container.basictypecontainer.DataAccess;
 import mpicbg.imglib.container.dynamic.DynamicContainer;
 import mpicbg.imglib.container.dynamic.DynamicContainerAccessor;
 import mpicbg.imglib.image.Image;
-import mpicbg.imglib.location.RasterLocalizable;
 import mpicbg.imglib.sampler.AbstractBasicPositionableRasterSampler;
 import mpicbg.imglib.type.Type;
 
@@ -134,14 +134,14 @@ public class DynamicPositionableRasterSampler< T extends Type< T > > extends Abs
 	}
 
 	@Override
-	public void moveTo( final RasterLocalizable localizable )
+	public void moveTo( final IntegerLocalizable localizable )
 	{
 		localizable.localize( tmp );
 		moveTo( tmp );
 	}
 	
 	@Override
-	public void setPosition( final RasterLocalizable localizable )
+	public void setPosition( final IntegerLocalizable localizable )
 	{
 		localizable.localize( tmp );
 		setPosition( tmp );

@@ -54,8 +54,6 @@ final public class Array< T extends Type< T >, A extends DataAccess > extends Ab
 {
 	final int[] step, dim;
 	
-	final ArrayContainerFactory factory;
-
 	// the DataAccess created by the ArrayContainerFactory
 	final A data;
 
@@ -67,7 +65,7 @@ final public class Array< T extends Type< T >, A extends DataAccess > extends Ab
 	 * @param dim
 	 * @param entitiesPerPixel
 	 */
-	public Array( final ArrayContainerFactory factory, final A data, final long[] dim, final int entitiesPerPixel )
+	public Array( final A data, final long[] dim, final int entitiesPerPixel )
 	{
 		super( dim, entitiesPerPixel );
 		this.dim = new int[ n ];
@@ -75,7 +73,6 @@ final public class Array< T extends Type< T >, A extends DataAccess > extends Ab
 			this.dim[ d ] = ( int )dim[ d ];
 
 		step = Array.createAllocationSteps( this.dim );
-		this.factory = factory;
 		this.data = data;
 	}
 
@@ -83,12 +80,6 @@ final public class Array< T extends Type< T >, A extends DataAccess > extends Ab
 	public A update( final Object o )
 	{
 		return data;
-	}
-
-	@Override
-	public ArrayContainerFactory getFactory()
-	{
-		return factory;
 	}
 
 	@Override
@@ -113,7 +104,7 @@ final public class Array< T extends Type< T >, A extends DataAccess > extends Ab
 	}
 
 	@Override
-	public ArrayOutOfBoundsPositionableRasterSampler< T > positionableRasterSampler( final RasterOutOfBoundsFactory< T > outOfBoundsFactory )
+	public ArrayOutOfBoundsPositionableRasterSampler< T > positionableRasterSampler( final RasterOutOfBoundsFactory< T, Array< T, A > > outOfBoundsFactory )
 	{
 		ArrayOutOfBoundsPositionableRasterSampler< T > c = new ArrayOutOfBoundsPositionableRasterSampler< T >( this, outOfBoundsFactory );
 		return c;
@@ -195,5 +186,11 @@ final public class Array< T extends Type< T >, A extends DataAccess > extends Ab
 	public < S extends Sampler< T > > S sampler( SamplerFactory< T, S, Array< T, A > > samplerFactory )
 	{
 		return samplerFactory.create( this );
+	}
+	
+	@Override
+	public ArrayContainerFactory factory()
+	{
+		return new ArrayContainerFactory();
 	}
 }

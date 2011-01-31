@@ -28,36 +28,36 @@
  */
 package mpicbg.imglib.location.transform;
 
-import mpicbg.imglib.Localizable;
-import mpicbg.imglib.Positionable;
-import mpicbg.imglib.location.RasterLocalizable;
-import mpicbg.imglib.location.RasterPositionable;
+import mpicbg.imglib.IntegerLocalizable;
+import mpicbg.imglib.IntegerPositionable;
+import mpicbg.imglib.RealLocalizable;
+import mpicbg.imglib.RealPositionable;
 
 /**
- * Links a {@link Localizable} with a {@link RasterPositionable} by
+ * Links a {@link RealLocalizable} with a {@link IntegerPositionable} by
  * transferring real coordinates to rounded discrete coordinates.  For practical
  * useage, the round operation is defined as the integer smaller than the real
  * value:
  * 
  * f = r < 0 ? (long)( r - 0.5 ) : (long)( r + 0.5 )
  * 
- * The {@link RasterPositionable} is not the linked {@link Positionable} of
- * this link, that is, other {@link Positionable Positionables} can be linked
+ * The {@link IntegerPositionable} is not the linked {@link RealPositionable} of
+ * this link, that is, other {@link RealPositionable Positionables} can be linked
  * to it in addition. 
  * 
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-public class PositionableRoundRasterPositionable< LocalizablePositionable extends Localizable & Positionable > implements Positionable
+public class PositionableRoundRasterPositionable< LocalizablePositionable extends RealLocalizable & RealPositionable > implements RealPositionable
 {
 	final protected LocalizablePositionable source;
-	final protected RasterPositionable target;
+	final protected IntegerPositionable target;
 	
 	final private int numDimensions;
 	
 	final private long[] floor;
 	final private double[] position;
 	
-	public PositionableRoundRasterPositionable( final LocalizablePositionable source, final RasterPositionable target )
+	public PositionableRoundRasterPositionable( final LocalizablePositionable source, final IntegerPositionable target )
 	{
 		this.source = source;
 		this.target = target;
@@ -114,7 +114,7 @@ public class PositionableRoundRasterPositionable< LocalizablePositionable extend
 	}
 
 	@Override
-	public void moveTo( final Localizable localizable )
+	public void moveTo( final RealLocalizable localizable )
 	{
 		localizable.localize( position );
 		moveTo( position );
@@ -137,7 +137,7 @@ public class PositionableRoundRasterPositionable< LocalizablePositionable extend
 	}
 
 	@Override
-	public void setPosition( final Localizable localizable )
+	public void setPosition( final RealLocalizable localizable )
 	{
 		localizable.localize( position );
 		setPosition( position );
@@ -205,7 +205,7 @@ public class PositionableRoundRasterPositionable< LocalizablePositionable extend
 	}
 
 	@Override
-	public void moveTo( final RasterLocalizable localizable )
+	public void moveTo( final IntegerLocalizable localizable )
 	{
 		source.moveTo( localizable );
 		target.moveTo( localizable );
@@ -226,7 +226,7 @@ public class PositionableRoundRasterPositionable< LocalizablePositionable extend
 	}
 	
 	@Override
-	public void setPosition( RasterLocalizable localizable )
+	public void setPosition( IntegerLocalizable localizable )
 	{
 		source.setPosition( localizable );
 		target.setPosition( localizable );

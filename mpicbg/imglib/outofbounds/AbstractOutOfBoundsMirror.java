@@ -27,8 +27,8 @@
  */
 package mpicbg.imglib.outofbounds;
 
+import mpicbg.imglib.IntegerLocalizable;
 import mpicbg.imglib.algorithm.math.MathLib;
-import mpicbg.imglib.location.RasterLocalizable;
 import mpicbg.imglib.sampler.PositionableRasterIntervalSampler;
 import mpicbg.imglib.type.Type;
 
@@ -182,7 +182,7 @@ public abstract class AbstractOutOfBoundsMirror< T extends Type< T > > implement
 	}
 	
 	@Override
-	public void moveTo( final RasterLocalizable localizable )
+	public void moveTo( final IntegerLocalizable localizable )
 	{
 		for ( int d = 0; d < numDimensions; ++d )
 			move( localizable.getIntPosition( d ) - position[ d ], d );
@@ -209,7 +209,7 @@ public abstract class AbstractOutOfBoundsMirror< T extends Type< T > > implement
 	}
 	
 	@Override
-	public void setPosition( final RasterLocalizable localizable )
+	public void setPosition( final IntegerLocalizable localizable )
 	{
 		for ( int d = 0; d < numDimensions; ++d )
 			setPosition( localizable.getIntPosition( d ), d );

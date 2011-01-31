@@ -29,90 +29,43 @@
  */
 package mpicbg.imglib;
 
-import mpicbg.imglib.location.RasterPositionable;
-
 
 /**
- * An element that can be positioned in n-dimensional real space.
+ * The {@link RealLocalizable} interface can localize itself in an n-dimensional
+ * real space.
+ *  
+ * @author Stephan Saalfeld
  *
- * @author Stephan Saalfeld <saalfeld@mpi-cbg.de> and Stephan Preibisch
  */
-public interface Positionable extends RasterPositionable
+public interface RealLocalizable extends EuclideanSpace
 {
 	/**
-	 * Move the element in one dimension for some distance.
-	 *  
-	 * @param distance
+	 * Write the current position into the passed array.
+	 * 
+	 * @param location
+	 */
+	public void localize( float[] position );
+	
+	/**
+	 * Write the current position into the passed array.
+	 * 
+	 * @param location
+	 */
+	public void localize( double[] position );
+	
+	/**
+	 * Return the current position in a given dimension.
+	 * 
 	 * @param dim
+	 * @return
 	 */
-	public void move( float distance, int dim );
-
+	public float getFloatPosition( int dim );
+	
 	/**
-	 * Move the element in one dimension for some distance.
-	 *  
-	 * @param distance
+	 * Return the current position in a given dimension.
+	 * 
 	 * @param dim
+	 * @return
 	 */
-	public void move( double distance, int dim );
-
-	/**
-	 * Move the element relative to its current location using a
-	 * {@link Localizable} as distance vector.
-	 * 
-	 * @param localizable
-	 */
-	public void move( Localizable localizable );
-	
-	/**
-	 * Move the element relative to its current location using a float[] as
-	 * distance vector.
-	 * 
-	 * @param position
-	 */
-	public void move( float[] position );
-	
-	/**
-	 * Move the element relative to its current location using a float[] as
-	 * distance vector.
-	 * 
-	 * @param position
-	 */
-	public void move( double[] position );
-	
-	/**
-	 * Place the element at the same location as a given {@link Localizable}
-	 * 
-	 * @param localizable
-	 */
-	public void setPosition( Localizable localizable );
-	
-	/**
-	 * Set the position of the element.
-	 * 
-	 * @param position
-	 */
-	public void setPosition( float position[] );
-	
-	/**
-	 * Set the position of the element.
-	 * 
-	 * @param position
-	 */
-	public void setPosition( double position[] );
-	
-	/**
-	 * Set the position of the element for one dimension.
-	 * 
-	 * @param position
-	 * @param dim
-	 */
-	public void setPosition( float position, int dim );		
-	
-	/**
-	 * Set the position of the element for one dimension.
-	 * 
-	 * @param position
-	 * @param dim
-	 */
-	public void setPosition( double position, int dim );
+	public double getDoublePosition( int dim );
 }

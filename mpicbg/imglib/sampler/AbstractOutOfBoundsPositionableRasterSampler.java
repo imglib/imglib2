@@ -28,7 +28,7 @@
 package mpicbg.imglib.sampler;
 
 import mpicbg.imglib.IntegerInterval;
-import mpicbg.imglib.location.RasterLocalizable;
+import mpicbg.imglib.IntegerLocalizable;
 import mpicbg.imglib.outofbounds.RasterOutOfBounds;
 import mpicbg.imglib.outofbounds.RasterOutOfBoundsFactory;
 import mpicbg.imglib.type.Type;
@@ -51,7 +51,7 @@ public abstract class AbstractOutOfBoundsPositionableRasterSampler< T extends Ty
 		this.outOfBounds = outOfBounds;
 	}
 	
-	public AbstractOutOfBoundsPositionableRasterSampler( final IntegerInterval f, final RasterOutOfBoundsFactory< T > outOfBoundsFactory )
+	public AbstractOutOfBoundsPositionableRasterSampler( final IntegerInterval f, final RasterOutOfBoundsFactory< T, ? > outOfBoundsFactory )
 	{
 		super( f.numDimensions() );
 		
@@ -130,7 +130,7 @@ public abstract class AbstractOutOfBoundsPositionableRasterSampler< T extends Ty
 	}
 	
 	@Override
-	final public void moveTo( final RasterLocalizable localizable )
+	final public void moveTo( final IntegerLocalizable localizable )
 	{
 		outOfBounds.moveTo( localizable );
 	}
@@ -160,7 +160,7 @@ public abstract class AbstractOutOfBoundsPositionableRasterSampler< T extends Ty
 	}
 	
 	@Override
-	final public void setPosition( final RasterLocalizable localizable )
+	final public void setPosition( final IntegerLocalizable localizable )
 	{
 		outOfBounds.setPosition( localizable );
 	}

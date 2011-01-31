@@ -40,7 +40,7 @@ package mpicbg.imglib;
 public interface RealFunction<
 		T,
 		F extends RealFunction< T, F, P >,
-		P extends Positionable & Sampler< T > > extends Function< T, F >
+		P extends RealPositionable & Sampler< T > > extends Function< T, F >
 {
 	/**
 	 * Create a random access sampler for real coordinates.

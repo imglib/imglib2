@@ -27,6 +27,7 @@
  */
 package mpicbg.imglib.container;
 
+import mpicbg.imglib.InjectiveIntegerInterval;
 import mpicbg.imglib.IntegerFunction;
 import mpicbg.imglib.IntegerIntervalFunction;
 import mpicbg.imglib.sampler.PositionableRasterIntervalSampler;
@@ -34,7 +35,9 @@ import mpicbg.imglib.sampler.RasterIterator;
 import mpicbg.imglib.type.Type;
 
 /**
- * 
+ * Containers are {@link InjectiveIntegerInterval} that has its min at
+ * 0<sup><em>n</em></sup> and its max positive.  Containers store pixels
+ * and thus are the basis for conventional image processing.
  *
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
@@ -43,7 +46,8 @@ public interface Container<
 		F extends Container< T, F > >
 	extends
 		IntegerFunction< T, F, PositionableRasterIntervalSampler< T > >,
-		IntegerIntervalFunction< T, F, PositionableRasterIntervalSampler< T >, RasterIterator< T > >
+		IntegerIntervalFunction< T, F, PositionableRasterIntervalSampler< T >, RasterIterator< T > >,
+		InjectiveIntegerInterval
 {
-	public ContainerFactory getFactory();
+	public ContainerFactory factory();
 }

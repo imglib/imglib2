@@ -27,50 +27,91 @@
  *
  * @author Stephan Preibisch & Stephan Saalfeld
  */
-package mpicbg.imglib.location;
+package mpicbg.imglib;
 
-import mpicbg.imglib.Localizable;
-import mpicbg.imglib.sampler.PositionableRasterIntervalSampler;
-import mpicbg.imglib.sampler.RasterIterator;
+
 
 /**
- * The {@link RasterLocalizable} interface can localize itself in an n-dimensional
- * discrete space.  Not only {@link RasterIterator}s can use this 
- * interface, it might be used by much more classes as {@link PositionableRasterIntervalSampler}s
- * can take any {@link RasterLocalizable} as input for where they should move to.
- *  
- * @author Stephan Preibisch & Stephan Saalfeld
+ * An element that can be positioned in n-dimensional real space.
  *
+ * @author Stephan Saalfeld <saalfeld@mpi-cbg.de> and Stephan Preibisch
  */
-public interface RasterLocalizable extends Localizable
+public interface RealPositionable extends IntegerPositionable
 {
 	/**
-	 * Write the current position into the passed array.
-	 * 
-	 * @param location
-	 */
-	public void localize( int[] position );
-	
-	/**
-	 * Write the current position into the passed array.
-	 * 
-	 * @param location
-	 */
-	public void localize( long[] position );
-	
-	/**
-	 * Return the current position in a given dimension.
-	 * 
+	 * Move the element in one dimension for some distance.
+	 *  
+	 * @param distance
 	 * @param dim
-	 * @return
 	 */
-	public int getIntPosition( int dim );
+	public void move( float distance, int dim );
+
+	/**
+	 * Move the element in one dimension for some distance.
+	 *  
+	 * @param distance
+	 * @param dim
+	 */
+	public void move( double distance, int dim );
+
+	/**
+	 * Move the element relative to its current location using a
+	 * {@link RealLocalizable} as distance vector.
+	 * 
+	 * @param localizable
+	 */
+	public void move( RealLocalizable localizable );
 	
 	/**
-	 * Return the current position in a given dimension.
+	 * Move the element relative to its current location using a float[] as
+	 * distance vector.
 	 * 
-	 * @param dim
-	 * @return
+	 * @param position
 	 */
-	public long getLongPosition( int dim );
+	public void move( float[] position );
+	
+	/**
+	 * Move the element relative to its current location using a float[] as
+	 * distance vector.
+	 * 
+	 * @param position
+	 */
+	public void move( double[] position );
+	
+	/**
+	 * Place the element at the same location as a given {@link RealLocalizable}
+	 * 
+	 * @param localizable
+	 */
+	public void setPosition( RealLocalizable localizable );
+	
+	/**
+	 * Set the position of the element.
+	 * 
+	 * @param position
+	 */
+	public void setPosition( float position[] );
+	
+	/**
+	 * Set the position of the element.
+	 * 
+	 * @param position
+	 */
+	public void setPosition( double position[] );
+	
+	/**
+	 * Set the position of the element for one dimension.
+	 * 
+	 * @param position
+	 * @param dim
+	 */
+	public void setPosition( float position, int dim );		
+	
+	/**
+	 * Set the position of the element for one dimension.
+	 * 
+	 * @param position
+	 * @param dim
+	 */
+	public void setPosition( double position, int dim );
 }

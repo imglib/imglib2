@@ -101,11 +101,25 @@ public abstract class AbstractContainer< T extends Type< T >, F extends Containe
 	{
 		return max[ d ];
 	}
+	
+	@Override
+	public void realMax( final double[] m )
+	{
+		for ( int d = 0; d < n; ++d )
+			m[ d ] = max[ d ];
+	}
 
 	@Override
 	public double realMin( int d )
 	{
 		return 0;
+	}
+	
+	@Override
+	public void realMin( final double[] m )
+	{
+		for ( int d = 0; d < n; ++d )
+			m[ d ] = 0;
 	}
 
 	@Override
@@ -113,6 +127,21 @@ public abstract class AbstractContainer< T extends Type< T >, F extends Containe
 	{
 		return max[ d ];
 	}
+
+	@Override
+	public void max( final long[] m )
+	{
+		for ( int d = 0; d < n; ++d )
+			m[ d ] = max[ d ];
+	}
+
+	@Override
+	public void min( final long[] m )
+	{
+		for ( int d = 0; d < n; ++d )
+			m[ d ] = 0;
+	}
+
 
 	@Override
 	public long min( int d )

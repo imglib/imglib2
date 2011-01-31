@@ -41,7 +41,7 @@ public class ArrayOutOfBoundsPositionableRasterSampler< T extends Type< T > > ex
 {
 	final protected Array< T, ? > container;
 	
-	public ArrayOutOfBoundsPositionableRasterSampler( final Array< T, ? > container, final RasterOutOfBoundsFactory< T > outOfBoundsStrategyFactory ) 
+	public ArrayOutOfBoundsPositionableRasterSampler( final Array< T, ? > container, final RasterOutOfBoundsFactory< T, ? > outOfBoundsStrategyFactory ) 
 	{
 		super( container, outOfBoundsStrategyFactory );
 		

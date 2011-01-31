@@ -27,10 +27,10 @@
  */
 package mpicbg.imglib.sampler.shapelist;
 
+import mpicbg.imglib.IntegerLocalizable;
+import mpicbg.imglib.IntegerPositionable;
 import mpicbg.imglib.container.shapelist.ShapeList;
 import mpicbg.imglib.image.Image;
-import mpicbg.imglib.location.RasterLocalizable;
-import mpicbg.imglib.location.RasterPositionable;
 import mpicbg.imglib.location.VoidPositionable;
 import mpicbg.imglib.sampler.AbstractRasterIterator;
 import mpicbg.imglib.sampler.PositionableRasterIntervalSampler;
@@ -50,7 +50,7 @@ public class ShapeListPositionableRasterSampler< T extends Type< T > > extends A
 	final protected int numDimensions;
 	final protected int[] position, dimensions;
 	
-	protected RasterPositionable linkedRasterPositionable = VoidPositionable.getInstance();
+	protected IntegerPositionable linkedRasterPositionable = VoidPositionable.getInstance();
 	
 	public ShapeListPositionableRasterSampler(
 			final ShapeList< T > container,
@@ -140,7 +140,7 @@ public class ShapeListPositionableRasterSampler< T extends Type< T > > extends A
 	}
 
 	@Override
-	public void moveTo( final RasterLocalizable localizable )
+	public void moveTo( final IntegerLocalizable localizable )
 	{
 		localizable.localize( position );
 		
@@ -148,7 +148,7 @@ public class ShapeListPositionableRasterSampler< T extends Type< T > > extends A
 	}
 
 	@Override
-	public void setPosition( final RasterLocalizable localizable )
+	public void setPosition( final IntegerLocalizable localizable )
 	{
 		localizable.localize( position );
 
