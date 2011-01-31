@@ -1,0 +1,27 @@
+\documentclass[a4paper,10pt]{report}
+\usepackage[utf8x]{inputenc}
+
+% Title Page
+\title{ImgLib}
+\author{Stephan Saalfeld \and Stephan Preibisch}
+
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+
+\end{abstract}
+
+\chapter{The ImgLib API}
+
+% \section{Introduction}
+
+\section{How images are Functions}
+
+\begin{description}
+	\item[{\tt{}Function<T,F extends Function<T,F>>}]{A generic Function from a not further specified domain into {\tt{}T}.  The interface declares a method to create a {\tt{Sampler<T> S}} through a {\tt{SamplerFactory<T,S,F>}}.  The latter having F as generic parameter, it can be implemented for particular specializations of the Function interface.}
+	\item[{\tt{}PositionableFunction<T,P extends Positionable \& Sampler<T>,F extends PositionableFunction<T,F>>}]{A generic Function from a not further specified domain into {\tt{}T}.  The interface declares a method to create a {\tt{Sampler<T> S}} through a {\tt{SamplerFactory<T,S,F>}}.  The latter having F as generic parameter, it can be implemented for particular specializations of the Function interface.}
+\end{description}
+
+\end{document}
