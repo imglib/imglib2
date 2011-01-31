@@ -37,7 +37,6 @@ import mpicbg.imglib.outofbounds.RasterOutOfBoundsFactory;
 import mpicbg.imglib.sampler.AbstractRasterIterator;
 import mpicbg.imglib.sampler.PositionableRasterSampler;
 import mpicbg.imglib.type.Type;
-import mpicbg.imglib.type.label.FakeType;
 
 public class LocalNeighborhoodCursor<T extends Type<T>> extends AbstractRasterIterator<T>
 {

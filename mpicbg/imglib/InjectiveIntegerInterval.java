@@ -25,19 +25,16 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-package mpicbg.imglib.outofbounds;
-
-import mpicbg.imglib.Sampler;
-import mpicbg.imglib.location.Localizable;
-import mpicbg.imglib.location.Positionable;
+package mpicbg.imglib;
 
 /**
+ * <p>{x&isin;Z<sup><em>n</em></sup>|<em>min<sub>d</sub></em>&le;<em>x<sub>d</sub></em>&le;<em>max<sub>d</sub></em>;<em>d</em>&isin;{0&hellip;<em>n</em>-1}}</p>
  * 
- * @param <T>
+ * An {@link IntegerInterval} over the discrete source domain in which for
+ * <em>all</em> integer coordinates in the {@link InjectiveIntegerInterval} a
+ * function value exists or can be generated.
  *
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-public interface OutOfBoundsFactory< T, F >
-{
-	public < P extends Positionable & Localizable & Sampler< T > >OutOfBounds< T > create( P sampler );
-}
+public interface InjectiveIntegerInterval extends IntegerInterval
+{}

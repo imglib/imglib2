@@ -25,19 +25,17 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-package mpicbg.imglib.outofbounds;
-
-import mpicbg.imglib.Sampler;
-import mpicbg.imglib.location.Localizable;
-import mpicbg.imglib.location.Positionable;
+package mpicbg.imglib;
 
 /**
+ * <p>{x&isin;R<sup><em>n</em></sup>|<em>min<sub>d</sub></em>&le;<em>x<sub>d</sub></em>&le;<em>max<sub>d</sub></em>;<em>d</em>&isin;{0&hellip;<em>n</em>-1}}</p>
  * 
- * @param <T>
+ * An {@link InjectiveRealInterval} over the real source domain in which for
+ * <em>all</em> coordinates in the {@link InjectiveRealInterval} a function
+ * value exists or can be generated.
  *
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-public interface OutOfBoundsFactory< T, F >
+public interface InjectiveRealInterval extends RealInterval
 {
-	public < P extends Positionable & Localizable & Sampler< T > >OutOfBounds< T > create( P sampler );
 }

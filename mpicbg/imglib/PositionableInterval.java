@@ -30,7 +30,6 @@ package mpicbg.imglib;
 import mpicbg.imglib.location.Positionable;
 import mpicbg.imglib.outofbounds.OutOfBounds;
 import mpicbg.imglib.outofbounds.OutOfBoundsFactory;
-import mpicbg.imglib.outofbounds.RasterOutOfBoundsFactory;
 
 /**
  * <p><em>f</em>:{x&isin;R<sup><em>n</em></sup>|[min,max]&rarr;T}</em></p>
