@@ -27,17 +27,19 @@
  */
 package mpicbg.imglib;
 
+import mpicbg.imglib.container.Container;
 import mpicbg.imglib.location.Iterator;
 import mpicbg.imglib.location.Localizable;
-import mpicbg.imglib.sampler.Sampler;
-import mpicbg.imglib.type.Type;
 
 /**
  * <p><em>f</em>:R<sup><em>n</em></sup>&isin;[0,<em>s</em>]&rarr;T</em></p>
  * 
- * <p>A {@link Function} over zero bound positive real space that can create a
- * random access {@link Sampler} that generates values beyond boundaries
- * through an {@link OutOfBounds}.</p>
+ * <p>A {@link Function} over real space and a finite set of elements in the
+ * target domain <em>T</em>.  All target elements <em>T</em> can be accessed
+ * through Iterators.  There is an iterator that tracks its source location
+ * at each move and one that calculates it on request only.  Depending on
+ * the frequency of requesting the source location, either of them is
+ * optimal in terms of speed.</p>
  * 
  * @param <T>
  * @param <F>
@@ -46,7 +48,7 @@ import mpicbg.imglib.type.Type;
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
 public interface IterableFunction<
-		T extends Type< T >,
+		T,
 		F extends IterableFunction< T, F, I >,
 		I extends Iterator & Localizable & java.util.Iterator< T > & Sampler< T > > extends Function< T, F >, RealInterval, Iterable< T >
 {
@@ -74,4 +76,32 @@ public interface IterableFunction<
 	 * @return I fast localizing iterator
 	 */
 	public I localizingIterator();
+	
+	/**
+	 * <p>Returns the number of elements in this
+	 * {@link IterableFunction Function}.</p>
+	 * 
+	 * @return number of elements
+	 */
+	public long size();
+	
+	/**
+	 * <p>Returns <tt>true</tt> if this {@link IterableFunction} and
+	 * <em>f</em> can be copied by synchronous iteration.  That is, having
+	 * an {@link Iterator} on this and another {@link Iterator} on <em>f</em>,
+	 * moving both in synchrony will point both of them to corresponding
+	 * locations in their source domain.  In other words, this and <em>f</em>
+	 * have the same iteration order and means and the same number of
+	 * elements.</p>
+	 * 
+	 * <p><em>Note</em> that returning <tt>false</tt> does not mean that
+	 * copying by synchronous iteration is not possible but only that the
+	 * method cannot decide if the required conditions are met.</p>
+	 * 
+	 * @param f the {@link Container} to be tested
+	 * 
+	 * @return <tt>true</tt> if copy by iteration is definitely possible,
+	 *   <tt>false</tt> otherwise
+	 */
+	public boolean canCopy( final IterableFunction< ?, ?, ? > f );
 }

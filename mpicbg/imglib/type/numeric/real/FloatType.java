@@ -40,16 +40,16 @@ import mpicbg.imglib.type.numeric.RealType;
  *
  * @author Stephan Preibisch and Stephan Saalfeld
  */
-public class FloatType extends AbstractRealType<FloatType> implements RealType<FloatType>
+public class FloatType extends AbstractRealType< FloatType > implements RealType< FloatType >
 {
 	// the DirectAccessContainer
-	final DirectAccessContainer<FloatType, ? extends FloatAccess> storage;
+	final DirectAccessContainer<FloatType, ? extends FloatAccess, ? > storage;
 	
 	// the (sub)DirectAccessContainer that holds the information 
 	FloatAccess b;
 	
 	// this is the constructor if you want it to read from an array
-	public FloatType( DirectAccessContainer<FloatType, ? extends FloatAccess> floatStorage )
+	public FloatType( DirectAccessContainer<FloatType, ? extends FloatAccess, ? > floatStorage )
 	{
 		storage = floatStorage;
 	}
@@ -66,10 +66,10 @@ public class FloatType extends AbstractRealType<FloatType> implements RealType<F
 	public FloatType() { this( 0 ); }
 
 	@Override
-	public DirectAccessContainer<FloatType, ? extends FloatAccess> createSuitableDirectAccessContainer( final DirectAccessContainerFactory storageFactory, final int dim[] )
+	public DirectAccessContainer<FloatType, ? extends FloatAccess, ? > createSuitableDirectAccessContainer( final DirectAccessContainerFactory storageFactory, final long[] dim )
 	{
 		// create the container
-		final DirectAccessContainer<FloatType, ? extends FloatAccess> container = storageFactory.createFloatInstance( dim, 1 );
+		final DirectAccessContainer< FloatType, ? extends FloatAccess, ? > container = storageFactory.createFloatInstance( dim, 1 );
 		
 		// create a Type that is linked to the container
 		final FloatType linkedType = new FloatType( container );

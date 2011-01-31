@@ -234,7 +234,7 @@ public class LOCI
 						while(it.hasNext())
 						{
 							it.fwd();
-							it.type().set( (short)(b[ 0 ][ it.getIntPosition( planeX )+it.getIntPosition( planeY )*width ] & 0xff) );
+							it.get().set( (short)(b[ 0 ][ it.getIntPosition( planeX )+it.getIntPosition( planeY )*width ] & 0xff) );
 						}						
 					}	
 					else //if (pixelType == FormatTools.UINT16)
@@ -242,7 +242,7 @@ public class LOCI
 						while(it.hasNext())
 						{
 							it.fwd();
-							it.type().set( getShortValue( b[ 0 ], ( it.getIntPosition( planeX )+it.getIntPosition( planeY )*width ) * 2, isLittleEndian ) );
+							it.get().set( getShortValue( b[ 0 ], ( it.getIntPosition( planeX )+it.getIntPosition( planeY )*width ) * 2, isLittleEndian ) );
 						}
 					}						
 				}
@@ -388,7 +388,7 @@ public class LOCI
 						while(it.hasNext())
 						{
 							it.fwd();
-							it.type().set( (short)(b[ 0 ][ it.getIntPosition( planeX )+it.getIntPosition( planeY )*width ] & 0xff) );
+							it.get().set( (short)(b[ 0 ][ it.getIntPosition( planeX )+it.getIntPosition( planeY )*width ] & 0xff) );
 						}						
 					}	
 					else //if (pixelType == FormatTools.UINT16)
@@ -396,7 +396,7 @@ public class LOCI
 						while(it.hasNext())
 						{
 							it.fwd();
-							it.type().set( getShortValue( b[ 0 ], ( it.getIntPosition( planeX )+it.getIntPosition( planeY )*width ) * 2, isLittleEndian ) );
+							it.get().set( getShortValue( b[ 0 ], ( it.getIntPosition( planeX )+it.getIntPosition( planeY )*width ) * 2, isLittleEndian ) );
 						}
 					}						
 				}
@@ -602,7 +602,7 @@ public class LOCI
 						while(it.hasNext())
 						{
 							it.fwd();
-							it.type().set( b[ 0 ][ it.getIntPosition( planeX )+it.getIntPosition( planeY )*width ] & 0xff );
+							it.get().set( b[ 0 ][ it.getIntPosition( planeX )+it.getIntPosition( planeY )*width ] & 0xff );
 						}
 						
 					}	
@@ -611,7 +611,7 @@ public class LOCI
 						while(it.hasNext())
 						{
 							it.fwd();
-							it.type().set( getShortValue( b[ 0 ], ( it.getIntPosition( planeX )+it.getIntPosition( planeY )*width ) * 2, isLittleEndian ) );
+							it.get().set( getShortValue( b[ 0 ], ( it.getIntPosition( planeX )+it.getIntPosition( planeY )*width ) * 2, isLittleEndian ) );
 						}
 					}						
 					else if (pixelType == FormatTools.UINT32)
@@ -621,7 +621,7 @@ public class LOCI
 						while(it.hasNext())
 						{
 							it.fwd();
-							it.type().set( getIntValue( b[ 0 ], ( it.getIntPosition( planeX )+it.getIntPosition( planeY )*width )*4, isLittleEndian ) );
+							it.get().set( getIntValue( b[ 0 ], ( it.getIntPosition( planeX )+it.getIntPosition( planeY )*width )*4, isLittleEndian ) );
 						}
 
 					}
@@ -630,7 +630,7 @@ public class LOCI
 						while(it.hasNext())
 						{
 							it.fwd();
-							it.type().set( getFloatValue( b[ 0 ], ( it.getIntPosition( planeX )+it.getIntPosition( planeY )*width )*4, isLittleEndian ) );
+							it.get().set( getFloatValue( b[ 0 ], ( it.getIntPosition( planeX )+it.getIntPosition( planeY )*width )*4, isLittleEndian ) );
 						}
 
 					}
@@ -755,7 +755,7 @@ public class LOCI
 				// set the z plane iterator to the current z plane
 				planePos[ 2 ] = z - start;
 				final OrthoSliceIterator< ByteType > it = img.createOrthoSliceIterator( planeX, planeY, planePos );
-				final ByteType type = it.type();
+				final ByteType type = it.get();
 
 				// read the data from LOCI
 				for (int c = 0; c < channels; c++)
@@ -893,7 +893,7 @@ public class LOCI
 				// set the z plane iterator to the current z plane
 				planePos[ 2 ] = z - start;
 				final OrthoSliceIterator< UnsignedByteType > it = img.createOrthoSliceIterator( planeX, planeY, planePos );
-				final UnsignedByteType type = it.type();
+				final UnsignedByteType type = it.get();
 
 				// read the data from LOCI
 				for (int c = 0; c < channels; c++)
@@ -1032,7 +1032,7 @@ public class LOCI
 					for ( int channel = 0; channel < channels; ++channel )
 						col[ channels - channel - 1 ] = b[ channel ][ it.getIntPosition( planeX )+it.getIntPosition( planeY )*width ];						
 					
-					it.type().set( RGBALegacyType.rgba( col[ 0 ], col[ 1 ], col[ 2 ], 0) );
+					it.get().set( RGBALegacyType.rgba( col[ 0 ], col[ 1 ], col[ 2 ], 0) );
 				}
 				it.close();
 			}

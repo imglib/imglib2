@@ -28,8 +28,8 @@
 package mpicbg.imglib.sampler;
 
 import mpicbg.imglib.EuclideanSpace;
+import mpicbg.imglib.Sampler;
 import mpicbg.imglib.container.Container;
-import mpicbg.imglib.image.Image;
 import mpicbg.imglib.type.Type;
 
 /**
@@ -48,11 +48,7 @@ import mpicbg.imglib.type.Type;
  */
 public interface RasterSampler< T extends Type< T > > extends Sampler< T >, EuclideanSpace
 {	
-	public Image< T > getImage();
-
 	public int getArrayIndex();
 
-	public Container< T > getContainer();
-
-	public void close();
+	public Container< T, ? > getContainer();
 }

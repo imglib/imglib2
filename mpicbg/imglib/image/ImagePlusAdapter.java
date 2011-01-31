@@ -217,11 +217,11 @@ public class ImagePlusAdapter
 		RasterIterator<T> in = input.createRasterIterator();
 		RasterIterator<FloatType> out = output.createRasterIterator();
 		
-		TypeConverter tc = TypeConverter.getTypeConverter( in.type(), out.type() );
+		TypeConverter tc = TypeConverter.getTypeConverter( in.get(), out.get() );
 		
 		if ( tc == null )
 		{
-			System.out.println( "Cannot convert from " + in.type().getClass() + " to " + out.type().getClass() );
+			System.out.println( "Cannot convert from " + in.get().getClass() + " to " + out.get().getClass() );
 			output.close();
 			return null;
 		}

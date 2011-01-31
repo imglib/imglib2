@@ -28,8 +28,9 @@
 package mpicbg.imglib;
 
 import mpicbg.imglib.location.Positionable;
-import mpicbg.imglib.sampler.Sampler;
-import mpicbg.imglib.type.Type;
+import mpicbg.imglib.outofbounds.OutOfBounds;
+import mpicbg.imglib.outofbounds.OutOfBoundsFactory;
+import mpicbg.imglib.outofbounds.RasterOutOfBoundsFactory;
 
 /**
  * <p><em>f</em>:{x&isin;R<sup><em>n</em></sup>|[min,max]&rarr;T}</em></p>
@@ -41,7 +42,7 @@ import mpicbg.imglib.type.Type;
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
 public interface PositionableInterval<
-		T extends Type< T >,
+		T,
 		F extends PositionableInterval< T, F, P >,
 		P extends Positionable & Sampler< T > > extends Function< T, F >
 {
@@ -50,5 +51,5 @@ public interface PositionableInterval<
 	 * 
 	 * @return random access sampler
 	 */
-	public P positionableSampler();
+	public P positionableSampler( final OutOfBoundsFactory< T, F > factory );
 }

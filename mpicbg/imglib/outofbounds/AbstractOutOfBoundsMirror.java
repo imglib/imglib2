@@ -105,11 +105,11 @@ public abstract class AbstractOutOfBoundsMirror< T extends Type< T > > implement
 	/* Sampler */
 	
 	@Override
-	public T type(){ return outOfBoundsPositionable.type(); }
+	public T get(){ return outOfBoundsPositionable.get(); }
 	
 	@Override
 	@Deprecated
-	final public T getType(){ return type(); }
+	final public T getType(){ return get(); }
 	
 	
 	/* RasterLocalizable */
@@ -155,7 +155,7 @@ public abstract class AbstractOutOfBoundsMirror< T extends Type< T > > implement
 	public long getLongPosition( final int dim ){ return position[ dim ]; }
 	
 	@Override
-	public String toString() { return MathLib.printCoordinates( position ) + " = " + type(); }
+	public String toString() { return MathLib.printCoordinates( position ) + " = " + get(); }
 	
 	
 	/* RasterPositionable */

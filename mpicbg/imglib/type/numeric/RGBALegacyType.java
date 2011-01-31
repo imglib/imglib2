@@ -45,13 +45,13 @@ import mpicbg.imglib.type.AbstractType;
 final public class RGBALegacyType extends AbstractType< RGBALegacyType > implements NumericType< RGBALegacyType >
 {
 	// the DirectAccessContainer
-	final DirectAccessContainer< RGBALegacyType, ? extends IntAccess > storage;
+	final DirectAccessContainer< RGBALegacyType, ? extends IntAccess, ? > storage;
 
 	// the (sub)DirectAccessContainer that holds the information
 	IntAccess b;
 
 	// this is the constructor if you want it to read from an array
-	public RGBALegacyType( DirectAccessContainer< RGBALegacyType, ? extends IntAccess > byteStorage )
+	public RGBALegacyType( DirectAccessContainer< RGBALegacyType, ? extends IntAccess, ? > byteStorage )
 	{
 		storage = byteStorage;
 	}
@@ -71,10 +71,10 @@ final public class RGBALegacyType extends AbstractType< RGBALegacyType > impleme
 	}
 
 	@Override
-	public DirectAccessContainer< RGBALegacyType, ? extends IntAccess > createSuitableDirectAccessContainer( final DirectAccessContainerFactory storageFactory, final int dim[] )
+	public DirectAccessContainer< RGBALegacyType, ? extends IntAccess, ? > createSuitableDirectAccessContainer( final DirectAccessContainerFactory storageFactory, final long[] dim )
 	{
 		// create the container
-		final DirectAccessContainer< RGBALegacyType, ? extends IntAccess > container = storageFactory.createIntInstance( dim, 1 );
+		final DirectAccessContainer< RGBALegacyType, ? extends IntAccess, ? > container = storageFactory.createIntInstance( dim, 1 );
 
 		// create a Type that is linked to the container
 		final RGBALegacyType linkedType = new RGBALegacyType( container );

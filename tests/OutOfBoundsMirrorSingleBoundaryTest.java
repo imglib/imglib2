@@ -138,7 +138,7 @@ public class OutOfBoundsMirrorSingleBoundaryTest
 			for ( int d = dim.length - 1; d >= 0; --d )
 				i = i * dim[ d ] + position[ d ];
 			
-			c.type().setInteger( i );
+			c.get().setInteger( i );
 		}
 
 		i = 0;
@@ -186,10 +186,10 @@ public class OutOfBoundsMirrorSingleBoundaryTest
 		cShapeList.setPosition( -8, 0 );
 		for ( int i = 0; i < 20; ++i )
 		{
-			assertEquals( "ArrayContainer x failed at iteration " + i + ".", expectedX[ i ], cArray.type().getInteger() );
-			assertEquals( "CellContainer x failed at iteration " + i + ".", expectedX[ i ], cCell.type().getInteger() );
-			assertEquals( "DynamicContainer x failed at iteration " + i + ".", expectedX[ i ], cDynamic.type().getInteger() );
-			assertEquals( "ShapeListContainer x failed at iteration " + i + ".", expectedX[ i ], cShapeList.type().getInteger() );
+			assertEquals( "ArrayContainer x failed at iteration " + i + ".", expectedX[ i ], cArray.get().getInteger() );
+			assertEquals( "CellContainer x failed at iteration " + i + ".", expectedX[ i ], cCell.get().getInteger() );
+			assertEquals( "DynamicContainer x failed at iteration " + i + ".", expectedX[ i ], cDynamic.get().getInteger() );
+			assertEquals( "ShapeListContainer x failed at iteration " + i + ".", expectedX[ i ], cShapeList.get().getInteger() );
 			
 			assertEquals( "ArrayContainer x failed isOutOfBounds() at iteration " + i + ".", isOutOfBounds( cArray ), cArray.isOutOfBounds() );
 			assertEquals( "CellContainer x failed isOutOfBounds() at iteration " + i + ".", isOutOfBounds( cCell ), cCell.isOutOfBounds() );
@@ -213,10 +213,10 @@ public class OutOfBoundsMirrorSingleBoundaryTest
 		cShapeList.setPosition( -6, 1 );
 		for ( int i = 0; i < 20; ++i )
 		{
-			assertEquals( "ArrayContainer y failed at iteration " + i + ".", expectedY[ i ], cArray.type().getInteger() );
-			assertEquals( "CellContainer y failed at iteration " + i + ".", expectedY[ i ], cCell.type().getInteger() );
-			assertEquals( "DynamicContainer y failed at iteration " + i + ".", expectedY[ i ], cDynamic.type().getInteger() );
-			assertEquals( "ShapeListContainer y failed at iteration " + i + ".", expectedY[ i ], cShapeList.type().getInteger() );
+			assertEquals( "ArrayContainer y failed at iteration " + i + ".", expectedY[ i ], cArray.get().getInteger() );
+			assertEquals( "CellContainer y failed at iteration " + i + ".", expectedY[ i ], cCell.get().getInteger() );
+			assertEquals( "DynamicContainer y failed at iteration " + i + ".", expectedY[ i ], cDynamic.get().getInteger() );
+			assertEquals( "ShapeListContainer y failed at iteration " + i + ".", expectedY[ i ], cShapeList.get().getInteger() );
 			
 			assertEquals( "ArrayContainer y failed isOutOfBounds() at iteration " + i + ".", isOutOfBounds( cArray ), cArray.isOutOfBounds() );
 			assertEquals( "CellContainer y failed isOutOfBounds() at iteration " + i + ".", isOutOfBounds( cCell ), cCell.isOutOfBounds() );
@@ -240,10 +240,10 @@ public class OutOfBoundsMirrorSingleBoundaryTest
 		cShapeList.setPosition( -4, 2 );
 		for ( int i = 0; i < 20; ++i )
 		{
-			assertEquals( "ArrayContainer z failed at iteration " + i + ".", expectedZ[ i ], cArray.type().getInteger() );
-			assertEquals( "CellContainer z failed at iteration " + i + ".", expectedZ[ i ], cCell.type().getInteger() );
-			assertEquals( "DynamicContainer z failed at iteration " + i + ".", expectedZ[ i ], cDynamic.type().getInteger() );
-			assertEquals( "ShapeListContainer z failed at iteration " + i + ".", expectedZ[ i ], cShapeList.type().getInteger() );
+			assertEquals( "ArrayContainer z failed at iteration " + i + ".", expectedZ[ i ], cArray.get().getInteger() );
+			assertEquals( "CellContainer z failed at iteration " + i + ".", expectedZ[ i ], cCell.get().getInteger() );
+			assertEquals( "DynamicContainer z failed at iteration " + i + ".", expectedZ[ i ], cDynamic.get().getInteger() );
+			assertEquals( "ShapeListContainer z failed at iteration " + i + ".", expectedZ[ i ], cShapeList.get().getInteger() );
 			
 			assertEquals( "ArrayContainer z failed isOutOfBounds() at iteration " + i + ".", isOutOfBounds( cArray ), cArray.isOutOfBounds() );
 			assertEquals( "CellContainer z failed isOutOfBounds() at iteration " + i + ".", isOutOfBounds( cCell ), cCell.isOutOfBounds() );
@@ -270,10 +270,10 @@ public class OutOfBoundsMirrorSingleBoundaryTest
 		cShapeList.setPosition( 8, 0 );
 		for ( int i = 0; i < 20; ++i )
 		{
-			assertEquals( "ArrayContainer x failed at iteration " + i + ".", expectedX[ i ], cArray.type().getInteger() );
-			assertEquals( "CellContainer x failed at iteration " + i + ".", expectedX[ i ], cCell.type().getInteger() );
-			assertEquals( "DynamicContainer x failed at iteration " + i + ".", expectedX[ i ], cDynamic.type().getInteger() );
-			assertEquals( "ShapeListContainer x failed at iteration " + i + ".", expectedX[ i ], cShapeList.type().getInteger() );
+			assertEquals( "ArrayContainer x failed at iteration " + i + ".", expectedX[ i ], cArray.get().getInteger() );
+			assertEquals( "CellContainer x failed at iteration " + i + ".", expectedX[ i ], cCell.get().getInteger() );
+			assertEquals( "DynamicContainer x failed at iteration " + i + ".", expectedX[ i ], cDynamic.get().getInteger() );
+			assertEquals( "ShapeListContainer x failed at iteration " + i + ".", expectedX[ i ], cShapeList.get().getInteger() );
 			
 			assertEquals( "ArrayContainer x failed isOutOfBounds() at iteration " + i + ".", isOutOfBounds( cArray ), cArray.isOutOfBounds() );
 			assertEquals( "CellContainer x failed isOutOfBounds() at iteration " + i + ".", isOutOfBounds( cCell ), cCell.isOutOfBounds() );
@@ -297,10 +297,10 @@ public class OutOfBoundsMirrorSingleBoundaryTest
 		cShapeList.setPosition( 6, 1 );
 		for ( int i = 0; i < 20; ++i )
 		{
-			assertEquals( "ArrayContainer y failed at iteration " + i + ".", expectedY[ i ], cArray.type().getInteger() );
-			assertEquals( "CellContainer y failed at iteration " + i + ".", expectedY[ i ], cCell.type().getInteger() );
-			assertEquals( "DynamicContainer y failed at iteration " + i + ".", expectedY[ i ], cDynamic.type().getInteger() );
-			assertEquals( "ShapeListContainer y failed at iteration " + i + ".", expectedY[ i ], cShapeList.type().getInteger() );
+			assertEquals( "ArrayContainer y failed at iteration " + i + ".", expectedY[ i ], cArray.get().getInteger() );
+			assertEquals( "CellContainer y failed at iteration " + i + ".", expectedY[ i ], cCell.get().getInteger() );
+			assertEquals( "DynamicContainer y failed at iteration " + i + ".", expectedY[ i ], cDynamic.get().getInteger() );
+			assertEquals( "ShapeListContainer y failed at iteration " + i + ".", expectedY[ i ], cShapeList.get().getInteger() );
 			
 			assertEquals( "ArrayContainer y failed isOutOfBounds() at iteration " + i + ".", isOutOfBounds( cArray ), cArray.isOutOfBounds() );
 			assertEquals( "CellContainer y failed isOutOfBounds() at iteration " + i + ".", isOutOfBounds( cCell ), cCell.isOutOfBounds() );
@@ -324,10 +324,10 @@ public class OutOfBoundsMirrorSingleBoundaryTest
 		cShapeList.setPosition( 4, 2 );
 		for ( int i = 0; i < 20; ++i )
 		{
-			assertEquals( "ArrayContainer z failed at iteration " + i + ".", expectedZ[ i ], cArray.type().getInteger() );
-			assertEquals( "CellContainer z failed at iteration " + i + ".", expectedZ[ i ], cCell.type().getInteger() );
-			assertEquals( "DynamicContainer z failed at iteration " + i + ".", expectedZ[ i ], cDynamic.type().getInteger() );
-			assertEquals( "ShapeListContainer z failed at iteration " + i + ".", expectedZ[ i ], cShapeList.type().getInteger() );
+			assertEquals( "ArrayContainer z failed at iteration " + i + ".", expectedZ[ i ], cArray.get().getInteger() );
+			assertEquals( "CellContainer z failed at iteration " + i + ".", expectedZ[ i ], cCell.get().getInteger() );
+			assertEquals( "DynamicContainer z failed at iteration " + i + ".", expectedZ[ i ], cDynamic.get().getInteger() );
+			assertEquals( "ShapeListContainer z failed at iteration " + i + ".", expectedZ[ i ], cShapeList.get().getInteger() );
 			
 			assertEquals( "ArrayContainer z failed isOutOfBounds() at iteration " + i + ".", isOutOfBounds( cArray ), cArray.isOutOfBounds() );
 			assertEquals( "CellContainer z failed isOutOfBounds() at iteration " + i + ".", isOutOfBounds( cCell ), cCell.isOutOfBounds() );
@@ -362,10 +362,10 @@ public class OutOfBoundsMirrorSingleBoundaryTest
 			cDynamic.move( distance[ i ], d[ i ] );
 			cShapeList.move( distance[ i ], d[ i ] );
 			
-			assertEquals( "ArrayContainer move failed at iteration " + i + ".", v[ i ], cArray.type().getInteger() );
-			assertEquals( "CellContainer move failed at iteration " + i + ".", v[ i ], cCell.type().getInteger() );
-			assertEquals( "DynamicContainer move failed at iteration " + i + ".", v[ i ], cDynamic.type().getInteger() );
-			assertEquals( "ShapeListContainer move failed at iteration " + i + ".", v[ i ], cShapeList.type().getInteger() );
+			assertEquals( "ArrayContainer move failed at iteration " + i + ".", v[ i ], cArray.get().getInteger() );
+			assertEquals( "CellContainer move failed at iteration " + i + ".", v[ i ], cCell.get().getInteger() );
+			assertEquals( "DynamicContainer move failed at iteration " + i + ".", v[ i ], cDynamic.get().getInteger() );
+			assertEquals( "ShapeListContainer move failed at iteration " + i + ".", v[ i ], cShapeList.get().getInteger() );
 			
 			assertEquals( "ArrayContainer z failed isOutOfBounds() at iteration " + i + ".", isOutOfBounds( cArray ), cArray.isOutOfBounds() );
 			assertEquals( "CellContainer z failed isOutOfBounds() at iteration " + i + ".", isOutOfBounds( cCell ), cCell.isOutOfBounds() );
@@ -398,10 +398,10 @@ public class OutOfBoundsMirrorSingleBoundaryTest
 			cShapeList.setPosition( y[ i ], 1 );
 			cShapeList.setPosition( z[ i ], 2 );
 			
-			assertEquals( "ArrayContainer failed at " + cArray, cArray.type().getInteger(), t[ i ] );
-			assertEquals( "CellContainer failed at " + cCell, cCell.type().getInteger(), t[ i ] );
-			assertEquals( "DynamicContainer failed at " + cDynamic, cDynamic.type().getInteger(), t[ i ] );
-			assertEquals( "ShapeListContainer failed at " + cShapeList, cShapeList.type().getInteger(), t[ i ] );
+			assertEquals( "ArrayContainer failed at " + cArray, cArray.get().getInteger(), t[ i ] );
+			assertEquals( "CellContainer failed at " + cCell, cCell.get().getInteger(), t[ i ] );
+			assertEquals( "DynamicContainer failed at " + cDynamic, cDynamic.get().getInteger(), t[ i ] );
+			assertEquals( "ShapeListContainer failed at " + cShapeList, cShapeList.get().getInteger(), t[ i ] );
 		}
 	}
 }

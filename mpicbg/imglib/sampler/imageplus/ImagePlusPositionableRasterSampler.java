@@ -118,11 +118,11 @@ public class ImagePlusPositionableRasterSampler< T extends Type< T > > extends A
 	{
 		type.updateIndex( container.getIndex( position ) );
 		
-		for ( int d = 0; d < numDimensions; d++ )
+		for ( int d = 0; d < n; d++ )
 			this.position[ d ] = position[ d ];
 		
 		sliceIndex = 0;
-		for ( int d = 2; d < numDimensions; ++d )
+		for ( int d = 2; d < n; ++d )
 			sliceIndex += position[ d ] * sliceSteps[ d ];
 		
 		type.updateContainer( this );
@@ -131,13 +131,13 @@ public class ImagePlusPositionableRasterSampler< T extends Type< T > > extends A
 	@Override
 	public void setPosition( final long[] position )
 	{
-		for ( int d = 0; d < numDimensions; d++ )
+		for ( int d = 0; d < n; d++ )
 			this.position[ d ] = ( int )position[ d ];
 		
 		type.updateIndex( container.getIndex( this.position ) );
 		
 		sliceIndex = 0;
-		for ( int d = 2; d < numDimensions; ++d )
+		for ( int d = 2; d < n; ++d )
 			sliceIndex += position[ d ] * sliceSteps[ d ];
 		
 		type.updateContainer( this );
@@ -163,7 +163,7 @@ public class ImagePlusPositionableRasterSampler< T extends Type< T > > extends A
 	public ImagePlusContainer< T, ? > getContainer(){ return container; }
 
 	@Override
-	public T type(){ return type; }
+	public T get(){ return type; }
 
 	@Override
 	public int getStorageIndex(){ return sliceIndex; }

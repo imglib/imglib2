@@ -91,7 +91,7 @@ public class CellBasicRasterIterator< T extends Type< T > > extends AbstractRast
 	public Cell<T,?> getCurrentCell() { return cellInstance; }
 	
 	@Override
-	public T type() { return type; }
+	public T get() { return type; }
 	
 	@Override
 	public void reset()

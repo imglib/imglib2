@@ -365,8 +365,8 @@ public class PhaseCorrelation<T extends RealType<T>, S extends RealType<S>> impl
 			roiCursor1.fwd();
 			roiCursor2.fwd();
 
-			avg1 += roiCursor1.type().getRealFloat();
-			avg2 += roiCursor2.type().getRealFloat();
+			avg1 += roiCursor1.get().getRealFloat();
+			avg2 += roiCursor2.get().getRealFloat();
 		}
 
 		avg1 /= (double) numPixels;
@@ -386,8 +386,8 @@ public class PhaseCorrelation<T extends RealType<T>, S extends RealType<S>> impl
 			roiCursor1.fwd();
 			roiCursor2.fwd();
 
-			final float pixel1 = roiCursor1.type().getRealFloat();
-			final float pixel2 = roiCursor2.type().getRealFloat();
+			final float pixel1 = roiCursor1.get().getRealFloat();
+			final float pixel2 = roiCursor2.get().getRealFloat();
 			
 			final double dist1 = pixel1 - avg1;
 			final double dist2 = pixel2 - avg2;
@@ -451,14 +451,14 @@ public class PhaseCorrelation<T extends RealType<T>, S extends RealType<S>> impl
 			localCursor.reset();
 			
 			// the value we are checking for if it is a maximum
-			final float value = cursor.type().get();
+			final float value = cursor.get().get();
 			boolean isMax = true;
 			
 			// iterate over local environment while value is still the maximum
 			while ( localCursor.hasNext() && isMax )
 			{
 				localCursor.fwd();								
-				isMax = ( cursor.type().get() <= value );
+				isMax = ( cursor.get().get() <= value );
 			}
 			
 			// reset the mothercursor and this cursor
@@ -533,7 +533,7 @@ public class PhaseCorrelation<T extends RealType<T>, S extends RealType<S>> impl
 			cursor1.fwd();
 			cursor2.fwd();
 			
-			cursor1.type().mul( cursor2.type() );
+			cursor1.get().mul( cursor2.get() );
 		}
 				
 		cursor1.close();
@@ -578,7 +578,7 @@ public class PhaseCorrelation<T extends RealType<T>, S extends RealType<S>> impl
 		while ( cursor.hasNext() )
 		{
 			cursor.fwd();
-			normalizeLength( cursor.type(), normalizationThreshold );
+			normalizeLength( cursor.get(), normalizationThreshold );
 		}
 				
 		cursor.close();		
@@ -592,8 +592,8 @@ public class PhaseCorrelation<T extends RealType<T>, S extends RealType<S>> impl
 		{
 			cursor.fwd();
 			
-			normalizeLength( cursor.type(), normalizationThreshold );
-			cursor.type().complexConjugate();
+			normalizeLength( cursor.get(), normalizationThreshold );
+			cursor.get().complexConjugate();
 		}
 				
 		cursor.close();		

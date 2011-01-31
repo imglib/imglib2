@@ -33,7 +33,8 @@ package mpicbg.imglib.container;
 import mpicbg.imglib.container.basictypecontainer.DataAccess;
 import mpicbg.imglib.type.Type;
 
-public interface DirectAccessContainer< T extends Type< T >, A extends DataAccess > extends PixelGridContainer< T >
+public interface DirectAccessContainer< T extends Type< T >, A extends DataAccess, F extends DirectAccessContainer< T, A, F > >
+		extends Container< T, F >
 {
 	public A update( final Object updater );
 

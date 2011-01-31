@@ -33,7 +33,7 @@ implements Algorithm, Benchmark
 			}
 			voteCursor.setPosition(loc);
 			
-			voteCursor.type().add(vote);
+			voteCursor.get().add(vote);
 			
 			return true;
 		}

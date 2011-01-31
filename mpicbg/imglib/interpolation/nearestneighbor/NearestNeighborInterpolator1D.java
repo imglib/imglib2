@@ -94,7 +94,7 @@ public class NearestNeighborInterpolator1D< T extends Type< T > > extends Neares
 	@Override
 	public String toString()
 	{
-		return new StringBuffer( "(" ).append( x ).append( ") = " ).append( type() ).toString();
+		return new StringBuffer( "(" ).append( x ).append( ") = " ).append( get() ).toString();
 	}
 
 	@Override

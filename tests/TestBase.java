@@ -47,7 +47,7 @@ public class TestBase {
 		while( cursor.hasNext() ) {
 			cursor.fwd();
 			cursor.localize( pos );
-			if( function.calculate( pos ) != cursor.type().getRealFloat() )
+			if( function.calculate( pos ) != cursor.get().getRealFloat() )
 				return false;
 		}
 		cursor.close();
@@ -63,7 +63,7 @@ public class TestBase {
 		while( cursor.hasNext() ) {
 			cursor.fwd();
 			cursor.localize( pos );
-			if( Math.abs( function.calculate( pos ) - cursor.type().getRealFloat() ) > tolerance )
+			if( Math.abs( function.calculate( pos ) - cursor.get().getRealFloat() ) > tolerance )
 				return false;
 		}
 		cursor.close();
@@ -94,7 +94,7 @@ public class TestBase {
 		while( cursor.hasNext() ) {
 			cursor.fwd();
 			cursor.localize( pos );
-			float value = cursor.type().getRealFloat();
+			float value = cursor.get().getRealFloat();
 			result[0] += value;
 			result[dim + 1] += value * value;
 			for( int i = 0; i < dim; i++ ) {
@@ -147,7 +147,7 @@ public class TestBase {
 	protected<T extends RealType<T>> float get( Image<T> image, int[] pos ) {
 		PositionableRasterSampler<T> cursor = image.createPositionableRasterSampler();
 		cursor.setPosition( pos );
-		float result = cursor.type().getRealFloat();
+		float result = cursor.get().getRealFloat();
 		cursor.close();
 		return result;
 	}
@@ -171,7 +171,7 @@ public class TestBase {
 			cursor.fwd();
 			cursor.localize( pos );
 			float value = function.calculate( pos );
-			cursor.type().setReal( value );
+			cursor.get().setReal( value );
 		}
 		cursor.close();
 		return result;

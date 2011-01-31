@@ -54,7 +54,7 @@ public class OutOfBoundsStrategyMirrorExpWindowing<T extends RealType<T>> extend
 		
 		this.parentCursor = parentCursor;
 		this.mirrorCursor = parentCursor.getImage().createPositionableRasterSampler();
-		this.mirrorType = mirrorCursor.type();
+		this.mirrorType = mirrorCursor.get();
 		this.type = mirrorType.createVariable();
 			
 		this.numDimensions = parentCursor.getImage().numDimensions();
@@ -96,7 +96,7 @@ public class OutOfBoundsStrategyMirrorExpWindowing<T extends RealType<T>> extend
 	
 
 	@Override
-	public T type(){ return type; }
+	public T get(){ return type; }
 	
 	@Override
 	final public void notifyOutOfBOunds()

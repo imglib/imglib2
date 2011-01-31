@@ -171,9 +171,9 @@ public abstract class AbstractRealType< T extends AbstractRealType< T >> extends
 	}
 
 	@Override
-	public void updateIndex( final int i )
+	public void updateIndex( final int index )
 	{
-		this.i = i;
+		this.i = index;
 	}
 
 	@Override

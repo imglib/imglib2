@@ -27,10 +27,7 @@
  */
 package mpicbg.imglib.outofbounds;
 
-import mpicbg.imglib.Factory;
-import mpicbg.imglib.location.RasterLocalizable;
-import mpicbg.imglib.location.RasterPositionable;
-import mpicbg.imglib.sampler.Sampler;
+import mpicbg.imglib.sampler.PositionableRasterSampler;
 import mpicbg.imglib.type.Type;
 
 /**
@@ -39,28 +36,7 @@ import mpicbg.imglib.type.Type;
  *
  * @author Stephan Preibisch and Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-public abstract class RasterOutOfBoundsFactory< T extends Type< T > > implements Factory
+public abstract class RasterOutOfBoundsFactory< T extends Type< T >, F >
 {
-	public abstract < P extends RasterPositionable & RasterLocalizable & Sampler< T > > RasterOutOfBounds< T > create( P sampler ); 
-	
-	@Override
-	public String getErrorMessage()
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void printProperties()
-	{
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void setParameters(String configuration)
-	{
-		// TODO Auto-generated method stub
-		
-	}
+	public abstract RasterOutOfBounds< T > create( PositionableRasterSampler< T > sampler );
 }

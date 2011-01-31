@@ -27,9 +27,16 @@
  */
 package mpicbg.imglib.container.array;
 
+import mpicbg.imglib.container.AbstractContainer;
 import mpicbg.imglib.container.DirectAccessContainerFactory;
-import mpicbg.imglib.container.AbstractPixelGridContainer;
-import mpicbg.imglib.container.basictypecontainer.*;
+import mpicbg.imglib.container.basictypecontainer.BitAccess;
+import mpicbg.imglib.container.basictypecontainer.ByteAccess;
+import mpicbg.imglib.container.basictypecontainer.CharAccess;
+import mpicbg.imglib.container.basictypecontainer.DoubleAccess;
+import mpicbg.imglib.container.basictypecontainer.FloatAccess;
+import mpicbg.imglib.container.basictypecontainer.IntAccess;
+import mpicbg.imglib.container.basictypecontainer.LongAccess;
+import mpicbg.imglib.container.basictypecontainer.ShortAccess;
 import mpicbg.imglib.container.basictypecontainer.array.BitArray;
 import mpicbg.imglib.container.basictypecontainer.array.ByteArray;
 import mpicbg.imglib.container.basictypecontainer.array.CharArray;
@@ -48,9 +55,9 @@ import mpicbg.imglib.type.Type;
  */
 public class ArrayContainerFactory extends DirectAccessContainerFactory
 {
-	public static int getNumEntitiesRangeCheck( final int[] dimensions, final int entitiesPerPixel )
+	public static int numEntitiesRangeCheck( final long[] dimensions, final int entitiesPerPixel )
 	{
-		final long numEntities = AbstractPixelGridContainer.getNumEntities( dimensions, entitiesPerPixel );
+		final long numEntities = AbstractContainer.numElements( dimensions ) * entitiesPerPixel;
 
 		if ( numEntities > ( long ) Integer.MAX_VALUE )
 			throw new RuntimeException( "Number of elements in Container too big, use for example CellContainer instead: " + numEntities + " > " + Integer.MAX_VALUE );
@@ -59,88 +66,66 @@ public class ArrayContainerFactory extends DirectAccessContainerFactory
 	}
 
 	@Override
-	public < T extends Type< T > > Array< T, BitAccess > createBitInstance( int[] dimensions, final int entitiesPerPixel )
+	public < T extends Type< T > > Array< T, BitAccess > createBitInstance( long[] dimensions, final int entitiesPerPixel )
 	{
-		final int numEntities = getNumEntitiesRangeCheck( dimensions, entitiesPerPixel );
+		final int numEntities = numEntitiesRangeCheck( dimensions, entitiesPerPixel );
 
 		return new Array< T, BitAccess >( this, new BitArray( numEntities ), dimensions, entitiesPerPixel );
 	}
 
 	@Override
-	public < T extends Type< T > > Array< T, ByteAccess > createByteInstance( final int[] dimensions, final int entitiesPerPixel )
+	public < T extends Type< T > > Array< T, ByteAccess > createByteInstance( final long[] dimensions, final int entitiesPerPixel )
 	{
-		final int numEntities = getNumEntitiesRangeCheck( dimensions, entitiesPerPixel );
+		final int numEntities = numEntitiesRangeCheck( dimensions, entitiesPerPixel );
 
 		return new Array< T, ByteAccess >( this, new ByteArray( numEntities ), dimensions, entitiesPerPixel );
 	}
 
 	@Override
-	public < T extends Type< T > > Array< T, CharAccess > createCharInstance( int[] dimensions, final int entitiesPerPixel )
+	public < T extends Type< T > > Array< T, CharAccess > createCharInstance( long[] dimensions, final int entitiesPerPixel )
 	{
-		final int numEntities = getNumEntitiesRangeCheck( dimensions, entitiesPerPixel );
+		final int numEntities = numEntitiesRangeCheck( dimensions, entitiesPerPixel );
 
 		return new Array< T, CharAccess >( this, new CharArray( numEntities ), dimensions, entitiesPerPixel );
 	}
 
 	@Override
-	public < T extends Type< T > > Array< T, DoubleAccess > createDoubleInstance( int[] dimensions, final int entitiesPerPixel )
+	public < T extends Type< T > > Array< T, DoubleAccess > createDoubleInstance( long[] dimensions, final int entitiesPerPixel )
 	{
-		final int numEntities = getNumEntitiesRangeCheck( dimensions, entitiesPerPixel );
+		final int numEntities = numEntitiesRangeCheck( dimensions, entitiesPerPixel );
 
 		return new Array< T, DoubleAccess >( this, new DoubleArray( numEntities ), dimensions, entitiesPerPixel );
 	}
 
 	@Override
-	public < T extends Type< T > > Array< T, FloatAccess > createFloatInstance( int[] dimensions, final int entitiesPerPixel )
+	public < T extends Type< T > > Array< T, FloatAccess > createFloatInstance( long[] dimensions, final int entitiesPerPixel )
 	{
-		final int numEntities = getNumEntitiesRangeCheck( dimensions, entitiesPerPixel );
+		final int numEntities = numEntitiesRangeCheck( dimensions, entitiesPerPixel );
 
 		return new Array< T, FloatAccess >( this, new FloatArray( numEntities ), dimensions, entitiesPerPixel );
 	}
 
 	@Override
-	public < T extends Type< T > > Array< T, IntAccess > createIntInstance( int[] dimensions, final int entitiesPerPixel )
+	public < T extends Type< T > > Array< T, IntAccess > createIntInstance( long[] dimensions, final int entitiesPerPixel )
 	{
-		final int numEntities = getNumEntitiesRangeCheck( dimensions, entitiesPerPixel );
+		final int numEntities = numEntitiesRangeCheck( dimensions, entitiesPerPixel );
 
 		return new Array< T, IntAccess >( this, new IntArray( numEntities ), dimensions, entitiesPerPixel );
 	}
 
 	@Override
-	public < T extends Type< T > > Array< T, LongAccess > createLongInstance( int[] dimensions, final int entitiesPerPixel )
+	public < T extends Type< T > > Array< T, LongAccess > createLongInstance( long[] dimensions, final int entitiesPerPixel )
 	{
-		final int numEntities = getNumEntitiesRangeCheck( dimensions, entitiesPerPixel );
+		final int numEntities = numEntitiesRangeCheck( dimensions, entitiesPerPixel );
 
 		return new Array< T, LongAccess >( this, new LongArray( numEntities ), dimensions, entitiesPerPixel );
 	}
 
 	@Override
-	public < T extends Type< T > > Array< T, ShortAccess > createShortInstance( int[] dimensions, final int entitiesPerPixel )
+	public < T extends Type< T > > Array< T, ShortAccess > createShortInstance( long[] dimensions, final int entitiesPerPixel )
 	{
-		final int numEntities = getNumEntitiesRangeCheck( dimensions, entitiesPerPixel );
+		final int numEntities = numEntitiesRangeCheck( dimensions, entitiesPerPixel );
 
 		return new Array< T, ShortAccess >( this, new ShortArray( numEntities ), dimensions, entitiesPerPixel );
 	}
-
-	@Override
-	public String getErrorMessage()
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void printProperties()
-	{
-	// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void setParameters( String configuration )
-	{
-	// TODO Auto-generated method stub
-
-	}
-
 }

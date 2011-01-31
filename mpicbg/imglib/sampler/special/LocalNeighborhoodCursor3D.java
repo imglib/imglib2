@@ -42,9 +42,9 @@ public class LocalNeighborhoodCursor3D<T extends Type<T>> extends LocalNeighborh
 	{ 
 		super( localizable, image, outofboundsFactory );
 		
-		if ( numDimensions != 3 )
+		if ( n != 3 )
 		{
-			System.out.println( "LocalNeighborhoodCursor3D.constructor(): Error, dimensionality is not 3 but " + numDimensions + ", I have to close." );
+			System.out.println( "LocalNeighborhoodCursor3D.constructor(): Error, dimensionality is not 3 but " + n + ", I have to close." );
 			close();
 		}
 	}

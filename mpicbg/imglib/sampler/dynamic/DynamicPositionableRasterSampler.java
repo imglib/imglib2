@@ -112,7 +112,7 @@ public class DynamicPositionableRasterSampler< T extends Type< T > > extends Abs
 	@Override
 	public void moveTo( final int[] position )
 	{		
-		for ( int d = 0; d < numDimensions; ++d )
+		for ( int d = 0; d < n; ++d )
 		{
 			final int dist = position[ d ] - getIntPosition( d );
 			
@@ -124,7 +124,7 @@ public class DynamicPositionableRasterSampler< T extends Type< T > > extends Abs
 	@Override
 	public void moveTo( final long[] position )
 	{
-		for ( int d = 0; d < numDimensions; ++d )
+		for ( int d = 0; d < n; ++d )
 		{
 			final long dist = position[ d ] - getIntPosition( d );
 			
@@ -153,14 +153,14 @@ public class DynamicPositionableRasterSampler< T extends Type< T > > extends Abs
 		internalIndex = container.getPos( position );
 		accessor.updateIndex( internalIndex );
 		
-		for ( int d = 0; d < numDimensions; ++d )
+		for ( int d = 0; d < n; ++d )
 			this.position[ d ] = position[ d ];
 	}
 
 	@Override
 	public void setPosition( final long[] position )
 	{
-		for ( int d = 0; d < numDimensions; ++d )
+		for ( int d = 0; d < n; ++d )
 			this.position[ d ] = ( int )position[ d ];
 		
 		internalIndex = container.getPos( this.position );
@@ -193,5 +193,5 @@ public class DynamicPositionableRasterSampler< T extends Type< T > > extends Abs
 	public DynamicContainer< T, ? > getContainer(){ return container; }
 	
 	@Override
-	public T type(){ return type; }
+	public T get(){ return type; }
 }

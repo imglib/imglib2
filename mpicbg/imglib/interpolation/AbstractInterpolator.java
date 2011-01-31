@@ -74,7 +74,7 @@ abstract public class AbstractInterpolator< T extends Type< T >, LocalizablePosi
 	@Deprecated
 	final public T getType()
 	{
-		return type();
+		return get();
 	}
 
 	/**

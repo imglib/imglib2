@@ -81,7 +81,7 @@ public class TestShapeList
 		{
 			cArray.fwd();
 			cShapeList.moveTo( cArray );
-			cArray.type().set( cShapeList.type() );
+			cArray.get().set( cShapeList.get() );
 		}
 
 		arrayImage.getDisplay().setMinMax();
@@ -104,8 +104,8 @@ public class TestShapeList
 		{
 			cCell.fwd();
 			cShapeList.moveTo( cCell );
-			cCell.type().set( cShapeList.type() );
-			cCell.type().mul( cCell.getArrayIndex() / 1000.0f );
+			cCell.get().set( cShapeList.get() );
+			cCell.get().mul( cCell.getArrayIndex() / 1000.0f );
 		}
 
 //		cellImage.getDisplay().setMinMax();

@@ -53,13 +53,13 @@ public class ComplexTypePowerSpectrumDisplay<T extends ComplexType<T>> extends D
 		}
 		
 		c.fwd();
-		min = max = getComplexDisplayValue( c.type() );
+		min = max = getComplexDisplayValue( c.get() );
 
 		while ( c.hasNext() )
 		{
 			c.fwd();
 
-			final double value = getComplexDisplayValue( c.type() );
+			final double value = getComplexDisplayValue( c.get() );
 			
 			if ( value > max )
 				max = value;			

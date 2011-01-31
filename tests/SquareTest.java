@@ -53,8 +53,8 @@ public class SquareTest {
     while (inputCursor.hasNext()) {
       inputCursor.fwd();
       outputCursor.fwd();
-      float value = inputCursor.type().getRealFloat();
-      outputCursor.type().setReal(value * value);
+      float value = inputCursor.get().getRealFloat();
+      outputCursor.get().setReal(value * value);
     }
     inputCursor.close();
     outputCursor.close();

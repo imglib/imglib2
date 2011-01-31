@@ -88,8 +88,8 @@ public class CellLocalizingRasterIterator< T extends Type< T > > extends Abstrac
 		super( container, image );
 		
 		this.type = container.createLinkedType();
-		this.cellDimensions = new int[ numDimensions ];
-		this.cellOffset = new int[ numDimensions ];		
+		this.cellDimensions = new int[ n ];
+		this.cellOffset = new int[ n ];		
 
 		this.container = container;
 		this.numCells = container.getNumCells();
@@ -123,7 +123,7 @@ public class CellLocalizingRasterIterator< T extends Type< T > > extends Abstrac
 		
 		position[ 0 ] = -1;
 		
-		for ( int d = 1; d < numDimensions; d++ )
+		for ( int d = 1; d < n; d++ )
 			position[ d ] = 0;
 		
 		type.updateContainer( this );
@@ -147,7 +147,7 @@ public class CellLocalizingRasterIterator< T extends Type< T > > extends Abstrac
 		{
 			type.incIndex();
 			
-			for ( int d = 0; d < numDimensions; d++ )
+			for ( int d = 0; d < n; d++ )
 			{
 				if ( position[ d ] < cellDimensions[ d ] + cellOffset[ d ] - 1 )
 				{
@@ -166,7 +166,7 @@ public class CellLocalizingRasterIterator< T extends Type< T > > extends Abstrac
 			cell++;
 			type.updateIndex( 0 );			
 			getCellData( cell );
-			for ( int d = 0; d < numDimensions; d++ )
+			for ( int d = 0; d < n; d++ )
 				position[ d ] = cellOffset[ d ];
 		}
 		else
@@ -179,7 +179,7 @@ public class CellLocalizingRasterIterator< T extends Type< T > > extends Abstrac
 	}	
 	
 	@Override
-	public T type() { return type; }
+	public T get() { return type; }
 	
 	@Override
 	public CellContainer<T,?> getContainer(){ return container; }

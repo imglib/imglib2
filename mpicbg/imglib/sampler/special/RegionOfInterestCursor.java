@@ -81,7 +81,7 @@ public class RegionOfInterestCursor<T extends Type<T>> extends AbstractRasterIte
 	}
 
 	@Override
-	public T type() { return cursor.type(); }
+	public T get() { return cursor.get(); }
 	
 	@Override
 	public void reset()
@@ -193,7 +193,7 @@ public class RegionOfInterestCursor<T extends Type<T>> extends AbstractRasterIte
 		for ( int d = 1; d < numDimensions; d++ )
 			pos += ", " + roiPosition[ d ];
 		
-		pos += ") = " + type();
+		pos += ") = " + get();
 		
 		return pos;
 	}

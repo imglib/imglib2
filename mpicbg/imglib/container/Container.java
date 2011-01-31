@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2009--2010, Stephan Preibisch & Stephan Saalfeld
+ * Copyright (c) 2010, Stephan Saalfeld
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -9,7 +9,7 @@
  * list of conditions and the following disclaimer.  Redistributions in binary
  * form must reproduce the above copyright notice, this list of conditions and
  * the following disclaimer in the documentation and/or other materials
- * provided with the distribution.  Neither the name of the Fiji project nor
+ * provided with the distribution.  Neither the name of the imglib project nor
  * the names of its contributors may be used to endorse or promote products
  * derived from this software without specific prior written permission.
  * 
@@ -27,37 +27,23 @@
  */
 package mpicbg.imglib.container;
 
+import mpicbg.imglib.Raster;
 import mpicbg.imglib.RasterInterval;
-import mpicbg.imglib.image.Image;
-import mpicbg.imglib.outofbounds.RasterOutOfBoundsFactory;
 import mpicbg.imglib.sampler.PositionableRasterSampler;
 import mpicbg.imglib.sampler.RasterIterator;
-import mpicbg.imglib.sampler.special.OrthoSliceIterator;
 import mpicbg.imglib.type.Type;
 
 /**
  * 
- * @param <T>
  *
- * @author Stephan Preibisch and Stephan Saalfeld
+ * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-public interface Container< T extends Type< T > > extends RasterInterval< T, Container< T >, PositionableRasterSampler< T >, RasterIterator< T > >
+public interface Container<
+		T extends Type< T >,
+		F extends Container< T, F > >
+	extends
+		Raster< T, F, PositionableRasterSampler< T > >,
+		RasterInterval< T, F, PositionableRasterSampler< T >, RasterIterator< T > >
 {
-	public RasterIterator< T > createRasterIterator( final Image< T > image );
-	public RasterIterator< T > createLocalizingRasterIterator( final Image< T > image );
-	public PositionableRasterSampler< T > createPositionableRasterSampler( final Image< T > image );
-	public PositionableRasterSampler< T > createPositionableRasterSampler( final Image< T > image, final RasterOutOfBoundsFactory< T > outOfBoundsFactory );
-	public OrthoSliceIterator< T > createOrthoSliceIterator( final Image< T > image, final int x, final int y, final int[] position );
-	
-	public void close();
-
 	public ContainerFactory getFactory();
-
-	public long getId();
-
-	public long numPixels();
-
-	public boolean compareStorageContainerDimensions( final Container< ? > img );
-	public boolean compareStorageContainerCompatibility( final Container< ? > img );
-
 }

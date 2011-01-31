@@ -9,7 +9,7 @@
  * list of conditions and the following disclaimer.  Redistributions in binary
  * form must reproduce the above copyright notice, this list of conditions and
  * the following disclaimer in the documentation and/or other materials
- * provided with the distribution.  Neither the name of the Fiji project nor
+ * provided with the distribution.  Neither the name of the imglib project nor
  * the names of its contributors may be used to endorse or promote products
  * derived from this software without specific prior written permission.
  * 
@@ -38,21 +38,19 @@ import mpicbg.imglib.type.AbstractType;
 import mpicbg.imglib.type.label.BasePairBitType.Base;
 
 /**
- * 
- * 
- *
- * @author Stephan Preibisch and Stephan Saalfeld
- */
+*
+* @author Stephan Preibisch and Stephan Saalfeld <saalfeld@mpi-cbg.de>
+*/
 public class BasePairCharType extends AbstractType<BasePairCharType> implements BasePairType<BasePairCharType>
 {
 	// the DirectAccessContainer
-	final DirectAccessContainer<BasePairCharType, ? extends CharAccess> storage;
+	final DirectAccessContainer< BasePairCharType, ? extends CharAccess, ? > storage;
 	
 	// the (sub)DirectAccessContainer that holds the information 
 	CharAccess b;
 	
 	// this is the constructor if you want it to read from an array
-	public BasePairCharType( DirectAccessContainer<BasePairCharType, ? extends CharAccess> charStorage )
+	public BasePairCharType( DirectAccessContainer< BasePairCharType, ? extends CharAccess, ? > charStorage )
 	{
 		storage = charStorage;
 	}
@@ -77,10 +75,10 @@ public class BasePairCharType extends AbstractType<BasePairCharType> implements 
 	public BasePairCharType() { this( Base.N ); }
 
 	@Override
-	public DirectAccessContainer<BasePairCharType, ? extends CharAccess> createSuitableDirectAccessContainer( final DirectAccessContainerFactory storageFactory, final int dim[] )
+	public DirectAccessContainer< BasePairCharType, ? extends CharAccess, ? > createSuitableDirectAccessContainer( final DirectAccessContainerFactory storageFactory, final long[] dim )
 	{
 		// create the container
-		final DirectAccessContainer<BasePairCharType, ? extends CharAccess> container = storageFactory.createCharInstance( dim, 1 );
+		final DirectAccessContainer< BasePairCharType, ? extends CharAccess, ? > container = storageFactory.createCharInstance( dim, 1 );
 		
 		// create a Type that is linked to the container
 		final BasePairCharType linkedType = new BasePairCharType( container );

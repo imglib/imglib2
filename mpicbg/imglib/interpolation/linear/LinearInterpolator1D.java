@@ -104,17 +104,17 @@ public class LinearInterpolator1D< T extends NumericType< T > > implements Inter
 	/* Sampler */
 	
 	@Override
-	public T type()
+	public T get()
 	{
 		// weights
 		final float t = x - target.getFloatPosition( 0 );
 		final float t1 = 1.0f - t;
 
-		tmp2.set( target.type() );
+		tmp2.set( target.get() );
 		tmp2.mul( t1 );
 		
 		target.fwd( 0 );
-		tmp1.set( target.type() );
+		tmp1.set( target.get() );
 		tmp1.mul( t );
 		tmp2.add( tmp1 );
 		
@@ -123,7 +123,7 @@ public class LinearInterpolator1D< T extends NumericType< T > > implements Inter
 	
 	@Override
 	@Deprecated
-	public T getType(){ return type(); }
+	public T getType(){ return get(); }
 	
 	
 	/* Localizable */

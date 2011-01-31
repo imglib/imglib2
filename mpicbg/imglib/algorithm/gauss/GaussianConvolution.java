@@ -256,8 +256,8 @@ public class GaussianConvolution< T extends NumericType<T>> implements MultiThre
     	
     	final int[] to = new int[ numDimensions ];
     	
-    	final T sum = inputIterator.type().createVariable();
-    	final T tmp = inputIterator.type().createVariable();
+    	final T sum = inputIterator.get().createVariable();
+    	final T tmp = inputIterator.get().createVariable();
         
     	
         // do as many pixels as wanted by this thread
@@ -285,7 +285,7 @@ public class GaussianConvolution< T extends NumericType<T>> implements MultiThre
         	for ( int f = -filterSizeHalf; f <= filterSizeHalfMinus1; ++f )
     		{
         		// get value from the input image
-        		tmp.set( inputIterator.type() );
+        		tmp.set( inputIterator.get() );
 
          		// multiply the kernel
         		tmp.mul( kernel[ f + filterSizeHalf ] );
@@ -302,7 +302,7 @@ public class GaussianConvolution< T extends NumericType<T>> implements MultiThre
         	//
         	    		
     		// get value from the input image
-    		tmp.set( inputIterator.type() );
+    		tmp.set( inputIterator.get() );
     		    		
     		// multiply the kernel
     		tmp.mul( kernel[ filterSizeMinus1 ] );
@@ -310,7 +310,7 @@ public class GaussianConvolution< T extends NumericType<T>> implements MultiThre
     		// add up the sum
     		sum.add( tmp );
     		    		
-            outputIterator.type().set( sum );			                		        	
+            outputIterator.get().set( sum );			                		        	
         }
 	}	
 	
@@ -405,7 +405,7 @@ public class GaussianConvolution< T extends NumericType<T>> implements MultiThre
 										for (int f = -filterSizeHalf; f <= filterSizeHalf; f++)
 										{
 											it.fwd( 0 );
-											avg += it.type().get() * kernel1[kernelPos++];
+											avg += it.get().get() * kernel1[kernelPos++];
 										}
 									}
 									out[count++] = (float) avg;
@@ -467,7 +467,7 @@ public class GaussianConvolution< T extends NumericType<T>> implements MultiThre
 										for (int f = -filterSizeHalf; f <= filterSizeHalf; f++)
 										{
 											it.fwd( 1 );
-											avg += it.type().get() * kernel1[kernelPos++];
+											avg += it.get().get() * kernel1[kernelPos++];
 										}
 									}
 
@@ -542,7 +542,7 @@ public class GaussianConvolution< T extends NumericType<T>> implements MultiThre
 										for (int f = -filterSizeHalf; f <= filterSizeHalf; f++)
 										{
 											it.fwd( 2 );
-											avg += it.type().get() * kernel1[kernelPos++];
+											avg += it.get().get() * kernel1[kernelPos++];
 										}
 									}
 									tempOut[z] = (float) avg;

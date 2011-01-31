@@ -50,7 +50,7 @@ public class ShapeListCachedPositionableRasterSampler< T extends Type< T > > ext
 	}
 	
 	@Override
-	public T type()
+	public T get()
 	{
 		return cache.lookUp( position );
 	}

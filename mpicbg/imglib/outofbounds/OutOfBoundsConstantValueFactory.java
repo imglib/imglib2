@@ -37,7 +37,7 @@ import mpicbg.imglib.type.Type;
  * @author Stephan Preibisch and Stephan Saalfeld
  */
 public class OutOfBoundsConstantValueFactory< T extends Type< T > >
-		extends RasterOutOfBoundsFactory< T >
+		extends RasterOutOfBoundsFactory< T, Object >
 {
 	protected T value;
 
@@ -62,10 +62,10 @@ public class OutOfBoundsConstantValueFactory< T extends Type< T > >
 	}
 
 	@Override
-	public OutOfBoundsConstantValue< T > create( final PositionableRasterSampler< T > cursor )
+	public OutOfBoundsConstantValue< T > create( final PositionableRasterSampler< T > sampler )
 	{
-		if ( value == null ) return new OutOfBoundsConstantValue< T >( cursor, cursor.getImage().createType() );
-		else return new OutOfBoundsConstantValue< T >( cursor, value );
+		if ( value == null ) return new OutOfBoundsConstantValue< T >( sampler, sampler.create() );
+		else return new OutOfBoundsConstantValue< T >( sampler, value );
 	}
 
 }

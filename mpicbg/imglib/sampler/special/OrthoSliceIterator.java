@@ -28,7 +28,6 @@
  */
 package mpicbg.imglib.sampler.special;
 
-import mpicbg.imglib.container.Container;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.location.Iterator;
 import mpicbg.imglib.sampler.PositionableRasterSampler;
@@ -101,13 +100,13 @@ public class OrthoSliceIterator< T extends mpicbg.imglib.type.Type< T > > implem
 	@Deprecated
 	public T getType()
 	{
-		return type();
+		return get();
 	}
 
 	@Override
-	public T type()
+	public T get()
 	{
-		return sampler.type();
+		return sampler.get();
 	}
 
 	@Override
@@ -209,7 +208,7 @@ public class OrthoSliceIterator< T extends mpicbg.imglib.type.Type< T > > implem
 	public T next()
 	{
 		fwd();
-		return sampler.type();
+		return sampler.get();
 	}
 
 	@Override

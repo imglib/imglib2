@@ -28,8 +28,6 @@
 package mpicbg.imglib;
 
 import mpicbg.imglib.location.Positionable;
-import mpicbg.imglib.sampler.Sampler;
-import mpicbg.imglib.type.Type;
 
 /**
  * <p><em>f:R<sup>n</sup>&rarr;T</em></p>
@@ -41,7 +39,7 @@ import mpicbg.imglib.type.Type;
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
 public interface PositionableFunction<
-		T extends Type< T >,
+		T,
 		F extends PositionableFunction< T, F, P >,
 		P extends Positionable & Sampler< T > > extends Function< T, F >
 {

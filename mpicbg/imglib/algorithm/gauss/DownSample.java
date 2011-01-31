@@ -151,7 +151,7 @@ public class DownSample<T extends RealType<T>> implements MultiThreaded, OutputA
 				scaledPos[ d ] = pos[ d ] * scalingDim[ d ];
 
 			interpolator.moveTo( scaledPos );
-			cursor.type().set( interpolator.type() );
+			cursor.get().set( interpolator.get() );
 		}
 		
 		cursor.close();

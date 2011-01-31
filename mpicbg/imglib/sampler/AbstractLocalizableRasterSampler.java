@@ -27,9 +27,8 @@
  */
 package mpicbg.imglib.sampler;
 
+import mpicbg.imglib.IntegerInterval;
 import mpicbg.imglib.algorithm.math.MathLib;
-import mpicbg.imglib.container.Container;
-import mpicbg.imglib.image.Image;
 import mpicbg.imglib.location.RasterLocalizable;
 import mpicbg.imglib.type.Type;
 
@@ -44,40 +43,40 @@ public abstract class AbstractLocalizableRasterSampler< T extends Type< T > > ex
 	final protected int[] position;
 	final protected long[] dimensions;
 	
-	public AbstractLocalizableRasterSampler( final Container<T> container, final Image<T> image )
+	public AbstractLocalizableRasterSampler( final IntegerInterval f )
 	{
-		super( container, image );
+		super( f.numDimensions() );
 		
-		this.position = new int[ numDimensions ];
-		this.dimensions = new long[ numDimensions ];
-		container.size( this.dimensions );
+		position = new int[ n ];
+		dimensions = new long[ n ];
+		f.size( dimensions );
 	}
 	
 	@Override
 	public void localize( float[] pos )
 	{
-		for ( int d = 0; d < numDimensions; d++ )
+		for ( int d = 0; d < n; d++ )
 			pos[ d ] = this.position[ d ];
 	}
 
 	@Override
 	public void localize( double[] pos )
 	{
-		for ( int d = 0; d < numDimensions; d++ )
+		for ( int d = 0; d < n; d++ )
 			pos[ d ] = this.position[ d ];
 	}
 
 	@Override
 	public void localize( int[] pos )
 	{
-		for ( int d = 0; d < numDimensions; d++ )
+		for ( int d = 0; d < n; d++ )
 			pos[ d ] = this.position[ d ];
 	}
 	
 	@Override
 	public void localize( long[] pos )
 	{
-		for ( int d = 0; d < numDimensions; d++ )
+		for ( int d = 0; d < n; d++ )
 			pos[ d ] = this.position[ d ];
 	}
 	
@@ -94,5 +93,5 @@ public abstract class AbstractLocalizableRasterSampler< T extends Type< T > > ex
 	public long getLongPosition( final int dim ){ return position[ dim ]; }
 	
 	@Override
-	public String toString(){ return MathLib.printCoordinates( position ) + " = " + type(); }
+	public String toString(){ return MathLib.printCoordinates( position ) + " = " + get(); }
 }

@@ -27,8 +27,7 @@
  */
 package mpicbg.imglib.sampler;
 
-import mpicbg.imglib.container.Container;
-import mpicbg.imglib.image.Image;
+import mpicbg.imglib.IntegerInterval;
 import mpicbg.imglib.location.RasterLocalizable;
 import mpicbg.imglib.outofbounds.RasterOutOfBounds;
 import mpicbg.imglib.outofbounds.RasterOutOfBoundsFactory;
@@ -45,27 +44,30 @@ public abstract class AbstractOutOfBoundsPositionableRasterSampler< T extends Ty
 	/* performs the actual moves and generates/queries a Type */
 	final protected RasterOutOfBounds< T > outOfBounds;
 	
-	public AbstractOutOfBoundsPositionableRasterSampler( final Container< T > container, final Image< T > image, final RasterOutOfBounds< T > outOfBounds )
+	public AbstractOutOfBoundsPositionableRasterSampler( final IntegerInterval f, final RasterOutOfBounds< T > outOfBounds )
 	{
-		super( container, image );
+		super( f.numDimensions() );
 		
 		this.outOfBounds = outOfBounds;
 	}
 	
-	public AbstractOutOfBoundsPositionableRasterSampler( final Container< T > container, final Image< T > image, final RasterOutOfBoundsFactory< T > outOfBoundsFactory )
+	public AbstractOutOfBoundsPositionableRasterSampler( final IntegerInterval f, final RasterOutOfBoundsFactory< T > outOfBoundsFactory )
 	{
-		super( container, image );
+		super( f.numDimensions() );
 		
 		this.outOfBounds = outOfBoundsFactory.create( this );
 	}
 	
-	final public boolean isOutOfBounds(){ return outOfBounds.isOutOfBounds(); }
+	final public boolean isOutOfBounds()
+	{
+		return outOfBounds.isOutOfBounds();
+	}
 	
 	
 	/* Sampler */
 	
 	@Override
-	final public T type(){ return outOfBounds.type(); }
+	final public T get(){ return outOfBounds.get(); }
 	
 	
 	/* RasterLocalizable */
@@ -98,7 +100,7 @@ public abstract class AbstractOutOfBoundsPositionableRasterSampler< T extends Ty
 	final public float  getFloatPosition( final int dim ){ return outOfBounds.getFloatPosition( dim ); }
 	
 	@Override
-	public String toString() { return outOfBounds.toString() + " = " + type(); }
+	public String toString() { return outOfBounds.toString() + " = " + get(); }
 	
 	
 	/* RasterPositionable */

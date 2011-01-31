@@ -42,13 +42,13 @@ import mpicbg.imglib.type.numeric.RealType;
 public class DoubleType extends AbstractRealType< DoubleType > implements RealType< DoubleType >
 {
 	// the DirectAccessContainer
-	final DirectAccessContainer< DoubleType, ? extends DoubleAccess > storage;
+	final DirectAccessContainer< DoubleType, ? extends DoubleAccess, ? > storage;
 
 	// the (sub)DirectAccessContainer that holds the information
 	DoubleAccess b;
 
 	// this is the constructor if you want it to read from an array
-	public DoubleType( DirectAccessContainer< DoubleType, ? extends DoubleAccess > doubleStorage )
+	public DoubleType( DirectAccessContainer< DoubleType, ? extends DoubleAccess, ? > doubleStorage )
 	{
 		storage = doubleStorage;
 	}
@@ -68,10 +68,10 @@ public class DoubleType extends AbstractRealType< DoubleType > implements RealTy
 	}
 
 	@Override
-	public DirectAccessContainer< DoubleType, ? extends DoubleAccess > createSuitableDirectAccessContainer( final DirectAccessContainerFactory storageFactory, final int dim[] )
+	public DirectAccessContainer< DoubleType, ? extends DoubleAccess, ? > createSuitableDirectAccessContainer( final DirectAccessContainerFactory storageFactory, final long[] dim )
 	{
 		// create the container
-		final DirectAccessContainer< DoubleType, ? extends DoubleAccess > container = storageFactory.createDoubleInstance( dim, 1 );
+		final DirectAccessContainer< DoubleType, ? extends DoubleAccess, ? > container = storageFactory.createDoubleInstance( dim, 1 );
 
 		// create a Type that is linked to the container
 		final DoubleType linkedType = new DoubleType( container );

@@ -242,7 +242,7 @@ public class LinearInterpolator< T extends NumericType< T > > extends FloorRaste
 	public void close() { target.close(); }
 
 	@Override
-	public T type()
+	public T get()
 	{
 		/* calculate weights [0...1] and their inverse (1-weight) [1...0] in each dimension */
 		for (int d = 0; d < numDimensions; d++)
@@ -260,7 +260,7 @@ public class LinearInterpolator< T extends NumericType< T > > extends FloorRaste
 				if ( positions[ i ][ d ] )
 					target.fwd( d );
 
-			tree[ numDimensions ][ i ].set( target.type() );
+			tree[ numDimensions ][ i ].set( target.get() );
 			
 			// move back to the offset position
 			for ( int d = 0; d < numDimensions; ++d )
@@ -292,6 +292,6 @@ public class LinearInterpolator< T extends NumericType< T > > extends FloorRaste
 	@Deprecated
 	final public T getType()
 	{
-		return type();
+		return get();
 	}
 }

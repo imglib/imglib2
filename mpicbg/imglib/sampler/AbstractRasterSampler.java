@@ -27,47 +27,31 @@
  */
 package mpicbg.imglib.sampler;
 
-import mpicbg.imglib.container.Container;
-import mpicbg.imglib.image.Image;
 import mpicbg.imglib.type.Type;
 
 /**
  * 
  * @author Stephan Preibisch and Stephan Saalfeld
  *
- * @param < T > the {@link Type} to be returned by {@link #type()}
+ * @param < T > the {@link Type} to be returned by {@link #get()}
  */
 public abstract class AbstractRasterSampler< T extends Type< T > > implements RasterSampler< T >
 {
-	/* the image whose pixels this AbstractCursor is accessing, can be null */
-	final protected Image< T > image;
-
 	/* a copy of container.numDimensions() for slightly faster access */
-	final protected int numDimensions;
+	final protected int n;
 	
-	public AbstractRasterSampler( final Container< T > container, final Image< T > image )
+	public AbstractRasterSampler( final int n )
 	{
-		this.image = image;
-		numDimensions = container.numDimensions();
+		this.n = n;
 	}
 
 	@Override
 	@Deprecated
-	final public T getType() { return type(); } 
+	final public T getType() { return get(); } 
 	
 	@Override
-	public int getArrayIndex() { return type().getIndex(); }
+	public int getArrayIndex() { return get().getIndex(); }
 	
 	@Override
-	public Image<T> getImage() { return image; }
-	
-	@Override
-	public void close()
-	{
-		if ( image != null)
-			image.removeRasterSampler( this ); 
-	}
-	
-	@Override
-	public int numDimensions(){ return numDimensions; }
+	public int numDimensions(){ return n; }
 }

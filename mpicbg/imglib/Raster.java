@@ -28,8 +28,6 @@
 package mpicbg.imglib;
 
 import mpicbg.imglib.location.RasterPositionable;
-import mpicbg.imglib.sampler.Sampler;
-import mpicbg.imglib.type.Type;
 
 /**
  * <p><em>f:Z<sup>n</sup>&rarr;T</em></p>
@@ -41,7 +39,7 @@ import mpicbg.imglib.type.Type;
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
 public interface Raster<
-		T extends Type< T >,
+		T,
 		F extends Raster< T, F, R >,
 		R extends RasterPositionable & Sampler< T > > extends Function< T, F >
 {

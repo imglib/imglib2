@@ -55,4 +55,20 @@ public interface IntegerInterval extends RealInterval
 	 * @return maximum
 	 */
 	public long max( final int d );
+	
+	/**
+	 * Write the number of pixels in each dimension into long[] size.
+	 * 
+	 * @param size
+	 */
+	public void size( long[] size );
+	
+	/**
+	 * Get the number of pixels in a given dimension <em>d</em>.
+	 * 
+	 * @param d
+	 * 
+	 * @return
+	 */
+	public long size( int d );
 }

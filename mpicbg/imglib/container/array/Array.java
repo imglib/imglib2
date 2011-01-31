@@ -27,15 +27,15 @@
  */
 package mpicbg.imglib.container.array;
 
+import mpicbg.imglib.IntegerInterval;
+import mpicbg.imglib.IterableFunction;
+import mpicbg.imglib.Sampler;
+import mpicbg.imglib.SamplerFactory;
 import mpicbg.imglib.container.AbstractDirectAccessContainer;
 import mpicbg.imglib.container.Container;
 import mpicbg.imglib.container.basictypecontainer.DataAccess;
-import mpicbg.imglib.image.Image;
+import mpicbg.imglib.container.dynamic.DynamicContainer;
 import mpicbg.imglib.outofbounds.RasterOutOfBoundsFactory;
-import mpicbg.imglib.sampler.array.ArrayBasicRasterIterator;
-import mpicbg.imglib.sampler.array.ArrayLocalizingRasterIterator;
-import mpicbg.imglib.sampler.array.ArrayPositionableRasterSampler;
-import mpicbg.imglib.sampler.array.ArrayOutOfBoundsPositionableRasterSampler;
 import mpicbg.imglib.type.Type;
 
 /**
@@ -48,22 +48,33 @@ import mpicbg.imglib.type.Type;
  * @param <T>
  * @param <A>
  *
- * @author Stephan Preibisch and Stephan Saalfeld
+ * @author Stephan Preibisch and Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-public class Array< T extends Type< T >, A extends DataAccess > extends AbstractDirectAccessContainer< T, A >
+final public class Array< T extends Type< T >, A extends DataAccess > extends AbstractDirectAccessContainer< T, A, Array< T, A > >
 {
-	final protected int[] step;
-
+	final int[] step, dim;
+	
 	final ArrayContainerFactory factory;
 
 	// the DataAccess created by the ArrayContainerFactory
 	final A data;
 
-	public Array( final ArrayContainerFactory factory, final A data, final int[] dim, final int entitiesPerPixel )
+	/**
+	 * TODO check for the size of numPixels being < Integer.MAX_VALUE?
+	 * 
+	 * @param factory
+	 * @param data
+	 * @param dim
+	 * @param entitiesPerPixel
+	 */
+	public Array( final ArrayContainerFactory factory, final A data, final long[] dim, final int entitiesPerPixel )
 	{
-		super( factory, dim, entitiesPerPixel );
+		super( dim, entitiesPerPixel );
+		this.dim = new int[ n ];
+		for ( int d = 0; d < n; ++d )
+			this.dim[ d ] = ( int )dim[ d ];
 
-		step = Array.createAllocationSteps( dim );
+		step = Array.createAllocationSteps( this.dim );
 		this.factory = factory;
 		this.data = data;
 	}
@@ -81,30 +92,30 @@ public class Array< T extends Type< T >, A extends DataAccess > extends Abstract
 	}
 
 	@Override
-	public ArrayBasicRasterIterator< T > createRasterIterator( final Image< T > image )
+	public ArrayRasterIterator< T > iterator()
 	{
-		ArrayBasicRasterIterator< T > c = new ArrayBasicRasterIterator< T >( this, image );
+		ArrayRasterIterator< T > c = new ArrayRasterIterator< T >( this );
 		return c;
 	}
 
 	@Override
-	public ArrayLocalizingRasterIterator< T > createLocalizingRasterIterator( final Image< T > image )
+	public ArrayLocalizingRasterIterator< T > localizingIterator()
 	{
-		ArrayLocalizingRasterIterator< T > c = new ArrayLocalizingRasterIterator< T >( this, image );
+		ArrayLocalizingRasterIterator< T > c = new ArrayLocalizingRasterIterator< T >( this );
 		return c;
 	}
 
 	@Override
-	public ArrayPositionableRasterSampler< T > createPositionableRasterSampler( final Image< T > image )
+	public ArrayPositionableRasterSampler< T > positionableRasterSampler()
 	{
-		ArrayPositionableRasterSampler< T > c = new ArrayPositionableRasterSampler< T >( this, image );
+		ArrayPositionableRasterSampler< T > c = new ArrayPositionableRasterSampler< T >( this );
 		return c;
 	}
 
 	@Override
-	public ArrayOutOfBoundsPositionableRasterSampler< T > createPositionableRasterSampler( final Image< T > image, final RasterOutOfBoundsFactory< T > outOfBoundsFactory )
+	public ArrayOutOfBoundsPositionableRasterSampler< T > positionableRasterSampler( final RasterOutOfBoundsFactory< T > outOfBoundsFactory )
 	{
-		ArrayOutOfBoundsPositionableRasterSampler< T > c = new ArrayOutOfBoundsPositionableRasterSampler< T >( this, image, outOfBoundsFactory );
+		ArrayOutOfBoundsPositionableRasterSampler< T > c = new ArrayOutOfBoundsPositionableRasterSampler< T >( this, outOfBoundsFactory );
 		return c;
 	}
 
@@ -125,7 +136,7 @@ public class Array< T extends Type< T >, A extends DataAccess > extends Abstract
 	public final int positionToIndex( final int[] position )
 	{
 		int i = position[ 0 ];
-		for ( int d = 1; d < numDimensions; ++d )
+		for ( int d = 1; d < n; ++d )
 			i += position[ d ] * step[ d ];
 
 		return i;
@@ -133,7 +144,7 @@ public class Array< T extends Type< T >, A extends DataAccess > extends Abstract
 
 	final public void indexToPosition( int i, final int[] l )
 	{
-		for ( int d = numDimensions - 1; d > 0; --d )
+		for ( int d = n - 1; d > 0; --d )
 		{
 			final int ld = i / step[ d ];
 			l[ d ] = ld;
@@ -145,7 +156,7 @@ public class Array< T extends Type< T >, A extends DataAccess > extends Abstract
 
 	final public void indexToPosition( int i, final long[] l )
 	{
-		for ( int d = numDimensions - 1; d > 0; --d )
+		for ( int d = n - 1; d > 0; --d )
 		{
 			final int ld = i / step[ d ];
 			l[ d ] = ld;
@@ -155,17 +166,34 @@ public class Array< T extends Type< T >, A extends DataAccess > extends Abstract
 		l[ 0 ] = i;
 	}
 
-	final public int indexToPosition( int i, final int dim )
+	final public int indexToPosition( int i, final int d )
 	{
-		for ( int d = numDimensions - 1; d > dim; --d )
-			i %= step[ d ];
+		for ( int j = n - 1; j > d; --j )
+			i %= step[ j ];
 
-		return i / step[ dim ];
+		return i / step[ d ];
 	}
 
 	@Override
-	public void close()
+	public boolean canCopy( final IterableFunction< ?, ?, ? > f )
 	{
-		data.close();
+		if ( f.numDimensions() != this.numDimensions() )
+			return false;
+		
+		if ( getClass().isInstance( f ) || DynamicContainer.class.isInstance( f ) )
+		{
+			final IntegerInterval a = ( IntegerInterval )f;
+			for ( int d = 0; d < n; ++d )
+				if ( size[ d ] != a.size( d ) )
+					return false;
+		}
+		
+		return true;
+	}
+
+	@Override
+	public < S extends Sampler< T > > S sampler( SamplerFactory< T, S, Array< T, A > > samplerFactory )
+	{
+		return samplerFactory.create( this );
 	}
 }

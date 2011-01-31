@@ -28,8 +28,6 @@
 package mpicbg.imglib;
 
 import mpicbg.imglib.location.Iterator;
-import mpicbg.imglib.sampler.Sampler;
-import mpicbg.imglib.sampler.SamplerFactory;
 import mpicbg.imglib.type.Type;
 
 /**
@@ -67,7 +65,7 @@ import mpicbg.imglib.type.Type;
  * 
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-public interface Function< T extends Type< T >, F extends Function< T, F > > extends EuclideanSpace
+public interface Function< T, F extends Function< T, F > >
 {
 	/**
 	 * Create a {@link Sampler} that provides access to a {@link Type}.

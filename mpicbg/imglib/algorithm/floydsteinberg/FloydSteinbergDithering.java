@@ -22,12 +22,12 @@ import mpicbg.imglib.algorithm.Benchmark;
 import mpicbg.imglib.algorithm.OutputAlgorithm;
 import mpicbg.imglib.algorithm.math.MathLib;
 import mpicbg.imglib.container.array.ArrayContainerFactory;
+import mpicbg.imglib.container.array.ArrayLocalizingRasterIterator;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.ImageFactory;
 import mpicbg.imglib.outofbounds.OutOfBoundsConstantValueFactory;
 import mpicbg.imglib.sampler.PositionableRasterSampler;
 import mpicbg.imglib.sampler.RasterIterator;
-import mpicbg.imglib.sampler.array.ArrayLocalizingRasterIterator;
 import mpicbg.imglib.type.label.FakeType;
 import mpicbg.imglib.type.logic.BitType;
 import mpicbg.imglib.type.numeric.RealType;
@@ -95,15 +95,15 @@ public class FloydSteinbergDithering<T extends RealType<T>> implements OutputAlg
 			
 			// set new value and compute error
 			final float error;
-			final float in = cursorInput.type().getRealFloat(); 
+			final float in = cursorInput.get().getRealFloat(); 
 			if ( in < ditheringThreshold )
 			{
-				cursorOutput.type().setZero();
+				cursorOutput.get().setZero();
 				error = in - minValue; 
 			}
 			else
 			{
-				cursorOutput.type().setOne();
+				cursorOutput.get().setOne();
 				error = in - maxValue; 
 			}
 			
@@ -118,14 +118,14 @@ public class FloydSteinbergDithering<T extends RealType<T>> implements OutputAlg
 				{
 					cursorKernel.fwd();				
 					
-					final float value = error * cursorKernel.type().get();
+					final float value = error * cursorKernel.get().get();
 					cursorKernel.localize( tmp2 );
 					
 					for ( int d = 0; d < numDimensions; ++d )
 						tmp2[ d ] += tmp1[ d ] - 1;
 					
 					cursorInput.setPosition( tmp2 );
-					cursorInput.type().setReal( cursorInput.type().getRealFloat() + value );
+					cursorInput.get().setReal( cursorInput.get().getRealFloat() + value );
 				}
 			}		
 		}
@@ -181,16 +181,16 @@ public class FloydSteinbergDithering<T extends RealType<T>> implements OutputAlg
 			//( - means processed already, # means the one we are currently processing)			
 			cursor.setPosition( 2, 0 );
 			cursor.setPosition( 1, 1 );			
-			cursor.type().setReal( 7.0f / 16.0f );
+			cursor.get().setReal( 7.0f / 16.0f );
 			
 			cursor.move( 1, 1 );
-			cursor.type().setReal( 1.0f / 16.0f );
+			cursor.get().setReal( 1.0f / 16.0f );
 
 			cursor.move( -1, 0 );
-			cursor.type().setReal( 5.0f / 16.0f );
+			cursor.get().setReal( 5.0f / 16.0f );
 
 			cursor.move( -1, 0 );
-			cursor.type().setReal( 3.0f / 16.0f );
+			cursor.get().setReal( 3.0f / 16.0f );
 
 			cursor.close();
 			
@@ -221,7 +221,7 @@ public class FloydSteinbergDithering<T extends RealType<T>> implements OutputAlg
 				cursor.fwd();
 				
 				if ( count > numValues )
-					cursor.type().setReal( rndValues[ count - numValues - 1 ] );				
+					cursor.get().setReal( rndValues[ count - numValues - 1 ] );				
 				
 				++count;
 			}
@@ -240,7 +240,7 @@ public class FloydSteinbergDithering<T extends RealType<T>> implements OutputAlg
 				{
 					cursor.fwd();
 					if ( cursor.getIntPosition( d ) != 1 )
-						sumD += cursor.type().get(); 				
+						sumD += cursor.get().get(); 				
 				}
 				
 				cursor.reset();
@@ -249,7 +249,7 @@ public class FloydSteinbergDithering<T extends RealType<T>> implements OutputAlg
 					cursor.fwd();
 
 					if ( cursor.getIntPosition( d ) != 1 )
-						cursor.type().set( cursor.type().get() / sumD );
+						cursor.get().set( cursor.get().get() / sumD );
 				}
 			}
 			cursor.close();
@@ -260,14 +260,14 @@ public class FloydSteinbergDithering<T extends RealType<T>> implements OutputAlg
 			while ( cursor.hasNext() )
 			{
 				cursor.fwd();
-				sum += cursor.type().get();
+				sum += cursor.get().get();
 			}
 
 			cursor.reset();
 			while ( cursor.hasNext() )
 			{
 				cursor.fwd();
-				cursor.type().set( cursor.type().get() / sum );
+				cursor.get().set( cursor.get().get() / sum );
 			}
 			return kernel;			
 		}

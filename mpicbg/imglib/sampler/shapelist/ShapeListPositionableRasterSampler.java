@@ -65,7 +65,7 @@ public class ShapeListPositionableRasterSampler< T extends Type< T > > extends A
 	}
 	
 	@Override
-	public T type()
+	public T get()
 	{
 		return container.getShapeType( position );
 	}
@@ -296,7 +296,7 @@ public class ShapeListPositionableRasterSampler< T extends Type< T > > extends A
 		for ( int d = 1; d < numDimensions; d++ )
 			pos += ", " + position[ d ];
 		
-		pos += ") = " + type();
+		pos += ") = " + get();
 		
 		return pos;
 	}

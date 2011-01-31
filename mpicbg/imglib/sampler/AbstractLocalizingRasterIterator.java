@@ -27,8 +27,7 @@
  */
 package mpicbg.imglib.sampler;
 
-import mpicbg.imglib.container.Container;
-import mpicbg.imglib.image.Image;
+import mpicbg.imglib.IntegerInterval;
 import mpicbg.imglib.type.Type;
 
 /**
@@ -39,9 +38,9 @@ import mpicbg.imglib.type.Type;
  */
 public abstract class AbstractLocalizingRasterIterator< T extends Type< T > > extends AbstractLocalizableRasterSampler< T > implements RasterIterator< T >
 {
-	public AbstractLocalizingRasterIterator( final Container< T > container, final Image< T > image )
+	public AbstractLocalizingRasterIterator( final IntegerInterval f )
 	{
-		super( container, image );
+		super( f );
 	}
 
 	@Override
@@ -51,7 +50,7 @@ public abstract class AbstractLocalizingRasterIterator< T extends Type< T > > ex
 	public T next()
 	{
 		fwd();
-		return type();
+		return get();
 	}
 
 	@Override

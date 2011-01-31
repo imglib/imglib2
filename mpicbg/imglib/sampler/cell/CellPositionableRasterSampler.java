@@ -28,12 +28,12 @@
 package mpicbg.imglib.sampler.cell;
 
 import mpicbg.imglib.container.array.Array;
+import mpicbg.imglib.container.array.ArrayPositionableRasterSampler;
 import mpicbg.imglib.container.cell.Cell;
 import mpicbg.imglib.container.cell.CellContainer;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.location.RasterLocalizable;
 import mpicbg.imglib.sampler.AbstractBasicPositionableRasterSampler;
-import mpicbg.imglib.sampler.array.ArrayPositionableRasterSampler;
 import mpicbg.imglib.type.Type;
 import mpicbg.imglib.type.label.FakeType;
 
@@ -122,15 +122,15 @@ public class CellPositionableRasterSampler< T extends Type< T > > extends Abstra
 		this.numCells = container.getNumCells();
 		this.numCellsDim = container.getNumCellsDim();
 		
-		this.cellPosition = new int[ numDimensions ];
-		this.cellEnd = new int[ numDimensions ];
-		this.step = new int[ numDimensions ];
-		this.cellStep = new int[ numDimensions ];
-		this.cellDimensions = new int[ numDimensions ];
-		this.cellOffset = new int[ numDimensions ];
+		this.cellPosition = new int[ n ];
+		this.cellEnd = new int[ n ];
+		this.step = new int[ n ];
+		this.cellStep = new int[ n ];
+		this.cellDimensions = new int[ n ];
+		this.cellOffset = new int[ n ];
 		
 		this.cursor = ArrayPositionableRasterSampler.createLinearByDimCursor( numCellsDim );
-		cursor.setPosition( new int[ numDimensions ] );
+		cursor.setPosition( new int[ n ] );
 		
 		// the steps when moving from cell to cell
 		Array.createAllocationSteps( numCellsDim, cellStep );
@@ -153,7 +153,7 @@ public class CellPositionableRasterSampler< T extends Type< T > > extends Abstra
 		cellInstance.dimensions( cellDimensions );
 		cellInstance.offset( cellOffset );
 		
-		for ( int d = 0; d < numDimensions; d++ )
+		for ( int d = 0; d < n; d++ )
 			cellEnd[ d ] = cellOffset[ d ] + cellDimensions[ d ];
 		
 		// the steps when moving inside a cell
@@ -231,7 +231,7 @@ public class CellPositionableRasterSampler< T extends Type< T > > extends Abstra
 	@Override
 	public void moveTo( final int[] position )
 	{		
-		for ( int d = 0; d < numDimensions; ++d )
+		for ( int d = 0; d < n; ++d )
 		{
 			final int dist = position[ d ] - this.position[ d ];
 			
@@ -245,7 +245,7 @@ public class CellPositionableRasterSampler< T extends Type< T > > extends Abstra
 	@Override
 	public void moveTo( final long[] position )
 	{
-		for ( int d = 0; d < numDimensions; ++d )
+		for ( int d = 0; d < n; ++d )
 		{
 			final long dist = position[ d ] - this.position[ d ];
 			
@@ -313,7 +313,7 @@ public class CellPositionableRasterSampler< T extends Type< T > > extends Abstra
 	@Override
 	public void setPosition( final int[] position )
 	{
-		for ( int d = 0; d < numDimensions; ++d )
+		for ( int d = 0; d < n; ++d )
 			this.position[ d ] = position[ d ];
 
 		// the cell position in "cell space" from the image coordinates 
@@ -330,7 +330,7 @@ public class CellPositionableRasterSampler< T extends Type< T > > extends Abstra
 	/* TODO change position to long accuracy */
 	public void setPosition( final long[] position )
 	{
-		for ( int d = 0; d < numDimensions; ++d )
+		for ( int d = 0; d < n; ++d )
 			this.position[ d ] = ( int )position[ d ];
 
 		// the cell position in "cell space" from the image coordinates 
@@ -380,5 +380,5 @@ public class CellPositionableRasterSampler< T extends Type< T > > extends Abstra
 	public CellContainer< T, ? > getContainer(){ return container; }
 
 	@Override
-	public T type() { return type; }
+	public T get() { return type; }
 }

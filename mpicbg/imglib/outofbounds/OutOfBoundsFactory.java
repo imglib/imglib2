@@ -27,9 +27,9 @@
  */
 package mpicbg.imglib.outofbounds;
 
+import mpicbg.imglib.Sampler;
 import mpicbg.imglib.location.Localizable;
 import mpicbg.imglib.location.Positionable;
-import mpicbg.imglib.sampler.Sampler;
 import mpicbg.imglib.type.Type;
 
 /**
@@ -38,7 +38,7 @@ import mpicbg.imglib.type.Type;
  *
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-public interface OutOfBoundsFactory< T extends Type< T > >
+public interface OutOfBoundsFactory< T extends Type< T >, F >
 {
 	public < P extends Positionable & Localizable & Sampler< T > >OutOfBounds< T > create( P sampler );
 }

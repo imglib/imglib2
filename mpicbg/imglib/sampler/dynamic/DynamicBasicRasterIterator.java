@@ -71,7 +71,7 @@ public class DynamicBasicRasterIterator< T extends Type< T > > extends AbstractR
 	public DynamicContainerAccessor getAccessor() { return accessor; }
 
 	@Override
-	public T type() { return type; }
+	public T get() { return type; }
 
 	@Override
 	public boolean hasNext() { return internalIndex < container.numPixels() - 1; }

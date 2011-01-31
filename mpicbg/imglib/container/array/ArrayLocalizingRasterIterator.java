@@ -25,20 +25,18 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-package mpicbg.imglib.sampler.array;
+package mpicbg.imglib.container.array;
 
-import mpicbg.imglib.container.array.Array;
-import mpicbg.imglib.image.Image;
-import mpicbg.imglib.sampler.AbstractRasterIterator;
+import mpicbg.imglib.sampler.AbstractLocalizingRasterIterator;
 import mpicbg.imglib.type.Type;
 
 /**
  * 
  * @param <T>
- * 
+ *
  * @author Stephan Preibisch and Stephan Saalfeld
  */
-public class ArrayBasicRasterIterator< T extends Type< T > > extends AbstractRasterIterator< T >
+public class ArrayLocalizingRasterIterator< T extends Type< T >> extends AbstractLocalizingRasterIterator< T >
 {
 	protected final T type;
 
@@ -46,76 +44,58 @@ public class ArrayBasicRasterIterator< T extends Type< T > > extends AbstractRas
 
 	protected final int lastIndex;
 
-	public ArrayBasicRasterIterator( final Array< T, ? > container, final Image< T > image )
+	public ArrayLocalizingRasterIterator( final Array< T, ? > container )
 	{
-		super( container, image );
+		super( container );
 
-		this.type = container.createLinkedType();
 		this.container = container;
-		this.lastIndex = ( int ) container.numPixels() - 1;
+		this.type = container.createLinkedType();
+		this.lastIndex = ( int )container.size() - 1;
 
 		reset();
 	}
 
 	@Override
-	public T type()
-	{
-		return type;
-	}
+	public T get(){ return type; }
 
 	@Override
-	public boolean hasNext()
+	public boolean hasNext(){ return type.getIndex() < lastIndex; }
+
+	@Override
+	public void fwd()
 	{
-		return type.getIndex() < lastIndex;
+		type.incIndex();
+
+		for ( int d = 0; d < n; ++d )
+		{
+			if ( ++position[ d ] >= dimensions[ d ] ) position[ d ] = 0;
+			else break;
+		}
 	}
 
 	@Override
 	public void jumpFwd( final long steps )
 	{
 		type.incIndex( ( int ) steps );
-	}
-
-	@Override
-	public void fwd()
-	{
-		type.incIndex();
-	}
-
-	@Override
-	public void close()
-	{
-		type.updateIndex( lastIndex + 1 );
-		super.close();
+		container.indexToPosition( type.getIndex(), position );
 	}
 
 	@Override
 	public void reset()
 	{
-		type.updateIndex( -1 );
-		type.updateContainer( this );
+		if ( dimensions != null )
+		{
+			type.updateIndex( -1 );
+
+			position[ 0 ] = -1;
+
+			for ( int d = 1; d < n; d++ )
+				position[ d ] = 0;
+
+			type.updateContainer( this );
+		}
 	}
 
 	@Override
-	public Array< T, ? > getContainer()
-	{
-		return container;
-	}
-
-	@Override
-	public String toString()
-	{
-		return type.toString();
-	}
-
-	@Override
-	public long getLongPosition( final int dim )
-	{
-		return container.indexToPosition( type.getIndex(), dim );
-	}
-
-	@Override
-	public void localize( final long[] position )
-	{
-		container.indexToPosition( type.getIndex(), position );
-	}
+	public Array< T, ? > getContainer(){ return container; }
 }

@@ -105,18 +105,18 @@ public class OutOfBoundsConstantValue< T extends Type< T > > implements RasterOu
 	/* Sampler */
 	
 	@Override
-	final public T type()
+	final public T get()
 	{
 		//System.out.println( getLocationAsString() + " " + isOutOfBounds );
 		if ( isOutOfBounds )
 			return value;
 		else
-			return sampler.type();
+			return sampler.get();
 	}
 	
 	@Override
 	@Deprecated
-	final public T getType(){ return type(); }
+	final public T getType(){ return get(); }
 	
 	
 	/* RasterLocalizable */
@@ -162,7 +162,7 @@ public class OutOfBoundsConstantValue< T extends Type< T > > implements RasterOu
 	public long getLongPosition( final int dim ){ return position[ dim ]; }
 	
 	@Override
-	public String toString() { return MathLib.printCoordinates( position ) + " = " + type(); }
+	public String toString() { return MathLib.printCoordinates( position ) + " = " + get(); }
 	
 	
 	/* RasterPositionable */
@@ -297,5 +297,11 @@ public class OutOfBoundsConstantValue< T extends Type< T > > implements RasterOu
 	{
 		for ( int d = 0; d < position.length; ++d )
 			setPosition( position[ d ], d );
+	}
+
+	@Override
+	public T create()
+	{
+		return value.createVariable();
 	}
 }

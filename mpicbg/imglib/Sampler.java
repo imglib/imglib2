@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2009--2010, Stephan Preibisch & Stephan Saalfeld
+ * Copyright (c) 2009--2011, Stephan Preibisch & Stephan Saalfeld
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -9,7 +9,7 @@
  * list of conditions and the following disclaimer.  Redistributions in binary
  * form must reproduce the above copyright notice, this list of conditions and
  * the following disclaimer in the documentation and/or other materials
- * provided with the distribution.  Neither the name of the Fiji project nor
+ * provided with the distribution.  Neither the name of the imglib project nor
  * the names of its contributors may be used to endorse or promote products
  * derived from this software without specific prior written permission.
  * 
@@ -24,23 +24,44 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- *
- * @author Stephan Preibisch & Stephan Saalfeld
  */
-package mpicbg.imglib.container.basictypecontainer.array;
+package mpicbg.imglib;
 
-import mpicbg.imglib.container.basictypecontainer.FakeAccess;
+import mpicbg.imglib.container.Container;
+import mpicbg.imglib.type.Type;
 
-public class FakeArray implements FakeAccess, ArrayDataAccess< FakeArray >
+/** 
+ * <p>The {@link Sampler} interface provides access to a {@link Type} instance.
+ * This {@link Type} instance may point to an actual pixel stored in a
+ * {@link Container} or be generated differently.</p>
+ * 
+ * <p>The {@link Sampler} interface unifies pixel access for {@link Iterator},
+ * {@link PositionableRasterSampler random access samplers},
+ * {@link Interpolator} which are point {@link Sampler Samplers}.</p>
+ * 
+ * <p>In addition, many operations require integrating a region in a
+ * functionally defined way.  The {@link Sampler} interface is the basis of all
+ * these strategies.</p>
+ *  
+ * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
+ */
+public interface Sampler< T >
 {
-	public FakeArray(){}
-
-	@Override
-	public void close(){}
-
-	@Override
-	public FakeArray createArray( final int numEntities )
-	{
-		return null;
-	}
+	/**
+	 * Access the actual <em>T</em> instance providing access to a pixel,
+	 * sub-pixel or integral region value the {@link Sampler} points at.
+	 * 
+	 * @return
+	 */
+	public T get();
+	
+	/**
+	 * Create a new <em>T</em> variable instance.
+	 * 
+	 * @return
+	 */
+	public T create();
+	
+	@Deprecated
+	public T getType();
 }

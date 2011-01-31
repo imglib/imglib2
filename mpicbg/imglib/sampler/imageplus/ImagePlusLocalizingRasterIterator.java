@@ -45,7 +45,7 @@ public class ImagePlusLocalizingRasterIterator< T extends Type< T > > extends Im
 	{
 		super( container, image );
 
-		position = new int[ numDimensions ];
+		position = new int[ n ];
 		dimensions = container.getDimensions();
 		
 		reset();
@@ -65,7 +65,7 @@ public class ImagePlusLocalizingRasterIterator< T extends Type< T > > extends Im
 			type.updateContainer( this );
 		}
 		
-		for ( int d = 0; d < numDimensions; ++d )
+		for ( int d = 0; d < n; ++d )
 		{
 			if ( ++position[ d ] >= dimensions[ d ] )
 				position[ d ] = 0;
@@ -81,7 +81,7 @@ public class ImagePlusLocalizingRasterIterator< T extends Type< T > > extends Im
 		
 		position[ 0 ] = -1;
 		
-		for ( int d = 1; d < numDimensions; d++ )
+		for ( int d = 1; d < n; d++ )
 			position[ d ] = 0;
 		
 		sliceIndex = 0;
@@ -108,14 +108,14 @@ public class ImagePlusLocalizingRasterIterator< T extends Type< T > > extends Im
 	@Override
 	public void localize( final float[] position )
 	{
-		for ( int d = 0; d < numDimensions; ++d )
+		for ( int d = 0; d < n; ++d )
 			position[ d ] = this.position[ d ];
 	}
 	
 	@Override
 	public void localize( final double[] position )
 	{
-		for ( int d = 0; d < numDimensions; ++d )
+		for ( int d = 0; d < n; ++d )
 			position[ d ] = this.position[ d ];
 	}
 	
@@ -138,14 +138,14 @@ public class ImagePlusLocalizingRasterIterator< T extends Type< T > > extends Im
 	@Override
 	public void localize( final long[] position )
 	{
-		for ( int d = 0; d < numDimensions; ++d )
+		for ( int d = 0; d < n; ++d )
 			position[ d ] = this.position[ d ];
 	}
 	
 	@Override
 	public void localize( final int[] position )
 	{
-		for ( int d = 0; d < numDimensions; ++d )
+		for ( int d = 0; d < n; ++d )
 			position[ d ] = this.position[ d ];
 	}
 }

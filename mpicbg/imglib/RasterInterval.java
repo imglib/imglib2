@@ -31,7 +31,6 @@ import mpicbg.imglib.location.Iterator;
 import mpicbg.imglib.location.RasterLocalizable;
 import mpicbg.imglib.location.RasterPositionable;
 import mpicbg.imglib.outofbounds.RasterOutOfBoundsFactory;
-import mpicbg.imglib.sampler.Sampler;
 import mpicbg.imglib.type.Type;
 
 /**
@@ -47,9 +46,7 @@ public interface RasterInterval<
 		T extends Type< T >,
 		F extends RasterInterval< T, F, R, I >,
 		R extends RasterPositionable & Sampler< T >,
-		I extends RasterLocalizable & Iterator & java.util.Iterator< T > & Sampler< T > > extends IterableFunction< T, F, I >, RealInterval
+		I extends RasterLocalizable & Iterator & java.util.Iterator< T > & Sampler< T > > extends IterableFunction< T, F, I >, IntegerInterval
 {
-	public void size( long[] position );
-	public long size( int dim );
-	public R positionableRasterSampler( final RasterOutOfBoundsFactory< T > factory );
+	public R positionableRasterSampler( final RasterOutOfBoundsFactory< T, F > factory );
 }

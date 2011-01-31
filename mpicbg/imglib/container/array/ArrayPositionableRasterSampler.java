@@ -25,15 +25,10 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-package mpicbg.imglib.sampler.array;
+package mpicbg.imglib.container.array;
 
-import mpicbg.imglib.container.array.Array;
-import mpicbg.imglib.container.basictypecontainer.FakeAccess;
-import mpicbg.imglib.container.basictypecontainer.array.FakeArray;
-import mpicbg.imglib.image.Image;
 import mpicbg.imglib.sampler.AbstractBasicPositionableRasterSampler;
 import mpicbg.imglib.type.Type;
-import mpicbg.imglib.type.label.FakeType;
 
 /**
  * 
@@ -44,60 +39,54 @@ import mpicbg.imglib.type.label.FakeType;
 public class ArrayPositionableRasterSampler< T extends Type< T > > extends AbstractBasicPositionableRasterSampler< T >
 {
 	final protected T type;
-	final protected int[] step;
+	final protected int[] step, dim;
 	final Array< T, ? > container;
 	
-	public ArrayPositionableRasterSampler( final Array< T, ? > container, final Image< T > image ) 
+	public ArrayPositionableRasterSampler( final Array< T, ? > container ) 
 	{
-		super( container, image );
+		super( container );
 		
 		this.container = container;
 		this.type = container.createLinkedType();
 		
-		step = Array.createAllocationSteps( dimensions );
+		dim = container.dim;
+		step = container.step;
 		
-		for ( int d = 0; d < numDimensions; d++ )
+		for ( int d = 0; d < n; d++ )
 			position[ d ] = 0;
 
 		setPosition( position );
 		type.updateContainer( this );
 	}	
 	
-	public static ArrayPositionableRasterSampler< FakeType > createLinearByDimCursor( final int[] dim )
+	@Override
+	public T get() { return type; }
+	
+	@Override
+	public void fwd( final int d )
 	{
-		final Array<FakeType, FakeAccess> array = new Array< FakeType, FakeAccess >( null, new FakeArray(), dim, 1 );
-		array.setLinkedType( new FakeType() );
-		return new ArrayPositionableRasterSampler<FakeType>( array, null );
+		type.incIndex( step[ d ] );
+		++position[ d ];
 	}
 
 	@Override
-	public T type() { return type; }
-	
-	@Override
-	public void fwd( final int dim )
+	public void bck( final int d )
 	{
-		type.incIndex( step[ dim ] );
-		++position[ dim ];
-	}
-
-	@Override
-	public void bck( final int dim )
-	{
-		type.decIndex( step[ dim ] );
-		--position[ dim ];
+		type.decIndex( step[ d ] );
+		--position[ d ];
 	}
 	
 	@Override
-	public void move( final int steps, final int dim )
+	public void move( final int steps, final int d )
 	{
-		type.incIndex( step[ dim ] * steps );
-		position[ dim ] += steps;
+		type.incIndex( step[ d ] * steps );
+		position[ d ] += steps;
 	}
 					
 	@Override
 	public void setPosition( final int[] position )
 	{
-		for ( int d = 0; d < numDimensions; ++d )
+		for ( int d = 0; d < n; ++d )
 			this.position[ d ] = position[ d ];
 		
 		type.updateIndex( container.positionToIndex( this.position ) );
@@ -106,7 +95,7 @@ public class ArrayPositionableRasterSampler< T extends Type< T > > extends Abstr
 	@Override
 	public void setPosition( long[] position )
 	{
-		for ( int d = 0; d < numDimensions; ++d )
+		for ( int d = 0; d < n; ++d )
 			this.position[ d ] = ( int )position[ d ];
 		
 		type.updateIndex( container.positionToIndex( this.position ) );

@@ -30,11 +30,11 @@ package mpicbg.imglib.type;
 import mpicbg.imglib.container.DirectAccessContainer;
 import mpicbg.imglib.container.DirectAccessContainerFactory;
 import mpicbg.imglib.container.array.Array;
+import mpicbg.imglib.container.array.ArrayRasterIterator;
 import mpicbg.imglib.container.basictypecontainer.DataAccess;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.display.Display;
 import mpicbg.imglib.sampler.RasterIterator;
-import mpicbg.imglib.sampler.array.ArrayBasicRasterIterator;
 import mpicbg.imglib.sampler.cell.CellBasicRasterIterator;
 import mpicbg.imglib.type.numeric.real.FloatType;
 
@@ -73,7 +73,7 @@ public interface Type< T extends Type< T > >
 	 * @return - the instantiated DirectAccessContainer where only the
 	 *         {@link Type} knowns the BasicType it contains.
 	 */
-	public DirectAccessContainer< T, ? > createSuitableDirectAccessContainer( final DirectAccessContainerFactory storageFactory, final int dim[] );
+	public DirectAccessContainer< T, ?, ? > createSuitableDirectAccessContainer( final DirectAccessContainerFactory storageFactory, final long[] dim );
 
 	/**
 	 * The {@link Type} creates the default {@link Display} for displaying the
@@ -102,7 +102,7 @@ public interface Type< T extends Type< T > >
 	 * asks the {@link DataAccess} to give the actual basic array by passing the
 	 * {@link RasterIterator} that calls the method. The {@link DataAccess} is
 	 * also an {@link Array}, {@link CellDirectAccessContainer}, ... which can
-	 * then communicate with the {@link ArrayBasicRasterIterator},
+	 * then communicate with the {@link ArrayRasterIterator},
 	 * {@link CellBasicRasterIterator}, ... and return the current basic type
 	 * array.
 	 * 

@@ -29,7 +29,6 @@
  */
 package mpicbg.imglib.sampler;
 
-import mpicbg.imglib.container.Container;
 import mpicbg.imglib.container.array.Array;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.location.Iterator;
@@ -50,7 +49,7 @@ import mpicbg.imglib.type.Type;
  * {@link RasterIterator RasterIterator} do not know about the {@link Image}
  * {@link Type} as it is not important for iteration.  However, {@link Type} is
  * a generic parameter such that the correct instance of {@link Type} is
- * returned by {@link #type()}.
+ * returned by {@link #get()}.
  * 
  * <h3>Traversal policy</h3>
  * 

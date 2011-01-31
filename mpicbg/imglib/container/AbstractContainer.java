@@ -29,65 +29,56 @@
  */
 package mpicbg.imglib.container;
 
-import mpicbg.imglib.image.Image;
-import mpicbg.imglib.sampler.special.OrthoSliceIterator;
 import mpicbg.imglib.type.Type;
 
-public abstract class AbstractContainer<T extends Type<T>> implements Container<T>
+public abstract class AbstractContainer< T extends Type< T >, F extends Container< T, F > > implements Container< T, F >
 {
-	final protected int numDimensions;
-	final protected long numPixels, id;
-	protected final int[] dim;
+	final protected int n;
+	protected long numPixels;
+	protected final long[] size;
+	protected final long[] max;
 	
-	final ContainerFactory factory;
-
-	public AbstractContainer( final ContainerFactory factory, int[] dim )
+	public AbstractContainer( final long[] size )
 	{
-		this.numDimensions = dim.length;
+		this.n = size.length;
 		
-		this.numPixels = getNumPixels(dim);
+		this.numPixels = numElements( size );
 		
-		this.dim = dim.clone();
-		this.factory = factory;
-		this.id = Image.createUniqueId();
+		this.size = size.clone();
+		max = new long[ size.length ];
+		for ( int i = 0; i < size.length; ++i )
+			max[ i ] = size[ i ] - 1;
 	}
 	
-	public static long getNumPixels( final int[] dim )
+	public static long numElements( final long[] dim )
 	{
 		long numPixels = 1;		
 		
-		for (int i = 0; i < dim.length; i++)
-			numPixels *= dim[i];
+		for ( int i = 0; i < dim.length; ++i )
+			numPixels *= dim[ i ];
 		
 		return numPixels;		
 	}
 		
 	@Override
-	public ContainerFactory getFactory() { return factory; }
+	public int numDimensions() { return size.length; }
 	
 	@Override
-	public long getId(){ return id; }
-	@Override
-	public int numDimensions() { return dim.length; }
-	
-	@Override
-	public void size( final int[] dimensions )
+	public void size( final long[] s )
 	{
-		for (int i = 0; i < numDimensions; i++)
-			dimensions[i] = this.dim[i];
+		for ( int i = 0; i < n; ++i )
+			s[ i ] = size[ i ];
 	}
 
 	@Override
-	public int size( final int d )
+	public long size( final int d )
 	{
-		if ( d < numDimensions && d > -1 )
-			return this.dim[ d ];
-		else
-			return 1;		
+		try { return this.size[ d ]; }
+		catch ( ArrayIndexOutOfBoundsException e ) { return 1; }
 	}
 	
 	@Override
-	public long numPixels() { return numPixels; }
+	public long size() { return numPixels; }
 
 	@Override
 	public String toString()
@@ -95,48 +86,44 @@ public abstract class AbstractContainer<T extends Type<T>> implements Container<
 		String className = this.getClass().getCanonicalName();
 		className = className.substring( className.lastIndexOf(".") + 1, className.length());
 		
-		String description = className + ", id '" + getId() + "' [" + dim[ 0 ];
+		String description = className + " [" + size[ 0 ];
 		
-		for ( int i = 1; i < numDimensions; i++ )
-			description += "x" + dim[ i ];
+		for ( int i = 1; i < n; ++i )
+			description += "x" + size[ i ];
 		
 		description += "]";
 		
 		return description;
 	}
-	
-	@Override
-	public boolean compareStorageContainerDimensions( final Container<?> container )
-	{
-		if ( container.numDimensions() != this.numDimensions() )
-			return false;
-		
-		for ( int i = 0; i < numDimensions; i++ )
-			if ( this.dim[i] != container.getDimensions()[i])
-				return false;
-		
-		return true;
-	}		
 
 	@Override
-	public boolean compareStorageContainerCompatibility( final Container<?> container )
+	public double realMax( int d )
 	{
-		if ( compareStorageContainerDimensions( container ))
-		{			
-			if ( getFactory().getClass().isInstance( container.getFactory() ))
-				return true;
-			else
-				return false;
-		}
-		else
-		{
-			return false;
-		}
+		return max[ d ];
+	}
+
+	@Override
+	public double realMin( int d )
+	{
+		return 0;
+	}
+
+	@Override
+	public long max( int d )
+	{
+		return max[ d ];
+	}
+
+	@Override
+	public long min( int d )
+	{
+		return 0;
 	}
 	
-	@Override
-	public OrthoSliceIterator< T > createOrthoSliceIterator( final Image< T > image, final int x, final int y, final int[] position )
-	{
-		return new OrthoSliceIterator< T >( image, x, y, position );
-	}
+
+//	@Override
+//	public OrthoSliceIterator< T > createOrthoSliceIterator( final Image< T > image, final int x, final int y, final int[] position )
+//	{
+//		return new OrthoSliceIterator< T >( image, x, y, position );
+//	}
 }

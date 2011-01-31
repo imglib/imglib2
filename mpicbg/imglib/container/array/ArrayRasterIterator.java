@@ -25,23 +25,18 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-package mpicbg.imglib.sampler.array;
+package mpicbg.imglib.container.array;
 
-import mpicbg.imglib.container.array.Array;
-import mpicbg.imglib.container.basictypecontainer.FakeAccess;
-import mpicbg.imglib.container.basictypecontainer.array.FakeArray;
-import mpicbg.imglib.image.Image;
-import mpicbg.imglib.sampler.AbstractLocalizingRasterIterator;
+import mpicbg.imglib.sampler.AbstractRasterIterator;
 import mpicbg.imglib.type.Type;
-import mpicbg.imglib.type.label.FakeType;
 
 /**
  * 
  * @param <T>
- *
+ * 
  * @author Stephan Preibisch and Stephan Saalfeld
  */
-public class ArrayLocalizingRasterIterator< T extends Type< T >> extends AbstractLocalizingRasterIterator< T >
+public class ArrayRasterIterator< T extends Type< T > > extends AbstractRasterIterator< T >
 {
 	protected final T type;
 
@@ -49,73 +44,69 @@ public class ArrayLocalizingRasterIterator< T extends Type< T >> extends Abstrac
 
 	protected final int lastIndex;
 
-	public ArrayLocalizingRasterIterator( final Array< T, ? > container, final Image< T > image )
+	public ArrayRasterIterator( final Array< T, ? > container )
 	{
-		super( container, image );
+		super( container.numDimensions() );
 
-		this.container = container;
 		this.type = container.createLinkedType();
-		this.lastIndex = ( int )container.numPixels() - 1;
+		this.container = container;
+		this.lastIndex = ( int ) container.size() - 1;
 
 		reset();
 	}
 
-	/**
-	 * TODO Now, that Samplers and Iterators are separated, we do not need that
-	 * FakeCursor any more, but should implement a pure Localizer without an
-	 * empty `FakeType' attached.
-	 *  
-	 * @param dim
-	 * @return
-	 */
-	public static ArrayLocalizingRasterIterator< FakeType > createLinearCursor( final int[] dim )
+	@Override
+	public T get()
 	{
-		final Array< FakeType, FakeAccess > array = new Array< FakeType, FakeAccess >( null, new FakeArray(), dim, 1 );
-		array.setLinkedType( new FakeType() );
-		return new ArrayLocalizingRasterIterator< FakeType >( array, null );
+		return type;
 	}
 
 	@Override
-	public T type(){ return type; }
-
-	@Override
-	public boolean hasNext(){ return type.getIndex() < lastIndex; }
-
-	@Override
-	public void fwd()
+	public boolean hasNext()
 	{
-		type.incIndex();
-
-		for ( int d = 0; d < numDimensions; ++d )
-		{
-			if ( ++position[ d ] >= dimensions[ d ] ) position[ d ] = 0;
-			else break;
-		}
+		return type.getIndex() < lastIndex;
 	}
 
 	@Override
 	public void jumpFwd( final long steps )
 	{
 		type.incIndex( ( int ) steps );
-		container.indexToPosition( type.getIndex(), position );
+	}
+
+	@Override
+	public void fwd()
+	{
+		type.incIndex();
 	}
 
 	@Override
 	public void reset()
 	{
-		if ( dimensions != null )
-		{
-			type.updateIndex( -1 );
-
-			position[ 0 ] = -1;
-
-			for ( int d = 1; d < numDimensions; d++ )
-				position[ d ] = 0;
-
-			type.updateContainer( this );
-		}
+		type.updateIndex( -1 );
+		type.updateContainer( this );
 	}
 
 	@Override
-	public Array< T, ? > getContainer(){ return container; }
+	public Array< T, ? > getContainer()
+	{
+		return container;
+	}
+
+	@Override
+	public String toString()
+	{
+		return type.toString();
+	}
+
+	@Override
+	public long getLongPosition( final int dim )
+	{
+		return container.indexToPosition( type.getIndex(), dim );
+	}
+
+	@Override
+	public void localize( final long[] position )
+	{
+		container.indexToPosition( type.getIndex(), position );
+	}
 }

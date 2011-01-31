@@ -36,9 +36,12 @@ import mpicbg.imglib.RasterInterval;
 import mpicbg.imglib.Function;
 import mpicbg.imglib.IterableRaster;
 import mpicbg.imglib.RandomAccessibleRaster;
+import mpicbg.imglib.Sampler;
+import mpicbg.imglib.SamplerFactory;
 import mpicbg.imglib.algorithm.math.MathLib;
 import mpicbg.imglib.container.Container;
 import mpicbg.imglib.container.ContainerFactory;
+import mpicbg.imglib.container.array.ArrayLocalizingRasterIterator;
 import mpicbg.imglib.image.display.Display;
 import mpicbg.imglib.interpolation.Interpolator;
 import mpicbg.imglib.interpolation.InterpolatorFactory;
@@ -46,9 +49,6 @@ import mpicbg.imglib.outofbounds.RasterOutOfBoundsFactory;
 import mpicbg.imglib.sampler.PositionableRasterSampler;
 import mpicbg.imglib.sampler.RasterIterator;
 import mpicbg.imglib.sampler.RasterSampler;
-import mpicbg.imglib.sampler.Sampler;
-import mpicbg.imglib.sampler.SamplerFactory;
-import mpicbg.imglib.sampler.array.ArrayLocalizingRasterIterator;
 import mpicbg.imglib.sampler.special.OrthoSliceIterator;
 import mpicbg.imglib.type.Type;
 import mpicbg.imglib.type.label.FakeType;
@@ -279,13 +279,13 @@ public class Image< T extends Type< T > > implements
 	@Deprecated
 	public < I extends Interpolator< T >> I createInterpolator( final InterpolatorFactory< T, I > factory )
 	{
-		return factory.createSampler( this );
+		return factory.create( this );
 	}
 	
 	@Override
 	public < S extends Sampler< T > > S sampler( final SamplerFactory< T, S, Image< T > > factory )
 	{
-		return factory.createSampler( this );
+		return factory.create( this );
 	}
 	
 	/**
@@ -386,7 +386,7 @@ public class Image< T extends Type< T > > implements
 			c1.fwd();
 			c2.fwd();
 			
-			c2.type().set( c1.type() );		
+			c2.get().set( c1.get() );		
 		}
 		
 		c1.close();
@@ -483,7 +483,7 @@ public class Image< T extends Type< T > > implements
 			iterator.fwd();
 			positionable.moveTo( iterator );
 			
-			pixels[ t++ ] = positionable.type().clone();			
+			pixels[ t++ ] = positionable.get().clone();			
 		}
 		
 		iterator.close();

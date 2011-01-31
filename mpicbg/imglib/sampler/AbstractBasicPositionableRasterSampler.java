@@ -27,8 +27,7 @@
  */
 package mpicbg.imglib.sampler;
 
-import mpicbg.imglib.container.Container;
-import mpicbg.imglib.image.Image;
+import mpicbg.imglib.IntegerInterval;
 import mpicbg.imglib.location.RasterLocalizable;
 import mpicbg.imglib.type.Type;
 
@@ -43,17 +42,17 @@ public abstract class AbstractBasicPositionableRasterSampler< T extends Type< T 
 	/* internal register for position calculation */
 	final protected int[] tmp;
 
-	public AbstractBasicPositionableRasterSampler( final Container< T > container, final Image< T > image )
+	public AbstractBasicPositionableRasterSampler( final IntegerInterval f )
 	{
-		super( container, image );
+		super( f );
 
-		this.tmp = new int[ numDimensions ];
+		this.tmp = new int[ n ];
 	}
 
 	@Override
 	public boolean isOutOfBounds()
 	{
-		for ( int d = 0; d < numDimensions; ++d )
+		for ( int d = 0; d < n; ++d )
 		{
 			final int x = position[ d ];
 			if ( x < 0 || x >= dimensions[ d ] )
@@ -77,7 +76,7 @@ public abstract class AbstractBasicPositionableRasterSampler< T extends Type< T 
 	@Override
 	public void moveTo( final int[] pos )
 	{
-		for ( int d = 0; d < numDimensions; ++d )
+		for ( int d = 0; d < n; ++d )
 		{
 			final int dist = pos[ d ] - getIntPosition( d );
 
@@ -89,7 +88,7 @@ public abstract class AbstractBasicPositionableRasterSampler< T extends Type< T 
 	@Override
 	public void moveTo( final long[] pos )
 	{
-		for ( int d = 0; d < numDimensions; ++d )
+		for ( int d = 0; d < n; ++d )
 		{
 			final long dist = pos[ d ] - getLongPosition( d );
 

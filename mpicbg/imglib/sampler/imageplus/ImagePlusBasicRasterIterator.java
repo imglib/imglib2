@@ -66,7 +66,7 @@ public class ImagePlusBasicRasterIterator< T extends Type< T > > extends Abstrac
 	}
 
 	@Override
-	public T type(){ return type; }
+	public T get(){ return type; }
 
 	/**
 	 * Note: This test is fragile in a sense that it returns true for elements
@@ -118,7 +118,7 @@ public class ImagePlusBasicRasterIterator< T extends Type< T > > extends Abstrac
 	final private void sliceIndexToPosition( final int[] position )
 	{
 		int i = sliceIndex;
-		for ( int d = numDimensions - 1; d > 2; --d )
+		for ( int d = n - 1; d > 2; --d )
 		{
 			final int ld = i / sliceSteps[ d ];
 			position[ d ] = ld;
@@ -131,7 +131,7 @@ public class ImagePlusBasicRasterIterator< T extends Type< T > > extends Abstrac
 	final private void sliceIndexToPosition( final long[] position )
 	{
 		int i = sliceIndex;
-		for ( int d = numDimensions - 1; d > 2; --d )
+		for ( int d = n - 1; d > 2; --d )
 		{
 			final int ld = i / sliceSteps[ d ];
 			position[ d ] = ld;
@@ -144,7 +144,7 @@ public class ImagePlusBasicRasterIterator< T extends Type< T > > extends Abstrac
 	final private int sliceIndexToPosition( final int dim )
 	{
 		int i = sliceIndex;
-		for ( int d = numDimensions - 1; d > dim; --d )
+		for ( int d = n - 1; d > dim; --d )
 			i %= sliceSteps[ d ];
 
 		return i / sliceSteps[ dim ];
@@ -182,7 +182,7 @@ public class ImagePlusBasicRasterIterator< T extends Type< T > > extends Abstrac
 		final int y = i / container.getWidth();
 		position[ 1 ] = y;
 		position[ 0 ] = i - y * container.getWidth();
-		if ( numDimensions > 2 )
+		if ( n > 2 )
 			sliceIndexToPosition( position );
 	}
 	
@@ -193,7 +193,7 @@ public class ImagePlusBasicRasterIterator< T extends Type< T > > extends Abstrac
 		final int y = i / container.getWidth();
 		position[ 1 ] = y;
 		position[ 0 ] = i - y * container.getWidth();
-		if ( numDimensions > 2 )
+		if ( n > 2 )
 			sliceIndexToPosition( position );
 	}
 	

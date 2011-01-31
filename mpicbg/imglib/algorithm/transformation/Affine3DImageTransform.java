@@ -375,7 +375,7 @@ public class Affine3DImageTransform<T extends Type<T>> implements OutputAlgorith
 				interpolator.moveTo( location );				
 				//interpolator.setPosition( location );
 				
-				transformedIterator.type().set( interpolator.type() );
+				transformedIterator.get().set( interpolator.get() );
 				
 				++c;
 			}

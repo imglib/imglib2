@@ -53,9 +53,9 @@ public class OutOfBoundsStrategyPeriodic< T extends Type< T > > implements Raste
 {
 	final protected PositionableRasterSampler< T > outOfBoundsPositionable;
 	
-	final protected int numDimensions;
+	final protected int n;
 	
-	final protected int[] dimension, position;
+	final protected long[] size, position;
 	
 	final protected boolean[] dimIsOutOfBounds;
 	
@@ -63,7 +63,7 @@ public class OutOfBoundsStrategyPeriodic< T extends Type< T > > implements Raste
 	
 	public OutOfBoundsStrategyPeriodic( final PositionableRasterSampler< T > source )
 	{
-		this( source, source.getImage().createPositionableRasterSampler() );
+		this( source, source.getContainer().positionableRasterSampler() );
 	}
 	
 	OutOfBoundsStrategyPeriodic(
@@ -71,16 +71,17 @@ public class OutOfBoundsStrategyPeriodic< T extends Type< T > > implements Raste
 			final PositionableRasterSampler< T > outOfBoundsPositionable )
 	{
 		this.outOfBoundsPositionable = outOfBoundsPositionable;
-		numDimensions = source.getImage().numDimensions();
-		dimension = source.getImage().getDimensions();
-		position = new int[ numDimensions ];
+		n = source.numDimensions();
+		size = new long[ n ];
+		source.getContainer().size( size );
+		position = new long[ n ];
 		
-		dimIsOutOfBounds = new boolean[ numDimensions ];
+		dimIsOutOfBounds = new boolean[ n ];
 	}
 	
 	final protected void checkOutOfBounds()
 	{
-		for ( int d = 0; d < numDimensions; ++d )
+		for ( int d = 0; d < n; ++d )
 		{
 			if ( dimIsOutOfBounds[ d ] )
 			{
@@ -94,7 +95,7 @@ public class OutOfBoundsStrategyPeriodic< T extends Type< T > > implements Raste
 	/* Dimensionality */
 	
 	@Override
-	public int numDimensions(){ return numDimensions; }
+	public int numDimensions(){ return n; }
 	
 	
 	/* OutOfBounds */
@@ -106,11 +107,11 @@ public class OutOfBoundsStrategyPeriodic< T extends Type< T > > implements Raste
 	/* Sampler */
 	
 	@Override
-	public T type(){ return outOfBoundsPositionable.type(); }
+	public T get(){ return outOfBoundsPositionable.get(); }
 	
 	@Override
 	@Deprecated
-	final public T getType(){ return type(); }
+	final public T getType(){ return get(); }
 	
 	
 	/* RasterLocalizable */
@@ -118,28 +119,28 @@ public class OutOfBoundsStrategyPeriodic< T extends Type< T > > implements Raste
 	@Override
 	public void localize( final float[] pos )
 	{
-		for ( int d = 0; d < numDimensions; d++ )
+		for ( int d = 0; d < n; d++ )
 			pos[ d ] = this.position[ d ];
 	}
 
 	@Override
 	public void localize( final double[] pos )
 	{
-		for ( int d = 0; d < numDimensions; d++ )
+		for ( int d = 0; d < n; d++ )
 			pos[ d ] = this.position[ d ];
 	}
 
 	@Override
 	public void localize( final int[] pos )
 	{
-		for ( int d = 0; d < numDimensions; d++ )
-			pos[ d ] = this.position[ d ];
+		for ( int d = 0; d < n; d++ )
+			pos[ d ] = ( int )this.position[ d ];
 	}
 	
 	@Override
 	public void localize( final long[] pos )
 	{
-		for ( int d = 0; d < numDimensions; d++ )
+		for ( int d = 0; d < n; d++ )
 			pos[ d ] = this.position[ d ];
 	}
 	
@@ -150,13 +151,13 @@ public class OutOfBoundsStrategyPeriodic< T extends Type< T > > implements Raste
 	public double getDoublePosition( final int dim ){ return position[ dim ]; }
 	
 	@Override
-	public int getIntPosition( final int dim ){ return position[ dim ]; }
+	public int getIntPosition( final int dim ){ return ( int )position[ dim ]; }
 
 	@Override
 	public long getLongPosition( final int dim ){ return position[ dim ]; }
 	
 	@Override
-	public String toString() { return MathLib.printCoordinates( position ) + " = " + type(); }
+	public String toString() { return MathLib.printCoordinates( position ) + " = " + get(); }
 	
 	
 	/* RasterPositionable */
@@ -164,17 +165,17 @@ public class OutOfBoundsStrategyPeriodic< T extends Type< T > > implements Raste
 	@Override
 	final public void fwd( final int dim )
 	{
-		final int p = ++position[ dim ];
+		final long p = ++position[ dim ];
 		if ( p == 0 )
 		{
 			dimIsOutOfBounds[ dim ] = false;
 			checkOutOfBounds();
 		}
-		else if ( p == dimension[ dim ] )
+		else if ( p == size[ dim ] )
 			dimIsOutOfBounds[ dim ] = isOutOfBounds = true;
 		
 		final int q = outOfBoundsPositionable.getIntPosition( dim ) + 1;
-		if ( q == dimension[ dim ] )
+		if ( q == size[ dim ] )
 			outOfBoundsPositionable.setPosition( 0, dim );
 		else
 			outOfBoundsPositionable.fwd( dim  );
@@ -183,10 +184,10 @@ public class OutOfBoundsStrategyPeriodic< T extends Type< T > > implements Raste
 	@Override
 	final public void bck( final int dim )
 	{
-		final int p = position[ dim ]--;
+		final long p = position[ dim ]--;
 		if ( p == 0 )
 			dimIsOutOfBounds[ dim ] = isOutOfBounds = true;
-		else if ( p == dimension[ dim ] )
+		else if ( p == size[ dim ] )
 		{
 			dimIsOutOfBounds[ dim ] = false;
 			checkOutOfBounds();
@@ -194,7 +195,7 @@ public class OutOfBoundsStrategyPeriodic< T extends Type< T > > implements Raste
 		
 		final int q = outOfBoundsPositionable.getIntPosition( dim );
 		if ( q == 0 )
-			outOfBoundsPositionable.setPosition( dimension[ dim ] - 1, dim );
+			outOfBoundsPositionable.setPosition( size[ dim ] - 1, dim );
 		else
 			outOfBoundsPositionable.bck( dim  );
 	}
@@ -203,7 +204,7 @@ public class OutOfBoundsStrategyPeriodic< T extends Type< T > > implements Raste
 	final public void setPosition( final int position, final int dim )
 	{
 		this.position[ dim ] = position;
-		final int mod = dimension[ dim ];
+		final long mod = size[ dim ];
 		if ( position < 0 )
 		{
 			outOfBoundsPositionable.setPosition( mod - 1 + ( ( position + 1 ) % mod ), dim );
@@ -247,21 +248,21 @@ public class OutOfBoundsStrategyPeriodic< T extends Type< T > > implements Raste
 	@Override
 	public void moveTo( final RasterLocalizable localizable )
 	{
-		for ( int d = 0; d < numDimensions; ++d )
+		for ( int d = 0; d < n; ++d )
 			move( localizable.getIntPosition( d ) - position[ d ], d );
 	}
 	
 	@Override
 	public void moveTo( final int[] pos )
 	{
-		for ( int d = 0; d < numDimensions; ++d )
+		for ( int d = 0; d < n; ++d )
 			move( pos[ d ] - this.position[ d ], d );
 	}
 	
 	@Override
 	public void moveTo( final long[] pos )
 	{
-		for ( int d = 0; d < numDimensions; ++d )
+		for ( int d = 0; d < n; ++d )
 			move( pos[ d ] - this.position[ d ], d );
 	}
 	
@@ -274,7 +275,7 @@ public class OutOfBoundsStrategyPeriodic< T extends Type< T > > implements Raste
 	@Override
 	public void setPosition( final RasterLocalizable localizable )
 	{
-		for ( int d = 0; d < numDimensions; ++d )
+		for ( int d = 0; d < n; ++d )
 			setPosition( localizable.getIntPosition( d ), d );
 	}
 	

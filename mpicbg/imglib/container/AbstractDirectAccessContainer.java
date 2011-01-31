@@ -32,13 +32,23 @@ package mpicbg.imglib.container;
 import mpicbg.imglib.container.basictypecontainer.DataAccess;
 import mpicbg.imglib.type.Type;
 
-public abstract class AbstractDirectAccessContainer< T extends Type< T >, A extends DataAccess > extends AbstractPixelGridContainer< T > implements DirectAccessContainer< T, A >
+public abstract class AbstractDirectAccessContainer<
+		T extends Type< T >,
+		A extends DataAccess,
+		F extends AbstractDirectAccessContainer< T, A, F > >
+	extends AbstractContainer< T, F >
+	implements DirectAccessContainer< T, A, F >
 {
-	protected T linkedType; 
+	final protected int entitiesPerPixel;
+	protected long numEntities;
 	
-	public AbstractDirectAccessContainer( final ContainerFactory factory, int[] dim, final int entitiesPerPixel )
+	protected T linkedType;
+	
+	public AbstractDirectAccessContainer( long[] dim, final int entitiesPerPixel )
 	{
-		super( factory, dim, entitiesPerPixel );
+		super( dim );
+		this.entitiesPerPixel = entitiesPerPixel;
+		this.numEntities = numPixels * entitiesPerPixel;
 	}
 	
 	@Override

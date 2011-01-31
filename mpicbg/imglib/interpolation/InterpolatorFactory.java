@@ -29,9 +29,9 @@
  */
 package mpicbg.imglib.interpolation;
 
+import mpicbg.imglib.SamplerFactory;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.outofbounds.RasterOutOfBoundsFactory;
-import mpicbg.imglib.sampler.SamplerFactory;
 import mpicbg.imglib.type.Type;
 
 public abstract class InterpolatorFactory< T extends Type< T > > implements SamplerFactory< T, Interpolator< T >, Image< T > >

@@ -27,15 +27,12 @@
  */
 package mpicbg.imglib.outofbounds;
 
-import mpicbg.imglib.image.Image;
-import mpicbg.imglib.location.RasterLocalizable;
-import mpicbg.imglib.location.RasterPositionable;
+import mpicbg.imglib.RasterInterval;
 import mpicbg.imglib.sampler.PositionableRasterSampler;
-import mpicbg.imglib.sampler.Sampler;
 import mpicbg.imglib.type.Type;
 
 /**
- * Create appropriate strategies that virtually extend an {@link Image}
+ * Create appropriate strategies that virtually extend a {@link RasterInterval}
  * periodically.
  *
  * @author Stephan Preibisch and Stephan Saalfeld <saalfeld@mpi-cbg.de>
@@ -43,9 +40,9 @@ import mpicbg.imglib.type.Type;
 public class OutOfBoundsStrategyPeriodicFactory< T extends Type< T > > extends RasterOutOfBoundsFactory< T >
 {
 	@Override
-	public < P extends RasterPositionable & RasterLocalizable & Sampler< T > > OutOfBoundsStrategyPeriodic< T > create( final P cursor )
+	public OutOfBoundsStrategyPeriodic< T > create( final PositionableRasterSampler< T > p )
 	{
-		return new OutOfBoundsStrategyPeriodic< T >( cursor );
+		return new OutOfBoundsStrategyPeriodic< T >( p );
 	}
 
 }

@@ -177,7 +177,7 @@ public class ImageTransform<T extends Type<T>> implements OutputAlgorithm<T>
 				// does the same, but for affine typically slower
 				// interpolator.setPosition( tmp );
 	
-				transformedIterator.type().set( interpolator.type() );
+				transformedIterator.get().set( interpolator.get() );
 			}		
 		} 
 		catch ( NoninvertibleModelException e )

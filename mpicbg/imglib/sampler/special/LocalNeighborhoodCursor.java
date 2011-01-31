@@ -30,12 +30,12 @@
 package mpicbg.imglib.sampler.special;
 
 import mpicbg.imglib.container.Container;
+import mpicbg.imglib.container.array.ArrayLocalizingRasterIterator;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.location.RasterLocalizable;
 import mpicbg.imglib.outofbounds.RasterOutOfBoundsFactory;
 import mpicbg.imglib.sampler.AbstractRasterIterator;
 import mpicbg.imglib.sampler.PositionableRasterSampler;
-import mpicbg.imglib.sampler.array.ArrayLocalizingRasterIterator;
 import mpicbg.imglib.type.Type;
 import mpicbg.imglib.type.label.FakeType;
 
@@ -64,15 +64,15 @@ public class LocalNeighborhoodCursor<T extends Type<T>> extends AbstractRasterIt
 		else
 			cursor = image.createPositionableRasterSampler( outofboundsFactory );
 		
-		tmp = new int[ numDimensions ];
+		tmp = new int[ n ];
 				
-		int[] dim = new int[ numDimensions ];
-		for ( int d = 0; d < numDimensions; ++d )
+		int[] dim = new int[ n ];
+		for ( int d = 0; d < n; ++d )
 			dim[ d ] = 3;
 
 		neigborhoodCursor = ArrayLocalizingRasterIterator.createLinearCursor( dim );
 
-		for ( int d = 0; d < numDimensions; ++d )
+		for ( int d = 0; d < n; ++d )
 			dim[ d ] = 1;
 
 		centralPositionIndex = neigborhoodCursor.getContainer().positionToIndex( dim );
@@ -89,7 +89,7 @@ public class LocalNeighborhoodCursor<T extends Type<T>> extends AbstractRasterIt
 	}
 
 	@Override
-	public T type() { return cursor.type(); }
+	public T get() { return cursor.get(); }
 	
 	@Override
 	public void reset()
@@ -106,12 +106,12 @@ public class LocalNeighborhoodCursor<T extends Type<T>> extends AbstractRasterIt
 	{
 		neigborhoodCursor.fwd();
 		
-		if ( neigborhoodCursor.type().getIndex() == centralPositionIndex )
+		if ( neigborhoodCursor.get().getIndex() == centralPositionIndex )
 			neigborhoodCursor.fwd();
 		
 		neigborhoodCursor.localize( tmp );
 
-		for ( int d = 0; d < numDimensions; ++d )
+		for ( int d = 0; d < n; ++d )
 			tmp[ d ] = localizable.getIntPosition( d ) + ( tmp[d] - 1 );
 		
 		cursor.moveTo( tmp );

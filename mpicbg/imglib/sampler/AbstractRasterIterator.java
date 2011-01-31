@@ -32,13 +32,11 @@ package mpicbg.imglib.sampler;
 import java.util.Iterator;
 
 import mpicbg.imglib.algorithm.math.MathLib;
-import mpicbg.imglib.container.Container;
-import mpicbg.imglib.image.Image;
 import mpicbg.imglib.type.Type;
 
 /**
  * Generic implementation of {@link Iterator} mapping to abstract {@link #fwd()} and
- * {@link #type()}.  
+ * {@link #get()}.  
  * 
  * @author Stephan Preibisch and Stephan Saalfeld
  * 
@@ -48,10 +46,10 @@ public abstract class AbstractRasterIterator< T extends Type< T > > extends Abst
 {
 	final private long[] position;
 	
-	public AbstractRasterIterator( final Container< T > container, final Image< T > image )
+	public AbstractRasterIterator( final int n )
 	{
-		super( container, image );
-		position = new long[ numDimensions ];
+		super( n );
+		position = new long[ n ];
 	}
 
 	@Override
@@ -62,7 +60,7 @@ public abstract class AbstractRasterIterator< T extends Type< T > > extends Abst
 	public T next()
 	{
 		fwd();
-		return type();
+		return get();
 	}
 
 	@Override
@@ -78,7 +76,7 @@ public abstract class AbstractRasterIterator< T extends Type< T > > extends Abst
 	public void localize( float[] pos )
 	{
 		localize( this.position );
-		for ( int d = 0; d < numDimensions; d++ )
+		for ( int d = 0; d < n; d++ )
 			pos[ d ] = this.position[ d ];
 	}
 
@@ -86,7 +84,7 @@ public abstract class AbstractRasterIterator< T extends Type< T > > extends Abst
 	public void localize( double[] pos )
 	{
 		localize( this.position );
-		for ( int d = 0; d < numDimensions; d++ )
+		for ( int d = 0; d < n; d++ )
 			pos[ d ] = this.position[ d ];
 	}
 
@@ -94,7 +92,7 @@ public abstract class AbstractRasterIterator< T extends Type< T > > extends Abst
 	public void localize( int[] pos )
 	{
 		localize( this.position );
-		for ( int d = 0; d < numDimensions; d++ )
+		for ( int d = 0; d < n; d++ )
 			pos[ d ] = ( int ) this.position[ d ];
 	}
 
@@ -119,7 +117,7 @@ public abstract class AbstractRasterIterator< T extends Type< T > > extends Abst
 	@Override
 	public String toString()
 	{
-		final int[] pos = new int[ numDimensions ];
+		final int[] pos = new int[ n ];
 		localize( pos );
 		return MathLib.printCoordinates( pos );
 	}

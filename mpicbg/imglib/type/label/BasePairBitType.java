@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2009--2010, Stephan Preibisch & Stephan Saalfeld
+ * Copyright (c) 2009--2011, Stephan Preibisch & Stephan Saalfeld
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -9,7 +9,7 @@
  * list of conditions and the following disclaimer.  Redistributions in binary
  * form must reproduce the above copyright notice, this list of conditions and
  * the following disclaimer in the documentation and/or other materials
- * provided with the distribution.  Neither the name of the Fiji project nor
+ * provided with the distribution.  Neither the name of the imglib project nor
  * the names of its contributors may be used to endorse or promote products
  * derived from this software without specific prior written permission.
  * 
@@ -34,9 +34,13 @@ import mpicbg.imglib.container.basictypecontainer.array.BitArray;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.display.BasePairTypeDisplay;
 import mpicbg.imglib.image.display.Display;
-import mpicbg.imglib.type.BasePairType;
 import mpicbg.imglib.type.AbstractType;
+import mpicbg.imglib.type.BasePairType;
 
+/**
+ *
+ * @author Stephan Preibisch and Stephan Saalfeld <saalfeld@mpi-cbg.de>
+ */
 public class BasePairBitType extends AbstractType< BasePairBitType > implements BasePairType< BasePairBitType >
 {
 	public static enum Base
@@ -45,7 +49,7 @@ public class BasePairBitType extends AbstractType< BasePairBitType > implements 
 	}
 
 	// the DirectAccessContainer
-	final DirectAccessContainer< BasePairBitType, ? extends BitAccess > storage;
+	final DirectAccessContainer< BasePairBitType, ? extends BitAccess, ? > storage;
 
 	// the (sub)DirectAccessContainer that holds the information
 	BitAccess b;
@@ -54,7 +58,7 @@ public class BasePairBitType extends AbstractType< BasePairBitType > implements 
 	int j1, j2, j3;
 
 	// this is the constructor if you want it to read from an array
-	public BasePairBitType( DirectAccessContainer< BasePairBitType, ? extends BitAccess > bitStorage )
+	public BasePairBitType( DirectAccessContainer< BasePairBitType, ? extends BitAccess, ? > bitStorage )
 	{
 		storage = bitStorage;
 		updateIndex( 0 );
@@ -76,10 +80,10 @@ public class BasePairBitType extends AbstractType< BasePairBitType > implements 
 	}
 
 	@Override
-	public DirectAccessContainer< BasePairBitType, ? extends BitAccess > createSuitableDirectAccessContainer( final DirectAccessContainerFactory storageFactory, final int dim[] )
+	public DirectAccessContainer< BasePairBitType, ? extends BitAccess, ? > createSuitableDirectAccessContainer( final DirectAccessContainerFactory storageFactory, final long[] dim )
 	{
 		// create the container
-		final DirectAccessContainer< BasePairBitType, ? extends BitAccess > container = storageFactory.createBitInstance( dim, 3 );
+		final DirectAccessContainer< BasePairBitType, ? extends BitAccess, ? > container = storageFactory.createBitInstance( dim, 3 );
 
 		// create a Type that is linked to the container
 		final BasePairBitType linkedType = new BasePairBitType( container );
@@ -103,10 +107,10 @@ public class BasePairBitType extends AbstractType< BasePairBitType > implements 
 	}
 
 	@Override
-	public void updateIndex( final int i )
+	public void updateIndex( final int index )
 	{
-		this.i = i;
-		j1 = i * 3;
+		this.i = index;
+		j1 = index * 3;
 		j2 = j1 + 1;
 		j3 = j1 + 2;
 	}

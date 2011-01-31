@@ -110,7 +110,7 @@ public class NearestNeighborInterpolator3D< T extends Type< T > > extends Neares
 	@Override
 	public String toString()
 	{
-		return new StringBuffer( "(" ).append( x ).append( ", " ).append( y ).append( ", " ).append( z ).append( ") = " ).append( type() ).toString();
+		return new StringBuffer( "(" ).append( x ).append( ", " ).append( y ).append( ", " ).append( z ).append( ") = " ).append( get() ).toString();
 	}
 
 	@Override

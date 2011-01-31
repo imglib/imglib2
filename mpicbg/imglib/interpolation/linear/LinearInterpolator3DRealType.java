@@ -45,7 +45,7 @@ public class LinearInterpolator3DRealType< T extends RealType< T > > extends Lin
 	}
 
 	@Override
-	public T type()
+	public T get()
 	{
 		// How to iterate the cube
 		//
@@ -59,21 +59,21 @@ public class LinearInterpolator3DRealType< T extends RealType< T > > extends Lin
 		// *------>*
 		// y0 y1
 
-		final float y0 = target.type().getRealFloat();
+		final float y0 = target.get().getRealFloat();
 		target.fwd( 0 );
-		final float y1 = target.type().getRealFloat();
+		final float y1 = target.get().getRealFloat();
 		target.fwd( 1 );
-		final float y2 = target.type().getRealFloat();
+		final float y2 = target.get().getRealFloat();
 		target.bck( 0 );
-		final float y3 = target.type().getRealFloat();
+		final float y3 = target.get().getRealFloat();
 		target.fwd( 2 );
-		final float y7 = target.type().getRealFloat();
+		final float y7 = target.get().getRealFloat();
 		target.fwd( 0 );
-		final float y6 = target.type().getRealFloat();
+		final float y6 = target.get().getRealFloat();
 		target.bck( 1 );
-		final float y5 = target.type().getRealFloat();
+		final float y5 = target.get().getRealFloat();
 		target.bck( 0 );
-		final float y4 = target.type().getRealFloat();
+		final float y4 = target.get().getRealFloat();
 		target.bck( 2 );
 
 		// weights

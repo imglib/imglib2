@@ -27,9 +27,9 @@
  */
 package mpicbg.imglib.outofbounds;
 
+import mpicbg.imglib.Sampler;
 import mpicbg.imglib.location.RasterLocalizable;
 import mpicbg.imglib.location.RasterPositionable;
-import mpicbg.imglib.sampler.Sampler;
 import mpicbg.imglib.type.Type;
 
 /**

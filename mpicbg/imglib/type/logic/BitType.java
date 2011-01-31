@@ -9,7 +9,7 @@
  * list of conditions and the following disclaimer.  Redistributions in binary
  * form must reproduce the above copyright notice, this list of conditions and
  * the following disclaimer in the documentation and/or other materials
- * provided with the distribution.  Neither the name of the Fiji project nor
+ * provided with the distribution.  Neither the name of the imglib project nor
  * the names of its contributors may be used to endorse or promote products
  * derived from this software without specific prior written permission.
  * 
@@ -38,21 +38,19 @@ import mpicbg.imglib.type.numeric.RealType;
 import mpicbg.imglib.type.numeric.integer.AbstractIntegerType;
 
 /**
- * 
- * 
- *
- * @author Stephan Preibisch and Stephan Saalfeld
- */
+*
+* @author Stephan Preibisch and Stephan Saalfeld <saalfeld@mpi-cbg.de>
+*/
 public class BitType extends AbstractIntegerType< BitType > implements LogicType< BitType >, RealType< BitType >
 {
 	// the DirectAccessContainer
-	final DirectAccessContainer< BitType, ? extends BitAccess > storage;
+	final DirectAccessContainer< BitType, ? extends BitAccess, ? > storage;
 
 	// the (sub)DirectAccessContainer that holds the information
 	BitAccess b;
 
 	// this is the constructor if you want it to read from an array
-	public BitType( DirectAccessContainer< BitType, ? extends BitAccess > bitStorage )
+	public BitType( DirectAccessContainer< BitType, ? extends BitAccess, ? > bitStorage )
 	{
 		storage = bitStorage;
 	}
@@ -72,10 +70,10 @@ public class BitType extends AbstractIntegerType< BitType > implements LogicType
 	}
 
 	@Override
-	public DirectAccessContainer< BitType, ? extends BitAccess > createSuitableDirectAccessContainer( final DirectAccessContainerFactory storageFactory, final int dim[] )
+	public DirectAccessContainer< BitType, ? extends BitAccess, ? > createSuitableDirectAccessContainer( final DirectAccessContainerFactory storageFactory, final long[] dim )
 	{
 		// create the container
-		final DirectAccessContainer< BitType, ? extends BitAccess > container = storageFactory.createBitInstance( dim, 1 );
+		final DirectAccessContainer< BitType, ? extends BitAccess, ? > container = storageFactory.createBitInstance( dim, 1 );
 
 		// create a Type that is linked to the container
 		final BitType linkedType = new BitType( container );

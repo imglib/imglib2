@@ -73,7 +73,7 @@ public class DynamicLocalizingRasterIterator< T extends Type< T > > extends Abst
 		++internalIndex; 
 		accessor.updateIndex( internalIndex );
 		
-		for ( int d = 0; d < numDimensions; d++ )
+		for ( int d = 0; d < n; d++ )
 		{
 			if ( position[ d ] < dimensions[ d ] - 1 )
 			{
@@ -104,7 +104,7 @@ public class DynamicLocalizingRasterIterator< T extends Type< T > > extends Abst
 			
 			position[ 0 ] = -1;
 			
-			for ( int d = 1; d < numDimensions; d++ )
+			for ( int d = 1; d < n; d++ )
 				position[ d ] = 0;		
 		}
 	}
@@ -113,7 +113,7 @@ public class DynamicLocalizingRasterIterator< T extends Type< T > > extends Abst
 	public DynamicContainer< T, ? > getContainer(){ return container; }
 	
 	@Override
-	public T type() { return type; }
+	public T get() { return type; }
 
 	@Override
 	public DynamicContainerAccessor getAccessor() { return accessor; }

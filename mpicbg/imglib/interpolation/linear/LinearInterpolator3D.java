@@ -104,7 +104,7 @@ public class LinearInterpolator3D< T extends NumericType< T > > implements Inter
 	/* Sampler */
 	
 	@Override
-	public T type()
+	public T get()
 	{
 		// How to iterate the cube
 		//
@@ -127,55 +127,55 @@ public class LinearInterpolator3D< T extends NumericType< T > > implements Inter
 		final float u1 = 1 - u;
 		final float v1 = 1 - v;
 
-		tmp2.set( target.type() );
+		tmp2.set( target.get() );
 		tmp2.mul( t1 );
 		tmp2.mul( u1 );
 		tmp2.mul( v1 );
 		
 		target.fwd( 0 );
-		tmp1.set( target.type() );
+		tmp1.set( target.get() );
 		tmp1.mul( t );
 		tmp1.mul( u1 );
 		tmp1.mul( v1 );
 		tmp2.add( tmp1 );
 
 		target.fwd( 1 );
-		tmp1.set( target.type() );
+		tmp1.set( target.get() );
 		tmp1.mul( t );
 		tmp1.mul( u );
 		tmp1.mul( v1 );
 		tmp2.add( tmp1 );
 
 		target.bck( 0 );
-		tmp1.set( target.type() );
+		tmp1.set( target.get() );
 		tmp1.mul( t1 );
 		tmp1.mul( u );
 		tmp1.mul( v1 );
 		tmp2.add( tmp1 );
 
 		target.fwd( 2 );
-		tmp1.set( target.type() );
+		tmp1.set( target.get() );
 		tmp1.mul( t1 );
 		tmp1.mul( u );
 		tmp1.mul( v );
 		tmp2.add( tmp1 );
 
 		target.fwd( 0 );
-		tmp1.set( target.type() );
+		tmp1.set( target.get() );
 		tmp1.mul( t );
 		tmp1.mul( u );
 		tmp1.mul( v );
 		tmp2.add( tmp1 );
 
 		target.bck( 1 );
-		tmp1.set( target.type() );
+		tmp1.set( target.get() );
 		tmp1.mul( t );
 		tmp1.mul( u1 );
 		tmp1.mul( v );
 		tmp2.add( tmp1 );
 
 		target.bck( 0 );
-		tmp1.set( target.type() );
+		tmp1.set( target.get() );
 		tmp1.mul( t1 );
 		tmp1.mul( u1 );
 		tmp1.mul( v );
@@ -186,7 +186,7 @@ public class LinearInterpolator3D< T extends NumericType< T > > implements Inter
 	
 	@Override
 	@Deprecated
-	public T getType(){ return type(); }
+	public T getType(){ return get(); }
 	
 	
 	/* Localizable */

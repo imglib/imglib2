@@ -2,6 +2,10 @@ package mpicbg.imglib.type.numeric;
 
 import mpicbg.imglib.algorithm.Precision.PrecisionReal;
 
+/**
+*
+* @author Stephan Preibisch and Stephan Saalfeld <saalfeld@mpi-cbg.de>
+*/
 public interface ComplexType<T extends ComplexType<T>> extends NumericType<T>
 {
 	public double getRealDouble();

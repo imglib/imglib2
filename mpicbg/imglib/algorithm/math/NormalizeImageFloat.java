@@ -26,7 +26,7 @@ public class NormalizeImageFloat <T extends RealType<T>> implements OutputAlgori
 		while (cursor.hasNext())
 		{
 			cursor.fwd();
-			sum.add(cursor.type().getRealFloat());
+			sum.add(cursor.get().getRealFloat());
 		}
 		
 		cursor.close();
@@ -68,7 +68,7 @@ public class NormalizeImageFloat <T extends RealType<T>> implements OutputAlgori
 		{			
 			pullCursor.fwd();
 			pushCursor.setPosition(pullCursor);
-			pushCursor.type().set((float)(pullCursor.type().getRealFloat() / norm));
+			pushCursor.get().set((float)(pullCursor.get().getRealFloat() / norm));
 		}
 		
 		pTime = System.currentTimeMillis() - startTime;
