@@ -11,7 +11,7 @@ import mpicbg.imglib.algorithm.math.MathLib;
 import mpicbg.imglib.container.Container;
 import mpicbg.imglib.container.ContainerFactory;
 import mpicbg.imglib.container.ContainerIterator;
-import mpicbg.imglib.container.PositionableContainerSampler;
+import mpicbg.imglib.container.RandomAccessContainerSampler;
 import mpicbg.imglib.container.array.ArrayContainerFactory;
 import mpicbg.imglib.container.cell.CellContainerFactory;
 import mpicbg.imglib.container.imageplus.ImagePlusContainerFactory;
@@ -189,7 +189,7 @@ public class ContainerTests
 
 		// copy back into a second image using localizable and positionable cursors			
 		final ContainerIterator<FloatType> localizableCursor1 = img1.localizingIterator();			
-		final PositionableContainerSampler<FloatType> positionable2 = img2.positionableRasterSampler();			
+		final RandomAccessContainerSampler<FloatType> positionable2 = img2.integerRandomAccessSampler();			
 		
 		int i = 0;
 		
@@ -199,7 +199,7 @@ public class ContainerTests
 			++i;
 			
 			if ( i % 2 == 0 )
-				positionable2.moveTo( localizableCursor1 );
+				positionable2.setPosition( localizableCursor1 );
 			else
 				positionable2.setPosition( localizableCursor1 );
 			
@@ -207,7 +207,7 @@ public class ContainerTests
 		}
 		
 		// copy again to the first image using a LocalizableByDimOutsideCursor and a LocalizableByDimCursor
-		final PositionableContainerSampler<FloatType> outsideCursor2 = img2.positionableRasterSampler( new OutOfBoundsStrategyPeriodicFactory<FloatType>() );
+		final RandomAccessContainerSampler<FloatType> outsideCursor2 = img2.positionableRasterSampler( new OutOfBoundsStrategyPeriodicFactory<FloatType>() );
 		localizableCursor1.reset();
 		
 		final int[] pos = new int[ numDimensions ];			
@@ -230,7 +230,7 @@ public class ContainerTests
 				if ( i % 7 == 0 )
 					outsideCursor2.setPosition( pos );
 				else
-					outsideCursor2.moveTo( pos );
+					outsideCursor2.setPosition( pos );
 				
 				final FloatType t1 = localizableCursor1.get();
 				final FloatType t2 = outsideCursor2.get();

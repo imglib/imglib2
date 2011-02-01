@@ -28,7 +28,7 @@
 package mpicbg.imglib.outofbounds;
 
 import mpicbg.imglib.algorithm.math.MathLib;
-import mpicbg.imglib.container.PositionableContainerSampler;
+import mpicbg.imglib.container.RandomAccessContainerSampler;
 import mpicbg.imglib.type.numeric.RealType;
 
 /**
@@ -39,8 +39,8 @@ import mpicbg.imglib.type.numeric.RealType;
  */
 public class OutOfBoundsStrategyMirrorExpWindowing<T extends RealType<T>> extends OutOfBoundsMirrorSingleBoundary< T >
 {
-	final PositionableContainerSampler<T> parentCursor;
-	final PositionableContainerSampler<T> mirrorCursor;
+	final RandomAccessContainerSampler<T> parentCursor;
+	final RandomAccessContainerSampler<T> mirrorCursor;
 	final T type, mirrorType;
 	final int numDimensions;
 	final int[] dimension, position, mirroredPosition, currentDirection, tmp;

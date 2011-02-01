@@ -99,14 +99,14 @@ final public class Array< T extends Type< T >, A extends DataAccess > extends Ab
 	}
 
 	@Override
-	public ArrayIntegerPositionableSampler< T > positionableRasterSampler()
+	public ArrayIntegerPositionableSampler< T > integerRandomAccessSampler()
 	{
 		ArrayIntegerPositionableSampler< T > c = new ArrayIntegerPositionableSampler< T >( this );
 		return c;
 	}
 
 	@Override
-	public ArrayOutOfBoundsPositionableRasterSampler< T > positionableRasterSampler( final RasterOutOfBoundsFactory< T, Array< T, A > > outOfBoundsFactory )
+	public ArrayOutOfBoundsPositionableRasterSampler< T > integerRandomAccessSampler( final RasterOutOfBoundsFactory< T, Array< T, A > > outOfBoundsFactory )
 	{
 		ArrayOutOfBoundsPositionableRasterSampler< T > c = new ArrayOutOfBoundsPositionableRasterSampler< T >( this, outOfBoundsFactory );
 		return c;

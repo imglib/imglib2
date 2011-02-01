@@ -42,8 +42,8 @@ import mpicbg.imglib.type.Type;
 public interface IntegerIntervalFunction<
 		T extends Type< T >,
 		F extends IntegerIntervalFunction< T, F, R, I >,
-		R extends IntegerPositionable & Sampler< T >,
+		R extends IntegerRandomAccess & Sampler< T >,
 		I extends IntegerLocalizable & Iterator & java.util.Iterator< T > & Sampler< T > > extends IterableFunction< T, F, I >, IntegerInterval
 {
-	public R positionableRasterSampler( final RasterOutOfBoundsFactory< T, F > factory );
+	public R integerRandomAccessSampler( final RasterOutOfBoundsFactory< T, F > factory );
 }

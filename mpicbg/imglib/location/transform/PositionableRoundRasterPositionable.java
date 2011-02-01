@@ -29,35 +29,35 @@
 package mpicbg.imglib.location.transform;
 
 import mpicbg.imglib.IntegerLocalizable;
-import mpicbg.imglib.IntegerPositionable;
+import mpicbg.imglib.IntegerRandomAccess;
 import mpicbg.imglib.RealLocalizable;
-import mpicbg.imglib.RealPositionable;
+import mpicbg.imglib.RealRandomAccess;
 
 /**
- * Links a {@link RealLocalizable} with a {@link IntegerPositionable} by
+ * Links a {@link RealLocalizable} with a {@link IntegerRandomAccess} by
  * transferring real coordinates to rounded discrete coordinates.  For practical
  * useage, the round operation is defined as the integer smaller than the real
  * value:
  * 
  * f = r < 0 ? (long)( r - 0.5 ) : (long)( r + 0.5 )
  * 
- * The {@link IntegerPositionable} is not the linked {@link RealPositionable} of
- * this link, that is, other {@link RealPositionable Positionables} can be linked
+ * The {@link IntegerRandomAccess} is not the linked {@link RealRandomAccess} of
+ * this link, that is, other {@link RealRandomAccess Positionables} can be linked
  * to it in addition. 
  * 
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-public class PositionableRoundRasterPositionable< LocalizablePositionable extends RealLocalizable & RealPositionable > implements RealPositionable
+public class PositionableRoundRasterPositionable< LocalizablePositionable extends RealLocalizable & RealRandomAccess > implements RealRandomAccess
 {
 	final protected LocalizablePositionable source;
-	final protected IntegerPositionable target;
+	final protected IntegerRandomAccess target;
 	
 	final private int numDimensions;
 	
 	final private long[] floor;
 	final private double[] position;
 	
-	public PositionableRoundRasterPositionable( final LocalizablePositionable source, final IntegerPositionable target )
+	public PositionableRoundRasterPositionable( final LocalizablePositionable source, final IntegerRandomAccess target )
 	{
 		this.source = source;
 		this.target = target;

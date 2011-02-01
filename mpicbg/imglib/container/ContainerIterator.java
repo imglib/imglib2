@@ -82,7 +82,7 @@ import mpicbg.imglib.type.Type;
  * will visit the <em>same pixel positions</em>.
  * <p>
  * If the two {@link Container Containers} are not the same, then
- * {@link IntegerLocalizable} and {@link PositionableContainerSampler} have to be
+ * {@link IntegerLocalizable} and {@link RandomAccessContainerSampler} have to be
  * used:
  * <pre>
  * 		else {

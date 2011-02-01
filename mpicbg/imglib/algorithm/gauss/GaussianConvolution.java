@@ -24,7 +24,7 @@ import mpicbg.imglib.algorithm.OutputAlgorithm;
 import mpicbg.imglib.algorithm.math.MathLib;
 import mpicbg.imglib.container.ContainerIterator;
 import mpicbg.imglib.container.DirectAccessContainer;
-import mpicbg.imglib.container.PositionableContainerSampler;
+import mpicbg.imglib.container.RandomAccessContainerSampler;
 import mpicbg.imglib.container.array.Array;
 import mpicbg.imglib.container.basictypecontainer.FloatAccess;
 import mpicbg.imglib.container.basictypecontainer.array.FloatArray;
@@ -166,7 +166,7 @@ public class GaussianConvolution< T extends NumericType<T>> implements MultiThre
 
 	                	//System.out.println("Thread " + myNumber + " folds in dimension " + currentDim);
 
-	                	final PositionableContainerSampler<T> inputIterator;
+	                	final RandomAccessContainerSampler<T> inputIterator;
 	                	final ContainerIterator<T> outputIterator;
 	                	
 	                	if ( numDimensions % 2 == 0 ) // even number of dimensions ( 2d, 4d, 6d, ... )
@@ -239,7 +239,7 @@ public class GaussianConvolution< T extends NumericType<T>> implements MultiThre
         return true;
 	}
 	
-	protected void convolve( final PositionableContainerSampler<T> inputIterator, final ContainerIterator<T> outputIterator, 
+	protected void convolve( final RandomAccessContainerSampler<T> inputIterator, final ContainerIterator<T> outputIterator, 
 															   final int dim, final float[] kernel,
 															   final long startPos, final long loopSize )
 	{		
@@ -367,7 +367,7 @@ public class GaussianConvolution< T extends NumericType<T>> implements MultiThre
 					final int filterSize = kernel[ 0 ].length;
 					final int filterSizeHalf = filterSize / 2;
 					
-					final PositionableContainerSampler<FloatType> it = imageFloat.createPositionableRasterSampler( outOfBoundsFactoryFloat );
+					final RandomAccessContainerSampler<FloatType> it = imageFloat.createPositionableRasterSampler( outOfBoundsFactoryFloat );
 
 					// fold in x
 					int kernelPos, count;
@@ -428,7 +428,7 @@ public class GaussianConvolution< T extends NumericType<T>> implements MultiThre
 					int kernelPos, count;
 
 					final float[] out =  outputArray.getCurrentStorageArray();
-					final PositionableContainerSampler<FloatType> it = convolvedFloat.createPositionableRasterSampler( outOfBoundsFactoryFloat );
+					final RandomAccessContainerSampler<FloatType> it = convolvedFloat.createPositionableRasterSampler( outOfBoundsFactoryFloat );
 					final double[] kernel1 = kernel[ 1 ].clone();
 					final int filterSize = kernel[ 1 ].length;
 					final int filterSizeHalf = filterSize / 2;
@@ -505,7 +505,7 @@ public class GaussianConvolution< T extends NumericType<T>> implements MultiThre
 					final int filterSizeHalf = filterSize / 2;
 
 					final float[] out = outputArray.getCurrentStorageArray();
-					final PositionableContainerSampler<FloatType> it = convolvedFloat.createPositionableRasterSampler( outOfBoundsFactoryFloat );
+					final RandomAccessContainerSampler<FloatType> it = convolvedFloat.createPositionableRasterSampler( outOfBoundsFactoryFloat );
 
 					final int inc = getPos( 0, 0, 1, width, height );
 					final int posLUT[] = new int[kernel1.length];

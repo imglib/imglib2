@@ -29,7 +29,7 @@ package mpicbg.imglib.outofbounds;
 
 import mpicbg.imglib.IntegerLocalizable;
 import mpicbg.imglib.algorithm.math.MathLib;
-import mpicbg.imglib.container.PositionableContainerSampler;
+import mpicbg.imglib.container.RandomAccessContainerSampler;
 import mpicbg.imglib.type.Type;
 
 /**
@@ -42,26 +42,26 @@ public class OutOfBoundsConstantValue< T extends Type< T > > implements RasterOu
 {
 	final protected T value;
 	
-	final protected PositionableContainerSampler< T > sampler;
+	final protected RandomAccessContainerSampler< T > sampler;
 	
 	final protected int numDimensions;
 	
-	final protected int[] dimension, position;
+	final protected long[] dimension, position;
 	
 	final protected boolean[] dimIsOutOfBounds;
 	
 	protected boolean isOutOfBounds = false;
 	
 	public OutOfBoundsConstantValue(
-			final PositionableContainerSampler< T > source,
+			final RandomAccessContainerSampler< T > source,
 			final T value )
 	{
-		this( source, source.getImage().createPositionableRasterSampler(), value );
+		this( source, source.getContainer().integerRandomAccessSampler(), value );
 	}
 	
 	protected OutOfBoundsConstantValue(
-			final PositionableContainerSampler< T > source,
-			final PositionableContainerSampler< T > sampler,
+			final RandomAccessContainerSampler< T > source,
+			final RandomAccessContainerSampler< T > sampler,
 			final T value )
 	{
 		this.sampler = sampler;

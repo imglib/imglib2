@@ -28,7 +28,7 @@
 package mpicbg.imglib.interpolation;
 
 import mpicbg.imglib.RealLocalizable;
-import mpicbg.imglib.RealPositionable;
+import mpicbg.imglib.RealRandomAccess;
 import mpicbg.imglib.Sampler;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.outofbounds.RasterOutOfBoundsFactory;
@@ -40,7 +40,7 @@ import mpicbg.imglib.type.Type;
  *
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-public interface Interpolator< T extends Type< T > > extends Sampler< T >, RealLocalizable, RealPositionable
+public interface Interpolator< T extends Type< T > > extends Sampler< T >, RealLocalizable, RealRandomAccess
 {
 	/**
 	 * Returns the {@link RasterOutOfBoundsFactory} used for interpolation

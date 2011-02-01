@@ -42,7 +42,7 @@ import mpicbg.imglib.outofbounds.OutOfBoundsFactory;
 public interface RealIntervalFunction<
 		T,
 		F extends RealIntervalFunction< T, F, P >,
-		P extends RealPositionable & Sampler< T > > extends Function< T, F >
+		P extends RealRandomAccess & Sampler< T > > extends Function< T, F >
 {
 	/**
 	 * Create a random access sampler for real coordinates.

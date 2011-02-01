@@ -32,13 +32,13 @@ package mpicbg.imglib.sampler.special;
 import mpicbg.imglib.container.AbstractContainerIterator;
 import mpicbg.imglib.container.Container;
 import mpicbg.imglib.container.ContainerIterator;
-import mpicbg.imglib.container.PositionableContainerSampler;
+import mpicbg.imglib.container.RandomAccessContainerSampler;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.type.Type;
 
 public class RegionOfInterestCursor<T extends Type<T>> extends AbstractContainerIterator<T> implements ContainerIterator<T> 
 {
-	final PositionableContainerSampler<T> cursor;
+	final RandomAccessContainerSampler<T> cursor;
 	final int[] offset, size, roiPosition;
 	
 	// true means go forward, false go backward

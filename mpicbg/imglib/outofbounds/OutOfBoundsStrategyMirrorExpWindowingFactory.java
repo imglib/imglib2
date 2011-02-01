@@ -30,7 +30,7 @@
 package mpicbg.imglib.outofbounds;
 
 import mpicbg.imglib.algorithm.math.MathLib;
-import mpicbg.imglib.container.PositionableContainerSampler;
+import mpicbg.imglib.container.RandomAccessContainerSampler;
 import mpicbg.imglib.type.numeric.RealType;
 
 public class OutOfBoundsStrategyMirrorExpWindowingFactory<T extends RealType<T>> extends RasterOutOfBoundsFactory<T>

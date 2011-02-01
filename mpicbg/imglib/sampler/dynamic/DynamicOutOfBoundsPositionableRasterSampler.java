@@ -27,7 +27,7 @@
  */
 package mpicbg.imglib.sampler.dynamic;
 
-import mpicbg.imglib.container.AbstractOutOfBoundsPositionableContainerSampler;
+import mpicbg.imglib.container.AbstractOutOfBoundsRandomAccessContainerSampler;
 import mpicbg.imglib.container.dynamic.DynamicContainer;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.outofbounds.RasterOutOfBoundsFactory;
@@ -39,7 +39,7 @@ import mpicbg.imglib.type.Type;
  *
  * @author Stephan Preibisch and Stephan Saalfeld
  */
-public class DynamicOutOfBoundsPositionableRasterSampler< T extends Type< T > > extends AbstractOutOfBoundsPositionableContainerSampler< T >
+public class DynamicOutOfBoundsPositionableRasterSampler< T extends Type< T > > extends AbstractOutOfBoundsRandomAccessContainerSampler< T >
 {
 	final protected DynamicContainer< T, ? > container;
 	

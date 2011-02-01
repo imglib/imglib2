@@ -28,7 +28,7 @@
 package mpicbg.imglib.outofbounds;
 
 import mpicbg.imglib.IntegerLocalizable;
-import mpicbg.imglib.IntegerPositionable;
+import mpicbg.imglib.IntegerRandomAccess;
 import mpicbg.imglib.Sampler;
 import mpicbg.imglib.type.Type;
 
@@ -37,7 +37,7 @@ import mpicbg.imglib.type.Type;
  *
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-public interface RasterOutOfBounds< T extends Type< T > > extends IntegerLocalizable, IntegerPositionable, Sampler< T >
+public interface RasterOutOfBounds< T extends Type< T > > extends IntegerLocalizable, IntegerRandomAccess, Sampler< T >
 {
 	public boolean isOutOfBounds();
 }

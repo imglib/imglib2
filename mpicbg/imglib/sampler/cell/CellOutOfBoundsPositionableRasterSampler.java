@@ -27,7 +27,7 @@
  */
 package mpicbg.imglib.sampler.cell;
 
-import mpicbg.imglib.container.AbstractOutOfBoundsPositionableContainerSampler;
+import mpicbg.imglib.container.AbstractOutOfBoundsRandomAccessContainerSampler;
 import mpicbg.imglib.container.cell.CellContainer;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.outofbounds.RasterOutOfBoundsFactory;
@@ -39,7 +39,7 @@ import mpicbg.imglib.type.Type;
  *
  * @author Stephan Preibisch and Stephan Saalfeld
  */
-public class CellOutOfBoundsPositionableRasterSampler< T extends Type< T > > extends AbstractOutOfBoundsPositionableContainerSampler< T >
+public class CellOutOfBoundsPositionableRasterSampler< T extends Type< T > > extends AbstractOutOfBoundsRandomAccessContainerSampler< T >
 {
 	final protected CellContainer< T, ? > container;
 

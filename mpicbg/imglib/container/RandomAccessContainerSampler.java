@@ -27,92 +27,28 @@
  */
 package mpicbg.imglib.container;
 
-import mpicbg.imglib.IntegerInterval;
 import mpicbg.imglib.IntegerLocalizable;
+import mpicbg.imglib.IntegerRandomAccess;
 import mpicbg.imglib.type.Type;
 
 /**
+ * This interface is for convenience only, it combines a set of interfaces and
+ * might be used for type definition in your implementation.  Instead of this
+ * interface, you can use a generic type that includes only the interfaces you
+ * need, e.g.
+ * 
+ * < T extends RasterSampler< ? >, RasterPositionable > 
  * 
  * @param <T>
- * 
+ *
  * @author Stephan Preibisch and Stephan Saalfeld
  */
-public abstract class AbstractPositionableContainerSampler< T extends Type< T > > extends AbstractLocalizableContainerSampler< T > implements PositionableContainerSampler< T >
+public interface RandomAccessContainerSampler< T extends Type< T > > extends ContainerSampler< T >, IntegerLocalizable, IntegerRandomAccess
 {
-	/* internal register for position calculation */
-	final protected int[] tmp;
-
-	public AbstractPositionableContainerSampler( final IntegerInterval f )
-	{
-		super( f );
-
-		this.tmp = new int[ n ];
-	}
-
-	@Override
-	public boolean isOutOfBounds()
-	{
-		for ( int d = 0; d < n; ++d )
-		{
-			final long x = position[ d ];
-			if ( x < 0 || x >= size[ d ] )
-				return true;
-		}
-		return false;
-	}
-
-	@Override
-	public void move( final int distance, final int dim )
-	{
-		move( ( long )distance, dim );
-	}
-
-	@Override
-	public void setPosition( final int position, final int dim )
-	{
-		setPosition( ( long )position, dim );
-	}
-
-	@Override
-	public void move( final int[] distance )
-	{
-		for ( int d = 0; d < n; ++d )
-		{
-			final int dist = distance[ d ];
-
-			if ( dist != 0 )
-				move( dist, d );
-		}
-	}
-
-	@Override
-	public void move( final long[] distance )
-	{
-		for ( int d = 0; d < n; ++d )
-		{
-			final long dist = distance[ d ];
-
-			if ( dist != 0 )
-				move( dist, d );
-		}
-	}
-
-	@Override
-	public void move( final IntegerLocalizable localizable )
-	{
-		for ( int d = 0; d < n; ++d )
-		{
-			final long dist = localizable.getLongPosition( d );
-
-			if ( dist != 0 )
-				move( dist, d );
-		}
-	}
-
-	@Override
-	public void setPosition( final IntegerLocalizable localizable )
-	{
-		localizable.localize( tmp );
-		setPosition( tmp );
-	}
+	/**
+	 * True if located out of image bounds.
+	 * 
+	 * @return
+	 */
+	public boolean isOutOfBounds();
 }

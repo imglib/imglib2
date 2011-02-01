@@ -40,12 +40,12 @@ package mpicbg.imglib;
 public interface IntegerFunction<
 		T,
 		F extends IntegerFunction< T, F, R >,
-		R extends IntegerPositionable & Sampler< T > > extends Function< T, F >
+		R extends IntegerRandomAccess & Sampler< T > > extends Function< T, F >
 {
 	/**
 	 * Create a random access sampler for integer coordinates.
 	 * 
 	 * @return random access sampler
 	 */
-	public R positionableRasterSampler();
+	public R integerRandomAccessSampler();
 }

@@ -32,14 +32,14 @@ import mpicbg.imglib.IntegerLocalizable;
 import mpicbg.imglib.Iterator;
 import mpicbg.imglib.algorithm.math.MathLib;
 import mpicbg.imglib.container.Container;
-import mpicbg.imglib.container.PositionableContainerSampler;
+import mpicbg.imglib.container.RandomAccessContainerSampler;
 import mpicbg.imglib.location.LocalizingFlatIntegerIntervalIterator;
 
 /**
  * Use this class to iterate a virtual rectangular raster in flat order, that
  * is: row by row, plane by plane, cube by cube, ...  This is useful for
  * iterating an arbitrary {@link Container} in a defined order.  For that,
- * connect a {@link FlatZeroBoundPositiveIntegerIntervalIterator} to a {@link PositionableContainerSampler}.
+ * connect a {@link FlatZeroBoundPositiveIntegerIntervalIterator} to a {@link RandomAccessContainerSampler}.
  * 
  * <pre>
  * ...
@@ -56,7 +56,7 @@ import mpicbg.imglib.location.LocalizingFlatIntegerIntervalIterator;
  * 
  * Note that {@link FlatZeroBoundPositiveIntegerIntervalIterator} is the right choice in situations where
  * <em>not</em> for each pixel you want to localize and/or set the
- * {@link PositionableContainerSampler}, that is in a sparse sampling situation.
+ * {@link RandomAccessContainerSampler}, that is in a sparse sampling situation.
  * For localizing at each iteration step (as in the simplified example above),
  * use {@link LocalizingFlatIntegerIntervalIterator} instead.
  *  

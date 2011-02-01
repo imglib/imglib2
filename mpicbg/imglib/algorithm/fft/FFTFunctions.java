@@ -25,7 +25,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import edu.mines.jtk.dsp.FftComplex;
 import edu.mines.jtk.dsp.FftReal;
 
-import mpicbg.imglib.container.PositionableContainerSampler;
+import mpicbg.imglib.container.RandomAccessContainerSampler;
 import mpicbg.imglib.container.array.ArrayLocalizingIterator;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.ImageFactory;
@@ -94,7 +94,7 @@ final public class FFTFunctions
 						final float[] tempIn = new float[ size * 2 ];						
 						final FftComplex fftc = new FftComplex( size );
 						
-						final PositionableContainerSampler<S> cursor = complex.createPositionableRasterSampler(); 
+						final RandomAccessContainerSampler<S> cursor = complex.createPositionableRasterSampler(); 
 
 						/**
 						 * Here we "misuse" a ArrayLocalizableCursor to iterate through all dimensions except the one we are computing the inverse fft in 
@@ -207,8 +207,8 @@ final public class FFTFunctions
 						cropX2 = realSize;
 					}
 					
-					final PositionableContainerSampler<S> cursor = complex.createPositionableRasterSampler(); 
-					final PositionableContainerSampler<T> cursorOut = realImage.createPositionableRasterSampler(); 
+					final RandomAccessContainerSampler<S> cursor = complex.createPositionableRasterSampler(); 
+					final RandomAccessContainerSampler<T> cursorOut = realImage.createPositionableRasterSampler(); 
 					
 					if ( numDimensions > 1 )
 					{
@@ -397,8 +397,8 @@ A:						while( cursorDim.hasNext() )
 					final float[] tempIn = new float[ realSize ];				
 					final FftReal fft = new FftReal( realSize );
 					
-					final PositionableContainerSampler<T> cursor = img.createPositionableRasterSampler( outOfBoundsFactory );
-					final PositionableContainerSampler<S> cursorOut = fftImage.createPositionableRasterSampler(); 
+					final RandomAccessContainerSampler<T> cursor = img.createPositionableRasterSampler( outOfBoundsFactory );
+					final RandomAccessContainerSampler<S> cursorOut = fftImage.createPositionableRasterSampler(); 
 					
 					if ( numDimensions > 1 )
 					{
@@ -551,7 +551,7 @@ A:						while( cursorDim.hasNext() )
 						final float[] tempIn = new float[ size * 2 ];						
 						final FftComplex fftc = new FftComplex( size );
 						
-						final PositionableContainerSampler<S> cursor = fftImage.createPositionableRasterSampler(); 
+						final RandomAccessContainerSampler<S> cursor = fftImage.createPositionableRasterSampler(); 
 
 						/**
 						 * Here we "misuse" a ArrayLocalizableCursor to iterate through all dimensions except the one we are computing the fft in 
@@ -644,8 +644,8 @@ A:						while( cursorDim.hasNext() )
 
 		final T buffer = fftImage.createType();
 		
-		final PositionableContainerSampler<T> cursor1 = fftImage.createPositionableRasterSampler(); 
-		final PositionableContainerSampler<T> cursor2 = fftImage.createPositionableRasterSampler(); 
+		final RandomAccessContainerSampler<T> cursor1 = fftImage.createPositionableRasterSampler(); 
+		final RandomAccessContainerSampler<T> cursor2 = fftImage.createPositionableRasterSampler(); 
 
 		// update the first cursor in the image to the zero position
 		cursor1.setPosition( 0, 0 );
@@ -709,8 +709,8 @@ A:						while( cursorDim.hasNext() )
 		
 					final T buffer = fftImage.createType();
 					
-					final PositionableContainerSampler<T> cursor1 = fftImage.createPositionableRasterSampler(); 
-					final PositionableContainerSampler<T> cursor2 = fftImage.createPositionableRasterSampler(); 
+					final RandomAccessContainerSampler<T> cursor1 = fftImage.createPositionableRasterSampler(); 
+					final RandomAccessContainerSampler<T> cursor2 = fftImage.createPositionableRasterSampler(); 
 					
 					/**
 					 * Here we "misuse" a ArrayLocalizableCursor to iterate through all dimensions except the one we are computing the fft in 
@@ -806,8 +806,8 @@ A:						while( cursorDim.hasNext() )
 		
 					final T buffer = fftImage.createType();
 					
-					final PositionableContainerSampler<T> cursor1 = fftImage.createPositionableRasterSampler(); 
-					final PositionableContainerSampler<T> cursor2 = fftImage.createPositionableRasterSampler(); 
+					final RandomAccessContainerSampler<T> cursor1 = fftImage.createPositionableRasterSampler(); 
+					final RandomAccessContainerSampler<T> cursor2 = fftImage.createPositionableRasterSampler(); 
 		
 					/**
 					 * Here we "misuse" a ArrayLocalizableCursor to iterate through all dimensions except the one we are computing the fft in 

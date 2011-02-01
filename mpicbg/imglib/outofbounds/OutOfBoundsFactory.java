@@ -28,7 +28,7 @@
 package mpicbg.imglib.outofbounds;
 
 import mpicbg.imglib.RealLocalizable;
-import mpicbg.imglib.RealPositionable;
+import mpicbg.imglib.RealRandomAccess;
 import mpicbg.imglib.Sampler;
 
 /**
@@ -39,5 +39,5 @@ import mpicbg.imglib.Sampler;
  */
 public interface OutOfBoundsFactory< T, F >
 {
-	public < P extends RealPositionable & RealLocalizable & Sampler< T > >OutOfBounds< T > create( P sampler );
+	public < P extends RealRandomAccess & RealLocalizable & Sampler< T > >OutOfBounds< T > create( P sampler );
 }

@@ -22,7 +22,7 @@ import mpicbg.imglib.algorithm.Benchmark;
 import mpicbg.imglib.algorithm.OutputAlgorithm;
 import mpicbg.imglib.algorithm.math.MathLib;
 import mpicbg.imglib.container.ContainerIterator;
-import mpicbg.imglib.container.PositionableContainerSampler;
+import mpicbg.imglib.container.RandomAccessContainerSampler;
 import mpicbg.imglib.container.array.ArrayContainerFactory;
 import mpicbg.imglib.container.array.ArrayLocalizingIterator;
 import mpicbg.imglib.image.Image;
@@ -81,8 +81,8 @@ public class FloydSteinbergDithering<T extends RealType<T>> implements OutputAlg
 		final ContainerIterator<FakeType> cursor = ArrayLocalizingIterator.createLinearCursor( dim );
 
 		// we also need a Cursors for the input, the output and the kernel image
-		final PositionableContainerSampler<T> cursorInput = img.createPositionableRasterSampler( new OutOfBoundsConstantValueFactory<T>() );
-		final PositionableContainerSampler<BitType> cursorOutput = result.createPositionableRasterSampler();
+		final RandomAccessContainerSampler<T> cursorInput = img.createPositionableRasterSampler( new OutOfBoundsConstantValueFactory<T>() );
+		final RandomAccessContainerSampler<BitType> cursorOutput = result.createPositionableRasterSampler();
 		final ContainerIterator<FloatType> cursorKernel = errorDiffusionKernel.createLocalizingRasterIterator();
 		
 		while( cursor.hasNext() )
@@ -172,7 +172,7 @@ public class FloydSteinbergDithering<T extends RealType<T>> implements OutputAlg
 		{
 			final Image<FloatType> kernel = factory.createImage( new int[] { 3, 3 } );
 			
-			final PositionableContainerSampler<FloatType> cursor = kernel.createPositionableRasterSampler();
+			final RandomAccessContainerSampler<FloatType> cursor = kernel.createPositionableRasterSampler();
 			
 			// For the 2d-case as well:
 			// |-  -  -|

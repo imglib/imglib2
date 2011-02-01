@@ -27,7 +27,7 @@
  */
 package mpicbg.imglib.sampler.shapelist;
 
-import mpicbg.imglib.container.AbstractOutOfBoundsPositionableContainerSampler;
+import mpicbg.imglib.container.AbstractOutOfBoundsRandomAccessContainerSampler;
 import mpicbg.imglib.container.shapelist.ShapeList;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.outofbounds.RasterOutOfBoundsFactory;
@@ -39,7 +39,7 @@ import mpicbg.imglib.type.Type;
  *
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-public class ShapeListOutOfBoundsPositionableRasterSampler< T extends Type< T > > extends AbstractOutOfBoundsPositionableContainerSampler< T >
+public class ShapeListOutOfBoundsPositionableRasterSampler< T extends Type< T > > extends AbstractOutOfBoundsRandomAccessContainerSampler< T >
 {
 	final protected ShapeList< T > container;
 	

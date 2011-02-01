@@ -2,7 +2,7 @@ package mpicbg.imglib.algorithm.gauss;
 
 import mpicbg.imglib.algorithm.Precision.PrecisionReal;
 import mpicbg.imglib.container.ContainerIterator;
-import mpicbg.imglib.container.PositionableContainerSampler;
+import mpicbg.imglib.container.RandomAccessContainerSampler;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.outofbounds.RasterOutOfBoundsFactory;
 import mpicbg.imglib.type.numeric.RealType;
@@ -27,7 +27,7 @@ public class GaussianConvolutionRealType<T extends RealType<T>> extends Gaussian
 	public PrecisionReal getPrecision() { return precision; }
 	
 	@Override
-	protected void convolve( final PositionableContainerSampler<T> inputIterator, final ContainerIterator<T> outputIterator, 
+	protected void convolve( final RandomAccessContainerSampler<T> inputIterator, final ContainerIterator<T> outputIterator, 
 		 	   				 final int dim, final float[] kernel,
 		 	   				 final long startPos, final long loopSize )
 	{
@@ -37,7 +37,7 @@ public class GaussianConvolutionRealType<T extends RealType<T>> extends Gaussian
 			convolveDouble( inputIterator, outputIterator, dim, kernel, startPos, loopSize );
 	}
 	
-	protected void convolveDouble( final PositionableContainerSampler<T> inputIterator, final ContainerIterator<T> outputIterator, final int dim, final float[] kernel, final long startPos, final long loopSize )
+	protected void convolveDouble( final RandomAccessContainerSampler<T> inputIterator, final ContainerIterator<T> outputIterator, final int dim, final float[] kernel, final long startPos, final long loopSize )
 	{		
 		// move to the starting position of the current thread
 		outputIterator.jumpFwd( startPos );
@@ -106,7 +106,7 @@ public class GaussianConvolutionRealType<T extends RealType<T>> extends Gaussian
 		}
 	}	
 
-	protected void convolveFloat( final PositionableContainerSampler<T> inputIterator, final ContainerIterator<T> outputIterator, final int dim, final float[] kernel, final long startPos, final long loopSize )
+	protected void convolveFloat( final RandomAccessContainerSampler<T> inputIterator, final ContainerIterator<T> outputIterator, final int dim, final float[] kernel, final long startPos, final long loopSize )
 	{		
 		// move to the starting position of the current thread
 		outputIterator.jumpFwd( startPos );

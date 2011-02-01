@@ -29,19 +29,19 @@
 package mpicbg.imglib.location.transform;
 
 import mpicbg.imglib.IntegerLocalizable;
-import mpicbg.imglib.IntegerPositionable;
+import mpicbg.imglib.IntegerRandomAccess;
 import mpicbg.imglib.RealLocalizable;
-import mpicbg.imglib.RealPositionable;
+import mpicbg.imglib.RealRandomAccess;
 
 /**
- * A {@link RealPositionable} that drives a {@link IntegerPositionable} to its
+ * A {@link RealRandomAccess} that drives a {@link IntegerRandomAccess} to its
  * round discrete coordinates:
  * 
  * f = r < 0 ? (long)( r - 0.5 ) : (long)( r + 0.5 )
  * 
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-public class RoundRasterPositionable< LocalizableRasterPositionable extends IntegerLocalizable & IntegerPositionable > implements RealPositionable, RealLocalizable
+public class RoundRasterPositionable< LocalizableRasterPositionable extends IntegerLocalizable & IntegerRandomAccess > implements RealRandomAccess, RealLocalizable
 {
 	final protected LocalizableRasterPositionable target;
 	

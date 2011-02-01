@@ -43,8 +43,8 @@ public interface Container<
 		T extends Type< T >,
 		F extends Container< T, F > >
 	extends
-		IntegerFunction< T, F, PositionableContainerSampler< T > >,
-		IntegerIntervalFunction< T, F, PositionableContainerSampler< T >, ContainerIterator< T > >,
+		IntegerFunction< T, F, RandomAccessContainerSampler< T > >,
+		IntegerIntervalFunction< T, F, RandomAccessContainerSampler< T >, ContainerIterator< T > >,
 		InjectiveIntegerInterval
 {
 	public ContainerFactory factory();

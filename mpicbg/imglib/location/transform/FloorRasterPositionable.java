@@ -28,12 +28,12 @@
 package mpicbg.imglib.location.transform;
 
 import mpicbg.imglib.IntegerLocalizable;
-import mpicbg.imglib.IntegerPositionable;
+import mpicbg.imglib.IntegerRandomAccess;
 import mpicbg.imglib.RealLocalizable;
-import mpicbg.imglib.RealPositionable;
+import mpicbg.imglib.RealRandomAccess;
 
 /**
- * A {@link RealPositionable} that drives a {@link IntegerPositionable} to its
+ * A {@link RealRandomAccess} that drives a {@link IntegerRandomAccess} to its
  * floor discrete coordinates.  For practical useage, the floor operation is
  * defined as the integer smaller than the real value:
  * 
@@ -41,7 +41,7 @@ import mpicbg.imglib.RealPositionable;
  * 
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-public class FloorRasterPositionable< LocalizableRasterPositionable extends IntegerLocalizable & IntegerPositionable > implements RealPositionable, RealLocalizable
+public class FloorRasterPositionable< LocalizableRasterPositionable extends IntegerLocalizable & IntegerRandomAccess > implements RealRandomAccess, RealLocalizable
 {
 	final protected LocalizableRasterPositionable target;
 	

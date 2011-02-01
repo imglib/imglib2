@@ -28,18 +28,18 @@
 package mpicbg.imglib.location;
 
 import mpicbg.imglib.IntegerLocalizable;
-import mpicbg.imglib.IntegerPositionable;
+import mpicbg.imglib.IntegerRandomAccess;
 import mpicbg.imglib.RealLocalizable;
-import mpicbg.imglib.RealPositionable;
+import mpicbg.imglib.RealRandomAccess;
 
 /**
- * A {@link IntegerPositionable} that just does nothing.  This is the default
- * linked {@link IntegerPositionable} of any {@link IntegerPositionable}.  This
+ * A {@link IntegerRandomAccess} that just does nothing.  This is the default
+ * linked {@link IntegerRandomAccess} of any {@link IntegerRandomAccess}.  This
  * object doing nothing, it is implemented as a Singleton.
  *
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-final public class VoidPositionable implements RealPositionable
+final public class VoidPositionable implements RealRandomAccess
 {
 	final static private VoidPositionable instance = new VoidPositionable();
 	

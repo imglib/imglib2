@@ -30,87 +30,74 @@
 package mpicbg.imglib;
 
 
+
 /**
- * An element that can be positioned in n-dimensional discrete space.
+ * An element that can be positioned in n-dimensional real space.
  *
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de> and Stephan Preibisch
  */
-public interface IntegerPositionable extends EuclideanSpace
+public interface RealRandomAccess extends IntegerRandomAccess
 {
 	/**
-	 * Move by 1 in one dimension.
-	 * 
-	 * @param dim
-	 */
-	public void fwd( int dim );
-	
-	/**
-	 * Move by -1 in one dimension.
-	 * 
-	 * @param dim
-	 */
-	public void bck( int dim );
-	
-	/**
 	 * Move the element in one dimension for some distance.
 	 *  
 	 * @param distance
 	 * @param dim
 	 */
-	public void move( int distance, int dim );
-	
-	/**
-	 * Move the element in one dimension for some distance.
-	 *  
-	 * @param distance
-	 * @param dim
-	 */
-	public void move( long distance, int dim );
+	public void move( float distance, int dim );
 
 	/**
-	 * Move the element relative to its current location using an
-	 * {@link IntegerLocalizable} as distance vector.
+	 * Move the element in one dimension for some distance.
+	 *  
+	 * @param distance
+	 * @param dim
+	 */
+	public void move( double distance, int dim );
+
+	/**
+	 * Move the element relative to its current location using a
+	 * {@link RealLocalizable} as distance vector.
 	 * 
 	 * @param localizable
 	 */
-	public void move( IntegerLocalizable localizable );
+	public void move( RealLocalizable localizable );
 	
 	/**
-	 * Move the element relative to its current location using an int[] as
+	 * Move the element relative to its current location using a float[] as
 	 * distance vector.
 	 * 
 	 * @param position
 	 */
-	public void move( int[] position );
+	public void move( float[] position );
 	
 	/**
-	 * Move the element relative to its current location using a long[] as
+	 * Move the element relative to its current location using a float[] as
 	 * distance vector.
 	 * 
 	 * @param position
 	 */
-	public void move( long[] position );
+	public void move( double[] position );
 	
 	/**
-	 * Place the element at the same location as a given {@link IntegerLocalizable}
+	 * Place the element at the same location as a given {@link RealLocalizable}
 	 * 
 	 * @param localizable
 	 */
-	public void setPosition( IntegerLocalizable localizable );
+	public void setPosition( RealLocalizable localizable );
 	
 	/**
 	 * Set the position of the element.
 	 * 
 	 * @param position
 	 */
-	public void setPosition( int[] position );
+	public void setPosition( float position[] );
 	
 	/**
 	 * Set the position of the element.
 	 * 
 	 * @param position
 	 */
-	public void setPosition( long[] position );
+	public void setPosition( double position[] );
 	
 	/**
 	 * Set the position of the element for one dimension.
@@ -118,7 +105,7 @@ public interface IntegerPositionable extends EuclideanSpace
 	 * @param position
 	 * @param dim
 	 */
-	public void setPosition( int position, int dim );		
+	public void setPosition( float position, int dim );		
 	
 	/**
 	 * Set the position of the element for one dimension.
@@ -126,5 +113,5 @@ public interface IntegerPositionable extends EuclideanSpace
 	 * @param position
 	 * @param dim
 	 */
-	public void setPosition( long position, int dim );
+	public void setPosition( double position, int dim );
 }

@@ -28,7 +28,7 @@
 package mpicbg.imglib.container.dynamic;
 
 import mpicbg.imglib.container.AbstractDirectAccessContainer;
-import mpicbg.imglib.container.PositionableContainerSampler;
+import mpicbg.imglib.container.RandomAccessContainerSampler;
 import mpicbg.imglib.container.array.Array;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.outofbounds.RasterOutOfBoundsFactory;
@@ -107,7 +107,7 @@ public abstract class DynamicContainer< T extends Type< T >, A extends DynamicCo
 	}
 
 	@Override
-	public PositionableContainerSampler< T > createPositionableRasterSampler( final Image< T > image )
+	public RandomAccessContainerSampler< T > createPositionableRasterSampler( final Image< T > image )
 	{
 		return new DynamicPositionableRasterSampler< T >( this, image );
 	}

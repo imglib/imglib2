@@ -7,7 +7,7 @@ import mpicbg.imglib.type.numeric.real.FloatType;
 import mpicbg.imglib.algorithm.Benchmark;
 import mpicbg.imglib.algorithm.OutputAlgorithm;
 import mpicbg.imglib.container.ContainerIterator;
-import mpicbg.imglib.container.PositionableContainerSampler;
+import mpicbg.imglib.container.RandomAccessContainerSampler;
 import mpicbg.util.RealSum;
 
 public class NormalizeImageFloat <T extends RealType<T>> implements OutputAlgorithm<FloatType>, Benchmark
@@ -52,7 +52,7 @@ public class NormalizeImageFloat <T extends RealType<T>> implements OutputAlgori
 			new ImageFactory<FloatType>(new FloatType(), image.getContainerFactory());  		
 		
 		final ContainerIterator<T> pullCursor;
-		final PositionableContainerSampler<FloatType> pushCursor;
+		final RandomAccessContainerSampler<FloatType> pushCursor;
 		
 		if (norm == 0)
 		{
