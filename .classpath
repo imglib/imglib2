@@ -2,9 +2,10 @@
 <classpath>
 	<classpathentry including="mpicbg/**|tests/**" kind="src" path=""/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="var" path="FIJI_HOME/jars/mpicbg.jar"/>
-	<classpathentry kind="var" path="FIJI_HOME/jars/ij.jar"/>
-	<classpathentry kind="var" path="FIJI_HOME/plugins/loci_tools.jar"/>
-	<classpathentry kind="var" path="FIJI_HOME/jars/edu_mines_jtk.jar"/>
+	<classpathentry kind="lib" path="D:/Program Files/Fiji.app/jars/edu_mines_jtk.jar"/>
+	<classpathentry kind="lib" path="D:/Program Files/Fiji.app/jars/ij.jar"/>
+	<classpathentry kind="lib" path="D:/Program Files/Fiji.app/jars/junit-4.5.jar"/>
+	<classpathentry kind="lib" path="D:/Program Files/Fiji.app/jars/mpicbg.jar"/>
+	<classpathentry kind="lib" path="D:/Program Files/Fiji.app/plugins/loci_tools.jar"/>
 	<classpathentry kind="output" path="build-eclipse"/>
 </classpath>
