@@ -1,2 +1,3 @@
 build-eclipse
 /imglib.jar
+*.classpath

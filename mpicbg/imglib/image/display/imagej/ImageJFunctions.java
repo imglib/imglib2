@@ -36,7 +36,7 @@ import mpicbg.imglib.container.array.ArrayLocalizingIterator;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.display.Display;
 import mpicbg.imglib.type.Type;
-import mpicbg.imglib.type.label.FakeType;
+
 import mpicbg.imglib.type.numeric.RGBALegacyType;
 
 import ij.ImagePlus;

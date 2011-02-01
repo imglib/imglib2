@@ -29,9 +29,11 @@
 package mpicbg.imglib.sampler.special;
 
 import mpicbg.imglib.Iterator;
+import mpicbg.imglib.container.Container;
 import mpicbg.imglib.container.ContainerIterator;
 import mpicbg.imglib.container.RandomAccessContainerSampler;
 import mpicbg.imglib.image.Image;
+import mpicbg.imglib.type.Type;
 
 /**
  * Generic {@link Iterator} for orthogonal 2d-slices.  This implementation
@@ -45,37 +47,46 @@ import mpicbg.imglib.image.Image;
  *
  * @author Stephan Preibisch and Stephan Saalfeld
  */
-public class OrthoSliceIterator< T extends mpicbg.imglib.type.Type< T > > implements ContainerIterator< T >
+public class OrthoSliceIterator< T extends Type< T > > implements ContainerIterator< T >
 {
 	/* index of x and y dimensions */
 	final protected int x, y;
-	final protected int w, h, maxX, maxY;
+	final protected long w, h, maxX, maxY;
 	
 	final protected RandomAccessContainerSampler< T > sampler;
 	
-	public OrthoSliceIterator( final Image< T > image, final int x, final int y, final int[] position )
+	private static long[] intToLong( final int[] i )
 	{
-		this( image.createPositionableRasterSampler(), x, y, position );
+		final long[] l = new long[ i.length ];
+		
+		for ( int d = 0; d < i.length; ++d )
+			l[ d ] = i[ d ];
+		
+		return l;
 	}
 	
-	public OrthoSliceIterator( final RandomAccessContainerSampler< T > sampler, final int x, final int y, final int[] position )
+	public OrthoSliceIterator( final Container< T, ? > container, final int x, final int y, final long[] position )
+	{
+		this( container.integerRandomAccessSampler(), x, y, position );		
+	}
+
+	public OrthoSliceIterator( final Container< T, ? > container, final int x, final int y, final int[] position )
+	{
+		this( container.integerRandomAccessSampler(), x, y, intToLong( position ) );		
+	}
+
+	public OrthoSliceIterator( final RandomAccessContainerSampler< T > sampler, final int x, final int y, final long[] position )
 	{
 		this.sampler = sampler;
 		this.x = x;
 		this.y = y;
-		w = sampler.getImage().getDimension( x );
-		h = sampler.getImage().getDimension( y );
+		w = sampler.getContainer().size( x );
+		h = sampler.getContainer().size( y );
 		maxX = w - 1;
 		maxY = h - 1;
 		
 		sampler.setPosition( position );
 		reset();
-	}
-
-	@Override
-	public void close()
-	{
-		sampler.close();
 	}
 
 	@Override
@@ -85,15 +96,9 @@ public class OrthoSliceIterator< T extends mpicbg.imglib.type.Type< T > > implem
 	}
 
 	@Override
-	public Container< T > getContainer()
+	public Container< T, ? > getContainer()
 	{
 		return sampler.getContainer();
-	}
-
-	@Override
-	public Image< T > getImage()
-	{
-		return sampler.getImage();
 	}
 
 	@Override
@@ -213,4 +218,70 @@ public class OrthoSliceIterator< T extends mpicbg.imglib.type.Type< T > > implem
 
 	@Override
 	public void remove() {}
+
+	@Override
+	public T create()
+	{
+		return sampler.create();
+	}
+
+	@Override
+	public long min( final int d )
+	{
+		return sampler.min( d );
+	}
+
+	@Override
+	public void min( final long[] min )
+	{
+		sampler.min( min );
+	}
+
+	@Override
+	public long max( final int d )
+	{
+		return sampler.max( d );
+	}
+
+	@Override
+	public void max( final long[] max )
+	{
+		sampler.max( max );
+	}
+
+	@Override
+	public void size( final long[] size )
+	{
+		sampler.size( size );
+	}
+
+	@Override
+	public long size( final int d )
+	{
+		return sampler.size( d );
+	}
+
+	@Override
+	public double realMin( final int d )
+	{
+		return sampler.realMax( d );
+	}
+
+	@Override
+	public void realMin( final double[] min )
+	{
+		sampler.realMax( min );
+	}
+
+	@Override
+	public double realMax( final int d )
+	{
+		return sampler.realMax( d );
+	}
+
+	@Override
+	public void realMax( final double[] max )
+	{
+		sampler.realMax( max );
+	}
 }
