@@ -27,10 +27,10 @@
  */
 package mpicbg.imglib.sampler.imageplus;
 
+import mpicbg.imglib.container.AbstractPositionableContainerSampler;
 import mpicbg.imglib.container.array.Array;
 import mpicbg.imglib.container.imageplus.ImagePlusContainer;
 import mpicbg.imglib.image.Image;
-import mpicbg.imglib.sampler.AbstractBasicPositionableRasterSampler;
 import mpicbg.imglib.type.Type;
 
 /**
@@ -39,7 +39,7 @@ import mpicbg.imglib.type.Type;
  *
  * @author Stephan Preibisch and Stephan Saalfeld
  */
-public class ImagePlusPositionableRasterSampler< T extends Type< T > > extends AbstractBasicPositionableRasterSampler< T > implements ImagePlusStorageAccess
+public class ImagePlusPositionableRasterSampler< T extends Type< T > > extends AbstractPositionableContainerSampler< T > implements ImagePlusStorageAccess
 {
 	/* the type instance accessing the pixel value the cursor points at */
 	protected final T type;
@@ -61,7 +61,7 @@ public class ImagePlusPositionableRasterSampler< T extends Type< T > > extends A
 		this.type = container.createLinkedType();
 		this.container = container;
 		step = Array.createAllocationSteps( container.getDimensions() );
-		sliceSteps = ImagePlusContainer.createSliceSteps( dimensions );
+		sliceSteps = ImagePlusContainer.createSliceSteps( size );
 		sliceIndex = 0;
 	}	
 

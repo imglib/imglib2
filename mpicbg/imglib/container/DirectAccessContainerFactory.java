@@ -28,19 +28,19 @@ public abstract class DirectAccessContainerFactory extends ContainerFactory
 	}
 
 	/* basic type containers */
-	public abstract < T extends Type< T > > DirectAccessContainer< T, ? extends BitAccess, ? > createBitInstance( long[] dimensions, int entitiesPerPixel );
+	public abstract < T extends Type< T > > DirectAccessContainer< T, ? extends BitAccess, ? > createBitInstance( final T type, long[] dimensions, int entitiesPerPixel );
 
-	public abstract < T extends Type< T > > DirectAccessContainer< T, ? extends ByteAccess, ? > createByteInstance( long[] dimensions, int entitiesPerPixel );
+	public abstract < T extends Type< T > > DirectAccessContainer< T, ? extends ByteAccess, ? > createByteInstance( final T type, long[] dimensions, int entitiesPerPixel );
 
-	public abstract < T extends Type< T > > DirectAccessContainer< T, ? extends CharAccess, ? > createCharInstance( long[] dimensions, int entitiesPerPixel );
+	public abstract < T extends Type< T > > DirectAccessContainer< T, ? extends CharAccess, ? > createCharInstance( final T type, long[] dimensions, int entitiesPerPixel );
 
-	public abstract < T extends Type< T > > DirectAccessContainer< T, ? extends ShortAccess, ? > createShortInstance( long[] dimensions, int entitiesPerPixel );
+	public abstract < T extends Type< T > > DirectAccessContainer< T, ? extends ShortAccess, ? > createShortInstance( final T type, long[] dimensions, int entitiesPerPixel );
 
-	public abstract < T extends Type< T > > DirectAccessContainer< T, ? extends IntAccess, ? > createIntInstance( long[] dimensions, int entitiesPerPixel );
+	public abstract < T extends Type< T > > DirectAccessContainer< T, ? extends IntAccess, ? > createIntInstance( final T type, long[] dimensions, int entitiesPerPixel );
 
-	public abstract < T extends Type< T > > DirectAccessContainer< T, ? extends LongAccess, ? > createLongInstance( long[] dimensions, int entitiesPerPixel );
+	public abstract < T extends Type< T > > DirectAccessContainer< T, ? extends LongAccess, ? > createLongInstance( final T type, long[] dimensions, int entitiesPerPixel );
 
-	public abstract < T extends Type< T > > DirectAccessContainer< T, ? extends FloatAccess, ? > createFloatInstance( long[] dimensions, int entitiesPerPixel );
+	public abstract < T extends Type< T > > DirectAccessContainer< T, ? extends FloatAccess, ? > createFloatInstance( final T type, long[] dimensions, int entitiesPerPixel );
 
-	public abstract < T extends Type< T > > DirectAccessContainer< T, ? extends DoubleAccess, ? > createDoubleInstance( long[] dimensions, int entitiesPerPixel );
+	public abstract < T extends Type< T > > DirectAccessContainer< T, ? extends DoubleAccess, ? > createDoubleInstance( final T type, long[] dimensions, int entitiesPerPixel );
 }

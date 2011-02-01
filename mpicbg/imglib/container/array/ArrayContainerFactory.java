@@ -66,66 +66,66 @@ public class ArrayContainerFactory extends DirectAccessContainerFactory
 	}
 
 	@Override
-	public < T extends Type< T > > Array< T, BitAccess > createBitInstance( long[] dimensions, final int entitiesPerPixel )
+	public < T extends Type< T > > Array< T, BitAccess > createBitInstance( final T type, long[] dimensions, final int entitiesPerPixel )
 	{
 		final int numEntities = numEntitiesRangeCheck( dimensions, entitiesPerPixel );
 
-		return new Array< T, BitAccess >( new BitArray( numEntities ), dimensions, entitiesPerPixel );
+		return new Array< T, BitAccess >( type, new BitArray( numEntities ), dimensions, entitiesPerPixel );
 	}
 
 	@Override
-	public < T extends Type< T > > Array< T, ByteAccess > createByteInstance( final long[] dimensions, final int entitiesPerPixel )
+	public < T extends Type< T > > Array< T, ByteAccess > createByteInstance( final T type, final long[] dimensions, final int entitiesPerPixel )
 	{
 		final int numEntities = numEntitiesRangeCheck( dimensions, entitiesPerPixel );
 
-		return new Array< T, ByteAccess >( new ByteArray( numEntities ), dimensions, entitiesPerPixel );
+		return new Array< T, ByteAccess >( type, new ByteArray( numEntities ), dimensions, entitiesPerPixel );
 	}
 
 	@Override
-	public < T extends Type< T > > Array< T, CharAccess > createCharInstance( long[] dimensions, final int entitiesPerPixel )
+	public < T extends Type< T > > Array< T, CharAccess > createCharInstance( final T type, long[] dimensions, final int entitiesPerPixel )
 	{
 		final int numEntities = numEntitiesRangeCheck( dimensions, entitiesPerPixel );
 
-		return new Array< T, CharAccess >( new CharArray( numEntities ), dimensions, entitiesPerPixel );
+		return new Array< T, CharAccess >( type, new CharArray( numEntities ), dimensions, entitiesPerPixel );
 	}
 
 	@Override
-	public < T extends Type< T > > Array< T, DoubleAccess > createDoubleInstance( long[] dimensions, final int entitiesPerPixel )
+	public < T extends Type< T > > Array< T, DoubleAccess > createDoubleInstance( final T type, long[] dimensions, final int entitiesPerPixel )
 	{
 		final int numEntities = numEntitiesRangeCheck( dimensions, entitiesPerPixel );
 
-		return new Array< T, DoubleAccess >( new DoubleArray( numEntities ), dimensions, entitiesPerPixel );
+		return new Array< T, DoubleAccess >( type, new DoubleArray( numEntities ), dimensions, entitiesPerPixel );
 	}
 
 	@Override
-	public < T extends Type< T > > Array< T, FloatAccess > createFloatInstance( long[] dimensions, final int entitiesPerPixel )
+	public < T extends Type< T > > Array< T, FloatAccess > createFloatInstance( final T type, long[] dimensions, final int entitiesPerPixel )
 	{
 		final int numEntities = numEntitiesRangeCheck( dimensions, entitiesPerPixel );
 
-		return new Array< T, FloatAccess >( new FloatArray( numEntities ), dimensions, entitiesPerPixel );
+		return new Array< T, FloatAccess >( type, new FloatArray( numEntities ), dimensions, entitiesPerPixel );
 	}
 
 	@Override
-	public < T extends Type< T > > Array< T, IntAccess > createIntInstance( long[] dimensions, final int entitiesPerPixel )
+	public < T extends Type< T > > Array< T, IntAccess > createIntInstance( final T type, long[] dimensions, final int entitiesPerPixel )
 	{
 		final int numEntities = numEntitiesRangeCheck( dimensions, entitiesPerPixel );
 
-		return new Array< T, IntAccess >( new IntArray( numEntities ), dimensions, entitiesPerPixel );
+		return new Array< T, IntAccess >( type, new IntArray( numEntities ), dimensions, entitiesPerPixel );
 	}
 
 	@Override
-	public < T extends Type< T > > Array< T, LongAccess > createLongInstance( long[] dimensions, final int entitiesPerPixel )
+	public < T extends Type< T > > Array< T, LongAccess > createLongInstance( final T type, long[] dimensions, final int entitiesPerPixel )
 	{
 		final int numEntities = numEntitiesRangeCheck( dimensions, entitiesPerPixel );
 
-		return new Array< T, LongAccess >( new LongArray( numEntities ), dimensions, entitiesPerPixel );
+		return new Array< T, LongAccess >( type, new LongArray( numEntities ), dimensions, entitiesPerPixel );
 	}
 
 	@Override
-	public < T extends Type< T > > Array< T, ShortAccess > createShortInstance( long[] dimensions, final int entitiesPerPixel )
+	public < T extends Type< T > > Array< T, ShortAccess > createShortInstance( final T type, long[] dimensions, final int entitiesPerPixel )
 	{
 		final int numEntities = numEntitiesRangeCheck( dimensions, entitiesPerPixel );
 
-		return new Array< T, ShortAccess >( new ShortArray( numEntities ), dimensions, entitiesPerPixel );
+		return new Array< T, ShortAccess >( type, new ShortArray( numEntities ), dimensions, entitiesPerPixel );
 	}
 }

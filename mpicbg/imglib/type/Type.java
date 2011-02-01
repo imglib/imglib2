@@ -31,7 +31,7 @@ import mpicbg.imglib.container.ContainerIterator;
 import mpicbg.imglib.container.DirectAccessContainer;
 import mpicbg.imglib.container.DirectAccessContainerFactory;
 import mpicbg.imglib.container.array.Array;
-import mpicbg.imglib.container.array.ArrayRasterIterator;
+import mpicbg.imglib.container.array.ArrayIterator;
 import mpicbg.imglib.container.basictypecontainer.DataAccess;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.display.Display;
@@ -102,7 +102,7 @@ public interface Type< T extends Type< T > >
 	 * asks the {@link DataAccess} to give the actual basic array by passing the
 	 * {@link ContainerIterator} that calls the method. The {@link DataAccess} is
 	 * also an {@link Array}, {@link CellDirectAccessContainer}, ... which can
-	 * then communicate with the {@link ArrayRasterIterator},
+	 * then communicate with the {@link ArrayIterator},
 	 * {@link CellBasicRasterIterator}, ... and return the current basic type
 	 * array.
 	 * 

@@ -27,7 +27,7 @@
  */
 package mpicbg.imglib.outofbounds;
 
-import mpicbg.imglib.sampler.PositionableRasterIntervalSampler;
+import mpicbg.imglib.container.PositionableContainerSampler;
 import mpicbg.imglib.type.Type;
 
 /**
@@ -50,14 +50,14 @@ import mpicbg.imglib.type.Type;
  */
 public class OutOfBoundsMirrorSingleBoundary< T extends Type< T > > extends AbstractOutOfBoundsMirror< T >
 {
-	OutOfBoundsMirrorSingleBoundary( final PositionableRasterIntervalSampler< T > source )
+	OutOfBoundsMirrorSingleBoundary( final PositionableContainerSampler< T > source )
 	{
 		this( source, source.getImage().createPositionableRasterSampler() );
 	}
 	
 	OutOfBoundsMirrorSingleBoundary(
-			final PositionableRasterIntervalSampler< T > source,
-			final PositionableRasterIntervalSampler< T > outOfBoundsPositionable )
+			final PositionableContainerSampler< T > source,
+			final PositionableContainerSampler< T > outOfBoundsPositionable )
 	{
 		super( source, outOfBoundsPositionable );
 		

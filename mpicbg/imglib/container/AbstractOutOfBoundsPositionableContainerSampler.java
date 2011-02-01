@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2009--2010, Stephan Preibisch & Stephan Saalfeld
+ * Copyright (c) 2009--2011, Stephan Preibisch & Stephan Saalfeld
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -9,7 +9,7 @@
  * list of conditions and the following disclaimer.  Redistributions in binary
  * form must reproduce the above copyright notice, this list of conditions and
  * the following disclaimer in the documentation and/or other materials
- * provided with the distribution.  Neither the name of the Fiji project nor
+ * provided with the distribution.  Neither the name of the imglib project nor
  * the names of its contributors may be used to endorse or promote products
  * derived from this software without specific prior written permission.
  * 
@@ -25,11 +25,10 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-package mpicbg.imglib.sampler;
+package mpicbg.imglib.container;
 
 import mpicbg.imglib.IntegerInterval;
 import mpicbg.imglib.IntegerLocalizable;
-import mpicbg.imglib.container.AbstractContainerSampler;
 import mpicbg.imglib.outofbounds.RasterOutOfBounds;
 import mpicbg.imglib.outofbounds.RasterOutOfBoundsFactory;
 import mpicbg.imglib.type.Type;
@@ -40,19 +39,19 @@ import mpicbg.imglib.type.Type;
  *
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-public abstract class AbstractOutOfBoundsPositionableRasterSampler< T extends Type< T > > extends AbstractContainerSampler< T > implements PositionableRasterIntervalSampler< T >
+public abstract class AbstractOutOfBoundsPositionableContainerSampler< T extends Type< T > > extends AbstractContainerSampler< T > implements PositionableContainerSampler< T >
 {
 	/* performs the actual moves and generates/queries a Type */
 	final protected RasterOutOfBounds< T > outOfBounds;
 	
-	public AbstractOutOfBoundsPositionableRasterSampler( final IntegerInterval f, final RasterOutOfBounds< T > outOfBounds )
+	public AbstractOutOfBoundsPositionableContainerSampler( final IntegerInterval f, final RasterOutOfBounds< T > outOfBounds )
 	{
 		super( f.numDimensions() );
 		
 		this.outOfBounds = outOfBounds;
 	}
 	
-	public AbstractOutOfBoundsPositionableRasterSampler( final IntegerInterval f, final RasterOutOfBoundsFactory< T, ? > outOfBoundsFactory )
+	public AbstractOutOfBoundsPositionableContainerSampler( final IntegerInterval f, final RasterOutOfBoundsFactory< T, ? > outOfBoundsFactory )
 	{
 		super( f.numDimensions() );
 		
@@ -131,21 +130,21 @@ public abstract class AbstractOutOfBoundsPositionableRasterSampler< T extends Ty
 	}
 	
 	@Override
-	final public void moveTo( final IntegerLocalizable localizable )
+	final public void move( final IntegerLocalizable localizable )
 	{
-		outOfBounds.moveTo( localizable );
+		outOfBounds.move( localizable );
 	}
 	
 	@Override
-	final public void moveTo( final int[] position )
+	final public void move( final int[] position )
 	{
-		outOfBounds.moveTo( position );
+		outOfBounds.move( position );
 	}
 	
 	@Override
-	final public void moveTo( final long[] position )
+	final public void move( final long[] position )
 	{
-		outOfBounds.moveTo( position );
+		outOfBounds.move( position );
 	}
 	
 	@Override

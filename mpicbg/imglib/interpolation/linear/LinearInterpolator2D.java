@@ -29,10 +29,10 @@ package mpicbg.imglib.interpolation.linear;
 
 import mpicbg.imglib.IntegerLocalizable;
 import mpicbg.imglib.RealLocalizable;
+import mpicbg.imglib.container.PositionableContainerSampler;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.interpolation.Interpolator;
 import mpicbg.imglib.outofbounds.RasterOutOfBoundsFactory;
-import mpicbg.imglib.sampler.PositionableRasterIntervalSampler;
 import mpicbg.imglib.type.numeric.NumericType;
 
 /**
@@ -46,7 +46,7 @@ public class LinearInterpolator2D< T extends NumericType< T > > implements Inter
 	final protected RasterOutOfBoundsFactory< T > outOfBoundsStrategyFactory;
 	final protected Image< T > image;
 	final protected T tmp1, tmp2;
-	final protected PositionableRasterIntervalSampler< T > target;
+	final protected PositionableContainerSampler< T > target;
 	
 	/* current position, required for relative movement */
 	private float x, y;

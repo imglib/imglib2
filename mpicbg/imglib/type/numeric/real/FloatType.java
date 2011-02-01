@@ -69,7 +69,7 @@ public class FloatType extends AbstractRealType< FloatType > implements RealType
 	public DirectAccessContainer<FloatType, ? extends FloatAccess, ? > createSuitableDirectAccessContainer( final DirectAccessContainerFactory storageFactory, final long[] dim )
 	{
 		// create the container
-		final DirectAccessContainer< FloatType, ? extends FloatAccess, ? > container = storageFactory.createFloatInstance( dim, 1 );
+		final DirectAccessContainer< FloatType, ? extends FloatAccess, ? > container = storageFactory.createFloatInstance( new FloatType(), dim, 1 );
 		
 		// create a Type that is linked to the container
 		final FloatType linkedType = new FloatType( container );
@@ -152,10 +152,10 @@ public class FloatType extends AbstractRealType< FloatType > implements RealType
 	public int compareTo( final FloatType c ) 
 	{ 
 		final float a = get();
-		final float b = c.get();
-		if ( a > b )
+		final float x = c.get();
+		if ( a > x )
 			return 1;
-		else if ( a < b )
+		else if ( a < x )
 			return -1;
 		else 
 			return 0;

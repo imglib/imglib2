@@ -28,7 +28,7 @@
 package mpicbg.imglib.outofbounds;
 
 import mpicbg.imglib.IntegerIntervalFunction;
-import mpicbg.imglib.sampler.PositionableRasterIntervalSampler;
+import mpicbg.imglib.container.PositionableContainerSampler;
 import mpicbg.imglib.type.Type;
 
 /**
@@ -40,7 +40,7 @@ import mpicbg.imglib.type.Type;
 public class OutOfBoundsStrategyPeriodicFactory< T extends Type< T > > extends RasterOutOfBoundsFactory< T >
 {
 	@Override
-	public OutOfBoundsStrategyPeriodic< T > create( final PositionableRasterIntervalSampler< T > p )
+	public OutOfBoundsStrategyPeriodic< T > create( final PositionableContainerSampler< T > p )
 	{
 		return new OutOfBoundsStrategyPeriodic< T >( p );
 	}

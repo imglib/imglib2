@@ -25,7 +25,7 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-package mpicbg.imglib.sampler;
+package mpicbg.imglib.container;
 
 import mpicbg.imglib.IntegerInterval;
 import mpicbg.imglib.IntegerLocalizable;
@@ -37,12 +37,12 @@ import mpicbg.imglib.type.Type;
  * 
  * @author Stephan Preibisch and Stephan Saalfeld
  */
-public abstract class AbstractBasicPositionableRasterSampler< T extends Type< T > > extends AbstractLocalizableRasterSampler< T > implements PositionableRasterIntervalSampler< T >
+public abstract class AbstractPositionableContainerSampler< T extends Type< T > > extends AbstractLocalizableContainerSampler< T > implements PositionableContainerSampler< T >
 {
 	/* internal register for position calculation */
 	final protected int[] tmp;
 
-	public AbstractBasicPositionableRasterSampler( final IntegerInterval f )
+	public AbstractPositionableContainerSampler( final IntegerInterval f )
 	{
 		super( f );
 
@@ -54,31 +54,31 @@ public abstract class AbstractBasicPositionableRasterSampler< T extends Type< T 
 	{
 		for ( int d = 0; d < n; ++d )
 		{
-			final int x = position[ d ];
-			if ( x < 0 || x >= dimensions[ d ] )
+			final long x = position[ d ];
+			if ( x < 0 || x >= size[ d ] )
 				return true;
 		}
 		return false;
 	}
 
 	@Override
-	public void move( final long distance, final int dim )
+	public void move( final int distance, final int dim )
 	{
-		move( ( int ) distance, dim );
+		move( ( long )distance, dim );
 	}
 
 	@Override
-	public void setPosition( final long position, final int dim )
+	public void setPosition( final int position, final int dim )
 	{
-		setPosition( ( int ) position, dim );
+		setPosition( ( long )position, dim );
 	}
 
 	@Override
-	public void moveTo( final int[] pos )
+	public void move( final int[] distance )
 	{
 		for ( int d = 0; d < n; ++d )
 		{
-			final int dist = pos[ d ] - getIntPosition( d );
+			final int dist = distance[ d ];
 
 			if ( dist != 0 )
 				move( dist, d );
@@ -86,11 +86,11 @@ public abstract class AbstractBasicPositionableRasterSampler< T extends Type< T 
 	}
 
 	@Override
-	public void moveTo( final long[] pos )
+	public void move( final long[] distance )
 	{
 		for ( int d = 0; d < n; ++d )
 		{
-			final long dist = pos[ d ] - getLongPosition( d );
+			final long dist = distance[ d ];
 
 			if ( dist != 0 )
 				move( dist, d );
@@ -98,10 +98,15 @@ public abstract class AbstractBasicPositionableRasterSampler< T extends Type< T 
 	}
 
 	@Override
-	public void moveTo( final IntegerLocalizable localizable )
+	public void move( final IntegerLocalizable localizable )
 	{
-		localizable.localize( tmp );
-		moveTo( tmp );
+		for ( int d = 0; d < n; ++d )
+		{
+			final long dist = localizable.getLongPosition( d );
+
+			if ( dist != 0 )
+				move( dist, d );
+		}
 	}
 
 	@Override

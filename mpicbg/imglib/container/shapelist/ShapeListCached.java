@@ -27,9 +27,9 @@
  */
 package mpicbg.imglib.container.shapelist;
 
+import mpicbg.imglib.container.PositionableContainerSampler;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.outofbounds.RasterOutOfBoundsFactory;
-import mpicbg.imglib.sampler.PositionableRasterIntervalSampler;
 import mpicbg.imglib.sampler.shapelist.ShapeListCache;
 import mpicbg.imglib.sampler.shapelist.ShapeListCacheFIFO;
 import mpicbg.imglib.sampler.shapelist.ShapeListCachedPositionableRasterSampler;
@@ -81,7 +81,7 @@ public class ShapeListCached< T extends Type< T > > extends ShapeList< T >
 	}
 
 	@Override
-	public PositionableRasterIntervalSampler< T > createPositionableRasterSampler( final Image< T > image, final RasterOutOfBoundsFactory< T > outOfBoundsFactory )
+	public PositionableContainerSampler< T > createPositionableRasterSampler( final Image< T > image, final RasterOutOfBoundsFactory< T > outOfBoundsFactory )
 	{
 		return new ShapeListCachedOutOfBoundsPositionableRasterSampler< T >( this, image, outOfBoundsFactory );
 	}

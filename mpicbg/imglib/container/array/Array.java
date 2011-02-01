@@ -55,7 +55,8 @@ final public class Array< T extends Type< T >, A extends DataAccess > extends Ab
 	final int[] step, dim;
 	
 	// the DataAccess created by the ArrayContainerFactory
-	final A data;
+	final private A data;
+	final private T type;
 
 	/**
 	 * TODO check for the size of numPixels being < Integer.MAX_VALUE?
@@ -65,7 +66,7 @@ final public class Array< T extends Type< T >, A extends DataAccess > extends Ab
 	 * @param dim
 	 * @param entitiesPerPixel
 	 */
-	public Array( final A data, final long[] dim, final int entitiesPerPixel )
+	public Array( final T type, final A data, final long[] dim, final int entitiesPerPixel )
 	{
 		super( dim, entitiesPerPixel );
 		this.dim = new int[ n ];
@@ -74,6 +75,7 @@ final public class Array< T extends Type< T >, A extends DataAccess > extends Ab
 
 		step = Array.createAllocationSteps( this.dim );
 		this.data = data;
+		this.type = type;
 	}
 
 	@Override
@@ -83,23 +85,23 @@ final public class Array< T extends Type< T >, A extends DataAccess > extends Ab
 	}
 
 	@Override
-	public ArrayRasterIterator< T > iterator()
+	public ArrayIterator< T > iterator()
 	{
-		ArrayRasterIterator< T > c = new ArrayRasterIterator< T >( this );
+		ArrayIterator< T > c = new ArrayIterator< T >( this );
 		return c;
 	}
 
 	@Override
-	public ArrayLocalizingRasterIterator< T > localizingIterator()
+	public ArrayLocalizingIterator< T > localizingIterator()
 	{
-		ArrayLocalizingRasterIterator< T > c = new ArrayLocalizingRasterIterator< T >( this );
+		ArrayLocalizingIterator< T > c = new ArrayLocalizingIterator< T >( this );
 		return c;
 	}
 
 	@Override
-	public ArrayPositionableRasterSampler< T > positionableRasterSampler()
+	public ArrayIntegerPositionableSampler< T > positionableRasterSampler()
 	{
-		ArrayPositionableRasterSampler< T > c = new ArrayPositionableRasterSampler< T >( this );
+		ArrayIntegerPositionableSampler< T > c = new ArrayIntegerPositionableSampler< T >( this );
 		return c;
 	}
 
@@ -127,6 +129,21 @@ final public class Array< T extends Type< T >, A extends DataAccess > extends Ab
 	public final int positionToIndex( final int[] position )
 	{
 		int i = position[ 0 ];
+		for ( int d = 1; d < n; ++d )
+			i += position[ d ] * step[ d ];
+
+		return i;
+	}
+	
+	/**
+	 * Not safe!
+	 * 
+	 * @param position
+	 * @return
+	 */
+	public final int positionToIndex( final long[] position )
+	{
+		int i = ( int )position[ 0 ];
 		for ( int d = 1; d < n; ++d )
 			i += position[ d ] * step[ d ];
 
@@ -192,5 +209,11 @@ final public class Array< T extends Type< T >, A extends DataAccess > extends Ab
 	public ArrayContainerFactory factory()
 	{
 		return new ArrayContainerFactory();
+	}
+	
+	@Override
+	public T createVariable()
+	{
+		return type.createVariable();
 	}
 }

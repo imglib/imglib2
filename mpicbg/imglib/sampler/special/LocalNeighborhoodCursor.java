@@ -32,10 +32,10 @@ package mpicbg.imglib.sampler.special;
 import mpicbg.imglib.IntegerLocalizable;
 import mpicbg.imglib.container.AbstractContainerIterator;
 import mpicbg.imglib.container.Container;
-import mpicbg.imglib.container.array.ArrayLocalizingRasterIterator;
+import mpicbg.imglib.container.PositionableContainerSampler;
+import mpicbg.imglib.container.array.ArrayLocalizingIterator;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.outofbounds.RasterOutOfBoundsFactory;
-import mpicbg.imglib.sampler.PositionableRasterIntervalSampler;
 import mpicbg.imglib.type.Type;
 
 public class LocalNeighborhoodCursor<T extends Type<T>> extends AbstractContainerIterator<T>
@@ -44,10 +44,10 @@ public class LocalNeighborhoodCursor<T extends Type<T>> extends AbstractContaine
 	 * Here we "misuse" a ArrayLocalizableCursor to iterate over cells,
 	 * it always gives us the location of the current cell we are instantiating 
 	 */
-	final ArrayLocalizingRasterIterator<FakeType> neigborhoodCursor;
+	final ArrayLocalizingIterator<FakeType> neigborhoodCursor;
 
 	final IntegerLocalizable localizable;
-	final PositionableRasterIntervalSampler< T > cursor;
+	final PositionableContainerSampler< T > cursor;
 	
 	final int[] tmp;
 	final int centralPositionIndex;
@@ -69,7 +69,7 @@ public class LocalNeighborhoodCursor<T extends Type<T>> extends AbstractContaine
 		for ( int d = 0; d < n; ++d )
 			dim[ d ] = 3;
 
-		neigborhoodCursor = ArrayLocalizingRasterIterator.createLinearCursor( dim );
+		neigborhoodCursor = ArrayLocalizingIterator.createLinearCursor( dim );
 
 		for ( int d = 0; d < n; ++d )
 			dim[ d ] = 1;

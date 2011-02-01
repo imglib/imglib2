@@ -29,7 +29,7 @@ package mpicbg.imglib.outofbounds;
 
 import mpicbg.imglib.IntegerLocalizable;
 import mpicbg.imglib.algorithm.math.MathLib;
-import mpicbg.imglib.sampler.PositionableRasterIntervalSampler;
+import mpicbg.imglib.container.PositionableContainerSampler;
 import mpicbg.imglib.type.Type;
 
 /**
@@ -51,7 +51,7 @@ import mpicbg.imglib.type.Type;
  */
 public class OutOfBoundsStrategyPeriodic< T extends Type< T > > implements RasterOutOfBounds< T >
 {
-	final protected PositionableRasterIntervalSampler< T > outOfBoundsPositionable;
+	final protected PositionableContainerSampler< T > outOfBoundsPositionable;
 	
 	final protected int n;
 	
@@ -61,14 +61,14 @@ public class OutOfBoundsStrategyPeriodic< T extends Type< T > > implements Raste
 	
 	protected boolean isOutOfBounds = false;
 	
-	public OutOfBoundsStrategyPeriodic( final PositionableRasterIntervalSampler< T > source )
+	public OutOfBoundsStrategyPeriodic( final PositionableContainerSampler< T > source )
 	{
 		this( source, source.getContainer().positionableRasterSampler() );
 	}
 	
 	OutOfBoundsStrategyPeriodic(
-			final PositionableRasterIntervalSampler< T > source,
-			final PositionableRasterIntervalSampler< T > outOfBoundsPositionable )
+			final PositionableContainerSampler< T > source,
+			final PositionableContainerSampler< T > outOfBoundsPositionable )
 	{
 		this.outOfBoundsPositionable = outOfBoundsPositionable;
 		n = source.numDimensions();

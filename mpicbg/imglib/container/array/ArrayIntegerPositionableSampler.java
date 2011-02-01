@@ -25,13 +25,9 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-package mpicbg.imglib.sampler;
+package mpicbg.imglib.container.array;
 
-import mpicbg.imglib.IntegerInterval;
-import mpicbg.imglib.IntegerLocalizable;
-import mpicbg.imglib.algorithm.math.MathLib;
-import mpicbg.imglib.container.AbstractContainerSampler;
-import mpicbg.imglib.container.ContainerSampler;
+import mpicbg.imglib.container.AbstractPositionableContainerSampler;
 import mpicbg.imglib.type.Type;
 
 /**
@@ -40,60 +36,88 @@ import mpicbg.imglib.type.Type;
  *
  * @author Stephan Preibisch and Stephan Saalfeld
  */
-public abstract class AbstractLocalizableRasterSampler< T extends Type< T > > extends AbstractContainerSampler< T > implements ContainerSampler< T >, IntegerLocalizable
+public class ArrayIntegerPositionableSampler< T extends Type< T > > extends AbstractPositionableContainerSampler< T >
 {
-	final protected int[] position;
-	final protected long[] dimensions;
+	final protected T type;
+	final protected int[] step, dim;
+	final Array< T, ? > container;
 	
-	public AbstractLocalizableRasterSampler( final IntegerInterval f )
+	public ArrayIntegerPositionableSampler( final Array< T, ? > container ) 
 	{
-		super( f.numDimensions() );
+		super( container );
 		
-		position = new int[ n ];
-		dimensions = new long[ n ];
-		f.size( dimensions );
+		this.container = container;
+		this.type = container.createLinkedType();
+		
+		dim = container.dim;
+		step = container.step;
+		
+		for ( int d = 0; d < n; d++ )
+			position[ d ] = 0;
+
+		setPosition( position );
+		type.updateContainer( this );
+	}	
+	
+	@Override
+	public T get()
+	{
+		return type;
 	}
 	
 	@Override
-	public void localize( float[] pos )
+	public T create()
 	{
-		for ( int d = 0; d < n; d++ )
-			pos[ d ] = this.position[ d ];
+		return type.createVariable();
+	}
+	
+	@Override
+	public void fwd( final int d )
+	{
+		type.incIndex( step[ d ] );
+		++position[ d ];
 	}
 
 	@Override
-	public void localize( double[] pos )
+	public void bck( final int d )
 	{
-		for ( int d = 0; d < n; d++ )
-			pos[ d ] = this.position[ d ];
+		type.decIndex( step[ d ] );
+		--position[ d ];
+	}
+	
+	@Override
+	public void move( final long steps, final int d )
+	{
+		type.incIndex( step[ d ] * ( int )steps );
+		position[ d ] += steps;
+	}
+					
+	@Override
+	public void setPosition( final int[] position )
+	{
+		for ( int d = 0; d < n; ++d )
+			this.position[ d ] = position[ d ];
+		
+		type.updateIndex( container.positionToIndex( this.position ) );
+	}
+	
+	@Override
+	public void setPosition( long[] position )
+	{
+		for ( int d = 0; d < n; ++d )
+			this.position[ d ] = ( int )position[ d ];
+		
+		type.updateIndex( container.positionToIndex( this.position ) );
 	}
 
 	@Override
-	public void localize( int[] pos )
+	public void setPosition( final long position, final int dim )
 	{
-		for ( int d = 0; d < n; d++ )
-			pos[ d ] = this.position[ d ];
+		this.position[ dim ] = position;
+		
+		type.updateIndex( container.positionToIndex( this.position ) );
 	}
-	
-	@Override
-	public void localize( long[] pos )
-	{
-		for ( int d = 0; d < n; d++ )
-			pos[ d ] = this.position[ d ];
-	}
-	
-	@Override
-	public float getFloatPosition( final int dim ){ return position[ dim ]; }
-	
-	@Override
-	public double getDoublePosition( final int dim ){ return position[ dim ]; }
-	
-	@Override
-	public int getIntPosition( final int dim ){ return position[ dim ]; }
 
 	@Override
-	public long getLongPosition( final int dim ){ return position[ dim ]; }
-	
-	@Override
-	public String toString(){ return MathLib.printCoordinates( position ) + " = " + get(); }
+	public Array<T,?> getContainer(){ return container; }
 }

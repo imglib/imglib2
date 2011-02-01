@@ -2,8 +2,8 @@ package mpicbg.imglib.algorithm.transformation;
 
 import mpicbg.imglib.algorithm.Algorithm;
 import mpicbg.imglib.algorithm.Benchmark;
+import mpicbg.imglib.container.PositionableContainerSampler;
 import mpicbg.imglib.image.Image;
-import mpicbg.imglib.sampler.PositionableRasterIntervalSampler;
 import mpicbg.imglib.type.numeric.RealType;
 
 public abstract class HoughTransform<S extends RealType<S>, T extends RealType<T>>
@@ -13,7 +13,7 @@ implements Algorithm, Benchmark
 	private String errorMsg;
 	private final Image<T> image;
 	private Image<S> voteSpace;
-	private PositionableRasterIntervalSampler<S> voteCursor;	
+	private PositionableContainerSampler<S> voteCursor;	
 	
 	protected HoughTransform(final Image<T> inputImage, final int[] voteSize)
 	{

@@ -25,32 +25,94 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-package mpicbg.imglib.sampler;
+package mpicbg.imglib.container.array;
 
-import mpicbg.imglib.IntegerInterval;
-import mpicbg.imglib.IntegerLocalizable;
-import mpicbg.imglib.IntegerPositionable;
-import mpicbg.imglib.container.ContainerSampler;
+import mpicbg.imglib.container.AbstractContainerIterator;
 import mpicbg.imglib.type.Type;
 
 /**
- * This interface is for convenience only, it combines a set of interfaces and
- * might be used for type definition in your implementation.  Instead of this
- * interface, you can use a generic type that includes only the interfaces you
- * need, e.g.
- * 
- * < T extends RasterSampler< ? >, RasterPositionable > 
  * 
  * @param <T>
- *
+ * 
  * @author Stephan Preibisch and Stephan Saalfeld
  */
-public interface PositionableRasterIntervalSampler< T extends Type< T > > extends ContainerSampler< T >, IntegerLocalizable, IntegerPositionable, IntegerInterval
+public class ArrayIterator< T extends Type< T > > extends AbstractContainerIterator< T >
 {
-	/**
-	 * True if located out of image bounds.
-	 * 
-	 * @return
-	 */
-	public boolean isOutOfBounds();
+	protected final T type;
+
+	protected final Array< T, ? > container;
+
+	protected final int lastIndex;
+
+	public ArrayIterator( final Array< T, ? > container )
+	{
+		super( container.numDimensions() );
+
+		this.type = container.createLinkedType();
+		this.container = container;
+		this.lastIndex = ( int )container.size() - 1;
+
+		reset();
+	}
+
+	@Override
+	public T get()
+	{
+		return type;
+	}
+	
+	@Override
+	public T create()
+	{
+		return type.createVariable();
+	}
+
+	@Override
+	public boolean hasNext()
+	{
+		return type.getIndex() < lastIndex;
+	}
+
+	@Override
+	public void jumpFwd( final long steps )
+	{
+		type.incIndex( ( int ) steps );
+	}
+
+	@Override
+	public void fwd()
+	{
+		type.incIndex();
+	}
+
+	@Override
+	public void reset()
+	{
+		type.updateIndex( -1 );
+		type.updateContainer( this );
+	}
+
+	@Override
+	public Array< T, ? > getContainer()
+	{
+		return container;
+	}
+
+	@Override
+	public String toString()
+	{
+		return type.toString();
+	}
+
+	@Override
+	public long getLongPosition( final int dim )
+	{
+		return container.indexToPosition( type.getIndex(), dim );
+	}
+
+	@Override
+	public void localize( final long[] position )
+	{
+		container.indexToPosition( type.getIndex(), position );
+	}
 }

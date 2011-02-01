@@ -28,7 +28,7 @@
 package mpicbg.imglib.outofbounds;
 
 import mpicbg.imglib.InjectiveIntegerInterval;
-import mpicbg.imglib.sampler.PositionableRasterIntervalSampler;
+import mpicbg.imglib.container.PositionableContainerSampler;
 import mpicbg.imglib.type.Type;
 
 /**
@@ -63,7 +63,7 @@ public class OutOfBoundsConstantValueFactory< T extends Type< T > >
 	}
 
 	@Override
-	public OutOfBoundsConstantValue< T > create( final PositionableRasterIntervalSampler< T > sampler )
+	public OutOfBoundsConstantValue< T > create( final PositionableContainerSampler< T > sampler )
 	{
 		if ( value == null ) return new OutOfBoundsConstantValue< T >( sampler, sampler.create() );
 		else return new OutOfBoundsConstantValue< T >( sampler, value );

@@ -29,10 +29,10 @@ import mpicbg.imglib.algorithm.gauss.GaussianConvolution;
 import mpicbg.imglib.algorithm.math.MathLib;
 import mpicbg.imglib.container.ContainerFactory;
 import mpicbg.imglib.container.ContainerIterator;
+import mpicbg.imglib.container.PositionableContainerSampler;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.ImageFactory;
 import mpicbg.imglib.outofbounds.OutOfBoundsConstantValueFactory;
-import mpicbg.imglib.sampler.PositionableRasterIntervalSampler;
 import mpicbg.imglib.type.numeric.RealType;
 import mpicbg.imglib.type.numeric.complex.ComplexFloatType;
 import mpicbg.imglib.type.numeric.real.FloatType;
@@ -167,7 +167,7 @@ public class FourierConvolution<T extends RealType<T>, S extends RealType<S>> im
 		for ( int d = 0; d < numDimensions; ++d )
 			center[ d ] = kernel.getDimension( d ) / 2;
 				
-		final PositionableRasterIntervalSampler<T> c = kernel.createPositionableRasterSampler();
+		final PositionableContainerSampler<T> c = kernel.createPositionableRasterSampler();
 		c.setPosition( center );
 		c.get().setOne();
 		c.close();
@@ -242,7 +242,7 @@ public class FourierConvolution<T extends RealType<T>, S extends RealType<S>> im
 			// the key here is that the center pixel of the kernel (e.g. 13,13,13)
 			// is located at (0,0,0)
 			final ContainerIterator<S> kernelCursor = kernel.createLocalizingRasterIterator();
-			final PositionableRasterIntervalSampler<S> kernelTemplateCursor = kernelTemplate.createPositionableRasterSampler();
+			final PositionableContainerSampler<S> kernelTemplateCursor = kernelTemplate.createPositionableRasterSampler();
 			
 			final int[] position = new int[ numDimensions ];
 			while ( kernelCursor.hasNext() )

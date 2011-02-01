@@ -25,77 +25,38 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-package mpicbg.imglib.container.array;
+package mpicbg.imglib.container;
 
-import mpicbg.imglib.sampler.AbstractLocalizingRasterIterator;
+import mpicbg.imglib.IntegerInterval;
 import mpicbg.imglib.type.Type;
 
 /**
  * 
  * @param <T>
- *
+ * 
  * @author Stephan Preibisch and Stephan Saalfeld
  */
-public class ArrayLocalizingRasterIterator< T extends Type< T >> extends AbstractLocalizingRasterIterator< T >
+public abstract class AbstractLocalizingContainerIterator< T extends Type< T > > extends AbstractLocalizableContainerSampler< T > implements ContainerIterator< T >
 {
-	protected final T type;
-
-	protected final Array< T, ? > container;
-
-	protected final int lastIndex;
-
-	public ArrayLocalizingRasterIterator( final Array< T, ? > container )
+	public AbstractLocalizingContainerIterator( final IntegerInterval f )
 	{
-		super( container );
-
-		this.container = container;
-		this.type = container.createLinkedType();
-		this.lastIndex = ( int )container.size() - 1;
-
-		reset();
+		super( f );
 	}
 
 	@Override
-	public T get(){ return type; }
+	public void remove(){}
 
 	@Override
-	public boolean hasNext(){ return type.getIndex() < lastIndex; }
-
-	@Override
-	public void fwd()
+	public T next()
 	{
-		type.incIndex();
-
-		for ( int d = 0; d < n; ++d )
-		{
-			if ( ++position[ d ] >= dimensions[ d ] ) position[ d ] = 0;
-			else break;
-		}
+		fwd();
+		return get();
 	}
 
 	@Override
 	public void jumpFwd( final long steps )
 	{
-		type.incIndex( ( int ) steps );
-		container.indexToPosition( type.getIndex(), position );
+		for ( long j = 0; j < steps; ++j )
+			fwd();
 	}
-
-	@Override
-	public void reset()
-	{
-		if ( dimensions != null )
-		{
-			type.updateIndex( -1 );
-
-			position[ 0 ] = -1;
-
-			for ( int d = 1; d < n; d++ )
-				position[ d ] = 0;
-
-			type.updateContainer( this );
-		}
-	}
-
-	@Override
-	public Array< T, ? > getContainer(){ return container; }
 }

@@ -71,7 +71,7 @@ public class DoubleType extends AbstractRealType< DoubleType > implements RealTy
 	public DirectAccessContainer< DoubleType, ? extends DoubleAccess, ? > createSuitableDirectAccessContainer( final DirectAccessContainerFactory storageFactory, final long[] dim )
 	{
 		// create the container
-		final DirectAccessContainer< DoubleType, ? extends DoubleAccess, ? > container = storageFactory.createDoubleInstance( dim, 1 );
+		final DirectAccessContainer< DoubleType, ? extends DoubleAccess, ? > container = storageFactory.createDoubleInstance( new DoubleType(), dim, 1 );
 
 		// create a Type that is linked to the container
 		final DoubleType linkedType = new DoubleType( container );

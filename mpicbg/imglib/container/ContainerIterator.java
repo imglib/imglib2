@@ -33,7 +33,6 @@ import mpicbg.imglib.IntegerLocalizable;
 import mpicbg.imglib.Iterator;
 import mpicbg.imglib.container.array.Array;
 import mpicbg.imglib.image.Image;
-import mpicbg.imglib.sampler.PositionableRasterIntervalSampler;
 import mpicbg.imglib.type.Type;
 
 /**
@@ -83,7 +82,7 @@ import mpicbg.imglib.type.Type;
  * will visit the <em>same pixel positions</em>.
  * <p>
  * If the two {@link Container Containers} are not the same, then
- * {@link IntegerLocalizable} and {@link PositionableRasterIntervalSampler} have to be
+ * {@link IntegerLocalizable} and {@link PositionableContainerSampler} have to be
  * used:
  * <pre>
  * 		else {

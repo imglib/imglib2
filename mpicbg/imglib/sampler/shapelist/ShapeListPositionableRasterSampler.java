@@ -31,10 +31,10 @@ import mpicbg.imglib.IntegerLocalizable;
 import mpicbg.imglib.IntegerPositionable;
 import mpicbg.imglib.container.AbstractContainerIterator;
 import mpicbg.imglib.container.ContainerIterator;
+import mpicbg.imglib.container.PositionableContainerSampler;
 import mpicbg.imglib.container.shapelist.ShapeList;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.location.VoidPositionable;
-import mpicbg.imglib.sampler.PositionableRasterIntervalSampler;
 import mpicbg.imglib.type.Type;
 
 /**
@@ -43,7 +43,7 @@ import mpicbg.imglib.type.Type;
  *
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-public class ShapeListPositionableRasterSampler< T extends Type< T > > extends AbstractContainerIterator< T > implements PositionableRasterIntervalSampler< T >, ContainerIterator< T >
+public class ShapeListPositionableRasterSampler< T extends Type< T > > extends AbstractContainerIterator< T > implements PositionableContainerSampler< T >, ContainerIterator< T >
 {
 	final protected ShapeList< T > container;
 	

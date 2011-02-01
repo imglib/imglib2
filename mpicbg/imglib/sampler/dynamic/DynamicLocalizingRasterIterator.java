@@ -27,11 +27,11 @@
  */
 package mpicbg.imglib.sampler.dynamic;
 
+import mpicbg.imglib.container.AbstractLocalizingContainerIterator;
 import mpicbg.imglib.container.basictypecontainer.DataAccess;
 import mpicbg.imglib.container.dynamic.DynamicContainer;
 import mpicbg.imglib.container.dynamic.DynamicContainerAccessor;
 import mpicbg.imglib.image.Image;
-import mpicbg.imglib.sampler.AbstractLocalizingRasterIterator;
 import mpicbg.imglib.type.Type;
 
 /**
@@ -40,7 +40,7 @@ import mpicbg.imglib.type.Type;
  *
  * @author Stephan Preibisch and Stephan Saalfeld
  */
-public class DynamicLocalizingRasterIterator< T extends Type< T > > extends AbstractLocalizingRasterIterator< T > implements DynamicStorageAccess
+public class DynamicLocalizingRasterIterator< T extends Type< T > > extends AbstractLocalizingContainerIterator< T > implements DynamicStorageAccess
 {
 	/* the type instance accessing the pixel value the cursor points at */
 	protected final T type;
@@ -75,7 +75,7 @@ public class DynamicLocalizingRasterIterator< T extends Type< T > > extends Abst
 		
 		for ( int d = 0; d < n; d++ )
 		{
-			if ( position[ d ] < dimensions[ d ] - 1 )
+			if ( position[ d ] < size[ d ] - 1 )
 			{
 				position[ d ]++;
 				
@@ -94,7 +94,7 @@ public class DynamicLocalizingRasterIterator< T extends Type< T > > extends Abst
 	@Override
 	public void reset()
 	{
-		if ( dimensions != null )
+		if ( size != null )
 		{
 			type.updateIndex( 0 );
 			internalIndex = 0;

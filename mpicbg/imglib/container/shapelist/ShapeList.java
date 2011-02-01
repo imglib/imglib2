@@ -31,9 +31,9 @@ import java.awt.Shape;
 import java.util.ArrayList;
 
 import mpicbg.imglib.container.AbstractContainer;
+import mpicbg.imglib.container.PositionableContainerSampler;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.outofbounds.RasterOutOfBoundsFactory;
-import mpicbg.imglib.sampler.PositionableRasterIntervalSampler;
 import mpicbg.imglib.sampler.shapelist.ShapeListPositionableRasterSampler;
 import mpicbg.imglib.sampler.shapelist.ShapeListOutOfBoundsPositionableRasterSampler;
 import mpicbg.imglib.type.Type;
@@ -120,7 +120,7 @@ public class ShapeList< T extends Type< T > > extends AbstractContainer< T >
 	}
 	
 	@Override
-	public PositionableRasterIntervalSampler< T > createPositionableRasterSampler( final Image< T > image, final RasterOutOfBoundsFactory< T > outOfBoundsFactory ) 
+	public PositionableContainerSampler< T > createPositionableRasterSampler( final Image< T > image, final RasterOutOfBoundsFactory< T > outOfBoundsFactory ) 
 	{
 		return new ShapeListOutOfBoundsPositionableRasterSampler< T >( this, image, outOfBoundsFactory );
 	}

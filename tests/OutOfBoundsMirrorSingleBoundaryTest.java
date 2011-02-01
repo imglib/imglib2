@@ -36,6 +36,7 @@ import java.awt.Rectangle;
 
 import mpicbg.imglib.IntegerLocalizable;
 import mpicbg.imglib.container.ContainerIterator;
+import mpicbg.imglib.container.PositionableContainerSampler;
 import mpicbg.imglib.container.array.ArrayContainerFactory;
 import mpicbg.imglib.container.cell.CellContainerFactory;
 import mpicbg.imglib.container.dynamic.DynamicContainerFactory;
@@ -45,7 +46,6 @@ import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.ImageFactory;
 import mpicbg.imglib.outofbounds.OutOfBoundsMirrorFactory;
 import mpicbg.imglib.outofbounds.OutOfBoundsMirrorFactory.Boundary;
-import mpicbg.imglib.sampler.PositionableRasterIntervalSampler;
 import mpicbg.imglib.type.numeric.integer.IntType;
 
 import org.junit.After;
@@ -70,10 +70,10 @@ public class OutOfBoundsMirrorSingleBoundaryTest
 	static private Image< IntType > dynamicImage;
 	static private Image< IntType > shapeListImage;
 	
-	static private PositionableRasterIntervalSampler< IntType > cArray;
-	static private PositionableRasterIntervalSampler< IntType > cCell;
-	static private PositionableRasterIntervalSampler< IntType > cDynamic;
-	static private PositionableRasterIntervalSampler< IntType > cShapeList;
+	static private PositionableContainerSampler< IntType > cArray;
+	static private PositionableContainerSampler< IntType > cCell;
+	static private PositionableContainerSampler< IntType > cDynamic;
+	static private PositionableContainerSampler< IntType > cShapeList;
 	
 	/**
 	 * @throws java.lang.Exception

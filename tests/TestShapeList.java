@@ -8,6 +8,7 @@ import java.awt.Rectangle;
 
 import mpicbg.imglib.algorithm.transformation.ImageTransform;
 import mpicbg.imglib.container.ContainerIterator;
+import mpicbg.imglib.container.PositionableContainerSampler;
 import mpicbg.imglib.container.array.ArrayContainerFactory;
 import mpicbg.imglib.container.cell.CellContainerFactory;
 import mpicbg.imglib.container.shapelist.ShapeList;
@@ -19,7 +20,6 @@ import mpicbg.imglib.interpolation.nearestneighbor.NearestNeighborInterpolatorFa
 import mpicbg.imglib.outofbounds.OutOfBoundsConstantValueFactory;
 import mpicbg.imglib.outofbounds.OutOfBoundsMirrorFactory;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyPeriodicFactory;
-import mpicbg.imglib.sampler.PositionableRasterIntervalSampler;
 import mpicbg.imglib.type.numeric.RealType;
 import mpicbg.imglib.type.numeric.integer.ByteType;
 import mpicbg.imglib.type.numeric.real.FloatType;
@@ -76,7 +76,7 @@ public class TestShapeList
 		final ArrayContainerFactory arrayFactory = new ArrayContainerFactory();
 		final Image< FloatType > arrayImage = new ImageFactory< FloatType >( new FloatType(), arrayFactory ).createImage( new int[]{ 200, 200, depth }, "ArrayContainer" );
 		final ContainerIterator< FloatType > cArray = arrayImage.createLocalizingRasterIterator();
-		final PositionableRasterIntervalSampler< FloatType > cShapeList = shapeListImage.createPositionableRasterSampler();
+		final PositionableContainerSampler< FloatType > cShapeList = shapeListImage.createPositionableRasterSampler();
 		while ( cArray.hasNext() )
 		{
 			cArray.fwd();

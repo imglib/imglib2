@@ -28,11 +28,11 @@
 package mpicbg.imglib.sampler.dynamic;
 
 import mpicbg.imglib.IntegerLocalizable;
+import mpicbg.imglib.container.AbstractPositionableContainerSampler;
 import mpicbg.imglib.container.basictypecontainer.DataAccess;
 import mpicbg.imglib.container.dynamic.DynamicContainer;
 import mpicbg.imglib.container.dynamic.DynamicContainerAccessor;
 import mpicbg.imglib.image.Image;
-import mpicbg.imglib.sampler.AbstractBasicPositionableRasterSampler;
 import mpicbg.imglib.type.Type;
 
 /**
@@ -41,7 +41,7 @@ import mpicbg.imglib.type.Type;
  *
  * @author Stephan Preibisch and Stephan Saalfeld
  */
-public class DynamicPositionableRasterSampler< T extends Type< T > > extends AbstractBasicPositionableRasterSampler< T > implements DynamicStorageAccess
+public class DynamicPositionableRasterSampler< T extends Type< T > > extends AbstractPositionableContainerSampler< T > implements DynamicStorageAccess
 {
 	/* the type instance accessing the pixel value the cursor points at */
 	protected final T type;

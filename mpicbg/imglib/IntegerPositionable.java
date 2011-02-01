@@ -68,40 +68,28 @@ public interface IntegerPositionable extends EuclideanSpace
 	public void move( long distance, int dim );
 
 	/**
-	 * Move the element to the same location as a given {@link IntegerLocalizable}.
-	 * This method is expected to evaluates the distance to move for each
-	 * dimension independently and then perform relative moves which can result
-	 * in more efficient moves, particularly in containers where local parts of
-	 * an image need to be requested on demand and switching between them is
-	 * expensive.  It also is slightly faster for dimensionally sparse moves.
+	 * Move the element relative to its current location using an
+	 * {@link IntegerLocalizable} as distance vector.
 	 * 
 	 * @param localizable
 	 */
-	public void moveTo( IntegerLocalizable localizable );
+	public void move( IntegerLocalizable localizable );
 	
 	/**
-	 * Move the element to some position.  This method is expected to evaluates
-	 * the distance to move for each dimension independently and then perform
-	 * relative moves which can result in more efficient moves, particularly in
-	 * containers where local parts of an image need to be requested on demand
-	 * and switching between them is expensive.  It also is slightly faster for
-	 * dimensionally sparse moves.
+	 * Move the element relative to its current location using an int[] as
+	 * distance vector.
 	 * 
 	 * @param position
 	 */
-	public void moveTo( int[] position );
+	public void move( int[] position );
 	
 	/**
-	 * Move the element to some position.  This method is expected to evaluates
-	 * the distance to move for each dimension independently and then perform
-	 * relative moves which can result in more efficient moves, particularly in
-	 * containers where local parts of an image need to be requested on demand
-	 * and switching between them is expensive.  It also is slightly faster for
-	 * dimensionally sparse moves.
+	 * Move the element relative to its current location using a long[] as
+	 * distance vector.
 	 * 
 	 * @param position
 	 */
-	public void moveTo( long[] position );
+	public void move( long[] position );
 	
 	/**
 	 * Place the element at the same location as a given {@link IntegerLocalizable}

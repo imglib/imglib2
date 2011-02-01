@@ -25,39 +25,30 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-package mpicbg.imglib.sampler;
+package mpicbg.imglib.container;
 
-import mpicbg.imglib.IntegerInterval;
-import mpicbg.imglib.container.ContainerIterator;
+import mpicbg.imglib.IntegerLocalizable;
+import mpicbg.imglib.IntegerPositionable;
 import mpicbg.imglib.type.Type;
 
 /**
+ * This interface is for convenience only, it combines a set of interfaces and
+ * might be used for type definition in your implementation.  Instead of this
+ * interface, you can use a generic type that includes only the interfaces you
+ * need, e.g.
+ * 
+ * < T extends RasterSampler< ? >, RasterPositionable > 
  * 
  * @param <T>
- * 
+ *
  * @author Stephan Preibisch and Stephan Saalfeld
  */
-public abstract class AbstractLocalizingRasterIterator< T extends Type< T > > extends AbstractLocalizableRasterSampler< T > implements ContainerIterator< T >
+public interface PositionableContainerSampler< T extends Type< T > > extends ContainerSampler< T >, IntegerLocalizable, IntegerPositionable
 {
-	public AbstractLocalizingRasterIterator( final IntegerInterval f )
-	{
-		super( f );
-	}
-
-	@Override
-	public void remove(){}
-
-	@Override
-	public T next()
-	{
-		fwd();
-		return get();
-	}
-
-	@Override
-	public void jumpFwd( final long steps )
-	{
-		for ( long j = 0; j < steps; ++j )
-			fwd();
-	}
+	/**
+	 * True if located out of image bounds.
+	 * 
+	 * @return
+	 */
+	public boolean isOutOfBounds();
 }

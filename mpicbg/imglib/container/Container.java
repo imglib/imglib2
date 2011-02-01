@@ -30,7 +30,6 @@ package mpicbg.imglib.container;
 import mpicbg.imglib.InjectiveIntegerInterval;
 import mpicbg.imglib.IntegerFunction;
 import mpicbg.imglib.IntegerIntervalFunction;
-import mpicbg.imglib.sampler.PositionableRasterIntervalSampler;
 import mpicbg.imglib.type.Type;
 
 /**
@@ -44,9 +43,11 @@ public interface Container<
 		T extends Type< T >,
 		F extends Container< T, F > >
 	extends
-		IntegerFunction< T, F, PositionableRasterIntervalSampler< T > >,
-		IntegerIntervalFunction< T, F, PositionableRasterIntervalSampler< T >, ContainerIterator< T > >,
+		IntegerFunction< T, F, PositionableContainerSampler< T > >,
+		IntegerIntervalFunction< T, F, PositionableContainerSampler< T >, ContainerIterator< T > >,
 		InjectiveIntegerInterval
 {
 	public ContainerFactory factory();
+	
+	public T createVariable();
 }

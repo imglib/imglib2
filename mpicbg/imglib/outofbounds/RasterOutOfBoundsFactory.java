@@ -27,7 +27,7 @@
  */
 package mpicbg.imglib.outofbounds;
 
-import mpicbg.imglib.sampler.PositionableRasterIntervalSampler;
+import mpicbg.imglib.container.PositionableContainerSampler;
 import mpicbg.imglib.type.Type;
 
 /**
@@ -38,5 +38,5 @@ import mpicbg.imglib.type.Type;
  */
 public abstract class RasterOutOfBoundsFactory< T extends Type< T >, F >
 {
-	public abstract RasterOutOfBounds< T > create( PositionableRasterIntervalSampler< T > sampler );
+	public abstract RasterOutOfBounds< T > create( PositionableContainerSampler< T > sampler );
 }

@@ -28,12 +28,12 @@
 package mpicbg.imglib.sampler.cell;
 
 import mpicbg.imglib.IntegerLocalizable;
+import mpicbg.imglib.container.AbstractPositionableContainerSampler;
 import mpicbg.imglib.container.array.Array;
-import mpicbg.imglib.container.array.ArrayPositionableRasterSampler;
+import mpicbg.imglib.container.array.ArrayIntegerPositionableSampler;
 import mpicbg.imglib.container.cell.Cell;
 import mpicbg.imglib.container.cell.CellContainer;
 import mpicbg.imglib.image.Image;
-import mpicbg.imglib.sampler.AbstractBasicPositionableRasterSampler;
 import mpicbg.imglib.type.Type;
 import mpicbg.imglib.type.label.FakeType;
 
@@ -43,13 +43,13 @@ import mpicbg.imglib.type.label.FakeType;
  *
  * @author Stephan Preibisch and Stephan Saalfeld
  */
-public class CellPositionableRasterSampler< T extends Type< T > > extends AbstractBasicPositionableRasterSampler< T > implements CellStorageAccess
+public class CellPositionableRasterSampler< T extends Type< T > > extends AbstractPositionableContainerSampler< T > implements CellStorageAccess
 {
 	/**
 	 * Here we "misuse" a ArrayLocalizableCursor to iterate over cells,
 	 * it always gives us the location of the current cell we are instantiating
 	 */
-	final ArrayPositionableRasterSampler< FakeType > cursor;
+	final ArrayIntegerPositionableSampler< FakeType > cursor;
 	   
 	final protected T type;
 	
@@ -129,7 +129,7 @@ public class CellPositionableRasterSampler< T extends Type< T > > extends Abstra
 		this.cellDimensions = new int[ n ];
 		this.cellOffset = new int[ n ];
 		
-		this.cursor = ArrayPositionableRasterSampler.createLinearByDimCursor( numCellsDim );
+		this.cursor = ArrayIntegerPositionableSampler.createLinearByDimCursor( numCellsDim );
 		cursor.setPosition( new int[ n ] );
 		
 		// the steps when moving from cell to cell
