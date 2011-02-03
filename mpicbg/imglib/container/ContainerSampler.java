@@ -46,7 +46,7 @@ import mpicbg.imglib.type.Type;
  * 
  * @author Stephan Preibisch & Stephan Saalfeld
  */
-public interface ContainerSampler< T extends Type< T > > extends Sampler< T >, EuclideanSpace, InjectiveIntegerInterval
+public interface ContainerSampler< T > extends Sampler< T >, EuclideanSpace, InjectiveIntegerInterval
 {	
 	public int getArrayIndex();
 

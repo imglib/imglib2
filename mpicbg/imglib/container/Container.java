@@ -30,6 +30,7 @@ package mpicbg.imglib.container;
 import mpicbg.imglib.InjectiveIntegerInterval;
 import mpicbg.imglib.IntegerRandomAccessible;
 import mpicbg.imglib.RandomAccessibleIntegerInterval;
+import mpicbg.imglib.outofbounds.OutOfBoundsFactory;
 
 /**
  * Containers are {@link InjectiveIntegerInterval} that has its min at
@@ -44,6 +45,12 @@ public interface Container<	T >
 		RandomAccessibleIntegerInterval< T, Container< T > >,
 		InjectiveIntegerInterval
 {
+	@Override
+	public ContainerRandomAccess< T > integerRandomAccess();
+	
+	@Override
+	public ContainerRandomAccess< T > integerRandomAccess( OutOfBoundsFactory< T, Container< T > > factory );
+	
 	public ContainerFactory factory();
 	
 	public T createVariable();
