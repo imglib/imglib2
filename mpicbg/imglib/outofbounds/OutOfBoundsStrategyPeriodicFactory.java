@@ -28,7 +28,7 @@
 package mpicbg.imglib.outofbounds;
 
 import mpicbg.imglib.RandomAccessibleIntegerInterval;
-import mpicbg.imglib.container.RandomAccessContainerSampler;
+import mpicbg.imglib.container.ContainerRandomAccess;
 import mpicbg.imglib.type.Type;
 
 /**
@@ -40,7 +40,7 @@ import mpicbg.imglib.type.Type;
 public class OutOfBoundsStrategyPeriodicFactory< T extends Type< T > > extends RasterOutOfBoundsFactory< T >
 {
 	@Override
-	public OutOfBoundsStrategyPeriodic< T > create( final RandomAccessContainerSampler< T > p )
+	public OutOfBoundsStrategyPeriodic< T > create( final ContainerRandomAccess< T > p )
 	{
 		return new OutOfBoundsStrategyPeriodic< T >( p );
 	}

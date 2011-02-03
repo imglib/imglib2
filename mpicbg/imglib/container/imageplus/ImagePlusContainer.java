@@ -35,7 +35,7 @@ import ij.ImageStack;
 import mpicbg.imglib.container.AbstractDirectAccessContainer;
 import mpicbg.imglib.container.Container;
 import mpicbg.imglib.container.ContainerIterator;
-import mpicbg.imglib.container.RandomAccessContainerSampler;
+import mpicbg.imglib.container.ContainerRandomAccess;
 import mpicbg.imglib.container.basictypecontainer.array.ArrayDataAccess;
 import mpicbg.imglib.exception.ImgLibException;
 import mpicbg.imglib.image.Image;
@@ -248,7 +248,7 @@ public class ImagePlusContainer< T extends Type< T >, A extends ArrayDataAccess<
 	}
 
 	@Override
-	public RandomAccessContainerSampler< T > createPositionableRasterSampler( final Image< T > image )
+	public ContainerRandomAccess< T > createPositionableRasterSampler( final Image< T > image )
 	{
 		return new ImagePlusPositionableRasterSampler< T >( this, image );
 	}

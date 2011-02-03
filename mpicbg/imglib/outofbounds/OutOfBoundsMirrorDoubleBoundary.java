@@ -27,7 +27,7 @@
  */
 package mpicbg.imglib.outofbounds;
 
-import mpicbg.imglib.container.RandomAccessContainerSampler;
+import mpicbg.imglib.container.ContainerRandomAccess;
 import mpicbg.imglib.type.Type;
 
 /**
@@ -50,14 +50,14 @@ import mpicbg.imglib.type.Type;
  */
 public class OutOfBoundsMirrorDoubleBoundary< T extends Type< T > > extends AbstractOutOfBoundsMirror< T >
 {
-	OutOfBoundsMirrorDoubleBoundary( final RandomAccessContainerSampler< T > source )
+	OutOfBoundsMirrorDoubleBoundary( final ContainerRandomAccess< T > source )
 	{
 		this( source, source.getImage().createPositionableRasterSampler() );
 	}
 	
 	OutOfBoundsMirrorDoubleBoundary(
-			final RandomAccessContainerSampler< T > source,
-			final RandomAccessContainerSampler< T > outOfBoundsPositionable )
+			final ContainerRandomAccess< T > source,
+			final ContainerRandomAccess< T > outOfBoundsPositionable )
 	{
 		super( source, outOfBoundsPositionable );
 		

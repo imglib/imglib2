@@ -3,7 +3,7 @@ package tests;
 import java.util.Arrays;
 
 import mpicbg.imglib.container.ContainerIterator;
-import mpicbg.imglib.container.RandomAccessContainerSampler;
+import mpicbg.imglib.container.ContainerRandomAccess;
 import mpicbg.imglib.container.array.ArrayContainerFactory;
 
 
@@ -145,7 +145,7 @@ public class TestBase {
 	 * Convenience helper to access single pixels
 	 */
 	protected<T extends RealType<T>> float get( Image<T> image, int[] pos ) {
-		RandomAccessContainerSampler<T> cursor = image.createPositionableRasterSampler();
+		ContainerRandomAccess<T> cursor = image.createPositionableRasterSampler();
 		cursor.setPosition( pos );
 		float result = cursor.get().getRealFloat();
 		cursor.close();

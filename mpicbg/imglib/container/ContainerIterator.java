@@ -29,9 +29,10 @@
  */
 package mpicbg.imglib.container;
 
+import mpicbg.imglib.IntegerCursor;
 import mpicbg.imglib.IntegerLocalizable;
-import mpicbg.imglib.Iterator;
 import mpicbg.imglib.container.array.Array;
+import mpicbg.imglib.container.cell.CellContainer;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.type.Type;
 
@@ -82,7 +83,7 @@ import mpicbg.imglib.type.Type;
  * will visit the <em>same pixel positions</em>.
  * <p>
  * If the two {@link Container Containers} are not the same, then
- * {@link IntegerLocalizable} and {@link RandomAccessContainerSampler} have to be
+ * {@link IntegerLocalizable} and {@link ContainerRandomAccess} have to be
  * used:
  * <pre>
  * 		else {
@@ -109,5 +110,5 @@ import mpicbg.imglib.type.Type;
  *
  * @param <T> - the {@link Type} this {@link ContainerIterator} works on
  */
-public interface ContainerIterator< T extends Type< T > > extends ContainerSampler< T >, IntegerLocalizable, Iterator, java.util.Iterator< T >
+public interface ContainerIterator< T extends Type< T > > extends ContainerSampler< T >, IntegerCursor< T >
 {}

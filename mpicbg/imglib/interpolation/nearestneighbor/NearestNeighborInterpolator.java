@@ -27,7 +27,7 @@
  */
 package mpicbg.imglib.interpolation.nearestneighbor;
 
-import mpicbg.imglib.container.RandomAccessContainerSampler;
+import mpicbg.imglib.container.ContainerRandomAccess;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.interpolation.Interpolator;
 import mpicbg.imglib.location.transform.RoundRasterPositionable;
@@ -40,12 +40,12 @@ import mpicbg.imglib.type.Type;
  *
  * @author Stephan Preibisch and Stephan Saalfeld
  */
-public class NearestNeighborInterpolator< T extends Type< T > > extends RoundRasterPositionable< RandomAccessContainerSampler< T > > implements Interpolator< T >
+public class NearestNeighborInterpolator< T extends Type< T > > extends RoundRasterPositionable< ContainerRandomAccess< T > > implements Interpolator< T >
 {
 	final protected RasterOutOfBoundsFactory< T > outOfBoundsStrategyFactory;
 	final protected Image< T > image;
 	
-	final static private < T extends Type< T > > RandomAccessContainerSampler< T > createPositionableRasterSampler( final Image< T > image, final RasterOutOfBoundsFactory<T> outOfBoundsStrategyFactory )
+	final static private < T extends Type< T > > ContainerRandomAccess< T > createPositionableRasterSampler( final Image< T > image, final RasterOutOfBoundsFactory<T> outOfBoundsStrategyFactory )
 	{
 		return image.createPositionableRasterSampler( outOfBoundsStrategyFactory );
 	}

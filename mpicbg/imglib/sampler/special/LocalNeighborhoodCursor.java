@@ -32,7 +32,7 @@ package mpicbg.imglib.sampler.special;
 import mpicbg.imglib.IntegerLocalizable;
 import mpicbg.imglib.container.AbstractContainerIterator;
 import mpicbg.imglib.container.Container;
-import mpicbg.imglib.container.RandomAccessContainerSampler;
+import mpicbg.imglib.container.ContainerRandomAccess;
 import mpicbg.imglib.container.array.ArrayLocalizingIterator;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.outofbounds.RasterOutOfBoundsFactory;
@@ -47,7 +47,7 @@ public class LocalNeighborhoodCursor<T extends Type<T>> extends AbstractContaine
 	final ArrayLocalizingIterator<FakeType> neigborhoodCursor;
 
 	final IntegerLocalizable localizable;
-	final RandomAccessContainerSampler< T > cursor;
+	final ContainerRandomAccess< T > cursor;
 	
 	final int[] tmp;
 	final int centralPositionIndex;

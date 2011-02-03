@@ -31,7 +31,7 @@ import mpicbg.imglib.IntegerLocalizable;
 import mpicbg.imglib.Iterator;
 import mpicbg.imglib.algorithm.math.MathLib;
 import mpicbg.imglib.container.Container;
-import mpicbg.imglib.container.RandomAccessContainerSampler;
+import mpicbg.imglib.container.ContainerRandomAccess;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.iterator.ZeroMinIntegerIntervalIterator;
 
@@ -40,7 +40,7 @@ import mpicbg.imglib.iterator.ZeroMinIntegerIntervalIterator;
  * is: row by row, plane by plane, cube by cube, ...  This is useful for
  * iterating an arbitrary {@link Container} in a defined order.  For that,
  * connect a {@link LocalizingFlatIntegerIntervalIterator} to a
- * {@link RandomAccessContainerSampler}.
+ * {@link ContainerRandomAccess}.
  * 
  * <pre>
  * ...
@@ -57,7 +57,7 @@ import mpicbg.imglib.iterator.ZeroMinIntegerIntervalIterator;
  * 
  * Note that {@link LocalizingFlatIntegerIntervalIterator} is the right choice in
  * situations where, for <em>each</em> pixel, you want to localize and/or set
- * the {@link RandomAccessContainerSampler}, that is in a dense sampling
+ * the {@link ContainerRandomAccess}, that is in a dense sampling
  * situation.  For localizing sparsely (e.g. under an external condition),
  * use {@link ZeroMinIntegerIntervalIterator} instead.
  * 

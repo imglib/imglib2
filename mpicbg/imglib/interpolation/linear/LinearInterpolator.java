@@ -28,7 +28,7 @@
 package mpicbg.imglib.interpolation.linear;
 
 import mpicbg.imglib.algorithm.math.MathLib;
-import mpicbg.imglib.container.RandomAccessContainerSampler;
+import mpicbg.imglib.container.ContainerRandomAccess;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.interpolation.Interpolator;
 import mpicbg.imglib.location.transform.FloorRasterPositionable;
@@ -42,7 +42,7 @@ import mpicbg.imglib.type.numeric.NumericType;
  *
  * @author Stephan Preibisch and Stephan Saalfeld
  */
-public class LinearInterpolator< T extends NumericType< T > > extends FloorRasterPositionable< RandomAccessContainerSampler< T > > implements Interpolator< T >
+public class LinearInterpolator< T extends NumericType< T > > extends FloorRasterPositionable< ContainerRandomAccess< T > > implements Interpolator< T >
 {
 	final protected RasterOutOfBoundsFactory< T > outOfBoundsStrategyFactory;
 	final protected Image< T > image;
@@ -63,7 +63,7 @@ public class LinearInterpolator< T extends NumericType< T > > extends FloorRaste
 	// the locations where to initially grab pixels from
 	final boolean[][] positions;
 	
-	final static private < T extends Type< T > > RandomAccessContainerSampler< T > createSampler( final Image< T > image, final RasterOutOfBoundsFactory<T> outOfBoundsStrategyFactory )
+	final static private < T extends Type< T > > ContainerRandomAccess< T > createSampler( final Image< T > image, final RasterOutOfBoundsFactory<T> outOfBoundsStrategyFactory )
 	{
 		return image.createPositionableRasterSampler( outOfBoundsStrategyFactory );
 	}

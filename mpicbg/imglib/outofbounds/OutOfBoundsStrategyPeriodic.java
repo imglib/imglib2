@@ -29,7 +29,7 @@ package mpicbg.imglib.outofbounds;
 
 import mpicbg.imglib.IntegerLocalizable;
 import mpicbg.imglib.algorithm.math.MathLib;
-import mpicbg.imglib.container.RandomAccessContainerSampler;
+import mpicbg.imglib.container.ContainerRandomAccess;
 import mpicbg.imglib.type.Type;
 
 /**
@@ -51,7 +51,7 @@ import mpicbg.imglib.type.Type;
  */
 public class OutOfBoundsStrategyPeriodic< T extends Type< T > > implements RealOutOfBounds< T >
 {
-	final protected RandomAccessContainerSampler< T > outOfBoundsPositionable;
+	final protected ContainerRandomAccess< T > outOfBoundsPositionable;
 	
 	final protected int n;
 	
@@ -61,14 +61,14 @@ public class OutOfBoundsStrategyPeriodic< T extends Type< T > > implements RealO
 	
 	protected boolean isOutOfBounds = false;
 	
-	public OutOfBoundsStrategyPeriodic( final RandomAccessContainerSampler< T > source )
+	public OutOfBoundsStrategyPeriodic( final ContainerRandomAccess< T > source )
 	{
 		this( source, source.getContainer().integerRandomAccessSampler() );
 	}
 	
 	OutOfBoundsStrategyPeriodic(
-			final RandomAccessContainerSampler< T > source,
-			final RandomAccessContainerSampler< T > outOfBoundsPositionable )
+			final ContainerRandomAccess< T > source,
+			final ContainerRandomAccess< T > outOfBoundsPositionable )
 	{
 		this.outOfBoundsPositionable = outOfBoundsPositionable;
 		n = source.numDimensions();

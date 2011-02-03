@@ -36,7 +36,7 @@ import java.awt.Rectangle;
 
 import mpicbg.imglib.IntegerLocalizable;
 import mpicbg.imglib.container.ContainerIterator;
-import mpicbg.imglib.container.RandomAccessContainerSampler;
+import mpicbg.imglib.container.ContainerRandomAccess;
 import mpicbg.imglib.container.array.ArrayContainerFactory;
 import mpicbg.imglib.container.cell.CellContainerFactory;
 import mpicbg.imglib.container.dynamic.DynamicContainerFactory;
@@ -70,10 +70,10 @@ public class OutOfBoundsMirrorSingleBoundaryTest
 	static private Image< IntType > dynamicImage;
 	static private Image< IntType > shapeListImage;
 	
-	static private RandomAccessContainerSampler< IntType > cArray;
-	static private RandomAccessContainerSampler< IntType > cCell;
-	static private RandomAccessContainerSampler< IntType > cDynamic;
-	static private RandomAccessContainerSampler< IntType > cShapeList;
+	static private ContainerRandomAccess< IntType > cArray;
+	static private ContainerRandomAccess< IntType > cCell;
+	static private ContainerRandomAccess< IntType > cDynamic;
+	static private ContainerRandomAccess< IntType > cShapeList;
 	
 	/**
 	 * @throws java.lang.Exception

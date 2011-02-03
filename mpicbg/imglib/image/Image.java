@@ -43,7 +43,7 @@ import mpicbg.imglib.container.Container;
 import mpicbg.imglib.container.ContainerFactory;
 import mpicbg.imglib.container.ContainerIterator;
 import mpicbg.imglib.container.ContainerSampler;
-import mpicbg.imglib.container.RandomAccessContainerSampler;
+import mpicbg.imglib.container.ContainerRandomAccess;
 import mpicbg.imglib.container.array.ArrayLocalizingIterator;
 import mpicbg.imglib.image.display.Display;
 import mpicbg.imglib.interpolation.Interpolator;
@@ -61,7 +61,7 @@ import mpicbg.imglib.type.label.FakeType;
  */
 public class Image< T extends Type< T > > implements
 		ImageProperties,
-		RandomAccessibleIntegerInterval< T, Image< T >, RandomAccessContainerSampler< T >, ContainerIterator< T > >
+		RandomAccessibleIntegerInterval< T, Image< T >, ContainerRandomAccess< T >, ContainerIterator< T > >
 {
 	final protected ArrayList< ContainerSampler< T > > rasterSamplers;
 	final ContainerFactory containerFactory;
@@ -214,16 +214,16 @@ public class Image< T extends Type< T > > implements
 	}
 	
 	/**
-	 * Creates a {@link RandomAccessContainerSampler} which is able to move freely
+	 * Creates a {@link ContainerRandomAccess} which is able to move freely
 	 * within the {@link Image} without checking for image boundaries.  The
 	 * behavior at locations outside of image bounds is not defined.
 	 * 
-	 * @return - a {@link RandomAccessContainerSampler} that cannot leave the {@link Image}
+	 * @return - a {@link ContainerRandomAccess} that cannot leave the {@link Image}
 	 */
 	@Override
-	public RandomAccessContainerSampler< T > createPositionableRasterSampler()
+	public ContainerRandomAccess< T > createPositionableRasterSampler()
 	{
-		RandomAccessContainerSampler<T> cursor = container.createPositionableRasterSampler( this );
+		ContainerRandomAccess<T> cursor = container.createPositionableRasterSampler( this );
 		addRasterSampler( cursor );
 		return cursor;						
 	}
@@ -232,24 +232,24 @@ public class Image< T extends Type< T > > implements
 	 * @deprecated Use {@link #createPositionableCursor()} instead.
 	 */
 	@Deprecated
-	public RandomAccessContainerSampler<T> createLocalizableByDimCursor()
+	public ContainerRandomAccess<T> createLocalizableByDimCursor()
 	{
 		return createPositionableRasterSampler();
 	}
 
 	/**
-	 * Creates a {@link RandomAccessContainerSampler} which is able to move freely
+	 * Creates a {@link ContainerRandomAccess} which is able to move freely
 	 * within and outside of {@link Image} bounds given a
 	 * {@link RasterOutOfBoundsFactory} that defines the behavior out of
 	 * {@link Image} bounds.
 	 * 
 	 * @param factory - the {@link RasterOutOfBoundsFactory}
-	 * @return - a {@link RandomAccessContainerSampler} that can leave the {@link Image}
+	 * @return - a {@link ContainerRandomAccess} that can leave the {@link Image}
 	 */
 	@Override
-	public RandomAccessContainerSampler<T> createPositionableRasterSampler( final RasterOutOfBoundsFactory<T> factory )
+	public ContainerRandomAccess<T> createPositionableRasterSampler( final RasterOutOfBoundsFactory<T> factory )
 	{
-		RandomAccessContainerSampler<T> cursor = container.createPositionableRasterSampler( this, factory );
+		ContainerRandomAccess<T> cursor = container.createPositionableRasterSampler( this, factory );
 		addRasterSampler( cursor );
 		return cursor;								
 	}
@@ -264,7 +264,7 @@ public class Image< T extends Type< T > > implements
 	 * @deprecated Use {@link #createPositionableCursor( OutOfBoundsStrategyFactory<T> )} instead.
 	 */
 	@Deprecated
-	public RandomAccessContainerSampler<T> createLocalizableByDimCursor( final RasterOutOfBoundsFactory<T> factory )
+	public ContainerRandomAccess<T> createLocalizableByDimCursor( final RasterOutOfBoundsFactory<T> factory )
 	{
 		return createPositionableRasterSampler( factory);
 	}
@@ -475,7 +475,7 @@ public class Image< T extends Type< T > > implements
 		final T[] pixels = createType().createArray1D( (int)numPixels );
 		
 		final ArrayLocalizingIterator<FakeType> iterator = ArrayLocalizingIterator.createLinearCursor( getDimensions() );
-		final RandomAccessContainerSampler<T> positionable = this.createPositionableRasterSampler();
+		final ContainerRandomAccess<T> positionable = this.createPositionableRasterSampler();
 		
 		int t = 0;
 		while ( iterator.hasNext() )

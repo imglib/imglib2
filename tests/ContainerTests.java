@@ -11,7 +11,7 @@ import mpicbg.imglib.algorithm.math.MathLib;
 import mpicbg.imglib.container.Container;
 import mpicbg.imglib.container.ContainerFactory;
 import mpicbg.imglib.container.ContainerIterator;
-import mpicbg.imglib.container.RandomAccessContainerSampler;
+import mpicbg.imglib.container.ContainerRandomAccess;
 import mpicbg.imglib.container.array.ArrayContainerFactory;
 import mpicbg.imglib.container.cell.CellContainerFactory;
 import mpicbg.imglib.container.imageplus.ImagePlusContainerFactory;
@@ -189,7 +189,7 @@ public class ContainerTests
 
 		// copy back into a second image using localizable and positionable cursors			
 		final ContainerIterator<FloatType> localizableCursor1 = img1.localizingCursor();			
-		final RandomAccessContainerSampler<FloatType> positionable2 = img2.integerRandomAccessSampler();			
+		final ContainerRandomAccess<FloatType> positionable2 = img2.integerRandomAccessSampler();			
 		
 		int i = 0;
 		
@@ -207,7 +207,7 @@ public class ContainerTests
 		}
 		
 		// copy again to the first image using a LocalizableByDimOutsideCursor and a LocalizableByDimCursor
-		final RandomAccessContainerSampler<FloatType> outsideCursor2 = img2.positionableRasterSampler( new OutOfBoundsStrategyPeriodicFactory<FloatType>() );
+		final ContainerRandomAccess<FloatType> outsideCursor2 = img2.positionableRasterSampler( new OutOfBoundsStrategyPeriodicFactory<FloatType>() );
 		localizableCursor1.reset();
 		
 		final int[] pos = new int[ numDimensions ];			

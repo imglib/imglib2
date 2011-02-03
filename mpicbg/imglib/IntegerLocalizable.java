@@ -30,12 +30,12 @@
 package mpicbg.imglib;
 
 import mpicbg.imglib.container.ContainerIterator;
-import mpicbg.imglib.container.RandomAccessContainerSampler;
+import mpicbg.imglib.container.ContainerRandomAccess;
 
 /**
  * The {@link IntegerLocalizable} interface can localize itself in an n-dimensional
  * discrete space.  Not only {@link ContainerIterator}s can use this 
- * interface, it might be used by much more classes as {@link RandomAccessContainerSampler}s
+ * interface, it might be used by much more classes as {@link ContainerRandomAccess}s
  * can take any {@link IntegerLocalizable} as input for where they should move to.
  *  
  * @author Stephan Preibisch & Stephan Saalfeld

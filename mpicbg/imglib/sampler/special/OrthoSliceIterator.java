@@ -31,7 +31,7 @@ package mpicbg.imglib.sampler.special;
 import mpicbg.imglib.Iterator;
 import mpicbg.imglib.container.Container;
 import mpicbg.imglib.container.ContainerIterator;
-import mpicbg.imglib.container.RandomAccessContainerSampler;
+import mpicbg.imglib.container.ContainerRandomAccess;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.type.Type;
 
@@ -39,7 +39,7 @@ import mpicbg.imglib.type.Type;
  * Generic {@link Iterator} for orthogonal 2d-slices.  This implementation
  * iterates row by row from top left to bottom right mapping <em>x</em> and
  * <em>y</em> to two arbitrary dimensions using a
- * {@link RandomAccessContainerSampler} provided either directly or through an
+ * {@link ContainerRandomAccess} provided either directly or through an
  * {@link Image}.  While, for most {@link Container Containers}, this is the
  * sufficient implementation, sometimes, a different iteration order is
  * required.  Such {@link Container Containers} are expected to provide their
@@ -53,7 +53,7 @@ public class OrthoSliceIterator< T extends Type< T > > implements ContainerItera
 	final protected int x, y;
 	final protected long w, h, maxX, maxY;
 	
-	final protected RandomAccessContainerSampler< T > sampler;
+	final protected ContainerRandomAccess< T > sampler;
 	
 	private static long[] intToLong( final int[] i )
 	{
@@ -75,7 +75,7 @@ public class OrthoSliceIterator< T extends Type< T > > implements ContainerItera
 		this( container.integerRandomAccessSampler(), x, y, intToLong( position ) );		
 	}
 
-	public OrthoSliceIterator( final RandomAccessContainerSampler< T > sampler, final int x, final int y, final long[] position )
+	public OrthoSliceIterator( final ContainerRandomAccess< T > sampler, final int x, final int y, final long[] position )
 	{
 		this.sampler = sampler;
 		this.x = x;
