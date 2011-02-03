@@ -23,13 +23,8 @@ import mpicbg.imglib.container.ContainerIterator;
 import mpicbg.imglib.interpolation.Interpolator;
 import mpicbg.imglib.interpolation.InterpolatorFactory;
 import mpicbg.imglib.type.Type;
-import mpicbg.models.AffineModel2D;
-import mpicbg.models.AffineModel3D;
 import mpicbg.models.InvertibleBoundable;
 import mpicbg.models.NoninvertibleModelException;
-import mpicbg.models.RigidModel2D;
-import mpicbg.models.TranslationModel2D;
-import mpicbg.models.TranslationModel3D;
 
 public class ImageTransform<T extends Type<T>> implements OutputAlgorithm<T>
 {
@@ -37,7 +32,6 @@ public class ImageTransform<T extends Type<T>> implements OutputAlgorithm<T>
 	final Container<T> container;
 	final int numDimensions;
 	final InterpolatorFactory<T,Container<T>> interpolatorFactory;
-	final boolean isAffine;
 	
 	ContainerFactory outputContainerFactory;
 	
@@ -55,15 +49,6 @@ public class ImageTransform<T extends Type<T>> implements OutputAlgorithm<T>
 		this.transform = transform;		
 		this.outputContainerFactory = container.factory();
 
-		if ( transform instanceof AffineModel3D ||
-			 transform instanceof AffineModel2D ||
-			 transform instanceof TranslationModel3D ||
-			 transform instanceof TranslationModel2D || 
-			 transform instanceof RigidModel2D )
-				isAffine = true;
-			else
-				isAffine = false;
-		
 		// get image dimensions
 		final long[] dimensions = new long[ numDimensions ]; 
 		container.size( dimensions );
