@@ -40,9 +40,9 @@ import mpicbg.imglib.type.Type;
  *
  * @author Stephan Preibisch and Stephan Saalfeld
  */
-abstract public class AbstractInterpolator< T extends Type< T >, LocalizablePositionable extends Localizable & Positionable > implements Interpolator< T >
+abstract public class AbstractInterpolator< T extends Type< T >, F, LocalizablePositionable extends Localizable & Positionable > implements Interpolator< T, F >
 {
-	final protected OutOfBoundsFactory< T > outOfBoundsStrategyFactory;
+	final protected OutOfBoundsFactory< T, F > outOfBoundsStrategyFactory;
 	final protected LocalizablePositionable localizablePositionable;
 
 	final protected Image< T > img;
@@ -54,7 +54,7 @@ abstract public class AbstractInterpolator< T extends Type< T >, LocalizablePosi
 
 	protected AbstractInterpolator(
 			final Image< T > img,
-			final RasterOutOfBoundsFactory< T > outOfBoundsStrategyFactory,
+			final OutOfBoundsFactory< T, F > outOfBoundsStrategyFactory,
 			final LocalizablePositionable localizablePositionable )
 	{
 		this.outOfBoundsStrategyFactory = outOfBoundsStrategyFactory;
@@ -83,20 +83,9 @@ abstract public class AbstractInterpolator< T extends Type< T >, LocalizablePosi
 	 * @return - the {@link RasterOutOfBoundsFactory}
 	 */
 	@Override
-	public RasterOutOfBoundsFactory< T > getOutOfBoundsStrategyFactory()
+	public OutOfBoundsFactory< T, F > getOutOfBoundsStrategyFactory()
 	{
 		return outOfBoundsStrategyFactory;
-	}
-
-	/**
-	 * Returns the typed image the interpolator is working on
-	 * 
-	 * @return - the image
-	 */
-	@Override
-	public Image< T > getImage()
-	{
-		return img;
 	}
 
 	/* Localizable */
@@ -147,21 +136,21 @@ abstract public class AbstractInterpolator< T extends Type< T >, LocalizablePosi
 	}
 
 	@Override
-	public void moveTo( final double[] position )
+	public void move( final double[] position )
 	{
-		localizablePositionable.moveTo( position );
+		localizablePositionable.move( position );
 	}
 
 	@Override
-	public void moveTo( final float[] position )
+	public void move( final float[] position )
 	{
-		localizablePositionable.moveTo( position );
+		localizablePositionable.move( position );
 	}
 
 	@Override
-	public void moveTo( final Localizable localizable )
+	public void move( final Localizable localizable )
 	{
-		localizablePositionable.moveTo( localizable );
+		localizablePositionable.move( localizable );
 	}
 
 	@Override
@@ -222,21 +211,21 @@ abstract public class AbstractInterpolator< T extends Type< T >, LocalizablePosi
 	}
 
 	@Override
-	public void moveTo( final IntegerLocalizable localizable )
+	public void move( final IntegerLocalizable localizable )
 	{
-		localizablePositionable.moveTo( localizable );
+		localizablePositionable.move( localizable );
 	}
 
 	@Override
-	public void moveTo( final int[] position )
+	public void move( final int[] position )
 	{
-		localizablePositionable.moveTo( position );
+		localizablePositionable.move( position );
 	}
 
 	@Override
-	public void moveTo( final long[] position )
+	public void move( final long[] position )
 	{
-		localizablePositionable.moveTo( position );
+		localizablePositionable.move( position );
 	}
 
 	@Override
