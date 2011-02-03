@@ -26,7 +26,6 @@ import mpicbg.imglib.container.Img;
 import mpicbg.imglib.container.ImgCursor;
 import mpicbg.imglib.container.ImgRandomAccess;
 import mpicbg.imglib.container.NativeContainer;
-import mpicbg.imglib.container.array.Array;
 import mpicbg.imglib.container.basictypecontainer.FloatAccess;
 import mpicbg.imglib.container.basictypecontainer.array.FloatArray;
 import mpicbg.imglib.multithreading.SimpleMultiThreading;
@@ -129,7 +128,7 @@ public class GaussianConvolution< T extends NumericType<T>> implements MultiThre
 	public boolean process() 
 	{		
 		final long startTime = System.currentTimeMillis();
-	
+		/*
 		if ( container.numDimensions() == 3 && Array.class.isInstance( container ) && FloatType.class.isInstance( container.createVariable() ))
 		{
     		//System.out.println( "GaussianConvolution: Input is instance of Image<Float> using an Array3D, fast forward algorithm");
@@ -139,7 +138,7 @@ public class GaussianConvolution< T extends NumericType<T>> implements MultiThre
     		
     		return true;
 		}
-    	
+    	*/
         final Img<T> temp = container.factory().create( container, container.createVariable() );        
     	final long containerSize = container.numPixels();
 

@@ -28,6 +28,8 @@
 package mpicbg.imglib.container.array;
 
 import mpicbg.imglib.container.AbstractImgRandomAccess;
+import mpicbg.imglib.type.NativeType;
+import mpicbg.imglib.type.NativeTypeCapable;
 import mpicbg.imglib.type.Type;
 
 /**
@@ -36,9 +38,10 @@ import mpicbg.imglib.type.Type;
  *
  * @author Stephan Preibisch and Stephan Saalfeld
  */
-public class ArrayIntegerPositionableSampler< T extends Type< T > > extends AbstractImgRandomAccess< T >
+public class ArrayIntegerPositionableSampler< T extends Type< T > & NativeTypeCapable< T > > extends AbstractImgRandomAccess< T >
 {
-	final protected T type;
+	protected final T type2;
+	protected final NativeType type;
 	final protected int[] step, dim;
 	final Array< T, ? > container;
 	
@@ -47,7 +50,8 @@ public class ArrayIntegerPositionableSampler< T extends Type< T > > extends Abst
 		super( container );
 		
 		this.container = container;
-		this.type = container.createLinkedType();
+		this.type2 = container.createLinkedType();
+		this.type = (NativeType)type2;
 		
 		dim = container.dim;
 		step = container.step;
@@ -62,13 +66,13 @@ public class ArrayIntegerPositionableSampler< T extends Type< T > > extends Abst
 	@Override
 	public T get()
 	{
-		return type;
+		return type2;
 	}
 	
 	@Override
 	public T create()
 	{
-		return type.createVariable();
+		return type2.createVariable();
 	}
 	
 	@Override

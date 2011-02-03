@@ -35,6 +35,7 @@ import mpicbg.imglib.container.ImgRandomAccess;
 import mpicbg.imglib.container.basictypecontainer.DataAccess;
 import mpicbg.imglib.container.dynamic.DynamicContainer;
 import mpicbg.imglib.outofbounds.OutOfBoundsFactory;
+import mpicbg.imglib.type.NativeTypeCapable;
 import mpicbg.imglib.type.Type;
 
 /**
@@ -49,7 +50,7 @@ import mpicbg.imglib.type.Type;
  *
  * @author Stephan Preibisch and Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-final public class Array< T extends Type< T >, A extends DataAccess > extends AbstractNativeContainer< T, A >
+final public class Array< T extends Type< T > & NativeTypeCapable< T >, A extends DataAccess > extends AbstractNativeContainer< T, A >
 {
 	final int[] step, dim;
 	
@@ -208,9 +209,9 @@ final public class Array< T extends Type< T >, A extends DataAccess > extends Ab
 	}
 
 	@Override
-	public ArrayContainerFactory factory()
+	public ArrayContainerFactory<T> factory()
 	{
-		return new ArrayContainerFactory();
+		return new ArrayContainerFactory<T>();
 	}
 	
 	@Override

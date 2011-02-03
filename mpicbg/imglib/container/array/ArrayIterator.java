@@ -28,6 +28,8 @@
 package mpicbg.imglib.container.array;
 
 import mpicbg.imglib.container.AbstractImgCursor;
+import mpicbg.imglib.type.NativeType;
+import mpicbg.imglib.type.NativeTypeCapable;
 import mpicbg.imglib.type.Type;
 
 /**
@@ -36,9 +38,10 @@ import mpicbg.imglib.type.Type;
  * 
  * @author Stephan Preibisch and Stephan Saalfeld
  */
-public class ArrayIterator< T extends Type< T > > extends AbstractImgCursor< T >
+public class ArrayIterator< T extends Type< T > & NativeTypeCapable< T > > extends AbstractImgCursor< T >
 {
-	protected final T type;
+	protected final T type2;
+	protected final NativeType type;
 
 	protected final Array< T, ? > container;
 
@@ -48,7 +51,8 @@ public class ArrayIterator< T extends Type< T > > extends AbstractImgCursor< T >
 	{
 		super( container.numDimensions() );
 
-		this.type = container.createLinkedType();
+		this.type2 = container.createLinkedType();
+		this.type = (NativeType)type2;
 		this.container = container;
 		this.lastIndex = ( int )container.size() - 1;
 
@@ -58,13 +62,13 @@ public class ArrayIterator< T extends Type< T > > extends AbstractImgCursor< T >
 	@Override
 	public T get()
 	{
-		return type;
+		return type2;
 	}
 	
 	@Override
 	public T create()
 	{
-		return type.createVariable();
+		return type2.createVariable();
 	}
 
 	@Override

@@ -2,6 +2,7 @@ package tests;
 
 import javax.media.j3d.Transform3D;
 
+import mpicbg.imglib.algorithm.gauss.GaussianConvolution;
 import mpicbg.imglib.algorithm.gauss.GaussianConvolutionRealType;
 import mpicbg.imglib.algorithm.transformation.ImageTransform;
 import mpicbg.imglib.container.Img;
@@ -26,7 +27,7 @@ public class OpenAndDisplay
 		ImgLib2Display.copyToImagePlus( img, new int[] {2, 0, 1} ).show();
 		
 		// compute a gaussian convolution with sigma = 3
-		GaussianConvolutionRealType<FloatType> gauss = new GaussianConvolutionRealType<FloatType>( img, new OutOfBoundsConstantValueFactory<FloatType, Img<FloatType>>(), 2 );
+		GaussianConvolution<FloatType> gauss = new GaussianConvolution<FloatType>( img, new OutOfBoundsConstantValueFactory<FloatType, Img<FloatType>>(), 2 );
 		
 		if ( !gauss.checkInput() || !gauss.process() )
 		{

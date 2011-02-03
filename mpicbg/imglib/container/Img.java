@@ -57,7 +57,7 @@ public interface Img<	T >
 	@Override
 	public ImgCursor< T > localizingCursor();
 
-	public ImgFactory factory();
+	public ImgFactory< T > factory();
 	
 	public T createVariable();
 	

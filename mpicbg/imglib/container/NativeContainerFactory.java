@@ -8,9 +8,10 @@ import mpicbg.imglib.container.basictypecontainer.FloatAccess;
 import mpicbg.imglib.container.basictypecontainer.IntAccess;
 import mpicbg.imglib.container.basictypecontainer.LongAccess;
 import mpicbg.imglib.container.basictypecontainer.ShortAccess;
+import mpicbg.imglib.type.NativeTypeCapable;
 import mpicbg.imglib.type.Type;
 
-public abstract class NativeContainerFactory extends ImgFactory
+public abstract class NativeContainerFactory< T extends Type<T> & NativeTypeCapable< T > > extends ImgFactory< T >
 {
 	/**
 	 * This class will ask the {@link Type} to create a 
@@ -22,25 +23,25 @@ public abstract class NativeContainerFactory extends ImgFactory
 	 * @return {@link Img} - the instantiated Container
 	 */
 	@Override
-	public < T extends Type< T > > NativeContainer< T, ? > create( final long[] dim, final T type )
+	public NativeContainer< T, ? > create( final long[] dim, final T type )
 	{
 		return type.createSuitableDirectAccessContainer( this, dim );
 	}
 
 	/* basic type containers */
-	public abstract < T extends Type< T > > NativeContainer< T, ? extends BitAccess > createBitInstance( final T type, long[] dimensions, int entitiesPerPixel );
+	public abstract NativeContainer< T, ? extends BitAccess > createBitInstance( final T type, long[] dimensions, int entitiesPerPixel );
 
-	public abstract < T extends Type< T > > NativeContainer< T, ? extends ByteAccess > createByteInstance( final T type, long[] dimensions, int entitiesPerPixel );
+	public abstract NativeContainer< T, ? extends ByteAccess > createByteInstance( final T type, long[] dimensions, int entitiesPerPixel );
 
-	public abstract < T extends Type< T > > NativeContainer< T, ? extends CharAccess > createCharInstance( final T type, long[] dimensions, int entitiesPerPixel );
+	public abstract NativeContainer< T, ? extends CharAccess > createCharInstance( final T type, long[] dimensions, int entitiesPerPixel );
 
-	public abstract < T extends Type< T > > NativeContainer< T, ? extends ShortAccess > createShortInstance( final T type, long[] dimensions, int entitiesPerPixel );
+	public abstract NativeContainer< T, ? extends ShortAccess > createShortInstance( final T type, long[] dimensions, int entitiesPerPixel );
 
-	public abstract < T extends Type< T > > NativeContainer< T, ? extends IntAccess > createIntInstance( final T type, long[] dimensions, int entitiesPerPixel );
+	public abstract NativeContainer< T, ? extends IntAccess > createIntInstance( final T type, long[] dimensions, int entitiesPerPixel );
 
-	public abstract < T extends Type< T > > NativeContainer< T, ? extends LongAccess > createLongInstance( final T type, long[] dimensions, int entitiesPerPixel );
+	public abstract NativeContainer< T, ? extends LongAccess > createLongInstance( final T type, long[] dimensions, int entitiesPerPixel );
 
-	public abstract < T extends Type< T > > NativeContainer< T, ? extends FloatAccess > createFloatInstance( final T type, long[] dimensions, int entitiesPerPixel );
+	public abstract NativeContainer< T, ? extends FloatAccess > createFloatInstance( final T type, long[] dimensions, int entitiesPerPixel );
 
-	public abstract < T extends Type< T > > NativeContainer< T, ? extends DoubleAccess > createDoubleInstance( final T type, long[] dimensions, int entitiesPerPixel );
+	public abstract NativeContainer< T, ? extends DoubleAccess > createDoubleInstance( final T type, long[] dimensions, int entitiesPerPixel );
 }
