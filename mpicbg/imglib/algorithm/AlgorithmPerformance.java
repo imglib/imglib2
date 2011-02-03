@@ -13,7 +13,7 @@ import mpicbg.imglib.algorithm.fft.FourierTransform.Rearrangement;
 import mpicbg.imglib.algorithm.floydsteinberg.FloydSteinbergDithering;
 import mpicbg.imglib.algorithm.gauss.DownSample;
 import mpicbg.imglib.algorithm.math.MathLib;
-import mpicbg.imglib.container.ContainerFactory;
+import mpicbg.imglib.container.ImgFactory;
 import mpicbg.imglib.container.array.ArrayContainerFactory;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.display.ComplexTypePhaseSpectrumDisplay;
@@ -27,7 +27,7 @@ import mpicbg.imglib.type.numeric.real.FloatType;
 
 public class AlgorithmPerformance
 {
-	public AlgorithmPerformance( final ContainerFactory containerFactory, final int numDimensions )
+	public AlgorithmPerformance( final ImgFactory containerFactory, final int numDimensions )
 	{
 		boolean show = false;
 		

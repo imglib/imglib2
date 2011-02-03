@@ -119,5 +119,5 @@ public class ArrayIntegerPositionableSampler< T extends Type< T > > extends Abst
 	}
 
 	@Override
-	public Array<T,?> getContainer(){ return container; }
+	public Array<T,?> getImg(){ return container; }
 }

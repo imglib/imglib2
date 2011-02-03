@@ -86,7 +86,7 @@ public class CellBasicRasterIterator< T extends Type< T > > extends AbstractCont
 	}
 	
 	@Override
-	public CellContainer<T,?> getContainer(){ return container; }
+	public CellContainer<T,?> getImg(){ return container; }
 	
 	public Cell<T,?> getCurrentCell() { return cellInstance; }
 	

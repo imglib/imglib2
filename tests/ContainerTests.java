@@ -8,10 +8,10 @@ import java.util.Random;
 
 import mpicbg.imglib.algorithm.fft.FFTFunctions;
 import mpicbg.imglib.algorithm.math.MathLib;
-import mpicbg.imglib.container.Container;
-import mpicbg.imglib.container.ContainerFactory;
-import mpicbg.imglib.container.ContainerIterator;
-import mpicbg.imglib.container.ContainerRandomAccess;
+import mpicbg.imglib.container.Img;
+import mpicbg.imglib.container.ImgFactory;
+import mpicbg.imglib.container.ImgIterator;
+import mpicbg.imglib.container.ImgRandomAccess;
 import mpicbg.imglib.container.array.ArrayContainerFactory;
 import mpicbg.imglib.container.cell.CellContainerFactory;
 import mpicbg.imglib.container.imageplus.ImagePlusContainerFactory;
@@ -95,10 +95,10 @@ public class ContainerTests
 		assertTrue( "ImagePlusContainer MultiThreading failed", testThreading( new ImagePlusContainerFactory() ) );	
 	}
 	
-	protected boolean testThreading( final ContainerFactory factory )
+	protected boolean testThreading( final ImgFactory factory )
 	{
 		// create the image
-		final Container< FloatType, ? > img = factory.create( new long[]{ 101, 99, 301 }, new FloatType() );
+		final Img< FloatType, ? > img = factory.create( new long[]{ 101, 99, 301 }, new FloatType() );
 
 		// get a reference to compare to
 		final float[] reference = createReference( img );
@@ -112,7 +112,7 @@ public class ContainerTests
 		return succesful;
 	}
 	
-	protected float[] createReference( final Container<FloatType,?> img )
+	protected float[] createReference( final Img<FloatType,?> img )
 	{
 		// use a random number generator
 		final Random rnd = new Random( 1241234 );
@@ -121,7 +121,7 @@ public class ContainerTests
 		final float[] reference = new float[ ( int )img.size() ];
 		
 		// iterate over image and reference array and fill with data
-		final ContainerIterator<FloatType> cursor = img.iterator();			
+		final ImgIterator<FloatType> cursor = img.iterator();			
 		int i = 0;
 		
 		while( cursor.hasNext() )
@@ -136,11 +136,11 @@ public class ContainerTests
 		return reference;
 	}
 	
-	protected boolean test( final Container< FloatType, ? > img, final float[] reference )
+	protected boolean test( final Img< FloatType, ? > img, final float[] reference )
 	{
 		boolean allEqual = true;
 		
-		final ContainerIterator< FloatType > cursor = img.iterator();
+		final ImgIterator< FloatType > cursor = img.iterator();
 		int i = 0;
 		
 		while( cursor.hasNext() )
@@ -152,11 +152,11 @@ public class ContainerTests
 		return allEqual;
 	}
 	
-	protected boolean testContainer( final long[] size, final ContainerFactory factory1, final ContainerFactory factory2 )
+	protected boolean testContainer( final long[] size, final ImgFactory factory1, final ImgFactory factory2 )
 	{
 		// create the image
-		final Container< FloatType, ? > img1 = factory1.create( size, new FloatType() );
-		final Container< FloatType, ? > img2 = factory2.create( size, new FloatType() );
+		final Img< FloatType, ? > img1 = factory1.create( size, new FloatType() );
+		final Img< FloatType, ? > img2 = factory2.create( size, new FloatType() );
 	
 		final int numDimensions = img1.numDimensions();
 
@@ -164,8 +164,8 @@ public class ContainerTests
 		final float[] reference = createReference( img1 );
 		
 		// copy into a second image using simple cursors
-		final ContainerIterator<FloatType> cursor1 = img1.iterator();
-		final ContainerIterator<FloatType> cursor2 = img2.iterator();
+		final ImgIterator<FloatType> cursor1 = img1.iterator();
+		final ImgIterator<FloatType> cursor2 = img2.iterator();
 		
 		while( cursor1.hasNext() )
 		{
@@ -188,8 +188,8 @@ public class ContainerTests
 		}		
 
 		// copy back into a second image using localizable and positionable cursors			
-		final ContainerIterator<FloatType> localizableCursor1 = img1.localizingCursor();			
-		final ContainerRandomAccess<FloatType> positionable2 = img2.integerRandomAccessSampler();			
+		final ImgIterator<FloatType> localizableCursor1 = img1.localizingCursor();			
+		final ImgRandomAccess<FloatType> positionable2 = img2.integerRandomAccessSampler();			
 		
 		int i = 0;
 		
@@ -207,7 +207,7 @@ public class ContainerTests
 		}
 		
 		// copy again to the first image using a LocalizableByDimOutsideCursor and a LocalizableByDimCursor
-		final ContainerRandomAccess<FloatType> outsideCursor2 = img2.positionableRasterSampler( new OutOfBoundsStrategyPeriodicFactory<FloatType>() );
+		final ImgRandomAccess<FloatType> outsideCursor2 = img2.positionableRasterSampler( new OutOfBoundsStrategyPeriodicFactory<FloatType>() );
 		localizableCursor1.reset();
 		
 		final int[] pos = new int[ numDimensions ];			

@@ -377,7 +377,7 @@ public class CellPositionableRasterSampler< T extends Type< T > > extends Abstra
 	public int getStorageIndex(){ return cellInstance.getCellId(); }
 
 	@Override
-	public CellContainer< T, ? > getContainer(){ return container; }
+	public CellContainer< T, ? > getImg(){ return container; }
 
 	@Override
 	public T get() { return type; }

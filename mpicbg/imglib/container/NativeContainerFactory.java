@@ -10,16 +10,16 @@ import mpicbg.imglib.container.basictypecontainer.LongAccess;
 import mpicbg.imglib.container.basictypecontainer.ShortAccess;
 import mpicbg.imglib.type.Type;
 
-public abstract class NativeContainerFactory extends ContainerFactory
+public abstract class NativeContainerFactory extends ImgFactory
 {
 	/**
 	 * This class will ask the {@link Type} to create a 
-	 * suitable {@link Container} for the {@link Type} and the dimensionality.
+	 * suitable {@link Img} for the {@link Type} and the dimensionality.
 	 * 
 	 * {@link Type} will then call one of the abstract methods defined below to create the 
 	 * {@link NativeContainer}
 	 * 
-	 * @return {@link Container} - the instantiated Container
+	 * @return {@link Img} - the instantiated Container
 	 */
 	@Override
 	public < T extends Type< T > > NativeContainer< T, ? > create( final long[] dim, final T type )

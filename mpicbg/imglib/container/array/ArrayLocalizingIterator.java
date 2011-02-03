@@ -109,5 +109,5 @@ public class ArrayLocalizingIterator< T extends Type< T >> extends AbstractLocal
 	}
 
 	@Override
-	public Array< T, ? > getContainer(){ return container; }
+	public Array< T, ? > getImg(){ return container; }
 }

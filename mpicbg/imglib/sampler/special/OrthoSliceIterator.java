@@ -29,9 +29,9 @@
 package mpicbg.imglib.sampler.special;
 
 import mpicbg.imglib.Iterator;
-import mpicbg.imglib.container.Container;
-import mpicbg.imglib.container.ContainerIterator;
-import mpicbg.imglib.container.ContainerRandomAccess;
+import mpicbg.imglib.container.Img;
+import mpicbg.imglib.container.ImgIterator;
+import mpicbg.imglib.container.ImgRandomAccess;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.type.Type;
 
@@ -39,21 +39,21 @@ import mpicbg.imglib.type.Type;
  * Generic {@link Iterator} for orthogonal 2d-slices.  This implementation
  * iterates row by row from top left to bottom right mapping <em>x</em> and
  * <em>y</em> to two arbitrary dimensions using a
- * {@link ContainerRandomAccess} provided either directly or through an
- * {@link Image}.  While, for most {@link Container Containers}, this is the
+ * {@link ImgRandomAccess} provided either directly or through an
+ * {@link Image}.  While, for most {@link Img Containers}, this is the
  * sufficient implementation, sometimes, a different iteration order is
- * required.  Such {@link Container Containers} are expected to provide their
+ * required.  Such {@link Img Containers} are expected to provide their
  * own adapted implementation.
  *
  * @author Stephan Preibisch and Stephan Saalfeld
  */
-public class OrthoSliceIterator< T extends Type< T > > implements ContainerIterator< T >
+public class OrthoSliceIterator< T extends Type< T > > implements ImgIterator< T >
 {
 	/* index of x and y dimensions */
 	final protected int x, y;
 	final protected long w, h, maxX, maxY;
 	
-	final protected ContainerRandomAccess< T > sampler;
+	final protected ImgRandomAccess< T > sampler;
 	
 	private static long[] intToLong( final int[] i )
 	{
@@ -65,23 +65,23 @@ public class OrthoSliceIterator< T extends Type< T > > implements ContainerItera
 		return l;
 	}
 	
-	public OrthoSliceIterator( final Container< T > container, final int x, final int y, final long[] position )
+	public OrthoSliceIterator( final Img< T > container, final int x, final int y, final long[] position )
 	{
 		this( container.integerRandomAccess(), x, y, position );		
 	}
 
-	public OrthoSliceIterator( final Container< T > container, final int x, final int y, final int[] position )
+	public OrthoSliceIterator( final Img< T > container, final int x, final int y, final int[] position )
 	{
 		this( container.integerRandomAccess(), x, y, intToLong( position ) );		
 	}
 
-	public OrthoSliceIterator( final ContainerRandomAccess< T > sampler, final int x, final int y, final long[] position )
+	public OrthoSliceIterator( final ImgRandomAccess< T > sampler, final int x, final int y, final long[] position )
 	{
 		this.sampler = sampler;
 		this.x = x;
 		this.y = y;
-		w = sampler.getContainer().size( x );
-		h = sampler.getContainer().size( y );
+		w = sampler.getImg().size( x );
+		h = sampler.getImg().size( y );
 		maxX = w - 1;
 		maxY = h - 1;
 		
@@ -96,9 +96,9 @@ public class OrthoSliceIterator< T extends Type< T > > implements ContainerItera
 	}
 
 	@Override
-	public Container< T > getContainer()
+	public Img< T > getImg()
 	{
-		return sampler.getContainer();
+		return sampler.getImg();
 	}
 
 	@Override

@@ -33,7 +33,7 @@ package mpicbg.imglib.container;
 import mpicbg.imglib.container.basictypecontainer.DataAccess;
 import mpicbg.imglib.type.Type;
 
-public interface NativeContainer< T extends Type< T >, A extends DataAccess > extends Container< T >
+public interface NativeContainer< T extends Type< T >, A extends DataAccess > extends Img< T >
 {
 	public A update( final Object updater );
 

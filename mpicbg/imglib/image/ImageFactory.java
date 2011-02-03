@@ -30,23 +30,23 @@
 package mpicbg.imglib.image;
 
 import mpicbg.imglib.Factory;
-import mpicbg.imglib.container.ContainerFactory;
+import mpicbg.imglib.container.ImgFactory;
 import mpicbg.imglib.type.Type;
 
 public class ImageFactory<T extends Type<T>> implements Factory
 {
-	final ContainerFactory containerFactory;
+	final ImgFactory containerFactory;
 	
 	final T type;
 	String errorMessage = "No errors.";
 	
-	public ImageFactory( final T type, final ContainerFactory containerFactory )
+	public ImageFactory( final T type, final ImgFactory containerFactory )
 	{
 		this.containerFactory = containerFactory;
 		this.type = type;
 	}
 
-	public ContainerFactory getContainerFactory() { return containerFactory; }
+	public ImgFactory getContainerFactory() { return containerFactory; }
 	
 	public T createType() { return type.createVariable();	}
 

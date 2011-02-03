@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2010, Stephan Saalfeld
+ * Copyright (c) 2009--2010, Stephan Preibisch & Stephan Saalfeld
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -9,7 +9,7 @@
  * list of conditions and the following disclaimer.  Redistributions in binary
  * form must reproduce the above copyright notice, this list of conditions and
  * the following disclaimer in the documentation and/or other materials
- * provided with the distribution.  Neither the name of the imglib project nor
+ * provided with the distribution.  Neither the name of the Fiji project nor
  * the names of its contributors may be used to endorse or promote products
  * derived from this software without specific prior written permission.
  * 
@@ -24,42 +24,30 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
+ *
+ * @author Stephan Preibisch & Stephan Saalfeld
  */
 package mpicbg.imglib.container;
 
-import mpicbg.imglib.InjectiveIntegerInterval;
-import mpicbg.imglib.IntegerRandomAccessible;
-import mpicbg.imglib.RandomAccessibleIntegerInterval;
-import mpicbg.imglib.outofbounds.OutOfBoundsFactory;
+import mpicbg.imglib.IntegerInterval;
+import mpicbg.imglib.type.Type;
 
-/**
- * Containers are {@link InjectiveIntegerInterval} that has its min at
- * 0<sup><em>n</em></sup> and its max positive.  Containers store pixels
- * and thus are the basis for conventional image processing.
- *
- * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
- */
-public interface Container<	T >
-	extends
-		IntegerRandomAccessible< T >,
-		RandomAccessibleIntegerInterval< T, Container< T > >,
-		InjectiveIntegerInterval
+public abstract class ImgFactory
 {
-	@Override
-	public ContainerRandomAccess< T > integerRandomAccess();
+	/**
+	 * The {@link ImgFactory} can decide how to create the
+	 * {@link Img}.  A {@link NativeContainerFactory} will ask the
+	 * {@link Type} to create a suitable {@link NativeContainer}.
+	 * 
+	 * @return {@link Img}
+	 */
+	public abstract < T extends Type< T > > Img< T > create( final long[] dim, final T type );
 	
-	@Override
-	public ContainerRandomAccess< T > integerRandomAccess( OutOfBoundsFactory< T, Container< T > > factory );
-	
-	@Override
-	public ContainerIterator< T > cursor();
-
-	@Override
-	public ContainerIterator< T > localizingCursor();
-
-	public ContainerFactory factory();
-	
-	public T createVariable();
-	
-	public long numPixels();
+	public < T extends Type< T > > Img< T > create( final IntegerInterval interval, final T type )
+	{
+		final long[] dim = new long[ interval.numDimensions() ];
+		interval.size( dim );
+		
+		return create( dim, type );
+	}
 }

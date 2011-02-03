@@ -31,8 +31,8 @@ package mpicbg.imglib.sampler.special;
 
 import mpicbg.imglib.IntegerLocalizable;
 import mpicbg.imglib.container.AbstractContainerCursor;
-import mpicbg.imglib.container.Container;
-import mpicbg.imglib.container.ContainerRandomAccess;
+import mpicbg.imglib.container.Img;
+import mpicbg.imglib.container.ImgRandomAccess;
 import mpicbg.imglib.container.array.ArrayLocalizingIterator;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.outofbounds.RasterOutOfBoundsFactory;
@@ -47,7 +47,7 @@ public class LocalNeighborhoodCursor<T extends Type<T>> extends AbstractContaine
 	final ArrayLocalizingIterator<FakeType> neigborhoodCursor;
 
 	final IntegerLocalizable localizable;
-	final ContainerRandomAccess< T > cursor;
+	final ImgRandomAccess< T > cursor;
 	
 	final int[] tmp;
 	final int centralPositionIndex;
@@ -74,7 +74,7 @@ public class LocalNeighborhoodCursor<T extends Type<T>> extends AbstractContaine
 		for ( int d = 0; d < n; ++d )
 			dim[ d ] = 1;
 
-		centralPositionIndex = neigborhoodCursor.getContainer().positionToIndex( dim );
+		centralPositionIndex = neigborhoodCursor.getImg().positionToIndex( dim );
 	}
 	
 	@Override
@@ -98,7 +98,7 @@ public class LocalNeighborhoodCursor<T extends Type<T>> extends AbstractContaine
 	}
 	
 	@Override
-	public Container<T> getContainer() { return cursor.getContainer();	}
+	public Img<T> getImg() { return cursor.getImg();	}
 
 	@Override
 	public void fwd()

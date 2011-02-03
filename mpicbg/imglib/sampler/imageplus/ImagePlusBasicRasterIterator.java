@@ -110,7 +110,7 @@ public class ImagePlusBasicRasterIterator< T extends Type< T > > extends Abstrac
 	}
 
 	@Override
-	public ImagePlusContainer< T, ? > getContainer(){ return container; }
+	public ImagePlusContainer< T, ? > getImg(){ return container; }
 
 	@Override
 	public int getStorageIndex(){ return sliceIndex; }

@@ -4,7 +4,7 @@ import javax.media.j3d.Transform3D;
 
 import mpicbg.imglib.algorithm.gauss.GaussianConvolutionRealType;
 import mpicbg.imglib.algorithm.transformation.ImageTransform;
-import mpicbg.imglib.container.Container;
+import mpicbg.imglib.container.Img;
 import mpicbg.imglib.container.array.ArrayContainerFactory;
 import mpicbg.imglib.image.display.imagej.ImgLib2Display;
 import mpicbg.imglib.interpolation.nearestneighbor.NearestNeighborInterpolatorFactory;
@@ -21,12 +21,12 @@ public class OpenAndDisplay
 	{
 		new ImageJ();
 		
-		Container<FloatType> img = LOCI.openLOCIFloatType( "D:/Temp/Truman/MoreTiles/73.tif",  new ArrayContainerFactory() );
+		Img<FloatType> img = LOCI.openLOCIFloatType( "D:/Temp/Truman/MoreTiles/73.tif",  new ArrayContainerFactory() );
 		
 		ImgLib2Display.copyToImagePlus( img, new int[] {2, 0, 1} ).show();
 		
 		// compute a gaussian convolution with sigma = 3
-		GaussianConvolutionRealType<FloatType> gauss = new GaussianConvolutionRealType<FloatType>( img, new OutOfBoundsConstantValueFactory<FloatType, Container<FloatType>>(), 2 );
+		GaussianConvolutionRealType<FloatType> gauss = new GaussianConvolutionRealType<FloatType>( img, new OutOfBoundsConstantValueFactory<FloatType, Img<FloatType>>(), 2 );
 		
 		if ( !gauss.checkInput() || !gauss.process() )
 		{
@@ -40,7 +40,7 @@ public class OpenAndDisplay
 		AffineModel3D model = new AffineModel3D();
 		model.set( 0.35355338f, -0.35355338f, 0.0f, 0.0f, 0.25f, 0.25f, -0.35355338f, 0.0f, 0.25f, 0.25f, 0.35355338f, 0.0f );
 
-		OutOfBoundsFactory<FloatType, Container<FloatType>> oob = new OutOfBoundsConstantValueFactory<FloatType, Container<FloatType>>( new FloatType( 255 ) );
+		OutOfBoundsFactory<FloatType, Img<FloatType>> oob = new OutOfBoundsConstantValueFactory<FloatType, Img<FloatType>>( new FloatType( 255 ) );
 		NearestNeighborInterpolatorFactory< FloatType > interpolatorFactory = new NearestNeighborInterpolatorFactory< FloatType >( oob );
 		ImageTransform< FloatType > transform = new ImageTransform<FloatType>( img, model, interpolatorFactory );
 		

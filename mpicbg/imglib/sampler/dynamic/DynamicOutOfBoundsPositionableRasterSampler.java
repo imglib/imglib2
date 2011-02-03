@@ -54,5 +54,5 @@ public class DynamicOutOfBoundsPositionableRasterSampler< T extends Type< T > > 
 	}
 
 	@Override
-	public DynamicContainer< T, ? > getContainer(){ return container; }
+	public DynamicContainer< T, ? > getImg(){ return container; }
 }

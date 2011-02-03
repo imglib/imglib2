@@ -51,5 +51,5 @@ public class CellOutOfBoundsPositionableRasterSampler< T extends Type< T > > ext
 	}
 
 	@Override
-	public CellContainer< T, ? > getContainer(){ return container; }	
+	public CellContainer< T, ? > getImg(){ return container; }	
 }

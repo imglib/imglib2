@@ -33,22 +33,20 @@ import mpicbg.imglib.Sampler;
 import mpicbg.imglib.type.Type;
 
 /**
- * {@link ContainerSampler} provides access to a `pixel' value in discrete image
+ * {@link ImgSampler} provides access to a `pixel' value in discrete image
  * space.  The step-size in any dimension of the image is 1 raster step which
  * does not necessarily reflect any meaningful analogy in some physical space.
- * For {@link Container Containers} that store actual sample values for each
+ * For {@link Img Containers} that store actual sample values for each
  * pixel, this interface provides access to these pixel samples
  * 
- * {@link ContainerSampler} is the common basic interface to access pixel data in
- * any {@link Container}.  Other {@link Sampler Samplers} build on top of it.
+ * {@link ImgSampler} is the common basic interface to access pixel data in
+ * any {@link Img}.  Other {@link Sampler Samplers} build on top of it.
  * 
- * @param <T> the {@link Type} of pixels in the {@link Container}
+ * @param <T> the {@link Type} of pixels in the {@link Img}
  * 
  * @author Stephan Preibisch & Stephan Saalfeld
  */
-public interface ContainerSampler< T > extends Sampler< T >, EuclideanSpace, InjectiveIntegerInterval
+public interface ImgSampler< T > extends Sampler< T >, EuclideanSpace, InjectiveIntegerInterval
 {	
-	public int getArrayIndex();
-
-	public Container< T > getContainer();
+	public Img< T > getImg();
 }

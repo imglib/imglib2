@@ -36,7 +36,7 @@ import mpicbg.imglib.type.Type;
  * 
  * @author Stephan Preibisch and Stephan Saalfeld
  */
-public abstract class AbstractLocalizingContainerIterator< T extends Type< T > > extends AbstractLocalizableContainerSampler< T > implements ContainerIterator< T >
+public abstract class AbstractLocalizingContainerIterator< T extends Type< T > > extends AbstractLocalizableContainerSampler< T > implements ImgIterator< T >
 {
 	public AbstractLocalizingContainerIterator( final IntegerInterval f )
 	{

@@ -182,7 +182,7 @@ public class CellLocalizingRasterIterator< T extends Type< T > > extends Abstrac
 	public T get() { return type; }
 	
 	@Override
-	public CellContainer<T,?> getContainer(){ return container; }
+	public CellContainer<T,?> getImg(){ return container; }
 	
 	@Override
 	public int getStorageIndex() { return cellInstance.getCellId(); }

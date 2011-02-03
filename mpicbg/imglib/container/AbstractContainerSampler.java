@@ -35,7 +35,7 @@ import mpicbg.imglib.type.Type;
  *
  * @param < T > the {@link Type} to be returned by {@link #get()}
  */
-public abstract class AbstractContainerSampler< T extends Type< T > > implements ContainerSampler< T >
+public abstract class AbstractContainerSampler< T extends Type< T > > implements ImgSampler< T >
 {
 	/* a copy of container.numDimensions() for slightly faster access */
 	final protected int n;
@@ -50,68 +50,65 @@ public abstract class AbstractContainerSampler< T extends Type< T > > implements
 	final public T getType() { return get(); }
 	
 	@Override
-	public int getArrayIndex() { return get().getIndex(); }
-	
-	@Override
 	public int numDimensions(){ return n; }
 
 	@Override
 	public long max( final int d )
 	{
-		return getContainer().max( d );
+		return getImg().max( d );
 	}
 
 	@Override
 	public void max( long[] max )
 	{
-		getContainer().max( max );		
+		getImg().max( max );		
 	}
 
 	@Override
 	public long min( int d )
 	{
-		return getContainer().min( d );
+		return getImg().min( d );
 	}
 
 	@Override
 	public void min( long[] min )
 	{
-		getContainer().min( min );
+		getImg().min( min );
 	}
 
 	@Override
 	public void size( long[] size )
 	{
-		getContainer().size( size );
+		getImg().size( size );
 	}
 
 	@Override
 	public long size( int d )
 	{
-		return getContainer().size( d );
+		return getImg().size( d );
 	}
 
 	@Override
 	public double realMax( int d )
 	{
-		return getContainer().realMax( d );
+		return getImg().realMax( d );
 	}
 
 	@Override
 	public void realMax( double[] max )
 	{
-		getContainer().realMax( max );
+		getImg().realMax( max );
 	}
 
 	@Override
 	public double realMin( int d )
 	{
-		return getContainer().realMin( d );
+		return getImg().realMin( d );
 	}
 
 	@Override
 	public void realMin( double[] min )
 	{
-		getContainer().realMin( min );	
+		getImg().realMin( min );	
 	}
 }

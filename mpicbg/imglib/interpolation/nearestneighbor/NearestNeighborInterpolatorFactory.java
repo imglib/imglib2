@@ -27,7 +27,7 @@
  */
 package mpicbg.imglib.interpolation.nearestneighbor;
 
-import mpicbg.imglib.container.Container;
+import mpicbg.imglib.container.Img;
 import mpicbg.imglib.interpolation.InterpolatorFactory;
 import mpicbg.imglib.outofbounds.OutOfBoundsFactory;
 import mpicbg.imglib.type.Type;
@@ -38,15 +38,15 @@ import mpicbg.imglib.type.Type;
  *
  * @author Stephan Preibisch and Stephan Saalfeld
  */
-public class NearestNeighborInterpolatorFactory< T extends Type< T > > extends InterpolatorFactory< T, Container<T> >
+public class NearestNeighborInterpolatorFactory< T extends Type< T > > extends InterpolatorFactory< T, Img<T> >
 {
-	public NearestNeighborInterpolatorFactory( final OutOfBoundsFactory< T, Container<T> > outOfBoundsStrategyFactory )
+	public NearestNeighborInterpolatorFactory( final OutOfBoundsFactory< T, Img<T> > outOfBoundsStrategyFactory )
 	{
 		super( outOfBoundsStrategyFactory );
 	}
 
 	@Override
-	public NearestNeighborInterpolator<T> create( final Container<T> container )
+	public NearestNeighborInterpolator<T> create( final Img<T> container )
 	{
 		/*
 		if ( img.numDimensions() == 1 )

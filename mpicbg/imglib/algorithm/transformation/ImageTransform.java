@@ -17,9 +17,9 @@
 package mpicbg.imglib.algorithm.transformation;
 
 import mpicbg.imglib.algorithm.OutputAlgorithm;
-import mpicbg.imglib.container.Container;
-import mpicbg.imglib.container.ContainerFactory;
-import mpicbg.imglib.container.ContainerIterator;
+import mpicbg.imglib.container.Img;
+import mpicbg.imglib.container.ImgFactory;
+import mpicbg.imglib.container.ImgIterator;
 import mpicbg.imglib.interpolation.Interpolator;
 import mpicbg.imglib.interpolation.InterpolatorFactory;
 import mpicbg.imglib.type.Type;
@@ -29,19 +29,19 @@ import mpicbg.models.NoninvertibleModelException;
 public class ImageTransform<T extends Type<T>> implements OutputAlgorithm<T>
 {
 	final InvertibleBoundable transform;
-	final Container<T> container;
+	final Img<T> container;
 	final int numDimensions;
-	final InterpolatorFactory<T,Container<T>> interpolatorFactory;
+	final InterpolatorFactory<T,Img<T>> interpolatorFactory;
 	
-	ContainerFactory outputContainerFactory;
+	ImgFactory outputContainerFactory;
 	
 	final long[] newDim;
 	final float[] offset;
 	
-	Container<T> transformed;
+	Img<T> transformed;
 	String errorMessage = "";
 		
-	public ImageTransform( final Container<T> container, final InvertibleBoundable transform, final InterpolatorFactory<T,Container<T>> interpolatorFactory )
+	public ImageTransform( final Img<T> container, final InvertibleBoundable transform, final InterpolatorFactory<T,Img<T>> interpolatorFactory )
 	{
 		this.container = container;
 		this.interpolatorFactory = interpolatorFactory;
@@ -80,8 +80,8 @@ public class ImageTransform<T extends Type<T>> implements OutputAlgorithm<T>
 		}		
 	}
 	
-	public void setOutputContainerFactory( final ContainerFactory outputContainerFactory ) { this.outputContainerFactory = outputContainerFactory; } 
-	public ContainerFactory getOutputImageFactory() { return this.outputContainerFactory; } 
+	public void setOutputContainerFactory( final ImgFactory outputContainerFactory ) { this.outputContainerFactory = outputContainerFactory; } 
+	public ImgFactory getOutputImageFactory() { return this.outputContainerFactory; } 
 	
 	public float[] getOffset() { return offset; }
 	public void setOffset( final float[] offset ) 
@@ -132,7 +132,7 @@ public class ImageTransform<T extends Type<T>> implements OutputAlgorithm<T>
 	public String getErrorMessage() { return errorMessage; }
 
 	@Override
-	public Container<T> getResult() { return transformed; }
+	public Img<T> getResult() { return transformed; }
 	
 
 	@Override
@@ -144,8 +144,8 @@ public class ImageTransform<T extends Type<T>> implements OutputAlgorithm<T>
 		// create the new output image
 		transformed = outputContainerFactory.create( newDim, container.createVariable() );
 
-		final ContainerIterator<T> transformedIterator = transformed.localizingCursor();
-		final Interpolator<T,Container<T>> interpolator = interpolatorFactory.create( container );
+		final ImgIterator<T> transformedIterator = transformed.localizingCursor();
+		final Interpolator<T,Img<T>> interpolator = interpolatorFactory.create( container );
 		
 		try
 		{

@@ -33,9 +33,9 @@ import ij.ImagePlus;
 import ij.ImageStack;
 
 import mpicbg.imglib.container.AbstractDirectAccessContainer;
-import mpicbg.imglib.container.Container;
-import mpicbg.imglib.container.ContainerIterator;
-import mpicbg.imglib.container.ContainerRandomAccess;
+import mpicbg.imglib.container.Img;
+import mpicbg.imglib.container.ImgIterator;
+import mpicbg.imglib.container.ImgRandomAccess;
 import mpicbg.imglib.container.basictypecontainer.array.ArrayDataAccess;
 import mpicbg.imglib.exception.ImgLibException;
 import mpicbg.imglib.image.Image;
@@ -48,7 +48,7 @@ import mpicbg.imglib.sampler.imageplus.ImagePlusStorageAccess;
 import mpicbg.imglib.type.Type;
 
 /**
- * A {@link Container} that stores data in an aray of 2d-slices each as a
+ * A {@link Img} that stores data in an aray of 2d-slices each as a
  * linear array of basic types.  For types that are supported by ImageJ (byte,
  * short, int, float), an actual ImagePlus is created or used to store the
  * data.  Alternatively, an {@link ImagePlusContainer} can be created using
@@ -62,7 +62,7 @@ import mpicbg.imglib.type.Type;
  * 
  * @author Jan Funke, Stephan Preibisch, Stephan Saalfeld, Johannes Schindelin
  */
-public class ImagePlusContainer< T extends Type< T >, A extends ArrayDataAccess< A > > extends AbstractDirectAccessContainer< T, A > implements Container< T >
+public class ImagePlusContainer< T extends Type< T >, A extends ArrayDataAccess< A > > extends AbstractDirectAccessContainer< T, A > implements Img< T >
 {
 	final protected ImagePlusContainerFactory factory;
 	final protected int width, height, depth, frames, channels, slices;
@@ -236,19 +236,19 @@ public class ImagePlusContainer< T extends Type< T >, A extends ArrayDataAccess<
 	}
 
 	@Override
-	public ContainerIterator< T > createRasterIterator( final Image< T > image )
+	public ImgIterator< T > createRasterIterator( final Image< T > image )
 	{
 		return new ImagePlusBasicRasterIterator< T >( this, image );
 	}
 
 	@Override
-	public ContainerIterator< T > createLocalizingRasterIterator( final Image< T > image )
+	public ImgIterator< T > createLocalizingRasterIterator( final Image< T > image )
 	{
 		return new ImagePlusLocalizingRasterIterator< T >( this, image );
 	}
 
 	@Override
-	public ContainerRandomAccess< T > createPositionableRasterSampler( final Image< T > image )
+	public ImgRandomAccess< T > createPositionableRasterSampler( final Image< T > image )
 	{
 		return new ImagePlusPositionableRasterSampler< T >( this, image );
 	}

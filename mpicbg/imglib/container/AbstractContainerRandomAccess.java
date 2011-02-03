@@ -37,7 +37,7 @@ import mpicbg.imglib.type.Type;
  * 
  * @author Stephan Preibisch and Stephan Saalfeld
  */
-public abstract class AbstractContainerRandomAccess< T extends Type< T > > extends AbstractLocalizableContainerSampler< T > implements ContainerRandomAccess< T >
+public abstract class AbstractContainerRandomAccess< T extends Type< T > > extends AbstractLocalizableContainerSampler< T > implements ImgRandomAccess< T >
 {
 	/* internal register for position calculation */
 	final protected int[] tmp;

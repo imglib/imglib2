@@ -27,13 +27,13 @@
  */
 package mpicbg.imglib;
 
-import mpicbg.imglib.container.Container;
+import mpicbg.imglib.container.Img;
 import mpicbg.imglib.type.Type;
 
 /** 
  * <p>The {@link Sampler} interface provides access to a {@link Type} instance.
  * This {@link Type} instance may point to an actual pixel stored in a
- * {@link Container} or be generated differently.</p>
+ * {@link Img} or be generated differently.</p>
  * 
  * <p>The {@link Sampler} interface unifies pixel access for {@link Iterator},
  * {@link PositionableRasterSampler random access samplers},

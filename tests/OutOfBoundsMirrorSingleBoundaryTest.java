@@ -35,8 +35,8 @@ import java.awt.Rectangle;
 //import mpicbg.imglib.image.display.imagej.ImageJFunctions;
 
 import mpicbg.imglib.IntegerLocalizable;
-import mpicbg.imglib.container.ContainerIterator;
-import mpicbg.imglib.container.ContainerRandomAccess;
+import mpicbg.imglib.container.ImgIterator;
+import mpicbg.imglib.container.ImgRandomAccess;
 import mpicbg.imglib.container.array.ArrayContainerFactory;
 import mpicbg.imglib.container.cell.CellContainerFactory;
 import mpicbg.imglib.container.dynamic.DynamicContainerFactory;
@@ -70,10 +70,10 @@ public class OutOfBoundsMirrorSingleBoundaryTest
 	static private Image< IntType > dynamicImage;
 	static private Image< IntType > shapeListImage;
 	
-	static private ContainerRandomAccess< IntType > cArray;
-	static private ContainerRandomAccess< IntType > cCell;
-	static private ContainerRandomAccess< IntType > cDynamic;
-	static private ContainerRandomAccess< IntType > cShapeList;
+	static private ImgRandomAccess< IntType > cArray;
+	static private ImgRandomAccess< IntType > cCell;
+	static private ImgRandomAccess< IntType > cDynamic;
+	static private ImgRandomAccess< IntType > cShapeList;
 	
 	/**
 	 * @throws java.lang.Exception
@@ -129,7 +129,7 @@ public class OutOfBoundsMirrorSingleBoundaryTest
 			t.set( i++ );
 
 		final int[] position = new int[ dim.length ];
-		for ( final ContainerIterator< IntType > c = cellImage.createLocalizingRasterIterator(); c.hasNext(); )
+		for ( final ImgIterator< IntType > c = cellImage.createLocalizingRasterIterator(); c.hasNext(); )
 		{
 			c.fwd();
 			c.localize( position );

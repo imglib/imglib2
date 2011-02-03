@@ -54,5 +54,5 @@ public class ImagePlusOutOfBoundsPositionableRasterSampler< T extends Type< T > 
 	}
 
 	@Override
-	public ImagePlusContainer< T, ? > getContainer(){ return container; }
+	public ImagePlusContainer< T, ? > getImg(){ return container; }
 }

@@ -93,7 +93,7 @@ public class ArrayIterator< T extends Type< T > > extends AbstractContainerCurso
 	}
 
 	@Override
-	public Array< T, ? > getContainer()
+	public Array< T, ? > getImg()
 	{
 		return container;
 	}

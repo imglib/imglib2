@@ -22,9 +22,9 @@ import mpicbg.imglib.algorithm.Benchmark;
 import mpicbg.imglib.algorithm.MultiThreaded;
 import mpicbg.imglib.algorithm.OutputAlgorithm;
 import mpicbg.imglib.algorithm.math.MathLib;
-import mpicbg.imglib.container.Container;
-import mpicbg.imglib.container.ContainerIterator;
-import mpicbg.imglib.container.ContainerRandomAccess;
+import mpicbg.imglib.container.Img;
+import mpicbg.imglib.container.ImgIterator;
+import mpicbg.imglib.container.ImgRandomAccess;
 import mpicbg.imglib.container.NativeContainer;
 import mpicbg.imglib.container.array.Array;
 import mpicbg.imglib.container.basictypecontainer.FloatAccess;
@@ -36,8 +36,8 @@ import mpicbg.imglib.type.numeric.real.FloatType;
 
 public class GaussianConvolution< T extends NumericType<T>> implements MultiThreaded, OutputAlgorithm<T>, Benchmark
 {	
-	final Container<T> container, convolved;
-	final OutOfBoundsFactory<T,Container<T>> outOfBoundsFactory;
+	final Img<T> container, convolved;
+	final OutOfBoundsFactory<T,Img<T>> outOfBoundsFactory;
 	final int numDimensions;
 	final double[] sigma;
     final double[][] kernel;
@@ -46,7 +46,7 @@ public class GaussianConvolution< T extends NumericType<T>> implements MultiThre
 	int numThreads;
 	String errorMessage = "";
 
-	public GaussianConvolution( final Container<T> container, final OutOfBoundsFactory<T,Container<T>> outOfBoundsFactory, final double[] sigma )
+	public GaussianConvolution( final Img<T> container, final OutOfBoundsFactory<T,Img<T>> outOfBoundsFactory, final double[] sigma )
 	{
 		this.container = container;
 		this.convolved = container.factory().create( container, container.createVariable() );
@@ -63,12 +63,12 @@ public class GaussianConvolution< T extends NumericType<T>> implements MultiThre
 			this.kernel[ d ] = MathLib.createGaussianKernel1DDouble( sigma[ d ], true );
 	}
 
-	public GaussianConvolution( final Container<T> container, final OutOfBoundsFactory<T,Container<T>> outOfBoundsFactory, final double sigma )
+	public GaussianConvolution( final Img<T> container, final OutOfBoundsFactory<T,Img<T>> outOfBoundsFactory, final double sigma )
 	{
 		this ( container, outOfBoundsFactory, createArray(container, sigma));
 	}
 	
-	protected static double[] createArray( final Container<?> container, final double sigma )
+	protected static double[] createArray( final Img<?> container, final double sigma )
 	{
 		final double[] sigmas = new double[ container.numDimensions() ];
 		
@@ -99,7 +99,7 @@ public class GaussianConvolution< T extends NumericType<T>> implements MultiThre
 	public int getKernelSize( final int dim ) { return kernel[ dim ].length; }
 	
 	@Override
-	public Container<T> getResult() { return convolved;	}
+	public Img<T> getResult() { return convolved;	}
 
 	@Override
 	public boolean checkInput() 
@@ -140,7 +140,7 @@ public class GaussianConvolution< T extends NumericType<T>> implements MultiThre
     		return true;
 		}
     	
-        final Container<T> temp = container.factory().create( container, container.createVariable() );        
+        final Img<T> temp = container.factory().create( container, container.createVariable() );        
     	final long containerSize = container.numPixels();
 
         //
@@ -166,8 +166,8 @@ public class GaussianConvolution< T extends NumericType<T>> implements MultiThre
 
 	                	//System.out.println("Thread " + myNumber + " folds in dimension " + currentDim);
 
-	                	final ContainerRandomAccess<T> inputIterator;
-	                	final ContainerIterator<T> outputIterator;
+	                	final ImgRandomAccess<T> inputIterator;
+	                	final ImgIterator<T> outputIterator;
 	                	
 	                	if ( numDimensions % 2 == 0 ) // even number of dimensions ( 2d, 4d, 6d, ... )
 	                	{
@@ -233,7 +233,7 @@ public class GaussianConvolution< T extends NumericType<T>> implements MultiThre
         return true;
 	}
 	
-	protected void convolve( final ContainerRandomAccess<T> inputIterator, final ContainerIterator<T> outputIterator, 
+	protected void convolve( final ImgRandomAccess<T> inputIterator, final ImgIterator<T> outputIterator, 
 															   final int dim, final float[] kernel,
 															   final long startPos, final long loopSize )
 	{		
@@ -330,12 +330,12 @@ public class GaussianConvolution< T extends NumericType<T>> implements MultiThre
 	{
 		/* inconvertible types due to javac bug 6548436: final OutOfBoundsStrategyFactory<FloatType> outOfBoundsFactoryFloat = (OutOfBoundsStrategyFactory<FloatType>)outOfBoundsFactory;  */
 		@SuppressWarnings("rawtypes")
-		final OutOfBoundsFactory<FloatType,Container<FloatType>> outOfBoundsFactoryFloat = (OutOfBoundsFactory)outOfBoundsFactory;
+		final OutOfBoundsFactory<FloatType,Img<FloatType>> outOfBoundsFactoryFloat = (OutOfBoundsFactory)outOfBoundsFactory;
 		
 		/* inconvertible types due to javac bug 6548436: final Image<FloatType> containerFloat = (Image<FloatType>) container; */
-		final Container<FloatType> containerFloat = (Container<FloatType>)container;
+		final Img<FloatType> containerFloat = (Img<FloatType>)container;
 		/* inconvertible types due to javac bug 6548436: final Image<FloatType> convolvedFloat = (Image<FloatType>) convolved; */
-		final Container<FloatType> convolvedFloat = (Container<FloatType>)convolved;
+		final Img<FloatType> convolvedFloat = (Img<FloatType>)convolved;
 		
 		final FloatArray inputArray = (FloatArray) ( (NativeContainer<FloatType, FloatAccess>) containerFloat ).update( null );
 		final FloatArray outputArray = (FloatArray) ( (NativeContainer<FloatType, FloatAccess>) convolvedFloat ).update( null );
@@ -363,7 +363,7 @@ public class GaussianConvolution< T extends NumericType<T>> implements MultiThre
 					final int filterSize = kernel[ 0 ].length;
 					final int filterSizeHalf = filterSize / 2;
 					
-					final ContainerRandomAccess<FloatType> it = containerFloat.integerRandomAccess( outOfBoundsFactoryFloat );
+					final ImgRandomAccess<FloatType> it = containerFloat.integerRandomAccess( outOfBoundsFactoryFloat );
 
 					// fold in x
 					int kernelPos, count;
@@ -423,7 +423,7 @@ public class GaussianConvolution< T extends NumericType<T>> implements MultiThre
 					int kernelPos, count;
 
 					final float[] out =  outputArray.getCurrentStorageArray();
-					final ContainerRandomAccess<FloatType> it = convolvedFloat.integerRandomAccess( outOfBoundsFactoryFloat );
+					final ImgRandomAccess<FloatType> it = convolvedFloat.integerRandomAccess( outOfBoundsFactoryFloat );
 					final double[] kernel1 = kernel[ 1 ].clone();
 					final int filterSize = kernel[ 1 ].length;
 					final int filterSizeHalf = filterSize / 2;
@@ -498,7 +498,7 @@ public class GaussianConvolution< T extends NumericType<T>> implements MultiThre
 					final int filterSizeHalf = filterSize / 2;
 
 					final float[] out = outputArray.getCurrentStorageArray();
-					final ContainerRandomAccess<FloatType> it = convolvedFloat.integerRandomAccess( outOfBoundsFactoryFloat );
+					final ImgRandomAccess<FloatType> it = convolvedFloat.integerRandomAccess( outOfBoundsFactoryFloat );
 
 					final int inc = getPos( 0, 0, 1, width, height );
 					final int posLUT[] = new int[kernel1.length];

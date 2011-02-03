@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2009--2010, Stephan Preibisch & Stephan Saalfeld
+ * Copyright (c) 2010, Stephan Saalfeld
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -9,7 +9,7 @@
  * list of conditions and the following disclaimer.  Redistributions in binary
  * form must reproduce the above copyright notice, this list of conditions and
  * the following disclaimer in the documentation and/or other materials
- * provided with the distribution.  Neither the name of the Fiji project nor
+ * provided with the distribution.  Neither the name of the imglib project nor
  * the names of its contributors may be used to endorse or promote products
  * derived from this software without specific prior written permission.
  * 
@@ -27,26 +27,39 @@
  */
 package mpicbg.imglib.container;
 
-import mpicbg.imglib.IntegerRandomAccess;
+import mpicbg.imglib.InjectiveIntegerInterval;
+import mpicbg.imglib.IntegerRandomAccessible;
+import mpicbg.imglib.RandomAccessibleIntegerInterval;
+import mpicbg.imglib.outofbounds.OutOfBoundsFactory;
 
 /**
- * This interface is for convenience only, it combines a set of interfaces and
- * might be used for type definition in your implementation.  Instead of this
- * interface, you can use a generic type that includes only the interfaces you
- * need, e.g.
- * 
- * < T extends RasterSampler< ? >, RasterPositionable > 
- * 
- * @param <T>
+ * Containers are {@link InjectiveIntegerInterval} that has its min at
+ * 0<sup><em>n</em></sup> and its max positive.  Containers store pixels
+ * and thus are the basis for conventional image processing.
  *
- * @author Stephan Preibisch and Stephan Saalfeld
+ * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-public interface ContainerRandomAccess< T > extends ContainerSampler< T >, IntegerRandomAccess< T >
+public interface Img<	T >
+	extends
+		IntegerRandomAccessible< T >,
+		RandomAccessibleIntegerInterval< T, Img< T > >,
+		InjectiveIntegerInterval
 {
-	/**
-	 * True if located out of image bounds.
-	 * 
-	 * @return
-	 */
-	public boolean isOutOfBounds();
+	@Override
+	public ImgRandomAccess< T > integerRandomAccess();
+	
+	@Override
+	public ImgRandomAccess< T > integerRandomAccess( OutOfBoundsFactory< T, Img< T > > factory );
+	
+	@Override
+	public ImgIterator< T > cursor();
+
+	@Override
+	public ImgIterator< T > localizingCursor();
+
+	public ImgFactory factory();
+	
+	public T createVariable();
+	
+	public long numPixels();
 }

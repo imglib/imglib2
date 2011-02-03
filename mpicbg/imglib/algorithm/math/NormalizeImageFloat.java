@@ -6,8 +6,8 @@ import mpicbg.imglib.type.numeric.*;
 import mpicbg.imglib.type.numeric.real.FloatType;
 import mpicbg.imglib.algorithm.Benchmark;
 import mpicbg.imglib.algorithm.OutputAlgorithm;
-import mpicbg.imglib.container.ContainerIterator;
-import mpicbg.imglib.container.ContainerRandomAccess;
+import mpicbg.imglib.container.ImgIterator;
+import mpicbg.imglib.container.ImgRandomAccess;
 import mpicbg.util.RealSum;
 
 public class NormalizeImageFloat <T extends RealType<T>> implements OutputAlgorithm<FloatType>, Benchmark
@@ -21,7 +21,7 @@ public class NormalizeImageFloat <T extends RealType<T>> implements OutputAlgori
 	public static <T extends RealType<T>> double sumImage( final Image<T> image )
 	{
 		final RealSum sum = new RealSum();
-		final ContainerIterator<T> cursor = image.createRasterIterator();
+		final ImgIterator<T> cursor = image.createRasterIterator();
 		
 		while (cursor.hasNext())
 		{
@@ -51,8 +51,8 @@ public class NormalizeImageFloat <T extends RealType<T>> implements OutputAlgori
 		final ImageFactory<FloatType> factory =
 			new ImageFactory<FloatType>(new FloatType(), image.getContainerFactory());  		
 		
-		final ContainerIterator<T> pullCursor;
-		final ContainerRandomAccess<FloatType> pushCursor;
+		final ImgIterator<T> pullCursor;
+		final ImgRandomAccess<FloatType> pushCursor;
 		
 		if (norm == 0)
 		{

@@ -27,8 +27,8 @@
  */
 package mpicbg.imglib.interpolation.nearestneighbor;
 
-import mpicbg.imglib.container.Container;
-import mpicbg.imglib.container.ContainerRandomAccess;
+import mpicbg.imglib.container.Img;
+import mpicbg.imglib.container.ImgRandomAccess;
 import mpicbg.imglib.interpolation.Interpolator;
 import mpicbg.imglib.location.transform.RoundRasterPositionable;
 import mpicbg.imglib.outofbounds.OutOfBoundsFactory;
@@ -40,17 +40,17 @@ import mpicbg.imglib.type.Type;
  *
  * @author Stephan Preibisch and Stephan Saalfeld
  */
-public class NearestNeighborInterpolator< T extends Type< T > > extends RoundRasterPositionable< ContainerRandomAccess< T > > implements Interpolator< T, Container<T> >
+public class NearestNeighborInterpolator< T extends Type< T > > extends RoundRasterPositionable< ImgRandomAccess< T > > implements Interpolator< T, Img<T> >
 {
-	final protected OutOfBoundsFactory< T, Container<T> > outOfBoundsStrategyFactory;
-	final protected Container< T > container;
+	final protected OutOfBoundsFactory< T, Img<T> > outOfBoundsStrategyFactory;
+	final protected Img< T > container;
 	
-	final static private < T extends Type< T > > ContainerRandomAccess< T > createPositionableRasterSampler( Container< T > container, final OutOfBoundsFactory<T,Container<T>> outOfBoundsStrategyFactory )
+	final static private < T extends Type< T > > ImgRandomAccess< T > createPositionableRasterSampler( Img< T > container, final OutOfBoundsFactory<T,Img<T>> outOfBoundsStrategyFactory )
 	{
 		return container.integerRandomAccess( outOfBoundsStrategyFactory );
 	}
 	
-	protected NearestNeighborInterpolator( Container< T > container, final OutOfBoundsFactory<T,Container<T>> outOfBoundsStrategyFactory )
+	protected NearestNeighborInterpolator( Img< T > container, final OutOfBoundsFactory<T,Img<T>> outOfBoundsStrategyFactory )
 	{
 		super( createPositionableRasterSampler( container, outOfBoundsStrategyFactory ) );
 		
@@ -73,7 +73,7 @@ public class NearestNeighborInterpolator< T extends Type< T > > extends RoundRas
 	 * @return - the {@link RasterOutOfBoundsFactory}
 	 */
 	@Override
-	public OutOfBoundsFactory< T, Container<T> > getOutOfBoundsStrategyFactory()
+	public OutOfBoundsFactory< T, Img<T> > getOutOfBoundsStrategyFactory()
 	{
 		return outOfBoundsStrategyFactory;
 	}
@@ -84,7 +84,7 @@ public class NearestNeighborInterpolator< T extends Type< T > > extends RoundRas
 	 * @return - the image
 	 */
 	@Override
-	public Container< T > getFunction()
+	public Img< T > getFunction()
 	{
 		return container;
 	}

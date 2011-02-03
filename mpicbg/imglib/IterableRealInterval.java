@@ -27,7 +27,7 @@
  */
 package mpicbg.imglib;
 
-import mpicbg.imglib.container.Container;
+import mpicbg.imglib.container.Img;
 
 /**
  * <p><em>f</em>:R<sup><em>n</em></sup>&isin;[0,<em>s</em>]&rarr;T</em></p>
@@ -92,7 +92,7 @@ public interface IterableRealInterval< T > extends RealInterval, Iterable< T >
 	 * copying by synchronous iteration is not possible but only that the
 	 * method cannot decide if the required conditions are met.</p>
 	 * 
-	 * @param f the {@link Container} to be tested
+	 * @param f the {@link Img} to be tested
 	 * 
 	 * @return <tt>true</tt> if copy by iteration is definitely possible,
 	 *   <tt>false</tt> otherwise

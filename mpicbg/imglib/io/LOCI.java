@@ -22,14 +22,14 @@ import loci.formats.ChannelSeparator;
 import loci.formats.FormatException;
 import loci.formats.FormatTools;
 import loci.formats.IFormatReader;
-import mpicbg.imglib.container.Container;
-import mpicbg.imglib.container.ContainerFactory;
+import mpicbg.imglib.container.Img;
+import mpicbg.imglib.container.ImgFactory;
 import mpicbg.imglib.sampler.special.OrthoSliceIterator;
 import mpicbg.imglib.type.numeric.real.FloatType;
 
 public class LOCI
 {
-	public static Container<FloatType> openLOCIFloatType( final String fileName, final ContainerFactory factory )
+	public static Img<FloatType> openLOCIFloatType( final String fileName, final ImgFactory factory )
 	{				
 		final IFormatReader r = new ChannelSeparator();
 
@@ -67,7 +67,7 @@ public class LOCI
 				return null;
 			}
 			
-			final Container<FloatType> container;
+			final Img<FloatType> container;
 			
 			if ( depth == 1 )
 				container = factory.create( new long[] { width, height }, new FloatType() );

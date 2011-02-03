@@ -110,7 +110,7 @@ public class DynamicLocalizingRasterIterator< T extends Type< T > > extends Abst
 	}
 
 	@Override
-	public DynamicContainer< T, ? > getContainer(){ return container; }
+	public DynamicContainer< T, ? > getImg(){ return container; }
 	
 	@Override
 	public T get() { return type; }

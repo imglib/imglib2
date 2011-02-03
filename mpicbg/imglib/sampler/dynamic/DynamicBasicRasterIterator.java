@@ -111,7 +111,7 @@ public class DynamicBasicRasterIterator< T extends Type< T > > extends AbstractC
 	public int getInternalIndex() { return internalIndex; }
 
 	@Override
-	public DynamicContainer<T,?> getContainer(){ return container; }
+	public DynamicContainer<T,?> getImg(){ return container; }
 	
 	@Override
 	public String toString() { return type.toString(); }

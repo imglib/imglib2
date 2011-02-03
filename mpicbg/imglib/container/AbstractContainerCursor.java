@@ -46,7 +46,7 @@ import mpicbg.imglib.type.Type;
  * 
  * @param <T>
  */
-public abstract class AbstractContainerCursor< T extends Type< T > > extends AbstractContainerSampler< T > implements ContainerIterator< T >
+public abstract class AbstractContainerCursor< T extends Type< T > > extends AbstractContainerSampler< T > implements ImgIterator< T >
 {
 	final private long[] position;
 	

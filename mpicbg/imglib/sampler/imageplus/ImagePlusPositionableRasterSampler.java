@@ -160,7 +160,7 @@ public class ImagePlusPositionableRasterSampler< T extends Type< T > > extends A
 	}
 
 	@Override
-	public ImagePlusContainer< T, ? > getContainer(){ return container; }
+	public ImagePlusContainer< T, ? > getImg(){ return container; }
 
 	@Override
 	public T get(){ return type; }

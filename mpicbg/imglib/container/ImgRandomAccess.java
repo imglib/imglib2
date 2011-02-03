@@ -24,30 +24,29 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- *
- * @author Stephan Preibisch & Stephan Saalfeld
  */
 package mpicbg.imglib.container;
 
-import mpicbg.imglib.IntegerInterval;
-import mpicbg.imglib.type.Type;
+import mpicbg.imglib.IntegerRandomAccess;
 
-public abstract class ContainerFactory
+/**
+ * This interface is for convenience only, it combines a set of interfaces and
+ * might be used for type definition in your implementation.  Instead of this
+ * interface, you can use a generic type that includes only the interfaces you
+ * need, e.g.
+ * 
+ * < T extends RasterSampler< ? >, RasterPositionable > 
+ * 
+ * @param <T>
+ *
+ * @author Stephan Preibisch and Stephan Saalfeld
+ */
+public interface ImgRandomAccess< T > extends ImgSampler< T >, IntegerRandomAccess< T >
 {
 	/**
-	 * The {@link ContainerFactory} can decide how to create the
-	 * {@link Container}.  A {@link NativeContainerFactory} will ask the
-	 * {@link Type} to create a suitable {@link NativeContainer}.
+	 * True if located out of image bounds.
 	 * 
-	 * @return {@link Container}
+	 * @return
 	 */
-	public abstract < T extends Type< T > > Container< T > create( final long[] dim, final T type );
-	
-	public < T extends Type< T > > Container< T > create( final IntegerInterval interval, final T type )
-	{
-		final long[] dim = new long[ interval.numDimensions() ];
-		interval.size( dim );
-		
-		return create( dim, type );
-	}
+	public boolean isOutOfBounds();
 }

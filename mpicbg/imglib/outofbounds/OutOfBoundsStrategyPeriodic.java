@@ -29,7 +29,7 @@ package mpicbg.imglib.outofbounds;
 
 import mpicbg.imglib.IntegerLocalizable;
 import mpicbg.imglib.algorithm.math.MathLib;
-import mpicbg.imglib.container.ContainerRandomAccess;
+import mpicbg.imglib.container.ImgRandomAccess;
 import mpicbg.imglib.type.Type;
 
 /**
@@ -51,7 +51,7 @@ import mpicbg.imglib.type.Type;
  */
 public class OutOfBoundsStrategyPeriodic< T extends Type< T > > implements RealOutOfBounds< T >
 {
-	final protected ContainerRandomAccess< T > outOfBoundsPositionable;
+	final protected ImgRandomAccess< T > outOfBoundsPositionable;
 	
 	final protected int n;
 	
@@ -61,19 +61,19 @@ public class OutOfBoundsStrategyPeriodic< T extends Type< T > > implements RealO
 	
 	protected boolean isOutOfBounds = false;
 	
-	public OutOfBoundsStrategyPeriodic( final ContainerRandomAccess< T > source )
+	public OutOfBoundsStrategyPeriodic( final ImgRandomAccess< T > source )
 	{
-		this( source, source.getContainer().integerRandomAccessSampler() );
+		this( source, source.getImg().integerRandomAccessSampler() );
 	}
 	
 	OutOfBoundsStrategyPeriodic(
-			final ContainerRandomAccess< T > source,
-			final ContainerRandomAccess< T > outOfBoundsPositionable )
+			final ImgRandomAccess< T > source,
+			final ImgRandomAccess< T > outOfBoundsPositionable )
 	{
 		this.outOfBoundsPositionable = outOfBoundsPositionable;
 		n = source.numDimensions();
 		size = new long[ n ];
-		source.getContainer().size( size );
+		source.getImg().size( size );
 		position = new long[ n ];
 		
 		dimIsOutOfBounds = new boolean[ n ];

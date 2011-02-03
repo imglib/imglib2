@@ -54,5 +54,5 @@ public class ShapeListOutOfBoundsPositionableRasterSampler< T extends Type< T > 
 	}
 
 	@Override
-	public ShapeList< T > getContainer(){ return container; }
+	public ShapeList< T > getImg(){ return container; }
 }

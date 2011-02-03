@@ -190,7 +190,7 @@ public class DynamicPositionableRasterSampler< T extends Type< T > > extends Abs
 	public int getInternalIndex() { return internalIndex; }
 
 	@Override
-	public DynamicContainer< T, ? > getContainer(){ return container; }
+	public DynamicContainer< T, ? > getImg(){ return container; }
 	
 	@Override
 	public T get(){ return type; }
