@@ -31,7 +31,7 @@ import mpicbg.imglib.IntegerLocalizable;
 import mpicbg.imglib.Localizable;
 import mpicbg.imglib.Positionable;
 import mpicbg.imglib.image.Image;
-import mpicbg.imglib.outofbounds.RasterOutOfBoundsFactory;
+import mpicbg.imglib.outofbounds.OutOfBoundsFactory;
 import mpicbg.imglib.type.Type;
 
 /**
@@ -42,7 +42,7 @@ import mpicbg.imglib.type.Type;
  */
 abstract public class AbstractInterpolator< T extends Type< T >, LocalizablePositionable extends Localizable & Positionable > implements Interpolator< T >
 {
-	final protected RasterOutOfBoundsFactory< T > outOfBoundsStrategyFactory;
+	final protected OutOfBoundsFactory< T > outOfBoundsStrategyFactory;
 	final protected LocalizablePositionable localizablePositionable;
 
 	final protected Image< T > img;
