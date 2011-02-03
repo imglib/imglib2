@@ -28,8 +28,8 @@
 package mpicbg.imglib.type;
 
 import mpicbg.imglib.container.ContainerIterator;
-import mpicbg.imglib.container.DirectAccessContainer;
-import mpicbg.imglib.container.DirectAccessContainerFactory;
+import mpicbg.imglib.container.NativeContainer;
+import mpicbg.imglib.container.NativeContainerFactory;
 import mpicbg.imglib.container.array.Array;
 import mpicbg.imglib.container.array.ArrayIterator;
 import mpicbg.imglib.container.basictypecontainer.DataAccess;
@@ -73,7 +73,7 @@ public interface Type< T extends Type< T > >
 	 * @return - the instantiated DirectAccessContainer where only the
 	 *         {@link Type} knowns the BasicType it contains.
 	 */
-	public DirectAccessContainer< T, ? > createSuitableDirectAccessContainer( final DirectAccessContainerFactory storageFactory, final long[] dim );
+	public NativeContainer< T, ? > createSuitableDirectAccessContainer( final NativeContainerFactory storageFactory, final long[] dim );
 
 	/**
 	 * The {@link Type} creates the default {@link Display} for displaying the
@@ -185,7 +185,7 @@ public interface Type< T extends Type< T > >
 	 * is only used internally.
 	 * 
 	 * @return - a new {@link Type} instance working on the same
-	 *         {@link DirectAccessContainer}
+	 *         {@link NativeContainer}
 	 */
 	public T duplicateTypeOnSameDirectAccessContainer();
 

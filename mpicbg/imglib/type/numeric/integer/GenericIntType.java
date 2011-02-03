@@ -28,7 +28,7 @@
 package mpicbg.imglib.type.numeric.integer;
 
 import mpicbg.imglib.algorithm.math.MathLib;
-import mpicbg.imglib.container.DirectAccessContainer;
+import mpicbg.imglib.container.NativeContainer;
 import mpicbg.imglib.container.basictypecontainer.IntAccess;
 import mpicbg.imglib.container.basictypecontainer.array.IntArray;
 
@@ -41,13 +41,13 @@ import mpicbg.imglib.container.basictypecontainer.array.IntArray;
 public abstract class GenericIntType< T extends GenericIntType< T > > extends AbstractIntegerType< T >
 {
 	// the DirectAccessContainer
-	final DirectAccessContainer< T, ? extends IntAccess > storage;
+	final NativeContainer< T, ? extends IntAccess > storage;
 
 	// the (sub)DirectAccessContainer that holds the information
 	IntAccess b;
 
 	// this is the constructor if you want it to read from an array
-	public GenericIntType( DirectAccessContainer< T, ? extends IntAccess > intStorage )
+	public GenericIntType( NativeContainer< T, ? extends IntAccess > intStorage )
 	{
 		storage = intStorage;
 	}

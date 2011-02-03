@@ -27,8 +27,8 @@
  */
 package mpicbg.imglib.type.logic;
 
-import mpicbg.imglib.container.DirectAccessContainer;
-import mpicbg.imglib.container.DirectAccessContainerFactory;
+import mpicbg.imglib.container.NativeContainer;
+import mpicbg.imglib.container.NativeContainerFactory;
 import mpicbg.imglib.container.basictypecontainer.BitAccess;
 import mpicbg.imglib.container.basictypecontainer.array.BitArray;
 import mpicbg.imglib.image.Image;
@@ -44,13 +44,13 @@ import mpicbg.imglib.type.numeric.integer.AbstractIntegerType;
 public class BitType extends AbstractIntegerType< BitType > implements LogicType< BitType >, RealType< BitType >
 {
 	// the DirectAccessContainer
-	final DirectAccessContainer< BitType, ? extends BitAccess, ? > storage;
+	final NativeContainer< BitType, ? extends BitAccess, ? > storage;
 
 	// the (sub)DirectAccessContainer that holds the information
 	BitAccess b;
 
 	// this is the constructor if you want it to read from an array
-	public BitType( DirectAccessContainer< BitType, ? extends BitAccess, ? > bitStorage )
+	public BitType( NativeContainer< BitType, ? extends BitAccess, ? > bitStorage )
 	{
 		storage = bitStorage;
 	}
@@ -70,10 +70,10 @@ public class BitType extends AbstractIntegerType< BitType > implements LogicType
 	}
 
 	@Override
-	public DirectAccessContainer< BitType, ? extends BitAccess, ? > createSuitableDirectAccessContainer( final DirectAccessContainerFactory storageFactory, final long[] dim )
+	public NativeContainer< BitType, ? extends BitAccess, ? > createSuitableDirectAccessContainer( final NativeContainerFactory storageFactory, final long[] dim )
 	{
 		// create the container
-		final DirectAccessContainer< BitType, ? extends BitAccess, ? > container = storageFactory.createBitInstance( dim, 1 );
+		final NativeContainer< BitType, ? extends BitAccess, ? > container = storageFactory.createBitInstance( dim, 1 );
 
 		// create a Type that is linked to the container
 		final BitType linkedType = new BitType( container );

@@ -36,7 +36,7 @@ public abstract class AbstractDirectAccessContainer<
 		T extends Type< T >,
 		A extends DataAccess >
 	extends AbstractContainer< T >
-	implements DirectAccessContainer< T, A >
+	implements NativeContainer< T, A >
 {
 	final protected int entitiesPerPixel;
 	protected long numEntities;

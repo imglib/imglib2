@@ -28,8 +28,8 @@
 package mpicbg.imglib.type.numeric.integer;
 
 import mpicbg.imglib.algorithm.math.MathLib;
-import mpicbg.imglib.container.DirectAccessContainer;
-import mpicbg.imglib.container.DirectAccessContainerFactory;
+import mpicbg.imglib.container.NativeContainer;
+import mpicbg.imglib.container.NativeContainerFactory;
 import mpicbg.imglib.container.basictypecontainer.LongAccess;
 import mpicbg.imglib.container.basictypecontainer.array.LongArray;
 
@@ -42,13 +42,13 @@ import mpicbg.imglib.container.basictypecontainer.array.LongArray;
 final public class LongType extends AbstractIntegerType< LongType >
 {
 	// the DirectAccessContainer
-	final DirectAccessContainer< LongType, ? extends LongAccess > storage;
+	final NativeContainer< LongType, ? extends LongAccess > storage;
 
 	// the (sub)DirectAccessContainer that holds the information
 	LongAccess b;
 
 	// this is the constructor if you want it to read from an array
-	public LongType( DirectAccessContainer< LongType, ? extends LongAccess > longStorage )
+	public LongType( NativeContainer< LongType, ? extends LongAccess > longStorage )
 	{
 		storage = longStorage;
 	}
@@ -68,10 +68,10 @@ final public class LongType extends AbstractIntegerType< LongType >
 	}
 
 	@Override
-	public DirectAccessContainer< LongType, ? extends LongAccess > createSuitableDirectAccessContainer( final DirectAccessContainerFactory storageFactory, final int dim[] )
+	public NativeContainer< LongType, ? extends LongAccess > createSuitableDirectAccessContainer( final NativeContainerFactory storageFactory, final int dim[] )
 	{
 		// create the container
-		final DirectAccessContainer< LongType, ? extends LongAccess > container = storageFactory.createLongInstance( dim, 1 );
+		final NativeContainer< LongType, ? extends LongAccess > container = storageFactory.createLongInstance( dim, 1 );
 
 		// create a Type that is linked to the container
 		final LongType linkedType = new LongType( container );

@@ -27,8 +27,8 @@
  */
 package mpicbg.imglib.type.label;
 
-import mpicbg.imglib.container.DirectAccessContainer;
-import mpicbg.imglib.container.DirectAccessContainerFactory;
+import mpicbg.imglib.container.NativeContainer;
+import mpicbg.imglib.container.NativeContainerFactory;
 import mpicbg.imglib.container.basictypecontainer.BitAccess;
 import mpicbg.imglib.container.basictypecontainer.array.BitArray;
 import mpicbg.imglib.image.Image;
@@ -49,7 +49,7 @@ public class BasePairBitType extends AbstractType< BasePairBitType > implements 
 	}
 
 	// the DirectAccessContainer
-	final DirectAccessContainer< BasePairBitType, ? extends BitAccess, ? > storage;
+	final NativeContainer< BasePairBitType, ? extends BitAccess, ? > storage;
 
 	// the (sub)DirectAccessContainer that holds the information
 	BitAccess b;
@@ -58,7 +58,7 @@ public class BasePairBitType extends AbstractType< BasePairBitType > implements 
 	int j1, j2, j3;
 
 	// this is the constructor if you want it to read from an array
-	public BasePairBitType( DirectAccessContainer< BasePairBitType, ? extends BitAccess, ? > bitStorage )
+	public BasePairBitType( NativeContainer< BasePairBitType, ? extends BitAccess, ? > bitStorage )
 	{
 		storage = bitStorage;
 		updateIndex( 0 );
@@ -80,10 +80,10 @@ public class BasePairBitType extends AbstractType< BasePairBitType > implements 
 	}
 
 	@Override
-	public DirectAccessContainer< BasePairBitType, ? extends BitAccess, ? > createSuitableDirectAccessContainer( final DirectAccessContainerFactory storageFactory, final long[] dim )
+	public NativeContainer< BasePairBitType, ? extends BitAccess, ? > createSuitableDirectAccessContainer( final NativeContainerFactory storageFactory, final long[] dim )
 	{
 		// create the container
-		final DirectAccessContainer< BasePairBitType, ? extends BitAccess, ? > container = storageFactory.createBitInstance( dim, 3 );
+		final NativeContainer< BasePairBitType, ? extends BitAccess, ? > container = storageFactory.createBitInstance( dim, 3 );
 
 		// create a Type that is linked to the container
 		final BasePairBitType linkedType = new BasePairBitType( container );

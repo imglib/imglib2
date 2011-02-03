@@ -28,8 +28,8 @@
 
 package mpicbg.imglib.type.numeric.integer;
 
-import mpicbg.imglib.container.DirectAccessContainer;
-import mpicbg.imglib.container.DirectAccessContainerFactory;
+import mpicbg.imglib.container.NativeContainer;
+import mpicbg.imglib.container.NativeContainerFactory;
 import mpicbg.imglib.container.basictypecontainer.BitAccess;
 import mpicbg.imglib.container.basictypecontainer.array.BitArray;
 import mpicbg.imglib.type.numeric.integer.AbstractIntegerType;
@@ -43,7 +43,7 @@ import mpicbg.imglib.type.numeric.integer.AbstractIntegerType;
 public class Unsigned12BitType extends AbstractIntegerType<Unsigned12BitType>
 {
 	// the DirectAccessContainer
-	final DirectAccessContainer<Unsigned12BitType, ? extends BitAccess> storage;
+	final NativeContainer<Unsigned12BitType, ? extends BitAccess> storage;
 
 	// the adresses of the bits that we store
 	int j1, j2, j3, j4, j5, j6, j7, j8, j9, j10, j11, j12;
@@ -52,7 +52,7 @@ public class Unsigned12BitType extends AbstractIntegerType<Unsigned12BitType>
 	BitAccess b;
 	
 	// this is the constructor if you want it to read from an array
-	public Unsigned12BitType( DirectAccessContainer<Unsigned12BitType, ? extends BitAccess> bitStorage )
+	public Unsigned12BitType( NativeContainer<Unsigned12BitType, ? extends BitAccess> bitStorage )
 	{
 		storage = bitStorage;
 		updateIndex( 0 );
@@ -71,10 +71,10 @@ public class Unsigned12BitType extends AbstractIntegerType<Unsigned12BitType>
 	public Unsigned12BitType() { this( (short)0 ); }
 	
 	@Override
-	public DirectAccessContainer<Unsigned12BitType, ? extends BitAccess> createSuitableDirectAccessContainer( final DirectAccessContainerFactory storageFactory, final int dim[] )
+	public NativeContainer<Unsigned12BitType, ? extends BitAccess> createSuitableDirectAccessContainer( final NativeContainerFactory storageFactory, final int dim[] )
 	{
 		// create the container
-		final DirectAccessContainer<Unsigned12BitType, ? extends BitAccess> container = storageFactory.createBitInstance( dim, 12 );
+		final NativeContainer<Unsigned12BitType, ? extends BitAccess> container = storageFactory.createBitInstance( dim, 12 );
 		
 		// create a Type that is linked to the container
 		final Unsigned12BitType linkedType = new Unsigned12BitType( container );

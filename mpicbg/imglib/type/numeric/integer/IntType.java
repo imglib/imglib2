@@ -27,8 +27,8 @@
  */
 package mpicbg.imglib.type.numeric.integer;
 
-import mpicbg.imglib.container.DirectAccessContainer;
-import mpicbg.imglib.container.DirectAccessContainerFactory;
+import mpicbg.imglib.container.NativeContainer;
+import mpicbg.imglib.container.NativeContainerFactory;
 import mpicbg.imglib.container.basictypecontainer.IntAccess;
 
 /**
@@ -40,7 +40,7 @@ import mpicbg.imglib.container.basictypecontainer.IntAccess;
 public class IntType extends GenericIntType< IntType >
 {
 	// this is the constructor if you want it to read from an array
-	public IntType( DirectAccessContainer< IntType, ? extends IntAccess > intStorage )
+	public IntType( NativeContainer< IntType, ? extends IntAccess > intStorage )
 	{
 		super( intStorage );
 	}
@@ -58,10 +58,10 @@ public class IntType extends GenericIntType< IntType >
 	}
 
 	@Override
-	public DirectAccessContainer< IntType, ? extends IntAccess > createSuitableDirectAccessContainer( final DirectAccessContainerFactory storageFactory, final int dim[] )
+	public NativeContainer< IntType, ? extends IntAccess > createSuitableDirectAccessContainer( final NativeContainerFactory storageFactory, final int dim[] )
 	{
 		// create the container
-		final DirectAccessContainer< IntType, ? extends IntAccess > container = storageFactory.createIntInstance( dim, 1 );
+		final NativeContainer< IntType, ? extends IntAccess > container = storageFactory.createIntInstance( dim, 1 );
 
 		// create a Type that is linked to the container
 		final IntType linkedType = new IntType( container );

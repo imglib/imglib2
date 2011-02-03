@@ -28,7 +28,7 @@
 package mpicbg.imglib.container.array;
 
 import mpicbg.imglib.container.AbstractContainer;
-import mpicbg.imglib.container.DirectAccessContainerFactory;
+import mpicbg.imglib.container.NativeContainerFactory;
 import mpicbg.imglib.container.basictypecontainer.BitAccess;
 import mpicbg.imglib.container.basictypecontainer.ByteAccess;
 import mpicbg.imglib.container.basictypecontainer.CharAccess;
@@ -53,7 +53,7 @@ import mpicbg.imglib.type.Type;
  * 
  * @author Stephan Preibisch and Stephan Saalfeld
  */
-public class ArrayContainerFactory extends DirectAccessContainerFactory
+public class ArrayContainerFactory extends NativeContainerFactory
 {
 	public static int numEntitiesRangeCheck( final long[] dimensions, final int entitiesPerPixel )
 	{

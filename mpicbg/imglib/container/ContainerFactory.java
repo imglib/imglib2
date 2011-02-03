@@ -36,8 +36,8 @@ public abstract class ContainerFactory
 {
 	/**
 	 * The {@link ContainerFactory} can decide how to create the
-	 * {@link Container}.  A {@link DirectAccessContainerFactory} will ask the
-	 * {@link Type} to create a suitable {@link DirectAccessContainer}.
+	 * {@link Container}.  A {@link NativeContainerFactory} will ask the
+	 * {@link Type} to create a suitable {@link NativeContainer}.
 	 * 
 	 * @return {@link Container}
 	 */

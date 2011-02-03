@@ -28,8 +28,8 @@
 package mpicbg.imglib.type.numeric.complex;
 
 import mpicbg.imglib.algorithm.Precision.PrecisionReal;
-import mpicbg.imglib.container.DirectAccessContainer;
-import mpicbg.imglib.container.DirectAccessContainerFactory;
+import mpicbg.imglib.container.NativeContainer;
+import mpicbg.imglib.container.NativeContainerFactory;
 import mpicbg.imglib.container.basictypecontainer.FloatAccess;
 import mpicbg.imglib.container.basictypecontainer.array.FloatArray;
 import mpicbg.imglib.type.numeric.ComplexType;
@@ -43,13 +43,13 @@ import mpicbg.imglib.type.numeric.ComplexType;
 public class ComplexFloatType extends AbstractComplexType< ComplexFloatType > implements ComplexType< ComplexFloatType >
 {
 	// the DirectAccessContainer
-	final DirectAccessContainer< ComplexFloatType, ? extends FloatAccess > storage;
+	final NativeContainer< ComplexFloatType, ? extends FloatAccess > storage;
 
 	// the (sub)DirectAccessContainer that holds the information
 	FloatAccess b;
 
 	// this is the constructor if you want it to read from an array
-	public ComplexFloatType( DirectAccessContainer< ComplexFloatType, ? extends FloatAccess > complexfloatStorage )
+	public ComplexFloatType( NativeContainer< ComplexFloatType, ? extends FloatAccess > complexfloatStorage )
 	{
 		storage = complexfloatStorage;
 	}
@@ -69,10 +69,10 @@ public class ComplexFloatType extends AbstractComplexType< ComplexFloatType > im
 	}
 
 	@Override
-	public DirectAccessContainer< ComplexFloatType, ? extends FloatAccess > createSuitableDirectAccessContainer( final DirectAccessContainerFactory storageFactory, final int dim[] )
+	public NativeContainer< ComplexFloatType, ? extends FloatAccess > createSuitableDirectAccessContainer( final NativeContainerFactory storageFactory, final int dim[] )
 	{
 		// create the container
-		final DirectAccessContainer< ComplexFloatType, ? extends FloatAccess > container = storageFactory.createFloatInstance( dim, 2 );
+		final NativeContainer< ComplexFloatType, ? extends FloatAccess > container = storageFactory.createFloatInstance( dim, 2 );
 
 		// create a Type that is linked to the container
 		final ComplexFloatType linkedType = new ComplexFloatType( container );

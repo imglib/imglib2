@@ -27,8 +27,8 @@
  */
 package mpicbg.imglib.type.numeric.integer;
 
-import mpicbg.imglib.container.DirectAccessContainer;
-import mpicbg.imglib.container.DirectAccessContainerFactory;
+import mpicbg.imglib.container.NativeContainer;
+import mpicbg.imglib.container.NativeContainerFactory;
 import mpicbg.imglib.container.basictypecontainer.ByteAccess;
 
 /**
@@ -40,7 +40,7 @@ import mpicbg.imglib.container.basictypecontainer.ByteAccess;
 public class ByteType extends GenericByteType< ByteType >
 {
 	// this is the constructor if you want it to read from an array
-	public ByteType( final DirectAccessContainer< ByteType, ? extends ByteAccess > byteStorage )
+	public ByteType( final NativeContainer< ByteType, ? extends ByteAccess > byteStorage )
 	{
 		super( byteStorage );
 	}
@@ -58,10 +58,10 @@ public class ByteType extends GenericByteType< ByteType >
 	}
 
 	@Override
-	public DirectAccessContainer< ByteType, ? extends ByteAccess > createSuitableDirectAccessContainer( final DirectAccessContainerFactory storageFactory, final int dim[] )
+	public NativeContainer< ByteType, ? extends ByteAccess > createSuitableDirectAccessContainer( final NativeContainerFactory storageFactory, final int dim[] )
 	{
 		// create the container
-		final DirectAccessContainer< ByteType, ? extends ByteAccess > container = storageFactory.createByteInstance( dim, 1 );
+		final NativeContainer< ByteType, ? extends ByteAccess > container = storageFactory.createByteInstance( dim, 1 );
 
 		// create a Type that is linked to the container
 		final ByteType linkedType = new ByteType( container );

@@ -29,7 +29,7 @@ package mpicbg.imglib.container.shapelist;
 
 import mpicbg.imglib.container.Container;
 import mpicbg.imglib.container.ContainerFactory;
-import mpicbg.imglib.container.DirectAccessContainerFactory;
+import mpicbg.imglib.container.NativeContainerFactory;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.type.Type;
 
@@ -53,7 +53,7 @@ public class ShapeListContainerFactory extends ContainerFactory
 
 	/**
 	 * This method is called by {@link Image}. The {@link ContainerFactory} can decide how to create the {@link Container},
-	 * if it is for example a {@link DirectAccessContainerFactory} it will ask the {@link Type} to create a 
+	 * if it is for example a {@link NativeContainerFactory} it will ask the {@link Type} to create a 
 	 * suitable {@link Container} for the {@link Type} and the dimensionality
 	 * 
 	 * @return {@link Container} - the instantiated Container

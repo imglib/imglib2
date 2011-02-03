@@ -25,7 +25,7 @@ import mpicbg.imglib.algorithm.math.MathLib;
 import mpicbg.imglib.container.Container;
 import mpicbg.imglib.container.ContainerIterator;
 import mpicbg.imglib.container.ContainerRandomAccess;
-import mpicbg.imglib.container.DirectAccessContainer;
+import mpicbg.imglib.container.NativeContainer;
 import mpicbg.imglib.container.array.Array;
 import mpicbg.imglib.container.basictypecontainer.FloatAccess;
 import mpicbg.imglib.container.basictypecontainer.array.FloatArray;
@@ -337,8 +337,8 @@ public class GaussianConvolution< T extends NumericType<T>> implements MultiThre
 		/* inconvertible types due to javac bug 6548436: final Image<FloatType> convolvedFloat = (Image<FloatType>) convolved; */
 		final Container<FloatType> convolvedFloat = (Container<FloatType>)convolved;
 		
-		final FloatArray inputArray = (FloatArray) ( (DirectAccessContainer<FloatType, FloatAccess>) containerFloat ).update( null );
-		final FloatArray outputArray = (FloatArray) ( (DirectAccessContainer<FloatType, FloatAccess>) convolvedFloat ).update( null );
+		final FloatArray inputArray = (FloatArray) ( (NativeContainer<FloatType, FloatAccess>) containerFloat ).update( null );
+		final FloatArray outputArray = (FloatArray) ( (NativeContainer<FloatType, FloatAccess>) convolvedFloat ).update( null );
 		
 		// Array supports only int anyways...
   		final int width = (int)containerFloat.size( 0 );

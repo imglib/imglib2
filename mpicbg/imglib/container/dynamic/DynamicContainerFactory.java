@@ -27,7 +27,7 @@
  */
 package mpicbg.imglib.container.dynamic;
 
-import mpicbg.imglib.container.DirectAccessContainerFactory;
+import mpicbg.imglib.container.NativeContainerFactory;
 import mpicbg.imglib.type.Type;
 
 /**
@@ -36,7 +36,7 @@ import mpicbg.imglib.type.Type;
  * 
  * @author Stephan Preibisch and Stephan Saalfeld
  */
-public class DynamicContainerFactory extends DirectAccessContainerFactory
+public class DynamicContainerFactory extends NativeContainerFactory
 {
 	@Override
 	public < T extends Type< T > > BitDynamicContainer< T > createBitInstance( final int[] dimensions, final int entitiesPerPixel )
