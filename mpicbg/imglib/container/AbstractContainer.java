@@ -29,6 +29,10 @@
  */
 package mpicbg.imglib.container;
 
+import java.util.Iterator;
+
+import mpicbg.imglib.container.array.ArrayIterator;
+
 
 public abstract class AbstractContainer< T > implements Container< T >
 {
@@ -47,6 +51,12 @@ public abstract class AbstractContainer< T > implements Container< T >
 		max = new long[ size.length ];
 		for ( int i = 0; i < size.length; ++i )
 			max[ i ] = size[ i ] - 1;
+	}
+	
+	@Override
+	public Iterator<T> iterator()
+	{ 
+		return cursor();
 	}
 	
 	public static long numElements( final long[] dim )
