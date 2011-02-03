@@ -13,7 +13,7 @@ public class OpenAndDisplay
 	{
 		new ImageJ();
 		
-		Container<FloatType, ?> img = LOCI.openLOCIFloatType( "D:/Temp/Truman/MoreTiles/73.tif",  new ArrayContainerFactory() );
+		Container<FloatType> img = LOCI.openLOCIFloatType( "D:/Temp/Truman/MoreTiles/73.tif",  new ArrayContainerFactory() );
 		
 		ImgLib2Display.copyToImagePlus( img, new int[] {2, 0, 1} ).show();
 	}

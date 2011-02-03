@@ -29,7 +29,7 @@ import mpicbg.imglib.type.numeric.real.FloatType;
 
 public class LOCI
 {
-	public static Container<FloatType, ?> openLOCIFloatType( final String fileName, final ContainerFactory factory )
+	public static Container<FloatType> openLOCIFloatType( final String fileName, final ContainerFactory factory )
 	{				
 		final IFormatReader r = new ChannelSeparator();
 
@@ -67,7 +67,7 @@ public class LOCI
 				return null;
 			}
 			
-			final Container<FloatType, ?> container;
+			final Container<FloatType> container;
 			
 			if ( depth == 1 )
 				container = factory.create( new long[] { width, height }, new FloatType() );

@@ -28,10 +28,10 @@
 package mpicbg.imglib.container.array;
 
 import mpicbg.imglib.IntegerInterval;
-import mpicbg.imglib.IntegerRandomAccess;
 import mpicbg.imglib.IterableRealInterval;
 import mpicbg.imglib.container.AbstractDirectAccessContainer;
 import mpicbg.imglib.container.Container;
+import mpicbg.imglib.container.ContainerRandomAccess;
 import mpicbg.imglib.container.basictypecontainer.DataAccess;
 import mpicbg.imglib.container.dynamic.DynamicContainer;
 import mpicbg.imglib.outofbounds.OutOfBoundsFactory;
@@ -114,7 +114,7 @@ final public class Array< T extends Type< T >, A extends DataAccess > extends Ab
 	*/
 	
 	@Override
-	public IntegerRandomAccess<T> integerRandomAccess(OutOfBoundsFactory<T, Container<T>> factory)
+	public ContainerRandomAccess<T> integerRandomAccess(OutOfBoundsFactory<T, Container<T>> factory)
 	{
 		// TODO Auto-generated method stub
 		return null;

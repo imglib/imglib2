@@ -65,14 +65,14 @@ public class OrthoSliceIterator< T extends Type< T > > implements ContainerItera
 		return l;
 	}
 	
-	public OrthoSliceIterator( final Container< T, ? > container, final int x, final int y, final long[] position )
+	public OrthoSliceIterator( final Container< T > container, final int x, final int y, final long[] position )
 	{
-		this( container.integerRandomAccessSampler(), x, y, position );		
+		this( container.integerRandomAccess(), x, y, position );		
 	}
 
-	public OrthoSliceIterator( final Container< T, ? > container, final int x, final int y, final int[] position )
+	public OrthoSliceIterator( final Container< T > container, final int x, final int y, final int[] position )
 	{
-		this( container.integerRandomAccessSampler(), x, y, intToLong( position ) );		
+		this( container.integerRandomAccess(), x, y, intToLong( position ) );		
 	}
 
 	public OrthoSliceIterator( final ContainerRandomAccess< T > sampler, final int x, final int y, final long[] position )
@@ -96,7 +96,7 @@ public class OrthoSliceIterator< T extends Type< T > > implements ContainerItera
 	}
 
 	@Override
-	public Container< T, ? > getContainer()
+	public Container< T > getContainer()
 	{
 		return sampler.getContainer();
 	}
