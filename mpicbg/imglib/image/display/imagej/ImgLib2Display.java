@@ -12,6 +12,11 @@ import mpicbg.imglib.type.numeric.real.FloatType;
 
 public class ImgLib2Display
 {
+	public static ImagePlus copyToImagePlus( final Container<FloatType,?> container, final int[] dim )
+	{
+		return createImagePlus( container, new VoidConverter<FloatType>(), "image", ImageJFunctions.GRAY32, getDim3( dim ), new int[ container.numDimensions() ] ); 		
+	}
+	
 	public static ImagePlus copyToImagePlus( final Container<FloatType,?> container )
 	{
 		return createImagePlus( container, new VoidConverter<FloatType>(), "image", ImageJFunctions.GRAY32, getDim3( getStandardDimensions() ), new int[ container.numDimensions() ] ); 
