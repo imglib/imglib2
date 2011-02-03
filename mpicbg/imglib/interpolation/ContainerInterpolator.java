@@ -24,30 +24,17 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- *
- * @author Stephan Preibisch & Stephan Saalfeld
  */
 package mpicbg.imglib.interpolation;
 
-import mpicbg.imglib.SamplerFactory;
-import mpicbg.imglib.outofbounds.OutOfBoundsFactory;
+import mpicbg.imglib.container.Container;
 
-public abstract class InterpolatorFactory< T, F > implements SamplerFactory< T, Interpolator< T, F >, F >
+/**
+ * 
+ * @param <T>
+ *
+ * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
+ */
+public interface ContainerInterpolator< T, F > extends Interpolator<T, Container<T> >
 {	
-	protected OutOfBoundsFactory< T, F > outOfBoundsStrategyFactory;
-	
-	public InterpolatorFactory( final OutOfBoundsFactory< T, F > outOfBoundsStrategyFactory )
-	{
-		this.outOfBoundsStrategyFactory = outOfBoundsStrategyFactory;
-	}
-	
-	public void setOutOfBoundsStrategyFactory( final OutOfBoundsFactory< T, F > outOfBoundsStrategyFactory ) 
-	{ 
-		this.outOfBoundsStrategyFactory = outOfBoundsStrategyFactory; 
-	}
-	
-	public OutOfBoundsFactory< T, F > getOutOfBoundsStrategyFactory() 
-	{ 
-		return outOfBoundsStrategyFactory; 
-	}		
 }
