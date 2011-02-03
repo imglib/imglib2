@@ -19,9 +19,44 @@
 
 \section{How images are Functions}
 
+<p><em>f:?&rarr;T</em></p>
+ *
+ * <p>Function is the the basis of imglib, a function over an unspecified
+ * source domain that can be sampled for values from a target domain T.
+ * <em>Note</em> that {@link Sampler Samplers} returned by the {@link Function}
+ * interface alone cannot be addressed in the unspecified source domain and
+ * thus cannot do anything but access a default T.  That is, any implementation
+ * of {@link Function} has to implement another interface that specifies the
+ * source domain over which a T is defined.</p>
+ *
+ * <p>Image processing usually refers to {@link Function Functions} over real
+ * (f:R<sup>n</sup>&rarr;T) or discrete (f:Z<sup>n</sup>&rarr;T) space with the
+ * latter being a subset of the former.  The source domain may be constrained
+ * further as an interval over such space.  The standard interfaces for image
+ * processing are thus:</p>
+ *
+ * <dl>
+ * <dt>{@link RealFunction}</dt>
+ * <dd>random access at real coordinates</dd>
+ * <dt>{@link RealIntervalFunction}</dt>
+ * <dd>random access at real coordinates with an {@link OutOfBoundsStrategy}
+ * that generates values beyond the boundaries of the source domain</dd>
+ * <dt>{@link IterableFunction}</dt>
+ * <dd>access to all T in the target domain and their coordinates in the
+ * source domain via {@link Iterator}</dd>
+ * <dt>{@link IntegerFunction}</dt>
+ * <dd>random access at integer coordinates</dd>
+ * <dt>{@link IntegerIntervalFunction}</dt>
+ * <dd>random access at integer coordinates with an {@link OutOfBoundsStrategy}
+ * that generates values beyond the boundaries of the source domain</dd>
+ * <dl>
+
 \begin{description}
 	\item[{\tt{}Function<T,F extends Function<T,F>>}]{A generic Function from a not further specified domain into {\tt{}T}.  The interface declares a method to create a {\tt{Sampler<T> S}} through a {\tt{SamplerFactory<T,S,F>}}.  The latter having F as generic parameter, it can be implemented for particular specializations of the Function interface.}
 	\item[{\tt{}PositionableFunction<T,P extends Positionable \& Sampler<T>,F extends PositionableFunction<T,F>>}]{A generic Function from a not further specified domain into {\tt{}T}.  The interface declares a method to create a {\tt{Sampler<T> S}} through a {\tt{SamplerFactory<T,S,F>}}.  The latter having F as generic parameter, it can be implemented for particular specializations of the Function interface.}
 \end{description}
+
+\section{Screen Images}
+A screen image for display purposes through Java AWT maps a 2d-slice or projection of an image into an AWT Image.  An ARGBScreenImage is a 2d Array of ARGBLegacyType whose internal int[] array serves as data for an AWT BufferedImage.
 
 \end{document}
