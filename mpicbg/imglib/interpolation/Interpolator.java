@@ -53,11 +53,4 @@ public interface Interpolator< T, F > extends Sampler< T >, Localizable, Positio
 	 * @return - the image
 	 */
 	public F getFunction();
-
-	/**
-	 * Closes the interpolator and with it any cursors or other containers,
-	 * images or datastructures that might have been created to make the
-	 * interpolation work
-	 */
-	public void close();	
 }

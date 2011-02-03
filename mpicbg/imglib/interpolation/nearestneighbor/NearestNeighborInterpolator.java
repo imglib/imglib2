@@ -27,11 +27,11 @@
  */
 package mpicbg.imglib.interpolation.nearestneighbor;
 
+import mpicbg.imglib.container.Container;
 import mpicbg.imglib.container.ContainerRandomAccess;
-import mpicbg.imglib.image.Image;
 import mpicbg.imglib.interpolation.Interpolator;
 import mpicbg.imglib.location.transform.RoundRasterPositionable;
-import mpicbg.imglib.outofbounds.RasterOutOfBoundsFactory;
+import mpicbg.imglib.outofbounds.OutOfBoundsFactory;
 import mpicbg.imglib.type.Type;
 
 /**
@@ -40,22 +40,22 @@ import mpicbg.imglib.type.Type;
  *
  * @author Stephan Preibisch and Stephan Saalfeld
  */
-public class NearestNeighborInterpolator< T extends Type< T > > extends RoundRasterPositionable< ContainerRandomAccess< T > > implements Interpolator< T >
+public class NearestNeighborInterpolator< T extends Type< T > > extends RoundRasterPositionable< ContainerRandomAccess< T > > implements Interpolator< T, Container<T> >
 {
-	final protected RasterOutOfBoundsFactory< T > outOfBoundsStrategyFactory;
-	final protected Image< T > image;
+	final protected OutOfBoundsFactory< T, Container<T> > outOfBoundsStrategyFactory;
+	final protected Container< T > container;
 	
-	final static private < T extends Type< T > > ContainerRandomAccess< T > createPositionableRasterSampler( final Image< T > image, final RasterOutOfBoundsFactory<T> outOfBoundsStrategyFactory )
+	final static private < T extends Type< T > > ContainerRandomAccess< T > createPositionableRasterSampler( Container< T > container, final OutOfBoundsFactory<T,Container<T>> outOfBoundsStrategyFactory )
 	{
-		return image.createPositionableRasterSampler( outOfBoundsStrategyFactory );
+		return container.integerRandomAccess( outOfBoundsStrategyFactory );
 	}
 	
-	protected NearestNeighborInterpolator( final Image<T> image, final RasterOutOfBoundsFactory<T> outOfBoundsStrategyFactory )
+	protected NearestNeighborInterpolator( Container< T > container, final OutOfBoundsFactory<T,Container<T>> outOfBoundsStrategyFactory )
 	{
-		super( createPositionableRasterSampler( image, outOfBoundsStrategyFactory ) );
+		super( createPositionableRasterSampler( container, outOfBoundsStrategyFactory ) );
 		
 		this.outOfBoundsStrategyFactory = outOfBoundsStrategyFactory;
-		this.image = image;
+		this.container = container;
 	}
 	
 	
@@ -64,7 +64,7 @@ public class NearestNeighborInterpolator< T extends Type< T > > extends RoundRas
 	@Override
 	public int numDimensions()
 	{
-		return image.numDimensions();
+		return container.numDimensions();
 	}
 
 	/**
@@ -73,7 +73,7 @@ public class NearestNeighborInterpolator< T extends Type< T > > extends RoundRas
 	 * @return - the {@link RasterOutOfBoundsFactory}
 	 */
 	@Override
-	public RasterOutOfBoundsFactory< T > getOutOfBoundsStrategyFactory()
+	public OutOfBoundsFactory< T, Container<T> > getOutOfBoundsStrategyFactory()
 	{
 		return outOfBoundsStrategyFactory;
 	}
@@ -84,19 +84,16 @@ public class NearestNeighborInterpolator< T extends Type< T > > extends RoundRas
 	 * @return - the image
 	 */
 	@Override
-	public Image< T > getImage()
+	public Container< T > getFunction()
 	{
-		return image;
+		return container;
 	}
 	
-	
-	/* RasterSampler */
-
-	@Override
-	public void close() { target.close(); }
-
 	@Override
 	public T get() { return target.get(); }
+	 
+	@Override 
+	public T create() { return target.create(); }
 	
 	@Override
 	@Deprecated

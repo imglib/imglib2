@@ -29,20 +29,9 @@
  */
 package mpicbg.imglib.interpolation;
 
-import mpicbg.imglib.type.Type;
 
-public interface Interpolator3D< T extends Type< T > > extends Interpolator< T >
+public interface Interpolator3D< T, F > extends Interpolator< T, F >
 {
-	/**
-	 * Moves the interpolator to a random position inside or out of image bounds.
-	 * This method is typically more efficient than setting the position
-	 * 
-	 * @param float x - the float position in x
-	 * @param float y - the float position in y
-	 * @param float z - the float position in z
-	 */
-	public void moveTo( float x, float y, float z );
-
 	/**
 	 * Moves the interpolator a certain distance given by the vector to a random position inside or out of image bounds.
 	 * This method is typically more efficient than setting the position
@@ -51,7 +40,7 @@ public interface Interpolator3D< T extends Type< T > > extends Interpolator< T >
 	 * @param float y - the float vector in y
 	 * @param float z - the float vector in z
 	 */
-	public void moveRel( float x, float y, float z );
+	public void move( float x, float y, float z );
 	
 	/**
 	 * Sets the interpolator to a random position inside or out of image bounds.
