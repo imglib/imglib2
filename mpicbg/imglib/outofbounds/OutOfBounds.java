@@ -27,8 +27,9 @@
  */
 package mpicbg.imglib.outofbounds;
 
-import mpicbg.imglib.RealLocalizable;
-import mpicbg.imglib.RealRandomAccess;
+import mpicbg.imglib.IntegerLocalizable;
+import mpicbg.imglib.IntegerPositionable;
+import mpicbg.imglib.IntegerRandomAccess;
 import mpicbg.imglib.Sampler;
 
 /**
@@ -36,7 +37,7 @@ import mpicbg.imglib.Sampler;
  *
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-public interface OutOfBounds< T > extends RealLocalizable, RealRandomAccess, Sampler< T >
+public interface OutOfBounds< T > extends IntegerRandomAccess< T >
 {
 	public boolean isOutOfBounds();
 }

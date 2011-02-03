@@ -34,7 +34,7 @@ package mpicbg.imglib;
  * this does <em>not</em> imply that for <em>all</em> coordinates in the
  * {@link RealInterval} function values exist or can be generated.  It only
  * defines where the minimum and maximum source coordinates are.  E.g. an
- * {@link IterableFunction} has a limited number of values and a source
+ * {@link IterableRealInterval} has a limited number of values and a source
  * coordinate for each.  By that, minimum and maximum are defined but the
  * {@link Function} does not define a value for all coordinates in between.
  *

@@ -29,8 +29,8 @@ package mpicbg.imglib.container;
 
 import mpicbg.imglib.IntegerInterval;
 import mpicbg.imglib.IntegerLocalizable;
-import mpicbg.imglib.outofbounds.RasterOutOfBounds;
-import mpicbg.imglib.outofbounds.RasterOutOfBoundsFactory;
+import mpicbg.imglib.outofbounds.RealOutOfBounds;
+import mpicbg.imglib.outofbounds.RealOutOfBounds;
 import mpicbg.imglib.type.Type;
 
 /**
@@ -42,9 +42,9 @@ import mpicbg.imglib.type.Type;
 public abstract class AbstractOutOfBoundsRandomAccessContainerSampler< T extends Type< T > > extends AbstractContainerSampler< T > implements RandomAccessContainerSampler< T >
 {
 	/* performs the actual moves and generates/queries a Type */
-	final protected RasterOutOfBounds< T > outOfBounds;
+	final protected RealOutOfBounds< T > outOfBounds;
 	
-	public AbstractOutOfBoundsRandomAccessContainerSampler( final IntegerInterval f, final RasterOutOfBounds< T > outOfBounds )
+	public AbstractOutOfBoundsRandomAccessContainerSampler( final IntegerInterval f, final RealOutOfBounds< T > outOfBounds )
 	{
 		super( f.numDimensions() );
 		

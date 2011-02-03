@@ -28,7 +28,7 @@
 package mpicbg.imglib.interpolation.nearestneighbor;
 
 import mpicbg.imglib.IntegerLocalizable;
-import mpicbg.imglib.RealLocalizable;
+import mpicbg.imglib.Localizable;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.outofbounds.RasterOutOfBoundsFactory;
 import mpicbg.imglib.type.Type;
@@ -141,7 +141,7 @@ public class NearestNeighborInterpolator1D< T extends Type< T > > extends Neares
 	}
 
 	@Override
-	public void moveTo( final RealLocalizable localizable )
+	public void moveTo( final Localizable localizable )
 	{
 		x = localizable.getFloatPosition( 0 );
 		final int roundX = round( x );
@@ -177,7 +177,7 @@ public class NearestNeighborInterpolator1D< T extends Type< T > > extends Neares
 	}
 
 	@Override
-	public void setPosition( final RealLocalizable localizable )
+	public void setPosition( final Localizable localizable )
 	{
 		x = localizable.getFloatPosition( 0 );
 		target.setPosition( round( x ), 0 );

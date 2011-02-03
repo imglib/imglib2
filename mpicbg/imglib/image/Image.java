@@ -32,7 +32,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.concurrent.atomic.AtomicLong;
 
-import mpicbg.imglib.IntegerIntervalFunction;
+import mpicbg.imglib.RandomAccessibleIntegerInterval;
 import mpicbg.imglib.Function;
 import mpicbg.imglib.IterableRaster;
 import mpicbg.imglib.RandomAccessibleRaster;
@@ -61,7 +61,7 @@ import mpicbg.imglib.type.label.FakeType;
  */
 public class Image< T extends Type< T > > implements
 		ImageProperties,
-		IntegerIntervalFunction< T, Image< T >, RandomAccessContainerSampler< T >, ContainerIterator< T > >
+		RandomAccessibleIntegerInterval< T, Image< T >, RandomAccessContainerSampler< T >, ContainerIterator< T > >
 {
 	final protected ArrayList< ContainerSampler< T > > rasterSamplers;
 	final ContainerFactory containerFactory;

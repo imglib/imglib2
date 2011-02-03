@@ -33,7 +33,7 @@ import mpicbg.imglib.algorithm.math.MathLib;
 import mpicbg.imglib.container.Container;
 import mpicbg.imglib.container.RandomAccessContainerSampler;
 import mpicbg.imglib.image.Image;
-import mpicbg.imglib.iterator.FlatZeroBoundPositiveIntegerIntervalIterator;
+import mpicbg.imglib.iterator.ZeroMinIntegerIntervalIterator;
 
 /**
  * Use this class to iterate a virtual rectangular raster in flat order, that
@@ -59,7 +59,7 @@ import mpicbg.imglib.iterator.FlatZeroBoundPositiveIntegerIntervalIterator;
  * situations where, for <em>each</em> pixel, you want to localize and/or set
  * the {@link RandomAccessContainerSampler}, that is in a dense sampling
  * situation.  For localizing sparsely (e.g. under an external condition),
- * use {@link FlatZeroBoundPositiveIntegerIntervalIterator} instead.
+ * use {@link ZeroMinIntegerIntervalIterator} instead.
  * 
  * TODO implement it, it's still the basic FlatRasterIterator!!!!!!
  *  

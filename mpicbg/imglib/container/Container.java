@@ -28,8 +28,8 @@
 package mpicbg.imglib.container;
 
 import mpicbg.imglib.InjectiveIntegerInterval;
-import mpicbg.imglib.IntegerFunction;
-import mpicbg.imglib.IntegerIntervalFunction;
+import mpicbg.imglib.IntegerRandomAccessible;
+import mpicbg.imglib.RandomAccessibleIntegerInterval;
 import mpicbg.imglib.type.Type;
 
 /**
@@ -43,8 +43,8 @@ public interface Container<
 		T extends Type< T >,
 		F extends Container< T, F > >
 	extends
-		IntegerFunction< T, F, RandomAccessContainerSampler< T > >,
-		IntegerIntervalFunction< T, F, RandomAccessContainerSampler< T >, ContainerIterator< T > >,
+		IntegerRandomAccessible< T, F, RandomAccessContainerSampler< T > >,
+		RandomAccessibleIntegerInterval< T, F, RandomAccessContainerSampler< T >, ContainerIterator< T > >,
 		InjectiveIntegerInterval
 {
 	public ContainerFactory factory();

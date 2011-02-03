@@ -39,7 +39,7 @@ import mpicbg.imglib.location.LocalizingFlatIntegerIntervalIterator;
  * Use this class to iterate a virtual rectangular raster in flat order, that
  * is: row by row, plane by plane, cube by cube, ...  This is useful for
  * iterating an arbitrary {@link Container} in a defined order.  For that,
- * connect a {@link FlatZeroBoundPositiveIntegerIntervalIterator} to a {@link RandomAccessContainerSampler}.
+ * connect a {@link ZeroMinIntegerIntervalIterator} to a {@link RandomAccessContainerSampler}.
  * 
  * <pre>
  * ...
@@ -54,7 +54,7 @@ import mpicbg.imglib.location.LocalizingFlatIntegerIntervalIterator;
  * ...
  * </pre>
  * 
- * Note that {@link FlatZeroBoundPositiveIntegerIntervalIterator} is the right choice in situations where
+ * Note that {@link ZeroMinIntegerIntervalIterator} is the right choice in situations where
  * <em>not</em> for each pixel you want to localize and/or set the
  * {@link RandomAccessContainerSampler}, that is in a sparse sampling situation.
  * For localizing at each iteration step (as in the simplified example above),
@@ -62,7 +62,7 @@ import mpicbg.imglib.location.LocalizingFlatIntegerIntervalIterator;
  *  
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-final public class FlatZeroBoundPositiveIntegerIntervalIterator extends IntegerIntervalIterator
+final public class ZeroMinIntegerIntervalIterator extends IntegerIntervalIterator
 {
 	final static private long[] max( final long[] size )
 	{
@@ -72,12 +72,12 @@ final public class FlatZeroBoundPositiveIntegerIntervalIterator extends IntegerI
 		return max;
 	}
 	
-	public FlatZeroBoundPositiveIntegerIntervalIterator( final long[] dimensions )
+	public ZeroMinIntegerIntervalIterator( final long[] dimensions )
 	{
 		super( new long[ dimensions.length ], max( dimensions ) );
 	}
 
-	public FlatZeroBoundPositiveIntegerIntervalIterator( final IntegerInterval interval )
+	public ZeroMinIntegerIntervalIterator( final IntegerInterval interval )
 	{
 		this( size( interval ) );
 	}

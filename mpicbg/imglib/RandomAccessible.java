@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2011, Tobias Pietzsch & Stephan Preibisch & Stephan Saalfeld
+ * Copyright (c) 2010, Stephan Saalfeld
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -27,10 +27,22 @@
  */
 package mpicbg.imglib;
 
+
 /**
+ * <p><em>f:R<sup>n</sup>&rarr;T</em></p>
+ * 
+ * <p>A function over real space that can create a random access
+ * {@link Sampler}.</p>
  * 
  *
- * @author Tobias Pietzsch & Stephan Preibisch & Stephan Saalfeld <saalfeld@mpi-cbg.de>
+ * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-public interface IntegerRandomAccess< T > extends IntegerLocalizable, IntegerPositionable, Sampler< T >
-{}
+public interface RandomAccessible< T > extends EuclideanSpace
+{
+	/**
+	 * Create a random access sampler for real coordinates.
+	 * 
+	 * @return random access sampler
+	 */
+	public RandomAccess< T > randomAccess();
+}

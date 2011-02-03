@@ -28,8 +28,8 @@
 package mpicbg.imglib.interpolation;
 
 import mpicbg.imglib.IntegerLocalizable;
-import mpicbg.imglib.RealLocalizable;
-import mpicbg.imglib.RealRandomAccess;
+import mpicbg.imglib.Localizable;
+import mpicbg.imglib.Positionable;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.outofbounds.RasterOutOfBoundsFactory;
 import mpicbg.imglib.type.Type;
@@ -40,7 +40,7 @@ import mpicbg.imglib.type.Type;
  *
  * @author Stephan Preibisch and Stephan Saalfeld
  */
-abstract public class AbstractInterpolator< T extends Type< T >, LocalizablePositionable extends RealLocalizable & RealRandomAccess > implements Interpolator< T >
+abstract public class AbstractInterpolator< T extends Type< T >, LocalizablePositionable extends Localizable & Positionable > implements Interpolator< T >
 {
 	final protected RasterOutOfBoundsFactory< T > outOfBoundsStrategyFactory;
 	final protected LocalizablePositionable localizablePositionable;
@@ -159,13 +159,13 @@ abstract public class AbstractInterpolator< T extends Type< T >, LocalizablePosi
 	}
 
 	@Override
-	public void moveTo( final RealLocalizable localizable )
+	public void moveTo( final Localizable localizable )
 	{
 		localizablePositionable.moveTo( localizable );
 	}
 
 	@Override
-	public void setPosition( final RealLocalizable localizable )
+	public void setPosition( final Localizable localizable )
 	{
 		localizablePositionable.setPosition( localizable );
 	}

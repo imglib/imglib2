@@ -32,7 +32,7 @@ import mpicbg.imglib.container.Container;
 /**
  * <p><em>f</em>:R<sup><em>n</em></sup>&isin;[0,<em>s</em>]&rarr;T</em></p>
  * 
- * <p>A {@link Function} over real space and a finite set of elements in the
+ * <p>A function over real space and a finite set of elements in the
  * target domain <em>T</em>.  All target elements <em>T</em> can be accessed
  * through Iterators.  There is an iterator that tracks its source location
  * at each move and one that calculates it on request only.  Depending on
@@ -45,13 +45,10 @@ import mpicbg.imglib.container.Container;
  *
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-public interface IterableFunction<
-		T,
-		F extends IterableFunction< T, F, I >,
-		I extends Iterator & RealLocalizable & java.util.Iterator< T > & Sampler< T > > extends Function< T, F >, RealInterval, Iterable< T >
+public interface IterableRealInterval< T > extends RealInterval, Iterable< T >
 {
 	/**
-	 * <p>Returns a {@link RealLocalizable} {@link Iterator} that iterates with
+	 * <p>Returns a {@link Cursor} that iterates with
 	 * optimal speed without calculating the location at each iteration step.
 	 * Localization is performed on demand.</p>
 	 * 
@@ -60,11 +57,10 @@ public interface IterableFunction<
 	 * 
 	 * @return I fast iterating iterator
 	 */
-	@Override
-	public I iterator();
+	public Cursor< T > cursor();
 
 	/**
-	 * <p>Returns a {@link RealLocalizable} {@link Iterator} that calculates its
+	 * <p>Returns a {@link Localizable} {@link Iterator} that calculates its
 	 * location at each iteration step.  That is, localization is performed
 	 * with optimal speed.</p>
 	 * 
@@ -73,18 +69,18 @@ public interface IterableFunction<
 	 * 
 	 * @return I fast localizing iterator
 	 */
-	public I localizingIterator();
+	public Cursor< T > localizingCursor();
 	
 	/**
 	 * <p>Returns the number of elements in this
-	 * {@link IterableFunction Function}.</p>
+	 * {@link IterableRealInterval Function}.</p>
 	 * 
 	 * @return number of elements
 	 */
 	public long size();
 	
 	/**
-	 * <p>Returns <tt>true</tt> if this {@link IterableFunction} and
+	 * <p>Returns <tt>true</tt> if this {@link IterableRealInterval} and
 	 * <em>f</em> can be copied by synchronous iteration.  That is, having
 	 * an {@link Iterator} on this and another {@link Iterator} on <em>f</em>,
 	 * moving both in synchrony will point both of them to corresponding
@@ -101,5 +97,5 @@ public interface IterableFunction<
 	 * @return <tt>true</tt> if copy by iteration is definitely possible,
 	 *   <tt>false</tt> otherwise
 	 */
-	public boolean canCopy( final IterableFunction< ?, ?, ? > f );
+	public boolean equalIterationOrder( final IterableRealInterval< ? > f );
 }

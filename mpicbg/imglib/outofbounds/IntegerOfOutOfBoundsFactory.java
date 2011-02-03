@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2011, Tobias Pietzsch & Stephan Preibisch & Stephan Saalfeld
+ * Copyright (c) 2010, Stephan Saalfeld
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -25,12 +25,16 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-package mpicbg.imglib;
+package mpicbg.imglib.outofbounds;
+
 
 /**
  * 
+ * @param <T>
  *
- * @author Tobias Pietzsch & Stephan Preibisch & Stephan Saalfeld <saalfeld@mpi-cbg.de>
+ * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-public interface IntegerRandomAccess< T > extends IntegerLocalizable, IntegerPositionable, Sampler< T >
-{}
+public interface IntegerOfOutOfBoundsFactory< T, F >
+{
+	public OutOfBounds< T > create( F f );
+}

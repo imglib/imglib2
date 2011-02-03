@@ -29,23 +29,20 @@ package mpicbg.imglib;
 
 
 /**
- * <p><em>f:R<sup>n</sup>&rarr;T</em></p>
+ * <p><em>f:Z<sup>n</sup>&rarr;T</em></p>
  * 
- * <p>A {@link Function} over real space that can create a random access
+ * <p>A function over integer space that can create a random access
  * {@link Sampler}.</p>
  * 
  *
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-public interface RealFunction<
-		T,
-		F extends RealFunction< T, F, P >,
-		P extends RealRandomAccess & Sampler< T > > extends Function< T, F >
+public interface IntegerRandomAccessible< T > extends EuclideanSpace
 {
 	/**
-	 * Create a random access sampler for real coordinates.
+	 * Create a random access sampler for integer coordinates.
 	 * 
 	 * @return random access sampler
 	 */
-	public P positionableSampler();
+	public IntegerRandomAccess< T > integerRandomAccess();
 }

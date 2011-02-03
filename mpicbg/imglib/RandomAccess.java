@@ -32,5 +32,5 @@ package mpicbg.imglib;
  *
  * @author Tobias Pietzsch & Stephan Preibisch & Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-public interface IntegerRandomAccess< T > extends IntegerLocalizable, IntegerPositionable, Sampler< T >
+public interface RandomAccess< T > extends Localizable, Positionable, Sampler< T >
 {}

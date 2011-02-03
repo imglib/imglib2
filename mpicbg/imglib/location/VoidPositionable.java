@@ -28,18 +28,18 @@
 package mpicbg.imglib.location;
 
 import mpicbg.imglib.IntegerLocalizable;
-import mpicbg.imglib.IntegerRandomAccess;
-import mpicbg.imglib.RealLocalizable;
-import mpicbg.imglib.RealRandomAccess;
+import mpicbg.imglib.IntegerPositionable;
+import mpicbg.imglib.Localizable;
+import mpicbg.imglib.Positionable;
 
 /**
- * A {@link IntegerRandomAccess} that just does nothing.  This is the default
- * linked {@link IntegerRandomAccess} of any {@link IntegerRandomAccess}.  This
+ * A {@link IntegerPositionable} that just does nothing.  This is the default
+ * linked {@link IntegerPositionable} of any {@link IntegerPositionable}.  This
  * object doing nothing, it is implemented as a Singleton.
  *
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-final public class VoidPositionable implements RealRandomAccess
+final public class VoidPositionable implements Positionable
 {
 	final static private VoidPositionable instance = new VoidPositionable();
 	
@@ -65,7 +65,7 @@ final public class VoidPositionable implements RealRandomAccess
 	final public void move( final long distance, final int dim ){}
 	
 	@Override
-	final public void move( final RealLocalizable localizable ){}
+	final public void move( final Localizable localizable ){}
 	
 	@Override
 	final public void move( final IntegerLocalizable localizable ){}
@@ -83,7 +83,7 @@ final public class VoidPositionable implements RealRandomAccess
 	final public void moveTo( final long[] position ){}
 	
 	@Override
-	final public void setPosition( final RealLocalizable localizable ){}
+	final public void setPosition( final Localizable localizable ){}
 	
 	@Override
 	final public void setPosition( final IntegerLocalizable localizable ){}

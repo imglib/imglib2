@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2010, Stephan Saalfeld
+ * Copyright (c) 2011, Tobias Pietzsch & Stephan Preibisch & Stephan Saalfeld
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -27,27 +27,10 @@
  */
 package mpicbg.imglib;
 
-import mpicbg.imglib.outofbounds.OutOfBounds;
-import mpicbg.imglib.outofbounds.OutOfBoundsFactory;
-
 /**
- * <p><em>f</em>:{x&isin;R<sup><em>n</em></sup>|[min,max]&rarr;T}</em></p>
  * 
- * <p>A {@link Function} over an n-dimensional real interval that can create a
- * random access {@link Sampler} that generates values beyond boundaries
- * through an {@link OutOfBounds}.</p>
  *
- * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
+ * @author Tobias Pietzsch & Stephan Preibisch & Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-public interface RealIntervalFunction<
-		T,
-		F extends RealIntervalFunction< T, F, P >,
-		P extends RealRandomAccess & Sampler< T > > extends Function< T, F >
-{
-	/**
-	 * Create a random access sampler for real coordinates.
-	 * 
-	 * @return random access sampler
-	 */
-	public P positionableSampler( final OutOfBoundsFactory< T, F > factory );
-}
+public interface Cursor< T > extends Localizable, Sampler< T >, Iterator, java.util.Iterator< T >
+{}

@@ -28,7 +28,7 @@
 package mpicbg.imglib.container;
 
 import mpicbg.imglib.IntegerLocalizable;
-import mpicbg.imglib.IntegerRandomAccess;
+import mpicbg.imglib.IntegerPositionable;
 import mpicbg.imglib.type.Type;
 
 /**
@@ -43,7 +43,7 @@ import mpicbg.imglib.type.Type;
  *
  * @author Stephan Preibisch and Stephan Saalfeld
  */
-public interface RandomAccessContainerSampler< T extends Type< T > > extends ContainerSampler< T >, IntegerLocalizable, IntegerRandomAccess
+public interface RandomAccessContainerSampler< T extends Type< T > > extends ContainerSampler< T >, IntegerLocalizable, IntegerPositionable
 {
 	/**
 	 * True if located out of image bounds.

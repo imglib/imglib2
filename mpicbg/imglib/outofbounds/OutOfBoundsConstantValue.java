@@ -27,9 +27,10 @@
  */
 package mpicbg.imglib.outofbounds;
 
+import mpicbg.imglib.IntegerInterval;
 import mpicbg.imglib.IntegerLocalizable;
+import mpicbg.imglib.IntegerRandomAccess;
 import mpicbg.imglib.algorithm.math.MathLib;
-import mpicbg.imglib.container.RandomAccessContainerSampler;
 import mpicbg.imglib.type.Type;
 
 /**
@@ -38,11 +39,11 @@ import mpicbg.imglib.type.Type;
  *
  * @author Stephan Preibisch and Stephan Saalfeld
  */
-public class OutOfBoundsConstantValue< T extends Type< T > > implements RasterOutOfBounds< T >
+public class OutOfBoundsConstantValue< T extends Type< T > > implements OutOfBounds< T >
 {
 	final protected T value;
 	
-	final protected RandomAccessContainerSampler< T > sampler;
+	final protected IntegerRandomAccess< T > sampler;
 	
 	final protected int numDimensions;
 	
@@ -53,26 +54,19 @@ public class OutOfBoundsConstantValue< T extends Type< T > > implements RasterOu
 	protected boolean isOutOfBounds = false;
 	
 	public OutOfBoundsConstantValue(
-			final RandomAccessContainerSampler< T > source,
+			final IntegerRandomAccess< T > source,
+			final IntegerInterval interval,
 			final T value )
 	{
-		this( source, source.getContainer().integerRandomAccessSampler(), value );
-	}
-	
-	protected OutOfBoundsConstantValue(
-			final RandomAccessContainerSampler< T > source,
-			final RandomAccessContainerSampler< T > sampler,
-			final T value )
-	{
-		this.sampler = sampler;
+		this.sampler = source;
 		this.value = value;
-		numDimensions = source.numDimensions();
+		numDimensions = interval.numDimensions();
 		dimension = new long[ numDimensions ];
-		source.getInterval().getDimensions();
-		position = new int[ numDimensions ];
+		interval.size( dimension );
+		position = new long[ numDimensions ];
 		dimIsOutOfBounds = new boolean[ numDimensions ];
 	}
-	
+		
 	final private void checkOutOfBounds()
 	{
 		for ( int d = 0; d < numDimensions; ++d )
@@ -140,7 +134,7 @@ public class OutOfBoundsConstantValue< T extends Type< T > > implements RasterOu
 	public void localize( final int[] pos )
 	{
 		for ( int d = 0; d < numDimensions; d++ )
-			pos[ d ] = this.position[ d ];
+			pos[ d ] = ( int )this.position[ d ];
 	}
 	
 	@Override
@@ -157,7 +151,7 @@ public class OutOfBoundsConstantValue< T extends Type< T > > implements RasterOu
 	public double getDoublePosition( final int dim ){ return position[ dim ]; }
 	
 	@Override
-	public int getIntPosition( final int dim ){ return position[ dim ]; }
+	public int getIntPosition( final int dim ){ return ( int )position[ dim ]; }
 
 	@Override
 	public long getLongPosition( final int dim ){ return position[ dim ]; }
@@ -172,7 +166,7 @@ public class OutOfBoundsConstantValue< T extends Type< T > > implements RasterOu
 	public void fwd( final int dim )
 	{
 		final boolean wasOutOfBounds = isOutOfBounds;
-		final int p = ++position[ dim ];
+		final long p = ++position[ dim ];
 		if ( p == 0 )
 		{
 			dimIsOutOfBounds[ dim ] = false;
@@ -195,7 +189,7 @@ public class OutOfBoundsConstantValue< T extends Type< T > > implements RasterOu
 	public void bck( final int dim )
 	{
 		final boolean wasOutOfBounds = isOutOfBounds;
-		final int p = position[ dim ]--;
+		final long p = position[ dim ]--;
 		if ( p == 0 )
 			dimIsOutOfBounds[ dim ] = isOutOfBounds = true;
 		else if ( p == dimension[ dim ] )
@@ -233,24 +227,24 @@ public class OutOfBoundsConstantValue< T extends Type< T > > implements RasterOu
 	}
 	
 	@Override
-	public void moveTo( final IntegerLocalizable localizable )
+	public void move( final IntegerLocalizable localizable )
 	{
 		for ( int d = 0; d < numDimensions; ++d )
-			move( localizable.getIntPosition( d ) - position[ d ], d );
+			move( localizable.getIntPosition( d ), d );
 	}
 	
 	@Override
-	public void moveTo( final int[] pos )
+	public void move( final int[] pos )
 	{
 		for ( int d = 0; d < numDimensions; ++d )
-			move( pos[ d ] - this.position[ d ], d );
+			move( pos[ d ], d );
 	}
 	
 	@Override
-	public void moveTo( final long[] pos )
+	public void move( final long[] pos )
 	{
 		for ( int d = 0; d < numDimensions; ++d )
-			move( pos[ d ] - this.position[ d ], d );
+			move( pos[ d ], d );
 	}
 	
 	@Override

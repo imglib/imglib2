@@ -41,7 +41,7 @@ import mpicbg.imglib.container.RandomAccessContainerSampler;
  * @author Stephan Preibisch & Stephan Saalfeld
  *
  */
-public interface IntegerLocalizable extends RealLocalizable
+public interface IntegerLocalizable extends Localizable
 {
 	/**
 	 * Write the current position into the passed array.

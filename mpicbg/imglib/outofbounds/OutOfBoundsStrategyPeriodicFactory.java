@@ -27,12 +27,12 @@
  */
 package mpicbg.imglib.outofbounds;
 
-import mpicbg.imglib.IntegerIntervalFunction;
+import mpicbg.imglib.RandomAccessibleIntegerInterval;
 import mpicbg.imglib.container.RandomAccessContainerSampler;
 import mpicbg.imglib.type.Type;
 
 /**
- * Create appropriate strategies that virtually extend a {@link IntegerIntervalFunction}
+ * Create appropriate strategies that virtually extend a {@link RandomAccessibleIntegerInterval}
  * periodically.
  *
  * @author Stephan Preibisch and Stephan Saalfeld <saalfeld@mpi-cbg.de>

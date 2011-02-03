@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2009--2010, Stephan Preibisch & Stephan Saalfeld
+ * Copyright (c) 2009--2010, Stephan Saalfeld
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -9,7 +9,7 @@
  * list of conditions and the following disclaimer.  Redistributions in binary
  * form must reproduce the above copyright notice, this list of conditions and
  * the following disclaimer in the documentation and/or other materials
- * provided with the distribution.  Neither the name of the Fiji project nor
+ * provided with the distribution.  Neither the name of the imglib project nor
  * the names of its contributors may be used to endorse or promote products
  * derived from this software without specific prior written permission.
  * 
@@ -27,16 +27,16 @@
  */
 package mpicbg.imglib.outofbounds;
 
-import mpicbg.imglib.container.RandomAccessContainerSampler;
-import mpicbg.imglib.type.Type;
+import mpicbg.imglib.Localizable;
+import mpicbg.imglib.Positionable;
+import mpicbg.imglib.Sampler;
 
 /**
  * 
- * @param <T>
  *
- * @author Stephan Preibisch and Stephan Saalfeld <saalfeld@mpi-cbg.de>
+ * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-public abstract class RasterOutOfBoundsFactory< T extends Type< T >, F >
+public interface RealOutOfBounds< T > extends OutOfBounds< T >, Localizable, Positionable, Sampler< T >
 {
-	public abstract RasterOutOfBounds< T > create( RandomAccessContainerSampler< T > sampler );
+	public boolean isOutOfBounds();
 }

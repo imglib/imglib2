@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2009--2010, Stephan Saalfeld
+ * Copyright (c) 2011, Tobias Pietzsch & Stephan Preibisch & Stephan Saalfeld
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -25,19 +25,18 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-package mpicbg.imglib.outofbounds;
-
-import mpicbg.imglib.IntegerLocalizable;
-import mpicbg.imglib.IntegerRandomAccess;
-import mpicbg.imglib.Sampler;
-import mpicbg.imglib.type.Type;
+package mpicbg.imglib;
 
 /**
  * 
  *
- * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
+ * @author Tobias Pietzsch & Stephan Preibisch & Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-public interface RasterOutOfBounds< T extends Type< T > > extends IntegerLocalizable, IntegerRandomAccess, Sampler< T >
+public interface IterableIntegerInterval< T > extends IterableRealInterval< T >, IntegerInterval
 {
-	public boolean isOutOfBounds();
+	@Override
+	public IntegerCursor< T > cursor();
+	
+	@Override
+	public IntegerCursor< T > localizingCursor();
 }

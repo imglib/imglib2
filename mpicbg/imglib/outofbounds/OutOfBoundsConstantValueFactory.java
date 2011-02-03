@@ -27,8 +27,9 @@
  */
 package mpicbg.imglib.outofbounds;
 
-import mpicbg.imglib.InjectiveIntegerInterval;
-import mpicbg.imglib.container.RandomAccessContainerSampler;
+import mpicbg.imglib.IntegerInterval;
+import mpicbg.imglib.IntegerRandomAccess;
+import mpicbg.imglib.IntegerRandomAccessible;
 import mpicbg.imglib.type.Type;
 
 /**
@@ -37,16 +38,16 @@ import mpicbg.imglib.type.Type;
  *
  * @author Stephan Preibisch and Stephan Saalfeld
  */
-public class OutOfBoundsConstantValueFactory< T extends Type< T > >
-		extends RasterOutOfBoundsFactory< T, InjectiveIntegerInterval >
+public class OutOfBoundsConstantValueFactory< T extends Type< T >, F extends IntegerInterval & IntegerRandomAccessible< T > >
+		implements OutOfBoundsFactory< T, F >
 {
 	protected T value;
 
 	public OutOfBoundsConstantValueFactory()
 	{
-		this.value = null;
+		
 	}
-
+	
 	public OutOfBoundsConstantValueFactory( final T value )
 	{
 		this.value = value;
@@ -63,10 +64,13 @@ public class OutOfBoundsConstantValueFactory< T extends Type< T > >
 	}
 
 	@Override
-	public OutOfBoundsConstantValue< T > create( final RandomAccessContainerSampler< T > sampler )
+	public OutOfBoundsConstantValue< T > create( final F f )
 	{
-		if ( value == null ) return new OutOfBoundsConstantValue< T >( sampler, sampler.create() );
-		else return new OutOfBoundsConstantValue< T >( sampler, value );
+		final IntegerRandomAccess< T > source = f.integerRandomAccess();
+		
+		if ( value == null )
+			value = source.create();
+		
+		return new OutOfBoundsConstantValue< T >( source, f, value );
 	}
-
 }

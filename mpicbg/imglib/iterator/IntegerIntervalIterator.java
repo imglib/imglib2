@@ -40,6 +40,8 @@ import mpicbg.imglib.Iterator;
 public class IntegerIntervalIterator implements Iterator, IntegerLocalizable
 {
 	final protected long[] size;
+	final protected long[] min;
+	final protected long[] max;
 	final protected long[] steps;
 	final protected int n;
 	final protected long lastIndex;
@@ -61,18 +63,49 @@ public class IntegerIntervalIterator implements Iterator, IntegerLocalizable
 		long k = steps[ 0 ] = 1;
 		for ( int d = 0; d < m; )
 		{
-			final long s = max[ d ] - min[ d ] + 1; 
+			final long mind = min[ d ];
+			final long maxd = max[ d ];
+			this.min[ d ] = mind;
+			this.max[ d ] = maxd;
+			final long s = maxd - mind + 1; 
 			size[ d ] = s;
 			k *= s;
 			steps[ ++d ] = k;
 		}
-		size[ m ] = max[ m ] - min[ m ] + 1;
-		lastIndex = k * size[ m ] - 1;
+		final long minm = min[ m ];
+		final long maxm = max[ m ];
+		this.min[ m ] = minm;
+		this.max[ m ] = maxm;
+		final long sizem = maxm - minm + 1;
+		size[ m ] = sizem;
+		lastIndex = k * sizem - 1;
 	}
 
 	public IntegerIntervalIterator( final IntegerInterval interval )
 	{
-		this( interval.getMin(), interval.getMax() );
+		n = interval.numDimensions();
+		final int m = n - 1;
+		size = new long[ n ];
+		steps = new long[ n ];
+		long k = steps[ 0 ] = 1;
+		for ( int d = 0; d < m; )
+		{
+			final long mind = interval.min( d );
+			final long maxd = interval.max( d );
+			this.min[ d ] = mind;
+			this.max[ d ] = maxd;
+			final long s = maxd - mind + 1; 
+			size[ d ] = s;
+			k *= s;
+			steps[ ++d ] = k;
+		}
+		final long minm = interval.min( m );
+		final long maxm = interval.max( m );
+		this.min[ m ] = minm;
+		this.max[ m ] = maxm;
+		final long sizem = maxm - minm + 1;
+		size[ m ] = sizem;
+		lastIndex = k * sizem - 1;
 	}
 	
 	static public IntegerIntervalIterator create( final IntegerInterval interval )
@@ -81,6 +114,6 @@ public class IntegerIntervalIterator implements Iterator, IntegerLocalizable
 		for ( int d = 0; d < n; ++d )
 			if ( interval.min( d ) != 0 )
 				return new IntegerIntervalIterator( interval );
-		return new FlatZeroBoundPositiveIntegerIntervalIterator( interval );
+		return new ZeroMinIntegerIntervalIterator( interval );
 	}
 }

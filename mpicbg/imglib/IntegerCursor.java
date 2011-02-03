@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2010, Stephan Saalfeld
+ * Copyright (c) 2011, Tobias Pietzsch & Stephan Preibisch & Stephan Saalfeld
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -27,23 +27,10 @@
  */
 package mpicbg.imglib;
 
-import mpicbg.imglib.outofbounds.RasterOutOfBoundsFactory;
-import mpicbg.imglib.type.Type;
-
 /**
- * <p><em>f</em>:{x&isin;Z<sup><em>n</em></sup>|[min,max]&rarr;T}</em></p>
  * 
- * <p>A {@link Function} over an an n-dimensional integer interval that can
- * create a random access {@link Sampler} that generates values beyond
- * boundaries through a {@link RasterOutOfBounds}.</p>
  *
- * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
+ * @author Tobias Pietzsch & Stephan Preibisch & Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-public interface IntegerIntervalFunction<
-		T extends Type< T >,
-		F extends IntegerIntervalFunction< T, F, R, I >,
-		R extends IntegerRandomAccess & Sampler< T >,
-		I extends IntegerLocalizable & Iterator & java.util.Iterator< T > & Sampler< T > > extends IterableFunction< T, F, I >, IntegerInterval
-{
-	public R integerRandomAccessSampler( final RasterOutOfBoundsFactory< T, F > factory );
-}
+public interface IntegerCursor< T > extends Cursor< T >, IntegerLocalizable
+{}

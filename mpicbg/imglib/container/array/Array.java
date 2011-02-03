@@ -28,7 +28,7 @@
 package mpicbg.imglib.container.array;
 
 import mpicbg.imglib.IntegerInterval;
-import mpicbg.imglib.IterableFunction;
+import mpicbg.imglib.IterableRealInterval;
 import mpicbg.imglib.Sampler;
 import mpicbg.imglib.SamplerFactory;
 import mpicbg.imglib.container.AbstractDirectAccessContainer;
@@ -99,14 +99,14 @@ final public class Array< T extends Type< T >, A extends DataAccess > extends Ab
 	}
 
 	@Override
-	public ArrayIntegerPositionableSampler< T > integerRandomAccessSampler()
+	public ArrayIntegerPositionableSampler< T > integerRandomAccess()
 	{
 		ArrayIntegerPositionableSampler< T > c = new ArrayIntegerPositionableSampler< T >( this );
 		return c;
 	}
 
 	@Override
-	public ArrayOutOfBoundsPositionableRasterSampler< T > integerRandomAccessSampler( final RasterOutOfBoundsFactory< T, Array< T, A > > outOfBoundsFactory )
+	public ArrayOutOfBoundsPositionableRasterSampler< T > integerRandomAccess( final RasterOutOfBoundsFactory< T, Array< T, A > > outOfBoundsFactory )
 	{
 		ArrayOutOfBoundsPositionableRasterSampler< T > c = new ArrayOutOfBoundsPositionableRasterSampler< T >( this, outOfBoundsFactory );
 		return c;
@@ -183,7 +183,7 @@ final public class Array< T extends Type< T >, A extends DataAccess > extends Ab
 	}
 
 	@Override
-	public boolean canCopy( final IterableFunction< ?, ?, ? > f )
+	public boolean equalIterationOrder( final IterableRealInterval< ?, ?, ? > f )
 	{
 		if ( f.numDimensions() != this.numDimensions() )
 			return false;

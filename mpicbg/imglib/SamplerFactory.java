@@ -32,7 +32,7 @@ package mpicbg.imglib;
  *
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-public interface SamplerFactory< T, S extends Sampler< T >, F extends Function< T, F > >
+public interface SamplerFactory< T, S extends Sampler< T >, F >
 {
 	public S create( final F f );
 }

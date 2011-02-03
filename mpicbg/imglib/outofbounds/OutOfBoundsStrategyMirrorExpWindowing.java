@@ -239,7 +239,7 @@ public class OutOfBoundsStrategyMirrorExpWindowing<T extends RealType<T>> extend
 	 * For mirroring, there is no difference between leaving the image and moving while 
 	 * being out of image bounds
 	 * 
-	 * @see mpicbg.imglib.outofbounds.RasterOutOfBounds#notifyOutOfBounds()
+	 * @see mpicbg.imglib.outofbounds.RealOutOfBounds#notifyOutOfBounds()
 	 */
 	@Override
 	public void initOutOfBOunds() { notifyOutOfBOunds(); }

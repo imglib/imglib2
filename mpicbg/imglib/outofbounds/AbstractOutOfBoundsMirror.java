@@ -38,7 +38,7 @@ import mpicbg.imglib.type.Type;
  *
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-public abstract class AbstractOutOfBoundsMirror< T extends Type< T > > implements RasterOutOfBounds< T >
+public abstract class AbstractOutOfBoundsMirror< T extends Type< T > > implements RealOutOfBounds< T >
 {
 	final protected RandomAccessContainerSampler< T > outOfBoundsPositionable;
 	

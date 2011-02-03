@@ -28,12 +28,12 @@
 package mpicbg.imglib.location.transform;
 
 import mpicbg.imglib.IntegerLocalizable;
-import mpicbg.imglib.IntegerRandomAccess;
-import mpicbg.imglib.RealLocalizable;
-import mpicbg.imglib.RealRandomAccess;
+import mpicbg.imglib.IntegerPositionable;
+import mpicbg.imglib.Localizable;
+import mpicbg.imglib.Positionable;
 
 /**
- * A {@link RealRandomAccess} that drives a {@link IntegerRandomAccess} to its
+ * A {@link Positionable} that drives a {@link IntegerPositionable} to its
  * floor discrete coordinates.  For practical useage, the floor operation is
  * defined as the integer smaller than the real value:
  * 
@@ -41,7 +41,7 @@ import mpicbg.imglib.RealRandomAccess;
  * 
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-public class FloorRasterPositionable< LocalizableRasterPositionable extends IntegerLocalizable & IntegerRandomAccess > implements RealRandomAccess, RealLocalizable
+public class FloorRasterPositionable< LocalizableRasterPositionable extends IntegerLocalizable & IntegerPositionable > implements Positionable, Localizable
 {
 	final protected LocalizableRasterPositionable target;
 	
@@ -59,7 +59,7 @@ public class FloorRasterPositionable< LocalizableRasterPositionable extends Inte
 		position = new float[ numDimensions ];
 	}
 	
-	public FloorRasterPositionable( final RealLocalizable origin, final LocalizableRasterPositionable target )
+	public FloorRasterPositionable( final Localizable origin, final LocalizableRasterPositionable target )
 	{
 		this( target );
 		
@@ -157,7 +157,7 @@ public class FloorRasterPositionable< LocalizableRasterPositionable extends Inte
 	}
 
 	@Override
-	public void moveTo( final RealLocalizable localizable )
+	public void moveTo( final Localizable localizable )
 	{
 		localizable.localize( position );
 		moveTo( position );
@@ -196,7 +196,7 @@ public class FloorRasterPositionable< LocalizableRasterPositionable extends Inte
 	}
 
 	@Override
-	public void setPosition( final RealLocalizable localizable )
+	public void setPosition( final Localizable localizable )
 	{
 		localizable.localize( position );
 		setPosition( position );

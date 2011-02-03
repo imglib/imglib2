@@ -188,7 +188,7 @@ public class ContainerTests
 		}		
 
 		// copy back into a second image using localizable and positionable cursors			
-		final ContainerIterator<FloatType> localizableCursor1 = img1.localizingIterator();			
+		final ContainerIterator<FloatType> localizableCursor1 = img1.localizingCursor();			
 		final RandomAccessContainerSampler<FloatType> positionable2 = img2.integerRandomAccessSampler();			
 		
 		int i = 0;

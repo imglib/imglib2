@@ -49,7 +49,7 @@ import mpicbg.imglib.type.Type;
  *
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-public class OutOfBoundsStrategyPeriodic< T extends Type< T > > implements RasterOutOfBounds< T >
+public class OutOfBoundsStrategyPeriodic< T extends Type< T > > implements RealOutOfBounds< T >
 {
 	final protected RandomAccessContainerSampler< T > outOfBoundsPositionable;
 	
