@@ -27,7 +27,7 @@
  */
 package mpicbg.imglib.sampler.cell;
 
-import mpicbg.imglib.container.AbstractContainerCursor;
+import mpicbg.imglib.container.AbstractImgCursor;
 import mpicbg.imglib.container.cell.Cell;
 import mpicbg.imglib.container.cell.CellContainer;
 import mpicbg.imglib.image.Image;
@@ -39,7 +39,7 @@ import mpicbg.imglib.type.Type;
  *
  * @author Stephan Preibisch and Stephan Saalfeld
  */
-public class CellBasicRasterIterator< T extends Type< T > > extends AbstractContainerCursor< T > implements CellStorageAccess
+public class CellBasicRasterIterator< T extends Type< T > > extends AbstractImgCursor< T > implements CellStorageAccess
 {
 	final protected T type;
 	

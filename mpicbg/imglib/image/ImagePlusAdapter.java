@@ -31,7 +31,7 @@ package mpicbg.imglib.image;
 
 import ij.ImagePlus;
 import ij.measure.Calibration;
-import mpicbg.imglib.container.ImgIterator;
+import mpicbg.imglib.container.ImgCursor;
 import mpicbg.imglib.container.imageplus.ByteImagePlus;
 import mpicbg.imglib.container.imageplus.FloatImagePlus;
 import mpicbg.imglib.container.imageplus.ImagePlusContainerFactory;
@@ -214,8 +214,8 @@ public class ImagePlusAdapter
 		ImageFactory<FloatType> factory = new ImageFactory<FloatType>( new FloatType(), new ImagePlusContainerFactory() );
 		Image<FloatType> output = factory.createImage( input.getDimensions(), input.getName() );
 	
-		ImgIterator<T> in = input.createRasterIterator();
-		ImgIterator<FloatType> out = output.createRasterIterator();
+		ImgCursor<T> in = input.createRasterIterator();
+		ImgCursor<FloatType> out = output.createRasterIterator();
 		
 		TypeConverter tc = TypeConverter.getTypeConverter( in.get(), out.get() );
 		

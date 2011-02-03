@@ -29,14 +29,14 @@
  */
 package mpicbg.imglib.sampler.special;
 
-import mpicbg.imglib.container.AbstractContainerCursor;
+import mpicbg.imglib.container.AbstractImgCursor;
 import mpicbg.imglib.container.Img;
-import mpicbg.imglib.container.ImgIterator;
+import mpicbg.imglib.container.ImgCursor;
 import mpicbg.imglib.container.ImgRandomAccess;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.type.Type;
 
-public class RegionOfInterestCursor<T extends Type<T>> extends AbstractContainerCursor<T> implements ImgIterator<T> 
+public class RegionOfInterestCursor<T extends Type<T>> extends AbstractImgCursor<T> implements ImgCursor<T> 
 {
 	final ImgRandomAccess<T> cursor;
 	final int[] offset, size, roiPosition;

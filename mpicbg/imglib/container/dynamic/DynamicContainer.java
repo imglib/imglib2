@@ -27,7 +27,7 @@
  */
 package mpicbg.imglib.container.dynamic;
 
-import mpicbg.imglib.container.AbstractDirectAccessContainer;
+import mpicbg.imglib.container.AbstractNativeContainer;
 import mpicbg.imglib.container.ImgRandomAccess;
 import mpicbg.imglib.container.array.Array;
 import mpicbg.imglib.image.Image;
@@ -45,7 +45,7 @@ import mpicbg.imglib.type.Type;
  *
  * @author Stephan Preibisch and Stephan Saalfeld
  */
-public abstract class DynamicContainer< T extends Type< T >, A extends DynamicContainerAccessor > extends AbstractDirectAccessContainer< T, A >
+public abstract class DynamicContainer< T extends Type< T >, A extends DynamicContainerAccessor > extends AbstractNativeContainer< T, A >
 {
 	final protected int[] step;
 

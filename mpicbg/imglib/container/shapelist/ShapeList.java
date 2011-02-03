@@ -30,7 +30,7 @@ package mpicbg.imglib.container.shapelist;
 import java.awt.Shape;
 import java.util.ArrayList;
 
-import mpicbg.imglib.container.AbstractContainer;
+import mpicbg.imglib.container.AbstractImg;
 import mpicbg.imglib.container.ImgRandomAccess;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.outofbounds.RasterOutOfBoundsFactory;
@@ -46,7 +46,7 @@ import mpicbg.imglib.type.Type;
  * @version 0.1a
  */
 //public class ShapeList< T extends Type< T > > extends ContainerImpl< T, DataAccess >
-public class ShapeList< T extends Type< T > > extends AbstractContainer< T >
+public class ShapeList< T extends Type< T > > extends AbstractImg< T >
 {
 	final public ShapeListContainerFactory factory;
 	

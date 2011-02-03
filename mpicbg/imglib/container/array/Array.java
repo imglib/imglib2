@@ -29,7 +29,7 @@ package mpicbg.imglib.container.array;
 
 import mpicbg.imglib.IntegerInterval;
 import mpicbg.imglib.IterableRealInterval;
-import mpicbg.imglib.container.AbstractDirectAccessContainer;
+import mpicbg.imglib.container.AbstractNativeContainer;
 import mpicbg.imglib.container.Img;
 import mpicbg.imglib.container.ImgRandomAccess;
 import mpicbg.imglib.container.basictypecontainer.DataAccess;
@@ -49,7 +49,7 @@ import mpicbg.imglib.type.Type;
  *
  * @author Stephan Preibisch and Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-final public class Array< T extends Type< T >, A extends DataAccess > extends AbstractDirectAccessContainer< T, A >
+final public class Array< T extends Type< T >, A extends DataAccess > extends AbstractNativeContainer< T, A >
 {
 	final int[] step, dim;
 	

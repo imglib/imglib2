@@ -17,7 +17,7 @@
 package mpicbg.imglib.algorithm;
 
 import mpicbg.imglib.algorithm.Benchmark;
-import mpicbg.imglib.container.ImgIterator;
+import mpicbg.imglib.container.ImgCursor;
 import mpicbg.imglib.container.ImgRandomAccess;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.outofbounds.RasterOutOfBoundsFactory;
@@ -111,7 +111,7 @@ public class CanvasImage<T extends Type<T>> implements OutputAlgorithm<T>, Bench
 	{
 		final long startTime = System.currentTimeMillis();
 
-		final ImgIterator<T> outputCursor = output.createLocalizingRasterIterator();
+		final ImgCursor<T> outputCursor = output.createLocalizingRasterIterator();
 		final ImgRandomAccess<T> inputCursor;
 		
 		if ( outOfBoundsFactory == null)

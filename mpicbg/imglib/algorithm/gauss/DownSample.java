@@ -20,7 +20,7 @@ import mpicbg.imglib.algorithm.Benchmark;
 import mpicbg.imglib.algorithm.MultiThreaded;
 import mpicbg.imglib.algorithm.OutputAlgorithm;
 import mpicbg.imglib.algorithm.math.MathLib;
-import mpicbg.imglib.container.ImgIterator;
+import mpicbg.imglib.container.ImgCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.interpolation.Interpolator;
 import mpicbg.imglib.interpolation.nearestneighbor.NearestNeighborInterpolatorFactory;
@@ -136,7 +136,7 @@ public class DownSample<T extends RealType<T>> implements MultiThreaded, OutputA
 		downSampled = input.createNewImage( newSize );
 		
 		final Interpolator<T> interpolator = gaussConvolved.sampler( new NearestNeighborInterpolatorFactory< T >( new OutOfBoundsMirrorFactory< T >( Boundary.SINGLE ) ) );		
-		final ImgIterator<T> cursor = downSampled.createLocalizingRasterIterator();
+		final ImgCursor<T> cursor = downSampled.createLocalizingRasterIterator();
 		
 		final int[] pos = new int[ numDimensions ];
 		final float[] scaledPos = new float[ numDimensions ];		

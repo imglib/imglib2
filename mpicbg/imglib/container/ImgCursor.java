@@ -37,17 +37,17 @@ import mpicbg.imglib.image.Image;
 import mpicbg.imglib.type.Type;
 
 /**
- * <h2>The {@link ImgIterator} interface</h2>
+ * <h2>The {@link ImgCursor} interface</h2>
  * 
  * <h3>Implementation</h3>
  * 
- * {@link ImgIterator RasterIterators} are used to iterate over a raster of
+ * {@link ImgCursor RasterIterators} are used to iterate over a raster of
  * pixels.  They depend on the way how pixels are stored and thus need to be
  * implemented for each {@link Img} like {@link Array}, {@link CellContainer}, ... 
  * 
  * <h3>Data access</h3>
  * 
- * {@link ImgIterator RasterIterator} do not know about the {@link Image}
+ * {@link ImgCursor RasterIterator} do not know about the {@link Image}
  * {@link Type} as it is not important for iteration.  However, {@link Type} is
  * a generic parameter such that the correct instance of {@link Type} is
  * returned by {@link #get()}.
@@ -108,7 +108,7 @@ import mpicbg.imglib.type.Type;
  * 
  * @author Stephan Preibisch & Stephan Saalfeld
  *
- * @param <T> - the {@link Type} this {@link ImgIterator} works on
+ * @param <T> - the {@link Type} this {@link ImgCursor} works on
  */
-public interface ImgIterator< T > extends ImgSampler< T >, IntegerCursor< T >
+public interface ImgCursor< T > extends ImgSampler< T >, IntegerCursor< T >
 {}

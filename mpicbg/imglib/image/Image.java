@@ -41,7 +41,7 @@ import mpicbg.imglib.SamplerFactory;
 import mpicbg.imglib.algorithm.math.MathLib;
 import mpicbg.imglib.container.Img;
 import mpicbg.imglib.container.ImgFactory;
-import mpicbg.imglib.container.ImgIterator;
+import mpicbg.imglib.container.ImgCursor;
 import mpicbg.imglib.container.ImgSampler;
 import mpicbg.imglib.container.ImgRandomAccess;
 import mpicbg.imglib.container.array.ArrayLocalizingIterator;
@@ -61,7 +61,7 @@ import mpicbg.imglib.type.label.FakeType;
  */
 public class Image< T extends Type< T > > implements
 		ImageProperties,
-		RandomAccessibleIntegerInterval< T, Image< T >, ImgRandomAccess< T >, ImgIterator< T > >
+		RandomAccessibleIntegerInterval< T, Image< T >, ImgRandomAccess< T >, ImgCursor< T > >
 {
 	final protected ArrayList< ImgSampler< T > > rasterSamplers;
 	final ImgFactory containerFactory;
@@ -184,31 +184,31 @@ public class Image< T extends Type< T > > implements
 	public T createType() { return imageFactory.createType(); }
 	
 	/**
-	 * Return a {@link ImgIterator} that will traverse the image's pixel data in a memory-optimized fashion.
-	 * @return IterableCursor<T> - the typed {@link ImgIterator}
+	 * Return a {@link ImgCursor} that will traverse the image's pixel data in a memory-optimized fashion.
+	 * @return IterableCursor<T> - the typed {@link ImgCursor}
 	 */
 	@Override
-	public ImgIterator<T> createRasterIterator()
+	public ImgCursor<T> createRasterIterator()
 	{
-		ImgIterator< T > cursor = container.createRasterIterator( this );
+		ImgCursor< T > cursor = container.createRasterIterator( this );
 		addRasterSampler( cursor );
 		return cursor;	
 	}
 	
 	/**
-	 * Return a {@link ImgIterator} that will traverse all image pixels in
+	 * Return a {@link ImgCursor} that will traverse all image pixels in
 	 * access-optimal order and tracks its location at each moving operation.
 	 * 
-	 * This {@link ImgIterator} is the preferred choice for implementations
+	 * This {@link ImgCursor} is the preferred choice for implementations
 	 * that require the iterator's location at each iteration step (e.g. for
 	 * rendering a transformed image)
 	 *  
-	 * @return RasterIterator<T> - the typed {@link ImgIterator}
+	 * @return RasterIterator<T> - the typed {@link ImgCursor}
 	 */
 	@Override
-	public ImgIterator<T> createLocalizingRasterIterator()
+	public ImgCursor<T> createLocalizingRasterIterator()
 	{
-		ImgIterator<T> cursor = container.createLocalizingRasterIterator( this );
+		ImgCursor<T> cursor = container.createLocalizingRasterIterator( this );
 		addRasterSampler( cursor );
 		return cursor;		
 	}
@@ -378,8 +378,8 @@ public class Image< T extends Type< T > > implements
 	{
 		final Image<T> clone = this.createNewImage();
 		
-		final ImgIterator<T> c1 = this.createRasterIterator();
-		final ImgIterator<T> c2 = clone.createRasterIterator();
+		final ImgCursor<T> c1 = this.createRasterIterator();
+		final ImgCursor<T> c2 = clone.createRasterIterator();
 		
 		while ( c1.hasNext() )
 		{

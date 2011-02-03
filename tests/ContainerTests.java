@@ -10,7 +10,7 @@ import mpicbg.imglib.algorithm.fft.FFTFunctions;
 import mpicbg.imglib.algorithm.math.MathLib;
 import mpicbg.imglib.container.Img;
 import mpicbg.imglib.container.ImgFactory;
-import mpicbg.imglib.container.ImgIterator;
+import mpicbg.imglib.container.ImgCursor;
 import mpicbg.imglib.container.ImgRandomAccess;
 import mpicbg.imglib.container.array.ArrayContainerFactory;
 import mpicbg.imglib.container.cell.CellContainerFactory;
@@ -121,7 +121,7 @@ public class ContainerTests
 		final float[] reference = new float[ ( int )img.size() ];
 		
 		// iterate over image and reference array and fill with data
-		final ImgIterator<FloatType> cursor = img.iterator();			
+		final ImgCursor<FloatType> cursor = img.iterator();			
 		int i = 0;
 		
 		while( cursor.hasNext() )
@@ -140,7 +140,7 @@ public class ContainerTests
 	{
 		boolean allEqual = true;
 		
-		final ImgIterator< FloatType > cursor = img.iterator();
+		final ImgCursor< FloatType > cursor = img.iterator();
 		int i = 0;
 		
 		while( cursor.hasNext() )
@@ -164,8 +164,8 @@ public class ContainerTests
 		final float[] reference = createReference( img1 );
 		
 		// copy into a second image using simple cursors
-		final ImgIterator<FloatType> cursor1 = img1.iterator();
-		final ImgIterator<FloatType> cursor2 = img2.iterator();
+		final ImgCursor<FloatType> cursor1 = img1.iterator();
+		final ImgCursor<FloatType> cursor2 = img2.iterator();
 		
 		while( cursor1.hasNext() )
 		{
@@ -188,7 +188,7 @@ public class ContainerTests
 		}		
 
 		// copy back into a second image using localizable and positionable cursors			
-		final ImgIterator<FloatType> localizableCursor1 = img1.localizingCursor();			
+		final ImgCursor<FloatType> localizableCursor1 = img1.localizingCursor();			
 		final ImgRandomAccess<FloatType> positionable2 = img2.integerRandomAccessSampler();			
 		
 		int i = 0;

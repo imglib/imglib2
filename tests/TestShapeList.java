@@ -7,7 +7,7 @@ import java.awt.Polygon;
 import java.awt.Rectangle;
 
 import mpicbg.imglib.algorithm.transformation.ImageTransform;
-import mpicbg.imglib.container.ImgIterator;
+import mpicbg.imglib.container.ImgCursor;
 import mpicbg.imglib.container.ImgRandomAccess;
 import mpicbg.imglib.container.array.ArrayContainerFactory;
 import mpicbg.imglib.container.cell.CellContainerFactory;
@@ -75,7 +75,7 @@ public class TestShapeList
 		timer.start();
 		final ArrayContainerFactory arrayFactory = new ArrayContainerFactory();
 		final Image< FloatType > arrayImage = new ImageFactory< FloatType >( new FloatType(), arrayFactory ).createImage( new int[]{ 200, 200, depth }, "ArrayContainer" );
-		final ImgIterator< FloatType > cArray = arrayImage.createLocalizingRasterIterator();
+		final ImgCursor< FloatType > cArray = arrayImage.createLocalizingRasterIterator();
 		final ImgRandomAccess< FloatType > cShapeList = shapeListImage.createPositionableRasterSampler();
 		while ( cArray.hasNext() )
 		{
@@ -99,7 +99,7 @@ public class TestShapeList
 		timer.start();
 		final CellContainerFactory cellFactory = new CellContainerFactory();
 		final Image< FloatType > cellImage = new ImageFactory< FloatType >( new FloatType(), cellFactory ).createImage( new int[]{ 200, 200, depth }, "CellContainer" );
-		final ImgIterator< FloatType > cCell = cellImage.createLocalizingRasterIterator();
+		final ImgCursor< FloatType > cCell = cellImage.createLocalizingRasterIterator();
 		while ( cCell.hasNext() )
 		{
 			cCell.fwd();

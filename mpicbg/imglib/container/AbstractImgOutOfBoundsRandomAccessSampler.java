@@ -40,19 +40,19 @@ import mpicbg.imglib.type.Type;
  *
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-public abstract class AbstractOutOfBoundsRandomAccessContainerSampler< T extends Type< T > > extends AbstractContainerSampler< T > implements ImgRandomAccess< T >
+public abstract class AbstractImgOutOfBoundsRandomAccessSampler< T extends Type< T > > extends AbstractImgSampler< T > implements ImgRandomAccess< T >
 {
 	/* performs the actual moves and generates/queries a Type */
 	final protected OutOfBounds< T > outOfBounds;
 	
-	public AbstractOutOfBoundsRandomAccessContainerSampler( final IntegerInterval f, final RealOutOfBounds< T > outOfBounds )
+	public AbstractImgOutOfBoundsRandomAccessSampler( final IntegerInterval f, final RealOutOfBounds< T > outOfBounds )
 	{
 		super( f.numDimensions() );
 		
 		this.outOfBounds = outOfBounds;
 	}
 	
-	public AbstractOutOfBoundsRandomAccessContainerSampler( final Img<T> container, final OutOfBoundsFactory< T, Img< T > > outOfBoundsFactory )
+	public AbstractImgOutOfBoundsRandomAccessSampler( final Img<T> container, final OutOfBoundsFactory< T, Img< T > > outOfBoundsFactory )
 	{
 		super( container.numDimensions() );
 		

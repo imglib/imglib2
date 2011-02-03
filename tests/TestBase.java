@@ -2,7 +2,7 @@ package tests;
 
 import java.util.Arrays;
 
-import mpicbg.imglib.container.ImgIterator;
+import mpicbg.imglib.container.ImgCursor;
 import mpicbg.imglib.container.ImgRandomAccess;
 import mpicbg.imglib.container.array.ArrayContainerFactory;
 
@@ -42,7 +42,7 @@ public class TestBase {
 	 * Check whether an image is identical to a generated image
 	 */
 	protected<T extends RealType<T>> boolean match( Image<T> image, Function function ) {
-		ImgIterator<T> cursor = image.createLocalizingRasterIterator();
+		ImgCursor<T> cursor = image.createLocalizingRasterIterator();
 		int[] pos = new int[cursor.numDimensions()];
 		while( cursor.hasNext() ) {
 			cursor.fwd();
@@ -58,7 +58,7 @@ public class TestBase {
 	 * Check whether an image is identical to a generated image, with fuzz
 	 */
 	protected<T extends RealType<T>> boolean match( Image<T> image, Function function, float tolerance ) {
-		ImgIterator<T> cursor = image.createLocalizingRasterIterator();
+		ImgCursor<T> cursor = image.createLocalizingRasterIterator();
 		int[] pos = new int[cursor.numDimensions()];
 		while( cursor.hasNext() ) {
 			cursor.fwd();
@@ -88,7 +88,7 @@ public class TestBase {
 	 */
 	protected<T extends RealType<T>> void signature( Image<T> image, float[] result ) {
 		Arrays.fill( result, 0 );
-		ImgIterator<T> cursor = image.createLocalizingRasterIterator();
+		ImgCursor<T> cursor = image.createLocalizingRasterIterator();
 		int dim = cursor.numDimensions();
 		int[] pos = new int[dim];
 		while( cursor.hasNext() ) {
@@ -165,7 +165,7 @@ public class TestBase {
 	protected<T extends RealType<T>> Image<T> makeImage( T type, Function function, int[] dims ) {
 		ImageFactory<T> factory = new ImageFactory<T>(type, new ArrayContainerFactory());
 		Image<T> result = factory.createImage( dims );
-		ImgIterator<T> cursor = result.createLocalizingRasterIterator();
+		ImgCursor<T> cursor = result.createLocalizingRasterIterator();
 		int[] pos = new int[cursor.numDimensions()];
 		while( cursor.hasNext() ) {
 			cursor.fwd();

@@ -29,7 +29,7 @@ import mpicbg.imglib.algorithm.Benchmark;
 import mpicbg.imglib.algorithm.MultiThreaded;
 import mpicbg.imglib.algorithm.fft.FourierTransform.Rearrangement;
 import mpicbg.imglib.algorithm.math.MathLib;
-import mpicbg.imglib.container.ImgIterator;
+import mpicbg.imglib.container.ImgCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.multithreading.SimpleMultiThreading;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyPeriodicFactory;
@@ -430,7 +430,7 @@ public class PhaseCorrelation<T extends RealType<T>, S extends RealType<S>> impl
 		for ( int i = 0; i < numPeaks; ++i )
 			peakList.add( new PhaseCorrelationPeak( new int[ numDimensions ], -Float.MAX_VALUE) );
 
-		final ImgIterator<FloatType> cursor = invPCM.createLocalizingRasterIterator();		
+		final ImgCursor<FloatType> cursor = invPCM.createLocalizingRasterIterator();		
 		final LocalNeighborhoodCursor<FloatType> localCursor = LocalNeighborhoodCursorFactory.createLocalNeighborhoodCursor( cursor, new OutOfBoundsStrategyPeriodicFactory<FloatType>() );
 				
 		final int[] originalOffset1 = fft1.getOriginalOffset();
@@ -525,8 +525,8 @@ public class PhaseCorrelation<T extends RealType<T>, S extends RealType<S>> impl
 	
 	protected void multiplyInPlace( final Image<ComplexFloatType> fftImage1, final Image<ComplexFloatType> fftImage2 )
 	{
-		final ImgIterator<ComplexFloatType> cursor1 = fftImage1.createRasterIterator();
-		final ImgIterator<ComplexFloatType> cursor2 = fftImage2.createRasterIterator();
+		final ImgCursor<ComplexFloatType> cursor1 = fftImage1.createRasterIterator();
+		final ImgCursor<ComplexFloatType> cursor2 = fftImage2.createRasterIterator();
 		
 		while ( cursor1.hasNext() )
 		{
@@ -573,7 +573,7 @@ public class PhaseCorrelation<T extends RealType<T>, S extends RealType<S>> impl
 	
 	private static final void normalizeComplexImage( final Image<ComplexFloatType> fftImage, final float normalizationThreshold )
 	{
-		final ImgIterator<ComplexFloatType> cursor = fftImage.createRasterIterator();
+		final ImgCursor<ComplexFloatType> cursor = fftImage.createRasterIterator();
 
 		while ( cursor.hasNext() )
 		{
@@ -586,7 +586,7 @@ public class PhaseCorrelation<T extends RealType<T>, S extends RealType<S>> impl
 	
 	private static final void normalizeAndConjugateComplexImage( final Image<ComplexFloatType> fftImage, final float normalizationThreshold )
 	{
-		final ImgIterator<ComplexFloatType> cursor = fftImage.createRasterIterator();
+		final ImgCursor<ComplexFloatType> cursor = fftImage.createRasterIterator();
 		
 		while ( cursor.hasNext() )
 		{

@@ -28,7 +28,7 @@ import mpicbg.imglib.algorithm.fft.FourierTransform.Rearrangement;
 import mpicbg.imglib.algorithm.gauss.GaussianConvolution;
 import mpicbg.imglib.algorithm.math.MathLib;
 import mpicbg.imglib.container.ImgFactory;
-import mpicbg.imglib.container.ImgIterator;
+import mpicbg.imglib.container.ImgCursor;
 import mpicbg.imglib.container.ImgRandomAccess;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.ImageFactory;
@@ -122,7 +122,7 @@ public class FourierConvolution<T extends RealType<T>, S extends RealType<S>> im
 		
 		final Image<FloatType> kernelImg = new ImageFactory<FloatType>( new FloatType(), factory ).createImage( imageSize );
 		
-		final ImgIterator<FloatType> cursor = kernelImg.createLocalizingRasterIterator();
+		final ImgCursor<FloatType> cursor = kernelImg.createLocalizingRasterIterator();
 		final int[] position = new int[ numDimensions ];
 		
 		while ( cursor.hasNext() )
@@ -241,7 +241,7 @@ public class FourierConvolution<T extends RealType<T>, S extends RealType<S>> im
 			// copy the kernel into the kernelTemplate,
 			// the key here is that the center pixel of the kernel (e.g. 13,13,13)
 			// is located at (0,0,0)
-			final ImgIterator<S> kernelCursor = kernel.createLocalizingRasterIterator();
+			final ImgCursor<S> kernelCursor = kernel.createLocalizingRasterIterator();
 			final ImgRandomAccess<S> kernelTemplateCursor = kernelTemplate.createPositionableRasterSampler();
 			
 			final int[] position = new int[ numDimensions ];
@@ -286,8 +286,8 @@ public class FourierConvolution<T extends RealType<T>, S extends RealType<S>> im
 		//
 		// Multiply in Fourier Space
 		//
-		final ImgIterator<ComplexFloatType> cursorImgFFT = imgFFT.createRasterIterator();
-		final ImgIterator<ComplexFloatType> cursorKernelFFT = kernelFFT.createRasterIterator();
+		final ImgCursor<ComplexFloatType> cursorImgFFT = imgFFT.createRasterIterator();
+		final ImgCursor<ComplexFloatType> cursorKernelFFT = kernelFFT.createRasterIterator();
 		
 		while ( cursorImgFFT.hasNext() )
 		{

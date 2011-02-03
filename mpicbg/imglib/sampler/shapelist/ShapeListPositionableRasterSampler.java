@@ -29,8 +29,8 @@ package mpicbg.imglib.sampler.shapelist;
 
 import mpicbg.imglib.IntegerLocalizable;
 import mpicbg.imglib.IntegerPositionable;
-import mpicbg.imglib.container.AbstractContainerCursor;
-import mpicbg.imglib.container.ImgIterator;
+import mpicbg.imglib.container.AbstractImgCursor;
+import mpicbg.imglib.container.ImgCursor;
 import mpicbg.imglib.container.ImgRandomAccess;
 import mpicbg.imglib.container.shapelist.ShapeList;
 import mpicbg.imglib.image.Image;
@@ -43,7 +43,7 @@ import mpicbg.imglib.type.Type;
  *
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-public class ShapeListPositionableRasterSampler< T extends Type< T > > extends AbstractContainerCursor< T > implements ImgRandomAccess< T >, ImgIterator< T >
+public class ShapeListPositionableRasterSampler< T extends Type< T > > extends AbstractImgCursor< T > implements ImgRandomAccess< T >, ImgCursor< T >
 {
 	final protected ShapeList< T > container;
 	

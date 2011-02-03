@@ -24,39 +24,39 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
+ *
+ * @author Stephan Preibisch & Stephan Saalfeld
  */
 package mpicbg.imglib.container;
 
-import mpicbg.imglib.IntegerInterval;
+import mpicbg.imglib.container.basictypecontainer.DataAccess;
 import mpicbg.imglib.type.Type;
 
-/**
- * 
- * @param <T>
- * 
- * @author Stephan Preibisch and Stephan Saalfeld
- */
-public abstract class AbstractLocalizingContainerIterator< T extends Type< T > > extends AbstractLocalizableContainerSampler< T > implements ImgIterator< T >
+public abstract class AbstractNativeContainer<
+		T extends Type< T >,
+		A extends DataAccess >
+	extends AbstractImg< T >
+	implements NativeContainer< T, A >
 {
-	public AbstractLocalizingContainerIterator( final IntegerInterval f )
+	final protected int entitiesPerPixel;
+	protected long numEntities;
+	
+	protected T linkedType;
+	
+	public AbstractNativeContainer( long[] dim, final int entitiesPerPixel )
 	{
-		super( f );
+		super( dim );
+		this.entitiesPerPixel = entitiesPerPixel;
+		this.numEntities = numPixels * entitiesPerPixel;
 	}
-
+	
 	@Override
-	public void remove(){}
-
+	public void setLinkedType( final T type ) { this.linkedType = type; }
+	
 	@Override
-	public T next()
+	public T createLinkedType()
 	{
-		fwd();
-		return get();
-	}
-
-	@Override
-	public void jumpFwd( final long steps )
-	{
-		for ( long j = 0; j < steps; ++j )
-			fwd();
+		try{ return linkedType.duplicateTypeOnSameDirectAccessContainer(); }
+		catch ( NullPointerException e ){ return null; }
 	}
 }

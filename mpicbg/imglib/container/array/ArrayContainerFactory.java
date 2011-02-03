@@ -27,7 +27,7 @@
  */
 package mpicbg.imglib.container.array;
 
-import mpicbg.imglib.container.AbstractContainer;
+import mpicbg.imglib.container.AbstractImg;
 import mpicbg.imglib.container.NativeContainerFactory;
 import mpicbg.imglib.container.basictypecontainer.BitAccess;
 import mpicbg.imglib.container.basictypecontainer.ByteAccess;
@@ -57,7 +57,7 @@ public class ArrayContainerFactory extends NativeContainerFactory
 {
 	public static int numEntitiesRangeCheck( final long[] dimensions, final int entitiesPerPixel )
 	{
-		final long numEntities = AbstractContainer.numElements( dimensions ) * entitiesPerPixel;
+		final long numEntities = AbstractImg.numElements( dimensions ) * entitiesPerPixel;
 
 		if ( numEntities > ( long ) Integer.MAX_VALUE )
 			throw new RuntimeException( "Number of elements in Container too big, use for example CellContainer instead: " + numEntities + " > " + Integer.MAX_VALUE );

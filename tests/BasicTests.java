@@ -1,6 +1,6 @@
 package tests;
 
-import mpicbg.imglib.container.ImgIterator;
+import mpicbg.imglib.container.ImgCursor;
 import mpicbg.imglib.image.Image;
 
 import mpicbg.imglib.type.numeric.real.FloatType;
@@ -62,7 +62,7 @@ public class BasicTests extends TestBase {
 	 * Ensure that all pixels are iterated over
 	 */
 	@Test public void testCursorCoverage() {
-		ImgIterator<FloatType> cursor = testImage.createLocalizingRasterIterator();
+		ImgCursor<FloatType> cursor = testImage.createLocalizingRasterIterator();
 		int count = 0;
 		int[] pos = new int[cursor.numDimensions()];
 		while( cursor.hasNext() ) {

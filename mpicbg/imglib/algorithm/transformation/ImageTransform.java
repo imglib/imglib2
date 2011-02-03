@@ -19,7 +19,7 @@ package mpicbg.imglib.algorithm.transformation;
 import mpicbg.imglib.algorithm.OutputAlgorithm;
 import mpicbg.imglib.container.Img;
 import mpicbg.imglib.container.ImgFactory;
-import mpicbg.imglib.container.ImgIterator;
+import mpicbg.imglib.container.ImgCursor;
 import mpicbg.imglib.interpolation.Interpolator;
 import mpicbg.imglib.interpolation.InterpolatorFactory;
 import mpicbg.imglib.type.Type;
@@ -144,7 +144,7 @@ public class ImageTransform<T extends Type<T>> implements OutputAlgorithm<T>
 		// create the new output image
 		transformed = outputContainerFactory.create( newDim, container.createVariable() );
 
-		final ImgIterator<T> transformedIterator = transformed.localizingCursor();
+		final ImgCursor<T> transformedIterator = transformed.localizingCursor();
 		final Interpolator<T,Img<T>> interpolator = interpolatorFactory.create( container );
 		
 		try

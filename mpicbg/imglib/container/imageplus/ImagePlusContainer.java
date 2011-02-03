@@ -32,9 +32,9 @@ import java.util.ArrayList;
 import ij.ImagePlus;
 import ij.ImageStack;
 
-import mpicbg.imglib.container.AbstractDirectAccessContainer;
+import mpicbg.imglib.container.AbstractNativeContainer;
 import mpicbg.imglib.container.Img;
-import mpicbg.imglib.container.ImgIterator;
+import mpicbg.imglib.container.ImgCursor;
 import mpicbg.imglib.container.ImgRandomAccess;
 import mpicbg.imglib.container.basictypecontainer.array.ArrayDataAccess;
 import mpicbg.imglib.exception.ImgLibException;
@@ -62,7 +62,7 @@ import mpicbg.imglib.type.Type;
  * 
  * @author Jan Funke, Stephan Preibisch, Stephan Saalfeld, Johannes Schindelin
  */
-public class ImagePlusContainer< T extends Type< T >, A extends ArrayDataAccess< A > > extends AbstractDirectAccessContainer< T, A > implements Img< T >
+public class ImagePlusContainer< T extends Type< T >, A extends ArrayDataAccess< A > > extends AbstractNativeContainer< T, A > implements Img< T >
 {
 	final protected ImagePlusContainerFactory factory;
 	final protected int width, height, depth, frames, channels, slices;
@@ -236,13 +236,13 @@ public class ImagePlusContainer< T extends Type< T >, A extends ArrayDataAccess<
 	}
 
 	@Override
-	public ImgIterator< T > createRasterIterator( final Image< T > image )
+	public ImgCursor< T > createRasterIterator( final Image< T > image )
 	{
 		return new ImagePlusBasicRasterIterator< T >( this, image );
 	}
 
 	@Override
-	public ImgIterator< T > createLocalizingRasterIterator( final Image< T > image )
+	public ImgCursor< T > createLocalizingRasterIterator( final Image< T > image )
 	{
 		return new ImagePlusLocalizingRasterIterator< T >( this, image );
 	}

@@ -29,69 +29,90 @@ package mpicbg.imglib.container;
 
 import mpicbg.imglib.IntegerInterval;
 import mpicbg.imglib.IntegerLocalizable;
-import mpicbg.imglib.algorithm.math.MathLib;
 import mpicbg.imglib.type.Type;
 
 /**
  * 
  * @param <T>
- *
+ * 
  * @author Stephan Preibisch and Stephan Saalfeld
  */
-public abstract class AbstractLocalizableContainerSampler< T extends Type< T > > extends AbstractContainerSampler< T > implements IntegerLocalizable
+public abstract class AbstractImgRandomAccess< T extends Type< T > > extends AbstractImgLocalizableCursor< T > implements ImgRandomAccess< T >
 {
-	final protected long[] position;
-	final protected long[] size;
-	
-	public AbstractLocalizableContainerSampler( final IntegerInterval f )
+	/* internal register for position calculation */
+	final protected int[] tmp;
+
+	public AbstractImgRandomAccess( final IntegerInterval f )
 	{
-		super( f.numDimensions() );
-		
-		position = new long[ n ];
-		size = new long[ n ];
-		f.size( size );
-	}
-	
-	@Override
-	public void localize( final float[] pos )
-	{
-		for ( int d = 0; d < n; d++ )
-			pos[ d ] = this.position[ d ];
+		super( f );
+
+		this.tmp = new int[ n ];
 	}
 
 	@Override
-	public void localize( final double[] pos )
+	public boolean isOutOfBounds()
 	{
-		for ( int d = 0; d < n; d++ )
-			pos[ d ] = this.position[ d ];
+		for ( int d = 0; d < n; ++d )
+		{
+			final long x = position[ d ];
+			if ( x < 0 || x >= size[ d ] )
+				return true;
+		}
+		return false;
 	}
 
 	@Override
-	public void localize( int[] pos )
+	public void move( final int distance, final int dim )
 	{
-		for ( int d = 0; d < n; d++ )
-			pos[ d ] = ( int )this.position[ d ];
+		move( ( long )distance, dim );
 	}
-	
-	@Override
-	public void localize( long[] pos )
-	{
-		for ( int d = 0; d < n; d++ )
-			pos[ d ] = this.position[ d ];
-	}
-	
-	@Override
-	public float getFloatPosition( final int dim ){ return position[ dim ]; }
-	
-	@Override
-	public double getDoublePosition( final int dim ){ return position[ dim ]; }
-	
-	@Override
-	public int getIntPosition( final int dim ){ return ( int )position[ dim ]; }
 
 	@Override
-	public long getLongPosition( final int dim ){ return position[ dim ]; }
-	
+	public void setPosition( final int position, final int dim )
+	{
+		setPosition( ( long )position, dim );
+	}
+
 	@Override
-	public String toString(){ return MathLib.printCoordinates( position ) + " = " + get(); }
+	public void move( final int[] distance )
+	{
+		for ( int d = 0; d < n; ++d )
+		{
+			final int dist = distance[ d ];
+
+			if ( dist != 0 )
+				move( dist, d );
+		}
+	}
+
+	@Override
+	public void move( final long[] distance )
+	{
+		for ( int d = 0; d < n; ++d )
+		{
+			final long dist = distance[ d ];
+
+			if ( dist != 0 )
+				move( dist, d );
+		}
+	}
+
+	@Override
+	public void move( final IntegerLocalizable localizable )
+	{
+		for ( int d = 0; d < n; ++d )
+		{
+			final long dist = localizable.getLongPosition( d );
+
+			if ( dist != 0 )
+				move( dist, d );
+		}
+	}
+
+	@Override
+	public void setPosition( final IntegerLocalizable localizable )
+	{
+		localizable.localize( tmp );
+		setPosition( tmp );
+	}
 }

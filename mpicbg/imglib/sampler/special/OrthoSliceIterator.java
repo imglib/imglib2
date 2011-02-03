@@ -30,7 +30,7 @@ package mpicbg.imglib.sampler.special;
 
 import mpicbg.imglib.Iterator;
 import mpicbg.imglib.container.Img;
-import mpicbg.imglib.container.ImgIterator;
+import mpicbg.imglib.container.ImgCursor;
 import mpicbg.imglib.container.ImgRandomAccess;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.type.Type;
@@ -47,7 +47,7 @@ import mpicbg.imglib.type.Type;
  *
  * @author Stephan Preibisch and Stephan Saalfeld
  */
-public class OrthoSliceIterator< T extends Type< T > > implements ImgIterator< T >
+public class OrthoSliceIterator< T extends Type< T > > implements ImgCursor< T >
 {
 	/* index of x and y dimensions */
 	final protected int x, y;

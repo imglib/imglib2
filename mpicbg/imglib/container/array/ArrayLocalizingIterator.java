@@ -27,7 +27,7 @@
  */
 package mpicbg.imglib.container.array;
 
-import mpicbg.imglib.container.AbstractLocalizingContainerIterator;
+import mpicbg.imglib.container.AbstractImgLocalizingCursor;
 import mpicbg.imglib.type.Type;
 
 /**
@@ -36,7 +36,7 @@ import mpicbg.imglib.type.Type;
  *
  * @author Stephan Preibisch and Stephan Saalfeld
  */
-public class ArrayLocalizingIterator< T extends Type< T >> extends AbstractLocalizingContainerIterator< T >
+public class ArrayLocalizingIterator< T extends Type< T >> extends AbstractImgLocalizingCursor< T >
 {
 	protected final T type;
 

@@ -52,10 +52,10 @@ public interface Img<	T >
 	public ImgRandomAccess< T > integerRandomAccess( OutOfBoundsFactory< T, Img< T > > factory );
 	
 	@Override
-	public ImgIterator< T > cursor();
+	public ImgCursor< T > cursor();
 
 	@Override
-	public ImgIterator< T > localizingCursor();
+	public ImgCursor< T > localizingCursor();
 
 	public ImgFactory factory();
 	

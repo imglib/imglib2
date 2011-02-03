@@ -9,7 +9,7 @@ import java.io.File;
 import javax.swing.JFileChooser;
 
 import mpicbg.imglib.container.Img;
-import mpicbg.imglib.container.ImgIterator;
+import mpicbg.imglib.container.ImgCursor;
 import mpicbg.imglib.container.array.ArrayContainerFactory;
 import mpicbg.imglib.container.imageplus.ImagePlusContainer;
 import mpicbg.imglib.exception.ImgLibException;
@@ -48,8 +48,8 @@ public class SquareTest {
     //Image<T> outputImage = factory.createImage(new int[] {512, 512});
     Image<T> outputImage = inputImage.createNewImage();
 
-    ImgIterator<T> inputCursor = inputImage.createRasterIterator();
-    ImgIterator<T> outputCursor = outputImage.createRasterIterator();
+    ImgCursor<T> inputCursor = inputImage.createRasterIterator();
+    ImgCursor<T> outputCursor = outputImage.createRasterIterator();
     while (inputCursor.hasNext()) {
       inputCursor.fwd();
       outputCursor.fwd();

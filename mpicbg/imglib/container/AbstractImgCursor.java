@@ -24,91 +24,111 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
+ *
+ * @author Stephan Preibisch & Stephan Saalfeld
  */
 package mpicbg.imglib.container;
 
+import java.util.Iterator;
+
+import mpicbg.imglib.algorithm.math.MathLib;
 import mpicbg.imglib.type.Type;
 
 /**
+ * Generic implementation of {@link Iterator} mapping to abstract {@link #fwd()} and
+ * {@link #get()}.
+ * 
+ * <p>For localization, default implementations are available that all build on
+ * the abstract long variant.  For particular cursors, this may be implemented more
+ * efficiently saving at least one loop over <em>n</em>. 
  * 
  * @author Stephan Preibisch and Stephan Saalfeld
- *
- * @param < T > the {@link Type} to be returned by {@link #get()}
+ * 
+ * @param <T>
  */
-public abstract class AbstractContainerSampler< T extends Type< T > > implements ImgSampler< T >
+public abstract class AbstractImgCursor< T extends Type< T > > extends AbstractImgSampler< T > implements ImgCursor< T >
 {
-	/* a copy of container.numDimensions() for slightly faster access */
-	final protected int n;
+	final private long[] position;
 	
-	public AbstractContainerSampler( final int n )
+	public AbstractImgCursor( final int n )
 	{
-		this.n = n;
+		super( n );
+		position = new long[ n ];
 	}
 
 	@Override
-	@Deprecated
-	final public T getType() { return get(); }
-	
-	@Override
-	public int numDimensions(){ return n; }
-
-	@Override
-	public long max( final int d )
+	public void remove()
 	{
-		return getImg().max( d );
+		
 	}
 
 	@Override
-	public void max( long[] max )
+	public T next()
 	{
-		getImg().max( max );		
+		fwd();
+		return get();
+	}
+
+	/**
+	 * Highly recommended to override this with a more efficient version.
+	 * 
+	 * @param steps
+	 */
+	public void jumpFwd( final long steps )
+	{
+		for ( long j = 0; j < steps; ++j )
+			fwd();
+	}
+
+	/* RasterLocalizable */
+
+	@Override
+	public void localize( float[] pos )
+	{
+		localize( this.position );
+		for ( int d = 0; d < n; d++ )
+			pos[ d ] = this.position[ d ];
 	}
 
 	@Override
-	public long min( int d )
+	public void localize( double[] pos )
 	{
-		return getImg().min( d );
+		localize( this.position );
+		for ( int d = 0; d < n; d++ )
+			pos[ d ] = this.position[ d ];
 	}
 
 	@Override
-	public void min( long[] min )
+	public void localize( int[] pos )
 	{
-		getImg().min( min );
+		localize( this.position );
+		for ( int d = 0; d < n; d++ )
+			pos[ d ] = ( int )this.position[ d ];
 	}
 
 	@Override
-	public void size( long[] size )
+	public float getFloatPosition( final int d )
 	{
-		getImg().size( size );
+		return getLongPosition( d );
 	}
 
 	@Override
-	public long size( int d )
+	public double getDoublePosition( final int d )
 	{
-		return getImg().size( d );
+		return getLongPosition( d );
 	}
 
 	@Override
-	public double realMax( int d )
+	public int getIntPosition( final int d )
 	{
-		return getImg().realMax( d );
+		return ( int )getLongPosition( d );
 	}
 
 	@Override
-	public void realMax( double[] max )
+	public String toString()
 	{
-		getImg().realMax( max );
-	}
-
-	@Override
-	public double realMin( int d )
-	{
-		return getImg().realMin( d );
-	}
-
-	@Override
-	public void realMin( double[] min )
-	{
-		getImg().realMin( min );	
+		final int[] pos = new int[ n ];
+		localize( pos );
+		return MathLib.printCoordinates( pos );
 	}
 }

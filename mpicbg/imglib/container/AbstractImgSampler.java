@@ -24,39 +24,91 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- *
- * @author Stephan Preibisch & Stephan Saalfeld
  */
 package mpicbg.imglib.container;
 
-import mpicbg.imglib.container.basictypecontainer.DataAccess;
 import mpicbg.imglib.type.Type;
 
-public abstract class AbstractDirectAccessContainer<
-		T extends Type< T >,
-		A extends DataAccess >
-	extends AbstractContainer< T >
-	implements NativeContainer< T, A >
+/**
+ * 
+ * @author Stephan Preibisch and Stephan Saalfeld
+ *
+ * @param < T > the {@link Type} to be returned by {@link #get()}
+ */
+public abstract class AbstractImgSampler< T extends Type< T > > implements ImgSampler< T >
 {
-	final protected int entitiesPerPixel;
-	protected long numEntities;
+	/* a copy of container.numDimensions() for slightly faster access */
+	final protected int n;
 	
-	protected T linkedType;
-	
-	public AbstractDirectAccessContainer( long[] dim, final int entitiesPerPixel )
+	public AbstractImgSampler( final int n )
 	{
-		super( dim );
-		this.entitiesPerPixel = entitiesPerPixel;
-		this.numEntities = numPixels * entitiesPerPixel;
+		this.n = n;
 	}
+
+	@Override
+	@Deprecated
+	final public T getType() { return get(); }
 	
 	@Override
-	public void setLinkedType( final T type ) { this.linkedType = type; }
-	
+	public int numDimensions(){ return n; }
+
 	@Override
-	public T createLinkedType()
+	public long max( final int d )
 	{
-		try{ return linkedType.duplicateTypeOnSameDirectAccessContainer(); }
-		catch ( NullPointerException e ){ return null; }
+		return getImg().max( d );
+	}
+
+	@Override
+	public void max( long[] max )
+	{
+		getImg().max( max );		
+	}
+
+	@Override
+	public long min( int d )
+	{
+		return getImg().min( d );
+	}
+
+	@Override
+	public void min( long[] min )
+	{
+		getImg().min( min );
+	}
+
+	@Override
+	public void size( long[] size )
+	{
+		getImg().size( size );
+	}
+
+	@Override
+	public long size( int d )
+	{
+		return getImg().size( d );
+	}
+
+	@Override
+	public double realMax( int d )
+	{
+		return getImg().realMax( d );
+	}
+
+	@Override
+	public void realMax( double[] max )
+	{
+		getImg().realMax( max );
+	}
+
+	@Override
+	public double realMin( int d )
+	{
+		return getImg().realMin( d );
+	}
+
+	@Override
+	public void realMin( double[] min )
+	{
+		getImg().realMin( min );	
 	}
 }
