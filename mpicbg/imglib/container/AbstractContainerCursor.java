@@ -46,11 +46,11 @@ import mpicbg.imglib.type.Type;
  * 
  * @param <T>
  */
-public abstract class AbstractContainerIterator< T extends Type< T > > extends AbstractContainerSampler< T > implements ContainerIterator< T >
+public abstract class AbstractContainerCursor< T extends Type< T > > extends AbstractContainerSampler< T > implements ContainerIterator< T >
 {
 	final private long[] position;
 	
-	public AbstractContainerIterator( final int n )
+	public AbstractContainerCursor( final int n )
 	{
 		super( n );
 		position = new long[ n ];

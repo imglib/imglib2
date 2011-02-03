@@ -27,7 +27,7 @@
  */
 package mpicbg.imglib.sampler.imageplus;
 
-import mpicbg.imglib.container.AbstractRandomAccessContainerSampler;
+import mpicbg.imglib.container.AbstractContainerRandomAccess;
 import mpicbg.imglib.container.array.Array;
 import mpicbg.imglib.container.imageplus.ImagePlusContainer;
 import mpicbg.imglib.image.Image;
@@ -39,7 +39,7 @@ import mpicbg.imglib.type.Type;
  *
  * @author Stephan Preibisch and Stephan Saalfeld
  */
-public class ImagePlusPositionableRasterSampler< T extends Type< T > > extends AbstractRandomAccessContainerSampler< T > implements ImagePlusStorageAccess
+public class ImagePlusPositionableRasterSampler< T extends Type< T > > extends AbstractContainerRandomAccess< T > implements ImagePlusStorageAccess
 {
 	/* the type instance accessing the pixel value the cursor points at */
 	protected final T type;

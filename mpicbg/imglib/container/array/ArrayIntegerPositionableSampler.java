@@ -27,7 +27,7 @@
  */
 package mpicbg.imglib.container.array;
 
-import mpicbg.imglib.container.AbstractRandomAccessContainerSampler;
+import mpicbg.imglib.container.AbstractContainerRandomAccess;
 import mpicbg.imglib.type.Type;
 
 /**
@@ -36,7 +36,7 @@ import mpicbg.imglib.type.Type;
  *
  * @author Stephan Preibisch and Stephan Saalfeld
  */
-public class ArrayIntegerPositionableSampler< T extends Type< T > > extends AbstractRandomAccessContainerSampler< T >
+public class ArrayIntegerPositionableSampler< T extends Type< T > > extends AbstractContainerRandomAccess< T >
 {
 	final protected T type;
 	final protected int[] step, dim;

@@ -27,7 +27,7 @@
  */
 package mpicbg.imglib.container.array;
 
-import mpicbg.imglib.container.AbstractContainerIterator;
+import mpicbg.imglib.container.AbstractContainerCursor;
 import mpicbg.imglib.type.Type;
 
 /**
@@ -36,7 +36,7 @@ import mpicbg.imglib.type.Type;
  * 
  * @author Stephan Preibisch and Stephan Saalfeld
  */
-public class ArrayIterator< T extends Type< T > > extends AbstractContainerIterator< T >
+public class ArrayIterator< T extends Type< T > > extends AbstractContainerCursor< T >
 {
 	protected final T type;
 

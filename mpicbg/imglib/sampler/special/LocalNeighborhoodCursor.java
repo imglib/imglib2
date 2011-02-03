@@ -30,7 +30,7 @@
 package mpicbg.imglib.sampler.special;
 
 import mpicbg.imglib.IntegerLocalizable;
-import mpicbg.imglib.container.AbstractContainerIterator;
+import mpicbg.imglib.container.AbstractContainerCursor;
 import mpicbg.imglib.container.Container;
 import mpicbg.imglib.container.ContainerRandomAccess;
 import mpicbg.imglib.container.array.ArrayLocalizingIterator;
@@ -38,7 +38,7 @@ import mpicbg.imglib.image.Image;
 import mpicbg.imglib.outofbounds.RasterOutOfBoundsFactory;
 import mpicbg.imglib.type.Type;
 
-public class LocalNeighborhoodCursor<T extends Type<T>> extends AbstractContainerIterator<T>
+public class LocalNeighborhoodCursor<T extends Type<T>> extends AbstractContainerCursor<T>
 {
 	/**
 	 * Here we "misuse" a ArrayLocalizableCursor to iterate over cells,
