@@ -28,9 +28,8 @@
 package mpicbg.imglib.container.array;
 
 import mpicbg.imglib.IntegerInterval;
+import mpicbg.imglib.IntegerRandomAccess;
 import mpicbg.imglib.IterableRealInterval;
-import mpicbg.imglib.Sampler;
-import mpicbg.imglib.SamplerFactory;
 import mpicbg.imglib.container.AbstractDirectAccessContainer;
 import mpicbg.imglib.container.Container;
 import mpicbg.imglib.container.basictypecontainer.DataAccess;
@@ -85,14 +84,14 @@ final public class Array< T extends Type< T >, A extends DataAccess > extends Ab
 	}
 
 	@Override
-	public ArrayIterator< T > iterator()
+	public ArrayIterator< T > cursor()
 	{
 		ArrayIterator< T > c = new ArrayIterator< T >( this );
 		return c;
 	}
 
 	@Override
-	public ArrayLocalizingIterator< T > localizingIterator()
+	public ArrayLocalizingIterator< T > localizingCursor()
 	{
 		ArrayLocalizingIterator< T > c = new ArrayLocalizingIterator< T >( this );
 		return c;
@@ -105,13 +104,22 @@ final public class Array< T extends Type< T >, A extends DataAccess > extends Ab
 		return c;
 	}
 
+	/*
 	@Override
-	public ArrayOutOfBoundsPositionableRasterSampler< T > integerRandomAccess( final RasterOutOfBoundsFactory< T, Array< T, A > > outOfBoundsFactory )
+	public ArrayOutOfBoundsPositionableRasterSampler< T > integerRandomAccess( final OutOfBoundsFactory< T, Container > outOfBoundsFactory )
 	{
 		ArrayOutOfBoundsPositionableRasterSampler< T > c = new ArrayOutOfBoundsPositionableRasterSampler< T >( this, outOfBoundsFactory );
 		return c;
 	}
-
+	*/
+	
+	@Override
+	public IntegerRandomAccess<T> integerRandomAccess(OutOfBoundsFactory<T, Container<T>> factory)
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
 	public static int[] createAllocationSteps( final int[] dim )
 	{
 		int[] steps = new int[ dim.length ];
@@ -183,7 +191,7 @@ final public class Array< T extends Type< T >, A extends DataAccess > extends Ab
 	}
 
 	@Override
-	public boolean equalIterationOrder( final IterableRealInterval< ?, ?, ? > f )
+	public boolean equalIterationOrder( final IterableRealInterval< ? > f )
 	{
 		if ( f.numDimensions() != this.numDimensions() )
 			return false;
@@ -199,12 +207,6 @@ final public class Array< T extends Type< T >, A extends DataAccess > extends Ab
 		return true;
 	}
 
-	@Override
-	public < S extends Sampler< T > > S sampler( SamplerFactory< T, S, Array< T, A > > samplerFactory )
-	{
-		return samplerFactory.create( this );
-	}
-	
 	@Override
 	public ArrayContainerFactory factory()
 	{

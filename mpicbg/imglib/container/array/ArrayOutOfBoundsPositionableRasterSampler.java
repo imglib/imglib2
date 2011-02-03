@@ -28,7 +28,8 @@
 package mpicbg.imglib.container.array;
 
 import mpicbg.imglib.container.AbstractOutOfBoundsRandomAccessContainerSampler;
-import mpicbg.imglib.outofbounds.RasterOutOfBoundsFactory;
+import mpicbg.imglib.container.Container;
+import mpicbg.imglib.outofbounds.OutOfBoundsFactory;
 import mpicbg.imglib.type.Type;
 
 /**
@@ -41,7 +42,7 @@ public class ArrayOutOfBoundsPositionableRasterSampler< T extends Type< T > > ex
 {
 	final protected Array< T, ? > container;
 	
-	public ArrayOutOfBoundsPositionableRasterSampler( final Array< T, ? > container, final RasterOutOfBoundsFactory< T, ? > outOfBoundsStrategyFactory ) 
+	public <F> ArrayOutOfBoundsPositionableRasterSampler( final Array< T, ? > container, final OutOfBoundsFactory< T, Container<T> > outOfBoundsStrategyFactory ) 
 	{
 		super( container, outOfBoundsStrategyFactory );
 		
