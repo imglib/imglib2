@@ -40,7 +40,7 @@ public class ImageTransform<T extends Type<T>> implements OutputAlgorithm<T>
 	
 	Container<T> transformed;
 	String errorMessage = "";
-	
+		
 	public ImageTransform( final Container<T> container, final InvertibleBoundable transform, final InterpolatorFactory<T,Container<T>> interpolatorFactory )
 	{
 		this.container = container;
