@@ -35,7 +35,7 @@ import mpicbg.imglib.container.AbstractDirectAccessContainer;
 import mpicbg.imglib.container.Container;
 import mpicbg.imglib.container.basictypecontainer.DataAccess;
 import mpicbg.imglib.container.dynamic.DynamicContainer;
-import mpicbg.imglib.outofbounds.RasterOutOfBoundsFactory;
+import mpicbg.imglib.outofbounds.OutOfBoundsFactory;
 import mpicbg.imglib.type.Type;
 
 /**
@@ -50,7 +50,7 @@ import mpicbg.imglib.type.Type;
  *
  * @author Stephan Preibisch and Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-final public class Array< T extends Type< T >, A extends DataAccess > extends AbstractDirectAccessContainer< T, A, Array< T, A > >
+final public class Array< T extends Type< T >, A extends DataAccess > extends AbstractDirectAccessContainer< T, A >
 {
 	final int[] step, dim;
 	
