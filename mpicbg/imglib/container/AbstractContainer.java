@@ -29,9 +29,8 @@
  */
 package mpicbg.imglib.container;
 
-import mpicbg.imglib.type.Type;
 
-public abstract class AbstractContainer< T extends Type< T >, F extends Container< T, F > > implements Container< T, F >
+public abstract class AbstractContainer< T > implements Container< T >
 {
 	final protected int n;
 	protected long numPixels;

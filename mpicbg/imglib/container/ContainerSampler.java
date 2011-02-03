@@ -50,5 +50,5 @@ public interface ContainerSampler< T extends Type< T > > extends Sampler< T >, E
 {	
 	public int getArrayIndex();
 
-	public Container< T, ? > getContainer();
+	public Container< T > getContainer();
 }

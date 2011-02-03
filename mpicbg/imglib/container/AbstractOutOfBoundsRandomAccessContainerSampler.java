@@ -29,7 +29,8 @@ package mpicbg.imglib.container;
 
 import mpicbg.imglib.IntegerInterval;
 import mpicbg.imglib.IntegerLocalizable;
-import mpicbg.imglib.outofbounds.RealOutOfBounds;
+import mpicbg.imglib.outofbounds.OutOfBounds;
+import mpicbg.imglib.outofbounds.OutOfBoundsFactory;
 import mpicbg.imglib.outofbounds.RealOutOfBounds;
 import mpicbg.imglib.type.Type;
 
@@ -42,7 +43,7 @@ import mpicbg.imglib.type.Type;
 public abstract class AbstractOutOfBoundsRandomAccessContainerSampler< T extends Type< T > > extends AbstractContainerSampler< T > implements RandomAccessContainerSampler< T >
 {
 	/* performs the actual moves and generates/queries a Type */
-	final protected RealOutOfBounds< T > outOfBounds;
+	final protected OutOfBounds< T > outOfBounds;
 	
 	public AbstractOutOfBoundsRandomAccessContainerSampler( final IntegerInterval f, final RealOutOfBounds< T > outOfBounds )
 	{
@@ -51,11 +52,11 @@ public abstract class AbstractOutOfBoundsRandomAccessContainerSampler< T extends
 		this.outOfBounds = outOfBounds;
 	}
 	
-	public AbstractOutOfBoundsRandomAccessContainerSampler( final IntegerInterval f, final RasterOutOfBoundsFactory< T, ? > outOfBoundsFactory )
+	public AbstractOutOfBoundsRandomAccessContainerSampler( final IntegerInterval f, final OutOfBoundsFactory< T, Container< T > > outOfBoundsFactory )
 	{
 		super( f.numDimensions() );
 		
-		this.outOfBounds = outOfBoundsFactory.create( this );
+		this.outOfBounds = outOfBoundsFactory.create( this.getContainer() );
 	}
 	
 	final public boolean isOutOfBounds()

@@ -40,5 +40,5 @@ public abstract class ContainerFactory
 	 * 
 	 * @return {@link Container}
 	 */
-	public abstract < T extends Type< T > > Container< T, ? > create( final long[] dim, final T type );
+	public abstract < T extends Type< T > > Container< T > create( final long[] dim, final T type );
 }

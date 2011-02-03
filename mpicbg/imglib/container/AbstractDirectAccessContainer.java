@@ -34,10 +34,9 @@ import mpicbg.imglib.type.Type;
 
 public abstract class AbstractDirectAccessContainer<
 		T extends Type< T >,
-		A extends DataAccess,
-		F extends AbstractDirectAccessContainer< T, A, F > >
-	extends AbstractContainer< T, F >
-	implements DirectAccessContainer< T, A, F >
+		A extends DataAccess >
+	extends AbstractContainer< T >
+	implements DirectAccessContainer< T, A >
 {
 	final protected int entitiesPerPixel;
 	protected long numEntities;

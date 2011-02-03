@@ -30,7 +30,6 @@ package mpicbg.imglib.container;
 import mpicbg.imglib.InjectiveIntegerInterval;
 import mpicbg.imglib.IntegerRandomAccessible;
 import mpicbg.imglib.RandomAccessibleIntegerInterval;
-import mpicbg.imglib.type.Type;
 
 /**
  * Containers are {@link InjectiveIntegerInterval} that has its min at
@@ -39,12 +38,10 @@ import mpicbg.imglib.type.Type;
  *
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-public interface Container<
-		T extends Type< T >,
-		F extends Container< T, F > >
+public interface Container<	T >
 	extends
-		IntegerRandomAccessible< T, F, RandomAccessContainerSampler< T > >,
-		RandomAccessibleIntegerInterval< T, F, RandomAccessContainerSampler< T >, ContainerIterator< T > >,
+		IntegerRandomAccessible< T >,
+		RandomAccessibleIntegerInterval< T, Container< T > >,
 		InjectiveIntegerInterval
 {
 	public ContainerFactory factory();

@@ -27,10 +27,7 @@
  */
 package mpicbg.imglib.outofbounds;
 
-import mpicbg.imglib.IntegerLocalizable;
-import mpicbg.imglib.IntegerPositionable;
 import mpicbg.imglib.IntegerRandomAccess;
-import mpicbg.imglib.Sampler;
 
 /**
  * 

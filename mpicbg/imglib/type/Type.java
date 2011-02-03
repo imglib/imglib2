@@ -73,7 +73,7 @@ public interface Type< T extends Type< T > >
 	 * @return - the instantiated DirectAccessContainer where only the
 	 *         {@link Type} knowns the BasicType it contains.
 	 */
-	public DirectAccessContainer< T, ?, ? > createSuitableDirectAccessContainer( final DirectAccessContainerFactory storageFactory, final long[] dim );
+	public DirectAccessContainer< T, ? > createSuitableDirectAccessContainer( final DirectAccessContainerFactory storageFactory, final long[] dim );
 
 	/**
 	 * The {@link Type} creates the default {@link Display} for displaying the
