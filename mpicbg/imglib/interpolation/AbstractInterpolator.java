@@ -27,12 +27,11 @@
  */
 package mpicbg.imglib.interpolation;
 
+import mpicbg.imglib.EuclideanSpace;
 import mpicbg.imglib.IntegerLocalizable;
 import mpicbg.imglib.Localizable;
 import mpicbg.imglib.Positionable;
-import mpicbg.imglib.image.Image;
 import mpicbg.imglib.outofbounds.OutOfBoundsFactory;
-import mpicbg.imglib.type.Type;
 
 /**
  * 
@@ -40,12 +39,12 @@ import mpicbg.imglib.type.Type;
  *
  * @author Stephan Preibisch and Stephan Saalfeld
  */
-abstract public class AbstractInterpolator< T extends Type< T >, F, LocalizablePositionable extends Localizable & Positionable > implements Interpolator< T, F >
+abstract public class AbstractInterpolator< T, F extends EuclideanSpace, LocalizablePositionable extends Localizable & Positionable > implements Interpolator< T, F >
 {
 	final protected OutOfBoundsFactory< T, F > outOfBoundsStrategyFactory;
 	final protected LocalizablePositionable localizablePositionable;
 
-	final protected Image< T > img;
+	final protected F img;
 
 	/**
 	 * the number of dimensions
@@ -53,7 +52,7 @@ abstract public class AbstractInterpolator< T extends Type< T >, F, LocalizableP
 	final protected int numDimensions;
 
 	protected AbstractInterpolator(
-			final Image< T > img,
+			final F img,
 			final OutOfBoundsFactory< T, F > outOfBoundsStrategyFactory,
 			final LocalizablePositionable localizablePositionable )
 	{
