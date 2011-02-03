@@ -17,16 +17,15 @@
 package mpicbg.imglib.algorithm.transformation;
 
 import mpicbg.imglib.algorithm.OutputAlgorithm;
-import mpicbg.imglib.algorithm.math.MathLib;
+import mpicbg.imglib.container.Container;
+import mpicbg.imglib.container.ContainerFactory;
 import mpicbg.imglib.container.ContainerIterator;
-import mpicbg.imglib.image.Image;
-import mpicbg.imglib.image.ImageFactory;
 import mpicbg.imglib.interpolation.Interpolator;
 import mpicbg.imglib.interpolation.InterpolatorFactory;
 import mpicbg.imglib.type.Type;
 import mpicbg.models.AffineModel2D;
 import mpicbg.models.AffineModel3D;
-import mpicbg.models.InvertibleCoordinateTransform;
+import mpicbg.models.InvertibleBoundable;
 import mpicbg.models.NoninvertibleModelException;
 import mpicbg.models.RigidModel2D;
 import mpicbg.models.TranslationModel2D;
@@ -34,27 +33,27 @@ import mpicbg.models.TranslationModel3D;
 
 public class ImageTransform<T extends Type<T>> implements OutputAlgorithm<T>
 {
-	final InvertibleCoordinateTransform transform;
-	final Image<T> img;
+	final InvertibleBoundable transform;
+	final Container<T> container;
 	final int numDimensions;
-	final InterpolatorFactory<T,?> interpolatorFactory;
+	final InterpolatorFactory<T,Container<T>> interpolatorFactory;
 	final boolean isAffine;
 	
-	ImageFactory<T> outputImageFactory;
+	ContainerFactory outputContainerFactory;
 	
-	final int[] newDim;
+	final long[] newDim;
 	final float[] offset;
 	
-	Image<T> transformed;
+	Container<T> transformed;
 	String errorMessage = "";
 	
-	public ImageTransform( final Image<T> img, final InvertibleCoordinateTransform transform, final InterpolatorFactory<T,?> interpolatorFactory )
+	public ImageTransform( final Container<T> container, final InvertibleBoundable transform, final InterpolatorFactory<T,Container<T>> interpolatorFactory )
 	{
-		this.img = img;
+		this.container = container;
 		this.interpolatorFactory = interpolatorFactory;
-		this.numDimensions = img.numDimensions();
+		this.numDimensions = container.numDimensions();
 		this.transform = transform;		
-		this.outputImageFactory = img.getImageFactory();
+		this.outputContainerFactory = container.factory();
 
 		if ( transform instanceof AffineModel3D ||
 			 transform instanceof AffineModel2D ||
@@ -66,27 +65,38 @@ public class ImageTransform<T extends Type<T>> implements OutputAlgorithm<T>
 				isAffine = false;
 		
 		// get image dimensions
-		final int[] dimensions = img.getDimensions();
+		final long[] dimensions = new long[ numDimensions ]; 
+		container.size( dimensions );
 
 		//
 		// first determine new min-max in all dimensions of the image
 		// by transforming all the corner-points
 		//	
-		final float[][] minMaxDim = MathLib.getMinMaxDim( dimensions, transform );		
-		offset = new float[ numDimensions ];
 		
-		// get the final size for the new image
-		newDim = new int[ numDimensions ];
+		float[] min = new float[ numDimensions ];
+		float[] max = new float[ numDimensions ];
 
 		for ( int d = 0; d < numDimensions; ++d )
 		{
-			newDim[ d ] = Math.round( minMaxDim[ d ][ 1 ] ) - Math.round( minMaxDim[ d ][ 0 ] );
-			offset[ d ] = minMaxDim[ d ][ 0 ];
+			min[ d ] = (float)container.realMin( d ); 
+			max[ d ] = (float)container.realMax( d ); 
+		}
+		transform.estimateBounds( min, max );
+		
+		offset = new float[ numDimensions ];
+		
+		// get the final size for the new image
+		newDim = new long[ numDimensions ];
+
+		for ( int d = 0; d < numDimensions; ++d )
+		{
+			newDim[ d ] = Math.round( max[ d ] ) - Math.round( min[ d ] );
+			offset[ d ] = min[ d ];
 		}		
 	}
 	
-	public void setOutputImageFactory( final ImageFactory<T> outputImageFactory ) { this.outputImageFactory = outputImageFactory; } 
-	public ImageFactory<T> getOutputImageFactory() { return this.outputImageFactory; } 
+	public void setOutputContainerFactory( final ContainerFactory outputContainerFactory ) { this.outputContainerFactory = outputContainerFactory; } 
+	public ContainerFactory getOutputImageFactory() { return this.outputContainerFactory; } 
 	
 	public float[] getOffset() { return offset; }
 	public void setOffset( final float[] offset ) 
@@ -95,8 +105,8 @@ public class ImageTransform<T extends Type<T>> implements OutputAlgorithm<T>
 			this.offset[ d ] = offset[ d ];
 	}
 
-	public int[] getNewImageSize() { return newDim; }
-	public void setNewImageSize( final int[] newDim ) 
+	public long[] getNewImageSize() { return newDim; }
+	public void setNewImageSize( final long[] newDim ) 
 	{
 		for ( int d = 0; d < numDimensions; ++d )
 			this.newDim[ d ] = newDim[ d ];
@@ -109,9 +119,9 @@ public class ImageTransform<T extends Type<T>> implements OutputAlgorithm<T>
 		{
 			return false;
 		}
-		else if ( img == null )
+		else if ( container == null )
 		{
-			errorMessage = "AffineTransform: [Image<T> img] is null.";
+			errorMessage = "AffineTransform: [Container<T> container] is null.";
 			return false;
 		}
 		else if ( interpolatorFactory.getOutOfBoundsStrategyFactory() == null )
@@ -137,7 +147,7 @@ public class ImageTransform<T extends Type<T>> implements OutputAlgorithm<T>
 	public String getErrorMessage() { return errorMessage; }
 
 	@Override
-	public Image<T> getResult() { return transformed; }
+	public Container<T> getResult() { return transformed; }
 	
 
 	@Override
@@ -147,10 +157,10 @@ public class ImageTransform<T extends Type<T>> implements OutputAlgorithm<T>
 			return false;
 		
 		// create the new output image
-		transformed = outputImageFactory.createImage( newDim );
+		transformed = outputContainerFactory.create( newDim, container.createVariable() );
 
-		final ContainerIterator<T> transformedIterator = transformed.createLocalizingRasterIterator();
-		final Interpolator<T> interpolator = img.createInterpolator( interpolatorFactory );
+		final ContainerIterator<T> transformedIterator = transformed.localizingCursor();
+		final Interpolator<T,Container<T>> interpolator = interpolatorFactory.create( container );
 		
 		try
 		{
@@ -172,26 +182,17 @@ public class ImageTransform<T extends Type<T>> implements OutputAlgorithm<T>
 				// the position in the original image
 				transform.applyInverseInPlace( tmp );
 				
-				interpolator.moveTo( tmp );
-				
-				// does the same, but for affine typically slower
-				// interpolator.setPosition( tmp );
+				interpolator.setPosition( tmp );
 	
 				transformedIterator.get().set( interpolator.get() );
 			}		
 		} 
 		catch ( NoninvertibleModelException e )
-		{
-			transformedIterator.close();
-			interpolator.close();
-			transformed.close();
-			
+		{			
 			errorMessage = "ImageTransform.process(): " + e.getMessage();
 			return false;
 		}
 
-		transformedIterator.close();
-		interpolator.close();
 		return true;
 	}	
 }
