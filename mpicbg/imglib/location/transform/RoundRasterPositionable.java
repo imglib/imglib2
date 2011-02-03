@@ -157,42 +157,24 @@ public class RoundRasterPositionable< LocalizableRasterPositionable extends Inte
 	}
 
 	@Override
-	public void moveTo( final Localizable localizable )
+	public void move( final Localizable localizable )
 	{
-		localizable.localize( position );
-		moveTo( position );
+		for ( int d = 0; d < numDimensions; ++d )
+			move( localizable.getDoublePosition(d), d );
 	}
 
 	@Override
-	public void moveTo( final float[] pos )
+	public void move( final float[] pos )
 	{
 		for ( int d = 0; d < numDimensions; ++d )
-		{
-			final float realPosition = pos[ d ];
-			position[ d ] = realPosition;
-			final int roundPosition = round( realPosition );
-			final int roundDistance = roundPosition - target.getIntPosition( d );
-			if ( roundDistance == 0 )
-				continue;
-			else
-				target.move( roundDistance, d );
-		}
+			move( pos[ d ], d );
 	}
 
 	@Override
-	public void moveTo( final double[] pos )
+	public void move( final double[] pos )
 	{
 		for ( int d = 0; d < numDimensions; ++d )
-		{
-			final float realPosition = ( float )pos[ d ];
-			position[ d ] = realPosition;
-			final int roundPosition = round( realPosition );
-			final int roundDistance = roundPosition - target.getIntPosition( d );
-			if ( roundDistance == 0 )
-				continue;
-			else
-				target.move( roundDistance, d );
-		}
+			move( pos[ d ], d );
 	}
 
 	@Override
@@ -270,26 +252,24 @@ public class RoundRasterPositionable< LocalizableRasterPositionable extends Inte
 	}
 
 	@Override
-	public void moveTo( final IntegerLocalizable localizable )
+	public void move( final IntegerLocalizable localizable )
 	{
-		localizable.localize( position );
-		target.moveTo( localizable );
+		for ( int d = 0; d < numDimensions; ++d )
+			move( localizable.getLongPosition( d ), d );
 	}
 
 	@Override
-	public void moveTo( final int[] pos )
+	public void move( final int[] pos )
 	{
 		for ( int d = 0; d < numDimensions; ++d )
-			this.position[ d ] = pos[ d ];
-		target.moveTo( pos );
+			move( pos[ d ], d );
 	}
 
 	@Override
-	public void moveTo( final long[] pos )
+	public void move( final long[] pos )
 	{
 		for ( int d = 0; d < numDimensions; ++d )
-			this.position[ d ] = pos[ d ];
-		target.moveTo( pos );
+			move( pos[ d ], d );
 	}
 	
 	@Override
