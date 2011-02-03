@@ -36,6 +36,9 @@ import ij.process.ByteProcessor;
 import ij.process.ColorProcessor;
 import ij.process.FloatProcessor;
 import ij.process.ImageProcessor;
+
+import java.util.Collection;
+
 import mpicbg.imglib.cursor.array.ArrayLocalizableCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.ImagePlusAdapter;
@@ -53,7 +56,7 @@ public class ImageJFunctions
 	final public static int GRAY8 = ImagePlus.GRAY8;
 	final public static int GRAY32 = ImagePlus.GRAY32;
 	final public static int COLOR_RGB = ImagePlus.COLOR_RGB;
-	/*
+	
 	public static <T extends Type<T>> ImagePlus displayAsVirtualStack( final Collection<InverseTransformDescription<T>> interpolators,
 																	   final int type, int[] dim, final int[] dimensionPositions )
 	{
@@ -81,17 +84,24 @@ public class ImageJFunctions
 
 			for ( InverseTransformDescription<T> ti : interpolators )
 			{
-				float[][] minMaxDimLocal = MathLib.getMinMaxDim( ti.getImage().getDimensions(), ti.getTransform() );
+				float[] min = new float[ 3 ];
+				float[] max = new float[ 3 ];
+				
+				for ( int d = 0; d < 3; ++d )
+					max[ d ] = ti.getImage().getDimension( d );
+				
+				ti.getTransform().estimateBounds( min, max );
+				//float[][] minMaxDimLocal = Util.getMinMaxDim( ti.getImage().getDimensions(), ti.getTransform() );
 
 				for ( int i = 0; i < dim.length; i++ )
 				{
-					if ( dim[i] < minMaxDimLocal.length )
+					if ( dim[i] < min.length )
 					{
-						if ( minMaxDimLocal[ dim[i] ][ 0 ] < minMaxDim[ dim[i] ][ 0 ] )
-							minMaxDim[ dim[i] ][ 0 ] = minMaxDimLocal[ dim[i] ][ 0 ];
+						if ( min[ dim[i] ] < minMaxDim[ dim[i] ][ 0 ] )
+							minMaxDim[ dim[i] ][ 0 ] = min[ dim[i] ];
 
-						if ( minMaxDimLocal[ dim[i] ][ 1 ] > minMaxDim[ dim[i] ][ 1 ] )
-							minMaxDim[ dim[i] ][ 1 ] = minMaxDimLocal[ dim[i] ][ 1 ];
+						if ( max[ dim[i] ] > minMaxDim[ dim[i] ][ 1 ] )
+							minMaxDim[ dim[i] ][ 1 ] = max[ dim[i] ];
 					}
 				}
 			}
@@ -127,7 +137,6 @@ public class ImageJFunctions
 
 		return imp;
 	}
-	*/
 	
 	public static <T extends RealType<T>> Image< T > wrap( final ImagePlus imp ) { return ImagePlusAdapter.wrap( imp ); }
 	
