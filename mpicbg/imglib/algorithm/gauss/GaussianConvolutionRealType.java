@@ -1,26 +1,26 @@
 package mpicbg.imglib.algorithm.gauss;
 
 import mpicbg.imglib.algorithm.Precision.PrecisionReal;
+import mpicbg.imglib.container.Container;
 import mpicbg.imglib.container.ContainerIterator;
 import mpicbg.imglib.container.ContainerRandomAccess;
-import mpicbg.imglib.image.Image;
-import mpicbg.imglib.outofbounds.RasterOutOfBoundsFactory;
+import mpicbg.imglib.outofbounds.OutOfBoundsFactory;
 import mpicbg.imglib.type.numeric.RealType;
 
 public class GaussianConvolutionRealType<T extends RealType<T>> extends GaussianConvolution<T>
 {
 	protected PrecisionReal precision = PrecisionReal.Double;
 	
-	public GaussianConvolutionRealType( final Image<T> image, final RasterOutOfBoundsFactory<T> outOfBoundsFactory, final double[] sigma )
+	public GaussianConvolutionRealType( final Container<T> image, final OutOfBoundsFactory<T,Container<T>> outOfBoundsFactory, final double[] sigma )
 	{
 		super( image, outOfBoundsFactory, sigma );
-		precision = image.createType().getPreferredRealPrecision(); 
+		precision = image.createVariable().getPreferredRealPrecision(); 
 	}
 
-	public GaussianConvolutionRealType( final Image<T> image, final RasterOutOfBoundsFactory<T> outOfBoundsFactory, final double sigma )
+	public GaussianConvolutionRealType( final Container<T> image, final OutOfBoundsFactory<T,Container<T>> outOfBoundsFactory, final double sigma )
 	{
 		super( image, outOfBoundsFactory, sigma );
-		precision = image.createType().getPreferredRealPrecision(); 
+		precision = image.createVariable().getPreferredRealPrecision(); 
 	}
 	
 	public void setPrecision( PrecisionReal precision ) { this.precision = precision; }
@@ -46,7 +46,7 @@ public class GaussianConvolutionRealType<T extends RealType<T>> extends Gaussian
 		final int filterSizeMinus1 = filterSize - 1;
 		final int filterSizeHalf = filterSize / 2;
 		final int filterSizeHalfMinus1 = filterSizeHalf - 1;
-		final int numDimensions = inputIterator.getImage().numDimensions();
+		final int numDimensions = inputIterator.numDimensions();
 		
 		final int iteratorPosition = filterSizeHalf;
 		
@@ -115,7 +115,7 @@ public class GaussianConvolutionRealType<T extends RealType<T>> extends Gaussian
 		final int filterSizeMinus1 = filterSize - 1;
 		final int filterSizeHalf = filterSize / 2;
 		final int filterSizeHalfMinus1 = filterSizeHalf - 1;
-		final int numDimensions = inputIterator.getImage().numDimensions();
+		final int numDimensions = inputIterator.numDimensions();
 		
 		final int iteratorPosition = filterSizeHalf;
 		

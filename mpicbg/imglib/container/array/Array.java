@@ -116,8 +116,8 @@ final public class Array< T extends Type< T >, A extends DataAccess > extends Ab
 	@Override
 	public ContainerRandomAccess<T> integerRandomAccess(OutOfBoundsFactory<T, Container<T>> factory)
 	{
-		// TODO Auto-generated method stub
-		return null;
+		ArrayOutOfBoundsPositionableRasterSampler< T > c = new ArrayOutOfBoundsPositionableRasterSampler< T >( this, factory );
+		return c;
 	}
 	
 	public static int[] createAllocationSteps( final int[] dim )

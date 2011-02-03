@@ -110,5 +110,5 @@ import mpicbg.imglib.type.Type;
  *
  * @param <T> - the {@link Type} this {@link ContainerIterator} works on
  */
-public interface ContainerIterator< T extends Type< T > > extends ContainerSampler< T >, IntegerCursor< T >
+public interface ContainerIterator< T > extends ContainerSampler< T >, IntegerCursor< T >
 {}

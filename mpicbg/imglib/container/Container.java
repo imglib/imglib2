@@ -51,7 +51,15 @@ public interface Container<	T >
 	@Override
 	public ContainerRandomAccess< T > integerRandomAccess( OutOfBoundsFactory< T, Container< T > > factory );
 	
+	@Override
+	public ContainerIterator< T > cursor();
+
+	@Override
+	public ContainerIterator< T > localizingCursor();
+
 	public ContainerFactory factory();
 	
 	public T createVariable();
+	
+	public long numPixels();
 }

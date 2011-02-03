@@ -71,6 +71,9 @@ public abstract class AbstractContainer< T > implements Container< T >
 	public int numDimensions() { return size.length; }
 	
 	@Override
+	public long numPixels() { return numPixels; }
+	
+	@Override
 	public void size( final long[] s )
 	{
 		for ( int i = 0; i < n; ++i )

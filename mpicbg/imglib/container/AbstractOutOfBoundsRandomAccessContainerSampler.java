@@ -52,11 +52,13 @@ public abstract class AbstractOutOfBoundsRandomAccessContainerSampler< T extends
 		this.outOfBounds = outOfBounds;
 	}
 	
-	public AbstractOutOfBoundsRandomAccessContainerSampler( final IntegerInterval f, final OutOfBoundsFactory< T, Container< T > > outOfBoundsFactory )
+	public AbstractOutOfBoundsRandomAccessContainerSampler( final Container<T> container, final OutOfBoundsFactory< T, Container< T > > outOfBoundsFactory )
 	{
-		super( f.numDimensions() );
+		super( container.numDimensions() );
 		
-		this.outOfBounds = outOfBoundsFactory.create( this.getContainer() );
+		// we need the container here, .getContainer() does not work yet as the Array/Cell/.../OutOfBoundsPositionableRasterSampler 
+		// calls super first and getContainer is not initialized yet
+		this.outOfBounds = outOfBoundsFactory.create( container );
 	}
 	
 	final public boolean isOutOfBounds()

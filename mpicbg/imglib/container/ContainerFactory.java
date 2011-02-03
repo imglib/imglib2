@@ -29,6 +29,7 @@
  */
 package mpicbg.imglib.container;
 
+import mpicbg.imglib.IntegerInterval;
 import mpicbg.imglib.type.Type;
 
 public abstract class ContainerFactory
@@ -41,4 +42,12 @@ public abstract class ContainerFactory
 	 * @return {@link Container}
 	 */
 	public abstract < T extends Type< T > > Container< T > create( final long[] dim, final T type );
+	
+	public < T extends Type< T > > Container< T > create( final IntegerInterval interval, final T type )
+	{
+		final long[] dim = new long[ interval.numDimensions() ];
+		interval.size( dim );
+		
+		return create( dim, type );
+	}
 }
