@@ -1,7 +1,5 @@
 package script.imglib.analysis;
 
-import ij.IJ;
-
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.util.ArrayList;
