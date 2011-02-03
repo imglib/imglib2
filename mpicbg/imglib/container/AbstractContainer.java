@@ -31,8 +31,6 @@ package mpicbg.imglib.container;
 
 import java.util.Iterator;
 
-import mpicbg.imglib.container.array.ArrayIterator;
-
 
 public abstract class AbstractContainer< T > implements Container< T >
 {
