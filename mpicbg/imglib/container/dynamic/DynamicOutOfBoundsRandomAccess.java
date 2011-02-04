@@ -28,9 +28,10 @@
 package mpicbg.imglib.container.dynamic;
 
 import mpicbg.imglib.container.AbstractImgOutOfBoundsRandomAccess;
-import mpicbg.imglib.image.Image;
-import mpicbg.imglib.outofbounds.RasterOutOfBoundsFactory;
+import mpicbg.imglib.container.Img;
+import mpicbg.imglib.outofbounds.OutOfBoundsFactory;
 import mpicbg.imglib.type.Type;
+import mpicbg.imglib.util.Util;
 
 /**
  * 
@@ -40,18 +41,29 @@ import mpicbg.imglib.type.Type;
  */
 public class DynamicOutOfBoundsRandomAccess< T extends Type< T > > extends AbstractImgOutOfBoundsRandomAccess< T >
 {
-	final protected DynamicContainer< T, ? > container;
+	final private DynamicContainer< T > container;
 	
 	public DynamicOutOfBoundsRandomAccess(
-			final DynamicContainer< T, ? > container,
-			final Image< T > image,
-			final RasterOutOfBoundsFactory< T > outOfBoundsStrategyFactory ) 
+			final DynamicContainer< T > container,
+			final OutOfBoundsFactory< T, Img< T > > outOfBoundsStrategyFactory ) 
 	{
-		super( container, image, outOfBoundsStrategyFactory );
+		super( container, outOfBoundsStrategyFactory );
 		
 		this.container = container;
 	}
 
 	@Override
-	public DynamicContainer< T, ? > getImg(){ return container; }
+	public DynamicContainer< T > getImg(){ return container; }
+	
+	@Override
+	public T create() { return container.createVariable(); }
+	
+	@Override
+	public String toString() 
+	{
+		final long[] tmp = new long[ n ];
+		localize( tmp );
+		
+		return Util.printCoordinates( tmp ) + ": " + get(); 
+	}		
 }

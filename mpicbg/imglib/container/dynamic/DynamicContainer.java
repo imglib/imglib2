@@ -28,19 +28,13 @@
 package mpicbg.imglib.container.dynamic;
 
 import java.util.ArrayList;
-import java.util.Collection;
 
 import mpicbg.imglib.IntegerInterval;
 import mpicbg.imglib.IterableRealInterval;
 import mpicbg.imglib.container.AbstractImg;
-import mpicbg.imglib.container.AbstractNativeContainer;
 import mpicbg.imglib.container.Img;
-import mpicbg.imglib.container.ImgCursor;
-import mpicbg.imglib.container.ImgFactory;
 import mpicbg.imglib.container.ImgRandomAccess;
 import mpicbg.imglib.container.array.Array;
-import mpicbg.imglib.container.cell.CellContainer;
-import mpicbg.imglib.image.Image;
 import mpicbg.imglib.outofbounds.OutOfBoundsFactory;
 import mpicbg.imglib.type.Type;
 
@@ -93,6 +87,15 @@ public class DynamicContainer< T extends Type< T > > extends AbstractImg< T >
 		return i;
 	}
 
+	public final int getPos( final long[] l )
+	{
+		int i = (int)l[ 0 ];
+		for ( int d = 1; d < n; ++d )
+			i += l[ d ] * step[ d ];
+
+		return i;
+	}
+
 	@Override
 	public long numPixels() { return numPixels; }
 
@@ -103,13 +106,13 @@ public class DynamicContainer< T extends Type< T > > extends AbstractImg< T >
 	}
 
 	@Override
-	public DynamicCursor< T > localizingCursor()
+	public DynamicLocalizingCursor< T > localizingCursor()
 	{
 		return new DynamicLocalizingCursor< T >( this  );
 	}
 
 	@Override
-	public ImgRandomAccess< T > integerRandomAccess()
+	public DynamicRandomAccess< T > integerRandomAccess()
 	{
 		return new DynamicRandomAccess< T >( this );
 	}
