@@ -30,8 +30,8 @@ package mpicbg.imglib.container.dynamic;
 import java.util.ArrayList;
 
 import mpicbg.imglib.container.AbstractImgLocalizingCursor;
-import mpicbg.imglib.image.Image;
 import mpicbg.imglib.type.Type;
+import mpicbg.imglib.util.Util;
 
 /**
  * 
@@ -42,6 +42,8 @@ import mpicbg.imglib.type.Type;
 final public class DynamicLocalizingCursor< T extends Type< T > > extends AbstractImgLocalizingCursor< T >
 {
 	private int i;
+	final private int maxNumPixels;
+	
 	final private ArrayList< T > pixels;
 	final private DynamicContainer< T > container;
 	
@@ -51,7 +53,8 @@ final public class DynamicLocalizingCursor< T extends Type< T > > extends Abstra
 		
 		this.container = container;
 		this.pixels = container.pixels;
-		
+		this.maxNumPixels = (int)container.numPixels() - 1;
+	
 		reset();
 	}
 	
@@ -59,7 +62,6 @@ final public class DynamicLocalizingCursor< T extends Type< T > > extends Abstra
 	public void fwd()
 	{ 
 		++i; 
-		accessor.updateIndex( i );
 		
 		for ( int d = 0; d < n; d++ )
 		{
@@ -76,18 +78,13 @@ final public class DynamicLocalizingCursor< T extends Type< T > > extends Abstra
 	}
 
 	@Override
-	public boolean hasNext() { return i < container.numPixels() - 1; }
+	public boolean hasNext() { return i < maxNumPixels; }
 	
-
 	@Override
 	public void reset()
 	{
 		if ( size != null )
 		{
-			type.updateIndex( 0 );
-			i = 0;
-			type.updateContainer( this );
-			accessor.updateIndex( i );
 			i = -1;
 			
 			position[ 0 ] = -1;
@@ -98,14 +95,20 @@ final public class DynamicLocalizingCursor< T extends Type< T > > extends Abstra
 	}
 
 	@Override
-	public DynamicContainer< T, ? > getImg(){ return container; }
+	public DynamicContainer< T > getImg(){ return container; }
 	
 	@Override
-	public T get() { return type; }
-
+	public T get() { return pixels.get( i ); }
+	
 	@Override
-	public DynamicContainerAccessor getAccessor() { return accessor; }
-
+	public T create() { return container.createVariable(); }
+	
 	@Override
-	public int getInternalIndex() { return i; }
+	public String toString() 
+	{
+		final long[] tmp = new long[ n ];
+		localize( tmp );
+		
+		return Util.printCoordinates( tmp ) + ": " + get(); 
+	}	
 }

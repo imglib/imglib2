@@ -42,6 +42,8 @@ import mpicbg.imglib.util.Util;
 final public class DynamicCursor< T extends Type< T > > extends AbstractImgCursor< T >
 {
 	private int i;
+	final private int maxNumPixels;
+	
 	final private ArrayList< T > pixels;
 	final private DynamicContainer< T > container;
 	
@@ -51,6 +53,7 @@ final public class DynamicCursor< T extends Type< T > > extends AbstractImgCurso
 		
 		this.container = container;
 		this.pixels = container.pixels;
+		this.maxNumPixels = (int)container.numPixels() - 1;
 		
 		reset();
 	}
@@ -59,7 +62,7 @@ final public class DynamicCursor< T extends Type< T > > extends AbstractImgCurso
 	public T get() { return pixels.get( i ); }
 
 	@Override
-	public boolean hasNext() { return i < container.numPixels() - 1; }
+	public boolean hasNext() { return i < maxNumPixels; }
 
 	@Override
 	public void jumpFwd( final long steps )  { i += steps; }
@@ -72,16 +75,7 @@ final public class DynamicCursor< T extends Type< T > > extends AbstractImgCurso
 	
 	@Override
 	public DynamicContainer<T> getImg() { return container; }
-	
-	@Override
-	public String toString() 
-	{
-		final long[] tmp = new long[ n ];
-		localize( tmp );
 		
-		return Util.printCoordinates( tmp ) + ": " + get(); 
-	}
-	
 	@Override
 	public long getLongPosition( final int dim )
 	{
@@ -96,4 +90,13 @@ final public class DynamicCursor< T extends Type< T > > extends AbstractImgCurso
 
 	@Override
 	public T create() { return container.createVariable(); }
+	
+	@Override
+	public String toString() 
+	{
+		final long[] tmp = new long[ n ];
+		localize( tmp );
+		
+		return Util.printCoordinates( tmp ) + ": " + get(); 
+	}	
 }
