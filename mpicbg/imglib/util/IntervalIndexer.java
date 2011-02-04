@@ -8,7 +8,7 @@ package mpicbg.imglib.util;
  * This class provides convenience methods to translate between N-dimensional
  * indices (positions) and 1-dimensional indices.
  */
-public class IntegerIntervalIndexer
+public class IntervalIndexer
 {
 	final static public int positionToIndex( final int[] position, final int[] dimensions )
 	{
@@ -16,6 +16,15 @@ public class IntegerIntervalIndexer
 		int i = position[ maxDim ];
 		for ( int d = maxDim - 1; d >= 0; --d )
 			i = i * dimensions[ d ] + position[ d ];
+		return i;
+	}
+
+	final static public int positionWithOffsetToIndex( final int[] position, final int[] dimensions, final int[] offsets )
+	{
+		final int maxDim = dimensions.length - 1;
+		int i = position[ maxDim ] + offsets[ maxDim ];
+		for ( int d = maxDim - 1; d >= 0; --d )
+			i = i * dimensions[ d ] + position[ d ] + offsets[ d ];
 		return i;
 	}
 
@@ -31,6 +40,18 @@ public class IntegerIntervalIndexer
 		position[ maxDim ] = index;
 	}
 
+	final static public void indexToPositionWithOffset( int index, final int[] dimensions, final int[] offsets, final int[] position )
+	{
+		final int maxDim = dimensions.length - 1;
+		for ( int d = 0; d < maxDim; ++d )
+		{
+			final int j = index / dimensions[ d ];
+			position[ d ] = index - j * dimensions[ d ] - offsets[ d ];
+			index = j;
+		}
+		position[ maxDim ] = index - offsets[ maxDim ];
+	}
+
 	final static public int indexToPosition( final int index, final int[] dimensions, final int dimension )
 	{
 		int step = 1;
@@ -39,30 +60,20 @@ public class IntegerIntervalIndexer
 		return ( index / step ) % dimensions[ dimension ];
 	}
 
+	final static public int indexToPositionWithOffset( final int index, final int[] dimensions, final int[] offsets, final int dimension )
+	{
+		return indexToPosition( index, dimensions, dimension ) - offsets[ dimension ];
+	}
+
 	final static public int indexToPosition( final int index, final int[] dimensions, final int[] steps, final int dimension )
 	{
 		return ( index / steps[ dimension ] ) % dimensions[ dimension ];
 	}
 	
-	final static public int indexToPosition( final int index, final int[] dimensions, final int[] steps, final int[] offset, final int dimension )
+	final static public int indexToPositionWithOffset( final int index, final int[] dimensions, final int[] steps, final int[] offset, final int dimension )
 	{
 		return indexToPosition( index, dimensions, steps, dimension ) - offset[ dimension ];
-	}
-	
-	
-	
-	
-	
-
-	public final long positionToIndex( final long[] position, final long[] dims )
-	{
-		final int maxDim = dims.length - 1;
-		long i = position[ maxDim ];
-		for ( int d = maxDim; d > 0; --d )
-			i = i * dims[ d - 1 ] + position[ d ];
-		return i + position[ 0 ];
-	}
-	
+	}	
 	
 	
 	
@@ -70,21 +81,21 @@ public class IntegerIntervalIndexer
 	/**
 	 * Create allocation step array from the dimensions of an N-dimensional array.
 	 *  
-	 * @param dim
+	 * @param dimensions
 	 * @param steps
 	 */
-	public static void createAllocationSteps( final long[] dim, final long[] steps )
+	public static void createAllocationSteps( final long[] dimensions, final long[] steps )
 	{
 		steps[ 0 ] = 1;
-		for ( int d = 1; d < dim.length; ++d )
-			steps[ d ] = steps[ d - 1 ] * dim[ d - 1 ];
+		for ( int d = 1; d < dimensions.length; ++d )
+			steps[ d ] = steps[ d - 1 ] * dimensions[ d - 1 ];
 	}
 
-	public static void createAllocationSteps( final int[] dim, final int[] steps )
+	public static void createAllocationSteps( final int[] dimensions, final int[] steps )
 	{
 		steps[ 0 ] = 1;
-		for ( int d = 1; d < dim.length; ++d )
-			steps[ d ] = steps[ d - 1 ] * dim[ d - 1 ];
+		for ( int d = 1; d < dimensions.length; ++d )
+			steps[ d ] = steps[ d - 1 ] * dimensions[ d - 1 ];
 	}
 	
 
