@@ -43,7 +43,7 @@ import mpicbg.imglib.container.ImgFactory;
 import mpicbg.imglib.container.ImgCursor;
 import mpicbg.imglib.container.ImgSampler;
 import mpicbg.imglib.container.ImgRandomAccess;
-import mpicbg.imglib.container.array.ArrayLocalizingIterator;
+import mpicbg.imglib.container.array.ArrayLocalizingCursor;
 import mpicbg.imglib.image.display.Display;
 import mpicbg.imglib.interpolation.Interpolator;
 import mpicbg.imglib.interpolation.InterpolatorFactory;
@@ -474,7 +474,7 @@ public class Image< T extends Type< T > > implements
 		
 		final T[] pixels = createType().createArray1D( (int)numPixels );
 		
-		final ArrayLocalizingIterator<FakeType> iterator = ArrayLocalizingIterator.createLinearCursor( getDimensions() );
+		final ArrayLocalizingCursor<FakeType> iterator = ArrayLocalizingCursor.createLinearCursor( getDimensions() );
 		final ImgRandomAccess<T> positionable = this.createPositionableRasterSampler();
 		
 		int t = 0;

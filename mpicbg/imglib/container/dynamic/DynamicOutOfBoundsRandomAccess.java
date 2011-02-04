@@ -25,13 +25,11 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-package mpicbg.imglib.sampler.dynamic;
+package mpicbg.imglib.container.dynamic;
 
-import mpicbg.imglib.container.AbstractImgLocalizingCursor;
-import mpicbg.imglib.container.basictypecontainer.DataAccess;
-import mpicbg.imglib.container.dynamic.DynamicContainer;
-import mpicbg.imglib.container.dynamic.DynamicContainerAccessor;
+import mpicbg.imglib.container.AbstractImgOutOfBoundsRandomAccess;
 import mpicbg.imglib.image.Image;
+import mpicbg.imglib.outofbounds.RasterOutOfBoundsFactory;
 import mpicbg.imglib.type.Type;
 
 /**
@@ -40,84 +38,20 @@ import mpicbg.imglib.type.Type;
  *
  * @author Stephan Preibisch and Stephan Saalfeld
  */
-public class DynamicLocalizingRasterIterator< T extends Type< T > > extends AbstractImgLocalizingCursor< T > implements DynamicStorageAccess
+public class DynamicOutOfBoundsRandomAccess< T extends Type< T > > extends AbstractImgOutOfBoundsRandomAccess< T >
 {
-	/* the type instance accessing the pixel value the cursor points at */
-	protected final T type;
+	final protected DynamicContainer< T, ? > container;
 	
-	/* a stronger typed pointer to Container< T > */
-	protected final DynamicContainer< T, ? extends DataAccess > container;
-	
-	/* access proxy */
-	protected final DynamicContainerAccessor accessor;
-
-	protected int internalIndex;
-	
-	public DynamicLocalizingRasterIterator(
+	public DynamicOutOfBoundsRandomAccess(
 			final DynamicContainer< T, ? > container,
-			final Image< T > image )
+			final Image< T > image,
+			final RasterOutOfBoundsFactory< T > outOfBoundsStrategyFactory ) 
 	{
-		super( container, image );
+		super( container, image, outOfBoundsStrategyFactory );
 		
 		this.container = container;
-		this.type = container.createLinkedType();
-		
-		accessor = container.createAccessor();
-		
-		reset();
-	}
-	
-	@Override
-	public void fwd()
-	{ 
-		++internalIndex; 
-		accessor.updateIndex( internalIndex );
-		
-		for ( int d = 0; d < n; d++ )
-		{
-			if ( position[ d ] < size[ d ] - 1 )
-			{
-				position[ d ]++;
-				
-				for ( int e = 0; e < d; e++ )
-					position[ e ] = 0;
-				
-				break;
-			}
-		}
-	}
-
-	@Override
-	public boolean hasNext() { return internalIndex < container.numPixels() - 1; }
-	
-
-	@Override
-	public void reset()
-	{
-		if ( size != null )
-		{
-			type.updateIndex( 0 );
-			internalIndex = 0;
-			type.updateContainer( this );
-			accessor.updateIndex( internalIndex );
-			internalIndex = -1;
-			
-			position[ 0 ] = -1;
-			
-			for ( int d = 1; d < n; d++ )
-				position[ d ] = 0;		
-		}
 	}
 
 	@Override
 	public DynamicContainer< T, ? > getImg(){ return container; }
-	
-	@Override
-	public T get() { return type; }
-
-	@Override
-	public DynamicContainerAccessor getAccessor() { return accessor; }
-
-	@Override
-	public int getInternalIndex() { return internalIndex; }
 }

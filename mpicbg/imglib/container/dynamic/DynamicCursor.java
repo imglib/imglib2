@@ -25,11 +25,10 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-package mpicbg.imglib.sampler.dynamic;
+package mpicbg.imglib.container.dynamic;
 
 import mpicbg.imglib.container.AbstractImgCursor;
 import mpicbg.imglib.container.basictypecontainer.DataAccess;
-import mpicbg.imglib.container.dynamic.DynamicContainer;
 import mpicbg.imglib.container.dynamic.DynamicContainerAccessor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.type.Type;
@@ -40,7 +39,7 @@ import mpicbg.imglib.type.Type;
  *
  * @author Stephan Preibisch and Stephan Saalfeld
  */
-public class DynamicBasicRasterIterator< T extends Type< T > > extends AbstractImgCursor< T > implements DynamicStorageAccess
+public class DynamicCursor< T extends Type< T > > extends AbstractImgCursor< T > implements DynamicStorageAccess
 {
 	/* the type instance accessing the pixel value the cursor points at */
 	protected final T type;
@@ -53,7 +52,7 @@ public class DynamicBasicRasterIterator< T extends Type< T > > extends AbstractI
 
 	protected int internalIndex;
 	
-	public DynamicBasicRasterIterator(
+	public DynamicCursor(
 			final DynamicContainer< T, ? extends DynamicContainerAccessor > container,
 			final Image< T > image )
 	{

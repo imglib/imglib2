@@ -25,12 +25,11 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-package mpicbg.imglib.sampler.dynamic;
+package mpicbg.imglib.container.dynamic;
 
 import mpicbg.imglib.IntegerLocalizable;
 import mpicbg.imglib.container.AbstractImgRandomAccess;
 import mpicbg.imglib.container.basictypecontainer.DataAccess;
-import mpicbg.imglib.container.dynamic.DynamicContainer;
 import mpicbg.imglib.container.dynamic.DynamicContainerAccessor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.type.Type;
@@ -41,7 +40,7 @@ import mpicbg.imglib.type.Type;
  *
  * @author Stephan Preibisch and Stephan Saalfeld
  */
-public class DynamicPositionableRasterSampler< T extends Type< T > > extends AbstractImgRandomAccess< T > implements DynamicStorageAccess
+public class DynamicRandomAccess< T extends Type< T > > extends AbstractImgRandomAccess< T > implements DynamicStorageAccess
 {
 	/* the type instance accessing the pixel value the cursor points at */
 	protected final T type;
@@ -58,7 +57,7 @@ public class DynamicPositionableRasterSampler< T extends Type< T > > extends Abs
 	
 	protected int numNeighborhoodCursors = 0;
 	
-	public DynamicPositionableRasterSampler(
+	public DynamicRandomAccess(
 			final DynamicContainer< T, ? > container,
 			final Image< T > image ) 
 	{

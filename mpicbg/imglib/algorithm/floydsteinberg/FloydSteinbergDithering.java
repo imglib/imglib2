@@ -23,7 +23,7 @@ import mpicbg.imglib.algorithm.OutputAlgorithm;
 import mpicbg.imglib.container.ImgCursor;
 import mpicbg.imglib.container.ImgRandomAccess;
 import mpicbg.imglib.container.array.ArrayContainerFactory;
-import mpicbg.imglib.container.array.ArrayLocalizingIterator;
+import mpicbg.imglib.container.array.ArrayLocalizingCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.ImageFactory;
 import mpicbg.imglib.outofbounds.OutOfBoundsConstantValueFactory;
@@ -78,7 +78,7 @@ public class FloydSteinbergDithering<T extends RealType<T>> implements OutputAlg
 		// we create a Cursor that traverses (top -> bottom) and (left -> right) in n dimensions,
 		// which is a Cursor on a normal Array, therefore we use a FakeArray which just gives us position
 		// information without allocating memory
-		final ImgCursor<FakeType> cursor = ArrayLocalizingIterator.createLinearCursor( dim );
+		final ImgCursor<FakeType> cursor = ArrayLocalizingCursor.createLinearCursor( dim );
 
 		// we also need a Cursors for the input, the output and the kernel image
 		final ImgRandomAccess<T> cursorInput = img.createPositionableRasterSampler( new OutOfBoundsConstantValueFactory<T>() );

@@ -84,39 +84,30 @@ final public class Array< T extends NativeType< T >, A extends DataAccess > exte
 	}
 
 	@Override
-	public ArrayIterator< T > cursor()
+	public ArrayCursor< T > cursor()
 	{
-		ArrayIterator< T > c = new ArrayIterator< T >( this );
+		ArrayCursor< T > c = new ArrayCursor< T >( this );
 		return c;
 	}
 
 	@Override
-	public ArrayLocalizingIterator< T > localizingCursor()
+	public ArrayLocalizingCursor< T > localizingCursor()
 	{
-		ArrayLocalizingIterator< T > c = new ArrayLocalizingIterator< T >( this );
+		ArrayLocalizingCursor< T > c = new ArrayLocalizingCursor< T >( this );
 		return c;
 	}
 
 	@Override
-	public ArrayIntegerPositionableSampler< T > integerRandomAccess()
+	public ArrayRandomAccess< T > integerRandomAccess()
 	{
-		ArrayIntegerPositionableSampler< T > c = new ArrayIntegerPositionableSampler< T >( this );
+		ArrayRandomAccess< T > c = new ArrayRandomAccess< T >( this );
 		return c;
 	}
 
-	/*
 	@Override
-	public ArrayOutOfBoundsPositionableRasterSampler< T > integerRandomAccess( final OutOfBoundsFactory< T, Container > outOfBoundsFactory )
+	public ArrayOutOfBoundsRandomAccess<T> integerRandomAccess(OutOfBoundsFactory<T, Img<T>> factory)
 	{
-		ArrayOutOfBoundsPositionableRasterSampler< T > c = new ArrayOutOfBoundsPositionableRasterSampler< T >( this, outOfBoundsFactory );
-		return c;
-	}
-	*/
-	
-	@Override
-	public ImgRandomAccess<T> integerRandomAccess(OutOfBoundsFactory<T, Img<T>> factory)
-	{
-		ArrayOutOfBoundsPositionableRasterSampler< T > c = new ArrayOutOfBoundsPositionableRasterSampler< T >( this, factory );
+		ArrayOutOfBoundsRandomAccess< T > c = new ArrayOutOfBoundsRandomAccess< T >( this, factory );
 		return c;
 	}
 	

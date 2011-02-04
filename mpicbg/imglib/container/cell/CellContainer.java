@@ -33,8 +33,8 @@ import mpicbg.imglib.Iterator;
 import mpicbg.imglib.container.Img;
 import mpicbg.imglib.container.ImgFactory;
 import mpicbg.imglib.container.AbstractNativeContainer;
-import mpicbg.imglib.container.array.ArrayLocalizingIterator;
-import mpicbg.imglib.container.array.ArrayIntegerPositionableSampler;
+import mpicbg.imglib.container.array.ArrayLocalizingCursor;
+import mpicbg.imglib.container.array.ArrayRandomAccess;
 import mpicbg.imglib.container.basictypecontainer.array.ArrayDataAccess;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.outofbounds.RasterOutOfBoundsFactory;
@@ -93,7 +93,7 @@ public class CellContainer< T extends Type< T >, A extends ArrayDataAccess< A > 
 		// Here we "misuse" an ArrayLocalizableCursor to iterate over cells,
 		// it always gives us the location of the current cell we are
 		// instantiating.
-		final ArrayLocalizingIterator< FakeType > cursor = ArrayLocalizingIterator.createLinearCursor( numCellsDim );
+		final ArrayLocalizingCursor< FakeType > cursor = ArrayLocalizingCursor.createLinearCursor( numCellsDim );
 
 		for ( int c = 0; c < numCells; c++ )
 		{
@@ -138,14 +138,14 @@ public class CellContainer< T extends Type< T >, A extends ArrayDataAccess< A > 
 		return data.get( cellId );
 	}
 
-	public int getCellIndex( final ArrayIntegerPositionableSampler< FakeType > cursor, final int[] cellPos )
+	public int getCellIndex( final ArrayRandomAccess< FakeType > cursor, final int[] cellPos )
 	{
 		cursor.setPosition( cellPos );
 		return cursor.getArrayIndex();
 	}
 
 	// many cursors using the same cursor for getting their position
-	public int getCellIndex( final ArrayIntegerPositionableSampler< FakeType > cursor, final int cellPos, final int dim )
+	public int getCellIndex( final ArrayRandomAccess< FakeType > cursor, final int cellPos, final int dim )
 	{
 		cursor.setPosition( cellPos, dim );
 		return cursor.getArrayIndex();
@@ -172,7 +172,7 @@ public class CellContainer< T extends Type< T >, A extends ArrayDataAccess< A > 
 		return position / cellSize[ dim ];
 	}
 
-	public int getCellIndexFromImageCoordinates( final ArrayIntegerPositionableSampler< FakeType > cursor, final int[] position )
+	public int getCellIndexFromImageCoordinates( final ArrayRandomAccess< FakeType > cursor, final int[] position )
 	{
 		return getCellIndex( cursor, getCellPosition( position ) );
 	}

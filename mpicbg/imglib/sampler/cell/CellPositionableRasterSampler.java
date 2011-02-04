@@ -30,7 +30,7 @@ package mpicbg.imglib.sampler.cell;
 import mpicbg.imglib.IntegerLocalizable;
 import mpicbg.imglib.container.AbstractImgRandomAccess;
 import mpicbg.imglib.container.array.Array;
-import mpicbg.imglib.container.array.ArrayIntegerPositionableSampler;
+import mpicbg.imglib.container.array.ArrayRandomAccess;
 import mpicbg.imglib.container.cell.Cell;
 import mpicbg.imglib.container.cell.CellContainer;
 import mpicbg.imglib.image.Image;
@@ -49,7 +49,7 @@ public class CellPositionableRasterSampler< T extends Type< T > > extends Abstra
 	 * Here we "misuse" a ArrayLocalizableCursor to iterate over cells,
 	 * it always gives us the location of the current cell we are instantiating
 	 */
-	final ArrayIntegerPositionableSampler< FakeType > cursor;
+	final ArrayRandomAccess< FakeType > cursor;
 	   
 	final protected T type;
 	
@@ -129,7 +129,7 @@ public class CellPositionableRasterSampler< T extends Type< T > > extends Abstra
 		this.cellDimensions = new int[ n ];
 		this.cellOffset = new int[ n ];
 		
-		this.cursor = ArrayIntegerPositionableSampler.createLinearByDimCursor( numCellsDim );
+		this.cursor = ArrayRandomAccess.createLinearByDimCursor( numCellsDim );
 		cursor.setPosition( new int[ n ] );
 		
 		// the steps when moving from cell to cell

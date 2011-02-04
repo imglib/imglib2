@@ -27,9 +27,7 @@
  */
 package mpicbg.imglib.container.array;
 
-import mpicbg.imglib.container.AbstractImgOutOfBoundsRandomAccess;
-import mpicbg.imglib.container.Img;
-import mpicbg.imglib.outofbounds.OutOfBoundsFactory;
+import mpicbg.imglib.container.AbstractImgLocalizingCursor;
 import mpicbg.imglib.type.NativeType;
 
 /**
@@ -38,20 +36,76 @@ import mpicbg.imglib.type.NativeType;
  *
  * @author Stephan Preibisch and Stephan Saalfeld
  */
-public class ArrayOutOfBoundsPositionableRasterSampler< T extends NativeType< T > > extends AbstractImgOutOfBoundsRandomAccess< T >
+public class ArrayLocalizingCursor< T extends NativeType< T >> extends AbstractImgLocalizingCursor< T >
 {
-	final protected Array< T, ? > container;
-	
-	public <F> ArrayOutOfBoundsPositionableRasterSampler( final Array< T, ? > container, final OutOfBoundsFactory< T, Img<T> > outOfBoundsStrategyFactory ) 
+	protected final T type;
+
+	protected final Array< T, ? > container;
+
+	protected final int lastIndex;
+
+	public ArrayLocalizingCursor( final Array< T, ? > container )
 	{
-		super( container, outOfBoundsStrategyFactory );
-		
+		super( container );
+
 		this.container = container;
+		this.type = container.createLinkedType();
+		this.lastIndex = ( int )container.size() - 1;
+
+		reset();
 	}
-	
+
+	@Override
+	public T get()
+	{
+		return type;
+	}
+
+	@Override
 	public T create()
 	{
-		return container.createVariable();
+		return type.createVariable();
+	}
+
+	@Override
+	public boolean hasNext()
+	{
+		return type.getIndex() < lastIndex;
+	}
+
+	@Override
+	public void fwd()
+	{
+		type.incIndex();
+
+		for ( int d = 0; d < n; ++d )
+		{
+			if ( ++position[ d ] >= size[ d ] ) position[ d ] = 0;
+			else break;
+		}
+	}
+
+	@Override
+	public void jumpFwd( final long steps )
+	{
+		type.incIndex( ( int ) steps );
+		container.indexToPosition( type.getIndex(), position );
+	}
+
+	@Override
+	public void reset()
+	{
+		if ( size != null )
+		{
+			type.updateIndex( -1 );
+
+			position[ 0 ] = -1;
+
+			for ( int d = 1; d < n; d++ )
+				position[ d ] = 0;
+
+			type.updateContainer( this );
+		}
 	}
 
 	@Override

@@ -27,92 +27,33 @@
  */
 package mpicbg.imglib.container.array;
 
-import mpicbg.imglib.container.AbstractImgCursor;
+import mpicbg.imglib.container.AbstractImgOutOfBoundsRandomAccess;
+import mpicbg.imglib.container.Img;
+import mpicbg.imglib.outofbounds.OutOfBoundsFactory;
 import mpicbg.imglib.type.NativeType;
 
 /**
  * 
  * @param <T>
- * 
+ *
  * @author Stephan Preibisch and Stephan Saalfeld
  */
-public class ArrayIterator< T extends NativeType< T > > extends AbstractImgCursor< T >
+public class ArrayOutOfBoundsRandomAccess< T extends NativeType< T > > extends AbstractImgOutOfBoundsRandomAccess< T >
 {
-	protected final T type;
-
-	protected final Array< T, ? > container;
-
-	protected final int lastIndex;
-
-	public ArrayIterator( final Array< T, ? > container )
+	final protected Array< T, ? > container;
+	
+	public <F> ArrayOutOfBoundsRandomAccess( final Array< T, ? > container, final OutOfBoundsFactory< T, Img<T> > outOfBoundsStrategyFactory ) 
 	{
-		super( container.numDimensions() );
-
-		this.type = container.createLinkedType();
+		super( container, outOfBoundsStrategyFactory );
+		
 		this.container = container;
-		this.lastIndex = ( int )container.size() - 1;
-
-		reset();
-	}
-
-	@Override
-	public T get()
-	{
-		return type;
 	}
 	
-	@Override
 	public T create()
 	{
-		return type.createVariable();
+		return container.createVariable();
 	}
 
 	@Override
-	public boolean hasNext()
-	{
-		return type.getIndex() < lastIndex;
-	}
-
-	@Override
-	public void jumpFwd( final long steps )
-	{
-		type.incIndex( ( int ) steps );
-	}
-
-	@Override
-	public void fwd()
-	{
-		type.incIndex();
-	}
-
-	@Override
-	public void reset()
-	{
-		type.updateIndex( -1 );
-		type.updateContainer( this );
-	}
-
-	@Override
-	public Array< T, ? > getImg()
-	{
-		return container;
-	}
-
-	@Override
-	public String toString()
-	{
-		return type.toString();
-	}
-
-	@Override
-	public long getLongPosition( final int dim )
-	{
-		return container.indexToPosition( type.getIndex(), dim );
-	}
-
-	@Override
-	public void localize( final long[] position )
-	{
-		container.indexToPosition( type.getIndex(), position );
-	}
+	public Array< T, ? > getImg(){ return container; }
 }

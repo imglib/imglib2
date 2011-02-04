@@ -35,10 +35,6 @@ import mpicbg.imglib.container.ImgRandomAccess;
 import mpicbg.imglib.container.array.Array;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.outofbounds.OutOfBoundsFactory;
-import mpicbg.imglib.sampler.dynamic.DynamicBasicRasterIterator;
-import mpicbg.imglib.sampler.dynamic.DynamicLocalizingRasterIterator;
-import mpicbg.imglib.sampler.dynamic.DynamicPositionableRasterSampler;
-import mpicbg.imglib.sampler.dynamic.DynamicOutOfBoundsPositionableRasterSampler;
 import mpicbg.imglib.type.Type;
 
 /**
@@ -87,25 +83,25 @@ public class DynamicContainer< T > extends AbstractImg< T >
 	@Override
 	public ImgCursor< T > cursor()
 	{
-		return new DynamicBasicRasterIterator< T >( this, image );
+		return new DynamicCursor< T >( this, image );
 	}
 
 	@Override
 	public ImgCursor< T > localizingCursor()
 	{
-		return new DynamicLocalizingRasterIterator< T >( this, image );
+		return new DynamicLocalizingCursor< T >( this, image );
 	}
 
 	@Override
 	public ImgRandomAccess< T > integerRandomAccess()
 	{
-		return new DynamicPositionableRasterSampler< T >( this, image );
+		return new DynamicRandomAccess< T >( this, image );
 	}
 
 	@Override
 	public ImgRandomAccess<T> integerRandomAccess(OutOfBoundsFactory<T, Img<T>> factory)
 {
-		return new DynamicOutOfBoundsPositionableRasterSampler< T >( this, image, outOfBoundsFactory );
+		return new DynamicOutOfBoundsRandomAccess< T >( this, image, outOfBoundsFactory );
 	}
 
 
