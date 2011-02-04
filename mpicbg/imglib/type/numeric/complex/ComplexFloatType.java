@@ -256,7 +256,7 @@ public class ComplexFloatType extends AbstractComplexType< ComplexFloatType > im
 	}
 
 	@Override
-	public ComplexFloatType clone()
+	public ComplexFloatType copy()
 	{
 		return new ComplexFloatType( getRealFloat(), getComplexFloat() );
 	}

@@ -171,7 +171,7 @@ public class DoubleType extends AbstractRealType< DoubleType > implements RealTy
 	}
 
 	@Override
-	public DoubleType clone()
+	public DoubleType copy()
 	{
 		return new DoubleType( get() );
 	}

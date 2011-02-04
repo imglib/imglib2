@@ -64,7 +64,7 @@ public interface Type< T extends Type< T > >
 	 * 
 	 * @return - a new {@link Type} instance
 	 */
-	public T clone();
+	public T copy();
 
 	/**
 	 * Sets the value of another {@link Type}.

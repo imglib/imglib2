@@ -36,26 +36,16 @@ import mpicbg.imglib.type.NativeTypeCapable;
 import mpicbg.imglib.type.numeric.RealType;
 
 /**
- * 
- * 
  *
  * @author Stephan Preibisch and Stephan Saalfeld
  */
-public class FloatType extends AbstractRealType< FloatType > implements RealType< FloatType >, NativeTypeCapable< FloatType >
+public abstract class FloatType extends AbstractRealType< FloatType > implements RealType< FloatType >, NativeTypeCapable< FloatType >
 {
-	float value;
+	public static FloatType create( final float value )  { return new FloatTypeValue( value ); }
+	public static FloatType create()  { return new FloatTypeValue(); }
 	
-	// this is the constructor if you want it to be a variable
-	public FloatType( final float value )
-	{
-		this.value = value;
-	}
-
-	// this is the constructor if you want it to be a variable
-	public FloatType() { this( 0 ); }
-
-	public float get(){ return value; }
-	public void set( final float f ){ value = f; }
+	public abstract float get();
+	public abstract void set( final float f );
 	
 	@Override
 	public float getRealFloat() { return get(); }
@@ -150,19 +140,19 @@ public class FloatType extends AbstractRealType< FloatType > implements RealType
 	}
 	
 	@Override
-	public FloatType createVariable(){ return new FloatType( 0 ); }
+	public FloatType createVariable(){ return new FloatTypeValue( 0 ); }
 	
 	@Override
-	public FloatType clone(){ return new FloatType( get() ); }
+	public FloatType copy(){ return new FloatTypeValue( get() ); }
 
 	@Override
 	public NativeContainer<FloatType, ?> createSuitableDirectAccessContainer(NativeContainerFactory< FloatType > storageFactory, long[] dim)
 	{
 		// create the container
-		final NativeContainer< FloatType, ? extends FloatAccess > container = storageFactory.createFloatInstance( new FloatType(), dim, 1 );
+		final NativeContainer< FloatType, ? extends FloatAccess > container = storageFactory.createFloatInstance( new FloatTypeValue(), dim, 1 );
 		
 		// create a Type that is linked to the container
-		final NativeFloatType linkedType = new NativeFloatType( container );
+		final FloatTypeNative linkedType = new FloatTypeNative( container );
 		
 		// pass it to the DirectAccessContainer
 		container.setLinkedType( linkedType );
@@ -171,5 +161,5 @@ public class FloatType extends AbstractRealType< FloatType > implements RealType
 	}
 
 	@Override
-	public NativeFloatType duplicateTypeOnSameDirectAccessContainer( NativeType nativeType ) { return new NativeFloatType( ((NativeFloatType)nativeType).storage ); }
+	public FloatTypeNative duplicateTypeOnSameDirectAccessContainer( NativeType nativeType ) { return new FloatTypeNative( ((FloatTypeNative)nativeType).storage ); }
 }

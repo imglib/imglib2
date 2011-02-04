@@ -149,7 +149,7 @@ public class IntType extends GenericIntType< IntType >
 	}
 
 	@Override
-	public IntType clone()
+	public IntType copy()
 	{
 		return new IntType( getValue() );
 	}

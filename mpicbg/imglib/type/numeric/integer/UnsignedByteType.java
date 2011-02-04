@@ -144,5 +144,5 @@ public class UnsignedByteType extends GenericByteType<UnsignedByteType>
 	public UnsignedByteType createVariable(){ return new UnsignedByteType( 0 ); }
 
 	@Override
-	public UnsignedByteType clone(){ return new UnsignedByteType( get() ); }
+	public UnsignedByteType copy(){ return new UnsignedByteType( get() ); }
 }

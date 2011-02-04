@@ -24,27 +24,28 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- *
- * @author Stephan Preibisch & Stephan Saalfeld
  */
+package mpicbg.imglib.type.numeric.real;
 
-package mpicbg.imglib.type;
-
-public abstract class AbstractType<T extends AbstractType<T>> implements Type<T>
+/**
+ * 
+ * 
+ *
+ * @author Stephan Preibisch and Stephan Saalfeld
+ */
+public class FloatTypeValue extends FloatType
 {
-	protected int i = 0;
-
-	public void updateIndex( final int j ) { this.i = j; }
-	public int getIndex() { return i; }
+	float value;
 	
-	public void incIndex() { ++i; }
-	public void incIndex( final int increment ) { i += increment; }
-	public void decIndex() { --i; }
-	public void decIndex( final int decrement ) { i -= decrement; }
-		
-	@Override
-	public abstract String toString();	
+	// this is the constructor if you want it to be a variable
+	public FloatTypeValue( final float value )
+	{
+		this.value = value;
+	}
 
-	@Override
-	public abstract T copy();	
+	// this is the constructor if you want it to be a variable
+	public FloatTypeValue() { this( 0 ); }
+
+	final public float get(){ return value; }
+	final public void set( final float f ){ value = f; }
 }

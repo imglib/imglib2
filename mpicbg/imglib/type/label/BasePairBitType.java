@@ -351,7 +351,7 @@ public class BasePairBitType extends AbstractType< BasePairBitType > implements 
 	}
 
 	@Override
-	public BasePairBitType clone()
+	public BasePairBitType copy()
 	{
 		return new BasePairBitType( this.get() );
 	}

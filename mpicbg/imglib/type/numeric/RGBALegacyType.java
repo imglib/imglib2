@@ -255,7 +255,7 @@ final public class RGBALegacyType extends AbstractType< RGBALegacyType > impleme
 	}
 
 	@Override
-	public RGBALegacyType clone()
+	public RGBALegacyType copy()
 	{
 		return new RGBALegacyType( get() );
 	}

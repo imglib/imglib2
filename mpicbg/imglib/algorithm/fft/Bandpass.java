@@ -62,7 +62,7 @@ public class Bandpass<T extends NumericType<T>> implements OutputAlgorithm<T>, B
 		}
 		else
 		{
-			this.output = this.img.clone(); 
+			this.output = this.img.copy(); 
 			img = this.output;
 		}
 		

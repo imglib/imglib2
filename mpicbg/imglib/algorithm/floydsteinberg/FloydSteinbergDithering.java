@@ -47,7 +47,7 @@ public class FloydSteinbergDithering<T extends RealType<T>> implements OutputAlg
 	
 	public FloydSteinbergDithering( final Image<T> img, final float ditheringThreshold )
 	{
-		this.img = img.clone();
+		this.img = img.copy();
 		this.dim = img.getDimensions();
 		this.tmp1 = img.createPositionArray();
 		this.tmp2 = img.createPositionArray();

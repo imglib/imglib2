@@ -246,7 +246,7 @@ final public class LongType extends AbstractIntegerType< LongType >
 	}
 
 	@Override
-	public LongType clone()
+	public LongType copy()
 	{
 		return new LongType( get() );
 	}

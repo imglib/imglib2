@@ -180,7 +180,7 @@ public class ComplexDoubleType extends AbstractComplexType< ComplexDoubleType > 
 	}
 
 	@Override
-	public ComplexDoubleType clone()
+	public ComplexDoubleType copy()
 	{
 		return new ComplexDoubleType( getRealFloat(), getComplexFloat() );
 	}

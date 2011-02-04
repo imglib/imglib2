@@ -110,7 +110,7 @@ public class InverseFourierTransform<T extends RealType<T>, S extends ComplexTyp
 		if ( inPlace )
 			complex = fftImage;
 		else
-			complex = fftImage.clone();
+			complex = fftImage.copy();
 			
 		if ( rearrangement == Rearrangement.REARRANGE_QUADRANTS )
 			FFTFunctions.rearrangeFFTQuadrants( complex, getNumThreads() );

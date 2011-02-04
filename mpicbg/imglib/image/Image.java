@@ -374,7 +374,7 @@ public class Image< T extends Type< T > > implements
 	 * No {@link ImgSampler}s will be instantiated and the name will be given automatically.
 	 */
 	@Override
-	public Image<T> clone()
+	public Image<T> copy()
 	{
 		final Image<T> clone = this.createNewImage();
 		
@@ -483,7 +483,7 @@ public class Image< T extends Type< T > > implements
 			iterator.fwd();
 			positionable.moveTo( iterator );
 			
-			pixels[ t++ ] = positionable.get().clone();			
+			pixels[ t++ ] = positionable.get().copy();			
 		}
 		
 		iterator.close();

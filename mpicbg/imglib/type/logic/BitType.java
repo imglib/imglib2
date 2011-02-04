@@ -289,7 +289,7 @@ public class BitType extends AbstractIntegerType< BitType > implements LogicType
 	}
 
 	@Override
-	public BitType clone()
+	public BitType copy()
 	{
 		return new BitType( b.getValue( i ) );
 	}

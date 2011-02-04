@@ -149,7 +149,7 @@ public class ByteType extends GenericByteType< ByteType >
 	}
 
 	@Override
-	public ByteType clone()
+	public ByteType copy()
 	{
 		return new ByteType( getValue() );
 	}

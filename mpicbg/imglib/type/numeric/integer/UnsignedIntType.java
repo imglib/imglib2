@@ -204,7 +204,7 @@ public class UnsignedIntType extends GenericIntType< UnsignedIntType >
 	}
 
 	@Override
-	public UnsignedIntType clone()
+	public UnsignedIntType copy()
 	{
 		return new UnsignedIntType( get() );
 	}

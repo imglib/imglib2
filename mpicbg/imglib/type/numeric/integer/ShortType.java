@@ -96,5 +96,5 @@ public class ShortType extends GenericShortType<ShortType>
 	public ShortType createVariable(){ return new ShortType( (short)0 ); }
 
 	@Override
-	public ShortType clone(){ return new ShortType( getValue() ); }
+	public ShortType copy(){ return new ShortType( getValue() ); }
 }
