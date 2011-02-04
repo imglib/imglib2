@@ -28,8 +28,8 @@
 package mpicbg.imglib.type.numeric.integer;
 
 import mpicbg.imglib.algorithm.math.MathLib;
-import mpicbg.imglib.container.DirectAccessContainer;
-import mpicbg.imglib.container.DirectAccessContainerFactory;
+import mpicbg.imglib.container.NativeContainer;
+import mpicbg.imglib.container.NativeContainerFactory;
 import mpicbg.imglib.container.basictypecontainer.ShortAccess;
 
 /**
@@ -41,7 +41,7 @@ import mpicbg.imglib.container.basictypecontainer.ShortAccess;
 public class UnsignedShortType extends GenericShortType< UnsignedShortType >
 {
 	// this is the constructor if you want it to read from an array
-	public UnsignedShortType( DirectAccessContainer< UnsignedShortType, ? extends ShortAccess > shortStorage )
+	public UnsignedShortType( NativeContainer< UnsignedShortType, ? extends ShortAccess > shortStorage )
 	{
 		super( shortStorage );
 	}
@@ -79,10 +79,10 @@ public class UnsignedShortType extends GenericShortType< UnsignedShortType >
 	}
 
 	@Override
-	public DirectAccessContainer< UnsignedShortType, ? extends ShortAccess > createSuitableDirectAccessContainer( final DirectAccessContainerFactory storageFactory, final int dim[] )
+	public NativeContainer< UnsignedShortType, ? extends ShortAccess > createSuitableDirectAccessContainer( final NativeContainerFactory storageFactory, final int dim[] )
 	{
 		// create the container
-		final DirectAccessContainer< UnsignedShortType, ? extends ShortAccess > container = storageFactory.createShortInstance( dim, 1 );
+		final NativeContainer< UnsignedShortType, ? extends ShortAccess > container = storageFactory.createShortInstance( dim, 1 );
 
 		// create a Type that is linked to the container
 		final UnsignedShortType linkedType = new UnsignedShortType( container );

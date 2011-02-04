@@ -1,9 +1,9 @@
 package mpicbg.imglib.algorithm.gauss;
 
 import mpicbg.imglib.algorithm.Precision.PrecisionReal;
-import mpicbg.imglib.container.Container;
-import mpicbg.imglib.container.ContainerIterator;
-import mpicbg.imglib.container.ContainerRandomAccess;
+import mpicbg.imglib.container.Img;
+import mpicbg.imglib.container.ImgCursor;
+import mpicbg.imglib.container.ImgRandomAccess;
 import mpicbg.imglib.outofbounds.OutOfBoundsFactory;
 import mpicbg.imglib.type.numeric.RealType;
 
@@ -11,13 +11,13 @@ public class GaussianConvolutionRealType<T extends RealType<T>> extends Gaussian
 {
 	protected PrecisionReal precision = PrecisionReal.Double;
 	
-	public GaussianConvolutionRealType( final Container<T> image, final OutOfBoundsFactory<T,Container<T>> outOfBoundsFactory, final double[] sigma )
+	public GaussianConvolutionRealType( final Img<T> image, final OutOfBoundsFactory<T,Img<T>> outOfBoundsFactory, final double[] sigma )
 	{
 		super( image, outOfBoundsFactory, sigma );
 		precision = image.createVariable().getPreferredRealPrecision(); 
 	}
 
-	public GaussianConvolutionRealType( final Container<T> image, final OutOfBoundsFactory<T,Container<T>> outOfBoundsFactory, final double sigma )
+	public GaussianConvolutionRealType( final Img<T> image, final OutOfBoundsFactory<T,Img<T>> outOfBoundsFactory, final double sigma )
 	{
 		super( image, outOfBoundsFactory, sigma );
 		precision = image.createVariable().getPreferredRealPrecision(); 
@@ -27,7 +27,7 @@ public class GaussianConvolutionRealType<T extends RealType<T>> extends Gaussian
 	public PrecisionReal getPrecision() { return precision; }
 	
 	@Override
-	protected void convolve( final ContainerRandomAccess<T> inputIterator, final ContainerIterator<T> outputIterator, 
+	protected void convolve( final ImgRandomAccess<T> inputIterator, final ImgCursor<T> outputIterator, 
 		 	   				 final int dim, final float[] kernel,
 		 	   				 final long startPos, final long loopSize )
 	{
@@ -37,7 +37,7 @@ public class GaussianConvolutionRealType<T extends RealType<T>> extends Gaussian
 			convolveDouble( inputIterator, outputIterator, dim, kernel, startPos, loopSize );
 	}
 	
-	protected void convolveDouble( final ContainerRandomAccess<T> inputIterator, final ContainerIterator<T> outputIterator, final int dim, final float[] kernel, final long startPos, final long loopSize )
+	protected void convolveDouble( final ImgRandomAccess<T> inputIterator, final ImgCursor<T> outputIterator, final int dim, final float[] kernel, final long startPos, final long loopSize )
 	{		
 		// move to the starting position of the current thread
 		outputIterator.jumpFwd( startPos );
@@ -106,7 +106,7 @@ public class GaussianConvolutionRealType<T extends RealType<T>> extends Gaussian
 		}
 	}	
 
-	protected void convolveFloat( final ContainerRandomAccess<T> inputIterator, final ContainerIterator<T> outputIterator, final int dim, final float[] kernel, final long startPos, final long loopSize )
+	protected void convolveFloat( final ImgRandomAccess<T> inputIterator, final ImgCursor<T> outputIterator, final int dim, final float[] kernel, final long startPos, final long loopSize )
 	{		
 		// move to the starting position of the current thread
 		outputIterator.jumpFwd( startPos );

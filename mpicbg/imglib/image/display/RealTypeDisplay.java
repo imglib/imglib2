@@ -29,7 +29,7 @@
  */
 package mpicbg.imglib.image.display;
 
-import mpicbg.imglib.container.ContainerIterator;
+import mpicbg.imglib.container.ImgCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.type.numeric.RealType;
 
@@ -47,7 +47,7 @@ public class RealTypeDisplay<T extends RealType<T>> extends Display<T>
 	@Override
 	public void setMinMax()
 	{
-		final ContainerIterator<T> c = img.createRasterIterator();
+		final ImgCursor<T> c = img.createRasterIterator();
 		
 		if ( !c.hasNext() )
 		{

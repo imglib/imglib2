@@ -2,7 +2,7 @@ package mpicbg.imglib.algorithm.transformation;
 
 import mpicbg.imglib.algorithm.Algorithm;
 import mpicbg.imglib.algorithm.Benchmark;
-import mpicbg.imglib.container.ContainerRandomAccess;
+import mpicbg.imglib.container.ImgRandomAccess;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.type.numeric.RealType;
 
@@ -13,7 +13,7 @@ implements Algorithm, Benchmark
 	private String errorMsg;
 	private final Image<T> image;
 	private Image<S> voteSpace;
-	private ContainerRandomAccess<S> voteCursor;	
+	private ImgRandomAccess<S> voteCursor;	
 	
 	protected HoughTransform(final Image<T> inputImage, final int[] voteSize)
 	{

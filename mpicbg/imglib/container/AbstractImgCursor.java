@@ -24,27 +24,43 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
+ *
+ * @author Stephan Preibisch & Stephan Saalfeld
  */
 package mpicbg.imglib.container;
 
-import mpicbg.imglib.IntegerInterval;
+import java.util.Iterator;
+
+import mpicbg.imglib.algorithm.math.MathLib;
 import mpicbg.imglib.type.Type;
 
 /**
+ * Generic implementation of {@link Iterator} mapping to abstract {@link #fwd()} and
+ * {@link #get()}.
  * 
- * @param <T>
+ * <p>For localization, default implementations are available that all build on
+ * the abstract long variant.  For particular cursors, this may be implemented more
+ * efficiently saving at least one loop over <em>n</em>. 
  * 
  * @author Stephan Preibisch and Stephan Saalfeld
+ * 
+ * @param <T>
  */
-public abstract class AbstractLocalizingContainerIterator< T extends Type< T > > extends AbstractLocalizableContainerSampler< T > implements ContainerIterator< T >
+public abstract class AbstractImgCursor< T extends Type< T > > extends AbstractImgSampler< T > implements ImgCursor< T >
 {
-	public AbstractLocalizingContainerIterator( final IntegerInterval f )
+	final private long[] position;
+	
+	public AbstractImgCursor( final int n )
 	{
-		super( f );
+		super( n );
+		position = new long[ n ];
 	}
 
 	@Override
-	public void remove(){}
+	public void remove()
+	{
+		
+	}
 
 	@Override
 	public T next()
@@ -53,10 +69,66 @@ public abstract class AbstractLocalizingContainerIterator< T extends Type< T > >
 		return get();
 	}
 
-	@Override
+	/**
+	 * Highly recommended to override this with a more efficient version.
+	 * 
+	 * @param steps
+	 */
 	public void jumpFwd( final long steps )
 	{
 		for ( long j = 0; j < steps; ++j )
 			fwd();
+	}
+
+	/* RasterLocalizable */
+
+	@Override
+	public void localize( float[] pos )
+	{
+		localize( this.position );
+		for ( int d = 0; d < n; d++ )
+			pos[ d ] = this.position[ d ];
+	}
+
+	@Override
+	public void localize( double[] pos )
+	{
+		localize( this.position );
+		for ( int d = 0; d < n; d++ )
+			pos[ d ] = this.position[ d ];
+	}
+
+	@Override
+	public void localize( int[] pos )
+	{
+		localize( this.position );
+		for ( int d = 0; d < n; d++ )
+			pos[ d ] = ( int )this.position[ d ];
+	}
+
+	@Override
+	public float getFloatPosition( final int d )
+	{
+		return getLongPosition( d );
+	}
+
+	@Override
+	public double getDoublePosition( final int d )
+	{
+		return getLongPosition( d );
+	}
+
+	@Override
+	public int getIntPosition( final int d )
+	{
+		return ( int )getLongPosition( d );
+	}
+
+	@Override
+	public String toString()
+	{
+		final int[] pos = new int[ n ];
+		localize( pos );
+		return MathLib.printCoordinates( pos );
 	}
 }

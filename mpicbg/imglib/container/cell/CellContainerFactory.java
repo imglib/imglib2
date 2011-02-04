@@ -27,7 +27,7 @@
  */
 package mpicbg.imglib.container.cell;
 
-import mpicbg.imglib.container.DirectAccessContainerFactory;
+import mpicbg.imglib.container.NativeContainerFactory;
 import mpicbg.imglib.container.basictypecontainer.array.BitArray;
 import mpicbg.imglib.container.basictypecontainer.array.ByteArray;
 import mpicbg.imglib.container.basictypecontainer.array.CharArray;
@@ -44,7 +44,7 @@ import mpicbg.imglib.type.Type;
  *
  * @author Stephan Preibisch and Stephan Saalfeld
  */
-public class CellContainerFactory extends DirectAccessContainerFactory
+public class CellContainerFactory extends NativeContainerFactory
 {
 	protected int[] cellSize;
 

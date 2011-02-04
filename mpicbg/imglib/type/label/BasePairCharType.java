@@ -27,8 +27,8 @@
  */
 package mpicbg.imglib.type.label;
 
-import mpicbg.imglib.container.DirectAccessContainer;
-import mpicbg.imglib.container.DirectAccessContainerFactory;
+import mpicbg.imglib.container.NativeContainer;
+import mpicbg.imglib.container.NativeContainerFactory;
 import mpicbg.imglib.container.basictypecontainer.CharAccess;
 import mpicbg.imglib.container.basictypecontainer.array.CharArray;
 import mpicbg.imglib.image.Image;
@@ -44,13 +44,13 @@ import mpicbg.imglib.type.label.BasePairBitType.Base;
 public class BasePairCharType extends AbstractType<BasePairCharType> implements BasePairType<BasePairCharType>
 {
 	// the DirectAccessContainer
-	final DirectAccessContainer< BasePairCharType, ? extends CharAccess, ? > storage;
+	final NativeContainer< BasePairCharType, ? extends CharAccess, ? > storage;
 	
 	// the (sub)DirectAccessContainer that holds the information 
 	CharAccess b;
 	
 	// this is the constructor if you want it to read from an array
-	public BasePairCharType( DirectAccessContainer< BasePairCharType, ? extends CharAccess, ? > charStorage )
+	public BasePairCharType( NativeContainer< BasePairCharType, ? extends CharAccess, ? > charStorage )
 	{
 		storage = charStorage;
 	}
@@ -75,10 +75,10 @@ public class BasePairCharType extends AbstractType<BasePairCharType> implements 
 	public BasePairCharType() { this( Base.N ); }
 
 	@Override
-	public DirectAccessContainer< BasePairCharType, ? extends CharAccess, ? > createSuitableDirectAccessContainer( final DirectAccessContainerFactory storageFactory, final long[] dim )
+	public NativeContainer< BasePairCharType, ? extends CharAccess, ? > createSuitableDirectAccessContainer( final NativeContainerFactory storageFactory, final long[] dim )
 	{
 		// create the container
-		final DirectAccessContainer< BasePairCharType, ? extends CharAccess, ? > container = storageFactory.createCharInstance( dim, 1 );
+		final NativeContainer< BasePairCharType, ? extends CharAccess, ? > container = storageFactory.createCharInstance( dim, 1 );
 		
 		// create a Type that is linked to the container
 		final BasePairCharType linkedType = new BasePairCharType( container );

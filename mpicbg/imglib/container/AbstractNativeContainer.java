@@ -24,29 +24,41 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
+ *
+ * @author Stephan Preibisch & Stephan Saalfeld
  */
 package mpicbg.imglib.container;
 
-import mpicbg.imglib.IntegerRandomAccess;
+import mpicbg.imglib.container.basictypecontainer.DataAccess;
+import mpicbg.imglib.type.NativeType;
+import mpicbg.imglib.type.NativeTypeCapable;
+import mpicbg.imglib.type.Type;
 
-/**
- * This interface is for convenience only, it combines a set of interfaces and
- * might be used for type definition in your implementation.  Instead of this
- * interface, you can use a generic type that includes only the interfaces you
- * need, e.g.
- * 
- * < T extends RasterSampler< ? >, RasterPositionable > 
- * 
- * @param <T>
- *
- * @author Stephan Preibisch and Stephan Saalfeld
- */
-public interface ContainerRandomAccess< T > extends ContainerSampler< T >, IntegerRandomAccess< T >
+public abstract class AbstractNativeContainer<
+		T extends Type< T > & NativeTypeCapable< T >,
+		A extends DataAccess >
+	extends AbstractImg< T >
+	implements NativeContainer< T, A >
 {
-	/**
-	 * True if located out of image bounds.
-	 * 
-	 * @return
-	 */
-	public boolean isOutOfBounds();
+	final protected int entitiesPerPixel;
+	protected long numEntities;
+	
+	protected T linkedType;
+	
+	public AbstractNativeContainer( long[] dim, final int entitiesPerPixel )
+	{
+		super( dim );
+		this.entitiesPerPixel = entitiesPerPixel;
+		this.numEntities = numPixels * entitiesPerPixel;
+	}
+	
+	@Override
+	public void setLinkedType( final T type ) { this.linkedType = type; }
+	
+	@Override
+	public T createLinkedType()
+	{
+		try{ return linkedType.duplicateTypeOnSameDirectAccessContainer( (NativeType)linkedType ); }
+		catch ( NullPointerException e ){ return null; }
+	}
 }

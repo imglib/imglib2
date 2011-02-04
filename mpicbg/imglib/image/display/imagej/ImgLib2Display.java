@@ -3,7 +3,7 @@ package mpicbg.imglib.image.display.imagej;
 import ij.ImagePlus;
 import ij.ImageStack;
 import ij.process.FloatProcessor;
-import mpicbg.imglib.container.Container;
+import mpicbg.imglib.container.Img;
 import mpicbg.imglib.converter.Converter;
 import mpicbg.imglib.converter.VoidConverter;
 import mpicbg.imglib.sampler.special.OrthoSliceIterator;
@@ -12,22 +12,22 @@ import mpicbg.imglib.type.numeric.real.FloatType;
 
 public class ImgLib2Display
 {
-	public static ImagePlus copyToImagePlus( final Container<FloatType> container, final int[] dim )
+	public static ImagePlus copyToImagePlus( final Img<FloatType> container, final int[] dim )
 	{
 		return createImagePlus( container, new VoidConverter<FloatType>(), "image", ImageJFunctions.GRAY32, getDim3( dim ), new int[ container.numDimensions() ] ); 		
 	}
 	
-	public static ImagePlus copyToImagePlus( final Container<FloatType> container )
+	public static ImagePlus copyToImagePlus( final Img<FloatType> container )
 	{
 		return createImagePlus( container, new VoidConverter<FloatType>(), "image", ImageJFunctions.GRAY32, getDim3( getStandardDimensions() ), new int[ container.numDimensions() ] ); 
 	}
 	
-	public static <T extends Type<T>> ImagePlus copyToImagePlus( final Container<T> container, final Converter<T, FloatType> converter )
+	public static <T extends Type<T>> ImagePlus copyToImagePlus( final Img<T> container, final Converter<T, FloatType> converter )
 	{
 		return createImagePlus( container, converter, "image", ImageJFunctions.GRAY32, getDim3( getStandardDimensions() ), new int[ container.numDimensions() ] ); 
 	}
 	
-	protected static <T extends Type<T>>ImagePlus createImagePlus( final Container<T> container, final Converter<T, FloatType> converter, 
+	protected static <T extends Type<T>>ImagePlus createImagePlus( final Img<T> container, final Converter<T, FloatType> converter, 
 			final String name, final int type, final int[] dim, final int[] dimensionPositions )
 	{	      
 		final int n = container.numDimensions();
@@ -61,7 +61,7 @@ public class ImgLib2Display
         return imp;
 	}		
 	
-    public static <T extends Type<T>> float[] extractSliceFloat( final Container<T> container, final Converter<T, FloatType> converter,
+    public static <T extends Type<T>> float[] extractSliceFloat( final Img<T> container, final Converter<T, FloatType> converter,
     		final int dimX, final int dimY, final int[] dimensionPositions )
     {
 		final int sizeX = (int) container.size( dimX );

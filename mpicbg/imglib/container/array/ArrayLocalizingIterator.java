@@ -27,7 +27,9 @@
  */
 package mpicbg.imglib.container.array;
 
-import mpicbg.imglib.container.AbstractLocalizingContainerIterator;
+import mpicbg.imglib.container.AbstractImgLocalizingCursor;
+import mpicbg.imglib.type.NativeType;
+import mpicbg.imglib.type.NativeTypeCapable;
 import mpicbg.imglib.type.Type;
 
 /**
@@ -36,9 +38,10 @@ import mpicbg.imglib.type.Type;
  *
  * @author Stephan Preibisch and Stephan Saalfeld
  */
-public class ArrayLocalizingIterator< T extends Type< T >> extends AbstractLocalizingContainerIterator< T >
+public class ArrayLocalizingIterator< T extends Type< T > & NativeTypeCapable< T >> extends AbstractImgLocalizingCursor< T >
 {
-	protected final T type;
+	protected final T type2;
+	protected final NativeType type;
 
 	protected final Array< T, ? > container;
 
@@ -49,7 +52,8 @@ public class ArrayLocalizingIterator< T extends Type< T >> extends AbstractLocal
 		super( container );
 
 		this.container = container;
-		this.type = container.createLinkedType();
+		this.type2 = container.createLinkedType();
+		this.type = (NativeType)type2;
 		this.lastIndex = ( int )container.size() - 1;
 
 		reset();
@@ -58,13 +62,13 @@ public class ArrayLocalizingIterator< T extends Type< T >> extends AbstractLocal
 	@Override
 	public T get()
 	{
-		return type;
+		return type2;
 	}
 
 	@Override
 	public T create()
 	{
-		return type.createVariable();
+		return type2.createVariable();
 	}
 
 	@Override
@@ -109,5 +113,5 @@ public class ArrayLocalizingIterator< T extends Type< T >> extends AbstractLocal
 	}
 
 	@Override
-	public Array< T, ? > getContainer(){ return container; }
+	public Array< T, ? > getImg(){ return container; }
 }

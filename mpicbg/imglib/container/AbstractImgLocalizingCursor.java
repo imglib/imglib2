@@ -24,30 +24,39 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- *
- * @author Stephan Preibisch & Stephan Saalfeld
  */
 package mpicbg.imglib.container;
 
 import mpicbg.imglib.IntegerInterval;
 import mpicbg.imglib.type.Type;
 
-public abstract class ContainerFactory
+/**
+ * 
+ * @param <T>
+ * 
+ * @author Stephan Preibisch and Stephan Saalfeld
+ */
+public abstract class AbstractImgLocalizingCursor< T extends Type< T > > extends AbstractImgLocalizableCursor< T > implements ImgCursor< T >
 {
-	/**
-	 * The {@link ContainerFactory} can decide how to create the
-	 * {@link Container}.  A {@link DirectAccessContainerFactory} will ask the
-	 * {@link Type} to create a suitable {@link DirectAccessContainer}.
-	 * 
-	 * @return {@link Container}
-	 */
-	public abstract < T extends Type< T > > Container< T > create( final long[] dim, final T type );
-	
-	public < T extends Type< T > > Container< T > create( final IntegerInterval interval, final T type )
+	public AbstractImgLocalizingCursor( final IntegerInterval f )
 	{
-		final long[] dim = new long[ interval.numDimensions() ];
-		interval.size( dim );
-		
-		return create( dim, type );
+		super( f );
+	}
+
+	@Override
+	public void remove(){}
+
+	@Override
+	public T next()
+	{
+		fwd();
+		return get();
+	}
+
+	@Override
+	public void jumpFwd( final long steps )
+	{
+		for ( long j = 0; j < steps; ++j )
+			fwd();
 	}
 }

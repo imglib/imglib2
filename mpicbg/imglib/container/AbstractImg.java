@@ -32,14 +32,14 @@ package mpicbg.imglib.container;
 import java.util.Iterator;
 
 
-public abstract class AbstractContainer< T > implements Container< T >
+public abstract class AbstractImg< T > implements Img< T >
 {
 	final protected int n;
 	protected long numPixels;
 	protected final long[] size;
 	protected final long[] max;
 	
-	public AbstractContainer( final long[] size )
+	public AbstractImg( final long[] size )
 	{
 		this.n = size.length;
 		

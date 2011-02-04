@@ -27,7 +27,7 @@
  */
 package mpicbg.imglib.sampler.imageplus;
 
-import mpicbg.imglib.container.AbstractContainerCursor;
+import mpicbg.imglib.container.AbstractImgCursor;
 import mpicbg.imglib.container.imageplus.ImagePlusContainer;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.type.Type;
@@ -38,7 +38,7 @@ import mpicbg.imglib.type.Type;
  *
  * @author Stephan Preibisch and Stephan Saalfeld
  */
-public class ImagePlusBasicRasterIterator< T extends Type< T > > extends AbstractContainerCursor< T > implements ImagePlusStorageAccess
+public class ImagePlusBasicRasterIterator< T extends Type< T > > extends AbstractImgCursor< T > implements ImagePlusStorageAccess
 {
 	protected final T type;
 	
@@ -110,7 +110,7 @@ public class ImagePlusBasicRasterIterator< T extends Type< T > > extends Abstrac
 	}
 
 	@Override
-	public ImagePlusContainer< T, ? > getContainer(){ return container; }
+	public ImagePlusContainer< T, ? > getImg(){ return container; }
 
 	@Override
 	public int getStorageIndex(){ return sliceIndex; }

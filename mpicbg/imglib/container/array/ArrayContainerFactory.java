@@ -27,8 +27,8 @@
  */
 package mpicbg.imglib.container.array;
 
-import mpicbg.imglib.container.AbstractContainer;
-import mpicbg.imglib.container.DirectAccessContainerFactory;
+import mpicbg.imglib.container.AbstractImg;
+import mpicbg.imglib.container.NativeContainerFactory;
 import mpicbg.imglib.container.basictypecontainer.BitAccess;
 import mpicbg.imglib.container.basictypecontainer.ByteAccess;
 import mpicbg.imglib.container.basictypecontainer.CharAccess;
@@ -45,6 +45,7 @@ import mpicbg.imglib.container.basictypecontainer.array.FloatArray;
 import mpicbg.imglib.container.basictypecontainer.array.IntArray;
 import mpicbg.imglib.container.basictypecontainer.array.LongArray;
 import mpicbg.imglib.container.basictypecontainer.array.ShortArray;
+import mpicbg.imglib.type.NativeTypeCapable;
 import mpicbg.imglib.type.Type;
 
 /**
@@ -53,11 +54,11 @@ import mpicbg.imglib.type.Type;
  * 
  * @author Stephan Preibisch and Stephan Saalfeld
  */
-public class ArrayContainerFactory extends DirectAccessContainerFactory
+public class ArrayContainerFactory< T extends Type<T> & NativeTypeCapable< T > > extends NativeContainerFactory< T >
 {
 	public static int numEntitiesRangeCheck( final long[] dimensions, final int entitiesPerPixel )
 	{
-		final long numEntities = AbstractContainer.numElements( dimensions ) * entitiesPerPixel;
+		final long numEntities = AbstractImg.numElements( dimensions ) * entitiesPerPixel;
 
 		if ( numEntities > ( long ) Integer.MAX_VALUE )
 			throw new RuntimeException( "Number of elements in Container too big, use for example CellContainer instead: " + numEntities + " > " + Integer.MAX_VALUE );
@@ -66,7 +67,7 @@ public class ArrayContainerFactory extends DirectAccessContainerFactory
 	}
 
 	@Override
-	public < T extends Type< T > > Array< T, BitAccess > createBitInstance( final T type, long[] dimensions, final int entitiesPerPixel )
+	public Array< T, BitAccess > createBitInstance( final T type, long[] dimensions, final int entitiesPerPixel )
 	{
 		final int numEntities = numEntitiesRangeCheck( dimensions, entitiesPerPixel );
 
@@ -74,7 +75,7 @@ public class ArrayContainerFactory extends DirectAccessContainerFactory
 	}
 
 	@Override
-	public < T extends Type< T > > Array< T, ByteAccess > createByteInstance( final T type, final long[] dimensions, final int entitiesPerPixel )
+	public Array< T, ByteAccess > createByteInstance( final T type, final long[] dimensions, final int entitiesPerPixel )
 	{
 		final int numEntities = numEntitiesRangeCheck( dimensions, entitiesPerPixel );
 
@@ -82,7 +83,7 @@ public class ArrayContainerFactory extends DirectAccessContainerFactory
 	}
 
 	@Override
-	public < T extends Type< T > > Array< T, CharAccess > createCharInstance( final T type, long[] dimensions, final int entitiesPerPixel )
+	public Array< T, CharAccess > createCharInstance( final T type, long[] dimensions, final int entitiesPerPixel )
 	{
 		final int numEntities = numEntitiesRangeCheck( dimensions, entitiesPerPixel );
 
@@ -90,7 +91,7 @@ public class ArrayContainerFactory extends DirectAccessContainerFactory
 	}
 
 	@Override
-	public < T extends Type< T > > Array< T, DoubleAccess > createDoubleInstance( final T type, long[] dimensions, final int entitiesPerPixel )
+	public Array< T, DoubleAccess > createDoubleInstance( final T type, long[] dimensions, final int entitiesPerPixel )
 	{
 		final int numEntities = numEntitiesRangeCheck( dimensions, entitiesPerPixel );
 
@@ -98,7 +99,7 @@ public class ArrayContainerFactory extends DirectAccessContainerFactory
 	}
 
 	@Override
-	public < T extends Type< T > > Array< T, FloatAccess > createFloatInstance( final T type, long[] dimensions, final int entitiesPerPixel )
+	public Array< T, FloatAccess > createFloatInstance( final T type, long[] dimensions, final int entitiesPerPixel )
 	{
 		final int numEntities = numEntitiesRangeCheck( dimensions, entitiesPerPixel );
 
@@ -106,7 +107,7 @@ public class ArrayContainerFactory extends DirectAccessContainerFactory
 	}
 
 	@Override
-	public < T extends Type< T > > Array< T, IntAccess > createIntInstance( final T type, long[] dimensions, final int entitiesPerPixel )
+	public Array< T, IntAccess > createIntInstance( final T type, long[] dimensions, final int entitiesPerPixel )
 	{
 		final int numEntities = numEntitiesRangeCheck( dimensions, entitiesPerPixel );
 
@@ -114,7 +115,7 @@ public class ArrayContainerFactory extends DirectAccessContainerFactory
 	}
 
 	@Override
-	public < T extends Type< T > > Array< T, LongAccess > createLongInstance( final T type, long[] dimensions, final int entitiesPerPixel )
+	public Array< T, LongAccess > createLongInstance( final T type, long[] dimensions, final int entitiesPerPixel )
 	{
 		final int numEntities = numEntitiesRangeCheck( dimensions, entitiesPerPixel );
 
@@ -122,7 +123,7 @@ public class ArrayContainerFactory extends DirectAccessContainerFactory
 	}
 
 	@Override
-	public < T extends Type< T > > Array< T, ShortAccess > createShortInstance( final T type, long[] dimensions, final int entitiesPerPixel )
+	public Array< T, ShortAccess > createShortInstance( final T type, long[] dimensions, final int entitiesPerPixel )
 	{
 		final int numEntities = numEntitiesRangeCheck( dimensions, entitiesPerPixel );
 

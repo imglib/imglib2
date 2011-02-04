@@ -28,7 +28,7 @@
 package mpicbg.imglib.sampler.cell;
 
 import mpicbg.imglib.IntegerLocalizable;
-import mpicbg.imglib.container.AbstractContainerRandomAccess;
+import mpicbg.imglib.container.AbstractImgRandomAccess;
 import mpicbg.imglib.container.array.Array;
 import mpicbg.imglib.container.array.ArrayIntegerPositionableSampler;
 import mpicbg.imglib.container.cell.Cell;
@@ -43,7 +43,7 @@ import mpicbg.imglib.type.label.FakeType;
  *
  * @author Stephan Preibisch and Stephan Saalfeld
  */
-public class CellPositionableRasterSampler< T extends Type< T > > extends AbstractContainerRandomAccess< T > implements CellStorageAccess
+public class CellPositionableRasterSampler< T extends Type< T > > extends AbstractImgRandomAccess< T > implements CellStorageAccess
 {
 	/**
 	 * Here we "misuse" a ArrayLocalizableCursor to iterate over cells,
@@ -377,7 +377,7 @@ public class CellPositionableRasterSampler< T extends Type< T > > extends Abstra
 	public int getStorageIndex(){ return cellInstance.getCellId(); }
 
 	@Override
-	public CellContainer< T, ? > getContainer(){ return container; }
+	public CellContainer< T, ? > getImg(){ return container; }
 
 	@Override
 	public T get() { return type; }

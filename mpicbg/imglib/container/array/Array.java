@@ -29,16 +29,17 @@ package mpicbg.imglib.container.array;
 
 import mpicbg.imglib.IntegerInterval;
 import mpicbg.imglib.IterableRealInterval;
-import mpicbg.imglib.container.AbstractDirectAccessContainer;
-import mpicbg.imglib.container.Container;
-import mpicbg.imglib.container.ContainerRandomAccess;
+import mpicbg.imglib.container.AbstractNativeContainer;
+import mpicbg.imglib.container.Img;
+import mpicbg.imglib.container.ImgRandomAccess;
 import mpicbg.imglib.container.basictypecontainer.DataAccess;
 import mpicbg.imglib.container.dynamic.DynamicContainer;
 import mpicbg.imglib.outofbounds.OutOfBoundsFactory;
+import mpicbg.imglib.type.NativeTypeCapable;
 import mpicbg.imglib.type.Type;
 
 /**
- * This {@link Container} stores an image in a single linear array of basic
+ * This {@link Img} stores an image in a single linear array of basic
  * types.  By that, it provides the fastest possible access to data while
  * limiting the number of basic types stored to {@link Integer#MAX_VALUE}.
  * Keep in mind that this does not necessarily reflect the number of pixels,
@@ -49,7 +50,7 @@ import mpicbg.imglib.type.Type;
  *
  * @author Stephan Preibisch and Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-final public class Array< T extends Type< T >, A extends DataAccess > extends AbstractDirectAccessContainer< T, A >
+final public class Array< T extends Type< T > & NativeTypeCapable< T >, A extends DataAccess > extends AbstractNativeContainer< T, A >
 {
 	final int[] step, dim;
 	
@@ -114,7 +115,7 @@ final public class Array< T extends Type< T >, A extends DataAccess > extends Ab
 	*/
 	
 	@Override
-	public ContainerRandomAccess<T> integerRandomAccess(OutOfBoundsFactory<T, Container<T>> factory)
+	public ImgRandomAccess<T> integerRandomAccess(OutOfBoundsFactory<T, Img<T>> factory)
 	{
 		ArrayOutOfBoundsPositionableRasterSampler< T > c = new ArrayOutOfBoundsPositionableRasterSampler< T >( this, factory );
 		return c;
@@ -208,9 +209,9 @@ final public class Array< T extends Type< T >, A extends DataAccess > extends Ab
 	}
 
 	@Override
-	public ArrayContainerFactory factory()
+	public ArrayContainerFactory<T> factory()
 	{
-		return new ArrayContainerFactory();
+		return new ArrayContainerFactory<T>();
 	}
 	
 	@Override

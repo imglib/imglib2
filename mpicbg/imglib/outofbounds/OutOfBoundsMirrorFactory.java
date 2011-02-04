@@ -27,7 +27,7 @@
  */
 package mpicbg.imglib.outofbounds;
 
-import mpicbg.imglib.container.ContainerRandomAccess;
+import mpicbg.imglib.container.ImgRandomAccess;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.type.Type;
 
@@ -52,7 +52,7 @@ public class OutOfBoundsMirrorFactory< T extends Type< T > > extends RasterOutOf
 	}
 	
 	@Override
-	public AbstractOutOfBoundsMirror< T > create( final ContainerRandomAccess< T > cursor )
+	public AbstractOutOfBoundsMirror< T > create( final ImgRandomAccess< T > cursor )
 	{
 		if ( boundary == Boundary.SINGLE )
 			return new OutOfBoundsMirrorSingleBoundary< T >( cursor );

@@ -27,28 +27,26 @@
  */
 package mpicbg.imglib.container;
 
-import mpicbg.imglib.EuclideanSpace;
-import mpicbg.imglib.InjectiveIntegerInterval;
-import mpicbg.imglib.Sampler;
-import mpicbg.imglib.type.Type;
+import mpicbg.imglib.IntegerRandomAccess;
 
 /**
- * {@link ContainerSampler} provides access to a `pixel' value in discrete image
- * space.  The step-size in any dimension of the image is 1 raster step which
- * does not necessarily reflect any meaningful analogy in some physical space.
- * For {@link Container Containers} that store actual sample values for each
- * pixel, this interface provides access to these pixel samples
+ * This interface is for convenience only, it combines a set of interfaces and
+ * might be used for type definition in your implementation.  Instead of this
+ * interface, you can use a generic type that includes only the interfaces you
+ * need, e.g.
  * 
- * {@link ContainerSampler} is the common basic interface to access pixel data in
- * any {@link Container}.  Other {@link Sampler Samplers} build on top of it.
+ * < T extends RasterSampler< ? >, RasterPositionable > 
  * 
- * @param <T> the {@link Type} of pixels in the {@link Container}
- * 
- * @author Stephan Preibisch & Stephan Saalfeld
+ * @param <T>
+ *
+ * @author Stephan Preibisch and Stephan Saalfeld
  */
-public interface ContainerSampler< T > extends Sampler< T >, EuclideanSpace, InjectiveIntegerInterval
-{	
-	public int getArrayIndex();
-
-	public Container< T > getContainer();
+public interface ImgRandomAccess< T > extends ImgSampler< T >, IntegerRandomAccess< T >
+{
+	/**
+	 * True if located out of image bounds.
+	 * 
+	 * @return
+	 */
+	public boolean isOutOfBounds();
 }

@@ -24,26 +24,95 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- *
- * @author Stephan Preibisch & Stephan Saalfeld
  */
-
 package mpicbg.imglib.container;
 
-import mpicbg.imglib.container.basictypecontainer.DataAccess;
+import mpicbg.imglib.IntegerInterval;
+import mpicbg.imglib.IntegerLocalizable;
 import mpicbg.imglib.type.Type;
 
-public interface DirectAccessContainer< T extends Type< T >, A extends DataAccess > extends Container< T >
+/**
+ * 
+ * @param <T>
+ * 
+ * @author Stephan Preibisch and Stephan Saalfeld
+ */
+public abstract class AbstractImgRandomAccess< T extends Type< T > > extends AbstractImgLocalizableCursor< T > implements ImgRandomAccess< T >
 {
-	/**
-	 * called by type with cursor.
-	 * 
-	 * @param updater cursor
-	 * @return native array which is referred to by the updater 
-	 */
-	public A update( final Object updater );
+	/* internal register for position calculation */
+	final protected int[] tmp;
 
-	public void setLinkedType( final T type );
+	public AbstractImgRandomAccess( final IntegerInterval f )
+	{
+		super( f );
 
-	public T createLinkedType();
+		this.tmp = new int[ n ];
+	}
+
+	@Override
+	public boolean isOutOfBounds()
+	{
+		for ( int d = 0; d < n; ++d )
+		{
+			final long x = position[ d ];
+			if ( x < 0 || x >= size[ d ] )
+				return true;
+		}
+		return false;
+	}
+
+	@Override
+	public void move( final int distance, final int dim )
+	{
+		move( ( long )distance, dim );
+	}
+
+	@Override
+	public void setPosition( final int position, final int dim )
+	{
+		setPosition( ( long )position, dim );
+	}
+
+	@Override
+	public void move( final int[] distance )
+	{
+		for ( int d = 0; d < n; ++d )
+		{
+			final int dist = distance[ d ];
+
+			if ( dist != 0 )
+				move( dist, d );
+		}
+	}
+
+	@Override
+	public void move( final long[] distance )
+	{
+		for ( int d = 0; d < n; ++d )
+		{
+			final long dist = distance[ d ];
+
+			if ( dist != 0 )
+				move( dist, d );
+		}
+	}
+
+	@Override
+	public void move( final IntegerLocalizable localizable )
+	{
+		for ( int d = 0; d < n; ++d )
+		{
+			final long dist = localizable.getLongPosition( d );
+
+			if ( dist != 0 )
+				move( dist, d );
+		}
+	}
+
+	@Override
+	public void setPosition( final IntegerLocalizable localizable )
+	{
+		localizable.localize( tmp );
+		setPosition( tmp );
+	}
 }

@@ -29,7 +29,7 @@ package mpicbg.imglib.outofbounds;
 
 import mpicbg.imglib.IntegerLocalizable;
 import mpicbg.imglib.algorithm.math.MathLib;
-import mpicbg.imglib.container.ContainerRandomAccess;
+import mpicbg.imglib.container.ImgRandomAccess;
 import mpicbg.imglib.type.Type;
 
 /**
@@ -40,7 +40,7 @@ import mpicbg.imglib.type.Type;
  */
 public abstract class AbstractOutOfBoundsMirror< T extends Type< T > > implements RealOutOfBounds< T >
 {
-	final protected ContainerRandomAccess< T > outOfBoundsPositionable;
+	final protected ImgRandomAccess< T > outOfBoundsPositionable;
 	
 	final protected int numDimensions;
 	
@@ -55,14 +55,14 @@ public abstract class AbstractOutOfBoundsMirror< T extends Type< T > > implement
 	
 	protected boolean isOutOfBounds = false;
 	
-	AbstractOutOfBoundsMirror( final ContainerRandomAccess< T > source )
+	AbstractOutOfBoundsMirror( final ImgRandomAccess< T > source )
 	{
 		this( source, source.getImage().createPositionableRasterSampler() );
 	}
 	
 	AbstractOutOfBoundsMirror(
-			final ContainerRandomAccess< T > source,
-			final ContainerRandomAccess< T > outOfBoundsPositionable )
+			final ImgRandomAccess< T > source,
+			final ImgRandomAccess< T > outOfBoundsPositionable )
 	{
 		this.outOfBoundsPositionable = outOfBoundsPositionable;
 		numDimensions = source.getImage().numDimensions();

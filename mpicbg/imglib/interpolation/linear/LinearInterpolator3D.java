@@ -29,7 +29,7 @@ package mpicbg.imglib.interpolation.linear;
 
 import mpicbg.imglib.IntegerLocalizable;
 import mpicbg.imglib.Localizable;
-import mpicbg.imglib.container.ContainerRandomAccess;
+import mpicbg.imglib.container.ImgRandomAccess;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.interpolation.Interpolator;
 import mpicbg.imglib.outofbounds.RasterOutOfBoundsFactory;
@@ -46,7 +46,7 @@ public class LinearInterpolator3D< T extends NumericType< T > > implements Inter
 	final protected RasterOutOfBoundsFactory< T > outOfBoundsStrategyFactory;
 	final protected Image< T > image;
 	final protected T tmp1, tmp2;
-	final protected ContainerRandomAccess< T > target;
+	final protected ImgRandomAccess< T > target;
 	
 	/* current position, required for relative movement */
 	protected float x, y, z;

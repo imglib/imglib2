@@ -24,94 +24,30 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
+ *
+ * @author Stephan Preibisch & Stephan Saalfeld
  */
 package mpicbg.imglib.container;
 
+import mpicbg.imglib.IntegerInterval;
 import mpicbg.imglib.type.Type;
 
-/**
- * 
- * @author Stephan Preibisch and Stephan Saalfeld
- *
- * @param < T > the {@link Type} to be returned by {@link #get()}
- */
-public abstract class AbstractContainerSampler< T extends Type< T > > implements ContainerSampler< T >
+public abstract class ImgFactory< T >
 {
-	/* a copy of container.numDimensions() for slightly faster access */
-	final protected int n;
+	/**
+	 * The {@link ImgFactory} can decide how to create the
+	 * {@link Img}.  A {@link NativeContainerFactory} will ask the
+	 * {@link Type} to create a suitable {@link NativeContainer}.
+	 * 
+	 * @return {@link Img}
+	 */
+	public abstract Img< T > create( final long[] dim, final T type );
 	
-	public AbstractContainerSampler( final int n )
+	public Img< T > create( final IntegerInterval interval, final T type )
 	{
-		this.n = n;
-	}
-
-	@Override
-	@Deprecated
-	final public T getType() { return get(); }
-	
-	@Override
-	public int getArrayIndex() { return get().getIndex(); }
-	
-	@Override
-	public int numDimensions(){ return n; }
-
-	@Override
-	public long max( final int d )
-	{
-		return getContainer().max( d );
-	}
-
-	@Override
-	public void max( long[] max )
-	{
-		getContainer().max( max );		
-	}
-
-	@Override
-	public long min( int d )
-	{
-		return getContainer().min( d );
-	}
-
-	@Override
-	public void min( long[] min )
-	{
-		getContainer().min( min );
-	}
-
-	@Override
-	public void size( long[] size )
-	{
-		getContainer().size( size );
-	}
-
-	@Override
-	public long size( int d )
-	{
-		return getContainer().size( d );
-	}
-
-	@Override
-	public double realMax( int d )
-	{
-		return getContainer().realMax( d );
-	}
-
-	@Override
-	public void realMax( double[] max )
-	{
-		getContainer().realMax( max );
-	}
-
-	@Override
-	public double realMin( int d )
-	{
-		return getContainer().realMin( d );
-	}
-
-	@Override
-	public void realMin( double[] min )
-	{
-		getContainer().realMin( min );	
+		final long[] dim = new long[ interval.numDimensions() ];
+		interval.size( dim );
+		
+		return create( dim, type );
 	}
 }

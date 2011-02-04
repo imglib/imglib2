@@ -28,7 +28,7 @@
 package mpicbg.imglib.sampler.dynamic;
 
 import mpicbg.imglib.IntegerLocalizable;
-import mpicbg.imglib.container.AbstractContainerRandomAccess;
+import mpicbg.imglib.container.AbstractImgRandomAccess;
 import mpicbg.imglib.container.basictypecontainer.DataAccess;
 import mpicbg.imglib.container.dynamic.DynamicContainer;
 import mpicbg.imglib.container.dynamic.DynamicContainerAccessor;
@@ -41,7 +41,7 @@ import mpicbg.imglib.type.Type;
  *
  * @author Stephan Preibisch and Stephan Saalfeld
  */
-public class DynamicPositionableRasterSampler< T extends Type< T > > extends AbstractContainerRandomAccess< T > implements DynamicStorageAccess
+public class DynamicPositionableRasterSampler< T extends Type< T > > extends AbstractImgRandomAccess< T > implements DynamicStorageAccess
 {
 	/* the type instance accessing the pixel value the cursor points at */
 	protected final T type;
@@ -190,7 +190,7 @@ public class DynamicPositionableRasterSampler< T extends Type< T > > extends Abs
 	public int getInternalIndex() { return internalIndex; }
 
 	@Override
-	public DynamicContainer< T, ? > getContainer(){ return container; }
+	public DynamicContainer< T, ? > getImg(){ return container; }
 	
 	@Override
 	public T get(){ return type; }

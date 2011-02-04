@@ -27,8 +27,8 @@
  */
 package mpicbg.imglib.type.numeric.complex;
 
-import mpicbg.imglib.container.DirectAccessContainer;
-import mpicbg.imglib.container.DirectAccessContainerFactory;
+import mpicbg.imglib.container.NativeContainer;
+import mpicbg.imglib.container.NativeContainerFactory;
 import mpicbg.imglib.container.basictypecontainer.DoubleAccess;
 import mpicbg.imglib.container.basictypecontainer.array.DoubleArray;
 import mpicbg.imglib.type.numeric.ComplexType;
@@ -42,13 +42,13 @@ import mpicbg.imglib.type.numeric.ComplexType;
 public class ComplexDoubleType extends AbstractComplexType< ComplexDoubleType > implements ComplexType< ComplexDoubleType >
 {
 	// the DirectAccessContainer
-	final DirectAccessContainer< ComplexDoubleType, ? extends DoubleAccess > storage;
+	final NativeContainer< ComplexDoubleType, ? extends DoubleAccess > storage;
 
 	// the (sub)DirectAccessContainer that holds the information
 	DoubleAccess b;
 
 	// this is the constructor if you want it to read from an array
-	public ComplexDoubleType( DirectAccessContainer< ComplexDoubleType, ? extends DoubleAccess > complexfloatStorage )
+	public ComplexDoubleType( NativeContainer< ComplexDoubleType, ? extends DoubleAccess > complexfloatStorage )
 	{
 		storage = complexfloatStorage;
 	}
@@ -68,10 +68,10 @@ public class ComplexDoubleType extends AbstractComplexType< ComplexDoubleType > 
 	}
 
 	@Override
-	public DirectAccessContainer< ComplexDoubleType, ? extends DoubleAccess > createSuitableDirectAccessContainer( final DirectAccessContainerFactory storageFactory, final int dim[] )
+	public NativeContainer< ComplexDoubleType, ? extends DoubleAccess > createSuitableDirectAccessContainer( final NativeContainerFactory storageFactory, final int dim[] )
 	{
 		// create the container
-		final DirectAccessContainer< ComplexDoubleType, ? extends DoubleAccess > container = storageFactory.createDoubleInstance( dim, 2 );
+		final NativeContainer< ComplexDoubleType, ? extends DoubleAccess > container = storageFactory.createDoubleInstance( dim, 2 );
 
 		// create a Type that is linked to the container
 		final ComplexDoubleType linkedType = new ComplexDoubleType( container );

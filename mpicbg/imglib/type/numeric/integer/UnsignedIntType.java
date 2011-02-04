@@ -28,8 +28,8 @@
 package mpicbg.imglib.type.numeric.integer;
 
 import mpicbg.imglib.algorithm.math.MathLib;
-import mpicbg.imglib.container.DirectAccessContainer;
-import mpicbg.imglib.container.DirectAccessContainerFactory;
+import mpicbg.imglib.container.NativeContainer;
+import mpicbg.imglib.container.NativeContainerFactory;
 import mpicbg.imglib.container.basictypecontainer.IntAccess;
 
 /**
@@ -41,7 +41,7 @@ import mpicbg.imglib.container.basictypecontainer.IntAccess;
 public class UnsignedIntType extends GenericIntType< UnsignedIntType >
 {
 	// this is the constructor if you want it to read from an array
-	public UnsignedIntType( DirectAccessContainer< UnsignedIntType, ? extends IntAccess > intStorage )
+	public UnsignedIntType( NativeContainer< UnsignedIntType, ? extends IntAccess > intStorage )
 	{
 		super( intStorage );
 	}
@@ -79,10 +79,10 @@ public class UnsignedIntType extends GenericIntType< UnsignedIntType >
 	}
 
 	@Override
-	public DirectAccessContainer< UnsignedIntType, ? extends IntAccess > createSuitableDirectAccessContainer( final DirectAccessContainerFactory storageFactory, final int dim[] )
+	public NativeContainer< UnsignedIntType, ? extends IntAccess > createSuitableDirectAccessContainer( final NativeContainerFactory storageFactory, final int dim[] )
 	{
 		// create the container
-		final DirectAccessContainer< UnsignedIntType, ? extends IntAccess > container = storageFactory.createIntInstance( dim, 1 );
+		final NativeContainer< UnsignedIntType, ? extends IntAccess > container = storageFactory.createIntInstance( dim, 1 );
 
 		// create a Type that is linked to the container
 		final UnsignedIntType linkedType = new UnsignedIntType( container );

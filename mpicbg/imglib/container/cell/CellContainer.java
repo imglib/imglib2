@@ -30,9 +30,9 @@ package mpicbg.imglib.container.cell;
 import java.util.ArrayList;
 
 import mpicbg.imglib.Iterator;
-import mpicbg.imglib.container.Container;
-import mpicbg.imglib.container.ContainerFactory;
-import mpicbg.imglib.container.AbstractDirectAccessContainer;
+import mpicbg.imglib.container.Img;
+import mpicbg.imglib.container.ImgFactory;
+import mpicbg.imglib.container.AbstractNativeContainer;
 import mpicbg.imglib.container.array.ArrayLocalizingIterator;
 import mpicbg.imglib.container.array.ArrayIntegerPositionableSampler;
 import mpicbg.imglib.container.basictypecontainer.array.ArrayDataAccess;
@@ -47,13 +47,13 @@ import mpicbg.imglib.type.Type;
 import mpicbg.imglib.type.label.FakeType;
 
 /**
- * This {@link Container} stores an image in a number of basic type arrays.
+ * This {@link Img} stores an image in a number of basic type arrays.
  * Each array covers a {@link Cell} of a constant size in all dimensions.
  * By that, max {@link Integer#MAX_VALUE}<sup2</sup> basic types can be stored.
  * Keep in mind that this does not necessarily reflect the number of pixels,
  * because a pixel can be stored in less than or more than a basic type entry.
  * 
- * An {@link Iterator} on this {@link Container} will iterate its pixels
+ * An {@link Iterator} on this {@link Img} will iterate its pixels
  * {@link Cell} by {@link Cell} for optimal performance.
  * 
  * @param <T>
@@ -61,7 +61,7 @@ import mpicbg.imglib.type.label.FakeType;
  *
  * @author Stephan Preibisch and Stephan Saalfeld
  */
-public class CellContainer< T extends Type< T >, A extends ArrayDataAccess< A > > extends AbstractDirectAccessContainer< T, A >
+public class CellContainer< T extends Type< T >, A extends ArrayDataAccess< A > > extends AbstractNativeContainer< T, A >
 {
 	final protected ArrayList< Cell< T, A > > data;
 
@@ -69,7 +69,7 @@ public class CellContainer< T extends Type< T >, A extends ArrayDataAccess< A > 
 
 	final protected int numCells;
 
-	public CellContainer( final ContainerFactory factory, final A creator, final int[] dim, final int[] cellSize, final int entitiesPerPixel )
+	public CellContainer( final ImgFactory factory, final A creator, final int[] dim, final int[] cellSize, final int entitiesPerPixel )
 	{
 		super( factory, dim, entitiesPerPixel );
 

@@ -24,74 +24,26 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
+ *
+ * @author Stephan Preibisch & Stephan Saalfeld
  */
+
 package mpicbg.imglib.container;
 
-import mpicbg.imglib.IntegerInterval;
-import mpicbg.imglib.IntegerLocalizable;
-import mpicbg.imglib.algorithm.math.MathLib;
+import mpicbg.imglib.container.basictypecontainer.DataAccess;
 import mpicbg.imglib.type.Type;
 
-/**
- * 
- * @param <T>
- *
- * @author Stephan Preibisch and Stephan Saalfeld
- */
-public abstract class AbstractLocalizableContainerSampler< T extends Type< T > > extends AbstractContainerSampler< T > implements IntegerLocalizable
+public interface NativeContainer< T extends Type< T >, A extends DataAccess > extends Img< T >
 {
-	final protected long[] position;
-	final protected long[] size;
-	
-	public AbstractLocalizableContainerSampler( final IntegerInterval f )
-	{
-		super( f.numDimensions() );
-		
-		position = new long[ n ];
-		size = new long[ n ];
-		f.size( size );
-	}
-	
-	@Override
-	public void localize( final float[] pos )
-	{
-		for ( int d = 0; d < n; d++ )
-			pos[ d ] = this.position[ d ];
-	}
+	/**
+	 * called by type with cursor.
+	 * 
+	 * @param updater cursor
+	 * @return native array which is referred to by the updater 
+	 */
+	public A update( final Object updater );
 
-	@Override
-	public void localize( final double[] pos )
-	{
-		for ( int d = 0; d < n; d++ )
-			pos[ d ] = this.position[ d ];
-	}
+	public void setLinkedType( final T type );
 
-	@Override
-	public void localize( int[] pos )
-	{
-		for ( int d = 0; d < n; d++ )
-			pos[ d ] = ( int )this.position[ d ];
-	}
-	
-	@Override
-	public void localize( long[] pos )
-	{
-		for ( int d = 0; d < n; d++ )
-			pos[ d ] = this.position[ d ];
-	}
-	
-	@Override
-	public float getFloatPosition( final int dim ){ return position[ dim ]; }
-	
-	@Override
-	public double getDoublePosition( final int dim ){ return position[ dim ]; }
-	
-	@Override
-	public int getIntPosition( final int dim ){ return ( int )position[ dim ]; }
-
-	@Override
-	public long getLongPosition( final int dim ){ return position[ dim ]; }
-	
-	@Override
-	public String toString(){ return MathLib.printCoordinates( position ) + " = " + get(); }
+	public T createLinkedType();
 }

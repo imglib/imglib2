@@ -33,50 +33,50 @@ import mpicbg.imglib.RandomAccessibleIntegerInterval;
 import mpicbg.imglib.outofbounds.OutOfBoundsFactory;
 
 /**
- * Containers are {@link InjectiveIntegerInterval} that has its min at
- * 0<sup><em>n</em></sup> and its max positive.  Containers store pixels
+ * {@link Img}s are {@link InjectiveIntegerInterval} that has its min at
+ * 0<sup><em>n</em></sup> and its max positive.  {@link Img}s store pixels
  * and thus are the basis for conventional image processing.
  *
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-public interface Container<	T >
+public interface Img<	T >
 	extends
 		IntegerRandomAccessible< T >,
-		RandomAccessibleIntegerInterval< T, Container< T > >,
+		RandomAccessibleIntegerInterval< T, Img< T > >,
 		InjectiveIntegerInterval
 {
 	@Override
-	public ContainerRandomAccess< T > integerRandomAccess();
+	public ImgRandomAccess< T > integerRandomAccess();
 	
 	@Override
-	public ContainerRandomAccess< T > integerRandomAccess( OutOfBoundsFactory< T, Container< T > > factory );
+	public ImgRandomAccess< T > integerRandomAccess( OutOfBoundsFactory< T, Img< T > > factory );
 	
 	@Override
-	public ContainerIterator< T > cursor();
+	public ImgCursor< T > cursor();
 
 	@Override
-	public ContainerIterator< T > localizingCursor();
+	public ImgCursor< T > localizingCursor();
 
 	/**
-	 * Return a {@link ContainerFactory} that creates Containers
+	 * Return a {@link ImgFactory} that creates {@link Img}s
 	 * of the same kind as this one.
 	 * 
-	 * This is useful to create containers for temporary storage
-	 * in generic methods where the specific container type is
+	 * This is useful to create Imgs for temporary storage
+	 * in generic methods where the specific Img type is
 	 * unknown.  Note, that the factory can be used even if
-	 * all references to this container have been invalidated. 
+	 * all references to this Img have been invalidated. 
 	 *  
-	 * @return a factory for containers of the same kind as this one. 
+	 * @return a factory for Imgs of the same kind as this one. 
 	 */
-	public ContainerFactory factory();
+	public ImgFactory< T > factory();
 	
 	/**
-	 * Create a new variable of the type stored in this container.
+	 * Create a new variable of the type stored in this Img.
 	 * 
 	 * The variable is useful in generic methods to store temporary
-	 * results, e.g., a running sum over pixels in the container.
+	 * results, e.g., a running sum over pixels in the Img.
 	 * 
-	 * @return a variable of the type contained in this container. 
+	 * @return a variable of the type contained in this Img.
 	 */
 	public T createVariable();
 	

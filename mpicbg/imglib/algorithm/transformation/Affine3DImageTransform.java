@@ -22,7 +22,7 @@ import javax.vecmath.Point3f;
 
 import mpicbg.imglib.algorithm.OutputAlgorithm;
 import mpicbg.imglib.algorithm.math.MathLib;
-import mpicbg.imglib.container.ContainerIterator;
+import mpicbg.imglib.container.ImgCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.interpolation.Interpolator;
 import mpicbg.imglib.interpolation.InterpolatorFactory;
@@ -344,7 +344,7 @@ public class Affine3DImageTransform<T extends Type<T>> implements OutputAlgorith
 		{	
 			final Point3f loc = new Point3f(0,0,0);
 			
-			final ContainerIterator<T> transformedIterator = transformed.createLocalizingRasterIterator();
+			final ImgCursor<T> transformedIterator = transformed.createLocalizingRasterIterator();
 			final Interpolator<T> interpolator = img.createInterpolator( interpolatorFactory );
 	
 			//final T transformedValue = transformedIterator.getType();		

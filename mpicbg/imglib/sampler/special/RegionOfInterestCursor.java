@@ -29,16 +29,16 @@
  */
 package mpicbg.imglib.sampler.special;
 
-import mpicbg.imglib.container.AbstractContainerCursor;
-import mpicbg.imglib.container.Container;
-import mpicbg.imglib.container.ContainerIterator;
-import mpicbg.imglib.container.ContainerRandomAccess;
+import mpicbg.imglib.container.AbstractImgCursor;
+import mpicbg.imglib.container.Img;
+import mpicbg.imglib.container.ImgCursor;
+import mpicbg.imglib.container.ImgRandomAccess;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.type.Type;
 
-public class RegionOfInterestCursor<T extends Type<T>> extends AbstractContainerCursor<T> implements ContainerIterator<T> 
+public class RegionOfInterestCursor<T extends Type<T>> extends AbstractImgCursor<T> implements ImgCursor<T> 
 {
-	final ContainerRandomAccess<T> cursor;
+	final ImgRandomAccess<T> cursor;
 	final int[] offset, size, roiPosition;
 	
 	// true means go forward, false go backward
@@ -142,7 +142,7 @@ public class RegionOfInterestCursor<T extends Type<T>> extends AbstractContainer
 	public int getArrayIndex() { return cursor.getArrayIndex(); }
 
 	@Override
-	public Container<T> getContainer() { return cursor.getContainer();	}
+	public Img<T> getImg() { return cursor.getImg();	}
 
 	@Override
 	public void localize( final float[] position )

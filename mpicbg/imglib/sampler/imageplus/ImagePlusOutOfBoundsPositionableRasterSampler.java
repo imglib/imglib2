@@ -27,7 +27,7 @@
  */
 package mpicbg.imglib.sampler.imageplus;
 
-import mpicbg.imglib.container.AbstractOutOfBoundsRandomAccessContainerSampler;
+import mpicbg.imglib.container.AbstractImgOutOfBoundsRandomAccess;
 import mpicbg.imglib.container.imageplus.ImagePlusContainer;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.outofbounds.RasterOutOfBoundsFactory;
@@ -39,7 +39,7 @@ import mpicbg.imglib.type.Type;
  *
  * @author Stephan Preibisch and Stephan Saalfeld
  */
-public class ImagePlusOutOfBoundsPositionableRasterSampler< T extends Type< T > > extends AbstractOutOfBoundsRandomAccessContainerSampler< T >
+public class ImagePlusOutOfBoundsPositionableRasterSampler< T extends Type< T > > extends AbstractImgOutOfBoundsRandomAccess< T >
 {
 	final protected ImagePlusContainer< T, ? > container;
 	
@@ -54,5 +54,5 @@ public class ImagePlusOutOfBoundsPositionableRasterSampler< T extends Type< T > 
 	}
 
 	@Override
-	public ImagePlusContainer< T, ? > getContainer(){ return container; }
+	public ImagePlusContainer< T, ? > getImg(){ return container; }
 }

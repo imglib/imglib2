@@ -27,92 +27,88 @@
  */
 package mpicbg.imglib.container;
 
-import mpicbg.imglib.IntegerInterval;
-import mpicbg.imglib.IntegerLocalizable;
 import mpicbg.imglib.type.Type;
 
 /**
  * 
- * @param <T>
- * 
  * @author Stephan Preibisch and Stephan Saalfeld
+ *
+ * @param < T > the {@link Type} to be returned by {@link #get()}
  */
-public abstract class AbstractContainerRandomAccess< T extends Type< T > > extends AbstractLocalizableContainerSampler< T > implements ContainerRandomAccess< T >
+public abstract class AbstractImgSampler< T extends Type< T > > implements ImgSampler< T >
 {
-	/* internal register for position calculation */
-	final protected int[] tmp;
-
-	public AbstractContainerRandomAccess( final IntegerInterval f )
+	/* a copy of container.numDimensions() for slightly faster access */
+	final protected int n;
+	
+	public AbstractImgSampler( final int n )
 	{
-		super( f );
-
-		this.tmp = new int[ n ];
+		this.n = n;
 	}
 
 	@Override
-	public boolean isOutOfBounds()
+	@Deprecated
+	final public T getType() { return get(); }
+	
+	@Override
+	public int numDimensions(){ return n; }
+
+	@Override
+	public long max( final int d )
 	{
-		for ( int d = 0; d < n; ++d )
-		{
-			final long x = position[ d ];
-			if ( x < 0 || x >= size[ d ] )
-				return true;
-		}
-		return false;
+		return getImg().max( d );
 	}
 
 	@Override
-	public void move( final int distance, final int dim )
+	public void max( long[] max )
 	{
-		move( ( long )distance, dim );
+		getImg().max( max );		
 	}
 
 	@Override
-	public void setPosition( final int position, final int dim )
+	public long min( int d )
 	{
-		setPosition( ( long )position, dim );
+		return getImg().min( d );
 	}
 
 	@Override
-	public void move( final int[] distance )
+	public void min( long[] min )
 	{
-		for ( int d = 0; d < n; ++d )
-		{
-			final int dist = distance[ d ];
-
-			if ( dist != 0 )
-				move( dist, d );
-		}
+		getImg().min( min );
 	}
 
 	@Override
-	public void move( final long[] distance )
+	public void size( long[] size )
 	{
-		for ( int d = 0; d < n; ++d )
-		{
-			final long dist = distance[ d ];
-
-			if ( dist != 0 )
-				move( dist, d );
-		}
+		getImg().size( size );
 	}
 
 	@Override
-	public void move( final IntegerLocalizable localizable )
+	public long size( int d )
 	{
-		for ( int d = 0; d < n; ++d )
-		{
-			final long dist = localizable.getLongPosition( d );
-
-			if ( dist != 0 )
-				move( dist, d );
-		}
+		return getImg().size( d );
 	}
 
 	@Override
-	public void setPosition( final IntegerLocalizable localizable )
+	public double realMax( int d )
 	{
-		localizable.localize( tmp );
-		setPosition( tmp );
+		return getImg().realMax( d );
+	}
+
+	@Override
+	public void realMax( double[] max )
+	{
+		getImg().realMax( max );
+	}
+
+	@Override
+	public double realMin( int d )
+	{
+		return getImg().realMin( d );
+	}
+
+	@Override
+	public void realMin( double[] min )
+	{
+		getImg().realMin( min );	
 	}
 }

@@ -27,7 +27,7 @@
  */
 package mpicbg.imglib.sampler.cell;
 
-import mpicbg.imglib.container.AbstractLocalizingContainerIterator;
+import mpicbg.imglib.container.AbstractImgLocalizingCursor;
 import mpicbg.imglib.container.cell.Cell;
 import mpicbg.imglib.container.cell.CellContainer;
 import mpicbg.imglib.image.Image;
@@ -39,7 +39,7 @@ import mpicbg.imglib.type.Type;
  *
  * @author Stephan Preibisch and Stephan Saalfeld
  */
-public class CellLocalizingRasterIterator< T extends Type< T > > extends AbstractLocalizingContainerIterator< T > implements CellStorageAccess
+public class CellLocalizingRasterIterator< T extends Type< T > > extends AbstractImgLocalizingCursor< T > implements CellStorageAccess
 {
 	final protected T type;
 
@@ -182,7 +182,7 @@ public class CellLocalizingRasterIterator< T extends Type< T > > extends Abstrac
 	public T get() { return type; }
 	
 	@Override
-	public CellContainer<T,?> getContainer(){ return container; }
+	public CellContainer<T,?> getImg(){ return container; }
 	
 	@Override
 	public int getStorageIndex() { return cellInstance.getCellId(); }

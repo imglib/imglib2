@@ -3,7 +3,7 @@ package mpicbg.imglib.algorithm.fft;
 import mpicbg.imglib.algorithm.Benchmark;
 import mpicbg.imglib.algorithm.OutputAlgorithm;
 import mpicbg.imglib.algorithm.math.MathLib;
-import mpicbg.imglib.container.ContainerIterator;
+import mpicbg.imglib.container.ImgCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.type.numeric.NumericType;
 
@@ -66,7 +66,7 @@ public class Bandpass<T extends NumericType<T>> implements OutputAlgorithm<T>, B
 			img = this.output;
 		}
 		
-		final ContainerIterator<T> cursor = img.createLocalizingRasterIterator();
+		final ImgCursor<T> cursor = img.createLocalizingRasterIterator();
 		final int[] pos = img.createPositionArray();
 		
 		final boolean actAsBandPass = bandPass;

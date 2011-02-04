@@ -27,7 +27,7 @@
  */
 package mpicbg.imglib.sampler.dynamic;
 
-import mpicbg.imglib.container.AbstractContainerCursor;
+import mpicbg.imglib.container.AbstractImgCursor;
 import mpicbg.imglib.container.basictypecontainer.DataAccess;
 import mpicbg.imglib.container.dynamic.DynamicContainer;
 import mpicbg.imglib.container.dynamic.DynamicContainerAccessor;
@@ -40,7 +40,7 @@ import mpicbg.imglib.type.Type;
  *
  * @author Stephan Preibisch and Stephan Saalfeld
  */
-public class DynamicBasicRasterIterator< T extends Type< T > > extends AbstractContainerCursor< T > implements DynamicStorageAccess
+public class DynamicBasicRasterIterator< T extends Type< T > > extends AbstractImgCursor< T > implements DynamicStorageAccess
 {
 	/* the type instance accessing the pixel value the cursor points at */
 	protected final T type;
@@ -111,7 +111,7 @@ public class DynamicBasicRasterIterator< T extends Type< T > > extends AbstractC
 	public int getInternalIndex() { return internalIndex; }
 
 	@Override
-	public DynamicContainer<T,?> getContainer(){ return container; }
+	public DynamicContainer<T,?> getImg(){ return container; }
 	
 	@Override
 	public String toString() { return type.toString(); }

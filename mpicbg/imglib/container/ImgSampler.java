@@ -24,39 +24,29 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- *
- * @author Stephan Preibisch & Stephan Saalfeld
  */
 package mpicbg.imglib.container;
 
-import mpicbg.imglib.container.basictypecontainer.DataAccess;
+import mpicbg.imglib.EuclideanSpace;
+import mpicbg.imglib.InjectiveIntegerInterval;
+import mpicbg.imglib.Sampler;
 import mpicbg.imglib.type.Type;
 
-public abstract class AbstractDirectAccessContainer<
-		T extends Type< T >,
-		A extends DataAccess >
-	extends AbstractContainer< T >
-	implements DirectAccessContainer< T, A >
-{
-	final protected int entitiesPerPixel;
-	protected long numEntities;
-	
-	protected T linkedType;
-	
-	public AbstractDirectAccessContainer( long[] dim, final int entitiesPerPixel )
-	{
-		super( dim );
-		this.entitiesPerPixel = entitiesPerPixel;
-		this.numEntities = numPixels * entitiesPerPixel;
-	}
-	
-	@Override
-	public void setLinkedType( final T type ) { this.linkedType = type; }
-	
-	@Override
-	public T createLinkedType()
-	{
-		try{ return linkedType.duplicateTypeOnSameDirectAccessContainer(); }
-		catch ( NullPointerException e ){ return null; }
-	}
+/**
+ * {@link ImgSampler} provides access to a `pixel' value in discrete image
+ * space.  The step-size in any dimension of the image is 1 raster step which
+ * does not necessarily reflect any meaningful analogy in some physical space.
+ * For {@link Img Containers} that store actual sample values for each
+ * pixel, this interface provides access to these pixel samples
+ * 
+ * {@link ImgSampler} is the common basic interface to access pixel data in
+ * any {@link Img}.  Other {@link Sampler Samplers} build on top of it.
+ * 
+ * @param <T> the {@link Type} of pixels in the {@link Img}
+ * 
+ * @author Stephan Preibisch & Stephan Saalfeld
+ */
+public interface ImgSampler< T > extends Sampler< T >, EuclideanSpace, InjectiveIntegerInterval
+{	
+	public Img< T > getImg();
 }

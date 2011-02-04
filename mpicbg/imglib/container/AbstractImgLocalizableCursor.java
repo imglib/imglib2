@@ -24,76 +24,44 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- *
- * @author Stephan Preibisch & Stephan Saalfeld
  */
 package mpicbg.imglib.container;
 
-import java.util.Iterator;
-
+import mpicbg.imglib.IntegerInterval;
+import mpicbg.imglib.IntegerLocalizable;
 import mpicbg.imglib.algorithm.math.MathLib;
 import mpicbg.imglib.type.Type;
 
 /**
- * Generic implementation of {@link Iterator} mapping to abstract {@link #fwd()} and
- * {@link #get()}.
- * 
- * <p>For localization, default implementations are available that all build on
- * the abstract long variant.  For particular cursors, this may be implemented more
- * efficiently saving at least one loop over <em>n</em>. 
- * 
- * @author Stephan Preibisch and Stephan Saalfeld
  * 
  * @param <T>
+ *
+ * @author Stephan Preibisch and Stephan Saalfeld
  */
-public abstract class AbstractContainerCursor< T extends Type< T > > extends AbstractContainerSampler< T > implements ContainerIterator< T >
+public abstract class AbstractImgLocalizableCursor< T extends Type< T > > extends AbstractImgSampler< T > implements IntegerLocalizable
 {
-	final private long[] position;
+	final protected long[] position;
+	final protected long[] size;
 	
-	public AbstractContainerCursor( final int n )
+	public AbstractImgLocalizableCursor( final IntegerInterval f )
 	{
-		super( n );
-		position = new long[ n ];
-	}
-
-	@Override
-	public void remove()
-	{
+		super( f.numDimensions() );
 		
+		position = new long[ n ];
+		size = new long[ n ];
+		f.size( size );
 	}
-
+	
 	@Override
-	public T next()
+	public void localize( final float[] pos )
 	{
-		fwd();
-		return get();
-	}
-
-	/**
-	 * Highly recommended to override this with a more efficient version.
-	 * 
-	 * @param steps
-	 */
-	public void jumpFwd( final long steps )
-	{
-		for ( long j = 0; j < steps; ++j )
-			fwd();
-	}
-
-	/* RasterLocalizable */
-
-	@Override
-	public void localize( float[] pos )
-	{
-		localize( this.position );
 		for ( int d = 0; d < n; d++ )
 			pos[ d ] = this.position[ d ];
 	}
 
 	@Override
-	public void localize( double[] pos )
+	public void localize( final double[] pos )
 	{
-		localize( this.position );
 		for ( int d = 0; d < n; d++ )
 			pos[ d ] = this.position[ d ];
 	}
@@ -101,34 +69,29 @@ public abstract class AbstractContainerCursor< T extends Type< T > > extends Abs
 	@Override
 	public void localize( int[] pos )
 	{
-		localize( this.position );
 		for ( int d = 0; d < n; d++ )
 			pos[ d ] = ( int )this.position[ d ];
 	}
+	
+	@Override
+	public void localize( long[] pos )
+	{
+		for ( int d = 0; d < n; d++ )
+			pos[ d ] = this.position[ d ];
+	}
+	
+	@Override
+	public float getFloatPosition( final int dim ){ return position[ dim ]; }
+	
+	@Override
+	public double getDoublePosition( final int dim ){ return position[ dim ]; }
+	
+	@Override
+	public int getIntPosition( final int dim ){ return ( int )position[ dim ]; }
 
 	@Override
-	public float getFloatPosition( final int d )
-	{
-		return getLongPosition( d );
-	}
-
+	public long getLongPosition( final int dim ){ return position[ dim ]; }
+	
 	@Override
-	public double getDoublePosition( final int d )
-	{
-		return getLongPosition( d );
-	}
-
-	@Override
-	public int getIntPosition( final int d )
-	{
-		return ( int )getLongPosition( d );
-	}
-
-	@Override
-	public String toString()
-	{
-		final int[] pos = new int[ n ];
-		localize( pos );
-		return MathLib.printCoordinates( pos );
-	}
+	public String toString(){ return MathLib.printCoordinates( position ) + " = " + get(); }
 }
