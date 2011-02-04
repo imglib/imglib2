@@ -27,9 +27,9 @@
  */
 package mpicbg.imglib.container.dynamic;
 
+import java.util.ArrayList;
+
 import mpicbg.imglib.container.AbstractImgLocalizingCursor;
-import mpicbg.imglib.container.basictypecontainer.DataAccess;
-import mpicbg.imglib.container.dynamic.DynamicContainerAccessor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.type.Type;
 
@@ -39,29 +39,18 @@ import mpicbg.imglib.type.Type;
  *
  * @author Stephan Preibisch and Stephan Saalfeld
  */
-public class DynamicLocalizingCursor< T extends Type< T > > extends AbstractImgLocalizingCursor< T > implements DynamicStorageAccess
+final public class DynamicLocalizingCursor< T extends Type< T > > extends AbstractImgLocalizingCursor< T >
 {
-	/* the type instance accessing the pixel value the cursor points at */
-	protected final T type;
+	private int i;
+	final private ArrayList< T > pixels;
+	final private DynamicContainer< T > container;
 	
-	/* a stronger typed pointer to Container< T > */
-	protected final DynamicContainer< T, ? extends DataAccess > container;
-	
-	/* access proxy */
-	protected final DynamicContainerAccessor accessor;
-
-	protected int internalIndex;
-	
-	public DynamicLocalizingCursor(
-			final DynamicContainer< T, ? > container,
-			final Image< T > image )
+	public DynamicLocalizingCursor(	final DynamicContainer< T > container )
 	{
-		super( container, image );
+		super( container );
 		
 		this.container = container;
-		this.type = container.createLinkedType();
-		
-		accessor = container.createAccessor();
+		this.pixels = container.pixels;
 		
 		reset();
 	}
@@ -69,8 +58,8 @@ public class DynamicLocalizingCursor< T extends Type< T > > extends AbstractImgL
 	@Override
 	public void fwd()
 	{ 
-		++internalIndex; 
-		accessor.updateIndex( internalIndex );
+		++i; 
+		accessor.updateIndex( i );
 		
 		for ( int d = 0; d < n; d++ )
 		{
@@ -87,7 +76,7 @@ public class DynamicLocalizingCursor< T extends Type< T > > extends AbstractImgL
 	}
 
 	@Override
-	public boolean hasNext() { return internalIndex < container.numPixels() - 1; }
+	public boolean hasNext() { return i < container.numPixels() - 1; }
 	
 
 	@Override
@@ -96,10 +85,10 @@ public class DynamicLocalizingCursor< T extends Type< T > > extends AbstractImgL
 		if ( size != null )
 		{
 			type.updateIndex( 0 );
-			internalIndex = 0;
+			i = 0;
 			type.updateContainer( this );
-			accessor.updateIndex( internalIndex );
-			internalIndex = -1;
+			accessor.updateIndex( i );
+			i = -1;
 			
 			position[ 0 ] = -1;
 			
@@ -118,5 +107,5 @@ public class DynamicLocalizingCursor< T extends Type< T > > extends AbstractImgL
 	public DynamicContainerAccessor getAccessor() { return accessor; }
 
 	@Override
-	public int getInternalIndex() { return internalIndex; }
+	public int getInternalIndex() { return i; }
 }

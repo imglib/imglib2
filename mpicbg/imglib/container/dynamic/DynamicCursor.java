@@ -27,11 +27,11 @@
  */
 package mpicbg.imglib.container.dynamic;
 
+import java.util.ArrayList;
+
 import mpicbg.imglib.container.AbstractImgCursor;
-import mpicbg.imglib.container.basictypecontainer.DataAccess;
-import mpicbg.imglib.container.dynamic.DynamicContainerAccessor;
-import mpicbg.imglib.image.Image;
 import mpicbg.imglib.type.Type;
+import mpicbg.imglib.util.Util;
 
 /**
  * 
@@ -39,91 +39,61 @@ import mpicbg.imglib.type.Type;
  *
  * @author Stephan Preibisch and Stephan Saalfeld
  */
-public class DynamicCursor< T extends Type< T > > extends AbstractImgCursor< T > implements DynamicStorageAccess
+final public class DynamicCursor< T extends Type< T > > extends AbstractImgCursor< T >
 {
-	/* the type instance accessing the pixel value the cursor points at */
-	protected final T type;
+	private int i;
+	final private ArrayList< T > pixels;
+	final private DynamicContainer< T > container;
 	
-	/* a stronger typed pointer to Container< T > */
-	protected final DynamicContainer< T, ? extends DataAccess > container;
-	
-	/* access proxy */
-	protected final DynamicContainerAccessor accessor;
-
-	protected int internalIndex;
-	
-	public DynamicCursor(
-			final DynamicContainer< T, ? extends DynamicContainerAccessor > container,
-			final Image< T > image )
+	public DynamicCursor( final DynamicContainer< T > container )
 	{
-		super( container, image );
+		super( container.numDimensions() );
 		
-		this.type = container.createLinkedType();
 		this.container = container;
-	
-		accessor = container.createAccessor();
+		this.pixels = container.pixels;
 		
 		reset();
 	}
 	
 	@Override
-	public DynamicContainerAccessor getAccessor() { return accessor; }
+	public T get() { return pixels.get( i ); }
 
 	@Override
-	public T get() { return type; }
+	public boolean hasNext() { return i < container.numPixels() - 1; }
 
 	@Override
-	public boolean hasNext() { return internalIndex < container.numPixels() - 1; }
+	public void jumpFwd( final long steps )  { i += steps; }
 
 	@Override
-	public void jumpFwd( final long steps ) 
-	{ 
-		internalIndex += steps;
-		accessor.updateIndex( internalIndex );
-	}
+	public void fwd() { ++i; }
 
 	@Override
-	public void fwd() 
-	{ 
-		++internalIndex; 
-		accessor.updateIndex( internalIndex );
-	}
-
-	@Override
-	public void close() 
-	{ 
-		internalIndex = Integer.MAX_VALUE;
-		super.close();
-	}
-
-	@Override
-	public void reset()
-	{		
-		type.updateIndex( 0 );
-		internalIndex = 0;
-		type.updateContainer( this );
-		accessor.updateIndex( internalIndex );
-		internalIndex = -1;
-	}
+	public void reset() { i = -1; }
 	
 	@Override
-	public int getInternalIndex() { return internalIndex; }
-
-	@Override
-	public DynamicContainer<T,?> getImg(){ return container; }
+	public DynamicContainer<T> getImg() { return container; }
 	
 	@Override
-	public String toString() { return type.toString(); }
+	public String toString() 
+	{
+		final long[] tmp = new long[ n ];
+		localize( tmp );
+		
+		return Util.printCoordinates( tmp ) + ": " + get(); 
+	}
 	
 	@Override
 	public long getLongPosition( final int dim )
 	{
-		return container.indexToPosition( type.getIndex(), dim );
+		return container.indexToPosition( i, dim );
 	}
 
 	@Override
 	public void localize( final long[] position )
 	{
-		container.indexToPosition( type.getIndex(), position );
+		container.indexToPosition( i, position );
 	}
+
+	@Override
+	public T create() { return container.createVariable(); }
 }

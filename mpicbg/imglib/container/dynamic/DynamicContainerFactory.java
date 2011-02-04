@@ -29,6 +29,7 @@ package mpicbg.imglib.container.dynamic;
 
 import mpicbg.imglib.container.Img;
 import mpicbg.imglib.container.ImgFactory;
+import mpicbg.imglib.type.Type;
 
 /**
  * 
@@ -36,7 +37,7 @@ import mpicbg.imglib.container.ImgFactory;
  * 
  * @author Stephan Preibisch and Stephan Saalfeld
  */
-public class DynamicContainerFactory< T > extends ImgFactory< T >
+public class DynamicContainerFactory< T extends Type< T > > extends ImgFactory< T >
 {
 
 	@Override
