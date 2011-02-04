@@ -57,8 +57,27 @@ public interface Container<	T >
 	@Override
 	public ContainerIterator< T > localizingCursor();
 
+	/**
+	 * Return a {@link ContainerFactory} that creates Containers
+	 * of the same kind as this one.
+	 * 
+	 * This is useful to create containers for temporary storage
+	 * in generic methods where the specific container type is
+	 * unknown.  Note, that the factory can be used even if
+	 * all references to this container have been invalidated. 
+	 *  
+	 * @return a factory for containers of the same kind as this one. 
+	 */
 	public ContainerFactory factory();
 	
+	/**
+	 * Create a new variable of the type stored in this container.
+	 * 
+	 * The variable is useful in generic methods to store temporary
+	 * results, e.g., a running sum over pixels in the container.
+	 * 
+	 * @return a variable of the type contained in this container. 
+	 */
 	public T createVariable();
 	
 	public long numPixels();

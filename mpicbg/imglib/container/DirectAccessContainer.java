@@ -35,6 +35,12 @@ import mpicbg.imglib.type.Type;
 
 public interface DirectAccessContainer< T extends Type< T >, A extends DataAccess > extends Container< T >
 {
+	/**
+	 * called by type with cursor.
+	 * 
+	 * @param updater cursor
+	 * @return native array which is referred to by the updater 
+	 */
 	public A update( final Object updater );
 
 	public void setLinkedType( final T type );
