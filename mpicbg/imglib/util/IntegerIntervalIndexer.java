@@ -8,7 +8,7 @@ package mpicbg.imglib.util;
  * This class provides convenience methods to translate between N-dimensional
  * indices (positions) and 1-dimensional indices.
  */
-public class FlatArrayIndexer
+public class IntegerIntervalIndexer
 {
 	final static public int positionToIndex( final int[] position, final int[] dimensions )
 	{
@@ -43,12 +43,17 @@ public class FlatArrayIndexer
 	{
 		return ( index / steps[ dimension ] ) % dimensions[ dimension ];
 	}
+	
+	final static public int indexToPosition( final int index, final int[] dimensions, final int[] steps, final int[] offset, final int dimension )
+	{
+		return indexToPosition( index, dimensions, steps, dimension ) - offset[ dimension ];
+	}
+	
+	
+	
+	
+	
 
-
-	
-	
-	
-	
 	public final long positionToIndex( final long[] position, final long[] dims )
 	{
 		final int maxDim = dims.length - 1;
