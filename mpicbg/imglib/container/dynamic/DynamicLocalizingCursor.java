@@ -25,94 +25,90 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-package mpicbg.imglib.container.array;
+package mpicbg.imglib.container.dynamic;
 
-import mpicbg.imglib.container.AbstractImgCursor;
-import mpicbg.imglib.type.NativeType;
+import java.util.ArrayList;
+
+import mpicbg.imglib.container.AbstractImgLocalizingCursor;
+import mpicbg.imglib.type.Type;
+import mpicbg.imglib.util.Util;
 
 /**
  * 
  * @param <T>
- * 
+ *
  * @author Stephan Preibisch and Stephan Saalfeld
  */
-public class ArrayIterator< T extends NativeType< T > > extends AbstractImgCursor< T >
+final public class DynamicLocalizingCursor< T extends Type< T > > extends AbstractImgLocalizingCursor< T >
 {
-	protected final T type;
-
-	protected final Array< T, ? > container;
-
-	protected final int lastIndex;
-
-	public ArrayIterator( final Array< T, ? > container )
+	private int i;
+	final private int maxNumPixels;
+	
+	final private ArrayList< T > pixels;
+	final private DynamicContainer< T > container;
+	
+	public DynamicLocalizingCursor(	final DynamicContainer< T > container )
 	{
-		super( container.numDimensions() );
-
-		this.type = container.createLinkedType();
+		super( container );
+		
 		this.container = container;
-		this.lastIndex = ( int )container.size() - 1;
-
+		this.pixels = container.pixels;
+		this.maxNumPixels = (int)container.numPixels() - 1;
+	
 		reset();
-	}
-
-	@Override
-	public T get()
-	{
-		return type;
 	}
 	
 	@Override
-	public T create()
-	{
-		return type.createVariable();
-	}
-
-	@Override
-	public boolean hasNext()
-	{
-		return type.getIndex() < lastIndex;
-	}
-
-	@Override
-	public void jumpFwd( final long steps )
-	{
-		type.incIndex( ( int ) steps );
-	}
-
-	@Override
 	public void fwd()
-	{
-		type.incIndex();
+	{ 
+		++i; 
+		
+		for ( int d = 0; d < n; d++ )
+		{
+			if ( position[ d ] < size[ d ] - 1 )
+			{
+				position[ d ]++;
+				
+				for ( int e = 0; e < d; e++ )
+					position[ e ] = 0;
+				
+				break;
+			}
+		}
 	}
 
+	@Override
+	public boolean hasNext() { return i < maxNumPixels; }
+	
 	@Override
 	public void reset()
 	{
-		type.updateIndex( -1 );
-		type.updateContainer( this );
+		if ( size != null )
+		{
+			i = -1;
+			
+			position[ 0 ] = -1;
+			
+			for ( int d = 1; d < n; d++ )
+				position[ d ] = 0;		
+		}
 	}
 
 	@Override
-	public Array< T, ? > getImg()
-	{
-		return container;
-	}
-
+	public DynamicContainer< T > getImg(){ return container; }
+	
 	@Override
-	public String toString()
-	{
-		return type.toString();
-	}
-
+	public T get() { return pixels.get( i ); }
+	
 	@Override
-	public long getLongPosition( final int dim )
-	{
-		return container.indexToPosition( type.getIndex(), dim );
-	}
-
+	public T create() { return container.createVariable(); }
+	
 	@Override
-	public void localize( final long[] position )
+	public String toString() 
 	{
-		container.indexToPosition( type.getIndex(), position );
-	}
+		final long[] tmp = new long[ n ];
+		localize( tmp );
+		
+		return Util.printCoordinates( tmp ) + ": " + get(); 
+	}	
 }

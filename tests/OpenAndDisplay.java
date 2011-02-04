@@ -1,10 +1,10 @@
 package tests;
 
+import ij.ImageJ;
+
 import javax.media.j3d.Transform3D;
 
-import mpicbg.imglib.Cursor;
 import mpicbg.imglib.algorithm.gauss.GaussianConvolution;
-import mpicbg.imglib.algorithm.gauss.GaussianConvolutionRealType;
 import mpicbg.imglib.algorithm.transformation.ImageTransform;
 import mpicbg.imglib.container.Img;
 import mpicbg.imglib.container.array.ArrayContainerFactory;
@@ -13,14 +13,11 @@ import mpicbg.imglib.interpolation.nearestneighbor.NearestNeighborInterpolatorFa
 import mpicbg.imglib.io.LOCI;
 import mpicbg.imglib.outofbounds.OutOfBoundsConstantValueFactory;
 import mpicbg.imglib.outofbounds.OutOfBoundsFactory;
-import mpicbg.imglib.type.Type;
 import mpicbg.imglib.type.numeric.real.FloatType;
 import mpicbg.models.AffineModel3D;
-import ij.ImageJ;
 
 public class OpenAndDisplay
 {	
-	
 	public static void main( String[] args )
 	{
 		new ImageJ();

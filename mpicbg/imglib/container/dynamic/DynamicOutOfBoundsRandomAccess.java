@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2009--2010, Stephan Preibisch
+ * Copyright (c) 2009--2010, Stephan Preibisch & Stephan Saalfeld
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -24,32 +24,46 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- *
- * @author Stephan Preibisch
  */
 package mpicbg.imglib.container.dynamic;
 
-import mpicbg.imglib.container.basictypecontainer.ShortAccess;
+import mpicbg.imglib.container.AbstractImgOutOfBoundsRandomAccess;
+import mpicbg.imglib.container.Img;
+import mpicbg.imglib.outofbounds.OutOfBoundsFactory;
+import mpicbg.imglib.type.Type;
+import mpicbg.imglib.util.Util;
 
-public class ShortDynamicContainerAccessor extends DynamicContainerAccessor implements ShortAccess
+/**
+ * 
+ * @param <T>
+ *
+ * @author Stephan Preibisch and Stephan Saalfeld
+ */
+public class DynamicOutOfBoundsRandomAccess< T extends Type< T > > extends AbstractImgOutOfBoundsRandomAccess< T >
 {
-	final ShortDynamicContainer<?> container;
+	final private DynamicContainer< T > container;
 	
-	public ShortDynamicContainerAccessor( ShortDynamicContainer<?> container, final int entitiesPerPixel )
+	public DynamicOutOfBoundsRandomAccess(
+			final DynamicContainer< T > container,
+			final OutOfBoundsFactory< T, Img< T > > outOfBoundsStrategyFactory ) 
 	{
-		super( entitiesPerPixel );
+		super( container, outOfBoundsStrategyFactory );
 		
 		this.container = container;
 	}
-		
-	@Override
-	public void close() {}
 
 	@Override
-	public short getValue( final int index ) { return container.data.get( currentIndex + index ); }
-
-	@Override
-	public void setValue( final int index, final short value ) { container.data.set( currentIndex + index, value); }
+	public DynamicContainer< T > getImg(){ return container; }
 	
-
+	@Override
+	public T create() { return container.createVariable(); }
+	
+	@Override
+	public String toString() 
+	{
+		final long[] tmp = new long[ n ];
+		localize( tmp );
+		
+		return Util.printCoordinates( tmp ) + ": " + get(); 
+	}		
 }

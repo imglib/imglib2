@@ -27,15 +27,15 @@
  */
 package mpicbg.imglib.container.dynamic;
 
-import mpicbg.imglib.container.AbstractNativeContainer;
+import java.util.ArrayList;
+
+import mpicbg.imglib.IntegerInterval;
+import mpicbg.imglib.IterableRealInterval;
+import mpicbg.imglib.container.AbstractImg;
+import mpicbg.imglib.container.Img;
 import mpicbg.imglib.container.ImgRandomAccess;
 import mpicbg.imglib.container.array.Array;
-import mpicbg.imglib.image.Image;
-import mpicbg.imglib.outofbounds.RasterOutOfBoundsFactory;
-import mpicbg.imglib.sampler.dynamic.DynamicBasicRasterIterator;
-import mpicbg.imglib.sampler.dynamic.DynamicLocalizingRasterIterator;
-import mpicbg.imglib.sampler.dynamic.DynamicPositionableRasterSampler;
-import mpicbg.imglib.sampler.dynamic.DynamicOutOfBoundsPositionableRasterSampler;
+import mpicbg.imglib.outofbounds.OutOfBoundsFactory;
 import mpicbg.imglib.type.Type;
 
 /**
@@ -45,88 +45,88 @@ import mpicbg.imglib.type.Type;
  *
  * @author Stephan Preibisch and Stephan Saalfeld
  */
-public abstract class DynamicContainer< T extends Type< T >, A extends DynamicContainerAccessor > extends AbstractNativeContainer< T, A >
+public class DynamicContainer< T extends Type< T > > extends AbstractImg< T >
 {
 	final protected int[] step;
-
+	final protected int[] dim;
+	
+	final ArrayList<T> pixels;
+	final T type;
+	
 	// we have to overwrite those as this can change during the processing
 	protected int numPixels, numEntities;
 
-	public DynamicContainer( final DynamicContainerFactory factory, final int[] dim, final int entitiesPerPixel )
+	public DynamicContainer( final long[] dim, final T type )
 	{
-		super( factory, dim, entitiesPerPixel );
+		super( dim );
 
-		this.step = Array.createAllocationSteps( dim );
+		this.dim = new int[ n ];
+		for ( int d = 0; d < n; ++d )
+			this.dim[ d ] = ( int )dim[ d ];
+
+		this.step = Array.createAllocationSteps( this.dim );
 		this.numPixels = ( int ) super.numPixels;
-		this.numEntities = ( int ) super.numEntities;
+		
+		this.type = type;
+		this.pixels = new ArrayList< T >( numPixels );
+		
+		for ( int i = 0; i < this.numPixels; ++i )
+			pixels.add( type.createVariable() );
 	}
 
-	public int[] getSteps()
-	{
-		return step.clone();
-	}
+	public int[] getSteps() { return step.clone(); }
 
-	public int getStep( final int dim )
-	{
-		return step[ dim ];
-	}
+	public int getStep( final int dim ) { return step[ dim ]; }
 
 	public final int getPos( final int[] l )
 	{
 		int i = l[ 0 ];
-		for ( int d = 1; d < numDimensions; ++d )
+		for ( int d = 1; d < n; ++d )
 			i += l[ d ] * step[ d ];
 
 		return i;
 	}
 
-	/**
-	 * Creates a Cursor-specific Accessor reading from the ArrayList, the Cursor
-	 * creates it himself in his constructor
-	 * 
-	 * @return
-	 */
-	public abstract A createAccessor();
-
-	@Override
-	public long getNumEntities()
+	public final int getPos( final long[] l )
 	{
-		return numEntities;
+		int i = (int)l[ 0 ];
+		for ( int d = 1; d < n; ++d )
+			i += l[ d ] * step[ d ];
+
+		return i;
 	}
 
 	@Override
-	public long numPixels()
+	public long numPixels() { return numPixels; }
+
+	@Override
+	public DynamicCursor< T > cursor()
 	{
-		return numPixels;
+		return new DynamicCursor< T >( this );
 	}
 
 	@Override
-	public DynamicBasicRasterIterator< T > createRasterIterator( final Image< T > image )
+	public DynamicLocalizingCursor< T > localizingCursor()
 	{
-		return new DynamicBasicRasterIterator< T >( this, image );
+		return new DynamicLocalizingCursor< T >( this  );
 	}
 
 	@Override
-	public ImgRandomAccess< T > createPositionableRasterSampler( final Image< T > image )
+	public DynamicRandomAccess< T > integerRandomAccess()
 	{
-		return new DynamicPositionableRasterSampler< T >( this, image );
+		return new DynamicRandomAccess< T >( this );
 	}
 
 	@Override
-	public DynamicOutOfBoundsPositionableRasterSampler< T > createPositionableRasterSampler( final Image< T > image, final RasterOutOfBoundsFactory< T > outOfBoundsFactory )
-	{
-		return new DynamicOutOfBoundsPositionableRasterSampler< T >( this, image, outOfBoundsFactory );
+	public ImgRandomAccess<T> integerRandomAccess( final OutOfBoundsFactory<T, Img<T>> outOfBoundsFactory )
+{
+		return new DynamicOutOfBoundsRandomAccess< T >( this, outOfBoundsFactory );
 	}
 
-	@Override
-	public DynamicLocalizingRasterIterator< T > createLocalizingRasterIterator( final Image< T > image )
-	{
-		return new DynamicLocalizingRasterIterator< T >( this, image );
-	}
 
 	final public void indexToPosition( int i, final int[] l )
 	{
-		for ( int d = numDimensions - 1; d >= 0; --d )
+		for ( int d = n - 1; d >= 0; --d )
 		{
 			final int ld = i / step[ d ];
 			l[ d ] = ld;
@@ -137,7 +137,7 @@ public abstract class DynamicContainer< T extends Type< T >, A extends DynamicCo
 
 	final public void indexToPosition( int i, final long[] l )
 	{
-		for ( int d = numDimensions - 1; d >= 0; --d )
+		for ( int d = n - 1; d >= 0; --d )
 		{
 			final int ld = i / step[ d ];
 			l[ d ] = ld;
@@ -148,9 +148,32 @@ public abstract class DynamicContainer< T extends Type< T >, A extends DynamicCo
 
 	final public int indexToPosition( int i, final int dim )
 	{
-		for ( int d = numDimensions - 1; d > dim; --d )
+		for ( int d = n - 1; d > dim; --d )
 			i %= step[ d ];
 
 		return i / step[ dim ];
+	}
+
+	@Override
+	public DynamicContainerFactory<T> factory() { return new DynamicContainerFactory<T>(); }
+
+	@Override
+	public T createVariable() { return type.createVariable(); }
+
+	@Override
+	public boolean equalIterationOrder( final IterableRealInterval<?> f )
+	{
+		if ( f.numDimensions() != this.numDimensions() )
+			return false;
+		
+		if ( getClass().isInstance( f ) || Array.class.isInstance( f ) )
+		{
+			final IntegerInterval a = ( IntegerInterval )f;
+			for ( int d = 0; d < n; ++d )
+				if ( size[ d ] != a.size( d ) )
+					return false;
+		}
+		
+		return true;
 	}
 }

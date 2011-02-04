@@ -35,7 +35,7 @@ import mpicbg.imglib.type.Type;
  *
  * @param < T > the {@link Type} to be returned by {@link #get()}
  */
-public abstract class AbstractImgSampler< T extends Type< T > > implements ImgSampler< T >
+public abstract class AbstractImgSampler< T > implements ImgSampler< T >
 {
 	/* a copy of container.numDimensions() for slightly faster access */
 	final protected int n;

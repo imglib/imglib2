@@ -4,7 +4,7 @@ import mpicbg.imglib.container.ImgCursor;
 import mpicbg.imglib.container.NativeContainer;
 import mpicbg.imglib.container.NativeContainerFactory;
 import mpicbg.imglib.container.array.Array;
-import mpicbg.imglib.container.array.ArrayIterator;
+import mpicbg.imglib.container.array.ArrayCursor;
 import mpicbg.imglib.container.basictypecontainer.DataAccess;
 import mpicbg.imglib.container.cell.Cell;
 import mpicbg.imglib.image.Image;
@@ -53,7 +53,7 @@ public interface NativeType<T extends NativeType<T>> extends Type<T>
 	 * asks the {@link DataAccess} to give the actual basic array by passing the
 	 * {@link ImgCursor} that calls the method. The {@link DataAccess} is
 	 * also an {@link Array}, {@link CellDirectAccessContainer}, ... which can
-	 * then communicate with the {@link ArrayIterator},
+	 * then communicate with the {@link ArrayCursor},
 	 * {@link CellBasicRasterIterator}, ... and return the current basic type
 	 * array.
 	 * 

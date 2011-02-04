@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2009--2010, Stephan Preibisch
+ * Copyright (c) 2009--2010, Stephan Preibisch & Stephan Saalfeld
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -24,27 +24,36 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- *
- * @author Stephan Preibisch
  */
-package mpicbg.imglib.container.dynamic;
+package mpicbg.imglib.container.array;
 
-import mpicbg.imglib.container.basictypecontainer.DataAccess;
+import mpicbg.imglib.container.AbstractImgOutOfBoundsRandomAccess;
+import mpicbg.imglib.container.Img;
+import mpicbg.imglib.outofbounds.OutOfBoundsFactory;
+import mpicbg.imglib.type.NativeType;
 
-public abstract class DynamicContainerAccessor implements DataAccess
-{	
-	protected int currentIndex = 0;
+/**
+ * 
+ * @param <T>
+ *
+ * @author Stephan Preibisch and Stephan Saalfeld
+ */
+public class ArrayOutOfBoundsRandomAccess< T extends NativeType< T > > extends AbstractImgOutOfBoundsRandomAccess< T >
+{
+	final protected Array< T, ? > container;
 	
-	final int entitiesPerPixel;
-
-	public DynamicContainerAccessor( final int entitiesPerPixel )
+	public <F> ArrayOutOfBoundsRandomAccess( final Array< T, ? > container, final OutOfBoundsFactory< T, Img<T> > outOfBoundsStrategyFactory ) 
 	{
-		this.entitiesPerPixel = entitiesPerPixel;
+		super( container, outOfBoundsStrategyFactory );
+		
+		this.container = container;
 	}
 	
-	/**
-	 * Called by the DynamicCursors upon movement
-	 * @param index - the new index inside the ArrayList
-	 */
-	public void updateIndex( final int index ) { currentIndex = index * entitiesPerPixel; }
+	public T create()
+	{
+		return container.createVariable();
+	}
+
+	@Override
+	public Array< T, ? > getImg(){ return container; }
 }

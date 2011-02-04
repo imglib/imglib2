@@ -31,7 +31,6 @@ package mpicbg.imglib.container;
 
 import java.util.Iterator;
 
-import mpicbg.imglib.type.Type;
 import mpicbg.imglib.util.Util;
 
 /**
@@ -46,7 +45,7 @@ import mpicbg.imglib.util.Util;
  * 
  * @param <T>
  */
-public abstract class AbstractImgCursor< T extends Type< T > > extends AbstractImgSampler< T > implements ImgCursor< T >
+public abstract class AbstractImgCursor< T > extends AbstractImgSampler< T > implements ImgCursor< T >
 {
 	final private long[] position;
 	

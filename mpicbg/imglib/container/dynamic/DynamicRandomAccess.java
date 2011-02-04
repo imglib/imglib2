@@ -25,15 +25,14 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-package mpicbg.imglib.sampler.dynamic;
+package mpicbg.imglib.container.dynamic;
+
+import java.util.ArrayList;
 
 import mpicbg.imglib.IntegerLocalizable;
 import mpicbg.imglib.container.AbstractImgRandomAccess;
-import mpicbg.imglib.container.basictypecontainer.DataAccess;
-import mpicbg.imglib.container.dynamic.DynamicContainer;
-import mpicbg.imglib.container.dynamic.DynamicContainerAccessor;
-import mpicbg.imglib.image.Image;
 import mpicbg.imglib.type.Type;
+import mpicbg.imglib.util.Util;
 
 /**
  * 
@@ -41,60 +40,41 @@ import mpicbg.imglib.type.Type;
  *
  * @author Stephan Preibisch and Stephan Saalfeld
  */
-public class DynamicPositionableRasterSampler< T extends Type< T > > extends AbstractImgRandomAccess< T > implements DynamicStorageAccess
+public class DynamicRandomAccess< T extends Type< T > > extends AbstractImgRandomAccess< T >
 {
-	/* the type instance accessing the pixel value the cursor points at */
-	protected final T type;
+	private int i;
 	
-	/* a stronger typed pointer to Container< T > */
-	protected final DynamicContainer< T, ? extends DataAccess > container;
+	final private ArrayList< T > pixels;
+	final private DynamicContainer< T > container;
 	
-	/* access proxy */
-	protected final DynamicContainerAccessor accessor;
-
-	protected int internalIndex;
+	final private int[] step;
 	
-	final protected int[] step;
-	
-	protected int numNeighborhoodCursors = 0;
-	
-	public DynamicPositionableRasterSampler(
-			final DynamicContainer< T, ? > container,
-			final Image< T > image ) 
+	public DynamicRandomAccess( final DynamicContainer< T > container ) 
 	{
-		super( container, image );
+		super( container );
 		
-		this.type = container.createLinkedType();
 		this.container = container;
-		accessor = container.createAccessor();
+		this.pixels = container.pixels;
+		this.step = container.getSteps();
 		
-		step = container.getSteps();
-		
-		type.updateIndex( 0 );
-		type.updateContainer( this );
-		accessor.updateIndex( 0 );
+		i = 0;
 	}	
 	
 	@Override
 	public void fwd( final int dim )
 	{
-		internalIndex += step[ dim ];
-		accessor.updateIndex( internalIndex );
-
+		i += step[ dim ];
 		++position[ dim ];
 	}
 
 	@Override
 	public void move( final int steps, final int dim )
 	{
-		internalIndex += step[ dim ] * steps;
-		accessor.updateIndex( internalIndex );
-
+		i += step[ dim ] * steps;
 		position[ dim ] += steps;
 	}
 	
 	@Override
-	/* TODO change position to long accuracy */
 	public void move( final long distance, final int dim )
 	{
 		move( ( int )distance, dim );
@@ -103,41 +83,29 @@ public class DynamicPositionableRasterSampler< T extends Type< T > > extends Abs
 	@Override
 	public void bck( final int dim )
 	{
-		internalIndex -= step[ dim ];
-		accessor.updateIndex( internalIndex );
- 
+		i -= step[ dim ];
 		--position[ dim ];
 	}
 		
 	@Override
-	public void moveTo( final int[] position )
+	public void move( final int[] position )
 	{		
 		for ( int d = 0; d < n; ++d )
-		{
-			final int dist = position[ d ] - getIntPosition( d );
-			
-			if ( dist != 0 )				
-				move( dist, d );
-		}
+			move( position[ d ], d );
 	}
 
 	@Override
-	public void moveTo( final long[] position )
+	public void move( final long[] position )
 	{
 		for ( int d = 0; d < n; ++d )
-		{
-			final long dist = position[ d ] - getIntPosition( d );
-			
-			if ( dist != 0 )				
-				move( dist, d );
-		}
+			move( (int)position[ d ], d );
 	}
 
 	@Override
-	public void moveTo( final IntegerLocalizable localizable )
+	public void move( final IntegerLocalizable localizable )
 	{
 		localizable.localize( tmp );
-		moveTo( tmp );
+		move( tmp );
 	}
 	
 	@Override
@@ -150,8 +118,7 @@ public class DynamicPositionableRasterSampler< T extends Type< T > > extends Abs
 	@Override
 	public void setPosition( final int[] position )
 	{
-		internalIndex = container.getPos( position );
-		accessor.updateIndex( internalIndex );
+		i = container.getPos( position );
 		
 		for ( int d = 0; d < n; ++d )
 			this.position[ d ] = position[ d ];
@@ -160,11 +127,10 @@ public class DynamicPositionableRasterSampler< T extends Type< T > > extends Abs
 	@Override
 	public void setPosition( final long[] position )
 	{
+		i = container.getPos( position );
+
 		for ( int d = 0; d < n; ++d )
-			this.position[ d ] = ( int )position[ d ];
-		
-		internalIndex = container.getPos( this.position );
-		accessor.updateIndex( internalIndex );
+			this.position[ d ] = ( int )position[ d ];		
 	}
 
 	@Override
@@ -172,26 +138,30 @@ public class DynamicPositionableRasterSampler< T extends Type< T > > extends Abs
 	{
 		this.position[ dim ] = position;
 
-		internalIndex = container.getPos( this.position );
-		accessor.updateIndex( internalIndex );
+		i = container.getPos( this.position );
 	}
 
 	@Override
-	/* TODO change position to long accuracy */
 	public void setPosition( final long position, final int dim )
 	{
 		setPosition( ( int )position, dim );
 	}
 	
 	@Override
-	public DynamicContainerAccessor getAccessor() { return accessor; }
-
-	@Override
-	public int getInternalIndex() { return internalIndex; }
-
-	@Override
-	public DynamicContainer< T, ? > getImg(){ return container; }
+	public DynamicContainer< T > getImg(){ return container; }
 	
 	@Override
-	public T get(){ return type; }
+	public T get(){ return pixels.get( i ); }
+
+	@Override
+	public T create() { return container.createVariable(); }
+	
+	@Override
+	public String toString() 
+	{
+		final long[] tmp = new long[ n ];
+		localize( tmp );
+		
+		return Util.printCoordinates( tmp ) + ": " + get(); 
+	}	
 }

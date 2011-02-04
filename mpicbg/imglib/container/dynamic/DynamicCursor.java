@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2009--2010, Stephan Preibisch
+ * Copyright (c) 2009--2010, Stephan Preibisch & Stephan Saalfeld
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -24,32 +24,79 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- *
- * @author Stephan Preibisch
  */
 package mpicbg.imglib.container.dynamic;
 
-import mpicbg.imglib.container.basictypecontainer.ByteAccess;
+import java.util.ArrayList;
 
-public class ByteDynamicContainerAccessor extends DynamicContainerAccessor implements ByteAccess
+import mpicbg.imglib.container.AbstractImgCursor;
+import mpicbg.imglib.type.Type;
+import mpicbg.imglib.util.Util;
+
+/**
+ * 
+ * @param <T>
+ *
+ * @author Stephan Preibisch and Stephan Saalfeld
+ */
+final public class DynamicCursor< T extends Type< T > > extends AbstractImgCursor< T >
 {
-	final ByteDynamicContainer<?> container;
+	private int i;
+	final private int maxNumPixels;
 	
-	public ByteDynamicContainerAccessor( ByteDynamicContainer<?> container, final int entitiesPerPixel )
+	final private ArrayList< T > pixels;
+	final private DynamicContainer< T > container;
+	
+	public DynamicCursor( final DynamicContainer< T > container )
 	{
-		super( entitiesPerPixel );
+		super( container.numDimensions() );
 		
 		this.container = container;
+		this.pixels = container.pixels;
+		this.maxNumPixels = (int)container.numPixels() - 1;
+		
+		reset();
 	}
+	
+	@Override
+	public T get() { return pixels.get( i ); }
+
+	@Override
+	public boolean hasNext() { return i < maxNumPixels; }
+
+	@Override
+	public void jumpFwd( final long steps )  { i += steps; }
+
+	@Override
+	public void fwd() { ++i; }
+
+	@Override
+	public void reset() { i = -1; }
+	
+	@Override
+	public DynamicContainer<T> getImg() { return container; }
 		
 	@Override
-	public void close() {}
+	public long getLongPosition( final int dim )
+	{
+		return container.indexToPosition( i, dim );
+	}
 
 	@Override
-	public byte getValue( final int index ) { return container.data.get( currentIndex + index ); }
+	public void localize( final long[] position )
+	{
+		container.indexToPosition( i, position );
+	}
 
 	@Override
-	public void setValue( final int index, final byte value ) { container.data.set( currentIndex + index, value); }
+	public T create() { return container.createVariable(); }
 	
-
+	@Override
+	public String toString() 
+	{
+		final long[] tmp = new long[ n ];
+		localize( tmp );
+		
+		return Util.printCoordinates( tmp ) + ": " + get(); 
+	}	
 }

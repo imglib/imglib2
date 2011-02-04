@@ -25,53 +25,89 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-package mpicbg.imglib.container.dynamic;
+package mpicbg.imglib.container.array;
 
-import java.util.ArrayList;
-
-import mpicbg.imglib.sampler.dynamic.DynamicStorageAccess;
-import mpicbg.imglib.type.Type;
+import mpicbg.imglib.container.AbstractImgLocalizingCursor;
+import mpicbg.imglib.type.NativeType;
 
 /**
  * 
  * @param <T>
- * 
+ *
  * @author Stephan Preibisch and Stephan Saalfeld
  */
-public class CharDynamicContainer< T extends Type< T > > extends DynamicContainer< T, CharDynamicContainerAccessor >
+public class ArrayLocalizingCursor< T extends NativeType< T >> extends AbstractImgLocalizingCursor< T >
 {
-	final ArrayList< Character > data;
+	protected final T type;
 
-	public CharDynamicContainer( final DynamicContainerFactory factory, final int[] dim, final int entitiesPerPixel )
+	protected final Array< T, ? > container;
+
+	protected final int lastIndex;
+
+	public ArrayLocalizingCursor( final Array< T, ? > container )
 	{
-		super( factory, dim, entitiesPerPixel );
+		super( container );
 
-		data = new ArrayList< Character >();
+		this.container = container;
+		this.type = container.createLinkedType();
+		this.lastIndex = ( int )container.size() - 1;
 
-		for ( int i = 0; i < numPixels * entitiesPerPixel; ++i )
-			data.add( ' ' );
+		reset();
 	}
 
 	@Override
-	public CharDynamicContainerAccessor update( final Object access )
+	public T get()
 	{
-		final DynamicStorageAccess c = ( DynamicStorageAccess )access;
-		final CharDynamicContainerAccessor accessor = ( CharDynamicContainerAccessor ) c.getAccessor();
-		accessor.updateIndex( c.getInternalIndex() );
-
-		return accessor;
+		return type;
 	}
 
 	@Override
-	public CharDynamicContainerAccessor createAccessor()
+	public T create()
 	{
-		return new CharDynamicContainerAccessor( this, entitiesPerPixel );
+		return type.createVariable();
 	}
 
 	@Override
-	public void close()
+	public boolean hasNext()
 	{
-		data.clear();
+		return type.getIndex() < lastIndex;
 	}
 
+	@Override
+	public void fwd()
+	{
+		type.incIndex();
+
+		for ( int d = 0; d < n; ++d )
+		{
+			if ( ++position[ d ] >= size[ d ] ) position[ d ] = 0;
+			else break;
+		}
+	}
+
+	@Override
+	public void jumpFwd( final long steps )
+	{
+		type.incIndex( ( int ) steps );
+		container.indexToPosition( type.getIndex(), position );
+	}
+
+	@Override
+	public void reset()
+	{
+		if ( size != null )
+		{
+			type.updateIndex( -1 );
+
+			position[ 0 ] = -1;
+
+			for ( int d = 1; d < n; d++ )
+				position[ d ] = 0;
+
+			type.updateContainer( this );
+		}
+	}
+
+	@Override
+	public Array< T, ? > getImg(){ return container; }
 }

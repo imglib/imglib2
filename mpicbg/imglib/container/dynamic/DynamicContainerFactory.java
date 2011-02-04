@@ -27,7 +27,8 @@
  */
 package mpicbg.imglib.container.dynamic;
 
-import mpicbg.imglib.container.NativeContainerFactory;
+import mpicbg.imglib.container.Img;
+import mpicbg.imglib.container.ImgFactory;
 import mpicbg.imglib.type.Type;
 
 /**
@@ -36,72 +37,12 @@ import mpicbg.imglib.type.Type;
  * 
  * @author Stephan Preibisch and Stephan Saalfeld
  */
-public class DynamicContainerFactory extends NativeContainerFactory
+public class DynamicContainerFactory< T extends Type< T > > extends ImgFactory< T >
 {
-	@Override
-	public < T extends Type< T > > BitDynamicContainer< T > createBitInstance( final int[] dimensions, final int entitiesPerPixel )
-	{
-		return new BitDynamicContainer< T >( this, dimensions, entitiesPerPixel );
-	}
 
 	@Override
-	public < T extends Type< T > > ByteDynamicContainer< T > createByteInstance( final int[] dimensions, final int entitiesPerPixel )
+	public Img<T> create( final long[] dim, final T type )
 	{
-		return new ByteDynamicContainer< T >( this, dimensions, entitiesPerPixel );
+		return new DynamicContainer< T >( dim, type );
 	}
-
-	@Override
-	public < T extends Type< T > > CharDynamicContainer< T > createCharInstance( final int[] dimensions, final int entitiesPerPixel )
-	{
-		return new CharDynamicContainer< T >( this, dimensions, entitiesPerPixel );
-	}
-
-	@Override
-	public < T extends Type< T > > DoubleDynamicContainer< T > createDoubleInstance( final int[] dimensions, final int entitiesPerPixel )
-	{
-		return new DoubleDynamicContainer< T >( this, dimensions, entitiesPerPixel );
-	}
-
-	@Override
-	public < T extends Type< T > > FloatDynamicContainer< T > createFloatInstance( final int[] dimensions, final int entitiesPerPixel )
-	{
-		return new FloatDynamicContainer< T >( this, dimensions, entitiesPerPixel );
-	}
-
-	@Override
-	public < T extends Type< T > > IntDynamicContainer< T > createIntInstance( final int[] dimensions, final int entitiesPerPixel )
-	{
-		return new IntDynamicContainer< T >( this, dimensions, entitiesPerPixel );
-	}
-
-	@Override
-	public < T extends Type< T > > LongDynamicContainer< T > createLongInstance( final int[] dimensions, final int entitiesPerPixel )
-	{
-		return new LongDynamicContainer< T >( this, dimensions, entitiesPerPixel );
-	}
-
-	@Override
-	public < T extends Type< T > > ShortDynamicContainer< T > createShortInstance( final int[] dimensions, final int entitiesPerPixel )
-	{
-		return new ShortDynamicContainer< T >( this, dimensions, entitiesPerPixel );
-	}
-
-	@Override
-	public String getErrorMessage()
-	{
-		return null;
-	}
-
-	@Override
-	public void printProperties()
-	{
-
-	}
-
-	@Override
-	public void setParameters( String configuration )
-	{
-
-	}
-
 }

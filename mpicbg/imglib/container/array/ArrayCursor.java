@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2009--2010, Stephan Preibisch
+ * Copyright (c) 2009--2010, Stephan Preibisch & Stephan Saalfeld
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -24,32 +24,95 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- *
- * @author Stephan Preibisch
  */
-package mpicbg.imglib.container.dynamic;
+package mpicbg.imglib.container.array;
 
-import mpicbg.imglib.container.basictypecontainer.LongAccess;
+import mpicbg.imglib.container.AbstractImgCursor;
+import mpicbg.imglib.type.NativeType;
 
-public class LongDynamicContainerAccessor extends DynamicContainerAccessor implements LongAccess
+/**
+ * 
+ * @param <T>
+ * 
+ * @author Stephan Preibisch and Stephan Saalfeld
+ */
+public class ArrayCursor< T extends NativeType< T > > extends AbstractImgCursor< T >
 {
-	final LongDynamicContainer<?> container;
-	
-	public LongDynamicContainerAccessor( LongDynamicContainer<?> container, final int entitiesPerPixel )
+	protected final T type;
+
+	protected final Array< T, ? > container;
+
+	protected final int lastIndex;
+
+	public ArrayCursor( final Array< T, ? > container )
 	{
-		super( entitiesPerPixel );
-		
+		super( container.numDimensions() );
+
+		this.type = container.createLinkedType();
 		this.container = container;
+		this.lastIndex = ( int )container.size() - 1;
+
+		reset();
 	}
-		
-	@Override
-	public void close() {}
 
 	@Override
-	public long getValue( final int index ) { return container.data.get( currentIndex + index ); }
-
-	@Override
-	public void setValue( final int index, final long value ) { container.data.set( currentIndex + index, value); }
+	public T get()
+	{
+		return type;
+	}
 	
+	@Override
+	public T create()
+	{
+		return type.createVariable();
+	}
 
+	@Override
+	public boolean hasNext()
+	{
+		return type.getIndex() < lastIndex;
+	}
+
+	@Override
+	public void jumpFwd( final long steps )
+	{
+		type.incIndex( ( int ) steps );
+	}
+
+	@Override
+	public void fwd()
+	{
+		type.incIndex();
+	}
+
+	@Override
+	public void reset()
+	{
+		type.updateIndex( -1 );
+		type.updateContainer( this );
+	}
+
+	@Override
+	public Array< T, ? > getImg()
+	{
+		return container;
+	}
+
+	@Override
+	public String toString()
+	{
+		return type.toString();
+	}
+
+	@Override
+	public long getLongPosition( final int dim )
+	{
+		return container.indexToPosition( type.getIndex(), dim );
+	}
+
+	@Override
+	public void localize( final long[] position )
+	{
+		container.indexToPosition( type.getIndex(), position );
+	}
 }
