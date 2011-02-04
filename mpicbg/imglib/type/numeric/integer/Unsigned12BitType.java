@@ -24,26 +24,23 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
+ *
+ * @author Stephan Preibisch
  */
 
 package mpicbg.imglib.type.numeric.integer;
 
-import mpicbg.imglib.container.NativeContainer;
-import mpicbg.imglib.container.NativeContainerFactory;
+import mpicbg.imglib.container.DirectAccessContainer;
+import mpicbg.imglib.container.DirectAccessContainerFactory;
 import mpicbg.imglib.container.basictypecontainer.BitAccess;
 import mpicbg.imglib.container.basictypecontainer.array.BitArray;
-import mpicbg.imglib.type.numeric.integer.AbstractIntegerType;
+import mpicbg.imglib.cursor.Cursor;
+import mpicbg.imglib.type.numeric.integer.IntegerTypeImpl;
 
-/**
- * 
- * 
- *
- * @author Stephan Preibisch and Stephan Saalfeld
- */
-public class Unsigned12BitType extends AbstractIntegerType<Unsigned12BitType>
+public class Unsigned12BitType extends IntegerTypeImpl<Unsigned12BitType>
 {
 	// the DirectAccessContainer
-	final NativeContainer<Unsigned12BitType, ? extends BitAccess> storage;
+	final DirectAccessContainer<Unsigned12BitType, ? extends BitAccess> storage;
 
 	// the adresses of the bits that we store
 	int j1, j2, j3, j4, j5, j6, j7, j8, j9, j10, j11, j12;
@@ -52,7 +49,7 @@ public class Unsigned12BitType extends AbstractIntegerType<Unsigned12BitType>
 	BitAccess b;
 	
 	// this is the constructor if you want it to read from an array
-	public Unsigned12BitType( NativeContainer<Unsigned12BitType, ? extends BitAccess> bitStorage )
+	public Unsigned12BitType( DirectAccessContainer<Unsigned12BitType, ? extends BitAccess> bitStorage )
 	{
 		storage = bitStorage;
 		updateIndex( 0 );
@@ -71,10 +68,10 @@ public class Unsigned12BitType extends AbstractIntegerType<Unsigned12BitType>
 	public Unsigned12BitType() { this( (short)0 ); }
 	
 	@Override
-	public NativeContainer<Unsigned12BitType, ? extends BitAccess> createSuitableDirectAccessContainer( final NativeContainerFactory storageFactory, final int dim[] )
+	public DirectAccessContainer<Unsigned12BitType, ? extends BitAccess> createSuitableDirectAccessContainer( final DirectAccessContainerFactory storageFactory, final int dim[] )
 	{
 		// create the container
-		final NativeContainer<Unsigned12BitType, ? extends BitAccess> container = storageFactory.createBitInstance( dim, 12 );
+		final DirectAccessContainer<Unsigned12BitType, ? extends BitAccess> container = storageFactory.createBitInstance( dim, 12 );
 		
 		// create a Type that is linked to the container
 		final Unsigned12BitType linkedType = new Unsigned12BitType( container );
@@ -86,7 +83,7 @@ public class Unsigned12BitType extends AbstractIntegerType<Unsigned12BitType>
 	}
 		
 	@Override
-	public void updateContainer( final Object c ) 
+	public void updateContainer( final Cursor<?> c ) 
 	{ 
 		b = storage.update( c );
 	}
@@ -115,7 +112,7 @@ public class Unsigned12BitType extends AbstractIntegerType<Unsigned12BitType>
 	}
 	public void set( final short value ) 
 	{
-		b.setValue( j1, value % 2 == 1 );
+		b.setValue( j1, (value & 1) == 1 );
 		b.setValue( j2, (value & 2) == 2 );
 		b.setValue( j3, (value & 4) == 4 );
 		b.setValue( j4, (value & 8) == 8 );
@@ -126,7 +123,7 @@ public class Unsigned12BitType extends AbstractIntegerType<Unsigned12BitType>
 		b.setValue( j9, (value & 256) == 256 );
 		b.setValue( j10, (value & 512) == 512 );
 		b.setValue( j11, (value & 1024) == 1024 );
-		b.setValue( j12, (value & 2048) == 2028 );		
+		b.setValue( j12, (value & 2048) == 2048 );		
 	}
 
 	@Override

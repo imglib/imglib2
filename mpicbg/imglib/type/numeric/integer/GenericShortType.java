@@ -24,34 +24,31 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
+ *
+ * @author Stephan Preibisch & Stephan Saalfeld
  */
 package mpicbg.imglib.type.numeric.integer;
 
-import mpicbg.imglib.algorithm.math.MathLib;
-import mpicbg.imglib.container.NativeContainer;
+import mpicbg.imglib.container.DirectAccessContainer;
 import mpicbg.imglib.container.basictypecontainer.ShortAccess;
 import mpicbg.imglib.container.basictypecontainer.array.ShortArray;
+import mpicbg.imglib.cursor.Cursor;
+import mpicbg.imglib.util.Util;
 
-/**
- * 
- * @param <T>
- * 
- * @author Stephan Preibisch and Stephan Saalfeld
- */
-public abstract class GenericShortType< T extends GenericShortType< T > > extends AbstractIntegerType< T >
+public abstract class GenericShortType<T extends GenericShortType<T>> extends IntegerTypeImpl<T>
 {
 	// the DirectAccessContainer
-	final NativeContainer< T, ? extends ShortAccess > storage;
-
-	// the (sub)DirectAccessContainer that holds the information
+	final DirectAccessContainer<T, ? extends ShortAccess> storage;
+	
+	// the (sub)DirectAccessContainer that holds the information 
 	ShortAccess b;
-
+	
 	// this is the constructor if you want it to read from an array
-	public GenericShortType( NativeContainer< T, ? extends ShortAccess > shortStorage )
+	public GenericShortType( DirectAccessContainer<T, ? extends ShortAccess> shortStorage )
 	{
 		storage = shortStorage;
 	}
-
+	
 	// this is the constructor if you want it to be a variable
 	public GenericShortType( final short value )
 	{
@@ -61,79 +58,69 @@ public abstract class GenericShortType< T extends GenericShortType< T > > extend
 	}
 
 	// this is the constructor if you want it to be a variable
-	public GenericShortType()
-	{
-		this( ( short ) 0 );
-	}
+	public GenericShortType(){ this( ( short )0 ); }
 
 	@Override
-	public void updateContainer( final Object c )
-	{
-		b = storage.update( c );
+	public void updateContainer( final Cursor< ? > c ) 
+	{ 
+		b = storage.update( c ); 
 	}
-
-	protected short getValue()
-	{
-		return b.getValue( i );
-	}
-
-	protected void setValue( final short f )
-	{
-		b.setValue( i, f );
-	}
-
+	
+	protected short getValue(){ return b.getValue( i ); }
+	protected void setValue( final short f ){ b.setValue( i, f ); }
+	
 	@Override
 	public void mul( final float c )
 	{
 		final short a = getValue();
-		setValue( ( short ) MathLib.round( a * c ) );
+		setValue( ( short )Util.round( a * c ) );
 	}
 
 	@Override
 	public void mul( final double c )
 	{
 		final short a = getValue();
-		setValue( ( short ) MathLib.round( a * c ) );
+		setValue( ( short )Util.round( a * c ) );
 	}
 
 	@Override
 	public void add( final T c )
 	{
-		final short a = getValue();
-		setValue( ( short ) ( a + c.getValue() ) );
+		final short a = getValue( );
+		setValue( ( short )( a + c.getValue() ) );
 	}
 
 	@Override
 	public void div( final T c )
 	{
 		final short a = getValue();
-		setValue( ( short ) ( a / c.getValue() ) );
+		setValue( ( short )( a / c.getValue() ) );
 	}
 
 	@Override
 	public void mul( final T c )
 	{
-		final short a = getValue();
-		setValue( ( short ) ( a * c.getValue() ) );
+		final short a = getValue( );
+		setValue( ( short )( a * c.getValue() ) );
 	}
 
 	@Override
 	public void sub( final T c )
 	{
-		final short a = getValue();
-		setValue( ( byte ) ( a - c.getValue() ) );
+		final short a = getValue( );
+		setValue( ( byte )( a - c.getValue() ) );
 	}
 
 	@Override
-	public int compareTo( final T c )
-	{
+	public int compareTo( final T c ) 
+	{ 
 		final short a = getValue();
 		final short b = c.getValue();
 		if ( a > b )
 			return 1;
 		else if ( a < b )
 			return -1;
-		else
+		else 
 			return 0;
 	}
 
@@ -144,16 +131,10 @@ public abstract class GenericShortType< T extends GenericShortType< T > > extend
 	}
 
 	@Override
-	public void setOne()
-	{
-		setValue( ( short ) 1 );
-	}
+	public void setOne() { setValue( ( short )1 ); }
 
 	@Override
-	public void setZero()
-	{
-		setValue( ( short ) 0 );
-	}
+	public void setZero() { setValue( ( short )0 ); }
 
 	@Override
 	public void inc()
@@ -168,10 +149,7 @@ public abstract class GenericShortType< T extends GenericShortType< T > > extend
 		short a = getValue();
 		setValue( --a );
 	}
-
+	
 	@Override
-	public String toString()
-	{
-		return "" + getValue();
-	}
+	public String toString() { return "" + getValue(); }
 }

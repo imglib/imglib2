@@ -31,13 +31,12 @@ package mpicbg.imglib.image.display.imagej;
 
 import java.util.Collection;
 
-import mpicbg.imglib.algorithm.math.MathLib;
 import mpicbg.imglib.container.array.ArrayLocalizingIterator;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.display.Display;
 import mpicbg.imglib.type.Type;
 
-import mpicbg.imglib.type.numeric.RGBALegacyType;
+import mpicbg.imglib.util.Util;
 
 import ij.ImagePlus;
 import ij.ImageStack;
@@ -80,7 +79,7 @@ public class ImageJFunctions
 			
 			for ( InverseTransformDescription<T> ti : interpolators )
 			{
-				float[][] minMaxDimLocal = MathLib.getMinMaxDim( ti.getImage().getDimensions(), ti.getTransform() ); 
+				float[][] minMaxDimLocal = Util.getMinMaxDim( ti.getImage().getDimensions(), ti.getTransform() ); 
 				
 				for ( int i = 0; i < dim.length; i++ )
 				{
@@ -129,7 +128,7 @@ public class ImageJFunctions
 
 	public static <T extends Type<T>> ImagePlus displayAsVirtualStack( final Image<T> img ) 
 	{
-		if ( RGBALegacyType.class.isInstance( img.createType() ) )
+		if ( ARGBType.class.isInstance( img.createType() ) )
 			return new ImagePlus( img.getName(), new ImageJVirtualStack<T>( img, COLOR_RGB, getDim3( getStandardDimensions() ), new int[ img.numDimensions() ] ) );
 		else
 			return new ImagePlus( img.getName(), new ImageJVirtualStack<T>( img, GRAY32, getDim3( getStandardDimensions() ), new int[ img.numDimensions() ] ) );
@@ -147,7 +146,7 @@ public class ImageJFunctions
 
 	public static <T extends Type<T>> ImagePlus displayAsVirtualStack( final Image<T> img, final int[] dim ) 
 	{		
-		if ( RGBALegacyType.class.isInstance( img.createType() ) )
+		if ( ARGBType.class.isInstance( img.createType() ) )
 			return new ImagePlus( img.getName(), new ImageJVirtualStack<T>( img, COLOR_RGB, getDim3(dim), new int[ img.numDimensions() ] ) );
 		else
 			return new ImagePlus( img.getName(), new ImageJVirtualStack<T>( img, GRAY32, getDim3(dim), new int[ img.numDimensions() ] ) ); 
@@ -160,7 +159,7 @@ public class ImageJFunctions
 
 	public static <T extends Type<T>> ImagePlus copyToImagePlus( final Image<T> img ) 
 	{		
-		if ( RGBALegacyType.class.isInstance( img.createType() ) )
+		if ( ARGBType.class.isInstance( img.createType() ) )
 			return createImagePlus( img, img.getName(), COLOR_RGB, getDim3( getStandardDimensions() ), new int[ img.numDimensions() ] );
 		else
 			return createImagePlus( img, img.getName(), GRAY32, getDim3( getStandardDimensions() ), new int[ img.numDimensions() ] ); 

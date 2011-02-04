@@ -24,34 +24,31 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
+ *
+ * @author Stephan Preibisch & Stephan Saalfeld
  */
 package mpicbg.imglib.type.numeric.integer;
 
-import mpicbg.imglib.algorithm.math.MathLib;
-import mpicbg.imglib.container.NativeContainer;
+import mpicbg.imglib.container.DirectAccessContainer;
 import mpicbg.imglib.container.basictypecontainer.ByteAccess;
 import mpicbg.imglib.container.basictypecontainer.array.ByteArray;
+import mpicbg.imglib.cursor.Cursor;
+import mpicbg.imglib.util.Util;
 
-/**
- * 
- * @param <T>
- * 
- * @author Stephan Preibisch and Stephan Saalfeld
- */
-public abstract class GenericByteType< T extends GenericByteType< T >> extends AbstractIntegerType< T >
+public abstract class GenericByteType<T extends GenericByteType<T>> extends IntegerTypeImpl<T>
 {
 	// the DirectAccessContainer
-	final NativeContainer< T, ? extends ByteAccess > storage;
-
-	// the (sub)DirectAccessContainer that holds the information
+	final DirectAccessContainer<T, ? extends ByteAccess> storage;
+	
+	// the (sub)DirectAccessContainer that holds the information 
 	ByteAccess b;
-
+	
 	// this is the constructor if you want it to read from an array
-	public GenericByteType( NativeContainer< T, ? extends ByteAccess > byteStorage )
+	public GenericByteType( DirectAccessContainer<T, ? extends ByteAccess> byteStorage )
 	{
 		storage = byteStorage;
 	}
-
+	
 	// this is the constructor if you want it to be a variable
 	protected GenericByteType( final byte value )
 	{
@@ -61,82 +58,72 @@ public abstract class GenericByteType< T extends GenericByteType< T >> extends A
 	}
 
 	// this is the constructor if you want it to be a variable
-	protected GenericByteType()
-	{
-		this( ( byte ) 0 );
-	}
-
+	protected GenericByteType() { this( ( byte )0 ); }
+			
 	@Override
-	public void updateContainer( final Object c )
-	{
-		b = storage.update( c );
+	public void updateContainer( final Cursor< ? > c ) 
+	{ 
+		b = storage.update( c ); 
 	}
-
-	protected byte getValue()
-	{
-		return b.getValue( i );
-	}
-
-	protected void setValue( final byte f )
-	{
-		b.setValue( i, f );
-	}
-
+	
+	protected byte getValue(){ return b.getValue( i ); }
+	protected void setValue( final byte f ){ b.setValue( i, f ); }
+	
 	@Override
 	public void mul( final float c )
 	{
 		final byte a = getValue();
-		setValue( ( byte ) MathLib.round( a * c ) );
+		setValue( ( byte )Util.round( a * c ) );
 	}
 
 	@Override
 	public void mul( final double c )
 	{
 		final byte a = getValue();
-		setValue( ( byte ) MathLib.round( a * c ) );
+		setValue( ( byte )Util.round( a * c ) );
 	}
 
 	@Override
 	public void add( final T c )
 	{
-		final byte a = getValue();
-		setValue( ( byte ) ( a + c.getValue() ) );
+		final byte a = getValue( );
+		setValue( ( byte )( a + c.getValue() ) );
 	}
 
 	@Override
 	public void div( final T c )
 	{
 		final byte a = getValue();
-		setValue( ( byte ) ( a / c.getValue() ) );
+		setValue( ( byte )( a / c.getValue() ) );
 	}
 
 	@Override
 	public void mul( final T c )
 	{
-		final byte a = getValue();
-		setValue( ( byte ) ( a * c.getValue() ) );
+		final byte a = getValue( );
+		setValue( ( byte )( a * c.getValue() ) );
 	}
 
 	@Override
 	public void sub( final T c )
 	{
-		final byte a = getValue();
-		setValue( ( byte ) ( a - c.getValue() ) );
+		final byte a = getValue( );
+		setValue( ( byte )( a - c.getValue() ) );
 	}
 
 	@Override
-	public int compareTo( final T c )
-	{
+	public int compareTo( final T c ) 
+	{ 
 		final byte a = getValue();
 		final byte b = c.getValue();
 		if ( a > b )
 			return 1;
 		else if ( a < b )
 			return -1;
-		else
+		else 
 			return 0;
 	}
-
+	
 	@Override
 	public void set( final T c )
 	{
@@ -144,16 +131,10 @@ public abstract class GenericByteType< T extends GenericByteType< T >> extends A
 	}
 
 	@Override
-	public void setOne()
-	{
-		setValue( ( byte ) 1 );
-	}
+	public void setOne() { setValue( ( byte )1 ); }
 
 	@Override
-	public void setZero()
-	{
-		setValue( ( byte ) 0 );
-	}
+	public void setZero() { setValue( ( byte )0 ); }
 
 	@Override
 	public void inc()
@@ -168,10 +149,7 @@ public abstract class GenericByteType< T extends GenericByteType< T >> extends A
 		byte a = getValue();
 		setValue( --a );
 	}
-
+	
 	@Override
-	public String toString()
-	{
-		return "" + getValue();
-	}
+	public String toString() { return "" + getValue(); }
 }

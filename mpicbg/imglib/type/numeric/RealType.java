@@ -30,7 +30,7 @@
 
 package mpicbg.imglib.type.numeric;
 
-public interface RealType<T extends RealType<T>> extends ComplexType<T>
+public interface RealType<T extends RealType<T>> extends ComplexType<T>, Comparable<T>
 {			
 	public void inc();
 	public void dec();	

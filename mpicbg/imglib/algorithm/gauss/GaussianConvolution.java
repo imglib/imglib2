@@ -21,7 +21,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 import mpicbg.imglib.algorithm.Benchmark;
 import mpicbg.imglib.algorithm.MultiThreaded;
 import mpicbg.imglib.algorithm.OutputAlgorithm;
-import mpicbg.imglib.algorithm.math.MathLib;
 import mpicbg.imglib.container.Img;
 import mpicbg.imglib.container.ImgCursor;
 import mpicbg.imglib.container.ImgRandomAccess;
@@ -32,6 +31,7 @@ import mpicbg.imglib.multithreading.SimpleMultiThreading;
 import mpicbg.imglib.outofbounds.OutOfBoundsFactory;
 import mpicbg.imglib.type.numeric.NumericType;
 import mpicbg.imglib.type.numeric.real.FloatType;
+import mpicbg.imglib.util.Util;
 
 public class GaussianConvolution< T extends NumericType<T>> implements MultiThreaded, OutputAlgorithm<T>, Benchmark
 {	
@@ -59,7 +59,7 @@ public class GaussianConvolution< T extends NumericType<T>> implements MultiThre
 		this.kernel = new double[ numDimensions ][];
 		
 		for ( int d = 0; d < numDimensions; ++d )
-			this.kernel[ d ] = MathLib.createGaussianKernel1DDouble( sigma[ d ], true );
+			this.kernel[ d ] = Util.createGaussianKernel1DDouble( sigma[ d ], true );
 	}
 
 	public GaussianConvolution( final Img<T> container, final OutOfBoundsFactory<T,Img<T>> outOfBoundsFactory, final double sigma )

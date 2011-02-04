@@ -24,53 +24,44 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
+ *
+ * @author Stephan Preibisch & Stephan Saalfeld
  */
 package mpicbg.imglib.type;
 
-import mpicbg.imglib.container.ImgCursor;
 import mpicbg.imglib.container.array.Array;
 import mpicbg.imglib.container.basictypecontainer.DataAccess;
 
 /**
- * The {@link Type} class is responsible for computing. It can be instaniated as
- * a variable holding one single value only or with a DirectAccessContainer.
- * There is no differentiation between the two cases except for the constructor
- * to avoid double implementations.
+ * The {@link Type} class is responsible for computing. It can be instaniated as a variable holding one single value only or with
+ * a DirectAccessContainer. There is no differentiation between the two cases except for the constructor to avoid double implementations. 
  * 
- * The {@link Type} is the only class that is aware of the actual data type,
- * i.e. which basic type ({@link DataAccess}) is used to store the data. On the
- * other hand it does not know the storage type ({@link Array},
- * {@link ImgCursor}, ...). This is not necessary for computation and avoid
- * complicated re-implementations. The method public void updateDataArray(
- * Cursor<?> c ); links the DirectAccessContainer and the cursor which define
- * the current position as well as the current storage array.
+ * The {@link Type} is the only class that is aware of the actual data type, i.e. which basic type ({@link DataAccess}) is used to 
+ * store the data. On the other hand it does not know the storage type ({@link Array}, {@link Cursor}, ...). This is not necessary for
+ * computation and avoid complicated re-implementations. The method public void updateDataArray( Cursor<?> c );	links the DirectAccessContainer and
+ * the cursor which define the current position as well as the current storage array.
  * 
- * @author Stephan Preibisch and Stephan Saalfeld
- * 
- * @param <T> the specialized version
+ * @author Stephan Preibisch
+ *
+ * @param <T> - the specialized version
  */
-public interface Type< T extends Type< T > >
-{
+public interface Type<T extends Type<T>>
+{	
 	/**
 	 * Creates a new {@link Type} which can only store one value.
-	 * 
 	 * @return - a new {@link Type} instance
 	 */
 	public T createVariable();
-
+	
 	/**
-	 * Creates a new {@link Type} which can only store one value but contains
-	 * the value of this {@link Type}
-	 * 
+	 * Creates a new {@link Type} which can only store one value but contains the value of this {@link Type}
 	 * @return - a new {@link Type} instance
 	 */
 	public T copy();
 
 	/**
 	 * Sets the value of another {@link Type}.
-	 * 
-	 * @param c
-	 *            - the new value
+	 * @param c - the new value
 	 */
-	public void set( T c );
+	public void set( T c );		
 }

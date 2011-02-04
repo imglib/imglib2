@@ -20,7 +20,6 @@ import java.util.Random;
 
 import mpicbg.imglib.algorithm.Benchmark;
 import mpicbg.imglib.algorithm.OutputAlgorithm;
-import mpicbg.imglib.algorithm.math.MathLib;
 import mpicbg.imglib.container.ImgCursor;
 import mpicbg.imglib.container.ImgRandomAccess;
 import mpicbg.imglib.container.array.ArrayContainerFactory;
@@ -32,6 +31,7 @@ import mpicbg.imglib.type.label.FakeType;
 import mpicbg.imglib.type.logic.BitType;
 import mpicbg.imglib.type.numeric.RealType;
 import mpicbg.imglib.type.numeric.real.FloatType;
+import mpicbg.imglib.util.Util;
 
 public class FloydSteinbergDithering<T extends RealType<T>> implements OutputAlgorithm<BitType>, Benchmark
 {
@@ -198,7 +198,7 @@ public class FloydSteinbergDithering<T extends RealType<T>> implements OutputAlg
 		}
 		else
 		{
-			final Image<FloatType> kernel = factory.createImage( MathLib.getArrayFromValue( 3, numDimensions) );				
+			final Image<FloatType> kernel = factory.createImage( Util.getArrayFromValue( 3, numDimensions) );				
 			final ImgCursor<FloatType> cursor = kernel.createLocalizingRasterIterator();
 			
 			final int numValues = (int)kernel.numPixels() / 2;

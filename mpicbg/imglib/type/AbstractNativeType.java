@@ -30,12 +30,18 @@
 
 package mpicbg.imglib.type;
 
-public interface LogicType<T extends LogicType<T>> extends ComparableType<T>
+public abstract class AbstractNativeType<T extends AbstractNativeType<T>> implements NativeType<T>
 {
-	public void and( T c );
-	public void or( T c );
-	public void xor( T c );
+	protected int i = 0;
+
+	public void updateIndex( final int i ) { this.i = i; }
+	public int getIndex() { return i; }
 	
-	public void not();
-	
+	public void incIndex() { ++i; }
+	public void incIndex( final int increment ) { i += increment; }
+	public void decIndex() { --i; }
+	public void decIndex( final int decrement ) { i -= decrement; }
+		
+	@Override
+	public abstract String toString();	
 }

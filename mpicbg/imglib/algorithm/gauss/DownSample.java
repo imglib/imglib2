@@ -19,7 +19,6 @@ package mpicbg.imglib.algorithm.gauss;
 import mpicbg.imglib.algorithm.Benchmark;
 import mpicbg.imglib.algorithm.MultiThreaded;
 import mpicbg.imglib.algorithm.OutputAlgorithm;
-import mpicbg.imglib.algorithm.math.MathLib;
 import mpicbg.imglib.container.ImgCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.interpolation.Interpolator;
@@ -27,6 +26,7 @@ import mpicbg.imglib.interpolation.nearestneighbor.NearestNeighborInterpolatorFa
 import mpicbg.imglib.outofbounds.OutOfBoundsMirrorFactory;
 import mpicbg.imglib.outofbounds.OutOfBoundsMirrorFactory.Boundary;
 import mpicbg.imglib.type.numeric.RealType;
+import mpicbg.imglib.util.Util;
 
 public class DownSample<T extends RealType<T>> implements MultiThreaded, OutputAlgorithm<T>, Benchmark
 {
@@ -90,7 +90,7 @@ public class DownSample<T extends RealType<T>> implements MultiThreaded, OutputA
 		
 		for ( int d = 0; d < input.numDimensions(); ++d )
 		{
-			newSize[ d ] = MathLib.round( input.getDimension(d) * factor );
+			newSize[ d ] = Util.round( input.getDimension(d) * factor );
 			scaling[ d ] = 1.0f / factor;
 		}
 	}

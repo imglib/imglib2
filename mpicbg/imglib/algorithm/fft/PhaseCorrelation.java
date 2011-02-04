@@ -28,7 +28,6 @@ import mpicbg.imglib.algorithm.Algorithm;
 import mpicbg.imglib.algorithm.Benchmark;
 import mpicbg.imglib.algorithm.MultiThreaded;
 import mpicbg.imglib.algorithm.fft.FourierTransform.Rearrangement;
-import mpicbg.imglib.algorithm.math.MathLib;
 import mpicbg.imglib.container.ImgCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.multithreading.SimpleMultiThreading;
@@ -39,6 +38,7 @@ import mpicbg.imglib.sampler.special.RegionOfInterestCursor;
 import mpicbg.imglib.type.numeric.RealType;
 import mpicbg.imglib.type.numeric.complex.ComplexFloatType;
 import mpicbg.imglib.type.numeric.real.FloatType;
+import mpicbg.imglib.util.Util;
 
 public class PhaseCorrelation<T extends RealType<T>, S extends RealType<S>> implements MultiThreaded, Algorithm, Benchmark
 {
@@ -212,7 +212,7 @@ public class PhaseCorrelation<T extends RealType<T>, S extends RealType<S>> impl
 	
 	protected void verifyWithCrossCorrelation( final ArrayList<PhaseCorrelationPeak> peakList, final int[] dimInvPCM, final Image<T> image1, final Image<S> image2 )
 	{
-		final boolean[][] coordinates = MathLib.getRecursiveCoordinates( numDimensions );
+		final boolean[][] coordinates = Util.getRecursiveCoordinates( numDimensions );
 		
 		final ArrayList<PhaseCorrelationPeak> newPeakList = new ArrayList<PhaseCorrelationPeak>();
 		
@@ -279,12 +279,12 @@ public class PhaseCorrelation<T extends RealType<T>, S extends RealType<S>> impl
 
 	public static <T extends RealType<T>, S extends RealType<S>> double testCrossCorrelation( final int[] shift, final Image<T> image1, final Image<S> image2 )
 	{
-		return testCrossCorrelation( shift, image1, image2, MathLib.getArrayFromValue( 5, image1.numDimensions()) );
+		return testCrossCorrelation( shift, image1, image2, Util.getArrayFromValue( 5, image1.numDimensions()) );
 	}
 
 	public static <T extends RealType<T>, S extends RealType<S>> double testCrossCorrelation( final int[] shift, final Image<T> image1, final Image<S> image2, final int minOverlapPx )
 	{
-		return testCrossCorrelation( shift, image1, image2, MathLib.getArrayFromValue( minOverlapPx, image1.numDimensions()) );
+		return testCrossCorrelation( shift, image1, image2, Util.getArrayFromValue( minOverlapPx, image1.numDimensions()) );
 	}
 	
 	public static <T extends RealType<T>, S extends RealType<S>> double testCrossCorrelation( final int[] shift, final Image<T> image1, final Image<S> image2, final int[] minOverlapPx )

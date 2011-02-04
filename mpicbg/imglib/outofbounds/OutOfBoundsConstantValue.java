@@ -30,8 +30,8 @@ package mpicbg.imglib.outofbounds;
 import mpicbg.imglib.IntegerInterval;
 import mpicbg.imglib.IntegerLocalizable;
 import mpicbg.imglib.IntegerRandomAccess;
-import mpicbg.imglib.algorithm.math.MathLib;
 import mpicbg.imglib.type.Type;
+import mpicbg.imglib.util.Util;
 
 /**
  * 
@@ -157,7 +157,7 @@ public class OutOfBoundsConstantValue< T extends Type< T > > implements OutOfBou
 	public long getLongPosition( final int dim ){ return position[ dim ]; }
 	
 	@Override
-	public String toString() { return MathLib.printCoordinates( position ) + " = " + get(); }
+	public String toString() { return Util.printCoordinates( position ) + " = " + get(); }
 	
 	
 	/* RasterPositionable */

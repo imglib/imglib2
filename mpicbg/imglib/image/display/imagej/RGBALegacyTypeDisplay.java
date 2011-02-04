@@ -32,11 +32,11 @@ package mpicbg.imglib.image.display.imagej;
 import mpicbg.imglib.container.ImgCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.display.Display;
-import mpicbg.imglib.type.numeric.RGBALegacyType;
+import mpicbg.imglib.type.numeric.ARGBType;
 
-public class RGBALegacyTypeDisplay extends Display<RGBALegacyType>
+public class RGBALegacyTypeDisplay extends Display<ARGBType>
 {
-	public RGBALegacyTypeDisplay( final Image<RGBALegacyType> img)
+	public RGBALegacyTypeDisplay( final Image<ARGBType> img)
 	{
 		super(img);
 		this.min = 0;
@@ -45,27 +45,27 @@ public class RGBALegacyTypeDisplay extends Display<RGBALegacyType>
 
 	final protected float avg( final int col )
 	{
-		final int r = RGBALegacyType.red( col );
-		final int g = RGBALegacyType.green( col );
-		final int b = RGBALegacyType.blue( col );
+		final int r = ARGBType.red( col );
+		final int g = ARGBType.green( col );
+		final int b = ARGBType.blue( col );
 		
 		return ( 0.3f * r + 0.6f * g + 0.1f * b );
 	}	
 	
 	final protected int max( final int col )
 	{
-		final int r = RGBALegacyType.red( col );
-		final int g = RGBALegacyType.green( col );
-		final int b = RGBALegacyType.blue( col );
+		final int r = ARGBType.red( col );
+		final int g = ARGBType.green( col );
+		final int b = ARGBType.blue( col );
 		
 		return Math.max( Math.max ( r,g ), b);
 	}
 
 	final protected int min( final int col )
 	{
-		final int r = RGBALegacyType.red( col );
-		final int g = RGBALegacyType.green( col );
-		final int b = RGBALegacyType.blue( col );
+		final int r = ARGBType.red( col );
+		final int g = ARGBType.green( col );
+		final int b = ARGBType.blue( col );
 
 		return Math.min( Math.min( r,g ), b);
 	}
@@ -73,8 +73,8 @@ public class RGBALegacyTypeDisplay extends Display<RGBALegacyType>
 	@Override
 	public void setMinMax()
 	{
-		final ImgCursor<RGBALegacyType> c = img.createRasterIterator();
-		final RGBALegacyType t = c.get();
+		final ImgCursor<ARGBType> c = img.createRasterIterator();
+		final ARGBType t = c.get();
 		
 		if ( !c.hasNext() )
 		{
@@ -107,15 +107,15 @@ public class RGBALegacyTypeDisplay extends Display<RGBALegacyType>
 	}
 	
 	@Override
-	public float get32Bit( RGBALegacyType c ) { return avg( c.get() ); }
+	public float get32Bit( ARGBType c ) { return avg( c.get() ); }
 	@Override
-	public float get32BitNormed( RGBALegacyType c ) { return normFloat( avg( c.get() ) ); }
+	public float get32BitNormed( ARGBType c ) { return normFloat( avg( c.get() ) ); }
 	
 	@Override
-	public byte get8BitSigned( final RGBALegacyType c) { return (byte)Math.round( normFloat( avg( c.get() ) ) * 255 ); }
+	public byte get8BitSigned( final ARGBType c) { return (byte)Math.round( normFloat( avg( c.get() ) ) * 255 ); }
 	@Override
-	public short get8BitUnsigned( final RGBALegacyType c) { return (short)Math.round( normFloat( avg( c.get() ) ) * 255 ); }		
+	public short get8BitUnsigned( final ARGBType c) { return (short)Math.round( normFloat( avg( c.get() ) ) * 255 ); }		
 	
 	@Override
-	public int get8BitARGB( final RGBALegacyType c) { return c.get(); }	
+	public int get8BitARGB( final ARGBType c) { return c.get(); }	
 }

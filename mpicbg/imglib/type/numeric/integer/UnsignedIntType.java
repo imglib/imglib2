@@ -24,141 +24,88 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
+ *
+ * @author Stephan Preibisch & Stephan Saalfeld
  */
 package mpicbg.imglib.type.numeric.integer;
 
-import mpicbg.imglib.algorithm.math.MathLib;
-import mpicbg.imglib.container.NativeContainer;
-import mpicbg.imglib.container.NativeContainerFactory;
+import mpicbg.imglib.container.DirectAccessContainer;
+import mpicbg.imglib.container.DirectAccessContainerFactory;
 import mpicbg.imglib.container.basictypecontainer.IntAccess;
+import mpicbg.imglib.util.Util;
 
-/**
- * 
- * 
- * 
- * @author Stephan Preibisch and Stephan Saalfeld
- */
-public class UnsignedIntType extends GenericIntType< UnsignedIntType >
+public class UnsignedIntType extends GenericIntType<UnsignedIntType>
 {
 	// this is the constructor if you want it to read from an array
-	public UnsignedIntType( NativeContainer< UnsignedIntType, ? extends IntAccess > intStorage )
-	{
-		super( intStorage );
-	}
+	public UnsignedIntType( DirectAccessContainer<UnsignedIntType, ? extends IntAccess> intStorage ) { super( intStorage ); }
 
 	// this is the constructor if you want it to be a variable
-	public UnsignedIntType( final long value )
-	{
-		super( getCodedSignedIntChecked( value ) );
-	}
+	public UnsignedIntType( final long value ) { super( getCodedSignedIntChecked(value) ); }
 
 	// this is the constructor if you want it to be a variable
-	public UnsignedIntType()
-	{
-		this( 0 );
-	}
-
+	public UnsignedIntType() { this( 0 ); }
+	
 	public static int getCodedSignedIntChecked( long unsignedInt )
 	{
 		if ( unsignedInt < 0 )
 			unsignedInt = 0;
 		else if ( unsignedInt > 4294967295l )
 			unsignedInt = 4294967295l;
-
+		
 		return getCodedSignedInt( unsignedInt );
 	}
-
-	public static int getCodedSignedInt( final long unsignedInt )
-	{
-		return ( int ) ( unsignedInt & 0xffffffff );
-	}
-
-	public static long getUnsignedInt( final int signedInt )
-	{
-		return signedInt & 0xffffffff;
-	}
+	public static int getCodedSignedInt( final long unsignedInt ) { return (int)( unsignedInt & 0xffffffff ); }
+	public static long getUnsignedInt( final int signedInt ) { return signedInt & 0xffffffffL; }
 
 	@Override
-	public NativeContainer< UnsignedIntType, ? extends IntAccess > createSuitableDirectAccessContainer( final NativeContainerFactory storageFactory, final int dim[] )
+	public DirectAccessContainer<UnsignedIntType, ? extends IntAccess> createSuitableDirectAccessContainer( final DirectAccessContainerFactory storageFactory, final int dim[] )
 	{
 		// create the container
-		final NativeContainer< UnsignedIntType, ? extends IntAccess > container = storageFactory.createIntInstance( dim, 1 );
-
+		final DirectAccessContainer<UnsignedIntType, ? extends IntAccess> container = storageFactory.createIntInstance( dim, 1 );
+		
 		// create a Type that is linked to the container
 		final UnsignedIntType linkedType = new UnsignedIntType( container );
-
+		
 		// pass it to the DirectAccessContainer
 		container.setLinkedType( linkedType );
-
+		
 		return container;
 	}
-
+	
 	@Override
-	public UnsignedIntType duplicateTypeOnSameDirectAccessContainer()
-	{
-		return new UnsignedIntType( storage );
-	}
+	public UnsignedIntType duplicateTypeOnSameDirectAccessContainer() { return new UnsignedIntType( storage ); }
 
 	@Override
 	public void mul( final float c )
 	{
 		final long a = getUnsignedInt( getValue() );
-		setValue( getCodedSignedInt( MathLib.round( a * c ) ) );
+		setValue( getCodedSignedInt( Util.round( a * c ) ) );
 	}
 
 	@Override
 	public void mul( final double c )
 	{
 		final long a = getUnsignedInt( getValue() );
-		setValue( getCodedSignedInt( ( int ) MathLib.round( a * c ) ) );
+		setValue( getCodedSignedInt( ( int )Util.round( a * c ) ) );
 	}
 
-	public long get()
-	{
-		return getUnsignedInt( getValue() );
-	}
-
-	public void set( final long f )
-	{
-		setValue( getCodedSignedInt( f ) );
-	}
+	public long get(){ return getUnsignedInt( getValue() ); }
+	public void set( final long f ){ setValue( getCodedSignedInt( f ) ); }
 
 	@Override
-	public int getInteger()
-	{
-		return ( int ) get();
-	}
+	public int getInteger(){ return (int)get(); }
+	@Override
+	public long getIntegerLong() { return get(); }
+	@Override
+	public void setInteger( final int f ){ set( f ); }
+	@Override
+	public void setInteger( final long f ){ set( f ); }
 
 	@Override
-	public long getIntegerLong()
-	{
-		return get();
-	}
-
+	public double getMaxValue() { return -((double)Integer.MIN_VALUE) + Integer.MAX_VALUE; }
 	@Override
-	public void setInteger( final int f )
-	{
-		set( f );
-	}
-
-	@Override
-	public void setInteger( final long f )
-	{
-		set( f );
-	}
-
-	@Override
-	public double getMaxValue()
-	{
-		return -Integer.MIN_VALUE + Integer.MAX_VALUE;
-	}
-
-	@Override
-	public double getMinValue()
-	{
-		return 0;
-	}
-
+	public double getMinValue()  { return 0; }
+	
 	@Override
 	public void div( final UnsignedIntType c )
 	{
@@ -166,46 +113,31 @@ public class UnsignedIntType extends GenericIntType< UnsignedIntType >
 	}
 
 	@Override
-	public int compareTo( final UnsignedIntType c )
+	public int compareTo( final UnsignedIntType c ) 
 	{
 		final long a = get();
 		final long b = c.get();
-
+		
 		if ( a > b )
 			return 1;
 		else if ( a < b )
 			return -1;
-		else
+		else 
 			return 0;
 	}
 
 	@Override
-	public UnsignedIntType[] createArray1D( final int size1 )
-	{
-		return new UnsignedIntType[ size1 ];
-	}
+	public UnsignedIntType[] createArray1D( final int size1 ){ return new UnsignedIntType[ size1 ]; }
 
 	@Override
-	public UnsignedIntType[][] createArray2D( final int size1, final int size2 )
-	{
-		return new UnsignedIntType[ size1 ][ size2 ];
-	}
+	public UnsignedIntType[][] createArray2D( final int size1, final int size2 ){ return new UnsignedIntType[ size1 ][ size2 ]; }
 
 	@Override
-	public UnsignedIntType[][][] createArray3D( final int size1, final int size2, final int size3 )
-	{
-		return new UnsignedIntType[ size1 ][ size2 ][ size3 ];
-	}
+	public UnsignedIntType[][][] createArray3D( final int size1, final int size2, final int size3 ) { return new UnsignedIntType[ size1 ][ size2 ][ size3 ]; }
 
 	@Override
-	public UnsignedIntType createVariable()
-	{
-		return new UnsignedIntType( 0 );
-	}
+	public UnsignedIntType createVariable(){ return new UnsignedIntType( 0 ); }
 
 	@Override
-	public UnsignedIntType copy()
-	{
-		return new UnsignedIntType( get() );
-	}
+	public UnsignedIntType copy(){ return new UnsignedIntType( get() ); }
 }

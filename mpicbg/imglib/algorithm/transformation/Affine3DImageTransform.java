@@ -21,12 +21,12 @@ import javax.vecmath.Point3d;
 import javax.vecmath.Point3f;
 
 import mpicbg.imglib.algorithm.OutputAlgorithm;
-import mpicbg.imglib.algorithm.math.MathLib;
 import mpicbg.imglib.container.ImgCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.interpolation.Interpolator;
 import mpicbg.imglib.interpolation.InterpolatorFactory;
 import mpicbg.imglib.type.Type;
+import mpicbg.imglib.util.Util;
 import mpicbg.models.AffineModel3D;
 
 public class Affine3DImageTransform<T extends Type<T>> implements OutputAlgorithm<T>
@@ -75,7 +75,7 @@ public class Affine3DImageTransform<T extends Type<T>> implements OutputAlgorith
 		}
 		else
 		{
-			this.transform = MathLib.getTransform3D( transform );			
+			this.transform = Util.getTransform3D( transform );			
 		}
 	}
 

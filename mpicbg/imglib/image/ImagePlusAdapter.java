@@ -41,7 +41,7 @@ import mpicbg.imglib.image.Image;
 import mpicbg.imglib.type.Type;
 import mpicbg.imglib.type.TypeConverter;
 import mpicbg.imglib.type.numeric.RealType;
-import mpicbg.imglib.type.numeric.RGBALegacyType;
+import mpicbg.imglib.type.numeric.ARGBType;
 import mpicbg.imglib.type.numeric.integer.UnsignedByteType;
 import mpicbg.imglib.type.numeric.integer.UnsignedShortType;
 import mpicbg.imglib.type.numeric.real.FloatType;
@@ -149,21 +149,21 @@ public class ImagePlusAdapter
 		return image;						
 	}
 
-	public static Image<RGBALegacyType> wrapRGBA( final ImagePlus imp )
+	public static Image<ARGBType> wrapRGBA( final ImagePlus imp )
 	{
 		if ( imp.getType() != ImagePlus.COLOR_RGB)
 			return null;
 
 		final ImagePlusContainerFactory containerFactory = new ImagePlusContainerFactory();
-		final IntImagePlus<RGBALegacyType> container = new IntImagePlus<RGBALegacyType>( imp,  containerFactory );
+		final IntImagePlus<ARGBType> container = new IntImagePlus<ARGBType>( imp,  containerFactory );
 
 		// create a Type that is linked to the container
-		final RGBALegacyType linkedType = new RGBALegacyType( container );
+		final ARGBType linkedType = new ARGBType( container );
 		
 		// pass it to the DirectAccessContainer
 		container.setLinkedType( linkedType );
 
-		final Image<RGBALegacyType> image = new Image<RGBALegacyType>( container, new RGBALegacyType(), imp.getTitle() );
+		final Image<ARGBType> image = new Image<ARGBType>( container, new ARGBType(), imp.getTitle() );
 
 		setCalibrationFromImagePlus( image, imp );
 		

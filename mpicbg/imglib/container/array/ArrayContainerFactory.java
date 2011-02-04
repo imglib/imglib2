@@ -45,8 +45,7 @@ import mpicbg.imglib.container.basictypecontainer.array.FloatArray;
 import mpicbg.imglib.container.basictypecontainer.array.IntArray;
 import mpicbg.imglib.container.basictypecontainer.array.LongArray;
 import mpicbg.imglib.container.basictypecontainer.array.ShortArray;
-import mpicbg.imglib.type.NativeTypeCapable;
-import mpicbg.imglib.type.Type;
+import mpicbg.imglib.type.NativeType;
 
 /**
  * 
@@ -54,7 +53,7 @@ import mpicbg.imglib.type.Type;
  * 
  * @author Stephan Preibisch and Stephan Saalfeld
  */
-public class ArrayContainerFactory< T extends Type<T> & NativeTypeCapable< T > > extends NativeContainerFactory< T >
+public class ArrayContainerFactory< T extends NativeType<T> > extends NativeContainerFactory< T >
 {
 	public static int numEntitiesRangeCheck( final long[] dimensions, final int entitiesPerPixel )
 	{

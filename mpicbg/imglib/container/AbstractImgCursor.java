@@ -31,8 +31,8 @@ package mpicbg.imglib.container;
 
 import java.util.Iterator;
 
-import mpicbg.imglib.algorithm.math.MathLib;
 import mpicbg.imglib.type.Type;
+import mpicbg.imglib.util.Util;
 
 /**
  * Generic implementation of {@link Iterator} mapping to abstract {@link #fwd()} and
@@ -129,6 +129,6 @@ public abstract class AbstractImgCursor< T extends Type< T > > extends AbstractI
 	{
 		final int[] pos = new int[ n ];
 		localize( pos );
-		return MathLib.printCoordinates( pos );
+		return Util.printCoordinates( pos );
 	}
 }

@@ -24,30 +24,27 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
+ *
+ * @author Stephan Preibisch & Stephan Saalfeld
  */
 package mpicbg.imglib.type.numeric.integer;
 
-import mpicbg.imglib.algorithm.math.MathLib;
-import mpicbg.imglib.container.NativeContainer;
+import mpicbg.imglib.container.DirectAccessContainer;
 import mpicbg.imglib.container.basictypecontainer.IntAccess;
 import mpicbg.imglib.container.basictypecontainer.array.IntArray;
+import mpicbg.imglib.cursor.Cursor;
+import mpicbg.imglib.util.Util;
 
-/**
- * 
- * @param <T>
- * 
- * @author Stephan Preibisch and Stephan Saalfeld
- */
-public abstract class GenericIntType< T extends GenericIntType< T > > extends AbstractIntegerType< T >
+public abstract class GenericIntType<T extends GenericIntType<T>> extends IntegerTypeImpl<T>
 {
 	// the DirectAccessContainer
-	final NativeContainer< T, ? extends IntAccess > storage;
-
-	// the (sub)DirectAccessContainer that holds the information
+	final DirectAccessContainer<T, ? extends IntAccess> storage;
+	
+	// the (sub)DirectAccessContainer that holds the information 
 	IntAccess b;
-
+	
 	// this is the constructor if you want it to read from an array
-	public GenericIntType( NativeContainer< T, ? extends IntAccess > intStorage )
+	public GenericIntType( DirectAccessContainer<T, ? extends IntAccess> intStorage )
 	{
 		storage = intStorage;
 	}
@@ -61,41 +58,31 @@ public abstract class GenericIntType< T extends GenericIntType< T > > extends Ab
 	}
 
 	// this is the constructor if you want it to be a variable
-	public GenericIntType()
-	{
-		this( 0 );
-	}
+	public GenericIntType() { this( 0 ); }
 
 	@Override
-	public void updateContainer( final Object c )
-	{
-		b = storage.update( c );
+	public void updateContainer( final Cursor<?> c ) 
+	{ 
+		b = storage.update( c ); 
 	}
 
-	protected int getValue()
-	{
-		return b.getValue( i );
-	}
-
-	protected void setValue( final int f )
-	{
-		b.setValue( i, f );
-	}
-
+	protected int getValue(){ return b.getValue( i ); }
+	protected void setValue( final int f ){ b.setValue( i, f ); }
+	
 	@Override
 	public void mul( final float c )
 	{
 		final int a = getValue();
-		setValue( MathLib.round( a * c ) );
+		setValue( Util.round( a * c ) );
 	}
-
+	
 	@Override
 	public void mul( final double c )
 	{
 		final int a = getValue();
-		setValue( ( int ) MathLib.round( a * c ) );
+		setValue( ( int )Util.round( a * c ) );
 	}
-
+	
 	@Override
 	public void add( final T c )
 	{
@@ -113,27 +100,27 @@ public abstract class GenericIntType< T extends GenericIntType< T > > extends Ab
 	@Override
 	public void mul( final T c )
 	{
-		final int a = getValue();
+		final int a = getValue( );
 		setValue( a * c.getValue() );
 	}
 
 	@Override
 	public void sub( final T c )
 	{
-		final int a = getValue();
+		final int a = getValue( );
 		setValue( a - c.getValue() );
 	}
 
 	@Override
-	public int compareTo( final T c )
-	{
+	public int compareTo( final T c ) 
+	{ 
 		final int a = getValue();
 		final int b = c.getValue();
 		if ( a > b )
 			return 1;
 		else if ( a < b )
 			return -1;
-		else
+		else 
 			return 0;
 	}
 
@@ -144,16 +131,10 @@ public abstract class GenericIntType< T extends GenericIntType< T > > extends Ab
 	}
 
 	@Override
-	public void setOne()
-	{
-		setValue( 1 );
-	}
+	public void setOne() { setValue( 1 ); }
 
 	@Override
-	public void setZero()
-	{
-		setValue( 0 );
-	}
+	public void setZero() { setValue( 0 ); }
 
 	@Override
 	public void inc()
@@ -168,10 +149,7 @@ public abstract class GenericIntType< T extends GenericIntType< T > > extends Ab
 		int a = getValue();
 		setValue( --a );
 	}
-
+	
 	@Override
-	public String toString()
-	{
-		return "" + getValue();
-	}
+	public String toString(){ return "" + getValue(); }
 }

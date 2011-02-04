@@ -28,9 +28,9 @@
 package mpicbg.imglib.outofbounds;
 
 import mpicbg.imglib.IntegerLocalizable;
-import mpicbg.imglib.algorithm.math.MathLib;
 import mpicbg.imglib.container.ImgRandomAccess;
 import mpicbg.imglib.type.Type;
+import mpicbg.imglib.util.Util;
 
 /**
  * 
@@ -155,7 +155,7 @@ public abstract class AbstractOutOfBoundsMirror< T extends Type< T > > implement
 	public long getLongPosition( final int dim ){ return position[ dim ]; }
 	
 	@Override
-	public String toString() { return MathLib.printCoordinates( position ) + " = " + get(); }
+	public String toString() { return Util.printCoordinates( position ) + " = " + get(); }
 	
 	
 	/* RasterPositionable */

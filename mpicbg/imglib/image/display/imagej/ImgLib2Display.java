@@ -12,19 +12,23 @@ import mpicbg.imglib.type.numeric.real.FloatType;
 
 public class ImgLib2Display
 {
+	final public static int GRAY8 = ImagePlus.GRAY8;
+	final public static int GRAY32 = ImagePlus.GRAY32;
+	final public static int COLOR_RGB = ImagePlus.COLOR_RGB;
+
 	public static ImagePlus copyToImagePlus( final Img<FloatType> container, final int[] dim )
 	{
-		return createImagePlus( container, new VoidConverter<FloatType>(), "image", ImageJFunctions.GRAY32, getDim3( dim ), new int[ container.numDimensions() ] ); 		
+		return createImagePlus( container, new VoidConverter<FloatType>(), "image", GRAY32, getDim3( dim ), new int[ container.numDimensions() ] ); 		
 	}
 	
 	public static ImagePlus copyToImagePlus( final Img<FloatType> container )
 	{
-		return createImagePlus( container, new VoidConverter<FloatType>(), "image", ImageJFunctions.GRAY32, getDim3( getStandardDimensions() ), new int[ container.numDimensions() ] ); 
+		return createImagePlus( container, new VoidConverter<FloatType>(), "image", GRAY32, getDim3( getStandardDimensions() ), new int[ container.numDimensions() ] ); 
 	}
 	
 	public static <T extends Type<T>> ImagePlus copyToImagePlus( final Img<T> container, final Converter<T, FloatType> converter )
 	{
-		return createImagePlus( container, converter, "image", ImageJFunctions.GRAY32, getDim3( getStandardDimensions() ), new int[ container.numDimensions() ] ); 
+		return createImagePlus( container, converter, "image", GRAY32, getDim3( getStandardDimensions() ), new int[ container.numDimensions() ] ); 
 	}
 	
 	protected static <T extends Type<T>>ImagePlus createImagePlus( final Img<T> container, final Converter<T, FloatType> converter, 

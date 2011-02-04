@@ -30,8 +30,7 @@ package mpicbg.imglib.container.array;
 import mpicbg.imglib.container.AbstractImgOutOfBoundsRandomAccess;
 import mpicbg.imglib.container.Img;
 import mpicbg.imglib.outofbounds.OutOfBoundsFactory;
-import mpicbg.imglib.type.NativeTypeCapable;
-import mpicbg.imglib.type.Type;
+import mpicbg.imglib.type.NativeType;
 
 /**
  * 
@@ -39,7 +38,7 @@ import mpicbg.imglib.type.Type;
  *
  * @author Stephan Preibisch and Stephan Saalfeld
  */
-public class ArrayOutOfBoundsPositionableRasterSampler< T extends Type< T > & NativeTypeCapable< T > > extends AbstractImgOutOfBoundsRandomAccess< T >
+public class ArrayOutOfBoundsPositionableRasterSampler< T extends NativeType< T > > extends AbstractImgOutOfBoundsRandomAccess< T >
 {
 	final protected Array< T, ? > container;
 	

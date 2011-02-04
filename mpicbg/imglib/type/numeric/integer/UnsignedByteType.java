@@ -24,24 +24,20 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
+ *
+ * @author Stephan Preibisch & Stephan Saalfeld
  */
 package mpicbg.imglib.type.numeric.integer;
 
-import mpicbg.imglib.algorithm.math.MathLib;
-import mpicbg.imglib.container.NativeContainer;
-import mpicbg.imglib.container.NativeContainerFactory;
+import mpicbg.imglib.container.DirectAccessContainer;
+import mpicbg.imglib.container.DirectAccessContainerFactory;
 import mpicbg.imglib.container.basictypecontainer.ByteAccess;
+import mpicbg.imglib.util.Util;
 
-/**
- * 
- * 
- *
- * @author Stephan Preibisch and Stephan Saalfeld
- */
 public class UnsignedByteType extends GenericByteType<UnsignedByteType>
 {
 	// this is the constructor if you want it to read from an array
-	public UnsignedByteType( final NativeContainer<UnsignedByteType, ? extends ByteAccess> byteStorage ) { super( byteStorage ); }
+	public UnsignedByteType( final DirectAccessContainer<UnsignedByteType, ? extends ByteAccess> byteStorage ) { super( byteStorage ); }
 
 	// this is the constructor if you want it to be a variable
 	public UnsignedByteType( final int value ) { super( getCodedSignedByteChecked(value) ); }
@@ -62,10 +58,10 @@ public class UnsignedByteType extends GenericByteType<UnsignedByteType>
 	public static int getUnsignedByte( final byte signedByte ) { return signedByte & 0xff; }
 
 	@Override
-	public NativeContainer<UnsignedByteType, ? extends ByteAccess> createSuitableDirectAccessContainer( final NativeContainerFactory storageFactory, final int dim[] )
+	public DirectAccessContainer<UnsignedByteType, ? extends ByteAccess> createSuitableDirectAccessContainer( final DirectAccessContainerFactory storageFactory, final int dim[] )
 	{
 		// create the container
-		final NativeContainer<UnsignedByteType, ? extends ByteAccess> container = storageFactory.createByteInstance( dim, 1 );
+		final DirectAccessContainer<UnsignedByteType, ? extends ByteAccess> container = storageFactory.createByteInstance( dim, 1 );
 		
 		// create a Type that is linked to the container
 		final UnsignedByteType linkedType = new UnsignedByteType( container );
@@ -84,14 +80,14 @@ public class UnsignedByteType extends GenericByteType<UnsignedByteType>
 	{
 		
 		final int a = getUnsignedByte( getValue() );
-		setValue( getCodedSignedByte( MathLib.round( a * c ) ) );
+		setValue( getCodedSignedByte( Util.round( a * c ) ) );
 	}
 
 	@Override
 	public void mul( final double c )
 	{
 		final int a = getUnsignedByte( getValue() );
-		setValue( getCodedSignedByte( ( int )MathLib.round( a * c ) ) );
+		setValue( getCodedSignedByte( ( int )Util.round( a * c ) ) );
 	}
 
 	public int get(){ return getUnsignedByte( getValue() ); }

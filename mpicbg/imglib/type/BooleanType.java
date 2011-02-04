@@ -24,28 +24,21 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- */
-package mpicbg.imglib.type.numeric.real;
-
-/**
- * 
- * 
  *
- * @author Stephan Preibisch and Stephan Saalfeld
+ * @author Stephan Preibisch & Stephan Saalfeld
  */
-public class FloatTypeValue extends FloatType
+
+package mpicbg.imglib.type;
+
+public interface BooleanType<T extends BooleanType<T>> extends Type<T>, Comparable<T>
 {
-	float value;
+	public boolean get();
+	public void set( boolean value );
 	
-	// this is the constructor if you want it to be a variable
-	public FloatTypeValue( final float value )
-	{
-		this.value = value;
-	}
-
-	// this is the constructor if you want it to be a variable
-	public FloatTypeValue() { this( 0 ); }
-
-	final public float get(){ return value; }
-	final public void set( final float f ){ value = f; }
+	public void and( T c );
+	public void or( T c );
+	public void xor( T c );
+	
+	public void not();
+	
 }

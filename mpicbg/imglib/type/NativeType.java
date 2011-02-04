@@ -1,15 +1,45 @@
 package mpicbg.imglib.type;
 
 import mpicbg.imglib.container.ImgCursor;
+import mpicbg.imglib.container.NativeContainer;
+import mpicbg.imglib.container.NativeContainerFactory;
 import mpicbg.imglib.container.array.Array;
 import mpicbg.imglib.container.array.ArrayIterator;
 import mpicbg.imglib.container.basictypecontainer.DataAccess;
 import mpicbg.imglib.container.cell.Cell;
+import mpicbg.imglib.image.Image;
 import mpicbg.imglib.sampler.cell.CellBasicRasterIterator;
 import mpicbg.imglib.type.numeric.real.FloatType;
 
-public interface NativeType
+public interface NativeType<T extends NativeType<T>> extends Type<T>
 {	
+	public int getEntitiesPerPixel(); 
+
+	/**
+	 * The {@link Type} creates the DirectAccessContainer used for storing image
+	 * data; based on the given storage strategy and its size. It basically only
+	 * decides here which BasicType it uses (float, int, byte, bit, ...) and how
+	 * many entities per pixel it needs (e.g. 2 floats per pixel for a complex
+	 * number). This enables the separation of {@link Image} and the basic
+	 * types.
+	 * 
+	 * @param storageFactory
+	 *            - Which storage strategy is used
+	 * @param dim
+	 *            - the dimensions
+	 * @return - the instantiated DirectAccessContainer where only the
+	 *         {@link Type} knowns the BasicType it contains.
+	 */
+	public NativeContainer< T, ? > createSuitableDirectAccessContainer( final NativeContainerFactory< T > storageFactory, final long[] dim );
+	
+	/**
+	 * Creates a new {@link Type} which stores in the same physical array. This
+	 * is only used internally.
+	 * 
+	 * @return - a new {@link Type} instance working on the same
+	 *         {@link NativeContainer}
+	 */
+	public T duplicateTypeOnSameDirectAccessContainer();	
 	/**
 	 * This method is used by the {@link ImgCursor}s to update the data
 	 * current data array of the {@link Type}, for example when moving from one

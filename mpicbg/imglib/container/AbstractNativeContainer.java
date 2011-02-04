@@ -31,11 +31,9 @@ package mpicbg.imglib.container;
 
 import mpicbg.imglib.container.basictypecontainer.DataAccess;
 import mpicbg.imglib.type.NativeType;
-import mpicbg.imglib.type.NativeTypeCapable;
-import mpicbg.imglib.type.Type;
 
 public abstract class AbstractNativeContainer<
-		T extends Type< T > & NativeTypeCapable< T >,
+		T extends NativeType< T >,
 		A extends DataAccess >
 	extends AbstractImg< T >
 	implements NativeContainer< T, A >
@@ -58,7 +56,7 @@ public abstract class AbstractNativeContainer<
 	@Override
 	public T createLinkedType()
 	{
-		try{ return linkedType.duplicateTypeOnSameDirectAccessContainer( (NativeType)linkedType ); }
+		try{ return linkedType.duplicateTypeOnSameDirectAccessContainer(); }
 		catch ( NullPointerException e ){ return null; }
 	}
 }

@@ -8,10 +8,10 @@ import mpicbg.imglib.container.basictypecontainer.FloatAccess;
 import mpicbg.imglib.container.basictypecontainer.IntAccess;
 import mpicbg.imglib.container.basictypecontainer.LongAccess;
 import mpicbg.imglib.container.basictypecontainer.ShortAccess;
-import mpicbg.imglib.type.NativeTypeCapable;
+import mpicbg.imglib.type.NativeType;
 import mpicbg.imglib.type.Type;
 
-public abstract class NativeContainerFactory< T extends Type<T> & NativeTypeCapable< T > > extends ImgFactory< T >
+public abstract class NativeContainerFactory< T extends NativeType< T > > extends ImgFactory< T >
 {
 	/**
 	 * This class will ask the {@link Type} to create a 

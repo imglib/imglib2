@@ -29,8 +29,8 @@ package mpicbg.imglib.container;
 
 import mpicbg.imglib.IntegerInterval;
 import mpicbg.imglib.IntegerLocalizable;
-import mpicbg.imglib.algorithm.math.MathLib;
 import mpicbg.imglib.type.Type;
+import mpicbg.imglib.util.Util;
 
 /**
  * 
@@ -93,5 +93,5 @@ public abstract class AbstractImgLocalizableCursor< T extends Type< T > > extend
 	public long getLongPosition( final int dim ){ return position[ dim ]; }
 	
 	@Override
-	public String toString(){ return MathLib.printCoordinates( position ) + " = " + get(); }
+	public String toString(){ return Util.printCoordinates( position ) + " = " + get(); }
 }

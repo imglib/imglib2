@@ -12,7 +12,6 @@ import mpicbg.imglib.algorithm.fft.FourierTransform.PreProcessing;
 import mpicbg.imglib.algorithm.fft.FourierTransform.Rearrangement;
 import mpicbg.imglib.algorithm.floydsteinberg.FloydSteinbergDithering;
 import mpicbg.imglib.algorithm.gauss.DownSample;
-import mpicbg.imglib.algorithm.math.MathLib;
 import mpicbg.imglib.container.ImgFactory;
 import mpicbg.imglib.container.array.ArrayContainerFactory;
 import mpicbg.imglib.image.Image;
@@ -24,6 +23,7 @@ import mpicbg.imglib.type.logic.BitType;
 import mpicbg.imglib.type.numeric.RealType;
 import mpicbg.imglib.type.numeric.complex.ComplexFloatType;
 import mpicbg.imglib.type.numeric.real.FloatType;
+import mpicbg.imglib.util.Util;
 
 public class AlgorithmPerformance
 {
@@ -121,7 +121,7 @@ public class AlgorithmPerformance
 		
 		if ( show )
 			for ( PhaseCorrelationPeak peak : peaks )
-			System.out.println( MathLib.printCoordinates( peak.getPosition() ) + " " + peak.getCrossCorrelationPeak() );
+			System.out.println( Util.printCoordinates( peak.getPosition() ) + " " + peak.getCrossCorrelationPeak() );
 		
 		return pc.getProcessingTime();
 	}
@@ -262,7 +262,7 @@ public class AlgorithmPerformance
 		final int[] newSize = new int[ img.numDimensions() ];
 		
 		for ( int d = 0; d < img.numDimensions(); ++d )
-			newSize[ d ] = MathLib.round( img.getDimension( d ) * factor );
+			newSize[ d ] = Util.round( img.getDimension( d ) * factor );
 		
 		final CanvasImage<T> canvas = new CanvasImage<T>( img, newSize, new OutOfBoundsStrategyPeriodicFactory<T>() );
 		

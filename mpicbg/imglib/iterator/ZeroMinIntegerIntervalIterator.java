@@ -30,10 +30,10 @@ package mpicbg.imglib.iterator;
 import mpicbg.imglib.IntegerInterval;
 import mpicbg.imglib.IntegerLocalizable;
 import mpicbg.imglib.Iterator;
-import mpicbg.imglib.algorithm.math.MathLib;
 import mpicbg.imglib.container.Img;
 import mpicbg.imglib.container.ImgRandomAccess;
 import mpicbg.imglib.location.LocalizingFlatIntegerIntervalIterator;
+import mpicbg.imglib.util.Util;
 
 /**
  * Use this class to iterate a virtual rectangular raster in flat order, that
@@ -194,6 +194,6 @@ final public class ZeroMinIntegerIntervalIterator extends IntegerIntervalIterato
 	{
 		final int[] l = new int[ size.length ];
 		localize( l );
-		return MathLib.printCoordinates( l );
+		return Util.printCoordinates( l );
 	}
 }

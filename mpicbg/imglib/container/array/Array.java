@@ -35,8 +35,7 @@ import mpicbg.imglib.container.ImgRandomAccess;
 import mpicbg.imglib.container.basictypecontainer.DataAccess;
 import mpicbg.imglib.container.dynamic.DynamicContainer;
 import mpicbg.imglib.outofbounds.OutOfBoundsFactory;
-import mpicbg.imglib.type.NativeTypeCapable;
-import mpicbg.imglib.type.Type;
+import mpicbg.imglib.type.NativeType;
 
 /**
  * This {@link Img} stores an image in a single linear array of basic
@@ -50,7 +49,7 @@ import mpicbg.imglib.type.Type;
  *
  * @author Stephan Preibisch and Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-final public class Array< T extends Type< T > & NativeTypeCapable< T >, A extends DataAccess > extends AbstractNativeContainer< T, A >
+final public class Array< T extends NativeType< T >, A extends DataAccess > extends AbstractNativeContainer< T, A >
 {
 	final int[] step, dim;
 	

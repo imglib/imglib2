@@ -20,7 +20,7 @@
  */
 package mpicbg.imglib.algorithm.fft;
 
-import mpicbg.imglib.algorithm.math.MathLib;
+import mpicbg.imglib.util.Util;
 
 public class PhaseCorrelationPeak implements Comparable<PhaseCorrelationPeak>
 {
@@ -90,8 +90,8 @@ public class PhaseCorrelationPeak implements Comparable<PhaseCorrelationPeak>
 	public String toString()
 	{
 		if ( originalInvPCMPosition == null)
-			return MathLib.printCoordinates( position ) + ", phaseCorrelationPeak = " + phaseCorrelationPeak + ", crossCorrelationPeak = " + crossCorrelationPeak;
+			return Util.printCoordinates( position ) + ", phaseCorrelationPeak = " + phaseCorrelationPeak + ", crossCorrelationPeak = " + crossCorrelationPeak;
 		else
-			return MathLib.printCoordinates( position ) + " [" + MathLib.printCoordinates( originalInvPCMPosition ) + "], phaseCorrelationPeak = " + phaseCorrelationPeak + ", crossCorrelationPeak = " + crossCorrelationPeak; 
+			return Util.printCoordinates( position ) + " [" + Util.printCoordinates( originalInvPCMPosition ) + "], phaseCorrelationPeak = " + phaseCorrelationPeak + ", crossCorrelationPeak = " + crossCorrelationPeak; 
 	}
 }

@@ -38,7 +38,6 @@ import mpicbg.imglib.IterableRaster;
 import mpicbg.imglib.RandomAccessibleRaster;
 import mpicbg.imglib.Sampler;
 import mpicbg.imglib.SamplerFactory;
-import mpicbg.imglib.algorithm.math.MathLib;
 import mpicbg.imglib.container.Img;
 import mpicbg.imglib.container.ImgFactory;
 import mpicbg.imglib.container.ImgCursor;
@@ -52,6 +51,7 @@ import mpicbg.imglib.outofbounds.RasterOutOfBoundsFactory;
 import mpicbg.imglib.sampler.special.OrthoSliceIterator;
 import mpicbg.imglib.type.Type;
 import mpicbg.imglib.type.label.FakeType;
+import mpicbg.imglib.util.Util;
 
 /**
  * 
@@ -345,7 +345,7 @@ public class Image< T extends Type< T > > implements
 	@Override
 	public String toString()
 	{
-		return "Image '" + this.getName() + "', dim=" + MathLib.printCoordinates( getContainer().getDimensions() );
+		return "Image '" + this.getName() + "', dim=" + Util.printCoordinates( getContainer().getDimensions() );
 	}
 	
 	/**

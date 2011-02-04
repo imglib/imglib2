@@ -29,11 +29,11 @@ package mpicbg.imglib.location;
 
 import mpicbg.imglib.IntegerLocalizable;
 import mpicbg.imglib.Iterator;
-import mpicbg.imglib.algorithm.math.MathLib;
 import mpicbg.imglib.container.Img;
 import mpicbg.imglib.container.ImgRandomAccess;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.iterator.ZeroMinIntegerIntervalIterator;
+import mpicbg.imglib.util.Util;
 
 /**
  * Use this class to iterate a virtual rectangular raster in flat order, that
@@ -202,6 +202,6 @@ final public class LocalizingFlatIntegerIntervalIterator implements Iterator, In
 	{
 		final int[] l = new int[ dimensions.length ];
 		localize( l );
-		return MathLib.printCoordinates( l );
+		return Util.printCoordinates( l );
 	}
 }

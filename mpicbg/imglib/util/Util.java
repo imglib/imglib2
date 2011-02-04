@@ -14,71 +14,81 @@
  *
  * @author Stephan Preibisch & Stephan Saalfeld
  */
-package mpicbg.imglib.algorithm.math;
+package mpicbg.imglib.util;
 
-import javax.media.j3d.Transform3D;
+import java.util.List;
 
-import mpicbg.models.AffineModel3D;
-import mpicbg.models.CoordinateTransform;
+import mpicbg.imglib.type.Type;
+import mpicbg.imglib.type.numeric.ExponentialMathType;
 
-public class MathLib
-{	
+public class Util
+{
+	@SuppressWarnings("unchecked")
+	public static < T > T[] genericArray( final int length )
+	{
+		return (T[])( new Object[ length ] );
+	}
 	
+	public static double log2( final double value )
+	{
+		return Math.log( value ) / Math.log( 2.0 );
+	}
+
 	public static double[] getArrayFromValue( final double value, final int numDimensions )
 	{
 		final double[] values = new double[ numDimensions ];
-		
+
 		for ( int d = 0; d < numDimensions; ++d )
 			values[ d ] = value;
-		
+
 		return values;
 	}
 
 	public static float[] getArrayFromValue( final float value, final int numDimensions )
 	{
 		final float[] values = new float[ numDimensions ];
-		
+
 		for ( int d = 0; d < numDimensions; ++d )
 			values[ d ] = value;
-		
+
 		return values;
 	}
-	
+
 	public static int[] getArrayFromValue( final int value, final int numDimensions )
 	{
 		final int[] values = new int[ numDimensions ];
-		
+
 		for ( int d = 0; d < numDimensions; ++d )
 			values[ d ] = value;
-		
+
 		return values;
-	}	
+	}
 
 	final public static float computeDistance( final int[] position1, final int[] position2 )
 	{
 		float dist = 0;
-		
+
 		for ( int d = 0; d < position1.length; ++d )
 		{
 			final int pos = position2[ d ] - position1[ d ];
-			
+
 			dist += pos*pos;
 		}
-		
+
 		return (float)Math.sqrt( dist );
 	}
 
 	final public static float computeLength( final int[] position )
 	{
 		float dist = 0;
-		
+
 		for ( int d = 0; d < position.length; ++d )
 		{
 			final int pos = position[ d ];
-			
+
 			dist += pos*pos;
 		}
-		
+
 		return (float)Math.sqrt( dist );
 	}
 
@@ -116,11 +126,71 @@ public class MathLib
 		return median;
 	}
 
+	/**
+	 * Computes the percentile of a collection of doubles (percentile 0.5 roughly corresponds to median)
+	 * @param values - the values
+	 * @param percentile - the percentile [0...1]
+	 * @return the corresponding value
+	 */
+	public static double computePercentile( final double[] values, final double percentile )
+	{
+		final double temp[] = values.clone();
+		final int length = temp.length;
+		
+		quicksort( temp );
+		
+		return temp[ Math.min( length - 1, Math.max(0 ,(int)Math.round( (length - 1) * percentile ) ) ) ];
+	}
+
+	public static double computeAverageDouble( final List<Double> values )
+	{
+		final double size = values.size();
+		double avg = 0;
+
+		for ( final double v : values )
+			avg += v / size;
+
+		return avg;
+	}
+
+	public static float computeAverageFloat( final List<Float> values )
+	{
+		final double size = values.size();
+		double avg = 0;
+
+		for ( final double v : values )
+			avg += v / size;
+
+		return (float)avg;
+	}
+
+	public static float computeMinimum( final List<Float> values )
+	{
+		float min = Float.MAX_VALUE;
+
+		for ( final float v : values )
+			if ( v < min )
+				min = v;
+
+		return min;
+	}
+
+	public static float computeMaximum( final List<Float> values )
+	{
+		float max = -Float.MAX_VALUE;
+
+		for ( final float v : values )
+			if ( v > max )
+				max = v;
+
+		return max;
+	}
+
 	public static float computeAverage( final float[] values )
 	{
 		final double size = values.length;
 		double avg = 0;
-		
+
 		for ( final float v : values )
 			avg += v / size;
 
@@ -131,13 +201,35 @@ public class MathLib
 	{
 		final double size = values.length;
 		double avg = 0;
-		
+
 		for ( final double v : values )
 			avg += v / size;
 
 		return avg;
 	}
 
+	public static double computeMin( final double[] values )
+	{
+		double min = values[ 0 ];
+
+		for ( final double v : values )
+			if ( v < min )
+				min = v;
+
+		return min;
+	}
+
+	public static double computeMax( final double[] values )
+	{
+		double max = values[ 0 ];
+
+		for ( final double v : values )
+			if ( v > max )
+				max = v;
+
+		return max;
+	}
+	
 	public static float computeMedian( final float[] values )
 	{
 		final float temp[] = values.clone();
@@ -154,7 +246,7 @@ public class MathLib
 
 		return median;
 	}
-	
+
 	public static void quicksort( final long[] data, final int left, final int right )
 	{
 		if (data == null || data.length < 2)return;
@@ -178,6 +270,8 @@ public class MathLib
 		if (i < right) quicksort(data, i, right);
 	}
 
+	public static void quicksort( final double[] data ) { quicksort( data, 0, data.length - 1 ); }
+
 	public static void quicksort( final double[] data, final int left, final int right )
 	{
 		if (data == null || data.length < 2)return;
@@ -200,6 +294,8 @@ public class MathLib
 		if (left < j) quicksort(data, left, j);
 		if (i < right) quicksort(data, i, right);
 	}
+
+	public static void quicksort( final float[] data ) { quicksort( data, 0, data.length - 1 ); }
 
 	public static void quicksort( final float[] data, final int left, final int right )
 	{
@@ -287,35 +383,35 @@ public class MathLib
 	public static boolean isApproxEqual( final float a, final float b, final float threshold )
 	{
 		if (a==b)
-		  return true;		
+		  return true;
 		else if (a + threshold > b && a - threshold < b)
 		  return true;
 		else
 		  return false;
 	}
-	
+
 	public static boolean isApproxEqual( final double a, final double b, final double threshold )
 	{
 		if (a==b)
-		  return true;		
+		  return true;
 		else if (a + threshold > b && a - threshold < b)
 		  return true;
 		else
 		  return false;
 	}
-	
+
 	public static int round( final float value )
 	{
 		return (int)( value + (0.5f * Math.signum( value ) ) );
-	}	
+	}
 
 	public static long round( final double value )
 	{
 		return (long)( value + (0.5d * Math.signum( value ) ) );
 	}
-	
+
     /**
-     * This class creates a gaussian kernel
+     * This method creates a gaussian kernel
      *
      * @param sigma Standard Derivation of the gaussian function
      * @param normalize Normalize integral of gaussian function to 1 or not...
@@ -326,7 +422,7 @@ public class MathLib
     public static double[] createGaussianKernel1DDouble( final double sigma, final boolean normalize )
     {
             int size = 3;
-            double[] gaussianKernel;
+            final double[] gaussianKernel;
 
             if (sigma <= 0)
             {
@@ -335,14 +431,14 @@ public class MathLib
             }
             else
             {
-                    size = Math.max(3, (int) (2 * (int) (3 * sigma + 0.5) + 1));
+                    size = Math.max(3, (2 * (int) (3 * sigma + 0.5) + 1));
 
-                    double two_sq_sigma = 2 * sigma * sigma;
+                    final double two_sq_sigma = 2 * sigma * sigma;
                     gaussianKernel = new double[size];
 
                     for (int x = size / 2; x >= 0; --x)
                     {
-                            double val = Math.exp( -(x * x) / two_sq_sigma);
+                            final double val = Math.exp( -(x * x) / two_sq_sigma);
 
                             gaussianKernel[size / 2 - x] = val;
                             gaussianKernel[size / 2 + x] = val;
@@ -355,88 +451,196 @@ public class MathLib
                     for (double value : gaussianKernel)
                             sum += value;
 
-                    for (int i = 0; i < gaussianKernel.length; i++)
+                    for (int i = 0; i < gaussianKernel.length; ++i)
                             gaussianKernel[i] /= sum;
             }
 
             return gaussianKernel;
     }
-    
+
+    /**
+     * This method creates a gaussian kernel
+     *
+     * @param sigma Standard Derivation of the gaussian function in the desired {@link Type}
+     * @param normalize Normalize integral of gaussian function to 1 or not...
+     * @return T[] The gaussian kernel
+     *
+     * @author  Stephan Preibisch & Stephan Saalfeld
+     */
+    public static < T extends ExponentialMathType<T> > T[] createGaussianKernel1D( final T sigma, final boolean normalize )
+    {
+            final T[] gaussianKernel;
+            int kernelSize;
+
+            final T zero = sigma.createVariable();
+            final T two = sigma.createVariable();
+            final T one = sigma.createVariable();
+            final T minusOne = sigma.createVariable();
+            final T two_sq_sigma = zero.createVariable();
+            final T sum = sigma.createVariable();
+            final T value = sigma.createVariable();
+            final T xPos = sigma.createVariable();
+            final T cs = sigma.createVariable();
+
+            zero.setZero();
+            one.setOne();
+
+            two.setOne();
+            two.add( one );
+
+
+            minusOne.setZero();
+            minusOne.sub( one );
+
+            if ( sigma.compareTo( zero ) <= 0 )
+            {
+            		kernelSize = 3;
+                    gaussianKernel = genericArray( 3 ); //zero.createArray1D( 3 );
+                    gaussianKernel[ 1 ].set( one );
+            }
+            else
+            {
+                	//size = Math.max(3, (int) (2 * (int) (3 * sigma + 0.5) + 1));
+                	cs.set( sigma );
+                	cs.mul( 3.0 );
+                	cs.round();
+                	cs.mul( 2.0 );
+                	cs.add( one );
+
+                	kernelSize = Util.round( cs.getRealFloat() );
+
+                	// kernelsize has to be at least 3
+            		kernelSize = Math.max( 3, kernelSize );
+
+            		// kernelsize has to be odd
+            		if ( kernelSize % 2 == 0 )
+            			++kernelSize;
+
+                    // two_sq_sigma = 2 * sigma * sigma;
+                    two_sq_sigma.set( two );
+                    two_sq_sigma.mul( sigma );
+                    two_sq_sigma.mul( sigma );
+
+                    gaussianKernel = genericArray( kernelSize ); //zero.createArray1D( kernelSize );
+
+                    for ( int i = 0; i < gaussianKernel.length; ++i )
+                    	gaussianKernel[ i ] = zero.createVariable();
+
+                    // set the xPos to kernelSize/2
+                    xPos.setZero();
+                    for ( int x = 1; x <= kernelSize / 2; ++x )
+                    	xPos.add( one );
+
+
+                    for ( int x = kernelSize / 2; x >= 0; --x )
+                    {
+                        //final double val = Math.exp( -(x * x) / two_sq_sigma );
+                    	value.set( xPos );
+                    	value.mul( xPos );
+                    	value.mul( minusOne );
+                    	value.div( two_sq_sigma );
+                    	value.exp();
+
+                        gaussianKernel[ kernelSize / 2 - x ].set( value );
+                        gaussianKernel[ kernelSize / 2 + x ].set( value );
+
+                        xPos.sub( one );
+                    }
+            }
+
+            if (normalize)
+            {
+                    sum.setZero();
+
+                    for ( final T val : gaussianKernel )
+                            sum.add(  val );
+
+                    for (int i = 0; i < gaussianKernel.length; ++i)
+                            gaussianKernel[ i ].div( sum );
+            }
+
+            for ( int i = 0; i < gaussianKernel.length; ++i )
+            	System.out.println( gaussianKernel[ i ] );
+
+            return gaussianKernel;
+    }
+
+
     public static int getSuggestedKernelDiameter( final double sigma )
     {
         int size = 3;
 
         if ( sigma > 0 )
-            size = Math.max(3, (int) (2 * (int) (3 * sigma + 0.5) + 1));
-    	
+            size = Math.max(3, (2 * (int) (3 * sigma + 0.5) + 1));
+
         return size;
     }
-	
+
 	public static String printCoordinates( final float[] value )
 	{
 		String out = "(Array empty)";
-		
+
 		if ( value == null || value.length == 0 )
 			return out;
 		else
 			out = "(" + value[0];
-		
+
 		for ( int i = 1; i < value.length; i++ )
 			out += ", " + value[ i ];
-		
+
 		out += ")";
-		
+
 		return out;
 	}
 
 	public static String printCoordinates( final int[] value )
 	{
 		String out = "(Array empty)";
-		
+
 		if ( value == null || value.length == 0 )
 			return out;
 		else
 			out = "(" + value[0];
-		
+
 		for ( int i = 1; i < value.length; i++ )
 			out += ", " + value[ i ];
-		
+
 		out += ")";
-		
+
 		return out;
 	}
-	
+
 	public static String printCoordinates( final long[] value )
 	{
 		String out = "(Array empty)";
-		
+
 		if ( value == null || value.length == 0 )
 			return out;
 		else
 			out = "(" + value[0];
-		
+
 		for ( int i = 1; i < value.length; i++ )
 			out += ", " + value[ i ];
-		
+
 		out += ")";
-		
+
 		return out;
 	}
 
 	public static String printCoordinates( final boolean[] value )
 	{
 		String out = "(Array empty)";
-		
+
 		if ( value == null || value.length == 0 )
 			return out;
 		else
 			out = "(";
-		
+
 		if ( value[ 0 ] )
 			out += "1";
 		else
 			out += "0";
-		
+
 		for ( int i = 1; i < value.length; i++ )
 		{
 			out += ", ";
@@ -445,39 +649,12 @@ public class MathLib
 			else
 				out += "0";
 		}
-		
+
 		out += ")";
-		
+
 		return out;
 	}
-	
-	public static Transform3D getTransform3D( AffineModel3D model )
-	{
-		final Transform3D transform = new Transform3D();		
-		final float[] m = model.getMatrix( null );
-		
-		final float[] m2 = new float[ 16 ]; 			
-		transform.get( m2 );
-		
-		for ( int i = 0; i < m.length; ++i )
-			m2[ i ] = m[ i ];
-		
-		transform.set( m2 );
-		
-		return transform;
-	}
 
-	public static AffineModel3D getAffineModel3D( Transform3D transform )
-	{
-		final float[] m = new float[16];
-		transform.get( m );
-
-		AffineModel3D model = new AffineModel3D();		
-		model.set( m[0], m[1], m[2], m[3], m[4], m[5], m[6], m[7], m[8], m[9], m[10], m[11] );
-		
-		return model;
-	}
-	
 	public static int pow( final int a, final int b )
 	{
 		if (b == 0)
@@ -487,141 +664,102 @@ public class MathLib
 		else
 		{
 			int result = a;
-	
+
 			for (int i = 1; i < b; i++)
 				result *= a;
-	
+
 			return result;
 		}
 	}
-	
+
+	public static <T extends Type<T> & Comparable<T>> T max( final T value1, final T value2 )
+	{
+		if( value1.compareTo( value2 ) >= 0 )
+			return value1;
+		else
+			return value2;
+	}
+
+	public static <T extends Type<T> & Comparable<T>> T min( final T value1, final T value2 )
+	{
+		if( value1.compareTo( value2 ) <= 0 )
+			return value1;
+		else
+			return value2;
+	}
+
 	public static boolean[][] getRecursiveCoordinates( final int numDimensions )
 	{
-		boolean[][] positions = new boolean[ MathLib.pow( 2, numDimensions ) ][ numDimensions ];
-		
+		boolean[][] positions = new boolean[ Util.pow( 2, numDimensions ) ][ numDimensions ];
+
 		setCoordinateRecursive( numDimensions - 1, numDimensions, new int[ numDimensions ], positions );
-		
+
 		return positions;
 	}
 
 	/**
-	 * recursively get coordinates covering all binary combinations for the given dimensionality  
-	 * 
+	 * recursively get coordinates covering all binary combinations for the given dimensionality
+	 *
 	 * example for 3d:
-	 * 
+	 *
 	 * x y z index
 	 * 0 0 0 [0]
-	 * 1 0 0 [1] 
+	 * 1 0 0 [1]
 	 * 0 1 0 [2]
-	 * 1 1 0 [3] 
-	 * 0 0 1 [4] 
-	 * 1 0 1 [5] 
-	 * 0 1 1 [6] 
-	 * 1 1 1 [7] 
-	 * 
+	 * 1 1 0 [3]
+	 * 0 0 1 [4]
+	 * 1 0 1 [5]
+	 * 0 1 1 [6]
+	 * 1 1 1 [7]
+	 *
 	 * All typical call will look like that:
-	 * 
+	 *
 	 * boolean[][] positions = new boolean[ MathLib.pow( 2, numDimensions ) ][ numDimensions ];
-	 * MathLib.setCoordinateRecursive( numDimensions - 1, numDimensions, new int[ numDimensions ], positions ); 
-	 * 
+	 * MathLib.setCoordinateRecursive( numDimensions - 1, numDimensions, new int[ numDimensions ], positions );
+	 *
 	 * @param dimension - recusively changed current dimension, init with numDimensions - 1
 	 * @param numDimensions - the number of dimensions
 	 * @param location - recursively changed current state, init with new int[ numDimensions ]
 	 * @param result - where the result will be stored when finished, needes a boolean[ MathLib.pow( 2, numDimensions ) ][ numDimensions ]
 	 */
 	public static void setCoordinateRecursive( final int dimension, final int numDimensions, final int[] location, final boolean[][] result )
-	{		
+	{
 		final int[] newLocation0 = new int[ numDimensions ];
 		final int[] newLocation1 = new int[ numDimensions ];
-		
+
 		for ( int d = 0; d < numDimensions; d++ )
 		{
 			newLocation0[ d ] = location[ d ];
 			newLocation1[ d ] = location[ d ];
 		}
-		
+
 		newLocation0[ dimension ] = 0;
 		newLocation1[ dimension ] = 1;
-		
+
 		if ( dimension == 0 )
 		{
 			// compute the index in the result array ( binary to decimal conversion )
 			int index0 = 0, index1 = 0;
-			
+
 			for ( int d = 0; d < numDimensions; d++ )
 			{
 				index0 += newLocation0[ d ] * pow( 2, d );
 				index1 += newLocation1[ d ] * pow( 2, d );
 			}
-			
+
 			// fill the result array
 			for ( int d = 0; d < numDimensions; d++ )
 			{
 				result[ index0 ][ d ] = (newLocation0[ d ] == 1);
 				result[ index1 ][ d ] = (newLocation1[ d ] == 1);
-			}			
+			}
 		}
 		else
-		{			
+		{
 			setCoordinateRecursive( dimension - 1, numDimensions, newLocation0, result );
 			setCoordinateRecursive( dimension - 1, numDimensions, newLocation1, result );
 		}
-			
+
 	}
 
-	/**
-	 * Return the min and max coordinate of the transformed image in each dimension
-	 * relative to the dimensions of the image it is based on. This is important 
-	 * for computing bounding boxes.
-	 * 
-	 * @param dimensions - the dimensions of the image
-	 * @param transform - the transformation
-	 * 
-	 * @return - float[ numDimensions ][ 2 ], in the respective dimension d 
-	 * float[ d ][ 0 ] is min, float[ d ][ 1 ] is max
-	 */
-	public static float[][] getMinMaxDim( final int[] dimensions, final CoordinateTransform transform )
-	{
-		final int numDimensions = dimensions.length;
-		
-		final float[] tmp = new float[ numDimensions ];
-		final float[][] minMaxDim = new float[ numDimensions ][ 2 ];
-		
-		for ( int d = 0; d < numDimensions; ++d )
-		{
-			minMaxDim[ d ][ 0 ] = Float.MAX_VALUE;
-			minMaxDim[ d ][ 1 ] = -Float.MAX_VALUE;
-		}
-		
-		// recursively get all corner points of the image, assuming they will still be the extremum points
-		// in the transformed image
-		final boolean[][] positions = new boolean[ MathLib.pow( 2, numDimensions ) ][ numDimensions ];
-		MathLib.setCoordinateRecursive( numDimensions - 1, numDimensions, new int[ numDimensions ], positions );
-		
-		// get the min and max location for each dimension independently  
-		for ( int i = 0; i < positions.length; ++i )
-		{
-			for ( int d = 0; d < numDimensions; ++d )
-			{
-				if ( positions[ i ][ d ])
-					tmp[ d ] = dimensions[ d ];
-				else
-					tmp[ d ] = 0;
-			}
-			
-			transform.applyInPlace( tmp );
-			
-			for ( int d = 0; d < numDimensions; ++d )
-			{				
-				if ( tmp[ d ] < minMaxDim[ d ][ 0 ]) 
-					minMaxDim[ d ][ 0 ] = tmp[ d ];
-
-				if ( tmp[ d ] > minMaxDim[ d ][ 1 ]) 
-					minMaxDim[ d ][ 1 ] = tmp[ d ];
-			}				
-		}
-		
-		return minMaxDim;
-	}
-	
 }
