@@ -37,7 +37,7 @@ import mpicbg.imglib.util.Util;
 public class UnsignedByteType extends GenericByteType<UnsignedByteType>
 {
 	// this is the constructor if you want it to read from an array
-	public UnsignedByteType( final DirectAccessContainer<UnsignedByteType, ? extends ByteAccess> byteStorage ) { super( byteStorage ); }
+	public UnsignedByteType( final NativeContainer<UnsignedByteType, ? extends ByteAccess> byteStorage ) { super( byteStorage ); }
 
 	// this is the constructor if you want it to be a variable
 	public UnsignedByteType( final int value ) { super( getCodedSignedByteChecked(value) ); }
@@ -58,22 +58,22 @@ public class UnsignedByteType extends GenericByteType<UnsignedByteType>
 	public static int getUnsignedByte( final byte signedByte ) { return signedByte & 0xff; }
 
 	@Override
-	public DirectAccessContainer<UnsignedByteType, ? extends ByteAccess> createSuitableDirectAccessContainer( final DirectAccessContainerFactory storageFactory, final int dim[] )
+	public NativeContainer<UnsignedByteType, ? extends ByteAccess> createSuitableNativeContainer( final NativeContainerFactory storageFactory, final int dim[] )
 	{
 		// create the container
-		final DirectAccessContainer<UnsignedByteType, ? extends ByteAccess> container = storageFactory.createByteInstance( dim, 1 );
+		final NativeContainer<UnsignedByteType, ? extends ByteAccess> container = storageFactory.createByteInstance( dim, 1 );
 		
 		// create a Type that is linked to the container
 		final UnsignedByteType linkedType = new UnsignedByteType( container );
 		
-		// pass it to the DirectAccessContainer
+		// pass it to the NativeContainer
 		container.setLinkedType( linkedType );
 		
 		return container;
 	}
 	
 	@Override
-	public UnsignedByteType duplicateTypeOnSameDirectAccessContainer() { return new UnsignedByteType( storage ); }
+	public UnsignedByteType duplicateTypeOnSameNativeContainer() { return new UnsignedByteType( storage ); }
 	
 	@Override
 	public void mul( final float c )

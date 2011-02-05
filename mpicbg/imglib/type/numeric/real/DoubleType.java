@@ -29,8 +29,8 @@
  */
 package mpicbg.imglib.type.numeric.real;
 
-import mpicbg.imglib.container.DirectAccessContainer;
-import mpicbg.imglib.container.DirectAccessContainerFactory;
+import mpicbg.imglib.container.NativeContainer;
+import mpicbg.imglib.container.NativeContainerFactory;
 import mpicbg.imglib.container.basictypecontainer.DoubleAccess;
 import mpicbg.imglib.container.basictypecontainer.array.DoubleArray;
 import mpicbg.imglib.cursor.Cursor;
@@ -40,14 +40,14 @@ import mpicbg.imglib.util.Util;
 
 public class DoubleType extends RealTypeImpl<DoubleType> implements RealType<DoubleType>, ExponentialMathType<DoubleType>
 {
-	// the DirectAccessContainer
-	final DirectAccessContainer<DoubleType, ? extends DoubleAccess> storage;
+	// the NativeContainer
+	final NativeContainer<DoubleType, ? extends DoubleAccess> storage;
 	
-	// the (sub)DirectAccessContainer that holds the information 
+	// the (sub)NativeContainer that holds the information 
 	DoubleAccess b;
 	
 	// this is the constructor if you want it to read from an array
-	public DoubleType( DirectAccessContainer<DoubleType, ? extends DoubleAccess> doubleStorage )
+	public DoubleType( NativeContainer<DoubleType, ? extends DoubleAccess> doubleStorage )
 	{
 		storage = doubleStorage;
 	}
@@ -64,15 +64,15 @@ public class DoubleType extends RealTypeImpl<DoubleType> implements RealType<Dou
 	public DoubleType() { this( 0 ); }
 
 	@Override
-	public DirectAccessContainer<DoubleType, ? extends DoubleAccess> createSuitableDirectAccessContainer( final DirectAccessContainerFactory storageFactory, final int dim[] )
+	public NativeContainer<DoubleType, ? extends DoubleAccess> createSuitableNativeContainer( final NativeContainerFactory storageFactory, final int dim[] )
 	{
 		// create the container
-		final DirectAccessContainer<DoubleType, ? extends DoubleAccess> container = storageFactory.createDoubleInstance( dim, 1 );
+		final NativeContainer<DoubleType, ? extends DoubleAccess> container = storageFactory.createDoubleInstance( dim, 1 );
 		
 		// create a Type that is linked to the container
 		final DoubleType linkedType = new DoubleType( container );
 		
-		// pass it to the DirectAccessContainer
+		// pass it to the NativeContainer
 		container.setLinkedType( linkedType );
 		
 		return container;
@@ -85,7 +85,7 @@ public class DoubleType extends RealTypeImpl<DoubleType> implements RealType<Dou
 	}
 
 	@Override
-	public DoubleType duplicateTypeOnSameDirectAccessContainer() { return new DoubleType( storage ); }
+	public DoubleType duplicateTypeOnSameNativeContainer() { return new DoubleType( storage ); }
 	
 	public double get(){ return b.getValue( i ); }
 	public void set( final double f ){ b.setValue( i, f ); }

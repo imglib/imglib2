@@ -29,8 +29,8 @@
  */
 package mpicbg.imglib.type.label;
 
-import mpicbg.imglib.container.DirectAccessContainer;
-import mpicbg.imglib.container.DirectAccessContainerFactory;
+import mpicbg.imglib.container.NativeContainer;
+import mpicbg.imglib.container.NativeContainerFactory;
 import mpicbg.imglib.container.basictypecontainer.CharAccess;
 import mpicbg.imglib.container.basictypecontainer.array.CharArray;
 import mpicbg.imglib.cursor.Cursor;
@@ -45,14 +45,14 @@ public class BasePairCharType extends TypeImpl<BasePairCharType> implements Base
 	@Override
 	public int getEntitiesPerPixel() { return 1; } 
 
-	// the DirectAccessContainer
-	final DirectAccessContainer<BasePairCharType, ? extends CharAccess> storage;
+	// the NativeContainer
+	final NativeContainer<BasePairCharType, ? extends CharAccess> storage;
 	
-	// the (sub)DirectAccessContainer that holds the information 
+	// the (sub)NativeContainer that holds the information 
 	CharAccess b;
 	
 	// this is the constructor if you want it to read from an array
-	public BasePairCharType( DirectAccessContainer<BasePairCharType, ? extends CharAccess> charStorage )
+	public BasePairCharType( NativeContainer<BasePairCharType, ? extends CharAccess> charStorage )
 	{
 		storage = charStorage;
 	}
@@ -77,15 +77,15 @@ public class BasePairCharType extends TypeImpl<BasePairCharType> implements Base
 	public BasePairCharType() { this( Base.N ); }
 
 	@Override
-	public DirectAccessContainer<BasePairCharType, ? extends CharAccess> createSuitableDirectAccessContainer( final DirectAccessContainerFactory storageFactory, final int dim[] )
+	public NativeContainer<BasePairCharType, ? extends CharAccess> createSuitableNativeContainer( final NativeContainerFactory storageFactory, final int dim[] )
 	{
 		// create the container
-		final DirectAccessContainer<BasePairCharType, ? extends CharAccess> container = storageFactory.createCharInstance( dim, 1 );
+		final NativeContainer<BasePairCharType, ? extends CharAccess> container = storageFactory.createCharInstance( dim, 1 );
 		
 		// create a Type that is linked to the container
 		final BasePairCharType linkedType = new BasePairCharType( container );
 		
-		// pass it to the DirectAccessContainer
+		// pass it to the NativeContainer
 		container.setLinkedType( linkedType );
 		
 		return container;
@@ -98,7 +98,7 @@ public class BasePairCharType extends TypeImpl<BasePairCharType> implements Base
 	}
 	
 	@Override
-	public BasePairCharType duplicateTypeOnSameDirectAccessContainer() { return new BasePairCharType( storage ); }
+	public BasePairCharType duplicateTypeOnSameNativeContainer() { return new BasePairCharType( storage ); }
 
 	@Override
 	public BasePairTypeDisplay<BasePairCharType> getDefaultDisplay( final Image<BasePairCharType> image )

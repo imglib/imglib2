@@ -45,7 +45,7 @@ public class ByteType extends GenericByteType<ByteType>
 	public ByteType() { super( (byte)0 ); }
 
 	@Override
-	public NativeContainer<ByteType, ? extends ByteAccess> createSuitableDirectAccessContainer( final NativeContainerFactory<ByteType> storageFactory, final long dim[] )
+	public NativeContainer<ByteType, ? extends ByteAccess> createSuitableNativeContainer( final NativeContainerFactory<ByteType> storageFactory, final long dim[] )
 	{
 		// create the container
 		final NativeContainer<ByteType, ? extends ByteAccess> container = storageFactory.createByteInstance( new ByteType(), dim, 1 );
@@ -53,14 +53,14 @@ public class ByteType extends GenericByteType<ByteType>
 		// create a Type that is linked to the container
 		final ByteType linkedType = new ByteType( container );
 		
-		// pass it to the DirectAccessContainer
+		// pass it to the NativeContainer
 		container.setLinkedType( linkedType );
 		
 		return container;
 	}
 	
 	@Override
-	public ByteType duplicateTypeOnSameDirectAccessContainer() { return new ByteType( storage ); }
+	public ByteType duplicateTypeOnSameNativeContainer() { return new ByteType( storage ); }
 
 	public byte get() { return getValue(); }
 	public void set( final byte b ) { setValue( b ); }

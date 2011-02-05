@@ -39,10 +39,10 @@ public abstract class GenericByteType<T extends GenericByteType<T>> extends Inte
 {
 	int i = 0;
 
-	// the DirectAccessContainer
+	// the NativeContainer
 	final NativeContainer<T, ? extends ByteAccess> storage;
 	
-	// the (sub)DirectAccessContainer that holds the information 
+	// the (sub)NativeContainer that holds the information 
 	ByteAccess b;
 	
 	// this is the constructor if you want it to read from an array
