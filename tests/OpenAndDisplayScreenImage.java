@@ -1,5 +1,8 @@
 package tests;
 
+import ij.ImageJ;
+import ij.ImagePlus;
+import ij.process.ColorProcessor;
 import mpicbg.imglib.container.Img;
 import mpicbg.imglib.container.array.ArrayContainerFactory;
 import mpicbg.imglib.display.ARGBScreenImage;
@@ -8,9 +11,6 @@ import mpicbg.imglib.display.XYProjector;
 import mpicbg.imglib.io.LOCI;
 import mpicbg.imglib.type.numeric.ARGBType;
 import mpicbg.imglib.type.numeric.real.FloatType;
-import ij.ImageJ;
-import ij.ImagePlus;
-import ij.process.ColorProcessor;
 
 public class OpenAndDisplayScreenImage
 {	
@@ -22,13 +22,24 @@ public class OpenAndDisplayScreenImage
 		
 		final ARGBScreenImage screenImage = new ARGBScreenImage( ( int )img.size( 0 ), ( int )img.size( 1 ) );
 		final XYProjector< FloatType, ARGBType > projector = new XYProjector< FloatType, ARGBType >( img, screenImage, new RealARGBConverter( 0, 127 ) );
-		projector.setPosition( 40, 2 );
+		
+		final ColorProcessor cp = new ColorProcessor( screenImage.image() );
+		final ImagePlus imp = new ImagePlus( "argbScreenProjection", cp );
+		imp.show();
+
+		for ( int k = 0; k < 3; ++k ) 
+			for ( int i = 0; i < img.size( 2 ); ++i )
+			{
+				projector.setPosition( i, 2 );
+				projector.map();
+				final ColorProcessor cpa = new ColorProcessor( screenImage.image() );
+				imp.setProcessor( cpa );
+				imp.updateAndDraw();
+			}
 		
 		projector.map();
 		
-		final ColorProcessor cp = new ColorProcessor( screenImage.image() );
-		
-		new ImagePlus( "argbScreenProjection", cp ).show();
-
+		projector.setPosition( 40, 2 );
+		projector.map();
 	}
 }
