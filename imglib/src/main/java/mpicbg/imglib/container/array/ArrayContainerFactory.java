@@ -1,10 +1,10 @@
 /**
  * Copyright (c) 2009--2010, Stephan Preibisch & Stephan Saalfeld
  * All rights reserved.
- *
+ * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- *
+ * 
  * Redistributions of source code must retain the above copyright notice, this
  * list of conditions and the following disclaimer.  Redistributions in binary
  * form must reproduce the above copyright notice, this list of conditions and
@@ -12,7 +12,7 @@
  * provided with the distribution.  Neither the name of the Fiji project nor
  * the names of its contributors may be used to endorse or promote products
  * derived from this software without specific prior written permission.
- *
+ * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -24,14 +24,11 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- *
- * @author Stephan Preibisch & Stephan Saalfeld
  */
 package mpicbg.imglib.container.array;
 
-import mpicbg.imglib.container.DirectAccessContainer;
-import mpicbg.imglib.container.DirectAccessContainerFactory;
-import mpicbg.imglib.container.PixelGridContainerImpl;
+import mpicbg.imglib.container.AbstractImg;
+import mpicbg.imglib.container.NativeContainerFactory;
 import mpicbg.imglib.container.basictypecontainer.BitAccess;
 import mpicbg.imglib.container.basictypecontainer.ByteAccess;
 import mpicbg.imglib.container.basictypecontainer.CharAccess;
@@ -47,157 +44,88 @@ import mpicbg.imglib.container.basictypecontainer.array.DoubleArray;
 import mpicbg.imglib.container.basictypecontainer.array.FloatArray;
 import mpicbg.imglib.container.basictypecontainer.array.IntArray;
 import mpicbg.imglib.container.basictypecontainer.array.LongArray;
-import mpicbg.imglib.container.basictypecontainer.array.NIOByteArray;
-import mpicbg.imglib.container.basictypecontainer.array.NIOCharArray;
-import mpicbg.imglib.container.basictypecontainer.array.NIODoubleArray;
-import mpicbg.imglib.container.basictypecontainer.array.NIOFloatArray;
-import mpicbg.imglib.container.basictypecontainer.array.NIOIntArray;
-import mpicbg.imglib.container.basictypecontainer.array.NIOLongArray;
-import mpicbg.imglib.container.basictypecontainer.array.NIOShortArray;
 import mpicbg.imglib.container.basictypecontainer.array.ShortArray;
-import mpicbg.imglib.type.Type;
+import mpicbg.imglib.type.NativeType;
 
-public class ArrayContainerFactory extends DirectAccessContainerFactory
+/**
+ * 
+ * 
+ * 
+ * @author Stephan Preibisch and Stephan Saalfeld
+ */
+public class ArrayContainerFactory< T extends NativeType<T> > extends NativeContainerFactory< T >
 {
-	protected boolean useNIO = false;
-
-	public void setNIOUse ( final boolean useNIO ) {
-		this.useNIO = useNIO;
-	}
-	public boolean useNIO() { return useNIO; }
-
-	@Override
-	public <T extends Type<T>> DirectAccessContainer<T, BitAccess> createBitInstance( int[] dimensions, final int entitiesPerPixel)
+	public static int numEntitiesRangeCheck( final long[] dimensions, final int entitiesPerPixel )
 	{
-		if (useNIO) throw new IllegalStateException("Cannot create NIO bit arrays");
+		final long numEntities = AbstractImg.numElements( dimensions ) * entitiesPerPixel;
 
-		final int numPixels = PixelGridContainerImpl.getNumEntities(dimensions, entitiesPerPixel);
+		if ( numEntities > ( long ) Integer.MAX_VALUE )
+			throw new RuntimeException( "Number of elements in Container too big, use for example CellContainer instead: " + numEntities + " > " + Integer.MAX_VALUE );
 
-		BitAccess access = new BitArray(numPixels);
-		if ( dimensions.length == 3 && useOptimizedContainers )
-			return new Array3D<T, BitAccess>( this, access, dimensions[0], dimensions[1], dimensions[2], entitiesPerPixel );
-		else
-			return new Array<T, BitAccess>( this, access, dimensions, entitiesPerPixel );
+		return ( int ) numEntities;
 	}
 
 	@Override
-	public <T extends Type<T>> DirectAccessContainer<T, ByteAccess> createByteInstance( final int[] dimensions, final int entitiesPerPixel)
+	public Array< T, BitAccess > createBitInstance( final T type, long[] dimensions, final int entitiesPerPixel )
 	{
-		final int numPixels = PixelGridContainerImpl.getNumEntities(dimensions, entitiesPerPixel);
+		final int numEntities = numEntitiesRangeCheck( dimensions, entitiesPerPixel );
 
-		ByteAccess access;
-		if (useNIO) access = new NIOByteArray(numPixels);
-		else access = new ByteArray(numPixels);
-		if ( dimensions.length == 3 && useOptimizedContainers )
-			return new Array3D<T, ByteAccess>( this, access, dimensions[0], dimensions[1], dimensions[2], entitiesPerPixel );
-		else
-			return new Array<T, ByteAccess>( this, access, dimensions, entitiesPerPixel );
+		return new Array< T, BitAccess >( type, new BitArray( numEntities ), dimensions, entitiesPerPixel );
 	}
 
 	@Override
-	public <T extends Type<T>> DirectAccessContainer<T, CharAccess> createCharInstance(int[] dimensions, final int entitiesPerPixel)
+	public Array< T, ByteAccess > createByteInstance( final T type, final long[] dimensions, final int entitiesPerPixel )
 	{
-		final int numPixels = PixelGridContainerImpl.getNumEntities(dimensions, entitiesPerPixel);
+		final int numEntities = numEntitiesRangeCheck( dimensions, entitiesPerPixel );
 
-		CharAccess access;
-		if (useNIO) access = new NIOCharArray(numPixels);
-		else access = new CharArray(numPixels);
-
-		if ( dimensions.length == 3 && useOptimizedContainers )
-			return new Array3D<T, CharAccess>( this, access, dimensions[0], dimensions[1], dimensions[2], entitiesPerPixel );
-		else
-			return new Array<T, CharAccess>( this, access, dimensions, entitiesPerPixel );
+		return new Array< T, ByteAccess >( type, new ByteArray( numEntities ), dimensions, entitiesPerPixel );
 	}
 
 	@Override
-	public <T extends Type<T>> DirectAccessContainer<T, DoubleAccess> createDoubleInstance(int[] dimensions, final int entitiesPerPixel)
+	public Array< T, CharAccess > createCharInstance( final T type, long[] dimensions, final int entitiesPerPixel )
 	{
-		final int numPixels = PixelGridContainerImpl.getNumEntities(dimensions, entitiesPerPixel);
+		final int numEntities = numEntitiesRangeCheck( dimensions, entitiesPerPixel );
 
-		DoubleAccess access;
-		if (useNIO) access = new NIODoubleArray(numPixels);
-		else access = new DoubleArray(numPixels);
-		if ( dimensions.length == 3 && useOptimizedContainers )
-			return new Array3D<T, DoubleAccess>( this, access, dimensions[0], dimensions[1], dimensions[2], entitiesPerPixel );
-		else
-			return new Array<T, DoubleAccess>( this, access, dimensions, entitiesPerPixel );
+		return new Array< T, CharAccess >( type, new CharArray( numEntities ), dimensions, entitiesPerPixel );
 	}
 
 	@Override
-	public <T extends Type<T>> DirectAccessContainer<T, FloatAccess> createFloatInstance(int[] dimensions, final int entitiesPerPixel)
+	public Array< T, DoubleAccess > createDoubleInstance( final T type, long[] dimensions, final int entitiesPerPixel )
 	{
-		final int numPixels = PixelGridContainerImpl.getNumEntities(dimensions, entitiesPerPixel);
+		final int numEntities = numEntitiesRangeCheck( dimensions, entitiesPerPixel );
 
-		FloatAccess access;
-		if (useNIO) access = new NIOFloatArray(numPixels);
-		else access = new FloatArray(numPixels);
-		if ( dimensions.length == 3 && useOptimizedContainers )
-			return new Array3D<T, FloatAccess>( this, access, dimensions[0], dimensions[1], dimensions[2], entitiesPerPixel );
-		else
-			return new Array<T, FloatAccess>( this, access, dimensions, entitiesPerPixel );
+		return new Array< T, DoubleAccess >( type, new DoubleArray( numEntities ), dimensions, entitiesPerPixel );
 	}
 
 	@Override
-	public <T extends Type<T>> DirectAccessContainer<T, IntAccess> createIntInstance(int[] dimensions, final int entitiesPerPixel)
+	public Array< T, FloatAccess > createFloatInstance( final T type, long[] dimensions, final int entitiesPerPixel )
 	{
-		final int numPixels = PixelGridContainerImpl.getNumEntities(dimensions, entitiesPerPixel);
+		final int numEntities = numEntitiesRangeCheck( dimensions, entitiesPerPixel );
 
-		IntAccess access;
-		if (useNIO) access = new NIOIntArray(numPixels);
-		else access = new IntArray(numPixels);
-		if ( dimensions.length == 3 && useOptimizedContainers )
-			return new Array3D<T, IntAccess>( this, access, dimensions[0], dimensions[1], dimensions[2], entitiesPerPixel );
-		else
-			return new Array<T, IntAccess>( this, access, dimensions, entitiesPerPixel );
+		return new Array< T, FloatAccess >( type, new FloatArray( numEntities ), dimensions, entitiesPerPixel );
 	}
 
 	@Override
-	public <T extends Type<T>> DirectAccessContainer<T, LongAccess> createLongInstance(int[] dimensions, final int entitiesPerPixel)
+	public Array< T, IntAccess > createIntInstance( final T type, long[] dimensions, final int entitiesPerPixel )
 	{
-		final int numPixels = PixelGridContainerImpl.getNumEntities(dimensions, entitiesPerPixel);
+		final int numEntities = numEntitiesRangeCheck( dimensions, entitiesPerPixel );
 
-		LongAccess access;
-		if (useNIO) access = new NIOLongArray(numPixels);
-		else access = new LongArray(numPixels);
-		if ( dimensions.length == 3 && useOptimizedContainers )
-			return new Array3D<T, LongAccess>( this, access, dimensions[0], dimensions[1], dimensions[2], entitiesPerPixel );
-		else
-			return new Array<T, LongAccess>( this, access, dimensions, entitiesPerPixel );
+		return new Array< T, IntAccess >( type, new IntArray( numEntities ), dimensions, entitiesPerPixel );
 	}
 
 	@Override
-	public <T extends Type<T>> DirectAccessContainer<T, ShortAccess> createShortInstance(int[] dimensions, final int entitiesPerPixel)
+	public Array< T, LongAccess > createLongInstance( final T type, long[] dimensions, final int entitiesPerPixel )
 	{
-		final int numPixels = PixelGridContainerImpl.getNumEntities(dimensions, entitiesPerPixel);
+		final int numEntities = numEntitiesRangeCheck( dimensions, entitiesPerPixel );
 
-		ShortAccess access;
-		if (useNIO) access = new NIOShortArray(numPixels);
-		else access = new ShortArray(numPixels);
-		if ( dimensions.length == 3 && useOptimizedContainers )
-			return new Array3D<T, ShortAccess>( this, access, dimensions[0], dimensions[1], dimensions[2], entitiesPerPixel );
-		else
-			return new Array<T, ShortAccess>( this, access, dimensions, entitiesPerPixel );
+		return new Array< T, LongAccess >( type, new LongArray( numEntities ), dimensions, entitiesPerPixel );
 	}
 
 	@Override
-	public String getErrorMessage()
+	public Array< T, ShortAccess > createShortInstance( final T type, long[] dimensions, final int entitiesPerPixel )
 	{
-		// TODO Auto-generated method stub
-		return null;
+		final int numEntities = numEntitiesRangeCheck( dimensions, entitiesPerPixel );
+
+		return new Array< T, ShortAccess >( type, new ShortArray( numEntities ), dimensions, entitiesPerPixel );
 	}
-
-	@Override
-	public void printProperties()
-	{
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void setParameters(String configuration)
-	{
-		// TODO Auto-generated method stub
-
-	}
-
 }

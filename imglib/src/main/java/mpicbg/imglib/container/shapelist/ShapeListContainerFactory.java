@@ -27,13 +27,13 @@
  */
 package mpicbg.imglib.container.shapelist;
 
-import mpicbg.imglib.container.Container;
-import mpicbg.imglib.container.ContainerFactory;
-import mpicbg.imglib.container.DirectAccessContainerFactory;
+import mpicbg.imglib.container.Img;
+import mpicbg.imglib.container.ImgFactory;
+import mpicbg.imglib.container.NativeContainerFactory;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.type.Type;
 
-public class ShapeListContainerFactory extends ContainerFactory
+public class ShapeListContainerFactory extends ImgFactory
 {
 	boolean useCaching = false;
 	int cacheSize = 32;
@@ -52,11 +52,11 @@ public class ShapeListContainerFactory extends ContainerFactory
 	public int getCacheSize() { return cacheSize; }
 
 	/**
-	 * This method is called by {@link Image}. The {@link ContainerFactory} can decide how to create the {@link Container},
-	 * if it is for example a {@link DirectAccessContainerFactory} it will ask the {@link Type} to create a 
-	 * suitable {@link Container} for the {@link Type} and the dimensionality
+	 * This method is called by {@link Image}. The {@link ImgFactory} can decide how to create the {@link Img},
+	 * if it is for example a {@link NativeContainerFactory} it will ask the {@link Type} to create a 
+	 * suitable {@link Img} for the {@link Type} and the dimensionality
 	 * 
-	 * @return {@link Container} - the instantiated Container
+	 * @return {@link Img} - the instantiated Container
 	 */
 	public <T extends Type<T>> ShapeList<T> createContainer( final int[] dim, final T type )
 	{

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2009--2010, Stephan Preibisch & Albert Cardona
+ * Copyright (c) 2009--2010, Albert Cardona, Stephan Preibisch & Stephan Saalfeld
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -24,34 +24,36 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- *
- * @author Stephan Preibisch & Albert Cardona
  */
 package mpicbg.imglib.container.shapelist;
 
-import mpicbg.imglib.cursor.shapelist.ShapeListCache;
-import mpicbg.imglib.cursor.shapelist.ShapeListCacheFIFO;
-import mpicbg.imglib.cursor.shapelist.ShapeListCachedLocalizableByDimCursor;
-import mpicbg.imglib.cursor.shapelist.ShapeListCachedLocalizableByDimOutOfBoundsCursor;
-import mpicbg.imglib.cursor.shapelist.ShapeListCachedLocalizablePlaneCursor;
-import mpicbg.imglib.cursor.shapelist.ShapeListLocalizableByDimCursor;
-import mpicbg.imglib.cursor.shapelist.ShapeListLocalizableByDimOutOfBoundsCursor;
-import mpicbg.imglib.cursor.shapelist.ShapeListLocalizablePlaneCursor;
+import mpicbg.imglib.container.ImgRandomAccess;
 import mpicbg.imglib.image.Image;
-import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
+import mpicbg.imglib.outofbounds.RasterOutOfBoundsFactory;
+import mpicbg.imglib.sampler.shapelist.ShapeListCache;
+import mpicbg.imglib.sampler.shapelist.ShapeListCacheFIFO;
+import mpicbg.imglib.sampler.shapelist.ShapeListCachedPositionableRasterSampler;
+import mpicbg.imglib.sampler.shapelist.ShapeListCachedOutOfBoundsPositionableRasterSampler;
+import mpicbg.imglib.sampler.shapelist.ShapeListPositionableRasterSampler;
 import mpicbg.imglib.type.Type;
 
-public class ShapeListCached<T extends Type<T> > extends ShapeList<T>
+/**
+ * 
+ * @param <T>
+ *
+ * @author Albert Cardona, Stephan Preibisch and Stephan Saalfeld
+ */
+public class ShapeListCached< T extends Type< T > > extends ShapeList< T >
 {
-	ShapeListCache<T> cache;
-		
+	ShapeListCache< T > cache;
+
 	public ShapeListCached( final ShapeListContainerFactory factory, final int[] dim, final T background )
 	{
 		super( factory, dim, background );
-		
-		this.cache = new ShapeListCacheFIFO<T>( factory.getCacheSize(), this );
+
+		this.cache = new ShapeListCacheFIFO< T >( factory.getCacheSize(), this );
 	}
-	
+
 	public ShapeListCached( final int[] dim, final T background, final int cacheSize )
 	{
 		this( new ShapeListContainerFactory( cacheSize ), dim, background );
@@ -61,25 +63,26 @@ public class ShapeListCached<T extends Type<T> > extends ShapeList<T>
 	{
 		this( dim, background, 32 );
 	}
-	
-	public ShapeListCache<T> getShapeListCachingStrategy() { return cache; }
-	public void setShapeListCachingStrategy( final ShapeListCache<T> cache ) { this.cache = cache; }
+
+	public ShapeListCache< T > getShapeListCachingStrategy()
+	{
+		return cache;
+	}
+
+	public void setShapeListCachingStrategy( final ShapeListCache< T > cache )
+	{
+		this.cache = cache;
+	}
 
 	@Override
-	public ShapeListLocalizablePlaneCursor< T > createLocalizablePlaneCursor( final Image< T > image ) 
-	{ 
-		return new ShapeListCachedLocalizablePlaneCursor< T >( this, image, cache.getCursorCacheInstance() );
-	}
-	
-	@Override
-	public ShapeListLocalizableByDimCursor< T > createLocalizableByDimCursor( final Image< T > image ) 
+	public ShapeListPositionableRasterSampler< T > createPositionableRasterSampler( final Image< T > image )
 	{
-		return new ShapeListCachedLocalizableByDimCursor< T >( this, image, cache.getCursorCacheInstance() );
+		return new ShapeListCachedPositionableRasterSampler< T >( this, image );
 	}
-	
+
 	@Override
-	public ShapeListLocalizableByDimOutOfBoundsCursor< T > createLocalizableByDimCursor( final Image< T > image, final OutOfBoundsStrategyFactory< T > outOfBoundsFactory ) 
+	public ImgRandomAccess< T > createPositionableRasterSampler( final Image< T > image, final RasterOutOfBoundsFactory< T > outOfBoundsFactory )
 	{
-		return new ShapeListCachedLocalizableByDimOutOfBoundsCursor< T >( this, image, outOfBoundsFactory, cache.getCursorCacheInstance() );
+		return new ShapeListCachedOutOfBoundsPositionableRasterSampler< T >( this, image, outOfBoundsFactory );
 	}
 }

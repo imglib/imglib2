@@ -29,7 +29,7 @@
  */
 package mpicbg.imglib.image.display;
 
-import mpicbg.imglib.cursor.Cursor;
+import mpicbg.imglib.container.ImgCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.type.numeric.RealType;
 
@@ -47,7 +47,7 @@ public class RealTypeDisplay<T extends RealType<T>> extends Display<T>
 	@Override
 	public void setMinMax()
 	{
-		final Cursor<T> c = img.createCursor();
+		final ImgCursor<T> c = img.createRasterIterator();
 		
 		if ( !c.hasNext() )
 		{
@@ -58,13 +58,13 @@ public class RealTypeDisplay<T extends RealType<T>> extends Display<T>
 		}
 		
 		c.fwd();
-		min = max = c.getType().getRealDouble();
+		min = max = c.get().getRealDouble();
 
 		while ( c.hasNext() )
 		{
 			c.fwd();
 
-			final double value = c.getType().getRealDouble();
+			final double value = c.get().getRealDouble();
 			
 			if ( value > max )
 				max = value;			

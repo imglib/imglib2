@@ -29,11 +29,11 @@
  */
 package mpicbg.imglib.outofbounds;
 
-import mpicbg.imglib.cursor.LocalizableCursor;
+import mpicbg.imglib.container.ImgRandomAccess;
 import mpicbg.imglib.type.numeric.RealType;
 import mpicbg.imglib.util.Util;
 
-public class OutOfBoundsStrategyMirrorExpWindowingFactory<T extends RealType<T>> extends OutOfBoundsStrategyFactory<T>
+public class OutOfBoundsStrategyMirrorExpWindowingFactory<T extends RealType<T>> extends RasterOutOfBoundsFactory<T>
 {
 	int[] fadeOutDistance = null;
 	int minFadeOutDistance = 6;
@@ -74,20 +74,20 @@ public class OutOfBoundsStrategyMirrorExpWindowingFactory<T extends RealType<T>>
 	public int[] getFadeOutDistance() { return fadeOutDistance.clone(); }
 
 	@Override
-	public OutOfBoundsStrategyMirrorExpWindowing<T> createStrategy( final LocalizableCursor<T> cursor )
+	public OutOfBoundsStrategyMirrorExpWindowing<T> createStrategy( final OutOfBoundsCursor<T> cursor )
 	{
 		if ( Float.isNaN(commonRelativeDistanceFadeOut) )
 		{					
 			if ( fadeOutDistance == null  )
 			{
-				fadeOutDistance = new int[ cursor.getImage().getNumDimensions() ];
+				fadeOutDistance = new int[ cursor.getImage().numDimensions() ];
 				
-				for ( int d = 0; d < cursor.getNumDimensions(); ++d )
+				for ( int d = 0; d < cursor.numDimensions(); ++d )
 					fadeOutDistance[ d ] = Math.max( minFadeOutDistance, commonFadeOutDistance );
 			}
 			else
 			{
-				for ( int d = 0; d < cursor.getNumDimensions(); ++d )
+				for ( int d = 0; d < cursor.numDimensions(); ++d )
 					fadeOutDistance[ d ] = Math.max( minFadeOutDistance, fadeOutDistance[ d ] );				
 			}
 		}
@@ -96,10 +96,10 @@ public class OutOfBoundsStrategyMirrorExpWindowingFactory<T extends RealType<T>>
 			if ( commonRelativeDistanceFadeOut <= 0 )
 				commonRelativeDistanceFadeOut = 0.1f;
 
-			fadeOutDistance = new int[ cursor.getNumDimensions() ];
+			fadeOutDistance = new int[ cursor.numDimensions() ];
 			
-			for ( int d = 0; d < cursor.getNumDimensions(); ++d )
-				fadeOutDistance[ d ] = Math.max( minFadeOutDistance, Util.round( cursor.getImage().getDimension( d ) * commonRelativeDistanceFadeOut ) / 2 );
+			for ( int d = 0; d < cursor.numDimensions(); ++d )
+				fadeOutDistance[ d ] = Math.max( minFadeOutDistance, Util.round( cursor.getImage().dimensions( d ) * commonRelativeDistanceFadeOut ) / 2 );
 		}
 		
 		return new OutOfBoundsStrategyMirrorExpWindowing<T>( cursor, fadeOutDistance, exponent );

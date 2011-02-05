@@ -24,74 +24,146 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- *
- * @author Stephan Preibisch & Stephan Saalfeld
  */
 package mpicbg.imglib.container.cell;
 
-import mpicbg.imglib.container.ContainerImpl;
-import mpicbg.imglib.container.PixelGridContainerImpl;
+import mpicbg.imglib.container.AbstractImg;
+import mpicbg.imglib.container.AbstractPixelGridContainer;
 import mpicbg.imglib.container.array.Array;
 import mpicbg.imglib.container.basictypecontainer.array.ArrayDataAccess;
 import mpicbg.imglib.type.Type;
 
-public class Cell< T extends Type<T>, A extends ArrayDataAccess<A>> //extends Array<T,A>
+/**
+ * 
+ * @param <T>
+ * @param <A>
+ *
+ * @author Stephan Preibisch and Stephan Saalfeld
+ */
+public class Cell< T extends Type< T >, A extends ArrayDataAccess< A > > // extends Array< T, A >
 {
-	final protected int[] offset, step, dim;	
+	final protected int[] offset, step, dim;
+
 	final protected int cellId, numDimensions, numPixels, numEntities;
-	
+
 	// the ArrayDataAccess containing the data
 	final protected A data;
-	
-	public Cell( final A creator, final int cellId, final int[] dim, final int offset[], final int entitiesPerPixel)
+
+	public Cell( final A creator, final int cellId, final int[] dim, final int offset[], final int entitiesPerPixel )
 	{
-		this.offset = offset;		
+		this.offset = offset;
 		this.cellId = cellId;
 		this.numDimensions = dim.length;
 		this.dim = dim;
-		this.numPixels = ContainerImpl.getNumPixels( dim );
-		this.numEntities = PixelGridContainerImpl.getNumEntities( dim, entitiesPerPixel );
-		
+		this.numPixels = ( int ) AbstractImg.numElements( dim );
+		this.numEntities = ( int ) AbstractPixelGridContainer.getNumEntities( dim, entitiesPerPixel );
+
 		step = new int[ numDimensions ];
-		
+
 		this.data = creator.createArray( numEntities );
-		
+
 		// the steps when moving inside a cell
-		Array.createAllocationSteps( dim, step );		
+		Array.createAllocationSteps( dim, step );
 	}
-	
-	protected A getData() { return data; }
-	protected void close() { data.close(); }
-	
-	public int getNumPixels() { return numPixels; }
-	public int getNumEntities() { return numEntities; }
-	public void getDimensions( final int[] dim )
+
+	protected A getData()
+	{
+		return data;
+	}
+
+	protected void close()
+	{
+		data.close();
+	}
+
+	public int getNumPixels()
+	{
+		return numPixels;
+	}
+
+	public int getNumEntities()
+	{
+		return numEntities;
+	}
+
+	public void dimensions( final int[] dim )
 	{
 		for ( int d = 0; d < numDimensions; ++d )
 			dim[ d ] = this.dim[ d ];
 	}
-	
+
 	public void getSteps( final int[] step )
 	{
 		for ( int d = 0; d < numDimensions; d++ )
 			step[ d ] = this.step[ d ];
 	}
-	
-	public int getCellId() { return cellId; }
-	
-	public void getOffset( final int[] offset )
+
+	public int getCellId()
 	{
-		for ( int i = 0; i < numDimensions; i++ )
+		return cellId;
+	}
+
+	public long getLongOffset( final int dim )
+	{
+		return offset[ dim ];
+	}
+
+	/**
+	 * Read the {@link Cell} offset coordinates into an int[]
+	 * 
+	 * @param offset
+	 */
+	public void offset( final int[] offset )
+	{
+		for ( int i = 0; i < numDimensions; ++i )
 			offset[ i ] = this.offset[ i ];
 	}
-	
-	public final int getPosGlobal( final int[] l ) 
-	{ 
-		int i = l[ 0 ] - offset[ 0 ];
+
+	/**
+	 * Read the {@link Cell} offset coordinates into a long[]
+	 * 
+	 * @param offset
+	 */
+	public void offset( final long[] offset )
+	{
+		for ( int i = 0; i < numDimensions; ++i )
+			offset[ i ] = this.offset[ i ];
+	}
+
+	/**
+	 * Calculate the {@link Cell} index for a global position. Note that this
+	 * method does not check if the global position is actually contained in the
+	 * {@link Cell}.
+	 * 
+	 * @param position
+	 * @return
+	 */
+	public final int globalPositionToIndex( final int[] position )
+	{
+		int i = position[ 0 ] - offset[ 0 ];
 		for ( int d = 1; d < dim.length; ++d )
-			i += (l[ d ] - offset[ d ]) * step[ d ];
-		
+			i += ( position[ d ] - offset[ d ] ) * step[ d ];
+
 		return i;
 	}
-	
+
+	final public void indexToGlobalPosition( int i, final long[] position )
+	{
+		for ( int d = numDimensions - 1; d >= 0; --d )
+		{
+			final int ld = i / step[ d ];
+			i -= ld * step[ d ];
+			// i %= step[ d ];
+
+			position[ d ] = ld + offset[ d ];
+		}
+	}
+
+	final public long indexToGlobalPosition( int i, final int dim )
+	{
+		for ( int d = numDimensions - 1; d > dim; --d )
+			i %= step[ d ];
+
+		return i / step[ dim ] + offset[ dim ];
+	}
 }

@@ -24,86 +24,33 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- *
- * @author Stephan Preibisch & Stephan Saalfeld
  */
 package mpicbg.imglib.interpolation;
 
-import mpicbg.imglib.image.Image;
-import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
-import mpicbg.imglib.type.Type;
+import mpicbg.imglib.RealLocalizable;
+import mpicbg.imglib.RealPositionable;
+import mpicbg.imglib.Sampler;
+import mpicbg.imglib.outofbounds.OutOfBoundsFactory;
 
-public interface Interpolator<T extends Type<T>>
+/**
+ * 
+ * @param <T>
+ *
+ * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
+ */
+public interface Interpolator< T, F > extends Sampler< T >, RealLocalizable, RealPositionable
 {
 	/**
-	 * Returns the typed interpolator factory the Interpolator has been instantiated with.
+	 * Returns the {@link RasterOutOfBoundsFactory} used for interpolation
 	 * 
-	 * @return - the interpolator factory
+	 * @return - the {@link RasterOutOfBoundsFactory}
 	 */
-	public InterpolatorFactory<T> getInterpolatorFactory();
-	
-	/**
-	 * Returns the {@link OutOfBoundsStrategyFactory} used for interpolation
-	 * 
-	 * @return - the {@link OutOfBoundsStrategyFactory}
-	 */
-	public OutOfBoundsStrategyFactory<T> getOutOfBoundsStrategyFactory();
-	
+	public OutOfBoundsFactory< T, F > getOutOfBoundsStrategyFactory();
+
 	/**
 	 * Returns the typed image the interpolator is working on
 	 * 
 	 * @return - the image
 	 */
-	public Image<T> getImage();
-	
-	/**
-	 * Returns the type which stores the value for the current position of the interpolator
-	 * 
-	 * @return - the Type object of the interpolator
-	 */
-	public T getType();
-	
-	/**
-	 * Moves the interpolator to a random position inside or out of image bounds.
-	 * This method is typically more efficient than setting the position
-	 * 
-	 * @param position - the floating position of the same dimensionality as the image
-	 */
-	public void moveTo( float[] position );
-
-	/**
-	 * Moves the interpolator a certain distance given by the vector to a random position inside or out of image bounds.
-	 * This method is typically more efficient than setting the position
-	 * 
-	 * @param vector - the floating vector of the same dimensionality as the image
-	 */
-	public void moveRel( float[] vector );
-	
-	/**
-	 * Sets the interpolator to a random position inside or out of image bounds.
-	 * This method is typically less efficient than moving the position
-	 * 
-	 * @param position - the floating position of the same dimensionality as the image
-	 */
-	public void setPosition( float[] position );
-
-	/**
-	 * Returns the positon of the interpolator.
-	 * 
-	 * @param position - the floating position of the same dimensionality as the image
-	 */
-	public void getPosition( float[] position );
-
-	/**
-	 * Returns the positon of the interpolator.
-	 * 
-	 * @return - the floating position of the same dimensionality as the image (as a new object)
-	 */
-	public float[] getPosition();
-	
-	/**
-	 * Closes the interpolator and with it any cursors or other containers, images or datastructures
-	 * that might have been created to make the interpolation work
-	 */
-	public void close();	
+	public F getFunction();
 }

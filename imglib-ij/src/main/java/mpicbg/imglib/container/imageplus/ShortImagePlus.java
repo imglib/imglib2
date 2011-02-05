@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2009--2010, Funke, Preibisch, Rueden, Saalfeld & Schindelin
+ * Copyright (c) 2009--2010, Funke, Preibisch, Saalfeld & Schindelin
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -38,31 +38,15 @@ import mpicbg.imglib.type.Type;
 /**
  * {@link ImagePlusContainer} for short-stored data.
  * 
- * @author Jan Funke, Stephan Preibisch, Curtis Rueden, Stephan Saalfeld,
- *   Johannes Schindelin
+ * @author Jan Funke, Stephan Preibisch, Stephan Saalfeld, Johannes Schindelin
  */
 public class ShortImagePlus<T extends Type<T>> extends ImagePlusContainer<T, ShortArray> 
 {
-	final protected ImagePlus imp;	
+	final ImagePlus imp;	
 	
-	/**
-	 * Standard constructor as called by default factories.
-	 * 
-	 * <em>Note that this constructor does not know about the meaning of
-	 * dimensions > 1, and will use them in the {@link ImagePlus} default order
-	 * x,y,c,z,t.  That is, from two dimensions, it will create an x,y image,
-	 * from three dimensions, an x,y,c image, and from four dimensions, an
-	 * x,y,c,z image.</em>
-	 * 
-	 * @param factory
-	 * @param dim
-	 * @param entitiesPerPixel
-	 */
 	public ShortImagePlus( final ImagePlusContainerFactory factory, final int[] dim, final int entitiesPerPixel ) 
 	{
 		super( factory, dim, entitiesPerPixel );
-		
-		mirror.clear();
 		
 		if ( entitiesPerPixel == 1 )
 		{
@@ -74,9 +58,9 @@ public class ShortImagePlus<T extends Type<T>> extends ImagePlusContainer<T, Sho
 			if ( slices > 1 )
 				imp.setOpenAsHyperStack( true );
 			
-			for ( int t = 0; t < frames; ++t )
-				for ( int z = 0; z < depth; ++z )
-					for ( int c = 0; c < channels; ++c )
+			for ( int c = 0; c < channels; ++c )
+				for ( int t = 0; t < frames; ++t )
+					for ( int z = 0; z < depth; ++z )
 						mirror.add( new ShortArray( ( short[] )imp.getStack().getProcessor( imp.getStackIndex( c + 1, z + 1 , t + 1 ) ).getPixels() ) );
 		}
 		else
@@ -100,11 +84,9 @@ public class ShortImagePlus<T extends Type<T>> extends ImagePlusContainer<T, Sho
 		
 		this.imp = imp;
 		
-		mirror.clear();
-		
-		for ( int t = 0; t < frames; ++t )
-			for ( int z = 0; z < depth; ++z )
-				for ( int c = 0; c < channels; ++c )
+		for ( int c = 0; c < channels; ++c )
+			for ( int t = 0; t < frames; ++t )
+				for ( int z = 0; z < depth; ++z )
 					mirror.add( new ShortArray( ( short[] )imp.getStack().getProcessor( imp.getStackIndex( c + 1, z + 1 , t + 1 ) ).getPixels() ) );
 	}
 

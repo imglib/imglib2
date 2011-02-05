@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2009--2010, Stephan Preibisch & Stephan Saalfeld
+ * Copyright (c) 2009--2011, Stephan Preibisch & Stephan Saalfeld
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -9,7 +9,7 @@
  * list of conditions and the following disclaimer.  Redistributions in binary
  * form must reproduce the above copyright notice, this list of conditions and
  * the following disclaimer in the documentation and/or other materials
- * provided with the distribution.  Neither the name of the Fiji project nor
+ * provided with the distribution.  Neither the name of the imglib project nor
  * the names of its contributors may be used to endorse or promote products
  * derived from this software without specific prior written permission.
  * 
@@ -24,65 +24,71 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- *
- * @author Stephan Preibisch & Stephan Saalfeld
  */
 package mpicbg.imglib.container.basictypecontainer.array;
 
 import mpicbg.imglib.container.basictypecontainer.BitAccess;
 
-public class BitArray implements BitAccess, ArrayDataAccess<BitArray>
+/**
+*
+* @author Stephan Preibisch and Stephan Saalfeld <saalfeld@mpi-cbg.de>
+*/
+public class BitArray implements BitAccess, ArrayDataAccess< BitArray >
 {
-	final static int bitsPerEntity = Integer.SIZE;
+	final static protected int bitsPerEntity = Integer.SIZE;
 
-	final int numEntities;
+	final protected int n;
+
 	protected int data[];
-	
+
 	public BitArray( final int numEntities )
 	{
-		this.numEntities = numEntities;
-		
+		this.n = numEntities;
+
 		final int numElements;
-		
-		if ( this.numEntities % bitsPerEntity == 0 )
-			numElements = this.numEntities / bitsPerEntity;
+
+		if ( this.n % bitsPerEntity == 0 )
+			numElements = this.n / bitsPerEntity;
 		else
-			numElements = this.numEntities / bitsPerEntity + 1;
-			
+			numElements = this.n / bitsPerEntity + 1;
+
 		this.data = new int[ numElements ];
 	}
 
 	@Override
-	public void close() { data = null; }
-
-	@Override
-	public boolean getValue( final int index ) 
+	public void close()
 	{
-		final int arrayIndex = index / bitsPerEntity;
-		final int arrayOffset = index % bitsPerEntity;
-
-		final int entry = data[ arrayIndex ];		
-		final int value = (entry & ( 1 << arrayOffset ) );
-		
-		return value != 0; 
+		data = null;
 	}
 
 	@Override
-	public void setValue( final int index, final boolean value ) 
+	public boolean getValue( final int index )
 	{
 		final int arrayIndex = index / bitsPerEntity;
 		final int arrayOffset = index % bitsPerEntity;
-		
+
+		final int entry = data[ arrayIndex ];
+		final int value = ( entry & ( 1 << arrayOffset ) );
+
+		return value != 0;
+	}
+
+	@Override
+	public void setValue( final int index, final boolean value )
+	{
+		final int arrayIndex = index / bitsPerEntity;
+		final int arrayOffset = index % bitsPerEntity;
+
 		if ( value )
 			data[ arrayIndex ] = data[ arrayIndex ] | ( 1 << arrayOffset );
 		else
-			data[ arrayIndex ] = data[ arrayIndex ] & ~( 1 << arrayOffset ); 
+			data[ arrayIndex ] = data[ arrayIndex ] & ~( 1 << arrayOffset );
 	}
 
 	@Override
-	public int[] getCurrentStorageArray() { return data; }
-
-	@Override
-	public BitArray createArray( final int numEntities ) { return new BitArray( numEntities ); }
+	public BitArray createArray( final int numEntities )
+	{
+		return new BitArray( numEntities );
+	}
 
 }

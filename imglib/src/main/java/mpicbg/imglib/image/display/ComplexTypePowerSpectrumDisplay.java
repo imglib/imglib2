@@ -29,7 +29,7 @@
  */
 package mpicbg.imglib.image.display;
 
-import mpicbg.imglib.cursor.Cursor;
+import mpicbg.imglib.container.ImgCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.type.numeric.ComplexType;
 
@@ -43,7 +43,7 @@ public class ComplexTypePowerSpectrumDisplay<T extends ComplexType<T>> extends D
 	@Override
 	public void setMinMax()
 	{
-		final Cursor<T> c = img.createCursor();
+		final ImgCursor<T> c = img.createRasterIterator();
 		
 		if ( !c.hasNext() )
 		{
@@ -53,13 +53,13 @@ public class ComplexTypePowerSpectrumDisplay<T extends ComplexType<T>> extends D
 		}
 		
 		c.fwd();
-		min = max = getComplexDisplayValue( c.getType() );
+		min = max = getComplexDisplayValue( c.get() );
 
 		while ( c.hasNext() )
 		{
 			c.fwd();
 
-			final double value = getComplexDisplayValue( c.getType() );
+			final double value = getComplexDisplayValue( c.get() );
 			
 			if ( value > max )
 				max = value;			

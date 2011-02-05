@@ -29,25 +29,27 @@
  */
 package mpicbg.imglib.type.numeric.real;
 
-import mpicbg.imglib.container.DirectAccessContainer;
-import mpicbg.imglib.container.DirectAccessContainerFactory;
+import mpicbg.imglib.container.NativeContainer;
+import mpicbg.imglib.container.NativeContainerFactory;
 import mpicbg.imglib.container.basictypecontainer.DoubleAccess;
 import mpicbg.imglib.container.basictypecontainer.array.DoubleArray;
-import mpicbg.imglib.cursor.Cursor;
+import mpicbg.imglib.type.NativeType;
 import mpicbg.imglib.type.numeric.ExponentialMathType;
 import mpicbg.imglib.type.numeric.RealType;
 import mpicbg.imglib.util.Util;
 
-public class DoubleType extends RealTypeImpl<DoubleType> implements RealType<DoubleType>, ExponentialMathType<DoubleType>
+public class DoubleType extends RealTypeImpl<DoubleType> implements RealType<DoubleType>, ExponentialMathType<DoubleType>, NativeType<DoubleType>
 {
-	// the DirectAccessContainer
-	final DirectAccessContainer<DoubleType, ? extends DoubleAccess> storage;
+	private int i = 0;
+
+	// the NativeContainer
+	final NativeContainer<DoubleType, ? extends DoubleAccess> storage;
 	
-	// the (sub)DirectAccessContainer that holds the information 
+	// the (sub)NativeContainer that holds the information 
 	DoubleAccess b;
 	
 	// this is the constructor if you want it to read from an array
-	public DoubleType( DirectAccessContainer<DoubleType, ? extends DoubleAccess> doubleStorage )
+	public DoubleType( NativeContainer<DoubleType, ? extends DoubleAccess> doubleStorage )
 	{
 		storage = doubleStorage;
 	}
@@ -64,28 +66,25 @@ public class DoubleType extends RealTypeImpl<DoubleType> implements RealType<Dou
 	public DoubleType() { this( 0 ); }
 
 	@Override
-	public DirectAccessContainer<DoubleType, ? extends DoubleAccess> createSuitableDirectAccessContainer( final DirectAccessContainerFactory storageFactory, final int dim[] )
+	public NativeContainer<DoubleType, ? extends DoubleAccess> createSuitableNativeContainer( final NativeContainerFactory<DoubleType> storageFactory, final long dim[] )
 	{
 		// create the container
-		final DirectAccessContainer<DoubleType, ? extends DoubleAccess> container = storageFactory.createDoubleInstance( dim, 1 );
+		final NativeContainer<DoubleType, ? extends DoubleAccess> container = storageFactory.createDoubleInstance( new DoubleType(), dim, 1 );
 		
 		// create a Type that is linked to the container
 		final DoubleType linkedType = new DoubleType( container );
 		
-		// pass it to the DirectAccessContainer
+		// pass it to the NativeContainer
 		container.setLinkedType( linkedType );
 		
 		return container;
 	}
 	
 	@Override
-	public void updateContainer( final Cursor<?> c ) 
-	{ 
-		b = storage.update( c ); 
-	}
+	public void updateContainer( final Object c )  { b = storage.update( c ); }
 
 	@Override
-	public DoubleType duplicateTypeOnSameDirectAccessContainer() { return new DoubleType( storage ); }
+	public DoubleType duplicateTypeOnSameNativeContainer() { return new DoubleType( storage ); }
 	
 	public double get(){ return b.getValue( i ); }
 	public void set( final double f ){ b.setValue( i, f ); }
@@ -108,15 +107,6 @@ public class DoubleType extends RealTypeImpl<DoubleType> implements RealType<Dou
 	public double getMinIncrement()  { return Double.MIN_VALUE; }
 	
 	@Override
-	public DoubleType[] createArray1D(int size1){ return new DoubleType[ size1 ]; }
-
-	@Override
-	public DoubleType[][] createArray2D(int size1, int size2){ return new DoubleType[ size1 ][ size2 ]; }
-
-	@Override
-	public DoubleType[][][] createArray3D(int size1, int size2, int size3) { return new DoubleType[ size1 ][ size2 ][ size3 ]; }
-	
-	@Override
 	public DoubleType createVariable(){ return new DoubleType( 0 ); }
 	
 	@Override
@@ -127,4 +117,21 @@ public class DoubleType extends RealTypeImpl<DoubleType> implements RealType<Dou
 
 	@Override
 	public void round() { set( Util.round( get() ) ); }
+	
+	@Override
+	public int getEntitiesPerPixel() { return 1; }
+	
+	@Override
+	public void updateIndex( final int i ) { this.i = i; }
+	@Override
+	public int getIndex() { return i; }
+	
+	@Override
+	public void incIndex() { ++i; }
+	@Override
+	public void incIndex( final int increment ) { i += increment; }
+	@Override
+	public void decIndex() { --i; }
+	@Override
+	public void decIndex( final int decrement ) { i -= decrement; }		
 }

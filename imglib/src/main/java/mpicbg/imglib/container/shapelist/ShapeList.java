@@ -30,13 +30,12 @@ package mpicbg.imglib.container.shapelist;
 import java.awt.Shape;
 import java.util.ArrayList;
 
-import mpicbg.imglib.container.Container;
-import mpicbg.imglib.container.ContainerImpl;
-import mpicbg.imglib.cursor.shapelist.ShapeListLocalizableByDimCursor;
-import mpicbg.imglib.cursor.shapelist.ShapeListLocalizableByDimOutOfBoundsCursor;
-import mpicbg.imglib.cursor.shapelist.ShapeListLocalizablePlaneCursor;
+import mpicbg.imglib.container.AbstractImg;
+import mpicbg.imglib.container.ImgRandomAccess;
 import mpicbg.imglib.image.Image;
-import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
+import mpicbg.imglib.outofbounds.RasterOutOfBoundsFactory;
+import mpicbg.imglib.sampler.shapelist.ShapeListPositionableRasterSampler;
+import mpicbg.imglib.sampler.shapelist.ShapeListOutOfBoundsPositionableRasterSampler;
 import mpicbg.imglib.type.Type;
 
 /**
@@ -47,7 +46,7 @@ import mpicbg.imglib.type.Type;
  * @version 0.1a
  */
 //public class ShapeList< T extends Type< T > > extends ContainerImpl< T, DataAccess >
-public class ShapeList< T extends Type< T > > extends ContainerImpl< T >
+public class ShapeList< T extends Type< T > > extends AbstractImg< T >
 {
 	final public ShapeListContainerFactory factory;
 	
@@ -98,50 +97,32 @@ public class ShapeList< T extends Type< T > > extends ContainerImpl< T >
 		shapeLists.get( p ).add( shape ); 
 		typeLists.get( p ).add( type );
 	}
-
-	/** @return a shallow copy of the lists of Shape instances.
-	 *  That is, the Shape instances themselves are the originals. */
-	public synchronized ArrayList< ArrayList< Shape > > getShapeLists() {
-		final ArrayList< ArrayList< Shape > > sl = new ArrayList< ArrayList< Shape > >();
-		for (final ArrayList< Shape > a : shapeLists)
-		{
-			sl.add( new ArrayList< Shape >( a ) );
-		}
-
-		return sl;
-	}
-
-	@Override
-	public ShapeListContainerFactory getFactory() { return factory; }
 	
 	@Override
-	public ShapeListLocalizableByDimCursor< T > createCursor( final Image< T > image ) 
-	{ 
-		return createLocalizableByDimCursor( image );
-	}
-
-	@Override
-	public ShapeListLocalizableByDimCursor< T > createLocalizableCursor( final Image< T > image ) 
-	{ 
-		return createLocalizableByDimCursor( image );
-	}
-
-	@Override
-	public ShapeListLocalizablePlaneCursor< T > createLocalizablePlaneCursor( final Image< T > image ) 
-	{ 
-		return new ShapeListLocalizablePlaneCursor< T >( this, image );
-	}
+	public ShapeListContainerFactory factory() { return factory; }
 	
 	@Override
-	public ShapeListLocalizableByDimCursor< T > createLocalizableByDimCursor( final Image< T > image ) 
+	public ShapeListPositionableRasterSampler< T > createRasterIterator( final Image< T > image ) 
+	{ 
+		return createPositionableRasterSampler( image );
+	}
+
+	@Override
+	public ShapeListPositionableRasterSampler< T > createLocalizingRasterIterator( final Image< T > image ) 
+	{ 
+		return createPositionableRasterSampler( image );
+	}
+
+	@Override
+	public ShapeListPositionableRasterSampler< T > createPositionableRasterSampler( final Image< T > image ) 
 	{
-		return new ShapeListLocalizableByDimCursor< T >( this, image );
+		return new ShapeListPositionableRasterSampler< T >( this, image );
 	}
 	
 	@Override
-	public ShapeListLocalizableByDimOutOfBoundsCursor< T > createLocalizableByDimCursor( final Image< T > image, final OutOfBoundsStrategyFactory< T > outOfBoundsFactory ) 
+	public ImgRandomAccess< T > createPositionableRasterSampler( final Image< T > image, final RasterOutOfBoundsFactory< T > outOfBoundsFactory ) 
 	{
-		return new ShapeListLocalizableByDimOutOfBoundsCursor< T >( this, image, outOfBoundsFactory );
+		return new ShapeListOutOfBoundsPositionableRasterSampler< T >( this, image, outOfBoundsFactory );
 	}
 	
 	@Override
@@ -196,21 +177,5 @@ public class ShapeList< T extends Type< T > > extends ContainerImpl< T >
 			f *= dim[ d ];
 		}
 		return getShapeType( position[ 0 ], position[ 1 ], p );
-	}
-
-	@Override
-	public boolean compareStorageContainerCompatibility( final Container<?> container )
-	{
-		if ( compareStorageContainerDimensions( container ))
-		{			
-			if ( getFactory().getClass().isInstance( container.getFactory() ))
-				return true;
-			else
-				return false;
-		}
-		else
-		{
-			return false;
-		}
 	}
 }

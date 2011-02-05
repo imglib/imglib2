@@ -30,8 +30,6 @@
 
 package mpicbg.imglib.multithreading;
 
-import java.util.Vector;
-
 public class SimpleMultiThreading
 {
 	/*
@@ -57,31 +55,6 @@ public class SimpleMultiThreading
 	}
 	startAndJoin(threads);
 	*/
-		
-	public static Vector<Chunk> divideIntoChunks( final long imageSize, final int numThreads )
-	{
-        final long threadChunkSize = imageSize / numThreads;
-        final long threadChunkMod = imageSize % numThreads;
-        
-        final Vector<Chunk> chunks = new Vector<Chunk>();
-        
-        for ( int threadID = 0; threadID < numThreads; ++threadID )
-        {
-        	// move to the starting position of the current thread
-        	final long startPosition = threadID * threadChunkSize;
-
-            // the last thread may has to run longer if the number of pixels cannot be divided by the number of threads
-            final long loopSize;		                    
-            if ( threadID == numThreads - 1 )
-            	loopSize = threadChunkSize + threadChunkMod;
-            else
-            	loopSize = threadChunkSize;
-        	
-            chunks.add( new Chunk( startPosition, loopSize ) );
-        }
-        
-        return chunks;
-	}
 
 	public static void startTask(Runnable run)
 	{

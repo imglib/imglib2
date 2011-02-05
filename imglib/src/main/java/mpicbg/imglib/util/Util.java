@@ -18,11 +18,19 @@ package mpicbg.imglib.util;
 
 import java.util.List;
 
+import mpicbg.imglib.Interval;
+import mpicbg.imglib.RealInterval;
 import mpicbg.imglib.type.Type;
 import mpicbg.imglib.type.numeric.ExponentialMathType;
 
 public class Util
 {
+	@SuppressWarnings("unchecked")
+	public static < T > T[] genericArray( final int length )
+	{
+		return (T[])( new Object[ length ] );
+	}
+	
 	public static double log2( final double value )
 	{
 		return Math.log( value ) / Math.log( 2.0 );
@@ -489,7 +497,7 @@ public class Util
             if ( sigma.compareTo( zero ) <= 0 )
             {
             		kernelSize = 3;
-                    gaussianKernel = zero.createArray1D( 3 );
+                    gaussianKernel = genericArray( 3 ); //zero.createArray1D( 3 );
                     gaussianKernel[ 1 ].set( one );
             }
             else
@@ -515,7 +523,7 @@ public class Util
                     two_sq_sigma.mul( sigma );
                     two_sq_sigma.mul( sigma );
 
-                    gaussianKernel = zero.createArray1D( kernelSize );
+                    gaussianKernel = genericArray( kernelSize ); //zero.createArray1D( kernelSize );
 
                     for ( int i = 0; i < gaussianKernel.length; ++i )
                     	gaussianKernel[ i ] = zero.createVariable();
@@ -588,6 +596,23 @@ public class Util
 	}
 
 	public static String printCoordinates( final int[] value )
+	{
+		String out = "(Array empty)";
+
+		if ( value == null || value.length == 0 )
+			return out;
+		else
+			out = "(" + value[0];
+
+		for ( int i = 1; i < value.length; i++ )
+			out += ", " + value[ i ];
+
+		out += ")";
+
+		return out;
+	}
+
+	public static String printCoordinates( final long[] value )
 	{
 		String out = "(Array empty)";
 
@@ -737,6 +762,45 @@ public class Util
 			setCoordinateRecursive( dimension - 1, numDimensions, newLocation1, result );
 		}
 
+	}
+	
+	/**
+	 * <p>Create a long[] with the dimensions of an {@link Interval}.</p>
+	 * 
+	 * <p>Keep in mind that creating arrays wildly is not good practice and
+	 * consider using the interval directly.</p>
+	 * 
+	 * @param interval
+	 * 
+	 * @return dimensions of the interval as a new long[]
+	 */
+	final static public long[] intervalDimensions( final Interval interval )
+	{
+		final long[] dimensions = new long[ interval.numDimensions() ];
+		interval.dimensions( dimensions );
+		return dimensions;
+	}
+	
+	/**
+	 * <p>Create a double[] with the dimensions of a {@link RealInterval}.
+	 * Dimensions are returned as <em>max</em> - <em>min</em>.</p>
+	 * 
+	 * <p>Keep in mind that creating arrays wildly is not good practice and
+	 * consider using the interval directly.</p>
+	 * 
+	 * @param interval
+	 * 
+	 * @return dimensions of the interval as a new double[]
+	 */
+	final static public double[] realIntervalDimensions( final RealInterval interval )
+	{
+		final int n = interval.numDimensions();
+		final double[] dimensions = new double[ interval.numDimensions() ];
+		
+		for ( int d = 0; d < n; ++d )
+			dimensions[ d ] = interval.realMax( d ) - interval.realMin( d );
+
+		return dimensions;
 	}
 
 }

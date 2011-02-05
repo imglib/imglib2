@@ -24,20 +24,25 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- *
- * @author Stephan Preibisch & Stephan Saalfeld
  */
 package mpicbg.imglib.outofbounds;
 
-import mpicbg.imglib.cursor.LocalizableCursor;
+import mpicbg.imglib.RandomAccessibleInterval;
+import mpicbg.imglib.container.ImgRandomAccess;
 import mpicbg.imglib.type.Type;
 
-public class OutOfBoundsStrategyPeriodicFactory<T extends Type<T>> extends OutOfBoundsStrategyFactory<T>
+/**
+ * Create appropriate strategies that virtually extend a {@link RandomAccessibleInterval}
+ * periodically.
+ *
+ * @author Stephan Preibisch and Stephan Saalfeld <saalfeld@mpi-cbg.de>
+ */
+public class OutOfBoundsStrategyPeriodicFactory< T extends Type< T > > extends RasterOutOfBoundsFactory< T >
 {
 	@Override
-	public OutOfBoundsStrategyPeriodic<T> createStrategy( final LocalizableCursor<T> cursor )
+	public OutOfBoundsStrategyPeriodic< T > create( final ImgRandomAccess< T > p )
 	{
-		return new OutOfBoundsStrategyPeriodic<T>( cursor );
+		return new OutOfBoundsStrategyPeriodic< T >( p );
 	}
 
 }

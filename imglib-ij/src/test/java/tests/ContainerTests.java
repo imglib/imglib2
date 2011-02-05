@@ -7,14 +7,13 @@ import org.junit.Test;
 import java.util.Random;
 
 import mpicbg.imglib.algorithm.fft.FFTFunctions;
-import mpicbg.imglib.container.ContainerFactory;
+import mpicbg.imglib.container.Img;
+import mpicbg.imglib.container.ImgFactory;
+import mpicbg.imglib.container.ImgCursor;
+import mpicbg.imglib.container.ImgRandomAccess;
 import mpicbg.imglib.container.array.ArrayContainerFactory;
 import mpicbg.imglib.container.cell.CellContainerFactory;
 import mpicbg.imglib.container.imageplus.ImagePlusContainerFactory;
-import mpicbg.imglib.container.planar.PlanarContainerFactory;
-import mpicbg.imglib.cursor.Cursor;
-import mpicbg.imglib.cursor.LocalizableByDimCursor;
-import mpicbg.imglib.cursor.LocalizableCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.ImageFactory;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyPeriodicFactory;
@@ -24,8 +23,8 @@ import mpicbg.imglib.util.Util;
 public class ContainerTests
 {
 	// which dimensions to test
-	final int[][] dim = 
-		new int[][]{ 
+	final long[][] dim = 
+		new long[][]{ 
 			{ 127 },
 			{ 288 },	
 			{ 135, 111 },
@@ -68,7 +67,7 @@ public class ContainerTests
 	}
 
 	/**
-	 * Test ImagePlusContainer
+	 * Test CellContainer
 	 */
 	@Test public void testImagePlusContainer()
 	{
@@ -87,25 +86,6 @@ public class ContainerTests
 	}
 	
 	/**
-	 * Test PlanarContainer
-	 */
-	@Test public void testPlanarContainer()
-	{
-		for ( int i = 0; i < dim.length; ++i )
-		{
-			if ( dim[ i ].length < 6 )
-			{
-				assertTrue( "ArrayContainer vs PlanarContainer failed for dim = " + Util.printCoordinates( dim[ i ] ),
-				            testContainer( dim[ i ], new ArrayContainerFactory(), new PlanarContainerFactory() ) );
-				assertTrue( "PlanarContainer vs ArrayContainer failed for dim = " + Util.printCoordinates( dim[ i ] ), 
-				            testContainer( dim[ i ], new PlanarContainerFactory(), new ArrayContainerFactory() ) );
-				assertTrue( "PlanarContainer vs PlanarContainer failed for dim = " + Util.printCoordinates( dim[ i ] ),
-				            testContainer( dim[ i ], new PlanarContainerFactory(), new PlanarContainerFactory() ) );
-			}
-		}
-	}
-	
-	/**
 	 * Test MultiThreading
 	 */
 	@Test public void testMultiThreading()
@@ -115,13 +95,10 @@ public class ContainerTests
 		assertTrue( "ImagePlusContainer MultiThreading failed", testThreading( new ImagePlusContainerFactory() ) );	
 	}
 	
-	protected boolean testThreading( final ContainerFactory factory )
+	protected boolean testThreading( final ImgFactory factory )
 	{
-		// create the image factory
-		final ImageFactory<FloatType> imageFactory = new ImageFactory<FloatType>( new FloatType(), factory );
-
 		// create the image
-		final Image<FloatType> img = imageFactory.createImage( new int[]{ 101, 99, 301 } );
+		final Img< FloatType, ? > img = factory.create( new long[]{ 101, 99, 301 }, new FloatType() );
 
 		// get a reference to compare to
 		final float[] reference = createReference( img );
@@ -135,16 +112,16 @@ public class ContainerTests
 		return succesful;
 	}
 	
-	protected float[] createReference( final Image<FloatType> img )
+	protected float[] createReference( final Img<FloatType,?> img )
 	{
 		// use a random number generator
 		final Random rnd = new Random( 1241234 );
 		
 		// create reference array
-		final float[] reference = new float[ img.getNumPixels() ];
+		final float[] reference = new float[ ( int )img.size() ];
 		
 		// iterate over image and reference array and fill with data
-		final Cursor<FloatType> cursor = img.createCursor();			
+		final ImgCursor<FloatType> cursor = img.iterator();			
 		int i = 0;
 		
 		while( cursor.hasNext() )
@@ -153,55 +130,49 @@ public class ContainerTests
 
 			final float value = rnd.nextFloat();
 			reference[ i++ ] = value;
-			cursor.getType().set( value );
+			cursor.get().set( value );
 		}
-		
-		cursor.close();
 		
 		return reference;
 	}
 	
-	protected boolean test( final Image<FloatType> img, final float[] reference )
+	protected boolean test( final Img< FloatType, ? > img, final float[] reference )
 	{
 		boolean allEqual = true;
 		
-		final Cursor<FloatType> cursor = img.createCursor();
+		final ImgCursor< FloatType > cursor = img.iterator();
 		int i = 0;
 		
 		while( cursor.hasNext() )
 		{
 			cursor.fwd();				
-			allEqual &= cursor.getType().get() == reference[ i++ ];
+			allEqual &= cursor.get().get() == reference[ i++ ];
 		}		
 		
 		return allEqual;
 	}
 	
-	protected boolean testContainer( final int[] dim, final ContainerFactory factory1, final ContainerFactory factory2 )
+	protected boolean testContainer( final long[] size, final ImgFactory factory1, final ImgFactory factory2 )
 	{
-		// create the image factory
-		final ImageFactory<FloatType> imageFactory1 = new ImageFactory<FloatType>( new FloatType(), factory1 );
-		final ImageFactory<FloatType> imageFactory2 = new ImageFactory<FloatType>( new FloatType(), factory2 );
-		
 		// create the image
-		final Image<FloatType> img1 = imageFactory1.createImage( dim );
-		final Image<FloatType> img2 = imageFactory2.createImage( dim );
+		final Img< FloatType, ? > img1 = factory1.create( size, new FloatType() );
+		final Img< FloatType, ? > img2 = factory2.create( size, new FloatType() );
 	
-		final int numDimensions = img1.getNumDimensions();
+		final int numDimensions = img1.numDimensions();
 
 		// get a reference to compare to
 		final float[] reference = createReference( img1 );
 		
 		// copy into a second image using simple cursors
-		final Cursor<FloatType> cursor1 = img1.createCursor();
-		final Cursor<FloatType> cursor2 = img2.createCursor();			
+		final ImgCursor<FloatType> cursor1 = img1.iterator();
+		final ImgCursor<FloatType> cursor2 = img2.iterator();
 		
 		while( cursor1.hasNext() )
 		{
 			cursor1.fwd();
 			cursor2.fwd();
 			
-			cursor2.getType().set( cursor1.getType() );
+			cursor2.get().set( cursor1.get() );
 		}
 		
 		cursor1.reset();
@@ -213,15 +184,12 @@ public class ContainerTests
 			cursor1.fwd();
 			cursor2.fwd();
 			
-			cursor1.getType().set( cursor2.getType() );
+			cursor1.get().set( cursor2.get() );
 		}		
-		
-		cursor1.close();
-		cursor2.close();
 
 		// copy back into a second image using localizable and positionable cursors			
-		final LocalizableCursor<FloatType> localizableCursor1 = img1.createLocalizableCursor();			
-		final LocalizableByDimCursor<FloatType> localizableByDimCursor2 = img2.createLocalizableByDimCursor();			
+		final ImgCursor<FloatType> localizableCursor1 = img1.localizingCursor();			
+		final ImgRandomAccess<FloatType> positionable2 = img2.integerRandomAccessSampler();			
 		
 		int i = 0;
 		
@@ -231,47 +199,52 @@ public class ContainerTests
 			++i;
 			
 			if ( i % 2 == 0 )
-				localizableByDimCursor2.moveTo( localizableCursor1 );
+				positionable2.setPosition( localizableCursor1 );
 			else
-				localizableByDimCursor2.setPosition( localizableCursor1 );
+				positionable2.setPosition( localizableCursor1 );
 			
-			localizableByDimCursor2.getType().set( localizableCursor1.getType() );
+			positionable2.get().set( localizableCursor1.get() );
 		}
 		
-		localizableByDimCursor2.close();
-		
 		// copy again to the first image using a LocalizableByDimOutsideCursor and a LocalizableByDimCursor
-		final LocalizableByDimCursor<FloatType> outsideCursor2 = img2.createLocalizableByDimCursor( new OutOfBoundsStrategyPeriodicFactory<FloatType>() );
+		final ImgRandomAccess<FloatType> outsideCursor2 = img2.positionableRasterSampler( new OutOfBoundsStrategyPeriodicFactory<FloatType>() );
 		localizableCursor1.reset();
 		
 		final int[] pos = new int[ numDimensions ];			
 		i = 0;
 		int direction = 1;
 		
-		while ( localizableCursor1.hasNext() )
-		{
-			localizableCursor1.fwd();
-			localizableCursor1.getPosition( pos );
-			++i;
-			
-			// how many times far away from the original image do we grab the pixel
-			final int distance = i % 5;
-			direction *= -1;				
-			
-			pos[ i % numDimensions ] += img1.getDimension( i % numDimensions ) * distance * direction;
-
-			if ( i % 7 == 0 )
-				outsideCursor2.setPosition( pos );
-			else
-				outsideCursor2.moveTo( pos );
+		try{
+			while ( localizableCursor1.hasNext() )
+			{
+				localizableCursor1.fwd();
+				localizableCursor1.localize( pos );
+				++i;
+				
+				// how many times far away from the original image do we grab the pixel
+				final int distance = i % 5;
+				direction *= -1;				
+				
+				pos[ i % numDimensions ] += img1.dimensions( i % numDimensions ) * distance * direction;
 	
-			localizableCursor1.getType().set( outsideCursor2.getType() );
+				if ( i % 7 == 0 )
+					outsideCursor2.setPosition( pos );
+				else
+					outsideCursor2.setPosition( pos );
+				
+				final FloatType t1 = localizableCursor1.get();
+				final FloatType t2 = outsideCursor2.get();
+				
+				final float f1 = t1.getRealFloat();
+				final float f2 = t2.getRealFloat();
+				
+				t1.set( t2 );
+				
+			}
 		}
+		catch ( ArrayIndexOutOfBoundsException e ){ System.err.println( ( i % 7 == 0 ? "setPosition() " : "moveTo() " ) + Util.printCoordinates( pos ) ); e.printStackTrace(); System.exit( 1 ); }
 
 		final boolean success = test( img1, reference );
-		
-		img1.close();
-		img2.close();
 		
 		return success;
 	}

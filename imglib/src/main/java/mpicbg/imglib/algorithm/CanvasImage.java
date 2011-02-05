@@ -16,17 +16,18 @@
  */
 package mpicbg.imglib.algorithm;
 
-import mpicbg.imglib.cursor.LocalizableByDimCursor;
-import mpicbg.imglib.cursor.LocalizableCursor;
+import mpicbg.imglib.algorithm.Benchmark;
+import mpicbg.imglib.container.ImgCursor;
+import mpicbg.imglib.container.ImgRandomAccess;
 import mpicbg.imglib.image.Image;
-import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
+import mpicbg.imglib.outofbounds.RasterOutOfBoundsFactory;
 import mpicbg.imglib.type.Type;
 
 public class CanvasImage<T extends Type<T>> implements OutputAlgorithm<T>, Benchmark
 {
 	final Image<T> input;
 	final Image<T> output;
-	final OutOfBoundsStrategyFactory<T> outOfBoundsFactory;
+	final RasterOutOfBoundsFactory<T> outOfBoundsFactory;
 	final int numDimensions;
 	final int[] newSize, offset, location;
 	
@@ -41,11 +42,11 @@ public class CanvasImage<T extends Type<T>> implements OutputAlgorithm<T>, Bench
 	 * @param newSize - the size of the new image
 	 * @param outOfBoundsFactory - what to do when extending the image
 	 */
-	public CanvasImage( final Image<T> input, final int[] newSize, final int[] offset, final OutOfBoundsStrategyFactory<T> outOfBoundsFactory )
+	public CanvasImage( final Image<T> input, final int[] newSize, final int[] offset, final RasterOutOfBoundsFactory<T> outOfBoundsFactory )
 	{
 		this.input = input;
 		this.outOfBoundsFactory = outOfBoundsFactory;
-		this.numDimensions = input.getNumDimensions();
+		this.numDimensions = input.numDimensions();
 		
 		this.newSize = newSize.clone();
 		this.location = new int[ numDimensions ];
@@ -77,16 +78,16 @@ public class CanvasImage<T extends Type<T>> implements OutputAlgorithm<T>, Bench
 	
 	public int[] getOffset() { return offset.clone(); }
 	
-	public CanvasImage( final Image<T> input, final int[] newSize, final OutOfBoundsStrategyFactory<T> outOfBoundsFactory )
+	public CanvasImage( final Image<T> input, final int[] newSize, final RasterOutOfBoundsFactory<T> outOfBoundsFactory )
 	{		
 		this( input, newSize, computeOffset(input, newSize), outOfBoundsFactory ); 
 	}
 	
 	private static int[] computeOffset( final Image<?> input, final int[] newSize )
 	{
-		final int offset[] = new int[ input.getNumDimensions() ];
+		final int offset[] = new int[ input.numDimensions() ];
 		
-		for ( int d = 0; d < input.getNumDimensions(); ++d )
+		for ( int d = 0; d < input.numDimensions(); ++d )
 			offset[ d ] = ( input.getDimension( d ) - newSize[ d ] ) / 2;
 		
 		return offset;
@@ -94,7 +95,7 @@ public class CanvasImage<T extends Type<T>> implements OutputAlgorithm<T>, Bench
 	
 	
 	/**
-	 * This constructor can be called if the image is only cropped, then there is no {@link OutOfBoundsStrategyFactory} necessary.
+	 * This constructor can be called if the image is only cropped, then there is no {@link RasterOutOfBoundsFactory} necessary.
 	 * It will fail if the image size is increased.
 	 *   
 	 * @param input - the input image
@@ -110,24 +111,24 @@ public class CanvasImage<T extends Type<T>> implements OutputAlgorithm<T>, Bench
 	{
 		final long startTime = System.currentTimeMillis();
 
-		final LocalizableCursor<T> outputCursor = output.createLocalizableCursor();
-		final LocalizableByDimCursor<T> inputCursor;
+		final ImgCursor<T> outputCursor = output.createLocalizingRasterIterator();
+		final ImgRandomAccess<T> inputCursor;
 		
 		if ( outOfBoundsFactory == null)
-			inputCursor = input.createLocalizableByDimCursor( );
+			inputCursor = input.createPositionableRasterSampler( );
 		else
-			inputCursor = input.createLocalizableByDimCursor( outOfBoundsFactory );
+			inputCursor = input.createPositionableRasterSampler( outOfBoundsFactory );
 
 		while ( outputCursor.hasNext() )
 		{
 			outputCursor.fwd();
-			outputCursor.getPosition( location );
+			outputCursor.localize( location );
 			
 			for ( int d = 0; d < numDimensions; ++d )
 				location[ d ] += offset[ d ];
 			
-			inputCursor.moveTo( location );
-			outputCursor.getType().set( inputCursor.getType() );
+			inputCursor.setPosition( location );
+			outputCursor.get().set( inputCursor.get() );
 		}
 
 		outputCursor.close();

@@ -24,74 +24,81 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- *
- * @author Stephan Preibisch & Stephan Saalfeld
  */
 package mpicbg.imglib.interpolation.nearestneighbor;
 
-import mpicbg.imglib.cursor.LocalizableByDimCursor;
-import mpicbg.imglib.image.Image;
-import mpicbg.imglib.interpolation.InterpolatorFactory;
-import mpicbg.imglib.interpolation.InterpolatorImpl;
-import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
+import mpicbg.imglib.container.Img;
+import mpicbg.imglib.container.ImgRandomAccess;
+import mpicbg.imglib.interpolation.Interpolator;
+import mpicbg.imglib.location.transform.RoundRasterPositionable;
+import mpicbg.imglib.outofbounds.OutOfBoundsFactory;
 import mpicbg.imglib.type.Type;
-import mpicbg.imglib.util.Util;
 
-public class NearestNeighborInterpolator<T extends Type<T>> extends InterpolatorImpl<T>
+/**
+ * 
+ * @param <T>
+ *
+ * @author Stephan Preibisch and Stephan Saalfeld
+ */
+public class NearestNeighborInterpolator< T extends Type< T > > extends RoundRasterPositionable< ImgRandomAccess< T > > implements Interpolator< T, Img<T> >
 {
-	final LocalizableByDimCursor<T> cursor;
+	final protected OutOfBoundsFactory< T, Img<T> > outOfBoundsStrategyFactory;
+	final protected Img< T > container;
 	
-	protected NearestNeighborInterpolator( final Image<T> img, final InterpolatorFactory<T> interpolatorFactory, final OutOfBoundsStrategyFactory<T> outOfBoundsStrategyFactory )
+	final static private < T extends Type< T > > ImgRandomAccess< T > createPositionableRasterSampler( Img< T > container, final OutOfBoundsFactory<T,Img<T>> outOfBoundsStrategyFactory )
 	{
-		super(img, interpolatorFactory, outOfBoundsStrategyFactory);
-		
-		cursor = img.createLocalizableByDimCursor( outOfBoundsStrategyFactory );
-		
-		moveTo( position );		
-	}
-
-	@Override
-	public void close() { cursor.close(); }
-
-	@Override
-	public T getType() { return cursor.getType(); }
-
-	@Override
-	public void moveTo( final float[] position )
-	{
-		for ( int d = 0; d < numDimensions; d++ )
-		{
-			this.position[ d ] = position[d];
-			
-			//final int pos = (int)( position[d] + (0.5f * Math.signum( position[d] ) ) );
-			final int pos = Util.round( position[ d ] );
-			cursor.move( pos - cursor.getPosition(d), d );
-		}
-	}
-
-	@Override
-	public void moveRel( final float[] vector )
-	{
-		for ( int d = 0; d < numDimensions; d++ )
-		{
-			this.position[ d ] += vector[ d ];
-			
-			//final int pos = (int)( position[d] + (0.5f * Math.signum( position[d] ) ) );
-			final int pos = Util.round( position[ d ] );			
-			cursor.move( pos - cursor.getPosition(d), d );
-		}
+		return container.integerRandomAccess( outOfBoundsStrategyFactory );
 	}
 	
-	@Override
-	public void setPosition( final float[] position )
+	protected NearestNeighborInterpolator( Img< T > container, final OutOfBoundsFactory<T,Img<T>> outOfBoundsStrategyFactory )
 	{
-		for ( int d = 0; d < numDimensions; d++ )
-		{
-			this.position[ d ] = position[d];
+		super( createPositionableRasterSampler( container, outOfBoundsStrategyFactory ) );
+		
+		this.outOfBoundsStrategyFactory = outOfBoundsStrategyFactory;
+		this.container = container;
+	}
+	
+	
+	/* Dimensionality */
+	
+	@Override
+	public int numDimensions()
+	{
+		return container.numDimensions();
+	}
 
-			//final int pos = (int)( position[d] + (0.5f * Math.signum( position[d] ) ) );
-			final int pos = Util.round( position[ d ] );
-			cursor.setPosition( pos, d );
-		}
+	/**
+	 * Returns the {@link RasterOutOfBoundsFactory} used for interpolation
+	 * 
+	 * @return - the {@link RasterOutOfBoundsFactory}
+	 */
+	@Override
+	public OutOfBoundsFactory< T, Img<T> > getOutOfBoundsStrategyFactory()
+	{
+		return outOfBoundsStrategyFactory;
+	}
+
+	/**
+	 * Returns the typed image the interpolator is working on
+	 * 
+	 * @return - the image
+	 */
+	@Override
+	public Img< T > getFunction()
+	{
+		return container;
+	}
+	
+	@Override
+	public T get() { return target.get(); }
+	 
+	@Override 
+	public T create() { return target.create(); }
+	
+	@Override
+	@Deprecated
+	final public T getType()
+	{
+		return get();
 	}
 }

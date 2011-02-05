@@ -1,65 +1,50 @@
 package mpicbg.imglib.type.numeric.complex;
 
 import mpicbg.imglib.algorithm.Precision.PrecisionReal;
-import mpicbg.imglib.image.Image;
-import mpicbg.imglib.image.display.ComplexTypePowerSpectrumDisplay;
-import mpicbg.imglib.image.display.Display;
-import mpicbg.imglib.type.TypeImpl;
+import mpicbg.imglib.type.Type;
 import mpicbg.imglib.type.numeric.ComplexType;
 import mpicbg.imglib.util.Util;
 
-public abstract class ComplexTypeImpl<T extends ComplexTypeImpl<T>> extends TypeImpl<T> implements ComplexType<T>
+public abstract class ComplexTypeImpl<T extends ComplexTypeImpl<T>> implements Type<T>, ComplexType<T>
 {
-	@Override
-	public int getEntitiesPerPixel() { return 2; }
-
-	// the indices for real and complex number
-	int realI = 0, complexI = 1;
-
-	@Override
-	public Display<T> getDefaultDisplay( final Image<T> image )
-	{
-		return new ComplexTypePowerSpectrumDisplay<T>( image );
-	}
-
 	@Override
 	public void set( final T c )
 	{
 		setReal( c.getRealDouble() );
-		setComplex( c.getComplexDouble() );
+		setImaginary( c.getImaginaryDouble() );
 	}
 
 	@Override
 	public void mul( final float c )
 	{
 		setReal( getRealFloat() * c );
-		setComplex( getComplexFloat() * c );
+		setImaginary( getImaginaryFloat() * c );
 	}
 
 	@Override
 	public void mul( final double c )
 	{
 		setReal( getRealDouble() * c );
-		setComplex( getComplexDouble() * c );
+		setImaginary( getImaginaryDouble() * c );
 	}
 
 	@Override
 	public void add( final T c )
 	{
 		setReal( getRealDouble() + c.getRealDouble() );
-		setComplex( getComplexDouble() + c.getComplexDouble() );
+		setImaginary( getImaginaryDouble() + c.getImaginaryDouble() );
 	}
 
 	@Override
 	public void div( final T c )
 	{
 		final double a1 = getRealDouble();
-		final double b1 = getComplexDouble();
+		final double b1 = getImaginaryDouble();
 		final double c1 = c.getRealDouble();
-		final double d1 = c.getComplexDouble();
+		final double d1 = c.getImaginaryDouble();
 
 		setReal( ( a1*c1 + b1*d1 ) / ( c1*c1 + d1*d1 ) );
-		setComplex( ( b1*c1 - a1*d1 ) / ( c1*c1 + d1*d1 ) );
+		setImaginary( ( b1*c1 - a1*d1 ) / ( c1*c1 + d1*d1 ) );
 	}
 
 	@Override
@@ -67,31 +52,31 @@ public abstract class ComplexTypeImpl<T extends ComplexTypeImpl<T>> extends Type
 	{
 		// a + bi
 		final double a = getRealDouble();
-		final double b = getComplexDouble();
+		final double b = getImaginaryDouble();
 
 		// c + di
 		final double c = t.getRealDouble();
-		final double d = t.getComplexDouble();
+		final double d = t.getImaginaryDouble();
 
 		setReal( a*c - b*d );
-		setComplex( a*d + b*c );
+		setImaginary( a*d + b*c );
 	}
 
 	@Override
 	public void sub( final T c )
 	{
 		setReal( getRealDouble() - c.getRealDouble() );
-		setComplex( getComplexDouble() - c.getComplexDouble() );
+		setImaginary( getImaginaryDouble() - c.getImaginaryDouble() );
 	}
 
 	@Override
-	public void complexConjugate(){ setComplex( -getComplexDouble() ); }
+	public void complexConjugate(){ setImaginary( -getImaginaryDouble() ); }
 
 	@Override
 	public float getPowerFloat()
 	{
 		final float real = getRealFloat();
-		final float complex = getComplexFloat();
+		final float complex = getImaginaryFloat();
 
 		return (float)Util.gLog( Math.sqrt( real * real + complex * complex ), 2 );
 	}
@@ -100,7 +85,7 @@ public abstract class ComplexTypeImpl<T extends ComplexTypeImpl<T>> extends Type
 	public double getPowerDouble()
 	{
 		final double real = getRealDouble();
-		final double complex = getComplexDouble();
+		final double complex = getImaginaryDouble();
 
 		return Util.gLog( Math.sqrt( real * real + complex * complex ), 2 );
 	}
@@ -109,7 +94,7 @@ public abstract class ComplexTypeImpl<T extends ComplexTypeImpl<T>> extends Type
 	public float getPhaseFloat()
 	{
 		final float real = getRealFloat();
-		final float complex = getComplexFloat();
+		final float complex = getImaginaryFloat();
 
 		if ( real != 0.0 || complex != 0)
 			return (float)Math.atan2( complex, real );
@@ -121,7 +106,7 @@ public abstract class ComplexTypeImpl<T extends ComplexTypeImpl<T>> extends Type
 	public double getPhaseDouble()
 	{
 		final double real = getRealDouble();
-		final double complex = getComplexDouble();
+		final double complex = getImaginaryDouble();
 
 		if ( real != 0.0 || complex != 0)
 			return (float)Math.atan2( complex, real );
@@ -133,28 +118,28 @@ public abstract class ComplexTypeImpl<T extends ComplexTypeImpl<T>> extends Type
 	public void setOne()
 	{
 		setReal( 1 );
-		setComplex( 0 );
+		setImaginary( 0 );
 	}
 
 	@Override
 	public void setZero()
 	{
 		setReal( 0 );
-		setComplex( 0 );
+		setImaginary( 0 );
 	}
 
 	@Override
 	public void setComplexNumber( final float real, final float complex )
 	{
 		setReal( real );
-		setComplex( complex );
+		setImaginary( complex );
 	}
 
 	@Override
 	public void setComplexNumber( final double real, final double complex )
 	{
 		setReal( real );
-		setComplex( complex );
+		setImaginary( complex );
 	}
 
 	@Override
@@ -162,45 +147,5 @@ public abstract class ComplexTypeImpl<T extends ComplexTypeImpl<T>> extends Type
 
 
 	@Override
-	public void updateIndex( final int i )
-	{
-		this.i = i;
-		realI = i * 2;
-		complexI = i * 2 + 1;
-	}
-
-	@Override
-	public void incIndex()
-	{
-		++i;
-		realI += 2;
-		complexI += 2;
-	}
-	@Override
-	public void incIndex( final int increment )
-	{
-		i += increment;
-
-		final int inc2 = 2 * increment;
-		realI += inc2;
-		complexI += inc2;
-	}
-	@Override
-	public void decIndex()
-	{
-		--i;
-		realI -= 2;
-		complexI -= 2;
-	}
-	@Override
-	public void decIndex( final int decrement )
-	{
-		i -= decrement;
-		final int dec2 = 2 * decrement;
-		realI -= dec2;
-		complexI -= dec2;
-	}
-
-	@Override
-	public String toString(){ return "(" + getRealDouble() + ") + (" + getComplexDouble() + ")i"; }
+	public String toString(){ return "(" + getRealDouble() + ") + (" + getImaginaryDouble() + ")i"; }
 }

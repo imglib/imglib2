@@ -29,23 +29,25 @@
  */
 package mpicbg.imglib.type.numeric.integer;
 
-import mpicbg.imglib.container.DirectAccessContainer;
-import mpicbg.imglib.container.DirectAccessContainerFactory;
+import mpicbg.imglib.container.NativeContainer;
+import mpicbg.imglib.container.NativeContainerFactory;
 import mpicbg.imglib.container.basictypecontainer.LongAccess;
 import mpicbg.imglib.container.basictypecontainer.array.LongArray;
-import mpicbg.imglib.cursor.Cursor;
+import mpicbg.imglib.type.NativeType;
 import mpicbg.imglib.util.Util;
 
-final public class LongType extends IntegerTypeImpl<LongType>
+final public class LongType extends IntegerTypeImpl<LongType> implements NativeType<LongType>
 {
-	// the DirectAccessContainer
-	final DirectAccessContainer<LongType, ? extends LongAccess> storage;
+	private int i = 0;
 	
-	// the (sub)DirectAccessContainer that holds the information 
+	// the NativeContainer
+	final NativeContainer<LongType, ? extends LongAccess> storage;
+	
+	// the (sub)NativeContainer that holds the information 
 	LongAccess b;
 	
 	// this is the constructor if you want it to read from an array
-	public LongType( DirectAccessContainer<LongType, ? extends LongAccess> longStorage )
+	public LongType( NativeContainer<LongType, ? extends LongAccess> longStorage )
 	{
 		storage = longStorage;
 	}
@@ -62,28 +64,25 @@ final public class LongType extends IntegerTypeImpl<LongType>
 	public LongType() { this( 0 ); }
 
 	@Override
-	public DirectAccessContainer<LongType, ? extends LongAccess> createSuitableDirectAccessContainer( final DirectAccessContainerFactory storageFactory, final int dim[] )
+	public NativeContainer<LongType, ? extends LongAccess> createSuitableNativeContainer( final NativeContainerFactory<LongType> storageFactory, final long dim[] )
 	{
 		// create the container
-		final DirectAccessContainer<LongType, ? extends LongAccess> container = storageFactory.createLongInstance( dim, 1 );
+		final NativeContainer<LongType, ? extends LongAccess> container = storageFactory.createLongInstance( new LongType(), dim, 1 );
 		
 		// create a Type that is linked to the container
 		final LongType linkedType = new LongType( container );
 		
-		// pass it to the DirectAccessContainer
+		// pass it to the NativeContainer
 		container.setLinkedType( linkedType );
 		
 		return container;
 	}
 
 	@Override
-	public void updateContainer( final Cursor<?> c ) 
-	{ 
-		b = storage.update( c ); 
-	}
+	public void updateContainer( final Object c ) { b = storage.update( c ); }
 
 	@Override
-	public LongType duplicateTypeOnSameDirectAccessContainer() { return new LongType( storage ); }
+	public LongType duplicateTypeOnSameNativeContainer() { return new LongType( storage ); }
 	
 	public long get(){ return b.getValue( i ); }
 	public void set( final long f ){ b.setValue( i, f ); }
@@ -175,17 +174,25 @@ final public class LongType extends IntegerTypeImpl<LongType>
 	}
 
 	@Override
-	public LongType[] createArray1D(int size1){ return new LongType[ size1 ]; }
-
-	@Override
-	public LongType[][] createArray2D(int size1, int size2){ return new LongType[ size1 ][ size2 ]; }
-
-	@Override
-	public LongType[][][] createArray3D(int size1, int size2, int size3) { return new LongType[ size1 ][ size2 ][ size3 ]; }
-
-	@Override
 	public LongType createVariable(){ return new LongType( 0 ); }
 
 	@Override
 	public LongType copy(){ return new LongType( get() ); }
+	
+	@Override
+	public int getEntitiesPerPixel() { return 1; }
+
+	@Override
+	public void updateIndex( final int i ) { this.i = i; }
+	@Override
+	public int getIndex() { return i; }
+	
+	@Override
+	public void incIndex() { ++i; }
+	@Override
+	public void incIndex( final int increment ) { i += increment; }
+	@Override
+	public void decIndex() { --i; }
+	@Override
+	public void decIndex( final int decrement ) { i -= decrement; }		
 }

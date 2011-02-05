@@ -24,13 +24,10 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- *
- * @author Stephan Preibisch & Stephan Saalfeld
  */
 package mpicbg.imglib.container.cell;
 
-import mpicbg.imglib.container.DirectAccessContainer;
-import mpicbg.imglib.container.DirectAccessContainerFactory;
+import mpicbg.imglib.container.NativeContainerFactory;
 import mpicbg.imglib.container.basictypecontainer.array.BitArray;
 import mpicbg.imglib.container.basictypecontainer.array.ByteArray;
 import mpicbg.imglib.container.basictypecontainer.array.CharArray;
@@ -41,77 +38,82 @@ import mpicbg.imglib.container.basictypecontainer.array.LongArray;
 import mpicbg.imglib.container.basictypecontainer.array.ShortArray;
 import mpicbg.imglib.type.Type;
 
-public class CellContainerFactory extends DirectAccessContainerFactory
+/**
+ * 
+ * 
+ *
+ * @author Stephan Preibisch and Stephan Saalfeld
+ */
+public class CellContainerFactory extends NativeContainerFactory
 {
 	protected int[] cellSize;
-	protected int standardCellSize = 10;
 
-	public CellContainerFactory()
-	{
-	}
+	protected int standardCellSize = 10;
+	
+	public CellContainerFactory(){}
 	
 	public CellContainerFactory( final int cellSize )
 	{
 		this.standardCellSize = cellSize;
 	}
-	
+
 	public CellContainerFactory( final int[] cellSize )
 	{
 		if ( cellSize == null || cellSize.length == 0 )
 		{
-			System.err.println("CellContainerFactory(): cellSize is null. Using equal cell size of 10.");
+			System.err.println( "CellContainerFactory(): cellSize is null. Using equal cell size of 10." );
 			this.cellSize = null;
 			return;
 		}
-		
+
 		for ( int i = 0; i < cellSize.length; i++ )
 		{
 			if ( cellSize[ i ] <= 0 )
 			{
-				System.err.println("CellContainerFactory(): cell size in dimension " + i + " is <= 0, using a size of " + standardCellSize + ".");
+				System.err.println( "CellContainerFactory(): cell size in dimension " + i + " is <= 0, using a size of " + standardCellSize + "." );
 				cellSize[ i ] = standardCellSize;
 			}
 		}
-		
+
 		this.cellSize = cellSize;
 	}
-	
+
 	protected int[] checkDimensions( int dimensions[] )
 	{
 		if ( dimensions == null || dimensions.length == 0 )
 		{
-			System.err.println("CellContainerFactory(): dimensionality is null. Creating a 1D cell with size 1.");
-			dimensions = new int[]{1};
+			System.err.println( "CellContainerFactory(): dimensionality is null. Creating a 1D cell with size 1." );
+			dimensions = new int[] { 1 };
 		}
 
 		for ( int i = 0; i < dimensions.length; i++ )
 		{
 			if ( dimensions[ i ] <= 0 )
 			{
-				System.err.println("CellContainerFactory(): size of dimension " + i + " is <= 0, using a size of 1.");
+				System.err.println( "CellContainerFactory(): size of dimension " + i + " is <= 0, using a size of 1." );
 				dimensions[ i ] = 1;
 			}
 		}
 
 		return dimensions;
 	}
-	
+
 	protected int[] checkCellSize( int[] cellSize, int[] dimensions )
-	{		
+	{
 		if ( cellSize == null )
 		{
 			cellSize = new int[ dimensions.length ];
 			for ( int i = 0; i < cellSize.length; i++ )
 				cellSize[ i ] = standardCellSize;
-			
+
 			return cellSize;
 		}
-		
+
 		if ( cellSize.length != dimensions.length )
 		{
-			System.err.println("CellContainerFactory(): dimensionality of image is unequal to dimensionality of cells, adjusting cell dimensionality.");
+			System.err.println( "CellContainerFactory(): dimensionality of image is unequal to dimensionality of cells, adjusting cell dimensionality." );
 			int[] cellSizeNew = new int[ dimensions.length ];
-			
+
 			for ( int i = 0; i < dimensions.length; i++ )
 			{
 				if ( i < cellSize.length )
@@ -119,83 +121,83 @@ public class CellContainerFactory extends DirectAccessContainerFactory
 				else
 					cellSizeNew[ i ] = standardCellSize;
 			}
-					
+
 			return cellSizeNew;
 		}
-		
+
 		return cellSize;
 	}
 
 	@Override
-	public <T extends Type<T>> DirectAccessContainer<T, BitArray> createBitInstance( int[] dimensions, int entitiesPerPixel )
+	public < T extends Type< T > > CellContainer< T, BitArray > createBitInstance( int[] dimensions, int entitiesPerPixel )
 	{
 		dimensions = checkDimensions( dimensions );
 		int[] cellSize = checkCellSize( this.cellSize, dimensions );
-		
-		return new CellContainer<T, BitArray>( this, new BitArray( 1 ), dimensions, cellSize, entitiesPerPixel );
-	}
-	
-	@Override
-	public <T extends Type<T>> DirectAccessContainer<T, ByteArray> createByteInstance( int[] dimensions, int entitiesPerPixel )
-	{
-		dimensions = checkDimensions( dimensions );
-		int[] cellSize = checkCellSize( this.cellSize, dimensions );
-		
-		return new CellContainer<T, ByteArray>( this, new ByteArray( 1 ), dimensions, cellSize, entitiesPerPixel );
+
+		return new CellContainer< T, BitArray >( this, new BitArray( 1 ), dimensions, cellSize, entitiesPerPixel );
 	}
 
 	@Override
-	public <T extends Type<T>> DirectAccessContainer<T, CharArray> createCharInstance(int[] dimensions, int entitiesPerPixel)
+	public < T extends Type< T > > CellContainer< T, ByteArray > createByteInstance( int[] dimensions, int entitiesPerPixel )
 	{
 		dimensions = checkDimensions( dimensions );
 		int[] cellSize = checkCellSize( this.cellSize, dimensions );
-		
-		return new CellContainer<T, CharArray>( this, new CharArray( 1 ), dimensions, cellSize, entitiesPerPixel );
+
+		return new CellContainer< T, ByteArray >( this, new ByteArray( 1 ), dimensions, cellSize, entitiesPerPixel );
 	}
 
 	@Override
-	public <T extends Type<T>> DirectAccessContainer<T, DoubleArray> createDoubleInstance(int[] dimensions, int entitiesPerPixel)
+	public < T extends Type< T > > CellContainer< T, CharArray > createCharInstance( int[] dimensions, int entitiesPerPixel )
 	{
 		dimensions = checkDimensions( dimensions );
 		int[] cellSize = checkCellSize( this.cellSize, dimensions );
-		
-		return new CellContainer<T, DoubleArray>( this, new DoubleArray( 1 ), dimensions, cellSize, entitiesPerPixel );
+
+		return new CellContainer< T, CharArray >( this, new CharArray( 1 ), dimensions, cellSize, entitiesPerPixel );
 	}
 
 	@Override
-	public <T extends Type<T>> DirectAccessContainer<T, FloatArray> createFloatInstance(int[] dimensions, int entitiesPerPixel)
+	public < T extends Type< T > > CellContainer< T, DoubleArray > createDoubleInstance( int[] dimensions, int entitiesPerPixel )
 	{
 		dimensions = checkDimensions( dimensions );
 		int[] cellSize = checkCellSize( this.cellSize, dimensions );
-		
-		return new CellContainer<T, FloatArray>( this, new FloatArray( 1 ), dimensions, cellSize, entitiesPerPixel );
+
+		return new CellContainer< T, DoubleArray >( this, new DoubleArray( 1 ), dimensions, cellSize, entitiesPerPixel );
 	}
 
 	@Override
-	public <T extends Type<T>> DirectAccessContainer<T, IntArray> createIntInstance(int[] dimensions, int entitiesPerPixel)
+	public < T extends Type< T > > CellContainer< T, FloatArray > createFloatInstance( int[] dimensions, int entitiesPerPixel )
 	{
 		dimensions = checkDimensions( dimensions );
 		int[] cellSize = checkCellSize( this.cellSize, dimensions );
-		
-		return new CellContainer<T, IntArray>( this, new IntArray( 1 ), dimensions, cellSize, entitiesPerPixel );
+
+		return new CellContainer< T, FloatArray >( this, new FloatArray( 1 ), dimensions, cellSize, entitiesPerPixel );
 	}
 
 	@Override
-	public <T extends Type<T>> DirectAccessContainer<T, LongArray> createLongInstance(int[] dimensions, int entitiesPerPixel)
+	public < T extends Type< T > > CellContainer< T, IntArray > createIntInstance( int[] dimensions, int entitiesPerPixel )
 	{
 		dimensions = checkDimensions( dimensions );
 		int[] cellSize = checkCellSize( this.cellSize, dimensions );
-		
-		return new CellContainer<T, LongArray>( this, new LongArray( 1 ), dimensions, cellSize, entitiesPerPixel );
+
+		return new CellContainer< T, IntArray >( this, new IntArray( 1 ), dimensions, cellSize, entitiesPerPixel );
 	}
 
 	@Override
-	public <T extends Type<T>> DirectAccessContainer<T, ShortArray> createShortInstance(int[] dimensions, int entitiesPerPixel)
+	public < T extends Type< T > > CellContainer< T, LongArray > createLongInstance( int[] dimensions, int entitiesPerPixel )
 	{
 		dimensions = checkDimensions( dimensions );
 		int[] cellSize = checkCellSize( this.cellSize, dimensions );
-		
-		return new CellContainer<T, ShortArray>( this, new ShortArray( 1 ), dimensions, cellSize, entitiesPerPixel );
+
+		return new CellContainer< T, LongArray >( this, new LongArray( 1 ), dimensions, cellSize, entitiesPerPixel );
+	}
+
+	@Override
+	public < T extends Type< T > > CellContainer< T, ShortArray > createShortInstance( int[] dimensions, int entitiesPerPixel )
+	{
+		dimensions = checkDimensions( dimensions );
+		int[] cellSize = checkCellSize( this.cellSize, dimensions );
+
+		return new CellContainer< T, ShortArray >( this, new ShortArray( 1 ), dimensions, cellSize, entitiesPerPixel );
 	}
 
 	@Override
@@ -208,15 +210,15 @@ public class CellContainerFactory extends DirectAccessContainerFactory
 	@Override
 	public void printProperties()
 	{
-		// TODO Auto-generated method stub
-		
+	// TODO Auto-generated method stub
+
 	}
 
 	@Override
-	public void setParameters(String configuration)
+	public void setParameters( String configuration )
 	{
-		// TODO Auto-generated method stub
-		
+	// TODO Auto-generated method stub
+
 	}
 
 }

@@ -29,7 +29,7 @@
  */
 package mpicbg.imglib.image.display;
 
-import mpicbg.imglib.cursor.Cursor;
+import mpicbg.imglib.container.ImgCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.type.numeric.IntegerType;
 
@@ -47,7 +47,7 @@ public class IntegerTypeDisplay<T extends IntegerType<T>> extends Display<T>
 	@Override
 	public void setMinMax()
 	{
-		final Cursor<T> c = img.createCursor();
+		final ImgCursor<T> c = img.createRasterIterator();
 		
 		if ( !c.hasNext() )
 		{
@@ -58,13 +58,13 @@ public class IntegerTypeDisplay<T extends IntegerType<T>> extends Display<T>
 		}
 		
 		c.fwd();
-		min = max = c.getType().getIntegerLong();
+		min = max = c.get().getIntegerLong();
 
 		while ( c.hasNext() )
 		{
 			c.fwd();
 			
-			final long value = c.getType().getIntegerLong();
+			final long value = c.get().getIntegerLong();
 
 			if ( value > max )
 				max = value;

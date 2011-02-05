@@ -30,27 +30,27 @@
 
 package mpicbg.imglib.type.logic;
 
-import mpicbg.imglib.container.DirectAccessContainer;
-import mpicbg.imglib.container.DirectAccessContainerFactory;
+import mpicbg.imglib.container.NativeContainer;
+import mpicbg.imglib.container.NativeContainerFactory;
 import mpicbg.imglib.container.basictypecontainer.BitAccess;
 import mpicbg.imglib.container.basictypecontainer.array.BitArray;
-import mpicbg.imglib.cursor.Cursor;
-import mpicbg.imglib.image.Image;
-import mpicbg.imglib.image.display.BitTypeDisplay;
 import mpicbg.imglib.type.BooleanType;
+import mpicbg.imglib.type.NativeType;
 import mpicbg.imglib.type.numeric.RealType;
 import mpicbg.imglib.type.numeric.integer.IntegerTypeImpl;
 
-public class BitType extends IntegerTypeImpl<BitType> implements BooleanType<BitType>, RealType<BitType>
+public class BitType extends IntegerTypeImpl<BitType> implements BooleanType<BitType>, RealType<BitType>, NativeType<BitType>
 {
-	// the DirectAccessContainer
-	final DirectAccessContainer<BitType, ? extends BitAccess> storage;
+	private int i = 0;
 	
-	// the (sub)DirectAccessContainer that holds the information 
+	// the NativeContainer
+	final NativeContainer<BitType, ? extends BitAccess> storage;
+	
+	// the (sub)NativeContainer that holds the information 
 	BitAccess b;
 	
 	// this is the constructor if you want it to read from an array
-	public BitType( DirectAccessContainer<BitType, ? extends BitAccess> bitStorage )
+	public BitType( NativeContainer<BitType, ? extends BitAccess> bitStorage )
 	{
 		storage = bitStorage;
 	}
@@ -67,34 +67,25 @@ public class BitType extends IntegerTypeImpl<BitType> implements BooleanType<Bit
 	public BitType() { this( false ); }
 	
 	@Override
-	public DirectAccessContainer<BitType, ? extends BitAccess> createSuitableDirectAccessContainer( final DirectAccessContainerFactory storageFactory, final int dim[] )
+	public NativeContainer<BitType, ? extends BitAccess> createSuitableNativeContainer( final NativeContainerFactory<BitType> storageFactory, final long dim[] )
 	{
 		// create the container
-		final DirectAccessContainer<BitType, ? extends BitAccess> container = storageFactory.createBitInstance( dim, 1 );
+		final NativeContainer<BitType, ? extends BitAccess> container = storageFactory.createBitInstance( new BitType(), dim, 1 );
 		
 		// create a Type that is linked to the container
 		final BitType linkedType = new BitType( container );
 		
-		// pass it to the DirectAccessContainer
+		// pass it to the NativeContainer
 		container.setLinkedType( linkedType );
 		
 		return container;
 	}
 		
 	@Override
-	public void updateContainer( final Cursor<?> c ) 
-	{ 
-		b = storage.update( c );
-	}
+	public void updateContainer( final Object c ) { b = storage.update( c ); }
 	
 	@Override
-	public BitType duplicateTypeOnSameDirectAccessContainer() { return new BitType( storage ); }
-
-	@Override
-	public BitTypeDisplay getDefaultDisplay( final Image<BitType> image )
-	{
-		return new BitTypeDisplay( image );
-	}
+	public BitType duplicateTypeOnSameNativeContainer() { return new BitType( storage ); }
 
 	@Override
 	public boolean get() { return b.getValue( i ); }
@@ -197,15 +188,6 @@ public class BitType extends IntegerTypeImpl<BitType> implements BooleanType<Bit
 		else 
 			return 0;
 	}
-
-	@Override
-	public BitType[] createArray1D(int size1){ return new BitType[ size1 ]; }
-
-	@Override
-	public BitType[][] createArray2D(int size1, int size2){ return new BitType[ size1 ][ size2 ]; }
-
-	@Override
-	public BitType[][][] createArray3D(int size1, int size2, int size3) { return new BitType[ size1 ][ size2 ][ size3 ]; }
 	
 	@Override
 	public BitType createVariable(){ return new BitType(); }
@@ -223,4 +205,21 @@ public class BitType extends IntegerTypeImpl<BitType> implements BooleanType<Bit
 		else 
 			return "0"; 			
 	}
+	
+	@Override
+	public int getEntitiesPerPixel() { return 1; }
+	
+	@Override
+	public void updateIndex( final int index ) { this.i = index; }
+	@Override
+	public int getIndex() { return i; }
+	
+	@Override
+	public void incIndex() { ++i; }
+	@Override
+	public void incIndex( final int increment ) { i += increment; }
+	@Override
+	public void decIndex() { --i; }
+	@Override
+	public void decIndex( final int decrement ) { i -= decrement; }	
 }

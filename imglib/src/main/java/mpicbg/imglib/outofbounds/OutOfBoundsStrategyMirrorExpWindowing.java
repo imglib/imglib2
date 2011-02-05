@@ -24,20 +24,23 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- *
- * @author Stephan Preibisch & Stephan Saalfeld
  */
 package mpicbg.imglib.outofbounds;
 
-import mpicbg.imglib.cursor.LocalizableByDimCursor;
-import mpicbg.imglib.cursor.LocalizableCursor;
+import mpicbg.imglib.container.ImgRandomAccess;
 import mpicbg.imglib.type.numeric.RealType;
 import mpicbg.imglib.util.Util;
 
-public class OutOfBoundsStrategyMirrorExpWindowing<T extends RealType<T>> extends OutOfBoundsStrategy<T>
+/**
+ * 
+ * @param <T>
+ *
+ * @author Stephan Preibisch and Stephan Saalfeld <saalfeld@mpi-cbg.de>
+ */
+public class OutOfBoundsStrategyMirrorExpWindowing<T extends RealType<T>> extends OutOfBoundsMirrorSingleBoundary< T >
 {
-	final LocalizableCursor<T> parentCursor;
-	final LocalizableByDimCursor<T> mirrorCursor;
+	final ImgRandomAccess<T> parentCursor;
+	final ImgRandomAccess<T> mirrorCursor;
 	final T type, mirrorType;
 	final int numDimensions;
 	final int[] dimension, position, mirroredPosition, currentDirection, tmp;
@@ -45,16 +48,16 @@ public class OutOfBoundsStrategyMirrorExpWindowing<T extends RealType<T>> extend
 	final float[][] weights;
 	final float cutOff = 0.0001f;
 	
-	public OutOfBoundsStrategyMirrorExpWindowing( final LocalizableCursor<T> parentCursor, final int[] fadeOutDistance, final float exponent )
+	public OutOfBoundsStrategyMirrorExpWindowing( final OutOfBoundsCursor<T> parentCursor, final int[] fadeOutDistance, final float exponent )
 	{
 		super( parentCursor );
 		
 		this.parentCursor = parentCursor;
-		this.mirrorCursor = parentCursor.getImage().createLocalizableByDimCursor();
-		this.mirrorType = mirrorCursor.getType();
+		this.mirrorCursor = parentCursor.getImage().createPositionableRasterSampler();
+		this.mirrorType = mirrorCursor.get();
 		this.type = mirrorType.createVariable();
 			
-		this.numDimensions = parentCursor.getImage().getNumDimensions();
+		this.numDimensions = parentCursor.getImage().numDimensions();
 		this.dimension = parentCursor.getImage().getDimensions();
 		this.position = new int[ numDimensions ];
 		this.mirroredPosition = new int[ numDimensions ];
@@ -93,12 +96,12 @@ public class OutOfBoundsStrategyMirrorExpWindowing<T extends RealType<T>> extend
 	
 
 	@Override
-	public T getType(){ return type; }
+	public T get(){ return type; }
 	
 	@Override
 	final public void notifyOutOfBOunds()
 	{
-		parentCursor.getPosition( position );
+		parentCursor.localize( position );
 		getMirrorCoordinate( position, mirroredPosition );		
 		mirrorCursor.setPosition( mirroredPosition );
 
@@ -156,7 +159,7 @@ public class OutOfBoundsStrategyMirrorExpWindowing<T extends RealType<T>> extend
 		else
 		{
 			for ( int i = 0; i < -steps; ++i )
-				notifyOutOfBOundsBck( dim );
+				notifyOutOfBoundsBck( dim );
 		}
 	}
 	
@@ -165,7 +168,7 @@ public class OutOfBoundsStrategyMirrorExpWindowing<T extends RealType<T>> extend
 	{
 		if ( currentDirection[ dim ] == 1 )
 		{
-			if ( mirrorCursor.getPosition( dim ) + 1 == dimension[ dim ] )
+			if ( mirrorCursor.getIntPosition( dim ) + 1 == dimension[ dim ] )
 			{
 				mirrorCursor.bck( dim );
 				currentDirection[ dim ] = -1;				
@@ -177,7 +180,7 @@ public class OutOfBoundsStrategyMirrorExpWindowing<T extends RealType<T>> extend
 		}
 		else
 		{
-			if ( mirrorCursor.getPosition( dim ) == 0 )
+			if ( mirrorCursor.getIntPosition( dim ) == 0 )
 			{
 				currentDirection[ dim ] = 1;
 				mirrorCursor.fwd( dim );
@@ -189,18 +192,18 @@ public class OutOfBoundsStrategyMirrorExpWindowing<T extends RealType<T>> extend
 		}
 		
 		type.set( mirrorType );		
-		parentCursor.getPosition( position );
+		parentCursor.localize( position );
 		type.mul( getWeight( position ) );
 	}
 
 	@Override
-	public void notifyOutOfBOundsBck( final int dim ) 
+	public void notifyOutOfBoundsBck( final int dim ) 
 	{
 		// current direction of the mirror cursor when going forward
 		if ( currentDirection[ dim ] == 1 )
 		{
 			// so we have to move the mirror cursor back if we are not position 0
-			if ( mirrorCursor.getPosition( dim ) == 0 )
+			if ( mirrorCursor.getIntPosition( dim ) == 0 )
 			{
 				// the mirror cursor is at position 0, so we have to go forward instead 
 				mirrorCursor.fwd( dim );
@@ -215,7 +218,7 @@ public class OutOfBoundsStrategyMirrorExpWindowing<T extends RealType<T>> extend
 		}
 		else
 		{
-			if ( mirrorCursor.getPosition( dim ) + 1 == dimension[ dim ] )
+			if ( mirrorCursor.getIntPosition( dim ) + 1 == dimension[ dim ] )
 			{
 				mirrorCursor.bck( dim );				
 				currentDirection[ dim ] = 1;
@@ -228,7 +231,7 @@ public class OutOfBoundsStrategyMirrorExpWindowing<T extends RealType<T>> extend
 		}
 		
 		type.set( mirrorType );		
-		parentCursor.getPosition( position );
+		parentCursor.localize( position );
 		type.mul( getWeight( position ) );
 	}
 	
@@ -236,7 +239,7 @@ public class OutOfBoundsStrategyMirrorExpWindowing<T extends RealType<T>> extend
 	 * For mirroring, there is no difference between leaving the image and moving while 
 	 * being out of image bounds
 	 * 
-	 * @see mpicbg.imglib.outofbounds.OutOfBoundsStrategy#notifyOutOfBounds()
+	 * @see mpicbg.imglib.outofbounds.RealOutOfBounds#notifyOutOfBounds()
 	 */
 	@Override
 	public void initOutOfBOunds() { notifyOutOfBOunds(); }

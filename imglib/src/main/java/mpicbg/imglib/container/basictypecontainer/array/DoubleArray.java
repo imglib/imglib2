@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2009--2010, Stephan Preibisch & Stephan Saalfeld
+ * Copyright (c) 2009--2011, Stephan Preibisch & Stephan Saalfeld
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -9,7 +9,7 @@
  * list of conditions and the following disclaimer.  Redistributions in binary
  * form must reproduce the above copyright notice, this list of conditions and
  * the following disclaimer in the documentation and/or other materials
- * provided with the distribution.  Neither the name of the Fiji project nor
+ * provided with the distribution.  Neither the name of the imglib project nor
  * the names of its contributors may be used to endorse or promote products
  * derived from this software without specific prior written permission.
  * 
@@ -24,19 +24,21 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- *
- * @author Stephan Preibisch & Stephan Saalfeld
  */
 package mpicbg.imglib.container.basictypecontainer.array;
 
 import mpicbg.imglib.container.basictypecontainer.DoubleAccess;
 
-public class DoubleArray implements DoubleAccess, ArrayDataAccess<DoubleArray>
+/**
+*
+* @author Stephan Preibisch and Stephan Saalfeld <saalfeld@mpi-cbg.de>
+*/
+public class DoubleArray implements DoubleAccess, ArrayDataAccess< DoubleArray >
 {
 	protected double data[];
 
 	public DoubleArray( final int numEntities )
-	{ 
+	{
 		this.data = new double[ numEntities ];
 	}
 
@@ -44,9 +46,12 @@ public class DoubleArray implements DoubleAccess, ArrayDataAccess<DoubleArray>
 	{
 		this.data = data;
 	}
-	
+
 	@Override
-	public void close() { data = null; }
+	public void close()
+	{
+		data = null;
+	}
 
 	@Override
 	public double getValue( final int index )
@@ -57,13 +62,17 @@ public class DoubleArray implements DoubleAccess, ArrayDataAccess<DoubleArray>
 	@Override
 	public void setValue( final int index, final double value )
 	{
-		data[ index ] = value;		
+		data[ index ] = value;
 	}
-	
-	@Override
-	public DoubleArray createArray( final int numEntities ) { return new DoubleArray( numEntities ); }
 
 	@Override
-	public double[] getCurrentStorageArray(){ return data; }
+	public DoubleArray createArray( final int numEntities )
+	{
+		return new DoubleArray( numEntities );
+	}
 
+	public double[] getCurrentStorageArray()
+	{
+		return data;
+	}
 }

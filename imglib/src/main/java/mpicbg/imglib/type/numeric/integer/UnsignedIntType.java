@@ -29,15 +29,15 @@
  */
 package mpicbg.imglib.type.numeric.integer;
 
-import mpicbg.imglib.container.DirectAccessContainer;
-import mpicbg.imglib.container.DirectAccessContainerFactory;
+import mpicbg.imglib.container.NativeContainer;
+import mpicbg.imglib.container.NativeContainerFactory;
 import mpicbg.imglib.container.basictypecontainer.IntAccess;
 import mpicbg.imglib.util.Util;
 
 public class UnsignedIntType extends GenericIntType<UnsignedIntType>
 {
 	// this is the constructor if you want it to read from an array
-	public UnsignedIntType( DirectAccessContainer<UnsignedIntType, ? extends IntAccess> intStorage ) { super( intStorage ); }
+	public UnsignedIntType( NativeContainer<UnsignedIntType, ? extends IntAccess> intStorage ) { super( intStorage ); }
 
 	// this is the constructor if you want it to be a variable
 	public UnsignedIntType( final long value ) { super( getCodedSignedIntChecked(value) ); }
@@ -58,22 +58,22 @@ public class UnsignedIntType extends GenericIntType<UnsignedIntType>
 	public static long getUnsignedInt( final int signedInt ) { return signedInt & 0xffffffffL; }
 
 	@Override
-	public DirectAccessContainer<UnsignedIntType, ? extends IntAccess> createSuitableDirectAccessContainer( final DirectAccessContainerFactory storageFactory, final int dim[] )
+	public NativeContainer<UnsignedIntType, ? extends IntAccess> createSuitableNativeContainer( final NativeContainerFactory<UnsignedIntType> storageFactory, final long dim[] )
 	{
 		// create the container
-		final DirectAccessContainer<UnsignedIntType, ? extends IntAccess> container = storageFactory.createIntInstance( dim, 1 );
+		final NativeContainer<UnsignedIntType, ? extends IntAccess> container = storageFactory.createIntInstance( new UnsignedIntType(), dim, 1 );
 		
 		// create a Type that is linked to the container
 		final UnsignedIntType linkedType = new UnsignedIntType( container );
 		
-		// pass it to the DirectAccessContainer
+		// pass it to the NativeContainer
 		container.setLinkedType( linkedType );
 		
 		return container;
 	}
 	
 	@Override
-	public UnsignedIntType duplicateTypeOnSameDirectAccessContainer() { return new UnsignedIntType( storage ); }
+	public UnsignedIntType duplicateTypeOnSameNativeContainer() { return new UnsignedIntType( storage ); }
 
 	@Override
 	public void mul( final float c )
@@ -125,15 +125,6 @@ public class UnsignedIntType extends GenericIntType<UnsignedIntType>
 		else 
 			return 0;
 	}
-
-	@Override
-	public UnsignedIntType[] createArray1D( final int size1 ){ return new UnsignedIntType[ size1 ]; }
-
-	@Override
-	public UnsignedIntType[][] createArray2D( final int size1, final int size2 ){ return new UnsignedIntType[ size1 ][ size2 ]; }
-
-	@Override
-	public UnsignedIntType[][][] createArray3D( final int size1, final int size2, final int size3 ) { return new UnsignedIntType[ size1 ][ size2 ][ size3 ]; }
 
 	@Override
 	public UnsignedIntType createVariable(){ return new UnsignedIntType( 0 ); }

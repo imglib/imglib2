@@ -29,23 +29,28 @@
  */
 package mpicbg.imglib.type.numeric.complex;
 
-import mpicbg.imglib.container.DirectAccessContainer;
-import mpicbg.imglib.container.DirectAccessContainerFactory;
+import mpicbg.imglib.container.NativeContainer;
+import mpicbg.imglib.container.NativeContainerFactory;
 import mpicbg.imglib.container.basictypecontainer.DoubleAccess;
 import mpicbg.imglib.container.basictypecontainer.array.DoubleArray;
-import mpicbg.imglib.cursor.Cursor;
+import mpicbg.imglib.type.NativeType;
 import mpicbg.imglib.type.numeric.ComplexType;
 
-public class ComplexDoubleType extends ComplexTypeImpl<ComplexDoubleType> implements ComplexType<ComplexDoubleType>
+public class ComplexDoubleType extends ComplexTypeImpl<ComplexDoubleType> implements ComplexType<ComplexDoubleType>, NativeType<ComplexDoubleType>
 {
-	// the DirectAccessContainer
-	final DirectAccessContainer<ComplexDoubleType, ? extends DoubleAccess> storage;
+	private int i = 0;
 	
-	// the (sub)DirectAccessContainer that holds the information 
+	// the indices for real and complex number
+	private int realI = 0, complexI = 1;
+
+	// the NativeContainer
+	final NativeContainer<ComplexDoubleType, ? extends DoubleAccess> storage;
+	
+	// the (sub)NativeContainer that holds the information 
 	DoubleAccess b;
 	
 	// this is the constructor if you want it to read from an array
-	public ComplexDoubleType( DirectAccessContainer<ComplexDoubleType, ? extends DoubleAccess> complexfloatStorage )
+	public ComplexDoubleType( NativeContainer<ComplexDoubleType, ? extends DoubleAccess> complexfloatStorage )
 	{
 		storage = complexfloatStorage;
 	}
@@ -62,46 +67,43 @@ public class ComplexDoubleType extends ComplexTypeImpl<ComplexDoubleType> implem
 	public ComplexDoubleType() { this( 0, 0 ); }
 
 	@Override
-	public DirectAccessContainer<ComplexDoubleType, ? extends DoubleAccess> createSuitableDirectAccessContainer( final DirectAccessContainerFactory storageFactory, final int dim[] )
+	public NativeContainer<ComplexDoubleType, ? extends DoubleAccess> createSuitableNativeContainer( final NativeContainerFactory<ComplexDoubleType> storageFactory, final long dim[] )
 	{
 		// create the container
-		final DirectAccessContainer<ComplexDoubleType, ? extends DoubleAccess> container = storageFactory.createDoubleInstance( dim, 2 );
+		final NativeContainer<ComplexDoubleType, ? extends DoubleAccess> container = storageFactory.createDoubleInstance( new ComplexDoubleType(), dim, 2 );
 		
 		// create a Type that is linked to the container
 		final ComplexDoubleType linkedType = new ComplexDoubleType( container );
 		
-		// pass it to the DirectAccessContainer
+		// pass it to the NativeContainer
 		container.setLinkedType( linkedType );
 		
 		return container;
 	}
 
 	@Override
-	public void updateContainer( final Cursor<?> c ) 
-	{ 
-		b = storage.update( c );		
-	}
+	public void updateContainer( final Object c ) { b = storage.update( c ); }
 	
 	@Override
-	public ComplexDoubleType duplicateTypeOnSameDirectAccessContainer() { return new ComplexDoubleType( storage ); }
+	public ComplexDoubleType duplicateTypeOnSameNativeContainer() { return new ComplexDoubleType( storage ); }
 
 	@Override
 	public float getRealFloat() { return (float)b.getValue( realI ); }
 	@Override
 	public double getRealDouble() { return b.getValue( realI ); }
 	@Override
-	public float getComplexFloat() { return (float)b.getValue( complexI ); }
+	public float getImaginaryFloat() { return (float)b.getValue( complexI ); }
 	@Override
-	public double getComplexDouble() { return b.getValue( complexI ); }
+	public double getImaginaryDouble() { return b.getValue( complexI ); }
 	
 	@Override
 	public void setReal( final float real ){ b.setValue( realI, real ); }
 	@Override
 	public void setReal( final double real ){ b.setValue( realI, real ); }
 	@Override
-	public void setComplex( final float complex ){ b.setValue( complexI, complex ); }
+	public void setImaginary( final float complex ){ b.setValue( complexI, complex ); }
 	@Override
-	public void setComplex( final double complex ){ b.setValue( complexI, complex ); }
+	public void setImaginary( final double complex ){ b.setValue( complexI, complex ); }
 	
 	public void set( final float real, final float complex ) 
 	{ 
@@ -113,21 +115,58 @@ public class ComplexDoubleType extends ComplexTypeImpl<ComplexDoubleType> implem
 	public void set( final ComplexDoubleType c ) 
 	{ 
 		setReal( c.getRealDouble() );
-		setComplex( c.getComplexDouble() );
+		setImaginary( c.getImaginaryDouble() );
 	}
 
-	@Override
-	public ComplexDoubleType[] createArray1D(int size1){ return new ComplexDoubleType[ size1 ]; }
-
-	@Override
-	public ComplexDoubleType[][] createArray2D(int size1, int size2){ return new ComplexDoubleType[ size1 ][ size2 ]; }
-
-	@Override
-	public ComplexDoubleType[][][] createArray3D(int size1, int size2, int size3) { return new ComplexDoubleType[ size1 ][ size2 ][ size3 ]; }
-	
 	@Override
 	public ComplexDoubleType createVariable(){ return new ComplexDoubleType( 0, 0 ); }
 	
 	@Override
-	public ComplexDoubleType copy(){ return new ComplexDoubleType( getRealFloat(), getComplexFloat() ); }	
+	public ComplexDoubleType copy(){ return new ComplexDoubleType( getRealFloat(), getImaginaryFloat() ); }	
+
+	@Override
+	public int getEntitiesPerPixel() { return 2; }	
+	
+	@Override
+	public void updateIndex( final int i )
+	{
+		this.i = i;
+		realI = i * 2;
+		complexI = i * 2 + 1;
+	}
+
+	@Override
+	public void incIndex()
+	{
+		++i;
+		realI += 2;
+		complexI += 2;
+	}
+	@Override
+	public void incIndex( final int increment )
+	{
+		i += increment;
+
+		final int inc2 = 2 * increment;
+		realI += inc2;
+		complexI += inc2;
+	}
+	@Override
+	public void decIndex()
+	{
+		--i;
+		realI -= 2;
+		complexI -= 2;
+	}
+	@Override
+	public void decIndex( final int decrement )
+	{
+		i -= decrement;
+		final int dec2 = 2 * decrement;
+		realI -= dec2;
+		complexI -= dec2;
+	}	
+	
+	@Override
+	public int getIndex() { return i; }		
 }

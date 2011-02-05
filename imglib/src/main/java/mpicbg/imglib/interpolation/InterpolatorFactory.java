@@ -29,51 +29,25 @@
  */
 package mpicbg.imglib.interpolation;
 
-import mpicbg.imglib.Factory;
-import mpicbg.imglib.image.Image;
-import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
-import mpicbg.imglib.type.Type;
+import mpicbg.imglib.SamplerFactory;
+import mpicbg.imglib.outofbounds.OutOfBoundsFactory;
 
-public abstract class InterpolatorFactory<T extends Type<T>> implements Factory
+public abstract class InterpolatorFactory< T, F > implements SamplerFactory< T, Interpolator< T, F >, F >
 {	
-	protected OutOfBoundsStrategyFactory<T> outOfBoundsStrategyFactory;
+	protected OutOfBoundsFactory< T, F > outOfBoundsStrategyFactory;
 	
-	public InterpolatorFactory( final OutOfBoundsStrategyFactory<T> outOfBoundsStrategyFactory )
+	public InterpolatorFactory( final OutOfBoundsFactory< T, F > outOfBoundsStrategyFactory )
 	{
 		this.outOfBoundsStrategyFactory = outOfBoundsStrategyFactory;
 	}
 	
-	public void setOutOfBoundsStrategyFactory( final OutOfBoundsStrategyFactory<T> outOfBoundsStrategyFactory ) 
+	public void setOutOfBoundsStrategyFactory( final OutOfBoundsFactory< T, F > outOfBoundsStrategyFactory ) 
 	{ 
 		this.outOfBoundsStrategyFactory = outOfBoundsStrategyFactory; 
 	}
 	
-	public OutOfBoundsStrategyFactory<T> getOutOfBoundsStrategyFactory() 
+	public OutOfBoundsFactory< T, F > getOutOfBoundsStrategyFactory() 
 	{ 
 		return outOfBoundsStrategyFactory; 
-	}
-		
-	public abstract Interpolator<T> createInterpolator( final Image<T> img );
-	
-	@Override
-	public String getErrorMessage()
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void printProperties()
-	{
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void setParameters(String configuration)
-	{
-		// TODO Auto-generated method stub
-		
-	}
-	
+	}		
 }

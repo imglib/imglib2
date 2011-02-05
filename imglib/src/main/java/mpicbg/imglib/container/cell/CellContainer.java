@@ -24,216 +24,217 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- *
- * @author Stephan Preibisch & Stephan Saalfeld
  */
 package mpicbg.imglib.container.cell;
 
 import java.util.ArrayList;
 
-import mpicbg.imglib.container.Container;
-import mpicbg.imglib.container.ContainerFactory;
-import mpicbg.imglib.container.DirectAccessContainerImpl;
+import mpicbg.imglib.Iterator;
+import mpicbg.imglib.container.Img;
+import mpicbg.imglib.container.ImgFactory;
+import mpicbg.imglib.container.AbstractNativeContainer;
+import mpicbg.imglib.container.array.ArrayLocalizingCursor;
+import mpicbg.imglib.container.array.ArrayRandomAccess;
 import mpicbg.imglib.container.basictypecontainer.array.ArrayDataAccess;
-import mpicbg.imglib.cursor.Cursor;
-import mpicbg.imglib.cursor.array.ArrayLocalizableByDimCursor;
-import mpicbg.imglib.cursor.array.ArrayLocalizableCursor;
-import mpicbg.imglib.cursor.cell.CellCursor;
-import mpicbg.imglib.cursor.cell.CellLocalizableByDimCursor;
-import mpicbg.imglib.cursor.cell.CellLocalizableByDimOutOfBoundsCursor;
-import mpicbg.imglib.cursor.cell.CellLocalizableCursor;
-import mpicbg.imglib.cursor.cell.CellLocalizablePlaneCursor;
 import mpicbg.imglib.image.Image;
-import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
+import mpicbg.imglib.outofbounds.RasterOutOfBoundsFactory;
+import mpicbg.imglib.sampler.cell.CellBasicRasterIterator;
+import mpicbg.imglib.sampler.cell.CellLocalizingRasterIterator;
+import mpicbg.imglib.sampler.cell.CellPositionableRasterSampler;
+import mpicbg.imglib.sampler.cell.CellOutOfBoundsPositionableRasterSampler;
+import mpicbg.imglib.sampler.cell.CellStorageAccess;
 import mpicbg.imglib.type.Type;
 import mpicbg.imglib.type.label.FakeType;
 
-public class CellContainer<T extends Type<T>, A extends ArrayDataAccess<A>> extends DirectAccessContainerImpl<T, A>
+/**
+ * This {@link Img} stores an image in a number of basic type arrays.
+ * Each array covers a {@link Cell} of a constant size in all dimensions.
+ * By that, max {@link Integer#MAX_VALUE}<sup2</sup> basic types can be stored.
+ * Keep in mind that this does not necessarily reflect the number of pixels,
+ * because a pixel can be stored in less than or more than a basic type entry.
+ * 
+ * An {@link Iterator} on this {@link Img} will iterate its pixels
+ * {@link Cell} by {@link Cell} for optimal performance.
+ * 
+ * @param <T>
+ * @param <A>
+ *
+ * @author Stephan Preibisch and Stephan Saalfeld
+ */
+public class CellContainer< T extends Type< T >, A extends ArrayDataAccess< A > > extends AbstractNativeContainer< T, A >
 {
-	final protected ArrayList<Cell<T,A>> data;
+	final protected ArrayList< Cell< T, A > > data;
+
 	final protected int[] numCellsDim, cellSize;
+
 	final protected int numCells;
-	
-	public CellContainer( final ContainerFactory factory, final A creator, final int[] dim, final int[] cellSize, final int entitiesPerPixel )
+
+	public CellContainer( final ImgFactory factory, final A creator, final int[] dim, final int[] cellSize, final int entitiesPerPixel )
 	{
-		super(factory, dim, entitiesPerPixel);
-		
+		super( factory, dim, entitiesPerPixel );
+
 		// check that cellsize is not bigger than the image
-		for ( int d = 0; d < getNumDimensions(); d++ )
-			if ( cellSize[ d ] > dim[ d ] )
-				cellSize[ d ] = dim[ d ];
-			
+		for ( int d = 0; d < numDimensions(); d++ )
+			if ( cellSize[ d ] > dim[ d ] ) cellSize[ d ] = dim[ d ];
+
 		this.cellSize = cellSize;
-		numCellsDim = new int[ getNumDimensions() ];				
-		
-		int tmp = 1;		
-		for ( int d = 0; d < getNumDimensions(); d++ )
+		numCellsDim = new int[ numDimensions() ];
+
+		int tmp = 1;
+		for ( int d = 0; d < numDimensions(); d++ )
 		{
-			numCellsDim[ d ] = ( dim[ d ] - 1) / cellSize[ d ] + 1;
+			numCellsDim[ d ] = ( dim[ d ] - 1 ) / cellSize[ d ] + 1;
 			tmp *= numCellsDim[ d ];
 		}
 		numCells = tmp;
-		
+
 		data = createCellArray( numCells );
-		
+
 		// Here we "misuse" an ArrayLocalizableCursor to iterate over cells,
-		// it always gives us the location of the current cell we are instantiating.
-		final ArrayLocalizableCursor<FakeType> cursor = ArrayLocalizableCursor.createLinearCursor( numCellsDim ); 
-		
-		for ( int c = 0; c < numCells; c++ )			
+		// it always gives us the location of the current cell we are
+		// instantiating.
+		final ArrayLocalizingCursor< FakeType > cursor = ArrayLocalizingCursor.createLinearCursor( numCellsDim );
+
+		for ( int c = 0; c < numCells; c++ )
 		{
 			cursor.fwd();
-			final int[] finalSize = new int[ getNumDimensions() ];
-			final int[] finalOffset = new int[ getNumDimensions() ];
-			
-			for ( int d = 0; d < getNumDimensions(); d++ )
+			final int[] finalSize = new int[ numDimensions() ];
+			final int[] finalOffset = new int[ numDimensions() ];
+
+			for ( int d = 0; d < numDimensions(); d++ )
 			{
 				finalSize[ d ] = cellSize[ d ];
-				
-				// the last cell in each dimension might have another size
-				if ( cursor.getPosition( d ) == numCellsDim[ d ] - 1 )
-					if ( dim[ d ] % cellSize[ d ] != 0 )
-						finalSize[ d ] = dim[ d ] % cellSize[ d ];
-				
-				finalOffset[ d ] = cursor.getPosition( d ) * cellSize[ d ];
-			}			
 
-			data.add( createCellInstance( creator, c, finalSize, finalOffset, entitiesPerPixel ) );			
+				// the last cell in each dimension might have another size
+				if ( cursor.getIntPosition( d ) == numCellsDim[ d ] - 1 ) if ( dim[ d ] % cellSize[ d ] != 0 ) finalSize[ d ] = dim[ d ] % cellSize[ d ];
+
+				finalOffset[ d ] = cursor.getIntPosition( d ) * cellSize[ d ];
+			}
+
+			data.add( createCellInstance( creator, c, finalSize, finalOffset, entitiesPerPixel ) );
 		}
-		
+
 		cursor.close();
 	}
-	
+
 	@Override
-	public A update( final Cursor<?> c ) { return data.get( c.getStorageIndex() ).getData(); }
-	
-	public ArrayList<Cell<T, A>> createCellArray( final int numCells ) { return new ArrayList<Cell<T, A>>( numCells ); }	
-	
-	public Cell<T, A> createCellInstance( final A creator, final int cellId, final int[] dim, final int offset[], final int entitiesPerPixel )
+	public A update( final Object c )
 	{
-		return new Cell<T,A>( creator, cellId, dim, offset, entitiesPerPixel );
+		return data.get( ( ( CellStorageAccess )c ).getStorageIndex() ).getData();
 	}
 
-	public Cell<T, A> getCell( final int cellId ) { return data.get( cellId ); }
-	public int getCellIndex( final ArrayLocalizableByDimCursor<FakeType> cursor, final int[] cellPos )
+	public ArrayList< Cell< T, A >> createCellArray( final int numCells )
+	{
+		return new ArrayList< Cell< T, A >>( numCells );
+	}
+
+	public Cell< T, A > createCellInstance( final A creator, final int cellId, final int[] dim, final int offset[], final int entitiesPerPixel )
+	{
+		return new Cell< T, A >( creator, cellId, dim, offset, entitiesPerPixel );
+	}
+
+	public Cell< T, A > getCell( final int cellId )
+	{
+		return data.get( cellId );
+	}
+
+	public int getCellIndex( final ArrayRandomAccess< FakeType > cursor, final int[] cellPos )
 	{
 		cursor.setPosition( cellPos );
 		return cursor.getArrayIndex();
 	}
 
 	// many cursors using the same cursor for getting their position
-	public int getCellIndex( final ArrayLocalizableByDimCursor<FakeType> cursor, final int cellPos, final int dim )
+	public int getCellIndex( final ArrayRandomAccess< FakeType > cursor, final int cellPos, final int dim )
 	{
-		cursor.setPosition( cellPos, dim );		
+		cursor.setPosition( cellPos, dim );
 		return cursor.getArrayIndex();
 	}
-	
+
 	public int[] getCellPosition( final int[] position )
 	{
 		final int[] cellPos = new int[ position.length ];
-		
+
 		for ( int d = 0; d < numDimensions; d++ )
 			cellPos[ d ] = position[ d ] / cellSize[ d ];
-		
+
 		return cellPos;
 	}
 
 	public void getCellPosition( final int[] position, final int[] cellPos )
 	{
-		for ( int d = 0; d < numDimensions; d++ )
+		for ( int d = 0; d < numDimensions; ++d )
 			cellPos[ d ] = position[ d ] / cellSize[ d ];
 	}
 
-	public int getCellPosition( final int position, final int dim ) { return position / cellSize[ dim ]; }
-	
-	public int getCellIndexFromImageCoordinates( final ArrayLocalizableByDimCursor<FakeType> cursor, final int[] position )
-	{		
+	public int getCellPosition( final int position, final int dim )
+	{
+		return position / cellSize[ dim ];
+	}
+
+	public int getCellIndexFromImageCoordinates( final ArrayRandomAccess< FakeType > cursor, final int[] position )
+	{
 		return getCellIndex( cursor, getCellPosition( position ) );
 	}
-	
-	public int getNumCells( final int dim ) 
-	{
-		if ( dim < numDimensions )
-			return numCellsDim[ dim ];
-		else
-			return 1;
-	}
-	public int getNumCells() { return numCells; }
-	public int[] getNumCellsDim() { return numCellsDim.clone(); }
 
-	public int getCellSize( final int dim ) { return cellSize[ dim ]; }
-	public int[] getCellSize() { return cellSize.clone(); }
+	public int getNumCells( final int dim )
+	{
+		if ( dim < numDimensions ) return numCellsDim[ dim ];
+		else return 1;
+	}
+
+	public int getNumCells()
+	{
+		return numCells;
+	}
+
+	public int[] getNumCellsDim()
+	{
+		return numCellsDim.clone();
+	}
+
+	public int getCellSize( final int dim )
+	{
+		return cellSize[ dim ];
+	}
+
+	public int[] getCellSize()
+	{
+		return cellSize.clone();
+	}
 
 	@Override
 	public void close()
 	{
-		for ( final Cell<T, A> e : data )
+		for ( final Cell< T, A > e : data )
 			e.close();
 	}
 
 	@Override
-	public CellCursor<T> createCursor( final Image<T> image ) 
-	{ 
-		// create a Cursor using a Type that is linked to the container
-		CellCursor<T> c = new CellCursor<T>( this, image, linkedType.duplicateTypeOnSameDirectAccessContainer() );
-		return c;
-	}
-	
-	@Override
-	public CellLocalizableCursor<T> createLocalizableCursor( final Image<T> image ) 
+	public CellBasicRasterIterator< T > createRasterIterator( final Image< T > image )
 	{
-		// create a Cursor using a Type that is linked to the container
-		CellLocalizableCursor<T> c = new CellLocalizableCursor<T>( this, image, linkedType.duplicateTypeOnSameDirectAccessContainer() );
-		return c;
-	}	
-
-	@Override
-	public CellLocalizablePlaneCursor<T> createLocalizablePlaneCursor( final Image<T> image ) 
-	{
-		// create a Cursor using a Type that is linked to the container
-		CellLocalizablePlaneCursor<T> c = new CellLocalizablePlaneCursor<T>( this, image, linkedType.duplicateTypeOnSameDirectAccessContainer() );
-		return c;
-	}	
-	
-	@Override
-	public CellLocalizableByDimCursor<T> createLocalizableByDimCursor( final Image<T> image ) 
-	{
-		// create a Cursor using a Type that is linked to the container
-		CellLocalizableByDimCursor<T> c = new CellLocalizableByDimCursor<T>( this, image, linkedType.duplicateTypeOnSameDirectAccessContainer() );
-		return c;
-	}	
-	
-	@Override
-	public CellLocalizableByDimCursor<T> createLocalizableByDimCursor( final Image<T> image, final OutOfBoundsStrategyFactory<T> outOfBoundsFactory ) 
-	{ 
-		// create a Cursor using a Type that is linked to the container
-		CellLocalizableByDimOutOfBoundsCursor<T> c = new CellLocalizableByDimOutOfBoundsCursor<T>( this, image, linkedType.duplicateTypeOnSameDirectAccessContainer(), outOfBoundsFactory );
+		CellBasicRasterIterator< T > c = new CellBasicRasterIterator< T >( this, image );
 		return c;
 	}
 
 	@Override
-	public boolean compareStorageContainerCompatibility( final Container<?> container )
+	public CellLocalizingRasterIterator< T > createLocalizingRasterIterator( final Image< T > image )
 	{
-		if ( compareStorageContainerDimensions( container ))
-		{			
-			if ( getFactory().getClass().isInstance( container.getFactory() ))
-			{
-				final CellContainer<?,?> otherCellContainer = (CellContainer<?,?>)container;
-				
-				for ( int d = 0; d < numDimensions; ++d )
-					if ( this.getCellSize( d ) != otherCellContainer.getCellSize( d ) )
-						return false;
-				
-				return true;
-			}
-			else
-			{
-				return false;
-			}
-		}
-		else
-		{
-			return false;
-		}
-	}	
+		CellLocalizingRasterIterator< T > c = new CellLocalizingRasterIterator< T >( this, image );
+		return c;
+	}
+
+	@Override
+	public CellPositionableRasterSampler< T > createPositionableRasterSampler( final Image< T > image )
+	{
+		CellPositionableRasterSampler< T > c = new CellPositionableRasterSampler< T >( this, image );
+		return c;
+	}
+
+	@Override
+	public CellOutOfBoundsPositionableRasterSampler< T > createPositionableRasterSampler( final Image< T > image, final RasterOutOfBoundsFactory< T > outOfBoundsFactory )
+	{
+		CellOutOfBoundsPositionableRasterSampler< T > c = new CellOutOfBoundsPositionableRasterSampler< T >( this, image, outOfBoundsFactory );
+		return c;
+	}
 }

@@ -42,6 +42,6 @@ public class ComplexTypeComplexValueDisplay<T extends ComplexType<T>> extends Co
 	@Override
 	protected float getComplexDisplayValue( final T c )
 	{
-		return c.getComplexFloat();
+		return c.getImaginaryFloat();
 	}
 }

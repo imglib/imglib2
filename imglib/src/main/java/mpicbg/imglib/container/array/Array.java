@@ -24,126 +24,120 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- *
- * @author Stephan Preibisch & Stephan Saalfeld
  */
 package mpicbg.imglib.container.array;
 
-import mpicbg.imglib.container.Container;
-import mpicbg.imglib.container.DirectAccessContainerImpl;
+import mpicbg.imglib.Interval;
+import mpicbg.imglib.IterableRealInterval;
+import mpicbg.imglib.container.AbstractNativeContainer;
+import mpicbg.imglib.container.Img;
 import mpicbg.imglib.container.basictypecontainer.DataAccess;
-import mpicbg.imglib.cursor.Cursor;
-import mpicbg.imglib.cursor.array.ArrayCursor;
-import mpicbg.imglib.cursor.array.ArrayLocalizableByDimCursor;
-import mpicbg.imglib.cursor.array.ArrayLocalizableByDimOutOfBoundsCursor;
-import mpicbg.imglib.cursor.array.ArrayLocalizableCursor;
-import mpicbg.imglib.cursor.array.ArrayLocalizablePlaneCursor;
-import mpicbg.imglib.image.Image;
-import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
-import mpicbg.imglib.type.Type;
+import mpicbg.imglib.container.list.ListContainer;
+import mpicbg.imglib.outofbounds.OutOfBoundsFactory;
+import mpicbg.imglib.type.NativeType;
+import mpicbg.imglib.util.IntervalIndexer;
 
-public class Array<T extends Type<T>, A extends DataAccess> extends DirectAccessContainerImpl<T, A>
+/**
+ * This {@link Img} stores an image in a single linear array of basic
+ * types.  By that, it provides the fastest possible access to data while
+ * limiting the number of basic types stored to {@link Integer#MAX_VALUE}.
+ * Keep in mind that this does not necessarily reflect the number of pixels,
+ * because a pixel can be stored in less than or more than a basic type entry.
+ * 
+ * @param <T>
+ * @param <A>
+ *
+ * @author Stephan Preibisch and Stephan Saalfeld <saalfeld@mpi-cbg.de>
+ */
+final public class Array< T extends NativeType< T >, A extends DataAccess > extends AbstractNativeContainer< T, A >
 {
-	final protected int[] step;
-	final ArrayContainerFactory factory;
+	final int[] steps, dim;
 	
 	// the DataAccess created by the ArrayContainerFactory
-	final A data;
+	final private A data;
+	final private T type;
 
-	public Array( final ArrayContainerFactory factory, final A data, final int[] dim, final int entitiesPerPixel )
+	/**
+	 * TODO check for the size of numPixels being < Integer.MAX_VALUE?
+	 * 
+	 * @param factory
+	 * @param data
+	 * @param dim
+	 * @param entitiesPerPixel
+	 */
+	public Array( final T type, final A data, final long[] dim, final int entitiesPerPixel )
 	{
-		super( factory, dim, entitiesPerPixel );
-		
-		step = Array.createAllocationSteps( dim );
-		this.factory = factory;
+		super( dim, entitiesPerPixel );
+		this.dim = new int[ n ];
+		for ( int d = 0; d < n; ++d )
+			this.dim[ d ] = ( int )dim[ d ];
+
+		this.steps = new int[ n ];
+		IntervalIndexer.createAllocationSteps( this.dim, this.steps );
 		this.data = data;
+		this.type = type;
 	}
-	
-	@Override
-	public A update( final Cursor<?> c ) { return data; }
 
 	@Override
-	public ArrayContainerFactory getFactory() { return factory; }
-	
-	@Override
-	public ArrayCursor<T> createCursor( final Image<T> image ) 
+	public A update( final Object o )
 	{
-		// create a Cursor using a Type that is linked to the container
-		ArrayCursor<T> c = new ArrayCursor<T>( this, image, linkedType.duplicateTypeOnSameDirectAccessContainer() );
-		return c;
+		return data;
 	}
 
 	@Override
-	public ArrayLocalizableCursor<T> createLocalizableCursor( final Image<T> image ) 
-	{ 
-		// create a Cursor using a Type that is linked to the container
-		ArrayLocalizableCursor<T> c = new ArrayLocalizableCursor<T>( this, image, linkedType.duplicateTypeOnSameDirectAccessContainer() );
-		return c;
-	}
-
-	@Override
-	public ArrayLocalizablePlaneCursor<T> createLocalizablePlaneCursor( final Image<T> image ) 
-	{ 
-		// create a Cursor using a Type that is linked to the container
-		ArrayLocalizablePlaneCursor<T> c = new ArrayLocalizablePlaneCursor<T>( this, image, linkedType.duplicateTypeOnSameDirectAccessContainer() );
-		return c;
-	}
-	
-	@Override
-	public ArrayLocalizableByDimCursor<T> createLocalizableByDimCursor( final Image<T> image ) 
-	{ 
-		// create a Cursor using a Type that is linked to the container
-		ArrayLocalizableByDimCursor<T> c = new ArrayLocalizableByDimCursor<T>( this, image, linkedType.duplicateTypeOnSameDirectAccessContainer() );
-		return c;
-	}
-	
-	@Override
-	public ArrayLocalizableByDimOutOfBoundsCursor<T> createLocalizableByDimCursor( final Image<T> image, final OutOfBoundsStrategyFactory<T> outOfBoundsFactory ) 
-	{ 
-		// create a Cursor using a Type that is linked to the container
-		ArrayLocalizableByDimOutOfBoundsCursor<T> c = new ArrayLocalizableByDimOutOfBoundsCursor<T>( this, image, linkedType.duplicateTypeOnSameDirectAccessContainer(), outOfBoundsFactory );
-		return c;
-	}
-	
-	public static int[] createAllocationSteps( final int[] dim )
+	public ArrayCursor< T > cursor()
 	{
-		int[] steps = new int[ dim.length ];
-		createAllocationSteps( dim, steps );
-		return steps;		
-	}
-
-	public static void createAllocationSteps( final int[] dim, final int[] steps )
-	{
-		steps[ 0 ] = 1;
-		for ( int d = 1; d < dim.length; ++d )
-			  steps[ d ] = steps[ d - 1 ] * dim[ d - 1 ];
-	}
-	
-	public final int getPos( final int[] l ) 
-	{ 
-		int i = l[ 0 ];
-		for ( int d = 1; d < numDimensions; ++d )
-			i += l[ d ] * step[ d ];
-		
-		return i;
+		ArrayCursor< T > c = new ArrayCursor< T >( this );
+		return c;
 	}
 
 	@Override
-	public void close() { data.close();	}
+	public ArrayLocalizingCursor< T > localizingCursor()
+	{
+		ArrayLocalizingCursor< T > c = new ArrayLocalizingCursor< T >( this );
+		return c;
+	}
 
 	@Override
-	public boolean compareStorageContainerCompatibility( final Container<?> container )
+	public ArrayRandomAccess< T > randomAccess()
 	{
-		if ( compareStorageContainerDimensions( container ))
-		{			
-			if ( getFactory().getClass().isInstance( container.getFactory() ))
-				return true;
-			else
-				return false;
-		}
-		else
-		{
+		ArrayRandomAccess< T > c = new ArrayRandomAccess< T >( this );
+		return c;
+	}
+
+	@Override
+	public ArrayOutOfBoundsRandomAccess<T> integerRandomAccess(OutOfBoundsFactory<T, Img<T>> factory)
+	{
+		ArrayOutOfBoundsRandomAccess< T > c = new ArrayOutOfBoundsRandomAccess< T >( this, factory );
+		return c;
+	}
+
+	@Override
+	public boolean equalIterationOrder( final IterableRealInterval< ? > f )
+	{
+		if ( f.numDimensions() != this.numDimensions() )
 			return false;
+		
+		if ( getClass().isInstance( f ) || ListContainer.class.isInstance( f ) )
+		{
+			final Interval a = ( Interval )f;
+			for ( int d = 0; d < n; ++d )
+				if ( size[ d ] != a.dimension( d ) )
+					return false;
 		}
+		
+		return true;
+	}
+
+	@Override
+	public ArrayContainerFactory<T> factory()
+	{
+		return new ArrayContainerFactory<T>();
+	}
+	
+	@Override
+	public T createVariable()
+	{
+		return type.createVariable();
 	}
 }

@@ -24,81 +24,311 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- *
- * @author Stephan Preibisch & Stephan Saalfeld
  */
 package mpicbg.imglib.interpolation.nearestneighbor;
 
+import mpicbg.imglib.Localizable;
+import mpicbg.imglib.RealLocalizable;
 import mpicbg.imglib.image.Image;
-import mpicbg.imglib.interpolation.Interpolator1D;
-import mpicbg.imglib.interpolation.InterpolatorFactory;
-import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
+import mpicbg.imglib.outofbounds.RasterOutOfBoundsFactory;
 import mpicbg.imglib.type.Type;
-import mpicbg.imglib.util.Util;
 
-public class NearestNeighborInterpolator1D<T extends Type<T>> extends NearestNeighborInterpolator<T> implements Interpolator1D<T>
+/**
+ * 
+ * @param <T>
+ *
+ * @author Stephan Preibisch and Stephan Saalfeld
+ */
+public class NearestNeighborInterpolator1D< T extends Type< T > > extends NearestNeighborInterpolator< T >
 {
-	float x;
 	
-	protected NearestNeighborInterpolator1D( final Image<T> img, final InterpolatorFactory<T> interpolatorFactory, final OutOfBoundsStrategyFactory<T> outOfBoundsStrategyFactory )
+	/* current position, required for relative movement */
+	private float x;
+	
+	protected NearestNeighborInterpolator1D( final Image< T > image, final RasterOutOfBoundsFactory< T > outOfBoundsStrategyFactory )
 	{
-		super( img, interpolatorFactory, outOfBoundsStrategyFactory );
+		super( image, outOfBoundsStrategyFactory );
+		//this.target = image.createPositionableRasterSampler( outOfBoundsStrategyFactory );
 		
 		x = 0;
 	}
-
-	/**
-	 * Returns the typed image the interpolator is working on
-	 * 
-	 * @return - the image
-	 */
-	@Override
-	public Image<T> getImage() { return img; }		
 	
-	@Override
-	public void getPosition( final float[] position ) { position[ 0 ] = x; }
-
-	@Override
-	public float[] getPosition() { return new float[]{ x }; }	
-	
-	@Override
-	public void close() { cursor.close(); }
-	
-	@Override
-	public void moveTo( final float x )
-	{		
-		this.x = x;
-		
-		final int ix = Util.round( x ); 
-		
-		cursor.move( ix - cursor.getPosition( 0 ), 0 );
-	}
-
-	@Override
-	public void moveTo( final float[] position ) { moveTo( position[0] ); }
-
-	@Override
-	public void moveRel( final float x )
+	final static private int round( final double r )
 	{
-		this.x += x;
-		
-		cursor.move( Util.round( this.x ) - cursor.getPosition( 0 ), 0 );
+		return r < 0 ? ( int )( r - 0.5 ) : ( int )( r + 0.5 );
 	}
 	
-	@Override
-	public void moveRel( final float[] vector ) { moveRel( vector[0] ); }
-	
-	@Override
-	public void setPosition( final float x )
+	final static private int round( final float r )
 	{
-		this.x = x;
+		return r < 0 ? ( int )( r - 0.5f ) : ( int )( r + 0.5f );
+	}
 
-		cursor.setPosition( Util.round( x ), 0 );
+	
+	/* Dimensionality */
+	
+	@Override
+	final public int numDimensions()
+	{
+		return 1;
+	}
+	
+	
+	/* Localizable */
+	
+	@Override
+	public double getDoublePosition( final int dim )
+	{
+		assert dim == 0 : getClass().getCanonicalName() + " cannot process " + ( dim + 1 ) + " dimensions.";
+		
+		return x;
+	}
+
+	@Override
+	public float getFloatPosition( final int dim )
+	{
+		assert dim == 0 : getClass().getCanonicalName() + " cannot process " + ( dim + 1 ) + " dimensions.";
+		
+		return x;
+	}
+
+	@Override
+	public String toString()
+	{
+		return new StringBuffer( "(" ).append( x ).append( ") = " ).append( get() ).toString();
+	}
+
+	@Override
+	public void localize( final float[] position )
+	{
+		position[ 0 ] = x;
+	}
+
+	@Override
+	public void localize( final double[] position )
+	{
+		position[ 0 ] = x;
+	}
+	
+	
+	/* Positionable */
+
+	@Override
+	public void move( final double distance, final int dim )
+	{
+		assert dim == 0 : getClass().getCanonicalName() + " cannot process " + ( dim + 1 ) + " dimensions.";
+		
+		x += distance;
+		final int roundPosition = round( x );
+		final int roundDistance = roundPosition - target.getIntPosition( dim );
+		if ( roundDistance == 0 )
+			return;
+		else
+			target.move( roundDistance, 0 );
 	}
 	
 	@Override
-	public void setPosition( final float[] position ) { setPosition( position[0] ); }
+	public void move( final float distance, final int dim )
+	{
+		assert dim == 0 : getClass().getCanonicalName() + " cannot process " + ( dim + 1 ) + " dimensions.";
+		
+		x += distance;
+		final int roundPosition = round( x );
+		final int roundDistance = roundPosition - target.getIntPosition( dim );
+		if ( roundDistance == 0 )
+			return;
+		else
+			target.move( roundDistance, 0 );
+	}
 
 	@Override
-	public float getX() { return x;	}
+	public void moveTo( final RealLocalizable localizable )
+	{
+		x = localizable.getFloatPosition( 0 );
+		final int roundX = round( x );
+		final int roundXDistance = roundX - target.getIntPosition( 0 );
+		if ( roundXDistance == 0 )
+			return;
+		else
+			target.move( roundXDistance, 0 );
+	}
+
+	@Override
+	public void moveTo( final double[] position )
+	{
+		x = ( float )position[ 0 ];
+		final int roundX = round( x );
+		final int roundXDistance = roundX - target.getIntPosition( 0 );
+		if ( roundXDistance == 0 )
+			return;
+		else
+			target.move( roundXDistance, 0 );
+	}
+
+	@Override
+	public void moveTo( final float[] position )
+	{
+		x = position[ 0 ];
+		final int roundX = round( x );
+		final int roundXDistance = roundX - target.getIntPosition( 0 );
+		if ( roundXDistance == 0 )
+			return;
+		else
+			target.move( roundXDistance, 0 );
+	}
+
+	@Override
+	public void setPosition( final RealLocalizable localizable )
+	{
+		x = localizable.getFloatPosition( 0 );
+		target.setPosition( round( x ), 0 );
+	}
+
+	@Override
+	public void setPosition( final float[] position )
+	{
+		x = position[ 0 ];
+		target.setPosition( round( x ), 0 );
+	}
+
+	@Override
+	public void setPosition( final double[] position )
+	{
+		x = ( float )position[ 0 ];
+		target.setPosition( round( x ), 0 );
+	}
+
+	@Override
+	public void setPosition( final float position, final int dim )
+	{
+		assert dim == 0 : getClass().getCanonicalName() + " cannot process " + ( dim + 1 ) + " dimensions.";
+
+		x = position;
+		target.setPosition( round( position ), 0 );
+	}
+
+	@Override
+	public void setPosition( final double position, final int dim )
+	{
+		assert dim == 0 : getClass().getCanonicalName() + " cannot process " + ( dim + 1 ) + " dimensions.";
+
+		x = ( float )position;
+		target.setPosition( round( position ), 0 );
+	}
+	
+	
+	/* RasterPositionable */
+
+	@Override
+	public void bck( final int dim )
+	{
+		assert dim == 0 : getClass().getCanonicalName() + " cannot process " + ( dim + 1 ) + " dimensions.";
+
+		x -= 1;
+		target.bck( 0 );
+	}
+
+	@Override
+	public void fwd( final int dim )
+	{
+		assert dim == 0 : getClass().getCanonicalName() + " cannot process " + ( dim + 1 ) + " dimensions.";
+
+		x += 1;
+		target.fwd( 0 );
+	}
+
+	@Override
+	public void move( final int distance, final int dim )
+	{
+		assert dim == 0 : getClass().getCanonicalName() + " cannot process " + ( dim + 1 ) + " dimensions.";
+
+		x += distance;
+		target.move( distance, 0 );
+	}
+
+	@Override
+	public void move( final long distance, final int dim )
+	{
+		assert dim == 0 : getClass().getCanonicalName() + " cannot process " + ( dim + 1 ) + " dimensions.";
+
+		x += distance;
+		target.move( distance, 0 );
+	}
+
+	@Override
+	public void moveTo( final Localizable localizable )
+	{
+		final int roundX = localizable.getIntPosition( 0 );
+		x = roundX;
+		final int roundXDistance = roundX - target.getIntPosition( 0 );
+		if ( roundXDistance == 0 )
+			return;
+		else
+			target.move( roundXDistance, 0 );
+	}
+
+	@Override
+	public void moveTo( final int[] position )
+	{
+		final int roundX = position[ 0 ];
+		x = roundX;
+		final int roundXDistance = roundX - target.getIntPosition( 0 );
+		if ( roundXDistance == 0 )
+			return;
+		else
+			target.move( roundXDistance, 0 );
+	}
+
+	@Override
+	public void moveTo( final long[] position )
+	{
+		final int roundX = ( int )position[ 0 ];
+		x = roundX;
+		final int roundXDistance = roundX - target.getIntPosition( 0 );
+		if ( roundXDistance == 0 )
+			return;
+		else
+			target.move( roundXDistance, 0 );
+	}
+
+	@Override
+	public void setPosition( final Localizable localizable )
+	{
+		final int roundX = localizable.getIntPosition( 0 );
+		x = roundX;
+		target.setPosition( roundX, 0 );
+	}
+
+	@Override
+	public void setPosition( final int[] position )
+	{
+		final int roundX = position[ 0 ];
+		x = roundX;
+		target.setPosition( roundX, 0 );
+	}
+
+	@Override
+	public void setPosition( final long[] position )
+	{
+		final int roundX = ( int )position[ 0 ];
+		x = roundX;
+		target.setPosition( roundX, 0 );
+	}
+
+	@Override
+	public void setPosition( final int position, final int dim )
+	{
+		assert dim == 0 : getClass().getCanonicalName() + " cannot process " + ( dim + 1 ) + " dimensions.";
+
+		x = position;
+		target.setPosition( position, 0 );
+	}
+
+	@Override
+	public void setPosition( final long position, final int dim )
+	{
+		assert dim == 0 : getClass().getCanonicalName() + " cannot process " + ( dim + 1 ) + " dimensions.";
+
+		x = position;
+		target.setPosition( position, 0 );
+	}
 }

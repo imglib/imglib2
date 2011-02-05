@@ -29,14 +29,14 @@
  */
 package mpicbg.imglib.type.numeric.integer;
 
-import mpicbg.imglib.container.DirectAccessContainer;
-import mpicbg.imglib.container.DirectAccessContainerFactory;
+import mpicbg.imglib.container.NativeContainer;
+import mpicbg.imglib.container.NativeContainerFactory;
 import mpicbg.imglib.container.basictypecontainer.IntAccess;
 
 public class IntType extends GenericIntType<IntType>
 {
 	// this is the constructor if you want it to read from an array
-	public IntType( DirectAccessContainer<IntType, ? extends IntAccess> intStorage ) { super( intStorage ); }
+	public IntType( NativeContainer<IntType, ? extends IntAccess> intStorage ) { super( intStorage ); }
 	
 	// this is the constructor if you want it to be a variable
 	public IntType( final int value ) { super( value ); }
@@ -45,22 +45,22 @@ public class IntType extends GenericIntType<IntType>
 	public IntType() { super( 0 ); }
 		
 	@Override
-	public DirectAccessContainer<IntType, ? extends IntAccess> createSuitableDirectAccessContainer( final DirectAccessContainerFactory storageFactory, final int dim[] )
+	public NativeContainer<IntType, ? extends IntAccess> createSuitableNativeContainer( final NativeContainerFactory<IntType> storageFactory, final long dim[] )
 	{
 		// create the container
-		final DirectAccessContainer<IntType, ? extends IntAccess> container = storageFactory.createIntInstance( dim, 1 );
+		final NativeContainer<IntType, ? extends IntAccess> container = storageFactory.createIntInstance( new IntType(), dim, 1 );
 		
 		// create a Type that is linked to the container
 		final IntType linkedType = new IntType( container );
 		
-		// pass it to the DirectAccessContainer
+		// pass it to the NativeContainer
 		container.setLinkedType( linkedType );
 		
 		return container;
 	}
 	
 	@Override
-	public IntType duplicateTypeOnSameDirectAccessContainer() { return new IntType( storage ); }
+	public IntType duplicateTypeOnSameNativeContainer() { return new IntType( storage ); }
 
 	public int get() { return getValue(); }
 	public void set( final int b ) { setValue( b ); }
@@ -78,15 +78,6 @@ public class IntType extends GenericIntType<IntType>
 	public double getMaxValue() { return Integer.MAX_VALUE; }
 	@Override
 	public double getMinValue()  { return Integer.MIN_VALUE; }
-
-	@Override
-	public IntType[] createArray1D(int size1){ return new IntType[ size1 ]; }
-
-	@Override
-	public IntType[][] createArray2D(int size1, int size2){ return new IntType[ size1 ][ size2 ]; }
-
-	@Override
-	public IntType[][][] createArray3D(int size1, int size2, int size3) { return new IntType[ size1 ][ size2 ][ size3 ]; }
 
 	@Override
 	public IntType createVariable(){ return new IntType( 0 ); }
