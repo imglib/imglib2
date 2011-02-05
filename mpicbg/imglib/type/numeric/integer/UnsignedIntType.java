@@ -58,10 +58,10 @@ public class UnsignedIntType extends GenericIntType<UnsignedIntType>
 	public static long getUnsignedInt( final int signedInt ) { return signedInt & 0xffffffffL; }
 
 	@Override
-	public NativeContainer<UnsignedIntType, ? extends IntAccess> createSuitableNativeContainer( final NativeContainerFactory storageFactory, final int dim[] )
+	public NativeContainer<UnsignedIntType, ? extends IntAccess> createSuitableNativeContainer( final NativeContainerFactory<UnsignedIntType> storageFactory, final long dim[] )
 	{
 		// create the container
-		final NativeContainer<UnsignedIntType, ? extends IntAccess> container = storageFactory.createIntInstance( dim, 1 );
+		final NativeContainer<UnsignedIntType, ? extends IntAccess> container = storageFactory.createIntInstance( new UnsignedIntType(), dim, 1 );
 		
 		// create a Type that is linked to the container
 		final UnsignedIntType linkedType = new UnsignedIntType( container );
@@ -125,15 +125,6 @@ public class UnsignedIntType extends GenericIntType<UnsignedIntType>
 		else 
 			return 0;
 	}
-
-	@Override
-	public UnsignedIntType[] createArray1D( final int size1 ){ return new UnsignedIntType[ size1 ]; }
-
-	@Override
-	public UnsignedIntType[][] createArray2D( final int size1, final int size2 ){ return new UnsignedIntType[ size1 ][ size2 ]; }
-
-	@Override
-	public UnsignedIntType[][][] createArray3D( final int size1, final int size2, final int size3 ) { return new UnsignedIntType[ size1 ][ size2 ][ size3 ]; }
 
 	@Override
 	public UnsignedIntType createVariable(){ return new UnsignedIntType( 0 ); }

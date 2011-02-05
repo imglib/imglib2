@@ -34,11 +34,13 @@ import mpicbg.imglib.container.NativeContainer;
 import mpicbg.imglib.container.NativeContainerFactory;
 import mpicbg.imglib.container.basictypecontainer.BitAccess;
 import mpicbg.imglib.container.basictypecontainer.array.BitArray;
-import mpicbg.imglib.cursor.Cursor;
+import mpicbg.imglib.type.NativeType;
 import mpicbg.imglib.type.numeric.integer.IntegerTypeImpl;
 
-public class Unsigned12BitType extends IntegerTypeImpl<Unsigned12BitType>
+public class Unsigned12BitType extends IntegerTypeImpl<Unsigned12BitType> implements NativeType<Unsigned12BitType>
 {
+	private int i = 0;
+	
 	// the NativeContainer
 	final NativeContainer<Unsigned12BitType, ? extends BitAccess> storage;
 
@@ -68,10 +70,10 @@ public class Unsigned12BitType extends IntegerTypeImpl<Unsigned12BitType>
 	public Unsigned12BitType() { this( (short)0 ); }
 	
 	@Override
-	public NativeContainer<Unsigned12BitType, ? extends BitAccess> createSuitableNativeContainer( final NativeContainerFactory storageFactory, final int dim[] )
+	public NativeContainer<Unsigned12BitType, ? extends BitAccess> createSuitableNativeContainer( final NativeContainerFactory<Unsigned12BitType> storageFactory, final long dim[] )
 	{
 		// create the container
-		final NativeContainer<Unsigned12BitType, ? extends BitAccess> container = storageFactory.createBitInstance( dim, 12 );
+		final NativeContainer<Unsigned12BitType, ? extends BitAccess> container = storageFactory.createBitInstance( new Unsigned12BitType(), dim, 12 );
 		
 		// create a Type that is linked to the container
 		final Unsigned12BitType linkedType = new Unsigned12BitType( container );
@@ -83,10 +85,7 @@ public class Unsigned12BitType extends IntegerTypeImpl<Unsigned12BitType>
 	}
 		
 	@Override
-	public void updateContainer( final Cursor<?> c ) 
-	{ 
-		b = storage.update( c );
-	}
+	public void updateContainer( final Object c ) { b = storage.update( c ); }
 	
 	@Override
 	public Unsigned12BitType duplicateTypeOnSameNativeContainer() { return new Unsigned12BitType( storage ); }
@@ -140,6 +139,9 @@ public class Unsigned12BitType extends IntegerTypeImpl<Unsigned12BitType>
 	@Override
 	public double getMinValue()  { return 0; }
 
+	@Override
+	public int getIndex() { return i; }
+	
 	@Override
 	public void updateIndex( final int i ) 
 	{ 
@@ -230,20 +232,13 @@ public class Unsigned12BitType extends IntegerTypeImpl<Unsigned12BitType>
 		j11 -= dec12;
 		j12 -= dec12;
 	}
-
-	
-	@Override
-	public Unsigned12BitType[] createArray1D(int size1){ return new Unsigned12BitType[ size1 ]; }
-
-	@Override
-	public Unsigned12BitType[][] createArray2D(int size1, int size2){ return new Unsigned12BitType[ size1 ][ size2 ]; }
-
-	@Override
-	public Unsigned12BitType[][][] createArray3D(int size1, int size2, int size3) { return new Unsigned12BitType[ size1 ][ size2 ][ size3 ]; }
 	
 	@Override
 	public Unsigned12BitType createVariable(){ return new Unsigned12BitType(); }
 
 	@Override
 	public Unsigned12BitType copy(){ return new Unsigned12BitType( get() ); }
+
+	@Override
+	public int getEntitiesPerPixel() { return 12; }
 }

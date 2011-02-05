@@ -33,15 +33,13 @@ import mpicbg.imglib.container.NativeContainer;
 import mpicbg.imglib.container.NativeContainerFactory;
 import mpicbg.imglib.container.basictypecontainer.BitAccess;
 import mpicbg.imglib.container.basictypecontainer.array.BitArray;
-import mpicbg.imglib.cursor.Cursor;
-import mpicbg.imglib.image.Image;
-import mpicbg.imglib.image.display.BasePairTypeDisplay;
-import mpicbg.imglib.image.display.Display;
+import mpicbg.imglib.type.NativeType;
 import mpicbg.imglib.type.BasePairType;
-import mpicbg.imglib.type.TypeImpl;
 
-public class BasePairBitType extends TypeImpl<BasePairBitType> implements BasePairType<BasePairBitType>
+public class BasePairBitType implements BasePairType<BasePairBitType>, NativeType<BasePairBitType>
 {
+	private int i = 0;
+	
 	public static enum Base { gap, N, A, T, G, C; }
 
 	@Override
@@ -76,10 +74,10 @@ public class BasePairBitType extends TypeImpl<BasePairBitType> implements BasePa
 	public BasePairBitType() { this( Base.N ); }
 	
 	@Override
-	public NativeContainer<BasePairBitType, ? extends BitAccess> createSuitableNativeContainer( final NativeContainerFactory storageFactory, final int dim[] )	
+	public NativeContainer<BasePairBitType, ? extends BitAccess> createSuitableNativeContainer( final NativeContainerFactory<BasePairBitType> storageFactory, final long dim[] )	
 	{
 		// create the container
-		final NativeContainer<BasePairBitType, ? extends BitAccess> container = storageFactory.createBitInstance( dim, 3 );
+		final NativeContainer<BasePairBitType, ? extends BitAccess> container = storageFactory.createBitInstance( new BasePairBitType(), dim, 3 );
 		
 		// create a Type that is linked to the container
 		final BasePairBitType linkedType = new BasePairBitType( container );
@@ -91,13 +89,13 @@ public class BasePairBitType extends TypeImpl<BasePairBitType> implements BasePa
 	}
 	
 	@Override
-	public void updateContainer( final Cursor<?> c ) 
-	{
-		b = storage.update( c );	
-	}
+	public void updateContainer( final Object c ) { b = storage.update( c ); }
 
 	@Override
 	public BasePairBitType duplicateTypeOnSameNativeContainer() { return new BasePairBitType( storage ); }
+	
+	@Override
+	public int getIndex() { return i; }
 	
 	@Override
 	public void updateIndex( final int i ) 
@@ -143,12 +141,6 @@ public class BasePairBitType extends TypeImpl<BasePairBitType> implements BasePa
 		j1 -= dec3;
 		j2 -= dec3;
 		j3 -= dec3;
-	}
-	
-	@Override
-	public Display<BasePairBitType> getDefaultDisplay( final Image<BasePairBitType> image ) 
-	{ 
-		return new BasePairTypeDisplay<BasePairBitType>( image );
 	}
 
 	public void set( final Base base ) 
@@ -262,15 +254,6 @@ public class BasePairBitType extends TypeImpl<BasePairBitType> implements BasePa
 	
 	@Override
 	public void set( final BasePairBitType c ) { set( c.get() ); }
-	
-	@Override
-	public BasePairBitType[] createArray1D(int size1){ return new BasePairBitType[ size1 ]; }
-
-	@Override
-	public BasePairBitType[][] createArray2D(int size1, int size2){ return new BasePairBitType[ size1 ][ size2 ]; }
-
-	@Override
-	public BasePairBitType[][][] createArray3D(int size1, int size2, int size3) { return new BasePairBitType[ size1 ][ size2 ][ size3 ]; }
 
 	@Override
 	public BasePairBitType createVariable(){ return new BasePairBitType(); }

@@ -58,10 +58,10 @@ public class UnsignedShortType extends GenericShortType<UnsignedShortType>
 	public static int getUnsignedShort( final short signedShort ) { return signedShort & 0xffff; }
 	
 	@Override
-	public NativeContainer<UnsignedShortType, ? extends ShortAccess> createSuitableNativeContainer( final NativeContainerFactory storageFactory, final int dim[] )
+	public NativeContainer<UnsignedShortType, ? extends ShortAccess> createSuitableNativeContainer( final NativeContainerFactory<UnsignedShortType> storageFactory, final long dim[] )
 	{
 		// create the container
-		final NativeContainer<UnsignedShortType, ? extends ShortAccess> container = storageFactory.createShortInstance( dim, 1 );
+		final NativeContainer<UnsignedShortType, ? extends ShortAccess> container = storageFactory.createShortInstance( new UnsignedShortType(), dim, 1 );
 		
 		// create a Type that is linked to the container
 		final UnsignedShortType linkedType = new UnsignedShortType( container );
@@ -125,15 +125,6 @@ public class UnsignedShortType extends GenericShortType<UnsignedShortType>
 		else 
 			return 0;
 	}
-
-	@Override
-	public UnsignedShortType[] createArray1D( final int size1 ){ return new UnsignedShortType[ size1 ]; }
-
-	@Override
-	public UnsignedShortType[][] createArray2D( final int size1, final int size2 ){ return new UnsignedShortType[ size1 ][ size2 ]; }
-
-	@Override
-	public UnsignedShortType[][][] createArray3D( final int size1, final int size2, final int size3 ) { return new UnsignedShortType[ size1 ][ size2 ][ size3 ]; }
 	
 	@Override
 	public UnsignedShortType createVariable(){ return new UnsignedShortType( 0 ); }

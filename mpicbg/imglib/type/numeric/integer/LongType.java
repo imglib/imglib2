@@ -33,11 +33,13 @@ import mpicbg.imglib.container.NativeContainer;
 import mpicbg.imglib.container.NativeContainerFactory;
 import mpicbg.imglib.container.basictypecontainer.LongAccess;
 import mpicbg.imglib.container.basictypecontainer.array.LongArray;
-import mpicbg.imglib.cursor.Cursor;
+import mpicbg.imglib.type.NativeType;
 import mpicbg.imglib.util.Util;
 
-final public class LongType extends IntegerTypeImpl<LongType>
+final public class LongType extends IntegerTypeImpl<LongType> implements NativeType<LongType>
 {
+	private int i = 0;
+	
 	// the NativeContainer
 	final NativeContainer<LongType, ? extends LongAccess> storage;
 	
@@ -62,10 +64,10 @@ final public class LongType extends IntegerTypeImpl<LongType>
 	public LongType() { this( 0 ); }
 
 	@Override
-	public NativeContainer<LongType, ? extends LongAccess> createSuitableNativeContainer( final NativeContainerFactory storageFactory, final int dim[] )
+	public NativeContainer<LongType, ? extends LongAccess> createSuitableNativeContainer( final NativeContainerFactory<LongType> storageFactory, final long dim[] )
 	{
 		// create the container
-		final NativeContainer<LongType, ? extends LongAccess> container = storageFactory.createLongInstance( dim, 1 );
+		final NativeContainer<LongType, ? extends LongAccess> container = storageFactory.createLongInstance( new LongType(), dim, 1 );
 		
 		// create a Type that is linked to the container
 		final LongType linkedType = new LongType( container );
@@ -77,10 +79,7 @@ final public class LongType extends IntegerTypeImpl<LongType>
 	}
 
 	@Override
-	public void updateContainer( final Cursor<?> c ) 
-	{ 
-		b = storage.update( c ); 
-	}
+	public void updateContainer( final Object c ) { b = storage.update( c ); }
 
 	@Override
 	public LongType duplicateTypeOnSameNativeContainer() { return new LongType( storage ); }
@@ -175,17 +174,25 @@ final public class LongType extends IntegerTypeImpl<LongType>
 	}
 
 	@Override
-	public LongType[] createArray1D(int size1){ return new LongType[ size1 ]; }
-
-	@Override
-	public LongType[][] createArray2D(int size1, int size2){ return new LongType[ size1 ][ size2 ]; }
-
-	@Override
-	public LongType[][][] createArray3D(int size1, int size2, int size3) { return new LongType[ size1 ][ size2 ][ size3 ]; }
-
-	@Override
 	public LongType createVariable(){ return new LongType( 0 ); }
 
 	@Override
 	public LongType copy(){ return new LongType( get() ); }
+	
+	@Override
+	public int getEntitiesPerPixel() { return 1; }
+
+	@Override
+	public void updateIndex( final int i ) { this.i = i; }
+	@Override
+	public int getIndex() { return i; }
+	
+	@Override
+	public void incIndex() { ++i; }
+	@Override
+	public void incIndex( final int increment ) { i += increment; }
+	@Override
+	public void decIndex() { --i; }
+	@Override
+	public void decIndex( final int decrement ) { i -= decrement; }		
 }

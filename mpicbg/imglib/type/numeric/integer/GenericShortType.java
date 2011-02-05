@@ -32,11 +32,13 @@ package mpicbg.imglib.type.numeric.integer;
 import mpicbg.imglib.container.NativeContainer;
 import mpicbg.imglib.container.basictypecontainer.ShortAccess;
 import mpicbg.imglib.container.basictypecontainer.array.ShortArray;
-import mpicbg.imglib.cursor.Cursor;
+import mpicbg.imglib.type.NativeType;
 import mpicbg.imglib.util.Util;
 
-public abstract class GenericShortType<T extends GenericShortType<T>> extends IntegerTypeImpl<T>
+public abstract class GenericShortType<T extends GenericShortType<T>> extends IntegerTypeImpl<T> implements NativeType<T>
 {
+	int i = 0;
+
 	// the NativeContainer
 	final NativeContainer<T, ? extends ShortAccess> storage;
 	
@@ -59,12 +61,12 @@ public abstract class GenericShortType<T extends GenericShortType<T>> extends In
 
 	// this is the constructor if you want it to be a variable
 	public GenericShortType(){ this( ( short )0 ); }
+	
+	@Override
+	public int getEntitiesPerPixel() { return 1; }
 
 	@Override
-	public void updateContainer( final Cursor< ? > c ) 
-	{ 
-		b = storage.update( c ); 
-	}
+	public void updateContainer( final Object c ) { b = storage.update( c ); }
 	
 	protected short getValue(){ return b.getValue( i ); }
 	protected void setValue( final short f ){ b.setValue( i, f ); }
@@ -152,4 +154,18 @@ public abstract class GenericShortType<T extends GenericShortType<T>> extends In
 	
 	@Override
 	public String toString() { return "" + getValue(); }
+	
+	@Override
+	public void updateIndex( final int i ) { this.i = i; }
+	@Override
+	public int getIndex() { return i; }
+	
+	@Override
+	public void incIndex() { ++i; }
+	@Override
+	public void incIndex( final int increment ) { i += increment; }
+	@Override
+	public void decIndex() { --i; }
+	@Override
+	public void decIndex( final int decrement ) { i -= decrement; }	
 }
