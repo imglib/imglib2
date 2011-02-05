@@ -98,10 +98,10 @@ public class BasePairBitType implements BasePairType<BasePairBitType>, NativeTyp
 	public int getIndex() { return i; }
 	
 	@Override
-	public void updateIndex( final int i ) 
+	public void updateIndex( final int index ) 
 	{ 
-		this.i = i;
-		j1 = i * 3;
+		this.i = index;
+		j1 = index * 3;
 		j2 = j1 + 1;
 		j3 = j1 + 2;
 	}

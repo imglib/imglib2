@@ -210,7 +210,7 @@ public class BitType extends IntegerTypeImpl<BitType> implements BooleanType<Bit
 	public int getEntitiesPerPixel() { return 1; }
 	
 	@Override
-	public void updateIndex( final int i ) { this.i = i; }
+	public void updateIndex( final int index ) { this.i = index; }
 	@Override
 	public int getIndex() { return i; }
 	

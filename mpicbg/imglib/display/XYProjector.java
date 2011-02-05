@@ -59,7 +59,7 @@ public class XYProjector< A, B > implements Projector< A, B >, Positionable, Loc
 	public void map()
 	{
 		final Cursor< B > targetCursor = target.cursor();
-		final RandomAccess< A > sourceRandomAccess = source.integerRandomAccess();
+		final RandomAccess< A > sourceRandomAccess = source.randomAccess();
 		sourceRandomAccess.setPosition( position );
 		while ( targetCursor.hasNext() )
 		{

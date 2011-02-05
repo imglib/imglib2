@@ -34,7 +34,7 @@ import mpicbg.imglib.container.ImgCursor;
 import mpicbg.imglib.container.ImgRandomAccess;
 import mpicbg.imglib.container.shapelist.ShapeList;
 import mpicbg.imglib.image.Image;
-import mpicbg.imglib.location.VoidPositionable;
+import mpicbg.imglib.location.VoidRealPositionable;
 import mpicbg.imglib.type.Type;
 
 /**
@@ -50,7 +50,7 @@ public class ShapeListPositionableRasterSampler< T extends Type< T > > extends A
 	final protected int numDimensions;
 	final protected int[] position, dimensions;
 	
-	protected Positionable linkedRasterPositionable = VoidPositionable.getInstance();
+	protected Positionable linkedRasterPositionable = VoidRealPositionable.getInstance();
 	
 	public ShapeListPositionableRasterSampler(
 			final ShapeList< T > container,
