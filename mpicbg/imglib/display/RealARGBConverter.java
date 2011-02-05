@@ -61,7 +61,7 @@ public class RealARGBConverter implements Converter< FloatType, ARGBType >
 	{
 		final double a = input.getRealDouble();
 		final int b = Math.min( 255, roundPositive( Math.max( 0, ( ( a - min ) / scale * 255.0 ) ) ) );
-		final int argb = ( ( ( b << 8 ) | b ) << 8 ) | b;
+		final int argb = 0xff000000 | ( ( ( b << 8 ) | b ) << 8 ) | b;
 		output.set( argb );
 	}
 	
