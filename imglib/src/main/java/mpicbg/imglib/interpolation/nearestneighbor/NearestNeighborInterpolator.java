@@ -91,9 +91,6 @@ public class NearestNeighborInterpolator< T extends Type< T > > extends RoundRas
 	
 	@Override
 	public T get() { return target.get(); }
-	 
-	@Override 
-	public T create() { return target.create(); }
 	
 	@Override
 	@Deprecated

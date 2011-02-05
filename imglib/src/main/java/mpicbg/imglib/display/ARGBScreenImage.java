@@ -64,6 +64,7 @@ public class ARGBScreenImage implements ScreenImage, IterableInterval< ARGBType 
 		image = Toolkit.getDefaultToolkit().createImage( source );
 	}
 	
+	@Override
 	public Image image()
 	{
 		return image;
@@ -163,5 +164,11 @@ public class ARGBScreenImage implements ScreenImage, IterableInterval< ARGBType 
 	public long dimension( final int d )
 	{
 		return argbArray.dimension( d );
+	}
+
+	@Override
+	public ARGBType firstElement()
+	{
+		return iterator().next();
 	}
 }

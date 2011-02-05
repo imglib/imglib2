@@ -293,10 +293,4 @@ public class OutOfBoundsConstantValue< T extends Type< T > > implements OutOfBou
 		for ( int d = 0; d < position.length; ++d )
 			setPosition( position[ d ], d );
 	}
-
-	@Override
-	public T create()
-	{
-		return value.createVariable();
-	}
 }
