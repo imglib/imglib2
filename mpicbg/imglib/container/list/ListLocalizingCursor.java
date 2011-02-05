@@ -25,11 +25,11 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-package mpicbg.imglib.container.dynamic;
+package mpicbg.imglib.container.list;
 
-import mpicbg.imglib.container.AbstractImgOutOfBoundsRandomAccess;
-import mpicbg.imglib.container.Img;
-import mpicbg.imglib.outofbounds.OutOfBoundsFactory;
+import java.util.ArrayList;
+
+import mpicbg.imglib.container.AbstractImgLocalizingCursor;
 import mpicbg.imglib.type.Type;
 import mpicbg.imglib.util.Util;
 
@@ -39,21 +39,66 @@ import mpicbg.imglib.util.Util;
  *
  * @author Stephan Preibisch and Stephan Saalfeld
  */
-public class DynamicOutOfBoundsRandomAccess< T extends Type< T > > extends AbstractImgOutOfBoundsRandomAccess< T >
+final public class ListLocalizingCursor< T extends Type< T > > extends AbstractImgLocalizingCursor< T >
 {
-	final private DynamicContainer< T > container;
+	private int i;
+	final private int maxNumPixels;
 	
-	public DynamicOutOfBoundsRandomAccess(
-			final DynamicContainer< T > container,
-			final OutOfBoundsFactory< T, Img< T > > outOfBoundsStrategyFactory ) 
+	final private ArrayList< T > pixels;
+	final private ListContainer< T > container;
+	
+	public ListLocalizingCursor(	final ListContainer< T > container )
 	{
-		super( container, outOfBoundsStrategyFactory );
+		super( container );
 		
 		this.container = container;
+		this.pixels = container.pixels;
+		this.maxNumPixels = (int)container.numPixels() - 1;
+	
+		reset();
+	}
+	
+	@Override
+	public void fwd()
+	{ 
+		++i; 
+		
+		for ( int d = 0; d < n; d++ )
+		{
+			if ( position[ d ] < size[ d ] - 1 )
+			{
+				position[ d ]++;
+				
+				for ( int e = 0; e < d; e++ )
+					position[ e ] = 0;
+				
+				break;
+			}
+		}
 	}
 
 	@Override
-	public DynamicContainer< T > getImg(){ return container; }
+	public boolean hasNext() { return i < maxNumPixels; }
+	
+	@Override
+	public void reset()
+	{
+		if ( size != null )
+		{
+			i = -1;
+			
+			position[ 0 ] = -1;
+			
+			for ( int d = 1; d < n; d++ )
+				position[ d ] = 0;		
+		}
+	}
+
+	@Override
+	public ListContainer< T > getImg(){ return container; }
+	
+	@Override
+	public T get() { return pixels.get( i ); }
 	
 	@Override
 	public T create() { return container.createVariable(); }
@@ -65,5 +110,5 @@ public class DynamicOutOfBoundsRandomAccess< T extends Type< T > > extends Abstr
 		localize( tmp );
 		
 		return Util.printCoordinates( tmp ) + ": " + get(); 
-	}		
+	}	
 }

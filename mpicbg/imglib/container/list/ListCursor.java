@@ -25,12 +25,13 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-package mpicbg.imglib.container.dynamic;
+package mpicbg.imglib.container.list;
 
 import java.util.ArrayList;
 
-import mpicbg.imglib.container.AbstractImgLocalizingCursor;
+import mpicbg.imglib.container.AbstractImgCursor;
 import mpicbg.imglib.type.Type;
+import mpicbg.imglib.util.IntervalIndexer;
 import mpicbg.imglib.util.Util;
 
 /**
@@ -39,67 +40,55 @@ import mpicbg.imglib.util.Util;
  *
  * @author Stephan Preibisch and Stephan Saalfeld
  */
-final public class DynamicLocalizingCursor< T extends Type< T > > extends AbstractImgLocalizingCursor< T >
+final public class ListCursor< T extends Type< T > > extends AbstractImgCursor< T >
 {
 	private int i;
 	final private int maxNumPixels;
 	
 	final private ArrayList< T > pixels;
-	final private DynamicContainer< T > container;
+	final private ListContainer< T > container;
 	
-	public DynamicLocalizingCursor(	final DynamicContainer< T > container )
+	public ListCursor( final ListContainer< T > container )
 	{
-		super( container );
+		super( container.numDimensions() );
 		
 		this.container = container;
 		this.pixels = container.pixels;
 		this.maxNumPixels = (int)container.numPixels() - 1;
-	
+		
 		reset();
 	}
 	
 	@Override
-	public void fwd()
-	{ 
-		++i; 
-		
-		for ( int d = 0; d < n; d++ )
-		{
-			if ( position[ d ] < size[ d ] - 1 )
-			{
-				position[ d ]++;
-				
-				for ( int e = 0; e < d; e++ )
-					position[ e ] = 0;
-				
-				break;
-			}
-		}
-	}
+	public T get() { return pixels.get( i ); }
 
 	@Override
 	public boolean hasNext() { return i < maxNumPixels; }
+
+	@Override
+	public void jumpFwd( final long steps )  { i += steps; }
+
+	@Override
+	public void fwd() { ++i; }
+
+	@Override
+	public void reset() { i = -1; }
 	
 	@Override
-	public void reset()
+	public ListContainer<T> getImg() { return container; }
+		
+	@Override
+	public long getLongPosition( final int dim )
 	{
-		if ( size != null )
-		{
-			i = -1;
-			
-			position[ 0 ] = -1;
-			
-			for ( int d = 1; d < n; d++ )
-				position[ d ] = 0;		
-		}
+		return IntervalIndexer.indexToPosition( i, container.dim, container.step, dim );
 	}
 
 	@Override
-	public DynamicContainer< T > getImg(){ return container; }
-	
-	@Override
-	public T get() { return pixels.get( i ); }
-	
+	public void localize( final long[] position )
+	{
+		IntervalIndexer.indexToPosition( i, container.dim, position );
+	}
+
 	@Override
 	public T create() { return container.createVariable(); }
 	

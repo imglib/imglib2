@@ -32,7 +32,7 @@ import mpicbg.imglib.IterableRealInterval;
 import mpicbg.imglib.container.AbstractNativeContainer;
 import mpicbg.imglib.container.Img;
 import mpicbg.imglib.container.basictypecontainer.DataAccess;
-import mpicbg.imglib.container.dynamic.DynamicContainer;
+import mpicbg.imglib.container.list.ListContainer;
 import mpicbg.imglib.outofbounds.OutOfBoundsFactory;
 import mpicbg.imglib.type.NativeType;
 import mpicbg.imglib.util.IntervalIndexer;
@@ -118,7 +118,7 @@ final public class Array< T extends NativeType< T >, A extends DataAccess > exte
 		if ( f.numDimensions() != this.numDimensions() )
 			return false;
 		
-		if ( getClass().isInstance( f ) || DynamicContainer.class.isInstance( f ) )
+		if ( getClass().isInstance( f ) || ListContainer.class.isInstance( f ) )
 		{
 			final Interval a = ( Interval )f;
 			for ( int d = 0; d < n; ++d )

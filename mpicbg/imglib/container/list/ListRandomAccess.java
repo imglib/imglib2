@@ -25,7 +25,7 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-package mpicbg.imglib.container.dynamic;
+package mpicbg.imglib.container.list;
 
 import java.util.ArrayList;
 
@@ -40,16 +40,16 @@ import mpicbg.imglib.util.Util;
  *
  * @author Stephan Preibisch and Stephan Saalfeld
  */
-public class DynamicRandomAccess< T extends Type< T > > extends AbstractImgRandomAccess< T >
+public class ListRandomAccess< T extends Type< T > > extends AbstractImgRandomAccess< T >
 {
 	private int i;
 	
 	final private ArrayList< T > pixels;
-	final private DynamicContainer< T > container;
+	final private ListContainer< T > container;
 	
 	final private int[] step;
 	
-	public DynamicRandomAccess( final DynamicContainer< T > container ) 
+	public ListRandomAccess( final ListContainer< T > container ) 
 	{
 		super( container );
 		
@@ -148,7 +148,7 @@ public class DynamicRandomAccess< T extends Type< T > > extends AbstractImgRando
 	}
 	
 	@Override
-	public DynamicContainer< T > getImg(){ return container; }
+	public ListContainer< T > getImg(){ return container; }
 	
 	@Override
 	public T get(){ return pixels.get( i ); }

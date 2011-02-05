@@ -25,7 +25,7 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-package mpicbg.imglib.container.dynamic;
+package mpicbg.imglib.container.list;
 
 import java.util.ArrayList;
 
@@ -46,7 +46,7 @@ import mpicbg.imglib.util.IntervalIndexer;
  *
  * @author Stephan Preibisch and Stephan Saalfeld
  */
-public class DynamicContainer< T extends Type< T > > extends AbstractImg< T >
+public class ListContainer< T extends Type< T > > extends AbstractImg< T >
 {
 	final protected int[] step;
 	final protected int[] dim;
@@ -57,7 +57,7 @@ public class DynamicContainer< T extends Type< T > > extends AbstractImg< T >
 	// we have to overwrite those as this can change during the processing
 	protected int numPixels, numEntities;
 
-	public DynamicContainer( final long[] dim, final T type )
+	public ListContainer( final long[] dim, final T type )
 	{
 		super( dim );
 
@@ -75,7 +75,15 @@ public class DynamicContainer< T extends Type< T > > extends AbstractImg< T >
 		for ( int i = 0; i < this.numPixels; ++i )
 			pixels.add( type.createVariable() );
 	}
-
+	
+	/*
+	public ListContainer( final List< T > pixels, final long[] dim )
+	{
+		pixels = new ArrayList< T >();
+		pixels.addA
+	}
+	*/
+	
 	public int[] getSteps() { return step.clone(); }
 
 	public int getStep( final int d ) { return step[ d ]; }
@@ -102,31 +110,31 @@ public class DynamicContainer< T extends Type< T > > extends AbstractImg< T >
 	public long numPixels() { return numPixels; }
 
 	@Override
-	public DynamicCursor< T > cursor()
+	public ListCursor< T > cursor()
 	{
-		return new DynamicCursor< T >( this );
+		return new ListCursor< T >( this );
 	}
 
 	@Override
-	public DynamicLocalizingCursor< T > localizingCursor()
+	public ListLocalizingCursor< T > localizingCursor()
 	{
-		return new DynamicLocalizingCursor< T >( this  );
+		return new ListLocalizingCursor< T >( this  );
 	}
 
 	@Override
-	public DynamicRandomAccess< T > randomAccess()
+	public ListRandomAccess< T > randomAccess()
 	{
-		return new DynamicRandomAccess< T >( this );
+		return new ListRandomAccess< T >( this );
 	}
 
 	@Override
 	public ImgRandomAccess<T> integerRandomAccess( final OutOfBoundsFactory<T, Img<T>> outOfBoundsFactory )
 	{
-		return new DynamicOutOfBoundsRandomAccess< T >( this, outOfBoundsFactory );
+		return new ListOutOfBoundsRandomAccess< T >( this, outOfBoundsFactory );
 	}
 
 	@Override
-	public DynamicContainerFactory<T> factory() { return new DynamicContainerFactory<T>(); }
+	public ListContainerFactory<T> factory() { return new ListContainerFactory<T>(); }
 
 	@Override
 	public T createVariable() { return type.createVariable(); }

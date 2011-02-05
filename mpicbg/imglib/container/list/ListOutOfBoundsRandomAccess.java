@@ -25,24 +25,45 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-package mpicbg.imglib.container.dynamic;
+package mpicbg.imglib.container.list;
 
+import mpicbg.imglib.container.AbstractImgOutOfBoundsRandomAccess;
 import mpicbg.imglib.container.Img;
-import mpicbg.imglib.container.ImgFactory;
+import mpicbg.imglib.outofbounds.OutOfBoundsFactory;
 import mpicbg.imglib.type.Type;
+import mpicbg.imglib.util.Util;
 
 /**
  * 
- * 
- * 
+ * @param <T>
+ *
  * @author Stephan Preibisch and Stephan Saalfeld
  */
-public class DynamicContainerFactory< T extends Type< T > > extends ImgFactory< T >
+public class ListOutOfBoundsRandomAccess< T extends Type< T > > extends AbstractImgOutOfBoundsRandomAccess< T >
 {
+	final private ListContainer< T > container;
+	
+	public ListOutOfBoundsRandomAccess(
+			final ListContainer< T > container,
+			final OutOfBoundsFactory< T, Img< T > > outOfBoundsStrategyFactory ) 
+	{
+		super( container, outOfBoundsStrategyFactory );
+		
+		this.container = container;
+	}
 
 	@Override
-	public Img<T> create( final long[] dim, final T type )
+	public ListContainer< T > getImg(){ return container; }
+	
+	@Override
+	public T create() { return container.createVariable(); }
+	
+	@Override
+	public String toString() 
 	{
-		return new DynamicContainer< T >( dim, type );
-	}
+		final long[] tmp = new long[ n ];
+		localize( tmp );
+		
+		return Util.printCoordinates( tmp ) + ": " + get(); 
+	}		
 }

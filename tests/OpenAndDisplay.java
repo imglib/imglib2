@@ -9,7 +9,7 @@ import mpicbg.imglib.algorithm.transformation.ImageTransform;
 import mpicbg.imglib.container.Img;
 import mpicbg.imglib.container.ImgFactory;
 import mpicbg.imglib.container.array.ArrayContainerFactory;
-import mpicbg.imglib.container.dynamic.DynamicContainerFactory;
+import mpicbg.imglib.container.list.ListContainerFactory;
 import mpicbg.imglib.image.display.imagej.ImgLib2Display;
 import mpicbg.imglib.interpolation.nearestneighbor.NearestNeighborInterpolatorFactory;
 import mpicbg.imglib.io.LOCI;
@@ -59,7 +59,7 @@ public class OpenAndDisplay
 	{
 		new ImageJ();
 		
-		test( new DynamicContainerFactory<FloatType>() );
+		test( new ListContainerFactory<FloatType>() );
 	}
 	
 	public static AffineModel3D getAffineModel3D( Transform3D transform )

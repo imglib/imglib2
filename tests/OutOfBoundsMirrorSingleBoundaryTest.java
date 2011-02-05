@@ -39,7 +39,7 @@ import mpicbg.imglib.container.ImgCursor;
 import mpicbg.imglib.container.ImgRandomAccess;
 import mpicbg.imglib.container.array.ArrayContainerFactory;
 import mpicbg.imglib.container.cell.CellContainerFactory;
-import mpicbg.imglib.container.dynamic.DynamicContainerFactory;
+import mpicbg.imglib.container.list.ListContainerFactory;
 import mpicbg.imglib.container.shapelist.ShapeList;
 import mpicbg.imglib.container.shapelist.ShapeListContainerFactory;
 import mpicbg.imglib.image.Image;
@@ -121,7 +121,7 @@ public class OutOfBoundsMirrorSingleBoundaryTest
 	{
 		arrayImage = new ImageFactory< IntType >( new IntType(), new ArrayContainerFactory() ).createImage( dim );
 		cellImage = new ImageFactory< IntType >( new IntType(), new CellContainerFactory( 2 ) ).createImage( dim );
-		dynamicImage = new ImageFactory< IntType >( new IntType(), new DynamicContainerFactory() ).createImage( dim );
+		dynamicImage = new ImageFactory< IntType >( new IntType(), new ListContainerFactory() ).createImage( dim );
 		shapeListImage = new ImageFactory< IntType >( new IntType(), new ShapeListContainerFactory() ).createImage( dim );
 		
 		int i = 0;
