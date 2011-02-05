@@ -25,7 +25,7 @@ public abstract class NativeContainerFactory< T extends NativeType< T > > extend
 	@Override
 	public NativeContainer< T, ? > create( final long[] dim, final T type )
 	{
-		return type.createSuitableDirectAccessContainer( this, dim );
+		return type.createSuitableNativeContainer( this, dim );
 	}
 
 	/* basic type containers */

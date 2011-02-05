@@ -56,7 +56,7 @@ public abstract class AbstractNativeContainer<
 	@Override
 	public T createLinkedType()
 	{
-		try{ return linkedType.duplicateTypeOnSameDirectAccessContainer(); }
+		try{ return linkedType.duplicateTypeOnSameNativeContainer(); }
 		catch ( NullPointerException e ){ return null; }
 	}
 }
