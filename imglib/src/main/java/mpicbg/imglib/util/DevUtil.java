@@ -1,16 +1,16 @@
 package mpicbg.imglib.util;
 
+import mpicbg.imglib.container.Img;
 import mpicbg.imglib.container.array.Array;
 import mpicbg.imglib.container.basictypecontainer.ByteAccess;
 import mpicbg.imglib.container.basictypecontainer.array.ByteArray;
-import mpicbg.imglib.image.Image;
 import mpicbg.imglib.type.numeric.integer.UnsignedByteType;
 
 final public class DevUtil
 {	
 	private DevUtil() {}
 	
-	final public static Image<UnsignedByteType> createImageFromArray( final byte[] data, final long[] dim )
+	final public static Img<UnsignedByteType> createImageFromArray( final byte[] data, final long[] dim )
 	{
 		final ByteAccess byteAccess = new ByteArray( data );
 		final Array<UnsignedByteType, ByteAccess> array = 
@@ -22,6 +22,6 @@ final public class DevUtil
 		// pass it to the DirectAccessContainer
 		array.setLinkedType( linkedType );
 		
-		return new Image<UnsignedByteType>(array, new UnsignedByteType());
+		return array;
 	}
 }

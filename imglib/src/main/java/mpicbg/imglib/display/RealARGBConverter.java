@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2009--2011, Stephan Saalfeld
+ * Copyright (c) 2011, Stephan Saalfeld
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -9,7 +9,7 @@
  * list of conditions and the following disclaimer.  Redistributions in binary
  * form must reproduce the above copyright notice, this list of conditions and
  * the following disclaimer in the documentation and/or other materials
- * provided with the distribution.  Neither the name of the Fiji project nor
+ * provided with the distribution.  Neither the name of the imglib project nor
  * the names of its contributors may be used to endorse or promote products
  * derived from this software without specific prior written permission.
  * 
@@ -36,24 +36,16 @@ import mpicbg.imglib.type.numeric.real.FloatType;
  *
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-public class RealARGBConverter implements Converter< FloatType, ARGBType >
+public class RealARGBConverter extends AbstractLinearRange implements Converter< FloatType, ARGBType >
 {
-	protected double min = 0;
-	protected double max = 1;
-	protected double scale = 1;
-	
-	public RealARGBConverter() {}
-	
-	public RealARGBConverter( final int min, final int max )
+	public RealARGBConverter()
 	{
-		this.min = min;
-		this.max = max;
-		scale = max - min;
+		super();
 	}
 	
-	final static protected int roundPositive( final double a )
+	public RealARGBConverter( final double min, final double max )
 	{
-		return ( int )( a + 0.5 );
+		super( min, max );
 	}
 	
 	@Override
@@ -64,6 +56,4 @@ public class RealARGBConverter implements Converter< FloatType, ARGBType >
 		final int argb = 0xff000000 | ( ( ( b << 8 ) | b ) << 8 ) | b;
 		output.set( argb );
 	}
-	
-	
 }

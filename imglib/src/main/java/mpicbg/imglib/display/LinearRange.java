@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2009--2010, Stephan Preibisch & Stephan Saalfeld
+ * Copyright (c) 2011, Stephan Saalfeld
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -9,7 +9,7 @@
  * list of conditions and the following disclaimer.  Redistributions in binary
  * form must reproduce the above copyright notice, this list of conditions and
  * the following disclaimer in the documentation and/or other materials
- * provided with the distribution.  Neither the name of the Fiji project nor
+ * provided with the distribution.  Neither the name of the imglib project nor
  * the names of its contributors may be used to endorse or promote products
  * derived from this software without specific prior written permission.
  * 
@@ -24,24 +24,18 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- *
- * @author Stephan Preibisch & Stephan Saalfeld
  */
-package mpicbg.imglib.image.display;
+package mpicbg.imglib.display;
 
-import mpicbg.imglib.image.Image;
-import mpicbg.imglib.type.numeric.ComplexType;
-
-public class ComplexTypeRealValueDisplay<T extends ComplexType<T>> extends ComplexTypePowerSpectrumDisplay<T>
+/**
+ * 
+ *
+ * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
+ */
+public interface LinearRange
 {
-	public ComplexTypeRealValueDisplay( final Image<T> img )
-	{
-		super(img);
-	}	
-	
-	@Override
-	protected float getComplexDisplayValue( final T c )
-	{
-		return c.getRealFloat();
-	}
+	public double getMin();
+	public double getMax();
+	public void setMin( double min );
+	public void setMax( double max );
 }

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2009--2010, Stephan Preibisch & Stephan Saalfeld
+ * Copyright (c) 2011, Stephan Saalfeld
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -9,7 +9,7 @@
  * list of conditions and the following disclaimer.  Redistributions in binary
  * form must reproduce the above copyright notice, this list of conditions and
  * the following disclaimer in the documentation and/or other materials
- * provided with the distribution.  Neither the name of the Fiji project nor
+ * provided with the distribution.  Neither the name of the imglib project nor
  * the names of its contributors may be used to endorse or promote products
  * derived from this software without specific prior written permission.
  * 
@@ -24,38 +24,52 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- *
- * @author Stephan Preibisch & Stephan Saalfeld
  */
-package mpicbg.imglib.image.display;
+package mpicbg.imglib.display;
 
-import mpicbg.imglib.image.Image;
-import mpicbg.imglib.type.logic.BitType;
-
-public class BitTypeDisplay extends Display<BitType>
+/**
+ * 
+ *
+ * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
+ */
+public class AbstractLinearRange implements LinearRange
 {
-	public BitTypeDisplay( final Image<BitType> img )
+	protected double min = 0;
+	protected double max = 1;
+	protected double scale = 1;
+	
+	public AbstractLinearRange() {}
+	
+	public AbstractLinearRange( final double min, final double max )
 	{
-		super(img);
-		this.min = 0;
-		this.max = 1;
-	}	
-
-	@Override
-	public void setMinMax() 
+		this.min = min;
+		this.max = max;
+		scale = max - min;
+	}
+	
+	final static protected int roundPositive( final double a )
 	{
-		this.min = 0;
-		this.max = 1;
+		return ( int )( a + 0.5 );
 	}
 	
 	@Override
-	public float get32Bit( BitType c ) { return c.get() ? 1 : 0; }
-	@Override
-	public float get32BitNormed( BitType c ) { return c.get() ? 1 : 0; }
-	
-	@Override
-	public byte get8BitSigned( final BitType c ) { return c.get() ? (byte)255 : (byte)0; }
-	@Override
-	public short get8BitUnsigned( final BitType c ) { return c.get() ? (short)255 : (short)0; }
-}
+	public double getMin() { return min; }
 
+	@Override
+	public double getMax() { return max; }
+
+	@Override
+	public void setMax( final double max )
+	{
+		this.max = max;
+		scale = max - min;
+	}
+
+	@Override
+	public void setMin( final double min )
+	{
+		this.min = min;
+		scale = max - min;
+	}
+
+}
