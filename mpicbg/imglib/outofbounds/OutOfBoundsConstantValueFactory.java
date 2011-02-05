@@ -66,7 +66,7 @@ public class OutOfBoundsConstantValueFactory< T extends Type< T >, F extends Int
 	@Override
 	public OutOfBoundsConstantValue< T > create( final F f )
 	{
-		final RandomAccess< T > source = f.integerRandomAccess();
+		final RandomAccess< T > source = f.randomAccess();
 		
 		if ( value == null )
 			value = source.create();
