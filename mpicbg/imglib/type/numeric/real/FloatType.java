@@ -204,6 +204,5 @@ public class FloatType extends RealTypeImpl<FloatType> implements RealType<Float
 	@Override
 	public void decIndex() { --i; }
 	@Override
-	public void decIndex( final int decrement ) { i -= decrement; }
-	
+	public void decIndex( final int decrement ) { i -= decrement; }	
 }
