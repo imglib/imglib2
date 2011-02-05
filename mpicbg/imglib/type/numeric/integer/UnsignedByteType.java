@@ -58,10 +58,10 @@ public class UnsignedByteType extends GenericByteType<UnsignedByteType>
 	public static int getUnsignedByte( final byte signedByte ) { return signedByte & 0xff; }
 
 	@Override
-	public NativeContainer<UnsignedByteType, ? extends ByteAccess> createSuitableNativeContainer( final NativeContainerFactory storageFactory, final int dim[] )
+	public NativeContainer<UnsignedByteType, ? extends ByteAccess> createSuitableNativeContainer( final NativeContainerFactory<UnsignedByteType> storageFactory, final long dim[] )
 	{
 		// create the container
-		final NativeContainer<UnsignedByteType, ? extends ByteAccess> container = storageFactory.createByteInstance( dim, 1 );
+		final NativeContainer<UnsignedByteType, ? extends ByteAccess> container = storageFactory.createByteInstance( new UnsignedByteType(), dim, 1 );
 		
 		// create a Type that is linked to the container
 		final UnsignedByteType linkedType = new UnsignedByteType( container );
@@ -126,15 +126,6 @@ public class UnsignedByteType extends GenericByteType<UnsignedByteType>
 		else 
 			return 0;
 	}
-
-	@Override
-	public UnsignedByteType[] createArray1D( final int size1 ){ return new UnsignedByteType[ size1 ]; }
-
-	@Override
-	public UnsignedByteType[][] createArray2D( final int size1, final int size2 ){ return new UnsignedByteType[ size1 ][ size2 ]; }
-
-	@Override
-	public UnsignedByteType[][][] createArray3D( final int size1, final int size2, final int size3 ) { return new UnsignedByteType[ size1 ][ size2 ][ size3 ]; }
 
 	@Override
 	public UnsignedByteType createVariable(){ return new UnsignedByteType( 0 ); }
