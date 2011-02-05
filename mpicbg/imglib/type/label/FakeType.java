@@ -29,8 +29,8 @@
  */
 package mpicbg.imglib.type.label;
 
-import mpicbg.imglib.container.DirectAccessContainer;
-import mpicbg.imglib.container.DirectAccessContainerFactory;
+import mpicbg.imglib.container.NativeContainer;
+import mpicbg.imglib.container.NativeContainerFactory;
 import mpicbg.imglib.cursor.Cursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.display.Display;
@@ -42,13 +42,13 @@ public class FakeType extends TypeImpl<FakeType>
 	public int getEntitiesPerPixel() { return 0; } 
 	
 	@Override
-	public DirectAccessContainer<FakeType,?> createSuitableDirectAccessContainer( final DirectAccessContainerFactory storageFactory, final int dim[] ) { return null; }
+	public NativeContainer<FakeType,?> createSuitableNativeContainer( final NativeContainerFactory storageFactory, final int dim[] ) { return null; }
 
 	@Override
 	public void updateContainer( Cursor<?> c ) {}
 	
 	@Override
-	public FakeType duplicateTypeOnSameDirectAccessContainer() { return new FakeType(); }
+	public FakeType duplicateTypeOnSameNativeContainer() { return new FakeType(); }
 
 	@Override
 	public Display<FakeType> getDefaultDisplay( Image<FakeType> image ) { return null; }

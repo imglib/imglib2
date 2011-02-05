@@ -29,7 +29,7 @@ import mpicbg.imglib.type.numeric.real.FloatType;
 
 public class LOCI
 {
-	public static Img<FloatType> openLOCIFloatType( final String fileName, final ImgFactory factory )
+	public static Img<FloatType> openLOCIFloatType( final String fileName, final ImgFactory<FloatType> factory )
 	{				
 		final IFormatReader r = new ChannelSeparator();
 

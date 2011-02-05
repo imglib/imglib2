@@ -38,10 +38,10 @@ import mpicbg.imglib.util.Util;
 
 final public class ARGBType extends AbstractNativeType<ARGBType> implements NumericType<ARGBType>
 {
-	// the DirectAccessContainer
+	// the NativeContainer
 	final NativeContainer<ARGBType, ? extends IntAccess> storage;
 	
-	// the (sub)DirectAccessContainer that holds the information 
+	// the (sub)NativeContainer that holds the information 
 	IntAccess b;
 	
 	// this is the constructor if you want it to read from an array
@@ -62,7 +62,7 @@ final public class ARGBType extends AbstractNativeType<ARGBType> implements Nume
 	public ARGBType() { this( 0 ); }
 	
 	@Override
-	public NativeContainer<ARGBType, ? extends IntAccess> createSuitableDirectAccessContainer( final NativeContainerFactory<ARGBType> storageFactory, final long dim[] )
+	public NativeContainer<ARGBType, ? extends IntAccess> createSuitableNativeContainer( final NativeContainerFactory<ARGBType> storageFactory, final long dim[] )
 	{
 		// create the container
 		final NativeContainer<ARGBType, ? extends IntAccess> container = storageFactory.createIntInstance( new ARGBType(), dim, 1 );
@@ -70,7 +70,7 @@ final public class ARGBType extends AbstractNativeType<ARGBType> implements Nume
 		// create a Type that is linked to the container
 		final ARGBType linkedType = new ARGBType( container );
 		
-		// pass it to the DirectAccessContainer
+		// pass it to the NativeContainer
 		container.setLinkedType( linkedType );
 		
 		return container;
@@ -83,7 +83,7 @@ final public class ARGBType extends AbstractNativeType<ARGBType> implements Nume
 	}
 
 	@Override
-	public ARGBType duplicateTypeOnSameDirectAccessContainer() { return new ARGBType( storage ); }
+	public ARGBType duplicateTypeOnSameNativeContainer() { return new ARGBType( storage ); }
 	
 	final public static int rgba( final int r, final int g, final int b, final int a)
 	{

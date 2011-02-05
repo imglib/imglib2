@@ -34,11 +34,11 @@ import mpicbg.imglib.container.basictypecontainer.DataAccess;
 
 /**
  * The {@link Type} class is responsible for computing. It can be instaniated as a variable holding one single value only or with
- * a DirectAccessContainer. There is no differentiation between the two cases except for the constructor to avoid double implementations. 
+ * a NativeContainer. There is no differentiation between the two cases except for the constructor to avoid double implementations. 
  * 
  * The {@link Type} is the only class that is aware of the actual data type, i.e. which basic type ({@link DataAccess}) is used to 
  * store the data. On the other hand it does not know the storage type ({@link Array}, {@link Cursor}, ...). This is not necessary for
- * computation and avoid complicated re-implementations. The method public void updateDataArray( Cursor<?> c );	links the DirectAccessContainer and
+ * computation and avoid complicated re-implementations. The method public void updateDataArray( Cursor<?> c );	links the NativeContainer and
  * the cursor which define the current position as well as the current storage array.
  * 
  * @author Stephan Preibisch

@@ -29,22 +29,24 @@
  */
 package mpicbg.imglib.type.numeric.integer;
 
-import mpicbg.imglib.container.DirectAccessContainer;
+import mpicbg.imglib.container.NativeContainer;
 import mpicbg.imglib.container.basictypecontainer.ByteAccess;
 import mpicbg.imglib.container.basictypecontainer.array.ByteArray;
-import mpicbg.imglib.cursor.Cursor;
+import mpicbg.imglib.type.NativeType;
 import mpicbg.imglib.util.Util;
 
-public abstract class GenericByteType<T extends GenericByteType<T>> extends IntegerTypeImpl<T>
+public abstract class GenericByteType<T extends GenericByteType<T>> extends IntegerTypeImpl<T> implements NativeType<T>
 {
-	// the DirectAccessContainer
-	final DirectAccessContainer<T, ? extends ByteAccess> storage;
+	int i = 0;
+
+	// the NativeContainer
+	final NativeContainer<T, ? extends ByteAccess> storage;
 	
-	// the (sub)DirectAccessContainer that holds the information 
+	// the (sub)NativeContainer that holds the information 
 	ByteAccess b;
 	
 	// this is the constructor if you want it to read from an array
-	public GenericByteType( DirectAccessContainer<T, ? extends ByteAccess> byteStorage )
+	public GenericByteType( NativeContainer<T, ? extends ByteAccess> byteStorage )
 	{
 		storage = byteStorage;
 	}
@@ -61,7 +63,10 @@ public abstract class GenericByteType<T extends GenericByteType<T>> extends Inte
 	protected GenericByteType() { this( ( byte )0 ); }
 			
 	@Override
-	public void updateContainer( final Cursor< ? > c ) 
+	public int getEntitiesPerPixel() { return 1; }
+
+	@Override
+	public void updateContainer( final Object c ) 
 	{ 
 		b = storage.update( c ); 
 	}
@@ -125,10 +130,7 @@ public abstract class GenericByteType<T extends GenericByteType<T>> extends Inte
 	}
 	
 	@Override
-	public void set( final T c )
-	{
-		setValue( c.getValue() );
-	}
+	public void set( final T c ) { setValue( c.getValue() );	}
 
 	@Override
 	public void setOne() { setValue( ( byte )1 ); }
@@ -152,4 +154,18 @@ public abstract class GenericByteType<T extends GenericByteType<T>> extends Inte
 	
 	@Override
 	public String toString() { return "" + getValue(); }
+
+	@Override
+	public void updateIndex( final int i ) { this.i = i; }
+	@Override
+	public int getIndex() { return i; }
+	
+	@Override
+	public void incIndex() { ++i; }
+	@Override
+	public void incIndex( final int increment ) { i += increment; }
+	@Override
+	public void decIndex() { --i; }
+	@Override
+	public void decIndex( final int decrement ) { i -= decrement; }	
 }

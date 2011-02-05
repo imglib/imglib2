@@ -41,10 +41,10 @@ public class FloatType extends RealTypeImpl<FloatType> implements RealType<Float
 {
 	private int i = 0;
 
-	// the DirectAccessContainer
+	// the NativeContainer
 	final NativeContainer<FloatType, ? extends FloatAccess> storage;
 	
-	// the (sub)DirectAccessContainer that holds the information 
+	// the (sub)NativeContainer that holds the information 
 	FloatAccess b;
 	
 	// this is the constructor if you want it to read from an array
@@ -65,7 +65,7 @@ public class FloatType extends RealTypeImpl<FloatType> implements RealType<Float
 	public FloatType() { this( 0 ); }
 
 	@Override
-	public NativeContainer<FloatType, ? extends FloatAccess> createSuitableDirectAccessContainer( final NativeContainerFactory<FloatType> storageFactory, final long dim[] )
+	public NativeContainer<FloatType, ? extends FloatAccess> createSuitableNativeContainer( final NativeContainerFactory<FloatType> storageFactory, final long dim[] )
 	{
 		// create the container
 		final NativeContainer<FloatType, ? extends FloatAccess> container = storageFactory.createFloatInstance( new FloatType(), dim, 1 );
@@ -73,7 +73,7 @@ public class FloatType extends RealTypeImpl<FloatType> implements RealType<Float
 		// create a Type that is linked to the container
 		final FloatType linkedType = new FloatType( container );
 		
-		// pass it to the DirectAccessContainer
+		// pass it to the NativeContainer
 		container.setLinkedType( linkedType );
 		
 		return container;
@@ -86,7 +86,7 @@ public class FloatType extends RealTypeImpl<FloatType> implements RealType<Float
 	}
 	
 	@Override
-	public FloatType duplicateTypeOnSameDirectAccessContainer() { return new FloatType( storage ); }
+	public FloatType duplicateTypeOnSameNativeContainer() { return new FloatType( storage ); }
 
 	public float get(){ return b.getValue( i ); }
 	public void set( final float f ){ b.setValue( i, f ); }
@@ -204,6 +204,5 @@ public class FloatType extends RealTypeImpl<FloatType> implements RealType<Float
 	@Override
 	public void decIndex() { --i; }
 	@Override
-	public void decIndex( final int decrement ) { i -= decrement; }
-	
+	public void decIndex( final int decrement ) { i -= decrement; }	
 }

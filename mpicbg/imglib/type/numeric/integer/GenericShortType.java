@@ -29,7 +29,7 @@
  */
 package mpicbg.imglib.type.numeric.integer;
 
-import mpicbg.imglib.container.DirectAccessContainer;
+import mpicbg.imglib.container.NativeContainer;
 import mpicbg.imglib.container.basictypecontainer.ShortAccess;
 import mpicbg.imglib.container.basictypecontainer.array.ShortArray;
 import mpicbg.imglib.cursor.Cursor;
@@ -37,14 +37,14 @@ import mpicbg.imglib.util.Util;
 
 public abstract class GenericShortType<T extends GenericShortType<T>> extends IntegerTypeImpl<T>
 {
-	// the DirectAccessContainer
-	final DirectAccessContainer<T, ? extends ShortAccess> storage;
+	// the NativeContainer
+	final NativeContainer<T, ? extends ShortAccess> storage;
 	
-	// the (sub)DirectAccessContainer that holds the information 
+	// the (sub)NativeContainer that holds the information 
 	ShortAccess b;
 	
 	// this is the constructor if you want it to read from an array
-	public GenericShortType( DirectAccessContainer<T, ? extends ShortAccess> shortStorage )
+	public GenericShortType( NativeContainer<T, ? extends ShortAccess> shortStorage )
 	{
 		storage = shortStorage;
 	}

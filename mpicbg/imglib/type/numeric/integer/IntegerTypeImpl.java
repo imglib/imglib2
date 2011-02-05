@@ -1,20 +1,11 @@
 package mpicbg.imglib.type.numeric.integer;
 
-import mpicbg.imglib.image.Image;
-import mpicbg.imglib.image.display.Display;
-import mpicbg.imglib.image.display.IntegerTypeDisplay;
 import mpicbg.imglib.type.numeric.IntegerType;
 import mpicbg.imglib.type.numeric.real.RealTypeImpl;
 import mpicbg.imglib.util.Util;
 
 public abstract class IntegerTypeImpl<T extends IntegerTypeImpl<T>> extends RealTypeImpl<T> implements IntegerType<T>
 {
-	@Override
-	public Display<T> getDefaultDisplay( final Image<T> image )
-	{
-		return new IntegerTypeDisplay<T>( image );
-	}
-
 	@Override
 	public double getMinIncrement() { return 1; }
 
