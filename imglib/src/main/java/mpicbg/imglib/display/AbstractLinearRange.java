@@ -27,33 +27,49 @@
  */
 package mpicbg.imglib.display;
 
-import mpicbg.imglib.converter.Converter;
-import mpicbg.imglib.type.numeric.ARGBType;
-import mpicbg.imglib.type.numeric.real.FloatType;
-
 /**
  * 
  *
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-public class RealARGBConverter extends AbstractLinearRange implements Converter< FloatType, ARGBType >
+public class AbstractLinearRange implements LinearRange
 {
-	public RealARGBConverter()
+	protected double min = 0;
+	protected double max = 1;
+	protected double scale = 1;
+	
+	public AbstractLinearRange() {}
+	
+	public AbstractLinearRange( final double min, final double max )
 	{
-		super();
+		this.min = min;
+		this.max = max;
+		scale = max - min;
 	}
 	
-	public RealARGBConverter( final double min, final double max )
+	final static protected int roundPositive( final double a )
 	{
-		super( min, max );
+		return ( int )( a + 0.5 );
 	}
 	
 	@Override
-	public void convert( final FloatType input, final ARGBType output )
+	public double getMin() { return min; }
+
+	@Override
+	public double getMax() { return max; }
+
+	@Override
+	public void setMax( final double max )
 	{
-		final double a = input.getRealDouble();
-		final int b = Math.min( 255, roundPositive( Math.max( 0, ( ( a - min ) / scale * 255.0 ) ) ) );
-		final int argb = 0xff000000 | ( ( ( b << 8 ) | b ) << 8 ) | b;
-		output.set( argb );
+		this.max = max;
+		scale = max - min;
 	}
+
+	@Override
+	public void setMin( final double min )
+	{
+		this.min = min;
+		scale = max - min;
+	}
+
 }
