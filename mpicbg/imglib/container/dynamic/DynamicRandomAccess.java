@@ -88,17 +88,17 @@ public class DynamicRandomAccess< T extends Type< T > > extends AbstractImgRando
 	}
 		
 	@Override
-	public void move( final int[] position )
+	public void move( final int[] pos )
 	{		
 		for ( int d = 0; d < n; ++d )
-			move( position[ d ], d );
+			move( pos[ d ], d );
 	}
 
 	@Override
-	public void move( final long[] position )
+	public void move( final long[] pos )
 	{
 		for ( int d = 0; d < n; ++d )
-			move( (int)position[ d ], d );
+			move( (int)pos[ d ], d );
 	}
 
 	@Override
@@ -159,9 +159,9 @@ public class DynamicRandomAccess< T extends Type< T > > extends AbstractImgRando
 	@Override
 	public String toString() 
 	{
-		final long[] tmp = new long[ n ];
-		localize( tmp );
+		final long[] t = new long[ n ];
+		localize( t );
 		
-		return Util.printCoordinates( tmp ) + ": " + get(); 
+		return Util.printCoordinates( t ) + ": " + get(); 
 	}	
 }

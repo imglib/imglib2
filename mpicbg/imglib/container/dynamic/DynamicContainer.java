@@ -78,7 +78,7 @@ public class DynamicContainer< T extends Type< T > > extends AbstractImg< T >
 
 	public int[] getSteps() { return step.clone(); }
 
-	public int getStep( final int dim ) { return step[ dim ]; }
+	public int getStep( final int d ) { return step[ d ]; }
 
 	public final int getPos( final int[] l )
 	{
@@ -121,39 +121,8 @@ public class DynamicContainer< T extends Type< T > > extends AbstractImg< T >
 
 	@Override
 	public ImgRandomAccess<T> integerRandomAccess( final OutOfBoundsFactory<T, Img<T>> outOfBoundsFactory )
-{
+	{
 		return new DynamicOutOfBoundsRandomAccess< T >( this, outOfBoundsFactory );
-	}
-
-
-	final public void indexToPosition( int i, final int[] l )
-	{
-		for ( int d = n - 1; d >= 0; --d )
-		{
-			final int ld = i / step[ d ];
-			l[ d ] = ld;
-			i -= ld * step[ d ];
-			// i %= step[ d ];
-		}
-	}
-
-	final public void indexToPosition( int i, final long[] l )
-	{
-		for ( int d = n - 1; d >= 0; --d )
-		{
-			final int ld = i / step[ d ];
-			l[ d ] = ld;
-			i -= ld * step[ d ];
-			// i %= step[ d ];
-		}
-	}
-
-	final public int indexToPosition( int i, final int dim )
-	{
-		for ( int d = n - 1; d > dim; --d )
-			i %= step[ d ];
-
-		return i / step[ dim ];
 	}
 
 	@Override

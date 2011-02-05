@@ -31,6 +31,7 @@ import java.util.ArrayList;
 
 import mpicbg.imglib.container.AbstractImgCursor;
 import mpicbg.imglib.type.Type;
+import mpicbg.imglib.util.IntervalIndexer;
 import mpicbg.imglib.util.Util;
 
 /**
@@ -79,13 +80,13 @@ final public class DynamicCursor< T extends Type< T > > extends AbstractImgCurso
 	@Override
 	public long getLongPosition( final int dim )
 	{
-		return container.indexToPosition( i, dim );
+		return IntervalIndexer.indexToPosition( i, container.dim, container.step, dim );
 	}
 
 	@Override
 	public void localize( final long[] position )
 	{
-		container.indexToPosition( i, position );
+		IntervalIndexer.indexToPosition( i, container.dim, position );
 	}
 
 	@Override
