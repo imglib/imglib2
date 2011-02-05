@@ -57,7 +57,7 @@ public abstract class AbstractOutOfBoundsMirror< T extends Type< T > > implement
 	
 	AbstractOutOfBoundsMirror( final ImgRandomAccess< T > source )
 	{
-		this( source, source.getImage().createPositionableRasterSampler() );
+		this( source, source.getImg().randomAccess() );
 	}
 	
 	AbstractOutOfBoundsMirror(
@@ -65,8 +65,8 @@ public abstract class AbstractOutOfBoundsMirror< T extends Type< T > > implement
 			final ImgRandomAccess< T > outOfBoundsPositionable )
 	{
 		this.outOfBoundsPositionable = outOfBoundsPositionable;
-		numDimensions = source.getImage().numDimensions();
-		dimension = source.getImage().getDimensions();
+		numDimensions = source.getImg().numDimensions();
+		dimension = source.getImg().getDimensions();
 		position = new int[ numDimensions ];
 		inc = new boolean[ numDimensions ];
 		for ( int i = 0; i < dimension.length; ++i )

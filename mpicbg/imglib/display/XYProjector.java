@@ -32,7 +32,7 @@ import mpicbg.imglib.Localizable;
 import mpicbg.imglib.Positionable;
 import mpicbg.imglib.RandomAccess;
 import mpicbg.imglib.RandomAccessible;
-import mpicbg.imglib.IterableIntegerInterval;
+import mpicbg.imglib.IterableInterval;
 import mpicbg.imglib.converter.Converter;
 
 /**
@@ -43,11 +43,11 @@ import mpicbg.imglib.converter.Converter;
 public class XYProjector< A, B > implements Projector< A, B >, Positionable, Localizable
 {
 	final protected RandomAccessible< A > source;
-	final protected IterableIntegerInterval< B > target;
+	final protected IterableInterval< B > target;
 	final protected Converter< A, B > converter;
 	final protected long[] position; 
 	
-	public XYProjector( final RandomAccessible< A > source, IterableIntegerInterval< B > target, final Converter< A, B > converter )
+	public XYProjector( final RandomAccessible< A > source, IterableInterval< B > target, final Converter< A, B > converter )
 	{
 		this.source = source;
 		this.target = target;

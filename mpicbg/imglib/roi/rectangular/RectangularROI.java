@@ -7,18 +7,18 @@ import mpicbg.imglib.Cursor;
 import mpicbg.imglib.RandomAccess;
 import mpicbg.imglib.RandomAccessible;
 import mpicbg.imglib.IterableRealInterval;
-import mpicbg.imglib.RandomAccessibleIntegerInterval;
+import mpicbg.imglib.RandomAccessibleInterval;
 import mpicbg.imglib.outofbounds.OutOfBoundsFactory;
 
-public class RectangularROI< T > implements RandomAccessible< T >, RandomAccessibleIntegerInterval< T, InjectiveInterval >, InjectiveInterval
+public class RectangularROI< T > implements RandomAccessible< T >, RandomAccessibleInterval< T, InjectiveInterval >, InjectiveInterval
 {
 	final int n;
 	
 	final RandomAccessible< T > source1;
-	final RandomAccessibleIntegerInterval< T, InjectiveInterval > source2;
+	final RandomAccessibleInterval< T, InjectiveInterval > source2;
 	final InjectiveInterval source3;
 	
-	public < S extends RandomAccessible< T > & RandomAccessibleIntegerInterval< T, InjectiveInterval > & InjectiveInterval >
+	public < S extends RandomAccessible< T > & RandomAccessibleInterval< T, InjectiveInterval > & InjectiveInterval >
 		RectangularROI( final long[] offset, final long[] size, final S source )
 	{
 		this.n = source.numDimensions();

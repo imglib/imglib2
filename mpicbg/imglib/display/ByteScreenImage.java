@@ -34,7 +34,7 @@ import java.awt.image.MemoryImageSource;
 import java.util.Iterator;
 
 import mpicbg.imglib.Cursor;
-import mpicbg.imglib.IterableIntegerInterval;
+import mpicbg.imglib.IterableInterval;
 import mpicbg.imglib.IterableRealInterval;
 import mpicbg.imglib.container.array.Array;
 import mpicbg.imglib.container.basictypecontainer.array.ByteArray;
@@ -45,7 +45,7 @@ import mpicbg.imglib.type.numeric.integer.UnsignedByteType;
  *
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-public class ByteScreenImage implements ScreenImage, IterableIntegerInterval< UnsignedByteType >
+public class ByteScreenImage implements ScreenImage, IterableInterval< UnsignedByteType >
 {
 	final protected byte[] data; 
 	final protected Array< UnsignedByteType, ByteArray > argbArray;

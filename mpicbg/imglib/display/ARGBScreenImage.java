@@ -33,7 +33,7 @@ import java.awt.image.MemoryImageSource;
 import java.util.Iterator;
 
 import mpicbg.imglib.Cursor;
-import mpicbg.imglib.IterableIntegerInterval;
+import mpicbg.imglib.IterableInterval;
 import mpicbg.imglib.IterableRealInterval;
 import mpicbg.imglib.container.array.Array;
 import mpicbg.imglib.container.basictypecontainer.array.IntArray;
@@ -44,7 +44,7 @@ import mpicbg.imglib.type.numeric.ARGBType;
  *
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-public class ARGBScreenImage implements ScreenImage, IterableIntegerInterval< ARGBType >
+public class ARGBScreenImage implements ScreenImage, IterableInterval< ARGBType >
 {
 	final protected int[] data; 
 	final protected Array< ARGBType, IntArray > argbArray;

@@ -32,7 +32,7 @@ package mpicbg.imglib;
  *
  * @author Tobias Pietzsch & Stephan Preibisch & Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-public interface IterableIntegerInterval< T > extends IterableRealInterval< T >, Interval
+public interface IterableInterval< T > extends IterableRealInterval< T >, Interval
 {
 	@Override
 	public Cursor< T > cursor();

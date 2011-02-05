@@ -29,7 +29,7 @@ package mpicbg.imglib.container;
 
 import mpicbg.imglib.InjectiveInterval;
 import mpicbg.imglib.RandomAccessible;
-import mpicbg.imglib.RandomAccessibleIntegerInterval;
+import mpicbg.imglib.RandomAccessibleInterval;
 import mpicbg.imglib.outofbounds.OutOfBoundsFactory;
 
 /**
@@ -42,7 +42,7 @@ import mpicbg.imglib.outofbounds.OutOfBoundsFactory;
 public interface Img<	T >
 	extends
 		RandomAccessible< T >,
-		RandomAccessibleIntegerInterval< T, Img< T > >,
+		RandomAccessibleInterval< T, Img< T > >,
 		InjectiveInterval
 {
 	@Override
