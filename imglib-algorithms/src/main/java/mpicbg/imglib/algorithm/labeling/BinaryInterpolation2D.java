@@ -255,15 +255,15 @@ public class BinaryInterpolation2D implements OutputAlgorithm<BitType>
 		this.weight = weight;
 	}
 
-	/** The first time, it will prepare the distance transform images, which are computed only once. */
 	@Override
-	public boolean process()
+	public boolean process() {
+		this.interpolated = process(this.weight);
+		return null != this.interpolated;
+	}
+	
+	/** The first time, it will prepare the distance transform images, which are computed only once. */
+	public Image<BitType> process(final float weight)
 	{
-		// Cannot just img1.createNewImage() because the container may not be able to receive data,
-		// such as the ShapeList container.
-		ImageFactory<BitType> f = new ImageFactory<BitType>(new BitType(), new ArrayContainerFactory());
-		this.interpolated = f.createImage(new int[]{img1.getDimension(0), img1.getDimension(1)});
-
 		synchronized (this) {
 			if (null == idt1 || null == idt2) {
 				ExecutorService exec = Executors.newFixedThreadPool(Math.min(2, Runtime.getRuntime().availableProcessors()));
@@ -281,6 +281,11 @@ public class BinaryInterpolation2D implements OutputAlgorithm<BitType>
 				}
 			}
 		}
+
+		// Cannot just img1.createNewImage() because the container may not be able to receive data,
+		// such as the ShapeList container.
+		final ImageFactory<BitType> f = new ImageFactory<BitType>(new BitType(), new ArrayContainerFactory());
+		final Image<BitType> interpolated = f.createImage(new int[]{img1.getDimension(0), img1.getDimension(1)});
 
 		if (img1.getContainer().compareStorageContainerCompatibility(img2.getContainer())) {
 			final Cursor<IntType> c1 = idt1.result.createCursor();
@@ -321,6 +326,6 @@ public class BinaryInterpolation2D implements OutputAlgorithm<BitType>
 			ci.close();
 		}
 
-		return true;
+		return interpolated;
 	}
 }
