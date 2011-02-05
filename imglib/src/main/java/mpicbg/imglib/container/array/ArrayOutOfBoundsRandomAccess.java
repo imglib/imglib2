@@ -48,11 +48,6 @@ public class ArrayOutOfBoundsRandomAccess< T extends NativeType< T > > extends A
 		
 		this.container = container;
 	}
-	
-	public T create()
-	{
-		return container.createVariable();
-	}
 
 	@Override
 	public Array< T, ? > getImg(){ return container; }

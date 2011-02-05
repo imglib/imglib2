@@ -101,9 +101,6 @@ final public class ListLocalizingCursor< T extends Type< T > > extends AbstractI
 	public T get() { return pixels.get( i ); }
 	
 	@Override
-	public T create() { return container.type.createVariable(); }
-	
-	@Override
 	public String toString() 
 	{
 		final long[] tmp = new long[ n ];

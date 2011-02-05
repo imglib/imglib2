@@ -54,10 +54,7 @@ public class ListOutOfBoundsRandomAccess< T extends Type< T > > extends Abstract
 
 	@Override
 	public ListContainer< T > getImg(){ return container; }
-	
-	@Override
-	public T create() { return container.type.createVariable(); }
-	
+		
 	@Override
 	public String toString() 
 	{

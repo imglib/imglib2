@@ -63,12 +63,6 @@ public class ArrayCursor< T extends NativeType< T > > extends AbstractImgCursor<
 	}
 	
 	@Override
-	public T create()
-	{
-		return type.createVariable();
-	}
-
-	@Override
 	public boolean hasNext()
 	{
 		return type.getIndex() < lastIndex;

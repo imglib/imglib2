@@ -67,12 +67,6 @@ public class ArrayRandomAccess< T extends NativeType< T > > extends AbstractImgR
 	}
 	
 	@Override
-	public T create()
-	{
-		return type.createVariable();
-	}
-	
-	@Override
 	public void fwd( final int d )
 	{
 		type.incIndex( step[ d ] );

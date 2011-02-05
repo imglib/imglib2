@@ -55,13 +55,6 @@ public interface Sampler< T >
 	 */
 	public T get();
 	
-	/**
-	 * Create a new <em>T</em> variable instance.
-	 * 
-	 * @return
-	 */
-	public T create();
-	
 	@Deprecated
 	public T getType();
 }

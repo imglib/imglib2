@@ -63,12 +63,6 @@ public class ArrayLocalizingCursor< T extends NativeType< T >> extends AbstractI
 	}
 
 	@Override
-	public T create()
-	{
-		return type.createVariable();
-	}
-
-	@Override
 	public boolean hasNext()
 	{
 		return type.getIndex() < lastIndex;
