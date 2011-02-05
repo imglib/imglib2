@@ -32,7 +32,6 @@ import mpicbg.imglib.Iterator;
 import mpicbg.imglib.container.Img;
 import mpicbg.imglib.container.ImgCursor;
 import mpicbg.imglib.container.ImgRandomAccess;
-import mpicbg.imglib.image.Image;
 import mpicbg.imglib.type.Type;
 
 /**

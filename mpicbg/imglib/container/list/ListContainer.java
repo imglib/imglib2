@@ -75,15 +75,7 @@ public class ListContainer< T extends Type< T > > extends AbstractImg< T >
 		for ( int i = 0; i < this.numPixels; ++i )
 			pixels.add( type.createVariable() );
 	}
-	
-	/*
-	public ListContainer( final List< T > pixels, final long[] dim )
-	{
-		pixels = new ArrayList< T >();
-		pixels.addA
-	}
-	*/
-	
+
 	public int[] getSteps() { return step.clone(); }
 
 	public int getStep( final int d ) { return step[ d ]; }
