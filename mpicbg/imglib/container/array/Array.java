@@ -35,6 +35,7 @@ import mpicbg.imglib.container.basictypecontainer.DataAccess;
 import mpicbg.imglib.container.dynamic.DynamicContainer;
 import mpicbg.imglib.outofbounds.OutOfBoundsFactory;
 import mpicbg.imglib.type.NativeType;
+import mpicbg.imglib.util.IntervalIndexer;
 
 /**
  * This {@link Img} stores an image in a single linear array of basic
@@ -50,7 +51,7 @@ import mpicbg.imglib.type.NativeType;
  */
 final public class Array< T extends NativeType< T >, A extends DataAccess > extends AbstractNativeContainer< T, A >
 {
-	final int[] step, dim;
+	final int[] steps, dim;
 	
 	// the DataAccess created by the ArrayContainerFactory
 	final private A data;
@@ -71,7 +72,8 @@ final public class Array< T extends NativeType< T >, A extends DataAccess > exte
 		for ( int d = 0; d < n; ++d )
 			this.dim[ d ] = ( int )dim[ d ];
 
-		step = Array.createAllocationSteps( this.dim );
+		this.steps = new int[ n ];
+		IntervalIndexer.createAllocationSteps( this.dim, this.steps );
 		this.data = data;
 		this.type = type;
 	}
@@ -108,76 +110,6 @@ final public class Array< T extends NativeType< T >, A extends DataAccess > exte
 	{
 		ArrayOutOfBoundsRandomAccess< T > c = new ArrayOutOfBoundsRandomAccess< T >( this, factory );
 		return c;
-	}
-	
-	public static int[] createAllocationSteps( final int[] dim )
-	{
-		int[] steps = new int[ dim.length ];
-		createAllocationSteps( dim, steps );
-		return steps;
-	}
-
-	public static void createAllocationSteps( final int[] dim, final int[] steps )
-	{
-		steps[ 0 ] = 1;
-		for ( int d = 1; d < dim.length; ++d )
-			steps[ d ] = steps[ d - 1 ] * dim[ d - 1 ];
-	}
-
-	public final int positionToIndex( final int[] position )
-	{
-		int i = position[ 0 ];
-		for ( int d = 1; d < n; ++d )
-			i += position[ d ] * step[ d ];
-
-		return i;
-	}
-	
-	/**
-	 * Not safe!
-	 * 
-	 * @param position
-	 * @return
-	 */
-	public final int positionToIndex( final long[] position )
-	{
-		int i = ( int )position[ 0 ];
-		for ( int d = 1; d < n; ++d )
-			i += position[ d ] * step[ d ];
-
-		return i;
-	}
-
-	final public void indexToPosition( int i, final int[] l )
-	{
-		for ( int d = n - 1; d > 0; --d )
-		{
-			final int ld = i / step[ d ];
-			l[ d ] = ld;
-			i -= ld * step[ d ];
-			// i %= step[ d ];
-		}
-		l[ 0 ] = i;
-	}
-
-	final public void indexToPosition( int i, final long[] l )
-	{
-		for ( int d = n - 1; d > 0; --d )
-		{
-			final int ld = i / step[ d ];
-			l[ d ] = ld;
-			i -= ld * step[ d ];
-			// i %= step[ d ];
-		}
-		l[ 0 ] = i;
-	}
-
-	final public int indexToPosition( int i, final int d )
-	{
-		for ( int j = n - 1; j > d; --j )
-			i %= step[ j ];
-
-		return i / step[ d ];
 	}
 
 	@Override
