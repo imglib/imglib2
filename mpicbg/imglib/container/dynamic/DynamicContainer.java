@@ -37,6 +37,7 @@ import mpicbg.imglib.container.ImgRandomAccess;
 import mpicbg.imglib.container.array.Array;
 import mpicbg.imglib.outofbounds.OutOfBoundsFactory;
 import mpicbg.imglib.type.Type;
+import mpicbg.imglib.util.IntervalIndexer;
 
 /**
  * 
@@ -64,7 +65,8 @@ public class DynamicContainer< T extends Type< T > > extends AbstractImg< T >
 		for ( int d = 0; d < n; ++d )
 			this.dim[ d ] = ( int )dim[ d ];
 
-		this.step = Array.createAllocationSteps( this.dim );
+		this.step = new int[ n ];
+		IntervalIndexer.createAllocationSteps( this.dim, this.step );
 		this.numPixels = ( int ) super.numPixels;
 		
 		this.type = type;
