@@ -29,6 +29,7 @@ package mpicbg.imglib.container.array;
 
 import mpicbg.imglib.container.AbstractImgCursor;
 import mpicbg.imglib.type.NativeType;
+import mpicbg.imglib.util.IntervalIndexer;
 
 /**
  * 
@@ -107,12 +108,12 @@ public class ArrayCursor< T extends NativeType< T > > extends AbstractImgCursor<
 	@Override
 	public long getLongPosition( final int dim )
 	{
-		return container.indexToPosition( type.getIndex(), dim );
+		return ( long )IntervalIndexer.indexToPosition( type.getIndex(), container.dim, dim );
 	}
 
 	@Override
 	public void localize( final long[] position )
 	{
-		container.indexToPosition( type.getIndex(), position );
+		IntervalIndexer.indexToPosition( type.getIndex(), container.dim, position );
 	}
 }

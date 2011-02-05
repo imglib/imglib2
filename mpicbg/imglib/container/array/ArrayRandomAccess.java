@@ -29,6 +29,7 @@ package mpicbg.imglib.container.array;
 
 import mpicbg.imglib.container.AbstractImgRandomAccess;
 import mpicbg.imglib.type.NativeType;
+import mpicbg.imglib.util.IntervalIndexer;
 
 /**
  * 
@@ -50,7 +51,7 @@ public class ArrayRandomAccess< T extends NativeType< T > > extends AbstractImgR
 		this.type = container.createLinkedType();
 		
 		dim = container.dim;
-		step = container.step;
+		step = container.steps;
 		
 		for ( int d = 0; d < n; d++ )
 			position[ d ] = 0;
@@ -98,7 +99,7 @@ public class ArrayRandomAccess< T extends NativeType< T > > extends AbstractImgR
 		for ( int d = 0; d < n; ++d )
 			this.position[ d ] = position[ d ];
 		
-		type.updateIndex( container.positionToIndex( this.position ) );
+		type.updateIndex( IntervalIndexer.positionToIndex( this.position, this.dim ) );
 	}
 	
 	@Override
@@ -107,7 +108,7 @@ public class ArrayRandomAccess< T extends NativeType< T > > extends AbstractImgR
 		for ( int d = 0; d < n; ++d )
 			this.position[ d ] = ( int )position[ d ];
 		
-		type.updateIndex( container.positionToIndex( this.position ) );
+		type.updateIndex( IntervalIndexer.positionToIndex( this.position, this.dim ) );
 	}
 
 	@Override
@@ -115,7 +116,7 @@ public class ArrayRandomAccess< T extends NativeType< T > > extends AbstractImgR
 	{
 		this.position[ dim ] = position;
 		
-		type.updateIndex( container.positionToIndex( this.position ) );
+		type.updateIndex( IntervalIndexer.positionToIndex( this.position, this.dim ) );
 	}
 
 	@Override

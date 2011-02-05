@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2009--2010, Stephan Preibisch & Stephan Saalfeld
+ * Copyright (c) 2009--2011, Stephan Saalfeld
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -25,90 +25,45 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-package mpicbg.imglib.container.array;
+package mpicbg.imglib.display;
 
-import mpicbg.imglib.container.AbstractImgLocalizingCursor;
-import mpicbg.imglib.type.NativeType;
-import mpicbg.imglib.util.IntervalIndexer;
+import mpicbg.imglib.converter.Converter;
+import mpicbg.imglib.type.numeric.ARGBType;
+import mpicbg.imglib.type.numeric.real.FloatType;
 
 /**
  * 
- * @param <T>
  *
- * @author Stephan Preibisch and Stephan Saalfeld
+ * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-public class ArrayLocalizingCursor< T extends NativeType< T >> extends AbstractImgLocalizingCursor< T >
+public class RealARGBConverter implements Converter< FloatType, ARGBType >
 {
-	protected final T type;
-
-	protected final Array< T, ? > container;
-
-	protected final int lastIndex;
-
-	public ArrayLocalizingCursor( final Array< T, ? > container )
+	protected double min = 0;
+	protected double max = 1;
+	protected double scale = 1;
+	
+	public RealARGBConverter() {}
+	
+	public RealARGBConverter( final int min, final int max )
 	{
-		super( container );
-
-		this.container = container;
-		this.type = container.createLinkedType();
-		this.lastIndex = ( int )container.size() - 1;
-
-		reset();
+		this.min = min;
+		this.max = max;
+		scale = max - min;
 	}
-
-	@Override
-	public T get()
+	
+	final static protected int roundPositive( final double a )
 	{
-		return type;
+		return ( int )( a + 0.5 );
 	}
-
+	
 	@Override
-	public T create()
+	public void convert( final FloatType input, final ARGBType output )
 	{
-		return type.createVariable();
+		final double a = input.getRealDouble();
+		final int b = Math.min( 255, roundPositive( Math.max( 0, ( ( a - min ) / scale * 255.0 ) ) ) );
+		final int argb = ( ( ( b << 8 ) | b ) << 8 ) | b;
+		output.set( argb );
 	}
-
-	@Override
-	public boolean hasNext()
-	{
-		return type.getIndex() < lastIndex;
-	}
-
-	@Override
-	public void fwd()
-	{
-		type.incIndex();
-
-		for ( int d = 0; d < n; ++d )
-		{
-			if ( ++position[ d ] >= size[ d ] ) position[ d ] = 0;
-			else break;
-		}
-	}
-
-	@Override
-	public void jumpFwd( final long steps )
-	{
-		type.incIndex( ( int ) steps );
-		IntervalIndexer.indexToPosition( type.getIndex(), container.dim, position );
-	}
-
-	@Override
-	public void reset()
-	{
-		if ( size != null )
-		{
-			type.updateIndex( -1 );
-
-			position[ 0 ] = -1;
-
-			for ( int d = 1; d < n; d++ )
-				position[ d ] = 0;
-
-			type.updateContainer( this );
-		}
-	}
-
-	@Override
-	public Array< T, ? > getImg(){ return container; }
+	
+	
 }

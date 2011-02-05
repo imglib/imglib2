@@ -15,7 +15,7 @@ final public class DevUtil
 	{
 		final ByteAccess byteAccess = new ByteArray( data );
 		final Array<UnsignedByteType, ByteAccess> array = 
-			new Array<UnsignedByteType, ByteAccess>(new ArrayContainerFactory(), byteAccess, dim, 1 );
+			new Array<UnsignedByteType, ByteAccess>(byteAccess, dim, 1 );
 			
 		// create a Type that is linked to the container
 		final UnsignedByteType linkedType = new UnsignedByteType( array );
