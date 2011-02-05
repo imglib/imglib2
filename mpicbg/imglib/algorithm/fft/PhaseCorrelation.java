@@ -602,19 +602,19 @@ public class PhaseCorrelation<T extends RealType<T>, S extends RealType<S>> impl
 	private static void normalizeLength( final ComplexFloatType type, final float threshold )
 	{
 		final float real = type.getRealFloat();
-		final float complex = type.getComplexFloat();
+		final float complex = type.getImaginaryFloat();
 		
 		final float length = (float)Math.sqrt( real*real + complex*complex );
 		
 		if ( length < threshold )
 		{
 			type.setReal( 0 );
-			type.setComplex( 0 );
+			type.setImaginary( 0 );
 		}
 		else
 		{
 			type.setReal( real / length );
-			type.setComplex( complex / length );
+			type.setImaginary( complex / length );
 		}
 	}
 		

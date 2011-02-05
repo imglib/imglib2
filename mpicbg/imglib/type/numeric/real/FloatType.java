@@ -182,16 +182,16 @@ public class FloatType extends RealTypeImpl<FloatType> implements RealType<Float
 		float a = get();
 		set( --a );
 	}
-	
-	@Override
-	public int getEntitiesPerPixel() { return 1; }
-	
+		
 	@Override
 	public FloatType createVariable(){ return new FloatType( 0 ); }
 	
 	@Override
 	public FloatType copy(){ return new FloatType( get() ); }
 
+	@Override
+	public int getEntitiesPerPixel() { return 1; }
+	
 	@Override
 	public void updateIndex( final int i ) { this.i = i; }
 	@Override

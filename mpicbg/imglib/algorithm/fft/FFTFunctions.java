@@ -135,11 +135,11 @@ final public class FFTFunctions
 								for ( int i = 0; i < size-1; ++i )
 								{
 									tempIn[ i * 2 ] = cursor.get().getRealFloat();
-									tempIn[ i * 2 + 1 ] = cursor.get().getComplexFloat();
+									tempIn[ i * 2 + 1 ] = cursor.get().getImaginaryFloat();
 									cursor.fwd( dim );
 								}
 								tempIn[ (size-1) * 2 ] = cursor.get().getRealFloat();
-								tempIn[ (size-1) * 2 + 1 ] = cursor.get().getComplexFloat();
+								tempIn[ (size-1) * 2 + 1 ] = cursor.get().getImaginaryFloat();
 								
 								// compute the inverse fft
 								fftc.complexToComplex( 1, tempIn, tempOut );
@@ -260,11 +260,11 @@ A:						while( cursorDim.hasNext() )
 								for ( int i = 0; i < complexSize-1; ++i )
 								{
 									tempIn[ i * 2 ] = cursor.get().getRealFloat();
-									tempIn[ i * 2 + 1 ] = cursor.get().getComplexFloat();
+									tempIn[ i * 2 + 1 ] = cursor.get().getImaginaryFloat();
 									cursor.fwd( 0 );
 								}
 								tempIn[ (complexSize-1) * 2 ] = cursor.get().getRealFloat();
-								tempIn[ (complexSize-1) * 2 + 1 ] = cursor.get().getComplexFloat();
+								tempIn[ (complexSize-1) * 2 + 1 ] = cursor.get().getImaginaryFloat();
 																								
 								// compute the fft in dimension 0 ( complex -> real )
 								fft.complexToReal( 1, tempIn, tempOut );
@@ -315,11 +315,11 @@ A:						while( cursorDim.hasNext() )
 							for ( int i = 0; i < complexSize-1; ++i )
 							{
 								tempIn[ i * 2 ] = cursor.get().getRealFloat();
-								tempIn[ i * 2 + 1 ] = cursor.get().getComplexFloat();
+								tempIn[ i * 2 + 1 ] = cursor.get().getImaginaryFloat();
 								cursor.fwd( 0 );
 							}
 							tempIn[ (complexSize-1) * 2 ] = cursor.get().getRealFloat();
-							tempIn[ (complexSize-1) * 2 + 1 ] = cursor.get().getComplexFloat();
+							tempIn[ (complexSize-1) * 2 + 1 ] = cursor.get().getImaginaryFloat();
 							
 							// compute the fft in dimension 0 ( real -> complex )
 							final float[] tempOut = new float[ realSize ];
@@ -592,11 +592,11 @@ A:						while( cursorDim.hasNext() )
 								for ( int i = 0; i < size - 1; ++i )
 								{
 									tempIn[ i * 2 ] = cursor.get().getRealFloat();
-									tempIn[ i * 2 + 1 ] = cursor.get().getComplexFloat();
+									tempIn[ i * 2 + 1 ] = cursor.get().getImaginaryFloat();
 									cursor.fwd( dim  );
 								}
 								tempIn[ (size-1) * 2 ] = cursor.get().getRealFloat();
-								tempIn[ (size-1) * 2 + 1 ] = cursor.get().getComplexFloat();
+								tempIn[ (size-1) * 2 + 1 ] = cursor.get().getImaginaryFloat();
 								
 								// compute the fft in dimension dim (complex -> complex) 
 								fftc.complexToComplex( -1, tempIn, tempOut);

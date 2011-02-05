@@ -6,14 +6,14 @@ import mpicbg.imglib.type.numeric.complex.ComplexTypeImpl;
 public abstract class RealTypeImpl<T extends RealTypeImpl<T>> extends ComplexTypeImpl<T> implements RealType<T>
 {
 	@Override
-	public float getComplexFloat() { return 0; }
+	public float getImaginaryFloat() { return 0; }
 	@Override
-	public double getComplexDouble() { return 0; }
+	public double getImaginaryDouble() { return 0; }
 	
 	@Override
-	public void setComplex( final float complex ){}
+	public void setImaginary( final float complex ){}
 	@Override
-	public void setComplex( final double complex ){}
+	public void setImaginary( final double complex ){}
 	
 	@Override
 	public void inc() { setReal( getRealDouble() + 1 ); }

@@ -45,10 +45,10 @@ public class ShortType extends GenericShortType<ShortType>
 	public ShortType() { this( (short)0 ); }
 	
 	@Override
-	public NativeContainer<ShortType, ? extends ShortAccess> createSuitableNativeContainer( final NativeContainerFactory storageFactory, final int dim[] )
+	public NativeContainer<ShortType, ? extends ShortAccess> createSuitableNativeContainer( final NativeContainerFactory<ShortType> storageFactory, final long dim[] )
 	{
 		// create the container
-		final NativeContainer<ShortType, ? extends ShortAccess> container = storageFactory.createShortInstance( dim, 1 );
+		final NativeContainer<ShortType, ? extends ShortAccess> container = storageFactory.createShortInstance( new ShortType(), dim, 1 );
 		
 		// create a Type that is linked to the container
 		final ShortType linkedType = new ShortType( container );
@@ -78,15 +78,6 @@ public class ShortType extends GenericShortType<ShortType>
 	public double getMaxValue() { return Short.MAX_VALUE; }
 	@Override
 	public double getMinValue()  { return Short.MIN_VALUE; }
-	
-	@Override
-	public ShortType[] createArray1D( final int size1 ){ return new ShortType[ size1 ]; }
-
-	@Override
-	public ShortType[][] createArray2D( final int size1, final int size2 ){ return new ShortType[ size1 ][ size2 ]; }
-
-	@Override
-	public ShortType[][][] createArray3D( final int size1, final int size2, final int size3 ) { return new ShortType[ size1 ][ size2 ][ size3 ]; }
 
 	@Override
 	public ShortType createVariable(){ return new ShortType( (short)0 ); }

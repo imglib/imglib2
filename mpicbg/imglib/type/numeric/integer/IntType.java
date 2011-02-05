@@ -45,10 +45,10 @@ public class IntType extends GenericIntType<IntType>
 	public IntType() { super( 0 ); }
 		
 	@Override
-	public NativeContainer<IntType, ? extends IntAccess> createSuitableNativeContainer( final NativeContainerFactory storageFactory, final int dim[] )
+	public NativeContainer<IntType, ? extends IntAccess> createSuitableNativeContainer( final NativeContainerFactory<IntType> storageFactory, final long dim[] )
 	{
 		// create the container
-		final NativeContainer<IntType, ? extends IntAccess> container = storageFactory.createIntInstance( dim, 1 );
+		final NativeContainer<IntType, ? extends IntAccess> container = storageFactory.createIntInstance( new IntType(), dim, 1 );
 		
 		// create a Type that is linked to the container
 		final IntType linkedType = new IntType( container );
@@ -78,15 +78,6 @@ public class IntType extends GenericIntType<IntType>
 	public double getMaxValue() { return Integer.MAX_VALUE; }
 	@Override
 	public double getMinValue()  { return Integer.MIN_VALUE; }
-
-	@Override
-	public IntType[] createArray1D(int size1){ return new IntType[ size1 ]; }
-
-	@Override
-	public IntType[][] createArray2D(int size1, int size2){ return new IntType[ size1 ][ size2 ]; }
-
-	@Override
-	public IntType[][][] createArray3D(int size1, int size2, int size3) { return new IntType[ size1 ][ size2 ][ size3 ]; }
 
 	@Override
 	public IntType createVariable(){ return new IntType( 0 ); }

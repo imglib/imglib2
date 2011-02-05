@@ -33,14 +33,11 @@ import mpicbg.imglib.container.NativeContainer;
 import mpicbg.imglib.container.NativeContainerFactory;
 import mpicbg.imglib.container.basictypecontainer.CharAccess;
 import mpicbg.imglib.container.basictypecontainer.array.CharArray;
-import mpicbg.imglib.cursor.Cursor;
-import mpicbg.imglib.image.Image;
-import mpicbg.imglib.image.display.BasePairTypeDisplay;
+import mpicbg.imglib.type.AbstractNativeType;
 import mpicbg.imglib.type.BasePairType;
-import mpicbg.imglib.type.TypeImpl;
 import mpicbg.imglib.type.label.BasePairBitType.Base;
 
-public class BasePairCharType extends TypeImpl<BasePairCharType> implements BasePairType<BasePairCharType>
+public class BasePairCharType extends AbstractNativeType<BasePairCharType> implements BasePairType<BasePairCharType>
 {
 	@Override
 	public int getEntitiesPerPixel() { return 1; } 
@@ -77,10 +74,10 @@ public class BasePairCharType extends TypeImpl<BasePairCharType> implements Base
 	public BasePairCharType() { this( Base.N ); }
 
 	@Override
-	public NativeContainer<BasePairCharType, ? extends CharAccess> createSuitableNativeContainer( final NativeContainerFactory storageFactory, final int dim[] )
+	public NativeContainer<BasePairCharType, ? extends CharAccess> createSuitableNativeContainer( final NativeContainerFactory<BasePairCharType> storageFactory, final long dim[] )
 	{
 		// create the container
-		final NativeContainer<BasePairCharType, ? extends CharAccess> container = storageFactory.createCharInstance( dim, 1 );
+		final NativeContainer<BasePairCharType, ? extends CharAccess> container = storageFactory.createCharInstance( new BasePairCharType(), dim, 1 );
 		
 		// create a Type that is linked to the container
 		final BasePairCharType linkedType = new BasePairCharType( container );
@@ -92,19 +89,10 @@ public class BasePairCharType extends TypeImpl<BasePairCharType> implements Base
 	}
 	
 	@Override
-	public void updateContainer( final Cursor<?> c ) 
-	{ 
-		b = storage.update( c ); 
-	}
+	public void updateContainer( final Object c ) { b = storage.update( c ); }
 	
 	@Override
 	public BasePairCharType duplicateTypeOnSameNativeContainer() { return new BasePairCharType( storage ); }
-
-	@Override
-	public BasePairTypeDisplay<BasePairCharType> getDefaultDisplay( final Image<BasePairCharType> image )
-	{
-		return new BasePairTypeDisplay<BasePairCharType>( image );
-	}
 	
 	public char getChar() { return b.getValue( i ); }
 	public void setChar( final char f ) { b.setValue( i, f ); }
@@ -192,15 +180,6 @@ public class BasePairCharType extends TypeImpl<BasePairCharType> implements Base
 			default: return 0;
 		}		
 	}
-	
-	@Override
-	public BasePairCharType[] createArray1D(int size1){ return new BasePairCharType[ size1 ]; }
-
-	@Override
-	public BasePairCharType[][] createArray2D(int size1, int size2){ return new BasePairCharType[ size1 ][ size2 ]; }
-
-	@Override
-	public BasePairCharType[][][] createArray3D(int size1, int size2, int size3) { return new BasePairCharType[ size1 ][ size2 ][ size3 ]; }
 
 	@Override
 	public BasePairCharType createVariable(){ return new BasePairCharType( Base.N ); }
