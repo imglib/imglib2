@@ -18,6 +18,8 @@ package mpicbg.imglib.util;
 
 import java.util.List;
 
+import mpicbg.imglib.Interval;
+import mpicbg.imglib.RealInterval;
 import mpicbg.imglib.type.Type;
 import mpicbg.imglib.type.numeric.ExponentialMathType;
 
@@ -760,6 +762,45 @@ public class Util
 			setCoordinateRecursive( dimension - 1, numDimensions, newLocation1, result );
 		}
 
+	}
+	
+	/**
+	 * <p>Create a long[] with the dimensions of an {@link Interval}.</p>
+	 * 
+	 * <p>Keep in mind that creating arrays wildly is not good practice and
+	 * consider using the interval directly.</p>
+	 * 
+	 * @param interval
+	 * 
+	 * @return dimensions of the interval as a new long[]
+	 */
+	final static public long[] intervalDimensions( final Interval interval )
+	{
+		final long[] dimensions = new long[ interval.numDimensions() ];
+		interval.dimensions( dimensions );
+		return dimensions;
+	}
+	
+	/**
+	 * <p>Create a double[] with the dimensions of a {@link RealInterval}.
+	 * Dimensions are returned as <em>max</em> - <em>min</em>.</p>
+	 * 
+	 * <p>Keep in mind that creating arrays wildly is not good practice and
+	 * consider using the interval directly.</p>
+	 * 
+	 * @param interval
+	 * 
+	 * @return dimensions of the interval as a new double[]
+	 */
+	final static public double[] realIntervalDimensions( final RealInterval interval )
+	{
+		final int n = interval.numDimensions();
+		final double[] dimensions = new double[ interval.numDimensions() ];
+		
+		for ( int d = 0; d < n; ++d )
+			dimensions[ d ] = interval.realMax( d ) - interval.realMin( d );
+
+		return dimensions;
 	}
 
 }
