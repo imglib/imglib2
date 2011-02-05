@@ -39,12 +39,12 @@ import mpicbg.imglib.RealPositionable;
  *
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-final public class VoidPositionable implements RealPositionable
+final public class VoidRealPositionable implements RealPositionable
 {
-	final static private VoidPositionable instance = new VoidPositionable();
+	final static private VoidRealPositionable instance = new VoidRealPositionable();
 	
-	private VoidPositionable(){}
-	final static public VoidPositionable getInstance(){ return instance; }
+	private VoidRealPositionable(){}
+	final static public VoidRealPositionable getInstance(){ return instance; }
 	
 	@Override
 	final public void bck( final int dim ){}
@@ -77,10 +77,10 @@ final public class VoidPositionable implements RealPositionable
 	final public void move( final float[] position ){}
 	
 	@Override
-	final public void moveTo( final int[] position ){}
+	final public void move( final int[] position ){}
 	
 	@Override
-	final public void moveTo( final long[] position ){}
+	final public void move( final long[] position ){}
 	
 	@Override
 	final public void setPosition( final RealLocalizable localizable ){}

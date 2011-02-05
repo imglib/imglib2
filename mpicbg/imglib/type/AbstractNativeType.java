@@ -34,7 +34,7 @@ public abstract class AbstractNativeType<T extends AbstractNativeType<T>> implem
 {
 	protected int i = 0;
 
-	public void updateIndex( final int i ) { this.i = i; }
+	public void updateIndex( final int j ) { this.i = j; }
 	public int getIndex() { return i; }
 	
 	public void incIndex() { ++i; }

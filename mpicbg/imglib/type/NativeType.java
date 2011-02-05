@@ -7,7 +7,6 @@ import mpicbg.imglib.container.array.Array;
 import mpicbg.imglib.container.array.ArrayCursor;
 import mpicbg.imglib.container.basictypecontainer.DataAccess;
 import mpicbg.imglib.container.cell.Cell;
-import mpicbg.imglib.image.Image;
 import mpicbg.imglib.sampler.cell.CellBasicRasterIterator;
 import mpicbg.imglib.type.numeric.real.FloatType;
 
