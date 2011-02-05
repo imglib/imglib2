@@ -55,10 +55,10 @@ public class Array< T extends NativeType< T >, A extends DataAccess > extends Ab
 	
 	// the DataAccess created by the ArrayContainerFactory
 	final private A data;
-	final private T type;
 
 	/**
 	 * TODO check for the size of numPixels being < Integer.MAX_VALUE?
+	 * TODO Type is suddenly not necessary anymore
 	 * 
 	 * @param factory
 	 * @param data
@@ -75,7 +75,6 @@ public class Array< T extends NativeType< T >, A extends DataAccess > extends Ab
 		this.steps = new int[ n ];
 		IntervalIndexer.createAllocationSteps( this.dim, this.steps );
 		this.data = data;
-		this.type = type;
 	}
 
 	@Override
