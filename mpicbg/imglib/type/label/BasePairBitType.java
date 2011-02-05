@@ -29,8 +29,8 @@
  */
 package mpicbg.imglib.type.label;
 
-import mpicbg.imglib.container.DirectAccessContainer;
-import mpicbg.imglib.container.DirectAccessContainerFactory;
+import mpicbg.imglib.container.NativeContainer;
+import mpicbg.imglib.container.NativeContainerFactory;
 import mpicbg.imglib.container.basictypecontainer.BitAccess;
 import mpicbg.imglib.container.basictypecontainer.array.BitArray;
 import mpicbg.imglib.cursor.Cursor;
@@ -47,17 +47,17 @@ public class BasePairBitType extends TypeImpl<BasePairBitType> implements BasePa
 	@Override
 	public int getEntitiesPerPixel() { return 1; } 
 
-	// the DirectAccessContainer
-	final DirectAccessContainer<BasePairBitType, ? extends BitAccess> storage;
+	// the NativeContainer
+	final NativeContainer<BasePairBitType, ? extends BitAccess> storage;
 	
-	// the (sub)DirectAccessContainer that holds the information 
+	// the (sub)NativeContainer that holds the information 
 	BitAccess b;
 	
 	// the adresses of the bits that we store
 	int j1, j2, j3;
 	
 	// this is the constructor if you want it to read from an array
-	public BasePairBitType( DirectAccessContainer<BasePairBitType, ? extends BitAccess> bitStorage )
+	public BasePairBitType( NativeContainer<BasePairBitType, ? extends BitAccess> bitStorage )
 	{
 		storage = bitStorage;
 		updateIndex( 0 );
@@ -76,15 +76,15 @@ public class BasePairBitType extends TypeImpl<BasePairBitType> implements BasePa
 	public BasePairBitType() { this( Base.N ); }
 	
 	@Override
-	public DirectAccessContainer<BasePairBitType, ? extends BitAccess> createSuitableDirectAccessContainer( final DirectAccessContainerFactory storageFactory, final int dim[] )	
+	public NativeContainer<BasePairBitType, ? extends BitAccess> createSuitableNativeContainer( final NativeContainerFactory storageFactory, final int dim[] )	
 	{
 		// create the container
-		final DirectAccessContainer<BasePairBitType, ? extends BitAccess> container = storageFactory.createBitInstance( dim, 3 );
+		final NativeContainer<BasePairBitType, ? extends BitAccess> container = storageFactory.createBitInstance( dim, 3 );
 		
 		// create a Type that is linked to the container
 		final BasePairBitType linkedType = new BasePairBitType( container );
 		
-		// pass it to the DirectAccessContainer
+		// pass it to the NativeContainer
 		container.setLinkedType( linkedType );
 		
 		return container;
@@ -97,7 +97,7 @@ public class BasePairBitType extends TypeImpl<BasePairBitType> implements BasePa
 	}
 
 	@Override
-	public BasePairBitType duplicateTypeOnSameDirectAccessContainer() { return new BasePairBitType( storage ); }
+	public BasePairBitType duplicateTypeOnSameNativeContainer() { return new BasePairBitType( storage ); }
 	
 	@Override
 	public void updateIndex( final int i ) 

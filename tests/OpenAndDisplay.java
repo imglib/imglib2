@@ -7,7 +7,9 @@ import javax.media.j3d.Transform3D;
 import mpicbg.imglib.algorithm.gauss.GaussianConvolution;
 import mpicbg.imglib.algorithm.transformation.ImageTransform;
 import mpicbg.imglib.container.Img;
+import mpicbg.imglib.container.ImgFactory;
 import mpicbg.imglib.container.array.ArrayContainerFactory;
+import mpicbg.imglib.container.dynamic.DynamicContainerFactory;
 import mpicbg.imglib.image.display.imagej.ImgLib2Display;
 import mpicbg.imglib.interpolation.nearestneighbor.NearestNeighborInterpolatorFactory;
 import mpicbg.imglib.io.LOCI;
@@ -18,11 +20,9 @@ import mpicbg.models.AffineModel3D;
 
 public class OpenAndDisplay
 {	
-	public static void main( String[] args )
+	public static void test( ImgFactory<FloatType> factory )
 	{
-		new ImageJ();
-		
-		Img<FloatType> img = LOCI.openLOCIFloatType( "D:/Temp/Truman/MoreTiles/73.tif",  new ArrayContainerFactory<FloatType>() );
+		Img<FloatType> img = LOCI.openLOCIFloatType( "D:/Temp/Truman/MoreTiles/73.tif",  factory );
 		
 		ImgLib2Display.copyToImagePlus( img, new int[] {2, 0, 1} ).show();
 		
@@ -52,7 +52,14 @@ public class OpenAndDisplay
 		}
 		
 		ImgLib2Display.copyToImagePlus( transform.getResult() ).show();
-
+		
+	}
+	
+	public static void main( String[] args )
+	{
+		new ImageJ();
+		
+		test( new DynamicContainerFactory<FloatType>() );
 	}
 	
 	public static AffineModel3D getAffineModel3D( Transform3D transform )

@@ -29,14 +29,14 @@
  */
 package mpicbg.imglib.type.numeric.integer;
 
-import mpicbg.imglib.container.DirectAccessContainer;
-import mpicbg.imglib.container.DirectAccessContainerFactory;
+import mpicbg.imglib.container.NativeContainer;
+import mpicbg.imglib.container.NativeContainerFactory;
 import mpicbg.imglib.container.basictypecontainer.ShortAccess;
 
 public class ShortType extends GenericShortType<ShortType>
 {
 	// this is the constructor if you want it to read from an array
-	public ShortType( DirectAccessContainer<ShortType, ? extends ShortAccess> shortStorage ) { super( shortStorage ); }
+	public ShortType( NativeContainer<ShortType, ? extends ShortAccess> shortStorage ) { super( shortStorage ); }
 	
 	// this is the constructor if you want it to be a variable
 	public ShortType( final short value ) { super( value ); }
@@ -45,22 +45,22 @@ public class ShortType extends GenericShortType<ShortType>
 	public ShortType() { this( (short)0 ); }
 	
 	@Override
-	public DirectAccessContainer<ShortType, ? extends ShortAccess> createSuitableDirectAccessContainer( final DirectAccessContainerFactory storageFactory, final int dim[] )
+	public NativeContainer<ShortType, ? extends ShortAccess> createSuitableNativeContainer( final NativeContainerFactory storageFactory, final int dim[] )
 	{
 		// create the container
-		final DirectAccessContainer<ShortType, ? extends ShortAccess> container = storageFactory.createShortInstance( dim, 1 );
+		final NativeContainer<ShortType, ? extends ShortAccess> container = storageFactory.createShortInstance( dim, 1 );
 		
 		// create a Type that is linked to the container
 		final ShortType linkedType = new ShortType( container );
 		
-		// pass it to the DirectAccessContainer
+		// pass it to the NativeContainer
 		container.setLinkedType( linkedType );
 		
 		return container;
 	}
 	
 	@Override
-	public ShortType duplicateTypeOnSameDirectAccessContainer() { return new ShortType( storage ); }
+	public ShortType duplicateTypeOnSameNativeContainer() { return new ShortType( storage ); }
 
 	public short get() { return getValue(); }
 	public void set( final short b ) { setValue( b ); }

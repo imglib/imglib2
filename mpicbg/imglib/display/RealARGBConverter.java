@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2009--2010, Stephan Preibisch & Stephan Saalfeld
+ * Copyright (c) 2009--2011, Stephan Saalfeld
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -24,53 +24,46 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- *
- * @author Stephan Preibisch & Stephan Saalfeld
  */
-package mpicbg.imglib.type.label;
+package mpicbg.imglib.display;
 
-import mpicbg.imglib.container.NativeContainer;
-import mpicbg.imglib.container.NativeContainerFactory;
-import mpicbg.imglib.cursor.Cursor;
-import mpicbg.imglib.image.Image;
-import mpicbg.imglib.image.display.Display;
-import mpicbg.imglib.type.TypeImpl;
+import mpicbg.imglib.converter.Converter;
+import mpicbg.imglib.type.numeric.ARGBType;
+import mpicbg.imglib.type.numeric.real.FloatType;
 
-public class FakeType extends TypeImpl<FakeType>
+/**
+ * 
+ *
+ * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
+ */
+public class RealARGBConverter implements Converter< FloatType, ARGBType >
 {
-	@Override
-	public int getEntitiesPerPixel() { return 0; } 
+	protected double min = 0;
+	protected double max = 1;
+	protected double scale = 1;
+	
+	public RealARGBConverter() {}
+	
+	public RealARGBConverter( final int min, final int max )
+	{
+		this.min = min;
+		this.max = max;
+		scale = max - min;
+	}
+	
+	final static protected int roundPositive( final double a )
+	{
+		return ( int )( a + 0.5 );
+	}
 	
 	@Override
-	public NativeContainer<FakeType,?> createSuitableNativeContainer( final NativeContainerFactory storageFactory, final int dim[] ) { return null; }
-
-	@Override
-	public void updateContainer( Cursor<?> c ) {}
+	public void convert( final FloatType input, final ARGBType output )
+	{
+		final double a = input.getRealDouble();
+		final int b = Math.min( 255, roundPositive( Math.max( 0, ( ( a - min ) / scale * 255.0 ) ) ) );
+		final int argb = 0xff000000 | ( ( ( b << 8 ) | b ) << 8 ) | b;
+		output.set( argb );
+	}
 	
-	@Override
-	public FakeType duplicateTypeOnSameNativeContainer() { return new FakeType(); }
-
-	@Override
-	public Display<FakeType> getDefaultDisplay( Image<FakeType> image ) { return null; }
-
-	@Override
-	public void set( final FakeType c ) {}
 	
-	@Override
-	public FakeType[] createArray1D(int size1){ return new FakeType[ size1 ]; }
-
-	@Override
-	public FakeType[][] createArray2D(int size1, int size2){ return new FakeType[ size1 ][ size2 ]; }
-
-	@Override
-	public FakeType[][][] createArray3D(int size1, int size2, int size3) { return new FakeType[ size1 ][ size2 ][ size3 ]; }
-	
-	@Override
-	public FakeType createVariable(){ return new FakeType(); }
-
-	@Override
-	public FakeType copy(){ return createVariable(); }
-
-	@Override
-	public String toString() { return ""; }
 }

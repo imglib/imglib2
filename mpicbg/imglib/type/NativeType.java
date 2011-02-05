@@ -16,7 +16,7 @@ public interface NativeType<T extends NativeType<T>> extends Type<T>
 	public int getEntitiesPerPixel(); 
 
 	/**
-	 * The {@link Type} creates the DirectAccessContainer used for storing image
+	 * The {@link Type} creates the NativeContainer used for storing image
 	 * data; based on the given storage strategy and its size. It basically only
 	 * decides here which BasicType it uses (float, int, byte, bit, ...) and how
 	 * many entities per pixel it needs (e.g. 2 floats per pixel for a complex
@@ -27,10 +27,10 @@ public interface NativeType<T extends NativeType<T>> extends Type<T>
 	 *            - Which storage strategy is used
 	 * @param dim
 	 *            - the dimensions
-	 * @return - the instantiated DirectAccessContainer where only the
+	 * @return - the instantiated NativeContainer where only the
 	 *         {@link Type} knowns the BasicType it contains.
 	 */
-	public NativeContainer< T, ? > createSuitableDirectAccessContainer( final NativeContainerFactory< T > storageFactory, final long[] dim );
+	public NativeContainer< T, ? > createSuitableNativeContainer( final NativeContainerFactory< T > storageFactory, final long[] dim );
 	
 	/**
 	 * Creates a new {@link Type} which stores in the same physical array. This
@@ -39,7 +39,7 @@ public interface NativeType<T extends NativeType<T>> extends Type<T>
 	 * @return - a new {@link Type} instance working on the same
 	 *         {@link NativeContainer}
 	 */
-	public T duplicateTypeOnSameDirectAccessContainer();	
+	public T duplicateTypeOnSameNativeContainer();	
 	/**
 	 * This method is used by the {@link ImgCursor}s to update the data
 	 * current data array of the {@link Type}, for example when moving from one
@@ -48,11 +48,11 @@ public interface NativeType<T extends NativeType<T>> extends Type<T>
 	 * 
 	 * The idea behind this concept is maybe not obvious. The {@link Type} knows
 	 * which basic type is used (float, int, byte, ...) but does not know how it
-	 * is stored ({@link Array}, {@link CellDirectAccessContainer}, ...) to
+	 * is stored ({@link Array}, {@link CellNativeContainer}, ...) to
 	 * prevent multiple implementations of {@link Type}. That's why {@link Type}
 	 * asks the {@link DataAccess} to give the actual basic array by passing the
 	 * {@link ImgCursor} that calls the method. The {@link DataAccess} is
-	 * also an {@link Array}, {@link CellDirectAccessContainer}, ... which can
+	 * also an {@link Array}, {@link CellNativeContainer}, ... which can
 	 * then communicate with the {@link ArrayCursor},
 	 * {@link CellBasicRasterIterator}, ... and return the current basic type
 	 * array.

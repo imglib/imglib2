@@ -90,12 +90,6 @@ public class OrthoSliceIterator< T extends Type< T > > implements ImgCursor< T >
 	}
 
 	@Override
-	public int getArrayIndex()
-	{
-		return sampler.getArrayIndex();
-	}
-
-	@Override
 	public Img< T > getImg()
 	{
 		return sampler.getImg();

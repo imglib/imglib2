@@ -16,9 +16,8 @@
  */
 package mpicbg.imglib.converter;
 
-import mpicbg.imglib.type.Type;
 
-public interface Converter< A extends Type<A>, B extends Type<B> >
+public interface Converter< A, B >
 {
 	public void convert( A input, B output );
 }

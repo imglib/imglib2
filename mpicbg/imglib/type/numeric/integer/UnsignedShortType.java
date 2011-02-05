@@ -29,15 +29,15 @@
  */
 package mpicbg.imglib.type.numeric.integer;
 
-import mpicbg.imglib.container.DirectAccessContainer;
-import mpicbg.imglib.container.DirectAccessContainerFactory;
+import mpicbg.imglib.container.NativeContainer;
+import mpicbg.imglib.container.NativeContainerFactory;
 import mpicbg.imglib.container.basictypecontainer.ShortAccess;
 import mpicbg.imglib.util.Util;
 
 public class UnsignedShortType extends GenericShortType<UnsignedShortType>
 {
 	// this is the constructor if you want it to read from an array
-	public UnsignedShortType( DirectAccessContainer<UnsignedShortType, ? extends ShortAccess> shortStorage ) { super( shortStorage ); }
+	public UnsignedShortType( NativeContainer<UnsignedShortType, ? extends ShortAccess> shortStorage ) { super( shortStorage ); }
 
 	// this is the constructor if you want it to be a variable
 	public UnsignedShortType( final int value ) { super( getCodedSignedShortChecked(value) ); }
@@ -58,22 +58,22 @@ public class UnsignedShortType extends GenericShortType<UnsignedShortType>
 	public static int getUnsignedShort( final short signedShort ) { return signedShort & 0xffff; }
 	
 	@Override
-	public DirectAccessContainer<UnsignedShortType, ? extends ShortAccess> createSuitableDirectAccessContainer( final DirectAccessContainerFactory storageFactory, final int dim[] )
+	public NativeContainer<UnsignedShortType, ? extends ShortAccess> createSuitableNativeContainer( final NativeContainerFactory storageFactory, final int dim[] )
 	{
 		// create the container
-		final DirectAccessContainer<UnsignedShortType, ? extends ShortAccess> container = storageFactory.createShortInstance( dim, 1 );
+		final NativeContainer<UnsignedShortType, ? extends ShortAccess> container = storageFactory.createShortInstance( dim, 1 );
 		
 		// create a Type that is linked to the container
 		final UnsignedShortType linkedType = new UnsignedShortType( container );
 		
-		// pass it to the DirectAccessContainer
+		// pass it to the NativeContainer
 		container.setLinkedType( linkedType );
 		
 		return container;
 	}
 	
 	@Override
-	public UnsignedShortType duplicateTypeOnSameDirectAccessContainer() { return new UnsignedShortType( storage ); }
+	public UnsignedShortType duplicateTypeOnSameNativeContainer() { return new UnsignedShortType( storage ); }
 
 	@Override
 	public void mul( final float c )

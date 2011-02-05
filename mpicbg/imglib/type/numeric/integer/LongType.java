@@ -29,8 +29,8 @@
  */
 package mpicbg.imglib.type.numeric.integer;
 
-import mpicbg.imglib.container.DirectAccessContainer;
-import mpicbg.imglib.container.DirectAccessContainerFactory;
+import mpicbg.imglib.container.NativeContainer;
+import mpicbg.imglib.container.NativeContainerFactory;
 import mpicbg.imglib.container.basictypecontainer.LongAccess;
 import mpicbg.imglib.container.basictypecontainer.array.LongArray;
 import mpicbg.imglib.cursor.Cursor;
@@ -38,14 +38,14 @@ import mpicbg.imglib.util.Util;
 
 final public class LongType extends IntegerTypeImpl<LongType>
 {
-	// the DirectAccessContainer
-	final DirectAccessContainer<LongType, ? extends LongAccess> storage;
+	// the NativeContainer
+	final NativeContainer<LongType, ? extends LongAccess> storage;
 	
-	// the (sub)DirectAccessContainer that holds the information 
+	// the (sub)NativeContainer that holds the information 
 	LongAccess b;
 	
 	// this is the constructor if you want it to read from an array
-	public LongType( DirectAccessContainer<LongType, ? extends LongAccess> longStorage )
+	public LongType( NativeContainer<LongType, ? extends LongAccess> longStorage )
 	{
 		storage = longStorage;
 	}
@@ -62,15 +62,15 @@ final public class LongType extends IntegerTypeImpl<LongType>
 	public LongType() { this( 0 ); }
 
 	@Override
-	public DirectAccessContainer<LongType, ? extends LongAccess> createSuitableDirectAccessContainer( final DirectAccessContainerFactory storageFactory, final int dim[] )
+	public NativeContainer<LongType, ? extends LongAccess> createSuitableNativeContainer( final NativeContainerFactory storageFactory, final int dim[] )
 	{
 		// create the container
-		final DirectAccessContainer<LongType, ? extends LongAccess> container = storageFactory.createLongInstance( dim, 1 );
+		final NativeContainer<LongType, ? extends LongAccess> container = storageFactory.createLongInstance( dim, 1 );
 		
 		// create a Type that is linked to the container
 		final LongType linkedType = new LongType( container );
 		
-		// pass it to the DirectAccessContainer
+		// pass it to the NativeContainer
 		container.setLinkedType( linkedType );
 		
 		return container;
@@ -83,7 +83,7 @@ final public class LongType extends IntegerTypeImpl<LongType>
 	}
 
 	@Override
-	public LongType duplicateTypeOnSameDirectAccessContainer() { return new LongType( storage ); }
+	public LongType duplicateTypeOnSameNativeContainer() { return new LongType( storage ); }
 	
 	public long get(){ return b.getValue( i ); }
 	public void set( final long f ){ b.setValue( i, f ); }

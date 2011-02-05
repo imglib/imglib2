@@ -30,8 +30,8 @@
 
 package mpicbg.imglib.type.logic;
 
-import mpicbg.imglib.container.DirectAccessContainer;
-import mpicbg.imglib.container.DirectAccessContainerFactory;
+import mpicbg.imglib.container.NativeContainer;
+import mpicbg.imglib.container.NativeContainerFactory;
 import mpicbg.imglib.container.basictypecontainer.BitAccess;
 import mpicbg.imglib.container.basictypecontainer.array.BitArray;
 import mpicbg.imglib.cursor.Cursor;
@@ -43,14 +43,14 @@ import mpicbg.imglib.type.numeric.integer.IntegerTypeImpl;
 
 public class BitType extends IntegerTypeImpl<BitType> implements BooleanType<BitType>, RealType<BitType>
 {
-	// the DirectAccessContainer
-	final DirectAccessContainer<BitType, ? extends BitAccess> storage;
+	// the NativeContainer
+	final NativeContainer<BitType, ? extends BitAccess> storage;
 	
-	// the (sub)DirectAccessContainer that holds the information 
+	// the (sub)NativeContainer that holds the information 
 	BitAccess b;
 	
 	// this is the constructor if you want it to read from an array
-	public BitType( DirectAccessContainer<BitType, ? extends BitAccess> bitStorage )
+	public BitType( NativeContainer<BitType, ? extends BitAccess> bitStorage )
 	{
 		storage = bitStorage;
 	}
@@ -67,15 +67,15 @@ public class BitType extends IntegerTypeImpl<BitType> implements BooleanType<Bit
 	public BitType() { this( false ); }
 	
 	@Override
-	public DirectAccessContainer<BitType, ? extends BitAccess> createSuitableDirectAccessContainer( final DirectAccessContainerFactory storageFactory, final int dim[] )
+	public NativeContainer<BitType, ? extends BitAccess> createSuitableNativeContainer( final NativeContainerFactory storageFactory, final int dim[] )
 	{
 		// create the container
-		final DirectAccessContainer<BitType, ? extends BitAccess> container = storageFactory.createBitInstance( dim, 1 );
+		final NativeContainer<BitType, ? extends BitAccess> container = storageFactory.createBitInstance( dim, 1 );
 		
 		// create a Type that is linked to the container
 		final BitType linkedType = new BitType( container );
 		
-		// pass it to the DirectAccessContainer
+		// pass it to the NativeContainer
 		container.setLinkedType( linkedType );
 		
 		return container;
@@ -88,7 +88,7 @@ public class BitType extends IntegerTypeImpl<BitType> implements BooleanType<Bit
 	}
 	
 	@Override
-	public BitType duplicateTypeOnSameDirectAccessContainer() { return new BitType( storage ); }
+	public BitType duplicateTypeOnSameNativeContainer() { return new BitType( storage ); }
 
 	@Override
 	public BitTypeDisplay getDefaultDisplay( final Image<BitType> image )
