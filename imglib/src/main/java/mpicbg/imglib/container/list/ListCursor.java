@@ -90,7 +90,7 @@ final public class ListCursor< T extends Type< T > > extends AbstractImgCursor< 
 	}
 
 	@Override
-	public T create() { return container.createVariable(); }
+	public T create() { return container.type.createVariable(); }
 	
 	@Override
 	public String toString() 

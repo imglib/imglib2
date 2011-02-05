@@ -78,6 +78,19 @@ public interface IterableRealInterval< T > extends RealInterval, Iterable< T >
 	 * @return number of elements
 	 */
 	public long size();
+
+	/**
+	 * Get the first element of this {@IterableRealInterval}.
+	 * This is a shortcut for <code>cursor().next()</code>.
+	 * 
+	 * This can be used to create a new variable of type T
+	 * using <code>firstElement().createVariable()</code>,
+	 * which is useful in generic methods to store temporary
+	 * results, e.g., a running sum over pixels in the {@IterableRealInterval}.
+	 * 
+	 * @return the first element in iteration order.
+	 */
+	public T firstElement();
 	
 	/**
 	 * <p>Returns <tt>true</tt> if this {@link IterableRealInterval} and

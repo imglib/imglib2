@@ -154,7 +154,7 @@ public class ListRandomAccess< T extends Type< T > > extends AbstractImgRandomAc
 	public T get(){ return pixels.get( i ); }
 
 	@Override
-	public T create() { return container.createVariable(); }
+	public T create() { return container.type.createVariable(); }
 	
 	@Override
 	public String toString() 

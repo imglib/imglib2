@@ -129,9 +129,6 @@ public class ListContainer< T extends Type< T > > extends AbstractImg< T >
 	public ListContainerFactory<T> factory() { return new ListContainerFactory<T>(); }
 
 	@Override
-	public T createVariable() { return type.createVariable(); }
-
-	@Override
 	public boolean equalIterationOrder( final IterableRealInterval<?> f )
 	{
 		if ( f.numDimensions() != this.numDimensions() )

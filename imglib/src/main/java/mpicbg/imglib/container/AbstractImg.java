@@ -56,6 +56,12 @@ public abstract class AbstractImg< T > implements Img< T >
 	{ 
 		return cursor();
 	}
+
+	@Override
+	public T firstElement()
+	{
+		return cursor().next();
+	}
 	
 	public static long numElements( final long[] dim )
 	{

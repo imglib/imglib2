@@ -49,7 +49,7 @@ import mpicbg.imglib.util.IntervalIndexer;
  *
  * @author Stephan Preibisch and Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-final public class Array< T extends NativeType< T >, A extends DataAccess > extends AbstractNativeContainer< T, A >
+public class Array< T extends NativeType< T >, A extends DataAccess > extends AbstractNativeContainer< T, A >
 {
 	final int[] steps, dim;
 	
@@ -133,11 +133,5 @@ final public class Array< T extends NativeType< T >, A extends DataAccess > exte
 	public ArrayContainerFactory<T> factory()
 	{
 		return new ArrayContainerFactory<T>();
-	}
-	
-	@Override
-	public T createVariable()
-	{
-		return type.createVariable();
 	}
 }

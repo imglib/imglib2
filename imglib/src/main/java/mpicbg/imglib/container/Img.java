@@ -58,7 +58,7 @@ public interface Img<	T >
 	public ImgCursor< T > localizingCursor();
 
 	/**
-	 * Return a {@link ImgFactory} that creates {@link Img}s
+	 * Get a {@link ImgFactory} that creates {@link Img}s
 	 * of the same kind as this one.
 	 * 
 	 * This is useful to create Imgs for temporary storage
@@ -69,16 +69,6 @@ public interface Img<	T >
 	 * @return a factory for Imgs of the same kind as this one. 
 	 */
 	public ImgFactory< T > factory();
-	
-	/**
-	 * Create a new variable of the type stored in this Img.
-	 * 
-	 * The variable is useful in generic methods to store temporary
-	 * results, e.g., a running sum over pixels in the Img.
-	 * 
-	 * @return a variable of the type contained in this Img.
-	 */
-	public T createVariable();
 	
 	public long numPixels();
 }
