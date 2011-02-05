@@ -18,7 +18,7 @@ package mpicbg.imglib.converter;
 
 import mpicbg.imglib.type.Type;
 
-public class VoidConverter<T extends Type<T>> implements Converter<T, T>
+public class TypeIdentity< T extends Type< T > > implements Converter< T, T >
 {
 	@Override
 	public void convert( final T input, final T output )

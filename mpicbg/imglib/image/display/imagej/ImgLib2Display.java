@@ -5,7 +5,7 @@ import ij.ImageStack;
 import ij.process.FloatProcessor;
 import mpicbg.imglib.container.Img;
 import mpicbg.imglib.converter.Converter;
-import mpicbg.imglib.converter.VoidConverter;
+import mpicbg.imglib.converter.TypeIdentity;
 import mpicbg.imglib.sampler.special.OrthoSliceIterator;
 import mpicbg.imglib.type.Type;
 import mpicbg.imglib.type.numeric.real.FloatType;
@@ -18,12 +18,12 @@ public class ImgLib2Display
 
 	public static ImagePlus copyToImagePlus( final Img<FloatType> container, final int[] dim )
 	{
-		return createImagePlus( container, new VoidConverter<FloatType>(), "image", GRAY32, getDim3( dim ), new int[ container.numDimensions() ] ); 		
+		return createImagePlus( container, new TypeIdentity<FloatType>(), "image", GRAY32, getDim3( dim ), new int[ container.numDimensions() ] ); 		
 	}
 	
 	public static ImagePlus copyToImagePlus( final Img<FloatType> container )
 	{
-		return createImagePlus( container, new VoidConverter<FloatType>(), "image", GRAY32, getDim3( getStandardDimensions() ), new int[ container.numDimensions() ] ); 
+		return createImagePlus( container, new TypeIdentity<FloatType>(), "image", GRAY32, getDim3( getStandardDimensions() ), new int[ container.numDimensions() ] ); 
 	}
 	
 	public static <T extends Type<T>> ImagePlus copyToImagePlus( final Img<T> container, final Converter<T, FloatType> converter )
