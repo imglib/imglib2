@@ -27,7 +27,7 @@
  */
 package mpicbg.imglib.container.array;
 
-import mpicbg.imglib.IntegerInterval;
+import mpicbg.imglib.Interval;
 import mpicbg.imglib.IterableRealInterval;
 import mpicbg.imglib.container.AbstractNativeContainer;
 import mpicbg.imglib.container.Img;
@@ -99,7 +99,7 @@ final public class Array< T extends NativeType< T >, A extends DataAccess > exte
 	}
 
 	@Override
-	public ArrayRandomAccess< T > integerRandomAccess()
+	public ArrayRandomAccess< T > randomAccess()
 	{
 		ArrayRandomAccess< T > c = new ArrayRandomAccess< T >( this );
 		return c;
@@ -120,9 +120,9 @@ final public class Array< T extends NativeType< T >, A extends DataAccess > exte
 		
 		if ( getClass().isInstance( f ) || DynamicContainer.class.isInstance( f ) )
 		{
-			final IntegerInterval a = ( IntegerInterval )f;
+			final Interval a = ( Interval )f;
 			for ( int d = 0; d < n; ++d )
-				if ( size[ d ] != a.size( d ) )
+				if ( size[ d ] != a.dimension( d ) )
 					return false;
 		}
 		

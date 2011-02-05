@@ -251,14 +251,14 @@ public class ImageJFunctions
 			final int extraDimPos[] = new int[ extraDimensions.length ];
 			
 			for ( int d = 2; d < numDimensions; ++d )
-				extraDimensions[ d - 2 ] = img.size( d );
+				extraDimensions[ d - 2 ] = img.dimension( d );
 			
 			// the max number of digits for each dimension
 			final int maxLengthDim[] = new int[ extraDimensions.length ];
 			
 			for ( int d = 2; d < numDimensions; ++d )
 			{
-				final String num = "" + (img.size( d ) - 1);
+				final String num = "" + (img.dimension( d ) - 1);
 				maxLengthDim[ d - 2 ] = num.length(); 
 			}
 				
@@ -310,11 +310,11 @@ public class ImageJFunctions
         switch(type) 
         {
         	case ImagePlus.GRAY8:
-        		ip = new ByteProcessor( img.size( dimX ), img.size( dimY ), ImageJVirtualStack.extractSliceByte( img, display, dimX, dimY, dimensionPositions ), null); break;
+        		ip = new ByteProcessor( img.dimension( dimX ), img.dimension( dimY ), ImageJVirtualStack.extractSliceByte( img, display, dimX, dimY, dimensionPositions ), null); break;
         	case ImagePlus.COLOR_RGB:
-        		ip = new ColorProcessor( img.size( dimX ), img.size( dimY ), ImageJVirtualStack.extractSliceRGB( img, display, dimX, dimY, dimensionPositions )); break;
+        		ip = new ColorProcessor( img.dimension( dimX ), img.dimension( dimY ), ImageJVirtualStack.extractSliceRGB( img, display, dimX, dimY, dimensionPositions )); break;
         	default:
-        		ip = new FloatProcessor( img.size( dimX ), img.size( dimY ), ImageJVirtualStack.extractSliceFloat( img, display, dimX, dimY, dimensionPositions ), null); 
+        		ip = new FloatProcessor( img.dimension( dimX ), img.dimension( dimY ), ImageJVirtualStack.extractSliceFloat( img, display, dimX, dimY, dimensionPositions ), null); 
         		ip.setMinAndMax( display.getMin(), display.getMax() );
         		break;
         }
@@ -328,9 +328,9 @@ public class ImageJFunctions
 		final Display<T> display = img.getDisplay();
 	
 		int[] size = new int[ 3 ];		
-		size[ 0 ] = img.size( dim[ 0 ] );
-		size[ 1 ] = img.size( dim[ 1 ] );
-		size[ 2 ] = img.size( dim[ 2 ] );
+		size[ 0 ] = img.dimension( dim[ 0 ] );
+		size[ 1 ] = img.dimension( dim[ 1 ] );
+		size[ 2 ] = img.dimension( dim[ 2 ] );
         
         final ImageStack stack = new ImageStack( size[ 0 ], size[ 1 ] );
         

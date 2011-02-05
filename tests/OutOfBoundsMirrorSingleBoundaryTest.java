@@ -34,7 +34,7 @@ import java.awt.Rectangle;
 //import ij.ImagePlus;
 //import mpicbg.imglib.image.display.imagej.ImageJFunctions;
 
-import mpicbg.imglib.IntegerLocalizable;
+import mpicbg.imglib.Localizable;
 import mpicbg.imglib.container.ImgCursor;
 import mpicbg.imglib.container.ImgRandomAccess;
 import mpicbg.imglib.container.array.ArrayContainerFactory;
@@ -166,7 +166,7 @@ public class OutOfBoundsMirrorSingleBoundaryTest
 	{
 	}
 	
-	final private boolean isOutOfBounds( final IntegerLocalizable l )
+	final private boolean isOutOfBounds( final Localizable l )
 	{
 		for ( int i = 0; i < dim.length; ++i )
 			if ( l.getIntPosition( i ) < 0 || l.getIntPosition( i ) >= dim[ i ] ) return true;

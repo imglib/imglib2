@@ -27,9 +27,9 @@
  */
 package mpicbg.imglib.outofbounds;
 
-import mpicbg.imglib.IntegerInterval;
-import mpicbg.imglib.IntegerLocalizable;
-import mpicbg.imglib.IntegerRandomAccess;
+import mpicbg.imglib.Interval;
+import mpicbg.imglib.Localizable;
+import mpicbg.imglib.RandomAccess;
 import mpicbg.imglib.type.Type;
 import mpicbg.imglib.util.Util;
 
@@ -43,7 +43,7 @@ public class OutOfBoundsConstantValue< T extends Type< T > > implements OutOfBou
 {
 	final protected T value;
 	
-	final protected IntegerRandomAccess< T > sampler;
+	final protected RandomAccess< T > sampler;
 	
 	final protected int numDimensions;
 	
@@ -54,15 +54,15 @@ public class OutOfBoundsConstantValue< T extends Type< T > > implements OutOfBou
 	protected boolean isOutOfBounds = false;
 	
 	public OutOfBoundsConstantValue(
-			final IntegerRandomAccess< T > source,
-			final IntegerInterval interval,
+			final RandomAccess< T > source,
+			final Interval interval,
 			final T value )
 	{
 		this.sampler = source;
 		this.value = value;
 		numDimensions = interval.numDimensions();
 		dimension = new long[ numDimensions ];
-		interval.size( dimension );
+		interval.dimensions( dimension );
 		position = new long[ numDimensions ];
 		dimIsOutOfBounds = new boolean[ numDimensions ];
 	}
@@ -227,7 +227,7 @@ public class OutOfBoundsConstantValue< T extends Type< T > > implements OutOfBou
 	}
 	
 	@Override
-	public void move( final IntegerLocalizable localizable )
+	public void move( final Localizable localizable )
 	{
 		for ( int d = 0; d < numDimensions; ++d )
 			move( localizable.getIntPosition( d ), d );
@@ -274,7 +274,7 @@ public class OutOfBoundsConstantValue< T extends Type< T > > implements OutOfBou
 	}
 	
 	@Override
-	public void setPosition( final IntegerLocalizable localizable )
+	public void setPosition( final Localizable localizable )
 	{
 		for ( int d = 0; d < numDimensions; ++d )
 			setPosition( localizable.getIntPosition( d ), d );

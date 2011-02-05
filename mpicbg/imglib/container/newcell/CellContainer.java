@@ -30,7 +30,7 @@ final public class CellContainer< T extends NativeType< T >, A extends DataAcces
 	}
 
 	@Override
-	public ImgRandomAccess<T> integerRandomAccess()
+	public ImgRandomAccess<T> randomAccess()
 	{
 		// TODO Auto-generated method stub
 		return null;

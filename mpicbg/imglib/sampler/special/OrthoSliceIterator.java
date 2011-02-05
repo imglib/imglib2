@@ -67,12 +67,12 @@ public class OrthoSliceIterator< T extends Type< T > > implements ImgCursor< T >
 	
 	public OrthoSliceIterator( final Img< T > container, final int x, final int y, final long[] position )
 	{
-		this( container.integerRandomAccess(), x, y, position );		
+		this( container.randomAccess(), x, y, position );		
 	}
 
 	public OrthoSliceIterator( final Img< T > container, final int x, final int y, final int[] position )
 	{
-		this( container.integerRandomAccess(), x, y, intToLong( position ) );		
+		this( container.randomAccess(), x, y, intToLong( position ) );		
 	}
 
 	public OrthoSliceIterator( final ImgRandomAccess< T > sampler, final int x, final int y, final long[] position )
@@ -80,8 +80,8 @@ public class OrthoSliceIterator< T extends Type< T > > implements ImgCursor< T >
 		this.sampler = sampler;
 		this.x = x;
 		this.y = y;
-		w = sampler.getImg().size( x );
-		h = sampler.getImg().size( y );
+		w = sampler.getImg().dimension( x );
+		h = sampler.getImg().dimension( y );
 		maxX = w - 1;
 		maxY = h - 1;
 		
@@ -244,15 +244,15 @@ public class OrthoSliceIterator< T extends Type< T > > implements ImgCursor< T >
 	}
 
 	@Override
-	public void size( final long[] size )
+	public void dimensions( final long[] size )
 	{
-		sampler.size( size );
+		sampler.dimensions( size );
 	}
 
 	@Override
-	public long size( final int d )
+	public long dimension( final int d )
 	{
-		return sampler.size( d );
+		return sampler.dimension( d );
 	}
 
 	@Override

@@ -340,9 +340,9 @@ public class GaussianConvolution< T extends NumericType<T>> implements MultiThre
 		final FloatArray outputArray = (FloatArray) ( (NativeContainer<FloatType, FloatAccess>) convolvedFloat ).update( null );
 		
 		// Array supports only int anyways...
-  		final int width = (int)containerFloat.size( 0 );
-		final int height = (int)containerFloat.size( 1 );
-		final int depth = (int)containerFloat.size( 2 );
+  		final int width = (int)containerFloat.dimension( 0 );
+		final int height = (int)containerFloat.dimension( 1 );
+		final int depth = (int)containerFloat.dimension( 2 );
 
 		final AtomicInteger ai = new AtomicInteger(0);
 		final Thread[] threads = SimpleMultiThreading.newThreads( numThreads );

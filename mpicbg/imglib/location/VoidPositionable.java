@@ -27,19 +27,19 @@
  */
 package mpicbg.imglib.location;
 
-import mpicbg.imglib.IntegerLocalizable;
-import mpicbg.imglib.IntegerPositionable;
 import mpicbg.imglib.Localizable;
 import mpicbg.imglib.Positionable;
+import mpicbg.imglib.RealLocalizable;
+import mpicbg.imglib.RealPositionable;
 
 /**
- * A {@link IntegerPositionable} that just does nothing.  This is the default
- * linked {@link IntegerPositionable} of any {@link IntegerPositionable}.  This
+ * A {@link Positionable} that just does nothing.  This is the default
+ * linked {@link Positionable} of any {@link Positionable}.  This
  * object doing nothing, it is implemented as a Singleton.
  *
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-final public class VoidPositionable implements Positionable
+final public class VoidPositionable implements RealPositionable
 {
 	final static private VoidPositionable instance = new VoidPositionable();
 	
@@ -65,10 +65,10 @@ final public class VoidPositionable implements Positionable
 	final public void move( final long distance, final int dim ){}
 	
 	@Override
-	final public void move( final Localizable localizable ){}
+	final public void move( final RealLocalizable localizable ){}
 	
 	@Override
-	final public void move( final IntegerLocalizable localizable ){}
+	final public void move( final Localizable localizable ){}
 	
 	@Override
 	final public void move( final double[] position ){}
@@ -83,10 +83,10 @@ final public class VoidPositionable implements Positionable
 	final public void moveTo( final long[] position ){}
 	
 	@Override
-	final public void setPosition( final Localizable localizable ){}
+	final public void setPosition( final RealLocalizable localizable ){}
 	
 	@Override
-	final public void setPosition( final IntegerLocalizable localizable ){}
+	final public void setPosition( final Localizable localizable ){}
 	
 	@Override
 	final public void setPosition( final double[] position ){}

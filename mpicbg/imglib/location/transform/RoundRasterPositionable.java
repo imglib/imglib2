@@ -28,20 +28,20 @@
  */
 package mpicbg.imglib.location.transform;
 
-import mpicbg.imglib.IntegerLocalizable;
-import mpicbg.imglib.IntegerPositionable;
 import mpicbg.imglib.Localizable;
 import mpicbg.imglib.Positionable;
+import mpicbg.imglib.RealLocalizable;
+import mpicbg.imglib.RealPositionable;
 
 /**
- * A {@link Positionable} that drives a {@link IntegerPositionable} to its
+ * A {@link RealPositionable} that drives a {@link Positionable} to its
  * round discrete coordinates:
  * 
  * f = r < 0 ? (long)( r - 0.5 ) : (long)( r + 0.5 )
  * 
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-public class RoundRasterPositionable< LocalizableRasterPositionable extends IntegerLocalizable & IntegerPositionable > implements Positionable, Localizable
+public class RoundRasterPositionable< LocalizableRasterPositionable extends Localizable & Positionable > implements RealPositionable, RealLocalizable
 {
 	final protected LocalizableRasterPositionable target;
 	
@@ -59,7 +59,7 @@ public class RoundRasterPositionable< LocalizableRasterPositionable extends Inte
 		position = new float[ numDimensions ];
 	}
 	
-	public RoundRasterPositionable( final Localizable origin, final LocalizableRasterPositionable target )
+	public RoundRasterPositionable( final RealLocalizable origin, final LocalizableRasterPositionable target )
 	{
 		this( target );
 		
@@ -157,7 +157,7 @@ public class RoundRasterPositionable< LocalizableRasterPositionable extends Inte
 	}
 
 	@Override
-	public void move( final Localizable localizable )
+	public void move( final RealLocalizable localizable )
 	{
 		for ( int d = 0; d < numDimensions; ++d )
 			move( localizable.getDoublePosition(d), d );
@@ -178,7 +178,7 @@ public class RoundRasterPositionable< LocalizableRasterPositionable extends Inte
 	}
 
 	@Override
-	public void setPosition( final Localizable localizable )
+	public void setPosition( final RealLocalizable localizable )
 	{
 		localizable.localize( position );
 		setPosition( position );
@@ -252,7 +252,7 @@ public class RoundRasterPositionable< LocalizableRasterPositionable extends Inte
 	}
 
 	@Override
-	public void move( final IntegerLocalizable localizable )
+	public void move( final Localizable localizable )
 	{
 		for ( int d = 0; d < numDimensions; ++d )
 			move( localizable.getLongPosition( d ), d );
@@ -273,7 +273,7 @@ public class RoundRasterPositionable< LocalizableRasterPositionable extends Inte
 	}
 	
 	@Override
-	public void setPosition( IntegerLocalizable localizable )
+	public void setPosition( Localizable localizable )
 	{
 		localizable.localize( position );
 		target.setPosition( localizable );

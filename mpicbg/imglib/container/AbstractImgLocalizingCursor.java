@@ -27,7 +27,7 @@
  */
 package mpicbg.imglib.container;
 
-import mpicbg.imglib.IntegerInterval;
+import mpicbg.imglib.Interval;
 import mpicbg.imglib.type.Type;
 
 /**
@@ -38,7 +38,7 @@ import mpicbg.imglib.type.Type;
  */
 public abstract class AbstractImgLocalizingCursor< T extends Type< T > > extends AbstractImgLocalizableCursor< T > implements ImgCursor< T >
 {
-	public AbstractImgLocalizingCursor( final IntegerInterval f )
+	public AbstractImgLocalizingCursor( final Interval f )
 	{
 		super( f );
 	}

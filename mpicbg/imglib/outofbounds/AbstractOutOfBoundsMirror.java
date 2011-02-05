@@ -27,7 +27,7 @@
  */
 package mpicbg.imglib.outofbounds;
 
-import mpicbg.imglib.IntegerLocalizable;
+import mpicbg.imglib.Localizable;
 import mpicbg.imglib.container.ImgRandomAccess;
 import mpicbg.imglib.type.Type;
 import mpicbg.imglib.util.Util;
@@ -182,7 +182,7 @@ public abstract class AbstractOutOfBoundsMirror< T extends Type< T > > implement
 	}
 	
 	@Override
-	public void moveTo( final IntegerLocalizable localizable )
+	public void moveTo( final Localizable localizable )
 	{
 		for ( int d = 0; d < numDimensions; ++d )
 			move( localizable.getIntPosition( d ) - position[ d ], d );
@@ -209,7 +209,7 @@ public abstract class AbstractOutOfBoundsMirror< T extends Type< T > > implement
 	}
 	
 	@Override
-	public void setPosition( final IntegerLocalizable localizable )
+	public void setPosition( final Localizable localizable )
 	{
 		for ( int d = 0; d < numDimensions; ++d )
 			setPosition( localizable.getIntPosition( d ), d );

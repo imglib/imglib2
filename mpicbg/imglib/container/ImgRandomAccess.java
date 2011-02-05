@@ -27,7 +27,7 @@
  */
 package mpicbg.imglib.container;
 
-import mpicbg.imglib.IntegerRandomAccess;
+import mpicbg.imglib.RandomAccess;
 
 /**
  * This interface is for convenience only, it combines a set of interfaces and
@@ -41,7 +41,7 @@ import mpicbg.imglib.IntegerRandomAccess;
  *
  * @author Stephan Preibisch and Stephan Saalfeld
  */
-public interface ImgRandomAccess< T > extends ImgSampler< T >, IntegerRandomAccess< T >
+public interface ImgRandomAccess< T > extends ImgSampler< T >, RandomAccess< T >
 {
 	/**
 	 * True if located out of image bounds.

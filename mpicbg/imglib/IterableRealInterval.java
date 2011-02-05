@@ -48,7 +48,7 @@ import mpicbg.imglib.container.Img;
 public interface IterableRealInterval< T > extends RealInterval, Iterable< T >
 {
 	/**
-	 * <p>Returns a {@link Cursor} that iterates with
+	 * <p>Returns a {@link RealCursor} that iterates with
 	 * optimal speed without calculating the location at each iteration step.
 	 * Localization is performed on demand.</p>
 	 * 
@@ -57,10 +57,10 @@ public interface IterableRealInterval< T > extends RealInterval, Iterable< T >
 	 * 
 	 * @return I fast iterating iterator
 	 */
-	public Cursor< T > cursor();
+	public RealCursor< T > cursor();
 
 	/**
-	 * <p>Returns a {@link Localizable} {@link Iterator} that calculates its
+	 * <p>Returns a {@link RealLocalizable} {@link Iterator} that calculates its
 	 * location at each iteration step.  That is, localization is performed
 	 * with optimal speed.</p>
 	 * 
@@ -69,7 +69,7 @@ public interface IterableRealInterval< T > extends RealInterval, Iterable< T >
 	 * 
 	 * @return I fast localizing iterator
 	 */
-	public Cursor< T > localizingCursor();
+	public RealCursor< T > localizingCursor();
 	
 	/**
 	 * <p>Returns the number of elements in this

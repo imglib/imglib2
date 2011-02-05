@@ -27,8 +27,8 @@
  */
 package mpicbg.imglib.interpolation.nearestneighbor;
 
-import mpicbg.imglib.IntegerLocalizable;
 import mpicbg.imglib.Localizable;
+import mpicbg.imglib.RealLocalizable;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.outofbounds.RasterOutOfBoundsFactory;
 import mpicbg.imglib.type.Type;
@@ -193,7 +193,7 @@ public class NearestNeighborInterpolator3D< T extends Type< T > > extends Neares
 	}
 
 	@Override
-	public void moveTo( final Localizable localizable )
+	public void moveTo( final RealLocalizable localizable )
 	{
 		assert localizable.numDimensions() == 3 : getClass().getCanonicalName() + " cannot process other than 3 dimensions.";
 
@@ -265,7 +265,7 @@ public class NearestNeighborInterpolator3D< T extends Type< T > > extends Neares
 	}
 
 	@Override
-	public void setPosition( final Localizable localizable )
+	public void setPosition( final RealLocalizable localizable )
 	{
 		x = localizable.getFloatPosition( 0 );
 		target.setPosition( round( x ), 0 );
@@ -421,7 +421,7 @@ public class NearestNeighborInterpolator3D< T extends Type< T > > extends Neares
 	}
 
 	@Override
-	public void moveTo( final IntegerLocalizable localizable )
+	public void moveTo( final Localizable localizable )
 	{
 		final int roundX = localizable.getIntPosition( 0 );
 		x = roundX;
@@ -487,7 +487,7 @@ public class NearestNeighborInterpolator3D< T extends Type< T > > extends Neares
 	}
 
 	@Override
-	public void setPosition( final IntegerLocalizable localizable )
+	public void setPosition( final Localizable localizable )
 	{
 		final int roundX = localizable.getIntPosition( 0 );
 		x = roundX;

@@ -27,13 +27,13 @@
  */
 package mpicbg.imglib.container;
 
-import mpicbg.imglib.InjectiveIntegerInterval;
-import mpicbg.imglib.IntegerRandomAccessible;
+import mpicbg.imglib.InjectiveInterval;
+import mpicbg.imglib.RandomAccessible;
 import mpicbg.imglib.RandomAccessibleIntegerInterval;
 import mpicbg.imglib.outofbounds.OutOfBoundsFactory;
 
 /**
- * {@link Img}s are {@link InjectiveIntegerInterval} that has its min at
+ * {@link Img}s are {@link InjectiveInterval} that has its min at
  * 0<sup><em>n</em></sup> and its max positive.  {@link Img}s store pixels
  * and thus are the basis for conventional image processing.
  *
@@ -41,12 +41,12 @@ import mpicbg.imglib.outofbounds.OutOfBoundsFactory;
  */
 public interface Img<	T >
 	extends
-		IntegerRandomAccessible< T >,
+		RandomAccessible< T >,
 		RandomAccessibleIntegerInterval< T, Img< T > >,
-		InjectiveIntegerInterval
+		InjectiveInterval
 {
 	@Override
-	public ImgRandomAccess< T > integerRandomAccess();
+	public ImgRandomAccess< T > randomAccess();
 	
 	@Override
 	public ImgRandomAccess< T > integerRandomAccess( OutOfBoundsFactory< T, Img< T > > factory );

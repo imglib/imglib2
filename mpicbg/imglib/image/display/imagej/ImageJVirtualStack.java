@@ -58,7 +58,7 @@ public class ImageJVirtualStack<T extends Type<T>> extends ImageStack
 	 */
 	public ImageJVirtualStack( final Image<T> img, final int type, final int[] dim, final int[] dimensionPositions )
 	{
-		super( img.size( dim[ 0 ] ), img.size( dim[ 1 ] ), img.size( dim[ 2 ] ) );
+		super( img.dimension( dim[ 0 ] ), img.dimension( dim[ 1 ] ), img.dimension( dim[ 2 ] ) );
 		
 		this.img = img;
 		this.type = type;
@@ -70,9 +70,9 @@ public class ImageJVirtualStack<T extends Type<T>> extends ImageStack
 		
 		this.dimensionPositions = dimensionPositions;
 		
-		sizeX = img.size( dim[ 0 ] );
-		sizeY = img.size( dim[ 1 ] );
-		sizeZ = img.size( dim[ 2 ] );
+		sizeX = img.dimension( dim[ 0 ] );
+		sizeY = img.dimension( dim[ 1 ] );
+		sizeZ = img.dimension( dim[ 2 ] );
 	}
 
 	/**

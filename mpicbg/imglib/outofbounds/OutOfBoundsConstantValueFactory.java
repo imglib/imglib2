@@ -27,9 +27,9 @@
  */
 package mpicbg.imglib.outofbounds;
 
-import mpicbg.imglib.IntegerInterval;
-import mpicbg.imglib.IntegerRandomAccess;
-import mpicbg.imglib.IntegerRandomAccessible;
+import mpicbg.imglib.Interval;
+import mpicbg.imglib.RandomAccess;
+import mpicbg.imglib.RandomAccessible;
 import mpicbg.imglib.type.Type;
 
 /**
@@ -38,7 +38,7 @@ import mpicbg.imglib.type.Type;
  *
  * @author Stephan Preibisch and Stephan Saalfeld
  */
-public class OutOfBoundsConstantValueFactory< T extends Type< T >, F extends IntegerInterval & IntegerRandomAccessible< T > >
+public class OutOfBoundsConstantValueFactory< T extends Type< T >, F extends Interval & RandomAccessible< T > >
 		implements OutOfBoundsFactory< T, F >
 {
 	protected T value;
@@ -66,7 +66,7 @@ public class OutOfBoundsConstantValueFactory< T extends Type< T >, F extends Int
 	@Override
 	public OutOfBoundsConstantValue< T > create( final F f )
 	{
-		final IntegerRandomAccess< T > source = f.integerRandomAccess();
+		final RandomAccess< T > source = f.integerRandomAccess();
 		
 		if ( value == null )
 			value = source.create();

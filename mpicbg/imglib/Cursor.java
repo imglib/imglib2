@@ -32,5 +32,5 @@ package mpicbg.imglib;
  *
  * @author Tobias Pietzsch & Stephan Preibisch & Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-public interface Cursor< T > extends Localizable, Sampler< T >, Iterator, java.util.Iterator< T >
+public interface Cursor< T > extends RealCursor< T >, Localizable
 {}

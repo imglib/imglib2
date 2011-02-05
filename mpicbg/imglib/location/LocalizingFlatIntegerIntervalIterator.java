@@ -27,7 +27,7 @@
  */
 package mpicbg.imglib.location;
 
-import mpicbg.imglib.IntegerLocalizable;
+import mpicbg.imglib.Localizable;
 import mpicbg.imglib.Iterator;
 import mpicbg.imglib.container.Img;
 import mpicbg.imglib.container.ImgRandomAccess;
@@ -65,7 +65,7 @@ import mpicbg.imglib.util.Util;
  *  
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-final public class LocalizingFlatIntegerIntervalIterator implements Iterator, IntegerLocalizable
+final public class LocalizingFlatIntegerIntervalIterator implements Iterator, Localizable
 {
 	final protected int[] dimensions;
 	final protected int[] steps;

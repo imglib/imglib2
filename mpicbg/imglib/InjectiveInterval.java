@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2011, Tobias Pietzsch & Stephan Preibisch & Stephan Saalfeld
+ * Copyright (c) 2010, Stephan Saalfeld
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -28,9 +28,13 @@
 package mpicbg.imglib;
 
 /**
+ * <p>{x&isin;Z<sup><em>n</em></sup>|<em>min<sub>d</sub></em>&le;<em>x<sub>d</sub></em>&le;<em>max<sub>d</sub></em>;<em>d</em>&isin;{0&hellip;<em>n</em>-1}}</p>
  * 
+ * An {@link Interval} over the discrete source domain in which for
+ * <em>all</em> integer coordinates in the {@link InjectiveInterval} a
+ * function value exists or can be generated.
  *
- * @author Tobias Pietzsch & Stephan Preibisch & Stephan Saalfeld <saalfeld@mpi-cbg.de>
+ * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-public interface IntegerRandomAccess< T > extends IntegerLocalizable, IntegerPositionable, Sampler< T >
+public interface InjectiveInterval extends Interval
 {}

@@ -29,9 +29,9 @@ package mpicbg.imglib;
 
 
 /**
- * <p><em>f:R<sup>n</sup>&rarr;T</em></p>
+ * <p><em>f:Z<sup>n</sup>&rarr;T</em></p>
  * 
- * <p>A function over real space that can create a random access
+ * <p>A function over integer space that can create a random access
  * {@link Sampler}.</p>
  * 
  *
@@ -40,7 +40,7 @@ package mpicbg.imglib;
 public interface RandomAccessible< T > extends EuclideanSpace
 {
 	/**
-	 * Create a random access sampler for real coordinates.
+	 * Create a random access sampler for integer coordinates.
 	 * 
 	 * @return random access sampler
 	 */

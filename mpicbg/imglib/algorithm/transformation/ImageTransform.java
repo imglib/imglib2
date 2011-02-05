@@ -51,7 +51,7 @@ public class ImageTransform<T extends Type<T>> implements OutputAlgorithm<T>
 
 		// get image dimensions
 		final long[] dimensions = new long[ numDimensions ]; 
-		container.size( dimensions );
+		container.dimensions( dimensions );
 
 		//
 		// first determine new min-max in all dimensions of the image

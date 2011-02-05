@@ -28,7 +28,7 @@
 package mpicbg.imglib.container;
 
 import mpicbg.imglib.EuclideanSpace;
-import mpicbg.imglib.InjectiveIntegerInterval;
+import mpicbg.imglib.InjectiveInterval;
 import mpicbg.imglib.Sampler;
 import mpicbg.imglib.type.Type;
 
@@ -46,7 +46,7 @@ import mpicbg.imglib.type.Type;
  * 
  * @author Stephan Preibisch & Stephan Saalfeld
  */
-public interface ImgSampler< T > extends Sampler< T >, EuclideanSpace, InjectiveIntegerInterval
+public interface ImgSampler< T > extends Sampler< T >, EuclideanSpace, InjectiveInterval
 {	
 	public Img< T > getImg();
 }

@@ -27,8 +27,8 @@
  */
 package mpicbg.imglib.container;
 
-import mpicbg.imglib.IntegerInterval;
-import mpicbg.imglib.IntegerLocalizable;
+import mpicbg.imglib.Interval;
+import mpicbg.imglib.Localizable;
 import mpicbg.imglib.outofbounds.OutOfBounds;
 import mpicbg.imglib.outofbounds.OutOfBoundsFactory;
 import mpicbg.imglib.outofbounds.RealOutOfBounds;
@@ -45,7 +45,7 @@ public abstract class AbstractImgOutOfBoundsRandomAccess< T extends Type< T > > 
 	/* performs the actual moves and generates/queries a Type */
 	final protected OutOfBounds< T > outOfBounds;
 	
-	public AbstractImgOutOfBoundsRandomAccess( final IntegerInterval f, final RealOutOfBounds< T > outOfBounds )
+	public AbstractImgOutOfBoundsRandomAccess( final Interval f, final RealOutOfBounds< T > outOfBounds )
 	{
 		super( f.numDimensions() );
 		
@@ -133,7 +133,7 @@ public abstract class AbstractImgOutOfBoundsRandomAccess< T extends Type< T > > 
 	}
 	
 	@Override
-	final public void move( final IntegerLocalizable localizable )
+	final public void move( final Localizable localizable )
 	{
 		outOfBounds.move( localizable );
 	}
@@ -163,7 +163,7 @@ public abstract class AbstractImgOutOfBoundsRandomAccess< T extends Type< T > > 
 	}
 	
 	@Override
-	final public void setPosition( final IntegerLocalizable localizable )
+	final public void setPosition( final Localizable localizable )
 	{
 		outOfBounds.setPosition( localizable );
 	}

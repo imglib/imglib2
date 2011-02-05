@@ -29,7 +29,7 @@ package mpicbg.imglib.container.dynamic;
 
 import java.util.ArrayList;
 
-import mpicbg.imglib.IntegerInterval;
+import mpicbg.imglib.Interval;
 import mpicbg.imglib.IterableRealInterval;
 import mpicbg.imglib.container.AbstractImg;
 import mpicbg.imglib.container.Img;
@@ -114,7 +114,7 @@ public class DynamicContainer< T extends Type< T > > extends AbstractImg< T >
 	}
 
 	@Override
-	public DynamicRandomAccess< T > integerRandomAccess()
+	public DynamicRandomAccess< T > randomAccess()
 	{
 		return new DynamicRandomAccess< T >( this );
 	}
@@ -139,9 +139,9 @@ public class DynamicContainer< T extends Type< T > > extends AbstractImg< T >
 		
 		if ( getClass().isInstance( f ) || Array.class.isInstance( f ) )
 		{
-			final IntegerInterval a = ( IntegerInterval )f;
+			final Interval a = ( Interval )f;
 			for ( int d = 0; d < n; ++d )
-				if ( size[ d ] != a.size( d ) )
+				if ( size[ d ] != a.dimension( d ) )
 					return false;
 		}
 		

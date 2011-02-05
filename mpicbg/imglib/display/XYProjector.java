@@ -27,11 +27,11 @@
  */
 package mpicbg.imglib.display;
 
-import mpicbg.imglib.IntegerCursor;
-import mpicbg.imglib.IntegerLocalizable;
-import mpicbg.imglib.IntegerPositionable;
-import mpicbg.imglib.IntegerRandomAccess;
-import mpicbg.imglib.IntegerRandomAccessible;
+import mpicbg.imglib.Cursor;
+import mpicbg.imglib.Localizable;
+import mpicbg.imglib.Positionable;
+import mpicbg.imglib.RandomAccess;
+import mpicbg.imglib.RandomAccessible;
 import mpicbg.imglib.IterableIntegerInterval;
 import mpicbg.imglib.converter.Converter;
 
@@ -40,14 +40,14 @@ import mpicbg.imglib.converter.Converter;
  *
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-public class XYProjector< A, B > implements Projector< A, B >, IntegerPositionable, IntegerLocalizable
+public class XYProjector< A, B > implements Projector< A, B >, Positionable, Localizable
 {
-	final protected IntegerRandomAccessible< A > source;
+	final protected RandomAccessible< A > source;
 	final protected IterableIntegerInterval< B > target;
 	final protected Converter< A, B > converter;
 	final protected long[] position; 
 	
-	public XYProjector( final IntegerRandomAccessible< A > source, IterableIntegerInterval< B > target, final Converter< A, B > converter )
+	public XYProjector( final RandomAccessible< A > source, IterableIntegerInterval< B > target, final Converter< A, B > converter )
 	{
 		this.source = source;
 		this.target = target;
@@ -58,8 +58,8 @@ public class XYProjector< A, B > implements Projector< A, B >, IntegerPositionab
 	@Override
 	public void map()
 	{
-		final IntegerCursor< B > targetCursor = target.cursor();
-		final IntegerRandomAccess< A > sourceRandomAccess = source.integerRandomAccess();
+		final Cursor< B > targetCursor = target.cursor();
+		final RandomAccess< A > sourceRandomAccess = source.integerRandomAccess();
 		sourceRandomAccess.setPosition( position );
 		while ( targetCursor.hasNext() )
 		{
@@ -95,7 +95,7 @@ public class XYProjector< A, B > implements Projector< A, B >, IntegerPositionab
 	}
 
 	@Override
-	public void move( final IntegerLocalizable localizable )
+	public void move( final Localizable localizable )
 	{
 		for ( int d = 0; d < position.length; ++d )
 			position[ d ] += localizable.getLongPosition( d );
@@ -116,7 +116,7 @@ public class XYProjector< A, B > implements Projector< A, B >, IntegerPositionab
 	}
 
 	@Override
-	public void setPosition( final IntegerLocalizable localizable )
+	public void setPosition( final Localizable localizable )
 	{
 		for ( int d = 0; d < position.length; ++d )
 			position[ d ] = localizable.getLongPosition( d );

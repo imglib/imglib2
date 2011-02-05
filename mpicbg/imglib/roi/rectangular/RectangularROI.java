@@ -2,23 +2,23 @@ package mpicbg.imglib.roi.rectangular;
 
 import java.util.Iterator;
 
-import mpicbg.imglib.InjectiveIntegerInterval;
-import mpicbg.imglib.IntegerCursor;
-import mpicbg.imglib.IntegerRandomAccess;
-import mpicbg.imglib.IntegerRandomAccessible;
+import mpicbg.imglib.InjectiveInterval;
+import mpicbg.imglib.Cursor;
+import mpicbg.imglib.RandomAccess;
+import mpicbg.imglib.RandomAccessible;
 import mpicbg.imglib.IterableRealInterval;
 import mpicbg.imglib.RandomAccessibleIntegerInterval;
 import mpicbg.imglib.outofbounds.OutOfBoundsFactory;
 
-public class RectangularROI< T > implements IntegerRandomAccessible< T >, RandomAccessibleIntegerInterval< T, InjectiveIntegerInterval >, InjectiveIntegerInterval
+public class RectangularROI< T > implements RandomAccessible< T >, RandomAccessibleIntegerInterval< T, InjectiveInterval >, InjectiveInterval
 {
 	final int n;
 	
-	final IntegerRandomAccessible< T > source1;
-	final RandomAccessibleIntegerInterval< T, InjectiveIntegerInterval > source2;
-	final InjectiveIntegerInterval source3;
+	final RandomAccessible< T > source1;
+	final RandomAccessibleIntegerInterval< T, InjectiveInterval > source2;
+	final InjectiveInterval source3;
 	
-	public < S extends IntegerRandomAccessible< T > & RandomAccessibleIntegerInterval< T, InjectiveIntegerInterval > & InjectiveIntegerInterval >
+	public < S extends RandomAccessible< T > & RandomAccessibleIntegerInterval< T, InjectiveInterval > & InjectiveInterval >
 		RectangularROI( final long[] offset, final long[] size, final S source )
 	{
 		this.n = source.numDimensions();
@@ -32,14 +32,14 @@ public class RectangularROI< T > implements IntegerRandomAccessible< T >, Random
 	public int numDimensions() { return n; }
 
 	@Override
-	public IntegerCursor<T> cursor()
+	public Cursor<T> cursor()
 	{
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public IntegerCursor<T> localizingCursor()
+	public Cursor<T> localizingCursor()
 	{
 		// TODO Auto-generated method stub
 		return null;
@@ -123,28 +123,28 @@ public class RectangularROI< T > implements IntegerRandomAccessible< T >, Random
 	}
 
 	@Override
-	public void size(long[] size)
+	public void dimensions(long[] size)
 	{
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public long size(int d)
+	public long dimension(int d)
 	{
 		// TODO Auto-generated method stub
 		return 0;
 	}
 
 	@Override
-	public IntegerRandomAccess<T> integerRandomAccess(OutOfBoundsFactory<T, InjectiveIntegerInterval> factory)
+	public RandomAccess<T> integerRandomAccess(OutOfBoundsFactory<T, InjectiveInterval> factory)
 	{
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public IntegerRandomAccess<T> integerRandomAccess()
+	public RandomAccess<T> randomAccess()
 	{
 		// TODO Auto-generated method stub
 		return null;

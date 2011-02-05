@@ -27,8 +27,8 @@
  */
 package mpicbg.imglib.interpolation.linear;
 
-import mpicbg.imglib.IntegerLocalizable;
 import mpicbg.imglib.Localizable;
+import mpicbg.imglib.RealLocalizable;
 import mpicbg.imglib.container.ImgRandomAccess;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.interpolation.Interpolator;
@@ -253,7 +253,7 @@ public class LinearInterpolator2D< T extends NumericType< T > > implements Inter
 	}
 
 	@Override
-	public void moveTo( final Localizable localizable )
+	public void moveTo( final RealLocalizable localizable )
 	{
 		assert localizable.numDimensions() == 2 : getClass().getCanonicalName() + " cannot process other than 3 dimensions.";
 
@@ -307,7 +307,7 @@ public class LinearInterpolator2D< T extends NumericType< T > > implements Inter
 	}
 
 	@Override
-	public void setPosition( final Localizable localizable )
+	public void setPosition( final RealLocalizable localizable )
 	{
 		assert localizable.numDimensions() >= 2 : getClass().getCanonicalName() + " cannot process " + ( localizable.numDimensions() ) + " dimensions.";
 		
@@ -442,7 +442,7 @@ public class LinearInterpolator2D< T extends NumericType< T > > implements Inter
 	}
 
 	@Override
-	public void moveTo( final IntegerLocalizable localizable )
+	public void moveTo( final Localizable localizable )
 	{
 		assert localizable.numDimensions() >= 2 : getClass().getCanonicalName() + " cannot process " + ( localizable.numDimensions() ) + " dimensions.";
 		
@@ -496,7 +496,7 @@ public class LinearInterpolator2D< T extends NumericType< T > > implements Inter
 	}
 
 	@Override
-	public void setPosition( final IntegerLocalizable localizable )
+	public void setPosition( final Localizable localizable )
 	{
 		assert localizable.numDimensions() >= 2 : getClass().getCanonicalName() + " cannot process " + ( localizable.numDimensions() ) + " dimensions.";
 		

@@ -74,14 +74,14 @@ public abstract class AbstractImg< T > implements Img< T >
 	public long numPixels() { return numPixels; }
 	
 	@Override
-	public void size( final long[] s )
+	public void dimensions( final long[] s )
 	{
 		for ( int i = 0; i < n; ++i )
 			s[ i ] = size[ i ];
 	}
 
 	@Override
-	public long size( final int d )
+	public long dimension( final int d )
 	{
 		try { return this.size[ d ]; }
 		catch ( ArrayIndexOutOfBoundsException e ) { return 1; }

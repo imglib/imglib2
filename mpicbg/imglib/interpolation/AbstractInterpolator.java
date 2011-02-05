@@ -28,9 +28,9 @@
 package mpicbg.imglib.interpolation;
 
 import mpicbg.imglib.EuclideanSpace;
-import mpicbg.imglib.IntegerLocalizable;
 import mpicbg.imglib.Localizable;
-import mpicbg.imglib.Positionable;
+import mpicbg.imglib.RealLocalizable;
+import mpicbg.imglib.RealPositionable;
 import mpicbg.imglib.outofbounds.OutOfBoundsFactory;
 
 /**
@@ -39,7 +39,7 @@ import mpicbg.imglib.outofbounds.OutOfBoundsFactory;
  *
  * @author Stephan Preibisch and Stephan Saalfeld
  */
-abstract public class AbstractInterpolator< T, F extends EuclideanSpace, LocalizablePositionable extends Localizable & Positionable > implements Interpolator< T, F >
+abstract public class AbstractInterpolator< T, F extends EuclideanSpace, LocalizablePositionable extends RealLocalizable & RealPositionable > implements Interpolator< T, F >
 {
 	final protected OutOfBoundsFactory< T, F > outOfBoundsStrategyFactory;
 	final protected LocalizablePositionable localizablePositionable;
@@ -147,13 +147,13 @@ abstract public class AbstractInterpolator< T, F extends EuclideanSpace, Localiz
 	}
 
 	@Override
-	public void move( final Localizable localizable )
+	public void move( final RealLocalizable localizable )
 	{
 		localizablePositionable.move( localizable );
 	}
 
 	@Override
-	public void setPosition( final Localizable localizable )
+	public void setPosition( final RealLocalizable localizable )
 	{
 		localizablePositionable.setPosition( localizable );
 	}
@@ -210,7 +210,7 @@ abstract public class AbstractInterpolator< T, F extends EuclideanSpace, Localiz
 	}
 
 	@Override
-	public void move( final IntegerLocalizable localizable )
+	public void move( final Localizable localizable )
 	{
 		localizablePositionable.move( localizable );
 	}
@@ -228,7 +228,7 @@ abstract public class AbstractInterpolator< T, F extends EuclideanSpace, Localiz
 	}
 
 	@Override
-	public void setPosition( final IntegerLocalizable localizable )
+	public void setPosition( final Localizable localizable )
 	{
 		localizablePositionable.setPosition( localizable );
 	}

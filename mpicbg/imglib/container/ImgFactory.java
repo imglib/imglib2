@@ -29,7 +29,7 @@
  */
 package mpicbg.imglib.container;
 
-import mpicbg.imglib.IntegerInterval;
+import mpicbg.imglib.Interval;
 import mpicbg.imglib.type.Type;
 
 public abstract class ImgFactory< T >
@@ -43,10 +43,10 @@ public abstract class ImgFactory< T >
 	 */
 	public abstract Img< T > create( final long[] dim, final T type );
 	
-	public Img< T > create( final IntegerInterval interval, final T type )
+	public Img< T > create( final Interval interval, final T type )
 	{
 		final long[] dim = new long[ interval.numDimensions() ];
-		interval.size( dim );
+		interval.dimensions( dim );
 		
 		return create( dim, type );
 	}

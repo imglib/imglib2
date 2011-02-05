@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2011, Tobias Pietzsch & Stephan Preibisch & Stephan Saalfeld
+ * Copyright (c) 2009--2010, Stephan Preibisch & Stephan Saalfeld
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -24,36 +24,51 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
+ *
+ * @author Stephan Preibisch & Stephan Saalfeld
  */
 package mpicbg.imglib;
 
 
-
 /**
- * An element that can be positioned in n-dimensional real space.
+ * An element that can be positioned in n-dimensional discrete space.
  *
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de> and Stephan Preibisch
  */
-public interface Positionable extends IntegerPositionable
+public interface Positionable extends EuclideanSpace
 {
 	/**
-	 * Move the element in one dimension for some distance.
-	 *  
-	 * @param distance
+	 * Move by 1 in one dimension.
+	 * 
 	 * @param dim
 	 */
-	public void move( float distance, int dim );
-
+	public void fwd( int dim );
+	
+	/**
+	 * Move by -1 in one dimension.
+	 * 
+	 * @param dim
+	 */
+	public void bck( int dim );
+	
 	/**
 	 * Move the element in one dimension for some distance.
 	 *  
 	 * @param distance
 	 * @param dim
 	 */
-	public void move( double distance, int dim );
+	public void move( int distance, int dim );
+	
+	/**
+	 * Move the element in one dimension for some distance.
+	 *  
+	 * @param distance
+	 * @param dim
+	 */
+	public void move( long distance, int dim );
 
 	/**
-	 * Move the element relative to its current location using a
+	 * Move the element relative to its current location using an
 	 * {@link Localizable} as distance vector.
 	 * 
 	 * @param localizable
@@ -61,20 +76,20 @@ public interface Positionable extends IntegerPositionable
 	public void move( Localizable localizable );
 	
 	/**
-	 * Move the element relative to its current location using a float[] as
+	 * Move the element relative to its current location using an int[] as
 	 * distance vector.
 	 * 
 	 * @param position
 	 */
-	public void move( float[] position );
+	public void move( int[] position );
 	
 	/**
-	 * Move the element relative to its current location using a float[] as
+	 * Move the element relative to its current location using a long[] as
 	 * distance vector.
 	 * 
 	 * @param position
 	 */
-	public void move( double[] position );
+	public void move( long[] position );
 	
 	/**
 	 * Place the element at the same location as a given {@link Localizable}
@@ -88,14 +103,14 @@ public interface Positionable extends IntegerPositionable
 	 * 
 	 * @param position
 	 */
-	public void setPosition( float position[] );
+	public void setPosition( int[] position );
 	
 	/**
 	 * Set the position of the element.
 	 * 
 	 * @param position
 	 */
-	public void setPosition( double position[] );
+	public void setPosition( long[] position );
 	
 	/**
 	 * Set the position of the element for one dimension.
@@ -103,7 +118,7 @@ public interface Positionable extends IntegerPositionable
 	 * @param position
 	 * @param dim
 	 */
-	public void setPosition( float position, int dim );		
+	public void setPosition( int position, int dim );		
 	
 	/**
 	 * Set the position of the element for one dimension.
@@ -111,5 +126,5 @@ public interface Positionable extends IntegerPositionable
 	 * @param position
 	 * @param dim
 	 */
-	public void setPosition( double position, int dim );
+	public void setPosition( long position, int dim );
 }

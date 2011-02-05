@@ -225,7 +225,7 @@ public class ContainerTests
 				final int distance = i % 5;
 				direction *= -1;				
 				
-				pos[ i % numDimensions ] += img1.size( i % numDimensions ) * distance * direction;
+				pos[ i % numDimensions ] += img1.dimensions( i % numDimensions ) * distance * direction;
 	
 				if ( i % 7 == 0 )
 					outsideCursor2.setPosition( pos );

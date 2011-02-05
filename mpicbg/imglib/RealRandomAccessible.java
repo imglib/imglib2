@@ -27,24 +27,22 @@
  */
 package mpicbg.imglib;
 
-import mpicbg.imglib.outofbounds.OutOfBounds;
-import mpicbg.imglib.outofbounds.OutOfBoundsFactory;
 
 /**
- * <p><em>f</em>:{x&isin;R<sup><em>n</em></sup>|[min,max]&rarr;T}</em></p>
+ * <p><em>f:R<sup>n</sup>&rarr;T</em></p>
  * 
- * <p>A function over an n-dimensional real interval that can create a
- * random access {@link Sampler} that generates values beyond boundaries
- * through an {@link OutOfBounds}.</p>
+ * <p>A function over real space that can create a random access
+ * {@link Sampler}.</p>
+ * 
  *
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-public interface RandomAccessibleRealInterval< T, F > extends RealInterval
+public interface RealRandomAccessible< T > extends EuclideanSpace
 {
 	/**
 	 * Create a random access sampler for real coordinates.
 	 * 
 	 * @return random access sampler
 	 */
-	public RandomAccess< T > randomAccess( final OutOfBoundsFactory< T, F > factory );
+	public RealRandomAccess< T > realRandomAccess();
 }

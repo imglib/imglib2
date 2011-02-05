@@ -29,7 +29,7 @@
  */
 package mpicbg.imglib.sampler.special;
 
-import mpicbg.imglib.IntegerLocalizable;
+import mpicbg.imglib.Localizable;
 import mpicbg.imglib.container.AbstractImgCursor;
 import mpicbg.imglib.container.Img;
 import mpicbg.imglib.container.ImgRandomAccess;
@@ -46,13 +46,13 @@ public class LocalNeighborhoodCursor<T extends Type<T>> extends AbstractImgCurso
 	 */
 	final ArrayLocalizingCursor<FakeType> neigborhoodCursor;
 
-	final IntegerLocalizable localizable;
+	final Localizable localizable;
 	final ImgRandomAccess< T > cursor;
 	
 	final int[] tmp;
 	final int centralPositionIndex;
 	
-	LocalNeighborhoodCursor( final IntegerLocalizable localizable, final Image< T > image, final RasterOutOfBoundsFactory<T> outofboundsFactory )
+	LocalNeighborhoodCursor( final Localizable localizable, final Image< T > image, final RasterOutOfBoundsFactory<T> outofboundsFactory )
 	{
 		super( image.getContainer(), image );
 		

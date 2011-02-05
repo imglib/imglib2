@@ -27,8 +27,8 @@
  */
 package mpicbg.imglib.iterator;
 
-import mpicbg.imglib.IntegerInterval;
-import mpicbg.imglib.IntegerLocalizable;
+import mpicbg.imglib.Interval;
+import mpicbg.imglib.Localizable;
 import mpicbg.imglib.Iterator;
 
 /**
@@ -37,7 +37,7 @@ import mpicbg.imglib.Iterator;
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  * @version 0.1a
  */
-public class IntegerIntervalIterator implements Iterator, IntegerLocalizable
+public class IntegerIntervalIterator implements Iterator, Localizable
 {
 	final protected long[] size;
 	final protected long[] min;
@@ -47,10 +47,10 @@ public class IntegerIntervalIterator implements Iterator, IntegerLocalizable
 	final protected long lastIndex;
 	protected long index = -1;
 	
-	final static protected long[] size( final IntegerInterval interval )
+	final static protected long[] size( final Interval interval )
 	{
 		final long size[] = new long[ interval.numDimensions() ];
-		interval.size( size );
+		interval.dimensions( size );
 		return size;
 	}
 	
@@ -81,7 +81,7 @@ public class IntegerIntervalIterator implements Iterator, IntegerLocalizable
 		lastIndex = k * sizem - 1;
 	}
 
-	public IntegerIntervalIterator( final IntegerInterval interval )
+	public IntegerIntervalIterator( final Interval interval )
 	{
 		n = interval.numDimensions();
 		final int m = n - 1;
@@ -108,7 +108,7 @@ public class IntegerIntervalIterator implements Iterator, IntegerLocalizable
 		lastIndex = k * sizem - 1;
 	}
 	
-	static public IntegerIntervalIterator create( final IntegerInterval interval )
+	static public IntegerIntervalIterator create( final Interval interval )
 	{
 		final int n = interval.numDimensions();
 		for ( int d = 0; d < n; ++d )

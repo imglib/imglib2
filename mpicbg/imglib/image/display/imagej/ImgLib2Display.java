@@ -37,9 +37,9 @@ public class ImgLib2Display
 		final int n = container.numDimensions();
 		
 		final int[] size = new int[ 3 ];		
-		size[ 0 ] = (int) container.size( dim[ 0 ] );
-		size[ 1 ] = (int) container.size( dim[ 1 ] );
-		size[ 2 ] = (int) container.size( dim[ 2 ] );
+		size[ 0 ] = (int) container.dimension( dim[ 0 ] );
+		size[ 1 ] = (int) container.dimension( dim[ 1 ] );
+		size[ 2 ] = (int) container.dimension( dim[ 2 ] );
         
         final ImageStack stack = new ImageStack( size[ 0 ], size[ 1 ] );
         
@@ -68,8 +68,8 @@ public class ImgLib2Display
     public static <T extends Type<T>> float[] extractSliceFloat( final Img<T> container, final Converter<T, FloatType> converter,
     		final int dimX, final int dimY, final int[] dimensionPositions )
     {
-		final int sizeX = (int) container.size( dimX );
-		final int sizeY = (int) container.size( dimY );
+		final int sizeX = (int) container.dimension( dimX );
+		final int sizeY = (int) container.dimension( dimY );
     	
     	final OrthoSliceIterator< T > cursor = new OrthoSliceIterator<T>( container, dimX, dimY, dimensionPositions ); 
 		final FloatType out = new FloatType();

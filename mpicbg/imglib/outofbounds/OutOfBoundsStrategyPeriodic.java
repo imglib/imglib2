@@ -27,7 +27,7 @@
  */
 package mpicbg.imglib.outofbounds;
 
-import mpicbg.imglib.IntegerLocalizable;
+import mpicbg.imglib.Localizable;
 import mpicbg.imglib.container.ImgRandomAccess;
 import mpicbg.imglib.type.Type;
 import mpicbg.imglib.util.Util;
@@ -73,7 +73,7 @@ public class OutOfBoundsStrategyPeriodic< T extends Type< T > > implements RealO
 		this.outOfBoundsPositionable = outOfBoundsPositionable;
 		n = source.numDimensions();
 		size = new long[ n ];
-		source.getImg().size( size );
+		source.getImg().dimensions( size );
 		position = new long[ n ];
 		
 		dimIsOutOfBounds = new boolean[ n ];
@@ -246,7 +246,7 @@ public class OutOfBoundsStrategyPeriodic< T extends Type< T > > implements RealO
 	}
 	
 	@Override
-	public void moveTo( final IntegerLocalizable localizable )
+	public void moveTo( final Localizable localizable )
 	{
 		for ( int d = 0; d < n; ++d )
 			move( localizable.getIntPosition( d ) - position[ d ], d );
@@ -273,7 +273,7 @@ public class OutOfBoundsStrategyPeriodic< T extends Type< T > > implements RealO
 	}
 	
 	@Override
-	public void setPosition( final IntegerLocalizable localizable )
+	public void setPosition( final Localizable localizable )
 	{
 		for ( int d = 0; d < n; ++d )
 			setPosition( localizable.getIntPosition( d ), d );

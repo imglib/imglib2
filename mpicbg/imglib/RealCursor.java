@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2010, Stephan Saalfeld
+ * Copyright (c) 2011, Tobias Pietzsch & Stephan Preibisch & Stephan Saalfeld
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -27,22 +27,10 @@
  */
 package mpicbg.imglib;
 
-
 /**
- * <p><em>f:Z<sup>n</sup>&rarr;T</em></p>
- * 
- * <p>A function over integer space that can create a random access
- * {@link Sampler}.</p>
  * 
  *
- * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
+ * @author Tobias Pietzsch & Stephan Preibisch & Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-public interface IntegerRandomAccessible< T > extends EuclideanSpace
-{
-	/**
-	 * Create a random access sampler for integer coordinates.
-	 * 
-	 * @return random access sampler
-	 */
-	public IntegerRandomAccess< T > integerRandomAccess();
-}
+public interface RealCursor< T > extends RealLocalizable, Sampler< T >, Iterator, java.util.Iterator< T >
+{}

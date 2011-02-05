@@ -27,8 +27,8 @@
  */
 package mpicbg.imglib.iterator;
 
-import mpicbg.imglib.IntegerInterval;
-import mpicbg.imglib.IntegerLocalizable;
+import mpicbg.imglib.Interval;
+import mpicbg.imglib.Localizable;
 import mpicbg.imglib.Iterator;
 import mpicbg.imglib.container.Img;
 import mpicbg.imglib.container.ImgRandomAccess;
@@ -77,7 +77,7 @@ final public class ZeroMinIntegerIntervalIterator extends IntegerIntervalIterato
 		super( new long[ dimensions.length ], max( dimensions ) );
 	}
 
-	public ZeroMinIntegerIntervalIterator( final IntegerInterval interval )
+	public ZeroMinIntegerIntervalIterator( final Interval interval )
 	{
 		this( size( interval ) );
 	}

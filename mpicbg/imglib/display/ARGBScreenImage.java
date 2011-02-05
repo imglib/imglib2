@@ -32,7 +32,7 @@ import java.awt.Toolkit;
 import java.awt.image.MemoryImageSource;
 import java.util.Iterator;
 
-import mpicbg.imglib.IntegerCursor;
+import mpicbg.imglib.Cursor;
 import mpicbg.imglib.IterableIntegerInterval;
 import mpicbg.imglib.IterableRealInterval;
 import mpicbg.imglib.container.array.Array;
@@ -70,13 +70,13 @@ public class ARGBScreenImage implements ScreenImage, IterableIntegerInterval< AR
 	}
 
 	@Override
-	public IntegerCursor< ARGBType > cursor()
+	public Cursor< ARGBType > cursor()
 	{
 		return argbArray.cursor();
 	}
 
 	@Override
-	public IntegerCursor< ARGBType > localizingCursor()
+	public Cursor< ARGBType > localizingCursor()
 	{
 		return argbArray.localizingCursor();
 	}
@@ -154,14 +154,14 @@ public class ARGBScreenImage implements ScreenImage, IterableIntegerInterval< AR
 	}
 
 	@Override
-	public void size( final long[] size )
+	public void dimensions( final long[] size )
 	{
-		argbArray.size( size );
+		argbArray.dimensions( size );
 	}
 
 	@Override
-	public long size( final int d )
+	public long dimension( final int d )
 	{
-		return argbArray.size( d );
+		return argbArray.dimension( d );
 	}
 }

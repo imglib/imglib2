@@ -27,14 +27,14 @@
  */
 package mpicbg.imglib.outofbounds;
 
-import mpicbg.imglib.IntegerRandomAccess;
+import mpicbg.imglib.RandomAccess;
 
 /**
  * 
  *
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-public interface OutOfBounds< T > extends IntegerRandomAccess< T >
+public interface OutOfBounds< T > extends RandomAccess< T >
 {
 	public boolean isOutOfBounds();
 }

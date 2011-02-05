@@ -363,11 +363,11 @@ public class Image< T extends Type< T > > implements
 	public void size( final int[] dimensions )
 	{
 		for (int d = 0; d < getContainer().numDimensions(); d++)
-			dimensions[d] = getContainer().size( d );
+			dimensions[d] = getContainer().dimension( d );
 	}
 
 	@Override
-	public long size( final int dim ) { return getContainer().size( dim ); }
+	public long dimension( final int dim ) { return getContainer().dimension( dim ); }
 	
 	/**
 	 * Clones this {@link Image}, i.e. creates this {@link Image} containing the same content.

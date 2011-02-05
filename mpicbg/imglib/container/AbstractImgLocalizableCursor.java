@@ -27,8 +27,8 @@
  */
 package mpicbg.imglib.container;
 
-import mpicbg.imglib.IntegerInterval;
-import mpicbg.imglib.IntegerLocalizable;
+import mpicbg.imglib.Interval;
+import mpicbg.imglib.Localizable;
 import mpicbg.imglib.type.Type;
 import mpicbg.imglib.util.Util;
 
@@ -38,18 +38,18 @@ import mpicbg.imglib.util.Util;
  *
  * @author Stephan Preibisch and Stephan Saalfeld
  */
-public abstract class AbstractImgLocalizableCursor< T extends Type< T > > extends AbstractImgSampler< T > implements IntegerLocalizable
+public abstract class AbstractImgLocalizableCursor< T extends Type< T > > extends AbstractImgSampler< T > implements Localizable
 {
 	final protected long[] position;
 	final protected long[] size;
 	
-	public AbstractImgLocalizableCursor( final IntegerInterval f )
+	public AbstractImgLocalizableCursor( final Interval f )
 	{
 		super( f.numDimensions() );
 		
 		position = new long[ n ];
 		size = new long[ n ];
-		f.size( size );
+		f.dimensions( size );
 	}
 	
 	@Override

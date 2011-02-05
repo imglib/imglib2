@@ -29,7 +29,7 @@ package mpicbg.imglib.container.dynamic;
 
 import java.util.ArrayList;
 
-import mpicbg.imglib.IntegerLocalizable;
+import mpicbg.imglib.Localizable;
 import mpicbg.imglib.container.AbstractImgRandomAccess;
 import mpicbg.imglib.type.Type;
 import mpicbg.imglib.util.Util;
@@ -102,14 +102,14 @@ public class DynamicRandomAccess< T extends Type< T > > extends AbstractImgRando
 	}
 
 	@Override
-	public void move( final IntegerLocalizable localizable )
+	public void move( final Localizable localizable )
 	{
 		localizable.localize( tmp );
 		move( tmp );
 	}
 	
 	@Override
-	public void setPosition( final IntegerLocalizable localizable )
+	public void setPosition( final Localizable localizable )
 	{
 		localizable.localize( tmp );
 		setPosition( tmp );

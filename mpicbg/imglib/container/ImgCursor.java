@@ -29,8 +29,8 @@
  */
 package mpicbg.imglib.container;
 
-import mpicbg.imglib.IntegerCursor;
-import mpicbg.imglib.IntegerLocalizable;
+import mpicbg.imglib.Cursor;
+import mpicbg.imglib.Localizable;
 import mpicbg.imglib.container.array.Array;
 import mpicbg.imglib.container.cell.CellContainer;
 import mpicbg.imglib.image.Image;
@@ -83,7 +83,7 @@ import mpicbg.imglib.type.Type;
  * will visit the <em>same pixel positions</em>.
  * <p>
  * If the two {@link Img Containers} are not the same, then
- * {@link IntegerLocalizable} and {@link ImgRandomAccess} have to be
+ * {@link Localizable} and {@link ImgRandomAccess} have to be
  * used:
  * <pre>
  * 		else {
@@ -110,5 +110,5 @@ import mpicbg.imglib.type.Type;
  *
  * @param <T> - the {@link Type} this {@link ImgCursor} works on
  */
-public interface ImgCursor< T > extends ImgSampler< T >, IntegerCursor< T >
+public interface ImgCursor< T > extends ImgSampler< T >, Cursor< T >
 {}

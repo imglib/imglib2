@@ -27,7 +27,7 @@
  */
 package mpicbg.imglib.sampler.special;
 
-import mpicbg.imglib.IntegerLocalizable;
+import mpicbg.imglib.Localizable;
 import mpicbg.imglib.container.ImgSampler;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.outofbounds.RasterOutOfBoundsFactory;
@@ -42,7 +42,7 @@ import mpicbg.imglib.type.Type;
 public class LocalNeighborhoodCursorFactory 
 {
 	public static < T extends Type< T > > LocalNeighborhoodCursor<T> createLocalNeighborhoodCursor(
-			final IntegerLocalizable localizable,
+			final Localizable localizable,
 			final Image< T > image,
 			final RasterOutOfBoundsFactory< T > outsideFactory )
 	{
@@ -56,17 +56,17 @@ public class LocalNeighborhoodCursorFactory
 		}
 	}
 
-	public static < T extends Type< T > >LocalNeighborhoodCursor<T> createLocalNeighborhoodCursor( final IntegerLocalizable localizable, final Image< T > image )
+	public static < T extends Type< T > >LocalNeighborhoodCursor<T> createLocalNeighborhoodCursor( final Localizable localizable, final Image< T > image )
 	{
 		return createLocalNeighborhoodCursor( localizable, image, null ); 
 	}
 	
-	public static < T extends Type< T >, S extends IntegerLocalizable & ImgSampler< T > >LocalNeighborhoodCursor< T > createLocalNeighborhoodCursor( final S cursor, final RasterOutOfBoundsFactory< T > outsideFactory )
+	public static < T extends Type< T >, S extends Localizable & ImgSampler< T > >LocalNeighborhoodCursor< T > createLocalNeighborhoodCursor( final S cursor, final RasterOutOfBoundsFactory< T > outsideFactory )
 	{
 		return createLocalNeighborhoodCursor( cursor, cursor.getImage(), outsideFactory ); 
 	}
 	
-	public static < T extends Type< T >, S extends IntegerLocalizable & ImgSampler< T > >LocalNeighborhoodCursor< T > createLocalNeighborhoodCursor( final S cursor )
+	public static < T extends Type< T >, S extends Localizable & ImgSampler< T > >LocalNeighborhoodCursor< T > createLocalNeighborhoodCursor( final S cursor )
 	{
 		return createLocalNeighborhoodCursor( cursor, cursor.getImage(), null ); 
 	}

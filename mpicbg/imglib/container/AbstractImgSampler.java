@@ -77,15 +77,15 @@ public abstract class AbstractImgSampler< T > implements ImgSampler< T >
 	}
 
 	@Override
-	public void size( long[] size )
+	public void dimensions( long[] size )
 	{
-		getImg().size( size );
+		getImg().dimensions( size );
 	}
 
 	@Override
-	public long size( int d )
+	public long dimension( int d )
 	{
-		return getImg().size( d );
+		return getImg().dimension( d );
 	}
 
 	@Override

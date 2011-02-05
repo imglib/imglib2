@@ -27,8 +27,8 @@
  */
 package mpicbg.imglib.container;
 
-import mpicbg.imglib.IntegerInterval;
-import mpicbg.imglib.IntegerLocalizable;
+import mpicbg.imglib.Interval;
+import mpicbg.imglib.Localizable;
 import mpicbg.imglib.type.Type;
 
 /**
@@ -42,7 +42,7 @@ public abstract class AbstractImgRandomAccess< T extends Type< T > > extends Abs
 	/* internal register for position calculation */
 	final protected int[] tmp;
 
-	public AbstractImgRandomAccess( final IntegerInterval f )
+	public AbstractImgRandomAccess( final Interval f )
 	{
 		super( f );
 
@@ -98,7 +98,7 @@ public abstract class AbstractImgRandomAccess< T extends Type< T > > extends Abs
 	}
 
 	@Override
-	public void move( final IntegerLocalizable localizable )
+	public void move( final Localizable localizable )
 	{
 		for ( int d = 0; d < n; ++d )
 		{
@@ -110,7 +110,7 @@ public abstract class AbstractImgRandomAccess< T extends Type< T > > extends Abs
 	}
 
 	@Override
-	public void setPosition( final IntegerLocalizable localizable )
+	public void setPosition( final Localizable localizable )
 	{
 		localizable.localize( tmp );
 		setPosition( tmp );
