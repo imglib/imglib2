@@ -29,14 +29,12 @@
  */
 package mpicbg.imglib;
 
-import mpicbg.imglib.image.Image;
-
 /** 
  * The {@link Iterator} interface provides basic functionality for
- * iterating over an {@link Image}.  {@link Iterator Iterators} are expected
- * to run over all pixels of an image in an optimal order.
+ * iterating over a set of elements.  The iteration order depends on
+ * the {@link Iterator} implementation.
  *  
- * @author Stephan Preibisch & Stephan Saalfeld
+ * @author Stephan Preibisch and Stephan Saalfeld
  */
 public interface Iterator
 {
