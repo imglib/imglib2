@@ -33,7 +33,6 @@ import mpicbg.imglib.Cursor;
 import mpicbg.imglib.Localizable;
 import mpicbg.imglib.container.array.Array;
 import mpicbg.imglib.container.cell.CellContainer;
-import mpicbg.imglib.image.Image;
 import mpicbg.imglib.type.Type;
 
 /**
