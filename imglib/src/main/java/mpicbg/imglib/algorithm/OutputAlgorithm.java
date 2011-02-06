@@ -16,10 +16,8 @@
  */
 package mpicbg.imglib.algorithm;
 
-import mpicbg.imglib.container.Img;
-import mpicbg.imglib.type.Type;
 
-public interface OutputAlgorithm<T extends Type<T>> extends Algorithm
+public interface OutputAlgorithm< F > extends Algorithm
 {
-	public Img<T> getResult();
+	public F getResult();
 }

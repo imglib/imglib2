@@ -27,9 +27,9 @@
  */
 package mpicbg.imglib.outofbounds;
 
+import mpicbg.imglib.Interval;
+import mpicbg.imglib.RandomAccessible;
 import mpicbg.imglib.RandomAccessibleInterval;
-import mpicbg.imglib.container.ImgRandomAccess;
-import mpicbg.imglib.type.Type;
 
 /**
  * Create appropriate strategies that virtually extend a {@link RandomAccessibleInterval}
@@ -37,12 +37,13 @@ import mpicbg.imglib.type.Type;
  *
  * @author Stephan Preibisch and Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-public class OutOfBoundsStrategyPeriodicFactory< T extends Type< T > > extends RasterOutOfBoundsFactory< T >
+public class OutOfBoundsStrategyPeriodicFactory< T, F extends Interval & RandomAccessible< T > > implements OutOfBoundsFactory< T, F >
 {
 	@Override
-	public OutOfBoundsStrategyPeriodic< T > create( final ImgRandomAccess< T > p )
+	public OutOfBoundsStrategyPeriodic< T > create( final F f )
 	{
-		return new OutOfBoundsStrategyPeriodic< T >( p );
+		return new OutOfBoundsStrategyPeriodic< T >( f );
 	}
 
+	
 }
