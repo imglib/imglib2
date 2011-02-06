@@ -39,7 +39,7 @@ import mpicbg.imglib.outofbounds.OutOfBoundsFactory;
  *
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-public interface Img<	T >
+public interface Img< T >
 	extends
 		RandomAccessible< T >,
 		RandomAccessibleInterval< T, Img< T > >,
@@ -69,6 +69,4 @@ public interface Img<	T >
 	 * @return a factory for Imgs of the same kind as this one. 
 	 */
 	public ImgFactory< T > factory();
-	
-	public long numPixels();
 }
