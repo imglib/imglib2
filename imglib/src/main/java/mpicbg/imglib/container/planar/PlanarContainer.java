@@ -29,10 +29,14 @@ package mpicbg.imglib.container.planar;
 
 import java.util.ArrayList;
 
+import mpicbg.imglib.Interval;
+import mpicbg.imglib.IterableRealInterval;
 import mpicbg.imglib.container.AbstractNativeContainer;
 import mpicbg.imglib.container.basictypecontainer.DataAccess;
 import mpicbg.imglib.container.basictypecontainer.PlanarAccess;
 import mpicbg.imglib.container.basictypecontainer.array.ArrayDataAccess;
+import mpicbg.imglib.container.list.ListContainer;
+import mpicbg.imglib.outofbounds.OutOfBoundsFactory;
 import mpicbg.imglib.type.NativeType;
 import mpicbg.imglib.type.Type;
 
@@ -51,7 +55,7 @@ import mpicbg.imglib.type.Type;
  *
  * @author Jan Funke, Stephan Preibisch, Stephan Saalfeld, Johannes Schindelin
  */
-public class PlanarContainer< T extends NativeType< T >, A extends DataAccess > extends AbstractNativeContainer< T, A > implements PlanarAccess< A >
+public class PlanarContainer< T extends NativeType< T >, A extends ArrayDataAccess<A> > extends AbstractNativeContainer< T, A > implements PlanarAccess< A >
 {
 	final protected int slices;
 	final int[] dim;
@@ -82,13 +86,13 @@ public class PlanarContainer< T extends NativeType< T >, A extends DataAccess > 
 		mirror = new ArrayList< A >( slices );
 
 		for ( int i = 0; i < slices; ++i )
-			mirror.add( creator == null ? null : creator.createArray( dimension( 0 ) * dimension( 1 ) * entitiesPerPixel ) );
+			mirror.add( creator == null ? null : creator.createArray( this.dim[ 0 ] * this.dim[ 1 ] * entitiesPerPixel ) );
 	}
 
 	@Override
 	public A update( final Object c )
 	{
-		return mirror.get( c.getStorageIndex() );
+		return mirror.get( ((PlanarLocation)c).getCurrentPlane() );
 	}
 
 	/**
@@ -110,43 +114,47 @@ public class PlanarContainer< T extends NativeType< T >, A extends DataAccess > 
 	}
 
 	@Override
-	public PlanarCursor<T> createCursor( final Image<T> image )
+	public PlanarCursor<T> cursor()
 	{
 		if ( numDimensions == 2 )
 			return new PlanarCursor2D< T >( this, image, linkedType.duplicateTypeOnSameDirectAccessContainer() );
 		else
-			return new PlanarCursor< T >( this, image, linkedType.duplicateTypeOnSameDirectAccessContainer() );
+			return new PlanarCursor< T >( this );
 	}
 
 	@Override
-	public PlanarLocalizableCursor<T> createLocalizableCursor( final Image<T> image )
+	public PlanarLocalizingCursor<T> localizingCursor()
 	{
-		return new PlanarLocalizableCursor<T>( this, image, linkedType.duplicateTypeOnSameDirectAccessContainer() );
+		return new PlanarLocalizingCursor<T>( this );
 	}
 
 	@Override
-	public PlanarLocalizablePlaneCursor<T> createLocalizablePlaneCursor( final Image<T> image )
+	public PlanarLocalizableByDimCursor<T> randomAccess()
 	{
-		return new PlanarLocalizablePlaneCursor<T>( this, image, linkedType.duplicateTypeOnSameDirectAccessContainer() );
+		return new PlanarLocalizableByDimCursor<T>( this) );
 	}
 
 	@Override
-	public PlanarLocalizableByDimCursor<T> createLocalizableByDimCursor( final Image<T> image )
+	public PlanarLocalizableByDimOutOfBoundsCursor<T> randomAccess( OutOfBoundsFactory<T,Img<T>> outOfBoundsFactory )
 	{
-		return new PlanarLocalizableByDimCursor<T>( this, image, linkedType.duplicateTypeOnSameDirectAccessContainer() );
+		return new PlanarLocalizableByDimOutOfBoundsCursor<T>( this, outOfBoundsFactory );
 	}
 
 	@Override
-	public PlanarLocalizableByDimOutOfBoundsCursor<T> createLocalizableByDimCursor( final Image<T> image, OutOfBoundsStrategyFactory<T> outOfBoundsFactory )
+	public boolean equalIterationOrder( final IterableRealInterval< ? > f )
 	{
-		return new PlanarLocalizableByDimOutOfBoundsCursor<T>( this, image, linkedType.duplicateTypeOnSameDirectAccessContainer(), outOfBoundsFactory );
-	}
-
-	@Override
-	public boolean compareStorageContainerCompatibility( final Container<?> container )
-	{
-		return compareStorageContainerDimensions( container ) &&
-		  getFactory().getClass().isInstance( container.getFactory() );
+		if ( f.numDimensions() != this.numDimensions() )
+			return false;
+		
+		if ( getClass().isInstance( f ) )
+		{
+			final Interval a = ( Interval )f;
+			for ( int d = 0; d < n; ++d )
+				if ( size[ d ] != a.dimension( d ) )
+					return false;
+		}
+		
+		return true;
 	}
 
 	@Override

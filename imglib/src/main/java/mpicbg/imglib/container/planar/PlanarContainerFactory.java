@@ -38,7 +38,6 @@ import mpicbg.imglib.container.basictypecontainer.array.IntArray;
 import mpicbg.imglib.container.basictypecontainer.array.LongArray;
 import mpicbg.imglib.container.basictypecontainer.array.ShortArray;
 import mpicbg.imglib.type.NativeType;
-import mpicbg.imglib.type.Type;
 
 /**
  * Factory that creates an appropriate {@link PlanarContainer}.
@@ -48,50 +47,50 @@ import mpicbg.imglib.type.Type;
 public class PlanarContainerFactory< T extends NativeType<T> > extends NativeContainerFactory< T >
 {
 	@Override
-	public NativeContainer< T, BitArray > createBitInstance( final final T type, long[] dimensions, final int entitiesPerPixel )
+	public NativeContainer< T, BitArray > createBitInstance( final T type, long[] dimensions, final int entitiesPerPixel )
 	{
-		return new PlanarContainer< T, BitArray >( this, new BitArray( 1 ), dimensions, entitiesPerPixel );
+		return new PlanarContainer< T, BitArray >( new BitArray( 1 ), dimensions, entitiesPerPixel );
 	}
 
 	@Override
-	public NativeContainer< T, ByteArray > createByteInstance( final final T type, long[] dimensions, final int entitiesPerPixel )
+	public NativeContainer< T, ByteArray > createByteInstance( final T type, long[] dimensions, final int entitiesPerPixel )
 	{
-		return new PlanarContainer< T , ByteArray >( this, new ByteArray( 1 ), dimensions, entitiesPerPixel );
+		return new PlanarContainer< T , ByteArray >( new ByteArray( 1 ), dimensions, entitiesPerPixel );
 	}
 
 	@Override
 	public NativeContainer< T, CharArray > createCharInstance( final T type, long[] dimensions, final int entitiesPerPixel )
 	{
-		return new PlanarContainer< T, CharArray >( this, new CharArray( 1 ), dimensions, entitiesPerPixel );
+		return new PlanarContainer< T, CharArray >( new CharArray( 1 ), dimensions, entitiesPerPixel );
 	}
 
 	@Override
 	public NativeContainer< T, DoubleArray > createDoubleInstance( final T type, long[] dimensions, final int entitiesPerPixel )
 	{
-		return new PlanarContainer< T, DoubleArray >( this, new DoubleArray( 1 ), dimensions, entitiesPerPixel );
+		return new PlanarContainer< T, DoubleArray >( new DoubleArray( 1 ), dimensions, entitiesPerPixel );
 	}
 
 	@Override
 	public NativeContainer< T, FloatArray > createFloatInstance( final T type, long[] dimensions, final int entitiesPerPixel )
 	{
-		return new PlanarContainer< T, FloatArray >( this, new FloatArray( 1 ), dimensions, entitiesPerPixel );
+		return new PlanarContainer< T, FloatArray >( new FloatArray( 1 ), dimensions, entitiesPerPixel );
 	}
 
 	@Override
 	public NativeContainer< T, IntArray > createIntInstance( final T type, long[] dimensions, final int entitiesPerPixel )
 	{
-		return new PlanarContainer< T, IntArray >( this, new IntArray( 1 ), dimensions, entitiesPerPixel );
+		return new PlanarContainer< T, IntArray >( new IntArray( 1 ), dimensions, entitiesPerPixel );
 	}
 
 	@Override
 	public NativeContainer< T, LongArray > createLongInstance( final T type, long[] dimensions, final int entitiesPerPixel )
 	{
-		return new PlanarContainer< T, LongArray >( this, new LongArray( 1 ), dimensions, entitiesPerPixel );
+		return new PlanarContainer< T, LongArray >( new LongArray( 1 ), dimensions, entitiesPerPixel );
 	}
 
 	@Override
 	public NativeContainer< T, ShortArray > createShortInstance( final T type, long[] dimensions, final int entitiesPerPixel )
 	{
-		return new PlanarContainer< T, ShortArray >( this, new ShortArray( 1 ), dimensions, entitiesPerPixel );
+		return new PlanarContainer< T, ShortArray >( new ShortArray( 1 ), dimensions, entitiesPerPixel );
 	}
 }

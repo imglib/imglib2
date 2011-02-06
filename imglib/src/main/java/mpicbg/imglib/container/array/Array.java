@@ -84,31 +84,18 @@ public class Array< T extends NativeType< T >, A extends DataAccess > extends Ab
 	}
 
 	@Override
-	public ArrayCursor< T > cursor()
-	{
-		ArrayCursor< T > c = new ArrayCursor< T >( this );
-		return c;
-	}
+	public ArrayCursor< T > cursor() { return new ArrayCursor< T >( this ); }
 
 	@Override
-	public ArrayLocalizingCursor< T > localizingCursor()
-	{
-		ArrayLocalizingCursor< T > c = new ArrayLocalizingCursor< T >( this );
-		return c;
-	}
+	public ArrayLocalizingCursor< T > localizingCursor() { return new ArrayLocalizingCursor< T >( this ); }
 
 	@Override
-	public ArrayRandomAccess< T > randomAccess()
-	{
-		ArrayRandomAccess< T > c = new ArrayRandomAccess< T >( this );
-		return c;
-	}
+	public ArrayRandomAccess< T > randomAccess() { return new ArrayRandomAccess< T >( this ); }
 
 	@Override
-	public ArrayOutOfBoundsRandomAccess<T> integerRandomAccess(OutOfBoundsFactory<T, Img<T>> factory)
+	public ArrayOutOfBoundsRandomAccess<T> randomAccess( final OutOfBoundsFactory<T, Img<T>> factory )
 	{
-		ArrayOutOfBoundsRandomAccess< T > c = new ArrayOutOfBoundsRandomAccess< T >( this, factory );
-		return c;
+		return new ArrayOutOfBoundsRandomAccess< T >( this, factory );
 	}
 
 	@Override
@@ -129,8 +116,5 @@ public class Array< T extends NativeType< T >, A extends DataAccess > extends Ab
 	}
 
 	@Override
-	public ArrayContainerFactory<T> factory()
-	{
-		return new ArrayContainerFactory<T>();
-	}
+	public ArrayContainerFactory<T> factory() { return new ArrayContainerFactory<T>(); }
 }

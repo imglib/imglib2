@@ -37,7 +37,7 @@ import mpicbg.imglib.util.IntervalIndexer;
  *
  * @author Stephan Preibisch and Stephan Saalfeld
  */
-public class ArrayLocalizingCursor< T extends NativeType< T >> extends AbstractImgLocalizingCursor< T >
+public class ArrayLocalizingCursor< T extends NativeType< T > > extends AbstractImgLocalizingCursor< T >
 {
 	protected final T type;
 

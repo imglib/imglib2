@@ -42,7 +42,7 @@ final public class CellContainer<
 	}
 
 	@Override
-	public ImgRandomAccess<T> integerRandomAccess(
+	public ImgRandomAccess<T> randomAccess(
 			OutOfBoundsFactory<T, Img<T>> factory )
 	{
 		// TODO Auto-generated method stub

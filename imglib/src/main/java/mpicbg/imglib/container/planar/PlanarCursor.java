@@ -25,12 +25,11 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-package mpicbg.imglib.cursor.planar;
+package mpicbg.imglib.container.planar;
 
-import mpicbg.imglib.container.planar.PlanarContainer;
-import mpicbg.imglib.cursor.CursorImpl;
-import mpicbg.imglib.image.Image;
-import mpicbg.imglib.type.Type;
+import mpicbg.imglib.container.AbstractImgCursor;
+import mpicbg.imglib.container.Img;
+import mpicbg.imglib.type.NativeType;
 
 /**
  * Basic Iterator for {@link PlanarContainer PlanarContainers}
@@ -38,32 +37,29 @@ import mpicbg.imglib.type.Type;
  *
  * @author Stephan Preibisch and Stephan Saalfeld
  */
-public class PlanarCursor< T extends Type< T >> extends CursorImpl< T >
+public class PlanarCursor< T extends NativeType< T > > extends AbstractImgCursor< T > implements PlanarLocation
 {
 	protected final T type;
-
 	protected final PlanarContainer< T, ? > container;
 
 	protected final int lastIndex, lastSliceIndex;
-
 	protected int sliceIndex;
-	
 	protected boolean hasNext;
 
-	public PlanarCursor( final PlanarContainer< T, ? > container, final Image< T > image, final T type )
+	public PlanarCursor( final PlanarContainer< T, ? > container )
 	{
-		super( container, image );
+		super( container.numDimensions() );
 
-		this.type = type;
 		this.container = container;
-		lastIndex = container.getDimension( 0 ) * container.getDimension( 1 ) - 1;
+		this.type = container.createLinkedType();
+		lastIndex = container.dim[ 0 ] * container.dim[ 1 ] - 1;
 		lastSliceIndex = container.getSlices() - 1;
 
 		reset();
 	}
 
 	@Override
-	public T getType() { return type; }
+	public T get() { return type; }
 
 	/**
 	 * Note: This test is fragile in a sense that it returns true for elements
@@ -72,10 +68,7 @@ public class PlanarCursor< T extends Type< T >> extends CursorImpl< T >
 	 * @return false for the last element 
 	 */
 	@Override
-	public boolean hasNext()
-	{
-		return hasNext;
-	}
+	public boolean hasNext() { return hasNext; }
 
 	@Override
 	public void fwd()
@@ -97,29 +90,34 @@ public class PlanarCursor< T extends Type< T >> extends CursorImpl< T >
 	}
 
 	@Override
-	public void close()
-	{
-		isClosed = true;
-		type.updateIndex( lastIndex + 1 );
-		sliceIndex = lastSliceIndex + 1;
-	}
-
-	@Override
 	public void reset()
 	{
 		sliceIndex = 0;
 		type.updateIndex( -1 );
 		type.updateContainer( this );
-		isClosed = false;
 		hasNext = true;
 	}
 
 	@Override
-	public PlanarContainer< T, ? > getStorageContainer() { return container;	}
-
-	@Override
-	public int getStorageIndex() { return sliceIndex; }
-
-	@Override
 	public String toString() { return type.toString(); }
+
+	@Override
+	public Img<T> getImg() { return container; }
+
+	@Override
+	public void localize( final long[] position )
+	{
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public long getLongPosition( final int dim )
+	{
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int getCurrentPlane() { return sliceIndex; }
 }

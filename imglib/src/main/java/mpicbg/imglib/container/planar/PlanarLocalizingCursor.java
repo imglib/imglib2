@@ -25,12 +25,12 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-package mpicbg.imglib.cursor.planar;
+package mpicbg.imglib.container.planar;
 
+import mpicbg.imglib.container.AbstractImgLocalizingCursor;
+import mpicbg.imglib.container.Img;
 import mpicbg.imglib.container.planar.PlanarContainer;
-import mpicbg.imglib.cursor.LocalizableCursor;
-import mpicbg.imglib.image.Image;
-import mpicbg.imglib.type.Type;
+import mpicbg.imglib.type.NativeType;
 
 /**
  * Localizing Iterator for a {@link PlanarContainer PlanarContainers}
@@ -38,34 +38,48 @@ import mpicbg.imglib.type.Type;
  *
  * @author Stephan Preibisch and Stephan Saalfeld
  */
-public class PlanarLocalizableCursor<T extends Type<T>> extends PlanarCursor<T> implements LocalizableCursor<T>
+public class PlanarLocalizingCursor< T extends NativeType< T > > extends AbstractImgLocalizingCursor< T >
 {
+	protected final T type;
+	protected final PlanarContainer< T, ? > container;
+
+	protected final int lastIndex, lastSliceIndex;
+	protected int sliceIndex;
+	protected boolean hasNext;
+
 	final protected int numDimensions;
 	final protected int[] position, dimensions;
 	
-	public PlanarLocalizableCursor( final PlanarContainer<T,?> container, final Image<T> image, final T type )
+	public PlanarLocalizingCursor( final PlanarContainer<T,?> container ) 
 	{
-		this( container, image, type, true );
-	}
-	
-	PlanarLocalizableCursor( final PlanarContainer<T,?> container, final Image<T> image, final T type, final boolean reset ) 
-	{
-		super( container, image, type );
+		super( container );
 
-		numDimensions = container.getNumDimensions(); 		
-		position = new int[ numDimensions ];
-		dimensions = container.getDimensions();
+		this.container = container;
+		this.type = container.createLinkedType();
+		lastIndex = container.dim[ 0 ] * container.dim[ 1 ] - 1;
+		lastSliceIndex = container.getSlices() - 1;
 		
-		// unluckily we have to call it twice, in the superclass position is not initialized yet
-		if ( reset )
-			reset();
+		numDimensions = container.numDimensions(); 		
+		position = new int[ numDimensions ];
+		dimensions = container.dim.clone();
+
+		reset();
 	}	
+	
+	/**
+	 * Note: This test is fragile in a sense that it returns true for elements
+	 * after the last element as well.
+	 * 
+	 * @return false for the last element 
+	 */
+	@Override
+	public boolean hasNext() { return hasNext; }
 	
 	@Override
 	public void fwd()
 	{
-		super.fwd();
-		
+		type.incIndex();
+
 		for ( int d = 0; d < numDimensions; ++d )
 		{
 			if ( ++position[ d ] >= dimensions[ d ] )
@@ -73,6 +87,19 @@ public class PlanarLocalizableCursor<T extends Type<T>> extends PlanarCursor<T> 
 			else
 				return;
 		}
+		
+		final int i = type.getIndex();
+				
+		if ( i < lastIndex )
+			return;
+		else if ( i == lastIndex )
+			hasNext = sliceIndex < lastSliceIndex;
+		else
+		{
+			++sliceIndex;
+			type.updateIndex( 0 );
+			type.updateContainer( this );
+		}		
 	}
 
 	@Override
@@ -81,7 +108,6 @@ public class PlanarLocalizableCursor<T extends Type<T>> extends PlanarCursor<T> 
 		if ( dimensions == null )
 			return;
 		
-		isClosed = false;
 		type.updateIndex( -1 );
 		
 		position[ 0 ] = -1;
@@ -96,33 +122,9 @@ public class PlanarLocalizableCursor<T extends Type<T>> extends PlanarCursor<T> 
 		hasNext = true;
 	}
 
+	@Override
+	public Img<T> getImg() { return container;	}
 
 	@Override
-	public void getPosition( int[] pos )
-	{
-		for ( int d = 0; d < numDimensions; d++ )
-			pos[ d ] = this.position[ d ];
-	}
-	
-	@Override
-	public int[] getPosition(){ return position.clone(); }
-	
-	@Override
-	public int getPosition( final int dim ){ return position[ dim ]; }
-	
-	@Override
-	public String getPositionAsString()
-	{
-		String pos = "(" + position[ 0 ];
-		
-		for ( int d = 1; d < numDimensions; d++ )
-			pos += ", " + position[ d ];
-		
-		pos += ")";
-		
-		return pos;
-	}
-	
-	@Override
-	public String toString() { return getPositionAsString() + " = " + getType(); }
+	public T get() { return type; }
 }
