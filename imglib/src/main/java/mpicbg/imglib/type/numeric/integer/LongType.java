@@ -67,7 +67,7 @@ final public class LongType extends IntegerTypeImpl<LongType> implements NativeT
 	public NativeContainer<LongType, ? extends LongAccess> createSuitableNativeContainer( final NativeContainerFactory<LongType> storageFactory, final long dim[] )
 	{
 		// create the container
-		final NativeContainer<LongType, ? extends LongAccess> container = storageFactory.createLongInstance( new LongType(), dim, 1 );
+		final NativeContainer<LongType, ? extends LongAccess> container = storageFactory.createLongInstance( dim, 1 );
 		
 		// create a Type that is linked to the container
 		final LongType linkedType = new LongType( container );

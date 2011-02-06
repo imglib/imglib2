@@ -26,6 +26,7 @@ import mpicbg.imglib.container.Img;
 import mpicbg.imglib.container.ImgFactory;
 import mpicbg.imglib.sampler.special.OrthoSliceIterator;
 import mpicbg.imglib.type.numeric.real.FloatType;
+import mpicbg.imglib.util.Util;
 
 public class LOCI
 {
@@ -112,7 +113,15 @@ public class LOCI
 						while(it.hasNext())
 						{
 							it.fwd();
-							it.get().set( b[ 0 ][ it.getIntPosition( planeX )+it.getIntPosition( planeY )*width ] & 0xff );
+							try
+							{
+								it.get().set( b[ 0 ][ it.getIntPosition( planeX )+it.getIntPosition( planeY )*width ] & 0xff );
+							}
+							catch( Exception e )
+							{
+								System.out.println( Util.printCoordinates( it) );
+								System.exit( 0 );
+							}
 						}
 						
 					}	

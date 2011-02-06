@@ -11,7 +11,7 @@ public class PlanarLocalizingCursor2D< T extends NativeType< T > > extends Plana
 	{
 		super( container );
 		
-		maxIndex = (int)container.numPixels() - 1;
+		maxIndex = (int)container.size() - 1;
 		width = (int)container.dimension( 0 );
 	}
 	

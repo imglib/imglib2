@@ -44,7 +44,7 @@ public class PlanarCursor2D< T extends NativeType< T > > extends PlanarCursor< T
 	{
 		super( container );
 		
-		maxIndex = (int)container.numPixels() - 1;
+		maxIndex = (int)container.size() - 1;
 	}
 	
 	@Override

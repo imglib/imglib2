@@ -19,6 +19,7 @@ package mpicbg.imglib.util;
 import java.util.List;
 
 import mpicbg.imglib.Interval;
+import mpicbg.imglib.Localizable;
 import mpicbg.imglib.RealInterval;
 import mpicbg.imglib.type.Type;
 import mpicbg.imglib.type.numeric.ExponentialMathType;
@@ -589,6 +590,23 @@ public class Util
 
 		for ( int i = 1; i < value.length; i++ )
 			out += ", " + value[ i ];
+
+		out += ")";
+
+		return out;
+	}
+
+	public static String printCoordinates( final Localizable localizable )
+	{
+		String out = "(Localizable empty)";
+
+		if ( localizable == null || localizable.numDimensions() == 0 )
+			return out;
+		else
+			out = "(" + localizable.getFloatPosition( 0 );
+
+		for ( int i = 1; i < localizable.numDimensions(); i++ )
+			out += ", " + localizable.getFloatPosition( i );
 
 		out += ")";
 

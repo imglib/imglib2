@@ -69,7 +69,7 @@ public class DoubleType extends RealTypeImpl<DoubleType> implements RealType<Dou
 	public NativeContainer<DoubleType, ? extends DoubleAccess> createSuitableNativeContainer( final NativeContainerFactory<DoubleType> storageFactory, final long dim[] )
 	{
 		// create the container
-		final NativeContainer<DoubleType, ? extends DoubleAccess> container = storageFactory.createDoubleInstance( new DoubleType(), dim, 1 );
+		final NativeContainer<DoubleType, ? extends DoubleAccess> container = storageFactory.createDoubleInstance( dim, 1 );
 		
 		// create a Type that is linked to the container
 		final DoubleType linkedType = new DoubleType( container );

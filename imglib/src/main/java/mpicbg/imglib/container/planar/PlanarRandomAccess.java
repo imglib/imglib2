@@ -37,7 +37,7 @@ import mpicbg.imglib.type.NativeType;
  *
  * @author Stephan Preibisch and Stephan Saalfeld
  */
-public class PlanarRandomAccess< T extends NativeType< T > > extends AbstractImgRandomAccess< T >
+public class PlanarRandomAccess< T extends NativeType< T > > extends AbstractImgRandomAccess< T > implements PlanarLocation
 {
 	final protected int[] tmp, sliceSteps, dim;
 	final int width, n;
@@ -76,49 +76,49 @@ public class PlanarRandomAccess< T extends NativeType< T > > extends AbstractImg
 	}
 	
 	@Override
-	public void fwd( final int dim )
+	public void fwd( final int d )
 	{
-		++position[ dim ];
+		++position[ d ];
 
-		if ( dim == 0 )
+		if ( d == 0 )
 			type.incIndex();
-		else if ( dim == 1 )
+		else if ( d == 1 )
 			type.incIndex( width );
 		else
 		{
-			sliceIndex += sliceSteps[ dim ];
+			sliceIndex += sliceSteps[ d ];
 			type.updateContainer( this );
 		}
 	}
 
 	@Override
-	public void move( final int steps, final int dim )
+	public void move( final int steps, final int d )
 	{
-		position[ dim ] += steps;	
+		position[ d ] += steps;	
 
-		if ( dim == 0 )
+		if ( d == 0 )
 			type.incIndex( steps );
-		else if ( dim == 1 )
+		else if ( d == 1 )
 			type.incIndex( steps * width );
 		else
 		{
-			sliceIndex += sliceSteps[ dim ] * steps;
+			sliceIndex += sliceSteps[ d ] * steps;
 			type.updateContainer( this );
 		}
 	}
 	
 	@Override
-	public void bck( final int dim )
+	public void bck( final int d )
 	{		
-		--position[ dim ];
+		--position[ d ];
 		
-		if ( dim == 0 )
+		if ( d == 0 )
 			type.decIndex();
-		else if ( dim == 1 )
+		else if ( d == 1 )
 			type.decIndex( width );
 		else
 		{
-			sliceIndex -= sliceSteps[ dim ];
+			sliceIndex -= sliceSteps[ d ];
 			type.updateContainer( this );
 		}
 	}
@@ -128,16 +128,15 @@ public class PlanarRandomAccess< T extends NativeType< T > > extends AbstractImg
 	{
 		if ( dim == 0 )
 		{
-			type.updateIndex( type.getIndex() - (int)this.position[ 0 ] + position );
+			type.updateIndex( type.getIndex() + position - (int)this.position[ 0 ] );
 		}
 		else if ( dim == 1 )
 		{
-			type.updateIndex( type.getIndex() - (int)this.position[ 0 ]*width + position*width );			
+			type.updateIndex( type.getIndex() + (position - (int)this.position[ 1 ]) * width );			
 		}
 		else
 		{
-			sliceIndex -= this.position[ dim ] * sliceSteps[ dim ]; 
-			sliceIndex += position * sliceSteps[ dim ];
+			sliceIndex += (position - (int)this.position[ dim ]) * sliceSteps[ dim ];
 			type.updateContainer( this );
 		}
 		
@@ -151,7 +150,10 @@ public class PlanarRandomAccess< T extends NativeType< T > > extends AbstractImg
 	public T get() { return type; }
 
 	@Override
-	public void move( final long distance, final int dim ) { move( (int)distance, dim ); }
+	public void move( final long distance, final int d )
+	{
+		move( ( int ) distance, d );
+	}
 
 	@Override
 	public void setPosition( final int[] position )
@@ -185,4 +187,7 @@ public class PlanarRandomAccess< T extends NativeType< T > > extends AbstractImg
 
 	@Override
 	public void setPosition( final long position, final int dim ) { setPosition( (int)position, dim ); }
+
+	@Override
+	public int getCurrentPlane() { return sliceIndex; }
 }

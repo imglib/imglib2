@@ -99,9 +99,6 @@ public class ListContainer< T extends Type< T > > extends AbstractImg< T >
 	}
 
 	@Override
-	public long numPixels() { return numPixels; }
-
-	@Override
 	public ListCursor< T > cursor()
 	{
 		return new ListCursor< T >( this );

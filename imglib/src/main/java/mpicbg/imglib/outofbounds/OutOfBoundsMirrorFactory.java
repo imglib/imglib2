@@ -27,9 +27,10 @@
  */
 package mpicbg.imglib.outofbounds;
 
-import mpicbg.imglib.container.ImgRandomAccess;
-import mpicbg.imglib.image.Image;
-import mpicbg.imglib.type.Type;
+import java.awt.Image;
+
+import mpicbg.imglib.Interval;
+import mpicbg.imglib.RandomAccessible;
 
 
 /**
@@ -40,7 +41,7 @@ import mpicbg.imglib.type.Type;
  *
  * @author Stephan Preibisch and Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-public class OutOfBoundsMirrorFactory< T extends Type< T > > extends RasterOutOfBoundsFactory< T >
+public class OutOfBoundsMirrorFactory< T, F extends Interval & RandomAccessible< T > > implements OutOfBoundsFactory< T, F >
 {
 	static public enum Boundary { SINGLE, DOUBLE };
 	
@@ -52,11 +53,11 @@ public class OutOfBoundsMirrorFactory< T extends Type< T > > extends RasterOutOf
 	}
 	
 	@Override
-	public AbstractOutOfBoundsMirror< T > create( final ImgRandomAccess< T > cursor )
+	public AbstractOutOfBoundsMirror< T > create( final F f )
 	{
 		if ( boundary == Boundary.SINGLE )
-			return new OutOfBoundsMirrorSingleBoundary< T >( cursor );
+			return new OutOfBoundsMirrorSingleBoundary< T >( f );
 		else
-			return new OutOfBoundsMirrorDoubleBoundary< T >( cursor );
+			return new OutOfBoundsMirrorDoubleBoundary< T >( f );
 	}
 }

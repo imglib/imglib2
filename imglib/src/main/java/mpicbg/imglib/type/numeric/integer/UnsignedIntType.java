@@ -61,7 +61,7 @@ public class UnsignedIntType extends GenericIntType<UnsignedIntType>
 	public NativeContainer<UnsignedIntType, ? extends IntAccess> createSuitableNativeContainer( final NativeContainerFactory<UnsignedIntType> storageFactory, final long dim[] )
 	{
 		// create the container
-		final NativeContainer<UnsignedIntType, ? extends IntAccess> container = storageFactory.createIntInstance( new UnsignedIntType(), dim, 1 );
+		final NativeContainer<UnsignedIntType, ? extends IntAccess> container = storageFactory.createIntInstance( dim, 1 );
 		
 		// create a Type that is linked to the container
 		final UnsignedIntType linkedType = new UnsignedIntType( container );

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2009--2010, Stephan Saalfeld
+ * Copyright (c) 2010--2011, Stephan Saalfeld
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -9,7 +9,7 @@
  * list of conditions and the following disclaimer.  Redistributions in binary
  * form must reproduce the above copyright notice, this list of conditions and
  * the following disclaimer in the documentation and/or other materials
- * provided with the distribution.  Neither the name of the Fiji project nor
+ * provided with the distribution.  Neither the name of the imglib project nor
  * the names of its contributors may be used to endorse or promote products
  * derived from this software without specific prior written permission.
  * 
@@ -27,8 +27,8 @@
  */
 package mpicbg.imglib.outofbounds;
 
-import mpicbg.imglib.container.ImgRandomAccess;
-import mpicbg.imglib.type.Type;
+import mpicbg.imglib.Interval;
+import mpicbg.imglib.RandomAccessible;
 
 /**
  * Coordinates out of image bounds are mirrored between boundary coordinates.
@@ -48,49 +48,43 @@ import mpicbg.imglib.type.Type;
  *
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-public class OutOfBoundsMirrorDoubleBoundary< T extends Type< T > > extends AbstractOutOfBoundsMirror< T >
+public class OutOfBoundsMirrorDoubleBoundary< T > extends AbstractOutOfBoundsMirror< T >
 {
-	OutOfBoundsMirrorDoubleBoundary( final ImgRandomAccess< T > source )
+	public < F extends Interval & RandomAccessible< T > > OutOfBoundsMirrorDoubleBoundary( final F f )
 	{
-		this( source, source.getImage().createPositionableRasterSampler() );
-	}
-	
-	OutOfBoundsMirrorDoubleBoundary(
-			final ImgRandomAccess< T > source,
-			final ImgRandomAccess< T > outOfBoundsPositionable )
-	{
-		super( source, outOfBoundsPositionable );
+		super( f );
 		
 		for ( int i = 0; i < dimension.length; ++i )
 			p[ i ] = 2 * dimension[ i ];
 	}
 	
-	/* RasterPositionable */
+	
+	/* Positionable */
 	
 	@Override
 	final public void fwd( final int dim ) 
 	{
 		isOutOfBounds = ( ++position[ dim ] >= dimension[ dim ] );
-		final int x = outOfBoundsPositionable.getIntPosition( dim );
+		final int x = outOfBoundsRandomAcess.getIntPosition( dim );
 		if ( inc[ dim ] )
 		{
 			if ( x + 1 == dimension[ dim ] )
 			{
 				inc[ dim ] = false;
-				outOfBoundsPositionable.bck( dim );
+				outOfBoundsRandomAcess.bck( dim );
 			}
 			else
-				outOfBoundsPositionable.fwd( dim );
+				outOfBoundsRandomAcess.fwd( dim );
 		}
 		else
 		{
 			if ( x == 0 )
 			{
 				inc[ dim ] = true;
-				outOfBoundsPositionable.fwd( dim  );
+				outOfBoundsRandomAcess.fwd( dim  );
 			}
 			else
-				outOfBoundsPositionable.bck( dim );
+				outOfBoundsRandomAcess.bck( dim );
 		}
 	}
 	
@@ -98,35 +92,35 @@ public class OutOfBoundsMirrorDoubleBoundary< T extends Type< T > > extends Abst
 	final public void bck( final int dim ) 
 	{
 		isOutOfBounds = ( --position[ dim ] < 0 );
-		final int x = outOfBoundsPositionable.getIntPosition( dim );
+		final int x = outOfBoundsRandomAcess.getIntPosition( dim );
 		if ( inc[ dim ] )
 		{
 			if ( x == 0 )
 			{
 				inc[ dim ] = false;
-				outOfBoundsPositionable.fwd( dim );
+				outOfBoundsRandomAcess.fwd( dim );
 			}
 			else
-				outOfBoundsPositionable.bck( dim );
+				outOfBoundsRandomAcess.bck( dim );
 		}
 		else
 		{
 			if ( x + 1 == dimension[ dim ] )
 			{
 				inc[ dim ] = true;
-				outOfBoundsPositionable.bck( dim  );
+				outOfBoundsRandomAcess.bck( dim  );
 			}
 			else
-				outOfBoundsPositionable.fwd( dim );
+				outOfBoundsRandomAcess.fwd( dim );
 		}
 	}
 	
 	@Override
-	final public void setPosition( int position, final int dim )
+	final public void setPosition( long position, final int dim )
 	{
 		this.position[ dim ] = position;
-		final int x = this.p[ dim ];
-		final int mod = dimension[ dim ];
+		final long x = this.p[ dim ];
+		final long mod = dimension[ dim ];
 		final boolean pos;
 		if ( position < 0 )
 		{
@@ -168,6 +162,6 @@ public class OutOfBoundsMirrorDoubleBoundary< T extends Type< T > > extends Abst
 			inc[ dim ] = pos;
 		}
 		
-		outOfBoundsPositionable.setPosition( position, dim );
+		outOfBoundsRandomAcess.setPosition( position, dim );
 	}
 }

@@ -30,6 +30,7 @@ package mpicbg.imglib.outofbounds;
 import mpicbg.imglib.Interval;
 import mpicbg.imglib.Localizable;
 import mpicbg.imglib.RandomAccess;
+import mpicbg.imglib.RandomAccessible;
 import mpicbg.imglib.type.Type;
 import mpicbg.imglib.util.Util;
 
@@ -45,31 +46,32 @@ public class OutOfBoundsConstantValue< T extends Type< T > > implements OutOfBou
 	
 	final protected RandomAccess< T > sampler;
 	
-	final protected int numDimensions;
+	final protected int n;
 	
-	final protected long[] dimension, position;
+	final protected long[] dimension, min, max, position;
 	
 	final protected boolean[] dimIsOutOfBounds;
 	
 	protected boolean isOutOfBounds = false;
 	
-	public OutOfBoundsConstantValue(
-			final RandomAccess< T > source,
-			final Interval interval,
-			final T value )
+	public < F extends Interval & RandomAccessible< T > > OutOfBoundsConstantValue( final F f, final T value )
 	{
-		this.sampler = source;
+		this.sampler = f.randomAccess();
 		this.value = value;
-		numDimensions = interval.numDimensions();
-		dimension = new long[ numDimensions ];
-		interval.dimensions( dimension );
-		position = new long[ numDimensions ];
-		dimIsOutOfBounds = new boolean[ numDimensions ];
+		n = f.numDimensions();
+		dimension = new long[ n ];
+		f.dimensions( dimension );
+		min = new long[ n ];
+		f.min( min );
+		max = new long[ n ];
+		f.max( max );
+		position = new long[ n ];
+		dimIsOutOfBounds = new boolean[ n ];
 	}
 		
 	final private void checkOutOfBounds()
 	{
-		for ( int d = 0; d < numDimensions; ++d )
+		for ( int d = 0; d < n; ++d )
 		{
 			if ( dimIsOutOfBounds[ d ] )
 			{
@@ -84,7 +86,7 @@ public class OutOfBoundsConstantValue< T extends Type< T > > implements OutOfBou
 	/* Dimensionality */
 	
 	@Override
-	public int numDimensions(){ return numDimensions; }
+	public int numDimensions(){ return n; }
 	
 	
 	/* OutOfBounds */
@@ -119,28 +121,28 @@ public class OutOfBoundsConstantValue< T extends Type< T > > implements OutOfBou
 	@Override
 	public void localize( final float[] pos )
 	{
-		for ( int d = 0; d < numDimensions; d++ )
+		for ( int d = 0; d < n; d++ )
 			pos[ d ] = this.position[ d ];
 	}
 
 	@Override
 	public void localize( final double[] pos )
 	{
-		for ( int d = 0; d < numDimensions; d++ )
+		for ( int d = 0; d < n; d++ )
 			pos[ d ] = this.position[ d ];
 	}
 
 	@Override
 	public void localize( final int[] pos )
 	{
-		for ( int d = 0; d < numDimensions; d++ )
+		for ( int d = 0; d < n; d++ )
 			pos[ d ] = ( int )this.position[ d ];
 	}
 	
 	@Override
 	public void localize( final long[] pos )
 	{
-		for ( int d = 0; d < numDimensions; d++ )
+		for ( int d = 0; d < n; d++ )
 			pos[ d ] = this.position[ d ];
 	}
 	
@@ -229,21 +231,21 @@ public class OutOfBoundsConstantValue< T extends Type< T > > implements OutOfBou
 	@Override
 	public void move( final Localizable localizable )
 	{
-		for ( int d = 0; d < numDimensions; ++d )
+		for ( int d = 0; d < n; ++d )
 			move( localizable.getIntPosition( d ), d );
 	}
 	
 	@Override
 	public void move( final int[] pos )
 	{
-		for ( int d = 0; d < numDimensions; ++d )
+		for ( int d = 0; d < n; ++d )
 			move( pos[ d ], d );
 	}
 	
 	@Override
 	public void move( final long[] pos )
 	{
-		for ( int d = 0; d < numDimensions; ++d )
+		for ( int d = 0; d < n; ++d )
 			move( pos[ d ], d );
 	}
 	
@@ -276,7 +278,7 @@ public class OutOfBoundsConstantValue< T extends Type< T > > implements OutOfBou
 	@Override
 	public void setPosition( final Localizable localizable )
 	{
-		for ( int d = 0; d < numDimensions; ++d )
+		for ( int d = 0; d < n; ++d )
 			setPosition( localizable.getIntPosition( d ), d );
 	}
 	

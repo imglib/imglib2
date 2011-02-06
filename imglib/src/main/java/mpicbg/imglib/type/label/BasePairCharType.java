@@ -77,7 +77,7 @@ public class BasePairCharType extends AbstractNativeType<BasePairCharType> imple
 	public NativeContainer<BasePairCharType, ? extends CharAccess> createSuitableNativeContainer( final NativeContainerFactory<BasePairCharType> storageFactory, final long dim[] )
 	{
 		// create the container
-		final NativeContainer<BasePairCharType, ? extends CharAccess> container = storageFactory.createCharInstance( new BasePairCharType(), dim, 1 );
+		final NativeContainer<BasePairCharType, ? extends CharAccess> container = storageFactory.createCharInstance( dim, 1 );
 		
 		// create a Type that is linked to the container
 		final BasePairCharType linkedType = new BasePairCharType( container );

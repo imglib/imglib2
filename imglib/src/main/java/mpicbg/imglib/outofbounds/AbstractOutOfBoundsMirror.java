@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2009--2010, Stephan Saalfeld
+ * Copyright (c) 2011, Stephan Saalfeld
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -9,7 +9,7 @@
  * list of conditions and the following disclaimer.  Redistributions in binary
  * form must reproduce the above copyright notice, this list of conditions and
  * the following disclaimer in the documentation and/or other materials
- * provided with the distribution.  Neither the name of the Fiji project nor
+ * provided with the distribution.  Neither the name of the imglib project nor
  * the names of its contributors may be used to endorse or promote products
  * derived from this software without specific prior written permission.
  * 
@@ -27,9 +27,10 @@
  */
 package mpicbg.imglib.outofbounds;
 
+import mpicbg.imglib.Interval;
 import mpicbg.imglib.Localizable;
-import mpicbg.imglib.container.ImgRandomAccess;
-import mpicbg.imglib.type.Type;
+import mpicbg.imglib.RandomAccess;
+import mpicbg.imglib.RandomAccessible;
 import mpicbg.imglib.util.Util;
 
 /**
@@ -38,47 +39,50 @@ import mpicbg.imglib.util.Util;
  *
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-public abstract class AbstractOutOfBoundsMirror< T extends Type< T > > implements RealOutOfBounds< T >
+public abstract class AbstractOutOfBoundsMirror< T > implements OutOfBounds< T >
 {
-	final protected ImgRandomAccess< T > outOfBoundsPositionable;
+	final protected RandomAccess< T > outOfBoundsRandomAcess;
 	
-	final protected int numDimensions;
+	final protected int n;
 	
-	final protected int[] dimension, position;
+	final protected long[] dimension, position, min, max, p;
 	
 	/* true when increasing, false when decreasing */
 	final protected boolean[] inc;
-	
-	final protected int[] p;
 	
 	final protected boolean[] dimIsOutOfBounds;
 	
 	protected boolean isOutOfBounds = false;
 	
-	AbstractOutOfBoundsMirror( final ImgRandomAccess< T > source )
+	public < F extends Interval & RandomAccessible< T > > AbstractOutOfBoundsMirror( final F f )
 	{
-		this( source, source.getImg().randomAccess() );
+		this( f, f.randomAccess() );
 	}
 	
-	AbstractOutOfBoundsMirror(
-			final ImgRandomAccess< T > source,
-			final ImgRandomAccess< T > outOfBoundsPositionable )
+	public AbstractOutOfBoundsMirror( final Interval interval, final RandomAccess< T > outOfBoundsRandomAccess )
 	{
-		this.outOfBoundsPositionable = outOfBoundsPositionable;
-		numDimensions = source.getImg().numDimensions();
-		dimension = source.getImg().getDimensions();
-		position = new int[ numDimensions ];
-		inc = new boolean[ numDimensions ];
+		n = interval.numDimensions();
+		dimension = new long[ n ];
+		interval.dimensions( dimension );
+		min = new long[ n ];
+		interval.min( min );
+		max = new long[ n ];
+		interval.max( max );
+		position = new long[ n ];
+		inc = new boolean[ n ];
+		
+		this.outOfBoundsRandomAcess = outOfBoundsRandomAccess;
+		
 		for ( int i = 0; i < dimension.length; ++i )
 			inc[ i ] = true;
 		
-		p = new int[ numDimensions ];
-		dimIsOutOfBounds = new boolean[ numDimensions ];
+		p = new long[ n ];
+		dimIsOutOfBounds = new boolean[ n ];
 	}
 	
 	final protected void checkOutOfBounds()
 	{
-		for ( int d = 0; d < numDimensions; ++d )
+		for ( int d = 0; d < n; ++d )
 		{
 			if ( dimIsOutOfBounds[ d ] )
 			{
@@ -90,75 +94,93 @@ public abstract class AbstractOutOfBoundsMirror< T extends Type< T > > implement
 	}
 	
 	
-	/* Dimensionality */
+	/* EuclideanSpace */
 	
 	@Override
-	public int numDimensions(){ return numDimensions; }
-	
+	public int numDimensions()
+	{
+		return n;
+	}
 	
 	/* OutOfBounds */
 	
 	@Override
-	public boolean isOutOfBounds(){ return isOutOfBounds; }
-
+	public boolean isOutOfBounds()
+	{
+		return isOutOfBounds;
+	}
 	
 	/* Sampler */
 	
 	@Override
-	public T get(){ return outOfBoundsPositionable.get(); }
-	
+	public T get()
+	{
+		return outOfBoundsRandomAcess.get();
+	}
+
 	@Override
 	@Deprecated
-	final public T getType(){ return get(); }
+	final public T getType()
+	{
+		return get();
+	}
 	
-	
-	/* RasterLocalizable */
+	/* Localizable */
 	
 	@Override
 	public void localize( final float[] pos )
 	{
-		for ( int d = 0; d < numDimensions; ++d )
+		for ( int d = 0; d < n; ++d )
 			pos[ d ] = this.position[ d ];
 	}
 
 	@Override
 	public void localize( final double[] pos )
 	{
-		for ( int d = 0; d < numDimensions; ++d )
+		for ( int d = 0; d < n; ++d )
 			pos[ d ] = this.position[ d ];
 	}
 
 	@Override
 	public void localize( final int[] pos )
 	{
-		for ( int d = 0; d < numDimensions; ++d )
-			pos[ d ] = this.position[ d ];
+		for ( int d = 0; d < n; ++d )
+			pos[ d ] = ( int )this.position[ d ];
 	}
 	
 	@Override
 	public void localize( final long[] pos )
 	{
-		for ( int d = 0; d < numDimensions; ++d )
+		for ( int d = 0; d < n; ++d )
 			pos[ d ] = this.position[ d ];
 	}
 	
 	@Override
-	public float getFloatPosition( final int dim ){ return position[ dim ]; }
-	
-	@Override
-	public double getDoublePosition( final int dim ){ return position[ dim ]; }
-	
-	@Override
-	public int getIntPosition( final int dim ){ return position[ dim ]; }
+	public float getFloatPosition( final int dim )
+	{
+		return position[ dim ];
+	}
 
 	@Override
-	public long getLongPosition( final int dim ){ return position[ dim ]; }
-	
+	public double getDoublePosition( final int dim )
+	{
+		return position[ dim ];
+	}
+
 	@Override
-	public String toString() { return Util.printCoordinates( position ) + " = " + get(); }
+	public int getIntPosition( final int dim )
+	{
+		return ( int )position[ dim ];
+	}
+
+	@Override
+	public long getLongPosition( final int dim )
+	{
+		return position[ dim ];
+	}
 	
 	
-	/* RasterPositionable */
+	/* Positionable */
 	
 	@Override
 	public void move( final int distance, final int dim )
@@ -182,36 +204,36 @@ public abstract class AbstractOutOfBoundsMirror< T extends Type< T > > implement
 	}
 	
 	@Override
-	public void moveTo( final Localizable localizable )
+	public void move( final Localizable localizable )
 	{
-		for ( int d = 0; d < numDimensions; ++d )
-			move( localizable.getIntPosition( d ) - position[ d ], d );
+		for ( int d = 0; d < n; ++d )
+			move( localizable.getLongPosition( d ), d );
 	}
 	
 	@Override
-	public void moveTo( final int[] pos )
+	public void move( final int[] pos )
 	{
-		for ( int d = 0; d < numDimensions; ++d )
-			move( pos[ d ] - this.position[ d ], d );
+		for ( int d = 0; d < n; ++d )
+			move( pos[ d ], d );
 	}
 	
 	@Override
-	public void moveTo( final long[] pos )
+	public void move( final long[] pos )
 	{
-		for ( int d = 0; d < numDimensions; ++d )
-			move( pos[ d ] - this.position[ d ], d );
+		for ( int d = 0; d < n; ++d )
+			move( pos[ d ], d );
 	}
 	
 	@Override
-	public void setPosition( final long position, final int dim )
+	public void setPosition( final int position, final int dim )
 	{
-		setPosition( ( int )position, dim );
+		setPosition( ( long )position, dim );
 	}
 	
 	@Override
 	public void setPosition( final Localizable localizable )
 	{
-		for ( int d = 0; d < numDimensions; ++d )
+		for ( int d = 0; d < n; ++d )
 			setPosition( localizable.getIntPosition( d ), d );
 	}
 	
@@ -227,5 +249,14 @@ public abstract class AbstractOutOfBoundsMirror< T extends Type< T > > implement
 	{
 		for ( int d = 0; d < position.length; ++d )
 			setPosition( position[ d ], d );
+	}
+	
+	
+	/* Object */
+	
+	@Override
+	public String toString()
+	{
+		return Util.printCoordinates( position ) + " = " + get();
 	}
 }
