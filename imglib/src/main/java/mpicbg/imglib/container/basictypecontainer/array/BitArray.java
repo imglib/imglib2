@@ -85,6 +85,11 @@ public class BitArray implements BitAccess, ArrayDataAccess< BitArray >
 			data[ arrayIndex ] = data[ arrayIndex ] & ~( 1 << arrayOffset );
 	}
 
+	public int[] getCurrentStorageArray()
+	{
+		return data;
+	}
+
 	@Override
 	public BitArray createArray( final int numEntities )
 	{
