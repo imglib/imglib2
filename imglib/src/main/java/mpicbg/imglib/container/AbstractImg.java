@@ -77,9 +77,6 @@ public abstract class AbstractImg< T > implements Img< T >
 	public int numDimensions() { return size.length; }
 	
 	@Override
-	public long numPixels() { return numPixels; }
-	
-	@Override
 	public void dimensions( final long[] s )
 	{
 		for ( int i = 0; i < n; ++i )
