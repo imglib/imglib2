@@ -48,7 +48,7 @@ public class ByteType extends GenericByteType<ByteType>
 	public NativeContainer<ByteType, ? extends ByteAccess> createSuitableNativeContainer( final NativeContainerFactory<ByteType> storageFactory, final long dim[] )
 	{
 		// create the container
-		final NativeContainer<ByteType, ? extends ByteAccess> container = storageFactory.createByteInstance( new ByteType(), dim, 1 );
+		final NativeContainer<ByteType, ? extends ByteAccess> container = storageFactory.createByteInstance( dim, 1 );
 		
 		// create a Type that is linked to the container
 		final ByteType linkedType = new ByteType( container );

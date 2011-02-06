@@ -61,7 +61,7 @@ public class UnsignedShortType extends GenericShortType<UnsignedShortType>
 	public NativeContainer<UnsignedShortType, ? extends ShortAccess> createSuitableNativeContainer( final NativeContainerFactory<UnsignedShortType> storageFactory, final long dim[] )
 	{
 		// create the container
-		final NativeContainer<UnsignedShortType, ? extends ShortAccess> container = storageFactory.createShortInstance( new UnsignedShortType(), dim, 1 );
+		final NativeContainer<UnsignedShortType, ? extends ShortAccess> container = storageFactory.createShortInstance( dim, 1 );
 		
 		// create a Type that is linked to the container
 		final UnsignedShortType linkedType = new UnsignedShortType( container );

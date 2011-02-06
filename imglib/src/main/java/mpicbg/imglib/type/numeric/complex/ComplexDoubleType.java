@@ -70,7 +70,7 @@ public class ComplexDoubleType extends ComplexTypeImpl<ComplexDoubleType> implem
 	public NativeContainer<ComplexDoubleType, ? extends DoubleAccess> createSuitableNativeContainer( final NativeContainerFactory<ComplexDoubleType> storageFactory, final long dim[] )
 	{
 		// create the container
-		final NativeContainer<ComplexDoubleType, ? extends DoubleAccess> container = storageFactory.createDoubleInstance( new ComplexDoubleType(), dim, 2 );
+		final NativeContainer<ComplexDoubleType, ? extends DoubleAccess> container = storageFactory.createDoubleInstance( dim, 2 );
 		
 		// create a Type that is linked to the container
 		final ComplexDoubleType linkedType = new ComplexDoubleType( container );

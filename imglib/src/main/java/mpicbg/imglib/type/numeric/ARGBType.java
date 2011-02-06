@@ -65,7 +65,7 @@ final public class ARGBType extends AbstractNativeType<ARGBType> implements Nume
 	public NativeContainer<ARGBType, ? extends IntAccess> createSuitableNativeContainer( final NativeContainerFactory<ARGBType> storageFactory, final long dim[] )
 	{
 		// create the container
-		final NativeContainer<ARGBType, ? extends IntAccess> container = storageFactory.createIntInstance( new ARGBType(), dim, 1 );
+		final NativeContainer<ARGBType, ? extends IntAccess> container = storageFactory.createIntInstance( dim, 1 );
 		
 		// create a Type that is linked to the container
 		final ARGBType linkedType = new ARGBType( container );

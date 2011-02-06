@@ -61,7 +61,7 @@ public class UnsignedByteType extends GenericByteType<UnsignedByteType>
 	public NativeContainer<UnsignedByteType, ? extends ByteAccess> createSuitableNativeContainer( final NativeContainerFactory<UnsignedByteType> storageFactory, final long dim[] )
 	{
 		// create the container
-		final NativeContainer<UnsignedByteType, ? extends ByteAccess> container = storageFactory.createByteInstance( new UnsignedByteType(), dim, 1 );
+		final NativeContainer<UnsignedByteType, ? extends ByteAccess> container = storageFactory.createByteInstance( dim, 1 );
 		
 		// create a Type that is linked to the container
 		final UnsignedByteType linkedType = new UnsignedByteType( container );

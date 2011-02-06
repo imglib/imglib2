@@ -73,7 +73,7 @@ public class Unsigned12BitType extends IntegerTypeImpl<Unsigned12BitType> implem
 	public NativeContainer<Unsigned12BitType, ? extends BitAccess> createSuitableNativeContainer( final NativeContainerFactory<Unsigned12BitType> storageFactory, final long dim[] )
 	{
 		// create the container
-		final NativeContainer<Unsigned12BitType, ? extends BitAccess> container = storageFactory.createBitInstance( new Unsigned12BitType(), dim, 12 );
+		final NativeContainer<Unsigned12BitType, ? extends BitAccess> container = storageFactory.createBitInstance( dim, 12 );
 		
 		// create a Type that is linked to the container
 		final Unsigned12BitType linkedType = new Unsigned12BitType( container );

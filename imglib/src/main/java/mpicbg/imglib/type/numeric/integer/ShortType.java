@@ -48,7 +48,7 @@ public class ShortType extends GenericShortType<ShortType>
 	public NativeContainer<ShortType, ? extends ShortAccess> createSuitableNativeContainer( final NativeContainerFactory<ShortType> storageFactory, final long dim[] )
 	{
 		// create the container
-		final NativeContainer<ShortType, ? extends ShortAccess> container = storageFactory.createShortInstance( new ShortType(), dim, 1 );
+		final NativeContainer<ShortType, ? extends ShortAccess> container = storageFactory.createShortInstance( dim, 1 );
 		
 		// create a Type that is linked to the container
 		final ShortType linkedType = new ShortType( container );

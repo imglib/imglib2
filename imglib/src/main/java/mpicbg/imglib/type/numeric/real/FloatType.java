@@ -68,7 +68,7 @@ public class FloatType extends RealTypeImpl<FloatType> implements RealType<Float
 	public NativeContainer<FloatType, ? extends FloatAccess> createSuitableNativeContainer( final NativeContainerFactory<FloatType> storageFactory, final long dim[] )
 	{
 		// create the container
-		final NativeContainer<FloatType, ? extends FloatAccess> container = storageFactory.createFloatInstance( new FloatType(), dim, 1 );
+		final NativeContainer<FloatType, ? extends FloatAccess> container = storageFactory.createFloatInstance( dim, 1 );
 		
 		// create a Type that is linked to the container
 		final FloatType linkedType = new FloatType( container );
