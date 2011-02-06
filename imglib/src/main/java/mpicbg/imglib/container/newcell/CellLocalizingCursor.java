@@ -1,57 +1,126 @@
 package mpicbg.imglib.container.newcell;
 
-import mpicbg.imglib.Interval;
+import mpicbg.imglib.Cursor;
 import mpicbg.imglib.container.AbstractImgLocalizingCursor;
-import mpicbg.imglib.container.Img;
 import mpicbg.imglib.container.basictypecontainer.DataAccess;
 import mpicbg.imglib.type.NativeType;
 
-public class CellLocalizingCursor< T extends NativeType< T >, A extends DataAccess > extends AbstractImgLocalizingCursor< T >
+public class CellLocalizingCursor< T extends NativeType< T >, A extends DataAccess > extends AbstractImgLocalizingCursor< T > implements CellContainer.CellContainerSampler< T, A >
 {
+	protected final T type;
+	
 	protected final CellContainer< T, A > container;
+
+	protected final Cursor< Cell< T, A > > cursorOnCells;
+
+	protected int lastIndexInCell;
+	final long[] minPositionInCell; 
+	final long[] maxPositionInCell; 
 
 	public CellLocalizingCursor( final CellContainer< T, A > container )
 	{
 		super( container );
-
-		this.container = container;
+		
 		this.type = container.createLinkedType();
-		this.lastIndex = ( int )container.size() - 1;
-
+		this.container = container;
+		this.cursorOnCells = container.cells.cursor();
+		this.minPositionInCell = new long[ n ];
+		this.maxPositionInCell = new long[ n ];
+		
 		reset();
 	}
 
 	@Override
+	public Cell<T, A> getCell()
+	{
+		return cursorOnCells.get();
+	}
+
+
+	@Override
 	public T get()
 	{
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void fwd()
-	{
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void reset()
-	{
-		// TODO Auto-generated method stub
-		
+		return type;
 	}
 
 	@Override
 	public boolean hasNext()
 	{
-		// TODO Auto-generated method stub
-		return false;
+		return ( type.getIndex() < lastIndexInCell ) || cursorOnCells.hasNext();
+	}
+
+	@Override
+	public void jumpFwd( long steps )
+	{
+		long newIndex = type.getIndex() + steps;
+		while ( newIndex > lastIndexInCell )
+		{
+			newIndex -= lastIndexInCell + 1;
+			cursorOnCells.fwd();
+			lastIndexInCell = ( int )( getCell().size() - 1);
+		}
+
+		Cell< T, A > c = getCell();
+		c.offset( minPositionInCell ); 
+		c.dimensions( maxPositionInCell );
+		for ( int d = 0; d < n; ++d )
+			maxPositionInCell[ d ] += minPositionInCell[ d ];
+
+		c.indexToGlobalPosition( ( int )newIndex, position );
+
+		type.updateIndex( ( int ) newIndex );
+		type.updateContainer( this );
+	}
+	
+	@Override
+	public void fwd()
+	{
+		type.incIndex();
+
+		if ( type.getIndex() > lastIndexInCell )
+			moveToNextCell();
+
+		for ( int d = 0; d < n; ++d )
+		{
+			if ( ++position[ d ] >= maxPositionInCell[ d ] )
+				position[ d ] = minPositionInCell[ d ];
+			else
+				break;
+		}
+	}
+
+	@Override
+	public void reset()
+	{
+		cursorOnCells.reset();
+		moveToNextCell();
 	}
 
 	@Override
 	public CellContainer< T, ? > getImg()
 	{
 		return container;
+	}
+
+	/**
+	 * Move cursor right before the first element of the next cell.
+	 * Update type, position, and index variables. 
+	 */
+	private void moveToNextCell()
+	{
+		cursorOnCells.fwd();
+		Cell< T, A > c = getCell();
+
+		lastIndexInCell = ( int )( c.size() - 1);
+		c.offset( minPositionInCell );
+		c.dimensions( maxPositionInCell ); 
+		for ( int d = 0; d < n; ++d )
+			maxPositionInCell[ d ] += minPositionInCell[ d ];
+
+		c.offset( position );
+		position[ 0 ] -= 1;
+
+		type.updateIndex( -1 );
+		type.updateContainer( this );
 	}
 }

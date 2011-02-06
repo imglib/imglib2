@@ -69,11 +69,11 @@ public interface NativeType<T extends NativeType<T>> extends Type<T>
 	public void updateContainer( Object c );
 
 	/**
-	 * Increments the array position of the {@link Type}, this is called by the
+	 * Set the array index of the {@link Type}, this is called by the
 	 * {@link ImgCursor}s which iterate over the image.
 	 * 
 	 * @param i
-	 *            - how many steps
+	 *            - the new array index
 	 */
 	public void updateIndex( final int i );
 

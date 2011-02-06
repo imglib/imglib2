@@ -1,20 +1,17 @@
 package mpicbg.imglib.container.newcell;
 
 import mpicbg.imglib.Cursor;
-import mpicbg.imglib.container.Img;
 import mpicbg.imglib.container.AbstractImgCursor;
-import mpicbg.imglib.container.array.ArrayCursor;
 import mpicbg.imglib.container.basictypecontainer.DataAccess;
 import mpicbg.imglib.type.NativeType;
-import mpicbg.imglib.util.IntervalIndexer;
 
-public class CellCursor< T extends NativeType< T >, A extends DataAccess > extends AbstractImgCursor< T > implements CellAccess< T, A >
+public class CellCursor< T extends NativeType< T >, A extends DataAccess > extends AbstractImgCursor< T > implements CellContainer.CellContainerSampler< T, A >
 {
 	protected final T type;
 	
 	protected final CellContainer< T, A > container;
 
-	protected final Cursor< Cell< T, A > > cursorCell;
+	protected final Cursor< Cell< T, A > > cursorOnCells;
 
 	protected int lastIndexInCell;
 
@@ -24,30 +21,50 @@ public class CellCursor< T extends NativeType< T >, A extends DataAccess > exten
 		
 		this.type = container.createLinkedType();
 		this.container = container;
-		this.cursorCell = container.cells.cursor();
+		this.cursorOnCells = container.cells.cursor();
 		
 		reset();
-	}
-	
-	@Override
-	public T get()
-	{
-		return type;
-		// return cursorT.get();
 	}
 
 	@Override
 	public Cell<T, A> getCell()
 	{
-		return cursorCell.get();
-	}	
+		return cursorOnCells.get();
+	}
 
+	@Override
+	public T get()
+	{
+		return type;
+	}
+
+	@Override
+	public boolean hasNext()
+	{
+		return ( type.getIndex() < lastIndexInCell ) || cursorOnCells.hasNext();
+	}
+
+	@Override
+	public void jumpFwd( long steps )
+	{
+		long newIndex = type.getIndex() + steps;
+		while ( newIndex > lastIndexInCell )
+		{
+			newIndex -= lastIndexInCell + 1;
+			cursorOnCells.fwd();
+			lastIndexInCell = ( int )( getCell().size() - 1);
+		}
+		type.updateIndex( ( int ) newIndex );
+		type.updateContainer( this );
+	}
+	
 	@Override
 	public void fwd()
 	{
 		type.incIndex();
-		if ( type.getIndex() > lastIndexInCell ) {
-			cursorCell.fwd();
+		if ( type.getIndex() > lastIndexInCell )
+		{
+			cursorOnCells.fwd();
 			lastIndexInCell = ( int )( getCell().size() - 1);
 			type.updateIndex( -1 );
 			type.updateContainer( this );
@@ -57,17 +74,11 @@ public class CellCursor< T extends NativeType< T >, A extends DataAccess > exten
 	@Override
 	public void reset()
 	{
-		cursorCell.reset();
-		cursorCell.fwd();
+		cursorOnCells.reset();
+		cursorOnCells.fwd();
 		lastIndexInCell = ( int )( getCell().size() - 1);
 		type.updateIndex( -1 );
 		type.updateContainer( this );
-	}
-
-	@Override
-	public boolean hasNext()
-	{
-		return ( type.getIndex() < lastIndexInCell ) || cursorCell.hasNext();
 	}
 
 	@Override
