@@ -76,49 +76,49 @@ public class PlanarRandomAccess< T extends NativeType< T > > extends AbstractImg
 	}
 	
 	@Override
-	public void fwd( final int dim )
+	public void fwd( final int d )
 	{
-		++position[ dim ];
+		++position[ d ];
 
-		if ( dim == 0 )
+		if ( d == 0 )
 			type.incIndex();
-		else if ( dim == 1 )
+		else if ( d == 1 )
 			type.incIndex( width );
 		else
 		{
-			sliceIndex += sliceSteps[ dim ];
+			sliceIndex += sliceSteps[ d ];
 			type.updateContainer( this );
 		}
 	}
 
 	@Override
-	public void move( final int steps, final int dim )
+	public void move( final int steps, final int d )
 	{
-		position[ dim ] += steps;	
+		position[ d ] += steps;	
 
-		if ( dim == 0 )
+		if ( d == 0 )
 			type.incIndex( steps );
-		else if ( dim == 1 )
+		else if ( d == 1 )
 			type.incIndex( steps * width );
 		else
 		{
-			sliceIndex += sliceSteps[ dim ] * steps;
+			sliceIndex += sliceSteps[ d ] * steps;
 			type.updateContainer( this );
 		}
 	}
 	
 	@Override
-	public void bck( final int dim )
+	public void bck( final int d )
 	{		
-		--position[ dim ];
+		--position[ d ];
 		
-		if ( dim == 0 )
+		if ( d == 0 )
 			type.decIndex();
-		else if ( dim == 1 )
+		else if ( d == 1 )
 			type.decIndex( width );
 		else
 		{
-			sliceIndex -= sliceSteps[ dim ];
+			sliceIndex -= sliceSteps[ d ];
 			type.updateContainer( this );
 		}
 	}
@@ -151,7 +151,10 @@ public class PlanarRandomAccess< T extends NativeType< T > > extends AbstractImg
 	public T get() { return type; }
 
 	@Override
-	public void move( final long distance, final int dim ) { move( (int)distance, dim ); }
+	public void move( final long distance, final int d )
+	{
+		move( ( int ) distance, d );
+	}
 
 	@Override
 	public void setPosition( final int[] position )

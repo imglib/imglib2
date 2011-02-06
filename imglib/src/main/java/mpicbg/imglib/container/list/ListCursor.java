@@ -54,7 +54,7 @@ final public class ListCursor< T extends Type< T > > extends AbstractImgCursor< 
 		
 		this.container = container;
 		this.pixels = container.pixels;
-		this.maxNumPixels = (int)container.numPixels() - 1;
+		this.maxNumPixels = ( int )container.size() - 1;
 		
 		reset();
 	}

@@ -32,7 +32,7 @@ import mpicbg.imglib.Iterator;
 import mpicbg.imglib.container.Img;
 import mpicbg.imglib.container.ImgRandomAccess;
 import mpicbg.imglib.image.Image;
-import mpicbg.imglib.iterator.ZeroMinIntegerIntervalIterator;
+import mpicbg.imglib.iterator.ZeroMinIntervalIterator;
 import mpicbg.imglib.util.Util;
 
 /**
@@ -59,7 +59,7 @@ import mpicbg.imglib.util.Util;
  * situations where, for <em>each</em> pixel, you want to localize and/or set
  * the {@link ImgRandomAccess}, that is in a dense sampling
  * situation.  For localizing sparsely (e.g. under an external condition),
- * use {@link ZeroMinIntegerIntervalIterator} instead.
+ * use {@link ZeroMinIntervalIterator} instead.
  * 
  * TODO implement it, it's still the basic FlatRasterIterator!!!!!!
  *  
