@@ -48,7 +48,7 @@ public class GaussianConvolution< T extends NumericType<T>> implements MultiThre
 	public GaussianConvolution( final Img<T> container, final OutOfBoundsFactory<T,Img<T>> outOfBoundsFactory, final double[] sigma )
 	{
 		this.container = container;
-		this.convolved = container.factory().create( container, container.createVariable() );
+		this.convolved = container.factory().create( container, container.firstElement().createVariable() );
 		this.sigma = sigma;
 		this.processingTime = -1;
 		setNumThreads();
@@ -139,8 +139,8 @@ public class GaussianConvolution< T extends NumericType<T>> implements MultiThre
     		return true;
 		}
     	*/
-        final Img<T> temp = container.factory().create( container, container.createVariable() );        
-    	final long containerSize = container.numPixels();
+        final Img<T> temp = container.factory().create( container, container.firstElement().createVariable() );        
+    	final long containerSize = container.size();
 
         //
         // Folding loop
@@ -172,17 +172,17 @@ public class GaussianConvolution< T extends NumericType<T>> implements MultiThre
 	                	{
 	                		if ( currentDim == 0 ) // first dimension convolve to the temporary container
 	                		{
-			                	inputIterator = container.integerRandomAccess( outOfBoundsFactory );
+			                	inputIterator = container.randomAccess( outOfBoundsFactory );
 			                    outputIterator = temp.localizingCursor();	                			
 	                		}
 	                		else if ( currentDim % 2 == 1 ) // for odd dimension ids we convolve to the output container, because that might be the last convolution  
 	                		{
-			                	inputIterator = temp.integerRandomAccess( outOfBoundsFactory );
+			                	inputIterator = temp.randomAccess( outOfBoundsFactory );
 			                    outputIterator = convolved.localizingCursor();
 	                		}
 	                		else //if ( currentDim % 2 == 0 ) // for even dimension ids we convolve to the temp container, it is not the last convolution for sure
 	                		{
-			                	inputIterator = convolved.integerRandomAccess( outOfBoundsFactory );
+			                	inputIterator = convolved.randomAccess( outOfBoundsFactory );
 			                    outputIterator = temp.localizingCursor();
 	                		}	                		
 	                	}
@@ -190,17 +190,17 @@ public class GaussianConvolution< T extends NumericType<T>> implements MultiThre
 	                	{
 	                		if ( currentDim == 0 ) // first dimension convolve to the output container, in the 1d case we are done then already
 	                		{
-			                	inputIterator = container.integerRandomAccess( outOfBoundsFactory );
+			                	inputIterator = container.randomAccess( outOfBoundsFactory );
 			                    outputIterator = convolved.localizingCursor();	                			
 	                		}
 	                		else if ( currentDim % 2 == 1 ) // for odd dimension ids we convolve to the output container, because that might be the last convolution  
 	                		{
-			                	inputIterator = convolved.integerRandomAccess( outOfBoundsFactory );
+			                	inputIterator = convolved.randomAccess( outOfBoundsFactory );
 			                    outputIterator = temp.localizingCursor();
 	                		}
 	                		else //if ( currentDim % 2 == 0 ) // for even dimension ids we convolve to the temp container, it is not the last convolution for sure
 	                		{
-			                	inputIterator = temp.integerRandomAccess( outOfBoundsFactory );
+			                	inputIterator = temp.randomAccess( outOfBoundsFactory );
 			                    outputIterator = convolved.localizingCursor();
 	                		}	 
 	                	}
@@ -362,7 +362,7 @@ public class GaussianConvolution< T extends NumericType<T>> implements MultiThre
 					final int filterSize = kernel[ 0 ].length;
 					final int filterSizeHalf = filterSize / 2;
 					
-					final ImgRandomAccess<FloatType> it = containerFloat.integerRandomAccess( outOfBoundsFactoryFloat );
+					final ImgRandomAccess<FloatType> it = containerFloat.randomAccess( outOfBoundsFactoryFloat );
 
 					// fold in x
 					int kernelPos, count;
@@ -422,7 +422,7 @@ public class GaussianConvolution< T extends NumericType<T>> implements MultiThre
 					int kernelPos, count;
 
 					final float[] out =  outputArray.getCurrentStorageArray();
-					final ImgRandomAccess<FloatType> it = convolvedFloat.integerRandomAccess( outOfBoundsFactoryFloat );
+					final ImgRandomAccess<FloatType> it = convolvedFloat.randomAccess( outOfBoundsFactoryFloat );
 					final double[] kernel1 = kernel[ 1 ].clone();
 					final int filterSize = kernel[ 1 ].length;
 					final int filterSizeHalf = filterSize / 2;
@@ -497,7 +497,7 @@ public class GaussianConvolution< T extends NumericType<T>> implements MultiThre
 					final int filterSizeHalf = filterSize / 2;
 
 					final float[] out = outputArray.getCurrentStorageArray();
-					final ImgRandomAccess<FloatType> it = convolvedFloat.integerRandomAccess( outOfBoundsFactoryFloat );
+					final ImgRandomAccess<FloatType> it = convolvedFloat.randomAccess( outOfBoundsFactoryFloat );
 
 					final int inc = getPos( 0, 0, 1, width, height );
 					final int posLUT[] = new int[kernel1.length];

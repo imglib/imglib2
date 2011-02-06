@@ -18,8 +18,8 @@ package mpicbg.imglib.algorithm.transformation;
 
 import mpicbg.imglib.algorithm.OutputAlgorithm;
 import mpicbg.imglib.container.Img;
-import mpicbg.imglib.container.ImgFactory;
 import mpicbg.imglib.container.ImgCursor;
+import mpicbg.imglib.container.ImgFactory;
 import mpicbg.imglib.interpolation.Interpolator;
 import mpicbg.imglib.interpolation.InterpolatorFactory;
 import mpicbg.imglib.type.Type;
@@ -33,7 +33,7 @@ public class ImageTransform<T extends Type<T>> implements OutputAlgorithm<T>
 	final int numDimensions;
 	final InterpolatorFactory<T,Img<T>> interpolatorFactory;
 	
-	ImgFactory outputContainerFactory;
+	ImgFactory<T> outputContainerFactory;
 	
 	final long[] newDim;
 	final float[] offset;
@@ -80,8 +80,8 @@ public class ImageTransform<T extends Type<T>> implements OutputAlgorithm<T>
 		}		
 	}
 	
-	public void setOutputContainerFactory( final ImgFactory outputContainerFactory ) { this.outputContainerFactory = outputContainerFactory; } 
-	public ImgFactory getOutputImageFactory() { return this.outputContainerFactory; } 
+	public void setOutputContainerFactory( final ImgFactory<T> outputContainerFactory ) { this.outputContainerFactory = outputContainerFactory; } 
+	public ImgFactory<T> getOutputImageFactory() { return this.outputContainerFactory; } 
 	
 	public float[] getOffset() { return offset; }
 	public void setOffset( final float[] offset ) 
@@ -142,7 +142,7 @@ public class ImageTransform<T extends Type<T>> implements OutputAlgorithm<T>
 			return false;
 		
 		// create the new output image
-		transformed = outputContainerFactory.create( newDim, container.createVariable() );
+		transformed = outputContainerFactory.create( newDim, container.firstElement().createVariable() );
 
 		final ImgCursor<T> transformedIterator = transformed.localizingCursor();
 		final Interpolator<T,Img<T>> interpolator = interpolatorFactory.create( container );

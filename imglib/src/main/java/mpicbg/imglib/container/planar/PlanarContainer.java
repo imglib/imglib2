@@ -134,13 +134,13 @@ public class PlanarContainer< T extends NativeType< T >, A extends ArrayDataAcce
 	@Override
 	public ImgRandomAccess<T> randomAccess()
 	{
-		return null;
+		return new PlanarRandomAccess<T>( this );
 	}
 
 	@Override
 	public ImgRandomAccess<T> randomAccess( OutOfBoundsFactory<T,Img<T>> outOfBoundsFactory )
 	{
-		return null;
+		return new PlanarOutOfBoundsRandomAccess< T >( this, outOfBoundsFactory );
 	}
 
 	@Override
