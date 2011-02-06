@@ -10,10 +10,13 @@ public class Cell< T extends NativeType< T >, A extends DataAccess > extends Arr
 {
 	final long[] offset;
 	
-	public Cell( final T type, final A data, final long[] dim, final int entitiesPerPixel )
+	public Cell( final T type, final A data, final long[] dim, final long[] offset, final int entitiesPerPixel )
 	{
 		super( type, data, dim, entitiesPerPixel );
-		offset = new long[ dim.length ];
+
+		this.offset = new long[ n ];
+		for ( int d = 0; d < n; ++d )
+			this.offset[ d ] = offset[ d ];
 	}
 
 	@Override
@@ -37,15 +40,26 @@ public class Cell< T extends NativeType< T >, A extends DataAccess > extends Arr
 		return null;
 	}
 
+	public void offset( final long[] o )
+	{
+		for ( int d = 0; d < n; ++d )
+			o[ d ] = offset[ d ];
+	}
+
 	public long indexToGlobalPosition( int index, int dimension )
 	{
 		return IntervalIndexer.indexToPosition( index, dim, steps, dimension ) + offset[ dimension ];
 	}
 
-	public void indexToGlobalPosition( int index, long[] position )
+	public void indexToGlobalPosition( int index, final long[] position )
 	{
 		IntervalIndexer.indexToPosition( index, dim, position );
 		for ( int d = 0; d < position.length; ++d )
 			position[ d ] += offset[ d ];
+	}
+	
+	public int localPositionToIndex( final long[] position )
+	{
+		return IntervalIndexer.positionToIndex( position, dim );
 	}
 }
