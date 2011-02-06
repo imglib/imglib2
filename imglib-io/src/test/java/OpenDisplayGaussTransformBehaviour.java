@@ -10,10 +10,12 @@ import mpicbg.imglib.interpolation.nearestneighbor.NearestNeighborInterpolatorFa
 import mpicbg.imglib.io.LOCI;
 import mpicbg.imglib.outofbounds.OutOfBoundsConstantValueFactory;
 import mpicbg.imglib.outofbounds.OutOfBoundsFactory;
+import mpicbg.imglib.outofbounds.OutOfBoundsMirrorFactory;
+import mpicbg.imglib.outofbounds.OutOfBoundsMirrorFactory.Boundary;
 import mpicbg.imglib.type.numeric.real.FloatType;
 import mpicbg.models.AffineModel3D;
 
-public class OpenDisplayGaussTransform
+public class OpenDisplayGaussTransformBehaviour
 {	
 	public static void test( ImgFactory<FloatType> factory )
 	{
@@ -22,7 +24,7 @@ public class OpenDisplayGaussTransform
 		ImgLib2Display.copyToImagePlus( img, new int[] {2, 0, 1} ).show();
 		
 		// compute a gaussian convolution with sigma = 3
-		GaussianConvolution<FloatType> gauss = new GaussianConvolution<FloatType>( img, new OutOfBoundsConstantValueFactory<FloatType, Img<FloatType>>( new FloatType(0)), 2 );
+		GaussianConvolution<FloatType> gauss = new GaussianConvolution<FloatType>( img, new OutOfBoundsMirrorFactory<FloatType, Img<FloatType>>( Boundary.SINGLE ), 2 );
 		
 		if ( !gauss.checkInput() || !gauss.process() )
 		{
@@ -36,7 +38,7 @@ public class OpenDisplayGaussTransform
 		AffineModel3D model = new AffineModel3D();
 		model.set( 0.35355338f, -0.35355338f, 0.0f, 0.0f, 0.25f, 0.25f, -0.35355338f, 0.0f, 0.25f, 0.25f, 0.35355338f, 0.0f );
 
-		OutOfBoundsFactory<FloatType, Img<FloatType>> oob = new OutOfBoundsConstantValueFactory<FloatType, Img<FloatType>>( new FloatType( 255 ) );
+		OutOfBoundsFactory<FloatType, Img<FloatType>> oob = new OutOfBoundsMirrorFactory<FloatType, Img<FloatType>>( Boundary.DOUBLE );
 		NearestNeighborInterpolatorFactory< FloatType > interpolatorFactory = new NearestNeighborInterpolatorFactory< FloatType >( oob );
 		ImageTransform< FloatType > transform = new ImageTransform<FloatType>( img, model, interpolatorFactory );
 		
