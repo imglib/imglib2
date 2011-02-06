@@ -4,6 +4,7 @@ import mpicbg.imglib.container.array.Array;
 import mpicbg.imglib.container.basictypecontainer.DataAccess;
 import mpicbg.imglib.type.NativeType;
 import mpicbg.imglib.type.Type;
+import mpicbg.imglib.util.IntervalIndexer;
 
 public class Cell< T extends NativeType< T >, A extends DataAccess > extends Array< T, A > implements Type< Cell< T, A > > 
 {
@@ -34,5 +35,17 @@ public class Cell< T extends NativeType< T >, A extends DataAccess > extends Arr
 	{
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	public long indexToGlobalPosition( int index, int dimension )
+	{
+		return IntervalIndexer.indexToPosition( index, dim, steps, dimension ) + offset[ dimension ];
+	}
+
+	public void indexToGlobalPosition( int index, long[] position )
+	{
+		IntervalIndexer.indexToPosition( index, dim, position );
+		for ( int d = 0; d < position.length; ++d )
+			position[ d ] += offset[ d ];
 	}
 }

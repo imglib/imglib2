@@ -9,6 +9,7 @@ import mpicbg.imglib.container.ImgRandomAccess;
 import mpicbg.imglib.container.basictypecontainer.DataAccess;
 import mpicbg.imglib.container.list.ListContainer;
 import mpicbg.imglib.outofbounds.OutOfBoundsFactory;
+import mpicbg.imglib.sampler.cell.CellStorageAccess;
 import mpicbg.imglib.type.NativeType;
 
 final public class CellContainer<
@@ -27,11 +28,14 @@ final public class CellContainer<
 		this.cellDimensions = cellDimensions;
 	}
 
-	@Override
-	public A update( Object updater )
+	@Override @SuppressWarnings("unchecked")
+	public A update( final Object cursor )
 	{
-		// TODO Auto-generated method stub
-		return null;
+		/* Currently, Cell<T,A>.update() is Array<T,A>.update().
+		 * It will not know what to do with a CellCursor, however,
+		 * it is not using it's parameter anyway.
+		 */
+		return ((CellAccess< T, A >)cursor).getCell().update( cursor );
 	}
 
 	@Override
