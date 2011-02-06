@@ -42,7 +42,7 @@ import mpicbg.imglib.type.Type;
  *
  * @author Stephan Preibisch and Stephan Saalfeld
  */
-public class PlanarLocalizableByDimOutOfBoundsCursor<T extends Type<T>> extends PlanarLocalizableByDimCursor<T> implements LocalizableByDimCursor<T>
+public class PlanarLocalizableByDimOutOfBoundsCursor<T extends Type<T>> extends PlanarRandomAccess<T> implements LocalizableByDimCursor<T>
 {
 	final OutOfBoundsStrategyFactory<T> outOfBoundsStrategyFactory;
 	final OutOfBoundsStrategy<T> outOfBoundsStrategy;
