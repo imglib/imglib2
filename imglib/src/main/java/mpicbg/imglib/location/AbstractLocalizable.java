@@ -27,6 +27,7 @@
  */
 package mpicbg.imglib.location;
 
+import mpicbg.imglib.EuclideanSpace;
 import mpicbg.imglib.Localizable;
 import mpicbg.imglib.util.Util;
 
@@ -34,9 +35,9 @@ import mpicbg.imglib.util.Util;
  * 
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-public abstract class AbstractLocalizable implements Localizable
+public  class AbstractLocalizable implements Localizable, EuclideanSpace
 {
-	final int n;
+	final protected int n;
 	final protected long[] position;
 	
 	public AbstractLocalizable( final int n )
@@ -101,5 +102,11 @@ public abstract class AbstractLocalizable implements Localizable
 	public String toString()
 	{
 		return Util.printCoordinates( position );
+	}
+
+	@Override
+	public int numDimensions()
+	{
+		return n;
 	}
 }
