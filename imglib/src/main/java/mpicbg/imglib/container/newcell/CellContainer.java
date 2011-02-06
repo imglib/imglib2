@@ -7,26 +7,31 @@ import mpicbg.imglib.container.ImgCursor;
 import mpicbg.imglib.container.ImgFactory;
 import mpicbg.imglib.container.ImgRandomAccess;
 import mpicbg.imglib.container.basictypecontainer.DataAccess;
+import mpicbg.imglib.container.list.ListContainer;
 import mpicbg.imglib.outofbounds.OutOfBoundsFactory;
 import mpicbg.imglib.type.NativeType;
 
-final public class CellContainer< T extends NativeType< T >, A extends DataAccess, C extends ArrayOfCells< A > > extends AbstractNativeContainer< T, A >
+final public class CellContainer<
+		T extends NativeType< T >,
+		A extends DataAccess>
+						extends AbstractNativeContainer< T, A >
 {
-	final private T type;
-
-	protected C cellArray;
+	protected ListContainer< Cell< T , A > > cells;
 	
-	public CellContainer( final T type, final C cellArray, final long[] dimensions, final int[] cellDimensions, int entitiesPerPixel )
+	final int[] cellDimensions;
+	
+	public CellContainer( final T type, final Cell< T, A > cellType, final long[] dimensions, final int[] cellDimensions, int entitiesPerPixel )
 	{
 		super( dimensions, entitiesPerPixel );
-		this.type = type;
-		this.cellArray = cellArray;
+		this.cells = new ListContainer< Cell< T, A > >( dimensions, cellType );
+		this.cellDimensions = cellDimensions;
 	}
 
 	@Override
 	public A update( Object updater )
 	{
-		return cellArray.getDataAccessForCell( 0 );
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	@Override
@@ -63,12 +68,6 @@ final public class CellContainer< T extends NativeType< T >, A extends DataAcces
 	{
 		// TODO Auto-generated method stub
 		return null;
-	}
-
-	@Override
-	public T createVariable()
-	{
-		return type.createVariable();
 	}
 
 	@Override

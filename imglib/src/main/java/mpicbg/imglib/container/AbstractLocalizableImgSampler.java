@@ -28,35 +28,70 @@
 package mpicbg.imglib.container;
 
 import mpicbg.imglib.Interval;
+import mpicbg.imglib.Localizable;
 import mpicbg.imglib.type.Type;
+import mpicbg.imglib.util.Util;
 
 /**
  * 
  * @param <T>
- * 
+ *
  * @author Stephan Preibisch and Stephan Saalfeld
  */
-public abstract class AbstractImgLocalizingCursor< T extends Type< T > > extends AbstractLocalizableImgSampler< T > implements ImgCursor< T >
+public abstract class AbstractLocalizableImgSampler< T extends Type< T > > extends AbstractImgSampler< T > implements Localizable
 {
-	public AbstractImgLocalizingCursor( final Interval f )
+	final protected long[] position;
+	final protected long[] size;
+	
+	public AbstractLocalizableImgSampler( final Interval f )
 	{
-		super( f );
+		super( f.numDimensions() );
+		
+		position = new long[ n ];
+		size = new long[ n ];
+		f.dimensions( size );
+	}
+	
+	@Override
+	public void localize( final float[] pos )
+	{
+		for ( int d = 0; d < n; d++ )
+			pos[ d ] = this.position[ d ];
 	}
 
 	@Override
-	public void remove(){}
-
-	@Override
-	public T next()
+	public void localize( final double[] pos )
 	{
-		fwd();
-		return get();
+		for ( int d = 0; d < n; d++ )
+			pos[ d ] = this.position[ d ];
 	}
 
 	@Override
-	public void jumpFwd( final long steps )
+	public void localize( int[] pos )
 	{
-		for ( long j = 0; j < steps; ++j )
-			fwd();
+		for ( int d = 0; d < n; d++ )
+			pos[ d ] = ( int )this.position[ d ];
 	}
+	
+	@Override
+	public void localize( long[] pos )
+	{
+		for ( int d = 0; d < n; d++ )
+			pos[ d ] = this.position[ d ];
+	}
+	
+	@Override
+	public float getFloatPosition( final int dim ){ return position[ dim ]; }
+	
+	@Override
+	public double getDoublePosition( final int dim ){ return position[ dim ]; }
+	
+	@Override
+	public int getIntPosition( final int dim ){ return ( int )position[ dim ]; }
+
+	@Override
+	public long getLongPosition( final int dim ){ return position[ dim ]; }
+	
+	@Override
+	public String toString(){ return Util.printCoordinates( position ) + " = " + get(); }
 }

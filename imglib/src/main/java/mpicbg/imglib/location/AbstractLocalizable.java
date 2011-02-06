@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2009--2010, Stephan Preibisch & Stephan Saalfeld
+ * Copyright (c) 2011, Stephan Saalfeld
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -9,7 +9,7 @@
  * list of conditions and the following disclaimer.  Redistributions in binary
  * form must reproduce the above copyright notice, this list of conditions and
  * the following disclaimer in the documentation and/or other materials
- * provided with the distribution.  Neither the name of the Fiji project nor
+ * provided with the distribution.  Neither the name of the imglib project nor
  * the names of its contributors may be used to endorse or promote products
  * derived from this software without specific prior written permission.
  * 
@@ -25,73 +25,81 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-package mpicbg.imglib.container;
+package mpicbg.imglib.location;
 
-import mpicbg.imglib.Interval;
 import mpicbg.imglib.Localizable;
-import mpicbg.imglib.type.Type;
 import mpicbg.imglib.util.Util;
 
 /**
  * 
- * @param <T>
- *
- * @author Stephan Preibisch and Stephan Saalfeld
+ * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-public abstract class AbstractImgLocalizableCursor< T extends Type< T > > extends AbstractImgSampler< T > implements Localizable
+public abstract class AbstractLocalizable implements Localizable
 {
+	final int n;
 	final protected long[] position;
-	final protected long[] size;
 	
-	public AbstractImgLocalizableCursor( final Interval f )
+	public AbstractLocalizable( final int n )
 	{
-		super( f.numDimensions() );
-		
+		this.n = n;
 		position = new long[ n ];
-		size = new long[ n ];
-		f.dimensions( size );
 	}
 	
 	@Override
 	public void localize( final float[] pos )
 	{
-		for ( int d = 0; d < n; d++ )
+		for ( int d = 0; d < n; ++d )
 			pos[ d ] = this.position[ d ];
 	}
 
 	@Override
 	public void localize( final double[] pos )
 	{
-		for ( int d = 0; d < n; d++ )
+		for ( int d = 0; d < n; ++d )
 			pos[ d ] = this.position[ d ];
 	}
 
 	@Override
 	public void localize( int[] pos )
 	{
-		for ( int d = 0; d < n; d++ )
+		for ( int d = 0; d < n; ++d )
 			pos[ d ] = ( int )this.position[ d ];
 	}
 	
 	@Override
 	public void localize( long[] pos )
 	{
-		for ( int d = 0; d < n; d++ )
+		for ( int d = 0; d < n; ++d )
 			pos[ d ] = this.position[ d ];
 	}
 	
 	@Override
-	public float getFloatPosition( final int dim ){ return position[ dim ]; }
+	public float getFloatPosition( final int d )
+	{
+		return position[ d ];
+	}
 	
 	@Override
-	public double getDoublePosition( final int dim ){ return position[ dim ]; }
+	public double getDoublePosition( final int d )
+	{
+		return position[ d ];
+	}
 	
 	@Override
-	public int getIntPosition( final int dim ){ return ( int )position[ dim ]; }
+	public int getIntPosition( final int d )
+	{
+		return ( int ) position[ d ];
+	}
 
 	@Override
-	public long getLongPosition( final int dim ){ return position[ dim ]; }
+	public long getLongPosition( final int d )
+	{
+		return position[ d ];
+	}
 	
 	@Override
-	public String toString(){ return Util.printCoordinates( position ) + " = " + get(); }
+	public String toString()
+	{
+		return Util.printCoordinates( position );
+	}
 }

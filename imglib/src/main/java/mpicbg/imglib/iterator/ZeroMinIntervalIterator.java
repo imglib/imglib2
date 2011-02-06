@@ -63,17 +63,9 @@ import mpicbg.imglib.util.Util;
  */
 public class ZeroMinIntervalIterator extends IntervalIterator
 {
-	final static private long[] max( final long[] size )
-	{
-		final long[] max = new long[ size.length ];
-		for ( int d = 0; d < size.length; ++d )
-			max[ d ] = size[ d ] - 1;
-		return max;
-	}
-	
 	public ZeroMinIntervalIterator( final long[] dimensions )
 	{
-		super( new long[ dimensions.length ], max( dimensions ) );
+		super( dimensions );
 	}
 
 	public ZeroMinIntervalIterator( final Interval interval )
