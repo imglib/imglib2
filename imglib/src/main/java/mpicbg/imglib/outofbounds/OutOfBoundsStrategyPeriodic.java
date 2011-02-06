@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2009--2010, Stephan Saalfeld
+ * Copyright (c) 2011, Stephan Saalfeld
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -9,7 +9,7 @@
  * list of conditions and the following disclaimer.  Redistributions in binary
  * form must reproduce the above copyright notice, this list of conditions and
  * the following disclaimer in the documentation and/or other materials
- * provided with the distribution.  Neither the name of the Fiji project nor
+ * provided with the distribution.  Neither the name of the imglib project nor
  * the names of its contributors may be used to endorse or promote products
  * derived from this software without specific prior written permission.
  * 
@@ -27,9 +27,10 @@
  */
 package mpicbg.imglib.outofbounds;
 
+import mpicbg.imglib.Interval;
 import mpicbg.imglib.Localizable;
-import mpicbg.imglib.container.ImgRandomAccess;
-import mpicbg.imglib.type.Type;
+import mpicbg.imglib.RandomAccess;
+import mpicbg.imglib.RandomAccessible;
 import mpicbg.imglib.util.Util;
 
 /**
@@ -49,31 +50,25 @@ import mpicbg.imglib.util.Util;
  *
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-public class OutOfBoundsStrategyPeriodic< T extends Type< T > > implements RealOutOfBounds< T >
+public class OutOfBoundsStrategyPeriodic< T > implements OutOfBounds< T >
 {
-	final protected ImgRandomAccess< T > outOfBoundsPositionable;
+	final protected RandomAccess< T > outOfBoundsRandomAccess;
 	
 	final protected int n;
 	
-	final protected long[] size, position;
+	final protected long[] dimension, position;
 	
 	final protected boolean[] dimIsOutOfBounds;
 	
 	protected boolean isOutOfBounds = false;
 	
-	public OutOfBoundsStrategyPeriodic( final ImgRandomAccess< T > source )
+	public < F extends Interval & RandomAccessible< T > > OutOfBoundsStrategyPeriodic( final F f )
 	{
-		this( source, source.getImg().integerRandomAccessSampler() );
-	}
-	
-	OutOfBoundsStrategyPeriodic(
-			final ImgRandomAccess< T > source,
-			final ImgRandomAccess< T > outOfBoundsPositionable )
-	{
-		this.outOfBoundsPositionable = outOfBoundsPositionable;
-		n = source.numDimensions();
-		size = new long[ n ];
-		source.getImg().dimensions( size );
+		this.outOfBoundsRandomAccess = f.randomAccess();
+		n = f.numDimensions();
+		dimension = new long[ n ];
+		f.dimensions( dimension );
+		
 		position = new long[ n ];
 		
 		dimIsOutOfBounds = new boolean[ n ];
@@ -92,7 +87,8 @@ public class OutOfBoundsStrategyPeriodic< T extends Type< T > > implements RealO
 		isOutOfBounds = false;
 	}
 	
-	/* Dimensionality */
+	
+	/* EuclideanSpace */
 	
 	@Override
 	public int numDimensions(){ return n; }
@@ -107,14 +103,14 @@ public class OutOfBoundsStrategyPeriodic< T extends Type< T > > implements RealO
 	/* Sampler */
 	
 	@Override
-	public T get(){ return outOfBoundsPositionable.get(); }
+	public T get(){ return outOfBoundsRandomAccess.get(); }
 	
 	@Override
 	@Deprecated
 	final public T getType(){ return get(); }
 	
 	
-	/* RasterLocalizable */
+	/* Localizable */
 	
 	@Override
 	public void localize( final float[] pos )
@@ -160,7 +156,7 @@ public class OutOfBoundsStrategyPeriodic< T extends Type< T > > implements RealO
 	public String toString() { return Util.printCoordinates( position ) + " = " + get(); }
 	
 	
-	/* RasterPositionable */
+	/* Positionable */
 	
 	@Override
 	final public void fwd( final int dim )
@@ -171,14 +167,14 @@ public class OutOfBoundsStrategyPeriodic< T extends Type< T > > implements RealO
 			dimIsOutOfBounds[ dim ] = false;
 			checkOutOfBounds();
 		}
-		else if ( p == size[ dim ] )
+		else if ( p == dimension[ dim ] )
 			dimIsOutOfBounds[ dim ] = isOutOfBounds = true;
 		
-		final int q = outOfBoundsPositionable.getIntPosition( dim ) + 1;
-		if ( q == size[ dim ] )
-			outOfBoundsPositionable.setPosition( 0, dim );
+		final int q = outOfBoundsRandomAccess.getIntPosition( dim ) + 1;
+		if ( q == dimension[ dim ] )
+			outOfBoundsRandomAccess.setPosition( 0, dim );
 		else
-			outOfBoundsPositionable.fwd( dim  );
+			outOfBoundsRandomAccess.fwd( dim  );
 	}
 	
 	@Override
@@ -187,37 +183,37 @@ public class OutOfBoundsStrategyPeriodic< T extends Type< T > > implements RealO
 		final long p = position[ dim ]--;
 		if ( p == 0 )
 			dimIsOutOfBounds[ dim ] = isOutOfBounds = true;
-		else if ( p == size[ dim ] )
+		else if ( p == dimension[ dim ] )
 		{
 			dimIsOutOfBounds[ dim ] = false;
 			checkOutOfBounds();
 		}
 		
-		final int q = outOfBoundsPositionable.getIntPosition( dim );
+		final int q = outOfBoundsRandomAccess.getIntPosition( dim );
 		if ( q == 0 )
-			outOfBoundsPositionable.setPosition( size[ dim ] - 1, dim );
+			outOfBoundsRandomAccess.setPosition( dimension[ dim ] - 1, dim );
 		else
-			outOfBoundsPositionable.bck( dim  );
+			outOfBoundsRandomAccess.bck( dim  );
 	}
 	
 	@Override
 	final public void setPosition( final int position, final int dim )
 	{
 		this.position[ dim ] = position;
-		final long mod = size[ dim ];
+		final long mod = dimension[ dim ];
 		if ( position < 0 )
 		{
-			outOfBoundsPositionable.setPosition( mod - 1 + ( ( position + 1 ) % mod ), dim );
+			outOfBoundsRandomAccess.setPosition( mod - 1 + ( ( position + 1 ) % mod ), dim );
 			dimIsOutOfBounds[ dim ] = isOutOfBounds = true;
 		}
 		else if ( position >= mod )
 		{
-			outOfBoundsPositionable.setPosition( position % mod, dim );
+			outOfBoundsRandomAccess.setPosition( position % mod, dim );
 			dimIsOutOfBounds[ dim ] = isOutOfBounds = true;
 		}
 		else
 		{
-			outOfBoundsPositionable.setPosition( position, dim );
+			outOfBoundsRandomAccess.setPosition( position, dim );
 			dimIsOutOfBounds[ dim ] = false;
 			if ( isOutOfBounds )
 				checkOutOfBounds();
@@ -246,24 +242,24 @@ public class OutOfBoundsStrategyPeriodic< T extends Type< T > > implements RealO
 	}
 	
 	@Override
-	public void moveTo( final Localizable localizable )
+	public void move( final Localizable localizable )
 	{
 		for ( int d = 0; d < n; ++d )
-			move( localizable.getIntPosition( d ) - position[ d ], d );
+			move( localizable.getLongPosition( d ), d );
 	}
 	
 	@Override
-	public void moveTo( final int[] pos )
+	public void move( final int[] pos )
 	{
 		for ( int d = 0; d < n; ++d )
-			move( pos[ d ] - this.position[ d ], d );
+			move( pos[ d ], d );
 	}
 	
 	@Override
-	public void moveTo( final long[] pos )
+	public void move( final long[] pos )
 	{
 		for ( int d = 0; d < n; ++d )
-			move( pos[ d ] - this.position[ d ], d );
+			move( pos[ d ], d );
 	}
 	
 	@Override
@@ -276,7 +272,7 @@ public class OutOfBoundsStrategyPeriodic< T extends Type< T > > implements RealO
 	public void setPosition( final Localizable localizable )
 	{
 		for ( int d = 0; d < n; ++d )
-			setPosition( localizable.getIntPosition( d ), d );
+			setPosition( localizable.getLongPosition( d ), d );
 	}
 	
 	@Override
