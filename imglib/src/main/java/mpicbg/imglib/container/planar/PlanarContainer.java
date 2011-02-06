@@ -32,13 +32,13 @@ import java.util.ArrayList;
 import mpicbg.imglib.Interval;
 import mpicbg.imglib.IterableRealInterval;
 import mpicbg.imglib.container.AbstractNativeContainer;
-import mpicbg.imglib.container.basictypecontainer.DataAccess;
+import mpicbg.imglib.container.Img;
+import mpicbg.imglib.container.ImgFactory;
+import mpicbg.imglib.container.ImgRandomAccess;
 import mpicbg.imglib.container.basictypecontainer.PlanarAccess;
 import mpicbg.imglib.container.basictypecontainer.array.ArrayDataAccess;
-import mpicbg.imglib.container.list.ListContainer;
 import mpicbg.imglib.outofbounds.OutOfBoundsFactory;
 import mpicbg.imglib.type.NativeType;
-import mpicbg.imglib.type.Type;
 
 /**
  * A {@link Container} that stores data in an array of 2d-slices each as a
@@ -116,8 +116,8 @@ public class PlanarContainer< T extends NativeType< T >, A extends ArrayDataAcce
 	@Override
 	public PlanarCursor<T> cursor()
 	{
-		if ( numDimensions == 2 )
-			return new PlanarCursor2D< T >( this, image, linkedType.duplicateTypeOnSameDirectAccessContainer() );
+		if ( n == 2 )
+			return new PlanarCursor2D< T >( this );
 		else
 			return new PlanarCursor< T >( this );
 	}
@@ -125,19 +125,22 @@ public class PlanarContainer< T extends NativeType< T >, A extends ArrayDataAcce
 	@Override
 	public PlanarLocalizingCursor<T> localizingCursor()
 	{
-		return new PlanarLocalizingCursor<T>( this );
+		if ( n == 2 )
+			return new PlanarLocalizingCursor2D< T >( this );
+		else
+			return new PlanarLocalizingCursor<T>( this );
 	}
 
 	@Override
-	public PlanarLocalizableByDimCursor<T> randomAccess()
+	public ImgRandomAccess<T> randomAccess()
 	{
-		return new PlanarLocalizableByDimCursor<T>( this) );
+		return null;
 	}
 
 	@Override
-	public PlanarLocalizableByDimOutOfBoundsCursor<T> randomAccess( OutOfBoundsFactory<T,Img<T>> outOfBoundsFactory )
+	public ImgRandomAccess<T> randomAccess( OutOfBoundsFactory<T,Img<T>> outOfBoundsFactory )
 	{
-		return new PlanarLocalizableByDimOutOfBoundsCursor<T>( this, outOfBoundsFactory );
+		return null;
 	}
 
 	@Override
@@ -162,4 +165,7 @@ public class PlanarContainer< T extends NativeType< T >, A extends ArrayDataAcce
 
 	@Override
 	public void setPlane( final int no, final A plane ) { mirror.set( no, plane ); }
+
+	@Override
+	public ImgFactory<T> factory() { return new PlanarContainerFactory<T>(); }
 }

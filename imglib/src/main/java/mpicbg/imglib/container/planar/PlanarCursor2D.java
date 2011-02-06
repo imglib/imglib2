@@ -25,11 +25,10 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-package mpicbg.imglib.cursor.planar;
+package mpicbg.imglib.container.planar;
 
 import mpicbg.imglib.container.planar.PlanarContainer;
-import mpicbg.imglib.image.Image;
-import mpicbg.imglib.type.Type;
+import mpicbg.imglib.type.NativeType;
 
 /**
  * Basic Iterator for 2d {@link PlanarContainer PlanarContainers}
@@ -37,15 +36,15 @@ import mpicbg.imglib.type.Type;
  *
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-public class PlanarCursor2D< T extends Type< T > > extends PlanarCursor< T >
+public class PlanarCursor2D< T extends NativeType< T > > extends PlanarCursor< T >
 {
 	final protected int maxIndex;
 	
-	public PlanarCursor2D( final PlanarContainer< T, ? > container, final Image< T > image, final T type )
+	public PlanarCursor2D( final PlanarContainer< T, ? > container )
 	{
-		super( container, image, type );
+		super( container );
 		
-		maxIndex = container.getNumPixels() - 1;
+		maxIndex = (int)container.numPixels() - 1;
 	}
 	
 	@Override
@@ -59,4 +58,11 @@ public class PlanarCursor2D< T extends Type< T > > extends PlanarCursor< T >
 	{
 		type.incIndex();
 	}
+
+	@Override
+	public void localize( final long[] position )
+	{		
+		position[ 0 ] = type.getIndex() % container.dim[ 0 ];
+		position[ 1 ] = type.getIndex() / container.dim[ 0 ];
+	}	
 }

@@ -107,15 +107,25 @@ public class PlanarCursor< T extends NativeType< T > > extends AbstractImgCursor
 	@Override
 	public void localize( final long[] position )
 	{
-		// TODO Auto-generated method stub
-		
+		for ( int d = 0; d < n; ++d )
+			position[ d ] = getLongPosition( d );
 	}
 
 	@Override
 	public long getLongPosition( final int dim )
 	{
-		// TODO Auto-generated method stub
-		return 0;
+		if ( dim == 0 )
+			return type.getIndex() % container.dim[ 0 ];
+		else if ( dim == 1 )
+			return type.getIndex() / container.dim[ 0 ];
+		else
+		{
+			// adapted from IntervalIndexer
+			int step = 1;
+			for ( int d = 2; d < dim; ++d )
+				step *= container.dim[ d ];
+			return ( sliceIndex / step ) % container.dim[ dim ];			               
+		}
 	}
 
 	@Override
