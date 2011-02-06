@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2009--2010, Stephan Saalfeld
+ * Copyright (c) 2011, Stephan Saalfeld
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -9,7 +9,7 @@
  * list of conditions and the following disclaimer.  Redistributions in binary
  * form must reproduce the above copyright notice, this list of conditions and
  * the following disclaimer in the documentation and/or other materials
- * provided with the distribution.  Neither the name of the Fiji project nor
+ * provided with the distribution.  Neither the name of the imglib project nor
  * the names of its contributors may be used to endorse or promote products
  * derived from this software without specific prior written permission.
  * 
@@ -25,44 +25,81 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-package mpicbg.imglib.container.planar;
+package mpicbg.imglib.location;
 
-import mpicbg.imglib.container.planar.PlanarContainer;
-import mpicbg.imglib.type.NativeType;
+import mpicbg.imglib.Localizable;
+import mpicbg.imglib.util.Util;
 
 /**
- * Basic Iterator for 2d {@link PlanarContainer PlanarContainers}
- * @param <T>
- *
+ * 
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-public class PlanarCursor2D< T extends NativeType< T > > extends PlanarCursor< T >
+public abstract class AbstractLocalizable implements Localizable
 {
-	final protected int maxIndex;
+	final int n;
+	final protected long[] position;
 	
-	public PlanarCursor2D( final PlanarContainer< T, ? > container )
+	public AbstractLocalizable( final int n )
 	{
-		super( container );
-		
-		maxIndex = (int)container.numPixels() - 1;
+		this.n = n;
+		position = new long[ n ];
 	}
 	
 	@Override
-	public boolean hasNext()
+	public void localize( final float[] pos )
 	{
-		return type.getIndex() < maxIndex;
+		for ( int d = 0; d < n; ++d )
+			pos[ d ] = this.position[ d ];
 	}
 
 	@Override
-	public void fwd()
+	public void localize( final double[] pos )
 	{
-		type.incIndex();
+		for ( int d = 0; d < n; ++d )
+			pos[ d ] = this.position[ d ];
 	}
 
 	@Override
-	public void localize( final long[] position )
-	{		
-		position[ 0 ] = type.getIndex() % container.dim[ 0 ];
-		position[ 1 ] = type.getIndex() / container.dim[ 0 ];
-	}	
+	public void localize( int[] pos )
+	{
+		for ( int d = 0; d < n; ++d )
+			pos[ d ] = ( int )this.position[ d ];
+	}
+	
+	@Override
+	public void localize( long[] pos )
+	{
+		for ( int d = 0; d < n; ++d )
+			pos[ d ] = this.position[ d ];
+	}
+	
+	@Override
+	public float getFloatPosition( final int d )
+	{
+		return position[ d ];
+	}
+	
+	@Override
+	public double getDoublePosition( final int d )
+	{
+		return position[ d ];
+	}
+	
+	@Override
+	public int getIntPosition( final int d )
+	{
+		return ( int ) position[ d ];
+	}
+
+	@Override
+	public long getLongPosition( final int d )
+	{
+		return position[ d ];
+	}
+	
+	@Override
+	public String toString()
+	{
+		return Util.printCoordinates( position );
+	}
 }

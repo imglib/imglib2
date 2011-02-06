@@ -72,12 +72,36 @@ public class IntervalIterator implements Iterator, Localizable
 	final protected long lastIndex;
 	protected long index = -1;
 	
+	public IntervalIterator( final long[] dimensions )
+	{
+		n = dimensions.length;
+		final int m = n - 1;
+		min = new long[ n ];
+		max = new long[ n ];
+		this.dimensions = new long[ n ];
+		steps = new long[ n ];
+		
+		long k = steps[ 0 ] = 1;
+		for ( int d = 0; d < m; )
+		{
+			final long dim = dimensions[ d ];
+			this.dimensions[ d ] = dim;
+			this.max[ d ] = dim - 1;
+			k *= dim;
+			steps[ ++d ] = k;	
+		}
+		final long dimm = dimensions[ m ];
+		this.max[ m ] = dimm - 1;
+		this.dimensions[ m ] = dimm;
+		lastIndex = k * dimm - 1;
+	}
+	
 	public IntervalIterator( final long[] min, final long[] max )
 	{
-		this.min = min.clone();
-		this.max = max.clone();
 		n = min.length;
 		final int m = n - 1;
+		this.min = min.clone();
+		this.max = max.clone();
 		
 		dimensions = new long[ n ];
 		steps = new long[ n ];
