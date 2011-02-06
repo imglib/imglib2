@@ -28,10 +28,13 @@
  */
 package mpicbg.imglib.sampler.special;
 
+import java.awt.Image;
+
 import mpicbg.imglib.Iterator;
 import mpicbg.imglib.container.Img;
 import mpicbg.imglib.container.ImgCursor;
 import mpicbg.imglib.container.ImgRandomAccess;
+import mpicbg.imglib.container.basictypecontainer.PlanarAccess;
 import mpicbg.imglib.type.Type;
 
 /**
@@ -51,6 +54,7 @@ public class OrthoSliceIterator< T extends Type< T > > implements ImgCursor< T >
 	/* index of x and y dimensions */
 	final protected int x, y;
 	final protected long w, h, maxX, maxY;
+	protected boolean initialState;
 	
 	final protected ImgRandomAccess< T > sampler;
 	
@@ -114,37 +118,37 @@ public class OrthoSliceIterator< T extends Type< T > > implements ImgCursor< T >
 	}
 
 	@Override
-	public int getIntPosition( int dim )
+	public int getIntPosition( final int dim )
 	{
 		return sampler.getIntPosition( dim );
 	}
 
 	@Override
-	public long getLongPosition( int dim )
+	public long getLongPosition( final int dim )
 	{
 		return sampler.getLongPosition( dim );
 	}
 
 	@Override
-	public void localize( int[] position )
+	public void localize( final int[] position )
 	{
 		sampler.localize( position );
 	}
 
 	@Override
-	public void localize( long[] position )
+	public void localize( final long[] position )
 	{
 		sampler.localize( position );
 	}
 
 	@Override
-	public double getDoublePosition( int dim )
+	public double getDoublePosition( final int dim )
 	{
 		return sampler.getDoublePosition( dim );
 	}
 
 	@Override
-	public float getFloatPosition( int dim )
+	public float getFloatPosition( final int dim )
 	{
 		return sampler.getFloatPosition( dim );
 	}
@@ -156,13 +160,13 @@ public class OrthoSliceIterator< T extends Type< T > > implements ImgCursor< T >
 	}
 
 	@Override
-	public void localize( float[] position )
+	public void localize( final float[] position )
 	{
 		sampler.localize( position );	
 	}
 
 	@Override
-	public void localize( double[] position )
+	public void localize( final double[] position )
 	{
 		sampler.localize( position );
 	}
@@ -174,14 +178,18 @@ public class OrthoSliceIterator< T extends Type< T > > implements ImgCursor< T >
 		if ( xi == maxX )
 		{
 			sampler.setPosition( 0, x );
-			sampler.fwd( y );
+			
+			if ( initialState )
+				initialState = false;
+			else
+				sampler.fwd( y );
 		}
 		else
 			sampler.fwd( x );
 	}
 
 	@Override
-	public void jumpFwd( long steps )
+	public void jumpFwd( final long steps )
 	{
 		final long ySteps = steps / w;
 		final long xSteps = steps - ySteps * w;
@@ -189,11 +197,17 @@ public class OrthoSliceIterator< T extends Type< T > > implements ImgCursor< T >
 		sampler.move( xSteps, x );
 	}
 
+	/**
+	 * We {@link PlanarAccess} to the end of the line, a state that has to be
+	 * checked anyways. In the fwd() call we then check for this special case
+	 * if it was maybe the initialState and set it to (0,x) (0,y)
+	 */
 	@Override
 	public void reset()
 	{
-		sampler.setPosition( -1, x );
+		sampler.setPosition( maxX, x );
 		sampler.setPosition( 0, y );
+		initialState = true;
 	}
 
 	@Override
