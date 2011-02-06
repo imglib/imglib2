@@ -14,20 +14,15 @@ public class RectangularROI< T > implements RandomAccessible< T >, RandomAccessi
 {
 	final int n;
 	
-	final RandomAccessible< T > source1;
-	final RandomAccessibleInterval< T, InjectiveInterval > source2;
-	final InjectiveInterval source3;
+	final RandomAccessible< T > source;
 	
-	public < S extends RandomAccessible< T > & RandomAccessibleInterval< T, InjectiveInterval > & InjectiveInterval >
-		RectangularROI( final long[] offset, final long[] size, final S source )
+	public RectangularROI( final long[] offset, final long[] size, final RandomAccessible< T > source )
 	{
 		this.n = source.numDimensions();
 		
-		this.source1 = source;
-		this.source2 = source;
-		this.source3 = source;
+		this.source = source;
 	}
-	
+
 	@Override
 	public int numDimensions() { return n; }
 
@@ -145,6 +140,13 @@ public class RectangularROI< T > implements RandomAccessible< T >, RandomAccessi
 
 	@Override
 	public RandomAccess<T> randomAccess()
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public T firstElement()
 	{
 		// TODO Auto-generated method stub
 		return null;

@@ -65,6 +65,7 @@ public class ByteScreenImage implements ScreenImage, IterableInterval< UnsignedB
 		image = Toolkit.getDefaultToolkit().createImage( source );
 	}
 	
+	@Override
 	public Image image()
 	{
 		return image;
@@ -164,5 +165,11 @@ public class ByteScreenImage implements ScreenImage, IterableInterval< UnsignedB
 	public long dimension( final int d )
 	{
 		return argbArray.dimension( d );
+	}
+
+	@Override
+	public UnsignedByteType firstElement()
+	{
+		return iterator().next();
 	}
 }

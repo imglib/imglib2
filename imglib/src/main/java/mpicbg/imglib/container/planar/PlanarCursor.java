@@ -25,77 +25,101 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-package mpicbg.imglib.interpolation.nearestneighbor;
+package mpicbg.imglib.cursor.planar;
 
-import mpicbg.imglib.container.Img;
-import mpicbg.imglib.container.ImgRandomAccess;
-import mpicbg.imglib.interpolation.Interpolator;
-import mpicbg.imglib.location.transform.RoundRasterPositionable;
-import mpicbg.imglib.outofbounds.OutOfBoundsFactory;
+import mpicbg.imglib.container.planar.PlanarContainer;
+import mpicbg.imglib.cursor.CursorImpl;
+import mpicbg.imglib.image.Image;
 import mpicbg.imglib.type.Type;
 
 /**
- * 
+ * Basic Iterator for {@link PlanarContainer PlanarContainers}
  * @param <T>
  *
  * @author Stephan Preibisch and Stephan Saalfeld
  */
-public class NearestNeighborInterpolator< T extends Type< T > > extends RoundRasterPositionable< ImgRandomAccess< T > > implements Interpolator< T, Img<T> >
+public class PlanarCursor< T extends Type< T >> extends CursorImpl< T >
 {
-	final protected OutOfBoundsFactory< T, Img<T> > outOfBoundsStrategyFactory;
-	final protected Img< T > container;
+	protected final T type;
+
+	protected final PlanarContainer< T, ? > container;
+
+	protected final int lastIndex, lastSliceIndex;
+
+	protected int sliceIndex;
 	
-	final static private < T extends Type< T > > ImgRandomAccess< T > createPositionableRasterSampler( Img< T > container, final OutOfBoundsFactory<T,Img<T>> outOfBoundsStrategyFactory )
+	protected boolean hasNext;
+
+	public PlanarCursor( final PlanarContainer< T, ? > container, final Image< T > image, final T type )
 	{
-		return container.integerRandomAccess( outOfBoundsStrategyFactory );
-	}
-	
-	protected NearestNeighborInterpolator( Img< T > container, final OutOfBoundsFactory<T,Img<T>> outOfBoundsStrategyFactory )
-	{
-		super( createPositionableRasterSampler( container, outOfBoundsStrategyFactory ) );
-		
-		this.outOfBoundsStrategyFactory = outOfBoundsStrategyFactory;
+		super( container, image );
+
+		this.type = type;
 		this.container = container;
-	}
-	
-	
-	/* Dimensionality */
-	
-	@Override
-	public int numDimensions()
-	{
-		return container.numDimensions();
+		lastIndex = container.getDimension( 0 ) * container.getDimension( 1 ) - 1;
+		lastSliceIndex = container.getSlices() - 1;
+
+		reset();
 	}
 
-	/**
-	 * Returns the {@link RasterOutOfBoundsFactory} used for interpolation
-	 * 
-	 * @return - the {@link RasterOutOfBoundsFactory}
-	 */
 	@Override
-	public OutOfBoundsFactory< T, Img<T> > getOutOfBoundsStrategyFactory()
-	{
-		return outOfBoundsStrategyFactory;
-	}
+	public T getType() { return type; }
 
 	/**
-	 * Returns the typed image the interpolator is working on
+	 * Note: This test is fragile in a sense that it returns true for elements
+	 * after the last element as well.
 	 * 
-	 * @return - the image
+	 * @return false for the last element 
 	 */
 	@Override
-	public Img< T > getFunction()
+	public boolean hasNext()
 	{
-		return container;
+		return hasNext;
 	}
-	
+
 	@Override
-	public T get() { return target.get(); }
-	
-	@Override
-	@Deprecated
-	final public T getType()
+	public void fwd()
 	{
-		return get();
+		type.incIndex();
+
+		final int i = type.getIndex();
+		
+		if ( i < lastIndex )
+			return;
+		else if ( i == lastIndex )
+			hasNext = sliceIndex < lastSliceIndex;
+		else
+		{
+			++sliceIndex;
+			type.updateIndex( 0 );
+			type.updateContainer( this );
+		}
 	}
+
+	@Override
+	public void close()
+	{
+		isClosed = true;
+		type.updateIndex( lastIndex + 1 );
+		sliceIndex = lastSliceIndex + 1;
+	}
+
+	@Override
+	public void reset()
+	{
+		sliceIndex = 0;
+		type.updateIndex( -1 );
+		type.updateContainer( this );
+		isClosed = false;
+		hasNext = true;
+	}
+
+	@Override
+	public PlanarContainer< T, ? > getStorageContainer() { return container;	}
+
+	@Override
+	public int getStorageIndex() { return sliceIndex; }
+
+	@Override
+	public String toString() { return type.toString(); }
 }

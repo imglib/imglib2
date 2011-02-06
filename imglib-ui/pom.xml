@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+    http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>mpicbg</groupId>
+    <artifactId>imglib-base</artifactId>
+    <version>2.0-SNAPSHOT</version>
+  </parent>
+
+  <artifactId>imglib-ui</artifactId>
+
+  <name>Imglib ImageJ</name>
+  <description>ImgLib user interface widgets.</description>
+
+  <dependencies>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>imglib</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <!-- TEMP - for development only -->
+    <dependency>
+    	<groupId>${project.groupId}</groupId>
+    	<artifactId>imglib-io</artifactId>
+    	<version>${project.version}</version>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <artifactId>maven-jar-plugin</artifactId>
+        <configuration>
+          <archive>
+            <manifest>
+              <packageName>mpicbg.imglib.ui</packageName>
+            </manifest>
+          </archive>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+
+  <!-- NB: for imglib-base, in case of partial checkout -->
+  <repositories>
+    <repository>
+      <id>imagej.releases</id>
+      <url>http://dev.imagejdev.org/maven2/releases</url>
+    </repository>
+    <repository>
+      <id>imagej.snapshots</id>
+      <url>http://dev.imagejdev.org/maven2/snapshots</url>
+    </repository>
+  </repositories>
+
+</project>

@@ -22,6 +22,7 @@
     <module>imglib-ij</module>
     <module>imglib-io</module>
     <module>imglib-scripting</module>
+    <module>imglib-ui</module>
   </modules>
 
   <properties>

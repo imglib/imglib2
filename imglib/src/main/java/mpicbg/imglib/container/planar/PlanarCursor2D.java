@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2009--2010, Stephan Preibisch & Stephan Saalfeld
+ * Copyright (c) 2009--2010, Stephan Saalfeld
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -25,41 +25,38 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-package mpicbg.imglib.outofbounds;
+package mpicbg.imglib.cursor.planar;
 
-import mpicbg.imglib.Interval;
-import mpicbg.imglib.RandomAccessible;
+import mpicbg.imglib.container.planar.PlanarContainer;
+import mpicbg.imglib.image.Image;
 import mpicbg.imglib.type.Type;
 
 /**
- * 
+ * Basic Iterator for 2d {@link PlanarContainer PlanarContainers}
  * @param <T>
  *
- * @author Stephan Preibisch and Stephan Saalfeld
+ * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-public class OutOfBoundsConstantValueFactory< T extends Type< T >, F extends Interval & RandomAccessible< T > >
-		implements OutOfBoundsFactory< T, F >
+public class PlanarCursor2D< T extends Type< T > > extends PlanarCursor< T >
 {
-	protected T value;
-
-	public OutOfBoundsConstantValueFactory( final T value )
+	final protected int maxIndex;
+	
+	public PlanarCursor2D( final PlanarContainer< T, ? > container, final Image< T > image, final T type )
 	{
-		this.value = value;
+		super( container, image, type );
+		
+		maxIndex = container.getNumPixels() - 1;
 	}
-
-	public void setValue( final T value )
+	
+	@Override
+	public boolean hasNext()
 	{
-		this.value = value;
-	}
-
-	public T getValue()
-	{
-		return value;
+		return type.getIndex() < maxIndex;
 	}
 
 	@Override
-	public OutOfBoundsConstantValue< T > create( final F f )
+	public void fwd()
 	{
-		return new OutOfBoundsConstantValue< T >( f.randomAccess(), f, value );
+		type.incIndex();
 	}
 }
