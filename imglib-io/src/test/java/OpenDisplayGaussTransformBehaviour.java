@@ -5,6 +5,7 @@ import mpicbg.imglib.container.Img;
 import mpicbg.imglib.container.ImgFactory;
 import mpicbg.imglib.container.array.ArrayContainerFactory;
 import mpicbg.imglib.container.list.ListContainerFactory;
+import mpicbg.imglib.container.planar.PlanarContainerFactory;
 import mpicbg.imglib.image.display.imagej.ImgLib2Display;
 import mpicbg.imglib.interpolation.nearestneighbor.NearestNeighborInterpolatorFactory;
 import mpicbg.imglib.io.LOCI;
@@ -38,7 +39,7 @@ public class OpenDisplayGaussTransformBehaviour
 		AffineModel3D model = new AffineModel3D();
 		model.set( 0.35355338f, -0.35355338f, 0.0f, 0.0f, 0.25f, 0.25f, -0.35355338f, 0.0f, 0.25f, 0.25f, 0.35355338f, 0.0f );
 
-		OutOfBoundsFactory<FloatType, Img<FloatType>> oob = new OutOfBoundsMirrorFactory<FloatType, Img<FloatType>>( Boundary.DOUBLE );
+		OutOfBoundsFactory<FloatType, Img<FloatType>> oob = new OutOfBoundsConstantValueFactory<FloatType, Img<FloatType>>( new FloatType( 255) );
 		NearestNeighborInterpolatorFactory< FloatType > interpolatorFactory = new NearestNeighborInterpolatorFactory< FloatType >( oob );
 		ImageTransform< FloatType > transform = new ImageTransform<FloatType>( img, model, interpolatorFactory );
 		
@@ -56,6 +57,6 @@ public class OpenDisplayGaussTransformBehaviour
 	{
 		new ImageJ();
 		
-		test( new ArrayContainerFactory<FloatType>() );
+		test( new PlanarContainerFactory<FloatType>() );
 	}
 }

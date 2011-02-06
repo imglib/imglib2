@@ -213,12 +213,6 @@ public class OrthoSliceIterator< T extends Type< T > > implements ImgCursor< T >
 	public void remove() {}
 
 	@Override
-	public T create()
-	{
-		return sampler.create();
-	}
-
-	@Override
 	public long min( final int d )
 	{
 		return sampler.min( d );

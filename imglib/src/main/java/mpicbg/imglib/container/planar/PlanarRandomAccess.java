@@ -37,7 +37,7 @@ import mpicbg.imglib.type.NativeType;
  *
  * @author Stephan Preibisch and Stephan Saalfeld
  */
-public class PlanarRandomAccess< T extends NativeType< T > > extends AbstractImgRandomAccess< T >
+public class PlanarRandomAccess< T extends NativeType< T > > extends AbstractImgRandomAccess< T > implements PlanarLocation
 {
 	final protected int[] tmp, sliceSteps, dim;
 	final int width, n;
@@ -132,7 +132,7 @@ public class PlanarRandomAccess< T extends NativeType< T > > extends AbstractImg
 		}
 		else if ( dim == 1 )
 		{
-			type.updateIndex( type.getIndex() - (int)this.position[ 0 ]*width + position*width );			
+			type.updateIndex( type.getIndex() - (int)this.position[ 1 ]*width + position*width );			
 		}
 		else
 		{
@@ -188,4 +188,7 @@ public class PlanarRandomAccess< T extends NativeType< T > > extends AbstractImg
 
 	@Override
 	public void setPosition( final long position, final int dim ) { setPosition( (int)position, dim ); }
+
+	@Override
+	public int getCurrentPlane() { return sliceIndex; }
 }
