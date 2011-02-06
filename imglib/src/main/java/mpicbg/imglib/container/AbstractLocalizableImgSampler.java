@@ -38,12 +38,12 @@ import mpicbg.imglib.util.Util;
  *
  * @author Stephan Preibisch and Stephan Saalfeld
  */
-public abstract class AbstractImgLocalizableCursor< T extends Type< T > > extends AbstractImgSampler< T > implements Localizable
+public abstract class AbstractLocalizableImgSampler< T extends Type< T > > extends AbstractImgSampler< T > implements Localizable
 {
 	final protected long[] position;
 	final protected long[] size;
 	
-	public AbstractImgLocalizableCursor( final Interval f )
+	public AbstractLocalizableImgSampler( final Interval f )
 	{
 		super( f.numDimensions() );
 		
