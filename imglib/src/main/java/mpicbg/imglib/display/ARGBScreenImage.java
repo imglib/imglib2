@@ -29,6 +29,7 @@ package mpicbg.imglib.display;
 
 import java.awt.Image;
 import java.awt.Toolkit;
+import java.awt.image.ImageProducer;
 import java.awt.image.MemoryImageSource;
 import java.util.Iterator;
 
@@ -48,7 +49,7 @@ public class ARGBScreenImage implements ScreenImage, IterableInterval< ARGBType 
 {
 	final protected int[] data; 
 	final protected Array< ARGBType, IntArray > argbArray;
-	final Image image;
+	final ImageProducer imageSource;
 	
 	public ARGBScreenImage( final int width, final int height )
 	{
@@ -58,16 +59,18 @@ public class ARGBScreenImage implements ScreenImage, IterableInterval< ARGBType 
 
 		final MemoryImageSource source = new MemoryImageSource( width, height, data, 0, width );
 		source.setAnimated( true );
-		
+
 		/* TOOO check if this is actually required */
 		source.setFullBufferUpdates( true );
-		image = Toolkit.getDefaultToolkit().createImage( source );
+
+		imageSource = source;
 	}
 	
 	@Override
 	public Image image()
 	{
-		return image;
+		// TODO - investigate more efficient way
+		return Toolkit.getDefaultToolkit().createImage(imageSource);
 	}
 
 	@Override
