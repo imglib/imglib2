@@ -65,7 +65,7 @@ public class Array< T extends NativeType< T >, A extends DataAccess > extends Ab
 	 * @param dim
 	 * @param entitiesPerPixel
 	 */
-	public Array( final T type, final A data, final long[] dim, final int entitiesPerPixel )
+	public Array( final A data, final long[] dim, final int entitiesPerPixel )
 	{
 		super( dim, entitiesPerPixel );
 		this.dim = new int[ n ];

@@ -29,19 +29,19 @@ public abstract class NativeContainerFactory< T extends NativeType< T > > extend
 	}
 
 	/* basic type containers */
-	public abstract NativeContainer< T, ? extends BitAccess > createBitInstance( final T type, long[] dimensions, int entitiesPerPixel );
+	public abstract NativeContainer< T, ? extends BitAccess > createBitInstance( long[] dimensions, int entitiesPerPixel );
 
-	public abstract NativeContainer< T, ? extends ByteAccess > createByteInstance( final T type, long[] dimensions, int entitiesPerPixel );
+	public abstract NativeContainer< T, ? extends ByteAccess > createByteInstance( long[] dimensions, int entitiesPerPixel );
 
-	public abstract NativeContainer< T, ? extends CharAccess > createCharInstance( final T type, long[] dimensions, int entitiesPerPixel );
+	public abstract NativeContainer< T, ? extends CharAccess > createCharInstance( long[] dimensions, int entitiesPerPixel );
 
-	public abstract NativeContainer< T, ? extends ShortAccess > createShortInstance( final T type, long[] dimensions, int entitiesPerPixel );
+	public abstract NativeContainer< T, ? extends ShortAccess > createShortInstance( long[] dimensions, int entitiesPerPixel );
 
-	public abstract NativeContainer< T, ? extends IntAccess > createIntInstance( final T type, long[] dimensions, int entitiesPerPixel );
+	public abstract NativeContainer< T, ? extends IntAccess > createIntInstance( long[] dimensions, int entitiesPerPixel );
 
-	public abstract NativeContainer< T, ? extends LongAccess > createLongInstance( final T type, long[] dimensions, int entitiesPerPixel );
+	public abstract NativeContainer< T, ? extends LongAccess > createLongInstance( long[] dimensions, int entitiesPerPixel );
 
-	public abstract NativeContainer< T, ? extends FloatAccess > createFloatInstance( final T type, long[] dimensions, int entitiesPerPixel );
+	public abstract NativeContainer< T, ? extends FloatAccess > createFloatInstance( long[] dimensions, int entitiesPerPixel );
 
-	public abstract NativeContainer< T, ? extends DoubleAccess > createDoubleInstance( final T type, long[] dimensions, int entitiesPerPixel );
+	public abstract NativeContainer< T, ? extends DoubleAccess > createDoubleInstance( long[] dimensions, int entitiesPerPixel );
 }

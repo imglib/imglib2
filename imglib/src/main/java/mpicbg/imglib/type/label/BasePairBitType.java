@@ -77,7 +77,7 @@ public class BasePairBitType implements BasePairType<BasePairBitType>, NativeTyp
 	public NativeContainer<BasePairBitType, ? extends BitAccess> createSuitableNativeContainer( final NativeContainerFactory<BasePairBitType> storageFactory, final long dim[] )	
 	{
 		// create the container
-		final NativeContainer<BasePairBitType, ? extends BitAccess> container = storageFactory.createBitInstance( new BasePairBitType(), dim, 3 );
+		final NativeContainer<BasePairBitType, ? extends BitAccess> container = storageFactory.createBitInstance( dim, 3 );
 		
 		// create a Type that is linked to the container
 		final BasePairBitType linkedType = new BasePairBitType( container );

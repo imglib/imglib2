@@ -48,7 +48,7 @@ public class IntType extends GenericIntType<IntType>
 	public NativeContainer<IntType, ? extends IntAccess> createSuitableNativeContainer( final NativeContainerFactory<IntType> storageFactory, final long dim[] )
 	{
 		// create the container
-		final NativeContainer<IntType, ? extends IntAccess> container = storageFactory.createIntInstance( new IntType(), dim, 1 );
+		final NativeContainer<IntType, ? extends IntAccess> container = storageFactory.createIntInstance( dim, 1 );
 		
 		// create a Type that is linked to the container
 		final IntType linkedType = new IntType( container );

@@ -71,7 +71,7 @@ public class ComplexFloatType extends ComplexTypeImpl<ComplexFloatType> implemen
 	public NativeContainer<ComplexFloatType, ? extends FloatAccess> createSuitableNativeContainer( final NativeContainerFactory<ComplexFloatType> storageFactory, final long dim[] )
 	{
 		// create the container
-		final NativeContainer<ComplexFloatType, ? extends FloatAccess> container = storageFactory.createFloatInstance( new ComplexFloatType(), dim, 2 );
+		final NativeContainer<ComplexFloatType, ? extends FloatAccess> container = storageFactory.createFloatInstance( dim, 2 );
 		
 		// create a Type that is linked to the container
 		final ComplexFloatType linkedType = new ComplexFloatType( container );

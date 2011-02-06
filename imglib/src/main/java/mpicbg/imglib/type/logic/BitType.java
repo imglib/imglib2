@@ -70,7 +70,7 @@ public class BitType extends IntegerTypeImpl<BitType> implements BooleanType<Bit
 	public NativeContainer<BitType, ? extends BitAccess> createSuitableNativeContainer( final NativeContainerFactory<BitType> storageFactory, final long dim[] )
 	{
 		// create the container
-		final NativeContainer<BitType, ? extends BitAccess> container = storageFactory.createBitInstance( new BitType(), dim, 1 );
+		final NativeContainer<BitType, ? extends BitAccess> container = storageFactory.createBitInstance( dim, 1 );
 		
 		// create a Type that is linked to the container
 		final BitType linkedType = new BitType( container );
