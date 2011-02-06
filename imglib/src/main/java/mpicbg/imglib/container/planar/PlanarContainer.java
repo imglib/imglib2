@@ -31,6 +31,7 @@ import java.util.ArrayList;
 
 import mpicbg.imglib.container.AbstractNativeContainer;
 import mpicbg.imglib.container.basictypecontainer.DataAccess;
+import mpicbg.imglib.container.basictypecontainer.PlanarAccess;
 import mpicbg.imglib.container.basictypecontainer.array.ArrayDataAccess;
 import mpicbg.imglib.type.NativeType;
 import mpicbg.imglib.type.Type;
@@ -53,41 +54,39 @@ import mpicbg.imglib.type.Type;
 public class PlanarContainer< T extends NativeType< T >, A extends DataAccess > extends AbstractNativeContainer< T, A > implements PlanarAccess< A >
 {
 	final protected int slices;
-
+	final int[] dim;
+	
 	final protected ArrayList< A > mirror;
 
-	public PlanarContainer( final int[] dim, final int entitiesPerPixel )
+	public PlanarContainer( final long[] dim, final int entitiesPerPixel )
 	{
-		this( new PlanarContainerFactory(), dim, entitiesPerPixel );
+		this( null, dim, entitiesPerPixel );
 	}
 
-	protected PlanarContainer( final PlanarContainerFactory factory, final int[] dim, final int entitiesPerPixel )
+	PlanarContainer( final A creator, final long[] dim, final int entitiesPerPixel )
 	{
-		this( factory, null, dim, entitiesPerPixel );
-	}
+		super( dim, entitiesPerPixel );
 
-	PlanarContainer( final PlanarContainerFactory factory, final A creator, final int[] dim, final int entitiesPerPixel )
-	{
-		super( factory, dim, entitiesPerPixel );
-
+		this.dim = new int[ n ];
+		for ( int d = 0; d < n; ++d )
+			this.dim[ d ] = (int)dim[ d ];
+		
 		// compute number of slices
 		int s = 1;
 
-		for ( int d = 2; d < numDimensions; ++d )
+		for ( int d = 2; d < n; ++d )
 			s *= dim[ d ];
 
 		slices = s;
 
-		this.factory = factory;
-
 		mirror = new ArrayList< A >( slices );
 
 		for ( int i = 0; i < slices; ++i )
-			mirror.add( creator == null ? null : creator.createArray( getDimension( 0 ) * getDimension( 1 ) * entitiesPerPixel ) );
+			mirror.add( creator == null ? null : creator.createArray( dimension( 0 ) * dimension( 1 ) * entitiesPerPixel ) );
 	}
 
 	@Override
-	public A update( final Cursor< ? > c )
+	public A update( final Object c )
 	{
 		return mirror.get( c.getStorageIndex() );
 	}
@@ -105,7 +104,7 @@ public class PlanarContainer< T extends NativeType< T >, A extends DataAccess > 
 	 */
 	public final int getIndex( final int[] l )
 	{
-		if ( numDimensions > 1 )
+		if ( n > 1 )
 			return l[ 1 ] * dim[ 0 ] + l[ 0 ];
 		return l[ 0 ];
 	}
@@ -141,16 +140,6 @@ public class PlanarContainer< T extends NativeType< T >, A extends DataAccess > 
 	public PlanarLocalizableByDimOutOfBoundsCursor<T> createLocalizableByDimCursor( final Image<T> image, OutOfBoundsStrategyFactory<T> outOfBoundsFactory )
 	{
 		return new PlanarLocalizableByDimOutOfBoundsCursor<T>( this, image, linkedType.duplicateTypeOnSameDirectAccessContainer(), outOfBoundsFactory );
-	}
-
-	@Override
-	public PlanarContainerFactory getFactory() { return factory; }
-
-	@Override
-	public void close()
-	{
-		for ( final A array : mirror )
-			array.close();
 	}
 
 	@Override
