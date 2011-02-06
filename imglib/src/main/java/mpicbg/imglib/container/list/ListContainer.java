@@ -120,7 +120,7 @@ public class ListContainer< T extends Type< T > > extends AbstractImg< T >
 	}
 
 	@Override
-	public ImgRandomAccess<T> randomAccess( final OutOfBoundsFactory<T, Img<T>> outOfBoundsFactory )
+	public ListOutOfBoundsRandomAccess<T> randomAccess( final OutOfBoundsFactory<T, Img<T>> outOfBoundsFactory )
 	{
 		return new ListOutOfBoundsRandomAccess< T >( this, outOfBoundsFactory );
 	}
