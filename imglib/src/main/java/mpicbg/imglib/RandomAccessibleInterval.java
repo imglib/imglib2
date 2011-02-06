@@ -41,5 +41,5 @@ import mpicbg.imglib.outofbounds.OutOfBoundsFactory;
  */
 public interface RandomAccessibleInterval< T, F > extends IterableInterval< T >
 {
-	public RandomAccess< T > integerRandomAccess( final OutOfBoundsFactory< T, F > factory );
+	public RandomAccess< T > randomAccess( final OutOfBoundsFactory< T, F > factory );
 }

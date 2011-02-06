@@ -132,7 +132,7 @@ public class RectangularROI< T > implements RandomAccessible< T >, RandomAccessi
 	}
 
 	@Override
-	public RandomAccess<T> integerRandomAccess(OutOfBoundsFactory<T, InjectiveInterval> factory)
+	public RandomAccess<T> randomAccess(OutOfBoundsFactory<T, InjectiveInterval> factory)
 	{
 		// TODO Auto-generated method stub
 		return null;

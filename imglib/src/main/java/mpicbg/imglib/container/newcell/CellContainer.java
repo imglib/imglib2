@@ -37,7 +37,7 @@ final public class CellContainer< T extends NativeType< T >, A extends DataAcces
 	}
 
 	@Override
-	public ImgRandomAccess<T> integerRandomAccess(
+	public ImgRandomAccess<T> randomAccess(
 			OutOfBoundsFactory<T, Img<T>> factory )
 	{
 		// TODO Auto-generated method stub
