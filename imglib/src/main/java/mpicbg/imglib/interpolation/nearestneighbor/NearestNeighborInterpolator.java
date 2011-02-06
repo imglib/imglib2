@@ -47,7 +47,7 @@ public class NearestNeighborInterpolator< T extends Type< T > > extends RoundRas
 	
 	final static private < T extends Type< T > > ImgRandomAccess< T > createPositionableRasterSampler( Img< T > container, final OutOfBoundsFactory<T,Img<T>> outOfBoundsStrategyFactory )
 	{
-		return container.integerRandomAccess( outOfBoundsStrategyFactory );
+		return container.randomAccess( outOfBoundsStrategyFactory );
 	}
 	
 	protected NearestNeighborInterpolator( Img< T > container, final OutOfBoundsFactory<T,Img<T>> outOfBoundsStrategyFactory )
