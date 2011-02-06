@@ -105,7 +105,7 @@ public class Array< T extends NativeType< T >, A extends DataAccess > extends Ab
 	}
 
 	@Override
-	public ArrayOutOfBoundsRandomAccess<T> integerRandomAccess(OutOfBoundsFactory<T, Img<T>> factory)
+	public ArrayOutOfBoundsRandomAccess<T> randomAccess(OutOfBoundsFactory<T, Img<T>> factory)
 	{
 		ArrayOutOfBoundsRandomAccess< T > c = new ArrayOutOfBoundsRandomAccess< T >( this, factory );
 		return c;

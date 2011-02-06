@@ -49,7 +49,7 @@ public interface Img<	T >
 	public ImgRandomAccess< T > randomAccess();
 	
 	@Override
-	public ImgRandomAccess< T > integerRandomAccess( OutOfBoundsFactory< T, Img< T > > factory );
+	public ImgRandomAccess< T > randomAccess( OutOfBoundsFactory< T, Img< T > > factory );
 	
 	@Override
 	public ImgCursor< T > cursor();
