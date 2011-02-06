@@ -2,6 +2,7 @@ target
 .classpath
 .project
 .settings
+*.class
 /imglib-algorithms.jar
 /imglib-ij.jar
 /imglib-io.jar
