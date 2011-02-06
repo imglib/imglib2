@@ -26,7 +26,7 @@ import mpicbg.imglib.type.Type;
 import mpicbg.models.InvertibleBoundable;
 import mpicbg.models.NoninvertibleModelException;
 
-public class ImageTransform<T extends Type<T>> implements OutputAlgorithm<T>
+public class ImageTransform<T extends Type<T>> implements OutputAlgorithm<Img<T>>
 {
 	final InvertibleBoundable transform;
 	final Img<T> container;

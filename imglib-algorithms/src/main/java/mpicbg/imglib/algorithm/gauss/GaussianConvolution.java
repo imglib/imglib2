@@ -33,7 +33,7 @@ import mpicbg.imglib.type.numeric.NumericType;
 import mpicbg.imglib.type.numeric.real.FloatType;
 import mpicbg.imglib.util.Util;
 
-public class GaussianConvolution< T extends NumericType<T>> implements MultiThreaded, OutputAlgorithm<T>, Benchmark
+public class GaussianConvolution< T extends NumericType<T>> implements MultiThreaded, OutputAlgorithm<Img<T>>, Benchmark
 {	
 	final Img<T> container, convolved;
 	final OutOfBoundsFactory<T,Img<T>> outOfBoundsFactory;

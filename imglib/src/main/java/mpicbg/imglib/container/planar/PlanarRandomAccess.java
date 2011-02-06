@@ -128,16 +128,15 @@ public class PlanarRandomAccess< T extends NativeType< T > > extends AbstractImg
 	{
 		if ( dim == 0 )
 		{
-			type.updateIndex( type.getIndex() - (int)this.position[ 0 ] + position );
+			type.updateIndex( type.getIndex() + position - (int)this.position[ 0 ] );
 		}
 		else if ( dim == 1 )
 		{
-			type.updateIndex( type.getIndex() - (int)this.position[ 1 ]*width + position*width );			
+			type.updateIndex( type.getIndex() + (position - (int)this.position[ 1 ]) * width );			
 		}
 		else
 		{
-			sliceIndex -= this.position[ dim ] * sliceSteps[ dim ]; 
-			sliceIndex += position * sliceSteps[ dim ];
+			sliceIndex += (position - (int)this.position[ dim ]) * sliceSteps[ dim ];
 			type.updateContainer( this );
 		}
 		
