@@ -64,54 +64,58 @@ public class OutOfBoundsMirrorDoubleBoundary< T > extends AbstractOutOfBoundsMir
 	@Override
 	final public void fwd( final int dim ) 
 	{
-		isOutOfBounds = ( ++position[ dim ] >= dimension[ dim ] );
-		final int x = outOfBoundsRandomAcess.getIntPosition( dim );
+		final long x = ++position[ dim ];
+		if ( x == min[ dim ] )
+		{
+			dimIsOutOfBounds[ dim ] = false;
+			if ( isOutOfBounds ) checkOutOfBounds();
+		}
+		else if ( x > max[ dim ] )
+			dimIsOutOfBounds[ dim ] = isOutOfBounds = true;
+		
+		final int y = outOfBoundsRandomAccess.getIntPosition( dim );
 		if ( inc[ dim ] )
 		{
-			if ( x + 1 == dimension[ dim ] )
-			{
+			if ( y == max[ dim ] )
 				inc[ dim ] = false;
-				outOfBoundsRandomAcess.bck( dim );
-			}
 			else
-				outOfBoundsRandomAcess.fwd( dim );
+				outOfBoundsRandomAccess.fwd( dim );
 		}
 		else
 		{
-			if ( x == 0 )
-			{
+			if ( y == min[ dim ] )
 				inc[ dim ] = true;
-				outOfBoundsRandomAcess.fwd( dim  );
-			}
 			else
-				outOfBoundsRandomAcess.bck( dim );
+				outOfBoundsRandomAccess.bck( dim );
 		}
 	}
 	
 	@Override
-	final public void bck( final int dim ) 
+	final public void bck( final int dim )
 	{
-		isOutOfBounds = ( --position[ dim ] < 0 );
-		final int x = outOfBoundsRandomAcess.getIntPosition( dim );
+		final long x = --position[ dim ];
+		if ( x < min[ dim ] )
+			dimIsOutOfBounds[ dim ] = isOutOfBounds = true;
+		else if ( x == max[ dim ] )
+		{
+			dimIsOutOfBounds[ dim ] = false;
+			if ( isOutOfBounds ) checkOutOfBounds();
+		}
+		
+		final int y = outOfBoundsRandomAccess.getIntPosition( dim );
 		if ( inc[ dim ] )
 		{
-			if ( x == 0 )
-			{
+			if ( y == min[ dim ] )
 				inc[ dim ] = false;
-				outOfBoundsRandomAcess.fwd( dim );
-			}
 			else
-				outOfBoundsRandomAcess.bck( dim );
+				outOfBoundsRandomAccess.fwd( dim );
 		}
 		else
 		{
-			if ( x + 1 == dimension[ dim ] )
-			{
+			if ( y == max[ dim ] )
 				inc[ dim ] = true;
-				outOfBoundsRandomAcess.bck( dim  );
-			}
 			else
-				outOfBoundsRandomAcess.fwd( dim );
+				outOfBoundsRandomAccess.bck( dim );
 		}
 	}
 	
@@ -162,6 +166,6 @@ public class OutOfBoundsMirrorDoubleBoundary< T > extends AbstractOutOfBoundsMir
 			inc[ dim ] = pos;
 		}
 		
-		outOfBoundsRandomAcess.setPosition( position, dim );
+		outOfBoundsRandomAccess.setPosition( position, dim );
 	}
 }

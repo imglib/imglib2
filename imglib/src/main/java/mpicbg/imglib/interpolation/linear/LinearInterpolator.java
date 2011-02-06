@@ -30,6 +30,7 @@ package mpicbg.imglib.interpolation.linear;
 import mpicbg.imglib.container.ImgRandomAccess;
 import mpicbg.imglib.interpolation.Interpolator;
 import mpicbg.imglib.location.transform.FloorRasterPositionable;
+import mpicbg.imglib.outofbounds.OutOfBoundsFactory;
 import mpicbg.imglib.type.Type;
 import mpicbg.imglib.type.numeric.NumericType;
 import mpicbg.imglib.util.Util;

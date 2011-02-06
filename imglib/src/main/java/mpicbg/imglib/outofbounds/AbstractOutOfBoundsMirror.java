@@ -41,7 +41,7 @@ import mpicbg.imglib.util.Util;
  */
 public abstract class AbstractOutOfBoundsMirror< T > implements OutOfBounds< T >
 {
-	final protected RandomAccess< T > outOfBoundsRandomAcess;
+	final protected RandomAccess< T > outOfBoundsRandomAccess;
 	
 	final protected int n;
 	
@@ -71,7 +71,7 @@ public abstract class AbstractOutOfBoundsMirror< T > implements OutOfBounds< T >
 		position = new long[ n ];
 		inc = new boolean[ n ];
 		
-		this.outOfBoundsRandomAcess = outOfBoundsRandomAccess;
+		this.outOfBoundsRandomAccess = outOfBoundsRandomAccess;
 		
 		for ( int i = 0; i < dimension.length; ++i )
 			inc[ i ] = true;
@@ -115,7 +115,7 @@ public abstract class AbstractOutOfBoundsMirror< T > implements OutOfBounds< T >
 	@Override
 	public T get()
 	{
-		return outOfBoundsRandomAcess.get();
+		return outOfBoundsRandomAccess.get();
 	}
 
 	@Override

@@ -73,26 +73,26 @@ public class OutOfBoundsMirrorSingleBoundary< T > extends AbstractOutOfBoundsMir
 		else if ( x == dimension[ dim ] )
 			dimIsOutOfBounds[ dim ] = isOutOfBounds = true;
 		
-		final int y = outOfBoundsRandomAcess.getIntPosition( dim );
+		final int y = outOfBoundsRandomAccess.getIntPosition( dim );
 		if ( inc[ dim ] )
 		{
 			if ( y + 1 == dimension[ dim ] )
 			{
 				inc[ dim ] = false;
-				outOfBoundsRandomAcess.bck( dim );
+				outOfBoundsRandomAccess.bck( dim );
 			}
 			else
-				outOfBoundsRandomAcess.fwd( dim );
+				outOfBoundsRandomAccess.fwd( dim );
 		}
 		else
 		{
 			if ( y == 0 )
 			{
 				inc[ dim ] = true;
-				outOfBoundsRandomAcess.fwd( dim  );
+				outOfBoundsRandomAccess.fwd( dim  );
 			}
 			else
-				outOfBoundsRandomAcess.bck( dim );
+				outOfBoundsRandomAccess.bck( dim );
 		}
 	}
 	
@@ -109,26 +109,26 @@ public class OutOfBoundsMirrorSingleBoundary< T > extends AbstractOutOfBoundsMir
 		}
 			
 		
-		final int y = outOfBoundsRandomAcess.getIntPosition( dim );
+		final int y = outOfBoundsRandomAccess.getIntPosition( dim );
 		if ( inc[ dim ] )
 		{
 			if ( y == 0 )
 			{
 				inc[ dim ] = false;
-				outOfBoundsRandomAcess.fwd( dim );
+				outOfBoundsRandomAccess.fwd( dim );
 			}
 			else
-				outOfBoundsRandomAcess.bck( dim );
+				outOfBoundsRandomAccess.bck( dim );
 		}
 		else
 		{
 			if ( y + 1 == dimension[ dim ] )
 			{
 				inc[ dim ] = true;
-				outOfBoundsRandomAcess.bck( dim  );
+				outOfBoundsRandomAccess.bck( dim  );
 			}
 			else
-				outOfBoundsRandomAcess.fwd( dim );
+				outOfBoundsRandomAccess.fwd( dim );
 		}
 	}
 	
@@ -186,6 +186,6 @@ public class OutOfBoundsMirrorSingleBoundary< T > extends AbstractOutOfBoundsMir
 			inc[ dim ] = pos;
 		}
 		
-		outOfBoundsRandomAcess.setPosition( position, dim );
+		outOfBoundsRandomAccess.setPosition( position, dim );
 	}
 }
