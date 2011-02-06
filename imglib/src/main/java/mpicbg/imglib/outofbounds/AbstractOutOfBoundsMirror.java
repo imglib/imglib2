@@ -207,7 +207,7 @@ public abstract class AbstractOutOfBoundsMirror< T > implements OutOfBounds< T >
 	public void move( final Localizable localizable )
 	{
 		for ( int d = 0; d < n; ++d )
-			move( localizable.getIntPosition( d ), d );
+			move( localizable.getLongPosition( d ), d );
 	}
 	
 	@Override
@@ -225,9 +225,9 @@ public abstract class AbstractOutOfBoundsMirror< T > implements OutOfBounds< T >
 	}
 	
 	@Override
-	public void setPosition( final long position, final int dim )
+	public void setPosition( final int position, final int dim )
 	{
-		setPosition( ( int )position, dim );
+		setPosition( ( long )position, dim );
 	}
 	
 	@Override

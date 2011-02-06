@@ -133,29 +133,28 @@ public class OutOfBoundsMirrorSingleBoundary< T > extends AbstractOutOfBoundsMir
 	}
 	
 	@Override
-	final public void setPosition( int intPosition, final int dim )
+	final public void setPosition( long position, final int dim )
 	{
-		long l = intPosition;
-		this.position[ dim ] = l;
+		this.position[ dim ] = position;
 		final long mod = dimension[ dim ];
 		final boolean pos;
-		if ( l < 0 )
+		if ( position < 0 )
 		{
 			dimIsOutOfBounds[ dim ] = isOutOfBounds = true;
-			l = -l;
+			position = -position;
 			pos = false;
 		}
 		else
 			pos = true;	
 		
-		if ( l >= mod )
+		if ( position >= mod )
 		{
 			dimIsOutOfBounds[ dim ] = isOutOfBounds = true;
 			final long x = this.p[ dim ];
 			
-			if ( l <= x )
+			if ( position <= x )
 			{
-				l = x - l;
+				position = x - position;
 				inc[ dim ] = !pos;
 			}
 			else
@@ -163,16 +162,16 @@ public class OutOfBoundsMirrorSingleBoundary< T > extends AbstractOutOfBoundsMir
 				/* catches mod == 1 to no additional cost */
 				try
 				{
-					l %= x;
-					if ( l >= mod )
+					position %= x;
+					if ( position >= mod )
 					{
-						l = x - l;
+						position = x - position;
 						inc[ dim ] = !pos;
 					}
 					else
 						inc[ dim ] = pos;
 				}
-				catch ( ArithmeticException e ){ l = 0; }
+				catch ( ArithmeticException e ){ position = 0; }
 			}
 		}
 		else
@@ -187,6 +186,6 @@ public class OutOfBoundsMirrorSingleBoundary< T > extends AbstractOutOfBoundsMir
 			inc[ dim ] = pos;
 		}
 		
-		outOfBoundsRandomAcess.setPosition( l, dim );
+		outOfBoundsRandomAcess.setPosition( position, dim );
 	}
 }
