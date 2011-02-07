@@ -1,6 +1,6 @@
 package script.imglib.algorithm.fn;
 
-import mpicbg.imglib.algorithm.roi.StatisticalOperation;
+import mpicbg.imglib.algorithm.roi.OrderStatistics;
 import mpicbg.imglib.algorithm.roi.StructuringElement;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
@@ -51,7 +51,7 @@ public abstract class Morph<T extends RealType<T>> extends Image<T>
 		}
 		R t = img.createType();
 		t.setReal(outside);
-		StatisticalOperation<R> morph = (StatisticalOperation<R>) c.getConstructor(Image.class, StructuringElement.class, OutOfBoundsStrategyFactory.class)
+		OrderStatistics<R> morph = (OrderStatistics<R>) c.getConstructor(Image.class, StructuringElement.class, OutOfBoundsStrategyFactory.class)
 				.newInstance(img, strel, new OutOfBoundsStrategyValueFactory<R>(t));
 		if (!morph.process()) { // !checkInput becomes true? TODO
 			throw new Exception(morph.getClass().getSimpleName() + ": " + morph.getErrorMessage());

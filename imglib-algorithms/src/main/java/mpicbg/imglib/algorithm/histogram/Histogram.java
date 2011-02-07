@@ -107,7 +107,6 @@ public class Histogram <T extends Type<T>> implements Algorithm, Benchmark
 	/**
 	 * Returns the bin count corresponding to a given {@link Type}.
 	 * @param t the Type corresponding to the requested 
-	 * {@link HistogramBin}
 	 * @return The requested bin count.
 	 */
 	public int getBin(final T t)

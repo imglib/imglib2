@@ -13,7 +13,7 @@ import mpicbg.imglib.type.numeric.RealType;
  *
  * @param <T> {@link Image} type.
  */
-public class MedianFilter<T extends RealType<T>> extends StatisticalOperation<T> {
+public class MedianFilter<T extends RealType<T>> extends OrderStatistics<T> {
 
     public MedianFilter(final Image<T> imageIn,
             int[] size, OutOfBoundsStrategyFactory<T> oobFactory) {

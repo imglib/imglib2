@@ -38,18 +38,6 @@ public abstract class ROIAlgorithm <T extends Type<T>, S extends Type<S>>
 	private String name;
 	private long pTime;
 
-	/**
-	 * Creates an ROIAlgorithm with default {@link OutOfBoundsStrategyValueFactory}, with value
-	 * Zero.
-	 * @param type a representative type for the output image.
-	 * @param imageIn the image over which to iterate.
-	 * @param patchSize the size of the patch that will be examined at each iteration.
-	 */
-	/*protected ROIAlgorithm(final S type, final Image<T> imageIn, final int[] patchSize)
-	{
-		this(type, imageIn, patchSize, null);
-	}*/
-
 	protected ROIAlgorithm(final ImageFactory<S> imFactory,
             final Image<T> inputImage,
             final int[] patchSize)
@@ -68,14 +56,7 @@ public abstract class ROIAlgorithm <T extends Type<T>, S extends Type<S>>
 	            patchSize));
 	}
 	
-	/**
-	 * 
-	 * @param type a representative type for the output image.
-	 * @param imageIn the image over which to iterate.
-	 * @param patchSize the size of the patch that will be examined at each iteration.
-	 * @param inOutFactory an {@link OutOfBoundsStrategyFactory} to handle the border phenomenon.
-	 */
-	protected ROIAlgorithm(final ImageFactory<S> imFactory,	        
+	protected ROIAlgorithm(final ImageFactory<S> imFactory,
 	        StructuringElementCursor<T> strelCursor)
 	{		
 		int nd = strelCursor.getImage().getNumDimensions();
@@ -99,7 +80,12 @@ public abstract class ROIAlgorithm <T extends Type<T>, S extends Type<S>>
 	protected abstract boolean patchOperation(
 			final StructuringElementCursor<T> cursor,
 			final S outputType);
-	
+
+
+    protected StructuringElementCursor<T> getStrelCursor()
+    {
+        return strelCursor;
+    }
 
 	/**
 	 * Set the name given to the output image.
@@ -222,10 +208,5 @@ public abstract class ROIAlgorithm <T extends Type<T>, S extends Type<S>>
 	{
 		return pTime;
 	}
-	
-	protected StructuringElementCursor<T> getStrelCursor()
-	{
-	    return strelCursor;
-	}
-	
+
 }

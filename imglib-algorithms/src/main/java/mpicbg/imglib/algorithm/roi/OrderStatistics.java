@@ -1,7 +1,6 @@
 package mpicbg.imglib.algorithm.roi;
 
 import java.util.Arrays;
-
 import mpicbg.imglib.algorithm.ROIAlgorithm;
 import mpicbg.imglib.cursor.special.StructuringElementCursor;
 import mpicbg.imglib.image.Image;
@@ -11,7 +10,7 @@ import mpicbg.imglib.outofbounds.OutOfBoundsStrategyValueFactory;
 import mpicbg.imglib.type.numeric.RealType;
 
 /**
- * StatisticalOperation provides the framework to create Order Statistic operations.  It operates
+ * OrderStatistics provides the framework to create Order Statistic operations.  It operates
  * by cursing over the input {@link Image}, and collecting a sorted list of the pixels "covered" by
  * a {@link StructuringElement}.  This list is made available to children classes, which are
  * responsible for setting the pixel value at the current position in the output Image.
@@ -20,7 +19,7 @@ import mpicbg.imglib.type.numeric.RealType;
  *
  * @param <T> The input- and output-{@link Image} type.
  */
-public abstract class StatisticalOperation<T extends RealType<T>> extends ROIAlgorithm<T, T> {
+public abstract class OrderStatistics<T extends RealType<T>> extends ROIAlgorithm<T, T> {
 	//Member variables
 	
 	private final double[] statArray;
@@ -28,12 +27,12 @@ public abstract class StatisticalOperation<T extends RealType<T>> extends ROIAlg
 	
 	//Member functions
 	
-	public StatisticalOperation(final Image<T> imageIn, int[][] path) {
+	public OrderStatistics(final Image<T> imageIn, int[][] path) {
         this(imageIn, path, new OutOfBoundsStrategyValueFactory<T>());
     }
 	
-	public StatisticalOperation(final Image<T> imageIn, int[][] path, 
-	        OutOfBoundsStrategyFactory<T> oobFactory) {
+	public OrderStatistics(final Image<T> imageIn, int[][] path,
+                           OutOfBoundsStrategyFactory<T> oobFactory) {
 		super(new ImageFactory<T>(imageIn.createType(), imageIn.getContainerFactory()),
 		        new StructuringElementCursor<T>(
 		                imageIn.createLocalizableByDimCursor(oobFactory), path));
