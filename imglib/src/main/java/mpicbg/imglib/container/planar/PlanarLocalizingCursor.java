@@ -38,7 +38,7 @@ import mpicbg.imglib.type.NativeType;
  *
  * @author Stephan Preibisch and Stephan Saalfeld
  */
-public class PlanarLocalizingCursor< T extends NativeType< T > > extends AbstractImgLocalizingCursor< T >
+public class PlanarLocalizingCursor< T extends NativeType< T > > extends AbstractImgLocalizingCursor< T > implements PlanarLocation
 {
 	protected final T type;
 	protected final PlanarContainer< T, ? > container;
@@ -127,4 +127,7 @@ public class PlanarLocalizingCursor< T extends NativeType< T > > extends Abstrac
 
 	@Override
 	public T get() { return type; }
+
+	@Override
+	public int getCurrentPlane() { return sliceIndex; }
 }

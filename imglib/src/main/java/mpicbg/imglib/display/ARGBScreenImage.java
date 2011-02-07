@@ -54,16 +54,10 @@ public class ARGBScreenImage implements ScreenImage, IterableInterval< ARGBType 
 	public ARGBScreenImage( final int width, final int height )
 	{
 		data = new int[ width * height ];
-		argbArray = new Array< ARGBType, IntArray >( new ARGBType(), new IntArray( data ), new long[]{ width, height }, 1 );
+		argbArray = new Array< ARGBType, IntArray >( new IntArray( data ), new long[]{ width, height }, 1 );
 		argbArray.setLinkedType( new ARGBType( argbArray ) );
 
-		final MemoryImageSource source = new MemoryImageSource( width, height, data, 0, width );
-		source.setAnimated( true );
-
-		/* TOOO check if this is actually required */
-		source.setFullBufferUpdates( true );
-
-		imageSource = source;
+		imageSource = new MemoryImageSource( width, height, data, 0, width );
 	}
 	
 	@Override

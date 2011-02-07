@@ -45,16 +45,16 @@ import mpicbg.imglib.type.numeric.integer.UnsignedByteType;
  *
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-public class ByteScreenImage implements ScreenImage, IterableInterval< UnsignedByteType >
+public class UnsignedByteScreenImage implements ScreenImage, IterableInterval< UnsignedByteType >
 {
 	final protected byte[] data; 
 	final protected Array< UnsignedByteType, ByteArray > argbArray;
 	final Image image;
 	
-	public ByteScreenImage( final int width, final int height )
+	public UnsignedByteScreenImage( final int width, final int height )
 	{
 		data = new byte[ width * height ];
-		argbArray = new Array< UnsignedByteType, ByteArray >( new UnsignedByteType(), new ByteArray( data ), new long[]{ width, height }, 1 );
+		argbArray = new Array< UnsignedByteType, ByteArray >( new ByteArray( data ), new long[]{ width, height }, 1 );
 		argbArray.setLinkedType( new UnsignedByteType( argbArray ) );
 
 		final MemoryImageSource source = new MemoryImageSource( width, height, ColorModel.getRGBdefault(), data, 0, width );

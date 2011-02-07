@@ -28,7 +28,6 @@
 package mpicbg.imglib.container;
 
 import mpicbg.imglib.Interval;
-import mpicbg.imglib.type.Type;
 
 /**
  * 
@@ -36,7 +35,7 @@ import mpicbg.imglib.type.Type;
  * 
  * @author Stephan Preibisch and Stephan Saalfeld
  */
-public abstract class AbstractImgLocalizingCursor< T extends Type< T > > extends AbstractLocalizableImgSampler< T > implements ImgCursor< T >
+public abstract class AbstractImgLocalizingCursor< T > extends AbstractLocalizableImgSampler< T > implements ImgCursor< T >
 {
 	public AbstractImgLocalizingCursor( final Interval f )
 	{

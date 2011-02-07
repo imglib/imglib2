@@ -28,6 +28,7 @@
 package mpicbg.imglib.container.list;
 
 import java.util.ArrayList;
+import java.util.Collection;
 
 import mpicbg.imglib.Interval;
 import mpicbg.imglib.IterableRealInterval;
@@ -51,12 +52,11 @@ public class ListContainer< T extends Type< T > > extends AbstractImg< T >
 	final protected int[] dim;
 	
 	final ArrayList<T> pixels;
-	final T type;
 	
 	// we have to overwrite those as this can change during the processing
 	protected int numPixels, numEntities;
 
-	public ListContainer( final long[] dim, final T type )
+	protected ListContainer( final long[] dim, final T type )
 	{
 		super( dim );
 
@@ -68,11 +68,26 @@ public class ListContainer< T extends Type< T > > extends AbstractImg< T >
 		IntervalIndexer.createAllocationSteps( this.dim, this.step );
 		this.numPixels = ( int ) super.numPixels;
 		
-		this.type = type;
 		this.pixels = new ArrayList< T >( numPixels );
 		
 		for ( int i = 0; i < this.numPixels; ++i )
 			pixels.add( type.createVariable() );
+	}
+	
+	public ListContainer( final Collection<T> collection, final long[] dim )
+	{
+		super( dim );
+		
+		this.dim = new int[ n ];
+		for ( int d = 0; d < n; ++d )
+			this.dim[ d ] = ( int )dim[ d ];
+
+		this.step = new int[ n ];
+		IntervalIndexer.createAllocationSteps( this.dim, this.step );
+		this.numPixels = ( int ) super.numPixels;
+		
+		this.pixels = new ArrayList< T >( numPixels );
+		this.pixels.addAll( collection );
 	}
 
 	public int[] getSteps() { return step.clone(); }
