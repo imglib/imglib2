@@ -2,20 +2,14 @@ package mpicbg.imglib.container.newcell;
 
 import mpicbg.imglib.Cursor;
 import mpicbg.imglib.IterableRealInterval;
-import mpicbg.imglib.RandomAccess;
 import mpicbg.imglib.container.AbstractNativeContainer;
 import mpicbg.imglib.container.Img;
-import mpicbg.imglib.container.ImgCursor;
-import mpicbg.imglib.container.ImgFactory;
-import mpicbg.imglib.container.ImgRandomAccess;
-import mpicbg.imglib.container.array.ArrayContainerFactory;
-import mpicbg.imglib.container.basictypecontainer.DataAccess;
+import mpicbg.imglib.container.basictypecontainer.array.ArrayDataAccess;
 import mpicbg.imglib.container.list.ListContainer;
-import mpicbg.imglib.container.list.ListRandomAccess;
 import mpicbg.imglib.outofbounds.OutOfBoundsFactory;
 import mpicbg.imglib.type.NativeType;
 
-final public class CellContainer< T extends NativeType< T >, A extends DataAccess > extends AbstractNativeContainer< T, A >
+final public class CellContainer< T extends NativeType< T >, A extends ArrayDataAccess< A > > extends AbstractNativeContainer< T, A >
 {
 	protected ListContainer< Cell< T , A > > cells;
 	
@@ -23,27 +17,25 @@ final public class CellContainer< T extends NativeType< T >, A extends DataAcces
 	 *  Dimensions of a standard cell.
 	 *  Cells on the max border of the image may be cut off and have different dimensions.
 	 */
-	final long[] cellDims;
+	final int[] cellDims;
 
-	public CellContainer( final T type, final Cell< T, A > cellType, final long[] dimensions, final long[] cellDimensions, int entitiesPerPixel )
+	public CellContainer( final A creator, final long[] dimensions, final int[] cellDimensions, int entitiesPerPixel )
 	{
 		super( dimensions, entitiesPerPixel );
 
-		cellDims = new long[ n ];
-		for ( int d = 0; d < n; ++d )
-			cellDims[ d ] = cellDimensions[ d ];
+		cellDims = cellDimensions.clone(); 
 
 		final long[] numCells = new long[ n ];
-		final long[] borderSize = new long[ n ];
+		final int[] borderSize = new int[ n ];
 		final long[] currentCellOffset = new long[ n ];
-		final long[] currentCellDims = new long[ n ];
+		final int[] currentCellDims = new int[ n ];
 
 		for ( int d = 0; d < n; ++d ) {
 			numCells[ d ] = ( dimensions[ d ] - 1 ) / cellDims[ d ] + 1;
-			borderSize[ d ] = dimensions[ d ] - (numCells[ d ] - 1) * cellDims[ d ];
+			borderSize[ d ] = ( int )( dimensions[ d ] - (numCells[ d ] - 1) * cellDims[ d ] );
 		}
 
-		cells = new ListContainer< Cell< T, A > >( numCells, cellType );
+		cells = new ListContainer< Cell< T, A > >( numCells, new Cell< T, A >( n ) );
 
 		Cursor< Cell < T, A > > cellCursor = cells.localizingCursor();		
 		while ( cellCursor.hasNext() ) {
@@ -52,14 +44,11 @@ final public class CellContainer< T extends NativeType< T >, A extends DataAcces
 			cellCursor.localize( currentCellOffset );
 			for ( int d = 0; d < n; ++d )
 			{
-				currentCellDims[ d ] = (currentCellOffset[d] + 1 == numCells[d])  ?  borderSize[ d ]  :  cellDims[ d ];
+				currentCellDims[ d ] = ( int )( (currentCellOffset[d] + 1 == numCells[d])  ?  borderSize[ d ]  :  cellDims[ d ] );
 				currentCellOffset[ d ] *= cellDims[ d ];
 			}
 			
-			// TODO:
-			// I'm using Array.update() to obtain an A instance here, which seems quite dirty.
-			// Maybe Array should have a getData() method? 
-			c.set( new Cell< T, A >( type, cellType.update( this ), currentCellDims, currentCellOffset, entitiesPerPixel ) );
+			c.set( new Cell< T, A >( creator, currentCellDims, currentCellOffset, entitiesPerPixel ) );
 		}
 	}
 
@@ -69,7 +58,7 @@ final public class CellContainer< T extends NativeType< T >, A extends DataAcces
 	 * This interface is implemented by all samplers on the CellContainer. It
 	 * allows the container to ask for the cell the sampler is currently in.
 	 */
-	public interface CellContainerSampler< T extends NativeType< T >, A extends DataAccess >
+	public interface CellContainerSampler< T extends NativeType< T >, A extends ArrayDataAccess< A > >
 	{
 		/**
 		 * @return the cell the sampler is currently in.
@@ -86,7 +75,7 @@ final public class CellContainer< T extends NativeType< T >, A extends DataAcces
 		 * know what to do with a CellCursor, however, it is not using it's
 		 * parameter anyway.
 		 */
-		return ( ( CellContainerSampler< T, A > ) cursor ).getCell().update( cursor );
+		return ( ( CellContainerSampler< T, A > ) cursor ).getCell().getData();
 	}
 
 
@@ -161,11 +150,24 @@ final public class CellContainer< T extends NativeType< T >, A extends DataAcces
 		return new CellContainerFactory< T >();
 	}
 
+	@SuppressWarnings( "unchecked" )
 	@Override
 	public boolean equalIterationOrder( IterableRealInterval<?> f )
 	{
-		// TODO Auto-generated method stub
+		if ( f.numDimensions() != this.numDimensions() )
+			return false;
+		
+		if ( getClass().isInstance( f ) )
+		{
+			CellContainer< T, A > other = (CellContainer< T, A >) f;
+
+			for ( int d = 0; d < n; ++d ) 
+				if ( this.size[ d ] != other.size[ d ] || this.cellDims[ d ] != other.cellDims[ d ] )
+					return false;
+			
+			return true;
+		}
+		
 		return false;
 	}
-
 }

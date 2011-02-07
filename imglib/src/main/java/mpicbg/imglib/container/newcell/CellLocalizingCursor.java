@@ -2,10 +2,10 @@ package mpicbg.imglib.container.newcell;
 
 import mpicbg.imglib.Cursor;
 import mpicbg.imglib.container.AbstractImgLocalizingCursor;
-import mpicbg.imglib.container.basictypecontainer.DataAccess;
+import mpicbg.imglib.container.basictypecontainer.array.ArrayDataAccess;
 import mpicbg.imglib.type.NativeType;
 
-public class CellLocalizingCursor< T extends NativeType< T >, A extends DataAccess > extends AbstractImgLocalizingCursor< T > implements CellContainer.CellContainerSampler< T, A >
+public class CellLocalizingCursor< T extends NativeType< T >, A extends ArrayDataAccess< A > > extends AbstractImgLocalizingCursor< T > implements CellContainer.CellContainerSampler< T, A >
 {
 	protected final T type;
 	
@@ -61,10 +61,10 @@ public class CellLocalizingCursor< T extends NativeType< T >, A extends DataAcce
 		}
 
 		Cell< T, A > c = getCell();
-		c.offset( minPositionInCell ); 
-		c.dimensions( maxPositionInCell );
-		for ( int d = 0; d < n; ++d )
-			maxPositionInCell[ d ] += minPositionInCell[ d ];
+		for ( int d = 0; d < n; ++d ) {
+			minPositionInCell[ d ] = c.offset[ d ];
+			maxPositionInCell[ d ] = minPositionInCell[ d ] + c.dimensions[ d ];
+		}
 
 		c.indexToGlobalPosition( ( int )newIndex, position );
 
@@ -112,12 +112,11 @@ public class CellLocalizingCursor< T extends NativeType< T >, A extends DataAcce
 		Cell< T, A > c = getCell();
 
 		lastIndexInCell = ( int )( c.size() - 1);
-		c.offset( minPositionInCell );
-		c.dimensions( maxPositionInCell ); 
-		for ( int d = 0; d < n; ++d )
-			maxPositionInCell[ d ] += minPositionInCell[ d ];
-
-		c.offset( position );
+		for ( int d = 0; d < n; ++d ) {
+			minPositionInCell[ d ] = c.offset[ d ];
+			maxPositionInCell[ d ] = minPositionInCell[ d ] + c.dimensions[ d ];
+			position[ d ] = c.offset[ d ];
+		}
 		position[ 0 ] -= 1;
 
 		type.updateIndex( -1 );

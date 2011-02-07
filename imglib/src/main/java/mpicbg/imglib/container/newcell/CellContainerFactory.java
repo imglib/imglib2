@@ -10,65 +10,158 @@ import mpicbg.imglib.container.basictypecontainer.FloatAccess;
 import mpicbg.imglib.container.basictypecontainer.IntAccess;
 import mpicbg.imglib.container.basictypecontainer.LongAccess;
 import mpicbg.imglib.container.basictypecontainer.ShortAccess;
+import mpicbg.imglib.container.basictypecontainer.array.BitArray;
+import mpicbg.imglib.container.basictypecontainer.array.ByteArray;
+import mpicbg.imglib.container.basictypecontainer.array.CharArray;
+import mpicbg.imglib.container.basictypecontainer.array.DoubleArray;
+import mpicbg.imglib.container.basictypecontainer.array.FloatArray;
+import mpicbg.imglib.container.basictypecontainer.array.IntArray;
+import mpicbg.imglib.container.basictypecontainer.array.LongArray;
+import mpicbg.imglib.container.basictypecontainer.array.ShortArray;
 import mpicbg.imglib.type.NativeType;
 
 public class CellContainerFactory< T extends NativeType<T> > extends NativeContainerFactory< T >
 {
+	protected int[] defaultCellDimensions = { 10 };
 
-	@Override
-	public NativeContainer< T, ? extends BitAccess > createBitInstance( T type, long[] dimensions, int entitiesPerPixel )
+	public CellContainerFactory()
 	{
-		// TODO Auto-generated method stub
-		return null;
+	}
+	
+	public CellContainerFactory( final int cellSize )
+	{
+		defaultCellDimensions[ 0 ] = cellSize;
+	}
+
+	public CellContainerFactory( final int[] cellDimensions )
+	{
+		if ( cellDimensions == null || cellDimensions.length == 0 )
+		{
+			System.err.println( "CellContainerFactory(): cellSize is null. Using equal cell size of " + defaultCellDimensions[0]);
+			return;
+		}
+
+		for ( int i = 0; i < cellDimensions.length; i++ )
+		{
+			if ( cellDimensions[ i ] <= 0 )
+			{
+				System.err.println( "CellContainerFactory(): cell size in dimension " + i + " is <= 0, using a size of " + defaultCellDimensions[ 0 ] + "." );
+				cellDimensions[ i ] = defaultCellDimensions[ 0 ];
+			}
+		}
+
+		defaultCellDimensions = cellDimensions;
+	}
+
+	protected long[] checkDimensions( long dimensions[] )
+	{
+		if ( dimensions == null || dimensions.length == 0 )
+		{
+			System.err.println( "CellContainerFactory(): dimensionality is null. Creating a 1D cell with size 1." );
+			dimensions = new long[] { 1 };
+		}
+
+		for ( int i = 0; i < dimensions.length; i++ )
+		{
+			if ( dimensions[ i ] <= 0 )
+			{
+				System.err.println( "CellContainerFactory(): size of dimension " + i + " is <= 0, using a size of 1." );
+				dimensions[ i ] = 1;
+			}
+		}
+
+		return dimensions;
+	}
+
+	protected int[] checkCellSize( int[] cellDimensions, long[] dimensions )
+	{
+		if ( cellDimensions == null )
+		{
+			cellDimensions = new int[ dimensions.length ];
+			for ( int i = 0; i < cellDimensions.length; i++ )
+				cellDimensions[ i ] = defaultCellDimensions[ ( i < defaultCellDimensions.length ) ? i : 0 ];
+		}
+
+		if ( cellDimensions.length != dimensions.length )
+		{
+			System.err.println( "CellContainerFactory(): dimensionality of image is unequal to dimensionality of cells, adjusting cell dimensionality." );
+			int[] cellDimensionsNew = new int[ dimensions.length ];
+
+			for ( int i = 0; i < dimensions.length; i++ )
+			{
+				if ( i < cellDimensions.length )
+					cellDimensionsNew[ i ] = cellDimensions[ i ];
+				else
+					cellDimensionsNew[ i ] = defaultCellDimensions[ ( i < defaultCellDimensions.length ) ? i : 0 ];
+			}
+
+			cellDimensions = cellDimensionsNew;
+		}
+
+		return cellDimensions;
 	}
 
 	@Override
-	public NativeContainer< T, ? extends ByteAccess > createByteInstance( T type, long[] dimensions, int entitiesPerPixel )
+	public NativeContainer< T, ? extends BitAccess > createBitInstance( long[] dimensions, int entitiesPerPixel )
 	{
-		// TODO Auto-generated method stub
-		return null;
+		dimensions = checkDimensions( dimensions );
+		int[] cellSize = checkCellSize( defaultCellDimensions, dimensions );
+		return new CellContainer< T, BitArray >( new BitArray( 1 ), dimensions, cellSize, entitiesPerPixel );
 	}
 
 	@Override
-	public NativeContainer< T, ? extends CharAccess > createCharInstance( T type, long[] dimensions, int entitiesPerPixel )
+	public NativeContainer< T, ? extends ByteAccess > createByteInstance( long[] dimensions, int entitiesPerPixel )
 	{
-		// TODO Auto-generated method stub
-		return null;
+		dimensions = checkDimensions( dimensions );
+		int[] cellSize = checkCellSize( defaultCellDimensions, dimensions );
+		return new CellContainer< T, ByteArray >( new ByteArray( 1 ), dimensions, cellSize, entitiesPerPixel );
 	}
 
 	@Override
-	public NativeContainer< T, ? extends ShortAccess > createShortInstance( T type, long[] dimensions, int entitiesPerPixel )
+	public NativeContainer< T, ? extends CharAccess > createCharInstance( long[] dimensions, int entitiesPerPixel )
 	{
-		// TODO Auto-generated method stub
-		return null;
+		dimensions = checkDimensions( dimensions );
+		int[] cellSize = checkCellSize( defaultCellDimensions, dimensions );
+		return new CellContainer< T, CharArray >( new CharArray( 1 ), dimensions, cellSize, entitiesPerPixel );
 	}
 
 	@Override
-	public NativeContainer< T, ? extends IntAccess > createIntInstance( T type, long[] dimensions, int entitiesPerPixel )
+	public NativeContainer< T, ? extends ShortAccess > createShortInstance( long[] dimensions, int entitiesPerPixel )
 	{
-		// TODO Auto-generated method stub
-		return null;
+		dimensions = checkDimensions( dimensions );
+		int[] cellSize = checkCellSize( defaultCellDimensions, dimensions );
+		return new CellContainer< T, ShortArray >( new ShortArray( 1 ), dimensions, cellSize, entitiesPerPixel );
 	}
 
 	@Override
-	public NativeContainer< T, ? extends LongAccess > createLongInstance( T type, long[] dimensions, int entitiesPerPixel )
+	public NativeContainer< T, ? extends IntAccess > createIntInstance( long[] dimensions, int entitiesPerPixel )
 	{
-		// TODO Auto-generated method stub
-		return null;
+		dimensions = checkDimensions( dimensions );
+		int[] cellSize = checkCellSize( defaultCellDimensions, dimensions );
+		return new CellContainer< T, IntArray >( new IntArray( 1 ), dimensions, cellSize, entitiesPerPixel );
 	}
 
 	@Override
-	public NativeContainer< T, ? extends FloatAccess > createFloatInstance( T type, long[] dimensions, int entitiesPerPixel )
+	public NativeContainer< T, ? extends LongAccess > createLongInstance( long[] dimensions, int entitiesPerPixel )
 	{
-		// TODO Auto-generated method stub
-		return null;
+		dimensions = checkDimensions( dimensions );
+		int[] cellSize = checkCellSize( defaultCellDimensions, dimensions );
+		return new CellContainer< T, LongArray >( new LongArray( 1 ), dimensions, cellSize, entitiesPerPixel );
 	}
 
 	@Override
-	public NativeContainer< T, ? extends DoubleAccess > createDoubleInstance( T type, long[] dimensions, int entitiesPerPixel )
+	public NativeContainer< T, ? extends FloatAccess > createFloatInstance( long[] dimensions, int entitiesPerPixel )
 	{
-		// TODO Auto-generated method stub
-		return null;
+		dimensions = checkDimensions( dimensions );
+		int[] cellSize = checkCellSize( defaultCellDimensions, dimensions );
+		return new CellContainer< T, FloatArray >( new FloatArray( 1 ), dimensions, cellSize, entitiesPerPixel );
 	}
 
+	@Override
+	public NativeContainer< T, ? extends DoubleAccess > createDoubleInstance( long[] dimensions, int entitiesPerPixel )
+	{
+		dimensions = checkDimensions( dimensions );
+		int[] cellSize = checkCellSize( defaultCellDimensions, dimensions );
+		return new CellContainer< T, DoubleArray >( new DoubleArray( 1 ), dimensions, cellSize, entitiesPerPixel );
+	}
 }

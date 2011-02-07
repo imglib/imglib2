@@ -3,7 +3,8 @@ package mpicbg.imglib.container.newcell;
 import mpicbg.imglib.Localizable;
 import mpicbg.imglib.RandomAccess;
 import mpicbg.imglib.container.AbstractImgRandomAccess;
-import mpicbg.imglib.container.basictypecontainer.DataAccess;
+import mpicbg.imglib.container.ImgRandomAccess;
+import mpicbg.imglib.container.basictypecontainer.array.ArrayDataAccess;
 import mpicbg.imglib.type.NativeType;
 
 /**
@@ -12,7 +13,7 @@ import mpicbg.imglib.type.NativeType;
  * No checks are performed to determine whether we stay in the same cell.
  * Instead, the cell position is computed and set on every access.  
  */
-public class CellRandomAccess< T extends NativeType< T >, A extends DataAccess > extends AbstractImgRandomAccess< T > implements CellContainer.CellContainerSampler< T, A >
+public class CellRandomAccess< T extends NativeType< T >, A extends ArrayDataAccess< A > > extends AbstractImgRandomAccess< T > implements CellContainer.CellContainerSampler< T, A >
 {
 	protected final T type;
 	

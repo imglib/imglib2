@@ -1,65 +1,113 @@
 package mpicbg.imglib.container.newcell;
 
-import mpicbg.imglib.container.array.Array;
-import mpicbg.imglib.container.basictypecontainer.DataAccess;
+import mpicbg.imglib.container.basictypecontainer.array.ArrayDataAccess;
 import mpicbg.imglib.type.NativeType;
 import mpicbg.imglib.type.Type;
 import mpicbg.imglib.util.IntervalIndexer;
 
-public class Cell< T extends NativeType< T >, A extends DataAccess > extends Array< T, A > implements Type< Cell< T, A > > 
+public class Cell< T extends NativeType< T >, A extends ArrayDataAccess< A > > implements Type< Cell< T, A > > 
 {
-	final long[] offset;
-	
-	public Cell( final T type, final A data, final long[] dim, final long[] offset, final int entitiesPerPixel )
-	{
-		super( type, data, dim, entitiesPerPixel );
+	final protected int n;
 
-		this.offset = new long[ n ];
-		for ( int d = 0; d < n; ++d )
-			this.offset[ d ] = offset[ d ];
+	final int[] dimensions;
+	final int[] steps;
+	final long[] offset;
+
+	protected int numPixels;
+
+	private A data;
+	
+	public Cell( final A creator, final int[] dim, final long[] offset, final int entitiesPerPixel )
+	{
+		dimensions = dim.clone();
+		n = dimensions.length;		
+		steps = new int[ n ];
+		IntervalIndexer.createAllocationSteps( dimensions, steps );
+		this.offset = offset.clone();
+
+		int nPixels = 1;
+		for ( int d = 0; d < n; ++d ) {
+			nPixels *= dimensions[ d ];
+		}
+		numPixels = nPixels;
+
+		this.data = creator.createArray( numPixels * entitiesPerPixel );
 	}
+
+	public Cell(final int numDimensions)
+	{
+		n = numDimensions;
+
+		dimensions = new int[ n ];
+		steps = new int[ n ];
+		offset = new long[ n ];
+
+		numPixels = 0;
+
+		this.data = null;
+	}
+
+	public A getData()
+	{
+		return data;
+	}
+
 
 	@Override
 	public Cell<T, A> copy()
 	{
-		// TODO Auto-generated method stub
-		return null;
+		Cell<T, A> c = new Cell<T, A>( n );
+		c.set( this );
+		return c;
 	}
 
 	@Override
 	public void set( Cell<T, A> c )
 	{
-		// TODO Auto-generated method stub
-		
+		assert( n == c.n );
+
+		for ( int d = 0; d < n; ++d ) {
+			dimensions[ n ] = c.dimensions[ n ];
+			steps[ n ] = c.steps[ n ];
+			offset[ n ] = c.offset[ n ];
+		}
+		numPixels = c.numPixels;
+
+		this.data = c.data;		
 	}
 
 	@Override
 	public Cell<T, A> createVariable()
 	{
-		// TODO Auto-generated method stub
-		return null;
+		return new Cell<T, A>( n );
 	}
 
-	public void offset( final long[] o )
+	public long size()
+	{
+		return numPixels;
+	}
+
+/*	public void offset( final long[] o )
 	{
 		for ( int d = 0; d < n; ++d )
 			o[ d ] = offset[ d ];
 	}
+*/
 
 	public long indexToGlobalPosition( int index, int dimension )
 	{
-		return IntervalIndexer.indexToPosition( index, dim, steps, dimension ) + offset[ dimension ];
+		return IntervalIndexer.indexToPosition( index, dimensions, steps, dimension ) + offset[ dimension ];
 	}
 
 	public void indexToGlobalPosition( int index, final long[] position )
 	{
-		IntervalIndexer.indexToPosition( index, dim, position );
+		IntervalIndexer.indexToPosition( index, dimensions, position );
 		for ( int d = 0; d < position.length; ++d )
 			position[ d ] += offset[ d ];
 	}
 	
 	public int localPositionToIndex( final long[] position )
 	{
-		return IntervalIndexer.positionToIndex( position, dim );
+		return IntervalIndexer.positionToIndex( position, dimensions );
 	}
 }

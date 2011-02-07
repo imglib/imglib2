@@ -2,10 +2,10 @@ package mpicbg.imglib.container.newcell;
 
 import mpicbg.imglib.Cursor;
 import mpicbg.imglib.container.AbstractImgCursor;
-import mpicbg.imglib.container.basictypecontainer.DataAccess;
+import mpicbg.imglib.container.basictypecontainer.array.ArrayDataAccess;
 import mpicbg.imglib.type.NativeType;
 
-public class CellCursor< T extends NativeType< T >, A extends DataAccess > extends AbstractImgCursor< T > implements CellContainer.CellContainerSampler< T, A >
+public class CellCursor< T extends NativeType< T >, A extends ArrayDataAccess< A > > extends AbstractImgCursor< T > implements CellContainer.CellContainerSampler< T, A >
 {
 	protected final T type;
 	
