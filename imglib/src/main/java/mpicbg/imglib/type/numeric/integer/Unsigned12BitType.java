@@ -112,7 +112,7 @@ public class Unsigned12BitType extends IntegerTypeImpl<Unsigned12BitType>
 	}
 	public void set( final short value ) 
 	{
-		b.setValue( j1, value % 2 == 1 );
+		b.setValue( j1, (value & 1) == 1 );
 		b.setValue( j2, (value & 2) == 2 );
 		b.setValue( j3, (value & 4) == 4 );
 		b.setValue( j4, (value & 8) == 8 );

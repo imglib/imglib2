@@ -164,6 +164,9 @@ public abstract class ROIAlgorithm <T extends Type<T>, S extends Type<S>>
 		final long sTime = System.currentTimeMillis();
 		strelCursor.patchReset();
 		
+		try
+		{
+		
 		while (strelCursor.patchHasNext())
 		{
 		    strelCursor.patchFwd();
@@ -176,7 +179,13 @@ public abstract class ROIAlgorithm <T extends Type<T>, S extends Type<S>>
 				return false;
 			}
 		}
-			
+		}
+		catch (ArrayIndexOutOfBoundsException e)
+		{
+		    System.out.println("Found error, strel at : " + strelCursor.getPositionAsString());
+		    System.out.println("Whereas outputcursor at : " + outputCursor.getPositionAsString());
+		    throw e;
+		}
 		outputCursor.close();
 		
 		pTime = System.currentTimeMillis() - sTime;

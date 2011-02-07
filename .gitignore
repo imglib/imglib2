@@ -2,3 +2,8 @@ target
 .classpath
 .project
 .settings
+/imglib-algorithms.jar
+/imglib-ij.jar
+/imglib-io.jar
+/imglib-scripting.jar
+/imglib.jar

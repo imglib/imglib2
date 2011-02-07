@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2010, Larry Lindsey
+ * Copyright (c) 2009--2010, Stephan Preibisch & Stephan Saalfeld
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -25,58 +25,25 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  *
- * @author Larry Lindsey
+ * @author Stephan Preibisch & Stephan Saalfeld
  */
+package mpicbg.imglib.interpolation.dct;
 
-package mpicbg.imglib.algorithm.histogram.discrete;
+import mpicbg.imglib.image.Image;
+import mpicbg.imglib.interpolation.InterpolatorFactory;
+import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
+import mpicbg.imglib.type.numeric.RealType;
 
-import mpicbg.imglib.algorithm.histogram.HistogramBin;
-import mpicbg.imglib.algorithm.histogram.HistogramBinFactory;
-import mpicbg.imglib.algorithm.histogram.HistogramKey;
-import mpicbg.imglib.type.numeric.IntegerType;
-
-/**
- * A HistogramBinFactory to be used to create a discrete Histogram over
- * integer-valued Type's.
- * @author LarryLindsey
- *
- * @param <T> the type of {@link Type} corresponding to this factory, implementing IntegerType.
- */
-public class DiscreteIntHistogramBinFactory<T extends IntegerType<T>> implements HistogramBinFactory<T>
+public class DCTInterpolatorFactory<T extends RealType<T>> extends InterpolatorFactory<T>
 {
-	public class DiscreteIntHistogramBin extends HistogramBin<T>
+	public DCTInterpolatorFactory( final OutOfBoundsStrategyFactory<T> outOfBoundsStrategyFactory )
 	{
-
-		public DiscreteIntHistogramBin(T t, HistogramKey<T> k) {
-			super(t, k);
-		}
-
-		@Override
-		public T getLowerBound() {
-			return getCenter();
-		}
-
-		@Override
-		public T getUpperBound() {
-			return getCenter();
-		}
-		
-	}
-	
-	@Override
-	public HistogramBin<T> createBin(T type) {		
-		return new DiscreteIntHistogramBin(type, createKey(type));
+		super(outOfBoundsStrategyFactory);
 	}
 
 	@Override
-	public HistogramKey<T> createKey(T type) {
-		return new HistogramKey<T>((new Double(type.getIntegerLong())).hashCode(),
-				type.copy(), this);
+	public DCTInterpolator<T> createInterpolator( final Image<T> img )
+	{
+		return new DCTInterpolator<T>( img, this, outOfBoundsStrategyFactory );
 	}
-
-	@Override
-	public boolean equivalent(T type1, T type2) {
-		return type1.getIntegerLong() == type2.getIntegerLong();
-	}
-	
 }

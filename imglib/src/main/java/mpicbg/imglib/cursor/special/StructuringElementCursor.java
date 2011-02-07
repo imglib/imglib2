@@ -138,7 +138,7 @@ public class StructuringElementCursor<T extends Type<T>> extends CursorImpl<T>
 	    {
 	        path[0][j] = -patchCenter[j];
 	    }
-	    
+	    	    	    
 	    for (int i = 1; i < n; ++i)
 	    {
 	        int j = 0;
@@ -149,10 +149,9 @@ public class StructuringElementCursor<T extends Type<T>> extends CursorImpl<T>
 	        while(path[i][j] >= (size[j] - patchCenter[j]) && j < d - 1)
 	        {
 	            path[i][j] = -patchCenter[j];
-	            path[i][j+1]++;
-	            j++;
-	        }
-	            
+	            path[i][j+1]++;	            
+	            j++;	            
+	        }	       
 	    }
 	    
 	    return path;
@@ -205,7 +204,15 @@ public class StructuringElementCursor<T extends Type<T>> extends CursorImpl<T>
 		{
 		    System.arraycopy(inPath[j], 0, path[j], 0, inPath[j].length);
 		}
+						
+		reset();
 		
+		while (hasNext())
+		{
+		    fwd();
+		    System.out.println(getPositionAsString());
+		}
+		System.out.println();
 		reset();
 	}
 	

@@ -37,7 +37,7 @@ public class NonLeaf<T extends Leaf<T>> implements Node<T>
 	public String toString(final Node<T> node) {
 		if (node == null)
 			return "null";
-		if (node instanceof Leaf) {
+		if (Leaf.class.isInstance(node)) {
 			String result = "(" + ((Leaf<?>)node).get(0);
 
 			for (int i = 1; i < dimension; i++)
@@ -46,7 +46,7 @@ public class NonLeaf<T extends Leaf<T>> implements Node<T>
 			return result + ")";
 		}
 
-		if (node instanceof NonLeaf) {
+		if (NonLeaf.class.isInstance(node)) {
 			NonLeaf<T> nonLeaf = (NonLeaf<T>)node;
 			return "[" + toString( nonLeaf.left ) + " |{" + nonLeaf.coordinate + "} " + toString(nonLeaf.right) + "]";
 		}

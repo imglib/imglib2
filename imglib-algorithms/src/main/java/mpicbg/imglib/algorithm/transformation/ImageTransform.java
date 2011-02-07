@@ -38,7 +38,7 @@ public class ImageTransform<T extends Type<T>> implements OutputAlgorithm<T>
 	final protected Boundable transformAsBoundable;
 	final protected Image<T> img;
 	final protected int numDimensions;
-	final protected InterpolatorFactory<T> interpolatorFactory;
+	protected InterpolatorFactory<T> interpolatorFactory;
 	final protected boolean isAffine;
 
 	ImageFactory<T> outputImageFactory;
@@ -94,6 +94,7 @@ public class ImageTransform<T extends Type<T>> implements OutputAlgorithm<T>
 	}
 
 	public void setOutputImageFactory( final ImageFactory<T> outputImageFactory ) { this.outputImageFactory = outputImageFactory; }
+	public void setInterpolatorFactory( final InterpolatorFactory<T> interpolatorFactory ) { this.interpolatorFactory = interpolatorFactory; }
 	public ImageFactory<T> getOutputImageFactory() { return this.outputImageFactory; }
 
 	public float[] getOffset() { return offset.clone(); }
@@ -105,6 +106,7 @@ public class ImageTransform<T extends Type<T>> implements OutputAlgorithm<T>
 			this.offset[ d ] = offset[ d ];
 	}
 
+	public InterpolatorFactory<T> getInterpolatorFactory() { return interpolatorFactory; }
 	public int[] getNewImageSize() { return newDim.clone(); }
 	public float getNewImageSize( final int dim ) { return newDim[ dim ]; }
 	public void setNewImageSize( final int dim, final int size ) { newDim[ dim ] = size; }

@@ -872,13 +872,13 @@ public class LOCI
 			
 			if ( channels > 1 )
 			{
-				System.out.println("LOCI.openLOCI(): More than one channel. Image<ByteType> supports only 1 channel right now, returning the first channel.");
+				System.out.println("LOCI.openLOCI(): More than one channel. Image<UnsignedByteType> supports only 1 channel right now, returning the first channel.");
 				channels = 1;
 			}
 			
 			if (!(pixelType == FormatTools.UINT8))
 			{
-				System.out.println("LOCI.openLOCI(): PixelType " + pixelTypeString + " not supported by ByteType, returning. ");
+				System.out.println("LOCI.openLOCI(): PixelType " + pixelTypeString + " not supported by UnsignedByteType, returning. ");
 				return null;
 			}
 			
