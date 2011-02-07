@@ -5,13 +5,13 @@ import mpicbg.imglib.IterableRealInterval;
 import mpicbg.imglib.container.AbstractNativeContainer;
 import mpicbg.imglib.container.Img;
 import mpicbg.imglib.container.basictypecontainer.array.ArrayDataAccess;
-import mpicbg.imglib.container.list.ListContainer;
+import mpicbg.imglib.container.list.ListContainerFactory;
 import mpicbg.imglib.outofbounds.OutOfBoundsFactory;
 import mpicbg.imglib.type.NativeType;
 
 final public class CellContainer< T extends NativeType< T >, A extends ArrayDataAccess< A > > extends AbstractNativeContainer< T, A >
 {
-	protected ListContainer< Cell< T , A > > cells;
+	protected Img< Cell< T , A > > cells;
 	
 	/**
 	 *  Dimensions of a standard cell.
@@ -35,7 +35,7 @@ final public class CellContainer< T extends NativeType< T >, A extends ArrayData
 			borderSize[ d ] = ( int )( dimensions[ d ] - (numCells[ d ] - 1) * cellDims[ d ] );
 		}
 
-		cells = new ListContainer< Cell< T, A > >( numCells, new Cell< T, A >( n ) );
+		cells = new ListContainerFactory< Cell< T, A > >().create( numCells, new Cell< T, A >( n ) );
 
 		Cursor< Cell < T, A > > cellCursor = cells.localizingCursor();		
 		while ( cellCursor.hasNext() ) {

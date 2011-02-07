@@ -67,9 +67,9 @@ public class Cell< T extends NativeType< T >, A extends ArrayDataAccess< A > > i
 		assert( n == c.n );
 
 		for ( int d = 0; d < n; ++d ) {
-			dimensions[ n ] = c.dimensions[ n ];
-			steps[ n ] = c.steps[ n ];
-			offset[ n ] = c.offset[ n ];
+			dimensions[ d ] = c.dimensions[ d ];
+			steps[ d ] = c.steps[ d ];
+			offset[ d ] = c.offset[ d ];
 		}
 		numPixels = c.numPixels;
 
