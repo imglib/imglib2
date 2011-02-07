@@ -131,76 +131,76 @@ public abstract class AbstractOutOfBoundsMirror< T > implements OutOfBounds< T >
 	public void localize( final float[] pos )
 	{
 		for ( int d = 0; d < n; ++d )
-			pos[ d ] = this.position[ d ];
+			pos[ d ] = this.position[ d ] + min[ d ];
 	}
 
 	@Override
 	public void localize( final double[] pos )
 	{
 		for ( int d = 0; d < n; ++d )
-			pos[ d ] = this.position[ d ];
+			pos[ d ] = this.position[ d ] + min[ d ];
 	}
 
 	@Override
 	public void localize( final int[] pos )
 	{
 		for ( int d = 0; d < n; ++d )
-			pos[ d ] = ( int )this.position[ d ];
+			pos[ d ] = ( int )( this.position[ d ] + min[ d ] );
 	}
 	
 	@Override
 	public void localize( final long[] pos )
 	{
 		for ( int d = 0; d < n; ++d )
-			pos[ d ] = this.position[ d ];
+			pos[ d ] = this.position[ d ] + min[ d ];
 	}
 	
 	@Override
-	public float getFloatPosition( final int dim )
+	public float getFloatPosition( final int d )
 	{
-		return position[ dim ];
+		return position[ d ] + min[ d ];
 	}
 
 	@Override
-	public double getDoublePosition( final int dim )
+	public double getDoublePosition( final int d )
 	{
-		return position[ dim ];
+		return position[ d ] + min[ d ];
 	}
 
 	@Override
-	public int getIntPosition( final int dim )
+	public int getIntPosition( final int d )
 	{
-		return ( int )position[ dim ];
+		return ( int )( position[ d ] + min[ d ] );
 	}
 
 	@Override
-	public long getLongPosition( final int dim )
+	public long getLongPosition( final int d )
 	{
-		return position[ dim ];
+		return position[ d ] + min[ d ];
 	}
 	
 	
 	/* Positionable */
 	
 	@Override
-	public void move( final int distance, final int dim )
+	public void move( final int distance, final int d )
 	{
 		if ( distance > 0 )
 		{
 			for ( int i = 0; i < distance; ++i )
-				fwd( dim );
+				fwd( d );
 		}
 		else
 		{
 			for ( int i = -distance; i > 0; --i )
-				bck( dim );
+				bck( d );
 		}
 	}
 	
 	@Override
-	public void move( final long distance, final int dim )
+	public void move( final long distance, final int d )
 	{
-		move( ( int )distance, dim );
+		move( ( int )distance, d );
 	}
 	
 	@Override
@@ -225,9 +225,9 @@ public abstract class AbstractOutOfBoundsMirror< T > implements OutOfBounds< T >
 	}
 	
 	@Override
-	public void setPosition( final int position, final int dim )
+	public void setPosition( final int position, final int d )
 	{
-		setPosition( ( long )position, dim );
+		setPosition( ( long )position, d );
 	}
 	
 	@Override
