@@ -51,7 +51,7 @@ import mpicbg.imglib.util.IntervalIndexer;
  */
 public class Array< T extends NativeType< T >, A extends DataAccess > extends AbstractNativeContainer< T, A >
 {
-	final protected int[] steps, dim;
+	final int[] steps, dim;
 	
 	// the DataAccess created by the ArrayContainerFactory
 	final private A data;
@@ -110,9 +110,11 @@ public class Array< T extends NativeType< T >, A extends DataAccess > extends Ab
 			for ( int d = 0; d < n; ++d )
 				if ( size[ d ] != a.dimension( d ) )
 					return false;
+			
+			return true;
 		}
 		
-		return true;
+		return false;
 	}
 
 	@Override

@@ -151,8 +151,10 @@ public class ListContainer< T extends Type< T > > extends AbstractImg< T >
 			for ( int d = 0; d < n; ++d )
 				if ( size[ d ] != a.dimension( d ) )
 					return false;
+
+			return true;
 		}
-		
-		return true;
+
+		return false;
 	}
 }
