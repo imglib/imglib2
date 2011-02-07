@@ -29,14 +29,14 @@ package mpicbg.imglib.display;
 
 import mpicbg.imglib.converter.Converter;
 import mpicbg.imglib.type.numeric.ARGBType;
-import mpicbg.imglib.type.numeric.real.FloatType;
+import mpicbg.imglib.type.numeric.RealType;
 
 /**
  * 
  *
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-public class RealARGBConverter extends AbstractLinearRange implements Converter< FloatType, ARGBType >
+public class RealARGBConverter< R extends RealType< R > > extends AbstractLinearRange implements Converter< R, ARGBType >
 {
 	public RealARGBConverter()
 	{
@@ -49,7 +49,7 @@ public class RealARGBConverter extends AbstractLinearRange implements Converter<
 	}
 	
 	@Override
-	public void convert( final FloatType input, final ARGBType output )
+	public void convert( final R input, final ARGBType output )
 	{
 		final double a = input.getRealDouble();
 		final int b = Math.min( 255, roundPositive( Math.max( 0, ( ( a - min ) / scale * 255.0 ) ) ) );

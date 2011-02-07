@@ -21,7 +21,7 @@ public class OpenAndDisplayScreenImage
 		Img< FloatType > img = LOCI.openLOCIFloatType( "/home/saalfeld/Desktop/73.tif",  new ArrayContainerFactory<FloatType>() );
 		
 		final ARGBScreenImage screenImage = new ARGBScreenImage( ( int )img.dimension( 0 ), ( int )img.dimension( 1 ) );
-		final XYProjector< FloatType, ARGBType > projector = new XYProjector< FloatType, ARGBType >( img, screenImage, new RealARGBConverter( 0, 127 ) );
+		final XYProjector< FloatType, ARGBType > projector = new XYProjector< FloatType, ARGBType >( img, screenImage, new RealARGBConverter< FloatType >( 0, 127 ) );
 		
 		final ColorProcessor cp = new ColorProcessor( screenImage.image() );
 		final ImagePlus imp = new ImagePlus( "argbScreenProjection", cp );
