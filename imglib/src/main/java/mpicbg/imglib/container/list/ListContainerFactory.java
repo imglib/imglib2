@@ -39,7 +39,7 @@ import mpicbg.imglib.type.Type;
  */
 public class ListContainerFactory< T extends Type< T > > extends ImgFactory< T >
 {
-
+	
 	@Override
 	public Img<T> create( final long[] dim, final T type )
 	{
