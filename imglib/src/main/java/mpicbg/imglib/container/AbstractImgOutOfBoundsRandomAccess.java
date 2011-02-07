@@ -32,7 +32,6 @@ import mpicbg.imglib.Localizable;
 import mpicbg.imglib.outofbounds.OutOfBounds;
 import mpicbg.imglib.outofbounds.OutOfBoundsFactory;
 import mpicbg.imglib.outofbounds.RealOutOfBounds;
-import mpicbg.imglib.type.Type;
 
 /**
  * 
@@ -40,7 +39,7 @@ import mpicbg.imglib.type.Type;
  *
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-public abstract class AbstractImgOutOfBoundsRandomAccess< T extends Type< T > > extends AbstractImgSampler< T > implements ImgRandomAccess< T >
+public abstract class AbstractImgOutOfBoundsRandomAccess< T > extends AbstractImgSampler< T > implements ImgRandomAccess< T >
 {
 	/* performs the actual moves and generates/queries a Type */
 	final protected OutOfBounds< T > outOfBounds;

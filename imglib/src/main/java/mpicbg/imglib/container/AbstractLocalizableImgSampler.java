@@ -29,7 +29,6 @@ package mpicbg.imglib.container;
 
 import mpicbg.imglib.Interval;
 import mpicbg.imglib.Localizable;
-import mpicbg.imglib.type.Type;
 import mpicbg.imglib.util.Util;
 
 /**
@@ -38,7 +37,7 @@ import mpicbg.imglib.util.Util;
  *
  * @author Stephan Preibisch and Stephan Saalfeld
  */
-public abstract class AbstractLocalizableImgSampler< T extends Type< T > > extends AbstractImgSampler< T > implements Localizable
+public abstract class AbstractLocalizableImgSampler< T > extends AbstractImgSampler< T > implements Localizable
 {
 	final protected long[] position;
 	final protected long[] size;
