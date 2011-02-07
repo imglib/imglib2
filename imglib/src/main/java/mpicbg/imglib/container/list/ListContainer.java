@@ -33,7 +33,6 @@ import mpicbg.imglib.Interval;
 import mpicbg.imglib.IterableRealInterval;
 import mpicbg.imglib.container.AbstractImg;
 import mpicbg.imglib.container.Img;
-import mpicbg.imglib.container.ImgRandomAccess;
 import mpicbg.imglib.container.array.Array;
 import mpicbg.imglib.outofbounds.OutOfBoundsFactory;
 import mpicbg.imglib.type.Type;
@@ -137,8 +136,10 @@ public class ListContainer< T extends Type< T > > extends AbstractImg< T >
 			for ( int d = 0; d < n; ++d )
 				if ( size[ d ] != a.dimension( d ) )
 					return false;
+
+			return true;
 		}
-		
-		return true;
+
+		return false;
 	}
 }
