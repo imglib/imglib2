@@ -31,6 +31,7 @@ import mpicbg.imglib.container.AbstractImgLocalizingCursor;
 import mpicbg.imglib.container.Img;
 import mpicbg.imglib.container.planar.PlanarContainer;
 import mpicbg.imglib.type.NativeType;
+import mpicbg.imglib.util.Util;
 
 /**
  * Localizing Iterator for a {@link PlanarContainer PlanarContainers}
@@ -128,6 +129,51 @@ public class PlanarLocalizingCursor< T extends NativeType< T > > extends Abstrac
 	@Override
 	public T get() { return type; }
 
+	// We have to override all these methods as they now refer to the int[] position instead of the long[] position of the super class
+	
 	@Override
 	public int getCurrentPlane() { return sliceIndex; }
+	
+	@Override
+	public float getFloatPosition( final int dim ){ return position[ dim ]; }
+	
+	@Override
+	public double getDoublePosition( final int dim ){ return position[ dim ]; }
+	
+	@Override
+	public int getIntPosition( final int dim ){ return position[ dim ]; }
+
+	@Override
+	public long getLongPosition( final int dim ){ return position[ dim ]; }	
+	
+	@Override
+	public void localize( final float[] pos )
+	{
+		for ( int d = 0; d < n; d++ )
+			pos[ d ] = this.position[ d ];
+	}
+
+	@Override
+	public void localize( final double[] pos )
+	{
+		for ( int d = 0; d < n; d++ )
+			pos[ d ] = this.position[ d ];
+	}
+
+	@Override
+	public void localize( int[] pos )
+	{
+		for ( int d = 0; d < n; d++ )
+			pos[ d ] = ( int )this.position[ d ];
+	}
+	
+	@Override
+	public void localize( long[] pos )
+	{
+		for ( int d = 0; d < n; d++ )
+			pos[ d ] = this.position[ d ];
+	}
+	
+	@Override
+	public String toString(){ return Util.printCoordinates( position ) + " = " + get(); }
 }
