@@ -177,6 +177,8 @@ public class IntervalIterator implements Iterator, Localizable
 	@Override
 	public void reset() { index = -1; }
 	
+	@Override
+	public boolean hasNext() { return index < lastIndex; }
 	
 	/* IntegerLocalizable */
 
