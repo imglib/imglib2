@@ -8,6 +8,7 @@ import java.awt.Toolkit;
 import java.awt.Window;
 import java.awt.event.AdjustmentEvent;
 import java.awt.event.AdjustmentListener;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,28 +18,32 @@ import javax.swing.JPanel;
 import javax.swing.JScrollBar;
 import javax.swing.border.TitledBorder;
 
+import loci.formats.FormatException;
 import mpicbg.imglib.container.Img;
 import mpicbg.imglib.container.ImgFactory;
 import mpicbg.imglib.container.array.ArrayContainerFactory;
 import mpicbg.imglib.display.ARGBScreenImage;
 import mpicbg.imglib.display.RealARGBConverter;
 import mpicbg.imglib.display.XYProjector;
-import mpicbg.imglib.io.LOCI;
+import mpicbg.imglib.exception.IncompatibleTypeException;
+import mpicbg.imglib.io.ImageOpener;
+import mpicbg.imglib.type.NativeType;
 import mpicbg.imglib.type.numeric.ARGBType;
+import mpicbg.imglib.type.numeric.RealType;
 import mpicbg.imglib.type.numeric.real.FloatType;
 
 public class ImgPanel extends JPanel {
 
-	public class ImgData {
+	public class ImgData<T extends RealType<T> & NativeType<T>> {
 		public String name;
-		public Img<FloatType> img;
+		public Img<T> img;
 		public ImgPanel owner;
 		public int width, height;
 		public ARGBScreenImage screenImage;
-		public RealARGBConverter converter;
-		public XYProjector<FloatType, ARGBType> projector;
+		public RealARGBConverter<T> converter;
+		public XYProjector<T, ARGBType> projector;
 
-		public ImgData(final String name, final Img<FloatType> img,
+		public ImgData(final String name, final Img<T> img,
 			final ImgPanel owner)
 		{
 			this.name = name;
@@ -48,15 +53,15 @@ public class ImgPanel extends JPanel {
 			height = (int) img.dimension(1);
 			screenImage = new ARGBScreenImage(width, height);
 			final int min = 0, max = 255;
-			converter = new RealARGBConverter(min, max);
-			projector = new XYProjector<FloatType, ARGBType>(img,
+			converter = new RealARGBConverter<T>(min, max);
+			projector = new XYProjector<T, ARGBType>(img,
 				screenImage, converter);
 			projector.map();
 		}
 	}
 
 	public class SliderPanel extends JPanel {
-		public SliderPanel(final ImgData imgData) {
+		public SliderPanel(final ImgData<?> imgData) {
 			setBorder(new TitledBorder(imgData.name));
 			setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 			// add one slider per dimension beyond the first two
@@ -80,7 +85,7 @@ public class ImgPanel extends JPanel {
 		}
 	}
 
-	private List<ImgData> images = new ArrayList<ImgData>();
+	private List<ImgData<?>> images = new ArrayList<ImgData<?>>();
 	private int maxWidth = 0, maxHeight = 0;
 
 	public ImgPanel() {
@@ -88,7 +93,7 @@ public class ImgPanel extends JPanel {
 		add(new JPanel() { // image canvas
 			@Override
 			public void paint(Graphics g) {
-				for (final ImgData imgData : images) {
+				for (final ImgData<?> imgData : images) {
 					final Image image = imgData.screenImage.image();
 					g.drawImage(image, 0, 0, this);
 				}
@@ -101,15 +106,17 @@ public class ImgPanel extends JPanel {
 		});
 	}
 
-	public void addImage(final String name, final Img<FloatType> img) {
-		final ImgData imgData = new ImgData(name, img, this);
+	public <T extends RealType<T> & NativeType<T>> void addImage(final String name,
+		final Img<T> img)
+	{
+		final ImgData<T> imgData = new ImgData<T>(name, img, this);
 		images.add(imgData);
 		if (imgData.width > maxWidth) maxWidth = imgData.width;
 		if (imgData.height > maxHeight) maxHeight = imgData.height;
 		add(new SliderPanel(imgData));
 	}
 
-	public static final void main(final String[] args) {
+	public static final <T extends RealType<T> & NativeType<T>> void main(final String[] args) {
 		final String[] paths = {
 			"/Users/curtis/data/mitosis-test.ipw",
 			"/Users/curtis/data/z-series.ome.tif"
@@ -118,7 +125,8 @@ public class ImgPanel extends JPanel {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		final ImgPanel imgPanel = new ImgPanel();
 		for (String path : paths) {
-			imgPanel.addImage(path, loadImage(path));
+			final Img<T> img = loadImage(path);
+			imgPanel.addImage(path, img);
 		}
 		frame.setContentPane(imgPanel);
 		frame.pack();
@@ -126,10 +134,20 @@ public class ImgPanel extends JPanel {
 		frame.setVisible(true);
 	}
 
-	private static Img<FloatType> loadImage(String path) {
-		final ImgFactory<FloatType> imgFactory =
-			new ArrayContainerFactory<FloatType>();
-		return LOCI.openLOCIFloatType(path, imgFactory);
+	private static <T extends RealType<T> & NativeType<T>> Img<T> loadImage(String path) {
+		try {
+			return new ImageOpener().openImage(path);
+		}
+		catch (IncompatibleTypeException e) {
+			e.printStackTrace();
+		}
+		catch (FormatException e) {
+			e.printStackTrace();
+		}
+		catch (IOException e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 
 	private static void center(final Window win) {
