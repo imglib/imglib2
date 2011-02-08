@@ -42,8 +42,6 @@ public abstract class HistogramStatistics<T extends RealType<T>> extends OrderSt
         return statArray;
     }
 
-
-
 	protected double[] getArray()
 	{
         for (int i = 0; i < statArray.length; ++i)

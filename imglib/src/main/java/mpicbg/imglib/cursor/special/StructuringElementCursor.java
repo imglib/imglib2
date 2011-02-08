@@ -206,14 +206,6 @@ public class StructuringElementCursor<T extends Type<T>> extends CursorImpl<T>
 		}
 						
 		reset();
-		
-		while (hasNext())
-		{
-		    fwd();
-		    System.out.println(getPositionAsString());
-		}
-		System.out.println();
-		reset();
 	}
 	
 	public void setKernelOffset(final int[] ko)
