@@ -27,19 +27,20 @@
  */
 package mpicbg.imglib.location;
 
+import mpicbg.imglib.Interval;
 import mpicbg.imglib.Localizable;
 import mpicbg.imglib.Iterator;
 import mpicbg.imglib.container.Img;
 import mpicbg.imglib.container.ImgRandomAccess;
-import mpicbg.imglib.image.Image;
 import mpicbg.imglib.iterator.ZeroMinIntervalIterator;
+import mpicbg.imglib.util.IntervalIndexer;
 import mpicbg.imglib.util.Util;
 
 /**
  * Use this class to iterate a virtual rectangular raster in flat order, that
  * is: row by row, plane by plane, cube by cube, ...  This is useful for
  * iterating an arbitrary {@link Img} in a defined order.  For that,
- * connect a {@link LocalizingFlatIntegerIntervalIterator} to a
+ * connect a {@link FlatIterator} to a
  * {@link ImgRandomAccess}.
  * 
  * <pre>
@@ -55,7 +56,7 @@ import mpicbg.imglib.util.Util;
  * ...
  * </pre>
  * 
- * Note that {@link LocalizingFlatIntegerIntervalIterator} is the right choice in
+ * Note that {@link FlatIterator} is the right choice in
  * situations where, for <em>each</em> pixel, you want to localize and/or set
  * the {@link ImgRandomAccess}, that is in a dense sampling
  * situation.  For localizing sparsely (e.g. under an external condition),
@@ -63,23 +64,23 @@ import mpicbg.imglib.util.Util;
  * 
  * TODO implement it, it's still the basic FlatRasterIterator!!!!!!
  *  
- * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
+ * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>, Stephan Preibisch
  */
-final public class LocalizingFlatIntegerIntervalIterator implements Iterator, Localizable
+final public class FlatIterator implements Iterator, Localizable
 {
-	final protected int[] dimensions;
-	final protected int[] steps;
+	final protected long[] size;
+	final protected long[] steps;
 	final protected int n;
-	final protected int lastIndex;
-	protected int index = -1;
+	final protected long lastIndex;
+	protected long index = -1;
 	
-	public LocalizingFlatIntegerIntervalIterator( final int[] dimensions )
+	public FlatIterator( final long[] dimensions )
 	{
 		n = dimensions.length;
 		final int m = n - 1;
-		this.dimensions = dimensions.clone();
-		steps = new int[ n ];
-		int k = steps[ 0 ] = 1;
+		this.size = dimensions.clone();
+		steps = new long[ n ];
+		long k = steps[ 0 ] = 1;
 		for ( int i = 0; i < m; )
 		{
 			k *= dimensions[ i ];
@@ -88,63 +89,9 @@ final public class LocalizingFlatIntegerIntervalIterator implements Iterator, Lo
 		lastIndex = k * dimensions[ m ] - 1;
 	}
 
-	public LocalizingFlatIntegerIntervalIterator( final Image< ? > image ) { this( image.getDimensions() ); }
-	
-	final public static void indexToPosition( final int i, final int[] steps, final int[] l )
-	{
-		int x = i;
-		for ( int d = steps.length - 1; d > 0; --d )
-		{
-			final int ld = x / steps[ d ];
-			l[ d ] = ld;
-			x -= ld * steps[ d ];
-		}
-		l[ 0 ] = i;
-	}
-
-	final public static void indexToPosition( final int i, final int[] steps, final long[] l )
-	{
-		int x = i;
-		for ( int d = steps.length - 1; d > 0; --d )
-		{
-			final int ld = x / steps[ d ];
-			l[ d ] = ld;
-			x -= ld * steps[ d ];
-		}
-		l[ 0 ] = i;
-	}
-	
-	final public static void indexToPosition( final int i, final int[] steps, final float[] l )
-	{
-		int x = i;
-		for ( int d = steps.length - 1; d > 0; --d )
-		{
-			final int ld = x / steps[ d ];
-			l[ d ] = ld;
-			x -= ld * steps[ d ];
-		}
-		l[ 0 ] = i;
-	}
-	
-	final public static void indexToPosition( final int i, final int[] steps, final double[] l )
-	{
-		int x = i;
-		for ( int d = steps.length - 1; d > 0; --d )
-		{
-			final int ld = x / steps[ d ];
-			l[ d ] = ld;
-			x -= ld * steps[ d ];
-		}
-		l[ 0 ] = i;
-	}
-	
-	final public static int indexToPosition( final int i, final int[] steps, final int dim )
-	{
-		int x = i;
-		for ( int d = steps.length - 1; d > dim; --d )
-			x %= steps[ d ];
-
-		return x / steps[ dim ];
+	public FlatIterator( final Interval interval ) 
+	{ 
+		this( Util.intervalDimensions( interval) ); 
 	}
 	
 	/* Iterator */
@@ -162,31 +109,31 @@ final public class LocalizingFlatIntegerIntervalIterator implements Iterator, Lo
 	/* RasterLocalizable */
 
 	@Override
-	final public long getLongPosition( final int dim ) { return indexToPosition( index, steps, dim ); }
+	final public long getLongPosition( final int dim ) { return IntervalIndexer.indexToPosition( index, size, dim ); }
 	
 	@Override
-	final public void localize( final long[] position ) { indexToPosition( index, steps, position ); }
+	final public void localize( final long[] position ) { IntervalIndexer.indexToPosition( index, size, position ); }
 
 	@Override
-	final public int getIntPosition( final int dim ) { return indexToPosition( index, steps, dim ); }
+	final public int getIntPosition( final int dim ) { return (int)IntervalIndexer.indexToPosition( index, size, dim ); }
 
 	@Override
-	final public void localize( final int[] position ) { indexToPosition( index, steps, position ); }
+	final public void localize( final int[] position ) { IntervalIndexer.indexToPosition( index, size, position ); }
 
 	@Override
-	final public double getDoublePosition( final int dim ) { return indexToPosition( index, steps, dim ); }
+	final public double getDoublePosition( final int dim ) { return IntervalIndexer.indexToPosition( index, size, dim ); }
 	
 	
 	/* Localizable */
 
 	@Override
-	final public float getFloatPosition( final int dim ) { return indexToPosition( index, steps, dim ); }
+	final public float getFloatPosition( final int dim ) { return IntervalIndexer.indexToPosition( index, size, dim ); }
 
 	@Override
-	final public void localize( final float[] position ) { indexToPosition( index, steps, position ); }
+	final public void localize( final float[] position ) { IntervalIndexer.indexToPosition( index, size, position ); }
 
 	@Override
-	final public void localize( final double[] position ) { indexToPosition( index, steps, position ); }
+	final public void localize( final double[] position ) { IntervalIndexer.indexToPosition( index, size, position ); }
 
 	
 	/* Dimensionality */
@@ -200,7 +147,7 @@ final public class LocalizingFlatIntegerIntervalIterator implements Iterator, Lo
 	@Override
 	final public String toString()
 	{
-		final int[] l = new int[ dimensions.length ];
+		final int[] l = new int[ size.length ];
 		localize( l );
 		return Util.printCoordinates( l );
 	}
