@@ -31,7 +31,6 @@ import mpicbg.imglib.Interval;
 import mpicbg.imglib.Localizable;
 import mpicbg.imglib.Iterator;
 import mpicbg.imglib.Sampler;
-import mpicbg.imglib.location.FlatIterator;
 import mpicbg.imglib.util.IntervalIndexer;
 import mpicbg.imglib.util.Util;
 

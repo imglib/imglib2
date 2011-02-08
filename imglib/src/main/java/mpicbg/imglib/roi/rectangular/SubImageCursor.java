@@ -31,7 +31,7 @@ import mpicbg.imglib.Cursor;
 import mpicbg.imglib.EuclideanSpace;
 import mpicbg.imglib.InjectiveInterval;
 import mpicbg.imglib.Sampler;
-import mpicbg.imglib.location.FlatIterator;
+import mpicbg.imglib.iterator.FlatIterator;
 
 /**
  * 
