@@ -43,14 +43,18 @@ import loci.common.DataTools;
 import loci.common.StatusEvent;
 import loci.common.StatusListener;
 import loci.common.StatusReporter;
+import loci.common.services.DependencyException;
 import loci.common.services.ServiceException;
+import loci.common.services.ServiceFactory;
 import loci.formats.ChannelFiller;
 import loci.formats.ChannelSeparator;
 import loci.formats.FormatException;
 import loci.formats.FormatTools;
 import loci.formats.IFormatReader;
 import loci.formats.ImageReader;
+import loci.formats.meta.IMetadata;
 import loci.formats.meta.MetadataRetrieve;
+import loci.formats.services.OMEXMLService;
 import loci.formats.services.OMEXMLServiceImpl;
 import mpicbg.imglib.container.Img;
 import mpicbg.imglib.container.ImgFactory;
@@ -347,6 +351,23 @@ public class ImageOpener implements StatusReporter {
 		r = new ImageReader();
 		r = new ChannelFiller(r);
 		r = new ChannelSeparator(r);
+
+		//TODO: Replace code below
+		/*
+		try
+		{
+			ServiceFactory factory = new ServiceFactory();
+			OMEXMLService service = factory.getInstance( OMEXMLService.class );
+			IMetadata meta = service.createOMEXMLMetadata();
+			r.setMetadataStore( meta );
+		}
+		catch (ServiceException e) 
+		{
+		}
+		catch (DependencyException e )
+		{			
+		}
+		*/
 		
 		try 
 		{
@@ -410,6 +431,11 @@ public class ImageOpener implements StatusReporter {
 		{
 			final String dimOrder = r.getDimensionOrder().toUpperCase();
 			final MetadataRetrieve retrieve = (MetadataRetrieve)r.getMetadataStore();
+			
+			// stage coordinates (per plane and series)
+			// retrieve.getPlanePositionX( series, plane );
+			// retrieve.getPlanePositionY( series, plane );
+			// retrieve.getPlanePositionZ( series, plane );
 			
 			Double cal;
 			
