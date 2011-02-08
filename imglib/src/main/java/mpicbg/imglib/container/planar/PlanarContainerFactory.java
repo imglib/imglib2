@@ -27,6 +27,7 @@
  */
 package mpicbg.imglib.container.planar;
 
+import mpicbg.imglib.container.ImgFactory;
 import mpicbg.imglib.container.NativeContainer;
 import mpicbg.imglib.container.NativeContainerFactory;
 import mpicbg.imglib.container.basictypecontainer.array.BitArray;
@@ -37,6 +38,7 @@ import mpicbg.imglib.container.basictypecontainer.array.FloatArray;
 import mpicbg.imglib.container.basictypecontainer.array.IntArray;
 import mpicbg.imglib.container.basictypecontainer.array.LongArray;
 import mpicbg.imglib.container.basictypecontainer.array.ShortArray;
+import mpicbg.imglib.exception.IncompatibleTypeException;
 import mpicbg.imglib.type.NativeType;
 
 /**
@@ -93,4 +95,14 @@ public class PlanarContainerFactory< T extends NativeType<T> > extends NativeCon
 	{
 		return new PlanarContainer< T, ShortArray >( new ShortArray( 1 ), dimensions, entitiesPerPixel );
 	}
+	
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@Override
+	public <S> ImgFactory<S> imgFactory( final S type ) throws IncompatibleTypeException
+	{
+		if ( NativeType.class.isInstance( type ) )
+			return new PlanarContainerFactory();
+		else
+			throw new IncompatibleTypeException( this, type.getClass().getCanonicalName() + " does not implement NativeType." );
+	}	
 }

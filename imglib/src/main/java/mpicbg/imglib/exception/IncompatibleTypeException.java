@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2009--2010, Stephan Preibisch & Stephan Saalfeld
+ * Copyright (c) 2009--2010, Curtis Rueden & Stephan Preibisch
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -25,45 +25,16 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  *
- * @author Stephan Preibisch & Stephan Saalfeld
+ * @author Johannes Schindelin & Stephan Preibisch
  */
-package mpicbg.imglib.container;
+package mpicbg.imglib.exception;
 
-import mpicbg.imglib.Interval;
-import mpicbg.imglib.exception.ImgLibException;
-import mpicbg.imglib.exception.IncompatibleTypeException;
-import mpicbg.imglib.type.NativeType;
-import mpicbg.imglib.type.Type;
-
-public abstract class ImgFactory< T >
+public class IncompatibleTypeException extends ImgLibException
 {
 	/**
-	 * The {@link ImgFactory} can decide how to create the
-	 * {@link Img}.  A {@link NativeContainerFactory} will ask the
-	 * {@link Type} to create a suitable {@link NativeContainer}.
 	 * 
-	 * @return {@link Img}
 	 */
-	public abstract Img< T > create( final long[] dim, final T type );
-	
-	public Img< T > create( final Interval interval, final T type )
-	{
-		final long[] dim = new long[ interval.numDimensions() ];
-		interval.dimensions( dim );
-		
-		return create( dim, type );
-	}
-	
-	/**
-	 * Creates the same {@link ImgFactory} for a different generic parameter if possible.
-	 * 
-	 * If <S> does not suit the needs of the {@link ImgFactory} (for example implement {@link NativeType}
-	 * in all {@link NativeContainerFactory}, it will return null.
-	 * 
-	 * @param <S> - the new type
-	 * @param type - an instance of S
-	 * @return {@link ImgFactory}<S> 
-	 * @throws ImgLibException if type <S> is not compatible
-	 */
-	public abstract < S > ImgFactory< S > imgFactory ( final S type ) throws IncompatibleTypeException;
+	private static final long serialVersionUID = 1L;
+
+	public IncompatibleTypeException( final Object obj, final String message ) { super( obj.getClass().getCanonicalName() + ": " + message ); }
 }

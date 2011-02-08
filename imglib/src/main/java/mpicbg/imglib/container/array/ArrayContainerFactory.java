@@ -28,6 +28,7 @@
 package mpicbg.imglib.container.array;
 
 import mpicbg.imglib.container.AbstractImg;
+import mpicbg.imglib.container.ImgFactory;
 import mpicbg.imglib.container.NativeContainerFactory;
 import mpicbg.imglib.container.basictypecontainer.BitAccess;
 import mpicbg.imglib.container.basictypecontainer.ByteAccess;
@@ -45,6 +46,7 @@ import mpicbg.imglib.container.basictypecontainer.array.FloatArray;
 import mpicbg.imglib.container.basictypecontainer.array.IntArray;
 import mpicbg.imglib.container.basictypecontainer.array.LongArray;
 import mpicbg.imglib.container.basictypecontainer.array.ShortArray;
+import mpicbg.imglib.exception.IncompatibleTypeException;
 import mpicbg.imglib.type.NativeType;
 
 /**
@@ -127,5 +129,15 @@ public class ArrayContainerFactory< T extends NativeType<T> > extends NativeCont
 		final int numEntities = numEntitiesRangeCheck( dimensions, entitiesPerPixel );
 
 		return new Array< T, ShortAccess >( new ShortArray( numEntities ), dimensions, entitiesPerPixel );
+	}
+
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@Override
+	public <S> ImgFactory<S> imgFactory( final S type ) throws IncompatibleTypeException
+	{
+		if ( NativeType.class.isInstance( type ) )
+			return new ArrayContainerFactory();
+		else
+			throw new IncompatibleTypeException( this, type.getClass().getCanonicalName() + " does not implement NativeType." );
 	}
 }
