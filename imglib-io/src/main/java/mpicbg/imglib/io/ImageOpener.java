@@ -52,8 +52,8 @@ import loci.formats.IFormatReader;
 import loci.formats.ImageReader;
 import loci.formats.meta.MetadataRetrieve;
 import loci.formats.services.OMEXMLServiceImpl;
-import mpicbg.imglib.container.Container;
-import mpicbg.imglib.container.ContainerFactory;
+import mpicbg.imglib.container.Img;
+import mpicbg.imglib.container.ImgFactory;
 import mpicbg.imglib.container.basictypecontainer.PlanarAccess;
 import mpicbg.imglib.container.basictypecontainer.array.ArrayDataAccess;
 import mpicbg.imglib.container.basictypecontainer.array.ByteArray;
@@ -64,9 +64,9 @@ import mpicbg.imglib.container.basictypecontainer.array.IntArray;
 import mpicbg.imglib.container.basictypecontainer.array.LongArray;
 import mpicbg.imglib.container.basictypecontainer.array.ShortArray;
 import mpicbg.imglib.container.planar.PlanarContainerFactory;
-import mpicbg.imglib.cursor.LocalizablePlaneCursor;
-import mpicbg.imglib.image.Image;
-import mpicbg.imglib.image.ImageFactory;
+import mpicbg.imglib.exception.IncompatibleTypeException;
+import mpicbg.imglib.sampler.special.OrthoSliceIterator;
+import mpicbg.imglib.type.NativeType;
 import mpicbg.imglib.type.numeric.RealType;
 import mpicbg.imglib.type.numeric.integer.ByteType;
 import mpicbg.imglib.type.numeric.integer.IntType;
@@ -83,7 +83,7 @@ import mpicbg.imglib.type.numeric.real.FloatType;
  * @author Curtis Rueden ctrueden at wisc.edu
  */
 public class ImageOpener implements StatusReporter {
-
+	
 	// -- Constants --
 
 	public static final String X = "X";
@@ -101,25 +101,27 @@ public class ImageOpener implements StatusReporter {
 	 * Reads in an imglib {@link Image} from the given source
 	 * (e.g., file on disk).
 	 */
-	public <T extends RealType<T>> Image<T> openImage(String id)
-		throws FormatException, IOException
+	public <T extends RealType<T> & NativeType<T>> Img<T> openImage(String id)
+		throws FormatException, IOException, IncompatibleTypeException
 	{
-		return openImage(id, new PlanarContainerFactory());
+		return openImage(id, new PlanarContainerFactory<T>());
 	}
 
 	/**
 	 * Reads in an imglib {@link Image} from the given source
 	 * (e.g., file on disk), using the given {@link ContainerFactory}
 	 * to construct the {@link Image}.
+	 * 
+	 * @throws IncompatibleTypeException if the Type of the Image is incompatible with
+	 * the {@link ImgFactory}
 	 */
-	public <T extends RealType<T>> Image<T> openImage(String id,
-		ContainerFactory containerFactory) throws FormatException, IOException
+	public <T extends RealType<T>> Img<T> openImage(String id,
+		ImgFactory<?> imgFactory) throws FormatException, IOException, IncompatibleTypeException
 	{
 		final IFormatReader r = initializeReader(id);
 		final T type = makeType(r.getPixelType());
-		final ImageFactory<T> imageFactory =
-			new ImageFactory<T>(type, containerFactory);
-		return openImage(r, imageFactory);
+		final ImgFactory<T> imageFactory = imgFactory.imgFactory( type ); 
+		return openImage(r, imageFactory, type );
 	}
 
 	/**
@@ -127,22 +129,22 @@ public class ImageOpener implements StatusReporter {
 	 * (e.g., file on disk), using the given {@link ImageFactory}
 	 * to construct the {@link Image}.
 	 */
-	public <T extends RealType<T>> Image<T> openImage(String id,
-		ImageFactory<T> imageFactory) throws FormatException, IOException
+	public <T extends RealType<T>> Img<T> openImage(String id,
+		ImgFactory<T> imageFactory, final T type ) throws FormatException, IOException
 	{
 		final IFormatReader r = initializeReader(id);
-		return openImage(r, imageFactory);
+		return openImage(r, imageFactory, type);
 	}
 
 	/**
 	 * Reads in an imglib {@link Image} from the given initialized
 	 * {@link IFormatReader}, using the given {@link ImageFactory}.
 	 */
-	public <T extends RealType<T>> Image<T> openImage(IFormatReader r,
-		ImageFactory<T> imageFactory) throws FormatException, IOException
+	public <T extends RealType<T>> Img<T> openImage(IFormatReader r,
+		ImgFactory<T> imageFactory, final T type) throws FormatException, IOException
 	{
 		final String[] dimTypes = getDimTypes(r);
-		final int[] dimLengths = getDimLengths(r);
+		final long[] dimLengths = getDimLengths(r);
 
 		// TEMP - make suffix out of dimension types, until imglib supports them
 		final String id = r.getCurrentFile();
@@ -151,10 +153,11 @@ public class ImageOpener implements StatusReporter {
 		name = encodeName(name, dimTypes);
 
 		// create image object
-		final Image<T> img = imageFactory.createImage(dimLengths, name);
+		final Img<T> img = imageFactory.create( dimLengths, type );
 
 		// set calibration of the image
-		img.setCalibration( getCalibration(r,dimLengths) );
+		// TODO: set calibration
+		// img.setCalibration( getCalibration(r,dimLengths) );
 
 		// TODO - create better container types; either:
 		// 1) an array container type using one byte array per plane
@@ -173,7 +176,7 @@ public class ImageOpener implements StatusReporter {
 		// get container
 		final PlanarAccess<?> planarAccess = getPlanarAccess(img);
 		final T inputType = makeType(r.getPixelType());
-		final T outputType = imageFactory.createType();
+		final T outputType = type;
 		final boolean compatibleTypes =
 			outputType.getClass().isAssignableFrom(inputType.getClass());
 
@@ -187,17 +190,14 @@ public class ImageOpener implements StatusReporter {
 			// NB: This solution is general and works regardless of container,
 			// but at the expense of performance both now and later.
 
-			final LocalizablePlaneCursor<T> cursor =
-				img.createLocalizablePlaneCursor();
 			byte[] plane = null;
 			for (int no = 0; no < planeCount; no++) {
 				notifyListeners(new StatusEvent(no, planeCount,
 					"Reading plane " + (no + 1) + "/" + planeCount));
 				if (plane == null) plane = r.openBytes(no);
 				else r.openBytes(no, plane);
-				populatePlane(r, no, plane, cursor);
+				populatePlane(r, no, plane, img);
 			}
-			cursor.close();
 		}
 		else {
 			// populate the values directly using PlanarAccess interface;
@@ -226,13 +226,12 @@ public class ImageOpener implements StatusReporter {
 
 	/** Obtains planar access instance backing the given image, if any. */
 	@SuppressWarnings("unchecked")
-	public static PlanarAccess<ArrayDataAccess<?>> getPlanarAccess(Image<?> im) {
-		PlanarAccess<ArrayDataAccess<?>> planarAccess = null;
-		final Container<?> container = im.getContainer();
-		if (container instanceof PlanarAccess<?>) {
-			planarAccess = (PlanarAccess<ArrayDataAccess<?>>) container;
-		}
-		return planarAccess;
+	public static PlanarAccess<ArrayDataAccess<?>> getPlanarAccess( final Img<?> im )
+	{
+		if ( im instanceof PlanarAccess<?>) 
+			return (PlanarAccess<ArrayDataAccess<?>>) im;
+		else
+			return null;
 	}
 
 	/** Converts Bio-Formats pixel type to imglib Type object. */
@@ -401,7 +400,7 @@ public class ImageOpener implements StatusReporter {
 	}
 	
 	/** Retrieves calibration for X,Y,Z,T **/
-	private float[] getCalibration( final IFormatReader r, final int[] dimensions )
+	private float[] getCalibration( final IFormatReader r, final long[] dimensions )
 	{		
 		float[] calibration = new float[ dimensions.length ];		
 		for ( int i = 0; i < calibration.length; ++i )
@@ -444,16 +443,16 @@ public class ImageOpener implements StatusReporter {
 	}
 
 	/** Compiles an N-dimensional list of axis lengths from the given reader. */
-	private int[] getDimLengths(IFormatReader r) {
-		final int sizeX = r.getSizeX();
-		final int sizeY = r.getSizeY();
-		final int sizeZ = r.getSizeZ();
-		final int sizeT = r.getSizeT();
+	private long[] getDimLengths(IFormatReader r) {
+		final long sizeX = r.getSizeX();
+		final long sizeY = r.getSizeY();
+		final long sizeZ = r.getSizeZ();
+		final long sizeT = r.getSizeT();
 		//final String[] cDimTypes = r.getChannelDimTypes();
 		final int[] cDimLengths = r.getChannelDimLengths();
 		final String dimOrder = r.getDimensionOrder();
 
-		final List<Integer> dimLengthsList = new ArrayList<Integer>();
+		final List<Long> dimLengthsList = new ArrayList<Long>();
 
 		// add core dimensions
 		for (int i=0; i<dimOrder.length(); i++) {
@@ -473,7 +472,7 @@ public class ImageOpener implements StatusReporter {
 					break;
 				case 'C':
 					for (int c=0; c<cDimLengths.length; c++) {
-						int len = cDimLengths[c];
+						long len = cDimLengths[c];
 						if (len > 1) dimLengthsList.add(len);
 					}
 					break;
@@ -481,7 +480,7 @@ public class ImageOpener implements StatusReporter {
 		}
 
 		// convert result to primitive array
-		final int[] dimLengths = new int[dimLengthsList.size()];
+		final long[] dimLengths = new long[dimLengthsList.size()];
 		for (int i=0; i<dimLengths.length; i++){
 			dimLengths[i] = dimLengthsList.get(i);
 		}
@@ -489,7 +488,7 @@ public class ImageOpener implements StatusReporter {
 	}
 
 	/** Copies the current dimensional position into the given array. */
-	private void getPosition(IFormatReader r, int no, int[] pos) {
+	private void getPosition(IFormatReader r, int no, long[] pos) {
 		final int sizeX = r.getSizeX();
 		final int sizeY = r.getSizeY();
 		final int sizeZ = r.getSizeZ();
@@ -565,27 +564,28 @@ public class ImageOpener implements StatusReporter {
 
 	
 	private <T extends RealType<T>> void populatePlane(IFormatReader r,
-			int no, byte[] plane, LocalizablePlaneCursor<T> cursor)
+			int no, byte[] plane, Img<T> img )
 		{
 			final int sizeX = r.getSizeX();
 			final int pixelType = r.getPixelType();
 			final boolean little = r.isLittleEndian();
 
-			final int[] dimLengths = getDimLengths(r);
-			final int[] pos = new int[dimLengths.length];
+			final long[] dimLengths = getDimLengths(r);
+			final long[] pos = new long[dimLengths.length];
 
 			final int planeX = 0;
 			final int planeY = 1;
-			
+
 			getPosition(r, no, pos);
-			cursor.reset( planeX, planeY, pos );
+
+			final OrthoSliceIterator<T> cursor = new OrthoSliceIterator<T>( img, planeX, planeY, pos );
 			
 			while ( cursor.hasNext() )
 			{
 				cursor.fwd();
-				final int index = cursor.getPosition( planeX ) + cursor.getPosition( planeY ) * sizeX;
+				final int index = cursor.getIntPosition( planeX ) + cursor.getIntPosition( planeY ) * sizeX;
 				final double value = decodeWord(plane, index, pixelType, little);
-				cursor.getType().setReal(value);
+				cursor.get().setReal(value);
 			}				
 		}
 	
