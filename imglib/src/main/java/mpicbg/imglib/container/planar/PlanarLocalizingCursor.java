@@ -86,7 +86,7 @@ public class PlanarLocalizingCursor< T extends NativeType< T > > extends Abstrac
 			if ( ++position[ d ] >= dimensions[ d ] )
 				position[ d ] = 0;
 			else
-				return;
+				break;
 		}
 		
 		final int i = type.getIndex();
