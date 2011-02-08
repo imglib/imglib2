@@ -798,6 +798,40 @@ public class Util
 		interval.dimensions( dimensions );
 		return dimensions;
 	}
+
+	/**
+	 * <p>Create a long[] with the max coordinates of an {@link Interval}.</p>
+	 * 
+	 * <p>Keep in mind that creating arrays wildly is not good practice and
+	 * consider using the interval directly.</p>
+	 * 
+	 * @param interval
+	 * 
+	 * @return dimensions of the interval as a new long[]
+	 */
+	final static public long[] intervalMax( final Interval interval )
+	{
+		final long[] max = new long[ interval.numDimensions() ];
+		interval.max( max );
+		return max;
+	}
+
+	/**
+	 * <p>Create a long[] with the min coordinates of an {@link Interval}.</p>
+	 * 
+	 * <p>Keep in mind that creating arrays wildly is not good practice and
+	 * consider using the interval directly.</p>
+	 * 
+	 * @param interval
+	 * 
+	 * @return dimensions of the interval as a new long[]
+	 */
+	final static public long[] intervalMin( final Interval interval )
+	{
+		final long[] min = new long[ interval.numDimensions() ];
+		interval.min( min );
+		return min;
+	}
 	
 	/**
 	 * <p>Create a double[] with the dimensions of a {@link RealInterval}.
@@ -821,4 +855,47 @@ public class Util
 		return dimensions;
 	}
 
+	/**
+	 * <p>Create a double[] with the max coordinates of a {@link RealInterval}.
+	 * Dimensions are returned as <em>max</em> - <em>min</em>.</p>
+	 * 
+	 * <p>Keep in mind that creating arrays wildly is not good practice and
+	 * consider using the interval directly.</p>
+	 * 
+	 * @param interval
+	 * 
+	 * @return dimensions of the interval as a new double[]
+	 */
+	final static public double[] realIntervalMax( final RealInterval interval )
+	{
+		final int n = interval.numDimensions();
+		final double[] max = new double[ interval.numDimensions() ];
+		
+		for ( int d = 0; d < n; ++d )
+			max[ d ] = interval.realMax( d );
+
+		return max;
+	}
+	
+	/**
+	 * <p>Create a double[] with the min coordinates of a {@link RealInterval}.
+	 * Dimensions are returned as <em>max</em> - <em>min</em>.</p>
+	 * 
+	 * <p>Keep in mind that creating arrays wildly is not good practice and
+	 * consider using the interval directly.</p>
+	 * 
+	 * @param interval
+	 * 
+	 * @return dimensions of the interval as a new double[]
+	 */
+	final static public double[] realIntervalMin( final RealInterval interval )
+	{
+		final int n = interval.numDimensions();
+		final double[] min = new double[ interval.numDimensions() ];
+		
+		for ( int d = 0; d < n; ++d )
+			min[ d ] = interval.realMin( d );
+
+		return min;
+	}
 }
