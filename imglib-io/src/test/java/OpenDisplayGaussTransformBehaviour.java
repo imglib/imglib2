@@ -3,8 +3,6 @@ import mpicbg.imglib.algorithm.gauss.GaussianConvolution;
 import mpicbg.imglib.algorithm.transformation.ImageTransform;
 import mpicbg.imglib.container.Img;
 import mpicbg.imglib.container.ImgFactory;
-import mpicbg.imglib.container.array.ArrayContainerFactory;
-import mpicbg.imglib.container.list.ListContainerFactory;
 import mpicbg.imglib.container.planar.PlanarContainerFactory;
 import mpicbg.imglib.image.display.imagej.ImgLib2Display;
 import mpicbg.imglib.interpolation.nearestneighbor.NearestNeighborInterpolatorFactory;
@@ -22,7 +20,11 @@ public class OpenDisplayGaussTransformBehaviour
 	{
 		Img<FloatType> img = LOCI.openLOCIFloatType( "D:/Temp/Truman/MoreTiles/73.tif",  factory );
 		
-		ImgLib2Display.copyToImagePlus( img, new int[] {2, 0, 1} ).show();
+		//ImgCursor<FloatType> c = img.localizingCursor();
+		//System.out.println( Util.printCoordinates(c ) + ": " + ((FloatType)c.get()).i );		
+		//System.exit( 0 );
+		
+		//ImgLib2Display.copyToImagePlus( img, new int[] {2, 0, 1} ).show();
 		
 		// compute a gaussian convolution with sigma = 3
 		GaussianConvolution<FloatType> gauss = new GaussianConvolution<FloatType>( img, new OutOfBoundsMirrorFactory<FloatType, Img<FloatType>>( Boundary.SINGLE ), 2 );
