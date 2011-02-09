@@ -1,7 +1,9 @@
 package mpicbg.imglib.container.newcell;
 
+import mpicbg.imglib.container.ImgFactory;
 import mpicbg.imglib.container.NativeContainer;
 import mpicbg.imglib.container.NativeContainerFactory;
+import mpicbg.imglib.container.array.ArrayContainerFactory;
 import mpicbg.imglib.container.basictypecontainer.BitAccess;
 import mpicbg.imglib.container.basictypecontainer.ByteAccess;
 import mpicbg.imglib.container.basictypecontainer.CharAccess;
@@ -18,6 +20,7 @@ import mpicbg.imglib.container.basictypecontainer.array.FloatArray;
 import mpicbg.imglib.container.basictypecontainer.array.IntArray;
 import mpicbg.imglib.container.basictypecontainer.array.LongArray;
 import mpicbg.imglib.container.basictypecontainer.array.ShortArray;
+import mpicbg.imglib.exception.IncompatibleTypeException;
 import mpicbg.imglib.type.NativeType;
 
 public class CellContainerFactory< T extends NativeType<T> > extends NativeContainerFactory< T >
@@ -163,5 +166,15 @@ public class CellContainerFactory< T extends NativeType<T> > extends NativeConta
 		dimensions = checkDimensions( dimensions );
 		int[] cellSize = checkCellSize( defaultCellDimensions, dimensions );
 		return new CellContainer< T, DoubleArray >( this, new DoubleArray( 1 ), dimensions, cellSize, entitiesPerPixel );
+	}
+
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@Override
+	public <S> ImgFactory<S> imgFactory( final S type ) throws IncompatibleTypeException
+	{
+		if ( NativeType.class.isInstance( type ) )
+			return new CellContainerFactory( defaultCellDimensions );
+		else
+			throw new IncompatibleTypeException( this, type.getClass().getCanonicalName() + " does not implement NativeType." );
 	}
 }
