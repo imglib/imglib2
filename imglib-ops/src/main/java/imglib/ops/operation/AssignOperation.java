@@ -1,8 +1,13 @@
 package imglib.ops.operation;
 
+import java.util.Observable;
+
 import imglib.ops.condition.Condition;
 import imglib.ops.function.RealFunction;
-import imglib.ops.observer.Observer;
+import imglib.ops.observer.IterationStatus;
+import imglib.ops.observer.IterationStatus.Message;
+
+import java.util.Observer;
 import mpicbg.imglib.cursor.LocalizableCursor;
 import mpicbg.imglib.cursor.special.RegionOfInterestCursor;
 import mpicbg.imglib.image.Image;
@@ -59,7 +64,7 @@ public class AssignOperation<T extends RealType<T>>
 	private MultiImageIterator<T> cursor;
 	private T outputVariable;
 	private int[][] positions;
-	private Observer observer;
+	private Observable notifier;
 	private Condition[] conditions;
 	private boolean requireIntersection;
 	private RealFunction<T> function;
@@ -85,7 +90,7 @@ public class AssignOperation<T extends RealType<T>>
 			positions[i] = new int[inputs[i-1].getNumDimensions()];
 		}
 		outputVariable = null;
-		observer = null;
+		notifier = null;
 		conditions = new Condition[imageCount];
 		requireIntersection = true;
 		function = func;
@@ -95,9 +100,22 @@ public class AssignOperation<T extends RealType<T>>
 			throw new IllegalArgumentException("function cannot handle "+inputs.length+" input images");
 	}
 
-	public void setObserver(Observer o)
+	public void addObserver(Observer o)
 	{
-		observer = o;
+		if (notifier == null)
+			notifier = new Observable();
+		notifier.addObserver(o);
+	}
+	
+	public void deleteObserver(Observer o)
+	{
+		if (notifier != null)
+		{
+			notifier.deleteObserver(o);
+			
+			if (notifier.countObservers() == 0)
+				notifier = null;
+		}
 	}
 	
 	public void setOutputRegion(int[] origin, int[] span)
@@ -141,9 +159,14 @@ public class AssignOperation<T extends RealType<T>>
 		T[] inputVariables = getInputVariables(subCursors);
 		
 		int[] position = subCursors[0].createPositionArray();
+
+		IterationTracker status = new IterationTracker();
 		
-		if (observer != null)
-			observer.init();
+		if (notifier != null)
+		{
+			status.message = Message.INITIALIZE;
+			notifier.notifyObservers(status);
+		}
 
 		while (cursor.hasNext())
 		{
@@ -163,16 +186,24 @@ public class AssignOperation<T extends RealType<T>>
 				value = outputVariable.getRealDouble();
 			}
 			
-			if (observer != null)
+			if (notifier != null)
 			{
 				subCursors[0].getPosition(position);
 				
-				observer.update(position,value,conditionsSatisfied);
+				status.message = Message.UPDATE;
+				status.position = position;
+				status.value = value;
+				status.conditionsSatisfied = conditionsSatisfied;
+				notifier.notifyObservers(status);
 			}
 		}
 
-		if (observer != null)
-			observer.done(wasInterrupted);
+		if (notifier != null)
+		{
+			status.message = Message.DONE;
+			status.wasInterrupted = wasInterrupted;
+			notifier.notifyObservers(status);
+		}
 	}
 
 	public void quit()
@@ -222,4 +253,43 @@ public class AssignOperation<T extends RealType<T>>
 		return variables;
 	}
 
+	private class IterationTracker implements IterationStatus
+	{
+		Message message;
+		int[] position;
+		double value;
+		boolean conditionsSatisfied;
+		boolean wasInterrupted;
+
+		@Override
+		public Message getMessage()
+		{
+			return message;
+		}
+
+		@Override
+		public int[] getPosition()
+		{
+			return position;
+		}
+
+		@Override
+		public double getValue()
+		{
+			return value;
+		}
+
+		@Override
+		public boolean getConditionsSatisfied()
+		{
+			return conditionsSatisfied;
+		}
+
+		@Override
+		public boolean wasInterrupted()
+		{
+			return wasInterrupted;
+		}
+		
+	}
 }
