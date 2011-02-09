@@ -76,29 +76,34 @@ public class SubImageCursor< T > implements Sampler< T >, EuclideanSpace, Inject
 	}
 	/*
 	 * From Dr. Schindelin, not tested yet
-	 * 
-	indexToPosition(int index, int[] size, int[] pos) {
-	 for (int j = 0, cumulSize = 1; j < size.length; j++) {
-	  dimPos = (index / cumulSize) % size[j];
-	  cumulSize *= size[j];
-	  if (((index / cumulSize) % 2) == 1)
-	   pos[j] = size[j] - 1 - dimPos;
-	  else
-	   pos[j] = dimPos;
-	 }
+	 */ 
+	protected void indexToPosition( final int index, final int[] size, final int[] pos ) 
+	{
+		for (int j = 0, cumulSize = 1; j < size.length; j++) 
+		{
+			int dimPos = (index / cumulSize) % size[j];
+			cumulSize *= size[j];
+			if (((index / cumulSize) % 2) == 1)
+				pos[j] = size[j] - 1 - dimPos;
+			else
+				pos[j] = dimPos;
+		}
 	}
 	
-	indexToDirection(int index, int[] size, int[] direction) {
-	 for (index++, j = 0; j < size.length; j++, index >>= 1) {
-	  if ((index % 2) != 0) {
-	   direction[j] = (index & 2) == 0 ? +1 : -1;
-	   index = 0;
-	  }
-	  else
-	   direction[j] = 0;
-	 }
+	protected void indexToDirection( int index, final int[] size, final int[] direction ) 
+	{
+		index++;
+		for (int j = 0; j < size.length; j++, index >>= 1) 
+		{
+			if ((index % 2) != 0) 
+			{
+				direction[j] = (index & 2) == 0 ? +1 : -1;
+				index = 0;
+			}
+		else
+			direction[j] = 0;
+		}
 	}	
-	*/
 	
 	/* Iterator */
 	
