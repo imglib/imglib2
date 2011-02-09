@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2009--2010, Stephan Preibisch & Stephan Saalfeld
+ * Copyright (c) 20011, Stephan Preibisch & Stephan Saalfeld
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -9,7 +9,7 @@
  * list of conditions and the following disclaimer.  Redistributions in binary
  * form must reproduce the above copyright notice, this list of conditions and
  * the following disclaimer in the documentation and/or other materials
- * provided with the distribution.  Neither the name of the Fiji project nor
+ * provided with the distribution.  Neither the name of the ImgLib/Fiji project nor
  * the names of its contributors may be used to endorse or promote products
  * derived from this software without specific prior written permission.
  * 
@@ -25,30 +25,19 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-package mpicbg.imglib.container.planar;
+package mpicbg.imglib.roi.rectangular;
 
-import mpicbg.imglib.container.AbstractImgOutOfBoundsRandomAccess;
-import mpicbg.imglib.container.Img;
-import mpicbg.imglib.outofbounds.OutOfBoundsFactory;
-import mpicbg.imglib.type.NativeType;
+import mpicbg.imglib.RandomAccess;
 
 /**
  * 
- * @param <T>
- *
- * @author Stephan Preibisch and Stephan Saalfeld
+ * @author Stephan Preibisch (stephan.preibisch@gmx.de)
+ * 
  */
-public class PlanarOutOfBoundsRandomAccess< T extends NativeType< T > > extends AbstractImgOutOfBoundsRandomAccess< T >
+public class SubImageRandomAccess< T > extends AbstractSubImageRandomAccess<T, RandomAccess<T> >
 {
-	final protected PlanarContainer< T, ? > container;
-	
-	public PlanarOutOfBoundsRandomAccess( final PlanarContainer< T, ? > container, final OutOfBoundsFactory< T, Img< T > > outOfBoundsStrategyFactory ) 
+	public SubImageRandomAccess( final SubImage< T > subImage )
 	{
-		super( container, outOfBoundsStrategyFactory );
-		
-		this.container = container;
+		super( subImage, subImage.createRandomAccessForSource() );
 	}
-
-	@Override
-	public PlanarContainer< T, ? > getImg(){ return container; }
 }

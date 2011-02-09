@@ -67,6 +67,7 @@ public class LocalizingZeroMinIntervalIterator extends AbstractLocalizable imple
 {
 	final protected long[] dimensions;
 	final protected long[] max;
+	final long lastIndex;
 	protected long index = -1;
 	
 	final static private long[] maxify( final long[] dimensions )
@@ -83,6 +84,12 @@ public class LocalizingZeroMinIntervalIterator extends AbstractLocalizable imple
 		this.dimensions = dimensions.clone();
 		max = maxify( dimensions );
 		position[ 0 ] = -1;
+
+		final int m = n - 1;
+		long k = 1;
+		for ( int d = 0; d < m; )
+			k *= dimensions[ d ];
+		lastIndex = k * dimensions[ m ] - 1;
 	}
 
 	public LocalizingZeroMinIntervalIterator( final Interval interval )
@@ -91,6 +98,12 @@ public class LocalizingZeroMinIntervalIterator extends AbstractLocalizable imple
 		this.dimensions = Util.intervalDimensions( interval );
 		max = maxify( dimensions );
 		position[ 0 ] = -1;
+
+		final int m = n - 1;
+		long k = 1;
+		for ( int d = 0; d < m; )
+			k *= dimensions[ d ];
+		lastIndex = k * dimensions[ m ] - 1;
 	}
 	
 
@@ -127,6 +140,8 @@ public class LocalizingZeroMinIntervalIterator extends AbstractLocalizable imple
 			position[ d ] = 0;
 	}
 	
+	@Override
+	public boolean hasNext() { return index < lastIndex; }
 	
 	/* EuclideanSpace */
 	

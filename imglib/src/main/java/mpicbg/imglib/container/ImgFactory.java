@@ -30,6 +30,9 @@
 package mpicbg.imglib.container;
 
 import mpicbg.imglib.Interval;
+import mpicbg.imglib.exception.ImgLibException;
+import mpicbg.imglib.exception.IncompatibleTypeException;
+import mpicbg.imglib.type.NativeType;
 import mpicbg.imglib.type.Type;
 
 public abstract class ImgFactory< T >
@@ -50,4 +53,17 @@ public abstract class ImgFactory< T >
 		
 		return create( dim, type );
 	}
+	
+	/**
+	 * Creates the same {@link ImgFactory} for a different generic parameter if possible.
+	 * 
+	 * If <S> does not suit the needs of the {@link ImgFactory} (for example implement {@link NativeType}
+	 * in all {@link NativeContainerFactory}, it will return null.
+	 * 
+	 * @param <S> - the new type
+	 * @param type - an instance of S
+	 * @return {@link ImgFactory}<S> 
+	 * @throws ImgLibException if type <S> is not compatible
+	 */
+	public abstract < S > ImgFactory< S > imgFactory ( final S type ) throws IncompatibleTypeException;
 }

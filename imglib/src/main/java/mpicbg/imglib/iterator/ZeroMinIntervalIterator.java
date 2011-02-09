@@ -29,7 +29,6 @@ package mpicbg.imglib.iterator;
 
 import mpicbg.imglib.Interval;
 import mpicbg.imglib.Sampler;
-import mpicbg.imglib.location.LocalizingFlatIntegerIntervalIterator;
 import mpicbg.imglib.util.IntervalIndexer;
 import mpicbg.imglib.util.Util;
 
@@ -57,7 +56,7 @@ import mpicbg.imglib.util.Util;
  * <em>not</em> for each pixel you want to localize and/or set the
  * {@link Positionable} [{@link Sampler}], that is in a sparse sampling situation.
  * For localizing at each iteration step (as in the simplified example above),
- * use {@link LocalizingFlatIntegerIntervalIterator} instead.
+ * use {@link FlatIterator} instead.
  *  
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */

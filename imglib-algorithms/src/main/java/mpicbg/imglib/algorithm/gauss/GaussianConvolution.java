@@ -235,10 +235,10 @@ public class GaussianConvolution< T extends NumericType<T>> implements MultiThre
 	protected void convolve( final ImgRandomAccess<T> inputIterator, final ImgCursor<T> outputIterator, 
 															   final int dim, final float[] kernel,
 															   final long startPos, final long loopSize )
-	{		
+	{
     	// move to the starting position of the current thread
     	outputIterator.jumpFwd( startPos );
-   	 
+
         final int filterSize = kernel.length;
         final int filterSizeMinus1 = filterSize - 1;
         final int filterSizeHalf = filterSize / 2;
@@ -257,7 +257,7 @@ public class GaussianConvolution< T extends NumericType<T>> implements MultiThre
         for ( long j = 0; j < loopSize; ++j )
         {
         	outputIterator.fwd();			                			                	
-
+        	
         	// set the sum to zero
         	sum.setZero();
         	
@@ -302,8 +302,8 @@ public class GaussianConvolution< T extends NumericType<T>> implements MultiThre
     		
     		// add up the sum
     		sum.add( tmp );
-    		    		
-            outputIterator.get().set( sum );			                		        	
+
+            outputIterator.get().set( sum );
         }
 	}	
 	

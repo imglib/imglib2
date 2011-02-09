@@ -30,6 +30,7 @@ package mpicbg.imglib.container.planar;
 import mpicbg.imglib.container.AbstractImgRandomAccess;
 import mpicbg.imglib.container.Img;
 import mpicbg.imglib.type.NativeType;
+import mpicbg.imglib.util.Util;
 
 /**
  * Positionable for a {@link PlanarContainer PlanarContainers}
@@ -39,7 +40,7 @@ import mpicbg.imglib.type.NativeType;
  */
 public class PlanarRandomAccess< T extends NativeType< T > > extends AbstractImgRandomAccess< T > implements PlanarLocation
 {
-	final protected int[] tmp, sliceSteps, dim;
+	final protected int[] tmp, sliceSteps, dim, position;
 	final int width, n;
 	
 	final T type;
@@ -56,8 +57,8 @@ public class PlanarRandomAccess< T extends NativeType< T > > extends AbstractImg
 		this.n = container.numDimensions();
 		this.type = container.createLinkedType();
 		this.dim = container.dim;
-		
-		tmp = new int[ n ];
+		this.position = new int[ n ];		
+		this.tmp = new int[ n ];
 
 		if ( n > 2 )
 		{
@@ -176,7 +177,7 @@ public class PlanarRandomAccess< T extends NativeType< T > > extends AbstractImg
 		type.updateIndex( (int)position[ 0 ] + (int)position[ 1 ] * width );
 		
 		for ( int d = 0; d < n; d++ )
-			this.position[ d ] = position[ d ];
+			this.position[ d ] = (int)position[ d ];
 		
 		sliceIndex = 0;
 		for ( int d = 2; d < n; ++d )
@@ -190,4 +191,49 @@ public class PlanarRandomAccess< T extends NativeType< T > > extends AbstractImg
 
 	@Override
 	public int getCurrentPlane() { return sliceIndex; }
+
+	// We have to override all these methods as they now refer to the int[] position instead of the long[] position of the super class
+		
+	@Override
+	public float getFloatPosition( final int dim ){ return position[ dim ]; }
+	
+	@Override
+	public double getDoublePosition( final int dim ){ return position[ dim ]; }
+	
+	@Override
+	public int getIntPosition( final int dim ){ return position[ dim ]; }
+
+	@Override
+	public long getLongPosition( final int dim ){ return position[ dim ]; }	
+	
+	@Override
+	public void localize( final float[] pos )
+	{
+		for ( int d = 0; d < n; d++ )
+			pos[ d ] = this.position[ d ];
+	}
+
+	@Override
+	public void localize( final double[] pos )
+	{
+		for ( int d = 0; d < n; d++ )
+			pos[ d ] = this.position[ d ];
+	}
+
+	@Override
+	public void localize( int[] pos )
+	{
+		for ( int d = 0; d < n; d++ )
+			pos[ d ] = ( int )this.position[ d ];
+	}
+	
+	@Override
+	public void localize( long[] pos )
+	{
+		for ( int d = 0; d < n; d++ )
+			pos[ d ] = this.position[ d ];
+	}
+	
+	@Override
+	public String toString(){ return Util.printCoordinates( position ) + " = " + get(); }
 }

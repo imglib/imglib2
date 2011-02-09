@@ -29,6 +29,7 @@ package mpicbg.imglib.container.list;
 
 import mpicbg.imglib.container.Img;
 import mpicbg.imglib.container.ImgFactory;
+import mpicbg.imglib.exception.IncompatibleTypeException;
 import mpicbg.imglib.type.Type;
 
 /**
@@ -44,4 +45,15 @@ public class ListContainerFactory< T extends Type< T > > extends ImgFactory< T >
 	{
 		return new ListContainer< T >( dim, type );
 	}
+	
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@Override
+	public <S> ImgFactory<S> imgFactory( final S type ) throws IncompatibleTypeException
+	{
+		if ( Type.class.isInstance( type ) )
+			return new ListContainerFactory();
+		else
+			throw new IncompatibleTypeException( this, type.getClass().getCanonicalName() + " does not implement Type." );
+	}
+	
 }

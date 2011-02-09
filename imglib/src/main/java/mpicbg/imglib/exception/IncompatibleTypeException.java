@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2009--2010, Stephan Preibisch & Stephan Saalfeld
+ * Copyright (c) 2009--2010, Curtis Rueden & Stephan Preibisch
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -24,31 +24,17 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- */
-package mpicbg.imglib.container.planar;
-
-import mpicbg.imglib.container.AbstractImgOutOfBoundsRandomAccess;
-import mpicbg.imglib.container.Img;
-import mpicbg.imglib.outofbounds.OutOfBoundsFactory;
-import mpicbg.imglib.type.NativeType;
-
-/**
- * 
- * @param <T>
  *
- * @author Stephan Preibisch and Stephan Saalfeld
+ * @author Johannes Schindelin & Stephan Preibisch
  */
-public class PlanarOutOfBoundsRandomAccess< T extends NativeType< T > > extends AbstractImgOutOfBoundsRandomAccess< T >
-{
-	final protected PlanarContainer< T, ? > container;
-	
-	public PlanarOutOfBoundsRandomAccess( final PlanarContainer< T, ? > container, final OutOfBoundsFactory< T, Img< T > > outOfBoundsStrategyFactory ) 
-	{
-		super( container, outOfBoundsStrategyFactory );
-		
-		this.container = container;
-	}
+package mpicbg.imglib.exception;
 
-	@Override
-	public PlanarContainer< T, ? > getImg(){ return container; }
+public class IncompatibleTypeException extends ImgLibException
+{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	public IncompatibleTypeException( final Object obj, final String message ) { super( obj.getClass().getCanonicalName() + ": " + message ); }
 }

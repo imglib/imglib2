@@ -55,4 +55,10 @@ public interface Iterator
 	 * newly created.
 	 */
 	public void reset();
+	
+	/**
+	 * 
+	 * @return true, if there is another step forward is possible, otherwise false
+	 */
+	public boolean hasNext();
 }

@@ -42,7 +42,7 @@ public class ArrayOutOfBoundsRandomAccess< T extends NativeType< T > > extends A
 {
 	final protected Array< T, ? > container;
 	
-	public <F> ArrayOutOfBoundsRandomAccess( final Array< T, ? > container, final OutOfBoundsFactory< T, Img<T> > outOfBoundsStrategyFactory ) 
+	public <F> ArrayOutOfBoundsRandomAccess( final Array< T, ? > container, final OutOfBoundsFactory< T, Img< T > > outOfBoundsStrategyFactory ) 
 	{
 		super( container, outOfBoundsStrategyFactory );
 		
