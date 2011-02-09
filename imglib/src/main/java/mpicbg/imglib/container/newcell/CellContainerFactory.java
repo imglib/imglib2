@@ -84,7 +84,7 @@ public class CellContainerFactory< T extends NativeType<T> > extends NativeConta
 
 		if ( cellDimensions.length != dimensions.length )
 		{
-			System.err.println( "CellContainerFactory(): dimensionality of image is unequal to dimensionality of cells, adjusting cell dimensionality." );
+			// System.err.println( "CellContainerFactory(): dimensionality of image is unequal to dimensionality of cells, adjusting cell dimensionality." );
 			int[] cellDimensionsNew = new int[ dimensions.length ];
 
 			for ( int i = 0; i < dimensions.length; i++ )
@@ -106,7 +106,7 @@ public class CellContainerFactory< T extends NativeType<T> > extends NativeConta
 	{
 		dimensions = checkDimensions( dimensions );
 		int[] cellSize = checkCellSize( defaultCellDimensions, dimensions );
-		return new CellContainer< T, BitArray >( new BitArray( 1 ), dimensions, cellSize, entitiesPerPixel );
+		return new CellContainer< T, BitArray >( this, new BitArray( 1 ), dimensions, cellSize, entitiesPerPixel );
 	}
 
 	@Override
@@ -114,7 +114,7 @@ public class CellContainerFactory< T extends NativeType<T> > extends NativeConta
 	{
 		dimensions = checkDimensions( dimensions );
 		int[] cellSize = checkCellSize( defaultCellDimensions, dimensions );
-		return new CellContainer< T, ByteArray >( new ByteArray( 1 ), dimensions, cellSize, entitiesPerPixel );
+		return new CellContainer< T, ByteArray >( this, new ByteArray( 1 ), dimensions, cellSize, entitiesPerPixel );
 	}
 
 	@Override
@@ -122,7 +122,7 @@ public class CellContainerFactory< T extends NativeType<T> > extends NativeConta
 	{
 		dimensions = checkDimensions( dimensions );
 		int[] cellSize = checkCellSize( defaultCellDimensions, dimensions );
-		return new CellContainer< T, CharArray >( new CharArray( 1 ), dimensions, cellSize, entitiesPerPixel );
+		return new CellContainer< T, CharArray >( this, new CharArray( 1 ), dimensions, cellSize, entitiesPerPixel );
 	}
 
 	@Override
@@ -130,7 +130,7 @@ public class CellContainerFactory< T extends NativeType<T> > extends NativeConta
 	{
 		dimensions = checkDimensions( dimensions );
 		int[] cellSize = checkCellSize( defaultCellDimensions, dimensions );
-		return new CellContainer< T, ShortArray >( new ShortArray( 1 ), dimensions, cellSize, entitiesPerPixel );
+		return new CellContainer< T, ShortArray >( this, new ShortArray( 1 ), dimensions, cellSize, entitiesPerPixel );
 	}
 
 	@Override
@@ -138,7 +138,7 @@ public class CellContainerFactory< T extends NativeType<T> > extends NativeConta
 	{
 		dimensions = checkDimensions( dimensions );
 		int[] cellSize = checkCellSize( defaultCellDimensions, dimensions );
-		return new CellContainer< T, IntArray >( new IntArray( 1 ), dimensions, cellSize, entitiesPerPixel );
+		return new CellContainer< T, IntArray >( this, new IntArray( 1 ), dimensions, cellSize, entitiesPerPixel );
 	}
 
 	@Override
@@ -146,7 +146,7 @@ public class CellContainerFactory< T extends NativeType<T> > extends NativeConta
 	{
 		dimensions = checkDimensions( dimensions );
 		int[] cellSize = checkCellSize( defaultCellDimensions, dimensions );
-		return new CellContainer< T, LongArray >( new LongArray( 1 ), dimensions, cellSize, entitiesPerPixel );
+		return new CellContainer< T, LongArray >( this, new LongArray( 1 ), dimensions, cellSize, entitiesPerPixel );
 	}
 
 	@Override
@@ -154,7 +154,7 @@ public class CellContainerFactory< T extends NativeType<T> > extends NativeConta
 	{
 		dimensions = checkDimensions( dimensions );
 		int[] cellSize = checkCellSize( defaultCellDimensions, dimensions );
-		return new CellContainer< T, FloatArray >( new FloatArray( 1 ), dimensions, cellSize, entitiesPerPixel );
+		return new CellContainer< T, FloatArray >( this, new FloatArray( 1 ), dimensions, cellSize, entitiesPerPixel );
 	}
 
 	@Override
@@ -162,6 +162,6 @@ public class CellContainerFactory< T extends NativeType<T> > extends NativeConta
 	{
 		dimensions = checkDimensions( dimensions );
 		int[] cellSize = checkCellSize( defaultCellDimensions, dimensions );
-		return new CellContainer< T, DoubleArray >( new DoubleArray( 1 ), dimensions, cellSize, entitiesPerPixel );
+		return new CellContainer< T, DoubleArray >( this, new DoubleArray( 1 ), dimensions, cellSize, entitiesPerPixel );
 	}
 }

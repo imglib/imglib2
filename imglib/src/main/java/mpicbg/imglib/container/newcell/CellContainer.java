@@ -11,7 +11,9 @@ import mpicbg.imglib.type.NativeType;
 
 final public class CellContainer< T extends NativeType< T >, A extends ArrayDataAccess< A > > extends AbstractNativeContainer< T, A >
 {
-	protected Img< Cell< T , A > > cells;
+	final protected CellContainerFactory< T > factory;
+	
+	final protected Img< Cell< T , A > > cells;
 	
 	/**
 	 *  Dimensions of a standard cell.
@@ -19,9 +21,11 @@ final public class CellContainer< T extends NativeType< T >, A extends ArrayData
 	 */
 	final int[] cellDims;
 
-	public CellContainer( final A creator, final long[] dimensions, final int[] cellDimensions, int entitiesPerPixel )
+	public CellContainer( final CellContainerFactory< T > factory, final A creator, final long[] dimensions, final int[] cellDimensions, int entitiesPerPixel )
 	{
 		super( dimensions, entitiesPerPixel );
+		
+		this.factory = factory;
 
 		cellDims = cellDimensions.clone(); 
 
@@ -147,7 +151,7 @@ final public class CellContainer< T extends NativeType< T >, A extends ArrayData
 	@Override
 	public CellContainerFactory< T > factory()
 	{
-		return new CellContainerFactory< T >();
+		return factory;
 	}
 
 	@SuppressWarnings( "unchecked" )
