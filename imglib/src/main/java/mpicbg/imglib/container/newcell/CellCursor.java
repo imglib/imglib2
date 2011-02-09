@@ -61,24 +61,16 @@ public class CellCursor< T extends NativeType< T >, A extends ArrayDataAccess< A
 	@Override
 	public void fwd()
 	{
+		if ( type.getIndex() == lastIndexInCell )
+			moveToNextCell();
 		type.incIndex();
-		if ( type.getIndex() > lastIndexInCell )
-		{
-			cursorOnCells.fwd();
-			lastIndexInCell = ( int )( getCell().size() - 1);
-			type.updateIndex( -1 );
-			type.updateContainer( this );
-		}
 	}
 
 	@Override
 	public void reset()
 	{
 		cursorOnCells.reset();
-		cursorOnCells.fwd();
-		lastIndexInCell = ( int )( getCell().size() - 1);
-		type.updateIndex( -1 );
-		type.updateContainer( this );
+		moveToNextCell();
 	}
 
 	@Override
@@ -103,5 +95,17 @@ public class CellCursor< T extends NativeType< T >, A extends ArrayDataAccess< A
 	public void localize( final long[] position )
 	{
 		getCell().indexToGlobalPosition( type.getIndex(), position );
+	}
+
+	/**
+	 * Move cursor right before the first element of the next cell.
+	 * Update type and index variables. 
+	 */
+	private void moveToNextCell()
+	{
+		cursorOnCells.fwd();
+		lastIndexInCell = ( int )( getCell().size() - 1);
+		type.updateIndex( -1 );
+		type.updateContainer( this );
 	}
 }

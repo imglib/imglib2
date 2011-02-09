@@ -63,26 +63,26 @@ public class CellLocalizingCursor< T extends NativeType< T >, A extends ArrayDat
 		Cell< T, A > c = getCell();
 		for ( int d = 0; d < n; ++d ) {
 			minPositionInCell[ d ] = c.offset[ d ];
-			maxPositionInCell[ d ] = minPositionInCell[ d ] + c.dimensions[ d ];
+			maxPositionInCell[ d ] = minPositionInCell[ d ] + c.dimensions[ d ] - 1;
 		}
 
 		c.indexToGlobalPosition( ( int )newIndex, position );
 
-		type.updateIndex( ( int ) newIndex );
+		type.updateIndex( ( int )newIndex );
 		type.updateContainer( this );
 	}
 	
 	@Override
 	public void fwd()
 	{
-		type.incIndex();
-
-		if ( type.getIndex() > lastIndexInCell )
+		if ( type.getIndex() == lastIndexInCell )
 			moveToNextCell();
+
+		type.incIndex();
 
 		for ( int d = 0; d < n; ++d )
 		{
-			if ( ++position[ d ] >= maxPositionInCell[ d ] )
+			if ( ++position[ d ] > maxPositionInCell[ d ] )
 				position[ d ] = minPositionInCell[ d ];
 			else
 				break;
@@ -114,8 +114,8 @@ public class CellLocalizingCursor< T extends NativeType< T >, A extends ArrayDat
 		lastIndexInCell = ( int )( c.size() - 1);
 		for ( int d = 0; d < n; ++d ) {
 			minPositionInCell[ d ] = c.offset[ d ];
-			maxPositionInCell[ d ] = minPositionInCell[ d ] + c.dimensions[ d ];
-			position[ d ] = c.offset[ d ];
+			maxPositionInCell[ d ] = minPositionInCell[ d ] + c.dimensions[ d ] - 1;
+			position[ d ] = minPositionInCell[ d ];
 		}
 		position[ 0 ] -= 1;
 
