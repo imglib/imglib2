@@ -9,6 +9,7 @@ import mpicbg.imglib.algorithm.transformation.ImageTransform;
 import mpicbg.imglib.container.Img;
 import mpicbg.imglib.container.ImgFactory;
 import mpicbg.imglib.container.array.ArrayContainerFactory;
+import mpicbg.imglib.container.cell.CellContainerFactory;
 import mpicbg.imglib.container.list.ListContainerFactory;
 import mpicbg.imglib.image.display.imagej.ImgLib2Display;
 import mpicbg.imglib.interpolation.nearestneighbor.NearestNeighborInterpolatorFactory;
@@ -27,7 +28,7 @@ public class OpenAndDisplay
 		ImgLib2Display.copyToImagePlus( img, new int[] {2, 0, 1} ).show();
 		
 		// compute a gaussian convolution with sigma = 3
-		GaussianConvolution<FloatType> gauss = new GaussianConvolution<FloatType>( img, new OutOfBoundsConstantValueFactory<FloatType, Img<FloatType>>(), 2 );
+		GaussianConvolution<FloatType> gauss = new GaussianConvolution<FloatType>( img, new OutOfBoundsConstantValueFactory<FloatType, Img<FloatType>>(new FloatType()), 2 );
 		
 		if ( !gauss.checkInput() || !gauss.process() )
 		{
@@ -59,7 +60,7 @@ public class OpenAndDisplay
 	{
 		new ImageJ();
 		
-		test( new ListContainerFactory<FloatType>() );
+		test( new CellContainerFactory<FloatType>( 64 ) );
 	}
 	
 	public static AffineModel3D getAffineModel3D( Transform3D transform )

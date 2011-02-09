@@ -1,4 +1,4 @@
-package mpicbg.imglib.container.newcell;
+package mpicbg.imglib.container.cell;
 
 import mpicbg.imglib.Localizable;
 import mpicbg.imglib.RandomAccess;

@@ -1,240 +1,177 @@
-/**
- * Copyright (c) 2009--2010, Stephan Preibisch & Stephan Saalfeld
- * All rights reserved.
- * 
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
- * 
- * Redistributions of source code must retain the above copyright notice, this
- * list of conditions and the following disclaimer.  Redistributions in binary
- * form must reproduce the above copyright notice, this list of conditions and
- * the following disclaimer in the documentation and/or other materials
- * provided with the distribution.  Neither the name of the Fiji project nor
- * the names of its contributors may be used to endorse or promote products
- * derived from this software without specific prior written permission.
- * 
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
- * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
- * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
- * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
- * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
- * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
- * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
- * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
- * POSSIBILITY OF SUCH DAMAGE.
- */
 package mpicbg.imglib.container.cell;
 
-import java.util.ArrayList;
-
-import mpicbg.imglib.Iterator;
-import mpicbg.imglib.container.Img;
-import mpicbg.imglib.container.ImgFactory;
+import mpicbg.imglib.Cursor;
+import mpicbg.imglib.IterableRealInterval;
 import mpicbg.imglib.container.AbstractNativeContainer;
-import mpicbg.imglib.container.array.ArrayLocalizingCursor;
-import mpicbg.imglib.container.array.ArrayRandomAccess;
+import mpicbg.imglib.container.Img;
 import mpicbg.imglib.container.basictypecontainer.array.ArrayDataAccess;
-import mpicbg.imglib.image.Image;
-import mpicbg.imglib.outofbounds.RasterOutOfBoundsFactory;
-import mpicbg.imglib.sampler.cell.CellBasicRasterIterator;
-import mpicbg.imglib.sampler.cell.CellLocalizingRasterIterator;
-import mpicbg.imglib.sampler.cell.CellPositionableRasterSampler;
-import mpicbg.imglib.sampler.cell.CellOutOfBoundsPositionableRasterSampler;
-import mpicbg.imglib.sampler.cell.CellStorageAccess;
-import mpicbg.imglib.type.Type;
-import mpicbg.imglib.type.label.FakeType;
+import mpicbg.imglib.container.list.ListContainerFactory;
+import mpicbg.imglib.outofbounds.OutOfBoundsFactory;
+import mpicbg.imglib.type.NativeType;
 
-/**
- * This {@link Img} stores an image in a number of basic type arrays.
- * Each array covers a {@link Cell} of a constant size in all dimensions.
- * By that, max {@link Integer#MAX_VALUE}<sup2</sup> basic types can be stored.
- * Keep in mind that this does not necessarily reflect the number of pixels,
- * because a pixel can be stored in less than or more than a basic type entry.
- * 
- * An {@link Iterator} on this {@link Img} will iterate its pixels
- * {@link Cell} by {@link Cell} for optimal performance.
- * 
- * @param <T>
- * @param <A>
- *
- * @author Stephan Preibisch and Stephan Saalfeld
- */
-public class CellContainer< T extends Type< T >, A extends ArrayDataAccess< A > > extends AbstractNativeContainer< T, A >
+final public class CellContainer< T extends NativeType< T >, A extends ArrayDataAccess< A > > extends AbstractNativeContainer< T, A >
 {
-	final protected ArrayList< Cell< T, A > > data;
+	final protected CellContainerFactory< T > factory;
+	
+	final protected Img< Cell< T , A > > cells;
+	
+	/**
+	 *  Dimensions of a standard cell.
+	 *  Cells on the max border of the image may be cut off and have different dimensions.
+	 */
+	final int[] cellDims;
 
-	final protected int[] numCellsDim, cellSize;
-
-	final protected int numCells;
-
-	public CellContainer( final ImgFactory factory, final A creator, final int[] dim, final int[] cellSize, final int entitiesPerPixel )
+	public CellContainer( final CellContainerFactory< T > factory, final A creator, final long[] dimensions, final int[] cellDimensions, int entitiesPerPixel )
 	{
-		super( factory, dim, entitiesPerPixel );
+		super( dimensions, entitiesPerPixel );
+		
+		this.factory = factory;
 
-		// check that cellsize is not bigger than the image
-		for ( int d = 0; d < numDimensions(); d++ )
-			if ( cellSize[ d ] > dim[ d ] ) cellSize[ d ] = dim[ d ];
+		cellDims = cellDimensions.clone(); 
 
-		this.cellSize = cellSize;
-		numCellsDim = new int[ numDimensions() ];
+		final long[] numCells = new long[ n ];
+		final int[] borderSize = new int[ n ];
+		final long[] currentCellOffset = new long[ n ];
+		final int[] currentCellDims = new int[ n ];
 
-		int tmp = 1;
-		for ( int d = 0; d < numDimensions(); d++ )
-		{
-			numCellsDim[ d ] = ( dim[ d ] - 1 ) / cellSize[ d ] + 1;
-			tmp *= numCellsDim[ d ];
+		for ( int d = 0; d < n; ++d ) {
+			numCells[ d ] = ( dimensions[ d ] - 1 ) / cellDims[ d ] + 1;
+			borderSize[ d ] = ( int )( dimensions[ d ] - (numCells[ d ] - 1) * cellDims[ d ] );
 		}
-		numCells = tmp;
 
-		data = createCellArray( numCells );
+		cells = new ListContainerFactory< Cell< T, A > >().create( numCells, new Cell< T, A >( n ) );
 
-		// Here we "misuse" an ArrayLocalizableCursor to iterate over cells,
-		// it always gives us the location of the current cell we are
-		// instantiating.
-		final ArrayLocalizingCursor< FakeType > cursor = ArrayLocalizingCursor.createLinearCursor( numCellsDim );
-
-		for ( int c = 0; c < numCells; c++ )
-		{
-			cursor.fwd();
-			final int[] finalSize = new int[ numDimensions() ];
-			final int[] finalOffset = new int[ numDimensions() ];
-
-			for ( int d = 0; d < numDimensions(); d++ )
+		Cursor< Cell < T, A > > cellCursor = cells.localizingCursor();		
+		while ( cellCursor.hasNext() ) {
+			Cell< T, A > c = cellCursor.next();
+			
+			cellCursor.localize( currentCellOffset );
+			for ( int d = 0; d < n; ++d )
 			{
-				finalSize[ d ] = cellSize[ d ];
-
-				// the last cell in each dimension might have another size
-				if ( cursor.getIntPosition( d ) == numCellsDim[ d ] - 1 ) if ( dim[ d ] % cellSize[ d ] != 0 ) finalSize[ d ] = dim[ d ] % cellSize[ d ];
-
-				finalOffset[ d ] = cursor.getIntPosition( d ) * cellSize[ d ];
+				currentCellDims[ d ] = ( int )( (currentCellOffset[d] + 1 == numCells[d])  ?  borderSize[ d ]  :  cellDims[ d ] );
+				currentCellOffset[ d ] *= cellDims[ d ];
 			}
-
-			data.add( createCellInstance( creator, c, finalSize, finalOffset, entitiesPerPixel ) );
+			
+			c.set( new Cell< T, A >( creator, currentCellDims, currentCellOffset, entitiesPerPixel ) );
 		}
+	}
 
-		cursor.close();
+
+
+	/**
+	 * This interface is implemented by all samplers on the CellContainer. It
+	 * allows the container to ask for the cell the sampler is currently in.
+	 */
+	public interface CellContainerSampler< T extends NativeType< T >, A extends ArrayDataAccess< A > >
+	{
+		/**
+		 * @return the cell the sampler is currently in.
+		 */
+		public Cell< T, A > getCell();
 	}
 
 	@Override
-	public A update( final Object c )
+	@SuppressWarnings( "unchecked" )
+	public A update( final Object cursor )
 	{
-		return data.get( ( ( CellStorageAccess )c ).getStorageIndex() ).getData();
+		/*
+		 * Currently, Cell<T,A>.update() is Array<T,A>.update(). It will not
+		 * know what to do with a CellCursor, however, it is not using it's
+		 * parameter anyway.
+		 */
+		return ( ( CellContainerSampler< T, A > ) cursor ).getCell().getData();
 	}
 
-	public ArrayList< Cell< T, A >> createCellArray( final int numCells )
+
+
+	/**
+	 * Get the position of the cell containing the element at {@link position}.
+	 * 
+	 * @param position   position of an element in the {@link CellContainer}.
+	 * @param cellPos    position within cell grid of the cell containing the element.
+	 */
+	protected void getCellPosition( final long[] position, final long[] cellPos )
 	{
-		return new ArrayList< Cell< T, A >>( numCells );
+		for ( int d = 0; d < n; ++d )
+			cellPos[ d ] = position[ d ] / cellDims[ d ];
+		// TODO remove?
 	}
 
-	public Cell< T, A > createCellInstance( final A creator, final int cellId, final int[] dim, final int offset[], final int entitiesPerPixel )
+	protected void splitGlobalPosition( final long[] position, final long[] cellPos, final long[] elementPos )
 	{
-		return new Cell< T, A >( creator, cellId, dim, offset, entitiesPerPixel );
+		for ( int d = 0; d < n; ++d ) {
+			cellPos[ d ] = position[ d ] / cellDims[ d ];
+			elementPos[ d ] = position[ d ] - cellPos[ d ] * cellDims[ d ];
+		}
+		// TODO comment
 	}
 
-	public Cell< T, A > getCell( final int cellId )
+	/**
+	 * Get the position in dimension {@link dim} of the cell containing elements at {@link position}.
+	 * 
+	 * @param position   position in dimension {@link dim} of an element in the {@link CellContainer}.
+	 * @param cellPos    position in dimension {@link dim} within cell grid of the cell containing the element.
+	 */
+	protected long getCellPosition( final long position, final int dim )
 	{
-		return data.get( cellId );
+		return position / cellDims[ dim ];
 	}
 
-	public int getCellIndex( final ArrayRandomAccess< FakeType > cursor, final int[] cellPos )
+	protected long getPositionInCell( final long position, final int dim)
 	{
-		cursor.setPosition( cellPos );
-		return cursor.getArrayIndex();
+		return position % cellDims[ dim ];
+		// TODO comment
 	}
 
-	// many cursors using the same cursor for getting their position
-	public int getCellIndex( final ArrayRandomAccess< FakeType > cursor, final int cellPos, final int dim )
+
+	@Override
+	public CellCursor< T, A > cursor()
 	{
-		cursor.setPosition( cellPos, dim );
-		return cursor.getArrayIndex();
-	}
-
-	public int[] getCellPosition( final int[] position )
-	{
-		final int[] cellPos = new int[ position.length ];
-
-		for ( int d = 0; d < numDimensions; d++ )
-			cellPos[ d ] = position[ d ] / cellSize[ d ];
-
-		return cellPos;
-	}
-
-	public void getCellPosition( final int[] position, final int[] cellPos )
-	{
-		for ( int d = 0; d < numDimensions; ++d )
-			cellPos[ d ] = position[ d ] / cellSize[ d ];
-	}
-
-	public int getCellPosition( final int position, final int dim )
-	{
-		return position / cellSize[ dim ];
-	}
-
-	public int getCellIndexFromImageCoordinates( final ArrayRandomAccess< FakeType > cursor, final int[] position )
-	{
-		return getCellIndex( cursor, getCellPosition( position ) );
-	}
-
-	public int getNumCells( final int dim )
-	{
-		if ( dim < numDimensions ) return numCellsDim[ dim ];
-		else return 1;
-	}
-
-	public int getNumCells()
-	{
-		return numCells;
-	}
-
-	public int[] getNumCellsDim()
-	{
-		return numCellsDim.clone();
-	}
-
-	public int getCellSize( final int dim )
-	{
-		return cellSize[ dim ];
-	}
-
-	public int[] getCellSize()
-	{
-		return cellSize.clone();
+		return new CellCursor< T, A >( this );
 	}
 
 	@Override
-	public void close()
+	public CellLocalizingCursor< T, A > localizingCursor()
 	{
-		for ( final Cell< T, A > e : data )
-			e.close();
+		return new CellLocalizingCursor< T, A >( this );
 	}
 
 	@Override
-	public CellBasicRasterIterator< T > createRasterIterator( final Image< T > image )
+	public CellRandomAccess< T, A > randomAccess()
 	{
-		CellBasicRasterIterator< T > c = new CellBasicRasterIterator< T >( this, image );
-		return c;
+		return new CellRandomAccess< T, A >( this );
 	}
 
 	@Override
-	public CellLocalizingRasterIterator< T > createLocalizingRasterIterator( final Image< T > image )
+	public CellOutOfBoundsRandomAccess< T > randomAccess( OutOfBoundsFactory< T, Img<T> > factory )
 	{
-		CellLocalizingRasterIterator< T > c = new CellLocalizingRasterIterator< T >( this, image );
-		return c;
+		return new CellOutOfBoundsRandomAccess< T >( this, factory );
 	}
 
 	@Override
-	public CellPositionableRasterSampler< T > createPositionableRasterSampler( final Image< T > image )
+	public CellContainerFactory< T > factory()
 	{
-		CellPositionableRasterSampler< T > c = new CellPositionableRasterSampler< T >( this, image );
-		return c;
+		return factory;
 	}
 
+	@SuppressWarnings( "unchecked" )
 	@Override
-	public CellOutOfBoundsPositionableRasterSampler< T > createPositionableRasterSampler( final Image< T > image, final RasterOutOfBoundsFactory< T > outOfBoundsFactory )
+	public boolean equalIterationOrder( IterableRealInterval<?> f )
 	{
-		CellOutOfBoundsPositionableRasterSampler< T > c = new CellOutOfBoundsPositionableRasterSampler< T >( this, image, outOfBoundsFactory );
-		return c;
+		if ( f.numDimensions() != this.numDimensions() )
+			return false;
+		
+		if ( getClass().isInstance( f ) )
+		{
+			CellContainer< T, A > other = (CellContainer< T, A >) f;
+
+			for ( int d = 0; d < n; ++d ) 
+				if ( this.size[ d ] != other.size[ d ] || this.cellDims[ d ] != other.cellDims[ d ] )
+					return false;
+			
+			return true;
+		}
+		
+		return false;
 	}
 }

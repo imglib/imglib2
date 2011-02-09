@@ -6,7 +6,7 @@ import ij.process.ColorProcessor;
 import mpicbg.imglib.Cursor;
 import mpicbg.imglib.RandomAccess;
 import mpicbg.imglib.container.Img;
-import mpicbg.imglib.container.newcell.CellContainerFactory;
+import mpicbg.imglib.container.cell.CellContainerFactory;
 import mpicbg.imglib.display.ARGBScreenImage;
 import mpicbg.imglib.display.RealARGBConverter;
 import mpicbg.imglib.display.XYProjector;

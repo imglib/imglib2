@@ -1,33 +1,16 @@
-/**
- * Copyright (c) 2009--2010, Stephan Preibisch & Stephan Saalfeld
- * All rights reserved.
- * 
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
- * 
- * Redistributions of source code must retain the above copyright notice, this
- * list of conditions and the following disclaimer.  Redistributions in binary
- * form must reproduce the above copyright notice, this list of conditions and
- * the following disclaimer in the documentation and/or other materials
- * provided with the distribution.  Neither the name of the Fiji project nor
- * the names of its contributors may be used to endorse or promote products
- * derived from this software without specific prior written permission.
- * 
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
- * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
- * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
- * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
- * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
- * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
- * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
- * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
- * POSSIBILITY OF SUCH DAMAGE.
- */
 package mpicbg.imglib.container.cell;
 
+import mpicbg.imglib.container.ImgFactory;
+import mpicbg.imglib.container.NativeContainer;
 import mpicbg.imglib.container.NativeContainerFactory;
+import mpicbg.imglib.container.basictypecontainer.BitAccess;
+import mpicbg.imglib.container.basictypecontainer.ByteAccess;
+import mpicbg.imglib.container.basictypecontainer.CharAccess;
+import mpicbg.imglib.container.basictypecontainer.DoubleAccess;
+import mpicbg.imglib.container.basictypecontainer.FloatAccess;
+import mpicbg.imglib.container.basictypecontainer.IntAccess;
+import mpicbg.imglib.container.basictypecontainer.LongAccess;
+import mpicbg.imglib.container.basictypecontainer.ShortAccess;
 import mpicbg.imglib.container.basictypecontainer.array.BitArray;
 import mpicbg.imglib.container.basictypecontainer.array.ByteArray;
 import mpicbg.imglib.container.basictypecontainer.array.CharArray;
@@ -36,54 +19,48 @@ import mpicbg.imglib.container.basictypecontainer.array.FloatArray;
 import mpicbg.imglib.container.basictypecontainer.array.IntArray;
 import mpicbg.imglib.container.basictypecontainer.array.LongArray;
 import mpicbg.imglib.container.basictypecontainer.array.ShortArray;
-import mpicbg.imglib.type.Type;
+import mpicbg.imglib.exception.IncompatibleTypeException;
+import mpicbg.imglib.type.NativeType;
 
-/**
- * 
- * 
- *
- * @author Stephan Preibisch and Stephan Saalfeld
- */
-public class CellContainerFactory extends NativeContainerFactory
+public class CellContainerFactory< T extends NativeType<T> > extends NativeContainerFactory< T >
 {
-	protected int[] cellSize;
+	protected int[] defaultCellDimensions = { 10 };
 
-	protected int standardCellSize = 10;
-	
-	public CellContainerFactory(){}
+	public CellContainerFactory()
+	{
+	}
 	
 	public CellContainerFactory( final int cellSize )
 	{
-		this.standardCellSize = cellSize;
+		defaultCellDimensions[ 0 ] = cellSize;
 	}
 
-	public CellContainerFactory( final int[] cellSize )
+	public CellContainerFactory( final int[] cellDimensions )
 	{
-		if ( cellSize == null || cellSize.length == 0 )
+		if ( cellDimensions == null || cellDimensions.length == 0 )
 		{
-			System.err.println( "CellContainerFactory(): cellSize is null. Using equal cell size of 10." );
-			this.cellSize = null;
+			System.err.println( "CellContainerFactory(): cellSize is null. Using equal cell size of " + defaultCellDimensions[0]);
 			return;
 		}
 
-		for ( int i = 0; i < cellSize.length; i++ )
+		for ( int i = 0; i < cellDimensions.length; i++ )
 		{
-			if ( cellSize[ i ] <= 0 )
+			if ( cellDimensions[ i ] <= 0 )
 			{
-				System.err.println( "CellContainerFactory(): cell size in dimension " + i + " is <= 0, using a size of " + standardCellSize + "." );
-				cellSize[ i ] = standardCellSize;
+				System.err.println( "CellContainerFactory(): cell size in dimension " + i + " is <= 0, using a size of " + defaultCellDimensions[ 0 ] + "." );
+				cellDimensions[ i ] = defaultCellDimensions[ 0 ];
 			}
 		}
 
-		this.cellSize = cellSize;
+		defaultCellDimensions = cellDimensions;
 	}
 
-	protected int[] checkDimensions( int dimensions[] )
+	protected long[] checkDimensions( long dimensions[] )
 	{
 		if ( dimensions == null || dimensions.length == 0 )
 		{
 			System.err.println( "CellContainerFactory(): dimensionality is null. Creating a 1D cell with size 1." );
-			dimensions = new int[] { 1 };
+			dimensions = new long[] { 1 };
 		}
 
 		for ( int i = 0; i < dimensions.length; i++ )
@@ -98,127 +75,105 @@ public class CellContainerFactory extends NativeContainerFactory
 		return dimensions;
 	}
 
-	protected int[] checkCellSize( int[] cellSize, int[] dimensions )
+	protected int[] checkCellSize( int[] cellDimensions, long[] dimensions )
 	{
-		if ( cellSize == null )
+		if ( cellDimensions == null )
 		{
-			cellSize = new int[ dimensions.length ];
-			for ( int i = 0; i < cellSize.length; i++ )
-				cellSize[ i ] = standardCellSize;
-
-			return cellSize;
+			cellDimensions = new int[ dimensions.length ];
+			for ( int i = 0; i < cellDimensions.length; i++ )
+				cellDimensions[ i ] = defaultCellDimensions[ ( i < defaultCellDimensions.length ) ? i : 0 ];
 		}
 
-		if ( cellSize.length != dimensions.length )
+		if ( cellDimensions.length != dimensions.length )
 		{
-			System.err.println( "CellContainerFactory(): dimensionality of image is unequal to dimensionality of cells, adjusting cell dimensionality." );
-			int[] cellSizeNew = new int[ dimensions.length ];
+			// System.err.println( "CellContainerFactory(): dimensionality of image is unequal to dimensionality of cells, adjusting cell dimensionality." );
+			int[] cellDimensionsNew = new int[ dimensions.length ];
 
 			for ( int i = 0; i < dimensions.length; i++ )
 			{
-				if ( i < cellSize.length )
-					cellSizeNew[ i ] = cellSize[ i ];
+				if ( i < cellDimensions.length )
+					cellDimensionsNew[ i ] = cellDimensions[ i ];
 				else
-					cellSizeNew[ i ] = standardCellSize;
+					cellDimensionsNew[ i ] = defaultCellDimensions[ ( i < defaultCellDimensions.length ) ? i : 0 ];
 			}
 
-			return cellSizeNew;
+			cellDimensions = cellDimensionsNew;
 		}
 
-		return cellSize;
+		return cellDimensions;
 	}
 
 	@Override
-	public < T extends Type< T > > CellContainer< T, BitArray > createBitInstance( int[] dimensions, int entitiesPerPixel )
+	public NativeContainer< T, ? extends BitAccess > createBitInstance( long[] dimensions, int entitiesPerPixel )
 	{
 		dimensions = checkDimensions( dimensions );
-		int[] cellSize = checkCellSize( this.cellSize, dimensions );
-
+		int[] cellSize = checkCellSize( defaultCellDimensions, dimensions );
 		return new CellContainer< T, BitArray >( this, new BitArray( 1 ), dimensions, cellSize, entitiesPerPixel );
 	}
 
 	@Override
-	public < T extends Type< T > > CellContainer< T, ByteArray > createByteInstance( int[] dimensions, int entitiesPerPixel )
+	public NativeContainer< T, ? extends ByteAccess > createByteInstance( long[] dimensions, int entitiesPerPixel )
 	{
 		dimensions = checkDimensions( dimensions );
-		int[] cellSize = checkCellSize( this.cellSize, dimensions );
-
+		int[] cellSize = checkCellSize( defaultCellDimensions, dimensions );
 		return new CellContainer< T, ByteArray >( this, new ByteArray( 1 ), dimensions, cellSize, entitiesPerPixel );
 	}
 
 	@Override
-	public < T extends Type< T > > CellContainer< T, CharArray > createCharInstance( int[] dimensions, int entitiesPerPixel )
+	public NativeContainer< T, ? extends CharAccess > createCharInstance( long[] dimensions, int entitiesPerPixel )
 	{
 		dimensions = checkDimensions( dimensions );
-		int[] cellSize = checkCellSize( this.cellSize, dimensions );
-
+		int[] cellSize = checkCellSize( defaultCellDimensions, dimensions );
 		return new CellContainer< T, CharArray >( this, new CharArray( 1 ), dimensions, cellSize, entitiesPerPixel );
 	}
 
 	@Override
-	public < T extends Type< T > > CellContainer< T, DoubleArray > createDoubleInstance( int[] dimensions, int entitiesPerPixel )
+	public NativeContainer< T, ? extends ShortAccess > createShortInstance( long[] dimensions, int entitiesPerPixel )
 	{
 		dimensions = checkDimensions( dimensions );
-		int[] cellSize = checkCellSize( this.cellSize, dimensions );
-
-		return new CellContainer< T, DoubleArray >( this, new DoubleArray( 1 ), dimensions, cellSize, entitiesPerPixel );
-	}
-
-	@Override
-	public < T extends Type< T > > CellContainer< T, FloatArray > createFloatInstance( int[] dimensions, int entitiesPerPixel )
-	{
-		dimensions = checkDimensions( dimensions );
-		int[] cellSize = checkCellSize( this.cellSize, dimensions );
-
-		return new CellContainer< T, FloatArray >( this, new FloatArray( 1 ), dimensions, cellSize, entitiesPerPixel );
-	}
-
-	@Override
-	public < T extends Type< T > > CellContainer< T, IntArray > createIntInstance( int[] dimensions, int entitiesPerPixel )
-	{
-		dimensions = checkDimensions( dimensions );
-		int[] cellSize = checkCellSize( this.cellSize, dimensions );
-
-		return new CellContainer< T, IntArray >( this, new IntArray( 1 ), dimensions, cellSize, entitiesPerPixel );
-	}
-
-	@Override
-	public < T extends Type< T > > CellContainer< T, LongArray > createLongInstance( int[] dimensions, int entitiesPerPixel )
-	{
-		dimensions = checkDimensions( dimensions );
-		int[] cellSize = checkCellSize( this.cellSize, dimensions );
-
-		return new CellContainer< T, LongArray >( this, new LongArray( 1 ), dimensions, cellSize, entitiesPerPixel );
-	}
-
-	@Override
-	public < T extends Type< T > > CellContainer< T, ShortArray > createShortInstance( int[] dimensions, int entitiesPerPixel )
-	{
-		dimensions = checkDimensions( dimensions );
-		int[] cellSize = checkCellSize( this.cellSize, dimensions );
-
+		int[] cellSize = checkCellSize( defaultCellDimensions, dimensions );
 		return new CellContainer< T, ShortArray >( this, new ShortArray( 1 ), dimensions, cellSize, entitiesPerPixel );
 	}
 
 	@Override
-	public String getErrorMessage()
+	public NativeContainer< T, ? extends IntAccess > createIntInstance( long[] dimensions, int entitiesPerPixel )
 	{
-		// TODO Auto-generated method stub
-		return null;
+		dimensions = checkDimensions( dimensions );
+		int[] cellSize = checkCellSize( defaultCellDimensions, dimensions );
+		return new CellContainer< T, IntArray >( this, new IntArray( 1 ), dimensions, cellSize, entitiesPerPixel );
 	}
 
 	@Override
-	public void printProperties()
+	public NativeContainer< T, ? extends LongAccess > createLongInstance( long[] dimensions, int entitiesPerPixel )
 	{
-	// TODO Auto-generated method stub
-
+		dimensions = checkDimensions( dimensions );
+		int[] cellSize = checkCellSize( defaultCellDimensions, dimensions );
+		return new CellContainer< T, LongArray >( this, new LongArray( 1 ), dimensions, cellSize, entitiesPerPixel );
 	}
 
 	@Override
-	public void setParameters( String configuration )
+	public NativeContainer< T, ? extends FloatAccess > createFloatInstance( long[] dimensions, int entitiesPerPixel )
 	{
-	// TODO Auto-generated method stub
-
+		dimensions = checkDimensions( dimensions );
+		int[] cellSize = checkCellSize( defaultCellDimensions, dimensions );
+		return new CellContainer< T, FloatArray >( this, new FloatArray( 1 ), dimensions, cellSize, entitiesPerPixel );
 	}
 
+	@Override
+	public NativeContainer< T, ? extends DoubleAccess > createDoubleInstance( long[] dimensions, int entitiesPerPixel )
+	{
+		dimensions = checkDimensions( dimensions );
+		int[] cellSize = checkCellSize( defaultCellDimensions, dimensions );
+		return new CellContainer< T, DoubleArray >( this, new DoubleArray( 1 ), dimensions, cellSize, entitiesPerPixel );
+	}
+
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@Override
+	public <S> ImgFactory<S> imgFactory( final S type ) throws IncompatibleTypeException
+	{
+		if ( NativeType.class.isInstance( type ) )
+			return new CellContainerFactory( defaultCellDimensions );
+		else
+			throw new IncompatibleTypeException( this, type.getClass().getCanonicalName() + " does not implement NativeType." );
+	}
 }
