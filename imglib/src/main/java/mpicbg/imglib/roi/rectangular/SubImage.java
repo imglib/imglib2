@@ -87,31 +87,18 @@ public class SubImage< T > implements RandomAccessible< T >, RandomAccessibleInt
 	public int numDimensions() { return n; }
 
 	@Override
-	public Cursor<T> cursor()
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
+	public SubImageCursor<T> cursor() { return new SubImageCursor< T >( this ); }
 
 	@Override
-	public Cursor<T> localizingCursor()
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
+	public SubImageCursor<T> localizingCursor() { return new SubImageCursor< T >( this ); }
 
 	@Override
-	public RandomAccess<T> randomAccess()
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
+	public RandomAccess<T> randomAccess() { return new SubImageRandomAccess< T >( this ); }
 
 	@Override
-	public RandomAccess<T> randomAccess(OutOfBoundsFactory<T, InjectiveInterval> factory)
+	public RandomAccess<T> randomAccess( final OutOfBoundsFactory<T, InjectiveInterval> factory )
 	{
-		// TODO Auto-generated method stub
-		return null;
+		return new SubImageOutOfBoundsRandomAccess< T >( this, factory );
 	}
 
 	@Override
