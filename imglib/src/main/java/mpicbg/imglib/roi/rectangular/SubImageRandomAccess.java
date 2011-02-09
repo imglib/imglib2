@@ -38,6 +38,6 @@ public class SubImageRandomAccess< T > extends AbstractSubImageRandomAccess<T, R
 {
 	public SubImageRandomAccess( final SubImage< T > subImage )
 	{
-		super( subImage, subImage.source.randomAccess() );
+		super( subImage, subImage.createRandomAccessForSource() );
 	}
 }

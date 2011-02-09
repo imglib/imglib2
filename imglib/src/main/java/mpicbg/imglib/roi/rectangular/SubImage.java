@@ -31,6 +31,7 @@ import java.util.Iterator;
 
 import mpicbg.imglib.InjectiveInterval;
 import mpicbg.imglib.Cursor;
+import mpicbg.imglib.Interval;
 import mpicbg.imglib.Localizable;
 import mpicbg.imglib.RandomAccess;
 import mpicbg.imglib.RandomAccessible;
@@ -39,6 +40,7 @@ import mpicbg.imglib.RandomAccessibleInterval;
 import mpicbg.imglib.container.Img;
 import mpicbg.imglib.outofbounds.OutOfBounds;
 import mpicbg.imglib.outofbounds.OutOfBoundsFactory;
+import mpicbg.imglib.util.Util;
 
 /**
  * The {@link SubImage} represents an n-dimensional, rectangular region of interest which is completely filled with
@@ -54,14 +56,16 @@ import mpicbg.imglib.outofbounds.OutOfBoundsFactory;
  *
  * @param <T>
  */
-public class SubImage< T > implements RandomAccessible< T >, RandomAccessibleInterval< T, InjectiveInterval >, InjectiveInterval, Localizable
+public class SubImage< T > implements RandomAccessible< T >, RandomAccessibleInterval< T, SubImage< T > >, InjectiveInterval, Localizable
 {
 	final int n;
 	final long numPixels;
 	
 	final long[] offset, max, size;
 	
-	final RandomAccessible< T > source;
+	final RandomAccessible< T > source1;
+	final RandomAccessibleInterval< T, InjectiveInterval > source2;
+	final OutOfBoundsFactory<T, InjectiveInterval> outOfBoudsFactory;
 	
 	public SubImage( final long[] offset, final long[] size, final RandomAccessible< T > source )
 	{
@@ -80,9 +84,57 @@ public class SubImage< T > implements RandomAccessible< T >, RandomAccessibleInt
 		
 		numPixels = p;
 		
-		this.source = source;
+		this.source1 = source;
+		this.source2 = null;
+		this.outOfBoudsFactory = null;
 	}
 
+	public SubImage( 
+			final long[] offset, final long[] size, 
+			final RandomAccessibleInterval< T, InjectiveInterval > source, 
+			final OutOfBoundsFactory<T, InjectiveInterval> outOfBoudsFactory )
+	{
+		this.n = source.numDimensions();
+		this.offset = offset.clone();
+		this.size = size.clone();
+		this.max = new long[ n ];
+		
+		long p = 1;
+		
+		for ( int d = 0; d < n; ++d )
+		{
+			p *= size[ d ];
+			max[ d ] = size[ d ] - offset[ d ] - 1;
+		}
+		
+		numPixels = p;
+		
+		this.source1 = null;
+		this.source2 = source;
+		this.outOfBoudsFactory = outOfBoudsFactory;
+	}
+	
+	public SubImage( final Interval interval, final RandomAccessible< T > source ) 
+	{ 
+		this( Util.intervalMin( interval ), Util.intervalDimensions(interval), source ); 
+	}
+	
+	public SubImage( 
+			final Interval interval, 
+			final RandomAccessibleInterval< T, InjectiveInterval > source, 
+			final OutOfBoundsFactory<T, InjectiveInterval> outOfBoudsFactory ) 
+	{ 
+		this( Util.intervalMin( interval ), Util.intervalDimensions(interval), source, outOfBoudsFactory ); 
+	}
+
+	protected RandomAccess<T> createRandomAccessForSource()
+	{
+		if ( source1 == null )
+			return source2.randomAccess( outOfBoudsFactory );
+		else
+			return source1.randomAccess();
+	}
+	
 	@Override
 	public int numDimensions() { return n; }
 
@@ -96,7 +148,7 @@ public class SubImage< T > implements RandomAccessible< T >, RandomAccessibleInt
 	public RandomAccess<T> randomAccess() { return new SubImageRandomAccess< T >( this ); }
 
 	@Override
-	public RandomAccess<T> randomAccess( final OutOfBoundsFactory<T, InjectiveInterval> factory )
+	public RandomAccess<T> randomAccess( final OutOfBoundsFactory<T, SubImage< T > > factory )
 	{
 		return new SubImageOutOfBoundsRandomAccess< T >( this, factory );
 	}

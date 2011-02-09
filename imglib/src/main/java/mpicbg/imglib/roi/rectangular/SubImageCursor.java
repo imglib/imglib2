@@ -56,7 +56,7 @@ public class SubImageCursor< T > implements Sampler< T >, EuclideanSpace, Inject
 	public SubImageCursor( final SubImage<T> subImage )
 	{
 		this.subImage = subImage;
-		this.access = subImage.source.randomAccess();
+		this.access = subImage.createRandomAccessForSource();
 		
 		this.n = subImage.numDimensions();
 				
@@ -71,7 +71,49 @@ public class SubImageCursor< T > implements Sampler< T >, EuclideanSpace, Inject
 			count *= size[ d ];
 		
 		numPixelsMinus1 = count - 1;
+		
+		reset();
 	}
+	/*
+	 * From Dr. Schindelin, not tested yet
+	 * 
+	indexToPosition(int index, int[] size, int[] pos) {
+	 int j, cumulSize = 1, cumulPos = 0;
+	
+	 for (j = 0; j < size.length; j++)
+	  cumulSize *= size[j];
+	
+	 while (--j >= 0) {
+	  cumulSize /= size[j];
+	  dimPos = (index / cumulSize) % size[j];
+	  if ((cumulPos % 2) == 1)
+	   pos[j] = size[j] - 1 - dimPos;
+	  else
+	   pos[j] = dimPos;
+	  cumulPos += dimPos;
+	 }
+	}
+	
+	indexToDirection(int index, int[] size, int[] direction) {
+	 int j, cumulSize = 1;
+	
+	 for (j = 0; j < size.length; j++) {
+	  cumulSize *= size[j];
+	  if ((index % cumulSize) != 0) {
+	   direction[j] = +1;
+	   break;
+	  }
+	  direction[j] = 0;
+	 }
+	 for (k = j + 1; k < size.length; k++) {
+	  cumulSize *= size[k];
+	  int dimPos = (index / cumulSize) % size[k];
+	  if ((dimPos % 2) == 1)
+	   direction[j] *= -1;
+	  direction[k] = 0;
+	 }
+	}	 
+	*/
 	
 	/* Iterator */
 	
@@ -254,6 +296,10 @@ public class SubImageCursor< T > implements Sampler< T >, EuclideanSpace, Inject
 	public int numDimensions() { return n; }
 	
 	/* Iterator */
+	
 	@Override
 	public void remove() {}
+	
+	@Override
+	public String toString() { return Util.printCoordinates( this ) + ": " + get(); }
 }

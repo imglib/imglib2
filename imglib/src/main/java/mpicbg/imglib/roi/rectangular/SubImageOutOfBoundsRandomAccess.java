@@ -27,7 +27,7 @@
  */
 package mpicbg.imglib.roi.rectangular;
 
-import mpicbg.imglib.InjectiveInterval;
+import mpicbg.imglib.Localizable;
 import mpicbg.imglib.outofbounds.OutOfBounds;
 import mpicbg.imglib.outofbounds.OutOfBoundsFactory;
 
@@ -38,7 +38,7 @@ import mpicbg.imglib.outofbounds.OutOfBoundsFactory;
  */
 public class SubImageOutOfBoundsRandomAccess< T > extends AbstractSubImageRandomAccess< T, OutOfBounds< T > >
 {
-	public SubImageOutOfBoundsRandomAccess( final SubImage<T> subImage, final OutOfBoundsFactory< T, InjectiveInterval > outOfBoundsFactory )
+	public SubImageOutOfBoundsRandomAccess( final SubImage<T> subImage, final OutOfBoundsFactory< T, SubImage< T > > outOfBoundsFactory )
 	{
 		super( subImage, outOfBoundsFactory.create( subImage ) );
 	}
@@ -48,4 +48,48 @@ public class SubImageOutOfBoundsRandomAccess< T > extends AbstractSubImageRandom
 	{
 		return access.isOutOfBounds();
 	}	
+
+	/* Localizable */
+	/* We need to override them as the randomAccess created by the OutOfBounds does that already */
+	
+	@Override
+	public void localize( final int[] position ) { access.localize( position ); }
+
+	@Override
+	public void localize( final long[] position ) { access.localize( position ); }
+
+	@Override
+	public int getIntPosition( final int dim ) { return access.getIntPosition( dim ); }
+
+	@Override
+	public long getLongPosition( final int dim ) { return access.getIntPosition( dim ); }
+
+	@Override
+	public void localize( final float[] position ) { access.localize( position ); }
+
+	@Override
+	public void localize( final double[] position ) { access.localize( position ); }
+
+	@Override
+	public float getFloatPosition( final int dim ) { return access.getIntPosition( dim ); }
+
+	@Override
+	public double getDoublePosition( final int dim ) { return access.getIntPosition( dim ); }
+
+	/* Absolute Movement */
+
+	@Override
+	public void setPosition( final Localizable localizable ) { access.setPosition( localizable ); }
+
+	@Override
+	public void setPosition( final int[] position ) { access.setPosition( position ); }
+
+	@Override
+	public void setPosition( final long[] position ) { access.setPosition( position ); }
+
+	@Override
+	public void setPosition( final int position, final int dim )  { access.setPosition( position + (int)offset[ dim ], dim );	}
+
+	@Override
+	public void setPosition( final long position, final int dim ) { access.setPosition( position, dim ); }
 }

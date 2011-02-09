@@ -61,6 +61,8 @@ public abstract class AbstractSubImageRandomAccess< T, S extends RandomAccess< T
 		
 		this.tmpI = new int[ n ];
 		this.tmpL = new long[ n ];
+		
+		setPosition( offset );
 	}
 	
 	/* Sampler */
@@ -241,4 +243,7 @@ public abstract class AbstractSubImageRandomAccess< T, S extends RandomAccess< T
 		for ( int d = 0; d < n; ++d )
 			max[ d ] = this.max[ d ];
 	}
+	
+	@Override
+	public String toString() { return Util.printCoordinates( this ) + ": " + get(); }
 }

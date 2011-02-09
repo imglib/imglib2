@@ -42,7 +42,7 @@ public class PlanarOutOfBoundsRandomAccess< T extends NativeType< T > > extends 
 {
 	final protected PlanarContainer< T, ? > container;
 	
-	public PlanarOutOfBoundsRandomAccess( final PlanarContainer< T, ? > container, final OutOfBoundsFactory< T, Img<T> > outOfBoundsStrategyFactory ) 
+	public PlanarOutOfBoundsRandomAccess( final PlanarContainer< T, ? > container, final OutOfBoundsFactory< T, Img< T > > outOfBoundsStrategyFactory ) 
 	{
 		super( container, outOfBoundsStrategyFactory );
 		
