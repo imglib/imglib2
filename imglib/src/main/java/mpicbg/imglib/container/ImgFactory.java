@@ -58,12 +58,12 @@ public abstract class ImgFactory< T >
 	 * Creates the same {@link ImgFactory} for a different generic parameter if possible.
 	 * 
 	 * If <S> does not suit the needs of the {@link ImgFactory} (for example implement {@link NativeType}
-	 * in all {@link NativeContainerFactory}, it will return null.
+	 * in all {@link NativeContainerFactory}, this method will throw an {@link IncompatibleTypeExceotion}.
 	 * 
 	 * @param <S> - the new type
 	 * @param type - an instance of S
 	 * @return {@link ImgFactory}<S> 
-	 * @throws ImgLibException if type <S> is not compatible
+	 * @throws IncompatibleTypeException if type <S> is not compatible
 	 */
 	public abstract < S > ImgFactory< S > imgFactory ( final S type ) throws IncompatibleTypeException;
 }
