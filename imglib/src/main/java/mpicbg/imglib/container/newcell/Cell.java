@@ -1,11 +1,10 @@
 package mpicbg.imglib.container.newcell;
 
 import mpicbg.imglib.container.basictypecontainer.array.ArrayDataAccess;
-import mpicbg.imglib.type.NativeType;
 import mpicbg.imglib.type.Type;
 import mpicbg.imglib.util.IntervalIndexer;
 
-public class Cell< T extends NativeType< T >, A extends ArrayDataAccess< A > > implements Type< Cell< T, A > > 
+public class Cell< T, A extends ArrayDataAccess< A > > implements Type< Cell< T, A > > 
 {
 	final protected int n;
 
@@ -86,13 +85,6 @@ public class Cell< T extends NativeType< T >, A extends ArrayDataAccess< A > > i
 	{
 		return numPixels;
 	}
-
-/*	public void offset( final long[] o )
-	{
-		for ( int d = 0; d < n; ++d )
-			o[ d ] = offset[ d ];
-	}
-*/
 
 	public long indexToGlobalPosition( int index, int dimension )
 	{
