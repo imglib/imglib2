@@ -13,7 +13,7 @@ final public class CellContainer< T extends NativeType< T >, A extends ArrayData
 {
 	final protected CellContainerFactory< T > factory;
 	
-	final protected Img< Cell< T , A > > cells;
+	final protected Img< Cell< A > > cells;
 	
 	/**
 	 *  Dimensions of a standard cell.
@@ -39,11 +39,11 @@ final public class CellContainer< T extends NativeType< T >, A extends ArrayData
 			borderSize[ d ] = ( int )( dimensions[ d ] - (numCells[ d ] - 1) * cellDims[ d ] );
 		}
 
-		cells = new ListContainerFactory< Cell< T, A > >().create( numCells, new Cell< T, A >( n ) );
+		cells = new ListContainerFactory< Cell< A > >().create( numCells, new Cell< A >( n ) );
 
-		Cursor< Cell < T, A > > cellCursor = cells.localizingCursor();		
+		Cursor< Cell < A > > cellCursor = cells.localizingCursor();		
 		while ( cellCursor.hasNext() ) {
-			Cell< T, A > c = cellCursor.next();
+			Cell< A > c = cellCursor.next();
 			
 			cellCursor.localize( currentCellOffset );
 			for ( int d = 0; d < n; ++d )
@@ -52,7 +52,7 @@ final public class CellContainer< T extends NativeType< T >, A extends ArrayData
 				currentCellOffset[ d ] *= cellDims[ d ];
 			}
 			
-			c.set( new Cell< T, A >( creator, currentCellDims, currentCellOffset, entitiesPerPixel ) );
+			c.set( new Cell< A >( creator, currentCellDims, currentCellOffset, entitiesPerPixel ) );
 		}
 	}
 
@@ -62,12 +62,12 @@ final public class CellContainer< T extends NativeType< T >, A extends ArrayData
 	 * This interface is implemented by all samplers on the CellContainer. It
 	 * allows the container to ask for the cell the sampler is currently in.
 	 */
-	public interface CellContainerSampler< T extends NativeType< T >, A extends ArrayDataAccess< A > >
+	public interface CellContainerSampler<T extends NativeType< T >, A extends ArrayDataAccess< A > >
 	{
 		/**
 		 * @return the cell the sampler is currently in.
 		 */
-		public Cell< T, A > getCell();
+		public Cell< A > getCell();
 	}
 
 	@Override

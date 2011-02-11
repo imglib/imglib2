@@ -11,7 +11,7 @@ public class CellLocalizingCursor< T extends NativeType< T >, A extends ArrayDat
 	
 	protected final CellContainer< T, A > container;
 
-	protected final Cursor< Cell< T, A > > cursorOnCells;
+	protected final Cursor< Cell< A > > cursorOnCells;
 
 	protected int lastIndexInCell;
 	final long[] minPositionInCell; 
@@ -31,7 +31,7 @@ public class CellLocalizingCursor< T extends NativeType< T >, A extends ArrayDat
 	}
 
 	@Override
-	public Cell<T, A> getCell()
+	public Cell< A > getCell()
 	{
 		return cursorOnCells.get();
 	}
@@ -60,7 +60,7 @@ public class CellLocalizingCursor< T extends NativeType< T >, A extends ArrayDat
 			lastIndexInCell = ( int )( getCell().size() - 1);
 		}
 
-		Cell< T, A > c = getCell();
+		Cell< A > c = getCell();
 		for ( int d = 0; d < n; ++d ) {
 			minPositionInCell[ d ] = c.offset[ d ];
 			maxPositionInCell[ d ] = minPositionInCell[ d ] + c.dimensions[ d ] - 1;
@@ -109,7 +109,7 @@ public class CellLocalizingCursor< T extends NativeType< T >, A extends ArrayDat
 	private void moveToNextCell()
 	{
 		cursorOnCells.fwd();
-		Cell< T, A > c = getCell();
+		Cell< A > c = getCell();
 
 		lastIndexInCell = ( int )( c.size() - 1);
 		for ( int d = 0; d < n; ++d ) {

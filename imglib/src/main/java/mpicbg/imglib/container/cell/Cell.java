@@ -4,7 +4,7 @@ import mpicbg.imglib.container.basictypecontainer.array.ArrayDataAccess;
 import mpicbg.imglib.type.Type;
 import mpicbg.imglib.util.IntervalIndexer;
 
-public class Cell< T, A extends ArrayDataAccess< A > > implements Type< Cell< T, A > > 
+public class Cell< A extends ArrayDataAccess< A > > implements Type< Cell< A > > 
 {
 	final protected int n;
 
@@ -29,7 +29,7 @@ public class Cell< T, A extends ArrayDataAccess< A > > implements Type< Cell< T,
 			nPixels *= dimensions[ d ];
 		}
 		numPixels = nPixels;
-
+		
 		this.data = creator.createArray( numPixels * entitiesPerPixel );
 	}
 
@@ -53,15 +53,15 @@ public class Cell< T, A extends ArrayDataAccess< A > > implements Type< Cell< T,
 
 
 	@Override
-	public Cell<T, A> copy()
+	public Cell<A> copy()
 	{
-		Cell<T, A> c = new Cell<T, A>( n );
+		Cell<A> c = new Cell<A>( n );
 		c.set( this );
 		return c;
 	}
 
 	@Override
-	public void set( Cell<T, A> c )
+	public void set( Cell<A> c )
 	{
 		assert( n == c.n );
 
@@ -76,9 +76,9 @@ public class Cell< T, A extends ArrayDataAccess< A > > implements Type< Cell< T,
 	}
 
 	@Override
-	public Cell<T, A> createVariable()
+	public Cell<A> createVariable()
 	{
-		return new Cell<T, A>( n );
+		return new Cell<A>( n );
 	}
 
 	public long size()
@@ -98,6 +98,14 @@ public class Cell< T, A extends ArrayDataAccess< A > > implements Type< Cell< T,
 			position[ d ] += offset[ d ];
 	}
 	
+	/**
+	 * compute the index in the underlying flat array of this cell
+	 * which corresponds to a local position (i.e., relative to the
+	 * origin of this cell).
+	 * 
+	 * @param position   a local position
+	 * @return corresponding index
+	 */
 	public int localPositionToIndex( final long[] position )
 	{
 		return IntervalIndexer.positionToIndex( position, dimensions );

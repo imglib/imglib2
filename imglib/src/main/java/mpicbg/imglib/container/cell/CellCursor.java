@@ -11,7 +11,7 @@ public class CellCursor< T extends NativeType< T >, A extends ArrayDataAccess< A
 	
 	protected final CellContainer< T, A > container;
 
-	protected final Cursor< Cell< T, A > > cursorOnCells;
+	protected final Cursor< Cell< A > > cursorOnCells;
 
 	protected int lastIndexInCell;
 
@@ -27,7 +27,7 @@ public class CellCursor< T extends NativeType< T >, A extends ArrayDataAccess< A
 	}
 
 	@Override
-	public Cell<T, A> getCell()
+	public Cell< A > getCell()
 	{
 		return cursorOnCells.get();
 	}

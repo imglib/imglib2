@@ -19,7 +19,7 @@ public class CellRandomAccess< T extends NativeType< T >, A extends ArrayDataAcc
 	
 	protected final CellContainer< T, A > container;
 
-	protected final RandomAccess< Cell< T, A > > cursorOnCells; // randomAccessOnCells;
+	protected final RandomAccess< Cell< A > > cursorOnCells; // randomAccessOnCells;
 
 	final long[] positionOfCurrentCell;
 	final long[] positionInCell;
@@ -36,7 +36,7 @@ public class CellRandomAccess< T extends NativeType< T >, A extends ArrayDataAcc
 	}
 
 	@Override
-	public Cell<T, A> getCell()
+	public Cell< A > getCell()
 	{
 		return cursorOnCells.get();
 	}
