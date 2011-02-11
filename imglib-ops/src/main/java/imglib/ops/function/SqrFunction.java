@@ -2,7 +2,7 @@ package imglib.ops.function;
 
 import mpicbg.imglib.type.numeric.RealType;
 
-public class SquareFunction<T extends RealType<T>> implements RealFunction<T>
+public class SqrFunction<T extends RealType<T>> implements RealFunction<T>
 {
 	@Override
 	public boolean canAccept(int numParameters) { return numParameters == 1; }

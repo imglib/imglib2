@@ -2,7 +2,7 @@ package imglib.ops.function;
 
 import mpicbg.imglib.type.numeric.RealType;
 
-public class AverageFunction<T extends RealType<T>> implements RealFunction<T>
+public class AvgFunction<T extends RealType<T>> implements RealFunction<T>
 {
 	@Override
 	public boolean canAccept(int numParameters) { return numParameters >= 0; }

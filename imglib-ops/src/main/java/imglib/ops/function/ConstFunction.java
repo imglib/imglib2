@@ -2,11 +2,11 @@ package imglib.ops.function;
 
 import mpicbg.imglib.type.numeric.RealType;
 
-public class ConstantFunction<T extends RealType<T>> implements RealFunction<T>
+public class ConstFunction<T extends RealType<T>> implements RealFunction<T>
 {
 	final double value;
 	
-	public ConstantFunction(double value)
+	public ConstFunction(double value)
 	{
 		this.value = value;
 	}

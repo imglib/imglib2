@@ -4,9 +4,9 @@ import static org.junit.Assert.assertEquals;
 import imglib.ops.condition.PixelOnBorder;
 import imglib.ops.condition.ValueGreaterThan;
 import imglib.ops.condition.ValueLessThan;
-import imglib.ops.function.AverageFunction;
-import imglib.ops.function.ConstantFunction;
-import imglib.ops.function.SquareFunction;
+import imglib.ops.function.AvgFunction;
+import imglib.ops.function.ConstFunction;
+import imglib.ops.function.SqrFunction;
 import imglib.ops.operation.AssignOperation;
 
 import org.junit.Test;
@@ -84,7 +84,7 @@ public class NewFunctionalIdeasTest
 		
 		Image<UnsignedByteType> image0 = createPopulatedImage(new int[]{1,2,3,4,5,6,7,8,9});
 		
-		SquareFunction<UnsignedByteType> function = new SquareFunction<UnsignedByteType>();
+		SqrFunction<UnsignedByteType> function = new SqrFunction<UnsignedByteType>();
 
 		AssignOperation<UnsignedByteType> operation = new AssignOperation<UnsignedByteType>(new Image[]{image0}, image0, function);
 		
@@ -102,7 +102,7 @@ public class NewFunctionalIdeasTest
 		
 		Image<UnsignedByteType> image0 = createPopulatedImage(new int[]{1,2,3,4,5,6,7,8,9});
 		
-		SquareFunction<UnsignedByteType> function = new SquareFunction<UnsignedByteType>();
+		SqrFunction<UnsignedByteType> function = new SqrFunction<UnsignedByteType>();
 
 		AssignOperation<UnsignedByteType> operation = new AssignOperation<UnsignedByteType>(new Image[]{image0}, image0, function);
 
@@ -122,7 +122,7 @@ public class NewFunctionalIdeasTest
 		
 		Image<UnsignedByteType> image0 = createPopulatedImage(new int[]{1,2,3,4,5,6,7,8,9});
 		
-		SquareFunction<UnsignedByteType> function = new SquareFunction<UnsignedByteType>();
+		SqrFunction<UnsignedByteType> function = new SqrFunction<UnsignedByteType>();
 
 		AssignOperation<UnsignedByteType> operation = new AssignOperation<UnsignedByteType>(new Image[]{image0}, image0, function);
 
@@ -144,7 +144,7 @@ public class NewFunctionalIdeasTest
 		
 		Image<UnsignedByteType> image1 = createPopulatedImage(new int[]{0,0,0,0,0,0,0,0,0});
 		
-		SquareFunction<UnsignedByteType> function = new SquareFunction<UnsignedByteType>();
+		SqrFunction<UnsignedByteType> function = new SqrFunction<UnsignedByteType>();
 
 		AssignOperation<UnsignedByteType> operation = new AssignOperation<UnsignedByteType>(new Image[]{image0}, image1, function);
 
@@ -167,7 +167,7 @@ public class NewFunctionalIdeasTest
 
 		Image<UnsignedByteType> image2 = createPopulatedImage(new int[]{0,0,0,0,0,0,0,0,0});
 		
-		AverageFunction<UnsignedByteType> function = new AverageFunction<UnsignedByteType>();
+		AvgFunction<UnsignedByteType> function = new AvgFunction<UnsignedByteType>();
 
 		AssignOperation<UnsignedByteType> operation = new AssignOperation<UnsignedByteType>(new Image[]{image0,image1}, image2, function);
 
@@ -197,7 +197,7 @@ public class NewFunctionalIdeasTest
 																		6,7,7,
 																		8,8,9});
 		
-		AverageFunction<UnsignedByteType> function = new AverageFunction<UnsignedByteType>();
+		AvgFunction<UnsignedByteType> function = new AvgFunction<UnsignedByteType>();
 
 		AssignOperation<UnsignedByteType> operation = new AssignOperation<UnsignedByteType>(new Image[]{image0,image1}, image2, function);
 
@@ -231,7 +231,7 @@ public class NewFunctionalIdeasTest
 																		0,0,0,
 																		0,0,0});
 
-		AverageFunction<UnsignedByteType> function = new AverageFunction<UnsignedByteType>();
+		AvgFunction<UnsignedByteType> function = new AvgFunction<UnsignedByteType>();
 
 		AssignOperation<UnsignedByteType> operation = new AssignOperation<UnsignedByteType>(new Image[]{image0,image0}, image1, function);
 
@@ -262,7 +262,7 @@ public class NewFunctionalIdeasTest
 						0,0,0,
 						0,0,0});
 		
-		ConstantFunction<UnsignedByteType> function = new ConstantFunction<UnsignedByteType>(1);
+		ConstFunction<UnsignedByteType> function = new ConstFunction<UnsignedByteType>(1);
 
 		AssignOperation<UnsignedByteType> operation = new AssignOperation<UnsignedByteType>(new Image[]{image0}, image1, function);
 		
