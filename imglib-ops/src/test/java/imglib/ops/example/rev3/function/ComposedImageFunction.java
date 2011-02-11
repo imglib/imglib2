@@ -59,6 +59,8 @@ public class ComposedImageFunction<T extends RealType<T>> implements IntegralSca
 		
 		if (image.getNumDimensions() != firstImage.getNumDimensions())
 			throw new IllegalArgumentException("incompatibly shaped images cannot be glued together: num dimensions different");
+		
+		// TODO -- add the subregion info to instance vars so we can access it
 	}
 	
 	@Override
@@ -90,6 +92,7 @@ public class ComposedImageFunction<T extends RealType<T>> implements IntegralSca
 		output.setReal(value);
 	}
 
+	// TODO - not completed
 	private void determineSubImageVariables(int[] position)
 	{
 		int sublistNum = 0;
