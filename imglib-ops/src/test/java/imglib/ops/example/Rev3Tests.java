@@ -25,16 +25,16 @@ public class Rev3Tests
 
 	// ************  private interface ********************************************************
 	
-	private static Image<UnsignedByteType> createImage()
+	private static Image<UnsignedByteType> createImage(int width, int height)
 	{
 		ImageFactory<UnsignedByteType> factory = new ImageFactory<UnsignedByteType>(new UnsignedByteType(), new ArrayContainerFactory());
 		
-		return factory.createImage(new int[]{3,3});
+		return factory.createImage(new int[]{width,height});
 	}
 
 	private static Image<UnsignedByteType> createPopulatedImage(int width, int height, int[] values)
 	{
-		Image<UnsignedByteType> image = createImage();
+		Image<UnsignedByteType> image = createImage(width, height);
 		
 		LocalizableByDimCursor<UnsignedByteType> cursor = image.createLocalizableByDimCursor();
 		
