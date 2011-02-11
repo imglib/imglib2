@@ -104,7 +104,13 @@ public class CellContainerFactory< T extends NativeType<T> > extends NativeConta
 	}
 
 	@Override
-	public NativeContainer< T, ? extends BitAccess > createBitInstance( long[] dimensions, int entitiesPerPixel )
+	public CellContainer< T, ? > create( final long[] dim, final T type )
+	{
+		return ( CellContainer< T, ? > ) type.createSuitableNativeContainer( this, dim );
+	}
+
+	@Override
+	public CellContainer< T, ? extends BitAccess > createBitInstance( long[] dimensions, int entitiesPerPixel )
 	{
 		dimensions = checkDimensions( dimensions );
 		int[] cellSize = checkCellSize( defaultCellDimensions, dimensions );
@@ -112,7 +118,7 @@ public class CellContainerFactory< T extends NativeType<T> > extends NativeConta
 	}
 
 	@Override
-	public NativeContainer< T, ? extends ByteAccess > createByteInstance( long[] dimensions, int entitiesPerPixel )
+	public CellContainer< T, ? extends ByteAccess > createByteInstance( long[] dimensions, int entitiesPerPixel )
 	{
 		dimensions = checkDimensions( dimensions );
 		int[] cellSize = checkCellSize( defaultCellDimensions, dimensions );
@@ -120,7 +126,7 @@ public class CellContainerFactory< T extends NativeType<T> > extends NativeConta
 	}
 
 	@Override
-	public NativeContainer< T, ? extends CharAccess > createCharInstance( long[] dimensions, int entitiesPerPixel )
+	public CellContainer< T, ? extends CharAccess > createCharInstance( long[] dimensions, int entitiesPerPixel )
 	{
 		dimensions = checkDimensions( dimensions );
 		int[] cellSize = checkCellSize( defaultCellDimensions, dimensions );
@@ -128,7 +134,7 @@ public class CellContainerFactory< T extends NativeType<T> > extends NativeConta
 	}
 
 	@Override
-	public NativeContainer< T, ? extends ShortAccess > createShortInstance( long[] dimensions, int entitiesPerPixel )
+	public CellContainer< T, ? extends ShortAccess > createShortInstance( long[] dimensions, int entitiesPerPixel )
 	{
 		dimensions = checkDimensions( dimensions );
 		int[] cellSize = checkCellSize( defaultCellDimensions, dimensions );
@@ -136,7 +142,7 @@ public class CellContainerFactory< T extends NativeType<T> > extends NativeConta
 	}
 
 	@Override
-	public NativeContainer< T, ? extends IntAccess > createIntInstance( long[] dimensions, int entitiesPerPixel )
+	public CellContainer< T, ? extends IntAccess > createIntInstance( long[] dimensions, int entitiesPerPixel )
 	{
 		dimensions = checkDimensions( dimensions );
 		int[] cellSize = checkCellSize( defaultCellDimensions, dimensions );
@@ -144,7 +150,7 @@ public class CellContainerFactory< T extends NativeType<T> > extends NativeConta
 	}
 
 	@Override
-	public NativeContainer< T, ? extends LongAccess > createLongInstance( long[] dimensions, int entitiesPerPixel )
+	public CellContainer< T, ? extends LongAccess > createLongInstance( long[] dimensions, int entitiesPerPixel )
 	{
 		dimensions = checkDimensions( dimensions );
 		int[] cellSize = checkCellSize( defaultCellDimensions, dimensions );
@@ -152,7 +158,7 @@ public class CellContainerFactory< T extends NativeType<T> > extends NativeConta
 	}
 
 	@Override
-	public NativeContainer< T, ? extends FloatAccess > createFloatInstance( long[] dimensions, int entitiesPerPixel )
+	public CellContainer< T, ? extends FloatAccess > createFloatInstance( long[] dimensions, int entitiesPerPixel )
 	{
 		dimensions = checkDimensions( dimensions );
 		int[] cellSize = checkCellSize( defaultCellDimensions, dimensions );
@@ -160,7 +166,7 @@ public class CellContainerFactory< T extends NativeType<T> > extends NativeConta
 	}
 
 	@Override
-	public NativeContainer< T, ? extends DoubleAccess > createDoubleInstance( long[] dimensions, int entitiesPerPixel )
+	public CellContainer< T, ? extends DoubleAccess > createDoubleInstance( long[] dimensions, int entitiesPerPixel )
 	{
 		dimensions = checkDimensions( dimensions );
 		int[] cellSize = checkCellSize( defaultCellDimensions, dimensions );
