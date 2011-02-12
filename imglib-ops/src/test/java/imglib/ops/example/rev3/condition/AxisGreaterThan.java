@@ -1,9 +1,8 @@
 package imglib.ops.example.rev3.condition;
 
 import imglib.ops.example.rev3.function.IntegralScalarFunction;
-import mpicbg.imglib.type.numeric.RealType;
 
-public class AxisGreaterThan<T extends RealType<T>> implements Condition<T>
+public class AxisGreaterThan implements Condition
 {
 	private int axis;
 	private int value;
@@ -15,7 +14,7 @@ public class AxisGreaterThan<T extends RealType<T>> implements Condition<T>
 	}
 	
 	@Override
-	public boolean isSatisfied(IntegralScalarFunction<T> function, int[] position)
+	public boolean isSatisfied(IntegralScalarFunction function, int[] position)
 	{
 		return position[axis] > value;
 	}

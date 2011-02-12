@@ -2,17 +2,15 @@ package imglib.ops.example.rev3.function;
 
 import java.util.Arrays;
 
-import mpicbg.imglib.type.numeric.RealType;
-
-public class MedianFunction<T extends RealType<T>> implements IntegralScalarFunction<T>
+public class MedianFunction implements IntegralScalarFunction
 {
-	private IntegralScalarFunction<T> otherFunction;
+	private IntegralScalarFunction otherFunction;
 	private int[] loDeltas;
 	private int[] hiDeltas;
 	private int[] relPos;
 	private double[] workspace;
 	
-	public MedianFunction(IntegralScalarFunction<T> otherFunction, int[] loDeltas, int[] hiDeltas)
+	public MedianFunction(IntegralScalarFunction otherFunction, int[] loDeltas, int[] hiDeltas)
 	{
 		this.otherFunction = otherFunction;
 		this.loDeltas = loDeltas;
@@ -30,16 +28,8 @@ public class MedianFunction<T extends RealType<T>> implements IntegralScalarFunc
 	}
 	
 	@Override
-	public T createVariable()
+	public double evaluate(int[] position)
 	{
-		return otherFunction.createVariable();
-	}
-
-	@Override
-	public void evaluate(int[] position, T output)
-	{
-		T variable = createVariable();
-		
 		int numElements = 0;
 		
 		for (int dy = loDeltas[1]; dy <= hiDeltas[1]; dy++)
@@ -48,9 +38,7 @@ public class MedianFunction<T extends RealType<T>> implements IntegralScalarFunc
 			for (int dx = loDeltas[0]; dx <= hiDeltas[0]; dx++)
 			{
 				relPos[0] = position[0] + dx;
-				variable.setZero();
-				otherFunction.evaluate(relPos, variable);
-				workspace[numElements++] = variable.getRealDouble();
+				workspace[numElements++] = otherFunction.evaluate(relPos);
 			}
 		}
 
@@ -68,7 +56,7 @@ public class MedianFunction<T extends RealType<T>> implements IntegralScalarFunc
 		else  // odd number of elements -- return the middle one
 			median = workspace[numElements/2];
 		
-		output.setReal(median);
+		return median;
 	}
 
 }

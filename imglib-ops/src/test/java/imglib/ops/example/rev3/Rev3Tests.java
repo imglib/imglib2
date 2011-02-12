@@ -84,9 +84,9 @@ public class Rev3Tests
 	{
 		Image<UnsignedByteType> outputImage = createPopulatedImage(3,3,new int[9]);
 		
-		ConstantFunction<UnsignedByteType>function = new ConstantFunction<UnsignedByteType>(43);
+		ConstantFunction function = new ConstantFunction(43);
 		
-		Operation<UnsignedByteType> op = new Operation<UnsignedByteType>(outputImage, new int[3], new int[]{3,3}, function);
+		Operation op = new Operation(outputImage, new int[3], new int[]{3,3}, function);
 		
 		op.execute();
 		
@@ -102,9 +102,9 @@ public class Rev3Tests
 		
 		assertImageValsEqual(3,3,new int[9], outputImage);
 
-		ImageFunction<UnsignedByteType> function = new ImageFunction<UnsignedByteType>(inputImage);
+		ImageFunction function = new ImageFunction(inputImage);
 		
-		Operation<UnsignedByteType> op = new Operation<UnsignedByteType>(outputImage, new int[3], new int[]{3,3}, function);
+		Operation op = new Operation(outputImage, new int[3], new int[]{3,3}, function);
 		
 		op.execute();
 		
@@ -123,11 +123,11 @@ public class Rev3Tests
 		
 		assertImageValsEqual(3,3,new int[9], outputImage);
 
-		ImageFunction<UnsignedByteType> imageFunction = new ImageFunction<UnsignedByteType>(inputImage);
+		ImageFunction imageFunction = new ImageFunction(inputImage);
 
-		ConvolutionFunction<UnsignedByteType> convolver = new ConvolutionFunction<UnsignedByteType>(new int[]{3,3}, kernel, imageFunction);
+		ConvolutionFunction convolver = new ConvolutionFunction(new int[]{3,3}, kernel, imageFunction);
 		
-		Operation<UnsignedByteType> op = new Operation<UnsignedByteType>(outputImage, new int[]{1,1}, new int[]{1,1}, convolver);
+		Operation op = new Operation(outputImage, new int[]{1,1}, new int[]{1,1}, convolver);
 		
 		op.execute();
 		
@@ -145,15 +145,15 @@ public class Rev3Tests
 
 		assertImageValsEqual(3,3,new int[9], outputImage);
 
-		ImageFunction<UnsignedByteType> leftImageFunction = new ImageFunction<UnsignedByteType>(leftImage);
+		ImageFunction leftImageFunction = new ImageFunction(leftImage);
 		
-		ImageFunction<UnsignedByteType> rightImageFunction = new ImageFunction<UnsignedByteType>(rightImage);
+		ImageFunction rightImageFunction = new ImageFunction(rightImage);
 
 		BinaryOperator addOp = new AddOperator();
 		
-		BinaryFunction<UnsignedByteType> addFunc = new BinaryFunction<UnsignedByteType>(addOp, leftImageFunction, rightImageFunction);
+		BinaryFunction addFunc = new BinaryFunction(addOp, leftImageFunction, rightImageFunction);
 		
-		Operation<UnsignedByteType> op = new Operation<UnsignedByteType>(outputImage, new int[2], new int[]{3,3}, addFunc);
+		Operation op = new Operation(outputImage, new int[2], new int[]{3,3}, addFunc);
 		
 		op.execute();
 		
@@ -169,13 +169,13 @@ public class Rev3Tests
 
 		assertImageValsEqual(3,3,new int[9], outputImage);
 
-		ImageFunction<UnsignedByteType> inputImageFunction = new ImageFunction<UnsignedByteType>(inputImage);
+		ImageFunction inputImageFunction = new ImageFunction(inputImage);
 		
 		UnaryOperator halfOp = new HalfOperator();
 		
-		UnaryFunction<UnsignedByteType> halfFunc = new UnaryFunction<UnsignedByteType>(halfOp, inputImageFunction);
+		UnaryFunction halfFunc = new UnaryFunction(halfOp, inputImageFunction);
 		
-		Operation<UnsignedByteType> op = new Operation<UnsignedByteType>(outputImage, new int[2], new int[]{3,3}, halfFunc);
+		Operation op = new Operation(outputImage, new int[2], new int[]{3,3}, halfFunc);
 		
 		op.execute();
 		
@@ -195,24 +195,24 @@ public class Rev3Tests
 		AddOperator addOp = new AddOperator();
 		HalfOperator halfOp = new HalfOperator();
 		
-		ImageFunction<UnsignedByteType> image1Func = new ImageFunction<UnsignedByteType>(inputImage1);
-		ImageFunction<UnsignedByteType> image2Func = new ImageFunction<UnsignedByteType>(inputImage2);
+		ImageFunction image1Func = new ImageFunction(inputImage1);
+		ImageFunction image2Func = new ImageFunction(inputImage2);
 
-		ConstantFunction<UnsignedByteType> two = new ConstantFunction<UnsignedByteType>(2);
-		ConstantFunction<UnsignedByteType> three = new ConstantFunction<UnsignedByteType>(3);
-		ConstantFunction<UnsignedByteType> four = new ConstantFunction<UnsignedByteType>(4);
+		ConstantFunction two = new ConstantFunction(2);
+		ConstantFunction three = new ConstantFunction(3);
+		ConstantFunction four = new ConstantFunction(4);
 
-		BinaryFunction<UnsignedByteType> term1 = new BinaryFunction<UnsignedByteType>(multOp, two, image1Func);
+		BinaryFunction term1 = new BinaryFunction(multOp, two, image1Func);
 		
-		BinaryFunction<UnsignedByteType> term2 = new BinaryFunction<UnsignedByteType>(multOp, three, image2Func);
+		BinaryFunction term2 = new BinaryFunction(multOp, three, image2Func);
 		
-		BinaryFunction<UnsignedByteType> twoTerms = new BinaryFunction<UnsignedByteType>(addOp, term1, term2);
+		BinaryFunction twoTerms = new BinaryFunction(addOp, term1, term2);
 		
-		BinaryFunction<UnsignedByteType> threeTerms = new BinaryFunction<UnsignedByteType>(addOp, twoTerms, four);
+		BinaryFunction threeTerms = new BinaryFunction(addOp, twoTerms, four);
 
-		UnaryFunction<UnsignedByteType> totalFunc = new UnaryFunction<UnsignedByteType>(halfOp, threeTerms);
+		UnaryFunction totalFunc = new UnaryFunction(halfOp, threeTerms);
 		
-		Operation<UnsignedByteType> op = new Operation<UnsignedByteType>(outputImage, new int[2], new int[]{3,3}, totalFunc);
+		Operation op = new Operation(outputImage, new int[2], new int[]{3,3}, totalFunc);
 		
 		op.execute();
 		

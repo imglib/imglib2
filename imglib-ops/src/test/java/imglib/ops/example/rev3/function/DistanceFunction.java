@@ -1,11 +1,10 @@
 package imglib.ops.example.rev3.function;
 
-import mpicbg.imglib.type.numeric.RealType;
 
 // think that maybe you would construct a LessThan Condition with value 2.0 & pass it a DistanceFunction.
 // this condition evaluates to true calculated distance from ref pt matches
 
-public class DistanceFunction<T extends RealType<T>> implements IntegralScalarFunction<T>
+public class DistanceFunction implements IntegralScalarFunction
 {
 	private int[] referencePoint;
 	
@@ -15,13 +14,7 @@ public class DistanceFunction<T extends RealType<T>> implements IntegralScalarFu
 	}
 	
 	@Override
-	public T createVariable()
-	{
-		return null;  // TODO - again this variable factory stuff probably needs to go away
-	}
-
-	@Override
-	public void evaluate(int[] position, T output)
+	public double evaluate(int[] position)
 	{
 		double sumOfSquares = 0;
 		
@@ -31,9 +24,7 @@ public class DistanceFunction<T extends RealType<T>> implements IntegralScalarFu
 			sumOfSquares += delta * delta;
 		}
 		
-		double value = Math.sqrt(sumOfSquares);
-		
-		output.setReal(value);
+		return Math.sqrt(sumOfSquares);
 	}
 
 }

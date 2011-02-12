@@ -1,8 +1,7 @@
 package imglib.ops.example.rev3.function;
 
-import mpicbg.imglib.type.numeric.RealType;
 
-public class ConstantFunction<T extends RealType<T>> implements IntegralScalarFunction<T>
+public class ConstantFunction implements IntegralScalarFunction
 {
 	private double value;
 	
@@ -12,15 +11,9 @@ public class ConstantFunction<T extends RealType<T>> implements IntegralScalarFu
 	}
 	
 	@Override
-	public T createVariable()
+	public double evaluate(int[] position)
 	{
-		return null;  // can't create a variable on a constant
-	}
-
-	@Override
-	public void evaluate(int[] position, T output)
-	{
-		output.setReal(value);
+		return value;
 	}
 
 }

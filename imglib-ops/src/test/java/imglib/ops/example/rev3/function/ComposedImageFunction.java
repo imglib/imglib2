@@ -26,10 +26,10 @@ import mpicbg.imglib.type.numeric.RealType;
  *   huh - stack XY planes into a 3d dataset. but why not stack two 3d volumes into a bigger 3d volume.
  *   as implemented it does the latter. Think about what is best.
  */
-public class ComposedImageFunction<T extends RealType<T>> implements IntegralScalarFunction<T>
+public class ComposedImageFunction implements IntegralScalarFunction
 {
 	private int axisOfComposition;
-	private ArrayList<LocalizableByDimCursor<T>> subImageCursors;
+	private ArrayList<LocalizableByDimCursor<? extends RealType<?>>> subImageCursors;
 	private ArrayList<int[]> subImageOrigins;
 	private ArrayList<int[]> subImageSpans;
 	private ArrayList<int[]> subImagePositions;
@@ -39,13 +39,13 @@ public class ComposedImageFunction<T extends RealType<T>> implements IntegralSca
 	public ComposedImageFunction(int axis)
 	{
 		axisOfComposition = axis;
-		subImageCursors = new ArrayList<LocalizableByDimCursor<T>>();
+		subImageCursors = new ArrayList<LocalizableByDimCursor<? extends RealType<?>>>();
 		subImageOrigins = new ArrayList<int[]>();
 		subImageSpans = new ArrayList<int[]>();
 		subImagePositions = new ArrayList<int[]>();
 	}
 	
-	public void addSubregionOfImage(Image<T> image, int[] origin, int[] span)
+	public void addSubregionOfImage(Image<? extends RealType<?>> image, int[] origin, int[] span)
 	{
 		if (subImageCursors.size() == 0)
 		{
@@ -55,41 +55,27 @@ public class ComposedImageFunction<T extends RealType<T>> implements IntegralSca
 			return;
 		}
 
-		Image<T> firstImage = subImageCursors.get(0).getImage();
+		Image<? extends RealType<?>> firstImage = subImageCursors.get(0).getImage();
 		
 		if (image.getNumDimensions() != firstImage.getNumDimensions())
 			throw new IllegalArgumentException("incompatibly shaped images cannot be glued together: num dimensions different");
 		
 		// TODO -- add the subregion info to instance vars so we can access it
 	}
-	
-	@Override
-	public T createVariable()
-	{
-		if (subImageCursors.size() == 0)
-			return null;
-		
-		return subImageCursors.get(0).getType().createVariable();
-	}
 
 	@Override
-	public void evaluate(int[] position, T output)
+	public double evaluate(int[] position)
 	{
 		if (subImageCursors.size() == 0)
-		{
-			output.setZero();    // TODO - is this what we really want to do???? or NaN????
-			return;
-		}
+			return 0;    // TODO - is this what we really want to do???? or NaN????
 		
 		determineSubImageVariables(position);
 		
-		LocalizableByDimCursor<T> cursor = subImageCursors.get(localizedSubImageNumber);
+		LocalizableByDimCursor<? extends RealType<?>> cursor = subImageCursors.get(localizedSubImageNumber);
 		
 		cursor.setPosition(localizedPosition);
 
-		double value = cursor.getType().getRealDouble();
-		
-		output.setReal(value);
+		return cursor.getType().getRealDouble();
 	}
 
 	// TODO - not completed

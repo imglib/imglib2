@@ -1,9 +1,8 @@
 package imglib.ops.example.rev3.condition;
 
 import imglib.ops.example.rev3.function.IntegralScalarFunction;
-import mpicbg.imglib.type.numeric.RealType;
 
-public class ValueLessThan<T extends RealType<T>> implements Condition<T>
+public class ValueLessThan implements Condition
 {
 	private double value;
 	private boolean wasFullyEvaluated;
@@ -17,15 +16,11 @@ public class ValueLessThan<T extends RealType<T>> implements Condition<T>
 	}
 	
 	@Override
-	public boolean isSatisfied(IntegralScalarFunction<T> function, int[] position)
+	public boolean isSatisfied(IntegralScalarFunction function, int[] position)
 	{
-		T variable = function.createVariable();
-		
-		function.evaluate(position, variable);
+		this.lastValue = function.evaluate(position);
 
 		this.wasFullyEvaluated = true;
-		
-		this.lastValue = variable.getRealDouble();
 		
 		return this.lastValue < value;
 	}

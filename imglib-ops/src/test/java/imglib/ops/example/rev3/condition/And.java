@@ -1,14 +1,13 @@
 package imglib.ops.example.rev3.condition;
 
-import mpicbg.imglib.type.numeric.RealType;
 import imglib.ops.example.rev3.function.IntegralScalarFunction;
 
-public class And<T extends RealType<T>> implements Condition<T>
+public class And implements Condition
 {
-	private Condition<T> left, right;
+	private Condition left, right;
 	private double lastEvaluation;
 	
-	public And(Condition<T> left, Condition<T> right)
+	public And(Condition left, Condition right)
 	{
 		this.left = left;
 		this.right = right;
@@ -16,7 +15,7 @@ public class And<T extends RealType<T>> implements Condition<T>
 	}
 	
 	@Override
-	public boolean isSatisfied(IntegralScalarFunction<T> function, int[] position)
+	public boolean isSatisfied(IntegralScalarFunction function, int[] position)
 	{
 		return left.isSatisfied(function, position) && right.isSatisfied(function, position);
 	}

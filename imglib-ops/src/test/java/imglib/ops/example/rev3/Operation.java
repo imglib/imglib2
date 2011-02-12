@@ -25,24 +25,25 @@ import mpicbg.imglib.type.numeric.RealType;
 // in place but realize the input pixels are being modified by the operation. again this points out need for domain information
 // for a function. 
 
-public class Operation<T extends RealType<T>>
+public class Operation
 {
-	private Image<T> outputImage;
+	private Image<? extends RealType<?>> outputImage;
 	private int[] origin;
-	private IntegralScalarFunction<T> function;
-	private RegionOfInterestCursor<T> cursor;
+	private IntegralScalarFunction function;
+	private RegionOfInterestCursor<? extends RealType<?>> cursor;
 	private boolean wasInterrupted;
 	private boolean isDone;
 	private Observable notifier;
-	private Condition<T> condition;
+	private Condition condition;
 	
-	public Operation(Image<T> outputImage, int[] origin, int[] span, IntegralScalarFunction<T> function)
+	@SuppressWarnings({"rawtypes","unchecked"})
+	public Operation(Image<? extends RealType<?>> outputImage, int[] origin, int[] span, IntegralScalarFunction function)
 	{
 		this.outputImage = outputImage;
 		this.origin = origin;
 		this.function = function;
-		LocalizableByDimCursor<T> tmpCursor = outputImage.createLocalizableByDimCursor();
-		this.cursor = new RegionOfInterestCursor<T>(tmpCursor, origin, span);
+		LocalizableByDimCursor<? extends RealType<?>> tmpCursor = outputImage.createLocalizableByDimCursor();
+		this.cursor = new RegionOfInterestCursor(tmpCursor, origin, span);  // nongeneric instantiation. SAFE?
 		this.wasInterrupted = false;
 		this.isDone = false;
 		this.notifier = null;
@@ -87,7 +88,7 @@ public class Operation<T extends RealType<T>>
 				if ((condition != null) && condition.functionWasFullyEvaluated())
 					cursor.getType().setReal(condition.getLastFunctionEvaluation());
 				else
-					function.evaluate(position, cursor.getType());
+					cursor.getType().setReal(function.evaluate(position));
 			}
 			if (notifier != null)
 			{
@@ -142,7 +143,7 @@ public class Operation<T extends RealType<T>>
 		}
 	}
 	
-	public void setCondition(Condition<T> c)
+	public void setCondition(Condition c)
 	{
 		condition = c;
 	}

@@ -7,33 +7,25 @@ import mpicbg.imglib.type.numeric.RealType;
 // turn an image into a function we can access
 // some thought needs to be given to how multithreading would work with such an approach
 
-public class ImageFunction<T extends RealType<T>> implements IntegralScalarFunction<T>
+public class ImageFunction implements IntegralScalarFunction
 {
-	private LocalizableByDimCursor<T> cursor;
+	private LocalizableByDimCursor<? extends RealType<?>> cursor;
 	
-	public ImageFunction(Image<T> image)  // TODO - OutOfBoundsStrategy too? Or handled by choice of cursor????
+	public ImageFunction(Image<? extends RealType<?>> image)  // TODO - OutOfBoundsStrategy too? Or handled by choice of cursor????
 	{
 		this.cursor = image.createLocalizableByDimCursor();
 	}
 
 	@Override
-	public void evaluate(int[] position, T output)
+	public double evaluate(int[] position)
 	{
 		// TODO - setPosition is slower than simple dimensional changes. think of best way to do this
 		this.cursor.setPosition(position);
 		
-		double sampleValue = this.cursor.getType().getRealDouble();
-		
-		output.setReal(sampleValue);
+		return this.cursor.getType().getRealDouble();
 	}
 	
-	@Override
-	public T createVariable()
-	{
-		return this.cursor.getType().createVariable();
-	}
-	
-	public Image<T> getImage()
+	public Image<?> getImage()
 	{
 		return this.cursor.getImage();
 	}

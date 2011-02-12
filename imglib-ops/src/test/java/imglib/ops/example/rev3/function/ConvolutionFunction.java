@@ -1,18 +1,16 @@
 package imglib.ops.example.rev3.function;
 
-import mpicbg.imglib.type.numeric.RealType;
 
 // TODO - could be derived from a plain ScalarFunction taking real coords. probably want to do this eventually. a discrete one and a continuous one.
 
-public class ConvolutionFunction<T extends RealType<T>> implements IntegralScalarFunction<T>
+public class ConvolutionFunction implements IntegralScalarFunction
 {
-	private IntegralScalarFunction<T> otherFunction;
+	private IntegralScalarFunction otherFunction;
 	private int[] kernelDimensions;
 	private double[] kernelValues;
 	private int[] relPos;
-	private T variable;
 	
-	public ConvolutionFunction(int[] kernelDimensions, double[] kernelValues, IntegralScalarFunction<T> otherFunction)
+	public ConvolutionFunction(int[] kernelDimensions, double[] kernelValues, IntegralScalarFunction otherFunction)
 	{
 		// TODO - hack - only work in two dims to get working
 		if (kernelDimensions.length != 2)
@@ -27,11 +25,10 @@ public class ConvolutionFunction<T extends RealType<T>> implements IntegralScala
 		this.otherFunction = otherFunction;
 		this.kernelDimensions = kernelDimensions;
 		this.kernelValues = kernelValues;
-		this.variable = createVariable();
 	}
 	
 	@Override
-	public void evaluate(int[] position, T output)
+	public double evaluate(int[] position)
 	{
 		double sum = 0;
 
@@ -47,24 +44,16 @@ public class ConvolutionFunction<T extends RealType<T>> implements IntegralScala
 			{
 				relPos[0] = position[0] + x;
 				
-				variable.setZero();
-				
-				otherFunction.evaluate(relPos, variable);
+				double value = otherFunction.evaluate(relPos);
 				
 				int kPos = relPos[1]*kernelDimensions[0] + relPos[0];
 				
 				double kernelValue = kernelValues[kPos];
 				
-				sum += kernelValue * variable.getRealDouble();
+				sum += kernelValue * value;
 			}
 		}
 		
-		output.setReal(sum);
-	}
-
-	@Override
-	public T createVariable()
-	{
-		return otherFunction.createVariable();
+		return sum;
 	}
 }

@@ -1,15 +1,14 @@
 package imglib.ops.example.rev3.function;
 
-import mpicbg.imglib.type.numeric.RealType;
 
-public class AverageFunction<T extends RealType<T>> implements IntegralScalarFunction<T>
+public class AverageFunction implements IntegralScalarFunction
 {
-	private IntegralScalarFunction<T> otherFunction;
+	private IntegralScalarFunction otherFunction;
 	private int[] loDeltas;
 	private int[] hiDeltas;
 	private int[] relPos;
 	
-	public AverageFunction(IntegralScalarFunction<T> otherFunction, int[] loDeltas, int[] hiDeltas)
+	public AverageFunction(IntegralScalarFunction otherFunction, int[] loDeltas, int[] hiDeltas)
 	{
 		this.otherFunction = otherFunction;
 		this.loDeltas = loDeltas;
@@ -22,17 +21,9 @@ public class AverageFunction<T extends RealType<T>> implements IntegralScalarFun
 	}
 	
 	@Override
-	public T createVariable()
+	public double evaluate(int[] position)
 	{
-		return otherFunction.createVariable();
-	}
-
-	@Override
-	public void evaluate(int[] position, T output)
-	{
-		T variable = createVariable();  // TODO - imagine we're trying to average the values from a ConstantFunction. this will
-										// fail. may need to make function.evaluate() return a double rather than assign to a T.
-		double sum = 0;					// then we can get rid of create variable everywhere and maybe get rid of much generics too???
+		double sum = 0;
 		
 		int numElements = 0;
 		
@@ -42,15 +33,14 @@ public class AverageFunction<T extends RealType<T>> implements IntegralScalarFun
 			for (int dx = loDeltas[0]; dx <= hiDeltas[0]; dx++)
 			{
 				relPos[0] = position[0] + dx;
-				otherFunction.evaluate(relPos, variable);
-				sum += variable.getRealDouble();
+				sum += otherFunction.evaluate(relPos);
 			}
 		}
 
 		if (numElements == 0)
-			output.setZero();
+			return 0;
 		else
-			output.setReal(sum / numElements);
+			return sum / numElements;
 	}
 
 }

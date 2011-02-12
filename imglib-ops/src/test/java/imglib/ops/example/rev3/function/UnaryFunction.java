@@ -1,35 +1,24 @@
 package imglib.ops.example.rev3.function;
 
 import imglib.ops.example.rev3.operator.UnaryOperator;
-import mpicbg.imglib.type.numeric.RealType;
 
-public class UnaryFunction<R extends RealType<R>> implements IntegralScalarFunction<R>
+public class UnaryFunction implements IntegralScalarFunction
 {
-	private IntegralScalarFunction<R> inputFunction;
+	private IntegralScalarFunction inputFunction;
 	private UnaryOperator operator;
 
-	public UnaryFunction(UnaryOperator operator, IntegralScalarFunction<R> inputFunction)
+	public UnaryFunction(UnaryOperator operator, IntegralScalarFunction inputFunction)
 	{
 		this.inputFunction = inputFunction;
 		this.operator = operator;
 	}
 	
 	@Override
-	public R createVariable()
+	public double evaluate(int[] position)
 	{
-		return inputFunction.createVariable();
-	}
+		double input = inputFunction.evaluate(position);
 
-	@Override
-	public void evaluate(int[] position, R output)
-	{
-		inputFunction.evaluate(position, output);
-
-		double input = output.getRealDouble();
-		
-		double value = operator.computeValue(input);
-		
-		output.setReal(value);
+		return operator.computeValue(input);
 	}
 }
 
