@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2010, Stephan Saalfeld
+ * Copyright (c) 2011, Stephan Saalfeld
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -31,6 +31,7 @@ package mpicbg.imglib.outofbounds;
 /**
  * 
  * @param <T>
+ * @param <F>
  *
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */

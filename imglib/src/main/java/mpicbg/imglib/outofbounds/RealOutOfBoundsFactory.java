@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2010, Stephan Saalfeld
+ * Copyright (c) 2011, Stephan Saalfeld
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -31,10 +31,11 @@ package mpicbg.imglib.outofbounds;
 /**
  * 
  * @param <T>
+ * @param <F>
  *
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-public interface IntegerOfOutOfBoundsFactory< T, F >
+public interface RealOutOfBoundsFactory< T, F >
 {
-	public OutOfBounds< T > create( F f );
+	public RealOutOfBounds< T > create( F f );
 }

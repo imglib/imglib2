@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2009--2010, Stephan Saalfeld
+ * Copyright (c) 2011, Stephan Saalfeld
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -33,6 +33,7 @@ import mpicbg.imglib.Sampler;
 
 /**
  * 
+ * @param <T>
  *
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
