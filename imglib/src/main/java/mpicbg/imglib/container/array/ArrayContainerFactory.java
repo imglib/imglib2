@@ -57,6 +57,12 @@ import mpicbg.imglib.type.NativeType;
  */
 public class ArrayContainerFactory< T extends NativeType<T> > extends NativeContainerFactory< T >
 {
+	@Override
+	public Array< T, ? > create( final long[] dim, final T type )
+	{
+		return ( Array< T, ? > ) type.createSuitableNativeContainer( this, dim );
+	}
+
 	public static int numEntitiesRangeCheck( final long[] dimensions, final int entitiesPerPixel )
 	{
 		final long numEntities = AbstractImg.numElements( dimensions ) * entitiesPerPixel;
