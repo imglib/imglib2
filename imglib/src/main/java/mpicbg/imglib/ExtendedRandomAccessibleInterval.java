@@ -35,7 +35,6 @@ import mpicbg.imglib.outofbounds.OutOfBoundsFactory;
  * through an {@link OutOfBoundsFactory}.
  *
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
- * @version 0.1a
  */
 final public class ExtendedRandomAccessibleInterval< T, F extends RandomAccessibleInterval< T, F > > implements Interval, RandomAccessible< T > 
 {

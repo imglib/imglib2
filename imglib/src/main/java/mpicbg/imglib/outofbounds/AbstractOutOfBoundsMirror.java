@@ -34,6 +34,10 @@ import mpicbg.imglib.RandomAccessible;
 import mpicbg.imglib.util.Util;
 
 /**
+ * Abstract implementation of shared functions for mirroring out of bounds.
+ * Internally used coordinates use an interval
+ * [0<sup><em>n</em></sup>,max<sup><em>n</em></sup>-min<sup><em>n</em></sup>]
+ * and compensate for min-shift on localization and positioning.
  * 
  * @param <T>
  *
@@ -45,7 +49,7 @@ public abstract class AbstractOutOfBoundsMirror< T > implements OutOfBounds< T >
 	
 	final protected int n;
 	
-	final protected long[] dimension, position, min, max, p;
+	final protected long[] dimension, position, min, p;
 	
 	/* true when increasing, false when decreasing */
 	final protected boolean[] inc;
@@ -66,8 +70,6 @@ public abstract class AbstractOutOfBoundsMirror< T > implements OutOfBounds< T >
 		interval.dimensions( dimension );
 		min = new long[ n ];
 		interval.min( min );
-		max = new long[ n ];
-		interval.max( max );
 		position = new long[ n ];
 		inc = new boolean[ n ];
 		
@@ -182,6 +184,9 @@ public abstract class AbstractOutOfBoundsMirror< T > implements OutOfBounds< T >
 	
 	/* Positionable */
 	
+	/**
+	 * Override with a more efficient version.
+	 */
 	@Override
 	public void move( final int distance, final int d )
 	{
@@ -234,7 +239,7 @@ public abstract class AbstractOutOfBoundsMirror< T > implements OutOfBounds< T >
 	public void setPosition( final Localizable localizable )
 	{
 		for ( int d = 0; d < n; ++d )
-			setPosition( localizable.getIntPosition( d ), d );
+			setPosition( localizable.getLongPosition( d ), d );
 	}
 	
 	@Override

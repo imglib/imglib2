@@ -107,7 +107,6 @@ public class OutOfBoundsMirrorSingleBoundary< T > extends AbstractOutOfBoundsMir
 			dimIsOutOfBounds[ dim ] = false;
 			if ( isOutOfBounds ) checkOutOfBounds();
 		}
-			
 		
 		final int y = outOfBoundsRandomAccess.getIntPosition( dim );
 		if ( inc[ dim ] )
@@ -135,6 +134,7 @@ public class OutOfBoundsMirrorSingleBoundary< T > extends AbstractOutOfBoundsMir
 	@Override
 	final public void setPosition( long position, final int dim )
 	{
+		position -= min[ dim ];
 		this.position[ dim ] = position;
 		final long mod = dimension[ dim ];
 		final boolean pos;

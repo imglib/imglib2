@@ -65,25 +65,25 @@ public class OutOfBoundsMirrorDoubleBoundary< T > extends AbstractOutOfBoundsMir
 	final public void fwd( final int dim ) 
 	{
 		final long x = ++position[ dim ];
-		if ( x == min[ dim ] )
+		if ( x == 0 )
 		{
 			dimIsOutOfBounds[ dim ] = false;
 			if ( isOutOfBounds ) checkOutOfBounds();
 		}
-		else if ( x > max[ dim ] )
+		else if ( x == dimension[ dim ] )
 			dimIsOutOfBounds[ dim ] = isOutOfBounds = true;
 		
 		final int y = outOfBoundsRandomAccess.getIntPosition( dim );
 		if ( inc[ dim ] )
 		{
-			if ( y == max[ dim ] )
+			if ( y + 1 == dimension[ dim ] )
 				inc[ dim ] = false;
 			else
 				outOfBoundsRandomAccess.fwd( dim );
 		}
 		else
 		{
-			if ( y == min[ dim ] )
+			if ( y == 0 )
 				inc[ dim ] = true;
 			else
 				outOfBoundsRandomAccess.bck( dim );
@@ -93,10 +93,10 @@ public class OutOfBoundsMirrorDoubleBoundary< T > extends AbstractOutOfBoundsMir
 	@Override
 	final public void bck( final int dim )
 	{
-		final long x = --position[ dim ];
-		if ( x < min[ dim ] )
+		final long x = position[ dim ]--;
+		if ( x == 0 )
 			dimIsOutOfBounds[ dim ] = isOutOfBounds = true;
-		else if ( x == max[ dim ] )
+		else if ( x == dimension[ dim ] )
 		{
 			dimIsOutOfBounds[ dim ] = false;
 			if ( isOutOfBounds ) checkOutOfBounds();
@@ -105,31 +105,32 @@ public class OutOfBoundsMirrorDoubleBoundary< T > extends AbstractOutOfBoundsMir
 		final int y = outOfBoundsRandomAccess.getIntPosition( dim );
 		if ( inc[ dim ] )
 		{
-			if ( y == min[ dim ] )
+			if ( y == 0 )
 				inc[ dim ] = false;
 			else
-				outOfBoundsRandomAccess.fwd( dim );
+				outOfBoundsRandomAccess.bck( dim );
 		}
 		else
 		{
-			if ( y == max[ dim ] )
+			if ( y + 1 == dimension[ dim ] )
 				inc[ dim ] = true;
 			else
-				outOfBoundsRandomAccess.bck( dim );
+				outOfBoundsRandomAccess.fwd( dim );
 		}
 	}
 	
 	@Override
 	final public void setPosition( long position, final int dim )
 	{
+		position -= min[ dim ];
 		this.position[ dim ] = position;
 		final long x = this.p[ dim ];
 		final long mod = dimension[ dim ];
 		final boolean pos;
 		if ( position < 0 )
 		{
-			isOutOfBounds = true;
-			position = -position;
+			dimIsOutOfBounds[ dim ] = isOutOfBounds = true;
+			position = -position - 1;
 			pos = false;
 		}
 		else
@@ -137,10 +138,10 @@ public class OutOfBoundsMirrorDoubleBoundary< T > extends AbstractOutOfBoundsMir
 		
 		if ( position >= mod )
 		{
-			isOutOfBounds = true;
-			if ( position <= x )
+			dimIsOutOfBounds[ dim ] = isOutOfBounds = true;
+			if ( position < x )
 			{
-				position = x - position;
+				position = x - position - 1;
 				inc[ dim ] = !pos;
 			}
 			else
@@ -151,7 +152,7 @@ public class OutOfBoundsMirrorDoubleBoundary< T > extends AbstractOutOfBoundsMir
 					position %= x;
 					if ( position >= mod )
 					{
-						position = x - position;
+						position = x - position - 1;
 						inc[ dim ] = !pos;
 					}
 					else
@@ -162,7 +163,12 @@ public class OutOfBoundsMirrorDoubleBoundary< T > extends AbstractOutOfBoundsMir
 		}
 		else
 		{
-			isOutOfBounds = false;
+			if ( pos )
+			{
+				dimIsOutOfBounds[ dim ] = false;
+				if ( isOutOfBounds )
+					checkOutOfBounds();
+			}
 			inc[ dim ] = pos;
 		}
 		
