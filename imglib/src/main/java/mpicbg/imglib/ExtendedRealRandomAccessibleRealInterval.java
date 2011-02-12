@@ -25,16 +25,63 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-package mpicbg.imglib.outofbounds;
 
-import mpicbg.imglib.RandomAccess;
+package mpicbg.imglib;
+
+import mpicbg.imglib.outofbounds.OutOfBoundsFactory;
+import mpicbg.imglib.outofbounds.RealOutOfBoundsFactory;
 
 /**
- * 
+ * Implements {@link RandomAccessible} for a {@link RandomAccessibleInterval}
+ * through an {@link OutOfBoundsFactory}.
  *
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
+ * @version 0.1a
  */
-public interface OutOfBounds< T > extends RandomAccess< T >
+final public class ExtendedRealRandomAccessibleRealInterval< T, F extends RealRandomAccessibleRealInterval< T, F > > implements RealInterval, RealRandomAccessible< T > 
 {
-	public boolean isOutOfBounds();
+	final protected F interval;
+	final protected RealOutOfBoundsFactory< T, F > factory;
+
+	public ExtendedRealRandomAccessibleRealInterval( final F interval, final RealOutOfBoundsFactory< T, F > factory )
+	{
+		this.interval = interval;
+		this.factory = factory;
+	}
+	
+	@Override
+	final public double realMax( final int d )
+	{
+		return interval.realMax( d );
+	}
+
+	@Override
+	final public void realMax( final double[] max )
+	{
+		realMax( max );
+	}
+
+	@Override
+	final public double realMin( final int d )
+	{
+		return interval.realMin( d );
+	}
+
+	@Override
+	final public void realMin( final double[] min )
+	{
+		realMin( min );
+	}
+
+	@Override
+	final public int numDimensions()
+	{
+		return interval.numDimensions();
+	}
+
+	@Override
+	final public RealRandomAccess< T > realRandomAccess()
+	{
+		return interval.realRandomAccess( factory );
+	}
 }

@@ -28,7 +28,7 @@
 package mpicbg.imglib;
 
 import mpicbg.imglib.outofbounds.OutOfBounds;
-import mpicbg.imglib.outofbounds.OutOfBoundsFactory;
+import mpicbg.imglib.outofbounds.RealOutOfBoundsFactory;
 
 /**
  * <p><em>f</em>:{x&isin;R<sup><em>n</em></sup>|[min,max]&rarr;T}</em></p>
@@ -46,5 +46,5 @@ public interface RealRandomAccessibleRealInterval< T, F > extends RealInterval
 	 * 
 	 * @return random access sampler
 	 */
-	public RealRandomAccess< T > realRandomAccess( final OutOfBoundsFactory< T, F > factory );
+	public RealRandomAccess< T > realRandomAccess( final RealOutOfBoundsFactory< T, F > factory );
 }
