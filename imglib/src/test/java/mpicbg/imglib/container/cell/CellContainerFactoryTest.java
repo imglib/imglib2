@@ -1,18 +1,12 @@
 package mpicbg.imglib.container.cell;
 
-import static org.junit.Assert.*;
-
-import org.junit.Test;
-
-import mpicbg.imglib.container.basictypecontainer.array.ArrayDataAccess;
-import mpicbg.imglib.container.basictypecontainer.array.BitArray;
-import mpicbg.imglib.container.cell.Cell;
-import mpicbg.imglib.container.cell.CellContainer;
-import mpicbg.imglib.container.cell.CellContainerFactory;
+import static org.junit.Assert.assertArrayEquals;
 import mpicbg.imglib.type.NativeType;
 import mpicbg.imglib.type.logic.BitType;
 import mpicbg.imglib.type.numeric.integer.IntType;
 import mpicbg.imglib.type.numeric.real.FloatType;
+
+import org.junit.Test;
 
 public class CellContainerFactoryTest
 {
@@ -32,12 +26,13 @@ public class CellContainerFactoryTest
 			1296
 		};
 
-	public < T extends NativeType< T > > void testDefaultCellSize (T type)
+	private < T extends NativeType< T > > void testDefaultCellSize (T type)
 	{
-		CellContainerFactory< T > factory = new CellContainerFactory< T >( 43 );
+		int defaultCellSize = 43;
+		int[] expectedCellDims = {43, 43, 43, 43};
+		CellContainerFactory< T > factory = new CellContainerFactory< T >( defaultCellSize );
 		long[] dim = {100, 80, 4, 3}; 
 		CellContainer< T, ? > img = factory.create( dim, type );
-		int[] expectedCellDims = {43, 43, 43, 43};
 		assertArrayEquals( expectedCellDims, img.cellDims );
 	}
 	
@@ -49,4 +44,23 @@ public class CellContainerFactoryTest
 
 	@Test
 	public void testFloatDefaultCellSize() { testDefaultCellSize( new FloatType() ); }
+
+	private < T extends NativeType< T > > void testDefaultCellDimensions (T type)
+	{
+		int[] defaultCellDims = {6, 8, 5, 3};
+		int[] expectedCellDims = defaultCellDims.clone();
+		CellContainerFactory< T > factory = new CellContainerFactory< T >( defaultCellDims );
+		long[] dim = {100, 80, 4, 3}; 
+		CellContainer< T, ? > img = factory.create( dim, type );
+		assertArrayEquals( expectedCellDims, img.cellDims );
+	}
+
+	@Test
+	public void testBitDefaultCellDimensions() { testDefaultCellDimensions( new BitType() ); }
+
+	@Test
+	public void testIntDefaultCellDimensions() { testDefaultCellDimensions( new IntType() ); }
+
+	@Test
+	public void testFloatDefaultCellDimensions() { testDefaultCellDimensions( new FloatType() ); }
 }

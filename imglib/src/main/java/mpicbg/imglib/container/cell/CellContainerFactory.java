@@ -1,7 +1,6 @@
 package mpicbg.imglib.container.cell;
 
 import mpicbg.imglib.container.ImgFactory;
-import mpicbg.imglib.container.NativeContainer;
 import mpicbg.imglib.container.NativeContainerFactory;
 import mpicbg.imglib.container.basictypecontainer.BitAccess;
 import mpicbg.imglib.container.basictypecontainer.ByteAccess;
