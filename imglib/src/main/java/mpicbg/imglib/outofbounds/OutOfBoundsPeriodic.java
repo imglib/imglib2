@@ -50,28 +50,29 @@ import mpicbg.imglib.util.Util;
  *
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-public class OutOfBoundsStrategyPeriodic< T > implements OutOfBounds< T >
+public class OutOfBoundsPeriodic< T > implements OutOfBounds< T >
 {
 	final protected RandomAccess< T > outOfBoundsRandomAccess;
 	
 	final protected int n;
 	
-	final protected long[] dimension, position;
+	final protected long[] dimension, position, min;
 	
 	final protected boolean[] dimIsOutOfBounds;
 	
 	protected boolean isOutOfBounds = false;
 	
-	public < F extends Interval & RandomAccessible< T > > OutOfBoundsStrategyPeriodic( final F f )
+	public < F extends Interval & RandomAccessible< T > > OutOfBoundsPeriodic( final F f )
 	{
-		this.outOfBoundsRandomAccess = f.randomAccess();
 		n = f.numDimensions();
 		dimension = new long[ n ];
 		f.dimensions( dimension );
-		
+		min = new long[ n ];
+		f.min( min );
 		position = new long[ n ];
-		
 		dimIsOutOfBounds = new boolean[ n ];
+		
+		outOfBoundsRandomAccess = f.randomAccess();
 	}
 	
 	final protected void checkOutOfBounds()
@@ -91,154 +92,177 @@ public class OutOfBoundsStrategyPeriodic< T > implements OutOfBounds< T >
 	/* EuclideanSpace */
 	
 	@Override
-	public int numDimensions(){ return n; }
+	public int numDimensions()
+	{
+		return n;
+	}
 	
 	
 	/* OutOfBounds */
 	
 	@Override
-	public boolean isOutOfBounds(){ return isOutOfBounds; }
-
+	public boolean isOutOfBounds()
+	{
+		return isOutOfBounds;
+	}
 	
 	/* Sampler */
 	
 	@Override
-	public T get(){ return outOfBoundsRandomAccess.get(); }
-	
+	public T get()
+	{
+		return outOfBoundsRandomAccess.get();
+	}
+
 	@Override
 	@Deprecated
-	final public T getType(){ return get(); }
-	
+	final public T getType()
+	{
+		return get();
+	}
 	
 	/* Localizable */
 	
 	@Override
 	public void localize( final float[] pos )
 	{
-		for ( int d = 0; d < n; d++ )
-			pos[ d ] = this.position[ d ];
+		for ( int d = 0; d < n; ++d )
+			pos[ d ] = this.position[ d ] + min[ d ];
 	}
 
 	@Override
 	public void localize( final double[] pos )
 	{
-		for ( int d = 0; d < n; d++ )
-			pos[ d ] = this.position[ d ];
+		for ( int d = 0; d < n; ++d )
+			pos[ d ] = this.position[ d ] + min[ d ];
 	}
 
 	@Override
 	public void localize( final int[] pos )
 	{
-		for ( int d = 0; d < n; d++ )
-			pos[ d ] = ( int )this.position[ d ];
+		for ( int d = 0; d < n; ++d )
+			pos[ d ] = ( int )( this.position[ d ] + min[ d ] );
 	}
 	
 	@Override
 	public void localize( final long[] pos )
 	{
-		for ( int d = 0; d < n; d++ )
-			pos[ d ] = this.position[ d ];
+		for ( int d = 0; d < n; ++d )
+			pos[ d ] = this.position[ d ] + min[ d ];
 	}
 	
 	@Override
-	public float getFloatPosition( final int dim ){ return position[ dim ]; }
-	
-	@Override
-	public double getDoublePosition( final int dim ){ return position[ dim ]; }
-	
-	@Override
-	public int getIntPosition( final int dim ){ return ( int )position[ dim ]; }
+	public float getFloatPosition( final int d )
+	{
+		return position[ d ] + min[ d ];
+	}
 
 	@Override
-	public long getLongPosition( final int dim ){ return position[ dim ]; }
-	
+	public double getDoublePosition( final int d )
+	{
+		return position[ d ] + min[ d ];
+	}
+
 	@Override
-	public String toString() { return Util.printCoordinates( position ) + " = " + get(); }
+	public int getIntPosition( final int d )
+	{
+		return ( int )( position[ d ] + min[ d ] );
+	}
+
+	@Override
+	public long getLongPosition( final int d )
+	{
+		return position[ d ] + min[ d ];
+	}
 	
 	
 	/* Positionable */
 	
 	@Override
-	final public void fwd( final int dim )
+	final public void fwd( final int d )
 	{
-		final long p = ++position[ dim ];
+		final long p = ++position[ d ];
 		if ( p == 0 )
 		{
-			dimIsOutOfBounds[ dim ] = false;
+			dimIsOutOfBounds[ d ] = false;
 			checkOutOfBounds();
 		}
-		else if ( p == dimension[ dim ] )
-			dimIsOutOfBounds[ dim ] = isOutOfBounds = true;
+		else if ( p == dimension[ d ] )
+			dimIsOutOfBounds[ d ] = isOutOfBounds = true;
 		
-		final int q = outOfBoundsRandomAccess.getIntPosition( dim ) + 1;
-		if ( q == dimension[ dim ] )
-			outOfBoundsRandomAccess.setPosition( 0, dim );
+		final long q = outOfBoundsRandomAccess.getLongPosition( d ) + 1;
+		if ( q == dimension[ d ] )
+			outOfBoundsRandomAccess.setPosition( 0, d );
 		else
-			outOfBoundsRandomAccess.fwd( dim  );
+			outOfBoundsRandomAccess.fwd( d  );
 	}
 	
 	@Override
-	final public void bck( final int dim )
+	final public void bck( final int d )
 	{
-		final long p = position[ dim ]--;
+		final long p = position[ d ]--;
 		if ( p == 0 )
-			dimIsOutOfBounds[ dim ] = isOutOfBounds = true;
-		else if ( p == dimension[ dim ] )
+			dimIsOutOfBounds[ d ] = isOutOfBounds = true;
+		else if ( p == dimension[ d ] )
 		{
-			dimIsOutOfBounds[ dim ] = false;
+			dimIsOutOfBounds[ d ] = false;
 			checkOutOfBounds();
 		}
 		
-		final int q = outOfBoundsRandomAccess.getIntPosition( dim );
+		final long q = outOfBoundsRandomAccess.getLongPosition( d );
 		if ( q == 0 )
-			outOfBoundsRandomAccess.setPosition( dimension[ dim ] - 1, dim );
+			outOfBoundsRandomAccess.setPosition( dimension[ d ] - 1, d );
 		else
-			outOfBoundsRandomAccess.bck( dim  );
+			outOfBoundsRandomAccess.bck( d  );
 	}
 	
 	@Override
-	final public void setPosition( final int position, final int dim )
+	final public void setPosition( long position, final int d )
 	{
-		this.position[ dim ] = position;
-		final long mod = dimension[ dim ];
+		position -= min[ d ];
+		this.position[ d ] = position;
+		final long mod = dimension[ d ];
 		if ( position < 0 )
 		{
-			outOfBoundsRandomAccess.setPosition( mod - 1 + ( ( position + 1 ) % mod ), dim );
-			dimIsOutOfBounds[ dim ] = isOutOfBounds = true;
+			outOfBoundsRandomAccess.setPosition( mod - 1 + ( ( position + 1 ) % mod ), d );
+			dimIsOutOfBounds[ d ] = isOutOfBounds = true;
 		}
 		else if ( position >= mod )
 		{
-			outOfBoundsRandomAccess.setPosition( position % mod, dim );
-			dimIsOutOfBounds[ dim ] = isOutOfBounds = true;
+			outOfBoundsRandomAccess.setPosition( position % mod, d );
+			dimIsOutOfBounds[ d ] = isOutOfBounds = true;
 		}
 		else
 		{
-			outOfBoundsRandomAccess.setPosition( position, dim );
-			dimIsOutOfBounds[ dim ] = false;
+			outOfBoundsRandomAccess.setPosition( position, d );
+			dimIsOutOfBounds[ d ] = false;
 			if ( isOutOfBounds )
 				checkOutOfBounds();
 		}
 	}
 	
+	/**
+	 * Override with a more efficient version.
+	 */
 	@Override
-	public void move( final int distance, final int dim )
+	public void move( final int distance, final int d )
 	{
 		if ( distance > 0 )
 		{
 			for ( int i = 0; i < distance; ++i )
-				fwd( dim );
+				fwd( d );
 		}
 		else
 		{
 			for ( int i = -distance; i > 0; --i )
-				bck( dim );
+				bck( d );
 		}
 	}
 	
 	@Override
-	public void move( final long distance, final int dim )
+	public void move( final long distance, final int d )
 	{
-		move( ( int )distance, dim );
+		move( ( int )distance, d );
 	}
 	
 	@Override
@@ -263,9 +287,9 @@ public class OutOfBoundsStrategyPeriodic< T > implements OutOfBounds< T >
 	}
 	
 	@Override
-	public void setPosition( final long position, final int dim )
+	public void setPosition( final int position, final int d )
 	{
-		setPosition( ( int )position, dim );
+		setPosition( ( long )position, d );
 	}
 	
 	@Override
@@ -287,5 +311,14 @@ public class OutOfBoundsStrategyPeriodic< T > implements OutOfBounds< T >
 	{
 		for ( int d = 0; d < position.length; ++d )
 			setPosition( position[ d ], d );
+	}
+	
+	
+	/* Object */
+	
+	@Override
+	public String toString()
+	{
+		return Util.printCoordinates( position ) + " = " + get();
 	}
 }

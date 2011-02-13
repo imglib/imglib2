@@ -60,26 +60,19 @@ public abstract class AbstractOutOfBoundsMirror< T > implements OutOfBounds< T >
 	
 	public < F extends Interval & RandomAccessible< T > > AbstractOutOfBoundsMirror( final F f )
 	{
-		this( f, f.randomAccess() );
-	}
-	
-	public AbstractOutOfBoundsMirror( final Interval interval, final RandomAccess< T > outOfBoundsRandomAccess )
-	{
-		n = interval.numDimensions();
+		n = f.numDimensions();
 		dimension = new long[ n ];
-		interval.dimensions( dimension );
+		f.dimensions( dimension );
 		min = new long[ n ];
-		interval.min( min );
+		f.min( min );
 		position = new long[ n ];
+		p = new long[ n ];
+		dimIsOutOfBounds = new boolean[ n ];
 		inc = new boolean[ n ];
-		
-		this.outOfBoundsRandomAccess = outOfBoundsRandomAccess;
-		
 		for ( int i = 0; i < dimension.length; ++i )
 			inc[ i ] = true;
 		
-		p = new long[ n ];
-		dimIsOutOfBounds = new boolean[ n ];
+		outOfBoundsRandomAccess = f.randomAccess();
 	}
 	
 	final protected void checkOutOfBounds()
