@@ -1,10 +1,13 @@
 package imglib.ops.example.rev3;
 
 import static org.junit.Assert.assertEquals;
+import imglib.ops.example.rev3.condition.ValueLessThan;
+import imglib.ops.example.rev3.constraints.Constraints;
 import imglib.ops.example.rev3.function.BinaryFunction;
 import imglib.ops.example.rev3.function.ConstantFunction;
 import imglib.ops.example.rev3.function.ConvolutionFunction;
 import imglib.ops.example.rev3.function.ImageFunction;
+import imglib.ops.example.rev3.function.IntegralScalarFunction;
 import imglib.ops.example.rev3.function.UnaryFunction;
 import imglib.ops.example.rev3.operator.BinaryOperator;
 import imglib.ops.example.rev3.operator.UnaryOperator;
@@ -219,7 +222,85 @@ public class Rev3Tests
 		assertImageValsEqual(3,3,new int[]{11,19,28,36,45,53,62,70,79}, outputImage);  // NOTICE IT ROUNDS 0.5 UP ...
 	}
 	
+	private class HalfPlanePositionFunction implements IntegralScalarFunction
+	{
+		private double xCoeff;
+		private double yCoeff;
+		
+		public HalfPlanePositionFunction(double xCoeff, double yCoeff)
+		{
+			this.xCoeff = xCoeff;
+			this.yCoeff = yCoeff;
+		}
+
+		@Override
+		public double evaluate(int[] position)
+		{
+			return xCoeff*position[0] + yCoeff*position[1];
+		}
+	}
+	
+	@Test
+	public void testConstraints()
+	{
+		// make an input image
+		Image<UnsignedByteType> inputImage = createImage(9,9);
+		LocalizableByDimCursor<UnsignedByteType> cursor = inputImage.createLocalizableByDimCursor();
+		int[] pos = new int[2];
+		int i = 0;
+		for (int y = 0; y < 9; y++)
+		{
+			pos[1] = y;
+			for (int x = 0; x < 9; x++)
+			{
+				pos[0] = x;
+				cursor.setPosition(pos);
+				cursor.getType().setReal(i++);
+			}
+		}
+
+		// make an unassigned output image
+		Image<UnsignedByteType> outputImage = createPopulatedImage(9,9,new int[81]);
+
+		// make a constraint where we are interested in values to right of 
+		
+		ImageFunction imageFunction = new ImageFunction(inputImage);
+		
+		Operation op = new Operation(outputImage, new int[2], new int[]{9,9}, imageFunction);
+		
+		ValueLessThan lessThan22 = new ValueLessThan(22);
+
+		HalfPlanePositionFunction halfPlaneEquation = new HalfPlanePositionFunction(2,3);
+		
+		Constraints constraints = new Constraints();
+		
+		constraints.addConstraint(halfPlaneEquation, lessThan22);
+		
+		op.setConstraints(constraints);
+		
+		op.execute();
+		
+		cursor = outputImage.createLocalizableByDimCursor();
+		i = 0;
+		for (int y = 0; y < 9; y++)
+		{
+			pos[1] = y;
+			for (int x = 0; x < 9; x++)
+			{
+				pos[0] = x;
+				cursor.setPosition(pos);
+				double actualValue = cursor.getType().getRealDouble();
+				double expectedValue;
+				if (((2*x) + (3*y)) < 22)
+					expectedValue = i;
+				else
+					expectedValue = 0;
+				i++;
+				assertEquals(expectedValue, actualValue, 0);
+			}
+		}
+	}
+	
 	// TODO
-	// test Conditions
 	// recreate all rev2 tests from NewFunctionlIdeas.java
 }

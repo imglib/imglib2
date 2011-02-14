@@ -1,6 +1,6 @@
 package imglib.ops.example.rev3;
 
-import imglib.ops.example.rev3.condition.Condition;
+import imglib.ops.example.rev3.constraints.Constraints;
 import imglib.ops.example.rev3.function.IntegralScalarFunction;
 import imglib.ops.observer.IterationStatus;
 import imglib.ops.observer.IterationStatus.Message;
@@ -34,7 +34,7 @@ public class Operation
 	private boolean wasInterrupted;
 	private boolean isDone;
 	private Observable notifier;
-	private Condition condition;
+	private Constraints constraints;
 	
 	@SuppressWarnings({"rawtypes","unchecked"})
 	public Operation(Image<? extends RealType<?>> outputImage, int[] origin, int[] span, IntegralScalarFunction function)
@@ -47,6 +47,7 @@ public class Operation
 		this.wasInterrupted = false;
 		this.isDone = false;
 		this.notifier = null;
+		this.constraints = new Constraints();
 	}
 	
 	// Note some inefficiency is execute() for in place transformations (basically because we're maintaining multiple cursors):
@@ -75,28 +76,19 @@ public class Operation
 			cursor.getPosition(position);
 			for (int i = 0; i < position.length; i++)  // TODO - slowing HACK because RoiCursor returns relative position rather than absolute position
 				position[i] += origin[i];
-			boolean conditionSatisfied;
-			if (condition == null)
-				conditionSatisfied = true;
-			else
+			boolean constraintsSatisfied = constraints.areSatisfied(position);
+			if (constraintsSatisfied)
 			{
-				condition.initEvaluationState();
-				conditionSatisfied = condition.isSatisfied(function, position);
-			}
-			if (conditionSatisfied)
-			{
-				if ((condition != null) && condition.functionWasFullyEvaluated())
-					cursor.getType().setReal(condition.getLastFunctionEvaluation());
-				else
-					cursor.getType().setReal(function.evaluate(position));
+				double newValue = function.evaluate(position);
+				cursor.getType().setReal(newValue);
 			}
 			if (notifier != null)
 			{
 				status.message = Message.UPDATE;
 				status.position = position;
-				status.value = cursor.getType().getRealDouble();
-				status.conditionsSatisfied = conditionSatisfied;
-				notifier.notifyObservers(status);
+				status.value = cursor.getType().getRealDouble();    // not sure what is best to pass as value if constraints
+				status.conditionsSatisfied = constraintsSatisfied;  // violated but I think if I pass original value it might be
+				notifier.notifyObservers(status);                   // useful info to caller. its incurs a small performance hit.
 			}
 		}
 		
@@ -143,9 +135,9 @@ public class Operation
 		}
 	}
 	
-	public void setCondition(Condition c)
+	public void setConstraints(Constraints c)
 	{
-		condition = c;
+		constraints = c;
 	}
 	
 	private class Status implements IterationStatus
