@@ -30,7 +30,7 @@ package mpicbg.imglib.sampler.imageplus;
 import mpicbg.imglib.container.AbstractImgRandomAccess;
 import mpicbg.imglib.container.array.Array;
 import mpicbg.imglib.container.imageplus.ImagePlusContainer;
-import mpicbg.imglib.image.Image;
+import mpicbg.imglib.container.Img;
 import mpicbg.imglib.type.Type;
 
 /**
@@ -54,7 +54,7 @@ public class ImagePlusPositionableRasterSampler< T extends Type< T > > extends A
 	/* TODO do we need this still? */
 	int numNeighborhoodCursors = 0;
 	
-	public ImagePlusPositionableRasterSampler( final ImagePlusContainer< T, ? > container, final Image< T > image ) 
+	public ImagePlusPositionableRasterSampler( final ImagePlusContainer< T, ? > container, final Img< T > image ) 
 	{
 		super( container, image );
 		

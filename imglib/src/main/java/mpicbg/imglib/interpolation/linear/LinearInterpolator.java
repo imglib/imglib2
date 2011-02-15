@@ -28,6 +28,7 @@
 package mpicbg.imglib.interpolation.linear;
 
 import mpicbg.imglib.container.ImgRandomAccess;
+import mpicbg.imglib.container.Img;
 import mpicbg.imglib.interpolation.Interpolator;
 import mpicbg.imglib.location.transform.FloorRasterPositionable;
 import mpicbg.imglib.outofbounds.OutOfBoundsFactory;
@@ -44,7 +45,7 @@ import mpicbg.imglib.util.Util;
 public class LinearInterpolator< T extends NumericType< T > > extends FloorRasterPositionable< ImgRandomAccess< T > > implements Interpolator< T >
 {
 	final protected OutOfBoundsFactory< T > outOfBoundsStrategyFactory;
-	final protected Image< T > image;
+	final protected Img< T > image;
 	final protected int numDimensions;
 	
 	final protected T tmp1, tmp2;
@@ -62,17 +63,17 @@ public class LinearInterpolator< T extends NumericType< T > > extends FloorRaste
 	// the locations where to initially grab pixels from
 	final boolean[][] positions;
 	
-	final static private < T extends Type< T > > ImgRandomAccess< T > createSampler( final Image< T > image, final RasterOutOfBoundsFactory<T> outOfBoundsStrategyFactory )
+	final static private < T extends Type< T > > ImgRandomAccess< T > createSampler( final Img< T > image, final RasterOutOfBoundsFactory<T> outOfBoundsStrategyFactory )
 	{
 		return image.createPositionableRasterSampler( outOfBoundsStrategyFactory );
 	}
 	
-	protected LinearInterpolator( final Image<T> image, final RasterOutOfBoundsFactory<T> outOfBoundsStrategyFactory )
+	protected LinearInterpolator( final Img<T> image, final RasterOutOfBoundsFactory<T> outOfBoundsStrategyFactory )
 	{
 		this( image, outOfBoundsStrategyFactory, true );
 	}
 	
-	protected LinearInterpolator( final Image<T> image, final RasterOutOfBoundsFactory<T> outOfBoundsStrategyFactory, boolean initGenericStructures )
+	protected LinearInterpolator( final Img<T> image, final RasterOutOfBoundsFactory<T> outOfBoundsStrategyFactory, boolean initGenericStructures )
 	{
 		super( createSampler( image, outOfBoundsStrategyFactory ) );
 		
@@ -231,7 +232,7 @@ public class LinearInterpolator< T extends NumericType< T > > extends FloorRaste
 	 * @return - the image
 	 */
 	@Override
-	public Image< T > getImage()
+	public Img< T > getImage()
 	{
 		return image;
 	}

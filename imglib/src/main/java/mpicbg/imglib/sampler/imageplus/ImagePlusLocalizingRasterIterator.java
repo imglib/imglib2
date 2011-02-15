@@ -28,7 +28,7 @@
 package mpicbg.imglib.sampler.imageplus;
 
 import mpicbg.imglib.container.imageplus.ImagePlusContainer;
-import mpicbg.imglib.image.Image;
+import mpicbg.imglib.container.Img;
 import mpicbg.imglib.type.Type;
 
 /**
@@ -41,7 +41,7 @@ public class ImagePlusLocalizingRasterIterator< T extends Type< T > > extends Im
 {
 	final protected int[] position, dimensions;
 
-	public ImagePlusLocalizingRasterIterator( final ImagePlusContainer< T, ? > container, final Image< T > image ) 
+	public ImagePlusLocalizingRasterIterator( final ImagePlusContainer< T, ? > container, final Img< T > image ) 
 	{
 		super( container, image );
 

@@ -29,7 +29,7 @@ package mpicbg.imglib.sampler.special;
 
 import mpicbg.imglib.Localizable;
 import mpicbg.imglib.container.ImgSampler;
-import mpicbg.imglib.image.Image;
+import mpicbg.imglib.container.Img;
 import mpicbg.imglib.outofbounds.RasterOutOfBoundsFactory;
 import mpicbg.imglib.type.Type;
 
@@ -43,7 +43,7 @@ public class LocalNeighborhoodCursorFactory
 {
 	public static < T extends Type< T > > LocalNeighborhoodCursor<T> createLocalNeighborhoodCursor(
 			final Localizable localizable,
-			final Image< T > image,
+			final Img< T > image,
 			final RasterOutOfBoundsFactory< T > outsideFactory )
 	{
 		if ( image.numDimensions() == 3 )

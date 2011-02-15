@@ -1,7 +1,7 @@
 package tests;
 
 import mpicbg.imglib.container.ImgCursor;
-import mpicbg.imglib.image.Image;
+import mpicbg.imglib.container.Img;
 
 import mpicbg.imglib.type.numeric.real.FloatType;
 
@@ -20,13 +20,13 @@ public class BasicTests extends TestBase {
 	/**
 	 * A very simple test image: 3x3x3, with the pixel (1, 0, 2) set to 1, otherwise 0
 	 */
-	protected Image<FloatType> singlePixel = makeSinglePixel3D( 3, 1, 0, 2 );
+	protected Img<FloatType> singlePixel = makeSinglePixel3D( 3, 1, 0, 2 );
 	protected float[] singlePixelSignature = { 0.037037037f, 1.0f, 0.0f, 2.0f, 0.18885258f, 0.0f, 0.0f, 0.0f };
 
 	/**
 	 * The second test image
 	 */
-	protected Image<FloatType> testImage = makeTestImage3D( 3 );
+	protected Img<FloatType> testImage = makeTestImage3D( 3 );
 	protected float[] testImageSignature = { 11.0f, 1.1818181f, 1.2424242f, 1.3636364f, 6.6666665f, 0.7959956f, 0.7796777f, 0.77138925f };
 
 	/**

@@ -30,7 +30,7 @@
 package mpicbg.imglib.sampler.special;
 
 import mpicbg.imglib.Localizable;
-import mpicbg.imglib.image.Image;
+import mpicbg.imglib.container.Img;
 import mpicbg.imglib.outofbounds.RasterOutOfBoundsFactory;
 import mpicbg.imglib.type.Type;
 
@@ -38,7 +38,7 @@ public class LocalNeighborhoodCursor3D<T extends Type<T>> extends LocalNeighborh
 {
 	int i = -1;
 	
-	public LocalNeighborhoodCursor3D( final Localizable localizable, final Image< T > image, final RasterOutOfBoundsFactory<T> outofboundsFactory ) 
+	public LocalNeighborhoodCursor3D( final Localizable localizable, final Img< T > image, final RasterOutOfBoundsFactory<T> outofboundsFactory ) 
 	{ 
 		super( localizable, image, outofboundsFactory );
 		

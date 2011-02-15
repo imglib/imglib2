@@ -7,7 +7,7 @@ import mpicbg.imglib.container.ImgRandomAccess;
 import mpicbg.imglib.container.array.ArrayContainerFactory;
 
 
-import mpicbg.imglib.image.Image;
+import mpicbg.imglib.container.Img;
 import mpicbg.imglib.image.ImageFactory;
 
 import mpicbg.imglib.type.numeric.RealType;
@@ -41,7 +41,7 @@ public class TestBase {
 	/**
 	 * Check whether an image is identical to a generated image
 	 */
-	protected<T extends RealType<T>> boolean match( Image<T> image, Function function ) {
+	protected<T extends RealType<T>> boolean match( Img<T> image, Function function ) {
 		ImgCursor<T> cursor = image.createLocalizingRasterIterator();
 		int[] pos = new int[cursor.numDimensions()];
 		while( cursor.hasNext() ) {
@@ -57,7 +57,7 @@ public class TestBase {
 	/**
 	 * Check whether an image is identical to a generated image, with fuzz
 	 */
-	protected<T extends RealType<T>> boolean match( Image<T> image, Function function, float tolerance ) {
+	protected<T extends RealType<T>> boolean match( Img<T> image, Function function, float tolerance ) {
 		ImgCursor<T> cursor = image.createLocalizingRasterIterator();
 		int[] pos = new int[cursor.numDimensions()];
 		while( cursor.hasNext() ) {
@@ -75,7 +75,7 @@ public class TestBase {
 	 *
 	 * The image signature are 1st and 2nd order moments of the intensity and the coordinates.
 	 */
-	protected<T extends RealType<T>> float[] signature( Image<T> image ) {
+	protected<T extends RealType<T>> float[] signature( Img<T> image ) {
 		float[] result = new float[( image.numDimensions() + 1 ) * 2];
 		signature( image, result );
 		return result;
@@ -86,7 +86,7 @@ public class TestBase {
 	 *
 	 * The image signature are 1st and 2nd order moments of the intensity and the coordinates.
 	 */
-	protected<T extends RealType<T>> void signature( Image<T> image, float[] result ) {
+	protected<T extends RealType<T>> void signature( Img<T> image, float[] result ) {
 		Arrays.fill( result, 0 );
 		ImgCursor<T> cursor = image.createLocalizingRasterIterator();
 		int dim = cursor.numDimensions();
@@ -123,7 +123,7 @@ public class TestBase {
 	 *
 	 * When it is hard/computationally expensive to calculate the values of the expected image, we need a quick test like this one.
 	 */
-	protected<T extends RealType<T>> boolean matchSignature( Image<T> image, float[] signature) {
+	protected<T extends RealType<T>> boolean matchSignature( Img<T> image, float[] signature) {
 		float[] result = signature(image);
 		return Arrays.equals( result, signature );
 	}
@@ -133,7 +133,7 @@ public class TestBase {
 	 *
 	 * When it is hard/computationally expensive to calculate the values of the expected image, we need a quick test like this one.
 	 */
-	protected<T extends RealType<T>> boolean matchSignature( Image<T> image, float[] signature, float tolerance) {
+	protected<T extends RealType<T>> boolean matchSignature( Img<T> image, float[] signature, float tolerance) {
 		float[] result = signature(image);
 		for (int i = 0; i < signature.length; i++)
 			if (Math.abs(result[i] - signature[i]) > tolerance)
@@ -144,7 +144,7 @@ public class TestBase {
 	/**
 	 * Convenience helper to access single pixels
 	 */
-	protected<T extends RealType<T>> float get( Image<T> image, int[] pos ) {
+	protected<T extends RealType<T>> float get( Img<T> image, int[] pos ) {
 		ImgRandomAccess<T> cursor = image.createPositionableRasterSampler();
 		cursor.setPosition( pos );
 		float result = cursor.get().getRealFloat();
@@ -155,16 +155,16 @@ public class TestBase {
 	/**
 	 * Convenience helper to access single pixels
 	 */
-	protected<T extends RealType<T>> float get3D( Image<T> image, int x, int y, int z ) {
+	protected<T extends RealType<T>> float get3D( Img<T> image, int x, int y, int z ) {
 		return get( image, new int[] { x, y, z } );
 	}
 
 	/**
 	 * Generate an image
 	 */
-	protected<T extends RealType<T>> Image<T> makeImage( T type, Function function, int[] dims ) {
+	protected<T extends RealType<T>> Img<T> makeImage( T type, Function function, int[] dims ) {
 		ImageFactory<T> factory = new ImageFactory<T>(type, new ArrayContainerFactory());
-		Image<T> result = factory.createImage( dims );
+		Img<T> result = factory.createImage( dims );
 		ImgCursor<T> cursor = result.createLocalizingRasterIterator();
 		int[] pos = new int[cursor.numDimensions()];
 		while( cursor.hasNext() ) {
@@ -212,14 +212,14 @@ public class TestBase {
 	/**
 	 * Generate a test image
 	 */
-	protected Image<FloatType> makeTestImage3D( int cubeLength ) {
+	protected Img<FloatType> makeTestImage3D( int cubeLength ) {
 		return makeImage( new FloatType(), new TestGenerator( cubeLength ), new int[] { cubeLength, cubeLength, cubeLength });
 	}
 
 	/**
 	 * Generate a test image
 	 */
-	protected Image<FloatType> makeSinglePixel3D( int cubeLength, int x, int y, int z ) {
+	protected Img<FloatType> makeSinglePixel3D( int cubeLength, int x, int y, int z ) {
 		return makeImage( new FloatType(), new SinglePixel3D( x, y, z ), new int[] { cubeLength, cubeLength, cubeLength });
 	}
 
