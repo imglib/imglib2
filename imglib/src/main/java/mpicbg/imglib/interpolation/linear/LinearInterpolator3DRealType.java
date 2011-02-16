@@ -27,7 +27,7 @@
  */
 package mpicbg.imglib.interpolation.linear;
 
-import mpicbg.imglib.image.Image;
+import mpicbg.imglib.container.Img;
 import mpicbg.imglib.outofbounds.RasterOutOfBoundsFactory;
 import mpicbg.imglib.type.numeric.RealType;
 
@@ -39,7 +39,7 @@ import mpicbg.imglib.type.numeric.RealType;
  */
 public class LinearInterpolator3DRealType< T extends RealType< T > > extends LinearInterpolator3D< T >
 {
-	protected LinearInterpolator3DRealType( final Image< T > img, final RasterOutOfBoundsFactory< T > outOfBoundsStrategyFactory )
+	protected LinearInterpolator3DRealType( final Img< T > img, final RasterOutOfBoundsFactory< T > outOfBoundsStrategyFactory )
 	{
 		super( img, outOfBoundsStrategyFactory );
 	}

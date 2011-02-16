@@ -33,7 +33,7 @@ import mpicbg.imglib.container.AbstractImgCursor;
 import mpicbg.imglib.container.ImgCursor;
 import mpicbg.imglib.container.ImgRandomAccess;
 import mpicbg.imglib.container.shapelist.ShapeList;
-import mpicbg.imglib.image.Image;
+import mpicbg.imglib.container.Img;
 import mpicbg.imglib.location.VoidRealPositionable;
 import mpicbg.imglib.type.Type;
 
@@ -54,7 +54,7 @@ public class ShapeListPositionableRasterSampler< T extends Type< T > > extends A
 	
 	public ShapeListPositionableRasterSampler(
 			final ShapeList< T > container,
-			final Image< T > image ) 
+			final Img< T > image ) 
 	{
 		super( container, image );
 		this.container = container;

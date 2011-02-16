@@ -29,7 +29,7 @@ package mpicbg.imglib.sampler.cell;
 
 import mpicbg.imglib.container.AbstractImgOutOfBoundsRandomAccess;
 import mpicbg.imglib.container.cell.CellContainer;
-import mpicbg.imglib.image.Image;
+import mpicbg.imglib.container.Img;
 import mpicbg.imglib.outofbounds.RasterOutOfBoundsFactory;
 import mpicbg.imglib.type.Type;
 
@@ -43,7 +43,7 @@ public class CellOutOfBoundsPositionableRasterSampler< T extends Type< T > > ext
 {
 	final protected CellContainer< T, ? > container;
 
-	public CellOutOfBoundsPositionableRasterSampler( final CellContainer< T, ? > container, final Image< T > image, final RasterOutOfBoundsFactory< T > outOfBoundsStrategyFactory )
+	public CellOutOfBoundsPositionableRasterSampler( final CellContainer< T, ? > container, final Img< T > image, final RasterOutOfBoundsFactory< T > outOfBoundsStrategyFactory )
 	{
 		super( container, image, outOfBoundsStrategyFactory );
 

@@ -37,13 +37,11 @@ import mpicbg.imglib.RandomAccessibleInterval;
  *
  * @author Stephan Preibisch and Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-public class OutOfBoundsStrategyPeriodicFactory< T, F extends Interval & RandomAccessible< T > > implements OutOfBoundsFactory< T, F >
+public class OutOfBoundsPeriodicFactory< T, F extends Interval & RandomAccessible< T > > implements OutOfBoundsFactory< T, F >
 {
 	@Override
-	public OutOfBoundsStrategyPeriodic< T > create( final F f )
+	public OutOfBoundsPeriodic< T > create( final F f )
 	{
-		return new OutOfBoundsStrategyPeriodic< T >( f );
+		return new OutOfBoundsPeriodic< T >( f );
 	}
-
-	
 }

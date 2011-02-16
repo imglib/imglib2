@@ -36,7 +36,6 @@ import mpicbg.imglib.outofbounds.RealOutOfBoundsFactory;
  * through an {@link OutOfBoundsFactory}.
  *
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
- * @version 0.1a
  */
 final public class ExtendedRealRandomAccessibleRealInterval< T, F extends RealRandomAccessibleRealInterval< T, F > > implements RealInterval, RealRandomAccessible< T > 
 {

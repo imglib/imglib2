@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2009--2010, Stephan Preibisch & Stephan Saalfeld
+ * Copyright (c) 2011, Stephan Saalfeld
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -9,7 +9,7 @@
  * list of conditions and the following disclaimer.  Redistributions in binary
  * form must reproduce the above copyright notice, this list of conditions and
  * the following disclaimer in the documentation and/or other materials
- * provided with the distribution.  Neither the name of the Fiji project nor
+ * provided with the distribution.  Neither the name of the imglib project nor
  * the names of its contributors may be used to endorse or promote products
  * derived from this software without specific prior written permission.
  * 
@@ -25,7 +25,7 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-package tests;
+package mpicbg.imglib.outofbounds;
 
 import static org.junit.Assert.assertEquals;
 
@@ -35,6 +35,8 @@ import mpicbg.imglib.container.Img;
 import mpicbg.imglib.container.ImgRandomAccess;
 import mpicbg.imglib.container.array.Array;
 import mpicbg.imglib.container.array.ArrayContainerFactory;
+import mpicbg.imglib.container.cell.CellContainer;
+import mpicbg.imglib.container.cell.CellContainerFactory;
 import mpicbg.imglib.container.list.ListContainerFactory;
 import mpicbg.imglib.outofbounds.OutOfBoundsMirrorFactory;
 import mpicbg.imglib.outofbounds.OutOfBoundsMirrorFactory.Boundary;
@@ -56,14 +58,12 @@ public class OutOfBoundsMirrorSingleBoundaryTest
 	final private long[] dim = new long[]{ 5, 4, 3 };
 
 	static private Array< IntType, ? > arrayImage;
-//	static private Img< IntType > cellImage;
+	static private CellContainer< IntType, ? > cellImage;
 	static private Img< IntType > listImage;
-//	static private Img< IntType > shapeListImage;
 	
 	static private ImgRandomAccess< IntType > cArray;
-//	static private ImgRandomAccess< IntType > cCell;
+	static private ImgRandomAccess< IntType > cCell;
 	static private ImgRandomAccess< IntType > cList;
-//	static private ImgRandomAccess< IntType > cShapeList;
 	
 	/**
 	 * @throws java.lang.Exception
@@ -79,28 +79,6 @@ public class OutOfBoundsMirrorSingleBoundaryTest
 	@AfterClass
 	public static void tearDownAfterClass() throws Exception
 	{
-//		new ImageJ();
-//		arrayImage.getDisplay().setMinMax();
-//		final ImagePlus impArray = ImageJFunctions.displayAsVirtualStack( arrayImage );
-//		impArray.show();
-//		
-//		cellImage.getDisplay().setMinMax();
-//		final ImagePlus impCell = ImageJFunctions.displayAsVirtualStack( cellImage );
-//		impCell.show();
-//		
-//		dynamicImage.getDisplay().setMinMax();
-//		final ImagePlus impDynamic = ImageJFunctions.displayAsVirtualStack( dynamicImage );
-//		impDynamic.show();
-//		
-//		shapeListImage.getDisplay().setMinMax();
-//		final ImagePlus impShapeList = ImageJFunctions.displayAsVirtualStack( shapeListImage );
-//		impShapeList.show();
-//		
-//		try
-//		{
-//			Thread.sleep( 100000 );
-//		}
-//		catch ( final InterruptedException e ){}
 	}
 
 	/**
@@ -109,10 +87,9 @@ public class OutOfBoundsMirrorSingleBoundaryTest
 	@Before
 	public void setUp() throws Exception
 	{
-		arrayImage = ( Array< IntType, ? > )new ArrayContainerFactory< IntType >().create( dim, new IntType() );
-		//cellImage = new ImageFactory< IntType >( new IntType(), new CellContainerFactory( 2 ) ).createImage( dim );
+		arrayImage = new ArrayContainerFactory< IntType >().create( dim, new IntType() );
+		cellImage = new CellContainerFactory< IntType >( 2 ).create( dim, new IntType() );
 		listImage = new ListContainerFactory< IntType >().create( dim, new IntType() );
-		//shapeListImage = new ImageFactory< IntType >( new IntType(), new ShapeListContainerFactory() ).createImage( dim );
 		
 		int i = 0;
 		for ( final IntType t : arrayImage )
@@ -131,18 +108,25 @@ public class OutOfBoundsMirrorSingleBoundaryTest
 			c.get().setInteger( i );
 		}
 
+		for ( final Cursor< IntType > c = cellImage.cursor(); c.hasNext(); )
+		{
+			c.fwd();
+			c.localize( position );
+			
+			i = 0;
+			for ( int d = dim.length - 1; d >= 0; --d )
+				i = i * ( int )dim[ d ] + position[ d ];
+			
+			c.get().setInteger( i );
+		}
+
 		i = 0;
 		for ( final IntType t : listImage )
 			t.set( i++ );
 
 		cArray = arrayImage.randomAccess( new OutOfBoundsMirrorFactory< IntType, Img< IntType > >( Boundary.SINGLE ) );
+		cCell = cellImage.randomAccess( new OutOfBoundsMirrorFactory< IntType, Img< IntType > >( Boundary.SINGLE ) );
 		cList = listImage.randomAccess( new OutOfBoundsMirrorFactory< IntType, Img< IntType > >( Boundary.SINGLE ) );
-		
-		i = 0;
-		for ( int z = 0; z < dim[ 2 ]; ++z )
-			for ( int y = 0; y < dim[ 1 ]; ++y )
-				for ( int x = 0; x < dim[ 0 ]; ++x );
-					//shapeList.addShape( new Rectangle( x, y, 1, 1 ), new IntType( i++ ), new int[]{ z } );
 	}
 
 	/**
@@ -168,50 +152,64 @@ public class OutOfBoundsMirrorSingleBoundaryTest
 		final int[] expectedZ = new int[]{ 0, 20, 40, 20, 0, 20, 40, 20, 0, 20, 40, 20, 0, 20, 40, 20, 0, 20, 40, 20 };
 		
 		cArray.setPosition( -8, 0 );
+		cCell.setPosition( -8, 0 );
 		cList.setPosition( -8, 0 );
 		for ( int i = 0; i < 20; ++i )
 		{
 			assertEquals( "ArrayContainer x failed at iteration " + i + ".", expectedX[ i ], cArray.get().getInteger() );
+			assertEquals( "CellContainer x failed at iteration " + i + ".", expectedX[ i ], cCell.get().getInteger() );
 			assertEquals( "ListContainer x failed at iteration " + i + ".", expectedX[ i ], cList.get().getInteger() );
 			
 			assertEquals( "ArrayContainer x failed isOutOfBounds() at iteration " + i + ".", isOutOfBounds( cArray ), cArray.isOutOfBounds() );
+			assertEquals( "CellContainer x failed isOutOfBounds() at iteration " + i + ".", isOutOfBounds( cCell ), cCell.isOutOfBounds() );
 			assertEquals( "ListContainer x failed isOutOfBounds() at iteration " + i + ".", isOutOfBounds( cList ), cList.isOutOfBounds() );
 			
 			cArray.fwd( 0 );
+			cCell.fwd( 0 );
 			cList.fwd( 0 );
 		}
 		
 		cArray.setPosition( 0, 0 );
+		cCell.setPosition( 0, 0 );
 		cList.setPosition( 0, 0 );
 		
 		cArray.setPosition( -6, 1 );
+		cCell.setPosition( -6, 1 );
 		cList.setPosition( -6, 1 );
 		for ( int i = 0; i < 20; ++i )
 		{
 			assertEquals( "ArrayContainer y failed at iteration " + i + ".", expectedY[ i ], cArray.get().getInteger() );
+			assertEquals( "CellContainer y failed at iteration " + i + ".", expectedY[ i ], cCell.get().getInteger() );
 			assertEquals( "ListContainer y failed at iteration " + i + ".", expectedY[ i ], cList.get().getInteger() );
 			
 			assertEquals( "ArrayContainer y failed isOutOfBounds() at iteration " + i + ".", isOutOfBounds( cArray ), cArray.isOutOfBounds() );
+			assertEquals( "CellContainer y failed isOutOfBounds() at iteration " + i + ".", isOutOfBounds( cCell ), cCell.isOutOfBounds() );
 			assertEquals( "ListContainer y failed isOutOfBounds() at iteration " + i + ".", isOutOfBounds( cList ), cList.isOutOfBounds() );
 			
 			cArray.fwd( 1 );
+			cCell.fwd( 1 );
 			cList.fwd( 1 );
 		}
 		
 		cArray.setPosition( 0, 1 );
+		cCell.setPosition( 0, 1 );
 		cList.setPosition( 0, 1 );
 		
 		cArray.setPosition( -4, 2 );
+		cCell.setPosition( -4, 2 );
 		cList.setPosition( -4, 2 );
 		for ( int i = 0; i < 20; ++i )
 		{
 			assertEquals( "ArrayContainer z failed at iteration " + i + ".", expectedZ[ i ], cArray.get().getInteger() );
+			assertEquals( "CellContainer z failed at iteration " + i + ".", expectedZ[ i ], cCell.get().getInteger() );
 			assertEquals( "LinkContainer z failed at iteration " + i + ".", expectedZ[ i ], cList.get().getInteger() );
 			
 			assertEquals( "ArrayContainer z failed isOutOfBounds() at iteration " + i + ".", isOutOfBounds( cArray ), cArray.isOutOfBounds() );
+			assertEquals( "CellContainer z failed isOutOfBounds() at iteration " + i + ".", isOutOfBounds( cCell ), cCell.isOutOfBounds() );
 			assertEquals( "LinkContainer z failed isOutOfBounds() at iteration " + i + ".", isOutOfBounds( cList ), cList.isOutOfBounds() );
 			
 			cArray.fwd( 2 );
+			cCell.fwd( 2 );
 			cList.fwd( 2 );
 		}
 	}
@@ -224,50 +222,64 @@ public class OutOfBoundsMirrorSingleBoundaryTest
 		final int[] expectedZ = new int[] { 0, 20, 40, 20, 0, 20, 40, 20, 0, 20, 40, 20, 0, 20, 40, 20, 0, 20, 40, 20 };
 
 		cArray.setPosition( 8, 0 );
+		cCell.setPosition( 8, 0 );
 		cList.setPosition( 8, 0 );
 		for ( int i = 0; i < 20; ++i )
 		{
 			assertEquals( "ArrayContainer x failed at iteration " + i + ".", expectedX[ i ], cArray.get().getInteger() );
+			assertEquals( "CellContainer x failed at iteration " + i + ".", expectedX[ i ], cCell.get().getInteger() );
 			assertEquals( "ListContainer x failed at iteration " + i + ".", expectedX[ i ], cList.get().getInteger() );
 			
 			assertEquals( "ArrayContainer x failed isOutOfBounds() at iteration " + i + ".", isOutOfBounds( cArray ), cArray.isOutOfBounds() );
+			assertEquals( "CellContainer x failed isOutOfBounds() at iteration " + i + ".", isOutOfBounds( cCell ), cCell.isOutOfBounds() );
 			assertEquals( "ListContainer x failed isOutOfBounds() at iteration " + i + ".", isOutOfBounds( cList ), cList.isOutOfBounds() );
 			
 			cArray.bck( 0 );
+			cCell.bck( 0 );
 			cList.bck( 0 );
 		}
 
 		cArray.setPosition( 0, 0 );
+		cCell.setPosition( 0, 0 );
 		cList.setPosition( 0, 0 );
 		
 		cArray.setPosition( 6, 1 );
+		cCell.setPosition( 6, 1 );
 		cList.setPosition( 6, 1 );
 		for ( int i = 0; i < 20; ++i )
 		{
 			assertEquals( "ArrayContainer y failed at iteration " + i + ".", expectedY[ i ], cArray.get().getInteger() );
+			assertEquals( "CellContainer y failed at iteration " + i + ".", expectedY[ i ], cCell.get().getInteger() );
 			assertEquals( "ListContainer y failed at iteration " + i + ".", expectedY[ i ], cList.get().getInteger() );
 			
 			assertEquals( "ArrayContainer y failed isOutOfBounds() at iteration " + i + ".", isOutOfBounds( cArray ), cArray.isOutOfBounds() );
+			assertEquals( "CellContainer y failed isOutOfBounds() at iteration " + i + ".", isOutOfBounds( cCell ), cCell.isOutOfBounds() );
 			assertEquals( "ListContainer y failed isOutOfBounds() at iteration " + i + ".", isOutOfBounds( cList ), cList.isOutOfBounds() );
 			
 			cArray.bck( 1 );
+			cCell.bck( 1 );
 			cList.bck( 1 );
 		}
 
 		cArray.setPosition( 0, 1 );
+		cCell.setPosition( 0, 1 );
 		cList.setPosition( 0, 1 );
 
 		cArray.setPosition( 4, 2 );
+		cCell.setPosition( 4, 2 );
 		cList.setPosition( 4, 2 );
 		for ( int i = 0; i < 20; ++i )
 		{
 			assertEquals( "ArrayContainer z failed at iteration " + i + ".", expectedZ[ i ], cArray.get().getInteger() );
+			assertEquals( "CellContainer z failed at iteration " + i + ".", expectedZ[ i ], cCell.get().getInteger() );
 			assertEquals( "ListContainer z failed at iteration " + i + ".", expectedZ[ i ], cList.get().getInteger() );
 			
 			assertEquals( "ArrayContainer z failed isOutOfBounds() at iteration " + i + ".", isOutOfBounds( cArray ), cArray.isOutOfBounds() );
+			assertEquals( "CellContainer z failed isOutOfBounds() at iteration " + i + ".", isOutOfBounds( cCell ), cCell.isOutOfBounds() );
 			assertEquals( "ListContainer z failed isOutOfBounds() at iteration " + i + ".", isOutOfBounds( cList ), cList.isOutOfBounds() );
 			
 			cArray.bck( 2 );
+			cCell.bck( 2 );
 			cList.bck( 2 );
 		}
 	}
@@ -275,24 +287,28 @@ public class OutOfBoundsMirrorSingleBoundaryTest
 	@Test
 	public void move()
 	{
-		final int[] distance = new int[]{ 0, 10, 6, -12, -5 };
-		final int[] d = new int[]{ 0, 0, 1, 0, 1 };
-		final int[] v = new int[]{ 33, 33, 33, 31, 36 };
+		final int[] distance = new int[]{ 0, 10, 6, -12, -5, 13, -5 };
+		final int[] d = new int[]{ 0, 0, 1, 0, 1, 2, 2 };
+		final int[] v = new int[]{ 33, 33, 33, 31, 36, 56, 36 };
 		
 		final int[] start = new int[]{ 3, 2, 1 };
 		
 		cArray.setPosition( start );
+		cCell.setPosition( start );
 		cList.setPosition( start );
 		
 		for ( int i = 0; i < d.length; ++i )
 		{
 			cArray.move( distance[ i ], d[ i ] );
+			cCell.move( distance[ i ], d[ i ] );
 			cList.move( distance[ i ], d[ i ] );
 			
 			assertEquals( "ArrayContainer move failed at iteration " + i + ".", v[ i ], cArray.get().getInteger() );
+			assertEquals( "CellContainer move failed at iteration " + i + ".", v[ i ], cCell.get().getInteger() );
 			assertEquals( "ListContainer move failed at iteration " + i + ".", v[ i ], cList.get().getInteger() );
 			
 			assertEquals( "ArrayContainer z failed isOutOfBounds() at iteration " + i + ".", isOutOfBounds( cArray ), cArray.isOutOfBounds() );
+			assertEquals( "CellContainer z failed isOutOfBounds() at iteration " + i + ".", isOutOfBounds( cCell ), cCell.isOutOfBounds() );
 			assertEquals( "ListContainer z failed isOutOfBounds() at iteration " + i + ".", isOutOfBounds( cList ), cList.isOutOfBounds() );
 		}
 	}
@@ -301,21 +317,25 @@ public class OutOfBoundsMirrorSingleBoundaryTest
 	@Test
 	public void setPosition()
 	{
-		final int[] x = new int[]{ 0, 1, 2, 3, 18, -9 };
-		final int[] y = new int[]{ 0, 0, 2, 3, 11, 12 };
-		final int[] z = new int[]{ 0, 0, 1, 2, 10, -13 };
-		final int[] t = new int[]{ 0, 1, 32, 58, 47, 21 };
+		final int[] x = new int[]{ 0, 1, 2, 3, 18, -9, 20 };
+		final int[] y = new int[]{ 0, 0, 2, 3, 11, 12, -40 };
+		final int[] z = new int[]{ 0, 0, 1, 2, 10, -13, -15 };
+		final int[] t = new int[]{ 0, 1, 32, 58, 47, 21, 34 };
 		
 		for ( int i = 0; i < x.length; ++ i )
 		{
 			cArray.setPosition( x[ i ], 0 );
 			cArray.setPosition( y[ i ], 1 );
 			cArray.setPosition( z[ i ], 2 );
+			cCell.setPosition( x[ i ], 0 );
+			cCell.setPosition( y[ i ], 1 );
+			cCell.setPosition( z[ i ], 2 );
 			cList.setPosition( x[ i ], 0 );
 			cList.setPosition( y[ i ], 1 );
 			cList.setPosition( z[ i ], 2 );
 			
 			assertEquals( "ArrayContainer failed at " + cArray, cArray.get().getInteger(), t[ i ] );
+			assertEquals( "CellContainer failed at " + cCell, cCell.get().getInteger(), t[ i ] );
 			assertEquals( "ListContainer failed at " + cList, cList.get().getInteger(), t[ i ] );
 		}
 	}

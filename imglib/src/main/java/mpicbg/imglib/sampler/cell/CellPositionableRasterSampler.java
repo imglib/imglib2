@@ -33,7 +33,7 @@ import mpicbg.imglib.container.array.Array;
 import mpicbg.imglib.container.array.ArrayRandomAccess;
 import mpicbg.imglib.container.cell.Cell;
 import mpicbg.imglib.container.cell.CellContainer;
-import mpicbg.imglib.image.Image;
+import mpicbg.imglib.container.Img;
 import mpicbg.imglib.type.Type;
 import mpicbg.imglib.type.label.FakeType;
 
@@ -112,7 +112,7 @@ public class CellPositionableRasterSampler< T extends Type< T > > extends Abstra
 	
 	public CellPositionableRasterSampler(
 			final CellContainer< T, ? > container,
-			final Image< T > image )
+			final Img< T > image )
 	{
 		super( container, image );
 		

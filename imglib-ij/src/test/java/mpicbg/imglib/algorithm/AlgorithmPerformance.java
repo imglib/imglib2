@@ -18,7 +18,7 @@ import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.display.ComplexTypePhaseSpectrumDisplay;
 import mpicbg.imglib.image.display.ComplexTypePowerSpectrumDisplay;
 import mpicbg.imglib.image.display.imagej.ImageJFunctions;
-import mpicbg.imglib.outofbounds.OutOfBoundsStrategyPeriodicFactory;
+import mpicbg.imglib.outofbounds.OutOfBoundsPeriodicFactory;
 import mpicbg.imglib.type.logic.BitType;
 import mpicbg.imglib.type.numeric.RealType;
 import mpicbg.imglib.type.numeric.complex.ComplexFloatType;
@@ -264,7 +264,7 @@ public class AlgorithmPerformance
 		for ( int d = 0; d < img.getNumDimensions(); ++d )
 			newSize[ d ] = Util.round( img.getDimension( d ) * factor );
 		
-		final CanvasImage<T> canvas = new CanvasImage<T>( img, newSize, new OutOfBoundsStrategyPeriodicFactory<T>() );
+		final CanvasImage<T> canvas = new CanvasImage<T>( img, newSize, new OutOfBoundsPeriodicFactory<T>() );
 		
 		if ( canvas.checkInput() && canvas.process() )
 		{

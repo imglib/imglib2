@@ -27,7 +27,7 @@
  */
 package mpicbg.imglib.interpolation.linear;
 
-import mpicbg.imglib.image.Image;
+import mpicbg.imglib.container.Img;
 import mpicbg.imglib.interpolation.Interpolator;
 import mpicbg.imglib.interpolation.InterpolatorFactory;
 import mpicbg.imglib.outofbounds.RasterOutOfBoundsFactory;
@@ -48,7 +48,7 @@ public class LinearInterpolatorFactory< T extends NumericType< T > > extends Int
 	}
 	
 	@Override
-	public Interpolator< T > createSampler( final Image< T > img )
+	public Interpolator< T > createSampler( final Img< T > img )
 	{
 		if ( img.numDimensions() == 1 )
 		{

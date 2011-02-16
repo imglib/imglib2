@@ -34,7 +34,7 @@ import mpicbg.imglib.container.AbstractImgCursor;
 import mpicbg.imglib.container.Img;
 import mpicbg.imglib.container.ImgRandomAccess;
 import mpicbg.imglib.container.array.ArrayLocalizingCursor;
-import mpicbg.imglib.image.Image;
+import mpicbg.imglib.container.Img;
 import mpicbg.imglib.outofbounds.RasterOutOfBoundsFactory;
 import mpicbg.imglib.type.Type;
 
@@ -52,7 +52,7 @@ public class LocalNeighborhoodCursor<T extends Type<T>> extends AbstractImgCurso
 	final int[] tmp;
 	final int centralPositionIndex;
 	
-	LocalNeighborhoodCursor( final Localizable localizable, final Image< T > image, final RasterOutOfBoundsFactory<T> outofboundsFactory )
+	LocalNeighborhoodCursor( final Localizable localizable, final Img< T > image, final RasterOutOfBoundsFactory<T> outofboundsFactory )
 	{
 		super( image.getContainer(), image );
 		

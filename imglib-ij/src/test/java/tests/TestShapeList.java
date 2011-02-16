@@ -19,7 +19,7 @@ import mpicbg.imglib.interpolation.linear.LinearInterpolatorFactory;
 import mpicbg.imglib.interpolation.nearestneighbor.NearestNeighborInterpolatorFactory;
 import mpicbg.imglib.outofbounds.OutOfBoundsConstantValueFactory;
 import mpicbg.imglib.outofbounds.OutOfBoundsMirrorFactory;
-import mpicbg.imglib.outofbounds.OutOfBoundsStrategyPeriodicFactory;
+import mpicbg.imglib.outofbounds.OutOfBoundsPeriodicFactory;
 import mpicbg.imglib.type.numeric.RealType;
 import mpicbg.imglib.type.numeric.integer.ByteType;
 import mpicbg.imglib.type.numeric.real.FloatType;
