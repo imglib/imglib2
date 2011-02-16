@@ -2,26 +2,18 @@ package mpicbg.imglib.container.planar;
 
 import mpicbg.imglib.type.NativeType;
 
-public class PlanarLocalizingCursor2D< T extends NativeType< T > > extends PlanarLocalizingCursor< T > 
+public class PlanarLocalizingCursor2D< T extends NativeType< T > > extends PlanarLocalizingCursor1D< T > 
 {
-	final protected int maxIndex;
-	final int width, height;
+	final protected int width, height;
 	
 	public PlanarLocalizingCursor2D( final PlanarContainer<T, ?> container )
 	{
 		super( container );
 		
-		maxIndex = (int)container.size() - 1;
-		width = (int)container.dimension( 0 );
-		height = (int)container.dimension( 1 );
+		width = ( int )container.dimension( 0 );
+		height = ( int )container.dimension( 1 );
 	}
 	
-	@Override
-	public boolean hasNext()
-	{
-		return type.getIndex() < maxIndex;
-	}
-
 	@Override
 	public void fwd()
 	{
