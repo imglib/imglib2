@@ -11,6 +11,7 @@ public class Cell< A extends ArrayDataAccess< A > > implements Type< Cell< A > >
 	final int[] dimensions;
 	final int[] steps;
 	final long[] offset;
+	final long[] max;
 
 	protected int numPixels;
 
@@ -24,6 +25,11 @@ public class Cell< A extends ArrayDataAccess< A > > implements Type< Cell< A > >
 		IntervalIndexer.createAllocationSteps( dimensions, steps );
 		this.offset = offset.clone();
 
+		max = new long[ n ];
+		for ( int d = 0; d < n; ++d ) {
+			max[ d ] = offset[ d ] + dimensions[ d ] - 1;
+		}
+		
 		int nPixels = 1;
 		for ( int d = 0; d < n; ++d ) {
 			nPixels *= dimensions[ d ];
@@ -40,6 +46,7 @@ public class Cell< A extends ArrayDataAccess< A > > implements Type< Cell< A > >
 		dimensions = new int[ n ];
 		steps = new int[ n ];
 		offset = new long[ n ];
+		max = new long[ n ];
 
 		numPixels = 0;
 
@@ -69,6 +76,7 @@ public class Cell< A extends ArrayDataAccess< A > > implements Type< Cell< A > >
 			dimensions[ d ] = c.dimensions[ d ];
 			steps[ d ] = c.steps[ d ];
 			offset[ d ] = c.offset[ d ];
+			max[ d ] = c.max[ d ];
 		}
 		numPixels = c.numPixels;
 

@@ -21,8 +21,14 @@ public class CellRandomAccess< T extends NativeType< T >, A extends ArrayDataAcc
 
 	protected final RandomAccess< Cell< A > > cursorOnCells; // randomAccessOnCells;
 
-	final long[] positionOfCurrentCell;
-	final long[] positionInCell;
+	protected final int[] defaultCellDims;
+
+	protected final long[] positionOfCurrentCell;
+	protected final long[] positionInCell;
+	
+	protected int[] currentCellSteps;
+	protected long[] currentCellMin;
+	protected long[] currentCellMax;
 
 	public CellRandomAccess( final CellContainer< T, A > container )
 	{
@@ -31,8 +37,17 @@ public class CellRandomAccess< T extends NativeType< T >, A extends ArrayDataAcc
 		this.type = container.createLinkedType();
 		this.container = container;
 		this.cursorOnCells = container.cells.randomAccess();
+		this.defaultCellDims = container.cellDims;
+		
 		this.positionOfCurrentCell = new long[ n ];
 		this.positionInCell = new long[ n ];
+		
+		for ( int d = 0; d < n; ++d )
+			position[ d ] = 0;
+		
+		container.splitGlobalPosition( position, positionOfCurrentCell, positionInCell );
+		cursorOnCells.setPosition( positionOfCurrentCell );
+		updatePosition();
 	}
 
 	@Override
@@ -50,68 +65,178 @@ public class CellRandomAccess< T extends NativeType< T >, A extends ArrayDataAcc
 	@Override
 	public void fwd( int dim )
 	{
-		++position[ dim ];
-		updatePosition( dim );
+		type.incIndex( currentCellSteps[ dim ] );
+		if ( ++position[ dim ] > currentCellMax[ dim ] )
+		{
+			cursorOnCells.fwd( dim );			
+			updatePosition();
+		}
 	}
 
 	@Override
 	public void bck( int dim )
 	{
-		--position[ dim ];
-		updatePosition( dim );
+		type.decIndex( currentCellSteps[ dim ] );
+		if ( --position[ dim ] < currentCellMin[ dim ] )
+		{
+			cursorOnCells.bck( dim );			
+			updatePosition();
+		}
 	}
 
 	@Override
-	public void move( int[] distance )
+	public void move( final long distance, final int dim )
 	{
-		for ( int d = 0; d < n; ++d )
-			position[ d ] += distance[ d ];
-		updatePosition();
+		type.incIndex( ( int ) distance * currentCellSteps[ dim ] );
+		position[ dim ] += distance;
+		if ( position[ dim ] < currentCellMin[ dim ] || position[ dim ] > currentCellMax[ dim ] )
+		{
+			cursorOnCells.setPosition( position[ dim ] / defaultCellDims[ dim ], dim );			
+			updatePosition();
+		}
 	}
 
 	@Override
-	public void move( long[] distance )
-	{
-		for ( int d = 0; d < n; ++d )
-			position[ d ] += distance[ d ];
-		updatePosition();
-	}
-
-	@Override
-	public void move( Localizable localizable )
+	public void move( final Localizable localizable )
 	{
 		localizable.localize( tmp );
-		move( tmp );		
+		move( tmp );
 	}
 
 	@Override
-	public void move( long distance, int dim )
-	{
-		position[ dim ] += distance;
-		updatePosition( dim );
-	}
-
-	@Override
-	public void setPosition( int[] pos )
+	public void move( final int[] distance )
 	{
 		for ( int d = 0; d < n; ++d )
-			position[ d ] = pos[ d ];
-		updatePosition();
+		{
+			if ( distance[ d ] != 0 )
+			{
+				type.incIndex( ( int ) distance[ d ] * currentCellSteps[ d ] );
+				position[ d ] += distance[ d ];
+				if ( position[ d ] < currentCellMin[ d ] || position[ d ] > currentCellMax[ d ] )
+				{
+					cursorOnCells.setPosition( position[ d ] / defaultCellDims[ d ], d );
+
+					for ( ++d; d < n; ++d )
+					{
+						if ( distance[ d ] != 0 )
+						{
+							position[ d ] += distance[ d ];
+							if ( position[ d ] < currentCellMin[ d ] || position[ d ] > currentCellMax[ d ] )
+							{
+								cursorOnCells.setPosition( position[ d ] / defaultCellDims[ d ], d );
+							}
+						}
+					}
+					
+					updatePosition();
+				}
+			}
+		}
 	}
 
 	@Override
-	public void setPosition( long[] pos )
+	public void move( final long[] distance )
 	{
 		for ( int d = 0; d < n; ++d )
-			position[ d ] = pos[ d ];
-		updatePosition();
+		{
+			if ( distance[ d ] != 0 )
+			{
+				type.incIndex( ( int ) distance[ d ] * currentCellSteps[ d ] );
+				position[ d ] += distance[ d ];
+				if ( position[ d ] < currentCellMin[ d ] || position[ d ] > currentCellMax[ d ] )
+				{
+					cursorOnCells.setPosition( position[ d ] / defaultCellDims[ d ], d );
+
+					for ( ++d; d < n; ++d )
+					{
+						if ( distance[ d ] != 0 )
+						{
+							position[ d ] += distance[ d ];
+							if ( position[ d ] < currentCellMin[ d ] || position[ d ] > currentCellMax[ d ] )
+							{
+								cursorOnCells.setPosition( position[ d ] / defaultCellDims[ d ], d );
+							}
+						}
+					}
+					
+					updatePosition();
+				}
+			}
+		}
 	}
 
 	@Override
-	public void setPosition( long pos, int dim )
+	public void setPosition( final long pos, final int dim )
 	{
+		type.incIndex( ( int ) ( pos - position[ dim ] ) * currentCellSteps[ dim ] );
 		position[ dim ] = pos;
-		updatePosition( dim );
+		if ( pos < currentCellMin[ dim ] || pos > currentCellMax[ dim ] )
+		{
+			cursorOnCells.setPosition( pos / defaultCellDims[ dim ], dim );			
+			updatePosition();
+		}
+	}
+	
+	@Override
+	public void setPosition( final int[] pos )
+	{
+		for ( int d = 0; d < n; ++d )
+		{
+			if ( pos[ d ] != position[ d ] )
+			{
+				type.incIndex( ( int ) ( pos[ d ] - position[ d ] ) * currentCellSteps[ d ] );
+				position[ d ] = pos[ d ];
+				if ( position[ d ] < currentCellMin[ d ] || position[ d ] > currentCellMax[ d ] )
+				{
+					cursorOnCells.setPosition( position[ d ] / defaultCellDims[ d ], d );
+
+					for ( ++d; d < n; ++d )
+					{
+						if ( pos[ d ] != position[ d ] )
+						{
+							position[ d ] = pos[ d ];
+							if ( position[ d ] < currentCellMin[ d ] || position[ d ] > currentCellMax[ d ] )
+							{
+								cursorOnCells.setPosition( position[ d ] / defaultCellDims[ d ], d );
+							}
+						}
+					}
+					
+					updatePosition();
+				}
+			}
+		}
+	}
+
+	@Override
+	public void setPosition( final long[] pos )
+	{
+		for ( int d = 0; d < n; ++d )
+		{
+			if ( pos[ d ] != position[ d ] )
+			{
+				type.incIndex( ( int ) ( pos[ d ] - position[ d ] ) * currentCellSteps[ d ] );
+				position[ d ] = pos[ d ];
+				if ( position[ d ] < currentCellMin[ d ] || position[ d ] > currentCellMax[ d ] )
+				{
+					cursorOnCells.setPosition( position[ d ] / defaultCellDims[ d ], d );
+
+					for ( ++d; d < n; ++d )
+					{
+						if ( pos[ d ] != position[ d ] )
+						{
+							position[ d ] = pos[ d ];
+							if ( position[ d ] < currentCellMin[ d ] || position[ d ] > currentCellMax[ d ] )
+							{
+								cursorOnCells.setPosition( position[ d ] / defaultCellDims[ d ], d );
+							}
+						}
+					}
+					
+					updatePosition();
+				}
+			}
+		}
 	}
 
 	@Override
@@ -119,36 +244,24 @@ public class CellRandomAccess< T extends NativeType< T >, A extends ArrayDataAcc
 	{
 		return container;
 	}
-	
+
 	/**
-	 * Update internal values to reflect the changed {@link position} field. 
+	 * Update type to currentCellSteps, currentCellMin, and type after
+	 * switching cells. This is called after cursorOnCells and position
+	 * fields have been set. 
 	 */
 	private void updatePosition()
 	{
-		container.splitGlobalPosition( position, positionOfCurrentCell, positionInCell );
+		final Cell< A > cell = getCell();
 
-		// the cell position in "cell space" from the global element position 
-		cursorOnCells.setPosition( positionOfCurrentCell );
-		
-		// the local element position within the cell
-		type.updateIndex( getCell().localPositionToIndex( positionInCell ) );
-		type.updateContainer( this );
-	}
+		currentCellSteps = cell.steps;
+		currentCellMin = cell.offset;			
+		currentCellMax = cell.max;			
 
-	/**
-	 * Update internal values to reflect the changed {@link position} field,
-	 * where the change has only occured in dimension {@link dim}. 
-	 */
-	private void updatePosition( int dim )
-	{
-		positionOfCurrentCell[ dim ] = container.getCellPosition( position[ dim ], dim );
-		positionInCell[ dim ] = container.getPositionInCell( position[ dim ], dim );
+		for ( int d = 0; d < n; ++d )
+			positionInCell[ d ] = position[ d ] - currentCellMin[ d ];
 
-		// the cell position in "cell space" from the global element position 
-		cursorOnCells.setPosition( positionOfCurrentCell );
-		
-		// the local element position within the cell
-		type.updateIndex( getCell().localPositionToIndex( positionInCell ) );
+		type.updateIndex( cell.localPositionToIndex( positionInCell ) );
 		type.updateContainer( this );
 	}
 }
