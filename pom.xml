@@ -21,6 +21,7 @@
     <module>imglib-algorithms</module>
     <module>imglib-ij</module>
     <module>imglib-io</module>
+    <module>imglib-ops</module>
     <module>imglib-scripting</module>
   </modules>
 
