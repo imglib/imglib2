@@ -4,7 +4,7 @@ package imglib.ops.example.rev3.function;
 // think that maybe you would construct a LessThan Condition with value 2.0 & pass it a DistanceFunction.
 // this condition evaluates to true calculated distance from ref pt matches
 
-public final class DistanceFunction implements IntegralScalarFunction
+public final class DistanceFunction implements IntegerIndexedScalarFunction
 {
 	private final int[] referencePoint;
 	

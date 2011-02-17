@@ -1,6 +1,6 @@
 package imglib.ops.example.rev3.condition;
 
-import imglib.ops.example.rev3.function.IntegralScalarFunction;
+import imglib.ops.example.rev3.function.IntegerIndexedScalarFunction;
 
 public final class Not implements Condition
 {
@@ -12,7 +12,7 @@ public final class Not implements Condition
 	}
 	
 	@Override
-	public boolean isSatisfied(IntegralScalarFunction function, int[] position)
+	public boolean isSatisfied(IntegerIndexedScalarFunction function, int[] position)
 	{
 		return ! cond.isSatisfied(function, position);
 	}

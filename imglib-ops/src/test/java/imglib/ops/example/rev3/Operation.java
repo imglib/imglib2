@@ -1,7 +1,7 @@
 package imglib.ops.example.rev3;
 
 import imglib.ops.example.rev3.constraints.Constraints;
-import imglib.ops.example.rev3.function.IntegralScalarFunction;
+import imglib.ops.example.rev3.function.IntegerIndexedScalarFunction;
 import imglib.ops.observer.IterationStatus;
 import imglib.ops.observer.IterationStatus.Message;
 
@@ -27,17 +27,17 @@ import mpicbg.imglib.type.numeric.RealType;
 
 public class Operation
 {
-	private Image<? extends RealType<?>> outputImage;
-	private int[] origin;
-	private IntegralScalarFunction function;
-	private RegionOfInterestCursor<? extends RealType<?>> cursor;
+	private final Image<? extends RealType<?>> outputImage;
+	private final int[] origin;
+	private final IntegerIndexedScalarFunction function;
+	private final RegionOfInterestCursor<? extends RealType<?>> cursor;
 	private boolean wasInterrupted;
 	private boolean isDone;
 	private Observable notifier;
 	private Constraints constraints;
 	
 	@SuppressWarnings({"rawtypes","unchecked"})
-	public Operation(Image<? extends RealType<?>> outputImage, int[] origin, int[] span, IntegralScalarFunction function)
+	public Operation(Image<? extends RealType<?>> outputImage, int[] origin, int[] span, IntegerIndexedScalarFunction function)
 	{
 		this.outputImage = outputImage;
 		this.origin = origin;

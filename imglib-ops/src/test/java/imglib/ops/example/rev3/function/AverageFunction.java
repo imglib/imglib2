@@ -1,13 +1,13 @@
 package imglib.ops.example.rev3.function;
 
-public final class AverageFunction implements IntegralScalarFunction
+public final class AverageFunction implements IntegerIndexedScalarFunction
 {
-	private final IntegralScalarFunction otherFunction;
+	private final IntegerIndexedScalarFunction otherFunction;
 	private final int[] loDeltas;
 	private final int[] hiDeltas;
 	private final int[] relPos;
 	
-	public AverageFunction(IntegralScalarFunction otherFunction, int[] loDeltas, int[] hiDeltas)
+	public AverageFunction(IntegerIndexedScalarFunction otherFunction, int[] loDeltas, int[] hiDeltas)
 	{
 		this.otherFunction = otherFunction;
 		this.loDeltas = loDeltas;

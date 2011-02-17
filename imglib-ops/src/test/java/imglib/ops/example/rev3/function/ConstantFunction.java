@@ -1,7 +1,7 @@
 package imglib.ops.example.rev3.function;
 
 
-public final class ConstantFunction implements IntegralScalarFunction
+public final class ConstantFunction implements IntegerIndexedScalarFunction
 {
 	private final double value;
 	

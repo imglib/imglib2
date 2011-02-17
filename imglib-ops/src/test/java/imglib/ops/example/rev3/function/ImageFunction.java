@@ -7,7 +7,7 @@ import mpicbg.imglib.type.numeric.RealType;
 // turn an image into a function we can access
 // some thought needs to be given to how multithreading would work with such an approach
 
-public final class ImageFunction implements IntegralScalarFunction
+public final class ImageFunction implements IntegerIndexedScalarFunction
 {
 	private final LocalizableByDimCursor<? extends RealType<?>> cursor;
 	
@@ -25,7 +25,7 @@ public final class ImageFunction implements IntegralScalarFunction
 		return this.cursor.getType().getRealDouble();
 	}
 	
-	public Image<?> getImage()
+	public Image<? extends RealType<?>> getImage()
 	{
 		return this.cursor.getImage();
 	}

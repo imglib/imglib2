@@ -3,7 +3,7 @@ package imglib.ops.example.rev3.constraints;
 import java.util.ArrayList;
 
 import imglib.ops.example.rev3.condition.Condition;
-import imglib.ops.example.rev3.function.IntegralScalarFunction;
+import imglib.ops.example.rev3.function.IntegerIndexedScalarFunction;
 
 public class Constraints
 {
@@ -14,7 +14,7 @@ public class Constraints
 		constraints = null;
 	}
 	
-	public void addConstraint(IntegralScalarFunction function, Condition condition)
+	public void addConstraint(IntegerIndexedScalarFunction function, Condition condition)
 	{
 		if (constraints == null)
 			constraints = new ArrayList<ConstraintEntry>();
@@ -38,10 +38,10 @@ public class Constraints
 	
 	private class ConstraintEntry
 	{
-		public IntegralScalarFunction function;
+		public IntegerIndexedScalarFunction function;
 		public Condition condition;
 		
-		public ConstraintEntry(IntegralScalarFunction func, Condition cond)
+		public ConstraintEntry(IntegerIndexedScalarFunction func, Condition cond)
 		{
 			this.function = func;
 			this.condition = cond;

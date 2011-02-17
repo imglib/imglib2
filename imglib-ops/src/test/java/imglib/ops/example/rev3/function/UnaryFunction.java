@@ -2,12 +2,12 @@ package imglib.ops.example.rev3.function;
 
 import imglib.ops.example.rev3.operator.UnaryOperator;
 
-public final class UnaryFunction implements IntegralScalarFunction
+public final class UnaryFunction implements IntegerIndexedScalarFunction
 {
-	private final IntegralScalarFunction inputFunction;
+	private final IntegerIndexedScalarFunction inputFunction;
 	private final UnaryOperator operator;
 
-	public UnaryFunction(UnaryOperator operator, IntegralScalarFunction inputFunction)
+	public UnaryFunction(UnaryOperator operator, IntegerIndexedScalarFunction inputFunction)
 	{
 		this.inputFunction = inputFunction;
 		this.operator = operator;

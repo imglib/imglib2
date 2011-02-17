@@ -2,13 +2,13 @@ package imglib.ops.example.rev3.function;
 
 import imglib.ops.example.rev3.operator.BinaryOperator;
 
-public final class BinaryFunction implements IntegralScalarFunction
+public final class BinaryFunction implements IntegerIndexedScalarFunction
 {
-	private final IntegralScalarFunction leftFunction;
-	private final IntegralScalarFunction rightFunction;
+	private final IntegerIndexedScalarFunction leftFunction;
+	private final IntegerIndexedScalarFunction rightFunction;
 	private final BinaryOperator operator;
 
-	public BinaryFunction(BinaryOperator operator, IntegralScalarFunction leftFunction, IntegralScalarFunction rightFunction)
+	public BinaryFunction(BinaryOperator operator, IntegerIndexedScalarFunction leftFunction, IntegerIndexedScalarFunction rightFunction)
 	{
 		this.leftFunction = leftFunction;
 		this.rightFunction = rightFunction;

@@ -7,7 +7,7 @@ import imglib.ops.example.rev3.function.BinaryFunction;
 import imglib.ops.example.rev3.function.ConstantFunction;
 import imglib.ops.example.rev3.function.ConvolutionFunction;
 import imglib.ops.example.rev3.function.ImageFunction;
-import imglib.ops.example.rev3.function.IntegralScalarFunction;
+import imglib.ops.example.rev3.function.IntegerIndexedScalarFunction;
 import imglib.ops.example.rev3.function.UnaryFunction;
 import imglib.ops.example.rev3.operator.BinaryOperator;
 import imglib.ops.example.rev3.operator.UnaryOperator;
@@ -222,7 +222,7 @@ public class Rev3Tests
 		assertImageValsEqual(3,3,new int[]{11,19,28,36,45,53,62,70,79}, outputImage);  // NOTICE IT ROUNDS 0.5 UP ...
 	}
 	
-	private class HalfPlanePositionFunction implements IntegralScalarFunction
+	private class HalfPlanePositionFunction implements IntegerIndexedScalarFunction
 	{
 		private double xCoeff;
 		private double yCoeff;

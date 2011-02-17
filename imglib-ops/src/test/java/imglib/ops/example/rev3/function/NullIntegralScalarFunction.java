@@ -5,7 +5,7 @@ package imglib.ops.example.rev3.function;
  *  function, and all conditions. Then attach an Observer and pass a null function and collect all the info
  *  you need.
  */
-public final class NullIntegralScalarFunction implements IntegralScalarFunction
+public final class NullIntegralScalarFunction implements IntegerIndexedScalarFunction
 {
 	@Override
 	public double evaluate(int[] position)
