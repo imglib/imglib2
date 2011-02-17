@@ -130,8 +130,9 @@ public class Operation
 		if (notifier != null)
 		{
 			notifier.deleteObserver(ob);
-			if (notifier.countObservers() == 0)
-				notifier = null;
+			// although this could improve performance in execute() it could cause problems there in a multithreaded context
+			//if (notifier.countObservers() == 0)
+			//	notifier = null;
 		}
 	}
 	

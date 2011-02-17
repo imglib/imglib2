@@ -2,107 +2,77 @@ package imglib.ops.example.rev3.function;
 
 import java.util.ArrayList;
 
-import mpicbg.imglib.cursor.LocalizableByDimCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.type.numeric.RealType;
 
-// NOTE & TODO
-//   I am doing the most brain dead, general, and slow composed image position calcs in determineSubImageVariables().
-//   Speed up by only allowing fixed sized n-dim chunks. Or implement some indexing structure for fast lookup.
-//   This is the last missing part to make rev 3 code do everything that rev 2 code could do plus more.
+// NOTES & TODO
 
-// UNWORKING AND NOT FINISHED. REALIZE could just compose any functions rather than image functions. that would be more
-// general but I am doing a quick and dirty impl.
+// This is the last missing part to make rev 3 code do everything that rev 2 code could do plus more.
+
+// Realize we could just compose any functions rather than image functions. that would be more
+// general but I am doing a simple implementation.
 
 // The idea here is that let's say I have 4 images that are each one plane and I want to average their values at each XY
 // location. The plan is to compose these 4 2-D images into a single virtual 3-D "image" with Z == 4. Then I can use a
 // AverageFunction on the XY locations across Z by passing correct axis deltas into the AverageFunction.
 
 // note that as defined this composition allows one to treat multiple subregions of a plane in one image for example as
-// a bigger dimensional "image".
+// a higher dimensional "image".
 
 /** ComposedImageFunction
  * Composes a number of N dimensional Images into a N+1 dimension function
- *   huh - stack XY planes into a 3d dataset. but why not stack two 3d volumes into a bigger 3d volume.
- *   as implemented it does the latter. Think about what is best. (later - the latter is just kind of wrong.
- *   you don't glue 2d datasets together into a bigger 2d set - why would you want one strip?)
  */
 public final class ComposedImageFunction implements IntegerIndexedScalarFunction
 {
-	private int axisOfComposition;
-	private ArrayList<LocalizableByDimCursor<? extends RealType<?>>> subImageCursors;
-	private ArrayList<int[]> subImageOrigins;
-	private ArrayList<int[]> subImageSpans;
-	private ArrayList<int[]> subImagePositions;
-	private int localizedSubImageNumber;
-	private int[] localizedPosition;
+	private ArrayList<SubImageInfo> subImages;
+	private int[] subImageDimensions;
+	private int[] subImagePosition;
+	private int subImageSpanSize;
 	
-	public ComposedImageFunction(int axis)
+	private class SubImageInfo
 	{
-		axisOfComposition = axis;
-		subImageCursors = new ArrayList<LocalizableByDimCursor<? extends RealType<?>>>();
-		subImageOrigins = new ArrayList<int[]>();
-		subImageSpans = new ArrayList<int[]>();
-		subImagePositions = new ArrayList<int[]>();
+		int[] origin;
+		ImageFunction function;
 	}
-	
-	public void addSubregionOfImage(Image<? extends RealType<?>> image, int[] origin, int[] span)
+
+	/** the only constructor. must use addImageRegion() to an instance before one can get values out of it via evaluate(). */
+	public ComposedImageFunction()
 	{
-		if (subImageCursors.size() == 0)
+	}
+
+	/** adds a subregion of an image to this COmposedImageFunction. The span of the region must match exactly the span of all previously added
+	 * image subregions. the origin can vary (allowing multiple regions in a single image to be treated as separate planes in the composed image). */
+	public void addImageRegion(Image<? extends RealType<?>> image, int[] origin, int[] span)
+	{
+		if (subImages == null)
 		{
-			subImageOrigins.add(origin);
-			subImageSpans.add(span);
-			subImagePositions.add(new int[image.getNumDimensions()]);
-			return;
+			subImages = new ArrayList<SubImageInfo>();
+			subImageDimensions = span.clone();
+			subImageSpanSize = span.length;
+			subImagePosition = new int[subImageSpanSize];
 		}
 
-		Image<? extends RealType<?>> firstImage = subImageCursors.get(0).getImage();
-		
-		if (image.getNumDimensions() != firstImage.getNumDimensions())
-			throw new IllegalArgumentException("incompatibly shaped images cannot be glued together: num dimensions different");
-		
-		// TODO -- add the subregion info to instance vars so we can access it
-	}
+		if (span.length != subImageSpanSize)
+			throw new IllegalArgumentException("span of new image subregion is not of the same dimensionality as existing images");
 
+		for (int i = 0; i < subImageSpanSize; i++)
+			if (span[i] != subImageDimensions[i])
+				throw new IllegalArgumentException("span of new image subregion is not of the same dimension as existing image subregions");
+				
+		SubImageInfo info = new SubImageInfo();
+		info.origin = origin;
+		info.function = new ImageFunction(image);
+		
+		subImages.add(info);
+	}
+	
 	@Override
 	public double evaluate(int[] position)
 	{
-		if (subImageCursors.size() == 0)
-			return 0;    // TODO - is this what we really want to do???? or NaN????
-		
-		determineSubImageVariables(position);
-		
-		LocalizableByDimCursor<? extends RealType<?>> cursor = subImageCursors.get(localizedSubImageNumber);
-		
-		cursor.setPosition(localizedPosition);
-
-		return cursor.getType().getRealDouble();
+		SubImageInfo info = subImages.get(position[subImageSpanSize]);
+		for (int i = 0; i < subImageSpanSize; i++)
+			subImagePosition[i] = info.origin[i] + position[i];
+		return info.function.evaluate(subImagePosition);
 	}
-
-	// TODO - not completed
-	private void determineSubImageVariables(int[] position)
-	{
-		int sublistNum = 0;
-		int totalSublists = subImageCursors.size();
-		int totalAxisPlanesSoFar = 0;
-		int prevAxisPlanesSoFar = 0;
-		while (sublistNum < totalSublists)
-		{
-			int[] span = subImageSpans.get(sublistNum);
-			totalAxisPlanesSoFar += span[axisOfComposition];
-			if (position[axisOfComposition] < totalAxisPlanesSoFar)
-			{
-				localizedSubImageNumber = sublistNum;
-				int[] localOrigin = subImageOrigins.get(sublistNum);
-				localizedPosition = subImagePositions.get(sublistNum);
-				for (int i = 0; i < position.length; i++)
-					localizedPosition[i] = localOrigin[i] + position[i];
-				localizedPosition[axisOfComposition] = localOrigin[axisOfComposition] + position[axisOfComposition] - prevAxisPlanesSoFar;
-				return;
-			}
-			prevAxisPlanesSoFar = totalAxisPlanesSoFar;
-			sublistNum++;
-		}
-		throw new IllegalArgumentException("position out of range");
-	}
+	
 }
