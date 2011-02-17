@@ -1,12 +1,11 @@
 package imglib.ops.example.rev3.function;
 
-
-public class AverageFunction implements IntegralScalarFunction
+public final class AverageFunction implements IntegralScalarFunction
 {
-	private IntegralScalarFunction otherFunction;
-	private int[] loDeltas;
-	private int[] hiDeltas;
-	private int[] relPos;
+	private final IntegralScalarFunction otherFunction;
+	private final int[] loDeltas;
+	private final int[] hiDeltas;
+	private final int[] relPos;
 	
 	public AverageFunction(IntegralScalarFunction otherFunction, int[] loDeltas, int[] hiDeltas)
 	{

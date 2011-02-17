@@ -2,13 +2,13 @@ package imglib.ops.example.rev3.function;
 
 import java.util.Arrays;
 
-public class MedianFunction implements IntegralScalarFunction
+public final class MedianFunction implements IntegralScalarFunction
 {
-	private IntegralScalarFunction otherFunction;
-	private int[] loDeltas;
-	private int[] hiDeltas;
-	private int[] relPos;
-	private double[] workspace;
+	private final IntegralScalarFunction otherFunction;
+	private final int[] loDeltas;
+	private final int[] hiDeltas;
+	private final int[] relPos;
+	private final double[] workspace;
 	
 	public MedianFunction(IntegralScalarFunction otherFunction, int[] loDeltas, int[] hiDeltas)
 	{

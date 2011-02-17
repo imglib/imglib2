@@ -1,10 +1,9 @@
 package imglib.ops.example.rev3.function;
 
-import imglib.ops.example.rev3.VariableFactory;
 import mpicbg.imglib.type.numeric.RealType;
 
 /** unused but a valid direction to go. a resample function would be of this type */
-public interface ScalarFunction<T extends RealType<T>> extends VariableFactory<T>
+public interface ScalarFunction<T extends RealType<T>>
 {
 	void evaluate(double[] position, T output);
 

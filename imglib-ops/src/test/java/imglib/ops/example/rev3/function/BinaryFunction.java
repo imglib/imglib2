@@ -2,11 +2,11 @@ package imglib.ops.example.rev3.function;
 
 import imglib.ops.example.rev3.operator.BinaryOperator;
 
-public class BinaryFunction implements IntegralScalarFunction
+public final class BinaryFunction implements IntegralScalarFunction
 {
-	private IntegralScalarFunction leftFunction;
-	private IntegralScalarFunction rightFunction;
-	private BinaryOperator operator;
+	private final IntegralScalarFunction leftFunction;
+	private final IntegralScalarFunction rightFunction;
+	private final BinaryOperator operator;
 
 	public BinaryFunction(BinaryOperator operator, IntegralScalarFunction leftFunction, IntegralScalarFunction rightFunction)
 	{

@@ -26,7 +26,7 @@ import mpicbg.imglib.type.numeric.RealType;
  *   huh - stack XY planes into a 3d dataset. but why not stack two 3d volumes into a bigger 3d volume.
  *   as implemented it does the latter. Think about what is best.
  */
-public class ComposedImageFunction implements IntegralScalarFunction
+public final class ComposedImageFunction implements IntegralScalarFunction
 {
 	private int axisOfComposition;
 	private ArrayList<LocalizableByDimCursor<? extends RealType<?>>> subImageCursors;

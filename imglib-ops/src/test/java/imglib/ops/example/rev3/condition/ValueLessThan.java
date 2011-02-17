@@ -2,44 +2,20 @@ package imglib.ops.example.rev3.condition;
 
 import imglib.ops.example.rev3.function.IntegralScalarFunction;
 
-public class ValueLessThan implements Condition
+public final class ValueLessThan implements Condition
 {
-	private double value;
-	private boolean wasFullyEvaluated;
-	private double lastValue;
+	private final double bound;
 	
-	public ValueLessThan(double value)
+	public ValueLessThan(double bound)
 	{
-		this.value = value;
-		this.wasFullyEvaluated = false;
-		this.lastValue = Double.NaN;
+		this.bound = bound;
 	}
 	
 	@Override
 	public boolean isSatisfied(IntegralScalarFunction function, int[] position)
 	{
-		this.lastValue = function.evaluate(position);
+		double value = function.evaluate(position);
 
-		this.wasFullyEvaluated = true;
-		
-		return this.lastValue < value;
-	}
-
-	@Override
-	public double getLastFunctionEvaluation()
-	{
-		return this.lastValue;
-	}
-
-	@Override
-	public boolean functionWasFullyEvaluated()
-	{
-		return this.wasFullyEvaluated;
-	}
-
-	@Override
-	public void initEvaluationState()
-	{
-		this.wasFullyEvaluated = false;
+		return value < bound;
 	}
 }

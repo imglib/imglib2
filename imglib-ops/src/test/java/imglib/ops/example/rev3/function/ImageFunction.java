@@ -7,9 +7,9 @@ import mpicbg.imglib.type.numeric.RealType;
 // turn an image into a function we can access
 // some thought needs to be given to how multithreading would work with such an approach
 
-public class ImageFunction implements IntegralScalarFunction
+public final class ImageFunction implements IntegralScalarFunction
 {
-	private LocalizableByDimCursor<? extends RealType<?>> cursor;
+	private final LocalizableByDimCursor<? extends RealType<?>> cursor;
 	
 	public ImageFunction(Image<? extends RealType<?>> image)  // TODO - OutOfBoundsStrategy too? Or handled by choice of cursor????
 	{

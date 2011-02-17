@@ -2,10 +2,10 @@ package imglib.ops.example.rev3.function;
 
 import imglib.ops.example.rev3.operator.UnaryOperator;
 
-public class UnaryFunction implements IntegralScalarFunction
+public final class UnaryFunction implements IntegralScalarFunction
 {
-	private IntegralScalarFunction inputFunction;
-	private UnaryOperator operator;
+	private final IntegralScalarFunction inputFunction;
+	private final UnaryOperator operator;
 
 	public UnaryFunction(UnaryOperator operator, IntegralScalarFunction inputFunction)
 	{

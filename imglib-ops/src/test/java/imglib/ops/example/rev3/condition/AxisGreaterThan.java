@@ -2,10 +2,10 @@ package imglib.ops.example.rev3.condition;
 
 import imglib.ops.example.rev3.function.IntegralScalarFunction;
 
-public class AxisGreaterThan implements Condition
+public final class AxisGreaterThan implements Condition
 {
-	private int axis;
-	private int value;
+	private final int axis;
+	private final int value;
 	
 	public AxisGreaterThan(int axis, int value)
 	{
@@ -17,23 +17,5 @@ public class AxisGreaterThan implements Condition
 	public boolean isSatisfied(IntegralScalarFunction function, int[] position)
 	{
 		return position[axis] > value;
-	}
-
-	@Override
-	public double getLastFunctionEvaluation()
-	{
-		return Double.NaN;
-	}
-
-	@Override
-	public boolean functionWasFullyEvaluated()
-	{
-		return false;  // ALWAYS FALSE
-	}
-
-	@Override
-	public void initEvaluationState()
-	{
-		// NOTHING TO DO
 	}
 }

@@ -7,42 +7,44 @@ import imglib.ops.example.rev3.function.IntegralScalarFunction;
 
 public class Constraints
 {
-	private ArrayList<IntegralScalarFunction> functions;
-	private ArrayList<Condition> conditions;
+	private ArrayList<ConstraintEntry> constraints;
 
 	public Constraints()
 	{
-		functions = null;
-		conditions = null;
+		constraints = null;
 	}
 	
 	public void addConstraint(IntegralScalarFunction function, Condition condition)
 	{
-		if (functions == null)
-		{
-			functions = new ArrayList<IntegralScalarFunction>();
-			conditions = new ArrayList<Condition>();
-		}
-		functions.add(function);
-		conditions.add(condition);
+		if (constraints == null)
+			constraints = new ArrayList<ConstraintEntry>();
+
+		constraints.add(new ConstraintEntry(function,condition));
 	}
 	
 	public boolean areSatisfied(int[] position)
 	{
-		if (functions == null)
+		if (constraints == null)
 			return true;
 		
-		int numConstraints = functions.size();
-		
-		for (int i = 0; i < numConstraints; i++)
+		for (ConstraintEntry entry : constraints)
 		{
-			IntegralScalarFunction function = functions.get(i);
-			Condition c = conditions.get(i);
-			
-			if ( ! c.isSatisfied(function, position) )
+			if ( ! entry.condition.isSatisfied(entry.function, position) )
 				return false;
 		}
 		
 		return true;
+	}
+	
+	private class ConstraintEntry
+	{
+		public IntegralScalarFunction function;
+		public Condition condition;
+		
+		public ConstraintEntry(IntegralScalarFunction func, Condition cond)
+		{
+			this.function = func;
+			this.condition = cond;
+		}
 	}
 }

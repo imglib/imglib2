@@ -3,12 +3,12 @@ package imglib.ops.example.rev3.function;
 
 // TODO - could be derived from a plain ScalarFunction taking real coords. probably want to do this eventually. a discrete one and a continuous one.
 
-public class ConvolutionFunction implements IntegralScalarFunction
+public final class ConvolutionFunction implements IntegralScalarFunction
 {
-	private IntegralScalarFunction otherFunction;
-	private int[] kernelDimensions;
-	private double[] kernelValues;
-	private int[] relPos;
+	private final IntegralScalarFunction otherFunction;
+	private final int[] kernelDimensions;
+	private final double[] kernelValues;
+	private final int[] relPos;
 	
 	public ConvolutionFunction(int[] kernelDimensions, double[] kernelValues, IntegralScalarFunction otherFunction)
 	{
