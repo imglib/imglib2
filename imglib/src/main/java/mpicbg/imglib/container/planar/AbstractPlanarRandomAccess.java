@@ -39,7 +39,7 @@ import mpicbg.imglib.util.Util;
  */
 abstract public class AbstractPlanarRandomAccess< T extends NativeType< T > > extends AbstractImgRandomAccess< T > implements PlanarLocation
 {
-	final protected int[] tmp, sliceSteps, dimension, position;
+	final protected int[] sliceSteps;
 	final int width, n;
 	
 	final T type;
@@ -51,22 +51,7 @@ abstract public class AbstractPlanarRandomAccess< T extends NativeType< T > > ex
 		
 		n = container.numDimensions();
 		
-		if ( n == 1 )
-		{
-			dimension = new int[ 2 ];
-			dimension[ 0 ] = width = ( int )container.dimension( 0 );
-			position = new int[ 2 ];
-			tmp = new int[ 2 ];
-		}
-		else
-		{
-			dimension = new int[ n ];
-			for ( int d = 0; d < n; ++d )
-				dimension[ d ] = ( int )container.dimension( d );
-			width = dimension[ 0 ];
-			position = new int[ n ];		
-			tmp = new int[ n ];
-		}
+		width = ( int )size[ 0 ];
 		
 		type = container.createLinkedType();
 		type.updateIndex( 0 );
@@ -79,7 +64,7 @@ abstract public class AbstractPlanarRandomAccess< T extends NativeType< T > > ex
 			for ( int i = 3; i < n; ++i )
 			{
 				final int j = i - 1;
-				sliceSteps[ i ] = dimension[ j ] * sliceSteps[ j ];
+				sliceSteps[ i ] = ( int )size[ j ] * sliceSteps[ j ];
 			}
 		}
 		else
@@ -135,17 +120,36 @@ abstract public class AbstractPlanarRandomAccess< T extends NativeType< T > > ex
 			type.updateContainer( this );
 		}
 	}
+	@Override
+	public void setPosition( final long position, final int dim )
+	{
+		if ( dim == 0 )
+		{
+			type.updateIndex( type.getIndex() + (int)position - (int)this.position[ 0 ] );
+		}
+		else if ( dim == 1 )
+		{
+			type.updateIndex( type.getIndex() + ( (int)position - (int)this.position[ 1 ] ) * width );			
+		}
+		else
+		{
+			sliceIndex += (position - (int)this.position[ dim ]) * sliceSteps[ dim ];
+			type.updateContainer( this );
+		}
+		
+		this.position[ dim ] = position;
+	}
 
 	@Override
 	public void setPosition( final int position, final int dim )
 	{
 		if ( dim == 0 )
 		{
-			type.updateIndex( type.getIndex() + position - this.position[ 0 ] );
+			type.updateIndex( type.getIndex() + position - (int)this.position[ 0 ] );
 		}
 		else if ( dim == 1 )
 		{
-			type.updateIndex( type.getIndex() + ( position - this.position[ 1 ] ) * width );			
+			type.updateIndex( type.getIndex() + ( position - (int)this.position[ 1 ] ) * width );			
 		}
 		else
 		{
@@ -196,65 +200,8 @@ abstract public class AbstractPlanarRandomAccess< T extends NativeType< T > > ex
 	}
 
 	@Override
-	public void setPosition( final long position, final int dim ) { setPosition( (int)position, dim ); }
-
-	@Override
 	public int getCurrentPlane() { return sliceIndex; }
 
-	// We have to override all these methods as they now refer to the int[] position instead of the long[] position of the super class
-
-	@Override
-	public boolean isOutOfBounds()
-	{
-		for ( int d = 0; d < n; ++d )
-		{
-			final int x = position[ d ];
-			if ( x < 0 || x >= dimension[ d ] )
-				return true;
-		}
-		return false;
-	}
-		
-	@Override
-	public float getFloatPosition( final int dim ){ return position[ dim ]; }
-	
-	@Override
-	public double getDoublePosition( final int dim ){ return position[ dim ]; }
-	
-	@Override
-	public int getIntPosition( final int dim ){ return position[ dim ]; }
-
-	@Override
-	public long getLongPosition( final int dim ){ return position[ dim ]; }	
-	
-	@Override
-	public void localize( final float[] pos )
-	{
-		for ( int d = 0; d < n; d++ )
-			pos[ d ] = this.position[ d ];
-	}
-
-	@Override
-	public void localize( final double[] pos )
-	{
-		for ( int d = 0; d < n; d++ )
-			pos[ d ] = this.position[ d ];
-	}
-
-	@Override
-	public void localize( int[] pos )
-	{
-		for ( int d = 0; d < n; d++ )
-			pos[ d ] = ( int )this.position[ d ];
-	}
-	
-	@Override
-	public void localize( long[] pos )
-	{
-		for ( int d = 0; d < n; d++ )
-			pos[ d ] = this.position[ d ];
-	}
-	
 	@Override
 	public String toString(){ return Util.printCoordinates( position ) + " = " + get(); }
 }
