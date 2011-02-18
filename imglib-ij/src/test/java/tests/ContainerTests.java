@@ -56,12 +56,14 @@ public class ContainerTests
 	{
 		for ( int i = 0; i < dim.length; ++i )
 		{
+			if ( dim[ i ].length > 1 ) {
 			assertTrue( "ArrayContainer vs CellContainer failed for dim = " + Util.printCoordinates( dim[ i ] ),
-			            testContainer( dim[ i ], new ArrayContainerFactory(), new CellContainerFactory( 10 ) ) );
+			            testContainer( dim[ i ], new ArrayContainerFactory< FloatType >(), new CellContainerFactory< FloatType >( 10 ) ) );
 			assertTrue( "CellContainer vs ArrayContainer failed for dim = " + Util.printCoordinates( dim[ i ] ), 
-			            testContainer( dim[ i ], new CellContainerFactory(), new ArrayContainerFactory() ) );
+			            testContainer( dim[ i ], new CellContainerFactory< FloatType >(), new ArrayContainerFactory< FloatType >() ) );
 			assertTrue( "CellContainer vs CellContainer failed for dim = " + Util.printCoordinates( dim[ i ] ),
-			            testContainer( dim[ i ], new CellContainerFactory( 5 ), new CellContainerFactory() ) );
+			            testContainer( dim[ i ], new CellContainerFactory< FloatType >( 5 ), new CellContainerFactory< FloatType >() ) );
+			}
 		}
 	}
 	
@@ -72,15 +74,12 @@ public class ContainerTests
 	{
 		for ( int i = 0; i < dim.length; ++i )
 		{
-			if ( dim[ i ].length > 1 )
-			{
-				assertTrue( "ArrayContainer vs PlanarContainer failed for dim = " + Util.printCoordinates( dim[ i ] ),
-				            testContainer( dim[ i ], new ArrayContainerFactory< FloatType >(), new PlanarContainerFactory< FloatType >() ) );
-				assertTrue( "PlanarContainer vs ArrayContainer failed for dim = " + Util.printCoordinates( dim[ i ] ), 
-				            testContainer( dim[ i ], new PlanarContainerFactory< FloatType >(), new ArrayContainerFactory< FloatType >() ) );
-				assertTrue( "PlanarContainer vs PlanarContainer failed for dim = " + Util.printCoordinates( dim[ i ] ),
-				            testContainer( dim[ i ], new PlanarContainerFactory< FloatType >(), new PlanarContainerFactory< FloatType >() ) );
-			}
+			assertTrue( "ArrayContainer vs PlanarContainer failed for dim = " + Util.printCoordinates( dim[ i ] ),
+			            testContainer( dim[ i ], new ArrayContainerFactory< FloatType >(), new PlanarContainerFactory< FloatType >() ) );
+			assertTrue( "PlanarContainer vs ArrayContainer failed for dim = " + Util.printCoordinates( dim[ i ] ), 
+			            testContainer( dim[ i ], new PlanarContainerFactory< FloatType >(), new ArrayContainerFactory< FloatType >() ) );
+			assertTrue( "PlanarContainer vs PlanarContainer failed for dim = " + Util.printCoordinates( dim[ i ] ),
+			            testContainer( dim[ i ], new PlanarContainerFactory< FloatType >(), new PlanarContainerFactory< FloatType >() ) );
 		}
 	}
 
@@ -224,7 +223,7 @@ public class ContainerTests
 			
 			positionable2.get().set( localizableCursor1.get() );
 		}
-		
+
 		// copy again to the first image using a LocalizableByDimOutsideCursor and a LocalizableByDimCursor
 		final ImgRandomAccess<FloatType> outsideCursor2 = img2.randomAccess( new OutOfBoundsPeriodicFactory< FloatType, Img< FloatType > >() );
 		localizableCursor1.reset();
@@ -232,7 +231,7 @@ public class ContainerTests
 		final int[] pos = new int[ numDimensions ];			
 		i = 0;
 		int direction = 1;
-		
+
 		try{
 			while ( localizableCursor1.hasNext() )
 			{

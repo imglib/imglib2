@@ -69,7 +69,8 @@ abstract public class AbstractPlanarRandomAccess< T extends NativeType< T > > ex
 		}
 		
 		type = container.createLinkedType();
-		
+		type.updateIndex( 0 );
+		type.updateContainer( this );
 		
 		if ( n > 2 )
 		{
@@ -201,6 +202,18 @@ abstract public class AbstractPlanarRandomAccess< T extends NativeType< T > > ex
 	public int getCurrentPlane() { return sliceIndex; }
 
 	// We have to override all these methods as they now refer to the int[] position instead of the long[] position of the super class
+
+	@Override
+	public boolean isOutOfBounds()
+	{
+		for ( int d = 0; d < n; ++d )
+		{
+			final int x = position[ d ];
+			if ( x < 0 || x >= dimension[ d ] )
+				return true;
+		}
+		return false;
+	}
 		
 	@Override
 	public float getFloatPosition( final int dim ){ return position[ dim ]; }
