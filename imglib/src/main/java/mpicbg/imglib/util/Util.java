@@ -799,6 +799,26 @@ public class Util
 		return dimensions;
 	}
 
+	final static public int[] long2int( final long[] a )
+	{
+		final int[] i = new int[ a.length ];
+		
+		for ( int d = 0; d < a.length; ++d )
+			i[ d ] = (int)a[ d ];
+
+		return i;
+	}
+
+	final static public long[] int2long( final int[] i )
+	{
+		final long[] l = new long[ i.length ];
+		
+		for ( int d = 0; d < l.length; ++d )
+			l[ d ] = i[ d ];
+
+		return l;
+	}
+
 	/**
 	 * <p>Create a long[] with the max coordinates of an {@link Interval}.</p>
 	 * 
