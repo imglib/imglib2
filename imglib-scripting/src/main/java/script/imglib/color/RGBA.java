@@ -5,9 +5,8 @@ import java.util.Collection;
 import script.imglib.color.fn.ColorFunction;
 import script.imglib.math.fn.IFunction;
 
-import mpicbg.imglib.cursor.Cursor;
-import mpicbg.imglib.image.Image;
-import mpicbg.imglib.type.numeric.RGBALegacyType;
+import mpicbg.imglib.container.Img;
+import mpicbg.imglib.container.ImgCursor;
 import mpicbg.imglib.type.numeric.RealType;
 
 /** Given up to 4 channels--each represented by an {@link IFunction},
@@ -29,7 +28,7 @@ public final class RGBA extends ColorFunction {
 	}
 
 	/** Interpret the @param img as an ARGB image. */
-	public RGBA(final Image<? extends RealType<?>> img) {
+	public RGBA(final Img<? extends RealType<?>> img) {
 		this(new Channel(img, 3), new Channel(img, 2), new Channel(img, 1), new Channel(img, 4));
 	}
 
@@ -88,7 +87,7 @@ public final class RGBA extends ColorFunction {
 	}
 
 	@Override
-	public final void findCursors(final Collection<Cursor<?>> cursors) {
+	public final void findCursors(final Collection<ImgCursor<?>> cursors) {
 		alpha.findCursors(cursors);
 		red.findCursors(cursors);
 		green.findCursors(cursors);

@@ -2,12 +2,12 @@ package script.imglib.math;
 
 import script.imglib.math.fn.IFunction;
 import script.imglib.math.fn.UnaryOperation;
-import mpicbg.imglib.image.Image;
+import mpicbg.imglib.container.Img;
 import mpicbg.imglib.type.numeric.RealType;
 
 public class Floor extends UnaryOperation {
 
-	public Floor(final Image<? extends RealType<?>> img) {
+	public Floor(final Img<? extends RealType<?>> img) {
 		super(img);
 	}
 	public Floor(final IFunction fn) {

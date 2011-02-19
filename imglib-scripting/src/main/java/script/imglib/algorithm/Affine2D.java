@@ -2,8 +2,8 @@ package script.imglib.algorithm;
 
 import java.awt.geom.AffineTransform;
 
-import mpicbg.imglib.image.Image;
-import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
+import mpicbg.imglib.container.Img;
+import mpicbg.imglib.outofbounds.OutOfBoundsFactory;
 import mpicbg.imglib.type.numeric.NumericType;
 import script.imglib.math.fn.IFunction;
 
@@ -57,7 +57,7 @@ public class Affine2D<N extends NumericType<N>> extends Affine3D<N>
 					final float scaleX, final float shearX,
 					final float shearY, final float scaleY,
 					final float translateX, final float translateY,
-					final Mode mode, final OutOfBoundsStrategyFactory<N> oobf) throws Exception
+					final Mode mode, final OutOfBoundsFactory<N,Img<N>> oobf) throws Exception
 	{
 		super(fn, scaleX, shearX, translateX,
 				  shearY, scaleY, translateY, mode, oobf);

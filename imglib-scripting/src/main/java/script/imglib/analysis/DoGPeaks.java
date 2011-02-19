@@ -11,9 +11,8 @@ import mpicbg.imglib.algorithm.scalespace.DifferenceOfGaussian;
 import mpicbg.imglib.algorithm.scalespace.DifferenceOfGaussianPeak;
 import mpicbg.imglib.container.array.ArrayContainerFactory;
 import mpicbg.imglib.function.RealTypeConverter;
-import mpicbg.imglib.image.Image;
-import mpicbg.imglib.image.ImageFactory;
-import mpicbg.imglib.outofbounds.OutOfBoundsStrategyMirrorFactory;
+import mpicbg.imglib.container.Img;
+import mpicbg.imglib.outofbounds.OutOfBoundsMirrorFactory;
 import mpicbg.imglib.type.numeric.RealType;
 import mpicbg.imglib.type.numeric.real.FloatType;
 import script.imglib.algorithm.fn.AlgorithmUtil;
@@ -36,10 +35,10 @@ public class DoGPeaks<N extends RealType<N>> extends ArrayList<float[]>
 	}
 
 	/** Consider the {@param img} as isotropic: apply the same sigma to all dimensions. */
-	public DoGPeaks(final Image<N> img, final Number sigmaLarge, final Number sigmaSmall,
+	public DoGPeaks(final Img<N> img, final Number sigmaLarge, final Number sigmaSmall,
 			final Number minPeakValue, final Number normalizationFactor) throws Exception {
-		this(img, AlgorithmUtil.asArray(img.getNumDimensions(), sigmaLarge.doubleValue()),
-				AlgorithmUtil.asArray(img.getNumDimensions(), sigmaSmall.doubleValue()),
+		this(img, AlgorithmUtil.asArray(img.numDimensions(), sigmaLarge.doubleValue()),
+				AlgorithmUtil.asArray(img.numDimensions(), sigmaSmall.doubleValue()),
 				minPeakValue, normalizationFactor);
 	}
 
@@ -71,7 +70,7 @@ public class DoGPeaks<N extends RealType<N>> extends ArrayList<float[]>
 	 *  @param sigmaSmall A double[] array with a sigma value for each dimension of the image.
 	 *  @param minPeakValue The lowest intensity value for a difference of Gaussian peak to be considered so.
 	 *  @param normalizationFactor See {@link DifferenceOfGaussian}. */
-	public DoGPeaks(final Image<N> img, final double[] sigmaLarge, final double[] sigmaSmall,
+	public DoGPeaks(final Img<N> img, final double[] sigmaLarge, final double[] sigmaSmall,
 						final Number minPeakValue, final Number normalizationFactor) throws Exception {
 		final DifferenceOfGaussian<N, FloatType> dog
 			= new DifferenceOfGaussian<N, FloatType>(img, new ImageFactory<FloatType>(new FloatType(), new ArrayContainerFactory()),

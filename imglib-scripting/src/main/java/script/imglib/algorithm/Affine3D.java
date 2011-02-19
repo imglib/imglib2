@@ -1,8 +1,8 @@
 package script.imglib.algorithm;
 
-import mpicbg.imglib.image.Image;
-import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
-import mpicbg.imglib.outofbounds.OutOfBoundsStrategyValueFactory;
+import mpicbg.imglib.container.Img;
+import mpicbg.imglib.outofbounds.OutOfBoundsFactory;
+import mpicbg.imglib.outofbounds.OutOfBoundsConstantValueFactory;
 import mpicbg.imglib.type.numeric.NumericType;
 import script.imglib.algorithm.fn.AbstractAffine3D;
 import script.imglib.algorithm.fn.AlgorithmUtil;
@@ -42,8 +42,8 @@ import script.imglib.algorithm.fn.AlgorithmUtil;
  */
 public class Affine3D<T extends NumericType<T>> extends AbstractAffine3D<T>
 {	
-	public Affine3D(final Image<T> img, final float[] matrix, final Mode mode) throws Exception {
-		this(img, matrix, mode, new OutOfBoundsStrategyValueFactory<T>(img.createType())); // default value is zero
+	public Affine3D(final Img<T> img, final float[] matrix, final Mode mode) throws Exception {
+		this(img, matrix, mode, new OutOfBoundsConstantValueFactory<T,Img<T>>(img.firstElement().createVariable())); // default value is zero
 	}
 
 	@SuppressWarnings("unchecked")
@@ -52,7 +52,7 @@ public class Affine3D<T extends NumericType<T>> extends AbstractAffine3D<T>
 	}
 
 	@SuppressWarnings("unchecked")
-	public Affine3D(final Object fn, final float[] matrix, final Mode mode, final OutOfBoundsStrategyFactory<T> oobf) throws Exception {
+	public Affine3D(final Object fn, final float[] matrix, final Mode mode, final OutOfBoundsFactory<T,Img<T>> oobf) throws Exception {
 		super(AlgorithmUtil.wrap(fn), matrix, mode, oobf);
 	}
 
@@ -72,7 +72,7 @@ public class Affine3D<T extends NumericType<T>> extends AbstractAffine3D<T>
 			final float scaleX, final float shearX,
 			final float shearY, final float scaleY,
 			final float translateX, final float translateY,
-			final Mode mode, final OutOfBoundsStrategyFactory<T> oobf) throws Exception {
+			final Mode mode, final OutOfBoundsFactory<T,Img<T>> oobf) throws Exception {
 		super(AlgorithmUtil.wrap(fn), new float[]{scaleX, shearX, 0, translateX,
 				  						 shearY, scaleY, 0, translateY,
 				  			   			 0, 0, 1, 0}, mode, oobf);

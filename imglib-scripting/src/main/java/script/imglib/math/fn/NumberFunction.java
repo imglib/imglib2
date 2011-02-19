@@ -3,7 +3,7 @@ package script.imglib.math.fn;
 
 import java.util.Collection;
 
-import mpicbg.imglib.cursor.Cursor;
+import mpicbg.imglib.container.ImgCursor;
 import mpicbg.imglib.type.numeric.RealType;
 import mpicbg.imglib.type.numeric.integer.IntType;
 import mpicbg.imglib.type.numeric.integer.LongType;
@@ -43,7 +43,7 @@ public final class NumberFunction implements IFunction {
 	}
 
 	@Override
-	public final void findCursors(final Collection<Cursor<?>> cursors) {}
+	public final void findCursors(final Collection<ImgCursor<?>> cursors) {}
 
 	@Override
 	public IFunction duplicate()

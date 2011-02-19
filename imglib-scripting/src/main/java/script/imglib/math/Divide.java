@@ -2,20 +2,20 @@ package script.imglib.math;
 
 import script.imglib.math.fn.BinaryOperation;
 import script.imglib.math.fn.IFunction;
-import mpicbg.imglib.image.Image;
+import mpicbg.imglib.container.Img;
 import mpicbg.imglib.type.numeric.RealType;
 
 public class Divide extends BinaryOperation
 {
-	public Divide(final Image<? extends RealType<?>> left, final Image<? extends RealType<?>> right) {
+	public Divide(final Img<? extends RealType<?>> left, final Img<? extends RealType<?>> right) {
 		super(left, right);
 	}
 
-	public Divide(final IFunction fn, final Image<? extends RealType<?>> right) {
+	public Divide(final IFunction fn, final Img<? extends RealType<?>> right) {
 		super(fn, right);
 	}
 
-	public Divide(final Image<? extends RealType<?>> left, final IFunction fn) {
+	public Divide(final Img<? extends RealType<?>> left, final IFunction fn) {
 		super(left, fn);
 	}
 
@@ -23,11 +23,11 @@ public class Divide extends BinaryOperation
 		super(fn1, fn2);
 	}
 	
-	public Divide(final Image<? extends RealType<?>> left, final Number val) {
+	public Divide(final Img<? extends RealType<?>> left, final Number val) {
 		super(left, val);
 	}
 
-	public Divide(final Number val,final Image<? extends RealType<?>> right) {
+	public Divide(final Number val,final Img<? extends RealType<?>> right) {
 		super(val, right);
 	}
 
@@ -48,7 +48,7 @@ public class Divide extends BinaryOperation
 	}
 
 	/** 1 / img */
-	public Divide(final Image<? extends RealType<?>> right) {
+	public Divide(final Img<? extends RealType<?>> right) {
 		super(1, right);
 	}
 
