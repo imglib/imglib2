@@ -28,6 +28,15 @@ public class IntervalIndexer
 		return i;
 	}
 
+	final static public long positionToIndex( final long[] position, final long[] dimensions )
+	{
+		final int maxDim = dimensions.length - 1;
+		long i = position[ maxDim ];
+		for ( int d = maxDim - 1; d >= 0; --d )
+			i = i * dimensions[ d ] + position[ d ];
+		return i;
+	}
+
 	final static public int positionWithOffsetToIndex( final int[] position, final int[] dimensions, final int[] offsets )
 	{
 		final int maxDim = dimensions.length - 1;
