@@ -1,5 +1,6 @@
 package script.imglib.algorithm;
 
+import script.imglib.algorithm.fn.ImgProxy;
 import script.imglib.math.Compute;
 import script.imglib.math.fn.IFunction;
 import mpicbg.imglib.algorithm.OutputAlgorithm;
@@ -14,11 +15,11 @@ public class Dither<T extends RealType<T>> extends ImgProxy<BitType>
 	/** The dithering threshold is computed from the min and max values of the image;
 	 *  see {@link FloydSteinbergDithering}. */
 	public Dither(final Img<T> img) throws Exception {
-		super(process(img).getContainer(), new BitType());
+		super(process(img));
 	}
 
 	public Dither(final Img<T> img, final float ditheringThreshold) throws Exception {
-		super(process(img, ditheringThreshold).getContainer(), new BitType());
+		super(process(img, ditheringThreshold));
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
@@ -37,7 +38,7 @@ public class Dither<T extends RealType<T>> extends ImgProxy<BitType>
 	static private final <R extends RealType<R>> Img<BitType> process(final Img<R> img) throws Exception {
 		return process(new FloydSteinbergDithering<R>(img));
 	}
-	static private final <R extends RealType<R>> Img<R> process(final OutputAlgorithm<R> oa) throws Exception {
+	static private final <R extends RealType<R>> Img<R> process(final OutputAlgorithm<Img<R>> oa) throws Exception {
 		if (!oa.checkInput() || !oa.process()) {
 			throw new Exception("Dither failed: " + oa.getErrorMessage());
 		}
