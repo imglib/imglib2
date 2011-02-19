@@ -30,7 +30,7 @@ package mpicbg.imglib.sampler.cell;
 import mpicbg.imglib.container.AbstractImgCursor;
 import mpicbg.imglib.container.cell.Cell;
 import mpicbg.imglib.container.cell.CellContainer;
-import mpicbg.imglib.image.Image;
+import mpicbg.imglib.container.Img;
 import mpicbg.imglib.type.Type;
 
 /**
@@ -61,7 +61,7 @@ public class CellBasicRasterIterator< T extends Type< T > > extends AbstractImgC
 	/* The instance of the current cell */
 	protected Cell< T, ? > cellInstance;
 	
-	public CellBasicRasterIterator( final CellContainer< T, ? > container, final Image< T > image )
+	public CellBasicRasterIterator( final CellContainer< T, ? > container, final Img< T > image )
 	{
 		super( container, image );
 		

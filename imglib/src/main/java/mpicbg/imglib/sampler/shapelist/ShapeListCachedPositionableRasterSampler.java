@@ -28,7 +28,7 @@
 package mpicbg.imglib.sampler.shapelist;
 
 import mpicbg.imglib.container.shapelist.ShapeListCached;
-import mpicbg.imglib.image.Image;
+import mpicbg.imglib.container.Img;
 import mpicbg.imglib.type.Type;
 
 /**
@@ -43,7 +43,7 @@ public class ShapeListCachedPositionableRasterSampler< T extends Type< T > > ext
 	
 	public ShapeListCachedPositionableRasterSampler(
 			final ShapeListCached< T > container,
-			final Image< T > image ) 
+			final Img< T > image ) 
 	{
 		super( container, image );
 		this.cache = container.getShapeListCachingStrategy().createInstance();

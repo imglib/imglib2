@@ -27,8 +27,6 @@
  */
 package mpicbg.imglib.container.planar;
 
-import mpicbg.imglib.container.AbstractImgCursor;
-import mpicbg.imglib.container.Img;
 import mpicbg.imglib.type.NativeType;
 
 /**
@@ -37,97 +35,22 @@ import mpicbg.imglib.type.NativeType;
  *
  * @author Stephan Preibisch and Stephan Saalfeld
  */
-public class PlanarCursor< T extends NativeType< T > > extends AbstractImgCursor< T > implements PlanarLocation
+public class PlanarCursor< T extends NativeType< T > > extends AbstractPlanarCursor< T >
 {
-	protected final T type;
 	protected final PlanarContainer< T, ? > container;
-
-	protected final int lastIndex, lastSliceIndex;
-	protected int sliceIndex;
-	protected boolean hasNext;
 
 	public PlanarCursor( final PlanarContainer< T, ? > container )
 	{
-		super( container.numDimensions() );
+		super( container );
 
 		this.container = container;
-		this.type = container.createLinkedType();
-		lastIndex = container.dim[ 0 ] * container.dim[ 1 ] - 1;
-		lastSliceIndex = container.getSlices() - 1;
-
+		
 		reset();
 	}
 
 	@Override
-	public T get() { return type; }
-
-	/**
-	 * Note: This test is fragile in a sense that it returns true for elements
-	 * after the last element as well.
-	 * 
-	 * @return false for the last element 
-	 */
-	@Override
-	public boolean hasNext() { return hasNext; }
-
-	@Override
-	public void fwd()
+	public PlanarContainer< T, ? > getImg()
 	{
-		type.incIndex();
-
-		final int i = type.getIndex();
-		
-		if ( i < lastIndex )
-			return;
-		else if ( i == lastIndex )
-			hasNext = sliceIndex < lastSliceIndex;
-		else
-		{
-			++sliceIndex;
-			type.updateIndex( 0 );
-			type.updateContainer( this );
-		}
+		return container;
 	}
-
-	@Override
-	public void reset()
-	{
-		sliceIndex = 0;
-		type.updateIndex( -1 );
-		type.updateContainer( this );
-		hasNext = true;
-	}
-
-	@Override
-	public String toString() { return type.toString(); }
-
-	@Override
-	public Img<T> getImg() { return container; }
-
-	@Override
-	public void localize( final long[] position )
-	{
-		for ( int d = 0; d < n; ++d )
-			position[ d ] = getLongPosition( d );
-	}
-
-	@Override
-	public long getLongPosition( final int dim )
-	{
-		if ( dim == 0 )
-			return type.getIndex() % container.dim[ 0 ];
-		else if ( dim == 1 )
-			return type.getIndex() / container.dim[ 0 ];
-		else
-		{
-			// adapted from IntervalIndexer
-			int step = 1;
-			for ( int d = 2; d < dim; ++d )
-				step *= container.dim[ d ];
-			return ( sliceIndex / step ) % container.dim[ dim ];			               
-		}
-	}
-
-	@Override
-	public int getCurrentPlane() { return sliceIndex; }
 }

@@ -43,6 +43,7 @@ import mpicbg.imglib.outofbounds.OutOfBoundsFactory;
 import mpicbg.imglib.type.Type;
 import mpicbg.imglib.util.IntervalIndexer;
 
+// TODO: Do not extend AbstractImgCursor!!!
 public class LocalNeighborhoodCursor<T extends Type<T>> extends AbstractImgCursor<T>
 {
 	/**

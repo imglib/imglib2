@@ -35,17 +35,54 @@ import mpicbg.imglib.type.NativeType;
  *
  * @author Stephan Preibisch and Stephan Saalfeld
  */
-public class PlanarRandomAccess< T extends NativeType< T > > extends AbstractPlanarRandomAccess< T >
+public class PlanarRandomAccess1D< T extends NativeType< T > > extends PlanarRandomAccess< T >
 {
-	final PlanarContainer< T, ? > container;
-
-	public PlanarRandomAccess( final PlanarContainer< T, ? > container )
+	public PlanarRandomAccess1D( final PlanarContainer< T, ? > container )
 	{
 		super( container );
-		
-		this.container = container;
+	}
+
+	@Override
+	public void fwd( final int d )
+	{
+		++position[ 0 ];
+		type.incIndex();
 	}
 	
 	@Override
-	public PlanarContainer< T, ? > getImg() { return container; }
+	public void bck( final int d )
+	{		
+		--position[ 0 ];
+		type.decIndex();
+	}
+	
+	@Override
+	public void move( final int steps, final int d )
+	{
+		position[ 0 ] += steps;	
+		type.incIndex( steps );
+	}
+	
+	@Override
+	public void setPosition( final int position, final int dim )
+	{
+		type.updateIndex( type.getIndex() + position - this.position[ 0 ] );
+		this.position[ dim ] = position;
+	}
+	
+	@Override
+	public void setPosition( final int[] position )
+	{
+		type.updateIndex( position[ 0 ] );
+		this.position[ 0 ] = position[ 0 ];
+	}
+	
+	@Override
+	public void setPosition( final long[] position )
+	{
+		type.updateIndex( ( int )position[ 0 ] );
+		this.position[ 0 ] = ( int )position[ 0 ];
+	}
+	
+	
 }

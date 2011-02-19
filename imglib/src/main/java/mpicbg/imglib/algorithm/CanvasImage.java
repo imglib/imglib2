@@ -19,14 +19,14 @@ package mpicbg.imglib.algorithm;
 import mpicbg.imglib.algorithm.Benchmark;
 import mpicbg.imglib.container.ImgCursor;
 import mpicbg.imglib.container.ImgRandomAccess;
-import mpicbg.imglib.image.Image;
+import mpicbg.imglib.container.Img;
 import mpicbg.imglib.outofbounds.RasterOutOfBoundsFactory;
 import mpicbg.imglib.type.Type;
 
 public class CanvasImage<T extends Type<T>> implements OutputAlgorithm<T>, Benchmark
 {
-	final Image<T> input;
-	final Image<T> output;
+	final Img<T> input;
+	final Img<T> output;
 	final RasterOutOfBoundsFactory<T> outOfBoundsFactory;
 	final int numDimensions;
 	final int[] newSize, offset, location;
@@ -42,7 +42,7 @@ public class CanvasImage<T extends Type<T>> implements OutputAlgorithm<T>, Bench
 	 * @param newSize - the size of the new image
 	 * @param outOfBoundsFactory - what to do when extending the image
 	 */
-	public CanvasImage( final Image<T> input, final int[] newSize, final int[] offset, final RasterOutOfBoundsFactory<T> outOfBoundsFactory )
+	public CanvasImage( final Img<T> input, final int[] newSize, final int[] offset, final RasterOutOfBoundsFactory<T> outOfBoundsFactory )
 	{
 		this.input = input;
 		this.outOfBoundsFactory = outOfBoundsFactory;
@@ -78,12 +78,12 @@ public class CanvasImage<T extends Type<T>> implements OutputAlgorithm<T>, Bench
 	
 	public int[] getOffset() { return offset.clone(); }
 	
-	public CanvasImage( final Image<T> input, final int[] newSize, final RasterOutOfBoundsFactory<T> outOfBoundsFactory )
+	public CanvasImage( final Img<T> input, final int[] newSize, final RasterOutOfBoundsFactory<T> outOfBoundsFactory )
 	{		
 		this( input, newSize, computeOffset(input, newSize), outOfBoundsFactory ); 
 	}
 	
-	private static int[] computeOffset( final Image<?> input, final int[] newSize )
+	private static int[] computeOffset( final Img<?> input, final int[] newSize )
 	{
 		final int offset[] = new int[ input.numDimensions() ];
 		
@@ -101,7 +101,7 @@ public class CanvasImage<T extends Type<T>> implements OutputAlgorithm<T>, Bench
 	 * @param input - the input image
 	 * @param newSize - the size of the new image
 	 */
-	public CanvasImage( final Image<T> input, final int[] newSize )
+	public CanvasImage( final Img<T> input, final int[] newSize )
 	{
 		this( input, newSize, null );
 	}
@@ -143,7 +143,7 @@ public class CanvasImage<T extends Type<T>> implements OutputAlgorithm<T>, Bench
 	public long getProcessingTime() { return processingTime; }
 	
 	@Override
-	public Image<T> getResult() { return output; }
+	public Img<T> getResult() { return output; }
 
 	@Override
 	public boolean checkInput() 

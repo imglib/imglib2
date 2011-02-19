@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2009--2010, Stephan Preibisch & Stephan Saalfeld
+ * Copyright (c) 2009--2010, Stephan Saalfeld
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -27,25 +27,25 @@
  */
 package mpicbg.imglib.container.planar;
 
+import mpicbg.imglib.container.planar.PlanarContainer;
 import mpicbg.imglib.type.NativeType;
 
 /**
- * Positionable for a {@link PlanarContainer PlanarContainers}
+ * Basic Iterator for 1d {@link PlanarContainer PlanarContainers}
  * @param <T>
  *
- * @author Stephan Preibisch and Stephan Saalfeld
+ * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-public class PlanarRandomAccess< T extends NativeType< T > > extends AbstractPlanarRandomAccess< T >
+public class PlanarCursor1D< T extends NativeType< T > > extends PlanarCursor2D< T >
 {
-	final PlanarContainer< T, ? > container;
-
-	public PlanarRandomAccess( final PlanarContainer< T, ? > container )
+	public PlanarCursor1D( final PlanarContainer< T, ? > container )
 	{
 		super( container );
-		
-		this.container = container;
 	}
 	
 	@Override
-	public PlanarContainer< T, ? > getImg() { return container; }
+	public void localize( final long[] position )
+	{		
+		position[ 0 ] = type.getIndex();
+	}	
 }

@@ -39,13 +39,13 @@ import mpicbg.imglib.Localizable;
 public abstract class AbstractImgRandomAccess< T > extends AbstractLocalizableImgSampler< T > implements ImgRandomAccess< T >
 {
 	/* internal register for position calculation */
-	final protected int[] tmp;
+	final protected long[] tmp;
 
 	public AbstractImgRandomAccess( final Interval f )
 	{
 		super( f );
 
-		this.tmp = new int[ n ];
+		this.tmp = new long[ n ];
 	}
 
 	@Override

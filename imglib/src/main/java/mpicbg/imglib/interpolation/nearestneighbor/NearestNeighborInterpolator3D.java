@@ -29,7 +29,7 @@ package mpicbg.imglib.interpolation.nearestneighbor;
 
 import mpicbg.imglib.Localizable;
 import mpicbg.imglib.RealLocalizable;
-import mpicbg.imglib.image.Image;
+import mpicbg.imglib.container.Img;
 import mpicbg.imglib.outofbounds.RasterOutOfBoundsFactory;
 import mpicbg.imglib.type.Type;
 
@@ -44,7 +44,7 @@ public class NearestNeighborInterpolator3D< T extends Type< T > > extends Neares
 	/* current position, required for relative movement */
 	private float x, y, z;
 	
-	protected NearestNeighborInterpolator3D( final Image< T > image, final RasterOutOfBoundsFactory< T > outOfBoundsStrategyFactory )
+	protected NearestNeighborInterpolator3D( final Img< T > image, final RasterOutOfBoundsFactory< T > outOfBoundsStrategyFactory )
 	{
 		super( image, outOfBoundsStrategyFactory );
 		
