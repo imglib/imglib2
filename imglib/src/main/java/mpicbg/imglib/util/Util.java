@@ -66,6 +66,16 @@ public class Util
 
 		return values;
 	}
+	
+	public static long[] getArrayFromValue( final long value, final int numDimensions )
+	{
+		final long[] values = new long[ numDimensions ];
+
+		for ( int d = 0; d < numDimensions; ++d )
+			values[ d ] = value;
+
+		return values;
+	}
 
 	final public static float computeDistance( final int[] position1, final int[] position2 )
 	{
