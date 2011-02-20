@@ -34,7 +34,7 @@ import mpicbg.imglib.util.Util;
 
 public class ImageConverter< S extends Type<S>, T extends Type<T> > implements OutputAlgorithm<Img<T>>, MultiThreaded, Benchmark
 {
-	final Img<S> image; 
+	final Img<S> image;
 	final Img<T> output;
 	final Converter<S,T> converter;
 
