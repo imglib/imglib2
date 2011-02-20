@@ -36,7 +36,7 @@ public abstract class AbstractImg< T > implements Img< T >
 {
 	final protected int n;
 	protected long numPixels;
-	protected final long[] size;
+	protected final long[] dimension;
 	protected final long[] max;
 	
 	public AbstractImg( final long[] size )
@@ -45,7 +45,7 @@ public abstract class AbstractImg< T > implements Img< T >
 		
 		this.numPixels = numElements( size );
 		
-		this.size = size.clone();
+		this.dimension = size.clone();
 		max = new long[ size.length ];
 		for ( int i = 0; i < size.length; ++i )
 			max[ i ] = size[ i ] - 1;
@@ -74,19 +74,19 @@ public abstract class AbstractImg< T > implements Img< T >
 	}
 		
 	@Override
-	public int numDimensions() { return size.length; }
+	public int numDimensions() { return dimension.length; }
 	
 	@Override
 	public void dimensions( final long[] s )
 	{
 		for ( int i = 0; i < n; ++i )
-			s[ i ] = size[ i ];
+			s[ i ] = dimension[ i ];
 	}
 
 	@Override
 	public long dimension( final int d )
 	{
-		try { return this.size[ d ]; }
+		try { return this.dimension[ d ]; }
 		catch ( ArrayIndexOutOfBoundsException e ) { return 1; }
 	}
 	
@@ -99,10 +99,10 @@ public abstract class AbstractImg< T > implements Img< T >
 		String className = this.getClass().getCanonicalName();
 		className = className.substring( className.lastIndexOf(".") + 1, className.length());
 		
-		String description = className + " [" + size[ 0 ];
+		String description = className + " [" + dimension[ 0 ];
 		
 		for ( int i = 1; i < n; ++i )
-			description += "x" + size[ i ];
+			description += "x" + dimension[ i ];
 		
 		description += "]";
 		

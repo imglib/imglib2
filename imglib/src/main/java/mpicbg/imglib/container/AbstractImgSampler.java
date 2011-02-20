@@ -37,7 +37,6 @@ import mpicbg.imglib.type.Type;
  */
 public abstract class AbstractImgSampler< T > implements ImgSampler< T >
 {
-	/* a copy of container.numDimensions() for slightly faster access */
 	final protected int n;
 	
 	public AbstractImgSampler( final int n )

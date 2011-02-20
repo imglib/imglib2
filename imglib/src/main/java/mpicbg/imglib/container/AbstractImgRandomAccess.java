@@ -54,7 +54,7 @@ public abstract class AbstractImgRandomAccess< T > extends AbstractLocalizableIm
 		for ( int d = 0; d < n; ++d )
 		{
 			final long x = position[ d ];
-			if ( x < 0 || x >= size[ d ] )
+			if ( x < 0 || x >= dimension[ d ] )
 				return true;
 		}
 		return false;

@@ -149,7 +149,7 @@ public class ListContainer< T extends Type< T > > extends AbstractImg< T >
 		{
 			final Interval a = ( Interval )f;
 			for ( int d = 0; d < n; ++d )
-				if ( size[ d ] != a.dimension( d ) )
+				if ( dimension[ d ] != a.dimension( d ) )
 					return false;
 
 			return true;

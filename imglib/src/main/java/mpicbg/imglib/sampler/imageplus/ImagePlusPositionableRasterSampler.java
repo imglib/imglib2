@@ -61,7 +61,7 @@ public class ImagePlusPositionableRasterSampler< T extends Type< T > > extends A
 		this.type = container.createLinkedType();
 		this.container = container;
 		step = Array.createAllocationSteps( container.getDimensions() );
-		sliceSteps = ImagePlusContainer.createSliceSteps( size );
+		sliceSteps = ImagePlusContainer.createSliceSteps( dimension );
 		sliceIndex = 0;
 	}	
 
