@@ -6,7 +6,7 @@ import mpicbg.imglib.algorithm.Benchmark;
 import mpicbg.imglib.algorithm.OutputAlgorithm;
 import mpicbg.imglib.container.Img;
 import mpicbg.imglib.container.ImgCursor;
-import mpicbg.imglib.cursor.*;
+import mpicbg.imglib.container.ImgRandomAccess;
 import mpicbg.imglib.exception.IncompatibleTypeException;
 import mpicbg.util.RealSum;
 
@@ -68,22 +68,13 @@ public class NormalizeImageFloat <T extends RealType<T>> implements OutputAlgori
 		} catch (IncompatibleTypeException e) {
 			throw new RuntimeException(e);
 		}
-		ImgCursor<FloatType> pushCursor = outputImage.localizingCursor();
-		ImgCursor<T> pullCursor = image.localizingCursor();
-		
-		final long[] p = new long[dims.length];
+		ImgCursor<T> pullCursor = image.cursor();
+		ImgRandomAccess<FloatType> pushCursor = outputImage.randomAccess();
 		
 		while(pullCursor.hasNext())
 		{			
 			pullCursor.fwd();
-			pullCursor.localize(p);
-			
-			// TODO: likely wrong
-			pushCursor.reset();
-			long steps = 1;
-			for (int i=0; i<p.length; i++) steps *= p[i];
-			pushCursor.jumpFwd(steps);
-			
+			pushCursor.setPosition(pullCursor);
 			pushCursor.get().set((float)(pullCursor.get().getRealFloat() / norm));
 		}
 		
