@@ -22,29 +22,27 @@ import java.util.concurrent.atomic.AtomicInteger;
 import mpicbg.imglib.algorithm.Benchmark;
 import mpicbg.imglib.algorithm.MultiThreaded;
 import mpicbg.imglib.algorithm.OutputAlgorithm;
-import mpicbg.imglib.cursor.Cursor;
-import mpicbg.imglib.cursor.LocalizableByDimCursor;
-import mpicbg.imglib.cursor.LocalizableCursor;
-import mpicbg.imglib.function.Function;
-import mpicbg.imglib.image.Image;
-import mpicbg.imglib.image.ImageFactory;
+import mpicbg.imglib.container.Img;
+import mpicbg.imglib.container.ImgCursor;
+import mpicbg.imglib.container.ImgFactory;
+import mpicbg.imglib.container.ImgRandomAccess;
 import mpicbg.imglib.multithreading.Chunk;
 import mpicbg.imglib.multithreading.SimpleMultiThreading;
 import mpicbg.imglib.type.Type;
 import mpicbg.imglib.util.Util;
 
-public class ImageCalculator<S extends Type<S>, T extends Type<T>, U extends Type<U>> implements OutputAlgorithm<U>, MultiThreaded, Benchmark
+public class ImageCalculator<S extends Type<S>, T extends Type<T>, U extends Type<U>> implements OutputAlgorithm<Img<U>>, MultiThreaded, Benchmark
 {
-	final Image<S> image1; 
-	final Image<T> image2; 
-	final Image<U> output;
+	final Img<S> image1; 
+	final Img<T> image2; 
+	final Img<U> output;
 	final Function<S,T,U> function;
 
 	long processingTime;
 	int numThreads;
 	String errorMessage = "";
 	
-	public ImageCalculator( final Image<S> image1, final Image<T> image2, final Image<U> output, final Function<S,T,U> function )
+	public ImageCalculator( final Img<S> image1, final Img<T> image2, final Img<U> output, final Function<S,T,U> function )
 	{
 		this.image1 = image1;
 		this.image2 = image2;
@@ -54,13 +52,13 @@ public class ImageCalculator<S extends Type<S>, T extends Type<T>, U extends Typ
 		setNumThreads();
 	}
 	
-	public ImageCalculator( final Image<S> image1, final Image<T> image2, final ImageFactory<U> factory, final Function<S,T,U> function )
+	public ImageCalculator( final Img<S> image1, final Img<T> image2, final ImgFactory<U> factory, final U destType, final Function<S,T,U> function )
 	{
-		this( image1, image2, createImageFromFactory( factory, image1.getDimensions() ), function );
+		this( image1, image2, factory.create( image1, destType ), function );
 	}
 	
 	@Override
-	public Image<U> getResult() { return output; }
+	public Img<U> getResult() { return output; }
 
 	@Override
 	public boolean checkInput()
@@ -71,17 +69,17 @@ public class ImageCalculator<S extends Type<S>, T extends Type<T>, U extends Typ
 		}
 		else if ( image1 == null )
 		{
-			errorMessage = "ImageCalculator: [Image<S> image1] is null.";
+			errorMessage = "ImageCalculator: [Img<S> image1] is null.";
 			return false;
 		}
 		else if ( image2 == null )
 		{
-			errorMessage = "ImageCalculator: [Image<T> image2] is null.";
+			errorMessage = "ImageCalculator: [Img<T> image2] is null.";
 			return false;
 		}
 		else if ( output == null )
 		{
-			errorMessage = "ImageCalculator: [Image<U> output] is null.";
+			errorMessage = "ImageCalculator: [Img<U> output] is null.";
 			return false;
 		}
 		else if ( function == null )
@@ -89,13 +87,13 @@ public class ImageCalculator<S extends Type<S>, T extends Type<T>, U extends Typ
 			errorMessage = "ImageCalculator: [Function<S,T,U>] is null.";
 			return false;
 		}
-		else if ( !image1.getContainer().compareStorageContainerDimensions( image2.getContainer() ) || 
-				  !image1.getContainer().compareStorageContainerDimensions( output.getContainer() ) )
+		else if ( !image1.equalIterationOrder( image2 ) || 
+				  !image1.equalIterationOrder( output ) )
 		{
-			errorMessage = "ImageCalculator: Images have different dimensions, not supported:" + 
-				" Image1: " + Util.printCoordinates( image1.getDimensions() ) + 
-				" Image2: " + Util.printCoordinates( image2.getDimensions() ) +
-				" Output: " + Util.printCoordinates( output.getDimensions() );
+			errorMessage = "ImageCalculator: Imgs have different dimensions, not supported:" + 
+				" Img1: " + Util.printCoordinates( Util.intervalDimensions( image1 ) ) + 
+				" Img2: " + Util.printCoordinates( Util.intervalDimensions( image2 ) ) +
+				" Output: " + Util.printCoordinates( Util.intervalDimensions( output ) );
 			return false;
 		}
 		else
@@ -107,7 +105,7 @@ public class ImageCalculator<S extends Type<S>, T extends Type<T>, U extends Typ
 	{
 		final long startTime = System.currentTimeMillis();
    
-		final long imageSize = image1.getNumPixels();
+		final long imageSize = image1.size();
 
 		final AtomicInteger ai = new AtomicInteger(0);					
         final Thread[] threads = SimpleMultiThreading.newThreads( getNumThreads() );
@@ -115,9 +113,9 @@ public class ImageCalculator<S extends Type<S>, T extends Type<T>, U extends Typ
         final Vector<Chunk> threadChunks = SimpleMultiThreading.divideIntoChunks( imageSize, numThreads );
 		
 		// check if all container types are comparable so that we can use simple iterators
-		// we assume transivity here
-        final boolean isCompatible = image1.getContainer().compareStorageContainerCompatibility( image2.getContainer() ) &&
-		 							 image1.getContainer().compareStorageContainerCompatibility( output.getContainer() );
+		// we assume transitivity here
+        final boolean isCompatible = image1.equalIterationOrder( image2 ) &&
+		 							 image1.equalIterationOrder( output );
         
         for (int ithread = 0; ithread < threads.length; ++ithread)
             threads[ithread] = new Thread(new Runnable()
@@ -152,14 +150,14 @@ public class ImageCalculator<S extends Type<S>, T extends Type<T>, U extends Typ
 	
 	protected void computeSimple( final long startPos, final long loopSize )
 	{
-		final Cursor<S> cursor1 = image1.createCursor();
-		final Cursor<T> cursor2 = image2.createCursor();
-		final Cursor<U> cursorOut = output.createCursor();
+		final ImgCursor<S> cursor1 = image1.cursor();
+		final ImgCursor<T> cursor2 = image2.cursor();
+		final ImgCursor<U> cursorOut = output.cursor();
 		
 		// move to the starting position of the current thread
-		cursor1.fwd( startPos );
-		cursor2.fwd( startPos );
-		cursorOut.fwd( startPos );
+		cursor1.jumpFwd( startPos );
+		cursor2.jumpFwd( startPos );
+		cursorOut.jumpFwd( startPos );
     	
         // do as many pixels as wanted by this thread
         for ( long j = 0; j < loopSize; ++j )
@@ -168,23 +166,19 @@ public class ImageCalculator<S extends Type<S>, T extends Type<T>, U extends Typ
 			cursor2.fwd();
 			cursorOut.fwd();
 			
-			function.compute( cursor1.getType(), cursor2.getType(), cursorOut.getType() );
-		}
-		
-		cursor1.close();
-		cursor2.close();
-		cursorOut.close();		
+			function.compute( cursor1.get(), cursor2.get(), cursorOut.get() );
+		}	
 	}
 	
 	protected void computeAdvanced( final long startPos, final long loopSize )
 	{
 		System.out.println( startPos + " -> " + (startPos+loopSize) );
-		final LocalizableByDimCursor<S> cursor1 = image1.createLocalizableByDimCursor();
-		final LocalizableByDimCursor<T> cursor2 = image2.createLocalizableByDimCursor();
-		final LocalizableCursor<U> cursorOut = output.createLocalizableCursor();
+		final ImgRandomAccess<S> cursor1 = image1.randomAccess();
+		final ImgRandomAccess<T> cursor2 = image2.randomAccess();
+		final ImgCursor<U> cursorOut = output.localizingCursor();
 		
 		// move to the starting position of the current thread
-		cursorOut.fwd( startPos );
+		cursorOut.jumpFwd( startPos );
         
 		// do as many pixels as wanted by this thread
         for ( long j = 0; j < loopSize; ++j )
@@ -193,12 +187,8 @@ public class ImageCalculator<S extends Type<S>, T extends Type<T>, U extends Typ
 			cursor1.setPosition( cursorOut );
 			cursor2.setPosition( cursorOut );
 			
-			function.compute( cursor1.getType(), cursor2.getType(), cursorOut.getType() );
-		}
-		
-		cursor1.close();
-		cursor2.close();
-		cursorOut.close();			
+			function.compute( cursor1.get(), cursor2.get(), cursorOut.get() );
+		}			
 		
 	}
 
@@ -216,12 +206,4 @@ public class ImageCalculator<S extends Type<S>, T extends Type<T>, U extends Typ
 
 	@Override
 	public long getProcessingTime() { return processingTime; }
-	
-	protected static <U extends Type<U>> Image<U> createImageFromFactory( final ImageFactory<U> factory, final int[] size )
-	{
-		if ( factory == null || size == null )
-			return null;
-		else 
-			return factory.createImage( size );			
-	}
 }
