@@ -3,12 +3,13 @@ package script.imglib.algorithm;
 import mpicbg.imglib.algorithm.math.ComputeMinMax;
 import mpicbg.imglib.algorithm.math.ImageConverter;
 import mpicbg.imglib.function.Converter;
-import mpicbg.imglib.image.Image;
+import mpicbg.imglib.container.Img;
 import mpicbg.imglib.type.numeric.NumericType;
-import mpicbg.imglib.type.numeric.RGBALegacyType;
+import mpicbg.imglib.type.numeric.ARGBType;
 import mpicbg.imglib.type.numeric.RealType;
 import mpicbg.imglib.type.numeric.real.FloatType;
-import script.imglib.algorithm.fn.AbstractNormalize;
+import script.imglib.algorithm.fn.AlgorithmUtil;
+import script.imglib.algorithm.fn.ImgProxy;
 import script.imglib.color.Alpha;
 import script.imglib.color.Blue;
 import script.imglib.color.Green;
@@ -23,44 +24,44 @@ import script.imglib.math.fn.IFunction;
  *
  * The constructor accepts any of {@link IFunction, ColorFunction, Image}.
  * 
- * Images may be of any RealType or RGBALegacyType. In the latter case, each color
+ * Images may be of any RealType or ARGBType. In the latter case, each color
  * channel is normalized independently.
  * 
  * When the min equals the max, the result is an image with zero values.
  */
-public class Normalize<N extends NumericType<N>> extends AbstractNormalize<N>
+public class Normalize<N extends NumericType<N>> extends ImgProxy<N>
 {
 	@SuppressWarnings("unchecked")
 	public Normalize(final Object fn) throws Exception {
 		super(process(fn));
 	}
 
-	@SuppressWarnings("unchecked")
-	static final private Image process(final Object fn) throws Exception {
-		if (fn instanceof ColorFunction) return (Image)processRGBA(Compute.inRGBA((ColorFunction)fn));
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	static final private Img process(final Object fn) throws Exception {
+		if (fn instanceof ColorFunction) return (Img)processRGBA(Compute.inRGBA((ColorFunction)fn));
 		if (fn instanceof IFunction) return processReal((IFunction)fn);
-		if (fn instanceof Image<?>) {
-			if (((Image)fn).createType() instanceof RGBALegacyType) {
-				return (Image)processRGBA((Image<RGBALegacyType>)fn);
+		if (fn instanceof Img<?>) {
+			if (((Img)fn).firstElement() instanceof ARGBType) {
+				return (Img)processRGBA((Img<ARGBType>)fn);
 			} else {
-				return processReal((Image)fn);
+				return processReal((Img)fn);
 			}
 		}
 		throw new Exception("NormalizeMinMax: don't know how to process " + fn.getClass());
 	}
 
-	static final private Image<RGBALegacyType> processRGBA(final Image<RGBALegacyType> img) throws Exception {
+	static final private Img<ARGBType> processRGBA(final Img<ARGBType> img) throws Exception {
 		return new RGBA(processReal(new Red(img)),
 						processReal(new Green(img)),
 						processReal(new Blue(img)),
 						processReal(new Alpha(img))).asImage();
 	}
 
-	static final private Image<FloatType> processReal(final IFunction fn) throws Exception {
+	static final private Img<FloatType> processReal(final IFunction fn) throws Exception {
 		return processReal(Compute.inFloats(fn));
 	}
 
-	static final private <T extends RealType<T>> Image<FloatType> processReal(final Image<T> img) throws Exception {
+	static final private <T extends RealType<T>> Img<FloatType> processReal(final Img<T> img) throws Exception {
 		// Compute min and max
 		final ComputeMinMax<T> cmm = new ComputeMinMax<T>(img);
 		if (!cmm.checkInput() || !cmm.process()) {
@@ -68,11 +69,11 @@ public class Normalize<N extends NumericType<N>> extends AbstractNormalize<N>
 		}
 		// If min and max are the same, we just return the empty image will all zeros
 		if (0 == cmm.getMin().compareTo(cmm.getMax())) {
-			return new Image<FloatType>(img.getContainerFactory().createContainer(img.getDimensions(), new FloatType()), new FloatType());
+			return img.factory().imgFactory(new FloatType()).create(AlgorithmUtil.extractDimensions(img), new FloatType());
 		}
 
 		// Copy img into a new target image
-		final Image<FloatType> target = new Image<FloatType>(img.getContainerFactory().createContainer(img.getDimensions(), new FloatType()), new FloatType());
+		final Img<FloatType> target = img.factory().imgFactory(new FloatType()).create(AlgorithmUtil.extractDimensions(img), new FloatType());
 
 		// Normalize in place the target image
 		final double min = cmm.getMin().getRealDouble();

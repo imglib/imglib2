@@ -28,10 +28,9 @@
 package mpicbg.imglib.sampler.imageplus;
 
 import mpicbg.imglib.container.AbstractImgRandomAccess;
-import mpicbg.imglib.container.array.Array;
 import mpicbg.imglib.container.imageplus.ImagePlusContainer;
-import mpicbg.imglib.image.Image;
-import mpicbg.imglib.type.Type;
+import mpicbg.imglib.container.Img;
+import mpicbg.imglib.type.NativeType;
 
 /**
  * 
@@ -39,7 +38,7 @@ import mpicbg.imglib.type.Type;
  *
  * @author Stephan Preibisch and Stephan Saalfeld
  */
-public class ImagePlusPositionableRasterSampler< T extends Type< T > > extends AbstractImgRandomAccess< T > implements ImagePlusStorageAccess
+public class ImagePlusPositionableRasterSampler< T extends NativeType< T > > extends AbstractImgRandomAccess< T > implements ImagePlusStorageAccess
 {
 	/* the type instance accessing the pixel value the cursor points at */
 	protected final T type;
@@ -54,9 +53,9 @@ public class ImagePlusPositionableRasterSampler< T extends Type< T > > extends A
 	/* TODO do we need this still? */
 	int numNeighborhoodCursors = 0;
 	
-	public ImagePlusPositionableRasterSampler( final ImagePlusContainer< T, ? > container, final Image< T > image ) 
+	public ImagePlusPositionableRasterSampler( final ImagePlusContainer< T, ? > container ) 
 	{
-		super( container, image );
+		super( container );
 		
 		this.type = container.createLinkedType();
 		this.container = container;
@@ -158,6 +157,14 @@ public class ImagePlusPositionableRasterSampler< T extends Type< T > > extends A
 			type.updateIndex( container.getIndex( this.position ) );
 		}
 	}
+	
+
+	// Casting to int, since ImagePlus stack cannot have more than Integer.MAX_VALUE indices in any dimension
+	@Override
+	public void setPosition(long position, int dim)
+	{
+		setPosition( (int) position, dim );
+	}
 
 	@Override
 	public ImagePlusContainer< T, ? > getImg(){ return container; }
@@ -167,4 +174,10 @@ public class ImagePlusPositionableRasterSampler< T extends Type< T > > extends A
 
 	@Override
 	public int getStorageIndex(){ return sliceIndex; }
+
+	@Override
+	public void move(long distance, int dim) {
+		// TODO Auto-generated method stub
+		
+	}
 }

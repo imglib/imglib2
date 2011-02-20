@@ -29,8 +29,8 @@ package mpicbg.imglib.sampler.imageplus;
 
 import mpicbg.imglib.container.AbstractImgCursor;
 import mpicbg.imglib.container.imageplus.ImagePlusContainer;
-import mpicbg.imglib.image.Image;
-import mpicbg.imglib.type.Type;
+import mpicbg.imglib.type.NativeType;
+import mpicbg.imglib.util.Util;
 
 /**
  * Basic Iterator for a {@link ImagePlusContainer ImagePlusContainers}
@@ -38,7 +38,7 @@ import mpicbg.imglib.type.Type;
  *
  * @author Stephan Preibisch and Stephan Saalfeld
  */
-public class ImagePlusBasicRasterIterator< T extends Type< T > > extends AbstractImgCursor< T > implements ImagePlusStorageAccess
+public class ImagePlusBasicRasterIterator< T extends NativeType< T > > extends AbstractImgCursor< T > implements ImagePlusStorageAccess
 {
 	protected final T type;
 	
@@ -50,9 +50,9 @@ public class ImagePlusBasicRasterIterator< T extends Type< T > > extends Abstrac
 	
 	final protected int[] sliceSteps;
 
-	public ImagePlusBasicRasterIterator( final ImagePlusContainer< T, ? > container, final Image< T > image )
+	public ImagePlusBasicRasterIterator( final ImagePlusContainer< T, ? > container )
 	{
-		super( container, image );
+		super( container.numDimensions() );
 
 		this.type = container.createLinkedType();
 		this.container = container;
@@ -60,7 +60,7 @@ public class ImagePlusBasicRasterIterator< T extends Type< T > > extends Abstrac
 		lastIndex = numSlicePixels - 1;
 		lastSliceIndex = container.numSlices() - 1;
 
-		sliceSteps = ImagePlusContainer.createSliceSteps( container.getDimensions() );
+		sliceSteps = ImagePlusContainer.createSliceSteps( Util.intervalDimensions( container ) );
 		
 		reset();
 	}
@@ -93,12 +93,11 @@ public class ImagePlusBasicRasterIterator< T extends Type< T > > extends Abstrac
 		}
 	}
 	
-	@Override
+	// TODO is this necessary?
 	public void close()
 	{
 		type.updateIndex( lastIndex + 1 );
 		sliceIndex = lastSliceIndex + 1;
-		super.close();
 	}
 
 	@Override

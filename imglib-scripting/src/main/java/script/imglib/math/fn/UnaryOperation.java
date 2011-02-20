@@ -3,8 +3,8 @@ package script.imglib.math.fn;
 
 import java.util.Collection;
 
-import mpicbg.imglib.cursor.Cursor;
-import mpicbg.imglib.image.Image;
+import mpicbg.imglib.container.Img;
+import mpicbg.imglib.container.ImgCursor;
 import mpicbg.imglib.type.numeric.RealType;
 
 /* An abstract class to facilitate implementing a function that takes one argument.
@@ -42,7 +42,7 @@ public abstract class UnaryOperation extends FloatImageOperation
 {
 	private final IFunction a;
 
-	public UnaryOperation(final Image<? extends RealType<?>> img) {
+	public UnaryOperation(final Img<? extends RealType<?>> img) {
 		this.a = new ImageFunction(img);
 	}
 
@@ -55,7 +55,7 @@ public abstract class UnaryOperation extends FloatImageOperation
 	}
 
 	@Override
-	public final void findCursors(final Collection<Cursor<?>> cursors) {
+	public final void findCursors(final Collection<ImgCursor<?>> cursors) {
 		a.findCursors(cursors);
 	}
 

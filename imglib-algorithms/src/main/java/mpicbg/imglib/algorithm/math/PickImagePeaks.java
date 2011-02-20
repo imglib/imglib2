@@ -6,14 +6,14 @@ import java.util.Collections;
 
 import mpicbg.imglib.algorithm.Benchmark;
 import mpicbg.imglib.algorithm.OutputAlgorithm;
-import mpicbg.imglib.container.ContainerFactory;
+import mpicbg.imglib.container.Img;
+import mpicbg.imglib.container.ImgCursor;
+import mpicbg.imglib.container.ImgFactory;
+import mpicbg.imglib.container.ImgRandomAccess;
 import mpicbg.imglib.container.array.ArrayContainerFactory;
-import mpicbg.imglib.cursor.LocalizableByDimCursor;
-import mpicbg.imglib.cursor.LocalizableCursor;
-import mpicbg.imglib.image.Image;
-import mpicbg.imglib.image.ImageFactory;
 import mpicbg.imglib.type.logic.BitType;
 import mpicbg.imglib.type.numeric.RealType;
+import mpicbg.imglib.util.Util;
 /**
  * This class implements a very simple peak-picker, with optional ellipsoidal peak suppression.
  * Peaks are found by taking the sign of the difference operator in each dimension, differentiating
@@ -34,12 +34,12 @@ import mpicbg.imglib.type.numeric.RealType;
  * @param <T> the {@link ComparableType} representing information stored in the {@link Image} to
  * pick peaks from.
  */
-public class PickImagePeaks <T extends RealType<T>> implements OutputAlgorithm<BitType>, Benchmark
+public class PickImagePeaks <T extends RealType<T>> implements OutputAlgorithm<Img<BitType>>, Benchmark
 {
-	private final Image<T> image;
+	private final Img<T> image;
 	private long pTime;
-	private Image<BitType> peakImage;
-	private ContainerFactory peakContainerFactory;
+	private Img<BitType> peakImage;
+	private ImgFactory<BitType> peakContainerFactory;
 	final private ArrayList<int[]> peakLocList;
 	private final double[] suppressAxis;
 	private double suppressSum;
@@ -100,14 +100,14 @@ public class PickImagePeaks <T extends RealType<T>> implements OutputAlgorithm<B
 		
 	}
 	
-	public PickImagePeaks(final Image<T> inputImage)
+	public PickImagePeaks(final Img<T> inputImage)
 	{
 		image = inputImage;
 		pTime = 0;
 		peakContainerFactory = null;
 		peakLocList = new ArrayList<int[]>();
 		peakImage = null;
-		suppressAxis = new double[inputImage.getDimensions().length];
+		suppressAxis = new double[inputImage.numDimensions()];
 		Arrays.fill(suppressAxis, 0);
 		suppressSum = 0;
 	}
@@ -128,14 +128,14 @@ public class PickImagePeaks <T extends RealType<T>> implements OutputAlgorithm<B
 		if (peakLocList.size() > 0 && suppressSum >= 1)
 		{
 			final ArrayList<Peak> suppressionList = new ArrayList<Peak>();
-			final LocalizableByDimCursor<T> imCursor = image.createLocalizableByDimCursor();
+			final ImgRandomAccess<T> imCursor = image.randomAccess();
 			
 			T type;
 			//populate the suppression list.
 			for (int[] pos : peakLocList)				
 			{
 				imCursor.setPosition(pos);
-				type = imCursor.getType().copy();
+				type = imCursor.get().copy();
 				suppressionList.add(new Peak(pos, type));
 			}
 			//sort the list.
@@ -178,33 +178,35 @@ public class PickImagePeaks <T extends RealType<T>> implements OutputAlgorithm<B
 	public boolean process() {
 		final long sTime = System.currentTimeMillis();
 		
-		final LocalizableCursor<T> cursor = image.createLocalizableCursor();
-		final LocalizableByDimCursor<T> localCursor = image.createLocalizableByDimCursor();
-		LocalizableByDimCursor<BitType> peakImageCursor;
+		final ImgCursor<T> cursor = image.localizingCursor();
+		final ImgRandomAccess<T> localCursor = image.randomAccess();
+		ImgRandomAccess<BitType> peakImageCursor;
 		//InterMediate Image Cursor
-		LocalizableCursor<BitType> imImagePullCursor;
-		LocalizableByDimCursor<BitType> imImagePushCursor;
-		final int[] dimensions = image.getDimensions();
+		ImgCursor<BitType> imImagePullCursor;
+		ImgRandomAccess<BitType> imImagePushCursor;
+		final long[] dimensions = Util.intervalDimensions(image);
 		final int[] pos = new int[dimensions.length];
-		final int[] checkPos = new int[pos.length];		
-		final ImageFactory<BitType> peakFactory = new ImageFactory<BitType>(new BitType(), 
-				(peakContainerFactory == null ? new ArrayContainerFactory() : peakContainerFactory));
+		final int[] checkPos = new int[pos.length];
+		final ImgFactory<BitType> peakFactory =
+			null == peakContainerFactory ?
+				new ArrayContainerFactory<BitType>()
+				: peakContainerFactory;
 		/* Create an intermediate image.  This image will contain a sort of signum operation of the difference  
 		 * along a given dimension of the input image.  "Sort of" because 1 corresponds to greater than or
 		 * equal to zero, while 0 corresponds to less than 0, rather than the traditions signum.
 		 * I've written this method in this way in order that we don't have to care what order the
 		 * cursor traverses the Image. 
 		*/
-		Image<BitType> imImage;
+		Img<BitType> imImage;
 		T t0, tc;
 
-		peakImage = peakFactory.createImage(dimensions);
-		imImage = peakFactory.createImage(dimensions);
-		imImagePullCursor = imImage.createLocalizableCursor();		
-		imImagePushCursor = imImage.createLocalizableByDimCursor();
+		peakImage = peakFactory.create(dimensions, new BitType());
+		imImage = peakFactory.create(dimensions, new BitType());
+		imImagePullCursor = imImage.localizingCursor();	
+		imImagePushCursor = imImage.randomAccess();
 		//imImagePushCursor is kind of a misnomer.  it'll be used for pulling, too, later.
 		
-		peakImageCursor = peakImage.createLocalizableByDimCursor();
+		peakImageCursor = peakImage.randomAccess();
 				
 		peakLocList.clear();
 		
@@ -215,22 +217,21 @@ public class PickImagePeaks <T extends RealType<T>> implements OutputAlgorithm<B
 			//first step: take the "signum of diff" down this dimension			
 			while(cursor.hasNext())
 			{				
-				cursor.fwd();
-				cursor.getPosition(pos);				
-				imImagePushCursor.setPosition(pos);				
+				cursor.fwd();			
+				imImagePushCursor.setPosition(cursor);				
 				System.arraycopy(pos, 0, checkPos, 0, pos.length);
 				checkPos[d] -= 1;
 				
 				if (checkPos[d] < 0)
 				{
-					imImagePushCursor.getType().set(false);
+					imImagePushCursor.get().set(false);
 				}
 				else
 				{					
 					localCursor.setPosition(checkPos);
-					t0 = cursor.getType();
-					tc = localCursor.getType();
-					imImagePushCursor.getType().set(tc.compareTo(t0) >= 0);
+					t0 = cursor.get();
+					tc = localCursor.get();
+					imImagePushCursor.get().set(tc.compareTo(t0) >= 0);
 				}								
 			}
 			/* OK. Now we should have a signum-diff image corresponding to
@@ -241,24 +242,23 @@ public class PickImagePeaks <T extends RealType<T>> implements OutputAlgorithm<B
 			while(imImagePullCursor.hasNext())
 			{
 				imImagePullCursor.fwd();
-				imImagePullCursor.getPosition(pos);
-				peakImageCursor.setPosition(pos);
+				peakImageCursor.setPosition( imImagePullCursor );
 				System.arraycopy(pos, 0, checkPos, 0, pos.length);
 				checkPos[d] += 1;
 				
 				if (checkPos[d] >= dimensions[d])
 				{
 					//No peaks around the boundary of the image.
-					peakImageCursor.getType().set(false);
+					peakImageCursor.get().set(false);
 				}
-				else if (d == 0 || peakImageCursor.getType().get())
+				else if (d == 0 || peakImageCursor.get().get())
 				{					
 					/* (d == 0 || peakImageCursor.getType().get():
 					 *   If d == 0, peakImage is assumed to be full of garbage.
 					 *   Otherwise, we only want to change the value there if it currently true 
 					*/
 					imImagePushCursor.setPosition(checkPos);
-					peakImageCursor.getType().set(!imImagePullCursor.getType().get() && imImagePushCursor.getType().get());
+					peakImageCursor.get().set(!imImagePullCursor.get().get() && imImagePushCursor.get().get());
 				}				
 			}
 		}				
@@ -272,7 +272,7 @@ public class PickImagePeaks <T extends RealType<T>> implements OutputAlgorithm<B
 	}
 
 	@Override
-	public Image<BitType> getResult() {
+	public Img<BitType> getResult() {
 		return peakImage;
 	}
 	
@@ -297,14 +297,17 @@ public class PickImagePeaks <T extends RealType<T>> implements OutputAlgorithm<B
 	{
 		if (peakLocList.isEmpty() && peakImage!=null)
 		{			
-			final LocalizableCursor<BitType> pkCursor = peakImage.createLocalizableCursor();
+			final ImgCursor<BitType> pkCursor = peakImage.localizingCursor();
 			peakLocList.clear();
+			
 			while (pkCursor.hasNext())
 			{
 				pkCursor.fwd();
-				if (pkCursor.getType().get())
+				if (pkCursor.get().get())
 				{
-					peakLocList.add(pkCursor.getPosition());
+					final int[] pos = new int[peakImage.numDimensions()];
+					pkCursor.localize(pos);
+					peakLocList.add(pos);
 				}				
 			}
 

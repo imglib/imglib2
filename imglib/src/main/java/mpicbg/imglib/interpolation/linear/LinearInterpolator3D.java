@@ -30,7 +30,7 @@ package mpicbg.imglib.interpolation.linear;
 import mpicbg.imglib.Localizable;
 import mpicbg.imglib.RealLocalizable;
 import mpicbg.imglib.container.ImgRandomAccess;
-import mpicbg.imglib.image.Image;
+import mpicbg.imglib.container.Img;
 import mpicbg.imglib.interpolation.Interpolator;
 import mpicbg.imglib.outofbounds.RasterOutOfBoundsFactory;
 import mpicbg.imglib.type.numeric.NumericType;
@@ -44,14 +44,14 @@ import mpicbg.imglib.type.numeric.NumericType;
 public class LinearInterpolator3D< T extends NumericType< T > > implements Interpolator< T > 
 {
 	final protected RasterOutOfBoundsFactory< T > outOfBoundsStrategyFactory;
-	final protected Image< T > image;
+	final protected Img< T > image;
 	final protected T tmp1, tmp2;
 	final protected ImgRandomAccess< T > target;
 	
 	/* current position, required for relative movement */
 	protected float x, y, z;
 	
-	protected LinearInterpolator3D( final Image< T > image, final RasterOutOfBoundsFactory< T > outOfBoundsStrategyFactory )
+	protected LinearInterpolator3D( final Img< T > image, final RasterOutOfBoundsFactory< T > outOfBoundsStrategyFactory )
 	{
 		this.outOfBoundsStrategyFactory = outOfBoundsStrategyFactory;
 		this.image = image;
@@ -92,7 +92,7 @@ public class LinearInterpolator3D< T extends NumericType< T > > implements Inter
 	}
 
 	@Override
-	public Image< T > getImage()
+	public Img< T > getImage()
 	{
 		return image;
 	}

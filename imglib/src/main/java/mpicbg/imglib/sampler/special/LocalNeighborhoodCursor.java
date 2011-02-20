@@ -29,63 +29,67 @@
  */
 package mpicbg.imglib.sampler.special;
 
+import mpicbg.imglib.Interval;
 import mpicbg.imglib.Localizable;
+import mpicbg.imglib.RandomAccess;
+import mpicbg.imglib.RandomAccessible;
+import mpicbg.imglib.RandomAccessibleInterval;
 import mpicbg.imglib.container.AbstractImgCursor;
 import mpicbg.imglib.container.Img;
 import mpicbg.imglib.container.ImgRandomAccess;
 import mpicbg.imglib.container.array.ArrayLocalizingCursor;
-import mpicbg.imglib.image.Image;
-import mpicbg.imglib.outofbounds.RasterOutOfBoundsFactory;
+import mpicbg.imglib.iterator.LocalizingZeroMinIntervalIterator;
+import mpicbg.imglib.outofbounds.OutOfBoundsFactory;
 import mpicbg.imglib.type.Type;
+import mpicbg.imglib.util.IntervalIndexer;
 
+// TODO: Do not extend AbstractImgCursor!!!
 public class LocalNeighborhoodCursor<T extends Type<T>> extends AbstractImgCursor<T>
 {
 	/**
-	 * Here we "misuse" a ArrayLocalizableCursor to iterate over cells,
-	 * it always gives us the location of the current cell we are instantiating 
+	 * We use a virtual cursor to iterate over the local neighborhood
 	 */
-	final ArrayLocalizingCursor<FakeType> neigborhoodCursor;
+	final LocalizingZeroMinIntervalIterator neigborhoodCursor;
 
 	final Localizable localizable;
-	final ImgRandomAccess< T > cursor;
+	final RandomAccess< T > cursor;
 	
 	final int[] tmp;
 	final int centralPositionIndex;
-	
-	LocalNeighborhoodCursor( final Localizable localizable, final Image< T > image, final RasterOutOfBoundsFactory<T> outofboundsFactory )
+
+	protected LocalNeighborhoodCursor( final Localizable localizable, final RandomAccess<T> randomAccess )
 	{
-		super( image.getContainer(), image );
+		super( randomAccess.numDimensions() );
 		
+		this.cursor = randomAccess;
 		this.localizable = localizable;
-		
-		if ( outofboundsFactory == null )
-			cursor = image.createPositionableRasterSampler();
-		else
-			cursor = image.createPositionableRasterSampler( outofboundsFactory );
-		
 		tmp = new int[ n ];
 				
 		int[] dim = new int[ n ];
 		for ( int d = 0; d < n; ++d )
 			dim[ d ] = 3;
 
-		neigborhoodCursor = ArrayLocalizingCursor.createLinearCursor( dim );
+		neigborhoodCursor = new LocalizingZeroMinIntervalIterator( dim );
 
 		for ( int d = 0; d < n; ++d )
-			dim[ d ] = 1;
+			tmp[ d ] = 1;
 
-		centralPositionIndex = neigborhoodCursor.getImg().positionToIndex( dim );
+		
+		centralPositionIndex = IntervalIndexer.positionToIndex( tmp, dim );
+	}
+	
+	LocalNeighborhoodCursor( final Localizable localizable, final RandomAccessible<T> interval )
+	{
+		this( localizable, interval.randomAccess() );
+	}
+	
+	LocalNeighborhoodCursor( final Localizable localizable, final RandomAccessibleInterval<T,RandomAccessible<T>> interval, final OutOfBoundsFactory<T, RandomAccessible<T>> outofboundsFactory )
+	{
+		this( localizable, interval.randomAccess( outofboundsFactory ) );
 	}
 	
 	@Override
 	public boolean hasNext() { return neigborhoodCursor.hasNext(); }
-	
-	@Override
-	public void close() 
-	{
-		neigborhoodCursor.close();
-		super.close();
-	}
 
 	@Override
 	public T get() { return cursor.get(); }
@@ -98,14 +102,11 @@ public class LocalNeighborhoodCursor<T extends Type<T>> extends AbstractImgCurso
 	}
 	
 	@Override
-	public Img<T> getImg() { return cursor.getImg();	}
-
-	@Override
 	public void fwd()
 	{
 		neigborhoodCursor.fwd();
 		
-		if ( neigborhoodCursor.get().getIndex() == centralPositionIndex )
+		if ( neigborhoodCursor.getIndex() == centralPositionIndex )
 			neigborhoodCursor.fwd();
 		
 		neigborhoodCursor.localize( tmp );
@@ -113,14 +114,11 @@ public class LocalNeighborhoodCursor<T extends Type<T>> extends AbstractImgCurso
 		for ( int d = 0; d < n; ++d )
 			tmp[ d ] = localizable.getIntPosition( d ) + ( tmp[d] - 1 );
 		
-		cursor.moveTo( tmp );
+		cursor.setPosition( tmp );
 	}
 	
 	public int getRelativePosition( final int d ) { return neigborhoodCursor.getIntPosition( d ); }
 	
-	@Override
-	public int getArrayIndex() { return cursor.getArrayIndex(); }
-
 	@Override
 	public long getLongPosition( final int dim )
 	{

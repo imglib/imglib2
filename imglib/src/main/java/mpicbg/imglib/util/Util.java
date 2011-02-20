@@ -66,6 +66,16 @@ public class Util
 
 		return values;
 	}
+	
+	public static long[] getArrayFromValue( final long value, final int numDimensions )
+	{
+		final long[] values = new long[ numDimensions ];
+
+		for ( int d = 0; d < numDimensions; ++d )
+			values[ d ] = value;
+
+		return values;
+	}
 
 	final public static float computeDistance( final int[] position1, final int[] position2 )
 	{
@@ -797,6 +807,26 @@ public class Util
 		final long[] dimensions = new long[ interval.numDimensions() ];
 		interval.dimensions( dimensions );
 		return dimensions;
+	}
+
+	final static public int[] long2int( final long[] a )
+	{
+		final int[] i = new int[ a.length ];
+		
+		for ( int d = 0; d < a.length; ++d )
+			i[ d ] = (int)a[ d ];
+
+		return i;
+	}
+
+	final static public long[] int2long( final int[] i )
+	{
+		final long[] l = new long[ i.length ];
+		
+		for ( int d = 0; d < l.length; ++d )
+			l[ d ] = i[ d ];
+
+		return l;
 	}
 
 	/**

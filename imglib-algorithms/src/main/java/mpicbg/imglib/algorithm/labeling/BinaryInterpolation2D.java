@@ -11,11 +11,11 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 import mpicbg.imglib.algorithm.OutputAlgorithm;
+import mpicbg.imglib.container.Img;
+import mpicbg.imglib.container.ImgCursor;
+import mpicbg.imglib.container.ImgFactory;
+import mpicbg.imglib.container.ImgRandomAccess;
 import mpicbg.imglib.container.array.ArrayContainerFactory;
-import mpicbg.imglib.cursor.Cursor;
-import mpicbg.imglib.cursor.LocalizableByDimCursor;
-import mpicbg.imglib.image.Image;
-import mpicbg.imglib.image.ImageFactory;
 import mpicbg.imglib.type.logic.BitType;
 import mpicbg.imglib.type.numeric.integer.IntType;
 
@@ -38,16 +38,16 @@ import mpicbg.imglib.type.numeric.integer.IntType;
  * The code was originally created by Johannes Schindelin
  * in the VIB's vib.BinaryInterpolator class, for ij.ImagePlus.
  */
-public class BinaryInterpolation2D implements OutputAlgorithm<BitType>
+public class BinaryInterpolation2D implements OutputAlgorithm<Img<BitType>>
 {
 
-	final private Image<BitType> img1, img2;
+	final private Img<BitType> img1, img2;
 	private float weight;
-	private Image<BitType> interpolated;
+	private Img<BitType> interpolated;
 	private String errorMessage;
 	private IDT2D idt1, idt2;
 
-	public BinaryInterpolation2D(final Image<BitType> img1, final Image<BitType> img2, final float weight) {
+	public BinaryInterpolation2D(final Img<BitType> img1, final Img<BitType> img2, final float weight) {
 		this.img1 = img1;
 		this.img2 = img2;
 		this.weight = weight;
@@ -55,17 +55,17 @@ public class BinaryInterpolation2D implements OutputAlgorithm<BitType>
 
 	/** NOT thread safe, stateful. */
 	private final class IDT2D {
-		final Image<IntType> result;
+		final Img<IntType> result;
 		final int w, h;
 		final int[] position = new int[2];
-		final LocalizableByDimCursor<BitType> csrc;
-		final LocalizableByDimCursor<IntType> cout;
+		final ImgRandomAccess<BitType> csrc;
+		final ImgRandomAccess<IntType> cout;
 
-		IDT2D(final Image<BitType> img) {
-			this.w = img.getDimension(0);
-			this.h = img.getDimension(1);
-			ImageFactory<IntType> f = new ImageFactory<IntType>(new IntType(), new ArrayContainerFactory());
-			this.result = f.createImage(new int[]{w, h});
+		IDT2D(final Img<BitType> img) {
+			this.w = (int) img.dimension(0);
+			this.h = (int) img.dimension(1);
+			ImgFactory<IntType> f = new ArrayContainerFactory<IntType>();
+			this.result = f.create(new long[]{w, h}, new IntType());
 
 			// Set all result pixels to infinity
 			final int infinity = (w + h) * 9;
@@ -74,8 +74,8 @@ public class BinaryInterpolation2D implements OutputAlgorithm<BitType>
 			}
 
 			// init result pixels with those of the image:
-			this.csrc = img.createLocalizableByDimCursor();
-			this.cout = result.createLocalizableByDimCursor();
+			this.csrc = img.randomAccess();
+			this.cout = result.randomAccess();
 
 			int count = 0;
 			for (int y = 0; y < h; y++) {
@@ -92,12 +92,9 @@ public class BinaryInterpolation2D implements OutputAlgorithm<BitType>
 			if (count > 0) {
 				propagate();
 			}
-
-			csrc.close();
-			cout.close();
 		}
 
-		private final void setPosition(final LocalizableByDimCursor<?> c, final int x, final int y) {
+		private final void setPosition(final ImgRandomAccess<?> c, final int x, final int y) {
 			position[0] = x;
 			position[1] = y;
 			c.setPosition(position);
@@ -105,17 +102,17 @@ public class BinaryInterpolation2D implements OutputAlgorithm<BitType>
 
 		private final void setOutValueAt(final int x, final int y, final int value) {
 			setPosition(cout, x, y);
-			cout.getType().set(value);
+			cout.get().set(value);
 		}
 
 		private final int getSrcValueAt(final int x, final int y) {
 			setPosition(csrc, x, y);
-			return csrc.getType().get() ? 1 : 0;
+			return csrc.get().get() ? 1 : 0;
 		}
 
 		private final int getOutValueAt(final int x, final int y) {
 			setPosition(cout, x, y);
-			return cout.getType().get();
+			return cout.get().get();
 		}
 
 		// reads from result, writes to result
@@ -128,8 +125,8 @@ public class BinaryInterpolation2D implements OutputAlgorithm<BitType>
 			final int distance = (dx == 0 || dy == 0 ? 3 : 4);
 			value += distance * (value < 0 ? -1 : 1);
 			setPosition(cout, x, y);
-			if (Math.abs(cout.getType().get()) > Math.abs(value)) {
-				cout.getType().set(value);
+			if (Math.abs(cout.get().get()) > Math.abs(value)) {
+				cout.get().set(value);
 			}
 		}
 
@@ -209,17 +206,17 @@ public class BinaryInterpolation2D implements OutputAlgorithm<BitType>
 	}
 
 	@Override
-	public Image<BitType> getResult() {
+	public Img<BitType> getResult() {
 		return interpolated;
 	}
 	
 	@Override
 	public boolean checkInput() {
-		if (img1.getNumDimensions() < 2 || img2.getNumDimensions() < 2) {
+		if (img1.numDimensions() < 2 || img2.numDimensions() < 2) {
 			errorMessage = "Need at least 2 dimensions";
 			return false;
 		}
-		if (img1.getDimension(0) != img2.getDimension(0) || img1.getDimension(1) != img2.getDimension(1)) {
+		if (img1.dimension(0) != img2.dimension(0) || img1.dimension(1) != img2.dimension(1)) {
 			errorMessage = "Dimensions do not match";
 			return false;
 		}
@@ -236,8 +233,8 @@ public class BinaryInterpolation2D implements OutputAlgorithm<BitType>
 	}
 
 	private final class NewITD2D implements Callable<IDT2D> {
-		private final Image<BitType> img;
-		NewITD2D(final Image<BitType> img) {
+		private final Img<BitType> img;
+		NewITD2D(final Img<BitType> img) {
 			this.img = img;
 		}
 		@Override
@@ -262,7 +259,7 @@ public class BinaryInterpolation2D implements OutputAlgorithm<BitType>
 	}
 	
 	/** The first time, it will prepare the distance transform images, which are computed only once. */
-	public Image<BitType> process(final float weight)
+	public Img<BitType> process(final float weight)
 	{
 		synchronized (this) {
 			if (null == idt1 || null == idt2) {
@@ -284,46 +281,38 @@ public class BinaryInterpolation2D implements OutputAlgorithm<BitType>
 
 		// Cannot just img1.createNewImage() because the container may not be able to receive data,
 		// such as the ShapeList container.
-		final ImageFactory<BitType> f = new ImageFactory<BitType>(new BitType(), new ArrayContainerFactory());
-		final Image<BitType> interpolated = f.createImage(new int[]{img1.getDimension(0), img1.getDimension(1)});
+		final ImgFactory<BitType> f = new ArrayContainerFactory<BitType>();
+		final Img<BitType> interpolated = f.create(new long[]{img1.dimension(0), img1.dimension(1)}, new BitType());
 
-		if (img1.getContainer().compareStorageContainerCompatibility(img2.getContainer())) {
-			final Cursor<IntType> c1 = idt1.result.createCursor();
-			final Cursor<IntType> c2 = idt2.result.createCursor();
-			final Cursor<BitType> ci = interpolated.createCursor();
+		if (img1.equalIterationOrder(img2)) {
+			final ImgCursor<IntType> c1 = idt1.result.cursor();
+			final ImgCursor<IntType> c2 = idt2.result.cursor();
+			final ImgCursor<BitType> ci = interpolated.cursor();
 
 			while (ci.hasNext()) {
 				c1.fwd();
 				c2.fwd();
 				ci.fwd();
 
-				if ((c1.getType().get() * weight) + (c2.getType().get() * (1 - weight)) > 0) {
-					ci.getType().set(true);
+				if ((c1.get().get() * weight) + (c2.get().get() * (1 - weight)) > 0) {
+					ci.get().set(true);
 				}
 			}
-
-			c1.close();
-			c2.close();
-			ci.close();
 		} else {
 			System.out.println("using option 2");
-			final LocalizableByDimCursor<IntType> c1 = idt1.result.createLocalizableByDimCursor();
-			final LocalizableByDimCursor<IntType> c2 = idt2.result.createLocalizableByDimCursor();
-			final LocalizableByDimCursor<BitType> ci = interpolated.createLocalizableByDimCursor();
+			final ImgRandomAccess<IntType> c1 = idt1.result.randomAccess();
+			final ImgRandomAccess<IntType> c2 = idt2.result.randomAccess();
+			final ImgCursor<BitType> ci = interpolated.cursor();
 
 			while (ci.hasNext()) {
 				ci.fwd();
 				c1.setPosition(ci);
 				c2.setPosition(ci);
 
-				if (0 <= c1.getType().get() * weight + c2.getType().get() * (1 - weight)) {
-					ci.getType().set(true);
+				if (0 <= c1.get().get() * weight + c2.get().get() * (1 - weight)) {
+					ci.get().set(true);
 				}
 			}
-
-			c1.close();
-			c2.close();
-			ci.close();
 		}
 
 		return interpolated;

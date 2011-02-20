@@ -7,8 +7,8 @@ import script.imglib.math.fn.IFunction;
 
 import mpicbg.imglib.algorithm.Algorithm;
 import mpicbg.imglib.algorithm.OutputAlgorithm;
-import mpicbg.imglib.cursor.Cursor;
-import mpicbg.imglib.image.Image;
+import mpicbg.imglib.container.Img;
+import mpicbg.imglib.container.ImgCursor;
 import mpicbg.imglib.type.numeric.RealType;
 import mpicbg.imglib.type.numeric.real.DoubleType;
 
@@ -23,13 +23,13 @@ import mpicbg.imglib.type.numeric.real.DoubleType;
  *  */
 public class Process implements IFunction {
 
-	private final Cursor<? extends RealType<?>> c;
+	private final ImgCursor<? extends RealType<?>> c;
 
 	/** Execute the given {@link OutputAlgorithm} and prepare a cursor to deliver
 	 *  its pixel values one by one in successive calls to {@code eval()}. */
-	public Process(final OutputAlgorithm<? extends RealType<?>> algorithm) throws Exception {
+	public Process(final OutputAlgorithm<Img<? extends RealType<?>>> algorithm) throws Exception {
 		execute(algorithm);
-		this.c = algorithm.getResult().createCursor();
+		this.c = algorithm.getResult().cursor();
 	}
 
 	/** Same as {@code this(algorithmClass, Process.asImage(fn), parameters);} */
@@ -48,10 +48,10 @@ public class Process implements IFunction {
 	 *  the argument in the same order as given. Otherwise, an {@link Exception} will
 	 *  be thrown. */
 	@SuppressWarnings("unchecked")
-	public Process(final Class<Algorithm> algorithmClass, final Image<? extends RealType<?>> img, final Object... parameters) throws Exception {
+	public Process(final Class<Algorithm> algorithmClass, final Img<? extends RealType<?>> img, final Object... parameters) throws Exception {
 		final Class<?>[] cargs = new Class[1 + parameters.length];
 		final Object[] args = new Object[cargs.length];
-		cargs[0] = Image.class;
+		cargs[0] = Img.class;
 		args[0] = img;
 		for (int i=1; i<cargs.length; i++) {
 			cargs[i] = parameters[i-1].getClass();
@@ -60,8 +60,15 @@ public class Process implements IFunction {
 		final Algorithm a = algorithmClass.getConstructor(cargs).newInstance(args);
 		execute(a);
 		
-		this.c = (a instanceof OutputAlgorithm<?> ?
-				((OutputAlgorithm<? extends RealType<?>>)a).getResult() : img).createCursor();
+		Object result = null;
+		if (a instanceof OutputAlgorithm<?>) {
+			result = ((OutputAlgorithm<?>)a).getResult();
+		}
+		if (result instanceof Img<?>) {
+			this.c = ((Img<? extends RealType<?>>)result).cursor();
+		} else {
+			this.c = img.cursor();
+		}
 	}
 
 	/** Evaluate the @param fn for every pixel and return a new {@link Image} with the result.
@@ -74,27 +81,27 @@ public class Process implements IFunction {
 		}
 	}
 
-	private Process(final Cursor<? extends RealType<?>> c) {
+	private Process(final ImgCursor<? extends RealType<?>> c) {
 		this.c = c;
 	}
 
-	public Image<? extends RealType<?>> getResult() {
-		return c.getImage();
+	public Img<? extends RealType<?>> getResult() {
+		return c.getImg();
 	}
 
 	@Override
 	public final IFunction duplicate() throws Exception {
-		return new Process(c.getImage().createCursor());
+		return new Process(c.getImg().cursor());
 	}
 
 	@Override
 	public final double eval() {
 		c.fwd();
-		return c.getType().getRealDouble();
+		return c.get().getRealDouble();
 	}
 
 	@Override
-	public final void findCursors(final Collection<Cursor<?>> cursors) {
+	public final void findCursors(final Collection<ImgCursor<?>> cursors) {
 		cursors.add(c);
 	}
 }

@@ -19,19 +19,19 @@ package mpicbg.imglib.algorithm.math;
 import mpicbg.imglib.algorithm.Algorithm;
 import mpicbg.imglib.algorithm.MultiThreaded;
 import mpicbg.imglib.algorithm.function.NormMinMax;
-import mpicbg.imglib.cursor.Cursor;
-import mpicbg.imglib.image.Image;
+import mpicbg.imglib.container.Img;
+import mpicbg.imglib.container.ImgCursor;
 import mpicbg.imglib.type.numeric.RealType;
 import mpicbg.util.RealSum;
 
 public class NormalizeImageMinMax<T extends RealType<T>> implements Algorithm, MultiThreaded
 {
-	final Image<T> image;
+	final Img<T> image;
 
 	String errorMessage = "";
 	int numThreads;
 	
-	public NormalizeImageMinMax( final Image<T> image )
+	public NormalizeImageMinMax( final Img<T> image )
 	{
 		setNumThreads();
 		
@@ -71,18 +71,16 @@ public class NormalizeImageMinMax<T extends RealType<T>> implements Algorithm, M
 		return true;
 	}
 
-	public static <T extends RealType<T>> double sumImage( final Image<T> image )
+	public static <T extends RealType<T>> double sumImage( final Img<T> image )
 	{
 		final RealSum sum = new RealSum();
-		final Cursor<T> cursor = image.createCursor();
+		final ImgCursor<T> cursor = image.cursor();
 		
 		while (cursor.hasNext())
 		{
 			cursor.fwd();
-			sum.add( cursor.getType().getRealDouble() );
+			sum.add( cursor.get().getRealDouble() );
 		}
-		
-		cursor.close();
 		
 		return sum.getSum();
 	}

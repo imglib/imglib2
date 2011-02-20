@@ -2,7 +2,7 @@ package script.imglib.algorithm.fn;
 
 import java.util.Collection;
 
-import mpicbg.imglib.image.Image;
+import mpicbg.imglib.container.Img;
 import script.imglib.color.fn.ColorFunction;
 import script.imglib.math.Compute;
 import script.imglib.math.fn.IFunction;
@@ -10,9 +10,9 @@ import script.imglib.math.fn.IFunction;
 public class AlgorithmUtil
 {
 	/** Wraps Image, ColorFunction and IFunction, but not numbers. */
-	@SuppressWarnings("unchecked")
-	static public final Image wrap(final Object ob) throws Exception {
-		if (ob instanceof Image<?>) return (Image)ob;
+	@SuppressWarnings("rawtypes")
+	static public final Img wrap(final Object ob) throws Exception {
+		if (ob instanceof Img<?>) return (Img)ob;
 		if (ob instanceof ColorFunction) return Compute.inRGBA((ColorFunction)ob);
 		if (ob instanceof IFunction) return Compute.inDoubles((IFunction)ob);
 		throw new Exception("Cannot create an image from " + ob.getClass());
@@ -20,9 +20,9 @@ public class AlgorithmUtil
 	
 	/** Wraps Image and IFunction, but not numbers, and not a ColorFunction:
 	 * considers the image as single-channel. */
-	@SuppressWarnings("unchecked")
-	static public final Image wrapS(final Object ob) throws Exception {
-		if (ob instanceof Image<?>) return (Image)ob;
+	@SuppressWarnings("rawtypes")
+	static public final Img wrapS(final Object ob) throws Exception {
+		if (ob instanceof Img<?>) return (Img)ob;
 		if (ob instanceof IFunction) return Compute.inDoubles((IFunction)ob);
 		throw new Exception("Cannot create an image from " + ob.getClass());
 	}
@@ -46,5 +46,11 @@ public class AlgorithmUtil
 		final double[] d = new double[f.length];
 		for (int i=0; i<f.length; i++) d[i] = f[i];
 		return d;
+	}
+	
+	public static long[] extractDimensions(final Img<?> img) {
+		final long[] dim = new long[img.numDimensions()];
+		img.dimensions(dim);
+		return dim;
 	}
 }

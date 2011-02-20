@@ -92,6 +92,11 @@ public class LocalizingZeroMinIntervalIterator extends AbstractLocalizable imple
 		lastIndex = k * dimensions[ m ] - 1;
 	}
 
+	public LocalizingZeroMinIntervalIterator( final int[] dimensions )
+	{
+		this( Util.int2long( dimensions ) );
+	}
+
 	public LocalizingZeroMinIntervalIterator( final Interval interval )
 	{
 		super( interval.numDimensions() );
@@ -107,6 +112,8 @@ public class LocalizingZeroMinIntervalIterator extends AbstractLocalizable imple
 	}
 	
 
+	public long getIndex() { return index; }
+	
 	/* Iterator */
 
 	@Override

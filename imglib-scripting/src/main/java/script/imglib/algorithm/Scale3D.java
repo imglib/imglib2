@@ -1,7 +1,7 @@
 package script.imglib.algorithm;
 
-import mpicbg.imglib.image.Image;
-import mpicbg.imglib.outofbounds.OutOfBoundsStrategyMirrorFactory;
+import mpicbg.imglib.container.Img;
+import mpicbg.imglib.outofbounds.OutOfBoundsMirrorFactory;
 import mpicbg.imglib.type.numeric.NumericType;
 import script.imglib.math.fn.IFunction;
 
@@ -36,6 +36,6 @@ public class Scale3D<N extends NumericType<N>> extends Affine3D<N>
 		super(fn, new float[]{scaleX, 0, 0, 0,
 										 0, scaleY, 0, 0,
 										 0, 0, scaleZ, 0},
-			  mode, new OutOfBoundsStrategyMirrorFactory<N>());
+			  mode, new OutOfBoundsMirrorFactory<N,Img<N>>(OutOfBoundsMirrorFactory.Boundary.SINGLE));
 	}
 }

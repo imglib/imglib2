@@ -33,12 +33,11 @@ import mpicbg.imglib.Interval;
 import mpicbg.imglib.IterableRealInterval;
 import mpicbg.imglib.container.AbstractNativeContainer;
 import mpicbg.imglib.container.Img;
-import mpicbg.imglib.container.ImgFactory;
-import mpicbg.imglib.container.ImgRandomAccess;
 import mpicbg.imglib.container.basictypecontainer.PlanarAccess;
 import mpicbg.imglib.container.basictypecontainer.array.ArrayDataAccess;
 import mpicbg.imglib.outofbounds.OutOfBoundsFactory;
 import mpicbg.imglib.type.NativeType;
+
 
 /**
  * A {@link Container} that stores data in an array of 2d-slices each as a
@@ -58,7 +57,7 @@ import mpicbg.imglib.type.NativeType;
 public class PlanarContainer< T extends NativeType< T >, A extends ArrayDataAccess<A> > extends AbstractNativeContainer< T, A > implements PlanarAccess< A >
 {
 	final protected int slices;
-	final int[] dim;
+	final protected int[] dim;
 	
 	final protected ArrayList< A > mirror;
 
@@ -71,9 +70,18 @@ public class PlanarContainer< T extends NativeType< T >, A extends ArrayDataAcce
 	{
 		super( dim, entitiesPerPixel );
 
-		this.dim = new int[ n ];
-		for ( int d = 0; d < n; ++d )
-			this.dim[ d ] = (int)dim[ d ];
+		if ( n < 2 )
+		{
+			this.dim = new int[ 2 ];
+			this.dim[ 0 ] = ( int )dim[ 0 ];
+			this.dim[ 1 ] = 1;
+		}
+		else
+		{
+			this.dim = new int[ n ];
+			for ( int d = 0; d < n; ++d )
+				this.dim[ d ] = ( int )dim[ d ];
+		}
 		
 		// compute number of slices
 		int s = 1;
@@ -116,7 +124,9 @@ public class PlanarContainer< T extends NativeType< T >, A extends ArrayDataAcce
 	@Override
 	public PlanarCursor<T> cursor()
 	{
-		if ( n == 2 )
+		if ( n == 1 )
+			return new PlanarCursor1D< T >( this );
+		else if ( n == 2 )
 			return new PlanarCursor2D< T >( this );
 		else
 			return new PlanarCursor< T >( this );
@@ -125,20 +135,25 @@ public class PlanarContainer< T extends NativeType< T >, A extends ArrayDataAcce
 	@Override
 	public PlanarLocalizingCursor<T> localizingCursor()
 	{
-		if ( n == 2 )
+		if ( n == 1 )
+			return new PlanarLocalizingCursor1D< T >( this );
+		else if ( n == 2 )
 			return new PlanarLocalizingCursor2D< T >( this );
 		else
 			return new PlanarLocalizingCursor<T>( this );
 	}
 
 	@Override
-	public ImgRandomAccess<T> randomAccess()
+	public PlanarRandomAccess<T> randomAccess()
 	{
-		return new PlanarRandomAccess<T>( this );
+		if ( n == 1 )
+			return new PlanarRandomAccess1D<T>( this );
+		else
+			return new PlanarRandomAccess<T>( this );
 	}
 
 	@Override
-	public ImgRandomAccess<T> randomAccess( OutOfBoundsFactory<T,Img< T >> outOfBoundsFactory )
+	public PlanarOutOfBoundsRandomAccess< T > randomAccess( OutOfBoundsFactory<T,Img< T >> outOfBoundsFactory )
 	{
 		return new PlanarOutOfBoundsRandomAccess< T >( this, outOfBoundsFactory );
 	}
@@ -167,5 +182,5 @@ public class PlanarContainer< T extends NativeType< T >, A extends ArrayDataAcce
 	public void setPlane( final int no, final A plane ) { mirror.set( no, plane ); }
 
 	@Override
-	public ImgFactory<T> factory() { return new PlanarContainerFactory<T>(); }
+	public PlanarContainerFactory< T > factory() { return new PlanarContainerFactory<T>(); }
 }

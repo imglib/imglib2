@@ -32,7 +32,7 @@ import java.util.ArrayList;
 
 import mpicbg.imglib.container.AbstractImg;
 import mpicbg.imglib.container.ImgRandomAccess;
-import mpicbg.imglib.image.Image;
+import mpicbg.imglib.container.Img;
 import mpicbg.imglib.outofbounds.RasterOutOfBoundsFactory;
 import mpicbg.imglib.sampler.shapelist.ShapeListPositionableRasterSampler;
 import mpicbg.imglib.sampler.shapelist.ShapeListOutOfBoundsPositionableRasterSampler;
@@ -101,25 +101,25 @@ public class ShapeList< T extends Type< T > > extends AbstractImg< T >
 	public ShapeListContainerFactory factory() { return factory; }
 	
 	@Override
-	public ShapeListPositionableRasterSampler< T > createRasterIterator( final Image< T > image ) 
+	public ShapeListPositionableRasterSampler< T > createRasterIterator( final Img< T > image ) 
 	{ 
 		return createPositionableRasterSampler( image );
 	}
 
 	@Override
-	public ShapeListPositionableRasterSampler< T > createLocalizingRasterIterator( final Image< T > image ) 
+	public ShapeListPositionableRasterSampler< T > createLocalizingRasterIterator( final Img< T > image ) 
 	{ 
 		return createPositionableRasterSampler( image );
 	}
 
 	@Override
-	public ShapeListPositionableRasterSampler< T > createPositionableRasterSampler( final Image< T > image ) 
+	public ShapeListPositionableRasterSampler< T > createPositionableRasterSampler( final Img< T > image ) 
 	{
 		return new ShapeListPositionableRasterSampler< T >( this, image );
 	}
 	
 	@Override
-	public ImgRandomAccess< T > createPositionableRasterSampler( final Image< T > image, final RasterOutOfBoundsFactory< T > outOfBoundsFactory ) 
+	public ImgRandomAccess< T > createPositionableRasterSampler( final Img< T > image, final RasterOutOfBoundsFactory< T > outOfBoundsFactory ) 
 	{
 		return new ShapeListOutOfBoundsPositionableRasterSampler< T >( this, image, outOfBoundsFactory );
 	}

@@ -28,8 +28,7 @@
 package mpicbg.imglib.sampler.imageplus;
 
 import mpicbg.imglib.container.imageplus.ImagePlusContainer;
-import mpicbg.imglib.image.Image;
-import mpicbg.imglib.type.Type;
+import mpicbg.imglib.type.NativeType;
 
 /**
  * Localizing Iterator for {@link ImagePlusContainer ImagePlusContainers}
@@ -37,16 +36,17 @@ import mpicbg.imglib.type.Type;
  *
  * @author Stephan Preibisch and Stephan Saalfeld
  */
-public class ImagePlusLocalizingRasterIterator< T extends Type< T > > extends ImagePlusBasicRasterIterator< T >
+public class ImagePlusLocalizingRasterIterator< T extends NativeType< T > > extends ImagePlusBasicRasterIterator< T >
 {
 	final protected int[] position, dimensions;
 
-	public ImagePlusLocalizingRasterIterator( final ImagePlusContainer< T, ? > container, final Image< T > image ) 
+	public ImagePlusLocalizingRasterIterator( final ImagePlusContainer< T, ? > container ) 
 	{
-		super( container, image );
+		super( container );
 
 		position = new int[ n ];
-		dimensions = container.getDimensions();
+		dimensions = new int[ n ];
+		for (int i=0; i<n; i++) dimensions[ i ] = (int) container.dimension( i );
 		
 		reset();
 	}

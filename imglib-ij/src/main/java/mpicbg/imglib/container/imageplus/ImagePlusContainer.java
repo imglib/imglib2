@@ -29,23 +29,27 @@ package mpicbg.imglib.container.imageplus;
 
 import java.util.ArrayList;
 
+import com.sun.xml.internal.bind.v2.runtime.unmarshaller.XsiNilLoader.Array;
+
 import ij.ImagePlus;
 import ij.ImageStack;
 
+import mpicbg.imglib.Interval;
+import mpicbg.imglib.IterableRealInterval;
 import mpicbg.imglib.container.AbstractNativeContainer;
 import mpicbg.imglib.container.Img;
 import mpicbg.imglib.container.ImgCursor;
 import mpicbg.imglib.container.ImgRandomAccess;
 import mpicbg.imglib.container.basictypecontainer.array.ArrayDataAccess;
+import mpicbg.imglib.container.planar.PlanarContainer;
 import mpicbg.imglib.exception.ImgLibException;
-import mpicbg.imglib.image.Image;
-import mpicbg.imglib.outofbounds.RasterOutOfBoundsFactory;
+import mpicbg.imglib.outofbounds.OutOfBoundsFactory;
 import mpicbg.imglib.sampler.imageplus.ImagePlusBasicRasterIterator;
 import mpicbg.imglib.sampler.imageplus.ImagePlusLocalizingRasterIterator;
 import mpicbg.imglib.sampler.imageplus.ImagePlusPositionableRasterSampler;
 import mpicbg.imglib.sampler.imageplus.ImagePlusOutOfBoundsPositionableRasterSampler;
 import mpicbg.imglib.sampler.imageplus.ImagePlusStorageAccess;
-import mpicbg.imglib.type.Type;
+import mpicbg.imglib.type.NativeType;
 
 /**
  * A {@link Img} that stores data in an aray of 2d-slices each as a
@@ -62,15 +66,15 @@ import mpicbg.imglib.type.Type;
  * 
  * @author Jan Funke, Stephan Preibisch, Stephan Saalfeld, Johannes Schindelin
  */
-public class ImagePlusContainer< T extends Type< T >, A extends ArrayDataAccess< A > > extends AbstractNativeContainer< T, A > implements Img< T >
+public class ImagePlusContainer< T extends NativeType< T >, A extends ArrayDataAccess< A > > extends AbstractNativeContainer< T, A > implements Img< T >
 {
-	final protected ImagePlusContainerFactory factory;
+	final protected ImagePlusContainerFactory<T> factory;
 	final protected int width, height, depth, frames, channels, slices;
 
 	final ArrayList< A > mirror;
 	
 	protected ImagePlusContainer(
-			final ImagePlusContainerFactory factory,
+			final ImagePlusContainerFactory<T> factory,
 			final int width,
 			final int height,
 			final int depth,
@@ -78,7 +82,7 @@ public class ImagePlusContainer< T extends Type< T >, A extends ArrayDataAccess<
 			final int channels,
 			final int entitiesPerPixel )
 	{
-		super( factory, reduceAndReorderDimensions( new int[]{ width, height, channels, depth, frames } ), entitiesPerPixel );
+		super( reduceAndReorderDimensions( new int[]{ width, height, channels, depth, frames } ), entitiesPerPixel );
 		
 		this.width = width;
 		this.height = height;
@@ -93,9 +97,9 @@ public class ImagePlusContainer< T extends Type< T >, A extends ArrayDataAccess<
 		mirror = new ArrayList< A >( slices ); 
 	}
 	
-	ImagePlusContainer( final ImagePlusContainerFactory factory, final int[] dim, final int entitiesPerPixel ) 
+	ImagePlusContainer( final ImagePlusContainerFactory<T> factory, final int[] dim, final int entitiesPerPixel ) 
 	{
-		super( factory, dim, entitiesPerPixel );
+		super( inLongs(dim), entitiesPerPixel );
 		
 		if ( dim.length > 0 )
 			width = dim[ 0 ];
@@ -129,7 +133,13 @@ public class ImagePlusContainer< T extends Type< T >, A extends ArrayDataAccess<
 		mirror = new ArrayList< A >( slices );
 	}
 	
-	ImagePlusContainer( final ImagePlusContainerFactory factory, final A creator, final int[] dim, final int entitiesPerPixel ) 
+	private static long[] inLongs(int[] dim) {
+		long[] d = new long[dim.length];
+		for (int i=0; i<d.length; i++) d[i] = dim[i];
+		return d;
+	}
+
+	ImagePlusContainer( final ImagePlusContainerFactory<T> factory, final A creator, final int[] dim, final int entitiesPerPixel ) 
 	{
 		this( factory, dim, entitiesPerPixel );				
 		
@@ -170,19 +180,19 @@ public class ImagePlusContainer< T extends Type< T >, A extends ArrayDataAccess<
 	 * @param imp
 	 * @return
 	 */
-	protected static int[] reduceAndReorderDimensions( final ImagePlus imp )
+	protected static long[] reduceAndReorderDimensions( final ImagePlus imp )
 	{
 		return reduceAndReorderDimensions( imp.getDimensions() );
 	}
 	
-	protected static int[] reduceAndReorderDimensions( final int[] impDimensions )
+	protected static long[] reduceAndReorderDimensions( final int[] impDimensions )
 	{
 		/* ImagePlus is at least 2d, x,y are mapped to an index on a stack slice */
 		int n = 2;
 		for ( int d = 2; d < impDimensions.length; ++d )
 			if ( impDimensions[ d ] > 1 ) ++n;
 		
-		final int[] dim = new int[ n ];
+		final long[] dim = new long[ n ];
 		dim[ 0 ] = impDimensions[ 0 ];
 		dim[ 1 ] = impDimensions[ 1 ];
 		
@@ -229,43 +239,31 @@ public class ImagePlusContainer< T extends Type< T >, A extends ArrayDataAccess<
 	 */
 	public final int getIndex( final int[] l ) 
 	{
-		if ( numDimensions > 1 )
+		if ( numDimensions() > 1 )
 			return l[ 1 ] * width + l[ 0 ];
 		else
 			return l[ 0 ];
 	}
-
-	@Override
-	public ImgCursor< T > createRasterIterator( final Image< T > image )
+	/**
+	 * For a given >=2d location, estimate the pixel index in the stack slice.
+	 * 
+	 * @param l
+	 * @return
+	 */
+	public final int getIndex( final long[] l ) 
 	{
-		return new ImagePlusBasicRasterIterator< T >( this, image );
+		if ( numDimensions() > 1 )
+			return (int)( l[ 1 ] * width + l[ 0 ] );
+		else
+			return (int) l[ 0 ];
 	}
 
 	@Override
-	public ImgCursor< T > createLocalizingRasterIterator( final Image< T > image )
-	{
-		return new ImagePlusLocalizingRasterIterator< T >( this, image );
-	}
-
-	@Override
-	public ImgRandomAccess< T > createPositionableRasterSampler( final Image< T > image )
-	{
-		return new ImagePlusPositionableRasterSampler< T >( this, image );
-	}
-
-	@Override
-	public ImagePlusOutOfBoundsPositionableRasterSampler< T > createPositionableRasterSampler( final Image< T > image, RasterOutOfBoundsFactory< T > outOfBoundsFactory )
-	{
-		return new ImagePlusOutOfBoundsPositionableRasterSampler< T >( this, image, outOfBoundsFactory );
-	}
-
-	@Override
-	public ImagePlusContainerFactory factory()
+	public ImagePlusContainerFactory<T> factory()
 	{
 		return factory;
 	}
 
-	@Override
 	public void close()
 	{
 		for ( final A array : mirror )
@@ -281,7 +279,7 @@ public class ImagePlusContainer< T extends Type< T >, A extends ArrayDataAccess<
 	 * @param dimensions
 	 * @return
 	 */
-	final static public int[] createSliceSteps( final int[] dimensions )
+	final static public int[] createSliceSteps( final long[] dimensions )
 	{
 		final int[] sliceSteps = new int[ dimensions.length ];
 		if ( dimensions.length > 2 )
@@ -290,9 +288,48 @@ public class ImagePlusContainer< T extends Type< T >, A extends ArrayDataAccess<
 			for ( int i = 3; i < dimensions.length; ++i )
 			{
 				final int j = i - 1;
-				sliceSteps[ i ] = dimensions[ j ] * sliceSteps[ j ];
+				sliceSteps[ i ] = (int) dimensions[ j ] * sliceSteps[ j ];
 			}
 		}
 		return sliceSteps;
+	}
+
+	@Override
+	public boolean equalIterationOrder(IterableRealInterval<?> f) {
+		if ( f.numDimensions() != this.numDimensions() )
+			return false;
+		
+		if ( getClass().isInstance( f ) || PlanarContainer.class.isInstance( f )
+				|| Array.class.isInstance( f ) )
+		{
+			final Interval a = ( Interval )f;
+			for ( int d = 0; d < n; ++d )
+				if ( size[ d ] != a.dimension( d ) )
+					return false;
+			
+			return true;
+		}
+		
+		return false;
+	}
+
+	@Override
+	public ImgRandomAccess<T> randomAccess() {
+		return new ImagePlusPositionableRasterSampler< T >( this );
+	}
+
+	@Override
+	public ImgRandomAccess<T> randomAccess(OutOfBoundsFactory<T, Img<T>> factory) {
+		return new ImagePlusOutOfBoundsPositionableRasterSampler< T >( this, factory );
+	}
+
+	@Override
+	public ImgCursor<T> cursor() {
+		return new ImagePlusBasicRasterIterator< T >( this );
+	}
+
+	@Override
+	public ImgCursor<T> localizingCursor() {
+		return new ImagePlusLocalizingRasterIterator< T >( this );
 	}
 }
