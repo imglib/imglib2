@@ -19,10 +19,8 @@ package mpicbg.imglib.algorithm.gauss;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import mpicbg.imglib.Cursor;
-import mpicbg.imglib.InjectiveInterval;
 import mpicbg.imglib.Interval;
 import mpicbg.imglib.RandomAccess;
-import mpicbg.imglib.RandomAccessible;
 import mpicbg.imglib.RandomAccessibleInterval;
 import mpicbg.imglib.algorithm.Benchmark;
 import mpicbg.imglib.algorithm.MultiThreaded;
