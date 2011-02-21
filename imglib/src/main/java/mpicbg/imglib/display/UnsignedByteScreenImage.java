@@ -60,9 +60,13 @@ public class UnsignedByteScreenImage implements ScreenImage, IterableInterval< U
 	static public final IndexColorModel makeGrayLut()
 	{
 		final byte[] c = new byte[256];
+		final byte[] a = new byte[256];
 		for (int i = 0; i < 256; ++i)
+		{
 			c[i] = (byte) i;
-		return new IndexColorModel(8, 256, c, c, c, c);
+			a[i] = (byte) 255;
+		}
+		return new IndexColorModel(8, 256, c, c, c, a);
 	}
 
 	public UnsignedByteScreenImage( final int width, final int height )
