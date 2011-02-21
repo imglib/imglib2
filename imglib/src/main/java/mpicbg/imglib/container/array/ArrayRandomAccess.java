@@ -27,20 +27,20 @@
  */
 package mpicbg.imglib.container.array;
 
-import mpicbg.imglib.container.AbstractImgRandomAccess;
+import mpicbg.imglib.Localizable;
+import mpicbg.imglib.container.AbstractImgRandomAccessInt;
 import mpicbg.imglib.type.NativeType;
-import mpicbg.imglib.util.IntervalIndexer;
 
 /**
  * 
  * @param <T>
  *
- * @author Stephan Preibisch and Stephan Saalfeld
+ * @author Stephan Preibisch, Stephan Saalfeld, Tobias Pietzsch
  */
-public class ArrayRandomAccess< T extends NativeType< T > > extends AbstractImgRandomAccess< T >
+public class ArrayRandomAccess< T extends NativeType< T > > extends AbstractImgRandomAccessInt< T >
 {
 	protected final T type;
-	final protected int[] step, dim;
+	final protected int[] steps, dimensions;
 	final Array< T, ? > container;
 	
 	public ArrayRandomAccess( final Array< T, ? > container ) 
@@ -50,8 +50,8 @@ public class ArrayRandomAccess< T extends NativeType< T > > extends AbstractImgR
 		this.container = container;
 		this.type = container.createLinkedType();
 		
-		dim = container.dim;
-		step = container.steps;
+		dimensions = container.dim;
+		steps = container.steps;
 		
 		for ( int d = 0; d < n; d++ )
 			position[ d ] = 0;
@@ -67,50 +67,71 @@ public class ArrayRandomAccess< T extends NativeType< T > > extends AbstractImgR
 	}
 	
 	@Override
-	public void fwd( final int d )
+	public void fwd( final int dim )
 	{
-		type.incIndex( step[ d ] );
-		++position[ d ];
+		type.incIndex( steps[ dim ] );
+		++position[ dim ];
 	}
 
 	@Override
-	public void bck( final int d )
+	public void bck( final int dim )
 	{
-		type.decIndex( step[ d ] );
-		--position[ d ];
-	}
-	
-	@Override
-	public void move( final long steps, final int d )
-	{
-		type.incIndex( step[ d ] * ( int )steps );
-		position[ d ] += steps;
-	}
-					
-	@Override
-	public void setPosition( final int[] position )
-	{
-		for ( int d = 0; d < n; ++d )
-			this.position[ d ] = position[ d ];
-		
-		type.updateIndex( IntervalIndexer.positionToIndex( this.position, this.dim ) );
-	}
-	
-	@Override
-	public void setPosition( long[] position )
-	{
-		for ( int d = 0; d < n; ++d )
-			this.position[ d ] = ( int )position[ d ];
-		
-		type.updateIndex( IntervalIndexer.positionToIndex( this.position, this.dim ) );
+		type.decIndex( steps[ dim ] );
+		--position[ dim ];
 	}
 
 	@Override
-	public void setPosition( final long position, final int dim )
+	public void move( final int distance, final int dim )
 	{
-		this.position[ dim ] = position;
-		
-		type.updateIndex( IntervalIndexer.positionToIndex( this.position, this.dim ) );
+		type.incIndex( steps[ dim ] * distance );
+		position[ dim ] += distance;
+	}
+	
+	@Override
+	public void move( final long distance, final int dim )
+	{
+		type.incIndex( steps[ dim ] * ( int )distance );
+		position[ dim ] += distance;
+	}
+
+	@Override
+	public void move( final Localizable localizable )
+	{
+		localizable.localize( tmp );
+		move( tmp );
+	}
+
+	@Override
+	public void setPosition( final int[] pos )
+	{
+		for ( int d = 0; d < n; ++d )
+		{
+			if ( pos[ d ] != position[ d ] )
+			{
+				type.incIndex( ( pos[ d ] - position[ d ] ) * steps[ d ] );
+				position[ d ] = pos[ d ];
+			}
+		}
+	}
+	
+	@Override
+	public void setPosition( long[] pos )
+	{
+		for ( int d = 0; d < n; ++d )
+		{
+			if ( pos[ d ] != position[ d ] )
+			{
+				type.incIndex( ( ( int ) pos[ d ] - position[ d ] ) * steps[ d ] );
+				position[ d ] = ( int ) pos[ d ];
+			}
+		}
+	}
+
+	@Override
+	public void setPosition( final long pos, final int dim )
+	{
+		type.incIndex( ( ( int ) pos - position[ dim ] ) * steps[ dim ] );
+		position[ dim ] = ( int ) pos;
 	}
 
 	@Override
