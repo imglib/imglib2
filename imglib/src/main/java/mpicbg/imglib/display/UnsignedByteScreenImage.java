@@ -28,9 +28,13 @@
 package mpicbg.imglib.display;
 
 import java.awt.Image;
-import java.awt.Toolkit;
+import java.awt.image.BufferedImage;
+import java.awt.image.DataBuffer;
+import java.awt.image.DataBufferByte;
 import java.awt.image.IndexColorModel;
-import java.awt.image.MemoryImageSource;
+import java.awt.image.Raster;
+import java.awt.image.SampleModel;
+import java.awt.image.WritableRaster;
 import java.util.Iterator;
 
 import mpicbg.imglib.Cursor;
@@ -49,7 +53,7 @@ public class UnsignedByteScreenImage implements ScreenImage, IterableInterval< U
 {
 	final protected byte[] data; 
 	final protected Array< UnsignedByteType, ByteArray > argbArray;
-	final Image image;
+	final protected Image image;
 	
 	static public final IndexColorModel GRAY_LUT = makeGrayLut();
 
@@ -58,27 +62,45 @@ public class UnsignedByteScreenImage implements ScreenImage, IterableInterval< U
 		final byte[] c = new byte[256];
 		for (int i = 0; i < 256; ++i)
 			c[i] = (byte) i;
-		return new IndexColorModel(8, 256, c, c, c);
+		return new IndexColorModel(8, 256, c, c, c, c);
 	}
 
 	public UnsignedByteScreenImage( final int width, final int height )
 	{
-		data = new byte[ width * height ];
+		this( width, height, new byte[ width * height ] );
+	}
+	
+	/** Create an {@link Image} with {@param data}. Writing to the {@param data} array will update the {@link Image}. */
+	public UnsignedByteScreenImage( final int width, final int height, final ByteArray data )
+	{
+		this( width, height, data.getCurrentStorageArray() );
+	}
+
+	/** Create an {@link Image} with {@param data}. Writing to the {@param data} array will update the {@link Image}. */
+	public UnsignedByteScreenImage( final int width, final int height, final byte[] data )
+	{
+		this.data = data;
 		argbArray = new Array< UnsignedByteType, ByteArray >( new ByteArray( data ), new long[]{ width, height }, 1 );
 		argbArray.setLinkedType( new UnsignedByteType( argbArray ) );
 
-		final MemoryImageSource source = new MemoryImageSource( width, height, GRAY_LUT, data, 0, width );
-		source.setAnimated( true );
-		
-		/* TOOO check if this is actually required */
-		source.setFullBufferUpdates( true );
-		image = Toolkit.getDefaultToolkit().createImage( source );
+		SampleModel sampleModel = GRAY_LUT.createCompatibleWritableRaster( 1, 1 )
+									.getSampleModel().createCompatibleSampleModel( width, height );
+		DataBuffer db = new DataBufferByte( data, width * height, 0 );
+		WritableRaster raster = Raster.createWritableRaster( sampleModel, db, null );
+		image = new BufferedImage(GRAY_LUT, raster, false, null);
 	}
 	
 	@Override
 	public Image image()
 	{
 		return image;
+	}
+	
+	/** The underlying array holding the data. Writing to this array will change the {@link Image}
+	 * returned by {@link UnsignedByteScreenImage#image() */
+	public byte[] getData()
+	{
+		return data;
 	}
 
 	@Override
