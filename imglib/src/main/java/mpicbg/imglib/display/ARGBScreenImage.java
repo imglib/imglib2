@@ -32,6 +32,7 @@ import java.awt.image.BufferedImage;
 import java.awt.image.ColorModel;
 import java.awt.image.DataBuffer;
 import java.awt.image.DataBufferInt;
+import java.awt.image.DirectColorModel;
 import java.awt.image.Raster;
 import java.awt.image.SampleModel;
 import java.awt.image.WritableRaster;
@@ -55,6 +56,8 @@ public class ARGBScreenImage implements ScreenImage, IterableInterval< ARGBType 
 	final protected Array< ARGBType, IntArray > argbArray;
 	final protected Image image;
 	
+	static final public ColorModel ARGB_COLOR_MODEL = new DirectColorModel(32, 0xff0000, 0xff00, 0xff, 0xff000000);
+	
 	public ARGBScreenImage( final int width, final int height )
 	{
 		this( width, height, new int[ width * height ] );
@@ -73,12 +76,11 @@ public class ARGBScreenImage implements ScreenImage, IterableInterval< ARGBType 
 		argbArray = new Array< ARGBType, IntArray >( new IntArray( data ), new long[]{ width, height }, 1 );
 		argbArray.setLinkedType( new ARGBType( argbArray ) );
 
-		ColorModel cm = ColorModel.getRGBdefault();
-		SampleModel sampleModel = cm.createCompatibleWritableRaster( 1, 1 ).getSampleModel()
+		SampleModel sampleModel = ARGB_COLOR_MODEL.createCompatibleWritableRaster( 1, 1 ).getSampleModel()
 									.createCompatibleSampleModel( width, height );
 		DataBuffer dataBuffer = new DataBufferInt( data, width * height, 0 );
 		WritableRaster rgbRaster = Raster.createWritableRaster( sampleModel, dataBuffer, null );
-		image = new BufferedImage( cm, rgbRaster, false, null );
+		image = new BufferedImage( ARGB_COLOR_MODEL, rgbRaster, false, null );
 	}
 	
 	@Override
