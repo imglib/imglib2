@@ -29,7 +29,7 @@ package mpicbg.imglib.display;
 
 import java.awt.Image;
 import java.awt.Toolkit;
-import java.awt.image.ColorModel;
+import java.awt.image.IndexColorModel;
 import java.awt.image.MemoryImageSource;
 import java.util.Iterator;
 
@@ -51,13 +51,23 @@ public class UnsignedByteScreenImage implements ScreenImage, IterableInterval< U
 	final protected Array< UnsignedByteType, ByteArray > argbArray;
 	final Image image;
 	
+	static public final IndexColorModel GRAY_LUT = makeGrayLut();
+
+	static public final IndexColorModel makeGrayLut()
+	{
+		final byte[] c = new byte[256];
+		for (int i = 0; i < 256; ++i)
+			c[i] = (byte) i;
+		return new IndexColorModel(8, 256, c, c, c);
+	}
+
 	public UnsignedByteScreenImage( final int width, final int height )
 	{
 		data = new byte[ width * height ];
 		argbArray = new Array< UnsignedByteType, ByteArray >( new ByteArray( data ), new long[]{ width, height }, 1 );
 		argbArray.setLinkedType( new UnsignedByteType( argbArray ) );
 
-		final MemoryImageSource source = new MemoryImageSource( width, height, ColorModel.getRGBdefault(), data, 0, width );
+		final MemoryImageSource source = new MemoryImageSource( width, height, GRAY_LUT, data, 0, width );
 		source.setAnimated( true );
 		
 		/* TOOO check if this is actually required */
