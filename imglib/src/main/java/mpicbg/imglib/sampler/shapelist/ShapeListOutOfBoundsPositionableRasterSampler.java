@@ -30,7 +30,7 @@ package mpicbg.imglib.sampler.shapelist;
 import mpicbg.imglib.container.AbstractImgOutOfBoundsRandomAccess;
 import mpicbg.imglib.container.shapelist.ShapeList;
 import mpicbg.imglib.container.Img;
-import mpicbg.imglib.outofbounds.RasterOutOfBoundsFactory;
+import mpicbg.imglib.outofbounds.OutOfBoundsFactory;
 import mpicbg.imglib.type.Type;
 
 /**
@@ -45,10 +45,9 @@ public class ShapeListOutOfBoundsPositionableRasterSampler< T extends Type< T > 
 	
 	public ShapeListOutOfBoundsPositionableRasterSampler(
 			final ShapeList< T > container,
-			final Img< T > image,
-			final RasterOutOfBoundsFactory< T > outOfBoundsStrategyFactory ) 
+			final OutOfBoundsFactory< T, Img< T > > outOfBoundsFactory ) 
 	{
-		super( container, image, outOfBoundsStrategyFactory );
+		super( container, outOfBoundsFactory );
 		
 		this.container = container;
 	}

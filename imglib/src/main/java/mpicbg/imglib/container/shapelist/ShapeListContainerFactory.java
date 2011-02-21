@@ -30,13 +30,13 @@ package mpicbg.imglib.container.shapelist;
 import mpicbg.imglib.container.Img;
 import mpicbg.imglib.container.ImgFactory;
 import mpicbg.imglib.container.NativeContainerFactory;
-import mpicbg.imglib.image.Image;
+import mpicbg.imglib.exception.IncompatibleTypeException;
 import mpicbg.imglib.type.Type;
 
-public class ShapeListContainerFactory extends ImgFactory
+public class ShapeListContainerFactory< T extends Type< T > > extends ImgFactory< T >
 {
 	boolean useCaching = false;
-	int cacheSize = 32;
+	int cacheSize = ShapeListCached.DEFAULT_CACHE_SIZE;
 	
 	public ShapeListContainerFactory() {}
 	public ShapeListContainerFactory( final int cacheSize )
@@ -58,39 +58,21 @@ public class ShapeListContainerFactory extends ImgFactory
 	 * 
 	 * @return {@link Img} - the instantiated Container
 	 */
-	public <T extends Type<T>> ShapeList<T> createContainer( final int[] dim, final T type )
+	@Override
+	public ShapeList<T> create( final long[] dim, final T type )
 	{
 		if ( useCaching )
-			return new ShapeListCached<T>( this, dim, type );
+			return new ShapeListCached<T>( dim, type );
 		else
-			return new ShapeList<T>( this, dim, type );
+			return new ShapeList<T>( dim, type );
 	}
 
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
-	public String getErrorMessage()
-	{
-		// TODO Auto-generated method stub
-		return null;
+	public < S > ImgFactory< S > imgFactory(final S type )
+			throws IncompatibleTypeException {
+		if ( Type.class.isInstance( type ) )
+			return new ShapeListContainerFactory();
+		throw new IncompatibleTypeException( this, type.getClass().getCanonicalName() + " does not implement Type." );
 	}
-
-	/* (non-Javadoc)
-	 * @see mpicbg.imglib.Factory#printProperties()
-	 */
-	@Override
-	public void printProperties()
-	{
-	// TODO Auto-generated method stub
-
-	}
-
-	/* (non-Javadoc)
-	 * @see mpicbg.imglib.Factory#setParameters(java.lang.String)
-	 */
-	@Override
-	public void setParameters( String configuration )
-	{
-	// TODO Auto-generated method stub
-
-	}
-
 }
