@@ -18,6 +18,11 @@ public class ImgProxy<T extends NumericType<T>> implements Img<T> {
 		this.img = img;
 	}
 	
+	/** Return the {@link Img} wrapped by this proxy. */
+	public Img<T> image() {
+		return img;
+	}
+	
 	@Override
 	public int numDimensions() {
 		return img.numDimensions();
