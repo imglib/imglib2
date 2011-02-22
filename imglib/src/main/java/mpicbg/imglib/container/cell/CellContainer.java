@@ -9,6 +9,12 @@ import mpicbg.imglib.container.list.ListContainerFactory;
 import mpicbg.imglib.outofbounds.OutOfBoundsFactory;
 import mpicbg.imglib.type.NativeType;
 
+/**
+ * @author Tobias Pietzsch
+ *
+ * @param <T>
+ * @param <A>
+ */
 final public class CellContainer< T extends NativeType< T >, A extends ArrayDataAccess< A > > extends AbstractNativeContainer< T, A >
 {
 	final protected CellContainerFactory< T > factory;
@@ -59,7 +65,7 @@ final public class CellContainer< T extends NativeType< T >, A extends ArrayData
 
 
 	/**
-	 * This interface is implemented by all samplers on the CellContainer. It
+	 * This interface is implemented by all samplers on the {@link CellContainer}. It
 	 * allows the container to ask for the cell the sampler is currently in.
 	 */
 	public interface CellContainerSampler<T extends NativeType< T >, A extends ArrayDataAccess< A > >
@@ -97,30 +103,44 @@ final public class CellContainer< T extends NativeType< T >, A extends ArrayData
 		// TODO remove?
 	}
 
+	/**
+	 * Translate a global element position into the position of the cell containing that element
+	 * and the element position within the cell.
+	 * 
+	 * @param position    global element position
+	 * @param cellPos     receives position of cell
+	 * @param elementPos  receives position of element within cell
+	 */
 	protected void splitGlobalPosition( final long[] position, final long[] cellPos, final long[] elementPos )
 	{
 		for ( int d = 0; d < n; ++d ) {
 			cellPos[ d ] = position[ d ] / cellDims[ d ];
 			elementPos[ d ] = position[ d ] - cellPos[ d ] * cellDims[ d ];
 		}
-		// TODO comment
 	}
 
 	/**
-	 * Get the position in dimension {@link dim} of the cell containing elements at {@link position}.
+	 * Get the position of the cell containing element at {@link position}.
 	 * 
-	 * @param position   position in dimension {@link dim} of an element in the {@link CellContainer}.
-	 * @param cellPos    position in dimension {@link dim} within cell grid of the cell containing the element.
+	 * @param position   position in dimension {@link dim} of an element in the {@link CellContainer}
+	 * @param dim        which dimension
+	 * @return           position in dimension {@link dim} of the cell containing the element.
 	 */
 	protected long getCellPosition( final long position, final int dim )
 	{
 		return position / cellDims[ dim ];
 	}
 
+	/**
+	 * Get the local position within the cell of the element at global {@link position}.
+	 * 
+	 * @param position   position in dimension {@link dim} of an element in the {@link CellContainer}
+	 * @param dim        which dimension
+	 * @return           local position in dimension {@link dim} within the cell containing the element.
+	 */
 	protected long getPositionInCell( final long position, final int dim)
 	{
 		return position % cellDims[ dim ];
-		// TODO comment
 	}
 
 

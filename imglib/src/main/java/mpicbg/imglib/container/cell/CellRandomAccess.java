@@ -63,7 +63,7 @@ public class CellRandomAccess< T extends NativeType< T >, A extends ArrayDataAcc
 	}
 	
 	@Override
-	public void fwd( int dim )
+	public void fwd( final int dim )
 	{
 		type.incIndex( currentCellSteps[ dim ] );
 		if ( ++position[ dim ] > currentCellMax[ dim ] )
@@ -74,7 +74,7 @@ public class CellRandomAccess< T extends NativeType< T >, A extends ArrayDataAcc
 	}
 
 	@Override
-	public void bck( int dim )
+	public void bck( final int dim )
 	{
 		type.decIndex( currentCellSteps[ dim ] );
 		if ( --position[ dim ] < currentCellMin[ dim ] )
