@@ -27,7 +27,6 @@
  */
 package mpicbg.imglib.container.planar;
 
-import mpicbg.imglib.container.Img;
 import mpicbg.imglib.type.NativeType;
 
 /**
@@ -48,7 +47,7 @@ public class PlanarLocalizingCursor< T extends NativeType< T > > extends Abstrac
 	}	
 	
 	@Override
-	public Img< T > getImg()
+	public PlanarContainer< T, ? > getImg()
 	{
 		return container;
 	}

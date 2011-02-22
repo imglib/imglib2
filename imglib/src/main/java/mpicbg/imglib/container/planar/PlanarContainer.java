@@ -103,10 +103,18 @@ public class PlanarContainer< T extends NativeType< T >, A extends ArrayDataAcce
 		numSlices = s;
 
 		mirror = new ArrayList< A >( numSlices );
-
-		final int entitiesPerSlice = ( ( n > 1 ) ? dimensions[ 1 ] : 1 )  *  dimensions[ 0 ] * entitiesPerPixel;
-		for ( int i = 0; i < numSlices; ++i )
-			mirror.add( creator == null ? null : creator.createArray( entitiesPerSlice ) );
+		
+		if ( creator == null)
+		{
+			for ( int i = 0; i < numSlices; ++i )
+				mirror.add( null );
+		}
+		else
+		{
+			final int entitiesPerSlice = ( ( n > 1 ) ? dimensions[ 1 ] : 1 )  *  dimensions[ 0 ] * entitiesPerPixel;
+			for ( int i = 0; i < numSlices; ++i )
+				mirror.add( creator.createArray( entitiesPerSlice ) );
+		}
 	}
 
 	/**
