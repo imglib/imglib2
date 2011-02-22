@@ -16,7 +16,7 @@
  */
 package mpicbg.imglib.algorithm.function;
 
-import mpicbg.imglib.function.Converter;
+import mpicbg.imglib.converter.Converter;
 import mpicbg.imglib.type.numeric.RealType;
 
 public class NormMinMax< A extends RealType<A> > implements Converter< A, A >

@@ -2,20 +2,20 @@ package script.imglib.math;
 
 import script.imglib.math.fn.BinaryOperation;
 import script.imglib.math.fn.IFunction;
-import mpicbg.imglib.image.Image;
+import mpicbg.imglib.container.Img;
 import mpicbg.imglib.type.numeric.RealType;
 
 public class Difference extends BinaryOperation
 {
-	public Difference(final Image<? extends RealType<?>> left, final Image<? extends RealType<?>> right) {
+	public Difference(final Img<? extends RealType<?>> left, final Img<? extends RealType<?>> right) {
 		super(left, right);
 	}
 
-	public Difference(final IFunction fn, final Image<? extends RealType<?>> right) {
+	public Difference(final IFunction fn, final Img<? extends RealType<?>> right) {
 		super(fn, right);
 	}
 
-	public Difference(final Image<? extends RealType<?>> left, final IFunction fn) {
+	public Difference(final Img<? extends RealType<?>> left, final IFunction fn) {
 		super(left, fn);
 	}
 
@@ -23,11 +23,11 @@ public class Difference extends BinaryOperation
 		super(fn1, fn2);
 	}
 	
-	public Difference(final Image<? extends RealType<?>> left, final Number val) {
+	public Difference(final Img<? extends RealType<?>> left, final Number val) {
 		super(left, val);
 	}
 
-	public Difference(final Number val,final Image<? extends RealType<?>> right) {
+	public Difference(final Number val,final Img<? extends RealType<?>> right) {
 		super(val, right);
 	}
 

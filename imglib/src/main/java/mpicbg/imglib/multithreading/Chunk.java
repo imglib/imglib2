@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2010, Cardona, Preibisch & Saalfeld
+ * Copyright (c) 2009--2010, Stephan Preibisch
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -24,34 +24,22 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- */
-package mpicbg.imglib.sampler.shapelist;
-
-import mpicbg.imglib.container.AbstractImgOutOfBoundsRandomAccess;
-import mpicbg.imglib.container.shapelist.ShapeListCached;
-import mpicbg.imglib.container.Img;
-import mpicbg.imglib.outofbounds.OutOfBoundsFactory;
-import mpicbg.imglib.type.Type;
-
-/**
- * 
- * @param <T>
  *
- * @author Cardona, Preibisch and Saalfeld
+ * @author Stephan Preibisch
  */
-public class ShapeListCachedOutOfBoundsPositionableRasterSampler< T extends Type< T > > extends AbstractImgOutOfBoundsRandomAccess< T >
-{
-	final protected ShapeListCached< T > container;
-	
-	public ShapeListCachedOutOfBoundsPositionableRasterSampler(
-			final ShapeListCached< T > container,
-			final OutOfBoundsFactory< T, Img< T > > outOfBoundsFactory ) 
-	{
-		super( container, outOfBoundsFactory );
-		
-		this.container = container;
-	}
+package mpicbg.imglib.multithreading;
 
-	@Override
-	public ShapeListCached< T > getImg(){ return container; }
+public class Chunk
+{
+	public Chunk( final long startPosition, long loopSize )
+	{
+		this.startPosition = startPosition;
+		this.loopSize = loopSize;
+	}
+	
+	public long getStartPosition() { return startPosition; }
+	public long getLoopSize() { return loopSize; }
+	
+	protected long startPosition;
+	protected long loopSize;
 }

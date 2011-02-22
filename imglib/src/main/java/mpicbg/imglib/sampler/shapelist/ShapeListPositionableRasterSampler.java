@@ -33,9 +33,9 @@ import mpicbg.imglib.container.AbstractImgCursor;
 import mpicbg.imglib.container.ImgCursor;
 import mpicbg.imglib.container.ImgRandomAccess;
 import mpicbg.imglib.container.shapelist.ShapeList;
-import mpicbg.imglib.container.Img;
 import mpicbg.imglib.location.VoidRealPositionable;
 import mpicbg.imglib.type.Type;
+import mpicbg.imglib.util.Util;
 
 /**
  * 
@@ -48,20 +48,18 @@ public class ShapeListPositionableRasterSampler< T extends Type< T > > extends A
 	final protected ShapeList< T > container;
 	
 	final protected int numDimensions;
-	final protected int[] position, dimensions;
+	final protected long[] position, dimensions;
 	
 	protected Positionable linkedRasterPositionable = VoidRealPositionable.getInstance();
 	
-	public ShapeListPositionableRasterSampler(
-			final ShapeList< T > container,
-			final Img< T > image ) 
+	public ShapeListPositionableRasterSampler( final ShapeList< T > container ) 
 	{
-		super( container, image );
+		super( container.numDimensions() );
 		this.container = container;
 		numDimensions = container.numDimensions(); 
 		
-		position = new int[ numDimensions ];
-		dimensions = container.getDimensions();
+		position = new long[ numDimensions ];
+		dimensions = Util.intervalDimensions( container );
 	}
 	
 	@Override
@@ -75,7 +73,7 @@ public class ShapeListPositionableRasterSampler< T extends Type< T > > extends A
 	{
 		for ( int d = 0; d < numDimensions; ++d )
 		{
-			final int x = position[ d ];
+			final long x = position[ d ];
 			if ( x < 0 || x >= dimensions[ d ] )
 				return true;
 		}
@@ -114,38 +112,6 @@ public class ShapeListPositionableRasterSampler< T extends Type< T > > extends A
 
 		linkedRasterPositionable.bck( dim );
 	}
-		
-	@Override
-	public void moveTo( final int[] pos )
-	{		
-		for ( int d = 0; d < numDimensions; ++d )
-		{
-			final int dist = pos[ d ] - getIntPosition( d );
-			
-			if ( dist != 0 )				
-				move( dist, d );
-		}
-	}
-	
-	@Override
-	public void moveTo( final long[] pos )
-	{		
-		for ( int d = 0; d < numDimensions; ++d )
-		{
-			final long dist = pos[ d ] - getIntPosition( d );
-			
-			if ( dist != 0 )				
-				move( dist, d );
-		}
-	}
-
-	@Override
-	public void moveTo( final Localizable localizable )
-	{
-		localizable.localize( position );
-		
-		linkedRasterPositionable.moveTo( localizable );
-	}
 
 	@Override
 	public void setPosition( final Localizable localizable )
@@ -165,7 +131,6 @@ public class ShapeListPositionableRasterSampler< T extends Type< T > > extends A
 	}
 	
 	@Override
-	/* TODO change position to long accuracy */
 	public void setPosition( final long[] position )
 	{
 		for ( int d = 0; d < numDimensions; ++d )
@@ -184,7 +149,6 @@ public class ShapeListPositionableRasterSampler< T extends Type< T > > extends A
 	}
 	
 	@Override
-	/* TODO change position to long accuracy */
 	public void setPosition( final long position, final int dim )
 	{
 		setPosition( ( int )position, dim );
@@ -214,7 +178,7 @@ public class ShapeListPositionableRasterSampler< T extends Type< T > > extends A
 	{
 		for ( int d = numDimensions - 1; d >= 0; --d )
 		{
-			final int sizeD = dimensions[ d ] - 1;
+			final long sizeD = dimensions[ d ] - 1;
 			if ( position[ d ] < sizeD )
 				return true;
 			else if ( position[ d ] > sizeD )
@@ -253,7 +217,7 @@ public class ShapeListPositionableRasterSampler< T extends Type< T > > extends A
 	public void localize( final int[] pos )
 	{
 		for ( int d = 0; d < numDimensions; ++d )
-			pos[ d ] = this.position[ d ];
+			pos[ d ] = (int) this.position[ d ];
 	}
 	
 	@Override
@@ -279,7 +243,7 @@ public class ShapeListPositionableRasterSampler< T extends Type< T > > extends A
 	@Override
 	public int getIntPosition( final int dim )
 	{
-		return position[ dim ];
+		return (int) position[ dim ];
 	}
 
 	@Override
@@ -303,4 +267,22 @@ public class ShapeListPositionableRasterSampler< T extends Type< T > > extends A
 	
 	@Override
 	public int numDimensions(){ return numDimensions; }
+
+	@Override
+	public void move( final Localizable localizable ) {
+		for ( int d = 0; d < numDimensions; d++ )
+			this.position[ d ] += localizable.getLongPosition( d );
+	}
+
+	@Override
+	public void move( final int[] position ) {
+		for ( int d = 0; d < numDimensions; d++ )
+			this.position[ d ] += position[ d ];
+	}
+
+	@Override
+	public void move( final long[] position ) {
+		for ( int d = 0; d < numDimensions; d++ )
+			this.position[ d ] += position[ d ];
+	}
 }

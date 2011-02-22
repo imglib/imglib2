@@ -28,9 +28,14 @@
 package mpicbg.imglib.display;
 
 import java.awt.Image;
-import java.awt.Toolkit;
-import java.awt.image.ImageProducer;
-import java.awt.image.MemoryImageSource;
+import java.awt.image.BufferedImage;
+import java.awt.image.ColorModel;
+import java.awt.image.DataBuffer;
+import java.awt.image.DataBufferInt;
+import java.awt.image.DirectColorModel;
+import java.awt.image.Raster;
+import java.awt.image.SampleModel;
+import java.awt.image.WritableRaster;
 import java.util.Iterator;
 
 import mpicbg.imglib.Cursor;
@@ -49,22 +54,46 @@ public class ARGBScreenImage implements ScreenImage, IterableInterval< ARGBType 
 {
 	final protected int[] data; 
 	final protected Array< ARGBType, IntArray > argbArray;
-	final ImageProducer imageSource;
+	final protected Image image;
+	
+	static final public ColorModel ARGB_COLOR_MODEL = new DirectColorModel(32, 0xff0000, 0xff00, 0xff, 0xff000000);
 	
 	public ARGBScreenImage( final int width, final int height )
 	{
-		data = new int[ width * height ];
+		this( width, height, new int[ width * height ] );
+	}
+	
+	/** Create an {@link Image} with {@param data}. Writing to the {@param data} array will update the {@link Image}. */
+	public ARGBScreenImage( final int width, final int height, final IntArray data )
+	{
+		this( width, height, data.getCurrentStorageArray() );
+	}
+
+	/** Create an {@link Image} with {@param data}. Writing to the {@param data} array will update the {@link Image}. */
+	public ARGBScreenImage( final int width, final int height, final int[] data )
+	{
+		this.data = data;
 		argbArray = new Array< ARGBType, IntArray >( new IntArray( data ), new long[]{ width, height }, 1 );
 		argbArray.setLinkedType( new ARGBType( argbArray ) );
 
-		imageSource = new MemoryImageSource( width, height, data, 0, width );
+		SampleModel sampleModel = ARGB_COLOR_MODEL.createCompatibleWritableRaster( 1, 1 ).getSampleModel()
+									.createCompatibleSampleModel( width, height );
+		DataBuffer dataBuffer = new DataBufferInt( data, width * height, 0 );
+		WritableRaster rgbRaster = Raster.createWritableRaster( sampleModel, dataBuffer, null );
+		image = new BufferedImage( ARGB_COLOR_MODEL, rgbRaster, false, null );
 	}
 	
 	@Override
 	public Image image()
 	{
-		// TODO - investigate more efficient way
-		return Toolkit.getDefaultToolkit().createImage(imageSource);
+		return image;
+	}
+	
+	/** The underlying array holding the data. Writing to this array will change
+	 * the content of the {@link Image} returned by {@link ARGBScreenImage#image() */
+	public int[] getData()
+	{
+		return data;
 	}
 
 	@Override

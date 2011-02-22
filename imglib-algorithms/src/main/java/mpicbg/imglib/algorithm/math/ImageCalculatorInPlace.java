@@ -16,13 +16,12 @@
  */
 package mpicbg.imglib.algorithm.math;
 
-import mpicbg.imglib.function.Function;
-import mpicbg.imglib.image.Image;
+import mpicbg.imglib.container.Img;
 import mpicbg.imglib.type.Type;
 
 public class ImageCalculatorInPlace <S extends Type<S>, T extends Type<T>> extends ImageCalculator<S, T, S>
 {
-	public ImageCalculatorInPlace( final Image<S> image1, final Image<T> image2, final Function<S, T, S> function )
+	public ImageCalculatorInPlace( final Img<S> image1, final Img<T> image2, final Function<S, T, S> function )
 	{
 		super( image1, image2, image1, function );
 	}

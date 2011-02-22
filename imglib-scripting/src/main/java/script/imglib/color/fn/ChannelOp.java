@@ -1,12 +1,12 @@
 package script.imglib.color.fn;
 
-import mpicbg.imglib.image.Image;
-import mpicbg.imglib.type.numeric.RGBALegacyType;
+import mpicbg.imglib.container.Img;
+import mpicbg.imglib.type.numeric.ARGBType;
 
 /** Extracts the red pixel value. */
 public abstract class ChannelOp extends RGBAOp {
 
-	public ChannelOp(final Image<? extends RGBALegacyType> img) {
+	public ChannelOp(final Img<? extends ARGBType> img) {
 		super(img);
 	}
 
@@ -15,6 +15,6 @@ public abstract class ChannelOp extends RGBAOp {
 	@Override
 	public final double eval() {
 		c.fwd();
-		return (c.getType().get() >> getShift()) & 0xff;
+		return (c.get().get() >> getShift()) & 0xff;
 	}
 }

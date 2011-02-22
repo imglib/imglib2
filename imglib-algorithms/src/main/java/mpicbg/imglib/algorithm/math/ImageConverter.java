@@ -22,28 +22,27 @@ import java.util.concurrent.atomic.AtomicInteger;
 import mpicbg.imglib.algorithm.Benchmark;
 import mpicbg.imglib.algorithm.MultiThreaded;
 import mpicbg.imglib.algorithm.OutputAlgorithm;
-import mpicbg.imglib.cursor.Cursor;
-import mpicbg.imglib.cursor.LocalizableByDimCursor;
-import mpicbg.imglib.cursor.LocalizableCursor;
-import mpicbg.imglib.function.Converter;
-import mpicbg.imglib.image.Image;
-import mpicbg.imglib.image.ImageFactory;
+import mpicbg.imglib.container.Img;
+import mpicbg.imglib.container.ImgCursor;
+import mpicbg.imglib.container.ImgFactory;
+import mpicbg.imglib.container.ImgRandomAccess;
+import mpicbg.imglib.converter.Converter;
 import mpicbg.imglib.multithreading.Chunk;
 import mpicbg.imglib.multithreading.SimpleMultiThreading;
 import mpicbg.imglib.type.Type;
 import mpicbg.imglib.util.Util;
 
-public class ImageConverter< S extends Type<S>, T extends Type<T> > implements OutputAlgorithm<T>, MultiThreaded, Benchmark
+public class ImageConverter< S extends Type<S>, T extends Type<T> > implements OutputAlgorithm<Img<T>>, MultiThreaded, Benchmark
 {
-	final Image<S> image; 
-	final Image<T> output;
+	final Img<S> image;
+	final Img<T> output;
 	final Converter<S,T> converter;
 
 	long processingTime;
 	int numThreads;
 	String errorMessage = "";
 	
-	public ImageConverter( final Image<S> image, final Image<T> output, final Converter<S,T> converter )
+	public ImageConverter( final Img<S> image, final Img<T> output, final Converter<S,T> converter )
 	{
 		this.image = image;
 		this.output = output;
@@ -52,13 +51,13 @@ public class ImageConverter< S extends Type<S>, T extends Type<T> > implements O
 		setNumThreads();
 	}
 	
-	public ImageConverter( final Image<S> image, final ImageFactory<T> factory, final Converter<S,T> converter )
+	public ImageConverter( final Img<S> image, final ImgFactory<T> factory, final T destType, final Converter<S,T> converter )
 	{
-		this( image, createImageFromFactory( factory, image.getDimensions() ), converter );
+		this( image, factory.create( image, destType ),  converter );
 	}
 	
 	@Override
-	public Image<T> getResult() { return output; }
+	public Img<T> getResult() { return output; }
 
 	@Override
 	public boolean checkInput()
@@ -82,11 +81,11 @@ public class ImageConverter< S extends Type<S>, T extends Type<T> > implements O
 			errorMessage = "ImageCalculator: [Converter<S,T>] is null.";
 			return false;
 		}
-		else if ( !image.getContainer().compareStorageContainerDimensions( output.getContainer() ) )
+		else if ( !image.equalIterationOrder( output ) )
 		{
 			errorMessage = "ImageCalculator: Images have different dimensions, not supported:" + 
-				" Image: " + Util.printCoordinates( image.getDimensions() ) + 
-				" Output: " + Util.printCoordinates( output.getDimensions() );
+				" Image: " + Util.printCoordinates( Util.intervalDimensions( image ) ) + 
+				" Output: " + Util.printCoordinates( Util.intervalDimensions( output ) );
 			return false;
 		}
 		else
@@ -98,14 +97,14 @@ public class ImageConverter< S extends Type<S>, T extends Type<T> > implements O
 	{
 		final long startTime = System.currentTimeMillis();
 
-		final long imageSize = image.getNumPixels();
+		final long imageSize = image.size();
 
 		final AtomicInteger ai = new AtomicInteger(0);					
         final Thread[] threads = SimpleMultiThreading.newThreads( getNumThreads() );
 
         final Vector<Chunk> threadChunks = SimpleMultiThreading.divideIntoChunks( imageSize, numThreads );
         
-        final boolean isCompatible = image.getContainer().compareStorageContainerCompatibility( output.getContainer() ); 
+        final boolean isCompatible = image.equalIterationOrder( output ); 
 	
         for (int ithread = 0; ithread < threads.length; ++ithread)
             threads[ithread] = new Thread(new Runnable()
@@ -143,12 +142,12 @@ public class ImageConverter< S extends Type<S>, T extends Type<T> > implements O
 	
 	protected void computeSimple( final long startPos, final long loopSize )
 	{
-		final Cursor<S> cursorIn = image.createCursor();
-		final Cursor<T> cursorOut = output.createCursor();
+		final ImgCursor<S> cursorIn = image.cursor();
+		final ImgCursor<T> cursorOut = output.cursor();
 		
 		// move to the starting position of the current thread
-		cursorIn.fwd( startPos );
-		cursorOut.fwd( startPos );
+		cursorIn.jumpFwd( startPos );
+		cursorOut.jumpFwd( startPos );
     	
         // do as many pixels as wanted by this thread
         for ( long j = 0; j < loopSize; ++j )
@@ -156,20 +155,17 @@ public class ImageConverter< S extends Type<S>, T extends Type<T> > implements O
 			cursorIn.fwd();
 			cursorOut.fwd();
 			
-			converter.convert( cursorIn.getType(), cursorOut.getType() );
-		}
-		
-		cursorIn.close();
-		cursorOut.close();		
+			converter.convert( cursorIn.get(), cursorOut.get() );
+		}		
 	}
 	
 	protected void computeAdvanced( final long startPos, final long loopSize )
 	{
-		final LocalizableByDimCursor<S> cursorIn = image.createLocalizableByDimCursor();
-		final LocalizableCursor<T> cursorOut = output.createLocalizableCursor();
+		final ImgRandomAccess<S> cursorIn = image.randomAccess();
+		final ImgCursor<T> cursorOut = output.cursor();
 		
 		// move to the starting position of the current thread
-		cursorOut.fwd( startPos );
+		cursorOut.jumpFwd( startPos );
     	
         // do as many pixels as wanted by this thread
         for ( long j = 0; j < loopSize; ++j )
@@ -177,11 +173,8 @@ public class ImageConverter< S extends Type<S>, T extends Type<T> > implements O
 			cursorOut.fwd();
 			cursorIn.setPosition( cursorOut );
 			
-			converter.convert( cursorIn.getType(), cursorOut.getType() );
-		}
-		
-		cursorIn.close();
-		cursorOut.close();					
+			converter.convert( cursorIn.get(), cursorOut.get() );
+		}				
 	}
 
 	@Override
@@ -198,12 +191,5 @@ public class ImageConverter< S extends Type<S>, T extends Type<T> > implements O
 
 	@Override
 	public long getProcessingTime() { return processingTime; }
-	
-	protected static <T extends Type<T>> Image<T> createImageFromFactory( final ImageFactory<T> factory, final int[] size )
-	{
-		if ( factory == null || size == null )
-			return null;
-		else 
-			return factory.createImage( size );			
-	}
+
 }

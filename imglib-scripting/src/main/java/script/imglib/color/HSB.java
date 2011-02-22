@@ -6,9 +6,8 @@ import java.util.Collection;
 import script.imglib.color.fn.ColorFunction;
 import script.imglib.math.fn.IFunction;
 
-import mpicbg.imglib.cursor.Cursor;
-import mpicbg.imglib.image.Image;
-import mpicbg.imglib.type.numeric.RGBALegacyType;
+import mpicbg.imglib.container.ImgCursor;
+import mpicbg.imglib.container.Img;
 import mpicbg.imglib.type.numeric.RealType;
 
 /** Given up to 3 channels--each represented by an {@link IFunction},
@@ -30,7 +29,7 @@ public final class HSB extends ColorFunction {
 	}
 
 	/** Interpret the @param img as an HSB image. */
-	public HSB(final Image<? extends RealType<?>> img) {
+	public HSB(final Img<? extends RealType<?>> img) {
 		this(new Channel(img, 3), new Channel(img, 2), new Channel(img, 1));
 	}
 
@@ -81,7 +80,7 @@ public final class HSB extends ColorFunction {
 	}
 
 	@Override
-	public final void findCursors(final Collection<Cursor<?>> cursors) {
+	public final void findCursors(final Collection<ImgCursor<?>> cursors) {
 		hue.findCursors(cursors);
 		saturation.findCursors(cursors);
 		brightness.findCursors(cursors);

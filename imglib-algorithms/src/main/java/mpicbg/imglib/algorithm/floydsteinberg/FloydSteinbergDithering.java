@@ -20,50 +20,46 @@ import java.util.Random;
 
 import mpicbg.imglib.algorithm.Benchmark;
 import mpicbg.imglib.algorithm.OutputAlgorithm;
+import mpicbg.imglib.algorithm.math.ComputeMinMax;
+import mpicbg.imglib.container.Img;
+import mpicbg.imglib.container.ImgCursor;
+import mpicbg.imglib.container.ImgRandomAccess;
 import mpicbg.imglib.container.array.ArrayContainerFactory;
-import mpicbg.imglib.cursor.LocalizableByDimCursor;
-import mpicbg.imglib.cursor.LocalizableCursor;
-import mpicbg.imglib.cursor.array.ArrayLocalizableCursor;
-import mpicbg.imglib.image.Image;
-import mpicbg.imglib.image.ImageFactory;
-import mpicbg.imglib.outofbounds.OutOfBoundsStrategyValueFactory;
-import mpicbg.imglib.type.label.FakeType;
+import mpicbg.imglib.exception.IncompatibleTypeException;
+import mpicbg.imglib.iterator.ZeroMinIntervalIterator;
+import mpicbg.imglib.outofbounds.OutOfBoundsConstantValueFactory;
 import mpicbg.imglib.type.logic.BitType;
 import mpicbg.imglib.type.numeric.RealType;
 import mpicbg.imglib.type.numeric.real.FloatType;
 import mpicbg.imglib.util.Util;
 
-public class FloydSteinbergDithering<T extends RealType<T>> implements OutputAlgorithm<BitType>, Benchmark
+public class FloydSteinbergDithering<T extends RealType<T>> implements OutputAlgorithm<Img<BitType>>, Benchmark
 {
-	Image<BitType> result;
-	final Image<T> img;
-	final Image<FloatType> errorDiffusionKernel;
-	final int[] dim, tmp1, tmp2;
-	final int numDimensions;
-	final float ditheringThreshold, minValue, maxValue;
+	Img<BitType> result;
+	final Img<T> img;
+	final Img<FloatType> errorDiffusionKernel;
+	final long[] dim, tmp1, tmp2;
+	final float ditheringThreshold;
 	long processingTime;
 	
 	String errorMessage = "";
 	
-	public FloydSteinbergDithering( final Image<T> img, final float ditheringThreshold )
+	public FloydSteinbergDithering( final Img<T> img, final float ditheringThreshold )
 	{
-		this.img = img.clone();
-		this.dim = img.getDimensions();
-		this.tmp1 = img.createPositionArray();
-		this.tmp2 = img.createPositionArray();
+		this.img = img;
+		this.dim = Util.intervalDimensions(img);
+		this.tmp1 = new long[img.numDimensions()];
+		this.tmp2 = new long[img.numDimensions()];
 
-		this.errorDiffusionKernel = createErrorDiffusionKernel( img.getNumDimensions() );
-
+		this.errorDiffusionKernel = createErrorDiffusionKernel( img.numDimensions() );
+		
 		this.ditheringThreshold = ditheringThreshold;
-		img.getDisplay().setMinMax();		
-		this.minValue = (float)img.getDisplay().getMin();
-		this.maxValue = (float)img.getDisplay().getMax();
-		this.numDimensions = img.getNumDimensions();
 	}
 
-	public FloydSteinbergDithering( final Image<T> img )
+	/** Will estimate the dithering threshold by (max - min) / 2 */
+	public FloydSteinbergDithering( final Img<T> img )
 	{
-		this ( img, getThreshold( img ) );	
+		this ( img, Float.NEGATIVE_INFINITY );
 	}	
 
 	@Override
@@ -71,39 +67,52 @@ public class FloydSteinbergDithering<T extends RealType<T>> implements OutputAlg
 	{		
 		final long startTime = System.currentTimeMillis();
 
-		// creates the output image of BitType using the same Storage Strategy as the input image 
-		final ImageFactory<BitType> imgFactory = new ImageFactory<BitType>( new BitType(), img.getContainerFactory() );
-		result = imgFactory.createImage( dim );
+		ComputeMinMax<T> cmm = new ComputeMinMax<T>(img);
+		cmm.process();
+		final float minValue = cmm.getMin().getRealFloat();
+		final float maxValue = cmm.getMax().getRealFloat();
+		final long numDimensions = img.numDimensions();
+		final float ditheringThreshold =
+			Float.NEGATIVE_INFINITY == this.ditheringThreshold ?
+					(maxValue - minValue) / 2.0f
+					: this.ditheringThreshold;
+
+		// creates the output image of BitType using the same Storage Strategy as the input image
+		try {
+			result = img.factory().imgFactory(new BitType()).create( dim, new BitType() );
+		} catch (IncompatibleTypeException e) {
+			throw new RuntimeException(e);
+		}
 		
 		// we create a Cursor that traverses (top -> bottom) and (left -> right) in n dimensions,
 		// which is a Cursor on a normal Array, therefore we use a FakeArray which just gives us position
 		// information without allocating memory
-		final LocalizableCursor<FakeType> cursor = ArrayLocalizableCursor.createLinearCursor( dim );
+		final ZeroMinIntervalIterator cursor = new ZeroMinIntervalIterator( dim );
 
 		// we also need a Cursors for the input, the output and the kernel image
-		final LocalizableByDimCursor<T> cursorInput = img.createLocalizableByDimCursor( new OutOfBoundsStrategyValueFactory<T>() );
-		final LocalizableByDimCursor<BitType> cursorOutput = result.createLocalizableByDimCursor();
-		final LocalizableCursor<FloatType> cursorKernel = errorDiffusionKernel.createLocalizableCursor();
+		final ImgRandomAccess<T> cursorInput = img.randomAccess( new OutOfBoundsConstantValueFactory<T,Img<T>>( img.firstElement().createVariable() ) );
+		final ImgRandomAccess<BitType> cursorOutput = result.randomAccess();
+		final ImgCursor<FloatType> cursorKernel = errorDiffusionKernel.localizingCursor();
 		
 		while( cursor.hasNext() )
 		{
 			cursor.fwd();
 			
 			// move input and output cursor to the current location
-			cursorInput.moveTo( cursor );
-			cursorOutput.moveTo( cursor );
+			cursorInput.setPosition( cursor );
+			cursorOutput.setPosition( cursor );
 			
 			// set new value and compute error
 			final float error;
-			final float in = cursorInput.getType().getRealFloat(); 
+			final float in = cursorInput.get().getRealFloat(); 
 			if ( in < ditheringThreshold )
 			{
-				cursorOutput.getType().setZero();
+				cursorOutput.get().setZero();
 				error = in - minValue; 
 			}
 			else
 			{
-				cursorOutput.getType().setOne();
+				cursorOutput.get().setOne();
 				error = in - maxValue; 
 			}
 			
@@ -111,33 +120,24 @@ public class FloydSteinbergDithering<T extends RealType<T>> implements OutputAlg
 			{
 				// distribute the error
 				cursorKernel.reset();
-				cursorKernel.fwd( errorDiffusionKernel.getNumPixels()/2 );
-				cursor.getPosition( tmp1 );			
+				cursorKernel.jumpFwd( errorDiffusionKernel.size()/2 );
+				cursor.localize( tmp1 );	
 				
 				while ( cursorKernel.hasNext() )
 				{
 					cursorKernel.fwd();				
 					
-					final float value = error * cursorKernel.getType().get();
-					cursorKernel.getPosition( tmp2 );
+					final float value = error * cursorKernel.get().get();
+					cursorKernel.localize( tmp2 );
 					
 					for ( int d = 0; d < numDimensions; ++d )
 						tmp2[ d ] += tmp1[ d ] - 1;
 					
-					cursorInput.moveTo( tmp2 );
-					cursorInput.getType().setReal( cursorInput.getType().getRealFloat() + value );
+					cursorInput.move( tmp2 );
+					cursorInput.get().setReal( cursorInput.get().getRealFloat() + value );
 				}
 			}		
 		}
-		
-		// close all cursors
-		cursor.close();
-		cursorInput.close();
-		cursorOutput.close();
-		cursorKernel.close();
-
-		// close image
-		img.close();
 		
 		processingTime = System.currentTimeMillis() - startTime;
 		
@@ -149,30 +149,24 @@ public class FloydSteinbergDithering<T extends RealType<T>> implements OutputAlg
 	public long getProcessingTime() { return processingTime; }
 
 	@Override
-	public Image<BitType> getResult() { return result; }
+	public Img<BitType> getResult() { return result; }
 
 	@Override
 	public boolean checkInput() { return true; }
-	
-	public static <T extends RealType<T>> float getThreshold( final Image<T> img )
-	{
-		img.getDisplay().setMinMax();
-		return (float) (img.getDisplay().getMax() - img.getDisplay().getMin()) / 2.0f ;
-	}
 
 	@Override
 	public String getErrorMessage() { return errorMessage; }
 
-	public Image<FloatType> createErrorDiffusionKernel( final int numDimensions )
+	public Img<FloatType> createErrorDiffusionKernel( final int numDimensions )
 	{
-		ImageFactory<FloatType> factory = new ImageFactory<FloatType>( new FloatType(), new ArrayContainerFactory() );
+		ArrayContainerFactory<FloatType> factory = new ArrayContainerFactory<FloatType>();
 		
 		// for 2d we take the values from the literature
 		if ( numDimensions == 2 )
 		{
-			final Image<FloatType> kernel = factory.createImage( new int[] { 3, 3 } );
+			final Img<FloatType> kernel = factory.create( new long[] { 3, 3 }, new FloatType() );
 			
-			final LocalizableByDimCursor<FloatType> cursor = kernel.createLocalizableByDimCursor();
+			final ImgRandomAccess<FloatType> cursor = kernel.randomAccess();
 			
 			// For the 2d-case as well:
 			// |-  -  -|
@@ -181,27 +175,25 @@ public class FloydSteinbergDithering<T extends RealType<T>> implements OutputAlg
 			//( - means processed already, # means the one we are currently processing)			
 			cursor.setPosition( 2, 0 );
 			cursor.setPosition( 1, 1 );			
-			cursor.getType().setReal( 7.0f / 16.0f );
+			cursor.get().setReal( 7.0f / 16.0f );
 			
 			cursor.move( 1, 1 );
-			cursor.getType().setReal( 1.0f / 16.0f );
+			cursor.get().setReal( 1.0f / 16.0f );
 
 			cursor.move( -1, 0 );
-			cursor.getType().setReal( 5.0f / 16.0f );
+			cursor.get().setReal( 5.0f / 16.0f );
 
 			cursor.move( -1, 0 );
-			cursor.getType().setReal( 3.0f / 16.0f );
-
-			cursor.close();
+			cursor.get().setReal( 3.0f / 16.0f );
 			
 			return kernel;			
 		}
 		else
 		{
-			final Image<FloatType> kernel = factory.createImage( Util.getArrayFromValue( 3, numDimensions) );				
-			final LocalizableCursor<FloatType> cursor = kernel.createLocalizableCursor();
+			final Img<FloatType> kernel = factory.create( Util.getArrayFromValue( 3L, numDimensions), new FloatType() );				
+			final ImgCursor<FloatType> cursor = kernel.localizingCursor();
 			
-			final int numValues = kernel.getNumPixels() / 2;
+			final int numValues = (int) ( kernel.size() / 2 );
 			final float[] rndValues = new float[ numValues ];
 			float sum = 0;
 			Random rnd = new Random( 435345 );
@@ -221,7 +213,7 @@ public class FloydSteinbergDithering<T extends RealType<T>> implements OutputAlg
 				cursor.fwd();
 				
 				if ( count > numValues )
-					cursor.getType().setReal( rndValues[ count - numValues - 1 ] );				
+					cursor.get().setReal( rndValues[ count - numValues - 1 ] );				
 				
 				++count;
 			}
@@ -239,8 +231,8 @@ public class FloydSteinbergDithering<T extends RealType<T>> implements OutputAlg
 				while ( cursor.hasNext() )
 				{
 					cursor.fwd();
-					if ( cursor.getPosition( d ) != 1 )
-						sumD += cursor.getType().get(); 				
+					if ( cursor.getIntPosition( d ) != 1 )
+						sumD += cursor.get().get(); 				
 				}
 				
 				cursor.reset();
@@ -248,11 +240,10 @@ public class FloydSteinbergDithering<T extends RealType<T>> implements OutputAlg
 				{
 					cursor.fwd();
 
-					if ( cursor.getPosition( d ) != 1 )
-						cursor.getType().set( cursor.getType().get() / sumD );
+					if ( cursor.getIntPosition( d ) != 1 )
+						cursor.get().set( cursor.get().get() / sumD );
 				}
 			}
-			cursor.close();
 
 			sum = 0;
 			
@@ -260,14 +251,14 @@ public class FloydSteinbergDithering<T extends RealType<T>> implements OutputAlg
 			while ( cursor.hasNext() )
 			{
 				cursor.fwd();
-				sum += cursor.getType().get();
+				sum += cursor.get().get();
 			}
 
 			cursor.reset();
 			while ( cursor.hasNext() )
 			{
 				cursor.fwd();
-				cursor.getType().set( cursor.getType().get() / sum );
+				cursor.get().set( cursor.get().get() / sum );
 			}
 			return kernel;			
 		}

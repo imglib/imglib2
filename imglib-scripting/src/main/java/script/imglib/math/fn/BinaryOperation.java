@@ -3,8 +3,8 @@ package script.imglib.math.fn;
 
 import java.util.Collection;
 
-import mpicbg.imglib.cursor.Cursor;
-import mpicbg.imglib.image.Image;
+import mpicbg.imglib.container.Img;
+import mpicbg.imglib.container.ImgCursor;
 import mpicbg.imglib.type.numeric.RealType;
 
 /* An abstract class to facilitate implementing a function that takes two arguments.
@@ -73,17 +73,17 @@ public abstract class BinaryOperation extends FloatImageOperation
 {
 	private final IFunction a, b;
 
-	public BinaryOperation(final Image<? extends RealType<?>> left, final Image<? extends RealType<?>> right) {
+	public BinaryOperation(final Img<? extends RealType<?>> left, final Img<? extends RealType<?>> right) {
 		this.a = new ImageFunction(left);
 		this.b = new ImageFunction(right);
 	}
 
-	public BinaryOperation(final IFunction fn, final Image<? extends RealType<?>> right) {
+	public BinaryOperation(final IFunction fn, final Img<? extends RealType<?>> right) {
 		this.a = fn;
 		this.b = new ImageFunction(right);
 	}
 
-	public BinaryOperation(final Image<? extends RealType<?>> left, final IFunction fn) {
+	public BinaryOperation(final Img<? extends RealType<?>> left, final IFunction fn) {
 		this.a = new ImageFunction(left);
 		this.b = fn;
 	}
@@ -93,12 +93,12 @@ public abstract class BinaryOperation extends FloatImageOperation
 		this.b = fn2;
 	}
 
-	public BinaryOperation(final Image<? extends RealType<?>> left, final Number val) {
+	public BinaryOperation(final Img<? extends RealType<?>> left, final Number val) {
 		this.a = new ImageFunction(left);
 		this.b = new NumberFunction(val);
 	}
 
-	public BinaryOperation(final Number val,final Image<? extends RealType<?>> right) {
+	public BinaryOperation(final Number val,final Img<? extends RealType<?>> right) {
 		this.a = new NumberFunction(val);
 		this.b = new ImageFunction(right);
 	}
@@ -134,7 +134,7 @@ public abstract class BinaryOperation extends FloatImageOperation
 	}
 
 	@Override
-	public final void findCursors(final Collection<Cursor<?>> cursors) {
+	public final void findCursors(final Collection<ImgCursor<?>> cursors) {
 		a.findCursors(cursors);
 		b.findCursors(cursors);
 	}

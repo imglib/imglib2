@@ -33,6 +33,7 @@ import java.util.Map;
 
 import mpicbg.imglib.container.shapelist.ShapeListCached;
 import mpicbg.imglib.type.Type;
+import mpicbg.imglib.util.IntervalIndexer;
 
 /**
  * 
@@ -42,25 +43,25 @@ import mpicbg.imglib.type.Type;
  */
 public class ShapeListCacheFIFO<T extends Type< T > > extends ShapeListCache<T>
 {
-	final Map< Integer, T > cache;
+	final Map< Long, T > cache;
 
-	final LinkedList< Integer > queue;
+	final LinkedList< Long > queue;
 
 	public ShapeListCacheFIFO( final int cacheSize, final ShapeListCached<T> container )
 	{		
 		super( cacheSize, container );
 		
-		cache = new HashMap< Integer, T >( cacheSize );
-		queue = new LinkedList< Integer >();
+		cache = new HashMap< Long, T >( cacheSize );
+		queue = new LinkedList< Long >();
 		
 		for ( int i = 0; i < cacheSize; ++i )
-			queue.add( Integer.MIN_VALUE );		
+			queue.add( Long.MIN_VALUE );		
 	}
 
 	@Override
-	public T lookUp( final int[] position )
+	public T lookUp( final long[] position )
 	{
-		final int index = fakeArray.positionToIndex( position );
+		final long index = IntervalIndexer.positionToIndex(position, dimensions);
 
 		final T value = cache.get( index );
 		

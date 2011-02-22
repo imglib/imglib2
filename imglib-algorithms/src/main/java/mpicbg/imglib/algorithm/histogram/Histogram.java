@@ -34,7 +34,7 @@ import java.util.Hashtable;
 
 import mpicbg.imglib.algorithm.Algorithm;
 import mpicbg.imglib.algorithm.Benchmark;
-import mpicbg.imglib.cursor.Cursor;
+import mpicbg.imglib.container.ImgCursor;
 import mpicbg.imglib.type.Type;
 
 /**
@@ -55,7 +55,7 @@ public class Histogram <T extends Type<T>> implements Algorithm, Benchmark
 	/**
 	 * The Cursor from which the histogram is to be calculated.
 	 */
-	private Cursor<T> cursor;
+	private ImgCursor<T> cursor;
 	
 	/**
 	 * The HistogramBinFactory to use for generating HistogramBin's and
@@ -72,7 +72,7 @@ public class Histogram <T extends Type<T>> implements Algorithm, Benchmark
 	 * will be calculated
 	 * 
 	 */
-	public Histogram(HistogramBinFactory<T> factory, Cursor<T> c)
+	public Histogram(HistogramBinFactory<T> factory, ImgCursor<T> c)
 	{
 		cursor = c;
 		hashTable = new Hashtable<HistogramKey<T>, HistogramBin<T>>();
@@ -159,7 +159,7 @@ public class Histogram <T extends Type<T>> implements Algorithm, Benchmark
 		{			
 			cursor.fwd();
 			//Create a key for the given type
-			HistogramKey<T> key = binFactory.createKey(cursor.getType());
+			HistogramKey<T> key = binFactory.createKey(cursor.get());
 			//Grab the HistogramBin corresponding to that key, if it exists.
 			HistogramBin<T> bin = hashTable.get(key);
 			

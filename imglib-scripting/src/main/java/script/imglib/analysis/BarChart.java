@@ -7,8 +7,8 @@ import java.util.Map;
 
 import javax.swing.JFrame;
 
-import mpicbg.imglib.image.Image;
-import mpicbg.imglib.type.numeric.RGBALegacyType;
+import mpicbg.imglib.container.Img;
+import mpicbg.imglib.type.numeric.ARGBType;
 
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
@@ -70,7 +70,7 @@ public class BarChart extends JFrame
 		return chart;
 	}
 	
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("rawtypes")
 	static private final JFreeChart createChart(final Map<? extends Number, ? extends Number> data, final String title,
 			final String xLabel, final String yLabel) {
 		DefaultCategoryDataset dcd = new DefaultCategoryDataset();
@@ -114,7 +114,7 @@ public class BarChart extends JFrame
 		chart.getTitle().setPaint(Color.gray);
 	}
  
- 	public Image<RGBALegacyType> asImage() {
+ 	public Img<ARGBType> asImage() {
 		return ChartUtils.asImage(chart);
 	}
 }

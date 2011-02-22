@@ -2,34 +2,34 @@ package script.imglib.math.fn;
 
 import java.util.Collection;
 
-import mpicbg.imglib.cursor.Cursor;
-import mpicbg.imglib.image.Image;
+import mpicbg.imglib.container.Img;
+import mpicbg.imglib.container.ImgCursor;
 import mpicbg.imglib.type.numeric.RealType;
 
 /** A function to that returns every pixel of a given {@link Image}
  *  at every call to {@link eval}. */
 public final class ImageFunction implements IFunction {
 
-	private final Cursor<? extends RealType<?>> c;
+	private final ImgCursor<? extends RealType<?>> c;
 
-	public ImageFunction(final Image<? extends RealType<?>> img) {
-		this.c = img.createCursor();
+	public ImageFunction(final Img<? extends RealType<?>> img) {
+		this.c = img.cursor();
 	}
 
 	@Override
 	public final double eval() {
 		c.fwd();
-		return c.getType().getRealDouble();
+		return c.get().getRealDouble();
 	}
 
 	@Override
-	public final void findCursors(final Collection<Cursor<?>> cursors) {
+	public final void findCursors(final Collection<ImgCursor<?>> cursors) {
 		cursors.add(c);
 	}
 
 	@Override
 	public IFunction duplicate()
 	{
-		return new ImageFunction(c.getImage());
+		return new ImageFunction(c.getImg());
 	}
 }

@@ -16,7 +16,7 @@
  */
 package mpicbg.imglib.algorithm.function;
 
-import mpicbg.imglib.function.Function;
+import mpicbg.imglib.algorithm.math.Function;
 import mpicbg.imglib.type.numeric.RealType;
 
 public class SubtractReal< A extends RealType<A>, B extends RealType<B>, C extends RealType<C> > implements Function< A, B, C >

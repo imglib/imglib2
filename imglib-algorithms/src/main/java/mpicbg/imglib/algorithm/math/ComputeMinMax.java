@@ -22,8 +22,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 import mpicbg.imglib.algorithm.Algorithm;
 import mpicbg.imglib.algorithm.Benchmark;
 import mpicbg.imglib.algorithm.MultiThreaded;
-import mpicbg.imglib.cursor.Cursor;
-import mpicbg.imglib.image.Image;
+import mpicbg.imglib.container.Img;
+import mpicbg.imglib.container.ImgCursor;
 import mpicbg.imglib.multithreading.Chunk;
 import mpicbg.imglib.multithreading.SimpleMultiThreading;
 import mpicbg.imglib.type.Type;
@@ -31,21 +31,21 @@ import mpicbg.imglib.util.Util;
 
 public class ComputeMinMax<T extends Type<T> & Comparable<T>> implements Algorithm, MultiThreaded, Benchmark
 {
-	final Image<T> image;
+	final Img<T> image;
 	final T min, max;
 	
 	String errorMessage = "";
 	int numThreads;
 	long processingTime;
 	
-	public ComputeMinMax( final Image<T> image )
+	public ComputeMinMax( final Img<T> image )
 	{
 		setNumThreads();
 		
 		this.image = image;
 	
-		this.min = image.createType();
-		this.max = image.createType();
+		this.min = image.firstElement().createVariable();
+		this.max = this.min.copy();
 	}
 	
 	public T getMin() { return min; }
@@ -56,7 +56,7 @@ public class ComputeMinMax<T extends Type<T> & Comparable<T>> implements Algorit
 	{
 		final long startTime = System.currentTimeMillis();
 
-		final long imageSize = image.getNumPixels();
+		final long imageSize = image.size();
 
 		final AtomicInteger ai = new AtomicInteger(0);					
         final Thread[] threads = SimpleMultiThreading.newThreads( getNumThreads() );
@@ -67,8 +67,8 @@ public class ComputeMinMax<T extends Type<T> & Comparable<T>> implements Algorit
 	
         for (int ithread = 0; ithread < threads.length; ++ithread)
         {
-        	minValues.add( image.createType() );
-        	maxValues.add( image.createType() );
+        	minValues.add( image.firstElement().createVariable() );
+        	maxValues.add( image.firstElement().createVariable() );
         	
             threads[ithread] = new Thread(new Runnable()
             {
@@ -111,25 +111,25 @@ public class ComputeMinMax<T extends Type<T> & Comparable<T>> implements Algorit
 
 	protected void compute( final long startPos, final long loopSize, final T min, final T max )
 	{
-		final Cursor<T> cursor = image.createCursor();
+		final ImgCursor<T> cursor = image.cursor();
 		
 		// init min and max
 		cursor.fwd();
 		
-		min.set( cursor.getType() );
-		max.set( cursor.getType() );
+		min.set( cursor.get() );
+		max.set( cursor.get() );
 		
 		cursor.reset();
 
 		// move to the starting position of the current thread
-		cursor.fwd( startPos );		
+		cursor.jumpFwd( startPos );		
 
         // do as many pixels as wanted by this thread
         for ( long j = 0; j < loopSize; ++j )
         {
 			cursor.fwd();
 			
-			final T value = cursor.getType();
+			final T value = cursor.get();
 			
 			if ( Util.min( min, value ) == value )
 				min.set( value );
@@ -137,8 +137,6 @@ public class ComputeMinMax<T extends Type<T> & Comparable<T>> implements Algorit
 			if ( Util.max( max, value ) == value )
 				max.set( value );
 		}
-		
-		cursor.close();
 	}
 	
 	@Override

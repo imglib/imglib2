@@ -16,7 +16,7 @@
  */
 package mpicbg.imglib.algorithm.function;
 
-import mpicbg.imglib.function.Function;
+import mpicbg.imglib.algorithm.math.Function;
 import mpicbg.imglib.type.numeric.NumericType;
 
 public class SubtractNorm< A extends NumericType<A> > implements Function< A, A, A >
