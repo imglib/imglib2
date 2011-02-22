@@ -46,30 +46,30 @@ public interface Localizable extends RealLocalizable
 	/**
 	 * Write the current position into the passed array.
 	 * 
-	 * @param location
+	 * @param position   receives current position
 	 */
 	public void localize( int[] position );
 	
 	/**
 	 * Write the current position into the passed array.
 	 * 
-	 * @param location
+	 * @param position   receives current position
 	 */
 	public void localize( long[] position );
 	
 	/**
 	 * Return the current position in a given dimension.
 	 * 
-	 * @param dim
-	 * @return
+	 * @param dim   dimension
+	 * @return      dimension {@link dim} of current position
 	 */
 	public int getIntPosition( int dim );
 	
 	/**
 	 * Return the current position in a given dimension.
 	 * 
-	 * @param dim
-	 * @return
+	 * @param dim   dimension
+	 * @return      dimension {@link dim} of current position
 	 */
 	public long getLongPosition( int dim );
 }
