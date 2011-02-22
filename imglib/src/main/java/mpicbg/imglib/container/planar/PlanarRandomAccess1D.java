@@ -30,7 +30,7 @@ package mpicbg.imglib.container.planar;
 import mpicbg.imglib.type.NativeType;
 
 /**
- * Positionable for a {@link PlanarContainer PlanarContainers}
+ * {@link RandomAccess} for a 1-dimensional {@link PlanarContainer}.
  * @param <T>
  *
  * @author Stephan Preibisch and Stephan Saalfeld
@@ -43,31 +43,31 @@ public class PlanarRandomAccess1D< T extends NativeType< T > > extends PlanarRan
 	}
 
 	@Override
-	public void fwd( final int d )
+	public void fwd( final int dim )
 	{
 		++position[ 0 ];
 		type.incIndex();
 	}
 	
 	@Override
-	public void bck( final int d )
+	public void bck( final int dim )
 	{		
 		--position[ 0 ];
 		type.decIndex();
 	}
 	
 	@Override
-	public void move( final int steps, final int d )
+	public void move( final int distance, final int dim )
 	{
-		position[ 0 ] += steps;	
-		type.incIndex( steps );
+		position[ 0 ] += distance;	
+		type.incIndex( distance );
 	}
 	
 	@Override
-	public void setPosition( final int position, final int dim )
+	public void setPosition( final int pos, final int dim )
 	{
-		type.updateIndex( type.getIndex() + position - (int)this.position[ 0 ] );
-		this.position[ dim ] = position;
+		type.incIndex( pos - position[ 0 ] );
+		position[ 0 ] = pos;
 	}
 	
 	@Override

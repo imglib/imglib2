@@ -27,51 +27,41 @@
  */
 package mpicbg.imglib.container.planar;
 
-import mpicbg.imglib.container.AbstractImgRandomAccess;
+import mpicbg.imglib.container.AbstractImgRandomAccessInt;
 import mpicbg.imglib.type.NativeType;
 import mpicbg.imglib.util.Util;
 
 /**
- * Positionable for a {@link PlanarContainer PlanarContainers}
+ * {@link RandomAccess} for a {@link PlanarContainer}
  * @param <T>
  *
- * @author Stephan Preibisch and Stephan Saalfeld
+ * @author Stephan Preibisch, Stephan Saalfeld, Tobias Pietzsch
  */
-abstract public class AbstractPlanarRandomAccess< T extends NativeType< T > > extends AbstractImgRandomAccess< T > implements PlanarLocation
+abstract public class AbstractPlanarRandomAccess< T extends NativeType< T > > extends AbstractImgRandomAccessInt< T > implements PlanarContainer.PlanarContainerSampler
 {
 	final protected int[] sliceSteps;
-	final int width, n;
+	final protected int width;
 	
-	final T type;
-	int sliceIndex;
+	final protected T type;
+	protected int sliceIndex;
 	
 	public AbstractPlanarRandomAccess( final PlanarContainer< T, ? > container )
 	{
 		super( container );
 		
-		n = container.numDimensions();
-		
-		width = ( int )size[ 0 ];
+		sliceSteps = container.sliceSteps;
+		width = size[ 0 ];
 		
 		type = container.createLinkedType();
 		type.updateIndex( 0 );
-		type.updateContainer( this );
-		
-		if ( n > 2 )
-		{
-			sliceSteps = new int[ n ];
-			sliceSteps[ 2 ] = 1;
-			for ( int i = 3; i < n; ++i )
-			{
-				final int j = i - 1;
-				sliceSteps[ i ] = ( int )size[ j ] * sliceSteps[ j ];
-			}
-		}
-		else
-		{
-			sliceSteps = null;
-		}
+		type.updateContainer( this );		
 	}
+
+	@Override
+	public int getCurrentSliceIndex() { return sliceIndex; }
+
+	@Override
+	public T get() { return type; }
 	
 	@Override
 	public void fwd( final int d )
@@ -90,22 +80,6 @@ abstract public class AbstractPlanarRandomAccess< T extends NativeType< T > > ex
 	}
 
 	@Override
-	public void move( final int steps, final int d )
-	{
-		position[ d ] += steps;	
-
-		if ( d == 0 )
-			type.incIndex( steps );
-		else if ( d == 1 )
-			type.incIndex( steps * width );
-		else
-		{
-			sliceIndex += sliceSteps[ d ] * steps;
-			type.updateContainer( this );
-		}
-	}
-	
-	@Override
 	public void bck( final int d )
 	{		
 		--position[ d ];
@@ -120,87 +94,112 @@ abstract public class AbstractPlanarRandomAccess< T extends NativeType< T > > ex
 			type.updateContainer( this );
 		}
 	}
+
 	@Override
-	public void setPosition( final long position, final int dim )
+	public void move( final int distance, final int dim )
 	{
+		position[ dim ] += distance;	
+
 		if ( dim == 0 )
 		{
-			type.updateIndex( type.getIndex() + (int)position - (int)this.position[ 0 ] );
+			type.incIndex( distance );
 		}
 		else if ( dim == 1 )
 		{
-			type.updateIndex( type.getIndex() + ( (int)position - (int)this.position[ 1 ] ) * width );			
+			type.incIndex( distance * width );
 		}
 		else
 		{
-			sliceIndex += (position - (int)this.position[ dim ]) * sliceSteps[ dim ];
+			sliceIndex += sliceSteps[ dim ] * distance;
 			type.updateContainer( this );
 		}
-		
-		this.position[ dim ] = position;
 	}
 
 	@Override
-	public void setPosition( final int position, final int dim )
+	public void move( final long distance, final int dim )
+	{
+		move( ( int ) distance, dim );
+	}
+
+	@Override
+	public void setPosition( final int pos, final int dim )
 	{
 		if ( dim == 0 )
 		{
-			type.updateIndex( type.getIndex() + position - (int)this.position[ 0 ] );
+			type.incIndex( pos - position[ 0 ] );
 		}
 		else if ( dim == 1 )
 		{
-			type.updateIndex( type.getIndex() + ( position - (int)this.position[ 1 ] ) * width );			
+			type.incIndex( ( pos - position[ 1 ] ) * width );			
 		}
 		else
 		{
-			sliceIndex += (position - (int)this.position[ dim ]) * sliceSteps[ dim ];
+			sliceIndex += ( pos - position[ dim ] ) * sliceSteps[ dim ];
 			type.updateContainer( this );
 		}
 		
-		this.position[ dim ] = position;
+		position[ dim ] = pos;
 	}
 
 	@Override
-	public T get() { return type; }
-
-	@Override
-	public void move( final long distance, final int d )
+	public void setPosition( final long pos, final int dim )
 	{
-		move( ( int ) distance, d );
+		setPosition( ( int ) pos, dim );
 	}
-
+	
 	@Override
-	public void setPosition( final int[] position )
+	public void setPosition( final int[] pos )
 	{
-		type.updateIndex( position[ 0 ] + position[ 1 ] * width );
-		
-		for ( int d = 0; d < n; d++ )
-			this.position[ d ] = position[ d ];
-		
-		sliceIndex = 0;
+		type.updateIndex( pos[ 0 ] + pos[ 1 ] * width );
+		position[ 0 ] = pos[ 0 ];
+		position[ 1 ] = pos[ 1 ];
+
 		for ( int d = 2; d < n; ++d )
-			sliceIndex += position[ d ] * sliceSteps[ d ];
-		
-		type.updateContainer( this );		
+		{
+			if ( pos[ d ] != position[ d ] )
+			{
+				sliceIndex += ( pos[ d ] - position[ d ] ) * sliceSteps[ d ];
+				position[ d ] = pos[ d ];
+
+				for ( ++d; d < n; ++d )
+				{
+					if ( pos[ d ] != position[ d ] )
+					{
+						sliceIndex += ( pos[ d ] - position[ d ] ) * sliceSteps[ d ];
+						position[ d ] = pos[ d ];
+					}
+				}
+				type.updateContainer( this );
+			}
+		}		
 	}
 
 	@Override
-	public void setPosition( final long[] position )
-	{
-		type.updateIndex( ( int )position[ 0 ] + ( int )position[ 1 ] * width );
-		
-		for ( int d = 0; d < n; d++ )
-			this.position[ d ] = ( int )position[ d ];
-		
-		sliceIndex = 0;
+	public void setPosition( final long[] pos )
+	{	
+		type.updateIndex( ( int ) pos[ 0 ] + ( int ) pos[ 1 ] * width );
+		position[ 0 ] = ( int ) pos[ 0 ];
+		position[ 1 ] = ( int ) pos[ 1 ];
+
 		for ( int d = 2; d < n; ++d )
-			sliceIndex += position[ d ] * sliceSteps[ d ];
-		
-		type.updateContainer( this );		
-	}
+		{
+			if ( pos[ d ] != position[ d ] )
+			{
+				sliceIndex += ( pos[ d ] - position[ d ] ) * sliceSteps[ d ];
+				position[ d ] = ( int ) pos[ d ];
 
-	@Override
-	public int getCurrentPlane() { return sliceIndex; }
+				for ( ++d; d < n; ++d )
+				{
+					if ( pos[ d ] != position[ d ] )
+					{
+						sliceIndex += ( pos[ d ] - position[ d ] ) * sliceSteps[ d ];
+						position[ d ] = ( int ) pos[ d ];
+					}
+				}
+				type.updateContainer( this );
+			}
+		}		
+	}
 
 	@Override
 	public String toString(){ return Util.printCoordinates( position ) + " = " + get(); }

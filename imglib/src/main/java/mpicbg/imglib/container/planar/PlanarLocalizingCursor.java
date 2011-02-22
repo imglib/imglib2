@@ -45,8 +45,6 @@ public class PlanarLocalizingCursor< T extends NativeType< T > > extends Abstrac
 		super( container );
 
 		this.container = container;
-		
-		reset();
 	}	
 	
 	@Override

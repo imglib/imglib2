@@ -4,14 +4,15 @@ import mpicbg.imglib.type.NativeType;
 
 public class PlanarLocalizingCursor2D< T extends NativeType< T > > extends PlanarLocalizingCursor1D< T > 
 {
-	final protected int width, height;
-	
 	public PlanarLocalizingCursor2D( final PlanarContainer<T, ?> container )
 	{
 		super( container );
-		
-		width = ( int )container.dimension( 0 );
-		height = ( int )container.dimension( 1 );
+	}
+
+	@Override
+	public boolean hasNext()
+	{
+		return type.getIndex() < lastIndex;
 	}
 	
 	@Override
@@ -19,11 +20,10 @@ public class PlanarLocalizingCursor2D< T extends NativeType< T > > extends Plana
 	{
 		type.incIndex();
 
-		if ( ++position[ 0 ] == width )
+		if ( ++position[ 0 ] >= size[ 0 ] )
 		{
 			position[ 0 ] = 0;
-			if ( ++position[ 1 ] == height )
-				hasNext = false;
+			++position[ 1 ];
 		}
 	}
 }

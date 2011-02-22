@@ -44,8 +44,6 @@ public class PlanarCursor< T extends NativeType< T > > extends AbstractPlanarCur
 		super( container );
 
 		this.container = container;
-		
-		reset();
 	}
 
 	@Override
