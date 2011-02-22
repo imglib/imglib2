@@ -13,10 +13,10 @@ public final class AverageFunction implements IntegerIndexedScalarFunction
 		this.loDeltas = loDeltas;
 		this.hiDeltas = hiDeltas;
 		
-		if (loDeltas.length != 2) // TODO - hack - make work in 2d only to get started
-			throw new IllegalArgumentException("only 2d average supported");
+		if (loDeltas.length != 3) // TODO - hack - make work in 3d only to get started
+			throw new IllegalArgumentException("only 3d average supported");
 		
-		relPos = new int[2];
+		relPos = new int[3];
 	}
 	
 	@Override
@@ -26,13 +26,21 @@ public final class AverageFunction implements IntegerIndexedScalarFunction
 		
 		int numElements = 0;
 		
-		for (int dy = loDeltas[1]; dy <= hiDeltas[1]; dy++)
+		for (int dz = loDeltas[2]; dz <= hiDeltas[2]; dz++)
 		{
-			relPos[1] = position[1] + dy;
-			for (int dx = loDeltas[0]; dx <= hiDeltas[0]; dx++)
+			if (position.length == 2)   // TODO - temp HACK to make 2d output sampling 3d input work correctly. Think about best approach.
+				relPos[2] = dz;
+			else
+				relPos[2] = position[2] + dz;
+			for (int dy = loDeltas[1]; dy <= hiDeltas[1]; dy++)
 			{
-				relPos[0] = position[0] + dx;
-				sum += otherFunction.evaluate(relPos);
+				relPos[1] = position[1] + dy;
+				for (int dx = loDeltas[0]; dx <= hiDeltas[0]; dx++)
+				{
+					relPos[0] = position[0] + dx;
+					sum += otherFunction.evaluate(relPos);
+					numElements++;
+				}
 			}
 		}
 

@@ -3,7 +3,9 @@ package imglib.ops.example.rev3;
 import static org.junit.Assert.assertEquals;
 import imglib.ops.example.rev3.condition.ValueLessThan;
 import imglib.ops.example.rev3.constraints.Constraints;
+import imglib.ops.example.rev3.function.AverageFunction;
 import imglib.ops.example.rev3.function.BinaryFunction;
+import imglib.ops.example.rev3.function.ComposedImageFunction;
 import imglib.ops.example.rev3.function.ConstantFunction;
 import imglib.ops.example.rev3.function.ConvolutionFunction;
 import imglib.ops.example.rev3.function.ImageFunction;
@@ -297,6 +299,87 @@ public class Rev3Tests
 					expectedValue = 0;
 				i++;
 				assertEquals(expectedValue, actualValue, 0);
+			}
+		}
+	}
+
+	@Test
+	public void testComposedImage()
+	{
+		// set an output image to the average of subregions of 3 planes
+		
+		// make input images
+		
+		LocalizableByDimCursor<UnsignedByteType> cursor;
+
+		// make and populate an input image
+		Image<UnsignedByteType> inputImage1 = createImage(9,9);
+		cursor = inputImage1.createLocalizableByDimCursor();
+		for (int x = 0; x < 9; x++)
+		{
+			for (int y = 0; y < 9; y++)
+			{
+				int[] pos = new int[]{x,y};
+				cursor.setPosition(pos);
+				cursor.getType().setReal(x*y);
+			}
+		}
+		
+		// make and populate an input image
+		Image<UnsignedByteType> inputImage2 = createImage(9,9);
+		cursor = inputImage2.createLocalizableByDimCursor();
+		for (int x = 0; x < 9; x++)
+		{
+			for (int y = 0; y < 9; y++)
+			{
+				int[] pos = new int[]{x,y};
+				cursor.setPosition(pos);
+				cursor.getType().setReal(x);
+			}
+		}
+
+		// make and populate an input image
+		Image<UnsignedByteType> inputImage3 = createImage(9,9);
+		cursor = inputImage3.createLocalizableByDimCursor();
+		for (int x = 0; x < 9; x++)
+		{
+			for (int y = 0; y < 9; y++)
+			{
+				int[] pos = new int[]{x,y};
+				cursor.setPosition(pos);
+				cursor.getType().setReal(y);
+			}
+		}
+
+		// make an unassigned output image
+		
+		int[] outputSpan = new int[]{5,5};
+		
+		Image<UnsignedByteType> outputImage = createImage(5,5);
+		
+		// compose a 3d image from the separate regions of the 2d images
+		
+		ComposedImageFunction composedImage = new ComposedImageFunction();
+		composedImage.addImageRegion(inputImage1, new int[]{0,0}, outputSpan);
+		composedImage.addImageRegion(inputImage2, new int[]{2,2}, outputSpan);
+		composedImage.addImageRegion(inputImage3, new int[]{4,4}, outputSpan);
+		
+		// apply an average of x,y values along the z axis in the ComposedImage
+		
+		IntegerIndexedScalarFunction function = new AverageFunction(composedImage, new int[]{0,0,0}, new int[]{0,0,2});
+		
+		Operation op = new Operation(outputImage, new int[]{0,0}, outputSpan, function);
+		
+		op.execute();
+		
+		cursor = outputImage.createLocalizableByDimCursor();
+		for (int x = 0; x < 5; x++)
+		{
+			for (int y = 0; y < 5; y++)
+			{
+				int[] pos = new int[]{x,y};
+				cursor.setPosition(pos);
+				assertEquals(Math.round(((x*y)+(x+2)+(y+4))/3.0), cursor.getType().getRealDouble(), 0);
 			}
 		}
 	}
