@@ -8,7 +8,6 @@ import script.imglib.math.fn.IFunction;
 
 import mpicbg.imglib.container.ImgCursor;
 import mpicbg.imglib.container.Img;
-import mpicbg.imglib.type.numeric.RGBALegacyType;
 import mpicbg.imglib.type.numeric.RealType;
 
 /** Given up to 3 channels--each represented by an {@link IFunction},
