@@ -84,6 +84,15 @@ public class CopyTest
 		}
 	}
 
+	public void copyWithIterationBoth(Img< IntType > srcImg, Img< IntType > dstImg)
+	{
+		Cursor< IntType > src = srcImg.cursor();
+		Cursor< IntType > dst = dstImg.cursor();
+		while( src.hasNext() ) {
+			dst.next().set( src.next().get() );
+		}
+	}
+
 	int[] getImgAsInts( Img< IntType > img )
 	{
 		RandomAccess< IntType > a = img.randomAccess();
@@ -130,5 +139,15 @@ public class CopyTest
 		CellContainer< IntType, ? > cellImg = new CellContainerFactory< IntType >( new int[] {2, 7, 4} ).create( dimensions, new IntType() );
 		copyWithDestIteration( intImg, cellImg );
 		assertArrayEquals( intData, getImgAsInts( cellImg ) );
+	}
+
+	@Test
+	public void testCopyArrayToArrayWithIterationBoth()
+	{
+		Array< IntType, ? > array2 = new ArrayContainerFactory< IntType >().create( dimensions, new IntType() );
+		Array< IntType, ? > array = new ArrayContainerFactory< IntType >().create( dimensions, new IntType() );
+		copyWithDestIteration( intImg, array2 );
+		copyWithIterationBoth( array2, array );
+		assertArrayEquals( intData, getImgAsInts( array ) );
 	}
 }
