@@ -8,7 +8,6 @@ import mpicbg.imglib.Cursor;
 import mpicbg.imglib.RandomAccess;
 import mpicbg.imglib.container.Img;
 import mpicbg.imglib.container.array.ArrayContainerFactory;
-import mpicbg.imglib.container.cell.ArrayRandomAccessBenchmark.Benchmark;
 import mpicbg.imglib.type.numeric.integer.IntType;
 import mpicbg.imglib.util.IntervalIndexer;
 
@@ -51,12 +50,16 @@ public class PlanarRandomAccessBenchmark
 	 */
 	public void fillImage()
 	{
-		long[] pos = new long[ dimensions.length ];
+		int[] pos = new int[ dimensions.length ];
 		RandomAccess< IntType > a = intImg.randomAccess();
 
+		int[] idim = new int[ dimensions.length ];
+		for ( int d = 0; d < dimensions.length; ++d )
+			idim[ d ] = ( int ) dimensions[ d ];
+		
 		for ( int i = 0; i < numValues; ++i )
 		{
-			IntervalIndexer.indexToPosition( i, dimensions, pos );
+			IntervalIndexer.indexToPosition( i, idim, pos );
 			a.setPosition( pos );
 			a.get().set( intData[ i ] );
 		}
@@ -65,7 +68,7 @@ public class PlanarRandomAccessBenchmark
 	
 	public void copyWithSourceIteration(Img< IntType > srcImg, Img< IntType > dstImg)
 	{
-		long[] pos = new long[ dimensions.length ];
+		int[] pos = new int[ dimensions.length ];
 		Cursor< IntType > src = srcImg.localizingCursor();
 		RandomAccess< IntType > dst = dstImg.randomAccess();
 		while( src.hasNext() ) {
