@@ -36,7 +36,7 @@ import mpicbg.imglib.container.basictypecontainer.array.LongArray;
 import mpicbg.imglib.type.NativeType;
 import mpicbg.imglib.util.Util;
 
-final public class LongType extends IntegerTypeImpl<LongType> implements NativeType<LongType>
+final public class LongType extends AbstractIntegerType<LongType> implements NativeType<LongType>
 {
 	private int i = 0;
 	

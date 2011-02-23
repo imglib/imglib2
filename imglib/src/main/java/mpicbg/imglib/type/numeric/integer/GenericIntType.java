@@ -35,7 +35,7 @@ import mpicbg.imglib.container.basictypecontainer.array.IntArray;
 import mpicbg.imglib.type.NativeType;
 import mpicbg.imglib.util.Util;
 
-public abstract class GenericIntType<T extends GenericIntType<T>> extends IntegerTypeImpl<T> implements NativeType<T>
+public abstract class GenericIntType<T extends GenericIntType<T>> extends AbstractIntegerType<T> implements NativeType<T>
 {
 	int i = 0;
 

@@ -35,9 +35,9 @@ import mpicbg.imglib.container.NativeContainerFactory;
 import mpicbg.imglib.container.basictypecontainer.BitAccess;
 import mpicbg.imglib.container.basictypecontainer.array.BitArray;
 import mpicbg.imglib.type.NativeType;
-import mpicbg.imglib.type.numeric.integer.IntegerTypeImpl;
+import mpicbg.imglib.type.numeric.integer.AbstractIntegerType;
 
-public class Unsigned12BitType extends IntegerTypeImpl<Unsigned12BitType> implements NativeType<Unsigned12BitType>
+public class Unsigned12BitType extends AbstractIntegerType<Unsigned12BitType> implements NativeType<Unsigned12BitType>
 {
 	private int i = 0;
 	

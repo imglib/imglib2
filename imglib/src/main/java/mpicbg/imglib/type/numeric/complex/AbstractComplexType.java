@@ -5,7 +5,7 @@ import mpicbg.imglib.type.Type;
 import mpicbg.imglib.type.numeric.ComplexType;
 import mpicbg.imglib.util.Util;
 
-public abstract class ComplexTypeImpl<T extends ComplexTypeImpl<T>> implements Type<T>, ComplexType<T>
+public abstract class AbstractComplexType<T extends AbstractComplexType<T>> implements Type<T>, ComplexType<T>
 {
 	@Override
 	public void set( final T c )
