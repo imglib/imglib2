@@ -181,22 +181,31 @@ public class ImagePlusAdapter
 		return container;				
 	}	
 	
-	public static < T extends RealType< T > > Img<FloatType> convertFloat( final ImagePlus imp )
+	public static Img< FloatType > convertFloat( final ImagePlus imp )
 	{
-		if ( imp.getType() != ImagePlus.GRAY32)
-		{
-			@SuppressWarnings( "unchecked" )
-			Img< T > img = ( Img< T > ) wrapLocal( imp );
-			
-			if ( img == null )
-				return null;				
-			
-			return convertToFloat( img );
-			
-		}
-		else
-		{
-			return wrapFloat( imp );
+		
+		switch( imp.getType() )
+		{		
+			case ImagePlus.GRAY8 : 
+			{
+				return convertToFloat( wrapByte( imp ) );
+			}
+			case ImagePlus.GRAY16 : 
+			{
+				return convertToFloat( wrapShort( imp ) );
+			}
+			case ImagePlus.GRAY32 : 
+			{
+				return wrapFloat( imp );
+			}
+			case ImagePlus.COLOR_RGB : 
+			{
+				return convertToFloat( wrapRGBA( imp ) );
+			}
+			default :
+			{
+				throw new RuntimeException("Only 8, 16, 32-bit and RGB supported!");
+			}
 		}
 	}
 	
