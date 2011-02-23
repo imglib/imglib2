@@ -1,14 +1,8 @@
 package mpicbg.imglib.type;
 
-import mpicbg.imglib.container.ImgCursor;
 import mpicbg.imglib.container.NativeContainer;
 import mpicbg.imglib.container.NativeContainerFactory;
-import mpicbg.imglib.container.array.Array;
-import mpicbg.imglib.container.array.ArrayCursor;
-import mpicbg.imglib.container.basictypecontainer.DataAccess;
-import mpicbg.imglib.container.cell.Cell;
-import mpicbg.imglib.sampler.cell.CellBasicRasterIterator;
-import mpicbg.imglib.type.numeric.real.FloatType;
+
 
 public interface NativeType<T extends NativeType<T>> extends Type<T>
 {	

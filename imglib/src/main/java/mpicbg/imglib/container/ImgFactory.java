@@ -30,7 +30,6 @@
 package mpicbg.imglib.container;
 
 import mpicbg.imglib.Interval;
-import mpicbg.imglib.exception.ImgLibException;
 import mpicbg.imglib.exception.IncompatibleTypeException;
 import mpicbg.imglib.type.NativeType;
 import mpicbg.imglib.type.Type;
