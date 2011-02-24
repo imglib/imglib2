@@ -19,20 +19,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import mpicbg.imglib.container.ContainerFactory;
+import mpicbg.imglib.Cursor;
+import mpicbg.imglib.container.Img;
+import mpicbg.imglib.container.ImgFactory;
 import mpicbg.imglib.container.array.Array;
-import mpicbg.imglib.container.array.ArrayContainerFactory;
+import mpicbg.imglib.container.array.ArrayCursor;
 import mpicbg.imglib.container.basictypecontainer.ByteAccess;
 import mpicbg.imglib.container.basictypecontainer.array.ByteArray;
 import mpicbg.imglib.container.cell.CellContainerFactory;
+import mpicbg.imglib.container.cell.CellCursor;
 import mpicbg.imglib.container.planar.PlanarContainer;
-import mpicbg.imglib.cursor.Cursor;
-import mpicbg.imglib.cursor.array.ArrayCursor;
-import mpicbg.imglib.cursor.cell.CellCursor;
-import mpicbg.imglib.cursor.imageplus.ImagePlusCursor;
-import mpicbg.imglib.cursor.planar.PlanarCursor;
-import mpicbg.imglib.image.Image;
-import mpicbg.imglib.image.ImageFactory;
+import mpicbg.imglib.container.planar.PlanarCursor;
 import mpicbg.imglib.image.ImagePlusAdapter;
 import mpicbg.imglib.type.numeric.integer.UnsignedByteType;
 
@@ -59,10 +56,10 @@ public class PerformanceBenchmark {
 	private final int width, height;
 	private final byte[] rawData;
 	private final ByteProcessor byteProc;
-	private final Image<UnsignedByteType> imgArray;
-	private final Image<UnsignedByteType> imgCell;
-	private final Image<UnsignedByteType> imgPlanar;
-	private final Image<UnsignedByteType> imgImagePlus;
+	private final Img<UnsignedByteType> imgArray;
+	private final Img<UnsignedByteType> imgCell;
+	private final Img<UnsignedByteType> imgPlanar;
+	private final Img<UnsignedByteType> imgImagePlus;
 	private final PixelCube<Byte, BaseIndex> pixelCube;
 
 	/**
@@ -342,41 +339,41 @@ public class PerformanceBenchmark {
 		return pc;
 	}
 
-	private Image<UnsignedByteType> createArrayImage(final byte[] data, final int w, final int h) {
+	private Img<UnsignedByteType> createArrayImage(final byte[] data, final int w, final int h) {
 		//return createImage(data, width, height, new ArrayContainerFactory());
 		// NB: Avoid copying the data.
 		final ByteAccess byteAccess = new ByteArray(data);
-		final Array<UnsignedByteType, ByteAccess> array = new Array<UnsignedByteType, ByteAccess>(new ArrayContainerFactory(), byteAccess, new int[] {w, h}, 1);
+		final Array<UnsignedByteType, ByteAccess> array = new Array<UnsignedByteType, ByteAccess>( byteAccess, new long[] {w, h}, 1 );
 		array.setLinkedType(new UnsignedByteType(array));
-		return new Image<UnsignedByteType>(array, new UnsignedByteType());
+		return array;
 		//return DevUtil.createImageFromArray(data, new int[] {width, height});
 	}
 
-	private Image<UnsignedByteType> createPlanarImage(final byte[] data, final int w, final int h) {
+	private Img<UnsignedByteType> createPlanarImage(final byte[] data, final int w, final int h) {
 		//return createImage(data, width, height, new PlanarContainerFactory());
 		// NB: Avoid copying the data.
-		PlanarContainer<UnsignedByteType, ByteArray> planarContainer = new PlanarContainer<UnsignedByteType, ByteArray>(new int[] {w, h}, 1);
+		PlanarContainer<UnsignedByteType, ByteArray> planarContainer = new PlanarContainer<UnsignedByteType, ByteArray>(new long[] {w, h}, 1);
 		planarContainer.setPlane(0, new ByteArray(data));
 		planarContainer.setLinkedType(new UnsignedByteType(planarContainer));
-		return new Image<UnsignedByteType>(planarContainer, new UnsignedByteType());
+		return planarContainer;
 	}
 
-	private Image<UnsignedByteType> createCellImage(final byte[] data, final int w, final int h) {
-		return createImage(data, w, h, new CellContainerFactory());
+	private Img<UnsignedByteType> createCellImage(final byte[] data, final int w, final int h) {
+		return createImage( data, w, h, new CellContainerFactory< UnsignedByteType >() );
 	}
 
-	private Image<UnsignedByteType> createImagePlusImage(final ImageProcessor ip) {
+	private Img<UnsignedByteType> createImagePlusImage(final ImageProcessor ip) {
 		final ImagePlus imp = new ImagePlus("image", ip);
 		return ImagePlusAdapter.wrapByte(imp);
 	}
 
-	private Image<UnsignedByteType> createImage(final byte[] data, final int w, final int h, final ContainerFactory cf) {
-		final ImageFactory<UnsignedByteType> imageFactory =
-			new ImageFactory<UnsignedByteType>(new UnsignedByteType(), cf);
-		final int[] dim = {w, h};
-		final Image<UnsignedByteType> img = imageFactory.createImage(dim);
+	private Img< UnsignedByteType > createImage( final byte[] data, final int w, final int h, final ImgFactory< UnsignedByteType > cf )
+	{
+		final long[] dim = { w, h };
+		final Img< UnsignedByteType > img = cf.create( dim, new UnsignedByteType() );
 		int index = 0;
-		for (UnsignedByteType t : img) t.set(data[index++]);
+		for ( UnsignedByteType t : img )
+			t.set( data[ index++ ] );
 		return img;
 	}
 
@@ -399,61 +396,60 @@ public class PerformanceBenchmark {
 	}
 
 	/** Generic version. */
-	@SuppressWarnings("unused")
-	private void invertImage(final Image<UnsignedByteType> img) {
-		final Cursor<UnsignedByteType> cursor = img.createCursor();
-		for (final UnsignedByteType t : cursor) {
+	@SuppressWarnings( "unused" )
+	private void invertImage(final Img<UnsignedByteType> img) {
+		for (final UnsignedByteType t : img) {
 			final int value = t.get();
 			final int result = 255 - value;
 			t.set(result);
 		}
-		cursor.close();
 	}
 
 	/** Explicit array version. */
-	private void invertArrayImage(final Image<UnsignedByteType> img) {
-		final ArrayCursor<UnsignedByteType> cursor = (ArrayCursor<UnsignedByteType>) img.createCursor();
-		for (final UnsignedByteType t : cursor) {
+	private void invertArrayImage(final Img<UnsignedByteType> img) {
+		final ArrayCursor<UnsignedByteType> c = (ArrayCursor<UnsignedByteType>) img.cursor();
+		while ( c.hasNext() ) {
+			final UnsignedByteType t = c.next();
 			final int value = t.get();
 			final int result = 255 - value;
 			t.set(result);
 		}
-		cursor.close();
 	}
 
 	/** Explicit cell version. */
-	private void invertCellImage(final Image<UnsignedByteType> img) {
-		final CellCursor<UnsignedByteType> cursor = (CellCursor<UnsignedByteType>) img.createCursor();
-		for (final UnsignedByteType t : cursor) {
+	private void invertCellImage(final Img<UnsignedByteType> img) {
+		@SuppressWarnings( "unchecked" )
+		final CellCursor< UnsignedByteType, ByteArray > c = ( CellCursor< UnsignedByteType, ByteArray > ) img.cursor();
+		while ( c.hasNext() ) {
+			final UnsignedByteType t = c.next();
 			final int value = t.get();
 			final int result = 255 - value;
 			t.set(result);
 		}
-		cursor.close();
 	}
 
 	/** Explicit planar version. */
-	private void invertPlanarImage(final Image<UnsignedByteType> img) {
-		final PlanarCursor<UnsignedByteType> cursor = (PlanarCursor<UnsignedByteType>) img.createCursor();
-		for (final UnsignedByteType t : cursor) {
+	private void invertPlanarImage(final Img<UnsignedByteType> img) {
+		final PlanarCursor<UnsignedByteType> c = (PlanarCursor<UnsignedByteType>) img.cursor();
+		while ( c.hasNext() ) {
+			final UnsignedByteType t = c.next();
 			final int value = t.get();
 			final int result = 255 - value;
 			t.set(result);
 		}
-		cursor.close();
 	}
-
+	
 	/** Explicit ImagePlus version. */
-	private void invertImagePlusImage(final Image<UnsignedByteType> img) {
-		final ImagePlusCursor<UnsignedByteType> cursor = (ImagePlusCursor<UnsignedByteType>) img.createCursor();
-		for (final UnsignedByteType t : cursor) {
+	private void invertImagePlusImage(final Img<UnsignedByteType> img) {
+		final PlanarCursor<UnsignedByteType> c = (PlanarCursor<UnsignedByteType>) img.cursor();
+		while ( c.hasNext() ) {
+			final UnsignedByteType t = c.next();
 			final int value = t.get();
 			final int result = 255 - value;
 			t.set(result);
 		}
-		cursor.close();
 	}
-
+	
 	private void invertPixelCubeReflection(final PixelCube<Byte, BaseIndex> pc) {
 		pc.setIterationPattern(Constants.IP_FWD + Constants.IP_SINGLE);
 		RasterForwardIterator<Byte> iterIn = (RasterForwardIterator<Byte>) pc.iterator();
@@ -505,59 +501,58 @@ public class PerformanceBenchmark {
 	}
 
 	/** Generic version. */
-	@SuppressWarnings("unused")
-	private void randomizeImage(final Image<UnsignedByteType> img) {
-		final Cursor<UnsignedByteType> cursor = img.createCursor();
-		for (final UnsignedByteType t : cursor) {
+	@SuppressWarnings( "unused" )
+	private void randomizeImage(final Img<UnsignedByteType> img) {
+		for (final UnsignedByteType t : img) {
 			final int value = t.get();
 			final double result = expensiveOperation(value);
 			t.set((int) result);
 		}
-		cursor.close();
 	}
 
 	/** Explicit array version. */
-	private void randomizeArrayImage(final Image<UnsignedByteType> img) {
-		final ArrayCursor<UnsignedByteType> cursor = (ArrayCursor<UnsignedByteType>) img.createCursor();
-		for (final UnsignedByteType t : cursor) {
+	private void randomizeArrayImage(final Img<UnsignedByteType> img) {
+		final ArrayCursor<UnsignedByteType> c = (ArrayCursor<UnsignedByteType>) img.cursor();
+		while ( c.hasNext() ) {
+			final UnsignedByteType t = c.next();
 			final int value = t.get();
 			final double result = expensiveOperation(value);
 			t.set((int) result);
 		}
-		cursor.close();
 	}
 
 	/** Explicit cell version. */
-	private void randomizeCellImage(final Image<UnsignedByteType> img) {
-		final CellCursor<UnsignedByteType> cursor = (CellCursor<UnsignedByteType>) img.createCursor();
-		for (final UnsignedByteType t : cursor) {
+	private void randomizeCellImage(final Img<UnsignedByteType> img) {
+		@SuppressWarnings( "unchecked" )
+		final CellCursor< UnsignedByteType, ByteArray > c = ( CellCursor< UnsignedByteType, ByteArray > ) img.cursor();
+		while ( c.hasNext() ) {
+			final UnsignedByteType t = c.next();
 			final int value = t.get();
 			final double result = expensiveOperation(value);
 			t.set((int) result);
 		}
-		cursor.close();
 	}
 
 	/** Explicit planar version. */
-	private void randomizePlanarImage(final Image<UnsignedByteType> img) {
-		final PlanarCursor<UnsignedByteType> cursor = (PlanarCursor<UnsignedByteType>) img.createCursor();
-		for (final UnsignedByteType t : cursor) {
+	private void randomizePlanarImage(final Img<UnsignedByteType> img) {
+		final PlanarCursor<UnsignedByteType> c = (PlanarCursor<UnsignedByteType>) img.cursor();
+		while ( c.hasNext() ) {
+			final UnsignedByteType t = c.next();
 			final int value = t.get();
 			final double result = expensiveOperation(value);
 			t.set((int) result);
 		}
-		cursor.close();
 	}
 
 	/** Explicit ImagePlus version. */
-	private void randomizeImagePlusImage(final Image<UnsignedByteType> img) {
-		final ImagePlusCursor<UnsignedByteType> cursor = (ImagePlusCursor<UnsignedByteType>) img.createCursor();
-		for (final UnsignedByteType t : cursor) {
+	private void randomizeImagePlusImage(final Img<UnsignedByteType> img) {
+		final PlanarCursor<UnsignedByteType> c = (PlanarCursor<UnsignedByteType>) img.cursor();
+		while ( c.hasNext() ) {
+			final UnsignedByteType t = c.next();
 			final int value = t.get();
 			final double result = expensiveOperation(value);
 			t.set((int) result);
 		}
-		cursor.close();
 	}
 
 	private void randomizePixelCubeReflection(final PixelCube<Byte, BaseIndex> pc) {

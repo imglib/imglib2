@@ -49,6 +49,12 @@ import mpicbg.imglib.type.NativeType;
 public class PlanarContainerFactory< T extends NativeType<T> > extends NativeContainerFactory< T >
 {
 	@Override
+	public PlanarContainer< T, ? > create( final long[] dim, final T type )
+	{
+		return ( PlanarContainer< T, ? > ) type.createSuitableNativeContainer( this, dim );
+	}
+	
+	@Override
 	public NativeContainer< T, BitArray > createBitInstance( final long[] dimensions, final int entitiesPerPixel )
 	{
 		return new PlanarContainer< T, BitArray >( new BitArray( 1 ), dimensions, entitiesPerPixel );

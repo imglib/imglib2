@@ -37,7 +37,7 @@ import mpicbg.imglib.container.basictypecontainer.array.FloatArray;
 import mpicbg.imglib.type.NativeType;
 import mpicbg.imglib.type.numeric.ComplexType;
 
-public class ComplexFloatType extends ComplexTypeImpl<ComplexFloatType> implements ComplexType<ComplexFloatType>, NativeType<ComplexFloatType>
+public class ComplexFloatType extends AbstractComplexType<ComplexFloatType> implements ComplexType<ComplexFloatType>, NativeType<ComplexFloatType>
 {
 	private int i = 0;
 	

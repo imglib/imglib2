@@ -33,25 +33,28 @@ import mpicbg.imglib.util.Util;
 
 /**
  * Abstract base class for localizable ImgSamplers.
- * The current position is stored in a long[] field and used to
- * implement the {@link Localizable} interface. 
+ * The current position is stored in a int[] field and used to
+ * implement the {@link Localizable} interface.
+ * This is identical to {@link AbstractLocalizableImgSampler}, except that
+ * the position is limited to {@link Integer.MAX_VALUE} in every dimension.
  *  
  * @param <T>
  *
- * @author Stephan Preibisch and Stephan Saalfeld
+ * @author Stephan Preibisch, Stephan Saalfeld, Tobias Pietzsch
  */
-public abstract class AbstractLocalizableImgSampler< T > extends AbstractImgSampler< T > implements Localizable
+public abstract class AbstractLocalizableImgSamplerInt< T > extends AbstractImgSampler< T > implements Localizable
 {
-	final protected long[] position;
-	final protected long[] dimension;
+	final protected int[] position;
+	final protected int[] size;
 	
-	public AbstractLocalizableImgSampler( final Interval f )
+	public AbstractLocalizableImgSamplerInt( final Interval f )
 	{
 		super( f.numDimensions() );
 		
-		position = new long[ n ];
-		dimension = new long[ n ];
-		f.dimensions( dimension );
+		position = new int[ n ];
+		size = new int[ n ];
+		for ( int d = 0; d < n; ++d )
+			size[ d ] = ( int ) f.dimension( d );
 	}
 	
 	@Override
@@ -72,7 +75,7 @@ public abstract class AbstractLocalizableImgSampler< T > extends AbstractImgSamp
 	public void localize( int[] pos )
 	{
 		for ( int d = 0; d < n; d++ )
-			pos[ d ] = ( int )this.position[ d ];
+			pos[ d ] = this.position[ d ];
 	}
 	
 	@Override
@@ -89,7 +92,7 @@ public abstract class AbstractLocalizableImgSampler< T > extends AbstractImgSamp
 	public double getDoublePosition( final int dim ){ return position[ dim ]; }
 	
 	@Override
-	public int getIntPosition( final int dim ){ return ( int )position[ dim ]; }
+	public int getIntPosition( final int dim ){ return position[ dim ]; }
 
 	@Override
 	public long getLongPosition( final int dim ){ return position[ dim ]; }

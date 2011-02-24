@@ -27,49 +27,45 @@
  */
 package mpicbg.imglib.container.planar;
 
-import mpicbg.imglib.container.AbstractImgCursor;
+import mpicbg.imglib.container.AbstractImgCursorInt;
 import mpicbg.imglib.type.NativeType;
 
 /**
  * Basic Iterator for {@link PlanarContainer PlanarContainers}
  * @param <T>
  *
- * @author Stephan Preibisch and Stephan Saalfeld
+ * @author Stephan Preibisch, Stephan Saalfeld, Tobias Pietzsch
  */
-abstract public class AbstractPlanarCursor< T extends NativeType< T > > extends AbstractImgCursor< T > implements PlanarLocation
+abstract public class AbstractPlanarCursor< T extends NativeType< T > > extends AbstractImgCursorInt< T > implements PlanarContainer.PlanarContainerSampler
 {
 	protected final T type;
 
+	protected final PlanarContainer< T, ? > container;
+
 	protected final int lastIndex, lastSliceIndex;
 	protected int sliceIndex;
-	protected boolean hasNext;
 	
-	final protected int[] dimension;
-
+	/**
+	 * The current index of the type.
+	 * It is faster to duplicate this here than to access it through type.getIndex(). 
+	 */
+	protected int index;
+	
 	public AbstractPlanarCursor( final PlanarContainer< T, ? > container )
 	{
 		super( container.numDimensions() );
 
 		this.type = container.createLinkedType();
+		this.container = container;
+
+		lastIndex = ( ( n > 1 ) ? container.dimensions[ 1 ] : 1 )  *  container.dimensions[ 0 ] - 1;
+		lastSliceIndex = container.numSlices() - 1;
 		
-		final int n = container.numDimensions();
-		
-		if ( n < 2 )
-		{
-			dimension = new int[ 2 ];
-			dimension[ 0 ] = ( int )container.dimension( 0 );
-			dimension[ 1 ] = 1;
-		}
-		else
-		{
-			dimension = new int[ container.numDimensions() ];
-			for ( int d = 0; d < n; ++d )
-				dimension[ d ] = ( int )container.dimension( d );
-		}
-		
-		lastIndex = dimension[ 0 ] * dimension[ 1 ] - 1;
-		lastSliceIndex = container.getSlices() - 1;
+		reset();
 	}
+
+	@Override
+	public int getCurrentSliceIndex() { return sliceIndex; }
 
 	@Override
 	public T get() { return type; }
@@ -81,63 +77,59 @@ abstract public class AbstractPlanarCursor< T extends NativeType< T > > extends 
 	 * @return false for the last element 
 	 */
 	@Override
-	public boolean hasNext() { return hasNext; }
+	public boolean hasNext()
+	{
+		return ( sliceIndex < lastSliceIndex ) || ( index < lastIndex );		
+	}
 
 	@Override
 	public void fwd()
 	{
-		type.incIndex();
-
-		final int i = type.getIndex();
-		
-		if ( i < lastIndex )
-			return;
-		else if ( i == lastIndex )
-			hasNext = sliceIndex < lastSliceIndex;
-		else
+		if ( ++index > lastIndex )
 		{
+			index = 0;
 			++sliceIndex;
-			type.updateIndex( 0 );
 			type.updateContainer( this );
 		}
+		type.updateIndex( index );
+	}
+
+	@Override
+	public void jumpFwd( long steps )
+	{
+		long newIndex = index + steps;
+		if ( newIndex > lastIndex )
+		{
+			final long s = newIndex / (lastIndex + 1);
+			newIndex -= s * (lastIndex + 1);
+			sliceIndex += s;
+			type.updateContainer( this );
+		}
+		index = ( int ) newIndex;
+		type.updateIndex( index );
 	}
 
 	@Override
 	public void reset()
 	{
 		sliceIndex = 0;
+		index = -1;
 		type.updateIndex( -1 );
 		type.updateContainer( this );
-		hasNext = true;
 	}
 
 	@Override
 	public String toString() { return type.toString(); }
 
 	@Override
-	public void localize( final long[] position )
+	public void localize( final int[] position )
 	{
-		for ( int d = 0; d < n; ++d )
-			position[ d ] = getLongPosition( d );
+		container.indexToGlobalPosition( sliceIndex, index, position );
 	}
 
 	@Override
-	public long getLongPosition( final int dim )
+	public int getIntPosition( final int dim )
 	{
-		if ( dim == 0 )
-			return type.getIndex() % dimension[ 0 ];
-		else if ( dim == 1 )
-			return type.getIndex() / dimension[ 0 ];
-		else
-		{
-			// adapted from IntervalIndexer
-			int step = 1;
-			for ( int d = 2; d < dim; ++d )
-				step *= dimension[ d ];
-			return ( sliceIndex / step ) % dimension[ dim ];			               
-		}
+		return container.indexToGlobalPosition( sliceIndex, index, dim );
 	}
-
-	@Override
-	public int getCurrentPlane() { return sliceIndex; }
 }

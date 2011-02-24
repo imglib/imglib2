@@ -1,4 +1,4 @@
-package mpicbg.imglib.container.cell;
+package mpicbg.imglib.container.planar;
 
 import static org.junit.Assert.assertArrayEquals;
 
@@ -25,7 +25,7 @@ public class CopyTest
 
 	long intDataSum;
 
-	CellContainer< IntType, ? > intImg;
+	PlanarContainer< IntType, ? > intImg;
 
 	@Before
 	public void createSourceData()
@@ -45,7 +45,7 @@ public class CopyTest
 			intDataSum += intData[ i ];
 		}
 		
-		intImg = new CellContainerFactory< IntType >( 10 ).create( dimensions, new IntType() );
+		intImg = ( PlanarContainer< IntType, ? > ) new PlanarContainerFactory< IntType >().create( dimensions, new IntType() );
 
 		long[] pos = new long[ dimensions.length ];
 		RandomAccess< IntType > a = intImg.randomAccess();
@@ -84,15 +84,6 @@ public class CopyTest
 		}
 	}
 
-	public void copyWithIterationBoth(Img< IntType > srcImg, Img< IntType > dstImg)
-	{
-		Cursor< IntType > src = srcImg.cursor();
-		Cursor< IntType > dst = dstImg.cursor();
-		while( src.hasNext() ) {
-			dst.next().set( src.next().get() );
-		}
-	}
-
 	int[] getImgAsInts( Img< IntType > img )
 	{
 		RandomAccess< IntType > a = img.randomAccess();
@@ -126,28 +117,18 @@ public class CopyTest
 	}
 
 	@Test
-	public void testCopyToCellContainerWithSourceIteration()
+	public void testCopyToPlanarContainerWithSourceIteration()
 	{
-		CellContainer< IntType, ? > cellImg = new CellContainerFactory< IntType >( new int[] {2, 7, 4} ).create( dimensions, new IntType() );
-		copyWithSourceIteration( intImg, cellImg );
-		assertArrayEquals( intData, getImgAsInts( cellImg ) );
+		PlanarContainer< IntType, ? > planarImg = ( PlanarContainer< IntType, ? > ) new PlanarContainerFactory< IntType >().create( dimensions, new IntType() );
+		copyWithSourceIteration( intImg, planarImg );
+		assertArrayEquals( intData, getImgAsInts( planarImg ) );
 	}
 
 	@Test
-	public void testCopyToCellContainerWithDestIteration()
+	public void testCopyToPlanarContainerWithDestIteration()
 	{
-		CellContainer< IntType, ? > cellImg = new CellContainerFactory< IntType >( new int[] {2, 7, 4} ).create( dimensions, new IntType() );
-		copyWithDestIteration( intImg, cellImg );
-		assertArrayEquals( intData, getImgAsInts( cellImg ) );
-	}
-
-	@Test
-	public void testCopyArrayToArrayWithIterationBoth()
-	{
-		Array< IntType, ? > array2 = new ArrayContainerFactory< IntType >().create( dimensions, new IntType() );
-		Array< IntType, ? > array = new ArrayContainerFactory< IntType >().create( dimensions, new IntType() );
-		copyWithDestIteration( intImg, array2 );
-		copyWithIterationBoth( array2, array );
-		assertArrayEquals( intData, getImgAsInts( array ) );
+		PlanarContainer< IntType, ? > planarImg = ( PlanarContainer< IntType, ? > ) new PlanarContainerFactory< IntType >().create( dimensions, new IntType() );
+		copyWithDestIteration( intImg, planarImg );
+		assertArrayEquals( intData, getImgAsInts( planarImg ) );
 	}
 }

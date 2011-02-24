@@ -30,34 +30,34 @@ package mpicbg.imglib.container.imageplus;
 import ij.ImagePlus;
 import ij.ImageStack;
 import ij.process.ByteProcessor;
-
 import mpicbg.imglib.container.basictypecontainer.array.ByteArray;
 import mpicbg.imglib.exception.ImgLibException;
-import mpicbg.imglib.type.Type;
+import mpicbg.imglib.type.NativeType;
 
 /**
  * {@link ImagePlusContainer} for byte-stored data.
  * 
  * @author Jan Funke, Stephan Preibisch, Stephan Saalfeld, Johannes Schindelin
  */
-public class ByteImagePlus<T extends Type<T>> extends ImagePlusContainer<T, ByteArray>
+public class ByteImagePlus< T extends NativeType< T > > extends ImagePlusContainer< T, ByteArray >
 {
 	final ImagePlus imp;	
 	
-	public ByteImagePlus( final ImagePlusContainerFactory factory, final int[] dim, final int entitiesPerPixel ) 
+	public ByteImagePlus( final long[] dim, final int entitiesPerPixel ) 
 	{
-		super( factory, dim, entitiesPerPixel );
+		super( dim, entitiesPerPixel );
 	
 		if ( entitiesPerPixel == 1 )
 		{
 			final ImageStack stack = new ImageStack( width, height );
-			for ( int i = 0; i < slices; ++i )
+			for ( int i = 0; i < numSlices; ++i )
 				stack.addSlice( "", new ByteProcessor( width, height ) );
 			imp = new ImagePlus( "image", stack );
 			imp.setDimensions( channels, depth, frames );
-			if ( slices > 1 )
+			if ( numSlices > 1 )
 				imp.setOpenAsHyperStack( true );
 			
+			mirror.clear();
 			for ( int c = 0; c < channels; ++c )
 				for ( int t = 0; t < frames; ++t )
 					for ( int z = 0; z < depth; ++z )
@@ -66,15 +66,16 @@ public class ByteImagePlus<T extends Type<T>> extends ImagePlusContainer<T, Byte
 		else
 		{
 			imp = null;
-			for ( int i = 0; i < slices; ++i )
+
+			mirror.clear();
+			for ( int i = 0; i < numSlices; ++i )
 				mirror.add( new ByteArray( width * height * entitiesPerPixel ) );
 		}
 	}
 
-	public ByteImagePlus( final ImagePlus imp, final ImagePlusContainerFactory factory ) 
+	public ByteImagePlus( final ImagePlus imp ) 
 	{
 		super(
-				factory,
 				imp.getWidth(),
 				imp.getHeight(),
 				imp.getNSlices(),
@@ -84,6 +85,7 @@ public class ByteImagePlus<T extends Type<T>> extends ImagePlusContainer<T, Byte
 		
 		this.imp = imp;
 		
+		mirror.clear();		
 		for ( int c = 0; c < channels; ++c )
 			for ( int t = 0; t < frames; ++t )
 				for ( int z = 0; z < depth; ++z )

@@ -1,4 +1,4 @@
-package mpicbg.imglib.container.cell;
+package mpicbg.imglib.container.planar;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -7,12 +7,11 @@ import java.util.Random;
 import mpicbg.imglib.Cursor;
 import mpicbg.imglib.RandomAccess;
 import mpicbg.imglib.container.Img;
-import mpicbg.imglib.container.array.Array;
 import mpicbg.imglib.container.array.ArrayContainerFactory;
 import mpicbg.imglib.type.numeric.integer.IntType;
 import mpicbg.imglib.util.IntervalIndexer;
 
-public class ArrayRandomAccessBenchmark
+public class PlanarRandomAccessBenchmark
 {
 	long[] dimensions;
 
@@ -22,8 +21,8 @@ public class ArrayRandomAccessBenchmark
 
 	long intDataSum;
 
-	Array< IntType, ? > intImg;
-	Array< IntType, ? > intImgCopy;
+	PlanarContainer< IntType, ? > intImg;
+	Img< IntType > intImgCopy;
 
 	public void createSourceData()
 	{
@@ -42,7 +41,7 @@ public class ArrayRandomAccessBenchmark
 			intDataSum += intData[ i ];
 		}
 
-		intImg = new ArrayContainerFactory< IntType >().create( dimensions, new IntType() );
+		intImg = new PlanarContainerFactory< IntType >().create( dimensions, new IntType() );
 	}
 
 
@@ -77,16 +76,6 @@ public class ArrayRandomAccessBenchmark
 			src.localize( pos );
 			dst.setPosition( pos );
 			dst.get().set( src.get() );
-		}
-	}
-
-
-	public void copyWithIterationBoth(Img< IntType > srcImg, Img< IntType > dstImg)
-	{
-		Cursor< IntType > src = srcImg.cursor();
-		Cursor< IntType > dst = dstImg.cursor();
-		while( src.hasNext() ) {
-			dst.next().set( src.next().get() );
 		}
 	}
 
@@ -133,7 +122,7 @@ public class ArrayRandomAccessBenchmark
 
 	public static void main( String[] args )
 	{
-		final ArrayRandomAccessBenchmark randomAccessBenchmark = new ArrayRandomAccessBenchmark();
+		final PlanarRandomAccessBenchmark randomAccessBenchmark = new PlanarRandomAccessBenchmark();
 		randomAccessBenchmark.createSourceData();
 
 		System.out.println( "benchmarking fill" );
@@ -146,8 +135,19 @@ public class ArrayRandomAccessBenchmark
 		} );
 		randomAccessBenchmark.intData = null;
 		
+		randomAccessBenchmark.intImgCopy = new PlanarContainerFactory< IntType >().create( randomAccessBenchmark.dimensions, new IntType() );
+		System.out.println( "benchmarking copy planar to planar" );
+		benchmark( new Benchmark()
+		{
+			public void run()
+			{
+				randomAccessBenchmark.copyWithSourceIteration( randomAccessBenchmark.intImg, randomAccessBenchmark.intImgCopy );
+			}
+		} );
+		randomAccessBenchmark.intImgCopy = null;
+
 		randomAccessBenchmark.intImgCopy = new ArrayContainerFactory< IntType >().create( randomAccessBenchmark.dimensions, new IntType() );
-		System.out.println( "benchmarking copy to array" );
+		System.out.println( "benchmarking copy planar to array" );
 		benchmark( new Benchmark()
 		{
 			public void run()
@@ -156,21 +156,12 @@ public class ArrayRandomAccessBenchmark
 			}
 		} );
 
-		System.out.println( "benchmarking copy from array" );
+		System.out.println( "benchmarking copy array to planar" );
 		benchmark( new Benchmark()
 		{
 			public void run()
 			{
 				randomAccessBenchmark.copyWithSourceIteration( randomAccessBenchmark.intImgCopy, randomAccessBenchmark.intImg );
-			}
-		} );
-
-		System.out.println( "benchmarking copy array to array using iteration" );
-		benchmark( new Benchmark()
-		{
-			public void run()
-			{
-				randomAccessBenchmark.copyWithIterationBoth( randomAccessBenchmark.intImg, randomAccessBenchmark.intImgCopy );
 			}
 		} );
 		randomAccessBenchmark.intImgCopy = null;

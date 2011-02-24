@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2009--2010, Stephan Saalfeld
+ * Copyright (c) 2009--2010, Stephan Preibisch & Stephan Saalfeld
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -25,38 +25,37 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-package mpicbg.imglib.cursor.imageplus;
+package mpicbg.imglib.container;
 
-import mpicbg.imglib.container.imageplus.ImagePlusContainer;
-import mpicbg.imglib.image.Image;
-import mpicbg.imglib.type.Type;
+import mpicbg.imglib.Interval;
 
 /**
- * Basic Iterator for 2d {@link ImagePlusContainer ImagePlusContainers}
+ * 
  * @param <T>
- *
- * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
+ * 
+ * @author Stephan Preibisch, Stephan Saalfeld, Tobias Pietzsch
  */
-public class ImagePlusCursor2D< T extends Type< T > > extends ImagePlusCursor< T >
+public abstract class AbstractImgLocalizingCursorInt< T > extends AbstractLocalizableImgSamplerInt< T > implements ImgCursor< T >
 {
-	final protected int maxIndex;
-	
-	public ImagePlusCursor2D( final ImagePlusContainer< T, ? > container, final Image< T > image, final T type )
+	public AbstractImgLocalizingCursorInt( final Interval f )
 	{
-		super( container, image, type );
-		
-		maxIndex = container.getNumPixels() - 1;
-	}
-	
-	@Override
-	public boolean hasNext()
-	{
-		return type.getIndex() < maxIndex;
+		super( f );
 	}
 
 	@Override
-	public void fwd()
+	public void remove(){}
+
+	@Override
+	public T next()
 	{
-		type.incIndex();
+		fwd();
+		return get();
+	}
+
+	@Override
+	public void jumpFwd( final long steps )
+	{
+		for ( long j = 0; j < steps; ++j )
+			fwd();
 	}
 }

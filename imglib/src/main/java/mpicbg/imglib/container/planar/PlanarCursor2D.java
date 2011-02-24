@@ -38,19 +38,15 @@ import mpicbg.imglib.type.NativeType;
  */
 public class PlanarCursor2D< T extends NativeType< T > > extends PlanarCursor< T >
 {
-	final protected int maxIndex;
-	
 	public PlanarCursor2D( final PlanarContainer< T, ? > container )
 	{
 		super( container );
-		
-		maxIndex = ( int )container.size() - 1;
 	}
 	
 	@Override
 	public boolean hasNext()
 	{
-		return type.getIndex() < maxIndex;
+		return type.getIndex() < lastIndex;
 	}
 
 	@Override
@@ -58,11 +54,4 @@ public class PlanarCursor2D< T extends NativeType< T > > extends PlanarCursor< T
 	{
 		type.incIndex();
 	}
-
-	@Override
-	public void localize( final long[] position )
-	{		
-		position[ 0 ] = type.getIndex() % container.dim[ 0 ];
-		position[ 1 ] = type.getIndex() / container.dim[ 0 ];
-	}	
 }

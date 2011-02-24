@@ -33,6 +33,7 @@ import mpicbg.imglib.Interval;
 import mpicbg.imglib.IterableRealInterval;
 import mpicbg.imglib.container.AbstractNativeContainer;
 import mpicbg.imglib.container.Img;
+import mpicbg.imglib.container.NativeContainer;
 import mpicbg.imglib.container.basictypecontainer.PlanarAccess;
 import mpicbg.imglib.container.basictypecontainer.array.ArrayDataAccess;
 import mpicbg.imglib.outofbounds.OutOfBoundsFactory;
@@ -40,7 +41,7 @@ import mpicbg.imglib.type.NativeType;
 
 
 /**
- * A {@link Container} that stores data in an array of 2d-slices each as a
+ * A {@link NativeContainer} that stores data in an array of 2d-slices each as a
  * linear array of basic types.  For types that are supported by ImageJ (byte,
  * short, int, float), an actual Planar is created or used to store the
  * data.  Alternatively, an {@link PlanarContainer} can be created using
@@ -52,13 +53,19 @@ import mpicbg.imglib.type.NativeType;
  * {@link PlanarContainer} provides access to the pixels of an
  * {@link Planar} instance that can be accessed ({@see #getPlanar()}.
  *
- * @author Jan Funke, Stephan Preibisch, Stephan Saalfeld, Johannes Schindelin
+ * @author Jan Funke, Stephan Preibisch, Stephan Saalfeld, Johannes Schindelin, Tobias Pietzsch
  */
 public class PlanarContainer< T extends NativeType< T >, A extends ArrayDataAccess<A> > extends AbstractNativeContainer< T, A > implements PlanarAccess< A >
 {
-	final protected int slices;
-	final protected int[] dim;
-	
+	final protected int numSlices;
+
+	/*
+	 * duplicate of size[] as an int array.
+	 */
+	final protected int[] dimensions;
+
+	final protected int[] sliceSteps;
+
 	final protected ArrayList< A > mirror;
 
 	public PlanarContainer( final long[] dim, final int entitiesPerPixel )
@@ -70,55 +77,132 @@ public class PlanarContainer< T extends NativeType< T >, A extends ArrayDataAcce
 	{
 		super( dim, entitiesPerPixel );
 
-		if ( n < 2 )
+		dimensions = new int[ n ];
+		for ( int d = 0; d < n; ++d )
+			dimensions[ d ] = ( int ) dim[ d ];
+
+		if ( n > 2 )
 		{
-			this.dim = new int[ 2 ];
-			this.dim[ 0 ] = ( int )dim[ 0 ];
-			this.dim[ 1 ] = 1;
+			sliceSteps = new int[ n ];
+			sliceSteps[ 2 ] = 1;
+			for ( int i = 3; i < n; ++i )
+			{
+				final int j = i - 1;
+				sliceSteps[ i ] = dimensions[ j ] * sliceSteps[ j ];
+			}
 		}
 		else
 		{
-			this.dim = new int[ n ];
-			for ( int d = 0; d < n; ++d )
-				this.dim[ d ] = ( int )dim[ d ];
+			sliceSteps = null;
 		}
-		
+
 		// compute number of slices
 		int s = 1;
-
 		for ( int d = 2; d < n; ++d )
-			s *= dim[ d ];
+			s *= dimensions[ d ];
+		numSlices = s;
 
-		slices = s;
-
-		mirror = new ArrayList< A >( slices );
-
-		for ( int i = 0; i < slices; ++i )
-			mirror.add( creator == null ? null : creator.createArray( this.dim[ 0 ] * this.dim[ 1 ] * entitiesPerPixel ) );
+		mirror = new ArrayList< A >( numSlices );
+		
+		if ( creator == null)
+		{
+			for ( int i = 0; i < numSlices; ++i )
+				mirror.add( null );
+		}
+		else
+		{
+			final int entitiesPerSlice = ( ( n > 1 ) ? dimensions[ 1 ] : 1 )  *  dimensions[ 0 ] * entitiesPerPixel;
+			for ( int i = 0; i < numSlices; ++i )
+				mirror.add( creator.createArray( entitiesPerSlice ) );
+		}
 	}
 
+	/**
+	 * This interface is implemented by all samplers on the {@link PlanarContainer}.
+	 * It allows the container to ask for the slice the sampler is currently in.
+	 */
+	public interface PlanarContainerSampler
+	{
+		/**
+		 * @return the index of the slice the sampler is currently accessing.
+		 */
+		public int getCurrentSliceIndex();
+	}
+		
 	@Override
 	public A update( final Object c )
 	{
-		return mirror.get( ((PlanarLocation)c).getCurrentPlane() );
+		return mirror.get( ( ( PlanarContainerSampler ) c ).getCurrentSliceIndex() );
 	}
 
 	/**
    * @return total number of image planes
 	 */
-	public int getSlices() { return slices; }
+	public int numSlices() { return numSlices; }
 
 	/**
 	 * For a given >=2d location, estimate the pixel index in the stack slice.
 	 *
 	 * @param l
 	 * @return
+	 * 
+	 * TODO: remove this method? (it doesn't seem to be used anywhere)
 	 */
 	public final int getIndex( final int[] l )
 	{
 		if ( n > 1 )
-			return l[ 1 ] * dim[ 0 ] + l[ 0 ];
+			return l[ 1 ] * dimensions[ 0 ] + l[ 0 ];
 		return l[ 0 ];
+	}
+
+	/**
+	 * Compute a global position from the index of a slice and an index within that slice.
+	 * 
+	 * @param sliceIndex    index of slice
+	 * @param indexInSlice  index of element within slice
+	 * @param position      receives global position of element
+	 * 
+	 * TODO: move this method to AbstractPlanarCursor? (that seems to be the only place where it is needed)
+	 */
+	public void indexToGlobalPosition( int sliceIndex, final int indexInSlice, final int[] position )
+	{
+		if (n > 1)
+		{
+			position[ 1 ] = indexInSlice / dimensions[ 0 ];
+			position[ 0 ] = indexInSlice - position[ 1 ] * dimensions[ 0 ];
+
+			final int maxDim = dimensions.length - 1;
+			for ( int d = 2; d < maxDim; ++d )
+			{
+				final int j = sliceIndex / dimensions[ d ];
+				position[ d ] = sliceIndex - j * dimensions[ d ];
+				sliceIndex = j;
+			}
+
+			position[ maxDim ] = sliceIndex;
+		} else {
+			position[ 0 ] = indexInSlice;
+		}
+	}
+
+	/**
+	 * Compute a global position from the index of a slice and an index within that slice.
+	 * 
+	 * @param sliceIndex    index of slice
+	 * @param indexInSlice  index of element within slice
+	 * @param dim           which dimension of the position we are interested in
+	 * @return              dimension dim of global position
+	 * 
+	 * TODO: move this method to AbstractPlanarCursor? (that seems to be the only place where it is needed)
+	 */
+	public int indexToGlobalPosition( int sliceIndex, final int indexInSlice, final int dim )
+	{
+		if ( dim == 0 )
+			return indexInSlice % dimensions[ 0 ];
+		else if ( dim == 1 )
+			return indexInSlice / dimensions[ 0 ];
+		else
+			return ( sliceIndex / sliceSteps[ dim ] ) % dimensions[ dim ];			               
 	}
 
 	@Override

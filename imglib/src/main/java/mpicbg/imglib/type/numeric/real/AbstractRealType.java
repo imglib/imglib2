@@ -1,9 +1,9 @@
 package mpicbg.imglib.type.numeric.real;
 
 import mpicbg.imglib.type.numeric.RealType;
-import mpicbg.imglib.type.numeric.complex.ComplexTypeImpl;
+import mpicbg.imglib.type.numeric.complex.AbstractComplexType;
 
-public abstract class RealTypeImpl<T extends RealTypeImpl<T>> extends ComplexTypeImpl<T> implements RealType<T>
+public abstract class AbstractRealType<T extends AbstractRealType<T>> extends AbstractComplexType<T> implements RealType<T>
 {
 	@Override
 	public float getImaginaryFloat() { return 0; }

@@ -30,34 +30,34 @@ package mpicbg.imglib.container.imageplus;
 import ij.ImagePlus;
 import ij.ImageStack;
 import ij.process.ShortProcessor;
-
 import mpicbg.imglib.container.basictypecontainer.array.ShortArray;
 import mpicbg.imglib.exception.ImgLibException;
-import mpicbg.imglib.type.Type;
+import mpicbg.imglib.type.NativeType;
 
 /**
  * {@link ImagePlusContainer} for short-stored data.
  * 
  * @author Jan Funke, Stephan Preibisch, Stephan Saalfeld, Johannes Schindelin
  */
-public class ShortImagePlus<T extends Type<T>> extends ImagePlusContainer<T, ShortArray> 
+public class ShortImagePlus< T extends NativeType< T > > extends ImagePlusContainer< T, ShortArray > 
 {
 	final ImagePlus imp;	
 	
-	public ShortImagePlus( final ImagePlusContainerFactory factory, final int[] dim, final int entitiesPerPixel ) 
+	public ShortImagePlus( final long[] dim, final int entitiesPerPixel ) 
 	{
-		super( factory, dim, entitiesPerPixel );
+		super( dim, entitiesPerPixel );
 		
 		if ( entitiesPerPixel == 1 )
 		{
 			final ImageStack stack = new ImageStack( width, height );
-			for ( int i = 0; i < slices; ++i )
+			for ( int i = 0; i < numSlices; ++i )
 				stack.addSlice( "", new ShortProcessor( width, height ) );
 			imp = new ImagePlus( "image", stack );
 			imp.setDimensions( channels, depth, frames );
-			if ( slices > 1 )
+			if ( numSlices > 1 )
 				imp.setOpenAsHyperStack( true );
 			
+			mirror.clear();
 			for ( int c = 0; c < channels; ++c )
 				for ( int t = 0; t < frames; ++t )
 					for ( int z = 0; z < depth; ++z )
@@ -66,15 +66,16 @@ public class ShortImagePlus<T extends Type<T>> extends ImagePlusContainer<T, Sho
 		else
 		{
 			imp = null;
-			for ( int i = 0; i < slices; ++i )
+
+			mirror.clear();
+			for ( int i = 0; i < numSlices; ++i )
 				mirror.add( new ShortArray( width * height * entitiesPerPixel ) );
 		}
 	}
 
-	public ShortImagePlus( final ImagePlus imp, final ImagePlusContainerFactory factory ) 
+	public ShortImagePlus( final ImagePlus imp ) 
 	{
 		super(
-				factory,
 				imp.getWidth(),
 				imp.getHeight(),
 				imp.getNSlices(),
@@ -84,6 +85,7 @@ public class ShortImagePlus<T extends Type<T>> extends ImagePlusContainer<T, Sho
 		
 		this.imp = imp;
 		
+		mirror.clear();
 		for ( int c = 0; c < channels; ++c )
 			for ( int t = 0; t < frames; ++t )
 				for ( int z = 0; z < depth; ++z )

@@ -7,6 +7,7 @@ import java.util.TreeMap;
 
 import javax.swing.JFrame;
 
+import mpicbg.imglib.algorithm.math.ComputeMinMax;
 import mpicbg.imglib.container.Img;
 import mpicbg.imglib.container.ImgCursor;
 import mpicbg.imglib.type.numeric.ARGBType;
@@ -51,10 +52,10 @@ public class Histogram<T extends RealType<T>> extends TreeMap<Double,Long>
 	@SuppressWarnings("unchecked")
 	public Histogram(final Object fn, final int nBins) throws Exception {
 		this.img = AlgorithmUtil.wrap(fn);
-		Display<T> display = img.getDisplay();
-		display.setMinMax();
-		this.min = display.getMin();
-		this.max = display.getMax();
+		ComputeMinMax<T> cmm = new ComputeMinMax<T>(this.img);
+		cmm.process();
+		this.min = cmm.getMin().getRealDouble();
+		this.max = cmm.getMax().getRealDouble();
 		this.increment = process(img, nBins, min, max);
 	}
 

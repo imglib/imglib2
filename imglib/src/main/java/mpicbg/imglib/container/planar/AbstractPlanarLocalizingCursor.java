@@ -27,9 +27,8 @@
  */
 package mpicbg.imglib.container.planar;
 
-import mpicbg.imglib.container.AbstractImgLocalizingCursor;
+import mpicbg.imglib.container.AbstractImgLocalizingCursorInt;
 import mpicbg.imglib.type.NativeType;
-import mpicbg.imglib.util.Util;
 
 /**
  * Localizing Iterator for a {@link PlanarContainer PlanarContainers}
@@ -37,34 +36,39 @@ import mpicbg.imglib.util.Util;
  *
  * @author Stephan Preibisch and Stephan Saalfeld
  */
-abstract public class AbstractPlanarLocalizingCursor< T extends NativeType< T > > extends AbstractImgLocalizingCursor< T > implements PlanarLocation
+abstract public class AbstractPlanarLocalizingCursor< T extends NativeType< T > > extends AbstractImgLocalizingCursorInt< T > implements PlanarContainer.PlanarContainerSampler
 {
 	protected final T type;
 
+	protected final PlanarContainer< T, ? > container;
+
 	protected final int lastIndex, lastSliceIndex;
 	protected int sliceIndex;
-	protected boolean hasNext;
 
-	final protected int numDimensions;
-	final protected int[] position, dimension;
+	/**
+	 * The current index of the type.
+	 * It is faster to duplicate this here than to access it through type.getIndex(). 
+	 */
+	protected int index;
 	
-	public AbstractPlanarLocalizingCursor( final PlanarContainer<T,?> container ) 
+	public AbstractPlanarLocalizingCursor( final PlanarContainer< T, ? > container )
 	{
 		super( container );
-
-		numDimensions = container.numDimensions();
-		dimension = container.dim.clone();
 		
 		this.type = container.createLinkedType();
-		if ( numDimensions == 1 )
-			lastIndex = ( int )container.dimension( 0 ) - 1;
-		else
-			lastIndex = dimension[ 0 ] * dimension[ 1 ] - 1;
+		this.container = container;
+
+		lastIndex = ( ( n > 1 ) ? container.dimensions[ 1 ] : 1 )  *  container.dimensions[ 0 ] - 1;
+		lastSliceIndex = container.numSlices() - 1;
 		
-		lastSliceIndex = container.getSlices() - 1;
-		
-		position = new int[ numDimensions ];
-	}	
+		reset();
+	}
+
+	@Override
+	public int getCurrentSliceIndex() { return sliceIndex; }
+
+	@Override
+	public T get() { return type; }
 	
 	/**
 	 * Note: This test is fragile in a sense that it returns true for elements
@@ -73,106 +77,55 @@ abstract public class AbstractPlanarLocalizingCursor< T extends NativeType< T > 
 	 * @return false for the last element 
 	 */
 	@Override
-	public boolean hasNext() { return hasNext; }
+	public boolean hasNext()
+	{
+		return ( sliceIndex < lastSliceIndex ) || ( index < lastIndex );		
+	}
 	
 	@Override
 	public void fwd()
 	{
-		type.incIndex();
-
-		for ( int d = 0; d < numDimensions; ++d )
+		if ( ++index > lastIndex )
 		{
-			if ( ++position[ d ] >= dimension[ d ] )
-				position[ d ] = 0;
-			else
-				break;
-		}
-		
-		final int i = type.getIndex();
-				
-		if ( i < lastIndex )
-			return;
-		else if ( i == lastIndex )
-			hasNext = sliceIndex < lastSliceIndex;
-		else
-		{
+			index = 0;
 			++sliceIndex;
-			type.updateIndex( 0 );
 			type.updateContainer( this );
-		}		
+		}
+		type.updateIndex( index );
+
+		for ( int d = 0; d < n; ++d )
+		{
+			if ( ++position[ d ] >= size[ d ] ) position[ d ] = 0;
+			else break;
+		}
+	}
+
+	@Override
+	public void jumpFwd( long steps )
+	{
+		long newIndex = index + steps;
+		if ( newIndex > lastIndex )
+		{
+			final long s = newIndex / (lastIndex + 1);
+			newIndex -= s * (lastIndex + 1);
+			sliceIndex += s;
+			type.updateContainer( this );
+		}
+		index = ( int ) newIndex;
+		type.updateIndex( index );
+		container.indexToGlobalPosition( sliceIndex, index, position );
 	}
 
 	@Override
 	public void reset()
 	{
-		if ( dimension == null )
-			return;
-		
-		type.updateIndex( -1 );
-		
 		position[ 0 ] = -1;
-		
-		for ( int d = 1; d < numDimensions; d++ )
+		for ( int d = 1; d < n; d++ )
 			position[ d ] = 0;
 		
 		sliceIndex = 0;
-		
+		index = -1;		
+		type.updateIndex( -1 );		
 		type.updateContainer( this );
-		
-		hasNext = true;
 	}
-
-	@Override
-	public T get()
-	{
-		return type;
-	}
-
-	// We have to override all these methods as they now refer to the int[] position instead of the long[] position of the super class
-	
-	@Override
-	public int getCurrentPlane() { return sliceIndex; }
-	
-	@Override
-	public float getFloatPosition( final int dim ){ return position[ dim ]; }
-	
-	@Override
-	public double getDoublePosition( final int dim ){ return position[ dim ]; }
-	
-	@Override
-	public int getIntPosition( final int dim ){ return position[ dim ]; }
-
-	@Override
-	public long getLongPosition( final int dim ){ return position[ dim ]; }	
-	
-	@Override
-	public void localize( final float[] pos )
-	{
-		for ( int d = 0; d < n; d++ )
-			pos[ d ] = this.position[ d ];
-	}
-
-	@Override
-	public void localize( final double[] pos )
-	{
-		for ( int d = 0; d < n; d++ )
-			pos[ d ] = this.position[ d ];
-	}
-
-	@Override
-	public void localize( int[] pos )
-	{
-		for ( int d = 0; d < n; d++ )
-			pos[ d ] = ( int )this.position[ d ];
-	}
-	
-	@Override
-	public void localize( long[] pos )
-	{
-		for ( int d = 0; d < n; d++ )
-			pos[ d ] = this.position[ d ];
-	}
-	
-	@Override
-	public String toString(){ return Util.printCoordinates( position ) + " = " + get(); }
 }

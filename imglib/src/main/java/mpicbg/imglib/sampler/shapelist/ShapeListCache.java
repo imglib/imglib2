@@ -27,9 +27,9 @@
  */
 package mpicbg.imglib.sampler.shapelist;
 
-import mpicbg.imglib.container.array.Array;
 import mpicbg.imglib.container.shapelist.ShapeListCached;
 import mpicbg.imglib.type.Type;
+import mpicbg.imglib.util.Util;
 
 /**
  * 
@@ -41,15 +41,17 @@ public abstract class ShapeListCache< T extends Type< T > >
 {
 	final protected ShapeListCached< T > container;
 	final protected int cacheSize;
+	final protected long[] dimensions;
 
 	public ShapeListCache( final int cacheSize, final ShapeListCached< T > container )
 	{		
 		this.container = container;
 		this.cacheSize = cacheSize;
+		this.dimensions = Util.intervalDimensions( container );
 		
 		//fakeArray = new Array< FakeType, FakeAccess >( null, new FakeArray(), container.getDimensions(), 1 );
 	}
 	
-	public abstract T lookUp( final int[] position );	
+	public abstract T lookUp( final long[] position );	
 	public abstract ShapeListCache< T > createInstance();
 }

@@ -1,10 +1,10 @@
 package mpicbg.imglib.type.numeric.integer;
 
 import mpicbg.imglib.type.numeric.IntegerType;
-import mpicbg.imglib.type.numeric.real.RealTypeImpl;
+import mpicbg.imglib.type.numeric.real.AbstractRealType;
 import mpicbg.imglib.util.Util;
 
-public abstract class IntegerTypeImpl<T extends IntegerTypeImpl<T>> extends RealTypeImpl<T> implements IntegerType<T>
+public abstract class AbstractIntegerType<T extends AbstractIntegerType<T>> extends AbstractRealType<T> implements IntegerType<T>
 {
 	@Override
 	public double getMinIncrement() { return 1; }

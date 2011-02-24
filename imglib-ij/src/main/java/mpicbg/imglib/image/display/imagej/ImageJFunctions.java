@@ -39,12 +39,14 @@ import ij.process.ImageProcessor;
 
 import java.util.Collection;
 
+import mpicbg.imglib.container.Img;
 import mpicbg.imglib.cursor.array.ArrayLocalizableCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.ImagePlusAdapter;
 import mpicbg.imglib.image.display.Display;
 import mpicbg.imglib.type.Type;
 import mpicbg.imglib.type.label.FakeType;
+import mpicbg.imglib.type.numeric.ARGBType;
 import mpicbg.imglib.type.numeric.RGBALegacyType;
 import mpicbg.imglib.type.numeric.RealType;
 import mpicbg.imglib.type.numeric.integer.UnsignedByteType;
@@ -120,7 +122,7 @@ public class ImageJFunctions
 		// set the offset for all InverseTransformableIterators
 		for ( InverseTransformDescription<T> ti : interpolators )
 		{
-			final float[] offset = new float[ ti.getImage().getNumDimensions() ];
+			final float[] offset = new float[ ti.getImage().numDimensions() ];
 
 			for ( int d = 0; d < dim.length; ++d )
 				offset[ dim[d] ] = minMaxDim[ d ][ 0 ];
@@ -138,50 +140,50 @@ public class ImageJFunctions
 		return imp;
 	}
 	
-	public static <T extends RealType<T>> Image< T > wrap( final ImagePlus imp ) { return ImagePlusAdapter.wrap( imp ); }
+	public static <T extends RealType<T>> Img< T > wrap( final ImagePlus imp ) { return ImagePlusAdapter.wrap( imp ); }
 	
-	public static Image<UnsignedByteType> wrapByte( final ImagePlus imp ) { return ImagePlusAdapter.wrapByte( imp ); }
+	public static Img<UnsignedByteType> wrapByte( final ImagePlus imp ) { return ImagePlusAdapter.wrapByte( imp ); }
 	
-	public static Image<UnsignedShortType> wrapShort( final ImagePlus imp ) { return ImagePlusAdapter.wrapShort( imp ); }
+	public static Img<UnsignedShortType> wrapShort( final ImagePlus imp ) { return ImagePlusAdapter.wrapShort( imp ); }
 
-	public static Image<RGBALegacyType> wrapRGBA( final ImagePlus imp ) { return ImagePlusAdapter.wrapRGBA( imp ); }
+	public static Img<ARGBType> wrapRGBA( final ImagePlus imp ) { return ImagePlusAdapter.wrapRGBA( imp ); }
 	
-	public static Image<FloatType> wrapFloat( final ImagePlus imp ) { return ImagePlusAdapter.wrapFloat( imp ); }
+	public static Img<FloatType> wrapFloat( final ImagePlus imp ) { return ImagePlusAdapter.wrapFloat( imp ); }
 	
-	public static Image<FloatType> convertFloat( final ImagePlus imp ) { return ImagePlusAdapter.convertFloat( imp ); }	
+	public static Img<FloatType> convertFloat( final ImagePlus imp ) { return ImagePlusAdapter.convertFloat( imp ); }	
 	
-	public static <T extends Type<T>> ImagePlus displayAsVirtualStack( final Image<T> img )
+	public static <T extends Type<T>> ImagePlus displayAsVirtualStack( final Img<T> img, String title )
 	{
-		if ( RGBALegacyType.class.isInstance( img.createType() ) )
-			return new ImagePlus( img.getName(), new ImageJVirtualStack<T>( img, COLOR_RGB, getDim3( getStandardDimensions() ), new int[ img.getNumDimensions() ] ) );
+		if ( ARGBType.class.isInstance( img.firstElement() ) )
+			return new ImagePlus( title, new ImageJVirtualStack<T>( img, COLOR_RGB, getDim3( getStandardDimensions() ), new int[ img.getNumDimensions() ] ) );
 		else
-			return new ImagePlus( img.getName(), new ImageJVirtualStack<T>( img, GRAY32, getDim3( getStandardDimensions() ), new int[ img.getNumDimensions() ] ) );
+			return new ImagePlus( title, new ImageJVirtualStack<T>( img, GRAY32, getDim3( getStandardDimensions() ), new int[ img.getNumDimensions() ] ) );
 	}
 
-	public static <T extends Type<T>> ImagePlus displayAsVirtualStack( final Image<T> img, final int type )
+	public static <T extends Type<T>> ImagePlus displayAsVirtualStack( final Img<T> img, final int type, String title )
 	{
-		return new ImagePlus( img.getName(), new ImageJVirtualStack<T>( img, type, getDim3( getStandardDimensions() ), new int[ img.getNumDimensions() ] ) );
+		return new ImagePlus( title, new ImageJVirtualStack<T>( img, type, getDim3( getStandardDimensions() ), new int[ img.getNumDimensions() ] ) );
 	}
 
-	public static <T extends Type<T>> ImagePlus displayAsVirtualStack( final Image<T> img, final int type, final int[] dim )
+	public static <T extends Type<T>> ImagePlus displayAsVirtualStack( final Img<T> img, final int type, final int[] dim, String title )
 	{
 		return new ImagePlus( img.getName(), new ImageJVirtualStack<T>( img, type, getDim3(dim), new int[ img.getNumDimensions() ] ) );
 	}
 
-	public static <T extends Type<T>> ImagePlus displayAsVirtualStack( final Image<T> img, final int[] dim )
+	public static <T extends Type<T>> ImagePlus displayAsVirtualStack( final Img<T> img, final int[] dim, String title )
 	{
-		if ( RGBALegacyType.class.isInstance( img.createType() ) )
-			return new ImagePlus( img.getName(), new ImageJVirtualStack<T>( img, COLOR_RGB, getDim3(dim), new int[ img.getNumDimensions() ] ) );
+		if ( ARGBType.class.isInstance( img.firstElement() ) )
+			return new ImagePlus( title, new ImageJVirtualStack<T>( img, COLOR_RGB, getDim3(dim), new int[ img.getNumDimensions() ] ) );
 		else
-			return new ImagePlus( img.getName(), new ImageJVirtualStack<T>( img, GRAY32, getDim3(dim), new int[ img.getNumDimensions() ] ) );
+			return new ImagePlus( title, new ImageJVirtualStack<T>( img, GRAY32, getDim3(dim), new int[ img.getNumDimensions() ] ) );
 	}
 
-	public static <T extends Type<T>> ImagePlus displayAsVirtualStack( final Image<T> img, final int type, final int[] dim, final int[] dimensionPositions )
+	public static <T extends Type<T>> ImagePlus displayAsVirtualStack( final Img<T> img, final int type, final int[] dim, final int[] dimensionPositions, String title )
 	{
-		return new ImagePlus( img.getName(), new ImageJVirtualStack<T>( img, type, getDim3(dim), dimensionPositions ) );
+		return new ImagePlus( title, new ImageJVirtualStack<T>( img, type, getDim3(dim), dimensionPositions ) );
 	}
 
-	public static <T extends Type<T>> ImagePlus show( final Image<T> img ) 
+	public static <T extends Type<T>> ImagePlus show( final Img<T> img ) 
 	{ 
 		img.getDisplay().setMinMax();
 		ImagePlus imp = displayAsVirtualStack( img );
@@ -190,32 +192,32 @@ public class ImageJFunctions
 		return imp;
 	}
 
-	public static <T extends Type<T>> ImagePlus copyToImagePlus( final Image<T> img )
+	public static <T extends Type<T>> ImagePlus copyToImagePlus( final Img<T> img, String title )
 	{
-		if ( RGBALegacyType.class.isInstance( img.createType() ) )
-			return createImagePlus( img, img.getName(), COLOR_RGB, getDim3( getStandardDimensions() ), new int[ img.getNumDimensions() ] );
+		if ( ARGBType.class.isInstance( img.firstElement() ) )
+			return createImagePlus( img, title, COLOR_RGB, getDim3( getStandardDimensions() ), new int[ img.numDimensions() ] );
 		else
-			return createImagePlus( img, img.getName(), GRAY32, getDim3( getStandardDimensions() ), new int[ img.getNumDimensions() ] );
+			return createImagePlus( img, title, GRAY32, getDim3( getStandardDimensions() ), new int[ img.numDimensions() ] );
 	}
 
-	public static <T extends Type<T>> ImagePlus copyToImagePlus( final Image<T> img, final int type )
+	public static <T extends Type<T>> ImagePlus copyToImagePlus( final Img<T> img, final int type, String title )
 	{
-		return createImagePlus( img, img.getName(), type, getDim3( getStandardDimensions() ), new int[ img.getNumDimensions() ] );
+		return createImagePlus( img, title, type, getDim3( getStandardDimensions() ), new int[ img.numDimensions() ] );
 	}
 
-	public static <T extends Type<T>> ImagePlus copyToImagePlus( final Image<T> img, final int[] dim )
+	public static <T extends Type<T>> ImagePlus copyToImagePlus( final Img<T> img, final int[] dim, String title )
 	{
-		return createImagePlus( img, img.getName(), GRAY32, getDim3(dim), new int[ img.getNumDimensions() ] );
+		return createImagePlus( img, title, GRAY32, getDim3(dim), new int[ img.numDimensions() ] );
 	}
 
-	public static <T extends Type<T>> ImagePlus copyToImagePlus( final Image<T> img, final int type, final int[] dim )
+	public static <T extends Type<T>> ImagePlus copyToImagePlus( final Img<T> img, final int type, final int[] dim, String title )
 	{
-		return createImagePlus( img, img.getName(), type, getDim3(dim), new int[ img.getNumDimensions() ] );
+		return createImagePlus( img, title, type, getDim3(dim), new int[ img.numDimensions() ] );
 	}
 
-	public static <T extends Type<T>> ImagePlus copyToImagePlus( final Image<T> img, final int type, final int[] dim, final int[] dimensionPositions )
+	public static <T extends Type<T>> ImagePlus copyToImagePlus( final Img<T> img, final int type, final int[] dim, final int[] dimensionPositions, String title )
 	{
-		return createImagePlus( img, img.getName(), type, getDim3(dim), dimensionPositions );
+		return createImagePlus( img, title, type, getDim3(dim), dimensionPositions );
 	}
 
 	protected static int[] getStandardDimensions()
@@ -242,12 +244,12 @@ public class ImageJFunctions
 		return dimReady;
 	}
 
-	public static <T extends Type<T>> boolean saveAsTiffs( final Image<T> img, String directory, final int type )
+	public static <T extends Type<T>> boolean saveAsTiffs( final Img<T> img, String directory, final int type )
 	{
 		return saveAsTiffs( img, directory, img.getName(), type );
 	}
 
-	public static <T extends Type<T>> boolean saveAsTiffs( final Image<T> img, String directory, final String name, final int type )
+	public static <T extends Type<T>> boolean saveAsTiffs( final Img<T> img, String directory, final String name, final int type )
 	{
 		final Display<T> display = img.getDisplay();
 		boolean everythingOK = true;
@@ -260,13 +262,13 @@ public class ImageJFunctions
 		if (directory.length() > 0 && !directory.endsWith("/"))
 			directory = directory + "/";
 
-		final int numDimensions = img.getNumDimensions();
+		final int numDimensions = img.numDimensions();
 
 		final int[] dimensionPositions = new int[ numDimensions ];
 
 		// x dimension for save is x
 		final int dimX = 0;
-		// y dimensins for save is y
+		// y dimensions for save is y
 		final int dimY = 1;
 
 		if ( numDimensions <= 2 )
@@ -284,14 +286,14 @@ public class ImageJFunctions
 			final int extraDimPos[] = new int[ extraDimensions.length ];
 
 			for ( int d = 2; d < numDimensions; ++d )
-				extraDimensions[ d - 2 ] = img.getDimension( d );
+				extraDimensions[ d - 2 ] = ( int ) img.dimension( d );
 
 			// the max number of digits for each dimension
 			final int maxLengthDim[] = new int[ extraDimensions.length ];
 
 			for ( int d = 2; d < numDimensions; ++d )
 			{
-				final String num = "" + (img.getDimension( d ) - 1);
+				final String num = "" + ( ( int ) img.dimension( d ) - 1);
 				maxLengthDim[ d - 2 ] = num.length();
 			}
 
@@ -336,18 +338,18 @@ public class ImageJFunctions
 	}
 
 
-	protected static <T extends Type<T>> ImageProcessor extract2DSlice( final Image<T> img, final Display<T> display, final int type, final int dimX, final int dimY, final int[] dimensionPositions )
+	protected static <T extends Type<T>> ImageProcessor extract2DSlice( final Img<T> img, final Display<T> display, final int type, final int dimX, final int dimY, final int[] dimensionPositions )
 	{
 		final ImageProcessor ip;
 
         switch(type)
         {
         	case ImagePlus.GRAY8:
-        		ip = new ByteProcessor( img.getDimension( dimX ), img.getDimension( dimY ), ImageJVirtualStack.extractSliceByte( img, display, dimX, dimY, dimensionPositions ), null); break;
+        		ip = new ByteProcessor( img.dimension( dimX ), img.dimension( dimY ), ImageJVirtualStack.extractSliceByte( img, display, dimX, dimY, dimensionPositions ), null); break;
         	case ImagePlus.COLOR_RGB:
-        		ip = new ColorProcessor( img.getDimension( dimX ), img.getDimension( dimY ), ImageJVirtualStack.extractSliceRGB( img, display, dimX, dimY, dimensionPositions )); break;
+        		ip = new ColorProcessor( img.dimension( dimX ), img.dimension( dimY ), ImageJVirtualStack.extractSliceRGB( img, display, dimX, dimY, dimensionPositions )); break;
         	default:
-        		ip = new FloatProcessor( img.getDimension( dimX ), img.getDimension( dimY ), ImageJVirtualStack.extractSliceFloat( img, display, dimX, dimY, dimensionPositions ), null);
+        		ip = new FloatProcessor( img.dimension( dimX ), img.dimension( dimY ), ImageJVirtualStack.extractSliceFloat( img, display, dimX, dimY, dimensionPositions ), null);
         		ip.setMinAndMax( display.getMin(), display.getMax() );
         		break;
         }
@@ -356,14 +358,14 @@ public class ImageJFunctions
 	}
 
 
-	protected static <T extends Type<T>>ImagePlus createImagePlus( final Image<T> img, final String name, final int type, final int[] dim, final int[] dimensionPositions )
+	protected static <T extends Type<T>>ImagePlus createImagePlus( final Img<T> img, final String name, final int type, final int[] dim, final int[] dimensionPositions )
 	{
 		final Display<T> display = img.getDisplay();
 
 		int[] size = new int[ 3 ];
-		size[ 0 ] = img.getDimension( dim[ 0 ] );
-		size[ 1 ] = img.getDimension( dim[ 1 ] );
-		size[ 2 ] = img.getDimension( dim[ 2 ] );
+		size[ 0 ] = ( int ) img.dimension( dim[ 0 ] );
+		size[ 1 ] = ( int ) img.dimension( dim[ 1 ] );
+		size[ 2 ] = ( int ) img.dimension( dim[ 2 ] );
 
         final ImageStack stack = new ImageStack( size[ 0 ], size[ 1 ] );
 
@@ -377,7 +379,7 @@ public class ImageJFunctions
         	case ImagePlus.GRAY8:
         		for (int z = 0; z < size[ 2 ]; z++)
         		{
-        			if ( dimZ < img.getNumDimensions() )
+        			if ( dimZ < img.numDimensions() )
         				dimPos[ dimZ ] = z;
 
         			ByteProcessor bp = new ByteProcessor( size[ 0 ], size[ 1 ] );
@@ -388,7 +390,7 @@ public class ImageJFunctions
         	case ImagePlus.COLOR_RGB:
         		for (int z = 0; z < size[ 2 ]; z++)
         		{
-        			if ( dimZ < img.getNumDimensions() )
+        			if ( dimZ < img.numDimensions() )
         				dimPos[ dimZ ] = z;
 
         			ColorProcessor bp = new ColorProcessor( size[ 0 ], size[ 1 ] );
@@ -399,7 +401,7 @@ public class ImageJFunctions
         	default:
         		for (int z = 0; z < size[ 2 ]; z++)
         		{
-        			if ( dimZ < img.getNumDimensions() )
+        			if ( dimZ < img.numDimensions() )
         				dimPos[ dimZ ] = z;
 
 	    			FloatProcessor bp = new FloatProcessor( size[ 0 ], size[ 1 ] );

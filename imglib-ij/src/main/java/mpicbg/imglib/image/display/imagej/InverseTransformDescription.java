@@ -29,7 +29,7 @@
  */
 package mpicbg.imglib.image.display.imagej;
 
-import mpicbg.imglib.image.Image;
+import mpicbg.imglib.container.Img;
 import mpicbg.imglib.interpolation.InterpolatorFactory;
 import mpicbg.imglib.type.Type;
 import mpicbg.models.InvertibleBoundable;
@@ -37,23 +37,23 @@ import mpicbg.models.InvertibleBoundable;
 public class InverseTransformDescription<T extends Type<T>> 
 {
 	final InvertibleBoundable transform;
-	final InterpolatorFactory<T> factory;
-	final Image<T> image;
+	final InterpolatorFactory<T, ?> factory;
+	final Img<T> image;
 	final float[] offset;
 	final int numDimensions;
 	
-	public InverseTransformDescription( final InvertibleBoundable transform, final InterpolatorFactory<T> factory, final Image<T> image )
+	public InverseTransformDescription( final InvertibleBoundable transform, final InterpolatorFactory<T, ?> factory, final Img<T> image )
 	{
 		this.transform = transform;
 		this.factory = factory;
 		this.image = image;
-		this.numDimensions = image.getNumDimensions();
+		this.numDimensions = image.numDimensions();
 		this.offset = new float[ numDimensions ];
 	}
 	
 	public InvertibleBoundable getTransform() { return transform; }
-	public InterpolatorFactory<T> getInterpolatorFactory() { return factory; }
-	public Image<T> getImage() { return image; }
+	public InterpolatorFactory<T, ?> getInterpolatorFactory() { return factory; }
+	public Img<T> getImage() { return image; }
 	
 	public void setOffset( final float[] offset )
 	{

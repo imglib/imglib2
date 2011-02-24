@@ -36,7 +36,7 @@ import mpicbg.imglib.container.basictypecontainer.array.DoubleArray;
 import mpicbg.imglib.type.NativeType;
 import mpicbg.imglib.type.numeric.ComplexType;
 
-public class ComplexDoubleType extends ComplexTypeImpl<ComplexDoubleType> implements ComplexType<ComplexDoubleType>, NativeType<ComplexDoubleType>
+public class ComplexDoubleType extends AbstractComplexType<ComplexDoubleType> implements ComplexType<ComplexDoubleType>, NativeType<ComplexDoubleType>
 {
 	private int i = 0;
 	

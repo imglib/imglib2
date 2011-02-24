@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2009--2010, Funke, Preibisch, Saalfeld & Schindelin
+ * Copyright (c) 2009--2010, Funke, Preibisch, Rueden, Saalfeld & Schindelin
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -27,32 +27,14 @@
  */
 package mpicbg.imglib.container.imageplus;
 
-import java.util.ArrayList;
-
-import com.sun.xml.internal.bind.v2.runtime.unmarshaller.XsiNilLoader.Array;
-
 import ij.ImagePlus;
-import ij.ImageStack;
-
-import mpicbg.imglib.Interval;
-import mpicbg.imglib.IterableRealInterval;
-import mpicbg.imglib.container.AbstractNativeContainer;
-import mpicbg.imglib.container.Img;
-import mpicbg.imglib.container.ImgCursor;
-import mpicbg.imglib.container.ImgRandomAccess;
 import mpicbg.imglib.container.basictypecontainer.array.ArrayDataAccess;
 import mpicbg.imglib.container.planar.PlanarContainer;
 import mpicbg.imglib.exception.ImgLibException;
-import mpicbg.imglib.outofbounds.OutOfBoundsFactory;
-import mpicbg.imglib.sampler.imageplus.ImagePlusBasicRasterIterator;
-import mpicbg.imglib.sampler.imageplus.ImagePlusLocalizingRasterIterator;
-import mpicbg.imglib.sampler.imageplus.ImagePlusPositionableRasterSampler;
-import mpicbg.imglib.sampler.imageplus.ImagePlusOutOfBoundsPositionableRasterSampler;
-import mpicbg.imglib.sampler.imageplus.ImagePlusStorageAccess;
 import mpicbg.imglib.type.NativeType;
 
 /**
- * A {@link Img} that stores data in an aray of 2d-slices each as a
+ * A container that stores data in an array of 2d-slices each as a
  * linear array of basic types.  For types that are supported by ImageJ (byte,
  * short, int, float), an actual ImagePlus is created or used to store the
  * data.  Alternatively, an {@link ImagePlusContainer} can be created using
@@ -60,21 +42,18 @@ import mpicbg.imglib.type.NativeType;
  * 
  * {@link ImagePlusContainer ImagePlusContainers} provides a legacy layer to
  * apply imglib-based algorithm implementations directly on the data stored in
- * an ImageJ {@link ImagePlus}.  For all types that are suported by ImageJ, the
+ * an ImageJ {@link ImagePlus}.  For all types that are supported by ImageJ, the
  * {@link ImagePlusContainer} provides access to the pixels of an
- * {@link ImagePlus} instance that can be accessed ({@see #getImagePlus()}.
+ * {@link ImagePlus} instance that can be accessed via {@link getImagePlus}().
  * 
- * @author Jan Funke, Stephan Preibisch, Stephan Saalfeld, Johannes Schindelin
+ * @author Jan Funke, Tobias Pietzsch, Stephan Preibisch, Curtis Rueden, Stephan Saalfeld,
+ *   Johannes Schindelin
  */
-public class ImagePlusContainer< T extends NativeType< T >, A extends ArrayDataAccess< A > > extends AbstractNativeContainer< T, A > implements Img< T >
+public class ImagePlusContainer< T extends NativeType< T >, A extends ArrayDataAccess<A> > extends PlanarContainer< T, A >
 {
-	final protected ImagePlusContainerFactory<T> factory;
-	final protected int width, height, depth, frames, channels, slices;
-
-	final ArrayList< A > mirror;
+	final protected int width, height, depth, frames, channels;
 	
 	protected ImagePlusContainer(
-			final ImagePlusContainerFactory<T> factory,
 			final int width,
 			final int height,
 			final int depth,
@@ -82,68 +61,67 @@ public class ImagePlusContainer< T extends NativeType< T >, A extends ArrayDataA
 			final int channels,
 			final int entitiesPerPixel )
 	{
-		super( reduceAndReorderDimensions( new int[]{ width, height, channels, depth, frames } ), entitiesPerPixel );
+		super( reduceDimensions( new long[] { width, height, channels, depth, frames } ), entitiesPerPixel );
 		
 		this.width = width;
 		this.height = height;
 		this.depth = depth;
 		this.frames = frames;
 		this.channels = channels;
-		
-		slices = depth * frames * channels;
-		
-		this.factory = factory;
-		
-		mirror = new ArrayList< A >( slices ); 
 	}
-	
-	ImagePlusContainer( final ImagePlusContainerFactory<T> factory, final int[] dim, final int entitiesPerPixel ) 
+
+	/**
+	 * Standard constructor as called by default factories.
+	 * 
+	 * <em>Note that this constructor does not know about the meaning of
+	 * dimensions > 1, and will use them in the {@link ImagePlus} default order
+	 * x,y,c,z,t.  That is, from two dimensions, it will create an x,y image,
+	 * from three dimensions, an x,y,c image, and from four dimensions, an
+	 * x,y,c,z image.</em>
+	 * 
+	 * @param factory
+	 * @param dim
+	 * @param entitiesPerPixel
+	 */
+	ImagePlusContainer( final long[] dim, final int entitiesPerPixel ) 
 	{
-		super( inLongs(dim), entitiesPerPixel );
+		super( dim, entitiesPerPixel );
 		
+		assert dim.length < 6 : "ImagePlusContainer can only handle up to 5 dimensions.";
+
 		if ( dim.length > 0 )
-			width = dim[ 0 ];
+			width = ( int ) dim[ 0 ];
 		else
 			width = 1;
 
 		if ( dim.length > 1 )
-			height = dim[ 1 ];
+			height = ( int ) dim[ 1 ];
 		else
 			height = 1;
 
 		if ( dim.length > 2 )
-			depth = dim[ 2 ];
+			channels = ( int ) dim[ 2 ];
+		else
+			channels = 1;
+
+		if ( dim.length > 3 )
+			depth = ( int ) dim[ 3 ];
 		else
 			depth = 1;
 
-		if ( dim.length > 3 )
-			frames = dim[ 3 ];
+		if ( dim.length > 4 )
+			frames = ( int ) dim[ 4 ];
 		else
 			frames = 1;
-
-		if ( dim.length > 4 )
-			channels = dim[ 4 ];
-		else
-			channels = 1;
-		
-		slices = depth * frames * channels;
-			
-		this.factory = factory;
-		
-		mirror = new ArrayList< A >( slices );
 	}
 	
-	private static long[] inLongs(int[] dim) {
-		long[] d = new long[dim.length];
-		for (int i=0; i<d.length; i++) d[i] = dim[i];
-		return d;
-	}
-
-	ImagePlusContainer( final ImagePlusContainerFactory<T> factory, final A creator, final int[] dim, final int entitiesPerPixel ) 
+	ImagePlusContainer( final A creator, final long[] dim, final int entitiesPerPixel ) 
 	{
-		this( factory, dim, entitiesPerPixel );				
+		this( dim, entitiesPerPixel );
 		
-		for ( int i = 0; i < slices; ++i )
+		mirror.clear();
+		
+		for ( int i = 0; i < numSlices; ++i )
 			mirror.add( creator.createArray( width * height * entitiesPerPixel ) );
 	}
 
@@ -152,40 +130,42 @@ public class ImagePlusContainer< T extends NativeType< T >, A extends ArrayDataA
 		throw new ImgLibException( this, "has no ImagePlus instance, it is not a standard type of ImagePlus" ); 
 	}
 
-	@Override
-	public A update( final Object c )
+	/*
+	protected static long[] expandDimensions( final long[] dimensions )
 	{
-		return mirror.get( ( ( ImagePlusStorageAccess ) c ).getStorageIndex() );
+		if(dimensions.length >= 5)
+			return dimensions;
+		
+		final long[] dim = new long[ 5 ];
+		for ( int d = 0; d < 5; ++d )
+			dim[ d ] = ( dimensions.length >= d ) ? dimensions[ d ] : 1;
+		return dim;
 	}
+	*/
 	
 	/**
-	 * Estimate the minimal required number of dimensions for a given
+	 * Compute the minimal required number of dimensions for a given
 	 * {@link ImagePlus}, whereas width and height are always first.
 	 * 
 	 * E.g. a gray-scale 2d time series would have three dimensions
 	 * [width,height,frames], a gray-scale 3d stack [width,height,depth] and a
 	 * 2d composite image [width,height,channels] as well.  A composite 3d
-	 * stack has four dimensions [width,height,depth,channels], as a time
-	 * series five [width,height,depth,frames,channels].
-	 * 
-	 * <em>Note that the order of the dimensions is slightly different from
-	 * that as used in the data stack in {@link ImagePlus}.  We considered this
-	 * more logical since interleaving the color channel in the middle of the
-	 * spatial dimensions makes sense only for display purposes but complicates
-	 * algorithm logics.  Note as well that this has no consequences for import,
-	 * export and processing of the data,
-	 * {@link ImagePlusContainer ImagePlusContainers}, internally, work on a
-	 * re-ordered list of the {@link ImagePlus} slices.</em> 
+	 * stack has four dimensions [width,height,channels,depth], as a time
+	 * series five [width,height,channels,depth,frames].
 	 * 
 	 * @param imp
 	 * @return
 	 */
-	protected static long[] reduceAndReorderDimensions( final ImagePlus imp )
+	protected static long[] reduceDimensions( final ImagePlus imp )
 	{
-		return reduceAndReorderDimensions( imp.getDimensions() );
+		final int[] dimensions = imp.getDimensions();
+		final long[] impDimensions = new long[ dimensions.length ];
+		for ( int d = 0; d < dimensions.length; ++d )
+			impDimensions[ d ] = dimensions[ d ];
+		return reduceDimensions( impDimensions );
 	}
-	
-	protected static long[] reduceAndReorderDimensions( final int[] impDimensions )
+
+	protected static long[] reduceDimensions( final long[] impDimensions )
 	{
 		/* ImagePlus is at least 2d, x,y are mapped to an index on a stack slice */
 		int n = 2;
@@ -198,6 +178,10 @@ public class ImagePlusContainer< T extends NativeType< T >, A extends ArrayDataA
 		
 		n = 1;
 		
+		/* channels */
+		if ( impDimensions[ 2 ] > 1 )
+			dim[ ++n ] = impDimensions[ 2 ];
+		
 		/* depth */
 		if ( impDimensions[ 3 ] > 1 )
 			dim[ ++n ] = impDimensions[ 3 ];
@@ -205,10 +189,6 @@ public class ImagePlusContainer< T extends NativeType< T >, A extends ArrayDataA
 		/* frames */
 		if ( impDimensions[ 4 ] > 1 )
 			dim[ ++n ] = impDimensions[ 4 ];
-		
-		/* channels */
-		if ( impDimensions[ 2 ] > 1 )
-			dim[ ++n ] = impDimensions[ 2 ];
 		
 		return dim;
 	}
@@ -222,114 +202,33 @@ public class ImagePlusContainer< T extends NativeType< T >, A extends ArrayDataA
 	public int getDepth() { return depth; }
 	
 	public int getFrames() { return frames; }
-
-	/**
-	 * Note: this is NOT the number of z-slices!
-	 * 
-	 * @return depth * frames * channels which reflects the number of slices
-	 * of the {@link ImageStack} used to store pixels in {@link ImagePlus}.
-	 */
-	public int numSlices() { return slices; }
-
-	/**
-	 * For a given >=2d location, estimate the pixel index in the stack slice.
-	 * 
-	 * @param l
-	 * @return
-	 */
-	public final int getIndex( final int[] l ) 
-	{
-		if ( numDimensions() > 1 )
-			return l[ 1 ] * width + l[ 0 ];
-		else
-			return l[ 0 ];
-	}
-	/**
-	 * For a given >=2d location, estimate the pixel index in the stack slice.
-	 * 
-	 * @param l
-	 * @return
-	 */
-	public final int getIndex( final long[] l ) 
-	{
-		if ( numDimensions() > 1 )
-			return (int)( l[ 1 ] * width + l[ 0 ] );
-		else
-			return (int) l[ 0 ];
-	}
-
+	
 	@Override
-	public ImagePlusContainerFactory<T> factory()
+	public ImagePlusContainerFactory< T > factory()
 	{
-		return factory;
+		return new ImagePlusContainerFactory< T >();
 	}
 
+	/**
+	 * Free resources.
+	 * The container can no longer be used after calling close().
+	 * 
+	 * Closes the {@link ArrayDataAccess}es in the {@link mirror} array.
+	 * Subclasses override this to close the underlying {@link ImagePlus}.
+	 */
 	public void close()
 	{
 		for ( final A array : mirror )
-			array.close();
-	}
-	
-	/**
-	 * Calculate the step sizes for the {@link ImagePlus} stack slices.
-	 * The first two entries (x,y) are 0 as x and y are mapped to an index
-	 * within the slice.  It is, thouhg, easier to keep them in the array
-	 * because that removes the need to shift the dimension index.
-	 * 
-	 * @param dimensions
-	 * @return
-	 */
-	final static public int[] createSliceSteps( final long[] dimensions )
-	{
-		final int[] sliceSteps = new int[ dimensions.length ];
-		if ( dimensions.length > 2 )
-		{
-			sliceSteps[ 2 ] = 1;
-			for ( int i = 3; i < dimensions.length; ++i )
-			{
-				final int j = i - 1;
-				sliceSteps[ i ] = (int) dimensions[ j ] * sliceSteps[ j ];
-			}
-		}
-		return sliceSteps;
+			if ( array != null )
+				array.close();
 	}
 
 	@Override
-	public boolean equalIterationOrder(IterableRealInterval<?> f) {
-		if ( f.numDimensions() != this.numDimensions() )
-			return false;
-		
-		if ( getClass().isInstance( f ) || PlanarContainer.class.isInstance( f )
-				|| Array.class.isInstance( f ) )
-		{
-			final Interval a = ( Interval )f;
-			for ( int d = 0; d < n; ++d )
-				if ( size[ d ] != a.dimension( d ) )
-					return false;
-			
-			return true;
-		}
-		
-		return false;
-	}
-
-	@Override
-	public ImgRandomAccess<T> randomAccess() {
-		return new ImagePlusPositionableRasterSampler< T >( this );
-	}
-
-	@Override
-	public ImgRandomAccess<T> randomAccess(OutOfBoundsFactory<T, Img<T>> factory) {
-		return new ImagePlusOutOfBoundsPositionableRasterSampler< T >( this, factory );
-	}
-
-	@Override
-	public ImgCursor<T> cursor() {
-		return new ImagePlusBasicRasterIterator< T >( this );
-	}
-
-	@Override
-	public ImgCursor<T> localizingCursor() {
-		return new ImagePlusLocalizingRasterIterator< T >( this );
+	protected void finalize() throws Throwable {
+	    try {
+	        close();
+	    } finally {
+	        super.finalize();
+	    }
 	}
 }

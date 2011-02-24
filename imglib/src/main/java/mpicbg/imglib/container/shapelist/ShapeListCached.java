@@ -27,14 +27,14 @@
  */
 package mpicbg.imglib.container.shapelist;
 
-import mpicbg.imglib.container.ImgRandomAccess;
 import mpicbg.imglib.container.Img;
-import mpicbg.imglib.outofbounds.RasterOutOfBoundsFactory;
+import mpicbg.imglib.container.ImgCursor;
+import mpicbg.imglib.container.ImgRandomAccess;
+import mpicbg.imglib.outofbounds.OutOfBoundsFactory;
 import mpicbg.imglib.sampler.shapelist.ShapeListCache;
 import mpicbg.imglib.sampler.shapelist.ShapeListCacheFIFO;
-import mpicbg.imglib.sampler.shapelist.ShapeListCachedPositionableRasterSampler;
 import mpicbg.imglib.sampler.shapelist.ShapeListCachedOutOfBoundsPositionableRasterSampler;
-import mpicbg.imglib.sampler.shapelist.ShapeListPositionableRasterSampler;
+import mpicbg.imglib.sampler.shapelist.ShapeListCachedPositionableRasterSampler;
 import mpicbg.imglib.type.Type;
 
 /**
@@ -46,22 +46,18 @@ import mpicbg.imglib.type.Type;
 public class ShapeListCached< T extends Type< T > > extends ShapeList< T >
 {
 	ShapeListCache< T > cache;
+	static public final int DEFAULT_CACHE_SIZE = 32;
 
-	public ShapeListCached( final ShapeListContainerFactory factory, final int[] dim, final T background )
+	public ShapeListCached( final long[] dim, final T background )
 	{
-		super( factory, dim, background );
-
-		this.cache = new ShapeListCacheFIFO< T >( factory.getCacheSize(), this );
+		this( dim, background, DEFAULT_CACHE_SIZE );
 	}
-
-	public ShapeListCached( final int[] dim, final T background, final int cacheSize )
+	
+	public ShapeListCached( final long[] dim, final T background, final int cacheSize )
 	{
-		this( new ShapeListContainerFactory( cacheSize ), dim, background );
-	}
+		super( dim, background );
 
-	public ShapeListCached( final int[] dim, final T background )
-	{
-		this( dim, background, 32 );
+		this.cache = new ShapeListCacheFIFO< T >( cacheSize, this );
 	}
 
 	public ShapeListCache< T > getShapeListCachingStrategy()
@@ -73,16 +69,19 @@ public class ShapeListCached< T extends Type< T > > extends ShapeList< T >
 	{
 		this.cache = cache;
 	}
-
+	
 	@Override
-	public ShapeListPositionableRasterSampler< T > createPositionableRasterSampler( final Img< T > image )
-	{
-		return new ShapeListCachedPositionableRasterSampler< T >( this, image );
+	public ImgRandomAccess<T> randomAccess() {
+		return new ShapeListCachedPositionableRasterSampler< T >( this );
 	}
 
 	@Override
-	public ImgRandomAccess< T > createPositionableRasterSampler( final Img< T > image, final RasterOutOfBoundsFactory< T > outOfBoundsFactory )
-	{
-		return new ShapeListCachedOutOfBoundsPositionableRasterSampler< T >( this, image, outOfBoundsFactory );
+	public ImgRandomAccess<T> randomAccess( final OutOfBoundsFactory< T, Img<T> > factory ) {
+		return new ShapeListCachedOutOfBoundsPositionableRasterSampler< T >( this, factory );
+	}
+
+	@Override
+	public ImgCursor<T> cursor() {
+		return new ShapeListCachedPositionableRasterSampler< T >( this );
 	}
 }

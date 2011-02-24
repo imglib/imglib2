@@ -83,7 +83,7 @@ public class FloydSteinbergDithering<T extends RealType<T>> implements OutputAlg
 		} catch (IncompatibleTypeException e) {
 			throw new RuntimeException(e);
 		}
-
+		
 		// we create a Cursor that traverses (top -> bottom) and (left -> right) in n dimensions,
 		// which is a Cursor on a normal Array, therefore we use a FakeArray which just gives us position
 		// information without allocating memory
@@ -99,8 +99,8 @@ public class FloydSteinbergDithering<T extends RealType<T>> implements OutputAlg
 			cursor.fwd();
 			
 			// move input and output cursor to the current location
-			cursorInput.move( cursor );
-			cursorOutput.move( cursor );
+			cursorInput.setPosition( cursor );
+			cursorOutput.setPosition( cursor );
 			
 			// set new value and compute error
 			final float error;
@@ -121,7 +121,7 @@ public class FloydSteinbergDithering<T extends RealType<T>> implements OutputAlg
 				// distribute the error
 				cursorKernel.reset();
 				cursorKernel.jumpFwd( errorDiffusionKernel.size()/2 );
-				cursor.localize( tmp1 );		
+				cursor.localize( tmp1 );	
 				
 				while ( cursorKernel.hasNext() )
 				{

@@ -86,8 +86,8 @@ public class Compute {
 				if (d1[i] != d2[i])
 					throw new Exception("Images have different dimensions!");
 
-			// TODO compare compatibility
-			// throw new Exception("Images are of incompatible container types!");
+			if ( ! first.equalIterationOrder(img))
+				throw new Exception("Images are of incompatible container types!");
 		}
 	}
 
