@@ -49,12 +49,16 @@ public class CellRandomAccessBenchmark
 	 */
 	public void fillImage()
 	{
-		long[] pos = new long[ dimensions.length ];
+		int[] pos = new int[ dimensions.length ];
 		RandomAccess< IntType > a = intImg.randomAccess();
+
+		int[] idim = new int[ dimensions.length ];
+		for ( int d = 0; d < dimensions.length; ++d )
+			idim[ d ] = ( int ) dimensions[ d ];
 
 		for ( int i = 0; i < numValues; ++i )
 		{
-			IntervalIndexer.indexToPosition( i, dimensions, pos );
+			IntervalIndexer.indexToPosition( i, idim, pos );
 			a.setPosition( pos );
 			a.get().set( intData[ i ] );
 		}
