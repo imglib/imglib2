@@ -8,6 +8,13 @@ public class PlanarLocalizingCursor1D< T extends NativeType< T > > extends Plana
 	{
 		super( container );
 	}
+
+	@Override
+	public boolean hasNext()
+	{
+		return type.getIndex() < lastIndex;
+	}
+	
 	
 	@Override
 	public void fwd()

@@ -11,7 +11,7 @@ import mpicbg.imglib.img.ImgFactory;
 import mpicbg.imglib.img.ImgRandomAccess;
 import mpicbg.imglib.img.array.ArrayImgFactory;
 import mpicbg.imglib.img.cell.CellImgFactory;
-import mpicbg.imglib.img.imageplus.ImagePlusContainerFactory;
+import mpicbg.imglib.img.imageplus.ImagePlusImgFactory;
 import mpicbg.imglib.img.planar.PlanarImgFactory;
 import mpicbg.imglib.outofbounds.OutOfBoundsPeriodicFactory;
 import mpicbg.imglib.type.numeric.real.FloatType;
@@ -93,11 +93,11 @@ public class ContainerTests
 			if ( dim[ i ].length < 6 )
 			{
 				assertTrue( "ArrayContainer vs ImagePlusContainer failed for dim = " + Util.printCoordinates( dim[ i ] ),
-				            testContainer( dim[ i ], new ArrayImgFactory< FloatType >(), new ImagePlusContainerFactory() ) );
+				            testContainer( dim[ i ], new ArrayImgFactory< FloatType >(), new ImagePlusImgFactory() ) );
 				assertTrue( "ImagePlusContainer vs ArrayContainer failed for dim = " + Util.printCoordinates( dim[ i ] ), 
-				            testContainer( dim[ i ], new ImagePlusContainerFactory(), new ArrayImgFactory() ) );
+				            testContainer( dim[ i ], new ImagePlusImgFactory(), new ArrayImgFactory() ) );
 				assertTrue( "ImagePlusContainer vs ImagePlusContainer failed for dim = " + Util.printCoordinates( dim[ i ] ),
-				            testContainer( dim[ i ], new ImagePlusContainerFactory(), new ImagePlusContainerFactory() ) );
+				            testContainer( dim[ i ], new ImagePlusImgFactory(), new ImagePlusImgFactory() ) );
 			}
 		}
 	}
@@ -110,7 +110,7 @@ public class ContainerTests
 		assertTrue( "ArrayContainer MultiThreading failed", testThreading( new ArrayImgFactory< FloatType >() ) );
 		assertTrue( "CellContainer MultiThreading failed", testThreading( new CellImgFactory< FloatType >() ) );
 		assertTrue( "PlanarContainer MultiThreading failed", testThreading( new PlanarImgFactory< FloatType >() ) );
-		assertTrue( "ImagePlusContainer MultiThreading failed", testThreading( new ImagePlusContainerFactory< FloatType >() ) );	
+		assertTrue( "ImagePlusContainer MultiThreading failed", testThreading( new ImagePlusImgFactory< FloatType >() ) );	
 	}
 	
 	protected boolean testThreading( final ImgFactory< FloatType > factory )
@@ -221,7 +221,12 @@ public class ContainerTests
 			else
 				positionable2.setPosition( localizableCursor1 );
 			
-			positionable2.get().set( localizableCursor1.get() );
+			FloatType t2 = positionable2.get();
+			FloatType t1 = localizableCursor1.get();
+			float f1 = t1.getRealFloat();
+			float f2 = t2.getRealFloat();
+			t2.set( t1 );
+//			positionable2.get().set( localizableCursor1.get() );
 		}
 
 		// copy again to the first image using a LocalizableByDimOutsideCursor and a LocalizableByDimCursor

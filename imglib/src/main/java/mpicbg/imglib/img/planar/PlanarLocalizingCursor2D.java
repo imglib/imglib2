@@ -2,7 +2,7 @@ package mpicbg.imglib.img.planar;
 
 import mpicbg.imglib.type.NativeType;
 
-public class PlanarLocalizingCursor2D< T extends NativeType< T > > extends PlanarLocalizingCursor1D< T > 
+public class PlanarLocalizingCursor2D< T extends NativeType< T > > extends PlanarLocalizingCursor< T > 
 {
 	public PlanarLocalizingCursor2D( final PlanarImg<T, ?> container )
 	{

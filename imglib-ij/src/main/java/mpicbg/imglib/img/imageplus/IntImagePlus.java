@@ -30,16 +30,16 @@ package mpicbg.imglib.img.imageplus;
 import ij.ImagePlus;
 import ij.ImageStack;
 import ij.process.ColorProcessor;
-import mpicbg.imglib.container.basictypecontainer.array.IntArray;
+import mpicbg.imglib.img.basictypeaccess.array.IntArray;
 import mpicbg.imglib.exception.ImgLibException;
 import mpicbg.imglib.type.NativeType;
 
 /**
- * {@link ImagePlusContainer} for integer-stored data.
+ * {@link ImagePlusImg} for integer-stored data.
  * 
  * @author Jan Funke, Stephan Preibisch, Stephan Saalfeld, Johannes Schindelin
  */
-public class IntImagePlus< T extends NativeType< T > > extends ImagePlusContainer< T, IntArray > 
+public class IntImagePlus< T extends NativeType< T > > extends ImagePlusImg< T, IntArray > 
 {
 	final ImagePlus imp;	
 	

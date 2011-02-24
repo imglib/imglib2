@@ -19,14 +19,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import mpicbg.imglib.Cursor;
-import mpicbg.imglib.container.basictypecontainer.ByteAccess;
-import mpicbg.imglib.container.basictypecontainer.array.ByteArray;
 import mpicbg.imglib.image.ImagePlusAdapter;
 import mpicbg.imglib.img.Img;
 import mpicbg.imglib.img.ImgFactory;
 import mpicbg.imglib.img.array.ArrayCursor;
 import mpicbg.imglib.img.array.ArrayImg;
+import mpicbg.imglib.img.basictypeaccess.ByteAccess;
+import mpicbg.imglib.img.basictypeaccess.array.ByteArray;
 import mpicbg.imglib.img.cell.CellCursor;
 import mpicbg.imglib.img.cell.CellImgFactory;
 import mpicbg.imglib.img.planar.PlanarCursor;

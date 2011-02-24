@@ -36,11 +36,17 @@ import mpicbg.imglib.type.NativeType;
  *
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-public class PlanarCursor1D< T extends NativeType< T > > extends PlanarCursor2D< T >
+public class PlanarCursor1D< T extends NativeType< T > > extends PlanarCursor< T >
 {
 	public PlanarCursor1D( final PlanarImg< T, ? > container )
 	{
 		super( container );
+	}
+
+	@Override
+	public boolean hasNext()
+	{
+		return type.getIndex() < lastIndex;
 	}
 	
 	@Override

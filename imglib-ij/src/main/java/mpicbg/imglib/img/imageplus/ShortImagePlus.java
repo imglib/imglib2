@@ -30,16 +30,16 @@ package mpicbg.imglib.img.imageplus;
 import ij.ImagePlus;
 import ij.ImageStack;
 import ij.process.ShortProcessor;
-import mpicbg.imglib.container.basictypecontainer.array.ShortArray;
+import mpicbg.imglib.img.basictypeaccess.array.ShortArray;
 import mpicbg.imglib.exception.ImgLibException;
 import mpicbg.imglib.type.NativeType;
 
 /**
- * {@link ImagePlusContainer} for short-stored data.
+ * {@link ImagePlusImg} for short-stored data.
  * 
  * @author Jan Funke, Stephan Preibisch, Stephan Saalfeld, Johannes Schindelin
  */
-public class ShortImagePlus< T extends NativeType< T > > extends ImagePlusContainer< T, ShortArray > 
+public class ShortImagePlus< T extends NativeType< T > > extends ImagePlusImg< T, ShortArray > 
 {
 	final ImagePlus imp;	
 	

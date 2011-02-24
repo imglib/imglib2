@@ -30,16 +30,16 @@ package mpicbg.imglib.img.imageplus;
 import ij.ImagePlus;
 import ij.ImageStack;
 import ij.process.FloatProcessor;
-import mpicbg.imglib.container.basictypecontainer.array.FloatArray;
+import mpicbg.imglib.img.basictypeaccess.array.FloatArray;
 import mpicbg.imglib.exception.ImgLibException;
 import mpicbg.imglib.type.NativeType;
 
 /**
- * {@link ImagePlusContainer} for float-stored data.
+ * {@link ImagePlusImg} for float-stored data.
  * 
  * @author Jan Funke, Stephan Preibisch, Stephan Saalfeld, Johannes Schindelin
  */
-public class FloatImagePlus< T extends NativeType< T > > extends ImagePlusContainer< T, FloatArray >
+public class FloatImagePlus< T extends NativeType< T > > extends ImagePlusImg< T, FloatArray >
 {
 	final ImagePlus imp;	
 	

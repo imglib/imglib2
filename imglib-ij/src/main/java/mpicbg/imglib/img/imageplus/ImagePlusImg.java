@@ -28,7 +28,7 @@
 package mpicbg.imglib.img.imageplus;
 
 import ij.ImagePlus;
-import mpicbg.imglib.container.basictypecontainer.array.ArrayDataAccess;
+import mpicbg.imglib.img.basictypeaccess.array.ArrayDataAccess;
 import mpicbg.imglib.exception.ImgLibException;
 import mpicbg.imglib.img.planar.PlanarImg;
 import mpicbg.imglib.type.NativeType;
@@ -37,23 +37,23 @@ import mpicbg.imglib.type.NativeType;
  * A container that stores data in an array of 2d-slices each as a
  * linear array of basic types.  For types that are supported by ImageJ (byte,
  * short, int, float), an actual ImagePlus is created or used to store the
- * data.  Alternatively, an {@link ImagePlusContainer} can be created using
+ * data.  Alternatively, an {@link ImagePlusImg} can be created using
  * an already existing {@link ImagePlus} instance. 
  * 
- * {@link ImagePlusContainer ImagePlusContainers} provides a legacy layer to
+ * {@link ImagePlusImg ImagePlusContainers} provides a legacy layer to
  * apply imglib-based algorithm implementations directly on the data stored in
  * an ImageJ {@link ImagePlus}.  For all types that are supported by ImageJ, the
- * {@link ImagePlusContainer} provides access to the pixels of an
+ * {@link ImagePlusImg} provides access to the pixels of an
  * {@link ImagePlus} instance that can be accessed via {@link getImagePlus}().
  * 
  * @author Jan Funke, Tobias Pietzsch, Stephan Preibisch, Curtis Rueden, Stephan Saalfeld,
  *   Johannes Schindelin
  */
-public class ImagePlusContainer< T extends NativeType< T >, A extends ArrayDataAccess<A> > extends PlanarImg< T, A >
+public class ImagePlusImg< T extends NativeType< T >, A extends ArrayDataAccess<A> > extends PlanarImg< T, A >
 {
 	final protected int width, height, depth, frames, channels;
 	
-	protected ImagePlusContainer(
+	protected ImagePlusImg(
 			final int width,
 			final int height,
 			final int depth,
@@ -83,7 +83,7 @@ public class ImagePlusContainer< T extends NativeType< T >, A extends ArrayDataA
 	 * @param dim
 	 * @param entitiesPerPixel
 	 */
-	ImagePlusContainer( final long[] dim, final int entitiesPerPixel ) 
+	ImagePlusImg( final long[] dim, final int entitiesPerPixel ) 
 	{
 		super( dim, entitiesPerPixel );
 		
@@ -115,7 +115,7 @@ public class ImagePlusContainer< T extends NativeType< T >, A extends ArrayDataA
 			frames = 1;
 	}
 	
-	ImagePlusContainer( final A creator, final long[] dim, final int entitiesPerPixel ) 
+	ImagePlusImg( final A creator, final long[] dim, final int entitiesPerPixel ) 
 	{
 		this( dim, entitiesPerPixel );
 		
@@ -204,9 +204,9 @@ public class ImagePlusContainer< T extends NativeType< T >, A extends ArrayDataA
 	public int getFrames() { return frames; }
 	
 	@Override
-	public ImagePlusContainerFactory< T > factory()
+	public ImagePlusImgFactory< T > factory()
 	{
-		return new ImagePlusContainerFactory< T >();
+		return new ImagePlusImgFactory< T >();
 	}
 
 	/**

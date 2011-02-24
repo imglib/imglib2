@@ -35,8 +35,8 @@ import mpicbg.imglib.Cursor;
 import mpicbg.imglib.img.Img;
 import mpicbg.imglib.img.imageplus.ByteImagePlus;
 import mpicbg.imglib.img.imageplus.FloatImagePlus;
-import mpicbg.imglib.img.imageplus.ImagePlusContainer;
-import mpicbg.imglib.img.imageplus.ImagePlusContainerFactory;
+import mpicbg.imglib.img.imageplus.ImagePlusImg;
+import mpicbg.imglib.img.imageplus.ImagePlusImgFactory;
 import mpicbg.imglib.img.imageplus.IntImagePlus;
 import mpicbg.imglib.img.imageplus.ShortImagePlus;
 import mpicbg.imglib.type.Type;
@@ -211,7 +211,7 @@ public class ImagePlusAdapter
 	
 	protected static < T extends Type< T > > Img< FloatType > convertToFloat( Img< T > input )
 	{		
-		ImagePlusContainer< FloatType, ? > output = new ImagePlusContainerFactory< FloatType >().create( input, new FloatType() );
+		ImagePlusImg< FloatType, ? > output = new ImagePlusImgFactory< FloatType >().create( input, new FloatType() );
 	
 		Cursor< T > in = input.cursor();
 		Cursor< FloatType > out = output.cursor();

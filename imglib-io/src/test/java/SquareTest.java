@@ -40,7 +40,7 @@ import mpicbg.imglib.cursor.Cursor;
 import mpicbg.imglib.exception.ImgLibException;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.display.imagej.ImageJFunctions;
-import mpicbg.imglib.img.imageplus.ImagePlusContainer;
+import mpicbg.imglib.img.imageplus.ImagePlusImg;
 import mpicbg.imglib.io.LOCI;
 import mpicbg.imglib.type.numeric.RealType;
 import mpicbg.imglib.type.numeric.real.FloatType;
@@ -101,8 +101,8 @@ public class SquareTest {
   {
     ImagePlus imp = null;
     Container<T> c = img.getContainer();
-    if (c instanceof ImagePlusContainer<?, ?>) {
-      ImagePlusContainer<T, ?> ipc = (ImagePlusContainer<T, ?>) c;
+    if (c instanceof ImagePlusImg<?, ?>) {
+      ImagePlusImg<T, ?> ipc = (ImagePlusImg<T, ?>) c;
       try {
         imp = ipc.getImagePlus();
       }

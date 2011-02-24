@@ -28,14 +28,14 @@
 package mpicbg.imglib.img.imageplus;
 
 import mpicbg.imglib.Interval;
-import mpicbg.imglib.container.basictypecontainer.array.BitArray;
-import mpicbg.imglib.container.basictypecontainer.array.ByteArray;
-import mpicbg.imglib.container.basictypecontainer.array.CharArray;
-import mpicbg.imglib.container.basictypecontainer.array.DoubleArray;
-import mpicbg.imglib.container.basictypecontainer.array.FloatArray;
-import mpicbg.imglib.container.basictypecontainer.array.IntArray;
-import mpicbg.imglib.container.basictypecontainer.array.LongArray;
-import mpicbg.imglib.container.basictypecontainer.array.ShortArray;
+import mpicbg.imglib.img.basictypeaccess.array.BitArray;
+import mpicbg.imglib.img.basictypeaccess.array.ByteArray;
+import mpicbg.imglib.img.basictypeaccess.array.CharArray;
+import mpicbg.imglib.img.basictypeaccess.array.DoubleArray;
+import mpicbg.imglib.img.basictypeaccess.array.FloatArray;
+import mpicbg.imglib.img.basictypeaccess.array.IntArray;
+import mpicbg.imglib.img.basictypeaccess.array.LongArray;
+import mpicbg.imglib.img.basictypeaccess.array.ShortArray;
 import mpicbg.imglib.exception.IncompatibleTypeException;
 import mpicbg.imglib.img.ImgFactory;
 import mpicbg.imglib.img.NativeImg;
@@ -43,20 +43,20 @@ import mpicbg.imglib.img.planar.PlanarImgFactory;
 import mpicbg.imglib.type.NativeType;
 
 /**
- * Factory that creates an appropriate {@link ImagePlusContainer}.
+ * Factory that creates an appropriate {@link ImagePlusImg}.
  * 
  * @author Jan Funke, Stephan Preibisch, Stephan Saalfeld, Johannes Schindelin
  */
-public class ImagePlusContainerFactory< T extends NativeType< T > > extends PlanarImgFactory< T >
+public class ImagePlusImgFactory< T extends NativeType< T > > extends PlanarImgFactory< T >
 {
 	@Override
-	public ImagePlusContainer< T, ? > create( final long[] dim, final T type )
+	public ImagePlusImg< T, ? > create( final long[] dim, final T type )
 	{
-		return ( ImagePlusContainer< T, ? > ) type.createSuitableNativeImg( this, dim );
+		return ( ImagePlusImg< T, ? > ) type.createSuitableNativeImg( this, dim );
 	}
 
 	@Override
-	public ImagePlusContainer< T, ? > create( final Interval interval, final T type )
+	public ImagePlusImg< T, ? > create( final Interval interval, final T type )
 	{
 		final long[] dim = new long[ interval.numDimensions() ];
 		interval.dimensions( dim );
@@ -70,7 +70,7 @@ public class ImagePlusContainerFactory< T extends NativeType< T > > extends Plan
 		if ( dimensions.length > 5 )
 			throw new RuntimeException( "Unsupported dimensionality: " + dimensions.length );
 
-		return new ImagePlusContainer< T, BitArray >( new BitArray( 1 ), dimensions, entitiesPerPixel );
+		return new ImagePlusImg< T, BitArray >( new BitArray( 1 ), dimensions, entitiesPerPixel );
 	}
 
 	@Override
@@ -88,7 +88,7 @@ public class ImagePlusContainerFactory< T extends NativeType< T > > extends Plan
 		if ( dimensions.length > 5 )
 			throw new RuntimeException( "Unsupported dimensionality: " + dimensions.length );
 
-		return new ImagePlusContainer< T, CharArray >( new CharArray( 1 ), dimensions, entitiesPerPixel );
+		return new ImagePlusImg< T, CharArray >( new CharArray( 1 ), dimensions, entitiesPerPixel );
 	}
 
 	@Override
@@ -97,7 +97,7 @@ public class ImagePlusContainerFactory< T extends NativeType< T > > extends Plan
 		if ( dimensions.length > 5 )
 			throw new RuntimeException( "Unsupported dimensionality: " + dimensions.length );
 
-		return new ImagePlusContainer< T, DoubleArray >( new DoubleArray( 1 ), dimensions, entitiesPerPixel );
+		return new ImagePlusImg< T, DoubleArray >( new DoubleArray( 1 ), dimensions, entitiesPerPixel );
 	}
 
 	@Override
@@ -124,7 +124,7 @@ public class ImagePlusContainerFactory< T extends NativeType< T > > extends Plan
 		if ( dimensions.length > 5 )
 			throw new RuntimeException( "Unsupported dimensionality: " + dimensions.length );
 
-		return new ImagePlusContainer< T, LongArray >( new LongArray( 1 ), dimensions, entitiesPerPixel );
+		return new ImagePlusImg< T, LongArray >( new LongArray( 1 ), dimensions, entitiesPerPixel );
 	}
 
 	@Override
@@ -141,7 +141,7 @@ public class ImagePlusContainerFactory< T extends NativeType< T > > extends Plan
 	public <S> ImgFactory<S> imgFactory( final S type ) throws IncompatibleTypeException
 	{
 		if ( NativeType.class.isInstance( type ) )
-			return new ImagePlusContainerFactory();
+			return new ImagePlusImgFactory();
 		else
 			throw new IncompatibleTypeException( this, type.getClass().getCanonicalName() + " does not implement NativeType." );
 	}	
