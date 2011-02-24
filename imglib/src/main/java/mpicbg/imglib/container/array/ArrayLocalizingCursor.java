@@ -85,7 +85,7 @@ public class ArrayLocalizingCursor< T extends NativeType< T > > extends Abstract
 	public void jumpFwd( final long steps )
 	{
 		type.incIndex( ( int ) steps );
-		IntervalIndexer.indexToPosition( type.getIndex(), size, position );
+		IntervalIndexer.indexToPosition( type.getIndex(), dimension, position );
 	}
 
 	@Override

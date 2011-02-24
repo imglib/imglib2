@@ -29,7 +29,7 @@ package mpicbg.imglib.roi.rectangular;
 
 import mpicbg.imglib.Cursor;
 import mpicbg.imglib.EuclideanSpace;
-import mpicbg.imglib.InjectiveInterval;
+import mpicbg.imglib.Interval;
 import mpicbg.imglib.RandomAccess;
 import mpicbg.imglib.Sampler;
 import mpicbg.imglib.util.Util;
@@ -39,7 +39,7 @@ import mpicbg.imglib.util.Util;
  * @author Stephan Preibisch (stephan.preibisch@gmx.de)
  * 
  */
-public class SubImageCursor< T > implements Sampler< T >, EuclideanSpace, InjectiveInterval, Cursor< T >, java.util.Iterator< T >
+public class SubImageCursor< T > implements Sampler< T >, EuclideanSpace, Interval, Cursor< T >, java.util.Iterator< T >
 {
 	final SubImage<T> subImage;
 	final RandomAccess<T> access;

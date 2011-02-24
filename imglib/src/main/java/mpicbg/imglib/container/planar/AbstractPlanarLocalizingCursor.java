@@ -95,7 +95,7 @@ abstract public class AbstractPlanarLocalizingCursor< T extends NativeType< T > 
 
 		for ( int d = 0; d < n; ++d )
 		{
-			if ( ++position[ d ] >= size[ d ] ) position[ d ] = 0;
+			if ( ++position[ d ] >= dimension[ d ] ) position[ d ] = 0;
 			else break;
 		}
 	}

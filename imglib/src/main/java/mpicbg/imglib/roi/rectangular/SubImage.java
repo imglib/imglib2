@@ -29,13 +29,12 @@ package mpicbg.imglib.roi.rectangular;
 
 import java.util.Iterator;
 
-import mpicbg.imglib.InjectiveInterval;
 import mpicbg.imglib.Cursor;
 import mpicbg.imglib.Interval;
+import mpicbg.imglib.IterableRealInterval;
 import mpicbg.imglib.Localizable;
 import mpicbg.imglib.RandomAccess;
 import mpicbg.imglib.RandomAccessible;
-import mpicbg.imglib.IterableRealInterval;
 import mpicbg.imglib.RandomAccessibleInterval;
 import mpicbg.imglib.container.Img;
 import mpicbg.imglib.outofbounds.OutOfBounds;
@@ -56,7 +55,7 @@ import mpicbg.imglib.util.Util;
  *
  * @param <T>
  */
-public class SubImage< T > implements RandomAccessible< T >, RandomAccessibleInterval< T, SubImage< T > >, InjectiveInterval, Localizable
+public class SubImage< T > implements RandomAccessible< T >, RandomAccessibleInterval< T, SubImage< T > >, Interval, Localizable
 {
 	final int n;
 	final long numPixels;
@@ -64,8 +63,8 @@ public class SubImage< T > implements RandomAccessible< T >, RandomAccessibleInt
 	final long[] offset, max, size;
 	
 	final RandomAccessible< T > source1;
-	final RandomAccessibleInterval< T, InjectiveInterval > source2;
-	final OutOfBoundsFactory<T, InjectiveInterval> outOfBoudsFactory;
+	final RandomAccessibleInterval< T, Interval > source2;
+	final OutOfBoundsFactory<T, Interval> outOfBoudsFactory;
 	
 	public SubImage( final long[] offset, final long[] size, final RandomAccessible< T > source )
 	{
@@ -91,8 +90,8 @@ public class SubImage< T > implements RandomAccessible< T >, RandomAccessibleInt
 
 	public SubImage( 
 			final long[] offset, final long[] size, 
-			final RandomAccessibleInterval< T, InjectiveInterval > source, 
-			final OutOfBoundsFactory<T, InjectiveInterval> outOfBoudsFactory )
+			final RandomAccessibleInterval< T, Interval > source, 
+			final OutOfBoundsFactory<T, Interval> outOfBoudsFactory )
 	{
 		this.n = source.numDimensions();
 		this.offset = offset.clone();
@@ -121,8 +120,8 @@ public class SubImage< T > implements RandomAccessible< T >, RandomAccessibleInt
 	
 	public SubImage( 
 			final Interval interval, 
-			final RandomAccessibleInterval< T, InjectiveInterval > source, 
-			final OutOfBoundsFactory<T, InjectiveInterval> outOfBoudsFactory ) 
+			final RandomAccessibleInterval< T, Interval > source, 
+			final OutOfBoundsFactory<T, Interval> outOfBoudsFactory ) 
 	{ 
 		this( Util.intervalMin( interval ), Util.intervalDimensions(interval), source, outOfBoudsFactory ); 
 	}
