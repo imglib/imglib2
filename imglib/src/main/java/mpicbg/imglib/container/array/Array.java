@@ -108,7 +108,7 @@ public class Array< T extends NativeType< T >, A extends DataAccess > extends Ab
 		{
 			final Interval a = ( Interval )f;
 			for ( int d = 0; d < n; ++d )
-				if ( size[ d ] != a.dimension( d ) )
+				if ( dimension[ d ] != a.dimension( d ) )
 					return false;
 			
 			return true;

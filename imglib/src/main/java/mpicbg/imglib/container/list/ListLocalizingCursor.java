@@ -65,7 +65,7 @@ final public class ListLocalizingCursor< T extends Type< T > > extends AbstractI
 		
 		for ( int d = 0; d < n; d++ )
 		{
-			if ( position[ d ] < size[ d ] - 1 )
+			if ( position[ d ] < dimension[ d ] - 1 )
 			{
 				position[ d ]++;
 				
@@ -83,7 +83,7 @@ final public class ListLocalizingCursor< T extends Type< T > > extends AbstractI
 	@Override
 	public void reset()
 	{
-		if ( size != null )
+		if ( dimension != null )
 		{
 			i = -1;
 			

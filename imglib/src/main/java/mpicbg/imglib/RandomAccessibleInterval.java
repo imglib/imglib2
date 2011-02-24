@@ -39,7 +39,7 @@ import mpicbg.imglib.outofbounds.OutOfBoundsFactory;
  *
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-public interface RandomAccessibleInterval< T, F > extends IterableInterval< T >
+public interface RandomAccessibleInterval< T, F > extends IterableInterval< T >, RandomAccessible< T >
 {
 	public RandomAccess< T > randomAccess( final OutOfBoundsFactory< T, F > factory );
 }

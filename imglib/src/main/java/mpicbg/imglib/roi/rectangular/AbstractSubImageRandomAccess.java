@@ -28,7 +28,7 @@
 package mpicbg.imglib.roi.rectangular;
 
 import mpicbg.imglib.EuclideanSpace;
-import mpicbg.imglib.InjectiveInterval;
+import mpicbg.imglib.Interval;
 import mpicbg.imglib.Localizable;
 import mpicbg.imglib.RandomAccess;
 import mpicbg.imglib.util.Util;
@@ -38,7 +38,7 @@ import mpicbg.imglib.util.Util;
  * @author Stephan Preibisch (stephan.preibisch@gmx.de)
  *
  */
-public abstract class AbstractSubImageRandomAccess< T, S extends RandomAccess< T > > implements RandomAccess< T >, EuclideanSpace, InjectiveInterval
+public abstract class AbstractSubImageRandomAccess< T, S extends RandomAccess< T > > implements RandomAccess< T >, EuclideanSpace, Interval
 {
 	final SubImage< T > subImage;
 	final S access;

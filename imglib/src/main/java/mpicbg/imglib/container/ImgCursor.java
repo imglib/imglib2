@@ -32,78 +32,13 @@ package mpicbg.imglib.container;
 import mpicbg.imglib.Cursor;
 
 /**
- * <h2>The {@link ImgCursor} interface</h2>
- * 
- * <h3>Implementation</h3>
- * 
- * {@link ImgCursor RasterIterators} are used to iterate over a raster of
- * pixels.  They depend on the way how pixels are stored and thus need to be
- * implemented for each {@link Img} like {@link Array}, {@link CellContainer}, ... 
- * 
- * <h3>Data access</h3>
- * 
- * {@link ImgCursor RasterIterator} do not know about the {@link Image}
- * {@link Type} as it is not important for iteration.  However, {@link Type} is
- * a generic parameter such that the correct instance of {@link Type} is
- * returned by {@link #get()}.
- * 
- * <h3>Traversal policy</h3>
- * 
- * There is no particular guaranty regarding the order of iteration other than
- * that all pixels are visited once before {@link #hasNext()} returns true.
- * The actual order of iteration depends on the {@link Img} and is
- * expected to be optimal in terms of access performance.
- * <p>
- * However, it is <em>guaranteed</em> that for two same
- * {@link Img Containers} with equal dimensions and properties, the 
- * traverse path will be the same.  For instance, if the following is true:
- * <p>
- * <pre>
-  		Container&lt T &gt c1 = img1.getContainer(); 
-  		Container&lt S &gt c2 = img2.getContainer();
- 		if ( c1.compareStorageContainerCompatibility( c2 ) )  
- * </pre>
- * then, it is ensured that
- * <pre>
- * 		{
- * 			RasterIterator&lt T &gt cursor1 = img1.createBasicIterator();
- * 			RasterIterator&lt S &gt cursor2 = img2.createBasicIterator();
- * 			while ( cursor1.hasNext() )
-			{
-				cursor1.fwd();
-				cursor2.fwd();
-			}
-		}
- * </pre>
- * will visit the <em>same pixel positions</em>.
- * <p>
- * If the two {@link Img Containers} are not the same, then
- * {@link Localizable} and {@link ImgRandomAccess} have to be
- * used:
- * <pre>
- * 		else {
- * 			LocalizableCursor&lt T &gt cursor1 = img1.createLocalizableCursor();
- * 			LocalizableByDimCursor&lt S &gt cursor2 = img2.createLocalizableByDimCursor();
- * 			while ( cursor1.hasNext() )
- * 			{
- * 				cursor1.fwd();
- * 				cursor2.moveTo( cursor1 );
- * 			}
- * 		}
- * </pre>
- * This snippet will also traverse images the same way, but this is less efficient than the previous solution 
- * with identical containers.
- *<p>
- * This interface is for convenience only, it combines a set of interfaces and
- * might be used for type definition in your implementation.  Instead of this
- * interface, you can use a generic type that includes only the interfaces you
- * need, e.g.
- * 
- * < T extends RasterSampler< ? >, Iterator< ? > > 
+ * ImgCursor combines {@link ImgSampler} and {@link Cursor}.  That is, an
+ * ImgCursor can access and return its {@link Img} and works on an interval
+ * with min&nbsp;=&nbsp;0<sup><em>n</em></sup>.
  * 
  * @author Stephan Preibisch & Stephan Saalfeld
  *
- * @param <T> - the {@link Type} this {@link ImgCursor} works on
+ * @param <T>
  */
 public interface ImgCursor< T > extends ImgSampler< T >, Cursor< T >
 {}

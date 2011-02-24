@@ -50,7 +50,6 @@ import mpicbg.imglib.type.Type;
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  * @version 0.1a
  */
-//public class ShapeList< T extends Type< T > > extends ContainerImpl< T, DataAccess >
 public class ShapeList< T extends Type< T > > extends AbstractImg< T >
 {
 	

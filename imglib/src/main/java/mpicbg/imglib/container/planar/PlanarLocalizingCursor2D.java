@@ -20,7 +20,7 @@ public class PlanarLocalizingCursor2D< T extends NativeType< T > > extends Plana
 	{
 		type.incIndex();
 
-		if ( ++position[ 0 ] >= size[ 0 ] )
+		if ( ++position[ 0 ] >= dimension[ 0 ] )
 		{
 			position[ 0 ] = 0;
 			++position[ 1 ];

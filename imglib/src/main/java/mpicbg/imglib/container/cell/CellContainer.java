@@ -186,7 +186,7 @@ final public class CellContainer< T extends NativeType< T >, A extends ArrayData
 			CellContainer< T, A > other = (CellContainer< T, A >) f;
 
 			for ( int d = 0; d < n; ++d ) 
-				if ( this.size[ d ] != other.size[ d ] || this.cellDims[ d ] != other.cellDims[ d ] )
+				if ( this.dimension[ d ] != other.dimension[ d ] || this.cellDims[ d ] != other.cellDims[ d ] )
 					return false;
 			
 			return true;

@@ -39,7 +39,7 @@ import mpicbg.imglib.outofbounds.RealOutOfBoundsFactory;
  *
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-public interface RealRandomAccessibleRealInterval< T, F > extends RealInterval
+public interface RealRandomAccessibleRealInterval< T, F > extends RealRandomAccessible< T >, RealInterval
 {
 	/**
 	 * Create a random access sampler for real coordinates.

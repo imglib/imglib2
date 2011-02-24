@@ -45,16 +45,16 @@ import mpicbg.imglib.util.Util;
 public abstract class AbstractLocalizableImgSamplerInt< T > extends AbstractImgSampler< T > implements Localizable
 {
 	final protected int[] position;
-	final protected int[] size;
+	final protected int[] dimension;
 	
 	public AbstractLocalizableImgSamplerInt( final Interval f )
 	{
 		super( f.numDimensions() );
 		
 		position = new int[ n ];
-		size = new int[ n ];
+		dimension = new int[ n ];
 		for ( int d = 0; d < n; ++d )
-			size[ d ] = ( int ) f.dimension( d );
+			dimension[ d ] = ( int ) f.dimension( d );
 	}
 	
 	@Override

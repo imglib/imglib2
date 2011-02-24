@@ -76,7 +76,7 @@ public class ArrayLocalizingCursor< T extends NativeType< T > > extends Abstract
 
 		for ( int d = 0; d < n; ++d )
 		{
-			if ( ++position[ d ] >= size[ d ] ) position[ d ] = 0;
+			if ( ++position[ d ] >= dimension[ d ] ) position[ d ] = 0;
 			else break;
 		}
 	}
@@ -85,13 +85,13 @@ public class ArrayLocalizingCursor< T extends NativeType< T > > extends Abstract
 	public void jumpFwd( final long steps )
 	{
 		type.incIndex( ( int ) steps );
-		IntervalIndexer.indexToPosition( type.getIndex(), size, position );
+		IntervalIndexer.indexToPosition( type.getIndex(), dimension, position );
 	}
 
 	@Override
 	public void reset()
 	{
-		if ( size != null )
+		if ( dimension != null )
 		{
 			type.updateIndex( -1 );
 
