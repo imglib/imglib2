@@ -30,6 +30,12 @@ public class CellRandomAccess< T extends NativeType< T >, A extends ArrayDataAcc
 	protected long[] currentCellMin;
 	protected long[] currentCellMax;
 
+	/**
+	 * The current index of the type.
+	 * It is faster to duplicate this here than to access it through type.getIndex(). 
+	 */
+	protected int index;
+
 	public CellRandomAccess( final CellContainer< T, A > container )
 	{
 		super( container );
@@ -65,35 +71,38 @@ public class CellRandomAccess< T extends NativeType< T >, A extends ArrayDataAcc
 	@Override
 	public void fwd( final int dim )
 	{
-		type.incIndex( currentCellSteps[ dim ] );
+		index += currentCellSteps[ dim ];
 		if ( ++position[ dim ] > currentCellMax[ dim ] )
 		{
 			cursorOnCells.fwd( dim );			
 			updatePosition();
 		}
+		type.updateIndex( index );
 	}
 
 	@Override
 	public void bck( final int dim )
 	{
-		type.decIndex( currentCellSteps[ dim ] );
+		index -= currentCellSteps[ dim ];
 		if ( --position[ dim ] < currentCellMin[ dim ] )
 		{
 			cursorOnCells.bck( dim );			
 			updatePosition();
 		}
+		type.updateIndex( index );
 	}
 
 	@Override
 	public void move( final long distance, final int dim )
 	{
-		type.incIndex( ( int ) distance * currentCellSteps[ dim ] );
+		index += ( int ) distance * currentCellSteps[ dim ];
 		position[ dim ] += distance;
 		if ( position[ dim ] < currentCellMin[ dim ] || position[ dim ] > currentCellMax[ dim ] )
 		{
 			cursorOnCells.setPosition( position[ dim ] / defaultCellDims[ dim ], dim );			
 			updatePosition();
 		}
+		type.updateIndex( index );
 	}
 
 	@Override
@@ -110,7 +119,7 @@ public class CellRandomAccess< T extends NativeType< T >, A extends ArrayDataAcc
 		{
 			if ( distance[ d ] != 0 )
 			{
-				type.incIndex( ( int ) distance[ d ] * currentCellSteps[ d ] );
+				index += ( int ) distance[ d ] * currentCellSteps[ d ];
 				position[ d ] += distance[ d ];
 				if ( position[ d ] < currentCellMin[ d ] || position[ d ] > currentCellMax[ d ] )
 				{
@@ -132,6 +141,7 @@ public class CellRandomAccess< T extends NativeType< T >, A extends ArrayDataAcc
 				}
 			}
 		}
+		type.updateIndex( index );
 	}
 
 	@Override
@@ -141,7 +151,7 @@ public class CellRandomAccess< T extends NativeType< T >, A extends ArrayDataAcc
 		{
 			if ( distance[ d ] != 0 )
 			{
-				type.incIndex( ( int ) distance[ d ] * currentCellSteps[ d ] );
+				index += ( int ) distance[ d ] * currentCellSteps[ d ];
 				position[ d ] += distance[ d ];
 				if ( position[ d ] < currentCellMin[ d ] || position[ d ] > currentCellMax[ d ] )
 				{
@@ -163,18 +173,20 @@ public class CellRandomAccess< T extends NativeType< T >, A extends ArrayDataAcc
 				}
 			}
 		}
+		type.updateIndex( index );
 	}
 
 	@Override
 	public void setPosition( final long pos, final int dim )
 	{
-		type.incIndex( ( int ) ( pos - position[ dim ] ) * currentCellSteps[ dim ] );
+		index += ( int ) ( pos - position[ dim ] ) * currentCellSteps[ dim ];
 		position[ dim ] = pos;
 		if ( pos < currentCellMin[ dim ] || pos > currentCellMax[ dim ] )
 		{
 			cursorOnCells.setPosition( pos / defaultCellDims[ dim ], dim );			
 			updatePosition();
 		}
+		type.updateIndex( index );
 	}
 	
 	@Override
@@ -184,7 +196,7 @@ public class CellRandomAccess< T extends NativeType< T >, A extends ArrayDataAcc
 		{
 			if ( pos[ d ] != position[ d ] )
 			{
-				type.incIndex( ( int ) ( pos[ d ] - position[ d ] ) * currentCellSteps[ d ] );
+				index += ( int ) ( pos[ d ] - position[ d ] ) * currentCellSteps[ d ];
 				position[ d ] = pos[ d ];
 				if ( position[ d ] < currentCellMin[ d ] || position[ d ] > currentCellMax[ d ] )
 				{
@@ -206,6 +218,7 @@ public class CellRandomAccess< T extends NativeType< T >, A extends ArrayDataAcc
 				}
 			}
 		}
+		type.updateIndex( index );
 	}
 
 	@Override
@@ -215,7 +228,7 @@ public class CellRandomAccess< T extends NativeType< T >, A extends ArrayDataAcc
 		{
 			if ( pos[ d ] != position[ d ] )
 			{
-				type.incIndex( ( int ) ( pos[ d ] - position[ d ] ) * currentCellSteps[ d ] );
+				index += ( int ) ( pos[ d ] - position[ d ] ) * currentCellSteps[ d ];
 				position[ d ] = pos[ d ];
 				if ( position[ d ] < currentCellMin[ d ] || position[ d ] > currentCellMax[ d ] )
 				{
@@ -237,6 +250,7 @@ public class CellRandomAccess< T extends NativeType< T >, A extends ArrayDataAcc
 				}
 			}
 		}
+		type.updateIndex( index );
 	}
 
 	@Override
@@ -261,7 +275,7 @@ public class CellRandomAccess< T extends NativeType< T >, A extends ArrayDataAcc
 		for ( int d = 0; d < n; ++d )
 			positionInCell[ d ] = position[ d ] - currentCellMin[ d ];
 
-		type.updateIndex( cell.localPositionToIndex( positionInCell ) );
+		index = cell.localPositionToIndex( positionInCell );
 		type.updateContainer( this );
 	}
 }

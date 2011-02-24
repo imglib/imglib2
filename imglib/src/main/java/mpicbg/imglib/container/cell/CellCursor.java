@@ -15,6 +15,17 @@ public class CellCursor< T extends NativeType< T >, A extends ArrayDataAccess< A
 
 	protected int lastIndexInCell;
 
+	/**
+	 * The current index of the type.
+	 * It is faster to duplicate this here than to access it through type.getIndex(). 
+	 */
+	protected int index;
+	
+	/**
+	 * Caches cursorOnCells.hasNext().
+	 */
+	protected boolean isNotLastCell;
+
 	public CellCursor( final CellContainer< T, A > container )
 	{
 		super( container.numDimensions() );
@@ -41,29 +52,34 @@ public class CellCursor< T extends NativeType< T >, A extends ArrayDataAccess< A
 	@Override
 	public boolean hasNext()
 	{
-		return ( type.getIndex() < lastIndexInCell ) || cursorOnCells.hasNext();
+		return isNotLastCell || ( index < lastIndexInCell );
 	}
 
 	@Override
 	public void jumpFwd( long steps )
 	{
-		long newIndex = type.getIndex() + steps;
+		long newIndex = index + steps;
 		while ( newIndex > lastIndexInCell )
 		{
 			newIndex -= lastIndexInCell + 1;
 			cursorOnCells.fwd();
+			isNotLastCell = cursorOnCells.hasNext();
 			lastIndexInCell = ( int )( getCell().size() - 1);
 		}
-		type.updateIndex( ( int ) newIndex );
+		index = ( int ) newIndex;
+		type.updateIndex( index );
 		type.updateContainer( this );
 	}
 	
 	@Override
 	public void fwd()
 	{
-		if ( type.getIndex() == lastIndexInCell )
+		if ( ++index > lastIndexInCell )
+		{
 			moveToNextCell();
-		type.incIndex();
+			index = 0;
+		}
+		type.updateIndex( index );
 	}
 
 	@Override
@@ -71,6 +87,7 @@ public class CellCursor< T extends NativeType< T >, A extends ArrayDataAccess< A
 	{
 		cursorOnCells.reset();
 		moveToNextCell();
+		type.updateIndex( index );
 	}
 
 	@Override
@@ -88,13 +105,13 @@ public class CellCursor< T extends NativeType< T >, A extends ArrayDataAccess< A
 	@Override
 	public long getLongPosition( int dim )
 	{
-		return getCell().indexToGlobalPosition( type.getIndex(), dim );
+		return getCell().indexToGlobalPosition( index, dim );
 	}
 
 	@Override
 	public void localize( final long[] position )
 	{
-		getCell().indexToGlobalPosition( type.getIndex(), position );
+		getCell().indexToGlobalPosition( index, position );
 	}
 
 	/**
@@ -104,8 +121,9 @@ public class CellCursor< T extends NativeType< T >, A extends ArrayDataAccess< A
 	private void moveToNextCell()
 	{
 		cursorOnCells.fwd();
+		isNotLastCell = cursorOnCells.hasNext();
 		lastIndexInCell = ( int )( getCell().size() - 1);
-		type.updateIndex( -1 );
+		index = -1;
 		type.updateContainer( this );
 	}
 }
