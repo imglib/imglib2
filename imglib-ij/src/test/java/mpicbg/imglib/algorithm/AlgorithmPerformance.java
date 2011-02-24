@@ -12,12 +12,12 @@ import mpicbg.imglib.algorithm.fft.FourierTransform.PreProcessing;
 import mpicbg.imglib.algorithm.fft.FourierTransform.Rearrangement;
 import mpicbg.imglib.algorithm.floydsteinberg.FloydSteinbergDithering;
 import mpicbg.imglib.algorithm.gauss.DownSample;
-import mpicbg.imglib.container.ContainerFactory;
-import mpicbg.imglib.container.array.ArrayContainerFactory;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.display.ComplexTypePhaseSpectrumDisplay;
 import mpicbg.imglib.image.display.ComplexTypePowerSpectrumDisplay;
 import mpicbg.imglib.image.display.imagej.ImageJFunctions;
+import mpicbg.imglib.img.ContainerFactory;
+import mpicbg.imglib.img.array.ArrayImgFactory;
 import mpicbg.imglib.outofbounds.OutOfBoundsPeriodicFactory;
 import mpicbg.imglib.type.logic.BitType;
 import mpicbg.imglib.type.numeric.RealType;
@@ -57,12 +57,12 @@ public class AlgorithmPerformance
 	
 	public static void main( String[] args )
 	{
-		new AlgorithmPerformance( new ArrayContainerFactory(), 2 );
+		new AlgorithmPerformance( new ArrayImgFactory(), 2 );
 	}
 	
 	public static <T extends RealType<T>> double testFFTConvolution( final Image<T> img, boolean show )
 	{
-		final Image<FloatType> kernel = FourierConvolution.createGaussianKernel( new ArrayContainerFactory(), 30 + System.currentTimeMillis()%10/10.0, img.getNumDimensions() );		
+		final Image<FloatType> kernel = FourierConvolution.createGaussianKernel( new ArrayImgFactory(), 30 + System.currentTimeMillis()%10/10.0, img.getNumDimensions() );		
 		final FourierConvolution<T, FloatType> fftConvol = new FourierConvolution<T, FloatType>( img, kernel );
 		
 		if ( fftConvol.checkInput() && fftConvol.process() )

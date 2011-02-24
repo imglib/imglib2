@@ -29,23 +29,23 @@
  */
 package mpicbg.imglib.type.numeric;
 
-import mpicbg.imglib.container.NativeContainer;
-import mpicbg.imglib.container.NativeContainerFactory;
-import mpicbg.imglib.container.basictypecontainer.IntAccess;
-import mpicbg.imglib.container.basictypecontainer.array.IntArray;
+import mpicbg.imglib.img.NativeImg;
+import mpicbg.imglib.img.NativeImgFactory;
+import mpicbg.imglib.img.basictypeaccess.IntAccess;
+import mpicbg.imglib.img.basictypeaccess.array.IntArray;
 import mpicbg.imglib.type.AbstractNativeType;
 import mpicbg.imglib.util.Util;
 
 final public class ARGBType extends AbstractNativeType<ARGBType> implements NumericType<ARGBType>
 {
 	// the NativeContainer
-	final NativeContainer<ARGBType, ? extends IntAccess> storage;
+	final NativeImg<ARGBType, ? extends IntAccess> storage;
 	
 	// the (sub)NativeContainer that holds the information 
 	IntAccess b;
 	
 	// this is the constructor if you want it to read from an array
-	public ARGBType( NativeContainer<ARGBType, ? extends IntAccess> byteStorage )
+	public ARGBType( NativeImg<ARGBType, ? extends IntAccess> byteStorage )
 	{
 		storage = byteStorage;
 	}
@@ -62,10 +62,10 @@ final public class ARGBType extends AbstractNativeType<ARGBType> implements Nume
 	public ARGBType() { this( 0 ); }
 	
 	@Override
-	public NativeContainer<ARGBType, ? extends IntAccess> createSuitableNativeContainer( final NativeContainerFactory<ARGBType> storageFactory, final long dim[] )
+	public NativeImg<ARGBType, ? extends IntAccess> createSuitableNativeImg( final NativeImgFactory<ARGBType> storageFactory, final long dim[] )
 	{
 		// create the container
-		final NativeContainer<ARGBType, ? extends IntAccess> container = storageFactory.createIntInstance( dim, 1 );
+		final NativeImg<ARGBType, ? extends IntAccess> container = storageFactory.createIntInstance( dim, 1 );
 		
 		// create a Type that is linked to the container
 		final ARGBType linkedType = new ARGBType( container );

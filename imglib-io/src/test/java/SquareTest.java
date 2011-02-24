@@ -36,11 +36,11 @@ import javax.swing.JFileChooser;
 
 import mpicbg.imglib.container.Container;
 import mpicbg.imglib.container.array.ArrayContainerFactory;
-import mpicbg.imglib.container.imageplus.ImagePlusContainer;
 import mpicbg.imglib.cursor.Cursor;
 import mpicbg.imglib.exception.ImgLibException;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.display.imagej.ImageJFunctions;
+import mpicbg.imglib.img.imageplus.ImagePlusContainer;
 import mpicbg.imglib.io.LOCI;
 import mpicbg.imglib.type.numeric.RealType;
 import mpicbg.imglib.type.numeric.real.FloatType;

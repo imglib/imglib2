@@ -7,14 +7,13 @@ import java.awt.Polygon;
 import java.awt.Rectangle;
 
 import mpicbg.imglib.algorithm.transformation.ImageTransform;
-import mpicbg.imglib.container.ImgCursor;
-import mpicbg.imglib.container.ImgRandomAccess;
-import mpicbg.imglib.container.array.ArrayContainerFactory;
-import mpicbg.imglib.container.cell.CellContainerFactory;
-import mpicbg.imglib.container.shapelist.ShapeList;
-import mpicbg.imglib.image.Image;
-import mpicbg.imglib.image.ImageFactory;
 import mpicbg.imglib.image.display.imagej.ImageJFunctions;
+import mpicbg.imglib.img.ImgCursor;
+import mpicbg.imglib.img.ImgRandomAccess;
+import mpicbg.imglib.img.array.ArrayImg;
+import mpicbg.imglib.img.array.ArrayImgFactory;
+import mpicbg.imglib.img.cell.CellImgFactory;
+import mpicbg.imglib.img.shapelist.ShapeList;
 import mpicbg.imglib.interpolation.linear.LinearInterpolatorFactory;
 import mpicbg.imglib.interpolation.nearestneighbor.NearestNeighborInterpolatorFactory;
 import mpicbg.imglib.outofbounds.OutOfBoundsConstantValueFactory;
@@ -50,17 +49,15 @@ public class TestShapeList
 
 		/* Create ShapeList */
 		//final ShapeList< FloatType > shapeList = new ShapeListCached<FloatType>( new int[]{ 200, 200, depth },  new FloatType( ) );
-		final ShapeList< FloatType > shapeList = new ShapeList<FloatType>( new int[]{ 200, 200, depth },  new FloatType( ( byte )91 ) );
-		final Image< FloatType > shapeListImage = new Image< FloatType >( shapeList, shapeList.getBackground(), "ShapeListContainer" ); 
+		final ShapeList< FloatType > shapeList = new ShapeList<FloatType>( new long[]{ 200, 200, depth },  new FloatType( ( byte )91 ) );
 		
 		/* add some shapes */
 		for ( int i = 0; i < depth; ++i )
 		{
-			shapeList.addShape( new Rectangle( 10 + i, 20, 40, 70 + 2 * i ), new FloatType( ( byte )64 ), new int[]{ i } );
-			shapeList.addShape( new Polygon( new int[]{ 90 + i, 180 - 2 * i, 190 - 4 * i, 120 - 2 * i }, new int[]{ 90, 80 + i, 140 - 3 * i, 130 - 2 * i }, 4 ), new FloatType( ( byte )127 ), new int[]{ i } );
+			shapeList.addShape( new Rectangle( 10 + i, 20, 40, 70 + 2 * i ), new FloatType( ( byte )64 ), new long[]{ i } );
+			shapeList.addShape( new Polygon( new int[]{ 90 + i, 180 - 2 * i, 190 - 4 * i, 120 - 2 * i }, new int[]{ 90, 80 + i, 140 - 3 * i, 130 - 2 * i }, 4 ), new FloatType( ( byte )127 ), new long[]{ i } );
 		}
 		
-		shapeListImage.getDisplay().setMinMax();
 		final ImagePlus shapeListImp = ImageJFunctions.displayAsVirtualStack( shapeListImage );
 		shapeListImp.show();
 		//shapeListImp.getProcessor().setMinAndMax( 0, 255 );
@@ -73,14 +70,14 @@ public class TestShapeList
 		/* Copy content into another container */
 		
 		timer.start();
-		final ArrayContainerFactory arrayFactory = new ArrayContainerFactory();
-		final Image< FloatType > arrayImage = new ImageFactory< FloatType >( new FloatType(), arrayFactory ).createImage( new int[]{ 200, 200, depth }, "ArrayContainer" );
-		final ImgCursor< FloatType > cArray = arrayImage.createLocalizingRasterIterator();
-		final ImgRandomAccess< FloatType > cShapeList = shapeListImage.createPositionableRasterSampler();
+		final ArrayImgFactory< FloatType > arrayFactory = new ArrayImgFactory< FloatType >();
+		final ArrayImg< FloatType, ? > arrayImage = arrayFactory.create( new long[]{ 200, 200, depth }, new FloatType() );
+		final ImgCursor< FloatType > cArray = arrayImage.localizingCursor();
+		final ImgRandomAccess< FloatType > cShapeList = shapeList.randomAccess();
 		while ( cArray.hasNext() )
 		{
 			cArray.fwd();
-			cShapeList.moveTo( cArray );
+			cShapeList.setPosition( cArray );
 			cArray.get().set( cShapeList.get() );
 		}
 
@@ -97,7 +94,7 @@ public class TestShapeList
 		/* Copy content into another container */
 		
 		timer.start();
-		final CellContainerFactory cellFactory = new CellContainerFactory();
+		final CellImgFactory cellFactory = new CellImgFactory();
 		final Image< FloatType > cellImage = new ImageFactory< FloatType >( new FloatType(), cellFactory ).createImage( new int[]{ 200, 200, depth }, "CellContainer" );
 		final ImgCursor< FloatType > cCell = cellImage.createLocalizingRasterIterator();
 		while ( cCell.hasNext() )

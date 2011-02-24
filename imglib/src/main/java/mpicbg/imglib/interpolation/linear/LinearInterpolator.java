@@ -27,8 +27,8 @@
  */
 package mpicbg.imglib.interpolation.linear;
 
-import mpicbg.imglib.container.ImgRandomAccess;
-import mpicbg.imglib.container.Img;
+import mpicbg.imglib.img.Img;
+import mpicbg.imglib.img.ImgRandomAccess;
 import mpicbg.imglib.interpolation.Interpolator;
 import mpicbg.imglib.location.transform.FloorRasterPositionable;
 import mpicbg.imglib.outofbounds.OutOfBoundsFactory;

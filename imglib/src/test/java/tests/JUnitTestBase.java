@@ -2,13 +2,13 @@ package tests;
 
 import java.util.Arrays;
 
-import mpicbg.imglib.container.array.ArrayContainerFactory;
 
 import mpicbg.imglib.cursor.LocalizableByDimCursor;
 import mpicbg.imglib.cursor.LocalizableCursor;
 
-import mpicbg.imglib.container.Img;
 import mpicbg.imglib.image.ImageFactory;
+import mpicbg.imglib.img.Img;
+import mpicbg.imglib.img.array.ArrayImgFactory;
 
 import mpicbg.imglib.type.numeric.RealType;
 
@@ -163,7 +163,7 @@ public class JUnitTestBase {
 	 * Generate an image
 	 */
 	protected<T extends RealType<T>> Img<T> makeImage( T type, Function function, int[] dims ) {
-		ImageFactory<T> factory = new ImageFactory<T>(type, new ArrayContainerFactory());
+		ImageFactory<T> factory = new ImageFactory<T>(type, new ArrayImgFactory());
 		Img<T> result = factory.createImage( dims );
 		LocalizableCursor<T> cursor = result.createLocalizableCursor();
 		int[] pos = new int[cursor.getNumDimensions()];

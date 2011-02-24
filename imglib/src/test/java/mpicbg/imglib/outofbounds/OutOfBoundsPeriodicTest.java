@@ -30,13 +30,13 @@ package mpicbg.imglib.outofbounds;
 import static org.junit.Assert.assertEquals;
 import mpicbg.imglib.Cursor;
 import mpicbg.imglib.Localizable;
-import mpicbg.imglib.container.Img;
-import mpicbg.imglib.container.ImgRandomAccess;
-import mpicbg.imglib.container.array.Array;
-import mpicbg.imglib.container.array.ArrayContainerFactory;
-import mpicbg.imglib.container.cell.CellContainer;
-import mpicbg.imglib.container.cell.CellContainerFactory;
-import mpicbg.imglib.container.list.ListContainerFactory;
+import mpicbg.imglib.img.Img;
+import mpicbg.imglib.img.ImgRandomAccess;
+import mpicbg.imglib.img.array.ArrayImg;
+import mpicbg.imglib.img.array.ArrayImgFactory;
+import mpicbg.imglib.img.cell.CellImg;
+import mpicbg.imglib.img.cell.CellImgFactory;
+import mpicbg.imglib.img.list.ListImgFactory;
 import mpicbg.imglib.type.numeric.integer.IntType;
 
 import org.junit.After;
@@ -54,8 +54,8 @@ public class OutOfBoundsPeriodicTest
 {
 	final private long[] dim = new long[]{ 5, 4, 3 };
 
-	static private Array< IntType, ? > arrayImage;
-	static private CellContainer< IntType, ? > cellImage;
+	static private ArrayImg< IntType, ? > arrayImage;
+	static private CellImg< IntType, ? > cellImage;
 	static private Img< IntType > listImage;
 	
 	static private ImgRandomAccess< IntType > cArray;
@@ -84,9 +84,9 @@ public class OutOfBoundsPeriodicTest
 	@Before
 	public void setUp() throws Exception
 	{
-		arrayImage = new ArrayContainerFactory< IntType >().create( dim, new IntType() );
-		cellImage = new CellContainerFactory< IntType >( 2 ).create( dim, new IntType() );
-		listImage = new ListContainerFactory< IntType >().create( dim, new IntType() );
+		arrayImage = new ArrayImgFactory< IntType >().create( dim, new IntType() );
+		cellImage = new CellImgFactory< IntType >( 2 ).create( dim, new IntType() );
+		listImage = new ListImgFactory< IntType >().create( dim, new IntType() );
 		
 		int i = 0;
 		for ( final IntType t : arrayImage )

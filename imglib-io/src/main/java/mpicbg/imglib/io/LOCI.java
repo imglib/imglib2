@@ -22,9 +22,9 @@ import loci.formats.ChannelSeparator;
 import loci.formats.FormatException;
 import loci.formats.FormatTools;
 import loci.formats.IFormatReader;
-import mpicbg.imglib.container.Img;
-import mpicbg.imglib.container.ImgFactory;
-import mpicbg.imglib.sampler.special.OrthoSliceIterator;
+import mpicbg.imglib.img.Img;
+import mpicbg.imglib.img.ImgFactory;
+import mpicbg.imglib.sampler.special.OrthoSliceCursor;
 import mpicbg.imglib.type.numeric.real.FloatType;
 import mpicbg.imglib.util.Util;
 
@@ -88,7 +88,7 @@ public class LOCI
 			final int t = 0;			
 			final byte[][] b = new byte[channels][width * height * bytesPerPixel];
 			
-			final int[] planePos = new int[3];
+			final long[] planePos = new long[3];
 			final int planeX = 0;
 			final int planeY = 1;
 									
@@ -96,7 +96,7 @@ public class LOCI
 			{	
 				// set the z plane iterator to the current z plane
 				planePos[ 2 ] = z ;
-				final OrthoSliceIterator< FloatType > it = new OrthoSliceIterator<FloatType>( container, planeX, planeY, planePos ); 
+				final OrthoSliceCursor< FloatType > it = new OrthoSliceCursor<FloatType>( container, planeX, planeY, planePos ); 
 				
 				// read the data from LOCI
 				for (int c = 0; c < channels; c++)

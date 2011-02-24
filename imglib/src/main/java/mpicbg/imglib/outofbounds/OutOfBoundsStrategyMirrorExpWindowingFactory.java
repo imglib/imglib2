@@ -29,7 +29,7 @@
  */
 package mpicbg.imglib.outofbounds;
 
-import mpicbg.imglib.container.ImgRandomAccess;
+import mpicbg.imglib.img.ImgRandomAccess;
 import mpicbg.imglib.type.numeric.RealType;
 import mpicbg.imglib.util.Util;
 

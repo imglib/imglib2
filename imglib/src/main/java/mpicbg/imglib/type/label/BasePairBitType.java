@@ -29,10 +29,10 @@
  */
 package mpicbg.imglib.type.label;
 
-import mpicbg.imglib.container.NativeContainer;
-import mpicbg.imglib.container.NativeContainerFactory;
-import mpicbg.imglib.container.basictypecontainer.BitAccess;
-import mpicbg.imglib.container.basictypecontainer.array.BitArray;
+import mpicbg.imglib.img.NativeImg;
+import mpicbg.imglib.img.NativeImgFactory;
+import mpicbg.imglib.img.basictypeaccess.BitAccess;
+import mpicbg.imglib.img.basictypeaccess.array.BitArray;
 import mpicbg.imglib.type.NativeType;
 import mpicbg.imglib.type.BasePairType;
 
@@ -46,7 +46,7 @@ public class BasePairBitType implements BasePairType<BasePairBitType>, NativeTyp
 	public int getEntitiesPerPixel() { return 1; } 
 
 	// the NativeContainer
-	final NativeContainer<BasePairBitType, ? extends BitAccess> storage;
+	final NativeImg<BasePairBitType, ? extends BitAccess> storage;
 	
 	// the (sub)NativeContainer that holds the information 
 	BitAccess b;
@@ -55,7 +55,7 @@ public class BasePairBitType implements BasePairType<BasePairBitType>, NativeTyp
 	int j1, j2, j3;
 	
 	// this is the constructor if you want it to read from an array
-	public BasePairBitType( NativeContainer<BasePairBitType, ? extends BitAccess> bitStorage )
+	public BasePairBitType( NativeImg<BasePairBitType, ? extends BitAccess> bitStorage )
 	{
 		storage = bitStorage;
 		updateIndex( 0 );
@@ -74,10 +74,10 @@ public class BasePairBitType implements BasePairType<BasePairBitType>, NativeTyp
 	public BasePairBitType() { this( Base.N ); }
 	
 	@Override
-	public NativeContainer<BasePairBitType, ? extends BitAccess> createSuitableNativeContainer( final NativeContainerFactory<BasePairBitType> storageFactory, final long dim[] )	
+	public NativeImg<BasePairBitType, ? extends BitAccess> createSuitableNativeImg( final NativeImgFactory<BasePairBitType> storageFactory, final long dim[] )	
 	{
 		// create the container
-		final NativeContainer<BasePairBitType, ? extends BitAccess> container = storageFactory.createBitInstance( dim, 3 );
+		final NativeImg<BasePairBitType, ? extends BitAccess> container = storageFactory.createBitInstance( dim, 3 );
 		
 		// create a Type that is linked to the container
 		final BasePairBitType linkedType = new BasePairBitType( container );

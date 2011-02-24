@@ -30,12 +30,15 @@ import ij.ImageJ;
 
 import java.util.Random;
 
-import mpicbg.imglib.container.array.ArrayContainerFactory;
+import mpicbg.imglib.RandomAccess;
 import mpicbg.imglib.cursor.LocalizableByDimCursor;
 import mpicbg.imglib.cursor.special.HyperSphereIterator;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.ImageFactory;
 import mpicbg.imglib.image.display.imagej.ImageJFunctions;
+import mpicbg.imglib.img.Img;
+import mpicbg.imglib.img.array.ArrayImg;
+import mpicbg.imglib.img.array.ArrayImgFactory;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyValueFactory;
 import mpicbg.imglib.type.numeric.real.FloatType;
 import mpicbg.imglib.util.Util;
@@ -46,26 +49,26 @@ public class HyperSphereIteratorBehavior
 	
 	final static public void main( final String[] args )
 	{
-		final ImageFactory<FloatType> factory = new ImageFactory<FloatType>( new FloatType(), new ArrayContainerFactory() );
+		final ArrayImgFactory<FloatType> factory = new ArrayImgFactory<FloatType>();
 		
 		final int dim = 3;
 		final int imgSize = 400;
 		final int numSpheres = 100000;
 		final int maxRadius = 10;
 
-		final int[] size = new int[ dim ];
+		final long[] size = new int[ dim ];
 		for ( int d = 0; d < dim; ++d )
 			size[ d ] = imgSize;
 		
-		final Image<FloatType> img1 = factory.createImage( size );
+		final Img<FloatType> img1 = factory.create( size, new FloatType() );
 		
-		final LocalizableByDimCursor<FloatType> c = img1.createLocalizableByDimCursor();
+		final RandomAccess<FloatType> c = img1.randomAccess();
 				
 		final Random rnd = new Random( 350345 );		
 		final long t = System.currentTimeMillis();
 				
-		for ( int d = 0; d < img1.getNumDimensions(); ++d )
-			c.setPosition( img1.getDimension( d ) / 2, d );
+		for ( int d = 0; d < img1.numDimensions(); ++d )
+			c.setPosition( img1.dimension( d ) / 2, d );
 			
 		final HyperSphereIterator<FloatType> referenceSphere = new HyperSphereIterator<FloatType>( img1, c, (imgSize)/2 - maxRadius, new OutOfBoundsStrategyValueFactory<FloatType>() );
 		

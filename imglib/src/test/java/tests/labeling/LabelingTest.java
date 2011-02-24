@@ -24,13 +24,13 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
-import mpicbg.imglib.container.DirectAccessContainer;
-import mpicbg.imglib.container.array.ArrayContainerFactory;
-import mpicbg.imglib.container.basictypecontainer.IntAccess;
 import mpicbg.imglib.cursor.Cursor;
 import mpicbg.imglib.cursor.LocalizableByDimCursor;
 import mpicbg.imglib.cursor.LocalizableCursor;
 import mpicbg.imglib.image.ImageFactory;
+import mpicbg.imglib.img.DirectAccessContainer;
+import mpicbg.imglib.img.array.ArrayImgFactory;
+import mpicbg.imglib.img.basictypeaccess.IntAccess;
 import mpicbg.imglib.labeling.Labeling;
 import mpicbg.imglib.labeling.LabelingType;
 import mpicbg.imglib.type.label.FakeType;
@@ -43,7 +43,7 @@ public class LabelingTest {
 		DirectAccessContainer<LabelingType<T>, IntAccess> container;
 		Labeling<T> labeling;
 		LabelingType<T> type;
-		container = new ArrayContainerFactory().createIntInstance(dimensions, 1);
+		container = new ArrayImgFactory().createIntInstance(dimensions, 1);
 		type = new LabelingType<T>(container);
 		labeling = new Labeling<T>(container, type);
 		container.setLinkedType(type);
@@ -92,7 +92,7 @@ public class LabelingTest {
 		DirectAccessContainer<LabelingType<String>, IntAccess> container;
 		Labeling<String> labeling;
 		LabelingType<String> type;
-		container = new ArrayContainerFactory().createIntInstance(dimensions, 1);
+		container = new ArrayImgFactory().createIntInstance(dimensions, 1);
 		type = new LabelingType<String>(container);
 		labeling = new Labeling<String>(container, type);
 		assertTrue(Arrays.equals(dimensions, labeling.getDimensions()));
@@ -104,7 +104,7 @@ public class LabelingTest {
 		DirectAccessContainer<LabelingType<String>, IntAccess> container;
 		Labeling<String> labeling;
 		LabelingType<String> type;
-		container = new ArrayContainerFactory().createIntInstance(dimensions, 1);
+		container = new ArrayImgFactory().createIntInstance(dimensions, 1);
 		type = new LabelingType<String>(container);
 		labeling = new Labeling<String>(container, type, "Foo");
 		assertTrue(Arrays.equals(dimensions, labeling.getDimensions()));
@@ -116,7 +116,7 @@ public class LabelingTest {
 		ImageFactory<LabelingType<String>> factory;
 		factory = new ImageFactory<LabelingType<String>>(
 				new LabelingType<String>(), 
-				new ArrayContainerFactory());
+				new ArrayImgFactory());
 		Labeling<String> labeling = new Labeling<String>(factory, dimensions, "Foo");
 		assertTrue(Arrays.equals(dimensions, labeling.getDimensions()));
 	}

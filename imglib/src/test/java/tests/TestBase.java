@@ -2,13 +2,13 @@ package tests;
 
 import java.util.Arrays;
 
-import mpicbg.imglib.container.ImgCursor;
-import mpicbg.imglib.container.ImgRandomAccess;
-import mpicbg.imglib.container.array.ArrayContainerFactory;
 
 
-import mpicbg.imglib.container.Img;
 import mpicbg.imglib.image.ImageFactory;
+import mpicbg.imglib.img.Img;
+import mpicbg.imglib.img.ImgCursor;
+import mpicbg.imglib.img.ImgRandomAccess;
+import mpicbg.imglib.img.array.ArrayImgFactory;
 
 import mpicbg.imglib.type.numeric.RealType;
 
@@ -163,7 +163,7 @@ public class TestBase {
 	 * Generate an image
 	 */
 	protected<T extends RealType<T>> Img<T> makeImage( T type, Function function, int[] dims ) {
-		ImageFactory<T> factory = new ImageFactory<T>(type, new ArrayContainerFactory());
+		ImageFactory<T> factory = new ImageFactory<T>(type, new ArrayImgFactory());
 		Img<T> result = factory.createImage( dims );
 		ImgCursor<T> cursor = result.createLocalizingRasterIterator();
 		int[] pos = new int[cursor.numDimensions()];

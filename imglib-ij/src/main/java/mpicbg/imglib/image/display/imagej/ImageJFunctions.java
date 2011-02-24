@@ -39,11 +39,11 @@ import ij.process.ImageProcessor;
 
 import java.util.Collection;
 
-import mpicbg.imglib.container.Img;
 import mpicbg.imglib.cursor.array.ArrayLocalizableCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.ImagePlusAdapter;
 import mpicbg.imglib.image.display.Display;
+import mpicbg.imglib.img.Img;
 import mpicbg.imglib.type.Type;
 import mpicbg.imglib.type.label.FakeType;
 import mpicbg.imglib.type.numeric.ARGBType;

@@ -30,10 +30,10 @@
 package mpicbg.imglib.type.numeric.complex;
 
 import mpicbg.imglib.algorithm.Precision.PrecisionReal;
-import mpicbg.imglib.container.NativeContainer;
-import mpicbg.imglib.container.NativeContainerFactory;
-import mpicbg.imglib.container.basictypecontainer.FloatAccess;
-import mpicbg.imglib.container.basictypecontainer.array.FloatArray;
+import mpicbg.imglib.img.NativeImg;
+import mpicbg.imglib.img.NativeImgFactory;
+import mpicbg.imglib.img.basictypeaccess.FloatAccess;
+import mpicbg.imglib.img.basictypeaccess.array.FloatArray;
 import mpicbg.imglib.type.NativeType;
 import mpicbg.imglib.type.numeric.ComplexType;
 
@@ -45,13 +45,13 @@ public class ComplexFloatType extends AbstractComplexType<ComplexFloatType> impl
 	private int realI = 0, complexI = 1;
 	
 	// the NativeContainer
-	final NativeContainer<ComplexFloatType, ? extends FloatAccess> storage;
+	final NativeImg<ComplexFloatType, ? extends FloatAccess> storage;
 	
 	// the (sub)NativeContainer that holds the information 
 	FloatAccess b;
 	
 	// this is the constructor if you want it to read from an array
-	public ComplexFloatType( NativeContainer<ComplexFloatType, ? extends FloatAccess> complexfloatStorage )
+	public ComplexFloatType( NativeImg<ComplexFloatType, ? extends FloatAccess> complexfloatStorage )
 	{
 		storage = complexfloatStorage;
 	}
@@ -68,10 +68,10 @@ public class ComplexFloatType extends AbstractComplexType<ComplexFloatType> impl
 	public ComplexFloatType() { this( 0, 0 ); }
 
 	@Override
-	public NativeContainer<ComplexFloatType, ? extends FloatAccess> createSuitableNativeContainer( final NativeContainerFactory<ComplexFloatType> storageFactory, final long dim[] )
+	public NativeImg<ComplexFloatType, ? extends FloatAccess> createSuitableNativeImg( final NativeImgFactory<ComplexFloatType> storageFactory, final long dim[] )
 	{
 		// create the container
-		final NativeContainer<ComplexFloatType, ? extends FloatAccess> container = storageFactory.createFloatInstance( dim, 2 );
+		final NativeImg<ComplexFloatType, ? extends FloatAccess> container = storageFactory.createFloatInstance( dim, 2 );
 		
 		// create a Type that is linked to the container
 		final ComplexFloatType linkedType = new ComplexFloatType( container );

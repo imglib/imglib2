@@ -29,14 +29,14 @@
  */
 package mpicbg.imglib.type.numeric.integer;
 
-import mpicbg.imglib.container.NativeContainer;
-import mpicbg.imglib.container.NativeContainerFactory;
-import mpicbg.imglib.container.basictypecontainer.ByteAccess;
+import mpicbg.imglib.img.NativeImg;
+import mpicbg.imglib.img.NativeImgFactory;
+import mpicbg.imglib.img.basictypeaccess.ByteAccess;
 
 public class ByteType extends GenericByteType<ByteType>
 {
 	// this is the constructor if you want it to read from an array
-	public ByteType( final NativeContainer<ByteType, ? extends ByteAccess> byteStorage ) { super( byteStorage ); }
+	public ByteType( final NativeImg<ByteType, ? extends ByteAccess> byteStorage ) { super( byteStorage ); }
 	
 	// this is the constructor if you want it to be a variable
 	public ByteType( final byte value ) { super( value ); }
@@ -45,10 +45,10 @@ public class ByteType extends GenericByteType<ByteType>
 	public ByteType() { super( (byte)0 ); }
 
 	@Override
-	public NativeContainer<ByteType, ? extends ByteAccess> createSuitableNativeContainer( final NativeContainerFactory<ByteType> storageFactory, final long dim[] )
+	public NativeImg<ByteType, ? extends ByteAccess> createSuitableNativeImg( final NativeImgFactory<ByteType> storageFactory, final long dim[] )
 	{
 		// create the container
-		final NativeContainer<ByteType, ? extends ByteAccess> container = storageFactory.createByteInstance( dim, 1 );
+		final NativeImg<ByteType, ? extends ByteAccess> container = storageFactory.createByteInstance( dim, 1 );
 		
 		// create a Type that is linked to the container
 		final ByteType linkedType = new ByteType( container );

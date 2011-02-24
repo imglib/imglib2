@@ -36,7 +36,7 @@ import mpicbg.imglib.Localizable;
 import mpicbg.imglib.RandomAccess;
 import mpicbg.imglib.RandomAccessible;
 import mpicbg.imglib.RandomAccessibleInterval;
-import mpicbg.imglib.container.Img;
+import mpicbg.imglib.img.Img;
 import mpicbg.imglib.outofbounds.OutOfBounds;
 import mpicbg.imglib.outofbounds.OutOfBoundsFactory;
 import mpicbg.imglib.util.Util;

@@ -29,8 +29,8 @@
  */
 package mpicbg.imglib;
 
-import mpicbg.imglib.container.ImgCursor;
-import mpicbg.imglib.container.ImgRandomAccess;
+import mpicbg.imglib.img.ImgCursor;
+import mpicbg.imglib.img.ImgRandomAccess;
 
 /**
  * The {@link Localizable} interface can localize itself in an n-dimensional

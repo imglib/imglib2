@@ -7,15 +7,15 @@ import java.awt.Polygon;
 import java.awt.Rectangle;
 
 import mpicbg.imglib.algorithm.transformation.ImageTransform;
-import mpicbg.imglib.container.array.ArrayContainerFactory;
-import mpicbg.imglib.container.cell.CellContainerFactory;
-import mpicbg.imglib.container.shapelist.ShapeList;
-import mpicbg.imglib.container.shapelist.ShapeListCached;
 import mpicbg.imglib.cursor.LocalizableByDimCursor;
 import mpicbg.imglib.cursor.LocalizableCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.ImageFactory;
 import mpicbg.imglib.image.display.imagej.ImageJFunctions;
+import mpicbg.imglib.img.array.ArrayContainerFactory;
+import mpicbg.imglib.img.cell.CellImgFactory;
+import mpicbg.imglib.img.shapelist.ShapeList;
+import mpicbg.imglib.img.shapelist.ShapeListCached;
 import mpicbg.imglib.interpolation.linear.LinearInterpolatorFactory;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyValueFactory;
 import mpicbg.imglib.type.numeric.RealType;
@@ -84,7 +84,7 @@ public class ShapeListBehavior
 		
 		
 		/* Copy content rotated into another container */
-		final CellContainerFactory cellFactory = new CellContainerFactory();
+		final CellImgFactory cellFactory = new CellImgFactory();
 		final AffineModel3D affine = new AffineModel3D();
 		affine.set(
 				0.7660444f, -0.6427875f, 0.0f, 0.0f,

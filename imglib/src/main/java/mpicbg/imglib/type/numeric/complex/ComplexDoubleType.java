@@ -29,10 +29,10 @@
  */
 package mpicbg.imglib.type.numeric.complex;
 
-import mpicbg.imglib.container.NativeContainer;
-import mpicbg.imglib.container.NativeContainerFactory;
-import mpicbg.imglib.container.basictypecontainer.DoubleAccess;
-import mpicbg.imglib.container.basictypecontainer.array.DoubleArray;
+import mpicbg.imglib.img.NativeImg;
+import mpicbg.imglib.img.NativeImgFactory;
+import mpicbg.imglib.img.basictypeaccess.DoubleAccess;
+import mpicbg.imglib.img.basictypeaccess.array.DoubleArray;
 import mpicbg.imglib.type.NativeType;
 import mpicbg.imglib.type.numeric.ComplexType;
 
@@ -44,13 +44,13 @@ public class ComplexDoubleType extends AbstractComplexType<ComplexDoubleType> im
 	private int realI = 0, complexI = 1;
 
 	// the NativeContainer
-	final NativeContainer<ComplexDoubleType, ? extends DoubleAccess> storage;
+	final NativeImg<ComplexDoubleType, ? extends DoubleAccess> storage;
 	
 	// the (sub)NativeContainer that holds the information 
 	DoubleAccess b;
 	
 	// this is the constructor if you want it to read from an array
-	public ComplexDoubleType( NativeContainer<ComplexDoubleType, ? extends DoubleAccess> complexfloatStorage )
+	public ComplexDoubleType( NativeImg<ComplexDoubleType, ? extends DoubleAccess> complexfloatStorage )
 	{
 		storage = complexfloatStorage;
 	}
@@ -67,10 +67,10 @@ public class ComplexDoubleType extends AbstractComplexType<ComplexDoubleType> im
 	public ComplexDoubleType() { this( 0, 0 ); }
 
 	@Override
-	public NativeContainer<ComplexDoubleType, ? extends DoubleAccess> createSuitableNativeContainer( final NativeContainerFactory<ComplexDoubleType> storageFactory, final long dim[] )
+	public NativeImg<ComplexDoubleType, ? extends DoubleAccess> createSuitableNativeImg( final NativeImgFactory<ComplexDoubleType> storageFactory, final long dim[] )
 	{
 		// create the container
-		final NativeContainer<ComplexDoubleType, ? extends DoubleAccess> container = storageFactory.createDoubleInstance( dim, 2 );
+		final NativeImg<ComplexDoubleType, ? extends DoubleAccess> container = storageFactory.createDoubleInstance( dim, 2 );
 		
 		// create a Type that is linked to the container
 		final ComplexDoubleType linkedType = new ComplexDoubleType( container );

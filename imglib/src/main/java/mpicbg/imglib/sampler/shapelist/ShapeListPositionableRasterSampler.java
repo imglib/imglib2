@@ -29,10 +29,10 @@ package mpicbg.imglib.sampler.shapelist;
 
 import mpicbg.imglib.Localizable;
 import mpicbg.imglib.Positionable;
-import mpicbg.imglib.container.AbstractImgCursor;
-import mpicbg.imglib.container.ImgCursor;
-import mpicbg.imglib.container.ImgRandomAccess;
-import mpicbg.imglib.container.shapelist.ShapeList;
+import mpicbg.imglib.img.AbstractImgCursor;
+import mpicbg.imglib.img.ImgCursor;
+import mpicbg.imglib.img.ImgRandomAccess;
+import mpicbg.imglib.img.shapelist.ShapeList;
 import mpicbg.imglib.location.VoidRealPositionable;
 import mpicbg.imglib.type.Type;
 import mpicbg.imglib.util.Util;

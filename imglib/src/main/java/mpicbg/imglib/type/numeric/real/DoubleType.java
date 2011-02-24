@@ -29,10 +29,10 @@
  */
 package mpicbg.imglib.type.numeric.real;
 
-import mpicbg.imglib.container.NativeContainer;
-import mpicbg.imglib.container.NativeContainerFactory;
-import mpicbg.imglib.container.basictypecontainer.DoubleAccess;
-import mpicbg.imglib.container.basictypecontainer.array.DoubleArray;
+import mpicbg.imglib.img.NativeImg;
+import mpicbg.imglib.img.NativeImgFactory;
+import mpicbg.imglib.img.basictypeaccess.DoubleAccess;
+import mpicbg.imglib.img.basictypeaccess.array.DoubleArray;
 import mpicbg.imglib.type.NativeType;
 import mpicbg.imglib.type.numeric.ExponentialMathType;
 import mpicbg.imglib.type.numeric.RealType;
@@ -43,13 +43,13 @@ public class DoubleType extends AbstractRealType<DoubleType> implements RealType
 	private int i = 0;
 
 	// the NativeContainer
-	final NativeContainer<DoubleType, ? extends DoubleAccess> storage;
+	final NativeImg<DoubleType, ? extends DoubleAccess> storage;
 	
 	// the (sub)NativeContainer that holds the information 
 	DoubleAccess b;
 	
 	// this is the constructor if you want it to read from an array
-	public DoubleType( NativeContainer<DoubleType, ? extends DoubleAccess> doubleStorage )
+	public DoubleType( NativeImg<DoubleType, ? extends DoubleAccess> doubleStorage )
 	{
 		storage = doubleStorage;
 	}
@@ -66,10 +66,10 @@ public class DoubleType extends AbstractRealType<DoubleType> implements RealType
 	public DoubleType() { this( 0 ); }
 
 	@Override
-	public NativeContainer<DoubleType, ? extends DoubleAccess> createSuitableNativeContainer( final NativeContainerFactory<DoubleType> storageFactory, final long dim[] )
+	public NativeImg<DoubleType, ? extends DoubleAccess> createSuitableNativeImg( final NativeImgFactory<DoubleType> storageFactory, final long dim[] )
 	{
 		// create the container
-		final NativeContainer<DoubleType, ? extends DoubleAccess> container = storageFactory.createDoubleInstance( dim, 1 );
+		final NativeImg<DoubleType, ? extends DoubleAccess> container = storageFactory.createDoubleInstance( dim, 1 );
 		
 		// create a Type that is linked to the container
 		final DoubleType linkedType = new DoubleType( container );

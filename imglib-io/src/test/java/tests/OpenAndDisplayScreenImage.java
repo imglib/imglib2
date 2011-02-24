@@ -3,11 +3,11 @@ package tests;
 import ij.ImageJ;
 import ij.ImagePlus;
 import ij.process.ColorProcessor;
-import mpicbg.imglib.container.Img;
-import mpicbg.imglib.container.array.ArrayContainerFactory;
 import mpicbg.imglib.display.ARGBScreenImage;
 import mpicbg.imglib.display.RealARGBConverter;
 import mpicbg.imglib.display.XYProjector;
+import mpicbg.imglib.img.Img;
+import mpicbg.imglib.img.array.ArrayImgFactory;
 import mpicbg.imglib.io.LOCI;
 import mpicbg.imglib.type.numeric.ARGBType;
 import mpicbg.imglib.type.numeric.real.FloatType;
@@ -18,7 +18,7 @@ public class OpenAndDisplayScreenImage
 	{
 		new ImageJ();
 		
-		Img< FloatType > img = LOCI.openLOCIFloatType( "/home/saalfeld/Desktop/73.tif",  new ArrayContainerFactory<FloatType>() );
+		Img< FloatType > img = LOCI.openLOCIFloatType( "/home/saalfeld/Desktop/73.tif",  new ArrayImgFactory<FloatType>() );
 		
 		final ARGBScreenImage screenImage = new ARGBScreenImage( ( int )img.dimension( 0 ), ( int )img.dimension( 1 ) );
 		final XYProjector< FloatType, ARGBType > projector = new XYProjector< FloatType, ARGBType >( img, screenImage, new RealARGBConverter< FloatType >( 0, 127 ) );

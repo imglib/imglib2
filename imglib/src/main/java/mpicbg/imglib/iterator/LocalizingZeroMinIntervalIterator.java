@@ -30,7 +30,7 @@ package mpicbg.imglib.iterator;
 import mpicbg.imglib.Interval;
 import mpicbg.imglib.Iterator;
 import mpicbg.imglib.Positionable;
-import mpicbg.imglib.container.ImgRandomAccess;
+import mpicbg.imglib.img.ImgRandomAccess;
 import mpicbg.imglib.location.AbstractLocalizable;
 import mpicbg.imglib.util.IntervalIndexer;
 import mpicbg.imglib.util.Util;

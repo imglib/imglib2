@@ -27,7 +27,7 @@
  */
 package mpicbg.imglib.sampler.shapelist;
 
-import mpicbg.imglib.container.shapelist.ShapeListCached;
+import mpicbg.imglib.img.shapelist.ShapeListCached;
 import mpicbg.imglib.type.Type;
 import mpicbg.imglib.util.Util;
 

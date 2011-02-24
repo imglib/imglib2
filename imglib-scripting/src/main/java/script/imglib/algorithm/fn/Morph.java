@@ -3,7 +3,7 @@ package script.imglib.algorithm.fn;
 import mpicbg.imglib.algorithm.roi.StatisticalOperation;
 import mpicbg.imglib.algorithm.roi.StructuringElement;
 import mpicbg.imglib.container.Img;
-import mpicbg.imglib.container.array.Array;
+import mpicbg.imglib.container.array.ArrayImg;
 import mpicbg.imglib.container.basictypecontainer.FloatAccess;
 import mpicbg.imglib.outofbounds.OutOfBoundsFactory;
 import mpicbg.imglib.outofbounds.OutOfBoundsConstantValueFactory;
@@ -19,7 +19,7 @@ import mpicbg.imglib.type.numeric.real.FloatType;
  * 
  * 
  */
-public abstract class Morph extends Array<FloatType,FloatAccess>
+public abstract class Morph extends ArrayImg<FloatType,FloatAccess>
 {
 	static public enum Shape { BALL, CUBE, BAR };
 
@@ -28,7 +28,7 @@ public abstract class Morph extends Array<FloatType,FloatAccess>
 	static public final Shape BAR = Shape.BAR; 
 
 	// TODO: is a.update(null) really the way to get the underlying data? It's odd.
-	private Morph(final Array<FloatType,FloatAccess> a) {
+	private Morph(final ArrayImg<FloatType,FloatAccess> a) {
 		super(a.update(null), AlgorithmUtil.extractDimensions(a), 1);
 	}
 
