@@ -30,10 +30,10 @@
 
 package mpicbg.imglib.type.logic;
 
-import mpicbg.imglib.container.NativeContainer;
-import mpicbg.imglib.container.NativeContainerFactory;
-import mpicbg.imglib.container.basictypecontainer.BitAccess;
-import mpicbg.imglib.container.basictypecontainer.array.BitArray;
+import mpicbg.imglib.img.NativeImg;
+import mpicbg.imglib.img.NativeImgFactory;
+import mpicbg.imglib.img.basictypeaccess.BitAccess;
+import mpicbg.imglib.img.basictypeaccess.array.BitArray;
 import mpicbg.imglib.type.BooleanType;
 import mpicbg.imglib.type.NativeType;
 import mpicbg.imglib.type.numeric.RealType;
@@ -44,13 +44,13 @@ public class BitType extends AbstractIntegerType<BitType> implements BooleanType
 	private int i = 0;
 	
 	// the NativeContainer
-	final NativeContainer<BitType, ? extends BitAccess> storage;
+	final NativeImg<BitType, ? extends BitAccess> storage;
 	
 	// the (sub)NativeContainer that holds the information 
 	BitAccess b;
 	
 	// this is the constructor if you want it to read from an array
-	public BitType( NativeContainer<BitType, ? extends BitAccess> bitStorage )
+	public BitType( NativeImg<BitType, ? extends BitAccess> bitStorage )
 	{
 		storage = bitStorage;
 	}
@@ -67,10 +67,10 @@ public class BitType extends AbstractIntegerType<BitType> implements BooleanType
 	public BitType() { this( false ); }
 	
 	@Override
-	public NativeContainer<BitType, ? extends BitAccess> createSuitableNativeContainer( final NativeContainerFactory<BitType> storageFactory, final long dim[] )
+	public NativeImg<BitType, ? extends BitAccess> createSuitableNativeImg( final NativeImgFactory<BitType> storageFactory, final long dim[] )
 	{
 		// create the container
-		final NativeContainer<BitType, ? extends BitAccess> container = storageFactory.createBitInstance( dim, 1 );
+		final NativeImg<BitType, ? extends BitAccess> container = storageFactory.createBitInstance( dim, 1 );
 		
 		// create a Type that is linked to the container
 		final BitType linkedType = new BitType( container );

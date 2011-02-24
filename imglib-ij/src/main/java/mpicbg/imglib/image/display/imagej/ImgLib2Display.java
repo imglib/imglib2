@@ -3,10 +3,10 @@ package mpicbg.imglib.image.display.imagej;
 import ij.ImagePlus;
 import ij.ImageStack;
 import ij.process.FloatProcessor;
-import mpicbg.imglib.container.Img;
 import mpicbg.imglib.converter.Converter;
 import mpicbg.imglib.converter.TypeIdentity;
-import mpicbg.imglib.sampler.special.OrthoSliceIterator;
+import mpicbg.imglib.img.Img;
+import mpicbg.imglib.sampler.special.OrthoSliceCursor;
 import mpicbg.imglib.type.Type;
 import mpicbg.imglib.type.numeric.real.FloatType;
 
@@ -71,7 +71,7 @@ public class ImgLib2Display
 		final int sizeX = (int) container.dimension( dimX );
 		final int sizeY = (int) container.dimension( dimY );
     	
-    	final OrthoSliceIterator< T > cursor = new OrthoSliceIterator<T>( container, dimX, dimY, dimensionPositions ); 
+    	final OrthoSliceCursor< T > cursor = new OrthoSliceCursor<T>( container, dimX, dimY, dimensionPositions ); 
 		final FloatType out = new FloatType();
 		
 		// store the slice image

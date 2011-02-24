@@ -29,10 +29,10 @@
  */
 package mpicbg.imglib.type.label;
 
-import mpicbg.imglib.container.NativeContainer;
-import mpicbg.imglib.container.NativeContainerFactory;
-import mpicbg.imglib.container.basictypecontainer.CharAccess;
-import mpicbg.imglib.container.basictypecontainer.array.CharArray;
+import mpicbg.imglib.img.NativeImg;
+import mpicbg.imglib.img.NativeImgFactory;
+import mpicbg.imglib.img.basictypeaccess.CharAccess;
+import mpicbg.imglib.img.basictypeaccess.array.CharArray;
 import mpicbg.imglib.type.AbstractNativeType;
 import mpicbg.imglib.type.BasePairType;
 import mpicbg.imglib.type.label.BasePairBitType.Base;
@@ -43,13 +43,13 @@ public class BasePairCharType extends AbstractNativeType<BasePairCharType> imple
 	public int getEntitiesPerPixel() { return 1; } 
 
 	// the NativeContainer
-	final NativeContainer<BasePairCharType, ? extends CharAccess> storage;
+	final NativeImg<BasePairCharType, ? extends CharAccess> storage;
 	
 	// the (sub)NativeContainer that holds the information 
 	CharAccess b;
 	
 	// this is the constructor if you want it to read from an array
-	public BasePairCharType( NativeContainer<BasePairCharType, ? extends CharAccess> charStorage )
+	public BasePairCharType( NativeImg<BasePairCharType, ? extends CharAccess> charStorage )
 	{
 		storage = charStorage;
 	}
@@ -74,10 +74,10 @@ public class BasePairCharType extends AbstractNativeType<BasePairCharType> imple
 	public BasePairCharType() { this( Base.N ); }
 
 	@Override
-	public NativeContainer<BasePairCharType, ? extends CharAccess> createSuitableNativeContainer( final NativeContainerFactory<BasePairCharType> storageFactory, final long dim[] )
+	public NativeImg<BasePairCharType, ? extends CharAccess> createSuitableNativeImg( final NativeImgFactory<BasePairCharType> storageFactory, final long dim[] )
 	{
 		// create the container
-		final NativeContainer<BasePairCharType, ? extends CharAccess> container = storageFactory.createCharInstance( dim, 1 );
+		final NativeImg<BasePairCharType, ? extends CharAccess> container = storageFactory.createCharInstance( dim, 1 );
 		
 		// create a Type that is linked to the container
 		final BasePairCharType linkedType = new BasePairCharType( container );

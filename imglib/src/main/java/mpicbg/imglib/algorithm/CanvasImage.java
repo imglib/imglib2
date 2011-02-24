@@ -17,9 +17,9 @@
 package mpicbg.imglib.algorithm;
 
 import mpicbg.imglib.algorithm.Benchmark;
-import mpicbg.imglib.container.ImgCursor;
-import mpicbg.imglib.container.ImgRandomAccess;
-import mpicbg.imglib.container.Img;
+import mpicbg.imglib.img.Img;
+import mpicbg.imglib.img.ImgCursor;
+import mpicbg.imglib.img.ImgRandomAccess;
 import mpicbg.imglib.outofbounds.RasterOutOfBoundsFactory;
 import mpicbg.imglib.type.Type;
 

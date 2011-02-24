@@ -20,17 +20,17 @@ import java.util.List;
 import java.util.Map;
 
 import mpicbg.imglib.Cursor;
-import mpicbg.imglib.container.Img;
-import mpicbg.imglib.container.ImgFactory;
-import mpicbg.imglib.container.array.Array;
-import mpicbg.imglib.container.array.ArrayCursor;
 import mpicbg.imglib.container.basictypecontainer.ByteAccess;
 import mpicbg.imglib.container.basictypecontainer.array.ByteArray;
-import mpicbg.imglib.container.cell.CellContainerFactory;
-import mpicbg.imglib.container.cell.CellCursor;
-import mpicbg.imglib.container.planar.PlanarContainer;
-import mpicbg.imglib.container.planar.PlanarCursor;
 import mpicbg.imglib.image.ImagePlusAdapter;
+import mpicbg.imglib.img.Img;
+import mpicbg.imglib.img.ImgFactory;
+import mpicbg.imglib.img.array.ArrayCursor;
+import mpicbg.imglib.img.array.ArrayImg;
+import mpicbg.imglib.img.cell.CellCursor;
+import mpicbg.imglib.img.cell.CellImgFactory;
+import mpicbg.imglib.img.planar.PlanarCursor;
+import mpicbg.imglib.img.planar.PlanarImg;
 import mpicbg.imglib.type.numeric.integer.UnsignedByteType;
 
 /**
@@ -343,7 +343,7 @@ public class PerformanceBenchmark {
 		//return createImage(data, width, height, new ArrayContainerFactory());
 		// NB: Avoid copying the data.
 		final ByteAccess byteAccess = new ByteArray(data);
-		final Array<UnsignedByteType, ByteAccess> array = new Array<UnsignedByteType, ByteAccess>( byteAccess, new long[] {w, h}, 1 );
+		final ArrayImg<UnsignedByteType, ByteAccess> array = new ArrayImg<UnsignedByteType, ByteAccess>( byteAccess, new long[] {w, h}, 1 );
 		array.setLinkedType(new UnsignedByteType(array));
 		return array;
 		//return DevUtil.createImageFromArray(data, new int[] {width, height});
@@ -352,14 +352,14 @@ public class PerformanceBenchmark {
 	private Img<UnsignedByteType> createPlanarImage(final byte[] data, final int w, final int h) {
 		//return createImage(data, width, height, new PlanarContainerFactory());
 		// NB: Avoid copying the data.
-		PlanarContainer<UnsignedByteType, ByteArray> planarContainer = new PlanarContainer<UnsignedByteType, ByteArray>(new long[] {w, h}, 1);
+		PlanarImg<UnsignedByteType, ByteArray> planarContainer = new PlanarImg<UnsignedByteType, ByteArray>(new long[] {w, h}, 1);
 		planarContainer.setPlane(0, new ByteArray(data));
 		planarContainer.setLinkedType(new UnsignedByteType(planarContainer));
 		return planarContainer;
 	}
 
 	private Img<UnsignedByteType> createCellImage(final byte[] data, final int w, final int h) {
-		return createImage( data, w, h, new CellContainerFactory< UnsignedByteType >() );
+		return createImage( data, w, h, new CellImgFactory< UnsignedByteType >() );
 	}
 
 	private Img<UnsignedByteType> createImagePlusImage(final ImageProcessor ip) {

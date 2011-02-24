@@ -11,7 +11,7 @@ import mpicbg.imglib.container.AbstractImg;
 import mpicbg.imglib.container.Img;
 import mpicbg.imglib.container.ImgCursor;
 import mpicbg.imglib.container.ImgRandomAccess;
-import mpicbg.imglib.container.array.Array;
+import mpicbg.imglib.container.array.ArrayImg;
 import mpicbg.imglib.container.basictypecontainer.FloatAccess;
 import mpicbg.imglib.interpolation.InterpolatorFactory;
 import mpicbg.imglib.interpolation.linear.LinearInterpolatorFactory;

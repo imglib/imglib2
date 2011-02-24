@@ -27,7 +27,7 @@
  */
 package mpicbg.imglib.interpolation.linear;
 
-import mpicbg.imglib.container.Img;
+import mpicbg.imglib.img.Img;
 import mpicbg.imglib.interpolation.Interpolator;
 import mpicbg.imglib.interpolation.InterpolatorFactory;
 import mpicbg.imglib.outofbounds.RasterOutOfBoundsFactory;

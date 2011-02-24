@@ -29,10 +29,10 @@
  */
 package mpicbg.imglib.type.numeric.integer;
 
-import mpicbg.imglib.container.NativeContainer;
-import mpicbg.imglib.container.NativeContainerFactory;
-import mpicbg.imglib.container.basictypecontainer.LongAccess;
-import mpicbg.imglib.container.basictypecontainer.array.LongArray;
+import mpicbg.imglib.img.NativeImg;
+import mpicbg.imglib.img.NativeImgFactory;
+import mpicbg.imglib.img.basictypeaccess.LongAccess;
+import mpicbg.imglib.img.basictypeaccess.array.LongArray;
 import mpicbg.imglib.type.NativeType;
 import mpicbg.imglib.util.Util;
 
@@ -41,13 +41,13 @@ final public class LongType extends AbstractIntegerType<LongType> implements Nat
 	private int i = 0;
 	
 	// the NativeContainer
-	final NativeContainer<LongType, ? extends LongAccess> storage;
+	final NativeImg<LongType, ? extends LongAccess> storage;
 	
 	// the (sub)NativeContainer that holds the information 
 	LongAccess b;
 	
 	// this is the constructor if you want it to read from an array
-	public LongType( NativeContainer<LongType, ? extends LongAccess> longStorage )
+	public LongType( NativeImg<LongType, ? extends LongAccess> longStorage )
 	{
 		storage = longStorage;
 	}
@@ -64,10 +64,10 @@ final public class LongType extends AbstractIntegerType<LongType> implements Nat
 	public LongType() { this( 0 ); }
 
 	@Override
-	public NativeContainer<LongType, ? extends LongAccess> createSuitableNativeContainer( final NativeContainerFactory<LongType> storageFactory, final long dim[] )
+	public NativeImg<LongType, ? extends LongAccess> createSuitableNativeImg( final NativeImgFactory<LongType> storageFactory, final long dim[] )
 	{
 		// create the container
-		final NativeContainer<LongType, ? extends LongAccess> container = storageFactory.createLongInstance( dim, 1 );
+		final NativeImg<LongType, ? extends LongAccess> container = storageFactory.createLongInstance( dim, 1 );
 		
 		// create a Type that is linked to the container
 		final LongType linkedType = new LongType( container );

@@ -5,14 +5,14 @@ import static org.junit.Assert.assertTrue;
 import java.util.Random;
 
 import mpicbg.imglib.algorithm.fft.FFTFunctions;
-import mpicbg.imglib.container.Img;
-import mpicbg.imglib.container.ImgCursor;
-import mpicbg.imglib.container.ImgFactory;
-import mpicbg.imglib.container.ImgRandomAccess;
-import mpicbg.imglib.container.array.ArrayContainerFactory;
-import mpicbg.imglib.container.cell.CellContainerFactory;
-import mpicbg.imglib.container.imageplus.ImagePlusContainerFactory;
-import mpicbg.imglib.container.planar.PlanarContainerFactory;
+import mpicbg.imglib.img.Img;
+import mpicbg.imglib.img.ImgCursor;
+import mpicbg.imglib.img.ImgFactory;
+import mpicbg.imglib.img.ImgRandomAccess;
+import mpicbg.imglib.img.array.ArrayImgFactory;
+import mpicbg.imglib.img.cell.CellImgFactory;
+import mpicbg.imglib.img.imageplus.ImagePlusContainerFactory;
+import mpicbg.imglib.img.planar.PlanarImgFactory;
 import mpicbg.imglib.outofbounds.OutOfBoundsPeriodicFactory;
 import mpicbg.imglib.type.numeric.real.FloatType;
 import mpicbg.imglib.util.Util;
@@ -45,7 +45,7 @@ public class ContainerTests
 		for ( int i = 0; i < dim.length; ++i )
 		{
 			assertTrue( "ArrayContainer failed for: dim=" + Util.printCoordinates( dim[ i ] ), 
-			            testContainer( dim[ i ], new ArrayContainerFactory< FloatType >(), new ArrayContainerFactory() ) );
+			            testContainer( dim[ i ], new ArrayImgFactory< FloatType >(), new ArrayImgFactory() ) );
 		}
 	}
 
@@ -58,11 +58,11 @@ public class ContainerTests
 		{
 			if ( dim[ i ].length > 1 ) {
 			assertTrue( "ArrayContainer vs CellContainer failed for dim = " + Util.printCoordinates( dim[ i ] ),
-			            testContainer( dim[ i ], new ArrayContainerFactory< FloatType >(), new CellContainerFactory< FloatType >( 10 ) ) );
+			            testContainer( dim[ i ], new ArrayImgFactory< FloatType >(), new CellImgFactory< FloatType >( 10 ) ) );
 			assertTrue( "CellContainer vs ArrayContainer failed for dim = " + Util.printCoordinates( dim[ i ] ), 
-			            testContainer( dim[ i ], new CellContainerFactory< FloatType >(), new ArrayContainerFactory< FloatType >() ) );
+			            testContainer( dim[ i ], new CellImgFactory< FloatType >(), new ArrayImgFactory< FloatType >() ) );
 			assertTrue( "CellContainer vs CellContainer failed for dim = " + Util.printCoordinates( dim[ i ] ),
-			            testContainer( dim[ i ], new CellContainerFactory< FloatType >( 5 ), new CellContainerFactory< FloatType >() ) );
+			            testContainer( dim[ i ], new CellImgFactory< FloatType >( 5 ), new CellImgFactory< FloatType >() ) );
 			}
 		}
 	}
@@ -75,11 +75,11 @@ public class ContainerTests
 		for ( int i = 0; i < dim.length; ++i )
 		{
 			assertTrue( "ArrayContainer vs PlanarContainer failed for dim = " + Util.printCoordinates( dim[ i ] ),
-			            testContainer( dim[ i ], new ArrayContainerFactory< FloatType >(), new PlanarContainerFactory< FloatType >() ) );
+			            testContainer( dim[ i ], new ArrayImgFactory< FloatType >(), new PlanarImgFactory< FloatType >() ) );
 			assertTrue( "PlanarContainer vs ArrayContainer failed for dim = " + Util.printCoordinates( dim[ i ] ), 
-			            testContainer( dim[ i ], new PlanarContainerFactory< FloatType >(), new ArrayContainerFactory< FloatType >() ) );
+			            testContainer( dim[ i ], new PlanarImgFactory< FloatType >(), new ArrayImgFactory< FloatType >() ) );
 			assertTrue( "PlanarContainer vs PlanarContainer failed for dim = " + Util.printCoordinates( dim[ i ] ),
-			            testContainer( dim[ i ], new PlanarContainerFactory< FloatType >(), new PlanarContainerFactory< FloatType >() ) );
+			            testContainer( dim[ i ], new PlanarImgFactory< FloatType >(), new PlanarImgFactory< FloatType >() ) );
 		}
 	}
 
@@ -93,9 +93,9 @@ public class ContainerTests
 			if ( dim[ i ].length < 6 )
 			{
 				assertTrue( "ArrayContainer vs ImagePlusContainer failed for dim = " + Util.printCoordinates( dim[ i ] ),
-				            testContainer( dim[ i ], new ArrayContainerFactory< FloatType >(), new ImagePlusContainerFactory() ) );
+				            testContainer( dim[ i ], new ArrayImgFactory< FloatType >(), new ImagePlusContainerFactory() ) );
 				assertTrue( "ImagePlusContainer vs ArrayContainer failed for dim = " + Util.printCoordinates( dim[ i ] ), 
-				            testContainer( dim[ i ], new ImagePlusContainerFactory(), new ArrayContainerFactory() ) );
+				            testContainer( dim[ i ], new ImagePlusContainerFactory(), new ArrayImgFactory() ) );
 				assertTrue( "ImagePlusContainer vs ImagePlusContainer failed for dim = " + Util.printCoordinates( dim[ i ] ),
 				            testContainer( dim[ i ], new ImagePlusContainerFactory(), new ImagePlusContainerFactory() ) );
 			}
@@ -107,9 +107,9 @@ public class ContainerTests
 	 */
 	@Test public void testMultiThreading()
 	{
-		assertTrue( "ArrayContainer MultiThreading failed", testThreading( new ArrayContainerFactory< FloatType >() ) );
-		assertTrue( "CellContainer MultiThreading failed", testThreading( new CellContainerFactory< FloatType >() ) );
-		assertTrue( "PlanarContainer MultiThreading failed", testThreading( new PlanarContainerFactory< FloatType >() ) );
+		assertTrue( "ArrayContainer MultiThreading failed", testThreading( new ArrayImgFactory< FloatType >() ) );
+		assertTrue( "CellContainer MultiThreading failed", testThreading( new CellImgFactory< FloatType >() ) );
+		assertTrue( "PlanarContainer MultiThreading failed", testThreading( new PlanarImgFactory< FloatType >() ) );
 		assertTrue( "ImagePlusContainer MultiThreading failed", testThreading( new ImagePlusContainerFactory< FloatType >() ) );	
 	}
 	

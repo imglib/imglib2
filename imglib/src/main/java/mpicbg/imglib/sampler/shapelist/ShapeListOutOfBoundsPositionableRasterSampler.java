@@ -27,9 +27,9 @@
  */
 package mpicbg.imglib.sampler.shapelist;
 
-import mpicbg.imglib.container.AbstractImgOutOfBoundsRandomAccess;
-import mpicbg.imglib.container.shapelist.ShapeList;
-import mpicbg.imglib.container.Img;
+import mpicbg.imglib.img.AbstractImgOutOfBoundsRandomAccess;
+import mpicbg.imglib.img.Img;
+import mpicbg.imglib.img.shapelist.ShapeList;
 import mpicbg.imglib.outofbounds.OutOfBoundsFactory;
 import mpicbg.imglib.type.Type;
 

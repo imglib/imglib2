@@ -29,7 +29,7 @@
  */
 package mpicbg.imglib.image.display.imagej;
 
-import mpicbg.imglib.container.Img;
+import mpicbg.imglib.img.Img;
 import mpicbg.imglib.interpolation.InterpolatorFactory;
 import mpicbg.imglib.type.Type;
 import mpicbg.models.InvertibleBoundable;

@@ -29,8 +29,8 @@ package mpicbg.imglib.interpolation.linear;
 
 import mpicbg.imglib.Localizable;
 import mpicbg.imglib.RealLocalizable;
-import mpicbg.imglib.container.ImgRandomAccess;
-import mpicbg.imglib.container.Img;
+import mpicbg.imglib.img.Img;
+import mpicbg.imglib.img.ImgRandomAccess;
 import mpicbg.imglib.interpolation.Interpolator;
 import mpicbg.imglib.outofbounds.RasterOutOfBoundsFactory;
 import mpicbg.imglib.type.numeric.NumericType;

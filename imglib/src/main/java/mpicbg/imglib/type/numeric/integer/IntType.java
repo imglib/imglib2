@@ -29,14 +29,14 @@
  */
 package mpicbg.imglib.type.numeric.integer;
 
-import mpicbg.imglib.container.NativeContainer;
-import mpicbg.imglib.container.NativeContainerFactory;
-import mpicbg.imglib.container.basictypecontainer.IntAccess;
+import mpicbg.imglib.img.NativeImg;
+import mpicbg.imglib.img.NativeImgFactory;
+import mpicbg.imglib.img.basictypeaccess.IntAccess;
 
 public class IntType extends GenericIntType<IntType>
 {
 	// this is the constructor if you want it to read from an array
-	public IntType( NativeContainer<IntType, ? extends IntAccess> intStorage ) { super( intStorage ); }
+	public IntType( NativeImg<IntType, ? extends IntAccess> intStorage ) { super( intStorage ); }
 	
 	// this is the constructor if you want it to be a variable
 	public IntType( final int value ) { super( value ); }
@@ -45,10 +45,10 @@ public class IntType extends GenericIntType<IntType>
 	public IntType() { super( 0 ); }
 		
 	@Override
-	public NativeContainer<IntType, ? extends IntAccess> createSuitableNativeContainer( final NativeContainerFactory<IntType> storageFactory, final long dim[] )
+	public NativeImg<IntType, ? extends IntAccess> createSuitableNativeImg( final NativeImgFactory<IntType> storageFactory, final long dim[] )
 	{
 		// create the container
-		final NativeContainer<IntType, ? extends IntAccess> container = storageFactory.createIntInstance( dim, 1 );
+		final NativeImg<IntType, ? extends IntAccess> container = storageFactory.createIntInstance( dim, 1 );
 		
 		// create a Type that is linked to the container
 		final IntType linkedType = new IntType( container );

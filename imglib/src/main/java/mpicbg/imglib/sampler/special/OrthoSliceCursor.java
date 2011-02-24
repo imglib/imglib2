@@ -35,10 +35,10 @@ import mpicbg.imglib.Interval;
 import mpicbg.imglib.Iterator;
 import mpicbg.imglib.RandomAccess;
 import mpicbg.imglib.RandomAccessible;
-import mpicbg.imglib.container.Img;
-import mpicbg.imglib.container.ImgCursor;
-import mpicbg.imglib.container.ImgRandomAccess;
-import mpicbg.imglib.container.basictypecontainer.PlanarAccess;
+import mpicbg.imglib.img.Img;
+import mpicbg.imglib.img.ImgCursor;
+import mpicbg.imglib.img.ImgRandomAccess;
+import mpicbg.imglib.img.basictypeaccess.PlanarAccess;
 import mpicbg.imglib.type.Type;
 
 /**

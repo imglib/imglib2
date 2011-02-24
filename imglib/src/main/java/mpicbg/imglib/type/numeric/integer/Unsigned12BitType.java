@@ -30,10 +30,10 @@
 
 package mpicbg.imglib.type.numeric.integer;
 
-import mpicbg.imglib.container.NativeContainer;
-import mpicbg.imglib.container.NativeContainerFactory;
-import mpicbg.imglib.container.basictypecontainer.BitAccess;
-import mpicbg.imglib.container.basictypecontainer.array.BitArray;
+import mpicbg.imglib.img.NativeImg;
+import mpicbg.imglib.img.NativeImgFactory;
+import mpicbg.imglib.img.basictypeaccess.BitAccess;
+import mpicbg.imglib.img.basictypeaccess.array.BitArray;
 import mpicbg.imglib.type.NativeType;
 import mpicbg.imglib.type.numeric.integer.AbstractIntegerType;
 
@@ -42,7 +42,7 @@ public class Unsigned12BitType extends AbstractIntegerType<Unsigned12BitType> im
 	private int i = 0;
 	
 	// the NativeContainer
-	final NativeContainer<Unsigned12BitType, ? extends BitAccess> storage;
+	final NativeImg<Unsigned12BitType, ? extends BitAccess> storage;
 
 	// the adresses of the bits that we store
 	int j1, j2, j3, j4, j5, j6, j7, j8, j9, j10, j11, j12;
@@ -51,7 +51,7 @@ public class Unsigned12BitType extends AbstractIntegerType<Unsigned12BitType> im
 	BitAccess b;
 	
 	// this is the constructor if you want it to read from an array
-	public Unsigned12BitType( NativeContainer<Unsigned12BitType, ? extends BitAccess> bitStorage )
+	public Unsigned12BitType( NativeImg<Unsigned12BitType, ? extends BitAccess> bitStorage )
 	{
 		storage = bitStorage;
 		updateIndex( 0 );
@@ -70,10 +70,10 @@ public class Unsigned12BitType extends AbstractIntegerType<Unsigned12BitType> im
 	public Unsigned12BitType() { this( (short)0 ); }
 	
 	@Override
-	public NativeContainer<Unsigned12BitType, ? extends BitAccess> createSuitableNativeContainer( final NativeContainerFactory<Unsigned12BitType> storageFactory, final long dim[] )
+	public NativeImg<Unsigned12BitType, ? extends BitAccess> createSuitableNativeImg( final NativeImgFactory<Unsigned12BitType> storageFactory, final long dim[] )
 	{
 		// create the container
-		final NativeContainer<Unsigned12BitType, ? extends BitAccess> container = storageFactory.createBitInstance( dim, 12 );
+		final NativeImg<Unsigned12BitType, ? extends BitAccess> container = storageFactory.createBitInstance( dim, 12 );
 		
 		// create a Type that is linked to the container
 		final Unsigned12BitType linkedType = new Unsigned12BitType( container );

@@ -5,11 +5,11 @@ import ij.ImagePlus;
 import ij.process.ColorProcessor;
 import mpicbg.imglib.Cursor;
 import mpicbg.imglib.RandomAccess;
-import mpicbg.imglib.container.Img;
-import mpicbg.imglib.container.cell.CellContainerFactory;
 import mpicbg.imglib.display.ARGBScreenImage;
 import mpicbg.imglib.display.RealARGBConverter;
 import mpicbg.imglib.display.XYProjector;
+import mpicbg.imglib.img.Img;
+import mpicbg.imglib.img.cell.CellImgFactory;
 import mpicbg.imglib.io.LOCI;
 import mpicbg.imglib.type.Type;
 import mpicbg.imglib.type.numeric.ARGBType;
@@ -56,7 +56,7 @@ public class OpenAndDisplayWithCellContainer
 	{
 		new ImageJ();
 		
-		Img< FloatType > img = LOCI.openLOCIFloatType( "/home/tobias/workspace/imglibworkshop/DrosophilaWing.tif",  new CellContainerFactory<FloatType>( new int[] {64, 64} ) );
+		Img< FloatType > img = LOCI.openLOCIFloatType( "/home/tobias/workspace/imglibworkshop/DrosophilaWing.tif",  new CellImgFactory<FloatType>( new int[] {64, 64} ) );
 
 		final Img< FloatType > copy = img.factory().create( img, new FloatType() );
 		copyLocalizing (img, copy);

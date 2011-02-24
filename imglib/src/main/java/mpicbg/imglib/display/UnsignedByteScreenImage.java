@@ -40,8 +40,8 @@ import java.util.Iterator;
 import mpicbg.imglib.Cursor;
 import mpicbg.imglib.IterableInterval;
 import mpicbg.imglib.IterableRealInterval;
-import mpicbg.imglib.container.array.Array;
-import mpicbg.imglib.container.basictypecontainer.array.ByteArray;
+import mpicbg.imglib.img.array.ArrayImg;
+import mpicbg.imglib.img.basictypeaccess.array.ByteArray;
 import mpicbg.imglib.type.numeric.integer.UnsignedByteType;
 
 /**
@@ -52,7 +52,7 @@ import mpicbg.imglib.type.numeric.integer.UnsignedByteType;
 public class UnsignedByteScreenImage implements ScreenImage, IterableInterval< UnsignedByteType >
 {
 	final protected byte[] data; 
-	final protected Array< UnsignedByteType, ByteArray > argbArray;
+	final protected ArrayImg< UnsignedByteType, ByteArray > argbArray;
 	final protected Image image;
 	
 	static public final IndexColorModel GRAY_LUT = makeGrayLut();
@@ -84,7 +84,7 @@ public class UnsignedByteScreenImage implements ScreenImage, IterableInterval< U
 	public UnsignedByteScreenImage( final int width, final int height, final byte[] data )
 	{
 		this.data = data;
-		argbArray = new Array< UnsignedByteType, ByteArray >( new ByteArray( data ), new long[]{ width, height }, 1 );
+		argbArray = new ArrayImg< UnsignedByteType, ByteArray >( new ByteArray( data ), new long[]{ width, height }, 1 );
 		argbArray.setLinkedType( new UnsignedByteType( argbArray ) );
 
 		SampleModel sampleModel = GRAY_LUT.createCompatibleWritableRaster( 1, 1 )

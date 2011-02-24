@@ -30,7 +30,7 @@
 package mpicbg.imglib.sampler.special;
 
 import mpicbg.imglib.Localizable;
-import mpicbg.imglib.container.Img;
+import mpicbg.imglib.img.Img;
 import mpicbg.imglib.outofbounds.RasterOutOfBoundsFactory;
 import mpicbg.imglib.type.Type;
 

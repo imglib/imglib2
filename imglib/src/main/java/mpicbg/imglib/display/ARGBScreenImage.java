@@ -41,8 +41,8 @@ import java.util.Iterator;
 import mpicbg.imglib.Cursor;
 import mpicbg.imglib.IterableInterval;
 import mpicbg.imglib.IterableRealInterval;
-import mpicbg.imglib.container.array.Array;
-import mpicbg.imglib.container.basictypecontainer.array.IntArray;
+import mpicbg.imglib.img.array.ArrayImg;
+import mpicbg.imglib.img.basictypeaccess.array.IntArray;
 import mpicbg.imglib.type.numeric.ARGBType;
 
 /**
@@ -53,7 +53,7 @@ import mpicbg.imglib.type.numeric.ARGBType;
 public class ARGBScreenImage implements ScreenImage, IterableInterval< ARGBType >
 {
 	final protected int[] data; 
-	final protected Array< ARGBType, IntArray > argbArray;
+	final protected ArrayImg< ARGBType, IntArray > argbArray;
 	final protected Image image;
 	
 	static final public ColorModel ARGB_COLOR_MODEL = new DirectColorModel(32, 0xff0000, 0xff00, 0xff, 0xff000000);
@@ -73,7 +73,7 @@ public class ARGBScreenImage implements ScreenImage, IterableInterval< ARGBType 
 	public ARGBScreenImage( final int width, final int height, final int[] data )
 	{
 		this.data = data;
-		argbArray = new Array< ARGBType, IntArray >( new IntArray( data ), new long[]{ width, height }, 1 );
+		argbArray = new ArrayImg< ARGBType, IntArray >( new IntArray( data ), new long[]{ width, height }, 1 );
 		argbArray.setLinkedType( new ARGBType( argbArray ) );
 
 		SampleModel sampleModel = ARGB_COLOR_MODEL.createCompatibleWritableRaster( 1, 1 ).getSampleModel()

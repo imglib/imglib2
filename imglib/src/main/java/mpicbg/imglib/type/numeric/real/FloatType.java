@@ -30,10 +30,10 @@
 package mpicbg.imglib.type.numeric.real;
 
 import mpicbg.imglib.algorithm.Precision.PrecisionReal;
-import mpicbg.imglib.container.NativeContainer;
-import mpicbg.imglib.container.NativeContainerFactory;
-import mpicbg.imglib.container.basictypecontainer.FloatAccess;
-import mpicbg.imglib.container.basictypecontainer.array.FloatArray;
+import mpicbg.imglib.img.NativeImg;
+import mpicbg.imglib.img.NativeImgFactory;
+import mpicbg.imglib.img.basictypeaccess.FloatAccess;
+import mpicbg.imglib.img.basictypeaccess.array.FloatArray;
 import mpicbg.imglib.type.NativeType;
 import mpicbg.imglib.type.numeric.RealType;
 
@@ -42,13 +42,13 @@ public class FloatType extends AbstractRealType<FloatType> implements RealType<F
 	private int i = 0;
 
 	// the NativeContainer
-	final NativeContainer<FloatType, ? extends FloatAccess> storage;
+	final NativeImg<FloatType, ? extends FloatAccess> storage;
 	
 	// the (sub)NativeContainer that holds the information 
 	FloatAccess b;
 	
 	// this is the constructor if you want it to read from an array
-	public FloatType( NativeContainer<FloatType, ? extends FloatAccess> floatStorage )
+	public FloatType( NativeImg<FloatType, ? extends FloatAccess> floatStorage )
 	{
 		storage = floatStorage;
 	}
@@ -65,10 +65,10 @@ public class FloatType extends AbstractRealType<FloatType> implements RealType<F
 	public FloatType() { this( 0 ); }
 
 	@Override
-	public NativeContainer<FloatType, ? extends FloatAccess> createSuitableNativeContainer( final NativeContainerFactory<FloatType> storageFactory, final long dim[] )
+	public NativeImg<FloatType, ? extends FloatAccess> createSuitableNativeImg( final NativeImgFactory<FloatType> storageFactory, final long dim[] )
 	{
 		// create the container
-		final NativeContainer<FloatType, ? extends FloatAccess> container = storageFactory.createFloatInstance( dim, 1 );
+		final NativeImg<FloatType, ? extends FloatAccess> container = storageFactory.createFloatInstance( dim, 1 );
 		
 		// create a Type that is linked to the container
 		final FloatType linkedType = new FloatType( container );

@@ -27,8 +27,8 @@
  */
 package mpicbg.imglib.type;
 
-import mpicbg.imglib.container.NativeContainer;
-import mpicbg.imglib.container.NativeContainerFactory;
+import mpicbg.imglib.img.NativeImg;
+import mpicbg.imglib.img.NativeImgFactory;
 
 /**
  * A {@link NativeType} is a {@link Type} that that provides access to data
@@ -57,7 +57,7 @@ public interface NativeType<T extends NativeType<T>> extends Type<T>
 	public int getEntitiesPerPixel(); 
 
 	/**
-	 * The {@link NativeType} creates the {@link NativeContainer} used for storing image
+	 * The {@link NativeType} creates the {@link NativeImg} used for storing image
 	 * data; based on the given storage strategy and its size. It basically only
 	 * decides here which BasicType it uses (float, int, byte, bit, ...) and how
 	 * many entities per pixel it needs (e.g. 2 floats per pixel for a complex
@@ -70,14 +70,14 @@ public interface NativeType<T extends NativeType<T>> extends Type<T>
 	 * @return the instantiated NativeContainer where only the
 	 *         {@link Type} knows the BasicType it contains.
 	 */
-	public NativeContainer< T, ? > createSuitableNativeContainer( final NativeContainerFactory< T > storageFactory, final long[] dim );
+	public NativeImg< T, ? > createSuitableNativeImg( final NativeImgFactory< T > storageFactory, final long[] dim );
 	
 	/**
 	 * Creates a new {@link NativeType} which stores in the same physical array. This
 	 * is only used internally.
 	 * 
 	 * @return - a new {@link NativeType} instance working on the same
-	 *         {@link NativeContainer}
+	 *         {@link NativeImg}
 	 */
 	public T duplicateTypeOnSameNativeContainer();	
 

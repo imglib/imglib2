@@ -8,13 +8,13 @@ import java.io.File;
 
 import javax.swing.JFileChooser;
 
-import mpicbg.imglib.container.Img;
-import mpicbg.imglib.container.ImgCursor;
-import mpicbg.imglib.container.array.ArrayContainerFactory;
 import mpicbg.imglib.container.imageplus.ImagePlusContainer;
 import mpicbg.imglib.exception.ImgLibException;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.display.imagej.ImageJFunctions;
+import mpicbg.imglib.img.Img;
+import mpicbg.imglib.img.ImgCursor;
+import mpicbg.imglib.img.array.ArrayImgFactory;
 import mpicbg.imglib.io.LOCI;
 import mpicbg.imglib.type.numeric.RealType;
 import mpicbg.imglib.type.numeric.real.FloatType;
@@ -32,7 +32,7 @@ public class SquareTest {
     File file = chooseFile();
     if (file == null) return;
     Image<FloatType> inImg = LOCI.openLOCIFloatType(file.getPath(),
-      new ArrayContainerFactory());
+      new ArrayImgFactory());
     Image<FloatType> outImg = square(inImg);
 
     // show ImageJ control panel window

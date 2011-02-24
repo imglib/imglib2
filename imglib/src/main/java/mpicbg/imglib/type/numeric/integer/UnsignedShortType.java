@@ -29,15 +29,15 @@
  */
 package mpicbg.imglib.type.numeric.integer;
 
-import mpicbg.imglib.container.NativeContainer;
-import mpicbg.imglib.container.NativeContainerFactory;
-import mpicbg.imglib.container.basictypecontainer.ShortAccess;
+import mpicbg.imglib.img.NativeImg;
+import mpicbg.imglib.img.NativeImgFactory;
+import mpicbg.imglib.img.basictypeaccess.ShortAccess;
 import mpicbg.imglib.util.Util;
 
 public class UnsignedShortType extends GenericShortType<UnsignedShortType>
 {
 	// this is the constructor if you want it to read from an array
-	public UnsignedShortType( NativeContainer<UnsignedShortType, ? extends ShortAccess> shortStorage ) { super( shortStorage ); }
+	public UnsignedShortType( NativeImg<UnsignedShortType, ? extends ShortAccess> shortStorage ) { super( shortStorage ); }
 
 	// this is the constructor if you want it to be a variable
 	public UnsignedShortType( final int value ) { super( getCodedSignedShortChecked(value) ); }
@@ -58,10 +58,10 @@ public class UnsignedShortType extends GenericShortType<UnsignedShortType>
 	public static int getUnsignedShort( final short signedShort ) { return signedShort & 0xffff; }
 	
 	@Override
-	public NativeContainer<UnsignedShortType, ? extends ShortAccess> createSuitableNativeContainer( final NativeContainerFactory<UnsignedShortType> storageFactory, final long dim[] )
+	public NativeImg<UnsignedShortType, ? extends ShortAccess> createSuitableNativeImg( final NativeImgFactory<UnsignedShortType> storageFactory, final long dim[] )
 	{
 		// create the container
-		final NativeContainer<UnsignedShortType, ? extends ShortAccess> container = storageFactory.createShortInstance( dim, 1 );
+		final NativeImg<UnsignedShortType, ? extends ShortAccess> container = storageFactory.createShortInstance( dim, 1 );
 		
 		// create a Type that is linked to the container
 		final UnsignedShortType linkedType = new UnsignedShortType( container );

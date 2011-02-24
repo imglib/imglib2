@@ -29,15 +29,15 @@
  */
 package mpicbg.imglib.type.numeric.integer;
 
-import mpicbg.imglib.container.NativeContainer;
-import mpicbg.imglib.container.NativeContainerFactory;
-import mpicbg.imglib.container.basictypecontainer.IntAccess;
+import mpicbg.imglib.img.NativeImg;
+import mpicbg.imglib.img.NativeImgFactory;
+import mpicbg.imglib.img.basictypeaccess.IntAccess;
 import mpicbg.imglib.util.Util;
 
 public class UnsignedIntType extends GenericIntType<UnsignedIntType>
 {
 	// this is the constructor if you want it to read from an array
-	public UnsignedIntType( NativeContainer<UnsignedIntType, ? extends IntAccess> intStorage ) { super( intStorage ); }
+	public UnsignedIntType( NativeImg<UnsignedIntType, ? extends IntAccess> intStorage ) { super( intStorage ); }
 
 	// this is the constructor if you want it to be a variable
 	public UnsignedIntType( final long value ) { super( getCodedSignedIntChecked(value) ); }
@@ -58,10 +58,10 @@ public class UnsignedIntType extends GenericIntType<UnsignedIntType>
 	public static long getUnsignedInt( final int signedInt ) { return signedInt & 0xffffffffL; }
 
 	@Override
-	public NativeContainer<UnsignedIntType, ? extends IntAccess> createSuitableNativeContainer( final NativeContainerFactory<UnsignedIntType> storageFactory, final long dim[] )
+	public NativeImg<UnsignedIntType, ? extends IntAccess> createSuitableNativeImg( final NativeImgFactory<UnsignedIntType> storageFactory, final long dim[] )
 	{
 		// create the container
-		final NativeContainer<UnsignedIntType, ? extends IntAccess> container = storageFactory.createIntInstance( dim, 1 );
+		final NativeImg<UnsignedIntType, ? extends IntAccess> container = storageFactory.createIntInstance( dim, 1 );
 		
 		// create a Type that is linked to the container
 		final UnsignedIntType linkedType = new UnsignedIntType( container );

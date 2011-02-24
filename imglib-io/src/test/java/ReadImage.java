@@ -35,20 +35,21 @@ POSSIBILITY OF SUCH DAMAGE.
 import java.io.IOException;
 
 import loci.formats.FormatException;
-import mpicbg.imglib.container.ContainerFactory;
-import mpicbg.imglib.container.array.ArrayContainerFactory;
-import mpicbg.imglib.container.planar.PlanarContainerFactory;
-import mpicbg.imglib.cursor.Cursor;
-import mpicbg.imglib.image.Image;
-import mpicbg.imglib.image.ImageFactory;
+import mpicbg.imglib.Cursor;
+import mpicbg.imglib.exception.IncompatibleTypeException;
+import mpicbg.imglib.img.Img;
+import mpicbg.imglib.img.ImgFactory;
+import mpicbg.imglib.img.array.ArrayImgFactory;
+import mpicbg.imglib.img.planar.PlanarImgFactory;
 import mpicbg.imglib.io.ImageOpener;
+import mpicbg.imglib.type.NativeType;
 import mpicbg.imglib.type.numeric.RealType;
 import mpicbg.imglib.type.numeric.real.FloatType;
 
 /** A simple test for {@link ImageOpener}. */
 public class ReadImage {
 
-	public static <T extends RealType<T>> void main(String[] args)
+	public static <T extends RealType<T> & NativeType< T >> void main(String[] args)
 		throws FormatException, IOException
 	{
 		final ImageOpener imageOpener = new ImageOpener();
@@ -66,42 +67,57 @@ public class ReadImage {
 		// read all arguments using auto-detected type with default container
 		System.out.println("== AUTO-DETECTED TYPE, DEFAULT CONTAINER ==");
 		for (String arg : args) {
-			Image<T> img = imageOpener.openImage(arg);
-			reportInformation(img);
+			try
+			{
+				Img< T > img = imageOpener.openImage(arg);
+				reportInformation(img);
+			}
+			catch ( IncompatibleTypeException e )
+			{
+				e.printStackTrace();
+			}
 		}
 
 		// read all arguments using FloatType with ArrayContainer
 		System.out.println();
 		System.out.println("== FLOAT TYPE, ARRAY CONTAINER ==");
-		final ContainerFactory acf = new ArrayContainerFactory();
-		final ImageFactory<FloatType> aif =
-			new ImageFactory<FloatType>(new FloatType(), acf);
+		final ImgFactory<FloatType> acf = new ArrayImgFactory< FloatType >();
 		for (String arg : args) {
-			Image<FloatType> img = imageOpener.openImage(arg, aif);
-			reportInformation(img);
+			try
+			{
+				Img<FloatType> img = imageOpener.openImage(arg, acf);
+				reportInformation(img);
+			}
+			catch ( IncompatibleTypeException e )
+			{
+				e.printStackTrace();
+			}
 		}
 
-		// read all arguments using FloatType with PlanarContainer
+		// read all arguments using FloatType with PlanarImg
 		System.out.println();
 		System.out.println("== FLOAT TYPE, PLANAR CONTAINER ==");
-		final ContainerFactory pcf = new PlanarContainerFactory();
-		final ImageFactory<FloatType> pif =
-			new ImageFactory<FloatType>(new FloatType(), pcf);
+		final ImgFactory< FloatType > pcf = new PlanarImgFactory< FloatType >();
 		for (String arg : args) {
-			Image<FloatType> img = imageOpener.openImage(arg, pif);
-			reportInformation(img);
+			try
+			{
+				Img<FloatType> img = imageOpener.openImage(arg, pcf);
+				reportInformation(img);
+			}
+			catch ( IncompatibleTypeException e )
+			{
+				e.printStackTrace();
+			}
 		}
 	}
 
 	/** Prints out some useful information about the {@link Image}. */
-	public static <T extends RealType<T>> void reportInformation(Image<T> img) {
+	public static <T extends RealType<T>> void reportInformation(Img<T> img) {
 		System.out.println(img);
-		final Cursor<T> cursor = img.createCursor();
+		final Cursor<T> cursor = img.cursor();
 		cursor.fwd();
-		System.out.println("\tType = " + cursor.getType().getClass().getName());
-		System.out.println("\tContainer = " +
-			cursor.getStorageContainer().getClass().getName());
-		cursor.close();
+		System.out.println("\tType = " + cursor.get().getClass().getName());
+		System.out.println("\tImg = " + img.getClass().getName());
 	}
 
 }

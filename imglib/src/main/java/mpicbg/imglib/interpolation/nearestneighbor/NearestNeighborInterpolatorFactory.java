@@ -27,7 +27,7 @@
  */
 package mpicbg.imglib.interpolation.nearestneighbor;
 
-import mpicbg.imglib.container.Img;
+import mpicbg.imglib.img.Img;
 import mpicbg.imglib.interpolation.InterpolatorFactory;
 import mpicbg.imglib.outofbounds.OutOfBoundsFactory;
 import mpicbg.imglib.type.Type;

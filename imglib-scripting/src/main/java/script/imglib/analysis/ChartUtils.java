@@ -7,7 +7,7 @@ import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.awt.image.PixelGrabber;
 
-import mpicbg.imglib.container.array.Array;
+import mpicbg.imglib.container.array.ArrayImg;
 import mpicbg.imglib.container.basictypecontainer.IntAccess;
 import mpicbg.imglib.container.basictypecontainer.array.IntArray;
 import mpicbg.imglib.container.Img;
@@ -47,7 +47,7 @@ public class ChartUtils {
 		} catch (InterruptedException e) {}
 		g.dispose();
 		
-		Array<ARGBType, IntAccess> a = new Array<ARGBType, IntAccess>(new IntArray(pixels), new long[]{width, height}, 1);
+		ArrayImg<ARGBType, IntAccess> a = new ArrayImg<ARGBType, IntAccess>(new IntArray(pixels), new long[]{width, height}, 1);
 		
 		// create a Type that is linked to the container
 		final ARGBType linkedType = new ARGBType( a );

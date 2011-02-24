@@ -2,7 +2,7 @@ package tests;
 
 import mpicbg.imglib.cursor.LocalizableCursor;
 
-import mpicbg.imglib.container.Img;
+import mpicbg.imglib.img.Img;
 
 import mpicbg.imglib.type.numeric.real.FloatType;
 

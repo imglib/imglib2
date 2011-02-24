@@ -4,11 +4,11 @@ import ij.ImageJ;
 import loci.formats.FormatException;
 import mpicbg.imglib.algorithm.gauss.GaussianConvolution;
 import mpicbg.imglib.algorithm.transformation.ImageTransform;
-import mpicbg.imglib.container.Img;
-import mpicbg.imglib.container.ImgFactory;
-import mpicbg.imglib.container.array.ArrayContainerFactory;
-import mpicbg.imglib.container.planar.PlanarContainerFactory;
 import mpicbg.imglib.image.display.imagej.ImgLib2Display;
+import mpicbg.imglib.img.Img;
+import mpicbg.imglib.img.ImgFactory;
+import mpicbg.imglib.img.array.ArrayImgFactory;
+import mpicbg.imglib.img.planar.PlanarImgFactory;
 import mpicbg.imglib.interpolation.nearestneighbor.NearestNeighborInterpolatorFactory;
 import mpicbg.imglib.io.ImageOpener;
 import mpicbg.imglib.io.LOCI;
@@ -76,6 +76,6 @@ public class OpenDisplayGaussTransformBehaviour
 	{
 		new ImageJ();
 		
-		test( new ArrayContainerFactory<FloatType>() );
+		test( new ArrayImgFactory<FloatType>() );
 	}
 }

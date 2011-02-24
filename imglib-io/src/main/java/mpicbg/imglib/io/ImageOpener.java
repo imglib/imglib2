@@ -43,33 +43,29 @@ import loci.common.DataTools;
 import loci.common.StatusEvent;
 import loci.common.StatusListener;
 import loci.common.StatusReporter;
-import loci.common.services.DependencyException;
 import loci.common.services.ServiceException;
-import loci.common.services.ServiceFactory;
 import loci.formats.ChannelFiller;
 import loci.formats.ChannelSeparator;
 import loci.formats.FormatException;
 import loci.formats.FormatTools;
 import loci.formats.IFormatReader;
 import loci.formats.ImageReader;
-import loci.formats.meta.IMetadata;
 import loci.formats.meta.MetadataRetrieve;
-import loci.formats.services.OMEXMLService;
 import loci.formats.services.OMEXMLServiceImpl;
-import mpicbg.imglib.container.Img;
-import mpicbg.imglib.container.ImgFactory;
-import mpicbg.imglib.container.basictypecontainer.PlanarAccess;
-import mpicbg.imglib.container.basictypecontainer.array.ArrayDataAccess;
-import mpicbg.imglib.container.basictypecontainer.array.ByteArray;
-import mpicbg.imglib.container.basictypecontainer.array.CharArray;
-import mpicbg.imglib.container.basictypecontainer.array.DoubleArray;
-import mpicbg.imglib.container.basictypecontainer.array.FloatArray;
-import mpicbg.imglib.container.basictypecontainer.array.IntArray;
-import mpicbg.imglib.container.basictypecontainer.array.LongArray;
-import mpicbg.imglib.container.basictypecontainer.array.ShortArray;
-import mpicbg.imglib.container.planar.PlanarContainerFactory;
 import mpicbg.imglib.exception.IncompatibleTypeException;
-import mpicbg.imglib.sampler.special.OrthoSliceIterator;
+import mpicbg.imglib.img.Img;
+import mpicbg.imglib.img.ImgFactory;
+import mpicbg.imglib.img.basictypeaccess.PlanarAccess;
+import mpicbg.imglib.img.basictypeaccess.array.ArrayDataAccess;
+import mpicbg.imglib.img.basictypeaccess.array.ByteArray;
+import mpicbg.imglib.img.basictypeaccess.array.CharArray;
+import mpicbg.imglib.img.basictypeaccess.array.DoubleArray;
+import mpicbg.imglib.img.basictypeaccess.array.FloatArray;
+import mpicbg.imglib.img.basictypeaccess.array.IntArray;
+import mpicbg.imglib.img.basictypeaccess.array.LongArray;
+import mpicbg.imglib.img.basictypeaccess.array.ShortArray;
+import mpicbg.imglib.img.planar.PlanarImgFactory;
+import mpicbg.imglib.sampler.special.OrthoSliceCursor;
 import mpicbg.imglib.type.NativeType;
 import mpicbg.imglib.type.numeric.RealType;
 import mpicbg.imglib.type.numeric.integer.ByteType;
@@ -108,7 +104,7 @@ public class ImageOpener implements StatusReporter {
 	public <T extends RealType<T> & NativeType<T>> Img<T> openImage(String id)
 		throws FormatException, IOException, IncompatibleTypeException
 	{
-		return openImage(id, new PlanarContainerFactory<T>());
+		return openImage(id, new PlanarImgFactory<T>());
 	}
 
 	/**
@@ -120,7 +116,7 @@ public class ImageOpener implements StatusReporter {
 	 * the {@link ImgFactory}
 	 */
 	public <T extends RealType<T>> Img<T> openImage(String id,
-		ImgFactory<?> imgFactory) throws FormatException, IOException, IncompatibleTypeException
+		ImgFactory<T> imgFactory) throws FormatException, IOException, IncompatibleTypeException
 	{
 		final IFormatReader r = initializeReader(id);
 		final T type = makeType(r.getPixelType());
@@ -570,7 +566,7 @@ public class ImageOpener implements StatusReporter {
 		return sb.toString();
 	}
 
-	@SuppressWarnings({"rawtypes", "unchecked"})
+	@SuppressWarnings({"unchecked"})
 	private void populatePlane(IFormatReader r,
 		int no, byte[] plane, PlanarAccess planarAccess)
 	{
@@ -604,7 +600,7 @@ public class ImageOpener implements StatusReporter {
 
 			getPosition(r, no, pos);
 
-			final OrthoSliceIterator<T> cursor = new OrthoSliceIterator<T>( img, planeX, planeY, pos );
+			final OrthoSliceCursor<T> cursor = new OrthoSliceCursor<T>( img, planeX, planeY, pos );
 			
 			while ( cursor.hasNext() )
 			{
