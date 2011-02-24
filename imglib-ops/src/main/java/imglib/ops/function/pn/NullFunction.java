@@ -1,5 +1,6 @@
-package imglib.ops.function;
+package imglib.ops.function.pn;
 
+import imglib.ops.function.RealFunction;
 import mpicbg.imglib.type.numeric.RealType;
 
 /** NullFunction is a function that does not change the output. It accepts any number of parameters.

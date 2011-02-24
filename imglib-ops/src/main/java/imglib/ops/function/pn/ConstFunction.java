@@ -1,5 +1,6 @@
-package imglib.ops.function;
+package imglib.ops.function.pn;
 
+import imglib.ops.function.RealFunction;
 import mpicbg.imglib.type.numeric.RealType;
 
 public class ConstFunction<T extends RealType<T>> implements RealFunction<T>

@@ -4,9 +4,9 @@ import static org.junit.Assert.assertEquals;
 import imglib.ops.condition.PixelOnBorder;
 import imglib.ops.condition.ValueGreaterThan;
 import imglib.ops.condition.ValueLessThan;
-import imglib.ops.function.AvgFunction;
-import imglib.ops.function.ConstFunction;
-import imglib.ops.function.SqrFunction;
+import imglib.ops.function.p1.SqrFunction;
+import imglib.ops.function.pn.AvgFunction;
+import imglib.ops.function.pn.ConstFunction;
 import imglib.ops.operation.AssignOperation;
 
 import org.junit.Test;
