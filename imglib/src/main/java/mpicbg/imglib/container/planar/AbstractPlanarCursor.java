@@ -45,6 +45,12 @@ abstract public class AbstractPlanarCursor< T extends NativeType< T > > extends 
 	protected final int lastIndex, lastSliceIndex;
 	protected int sliceIndex;
 	
+	/**
+	 * The current index of the type.
+	 * It is faster to duplicate this here than to access it through type.getIndex(). 
+	 */
+	protected int index;
+	
 	public AbstractPlanarCursor( final PlanarContainer< T, ? > container )
 	{
 		super( container.numDimensions() );
@@ -73,28 +79,25 @@ abstract public class AbstractPlanarCursor< T extends NativeType< T > > extends 
 	@Override
 	public boolean hasNext()
 	{
-		return ( type.getIndex() < lastIndex ) || ( sliceIndex < lastSliceIndex );
+		return ( sliceIndex < lastSliceIndex ) || ( index < lastIndex );		
 	}
 
 	@Override
 	public void fwd()
 	{
-		if ( type.getIndex() == lastIndex )
+		if ( ++index > lastIndex )
 		{
+			index = 0;
 			++sliceIndex;
-			type.updateIndex( 0 );
 			type.updateContainer( this );
 		}
-		else
-		{
-			type.incIndex();
-		}
+		type.updateIndex( index );
 	}
 
 	@Override
 	public void jumpFwd( long steps )
 	{
-		long newIndex = type.getIndex() + steps;
+		long newIndex = index + steps;
 		if ( newIndex > lastIndex )
 		{
 			final long s = newIndex / (lastIndex + 1);
@@ -102,13 +105,15 @@ abstract public class AbstractPlanarCursor< T extends NativeType< T > > extends 
 			sliceIndex += s;
 			type.updateContainer( this );
 		}
-		type.updateIndex( ( int ) newIndex );
+		index = ( int ) newIndex;
+		type.updateIndex( index );
 	}
 
 	@Override
 	public void reset()
 	{
 		sliceIndex = 0;
+		index = -1;
 		type.updateIndex( -1 );
 		type.updateContainer( this );
 	}
@@ -119,12 +124,12 @@ abstract public class AbstractPlanarCursor< T extends NativeType< T > > extends 
 	@Override
 	public void localize( final int[] position )
 	{
-		container.indexToGlobalPosition( sliceIndex, type.getIndex(), position );
+		container.indexToGlobalPosition( sliceIndex, index, position );
 	}
 
 	@Override
 	public int getIntPosition( final int dim )
 	{
-		return container.indexToGlobalPosition( sliceIndex, type.getIndex(), dim );
+		return container.indexToGlobalPosition( sliceIndex, index, dim );
 	}
 }

@@ -40,14 +40,23 @@ abstract public class AbstractPlanarLocalizingCursor< T extends NativeType< T > 
 {
 	protected final T type;
 
+	protected final PlanarContainer< T, ? > container;
+
 	protected final int lastIndex, lastSliceIndex;
 	protected int sliceIndex;
+
+	/**
+	 * The current index of the type.
+	 * It is faster to duplicate this here than to access it through type.getIndex(). 
+	 */
+	protected int index;
 	
-	public AbstractPlanarLocalizingCursor( final PlanarContainer<T,?> container ) 
+	public AbstractPlanarLocalizingCursor( final PlanarContainer< T, ? > container )
 	{
 		super( container );
 		
 		this.type = container.createLinkedType();
+		this.container = container;
 
 		lastIndex = ( ( n > 1 ) ? container.dimensions[ 1 ] : 1 )  *  container.dimensions[ 0 ] - 1;
 		lastSliceIndex = container.numSlices() - 1;
@@ -70,28 +79,41 @@ abstract public class AbstractPlanarLocalizingCursor< T extends NativeType< T > 
 	@Override
 	public boolean hasNext()
 	{
-		return ( type.getIndex() < lastIndex ) || ( sliceIndex < lastSliceIndex );
+		return ( sliceIndex < lastSliceIndex ) || ( index < lastIndex );		
 	}
 	
 	@Override
 	public void fwd()
 	{
-		if ( type.getIndex() == lastIndex )
+		if ( ++index > lastIndex )
 		{
+			index = 0;
 			++sliceIndex;
-			type.updateIndex( 0 );
 			type.updateContainer( this );
 		}
-		else
-		{
-			type.incIndex();
-		}
+		type.updateIndex( index );
 
 		for ( int d = 0; d < n; ++d )
 		{
 			if ( ++position[ d ] >= size[ d ] ) position[ d ] = 0;
 			else break;
 		}
+	}
+
+	@Override
+	public void jumpFwd( long steps )
+	{
+		long newIndex = index + steps;
+		if ( newIndex > lastIndex )
+		{
+			final long s = newIndex / (lastIndex + 1);
+			newIndex -= s * (lastIndex + 1);
+			sliceIndex += s;
+			type.updateContainer( this );
+		}
+		index = ( int ) newIndex;
+		type.updateIndex( index );
+		container.indexToGlobalPosition( sliceIndex, index, position );
 	}
 
 	@Override
@@ -102,7 +124,7 @@ abstract public class AbstractPlanarLocalizingCursor< T extends NativeType< T > 
 			position[ d ] = 0;
 		
 		sliceIndex = 0;
-		
+		index = -1;		
 		type.updateIndex( -1 );		
 		type.updateContainer( this );
 	}
