@@ -5,7 +5,7 @@ import script.imglib.math.Compute;
 import script.imglib.math.fn.IFunction;
 import mpicbg.imglib.algorithm.OutputAlgorithm;
 import mpicbg.imglib.algorithm.floydsteinberg.FloydSteinbergDithering;
-import mpicbg.imglib.container.Img;
+import mpicbg.imglib.img.Img;
 import mpicbg.imglib.type.logic.BitType;
 import mpicbg.imglib.type.numeric.RealType;
 

@@ -3,10 +3,10 @@ package script.imglib.algorithm.fn;
 import java.util.Iterator;
 
 import mpicbg.imglib.IterableRealInterval;
-import mpicbg.imglib.container.Img;
-import mpicbg.imglib.container.ImgCursor;
-import mpicbg.imglib.container.ImgFactory;
-import mpicbg.imglib.container.ImgRandomAccess;
+import mpicbg.imglib.img.Img;
+import mpicbg.imglib.img.ImgCursor;
+import mpicbg.imglib.img.ImgFactory;
+import mpicbg.imglib.img.ImgRandomAccess;
 import mpicbg.imglib.outofbounds.OutOfBoundsFactory;
 import mpicbg.imglib.type.numeric.NumericType;
 

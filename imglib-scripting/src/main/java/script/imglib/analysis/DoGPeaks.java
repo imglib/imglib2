@@ -9,9 +9,9 @@ import javax.vecmath.Point4f;
 
 import mpicbg.imglib.algorithm.scalespace.DifferenceOfGaussian;
 import mpicbg.imglib.algorithm.scalespace.DifferenceOfGaussianPeak;
-import mpicbg.imglib.container.array.ArrayContainerFactory;
+import mpicbg.imglib.img.array.ArrayImgFactory;
 import mpicbg.imglib.function.RealTypeConverter;
-import mpicbg.imglib.container.Img;
+import mpicbg.imglib.img.Img;
 import mpicbg.imglib.outofbounds.OutOfBoundsMirrorFactory;
 import mpicbg.imglib.type.numeric.RealType;
 import mpicbg.imglib.type.numeric.real.FloatType;

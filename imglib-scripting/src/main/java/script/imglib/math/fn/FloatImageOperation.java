@@ -1,7 +1,7 @@
 package script.imglib.math.fn;
 
 import script.imglib.math.Compute;
-import mpicbg.imglib.container.Img;
+import mpicbg.imglib.img.Img;
 import mpicbg.imglib.type.numeric.real.FloatType;
 
 /** Convenient class to define methods to create

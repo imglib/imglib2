@@ -7,10 +7,10 @@ import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.awt.image.PixelGrabber;
 
-import mpicbg.imglib.container.array.ArrayImg;
-import mpicbg.imglib.container.basictypecontainer.IntAccess;
-import mpicbg.imglib.container.basictypecontainer.array.IntArray;
-import mpicbg.imglib.container.Img;
+import mpicbg.imglib.img.array.ArrayImg;
+import mpicbg.imglib.img.basictypeaccess.IntAccess;
+import mpicbg.imglib.img.basictypeaccess.array.IntArray;
+import mpicbg.imglib.img.Img;
 import mpicbg.imglib.type.numeric.ARGBType;
 
 import org.jfree.chart.ChartPanel;

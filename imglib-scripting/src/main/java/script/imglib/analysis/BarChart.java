@@ -7,7 +7,7 @@ import java.util.Map;
 
 import javax.swing.JFrame;
 
-import mpicbg.imglib.container.Img;
+import mpicbg.imglib.img.Img;
 import mpicbg.imglib.type.numeric.ARGBType;
 
 import org.jfree.chart.ChartFactory;

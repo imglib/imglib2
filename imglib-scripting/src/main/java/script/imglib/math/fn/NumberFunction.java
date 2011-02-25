@@ -3,7 +3,7 @@ package script.imglib.math.fn;
 
 import java.util.Collection;
 
-import mpicbg.imglib.container.ImgCursor;
+import mpicbg.imglib.img.ImgCursor;
 import mpicbg.imglib.type.numeric.RealType;
 import mpicbg.imglib.type.numeric.integer.IntType;
 import mpicbg.imglib.type.numeric.integer.LongType;

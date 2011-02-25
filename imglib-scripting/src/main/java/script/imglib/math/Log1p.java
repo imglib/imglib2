@@ -2,7 +2,7 @@ package script.imglib.math;
 
 import script.imglib.math.fn.IFunction;
 import script.imglib.math.fn.UnaryOperation;
-import mpicbg.imglib.container.Img;
+import mpicbg.imglib.img.Img;
 import mpicbg.imglib.type.numeric.RealType;
 
 /** Returns the natural logarithm of the sum of the argument and 1. */

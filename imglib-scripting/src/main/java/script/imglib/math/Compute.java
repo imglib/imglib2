@@ -7,9 +7,9 @@ import java.util.Set;
 import script.imglib.math.fn.IFunction;
 import script.imglib.math.fn.ImageFunction;
 
-import mpicbg.imglib.container.array.ArrayContainerFactory;
-import mpicbg.imglib.container.ImgCursor;
-import mpicbg.imglib.container.Img;
+import mpicbg.imglib.img.ImgCursor;
+import mpicbg.imglib.img.Img;
+import mpicbg.imglib.img.array.ArrayImgFactory;
 import mpicbg.imglib.multithreading.SimpleMultiThreading;
 import mpicbg.imglib.outofbounds.OutOfBounds;
 import mpicbg.imglib.type.numeric.NumericType;
@@ -154,7 +154,7 @@ public class Compute {
 				final Img<?> first = images.iterator().next();
 
 				// 3 - Operate on an empty result image
-				final ArrayContainerFactory<FloatType> factory = new ArrayContainerFactory<FloatType>();
+				final ArrayImgFactory<FloatType> factory = new ArrayImgFactory<FloatType>();
 				final long[] dim = new long[first.numDimensions()];
 				first.dimensions(dim);
 				// TODO use instead the Array<FloatType,FloatAccess> as result
@@ -217,7 +217,7 @@ public class Compute {
 				return result;
 			} else {
 				// Operations that only involve numbers (for consistency)
-				final ArrayContainerFactory<FloatType> factory = new ArrayContainerFactory<FloatType>();
+				final ArrayImgFactory<FloatType> factory = new ArrayImgFactory<FloatType>();
 				// TODO use instead the Array<FloatType,FloatAccess> as result
 				final Img<R> result = (Img<R>) (output instanceof DoubleType ? factory.createDoubleInstance(new long[1], 1)
 						 : factory.createFloatInstance(new long[1], 1));

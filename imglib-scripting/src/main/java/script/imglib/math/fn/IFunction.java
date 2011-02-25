@@ -2,7 +2,7 @@ package script.imglib.math.fn;
 
 import java.util.Collection;
 
-import mpicbg.imglib.container.ImgCursor;
+import mpicbg.imglib.img.ImgCursor;
 
 public interface IFunction {
 	/** Evaluate this function and return a result in double floating-point precision. */

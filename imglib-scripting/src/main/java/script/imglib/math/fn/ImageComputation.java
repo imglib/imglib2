@@ -1,6 +1,6 @@
 package script.imglib.math.fn;
 
-import mpicbg.imglib.container.Img;
+import mpicbg.imglib.img.Img;
 import mpicbg.imglib.type.Type;
 
 public interface ImageComputation<T extends Type<T>>

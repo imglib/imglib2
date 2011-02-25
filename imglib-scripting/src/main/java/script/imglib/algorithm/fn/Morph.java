@@ -2,9 +2,9 @@ package script.imglib.algorithm.fn;
 
 import mpicbg.imglib.algorithm.roi.StatisticalOperation;
 import mpicbg.imglib.algorithm.roi.StructuringElement;
-import mpicbg.imglib.container.Img;
-import mpicbg.imglib.container.array.ArrayImg;
-import mpicbg.imglib.container.basictypecontainer.FloatAccess;
+import mpicbg.imglib.img.Img;
+import mpicbg.imglib.img.array.ArrayImg;
+import mpicbg.imglib.img.basictypeaccess.FloatAccess;
 import mpicbg.imglib.outofbounds.OutOfBoundsFactory;
 import mpicbg.imglib.outofbounds.OutOfBoundsConstantValueFactory;
 import mpicbg.imglib.type.numeric.RealType;

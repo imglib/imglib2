@@ -4,7 +4,7 @@ import ij.IJ;
 import ij.ImagePlus;
 import ij.io.FileSaver;
 
-import mpicbg.imglib.image.Image;
+import mpicbg.imglib.container.Img;
 import mpicbg.imglib.image.ImagePlusAdapter;
 import mpicbg.imglib.image.display.imagej.ImageJFunctions;
 import mpicbg.imglib.type.numeric.RealType;

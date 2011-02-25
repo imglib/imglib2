@@ -6,8 +6,8 @@ import java.util.Collection;
 import script.imglib.color.fn.ColorFunction;
 import script.imglib.math.fn.IFunction;
 
-import mpicbg.imglib.container.ImgCursor;
-import mpicbg.imglib.container.Img;
+import mpicbg.imglib.img.ImgCursor;
+import mpicbg.imglib.img.Img;
 import mpicbg.imglib.type.numeric.RealType;
 
 /** Given up to 3 channels--each represented by an {@link IFunction},

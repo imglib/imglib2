@@ -3,12 +3,12 @@ package script.imglib.math.fn;
 
 import java.util.Collection;
 
-import mpicbg.imglib.container.Img;
-import mpicbg.imglib.container.ImgCursor;
+import mpicbg.imglib.img.Img;
+import mpicbg.imglib.img.ImgCursor;
 import mpicbg.imglib.type.numeric.RealType;
 
 /* An abstract class to facilitate implementing a function that takes two arguments.
- * Subclasses must call one of the constructors, which take as arguments two out an {@link Image},
+ * Subclasses must call one of the constructors, which take as arguments two out an {@link Img},
  * an {@link IFunction}, or a {@link Number}.
  * 
  * Suppose you want a function that returns the average value of two values. You could write:

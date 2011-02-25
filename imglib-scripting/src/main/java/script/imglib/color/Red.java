@@ -1,7 +1,7 @@
 package script.imglib.color;
 
 import script.imglib.color.fn.ChannelOp;
-import mpicbg.imglib.container.Img;
+import mpicbg.imglib.img.Img;
 import mpicbg.imglib.type.numeric.ARGBType;
 
 /** Extracts the red pixel value. */

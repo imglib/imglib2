@@ -2,7 +2,7 @@ package script.imglib.algorithm;
 
 import java.awt.geom.AffineTransform;
 
-import mpicbg.imglib.container.Img;
+import mpicbg.imglib.img.Img;
 import mpicbg.imglib.outofbounds.OutOfBoundsFactory;
 import mpicbg.imglib.type.numeric.NumericType;
 import script.imglib.math.fn.IFunction;

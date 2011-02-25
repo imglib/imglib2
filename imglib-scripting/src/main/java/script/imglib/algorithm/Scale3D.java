@@ -1,6 +1,6 @@
 package script.imglib.algorithm;
 
-import mpicbg.imglib.container.Img;
+import mpicbg.imglib.img.Img;
 import mpicbg.imglib.outofbounds.OutOfBoundsMirrorFactory;
 import mpicbg.imglib.type.numeric.NumericType;
 import script.imglib.math.fn.IFunction;

@@ -2,7 +2,7 @@ package script.imglib.algorithm.fn;
 
 import java.util.Collection;
 
-import mpicbg.imglib.container.Img;
+import mpicbg.imglib.img.Img;
 import script.imglib.color.fn.ColorFunction;
 import script.imglib.math.Compute;
 import script.imglib.math.fn.IFunction;

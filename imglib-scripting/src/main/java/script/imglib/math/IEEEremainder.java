@@ -2,7 +2,7 @@ package script.imglib.math;
 
 import script.imglib.math.fn.BinaryOperation;
 import script.imglib.math.fn.IFunction;
-import mpicbg.imglib.container.Img;
+import mpicbg.imglib.img.Img;
 import mpicbg.imglib.type.numeric.RealType;
 
 /** Returns sqrt(x2 +y2) without intermediate overflow or underflow. */

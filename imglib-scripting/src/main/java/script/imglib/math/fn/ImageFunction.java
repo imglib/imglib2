@@ -2,8 +2,8 @@ package script.imglib.math.fn;
 
 import java.util.Collection;
 
-import mpicbg.imglib.container.Img;
-import mpicbg.imglib.container.ImgCursor;
+import mpicbg.imglib.img.Img;
+import mpicbg.imglib.img.ImgCursor;
 import mpicbg.imglib.type.numeric.RealType;
 
 /** A function to that returns every pixel of a given {@link Image}

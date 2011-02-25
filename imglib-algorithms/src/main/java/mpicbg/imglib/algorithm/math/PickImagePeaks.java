@@ -6,11 +6,11 @@ import java.util.Collections;
 
 import mpicbg.imglib.algorithm.Benchmark;
 import mpicbg.imglib.algorithm.OutputAlgorithm;
-import mpicbg.imglib.container.Img;
-import mpicbg.imglib.container.ImgCursor;
-import mpicbg.imglib.container.ImgFactory;
-import mpicbg.imglib.container.ImgRandomAccess;
-import mpicbg.imglib.container.array.ArrayContainerFactory;
+import mpicbg.imglib.img.Img;
+import mpicbg.imglib.img.ImgCursor;
+import mpicbg.imglib.img.ImgFactory;
+import mpicbg.imglib.img.ImgRandomAccess;
+import mpicbg.imglib.img.array.ArrayImgFactory;
 import mpicbg.imglib.type.logic.BitType;
 import mpicbg.imglib.type.numeric.RealType;
 import mpicbg.imglib.util.Util;
@@ -189,7 +189,7 @@ public class PickImagePeaks <T extends RealType<T>> implements OutputAlgorithm<I
 		final int[] checkPos = new int[pos.length];
 		final ImgFactory<BitType> peakFactory =
 			null == peakContainerFactory ?
-				new ArrayContainerFactory<BitType>()
+				new ArrayImgFactory<BitType>()
 				: peakContainerFactory;
 		/* Create an intermediate image.  This image will contain a sort of signum operation of the difference  
 		 * along a given dimension of the input image.  "Sort of" because 1 corresponds to greater than or

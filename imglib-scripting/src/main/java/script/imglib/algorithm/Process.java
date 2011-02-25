@@ -7,8 +7,8 @@ import script.imglib.math.fn.IFunction;
 
 import mpicbg.imglib.algorithm.Algorithm;
 import mpicbg.imglib.algorithm.OutputAlgorithm;
-import mpicbg.imglib.container.Img;
-import mpicbg.imglib.container.ImgCursor;
+import mpicbg.imglib.img.Img;
+import mpicbg.imglib.img.ImgCursor;
 import mpicbg.imglib.type.numeric.RealType;
 import mpicbg.imglib.type.numeric.real.DoubleType;
 
