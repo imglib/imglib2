@@ -1,15 +1,16 @@
 package imglib.ops.function.p1;
 
 import imglib.ops.function.RealFunction;
+import imglib.ops.operator.UnaryOperator;
 import mpicbg.imglib.type.numeric.RealType;
 
-public class SubtractConstFunction<T extends RealType<T>> implements RealFunction<T>
+public class UnaryOperatorFunction<T extends RealType<T>> implements RealFunction<T>
 {
-	private double constant;
+	private UnaryOperator op;
 	
-	public SubtractConstFunction(double constant)
+	public UnaryOperatorFunction(UnaryOperator op)
 	{
-		this.constant = constant;
+		this.op = op;
 	}
 	
 	@Override
@@ -19,7 +20,8 @@ public class SubtractConstFunction<T extends RealType<T>> implements RealFunctio
 	public void compute(T[] inputs, T output)
 	{
 		double inValue = inputs[0].getRealDouble();
-		output.setReal(inValue - constant);
+		double outValue = op.computeValue(inValue);
+		output.setReal(outValue);
 	}
 	
 }

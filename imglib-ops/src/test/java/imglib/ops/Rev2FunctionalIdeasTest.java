@@ -4,10 +4,12 @@ import static org.junit.Assert.assertEquals;
 import imglib.ops.condition.PixelOnBorder;
 import imglib.ops.condition.ValueGreaterThan;
 import imglib.ops.condition.ValueLessThan;
-import imglib.ops.function.p1.SqrFunction;
+import imglib.ops.function.p1.UnaryOperatorFunction;
 import imglib.ops.function.pn.AvgFunction;
 import imglib.ops.function.pn.ConstFunction;
 import imglib.ops.operation.AssignOperation;
+import imglib.ops.operator.UnaryOperator;
+import imglib.ops.operator.unary.Sqr;
 
 import org.junit.Test;
 
@@ -84,8 +86,10 @@ public class Rev2FunctionalIdeasTest
 		
 		Image<UnsignedByteType> image0 = createPopulatedImage(new int[]{1,2,3,4,5,6,7,8,9});
 		
-		SqrFunction<UnsignedByteType> function = new SqrFunction<UnsignedByteType>();
-
+		UnaryOperator op = new Sqr();
+		
+		UnaryOperatorFunction<UnsignedByteType> function = new UnaryOperatorFunction<UnsignedByteType>(op);
+		
 		AssignOperation<UnsignedByteType> operation = new AssignOperation<UnsignedByteType>(new Image[]{image0}, image0, function);
 		
 		operation.execute();
@@ -102,7 +106,9 @@ public class Rev2FunctionalIdeasTest
 		
 		Image<UnsignedByteType> image0 = createPopulatedImage(new int[]{1,2,3,4,5,6,7,8,9});
 		
-		SqrFunction<UnsignedByteType> function = new SqrFunction<UnsignedByteType>();
+		UnaryOperator op = new Sqr();
+		
+		UnaryOperatorFunction<UnsignedByteType> function = new UnaryOperatorFunction<UnsignedByteType>(op);
 
 		AssignOperation<UnsignedByteType> operation = new AssignOperation<UnsignedByteType>(new Image[]{image0}, image0, function);
 
@@ -122,7 +128,9 @@ public class Rev2FunctionalIdeasTest
 		
 		Image<UnsignedByteType> image0 = createPopulatedImage(new int[]{1,2,3,4,5,6,7,8,9});
 		
-		SqrFunction<UnsignedByteType> function = new SqrFunction<UnsignedByteType>();
+		UnaryOperator op = new Sqr();
+		
+		UnaryOperatorFunction<UnsignedByteType> function = new UnaryOperatorFunction<UnsignedByteType>(op);
 
 		AssignOperation<UnsignedByteType> operation = new AssignOperation<UnsignedByteType>(new Image[]{image0}, image0, function);
 
@@ -144,7 +152,9 @@ public class Rev2FunctionalIdeasTest
 		
 		Image<UnsignedByteType> image1 = createPopulatedImage(new int[]{0,0,0,0,0,0,0,0,0});
 		
-		SqrFunction<UnsignedByteType> function = new SqrFunction<UnsignedByteType>();
+		UnaryOperator op = new Sqr();
+		
+		UnaryOperatorFunction<UnsignedByteType> function = new UnaryOperatorFunction<UnsignedByteType>(op);
 
 		AssignOperation<UnsignedByteType> operation = new AssignOperation<UnsignedByteType>(new Image[]{image0}, image1, function);
 
