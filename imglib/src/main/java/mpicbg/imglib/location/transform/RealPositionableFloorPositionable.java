@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2009--2010, Stephan Saalfeld
+ * Copyright (c) 2009--2011, Stephan Saalfeld
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -9,7 +9,7 @@
  * list of conditions and the following disclaimer.  Redistributions in binary
  * form must reproduce the above copyright notice, this list of conditions and
  * the following disclaimer in the documentation and/or other materials
- * provided with the distribution.  Neither the name of the Fiji project nor
+ * provided with the distribution.  Neither the name of the imglib project nor
  * the names of its contributors may be used to endorse or promote products
  * derived from this software without specific prior written permission.
  * 
@@ -41,34 +41,30 @@ import mpicbg.imglib.RealPositionable;
  * 
  * f = r < 0 ? (long)r - 1 : (long)r
  * 
- * The {@link Positionable} is not the linked {@link RealPositionable} of
- * this link, that is, other {@link RealPositionable Positionables} can be linked
- * to it in addition. 
- * 
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-public class PositionableFloorRasterPositionable< LocalizablePositionable extends RealLocalizable & RealPositionable > implements RealPositionable
+public class RealPositionableFloorPositionable< LocalizablePositionable extends RealLocalizable & RealPositionable > implements RealPositionable
 {
 	final protected LocalizablePositionable source;
 	final protected Positionable target;
 	
-	final private int numDimensions;
+	final protected int n;
 	
 	/* temporary floor position register */
-	final private long[] floor;
+	final protected long[] floor;
 	
 	/* temporary position register */
-	final private double[] position;
+	final protected double[] position;
 	
-	public PositionableFloorRasterPositionable( final LocalizablePositionable source, final Positionable target )
+	public RealPositionableFloorPositionable( final LocalizablePositionable source, final Positionable target )
 	{
 		this.source = source;
 		this.target = target;
 		
-		numDimensions = source.numDimensions();
+		n = source.numDimensions();
 		
-		position = new double[ numDimensions ];
-		floor = new long[ numDimensions ];
+		position = new double[ n ];
+		floor = new long[ n ];
 	}
 	
 	final static private long floor( final double r )
@@ -83,153 +79,161 @@ public class PositionableFloorRasterPositionable< LocalizablePositionable extend
 	
 	final static private void floor( final double[] r, final long[] f )
 	{
-		for ( int i = 0; i < r.length; ++i )
-			f[ i ] = floor( r[ i ] );
+		for ( int d = 0; d < r.length; ++d )
+			f[ d ] = floor( r[ d ] );
 	}
 	
 	final static private void floor( final float[] r, final long[] f )
 	{
-		for ( int i = 0; i < r.length; ++i )
-			f[ i ] = floor( r[ i ] );
+		for ( int d = 0; d < r.length; ++d )
+			f[ d ] = floor( r[ d ] );
+	}
+	
+	final static private void floor( final RealLocalizable r, final long[] f )
+	{
+		for ( int d = 0; d < f.length; ++d )
+			f[ d ] = floor( r.getDoublePosition( d ) );
 	}
 	
 	
-	/* Dimensionality */
+	/* EuclideanSpace */
 	
 	@Override
 	public int numDimensions(){ return source.numDimensions(); }
 
 	
-	/* Positionable */
+	/* RealPositionable */
 	
 	@Override
-	public void move( final float distance, final int dim )
+	public void move( final float distance, final int d )
 	{
-		source.move( distance, dim );
-		target.setPosition( floor( source.getDoublePosition( dim ) ), dim );
+		source.move( distance, d );
+		target.setPosition( floor( source.getDoublePosition( d ) ), d );
 	}
 
 	@Override
-	public void move( final double distance, final int dim )
+	public void move( final double distance, final int d )
 	{
-		source.move( distance, dim );
-		target.setPosition( floor( source.getDoublePosition( dim ) ), dim );
+		source.move( distance, d );
+		target.setPosition( floor( source.getDoublePosition( d ) ), d );
 	}
 
 	@Override
-	public void moveTo( final RealLocalizable localizable )
+	public void move( final RealLocalizable localizable )
 	{
-		localizable.localize( position );
-		moveTo( position );
+		source.move( localizable );
+		floor( localizable, floor );
+		target.move( floor );
 	}
 
 	@Override
-	public void moveTo( final float[] pos )
+	public void move( final float[] distance )
 	{
-		source.moveTo( pos );
-		floor( pos, floor );
-		target.moveTo( floor );
+		source.move( distance );
+		floor( distance, floor );
+		target.move( floor );
 	}
 
 	@Override
-	public void moveTo( final double[] pos )
+	public void move( final double[] distance )
 	{
-		source.moveTo( pos );
-		floor( pos, floor );
-		target.moveTo( floor );
+		source.move( distance );
+		floor( distance, floor );
+		target.move( floor );
 	}
 
 	@Override
 	public void setPosition( final RealLocalizable localizable )
 	{
-		localizable.localize( position );
-		setPosition( position );
-	}
-
-	@Override
-	public void setPosition( final float[] position )
-	{
-		source.setPosition( position );
-		floor( position, floor );
+		source.setPosition( localizable );
+		floor( localizable, floor );
 		target.setPosition( floor );
 	}
 
 	@Override
-	public void setPosition( final double[] position )
+	public void setPosition( final float[] pos )
 	{
-		source.setPosition( position );
-		floor( position, floor );
+		source.setPosition( pos );
+		floor( pos, floor );
 		target.setPosition( floor );
 	}
 
 	@Override
-	public void setPosition( final float position, final int dim )
+	public void setPosition( final double[] pos )
 	{
-		source.setPosition( position, dim );
-		target.setPosition( floor( position ), dim );
+		source.setPosition( pos );
+		floor( pos, floor );
+		target.setPosition( floor );
 	}
 
 	@Override
-	public void setPosition( final double position, final int dim )
+	public void setPosition( final float position, final int d )
 	{
-		source.setPosition( position, dim );
-		target.setPosition( floor( position ), dim );
+		source.setPosition( position, d );
+		target.setPosition( floor( position ), d );
+	}
+
+	@Override
+	public void setPosition( final double position, final int d )
+	{
+		source.setPosition( position, d );
+		target.setPosition( floor( position ), d );
 	}
 
 	
-	/* RasterPositionable */
+	/* Positionable */
 	
 	@Override
-	public void bck( final int dim )
+	public void bck( final int d )
 	{
-		source.bck( dim );
-		target.bck( dim );
+		source.bck( d );
+		target.bck( d );
 	}
 
 	@Override
-	public void fwd( final int dim )
+	public void fwd( final int d )
 	{
-		source.fwd( dim );
-		target.fwd( dim );
+		source.fwd( d );
+		target.fwd( d );
 	}
 
 	@Override
-	public void move( final int distance, final int dim )
+	public void move( final int distance, final int d )
 	{
-		source.move( distance, dim );
-		target.move( distance, dim );
+		source.move( distance, d );
+		target.move( distance, d );
 	}
 
 	@Override
-	public void move( final long distance, final int dim )
+	public void move( final long distance, final int d )
 	{
-		source.move( distance, dim );
-		target.move( distance, dim );
+		source.move( distance, d );
+		target.move( distance, d );
 	}
 
 	@Override
-	public void moveTo( final Localizable localizable )
+	public void move( final Localizable localizable )
 	{
-		source.moveTo( localizable );
-		target.moveTo( localizable );
+		source.move( localizable );
+		target.move( localizable );
 	}
 
 	@Override
-	public void moveTo( final int[] pos )
+	public void move( final int[] pos )
 	{
-		source.moveTo( pos );
-		target.moveTo( pos );
+		source.move( pos );
+		target.move( pos );
 	}
 
 	@Override
-	public void moveTo( final long[] pos )
+	public void move( final long[] pos )
 	{
-		source.moveTo( pos );
-		target.moveTo( pos );
+		source.move( pos );
+		target.move( pos );
 	}
 	
 	@Override
-	public void setPosition( Localizable localizable )
+	public void setPosition( final Localizable localizable )
 	{
 		source.setPosition( localizable );
 		target.setPosition( localizable );
@@ -243,23 +247,23 @@ public class PositionableFloorRasterPositionable< LocalizablePositionable extend
 	}
 	
 	@Override
-	public void setPosition( long[] position )
+	public void setPosition( final long[] position )
 	{
 		source.setPosition( position );
 		target.setPosition( position );
 	}
 
 	@Override
-	public void setPosition( int position, int dim )
+	public void setPosition( final int position, final int d )
 	{
-		source.setPosition( position, dim );
-		target.setPosition( position, dim );
+		source.setPosition( position, d );
+		target.setPosition( position, d );
 	}
 
 	@Override
-	public void setPosition( long position, int dim )
+	public void setPosition( final long position, final int d )
 	{
-		source.setPosition( position, dim );
-		target.setPosition( position, dim );
+		source.setPosition( position, d );
+		target.setPosition( position, d );
 	}
 }

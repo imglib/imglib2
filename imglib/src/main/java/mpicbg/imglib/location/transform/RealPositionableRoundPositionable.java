@@ -41,23 +41,19 @@ import mpicbg.imglib.RealPositionable;
  * 
  * f = r < 0 ? (long)( r - 0.5 ) : (long)( r + 0.5 )
  * 
- * The {@link Positionable} is not the linked {@link RealPositionable} of
- * this link, that is, other {@link RealPositionable Positionables} can be linked
- * to it in addition. 
- * 
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-public class PositionableRoundRasterPositionable< LocalizablePositionable extends RealLocalizable & RealPositionable > implements RealPositionable
+public class RealPositionableRoundPositionable< LocalizablePositionable extends RealLocalizable & RealPositionable > implements RealPositionable
 {
 	final protected LocalizablePositionable source;
 	final protected Positionable target;
 	
-	final private int numDimensions;
+	final protected int numDimensions;
 	
-	final private long[] floor;
+	final private long[] round;
 	final private double[] position;
 	
-	public PositionableRoundRasterPositionable( final LocalizablePositionable source, final Positionable target )
+	public RealPositionableRoundPositionable( final LocalizablePositionable source, final Positionable target )
 	{
 		this.source = source;
 		this.target = target;
@@ -65,7 +61,7 @@ public class PositionableRoundRasterPositionable< LocalizablePositionable extend
 		numDimensions = source.numDimensions();
 		
 		position = new double[ numDimensions ];
-		floor = new long[ numDimensions ];
+		round = new long[ numDimensions ];
 	}
 	
 	final static private long round( final double r )
@@ -91,13 +87,13 @@ public class PositionableRoundRasterPositionable< LocalizablePositionable extend
 	}
 	
 	
-	/* Dimensionality */
+	/* EuclideanSpace */
 	
 	@Override
-	public int numDimensions(){ return source.numDimensions(); }
+	public int numDimensions(){ return numDimensions; }
 
 	
-	/* Positionable */
+	/* RealPositionable */
 	
 	@Override
 	public void move( final float distance, final int dim )
@@ -114,26 +110,26 @@ public class PositionableRoundRasterPositionable< LocalizablePositionable extend
 	}
 
 	@Override
-	public void moveTo( final RealLocalizable localizable )
+	public void move( final RealLocalizable localizable )
 	{
 		localizable.localize( position );
-		moveTo( position );
+		move( position );
 	}
 
 	@Override
-	public void moveTo( final float[] pos )
+	public void move( final float[] pos )
 	{
 		source.moveTo( pos );
-		round( pos, floor );
-		target.moveTo( floor );
+		round( pos, round );
+		target.moveTo( round );
 	}
 
 	@Override
 	public void moveTo( final double[] pos )
 	{
 		source.moveTo( pos );
-		round( pos, floor );
-		target.moveTo( floor );
+		round( pos, round );
+		target.moveTo( round );
 	}
 
 	@Override
@@ -147,16 +143,16 @@ public class PositionableRoundRasterPositionable< LocalizablePositionable extend
 	public void setPosition( final float[] position )
 	{
 		source.setPosition( position );
-		round( position, floor );
-		target.setPosition( floor );
+		round( position, round );
+		target.setPosition( round );
 	}
 
 	@Override
 	public void setPosition( final double[] position )
 	{
 		source.setPosition( position );
-		round( position, floor );
-		target.setPosition( floor );
+		round( position, round );
+		target.setPosition( round );
 	}
 
 	@Override

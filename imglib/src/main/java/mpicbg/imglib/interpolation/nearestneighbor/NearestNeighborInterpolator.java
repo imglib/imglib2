@@ -30,7 +30,7 @@ package mpicbg.imglib.interpolation.nearestneighbor;
 import mpicbg.imglib.img.Img;
 import mpicbg.imglib.img.ImgRandomAccess;
 import mpicbg.imglib.interpolation.Interpolator;
-import mpicbg.imglib.location.transform.RoundRasterPositionable;
+import mpicbg.imglib.location.transform.Round;
 import mpicbg.imglib.outofbounds.OutOfBoundsFactory;
 import mpicbg.imglib.type.Type;
 
@@ -40,7 +40,7 @@ import mpicbg.imglib.type.Type;
  *
  * @author Stephan Preibisch and Stephan Saalfeld
  */
-public class NearestNeighborInterpolator< T extends Type< T > > extends RoundRasterPositionable< ImgRandomAccess< T > > implements Interpolator< T, Img<T> >
+public class NearestNeighborInterpolator< T extends Type< T > > extends Round< ImgRandomAccess< T > > implements Interpolator< T, Img<T> >
 {
 	final protected OutOfBoundsFactory< T, Img<T> > outOfBoundsStrategyFactory;
 	final protected Img< T > container;

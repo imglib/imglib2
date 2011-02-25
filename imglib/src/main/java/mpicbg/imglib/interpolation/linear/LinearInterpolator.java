@@ -30,7 +30,7 @@ package mpicbg.imglib.interpolation.linear;
 import mpicbg.imglib.img.Img;
 import mpicbg.imglib.img.ImgRandomAccess;
 import mpicbg.imglib.interpolation.Interpolator;
-import mpicbg.imglib.location.transform.FloorRasterPositionable;
+import mpicbg.imglib.location.transform.Floor;
 import mpicbg.imglib.outofbounds.OutOfBoundsFactory;
 import mpicbg.imglib.type.Type;
 import mpicbg.imglib.type.numeric.NumericType;
@@ -42,7 +42,7 @@ import mpicbg.imglib.util.Util;
  *
  * @author Stephan Preibisch and Stephan Saalfeld
  */
-public class LinearInterpolator< T extends NumericType< T > > extends FloorRasterPositionable< ImgRandomAccess< T > > implements Interpolator< T >
+public class LinearInterpolator< T extends NumericType< T > > extends Floor< ImgRandomAccess< T > > implements Interpolator< T >
 {
 	final protected OutOfBoundsFactory< T > outOfBoundsStrategyFactory;
 	final protected Img< T > image;
