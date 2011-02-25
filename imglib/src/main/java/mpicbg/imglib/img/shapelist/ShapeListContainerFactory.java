@@ -67,7 +67,7 @@ public class ShapeListContainerFactory< T extends Type< T > > extends ImgFactory
 			return new ShapeList<T>( dim, type );
 	}
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@SuppressWarnings( "unchecked" )
 	@Override
 	public < S > ImgFactory< S > imgFactory(final S type )
 			throws IncompatibleTypeException {

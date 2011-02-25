@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2010, Cardona, Preibisch & Saalfeld
+ * Copyright (c) 2009--2010, Cardona, Preibisch & Saalfeld
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -25,10 +25,10 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-package mpicbg.imglib.sampler.shapelist;
+package mpicbg.imglib.img.shapelist;
 
-import mpicbg.imglib.img.shapelist.ShapeListCached;
 import mpicbg.imglib.type.Type;
+import mpicbg.imglib.util.Util;
 
 /**
  * 
@@ -36,19 +36,21 @@ import mpicbg.imglib.type.Type;
  *
  * @author Cardona, Preibisch and Saalfeld
  */
-public class ShapeListCachedPositionableRasterSampler< T extends Type< T > > extends ShapeListPositionableRasterSampler< T >
+public abstract class ShapeListCache< T extends Type< T > >
 {
-	final ShapeListCache<T> cache;
-	
-	public ShapeListCachedPositionableRasterSampler( final ShapeListCached< T > container )
-	{
-		super( container );
-		this.cache = container.getShapeListCachingStrategy().createInstance();
+	final protected ShapeListCached< T > container;
+	final protected int cacheSize;
+	final protected long[] dimensions;
+
+	public ShapeListCache( final int cacheSize, final ShapeListCached< T > container )
+	{		
+		this.container = container;
+		this.cacheSize = cacheSize;
+		this.dimensions = Util.intervalDimensions( container );
+		
+		//fakeArray = new Array< FakeType, FakeAccess >( null, new FakeArray(), container.getDimensions(), 1 );
 	}
 	
-	@Override
-	public T get()
-	{
-		return cache.lookUp( position );
-	}
+	public abstract T lookUp( final long[] position );	
+	public abstract ShapeListCache< T > createInstance();
 }
