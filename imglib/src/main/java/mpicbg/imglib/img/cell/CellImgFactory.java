@@ -172,7 +172,7 @@ public class CellImgFactory< T extends NativeType<T> > extends NativeImgFactory<
 		return new CellImg< T, DoubleArray >( this, new DoubleArray( 1 ), dimensions, cellSize, entitiesPerPixel );
 	}
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@SuppressWarnings({ "unchecked" })
 	@Override
 	public <S> ImgFactory<S> imgFactory( final S type ) throws IncompatibleTypeException
 	{

@@ -46,7 +46,7 @@ public class ListImgFactory< T extends Type< T > > extends ImgFactory< T >
 		return new ListImg< T >( dim, type );
 	}
 	
-	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@SuppressWarnings( "unchecked" )
 	@Override
 	public <S> ImgFactory<S> imgFactory( final S type ) throws IncompatibleTypeException
 	{
