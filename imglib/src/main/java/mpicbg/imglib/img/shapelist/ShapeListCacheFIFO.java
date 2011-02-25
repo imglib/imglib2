@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2010, Stephan Saalfeld
+ * Copyright (c) 2009--2010, Cardona, Preibisch & Saalfeld
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -25,33 +25,64 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-package mpicbg.imglib.sampler.shapelist;
+package mpicbg.imglib.img.shapelist;
 
-import mpicbg.imglib.img.AbstractImgOutOfBoundsRandomAccess;
-import mpicbg.imglib.img.Img;
-import mpicbg.imglib.img.shapelist.ShapeList;
-import mpicbg.imglib.outofbounds.OutOfBoundsFactory;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.Map;
+
 import mpicbg.imglib.type.Type;
+import mpicbg.imglib.util.IntervalIndexer;
 
 /**
  * 
  * @param <T>
  *
- * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
+ * @author Cardona, Preibisch and Saalfeld
  */
-public class ShapeListOutOfBoundsPositionableRasterSampler< T extends Type< T > > extends AbstractImgOutOfBoundsRandomAccess< T >
+public class ShapeListCacheFIFO<T extends Type< T > > extends ShapeListCache<T>
 {
-	final protected ShapeList< T > container;
-	
-	public ShapeListOutOfBoundsPositionableRasterSampler(
-			final ShapeList< T > container,
-			final OutOfBoundsFactory< T, Img< T > > outOfBoundsFactory ) 
-	{
-		super( container, outOfBoundsFactory );
+	final Map< Long, T > cache;
+
+	final LinkedList< Long > queue;
+
+	public ShapeListCacheFIFO( final int cacheSize, final ShapeListCached<T> container )
+	{		
+		super( cacheSize, container );
 		
-		this.container = container;
+		cache = new HashMap< Long, T >( cacheSize );
+		queue = new LinkedList< Long >();
+		
+		for ( int i = 0; i < cacheSize; ++i )
+			queue.add( Long.MIN_VALUE );		
 	}
 
 	@Override
-	public ShapeList< T > getImg(){ return container; }
+	public T lookUp( final long[] position )
+	{
+		final long index = IntervalIndexer.positionToIndex(position, dimensions);
+
+		final T value = cache.get( index );
+		
+		if ( value == null )
+		{
+			final T t = container.getShapeType( position );
+			queue.add( index );
+			cache.put( index , t );
+			
+			cache.remove( queue.removeFirst() );				
+			
+			return t;
+		}
+		else
+		{
+			return value;
+		}		
+	}
+
+	@Override
+	public ShapeListCache< T > createInstance()
+	{
+		return new ShapeListCacheFIFO< T >( cacheSize, container );
+	}
 }

@@ -25,14 +25,13 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-package mpicbg.imglib.sampler.shapelist;
+package mpicbg.imglib.img.shapelist;
 
 import mpicbg.imglib.Localizable;
 import mpicbg.imglib.Positionable;
 import mpicbg.imglib.img.AbstractImgCursor;
 import mpicbg.imglib.img.ImgCursor;
 import mpicbg.imglib.img.ImgRandomAccess;
-import mpicbg.imglib.img.shapelist.ShapeList;
 import mpicbg.imglib.location.VoidRealPositionable;
 import mpicbg.imglib.type.Type;
 import mpicbg.imglib.util.Util;

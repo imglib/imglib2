@@ -39,8 +39,6 @@ import mpicbg.imglib.img.ImgRandomAccess;
 import mpicbg.imglib.img.array.ArrayImg;
 import mpicbg.imglib.img.planar.PlanarImg;
 import mpicbg.imglib.outofbounds.OutOfBoundsFactory;
-import mpicbg.imglib.sampler.shapelist.ShapeListOutOfBoundsPositionableRasterSampler;
-import mpicbg.imglib.sampler.shapelist.ShapeListPositionableRasterSampler;
 import mpicbg.imglib.type.Type;
 
 /**
@@ -62,14 +60,14 @@ public class ShapeList< T extends Type< T > > extends AbstractImg< T >
 	{
 		super( dim );
 		
-		int n = 1;
+		int m = 1;
 		for ( int d = 2; d < dim.length; ++d )
-			n *= dim[ d ];
+			m *= dim[ d ];
 		
-		shapeLists = new ArrayList< ArrayList< Shape > > ( n );
-		typeLists = new ArrayList< ArrayList< T > > ( n );
+		shapeLists = new ArrayList< ArrayList< Shape > > ( m );
+		typeLists = new ArrayList< ArrayList< T > > ( m );
 		
-		for ( int d = 0; d < n; ++d )
+		for ( int d = 0; d < m; ++d )
 		{
 			shapeLists.add( new ArrayList< Shape >() );
 			typeLists.add( new ArrayList< T >() );

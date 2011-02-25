@@ -25,12 +25,8 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-package mpicbg.imglib.sampler.shapelist;
+package mpicbg.imglib.img.shapelist;
 
-import mpicbg.imglib.img.AbstractImgOutOfBoundsRandomAccess;
-import mpicbg.imglib.img.Img;
-import mpicbg.imglib.img.shapelist.ShapeListCached;
-import mpicbg.imglib.outofbounds.OutOfBoundsFactory;
 import mpicbg.imglib.type.Type;
 
 /**
@@ -39,19 +35,19 @@ import mpicbg.imglib.type.Type;
  *
  * @author Cardona, Preibisch and Saalfeld
  */
-public class ShapeListCachedOutOfBoundsPositionableRasterSampler< T extends Type< T > > extends AbstractImgOutOfBoundsRandomAccess< T >
+public class ShapeListCachedPositionableRasterSampler< T extends Type< T > > extends ShapeListPositionableRasterSampler< T >
 {
-	final protected ShapeListCached< T > container;
+	final ShapeListCache<T> cache;
 	
-	public ShapeListCachedOutOfBoundsPositionableRasterSampler(
-			final ShapeListCached< T > container,
-			final OutOfBoundsFactory< T, Img< T > > outOfBoundsFactory ) 
+	public ShapeListCachedPositionableRasterSampler( final ShapeListCached< T > container )
 	{
-		super( container, outOfBoundsFactory );
-		
-		this.container = container;
+		super( container );
+		this.cache = container.getShapeListCachingStrategy().createInstance();
 	}
-
+	
 	@Override
-	public ShapeListCached< T > getImg(){ return container; }
+	public T get()
+	{
+		return cache.lookUp( position );
+	}
 }

@@ -31,10 +31,6 @@ import mpicbg.imglib.img.Img;
 import mpicbg.imglib.img.ImgCursor;
 import mpicbg.imglib.img.ImgRandomAccess;
 import mpicbg.imglib.outofbounds.OutOfBoundsFactory;
-import mpicbg.imglib.sampler.shapelist.ShapeListCache;
-import mpicbg.imglib.sampler.shapelist.ShapeListCacheFIFO;
-import mpicbg.imglib.sampler.shapelist.ShapeListCachedOutOfBoundsPositionableRasterSampler;
-import mpicbg.imglib.sampler.shapelist.ShapeListCachedPositionableRasterSampler;
 import mpicbg.imglib.type.Type;
 
 /**
