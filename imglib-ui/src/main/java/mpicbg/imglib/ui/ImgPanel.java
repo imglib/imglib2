@@ -19,13 +19,13 @@ import javax.swing.JScrollBar;
 import javax.swing.border.TitledBorder;
 
 import loci.formats.FormatException;
-import mpicbg.imglib.container.Img;
-import mpicbg.imglib.container.ImgFactory;
-import mpicbg.imglib.container.array.ArrayContainerFactory;
 import mpicbg.imglib.display.ARGBScreenImage;
 import mpicbg.imglib.display.RealARGBConverter;
 import mpicbg.imglib.display.XYProjector;
 import mpicbg.imglib.exception.IncompatibleTypeException;
+import mpicbg.imglib.img.Img;
+import mpicbg.imglib.img.ImgFactory;
+import mpicbg.imglib.img.array.ArrayImgFactory;
 import mpicbg.imglib.io.ImageOpener;
 import mpicbg.imglib.type.NativeType;
 import mpicbg.imglib.type.numeric.ARGBType;
