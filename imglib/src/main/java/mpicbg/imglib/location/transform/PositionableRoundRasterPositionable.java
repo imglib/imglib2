@@ -114,26 +114,26 @@ public class PositionableRoundRasterPositionable< LocalizablePositionable extend
 	}
 
 	@Override
-	public void moveTo( final RealLocalizable localizable )
+	public void move( final RealLocalizable localizable )
 	{
 		localizable.localize( position );
-		moveTo( position );
+		move( position );
 	}
 
 	@Override
-	public void moveTo( final float[] pos )
+	public void move( final float[] pos )
 	{
-		source.moveTo( pos );
+		source.move( pos );
 		round( pos, floor );
-		target.moveTo( floor );
+		target.move( floor );
 	}
 
 	@Override
-	public void moveTo( final double[] pos )
+	public void move( final double[] pos )
 	{
-		source.moveTo( pos );
+		source.move( pos );
 		round( pos, floor );
-		target.moveTo( floor );
+		target.move( floor );
 	}
 
 	@Override
@@ -205,24 +205,24 @@ public class PositionableRoundRasterPositionable< LocalizablePositionable extend
 	}
 
 	@Override
-	public void moveTo( final Localizable localizable )
+	public void move( final Localizable localizable )
 	{
-		source.moveTo( localizable );
-		target.moveTo( localizable );
+		source.move( localizable );
+		target.move( localizable );
 	}
 
 	@Override
-	public void moveTo( final int[] pos )
+	public void move( final int[] pos )
 	{
-		source.moveTo( pos );
-		target.moveTo( pos );
+		source.move( pos );
+		target.move( pos );
 	}
 
 	@Override
-	public void moveTo( final long[] pos )
+	public void move( final long[] pos )
 	{
-		source.moveTo( pos );
-		target.moveTo( pos );
+		source.move( pos );
+		target.move( pos );
 	}
 	
 	@Override

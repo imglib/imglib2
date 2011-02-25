@@ -157,14 +157,14 @@ public class FloorRasterPositionable< LocalizableRasterPositionable extends Loca
 	}
 
 	@Override
-	public void moveTo( final RealLocalizable localizable )
+	public void move( final RealLocalizable localizable )
 	{
 		localizable.localize( position );
-		moveTo( position );
+		move( position );
 	}
 
 	@Override
-	public void moveTo( final float[] pos )
+	public void move( final float[] pos )
 	{
 		for ( int d = 0; d < numDimensions; ++d )
 		{
@@ -180,7 +180,7 @@ public class FloorRasterPositionable< LocalizableRasterPositionable extends Loca
 	}
 
 	@Override
-	public void moveTo( final double[] pos )
+	public void move( final double[] pos )
 	{
 		for ( int d = 0; d < numDimensions; ++d )
 		{
@@ -270,26 +270,26 @@ public class FloorRasterPositionable< LocalizableRasterPositionable extends Loca
 	}
 
 	@Override
-	public void moveTo( final Localizable localizable )
+	public void move( final Localizable localizable )
 	{
 		localizable.localize( position );
-		target.moveTo( localizable );
+		target.move( localizable );
 	}
 
 	@Override
-	public void moveTo( final int[] pos )
+	public void move( final int[] pos )
 	{
 		for ( int d = 0; d < numDimensions; ++d )
 			this.position[ d ] = pos[ d ];
-		target.moveTo( pos );
+		target.move( pos );
 	}
 
 	@Override
-	public void moveTo( final long[] pos )
+	public void move( final long[] pos )
 	{
 		for ( int d = 0; d < numDimensions; ++d )
 			this.position[ d ] = pos[ d ];
-		target.moveTo( pos );
+		target.move( pos );
 	}
 	
 	@Override
