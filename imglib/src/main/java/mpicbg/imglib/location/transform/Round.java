@@ -134,7 +134,7 @@ public class Round< LocalizablePositionable extends Localizable & Positionable >
 	}
 	
 
-	/* Positionable */
+	/* RealPositionable */
 	
 	@Override
 	public void move( final float distance, final int d )

@@ -27,30 +27,20 @@
  */
 package mpicbg.imglib.interpolation;
 
-import mpicbg.imglib.RealLocalizable;
-import mpicbg.imglib.RealPositionable;
-import mpicbg.imglib.Sampler;
-import mpicbg.imglib.outofbounds.OutOfBoundsFactory;
+import mpicbg.imglib.RealRandomAccess;
 
 /**
- * 
- * @param <T>
+ * @author Tobias Pietzsch, Stephan Saalfeld <saalfeld@mpi-cbg.de>
  *
- * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
+ * @param <T>
+ * @param <F>
  */
-public interface Interpolator< T, F > extends Sampler< T >, RealLocalizable, RealPositionable
+public interface Interpolator< T, F > extends RealRandomAccess< T >
 {
 	/**
-	 * Returns the {@link RasterOutOfBoundsFactory} used for interpolation
+	 * Returns the function the interpolator is working on
 	 * 
-	 * @return - the {@link RasterOutOfBoundsFactory}
-	 */
-	public OutOfBoundsFactory< T, F > getOutOfBoundsStrategyFactory();
-
-	/**
-	 * Returns the typed image the interpolator is working on
-	 * 
-	 * @return - the image
+	 * @return - the function
 	 */
 	public F getFunction();
 }

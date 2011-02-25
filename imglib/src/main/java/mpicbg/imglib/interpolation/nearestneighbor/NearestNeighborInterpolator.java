@@ -27,70 +27,42 @@
  */
 package mpicbg.imglib.interpolation.nearestneighbor;
 
-import mpicbg.imglib.img.Img;
-import mpicbg.imglib.img.ImgRandomAccess;
+import mpicbg.imglib.RandomAccess;
+import mpicbg.imglib.RandomAccessible;
 import mpicbg.imglib.interpolation.Interpolator;
 import mpicbg.imglib.location.transform.Round;
-import mpicbg.imglib.outofbounds.OutOfBoundsFactory;
-import mpicbg.imglib.type.Type;
 
 /**
  * 
  * @param <T>
  *
- * @author Stephan Preibisch and Stephan Saalfeld
+ * @author Tobias Pietzsch, Stephan Preibisch, Stephan Saalfeld
  */
-public class NearestNeighborInterpolator< T extends Type< T > > extends Round< ImgRandomAccess< T > > implements Interpolator< T, Img<T> >
+public class NearestNeighborInterpolator< T > extends Round< RandomAccess< T > > implements Interpolator< T, RandomAccessible< T > >
 {
-	final protected OutOfBoundsFactory< T, Img<T> > outOfBoundsStrategyFactory;
-	final protected Img< T > container;
-	
-	final static private < T extends Type< T > > ImgRandomAccess< T > createPositionableRasterSampler( Img< T > container, final OutOfBoundsFactory<T,Img<T>> outOfBoundsStrategyFactory )
+	RandomAccessible< T > randomAccessible;
+
+	protected NearestNeighborInterpolator( RandomAccessible< T > randomAccessible )
 	{
-		return container.randomAccess( outOfBoundsStrategyFactory );
-	}
-	
-	protected NearestNeighborInterpolator( Img< T > container, final OutOfBoundsFactory<T,Img<T>> outOfBoundsStrategyFactory )
-	{
-		super( createPositionableRasterSampler( container, outOfBoundsStrategyFactory ) );
-		
-		this.outOfBoundsStrategyFactory = outOfBoundsStrategyFactory;
-		this.container = container;
-	}
-	
-	
-	/* Dimensionality */
-	
-	@Override
-	public int numDimensions()
-	{
-		return container.numDimensions();
+		super( randomAccessible.randomAccess() );
 	}
 
 	/**
-	 * Returns the {@link RasterOutOfBoundsFactory} used for interpolation
+	 * Returns the {@link RandomAccessible} the interpolator is working on
 	 * 
-	 * @return - the {@link RasterOutOfBoundsFactory}
+	 * @return - the {@link RandomAccessible}
 	 */
 	@Override
-	public OutOfBoundsFactory< T, Img<T> > getOutOfBoundsStrategyFactory()
+	public RandomAccessible< T > getFunction()
 	{
-		return outOfBoundsStrategyFactory;
-	}
-
-	/**
-	 * Returns the typed image the interpolator is working on
-	 * 
-	 * @return - the image
-	 */
-	@Override
-	public Img< T > getFunction()
-	{
-		return container;
+		return randomAccessible;
 	}
 	
 	@Override
-	public T get() { return target.get(); }
+	public T get()
+	{
+		return target.get();
+	}
 	
 	@Override
 	@Deprecated
