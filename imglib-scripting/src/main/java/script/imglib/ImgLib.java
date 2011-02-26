@@ -23,7 +23,7 @@ import mpicbg.imglib.type.numeric.RealType;
  */
 public class ImgLib {
 	/** Open an image from a file path or a web URL. */
-	public static<T extends RealType<T>> Image<T> open(String pathOrURL) {
+	public static<T extends RealType<T>> Img<T> open(String pathOrURL) {
 		try {
 			// In the future, when dimensions can be called by name properly:
 			//return new ImageOpener().<T>openImage(pathOrURL);
@@ -53,19 +53,19 @@ public class ImgLib {
 	/** Wrap an ImageJ's {@link ImagePlus} as an Imglib {@link Image} of the appropriate type.
 	 * The data is not copied, but merely accessed with a PlanarArrayContainer.
 	 * @see ImagePlusAdapter */
-	public static<T extends RealType<T>> Image<T> wrap(ImagePlus imp) {
+	public static<T extends RealType<T>> Img<T> wrap(ImagePlus imp) {
 		return ImagePlusAdapter.<T>wrap(imp);
 	}
 
 	/** Wrap an Imglib's {@link Image} as an ImageJ's {@link ImagePlus} of the appropriate type.
 	 * The data is not copied, but accessed with a special-purpose VirtualStack subclass. */
-	static public final ImagePlus wrap(final Image<?> img) {
+	static public final ImagePlus wrap(final Img<?> img) {
 		return ImageJFunctions.displayAsVirtualStack(img);
 	}
 
 	/** Save an image in the appropriate file format according to
 	 * the filename extension specified in {@param path}. */
-	public static<T extends RealType<T>> boolean save(Image<T> image, String path) {
+	public static<T extends RealType<T>> boolean save(Img<T> image, String path) {
 		int dot = path.lastIndexOf('.');
 		if (dot < 0 || path.length() - dot - 1 > 4)
 			throw new RuntimeException("Could not infer file type from filename: " + path);
@@ -77,13 +77,13 @@ public class ImgLib {
 	 *  
 	 *  When saving as TIFF, if the image has more than 2 dimensions, it will be saved
 	 *  as a stack. */
-	public static<T extends RealType<T>> boolean save(Image<T> image, String fileType, String path) {
+	public static<T extends RealType<T>> boolean save(Img<T> image, String fileType, String path) {
 		// TODO: use LOCI for this
 		ImagePlus imp = ImageJFunctions.displayAsVirtualStack(image);
 		FileSaver saver = new FileSaver(imp);
 		fileType = fileType.toLowerCase();
 		if (fileType.equals("tif") || fileType.equals("tiff")) {
-			if (image.getNumDimensions() > 2) {
+			if (image.numDimensions() > 2) {
 				return saver.saveAsTiffStack(path);
 			} else {
 				return saver.saveAsTiff(path);
