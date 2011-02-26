@@ -30,7 +30,7 @@ package mpicbg.imglib.interpolation.nearestneighbor;
 import mpicbg.imglib.RandomAccess;
 import mpicbg.imglib.RandomAccessible;
 import mpicbg.imglib.interpolation.Interpolator;
-import mpicbg.imglib.location.transform.Round;
+import mpicbg.imglib.position.transform.Round;
 
 /**
  * 
