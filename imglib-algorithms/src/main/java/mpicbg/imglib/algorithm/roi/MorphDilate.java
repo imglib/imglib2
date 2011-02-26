@@ -1,8 +1,8 @@
 package mpicbg.imglib.algorithm.roi;
 
-import mpicbg.imglib.cursor.LocalizableByDimCursor;
-import mpicbg.imglib.image.Image;
-import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
+import mpicbg.imglib.img.Img;
+import mpicbg.imglib.outofbounds.OutOfBoundsConstantValueFactory;
+import mpicbg.imglib.outofbounds.OutOfBoundsFactory;
 import mpicbg.imglib.type.numeric.RealType;
 
 /**
@@ -12,25 +12,59 @@ import mpicbg.imglib.type.numeric.RealType;
  *
  * @param <T> {@link Image} type.
  */
-public class MorphDilate<T extends RealType<T>> extends StatisticalOperation<T> {
+public class MorphDilate<T extends RealType<T> & Comparable<T>> extends ROIAlgorithm<T, T> {
 
-	
-	public MorphDilate(final Image<T> imageIn, final StructuringElement strel,
-			final OutOfBoundsStrategyFactory<T> inOutsideFactory)
-	{
-		super(imageIn, strel, inOutsideFactory);
-		setName(imageIn.getName() + " dilated");
-	}
-	
-	
-	public MorphDilate(final Image<T> imageIn, final StructuringElement strel) {
-		super(imageIn, strel);
-		setName(imageIn.getName() + " dilated");
-	}
+    public MorphDilate(final Img<T> imageIn,
+            long[] size, OutOfBoundsFactory<T,Img<T>> oobFactory)
+    {
+        this(imageIn, StructuringElementCursor.sizeToPath(size), oobFactory);       
+    }
+    
+    public MorphDilate(final Img<T> imageIn,
+            long[][] path, OutOfBoundsFactory<T,Img<T>> oobFactory)
+    {
+        super(imageIn.factory(), imageIn.firstElement().createVariable(),
+                new StructuringElementCursor<T>(
+                        imageIn.randomAccess(oobFactory),
+                        path)
+        );
+        setName(imageIn + " Dilated");
+    }
+    
+    public MorphDilate(final Img<T> imageIn,
+            long[] size) {
+        this(imageIn, StructuringElementCursor.sizeToPath(size));       
+    }
+    
+    public MorphDilate(final Img<T> imageIn,
+            long[][] path)
+    {
+        this(imageIn, path, new OutOfBoundsConstantValueFactory<T,Img<T>>(imageIn.firstElement().createVariable()));
+    }
 
-	@Override
-	protected void statsOp(final LocalizableByDimCursor<T> cursor) {
-		cursor.getType().set(super.getList().getLast());
-	}
+    @Override
+    protected boolean patchOperation(StructuringElementCursor<T> strelCursor,
+                                     T outputType) {
 
+        if (strelCursor.hasNext())
+        {
+            strelCursor.fwd();
+            outputType.set(strelCursor.getType());
+        }
+        else
+        {
+            return false;
+        }
+
+        while (strelCursor.hasNext())
+        {
+            strelCursor.fwd();
+            if(strelCursor.getType().compareTo(outputType) > 0)
+            {
+                outputType.set(strelCursor.getType());
+            }
+        }
+
+        return true;
+    }
 }

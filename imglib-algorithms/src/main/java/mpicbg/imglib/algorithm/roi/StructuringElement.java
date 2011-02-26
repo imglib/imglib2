@@ -1,25 +1,27 @@
 package mpicbg.imglib.algorithm.roi;
 
-import mpicbg.imglib.container.array.ArrayContainerFactory;
-import mpicbg.imglib.cursor.Cursor;
-import mpicbg.imglib.cursor.LocalizableCursor;
-import mpicbg.imglib.image.Image;
-import mpicbg.imglib.image.ImageFactory;
+import mpicbg.imglib.img.ImgCursor;
+import mpicbg.imglib.img.array.ArrayImg;
+import mpicbg.imglib.img.basictypeaccess.BitAccess;
+import mpicbg.imglib.img.basictypeaccess.array.BitArray;
 import mpicbg.imglib.type.logic.BitType;
 
-public class StructuringElement extends Image<BitType> {
+public class StructuringElement extends ArrayImg<BitType,BitAccess> {
 	
-	private final int[] offset;
+	private final long[] offset;
+	private String name;
 	
-	public StructuringElement(final int[] dimensions, final String name)
-	{
-		this(new ImageFactory<BitType>(new BitType(), new ArrayContainerFactory()), dimensions, name);
+	static private final int sizeOf(final long[] dim) {
+		long a = dim[0];
+		for (int i=1; i<dim.length; i++) a *= dim[i];
+		return (int) a;
 	}
 	
-	public StructuringElement(final ImageFactory<BitType> factory, final int[] dimensions, final String name)
+	public StructuringElement(final long[] dimensions, final String name)
 	{
-		super(factory, dimensions, name);
-		offset = new int[dimensions.length];
+		super(new BitArray(sizeOf(dimensions)), dimensions, 1);
+		this.name = name;
+		offset = new long[dimensions.length];
 		
 		for (int i = 0; i < dimensions.length; ++i)
 		{
@@ -27,7 +29,12 @@ public class StructuringElement extends Image<BitType> {
 		}
 	}
 	
-	public int[] getOffset()
+	public String getName()
+	{
+		return name;
+	}
+	
+	public long[] getOffset()
 	{
 		return offset;
 	}
@@ -35,9 +42,9 @@ public class StructuringElement extends Image<BitType> {
 	public static StructuringElement createBall(final int nd, final double radius)
 	{
 		StructuringElement strel;
-		LocalizableCursor<BitType> cursor;
-		final int[] dims = new int[nd];
-		final int[] pos = new int[nd];
+		ImgCursor<BitType> cursor;
+		final long[] dims = new long[nd];
+		final long[] pos = new long[nd];
 		double dist;
 		
 		for (int i = 0; i < dims.length; ++i)
@@ -46,13 +53,13 @@ public class StructuringElement extends Image<BitType> {
 		}
 		strel = new StructuringElement(dims, "Ball Structure " + nd + "D, " + radius);
 		
-		cursor = strel.createLocalizableCursor();
+		cursor = strel.cursor();
 		
 		while (cursor.hasNext())
 		{
 			dist = 0;
 			cursor.fwd();
-			cursor.getPosition(pos);
+			cursor.localize(pos);
 			for (int i = 0; i < dims.length; ++i)
 			{
 				dist += Math.pow(pos[i] - strel.offset[i], 2);
@@ -61,15 +68,13 @@ public class StructuringElement extends Image<BitType> {
 			
 			if (dist <= radius)
 			{
-				cursor.getType().setOne();
+				cursor.get().setOne();
 			}
 			else
 			{
-				cursor.getType().setZero();
+				cursor.get().setZero();
 			}
 		}
-		cursor.close();
-		strel.removeCursor(cursor);
 		
 		return strel;
 	}
@@ -77,24 +82,21 @@ public class StructuringElement extends Image<BitType> {
 	public static StructuringElement createCube(final int nd, final int length)
 	{
 		StructuringElement strel;
-		Cursor<BitType> cursor;
-		final int[] dims = new int[nd];
+		ImgCursor<BitType> cursor;
+		final long[] dims = new long[nd];
 		for (int i = 0; i < nd; ++i)
 		{
 			dims[i] = length;
 		}
 		
 		strel = new StructuringElement(dims, "Cube Structure " + length);
-		cursor = strel.createCursor(); 
+		cursor = strel.cursor(); 
 		
 		while (cursor.hasNext())
 		{
 			cursor.fwd();
-			cursor.getType().setOne();
+			cursor.get().setOne();
 		}
-		
-		cursor.close();
-		strel.removeCursor(cursor);
 		
 		return strel;
 	}
@@ -106,8 +108,8 @@ public class StructuringElement extends Image<BitType> {
 			throw new RuntimeException("Invalid bar dimension " + lengthDim + ". Only have " + nd +
 					" dimensions.");
 		}
-		final int [] dims = new int[nd];
-		Cursor<BitType> cursor;
+		final long[] dims = new long[nd];
+		ImgCursor<BitType> cursor;
 		StructuringElement strel;
 		
 		for (int i = 0; i < nd; ++i)
@@ -123,16 +125,13 @@ public class StructuringElement extends Image<BitType> {
 		}
 		
 		strel = new StructuringElement(dims, "Bar " + lengthDim + " of " + nd + ", " + length);
-		cursor = strel.createCursor();
+		cursor = strel.cursor();
 		
 		while(cursor.hasNext())
 		{
 			cursor.fwd();
-			cursor.getType().setOne();
+			cursor.get().setOne();
 		}
-		
-		cursor.close();
-		strel.removeCursor(cursor);
 		
 		return strel;	
 	}
