@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2009--2010, Stephan Saalfeld
+ * Copyright (c) 2009--2011, Stephan Saalfeld
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -9,7 +9,7 @@
  * list of conditions and the following disclaimer.  Redistributions in binary
  * form must reproduce the above copyright notice, this list of conditions and
  * the following disclaimer in the documentation and/or other materials
- * provided with the distribution.  Neither the name of the Fiji project nor
+ * provided with the distribution.  Neither the name of the imglib project nor
  * the names of its contributors may be used to endorse or promote products
  * derived from this software without specific prior written permission.
  * 
@@ -24,9 +24,8 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- *
  */
-package mpicbg.imglib.location.transform;
+package mpicbg.imglib.position.transform;
 
 import mpicbg.imglib.Localizable;
 import mpicbg.imglib.Positionable;
@@ -35,53 +34,70 @@ import mpicbg.imglib.RealPositionable;
 
 /**
  * A {@link RealPositionable} that drives a {@link Positionable} to its
- * round discrete coordinates:
+ * floor discrete coordinates.  For practical useage, the floor operation is
+ * defined as the integer smaller than the real value:
  * 
- * f = r < 0 ? (long)( r - 0.5 ) : (long)( r + 0.5 )
+ * f = r < 0 ? (long)r - 1 : (long)r
  * 
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-public class Round< LocalizablePositionable extends Localizable & Positionable > implements RealPositionable, RealLocalizable
+public class Floor< LocalizablePositionable extends Localizable & Positionable > implements RealPositionable, RealLocalizable
 {
 	final protected LocalizablePositionable target;
 	
 	final private int n;
 	
 	/* current position, required for relative movement */
-	final private double[] position;
+	final protected double[] position;
 	
-	/* current round for temporary storage, this field does not necessarily contain the actual floor position! */
-	final protected long[] round;
+	/* current floor for temporary storage, this field does not necessarily contain the actual floor position! */
+	final protected long[] floor;
 	
-	
-	public Round( final LocalizablePositionable target )
+	public Floor( final LocalizablePositionable target )
 	{
 		this.target = target;
 		
 		n = target.numDimensions();
 		
 		position = new double[ n ];
-		round = new long[ n ];
+		floor = new long[ n ];
 	}
 	
-	public Round( final RealLocalizable origin, final LocalizablePositionable target )
+	public Floor( final RealLocalizable origin, final LocalizablePositionable target )
 	{
 		this( target );
 		
 		origin.localize( position );
 		for ( int d = 0; d < n; ++d )
-			round[ d ] = round( position[ d ] );
-		target.setPosition( round );
+			target.setPosition( floor( position[ d ] ), d );
 	}
 	
-	final static private long round( final double r )
+	final static long floor( final double r )
 	{
-		return r < 0 ? ( long )( r - 0.5 ) : ( long )( r + 0.5 );
+		return r < 0 ? ( long )r - 1 : ( long )r;
 	}
 	
-	final static private long round( final float r )
+	final static long floor( final float r )
 	{
-		return r < 0 ? ( long )( r - 0.5f ) : ( long )( r + 0.5f );
+		return r < 0 ? ( long )r - 1 : ( long )r;
+	}
+	
+	final static void floor( final double[] r, final long[] f )
+	{
+		for ( int d = 0; d < r.length; ++d )
+			f[ d ] = floor( r[ d ] );
+	}
+	
+	final static void floor( final float[] r, final long[] f )
+	{
+		for ( int d = 0; d < r.length; ++d )
+			f[ d ] = floor( r[ d ] );
+	}
+	
+	final static void floor( final RealLocalizable r, final long[] f )
+	{
+		for ( int d = 0; d < f.length; ++d )
+			f[ d ] = floor( r.getDoublePosition( d ) );
 	}
 	
 	
@@ -94,72 +110,58 @@ public class Round< LocalizablePositionable extends Localizable & Positionable >
 	/* RealLocalizable */
 
 	@Override
-	public double getDoublePosition( final int d )
+	public double getDoublePosition( final int dim )
 	{
-		return position[ d ];
+		return position[ dim ];
 	}
 
 	@Override
-	public float getFloatPosition( final int d )
+	public float getFloatPosition( final int dim )
 	{
-		return ( float )position[ d ];
-	}
-
-	@Override
-	public String toString()
-	{
-		final StringBuffer pos = new StringBuffer( "(" );
-		pos.append( position[ 0 ] );
-
-		for ( int d = 1; d < n; d++ )
-			pos.append( ", " ).append( position[ d ] );
-
-		pos.append( ")" );
-
-		return pos.toString();
+		return ( float )position[ dim ];
 	}
 
 	@Override
 	public void localize( final float[] pos )
 	{
 		for ( int d = 0; d < pos.length; ++d )
-			pos[ d ] = ( float )position[ d ];
+			pos[ d ] = ( float )this.position[ d ];
 	}
 
 	@Override
 	public void localize( final double[] pos )
 	{
 		for ( int d = 0; d < pos.length; ++d )
-			pos[ d ] = position[ d ];
+			pos[ d ] = this.position[ d ];
 	}
 	
 
-	/* Positionable */
+	/* RealPositionable */
 	
 	@Override
 	public void move( final float distance, final int d )
 	{
 		final double realPosition = position[ d ] + distance;
-		final long roundPosition = round( realPosition );
+		final long floorPosition = floor( realPosition );
 		position[ d ] = realPosition;
-		final long roundDistance = roundPosition - target.getIntPosition( d );
-		if ( roundDistance == 0 )
+		final long floorDistance = floorPosition - target.getLongPosition( d );
+		if ( floorDistance == 0 )
 			return;
 		else
-			target.move( roundDistance, d );
+			target.move( floorDistance, d );
 	}
 
 	@Override
 	public void move( final double distance, final int d )
 	{
 		final double realPosition = position[ d ] + distance;
-		final long roundPosition = round( realPosition );
+		final long floorPosition = floor( realPosition );
 		position[ d ] = realPosition;
-		final long roundDistance = roundPosition - target.getIntPosition( d );
-		if ( roundDistance == 0 )
+		final long floorDistance = floorPosition - target.getLongPosition( d );
+		if ( floorDistance == 0 )
 			return;
 		else
-			target.move( roundDistance, d );
+			target.move( floorDistance, d );
 	}
 
 	@Override
@@ -168,11 +170,11 @@ public class Round< LocalizablePositionable extends Localizable & Positionable >
 		for ( int d = 0; d < n; ++d )
 		{
 			final double realPosition = position[ d ] + localizable.getDoublePosition( d );
-			final long floorPosition = round( realPosition );
+			final long floorPosition = floor( realPosition );
 			position[ d ] = realPosition;
-			round[ d ] = floorPosition - target.getLongPosition( d );
+			floor[ d ] = floorPosition - target.getLongPosition( d );
 		}
-		target.move( round );
+		target.move( floor );
 	}
 
 	@Override
@@ -181,11 +183,11 @@ public class Round< LocalizablePositionable extends Localizable & Positionable >
 		for ( int d = 0; d < n; ++d )
 		{
 			final double realPosition = position[ d ] + distance[ d ];
-			final long floorPosition = round( realPosition );
+			final long floorPosition = floor( realPosition );
 			position[ d ] = realPosition;
-			round[ d ] = floorPosition - target.getLongPosition( d );
+			floor[ d ] = floorPosition - target.getLongPosition( d );
 		}
-		target.move( round );
+		target.move( floor );
 	}
 
 	@Override
@@ -194,11 +196,11 @@ public class Round< LocalizablePositionable extends Localizable & Positionable >
 		for ( int d = 0; d < n; ++d )
 		{
 			final double realPosition = position[ d ] + distance[ d ];
-			final long floorPosition = round( realPosition );
+			final long floorPosition = floor( realPosition );
 			position[ d ] = realPosition;
-			round[ d ] = floorPosition - target.getLongPosition( d );
+			floor[ d ] = floorPosition - target.getLongPosition( d );
 		}
-		target.move( round );
+		target.move( floor );
 	}
 
 	@Override
@@ -208,9 +210,9 @@ public class Round< LocalizablePositionable extends Localizable & Positionable >
 		{
 			final double realPosition = localizable.getDoublePosition( d );
 			position[ d ] = realPosition;
-			round[ d ] = round( realPosition );
+			floor[ d ] = floor( realPosition );
 		}
-		target.setPosition( round );
+		target.setPosition( floor );
 	}
 
 	@Override
@@ -220,52 +222,52 @@ public class Round< LocalizablePositionable extends Localizable & Positionable >
 		{
 			final float realPosition = pos[ d ];
 			position[ d ] = realPosition;
-			round[ d ] = round( realPosition );
+			floor[ d ] = floor( realPosition );
 		}
-		target.setPosition( round );
+		target.setPosition( floor );
 	}
 
 	@Override
-	public void setPosition( final double[] pos )
+	public void setPosition( final double[] position )
 	{
 		for ( int d = 0; d < n; ++d )
 		{
-			final double realPosition = pos[ d ];
-			position[ d ] = realPosition;
-			round[ d ] = round( realPosition );
+			final float realPosition = ( float )position[ d ];
+			this.position[ d ] = realPosition;
+			floor[ d ] = floor( realPosition );
 		}
-		target.setPosition( round );
+		target.setPosition( floor );
 	}
 
 	@Override
-	public void setPosition( final float position, final int d )
+	public void setPosition( final float position, final int dim )
 	{
-		this.position[ d ] = position;
-		target.setPosition( round( position ), d );
+		this.position[ dim ] = position;
+		target.setPosition( floor( position ), dim );
 	}
 
 	@Override
-	public void setPosition( final double position, final int d )
+	public void setPosition( final double position, final int dim )
 	{
-		this.position[ d ] = position;
-		target.setPosition( round( position ), d );
+		this.position[ dim ] = position;
+		target.setPosition( floor( position ), dim );
 	}
 
 	
 	/* Positionable */
 	
 	@Override
-	public void bck( final int d )
+	public void bck( final int dim )
 	{
-		position[ d ] -= 1;
-		target.bck( d );
+		position[ dim ] -= 1;
+		target.bck( dim );
 	}
 
 	@Override
-	public void fwd( final int d )
+	public void fwd( final int dim )
 	{
-		position[ d ] += 1;
-		target.fwd( d );
+		position[ dim ] += 1;
+		target.fwd( dim );
 	}
 
 	@Override
@@ -304,8 +306,8 @@ public class Round< LocalizablePositionable extends Localizable & Positionable >
 	public void move( final long[] distance )
 	{
 		for ( int d = 0; d < n; ++d )
-			position[ d ] += distance[ d ]; 
-			
+			position[ d ] += distance[ d ];
+		
 		target.move( distance );
 	}
 	
@@ -346,5 +348,22 @@ public class Round< LocalizablePositionable extends Localizable & Positionable >
 	{
 		this.position[ d ] = position;
 		target.setPosition( position, d );
+	}
+	
+	
+	/* Object */
+	
+	@Override
+	public String toString()
+	{
+		final StringBuffer pos = new StringBuffer( "(" );
+		pos.append( position[ 0 ] );
+
+		for ( int d = 1; d < n; d++ )
+			pos.append( ", " ).append( position[ d ] );
+
+		pos.append( ")" );
+
+		return pos.toString();
 	}
 }
