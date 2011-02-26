@@ -56,7 +56,7 @@ public abstract class AbstractNativeImg<
 	@Override
 	public T createLinkedType()
 	{
-		try{ return linkedType.duplicateTypeOnSameNativeContainer(); }
+		try{ return linkedType.duplicateTypeOnSameNativeImg(); }
 		catch ( NullPointerException e ){ return null; }
 	}
 }

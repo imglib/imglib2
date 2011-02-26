@@ -36,7 +36,7 @@ import mpicbg.imglib.img.basictypeaccess.ByteAccess;
 public class ByteType extends GenericByteType<ByteType>
 {
 	// this is the constructor if you want it to read from an array
-	public ByteType( final NativeImg<ByteType, ? extends ByteAccess> byteStorage ) { super( byteStorage ); }
+	public ByteType( final NativeImg<ByteType, ? extends ByteAccess> img ) { super( img ); }
 	
 	// this is the constructor if you want it to be a variable
 	public ByteType( final byte value ) { super( value ); }
@@ -60,7 +60,7 @@ public class ByteType extends GenericByteType<ByteType>
 	}
 	
 	@Override
-	public ByteType duplicateTypeOnSameNativeContainer() { return new ByteType( storage ); }
+	public ByteType duplicateTypeOnSameNativeImg() { return new ByteType( img ); }
 
 	public byte get() { return getValue(); }
 	public void set( final byte b ) { setValue( b ); }

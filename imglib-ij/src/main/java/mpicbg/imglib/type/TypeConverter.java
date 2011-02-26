@@ -35,6 +35,12 @@ import mpicbg.imglib.type.numeric.integer.LongType;
 import mpicbg.imglib.type.numeric.integer.ShortType;
 import mpicbg.imglib.type.numeric.real.FloatType;
 
+/**
+ * @deprecated TODO This construct is usable only for situations where
+ * the input Type<?> is constant.  Since this is not guaranteed for any of the
+ * accessors, this construct is fragile and will, most likely, break. 
+ */
+@Deprecated
 public abstract class TypeConverter
 {
 	public abstract void convert();

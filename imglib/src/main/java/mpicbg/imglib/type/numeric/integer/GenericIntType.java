@@ -39,23 +39,22 @@ public abstract class GenericIntType<T extends GenericIntType<T>> extends Abstra
 {
 	int i = 0;
 
-	// the NativeContainer
-	final NativeImg<T, ? extends IntAccess> storage;
+	final protected NativeImg<T, ? extends IntAccess> img;
 	
-	// the (sub)NativeContainer that holds the information 
-	IntAccess b;
+	// the DataAccess that holds the information 
+	protected IntAccess dataAccess;
 	
 	// this is the constructor if you want it to read from an array
 	public GenericIntType( NativeImg<T, ? extends IntAccess> intStorage )
 	{
-		storage = intStorage;
+		img = intStorage;
 	}
 
 	// this is the constructor if you want it to be a variable
 	public GenericIntType( final int value )
 	{
-		storage = null;
-		b = new IntArray( 1 );
+		img = null;
+		dataAccess = new IntArray( 1 );
 		setValue( value );
 	}
 
@@ -66,10 +65,10 @@ public abstract class GenericIntType<T extends GenericIntType<T>> extends Abstra
 	public int getEntitiesPerPixel() { return 1; }
 
 	@Override
-	public void updateContainer( final Object c ) { b = storage.update( c ); }
+	public void updateContainer( final Object c ) { dataAccess = img.update( c ); }
 
-	protected int getValue(){ return b.getValue( i ); }
-	protected void setValue( final int f ){ b.setValue( i, f ); }
+	protected int getValue(){ return dataAccess.getValue( i ); }
+	protected void setValue( final int f ){ dataAccess.setValue( i, f ); }
 	
 	@Override
 	public void mul( final float c )
@@ -156,7 +155,7 @@ public abstract class GenericIntType<T extends GenericIntType<T>> extends Abstra
 	public String toString(){ return "" + getValue(); }
 
 	@Override
-	public void updateIndex( final int i ) { this.i = i; }
+	public void updateIndex( final int index ) { i = index; }
 	@Override
 	public int getIndex() { return i; }
 	

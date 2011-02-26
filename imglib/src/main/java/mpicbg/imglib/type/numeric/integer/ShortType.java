@@ -36,7 +36,7 @@ import mpicbg.imglib.img.basictypeaccess.ShortAccess;
 public class ShortType extends GenericShortType<ShortType>
 {
 	// this is the constructor if you want it to read from an array
-	public ShortType( NativeImg<ShortType, ? extends ShortAccess> shortStorage ) { super( shortStorage ); }
+	public ShortType( NativeImg<ShortType, ? extends ShortAccess> img ) { super( img ); }
 	
 	// this is the constructor if you want it to be a variable
 	public ShortType( final short value ) { super( value ); }
@@ -60,7 +60,7 @@ public class ShortType extends GenericShortType<ShortType>
 	}
 	
 	@Override
-	public ShortType duplicateTypeOnSameNativeContainer() { return new ShortType( storage ); }
+	public ShortType duplicateTypeOnSameNativeImg() { return new ShortType( img ); }
 
 	public short get() { return getValue(); }
 	public void set( final short b ) { setValue( b ); }

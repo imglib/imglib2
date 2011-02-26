@@ -29,7 +29,6 @@
  */
 package mpicbg.imglib.type.numeric.complex;
 
-import mpicbg.imglib.algorithm.Precision.PrecisionReal;
 import mpicbg.imglib.img.NativeImg;
 import mpicbg.imglib.img.NativeImgFactory;
 import mpicbg.imglib.img.basictypeaccess.FloatAccess;
@@ -41,27 +40,26 @@ public class ComplexFloatType extends AbstractComplexType<ComplexFloatType> impl
 {
 	private int i = 0;
 	
-	// the indices for real and complex number
-	private int realI = 0, complexI = 1;
+	// the indices for real and imaginary number
+	private int realI = 0, imaginaryI = 1;
 	
-	// the NativeContainer
-	final NativeImg<ComplexFloatType, ? extends FloatAccess> storage;
+	final protected NativeImg<ComplexFloatType, ? extends FloatAccess> img;
 	
-	// the (sub)NativeContainer that holds the information 
-	FloatAccess b;
+	// the DataAccess that holds the information 
+	protected FloatAccess dataAccess;
 	
 	// this is the constructor if you want it to read from an array
 	public ComplexFloatType( NativeImg<ComplexFloatType, ? extends FloatAccess> complexfloatStorage )
 	{
-		storage = complexfloatStorage;
+		img = complexfloatStorage;
 	}
 	
 	// this is the constructor if you want it to be a variable
-	public ComplexFloatType( final float real, final float complex )
+	public ComplexFloatType( final float r, final float i )
 	{
-		storage = null;
-		b = new FloatArray( 2 );
-		set( real, complex );
+		img = null;
+		dataAccess = new FloatArray( 2 );
+		set( r, i );
 	}
 
 	// this is the constructor if you want it to be a variable
@@ -83,36 +81,33 @@ public class ComplexFloatType extends AbstractComplexType<ComplexFloatType> impl
 	}
 	
 	@Override
-	public void updateContainer( final Object c ) { b = storage.update( c ); }
+	public void updateContainer( final Object c ) { dataAccess = img.update( c ); }
 		
 	@Override
-	public ComplexFloatType duplicateTypeOnSameNativeContainer() { return new ComplexFloatType( storage ); }
+	public ComplexFloatType duplicateTypeOnSameNativeImg() { return new ComplexFloatType( img ); }
 	
 	@Override
-	public float getRealFloat() { return b.getValue( realI ); }
+	public float getRealFloat() { return dataAccess.getValue( realI ); }
 	@Override
-	public double getRealDouble() { return b.getValue( realI ); }
+	public double getRealDouble() { return dataAccess.getValue( realI ); }
 	@Override
-	public float getImaginaryFloat() { return b.getValue( complexI ); }
+	public float getImaginaryFloat() { return dataAccess.getValue( imaginaryI ); }
 	@Override
-	public double getImaginaryDouble() { return b.getValue( complexI ); }
+	public double getImaginaryDouble() { return dataAccess.getValue( imaginaryI ); }
 	
 	@Override
-	public void setReal( final float real ){ b.setValue( realI, real ); }
+	public void setReal( final float r ){ dataAccess.setValue( realI, r ); }
 	@Override
-	public void setReal( final double real ){ b.setValue( realI, (float)real ); }
+	public void setReal( final double r ){ dataAccess.setValue( realI, (float)r ); }
 	@Override
-	public void setImaginary( final float complex ){ b.setValue( complexI, complex ); }
+	public void setImaginary( final float i ){ dataAccess.setValue( imaginaryI, i ); }
 	@Override
-	public void setImaginary( final double complex ){ b.setValue( complexI, (float)complex ); }
+	public void setImaginary( final double i ){ dataAccess.setValue( imaginaryI, (float)i ); }
 	
-	@Override
-	public PrecisionReal getPreferredRealPrecision() { return PrecisionReal.Float; }
-
-	public void set( final float real, final float complex ) 
+	public void set( final float r, final float i ) 
 	{ 
-		b.setValue( realI, real );
-		b.setValue( complexI, complex );
+		dataAccess.setValue( realI, r );
+		dataAccess.setValue( imaginaryI, i );
 	}
 
 	@Override
@@ -183,11 +178,11 @@ public class ComplexFloatType extends AbstractComplexType<ComplexFloatType> impl
 	public int getEntitiesPerPixel() { return 2; }	
 	
 	@Override
-	public void updateIndex( final int i )
+	public void updateIndex( final int index )
 	{
-		this.i = i;
-		realI = i * 2;
-		complexI = i * 2 + 1;
+		this.i = index;
+		realI = index * 2;
+		imaginaryI = index * 2 + 1;
 	}
 
 	@Override
@@ -195,7 +190,7 @@ public class ComplexFloatType extends AbstractComplexType<ComplexFloatType> impl
 	{
 		++i;
 		realI += 2;
-		complexI += 2;
+		imaginaryI += 2;
 	}
 	@Override
 	public void incIndex( final int increment )
@@ -204,14 +199,14 @@ public class ComplexFloatType extends AbstractComplexType<ComplexFloatType> impl
 
 		final int inc2 = 2 * increment;
 		realI += inc2;
-		complexI += inc2;
+		imaginaryI += inc2;
 	}
 	@Override
 	public void decIndex()
 	{
 		--i;
 		realI -= 2;
-		complexI -= 2;
+		imaginaryI -= 2;
 	}
 	@Override
 	public void decIndex( final int decrement )
@@ -219,7 +214,7 @@ public class ComplexFloatType extends AbstractComplexType<ComplexFloatType> impl
 		i -= decrement;
 		final int dec2 = 2 * decrement;
 		realI -= dec2;
-		complexI -= dec2;
+		imaginaryI -= dec2;
 	}	
 	
 	@Override

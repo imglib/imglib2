@@ -42,23 +42,22 @@ public class DoubleType extends AbstractRealType<DoubleType> implements RealType
 {
 	private int i = 0;
 
-	// the NativeContainer
-	final NativeImg<DoubleType, ? extends DoubleAccess> storage;
+	final protected NativeImg<DoubleType, ? extends DoubleAccess> img;
 	
-	// the (sub)NativeContainer that holds the information 
-	DoubleAccess b;
+	// the DataAccess that holds the information 
+	protected DoubleAccess dataAccess;
 	
 	// this is the constructor if you want it to read from an array
 	public DoubleType( NativeImg<DoubleType, ? extends DoubleAccess> doubleStorage )
 	{
-		storage = doubleStorage;
+		img = doubleStorage;
 	}
 	
 	// this is the constructor if you want it to be a variable
 	public DoubleType( final double value )
 	{
-		storage = null;
-		b = new DoubleArray( 1 );
+		img = null;
+		dataAccess = new DoubleArray( 1 );
 		set( value );
 	}
 
@@ -81,13 +80,13 @@ public class DoubleType extends AbstractRealType<DoubleType> implements RealType
 	}
 	
 	@Override
-	public void updateContainer( final Object c )  { b = storage.update( c ); }
+	public void updateContainer( final Object c )  { dataAccess = img.update( c ); }
 
 	@Override
-	public DoubleType duplicateTypeOnSameNativeContainer() { return new DoubleType( storage ); }
+	public DoubleType duplicateTypeOnSameNativeImg() { return new DoubleType( img ); }
 	
-	public double get(){ return b.getValue( i ); }
-	public void set( final double f ){ b.setValue( i, f ); }
+	public double get(){ return dataAccess.getValue( i ); }
+	public void set( final double f ){ dataAccess.setValue( i, f ); }
 	
 	@Override
 	public float getRealFloat() { return (float)get(); }
@@ -122,7 +121,7 @@ public class DoubleType extends AbstractRealType<DoubleType> implements RealType
 	public int getEntitiesPerPixel() { return 1; }
 	
 	@Override
-	public void updateIndex( final int i ) { this.i = i; }
+	public void updateIndex( final int index ) { i = index; }
 	@Override
 	public int getIndex() { return i; }
 	

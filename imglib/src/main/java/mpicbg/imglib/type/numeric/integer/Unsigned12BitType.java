@@ -41,28 +41,27 @@ public class Unsigned12BitType extends AbstractIntegerType<Unsigned12BitType> im
 {
 	private int i = 0;
 	
-	// the NativeContainer
-	final NativeImg<Unsigned12BitType, ? extends BitAccess> storage;
+	final protected NativeImg<Unsigned12BitType, ? extends BitAccess> img;
 
 	// the adresses of the bits that we store
 	int j1, j2, j3, j4, j5, j6, j7, j8, j9, j10, j11, j12;
 
-	// the (sub)NativeContainer that holds the information 
-	BitAccess b;
+	// the DataAccess that holds the information 
+	protected BitAccess dataAccess;
 	
 	// this is the constructor if you want it to read from an array
 	public Unsigned12BitType( NativeImg<Unsigned12BitType, ? extends BitAccess> bitStorage )
 	{
-		storage = bitStorage;
+		img = bitStorage;
 		updateIndex( 0 );
 	}
 	
 	// this is the constructor if you want it to be a variable
 	public Unsigned12BitType( final short value )
 	{
-		storage = null;
+		img = null;
 		updateIndex( 0 );
-		b = new BitArray( 12 );
+		dataAccess = new BitArray( 12 );
 		set( value );
 	}
 
@@ -85,44 +84,44 @@ public class Unsigned12BitType extends AbstractIntegerType<Unsigned12BitType> im
 	}
 		
 	@Override
-	public void updateContainer( final Object c ) { b = storage.update( c ); }
+	public void updateContainer( final Object c ) { dataAccess = img.update( c ); }
 	
 	@Override
-	public Unsigned12BitType duplicateTypeOnSameNativeContainer() { return new Unsigned12BitType( storage ); }
+	public Unsigned12BitType duplicateTypeOnSameNativeImg() { return new Unsigned12BitType( img ); }
 
 	public short get() 
 	{
 		short value = 0;
 		
-		if ( b.getValue( j1 ) ) ++value;
-		if ( b.getValue( j2 ) ) value += 2;
-		if ( b.getValue( j3 ) ) value += 4;
-		if ( b.getValue( j4 ) ) value += 8;
-		if ( b.getValue( j5 ) ) value += 16;
-		if ( b.getValue( j6 ) ) value += 32;
-		if ( b.getValue( j7 ) ) value += 64;
-		if ( b.getValue( j8 ) ) value += 128;
-		if ( b.getValue( j9 ) ) value += 256;
-		if ( b.getValue( j10 ) ) value += 512;
-		if ( b.getValue( j11 ) ) value += 1024;
-		if ( b.getValue( j12 ) ) value += 2048;
+		if ( dataAccess.getValue( j1 ) ) ++value;
+		if ( dataAccess.getValue( j2 ) ) value += 2;
+		if ( dataAccess.getValue( j3 ) ) value += 4;
+		if ( dataAccess.getValue( j4 ) ) value += 8;
+		if ( dataAccess.getValue( j5 ) ) value += 16;
+		if ( dataAccess.getValue( j6 ) ) value += 32;
+		if ( dataAccess.getValue( j7 ) ) value += 64;
+		if ( dataAccess.getValue( j8 ) ) value += 128;
+		if ( dataAccess.getValue( j9 ) ) value += 256;
+		if ( dataAccess.getValue( j10 ) ) value += 512;
+		if ( dataAccess.getValue( j11 ) ) value += 1024;
+		if ( dataAccess.getValue( j12 ) ) value += 2048;
 		
 		return value; 
 	}
 	public void set( final short value ) 
 	{
-		b.setValue( j1, (value & 1) == 1 );
-		b.setValue( j2, (value & 2) == 2 );
-		b.setValue( j3, (value & 4) == 4 );
-		b.setValue( j4, (value & 8) == 8 );
-		b.setValue( j5, (value & 16) == 16 );
-		b.setValue( j6, (value & 32) == 32 );
-		b.setValue( j7, (value & 64) == 64 );
-		b.setValue( j8, (value & 128) == 128 );
-		b.setValue( j9, (value & 256) == 256 );
-		b.setValue( j10, (value & 512) == 512 );
-		b.setValue( j11, (value & 1024) == 1024 );
-		b.setValue( j12, (value & 2048) == 2048 );		
+		dataAccess.setValue( j1, (value & 1) == 1 );
+		dataAccess.setValue( j2, (value & 2) == 2 );
+		dataAccess.setValue( j3, (value & 4) == 4 );
+		dataAccess.setValue( j4, (value & 8) == 8 );
+		dataAccess.setValue( j5, (value & 16) == 16 );
+		dataAccess.setValue( j6, (value & 32) == 32 );
+		dataAccess.setValue( j7, (value & 64) == 64 );
+		dataAccess.setValue( j8, (value & 128) == 128 );
+		dataAccess.setValue( j9, (value & 256) == 256 );
+		dataAccess.setValue( j10, (value & 512) == 512 );
+		dataAccess.setValue( j11, (value & 1024) == 1024 );
+		dataAccess.setValue( j12, (value & 2048) == 2048 );		
 	}
 
 	@Override
@@ -143,10 +142,10 @@ public class Unsigned12BitType extends AbstractIntegerType<Unsigned12BitType> im
 	public int getIndex() { return i; }
 	
 	@Override
-	public void updateIndex( final int i ) 
+	public void updateIndex( final int index ) 
 	{ 
-		this.i = i;
-		j1 = i * 12;
+		i = index;
+		j1 = index * 12;
 		j2 = j1 + 1;
 		j3 = j1 + 2;
 		j4 = j1 + 3;
