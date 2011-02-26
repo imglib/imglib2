@@ -40,23 +40,22 @@ final public class LongType extends AbstractIntegerType<LongType> implements Nat
 {
 	private int i = 0;
 	
-	// the NativeContainer
-	final NativeImg<LongType, ? extends LongAccess> storage;
+	final protected NativeImg<LongType, ? extends LongAccess> img;
 	
-	// the (sub)NativeContainer that holds the information 
-	LongAccess b;
+	// the DataAccess that holds the information 
+	protected LongAccess dataAccess;
 	
 	// this is the constructor if you want it to read from an array
 	public LongType( NativeImg<LongType, ? extends LongAccess> longStorage )
 	{
-		storage = longStorage;
+		img = longStorage;
 	}
 
 	// this is the constructor if you want it to be a variable
 	public LongType( final long value )
 	{
-		storage = null;
-		b = new LongArray ( 1 );
+		img = null;
+		dataAccess = new LongArray ( 1 );
 		set( value );
 	}
 
@@ -79,13 +78,13 @@ final public class LongType extends AbstractIntegerType<LongType> implements Nat
 	}
 
 	@Override
-	public void updateContainer( final Object c ) { b = storage.update( c ); }
+	public void updateContainer( final Object c ) { dataAccess = img.update( c ); }
 
 	@Override
-	public LongType duplicateTypeOnSameNativeContainer() { return new LongType( storage ); }
+	public LongType duplicateTypeOnSameNativeImg() { return new LongType( img ); }
 	
-	public long get(){ return b.getValue( i ); }
-	public void set( final long f ){ b.setValue( i, f ); }
+	public long get(){ return dataAccess.getValue( i ); }
+	public void set( final long f ){ dataAccess.setValue( i, f ); }
 
 	@Override
 	public int getInteger(){ return (int)get(); }
@@ -183,7 +182,7 @@ final public class LongType extends AbstractIntegerType<LongType> implements Nat
 	public int getEntitiesPerPixel() { return 1; }
 
 	@Override
-	public void updateIndex( final int i ) { this.i = i; }
+	public void updateIndex( final int index ) { this.i = index; }
 	@Override
 	public int getIndex() { return i; }
 	

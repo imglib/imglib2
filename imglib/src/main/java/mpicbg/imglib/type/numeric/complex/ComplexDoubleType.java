@@ -40,27 +40,26 @@ public class ComplexDoubleType extends AbstractComplexType<ComplexDoubleType> im
 {
 	private int i = 0;
 	
-	// the indices for real and complex number
-	private int realI = 0, complexI = 1;
+	// the indices for real and imaginary value
+	private int realI = 0, imaginaryI = 1;
 
-	// the NativeContainer
-	final NativeImg<ComplexDoubleType, ? extends DoubleAccess> storage;
+	final protected NativeImg<ComplexDoubleType, ? extends DoubleAccess> img;
 	
-	// the (sub)NativeContainer that holds the information 
-	DoubleAccess b;
+	// the DataAccess that holds the information 
+	protected DoubleAccess dataAccess;
 	
 	// this is the constructor if you want it to read from an array
 	public ComplexDoubleType( NativeImg<ComplexDoubleType, ? extends DoubleAccess> complexfloatStorage )
 	{
-		storage = complexfloatStorage;
+		img = complexfloatStorage;
 	}
 	
 	// this is the constructor if you want it to be a variable
-	public ComplexDoubleType( final float real, final float complex )
+	public ComplexDoubleType( final float r, final float i )
 	{
-		storage = null;
-		b = new DoubleArray( 2 );
-		set( real, complex );
+		img = null;
+		dataAccess = new DoubleArray( 2 );
+		set( r, i );
 	}
 
 	// this is the constructor if you want it to be a variable
@@ -82,33 +81,33 @@ public class ComplexDoubleType extends AbstractComplexType<ComplexDoubleType> im
 	}
 
 	@Override
-	public void updateContainer( final Object c ) { b = storage.update( c ); }
+	public void updateContainer( final Object c ) { dataAccess = img.update( c ); }
 	
 	@Override
-	public ComplexDoubleType duplicateTypeOnSameNativeContainer() { return new ComplexDoubleType( storage ); }
+	public ComplexDoubleType duplicateTypeOnSameNativeImg() { return new ComplexDoubleType( img ); }
 
 	@Override
-	public float getRealFloat() { return (float)b.getValue( realI ); }
+	public float getRealFloat() { return (float)dataAccess.getValue( realI ); }
 	@Override
-	public double getRealDouble() { return b.getValue( realI ); }
+	public double getRealDouble() { return dataAccess.getValue( realI ); }
 	@Override
-	public float getImaginaryFloat() { return (float)b.getValue( complexI ); }
+	public float getImaginaryFloat() { return (float)dataAccess.getValue( imaginaryI ); }
 	@Override
-	public double getImaginaryDouble() { return b.getValue( complexI ); }
+	public double getImaginaryDouble() { return dataAccess.getValue( imaginaryI ); }
 	
 	@Override
-	public void setReal( final float real ){ b.setValue( realI, real ); }
+	public void setReal( final float r ){ dataAccess.setValue( realI, r ); }
 	@Override
-	public void setReal( final double real ){ b.setValue( realI, real ); }
+	public void setReal( final double r ){ dataAccess.setValue( realI, r ); }
 	@Override
-	public void setImaginary( final float complex ){ b.setValue( complexI, complex ); }
+	public void setImaginary( final float i ){ dataAccess.setValue( imaginaryI, i ); }
 	@Override
-	public void setImaginary( final double complex ){ b.setValue( complexI, complex ); }
+	public void setImaginary( final double i ){ dataAccess.setValue( imaginaryI, i ); }
 	
-	public void set( final float real, final float complex ) 
+	public void set( final float r, final float i ) 
 	{ 
-		b.setValue( realI, real );
-		b.setValue( complexI, complex );
+		dataAccess.setValue( realI, r );
+		dataAccess.setValue( imaginaryI, i );
 	}
 
 	@Override
@@ -128,11 +127,11 @@ public class ComplexDoubleType extends AbstractComplexType<ComplexDoubleType> im
 	public int getEntitiesPerPixel() { return 2; }	
 	
 	@Override
-	public void updateIndex( final int i )
+	public void updateIndex( final int index )
 	{
-		this.i = i;
-		realI = i * 2;
-		complexI = i * 2 + 1;
+		this.i = index;
+		realI = index * 2;
+		imaginaryI = index * 2 + 1;
 	}
 
 	@Override
@@ -140,7 +139,7 @@ public class ComplexDoubleType extends AbstractComplexType<ComplexDoubleType> im
 	{
 		++i;
 		realI += 2;
-		complexI += 2;
+		imaginaryI += 2;
 	}
 	@Override
 	public void incIndex( final int increment )
@@ -149,14 +148,14 @@ public class ComplexDoubleType extends AbstractComplexType<ComplexDoubleType> im
 
 		final int inc2 = 2 * increment;
 		realI += inc2;
-		complexI += inc2;
+		imaginaryI += inc2;
 	}
 	@Override
 	public void decIndex()
 	{
 		--i;
 		realI -= 2;
-		complexI -= 2;
+		imaginaryI -= 2;
 	}
 	@Override
 	public void decIndex( final int decrement )
@@ -164,7 +163,7 @@ public class ComplexDoubleType extends AbstractComplexType<ComplexDoubleType> im
 		i -= decrement;
 		final int dec2 = 2 * decrement;
 		realI -= dec2;
-		complexI -= dec2;
+		imaginaryI -= dec2;
 	}	
 	
 	@Override

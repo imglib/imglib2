@@ -45,8 +45,7 @@ public class BasePairBitType implements BasePairType<BasePairBitType>, NativeTyp
 	@Override
 	public int getEntitiesPerPixel() { return 1; } 
 
-	// the NativeContainer
-	final NativeImg<BasePairBitType, ? extends BitAccess> storage;
+	final protected NativeImg<BasePairBitType, ? extends BitAccess> img;
 	
 	// the (sub)NativeContainer that holds the information 
 	BitAccess b;
@@ -57,14 +56,14 @@ public class BasePairBitType implements BasePairType<BasePairBitType>, NativeTyp
 	// this is the constructor if you want it to read from an array
 	public BasePairBitType( NativeImg<BasePairBitType, ? extends BitAccess> bitStorage )
 	{
-		storage = bitStorage;
+		img = bitStorage;
 		updateIndex( 0 );
 	}
 	
 	// this is the constructor if you want it to be a variable
 	public BasePairBitType( final Base value )
 	{
-		storage = null;
+		img = null;
 		updateIndex( 0 );
 		b = new BitArray( 3 );
 		set( value );
@@ -89,10 +88,10 @@ public class BasePairBitType implements BasePairType<BasePairBitType>, NativeTyp
 	}
 	
 	@Override
-	public void updateContainer( final Object c ) { b = storage.update( c ); }
+	public void updateContainer( final Object c ) { b = img.update( c ); }
 
 	@Override
-	public BasePairBitType duplicateTypeOnSameNativeContainer() { return new BasePairBitType( storage ); }
+	public BasePairBitType duplicateTypeOnSameNativeImg() { return new BasePairBitType( img ); }
 	
 	@Override
 	public int getIndex() { return i; }

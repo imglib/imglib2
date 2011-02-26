@@ -38,23 +38,22 @@ import mpicbg.imglib.util.Util;
 
 final public class ARGBType extends AbstractNativeType<ARGBType> implements NumericType<ARGBType>
 {
-	// the NativeContainer
-	final NativeImg<ARGBType, ? extends IntAccess> storage;
+	final protected NativeImg<ARGBType, ? extends IntAccess> img;
 	
-	// the (sub)NativeContainer that holds the information 
-	IntAccess b;
+	// the DataAccess that holds the information 
+	protected IntAccess dataAccess;
 	
 	// this is the constructor if you want it to read from an array
 	public ARGBType( NativeImg<ARGBType, ? extends IntAccess> byteStorage )
 	{
-		storage = byteStorage;
+		img = byteStorage;
 	}
 
 	// this is the constructor if you want it to be a variable
 	public ARGBType( final int value )
 	{
-		storage = null;
-		b = new IntArray( 1 );
+		img = null;
+		dataAccess = new IntArray( 1 );
 		set( value );
 	}
 
@@ -79,11 +78,11 @@ final public class ARGBType extends AbstractNativeType<ARGBType> implements Nume
 	@Override
 	public void updateContainer( final Object c ) 
 	{ 
-		b = storage.update( c );
+		dataAccess = img.update( c );
 	}
 
 	@Override
-	public ARGBType duplicateTypeOnSameNativeContainer() { return new ARGBType( storage ); }
+	public ARGBType duplicateTypeOnSameNativeImg() { return new ARGBType( img ); }
 	
 	final public static int rgba( final int r, final int g, final int b, final int a)
 	{
@@ -120,8 +119,8 @@ final public class ARGBType extends AbstractNativeType<ARGBType> implements Nume
 		return (value >> 24) & 0xff;
 	}
 	
-	public int get(){ return b.getValue( i ); }
-	public void set( final int f ){ b.setValue( i, f ); }
+	public int get(){ return dataAccess.getValue( i ); }
+	public void set( final int f ){ dataAccess.setValue( i, f ); }
 		
 	@Override
 	public void mul( final float c )

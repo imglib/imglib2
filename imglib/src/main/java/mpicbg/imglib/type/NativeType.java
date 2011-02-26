@@ -79,7 +79,7 @@ public interface NativeType<T extends NativeType<T>> extends Type<T>
 	 * @return - a new {@link NativeType} instance working on the same
 	 *         {@link NativeImg}
 	 */
-	public T duplicateTypeOnSameNativeContainer();	
+	public T duplicateTypeOnSameNativeImg();	
 
 	/**
 	 * This method is used by an accessor (e.g., a {@link Cursor})

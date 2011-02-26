@@ -37,7 +37,7 @@ import mpicbg.imglib.util.Util;
 public class UnsignedShortType extends GenericShortType<UnsignedShortType>
 {
 	// this is the constructor if you want it to read from an array
-	public UnsignedShortType( NativeImg<UnsignedShortType, ? extends ShortAccess> shortStorage ) { super( shortStorage ); }
+	public UnsignedShortType( NativeImg<UnsignedShortType, ? extends ShortAccess> img ) { super( img ); }
 
 	// this is the constructor if you want it to be a variable
 	public UnsignedShortType( final int value ) { super( getCodedSignedShortChecked(value) ); }
@@ -73,7 +73,7 @@ public class UnsignedShortType extends GenericShortType<UnsignedShortType>
 	}
 	
 	@Override
-	public UnsignedShortType duplicateTypeOnSameNativeContainer() { return new UnsignedShortType( storage ); }
+	public UnsignedShortType duplicateTypeOnSameNativeImg() { return new UnsignedShortType( img ); }
 
 	@Override
 	public void mul( final float c )

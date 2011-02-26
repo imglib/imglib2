@@ -42,31 +42,30 @@ public class BasePairCharType extends AbstractNativeType<BasePairCharType> imple
 	@Override
 	public int getEntitiesPerPixel() { return 1; } 
 
-	// the NativeContainer
-	final NativeImg<BasePairCharType, ? extends CharAccess> storage;
+	final protected NativeImg<BasePairCharType, ? extends CharAccess> img;
 	
-	// the (sub)NativeContainer that holds the information 
-	CharAccess b;
+	// the DataAccess that holds the information 
+	protected CharAccess dataAccess;
 	
 	// this is the constructor if you want it to read from an array
 	public BasePairCharType( NativeImg<BasePairCharType, ? extends CharAccess> charStorage )
 	{
-		storage = charStorage;
+		img = charStorage;
 	}
 
 	// this is the constructor if you want it to be a variable
 	public BasePairCharType( final Base value )
 	{
-		storage = null;
-		b = new CharArray( 1 );
+		img = null;
+		dataAccess = new CharArray( 1 );
 		set( value );
 	}
 
 	// this is the constructor if you want it to be a variable
 	public BasePairCharType( final char value )
 	{	
-		storage = null;
-		b = new CharArray( 1 );
+		img = null;
+		dataAccess = new CharArray( 1 );
 		setChar( value );
 	}
 
@@ -89,13 +88,13 @@ public class BasePairCharType extends AbstractNativeType<BasePairCharType> imple
 	}
 	
 	@Override
-	public void updateContainer( final Object c ) { b = storage.update( c ); }
+	public void updateContainer( final Object c ) { dataAccess = img.update( c ); }
 	
 	@Override
-	public BasePairCharType duplicateTypeOnSameNativeContainer() { return new BasePairCharType( storage ); }
+	public BasePairCharType duplicateTypeOnSameNativeImg() { return new BasePairCharType( img ); }
 	
-	public char getChar() { return b.getValue( i ); }
-	public void setChar( final char f ) { b.setValue( i, f ); }
+	public char getChar() { return dataAccess.getValue( i ); }
+	public void setChar( final char f ) { dataAccess.setValue( i, f ); }
 
 	public void set( final Base base ) 
 	{
@@ -126,7 +125,7 @@ public class BasePairCharType extends AbstractNativeType<BasePairCharType> imple
 	}
 	
 	@Override
-	public void set( final BasePairCharType c ) { b.setValue( i, c.getChar() ); }
+	public void set( final BasePairCharType c ) { dataAccess.setValue( i, c.getChar() ); }
 
 	@Override
 	public int compareTo( final BasePairCharType c ) 

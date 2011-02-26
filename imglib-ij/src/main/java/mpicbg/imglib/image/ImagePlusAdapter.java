@@ -32,6 +32,7 @@ package mpicbg.imglib.image;
 import ij.ImagePlus;
 import ij.measure.Calibration;
 import mpicbg.imglib.Cursor;
+import mpicbg.imglib.converter.Converter;
 import mpicbg.imglib.img.Img;
 import mpicbg.imglib.img.imageplus.ByteImagePlus;
 import mpicbg.imglib.img.imageplus.FloatImagePlus;
@@ -209,6 +210,16 @@ public class ImagePlusAdapter
 		}
 	}
 	
+	
+	/**
+	 * @deprecated TODO This methods does not work for all {@link Img} where T returned by is not constant.  Instead,
+	 * a construct using {@link Converter} should be used.
+	 * 
+	 * @param <T>
+	 * @param input
+	 * @return
+	 */
+	@Deprecated
 	protected static < T extends Type< T > > Img< FloatType > convertToFloat( Img< T > input )
 	{		
 		ImagePlusImg< FloatType, ? > output = new ImagePlusImgFactory< FloatType >().create( input, new FloatType() );

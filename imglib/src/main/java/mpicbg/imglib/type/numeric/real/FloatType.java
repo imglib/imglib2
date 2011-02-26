@@ -29,7 +29,6 @@
  */
 package mpicbg.imglib.type.numeric.real;
 
-import mpicbg.imglib.algorithm.Precision.PrecisionReal;
 import mpicbg.imglib.img.NativeImg;
 import mpicbg.imglib.img.NativeImgFactory;
 import mpicbg.imglib.img.basictypeaccess.FloatAccess;
@@ -41,23 +40,22 @@ public class FloatType extends AbstractRealType<FloatType> implements RealType<F
 {
 	private int i = 0;
 
-	// the NativeContainer
-	final NativeImg<FloatType, ? extends FloatAccess> storage;
+	final protected NativeImg<FloatType, ? extends FloatAccess> img;
 	
-	// the (sub)NativeContainer that holds the information 
-	FloatAccess b;
+	// the DataAccess that holds the information 
+	protected FloatAccess dataAccess;
 	
 	// this is the constructor if you want it to read from an array
 	public FloatType( NativeImg<FloatType, ? extends FloatAccess> floatStorage )
 	{
-		storage = floatStorage;
+		img = floatStorage;
 	}
 
 	// this is the constructor if you want it to be a variable
 	public FloatType( final float value )
 	{
-		storage = null;
-		b = new FloatArray( 1 );
+		img = null;
+		dataAccess = new FloatArray( 1 );
 		set( value );
 	}
 
@@ -82,14 +80,14 @@ public class FloatType extends AbstractRealType<FloatType> implements RealType<F
 	@Override
 	public void updateContainer( final Object c ) 
 	{ 
-		b = storage.update( c ); 
+		dataAccess = img.update( c ); 
 	}
 	
 	@Override
-	public FloatType duplicateTypeOnSameNativeContainer() { return new FloatType( storage ); }
+	public FloatType duplicateTypeOnSameNativeImg() { return new FloatType( img ); }
 
-	public float get(){ return b.getValue( i ); }
-	public void set( final float f ){ b.setValue( i, f ); }
+	public float get(){ return dataAccess.getValue( i ); }
+	public void set( final float f ){ dataAccess.setValue( i, f ); }
 	
 	@Override
 	public float getRealFloat() { return get(); }
@@ -101,9 +99,6 @@ public class FloatType extends AbstractRealType<FloatType> implements RealType<F
 	@Override
 	public void setReal( final double real ){ set( (float)real ); }
 	
-	@Override
-	public PrecisionReal getPreferredRealPrecision() { return PrecisionReal.Float; }
-
 	@Override
 	public double getMaxValue() { return Float.MAX_VALUE; }
 	@Override
@@ -193,7 +188,7 @@ public class FloatType extends AbstractRealType<FloatType> implements RealType<F
 	public int getEntitiesPerPixel() { return 1; }
 	
 	@Override
-	public void updateIndex( final int i ) { this.i = i; }
+	public void updateIndex( final int index ) { i = index; }
 	@Override
 	public int getIndex() { return i; }
 	

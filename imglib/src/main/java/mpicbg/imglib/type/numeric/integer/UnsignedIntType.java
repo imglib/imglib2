@@ -37,7 +37,7 @@ import mpicbg.imglib.util.Util;
 public class UnsignedIntType extends GenericIntType<UnsignedIntType>
 {
 	// this is the constructor if you want it to read from an array
-	public UnsignedIntType( NativeImg<UnsignedIntType, ? extends IntAccess> intStorage ) { super( intStorage ); }
+	public UnsignedIntType( NativeImg<UnsignedIntType, ? extends IntAccess> img ) { super( img ); }
 
 	// this is the constructor if you want it to be a variable
 	public UnsignedIntType( final long value ) { super( getCodedSignedIntChecked(value) ); }
@@ -73,7 +73,7 @@ public class UnsignedIntType extends GenericIntType<UnsignedIntType>
 	}
 	
 	@Override
-	public UnsignedIntType duplicateTypeOnSameNativeContainer() { return new UnsignedIntType( storage ); }
+	public UnsignedIntType duplicateTypeOnSameNativeImg() { return new UnsignedIntType( img ); }
 
 	@Override
 	public void mul( final float c )

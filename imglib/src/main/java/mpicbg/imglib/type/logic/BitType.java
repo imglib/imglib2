@@ -43,24 +43,23 @@ public class BitType extends AbstractIntegerType<BitType> implements BooleanType
 {
 	private int i = 0;
 	
-	// the NativeContainer
-	final NativeImg<BitType, ? extends BitAccess> storage;
+	final protected NativeImg<BitType, ? extends BitAccess> img;
 	
-	// the (sub)NativeContainer that holds the information 
-	BitAccess b;
+	// the DataAccess that holds the information 
+	protected BitAccess dataAccess;
 	
 	// this is the constructor if you want it to read from an array
 	public BitType( NativeImg<BitType, ? extends BitAccess> bitStorage )
 	{
-		storage = bitStorage;
+		img = bitStorage;
 	}
 	
 	// this is the constructor if you want it to be a variable
 	public BitType( final boolean value )
 	{
-		storage = null;
-		b = new BitArray( 1 );
-		b.setValue( i, value );
+		img = null;
+		dataAccess = new BitArray( 1 );
+		dataAccess.setValue( i, value );
 	}
 
 	// this is the constructor if you want it to be a variable
@@ -82,15 +81,15 @@ public class BitType extends AbstractIntegerType<BitType> implements BooleanType
 	}
 		
 	@Override
-	public void updateContainer( final Object c ) { b = storage.update( c ); }
+	public void updateContainer( final Object c ) { dataAccess = img.update( c ); }
 	
 	@Override
-	public BitType duplicateTypeOnSameNativeContainer() { return new BitType( storage ); }
+	public BitType duplicateTypeOnSameNativeImg() { return new BitType( img ); }
 
 	@Override
-	public boolean get() { return b.getValue( i ); }
+	public boolean get() { return dataAccess.getValue( i ); }
 	@Override
-	public void set( final boolean value ) { b.setValue( i, value ); }
+	public void set( final boolean value ) { dataAccess.setValue( i, value ); }
 
 	@Override
 	public int getInteger(){ return get() ? 1 : 0; }
@@ -119,19 +118,19 @@ public class BitType extends AbstractIntegerType<BitType> implements BooleanType
 	public double getMinValue()  { return 0; }
 	
 	@Override
-	public void set( final BitType c ) { b.setValue(i, c.get() ); }
+	public void set( final BitType c ) { dataAccess.setValue(i, c.get() ); }
 
 	@Override
-	public void and( final BitType c ) { b.setValue(i, b.getValue(i) && c.get() ); }
+	public void and( final BitType c ) { dataAccess.setValue(i, dataAccess.getValue(i) && c.get() ); }
 	
 	@Override
-	public void or( final BitType c ) { b.setValue(i, b.getValue(i) || c.get() ); }
+	public void or( final BitType c ) { dataAccess.setValue(i, dataAccess.getValue(i) || c.get() ); }
 	
 	@Override
-	public void xor( final BitType c ) { b.setValue(i, b.getValue(i) ^ c.get() ); }
+	public void xor( final BitType c ) { dataAccess.setValue(i, dataAccess.getValue(i) ^ c.get() ); }
 	
 	@Override
-	public void not() { b.setValue(i, !b.getValue(i) ); }
+	public void not() { dataAccess.setValue(i, !dataAccess.getValue(i) ); }
 	
 	@Override
 	public void add( final BitType c ) { xor( c ); }
@@ -149,28 +148,28 @@ public class BitType extends AbstractIntegerType<BitType> implements BooleanType
 	public void mul( final float c ) 
 	{ 
 		if ( c >= 0.5f )
-			b.setValue(i, b.getValue(i) && true );
+			dataAccess.setValue(i, dataAccess.getValue(i) && true );
 		else
-			b.setValue(i, b.getValue(i) && false );
+			dataAccess.setValue(i, dataAccess.getValue(i) && false );
 	}
 
 	@Override
 	public void mul( final double c ) 
 	{ 
 		if ( c >= 0.5f )
-			b.setValue(i, b.getValue(i) && true );
+			dataAccess.setValue(i, dataAccess.getValue(i) && true );
 		else
-			b.setValue(i, b.getValue(i) && false );
+			dataAccess.setValue(i, dataAccess.getValue(i) && false );
 	}
 		
 	@Override
-	public void setOne() { b.setValue( i, true ); }
+	public void setOne() { dataAccess.setValue( i, true ); }
 
 	@Override
-	public void setZero() { b.setValue( i, false ); }
+	public void setZero() { dataAccess.setValue( i, false ); }
 	
 	@Override
-	public void inc() { b.setValue( i, !b.getValue( i) ); }
+	public void inc() { dataAccess.setValue( i, !dataAccess.getValue( i) ); }
 
 	@Override
 	public void dec() { inc(); }
@@ -178,7 +177,7 @@ public class BitType extends AbstractIntegerType<BitType> implements BooleanType
 	@Override
 	public int compareTo( final BitType c ) 
 	{
-		final boolean b1 = b.getValue(i);
+		final boolean b1 = dataAccess.getValue(i);
 		final boolean b2 = c.get();
 		
 		if ( b1 && !b2 )
@@ -193,12 +192,12 @@ public class BitType extends AbstractIntegerType<BitType> implements BooleanType
 	public BitType createVariable(){ return new BitType(); }
 
 	@Override
-	public BitType copy(){ return new BitType( b.getValue(i) ); }
+	public BitType copy(){ return new BitType( dataAccess.getValue(i) ); }
 
 	@Override
 	public String toString() 
 	{
-		final boolean value = b.getValue(i);
+		final boolean value = dataAccess.getValue(i);
 		
 		if ( value ) 
 			return "1"; 

@@ -1,7 +1,5 @@
 package mpicbg.imglib.type.numeric;
 
-import mpicbg.imglib.algorithm.Precision.PrecisionReal;
-
 public interface ComplexType<T extends ComplexType<T>> extends NumericType<T>
 {
 	public double getRealDouble();
@@ -16,11 +14,9 @@ public interface ComplexType<T extends ComplexType<T>> extends NumericType<T>
 	public void setImaginary( float f );
 	public void setImaginary( double f );
 
-	public void setComplexNumber( float real, float complex );
-	public void setComplexNumber( double real, double complex );
+	public void setComplexNumber( float r, float i );
+	public void setComplexNumber( double r, double i );
 	
-	public PrecisionReal getPreferredRealPrecision();
-
 	public float getPowerFloat();
 	public double getPowerDouble();
 	public float getPhaseFloat();
