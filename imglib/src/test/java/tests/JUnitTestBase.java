@@ -3,6 +3,8 @@ package tests;
 import java.util.Arrays;
 
 
+import mpicbg.imglib.Cursor;
+import mpicbg.imglib.RandomAccess;
 import mpicbg.imglib.cursor.LocalizableByDimCursor;
 import mpicbg.imglib.cursor.LocalizableCursor;
 
@@ -13,6 +15,7 @@ import mpicbg.imglib.img.array.ArrayImgFactory;
 import mpicbg.imglib.type.numeric.RealType;
 
 import mpicbg.imglib.type.numeric.real.FloatType;
+import mpicbg.imglib.util.Util;
 
 /**
  * The base class for JUnit tests
@@ -42,15 +45,14 @@ public class JUnitTestBase {
 	 * Check whether an image is identical to a generated image
 	 */
 	protected<T extends RealType<T>> boolean match( Img<T> image, Function function ) {
-		LocalizableCursor<T> cursor = image.createLocalizableCursor();
-		int[] pos = new int[cursor.getNumDimensions()];
+		Cursor<T> cursor = image.localizingCursor();
+		int[] pos = new int[cursor.numDimensions()];
 		while( cursor.hasNext() ) {
 			cursor.fwd();
-			cursor.getPosition( pos );
-			if( function.calculate( pos ) != cursor.getType().getRealFloat() )
+			cursor.localize( pos );
+			if( function.calculate( pos ) != cursor.get().getRealFloat() )
 				return false;
 		}
-		cursor.close();
 		return true;
 	}
 
@@ -58,15 +60,14 @@ public class JUnitTestBase {
 	 * Check whether an image is identical to a generated image, with fuzz
 	 */
 	protected<T extends RealType<T>> boolean match( Img<T> image, Function function, float tolerance ) {
-		LocalizableCursor<T> cursor = image.createLocalizableCursor();
-		int[] pos = new int[cursor.getNumDimensions()];
+		Cursor<T> cursor = image.localizingCursor();
+		int[] pos = new int[cursor.numDimensions()];
 		while( cursor.hasNext() ) {
 			cursor.fwd();
-			cursor.getPosition( pos );
-			if( Math.abs( function.calculate( pos ) - cursor.getType().getRealFloat() ) > tolerance )
+			cursor.localize( pos );
+			if( Math.abs( function.calculate( pos ) - cursor.get().getRealFloat() ) > tolerance )
 				return false;
 		}
-		cursor.close();
 		return true;
 	}
 
@@ -76,7 +77,7 @@ public class JUnitTestBase {
 	 * The image signature are 1st and 2nd order moments of the intensity and the coordinates.
 	 */
 	protected<T extends RealType<T>> float[] signature( Img<T> image ) {
-		float[] result = new float[( image.getNumDimensions() + 1 ) * 2];
+		float[] result = new float[( image.numDimensions() + 1 ) * 2];
 		signature( image, result );
 		return result;
 	}
@@ -88,13 +89,13 @@ public class JUnitTestBase {
 	 */
 	protected<T extends RealType<T>> void signature( Img<T> image, float[] result ) {
 		Arrays.fill( result, 0 );
-		LocalizableCursor<T> cursor = image.createLocalizableCursor();
-		int dim = cursor.getNumDimensions();
+		Cursor<T> cursor = image.localizingCursor();
+		int dim = cursor.numDimensions();
 		int[] pos = new int[dim];
 		while( cursor.hasNext() ) {
 			cursor.fwd();
-			cursor.getPosition( pos );
-			float value = cursor.getType().getRealFloat();
+			cursor.localize( pos );
+			float value = cursor.get().getRealFloat();
 			result[0] += value;
 			result[dim + 1] += value * value;
 			for( int i = 0; i < dim; i++ ) {
@@ -102,14 +103,13 @@ public class JUnitTestBase {
 				result[i + 1 + dim + 1] += value * pos[i] * pos[i];
 			}
 		}
-		cursor.close();
 
 		for( int i = 1; i < dim + 1; i++ ) {
 			result[i] /= result[0];
 			result[i + dim + 1] = ( float )Math.sqrt( result[i + dim + 1] / result[0] - result[i] * result[i] );
 		}
 
-		int[] dims = image.getDimensions();
+		long[] dims = Util.intervalDimensions( image );
 		float total = dims[0];
 		for( int i = 1; i < dim; i++ )
 			total *= dims[i];
@@ -145,10 +145,9 @@ public class JUnitTestBase {
 	 * Convenience helper to access single pixels
 	 */
 	protected<T extends RealType<T>> float get( Img<T> image, int[] pos ) {
-		LocalizableByDimCursor<T> cursor = image.createLocalizableByDimCursor();
+		RandomAccess<T> cursor = image.randomAccess();
 		cursor.setPosition( pos );
-		float result = cursor.getType().getRealFloat();
-		cursor.close();
+		float result = cursor.get().getRealFloat();
 		return result;
 	}
 
