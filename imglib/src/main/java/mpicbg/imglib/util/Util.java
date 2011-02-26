@@ -105,6 +105,20 @@ public class Util
 		return (float)Math.sqrt( dist );
 	}
 
+	final public static float computeLength( final long[] position )
+	{
+		float dist = 0;
+
+		for ( int d = 0; d < position.length; ++d )
+		{
+			final long pos = position[ d ];
+
+			dist += pos*pos;
+		}
+
+		return (float)Math.sqrt( dist );
+	}
+
 	public static long computeMedian( final long[] values )
 	{
 		final long temp[] = values.clone();
