@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2009--2010, Stephan Saalfeld
+ * Copyright (c) 2009--2011, Stephan Saalfeld
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -9,7 +9,7 @@
  * list of conditions and the following disclaimer.  Redistributions in binary
  * form must reproduce the above copyright notice, this list of conditions and
  * the following disclaimer in the documentation and/or other materials
- * provided with the distribution.  Neither the name of the Fiji project nor
+ * provided with the distribution.  Neither the name of the imglib project nor
  * the names of its contributors may be used to endorse or promote products
  * derived from this software without specific prior written permission.
  * 
@@ -26,7 +26,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  */
-package mpicbg.imglib.location.transform;
+package mpicbg.imglib.position.transform;
 
 import mpicbg.imglib.Localizable;
 import mpicbg.imglib.Positionable;
@@ -34,116 +34,93 @@ import mpicbg.imglib.RealLocalizable;
 import mpicbg.imglib.RealPositionable;
 
 /**
- * Links a {@link RealLocalizable} with a {@link Positionable} by
- * transferring real coordinates to rounded discrete coordinates.  For practical
- * useage, the round operation is defined as the integer smaller than the real
- * value:
+ * Moves a {@link RealLocalizable} & {@link RealPositionable} and a
+ * {@link Positionable} in synchrony.  The position of the latter is at the
+ * round coordinates of the former:
  * 
  * f = r < 0 ? (long)( r - 0.5 ) : (long)( r + 0.5 )
  * 
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-public class RealPositionableRoundPositionable< LocalizablePositionable extends RealLocalizable & RealPositionable > implements RealPositionable
+public class RealPositionableRoundPositionable< P extends RealLocalizable & RealPositionable > implements RealPositionable, RealLocalizable
 {
-	final protected LocalizablePositionable source;
+	final protected P source;
 	final protected Positionable target;
 	
-	final protected int numDimensions;
+	final protected int n;
 	
 	final private long[] round;
-	final private double[] position;
 	
-	public RealPositionableRoundPositionable( final LocalizablePositionable source, final Positionable target )
+	public RealPositionableRoundPositionable( final P source, final Positionable target )
 	{
 		this.source = source;
 		this.target = target;
 		
-		numDimensions = source.numDimensions();
+		n = source.numDimensions();
 		
-		position = new double[ numDimensions ];
-		round = new long[ numDimensions ];
+		round = new long[ n ];
 	}
 	
-	final static private long round( final double r )
-	{
-		return r < 0 ? ( long )( r - 0.5 ) : ( long )( r + 0.5 );
-	}
-	
-	final static private long round( final float r )
-	{
-		return r < 0 ? ( long )( r - 0.5f ) : ( long )( r + 0.5f );
-	}
-	
-	final static private void round( final double[] r, final long[] f )
-	{
-		for ( int i = 0; i < r.length; ++i )
-			f[ i ] = round( r[ i ] );
-	}
-	
-	final static private void round( final float[] r, final long[] f )
-	{
-		for ( int i = 0; i < r.length; ++i )
-			f[ i ] = round( r[ i ] );
-	}
-	
-	
+
 	/* EuclideanSpace */
 	
 	@Override
-	public int numDimensions(){ return numDimensions; }
+	public int numDimensions(){ return n; }
 
 	
 	/* RealPositionable */
 	
 	@Override
-	public void move( final float distance, final int dim )
+	public void move( final float distance, final int d )
 	{
-		source.move( distance, dim );
-		target.setPosition( round( source.getDoublePosition( dim ) ), dim );
+		source.move( distance, d );
+		target.setPosition( Round.round( source.getDoublePosition( d ) ), d );
 	}
 
 	@Override
-	public void move( final double distance, final int dim )
+	public void move( final double distance, final int d )
 	{
-		source.move( distance, dim );
-		target.setPosition( round( source.getDoublePosition( dim ) ), dim );
+		source.move( distance, d );
+		target.setPosition( Round.round( source.getDoublePosition( d ) ), d );
 	}
 
 	@Override
 	public void move( final RealLocalizable localizable )
 	{
-		localizable.localize( position );
-		move( position );
+		source.move( localizable );
+		Round.round( source, round );
+		target.setPosition( round );
 	}
 
 	@Override
-	public void move( final float[] pos )
+	public void move( final float[] distance )
 	{
-		source.moveTo( pos );
-		round( pos, round );
-		target.moveTo( round );
+		source.move( distance );
+		Round.round( source, round );
+		target.setPosition( round );
 	}
 
 	@Override
-	public void moveTo( final double[] pos )
+	public void move( final double[] distance )
 	{
-		source.moveTo( pos );
-		round( pos, round );
-		target.moveTo( round );
+		source.move( distance );
+		Round.round( source, round );
+		target.setPosition( round );
 	}
 
 	@Override
 	public void setPosition( final RealLocalizable localizable )
 	{
-		localizable.localize( position );
-		setPosition( position );
+		source.setPosition( localizable );
+		Round.round( localizable, round );
+		target.setPosition( round );
 	}
 
 	@Override
 	public void setPosition( final float[] position )
 	{
 		source.setPosition( position );
-		round( position, round );
+		Round.round( position, round );
 		target.setPosition( round );
 	}
 
@@ -151,7 +128,7 @@ public class RealPositionableRoundPositionable< LocalizablePositionable extends 
 	public void setPosition( final double[] position )
 	{
 		source.setPosition( position );
-		round( position, round );
+		Round.round( position, round );
 		target.setPosition( round );
 	}
 
@@ -159,18 +136,18 @@ public class RealPositionableRoundPositionable< LocalizablePositionable extends 
 	public void setPosition( final float position, final int dim )
 	{
 		source.setPosition( position, dim );
-		target.setPosition( round( position ), dim );
+		target.setPosition( Round.round( position ), dim );
 	}
 
 	@Override
 	public void setPosition( final double position, final int dim )
 	{
 		source.setPosition( position, dim );
-		target.setPosition( round( position ), dim );
+		target.setPosition( Round.round( position ), dim );
 	}
 
 	
-	/* RasterPositionable */
+	/* Positionable */
 	
 	@Override
 	public void bck( final int dim )
@@ -187,42 +164,42 @@ public class RealPositionableRoundPositionable< LocalizablePositionable extends 
 	}
 
 	@Override
-	public void move( final int distance, final int dim )
+	public void move( final int distance, final int d )
 	{
-		source.move( distance, dim );
-		target.move( distance, dim );
+		source.move( distance, d );
+		target.move( distance, d );
 	}		
 
 	@Override
-	public void move( final long distance, final int dim )
+	public void move( final long distance, final int d )
 	{
-		source.move( distance, dim );
-		target.move( distance, dim );
+		source.move( distance, d );
+		target.move( distance, d );
 	}
 
 	@Override
-	public void moveTo( final Localizable localizable )
+	public void move( final Localizable localizable )
 	{
-		source.moveTo( localizable );
-		target.moveTo( localizable );
+		source.move( localizable );
+		target.move( localizable );
 	}
 
 	@Override
-	public void moveTo( final int[] pos )
+	public void move( final int[] pos )
 	{
-		source.moveTo( pos );
-		target.moveTo( pos );
+		source.move( pos );
+		target.move( pos );
 	}
 
 	@Override
-	public void moveTo( final long[] pos )
+	public void move( final long[] pos )
 	{
-		source.moveTo( pos );
-		target.moveTo( pos );
+		source.move( pos );
+		target.move( pos );
 	}
 	
 	@Override
-	public void setPosition( Localizable localizable )
+	public void setPosition( final Localizable localizable )
 	{
 		source.setPosition( localizable );
 		target.setPosition( localizable );
@@ -236,23 +213,50 @@ public class RealPositionableRoundPositionable< LocalizablePositionable extends 
 	}
 	
 	@Override
-	public void setPosition( long[] position )
+	public void setPosition( final long[] position )
 	{
 		source.setPosition( position );
 		target.setPosition( position );
 	}
 
 	@Override
-	public void setPosition( int position, int dim )
+	public void setPosition( final int position, final int d )
 	{
-		source.setPosition( position, dim );
-		target.setPosition( position, dim );
+		source.setPosition( position, d );
+		target.setPosition( position, d );
 	}
 
 	@Override
-	public void setPosition( long position, int dim )
+	public void setPosition( final long position, final int d )
 	{
-		source.setPosition( position, dim );
-		target.setPosition( position, dim );
+		source.setPosition( position, d );
+		target.setPosition( position, d );
+	}
+	
+	
+	/* RealLocalizable */
+
+	@Override
+	public double getDoublePosition( final int d )
+	{
+		return source.getDoublePosition( d );
+	}
+
+	@Override
+	public float getFloatPosition( final int d )
+	{
+		return source.getFloatPosition( d );
+	}
+
+	@Override
+	public void localize( final float[] position )
+	{
+		source.localize( position );
+	}
+
+	@Override
+	public void localize( final double[] position )
+	{
+		source.localize( position );
 	}
 }

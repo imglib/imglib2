@@ -26,7 +26,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  */
-package mpicbg.imglib.location.transform;
+package mpicbg.imglib.position.transform;
 
 import mpicbg.imglib.Localizable;
 import mpicbg.imglib.Positionable;
@@ -34,18 +34,18 @@ import mpicbg.imglib.RealLocalizable;
 import mpicbg.imglib.RealPositionable;
 
 /**
- * Links a {@link RealPositionable} with a {@link Positionable} by
- * transferring real coordinates to floor discrete coordinates.  For practical
- * useage, the floor operation is defined as the integer smaller than the real
- * value:
+ * Moves a {@link RealLocalizable} & {@link RealPositionable} and a
+ * {@link Positionable} in synchrony.  The position of the latter is at the
+ * floor coordinates of the former.  For practical useage, the floor operation
+ * is defined as the integer smaller than the real value:
  * 
  * f = r < 0 ? (long)r - 1 : (long)r
  * 
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-public class RealPositionableFloorPositionable< LocalizablePositionable extends RealLocalizable & RealPositionable > implements RealPositionable
+public class RealPositionableFloorPositionable< P extends RealLocalizable & RealPositionable > implements RealPositionable, RealLocalizable
 {
-	final protected LocalizablePositionable source;
+	final protected P source;
 	final protected Positionable target;
 	
 	final protected int n;
@@ -53,46 +53,14 @@ public class RealPositionableFloorPositionable< LocalizablePositionable extends 
 	/* temporary floor position register */
 	final protected long[] floor;
 	
-	/* temporary position register */
-	final protected double[] position;
-	
-	public RealPositionableFloorPositionable( final LocalizablePositionable source, final Positionable target )
+	public RealPositionableFloorPositionable( final P source, final Positionable target )
 	{
 		this.source = source;
 		this.target = target;
 		
 		n = source.numDimensions();
 		
-		position = new double[ n ];
 		floor = new long[ n ];
-	}
-	
-	final static private long floor( final double r )
-	{
-		return r < 0 ? ( long )r - 1 : ( long )r;
-	}
-	
-	final static private long floor( final float r )
-	{
-		return r < 0 ? ( long )r - 1 : ( long )r;
-	}
-	
-	final static private void floor( final double[] r, final long[] f )
-	{
-		for ( int d = 0; d < r.length; ++d )
-			f[ d ] = floor( r[ d ] );
-	}
-	
-	final static private void floor( final float[] r, final long[] f )
-	{
-		for ( int d = 0; d < r.length; ++d )
-			f[ d ] = floor( r[ d ] );
-	}
-	
-	final static private void floor( final RealLocalizable r, final long[] f )
-	{
-		for ( int d = 0; d < f.length; ++d )
-			f[ d ] = floor( r.getDoublePosition( d ) );
 	}
 	
 	
@@ -108,61 +76,61 @@ public class RealPositionableFloorPositionable< LocalizablePositionable extends 
 	public void move( final float distance, final int d )
 	{
 		source.move( distance, d );
-		target.setPosition( floor( source.getDoublePosition( d ) ), d );
+		target.setPosition( Floor.floor( source.getDoublePosition( d ) ), d );
 	}
 
 	@Override
 	public void move( final double distance, final int d )
 	{
 		source.move( distance, d );
-		target.setPosition( floor( source.getDoublePosition( d ) ), d );
+		target.setPosition( Floor.floor( source.getDoublePosition( d ) ), d );
 	}
 
 	@Override
 	public void move( final RealLocalizable localizable )
 	{
 		source.move( localizable );
-		floor( localizable, floor );
-		target.move( floor );
+		Floor.floor( source, floor );
+		target.setPosition( floor );
 	}
 
 	@Override
 	public void move( final float[] distance )
 	{
 		source.move( distance );
-		floor( distance, floor );
-		target.move( floor );
+		Floor.floor( source, floor );
+		target.setPosition( floor );
 	}
 
 	@Override
 	public void move( final double[] distance )
 	{
 		source.move( distance );
-		floor( distance, floor );
-		target.move( floor );
+		Floor.floor( source, floor );
+		target.setPosition( floor );
 	}
 
 	@Override
 	public void setPosition( final RealLocalizable localizable )
 	{
 		source.setPosition( localizable );
-		floor( localizable, floor );
+		Floor.floor( localizable, floor );
 		target.setPosition( floor );
 	}
 
 	@Override
-	public void setPosition( final float[] pos )
+	public void setPosition( final float[] position )
 	{
-		source.setPosition( pos );
-		floor( pos, floor );
+		source.setPosition( position );
+		Floor.floor( position, floor );
 		target.setPosition( floor );
 	}
 
 	@Override
-	public void setPosition( final double[] pos )
+	public void setPosition( final double[] position )
 	{
-		source.setPosition( pos );
-		floor( pos, floor );
+		source.setPosition( position );
+		Floor.floor( position, floor );
 		target.setPosition( floor );
 	}
 
@@ -170,14 +138,14 @@ public class RealPositionableFloorPositionable< LocalizablePositionable extends 
 	public void setPosition( final float position, final int d )
 	{
 		source.setPosition( position, d );
-		target.setPosition( floor( position ), d );
+		target.setPosition( Floor.floor( position ), d );
 	}
 
 	@Override
 	public void setPosition( final double position, final int d )
 	{
 		source.setPosition( position, d );
-		target.setPosition( floor( position ), d );
+		target.setPosition( Floor.floor( position ), d );
 	}
 
 	
@@ -219,17 +187,17 @@ public class RealPositionableFloorPositionable< LocalizablePositionable extends 
 	}
 
 	@Override
-	public void move( final int[] pos )
+	public void move( final int[] position )
 	{
-		source.move( pos );
-		target.move( pos );
+		source.move( position );
+		target.move( position );
 	}
 
 	@Override
-	public void move( final long[] pos )
+	public void move( final long[] position )
 	{
-		source.move( pos );
-		target.move( pos );
+		source.move( position );
+		target.move( position );
 	}
 	
 	@Override
@@ -265,5 +233,32 @@ public class RealPositionableFloorPositionable< LocalizablePositionable extends 
 	{
 		source.setPosition( position, d );
 		target.setPosition( position, d );
+	}
+	
+	
+	/* RealLocalizable */
+
+	@Override
+	public double getDoublePosition( final int d )
+	{
+		return source.getDoublePosition( d );
+	}
+
+	@Override
+	public float getFloatPosition( final int d )
+	{
+		return source.getFloatPosition( d );
+	}
+
+	@Override
+	public void localize( final float[] position )
+	{
+		source.localize( position );
+	}
+
+	@Override
+	public void localize( final double[] position )
+	{
+		source.localize( position );
 	}
 }
