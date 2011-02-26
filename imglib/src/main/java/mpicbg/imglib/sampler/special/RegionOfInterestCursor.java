@@ -31,11 +31,10 @@ package mpicbg.imglib.sampler.special;
 
 import mpicbg.imglib.img.AbstractImgCursor;
 import mpicbg.imglib.img.Img;
-import mpicbg.imglib.img.ImgCursor;
 import mpicbg.imglib.img.ImgRandomAccess;
 import mpicbg.imglib.type.Type;
 
-public class RegionOfInterestCursor<T extends Type<T>> extends AbstractImgCursor<T> implements ImgCursor<T> 
+public class RegionOfInterestCursor<T extends Type<T>> extends AbstractImgCursor<T> 
 {
 	final ImgRandomAccess<T> cursor;
 	final int[] offset, size, roiPosition;
@@ -49,13 +48,13 @@ public class RegionOfInterestCursor<T extends Type<T>> extends AbstractImgCursor
 	
 	public RegionOfInterestCursor( final Img< T > image, final int[] offset, final int size[] )
 	{
-		super( image.getContainer(), image );
+		super( image.numDimensions() );
 		
 		this.offset = offset.clone();
 		this.size = size.clone();		
-		this.cursor = image.createPositionableRasterSampler();
+		this.cursor = image.randomAccess();
 		
-		this.numDimensions = cursor.getImage().numDimensions();
+		this.numDimensions = image.numDimensions();
 		this.roiPosition = new int[ numDimensions ];
 		this.currentDirectionDim = new boolean[ numDimensions ]; 
 		
@@ -71,13 +70,6 @@ public class RegionOfInterestCursor<T extends Type<T>> extends AbstractImgCursor
 	
 	@Override
 	public boolean hasNext() { return i < numPixelsMinus1; }
-	
-	@Override
-	public void close()  
-	{
-		cursor.close();
-		super.close();
-	}
 
 	@Override
 	public T get() { return cursor.get(); }
@@ -136,9 +128,6 @@ public class RegionOfInterestCursor<T extends Type<T>> extends AbstractImgCursor
 			}
 		}
 	}
-	
-	@Override
-	public int getArrayIndex() { return cursor.getArrayIndex(); }
 
 	@Override
 	public Img<T> getImg() { return cursor.getImg();	}
