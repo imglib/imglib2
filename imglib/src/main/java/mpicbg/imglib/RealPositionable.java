@@ -40,17 +40,17 @@ public interface RealPositionable extends Positionable
 	 * Move the element in one dimension for some distance.
 	 *  
 	 * @param distance
-	 * @param dim
+	 * @param d
 	 */
-	public void move( float distance, int dim );
+	public void move( float distance, int d );
 
 	/**
 	 * Move the element in one dimension for some distance.
 	 *  
 	 * @param distance
-	 * @param dim
+	 * @param d
 	 */
-	public void move( double distance, int dim );
+	public void move( double distance, int d );
 
 	/**
 	 * Move the element relative to its current location using a
@@ -101,15 +101,15 @@ public interface RealPositionable extends Positionable
 	 * Set the position of the element for one dimension.
 	 * 
 	 * @param position
-	 * @param dim
+	 * @param d
 	 */
-	public void setPosition( float position, int dim );		
+	public void setPosition( float position, int d );		
 	
 	/**
 	 * Set the position of the element for one dimension.
 	 * 
 	 * @param position
-	 * @param dim
+	 * @param d
 	 */
-	public void setPosition( double position, int dim );
+	public void setPosition( double position, int d );
 }

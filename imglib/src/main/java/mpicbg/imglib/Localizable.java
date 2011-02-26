@@ -60,16 +60,16 @@ public interface Localizable extends RealLocalizable
 	/**
 	 * Return the current position in a given dimension.
 	 * 
-	 * @param dim   dimension
+	 * @param d   dimension
 	 * @return      dimension {@link dim} of current position
 	 */
-	public int getIntPosition( int dim );
+	public int getIntPosition( int d );
 	
 	/**
 	 * Return the current position in a given dimension.
 	 * 
-	 * @param dim   dimension
+	 * @param d   dimension
 	 * @return      dimension {@link dim} of current position
 	 */
-	public long getLongPosition( int dim );
+	public long getLongPosition( int d );
 }
