@@ -47,8 +47,8 @@ public class BasePairBitType implements BasePairType<BasePairBitType>, NativeTyp
 
 	final protected NativeImg<BasePairBitType, ? extends BitAccess> img;
 	
-	// the (sub)NativeContainer that holds the information 
-	BitAccess b;
+	// the DataAccess that holds the information 
+	protected BitAccess dataAccess;
 	
 	// the adresses of the bits that we store
 	int j1, j2, j3;
@@ -65,7 +65,7 @@ public class BasePairBitType implements BasePairType<BasePairBitType>, NativeTyp
 	{
 		img = null;
 		updateIndex( 0 );
-		b = new BitArray( 3 );
+		dataAccess = new BitArray( 3 );
 		set( value );
 	}	
 
@@ -88,7 +88,7 @@ public class BasePairBitType implements BasePairType<BasePairBitType>, NativeTyp
 	}
 	
 	@Override
-	public void updateContainer( final Object c ) { b = img.update( c ); }
+	public void updateContainer( final Object c ) { dataAccess = img.update( c ); }
 
 	@Override
 	public BasePairBitType duplicateTypeOnSameNativeImg() { return new BasePairBitType( img ); }
@@ -157,16 +157,16 @@ public class BasePairBitType implements BasePairType<BasePairBitType>, NativeTyp
 			default: b1 = true; b2 = false; b3 = true; break;
 		}
 		
-		b.setValue( j1, b1 );
-		b.setValue( j2, b2 );
-		b.setValue( j3, b3 );
+		dataAccess.setValue( j1, b1 );
+		dataAccess.setValue( j2, b2 );
+		dataAccess.setValue( j3, b3 );
 	}
 	
 	public Base get() 
 	{
-		final boolean b1 = b.getValue( j1 );
-		final boolean b2 = b.getValue( j2 );
-		final boolean b3 = b.getValue( j3 );
+		final boolean b1 = dataAccess.getValue( j1 );
+		final boolean b2 = dataAccess.getValue( j2 );
+		final boolean b3 = dataAccess.getValue( j3 );
 		
 		final Base base;
 		

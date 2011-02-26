@@ -67,7 +67,7 @@ public interface NativeType<T extends NativeType<T>> extends Type<T>
 	 * @param storageFactory  which storage strategy is used
 	 * @param dim             the dimensions
 	 * 
-	 * @return the instantiated NativeContainer where only the
+	 * @return the instantiated {@link NativeImg} where only the
 	 *         {@link Type} knows the BasicType it contains.
 	 */
 	public NativeImg< T, ? > createSuitableNativeImg( final NativeImgFactory< T > storageFactory, final long[] dim );
