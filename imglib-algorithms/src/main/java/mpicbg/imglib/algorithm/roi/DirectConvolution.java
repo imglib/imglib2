@@ -1,15 +1,18 @@
 package mpicbg.imglib.algorithm.roi;
 
 
-import mpicbg.imglib.algorithm.ROIAlgorithm;
-import mpicbg.imglib.container.array.ArrayContainerFactory;
-import mpicbg.imglib.cursor.LocalizableByDimCursor;
-import mpicbg.imglib.cursor.special.RegionOfInterestCursor;
-import mpicbg.imglib.image.Image;
-import mpicbg.imglib.image.ImageFactory;
-import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
-import mpicbg.imglib.type.numeric.RealType;
+import java.util.Arrays;
+
+import mpicbg.imglib.Localizable;
+import mpicbg.imglib.img.Img;
+import mpicbg.imglib.img.ImgFactory;
+import mpicbg.imglib.img.ImgRandomAccess;
+import mpicbg.imglib.img.array.ArrayImgFactory;
+import mpicbg.imglib.outofbounds.OutOfBoundsConstantValueFactory;
+import mpicbg.imglib.outofbounds.OutOfBoundsFactory;
+import mpicbg.imglib.type.numeric.ComplexType;
 import mpicbg.imglib.type.numeric.integer.ShortType;
+import mpicbg.imglib.util.Util;
 
 /**
  * DirectConvolution is an ROIAlgorithm designed to do both convolution and cross-correlation 
@@ -22,13 +25,13 @@ import mpicbg.imglib.type.numeric.integer.ShortType;
  * @param <S> output image type
  */
 public class DirectConvolution
-	<T extends RealType<T>, R extends RealType<R>, S extends RealType<S>>
+	<T extends ComplexType<T>, R extends ComplexType<R>, S extends ComplexType<S>>
 		extends ROIAlgorithm<T, S>
 {
 
-	protected static void quickKernel2D(short[][] vals, Image<ShortType> kern)
+	protected static void quickKernel2D(short[][] vals, Img<ShortType> kern)
 	{
-		final LocalizableByDimCursor<ShortType> cursor = kern.createLocalizableByDimCursor();
+		final ImgRandomAccess<ShortType> cursor = kern.randomAccess();
 		final int[] pos = new int[2];
 
 		for (int i = 0; i < vals.length; ++i)
@@ -38,17 +41,15 @@ public class DirectConvolution
 				pos[0] = i;
 				pos[1] = j;
 				cursor.setPosition(pos);
-				cursor.getType().set(vals[i][j]);
+				cursor.get().set(vals[i][j]);
 			}
-		}
-		cursor.close();		
+		}	
 	}
 	
-	public static Image<ShortType> sobelVertical()
+	public static Img<ShortType> sobelVertical()
 	{
-		final ImageFactory<ShortType> factory = new ImageFactory<ShortType>(new ShortType(),
-				new ArrayContainerFactory());
-		final Image<ShortType> sobel = factory.createImage(new int[]{3, 3}, "Vertical Sobel");
+		final ImgFactory<ShortType> factory = new ArrayImgFactory<ShortType>();
+		final Img<ShortType> sobel = factory.create(new long[]{3, 3}, new ShortType()); // "Vertical Sobel"
 		final short[][] vals = {{-1, -2, -1},
 				{0, 0, 0},
 				{1, 2, 1}};
@@ -58,11 +59,10 @@ public class DirectConvolution
 		return sobel;
 	}
 	
-	public static Image<ShortType> sobelHorizontal()
+	public static Img<ShortType> sobelHorizontal()
 	{
-		final ImageFactory<ShortType> factory = new ImageFactory<ShortType>(new ShortType(),
-				new ArrayContainerFactory());
-		final Image<ShortType> sobel = factory.createImage(new int[]{3, 3}, "Horizontal Sobel");
+		final ImgFactory<ShortType> factory = new ArrayImgFactory<ShortType>();
+		final Img<ShortType> sobel = factory.create(new long[]{3, 3}, new ShortType()); // "Horizontal Sobel"
 		final short[][] vals = {{1, 0, -1},
 				{2, 0, -2},
 				{1, 0, -1}};
@@ -72,97 +72,90 @@ public class DirectConvolution
 		return sobel;
 	}
 	
-	
-	private final Image<R> kernel;
-	private final int[] kernelSize;
-	private LocalizableByDimCursor<S> outputImageCursor;
-	private final LocalizableByDimCursor<R> kernelCursor;
-	private final boolean doInvert;
-	
-	public DirectConvolution(final S type, final Image<T> inputImage, final Image<R> kernel)
+	private static long[] zeroArray(final int d)
 	{
-		this(type, inputImage, kernel, null);
+	    long[] zeros = new long[d];
+	    Arrays.fill(zeros, 0);
+	    return zeros;
 	}
 	
+	private final Img<R> kernel;
+	protected  final ImgRandomAccess<R> kernelCursor;
 	
-	public DirectConvolution(final S type, final Image<T> inputImage, final Image<R> kernel,
-			final OutOfBoundsStrategyFactory<T> outsideFactory) {
-		this(type, inputImage, kernel, outsideFactory, true);
+	private final S accum;
+	private final S mul;
+	private final S temp;
+	
+	public DirectConvolution(final S type, final Img<T> inputImage, final Img<R> kernel)
+	{
+		this(type, inputImage, kernel, new OutOfBoundsConstantValueFactory<T,Img<T>>(inputImage.firstElement().createVariable()));
 	}
 	
-	protected DirectConvolution(final S type, final Image<T> inputImage, final Image<R> kernel,
-			final OutOfBoundsStrategyFactory<T> outsideFactory, final boolean isconv)
+	// TODO ArrayImgFactory should use a type that extends NativeType
+	public DirectConvolution(final S type, final Img<T> inputImage, final Img<R> kernel,
+			final OutOfBoundsFactory<T,Img<T>> outsideFactory) {
+		this(new ArrayImgFactory(), type, inputImage, kernel, outsideFactory);
+	}
+	
+	public DirectConvolution(final ImgFactory<S> factory,
+			final S type,
+	        final Img<T> inputImage,
+	        final Img<R> kernel,
+			final OutOfBoundsFactory<T,Img<T>> outsideFactory)
 	{
-		super(type, inputImage, kernel.getDimensions(), outsideFactory);
+		super(factory, type.createVariable(),
+				new StructuringElementCursor<T>(
+						inputImage.randomAccess(outsideFactory), 
+						Util.intervalDimensions(kernel),
+						zeroArray(kernel.numDimensions())));
+
+		getStrelCursor().centerKernel(Util.intervalDimensions(kernel));
 		
 		this.kernel = kernel;
-		outputImageCursor = null;
-		kernelSize = kernel.getDimensions();
-		kernelCursor = kernel.createLocalizableByDimCursor();
+		kernelCursor = kernel.randomAccess();
 		
-		setName(inputImage.getName() + " * " + kernel.getName());
+		//setName(inputImage.getName() + " * " + kernel.getName());
 		
-		doInvert = isconv;
+		accum = type.createVariable();
+		mul = type.createVariable();
+		temp = type.createVariable();
 	}
-	
-	private LocalizableByDimCursor<S> getOutputCursor()
+		
+	protected void setKernelCursorPosition(final Localizable l)
 	{
-		if (outputImageCursor == null)
-		{
-			outputImageCursor = getOutputImage().createLocalizableByDimCursor();
-		}		
-		return outputImageCursor;
-	}
-	
-	private void invertPosition(final int[] pos, final int[] invPos)
-	{
-	    for (int i = 0; i < kernel.getNumDimensions(); ++i)
-		{
-			invPos[i] = kernelSize[i] - pos[i] - 1;
-		}
+	    kernelCursor.setPosition(l);
 	}
 	
 	@Override
-	protected boolean patchOperation(final int[] position, final RegionOfInterestCursor<T> roiCursor) {
-		final LocalizableByDimCursor<S> outCursor = getOutputCursor();
-		final int[] pos = new int[outCursor.getNumDimensions()];
-		final int[] invPos = new int[outCursor.getNumDimensions()];
-		S accum = outCursor.getImage().createType();
-		S mul = outCursor.getImage().createType();
-		S temp = outCursor.getImage().createType();
+	protected boolean patchOperation(final StructuringElementCursor<T> strelCursor,
+            final S outputType) {		
+		T inType;
+		R kernelType;
 		
 		accum.setZero();
-		
-		outCursor.setPosition(position);
-		
-		while(roiCursor.hasNext())
-		{
-			mul.setOne();
-			roiCursor.fwd();
-			roiCursor.getPosition(pos);
 			
-			if (doInvert)
-			{
-				invertPosition(pos, invPos);			
-				kernelCursor.setPosition(invPos);
-			}
-			else
-			{
-				kernelCursor.setPosition(pos);
-			}
-
-			temp.setReal(kernelCursor.getType().getRealDouble());
-			temp.setComplex(-kernelCursor.getType().getComplexDouble());			
+		while(strelCursor.hasNext())
+		{
+		    
+			mul.setOne();
+			strelCursor.fwd();			
+			setKernelCursorPosition(strelCursor);			
+			
+			inType = strelCursor.getType();
+			kernelType = kernelCursor.get();
+			
+			temp.setReal(kernelType.getRealDouble());
+			temp.setImaginary(-kernelType.getImaginaryDouble());			
 			mul.mul(temp);
 			
-			temp.setReal(roiCursor.getType().getRealDouble());
-			temp.setComplex(roiCursor.getType().getComplexDouble());
+			temp.setReal(inType.getRealDouble());
+			temp.setImaginary(inType.getImaginaryDouble());
 			mul.mul(temp);
 			
 			accum.add(mul);			
 		}
 				
-		outCursor.getType().set(accum);
+		outputType.set(accum);
 		return true;
 	}
 
@@ -170,7 +163,8 @@ public class DirectConvolution
 	public boolean checkInput() {
 		if (super.checkInput())
 		{
-			if (kernel.getNumDimensions() == getOutputImage().getNumActiveCursors())
+			// TODO there was a getOutputImage().getNumActiveCursors() instead
+			if (kernel.numDimensions() == getOutputImage().numDimensions())
 			{
 				setErrorMessage("Kernel has different dimensionality than the Image");
 				return false;

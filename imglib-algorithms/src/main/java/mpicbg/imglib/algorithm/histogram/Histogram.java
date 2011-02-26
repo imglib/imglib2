@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2010, Larry Lindsey
+ * Copyright (c) 2010, 2011 Larry Lindsey
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -30,11 +30,12 @@
 package mpicbg.imglib.algorithm.histogram;
 
 import java.util.ArrayList;
-import java.util.Hashtable;
+import java.util.Arrays;
 
 import mpicbg.imglib.algorithm.Algorithm;
 import mpicbg.imglib.algorithm.Benchmark;
-import mpicbg.imglib.container.ImgCursor;
+import mpicbg.imglib.img.Img;
+import mpicbg.imglib.img.ImgCursor;
 import mpicbg.imglib.type.Type;
 
 /**
@@ -50,95 +51,133 @@ public class Histogram <T extends Type<T>> implements Algorithm, Benchmark
 	/**
 	 * Hold the histogram itself.
 	 */
-	private Hashtable<HistogramKey<T>, HistogramBin<T>>  hashTable;
+	private final int[] histogram;
 	
 	/**
 	 * The Cursor from which the histogram is to be calculated.
 	 */
-	private ImgCursor<T> cursor;
+	private final ImgCursor<T> cursor;
 	
 	/**
-	 * The HistogramBinFactory to use for generating HistogramBin's and
-	 * HistogramKey's.
+	 * The HistogramBinMapper, used to map Type values to histogram bin
+	 * indices.
 	 */
-	private final HistogramBinFactory<T> binFactory;	
+	private final HistogramBinMapper<T> binMapper;	
 
 	/**
-	 * Create a Histogram using the given factory, calculating from the given
+	 * Create a Histogram using the given mapper, calculating from the given
 	 * Cursor.
-	 * @param factory the HistogramBinFactory used to generate  
-	 * {@link HistogramKey}s and {@link HistogramBin}s 
+	 * @param mapper the HistogramBinMapper used to map Type values to 
+	 * histogram bin indices. 
 	 * @param c a Cursor corresponding to the Image from which the Histogram
 	 * will be calculated
 	 * 
 	 */
-	public Histogram(HistogramBinFactory<T> factory, ImgCursor<T> c)
-	{
+	public Histogram(final HistogramBinMapper<T> mapper,
+			final ImgCursor<T> c)
+	{		
 		cursor = c;
-		hashTable = new Hashtable<HistogramKey<T>, HistogramBin<T>>();
-		binFactory = factory;		
+		binMapper = mapper;
+		histogram = new int[binMapper.getNumBins()];
 	}
 	
 	/**
-	 * Returns an ArrayList containing the {@link HistogramKey}s generated
-	 * when calculating this Histogram.
-	 * @return an ArrayList containing the {@link HistogramKey}s generated
-	 * when calculating this Histogram.
-	 */
-	public ArrayList<HistogramKey<T>> getKeys()
+     * Create a Histogram using the given mapper, calculating from the given
+     * Image.
+     * @param mapper the HistogramBinMapper used to map Type values to 
+     * histogram bin indices. 
+     * @param image an Image from which the Histogram will be calculated
+     * 
+     */
+	public Histogram(final HistogramBinMapper<T> mapper,
+			final Img<T> image)
 	{
-		return new ArrayList<HistogramKey<T>>(hashTable.keySet());
+		this(mapper, image.cursor());
+	}
+	
+	/**
+	 * Resets the histogram array and the Cursor.
+	 */
+	public void reset()
+	{
+		Arrays.fill(histogram, 0);
+		cursor.reset();
+	}
+	
+	/**
+	 * Returns the bin count corresponding to a given {@link Type}.
+	 * @param t the Type corresponding to the requested 
+	 * @return The requested bin count.
+	 */
+	public int getBin(final T t)
+	{
+		return getHistogram()[binMapper.map(t)];
 	}
 
 	/**
-	 * Returns the center {@link Type} corresponding to each
-	 * {@link HistogramKey} generated when calculating this Histogram.
-	 * @return
+	 * Returns the bin count given by the indicated bin index.
+	 * @param i the index of the requested bin
+	 * @return the bin count at the given index
 	 */
-	public ArrayList<T> getKeyTypes()
+	public int getBin(int i)
+    {
+        return getHistogram()[i];
+    }
+	
+	/**
+	 * Returns this Histogram's HistogramBinMapper.
+	 * @return the HistogramBinMapper associated with this Histogram.
+	 */
+	public HistogramBinMapper<T> getBinMapper()
 	{
-		ArrayList<HistogramKey<T>> keys = getKeys();
-		ArrayList<T> types = new ArrayList<T>(keys.size());
-		for (HistogramKey<T> hk : keys)
+	    return binMapper;
+	}
+	
+	/**
+	 * Returns the histogram array.
+	 * @return the histogram array.
+	 */
+	public int[] getHistogram()
+	{
+		return histogram; 
+	}
+	
+	/**
+	 * Creates and returns the a Type whose value corresponds to the center
+	 * of the bin indexed by i.
+	 * @param i the requested bin index.
+	 * @return a Type whose value corresponds to the requested bin center.
+	 */
+	public T getBinCenter(final int i)
+	{
+	    return getBinMapper().invMap(i);
+	}
+	
+	/**
+	 * Creates and returns a List containing Types that correspond to the
+	 * centers of the histogram bins.
+	 * @return a List containing Types that correspond to the centers of the 
+     * histogram bins.
+	 */
+	public ArrayList<T> getBinCenters()
+	{
+		ArrayList<T> binCenters = new ArrayList<T>(histogram.length);
+		for (int i = 0; i < histogram.length; ++i)
 		{
-			types.add(hk.getType());			
+			binCenters.add(i, getBinMapper().invMap(i));
 		}
 		
-		return types;
+		return binCenters;
 	}
 	
 	/**
-	 * Returns the bin corresponding to a given {@link Type}.
-	 * @param t the Type corresponding to the requested 
-	 * {@link HistogramBin}
-	 * @return The requested HistogramBin.
+	 * Returns the number of bins in this Histogram.
+	 * @return the number of bins in this Histogram
+	 * 
 	 */
-	public HistogramBin<T> getBin(T t)
+	public int getNumBins()
 	{
-		return getBin(binFactory.createKey(t));
-	}
-	
-	/**
-	 * Returns the bin corresponding to a given {@link HistogramKey}.
-	 * @param key the HistogramKey corresponding to the requested 
-	 * {@link HistogramBin}
-	 * @return The requested HistogramBin.
-	 */
-	public HistogramBin<T> getBin(HistogramKey<T> key)
-	{
-		if (hashTable.containsKey(key))
-		{
-			return hashTable.get(key);
-		}
-		else
-		{
-			/*
-			 * If the hash table doesn't contain the key in question, create a 
-			 * zero bin and return that.
-			 */
-			HistogramBin<T> zeroBin = binFactory.createBin(key.getType());
-			return zeroBin;
-		}
+	    return getBinMapper().getNumBins();
 	}
 	
 	@Override
@@ -154,25 +193,23 @@ public class Histogram <T extends Type<T>> implements Algorithm, Benchmark
 	@Override
 	public boolean process() {
 		long startTime = System.currentTimeMillis();
+		int index;
 		
 		while (cursor.hasNext())
 		{			
 			cursor.fwd();
-			//Create a key for the given type
-			HistogramKey<T> key = binFactory.createKey(cursor.get());
-			//Grab the HistogramBin corresponding to that key, if it exists.
-			HistogramBin<T> bin = hashTable.get(key);
-			
-			if (bin == null)
+			index = binMapper.map(cursor.get());
+			/*
+		    The following check makes this run for IntegerTypes at 3 to 4
+		    longer than the manual case on my machine.  This is a necessary
+		    check, but if this takes too long, it might be worthwhile to
+		    separate out an UncheckedHistogram, which would instead throw an
+		    ArrayOutOfBoundsException.
+			*/
+			if (index >=0 && index < histogram.length)
 			{
-				//If there wasn't a bin already, create one and add it to the 
-				//hash table.
-				bin = binFactory.createBin(key.getType());
-				hashTable.put(key, bin);
+			    ++histogram[index];
 			}
-			
-			//Increment the count of the bin.
-			bin.inc();
 		}
 		
 		pTime = System.currentTimeMillis() - startTime;

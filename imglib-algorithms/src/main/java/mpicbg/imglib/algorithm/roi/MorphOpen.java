@@ -2,8 +2,9 @@ package mpicbg.imglib.algorithm.roi;
 
 import mpicbg.imglib.algorithm.Benchmark;
 import mpicbg.imglib.algorithm.OutputAlgorithm;
-import mpicbg.imglib.image.Image;
-import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
+import mpicbg.imglib.img.Img;
+import mpicbg.imglib.outofbounds.OutOfBoundsConstantValueFactory;
+import mpicbg.imglib.outofbounds.OutOfBoundsFactory;
 import mpicbg.imglib.type.numeric.RealType;
 
 /**
@@ -14,36 +15,52 @@ import mpicbg.imglib.type.numeric.RealType;
  *
  * @param <T> {@link Image} type.
  */
-public class MorphOpen<T extends RealType<T>> implements OutputAlgorithm<T>, Benchmark
+public class MorphOpen<T extends RealType<T>> implements OutputAlgorithm<Img<T>>, Benchmark
 {
 	
-	private final Image<T> image;
-	private Image<T> outputImage;
+	private final Img<T> image;
+	private Img<T> outputImage;
 	private MorphDilate<T> dilater;
 	private final MorphErode<T> eroder;
-	private final StructuringElement strel;
-	private final OutOfBoundsStrategyFactory<T> outsideFactory;
 	private long pTime;
+	private final long[][] path;
+	private final OutOfBoundsFactory<T,Img<T>> oobFactory;
 	
-	public MorphOpen(Image<T> imageIn, StructuringElement strelIn)
-	{
-		this(imageIn, strelIn, null);
-	}
 	
-	public MorphOpen(Image<T> imageIn, StructuringElement strelIn,
-			final OutOfBoundsStrategyFactory<T> inOutsideFactory)
-	{
-		image = imageIn;		
-		strel = strelIn;
-		eroder = new MorphErode<T>(image, strel, inOutsideFactory);
-		dilater = null;
-		outputImage = null;
-		outsideFactory = inOutsideFactory;
-		pTime = 0;		
-	}
+	 public MorphOpen(final Img<T> imageIn,
+	            long[] size, OutOfBoundsFactory<T,Img<T>> oobFactory) {
+	        this(imageIn, StructuringElementCursor.sizeToPath(size), oobFactory);       
+	    }
+	     public MorphOpen(final Img<T> imageIn, long[] size) {
+	        this(imageIn, StructuringElementCursor.sizeToPath(size));       
+	    }
+	    
+	    public MorphOpen(final Img<T> imageIn,
+	            long[][] path)
+	    {
+	       this(imageIn, path, new OutOfBoundsConstantValueFactory<T,Img<T>>(imageIn.firstElement().createVariable()));
+	    }
+	    
+	    public MorphOpen(final Img<T> imageIn,
+	            final long[][] inPath, OutOfBoundsFactory<T,Img<T>> oobFactory)
+	    {
+	        image = imageIn;        
+	        path = new long[inPath.length][inPath[0].length];	        
+	        dilater = null;
+	        outputImage = null;
+	        pTime = 0;
+	        this.oobFactory = oobFactory;
+	        
+	        for (int i = 0; i < inPath.length; ++i)
+	        {
+	            System.arraycopy(inPath[i], 0, path[i], 0, inPath[i].length);
+	        }
+	        
+	        eroder = new MorphErode<T>(image, path, oobFactory);
+	    }
 	
 	@Override
-	public Image<T> getResult()
+	public Img<T> getResult()
 	{
 		return outputImage;
 	}
@@ -74,9 +91,9 @@ public class MorphOpen<T extends RealType<T>> implements OutputAlgorithm<T>, Ben
 		
 		if (eroder.process())
 		{
-			dilater = new MorphDilate<T>(eroder.getResult(), strel, outsideFactory);
-			dilater.setName(image.getName() + " Opened");
-			rVal = dilater.process();			
+		    dilater = new MorphDilate<T>(eroder.getResult(), path, oobFactory);
+			dilater.setName(image + " Opened");
+			rVal = dilater.process();
 		}
 		
 		if (rVal)

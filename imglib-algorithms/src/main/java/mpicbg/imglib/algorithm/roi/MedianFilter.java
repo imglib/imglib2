@@ -1,8 +1,7 @@
 package mpicbg.imglib.algorithm.roi;
 
-import mpicbg.imglib.cursor.LocalizableByDimCursor;
-import mpicbg.imglib.image.Image;
-import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
+import mpicbg.imglib.img.Img;
+import mpicbg.imglib.outofbounds.OutOfBoundsFactory;
 import mpicbg.imglib.type.numeric.RealType;
 
 
@@ -13,23 +12,36 @@ import mpicbg.imglib.type.numeric.RealType;
  *
  * @param <T> {@link Image} type.
  */
-public class MedianFilter<T extends RealType<T>> extends StatisticalOperation<T> {
+public class MedianFilter<T extends RealType<T>> extends OrderStatistics<T> {
 
-	public MedianFilter(final Image<T> imageIn, final StructuringElement inStrel,
-			final OutOfBoundsStrategyFactory<T> inOutFactory) {
-		super(imageIn, inStrel, inOutFactory);
-		setName(imageIn.getName() + " Median Filter");
+    public MedianFilter(final Img<T> imageIn,
+            long[] size, OutOfBoundsFactory<T,Img<T>> oobFactory) {
+        this(imageIn, StructuringElementCursor.sizeToPath(size), oobFactory);       
+    }
+    
+    public MedianFilter(final Img<T> imageIn,
+            long[][] path, OutOfBoundsFactory<T,Img<T>> oobFactory)
+    {
+        super(imageIn, path, oobFactory);
+        setName(imageIn + " Median Filter");
+    }
+    
+	public MedianFilter(final Img<T> imageIn,
+	        long[] size) {
+		this(imageIn, StructuringElementCursor.sizeToPath(size));		
 	}
 	
-	public MedianFilter(final Image<T> imageIn, final StructuringElement inStrel) {
-		super(imageIn, inStrel);
-		setName(imageIn.getName() + " Median Filter");
+	public MedianFilter(final Img<T> imageIn,
+	        long[][] path)
+	{
+	    super(imageIn, path);
+	    setName(imageIn + " Median Filter");
 	}
 
 	@Override
-	protected void statsOp(LocalizableByDimCursor<T> cursor) {		
-		int n = super.getList().size();
-		cursor.getType().set(super.getList().get(n / 2));
+	protected void statsOp(final T outputType) {		
+	    int n = super.getArray().length;		
+		outputType.setReal(super.getArray()[n / 2]);
 	}
 
 }

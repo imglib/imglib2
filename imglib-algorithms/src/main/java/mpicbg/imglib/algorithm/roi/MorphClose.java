@@ -2,8 +2,9 @@ package mpicbg.imglib.algorithm.roi;
 
 import mpicbg.imglib.algorithm.Benchmark;
 import mpicbg.imglib.algorithm.OutputAlgorithm;
-import mpicbg.imglib.image.Image;
-import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
+import mpicbg.imglib.img.Img;
+import mpicbg.imglib.outofbounds.OutOfBoundsConstantValueFactory;
+import mpicbg.imglib.outofbounds.OutOfBoundsFactory;
 import mpicbg.imglib.type.numeric.RealType;
 
 /**
@@ -14,36 +15,52 @@ import mpicbg.imglib.type.numeric.RealType;
  *
  * @param <T> {@link Image} type.
  */
-public class MorphClose<T extends RealType<T>> implements OutputAlgorithm<T>, Benchmark
+public class MorphClose<T extends RealType<T>> implements OutputAlgorithm<Img<T>>, Benchmark
 {
 	
-	private final Image<T> image;
-	private Image<T> outputImage;
+	private final Img<T> image;
+	private Img<T> outputImage;
 	private final MorphDilate<T> dilater;
 	private MorphErode<T> eroder;
-	private final StructuringElement strel;
-	private final OutOfBoundsStrategyFactory<T> outsideFactory;
+	private final long[][] path;
 	private long pTime;
+	private final OutOfBoundsFactory<T,Img<T>> oobFactory;
 	
-	public MorphClose(Image<T> imageIn, StructuringElement strelIn)
-	{
-		this(imageIn, strelIn, null);
-	}
-	
-	public MorphClose(Image<T> imageIn, StructuringElement strelIn,
-			final OutOfBoundsStrategyFactory<T> inOutsideFactory)
+	 public MorphClose(final Img<T> imageIn,
+            long[] size, OutOfBoundsFactory<T,Img<T>> oobFactory) {
+        this(imageIn, StructuringElementCursor.sizeToPath(size), oobFactory);       
+    }
+     public MorphClose(final Img<T> imageIn, long[] size) {
+        this(imageIn, StructuringElementCursor.sizeToPath(size));       
+    }
+    
+    public MorphClose(final Img<T> imageIn,
+            long[][] path)
+    {
+       this(imageIn, path, new OutOfBoundsConstantValueFactory<T,Img<T>>(imageIn.firstElement().createVariable()));
+    }
+    
+	public MorphClose(final Img<T> imageIn,
+	        final long[][] inPath, OutOfBoundsFactory<T,Img<T>> oobFactory)
 	{
 		image = imageIn;		
-		strel = strelIn;
-		dilater = new MorphDilate<T>(image, strel, inOutsideFactory);
+		path = new long[inPath.length][inPath[0].length];
 		eroder = null;
 		outputImage = null;
-		outsideFactory = inOutsideFactory;
 		pTime = 0;
+		this.oobFactory = oobFactory;
+		
+		for (int i = 0; i < inPath.length; ++i)
+		{
+		    System.arraycopy(inPath[i], 0, path[i], 0, inPath[i].length);
+		}
+		
+	      dilater = new MorphDilate<T>(image, path, oobFactory);
+
 	}
 	
 	@Override
-	public Image<T> getResult()
+	public Img<T> getResult()
 	{
 		return outputImage;
 	}
@@ -74,8 +91,8 @@ public class MorphClose<T extends RealType<T>> implements OutputAlgorithm<T>, Be
 		
 		if (dilater.process())
 		{
-			eroder = new MorphErode<T>(dilater.getResult(), strel, outsideFactory);
-			eroder.setName(image.getName() + " Closed");
+			eroder = new MorphErode<T>(dilater.getResult(), path, oobFactory);
+			eroder.setName(image + " Closed");
 			rVal = eroder.process();			
 		}
 		
