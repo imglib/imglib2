@@ -31,42 +31,39 @@ import mpicbg.imglib.EuclideanSpace;
 import mpicbg.imglib.Localizable;
 import mpicbg.imglib.RealLocalizable;
 import mpicbg.imglib.RealPositionable;
-import mpicbg.imglib.outofbounds.OutOfBoundsFactory;
+
+TODO: // TODO: Do we need this class at all?
 
 /**
- * 
  * @param <T>
  *
  * @author Stephan Preibisch and Stephan Saalfeld
  */
-abstract public class AbstractInterpolator< T, F extends EuclideanSpace, LocalizablePositionable extends RealLocalizable & RealPositionable > implements Interpolator< T, F >
+abstract public class AbstractInterpolator< T, F extends EuclideanSpace, RealLocalizableRealPositionable extends RealLocalizable & RealPositionable > implements Interpolator< T, F >
 {
-	final protected OutOfBoundsFactory< T, F > outOfBoundsStrategyFactory;
-	final protected LocalizablePositionable localizablePositionable;
+	final protected RealLocalizableRealPositionable realLocalizableRealPositionable;
 
 	final protected F img;
 
 	/**
 	 * the number of dimensions
 	 */
-	final protected int numDimensions;
+	final protected int n;
 
 	protected AbstractInterpolator(
 			final F img,
-			final OutOfBoundsFactory< T, F > outOfBoundsStrategyFactory,
-			final LocalizablePositionable localizablePositionable )
+			final RealLocalizableRealPositionable realLocalizableRealPositionable )
 	{
-		this.outOfBoundsStrategyFactory = outOfBoundsStrategyFactory;
 		this.img = img;
-		this.localizablePositionable = localizablePositionable;
+		this.realLocalizableRealPositionable = realLocalizableRealPositionable;
 
-		numDimensions = img.numDimensions();
+		n = img.numDimensions();
 	}
 
 	@Override
 	final public int numDimensions()
 	{
-		return numDimensions;
+		return n;
 	}
 
 	@Override
@@ -76,184 +73,173 @@ abstract public class AbstractInterpolator< T, F extends EuclideanSpace, Localiz
 		return get();
 	}
 
-	/**
-	 * Returns the {@link RasterOutOfBoundsFactory} used for interpolation
-	 * 
-	 * @return - the {@link RasterOutOfBoundsFactory}
-	 */
-	@Override
-	public OutOfBoundsFactory< T, F > getOutOfBoundsStrategyFactory()
-	{
-		return outOfBoundsStrategyFactory;
-	}
-
-	/* Localizable */
+	/* RealLocalizable */
 
 	@Override
 	public double getDoublePosition( final int dim )
 	{
-		return localizablePositionable.getDoublePosition( dim );
+		return realLocalizableRealPositionable.getDoublePosition( dim );
 	}
 
 	@Override
 	public float getFloatPosition( final int dim )
 	{
-		return localizablePositionable.getFloatPosition( dim );
+		return realLocalizableRealPositionable.getFloatPosition( dim );
 	}
 
 	@Override
 	public String toString()
 	{
-		return localizablePositionable.toString();
+		return realLocalizableRealPositionable.toString();
 	}
 
 	@Override
 	public void localize( final float[] position )
 	{
-		localizablePositionable.localize( position );
+		realLocalizableRealPositionable.localize( position );
 	}
 
 	@Override
 	public void localize( final double[] position )
 	{
-		localizablePositionable.localize( position );
+		realLocalizableRealPositionable.localize( position );
+	}
+	
+
+	/* RealPositionable */
+
+	@Override
+	public void move( final double distance, final int dim )
+	{
+		realLocalizableRealPositionable.move( distance, dim );
+	}
+
+	@Override
+	public void move( final float distance, final int dim )
+	{
+		realLocalizableRealPositionable.move( distance, dim );
+	}
+
+	@Override
+	public void move( final double[] position )
+	{
+		realLocalizableRealPositionable.move( position );
+	}
+
+	@Override
+	public void move( final float[] position )
+	{
+		realLocalizableRealPositionable.move( position );
+	}
+
+	@Override
+	public void move( final RealLocalizable localizable )
+	{
+		realLocalizableRealPositionable.move( localizable );
+	}
+
+	@Override
+	public void setPosition( final RealLocalizable localizable )
+	{
+		realLocalizableRealPositionable.setPosition( localizable );
+	}
+
+	@Override
+	public void setPosition( final float[] position )
+	{
+		realLocalizableRealPositionable.setPosition( position );
+	}
+
+	@Override
+	public void setPosition( final double[] position )
+	{
+		realLocalizableRealPositionable.setPosition( position );
+	}
+
+	@Override
+	public void setPosition( final float position, final int dim )
+	{
+		realLocalizableRealPositionable.setPosition( position, dim );
+	}
+
+	@Override
+	public void setPosition( final double position, final int dim )
+	{
+		realLocalizableRealPositionable.setPosition( position, dim );
 	}
 	
 
 	/* Positionable */
 
 	@Override
-	public void move( final double distance, final int dim )
-	{
-		localizablePositionable.move( distance, dim );
-	}
-
-	@Override
-	public void move( final float distance, final int dim )
-	{
-		localizablePositionable.move( distance, dim );
-	}
-
-	@Override
-	public void move( final double[] position )
-	{
-		localizablePositionable.move( position );
-	}
-
-	@Override
-	public void move( final float[] position )
-	{
-		localizablePositionable.move( position );
-	}
-
-	@Override
-	public void move( final RealLocalizable localizable )
-	{
-		localizablePositionable.move( localizable );
-	}
-
-	@Override
-	public void setPosition( final RealLocalizable localizable )
-	{
-		localizablePositionable.setPosition( localizable );
-	}
-
-	@Override
-	public void setPosition( final float[] position )
-	{
-		localizablePositionable.setPosition( position );
-	}
-
-	@Override
-	public void setPosition( final double[] position )
-	{
-		localizablePositionable.setPosition( position );
-	}
-
-	@Override
-	public void setPosition( final float position, final int dim )
-	{
-		localizablePositionable.setPosition( position, dim );
-	}
-
-	@Override
-	public void setPosition( final double position, final int dim )
-	{
-		localizablePositionable.setPosition( position, dim );
-	}
-	
-
-	/* RasterPositionable */
-
-	@Override
 	public void bck( final int dim )
 	{
-		localizablePositionable.bck( dim );
+		realLocalizableRealPositionable.bck( dim );
 	}
 
 	@Override
 	public void fwd( final int dim )
 	{
-		localizablePositionable.fwd( dim );
+		realLocalizableRealPositionable.fwd( dim );
 	}
 
 	@Override
 	public void move( final int distance, final int dim )
 	{
-		localizablePositionable.move( distance, dim );
+		realLocalizableRealPositionable.move( distance, dim );
 	}
 
 	@Override
 	public void move( final long distance, final int dim )
 	{
-		localizablePositionable.move( distance, dim );
+		realLocalizableRealPositionable.move( distance, dim );
 	}
 
 	@Override
 	public void move( final Localizable localizable )
 	{
-		localizablePositionable.move( localizable );
+		realLocalizableRealPositionable.move( localizable );
 	}
 
 	@Override
 	public void move( final int[] position )
 	{
-		localizablePositionable.move( position );
+		realLocalizableRealPositionable.move( position );
 	}
 
 	@Override
 	public void move( final long[] position )
 	{
-		localizablePositionable.move( position );
+		realLocalizableRealPositionable.move( position );
 	}
 
 	@Override
 	public void setPosition( final Localizable localizable )
 	{
-		localizablePositionable.setPosition( localizable );
+		realLocalizableRealPositionable.setPosition( localizable );
 	}
 
 	@Override
 	public void setPosition( final int[] position )
 	{
-		localizablePositionable.setPosition( position );
+		realLocalizableRealPositionable.setPosition( position );
 	}
 
 	@Override
 	public void setPosition( final long[] position )
 	{
-		localizablePositionable.setPosition( position );
+		realLocalizableRealPositionable.setPosition( position );
 	}
 
 	@Override
 	public void setPosition( final int position, final int dim )
 	{
-		localizablePositionable.setPosition( position, dim );
+		realLocalizableRealPositionable.setPosition( position, dim );
 	}
 
 	@Override
 	public void setPosition( final long position, final int dim )
 	{
-		localizablePositionable.setPosition( position, dim );
+		realLocalizableRealPositionable.setPosition( position, dim );
 	}
 }
