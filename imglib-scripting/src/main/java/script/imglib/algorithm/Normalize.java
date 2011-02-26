@@ -2,7 +2,7 @@ package script.imglib.algorithm;
 
 import mpicbg.imglib.algorithm.math.ComputeMinMax;
 import mpicbg.imglib.algorithm.math.ImageConverter;
-import mpicbg.imglib.function.Converter;
+import mpicbg.imglib.converter.Converter;
 import mpicbg.imglib.img.Img;
 import mpicbg.imglib.type.numeric.NumericType;
 import mpicbg.imglib.type.numeric.ARGBType;

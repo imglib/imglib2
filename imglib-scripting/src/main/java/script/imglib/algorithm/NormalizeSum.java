@@ -14,7 +14,7 @@ public class NormalizeSum<T extends RealType<T>> extends ImgProxy<FloatType>
 		super(process(img));
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public NormalizeSum(final IFunction fn) throws Exception {
 		this((Img)Compute.inFloats(fn));
 	}
