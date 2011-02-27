@@ -27,10 +27,8 @@
  */
 package mpicbg.imglib.interpolation.nearestneighbor;
 
-import mpicbg.imglib.img.Img;
+import mpicbg.imglib.RandomAccessible;
 import mpicbg.imglib.interpolation.InterpolatorFactory;
-import mpicbg.imglib.outofbounds.OutOfBoundsFactory;
-import mpicbg.imglib.type.Type;
 
 /**
  * 
@@ -38,24 +36,19 @@ import mpicbg.imglib.type.Type;
  *
  * @author Stephan Preibisch and Stephan Saalfeld
  */
-public class NearestNeighborInterpolatorFactory< T extends Type< T > > extends InterpolatorFactory< T, Img<T> >
+public class NearestNeighborInterpolatorFactory< T > implements InterpolatorFactory< T, RandomAccessible< T > >
 {
-	public NearestNeighborInterpolatorFactory( final OutOfBoundsFactory< T, Img<T> > outOfBoundsStrategyFactory )
-	{
-		super( outOfBoundsStrategyFactory );
-	}
-
 	@Override
-	public NearestNeighborInterpolator<T> create( final Img<T> container )
+	public NearestNeighborInterpolator< T > create( final RandomAccessible< T > randomAccessible )
 	{
 		/*
 		if ( img.numDimensions() == 1 )
-			return new NearestNeighborInterpolator1D< T >( container, outOfBoundsStrategyFactory );
+			return new NearestNeighborInterpolator1D< T >( randomAccessible );
 		else if ( img.numDimensions() == 2 )
-			return new NearestNeighborInterpolator2D< T >( container, outOfBoundsStrategyFactory );
+			return new NearestNeighborInterpolator2D< T >( randomAccessible );
 		else if ( img.numDimensions() == 3 )
-			return new NearestNeighborInterpolator3D< T >( container, outOfBoundsStrategyFactory );
+			return new NearestNeighborInterpolator3D< T >( randomAccessible );
 		else */
-			return new NearestNeighborInterpolator< T >( container, outOfBoundsStrategyFactory );
+			return new NearestNeighborInterpolator< T >( randomAccessible );
 	}
 }

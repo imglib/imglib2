@@ -30,24 +30,9 @@
 package mpicbg.imglib.interpolation;
 
 import mpicbg.imglib.SamplerFactory;
-import mpicbg.imglib.outofbounds.OutOfBoundsFactory;
 
-public abstract class InterpolatorFactory< T, F > implements SamplerFactory< T, Interpolator< T, F >, F >
+public interface InterpolatorFactory< T, F > extends SamplerFactory< T, Interpolator< T, F >, F >
 {	
-	protected OutOfBoundsFactory< T, F > outOfBoundsStrategyFactory;
-	
-	public InterpolatorFactory( final OutOfBoundsFactory< T, F > outOfBoundsStrategyFactory )
-	{
-		this.outOfBoundsStrategyFactory = outOfBoundsStrategyFactory;
-	}
-	
-	public void setOutOfBoundsStrategyFactory( final OutOfBoundsFactory< T, F > outOfBoundsStrategyFactory ) 
-	{ 
-		this.outOfBoundsStrategyFactory = outOfBoundsStrategyFactory; 
-	}
-	
-	public OutOfBoundsFactory< T, F > getOutOfBoundsStrategyFactory() 
-	{ 
-		return outOfBoundsStrategyFactory; 
-	}		
+	@Override
+	public Interpolator< T, F > create( final F function );
 }

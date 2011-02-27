@@ -34,5 +34,5 @@ package mpicbg.imglib;
  */
 public interface SamplerFactory< T, S extends Sampler< T >, F >
 {
-	public S create( final F f );
+	public S create( final F function );
 }

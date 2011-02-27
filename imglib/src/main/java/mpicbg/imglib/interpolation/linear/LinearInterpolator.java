@@ -27,10 +27,13 @@
  */
 package mpicbg.imglib.interpolation.linear;
 
+import mpicbg.imglib.RandomAccess;
+import mpicbg.imglib.RandomAccessible;
 import mpicbg.imglib.img.Img;
 import mpicbg.imglib.img.ImgRandomAccess;
 import mpicbg.imglib.interpolation.Interpolator;
 import mpicbg.imglib.location.transform.Floor;
+import mpicbg.imglib.location.transform.Round;
 import mpicbg.imglib.outofbounds.OutOfBoundsFactory;
 import mpicbg.imglib.type.Type;
 import mpicbg.imglib.type.numeric.NumericType;
@@ -42,9 +45,8 @@ import mpicbg.imglib.util.Util;
  *
  * @author Stephan Preibisch and Stephan Saalfeld
  */
-public class LinearInterpolator< T extends NumericType< T > > extends Floor< ImgRandomAccess< T > > implements Interpolator< T >
+public class LinearInterpolator< T extends NumericType< T > > extends Floor< RandomAccess< T > > implements Interpolator< T, RandomAccessible< T > >
 {
-	final protected OutOfBoundsFactory< T > outOfBoundsStrategyFactory;
 	final protected Img< T > image;
 	final protected int numDimensions;
 	
@@ -68,7 +70,7 @@ public class LinearInterpolator< T extends NumericType< T > > extends Floor< Img
 		return image.createPositionableRasterSampler( outOfBoundsStrategyFactory );
 	}
 	
-	protected LinearInterpolator( final Img<T> image, final RasterOutOfBoundsFactory<T> outOfBoundsStrategyFactory )
+	protected LinearInterpolator( final Img<T> image )
 	{
 		this( image, outOfBoundsStrategyFactory, true );
 	}
@@ -293,5 +295,12 @@ public class LinearInterpolator< T extends NumericType< T > > extends Floor< Img
 	final public T getType()
 	{
 		return get();
+	}
+
+	@Override
+	public RandomAccessible< T > getFunction()
+	{
+		// TODO Auto-generated method stub
+		return null;
 	}
 }
