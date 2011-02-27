@@ -32,7 +32,7 @@ import mpicbg.imglib.Localizable;
 import mpicbg.imglib.RealLocalizable;
 import mpicbg.imglib.RealPositionable;
 
-TODO: // TODO: Do we need this class at all?
+//TODO: DO NOT PUT INTO imglib2 BRANCH!  We don't need this at the moment.
 
 /**
  * @param <T>
@@ -121,15 +121,15 @@ abstract public class AbstractInterpolator< T, F extends EuclideanSpace, RealLoc
 	}
 
 	@Override
-	public void move( final double[] position )
+	public void move( final double[] distance )
 	{
-		realLocalizableRealPositionable.move( position );
+		realLocalizableRealPositionable.move( distance );
 	}
 
 	@Override
-	public void move( final float[] position )
+	public void move( final float[] distance )
 	{
-		realLocalizableRealPositionable.move( position );
+		realLocalizableRealPositionable.move( distance );
 	}
 
 	@Override
@@ -202,15 +202,15 @@ abstract public class AbstractInterpolator< T, F extends EuclideanSpace, RealLoc
 	}
 
 	@Override
-	public void move( final int[] position )
+	public void move( final int[] distance )
 	{
-		realLocalizableRealPositionable.move( position );
+		realLocalizableRealPositionable.move( distance );
 	}
 
 	@Override
-	public void move( final long[] position )
+	public void move( final long[] distance )
 	{
-		realLocalizableRealPositionable.move( position );
+		realLocalizableRealPositionable.move( distance );
 	}
 
 	@Override

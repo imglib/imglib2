@@ -146,10 +146,10 @@ public abstract class AbstractSubImageRandomAccess< T, S extends RandomAccess< T
 	public void move( final Localizable localizable ) { access.move( localizable ); }
 
 	@Override
-	public void move( final int[] position ) { access.move( position ); }
+	public void move( final int[] distance ) { access.move( distance ); }
 
 	@Override
-	public void move( final long[] position ) { access.move( position ); }
+	public void move( final long[] distance ) { access.move( distance ); }
 
 	/* Absolute Movement */
 

@@ -138,15 +138,15 @@ public abstract class AbstractImgOutOfBoundsRandomAccess< T > extends AbstractIm
 	}
 	
 	@Override
-	final public void move( final int[] position )
+	final public void move( final int[] distance )
 	{
-		outOfBounds.move( position );
+		outOfBounds.move( distance );
 	}
 	
 	@Override
-	final public void move( final long[] position )
+	final public void move( final long[] distance )
 	{
-		outOfBounds.move( position );
+		outOfBounds.move( distance );
 	}
 	
 	@Override

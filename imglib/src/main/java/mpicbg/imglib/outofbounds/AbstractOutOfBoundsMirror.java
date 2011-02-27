@@ -209,17 +209,17 @@ public abstract class AbstractOutOfBoundsMirror< T > implements OutOfBounds< T >
 	}
 	
 	@Override
-	public void move( final int[] pos )
+	public void move( final int[] distance )
 	{
 		for ( int d = 0; d < n; ++d )
-			move( pos[ d ], d );
+			move( distance[ d ], d );
 	}
 	
 	@Override
-	public void move( final long[] pos )
+	public void move( final long[] distance )
 	{
 		for ( int d = 0; d < n; ++d )
-			move( pos[ d ], d );
+			move( distance[ d ], d );
 	}
 	
 	@Override

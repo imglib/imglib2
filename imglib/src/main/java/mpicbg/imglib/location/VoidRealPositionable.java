@@ -71,16 +71,16 @@ final public class VoidRealPositionable implements RealPositionable
 	final public void move( final Localizable localizable ){}
 	
 	@Override
-	final public void move( final double[] position ){}
+	final public void move( final double[] distance ){}
 	
 	@Override
-	final public void move( final float[] position ){}
+	final public void move( final float[] distance ){}
 	
 	@Override
-	final public void move( final int[] position ){}
+	final public void move( final int[] distance ){}
 	
 	@Override
-	final public void move( final long[] position ){}
+	final public void move( final long[] distance ){}
 	
 	@Override
 	final public void setPosition( final RealLocalizable localizable ){}

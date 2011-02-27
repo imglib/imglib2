@@ -79,17 +79,17 @@ public interface Positionable extends EuclideanSpace
 	 * Move the element relative to its current location using an int[] as
 	 * distance vector.
 	 * 
-	 * @param position
+	 * @param distance
 	 */
-	public void move( int[] position );
+	public void move( int[] distance );
 	
 	/**
 	 * Move the element relative to its current location using a long[] as
 	 * distance vector.
 	 * 
-	 * @param position
+	 * @param distance
 	 */
-	public void move( long[] position );
+	public void move( long[] distance );
 	
 	/**
 	 * Place the element at the same location as a given {@link Localizable}

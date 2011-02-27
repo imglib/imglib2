@@ -274,14 +274,14 @@ public class ShapeListPositionableRasterSampler< T extends Type< T > > extends A
 	}
 
 	@Override
-	public void move( final int[] position ) {
+	public void move( final int[] distance ) {
 		for ( int d = 0; d < numDimensions; d++ )
-			this.position[ d ] += position[ d ];
+			this.position[ d ] += distance[ d ];
 	}
 
 	@Override
-	public void move( final long[] position ) {
+	public void move( final long[] distance ) {
 		for ( int d = 0; d < numDimensions; d++ )
-			this.position[ d ] += position[ d ];
+			this.position[ d ] += distance[ d ];
 	}
 }
