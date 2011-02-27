@@ -5,13 +5,12 @@ import java.util.Arrays;
 
 import mpicbg.imglib.Cursor;
 import mpicbg.imglib.RandomAccess;
-import mpicbg.imglib.cursor.LocalizableByDimCursor;
-import mpicbg.imglib.cursor.LocalizableCursor;
 
-import mpicbg.imglib.image.ImageFactory;
 import mpicbg.imglib.img.Img;
+import mpicbg.imglib.img.ImgFactory;
 import mpicbg.imglib.img.array.ArrayImgFactory;
 
+import mpicbg.imglib.type.NativeType;
 import mpicbg.imglib.type.numeric.RealType;
 
 import mpicbg.imglib.type.numeric.real.FloatType;
@@ -38,7 +37,7 @@ public class JUnitTestBase {
 	 * An interface for image generators
 	 */
 	protected interface Function {
-		public float calculate( int[] pos );
+		public float calculate( long[] pos );
 	}
 
 	/**
@@ -46,7 +45,7 @@ public class JUnitTestBase {
 	 */
 	protected<T extends RealType<T>> boolean match( Img<T> image, Function function ) {
 		Cursor<T> cursor = image.localizingCursor();
-		int[] pos = new int[cursor.numDimensions()];
+		long[] pos = new long[cursor.numDimensions()];
 		while( cursor.hasNext() ) {
 			cursor.fwd();
 			cursor.localize( pos );
@@ -61,7 +60,7 @@ public class JUnitTestBase {
 	 */
 	protected<T extends RealType<T>> boolean match( Img<T> image, Function function, float tolerance ) {
 		Cursor<T> cursor = image.localizingCursor();
-		int[] pos = new int[cursor.numDimensions()];
+		long[] pos = new long[cursor.numDimensions()];
 		while( cursor.hasNext() ) {
 			cursor.fwd();
 			cursor.localize( pos );
@@ -161,18 +160,17 @@ public class JUnitTestBase {
 	/**
 	 * Generate an image
 	 */
-	protected<T extends RealType<T>> Img<T> makeImage( T type, Function function, int[] dims ) {
-		ImageFactory<T> factory = new ImageFactory<T>(type, new ArrayImgFactory());
-		Img<T> result = factory.createImage( dims );
-		LocalizableCursor<T> cursor = result.createLocalizableCursor();
-		int[] pos = new int[cursor.getNumDimensions()];
+	protected<T extends RealType<T> & NativeType< T >> Img<T> makeImage( T type, Function function, long[] dims ) {
+		ImgFactory<T> factory = new ArrayImgFactory<T>();
+		Img<T> result = factory.create( dims, type );
+		Cursor<T> cursor = result.cursor();
+		long[] pos = new long[cursor.numDimensions()];
 		while( cursor.hasNext() ) {
 			cursor.fwd();
-			cursor.getPosition( pos );
+			cursor.localize( pos );
 			float value = function.calculate( pos );
-			cursor.getType().setReal( value );
+			cursor.get().setReal( value );
 		}
-		cursor.close();
 		return result;
 	}
 
@@ -186,7 +184,7 @@ public class JUnitTestBase {
 			this.factor = factor;
 		}
 
-		public float calculate( int[] pos ) {
+		public float calculate( long[] pos ) {
 			return 1 + pos[0] + 2 * (pos[0] + 1) * pos[1] + factor * pos[2] * pos[2];
 		}
 	}
@@ -197,13 +195,13 @@ public class JUnitTestBase {
 	 * This test image is 0 everywhere, except at the given coordinate, where it is 1.
 	 */
 	protected class SinglePixel3D implements Function {
-		int x, y, z;
+		long x, y, z;
 
-		protected SinglePixel3D( int x, int y, int z ) {
+		protected SinglePixel3D( long x, long y, long z ) {
 			this.x = x; this.y = y; this.z = z;
 		}
 
-		public float calculate( int[] pos ) {
+		public float calculate( long[] pos ) {
 			return pos[0] == x && pos[1] == y && pos[2] == z ? 1 : 0;
 		}
 	}
@@ -211,15 +209,15 @@ public class JUnitTestBase {
 	/**
 	 * Generate a test image
 	 */
-	protected Img<FloatType> makeTestImage3D( int cubeLength ) {
-		return makeImage( new FloatType(), new TestGenerator( cubeLength ), new int[] { cubeLength, cubeLength, cubeLength });
+	protected Img<FloatType> makeTestImage3D( long cubeLength ) {
+		return makeImage( new FloatType(), new TestGenerator( cubeLength ), new long[] { cubeLength, cubeLength, cubeLength });
 	}
 
 	/**
 	 * Generate a test image
 	 */
-	protected Img<FloatType> makeSinglePixel3D( int cubeLength, int x, int y, int z ) {
-		return makeImage( new FloatType(), new SinglePixel3D( x, y, z ), new int[] { cubeLength, cubeLength, cubeLength });
+	protected Img<FloatType> makeSinglePixel3D( long cubeLength, long x, long y, long z ) {
+		return makeImage( new FloatType(), new SinglePixel3D( x, y, z ), new long[] { cubeLength, cubeLength, cubeLength });
 	}
 
 	/**

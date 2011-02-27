@@ -62,11 +62,18 @@ public class BasicTest extends JUnitTestBase {
 	 * Ensure that all pixels are iterated over
 	 */
 	@Test public void testCursorCoverage() {
-		Cursor<FloatType> cursor = testImage.localizingCursor();
-		int count = 0;
-//		int[] pos = new int[cursor.getNumDimensions()];
+		Cursor<FloatType> cursor = testImage.cursor();
+		long count = 0;
 		while( cursor.hasNext() ) {
 			cursor.fwd();
+			count++;
+		}
+		assertTrue( count == 27 );
+		
+		Cursor<FloatType> localizingCursor = testImage.localizingCursor();
+		count = 0;
+		while( localizingCursor.hasNext() ) {
+			localizingCursor.fwd();
 			count++;
 		}
 		assertTrue( count == 27 );

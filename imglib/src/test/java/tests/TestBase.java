@@ -37,7 +37,7 @@ public class TestBase {
 	 * An interface for image generators
 	 */
 	protected interface Function {
-		public float calculate( int[] pos );
+		public float calculate( long[] pos );
 	}
 
 	/**
@@ -45,7 +45,7 @@ public class TestBase {
 	 */
 	protected<T extends RealType<T>> boolean match( Img<T> image, Function function ) {
 		ImgCursor<T> cursor = image.localizingCursor();
-		int[] pos = new int[cursor.numDimensions()];
+		long[] pos = new long[cursor.numDimensions()];
 		while( cursor.hasNext() ) {
 			cursor.fwd();
 			cursor.localize( pos );
@@ -60,7 +60,7 @@ public class TestBase {
 	 */
 	protected<T extends RealType<T>> boolean match( Img<T> image, Function function, float tolerance ) {
 		ImgCursor<T> cursor = image.localizingCursor();
-		int[] pos = new int[cursor.numDimensions()];
+		long[] pos = new long[cursor.numDimensions()];
 		while( cursor.hasNext() ) {
 			cursor.fwd();
 			cursor.localize( pos );
@@ -89,32 +89,32 @@ public class TestBase {
 	protected<T extends RealType<T>> void signature( Img<T> image, float[] result ) {
 		Arrays.fill( result, 0 );
 		ImgCursor<T> cursor = image.localizingCursor();
-		int dim = cursor.numDimensions();
-		int[] pos = new int[dim];
+		int n = cursor.numDimensions();
+		long[] pos = new long[n];
 		while( cursor.hasNext() ) {
 			cursor.fwd();
 			cursor.localize( pos );
 			float value = cursor.get().getRealFloat();
 			result[0] += value;
-			result[dim + 1] += value * value;
-			for( int i = 0; i < dim; i++ ) {
+			result[n + 1] += value * value;
+			for( int i = 0; i < n; i++ ) {
 				result[i + 1] += value * pos[i];
-				result[i + 1 + dim + 1] += value * pos[i] * pos[i];
+				result[i + 1 + n + 1] += value * pos[i] * pos[i];
 			}
 		}
 
-		for( int i = 1; i < dim + 1; i++ ) {
+		for( int i = 1; i < n + 1; i++ ) {
 			result[i] /= result[0];
-			result[i + dim + 1] = ( float )Math.sqrt( result[i + dim + 1] / result[0] - result[i] * result[i] );
+			result[i + n + 1] = ( float )Math.sqrt( result[i + n + 1] / result[0] - result[i] * result[i] );
 		}
 
-		long[] dims = Util.intervalDimensions( image );
-		float total = dims[0];
-		for( int i = 1; i < dim; i++ )
-			total *= dims[i];
+		long[] dimensions = Util.intervalDimensions( image );
+		float total = dimensions[0];
+		for( int i = 1; i < n; i++ )
+			total *= dimensions[i];
 
 		result[0] /= total;
-		result[dim + 1] = ( float )Math.sqrt( result[dim + 1] / total - result[0] * result[0] );
+		result[n + 1] = ( float )Math.sqrt( result[n + 1] / total - result[0] * result[0] );
 	}
 
 	/**
@@ -164,7 +164,7 @@ public class TestBase {
 		ImgFactory<T> factory = new ArrayImgFactory<T>();
 		Img<T> result = factory.create( dims, type );
 		ImgCursor<T> cursor = result.localizingCursor();
-		int[] pos = new int[cursor.numDimensions()];
+		long[] pos = new long[cursor.numDimensions()];
 		while( cursor.hasNext() ) {
 			cursor.fwd();
 			cursor.localize( pos );
@@ -184,7 +184,7 @@ public class TestBase {
 			this.factor = factor;
 		}
 
-		public float calculate( int[] pos ) {
+		public float calculate( long[] pos ) {
 			return 1 + pos[0] + 2 * (pos[0] + 1) * pos[1] + factor * pos[2] * pos[2];
 		}
 	}
@@ -201,7 +201,7 @@ public class TestBase {
 			this.x = x; this.y = y; this.z = z;
 		}
 
-		public float calculate( int[] pos ) {
+		public float calculate( long[] pos ) {
 			return pos[0] == x && pos[1] == y && pos[2] == z ? 1 : 0;
 		}
 	}
