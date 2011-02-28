@@ -137,7 +137,7 @@ public class ArrayImgFactory< T extends NativeType<T> > extends NativeImgFactory
 		return new ArrayImg< T, ShortAccess >( new ShortArray( numEntities ), dimensions, entitiesPerPixel );
 	}
 
-	@SuppressWarnings( "unchecked" )
+	@SuppressWarnings( { "unchecked", "rawtypes" } )
 	@Override
 	public <S> ImgFactory<S> imgFactory( final S type ) throws IncompatibleTypeException
 	{

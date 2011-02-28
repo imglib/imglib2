@@ -163,9 +163,9 @@ final public class CellImg< T extends NativeType< T >, A extends ArrayDataAccess
 	}
 
 	@Override
-	public CellOutOfBoundsRandomAccess< T > randomAccess( OutOfBoundsFactory< T, Img<T> > factory )
+	public CellOutOfBoundsRandomAccess< T > randomAccess( OutOfBoundsFactory< T, Img<T> > outOfBoundsFactory )
 	{
-		return new CellOutOfBoundsRandomAccess< T >( this, factory );
+		return new CellOutOfBoundsRandomAccess< T >( this, outOfBoundsFactory );
 	}
 
 	@Override
