@@ -176,17 +176,17 @@ public class LinearInterpolator< T extends NumericType< T > > extends Floor< Ran
 	{
 		fillWeights();
 
-		accumulator.setZero();
-		accumulate();
-		graycodeFwdRecursive( n - 1 );
+		accumulator.set( target.get() );
+		accumulator.mul( weights[ 0 ] );
 
-		target.bck( n - 1 );
 		code = 0;
+		graycodeFwdRecursive( n - 1 );
+		target.bck( n - 1 );
 		
 		return accumulator;
 	}
 
-	private void graycodeFwdRecursive ( int dimension )
+	final private void graycodeFwdRecursive ( int dimension )
 	{
 		if ( dimension == 0 )
 		{
@@ -204,7 +204,7 @@ public class LinearInterpolator< T extends NumericType< T > > extends Floor< Ran
 		}
 	}
 
-	private void graycodeBckRecursive ( int dimension )
+	final private void graycodeBckRecursive ( int dimension )
 	{
 		if ( dimension == 0 )
 		{
@@ -225,7 +225,7 @@ public class LinearInterpolator< T extends NumericType< T > > extends Floor< Ran
 	/**
 	 * multiply current target value with current weight and add to accumulator.
 	 */
-	private void accumulate()
+	final private void accumulate()
 	{
 		tmp.set( target.get() );
 		tmp.mul( weights[ code ] );
@@ -237,14 +237,14 @@ public class LinearInterpolator< T extends NumericType< T > > extends Floor< Ran
 	}
 
 	@SuppressWarnings( "unused" )
-	private void printWeights()
+	final private void printWeights()
 	{
 		for ( int i = 0; i < weights.length; ++i )
 			System.out.printf("weights [ %2d ] = %f\n", i, weights[ i ] );
 	}
 	
 	@SuppressWarnings( "unused" )
-	private void printCode()
+	final private void printCode()
 	{
 		final int maxbits = 4;
 		String binary = Integer.toBinaryString( code );
