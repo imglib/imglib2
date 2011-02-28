@@ -67,7 +67,7 @@ public interface NativeType<T extends NativeType<T>> extends Type<T>
 	 * @param storageFactory  which storage strategy is used
 	 * @param dim             the dimensions
 	 * 
-	 * @return the instantiated NativeContainer where only the
+	 * @return the instantiated {@link NativeImg} where only the
 	 *         {@link Type} knows the BasicType it contains.
 	 */
 	public NativeImg< T, ? > createSuitableNativeImg( final NativeImgFactory< T > storageFactory, final long[] dim );
@@ -79,7 +79,7 @@ public interface NativeType<T extends NativeType<T>> extends Type<T>
 	 * @return - a new {@link NativeType} instance working on the same
 	 *         {@link NativeImg}
 	 */
-	public T duplicateTypeOnSameNativeContainer();	
+	public T duplicateTypeOnSameNativeImg();	
 
 	/**
 	 * This method is used by an accessor (e.g., a {@link Cursor})

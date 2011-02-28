@@ -4,15 +4,17 @@ import java.util.Arrays;
 
 
 
-import mpicbg.imglib.image.ImageFactory;
 import mpicbg.imglib.img.Img;
 import mpicbg.imglib.img.ImgCursor;
+import mpicbg.imglib.img.ImgFactory;
 import mpicbg.imglib.img.ImgRandomAccess;
 import mpicbg.imglib.img.array.ArrayImgFactory;
 
+import mpicbg.imglib.type.NativeType;
 import mpicbg.imglib.type.numeric.RealType;
 
 import mpicbg.imglib.type.numeric.real.FloatType;
+import mpicbg.imglib.util.Util;
 
 /**
  * The base class for JUnit tests
@@ -35,22 +37,21 @@ public class TestBase {
 	 * An interface for image generators
 	 */
 	protected interface Function {
-		public float calculate( int[] pos );
+		public float calculate( long[] pos );
 	}
 
 	/**
 	 * Check whether an image is identical to a generated image
 	 */
 	protected<T extends RealType<T>> boolean match( Img<T> image, Function function ) {
-		ImgCursor<T> cursor = image.createLocalizingRasterIterator();
-		int[] pos = new int[cursor.numDimensions()];
+		ImgCursor<T> cursor = image.localizingCursor();
+		long[] pos = new long[cursor.numDimensions()];
 		while( cursor.hasNext() ) {
 			cursor.fwd();
 			cursor.localize( pos );
 			if( function.calculate( pos ) != cursor.get().getRealFloat() )
 				return false;
 		}
-		cursor.close();
 		return true;
 	}
 
@@ -58,15 +59,14 @@ public class TestBase {
 	 * Check whether an image is identical to a generated image, with fuzz
 	 */
 	protected<T extends RealType<T>> boolean match( Img<T> image, Function function, float tolerance ) {
-		ImgCursor<T> cursor = image.createLocalizingRasterIterator();
-		int[] pos = new int[cursor.numDimensions()];
+		ImgCursor<T> cursor = image.localizingCursor();
+		long[] pos = new long[cursor.numDimensions()];
 		while( cursor.hasNext() ) {
 			cursor.fwd();
 			cursor.localize( pos );
 			if( Math.abs( function.calculate( pos ) - cursor.get().getRealFloat() ) > tolerance )
 				return false;
 		}
-		cursor.close();
 		return true;
 	}
 
@@ -88,34 +88,33 @@ public class TestBase {
 	 */
 	protected<T extends RealType<T>> void signature( Img<T> image, float[] result ) {
 		Arrays.fill( result, 0 );
-		ImgCursor<T> cursor = image.createLocalizingRasterIterator();
-		int dim = cursor.numDimensions();
-		int[] pos = new int[dim];
+		ImgCursor<T> cursor = image.localizingCursor();
+		int n = cursor.numDimensions();
+		long[] pos = new long[n];
 		while( cursor.hasNext() ) {
 			cursor.fwd();
 			cursor.localize( pos );
 			float value = cursor.get().getRealFloat();
 			result[0] += value;
-			result[dim + 1] += value * value;
-			for( int i = 0; i < dim; i++ ) {
+			result[n + 1] += value * value;
+			for( int i = 0; i < n; i++ ) {
 				result[i + 1] += value * pos[i];
-				result[i + 1 + dim + 1] += value * pos[i] * pos[i];
+				result[i + 1 + n + 1] += value * pos[i] * pos[i];
 			}
 		}
-		cursor.close();
 
-		for( int i = 1; i < dim + 1; i++ ) {
+		for( int i = 1; i < n + 1; i++ ) {
 			result[i] /= result[0];
-			result[i + dim + 1] = ( float )Math.sqrt( result[i + dim + 1] / result[0] - result[i] * result[i] );
+			result[i + n + 1] = ( float )Math.sqrt( result[i + n + 1] / result[0] - result[i] * result[i] );
 		}
 
-		int[] dims = image.getDimensions();
-		float total = dims[0];
-		for( int i = 1; i < dim; i++ )
-			total *= dims[i];
+		long[] dimensions = Util.intervalDimensions( image );
+		float total = dimensions[0];
+		for( int i = 1; i < n; i++ )
+			total *= dimensions[i];
 
 		result[0] /= total;
-		result[dim + 1] = ( float )Math.sqrt( result[dim + 1] / total - result[0] * result[0] );
+		result[n + 1] = ( float )Math.sqrt( result[n + 1] / total - result[0] * result[0] );
 	}
 
 	/**
@@ -145,10 +144,9 @@ public class TestBase {
 	 * Convenience helper to access single pixels
 	 */
 	protected<T extends RealType<T>> float get( Img<T> image, int[] pos ) {
-		ImgRandomAccess<T> cursor = image.createPositionableRasterSampler();
-		cursor.setPosition( pos );
-		float result = cursor.get().getRealFloat();
-		cursor.close();
+		ImgRandomAccess<T> randomAccess = image.randomAccess();
+		randomAccess.setPosition( pos );
+		float result = randomAccess.get().getRealFloat();
 		return result;
 	}
 
@@ -162,18 +160,17 @@ public class TestBase {
 	/**
 	 * Generate an image
 	 */
-	protected<T extends RealType<T>> Img<T> makeImage( T type, Function function, int[] dims ) {
-		ImageFactory<T> factory = new ImageFactory<T>(type, new ArrayImgFactory());
-		Img<T> result = factory.createImage( dims );
-		ImgCursor<T> cursor = result.createLocalizingRasterIterator();
-		int[] pos = new int[cursor.numDimensions()];
+	protected<T extends RealType<T> & NativeType< T >> Img<T> makeImage( T type, Function function, long[] dims ) {
+		ImgFactory<T> factory = new ArrayImgFactory<T>();
+		Img<T> result = factory.create( dims, type );
+		ImgCursor<T> cursor = result.localizingCursor();
+		long[] pos = new long[cursor.numDimensions()];
 		while( cursor.hasNext() ) {
 			cursor.fwd();
 			cursor.localize( pos );
 			float value = function.calculate( pos );
 			cursor.get().setReal( value );
 		}
-		cursor.close();
 		return result;
 	}
 
@@ -187,7 +184,7 @@ public class TestBase {
 			this.factor = factor;
 		}
 
-		public float calculate( int[] pos ) {
+		public float calculate( long[] pos ) {
 			return 1 + pos[0] + 2 * (pos[0] + 1) * pos[1] + factor * pos[2] * pos[2];
 		}
 	}
@@ -204,7 +201,7 @@ public class TestBase {
 			this.x = x; this.y = y; this.z = z;
 		}
 
-		public float calculate( int[] pos ) {
+		public float calculate( long[] pos ) {
 			return pos[0] == x && pos[1] == y && pos[2] == z ? 1 : 0;
 		}
 	}
@@ -212,15 +209,15 @@ public class TestBase {
 	/**
 	 * Generate a test image
 	 */
-	protected Img<FloatType> makeTestImage3D( int cubeLength ) {
-		return makeImage( new FloatType(), new TestGenerator( cubeLength ), new int[] { cubeLength, cubeLength, cubeLength });
+	protected Img<FloatType> makeTestImage3D( long cubeLength ) {
+		return makeImage( new FloatType(), new TestGenerator( cubeLength ), new long[] { cubeLength, cubeLength, cubeLength });
 	}
 
 	/**
 	 * Generate a test image
 	 */
-	protected Img<FloatType> makeSinglePixel3D( int cubeLength, int x, int y, int z ) {
-		return makeImage( new FloatType(), new SinglePixel3D( x, y, z ), new int[] { cubeLength, cubeLength, cubeLength });
+	protected Img<FloatType> makeSinglePixel3D( long cubeLength, int x, int y, int z ) {
+		return makeImage( new FloatType(), new SinglePixel3D( x, y, z ), new long[] { cubeLength, cubeLength, cubeLength });
 	}
 
 	/**

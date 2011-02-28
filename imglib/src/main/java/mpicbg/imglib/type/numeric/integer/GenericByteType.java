@@ -39,23 +39,22 @@ public abstract class GenericByteType<T extends GenericByteType<T>> extends Abst
 {
 	int i = 0;
 
-	// the NativeContainer
-	final NativeImg<T, ? extends ByteAccess> storage;
+	final protected NativeImg<T, ? extends ByteAccess> img;
 	
-	// the (sub)NativeContainer that holds the information 
-	ByteAccess b;
+	// the DataAccess that holds the information 
+	protected ByteAccess dataAccess;
 	
 	// this is the constructor if you want it to read from an array
 	public GenericByteType( NativeImg<T, ? extends ByteAccess> byteStorage )
 	{
-		storage = byteStorage;
+		img = byteStorage;
 	}
 	
 	// this is the constructor if you want it to be a variable
 	protected GenericByteType( final byte value )
 	{
-		storage = null;
-		b = new ByteArray( 1 );
+		img = null;
+		dataAccess = new ByteArray( 1 );
 		setValue( value );
 	}
 
@@ -68,11 +67,11 @@ public abstract class GenericByteType<T extends GenericByteType<T>> extends Abst
 	@Override
 	public void updateContainer( final Object c ) 
 	{ 
-		b = storage.update( c ); 
+		dataAccess = img.update( c ); 
 	}
 	
-	protected byte getValue(){ return b.getValue( i ); }
-	protected void setValue( final byte f ){ b.setValue( i, f ); }
+	protected byte getValue(){ return dataAccess.getValue( i ); }
+	protected void setValue( final byte f ){ dataAccess.setValue( i, f ); }
 	
 	@Override
 	public void mul( final float c )
@@ -156,7 +155,7 @@ public abstract class GenericByteType<T extends GenericByteType<T>> extends Abst
 	public String toString() { return "" + getValue(); }
 
 	@Override
-	public void updateIndex( final int i ) { this.i = i; }
+	public void updateIndex( final int index ) { i = index; }
 	@Override
 	public int getIndex() { return i; }
 	

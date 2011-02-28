@@ -1,6 +1,5 @@
 package mpicbg.imglib.type.numeric.complex;
 
-import mpicbg.imglib.algorithm.Precision.PrecisionReal;
 import mpicbg.imglib.type.Type;
 import mpicbg.imglib.type.numeric.ComplexType;
 import mpicbg.imglib.util.Util;
@@ -76,28 +75,28 @@ public abstract class AbstractComplexType<T extends AbstractComplexType<T>> impl
 	public float getPowerFloat()
 	{
 		final float real = getRealFloat();
-		final float complex = getImaginaryFloat();
+		final float imaginary = getImaginaryFloat();
 
-		return (float)Util.gLog( Math.sqrt( real * real + complex * complex ), 2 );
+		return (float)Util.gLog( Math.sqrt( real * real + imaginary * imaginary ), 2 );
 	}
 
 	@Override
 	public double getPowerDouble()
 	{
 		final double real = getRealDouble();
-		final double complex = getImaginaryDouble();
+		final double imaginary = getImaginaryDouble();
 
-		return Util.gLog( Math.sqrt( real * real + complex * complex ), 2 );
+		return Util.gLog( Math.sqrt( real * real + imaginary * imaginary ), 2 );
 	}
 
 	@Override
 	public float getPhaseFloat()
 	{
 		final float real = getRealFloat();
-		final float complex = getImaginaryFloat();
+		final float imaginary = getImaginaryFloat();
 
-		if ( real != 0.0 || complex != 0)
-			return (float)Math.atan2( complex, real );
+		if ( real != 0.0 || imaginary != 0)
+			return (float)Math.atan2( imaginary, real );
 		else
 			return 0;
 	}
@@ -106,10 +105,10 @@ public abstract class AbstractComplexType<T extends AbstractComplexType<T>> impl
 	public double getPhaseDouble()
 	{
 		final double real = getRealDouble();
-		final double complex = getImaginaryDouble();
+		final double imaginary = getImaginaryDouble();
 
-		if ( real != 0.0 || complex != 0)
-			return (float)Math.atan2( complex, real );
+		if ( real != 0.0 || imaginary != 0)
+			return (float)Math.atan2( imaginary, real );
 		else
 			return 0;
 	}
@@ -129,22 +128,18 @@ public abstract class AbstractComplexType<T extends AbstractComplexType<T>> impl
 	}
 
 	@Override
-	public void setComplexNumber( final float real, final float complex )
+	public void setComplexNumber( final float r, final float i )
 	{
-		setReal( real );
-		setImaginary( complex );
+		setReal( r );
+		setImaginary( i );
 	}
 
 	@Override
-	public void setComplexNumber( final double real, final double complex )
+	public void setComplexNumber( final double r, final double i )
 	{
-		setReal( real );
-		setImaginary( complex );
+		setReal( r );
+		setImaginary( i );
 	}
-
-	@Override
-	public PrecisionReal getPreferredRealPrecision() { return PrecisionReal.Double; }
-
 
 	@Override
 	public String toString(){ return "(" + getRealDouble() + ") + (" + getImaginaryDouble() + ")i"; }

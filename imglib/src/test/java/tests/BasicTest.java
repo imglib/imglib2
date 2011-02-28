@@ -1,7 +1,6 @@
 package tests;
 
-import mpicbg.imglib.cursor.LocalizableCursor;
-
+import mpicbg.imglib.Cursor;
 import mpicbg.imglib.img.Img;
 
 import mpicbg.imglib.type.numeric.real.FloatType;
@@ -63,14 +62,20 @@ public class BasicTest extends JUnitTestBase {
 	 * Ensure that all pixels are iterated over
 	 */
 	@Test public void testCursorCoverage() {
-		LocalizableCursor<FloatType> cursor = testImage.createLocalizableCursor();
-		int count = 0;
-//		int[] pos = new int[cursor.getNumDimensions()];
+		Cursor<FloatType> cursor = testImage.cursor();
+		long count = 0;
 		while( cursor.hasNext() ) {
 			cursor.fwd();
 			count++;
 		}
-		cursor.close();
+		assertTrue( count == 27 );
+		
+		Cursor<FloatType> localizingCursor = testImage.localizingCursor();
+		count = 0;
+		while( localizingCursor.hasNext() ) {
+			localizingCursor.fwd();
+			count++;
+		}
 		assertTrue( count == 27 );
 	}
 }

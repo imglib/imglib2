@@ -40,32 +40,32 @@ public interface Positionable extends EuclideanSpace
 	/**
 	 * Move by 1 in one dimension.
 	 * 
-	 * @param dim
+	 * @param d
 	 */
-	public void fwd( int dim );
+	public void fwd( int d );
 	
 	/**
 	 * Move by -1 in one dimension.
 	 * 
-	 * @param dim
+	 * @param d
 	 */
-	public void bck( int dim );
+	public void bck( int d );
 	
 	/**
 	 * Move the element in one dimension for some distance.
 	 *  
 	 * @param distance
-	 * @param dim
+	 * @param d
 	 */
-	public void move( int distance, int dim );
+	public void move( int distance, int d );
 	
 	/**
 	 * Move the element in one dimension for some distance.
 	 *  
 	 * @param distance
-	 * @param dim
+	 * @param d
 	 */
-	public void move( long distance, int dim );
+	public void move( long distance, int d );
 
 	/**
 	 * Move the element relative to its current location using an
@@ -116,15 +116,15 @@ public interface Positionable extends EuclideanSpace
 	 * Set the position of the element for one dimension.
 	 * 
 	 * @param position
-	 * @param dim
+	 * @param d
 	 */
-	public void setPosition( int position, int dim );		
+	public void setPosition( int position, int d );		
 	
 	/**
 	 * Set the position of the element for one dimension.
 	 * 
 	 * @param position
-	 * @param dim
+	 * @param d
 	 */
-	public void setPosition( long position, int dim );
+	public void setPosition( long position, int d );
 }

@@ -21,10 +21,10 @@ import java.util.Random;
 import mpicbg.imglib.algorithm.Benchmark;
 import mpicbg.imglib.algorithm.OutputAlgorithm;
 import mpicbg.imglib.algorithm.math.ComputeMinMax;
-import mpicbg.imglib.container.Img;
-import mpicbg.imglib.container.ImgCursor;
-import mpicbg.imglib.container.ImgRandomAccess;
-import mpicbg.imglib.container.array.ArrayContainerFactory;
+import mpicbg.imglib.img.Img;
+import mpicbg.imglib.img.ImgCursor;
+import mpicbg.imglib.img.ImgRandomAccess;
+import mpicbg.imglib.img.array.ArrayImgFactory;
 import mpicbg.imglib.exception.IncompatibleTypeException;
 import mpicbg.imglib.iterator.ZeroMinIntervalIterator;
 import mpicbg.imglib.outofbounds.OutOfBoundsConstantValueFactory;
@@ -159,7 +159,7 @@ public class FloydSteinbergDithering<T extends RealType<T>> implements OutputAlg
 
 	public Img<FloatType> createErrorDiffusionKernel( final int numDimensions )
 	{
-		ArrayContainerFactory<FloatType> factory = new ArrayContainerFactory<FloatType>();
+		ArrayImgFactory<FloatType> factory = new ArrayImgFactory<FloatType>();
 		
 		// for 2d we take the values from the literature
 		if ( numDimensions == 2 )

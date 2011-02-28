@@ -35,7 +35,7 @@ import mpicbg.imglib.util.Util;
  * 
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-public  class AbstractLocalizable implements Localizable, EuclideanSpace
+public class AbstractLocalizable implements Localizable, EuclideanSpace
 {
 	final protected int n;
 	final protected long[] position;

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2009--2010, Stephan Preibisch & Stephan Saalfeld
+ * Copyright (c) 2009--2011, Tobias Pietzsch, Stephan Preibisch & Stephan Saalfeld
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -24,8 +24,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- *
- * @author Stephan Preibisch & Stephan Saalfeld
  */
 package mpicbg.imglib.type;
 
@@ -48,14 +46,14 @@ import mpicbg.imglib.img.basictypeaccess.DataAccess;
 public interface Type<T extends Type<T>>
 {	
 	/**
-	 * Creates a new {@link Type} which can only store one value.
-	 * @return - a new {@link Type} instance
+	 * Creates a new {@link Type} variable which can only store one value.
+	 * @return - a new {@link Type} variable
 	 */
 	public T createVariable();
 	
 	/**
-	 * Creates a new {@link Type} which can only store one value but contains the value of this {@link Type}
-	 * @return - a new {@link Type} instance
+	 * Creates a new {@link Type} variable that has the value of this {@link Type}
+	 * @return - a new {@link Type} variable
 	 */
 	public T copy();
 

@@ -39,23 +39,22 @@ public abstract class GenericShortType<T extends GenericShortType<T>> extends Ab
 {
 	int i = 0;
 
-	// the NativeContainer
-	final NativeImg<T, ? extends ShortAccess> storage;
+	final protected NativeImg<T, ? extends ShortAccess> img;
 	
-	// the (sub)NativeContainer that holds the information 
-	ShortAccess b;
+	// the DataAccess that holds the information 
+	protected ShortAccess dataAccess;
 	
 	// this is the constructor if you want it to read from an array
 	public GenericShortType( NativeImg<T, ? extends ShortAccess> shortStorage )
 	{
-		storage = shortStorage;
+		img = shortStorage;
 	}
 	
 	// this is the constructor if you want it to be a variable
 	public GenericShortType( final short value )
 	{
-		storage = null;
-		b = new ShortArray( 1 );
+		img = null;
+		dataAccess = new ShortArray( 1 );
 		setValue( value );
 	}
 
@@ -66,10 +65,10 @@ public abstract class GenericShortType<T extends GenericShortType<T>> extends Ab
 	public int getEntitiesPerPixel() { return 1; }
 
 	@Override
-	public void updateContainer( final Object c ) { b = storage.update( c ); }
+	public void updateContainer( final Object c ) { dataAccess = img.update( c ); }
 	
-	protected short getValue(){ return b.getValue( i ); }
-	protected void setValue( final short f ){ b.setValue( i, f ); }
+	protected short getValue(){ return dataAccess.getValue( i ); }
+	protected void setValue( final short f ){ dataAccess.setValue( i, f ); }
 	
 	@Override
 	public void mul( final float c )
@@ -156,7 +155,7 @@ public abstract class GenericShortType<T extends GenericShortType<T>> extends Ab
 	public String toString() { return "" + getValue(); }
 	
 	@Override
-	public void updateIndex( final int i ) { this.i = i; }
+	public void updateIndex( final int index ) { i = index; }
 	@Override
 	public int getIndex() { return i; }
 	
