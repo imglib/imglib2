@@ -12,8 +12,11 @@ import mpicbg.imglib.display.XYProjector;
 import mpicbg.imglib.img.Img;
 import mpicbg.imglib.img.ImgFactory;
 import mpicbg.imglib.img.array.ArrayImgFactory;
+import mpicbg.imglib.interpolation.Interpolator;
+import mpicbg.imglib.interpolation.InterpolatorFactory;
 import mpicbg.imglib.interpolation.linear.LinearInterpolator;
 import mpicbg.imglib.interpolation.linear.LinearInterpolatorFactory;
+import mpicbg.imglib.interpolation.nearestneighbor.NearestNeighborInterpolatorFactory;
 import mpicbg.imglib.io.LOCI;
 import mpicbg.imglib.type.numeric.ARGBType;
 import mpicbg.imglib.type.numeric.NumericType;
@@ -22,12 +25,12 @@ import mpicbg.imglib.type.numeric.real.FloatType;
 
 public class OpenAndDisplayInterpolated
 {
-	public static <T extends NumericType< T > > void copyInterpolatedGeneric( RandomAccessible< T > from, IterableInterval< T > to, double[] offset, double scale )
+	public static <T extends NumericType< T > > void copyInterpolatedGeneric( RandomAccessible< T > from, IterableInterval< T > to, double[] offset, double scale, InterpolatorFactory< T, RandomAccessible< T > > interpolatorFactory )
 	{
 		final int n = to.numDimensions();
 		final double[] fromPosition = new double[ n ];
 		Cursor< T > cursor = to.localizingCursor();
-		LinearInterpolator< T > interpolator =  new LinearInterpolatorFactory< T >().create( from );
+		Interpolator< T, RandomAccessible< T > > interpolator =  interpolatorFactory.create( from );
 		while ( cursor.hasNext() )
 		{
 			final T t = cursor.next();
@@ -57,10 +60,28 @@ public class OpenAndDisplayInterpolated
 		final ImagePlus imp = new ImagePlus( "argbScreenProjection", cp );
 		imp.show();
 		
-		double[] offset = new double[] {50, 10};
-		double scale = 1.0;
+		double[] offset;
+		double scale;
+		InterpolatorFactory< FloatType, RandomAccessible< FloatType > > interpolatorFactory;
+
+		offset = new double[] {50, 10};
+		scale = 1.0;
+		interpolatorFactory = new LinearInterpolatorFactory< FloatType >();
 		for ( int i=0; i<2000; ++i ) {
-			copyInterpolatedGeneric( img, interpolatedImg, offset, scale );
+			copyInterpolatedGeneric( img, interpolatedImg, offset, scale, interpolatorFactory );
+			projector.map();
+			final ColorProcessor cpa = new ColorProcessor( screenImage.image() );
+			imp.setProcessor( cpa );
+			offset[0] += 0.2;
+			offset[0] += 0.04;
+			scale *= 0.999;
+		}
+
+		offset = new double[] {50, 10};
+		scale = 1.0;
+		interpolatorFactory = new NearestNeighborInterpolatorFactory< FloatType >();
+		for ( int i=0; i<2000; ++i ) {
+			copyInterpolatedGeneric( img, interpolatedImg, offset, scale, interpolatorFactory );
 			projector.map();
 			final ColorProcessor cpa = new ColorProcessor( screenImage.image() );
 			imp.setProcessor( cpa );
