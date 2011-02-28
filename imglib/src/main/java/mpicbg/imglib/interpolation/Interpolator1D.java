@@ -29,6 +29,8 @@
  */
 package mpicbg.imglib.interpolation;
 
+// TODO: DO NOT PUT INTO imglib2 BRANCH!  We don't need this at the moment.
+
 public interface Interpolator1D<T,F> extends Interpolator<T,F>
 {
 	/**
