@@ -28,7 +28,6 @@
 package mpicbg.imglib.interpolation.linear;
 
 import mpicbg.imglib.RandomAccessible;
-import mpicbg.imglib.interpolation.Interpolator;
 import mpicbg.imglib.interpolation.InterpolatorFactory;
 import mpicbg.imglib.type.numeric.NumericType;
 
@@ -43,27 +42,16 @@ public class LinearInterpolatorFactory< T extends NumericType< T > > implements 
 	@Override
 	public LinearInterpolator< T > create( RandomAccessible< T > function )
 	{
-		/*
-		if ( function.numDimensions() == 1 )
+		switch ( function.numDimensions() ) 
 		{
+		case 1:
 			return new LinearInterpolator1D< T >( function );
-		}
-		else if ( function.numDimensions() == 2 )
-		{
+		case 2:
 			return new LinearInterpolator2D< T >( function );
+		case 3:
+			return new LinearInterpolator3D< T >( function );
+		default:
+			return new LinearInterpolator< T >( function );
 		}
-		else if ( function.numDimensions() == 3 )
-		{
-			if ( RealType.class.isInstance( function.createType() ) )
-			{
-				return new LinearInterpolator3D< T >( function ); 
-				//LinearInterpolator3DRealType( function );
-			}
-			else
-				return new LinearInterpolator3D< T >( function );
-		}
-		else
-		*/
-		return new LinearInterpolator< T >( function );
 	}
 }

@@ -38,7 +38,7 @@ import mpicbg.imglib.util.IntervalIndexer;
  * 
  * @param <T>
  *
- * @author Stephan Preibisch and Stephan Saalfeld
+ * @author Tobias Pietzsch, Stephan Preibisch and Stephan Saalfeld
  */
 public class LinearInterpolator< T extends NumericType< T > > extends Floor< RandomAccess< T > > implements Interpolator< T, RandomAccessible< T > >
 {
