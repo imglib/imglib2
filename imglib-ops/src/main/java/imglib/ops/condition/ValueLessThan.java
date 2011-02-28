@@ -6,15 +6,15 @@ import mpicbg.imglib.type.numeric.RealType;
 
 public class ValueLessThan<T extends RealType<T>> implements Condition<T>
 {
-	private double bound;
+	private final double bound;
 	
-	public ValueLessThan(double bound)
+	public ValueLessThan(final double bound)
 	{
 		this.bound = bound;
 	}
 	
 	@Override
-	public boolean isSatisfied(LocalizableCursor<T> cursor, int[] position)
+	public boolean isSatisfied(final LocalizableCursor<T> cursor, final int[] position)
 	{
 		return cursor.getType().getRealDouble() < bound;
 	}

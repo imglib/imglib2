@@ -6,18 +6,18 @@ import mpicbg.imglib.type.numeric.RealType;
 
 public class BinaryOperatorFunction<T extends RealType<T>> implements RealFunction<T>
 {
-	private BinaryOperator op;
+	private final BinaryOperator op;
 	
-	public BinaryOperatorFunction(BinaryOperator op)
+	public BinaryOperatorFunction(final BinaryOperator op)
 	{
 		this.op = op;
 	}
 	
 	@Override
-	public boolean canAccept(int numParameters) { return numParameters == 2; }
+	public boolean canAccept(final int numParameters) { return numParameters == 2; }
 
 	@Override
-	public void compute(T[] inputs, T output)
+	public void compute(final T[] inputs, final T output)
 	{
 		double input1 = inputs[0].getRealDouble();
 		double input2 = inputs[1].getRealDouble();

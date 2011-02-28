@@ -2,10 +2,10 @@ package imglib.ops.operator.unary;
 
 import imglib.ops.operator.UnaryOperator;
 
-public class Log implements UnaryOperator
+public final class Log implements UnaryOperator
 {
 	@Override
-	public double computeValue(double input)
+	public double computeValue(final double input)
 	{
 		if (input <= 0)
 			return 0;

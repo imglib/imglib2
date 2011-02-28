@@ -2,17 +2,17 @@ package imglib.ops.operator.unary;
 
 import imglib.ops.operator.UnaryOperator;
 
-public class DivideByConstant implements UnaryOperator
+public final class DivideByConstant implements UnaryOperator
 {
-	private double constant;
+	private final double constant;
 	
-	public DivideByConstant(double constant)
+	public DivideByConstant(final double constant)
 	{
 		this.constant = constant;
 	}
 	
 	@Override
-	public double computeValue(double input)
+	public double computeValue(final double input)
 	{
 		if (constant != 0)
 			return input / constant;

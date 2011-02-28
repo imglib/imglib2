@@ -2,17 +2,17 @@ package imglib.ops.operator.unary;
 
 import imglib.ops.operator.UnaryOperator;
 
-public class MultiplyByConstant implements UnaryOperator
+public final class MultiplyByConstant implements UnaryOperator
 {
-	private double constant;
+	private final double constant;
 	
-	public MultiplyByConstant(double constant)
+	public MultiplyByConstant(final double constant)
 	{
 		this.constant = constant;
 	}
 	
 	@Override
-	public double computeValue(double input)
+	public double computeValue(final double input)
 	{
 		return input * constant;
 	}

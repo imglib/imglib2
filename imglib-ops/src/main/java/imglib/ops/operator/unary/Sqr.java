@@ -2,10 +2,10 @@ package imglib.ops.operator.unary;
 
 import imglib.ops.operator.UnaryOperator;
 
-public class Sqr implements UnaryOperator
+public final class Sqr implements UnaryOperator
 {
 	@Override
-	public double computeValue(double input)
+	public double computeValue(final double input)
 	{
 		return input * input;
 	}

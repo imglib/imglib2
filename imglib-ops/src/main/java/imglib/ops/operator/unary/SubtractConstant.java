@@ -2,17 +2,17 @@ package imglib.ops.operator.unary;
 
 import imglib.ops.operator.UnaryOperator;
 
-public class SubtractConstant implements UnaryOperator
+public final class SubtractConstant implements UnaryOperator
 {
-	private double constant;
+	private final double constant;
 	
-	public SubtractConstant(double constant)
+	public SubtractConstant(final double constant)
 	{
 		this.constant = constant;
 	}
 	
 	@Override
-	public double computeValue(double input)
+	public double computeValue(final double input)
 	{
 		return input - constant;
 	}

@@ -6,17 +6,17 @@ import mpicbg.imglib.type.numeric.RealType;
 
 public class AxisLessThan<T extends RealType<T>> implements Condition<T>
 {
-	private int axis;
-	private int bound;
+	private final int axis;
+	private final int bound;
 	
-	public AxisLessThan(int numAxes, int axis, int bound)
+	public AxisLessThan(final int axis, final int bound)
 	{
 		this.axis = axis;
 		this.bound = bound;
 	}
 	
 	@Override
-	public boolean isSatisfied(LocalizableCursor<T> cursor, int[] position)
+	public boolean isSatisfied(final LocalizableCursor<T> cursor, final int[] position)
 	{
 		return position[axis] < bound;
 	}

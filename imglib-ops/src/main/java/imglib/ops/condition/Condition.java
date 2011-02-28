@@ -5,6 +5,6 @@ import mpicbg.imglib.type.numeric.RealType;
 
 public interface Condition<T extends RealType<T>>
 {
-	boolean isSatisfied(LocalizableCursor<T> cursor, int[] position);
+	boolean isSatisfied(final LocalizableCursor<T> cursor, final int[] position);
 }
 

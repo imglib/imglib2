@@ -2,5 +2,5 @@ package imglib.ops.operator;
 
 public interface BinaryOperator
 {
-	double computeValue(double input1, double input2);
+	double computeValue(final double input1, final double input2);
 }

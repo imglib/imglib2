@@ -6,10 +6,10 @@ import mpicbg.imglib.type.numeric.RealType;
 public class AvgFunction<T extends RealType<T>> implements RealFunction<T>
 {
 	@Override
-	public boolean canAccept(int numParameters) { return numParameters >= 0; }
+	public boolean canAccept(final int numParameters) { return numParameters >= 0; }
 	
 	@Override
-	public void compute(T[] inputs, T output)
+	public void compute(final T[] inputs, final T output)
 	{
 		int numElements = inputs.length;
 		

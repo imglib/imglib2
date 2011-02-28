@@ -12,12 +12,12 @@ import mpicbg.imglib.type.numeric.RealType;
 public class NullFunction<T extends RealType<T>> implements RealFunction<T>
 {
 	@Override
-	public boolean canAccept(int numParameters) {
+	public boolean canAccept(final int numParameters) {
 		return true;
 	}
 
 	@Override
-	public void compute(T[] inputs, T output)
+	public void compute(final T[] inputs, final T output)
 	{
 		// DO NOTHING
 	}

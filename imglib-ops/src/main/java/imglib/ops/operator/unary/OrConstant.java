@@ -2,17 +2,17 @@ package imglib.ops.operator.unary;
 
 import imglib.ops.operator.UnaryOperator;
 
-public class OrConstant implements UnaryOperator
+public final class OrConstant implements UnaryOperator
 {
-	private long constant;
+	private final long constant;
 	
-	public OrConstant(long constant)
+	public OrConstant(final long constant)
 	{
 		this.constant = constant;
 	}
 	
 	@Override
-	public double computeValue(double input)
+	public double computeValue(final double input)
 	{
 		return ((long)input) | constant;
 	}

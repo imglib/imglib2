@@ -7,12 +7,12 @@ import mpicbg.imglib.type.numeric.RealType;
 
 public class PixelOnBorder<T extends RealType<T>> implements Condition<T>
 {
-	private double borderValue;
-	private int[] imageDims;;
-	private int[] neighPos;
-	private LocalizableByDimCursor<T> neighCursor;
+	private final double borderValue;
+	private final int[] imageDims;
+	private final int[] neighPos;
+	private final LocalizableByDimCursor<T> neighCursor;
 	
-	public PixelOnBorder(Image<T> image, double borderValue)
+	public PixelOnBorder(final Image<T> image, final double borderValue)
 	{
 		this.borderValue = borderValue;
 		this.imageDims = image.getDimensions();
@@ -21,7 +21,7 @@ public class PixelOnBorder<T extends RealType<T>> implements Condition<T>
 	}
 	
 	@Override
-	public boolean isSatisfied(LocalizableCursor<T> cursor, int[] position)
+	public boolean isSatisfied(final LocalizableCursor<T> cursor, final int[] position)
 	{
 		double currPixValue = cursor.getType().getRealDouble();
 		

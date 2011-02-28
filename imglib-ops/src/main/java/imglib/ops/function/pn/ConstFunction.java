@@ -5,21 +5,21 @@ import mpicbg.imglib.type.numeric.RealType;
 
 public class ConstFunction<T extends RealType<T>> implements RealFunction<T>
 {
-	final double value;
+	private final double value;
 	
-	public ConstFunction(double value)
+	public ConstFunction(final double value)
 	{
 		this.value = value;
 	}
 	
 	@Override
-	public boolean canAccept(int numParameters)
+	public boolean canAccept(final int numParameters)
 	{
 		return numParameters >= 0;
 	}
 
 	@Override
-	public void compute(T[] inputs, T output)
+	public void compute(final T[] inputs, final T output)
 	{
 		output.setReal(value);
 	}

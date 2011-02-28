@@ -2,5 +2,5 @@ package imglib.ops.operator;
 
 public interface UnaryOperator
 {
-	double computeValue(double input);
+	double computeValue(final double input);
 }

@@ -5,15 +5,15 @@ import mpicbg.imglib.type.numeric.RealType;
 
 public class Not<T extends RealType<T>> implements Condition<T>
 {
-	private Condition<T> condition;
+	private final Condition<T> condition;
 	
-	public Not(Condition<T> condition)
+	public Not(final Condition<T> condition)
 	{
 		this.condition = condition;
 	}
 	
 	@Override
-	public boolean isSatisfied(LocalizableCursor<T> cursor, int[] position)
+	public boolean isSatisfied(final LocalizableCursor<T> cursor, final int[] position)
 	{
 		return ! condition.isSatisfied(cursor, position); 
 	}

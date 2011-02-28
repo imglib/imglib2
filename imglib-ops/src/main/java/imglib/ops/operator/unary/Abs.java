@@ -2,10 +2,10 @@ package imglib.ops.operator.unary;
 
 import imglib.ops.operator.UnaryOperator;
 
-public class Abs implements UnaryOperator
+public final class Abs implements UnaryOperator
 {
 	@Override
-	public double computeValue(double input)
+	public double computeValue(final double input)
 	{
 		return Math.abs(input);
 	}

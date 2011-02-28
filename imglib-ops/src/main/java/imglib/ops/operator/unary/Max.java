@@ -2,17 +2,17 @@ package imglib.ops.operator.unary;
 
 import imglib.ops.operator.UnaryOperator;
 
-public class Max implements UnaryOperator
+public final class Max implements UnaryOperator
 {
-	private double constant;
+	private final double constant;
 	
-	public Max(double constant)
+	public Max(final double constant)
 	{
 		this.constant = constant;
 	}
 	
 	@Override
-	public double computeValue(double input)
+	public double computeValue(final double input)
 	{
 		if (input > constant)
 			return constant;

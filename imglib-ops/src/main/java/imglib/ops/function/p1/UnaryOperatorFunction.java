@@ -6,18 +6,18 @@ import mpicbg.imglib.type.numeric.RealType;
 
 public class UnaryOperatorFunction<T extends RealType<T>> implements RealFunction<T>
 {
-	private UnaryOperator op;
+	private final UnaryOperator op;
 	
-	public UnaryOperatorFunction(UnaryOperator op)
+	public UnaryOperatorFunction(final UnaryOperator op)
 	{
 		this.op = op;
 	}
 	
 	@Override
-	public boolean canAccept(int numParameters) { return numParameters == 1; }
+	public boolean canAccept(final int numParameters) { return numParameters == 1; }
 
 	@Override
-	public void compute(T[] inputs, T output)
+	public void compute(final T[] inputs, final T output)
 	{
 		double inValue = inputs[0].getRealDouble();
 		double outValue = op.computeValue(inValue);
