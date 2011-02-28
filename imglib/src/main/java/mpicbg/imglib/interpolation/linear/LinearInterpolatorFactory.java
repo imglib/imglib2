@@ -27,50 +27,43 @@
  */
 package mpicbg.imglib.interpolation.linear;
 
-import mpicbg.imglib.img.Img;
+import mpicbg.imglib.RandomAccessible;
 import mpicbg.imglib.interpolation.Interpolator;
 import mpicbg.imglib.interpolation.InterpolatorFactory;
-import mpicbg.imglib.outofbounds.RasterOutOfBoundsFactory;
 import mpicbg.imglib.type.numeric.NumericType;
-import mpicbg.imglib.type.numeric.RealType;
 
 /**
  * 
  * @param <T>
  *
- * @author Stephan Preibisch and Stephan Saalfeld
+ * @author Tobias Pietzsch, Stephan Preibisch and Stephan Saalfeld
  */
-public class LinearInterpolatorFactory< T extends NumericType< T > > extends InterpolatorFactory< T >
+public class LinearInterpolatorFactory< T extends NumericType< T > > implements InterpolatorFactory< T, RandomAccessible< T > >
 {
-	public LinearInterpolatorFactory( final RasterOutOfBoundsFactory< T > outOfBoundsStrategyFactory )
-	{
-		super( outOfBoundsStrategyFactory );
-	}
-	
 	@Override
-	public Interpolator< T > createSampler( final Img< T > img )
+	public LinearInterpolator< T > create( RandomAccessible< T > function )
 	{
-		if ( img.numDimensions() == 1 )
+		/*
+		if ( function.numDimensions() == 1 )
 		{
-			return new LinearInterpolator1D< T >( img, outOfBoundsStrategyFactory );
+			return new LinearInterpolator1D< T >( function );
 		}
-		else if ( img.numDimensions() == 2 )
+		else if ( function.numDimensions() == 2 )
 		{
-			return new LinearInterpolator2D< T >( img, outOfBoundsStrategyFactory );
+			return new LinearInterpolator2D< T >( function );
 		}
-		else if ( img.numDimensions() == 3 )
+		else if ( function.numDimensions() == 3 )
 		{
-			if ( RealType.class.isInstance( img.createType() ) )
+			if ( RealType.class.isInstance( function.createType() ) )
 			{
-				return new LinearInterpolator3D< T >( img, outOfBoundsStrategyFactory ); 
-				//LinearInterpolator3DRealType( img, outOfBoundsStrategyFactory );
+				return new LinearInterpolator3D< T >( function ); 
+				//LinearInterpolator3DRealType( function );
 			}
 			else
-				return new LinearInterpolator3D< T >( img, outOfBoundsStrategyFactory );
+				return new LinearInterpolator3D< T >( function );
 		}
 		else
-		{
-			return new LinearInterpolator< T >( img, outOfBoundsStrategyFactory );
-		}
+		*/
+		return new LinearInterpolator< T >( function );
 	}
 }

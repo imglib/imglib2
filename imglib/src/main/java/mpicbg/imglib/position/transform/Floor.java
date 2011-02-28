@@ -45,7 +45,7 @@ public class Floor< LocalizablePositionable extends Localizable & Positionable >
 {
 	final protected LocalizablePositionable target;
 	
-	final private int n;
+	final protected int n;
 	
 	/* current position, required for relative movement */
 	final protected double[] position;

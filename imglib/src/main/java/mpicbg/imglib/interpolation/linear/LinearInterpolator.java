@@ -29,15 +29,10 @@ package mpicbg.imglib.interpolation.linear;
 
 import mpicbg.imglib.RandomAccess;
 import mpicbg.imglib.RandomAccessible;
-import mpicbg.imglib.img.Img;
-import mpicbg.imglib.img.ImgRandomAccess;
 import mpicbg.imglib.interpolation.Interpolator;
-import mpicbg.imglib.location.transform.Floor;
-import mpicbg.imglib.location.transform.Round;
-import mpicbg.imglib.outofbounds.OutOfBoundsFactory;
-import mpicbg.imglib.type.Type;
+import mpicbg.imglib.position.transform.Floor;
 import mpicbg.imglib.type.numeric.NumericType;
-import mpicbg.imglib.util.Util;
+import mpicbg.imglib.util.IntervalIndexer;
 
 /**
  * 
@@ -47,260 +42,221 @@ import mpicbg.imglib.util.Util;
  */
 public class LinearInterpolator< T extends NumericType< T > > extends Floor< RandomAccess< T > > implements Interpolator< T, RandomAccessible< T > >
 {
-	final protected Img< T > image;
-	final protected int numDimensions;
-	
-	final protected T tmp1, tmp2;
-	
-	// the weights and inverse weights in each dimension
-	final float[][] weights;
-	
-	// to save the temporary values in each dimension when computing the final value
-	// the value in [ 0 ][ 0 ] will be the interpolated value
-	final T[][] tree;
-	
-	// the half size of the second array in each tree step - speedup
-	final int[] halfTreeLevelSizes;
-		
-	// the locations where to initially grab pixels from
-	final boolean[][] positions;
-	
-	final static private < T extends Type< T > > ImgRandomAccess< T > createSampler( final Img< T > image, final RasterOutOfBoundsFactory<T> outOfBoundsStrategyFactory )
+	final protected RandomAccessible< T > randomAccessible;
+
+	/**
+	 * Index into {@link weights} array.
+	 * 
+	 * <p>
+	 * To visit the pixels that contribute to an interpolated value, we move in
+	 * a (binary-reflected) Gray code pattern, such that only one dimension of
+	 * the target position is modified per move.
+	 * 
+	 * <p>
+	 * This index is the corresponding gray code bit pattern which will select
+	 * the correct corresponding weight.
+	 * 
+	 * <p>
+	 * {@see http://en.wikipedia.org/wiki/Gray_code}
+	 */
+	protected int code;
+
+	/**
+	 *  Weights for each pixel of the <em>2x2x...x2</em> hypercube
+	 *  of pixels participating in the interpolation.
+	 *  
+	 *  Indices into this array are arranged in the standard iteration
+	 *  order (as provided by {@link IntervalIndexer#positionToIndex}).
+	 *  Element 0 refers to position <em>(0,0,...,0)</em>,
+	 *  element 1 refers to position <em>(1,0,...,0)</em>,
+	 *  element 2 refers to position <em>(0,1,...,0)</em>, etc.
+	 */
+	final protected double[] weights;
+
+	final protected T accumulator;
+
+	final protected T tmp;
+
+	protected LinearInterpolator( final RandomAccessible< T > randomAccessible, final T type )
 	{
-		return image.createPositionableRasterSampler( outOfBoundsStrategyFactory );
+		super( randomAccessible.randomAccess() );
+		this.randomAccessible = randomAccessible;
+		weights = new double [ 1 << n ];		
+		code = 0;
+		accumulator = type.createVariable();
+		tmp = type.createVariable();
+	}
+
+	protected LinearInterpolator( final RandomAccessible< T > randomAccessible )
+	{
+		this( randomAccessible, randomAccessible.randomAccess().get() );
+	}
+
+	/**
+	 * Returns the {@link RandomAccessible} the interpolator is working on
+	 * 
+	 * @return - the {@link RandomAccessible}
+	 */
+	@Override
+	public RandomAccessible< T > getFunction()
+	{
+		return randomAccessible;
 	}
 	
-	protected LinearInterpolator( final Img<T> image )
+	/**
+	 * Fill the {@link weights} array.
+	 * 
+	 * <p>
+	 * Let <em>w_d</em> denote the fraction of a pixel at which the sample
+	 * position <em>p_d</em> lies from the floored position <em>pf_d</em> in
+	 * dimension <em>d</em>. That is, the value at <em>pf_d</em> contributes
+	 * with <em>(1 - w_d)</em> to the sampled value; the value at
+	 * <em>( pf_d + 1 )</em> contributes with <em>w_d</em>.
+	 * 
+	 * <p>
+	 * At every pixel, the total weight results from multiplying the weights of
+	 * all dimensions for that pixel. That is, the "top-left" contributing pixel
+	 * (position floored in all dimensions) gets assigned weight
+	 * <em>(1-w_0)(1-w_1)...(1-w_n)</em>.
+	 * 
+	 * <p>
+	 * We work through the weights array starting from the highest dimension.
+	 * For the highest dimension, the first half of the weights contain the
+	 * factor <em>(1 - w_n)</em> because this first half corresponds to floored
+	 * pixel positions in the highest dimension. The second half contain the
+	 * factor <em>w_n</em>. In this first step, the first weight of the first
+	 * half gets assigned <em>(1 - w_n)</em>. The first element of the second
+	 * half gets assigned <em>w_n</em>
+	 * 
+	 * <p>
+	 * From their, we work recursively down to dimension 0. That is, each half
+	 * of weights is again split recursively into two partitions. The first
+	 * element of the second partitions is the first element of the half
+	 * multiplied with <em>(w_d)</em>. The first element of the first partitions
+	 * is multiplied with <em>(1 - w_d)</em>.
+	 * 
+	 * <p>
+	 * When we have reached dimension 0, all weights will have a value assigned.
+	 */
+	protected void fillWeights()
 	{
-		this( image, outOfBoundsStrategyFactory, true );
-	}
-	
-	protected LinearInterpolator( final Img<T> image, final RasterOutOfBoundsFactory<T> outOfBoundsStrategyFactory, boolean initGenericStructures )
-	{
-		super( createSampler( image, outOfBoundsStrategyFactory ) );
-		
-		this.outOfBoundsStrategyFactory = outOfBoundsStrategyFactory;
-		this.image = image;
-		
-		numDimensions = image.numDimensions();
-		
-		// Principle of interpolation used
-		//
-		// example: 3d
-		//
-		// STEP 1 - Interpolate in dimension 0 (x)
-		//
-		//   ^
-		// y |
-		//   |        _
-		//   |        /|     [6]     [7]
-		//   |     z /        *<----->*       
-  		//   |      /        /       /|
-		//   |     /    [2] /   [3] / |    
-		//   |    /        *<----->*  * [5]
-		//   |   /         |       | /
-		//   |  /          |       |/
-		//   | /           *<----->*
-		//   |/           [0]     [1]
-		//   *--------------------------> 
-		//                             x
-		//
-		// STEP 2 - Interpolate in dimension 1 (y)
-		//
-		//   [2][3]   [6][7]
-		//      *-------*
-		//      |       |
-		//      |       |       
-		//      |       |
-		//      *-------*
-		//   [0][1]   [4][5]
-		//
-		//     [2]     [3]
-		//      *<----->*
-		//      |       |
-		//      |       |       
-		//      |       |
-		//      *<----->*
-		//     [0]     [1]
-		//
-		// STEP 3 - Interpolate in dimension 1 (z)
-		//
-		//   [2][3]  
-		//      *    
-		//      |     
-		//      |      
-		//      |    
-		//      *    
-		//   [0][1]  
-		//
-		//     [0]     [1]
-		//      *<----->*
-		//
-		// yiels the interpolated value in 3 dimensions
-		
-		tmp1 = image.createType();
-		tmp2 = image.createType();
+		weights[ 0 ] = 1.0d;
 
-		weights = new float[ numDimensions ][ 2 ];
-
-		if ( initGenericStructures )
-		{		
-			// create the temporary datastructure for computing the actual interpolation
-			//
-			// example: 3d-image
-			//
-			// 3d: get values from image and interpolate in dimension 0
-			//     see above and below which coordinates are [0]...[7]
-			//
-			//              [0] [1] [2] [3] [4] [5] [6] [7]
-			// interp in 3d  |   |   |   |   |   |   |   |
-			// store in 2d:  \   /   \   /   \   /   \   /
-			//                [0]     [1]     [2]     [3] 
-			// interp in 2d    \       /       \       /
-			// and store in     \     /         \     /
-			// 1d                \   /           \   /
-			//                    [0]             [1]
-			// interpolate in 1d   \               /       
-			// and store            \             / 
-			// the final             \           /
-			// result                 \         /
-			//                         \       / 
-			//                          \     / 
-			//                           \   /
-			//  final interpolated value  [0]
-	
-			tree = tmp1.createArray2D( numDimensions + 1, 1 );
-			halfTreeLevelSizes = new int[ numDimensions + 1 ];
-			
-			for ( int d = 0; d < tree.length; d++ )
+		for ( int d = n - 1; d >= 0; --d )
+		{
+			final double w    = position[ d ] - target.getLongPosition( d );
+			final double wInv = 1.0d - w;
+			final int wInvIndexIncrement = 1 << d;
+			final int loopCount = 1 << ( n - 1 - d );
+			final int baseIndexIncrement = wInvIndexIncrement * 2;
+			int baseIndex = 0;
+			for (int i = 0; i < loopCount; ++i )
 			{
-				tree[ d ] = tmp1.createArray1D( Util.pow( 2, d ));
-				
-				for ( int i = 0; i < tree[ d ].length; i++ )
-					tree[ d ][ i ] = image.createType();
-	
-				halfTreeLevelSizes[ d ] = tree[ d ].length / 2;
+				weights[ baseIndex + wInvIndexIncrement ] = weights[ baseIndex ] * w;
+				weights[ baseIndex ] *= wInv;
+				baseIndex += baseIndexIncrement;
 			}
-						
-			// recursively get the coordinates we need for interpolation
-			// ( relative location to the offset in each dimension )
-			//
-			// example for 3d:
-			//
-			//  x y z index
-			//  0 0 0 [0]
-			//  1 0 0 [1] 
-			//  0 1 0 [2]
-			//  1 1 0 [3] 
-			// 	0 0 1 [4] 
-			// 	1 0 1 [5] 
-			// 	0 1 1 [6] 
-			// 	1 1 1 [7] 
-			
-			positions = new boolean[ Util.pow( 2, numDimensions ) ][ numDimensions ];
-			Util.setCoordinateRecursive( numDimensions() - 1, numDimensions, new int[ numDimensions ], positions );
+		}
+//		printWeights();
+//		System.out.println();
+	}
+	
+	/**
+	 * Get the interpolated value at the current position.
+	 * 
+	 * <p>
+	 * To visit the pixels that contribute to an interpolated value, we move in
+	 * a (binary-reflected) Gray code pattern, such that only one dimension of
+	 * the target position is modified per move.
+	 * 
+	 * <p>
+	 * {@see http://en.wikipedia.org/wiki/Gray_code}
+	 */
+	public T get()
+	{
+		fillWeights();
+
+		accumulator.setZero();
+		accumulate();
+		graycodeFwdRecursive( n - 1 );
+
+		target.bck( n - 1 );
+		code = 0;
+		
+		return accumulator;
+	}
+
+	private void graycodeFwdRecursive ( int dimension )
+	{
+		if ( dimension == 0 )
+		{
+			target.fwd ( 0 );
+			code += 1;
+			accumulate();
 		}
 		else
 		{
-			tree = null;
-			positions = null;
-			halfTreeLevelSizes = null;
+			graycodeFwdRecursive ( dimension - 1 );
+			target.fwd ( dimension );
+			code += 1 << dimension;
+			accumulate();
+			graycodeBckRecursive ( dimension - 1 );
 		}
 	}
-	
 
-	/* Dimensionality */
-	
-	@Override
-	final public int numDimensions()
+	private void graycodeBckRecursive ( int dimension )
 	{
-		return numDimensions;
+		if ( dimension == 0 )
+		{
+			target.bck ( 0 );
+			code -= 1;
+			accumulate();
+	}
+		else
+		{
+			graycodeFwdRecursive ( dimension - 1 );
+			target.bck ( dimension );
+			code -= 1 << dimension;
+			accumulate();
+			graycodeBckRecursive ( dimension - 1 );
+		}
 	}
 
 	/**
-	 * Returns the {@link RasterOutOfBoundsFactory} used for interpolation
-	 * 
-	 * @return - the {@link RasterOutOfBoundsFactory}
+	 * multiply current target value with current weight and add to accumulator.
 	 */
-	@Override
-	public RasterOutOfBoundsFactory< T > getOutOfBoundsStrategyFactory()
+	private void accumulate()
 	{
-		return outOfBoundsStrategyFactory;
+		tmp.set( target.get() );
+		tmp.mul( weights[ code ] );
+		accumulator.add( tmp );
+//		System.out.print( "accumulating value at " + target );
+//		System.out.print( "with weights [" );
+//		printCode();
+//		System.out.printf( "] = %f" + "\n", weights[ code ] );
 	}
 
-	/**
-	 * Returns the typed image the interpolator is working on
-	 * 
-	 * @return - the image
-	 */
-	@Override
-	public Img< T > getImage()
+	@SuppressWarnings( "unused" )
+	private void printWeights()
 	{
-		return image;
+		for ( int i = 0; i < weights.length; ++i )
+			System.out.printf("weights [ %2d ] = %f\n", i, weights[ i ] );
 	}
 	
-	
-	@Override
-	public void close() { target.close(); }
-
-	@Override
-	public T get()
+	@SuppressWarnings( "unused" )
+	private void printCode()
 	{
-		/* calculate weights [0...1] and their inverse (1-weight) [1...0] in each dimension */
-		for (int d = 0; d < numDimensions; d++)
-		{
-			final float w = position[ d ] - target.getIntPosition( d );
-			weights[ d ][ 1 ] = w;
-			weights[ d ][ 0 ] = 1 - w;
-		}
-		
-		/* the values from the image */
-		
-		for ( int i = 0; i < positions.length; ++i )
-		{
-			for ( int d = 0; d < numDimensions; ++d )
-				if ( positions[ i ][ d ] )
-					target.fwd( d );
-
-			tree[ numDimensions ][ i ].set( target.get() );
-			
-			// move back to the offset position
-			for ( int d = 0; d < numDimensions; ++d )
-				if ( positions[ i ][ d ] )
-					target.bck(d);
-		}
-		
-		/* interpolate down the tree as shown above */
-		for ( int d = numDimensions; d > 0; --d )
-		{
-			for ( int i = 0; i < halfTreeLevelSizes[ d ]; i++ )
-			{
-				tmp1.set( tree[ d ][ i*2 ] );
-				tmp2.set( tree[ d ][ i*2+1 ] );
-				
-				tmp1.mul( weights[ numDimensions - d ][ 0 ] );
-				tmp2.mul( weights[ numDimensions - d ][ 1 ] );
-				
-				tmp1.add( tmp2 );
-				
-				tree[ d - 1 ][ i ].set( tmp1 );
-			}
-		}
-		
-		return tree[ 0 ][ 0 ];
+		final int maxbits = 4;
+		String binary = Integer.toBinaryString( code );
+		for ( int i = binary.length(); i < maxbits; ++i )
+			System.out.print("0");
+		System.out.print ( binary );
 	}
-	
+
 	@Override
 	@Deprecated
 	final public T getType()
 	{
 		return get();
-	}
-
-	@Override
-	public RandomAccessible< T > getFunction()
-	{
-		// TODO Auto-generated method stub
-		return null;
 	}
 }
