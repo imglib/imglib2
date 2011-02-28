@@ -24,15 +24,16 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- *
- * @author Stephan Preibisch & Stephan Saalfeld
  */
 package mpicbg.imglib.interpolation;
 
-import mpicbg.imglib.SamplerFactory;
-
-public interface InterpolatorFactory< T, F > extends SamplerFactory< T, Interpolator< T, F >, F >
+/**
+ * @author Tobias Pietzsch, Stephan Preibisch & Stephan Saalfeld
+ *
+ * @param <T> Type of values provided by the interpolator.
+ * @param <F> Type of function, which the interpolator operates on. 
+ */
+public interface InterpolatorFactory< T, F >
 {	
-	@Override
 	public Interpolator< T, F > create( final F function );
 }

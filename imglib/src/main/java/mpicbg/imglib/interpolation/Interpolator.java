@@ -32,8 +32,8 @@ import mpicbg.imglib.RealRandomAccess;
 /**
  * @author Tobias Pietzsch, Stephan Saalfeld <saalfeld@mpi-cbg.de>
  *
- * @param <T>
- * @param <F>
+ * @param <T> Type of values provided by the interpolator.
+ * @param <F> Type of function, which the interpolator operates on. 
  */
 public interface Interpolator< T, F > extends RealRandomAccess< T >
 {
