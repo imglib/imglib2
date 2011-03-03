@@ -72,7 +72,7 @@ public abstract class AbstractImgOutOfBoundsRandomAccess< T > extends AbstractIm
 	final public T get(){ return outOfBounds.get(); }
 	
 	
-	/* RasterLocalizable */
+	/* Localizable */
 	
 	@Override
 	final public void localize( final int[] position ){ outOfBounds.localize( position ); }
@@ -87,7 +87,7 @@ public abstract class AbstractImgOutOfBoundsRandomAccess< T > extends AbstractIm
 	final public long getLongPosition( final int dim ){ return outOfBounds.getLongPosition( dim ); }
 	
 	
-	/* Localizable */
+	/* RealLocalizable */
 	
 	@Override
 	final public void localize( final float[] position ){ outOfBounds.localize( position ); }
@@ -101,11 +101,8 @@ public abstract class AbstractImgOutOfBoundsRandomAccess< T > extends AbstractIm
 	@Override
 	final public float  getFloatPosition( final int dim ){ return outOfBounds.getFloatPosition( dim ); }
 	
-	@Override
-	public String toString() { return outOfBounds.toString() + " = " + get(); }
 	
-	
-	/* RasterPositionable */
+	/* Positionable */
 	
 	@Override
 	final public void fwd( final int dim )
@@ -178,4 +175,7 @@ public abstract class AbstractImgOutOfBoundsRandomAccess< T > extends AbstractIm
 	{
 		outOfBounds.setPosition( position );
 	}
+
+	@Override
+	public String toString() { return outOfBounds.toString() + " = " + get(); }
 }

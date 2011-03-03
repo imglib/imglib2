@@ -33,7 +33,7 @@ import mpicbg.imglib.util.Util;
 
 /**
  * Abstract base class for localizable ImgSamplers.
- * The current position is stored in a int[] field and used to
+ * The current position is stored in an int[] field and used to
  * implement the {@link Localizable} interface.
  * This is identical to {@link AbstractLocalizableImgSampler}, except that
  * the position is limited to {@link Integer.MAX_VALUE} in every dimension.
@@ -44,17 +44,18 @@ import mpicbg.imglib.util.Util;
  */
 public abstract class AbstractLocalizableImgSamplerInt< T > extends AbstractImgSampler< T > implements Localizable
 {
+	/**
+	 * The {@link Localizable} interface is implemented using the position
+	 * stored here. Subclasses use this array to keep track of the position of
+	 * the {@link ImgSampler}.
+	 */
 	final protected int[] position;
-	final protected int[] dimension;
 	
 	public AbstractLocalizableImgSamplerInt( final Interval f )
 	{
 		super( f.numDimensions() );
 		
 		position = new int[ n ];
-		dimension = new int[ n ];
-		for ( int d = 0; d < n; ++d )
-			dimension[ d ] = ( int ) f.dimension( d );
 	}
 	
 	@Override

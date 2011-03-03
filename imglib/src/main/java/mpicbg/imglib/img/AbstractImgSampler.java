@@ -27,16 +27,22 @@
  */
 package mpicbg.imglib.img;
 
-import mpicbg.imglib.type.Type;
+import mpicbg.imglib.EuclideanSpace;
 
 /**
+ * Superclass of the abstract Img accessor implementations.
+ * Does nothing but store the number {@link n} of dimensions of the
+ * underlying img.
  * 
- * @author Stephan Preibisch and Stephan Saalfeld
+ * @author Tobias Pietzsch, Stephan Preibisch and Stephan Saalfeld
  *
- * @param < T > the {@link Type} to be returned by {@link #get()}
+ * @param < T > the type to be returned by {@link #get()}
  */
-public abstract class AbstractImgSampler< T > implements ImgSampler< T >
+public abstract class AbstractImgSampler< T > implements ImgSampler< T >, EuclideanSpace
 {
+	/**
+	 * the number of dimensions in the {@link Img}.
+	 */
 	final protected int n;
 	
 	public AbstractImgSampler( final int n )
@@ -45,69 +51,12 @@ public abstract class AbstractImgSampler< T > implements ImgSampler< T >
 	}
 
 	@Override
-	@Deprecated
-	final public T getType() { return get(); }
+	public int numDimensions()
+	{
+		return n;
+	}
 	
 	@Override
-	public int numDimensions(){ return n; }
-
-	@Override
-	public long max( final int d )
-	{
-		return getImg().max( d );
-	}
-
-	@Override
-	public void max( long[] max )
-	{
-		getImg().max( max );		
-	}
-
-	@Override
-	public long min( int d )
-	{
-		return getImg().min( d );
-	}
-
-	@Override
-	public void min( long[] min )
-	{
-		getImg().min( min );
-	}
-
-	@Override
-	public void dimensions( long[] size )
-	{
-		getImg().dimensions( size );
-	}
-
-	@Override
-	public long dimension( int d )
-	{
-		return getImg().dimension( d );
-	}
-
-	@Override
-	public double realMax( int d )
-	{
-		return getImg().realMax( d );
-	}
-
-	@Override
-	public void realMax( double[] max )
-	{
-		getImg().realMax( max );
-	}
-
-	@Override
-	public double realMin( int d )
-	{
-		return getImg().realMin( d );
-	}
-
-	@Override
-	public void realMin( double[] min )
-	{
-		getImg().realMin( min );	
-	}
+	@Deprecated
+	final public T getType() { return get(); }
 }

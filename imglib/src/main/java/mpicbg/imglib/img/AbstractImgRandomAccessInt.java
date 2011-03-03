@@ -38,14 +38,25 @@ import mpicbg.imglib.Localizable;
  */
 public abstract class AbstractImgRandomAccessInt< T > extends AbstractLocalizableImgSamplerInt< T > implements ImgRandomAccess< T >
 {
-	/* internal register for position calculation */
+	/**
+	 * Internal register for position calculation
+	 */
 	final protected int[] tmp;
+
+	/**
+	 * Maximum of the {@link Img} in every dimension.
+	 * This is used to check isOutOfBounds().
+	 */
+	final protected int[] max;
 
 	public AbstractImgRandomAccessInt( final Interval f )
 	{
 		super( f );
 
-		this.tmp = new int[ n ];
+		tmp = new int[ n ];
+		max = new int[ n ];
+		for( int d = 0; d < n; ++d )
+			max[ d ] = ( int ) f.max( d );
 	}
 
 	@Override
@@ -53,8 +64,8 @@ public abstract class AbstractImgRandomAccessInt< T > extends AbstractLocalizabl
 	{
 		for ( int d = 0; d < n; ++d )
 		{
-			final long x = position[ d ];
-			if ( x < 0 || x >= dimension[ d ] )
+			final int x = position[ d ];
+			if ( x < 0 || x > max[ d ] )
 				return true;
 		}
 		return false;

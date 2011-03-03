@@ -41,18 +41,22 @@ import mpicbg.imglib.util.Util;
  * the abstract long variant.  For particular cursors, this may be implemented more
  * efficiently saving at least one loop over <em>n</em>. 
  * 
- * @author Stephan Preibisch and Stephan Saalfeld
+ * @author Tobias Pietzsch, Stephan Preibisch and Stephan Saalfeld
  * 
  * @param <T>
  */
 public abstract class AbstractImgCursor< T > extends AbstractImgSampler< T > implements ImgCursor< T >
 {
-	final private long[] position;
+	/**
+	 * used internally to forward all localize() versions to the (abstract)
+	 * long[] version.
+	 */
+	final private long[] tmp;
 	
 	public AbstractImgCursor( final int n )
 	{
 		super( n );
-		position = new long[ n ];
+		tmp = new long[ n ];
 	}
 
 	@Override
@@ -79,30 +83,28 @@ public abstract class AbstractImgCursor< T > extends AbstractImgSampler< T > imp
 			fwd();
 	}
 
-	/* RasterLocalizable */
-
 	@Override
 	public void localize( float[] pos )
 	{
-		localize( this.position );
+		localize( this.tmp );
 		for ( int d = 0; d < n; d++ )
-			pos[ d ] = this.position[ d ];
+			pos[ d ] = this.tmp[ d ];
 	}
 
 	@Override
 	public void localize( double[] pos )
 	{
-		localize( this.position );
+		localize( this.tmp );
 		for ( int d = 0; d < n; d++ )
-			pos[ d ] = this.position[ d ];
+			pos[ d ] = this.tmp[ d ];
 	}
 
 	@Override
 	public void localize( int[] pos )
 	{
-		localize( this.position );
+		localize( this.tmp );
 		for ( int d = 0; d < n; d++ )
-			pos[ d ] = ( int )this.position[ d ];
+			pos[ d ] = ( int )this.tmp[ d ];
 	}
 
 	@Override

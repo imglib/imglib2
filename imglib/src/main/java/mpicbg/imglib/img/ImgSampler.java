@@ -27,20 +27,17 @@
  */
 package mpicbg.imglib.img;
 
-import mpicbg.imglib.EuclideanSpace;
-import mpicbg.imglib.Interval;
 import mpicbg.imglib.Sampler;
-import mpicbg.imglib.type.Type;
 
 /**
  * {@link ImgSampler} is a {@link Sampler} that works on an {@link Img} and has
  * access to that {@link Img}.
  * 
- * @param <T> the {@link Type} of pixels in the {@link Img}
+ * @param <T> the type of pixels in the {@link Img}
  * 
  * @author Stephan Preibisch & Stephan Saalfeld
  */
-public interface ImgSampler< T > extends Sampler< T >, EuclideanSpace, Interval
+public interface ImgSampler< T > extends Sampler< T >
 {	
 	public Img< T > getImg();
 }

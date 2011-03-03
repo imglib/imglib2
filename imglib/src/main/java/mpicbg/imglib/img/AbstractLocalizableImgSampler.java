@@ -42,16 +42,18 @@ import mpicbg.imglib.util.Util;
  */
 public abstract class AbstractLocalizableImgSampler< T > extends AbstractImgSampler< T > implements Localizable
 {
+	/**
+	 * The {@link Localizable} interface is implemented using the position
+	 * stored here. Subclasses use this array to keep track of the position of
+	 * the {@link ImgSampler}.
+	 */
 	final protected long[] position;
-	final protected long[] dimension;
 	
 	public AbstractLocalizableImgSampler( final Interval f )
 	{
 		super( f.numDimensions() );
-		
+
 		position = new long[ n ];
-		dimension = new long[ n ];
-		f.dimensions( dimension );
 	}
 	
 	@Override
