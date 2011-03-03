@@ -40,7 +40,6 @@ import mpicbg.imglib.type.NativeType;
 public class ArrayRandomAccess< T extends NativeType< T > > extends AbstractImgRandomAccessInt< T >
 {
 	protected final T type;
-	final protected int[] steps, dimensions;
 	final ArrayImg< T, ? > container;
 	
 	public ArrayRandomAccess( final ArrayImg< T, ? > container ) 
@@ -49,9 +48,6 @@ public class ArrayRandomAccess< T extends NativeType< T > > extends AbstractImgR
 		
 		this.container = container;
 		this.type = container.createLinkedType();
-		
-		dimensions = container.dim;
-		steps = container.steps;
 		
 		for ( int d = 0; d < n; d++ )
 			position[ d ] = 0;
@@ -69,28 +65,28 @@ public class ArrayRandomAccess< T extends NativeType< T > > extends AbstractImgR
 	@Override
 	public void fwd( final int dim )
 	{
-		type.incIndex( steps[ dim ] );
+		type.incIndex( container.steps[ dim ] );
 		++position[ dim ];
 	}
 
 	@Override
 	public void bck( final int dim )
 	{
-		type.decIndex( steps[ dim ] );
+		type.decIndex( container.steps[ dim ] );
 		--position[ dim ];
 	}
 
 	@Override
 	public void move( final int distance, final int dim )
 	{
-		type.incIndex( steps[ dim ] * distance );
+		type.incIndex( container.steps[ dim ] * distance );
 		position[ dim ] += distance;
 	}
 	
 	@Override
 	public void move( final long distance, final int dim )
 	{
-		type.incIndex( steps[ dim ] * ( int )distance );
+		type.incIndex( container.steps[ dim ] * ( int )distance );
 		position[ dim ] += distance;
 	}
 
@@ -108,7 +104,7 @@ public class ArrayRandomAccess< T extends NativeType< T > > extends AbstractImgR
 		{
 			if ( pos[ d ] != position[ d ] )
 			{
-				type.incIndex( ( pos[ d ] - position[ d ] ) * steps[ d ] );
+				type.incIndex( ( pos[ d ] - position[ d ] ) * container.steps[ d ] );
 				position[ d ] = pos[ d ];
 			}
 		}
@@ -121,7 +117,7 @@ public class ArrayRandomAccess< T extends NativeType< T > > extends AbstractImgR
 		{
 			if ( pos[ d ] != position[ d ] )
 			{
-				type.incIndex( ( ( int ) pos[ d ] - position[ d ] ) * steps[ d ] );
+				type.incIndex( ( ( int ) pos[ d ] - position[ d ] ) * container.steps[ d ] );
 				position[ d ] = ( int ) pos[ d ];
 			}
 		}
@@ -130,7 +126,7 @@ public class ArrayRandomAccess< T extends NativeType< T > > extends AbstractImgR
 	@Override
 	public void setPosition( final long pos, final int dim )
 	{
-		type.incIndex( ( ( int ) pos - position[ dim ] ) * steps[ dim ] );
+		type.incIndex( ( ( int ) pos - position[ dim ] ) * container.steps[ dim ] );
 		position[ dim ] = ( int ) pos;
 	}
 
