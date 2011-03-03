@@ -60,7 +60,7 @@ public class PlanarImg< T extends NativeType< T >, A extends ArrayDataAccess<A> 
 	final protected int numSlices;
 
 	/*
-	 * duplicate of size[] as an int array.
+	 * duplicate of long[] dimension as an int array.
 	 */
 	final protected int[] dimensions;
 

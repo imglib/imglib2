@@ -50,7 +50,7 @@ abstract public class AbstractPlanarRandomAccess< T extends NativeType< T > > ex
 		super( container );
 		
 		sliceSteps = container.sliceSteps;
-		width = dimension[ 0 ];
+		width = ( int ) container.dimension( 0 );
 		
 		type = container.createLinkedType();
 		type.updateIndex( 0 );

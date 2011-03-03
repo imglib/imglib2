@@ -50,6 +50,12 @@ abstract public class AbstractPlanarLocalizingCursor< T extends NativeType< T > 
 	 * It is faster to duplicate this here than to access it through type.getIndex(). 
 	 */
 	protected int index;
+
+	/**
+	 * Maximum of the {@link PlanarImg} in every dimension.
+	 * This is used to check isOutOfBounds().
+	 */
+	protected final int[] max;
 	
 	public AbstractPlanarLocalizingCursor( final PlanarImg< T, ? > container )
 	{
@@ -61,6 +67,10 @@ abstract public class AbstractPlanarLocalizingCursor< T extends NativeType< T > 
 		lastIndex = ( ( n > 1 ) ? container.dimensions[ 1 ] : 1 )  *  container.dimensions[ 0 ] - 1;
 		lastSliceIndex = container.numSlices() - 1;
 		
+		max = new int[ n ];
+		for( int d = 0; d < n; ++d )
+			max[ d ] = ( int ) container.max( d );
+
 		reset();
 	}
 
@@ -95,7 +105,7 @@ abstract public class AbstractPlanarLocalizingCursor< T extends NativeType< T > 
 
 		for ( int d = 0; d < n; ++d )
 		{
-			if ( ++position[ d ] >= dimension[ d ] ) position[ d ] = 0;
+			if ( ++position[ d ] > max[ d ] ) position[ d ] = 0;
 			else break;
 		}
 	}

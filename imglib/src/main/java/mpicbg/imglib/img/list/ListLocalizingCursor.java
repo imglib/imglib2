@@ -44,16 +44,24 @@ final public class ListLocalizingCursor< T extends Type< T > > extends AbstractI
 	private int i;
 	final private int maxNumPixels;
 	
-	final private ArrayList< T > pixels;
-	final private ListImg< T > container;
+	final private long[] max;
 	
-	public ListLocalizingCursor(	final ListImg< T > container )
+	final private ArrayList< T > pixels;
+	final private ListImg< T > img;
+	
+	public ListLocalizingCursor( final ListImg< T > img )
 	{
-		super( container );
+		super( img );
 		
-		this.container = container;
-		this.pixels = container.pixels;
-		this.maxNumPixels = ( int )container.size() - 1;
+		this.img = img;
+		this.pixels = img.pixels;
+		this.maxNumPixels = ( int )img.size() - 1;
+
+		this.max = new long[ n ];
+		for ( int d = 0; d < n; ++d )
+		{
+			max[ d ] = img.max( d );
+		}
 	
 		reset();
 	}
@@ -65,7 +73,7 @@ final public class ListLocalizingCursor< T extends Type< T > > extends AbstractI
 		
 		for ( int d = 0; d < n; d++ )
 		{
-			if ( position[ d ] < dimension[ d ] - 1 )
+			if ( position[ d ] < max[ d ] )
 			{
 				position[ d ]++;
 				
@@ -83,19 +91,16 @@ final public class ListLocalizingCursor< T extends Type< T > > extends AbstractI
 	@Override
 	public void reset()
 	{
-		if ( dimension != null )
-		{
-			i = -1;
-			
-			position[ 0 ] = -1;
-			
-			for ( int d = 1; d < n; d++ )
-				position[ d ] = 0;		
-		}
+		i = -1;
+		
+		position[ 0 ] = -1;
+		
+		for ( int d = 1; d < n; d++ )
+			position[ d ] = 0;		
 	}
 
 	@Override
-	public ListImg< T > getImg(){ return container; }
+	public ListImg< T > getImg(){ return img; }
 	
 	@Override
 	public T get() { return pixels.get( i ); }
