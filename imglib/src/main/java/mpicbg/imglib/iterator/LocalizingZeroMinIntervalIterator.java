@@ -28,23 +28,20 @@
 package mpicbg.imglib.iterator;
 
 import mpicbg.imglib.Interval;
-import mpicbg.imglib.Iterator;
 import mpicbg.imglib.Positionable;
-import mpicbg.imglib.img.ImgRandomAccess;
-import mpicbg.imglib.location.AbstractLocalizable;
+import mpicbg.imglib.Sampler;
 import mpicbg.imglib.util.IntervalIndexer;
-import mpicbg.imglib.util.Util;
 
 /**
- * Use this class to iterate a virtual rectangular {@link Interval} whose min
- * coordinates are at 0<sup><em>n</em></sup> in flat
- * order, that is: row by row, plane by plane, cube by cube, ...  This is useful for
- * iterating an arbitrary interval in a defined order.  For that,
- * connect a {@link LocalizingZeroMinIntervalIterator} to a {@link Positionable}.
+ * Use this class to iterate a virtual rectangular {@link Interval} whose
+ * <em>min</em> coordinates are at 0<sup><em>n</em></sup> in flat order, that
+ * is: row by row, plane by plane, cube by cube, ...  This is useful for
+ * iterating an arbitrary interval in a defined order.  For that, connect a
+ * {@link LocalizingZeroMinIntervalIterator} to a {@link Positionable}.
  * 
  * <pre>
  * ...
- * ZeroMinIntervalIterator i = new ZeroMinIntervalIterator(image);
+ * LocalizingZeroMinIntervalIterator i = new LocalizingZeroMinIntervalIterator(image);
  * RandomAccess<T> s = image.randomAccess();
  * while (i.hasNext()) {
  *   i.fwd();
@@ -57,62 +54,24 @@ import mpicbg.imglib.util.Util;
  * 
  * Note that {@link LocalizingZeroMinIntervalIterator} is the right choice in
  * situations where, for <em>each</em> pixel, you want to localize and/or set
- * the {@link ImgRandomAccess}, that is in a dense sampling
+ * the {@link Positionable} [{@link Sampler}], that is in a dense sampling
  * situation.  For localizing sparsely (e.g. under an external condition),
  * use {@link ZeroMinIntervalIterator} instead.
  *  
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-public class LocalizingZeroMinIntervalIterator extends AbstractLocalizable implements Iterator, Interval
+public class LocalizingZeroMinIntervalIterator extends LocalizingIntervalIterator
 {
-	final protected long[] dimensions;
-	final protected long[] max;
-	final long lastIndex;
-	protected long index = -1;
-	
-	final static private long[] maxify( final long[] dimensions )
-	{
-		final long[] max = new long[ dimensions.length ];
-		for ( int d = 0; d < dimensions.length; ++d )
-			max[ d ] = dimensions[ d ] - 1;
-		return max;
-	}
-	
 	public LocalizingZeroMinIntervalIterator( final long[] dimensions )
 	{
-		super( dimensions.length );
-		this.dimensions = dimensions.clone();
-		max = maxify( dimensions );
-		position[ 0 ] = -1;
-
-		final int m = n - 1;
-		long k = 1;
-		for ( int d = 0; d < m; )
-			k *= dimensions[ d ];
-		lastIndex = k * dimensions[ m ] - 1;
-	}
-
-	public LocalizingZeroMinIntervalIterator( final int[] dimensions )
-	{
-		this( Util.int2long( dimensions ) );
-	}
-
-	public LocalizingZeroMinIntervalIterator( final Interval interval )
-	{
-		super( interval.numDimensions() );
-		this.dimensions = Util.intervalDimensions( interval );
-		max = maxify( dimensions );
-		position[ 0 ] = -1;
-
-		final int m = n - 1;
-		long k = 1;
-		for ( int d = 0; d < m; )
-			k *= dimensions[ d ];
-		lastIndex = k * dimensions[ m ] - 1;
+		super( dimensions );
 	}
 	
-
-	public long getIndex() { return index; }
+	public LocalizingZeroMinIntervalIterator( final Interval interval )
+	{
+		super( interval );
+	}
+	
 	
 	/* Iterator */
 
@@ -123,7 +82,7 @@ public class LocalizingZeroMinIntervalIterator extends AbstractLocalizable imple
 
 		for ( int d = 0; d < n; ++d )
 		{
-			if ( ++position[ d ] >= dimensions[ d ] )
+			if ( ++position[ d ] > max[ d ] )
 				position[ d ] = 0;
 			else
 				break;
@@ -131,103 +90,21 @@ public class LocalizingZeroMinIntervalIterator extends AbstractLocalizable imple
 	}
 
 	@Override
-	public void jumpFwd( final long steps )
+	public void jumpFwd( final long i )
 	{
-		index += steps;
+		index += i;
 		IntervalIndexer.indexToPosition( index, dimensions, position );
 	}
-
+	
 	@Override
 	public void reset()
 	{
 		index = -1;
 		position[ 0 ] = -1;
 
-		for ( int d = 1; d < n; d++ )
+		for ( int d = 1; d < n; ++d )
 			position[ d ] = 0;
 	}
 	
-	@Override
-	public boolean hasNext() { return index < lastIndex; }
 	
-	/* EuclideanSpace */
-	
-	@Override
-	final public int numDimensions() { return n; }
-	
-	
-	/* Object */
-	
-	@Override
-	final public String toString()
-	{
-		final int[] l = new int[ dimensions.length ];
-		localize( l );
-		return Util.printCoordinates( l );
-	}
-
-	@Override
-	public long dimension( final int d )
-	{
-		return dimensions[ d ];
-	}
-
-	@Override
-	public void dimensions( final long[] dim )
-	{
-		for ( int d = 0; d < n; ++d )
-			dim[ d ] = dimensions[ d ];
-	}
-
-	@Override
-	public long max( final int d )
-	{
-		return max[ d ];
-	}
-
-	@Override
-	public void max( final long[] m )
-	{
-		for ( int d = 0; d < n; ++d )
-			m[ d ] = max[ d ];
-	}
-
-	@Override
-	public long min( final int d )
-	{
-		return 0;
-	}
-
-	@Override
-	public void min( final long[] min )
-	{
-		for ( int d = 0; d < n; ++d )
-			min[ d ] = 0;
-	}
-
-	@Override
-	public double realMax( final int d )
-	{
-		return max[ d ];
-	}
-
-	@Override
-	public void realMax( final double[] m )
-	{
-		for ( int d = 0; d < n; ++d )
-			m[ d ] = max[ d ];
-	}
-
-	@Override
-	public double realMin( final int d )
-	{
-		return 0;
-	}
-
-	@Override
-	public void realMin( final double[] min )
-	{
-		for ( int d = 0; d < n; ++d )
-			min[ d ] = 0;
-	}
 }

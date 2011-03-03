@@ -28,24 +28,19 @@
 package mpicbg.imglib.iterator;
 
 import mpicbg.imglib.Interval;
-import mpicbg.imglib.Iterator;
-import mpicbg.imglib.Localizable;
 import mpicbg.imglib.Positionable;
 import mpicbg.imglib.img.ImgRandomAccess;
-import mpicbg.imglib.location.AbstractLocalizable;
 import mpicbg.imglib.util.IntervalIndexer;
-import mpicbg.imglib.util.Util;
 
 /**
- * Use this class to iterate a virtual rectangular {@link Interval} whose min
- * coordinates are at 0<sup><em>n</em></sup> in flat
- * order, that is: row by row, plane by plane, cube by cube, ...  This is useful for
- * iterating an arbitrary interval in a defined order.  For that,
- * connect a {@link LocalizingIntervalIterator} to a {@link Positionable}.
+ * Use this class to iterate a virtual {@link Interval} in flat order, that is:
+ * row by row, plane by plane, cube by cube, ...  This is useful for iterating
+ * an arbitrary interval in a defined order.  For that, connect a
+ * {@link LocalizingIntervalIterator} to a {@link Positionable}.
  * 
  * <pre>
  * ...
- * ZeroMinIntervalIterator i = new ZeroMinIntervalIterator(image);
+ * LocalizingIntervalIterator i = new LocalizingIntervalIterator(image);
  * RandomAccess<T> s = image.randomAccess();
  * while (i.hasNext()) {
  *   i.fwd();
@@ -58,41 +53,35 @@ import mpicbg.imglib.util.Util;
  * 
  * Note that {@link LocalizingIntervalIterator} is the right choice in
  * situations where, for <em>each</em> pixel, you want to localize and/or set
- * the {@link ImgRandomAccess}, that is in a dense sampling
- * situation.  For localizing sparsely (e.g. under an external condition),
- * use {@link ZeroMinIntervalIterator} instead.
+ * the {@link ImgRandomAccess}, that is in a dense sampling situation.  For
+ * localizing sparsely (e.g. under an external condition), use
+ * {@link IntervalIterator} instead.
  *  
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-public class LocalizingIntervalIterator implements Iterator, Localizable, Interval
+public class LocalizingIntervalIterator extends IntervalIterator
 {
-	final protected long[] dimensions;
-	final protected long[] min;
-	final protected long[] max;
-	protected long index = -1;
-	
-	final static private long[] createMax( final long[] dimensions )
-	{
-		final long[] max = new long[ dimensions.length ];
-		for ( int d = 0; d < dimensions.length; ++d )
-			max[ d ] = dimensions[ d ] - 1;
-		return max;
-	}
+	final protected long[] position;
 	
 	public LocalizingIntervalIterator( final long[] dimensions )
 	{
-		super( dimensions.length );
-		this.dimensions = dimensions.clone();
-		max = createMax( dimensions );
-		position[ 0 ] = -1;
+		super( dimensions );
+		position = new long[ n ];
+		reset();
+	}
+	
+	public LocalizingIntervalIterator( final long[] min, final long[] max )
+	{
+		super( min, max );
+		position = new long[ n ];
+		reset();
 	}
 
 	public LocalizingIntervalIterator( final Interval interval )
 	{
-		super( interval.numDimensions() );
-		this.dimensions = Util.intervalDimensions( interval );
-		max = createMax( dimensions );
-		position[ 0 ] = -1;
+		super( interval );
+		position = new long[ n ];
+		reset();
 	}
 	
 
@@ -105,109 +94,82 @@ public class LocalizingIntervalIterator implements Iterator, Localizable, Interv
 
 		for ( int d = 0; d < n; ++d )
 		{
-			if ( ++position[ d ] >= dimensions[ d ] )
-				position[ d ] = 0;
+			if ( ++position[ d ] > max[ d ] )
+				position[ d ] = min[ d ];
 			else
 				break;
 		}
 	}
 
 	@Override
-	public void jumpFwd( final long steps )
+	public void jumpFwd( final long i )
 	{
-		index += steps;
-		IntervalIndexer.indexToPosition( index, dimensions, position );
+		index += i;
+		IntervalIndexer.indexToPositionWithOffset( index, dimensions, min, position );
 	}
 
 	@Override
 	public void reset()
 	{
 		index = -1;
-		position[ 0 ] = -1;
+		position[ 0 ] = min[ 0 ] - 1;
 
-		for ( int d = 1; d < n; d++ )
-			position[ d ] = 0;
+		for ( int d = 1; d < n; ++d )
+			position[ d ] = min[ d ];
 	}
 	
 	
-	/* EuclideanSpace */
+	/* Localizable */
 	
 	@Override
-	final public int numDimensions() { return n; }
-	
-	
-	/* Object */
-	
-	@Override
-	final public String toString()
-	{
-		final int[] l = new int[ dimensions.length ];
-		localize( l );
-		return Util.printCoordinates( l );
-	}
-
-	@Override
-	public long dimension( final int d )
-	{
-		return dimensions[ d ];
-	}
-
-	@Override
-	public void dimensions( final long[] dim )
+	public void localize( final float[] pos )
 	{
 		for ( int d = 0; d < n; ++d )
-			dim[ d ] = dimensions[ d ];
+			pos[ d ] = this.position[ d ];
 	}
 
 	@Override
-	public long max( final int d )
-	{
-		return max[ d ];
-	}
-
-	@Override
-	public void max( final long[] m )
+	public void localize( final double[] pos )
 	{
 		for ( int d = 0; d < n; ++d )
-			m[ d ] = max[ d ];
+			pos[ d ] = this.position[ d ];
 	}
 
 	@Override
-	public long min( final int d )
-	{
-		return 0;
-	}
-
-	@Override
-	public void min( final long[] min )
+	public void localize( final int[] pos )
 	{
 		for ( int d = 0; d < n; ++d )
-			min[ d ] = 0;
+			pos[ d ] = ( int )this.position[ d ];
 	}
-
+	
 	@Override
-	public double realMax( final int d )
-	{
-		return max[ d ];
-	}
-
-	@Override
-	public void realMax( final double[] m )
+	public void localize( final long[] pos )
 	{
 		for ( int d = 0; d < n; ++d )
-			m[ d ] = max[ d ];
+			pos[ d ] = this.position[ d ];
+	}
+	
+	@Override
+	public float getFloatPosition( final int d )
+	{
+		return position[ d ];
+	}
+	
+	@Override
+	public double getDoublePosition( final int d )
+	{
+		return position[ d ];
+	}
+	
+	@Override
+	public int getIntPosition( final int d )
+	{
+		return ( int )position[ d ];
 	}
 
 	@Override
-	public double realMin( final int d )
+	public long getLongPosition( final int d )
 	{
-		return 0;
-	}
-
-	@Override
-	public void realMin( final double[] min )
-	{
-		for ( int d = 0; d < n; ++d )
-			min[ d ] = 0;
+		return position[ d ];
 	}
 }

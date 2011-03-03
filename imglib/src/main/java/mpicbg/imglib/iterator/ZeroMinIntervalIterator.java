@@ -28,16 +28,16 @@
 package mpicbg.imglib.iterator;
 
 import mpicbg.imglib.Interval;
+import mpicbg.imglib.Positionable;
 import mpicbg.imglib.Sampler;
 import mpicbg.imglib.util.IntervalIndexer;
-import mpicbg.imglib.util.Util;
 
 /**
- * Use this class to iterate a virtual rectangular {@link Interval} whose min
- * coordinates are at 0<sup><em>n</em></sup> in flat
- * order, that is: row by row, plane by plane, cube by cube, ...  This is useful for
- * iterating an arbitrary interval in a defined order.  For that,
- * connect a {@link ZeroMinIntervalIterator} to a {@link Positionable}.
+ * Use this class to iterate a virtual rectangular {@link Interval} whose
+ * <em>min</em> coordinates are at 0<sup><em>n</em></sup> in flat order, that
+ * is: row by row, plane by plane, cube by cube, ...  This is useful for
+ * iterating an arbitrary interval in a defined order.  For that, connect a
+ * {@link ZeroMinIntervalIterator} to a {@link Positionable}.
  * 
  * <pre>
  * ...
@@ -52,11 +52,11 @@ import mpicbg.imglib.util.Util;
  * ...
  * </pre>
  * 
- * Note that {@link ZeroMinIntervalIterator} is the right choice in situations where
- * <em>not</em> for each pixel you want to localize and/or set the
- * {@link Positionable} [{@link Sampler}], that is in a sparse sampling situation.
- * For localizing at each iteration step (as in the simplified example above),
- * use {@link FlatIterator} instead.
+ * Note that {@link ZeroMinIntervalIterator} is the right choice in situations
+ * where <em>not</em> for each pixel you want to localize and/or set the
+ * {@link Positionable} [{@link Sampler}], that is in a sparse sampling
+ * situation.  For localizing at each iteration step (as in the simplified
+ * example above), use {@link LocalizingZeroMinIntervalIterator} instead.
  *  
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
@@ -73,64 +73,56 @@ public class ZeroMinIntervalIterator extends IntervalIterator
 	}
 	
 
-	/* Iterator */
+	/* Localizable */
 
 	@Override
-	final public void jumpFwd( final long i ) { index += i; }
-
-	@Override
-	final public void fwd() { ++index; }
-
-	@Override
-	final public void reset() { index = -1; }
-	
-	
-	/* IntegerLocalizable */
-
-	@Override
-	final public long getLongPosition( final int dim )
+	final public long getLongPosition( final int d )
 	{
-		return IntervalIndexer.indexToPosition( index, dimensions, steps, dim );
+		return IntervalIndexer.indexToPosition( index, dimensions, steps, d );
 	}
 	
 	@Override
-	final public void localize( final long[] position ) { IntervalIndexer.indexToPosition( index, dimensions, position ); }
+	final public void localize( final long[] position )
+	{
+		IntervalIndexer.indexToPosition( index, dimensions, position );
+	}
 
 	@Override
-	final public int getIntPosition( final int dim ) { return ( int )IntervalIndexer.indexToPosition( index, dimensions, steps, dim ); }
+	final public int getIntPosition( final int d )
+	{
+		return ( int ) IntervalIndexer.indexToPosition( index, dimensions, steps, d );
+	}
 
 	@Override
-	final public void localize( final int[] position ) { IntervalIndexer.indexToPosition( index, dimensions, position ); }
+	final public void localize( final int[] position )
+	{
+		IntervalIndexer.indexToPosition( index, dimensions, position );
+	}
 
-	@Override
-	final public double getDoublePosition( final int dim ) { return IntervalIndexer.indexToPosition( index, dimensions, steps, dim ); }
-	
 	
 	/* RealLocalizable */
 
 	@Override
-	final public float getFloatPosition( final int dim ) { return IntervalIndexer.indexToPosition( index, dimensions, steps, dim ); }
-
-	@Override
-	final public void localize( final float[] position ) { IntervalIndexer.indexToPosition( index, dimensions, position ); }
-
-	@Override
-	final public void localize( final double[] position ) { IntervalIndexer.indexToPosition( index, dimensions, position ); }
-
-	
-	/* EuclideanSpace */
-	
-	@Override
-	final public int numDimensions() { return n; }
-	
-	
-	/* Object */
-	
-	@Override
-	final public String toString()
+	final public double getDoublePosition( final int d )
 	{
-		final int[] l = new int[ dimensions.length ];
-		localize( l );
-		return Util.printCoordinates( l );
+		return IntervalIndexer.indexToPosition( index, dimensions, steps, d );
+	}
+	
+	@Override
+	final public void localize( final double[] position )
+	{
+		IntervalIndexer.indexToPosition( index, dimensions, position );
+	}
+
+	@Override
+	final public float getFloatPosition( final int d )
+	{
+		return IntervalIndexer.indexToPosition( index, dimensions, steps, d );
+	}
+
+	@Override
+	final public void localize( final float[] position )
+	{
+		IntervalIndexer.indexToPosition( index, dimensions, position );
 	}
 }
