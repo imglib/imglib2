@@ -27,8 +27,6 @@
  */
 package mpicbg.imglib;
 
-import mpicbg.imglib.img.Img;
-
 /**
  * Superclass of the abstract accessor implementations.
  * Does nothing but store the number {@link n} of dimensions of the

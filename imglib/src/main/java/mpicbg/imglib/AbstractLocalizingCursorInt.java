@@ -27,8 +27,6 @@
  */
 package mpicbg.imglib;
 
-
-
 /**
  * Abstract base class for localizing {@link Cursor}s.
  * The current position is maintained in the inherited
@@ -40,6 +38,9 @@ package mpicbg.imglib;
  */
 public abstract class AbstractLocalizingCursorInt< T > extends AbstractLocalizableSamplerInt< T > implements Cursor< T >
 {
+	/**
+	 * @param n number of dimensions in the {@link Img}.
+	 */
 	public AbstractLocalizingCursorInt( final int n )
 	{
 		super( n );

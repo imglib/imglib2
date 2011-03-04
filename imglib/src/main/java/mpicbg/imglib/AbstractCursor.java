@@ -52,6 +52,9 @@ public abstract class AbstractCursor< T > extends AbstractSampler< T > implement
 	 */
 	final private long[] tmp;
 	
+	/**
+	 * @param n number of dimensions in the {@link Img}.
+	 */
 	public AbstractCursor( final int n )
 	{
 		super( n );

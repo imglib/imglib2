@@ -27,8 +27,6 @@
  */
 package mpicbg.imglib;
 
-import mpicbg.imglib.img.Img;
-import mpicbg.imglib.img.ImgSampler;
 import mpicbg.imglib.util.Util;
 
 /**
@@ -45,7 +43,7 @@ public abstract class AbstractLocalizableSampler< T > extends AbstractSampler< T
 	/**
 	 * The {@link Localizable} interface is implemented using the position
 	 * stored here. Subclasses use this array to keep track of the position of
-	 * the {@link ImgSampler}.
+	 * the {@link Sampler}.
 	 */
 	final protected long[] position;
 	

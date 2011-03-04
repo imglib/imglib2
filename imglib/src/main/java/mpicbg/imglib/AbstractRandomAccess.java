@@ -27,7 +27,6 @@
  */
 package mpicbg.imglib;
 
-
 /**
  * Abstract base class for {@link RandomAccess}es.
  * 
@@ -42,6 +41,9 @@ package mpicbg.imglib;
  */
 public abstract class AbstractRandomAccess< T > extends AbstractLocalizableSampler< T > implements RandomAccess< T >
 {
+	/**
+	 * @param n number of dimensions in the {@link Img}.
+	 */
 	public AbstractRandomAccess( final int n )
 	{
 		super( n );
