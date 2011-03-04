@@ -27,12 +27,8 @@
  */
 package mpicbg.imglib.img;
 
-import mpicbg.imglib.AbstractSampler;
-import mpicbg.imglib.Interval;
-import mpicbg.imglib.Localizable;
-import mpicbg.imglib.outofbounds.OutOfBounds;
+import mpicbg.imglib.outofbounds.AbstractOutOfBoundsRandomAccess;
 import mpicbg.imglib.outofbounds.OutOfBoundsFactory;
-import mpicbg.imglib.outofbounds.RealOutOfBounds;
 
 /**
  * 
@@ -40,143 +36,12 @@ import mpicbg.imglib.outofbounds.RealOutOfBounds;
  *
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-public abstract class AbstractImgOutOfBoundsRandomAccess< T > extends AbstractSampler< T > implements ImgRandomAccess< T >
+public abstract class AbstractImgOutOfBoundsRandomAccess< T > extends AbstractOutOfBoundsRandomAccess< T > implements ImgRandomAccess< T >
 {
-	/* performs the actual moves and generates/queries a Type */
-	final protected OutOfBounds< T > outOfBounds;
-	
-	public AbstractImgOutOfBoundsRandomAccess( final Interval f, final RealOutOfBounds< T > outOfBounds )
+	public AbstractImgOutOfBoundsRandomAccess( final Img< T > container, final OutOfBoundsFactory< T, Img< T > > outOfBoundsFactory )
 	{
-		super( f.numDimensions() );
-		
-		this.outOfBounds = outOfBounds;
-	}
-	
-	public AbstractImgOutOfBoundsRandomAccess( final Img<T> container, final OutOfBoundsFactory< T, Img< T > > outOfBoundsFactory )
-	{
-		super( container.numDimensions() );
-		
 		// we need the container here, .getContainer() does not work yet as the Array/Cell/.../OutOfBoundsPositionableRasterSampler 
 		// calls super first and getContainer is not initialized yet
-		this.outOfBounds = outOfBoundsFactory.create( container );
+		super( container.numDimensions(), outOfBoundsFactory.create( container ) );
 	}
-	
-	final public boolean isOutOfBounds()
-	{
-		return outOfBounds.isOutOfBounds();
-	}
-	
-	
-	/* Sampler */
-	
-	@Override
-	final public T get(){ return outOfBounds.get(); }
-	
-	
-	/* Localizable */
-	
-	@Override
-	final public void localize( final int[] position ){ outOfBounds.localize( position ); }
-	
-	@Override
-	final public void localize( final long[] position ){ outOfBounds.localize( position ); }
-	
-	@Override
-	final public int getIntPosition( final int dim ){ return outOfBounds.getIntPosition( dim ); }
-	
-	@Override
-	final public long getLongPosition( final int dim ){ return outOfBounds.getLongPosition( dim ); }
-	
-	
-	/* RealLocalizable */
-	
-	@Override
-	final public void localize( final float[] position ){ outOfBounds.localize( position ); }
-	
-	@Override
-	final public void localize( final double[] position ){ outOfBounds.localize( position ); }
-	
-	@Override
-	final public double getDoublePosition( final int dim ){ return outOfBounds.getDoublePosition( dim ); }
-	
-	@Override
-	final public float  getFloatPosition( final int dim ){ return outOfBounds.getFloatPosition( dim ); }
-	
-	
-	/* Positionable */
-	
-	@Override
-	final public void fwd( final int dim )
-	{
-		outOfBounds.fwd( dim );
-	}
-	
-	@Override
-	final public void bck( final int dim )
-	{
-		outOfBounds.bck( dim );
-	}
-	
-	@Override
-	final public void move( final int distance, final int dim )
-	{
-		outOfBounds.move( distance, dim );
-	}
-	
-	@Override
-	final public void move( final long distance, final int dim )
-	{
-		outOfBounds.move( distance, dim );
-	}
-	
-	@Override
-	final public void move( final Localizable localizable )
-	{
-		outOfBounds.move( localizable );
-	}
-	
-	@Override
-	final public void move( final int[] distance )
-	{
-		outOfBounds.move( distance );
-	}
-	
-	@Override
-	final public void move( final long[] distance )
-	{
-		outOfBounds.move( distance );
-	}
-	
-	@Override
-	final public void setPosition( final int distance, final int dim )
-	{
-		outOfBounds.setPosition( distance, dim );
-	}
-	
-	@Override
-	final public void setPosition( final long distance, final int dim )
-	{
-		outOfBounds.setPosition( distance, dim );
-	}
-	
-	@Override
-	final public void setPosition( final Localizable localizable )
-	{
-		outOfBounds.setPosition( localizable );
-	}
-	
-	@Override
-	final public void setPosition( final int[] position )
-	{
-		outOfBounds.setPosition( position );
-	}
-	
-	@Override
-	final public void setPosition( final long[] position )
-	{
-		outOfBounds.setPosition( position );
-	}
-
-	@Override
-	public String toString() { return outOfBounds.toString() + " = " + get(); }
 }
