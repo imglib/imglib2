@@ -34,7 +34,7 @@ import mpicbg.imglib.Localizable;
 import mpicbg.imglib.RandomAccess;
 import mpicbg.imglib.RandomAccessible;
 import mpicbg.imglib.RandomAccessibleInterval;
-import mpicbg.imglib.img.AbstractImgCursor;
+import mpicbg.imglib.img.AbstractCursor;
 import mpicbg.imglib.img.Img;
 import mpicbg.imglib.img.ImgRandomAccess;
 import mpicbg.imglib.img.array.ArrayLocalizingCursor;
@@ -44,7 +44,7 @@ import mpicbg.imglib.type.Type;
 import mpicbg.imglib.util.IntervalIndexer;
 
 // TODO: Do not extend AbstractImgCursor!!!
-public class LocalNeighborhoodCursor<T extends Type<T>> extends AbstractImgCursor<T>
+public class LocalNeighborhoodCursor<T extends Type<T>> extends AbstractCursor<T>
 {
 	/**
 	 * We use a virtual cursor to iterate over the local neighborhood

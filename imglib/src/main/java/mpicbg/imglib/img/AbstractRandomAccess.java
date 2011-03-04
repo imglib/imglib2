@@ -25,83 +25,84 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-package mpicbg.imglib.img.list;
+package mpicbg.imglib.img;
 
-import java.util.ArrayList;
-
-import mpicbg.imglib.img.AbstractLocalizingCursor;
-import mpicbg.imglib.img.ImgCursor;
-import mpicbg.imglib.type.Type;
+import mpicbg.imglib.Localizable;
+import mpicbg.imglib.RandomAccess;
 
 /**
+ * Abstract base class for {@link RandomAccess}es.
+ * 
+ * <p>
+ * It provides a partial implementation of the {@link Positionable}
+ * interface. The default implementations build on the abstract long
+ * variants of methods.
  * 
  * @param <T>
- *
- * @author Stephan Preibisch and Stephan Saalfeld
+ * 
+ * @author Tobias Pietzsch, Stephan Preibisch and Stephan Saalfeld
  */
-final public class ListLocalizingCursor< T extends Type< T > > extends AbstractLocalizingCursor< T > implements ImgCursor< T >
+public abstract class AbstractRandomAccess< T > extends AbstractLocalizableSampler< T > implements RandomAccess< T >
 {
-	private int i;
-	final private int maxNumPixels;
-	
-	final private long[] max;
-	
-	final private ArrayList< T > pixels;
-	final private ListImg< T > img;
-	
-	public ListLocalizingCursor( final ListImg< T > img )
+	public AbstractRandomAccess( final int n )
 	{
-		super( img.numDimensions() );
-		
-		this.img = img;
-		this.pixels = img.pixels;
-		this.maxNumPixels = ( int )img.size() - 1;
+		super( n );
+	}
 
-		this.max = new long[ n ];
+	@Override
+	public void move( final int distance, final int dim )
+	{
+		move( ( long ) distance, dim );
+	}
+
+	@Override
+	public void setPosition( final int position, final int dim )
+	{
+		setPosition( ( long ) position, dim );
+	}
+
+	@Override
+	public void move( final int[] distance )
+	{
 		for ( int d = 0; d < n; ++d )
 		{
-			max[ d ] = img.max( d );
-		}
-	
-		reset();
-	}
-	
-	@Override
-	public void fwd()
-	{ 
-		++i; 
-		
-		for ( int d = 0; d < n; d++ )
-		{
-			if ( position[ d ] < max[ d ] )
-			{
-				position[ d ]++;
-				
-				for ( int e = 0; e < d; e++ )
-					position[ e ] = 0;
-				
-				break;
-			}
+			final long dist = ( long ) distance[ d ];
+
+			if ( dist != 0 )
+				move( dist, d );
 		}
 	}
 
 	@Override
-	public boolean hasNext() { return i < maxNumPixels; }
-	
-	@Override
-	public void reset()
+	public void move( final long[] distance )
 	{
-		i = -1;
-		
-		position[ 0 ] = -1;
-		
-		for ( int d = 1; d < n; d++ )
-			position[ d ] = 0;		
+		for ( int d = 0; d < n; ++d )
+		{
+			final long dist = distance[ d ];
+
+			if ( dist != 0 )
+				move( dist, d );
+		}
 	}
 
 	@Override
-	public ListImg< T > getImg(){ return img; }
-	
+	public void move( final Localizable localizable )
+	{
+		for ( int d = 0; d < n; ++d )
+		{
+			final long dist = localizable.getLongPosition( d );
+
+			if ( dist != 0 )
+				move( dist, d );
+		}
+	}
+
 	@Override
-	public T get() { return pixels.get( i ); }
+	public void setPosition( final Localizable localizable )
+	{
+		for ( int d = 0; d < n; ++d )
+		{
+			setPosition( localizable.getLongPosition( d ), d );
+		}
+	}
 }

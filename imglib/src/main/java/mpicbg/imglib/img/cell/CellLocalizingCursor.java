@@ -1,11 +1,12 @@
 package mpicbg.imglib.img.cell;
 
 import mpicbg.imglib.Cursor;
-import mpicbg.imglib.img.AbstractImgLocalizingCursor;
+import mpicbg.imglib.img.AbstractLocalizingCursor;
+import mpicbg.imglib.img.ImgCursor;
 import mpicbg.imglib.img.basictypeaccess.array.ArrayDataAccess;
 import mpicbg.imglib.type.NativeType;
 
-public class CellLocalizingCursor< T extends NativeType< T >, A extends ArrayDataAccess< A > > extends AbstractImgLocalizingCursor< T > implements CellImg.CellContainerSampler< T, A >
+public class CellLocalizingCursor< T extends NativeType< T >, A extends ArrayDataAccess< A > > extends AbstractLocalizingCursor< T > implements ImgCursor< T >, CellImg.CellContainerSampler< T, A >
 {
 	protected final T type;
 	
@@ -30,7 +31,7 @@ public class CellLocalizingCursor< T extends NativeType< T >, A extends ArrayDat
 
 	public CellLocalizingCursor( final CellImg< T, A > container )
 	{
-		super( container );
+		super( container.numDimensions() );
 		
 		this.type = container.createLinkedType();
 		this.container = container;

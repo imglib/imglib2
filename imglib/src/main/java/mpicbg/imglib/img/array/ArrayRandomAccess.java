@@ -27,8 +27,8 @@
  */
 package mpicbg.imglib.img.array;
 
-import mpicbg.imglib.Localizable;
-import mpicbg.imglib.img.AbstractImgRandomAccessInt;
+import mpicbg.imglib.img.AbstractBoundedRandomAccessInt;
+import mpicbg.imglib.img.ImgRandomAccess;
 import mpicbg.imglib.type.NativeType;
 
 /**
@@ -37,7 +37,7 @@ import mpicbg.imglib.type.NativeType;
  *
  * @author Stephan Preibisch, Stephan Saalfeld, Tobias Pietzsch
  */
-public class ArrayRandomAccess< T extends NativeType< T > > extends AbstractImgRandomAccessInt< T >
+public class ArrayRandomAccess< T extends NativeType< T > > extends AbstractBoundedRandomAccessInt< T > implements ImgRandomAccess< T >
 {
 	protected final T type;
 	final ArrayImg< T, ? > container;
@@ -91,13 +91,6 @@ public class ArrayRandomAccess< T extends NativeType< T > > extends AbstractImgR
 	}
 
 	@Override
-	public void move( final Localizable localizable )
-	{
-		localizable.localize( tmp );
-		move( tmp );
-	}
-
-	@Override
 	public void setPosition( final int[] pos )
 	{
 		for ( int d = 0; d < n; ++d )
@@ -124,10 +117,10 @@ public class ArrayRandomAccess< T extends NativeType< T > > extends AbstractImgR
 	}
 
 	@Override
-	public void setPosition( final long pos, final int dim )
+	public void setPosition( final int pos, final int dim )
 	{
-		type.incIndex( ( ( int ) pos - position[ dim ] ) * container.steps[ dim ] );
-		position[ dim ] = ( int ) pos;
+		type.incIndex( ( pos - position[ dim ] ) * container.steps[ dim ] );
+		position[ dim ] = pos;
 	}
 
 	@Override

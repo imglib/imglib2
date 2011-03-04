@@ -29,12 +29,12 @@
  */
 package mpicbg.imglib.sampler.special;
 
-import mpicbg.imglib.img.AbstractImgCursor;
+import mpicbg.imglib.img.AbstractCursor;
 import mpicbg.imglib.img.Img;
 import mpicbg.imglib.img.ImgRandomAccess;
 import mpicbg.imglib.type.Type;
 
-public class RegionOfInterestCursor<T extends Type<T>> extends AbstractImgCursor<T> 
+public class RegionOfInterestCursor<T extends Type<T>> extends AbstractCursor<T> 
 {
 	final ImgRandomAccess<T> cursor;
 	final int[] offset, size, roiPosition;

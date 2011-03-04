@@ -27,7 +27,8 @@
  */
 package mpicbg.imglib.img.array;
 
-import mpicbg.imglib.img.AbstractImgLocalizingCursorInt;
+import mpicbg.imglib.img.AbstractLocalizingCursorInt;
+import mpicbg.imglib.img.ImgCursor;
 import mpicbg.imglib.type.NativeType;
 import mpicbg.imglib.util.IntervalIndexer;
 
@@ -37,7 +38,7 @@ import mpicbg.imglib.util.IntervalIndexer;
  *
  * @author Stephan Preibisch and Stephan Saalfeld
  */
-public class ArrayLocalizingCursor< T extends NativeType< T > > extends AbstractImgLocalizingCursorInt< T >
+public class ArrayLocalizingCursor< T extends NativeType< T > > extends AbstractLocalizingCursorInt< T > implements ImgCursor< T >
 {
 	protected final T type;
 
@@ -53,7 +54,7 @@ public class ArrayLocalizingCursor< T extends NativeType< T > > extends Abstract
 	
 	public ArrayLocalizingCursor( final ArrayImg< T, ? > container )
 	{
-		super( container );
+		super( container.numDimensions() );
 
 		this.container = container;
 		this.type = container.createLinkedType();

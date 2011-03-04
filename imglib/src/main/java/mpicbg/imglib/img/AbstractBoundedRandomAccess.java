@@ -27,36 +27,45 @@
  */
 package mpicbg.imglib.img;
 
-import mpicbg.imglib.EuclideanSpace;
+import mpicbg.imglib.Bounded;
+import mpicbg.imglib.Interval;
+import mpicbg.imglib.RandomAccess;
 
 /**
- * Superclass of the abstract Img accessor implementations.
- * Does nothing but store the number {@link n} of dimensions of the
- * underlying img.
+ * Abstract base class for bounded {@link RandomAccess}es.
+ * 
+ * Extends {@link AbstractRandomAccess} by an implementation of
+ * the {@link Bounded} interface.
+ * 
+ * @param <T>
  * 
  * @author Tobias Pietzsch, Stephan Preibisch and Stephan Saalfeld
- *
- * @param < T > the type to be returned by {@link #get()}
  */
-public abstract class AbstractImgSampler< T > implements ImgSampler< T >, EuclideanSpace
+public abstract class AbstractBoundedRandomAccess< T > extends AbstractRandomAccess< T > implements RandomAccess< T >, Bounded
 {
 	/**
-	 * the number of dimensions in the {@link Img}.
+	 * Maximum of the {@link Img} in every dimension.
+	 * This is used to check isOutOfBounds().
 	 */
-	final protected int n;
-	
-	public AbstractImgSampler( final int n )
+	final protected long[] max;
+
+	public AbstractBoundedRandomAccess( final Interval f )
 	{
-		this.n = n;
+		super( f.numDimensions() );
+
+		max = new long[ n ];
+		f.max( max );
 	}
 
 	@Override
-	public int numDimensions()
+	public boolean isOutOfBounds()
 	{
-		return n;
+		for ( int d = 0; d < n; ++d )
+		{
+			final long x = position[ d ];
+			if ( x < 0 || x > max[ d ] )
+				return true;
+		}
+		return false;
 	}
-	
-	@Override
-	@Deprecated
-	final public T getType() { return get(); }
 }

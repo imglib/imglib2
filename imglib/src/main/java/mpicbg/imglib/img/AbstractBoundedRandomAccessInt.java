@@ -27,35 +27,35 @@
  */
 package mpicbg.imglib.img;
 
+import mpicbg.imglib.Bounded;
 import mpicbg.imglib.Interval;
-import mpicbg.imglib.Localizable;
+import mpicbg.imglib.RandomAccess;
 
 /**
+ * Abstract base class for bounded {@link RandomAccess}es.
+ * 
+ * Extends {@link AbstractRandomAccessInt} by an implementation of
+ * the {@link Bounded} interface.
  * 
  * @param <T>
  * 
- * @author Stephan Preibisch and Stephan Saalfeld
+ * @author Tobias Pietzsch, Stephan Preibisch and Stephan Saalfeld
  */
-public abstract class AbstractImgRandomAccess< T > extends AbstractLocalizableImgSampler< T > implements ImgRandomAccess< T >
+public abstract class AbstractBoundedRandomAccessInt< T > extends AbstractRandomAccessInt< T > implements RandomAccess< T >, Bounded
 {
-	/**
-	 * Internal register for position calculation
-	 */
-	final protected long[] tmp;
-	
 	/**
 	 * Maximum of the {@link Img} in every dimension.
 	 * This is used to check isOutOfBounds().
 	 */
-	final protected long[] max;
+	final protected int[] max;
 
-	public AbstractImgRandomAccess( final Interval f )
+	public AbstractBoundedRandomAccessInt( final Interval f )
 	{
-		super( f );
+		super( f.numDimensions() );
 
-		tmp = new long[ n ];
-		max = new long[ n ];
-		f.max( max );
+		max = new int[ n ];
+		for( int d = 0; d < n; ++d )
+			max[ d ] = ( int ) f.max( d );
 	}
 
 	@Override
@@ -63,65 +63,10 @@ public abstract class AbstractImgRandomAccess< T > extends AbstractLocalizableIm
 	{
 		for ( int d = 0; d < n; ++d )
 		{
-			final long x = position[ d ];
+			final int x = position[ d ];
 			if ( x < 0 || x > max[ d ] )
 				return true;
 		}
 		return false;
-	}
-
-	@Override
-	public void move( final int distance, final int dim )
-	{
-		move( ( long )distance, dim );
-	}
-
-	@Override
-	public void setPosition( final int position, final int dim )
-	{
-		setPosition( ( long )position, dim );
-	}
-
-	@Override
-	public void move( final int[] distance )
-	{
-		for ( int d = 0; d < n; ++d )
-		{
-			final int dist = distance[ d ];
-
-			if ( dist != 0 )
-				move( dist, d );
-		}
-	}
-
-	@Override
-	public void move( final long[] distance )
-	{
-		for ( int d = 0; d < n; ++d )
-		{
-			final long dist = distance[ d ];
-
-			if ( dist != 0 )
-				move( dist, d );
-		}
-	}
-
-	@Override
-	public void move( final Localizable localizable )
-	{
-		for ( int d = 0; d < n; ++d )
-		{
-			final long dist = localizable.getLongPosition( d );
-
-			if ( dist != 0 )
-				move( dist, d );
-		}
-	}
-
-	@Override
-	public void setPosition( final Localizable localizable )
-	{
-		localizable.localize( tmp );
-		setPosition( tmp );
 	}
 }

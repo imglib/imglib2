@@ -27,7 +27,8 @@
  */
 package mpicbg.imglib.img.planar;
 
-import mpicbg.imglib.img.AbstractImgLocalizingCursorInt;
+import mpicbg.imglib.img.AbstractLocalizingCursorInt;
+import mpicbg.imglib.img.ImgCursor;
 import mpicbg.imglib.type.NativeType;
 
 /**
@@ -36,7 +37,7 @@ import mpicbg.imglib.type.NativeType;
  *
  * @author Stephan Preibisch and Stephan Saalfeld
  */
-abstract public class AbstractPlanarLocalizingCursor< T extends NativeType< T > > extends AbstractImgLocalizingCursorInt< T > implements PlanarImg.PlanarContainerSampler
+abstract public class AbstractPlanarLocalizingCursor< T extends NativeType< T > > extends AbstractLocalizingCursorInt< T > implements ImgCursor< T >, PlanarImg.PlanarContainerSampler
 {
 	protected final T type;
 
@@ -59,7 +60,7 @@ abstract public class AbstractPlanarLocalizingCursor< T extends NativeType< T > 
 	
 	public AbstractPlanarLocalizingCursor( final PlanarImg< T, ? > container )
 	{
-		super( container );
+		super( container.numDimensions() );
 		
 		this.type = container.createLinkedType();
 		this.container = container;

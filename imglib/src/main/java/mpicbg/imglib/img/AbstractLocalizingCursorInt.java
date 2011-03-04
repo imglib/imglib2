@@ -27,19 +27,23 @@
  */
 package mpicbg.imglib.img;
 
-import mpicbg.imglib.Interval;
+import mpicbg.imglib.Cursor;
+
 
 /**
- * 
+ * Abstract base class for localizing {@link Cursor}s.
+ * The current position is maintained in the inherited
+ * int[] {@link AbstractLocalizableSamplerInt#position position} field.  
+ *  
  * @param <T>
- * 
- * @author Stephan Preibisch and Stephan Saalfeld
+ *
+ * @author Tobias Pietzsch, Stephan Preibisch and Stephan Saalfeld
  */
-public abstract class AbstractImgLocalizingCursor< T > extends AbstractLocalizableImgSampler< T > implements ImgCursor< T >
+public abstract class AbstractLocalizingCursorInt< T > extends AbstractLocalizableSamplerInt< T > implements Cursor< T >
 {
-	public AbstractImgLocalizingCursor( final Interval f )
+	public AbstractLocalizingCursorInt( final int n )
 	{
-		super( f );
+		super( n );
 	}
 
 	@Override

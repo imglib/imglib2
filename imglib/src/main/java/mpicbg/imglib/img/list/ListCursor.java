@@ -29,10 +29,10 @@ package mpicbg.imglib.img.list;
 
 import java.util.ArrayList;
 
-import mpicbg.imglib.img.AbstractImgCursor;
+import mpicbg.imglib.img.AbstractCursor;
+import mpicbg.imglib.img.ImgCursor;
 import mpicbg.imglib.type.Type;
 import mpicbg.imglib.util.IntervalIndexer;
-import mpicbg.imglib.util.Util;
 
 /**
  * 
@@ -40,7 +40,7 @@ import mpicbg.imglib.util.Util;
  *
  * @author Stephan Preibisch and Stephan Saalfeld
  */
-final public class ListCursor< T extends Type< T > > extends AbstractImgCursor< T >
+final public class ListCursor< T extends Type< T > > extends AbstractCursor< T > implements ImgCursor< T >
 {
 	private int i;
 	final private int maxNumPixels;
@@ -88,13 +88,4 @@ final public class ListCursor< T extends Type< T > > extends AbstractImgCursor< 
 	{
 		IntervalIndexer.indexToPosition( i, container.dim, position );
 	}
-
-	@Override
-	public String toString() 
-	{
-		final long[] tmp = new long[ n ];
-		localize( tmp );
-		
-		return Util.printCoordinates( tmp ) + ": " + get(); 
-	}	
 }

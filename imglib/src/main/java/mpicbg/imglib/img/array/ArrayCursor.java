@@ -27,7 +27,8 @@
  */
 package mpicbg.imglib.img.array;
 
-import mpicbg.imglib.img.AbstractImgCursorInt;
+import mpicbg.imglib.img.AbstractCursorInt;
+import mpicbg.imglib.img.ImgCursor;
 import mpicbg.imglib.type.NativeType;
 import mpicbg.imglib.util.IntervalIndexer;
 
@@ -37,7 +38,7 @@ import mpicbg.imglib.util.IntervalIndexer;
  * 
  * @author Stephan Preibisch and Stephan Saalfeld
  */
-public class ArrayCursor< T extends NativeType< T > > extends AbstractImgCursorInt< T >
+public class ArrayCursor< T extends NativeType< T > > extends AbstractCursorInt< T > implements ImgCursor< T >
 {
 	protected final T type;
 

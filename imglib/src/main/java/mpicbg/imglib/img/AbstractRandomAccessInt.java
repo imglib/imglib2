@@ -27,60 +27,41 @@
  */
 package mpicbg.imglib.img;
 
-import mpicbg.imglib.Interval;
 import mpicbg.imglib.Localizable;
+import mpicbg.imglib.RandomAccess;
 
 /**
+ * Abstract base class for {@link RandomAccess}es.
+ * 
+ * <p>
+ * It provides a partial implementation of the {@link Positionable}
+ * interface.
+ * 
+ * <p>
+ * This is identical to {@link AbstractRandomAccess}, except that default
+ * implementations build on the abstract int variants of methods here.
  * 
  * @param <T>
  * 
- * @author Stephan Preibisch, Stephan Saalfeld, Tobias Pietzsch
+ * @author Tobias Pietzsch, Stephan Preibisch and Stephan Saalfeld
  */
-public abstract class AbstractImgRandomAccessInt< T > extends AbstractLocalizableImgSamplerInt< T > implements ImgRandomAccess< T >
+public abstract class AbstractRandomAccessInt< T > extends AbstractLocalizableSamplerInt< T > implements RandomAccess< T >
 {
-	/**
-	 * Internal register for position calculation
-	 */
-	final protected int[] tmp;
-
-	/**
-	 * Maximum of the {@link Img} in every dimension.
-	 * This is used to check isOutOfBounds().
-	 */
-	final protected int[] max;
-
-	public AbstractImgRandomAccessInt( final Interval f )
+	public AbstractRandomAccessInt( final int n )
 	{
-		super( f );
-
-		tmp = new int[ n ];
-		max = new int[ n ];
-		for( int d = 0; d < n; ++d )
-			max[ d ] = ( int ) f.max( d );
+		super( n );
 	}
 
 	@Override
-	public boolean isOutOfBounds()
+	public void move( final long distance, final int dim )
 	{
-		for ( int d = 0; d < n; ++d )
-		{
-			final int x = position[ d ];
-			if ( x < 0 || x > max[ d ] )
-				return true;
-		}
-		return false;
+		move( ( int ) distance, dim );
 	}
 
 	@Override
-	public void move( final int distance, final int dim )
+	public void setPosition( final long position, final int dim )
 	{
-		move( ( long )distance, dim );
-	}
-
-	@Override
-	public void setPosition( final int position, final int dim )
-	{
-		setPosition( ( long )position, dim );
+		setPosition( ( int ) position, dim );
 	}
 
 	@Override
@@ -100,7 +81,7 @@ public abstract class AbstractImgRandomAccessInt< T > extends AbstractLocalizabl
 	{
 		for ( int d = 0; d < n; ++d )
 		{
-			final long dist = distance[ d ];
+			final int dist = ( int ) distance[ d ];
 
 			if ( dist != 0 )
 				move( dist, d );
@@ -112,7 +93,7 @@ public abstract class AbstractImgRandomAccessInt< T > extends AbstractLocalizabl
 	{
 		for ( int d = 0; d < n; ++d )
 		{
-			final long dist = localizable.getLongPosition( d );
+			final int dist = localizable.getIntPosition( d );
 
 			if ( dist != 0 )
 				move( dist, d );
@@ -122,7 +103,9 @@ public abstract class AbstractImgRandomAccessInt< T > extends AbstractLocalizabl
 	@Override
 	public void setPosition( final Localizable localizable )
 	{
-		localizable.localize( tmp );
-		setPosition( tmp );
+		for ( int d = 0; d < n; ++d )
+		{
+			setPosition( localizable.getIntPosition( d ), d );
+		}
 	}
 }

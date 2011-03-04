@@ -1,8 +1,7 @@
 package mpicbg.imglib.img.cell;
 
-import mpicbg.imglib.Localizable;
 import mpicbg.imglib.RandomAccess;
-import mpicbg.imglib.img.AbstractImgRandomAccess;
+import mpicbg.imglib.img.AbstractBoundedRandomAccess;
 import mpicbg.imglib.img.ImgRandomAccess;
 import mpicbg.imglib.img.basictypeaccess.array.ArrayDataAccess;
 import mpicbg.imglib.type.NativeType;
@@ -13,7 +12,7 @@ import mpicbg.imglib.type.NativeType;
  * No checks are performed to determine whether we stay in the same cell.
  * Instead, the cell position is computed and set on every access.  
  */
-public class CellRandomAccess< T extends NativeType< T >, A extends ArrayDataAccess< A > > extends AbstractImgRandomAccess< T > implements CellImg.CellContainerSampler< T, A >
+public class CellRandomAccess< T extends NativeType< T >, A extends ArrayDataAccess< A > > extends AbstractBoundedRandomAccess< T > implements ImgRandomAccess< T >, CellImg.CellContainerSampler< T, A >
 {
 	protected final T type;
 	
@@ -103,13 +102,6 @@ public class CellRandomAccess< T extends NativeType< T >, A extends ArrayDataAcc
 			updatePosition();
 		}
 		type.updateIndex( index );
-	}
-
-	@Override
-	public void move( final Localizable localizable )
-	{
-		localizable.localize( tmp );
-		move( tmp );
 	}
 
 	@Override

@@ -25,83 +25,42 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-package mpicbg.imglib.img.list;
+package mpicbg.imglib.img;
 
-import java.util.ArrayList;
-
-import mpicbg.imglib.img.AbstractLocalizingCursor;
-import mpicbg.imglib.img.ImgCursor;
-import mpicbg.imglib.type.Type;
+import mpicbg.imglib.EuclideanSpace;
+import mpicbg.imglib.Sampler;
 
 /**
+ * Superclass of the abstract accessor implementations.
+ * Does nothing but store the number {@link n} of dimensions of the
+ * underlying function.
  * 
- * @param <T>
+ * @author Tobias Pietzsch, Stephan Preibisch and Stephan Saalfeld
  *
- * @author Stephan Preibisch and Stephan Saalfeld
+ * @param < T > the type to be returned by {@link #get()}
  */
-final public class ListLocalizingCursor< T extends Type< T > > extends AbstractLocalizingCursor< T > implements ImgCursor< T >
+public abstract class AbstractSampler< T > implements Sampler< T >, EuclideanSpace
 {
-	private int i;
-	final private int maxNumPixels;
+	/**
+	 * the number of dimensions in the {@link Img}.
+	 */
+	final protected int n;
 	
-	final private long[] max;
-	
-	final private ArrayList< T > pixels;
-	final private ListImg< T > img;
-	
-	public ListLocalizingCursor( final ListImg< T > img )
+	/**
+	 * @param n number of dimensions in the {@link Img}.
+	 */
+	public AbstractSampler( final int n )
 	{
-		super( img.numDimensions() );
-		
-		this.img = img;
-		this.pixels = img.pixels;
-		this.maxNumPixels = ( int )img.size() - 1;
-
-		this.max = new long[ n ];
-		for ( int d = 0; d < n; ++d )
-		{
-			max[ d ] = img.max( d );
-		}
-	
-		reset();
-	}
-	
-	@Override
-	public void fwd()
-	{ 
-		++i; 
-		
-		for ( int d = 0; d < n; d++ )
-		{
-			if ( position[ d ] < max[ d ] )
-			{
-				position[ d ]++;
-				
-				for ( int e = 0; e < d; e++ )
-					position[ e ] = 0;
-				
-				break;
-			}
-		}
+		this.n = n;
 	}
 
 	@Override
-	public boolean hasNext() { return i < maxNumPixels; }
-	
-	@Override
-	public void reset()
+	public int numDimensions()
 	{
-		i = -1;
-		
-		position[ 0 ] = -1;
-		
-		for ( int d = 1; d < n; d++ )
-			position[ d ] = 0;		
+		return n;
 	}
-
-	@Override
-	public ListImg< T > getImg(){ return img; }
 	
 	@Override
-	public T get() { return pixels.get( i ); }
+	@Deprecated
+	final public T getType() { return get(); }
 }

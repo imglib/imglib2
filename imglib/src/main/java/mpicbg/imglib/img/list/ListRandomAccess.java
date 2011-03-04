@@ -29,10 +29,9 @@ package mpicbg.imglib.img.list;
 
 import java.util.ArrayList;
 
-import mpicbg.imglib.Localizable;
-import mpicbg.imglib.img.AbstractImgRandomAccess;
+import mpicbg.imglib.img.AbstractBoundedRandomAccess;
+import mpicbg.imglib.img.ImgRandomAccess;
 import mpicbg.imglib.type.Type;
-import mpicbg.imglib.util.Util;
 
 /**
  * 
@@ -40,7 +39,7 @@ import mpicbg.imglib.util.Util;
  *
  * @author Stephan Preibisch and Stephan Saalfeld
  */
-public class ListRandomAccess< T extends Type< T > > extends AbstractImgRandomAccess< T >
+public class ListRandomAccess< T extends Type< T > > extends AbstractBoundedRandomAccess< T > implements ImgRandomAccess< T >
 {
 	private int i;
 	
@@ -102,20 +101,6 @@ public class ListRandomAccess< T extends Type< T > > extends AbstractImgRandomAc
 	}
 
 	@Override
-	public void move( final Localizable localizable )
-	{
-		localizable.localize( tmp );
-		move( tmp );
-	}
-	
-	@Override
-	public void setPosition( final Localizable localizable )
-	{
-		localizable.localize( tmp );
-		setPosition( tmp );
-	}
-	
-	@Override
 	public void setPosition( final int[] position )
 	{
 		i = container.getPos( position );
@@ -152,13 +137,4 @@ public class ListRandomAccess< T extends Type< T > > extends AbstractImgRandomAc
 	
 	@Override
 	public T get(){ return pixels.get( i ); }
-
-	@Override
-	public String toString() 
-	{
-		final long[] t = new long[ n ];
-		localize( t );
-		
-		return Util.printCoordinates( t ) + ": " + get(); 
-	}	
 }
