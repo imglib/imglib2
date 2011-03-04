@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2009--2010, Stephan Preibisch & Stephan Saalfeld
+ * Copyright (c) 2011, Tobias Pietzsch & Stephan Preibisch & Stephan Saalfeld
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -9,7 +9,7 @@
  * list of conditions and the following disclaimer.  Redistributions in binary
  * form must reproduce the above copyright notice, this list of conditions and
  * the following disclaimer in the documentation and/or other materials
- * provided with the distribution.  Neither the name of the Fiji project nor
+ * provided with the distribution.  Neither the name of the imglib project nor
  * the names of its contributors may be used to endorse or promote products
  * derived from this software without specific prior written permission.
  * 
@@ -25,19 +25,21 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-package mpicbg.imglib.img;
-
-import mpicbg.imglib.Bounded;
-import mpicbg.imglib.RandomAccess;
+package mpicbg.imglib;
 
 /**
- * ImgRandomAccess is a {@link Bounded} {@link RandomAccess} that is an
- * {@link ImgSampler}. That is, an ImgRandomAccess can access and return its
- * {@link Img}. It is also bounded, that is, it can tell whether its current
- * position falls out of the Img.
+ * Interface implemented by entities ({@link Sampler}s, {@link Positionable}s,
+ * {@link Localizable}s) that can tell whether they are currently located
+ * outside of the image boundaries.
  * 
- * @author Tobias Pietzsch, Stephan Preibisch and Stephan Saalfeld
+ * @author Tobias Pietzsch
  */
-public interface ImgRandomAccess< T > extends ImgSampler< T >, RandomAccess< T >, Bounded
+public interface Bounded
 {
+	/**
+	 * True if located out of image bounds.
+	 * 
+	 * @return
+	 */
+	public boolean isOutOfBounds();
 }
