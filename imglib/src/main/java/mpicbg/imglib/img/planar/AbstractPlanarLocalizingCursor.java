@@ -27,7 +27,7 @@
  */
 package mpicbg.imglib.img.planar;
 
-import mpicbg.imglib.img.AbstractLocalizingCursorInt;
+import mpicbg.imglib.AbstractLocalizingCursorInt;
 import mpicbg.imglib.img.ImgCursor;
 import mpicbg.imglib.type.NativeType;
 

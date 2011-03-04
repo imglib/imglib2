@@ -27,7 +27,7 @@
  */
 package mpicbg.imglib.img.array;
 
-import mpicbg.imglib.img.AbstractCursorInt;
+import mpicbg.imglib.AbstractCursorInt;
 import mpicbg.imglib.img.ImgCursor;
 import mpicbg.imglib.type.NativeType;
 import mpicbg.imglib.util.IntervalIndexer;

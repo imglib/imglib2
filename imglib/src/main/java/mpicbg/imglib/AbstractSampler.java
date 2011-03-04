@@ -25,41 +25,41 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-package mpicbg.imglib.img;
+package mpicbg.imglib;
 
-import mpicbg.imglib.Cursor;
-
+import mpicbg.imglib.img.Img;
 
 /**
- * Abstract base class for localizing {@link Cursor}s.
- * The current position is maintained in the inherited
- * long[] {@link AbstractLocalizableSampler#position position} field.  
- *  
- * @param <T>
- *
+ * Superclass of the abstract accessor implementations.
+ * Does nothing but store the number {@link n} of dimensions of the
+ * underlying function.
+ * 
  * @author Tobias Pietzsch, Stephan Preibisch and Stephan Saalfeld
+ *
+ * @param < T > the type to be returned by {@link #get()}
  */
-public abstract class AbstractLocalizingCursor< T > extends AbstractLocalizableSampler< T > implements Cursor< T >
+public abstract class AbstractSampler< T > implements Sampler< T >, EuclideanSpace
 {
-	public AbstractLocalizingCursor( final int n )
+	/**
+	 * the number of dimensions in the {@link Img}.
+	 */
+	final protected int n;
+	
+	/**
+	 * @param n number of dimensions in the {@link Img}.
+	 */
+	public AbstractSampler( final int n )
 	{
-		super( n );
+		this.n = n;
 	}
 
 	@Override
-	public void remove(){}
-
-	@Override
-	public T next()
+	public int numDimensions()
 	{
-		fwd();
-		return get();
+		return n;
 	}
-
+	
 	@Override
-	public void jumpFwd( final long steps )
-	{
-		for ( long j = 0; j < steps; ++j )
-			fwd();
-	}
+	@Deprecated
+	final public T getType() { return get(); }
 }

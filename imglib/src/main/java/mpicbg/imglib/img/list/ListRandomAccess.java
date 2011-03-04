@@ -29,7 +29,7 @@ package mpicbg.imglib.img.list;
 
 import java.util.ArrayList;
 
-import mpicbg.imglib.img.AbstractBoundedRandomAccess;
+import mpicbg.imglib.AbstractBoundedRandomAccess;
 import mpicbg.imglib.img.ImgRandomAccess;
 import mpicbg.imglib.type.Type;
 

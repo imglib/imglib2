@@ -29,7 +29,7 @@ package mpicbg.imglib.img.list;
 
 import java.util.ArrayList;
 
-import mpicbg.imglib.img.AbstractCursor;
+import mpicbg.imglib.AbstractCursor;
 import mpicbg.imglib.img.ImgCursor;
 import mpicbg.imglib.type.Type;
 import mpicbg.imglib.util.IntervalIndexer;

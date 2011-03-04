@@ -25,10 +25,8 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-package mpicbg.imglib.img;
+package mpicbg.imglib;
 
-import mpicbg.imglib.Localizable;
-import mpicbg.imglib.RandomAccess;
 
 /**
  * Abstract base class for {@link RandomAccess}es.

@@ -25,41 +25,85 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-package mpicbg.imglib.img;
-
-import mpicbg.imglib.Cursor;
+package mpicbg.imglib;
 
 
 /**
- * Abstract base class for localizing {@link Cursor}s.
- * The current position is maintained in the inherited
- * int[] {@link AbstractLocalizableSamplerInt#position position} field.  
- *  
+ * Abstract base class for {@link RandomAccess}es.
+ * 
+ * <p>
+ * It provides a partial implementation of the {@link Positionable}
+ * interface.
+ * 
+ * <p>
+ * This is identical to {@link AbstractRandomAccess}, except that default
+ * implementations build on the abstract int variants of methods here.
+ * 
  * @param <T>
- *
+ * 
  * @author Tobias Pietzsch, Stephan Preibisch and Stephan Saalfeld
  */
-public abstract class AbstractLocalizingCursorInt< T > extends AbstractLocalizableSamplerInt< T > implements Cursor< T >
+public abstract class AbstractRandomAccessInt< T > extends AbstractLocalizableSamplerInt< T > implements RandomAccess< T >
 {
-	public AbstractLocalizingCursorInt( final int n )
+	public AbstractRandomAccessInt( final int n )
 	{
 		super( n );
 	}
 
 	@Override
-	public void remove(){}
-
-	@Override
-	public T next()
+	public void move( final long distance, final int dim )
 	{
-		fwd();
-		return get();
+		move( ( int ) distance, dim );
 	}
 
 	@Override
-	public void jumpFwd( final long steps )
+	public void setPosition( final long position, final int dim )
 	{
-		for ( long j = 0; j < steps; ++j )
-			fwd();
+		setPosition( ( int ) position, dim );
+	}
+
+	@Override
+	public void move( final int[] distance )
+	{
+		for ( int d = 0; d < n; ++d )
+		{
+			final int dist = distance[ d ];
+
+			if ( dist != 0 )
+				move( dist, d );
+		}
+	}
+
+	@Override
+	public void move( final long[] distance )
+	{
+		for ( int d = 0; d < n; ++d )
+		{
+			final int dist = ( int ) distance[ d ];
+
+			if ( dist != 0 )
+				move( dist, d );
+		}
+	}
+
+	@Override
+	public void move( final Localizable localizable )
+	{
+		for ( int d = 0; d < n; ++d )
+		{
+			final int dist = localizable.getIntPosition( d );
+
+			if ( dist != 0 )
+				move( dist, d );
+		}
+	}
+
+	@Override
+	public void setPosition( final Localizable localizable )
+	{
+		for ( int d = 0; d < n; ++d )
+		{
+			setPosition( localizable.getIntPosition( d ), d );
+		}
 	}
 }

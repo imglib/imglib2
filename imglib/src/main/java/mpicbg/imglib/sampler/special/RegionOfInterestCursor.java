@@ -29,7 +29,7 @@
  */
 package mpicbg.imglib.sampler.special;
 
-import mpicbg.imglib.img.AbstractCursor;
+import mpicbg.imglib.AbstractCursor;
 import mpicbg.imglib.img.Img;
 import mpicbg.imglib.img.ImgRandomAccess;
 import mpicbg.imglib.type.Type;

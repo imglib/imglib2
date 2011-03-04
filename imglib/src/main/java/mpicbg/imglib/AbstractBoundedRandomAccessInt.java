@@ -25,11 +25,9 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-package mpicbg.imglib.img;
+package mpicbg.imglib;
 
-import mpicbg.imglib.Bounded;
-import mpicbg.imglib.Interval;
-import mpicbg.imglib.RandomAccess;
+import mpicbg.imglib.img.Img;
 
 /**
  * Abstract base class for bounded {@link RandomAccess}es.

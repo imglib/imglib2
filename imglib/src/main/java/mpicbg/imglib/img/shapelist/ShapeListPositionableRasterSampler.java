@@ -27,9 +27,9 @@
  */
 package mpicbg.imglib.img.shapelist;
 
+import mpicbg.imglib.AbstractCursor;
 import mpicbg.imglib.Localizable;
 import mpicbg.imglib.Positionable;
-import mpicbg.imglib.img.AbstractCursor;
 import mpicbg.imglib.img.ImgCursor;
 import mpicbg.imglib.img.ImgRandomAccess;
 import mpicbg.imglib.location.VoidRealPositionable;

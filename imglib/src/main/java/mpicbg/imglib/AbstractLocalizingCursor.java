@@ -25,47 +25,40 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-package mpicbg.imglib.img;
+package mpicbg.imglib;
 
-import mpicbg.imglib.Bounded;
-import mpicbg.imglib.Interval;
-import mpicbg.imglib.RandomAccess;
+
 
 /**
- * Abstract base class for bounded {@link RandomAccess}es.
- * 
- * Extends {@link AbstractRandomAccess} by an implementation of
- * the {@link Bounded} interface.
- * 
+ * Abstract base class for localizing {@link Cursor}s.
+ * The current position is maintained in the inherited
+ * long[] {@link AbstractLocalizableSampler#position position} field.  
+ *  
  * @param <T>
- * 
+ *
  * @author Tobias Pietzsch, Stephan Preibisch and Stephan Saalfeld
  */
-public abstract class AbstractBoundedRandomAccess< T > extends AbstractRandomAccess< T > implements RandomAccess< T >, Bounded
+public abstract class AbstractLocalizingCursor< T > extends AbstractLocalizableSampler< T > implements Cursor< T >
 {
-	/**
-	 * Maximum of the {@link Img} in every dimension.
-	 * This is used to check isOutOfBounds().
-	 */
-	final protected long[] max;
-
-	public AbstractBoundedRandomAccess( final Interval f )
+	public AbstractLocalizingCursor( final int n )
 	{
-		super( f.numDimensions() );
-
-		max = new long[ n ];
-		f.max( max );
+		super( n );
 	}
 
 	@Override
-	public boolean isOutOfBounds()
+	public void remove(){}
+
+	@Override
+	public T next()
 	{
-		for ( int d = 0; d < n; ++d )
-		{
-			final long x = position[ d ];
-			if ( x < 0 || x > max[ d ] )
-				return true;
-		}
-		return false;
+		fwd();
+		return get();
+	}
+
+	@Override
+	public void jumpFwd( final long steps )
+	{
+		for ( long j = 0; j < steps; ++j )
+			fwd();
 	}
 }

@@ -27,7 +27,7 @@
  */
 package mpicbg.imglib.img.array;
 
-import mpicbg.imglib.img.AbstractBoundedRandomAccessInt;
+import mpicbg.imglib.AbstractBoundedRandomAccessInt;
 import mpicbg.imglib.img.ImgRandomAccess;
 import mpicbg.imglib.type.NativeType;
 

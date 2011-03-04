@@ -27,9 +27,8 @@
  *
  * @author Stephan Preibisch & Stephan Saalfeld
  */
-package mpicbg.imglib.img;
+package mpicbg.imglib;
 
-import mpicbg.imglib.Cursor;
 import mpicbg.imglib.util.Util;
 
 /**

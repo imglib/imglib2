@@ -25,87 +25,80 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-package mpicbg.imglib.img;
+package mpicbg.imglib;
 
-import mpicbg.imglib.Localizable;
-import mpicbg.imglib.RandomAccess;
+import mpicbg.imglib.img.Img;
+import mpicbg.imglib.img.ImgSampler;
+import mpicbg.imglib.util.Util;
 
 /**
- * Abstract base class for {@link RandomAccess}es.
- * 
- * <p>
- * It provides a partial implementation of the {@link Positionable}
- * interface.
- * 
- * <p>
- * This is identical to {@link AbstractRandomAccess}, except that default
- * implementations build on the abstract int variants of methods here.
- * 
+ * Abstract base class for localizable samplers.
+ * The current position is stored in a long[] field and used to
+ * implement the {@link Localizable} interface. 
+ *  
  * @param <T>
- * 
- * @author Tobias Pietzsch, Stephan Preibisch and Stephan Saalfeld
+ *
+ * @author Stephan Preibisch and Stephan Saalfeld
  */
-public abstract class AbstractRandomAccessInt< T > extends AbstractLocalizableSamplerInt< T > implements RandomAccess< T >
+public abstract class AbstractLocalizableSampler< T > extends AbstractSampler< T > implements Localizable
 {
-	public AbstractRandomAccessInt( final int n )
+	/**
+	 * The {@link Localizable} interface is implemented using the position
+	 * stored here. Subclasses use this array to keep track of the position of
+	 * the {@link ImgSampler}.
+	 */
+	final protected long[] position;
+	
+	/**
+	 * @param n number of dimensions in the {@link Img}.
+	 */
+	public AbstractLocalizableSampler( final int n )
 	{
 		super( n );
+
+		position = new long[ n ];
+	}
+	
+	@Override
+	public void localize( final float[] pos )
+	{
+		for ( int d = 0; d < n; d++ )
+			pos[ d ] = this.position[ d ];
 	}
 
 	@Override
-	public void move( final long distance, final int dim )
+	public void localize( final double[] pos )
 	{
-		move( ( int ) distance, dim );
+		for ( int d = 0; d < n; d++ )
+			pos[ d ] = this.position[ d ];
 	}
 
 	@Override
-	public void setPosition( final long position, final int dim )
+	public void localize( int[] pos )
 	{
-		setPosition( ( int ) position, dim );
+		for ( int d = 0; d < n; d++ )
+			pos[ d ] = ( int )this.position[ d ];
 	}
+	
+	@Override
+	public void localize( long[] pos )
+	{
+		for ( int d = 0; d < n; d++ )
+			pos[ d ] = this.position[ d ];
+	}
+	
+	@Override
+	public float getFloatPosition( final int dim ){ return position[ dim ]; }
+	
+	@Override
+	public double getDoublePosition( final int dim ){ return position[ dim ]; }
+	
+	@Override
+	public int getIntPosition( final int dim ){ return ( int )position[ dim ]; }
 
 	@Override
-	public void move( final int[] distance )
-	{
-		for ( int d = 0; d < n; ++d )
-		{
-			final int dist = distance[ d ];
-
-			if ( dist != 0 )
-				move( dist, d );
-		}
-	}
-
+	public long getLongPosition( final int dim ){ return position[ dim ]; }
+	
 	@Override
-	public void move( final long[] distance )
-	{
-		for ( int d = 0; d < n; ++d )
-		{
-			final int dist = ( int ) distance[ d ];
-
-			if ( dist != 0 )
-				move( dist, d );
-		}
-	}
-
-	@Override
-	public void move( final Localizable localizable )
-	{
-		for ( int d = 0; d < n; ++d )
-		{
-			final int dist = localizable.getIntPosition( d );
-
-			if ( dist != 0 )
-				move( dist, d );
-		}
-	}
-
-	@Override
-	public void setPosition( final Localizable localizable )
-	{
-		for ( int d = 0; d < n; ++d )
-		{
-			setPosition( localizable.getIntPosition( d ), d );
-		}
-	}
+	public String toString(){ return Util.printCoordinates( position ) + " = " + get(); }
 }

@@ -29,7 +29,7 @@ package mpicbg.imglib.img.list;
 
 import java.util.ArrayList;
 
-import mpicbg.imglib.img.AbstractLocalizingCursor;
+import mpicbg.imglib.AbstractLocalizingCursor;
 import mpicbg.imglib.img.ImgCursor;
 import mpicbg.imglib.type.Type;
 

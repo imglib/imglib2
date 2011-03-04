@@ -1,7 +1,7 @@
 package mpicbg.imglib.img.cell;
 
+import mpicbg.imglib.AbstractBoundedRandomAccess;
 import mpicbg.imglib.RandomAccess;
-import mpicbg.imglib.img.AbstractBoundedRandomAccess;
 import mpicbg.imglib.img.ImgRandomAccess;
 import mpicbg.imglib.img.basictypeaccess.array.ArrayDataAccess;
 import mpicbg.imglib.type.NativeType;

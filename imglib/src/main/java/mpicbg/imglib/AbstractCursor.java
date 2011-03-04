@@ -24,81 +24,110 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
+ *
+ * @author Stephan Preibisch & Stephan Saalfeld
  */
-package mpicbg.imglib.img;
+package mpicbg.imglib;
 
-import mpicbg.imglib.Localizable;
 import mpicbg.imglib.util.Util;
 
 /**
- * Abstract base class for localizable samplers.
- * The current position is stored in an int[] field and used to
- * implement the {@link Localizable} interface.
+ * Generic implementation of {@link mpicbg.imglib.Iterator Iterator} mapping to
+ * abstract {@link #fwd()} and {@link #get()}.
  * 
  * <p>
- * This is identical to {@link AbstractLocalizableSampler}, except that
- * the position is limited to {@link Integer.MAX_VALUE} in every dimension.
- *  
+ * For localization, default implementations are available that all build on
+ * the abstract long variant.  For particular cursors, this may be implemented more
+ * efficiently saving at least one loop over <em>n</em>. 
+ * 
+ * @author Tobias Pietzsch, Stephan Preibisch and Stephan Saalfeld
+ * 
  * @param <T>
- *
- * @author Stephan Preibisch, Stephan Saalfeld, Tobias Pietzsch
  */
-public abstract class AbstractLocalizableSamplerInt< T > extends AbstractSampler< T > implements Localizable
+public abstract class AbstractCursor< T > extends AbstractSampler< T > implements Cursor< T >
 {
 	/**
-	 * The {@link Localizable} interface is implemented using the position
-	 * stored here. Subclasses use this array to keep track of the position of
-	 * the {@link ImgSampler}.
+	 * used internally to forward all localize() versions to the (abstract)
+	 * long[] version.
 	 */
-	final protected int[] position;
+	final private long[] tmp;
 	
-	public AbstractLocalizableSamplerInt( final int n )
+	public AbstractCursor( final int n )
 	{
 		super( n );
-		
-		position = new int[ n ];
-	}
-	
-	@Override
-	public void localize( final float[] pos )
-	{
-		for ( int d = 0; d < n; d++ )
-			pos[ d ] = this.position[ d ];
+		tmp = new long[ n ];
 	}
 
 	@Override
-	public void localize( final double[] pos )
+	public void remove()
 	{
+		
+	}
+
+	@Override
+	public T next()
+	{
+		fwd();
+		return get();
+	}
+
+	/**
+	 * Highly recommended to override this with a more efficient version.
+	 * 
+	 * @param steps
+	 */
+	public void jumpFwd( final long steps )
+	{
+		for ( long j = 0; j < steps; ++j )
+			fwd();
+	}
+
+	@Override
+	public void localize( float[] pos )
+	{
+		localize( this.tmp );
 		for ( int d = 0; d < n; d++ )
-			pos[ d ] = this.position[ d ];
+			pos[ d ] = this.tmp[ d ];
+	}
+
+	@Override
+	public void localize( double[] pos )
+	{
+		localize( this.tmp );
+		for ( int d = 0; d < n; d++ )
+			pos[ d ] = this.tmp[ d ];
 	}
 
 	@Override
 	public void localize( int[] pos )
 	{
+		localize( this.tmp );
 		for ( int d = 0; d < n; d++ )
-			pos[ d ] = this.position[ d ];
+			pos[ d ] = ( int )this.tmp[ d ];
 	}
-	
-	@Override
-	public void localize( long[] pos )
-	{
-		for ( int d = 0; d < n; d++ )
-			pos[ d ] = this.position[ d ];
-	}
-	
-	@Override
-	public float getFloatPosition( final int dim ){ return position[ dim ]; }
-	
-	@Override
-	public double getDoublePosition( final int dim ){ return position[ dim ]; }
-	
-	@Override
-	public int getIntPosition( final int dim ){ return position[ dim ]; }
 
 	@Override
-	public long getLongPosition( final int dim ){ return position[ dim ]; }
-	
+	public float getFloatPosition( final int d )
+	{
+		return getLongPosition( d );
+	}
+
 	@Override
-	public String toString(){ return Util.printCoordinates( position ) + " = " + get(); }
+	public double getDoublePosition( final int d )
+	{
+		return getLongPosition( d );
+	}
+
+	@Override
+	public int getIntPosition( final int d )
+	{
+		return ( int )getLongPosition( d );
+	}
+
+	@Override
+	public String toString()
+	{
+		localize( tmp );
+		return Util.printCoordinates( tmp ) + " = " + get();
+	}
 }

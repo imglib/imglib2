@@ -29,12 +29,12 @@
  */
 package mpicbg.imglib.sampler.special;
 
+import mpicbg.imglib.AbstractCursor;
 import mpicbg.imglib.Interval;
 import mpicbg.imglib.Localizable;
 import mpicbg.imglib.RandomAccess;
 import mpicbg.imglib.RandomAccessible;
 import mpicbg.imglib.RandomAccessibleInterval;
-import mpicbg.imglib.img.AbstractCursor;
 import mpicbg.imglib.img.Img;
 import mpicbg.imglib.img.ImgRandomAccess;
 import mpicbg.imglib.img.array.ArrayLocalizingCursor;

@@ -27,6 +27,7 @@
  */
 package mpicbg.imglib.img;
 
+import mpicbg.imglib.AbstractSampler;
 import mpicbg.imglib.Interval;
 import mpicbg.imglib.Localizable;
 import mpicbg.imglib.outofbounds.OutOfBounds;

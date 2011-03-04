@@ -1,7 +1,7 @@
 package mpicbg.imglib.img.cell;
 
+import mpicbg.imglib.AbstractLocalizingCursor;
 import mpicbg.imglib.Cursor;
-import mpicbg.imglib.img.AbstractLocalizingCursor;
 import mpicbg.imglib.img.ImgCursor;
 import mpicbg.imglib.img.basictypeaccess.array.ArrayDataAccess;
 import mpicbg.imglib.type.NativeType;
