@@ -31,6 +31,8 @@ package mpicbg.imglib.img;
 
 import java.util.Iterator;
 
+import mpicbg.imglib.view.ViewTransform;
+
 
 public abstract class AbstractImg< T > implements Img< T >
 {
@@ -162,6 +164,20 @@ public abstract class AbstractImg< T > implements Img< T >
 		return 0;
 	}
 	
+	@Override
+	public ViewTransform getViewTransform()
+	{
+		// TODO: There should be a singleton Identity Transform Object
+		return new ViewTransform( n );
+	}
+
+	@Override
+	public Img< T > getImg()
+	{
+		return this;
+	}
+
+
 
 //	@Override
 //	public OrthoSliceIterator< T > createOrthoSliceIterator( final Image< T > image, final int x, final int y, final int[] position )
