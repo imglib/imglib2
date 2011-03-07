@@ -180,6 +180,19 @@ public class ViewTransform
 		for (int d = 0; d < m; ++d)
 			translation[ d ] = t[ d ];
 	}
+
+	public void getPermutation( final boolean[] zero, final int[] component, final boolean[] inv )
+	{
+		assert zero.length == m;
+		assert inv.length == m;
+		assert component.length == m;
+		for (int d = 0; d < m; ++d)
+		{
+			zero[ d ] = targetZero[ d ];
+			inv[ d ] = targetInv[ d ];
+			component[ d ] = targetComponent[ d ];
+		}		
+	}
 	
 	public void setPermutation( final boolean[] zero, final int[] component, final boolean[] inv )
 	{
