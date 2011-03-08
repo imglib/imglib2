@@ -2,9 +2,9 @@ package mpicbg.imglib.view;
 
 import mpicbg.imglib.IterableInterval;
 import mpicbg.imglib.RandomAccessible;
-import mpicbg.imglib.img.Img;
+import mpicbg.imglib.RandomAccessibleInterval;
 
-public interface View< T > extends IterableInterval< T >, RandomAccessible< T >
+public interface View< T > extends IterableInterval< T >, RandomAccessible< T >, RandomAccessibleInterval< T, View< T > >
 {
 	/** 
 	 * @return transform from this {@link View} into the underlying (TODO Img?).
@@ -15,5 +15,5 @@ public interface View< T > extends IterableInterval< T >, RandomAccessible< T >
 	 * TODO: lift this from Img to the appropriate set of Interfaces
 	 * @return the underlying (TODO Img?).
 	 */
-	public Img< T > getImg();
+	public ExtendableRandomAccessibleInterval< T > getImg();
 }
