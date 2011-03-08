@@ -93,4 +93,48 @@ public class Views
 		t.setPermutation( zero, component );
 		return new ViewTransformView< T >( view, t, dimension );
 	}
+
+	/**
+	 * Create view that is rotated by 90 degrees.
+	 * The rotation is specified by the fromAxis and toAxis arguments.
+	 * 
+	 * If fromAxis=0 and toAxis=1, this means that the X-axis of the source view
+	 * is mapped to the Y-Axis of the rotated view. That is, it corresponds to a
+	 * 90 degree clock-wise rotation of the source view in the XY plane.
+	 * 
+	 * fromAxis=1 and toAxis=0 corresponds to a counter-clock-wise rotation in the
+	 * XY plane.
+	 */
+	public static < T > View< T > rotatedView( final View< T > view, final int fromAxis, final int toAxis )
+	{
+		final int n = view.numDimensions();
+		long[] tmp = new long[ n ];
+		tmp[ toAxis ] = view.max( toAxis );
+		int[] component = new int[ n ];
+		boolean[] inv = new boolean[ n ];
+		for ( int e = 0; e < n; ++e )
+		{
+			if ( e == fromAxis )
+			{
+				component[ e ] = toAxis;
+				inv[ e ] = true;
+			}
+			else if ( e == toAxis )
+			{
+				component[ e ] = fromAxis;
+			}
+			else
+			{
+				component[ e ] = e;
+			}
+		}
+		ViewTransform t = new ViewTransform( n, n );
+		t.setTranslation( tmp );
+		t.setPermutation( component, inv );
+		view.dimensions( tmp );
+		final long fromDim = tmp[ fromAxis ];
+		tmp[ fromAxis ] = tmp[ toAxis ];
+		tmp[ toAxis ] = fromDim;
+		return new ViewTransformView< T >( view, t, tmp );
+	}
 }
