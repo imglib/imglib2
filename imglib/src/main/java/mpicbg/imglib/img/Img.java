@@ -30,7 +30,6 @@ package mpicbg.imglib.img;
 import mpicbg.imglib.Interval;
 import mpicbg.imglib.RandomAccessibleInterval;
 import mpicbg.imglib.outofbounds.OutOfBoundsFactory;
-import mpicbg.imglib.view.View;
 
 /**
  * {@link Img}s are {@link InjectiveInterval} that has its min at
@@ -42,8 +41,7 @@ import mpicbg.imglib.view.View;
 public interface Img< T >
 	extends
 		RandomAccessibleInterval< T, Img< T > >,
-		Interval,
-		View< T >
+		Interval
 {
 	@Override
 	public ImgRandomAccess< T > randomAccess();
