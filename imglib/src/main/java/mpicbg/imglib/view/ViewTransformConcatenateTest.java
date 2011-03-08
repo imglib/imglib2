@@ -2,7 +2,7 @@ package mpicbg.imglib.view;
 
 import Jama.Matrix;
 
-public class Test
+public class ViewTransformConcatenateTest
 {
 	public static void testConcatenation( ViewTransform t1, ViewTransform t2 )
 	{
