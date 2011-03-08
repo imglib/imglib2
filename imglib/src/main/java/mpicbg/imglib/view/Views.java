@@ -114,14 +114,14 @@ public class Views
 		boolean[] inv = new boolean[ n ];
 		for ( int e = 0; e < n; ++e )
 		{
-			if ( e == fromAxis )
-			{
-				component[ e ] = toAxis;
-				inv[ e ] = true;
-			}
-			else if ( e == toAxis )
+			if ( e == toAxis )
 			{
 				component[ e ] = fromAxis;
+				inv[ e ] = true;
+			}
+			else if ( e == fromAxis )
+			{
+				component[ e ] = toAxis;
 			}
 			else
 			{
@@ -132,9 +132,9 @@ public class Views
 		t.setTranslation( tmp );
 		t.setPermutation( component, inv );
 		view.dimensions( tmp );
-		final long fromDim = tmp[ fromAxis ];
-		tmp[ fromAxis ] = tmp[ toAxis ];
-		tmp[ toAxis ] = fromDim;
+		final long fromDim = tmp[ toAxis ];
+		tmp[ toAxis ] = tmp[ fromAxis ];
+		tmp[ fromAxis ] = fromDim;
 		return new ViewTransformView< T >( view, t, tmp );
 	}
 }
