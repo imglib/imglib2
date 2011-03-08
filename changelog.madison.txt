@@ -1,0 +1,22 @@
+Stephan Saalfeld, Tobias Pietzsch, Stephan Preibisch:
+
+* redesigned ImgLib core gaining the following improvements:
+  * separation of access to the domain and codomain (position vs. type-access)
+  * separation of iteration and random access
+  * separation of real and integer coordinate access
+  * virtualization of how data sets can be accessed, thus allowing generative
+    functions, views on virtually transformed data, unevenly sampled data, and
+    much more
+  * improved performance
+  * simplified generalized display
+
+* added interactive panorama viewer as  aplugin to Fiji (thanks Albert for
+  doing the infrastructure)
+
+* added integral images as a library component to the mpicbg submodule of Fiji
+  with the following examplary applications:
+  * rapid mean filter
+  * rapid averaging downscaling
+  * rapid difference of mean filter
+
+
