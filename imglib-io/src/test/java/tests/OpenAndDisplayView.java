@@ -12,11 +12,9 @@ import mpicbg.imglib.img.Img;
 import mpicbg.imglib.img.ImgFactory;
 import mpicbg.imglib.img.array.ArrayImgFactory;
 import mpicbg.imglib.io.LOCI;
-import mpicbg.imglib.outofbounds.OutOfBoundsMirrorFactory;
 import mpicbg.imglib.type.Type;
 import mpicbg.imglib.type.numeric.ARGBType;
 import mpicbg.imglib.type.numeric.real.FloatType;
-import mpicbg.imglib.view.ExtendableRandomAccessibleIntervalImp;
 import mpicbg.imglib.view.View;
 import mpicbg.imglib.view.Views;
 

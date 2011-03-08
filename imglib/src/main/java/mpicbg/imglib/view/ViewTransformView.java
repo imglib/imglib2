@@ -5,7 +5,6 @@ import java.util.Iterator;
 import mpicbg.imglib.Cursor;
 import mpicbg.imglib.IterableRealInterval;
 import mpicbg.imglib.RandomAccess;
-import mpicbg.imglib.img.array.ArrayOutOfBoundsRandomAccess;
 import mpicbg.imglib.outofbounds.OutOfBoundsFactory;
 
 public class ViewTransformView< T > implements View< T >
