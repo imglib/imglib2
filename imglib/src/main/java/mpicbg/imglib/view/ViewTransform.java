@@ -4,7 +4,7 @@ import mpicbg.imglib.util.Util;
 import Jama.Matrix;
 
 /**
- * transform a n-vector to a m-vector.
+ * transform a n-dimensional source vector to a m-dimensional target vector.
  * can be represented as a (m+1 x n+1) homogeneous matrix.
  * 
  * @author Tobias Pietzsch
@@ -108,6 +108,25 @@ public class ViewTransform
 			}
 		}
 	}
+
+	public void transform( long[] source, long[] target )
+	{
+		assert source.length == n;
+		assert target.length == m;
+
+		for (int d = 0; d < m; ++d )
+		{
+			target[ d ] = translation[ d ];
+			if ( ! targetZero[ d ] )
+			{
+				final long v = source[ targetComponent[ d ] ];
+				if ( targetInv[ d ] )
+					target[ d ] -= v;
+				else
+					target[ d ] += v;
+			}
+		}
+	}
 	
 	private void permutateVector( long[] in, long[] out )
 	{
@@ -203,6 +222,19 @@ public class ViewTransform
 		{
 			assert component[ d ] < n;
 			targetZero[ d ] = zero[ d ];
+			targetInv[ d ] = inv[ d ];
+			targetComponent[ d ] = component[ d ];
+		}
+	}
+	
+	public void setPermutation( final int[] component, final boolean[] inv )
+	{
+		assert inv.length == m;
+		assert component.length == m;
+		for (int d = 0; d < m; ++d)
+		{
+			assert component[ d ] < n;
+			targetZero[ d ] = false;
 			targetInv[ d ] = inv[ d ];
 			targetComponent[ d ] = component[ d ];
 		}
