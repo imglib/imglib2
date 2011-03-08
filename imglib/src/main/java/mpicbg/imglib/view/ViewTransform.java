@@ -1,6 +1,5 @@
 package mpicbg.imglib.view;
 
-import mpicbg.imglib.util.Util;
 import Jama.Matrix;
 
 /**
@@ -223,6 +222,19 @@ public class ViewTransform
 			assert component[ d ] < n;
 			targetZero[ d ] = zero[ d ];
 			targetInv[ d ] = inv[ d ];
+			targetComponent[ d ] = component[ d ];
+		}
+	}
+	
+	public void setPermutation( final boolean[] zero, final int[] component )
+	{
+		assert zero.length == m;
+		assert component.length == m;
+		for (int d = 0; d < m; ++d)
+		{
+			assert component[ d ] < n;
+			targetZero[ d ] = zero[ d ];
+			targetInv[ d ] = false;
 			targetComponent[ d ] = component[ d ];
 		}
 	}

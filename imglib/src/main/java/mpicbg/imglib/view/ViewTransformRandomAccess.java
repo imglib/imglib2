@@ -204,7 +204,7 @@ public final class ViewTransformRandomAccess< T > extends AbstractRandomAccess< 
 		if( ! sourceZero[ d ] )
 		{
 			final int e = sourceComponent[ d ]; 
-			final long targetPos = translation[ e ] + ( sourceInv[ e ] ? -position : position );
+			final long targetPos = translation[ e ] + ( targetInv[ e ] ? -position : position );
 			target.setPosition( targetPos, e );
 		}
 	}

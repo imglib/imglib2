@@ -54,4 +54,43 @@ public class Views
 		System.out.println( Util.printCoordinates( tmp ) );
 		return new ViewTransformView< T >( view, t, tmp );
 	}
+
+	/**
+	 * take a (n-1)-dimensional slice of a n-dimensional view,
+	 * fixing d-component of coordinates to pos. 
+	 */
+	public static < T > View< T > hyperSlice( final View< T > view, final int d, long pos )
+	{
+		final int m = view.numDimensions();
+		final int n = m - 1;
+		ViewTransform t = new ViewTransform( n, m );
+		long[] translation = new long[ m ];
+		translation[ d ] = pos;
+		boolean[] zero = new boolean[ m ];
+		int[] component = new int[ m ];
+		long[] dimension = new long[ n ];
+		for ( int e = 0; e < m; ++e )
+		{
+			if ( e < d )
+			{
+				zero [ e ] = false;
+				component[ e ] = e;
+				dimension[ e ] = view.dimension( e );
+			}
+			else if ( e > d )
+			{
+				zero [ e ] = false;
+				component[ e ] = e - 1;
+				dimension[ e - 1 ] = view.dimension( e );
+			}
+			else
+			{
+				zero [ e ] = true;
+				component[ e ] = 0;
+			}
+		}
+		t.setTranslation( translation );
+		t.setPermutation( zero, component );
+		return new ViewTransformView< T >( view, t, dimension );
+	}
 }
