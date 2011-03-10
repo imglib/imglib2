@@ -31,13 +31,11 @@ import mpicbg.imglib.Bounded;
 import mpicbg.imglib.RandomAccess;
 
 /**
- * ImgRandomAccess is a {@link Bounded} {@link RandomAccess} that is an
- * {@link ImgSampler}. That is, an ImgRandomAccess can access and return its
- * {@link Img}. It is also bounded, that is, it can tell whether its current
- * position falls out of the Img.
+ * ImgRandomAccess is a {@link Bounded} {@link RandomAccess}.
+ * It can tell whether its current position falls out of bounds.
  * 
  * @author Tobias Pietzsch, Stephan Preibisch and Stephan Saalfeld
  */
-public interface ImgRandomAccess< T > extends ImgSampler< T >, RandomAccess< T >, Bounded
+public interface ImgRandomAccess< T > extends RandomAccess< T >, Bounded
 {
 }

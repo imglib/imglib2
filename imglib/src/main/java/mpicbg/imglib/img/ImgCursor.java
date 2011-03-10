@@ -40,5 +40,5 @@ import mpicbg.imglib.Cursor;
  *
  * @param <T>
  */
-public interface ImgCursor< T > extends ImgSampler< T >, Cursor< T >
+public interface ImgCursor< T > extends Cursor< T >
 {}
