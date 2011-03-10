@@ -30,7 +30,7 @@ package mpicbg.imglib.img.shapelist;
 import mpicbg.imglib.AbstractCursor;
 import mpicbg.imglib.Localizable;
 import mpicbg.imglib.Positionable;
-import mpicbg.imglib.img.ImgCursor;
+import mpicbg.imglib.Cursor;
 import mpicbg.imglib.img.ImgRandomAccess;
 import mpicbg.imglib.location.VoidRealPositionable;
 import mpicbg.imglib.type.Type;
@@ -42,7 +42,7 @@ import mpicbg.imglib.util.Util;
  *
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-public class ShapeListPositionableRasterSampler< T extends Type< T > > extends AbstractCursor< T > implements ImgRandomAccess< T >, ImgCursor< T >
+public class ShapeListPositionableRasterSampler< T extends Type< T > > extends AbstractCursor< T > implements ImgRandomAccess< T >, Cursor< T >
 {
 	final protected ShapeList< T > container;
 	

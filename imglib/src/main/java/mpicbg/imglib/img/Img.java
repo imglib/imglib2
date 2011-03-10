@@ -27,6 +27,7 @@
  */
 package mpicbg.imglib.img;
 
+import mpicbg.imglib.Cursor;
 import mpicbg.imglib.Interval;
 import mpicbg.imglib.RandomAccessibleInterval;
 import mpicbg.imglib.outofbounds.OutOfBoundsFactory;
@@ -50,10 +51,10 @@ public interface Img< T >
 	public ImgRandomAccess< T > randomAccess( OutOfBoundsFactory< T, Img< T > > factory );
 	
 	@Override
-	public ImgCursor< T > cursor();
+	public Cursor< T > cursor();
 
 	@Override
-	public ImgCursor< T > localizingCursor();
+	public Cursor< T > localizingCursor();
 
 	/**
 	 * Get a {@link ImgFactory} that creates {@link Img}s

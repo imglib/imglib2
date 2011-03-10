@@ -29,7 +29,7 @@ package mpicbg.imglib.img.shapelist;
 
 import mpicbg.imglib.img.AbstractImgOutOfBoundsRandomAccess;
 import mpicbg.imglib.img.Img;
-import mpicbg.imglib.img.ImgCursor;
+import mpicbg.imglib.Cursor;
 import mpicbg.imglib.img.ImgRandomAccess;
 import mpicbg.imglib.outofbounds.OutOfBoundsFactory;
 import mpicbg.imglib.type.Type;
@@ -78,7 +78,7 @@ public class ShapeListCached< T extends Type< T > > extends ShapeList< T >
 	}
 
 	@Override
-	public ImgCursor<T> cursor() {
+	public Cursor<T> cursor() {
 		return new ShapeListCachedPositionableRasterSampler< T >( this );
 	}
 }

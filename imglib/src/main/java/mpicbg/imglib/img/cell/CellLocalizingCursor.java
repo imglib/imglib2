@@ -2,11 +2,10 @@ package mpicbg.imglib.img.cell;
 
 import mpicbg.imglib.AbstractLocalizingCursor;
 import mpicbg.imglib.Cursor;
-import mpicbg.imglib.img.ImgCursor;
 import mpicbg.imglib.img.basictypeaccess.array.ArrayDataAccess;
 import mpicbg.imglib.type.NativeType;
 
-public class CellLocalizingCursor< T extends NativeType< T >, A extends ArrayDataAccess< A > > extends AbstractLocalizingCursor< T > implements ImgCursor< T >, CellImg.CellContainerSampler< T, A >
+public class CellLocalizingCursor< T extends NativeType< T >, A extends ArrayDataAccess< A > > extends AbstractLocalizingCursor< T > implements Cursor< T >, CellImg.CellContainerSampler< T, A >
 {
 	protected final T type;
 	

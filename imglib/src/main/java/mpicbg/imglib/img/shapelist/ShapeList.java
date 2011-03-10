@@ -30,12 +30,12 @@ package mpicbg.imglib.img.shapelist;
 import java.awt.Shape;
 import java.util.ArrayList;
 
+import mpicbg.imglib.Cursor;
 import mpicbg.imglib.Interval;
 import mpicbg.imglib.IterableRealInterval;
 import mpicbg.imglib.img.AbstractImg;
 import mpicbg.imglib.img.AbstractImgOutOfBoundsRandomAccess;
 import mpicbg.imglib.img.Img;
-import mpicbg.imglib.img.ImgCursor;
 import mpicbg.imglib.img.ImgRandomAccess;
 import mpicbg.imglib.img.array.ArrayImg;
 import mpicbg.imglib.img.planar.PlanarImg;
@@ -160,12 +160,12 @@ public class ShapeList< T extends Type< T > > extends AbstractImg< T >
 	}
 
 	@Override
-	public ImgCursor<T> cursor() {
+	public Cursor<T> cursor() {
 		return new ShapeListPositionableRasterSampler< T >( this );
 	}
 
 	@Override
-	public ImgCursor<T> localizingCursor() {
+	public Cursor<T> localizingCursor() {
 		return cursor();
 	}
 

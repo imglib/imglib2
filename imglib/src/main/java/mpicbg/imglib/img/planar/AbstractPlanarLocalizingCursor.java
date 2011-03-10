@@ -28,7 +28,7 @@
 package mpicbg.imglib.img.planar;
 
 import mpicbg.imglib.AbstractLocalizingCursorInt;
-import mpicbg.imglib.img.ImgCursor;
+import mpicbg.imglib.Cursor;
 import mpicbg.imglib.type.NativeType;
 
 /**
@@ -37,7 +37,7 @@ import mpicbg.imglib.type.NativeType;
  *
  * @author Stephan Preibisch and Stephan Saalfeld
  */
-abstract public class AbstractPlanarLocalizingCursor< T extends NativeType< T > > extends AbstractLocalizingCursorInt< T > implements ImgCursor< T >, PlanarImg.PlanarContainerSampler
+abstract public class AbstractPlanarLocalizingCursor< T extends NativeType< T > > extends AbstractLocalizingCursorInt< T > implements Cursor< T >, PlanarImg.PlanarContainerSampler
 {
 	protected final T type;
 
