@@ -28,6 +28,9 @@
 
 package mpicbg.imglib;
 
+import java.util.Iterator;
+
+import mpicbg.imglib.outofbounds.AbstractOutOfBoundsRandomAccess;
 import mpicbg.imglib.outofbounds.OutOfBoundsFactory;
 
 /**
@@ -36,7 +39,7 @@ import mpicbg.imglib.outofbounds.OutOfBoundsFactory;
  *
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-final public class ExtendedRandomAccessibleInterval< T, F extends RandomAccessibleInterval< T, F > > implements Interval, RandomAccessible< T > 
+final public class ExtendedRandomAccessibleInterval< T, F extends RandomAccessibleInterval< T > > implements RandomAccessibleInterval< T > 
 {
 	final protected F interval;
 	final protected OutOfBoundsFactory< T, F > factory;
@@ -116,6 +119,43 @@ final public class ExtendedRandomAccessibleInterval< T, F extends RandomAccessib
 	@Override
 	final public RandomAccess< T > randomAccess()
 	{
-		return interval.randomAccess( factory );
+		return new AbstractOutOfBoundsRandomAccess< T >( interval.numDimensions(), factory.create( interval ) );
 	}
+
+	@Override
+	public Cursor< T > cursor()
+	{
+		return interval.cursor();
+	}
+
+	@Override
+	public Cursor< T > localizingCursor()
+	{
+		return interval.localizingCursor();
+	}
+
+	@Override
+	public long size()
+	{
+		return interval.size();
+	}
+
+	@Override
+	public T firstElement()
+	{
+		return interval.firstElement();
+	}
+
+	@Override
+	public boolean equalIterationOrder( IterableRealInterval< ? > f )
+	{
+		return false;
+	}
+
+	@Override
+	public Iterator< T > iterator()
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}	
 }

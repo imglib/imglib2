@@ -29,12 +29,10 @@ package mpicbg.imglib.img.array;
 
 import mpicbg.imglib.Interval;
 import mpicbg.imglib.IterableRealInterval;
-import mpicbg.imglib.img.AbstractImgOutOfBoundsRandomAccess;
 import mpicbg.imglib.img.AbstractNativeImg;
 import mpicbg.imglib.img.Img;
 import mpicbg.imglib.img.basictypeaccess.DataAccess;
 import mpicbg.imglib.img.list.ListImg;
-import mpicbg.imglib.outofbounds.OutOfBoundsFactory;
 import mpicbg.imglib.type.NativeType;
 import mpicbg.imglib.util.IntervalIndexer;
 
@@ -92,12 +90,6 @@ public class ArrayImg< T extends NativeType< T >, A extends DataAccess > extends
 
 	@Override
 	public ArrayRandomAccess< T > randomAccess() { return new ArrayRandomAccess< T >( this ); }
-
-	@Override
-	public AbstractImgOutOfBoundsRandomAccess<T> randomAccess( final OutOfBoundsFactory<T, Img< T >> factory )
-	{
-		return new AbstractImgOutOfBoundsRandomAccess< T >( this, factory );
-	}
 
 	@Override
 	public boolean equalIterationOrder( final IterableRealInterval< ? > f )

@@ -34,12 +34,9 @@ import mpicbg.imglib.Cursor;
 import mpicbg.imglib.Interval;
 import mpicbg.imglib.IterableRealInterval;
 import mpicbg.imglib.img.AbstractImg;
-import mpicbg.imglib.img.AbstractImgOutOfBoundsRandomAccess;
-import mpicbg.imglib.img.Img;
 import mpicbg.imglib.img.ImgRandomAccess;
 import mpicbg.imglib.img.array.ArrayImg;
 import mpicbg.imglib.img.planar.PlanarImg;
-import mpicbg.imglib.outofbounds.OutOfBoundsFactory;
 import mpicbg.imglib.type.Type;
 
 /**
@@ -152,11 +149,6 @@ public class ShapeList< T extends Type< T > > extends AbstractImg< T >
 	@Override
 	public ImgRandomAccess<T> randomAccess() {
 		return new ShapeListPositionableRasterSampler< T >( this );
-	}
-
-	@Override
-	public AbstractImgOutOfBoundsRandomAccess<T> randomAccess( final OutOfBoundsFactory< T, Img<T> > factory ) {
-		return new AbstractImgOutOfBoundsRandomAccess< T >( this, factory );
 	}
 
 	@Override

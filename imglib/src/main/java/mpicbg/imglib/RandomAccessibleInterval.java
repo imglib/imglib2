@@ -27,9 +27,6 @@
  */
 package mpicbg.imglib;
 
-import mpicbg.imglib.outofbounds.OutOfBounds;
-import mpicbg.imglib.outofbounds.OutOfBoundsFactory;
-
 /**
  * <p><em>f</em>:{x&isin;Z<sup><em>n</em></sup>|[min,max]&rarr;T}</em></p>
  * 
@@ -39,7 +36,6 @@ import mpicbg.imglib.outofbounds.OutOfBoundsFactory;
  *
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-public interface RandomAccessibleInterval< T, F > extends IterableInterval< T >, RandomAccessible< T >
+public interface RandomAccessibleInterval< T > extends IterableInterval< T >, RandomAccessible< T >
 {
-	public RandomAccess< T > randomAccess( final OutOfBoundsFactory< T, F > factory );
 }

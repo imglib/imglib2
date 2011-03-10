@@ -27,11 +27,8 @@
  */
 package mpicbg.imglib.img.shapelist;
 
-import mpicbg.imglib.img.AbstractImgOutOfBoundsRandomAccess;
-import mpicbg.imglib.img.Img;
 import mpicbg.imglib.Cursor;
 import mpicbg.imglib.img.ImgRandomAccess;
-import mpicbg.imglib.outofbounds.OutOfBoundsFactory;
 import mpicbg.imglib.type.Type;
 
 /**
@@ -70,11 +67,6 @@ public class ShapeListCached< T extends Type< T > > extends ShapeList< T >
 	@Override
 	public ImgRandomAccess<T> randomAccess() {
 		return new ShapeListCachedPositionableRasterSampler< T >( this );
-	}
-
-	@Override
-	public AbstractImgOutOfBoundsRandomAccess<T> randomAccess( final OutOfBoundsFactory< T, Img<T> > factory ) {
-		return new AbstractImgOutOfBoundsRandomAccess< T >( this, factory );
 	}
 
 	@Override

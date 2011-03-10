@@ -6,9 +6,10 @@ import mpicbg.imglib.Cursor;
 import mpicbg.imglib.IterableRealInterval;
 import mpicbg.imglib.RandomAccess;
 import mpicbg.imglib.RandomAccessibleInterval;
+import mpicbg.imglib.outofbounds.AbstractOutOfBoundsRandomAccess;
 import mpicbg.imglib.outofbounds.OutOfBoundsFactory;
 
-final public class ExtendableRandomAccessibleIntervalImp< T, F extends RandomAccessibleInterval< T, F > > implements ExtendableRandomAccessibleInterval< T > 
+final public class ExtendableRandomAccessibleIntervalImp< T, F extends RandomAccessibleInterval< T > > implements ExtendableRandomAccessibleInterval< T > 
 {
 	final protected F interval;
 	final protected OutOfBoundsFactory< T, F > factory;
@@ -146,7 +147,7 @@ final public class ExtendableRandomAccessibleIntervalImp< T, F extends RandomAcc
 	final public RandomAccess< T > extendedRandomAccess()
 	{
 		System.out.println( "using extended randomAccess");
-		return interval.randomAccess( factory );
+		return new AbstractOutOfBoundsRandomAccess< T >( interval.numDimensions(), factory.create( interval ) );
 	}
 
 	@Override
@@ -160,11 +161,5 @@ final public class ExtendableRandomAccessibleIntervalImp< T, F extends RandomAcc
 	final public ExtendableRandomAccessibleInterval< T > getImg()
 	{
 		return this;
-	}
-
-	@Override
-	public RandomAccess< T > randomAccess( OutOfBoundsFactory< T, View< T > > outOfBoundsFactory )
-	{
-		return new ViewOutOfBoundsRandomAccess< T >( this, outOfBoundsFactory );
 	}
 }

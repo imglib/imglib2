@@ -37,7 +37,7 @@ import mpicbg.imglib.RandomAccess;
  *
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-public abstract class AbstractOutOfBoundsRandomAccess< T > extends AbstractSampler< T > implements RandomAccess< T >
+public class AbstractOutOfBoundsRandomAccess< T > extends AbstractSampler< T > implements RandomAccess< T >
 {
 	/* performs the actual moves and generates/queries a Type */
 	final protected OutOfBounds< T > outOfBounds;
