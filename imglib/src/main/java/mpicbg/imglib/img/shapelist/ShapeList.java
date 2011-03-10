@@ -33,6 +33,7 @@ import java.util.ArrayList;
 import mpicbg.imglib.Interval;
 import mpicbg.imglib.IterableRealInterval;
 import mpicbg.imglib.img.AbstractImg;
+import mpicbg.imglib.img.AbstractImgOutOfBoundsRandomAccess;
 import mpicbg.imglib.img.Img;
 import mpicbg.imglib.img.ImgCursor;
 import mpicbg.imglib.img.ImgRandomAccess;
@@ -154,8 +155,8 @@ public class ShapeList< T extends Type< T > > extends AbstractImg< T >
 	}
 
 	@Override
-	public ImgRandomAccess<T> randomAccess( final OutOfBoundsFactory< T, Img<T> > factory ) {
-		return new ShapeListOutOfBoundsPositionableRasterSampler< T >( this, factory );
+	public AbstractImgOutOfBoundsRandomAccess<T> randomAccess( final OutOfBoundsFactory< T, Img<T> > factory ) {
+		return new AbstractImgOutOfBoundsRandomAccess< T >( this, factory );
 	}
 
 	@Override

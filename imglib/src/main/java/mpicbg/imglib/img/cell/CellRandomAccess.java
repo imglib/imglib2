@@ -16,8 +16,6 @@ public class CellRandomAccess< T extends NativeType< T >, A extends ArrayDataAcc
 {
 	protected final T type;
 	
-	protected final CellImg< T, A > container;
-
 	protected final RandomAccess< Cell< A > > cursorOnCells; // randomAccessOnCells;
 
 	protected final int[] defaultCellDims;
@@ -40,7 +38,6 @@ public class CellRandomAccess< T extends NativeType< T >, A extends ArrayDataAcc
 		super( container );
 		
 		this.type = container.createLinkedType();
-		this.container = container;
 		this.cursorOnCells = container.cells.randomAccess();
 		this.defaultCellDims = container.cellDims;
 		
@@ -243,12 +240,6 @@ public class CellRandomAccess< T extends NativeType< T >, A extends ArrayDataAcc
 			}
 		}
 		type.updateIndex( index );
-	}
-
-	@Override
-	public CellImg< T, ? > getImg()
-	{
-		return container;
 	}
 
 	/**

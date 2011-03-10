@@ -156,9 +156,6 @@ public class ShapeListPositionableRasterSampler< T extends Type< T > > extends A
 	}
 
 	@Override
-	public ShapeList<T> getImg(){ return container; }
-
-	@Override
 	public void reset()
 	{
 		position[ 0 ] = -1;

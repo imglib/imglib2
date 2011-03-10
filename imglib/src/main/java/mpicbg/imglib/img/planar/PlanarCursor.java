@@ -27,7 +27,6 @@
  */
 package mpicbg.imglib.img.planar;
 
-import mpicbg.imglib.Cursor;
 import mpicbg.imglib.type.NativeType;
 
 /**
@@ -38,18 +37,8 @@ import mpicbg.imglib.type.NativeType;
  */
 public class PlanarCursor< T extends NativeType< T > > extends AbstractPlanarCursor< T >
 {
-	protected final PlanarImg< T, ? > container;
-
 	public PlanarCursor( final PlanarImg< T, ? > container )
 	{
 		super( container );
-
-		this.container = container;
-	}
-
-	@Override
-	public PlanarImg< T, ? > getImg()
-	{
-		return container;
 	}
 }

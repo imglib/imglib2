@@ -89,12 +89,6 @@ public class ArrayCursor< T extends NativeType< T > > extends AbstractCursorInt<
 	}
 
 	@Override
-	public ArrayImg< T, ? > getImg()
-	{
-		return container;
-	}
-
-	@Override
 	public String toString()
 	{
 		return type.toString();

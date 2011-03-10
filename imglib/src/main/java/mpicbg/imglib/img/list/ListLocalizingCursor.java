@@ -47,13 +47,11 @@ final public class ListLocalizingCursor< T extends Type< T > > extends AbstractL
 	final private long[] max;
 	
 	final private ArrayList< T > pixels;
-	final private ListImg< T > img;
 	
 	public ListLocalizingCursor( final ListImg< T > img )
 	{
 		super( img.numDimensions() );
 		
-		this.img = img;
 		this.pixels = img.pixels;
 		this.maxNumPixels = ( int )img.size() - 1;
 
@@ -99,9 +97,6 @@ final public class ListLocalizingCursor< T extends Type< T > > extends AbstractL
 			position[ d ] = 0;		
 	}
 
-	@Override
-	public ListImg< T > getImg(){ return img; }
-	
 	@Override
 	public T get() { return pixels.get( i ); }
 }

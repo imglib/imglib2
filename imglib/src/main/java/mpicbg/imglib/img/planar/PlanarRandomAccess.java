@@ -37,15 +37,8 @@ import mpicbg.imglib.type.NativeType;
  */
 public class PlanarRandomAccess< T extends NativeType< T > > extends AbstractPlanarRandomAccess< T >
 {
-	final PlanarImg< T, ? > container;
-
 	public PlanarRandomAccess( final PlanarImg< T, ? > container )
 	{
 		super( container );
-		
-		this.container = container;
 	}
-	
-	@Override
-	public PlanarImg< T, ? > getImg() { return container; }
 }

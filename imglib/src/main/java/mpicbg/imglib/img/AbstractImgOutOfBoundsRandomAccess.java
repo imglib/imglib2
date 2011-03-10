@@ -36,7 +36,7 @@ import mpicbg.imglib.outofbounds.OutOfBoundsFactory;
  *
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-public abstract class AbstractImgOutOfBoundsRandomAccess< T > extends AbstractOutOfBoundsRandomAccess< T > implements ImgRandomAccess< T >
+public class AbstractImgOutOfBoundsRandomAccess< T > extends AbstractOutOfBoundsRandomAccess< T > implements ImgRandomAccess< T >
 {
 	public AbstractImgOutOfBoundsRandomAccess( final Img< T > container, final OutOfBoundsFactory< T, Img< T > > outOfBoundsFactory )
 	{

@@ -75,9 +75,6 @@ final public class ListCursor< T extends Type< T > > extends AbstractCursor< T >
 	public void reset() { i = -1; }
 	
 	@Override
-	public ListImg<T> getImg() { return container; }
-		
-	@Override
 	public long getLongPosition( final int dim )
 	{
 		return IntervalIndexer.indexToPosition( i, container.dim, container.step, dim );

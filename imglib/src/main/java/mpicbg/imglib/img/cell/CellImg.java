@@ -2,6 +2,7 @@ package mpicbg.imglib.img.cell;
 
 import mpicbg.imglib.Cursor;
 import mpicbg.imglib.IterableRealInterval;
+import mpicbg.imglib.img.AbstractImgOutOfBoundsRandomAccess;
 import mpicbg.imglib.img.AbstractNativeImg;
 import mpicbg.imglib.img.Img;
 import mpicbg.imglib.img.basictypeaccess.array.ArrayDataAccess;
@@ -163,9 +164,9 @@ final public class CellImg< T extends NativeType< T >, A extends ArrayDataAccess
 	}
 
 	@Override
-	public CellOutOfBoundsRandomAccess< T > randomAccess( OutOfBoundsFactory< T, Img<T> > outOfBoundsFactory )
+	public AbstractImgOutOfBoundsRandomAccess< T > randomAccess( OutOfBoundsFactory< T, Img<T> > outOfBoundsFactory )
 	{
-		return new CellOutOfBoundsRandomAccess< T >( this, outOfBoundsFactory );
+		return new AbstractImgOutOfBoundsRandomAccess< T >( this, outOfBoundsFactory );
 	}
 
 	@Override

@@ -133,8 +133,5 @@ public class ListRandomAccess< T extends Type< T > > extends AbstractBoundedRand
 	}
 	
 	@Override
-	public ListImg< T > getImg(){ return container; }
-	
-	@Override
 	public T get(){ return pixels.get( i ); }
 }

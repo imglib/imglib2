@@ -31,6 +31,7 @@ import java.util.ArrayList;
 
 import mpicbg.imglib.Interval;
 import mpicbg.imglib.IterableRealInterval;
+import mpicbg.imglib.img.AbstractImgOutOfBoundsRandomAccess;
 import mpicbg.imglib.img.AbstractNativeImg;
 import mpicbg.imglib.img.Img;
 import mpicbg.imglib.img.NativeImg;
@@ -237,9 +238,9 @@ public class PlanarImg< T extends NativeType< T >, A extends ArrayDataAccess<A> 
 	}
 
 	@Override
-	public PlanarOutOfBoundsRandomAccess< T > randomAccess( OutOfBoundsFactory<T,Img< T >> outOfBoundsFactory )
+	public AbstractImgOutOfBoundsRandomAccess< T > randomAccess( OutOfBoundsFactory<T,Img< T >> outOfBoundsFactory )
 	{
-		return new PlanarOutOfBoundsRandomAccess< T >( this, outOfBoundsFactory );
+		return new AbstractImgOutOfBoundsRandomAccess< T >( this, outOfBoundsFactory );
 	}
 
 	@Override

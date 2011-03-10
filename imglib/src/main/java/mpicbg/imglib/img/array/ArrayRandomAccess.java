@@ -122,7 +122,4 @@ public class ArrayRandomAccess< T extends NativeType< T > > extends AbstractBoun
 		type.incIndex( ( pos - position[ dim ] ) * container.steps[ dim ] );
 		position[ dim ] = pos;
 	}
-
-	@Override
-	public ArrayImg<T,?> getImg(){ return container; }
 }

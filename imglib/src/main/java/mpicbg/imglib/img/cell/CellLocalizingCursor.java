@@ -10,8 +10,6 @@ public class CellLocalizingCursor< T extends NativeType< T >, A extends ArrayDat
 {
 	protected final T type;
 	
-	protected final CellImg< T, A > container;
-
 	protected final Cursor< Cell< A > > cursorOnCells;
 
 	protected int lastIndexInCell;
@@ -34,7 +32,6 @@ public class CellLocalizingCursor< T extends NativeType< T >, A extends ArrayDat
 		super( container.numDimensions() );
 		
 		this.type = container.createLinkedType();
-		this.container = container;
 		this.cursorOnCells = container.cells.cursor();
 		this.minPositionInCell = new long[ n ];
 		this.maxPositionInCell = new long[ n ];
@@ -111,12 +108,6 @@ public class CellLocalizingCursor< T extends NativeType< T >, A extends ArrayDat
 		cursorOnCells.reset();
 		moveToNextCell();
 		type.updateIndex( index );
-	}
-
-	@Override
-	public CellImg< T, ? > getImg()
-	{
-		return container;
 	}
 
 	/**

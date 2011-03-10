@@ -39,5 +39,4 @@ import mpicbg.imglib.Sampler;
  */
 public interface ImgSampler< T > extends Sampler< T >
 {	
-	public Img< T > getImg();
 }

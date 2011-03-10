@@ -10,8 +10,6 @@ public class CellCursor< T extends NativeType< T >, A extends ArrayDataAccess< A
 {
 	protected final T type;
 	
-	protected final CellImg< T, A > container;
-
 	protected final Cursor< Cell< A > > cursorOnCells;
 
 	protected int lastIndexInCell;
@@ -32,7 +30,6 @@ public class CellCursor< T extends NativeType< T >, A extends ArrayDataAccess< A
 		super( container.numDimensions() );
 		
 		this.type = container.createLinkedType();
-		this.container = container;
 		this.cursorOnCells = container.cells.cursor();
 		
 		reset();
@@ -89,12 +86,6 @@ public class CellCursor< T extends NativeType< T >, A extends ArrayDataAccess< A
 		cursorOnCells.reset();
 		moveToNextCell();
 		type.updateIndex( index );
-	}
-
-	@Override
-	public CellImg< T, ? > getImg()
-	{
-		return container;
 	}
 
 	@Override

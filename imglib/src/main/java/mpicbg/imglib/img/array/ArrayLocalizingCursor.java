@@ -110,7 +110,4 @@ public class ArrayLocalizingCursor< T extends NativeType< T > > extends Abstract
 
 		type.updateContainer( this );
 	}
-
-	@Override
-	public ArrayImg< T, ? > getImg(){ return container; }
 }
