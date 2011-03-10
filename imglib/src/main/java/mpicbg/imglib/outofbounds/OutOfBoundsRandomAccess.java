@@ -37,7 +37,7 @@ import mpicbg.imglib.RandomAccess;
  *
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-public class AbstractOutOfBoundsRandomAccess< T > extends AbstractSampler< T > implements RandomAccess< T >
+public final class OutOfBoundsRandomAccess< T > extends AbstractSampler< T > implements RandomAccess< T >
 {
 	/* performs the actual moves and generates/queries a Type */
 	final protected OutOfBounds< T > outOfBounds;
@@ -46,7 +46,7 @@ public class AbstractOutOfBoundsRandomAccess< T > extends AbstractSampler< T > i
 	 * @param n number of dimensions in the {@link Img}.
 	 * @param outOfBounds
 	 */
-	public AbstractOutOfBoundsRandomAccess( final int n, final OutOfBounds< T > outOfBounds )
+	public OutOfBoundsRandomAccess( final int n, final OutOfBounds< T > outOfBounds )
 	{
 		super( n );
 		this.outOfBounds = outOfBounds;

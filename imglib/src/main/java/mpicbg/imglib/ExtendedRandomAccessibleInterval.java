@@ -30,7 +30,7 @@ package mpicbg.imglib;
 
 import java.util.Iterator;
 
-import mpicbg.imglib.outofbounds.AbstractOutOfBoundsRandomAccess;
+import mpicbg.imglib.outofbounds.OutOfBoundsRandomAccess;
 import mpicbg.imglib.outofbounds.OutOfBoundsFactory;
 
 /**
@@ -119,7 +119,7 @@ final public class ExtendedRandomAccessibleInterval< T, F extends RandomAccessib
 	@Override
 	final public RandomAccess< T > randomAccess()
 	{
-		return new AbstractOutOfBoundsRandomAccess< T >( interval.numDimensions(), factory.create( interval ) );
+		return new OutOfBoundsRandomAccess< T >( interval.numDimensions(), factory.create( interval ) );
 	}
 
 	@Override

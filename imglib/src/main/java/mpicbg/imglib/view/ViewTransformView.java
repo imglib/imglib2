@@ -3,9 +3,11 @@ package mpicbg.imglib.view;
 import java.util.Iterator;
 
 import mpicbg.imglib.Cursor;
+import mpicbg.imglib.IterableInterval;
 import mpicbg.imglib.IterableRealInterval;
 import mpicbg.imglib.RandomAccess;
-import mpicbg.imglib.outofbounds.OutOfBoundsFactory;
+import mpicbg.imglib.RandomAccessible;
+import mpicbg.imglib.util.Util;
 
 public class ViewTransformView< T > implements View< T >
 {
@@ -22,6 +24,31 @@ public class ViewTransformView< T > implements View< T >
 
 	protected final long[] tmpSourcePosition;
 	protected final long[] tmpTargetPosition;
+
+	public <I extends IterableInterval< T > & RandomAccessible< T > > ViewTransformView( I target, ViewTransform transform, long[] dim )
+	{
+		assert target.numDimensions() == transform.targetDim();
+		assert dim.length == transform.sourceDim();
+
+		n = transform.sourceDim();
+
+		numPixels = numElements( dim );
+
+		targetImg = null;
+		
+		final int targetDim = target.numDimensions();
+		cumulativeTransform = new ViewTransform( n, targetDim );
+		cumulativeTransform.set( transform );
+		
+		dimension = dim.clone();
+
+		max = new long[ n ];
+		for ( int d = 0; d < n; ++d )
+			max[ d ] = dimension[ d ] - 1;
+		
+		tmpSourcePosition = new long[ n ];
+		tmpTargetPosition = new long[ targetDim ];
+	}
 
 	public ViewTransformView( View< T > target, ViewTransform transform, long[] dim )
 	{
@@ -173,6 +200,7 @@ public class ViewTransformView< T > implements View< T >
 			tmpSourcePosition[ d ] = 0;
 		}
 		cumulativeTransform.transform( tmpSourcePosition, tmpTargetPosition );
+		System.out.println( "src " + Util.printCoordinates( tmpSourcePosition ) + " => tgt " + Util.printCoordinates( tmpTargetPosition ) );
 		if ( ! targetImg.isOutOfBounds( tmpTargetPosition ) )
 		{
 			for ( int d = 0; d < n; ++d )
@@ -180,6 +208,7 @@ public class ViewTransformView< T > implements View< T >
 				tmpSourcePosition[ d ] = max[ d ];
 			}
 			cumulativeTransform.transform( tmpSourcePosition, tmpTargetPosition );
+			System.out.println( "src " + Util.printCoordinates( tmpSourcePosition ) + " => tgt " + Util.printCoordinates( tmpTargetPosition ) );
 			if ( ! targetImg.isOutOfBounds( tmpTargetPosition ) )
 			{
 				return new ViewTransformRandomAccess< T >( targetImg.randomAccess(), cumulativeTransform );
@@ -211,11 +240,4 @@ public class ViewTransformView< T > implements View< T >
 	{
 		return targetImg;
 	}
-
-	@Override
-	public RandomAccess< T > randomAccess( OutOfBoundsFactory< T, View< T > > outOfBoundsFactory )
-	{
-		return new ViewOutOfBoundsRandomAccess< T >( this, outOfBoundsFactory );
-	}
-
 }
