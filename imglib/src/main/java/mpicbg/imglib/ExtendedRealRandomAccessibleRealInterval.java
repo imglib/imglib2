@@ -28,12 +28,12 @@
 
 package mpicbg.imglib;
 
-import mpicbg.imglib.outofbounds.OutOfBoundsFactory;
 import mpicbg.imglib.outofbounds.RealOutOfBoundsFactory;
+import mpicbg.imglib.outofbounds.RealOutOfBoundsRealRandomAccess;
 
 /**
- * Implements {@link RandomAccessible} for a {@link RandomAccessibleInterval}
- * through an {@link OutOfBoundsFactory}.
+ * Implements {@link RealRandomAccessible} for a {@link RealRandomAccessibleRealInterval}
+ * through an {@link RealOutOfBoundsFactory}.
  *
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
@@ -81,6 +81,6 @@ final public class ExtendedRealRandomAccessibleRealInterval< T, F extends RealRa
 	@Override
 	final public RealRandomAccess< T > realRandomAccess()
 	{
-		return interval.realRandomAccess( factory );
+		return new RealOutOfBoundsRealRandomAccess< T >( interval.numDimensions(), factory.create( interval ) );
 	}
 }
