@@ -45,4 +45,17 @@ public interface RandomAccessible< T > extends EuclideanSpace
 	 * @return random access sampler
 	 */
 	public RandomAccess< T > randomAccess();
+
+	/**
+	 * Create a random access sampler for integer coordinates.
+	 * The returned random access is intended to be used in the specified interval only.
+	 * Thus, the RandomAccessible may provide optimized versions.
+	 * Within the interval the random access provides the same values as that
+	 * obtained by {@link #randomAccess()}.
+	 * 
+	 * @param interval   in which interval you intend to use the random access.
+	 * 
+	 * @return random access sampler
+	 */
+	public RandomAccess< T > randomAccess( Interval interval );
 }

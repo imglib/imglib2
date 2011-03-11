@@ -31,6 +31,9 @@ package mpicbg.imglib.img;
 
 import java.util.Iterator;
 
+import mpicbg.imglib.Interval;
+import mpicbg.imglib.RandomAccess;
+
 
 public abstract class AbstractImg< T > implements Img< T >
 {
@@ -160,6 +163,12 @@ public abstract class AbstractImg< T > implements Img< T >
 	public long min( int d )
 	{
 		return 0;
+	}
+
+	@Override
+	public RandomAccess< T > randomAccess( Interval interval )
+	{
+		return randomAccess();
 	}
 	
 //	@Override
