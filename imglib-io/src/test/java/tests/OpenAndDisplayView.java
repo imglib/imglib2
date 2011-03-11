@@ -15,6 +15,7 @@ import mpicbg.imglib.io.LOCI;
 import mpicbg.imglib.type.Type;
 import mpicbg.imglib.type.numeric.ARGBType;
 import mpicbg.imglib.type.numeric.real.FloatType;
+import mpicbg.imglib.view.IntervalView;
 import mpicbg.imglib.view.View;
 import mpicbg.imglib.view.Views;
 
@@ -23,15 +24,15 @@ public class OpenAndDisplayView
 {
 	public static < T extends Type< T > > void copy (View< T > src, Img< T > dst)
 	{
-		final Cursor< T > srcCursor = src.localizingCursor();
-		final RandomAccess< T > dstCursor = dst.randomAccess();
+		final RandomAccess< T > srcCursor = src.randomAccess();
+		final Cursor< T > dstCursor = dst.localizingCursor();
 		
 		int[] position = new int[ src.numDimensions() ];
-		while ( srcCursor.hasNext() )
+		while ( dstCursor.hasNext() )
 		{
-			srcCursor.fwd();
-			srcCursor.localize( position );
-			dstCursor.setPosition( position );
+			dstCursor.fwd();
+			dstCursor.localize( position );
+			srcCursor.setPosition( position );
 			dstCursor.get().set( srcCursor.get() );
 		}
 	}
@@ -45,12 +46,12 @@ public class OpenAndDisplayView
 		Img< FloatType > img = LOCI.openLOCIFloatType( "/home/tobias/workspace/imglib2/imglib/DrosophilaWingMarked.tif", imgFactory );
 
 		long[] viewDimension = new long[] {100, 100};
-		View< FloatType > v1 = Views.superIntervalView( Views.view( img ), new long[] {65, 80}, viewDimension );
-		View< FloatType > v2 = Views.flippedView( v1, 0 );
-		View< FloatType > v3 = Views.flippedView( v2, 1 );
+		IntervalView< FloatType > v1 = Views.superIntervalView( Views.extend( img ), new long[] {65, 80}, viewDimension );
+		IntervalView< FloatType > v2 = Views.flippedView( v1, 0 );
+		IntervalView< FloatType > v3 = Views.flippedView( v2, 1 );
 
 		viewDimension = new long[] {120, 120};
-//		View< FloatType > v4 = Views.superIntervalView( Views.view( v3 ), new long[] {-10, -10}, viewDimension );
+//		IntervalView< FloatType > v4 = Views.superIntervalView( Views.extend( v3 ), new long[] {-10, -10}, viewDimension );
 		View< FloatType > v4 = Views.superIntervalView( v3, new long[] {-10, -10}, viewDimension );
 
 		/*

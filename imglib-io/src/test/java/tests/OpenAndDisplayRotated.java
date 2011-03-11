@@ -11,7 +11,7 @@ import mpicbg.imglib.img.array.ArrayImgFactory;
 import mpicbg.imglib.io.LOCI;
 import mpicbg.imglib.type.numeric.ARGBType;
 import mpicbg.imglib.type.numeric.real.FloatType;
-import mpicbg.imglib.view.View;
+import mpicbg.imglib.view.IntervalView;
 import mpicbg.imglib.view.Views;
 
 public class OpenAndDisplayRotated
@@ -22,7 +22,7 @@ public class OpenAndDisplayRotated
 		
 		Img< FloatType > img = LOCI.openLOCIFloatType( "/home/tobias/Desktop/73.tif",  new ArrayImgFactory<FloatType>() );
 		
-		View< FloatType > view = Views.rotatedView( Views.view( img ), 0, 1 );
+		IntervalView< FloatType > view = Views.rotatedView( img, 0, 2 );
 
 		final ARGBScreenImage screenImage = new ARGBScreenImage( ( int )view.dimension( 0 ), ( int )view.dimension( 1 ) );
 		final XYProjector< FloatType, ARGBType > projector = new XYProjector< FloatType, ARGBType >( view, screenImage, new RealARGBConverter< FloatType >( 0, 127 ) );

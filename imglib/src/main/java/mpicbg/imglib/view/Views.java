@@ -1,33 +1,24 @@
 package mpicbg.imglib.view;
 
-import mpicbg.imglib.img.Img;
+import mpicbg.imglib.ExtendedRandomAccessibleInterval;
+import mpicbg.imglib.RandomAccessibleInterval;
 import mpicbg.imglib.outofbounds.OutOfBoundsFactory;
 import mpicbg.imglib.outofbounds.OutOfBoundsMirrorFactory;
 import mpicbg.imglib.util.Util;
 
 public class Views
 {
-	public static < T > View< T > view( final Img< T > img, final OutOfBoundsFactory< T, Img< T > > factory )
+	public static < T, F extends RandomAccessibleInterval< T > > IntervalView< T > extend( final F randomAccessible, final OutOfBoundsFactory< T, F > factory )
 	{
-		return new ExtendableRandomAccessibleIntervalImp< T, Img< T > >( img, factory );
+		return new ExtendedRandomAccessibleInterval< T, F >( randomAccessible, factory );
 	}
 
-	public static < T > View< T > view( final Img< T > img )
+	public static < T, F extends RandomAccessibleInterval< T > > IntervalView< T > extend( final F randomAccessible )
 	{
-		return view( img, new OutOfBoundsMirrorFactory< T, Img< T > >(OutOfBoundsMirrorFactory.Boundary.SINGLE) );
+		return new ExtendedRandomAccessibleInterval< T, F >( randomAccessible, new OutOfBoundsMirrorFactory< T, F >( OutOfBoundsMirrorFactory.Boundary.SINGLE ) );
 	}
 
-	public static < T > View< T > view( final View< T > view, final OutOfBoundsFactory< T, View< T > > factory )
-	{
-		return new ExtendableRandomAccessibleIntervalImp< T, View< T > >( view, factory );
-	}
-
-	public static < T > View< T > view( final View< T > view )
-	{
-		return view( view, new OutOfBoundsMirrorFactory< T, View< T > >(OutOfBoundsMirrorFactory.Boundary.SINGLE) );
-	}
-
-	public static < T > View< T > superIntervalView( final View< T > view, long[] offset, long[] dimension )
+	public static < T > ViewTransformView< T > superIntervalView( final View< T > view, long[] offset, long[] dimension )
 	{
 		final int n = view.numDimensions();
 		ViewTransform t = new ViewTransform( n, n );
@@ -35,7 +26,7 @@ public class Views
 		return new ViewTransformView< T >( view, t, dimension );
 	}
 
-	public static < T > View< T > flippedView( final View< T > view, final int d )
+	public static < T > ViewTransformView< T > flippedView( final IntervalView< T > view, final int d )
 	{
 		final int n = view.numDimensions();
 		long[] tmp = new long[ n ];
@@ -57,9 +48,11 @@ public class Views
 
 	/**
 	 * take a (n-1)-dimensional slice of a n-dimensional view,
-	 * fixing d-component of coordinates to pos. 
+	 * fixing d-component of coordinates to pos.
+	 * 
+	 * TODO: this should work on general views, not just IntervalView
 	 */
-	public static < T > View< T > hyperSlice( final View< T > view, final int d, long pos )
+	public static < T > ViewTransformView< T > hyperSlice( final RandomAccessibleInterval< T > view, final int d, long pos )
 	{
 		final int m = view.numDimensions();
 		final int n = m - 1;
@@ -105,7 +98,7 @@ public class Views
 	 * fromAxis=1 and toAxis=0 corresponds to a counter-clock-wise rotation in the
 	 * XY plane.
 	 */
-	public static < T > View< T > rotatedView( final View< T > view, final int fromAxis, final int toAxis )
+	public static < T > ViewTransformView< T > rotatedView( final RandomAccessibleInterval< T > view, final int fromAxis, final int toAxis )
 	{
 		final int n = view.numDimensions();
 		long[] tmp = new long[ n ];
