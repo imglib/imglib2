@@ -27,7 +27,7 @@
  */
 package mpicbg.imglib.img;
 
-import mpicbg.imglib.Interval;
+import mpicbg.imglib.IterableInterval;
 import mpicbg.imglib.RandomAccessibleInterval;
 
 /**
@@ -40,7 +40,7 @@ import mpicbg.imglib.RandomAccessibleInterval;
 public interface Img< T >
 	extends
 		RandomAccessibleInterval< T >,
-		Interval
+		IterableInterval< T >
 {
 	/**
 	 * Get a {@link ImgFactory} that creates {@link Img}s

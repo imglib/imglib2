@@ -36,6 +36,6 @@ package mpicbg.imglib;
  *
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-public interface RandomAccessibleInterval< T > extends IterableInterval< T >, RandomAccessible< T >
+public interface RandomAccessibleInterval< T > extends RandomAccessible< T >, Interval
 {
 }
