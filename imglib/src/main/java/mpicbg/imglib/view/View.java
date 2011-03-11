@@ -1,18 +1,24 @@
 package mpicbg.imglib.view;
 
-import mpicbg.imglib.IterableInterval;
+import mpicbg.imglib.Interval;
+import mpicbg.imglib.RandomAccess;
 import mpicbg.imglib.RandomAccessible;
-import mpicbg.imglib.RandomAccessibleInterval;
+import mpicbg.imglib.util.Pair;
 
-public interface View< T > extends IterableInterval< T >, RandomAccessible< T >, RandomAccessibleInterval< T >
+public interface View< T > extends RandomAccessible< T >
 {
-	/** 
-	 * @return transform from this {@link View} into the underlying {@link ExtendableRandomAccessibleInterval}.
-	 */
-	public ViewTransform getViewTransform ();
-
+	public Pair< RandomAccess< T >, ViewTransform > untransformedRandomAccess( Interval i );
+	
 	/**
-	 * @return the underlying {@link ExtendableRandomAccessibleInterval}.
+	 * Get the target {@link RandomAccessible}.
+	 * This is the next irreducible element in the view hierarchy, that is,
+	 * the next ExtendedRandomAccessibleInterval or the underlying Img.
+	 * 
+	 * <p>
+	 * For {@link TransformingView}s the target RandomAccessible is the one
+	 * to which the {@link TransformingView#getViewTransform view transform} maps. 
+	 * 
+	 * @return the underlying {@link RandomAccessible}.
 	 */
-	public ExtendableRandomAccessibleInterval< T > getImg();
+	public RandomAccessible< T > getTargetRandomAccessible();
 }
