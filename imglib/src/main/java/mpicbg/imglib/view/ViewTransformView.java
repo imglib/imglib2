@@ -1,21 +1,16 @@
 package mpicbg.imglib.view;
 
-import java.util.Iterator;
-
-import mpicbg.imglib.Cursor;
-import mpicbg.imglib.IterableInterval;
-import mpicbg.imglib.IterableRealInterval;
+import mpicbg.imglib.ExtendedRandomAccessibleInterval;
+import mpicbg.imglib.Interval;
 import mpicbg.imglib.RandomAccess;
 import mpicbg.imglib.RandomAccessible;
-import mpicbg.imglib.util.Util;
+import mpicbg.imglib.util.Pair;
 
-public class ViewTransformView< T > implements View< T >
+public class ViewTransformView< T > implements TransformingIntervalView< T >
 {
 	protected final int n;
 
-	protected final long numPixels;
-
-	protected final ExtendableRandomAccessibleInterval< T > targetImg;
+	protected final RandomAccessible< T > targetImg;
 	
 	protected final ViewTransform cumulativeTransform;
 
@@ -25,18 +20,16 @@ public class ViewTransformView< T > implements View< T >
 	protected final long[] tmpSourcePosition;
 	protected final long[] tmpTargetPosition;
 
-	public <I extends IterableInterval< T > & RandomAccessible< T > > ViewTransformView( I target, ViewTransform transform, long[] dim )
+	public ViewTransformView( RandomAccessible< T > target, ViewTransform transform, long[] dim )
 	{
 		assert target.numDimensions() == transform.targetDim();
 		assert dim.length == transform.sourceDim();
 
 		n = transform.sourceDim();
 
-		numPixels = numElements( dim );
-
-		targetImg = null;
+		targetImg = target;
 		
-		final int targetDim = target.numDimensions();
+		final int targetDim = targetImg.numDimensions();
 		cumulativeTransform = new ViewTransform( n, targetDim );
 		cumulativeTransform.set( transform );
 		
@@ -50,18 +43,16 @@ public class ViewTransformView< T > implements View< T >
 		tmpTargetPosition = new long[ targetDim ];
 	}
 
-	public ViewTransformView( View< T > target, ViewTransform transform, long[] dim )
+	public ViewTransformView( ViewTransformView< T > target, ViewTransform transform, long[] dim )
 	{
 		assert target.numDimensions() == transform.targetDim();
 		assert dim.length == transform.sourceDim();
 
 		n = transform.sourceDim();
 
-		numPixels = numElements( dim );
-
-		targetImg = target.getImg();
+		targetImg = target.getTargetRandomAccessible();
 		
-		final int targetDim = target.getViewTransform().targetDim();
+		final int targetDim = targetImg.numDimensions();
 		cumulativeTransform = new ViewTransform( n, targetDim );
 		ViewTransform.concatenate( target.getViewTransform(), transform, cumulativeTransform );
 		
@@ -75,28 +66,29 @@ public class ViewTransformView< T > implements View< T >
 		tmpTargetPosition = new long[ targetDim ];
 	}
 	
-	@Override
-	public Iterator<T> iterator()
-	{ 
-		return cursor();
-	}
+	public ViewTransformView( ExtendedRandomAccessibleInterval< T, ? > target, ViewTransform transform, long[] dim )
+	{
+		assert target.numDimensions() == transform.targetDim();
+		assert dim.length == transform.sourceDim();
 
-	@Override
-	public T firstElement()
-	{
-		return cursor().next();
+		n = transform.sourceDim();
+
+		targetImg = target;
+		
+		final int targetDim = targetImg.numDimensions();
+		cumulativeTransform = new ViewTransform( n, targetDim );
+		cumulativeTransform.set( transform );
+		
+		dimension = dim.clone();
+
+		max = new long[ n ];
+		for ( int d = 0; d < n; ++d )
+			max[ d ] = dimension[ d ] - 1;
+		
+		tmpSourcePosition = new long[ n ];
+		tmpTargetPosition = new long[ targetDim ];
 	}
-	
-	public static long numElements( final long[] dim )
-	{
-		long numPixels = 1;		
-		
-		for ( int i = 0; i < dim.length; ++i )
-			numPixels *= dim[ i ];
-		
-		return numPixels;		
-	}
-		
+			
 	@Override
 	public int numDimensions() { return n; }
 	
@@ -114,9 +106,6 @@ public class ViewTransformView< T > implements View< T >
 		catch ( ArrayIndexOutOfBoundsException e ) { return 1; }
 	}
 	
-	@Override
-	public long size() { return numPixels; }
-
 	@Override
 	public String toString()
 	{
@@ -186,47 +175,29 @@ public class ViewTransformView< T > implements View< T >
 	}
 
 	@Override
-	public boolean equalIterationOrder( IterableRealInterval< ? > f )
+	public Pair< RandomAccess< T >, ViewTransform > untransformedRandomAccess( Interval interval )
 	{
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public RandomAccess< T > randomAccess()
-	{
-		for ( int d = 0; d < n; ++d )
+		System.out.println( "ViewTransformView.untransformedRandomAccess in " + toString() );
+		Interval transformedInterval = cumulativeTransform.transform( interval );
+		if ( View.class.isInstance( targetImg ) )
 		{
-			tmpSourcePosition[ d ] = 0;
-		}
-		cumulativeTransform.transform( tmpSourcePosition, tmpTargetPosition );
-		System.out.println( "src " + Util.printCoordinates( tmpSourcePosition ) + " => tgt " + Util.printCoordinates( tmpTargetPosition ) );
-		if ( ! targetImg.isOutOfBounds( tmpTargetPosition ) )
-		{
-			for ( int d = 0; d < n; ++d )
+			Pair< RandomAccess< T >, ViewTransform > pair = ( ( View < T > ) targetImg ).untransformedRandomAccess( transformedInterval );
+			ViewTransform accessTransform = pair.b;
+			if ( accessTransform == null )
 			{
-				tmpSourcePosition[ d ] = max[ d ];
+				return new Pair< RandomAccess< T >, ViewTransform >( pair.a, cumulativeTransform );
 			}
-			cumulativeTransform.transform( tmpSourcePosition, tmpTargetPosition );
-			System.out.println( "src " + Util.printCoordinates( tmpSourcePosition ) + " => tgt " + Util.printCoordinates( tmpTargetPosition ) );
-			if ( ! targetImg.isOutOfBounds( tmpTargetPosition ) )
+			else
 			{
-				return new ViewTransformRandomAccess< T >( targetImg.randomAccess(), cumulativeTransform );
+				ViewTransform t = new ViewTransform( n, accessTransform.targetDim );
+				ViewTransform.concatenate( accessTransform, cumulativeTransform, t );
+				return new Pair< RandomAccess< T >, ViewTransform >( pair.a, t );
 			}
 		}
-		return new ViewTransformRandomAccess< T >( targetImg.extendedRandomAccess(), cumulativeTransform );
-	}
-
-	@Override
-	public Cursor< T > cursor()
-	{
-		return new RandomAccessibleZeroMinIntervalCursor< T >( this );
-	}
-
-	@Override
-	public Cursor< T > localizingCursor()
-	{
-		return new RandomAccessibleZeroMinIntervalCursor< T >( this );
+		else
+		{
+			return new Pair< RandomAccess< T >, ViewTransform > ( targetImg.randomAccess( transformedInterval ), cumulativeTransform );
+		}
 	}
 
 	@Override
@@ -236,8 +207,22 @@ public class ViewTransformView< T > implements View< T >
 	}
 
 	@Override
-	public ExtendableRandomAccessibleInterval< T > getImg()
+	public RandomAccessible< T > getTargetRandomAccessible()
 	{
 		return targetImg;
+	}
+
+	@Override
+	public RandomAccess< T > randomAccess( Interval interval )
+	{
+		Pair< RandomAccess< T >, ViewTransform > pair = untransformedRandomAccess( interval );
+		return new ViewTransformRandomAccess< T >( pair.a, pair.b );
+	}
+
+	@Override
+	public RandomAccess< T > randomAccess()
+	{
+		Pair< RandomAccess< T >, ViewTransform > pair = untransformedRandomAccess( this );
+		return new ViewTransformRandomAccess< T >( pair.a, pair.b );
 	}
 }

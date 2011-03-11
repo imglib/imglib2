@@ -30,6 +30,11 @@ package mpicbg.imglib;
 
 import mpicbg.imglib.outofbounds.OutOfBoundsFactory;
 import mpicbg.imglib.outofbounds.OutOfBoundsRandomAccess;
+import mpicbg.imglib.util.Util;
+import mpicbg.imglib.view.IntervalView;
+import mpicbg.imglib.view.View;
+import mpicbg.imglib.util.Pair;
+import mpicbg.imglib.view.ViewTransform;
 
 /**
  * Implements {@link RandomAccessible} for a {@link RandomAccessibleInterval}
@@ -37,57 +42,57 @@ import mpicbg.imglib.outofbounds.OutOfBoundsRandomAccess;
  *
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-final public class ExtendedRandomAccessibleInterval< T, F extends RandomAccessibleInterval< T > > implements RandomAccessibleInterval< T > 
+final public class ExtendedRandomAccessibleInterval< T, F extends RandomAccessibleInterval< T > > implements IntervalView< T > 
 {
-	final protected F interval;
+	final protected F target;
 	final protected OutOfBoundsFactory< T, F > factory;
 
 	public ExtendedRandomAccessibleInterval( final F interval, final OutOfBoundsFactory< T, F > factory )
 	{
-		this.interval = interval;
+		this.target = interval;
 		this.factory = factory;
 	}
 	
 	@Override
 	final public long dimension( final int d )
 	{
-		return interval.dimension( d );
+		return target.dimension( d );
 	}
 
 	@Override
 	final public void dimensions( final long[] dimensions )
 	{
-		interval.dimensions( dimensions );
+		target.dimensions( dimensions );
 	}
 
 	@Override
 	final public long max( final int d )
 	{
-		return interval.max( d );
+		return target.max( d );
 	}
 
 	@Override
 	final public void max( final long[] max )
 	{
-		interval.max( max );
+		target.max( max );
 	}
 
 	@Override
 	final public long min( final int d )
 	{
-		return interval.min( d );
+		return target.min( d );
 	}
 
 	@Override
 	final public void min( final long[] min )
 	{
-		interval.min( min );
+		target.min( min );
 	}
 
 	@Override
 	final public double realMax( final int d )
 	{
-		return interval.realMax( d );
+		return target.realMax( d );
 	}
 
 	@Override
@@ -99,7 +104,7 @@ final public class ExtendedRandomAccessibleInterval< T, F extends RandomAccessib
 	@Override
 	final public double realMin( final int d )
 	{
-		return interval.realMin( d );
+		return target.realMin( d );
 	}
 
 	@Override
@@ -111,19 +116,53 @@ final public class ExtendedRandomAccessibleInterval< T, F extends RandomAccessib
 	@Override
 	final public int numDimensions()
 	{
-		return interval.numDimensions();
+		return target.numDimensions();
 	}
 
 	@Override
 	final public RandomAccess< T > randomAccess()
 	{
-		return new OutOfBoundsRandomAccess< T >( interval.numDimensions(), factory.create( interval ) );
+		return new OutOfBoundsRandomAccess< T >( target.numDimensions(), factory.create( target ) );
 	}
 
 	@Override
-	final public RandomAccess< T > randomAccess( Interval i )
+	final public RandomAccess< T > randomAccess( Interval interval )
 	{
-		assert interval.numDimensions() == i.numDimensions();
-		return new OutOfBoundsRandomAccess< T >( interval.numDimensions(), factory.create( interval ) );
+		assert target.numDimensions() == interval.numDimensions();
+		
+		if ( Util.contains( target, interval ) ) {
+			return target.randomAccess( interval );
+		} else {
+			return randomAccess();
+		}
+	}
+
+	@SuppressWarnings( "unchecked" )
+	@Override
+	public Pair< RandomAccess< T >, ViewTransform > untransformedRandomAccess( Interval interval )
+	{
+		System.out.println( "ExtendedRandomAccessibleInterval.untransformedRandomAccess in " + toString() );
+		if ( Util.contains( target, interval ) )
+		{
+			if ( View.class.isInstance( target ) )
+			{
+				return ( ( View< T > ) target ).untransformedRandomAccess( interval );
+			}
+			else
+			{
+				return new Pair< RandomAccess< T >, ViewTransform >( target.randomAccess( interval ), null );
+			}
+		}
+		else
+		{
+			return new Pair< RandomAccess< T >, ViewTransform >( randomAccess(), null );
+		}
+	}
+
+	@Override
+	public RandomAccessible< T > getTargetRandomAccessible()
+	{
+		// TODO Auto-generated method stub
+		return null;
 	}
 }
