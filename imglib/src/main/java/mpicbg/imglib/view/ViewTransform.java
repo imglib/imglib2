@@ -1,5 +1,6 @@
 package mpicbg.imglib.view;
 
+import mpicbg.imglib.Interval;
 import Jama.Matrix;
 
 /**
@@ -13,12 +14,12 @@ public class ViewTransform
 	/**
 	 * dimension of source vector
 	 */
-	protected final int n;
+	protected final int sourceDim;
 	
 	/**
 	 * dimension of target vector
 	 */
-	protected final int m;
+	protected final int targetDim;
 
 	protected final long[] translation;
 
@@ -40,16 +41,16 @@ public class ViewTransform
 	 */
 	protected final int[] targetComponent;
 	
-	public ViewTransform( final int n, final int m )
+	public ViewTransform( final int sourceDim, final int targetDim )
 	{
-		this.n = n;
-		this.m = m;
-		translation = new long[ m ];
-		targetZero = new boolean[ m ];
-		targetInv = new boolean[ m ];
-		targetComponent = new int[ m ];
-		for ( int d = 0; d < m; ++d ) {
-			if ( d < n )
+		this.sourceDim = sourceDim;
+		this.targetDim = targetDim;
+		translation = new long[ targetDim ];
+		targetZero = new boolean[ targetDim ];
+		targetInv = new boolean[ targetDim ];
+		targetComponent = new int[ targetDim ];
+		for ( int d = 0; d < targetDim; ++d ) {
+			if ( d < sourceDim )
 			{
 				targetComponent[ d ] = d;
 			}
@@ -63,21 +64,21 @@ public class ViewTransform
 
 	public int sourceDim()
 	{
-		return n;
+		return sourceDim;
 	}
 	
 	public int targetDim()
 	{
-		return m;
+		return targetDim;
 	}
 	
 	public static void concatenate( final ViewTransform t1, final ViewTransform t2, final ViewTransform t1t2 )
 	{
-		assert t1.n == t2.m;
-		assert t1t2.m == t1.m;
-		assert t1t2.n == t2.n;
+		assert t1.sourceDim == t2.targetDim;
+		assert t1t2.targetDim == t1.targetDim;
+		assert t1t2.sourceDim == t2.sourceDim;
 		
-		for ( int d = 0; d < t1t2.m; ++d )
+		for ( int d = 0; d < t1t2.targetDim; ++d )
 		{
 			t1t2.translation[ d ] = t1.translation[ d ];
 			if ( t1.targetZero[ d ] )
@@ -110,10 +111,10 @@ public class ViewTransform
 
 	public void transform( long[] source, long[] target )
 	{
-		assert source.length == n;
-		assert target.length == m;
+		assert source.length == sourceDim;
+		assert target.length == targetDim;
 
-		for (int d = 0; d < m; ++d )
+		for (int d = 0; d < targetDim; ++d )
 		{
 			target[ d ] = translation[ d ];
 			if ( ! targetZero[ d ] )
@@ -126,57 +127,30 @@ public class ViewTransform
 			}
 		}
 	}
-	
-	private void permutateVector( long[] in, long[] out )
+
+	public IntervalImp transform( final Interval interval )
 	{
-		assert in.length == n;
-		assert out.length == m;
-
-		for (int d = 0; d < m; ++d )
-		{
-			if ( targetZero[ d ] )
-			{
-				out[ d ] = 0;
-			}
-			else
-			{
-				final long v = in[ targetComponent[ d ] ];
-				if ( targetInv[ d ] )
-					out[ d ] = -v;
-				else
-					out[ d ] = v;
-			}
-		}
-	}
-
-	private void permutateVector( int[] in, int[] out )
-	{
-		assert in.length == n;
-		assert out.length == m;
-
-		for (int d = 0; d < m; ++d )
-		{
-			if ( targetZero[ d ] )
-			{
-				out[ d ] = 0;
-			}
-			else
-			{
-				final int v = in[ targetComponent[ d ] ];
-				if ( targetInv[ d ] )
-					out[ d ] = -v;
-				else
-					out[ d ] = v;
-			}
-		}
+		assert interval.numDimensions() == sourceDim;
+		
+		long[] max = new long[ sourceDim ];
+		long[] min = new long[ sourceDim ];
+		interval.min( min );
+		interval.max( max );
+		
+		long[] tmax = new long[ targetDim ];
+		long[] tmin = new long[ targetDim ];
+		transform( min, tmin );
+		transform( max, tmax );
+		
+		return new IntervalImp( tmin, tmax );
 	}
 
 	public void set( final ViewTransform transform )
 	{
-		assert n == transform.n;
-		assert m == transform.m;
+		assert sourceDim == transform.sourceDim;
+		assert targetDim == transform.targetDim;
 
-		for (int d = 0; d < m; ++d)
+		for (int d = 0; d < targetDim; ++d)
 		{
 			translation[ d ] = transform.translation[ d ];
 			targetZero[ d ] = transform.targetZero[ d ];
@@ -187,24 +161,24 @@ public class ViewTransform
 
 	public void getTranslation( final long[] t )
 	{
-		assert t.length == m;
-		for (int d = 0; d < m; ++d)
+		assert t.length == targetDim;
+		for (int d = 0; d < targetDim; ++d)
 			t[ d ] = translation[ d ];
 	}
 
 	public void setTranslation( final long[] t )
 	{
-		assert t.length == m;
-		for (int d = 0; d < m; ++d)
+		assert t.length == targetDim;
+		for (int d = 0; d < targetDim; ++d)
 			translation[ d ] = t[ d ];
 	}
 
 	public void getPermutation( final boolean[] zero, final int[] component, final boolean[] inv )
 	{
-		assert zero.length == m;
-		assert inv.length == m;
-		assert component.length == m;
-		for (int d = 0; d < m; ++d)
+		assert zero.length == targetDim;
+		assert inv.length == targetDim;
+		assert component.length == targetDim;
+		for (int d = 0; d < targetDim; ++d)
 		{
 			zero[ d ] = targetZero[ d ];
 			inv[ d ] = targetInv[ d ];
@@ -214,12 +188,12 @@ public class ViewTransform
 	
 	public void setPermutation( final boolean[] zero, final int[] component, final boolean[] inv )
 	{
-		assert zero.length == m;
-		assert inv.length == m;
-		assert component.length == m;
-		for (int d = 0; d < m; ++d)
+		assert zero.length == targetDim;
+		assert inv.length == targetDim;
+		assert component.length == targetDim;
+		for (int d = 0; d < targetDim; ++d)
 		{
-			assert component[ d ] < n;
+			assert component[ d ] < sourceDim;
 			targetZero[ d ] = zero[ d ];
 			targetInv[ d ] = inv[ d ];
 			targetComponent[ d ] = component[ d ];
@@ -228,11 +202,11 @@ public class ViewTransform
 	
 	public void setPermutation( final boolean[] zero, final int[] component )
 	{
-		assert zero.length == m;
-		assert component.length == m;
-		for (int d = 0; d < m; ++d)
+		assert zero.length == targetDim;
+		assert component.length == targetDim;
+		for (int d = 0; d < targetDim; ++d)
 		{
-			assert component[ d ] < n;
+			assert component[ d ] < sourceDim;
 			targetZero[ d ] = zero[ d ];
 			targetInv[ d ] = false;
 			targetComponent[ d ] = component[ d ];
@@ -241,11 +215,11 @@ public class ViewTransform
 	
 	public void setPermutation( final int[] component, final boolean[] inv )
 	{
-		assert inv.length == m;
-		assert component.length == m;
-		for (int d = 0; d < m; ++d)
+		assert inv.length == targetDim;
+		assert component.length == targetDim;
+		for (int d = 0; d < targetDim; ++d)
 		{
-			assert component[ d ] < n;
+			assert component[ d ] < sourceDim;
 			targetZero[ d ] = false;
 			targetInv[ d ] = inv[ d ];
 			targetComponent[ d ] = component[ d ];
@@ -254,10 +228,10 @@ public class ViewTransform
 	
 	public void setPermutation( final int[] component )
 	{
-		assert component.length == m;
-		for (int d = 0; d < n; ++d)
+		assert component.length == targetDim;
+		for (int d = 0; d < sourceDim; ++d)
 		{
-			assert component[ d ] < n;
+			assert component[ d ] < sourceDim;
 			targetZero[ d ] = false;
 			targetInv[ d ] = false;
 			targetComponent[ d ] = component[ d ];
@@ -266,16 +240,16 @@ public class ViewTransform
 	
 	public Matrix getMatrix()
 	{
-		Matrix mat = new Matrix( m+1, n+1 );
+		Matrix mat = new Matrix( targetDim+1, sourceDim+1 );
 
-		mat.set( m, n, 1 );
+		mat.set( targetDim, sourceDim, 1 );
 		
-		for ( int d = 0; d < m; ++d )
+		for ( int d = 0; d < targetDim; ++d )
 		{
-			mat.set( d, n , translation[ d ] );
+			mat.set( d, sourceDim , translation[ d ] );
 		}
 		
-		for ( int d = 0; d < m; ++d )
+		for ( int d = 0; d < targetDim; ++d )
 		{
 			if ( targetZero[ d ] == false )
 			{
