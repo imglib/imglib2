@@ -29,8 +29,7 @@ package mpicbg.imglib.img.list;
 
 import java.util.ArrayList;
 
-import mpicbg.imglib.AbstractBoundedRandomAccess;
-import mpicbg.imglib.img.ImgRandomAccess;
+import mpicbg.imglib.AbstractRandomAccess;
 import mpicbg.imglib.type.Type;
 
 /**
@@ -39,7 +38,7 @@ import mpicbg.imglib.type.Type;
  *
  * @author Stephan Preibisch and Stephan Saalfeld
  */
-public class ListRandomAccess< T extends Type< T > > extends AbstractBoundedRandomAccess< T > implements ImgRandomAccess< T >
+public class ListRandomAccess< T extends Type< T > > extends AbstractRandomAccess< T >
 {
 	private int i;
 	
@@ -50,7 +49,7 @@ public class ListRandomAccess< T extends Type< T > > extends AbstractBoundedRand
 	
 	public ListRandomAccess( final ListImg< T > container ) 
 	{
-		super( container );
+		super( container.numDimensions() );
 		
 		this.container = container;
 		this.pixels = container.pixels;

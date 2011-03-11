@@ -33,8 +33,8 @@ import java.util.ArrayList;
 import mpicbg.imglib.Cursor;
 import mpicbg.imglib.Interval;
 import mpicbg.imglib.IterableRealInterval;
+import mpicbg.imglib.RandomAccess;
 import mpicbg.imglib.img.AbstractImg;
-import mpicbg.imglib.img.ImgRandomAccess;
 import mpicbg.imglib.img.array.ArrayImg;
 import mpicbg.imglib.img.planar.PlanarImg;
 import mpicbg.imglib.type.Type;
@@ -147,7 +147,7 @@ public class ShapeList< T extends Type< T > > extends AbstractImg< T >
 	}
 
 	@Override
-	public ImgRandomAccess<T> randomAccess() {
+	public RandomAccess<T> randomAccess() {
 		return new ShapeListPositionableRasterSampler< T >( this );
 	}
 

@@ -27,8 +27,7 @@
  */
 package mpicbg.imglib.img.planar;
 
-import mpicbg.imglib.AbstractBoundedRandomAccessInt;
-import mpicbg.imglib.img.ImgRandomAccess;
+import mpicbg.imglib.AbstractRandomAccessInt;
 import mpicbg.imglib.type.NativeType;
 
 /**
@@ -37,7 +36,7 @@ import mpicbg.imglib.type.NativeType;
  *
  * @author Stephan Preibisch and Stephan Saalfeld
  */
-public class PlanarRandomAccess< T extends NativeType< T > > extends AbstractBoundedRandomAccessInt< T > implements ImgRandomAccess< T >, PlanarImg.PlanarContainerSampler
+public class PlanarRandomAccess< T extends NativeType< T > > extends AbstractRandomAccessInt< T > implements PlanarImg.PlanarContainerSampler
 {
 	final protected int[] sliceSteps;
 	final protected int width;
@@ -47,7 +46,7 @@ public class PlanarRandomAccess< T extends NativeType< T > > extends AbstractBou
 	
 	public PlanarRandomAccess( final PlanarImg< T, ? > container )
 	{
-		super( container );
+		super( container.numDimensions() );
 		
 		sliceSteps = container.sliceSteps;
 		width = ( int ) container.dimension( 0 );

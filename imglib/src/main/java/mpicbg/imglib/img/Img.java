@@ -42,9 +42,6 @@ public interface Img< T >
 		RandomAccessibleInterval< T >,
 		Interval
 {
-	@Override
-	public ImgRandomAccess< T > randomAccess();
-
 	/**
 	 * Get a {@link ImgFactory} that creates {@link Img}s
 	 * of the same kind as this one.

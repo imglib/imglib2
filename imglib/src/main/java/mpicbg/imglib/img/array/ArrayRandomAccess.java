@@ -27,8 +27,7 @@
  */
 package mpicbg.imglib.img.array;
 
-import mpicbg.imglib.AbstractBoundedRandomAccessInt;
-import mpicbg.imglib.img.ImgRandomAccess;
+import mpicbg.imglib.AbstractRandomAccessInt;
 import mpicbg.imglib.type.NativeType;
 
 /**
@@ -37,14 +36,14 @@ import mpicbg.imglib.type.NativeType;
  *
  * @author Stephan Preibisch, Stephan Saalfeld, Tobias Pietzsch
  */
-public class ArrayRandomAccess< T extends NativeType< T > > extends AbstractBoundedRandomAccessInt< T > implements ImgRandomAccess< T >
+public class ArrayRandomAccess< T extends NativeType< T > > extends AbstractRandomAccessInt< T >
 {
 	protected final T type;
 	final ArrayImg< T, ? > container;
 	
 	public ArrayRandomAccess( final ArrayImg< T, ? > container ) 
 	{
-		super( container );
+		super( container.numDimensions() );
 		
 		this.container = container;
 		this.type = container.createLinkedType();

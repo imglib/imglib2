@@ -28,6 +28,7 @@
 package mpicbg.imglib.outofbounds;
 
 import mpicbg.imglib.AbstractSampler;
+import mpicbg.imglib.Bounded;
 import mpicbg.imglib.Localizable;
 import mpicbg.imglib.RandomAccess;
 
@@ -37,7 +38,7 @@ import mpicbg.imglib.RandomAccess;
  *
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-public final class OutOfBoundsRandomAccess< T > extends AbstractSampler< T > implements RandomAccess< T >
+public final class OutOfBoundsRandomAccess< T > extends AbstractSampler< T > implements RandomAccess< T >, Bounded
 {
 	/* performs the actual moves and generates/queries a Type */
 	final protected OutOfBounds< T > outOfBounds;
@@ -51,7 +52,11 @@ public final class OutOfBoundsRandomAccess< T > extends AbstractSampler< T > imp
 		super( n );
 		this.outOfBounds = outOfBounds;
 	}
-		
+
+
+	/* Bounded */
+	
+	@Override
 	final public boolean isOutOfBounds()
 	{
 		return outOfBounds.isOutOfBounds();

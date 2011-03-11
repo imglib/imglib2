@@ -28,7 +28,7 @@
 package mpicbg.imglib.img.shapelist;
 
 import mpicbg.imglib.Cursor;
-import mpicbg.imglib.img.ImgRandomAccess;
+import mpicbg.imglib.RandomAccess;
 import mpicbg.imglib.type.Type;
 
 /**
@@ -65,7 +65,7 @@ public class ShapeListCached< T extends Type< T > > extends ShapeList< T >
 	}
 	
 	@Override
-	public ImgRandomAccess<T> randomAccess() {
+	public RandomAccess<T> randomAccess() {
 		return new ShapeListCachedPositionableRasterSampler< T >( this );
 	}
 
