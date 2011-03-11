@@ -30,19 +30,19 @@ package mpicbg.imglib;
 
 import mpicbg.imglib.outofbounds.OutOfBoundsFactory;
 import mpicbg.imglib.outofbounds.OutOfBoundsRandomAccess;
-import mpicbg.imglib.util.Util;
-import mpicbg.imglib.view.IntervalView;
-import mpicbg.imglib.view.View;
 import mpicbg.imglib.util.Pair;
+import mpicbg.imglib.util.Util;
+import mpicbg.imglib.view.View;
 import mpicbg.imglib.view.ViewTransform;
 
 /**
  * Implements {@link RandomAccessible} for a {@link RandomAccessibleInterval}
  * through an {@link OutOfBoundsFactory}.
+ * Note that it is not an Interval itself.
  *
- * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
+ * @author Tobias Pietzsch, Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-final public class ExtendedRandomAccessibleInterval< T, F extends RandomAccessibleInterval< T > > implements IntervalView< T > 
+final public class ExtendedRandomAccessibleInterval< T, F extends RandomAccessibleInterval< T > > implements View< T > 
 {
 	final protected F target;
 	final protected OutOfBoundsFactory< T, F > factory;
@@ -51,67 +51,7 @@ final public class ExtendedRandomAccessibleInterval< T, F extends RandomAccessib
 	{
 		this.target = interval;
 		this.factory = factory;
-	}
-	
-	@Override
-	final public long dimension( final int d )
-	{
-		return target.dimension( d );
-	}
-
-	@Override
-	final public void dimensions( final long[] dimensions )
-	{
-		target.dimensions( dimensions );
-	}
-
-	@Override
-	final public long max( final int d )
-	{
-		return target.max( d );
-	}
-
-	@Override
-	final public void max( final long[] max )
-	{
-		target.max( max );
-	}
-
-	@Override
-	final public long min( final int d )
-	{
-		return target.min( d );
-	}
-
-	@Override
-	final public void min( final long[] min )
-	{
-		target.min( min );
-	}
-
-	@Override
-	final public double realMax( final int d )
-	{
-		return target.realMax( d );
-	}
-
-	@Override
-	final public void realMax( final double[] max )
-	{
-		realMax( max );
-	}
-
-	@Override
-	final public double realMin( final int d )
-	{
-		return target.realMin( d );
-	}
-
-	@Override
-	final public void realMin( final double[] min )
-	{
-		realMin( min );
-	}
+	}	
 
 	@Override
 	final public int numDimensions()

@@ -34,10 +34,11 @@ import mpicbg.imglib.outofbounds.RealOutOfBoundsRealRandomAccess;
 /**
  * Implements {@link RealRandomAccessible} for a {@link RealRandomAccessibleRealInterval}
  * through an {@link RealOutOfBoundsFactory}.
+ * Note that it is not a RealInterval itself.
  *
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-final public class ExtendedRealRandomAccessibleRealInterval< T, F extends RealRandomAccessibleRealInterval< T, F > > implements RealInterval, RealRandomAccessible< T > 
+final public class ExtendedRealRandomAccessibleRealInterval< T, F extends RealRandomAccessibleRealInterval< T, F > > implements RealRandomAccessible< T > 
 {
 	final protected F interval;
 	final protected RealOutOfBoundsFactory< T, F > factory;
@@ -48,30 +49,6 @@ final public class ExtendedRealRandomAccessibleRealInterval< T, F extends RealRa
 		this.factory = factory;
 	}
 	
-	@Override
-	final public double realMax( final int d )
-	{
-		return interval.realMax( d );
-	}
-
-	@Override
-	final public void realMax( final double[] max )
-	{
-		realMax( max );
-	}
-
-	@Override
-	final public double realMin( final int d )
-	{
-		return interval.realMin( d );
-	}
-
-	@Override
-	final public void realMin( final double[] min )
-	{
-		realMin( min );
-	}
-
 	@Override
 	final public int numDimensions()
 	{

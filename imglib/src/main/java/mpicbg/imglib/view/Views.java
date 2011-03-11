@@ -8,12 +8,12 @@ import mpicbg.imglib.util.Util;
 
 public class Views
 {
-	public static < T, F extends RandomAccessibleInterval< T > > IntervalView< T > extend( final F randomAccessible, final OutOfBoundsFactory< T, F > factory )
+	public static < T, F extends RandomAccessibleInterval< T > > View< T > extend( final F randomAccessible, final OutOfBoundsFactory< T, F > factory )
 	{
 		return new ExtendedRandomAccessibleInterval< T, F >( randomAccessible, factory );
 	}
 
-	public static < T, F extends RandomAccessibleInterval< T > > IntervalView< T > extend( final F randomAccessible )
+	public static < T, F extends RandomAccessibleInterval< T > > View< T > extend( final F randomAccessible )
 	{
 		return new ExtendedRandomAccessibleInterval< T, F >( randomAccessible, new OutOfBoundsMirrorFactory< T, F >( OutOfBoundsMirrorFactory.Boundary.SINGLE ) );
 	}
