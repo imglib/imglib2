@@ -31,8 +31,7 @@ package mpicbg.imglib;
  * <p><em>f</em>:{x&isin;Z<sup><em>n</em></sup>|[min,max]&rarr;T}</em></p>
  * 
  * <p>A function over an an n-dimensional integer interval that can
- * create a random access {@link Sampler} that generates values beyond
- * boundaries through a {@link OutOfBounds}.</p>
+ * create a random access {@link Sampler}.</p>
  *
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */

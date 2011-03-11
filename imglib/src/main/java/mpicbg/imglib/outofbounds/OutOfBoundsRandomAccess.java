@@ -40,11 +40,13 @@ import mpicbg.imglib.RandomAccess;
  */
 public final class OutOfBoundsRandomAccess< T > extends AbstractSampler< T > implements RandomAccess< T >, Bounded
 {
-	/* performs the actual moves and generates/queries a Type */
+	/**
+	 * performs the actual moves and generates/queries a Type
+	 */
 	final protected OutOfBounds< T > outOfBounds;
 	
 	/**
-	 * @param n number of dimensions in the {@link Img}.
+	 * @param n number of dimensions in the {@link RandomAccessible}.
 	 * @param outOfBounds
 	 */
 	public OutOfBoundsRandomAccess( final int n, final OutOfBounds< T > outOfBounds )
