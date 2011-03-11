@@ -35,6 +35,8 @@ import mpicbg.imglib.img.Img;
  * Extends {@link AbstractRandomAccess} by an implementation of
  * the {@link Bounded} interface.
  * 
+ * TODO: Remove? This is not used by anyone currently.
+ * 
  * @param <T>
  * 
  * @author Tobias Pietzsch, Stephan Preibisch and Stephan Saalfeld
