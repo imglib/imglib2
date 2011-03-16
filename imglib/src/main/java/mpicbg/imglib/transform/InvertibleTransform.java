@@ -1,4 +1,4 @@
-package transform;
+package mpicbg.imglib.transform;
 
 import mpicbg.imglib.Localizable;
 import mpicbg.imglib.Positionable;
@@ -15,7 +15,7 @@ import mpicbg.imglib.Positionable;
  * 
  * <p>
  * You can also
- * {@link InvertibleIntegerTransform#applyInverse(Positionable, Localizable)
+ * {@link InvertibleTransform#applyInverse(Positionable, Localizable)
  * apply the inverse transformation} to a <em>m</em>-dimensional integer
  * <em>target</em> vector to get the <em>n</em>-dimensional integer
  * <em>source</em> vector.
@@ -23,7 +23,7 @@ import mpicbg.imglib.Positionable;
  * 
  * @author Tobias Pietzsch, Stephan Saalfeld
  */
-public interface InvertibleIntegerTransform extends IntegerTransform
+public interface InvertibleTransform extends Transform
 {
 	/**
 	 * Apply the inverse transform to a target vector to obtain a source vector.
@@ -51,5 +51,5 @@ public interface InvertibleIntegerTransform extends IntegerTransform
 	 * 
 	 * @return the inverse transform
 	 */
-	public InvertibleIntegerTransform inverse();
+	public InvertibleTransform inverse();
 }

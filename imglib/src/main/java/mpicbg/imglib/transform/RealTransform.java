@@ -1,4 +1,4 @@
-package transform;
+package mpicbg.imglib.transform;
 
 import mpicbg.imglib.RealLocalizable;
 import mpicbg.imglib.RealPositionable;
@@ -21,14 +21,14 @@ public interface RealTransform
 	 * 
 	 * @return the dimension of the source vector.
 	 */
-	public int sourceNumDimensions();
+	public int numSourceDimensions();
 
 	/**
 	 * Returns <em>m</em>, the dimension of the target vector.
 	 * 
 	 * @return the dimension of the target vector.
 	 */
-	public int targetNumDimensions();
+	public int numTargetDimensions();
 
 	/**
 	 * Apply the {@link RealTransform} to a source vector to obtain a target vector.

@@ -1,4 +1,4 @@
-package transform;
+package mpicbg.imglib.transform;
 
 import mpicbg.imglib.RealLocalizable;
 import mpicbg.imglib.RealPositionable;

@@ -1,4 +1,4 @@
-package transform;
+package mpicbg.imglib.transform;
 
 import mpicbg.imglib.Localizable;
 import mpicbg.imglib.Positionable;
@@ -14,24 +14,24 @@ import mpicbg.imglib.Positionable;
  * 
  * @author Tobias Pietzsch, Stephan Saalfeld
  */
-public interface IntegerTransform
+public interface Transform
 {
 	/**
 	 * Returns <em>n</em>, the dimension of the source vector.
 	 * 
 	 * @return the dimension of the source vector.
 	 */
-	public int sourceNumDimensions();
+	public int numSourceDimensions();
 
 	/**
 	 * Returns <em>m</em>, the dimension of the target vector.
 	 * 
 	 * @return the dimension of the target vector.
 	 */
-	public int targetNumDimensions();
+	public int numTargetDimensions();
 
 	/**
-	 * Apply the {@link IntegerTransform} to a source vector to obtain a target vector.
+	 * Apply the {@link Transform} to a source vector to obtain a target vector.
 	 * 
 	 * @param source
 	 *            source coordinates.
@@ -41,7 +41,7 @@ public interface IntegerTransform
 	public void apply( final long[] source, final long[] target );
 
 	/**
-	 * Apply the {@link IntegerTransform} to a source vector to obtain a target vector.
+	 * Apply the {@link Transform} to a source vector to obtain a target vector.
 	 * 
 	 * @param source
 	 *            source coordinates.
@@ -51,7 +51,7 @@ public interface IntegerTransform
 	public void apply( final int[] source, final int[] target );
 
 	/**
-	 * Apply the {@link IntegerTransform} to a source {@link Localizable} to obtain a
+	 * Apply the {@link Transform} to a source {@link Localizable} to obtain a
 	 * target {@link Positionable}.
 	 * 
 	 * @param source
