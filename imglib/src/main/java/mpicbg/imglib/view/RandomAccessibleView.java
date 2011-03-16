@@ -5,7 +5,7 @@ import mpicbg.imglib.RandomAccess;
 import mpicbg.imglib.RandomAccessible;
 import mpicbg.imglib.util.Pair;
 
-public interface View< T > extends RandomAccessible< T >
+public interface RandomAccessibleView< T > extends RandomAccessible< T >
 {
 	/**
 	 * Get a RandomAccess covering <code>interval</code> from some underlying
@@ -43,10 +43,10 @@ public interface View< T > extends RandomAccessible< T >
 	 * the next ExtendedRandomAccessibleInterval or the underlying Img.
 	 * 
 	 * <p>
-	 * For {@link TransformingView}s the target RandomAccessible is the one
-	 * to which the {@link TransformingView#getViewTransform view transform} maps. 
+	 * For {@link TransformedRandomAccessibleView}s the target RandomAccessible is the one
+	 * to which the {@link TransformedRandomAccessibleView#getViewTransform view transform} maps. 
 	 * 
 	 * @return the underlying {@link RandomAccessible}.
 	 */
-	public RandomAccessible< T > getTargetRandomAccessible();
+	public RandomAccessible< T > getTarget();
 }

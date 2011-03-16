@@ -1,14 +1,18 @@
-package mpicbg.imglib.view;
+package mpicbg.imglib;
 
-import mpicbg.imglib.Interval;
 
-public class IntervalImp implements Interval
+/**
+ * Implementation of the {@link Interval} interface.
+ * 
+ * @author Tobias Pietzsch
+ */
+public final class FinalInterval implements Interval
 {
 	final protected int n;
 	final protected long[] min;
 	final protected long[] max;
 	
-	public IntervalImp (final long[] min, final long[] max)
+	public FinalInterval (final long[] min, final long[] max)
 	{
 		assert min.length == max.length;
 
@@ -27,12 +31,12 @@ public class IntervalImp implements Interval
 	}
 
 	@Override
-	public void realMin( double[] min )
+	public void realMin( double[] minimum )
 	{
-		assert min.length == n;
+		assert minimum.length == n;
 		
 		for ( int d = 0; d < n; ++d )
-			min[ d ] = this.min[ d ];
+			minimum[ d ] = this.min[ d ];
 	}
 
 	@Override
@@ -45,12 +49,12 @@ public class IntervalImp implements Interval
 	}
 
 	@Override
-	public void realMax( double[] max )
+	public void realMax( double[] maximum )
 	{
-		assert max.length == n;
+		assert maximum.length == n;
 		
 		for ( int d = 0; d < n; ++d )
-			max[ d ] = this.max[ d ];
+			maximum[ d ] = this.max[ d ];
 	}
 
 	@Override
@@ -69,12 +73,12 @@ public class IntervalImp implements Interval
 	}
 
 	@Override
-	public void min( long[] min )
+	public void min( long[] minimum )
 	{
-		assert min.length == n;
+		assert minimum.length == n;
 		
 		for ( int d = 0; d < n; ++d )
-			min[ d ] = this.min[ d ];
+			minimum[ d ] = this.min[ d ];
 	}
 
 	@Override
@@ -87,12 +91,12 @@ public class IntervalImp implements Interval
 	}
 
 	@Override
-	public void max( long[] max )
+	public void max( long[] maximum )
 	{
-		assert max.length == n;
+		assert maximum.length == n;
 		
 		for ( int d = 0; d < n; ++d )
-			max[ d ] = this.max[ d ];
+			maximum[ d ] = this.max[ d ];
 	}
 
 	@Override

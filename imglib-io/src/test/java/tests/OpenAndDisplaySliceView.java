@@ -14,14 +14,14 @@ import mpicbg.imglib.io.LOCI;
 import mpicbg.imglib.type.Type;
 import mpicbg.imglib.type.numeric.ARGBType;
 import mpicbg.imglib.type.numeric.real.FloatType;
-import mpicbg.imglib.view.IntervalView;
-import mpicbg.imglib.view.View;
+import mpicbg.imglib.view.RandomAccessibleIntervalView;
+import mpicbg.imglib.view.RandomAccessibleView;
 import mpicbg.imglib.view.Views;
 
 
 public class OpenAndDisplaySliceView
 {
-	public static < T extends Type< T > > void copy (View< T > src, Img< T > dst)
+	public static < T extends Type< T > > void copy (RandomAccessibleView< T > src, Img< T > dst)
 	{
 		final RandomAccess< T > srcCursor = src.randomAccess();
 		final Cursor< T > dstCursor = dst.localizingCursor();
@@ -42,7 +42,7 @@ public class OpenAndDisplaySliceView
 		
 		Img< FloatType > img = LOCI.openLOCIFloatType( "/home/tobias/Desktop/73.tif",  new ArrayImgFactory<FloatType>() );
 
-		IntervalView< FloatType > view = Views.hyperSlice( img, 0, 50 );
+		RandomAccessibleIntervalView< FloatType > view = Views.hyperSlice( img, 0, 50 );
 
 		final ARGBScreenImage screenImage = new ARGBScreenImage( ( int )view.dimension( 0 ), ( int )view.dimension( 1 ) );
 		final XYProjector< FloatType, ARGBType > projector = new XYProjector< FloatType, ARGBType >( view, screenImage, new RealARGBConverter< FloatType >( 0, 255 ) );

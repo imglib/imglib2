@@ -6,13 +6,13 @@ import mpicbg.imglib.RandomAccess;
 import mpicbg.imglib.RandomAccessible;
 import mpicbg.imglib.util.Pair;
 
-public class ViewTransformView< T > implements TransformingIntervalView< T >
+public class ViewTransformView< T > implements TransformedRandomAccessibleIntervalView< T >
 {
 	protected final int n;
 
-	protected final RandomAccessible< T > targetImg; // TODO: refactor -> target
+	protected final RandomAccessible< T > target;
 	
-	protected final ViewTransform cumulativeTransform; // TODO: refactor -> targetTransform
+	protected final ViewTransform targetTransform;
 
 	protected final long[] dimension;
 	protected final long[] max;
@@ -32,11 +32,11 @@ public class ViewTransformView< T > implements TransformingIntervalView< T >
 
 		n = transform.sourceDim();
 
-		targetImg = target;
+		this.target = target;
 		
-		final int targetDim = targetImg.numDimensions();
-		cumulativeTransform = new ViewTransform( n, targetDim );
-		cumulativeTransform.set( transform );
+		final int targetDim = target.numDimensions();
+		targetTransform = new ViewTransform( n, targetDim );
+		targetTransform.set( transform );
 		
 		dimension = dim.clone();
 
@@ -59,11 +59,11 @@ public class ViewTransformView< T > implements TransformingIntervalView< T >
 
 		n = transform.sourceDim();
 
-		targetImg = target.getTargetRandomAccessible();
+		this.target = target.getTarget();
 		
-		final int targetDim = targetImg.numDimensions();
-		cumulativeTransform = new ViewTransform( n, targetDim );
-		ViewTransform.concatenate( target.getViewTransform(), transform, cumulativeTransform );
+		final int targetDim = target.numDimensions();
+		targetTransform = new ViewTransform( n, targetDim );
+		ViewTransform.concatenate( target.getViewTransform(), transform, targetTransform );
 		
 		dimension = dim.clone();
 
@@ -86,11 +86,11 @@ public class ViewTransformView< T > implements TransformingIntervalView< T >
 
 		n = transform.sourceDim();
 
-		targetImg = target;
+		this.target = target;
 		
-		final int targetDim = targetImg.numDimensions();
-		cumulativeTransform = new ViewTransform( n, targetDim );
-		cumulativeTransform.set( transform );
+		final int targetDim = target.numDimensions();
+		targetTransform = new ViewTransform( n, targetDim );
+		targetTransform.set( transform );
 		
 		dimension = dim.clone();
 
@@ -196,29 +196,29 @@ public class ViewTransformView< T > implements TransformingIntervalView< T >
 	{
 		System.out.println( "ViewTransformView.untransformedRandomAccessible in " + toString() );
 		// apply our own cumulativeTransform to the interval before we pass it on to the target 
-		Interval transformedInterval = cumulativeTransform.transform( interval );
-		if ( View.class.isInstance( targetImg ) )
+		Interval transformedInterval = targetTransform.transform( interval );
+		if ( RandomAccessibleView.class.isInstance( target ) )
 		{
 			// if the target is a View,
 			// get an untransformedRandomAccessible pair from it
 			// and concatenate with our own cumulativeTransform before we return it
-			Pair< RandomAccessible< T >, ViewTransform > pair = ( ( View < T > ) targetImg ).untransformedRandomAccessible( transformedInterval );
+			Pair< RandomAccessible< T >, ViewTransform > pair = ( ( RandomAccessibleView < T > ) target ).untransformedRandomAccessible( transformedInterval );
 			ViewTransform accessTransform = pair.b;
 			if ( accessTransform == null )
 			{
-				return new Pair< RandomAccessible< T >, ViewTransform >( pair.a, cumulativeTransform );
+				return new Pair< RandomAccessible< T >, ViewTransform >( pair.a, targetTransform );
 			}
 			else
 			{
 				ViewTransform t = new ViewTransform( n, accessTransform.targetDim );
-				ViewTransform.concatenate( accessTransform, cumulativeTransform, t );
+				ViewTransform.concatenate( accessTransform, targetTransform, t );
 				return new Pair< RandomAccessible< T >, ViewTransform >( pair.a, t );
 			}
 		}
 		else
 		{
 			// if the target is not a View, just use it with our own cumulativeTransform
-			return new Pair< RandomAccessible< T >, ViewTransform > ( targetImg, cumulativeTransform );
+			return new Pair< RandomAccessible< T >, ViewTransform > ( target, targetTransform );
 		}
 	}
 	
@@ -227,42 +227,42 @@ public class ViewTransformView< T > implements TransformingIntervalView< T >
 	{
 		System.out.println( "ViewTransformView.untransformedRandomAccess in " + toString() );
 		// apply our own cumulativeTransform to the interval before we pass it on to the target 
-		Interval transformedInterval = cumulativeTransform.transform( interval );
-		if ( View.class.isInstance( targetImg ) )
+		Interval transformedInterval = targetTransform.transform( interval );
+		if ( RandomAccessibleView.class.isInstance( target ) )
 		{
 			// if the target is a View,
 			// get an untransformedRandomAccess pair from it
 			// and concatenate with our own cumulativeTransform before we return it
-			Pair< RandomAccess< T >, ViewTransform > pair = ( ( View < T > ) targetImg ).untransformedRandomAccess( transformedInterval );
+			Pair< RandomAccess< T >, ViewTransform > pair = ( ( RandomAccessibleView < T > ) target ).untransformedRandomAccess( transformedInterval );
 			ViewTransform accessTransform = pair.b;
 			if ( accessTransform == null )
 			{
-				return new Pair< RandomAccess< T >, ViewTransform >( pair.a, cumulativeTransform );
+				return new Pair< RandomAccess< T >, ViewTransform >( pair.a, targetTransform );
 			}
 			else
 			{
 				ViewTransform t = new ViewTransform( n, accessTransform.targetDim );
-				ViewTransform.concatenate( accessTransform, cumulativeTransform, t );
+				ViewTransform.concatenate( accessTransform, targetTransform, t );
 				return new Pair< RandomAccess< T >, ViewTransform >( pair.a, t );
 			}
 		}
 		else
 		{
 			// if the target is not a View, just return a plain randomAccess and our own cumulativeTransform
-			return new Pair< RandomAccess< T >, ViewTransform > ( targetImg.randomAccess( transformedInterval ), cumulativeTransform );
+			return new Pair< RandomAccess< T >, ViewTransform > ( target.randomAccess( transformedInterval ), targetTransform );
 		}
 	}
 
 	@Override
 	public ViewTransform getViewTransform()
 	{
-		return cumulativeTransform;
+		return targetTransform;
 	}
 
 	@Override
-	public RandomAccessible< T > getTargetRandomAccessible()
+	public RandomAccessible< T > getTarget()
 	{
-		return targetImg;
+		return target;
 	}
 
 	@Override

@@ -32,7 +32,7 @@ import mpicbg.imglib.outofbounds.OutOfBoundsFactory;
 import mpicbg.imglib.outofbounds.OutOfBoundsRandomAccess;
 import mpicbg.imglib.util.Pair;
 import mpicbg.imglib.util.Util;
-import mpicbg.imglib.view.View;
+import mpicbg.imglib.view.RandomAccessibleView;
 import mpicbg.imglib.view.ViewTransform;
 
 /**
@@ -42,7 +42,7 @@ import mpicbg.imglib.view.ViewTransform;
  *
  * @author Tobias Pietzsch, Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-final public class ExtendedRandomAccessibleInterval< T, F extends RandomAccessibleInterval< T > > implements View< T > 
+final public class ExtendedRandomAccessibleInterval< T, F extends RandomAccessibleInterval< T > > implements RandomAccessibleView< T > 
 {
 	final protected F target;
 	final protected OutOfBoundsFactory< T, F > factory;
@@ -85,11 +85,11 @@ final public class ExtendedRandomAccessibleInterval< T, F extends RandomAccessib
 		if ( Util.contains( target, interval ) )
 		{
 			// no out-of-bounds values are needed.
-			if ( View.class.isInstance( target ) )
+			if ( RandomAccessibleView.class.isInstance( target ) )
 			{
 				// if the target is a View, let the target handle the request.
 				// (it will return a RandomAccessible-ViewTransform pair)
-				return ( ( View< T > ) target ).untransformedRandomAccessible( interval );
+				return ( ( RandomAccessibleView< T > ) target ).untransformedRandomAccessible( interval );
 			}
 			else
 			{
@@ -113,11 +113,11 @@ final public class ExtendedRandomAccessibleInterval< T, F extends RandomAccessib
 		if ( Util.contains( target, interval ) )
 		{
 			// no out-of-bounds values are needed.
-			if ( View.class.isInstance( target ) )
+			if ( RandomAccessibleView.class.isInstance( target ) )
 			{
 				// if the target is a View, let the target handle the request.
 				// (it will return a RandomAccess-ViewTransform pair) 
-				return ( ( View< T > ) target ).untransformedRandomAccess( interval );
+				return ( ( RandomAccessibleView< T > ) target ).untransformedRandomAccess( interval );
 			}
 			else
 			{
@@ -134,7 +134,7 @@ final public class ExtendedRandomAccessibleInterval< T, F extends RandomAccessib
 	}
 
 	@Override
-	public RandomAccessible< T > getTargetRandomAccessible()
+	public RandomAccessible< T > getTarget()
 	{
 		return target;
 	}

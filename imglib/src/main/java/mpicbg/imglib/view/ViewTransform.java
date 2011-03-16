@@ -1,5 +1,6 @@
 package mpicbg.imglib.view;
 
+import mpicbg.imglib.FinalInterval;
 import mpicbg.imglib.Interval;
 import Jama.Matrix;
 
@@ -128,7 +129,7 @@ public class ViewTransform
 		}
 	}
 
-	public IntervalImp transform( final Interval interval )
+	public FinalInterval transform( final Interval interval )
 	{
 		assert interval.numDimensions() == sourceDim;
 		
@@ -142,7 +143,7 @@ public class ViewTransform
 		transform( min, tmin );
 		transform( max, tmax );
 		
-		return new IntervalImp( tmin, tmax );
+		return new FinalInterval( tmin, tmax );
 	}
 
 	public void set( final ViewTransform transform )

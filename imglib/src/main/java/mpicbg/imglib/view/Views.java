@@ -8,17 +8,17 @@ import mpicbg.imglib.util.Util;
 
 public class Views
 {
-	public static < T, F extends RandomAccessibleInterval< T > > View< T > extend( final F randomAccessible, final OutOfBoundsFactory< T, F > factory )
+	public static < T, F extends RandomAccessibleInterval< T > > RandomAccessibleView< T > extend( final F randomAccessible, final OutOfBoundsFactory< T, F > factory )
 	{
 		return new ExtendedRandomAccessibleInterval< T, F >( randomAccessible, factory );
 	}
 
-	public static < T, F extends RandomAccessibleInterval< T > > View< T > extend( final F randomAccessible )
+	public static < T, F extends RandomAccessibleInterval< T > > RandomAccessibleView< T > extend( final F randomAccessible )
 	{
 		return new ExtendedRandomAccessibleInterval< T, F >( randomAccessible, new OutOfBoundsMirrorFactory< T, F >( OutOfBoundsMirrorFactory.Boundary.SINGLE ) );
 	}
 
-	public static < T > ViewTransformView< T > superIntervalView( final View< T > view, long[] offset, long[] dimension )
+	public static < T > ViewTransformView< T > superIntervalView( final RandomAccessibleView< T > view, long[] offset, long[] dimension )
 	{
 		final int n = view.numDimensions();
 		ViewTransform t = new ViewTransform( n, n );
@@ -26,7 +26,7 @@ public class Views
 		return new ViewTransformView< T >( view, t, dimension );
 	}
 
-	public static < T > ViewTransformView< T > flippedView( final IntervalView< T > view, final int d )
+	public static < T > ViewTransformView< T > flippedView( final RandomAccessibleIntervalView< T > view, final int d )
 	{
 		final int n = view.numDimensions();
 		long[] tmp = new long[ n ];
