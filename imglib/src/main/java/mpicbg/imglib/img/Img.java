@@ -27,9 +27,8 @@
  */
 package mpicbg.imglib.img;
 
-import mpicbg.imglib.Interval;
+import mpicbg.imglib.IterableInterval;
 import mpicbg.imglib.RandomAccessibleInterval;
-import mpicbg.imglib.outofbounds.OutOfBoundsFactory;
 
 /**
  * {@link Img}s are {@link InjectiveInterval} that has its min at
@@ -40,21 +39,9 @@ import mpicbg.imglib.outofbounds.OutOfBoundsFactory;
  */
 public interface Img< T >
 	extends
-		RandomAccessibleInterval< T, Img< T > >,
-		Interval
+		RandomAccessibleInterval< T >,
+		IterableInterval< T >
 {
-	@Override
-	public ImgRandomAccess< T > randomAccess();
-	
-	@Override
-	public ImgRandomAccess< T > randomAccess( OutOfBoundsFactory< T, Img< T > > factory );
-	
-	@Override
-	public ImgCursor< T > cursor();
-
-	@Override
-	public ImgCursor< T > localizingCursor();
-
 	/**
 	 * Get a {@link ImgFactory} that creates {@link Img}s
 	 * of the same kind as this one.

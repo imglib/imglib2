@@ -55,7 +55,7 @@ import mpicbg.imglib.util.Util;
  *
  * @param <T>
  */
-public class SubImage< T > implements RandomAccessible< T >, RandomAccessibleInterval< T, SubImage< T > >, Interval, Localizable
+public class SubImage< T > implements RandomAccessible< T >, RandomAccessibleInterval< T >, Interval, Localizable
 {
 	final int n;
 	final long numPixels;
@@ -63,7 +63,7 @@ public class SubImage< T > implements RandomAccessible< T >, RandomAccessibleInt
 	final long[] offset, max, size;
 	
 	final RandomAccessible< T > source1;
-	final RandomAccessibleInterval< T, Interval > source2;
+	final RandomAccessibleInterval< T > source2;
 	final OutOfBoundsFactory<T, Interval> outOfBoudsFactory;
 	
 	public SubImage( final long[] offset, final long[] size, final RandomAccessible< T > source )
@@ -90,7 +90,7 @@ public class SubImage< T > implements RandomAccessible< T >, RandomAccessibleInt
 
 	public SubImage( 
 			final long[] offset, final long[] size, 
-			final RandomAccessibleInterval< T, Interval > source, 
+			final RandomAccessibleInterval< T > source, 
 			final OutOfBoundsFactory<T, Interval> outOfBoudsFactory )
 	{
 		this.n = source.numDimensions();
@@ -120,7 +120,7 @@ public class SubImage< T > implements RandomAccessible< T >, RandomAccessibleInt
 	
 	public SubImage( 
 			final Interval interval, 
-			final RandomAccessibleInterval< T, Interval > source, 
+			final RandomAccessibleInterval< T > source, 
 			final OutOfBoundsFactory<T, Interval> outOfBoudsFactory ) 
 	{ 
 		this( Util.intervalMin( interval ), Util.intervalDimensions(interval), source, outOfBoudsFactory ); 
@@ -145,12 +145,6 @@ public class SubImage< T > implements RandomAccessible< T >, RandomAccessibleInt
 
 	@Override
 	public RandomAccess<T> randomAccess() { return new SubImageRandomAccess< T >( this ); }
-
-	@Override
-	public RandomAccess<T> randomAccess( final OutOfBoundsFactory<T, SubImage< T > > factory )
-	{
-		return new SubImageOutOfBoundsRandomAccess< T >( this, factory );
-	}
 
 	@Override
 	public long size() { return numPixels; }

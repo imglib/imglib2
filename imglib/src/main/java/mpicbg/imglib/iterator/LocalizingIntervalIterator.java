@@ -29,7 +29,6 @@ package mpicbg.imglib.iterator;
 
 import mpicbg.imglib.Interval;
 import mpicbg.imglib.Positionable;
-import mpicbg.imglib.img.ImgRandomAccess;
 import mpicbg.imglib.util.IntervalIndexer;
 
 /**
@@ -53,7 +52,7 @@ import mpicbg.imglib.util.IntervalIndexer;
  * 
  * Note that {@link LocalizingIntervalIterator} is the right choice in
  * situations where, for <em>each</em> pixel, you want to localize and/or set
- * the {@link ImgRandomAccess}, that is in a dense sampling situation.  For
+ * the {@link RandomAccess}, that is, in a dense sampling situation.  For
  * localizing sparsely (e.g. under an external condition), use
  * {@link IntervalIterator} instead.
  *  

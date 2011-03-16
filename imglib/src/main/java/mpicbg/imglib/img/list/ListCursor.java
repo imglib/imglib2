@@ -30,7 +30,7 @@ package mpicbg.imglib.img.list;
 import java.util.ArrayList;
 
 import mpicbg.imglib.AbstractCursor;
-import mpicbg.imglib.img.ImgCursor;
+import mpicbg.imglib.Cursor;
 import mpicbg.imglib.type.Type;
 import mpicbg.imglib.util.IntervalIndexer;
 
@@ -40,7 +40,7 @@ import mpicbg.imglib.util.IntervalIndexer;
  *
  * @author Stephan Preibisch and Stephan Saalfeld
  */
-final public class ListCursor< T extends Type< T > > extends AbstractCursor< T > implements ImgCursor< T >
+final public class ListCursor< T extends Type< T > > extends AbstractCursor< T > implements Cursor< T >
 {
 	private int i;
 	final private int maxNumPixels;
@@ -74,9 +74,6 @@ final public class ListCursor< T extends Type< T > > extends AbstractCursor< T >
 	@Override
 	public void reset() { i = -1; }
 	
-	@Override
-	public ListImg<T> getImg() { return container; }
-		
 	@Override
 	public long getLongPosition( final int dim )
 	{

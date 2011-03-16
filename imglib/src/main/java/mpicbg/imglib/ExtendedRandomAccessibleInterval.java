@@ -29,93 +29,113 @@
 package mpicbg.imglib;
 
 import mpicbg.imglib.outofbounds.OutOfBoundsFactory;
+import mpicbg.imglib.outofbounds.OutOfBoundsRandomAccess;
+import mpicbg.imglib.util.Pair;
+import mpicbg.imglib.util.Util;
+import mpicbg.imglib.view.RandomAccessibleView;
+import mpicbg.imglib.view.ViewTransform;
 
 /**
  * Implements {@link RandomAccessible} for a {@link RandomAccessibleInterval}
  * through an {@link OutOfBoundsFactory}.
+ * Note that it is not an Interval itself.
  *
- * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
+ * @author Tobias Pietzsch, Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-final public class ExtendedRandomAccessibleInterval< T, F extends RandomAccessibleInterval< T, F > > implements Interval, RandomAccessible< T > 
+final public class ExtendedRandomAccessibleInterval< T, F extends RandomAccessibleInterval< T > > implements RandomAccessibleView< T > 
 {
-	final protected F interval;
+	final protected F target;
 	final protected OutOfBoundsFactory< T, F > factory;
 
 	public ExtendedRandomAccessibleInterval( final F interval, final OutOfBoundsFactory< T, F > factory )
 	{
-		this.interval = interval;
+		this.target = interval;
 		this.factory = factory;
-	}
-	
-	@Override
-	final public long dimension( final int d )
-	{
-		return interval.dimension( d );
-	}
-
-	@Override
-	final public void dimensions( final long[] dimensions )
-	{
-		interval.dimensions( dimensions );
-	}
-
-	@Override
-	final public long max( final int d )
-	{
-		return interval.max( d );
-	}
-
-	@Override
-	final public void max( final long[] max )
-	{
-		interval.max( max );
-	}
-
-	@Override
-	final public long min( final int d )
-	{
-		return interval.min( d );
-	}
-
-	@Override
-	final public void min( final long[] min )
-	{
-		interval.min( min );
-	}
-
-	@Override
-	final public double realMax( final int d )
-	{
-		return interval.realMax( d );
-	}
-
-	@Override
-	final public void realMax( final double[] max )
-	{
-		realMax( max );
-	}
-
-	@Override
-	final public double realMin( final int d )
-	{
-		return interval.realMin( d );
-	}
-
-	@Override
-	final public void realMin( final double[] min )
-	{
-		realMin( min );
-	}
+	}	
 
 	@Override
 	final public int numDimensions()
 	{
-		return interval.numDimensions();
+		return target.numDimensions();
 	}
 
 	@Override
 	final public RandomAccess< T > randomAccess()
 	{
-		return interval.randomAccess( factory );
+		return new OutOfBoundsRandomAccess< T >( target.numDimensions(), factory.create( target ) );
+	}
+
+	@Override
+	final public RandomAccess< T > randomAccess( Interval interval )
+	{
+		assert target.numDimensions() == interval.numDimensions();
+		
+		if ( Util.contains( target, interval ) ) {
+			return target.randomAccess( interval );
+		} else {
+			return randomAccess();
+		}
+	}
+
+	@SuppressWarnings( "unchecked" )
+	@Override
+	public Pair< RandomAccessible< T >, ViewTransform > untransformedRandomAccessible( Interval interval )
+	{
+		System.out.println( "ExtendedRandomAccessibleInterval.untransformedRandomAccessible in " + toString() );
+		if ( Util.contains( target, interval ) )
+		{
+			// no out-of-bounds values are needed.
+			if ( RandomAccessibleView.class.isInstance( target ) )
+			{
+				// if the target is a View, let the target handle the request.
+				// (it will return a RandomAccessible-ViewTransform pair)
+				return ( ( RandomAccessibleView< T > ) target ).untransformedRandomAccessible( interval );
+			}
+			else
+			{
+				// if the target is not a View just return it with the identity transform.
+				return new Pair< RandomAccessible< T >, ViewTransform >( target, null );
+			}
+		}
+		else
+		{
+			// out-of-bounds values are needed.
+			// we have to handle this ourselves.
+			return new Pair< RandomAccessible< T >, ViewTransform >( this, null );
+		}
+	}
+
+	@SuppressWarnings( "unchecked" )
+	@Override
+	public Pair< RandomAccess< T >, ViewTransform > untransformedRandomAccess( Interval interval )
+	{
+		System.out.println( "ExtendedRandomAccessibleInterval.untransformedRandomAccess in " + toString() );
+		if ( Util.contains( target, interval ) )
+		{
+			// no out-of-bounds values are needed.
+			if ( RandomAccessibleView.class.isInstance( target ) )
+			{
+				// if the target is a View, let the target handle the request.
+				// (it will return a RandomAccess-ViewTransform pair) 
+				return ( ( RandomAccessibleView< T > ) target ).untransformedRandomAccess( interval );
+			}
+			else
+			{
+				// if the target is not a View just get a randomAccess and return it with the identity transform.
+				return new Pair< RandomAccess< T >, ViewTransform >( target.randomAccess( interval ), null );
+			}
+		}
+		else
+		{
+			// out-of-bounds values are needed.
+			// we have to handle this ourselves.
+			return new Pair< RandomAccess< T >, ViewTransform >( randomAccess(), null );
+		}
+	}
+
+	@Override
+	public RandomAccessible< T > getTarget()
+	{
+		return target;
 	}
 }

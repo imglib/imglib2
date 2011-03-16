@@ -6,7 +6,6 @@ import mpicbg.imglib.img.AbstractNativeImg;
 import mpicbg.imglib.img.Img;
 import mpicbg.imglib.img.basictypeaccess.array.ArrayDataAccess;
 import mpicbg.imglib.img.list.ListImgFactory;
-import mpicbg.imglib.outofbounds.OutOfBoundsFactory;
 import mpicbg.imglib.type.NativeType;
 
 /**
@@ -160,12 +159,6 @@ final public class CellImg< T extends NativeType< T >, A extends ArrayDataAccess
 	public CellRandomAccess< T, A > randomAccess()
 	{
 		return new CellRandomAccess< T, A >( this );
-	}
-
-	@Override
-	public CellOutOfBoundsRandomAccess< T > randomAccess( OutOfBoundsFactory< T, Img<T> > outOfBoundsFactory )
-	{
-		return new CellOutOfBoundsRandomAccess< T >( this, outOfBoundsFactory );
 	}
 
 	@Override

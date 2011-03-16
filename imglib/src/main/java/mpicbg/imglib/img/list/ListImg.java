@@ -33,9 +33,7 @@ import java.util.Collection;
 import mpicbg.imglib.Interval;
 import mpicbg.imglib.IterableRealInterval;
 import mpicbg.imglib.img.AbstractImg;
-import mpicbg.imglib.img.Img;
 import mpicbg.imglib.img.array.ArrayImg;
-import mpicbg.imglib.outofbounds.OutOfBoundsFactory;
 import mpicbg.imglib.type.Type;
 import mpicbg.imglib.util.IntervalIndexer;
 
@@ -128,12 +126,6 @@ public class ListImg< T extends Type< T > > extends AbstractImg< T >
 	public ListRandomAccess< T > randomAccess()
 	{
 		return new ListRandomAccess< T >( this );
-	}
-
-	@Override
-	public ListOutOfBoundsRandomAccess<T> randomAccess( final OutOfBoundsFactory<T, Img< T >> outOfBoundsFactory )
-	{
-		return new ListOutOfBoundsRandomAccess< T >( this, outOfBoundsFactory );
 	}
 
 	@Override

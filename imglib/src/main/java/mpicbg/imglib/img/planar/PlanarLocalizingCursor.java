@@ -27,6 +27,8 @@
  */
 package mpicbg.imglib.img.planar;
 
+import mpicbg.imglib.AbstractLocalizingCursorInt;
+import mpicbg.imglib.Cursor;
 import mpicbg.imglib.type.NativeType;
 
 /**
@@ -35,20 +37,106 @@ import mpicbg.imglib.type.NativeType;
  *
  * @author Stephan Preibisch and Stephan Saalfeld
  */
-public class PlanarLocalizingCursor< T extends NativeType< T > > extends AbstractPlanarLocalizingCursor< T >
+public class PlanarLocalizingCursor< T extends NativeType< T > > extends AbstractLocalizingCursorInt< T > implements Cursor< T >, PlanarImg.PlanarContainerSampler
 {
+	protected final T type;
+
 	protected final PlanarImg< T, ? > container;
 
-	public PlanarLocalizingCursor( final PlanarImg<T,?> container ) 
-	{
-		super( container );
+	protected final int lastIndex, lastSliceIndex;
+	protected int sliceIndex;
 
+	/**
+	 * The current index of the type.
+	 * It is faster to duplicate this here than to access it through type.getIndex(). 
+	 */
+	protected int index;
+
+	/**
+	 * Maximum of the {@link PlanarImg} in every dimension.
+	 * This is used to check isOutOfBounds().
+	 */
+	protected final int[] max;
+	
+	public PlanarLocalizingCursor( final PlanarImg< T, ? > container )
+	{
+		super( container.numDimensions() );
+		
+		this.type = container.createLinkedType();
 		this.container = container;
-	}	
+
+		lastIndex = ( ( n > 1 ) ? container.dimensions[ 1 ] : 1 )  *  container.dimensions[ 0 ] - 1;
+		lastSliceIndex = container.numSlices() - 1;
+		
+		max = new int[ n ];
+		for( int d = 0; d < n; ++d )
+			max[ d ] = ( int ) container.max( d );
+
+		reset();
+	}
+
+	@Override
+	public int getCurrentSliceIndex() { return sliceIndex; }
+
+	@Override
+	public T get() { return type; }
+	
+	/**
+	 * Note: This test is fragile in a sense that it returns true for elements
+	 * after the last element as well.
+	 * 
+	 * @return false for the last element 
+	 */
+	@Override
+	public boolean hasNext()
+	{
+		return ( sliceIndex < lastSliceIndex ) || ( index < lastIndex );		
+	}
 	
 	@Override
-	public PlanarImg< T, ? > getImg()
+	public void fwd()
 	{
-		return container;
+		if ( ++index > lastIndex )
+		{
+			index = 0;
+			++sliceIndex;
+			type.updateContainer( this );
+		}
+		type.updateIndex( index );
+
+		for ( int d = 0; d < n; ++d )
+		{
+			if ( ++position[ d ] > max[ d ] ) position[ d ] = 0;
+			else break;
+		}
+	}
+
+	@Override
+	public void jumpFwd( long steps )
+	{
+		long newIndex = index + steps;
+		if ( newIndex > lastIndex )
+		{
+			final long s = newIndex / (lastIndex + 1);
+			newIndex -= s * (lastIndex + 1);
+			sliceIndex += s;
+			type.updateContainer( this );
+		}
+		index = ( int ) newIndex;
+		type.updateIndex( index );
+		container.indexToGlobalPosition( sliceIndex, index, position );
+	}
+
+	@Override
+	public void reset()
+	{
+		position[ 0 ] = -1;
+		for ( int d = 1; d < n; d++ )
+			position[ d ] = 0;
+		
+		sliceIndex = 0;
+		index = -1;		
+		type.updateIndex( -1 );		
+		type.updateContainer( this );
 	}
 }

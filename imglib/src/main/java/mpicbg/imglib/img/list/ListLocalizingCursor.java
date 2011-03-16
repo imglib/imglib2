@@ -30,7 +30,7 @@ package mpicbg.imglib.img.list;
 import java.util.ArrayList;
 
 import mpicbg.imglib.AbstractLocalizingCursor;
-import mpicbg.imglib.img.ImgCursor;
+import mpicbg.imglib.Cursor;
 import mpicbg.imglib.type.Type;
 
 /**
@@ -39,7 +39,7 @@ import mpicbg.imglib.type.Type;
  *
  * @author Stephan Preibisch and Stephan Saalfeld
  */
-final public class ListLocalizingCursor< T extends Type< T > > extends AbstractLocalizingCursor< T > implements ImgCursor< T >
+final public class ListLocalizingCursor< T extends Type< T > > extends AbstractLocalizingCursor< T > implements Cursor< T >
 {
 	private int i;
 	final private int maxNumPixels;
@@ -47,13 +47,11 @@ final public class ListLocalizingCursor< T extends Type< T > > extends AbstractL
 	final private long[] max;
 	
 	final private ArrayList< T > pixels;
-	final private ListImg< T > img;
 	
 	public ListLocalizingCursor( final ListImg< T > img )
 	{
 		super( img.numDimensions() );
 		
-		this.img = img;
 		this.pixels = img.pixels;
 		this.maxNumPixels = ( int )img.size() - 1;
 
@@ -99,9 +97,6 @@ final public class ListLocalizingCursor< T extends Type< T > > extends AbstractL
 			position[ d ] = 0;		
 	}
 
-	@Override
-	public ListImg< T > getImg(){ return img; }
-	
 	@Override
 	public T get() { return pixels.get( i ); }
 }
