@@ -79,22 +79,56 @@ final public class ExtendedRandomAccessibleInterval< T, F extends RandomAccessib
 
 	@SuppressWarnings( "unchecked" )
 	@Override
+	public Pair< RandomAccessible< T >, ViewTransform > untransformedRandomAccessible( Interval interval )
+	{
+		System.out.println( "ExtendedRandomAccessibleInterval.untransformedRandomAccessible in " + toString() );
+		if ( Util.contains( target, interval ) )
+		{
+			// no out-of-bounds values are needed.
+			if ( View.class.isInstance( target ) )
+			{
+				// if the target is a View, let the target handle the request.
+				// (it will return a RandomAccessible-ViewTransform pair)
+				return ( ( View< T > ) target ).untransformedRandomAccessible( interval );
+			}
+			else
+			{
+				// if the target is not a View just return it with the identity transform.
+				return new Pair< RandomAccessible< T >, ViewTransform >( target, null );
+			}
+		}
+		else
+		{
+			// out-of-bounds values are needed.
+			// we have to handle this ourselves.
+			return new Pair< RandomAccessible< T >, ViewTransform >( this, null );
+		}
+	}
+
+	@SuppressWarnings( "unchecked" )
+	@Override
 	public Pair< RandomAccess< T >, ViewTransform > untransformedRandomAccess( Interval interval )
 	{
 		System.out.println( "ExtendedRandomAccessibleInterval.untransformedRandomAccess in " + toString() );
 		if ( Util.contains( target, interval ) )
 		{
+			// no out-of-bounds values are needed.
 			if ( View.class.isInstance( target ) )
 			{
+				// if the target is a View, let the target handle the request.
+				// (it will return a RandomAccess-ViewTransform pair) 
 				return ( ( View< T > ) target ).untransformedRandomAccess( interval );
 			}
 			else
 			{
+				// if the target is not a View just get a randomAccess and return it with the identity transform.
 				return new Pair< RandomAccess< T >, ViewTransform >( target.randomAccess( interval ), null );
 			}
 		}
 		else
 		{
+			// out-of-bounds values are needed.
+			// we have to handle this ourselves.
 			return new Pair< RandomAccess< T >, ViewTransform >( randomAccess(), null );
 		}
 	}
@@ -102,7 +136,6 @@ final public class ExtendedRandomAccessibleInterval< T, F extends RandomAccessib
 	@Override
 	public RandomAccessible< T > getTargetRandomAccessible()
 	{
-		// TODO Auto-generated method stub
-		return null;
+		return target;
 	}
 }
