@@ -210,7 +210,7 @@ public class ViewTransformView< T > implements TransformedRandomAccessibleInterv
 			}
 			else
 			{
-				ViewTransform t = new ViewTransform( n, accessTransform.targetDim );
+				ViewTransform t = new ViewTransform( n, accessTransform.numTargetDimensions );
 				ViewTransform.concatenate( accessTransform, targetTransform, t );
 				return new Pair< RandomAccessible< T >, ViewTransform >( pair.a, t );
 			}
@@ -241,7 +241,7 @@ public class ViewTransformView< T > implements TransformedRandomAccessibleInterv
 			}
 			else
 			{
-				ViewTransform t = new ViewTransform( n, accessTransform.targetDim );
+				ViewTransform t = new ViewTransform( n, accessTransform.numTargetDimensions );
 				ViewTransform.concatenate( accessTransform, targetTransform, t );
 				return new Pair< RandomAccess< T >, ViewTransform >( pair.a, t );
 			}
