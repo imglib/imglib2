@@ -35,7 +35,7 @@ import mpicbg.imglib.type.Type;
  * An interface used by the Histogram class to map Type objects to histogram
  * bins.
  */
-public interface HistogramBinMapper <T extends Type<T>>{
+public interface HistogramBinMapper <T>{
 	
     /**
      * Returns the minimum bin for the histogram.  This value may not

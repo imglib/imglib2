@@ -32,16 +32,17 @@ package mpicbg.imglib.algorithm.histogram;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+
+import mpicbg.imglib.RealCursor;
 import mpicbg.imglib.algorithm.Algorithm;
 import mpicbg.imglib.algorithm.Benchmark;
 import mpicbg.imglib.img.Img;
-import mpicbg.imglib.img.ImgCursor;
 import mpicbg.imglib.type.Type;
 
 /**
  * Implements a Histogram over an Image.
  */
-public class Histogram <T extends Type<T>> implements Algorithm, Benchmark
+public class Histogram <T> implements Algorithm, Benchmark
 {
 	/**
 	 * Processing time, milliseconds.
@@ -56,7 +57,7 @@ public class Histogram <T extends Type<T>> implements Algorithm, Benchmark
 	/**
 	 * The Cursor from which the histogram is to be calculated.
 	 */
-	private final ImgCursor<T> cursor;
+	private final RealCursor<T> cursor;
 	
 	/**
 	 * The HistogramBinMapper, used to map Type values to histogram bin
@@ -74,7 +75,7 @@ public class Histogram <T extends Type<T>> implements Algorithm, Benchmark
 	 * 
 	 */
 	public Histogram(final HistogramBinMapper<T> mapper,
-			final ImgCursor<T> c)
+			final RealCursor<T> c)
 	{		
 		cursor = c;
 		binMapper = mapper;
