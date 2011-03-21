@@ -196,8 +196,8 @@ public class ViewTransform implements Transform
 
 		long[] tmax = new long[ numTargetDimensions ];
 		long[] tmin = new long[ numTargetDimensions ];
-		transform( min, tmin );
-		transform( max, tmax );
+		apply( min, tmin );
+		apply( max, tmax );
 
 		return new FinalInterval( tmin, tmax );
 	}

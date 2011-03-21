@@ -60,12 +60,12 @@ public final class ViewTransformRandomAccess< T > extends AbstractRandomAccess< 
 
 	ViewTransformRandomAccess( RandomAccess< T > target, ViewTransform transform )
 	{
-		super( transform.sourceDim() );
+		super( transform.numSourceDimensions() );
 
-		assert target.numDimensions() == transform.targetDim();
+		assert target.numDimensions() == transform.numTargetDimensions();
 
 		this.target = target;
-		m = transform.targetDim();
+		m = transform.numTargetDimensions();
 		translation = new long[ m ];
 		targetZero = new boolean[ m ];
 		targetInv = new boolean[ m ];

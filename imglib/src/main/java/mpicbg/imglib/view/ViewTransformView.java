@@ -4,15 +4,16 @@ import mpicbg.imglib.ExtendedRandomAccessibleInterval;
 import mpicbg.imglib.Interval;
 import mpicbg.imglib.RandomAccess;
 import mpicbg.imglib.RandomAccessible;
+import mpicbg.imglib.transform.Transform;
 import mpicbg.imglib.util.Pair;
 
 public class ViewTransformView< T > implements TransformedRandomAccessibleIntervalView< T >
 {
 	protected final int n;
 
-	protected final RandomAccessible< T > target;
+	protected final RandomAccessible< T > source;
 	
-	protected final ViewTransform targetTransform;
+	protected final ViewTransform transformToSource;
 
 	protected final long[] dimension;
 	protected final long[] max;
@@ -23,87 +24,86 @@ public class ViewTransformView< T > implements TransformedRandomAccessibleInterv
 	protected final RandomAccessible< T > fullViewUntransformedRandomAccessible;
 
 	protected final ViewTransform fullViewRandomAccessibleTransform;
-	
-	
-	public ViewTransformView( RandomAccessible< T > target, ViewTransform transform, long[] dim )
+		
+	public ViewTransformView( RandomAccessible< T > source, ViewTransform transformToSource, long[] dim )
 	{
-		assert target.numDimensions() == transform.targetDim();
-		assert dim.length == transform.sourceDim();
+		assert source.numDimensions() == transformToSource.numTargetDimensions();
+		assert dim.length == transformToSource.numSourceDimensions();
 
-		n = transform.sourceDim();
+		this.n = dim.length;
 
-		this.target = target;
+		this.source = source;
 		
-		final int targetDim = target.numDimensions();
-		targetTransform = new ViewTransform( n, targetDim );
-		targetTransform.set( transform );
+		final int sourceDim = this.source.numDimensions();
+		this.transformToSource = new ViewTransform( n, sourceDim );
+		this.transformToSource.set( transformToSource );
 		
-		dimension = dim.clone();
+		this.dimension = dim.clone();
 
-		max = new long[ n ];
+		this.max = new long[ n ];
 		for ( int d = 0; d < n; ++d )
-			max[ d ] = dimension[ d ] - 1;
+			this.max[ d ] = this.dimension[ d ] - 1;
 		
-		tmpSourcePosition = new long[ n ];
-		tmpTargetPosition = new long[ targetDim ];
+		this.tmpSourcePosition = new long[ sourceDim ];
+		this.tmpTargetPosition = new long[ n ];
 
-		Pair< RandomAccessible< T >, ViewTransform > pair = untransformedRandomAccessible( this );
-		fullViewUntransformedRandomAccessible = pair.a;
-		fullViewRandomAccessibleTransform = pair.b;
+		Pair< RandomAccessible< T >, Transform > pair = untransformedRandomAccessible( this );
+		this.fullViewUntransformedRandomAccessible = pair.a;
+		this.fullViewRandomAccessibleTransform = ( ViewTransform ) pair.b;
 	}
 
-	public ViewTransformView( ViewTransformView< T > target, ViewTransform transform, long[] dim )
+	public ViewTransformView( ViewTransformView< T > source, ViewTransform transformToSource, long[] dim )
 	{
-		assert target.numDimensions() == transform.targetDim();
-		assert dim.length == transform.sourceDim();
+		assert source.numDimensions() == transformToSource.numTargetDimensions();
+		assert dim.length == transformToSource.numSourceDimensions();
 
-		n = transform.sourceDim();
+		this.n = dim.length;
 
-		this.target = target.getTarget();
+		this.source = source.getSource();
 		
-		final int targetDim = target.numDimensions();
-		targetTransform = new ViewTransform( n, targetDim );
-		ViewTransform.concatenate( target.getViewTransform(), transform, targetTransform );
+		final int sourceDim = this.source.numDimensions();
+		this.transformToSource = new ViewTransform( n, sourceDim );
+		ViewTransform.concatenate( source.getTransformToSource(), transformToSource, this.transformToSource );
 		
-		dimension = dim.clone();
+		this.dimension = dim.clone();
 
-		max = new long[ n ];
+		this.max = new long[ n ];
 		for ( int d = 0; d < n; ++d )
-			max[ d ] = dimension[ d ] - 1;
+			this.max[ d ] = this.dimension[ d ] - 1;
 		
-		tmpSourcePosition = new long[ n ];
-		tmpTargetPosition = new long[ targetDim ];
-		
-		Pair< RandomAccessible< T >, ViewTransform > pair = untransformedRandomAccessible( this );
-		fullViewUntransformedRandomAccessible = pair.a;
-		fullViewRandomAccessibleTransform = pair.b;
+		this.tmpSourcePosition = new long[ sourceDim ];
+		this.tmpTargetPosition = new long[ n ];
+
+		Pair< RandomAccessible< T >, Transform > pair = untransformedRandomAccessible( this );
+		this.fullViewUntransformedRandomAccessible = pair.a;
+		this.fullViewRandomAccessibleTransform = ( ViewTransform ) pair.b;
 	}
 	
-	public ViewTransformView( ExtendedRandomAccessibleInterval< T, ? > target, ViewTransform transform, long[] dim )
+	public ViewTransformView( ExtendedRandomAccessibleInterval< T, ? > source, ViewTransform transformToSource, long[] dim )
 	{
-		assert target.numDimensions() == transform.targetDim();
-		assert dim.length == transform.sourceDim();
+		assert source.numDimensions() == transformToSource.numTargetDimensions();
+		assert dim.length == transformToSource.numSourceDimensions();
 
-		n = transform.sourceDim();
+		this.n = dim.length;
 
-		this.target = target;
+		this.source = source;
 		
-		final int targetDim = target.numDimensions();
-		targetTransform = new ViewTransform( n, targetDim );
-		targetTransform.set( transform );
+		final int sourceDim = this.source.numDimensions();
+		this.transformToSource = new ViewTransform( n, sourceDim );
+		this.transformToSource.set( transformToSource );
 		
-		dimension = dim.clone();
+		this.dimension = dim.clone();
 
-		max = new long[ n ];
+		this.max = new long[ n ];
 		for ( int d = 0; d < n; ++d )
-			max[ d ] = dimension[ d ] - 1;
+			this.max[ d ] = this.dimension[ d ] - 1;
 		
-		tmpSourcePosition = new long[ n ];
-		tmpTargetPosition = new long[ targetDim ];
+		this.tmpSourcePosition = new long[ sourceDim ];
+		this.tmpTargetPosition = new long[ n ];
 
-		Pair< RandomAccessible< T >, ViewTransform > pair = untransformedRandomAccessible( this );
-		fullViewUntransformedRandomAccessible = pair.a;
-		fullViewRandomAccessibleTransform = pair.b;
+		Pair< RandomAccessible< T >, Transform > pair = untransformedRandomAccessible( this );
+		this.fullViewUntransformedRandomAccessible = pair.a;
+		this.fullViewRandomAccessibleTransform = ( ViewTransform ) pair.b;
 	}
 			
 	@Override
@@ -192,84 +192,94 @@ public class ViewTransformView< T > implements TransformedRandomAccessibleInterv
 	}
 
 	@Override
-	public Pair< RandomAccessible< T >, ViewTransform > untransformedRandomAccessible( Interval interval )
+	public Pair< RandomAccessible< T >, Transform > untransformedRandomAccessible( Interval interval )
 	{
 		System.out.println( "ViewTransformView.untransformedRandomAccessible in " + toString() );
-		// apply our own cumulativeTransform to the interval before we pass it on to the target 
-		Interval transformedInterval = targetTransform.transform( interval );
-		if ( RandomAccessibleView.class.isInstance( target ) )
+		// apply our own transformToSource to the interval before we pass it on to the source 
+		Interval transformedInterval = transformToSource.transform( interval );
+		if ( RandomAccessibleView.class.isInstance( source ) )
 		{
-			// if the target is a View,
+			// if the source is a View,
 			// get an untransformedRandomAccessible pair from it
-			// and concatenate with our own cumulativeTransform before we return it
-			Pair< RandomAccessible< T >, ViewTransform > pair = ( ( RandomAccessibleView < T > ) target ).untransformedRandomAccessible( transformedInterval );
-			ViewTransform accessTransform = pair.b;
+			// and concatenate with our own transformToSource before we return it
+			Pair< RandomAccessible< T >, Transform > pair = ( ( RandomAccessibleView < T > ) source ).untransformedRandomAccessible( transformedInterval );
+			Transform accessTransform = pair.b;
 			if ( accessTransform == null )
 			{
-				return new Pair< RandomAccessible< T >, ViewTransform >( pair.a, targetTransform );
+				return new Pair< RandomAccessible< T >, Transform >( pair.a, transformToSource );
 			}
 			else
 			{
-				ViewTransform t = new ViewTransform( n, accessTransform.numTargetDimensions );
-				ViewTransform.concatenate( accessTransform, targetTransform, t );
-				return new Pair< RandomAccessible< T >, ViewTransform >( pair.a, t );
+				if ( ViewTransform.class.isInstance( accessTransform ) ) {
+					ViewTransform t = new ViewTransform( n, accessTransform.numTargetDimensions() );
+					ViewTransform.concatenate( ( ViewTransform ) accessTransform, transformToSource, t );
+					return new Pair< RandomAccessible< T >, Transform >( pair.a, t );
+				} else {
+					// TODO: concatenate to TransformList
+					return null;
+				}
 			}
 		}
 		else
 		{
-			// if the target is not a View, just use it with our own cumulativeTransform
-			return new Pair< RandomAccessible< T >, ViewTransform > ( target, targetTransform );
+			// if the source is not a View, just use it with our own transformToSource
+			return new Pair< RandomAccessible< T >, Transform > ( source, transformToSource );
 		}
 	}
 	
 	@Override
-	public Pair< RandomAccess< T >, ViewTransform > untransformedRandomAccess( Interval interval )
+	public Pair< RandomAccess< T >, Transform > untransformedRandomAccess( Interval interval )
 	{
 		System.out.println( "ViewTransformView.untransformedRandomAccess in " + toString() );
-		// apply our own cumulativeTransform to the interval before we pass it on to the target 
-		Interval transformedInterval = targetTransform.transform( interval );
-		if ( RandomAccessibleView.class.isInstance( target ) )
+		// apply our own transformToSource to the interval before we pass it on to the source 
+		Interval transformedInterval = transformToSource.transform( interval );
+		if ( RandomAccessibleView.class.isInstance( source ) )
 		{
-			// if the target is a View,
+			// if the source is a View,
 			// get an untransformedRandomAccess pair from it
-			// and concatenate with our own cumulativeTransform before we return it
-			Pair< RandomAccess< T >, ViewTransform > pair = ( ( RandomAccessibleView < T > ) target ).untransformedRandomAccess( transformedInterval );
-			ViewTransform accessTransform = pair.b;
+			// and concatenate with our own transformToSource before we return it
+			Pair< RandomAccess< T >, Transform > pair = ( ( RandomAccessibleView < T > ) source ).untransformedRandomAccess( transformedInterval );
+			Transform accessTransform = pair.b;
 			if ( accessTransform == null )
 			{
-				return new Pair< RandomAccess< T >, ViewTransform >( pair.a, targetTransform );
+				return new Pair< RandomAccess< T >, Transform >( pair.a, transformToSource );
 			}
 			else
 			{
-				ViewTransform t = new ViewTransform( n, accessTransform.numTargetDimensions );
-				ViewTransform.concatenate( accessTransform, targetTransform, t );
-				return new Pair< RandomAccess< T >, ViewTransform >( pair.a, t );
+				if ( ViewTransform.class.isInstance( accessTransform ) ) {
+					ViewTransform t = new ViewTransform( n, accessTransform.numTargetDimensions() );
+					ViewTransform.concatenate( ( ViewTransform ) accessTransform, transformToSource, t );
+					return new Pair< RandomAccess< T >, Transform >( pair.a, t );
+				} else {
+					// TODO: concatenate to TransformList
+					return null;
+				}
 			}
 		}
 		else
 		{
-			// if the target is not a View, just return a plain randomAccess and our own cumulativeTransform
-			return new Pair< RandomAccess< T >, ViewTransform > ( target.randomAccess( transformedInterval ), targetTransform );
+			// if the source is not a View, just return a plain randomAccess and our own transformToSource
+			return new Pair< RandomAccess< T >, Transform > ( source.randomAccess( transformedInterval ), transformToSource );
 		}
 	}
 
 	@Override
-	public ViewTransform getViewTransform()
+	public ViewTransform getTransformToSource()
 	{
-		return targetTransform;
+		return transformToSource;
 	}
 
 	@Override
-	public RandomAccessible< T > getTarget()
+	public RandomAccessible< T > getSource()
 	{
-		return target;
+		return source;
 	}
 
 	@Override
 	public RandomAccess< T > randomAccess( Interval interval )
 	{
-		Pair< RandomAccess< T >, ViewTransform > pair = untransformedRandomAccess( interval );
-		return new ViewTransformRandomAccess< T >( pair.a, pair.b );
+		Pair< RandomAccess< T >, Transform > pair = untransformedRandomAccess( interval );
+		return new ViewTransformRandomAccess< T >( pair.a, ( ViewTransform ) pair.b );
 	}
 
 	@Override
