@@ -522,8 +522,10 @@ public class Util
             if ( sigma.compareTo( zero ) <= 0 )
             {
             		kernelSize = 3;
-                    gaussianKernel = genericArray( 3 ); //zero.createArray1D( 3 );
-                    gaussianKernel[ 1 ].set( one );
+								// NB: Need explicit cast to T[] to satisfy javac;
+								// See: http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=6302954
+                gaussianKernel = (T[]) genericArray( 3 ); //zero.createArray1D( 3 );
+                gaussianKernel[ 1 ].set( one );
             }
             else
             {
@@ -548,7 +550,9 @@ public class Util
                     two_sq_sigma.mul( sigma );
                     two_sq_sigma.mul( sigma );
 
-                    gaussianKernel = genericArray( kernelSize ); //zero.createArray1D( kernelSize );
+										// NB: Need explicit cast to T[] to satisfy javac;
+										// See: http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=6302954
+                    gaussianKernel = (T[]) genericArray( kernelSize ); //zero.createArray1D( kernelSize );
 
                     for ( int i = 0; i < gaussianKernel.length; ++i )
                     	gaussianKernel[ i ] = zero.createVariable();
