@@ -36,6 +36,16 @@ public interface InvertibleTransform extends Transform
 	public void applyInverse( final long[] source, final long[] target );
 
 	/**
+	 * Apply the inverse transform to a target vector to obtain a source vector.
+	 * 
+	 * @param source
+	 *            set this to the source coordinates.
+	 * @param target
+	 *            target coordinates.
+	 */
+	public void applyInverse( final int[] source, final int[] target );
+
+	/**
 	 * Apply the inverse transform to a target {@link Localizable} to obtain a
 	 * source {@link Positionable}.
 	 * 
