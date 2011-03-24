@@ -1,10 +1,11 @@
 package mpicbg.imglib.view;
 
+import mpicbg.imglib.view.MixedTransform;
 import Jama.Matrix;
 
-public class ViewTransformConcatenateTest
+public class MixedTransformConcatenateTest
 {
-	public static void testConcatenation( ViewTransform t1, ViewTransform t2 )
+	public static void testConcatenation( MixedTransform t1, MixedTransform t2 )
 	{
 		if (t1.sourceDim() != t2.targetDim() )
 		{
@@ -12,9 +13,9 @@ public class ViewTransformConcatenateTest
 			return;
 		}
 
-		ViewTransform t1t2 = new ViewTransform( t2.sourceDim(), t1.targetDim() );
+		MixedTransform t1t2 = new MixedTransform( t2.sourceDim(), t1.targetDim() );
 
-		ViewTransform.concatenate( t1, t2, t1t2 );
+		MixedTransform.concatenate( t1, t2, t1t2 );
 		
 		Matrix mt1 = t1.getMatrix(); 
 		Matrix mt2 = t2.getMatrix(); 
@@ -42,38 +43,38 @@ public class ViewTransformConcatenateTest
 	
 	public static void main( String[] args )
 	{
-		ViewTransform tr1 = new ViewTransform( 3, 3 );
+		MixedTransform tr1 = new MixedTransform( 3, 3 );
 		long[] translation = new long[] {3, 4, 5};
 		tr1.setTranslation( translation );
 		Matrix m_tr1 = tr1.getMatrix(); 
 
-		ViewTransform tr2 = new ViewTransform( 3, 3 );
+		MixedTransform tr2 = new MixedTransform( 3, 3 );
 		translation = new long[] {7, 8, 9};
 		tr2.setTranslation( translation );
 		Matrix m_tr2 = tr2.getMatrix(); 
 
-		ViewTransform perm1 = new ViewTransform( 3, 3 );
+		MixedTransform perm1 = new MixedTransform( 3, 3 );
 		boolean[] zero = new boolean[] {false, false, false};
 		boolean[] inv = new boolean[] {false, false, false};
 		int[] component = new int[] {0, 1, 2};
 		perm1.setPermutation( zero, component, inv );
 		Matrix m_perm1 = perm1.getMatrix(); 
 
-		ViewTransform rot1 = new ViewTransform( 3, 3 );
+		MixedTransform rot1 = new MixedTransform( 3, 3 );
 		zero = new boolean[] {false, false, false};
 		inv = new boolean[] {false, true, false};
 		component = new int[] {1, 0, 2};
 		rot1.setPermutation( zero, component, inv );
 		Matrix m_rot1 = rot1.getMatrix(); 
 
-		ViewTransform proj1 = new ViewTransform( 3, 2 );
+		MixedTransform proj1 = new MixedTransform( 3, 2 );
 		Matrix m_proj1 = proj1.getMatrix(); 
 
-		ViewTransform proj2 = new ViewTransform( 2, 3 );
+		MixedTransform proj2 = new MixedTransform( 2, 3 );
 		Matrix m_proj2 = proj2.getMatrix(); 
 
-		ViewTransform comp1 = new ViewTransform( 3, 3 );
-		ViewTransform.concatenate( rot1, tr2, comp1 );
+		MixedTransform comp1 = new MixedTransform( 3, 3 );
+		MixedTransform.concatenate( rot1, tr2, comp1 );
 		Matrix m_comp1 = comp1.getMatrix(); 
 
 

@@ -30,10 +30,7 @@ package mpicbg.imglib;
 
 import mpicbg.imglib.outofbounds.OutOfBoundsFactory;
 import mpicbg.imglib.outofbounds.OutOfBoundsRandomAccess;
-import mpicbg.imglib.transform.Transform;
-import mpicbg.imglib.util.Pair;
 import mpicbg.imglib.util.Util;
-import mpicbg.imglib.view.RandomAccessibleView;
 
 /**
  * Implements {@link RandomAccessible} for a {@link RandomAccessibleInterval}
@@ -42,7 +39,7 @@ import mpicbg.imglib.view.RandomAccessibleView;
  *
  * @author Tobias Pietzsch, Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-final public class ExtendedRandomAccessibleInterval< T, F extends RandomAccessibleInterval< T > > implements RandomAccessibleView< T > 
+final public class ExtendedRandomAccessibleInterval< T, F extends RandomAccessibleInterval< T > > implements RandomAccessible< T >
 {
 	final protected F source;
 	final protected OutOfBoundsFactory< T, F > factory;
@@ -77,64 +74,7 @@ final public class ExtendedRandomAccessibleInterval< T, F extends RandomAccessib
 		}
 	}
 
-	@SuppressWarnings( "unchecked" )
-	@Override
-	public Pair< RandomAccessible< T >, Transform > untransformedRandomAccessible( Interval interval )
-	{
-		System.out.println( "ExtendedRandomAccessibleInterval.untransformedRandomAccessible in " + toString() );
-		if ( Util.contains( source, interval ) )
-		{
-			// no out-of-bounds values are needed.
-			if ( RandomAccessibleView.class.isInstance( source ) )
-			{
-				// if the target is a View, let the target handle the request.
-				// (it will return a RandomAccessible-ViewTransform pair)
-				return ( ( RandomAccessibleView< T > ) source ).untransformedRandomAccessible( interval );
-			}
-			else
-			{
-				// if the target is not a View just return it with the identity transform.
-				return new Pair< RandomAccessible< T >, Transform >( source, null );
-			}
-		}
-		else
-		{
-			// out-of-bounds values are needed.
-			// we have to handle this ourselves.
-			return new Pair< RandomAccessible< T >, Transform >( this, null );
-		}
-	}
-
-	@SuppressWarnings( "unchecked" )
-	@Override
-	public Pair< RandomAccess< T >, Transform > untransformedRandomAccess( Interval interval )
-	{
-		System.out.println( "ExtendedRandomAccessibleInterval.untransformedRandomAccess in " + toString() );
-		if ( Util.contains( source, interval ) )
-		{
-			// no out-of-bounds values are needed.
-			if ( RandomAccessibleView.class.isInstance( source ) )
-			{
-				// if the target is a View, let the target handle the request.
-				// (it will return a RandomAccess-ViewTransform pair) 
-				return ( ( RandomAccessibleView< T > ) source ).untransformedRandomAccess( interval );
-			}
-			else
-			{
-				// if the target is not a View just get a randomAccess and return it with the identity transform.
-				return new Pair< RandomAccess< T >, Transform >( source.randomAccess( interval ), null );
-			}
-		}
-		else
-		{
-			// out-of-bounds values are needed.
-			// we have to handle this ourselves.
-			return new Pair< RandomAccess< T >, Transform >( randomAccess(), null );
-		}
-	}
-
-	@Override
-	public RandomAccessible< T > getSource()
+	public RandomAccessibleInterval< T > getSource()
 	{
 		return source;
 	}

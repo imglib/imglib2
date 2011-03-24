@@ -6,12 +6,14 @@ import mpicbg.imglib.RandomAccess;
 /**
  * TODO: extend AbstractSampler and implement RandomAccess< T > interface directly
  *       (keeping our own position[] in addition to target's is not very efficient...)
+ *       
+ * TODO: rename target to source? 
  * 
  * @author Tobias Pietzsch
  *
  * @param <T>
  */
-public final class ViewTransformRandomAccess< T > extends AbstractRandomAccess< T >
+public final class MixedTransformRandomAccess< T > extends AbstractRandomAccess< T >
 {
 	private final RandomAccess< T > target;
 	
@@ -58,7 +60,8 @@ public final class ViewTransformRandomAccess< T > extends AbstractRandomAccess< 
 	
 	private final long[] tmp;
 
-	ViewTransformRandomAccess( RandomAccess< T > target, ViewTransform transform )
+	// TODO make package private
+	public MixedTransformRandomAccess( RandomAccess< T > target, MixedTransform transform )
 	{
 		super( transform.numSourceDimensions() );
 

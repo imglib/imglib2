@@ -1,13 +1,25 @@
 package mpicbg.imglib.view;
 
+import mpicbg.imglib.RandomAccessible;
+import mpicbg.imglib.transform.Transform;
+
 /**
  * A view of a RandomAccessible which is related by a coordinate
  * {@link Transform} to its source.
  * 
  * @author Tobias Pietzsch
  */
-public interface TransformedRandomAccessibleView< T > extends RandomAccessibleView< T >
+public interface TransformedRandomAccessible< T > extends RandomAccessible< T >
 {
+	/**
+	 * Get the source of the TransformedRandomAccessible.
+	 * This is the next element in the view hierarchy, for example, the next
+	 * ExtendedRandomAccessibleInterval or the underlying Img.
+	 * 
+	 * @return the source {@link RandomAccessible}.
+	 */
+	public RandomAccessible< T > getSource();
+
 	/**
 	 * Get the transformation from view coordinates into {@link #getSource()
 	 * source} coordinates.
@@ -20,5 +32,5 @@ public interface TransformedRandomAccessibleView< T > extends RandomAccessibleVi
 	 * @return transformation from view coordinates into {@link #getSource()
 	 *         source} coordinates.
 	 */
-	public ViewTransform getTransformToSource();
+	public Transform getTransformToSource();	
 }

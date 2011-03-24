@@ -1,7 +1,5 @@
 package mpicbg.imglib.view;
 
-import mpicbg.imglib.FinalInterval;
-import mpicbg.imglib.Interval;
 import mpicbg.imglib.Localizable;
 import mpicbg.imglib.Positionable;
 import mpicbg.imglib.transform.Transform;
@@ -13,7 +11,7 @@ import Jama.Matrix;
  * 
  * @author Tobias Pietzsch
  */
-public class ViewTransform implements Transform
+public class MixedTransform implements Transform, BoundingBoxTransform
 {
 	/**
 	 * dimension of source vector.
@@ -50,7 +48,7 @@ public class ViewTransform implements Transform
 	 */
 	protected final int[] component;
 
-	public ViewTransform( final int sourceDim, final int targetDim )
+	public MixedTransform( final int sourceDim, final int targetDim )
 	{
 		this.numSourceDimensions = sourceDim;
 		this.numTargetDimensions = targetDim;
@@ -145,7 +143,7 @@ public class ViewTransform implements Transform
 		}
 	}
 
-	public static void concatenate( final ViewTransform t1, final ViewTransform t2, final ViewTransform t1t2 )
+	public static void concatenate( final MixedTransform t1, final MixedTransform t2, final MixedTransform t1t2 )
 	{
 		assert t1.numSourceDimensions == t2.numTargetDimensions;
 		assert t1t2.numTargetDimensions == t1.numTargetDimensions;
@@ -185,24 +183,7 @@ public class ViewTransform implements Transform
 		}
 	}
 
-	public FinalInterval transform( final Interval interval )
-	{
-		assert interval.numDimensions() == numSourceDimensions;
-
-		long[] max = new long[ numSourceDimensions ];
-		long[] min = new long[ numSourceDimensions ];
-		interval.min( min );
-		interval.max( max );
-
-		long[] tmax = new long[ numTargetDimensions ];
-		long[] tmin = new long[ numTargetDimensions ];
-		apply( min, tmin );
-		apply( max, tmax );
-
-		return new FinalInterval( tmin, tmax );
-	}
-
-	public void set( final ViewTransform transform )
+	public void set( final MixedTransform transform )
 	{
 		assert numSourceDimensions == transform.numSourceDimensions;
 		assert numTargetDimensions == transform.numTargetDimensions;
@@ -230,6 +211,7 @@ public class ViewTransform implements Transform
 			translation[ d ] = t[ d ];
 	}
 
+	// TODO
 	public void getPermutation( final boolean[] pzero, final int[] pcomponent, final boolean[] pinv )
 	{
 		assert pzero.length == numTargetDimensions;
@@ -243,6 +225,7 @@ public class ViewTransform implements Transform
 		}
 	}
 
+	// TODO
 	public void setPermutation( final boolean[] pzero, final int[] pcomponent, final boolean[] pinv )
 	{
 		assert pzero.length == numTargetDimensions;
@@ -257,6 +240,7 @@ public class ViewTransform implements Transform
 		}
 	}
 
+	// TODO
 	public void setPermutation( final boolean[] pzero, final int[] pcomponent )
 	{
 		assert pzero.length == numTargetDimensions;
@@ -270,6 +254,7 @@ public class ViewTransform implements Transform
 		}
 	}
 
+	// TODO
 	public void setPermutation( final int[] pcomponent, final boolean[] pinv )
 	{
 		assert pinv.length == numTargetDimensions;
@@ -283,6 +268,7 @@ public class ViewTransform implements Transform
 		}
 	}
 
+	// TODO
 	public void setPermutation( final int[] pcomponent )
 	{
 		assert pcomponent.length == numTargetDimensions;
@@ -315,5 +301,28 @@ public class ViewTransform implements Transform
 		}
 
 		return mat;
+	}
+
+	@Override
+	public BoundingBox transform( BoundingBox boundingBox )
+	{
+		assert boundingBox.numDimensions() == numSourceDimensions;
+		
+		if ( numSourceDimensions == numTargetDimensions )
+		{   // apply in-place
+			long[] tmp = new long[ numSourceDimensions ];
+			boundingBox.min( tmp );
+			apply( tmp, boundingBox.min );
+			boundingBox.max( tmp );
+			apply( tmp, boundingBox.max );
+			return boundingBox;
+		}
+		else
+		{   // create new BoundingBox with target dimensions
+			BoundingBox b = new BoundingBox( numTargetDimensions );
+			apply( boundingBox.min, b.min );
+			apply( boundingBox.max, b.max );
+			return b;
+		}
 	}
 }
