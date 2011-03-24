@@ -2,7 +2,8 @@ package mpicbg.imglib.view;
 
 import mpicbg.imglib.Localizable;
 import mpicbg.imglib.Positionable;
-import mpicbg.imglib.transform.Transform;
+import mpicbg.imglib.concatenate.Concatenable;
+import mpicbg.imglib.concatenate.PreConcatenable;
 import Jama.Matrix;
 
 /**
@@ -11,17 +12,12 @@ import Jama.Matrix;
  * 
  * @author Tobias Pietzsch
  */
-public class MixedTransform implements Transform, BoundingBoxTransform
+public class MixedTransform extends AbstractMixedTransform implements Concatenable< Mixed >, PreConcatenable< Mixed >
 {
 	/**
 	 * dimension of source vector.
 	 */
 	protected final int numSourceDimensions;
-
-	/**
-	 * dimension of target vector.
-	 */
-	protected final int numTargetDimensions;
 
 	/**
 	 * translation is added to the target vector after applying permutation,
@@ -50,8 +46,8 @@ public class MixedTransform implements Transform, BoundingBoxTransform
 
 	public MixedTransform( final int sourceDim, final int targetDim )
 	{
+		super( targetDim );
 		this.numSourceDimensions = sourceDim;
-		this.numTargetDimensions = targetDim;
 		translation = new long[ targetDim ];
 		zero = new boolean[ targetDim ];
 		invert = new boolean[ targetDim ];
@@ -77,9 +73,147 @@ public class MixedTransform implements Transform, BoundingBoxTransform
 	}
 
 	@Override
-	public int numTargetDimensions()
+	public void getTranslation( final long[] t )
 	{
-		return numTargetDimensions;
+		assert t.length == numTargetDimensions;
+		for ( int d = 0; d < numTargetDimensions; ++d )
+			t[ d ] = translation[ d ];
+	}
+
+	@Override
+	public long getTranslation( final int d )
+	{
+		assert d <= numTargetDimensions;
+		return translation[ d ];
+	}
+
+	public void setTranslation( final long[] t )
+	{
+		assert t.length == numTargetDimensions;
+		for ( int d = 0; d < numTargetDimensions; ++d )
+			translation[ d ] = t[ d ];
+	}
+
+	@Override
+	public void getComponentZero( @SuppressWarnings( "hiding" ) final boolean[] zero )
+	{
+		assert zero.length >= numTargetDimensions;
+		for ( int d = 0; d < numTargetDimensions; ++d )
+		{
+			zero[ d ] = this.zero[ d ];
+		}
+	}
+
+	@Override
+	public boolean getComponentZero( final int d )
+	{
+		assert d <= numTargetDimensions;
+		return zero[ d ];
+	}
+
+	/**
+	 * Set which target dimensions are _not_ taken from source dimensions.
+	 * 
+	 * <p>
+	 * For instance, if the transform maps 2D (x,y) coordinates to the first two
+	 * components of a 3D (x,y,z) coordinate, this will be [false, false, true]
+	 * </p>
+	 * 
+	 * @param zero
+	 *            array that says for each component of the target vector
+	 *            (before translation) whether the value should be taken from a
+	 *            source vector component (false) or should be set to zero
+	 *            (true).
+	 */
+	public void setComponentZero( final boolean[] zero )
+	{
+		assert zero.length >= numTargetDimensions;
+		for ( int d = 0; d < numTargetDimensions; ++d )
+		{
+			this.zero[ d ] = zero[ d ];
+		}
+	}
+
+	@Override
+	public void getComponentMapping( @SuppressWarnings( "hiding" ) final int[] component )
+	{
+		assert component.length >= numTargetDimensions;
+		for ( int d = 0; d < numTargetDimensions; ++d )
+		{
+			component[ d ] = this.component[ d ];
+		}
+	}
+
+	@Override
+	public int getComponentMapping( final int d )
+	{
+		assert d <= numTargetDimensions;
+		return component[ d ];
+	}
+
+	/**
+	 * Set for each target dimensions from which source dimension it is taken.
+	 * 
+	 * <p>
+	 * For instance, if the transform maps 2D (x,y) coordinates to the first two
+	 * components of a 3D (x,y,z) coordinate, this will be [0, 1, x]. Here, x
+	 * can be any value because the third target dimension does not correspond
+	 * to any source dimension, which can be realized using
+	 * {@link #setZero(boolean[])}.
+	 * </p>
+	 * 
+	 * @param component
+	 *            array that says for each component of the target vector
+	 *            (before translation) from which source vector component it
+	 *            should be taken.
+	 */
+	public void setComponentMapping( final int[] component )
+	{
+		assert component.length >= numTargetDimensions;
+		for ( int d = 0; d < numTargetDimensions; ++d )
+		{
+			this.component[ d ] = component[ d ];
+		}
+	}
+
+	@Override
+	public void getComponentInversion( @SuppressWarnings( "hiding" ) final boolean[] invert )
+	{
+		assert invert.length >= numTargetDimensions;
+		for ( int d = 0; d < numTargetDimensions; ++d )
+		{
+			invert[ d ] = this.invert[ d ];
+		}
+	}
+
+	@Override
+	public boolean getComponentInversion( final int d )
+	{
+		assert d <= numTargetDimensions;
+		return invert[ d ];
+	}
+
+	/**
+	 * Set for each target component, whether the source component it is taken
+	 * from should be inverted.
+	 * 
+	 * <p>
+	 * For instance, if rotating a 2D (x,y) coordinates by 180 degrees will map
+	 * it to (-x,-y). In this case, this will be [true, true].
+	 * </p>
+	 * 
+	 * @param component
+	 *            array that says for each component of the target vector
+	 *            (before translation) whether the source vector component it is
+	 *            taken from should be inverted (true).
+	 */
+	public void setComponentInversion( final boolean[] invert )
+	{
+		assert invert.length >= numTargetDimensions;
+		for ( int d = 0; d < numTargetDimensions; ++d )
+		{
+			this.invert[ d ] = invert[ d ];
+		}
 	}
 
 	@Override
@@ -143,144 +277,123 @@ public class MixedTransform implements Transform, BoundingBoxTransform
 		}
 	}
 
-	public static void concatenate( final MixedTransform t1, final MixedTransform t2, final MixedTransform t1t2 )
+	@Override
+	public MixedTransform concatenate( Mixed t )
 	{
-		assert t1.numSourceDimensions == t2.numTargetDimensions;
-		assert t1t2.numTargetDimensions == t1.numTargetDimensions;
-		assert t1t2.numSourceDimensions == t2.numSourceDimensions;
+		assert this.numSourceDimensions == t.numTargetDimensions();
+		
+		MixedTransform result = new MixedTransform( t.numSourceDimensions(), this.numTargetDimensions );
 
-		for ( int d = 0; d < t1t2.numTargetDimensions; ++d )
+		for ( int d = 0; d < result.numTargetDimensions; ++d )
 		{
-			t1t2.translation[ d ] = t1.translation[ d ];
-			if ( t1.zero[ d ] )
+			result.translation[ d ] = this.translation[ d ];
+			if ( this.zero[ d ] )
 			{
-				t1t2.zero[ d ] = true;
-				t1t2.invert[ d ] = false;
-				t1t2.component[ d ] = 0;
+				result.zero[ d ] = true;
+				result.invert[ d ] = false;
+				result.component[ d ] = 0;
 			}
 			else
 			{
-				final long v = t2.translation[ t1.component[ d ] ];
-				if ( t1.invert[ d ] )
-					t1t2.translation[ d ] -= v;
+				final int c = this.component[ d ];
+				final long v = t.getTranslation( c );
+				if ( this.invert[ d ] )
+					result.translation[ d ] -= v;
 				else
-					t1t2.translation[ d ] += v;
+					result.translation[ d ] += v;
 
-				final int c = t1.component[ d ];
-				if ( t2.zero[ c ] )
+				if ( t.getComponentZero( c ) )
 				{
-					t1t2.zero[ d ] = true;
-					t1t2.invert[ d ] = false;
-					t1t2.component[ d ] = 0;
+					result.zero[ d ] = true;
+					result.invert[ d ] = false;
+					result.component[ d ] = 0;
 				}
 				else
 				{
-					t1t2.zero[ d ] = false;
-					t1t2.invert[ d ] = ( t1.invert[ d ] != t2.invert[ c ] );
-					t1t2.component[ d ] = t2.component[ c ];
+					result.zero[ d ] = false;
+					result.invert[ d ] = ( this.invert[ d ] != t.getComponentInversion( c ) );
+					result.component[ d ] = t.getComponentMapping( c );
 				}
 			}
 		}
+		return result;
 	}
 
-	public void set( final MixedTransform transform )
+	@Override
+	public Class< Mixed > getConcatenableClass()
 	{
-		assert numSourceDimensions == transform.numSourceDimensions;
-		assert numTargetDimensions == transform.numTargetDimensions;
+		return Mixed.class;
+	}
 
-		for ( int d = 0; d < numTargetDimensions; ++d )
+	@Override
+	public MixedTransform preConcatenate( Mixed t )
+	{
+		assert t.numSourceDimensions() == this.numTargetDimensions;
+		
+		MixedTransform result = new MixedTransform( this.numSourceDimensions, t.numTargetDimensions() );
+
+		for ( int d = 0; d < result.numTargetDimensions; ++d )
 		{
-			translation[ d ] = transform.translation[ d ];
-			zero[ d ] = transform.zero[ d ];
-			invert[ d ] = transform.invert[ d ];
-			component[ d ] = transform.component[ d ];
+			result.translation[ d ] = t.getTranslation( d );
+			if ( t.getComponentZero( d ) )
+			{
+				result.zero[ d ] = true;
+				result.invert[ d ] = false;
+				result.component[ d ] = 0;
+			}
+			else
+			{
+				final int c = t.getComponentMapping( d );
+				final long v = this.translation[ c ];
+				if ( t.getComponentInversion( d ) )
+					result.translation[ d ] -= v;
+				else
+					result.translation[ d ] += v;
+
+				if ( this.zero[ c ] )
+				{
+					result.zero[ d ] = true;
+					result.invert[ d ] = false;
+					result.component[ d ] = 0;
+				}
+				else
+				{
+					result.zero[ d ] = false;
+					result.invert[ d ] = ( t.getComponentInversion( d ) != this.invert[ c ] );
+					result.component[ d ] = this.component[ c ];
+				}
+			}
 		}
+		return result;
 	}
 
-	public void getTranslation( final long[] t )
+	@Override
+	public Class< Mixed > getPreConcatenableClass()
 	{
-		assert t.length == numTargetDimensions;
-		for ( int d = 0; d < numTargetDimensions; ++d )
-			t[ d ] = translation[ d ];
+		return Mixed.class;
 	}
 
-	public void setTranslation( final long[] t )
+	/**
+	 * set parameters to <code>transform</code>.
+	 * 
+	 * @param transform
+	 */
+	public void set( final Mixed transform )
 	{
-		assert t.length == numTargetDimensions;
-		for ( int d = 0; d < numTargetDimensions; ++d )
-			translation[ d ] = t[ d ];
+		assert numSourceDimensions == transform.numSourceDimensions();
+		assert numTargetDimensions == transform.numTargetDimensions();
+
+		transform.getTranslation( translation );
+		transform.getComponentZero( zero );
+		transform.getComponentMapping( component );
+		transform.getComponentInversion( invert );
 	}
 
-	// TODO
-	public void getPermutation( final boolean[] pzero, final int[] pcomponent, final boolean[] pinv )
-	{
-		assert pzero.length == numTargetDimensions;
-		assert pinv.length == numTargetDimensions;
-		assert pcomponent.length == numTargetDimensions;
-		for ( int d = 0; d < numTargetDimensions; ++d )
-		{
-			pzero[ d ] = zero[ d ];
-			pinv[ d ] = invert[ d ];
-			pcomponent[ d ] = component[ d ];
-		}
-	}
-
-	// TODO
-	public void setPermutation( final boolean[] pzero, final int[] pcomponent, final boolean[] pinv )
-	{
-		assert pzero.length == numTargetDimensions;
-		assert pinv.length == numTargetDimensions;
-		assert pcomponent.length == numTargetDimensions;
-		for ( int d = 0; d < numTargetDimensions; ++d )
-		{
-			assert pcomponent[ d ] < numSourceDimensions;
-			zero[ d ] = pzero[ d ];
-			invert[ d ] = pinv[ d ];
-			component[ d ] = pcomponent[ d ];
-		}
-	}
-
-	// TODO
-	public void setPermutation( final boolean[] pzero, final int[] pcomponent )
-	{
-		assert pzero.length == numTargetDimensions;
-		assert pcomponent.length == numTargetDimensions;
-		for ( int d = 0; d < numTargetDimensions; ++d )
-		{
-			assert pcomponent[ d ] < numSourceDimensions;
-			zero[ d ] = pzero[ d ];
-			invert[ d ] = false;
-			component[ d ] = pcomponent[ d ];
-		}
-	}
-
-	// TODO
-	public void setPermutation( final int[] pcomponent, final boolean[] pinv )
-	{
-		assert pinv.length == numTargetDimensions;
-		assert pcomponent.length == numTargetDimensions;
-		for ( int d = 0; d < numTargetDimensions; ++d )
-		{
-			assert pcomponent[ d ] < numSourceDimensions;
-			zero[ d ] = false;
-			invert[ d ] = pinv[ d ];
-			component[ d ] = pcomponent[ d ];
-		}
-	}
-
-	// TODO
-	public void setPermutation( final int[] pcomponent )
-	{
-		assert pcomponent.length == numTargetDimensions;
-		for ( int d = 0; d < numSourceDimensions; ++d )
-		{
-			assert pcomponent[ d ] < numSourceDimensions;
-			zero[ d ] = false;
-			invert[ d ] = false;
-			component[ d ] = pcomponent[ d ];
-		}
-	}
-
+	/**
+	 * Get the matrix that transforms homogeneous source points to homogeneous
+	 * target points. For testing purposes.
+	 */
+	@Override
 	public Matrix getMatrix()
 	{
 		Matrix mat = new Matrix( numTargetDimensions + 1, numSourceDimensions + 1 );
@@ -301,28 +414,5 @@ public class MixedTransform implements Transform, BoundingBoxTransform
 		}
 
 		return mat;
-	}
-
-	@Override
-	public BoundingBox transform( BoundingBox boundingBox )
-	{
-		assert boundingBox.numDimensions() == numSourceDimensions;
-		
-		if ( numSourceDimensions == numTargetDimensions )
-		{   // apply in-place
-			long[] tmp = new long[ numSourceDimensions ];
-			boundingBox.min( tmp );
-			apply( tmp, boundingBox.min );
-			boundingBox.max( tmp );
-			apply( tmp, boundingBox.max );
-			return boundingBox;
-		}
-		else
-		{   // create new BoundingBox with target dimensions
-			BoundingBox b = new BoundingBox( numTargetDimensions );
-			apply( boundingBox.min, b.min );
-			apply( boundingBox.max, b.max );
-			return b;
-		}
 	}
 }
