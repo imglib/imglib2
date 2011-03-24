@@ -1,6 +1,7 @@
 package mpicbg.imglib.view;
 
 import mpicbg.imglib.ExtendedRandomAccessibleInterval;
+import mpicbg.imglib.RandomAccessible;
 import mpicbg.imglib.RandomAccessibleInterval;
 import mpicbg.imglib.outofbounds.OutOfBoundsFactory;
 import mpicbg.imglib.outofbounds.OutOfBoundsMirrorFactory;
@@ -8,29 +9,29 @@ import mpicbg.imglib.util.Util;
 
 public class Views
 {
-	public static < T, F extends RandomAccessibleInterval< T > > RandomAccessibleView< T > extend( final F randomAccessible, final OutOfBoundsFactory< T, F > factory )
+	public static < T, F extends RandomAccessibleInterval< T > > RandomAccessible< T > extend( final F randomAccessible, final OutOfBoundsFactory< T, F > factory )
 	{
 		return new ExtendedRandomAccessibleInterval< T, F >( randomAccessible, factory );
 	}
 
-	public static < T, F extends RandomAccessibleInterval< T > > RandomAccessibleView< T > extend( final F randomAccessible )
+	public static < T, F extends RandomAccessibleInterval< T > > RandomAccessible< T > extend( final F randomAccessible )
 	{
 		return new ExtendedRandomAccessibleInterval< T, F >( randomAccessible, new OutOfBoundsMirrorFactory< T, F >( OutOfBoundsMirrorFactory.Boundary.SINGLE ) );
 	}
 
-	public static < T > ViewTransformView< T > superIntervalView( final RandomAccessibleView< T > view, long[] offset, long[] dimension )
+	public static < T > MixedTransformView< T > superIntervalView( final RandomAccessible< T > randomAccessible, long[] offset, long[] dimension )
 	{
-		final int n = view.numDimensions();
-		ViewTransform t = new ViewTransform( n, n );
+		final int n = randomAccessible.numDimensions();
+		MixedTransform t = new MixedTransform( n, n );
 		t.setTranslation( offset );
-		return new ViewTransformView< T >( view, t, dimension );
+		return new MixedTransformView< T >( randomAccessible, t, dimension );
 	}
 
-	public static < T > ViewTransformView< T > flippedView( final RandomAccessibleIntervalView< T > view, final int d )
+	public static < T > MixedTransformView< T > flippedView( final RandomAccessibleInterval< T > interval, final int d )
 	{
-		final int n = view.numDimensions();
+		final int n = interval.numDimensions();
 		long[] tmp = new long[ n ];
-		tmp[ d ] = view.max( d );
+		tmp[ d ] = interval.max( d );
 		int[] component = new int[ n ];
 		boolean[] inv = new boolean[ n ];
 		for ( int e = 0; e < n; ++e )
@@ -38,12 +39,12 @@ public class Views
 			component[ e ] = e;
 			inv[ e ] = (e == d);
 		}
-		ViewTransform t = new ViewTransform( n, n );
+		MixedTransform t = new MixedTransform( n, n );
 		t.setTranslation( tmp );
 		t.setPermutation( component, inv );
-		view.dimensions( tmp );
+		interval.dimensions( tmp );
 		System.out.println( Util.printCoordinates( tmp ) );
-		return new ViewTransformView< T >( view, t, tmp );
+		return new MixedTransformView< T >( interval, t, tmp );
 	}
 
 	/**
@@ -52,11 +53,11 @@ public class Views
 	 * 
 	 * TODO: this should work on general views, not just IntervalView
 	 */
-	public static < T > ViewTransformView< T > hyperSlice( final RandomAccessibleInterval< T > view, final int d, long pos )
+	public static < T > MixedTransformView< T > hyperSlice( final RandomAccessibleInterval< T > view, final int d, long pos )
 	{
 		final int m = view.numDimensions();
 		final int n = m - 1;
-		ViewTransform t = new ViewTransform( n, m );
+		MixedTransform t = new MixedTransform( n, m );
 		long[] translation = new long[ m ];
 		translation[ d ] = pos;
 		boolean[] zero = new boolean[ m ];
@@ -84,7 +85,7 @@ public class Views
 		}
 		t.setTranslation( translation );
 		t.setPermutation( zero, component );
-		return new ViewTransformView< T >( view, t, dimension );
+		return new MixedTransformView< T >( view, t, dimension );
 	}
 
 	/**
@@ -98,11 +99,11 @@ public class Views
 	 * fromAxis=1 and toAxis=0 corresponds to a counter-clock-wise rotation in the
 	 * XY plane.
 	 */
-	public static < T > ViewTransformView< T > rotatedView( final RandomAccessibleInterval< T > view, final int fromAxis, final int toAxis )
+	public static < T > MixedTransformView< T > rotatedView( final RandomAccessibleInterval< T > interval, final int fromAxis, final int toAxis )
 	{
-		final int n = view.numDimensions();
+		final int n = interval.numDimensions();
 		long[] tmp = new long[ n ];
-		tmp[ toAxis ] = view.max( toAxis );
+		tmp[ toAxis ] = interval.max( toAxis );
 		int[] component = new int[ n ];
 		boolean[] inv = new boolean[ n ];
 		for ( int e = 0; e < n; ++e )
@@ -121,13 +122,13 @@ public class Views
 				component[ e ] = e;
 			}
 		}
-		ViewTransform t = new ViewTransform( n, n );
+		MixedTransform t = new MixedTransform( n, n );
 		t.setTranslation( tmp );
 		t.setPermutation( component, inv );
-		view.dimensions( tmp );
+		interval.dimensions( tmp );
 		final long fromDim = tmp[ toAxis ];
 		tmp[ toAxis ] = tmp[ fromAxis ];
 		tmp[ fromAxis ] = fromDim;
-		return new ViewTransformView< T >( view, t, tmp );
+		return new MixedTransformView< T >( interval, t, tmp );
 	}
 }
