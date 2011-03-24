@@ -29,9 +29,7 @@ public class MixedTransformView< T > implements TransformedRandomAccessible< T >
 		{
 			MixedTransformView< T > v = ( MixedTransformView< T > ) source;
 			this.source = v.getSource();
-			final int sourceDim = this.source.numDimensions();
-			this.transformToSource = new MixedTransform( n, sourceDim );
-			MixedTransform.concatenate( v.getTransformToSource(), transformToSource, this.transformToSource );
+			this.transformToSource = v.getTransformToSource().concatenate( transformToSource );
 		}
 		else
 		{

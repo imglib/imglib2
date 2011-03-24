@@ -77,7 +77,9 @@ public final class MixedTransformRandomAccess< T > extends AbstractRandomAccess<
 		sourceInv = new boolean[ n ];
 		sourceComponent = new int[ n ];
 		transform.getTranslation( translation );
-		transform.getPermutation( targetZero, targetComponent, targetInv );
+		transform.getComponentZero( targetZero );
+		transform.getComponentMapping( targetComponent );
+		transform.getComponentInversion( targetInv );
 
 		for( int e = 0; e < n; ++e )
 		{

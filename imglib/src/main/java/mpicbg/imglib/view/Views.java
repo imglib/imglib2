@@ -41,7 +41,8 @@ public class Views
 		}
 		MixedTransform t = new MixedTransform( n, n );
 		t.setTranslation( tmp );
-		t.setPermutation( component, inv );
+		t.setComponentMapping( component );
+		t.setComponentInversion( inv );
 		interval.dimensions( tmp );
 		System.out.println( Util.printCoordinates( tmp ) );
 		return new MixedTransformView< T >( interval, t, tmp );
@@ -84,7 +85,8 @@ public class Views
 			}
 		}
 		t.setTranslation( translation );
-		t.setPermutation( zero, component );
+		t.setComponentZero( zero );
+		t.setComponentMapping( component );
 		return new MixedTransformView< T >( view, t, dimension );
 	}
 
@@ -124,7 +126,8 @@ public class Views
 		}
 		MixedTransform t = new MixedTransform( n, n );
 		t.setTranslation( tmp );
-		t.setPermutation( component, inv );
+		t.setComponentMapping( component );
+		t.setComponentInversion( inv );
 		interval.dimensions( tmp );
 		final long fromDim = tmp[ toAxis ];
 		tmp[ toAxis ] = tmp[ fromAxis ];
