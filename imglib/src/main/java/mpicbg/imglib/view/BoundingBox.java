@@ -1,131 +1,83 @@
 package mpicbg.imglib.view;
 
+import mpicbg.imglib.FinalInterval;
 import mpicbg.imglib.Interval;
 
-public final class BoundingBox implements Interval
+public final class BoundingBox
 {
 	final public int n;
-	final public long[] min;
-	final public long[] max;
+
+	final public long[] corner1;
+
+	final public long[] corner2;
 
 	public BoundingBox( final int n )
 	{
 		this.n = n;
-		this.min = new long[ n ];
-		this.max = new long[ n ];
+		this.corner1 = new long[ n ];
+		this.corner2 = new long[ n ];
 	}
 
-	public BoundingBox( final long[] min, final long[] max )
+	public BoundingBox( final long[] corner1, final long[] corner2 )
 	{
-		assert min.length == max.length;
+		assert corner1.length == corner2.length;
 
-		this.n = min.length;
-		this.min = min.clone();
-		this.max = max.clone();
+		this.n = corner1.length;
+		this.corner1 = corner1.clone();
+		this.corner2 = corner2.clone();
 	}
 
 	public BoundingBox( Interval interval )
 	{
 		this.n = interval.numDimensions();
-		this.min = new long[ n ];
-		this.max = new long[ n ];
-		interval.min( min );
-		interval.max( max );
-	}
-	
-	@Override
-	public double realMin( int d )
-	{
-		assert d >= 0;
-		assert d < n;
-
-		return min[ d ];
+		this.corner1 = new long[ n ];
+		this.corner2 = new long[ n ];
+		interval.min( corner1 );
+		interval.max( corner2 );
 	}
 
-	@Override
-	public void realMin( double[] minimum )
-	{
-		assert minimum.length == n;
-		
-		for ( int d = 0; d < n; ++d )
-			minimum[ d ] = this.min[ d ];
-	}
-
-	@Override
-	public double realMax( int d )
-	{
-		assert d >= 0;
-		assert d < n;
-
-		return max[ d ];
-	}
-
-	@Override
-	public void realMax( double[] maximum )
-	{
-		assert maximum.length == n;
-		
-		for ( int d = 0; d < n; ++d )
-			maximum[ d ] = this.max[ d ];
-	}
-
-	@Override
 	public int numDimensions()
 	{
 		return n;
 	}
 
-	@Override
-	public long min( int d )
+	public void corner1( long[] c )
 	{
-		assert d >= 0;
-		assert d < n;
-
-		return min[ d ];
-	}
-
-	@Override
-	public void min( long[] minimum )
-	{
-		assert minimum.length == n;
-		
+		assert c.length >= n;
 		for ( int d = 0; d < n; ++d )
-			minimum[ d ] = this.min[ d ];
+			c[ d ] = this.corner1[ d ];
 	}
 
-	@Override
-	public long max( int d )
+	public void corner2( long[] c )
 	{
-		assert d >= 0;
-		assert d < n;
-
-		return max[ d ];
-	}
-
-	@Override
-	public void max( long[] maximum )
-	{
-		assert maximum.length == n;
-		
+		assert c.length >= n;
 		for ( int d = 0; d < n; ++d )
-			maximum[ d ] = this.max[ d ];
+			c[ d ] = this.corner2[ d ];
 	}
 
-	@Override
-	public void dimensions( long[] dimensions )
+	/**
+	 * flip coordinates between corner1 and corner2 such that corner1 is the min
+	 * of the bounding box and corner2 is the max.
+	 */
+	public void orderMinMax()
 	{
-		assert dimensions.length == n;
-		
 		for ( int d = 0; d < n; ++d )
-			dimensions[ d ] = max[ d ] - min[ d ] + 1;
+		{
+			if ( corner1[ d ] > corner2[ d ] )
+			{
+				final long tmp = corner1[ d ];
+				corner1[ d ] = corner2[ d ];
+				corner2[ d ] = tmp;
+			}
+		}
 	}
 
-	@Override
-	public long dimension( int d )
+	/**
+	 * @return bounding box as an interval.
+	 */
+	public Interval getInterval()
 	{
-		assert d >= 0;
-		assert d < n;
-
-		return max[ d ] - min[ d ] + 1;
+		orderMinMax();
+		return new FinalInterval( corner1, corner2 );
 	}
 }
