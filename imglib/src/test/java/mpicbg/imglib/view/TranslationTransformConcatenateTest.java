@@ -2,6 +2,9 @@ package mpicbg.imglib.view;
 
 import static org.junit.Assert.assertTrue;
 
+import mpicbg.imglib.transform.integer.Translation;
+import mpicbg.imglib.transform.integer.TranslationTransform;
+
 import org.junit.Before;
 import org.junit.Test;
 

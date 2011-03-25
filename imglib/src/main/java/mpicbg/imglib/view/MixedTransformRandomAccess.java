@@ -2,6 +2,7 @@ package mpicbg.imglib.view;
 
 import mpicbg.imglib.AbstractRandomAccess;
 import mpicbg.imglib.RandomAccess;
+import mpicbg.imglib.transform.integer.MixedTransform;
 
 /**
  * TODO: extend AbstractSampler and implement RandomAccess< T > interface directly

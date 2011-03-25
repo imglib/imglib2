@@ -10,6 +10,7 @@ import mpicbg.imglib.RandomAccess;
 import mpicbg.imglib.RandomAccessible;
 import mpicbg.imglib.RandomAccessibleInterval;
 import mpicbg.imglib.transform.Transform;
+import mpicbg.imglib.transform.integer.MixedTransform;
 import mpicbg.imglib.util.Util;
 
 public class TransformBuilder< T >
@@ -74,7 +75,7 @@ public class TransformBuilder< T >
 	protected void visitExtended( ExtendedRandomAccessibleInterval< T, ? > randomAccessible )
 	{
 		RandomAccessibleInterval< T > sourceInterval = randomAccessible.getSource();
-		if ( Util.contains( sourceInterval, boundingBox ) )
+		if ( Util.contains( sourceInterval, boundingBox.getInterval() ) )
 			visit( sourceInterval );
 		else
 			source = randomAccessible;

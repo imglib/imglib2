@@ -4,6 +4,7 @@ import mpicbg.imglib.Interval;
 import mpicbg.imglib.RandomAccess;
 import mpicbg.imglib.RandomAccessible;
 import mpicbg.imglib.RandomAccessibleInterval;
+import mpicbg.imglib.transform.integer.MixedTransform;
 
 public class MixedTransformView< T > implements TransformedRandomAccessible< T >, RandomAccessibleInterval< T >
 {
@@ -16,7 +17,7 @@ public class MixedTransformView< T > implements TransformedRandomAccessible< T >
 	protected final long[] dimension;
 	protected final long[] max;
 
-	protected final RandomAccessible< T > fullViewRandomAccessible;
+	protected RandomAccessible< T > fullViewRandomAccessible;
 		
 	public MixedTransformView( RandomAccessible< T > source, MixedTransform transformToSource, long[] dim )
 	{
@@ -45,7 +46,7 @@ public class MixedTransformView< T > implements TransformedRandomAccessible< T >
 		for ( int d = 0; d < n; ++d )
 			this.max[ d ] = this.dimension[ d ] - 1;
 		
-		fullViewRandomAccessible = TransformBuilder.getEfficientRandomAccessible( this, this ); 
+		fullViewRandomAccessible = null;
 	}
 
 	@Override
@@ -157,6 +158,8 @@ public class MixedTransformView< T > implements TransformedRandomAccessible< T >
 	@Override
 	public RandomAccess< T > randomAccess()
 	{
+		if ( fullViewRandomAccessible == null )
+			fullViewRandomAccessible = TransformBuilder.getEfficientRandomAccessible( this, this ); 
 		return fullViewRandomAccessible.randomAccess();
 	}
 }

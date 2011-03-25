@@ -1,7 +1,9 @@
-package mpicbg.imglib.view;
+package mpicbg.imglib.transform.integer;
+
+import mpicbg.imglib.view.BoundingBox;
 
 
-public abstract class AbstractMixedTransform implements Mixed, BoundingBoxTransform
+public abstract class AbstractMixedTransform implements Mixed
 {
 	/**
 	 * dimension of target vector.
@@ -93,17 +95,17 @@ public abstract class AbstractMixedTransform implements Mixed, BoundingBoxTransf
 		if ( numSourceDimensions() == numTargetDimensions )
 		{ // apply in-place
 			long[] tmp = new long[ numTargetDimensions ];
-			boundingBox.min( tmp );
-			apply( tmp, boundingBox.min );
-			boundingBox.max( tmp );
-			apply( tmp, boundingBox.max );
+			boundingBox.corner1( tmp );
+			apply( tmp, boundingBox.corner1 );
+			boundingBox.corner2( tmp );
+			apply( tmp, boundingBox.corner2 );
 			return boundingBox;
 		}
 		else
 		{ // create new BoundingBox with target dimensions
 			BoundingBox b = new BoundingBox( numTargetDimensions );
-			apply( boundingBox.min, b.min );
-			apply( boundingBox.max, b.max );
+			apply( boundingBox.corner1, b.corner1 );
+			apply( boundingBox.corner2, b.corner2 );
 			return b;
 		}
 	}

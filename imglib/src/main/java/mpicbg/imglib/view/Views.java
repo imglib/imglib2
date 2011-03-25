@@ -5,6 +5,7 @@ import mpicbg.imglib.RandomAccessible;
 import mpicbg.imglib.RandomAccessibleInterval;
 import mpicbg.imglib.outofbounds.OutOfBoundsFactory;
 import mpicbg.imglib.outofbounds.OutOfBoundsMirrorFactory;
+import mpicbg.imglib.transform.integer.MixedTransform;
 import mpicbg.imglib.util.Util;
 
 public class Views

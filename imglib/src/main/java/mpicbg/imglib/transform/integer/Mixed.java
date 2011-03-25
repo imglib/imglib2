@@ -1,7 +1,8 @@
-package mpicbg.imglib.view;
+package mpicbg.imglib.transform.integer;
 
 import Jama.Matrix;
 import mpicbg.imglib.transform.Transform;
+import mpicbg.imglib.view.BoundingBoxTransform;
 
 public interface Mixed extends Transform, BoundingBoxTransform
 {

@@ -2,6 +2,9 @@ package mpicbg.imglib.view;
 
 import static org.junit.Assert.assertArrayEquals;
 
+
+import mpicbg.imglib.transform.integer.SequentializeTransform;
+
 import org.junit.Test;
 
 public class SequentializeTransformTest

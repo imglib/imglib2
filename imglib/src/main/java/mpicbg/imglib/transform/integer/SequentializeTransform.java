@@ -1,4 +1,4 @@
-package mpicbg.imglib.view;
+package mpicbg.imglib.transform.integer;
 
 import mpicbg.imglib.Localizable;
 import mpicbg.imglib.Positionable;
@@ -118,8 +118,8 @@ public class SequentializeTransform implements InvertibleTransform
 	@Override
 	public void apply( long[] source, long[] target )
 	{
-		assert source.length == numSourceDimensions;
-		assert target.length == numTargetDimensions;
+		assert source.length >= numSourceDimensions;
+		assert target.length >= numTargetDimensions;
 
 		for ( int d = 0; d < maxTargetDimension; ++d )
 			target[ d ] = source[ d ];
@@ -132,8 +132,8 @@ public class SequentializeTransform implements InvertibleTransform
 	@Override
 	public void apply( int[] source, int[] target )
 	{
-		assert source.length == numSourceDimensions;
-		assert target.length == numTargetDimensions;
+		assert source.length >= numSourceDimensions;
+		assert target.length >= numTargetDimensions;
 
 		for ( int d = 0; d < maxTargetDimension; ++d )
 			target[ d ] = source[ d ];
@@ -146,8 +146,8 @@ public class SequentializeTransform implements InvertibleTransform
 	@Override
 	public void apply( Localizable source, Positionable target )
 	{
-		assert source.numDimensions() == numSourceDimensions;
-		assert target.numDimensions() == numTargetDimensions;
+		assert source.numDimensions() >= numSourceDimensions;
+		assert target.numDimensions() >= numTargetDimensions;
 
 		for ( int d = 0; d < maxTargetDimension; ++d )
 			target.setPosition( source.getLongPosition( d ), d );
@@ -160,8 +160,8 @@ public class SequentializeTransform implements InvertibleTransform
 	@Override
 	public void applyInverse( long[] source, long[] target )
 	{
-		assert source.length == numSourceDimensions;
-		assert target.length == numTargetDimensions;
+		assert source.length >= numSourceDimensions;
+		assert target.length >= numTargetDimensions;
 
 		for ( int d = 0; d < maxTargetDimension; ++d )
 			source[ d ] = target[ d ];
@@ -178,8 +178,8 @@ public class SequentializeTransform implements InvertibleTransform
 	@Override
 	public void applyInverse( int[] source, int[] target )
 	{
-		assert source.length == numSourceDimensions;
-		assert target.length == numTargetDimensions;
+		assert source.length >= numSourceDimensions;
+		assert target.length >= numTargetDimensions;
 
 		for ( int d = 0; d < maxTargetDimension; ++d )
 			source[ d ] = target[ d ];
@@ -196,8 +196,8 @@ public class SequentializeTransform implements InvertibleTransform
 	@Override
 	public void applyInverse( Positionable source, Localizable target )
 	{
-		assert source.numDimensions() == numSourceDimensions;
-		assert target.numDimensions() == numTargetDimensions;
+		assert source.numDimensions() >= numSourceDimensions;
+		assert target.numDimensions() >= numTargetDimensions;
 
 		for ( int d = 0; d < maxTargetDimension; ++d )
 			source.setPosition( target.getLongPosition( d ), d );

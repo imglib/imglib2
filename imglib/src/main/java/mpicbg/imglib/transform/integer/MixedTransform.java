@@ -1,4 +1,4 @@
-package mpicbg.imglib.view;
+package mpicbg.imglib.transform.integer;
 
 import mpicbg.imglib.Localizable;
 import mpicbg.imglib.Positionable;
@@ -219,8 +219,8 @@ public class MixedTransform extends AbstractMixedTransform implements Concatenab
 	@Override
 	public void apply( long[] source, long[] target )
 	{
-		assert source.length == numSourceDimensions;
-		assert target.length == numTargetDimensions;
+		assert source.length >= numSourceDimensions;
+		assert target.length >= numTargetDimensions;
 
 		for ( int d = 0; d < numTargetDimensions; ++d )
 		{
@@ -239,8 +239,8 @@ public class MixedTransform extends AbstractMixedTransform implements Concatenab
 	@Override
 	public void apply( int[] source, int[] target )
 	{
-		assert source.length == numSourceDimensions;
-		assert target.length == numTargetDimensions;
+		assert source.length >= numSourceDimensions;
+		assert target.length >= numTargetDimensions;
 
 		for ( int d = 0; d < numTargetDimensions; ++d )
 		{
@@ -259,8 +259,8 @@ public class MixedTransform extends AbstractMixedTransform implements Concatenab
 	@Override
 	public void apply( Localizable source, Positionable target )
 	{
-		assert source.numDimensions() == numSourceDimensions;
-		assert target.numDimensions() == numTargetDimensions;
+		assert source.numDimensions() >= numSourceDimensions;
+		assert target.numDimensions() >= numTargetDimensions;
 
 		for ( int d = 0; d < numTargetDimensions; ++d )
 		{
