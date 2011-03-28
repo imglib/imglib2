@@ -1,8 +1,7 @@
 package mpicbg.imglib.img.cell;
 
-import mpicbg.imglib.AbstractBoundedRandomAccess;
+import mpicbg.imglib.AbstractRandomAccess;
 import mpicbg.imglib.RandomAccess;
-import mpicbg.imglib.img.ImgRandomAccess;
 import mpicbg.imglib.img.basictypeaccess.array.ArrayDataAccess;
 import mpicbg.imglib.type.NativeType;
 
@@ -12,12 +11,10 @@ import mpicbg.imglib.type.NativeType;
  * No checks are performed to determine whether we stay in the same cell.
  * Instead, the cell position is computed and set on every access.  
  */
-public class CellRandomAccess< T extends NativeType< T >, A extends ArrayDataAccess< A > > extends AbstractBoundedRandomAccess< T > implements ImgRandomAccess< T >, CellImg.CellContainerSampler< T, A >
+public class CellRandomAccess< T extends NativeType< T >, A extends ArrayDataAccess< A > > extends AbstractRandomAccess< T > implements CellImg.CellContainerSampler< T, A >
 {
 	protected final T type;
 	
-	protected final CellImg< T, A > container;
-
 	protected final RandomAccess< Cell< A > > cursorOnCells; // randomAccessOnCells;
 
 	protected final int[] defaultCellDims;
@@ -37,10 +34,9 @@ public class CellRandomAccess< T extends NativeType< T >, A extends ArrayDataAcc
 
 	public CellRandomAccess( final CellImg< T, A > container )
 	{
-		super( container );
+		super( container.numDimensions() );
 		
 		this.type = container.createLinkedType();
-		this.container = container;
 		this.cursorOnCells = container.cells.randomAccess();
 		this.defaultCellDims = container.cellDims;
 		
@@ -243,12 +239,6 @@ public class CellRandomAccess< T extends NativeType< T >, A extends ArrayDataAcc
 			}
 		}
 		type.updateIndex( index );
-	}
-
-	@Override
-	public CellImg< T, ? > getImg()
-	{
-		return container;
 	}
 
 	/**

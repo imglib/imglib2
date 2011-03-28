@@ -29,93 +29,53 @@
 package mpicbg.imglib;
 
 import mpicbg.imglib.outofbounds.OutOfBoundsFactory;
+import mpicbg.imglib.outofbounds.OutOfBoundsRandomAccess;
+import mpicbg.imglib.util.Util;
 
 /**
  * Implements {@link RandomAccessible} for a {@link RandomAccessibleInterval}
  * through an {@link OutOfBoundsFactory}.
+ * Note that it is not an Interval itself.
  *
- * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
+ * @author Tobias Pietzsch, Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-final public class ExtendedRandomAccessibleInterval< T, F extends RandomAccessibleInterval< T, F > > implements Interval, RandomAccessible< T > 
+final public class ExtendedRandomAccessibleInterval< T, F extends RandomAccessibleInterval< T > > implements RandomAccessible< T >
 {
-	final protected F interval;
+	final protected F source;
 	final protected OutOfBoundsFactory< T, F > factory;
 
-	public ExtendedRandomAccessibleInterval( final F interval, final OutOfBoundsFactory< T, F > factory )
+	public ExtendedRandomAccessibleInterval( final F source, final OutOfBoundsFactory< T, F > factory )
 	{
-		this.interval = interval;
+		this.source = source;
 		this.factory = factory;
-	}
-	
-	@Override
-	final public long dimension( final int d )
-	{
-		return interval.dimension( d );
-	}
-
-	@Override
-	final public void dimensions( final long[] dimensions )
-	{
-		interval.dimensions( dimensions );
-	}
-
-	@Override
-	final public long max( final int d )
-	{
-		return interval.max( d );
-	}
-
-	@Override
-	final public void max( final long[] max )
-	{
-		interval.max( max );
-	}
-
-	@Override
-	final public long min( final int d )
-	{
-		return interval.min( d );
-	}
-
-	@Override
-	final public void min( final long[] min )
-	{
-		interval.min( min );
-	}
-
-	@Override
-	final public double realMax( final int d )
-	{
-		return interval.realMax( d );
-	}
-
-	@Override
-	final public void realMax( final double[] max )
-	{
-		realMax( max );
-	}
-
-	@Override
-	final public double realMin( final int d )
-	{
-		return interval.realMin( d );
-	}
-
-	@Override
-	final public void realMin( final double[] min )
-	{
-		realMin( min );
-	}
+	}	
 
 	@Override
 	final public int numDimensions()
 	{
-		return interval.numDimensions();
+		return source.numDimensions();
 	}
 
 	@Override
 	final public RandomAccess< T > randomAccess()
 	{
-		return interval.randomAccess( factory );
+		return new OutOfBoundsRandomAccess< T >( source.numDimensions(), factory.create( source ) );
+	}
+
+	@Override
+	final public RandomAccess< T > randomAccess( Interval interval )
+	{
+		assert source.numDimensions() == interval.numDimensions();
+		
+		if ( Util.contains( source, interval ) ) {
+			return source.randomAccess( interval );
+		} else {
+			return randomAccess();
+		}
+	}
+
+	public RandomAccessibleInterval< T > getSource()
+	{
+		return source;
 	}
 }

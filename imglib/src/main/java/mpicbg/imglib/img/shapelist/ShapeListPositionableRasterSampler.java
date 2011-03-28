@@ -30,8 +30,8 @@ package mpicbg.imglib.img.shapelist;
 import mpicbg.imglib.AbstractCursor;
 import mpicbg.imglib.Localizable;
 import mpicbg.imglib.Positionable;
-import mpicbg.imglib.img.ImgCursor;
-import mpicbg.imglib.img.ImgRandomAccess;
+import mpicbg.imglib.Cursor;
+import mpicbg.imglib.RandomAccess;
 import mpicbg.imglib.location.VoidRealPositionable;
 import mpicbg.imglib.type.Type;
 import mpicbg.imglib.util.Util;
@@ -42,7 +42,7 @@ import mpicbg.imglib.util.Util;
  *
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-public class ShapeListPositionableRasterSampler< T extends Type< T > > extends AbstractCursor< T > implements ImgRandomAccess< T >, ImgCursor< T >
+public class ShapeListPositionableRasterSampler< T extends Type< T > > extends AbstractCursor< T > implements RandomAccess< T >, Cursor< T >
 {
 	final protected ShapeList< T > container;
 	
@@ -65,18 +65,6 @@ public class ShapeListPositionableRasterSampler< T extends Type< T > > extends A
 	public T get()
 	{
 		return container.getShapeType( position );
-	}
-	
-	@Override
-	public boolean isOutOfBounds()
-	{
-		for ( int d = 0; d < numDimensions; ++d )
-		{
-			final long x = position[ d ];
-			if ( x < 0 || x >= dimensions[ d ] )
-				return true;
-		}
-		return false;
 	}
 	
 	@Override
@@ -154,9 +142,6 @@ public class ShapeListPositionableRasterSampler< T extends Type< T > > extends A
 
 		linkedRasterPositionable.setPosition( position, dim );
 	}
-
-	@Override
-	public ShapeList<T> getImg(){ return container; }
 
 	@Override
 	public void reset()

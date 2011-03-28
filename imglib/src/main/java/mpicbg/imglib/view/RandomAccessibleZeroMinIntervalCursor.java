@@ -4,7 +4,6 @@ import mpicbg.imglib.Cursor;
 import mpicbg.imglib.Interval;
 import mpicbg.imglib.RandomAccess;
 import mpicbg.imglib.RandomAccessible;
-import mpicbg.imglib.RandomAccessibleInterval;
 import mpicbg.imglib.iterator.LocalizingZeroMinIntervalIterator;
 
 public final class RandomAccessibleZeroMinIntervalCursor< T > extends LocalizingZeroMinIntervalIterator implements Cursor< T >
