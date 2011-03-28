@@ -27,19 +27,14 @@
  */
 package mpicbg.imglib;
 
-import mpicbg.imglib.outofbounds.OutOfBounds;
-import mpicbg.imglib.outofbounds.OutOfBoundsFactory;
-
 /**
  * <p><em>f</em>:{x&isin;Z<sup><em>n</em></sup>|[min,max]&rarr;T}</em></p>
  * 
  * <p>A function over an an n-dimensional integer interval that can
- * create a random access {@link Sampler} that generates values beyond
- * boundaries through a {@link OutOfBounds}.</p>
+ * create a random access {@link Sampler}.</p>
  *
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-public interface RandomAccessibleInterval< T, F > extends IterableInterval< T >, RandomAccessible< T >
+public interface RandomAccessibleInterval< T > extends RandomAccessible< T >, Interval
 {
-	public RandomAccess< T > randomAccess( final OutOfBoundsFactory< T, F > factory );
 }

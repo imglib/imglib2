@@ -36,8 +36,6 @@ import mpicbg.imglib.Iterator;
 import mpicbg.imglib.RandomAccess;
 import mpicbg.imglib.RandomAccessible;
 import mpicbg.imglib.img.Img;
-import mpicbg.imglib.img.ImgCursor;
-import mpicbg.imglib.img.ImgRandomAccess;
 import mpicbg.imglib.img.basictypeaccess.PlanarAccess;
 import mpicbg.imglib.type.Type;
 
@@ -219,60 +217,60 @@ public class OrthoSliceCursor< T extends Type< T > > implements Cursor< T >, Int
 	@Override
 	public long min( final int d )
 	{
-		return sampler.min( d );
+		return interval.min( d );
 	}
 
 	@Override
 	public void min( final long[] min )
 	{
-		sampler.min( min );
+		interval.min( min );
 	}
 
 	@Override
 	public long max( final int d )
 	{
-		return sampler.max( d );
+		return interval.max( d );
 	}
 
 	@Override
 	public void max( final long[] max )
 	{
-		sampler.max( max );
+		interval.max( max );
 	}
 
 	@Override
 	public void dimensions( final long[] size )
 	{
-		sampler.dimensions( size );
+		interval.dimensions( size );
 	}
 
 	@Override
 	public long dimension( final int d )
 	{
-		return sampler.dimension( d );
+		return interval.dimension( d );
 	}
 
 	@Override
 	public double realMin( final int d )
 	{
-		return sampler.realMax( d );
+		return interval.realMax( d );
 	}
 
 	@Override
 	public void realMin( final double[] min )
 	{
-		sampler.realMax( min );
+		interval.realMax( min );
 	}
 
 	@Override
 	public double realMax( final int d )
 	{
-		return sampler.realMax( d );
+		return interval.realMax( d );
 	}
 
 	@Override
 	public void realMax( final double[] max )
 	{
-		sampler.realMax( max );
+		interval.realMax( max );
 	}
 }
