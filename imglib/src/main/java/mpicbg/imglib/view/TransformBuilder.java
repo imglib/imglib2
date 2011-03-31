@@ -114,13 +114,13 @@ public class TransformBuilder< T >
 			@Override
 			public RandomAccess< T > randomAccess()
 			{
-				return new MixedTransformRandomAccess< T >( s.randomAccess(), t );
+				return new MixedRandomAccess< T >( s.randomAccess(), t );
 			}
 
 			@Override
 			public RandomAccess< T > randomAccess( Interval interval )
 			{
-				return new MixedTransformRandomAccess< T >( s.randomAccess(), t );
+				return new MixedRandomAccess< T >( s.randomAccess(), t );
 			}
 		};		
 	}
