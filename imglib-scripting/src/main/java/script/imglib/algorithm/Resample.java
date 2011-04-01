@@ -12,8 +12,8 @@ import mpicbg.imglib.img.Img;
 import mpicbg.imglib.img.ImgCursor;
 import mpicbg.imglib.interpolation.Interpolator;
 import mpicbg.imglib.interpolation.InterpolatorFactory;
-import mpicbg.imglib.interpolation.linear.LinearInterpolatorFactory;
-import mpicbg.imglib.interpolation.nearestneighbor.NearestNeighborInterpolatorFactory;
+import mpicbg.imglib.interpolation.randomaccess.NLinearInterpolatorFactory;
+import mpicbg.imglib.interpolation.randomaccess.NearestNeighborInterpolatorFactory;
 import mpicbg.imglib.outofbounds.OutOfBoundsMirrorFactory;
 import mpicbg.imglib.type.Type;
 import mpicbg.imglib.type.numeric.ARGBType;
@@ -94,7 +94,7 @@ public class Resample<N extends NumericType<N>> extends ImgProxy<N>
 		InterpolatorFactory<T,Img<T>> ifac;
 		switch (mode) {
 		case LINEAR:
-			ifac = new LinearInterpolatorFactory<T>(new OutOfBoundsMirrorFactory<T,Img<T>>(OutOfBoundsMirrorFactory.Boundary.SINGLE));
+			ifac = new NLinearInterpolatorFactory<T>(new OutOfBoundsMirrorFactory<T,Img<T>>(OutOfBoundsMirrorFactory.Boundary.SINGLE));
 			break;
 		case NEAREST_NEIGHBOR:
 			ifac = new NearestNeighborInterpolatorFactory<T>(new OutOfBoundsMirrorFactory<T,Img<T>>(OutOfBoundsMirrorFactory.Boundary.SINGLE));

@@ -25,11 +25,11 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-package mpicbg.imglib.interpolation.linear;
+package mpicbg.imglib.interpolation.randomaccess;
 
 import mpicbg.imglib.RandomAccess;
 import mpicbg.imglib.RandomAccessible;
-import mpicbg.imglib.interpolation.Interpolator;
+import mpicbg.imglib.RealRandomAccess;
 import mpicbg.imglib.position.transform.Floor;
 import mpicbg.imglib.type.numeric.NumericType;
 import mpicbg.imglib.util.IntervalIndexer;
@@ -40,10 +40,8 @@ import mpicbg.imglib.util.IntervalIndexer;
  *
  * @author Tobias Pietzsch, Stephan Preibisch and Stephan Saalfeld
  */
-public class LinearInterpolator< T extends NumericType< T > > extends Floor< RandomAccess< T > > implements Interpolator< T, RandomAccessible< T > >
+public class NLinearInterpolator< T extends NumericType< T > > extends Floor< RandomAccess< T > > implements RealRandomAccess< T >
 {
-	final protected RandomAccessible< T > randomAccessible;
-
 	/**
 	 * Index into {@link weights} array.
 	 * 
@@ -77,32 +75,20 @@ public class LinearInterpolator< T extends NumericType< T > > extends Floor< Ran
 
 	final protected T tmp;
 
-	protected LinearInterpolator( final RandomAccessible< T > randomAccessible, final T type )
+	protected NLinearInterpolator( final RandomAccessible< T > randomAccessible, final T type )
 	{
 		super( randomAccessible.randomAccess() );
-		this.randomAccessible = randomAccessible;
 		weights = new double [ 1 << n ];		
 		code = 0;
 		accumulator = type.createVariable();
 		tmp = type.createVariable();
 	}
 
-	protected LinearInterpolator( final RandomAccessible< T > randomAccessible )
+	protected NLinearInterpolator( final RandomAccessible< T > randomAccessible )
 	{
 		this( randomAccessible, randomAccessible.randomAccess().get() );
 	}
 
-	/**
-	 * Returns the {@link RandomAccessible} the interpolator is working on
-	 * 
-	 * @return - the {@link RandomAccessible}
-	 */
-	@Override
-	public RandomAccessible< T > getFunction()
-	{
-		return randomAccessible;
-	}
-	
 	/**
 	 * Fill the {@link weights} array.
 	 * 

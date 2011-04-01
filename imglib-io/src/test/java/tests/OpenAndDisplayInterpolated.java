@@ -14,9 +14,9 @@ import mpicbg.imglib.img.ImgFactory;
 import mpicbg.imglib.img.array.ArrayImgFactory;
 import mpicbg.imglib.interpolation.Interpolator;
 import mpicbg.imglib.interpolation.InterpolatorFactory;
-import mpicbg.imglib.interpolation.linear.LinearInterpolator;
-import mpicbg.imglib.interpolation.linear.LinearInterpolatorFactory;
-import mpicbg.imglib.interpolation.nearestneighbor.NearestNeighborInterpolatorFactory;
+import mpicbg.imglib.interpolation.randomaccess.NLinearInterpolator;
+import mpicbg.imglib.interpolation.randomaccess.NLinearInterpolatorFactory;
+import mpicbg.imglib.interpolation.randomaccess.NearestNeighborInterpolatorFactory;
 import mpicbg.imglib.io.LOCI;
 import mpicbg.imglib.type.numeric.ARGBType;
 import mpicbg.imglib.type.numeric.NumericType;
@@ -66,7 +66,7 @@ public class OpenAndDisplayInterpolated
 
 		offset = new double[] {50, 10};
 		scale = 1.0;
-		interpolatorFactory = new LinearInterpolatorFactory< FloatType >();
+		interpolatorFactory = new NLinearInterpolatorFactory< FloatType >();
 		for ( int i=0; i<2000; ++i ) {
 			copyInterpolatedGeneric( img, interpolatedImg, offset, scale, interpolatorFactory );
 			projector.map();

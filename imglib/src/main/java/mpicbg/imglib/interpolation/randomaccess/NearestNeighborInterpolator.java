@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2009--2010, Stephan Preibisch & Stephan Saalfeld
+ * Copyright (c) 2009--2011, Pietzsch, Preibisch & Saalfeld
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -9,7 +9,7 @@
  * list of conditions and the following disclaimer.  Redistributions in binary
  * form must reproduce the above copyright notice, this list of conditions and
  * the following disclaimer in the documentation and/or other materials
- * provided with the distribution.  Neither the name of the Fiji project nor
+ * provided with the distribution.  Neither the name of the imglib project nor
  * the names of its contributors may be used to endorse or promote products
  * derived from this software without specific prior written permission.
  * 
@@ -25,22 +25,38 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-package mpicbg.imglib.interpolation;
+package mpicbg.imglib.interpolation.randomaccess;
 
+import mpicbg.imglib.RandomAccess;
+import mpicbg.imglib.RandomAccessible;
 import mpicbg.imglib.RealRandomAccess;
+import mpicbg.imglib.position.transform.Round;
 
 /**
- * @author Tobias Pietzsch, Stephan Saalfeld <saalfeld@mpi-cbg.de>
+ * {@link RealRandomAccess} to a {@link RandomAccess} by nearest neighbor
+ * interpolation.
+ * 
+ * @param <T>
  *
- * @param <T> Type of values provided by the interpolator.
- * @param <F> Type of function, which the interpolator operates on. 
+ * @author Tobias Pietzsch, Stephan Preibisch and Stephan Saalfeld
  */
-public interface Interpolator< T, F > extends RealRandomAccess< T >
+public class NearestNeighborInterpolator< T > extends Round< RandomAccess< T > > implements RealRandomAccess< T >
 {
-	/**
-	 * Returns the function the interpolator is working on
-	 * 
-	 * @return - the function
-	 */
-	public F getFunction();
+	protected NearestNeighborInterpolator( final RandomAccessible< T > randomAccessible )
+	{
+		super( randomAccessible.randomAccess() );
+	}
+
+	@Override
+	public T get()
+	{
+		return target.get();
+	}
+	
+	@Override
+	@Deprecated
+	final public T getType()
+	{
+		return get();
+	}
 }

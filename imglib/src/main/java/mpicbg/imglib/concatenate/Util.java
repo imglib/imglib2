@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.ListIterator;
 
 import mpicbg.imglib.transform.RealTransform;
-import mpicbg.imglib.transform.Transform;
 
 public class Util
 {

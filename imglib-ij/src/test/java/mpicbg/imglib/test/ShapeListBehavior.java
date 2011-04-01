@@ -16,7 +16,7 @@ import mpicbg.imglib.img.array.ArrayContainerFactory;
 import mpicbg.imglib.img.cell.CellImgFactory;
 import mpicbg.imglib.img.shapelist.ShapeList;
 import mpicbg.imglib.img.shapelist.ShapeListCached;
-import mpicbg.imglib.interpolation.linear.LinearInterpolatorFactory;
+import mpicbg.imglib.interpolation.randomaccess.NLinearInterpolatorFactory;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyValueFactory;
 import mpicbg.imglib.type.numeric.RealType;
 import mpicbg.imglib.type.numeric.integer.ByteType;
@@ -95,7 +95,7 @@ public class ShapeListBehavior
 		
 		affine.preConcatenate( translation );
 		
-		final ImageTransform<ByteType> transform = new ImageTransform<ByteType>( shapeListImage, affine, new LinearInterpolatorFactory<ByteType>( new OutOfBoundsStrategyValueFactory<ByteType>() ) );
+		final ImageTransform<ByteType> transform = new ImageTransform<ByteType>( shapeListImage, affine, new NLinearInterpolatorFactory<ByteType>( new OutOfBoundsStrategyValueFactory<ByteType>() ) );
 		transform.setOutputImageFactory( new ImageFactory< ByteType >( new ByteType(), cellFactory ) );
 		
 		if ( !transform.checkInput() || !transform.process() )

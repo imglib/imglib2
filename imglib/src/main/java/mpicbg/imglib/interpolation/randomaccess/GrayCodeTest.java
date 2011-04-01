@@ -1,4 +1,4 @@
-package mpicbg.imglib.interpolation.linear;
+package mpicbg.imglib.interpolation.randomaccess;
 
 import mpicbg.imglib.util.Util;
 

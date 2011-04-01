@@ -27,6 +27,9 @@
  */
 package mpicbg.imglib.interpolation;
 
+import mpicbg.imglib.RealInterval;
+import mpicbg.imglib.RealRandomAccess;
+
 /**
  * @author Tobias Pietzsch, Stephan Preibisch & Stephan Saalfeld
  *
@@ -35,5 +38,6 @@ package mpicbg.imglib.interpolation;
  */
 public interface InterpolatorFactory< T, F >
 {	
-	public Interpolator< T, F > create( final F function );
+	public RealRandomAccess< T > create( final F f );
+	public RealRandomAccess< T > create( final F f, final RealInterval interval );
 }

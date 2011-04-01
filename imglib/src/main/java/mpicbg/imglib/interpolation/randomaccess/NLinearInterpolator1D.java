@@ -24,54 +24,55 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- *
- * @author Stephan Preibisch & Stephan Saalfeld
  */
-package mpicbg.imglib.interpolation;
+package mpicbg.imglib.interpolation.randomaccess;
 
-//TODO: DO NOT PUT INTO imglib2 BRANCH!  We don't need this at the moment.
+import mpicbg.imglib.RandomAccessible;
+import mpicbg.imglib.type.numeric.NumericType;
 
-public interface Interpolator3D< T, F > extends Interpolator< T, F >
-{
-	/**
-	 * Moves the interpolator a certain distance given by the vector to a random position inside or out of image bounds.
-	 * This method is typically more efficient than setting the position
-	 * 
-	 * @param float x - the float vector in x
-	 * @param float y - the float vector in y
-	 * @param float z - the float vector in z
-	 */
-	public void move( float x, float y, float z );
+/**
+ * 
+ * @param <T>
+ *
+ * @author Tobias Pietzsch, Stephan Preibisch and Stephan Saalfeld
+ */
+public class NLinearInterpolator1D< T extends NumericType< T > > extends NLinearInterpolator< T > 
+{	
+	protected NLinearInterpolator1D( final RandomAccessible< T > randomAccessible, final T type )
+	{
+		super( randomAccessible, type );
+	}
+
+	protected NLinearInterpolator1D( final RandomAccessible< T > randomAccessible )
+	{
+		super( randomAccessible );
+	}
+
+	@Override
+	final public int numDimensions() { return 1; }
+
+	@Override
+	protected void fillWeights()
+	{
+		final double w0 = position[ 0 ] - target.getLongPosition( 0 );
+		weights[ 0 ] = 1.0d - w0;
+		weights[ 1 ] = w0;
+	}
 	
-	/**
-	 * Sets the interpolator to a random position inside or out of image bounds.
-	 * This method is typically less efficient than moving the position
-	 * 
-	 * @param float x - the float position in x
-	 * @param float y - the float position in y
-	 * @param float z - the float position in z
-	 */
-	public void setPosition( float x, float y, float z );
+	@Override
+	public T get()
+	{
+		// fillWeights();
+		final double w0 = position[ 0 ] - target.getLongPosition( 0 );
 
-	/**
-	 * Returns the current x coordinate of the interpolator
-	 * 
-	 * @return float - x coordinate
-	 */
-	public float getX();
+		accumulator.set( target.get() );
+		accumulator.mul( 1.0d - w0 );
+		target.fwd( 0 );
+		tmp.set( target.get() );
+		tmp.mul( w0 );
+		accumulator.add( tmp );
+		target.bck( 0 );
 
-	/**
-	 * Returns the current y coordinate of the interpolator
-	 * 
-	 * @return float - y coordinate
-	 */
-	public float getY();
-
-	/**
-	 * Returns the current z coordinate of the interpolator
-	 * 
-	 * @return float - z coordinate
-	 */
-	public float getZ();
-	
+		return accumulator;
+	}
 }

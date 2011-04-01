@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2009--2010, Stephan Preibisch & Stephan Saalfeld
+ * Copyright (c) 2009--2011, Pietzsch, Preibisch, and Saalfeld
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -9,7 +9,7 @@
  * list of conditions and the following disclaimer.  Redistributions in binary
  * form must reproduce the above copyright notice, this list of conditions and
  * the following disclaimer in the documentation and/or other materials
- * provided with the distribution.  Neither the name of the Fiji project nor
+ * provided with the distribution.  Neither the name of the imglib project nor
  * the names of its contributors may be used to endorse or promote products
  * derived from this software without specific prior written permission.
  * 
@@ -25,30 +25,44 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-package mpicbg.imglib.interpolation.nearestneighbor;
+package mpicbg.imglib.interpolation.randomaccess;
 
 import mpicbg.imglib.RandomAccessible;
+import mpicbg.imglib.RealInterval;
 import mpicbg.imglib.interpolation.InterpolatorFactory;
+import mpicbg.imglib.type.numeric.NumericType;
 
 /**
  * 
  * @param <T>
  *
- * @author Stephan Preibisch and Stephan Saalfeld
+ * @author Tobias Pietzsch, Stephan Preibisch and Stephan Saalfeld
  */
-public class NearestNeighborInterpolatorFactory< T > implements InterpolatorFactory< T, RandomAccessible< T > >
+public class NLinearInterpolatorFactory< T extends NumericType< T > > implements InterpolatorFactory< T, RandomAccessible< T > >
 {
 	@Override
-	public NearestNeighborInterpolator< T > create( final RandomAccessible< T > randomAccessible )
+	public NLinearInterpolator< T > create( final RandomAccessible< T > randomAccessible )
 	{
-		/*
-		if ( img.numDimensions() == 1 )
-			return new NearestNeighborInterpolator1D< T >( randomAccessible );
-		else if ( img.numDimensions() == 2 )
-			return new NearestNeighborInterpolator2D< T >( randomAccessible );
-		else if ( img.numDimensions() == 3 )
-			return new NearestNeighborInterpolator3D< T >( randomAccessible );
-		else */
-			return new NearestNeighborInterpolator< T >( randomAccessible );
+		switch ( randomAccessible.numDimensions() ) 
+		{
+		case 1:
+			return new NLinearInterpolator1D< T >( randomAccessible );
+		case 2:
+			return new NLinearInterpolator2D< T >( randomAccessible );
+		case 3:
+			return new NLinearInterpolator3D< T >( randomAccessible );
+		default:
+			return new NLinearInterpolator< T >( randomAccessible );
+		}
+	}
+	
+	/**
+	 * For now, ignore the {@link RealInterval} and return
+	 * {@link #create(RandomAccessible)}.
+	 */
+	@Override
+	public NLinearInterpolator< T > create( final RandomAccessible< T > randomAccessible, final RealInterval interval )
+	{
+		return create( randomAccessible );
 	}
 }

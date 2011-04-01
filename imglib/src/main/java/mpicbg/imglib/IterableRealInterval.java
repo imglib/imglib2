@@ -37,7 +37,8 @@ import mpicbg.imglib.img.Img;
  * through Iterators.  There is an iterator that tracks its source location
  * at each move and one that calculates it on request only.  Depending on
  * the frequency of requesting the source location, either of them is
- * optimal in terms of speed.</p>
+ * optimal in terms of speed.  Iteration order is constant for an individual
+ * {@link IterableRealInterval} but not further specified.</p>
  * 
  * @param <T>
  * @param <F>

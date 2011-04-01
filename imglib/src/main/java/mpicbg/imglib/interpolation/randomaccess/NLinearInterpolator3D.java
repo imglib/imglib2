@@ -25,7 +25,7 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-package mpicbg.imglib.interpolation.linear;
+package mpicbg.imglib.interpolation.randomaccess;
 
 import mpicbg.imglib.RandomAccessible;
 import mpicbg.imglib.type.numeric.NumericType;
@@ -36,42 +36,77 @@ import mpicbg.imglib.type.numeric.NumericType;
  *
  * @author Tobias Pietzsch, Stephan Preibisch and Stephan Saalfeld
  */
-public class LinearInterpolator1D< T extends NumericType< T > > extends LinearInterpolator< T > 
+public class NLinearInterpolator3D< T extends NumericType< T > > extends NLinearInterpolator< T > 
 {	
-	protected LinearInterpolator1D( final RandomAccessible< T > randomAccessible, final T type )
+	protected NLinearInterpolator3D( final RandomAccessible< T > randomAccessible, final T type )
 	{
 		super( randomAccessible, type );
 	}
 
-	protected LinearInterpolator1D( final RandomAccessible< T > randomAccessible )
+	protected NLinearInterpolator3D( final RandomAccessible< T > randomAccessible )
 	{
 		super( randomAccessible );
 	}
 
 	@Override
-	final public int numDimensions() { return 1; }
+	final public int numDimensions() { return 3; }
 
 	@Override
 	protected void fillWeights()
 	{
 		final double w0 = position[ 0 ] - target.getLongPosition( 0 );
-		weights[ 0 ] = 1.0d - w0;
-		weights[ 1 ] = w0;
+		final double w0Inv = 1.0d - w0;
+		final double w1 = position[ 1 ] - target.getLongPosition( 1 );
+		final double w1Inv = 1.0d - w1;
+		final double w2 = position[ 2 ] - target.getLongPosition( 2 );
+		final double w2Inv = 1.0d - w2;
+
+		weights[ 0 ] = w0Inv * w1Inv * w2Inv;
+		weights[ 1 ] = w0    * w1Inv * w2Inv;
+		weights[ 2 ] = w0Inv * w1    * w2Inv;
+		weights[ 3 ] = w0    * w1    * w2Inv;
+		weights[ 4 ] = w0Inv * w1Inv * w2;
+		weights[ 5 ] = w0    * w1Inv * w2;
+		weights[ 6 ] = w0Inv * w1    * w2;
+		weights[ 7 ] = w0    * w1    * w2;
 	}
 	
 	@Override
 	public T get()
 	{
-		// fillWeights();
-		final double w0 = position[ 0 ] - target.getLongPosition( 0 );
+		fillWeights();
 
 		accumulator.set( target.get() );
-		accumulator.mul( 1.0d - w0 );
+		accumulator.mul( weights[ 0 ] );
 		target.fwd( 0 );
 		tmp.set( target.get() );
-		tmp.mul( w0 );
+		tmp.mul( weights[ 1 ] );
+		accumulator.add( tmp );
+		target.fwd( 1 );
+		tmp.set( target.get() );
+		tmp.mul( weights[ 3 ] );
 		accumulator.add( tmp );
 		target.bck( 0 );
+		tmp.set( target.get() );
+		tmp.mul( weights[ 2 ] );
+		accumulator.add( tmp );
+		target.fwd( 2 );
+		tmp.set( target.get() );
+		tmp.mul( weights[ 6 ] );
+		accumulator.add( tmp );
+		target.fwd( 0 );
+		tmp.set( target.get() );
+		tmp.mul( weights[ 7 ] );
+		accumulator.add( tmp );
+		target.bck( 1 );
+		tmp.set( target.get() );
+		tmp.mul( weights[ 5 ] );
+		accumulator.add( tmp );
+		target.bck( 0 );
+		tmp.set( target.get() );
+		tmp.mul( weights[ 4 ] );
+		accumulator.add( tmp );
+		target.bck( 2 );
 
 		return accumulator;
 	}

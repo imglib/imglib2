@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2009--2010, Stephan Preibisch & Stephan Saalfeld
+ * Copyright (c) 2009--2011, Pietzsch, Preibisch & Saalfeld
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -9,7 +9,7 @@
  * list of conditions and the following disclaimer.  Redistributions in binary
  * form must reproduce the above copyright notice, this list of conditions and
  * the following disclaimer in the documentation and/or other materials
- * provided with the distribution.  Neither the name of the Fiji project nor
+ * provided with the distribution.  Neither the name of the imglib project nor
  * the names of its contributors may be used to endorse or promote products
  * derived from this software without specific prior written permission.
  * 
@@ -24,35 +24,34 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- *
- * @author Stephan Preibisch & Stephan Saalfeld
  */
-package mpicbg.imglib.interpolation;
+package mpicbg.imglib.interpolation.randomaccess;
 
-// TODO: DO NOT PUT INTO imglib2 BRANCH!  We don't need this at the moment.
+import mpicbg.imglib.RandomAccessible;
+import mpicbg.imglib.RealInterval;
+import mpicbg.imglib.interpolation.InterpolatorFactory;
 
-public interface Interpolator1D<T,F> extends Interpolator<T,F>
+/**
+ * 
+ * @param <T>
+ * 
+ * @author Tobias Pietzsch, Stephan Preibisch and Stephan Saalfeld
+ */
+public class NearestNeighborInterpolatorFactory< T > implements InterpolatorFactory< T, RandomAccessible< T > >
 {
-	/**
-	 * Moves the interpolator a certain distance given by the vector to a random position inside or out of image bounds.
-	 * This method is typically more efficient than setting the position
-	 * 
-	 * @param float x - the float vector in x
-	 */
-	public void move( float x );
+	@Override
+	public NearestNeighborInterpolator< T > create( final RandomAccessible< T > randomAccessible )
+	{
+		return new NearestNeighborInterpolator< T >( randomAccessible );
+	}
 	
 	/**
-	 * Sets the interpolator to a random position inside or out of image bounds.
-	 * This method is typically less efficient than moving the position
-	 * 
-	 * @param float x - the float position in x
+	 * For now, ignore the {@link RealInterval} and return
+	 * {@link #create(RandomAccessible)}.
 	 */
-	public void setPosition( float x );
-
-	/**
-	 * Returns the current x coordinate of the interpolator
-	 * 
-	 * @return float - x coordinate
-	 */
-	public float getX();
+	@Override
+	public NearestNeighborInterpolator< T > create( final RandomAccessible< T > randomAccessible, final RealInterval interval )
+	{
+		return create( randomAccessible );
+	}
 }

@@ -25,77 +25,67 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-package mpicbg.imglib.interpolation.linear;
+package mpicbg.imglib.interpolation.randomaccess;
 
-import mpicbg.imglib.img.Img;
-import mpicbg.imglib.outofbounds.RasterOutOfBoundsFactory;
-import mpicbg.imglib.type.numeric.RealType;
+import mpicbg.imglib.RandomAccessible;
+import mpicbg.imglib.type.numeric.NumericType;
 
 /**
  * 
  * @param <T>
- * 
- * @author Stephan Preibisch and Stephan Saalfeld
+ *
+ * @author Tobias Pietzsch, Stephan Preibisch and Stephan Saalfeld
  */
-public class LinearInterpolator3DRealType< T extends RealType< T > > extends LinearInterpolator3D< T >
-{
-	protected LinearInterpolator3DRealType( final Img< T > img, final RasterOutOfBoundsFactory< T > outOfBoundsStrategyFactory )
+public class NLinearInterpolator2D< T extends NumericType< T > > extends NLinearInterpolator< T > 
+{	
+	protected NLinearInterpolator2D( final RandomAccessible< T > randomAccessible, final T type )
 	{
-		super( img, outOfBoundsStrategyFactory );
+		super( randomAccessible, type );
+	}
+
+	protected NLinearInterpolator2D( final RandomAccessible< T > randomAccessible )
+	{
+		super( randomAccessible );
 	}
 
 	@Override
+	final public int numDimensions() { return 2; }
+
+	@Override
+	protected void fillWeights()
+	{
+		final double w0 = position[ 0 ] - target.getLongPosition( 0 );
+		final double w0Inv = 1.0d - w0;
+		final double w1 = position[ 1 ] - target.getLongPosition( 1 );
+		final double w1Inv = 1.0d - w1;
+
+		weights[ 0 ] = w0Inv * w1Inv;
+		weights[ 1 ] = w0    * w1Inv;
+		weights[ 2 ] = w0Inv * w1;
+		weights[ 3 ] = w0    * w1;
+	}
+	
+	@Override
 	public T get()
 	{
-		// How to iterate the cube
-		//
-		// y7 y6
-		// *------>*
-		// ^ /|
-		// y3 / y2 / v
-		// *<------* * y5
-		// | x ^ /
-		// | |/
-		// *------>*
-		// y0 y1
+		fillWeights();
 
-		final float y0 = target.get().getRealFloat();
+		accumulator.set( target.get() );
+		accumulator.mul( weights[ 0 ] );
 		target.fwd( 0 );
-		final float y1 = target.get().getRealFloat();
+		tmp.set( target.get() );
+		tmp.mul( weights[ 1 ] );
+		accumulator.add( tmp );
 		target.fwd( 1 );
-		final float y2 = target.get().getRealFloat();
+		tmp.set( target.get() );
+		tmp.mul( weights[ 3 ] );
+		accumulator.add( tmp );
 		target.bck( 0 );
-		final float y3 = target.get().getRealFloat();
-		target.fwd( 2 );
-		final float y7 = target.get().getRealFloat();
-		target.fwd( 0 );
-		final float y6 = target.get().getRealFloat();
+		tmp.set( target.get() );
+		tmp.mul( weights[ 2 ] );
+		accumulator.add( tmp );
 		target.bck( 1 );
-		final float y5 = target.get().getRealFloat();
-		target.bck( 0 );
-		final float y4 = target.get().getRealFloat();
-		target.bck( 2 );
 
-		// weights
-		final float t = x - target.getIntPosition( 0 );
-		final float u = y - target.getIntPosition( 1 );
-		final float v = z - target.getIntPosition( 2 );
-
-		final float t1 = 1 - t;
-		final float u1 = 1 - u;
-		final float v1 = 1 - v;
-
-		tmp1.setReal(
-				t1 * u1 * v1 * y0 +
-				t * u1 * v1 * y1 +
-				t * u * v1 * y2 +
-				t1 * u * v1 * y3 +
-				
-				t1 * u1 * v * y4 +
-				t * u1 * v * y5 +
-				t * u * v * y6 +
-				t1 * u * v * y7 );
-
-		return tmp1;
+		return accumulator;
 	}
 }
