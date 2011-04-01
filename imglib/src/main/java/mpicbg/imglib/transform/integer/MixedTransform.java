@@ -7,8 +7,31 @@ import mpicbg.imglib.concatenate.PreConcatenable;
 import Jama.Matrix;
 
 /**
- * transform a n-dimensional source vector to a m-dimensional target vector. can
- * be represented as a (m+1 x n+1) homogeneous matrix.
+ * Mixed transform allows to express common integer view transformations such as
+ * translation, rotation, rotoinversion, and projection.
+ * 
+ * <p>
+ * It transform a n-dimensional source vector to a m-dimensional target vector,
+ * and can be represented as a <em>m+1</em> &times;
+ * <em>n+1</em> homogeneous matrix.
+ * The mixed transform can be decomposed as follows:
+ * <ol>
+ *   <li>project down (discard some components of the source vector)</li>
+ *   <li>component permutation</li>
+ *   <li>component inversion</li>
+ *   <li>project up (add zero components in the target vector)</li>
+ *   <li>translation</li>
+ * </ol>
+ * </p>
+ * 
+ * <p>
+ * The project down and component permutation steps are implemented by the
+ * {@link #setComponentMapping(int[]) component mapping}. This is a lookup array
+ * that specifies for each target dimension from which source dimension it is
+ * taken.
+ * <em>Note, that it is not allowed to set this array such that a source component
+ * is mapped to several target components!</em>
+ * </p>
  * 
  * @author Tobias Pietzsch
  */
@@ -162,6 +185,11 @@ public class MixedTransform extends AbstractMixedTransform implements Concatenab
 	 * {@link #setZero(boolean[])}.
 	 * </p>
 	 * 
+	 * <p>
+	 * <em>Note, that it is not allowed to set the {@code component} array such that
+	 * a source component is mapped to several target components!</em>
+	 * </p>
+	 * 
 	 * @param component
 	 *            array that says for each component of the target vector
 	 *            (before translation) from which source vector component it
@@ -281,7 +309,7 @@ public class MixedTransform extends AbstractMixedTransform implements Concatenab
 	public MixedTransform concatenate( Mixed t )
 	{
 		assert this.numSourceDimensions == t.numTargetDimensions();
-		
+
 		MixedTransform result = new MixedTransform( t.numSourceDimensions(), this.numTargetDimensions );
 
 		for ( int d = 0; d < result.numTargetDimensions; ++d )
@@ -329,7 +357,7 @@ public class MixedTransform extends AbstractMixedTransform implements Concatenab
 	public MixedTransform preConcatenate( Mixed t )
 	{
 		assert t.numSourceDimensions() == this.numTargetDimensions;
-		
+
 		MixedTransform result = new MixedTransform( this.numSourceDimensions, t.numTargetDimensions() );
 
 		for ( int d = 0; d < result.numTargetDimensions; ++d )
