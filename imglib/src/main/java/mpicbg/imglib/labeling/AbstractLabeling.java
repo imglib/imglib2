@@ -37,14 +37,11 @@ import mpicbg.imglib.roi.RegionOfInterest;
 public abstract class AbstractLabeling<T extends Comparable<T>> extends AbstractImg<LabelingType<T>> implements Labeling<T> {
 
 	protected LabelingROIStrategy<T, ? extends Labeling<T>> strategy;
-	/**
-	 * Create a labeling that uses a particular strategy
-	 */
-	protected AbstractLabeling(final long [] size, LabelingROIStrategy<T, ? extends Labeling<T>> strategy) {
-		super(size);
-		this.strategy = strategy;
-	}
 
+	protected AbstractLabeling(final long [] size, LabelingROIStrategyFactory<T> factory) {
+		super(size);
+		this.strategy = factory.createLabelingROIStrategy(this);
+	}
 	/**
 	 * Use an alternative strategy for making labeling cursors.
 	 * @param strategy - a strategy for making labeling cursors.

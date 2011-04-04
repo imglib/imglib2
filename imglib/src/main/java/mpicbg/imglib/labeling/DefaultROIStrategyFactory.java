@@ -17,13 +17,13 @@
  */
 package mpicbg.imglib.labeling;
 
-public class DefaultLabelingCursorStrategyFactory<T extends Comparable<T>, L extends Labeling<T>> implements
-		LabelingCursorStrategyFactory<T, L> {
+public class DefaultROIStrategyFactory<T extends Comparable<T>> implements
+		LabelingROIStrategyFactory<T> {
 
 	@Override
-	public LabelingCursorStrategy<T, L> createLabelingCursorStrategy(L labeling) {
+	public <L extends Labeling<T>> LabelingROIStrategy<T, L> createLabelingROIStrategy(L labeling) {
 		// TODO Auto-generated method stub
-		return new DefaultROICursorStrategy<T,L>(labeling);
+		return new DefaultROIStrategy<T,L>(labeling);
 	}
 
 }

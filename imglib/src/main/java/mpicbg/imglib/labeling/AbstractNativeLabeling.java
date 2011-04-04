@@ -33,18 +33,17 @@ public abstract class AbstractNativeLabeling<T extends Comparable<T>, A extends 
 	extends AbstractLabeling<T> implements NativeLabeling<T, A> {
 
 	protected LabelingType<T> linkedType;
+	protected LabelingMapping<T, Integer> mapping = new LabelingMapping<T, Integer>(0);
 	
-	protected AbstractNativeLabeling(long [] dim, LabelingROIStrategy<T, ? extends Labeling<T>> strategy) {
-		super(dim, strategy);
+	protected AbstractNativeLabeling(long [] dim, LabelingROIStrategyFactory<T> factory) {
+		super(dim, factory);
 	}
-
 	/* (non-Javadoc)
 	 * @see mpicbg.imglib.labeling.NativeLabeling#getMapping()
 	 */
 	@Override
 	public LabelingMapping<T, Integer> getMapping() {
-		if (linkedType == null) return null;
-		return linkedType.getMapping();
+		return mapping;
 	}
 
 	@Override

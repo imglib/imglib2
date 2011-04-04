@@ -17,6 +17,6 @@
  */
 package mpicbg.imglib.labeling;
 
-public interface LabelingROIStrategyFactory<T extends Comparable<T>, L extends Labeling<T>> {
-	public LabelingROIStrategy<T, L> createLabelingROIStrategy(L labeling);
+public interface LabelingROIStrategyFactory<T extends Comparable<T>> {
+	public <L extends Labeling<T>> LabelingROIStrategy<T, L> createLabelingROIStrategy(L labeling);
 }

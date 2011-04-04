@@ -35,8 +35,7 @@ import mpicbg.imglib.type.AbstractNativeType;
  * @param <T> the desired type of the pixel labels, for instance Integer to number objects or String for user-assigned label names
  */
 public class LabelingType<T extends Comparable<T>> extends AbstractNativeType<LabelingType<T>> {
-	int i = 0;
-	protected long [] generation;
+	final protected long [] generation;
 
 	// the NativeContainer
 	final NativeLabeling<T, ? extends IntAccess> storage;
@@ -46,6 +45,17 @@ public class LabelingType<T extends Comparable<T>> extends AbstractNativeType<La
 	
 	protected final LabelingMapping<T, Integer> mapping;
 	
+	/**
+	 * Constructor for mirroring state with another labeling
+	 * @param storage
+	 * @param mapping
+	 * @param generation
+	 */
+	protected LabelingType(NativeLabeling<T, ? extends IntAccess> storage, LabelingMapping<T, Integer> mapping, long [] generation) {
+		this.storage = storage;
+		this.mapping = mapping;
+		this.generation = generation;
+	}
 	// this is the constructor if you want it to read from an array
 	public LabelingType( NativeLabeling<T, ? extends IntAccess> storage ) { 
 		this.storage = storage;
@@ -58,6 +68,7 @@ public class LabelingType<T extends Comparable<T>> extends AbstractNativeType<La
 		storage = null;
 		b = new IntArray(1);
 		mapping = new LabelingMapping<T, Integer>(new Integer(0));
+		generation = new long [1];
 		this.setLabeling(value);
 	}
 	
@@ -199,7 +210,8 @@ public class LabelingType<T extends Comparable<T>> extends AbstractNativeType<La
 
 	@Override
 	public LabelingType<T> duplicateTypeOnSameNativeContainer() {
-		return new LabelingType<T>(storage);
+		LabelingType<T> t = new LabelingType<T>(storage, mapping, generation);
+		return t;
 	}
 
 	public LabelingMapping<T, Integer> getMapping() {

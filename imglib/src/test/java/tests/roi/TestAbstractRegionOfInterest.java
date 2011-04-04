@@ -12,7 +12,7 @@ import mpicbg.imglib.RandomAccess;
 import mpicbg.imglib.RandomAccessible;
 import mpicbg.imglib.RealRandomAccess;
 import mpicbg.imglib.img.array.ArrayImgFactory;
-import mpicbg.imglib.roi.AbstractRegionOfInterest;
+import mpicbg.imglib.roi.AbstractIterableRegionOfInterest;
 import mpicbg.imglib.type.logic.BitType;
 import mpicbg.imglib.type.numeric.integer.IntType;
 import mpicbg.imglib.type.numeric.real.DoubleType;
@@ -20,7 +20,7 @@ import mpicbg.imglib.type.numeric.real.DoubleType;
 import org.junit.Test;
 
 public class TestAbstractRegionOfInterest {
-	static class RectangleRegionOfInterest extends AbstractRegionOfInterest {
+	static class RectangleRegionOfInterest extends AbstractIterableRegionOfInterest {
 
 		public Rectangle r;
 		public RectangleRegionOfInterest(Rectangle r) {

@@ -24,8 +24,7 @@ import java.util.Map;
 
 import mpicbg.imglib.Cursor;
 import mpicbg.imglib.RandomAccess;
-import mpicbg.imglib.img.basictypeaccess.IntAccess;
-import mpicbg.imglib.roi.AbstractRegionOfInterest;
+import mpicbg.imglib.roi.AbstractIterableRegionOfInterest;
 import mpicbg.imglib.roi.IterableRegionOfInterest;
 import mpicbg.imglib.roi.RegionOfInterest;
 
@@ -36,21 +35,21 @@ import mpicbg.imglib.roi.RegionOfInterest;
  * 
  * @author leek
  *
- * @param <T>
- * @param <L>
+ * @param <T> - the type used to label the space
+ * @param <L> - the labeling class that will use this strategy for cursors and random access.
  */
-public class DefaultROICursorStrategy<T extends Comparable<T>, A extends IntAccess>
-		implements LabelingROIStrategy<T, Labeling<T>> {
+public class DefaultROIStrategy<T extends Comparable<T>, L extends Labeling<T>>
+		implements LabelingROIStrategy<T, L> {
 
-	final protected NativeLabeling<T, A> labeling;
+	final protected L labeling;
 	protected long generation;
 	
 	private class LabelStatistics extends BoundingBox {
-		private int [] rasterStart;
+		private long [] rasterStart;
 		private long area = 0;
 		public LabelStatistics(int dimensions) {
 			super(dimensions);
-			rasterStart = new int [dimensions];
+			rasterStart = new long [dimensions];
 			Arrays.fill(rasterStart, Integer.MAX_VALUE);
 		}
 		
@@ -74,7 +73,7 @@ public class DefaultROICursorStrategy<T extends Comparable<T>, A extends IntAcce
 		}
 	}
 	protected Map<T, LabelStatistics> statistics;
-	public DefaultROICursorStrategy(NativeLabeling<T, A> labeling) {
+	public DefaultROIStrategy(L labeling) {
 		this.labeling = labeling;
 		generation = Long.MIN_VALUE;
 	}
@@ -160,13 +159,42 @@ public class DefaultROICursorStrategy<T extends Comparable<T>, A extends IntAcce
 	 * @author leek
 	 *
 	 */
-	class DefaultRegionOfInterest extends AbstractRegionOfInterest {
+	class DefaultRegionOfInterest extends AbstractIterableRegionOfInterest {
+		/* (non-Javadoc)
+		 * @see mpicbg.imglib.roi.AbstractIterableRegionOfInterest#size()
+		 */
 		T label;
 		final RandomAccess<LabelingType<T>> randomAccess;
+		final LabelStatistics labelStats;
+		final long [] min;
+		final long [] max;
+		final long [] firstRaster;
+		final double [] real_min;
+		final double [] real_max;
 		DefaultRegionOfInterest(T label) {
 			super(labeling.numDimensions());
 			this.label = label;
 			randomAccess = new LabelingOutOfBoundsRandomAccess<T>(labeling);
+			computeStatistics();
+			labelStats = statistics.get(label);
+			min = new long [labeling.numDimensions()];
+			max = new long [labeling.numDimensions()];
+			firstRaster = new long [labeling.numDimensions()];
+			labelStats.getExtents(min, max);
+			labelStats.getRasterStart(firstRaster);
+			real_min = new double [labeling.numDimensions()];
+			real_max = new double [labeling.numDimensions()];
+			
+			labelStats.getExtents(min, max);
+			for (int i = 0; i < labeling.numDimensions(); i++) {
+				real_min[i] = min[i];
+				real_max[i] = max[i];
+			}
+		}
+
+		@Override
+		protected long size() {
+			return labelStats.getArea();
 		}
 
 		@Override
@@ -174,26 +202,56 @@ public class DefaultROICursorStrategy<T extends Comparable<T>, A extends IntAcce
 			for (int i = 0; i < position.length; i++) {
 				randomAccess.setPosition((int)position[i], i);
 			}
-			return randomAccess.get().getLabels().contains(label);
+			return randomAccess.get().getLabeling().contains(label);
+		}
+
+		@Override
+		protected void getExtrema(long[] minima, long[] maxima) {
+			System.arraycopy(min, 0, minima, 0, numDimensions());
+			System.arraycopy(max, 0, maxima, 0, numDimensions());
 		}
 
 		@Override
 		protected boolean nextRaster(long[] position, long[] end) {
-			// TODO Auto-generated method stub
-			return false;
+			for (int i=numDimensions()-1; i>=0; i--) {
+				if (position[i] < min[i]) {
+					System.arraycopy(min, 0, position, 0, i+1);
+					// Pre-decrement in anticipation of one increment.
+					position[0]--;
+					break;
+				}
+			}
+			do {
+				int i;
+				for (i = 0; i < numDimensions(); i++) {
+					if (position[i] >= max[i]-1) {
+						position[i] = min[i];
+					} else {
+						position[i]++;
+						break;
+					}
+				}
+				if (i == numDimensions()) return false;
+				randomAccess.setPosition(position);
+			} while (! randomAccess.get().getLabeling().contains(label));
+			System.arraycopy(position, 0, end, 0, numDimensions());
+			do {
+				end[0]++;
+				randomAccess.setPosition(end);
+			} while ((end[0] < max[0]) && (randomAccess.get().getLabeling().contains(label)));
+			return true;
 		}
-		
+
 	}
 
 	@Override
 	public RegionOfInterest createRegionOfInterest(T label) {
-		return new DefaultRegionOfInterest();
+		return new DefaultRegionOfInterest(label);
 	}
 
 	@Override
 	public IterableRegionOfInterest createIterableRegionOfInterest(T label) {
-		// TODO Auto-generated method stub
-		return null;
+		return new DefaultRegionOfInterest(label);
 	}
 
 }

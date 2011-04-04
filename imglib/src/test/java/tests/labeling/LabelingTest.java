@@ -24,53 +24,55 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
-import mpicbg.imglib.cursor.Cursor;
-import mpicbg.imglib.cursor.LocalizableByDimCursor;
-import mpicbg.imglib.cursor.LocalizableCursor;
-import mpicbg.imglib.image.ImageFactory;
-import mpicbg.imglib.img.DirectAccessContainer;
+import mpicbg.imglib.Cursor;
+import mpicbg.imglib.RandomAccess;
+import mpicbg.imglib.RealRandomAccess;
+import mpicbg.imglib.img.Img;
 import mpicbg.imglib.img.array.ArrayImgFactory;
 import mpicbg.imglib.img.basictypeaccess.IntAccess;
+import mpicbg.imglib.labeling.NativeImgLabeling;
+import mpicbg.imglib.labeling.DefaultROIStrategyFactory;
 import mpicbg.imglib.labeling.Labeling;
 import mpicbg.imglib.labeling.LabelingType;
-import mpicbg.imglib.type.label.FakeType;
+import mpicbg.imglib.labeling.NativeLabeling;
+import mpicbg.imglib.type.logic.BitType;
+import mpicbg.imglib.type.numeric.integer.IntType;
+import mpicbg.imglib.type.numeric.real.DoubleType;
 
 import org.junit.Test;
 
 
 public class LabelingTest {
-	protected <T extends Comparable<T>> Labeling<T> makeLabeling(T exemplar, int [] dimensions) {
-		DirectAccessContainer<LabelingType<T>, IntAccess> container;
-		Labeling<T> labeling;
-		LabelingType<T> type;
-		container = new ArrayImgFactory().createIntInstance(dimensions, 1);
-		type = new LabelingType<T>(container);
-		labeling = new Labeling<T>(container, type);
-		container.setLinkedType(type);
+	protected <T extends Comparable<T>> Labeling<T> makeLabeling(T exemplar, long [] dimensions) {
+		NativeLabeling<T, IntAccess> labeling;
+		labeling = new NativeImgLabeling<T>(dimensions, new ArrayImgFactory<LabelingType<T>>());
+		LabelingType<T> type = new LabelingType<T>(labeling);
+		labeling.setLinkedType(type);
 		return labeling;
 	}
 	protected <T extends Comparable<T>> Labeling<T> makeLabeling(
-			int [][] coordinates, T [] labels, int [] dimensions) {
+			long [][] coordinates, T [] labels, long [] dimensions) {
 		assertTrue(labels.length > 0);
 		assertEquals(labels.length, coordinates.length);
 		Labeling<T> labeling = makeLabeling(labels[0], dimensions);
-		LocalizableByDimCursor<LabelingType<T>> c = labeling.createLocalizableByDimCursor();
+		RandomAccess<LabelingType<T>> a = labeling.randomAccess();
 		for (int i=0;i < coordinates.length; i++) {
-			c.setPosition(coordinates[i]);
-			List<T> currentLabels = new ArrayList<T>(c.getType().getLabeling());
+			a.setPosition(coordinates[i]);
+			List<T> currentLabels = new ArrayList<T>(a.get().getLabeling());
 			if (! currentLabels.contains(labels[i]))
 				currentLabels.add(labels[i]);
-			c.getType().setLabeling(currentLabels);
+			a.get().setLabeling(currentLabels);
 		}
 		return labeling;
 	}
 	
 	protected <T extends Comparable<T>> void labelSphere(
 			Labeling<T> labeling, T label, double [] center, double radius) {
-		LocalizableCursor<LabelingType<T>> c = labeling.createLocalizableCursor();
-		int [] position = labeling.createPositionArray();
-		for (LabelingType<T> t:c) {
-			c.getPosition(position);
+		Cursor<LabelingType<T>> c = labeling.localizingCursor();
+		long [] position = new long [labeling.numDimensions()];
+		while(c.hasNext()) {
+			LabelingType<T> t = c.next();
+			c.localize(position);
 			double distance2 = 0;
 			double distance = 0;
 			for (int i=0; i<position.length; i++) {
@@ -87,202 +89,215 @@ public class LabelingTest {
 		}
 	}
 	@Test
-	public void testContainerConstructor() {
-		int [] dimensions = { 5,6,7 };
-		DirectAccessContainer<LabelingType<String>, IntAccess> container;
+	public void testDefaultConstructor() {
+		long [] dimensions = { 5,6,7 };
 		Labeling<String> labeling;
-		LabelingType<String> type;
-		container = new ArrayImgFactory().createIntInstance(dimensions, 1);
-		type = new LabelingType<String>(container);
-		labeling = new Labeling<String>(container, type);
-		assertTrue(Arrays.equals(dimensions, labeling.getDimensions()));
+		labeling = new NativeImgLabeling<String>(
+				dimensions, new ArrayImgFactory<LabelingType<String>>());
+		assertEquals(3, labeling.numDimensions());
 	}
 	
 	@Test
-	public void testNamedContainerConstructor() {
-		int [] dimensions = { 5,6,7 };
-		DirectAccessContainer<LabelingType<String>, IntAccess> container;
+	public void testFactoryConstructor() {
+		long [] dimensions = { 5,6,7 };
 		Labeling<String> labeling;
-		LabelingType<String> type;
-		container = new ArrayImgFactory().createIntInstance(dimensions, 1);
-		type = new LabelingType<String>(container);
-		labeling = new Labeling<String>(container, type, "Foo");
-		assertTrue(Arrays.equals(dimensions, labeling.getDimensions()));
-	}
-	
-	@Test
-	public void testImageFactoryConstructor() {
-		int [] dimensions = { 5,6,7 };
-		ImageFactory<LabelingType<String>> factory;
-		factory = new ImageFactory<LabelingType<String>>(
-				new LabelingType<String>(), 
-				new ArrayImgFactory());
-		Labeling<String> labeling = new Labeling<String>(factory, dimensions, "Foo");
-		assertTrue(Arrays.equals(dimensions, labeling.getDimensions()));
+		labeling = new NativeImgLabeling<String>(
+				dimensions, new DefaultROIStrategyFactory<String>(), 
+				new ArrayImgFactory<LabelingType<String>>());
+		assertEquals(3, labeling.numDimensions());
 	}
 	
 	@Test
 	public void testEmptyImage() {
-		Labeling<String> labeling = makeLabeling("Foo", new int [] { 5,6,7});
+		Labeling<String> labeling = makeLabeling("Foo", new long [] { 5,6,7});
 		assertTrue(labeling.getLabels().isEmpty());
-		Cursor<LabelingType<String>> c = labeling.createCursor();
 		int iterations = 0;
-		for (LabelingType<String> t:c){
+		for (LabelingType<String> t:labeling){
 			assertTrue(t.getLabeling().size() == 0);
 			iterations++;
 		}
-		c.close();
 		assertTrue(iterations == 5 * 6 * 7);
 	}
 	
 	@Test
 	public void testLabelOne() {
-		int [][] coordinates = {{ 1,1,1}};
+		long [][] coordinates = {{ 1,1,1}};
 		String [] labels = { "Foo" };
-		int [] dimensions = new int [] { 5,6,7};
+		long [] dimensions = new long [] { 5,6,7};
 		Labeling<String> labeling = makeLabeling(coordinates, labels, dimensions);
 		assertEquals(labeling.getLabels().size(), 1);
 		assertTrue(labeling.getLabels().contains("Foo"));
 	}
 	@Test
 	public void testGetAreaOne() {
-		int [][] coordinates = {{ 1,1,1}};
+		long [][] coordinates = {{ 1,1,1}};
 		String [] labels = { "Foo" };
-		int [] dimensions = new int [] { 5,6,7};
+		long [] dimensions = new long [] { 5,6,7};
 		Labeling<String> labeling = makeLabeling(coordinates, labels, dimensions);
 		assertEquals(labeling.getArea("Foo"), 1);
 	}
 	@Test
 	public void testExtentsOne() {
-		int [][] coordinates = {{ 1,3,5}};
+		long [][] coordinates = {{ 1,3,5}};
 		String [] labels = { "Foo" };
-		int [] dimensions = new int [] { 5,6,7};
+		long [] dimensions = new long [] { 5,6,7};
 		Labeling<String> labeling = makeLabeling(coordinates, labels, dimensions);
-		int [] minExtents = labeling.createPositionArray();
-		int [] maxExtents = labeling.createPositionArray();
+		long [] minExtents = new long[3];
+		long [] maxExtents = new long[3];
 		assertFalse(labeling.getExtents("Bar", minExtents, maxExtents));
 		assertTrue(labeling.getExtents("Foo", minExtents, maxExtents));
 		assertArrayEquals(coordinates[0], minExtents);
-		int [] expectedMaxExtents = coordinates[0].clone();
+		long [] expectedMaxExtents = coordinates[0].clone();
 		for (int i = 0; i<3; i++) expectedMaxExtents[i]++;
 		assertArrayEquals(expectedMaxExtents, maxExtents);
 	}
 	@Test
 	public void testRasterStartOne() {
-		int [][] coordinates = {{ 1,3,5}};
+		long [][] coordinates = {{ 1,3,5}};
 		String [] labels = { "Foo" };
-		int [] dimensions = new int [] { 5,6,7};
+		long [] dimensions = new long [] { 5,6,7};
 		Labeling<String> labeling = makeLabeling(coordinates, labels, dimensions);
-		int [] rasterStart = labeling.createPositionArray();
+		long [] rasterStart = new long[3];
 		assertFalse(labeling.getRasterStart("Bar", rasterStart));
 		assertTrue(labeling.getRasterStart("Foo", rasterStart));
 		assertArrayEquals(coordinates[0], rasterStart);
 	}
 	@Test
-	public void testLocalizableCursorOne() {
-		int [][] coordinates = {{ 1,3,2}};
+	public void testRandomAccessible() {
+		long [][] coordinates = {{ 1,3,5}};
 		String [] labels = { "Foo" };
-		int [] dimensions = new int [] { 5,6,7};
+		long [] dimensions = new long [] { 5,6,7};
 		Labeling<String> labeling = makeLabeling(coordinates, labels, dimensions);
-		LocalizableCursor<FakeType> c = labeling.createLocalizableLabelCursor("Foo");
-		int iterations = 0;
-		for (@SuppressWarnings("unused") FakeType t:c) {
-			iterations++;
-			assertEquals(c.getPosition(0), 1);
-			assertEquals(c.getPosition(1), 3);
-			assertEquals(c.getPosition(2), 2);
-		}
-		assertEquals(iterations, 1);
-		c.close();
+		RandomAccess<LabelingType<String>> a = labeling.randomAccess();
+		a.setPosition(coordinates[0]);
+		List<String> list = a.get().getLabeling();
+		assertEquals(list.size(), 1);
+		assertEquals(list.get(0), "Foo");
+		a.setPosition(new long [] { 1,2,3});
+		list = a.get().getLabeling();
+		assertEquals(list.size(), 0);
 	}
 	@Test
-	public void testLocalizablePerimeterCursorOne() {
-		int [][] coordinates = {{ 1,3,2}};
+	public void testROIRandomAccess() {
+		long [][] coordinates = {{ 1,3,5}};
 		String [] labels = { "Foo" };
-		int [] dimensions = new int [] { 5,6,7};
+		long [] dimensions = new long [] { 5,6,7};
 		Labeling<String> labeling = makeLabeling(coordinates, labels, dimensions);
-		LocalizableCursor<FakeType> c = labeling.createLocalizablePerimeterCursor("Foo");
+		RealRandomAccess<BitType> a = labeling.getRegionOfInterest("Foo").realRandomAccess();
+		a.setPosition(coordinates[0]);
+		assertTrue(a.get().get());
+		a.setPosition(new long [] { 1,2,3});
+		assertFalse(a.get().get());
+	}
+	
+	@Test
+	public void testLocalizableCursorOne() {
+		long [][] coordinates = {{ 1,3,2}};
+		int expected = 132;
+		String [] labels = { "Foo" };
+		long [] dimensions = new long [] { 5,6,7};
+		Labeling<String> labeling = makeLabeling(coordinates, labels, dimensions);
+		Img<IntType> img = new ArrayImgFactory<IntType>().create(dimensions, new IntType());
+		RandomAccess<IntType> a = img.randomAccess();
+		for (int i = 0; i<dimensions[0]; i++) {
+			a.setPosition(i, 0);
+			for (int j = 0; j < dimensions[1]; j++) {
+				a.setPosition(j, 1);
+				for (int k = 0; k < dimensions[2]; k++) {
+					a.setPosition(k, 2);
+					a.get().set(i * 100 + j*10 + k);
+				}
+			}
+		}
+		Cursor<IntType> c = labeling.getIterableRegionOfInterest("Foo").getIterableIntervalOverROI(img).cursor();
 		int iterations = 0;
-		for (@SuppressWarnings("unused") FakeType t:c) {
+		while(c.hasNext()) {
+			IntType t = c.next();
 			iterations++;
-			assertEquals(c.getPosition(0), 1);
-			assertEquals(c.getPosition(1), 3);
-			assertEquals(c.getPosition(2), 2);
+			assertEquals(c.getLongPosition(0), 1);
+			assertEquals(c.getLongPosition(1), 3);
+			assertEquals(c.getLongPosition(2), 2);
+			assertEquals(expected, t.get());
 		}
 		assertEquals(iterations, 1);
-		c.close();
 	}
+	
 	@Test
 	public void testSphere() {
-		int [] dimensions = new int [] { 20,20,20 };
+		long [] dimensions = new long [] { 20,20,20 };
 		Labeling<String> labeling = makeLabeling("MyLabels", dimensions);
 		labelSphere(labeling, "Foo", new double [] { 10,9,8 }, 5);
 		/*
 		 * Test the extents
 		 */
-		int [] minExtents = labeling.createPositionArray();
-		int [] maxExtents = labeling.createPositionArray();
+		long [] minExtents = new long[3];
+		long [] maxExtents = new long[3];
 		assertTrue(labeling.getExtents("Foo", minExtents, maxExtents));
-		assertArrayEquals(new int [] { 5,4,3}, minExtents);
-		assertArrayEquals(new int [] { 16, 15, 14 }, maxExtents);
+		assertArrayEquals(new long [] { 5,4,3}, minExtents);
+		assertArrayEquals(new long [] { 16, 15, 14 }, maxExtents);
 		/*
 		 * Test the raster start which should be 5, 9, 8
 		 */
-		int [] start = labeling.createPositionArray();
+		long [] start = new long[3];
 		assertTrue(labeling.getRasterStart("Foo", start));
-		assertArrayEquals(new int [] { 5, 9, 8}, start);
+		assertArrayEquals(new long [] { 5, 9, 8}, start);
 		double expectedVolumeLow = 4./ 3. * Math.PI * Math.pow(4.5, 3);
 		double expectedVolumeHigh = 4./ 3. * Math.PI * Math.pow(5.5, 3);
 		assertTrue(labeling.getArea("Foo") > expectedVolumeLow);
 		assertTrue(labeling.getArea("Foo") < expectedVolumeHigh);
-		/*
-		 * Iterate through the perimeter pixels, checking for the
-		 * boundary condition.
-		 */
-		LocalizableCursor<FakeType> c = labeling.createLocalizablePerimeterCursor("Foo");
-		LocalizableByDimCursor<LabelingType<String>> dc = labeling.createLocalizableByDimCursor();
-		int [] position = labeling.createPositionArray();
-		for (@SuppressWarnings("unused") FakeType t: c) {
-			c.getPosition(position);
-			dc.setPosition(position);
-			assertTrue(dc.getType().getLabeling().contains("Foo"));
-			boolean foundEdge = false;
-			for (int i =0; i<3; i++) {
-				for (int j = -1; j <= 1; j += 2) {
-					int [] test = position.clone();	
-					test[i] += j;
-					dc.setPosition(test);
-					if (! dc.getType().getLabeling().contains("Foo")) {
-						foundEdge = true;
-						break;
-					}
+		RandomAccess<LabelingType<String>> a = labeling.randomAccess();
+		Img<DoubleType> img = new ArrayImgFactory<DoubleType>().create(dimensions, new DoubleType());
+		RandomAccess<DoubleType> img_a = img.randomAccess();
+		for (int i = 0; i<dimensions[0]; i++) {
+			img_a.setPosition(i, 0);
+			for (int j = 0; j < dimensions[1]; j++) {
+				img_a.setPosition(j, 1);
+				for (int k = 0; k < dimensions[2]; k++) {
+					img_a.setPosition(k, 2);
+					img_a.get().set(Math.sqrt((i-10)*(i-10) + (j-9)*(j-9) + (k-8)*(k-8)));
 				}
 			}
-			assertTrue(foundEdge);
 		}
-		c.close();
+		Cursor<DoubleType> c = labeling.getIterableRegionOfInterest("Foo").getIterableIntervalOverROI(img).cursor();
+		int iterations = 0;
+		long [] position = new long[3];
+		while(c.hasNext()) {
+			iterations++;
+			DoubleType t = c.next();
+			assertTrue(t.get() <= 5);
+			c.localize(position);
+			a.setPosition(position);
+			assertEquals(a.get().getLabeling().size(), 1);
+		}
+		assertEquals(iterations, labeling.getArea("Foo"));
 	}
 	@Test
 	public void testTwoLabels() {
-		int [] dimensions = new int [] { 20,20,40 };
+		long [] dimensions = new long [] { 20,20,40 };
 		Labeling<String> labeling = makeLabeling("MyLabels", dimensions);
 		String [] labels = { "Foo", "Bar" };
 		double [][] centers = {{10,9,8}, { 8, 9, 30 }};
 		for (int i=0; i<2; i++) {
 			labelSphere(labeling, labels[i], centers[i], 5);
 		}
-		int [] temp = labeling.createPositionArray();
+		long [] temp = new long[3];
 		for (int i=0; i<2; i++ ) {
 			double [] coords = new double[3];
 			Arrays.fill(coords, 0);
-			LocalizableCursor<FakeType> c = labeling.createLocalizableLabelCursor(labels[i]);
-			for (@SuppressWarnings("unused") FakeType t:c) {
-				c.getPosition(temp);
+			// oooooo 
+			// it's a cursor iterating over the labels themselves for one label
+			// oooooo
+			
+			Cursor<LabelingType<String>> c = labeling.getIterableRegionOfInterest(labels[i]).getIterableIntervalOverROI(labeling).cursor();
+			while(c.hasNext()){
+				LabelingType<String> t = c.next();
+				c.localize(temp);
 				for (int j=0;j<temp.length; j++) {
 					coords[j] += temp[j];
 				}
+				assertEquals(t.getLabeling().size(), 1);
+				assertEquals(t.getLabeling().get(0), labels[i]);
 			}
-			c.close();
 			for (int j=0;j<coords.length; j++) {
 				coords[j] /= labeling.getArea(labels[i]);
 				assertTrue(Math.abs(coords[j] - centers[i][j]) < .5);
@@ -291,7 +306,7 @@ public class LabelingTest {
 	}
 	@Test
 	public void testOverlappingLabels() {
-		int [] dimensions = new int [] { 20,20,30 };
+		long [] dimensions = new long [] { 20,20,30 };
 		Labeling<String> labeling = makeLabeling("MyLabels", dimensions);
 		String [] labels = { "Foo", "Bar" };
 		double [][] centers = {{10,9,8}, { 8, 9, 12 }};
@@ -303,18 +318,25 @@ public class LabelingTest {
 		for (int i=0; i<2; i++) {
 			assertTrue(foundLabels.contains(labels[i]));
 		}
-		int [] temp = labeling.createPositionArray();
+		long [] temp = new long[3];
 		for (int i=0; i<2; i++ ) {
 			double [] coords = new double[3];
 			Arrays.fill(coords, 0);
-			LocalizableCursor<FakeType> c = labeling.createLocalizableLabelCursor(labels[i]);
-			for (@SuppressWarnings("unused") FakeType t:c) {
-				c.getPosition(temp);
+			Cursor<LabelingType<String>> c = labeling.getIterableRegionOfInterest(labels[i]).getIterableIntervalOverROI(labeling).cursor();
+			while(c.hasNext()){
+				LabelingType<String> t = c.next();
+				c.localize(temp);
+				long [] d = new long[] { 0, 0 };
 				for (int j=0;j<temp.length; j++) {
 					coords[j] += temp[j];
+					for (int k=0; k<d.length; k++) {
+						d[k] += (temp[j] - centers[k][j]) * (temp[j] - centers[k][j]);
+					}
 				}
+				boolean in_both = ((d[0] <= 25) & (d[1] <= 25));
+				assertEquals(t.getLabeling().size(), in_both?2:1);
+				assertTrue(t.getLabeling().contains(labels[i]));
 			}
-			c.close();
 			for (int j=0;j<coords.length; j++) {
 				coords[j] /= labeling.getArea(labels[i]);
 				assertTrue(Math.abs(coords[j] - centers[i][j]) < .5);
