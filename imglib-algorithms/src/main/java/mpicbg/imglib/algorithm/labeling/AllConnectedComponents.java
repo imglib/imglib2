@@ -22,11 +22,17 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
 
+import mpicbg.imglib.Cursor;
+import mpicbg.imglib.RandomAccess;
 import mpicbg.imglib.cursor.LocalizableByDimCursor;
 import mpicbg.imglib.cursor.LocalizableCursor;
 import mpicbg.imglib.image.Image;
+import mpicbg.imglib.img.Img;
 import mpicbg.imglib.labeling.Labeling;
+import mpicbg.imglib.labeling.LabelingOutOfBoundsRandomAccessFactory;
 import mpicbg.imglib.labeling.LabelingType;
+import mpicbg.imglib.outofbounds.OutOfBoundsFactory;
+import mpicbg.imglib.type.Type;
 import mpicbg.imglib.type.logic.BitType;
 
 /**
@@ -72,10 +78,10 @@ public class AllConnectedComponents {
 	 * @throws NoSuchElementException if there are not enough names
 	 */
 	public static <T extends Comparable<T>> void labelAllConnectedComponents(
-			Labeling<T> labeling, Image<BitType> img, Iterator<T> names)
+			Labeling<T> labeling, Img<BitType> img, Iterator<T> names)
 	throws NoSuchElementException
 	{
-		int [][] offsets = getStructuringElement(img.getNumDimensions());
+		int [][] offsets = getStructuringElement(img.numDimensions());
 		labelAllConnectedComponents(labeling, img, names, offsets);
 	}
 	/**
@@ -91,21 +97,24 @@ public class AllConnectedComponents {
 	 * @throws NoSuchElementException if there are not enough names
 	 */
 	public static <T extends Comparable<T>> void labelAllConnectedComponents(
-			Labeling<T> labeling, Image<BitType> img,
+			Labeling<T> labeling, Img<BitType> img,
 			Iterator<T> names, int [][] structuringElement)
 	throws NoSuchElementException
 	{
-		LocalizableCursor<BitType> c = img.createLocalizableCursor();
-		LocalizableByDimCursor<BitType> bc = img.createLocalizableByDimCursor();
-		LocalizableByDimCursor<LabelingType<T>> destCursor =
-			labeling.createLocalizableByDimCursor();
-		int [] srcPosition = img.createPositionArray();
-		int [] destPosition = img.createPositionArray();
-		int [] dimensions = labeling.getDimensions();
-		PositionStack toDoList = new PositionStack(img.getNumDimensions()); 
-		for (BitType t:c) {
+		Cursor<BitType> c = img.localizingCursor();
+		RandomAccess<BitType> raSrc = img.randomAccess();
+		OutOfBoundsFactory<LabelingType<T>, Labeling<T>> factory =
+			new LabelingOutOfBoundsRandomAccessFactory<T, Labeling<T>>();
+		RandomAccess<? extends LabelingType<T>> raDest = labeling.randomAccess(factory);
+		long [] srcPosition = new long [img.numDimensions()];
+		long [] destPosition = new long [labeling.numDimensions()];
+		long [] dimensions = new long [labeling.numDimensions()];
+		labeling.dimensions(dimensions);
+		PositionStack toDoList = new PositionStack(img.numDimensions()); 
+		while(c.hasNext()) {
+			BitType t = c.next();
 			if (t.get()) {
-				c.getPosition(srcPosition);
+				c.localize(srcPosition);
 				boolean outOfBounds = false;
 				for (int i=0; i<dimensions.length; i++) {
 					if (srcPosition[i] >= dimensions[i]) {
