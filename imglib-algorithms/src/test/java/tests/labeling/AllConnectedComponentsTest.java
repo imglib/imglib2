@@ -27,31 +27,30 @@ import org.junit.Test;
 
 import static org.junit.Assert.*;
 
+import mpicbg.imglib.Cursor;
 import mpicbg.imglib.algorithm.labeling.AllConnectedComponents;
-import mpicbg.imglib.container.DirectAccessContainerFactory;
-import mpicbg.imglib.container.array.ArrayContainerFactory;
-import mpicbg.imglib.cursor.LocalizableCursor;
-import mpicbg.imglib.image.Image;
-import mpicbg.imglib.image.ImageFactory;
-import mpicbg.imglib.labeling.Labeling;
+import mpicbg.imglib.img.array.ArrayImg;
+import mpicbg.imglib.img.array.ArrayImgFactory;
 import mpicbg.imglib.labeling.LabelingType;
+import mpicbg.imglib.labeling.NativeImgLabeling;
 import mpicbg.imglib.type.logic.BitType;
 
 public class AllConnectedComponentsTest {
-	private void test2D(boolean [][] input, int [][] expected, int [][] structuringElement, int start, int background) {
-		int [] dimensions = new int [] { input.length, input[0].length };
-		DirectAccessContainerFactory containerFactory = new ArrayContainerFactory();
-		ImageFactory<BitType> bitFactory = new ImageFactory<BitType>(new BitType(), containerFactory);
-		Image<BitType> image = bitFactory.createImage(dimensions);
-		ImageFactory<LabelingType<Integer>> labelingFactory = new ImageFactory<LabelingType<Integer>>(new LabelingType<Integer>(), containerFactory);
-		Labeling<Integer> labeling = new Labeling<Integer>(labelingFactory, dimensions, "Foo");
+	private void test2D(boolean [][] input, int[][] expected, long [][] structuringElement, int start, int background) {
+		long [] dimensions = new long [] { input.length, input[0].length };
+		ArrayImgFactory<BitType> imgFactory = new ArrayImgFactory<BitType>();
+		ArrayImgFactory<LabelingType<Integer>> labelingFactory = new ArrayImgFactory<LabelingType<Integer>>();
+		ArrayImg<BitType, ? > image = imgFactory.create(dimensions, new BitType());
+		NativeImgLabeling<Integer> labeling = new NativeImgLabeling<Integer>(dimensions, labelingFactory);
+		labeling.setLinkedType(new LabelingType<Integer>(labeling));
 		/*
 		 * Fill the image.
 		 */
-		LocalizableCursor<BitType> c = image.createLocalizableCursor();
-		int [] position = image.createPositionArray();
-		for (BitType t:c) {
-			c.getPosition(position);
+		Cursor<BitType> c = image.localizingCursor();
+		int [] position = new int[2];
+		while(c.hasNext()) {
+			BitType t = c.next();
+			c.localize(position);
 			t.set(input[position[0]][position[1]]);
 		}
 		/*
@@ -66,12 +65,13 @@ public class AllConnectedComponentsTest {
 		/*
 		 * Check the result
 		 */
-		LocalizableCursor<LabelingType<Integer>> lc = labeling.createLocalizableCursor();
+		Cursor<LabelingType<Integer>> lc = labeling.localizingCursor();
 		HashMap<Integer, Integer> map = new HashMap<Integer,Integer>();
-		for (LabelingType<Integer> lt:lc) {
-			lc.getPosition(position);
+		while(lc.hasNext()) {
+			LabelingType<Integer> lt = lc.next();
+			lc.localize(position);
 			List<Integer> labels = lt.getLabeling();
-			int expectedValue = expected[position[0]][position[1]]; 
+			int expectedValue = expected[(int)(position[0])][(int)(position[1])]; 
 			if (expectedValue == background)
 				assertEquals(labels.size(),0);
 			else {
@@ -107,12 +107,12 @@ public class AllConnectedComponentsTest {
 		/*
 		 * Make sure that the labeler can handle out of bounds conditions
 		 */
-		for (int [] offset:AllConnectedComponents.getStructuringElement(2)) {
+		for (long [] offset:AllConnectedComponents.getStructuringElement(2)) {
 			boolean [][] input = new boolean [3][3];
 			int [][] expected = new int[3][3];
 			
-			input[offset[0]+1][offset[1]+1] = true;
-			expected[offset[0]+1][offset[1]+1] = 1;
+			input[(int)(offset[0])+1][(int)(offset[1])+1] = true;
+			expected[(int)(offset[0])+1][(int)(offset[1])+1] = 1;
 			test2D(input, expected, null, 1, 0);
 		}
 	}
@@ -177,7 +177,7 @@ public class AllConnectedComponentsTest {
 				{ 3,0,0,0,0 },
 				{ 0,2,2,2,0 },
 				{ 0,0,0,0,0 }};
-		int [][] strel = {{-1,0},{1,0},{0,-1},{0,1}};
+		long [][] strel = {{-1,0},{1,0},{0,-1},{0,1}};
 		test2D(input, expected, strel, 1, 0);
 		
 	}

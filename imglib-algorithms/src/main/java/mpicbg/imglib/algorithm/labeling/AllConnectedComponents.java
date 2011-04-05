@@ -24,15 +24,11 @@ import java.util.NoSuchElementException;
 
 import mpicbg.imglib.Cursor;
 import mpicbg.imglib.RandomAccess;
-import mpicbg.imglib.cursor.LocalizableByDimCursor;
-import mpicbg.imglib.cursor.LocalizableCursor;
-import mpicbg.imglib.image.Image;
 import mpicbg.imglib.img.Img;
 import mpicbg.imglib.labeling.Labeling;
 import mpicbg.imglib.labeling.LabelingOutOfBoundsRandomAccessFactory;
 import mpicbg.imglib.labeling.LabelingType;
 import mpicbg.imglib.outofbounds.OutOfBoundsFactory;
-import mpicbg.imglib.type.Type;
 import mpicbg.imglib.type.logic.BitType;
 
 /**
@@ -42,23 +38,23 @@ import mpicbg.imglib.type.logic.BitType;
 public class AllConnectedComponents {
 	protected static class PositionStack {
 		private final int dimensions;
-		private int [] storage;
+		private long [] storage;
 		private int position = 0;
 		public PositionStack(int dimensions) {
 			this.dimensions = dimensions;
-			storage = new int [100 * dimensions];
+			storage = new long [100 * dimensions];
 		}
-		public void push(int [] position) {
+		public void push(long [] position) {
 			int insertPoint = this.position * dimensions;
 			if (storage.length == insertPoint) {
-				int [] newStorage = new int [storage.length * 3 / 2];
+				long [] newStorage = new long [storage.length * 3 / 2];
 				System.arraycopy(storage, 0, newStorage, 0, storage.length);
 				storage = newStorage;
 			}
 			System.arraycopy(position, 0, storage, insertPoint, dimensions);
 			this.position++;
 		}
-		public void pop(int [] position) {
+		public void pop(long [] position) {
 			this.position--;
 			System.arraycopy(storage, this.position * dimensions, 
 					position, 0, dimensions);
@@ -81,7 +77,7 @@ public class AllConnectedComponents {
 			Labeling<T> labeling, Img<BitType> img, Iterator<T> names)
 	throws NoSuchElementException
 	{
-		int [][] offsets = getStructuringElement(img.numDimensions());
+		long [][] offsets = getStructuringElement(img.numDimensions());
 		labelAllConnectedComponents(labeling, img, names, offsets);
 	}
 	/**
@@ -98,14 +94,15 @@ public class AllConnectedComponents {
 	 */
 	public static <T extends Comparable<T>> void labelAllConnectedComponents(
 			Labeling<T> labeling, Img<BitType> img,
-			Iterator<T> names, int [][] structuringElement)
+			Iterator<T> names, long [][] structuringElement)
 	throws NoSuchElementException
 	{
 		Cursor<BitType> c = img.localizingCursor();
 		RandomAccess<BitType> raSrc = img.randomAccess();
-		OutOfBoundsFactory<LabelingType<T>, Labeling<T>> factory =
-			new LabelingOutOfBoundsRandomAccessFactory<T, Labeling<T>>();
-		RandomAccess<? extends LabelingType<T>> raDest = labeling.randomAccess(factory);
+		OutOfBoundsFactory<LabelingType<T>, Img<LabelingType<T>>> factory =
+			new LabelingOutOfBoundsRandomAccessFactory<T, Img<LabelingType<T>>>();
+		
+		RandomAccess<LabelingType<T>> raDest = labeling.randomAccess(factory);
 		long [] srcPosition = new long [img.numDimensions()];
 		long [] destPosition = new long [labeling.numDimensions()];
 		long [] dimensions = new long [labeling.numDimensions()];
@@ -124,20 +121,21 @@ public class AllConnectedComponents {
 				}
 				if (outOfBounds) continue;
 				
-				destCursor.setPosition(srcPosition);
+				raDest.setPosition(srcPosition);
 				/*
 				 * Assign a label if no label has yet been assigned.
 				 */
-				if (destCursor.getType().getLabeling().isEmpty()) {
-					List<T> currentLabel = destCursor.getType().intern(names.next());
-					destCursor.getType().setLabeling(currentLabel);
+				LabelingType<T> label = raDest.get();
+				if (label.getLabeling().isEmpty()) {
+					List<T> currentLabel = label.intern(names.next());
+					label.setLabeling(currentLabel);
 					toDoList.push(srcPosition);
 					while (! toDoList.isEmpty()) {
 						/*
 						 * Find neighbors at the position
 						 */
 						toDoList.pop(srcPosition);
-						for (int [] offset:structuringElement) {
+						for (long [] offset:structuringElement) {
 							outOfBounds = false;
 							for (int i=0; i<offset.length; i++) {
 								destPosition[i] = srcPosition[i] + offset[i];
@@ -147,11 +145,12 @@ public class AllConnectedComponents {
 								}
 							}
 							if (outOfBounds) continue;
-							bc.setPosition(destPosition);
-							if (bc.getType().get()) { 
-								destCursor.setPosition(destPosition);
-								if (destCursor.getType().getLabeling().isEmpty()) {
-									destCursor.getType().setLabeling(currentLabel);
+							raSrc.setPosition(destPosition);
+							if (raSrc.get().get()) { 
+								raDest.setPosition(destPosition);
+								label = raDest.get(); 
+								if (label.getLabeling().isEmpty()) {
+									label.setLabeling(currentLabel);
 									toDoList.push(destPosition);
 								}
 							}
@@ -160,9 +159,6 @@ public class AllConnectedComponents {
 				}
 			}
 		}
-		c.close();
-		bc.close();
-		destCursor.close();
 	}
 	/**
 	 * Return an array of offsets to the 8-connected (or N-d equivalent)
@@ -171,12 +167,12 @@ public class AllConnectedComponents {
 	 * @param dimensions
 	 * @return the structuring element.
 	 */
-	static public int [][] getStructuringElement(int dimensions) {
+	static public long [][] getStructuringElement(int dimensions) {
 		int nElements = 1;
 		for (int i=0; i<dimensions; i++) nElements *= 3;
 		nElements--;
-		int [][] result = new int [nElements][dimensions];
-		int [] position = new int [dimensions];
+		long [][] result = new long [nElements][dimensions];
+		long [] position = new long [dimensions];
 		Arrays.fill(position, -1);
 		for (int i=0; i<nElements; i++) {
 			System.arraycopy(position, 0, result[i], 0, dimensions);

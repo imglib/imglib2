@@ -24,6 +24,7 @@ import mpicbg.imglib.img.ImgFactory;
 import mpicbg.imglib.img.ImgRandomAccess;
 import mpicbg.imglib.img.NativeImg;
 import mpicbg.imglib.img.NativeImgFactory;
+import mpicbg.imglib.img.array.ArrayImgFactory;
 import mpicbg.imglib.img.basictypeaccess.IntAccess;
 import mpicbg.imglib.outofbounds.OutOfBoundsFactory;
 
@@ -40,10 +41,32 @@ public class NativeImgLabeling<T extends Comparable<T>>
 	extends AbstractNativeLabeling<T, IntAccess>{
 
 	final NativeImg<LabelingType<T>, ? extends IntAccess> img;
+	
+	/**
+	 * Create a labeling backed by the default image storage factory
+	 * 
+	 * @param dim dimensions of the image
+	 */
+	public NativeImgLabeling(long [] dim) {
+		this(dim, new ArrayImgFactory<LabelingType<T>>());
+	}
+	/**
+	 * Create a labeling backed by an image from a custom factory
+	 * 
+	 * @param dim dimensions of the image
+	 * @param imgFactory the custom factory to be used to create the backing storage 
+	 */
 	public NativeImgLabeling(long[] dim, NativeImgFactory<LabelingType<T>> imgFactory) {
 		this(dim, new DefaultROIStrategyFactory<T>(), imgFactory);
 	}
 
+	/**
+	 * Create a labeling backed by a native image with custom strategy and image factory
+	 * 
+	 * @param dim - dimensions of the labeling
+	 * @param strategyFactory - the strategy factory that drives iteration and statistics
+	 * @param imgFactory - the image factory to generate the native image
+	 */
 	public NativeImgLabeling(
 			long[] dim, 
 			LabelingROIStrategyFactory<T> strategyFactory, 
