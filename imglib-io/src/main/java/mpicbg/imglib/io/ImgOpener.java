@@ -55,7 +55,6 @@ import loci.formats.ImageReader;
 import loci.formats.meta.IMetadata;
 import loci.formats.meta.MetadataRetrieve;
 import loci.formats.services.OMEXMLService;
-import loci.formats.services.OMEXMLServiceImpl;
 import mpicbg.imglib.exception.IncompatibleTypeException;
 import mpicbg.imglib.img.Img;
 import mpicbg.imglib.img.ImgFactory;
@@ -601,8 +600,9 @@ public class ImgOpener implements StatusReporter {
 		return sb.toString();
 	}
 
+	@SuppressWarnings("unchecked")
 	private void populatePlane( final IFormatReader r,
-		final int no, final byte[] plane, final PlanarAccess planarAccess )
+		final int no, final byte[] plane, @SuppressWarnings("rawtypes") final PlanarAccess planarAccess )
 	{
 		final int pixelType = r.getPixelType();
 		final int bpp = FormatTools.getBytesPerPixel(pixelType);
