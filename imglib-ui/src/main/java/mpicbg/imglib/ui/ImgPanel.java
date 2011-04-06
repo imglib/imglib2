@@ -26,7 +26,7 @@ import mpicbg.imglib.exception.IncompatibleTypeException;
 import mpicbg.imglib.img.Img;
 import mpicbg.imglib.img.ImgFactory;
 import mpicbg.imglib.img.array.ArrayImgFactory;
-import mpicbg.imglib.io.ImageOpener;
+import mpicbg.imglib.io.ImgOpener;
 import mpicbg.imglib.type.NativeType;
 import mpicbg.imglib.type.numeric.ARGBType;
 import mpicbg.imglib.type.numeric.RealType;
@@ -136,7 +136,7 @@ public class ImgPanel extends JPanel {
 
 	private static <T extends RealType<T> & NativeType<T>> Img<T> loadImage(String path) {
 		try {
-			return new ImageOpener().openImage(path);
+			return new ImgOpener().openImage(path);
 		}
 		catch (IncompatibleTypeException e) {
 			e.printStackTrace();

@@ -82,7 +82,7 @@ import mpicbg.imglib.type.numeric.real.FloatType;
  *
  * @author Curtis Rueden ctrueden at wisc.edu
  */
-public class ImageOpener implements StatusReporter {
+public class ImgOpener implements StatusReporter {
 	
 	// -- Constants --
 
