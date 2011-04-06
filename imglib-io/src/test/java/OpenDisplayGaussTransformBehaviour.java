@@ -29,7 +29,7 @@ public class OpenDisplayGaussTransformBehaviour
 		
 		try
 		{
-			img = new ImgOpener().openImage( "D:/Temp/Truman/MoreTiles/73_8bit.tif", factory, new FloatType() );
+			img = new ImgOpener().openImg( "D:/Temp/Truman/MoreTiles/73_8bit.tif", factory, new FloatType() );
 		}
 		catch ( Exception e )
 		{

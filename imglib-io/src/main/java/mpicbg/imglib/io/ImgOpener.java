@@ -43,14 +43,18 @@ import loci.common.DataTools;
 import loci.common.StatusEvent;
 import loci.common.StatusListener;
 import loci.common.StatusReporter;
+import loci.common.services.DependencyException;
 import loci.common.services.ServiceException;
+import loci.common.services.ServiceFactory;
 import loci.formats.ChannelFiller;
 import loci.formats.ChannelSeparator;
 import loci.formats.FormatException;
 import loci.formats.FormatTools;
 import loci.formats.IFormatReader;
 import loci.formats.ImageReader;
+import loci.formats.meta.IMetadata;
 import loci.formats.meta.MetadataRetrieve;
+import loci.formats.services.OMEXMLService;
 import loci.formats.services.OMEXMLServiceImpl;
 import mpicbg.imglib.exception.IncompatibleTypeException;
 import mpicbg.imglib.img.Img;
@@ -64,9 +68,11 @@ import mpicbg.imglib.img.basictypeaccess.array.FloatArray;
 import mpicbg.imglib.img.basictypeaccess.array.IntArray;
 import mpicbg.imglib.img.basictypeaccess.array.LongArray;
 import mpicbg.imglib.img.basictypeaccess.array.ShortArray;
+import mpicbg.imglib.img.planar.PlanarImg;
 import mpicbg.imglib.img.planar.PlanarImgFactory;
 import mpicbg.imglib.sampler.special.OrthoSliceCursor;
 import mpicbg.imglib.type.NativeType;
+import mpicbg.imglib.type.Type;
 import mpicbg.imglib.type.numeric.RealType;
 import mpicbg.imglib.type.numeric.integer.ByteType;
 import mpicbg.imglib.type.numeric.integer.IntType;
@@ -78,9 +84,9 @@ import mpicbg.imglib.type.numeric.real.DoubleType;
 import mpicbg.imglib.type.numeric.real.FloatType;
 
 /**
- * Reads in an imglib Image using Bio-Formats.
+ * Reads in an imglib2 {@link Img} using Bio-Formats.
  *
- * @author Curtis Rueden ctrueden at wisc.edu
+ * @author Curtis Rueden (ctrueden at wisc.edu) and Stephan Preibisch (preibisch at mpi-cbg.de)
  */
 public class ImgOpener implements StatusReporter {
 	
@@ -90,6 +96,9 @@ public class ImgOpener implements StatusReporter {
 	public static final String Y = "Y";
 	public static final String Z = "Z";
 	public static final String TIME = "Time";
+	
+	// -- Calibration one can ask for if wanted --
+	protected float[] calibration;
 
 	// -- Fields --
 
@@ -98,50 +107,67 @@ public class ImgOpener implements StatusReporter {
 	// -- ImageOpener methods --
 
 	/**
-	 * Reads in an imglib {@link Image} from the given source
-	 * (e.g., file on disk).
+	 * Reads in an imglib {@link Img} from the given source
+	 * (e.g., file on disk). It will read it into a {@link PlanarImg}, where
+	 * the {@link Type} T is defined by the file format and implements {@link RealType} 
+	 * and {@link NativeType}.
+	 * 
+	 * @throws IncompatibleTypeException if the {@link Type} of the of the file  
+	 * is incompatible with the {@link PlanarImg}
 	 */
-	public <T extends RealType<T> & NativeType<T>> Img<T> openImage(String id)
+	public <T extends RealType<T> & NativeType<T>> Img<T> openImg( final String id )
 		throws FormatException, IOException, IncompatibleTypeException
 	{
-		return openImage(id, new PlanarImgFactory<T>());
+		return openImg( id, new PlanarImgFactory<T>() );
 	}
 
 	/**
-	 * Reads in an imglib {@link Image} from the given source
-	 * (e.g., file on disk), using the given {@link ContainerFactory}
-	 * to construct the {@link Image}.
+	 * Reads in an imglib {@link Img} from the given source
+	 * (e.g., file on disk), using the given {@link ImgFactory}
+	 * to construct the {@link Img}. The {@link Type} T is defined by 
+	 * the file format and implements {@link RealType} 
+	 * and {@link NativeType}. 
 	 * 
-	 * @throws IncompatibleTypeException if the Type of the Image is incompatible with
-	 * the {@link ImgFactory}
+	 * The {@link Type} of the {@link ImgFactory} will be ignored.
+	 * 
+	 * @throws IncompatibleTypeException if the {@link Type} of the {@link Img} 
+	 * is incompatible with the {@link ImgFactory}
 	 */
-	public <T extends RealType<T>> Img<T> openImage(String id,
-		ImgFactory<T> imgFactory) throws FormatException, IOException, IncompatibleTypeException
+	public <T extends RealType<T>> Img<T> openImg( final String id,
+		final ImgFactory<?> imgFactory ) throws FormatException, IOException, IncompatibleTypeException
 	{
-		final IFormatReader r = initializeReader(id);
-		final T type = makeType(r.getPixelType());
+		final IFormatReader r = initializeReader( id );
+		final T type = makeType( r.getPixelType() );
 		final ImgFactory<T> imageFactory = imgFactory.imgFactory( type ); 
-		return openImage(r, imageFactory, type );
+		return openImg( r, imageFactory, type );
 	}
 
 	/**
-	 * Reads in an imglib {@link Image} from the given source
-	 * (e.g., file on disk), using the given {@link ImageFactory}
-	 * to construct the {@link Image}.
+	 * Reads in an imglib {@link Img} from the given source
+	 * (e.g., file on disk), using the given {@link ImgFactory}
+	 * to construct the {@link Img}. The {@link Type} T to read 
+	 * is defined by the third parameter T. 
+	 * 
+	 * @throws IncompatibleTypeException if the {@link Type} T is not valid for the
+	 * given {@link ImgFactory}, the {@link Type} of the {@link ImgFactory}
+	 * itself will be ignored.
 	 */
-	public <T extends RealType<T>> Img<T> openImage(String id,
-		ImgFactory<T> imageFactory, final T type ) throws FormatException, IOException
+	public <T extends RealType<T>> Img<T> openImg( final String id,
+		final ImgFactory<?> imageFactory, final T type ) throws FormatException, IOException, IncompatibleTypeException
 	{
-		final IFormatReader r = initializeReader(id);
-		return openImage(r, imageFactory, type);
+		final IFormatReader r = initializeReader( id );
+		return openImg( r, imageFactory.imgFactory( type ), type );
 	}
 
 	/**
-	 * Reads in an imglib {@link Image} from the given initialized
-	 * {@link IFormatReader}, using the given {@link ImageFactory}.
+	 * Reads in an imglib {@link Img} from the given initialized
+	 * {@link IFormatReader}, using the given {@link ImgFactory}.
+	 * 
+	 * The {@link Type} T to read is defined by the third parameter T
+	 * and it has to match the typing of the {@link ImgFactory}.
 	 */
-	public <T extends RealType<T>> Img<T> openImage(IFormatReader r,
-		ImgFactory<T> imageFactory, final T type) throws FormatException, IOException
+	public <T extends RealType<T>> Img<T> openImg( final IFormatReader r,
+		final ImgFactory<T> imageFactory, final T type ) throws FormatException, IOException
 	{
 		final String[] dimTypes = getDimTypes(r);
 		final long[] dimLengths = getDimLengths(r);
@@ -158,6 +184,7 @@ public class ImgOpener implements StatusReporter {
 		// set calibration of the image
 		// TODO: set calibration
 		// img.setCalibration( getCalibration(r,dimLengths) );
+		this.calibration = getCalibration( r,dimLengths );
 
 		// TODO - create better container types; either:
 		// 1) an array container type using one byte array per plane
@@ -179,6 +206,8 @@ public class ImgOpener implements StatusReporter {
 		final T outputType = type;
 		final boolean compatibleTypes =
 			outputType.getClass().isAssignableFrom(inputType.getClass());
+
+		System.out.println( planarAccess + " " + compatibleTypes );
 
 		final long startTime = System.currentTimeMillis();
 
@@ -202,7 +231,6 @@ public class ImgOpener implements StatusReporter {
 		else {
 			// populate the values directly using PlanarAccess interface;
 			// e.g., to a PlanarContainer
-
 			byte[] plane = null;
 			for (int no=0; no<planeCount; no++) {
 				notifyListeners(new StatusEvent(no, planeCount,
@@ -221,6 +249,11 @@ public class ImgOpener implements StatusReporter {
 
 		return img;
 	}
+	
+	/**
+	 * @return - the calibration of the {@link Img} that was opened last
+	 */
+	public float[] getCalibration() { return calibration; }
 
 	// TODO: eliminate getPlanarAccess in favor of utility method elsewhere.
 
@@ -270,7 +303,7 @@ public class ImgOpener implements StatusReporter {
 	}
 
 	/** Wraps raw primitive array in imglib Array object. */
-	public static ArrayDataAccess<?> makeArray(Object array) {
+	public static ArrayDataAccess<?> makeArray( final Object array ) {
 		final ArrayDataAccess<?> access;
 		if (array instanceof byte[]) {
 			access = new ByteArray((byte[]) array);
@@ -349,7 +382,7 @@ public class ImgOpener implements StatusReporter {
 		r = new ChannelSeparator(r);
 
 		//TODO: Replace code below
-		/*
+		
 		try
 		{
 			ServiceFactory factory = new ServiceFactory();
@@ -363,8 +396,9 @@ public class ImgOpener implements StatusReporter {
 		catch (DependencyException e )
 		{			
 		}
-		*/
 		
+		
+		/*
 		try 
 		{
 			r.setMetadataStore( new OMEXMLServiceImpl().createOMEXMLMetadata() );
@@ -372,6 +406,7 @@ public class ImgOpener implements StatusReporter {
 		catch (ServiceException e) 
 		{
 		}
+		*/
 		
 		r.setId(id);
 
@@ -566,27 +601,29 @@ public class ImgOpener implements StatusReporter {
 		return sb.toString();
 	}
 
-	@SuppressWarnings({"unchecked"})
-	private void populatePlane(IFormatReader r,
-		int no, byte[] plane, PlanarAccess planarAccess)
+	private void populatePlane( final IFormatReader r,
+		final int no, final byte[] plane, final PlanarAccess planarAccess )
 	{
 		final int pixelType = r.getPixelType();
 		final int bpp = FormatTools.getBytesPerPixel(pixelType);
 		final boolean fp = FormatTools.isFloatingPoint(pixelType);
 		final boolean little = r.isLittleEndian();
 		Object planeArray = DataTools.makeDataArray(plane, bpp, fp, little);
-		if (planeArray == plane) {
+		
+		if (planeArray == plane) 
+		{
 			// array was returned by reference; make a copy
 			final byte[] planeCopy = new byte[plane.length];
 			System.arraycopy(plane, 0, planeCopy, 0, plane.length);
 			planeArray = planeCopy;
 		}
-		planarAccess.setPlane(no, makeArray(planeArray));
+		
+		planarAccess.setPlane( no, makeArray(planeArray) );
 	}
 
 	
-	private <T extends RealType<T>> void populatePlane(IFormatReader r,
-			int no, byte[] plane, Img<T> img )
+	private <T extends RealType<T>> void populatePlane( final IFormatReader r,
+			final int no, final byte[] plane, final Img<T> img )
 		{
 			final int sizeX = r.getSizeX();
 			final int pixelType = r.getPixelType();
@@ -638,8 +675,8 @@ public class ImgOpener implements StatusReporter {
 	}
 	*/
 	
-	private static double decodeWord(byte[] plane, int index,
-		int pixelType, boolean little)
+	private static double decodeWord( final byte[] plane, final int index,
+			final int pixelType, final boolean little)
 	{
 		final double value;
 		switch (pixelType) {

@@ -136,7 +136,7 @@ public class ImgPanel extends JPanel {
 
 	private static <T extends RealType<T> & NativeType<T>> Img<T> loadImage(String path) {
 		try {
-			return new ImgOpener().openImage(path);
+			return new ImgOpener().openImg(path);
 		}
 		catch (IncompatibleTypeException e) {
 			e.printStackTrace();

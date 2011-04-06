@@ -69,7 +69,7 @@ public class ReadImage {
 		for (String arg : args) {
 			try
 			{
-				Img< T > img = imageOpener.openImage(arg);
+				Img< T > img = imageOpener.openImg(arg);
 				reportInformation(img);
 			}
 			catch ( IncompatibleTypeException e )
@@ -85,7 +85,7 @@ public class ReadImage {
 		for (String arg : args) {
 			try
 			{
-				Img<FloatType> img = imageOpener.openImage(arg, acf);
+				Img<FloatType> img = imageOpener.openImg(arg, acf);
 				reportInformation(img);
 			}
 			catch ( IncompatibleTypeException e )
@@ -101,7 +101,7 @@ public class ReadImage {
 		for (String arg : args) {
 			try
 			{
-				Img<FloatType> img = imageOpener.openImage(arg, pcf);
+				Img<FloatType> img = imageOpener.openImg(arg, pcf);
 				reportInformation(img);
 			}
 			catch ( IncompatibleTypeException e )
