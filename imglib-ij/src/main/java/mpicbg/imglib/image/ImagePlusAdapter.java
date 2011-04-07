@@ -41,7 +41,6 @@ import mpicbg.imglib.img.imageplus.ImagePlusImgFactory;
 import mpicbg.imglib.img.imageplus.IntImagePlus;
 import mpicbg.imglib.img.imageplus.ShortImagePlus;
 import mpicbg.imglib.type.Type;
-import mpicbg.imglib.type.TypeConverter;
 import mpicbg.imglib.type.numeric.ARGBType;
 import mpicbg.imglib.type.numeric.RealType;
 import mpicbg.imglib.type.numeric.integer.UnsignedByteType;
@@ -110,7 +109,7 @@ public class ImagePlusAdapter
 		//image.setCalibration( spacing );
 	}
 	
-	public static Img<UnsignedByteType> wrapByte( final ImagePlus imp )
+	public static ByteImagePlus<UnsignedByteType> wrapByte( final ImagePlus imp )
 	{
 		if ( imp.getType() != ImagePlus.GRAY8)
 			return null;
@@ -128,7 +127,7 @@ public class ImagePlusAdapter
 		return container;
 	}
 	
-	public static Img<UnsignedShortType> wrapShort( final ImagePlus imp )
+	public static ShortImagePlus<UnsignedShortType> wrapShort( final ImagePlus imp )
 	{
 		if ( imp.getType() != ImagePlus.GRAY16)
 			return null;
@@ -146,7 +145,7 @@ public class ImagePlusAdapter
 		return container;						
 	}
 
-	public static Img<ARGBType> wrapRGBA( final ImagePlus imp )
+	public static IntImagePlus<ARGBType> wrapRGBA( final ImagePlus imp )
 	{
 		if ( imp.getType() != ImagePlus.COLOR_RGB)
 			return null;
@@ -164,7 +163,7 @@ public class ImagePlusAdapter
 		return container;				
 	}	
 	
-	public static Img<FloatType> wrapFloat( final ImagePlus imp )
+	public static FloatImagePlus<FloatType> wrapFloat( final ImagePlus imp )
 	{
 		if ( imp.getType() != ImagePlus.GRAY32)
 			return null;
