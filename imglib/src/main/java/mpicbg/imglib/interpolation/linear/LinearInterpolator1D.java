@@ -43,7 +43,7 @@ public class LinearInterpolator1D<T extends NumericType<T>> extends LinearInterp
 		super( img, interpolatorFactory, outOfBoundsStrategyFactory, false );
 
 		tmpLocation = new int[ 1 ];
-		moveTo( position );		
+		setPosition( position );
 	}
 	
 	@Override
