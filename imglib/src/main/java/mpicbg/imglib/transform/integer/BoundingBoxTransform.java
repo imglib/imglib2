@@ -1,4 +1,5 @@
-package mpicbg.imglib.view;
+package mpicbg.imglib.transform.integer;
+
 
 /**
  * Implemented by Transforms that can transform (easily) a BoundingBox in the

@@ -1,6 +1,5 @@
 package mpicbg.imglib.transform.integer;
 
-import mpicbg.imglib.view.BoundingBox;
 
 
 public abstract class AbstractMixedTransform implements Mixed

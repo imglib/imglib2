@@ -10,6 +10,8 @@ import mpicbg.imglib.RandomAccess;
 import mpicbg.imglib.RandomAccessible;
 import mpicbg.imglib.RandomAccessibleInterval;
 import mpicbg.imglib.transform.Transform;
+import mpicbg.imglib.transform.integer.BoundingBox;
+import mpicbg.imglib.transform.integer.BoundingBoxTransform;
 import mpicbg.imglib.transform.integer.MixedTransform;
 import mpicbg.imglib.util.Util;
 
