@@ -105,6 +105,7 @@ public class TransformBuilder< T >
 
 	protected RandomAccessible< T > wrapMixedTransform( final RandomAccessible< T > s, final MixedTransform t )
 	{
+		final boolean full = t.hasFullSourceMapping();
 		return new RandomAccessible< T >()
 		{
 			@Override
@@ -116,14 +117,20 @@ public class TransformBuilder< T >
 			@Override
 			public RandomAccess< T > randomAccess()
 			{
-				return new MixedRandomAccess< T >( s.randomAccess(), t );
+				if (full)
+					return new FullSourceMapMixedRandomAccess< T >( s.randomAccess(), t );
+				else
+					return new MixedRandomAccess< T >( s.randomAccess(), t );
 			}
 
 			@Override
 			public RandomAccess< T > randomAccess( Interval interval )
 			{
-				return new MixedRandomAccess< T >( s.randomAccess(), t );
+				if (full)
+					return new FullSourceMapMixedRandomAccess< T >( s.randomAccess(), t );
+				else
+					return new MixedRandomAccess< T >( s.randomAccess(), t );
 			}
-		};		
+		};
 	}
 }
