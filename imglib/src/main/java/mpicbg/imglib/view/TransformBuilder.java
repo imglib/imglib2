@@ -18,23 +18,58 @@ import mpicbg.imglib.util.Util;
 public class TransformBuilder< T >
 {
 	/**
-	 * Provides the untransformed random access.
+	 * Get a RandomAccessible which provides RandomAccess to the specified
+	 * {@code interval} of {@code randomAccessible}.
+	 * 
+	 * <p>
+	 * Create a new TransformBuilder that traverses the view hierarchy starting
+	 * from {@code randomAccessible}. {@link #build()} an efficient
+	 * RandomAccessible by joining and simplifying the collected
+	 * transformations.
+	 * </p>
+	 * 
+	 * @param interval
+	 *            The interval in which access is needed.
+	 * @param randomAccessible
 	 */
-	RandomAccessible< T > source;
-	
-	/**
-	 * Interval transformed to the currently visited view.
-	 * null means that the interval is infinite.
-	 */
-	BoundingBox boundingBox;
-	
-	List< Transform > transforms;
-	
 	public static < S > RandomAccessible< S > getEfficientRandomAccessible( Interval interval, RandomAccessible< S > randomAccessible )
 	{
 		return new TransformBuilder< S >( interval, randomAccessible ).build();
 	}
-	
+
+	/**
+	 * Provides the untransformed random access.
+	 */
+	RandomAccessible< T > source;
+
+	/**
+	 * Interval transformed to the currently visited view. null means that the
+	 * interval is infinite.
+	 */
+	BoundingBox boundingBox;
+
+	/**
+	 * List of transforms that have to be applied when wrapping the
+	 * {@link #source} RandomAccess to obtain a RandomAccess in the target
+	 * coordinate system.
+	 */
+	List< Transform > transforms;
+
+	/**
+	 * Create a new TransformBuilder. Starting from {@code randomAccessible}, go
+	 * down the view hierarchy to the RandomAccessible that will provide the
+	 * source RandomAccess into the specified {@code interval}. While traversing
+	 * the view hierarchy transforms are collected into the {@link #transforms}
+	 * list. These transforms have to be applied when wrapping the source
+	 * RandomAccess to obtain a RandomAccess in the coordinate system of
+	 * {@code randomAccessible}.
+	 * 
+	 * @param interval
+	 *            The interval in which access is needed. This is converted to a
+	 *            bounding box which is propagated through the transforms down
+	 *            the view hierarchy.
+	 * @param randomAccessible
+	 */
 	TransformBuilder( Interval interval, RandomAccessible< T > randomAccessible )
 	{
 		transforms = new ArrayList< Transform >();
@@ -42,25 +77,44 @@ public class TransformBuilder< T >
 		System.out.println( randomAccessible );
 		visit( randomAccessible );
 	}
-	
+
+	/**
+	 * Append a transform to the {@link #transforms} list. Also apply the
+	 * transform to {@link #boundingBox}, which This is called while traversing
+	 * the view hierarchy.
+	 * 
+	 * @param t
+	 *            the transform to add.
+	 */
 	protected void appendTransform( Transform t )
 	{
 		if ( BoundingBoxTransform.class.isInstance( t ) )
-			boundingBox = ( (BoundingBoxTransform) t ).transform( boundingBox );
+			boundingBox = ( ( BoundingBoxTransform ) t ).transform( boundingBox );
 		else
 			boundingBox = null;
 		transforms.add( t );
 	}
 
+	/**
+	 * Visit a RandomAccessible (while traversing the view hierarchy). The
+	 * {@code randomAccessible} is handled by
+	 * {@link #visitTransformed(TransformedRandomAccessible)} or
+	 * {@link #visitExtended(ExtendedRandomAccessibleInterval)} when it has the
+	 * appropriate type. Otherwise, the traversal stops and
+	 * {@code randomAccessible} is set as the {@link #source}.
+	 * 
+	 * @param randomAccessible
+	 */
 	@SuppressWarnings( "unchecked" )
 	protected void visit( RandomAccessible< T > randomAccessible )
 	{
-		if ( TransformedRandomAccessible.class.isInstance( randomAccessible ) ) {
+		if ( TransformedRandomAccessible.class.isInstance( randomAccessible ) )
+		{
 			visitTransformed( ( TransformedRandomAccessible< T > ) randomAccessible );
 		}
 		else if ( ExtendedRandomAccessibleInterval.class.isInstance( randomAccessible ) )
 		{
-			visitExtended( ( ExtendedRandomAccessibleInterval< T, ? > ) randomAccessible );			
+			visitExtended( ( ExtendedRandomAccessibleInterval< T, ? > ) randomAccessible );
 		}
 		else
 		{
@@ -68,12 +122,28 @@ public class TransformBuilder< T >
 		}
 	}
 
+	/**
+	 * Visit a TransformedRandomAccessible (while traversing the view
+	 * hierarchy). Append the view's transform to the list and
+	 * {@link #visit(RandomAccessible)} the view's source.
+	 * 
+	 * @param randomAccessible
+	 */
 	protected void visitTransformed( TransformedRandomAccessible< T > randomAccessible )
 	{
 		appendTransform( randomAccessible.getTransformToSource() );
 		visit( randomAccessible.getSource() );
 	}
 
+	/**
+	 * Visit a ExtendedRandomAccessibleInterval (while traversing the view
+	 * hierarchy). If the no out-of-bounds extension is needed for the current
+	 * bounding box, {@link #visit(RandomAccessible)} the view's source.
+	 * Otherwise, the traversal stops and {@code randomAccessible} is set as the
+	 * {@link #source}.
+	 * 
+	 * @param randomAccessible
+	 */
 	protected void visitExtended( ExtendedRandomAccessibleInterval< T, ? > randomAccessible )
 	{
 		RandomAccessibleInterval< T > sourceInterval = randomAccessible.getSource();
@@ -83,6 +153,12 @@ public class TransformBuilder< T >
 			source = randomAccessible;
 	}
 
+	/**
+	 * Simplify the transforms list and create a sequence of wrapped
+	 * RandomAccessibles.
+	 * 
+	 * @return RandomAccessible on the interval specified in the constructor.
+	 */
 	protected RandomAccessible< T > build()
 	{
 		// TODO: simplify transform list
