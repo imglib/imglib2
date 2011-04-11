@@ -12,7 +12,9 @@ import mpicbg.imglib.RandomAccessibleInterval;
 import mpicbg.imglib.transform.Transform;
 import mpicbg.imglib.transform.integer.BoundingBox;
 import mpicbg.imglib.transform.integer.BoundingBoxTransform;
+import mpicbg.imglib.transform.integer.Mixed;
 import mpicbg.imglib.transform.integer.MixedTransform;
+import mpicbg.imglib.transform.integer.TranslationTransform;
 import mpicbg.imglib.util.Util;
 
 public class TransformBuilder< T >
@@ -73,7 +75,7 @@ public class TransformBuilder< T >
 	TransformBuilder( Interval interval, RandomAccessible< T > randomAccessible )
 	{
 		transforms = new ArrayList< Transform >();
-		boundingBox = new BoundingBox( interval );
+		boundingBox = ( interval == null) ? null : new BoundingBox( interval );
 		System.out.println( randomAccessible );
 		visit( randomAccessible );
 	}
@@ -152,6 +154,46 @@ public class TransformBuilder< T >
 		else
 			source = randomAccessible;
 	}
+	
+	public static boolean isIdentity( Mixed t )
+	{
+		final int n = t.numSourceDimensions();
+		final int m = t.numTargetDimensions();
+		if ( n != m )
+			return false;
+
+		for ( int d = 0; d < m; ++d )
+		{
+			if ( t.getTranslation( d ) != 0 )
+				return false;
+			if ( t.getComponentZero( d ) )
+				return false;
+			if ( t.getComponentInversion( d ) )
+				return false;
+			if ( t.getComponentMapping( d ) != d )
+				return false;
+		}
+		return true;
+	}
+
+	public static boolean isTranslation( Mixed t )
+	{
+		final int n = t.numSourceDimensions();
+		final int m = t.numTargetDimensions();
+		if ( n != m )
+			return false;
+
+		for ( int d = 0; d < m; ++d )
+		{
+			if ( t.getComponentZero( d ) )
+				return false;
+			if ( t.getComponentInversion( d ) )
+				return false;
+			if ( t.getComponentMapping( d ) != d )
+				return false;
+		}
+		return true;
+	}
 
 	/**
 	 * Simplify the transforms list and create a sequence of wrapped
@@ -161,22 +203,69 @@ public class TransformBuilder< T >
 	 */
 	protected RandomAccessible< T > build()
 	{
+		mpicbg.imglib.concatenate.Util.join( transforms );
+
 		// TODO: simplify transform list
+		for ( ListIterator< Transform > i = transforms.listIterator( transforms.size() ); i.hasPrevious(); )
+		{
+			Transform t = i.previous();
+			if ( Mixed.class.isInstance( t ) )
+			{
+				Mixed mixed = ( Mixed ) t;
+				if ( isIdentity( mixed ) )
+				{
+					// found identity
+					// remove from transforms list
+					i.remove();
+				}
+				else if ( isTranslation( mixed ) )
+				{
+					// found pure translation
+					// replace by a TranslationTransform
+					final long[] translation = new long[ mixed.numTargetDimensions() ]; 
+					mixed.getTranslation( translation );
+					i.set( new TranslationTransform( translation ) );
+				}
+			}
+		}
+		
+		// build RandomAccessibles
 		RandomAccessible< T > result = source;
 		for ( ListIterator< Transform > i = transforms.listIterator( transforms.size() ); i.hasPrevious(); )
 		{
 			Transform t = i.previous();
 			if ( MixedTransform.class.isInstance( t ) )
 				result = wrapMixedTransform( result, ( MixedTransform ) t );
+			else if ( TranslationTransform.class.isInstance( t ) )
+				result = wrapTranslationTransform( result, ( TranslationTransform ) t );
 			else
 				result = wrapGenericTransform( result, t );
 		}
 		return result;
 	}
-	
+
 	protected RandomAccessible< T > wrapGenericTransform( final RandomAccessible< T > s, final Transform t )
 	{
-		throw new RuntimeException("RandomAccessible for general Transforms is not implemented yet");
+		return new RandomAccessible< T >()
+		{
+			@Override
+			public int numDimensions()
+			{
+				return t.numSourceDimensions();
+			}
+
+			@Override
+			public RandomAccess< T > randomAccess()
+			{
+				return new TransformRandomAccess< T >( s.randomAccess(), t );
+			}
+
+			@Override
+			public RandomAccess< T > randomAccess( Interval interval )
+			{
+				return new TransformRandomAccess< T >( s.randomAccess(), t );
+			}
+		};
 	}
 
 	protected RandomAccessible< T > wrapMixedTransform( final RandomAccessible< T > s, final MixedTransform t )
@@ -193,7 +282,7 @@ public class TransformBuilder< T >
 			@Override
 			public RandomAccess< T > randomAccess()
 			{
-				if (full)
+				if ( full )
 					return new FullSourceMapMixedRandomAccess< T >( s.randomAccess(), t );
 				else
 					return new MixedRandomAccess< T >( s.randomAccess(), t );
@@ -202,10 +291,34 @@ public class TransformBuilder< T >
 			@Override
 			public RandomAccess< T > randomAccess( Interval interval )
 			{
-				if (full)
+				if ( full )
 					return new FullSourceMapMixedRandomAccess< T >( s.randomAccess(), t );
 				else
 					return new MixedRandomAccess< T >( s.randomAccess(), t );
+			}
+		};
+	}
+
+	protected RandomAccessible< T > wrapTranslationTransform( final RandomAccessible< T > s, final TranslationTransform t )
+	{
+		return new RandomAccessible< T >()
+		{
+			@Override
+			public int numDimensions()
+			{
+				return t.numSourceDimensions();
+			}
+
+			@Override
+			public RandomAccess< T > randomAccess()
+			{
+				return new TranslationRandomAccess< T >( s.randomAccess(), t );
+			}
+
+			@Override
+			public RandomAccess< T > randomAccess( Interval interval )
+			{
+				return new TranslationRandomAccess< T >( s.randomAccess(), t );
 			}
 		};
 	}
