@@ -6,18 +6,17 @@ import ij.process.ColorProcessor;
 import mpicbg.imglib.Cursor;
 import mpicbg.imglib.IterableInterval;
 import mpicbg.imglib.RandomAccessible;
+import mpicbg.imglib.RealRandomAccess;
 import mpicbg.imglib.display.ARGBScreenImage;
 import mpicbg.imglib.display.RealARGBConverter;
 import mpicbg.imglib.display.XYProjector;
 import mpicbg.imglib.img.Img;
 import mpicbg.imglib.img.ImgFactory;
 import mpicbg.imglib.img.array.ArrayImgFactory;
-import mpicbg.imglib.interpolation.Interpolator;
 import mpicbg.imglib.interpolation.InterpolatorFactory;
-import mpicbg.imglib.interpolation.randomaccess.NLinearInterpolator;
 import mpicbg.imglib.interpolation.randomaccess.NLinearInterpolatorFactory;
 import mpicbg.imglib.interpolation.randomaccess.NearestNeighborInterpolatorFactory;
-import mpicbg.imglib.io.LOCI;
+import mpicbg.imglib.io.ImgOpener;
 import mpicbg.imglib.type.numeric.ARGBType;
 import mpicbg.imglib.type.numeric.NumericType;
 import mpicbg.imglib.type.numeric.real.FloatType;
@@ -30,7 +29,7 @@ public class OpenAndDisplayInterpolated
 		final int n = to.numDimensions();
 		final double[] fromPosition = new double[ n ];
 		Cursor< T > cursor = to.localizingCursor();
-		Interpolator< T, RandomAccessible< T > > interpolator =  interpolatorFactory.create( from );
+		RealRandomAccess< T > interpolator =  interpolatorFactory.create( from );
 		while ( cursor.hasNext() )
 		{
 			final T t = cursor.next();
@@ -48,8 +47,17 @@ public class OpenAndDisplayInterpolated
 		new ImageJ();
 		
 		ImgFactory< FloatType > imgFactory = new ArrayImgFactory< FloatType >();
-		
-		Img< FloatType > img = LOCI.openLOCIFloatType( "/home/tobias/workspace/imglibworkshop/DrosophilaWing.tif", imgFactory );
+		Img< FloatType > img = null;
+		try
+		{
+			final ImgOpener io = new ImgOpener();
+			img = io.openImg( "/home/tobias/workspace/imglibworkshop/DrosophilaWing.tif", imgFactory, new FloatType() );
+		}
+		catch ( Exception e )
+		{
+			e.printStackTrace();
+			return;
+		}
 
 		Img< FloatType > interpolatedImg = imgFactory.create( new long[] {200, 200}, new FloatType () );
 		
