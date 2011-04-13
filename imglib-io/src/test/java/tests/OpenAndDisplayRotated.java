@@ -8,8 +8,9 @@ import mpicbg.imglib.display.ARGBScreenImage;
 import mpicbg.imglib.display.RealARGBConverter;
 import mpicbg.imglib.display.XYProjector;
 import mpicbg.imglib.img.Img;
+import mpicbg.imglib.img.ImgFactory;
 import mpicbg.imglib.img.array.ArrayImgFactory;
-import mpicbg.imglib.io.LOCI;
+import mpicbg.imglib.io.ImgOpener;
 import mpicbg.imglib.type.numeric.ARGBType;
 import mpicbg.imglib.type.numeric.real.FloatType;
 import mpicbg.imglib.view.Views;
@@ -20,9 +21,20 @@ public class OpenAndDisplayRotated
 	{
 		new ImageJ();
 		
-		Img< FloatType > img = LOCI.openLOCIFloatType( "/home/tobias/Desktop/73.tif",  new ArrayImgFactory<FloatType>() );
+		Img< FloatType > img = null;
+		try
+		{
+			ImgFactory< FloatType > imgFactory = new ArrayImgFactory< FloatType >();
+			final ImgOpener io = new ImgOpener();
+			img = io.openImg( "/home/tobias/Desktop/73.tif", imgFactory, new FloatType() );
+		}
+		catch ( Exception e )
+		{
+			e.printStackTrace();
+			return;
+		}
 		
-		RandomAccessibleInterval< FloatType > view = Views.rotatedView( img, 0, 1 );
+		RandomAccessibleInterval< FloatType > view = Views.rotatedView( Views.hyperSlice( img, 2, 0 ), 0, 1 );
 
 		final ARGBScreenImage screenImage = new ARGBScreenImage( ( int )view.dimension( 0 ), ( int )view.dimension( 1 ) );
 		final XYProjector< FloatType, ARGBType > projector = new XYProjector< FloatType, ARGBType >( view, screenImage, new RealARGBConverter< FloatType >( 0, 127 ) );

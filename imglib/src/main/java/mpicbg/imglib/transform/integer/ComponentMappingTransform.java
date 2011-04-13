@@ -11,10 +11,11 @@ import Jama.Matrix;
  * instance transform (x,y,z) to (x,z,y).
  * 
  * <p>
- * Although it's intended use is a dimension permutation, bijectivity of the
- * mapping is not enforced. The mapping is implemented as a inverse lookup,
- * i.e., every component of the target is read from a source component. The same
- * source component can be mapped to several target components.
+ * The intended use of ComponentMapping is as a dimension permutation. The
+ * mapping is implemented as a inverse lookup, i.e., every component of the
+ * target is read from a source component.
+ * <em>Note, that it is not allowed to set this array such that a source component
+ * is mapped to several target components!</em>
  * </p>
  * 
  * @author Tobias Pietzsch

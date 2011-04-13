@@ -51,8 +51,7 @@ public final class MixedRandomAccess< T > extends AbstractRandomAccess< T >
 
 	private final long[] tmpDistance;
 
-	// TODO make package private
-	public MixedRandomAccess( RandomAccess< T > source, MixedTransform transformToSource )
+	MixedRandomAccess( RandomAccess< T > source, MixedTransform transformToSource )
 	{
 		super( transformToSource.numSourceDimensions() );
 		// n == transformToSource.numSourceDimensions()

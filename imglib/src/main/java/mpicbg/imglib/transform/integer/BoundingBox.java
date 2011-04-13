@@ -1,4 +1,4 @@
-package mpicbg.imglib.view;
+package mpicbg.imglib.transform.integer;
 
 import mpicbg.imglib.FinalInterval;
 import mpicbg.imglib.Interval;

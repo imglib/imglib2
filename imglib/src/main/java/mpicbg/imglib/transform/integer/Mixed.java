@@ -2,7 +2,6 @@ package mpicbg.imglib.transform.integer;
 
 import Jama.Matrix;
 import mpicbg.imglib.transform.Transform;
-import mpicbg.imglib.view.BoundingBoxTransform;
 
 /**
  * Mixed transform allows to express common integer view transformations such as

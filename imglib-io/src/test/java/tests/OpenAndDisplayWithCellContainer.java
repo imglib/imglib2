@@ -9,8 +9,9 @@ import mpicbg.imglib.display.ARGBScreenImage;
 import mpicbg.imglib.display.RealARGBConverter;
 import mpicbg.imglib.display.XYProjector;
 import mpicbg.imglib.img.Img;
+import mpicbg.imglib.img.ImgFactory;
 import mpicbg.imglib.img.cell.CellImgFactory;
-import mpicbg.imglib.io.LOCI;
+import mpicbg.imglib.io.ImgOpener;
 import mpicbg.imglib.type.Type;
 import mpicbg.imglib.type.numeric.ARGBType;
 import mpicbg.imglib.type.numeric.real.FloatType;
@@ -56,19 +57,32 @@ public class OpenAndDisplayWithCellContainer
 	{
 		new ImageJ();
 		
-		Img< FloatType > img = LOCI.openLOCIFloatType( "/home/tobias/workspace/imglibworkshop/DrosophilaWing.tif",  new CellImgFactory<FloatType>( new int[] {64, 64} ) );
+		Img< FloatType > img = null;
+		try
+		{
+			ImgFactory< FloatType > imgFactory = new CellImgFactory<FloatType>( new int[] {64, 64} );
+			final ImgOpener io = new ImgOpener();
+			img = io.openImg( "/home/tobias/Desktop/73.tif", imgFactory, new FloatType() );
+		}
+		catch ( Exception e )
+		{
+			e.printStackTrace();
+			return;
+		}
 
-		final Img< FloatType > copy = img.factory().create( img, new FloatType() );
-		copyLocalizing (img, copy);
+//		final Img< FloatType > copy = img.factory().create( img, new FloatType() );
+//		copyLocalizing (img, copy);
 
-		final Img< FloatType > copy2 = img.factory().create( img, new FloatType() );
-		copyIterating( img, copy2 );
+//		final Img< FloatType > copy2 = img.factory().create( img, new FloatType() );
+//		copyIterating( img, copy2 );
 
-		Img< FloatType > finalImg = copy2;
+		Img< FloatType > finalImg = img;
 
 		final ARGBScreenImage screenImage = new ARGBScreenImage( ( int )finalImg.dimension( 0 ), ( int )finalImg.dimension( 1 ) );
 		final XYProjector< FloatType, ARGBType > projector = new XYProjector< FloatType, ARGBType >( finalImg, screenImage, new RealARGBConverter< FloatType >( 0, 255 ) );
 		
+		projector.setPosition( 0, 2 );
+		projector.setPosition( 20, 3 );
 		projector.map();
 
 		final ColorProcessor cp = new ColorProcessor( screenImage.image() );

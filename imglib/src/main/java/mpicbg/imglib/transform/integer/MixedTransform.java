@@ -12,15 +12,14 @@ import Jama.Matrix;
  * 
  * <p>
  * It transform a n-dimensional source vector to a m-dimensional target vector,
- * and can be represented as a <em>m+1</em> &times;
- * <em>n+1</em> homogeneous matrix.
- * The mixed transform can be decomposed as follows:
+ * and can be represented as a <em>m+1</em> &times; <em>n+1</em> homogeneous
+ * matrix. The mixed transform can be decomposed as follows:
  * <ol>
- *   <li>project down (discard some components of the source vector)</li>
- *   <li>component permutation</li>
- *   <li>component inversion</li>
- *   <li>project up (add zero components in the target vector)</li>
- *   <li>translation</li>
+ * <li>project down (discard some components of the source vector)</li>
+ * <li>component permutation</li>
+ * <li>component inversion</li>
+ * <li>project up (add zero components in the target vector)</li>
+ * <li>translation</li>
  * </ol>
  * </p>
  * 
@@ -442,5 +441,28 @@ public class MixedTransform extends AbstractMixedTransform implements Concatenab
 		}
 
 		return mat;
+	}
+
+	/**
+	 * Check whether the transforms has a full mapping of source to target
+	 * components (no source component is discarded).
+	 * 
+	 * @return whether there is a full mapping of source to target components.
+	 */
+	public boolean hasFullSourceMapping()
+	{
+		final boolean[] sourceMapped = new boolean[ numSourceDimensions ];
+		for ( int d = 0; d < numTargetDimensions; ++d )
+		{
+			if ( !zero[ d ] )
+			{
+				sourceMapped[ component[ d ] ] = true;
+			}
+		}
+		for ( int d = 0; d < numSourceDimensions; ++d )
+		{
+			if ( !sourceMapped[ d ] ) { return false; }
+		}
+		return true;
 	}
 }

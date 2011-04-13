@@ -53,8 +53,7 @@ public final class FullSourceMapMixedRandomAccess< T > extends AbstractSampler< 
 
 	private final long[] tmpDistance;
 
-	// TODO make package private
-	public FullSourceMapMixedRandomAccess( RandomAccess< T > source, Mixed transformToSource )
+	FullSourceMapMixedRandomAccess( RandomAccess< T > source, Mixed transformToSource )
 	{
 		super( transformToSource.numSourceDimensions() );
 		// n == transformToSource.numSourceDimensions()
@@ -210,8 +209,7 @@ public final class FullSourceMapMixedRandomAccess< T > extends AbstractSampler< 
 		assert distance.length >= n;
 
 		// we just loop over the source dimension.
-		// this may not assign all components of the target distance in
-		// tmpDistance[].
+		// this may not assign all components of the target distance in tmpDistance[].
 		// however, the missing components are already assigned to 0
 		for ( int d = 0; d < n; ++d )
 		{
@@ -227,8 +225,7 @@ public final class FullSourceMapMixedRandomAccess< T > extends AbstractSampler< 
 		assert distance.length >= n;
 
 		// we just loop over the source dimension.
-		// this may not assign all components of the target distance in
-		// tmpDistance[].
+		// this may not assign all components of the target distance in tmpDistance[].
 		// however, the missing components are already assigned to 0
 		for ( int d = 0; d < n; ++d )
 		{

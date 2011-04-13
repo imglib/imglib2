@@ -152,7 +152,7 @@ public class MixedTransformView< T > implements TransformedRandomAccessible< T >
 	@Override
 	public RandomAccess< T > randomAccess( Interval interval )
 	{
-		return TransformBuilder.getEfficientRandomAccessible( this, this ).randomAccess(); 
+		return TransformBuilder.getEfficientRandomAccessible( interval, this ).randomAccess(); 
 	}
 
 	@Override
