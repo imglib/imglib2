@@ -19,18 +19,16 @@ package mpicbg.imglib.algorithm.gauss;
 import java.util.Vector;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import mpicbg.imglib.RandomAccessible;
+import mpicbg.imglib.RandomAccessibleInterval;
 import mpicbg.imglib.algorithm.Benchmark;
 import mpicbg.imglib.algorithm.MultiThreaded;
 import mpicbg.imglib.algorithm.OutputAlgorithm;
 import mpicbg.imglib.algorithm.math.ImageConverter;
-import mpicbg.imglib.cursor.LocalizableByDimCursor;
-import mpicbg.imglib.cursor.LocalizableCursor;
-import mpicbg.imglib.function.Converter;
-import mpicbg.imglib.image.Image;
-import mpicbg.imglib.image.ImageFactory;
+import mpicbg.imglib.converter.Converter;
 import mpicbg.imglib.multithreading.Chunk;
 import mpicbg.imglib.multithreading.SimpleMultiThreading;
-import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
+import mpicbg.imglib.outofbounds.OutOfBoundsFactory;
 import mpicbg.imglib.type.Type;
 import mpicbg.imglib.type.numeric.NumericType;
 import mpicbg.imglib.util.Util;
@@ -57,7 +55,7 @@ public class GaussianConvolution3< A extends Type<A>, B extends NumericType<B>, 
 	final Converter<A, B> converterIn; 
 	final Converter<B, C> converterOut;
 	
-	final OutOfBoundsStrategyFactory<B> outOfBoundsFactory;
+	final OutOfBoundsFactory<B> outOfBoundsFactory;
 	int numDimensions;
 	final double[] sigma;
     final double[][] kernel;
@@ -66,7 +64,12 @@ public class GaussianConvolution3< A extends Type<A>, B extends NumericType<B>, 
 	int numThreads;
 	String errorMessage = "";
 
-	public GaussianConvolution3( final Image<A> image, final ImageFactory<B> factoryProcess, final ImageFactory<C> factoryOut, final OutOfBoundsStrategyFactory<B> outOfBoundsFactory, 
+	public GaussianConvolution3( final RandomAccessible<A> input )
+	{
+		
+	}
+	
+	public GaussianConvolution3( final RandomAccessible<A> input, final ImageFactory<B> factoryProcess, final ImageFactory<C> factoryOut, final OutOfBoundsFactory<B> outOfBoundsFactory, 
 									   final Converter<A, B> converterIn, final Converter<B, C> converterOut, final double[] sigma )
 	{
 		this.image = image;
