@@ -259,6 +259,10 @@ public abstract class AbstractRegionOfInterest implements RegionOfInterest {
 		}
 	}
 	
+	protected void invalidateCachedState() {
+		cached_real_min = null;
+		cached_real_max = null;
+	}
 	protected double realMin(int d) {
 		validateRealExtremaCache();
 		return cached_real_min[d];

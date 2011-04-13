@@ -373,6 +373,14 @@ public abstract class AbstractIterableRegionOfInterest extends
 			position[0] = end[0];
 		}
 	}
+	@Override
+	protected void invalidateCachedState() {
+		super.invalidateCachedState();
+		cached_min = null;
+		cached_max = null;
+		cached_size = SIZE_NOT_CACHED;
+	}
+
 	/**
 	 * Get the minimum and maximum corners of a bounding hypercube
 	 * using real coordinates (which might have fractional components)
