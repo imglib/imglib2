@@ -27,6 +27,14 @@ public class PointTest {
 		assertEquals(p.getLongPosition(0), 5);
 		assertEquals(p.getLongPosition(1), 3);
 	}
+	@Test
+	public void testPointLocalizable() {
+		Point p = new Point(new Point(new int[] {15,2,1}));
+		assertEquals(p.numDimensions(), 3);
+		assertEquals(p.getLongPosition(0), 15);
+		assertEquals(p.getLongPosition(1), 2);
+		assertEquals(p.getLongPosition(2), 1);
+	}
 
 	@Test
 	public void testLocalizeFloatArray() {
