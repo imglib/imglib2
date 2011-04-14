@@ -34,6 +34,15 @@ public class Point implements Localizable, Positionable, EuclideanSpace {
 			this.position[i] = position[i];
 		}
 	}
+	
+	/**
+	 * Create a point using the position of a localizable
+	 * @param localizable get position from here
+	 */
+	public Point(Localizable localizable) {
+		position = new long [localizable.numDimensions()];
+		localizable.localize(position);
+	}
 	@Override
 	public void localize(float[] position) {
 		for (int i=0; (i<numDimensions()) && (i<position.length); i++)

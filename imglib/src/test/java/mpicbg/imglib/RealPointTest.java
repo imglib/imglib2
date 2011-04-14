@@ -50,6 +50,14 @@ public class RealPointTest {
 			assertEquals(p.getFloatPosition(i), expected[i], 0);
 		}
 	}
+	@Test
+	public void testRealPointRealLocalizable() {
+		RealPoint p = new RealPoint(new RealPoint(new double[] {15.3,2.1,1.2}));
+		assertEquals(p.numDimensions(), 3);
+		assertEquals(p.getDoublePosition(0), 15.3, 0);
+		assertEquals(p.getDoublePosition(1), 2.1, 0);
+		assertEquals(p.getDoublePosition(2), 1.2, 0);
+	}
 	/**
 	 * Test method for {@link mpicbg.imglib.RealPoint#fwd(int)}.
 	 */

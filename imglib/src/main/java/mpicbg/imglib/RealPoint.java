@@ -37,6 +37,14 @@ public class RealPoint implements RealLocalizable, RealPositionable, EuclideanSp
 		}
 	}
 	
+	/**
+	 * Create a point using the position of a localizable
+	 * @param localizable get position from here
+	 */
+	public RealPoint(RealLocalizable localizable) {
+		position = new double [localizable.numDimensions()];
+		localizable.localize(position);
+	}
 	@Override
 	public void fwd(int d) {
 		position[d] += 1;
