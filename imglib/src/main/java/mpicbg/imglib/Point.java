@@ -175,4 +175,17 @@ public class Point implements Localizable, Positionable, EuclideanSpace {
 		return position[d];
 	}
 
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		char c = '(';
+		for (int i=0; i<numDimensions(); i++) {
+			sb.append(c);
+			sb.append(position[i]);
+			c = ',';
+		}
+		sb.append(")");
+		return sb.toString();
+	}
+
 }
