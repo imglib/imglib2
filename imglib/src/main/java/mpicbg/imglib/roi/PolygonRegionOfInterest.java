@@ -1,6 +1,5 @@
 package mpicbg.imglib.roi;
 
-<<<<<<< HEAD
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -180,23 +179,11 @@ public class PolygonRegionOfInterest extends AbstractIterableRegionOfInterest {
 			return true;
 		}
 		// First case to check: the position given is wholly to the left.
-=======
-public class PolygonRegionOfInterest extends AbstractIterableRegionOfInterest {
-
-	protected PolygonRegionOfInterest() {
-		super(2);
-	}
-
-	@Override
-	protected boolean nextRaster(long[] position, long[] end) {
-		// TODO Auto-generated method stub
->>>>>>> origin/imglib2-roi
 		return false;
 	}
 
 	@Override
 	protected boolean isMember(double[] position) {
-<<<<<<< HEAD
 		return getEdges(position, null, null);
 	}
 
@@ -327,10 +314,4 @@ public class PolygonRegionOfInterest extends AbstractIterableRegionOfInterest {
 		}
 		return left_is_good && right_is_good;
 	}
-=======
-		// TODO Auto-generated method stub
-		return false;
-	}
-
->>>>>>> origin/imglib2-roi
 }
