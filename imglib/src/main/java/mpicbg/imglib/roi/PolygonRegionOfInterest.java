@@ -124,8 +124,40 @@ public class PolygonRegionOfInterest extends AbstractIterableRegionOfInterest {
 	
 	private long getAreaOnBehalfOfSize(double y0, double x0, double y1, double x1) {
 		long x_max = this.max(0) + 1;
-		// Account for y0 at an exact integer location
-		return 0;
+		long x_min = (long)Math.min(x0, x1);
+		// Renormalize
+		x0 = x0 - x_min;
+		x1 = x1 - x_min;
+		x_max = x_max - x_min;
+		//
+		// A pixel at x,y is in the area if
+		// y >= y0
+		// y <= y1
+		// x >= x0 + (y - y0) * (x1 - x0) / (y1 - y0)
+		// x <= x_max
+		//
+		// So the number of pixels at a given y is
+		//
+		// x_max - ceil(x0 + (y - y0) * (x1 - x0) / (y1 - y0))
+		// 
+		// y goes from ceil(y0) to floor(y1) inclusive so
+		//
+		// area = x_max * (floor(y1) - ceil(y0) + 1) -
+		//        sum(ceil(x0 + (y - y0) * (x1 - x0) / (y1 - y0)), ceil(y0), floor(y1))
+		//
+		// and this can be computed by taking the average of the length
+		// of the line at ceil(y0) and at floor(y1), multiplying by floor(y1) - ceil(y0) + 1
+		// and rounding down.
+		//
+		long y1_floor = (long)y1;
+		long y0_ceiling = (long)Math.ceil(y0);
+		long height = (y1_floor - y0_ceiling + 1);
+		long area = x_max * height;
+		double inv_slope = (x1 - x0) / (y1 - y0);
+		long x1_ceiling = (long)Math.ceil(x0 + (y1_floor - y0) * inv_slope);
+		long x0_ceiling = (long)Math.ceil(x0 + (y0_ceiling - y0) * inv_slope);
+		area = (x1_ceiling + x0_ceiling) * height / 2;
+		return area;
 	}
 
 	@Override
