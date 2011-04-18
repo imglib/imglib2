@@ -13,7 +13,7 @@
 
   <artifactId>imglib-ui</artifactId>
 
-  <name>Imglib ImageJ</name>
+  <name>Imglib UI</name>
   <description>ImgLib user interface widgets.</description>
 
   <dependencies>
