@@ -19,7 +19,7 @@ public class CellTest
 {
 	int[][] dim = {
 			{10, 12},
-			{200, 30, 2, 2384},
+			{200, 30, 2, 384},
 			{12, 3, 4, 1, 9}
 		};
 	long[][] offset = {
@@ -29,7 +29,7 @@ public class CellTest
 		};
 	int[] expectedLength = {
 			120,
-			28608000,
+			4608000,
 			1296
 		};
 
