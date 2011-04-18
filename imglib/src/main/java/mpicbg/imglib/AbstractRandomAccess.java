@@ -105,4 +105,7 @@ public abstract class AbstractRandomAccess< T > extends AbstractLocalizableSampl
 			setPosition( localizable.getLongPosition( d ), d );
 		}
 	}
+	
+	@Override
+	abstract public AbstractRandomAccess< T > copy();
 }

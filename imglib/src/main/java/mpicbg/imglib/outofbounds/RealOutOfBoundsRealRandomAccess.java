@@ -49,6 +49,16 @@ public final class RealOutOfBoundsRealRandomAccess< T > extends AbstractSampler<
 	 * @param n number of dimensions in the {@link RealRandomAccessible}.
 	 * @param outOfBounds
 	 */
+	public RealOutOfBoundsRealRandomAccess( final RealOutOfBoundsRealRandomAccess< T > realOutOfBoundsRealRandomAccess )
+	{
+		super( realOutOfBoundsRealRandomAccess.n );
+		this.outOfBounds = realOutOfBoundsRealRandomAccess.outOfBounds.copy();
+	}
+	
+	/**
+	 * @param n number of dimensions in the {@link RealRandomAccessible}.
+	 * @param outOfBounds
+	 */
 	public RealOutOfBoundsRealRandomAccess( final int n, final RealOutOfBounds< T > outOfBounds )
 	{
 		super( n );
@@ -71,6 +81,12 @@ public final class RealOutOfBoundsRealRandomAccess< T > extends AbstractSampler<
 	public T get()
 	{
 		return outOfBounds.get();
+	}
+	
+	@Override
+	public RealOutOfBoundsRealRandomAccess< T > copy()
+	{
+		return new RealOutOfBoundsRealRandomAccess< T >( this );
 	}
 
 	

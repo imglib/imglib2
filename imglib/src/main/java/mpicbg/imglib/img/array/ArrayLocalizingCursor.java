@@ -52,6 +52,25 @@ public class ArrayLocalizingCursor< T extends NativeType< T > > extends Abstract
 	 */
 	protected final int[] max;
 	
+	protected ArrayLocalizingCursor( final ArrayLocalizingCursor< T > cursor )
+	{
+		super( cursor.numDimensions() );
+
+		this.container = cursor.container;
+		this.type = container.createLinkedType();
+		this.lastIndex = ( int )container.size() - 1;
+
+		max = new int[ n ];
+		for( int d = 0; d < n; ++d )
+		{
+			position[ d ] = cursor.position[ d ];
+			max[ d ] = cursor.max[ d ];
+		}
+
+		type.updateIndex( cursor.type.getIndex() );
+		type.updateContainer( this );
+	}
+	
 	public ArrayLocalizingCursor( final ArrayImg< T, ? > container )
 	{
 		super( container.numDimensions() );
@@ -109,5 +128,11 @@ public class ArrayLocalizingCursor< T extends NativeType< T > > extends Abstract
 			position[ d ] = 0;
 
 		type.updateContainer( this );
+	}
+	
+	@Override
+	public ArrayLocalizingCursor< T > copy()
+	{
+		return new ArrayLocalizingCursor< T >( this );
 	}
 }

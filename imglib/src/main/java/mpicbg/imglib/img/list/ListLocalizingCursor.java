@@ -48,6 +48,23 @@ final public class ListLocalizingCursor< T extends Type< T > > extends AbstractL
 	
 	final private ArrayList< T > pixels;
 	
+	public ListLocalizingCursor( final ListLocalizingCursor< T > cursor )
+	{
+		super( cursor.numDimensions() );
+		
+		this.pixels = cursor.pixels;
+		this.maxNumPixels = cursor.maxNumPixels;
+
+		this.max = new long[ n ];
+		for ( int d = 0; d < n; ++d )
+		{
+			max[ d ] = cursor.max[ 0 ];
+			position[ d ] = cursor.position[ d ];
+		}
+	
+		i = cursor.i;
+	}
+	
 	public ListLocalizingCursor( final ListImg< T > img )
 	{
 		super( img.numDimensions() );
@@ -99,4 +116,10 @@ final public class ListLocalizingCursor< T extends Type< T > > extends AbstractL
 
 	@Override
 	public T get() { return pixels.get( i ); }
+	
+	@Override
+	public ListLocalizingCursor< T > copy()
+	{
+		return new ListLocalizingCursor< T >( this );
+	}
 }

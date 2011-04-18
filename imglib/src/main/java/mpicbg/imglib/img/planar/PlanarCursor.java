@@ -52,6 +52,22 @@ public class PlanarCursor< T extends NativeType< T > > extends AbstractCursorInt
 	 */
 	protected int index;
 	
+	protected PlanarCursor( final PlanarCursor< T > cursor )
+	{
+		super( cursor.numDimensions() );
+
+		container = cursor.container;
+		this.type = container.createLinkedType();
+		
+		lastIndex = cursor.lastIndex;
+		lastSliceIndex = cursor.lastSliceIndex;
+		sliceIndex = cursor.sliceIndex;
+		index = cursor.index;
+		
+		type.updateContainer( this );
+		type.updateIndex( index );
+	}
+	
 	public PlanarCursor( final PlanarImg< T, ? > container )
 	{
 		super( container.numDimensions() );
@@ -70,6 +86,12 @@ public class PlanarCursor< T extends NativeType< T > > extends AbstractCursorInt
 
 	@Override
 	public T get() { return type; }
+	
+	@Override
+	public PlanarCursor< T > copy()
+	{
+		return new PlanarCursor< T >( this );
+	}
 
 	/**
 	 * Note: This test is fragile in a sense that it returns true for elements

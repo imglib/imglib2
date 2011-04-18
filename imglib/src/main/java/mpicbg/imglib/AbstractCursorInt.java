@@ -137,4 +137,7 @@ public abstract class AbstractCursorInt< T > extends AbstractSampler< T > implem
 		localize( tmp );
 		return Util.printCoordinates( tmp ) + " = " + get();
 	}
+	
+	@Override
+	abstract public AbstractCursorInt< T > copy();
 }

@@ -103,4 +103,7 @@ public abstract class AbstractLocalizableSamplerInt< T > extends AbstractSampler
 	
 	@Override
 	public String toString(){ return Util.printCoordinates( position ) + " = " + get(); }
+	
+	@Override
+	abstract public AbstractLocalizableSamplerInt< T > copy();
 }

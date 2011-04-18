@@ -44,6 +44,23 @@ public class PlanarRandomAccess< T extends NativeType< T > > extends AbstractRan
 	final protected T type;
 	protected int sliceIndex;
 	
+	protected PlanarRandomAccess( final PlanarRandomAccess< T > randomAccess )
+	{
+		super( randomAccess.numDimensions() );
+		
+		sliceSteps = randomAccess.sliceSteps;
+		width = randomAccess.width;
+		sliceIndex = randomAccess.sliceIndex;
+		
+		for ( int d = 0; d < n; ++d )
+			position[ d ] = randomAccess.position[ d ];
+		
+		type = randomAccess.type.duplicateTypeOnSameNativeImg();
+		type.updateContainer( this );
+		type.updateIndex( randomAccess.type.getIndex() );
+	}
+	
+	
 	public PlanarRandomAccess( final PlanarImg< T, ? > container )
 	{
 		super( container.numDimensions() );
@@ -61,6 +78,12 @@ public class PlanarRandomAccess< T extends NativeType< T > > extends AbstractRan
 
 	@Override
 	public T get() { return type; }
+	
+	@Override
+	public PlanarRandomAccess< T > copy()
+	{
+		return new PlanarRandomAccess< T >( this );
+	}
 	
 	@Override
 	public void fwd( final int d )

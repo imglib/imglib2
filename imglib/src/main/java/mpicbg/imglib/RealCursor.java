@@ -27,10 +27,14 @@
  */
 package mpicbg.imglib;
 
+
 /**
  * 
  *
  * @author Tobias Pietzsch & Stephan Preibisch & Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
 public interface RealCursor< T > extends RealLocalizable, Sampler< T >, Iterator, java.util.Iterator< T >
-{}
+{
+	@Override
+	public RealCursor< T > copy();
+}

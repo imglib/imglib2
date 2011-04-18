@@ -43,9 +43,23 @@ final public class IterableIntervalSubset< T > implements IterableInterval< T >
 		private long index;
 		
 		final private mpicbg.imglib.Cursor< T > cursor;
+		final private boolean localizing; 
+		
+		private Cursor( final Cursor cursor )
+		{
+			this.localizing = cursor.localizing;
+			if ( localizing )
+				this.cursor = interval.localizingCursor();
+			else
+				this.cursor = interval.cursor();
+			
+			index = cursor.index;
+			cursor.jumpFwd( index + 1 );
+		}
 		
 		Cursor( final boolean localizing )
 		{
+			this.localizing = localizing;
 			if ( localizing )
 				cursor = interval.localizingCursor();
 			else
@@ -96,6 +110,12 @@ final public class IterableIntervalSubset< T > implements IterableInterval< T >
 		final public T getType()
 		{
 			return cursor.getType();
+		}
+		
+		@Override
+		final public Cursor copy()
+		{
+			return new Cursor( this );
 		}
 
 		@Override

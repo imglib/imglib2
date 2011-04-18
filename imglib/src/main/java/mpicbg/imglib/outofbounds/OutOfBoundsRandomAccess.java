@@ -45,6 +45,12 @@ public final class OutOfBoundsRandomAccess< T > extends AbstractSampler< T > imp
 	 */
 	final protected OutOfBounds< T > outOfBounds;
 	
+	private OutOfBoundsRandomAccess( final OutOfBoundsRandomAccess< T > outOfBoundsRandomAccess )
+	{
+		super( outOfBoundsRandomAccess.n );
+		this.outOfBounds = outOfBoundsRandomAccess.outOfBounds.copy();
+	}
+	
 	/**
 	 * @param n number of dimensions in the {@link RandomAccessible}.
 	 * @param outOfBounds
@@ -177,4 +183,10 @@ public final class OutOfBoundsRandomAccess< T > extends AbstractSampler< T > imp
 
 	@Override
 	public String toString() { return outOfBounds.toString() + " = " + get(); }
+	
+	@Override
+	public OutOfBoundsRandomAccess< T > copy()
+	{
+		return new OutOfBoundsRandomAccess< T >( this );
+	}
 }

@@ -37,4 +37,6 @@ import mpicbg.imglib.RealRandomAccess;
  */
 public interface RealOutOfBounds< T > extends OutOfBounds< T >, RealRandomAccess< T >
 {
+	@Override
+	public RealOutOfBounds< T > copy();
 }

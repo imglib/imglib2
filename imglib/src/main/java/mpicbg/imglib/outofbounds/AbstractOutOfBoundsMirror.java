@@ -120,6 +120,10 @@ public abstract class AbstractOutOfBoundsMirror< T > implements OutOfBounds< T >
 		return get();
 	}
 	
+	@Override
+	abstract public AbstractOutOfBoundsMirror< T > copy();
+	
+	
 	/* Localizable */
 	
 	@Override

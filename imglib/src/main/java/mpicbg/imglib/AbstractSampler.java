@@ -60,4 +60,7 @@ public abstract class AbstractSampler< T > implements Sampler< T >, EuclideanSpa
 	@Override
 	@Deprecated
 	final public T getType() { return get(); }
+	
+	@Override
+	abstract public AbstractSampler< T > copy();
 }

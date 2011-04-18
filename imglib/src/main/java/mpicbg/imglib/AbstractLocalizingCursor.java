@@ -62,4 +62,7 @@ public abstract class AbstractLocalizingCursor< T > extends AbstractLocalizableS
 		for ( long j = 0; j < steps; ++j )
 			fwd();
 	}
+	
+	@Override
+	abstract public AbstractLocalizingCursor< T > copy();
 }

@@ -58,6 +58,30 @@ public class PlanarLocalizingCursor< T extends NativeType< T > > extends Abstrac
 	 */
 	protected final int[] max;
 	
+	protected PlanarLocalizingCursor( final PlanarLocalizingCursor< T > cursor )
+	{
+		super( cursor.numDimensions() );
+		
+		container = cursor.container;
+		this.type = container.createLinkedType();
+		
+		lastIndex = cursor.lastIndex;
+		lastSliceIndex = cursor.lastSliceIndex;
+		
+		max = new int[ n ];
+		for( int d = 0; d < n; ++d )
+		{
+			max[ d ] = cursor.max[ d ];
+			position[ d ] = cursor.position[ d ];
+		}
+
+		sliceIndex = cursor.sliceIndex;
+		index = cursor.index;
+		
+		type.updateContainer( this );
+		type.updateIndex( index );
+	}
+	
 	public PlanarLocalizingCursor( final PlanarImg< T, ? > container )
 	{
 		super( container.numDimensions() );
@@ -80,6 +104,12 @@ public class PlanarLocalizingCursor< T extends NativeType< T > > extends Abstrac
 
 	@Override
 	public T get() { return type; }
+	
+	@Override
+	public PlanarLocalizingCursor< T > copy()
+	{
+		return new PlanarLocalizingCursor< T >( this );
+	}
 	
 	/**
 	 * Note: This test is fragile in a sense that it returns true for elements

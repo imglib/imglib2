@@ -37,4 +37,6 @@ import mpicbg.imglib.RandomAccess;
  */
 public interface OutOfBounds< T > extends RandomAccess< T >, Bounded
 {
+	@Override
+	public OutOfBounds< T > copy();
 }

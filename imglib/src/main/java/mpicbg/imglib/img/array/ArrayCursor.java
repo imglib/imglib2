@@ -45,6 +45,18 @@ public class ArrayCursor< T extends NativeType< T > > extends AbstractCursorInt<
 	protected final ArrayImg< T, ? > container;
 
 	protected final int lastIndex;
+	
+	protected ArrayCursor( final ArrayCursor< T > cursor )
+	{
+		super( cursor.numDimensions() );
+
+		this.container = cursor.container;
+		this.type = container.createLinkedType();
+		this.lastIndex = ( int )container.size() - 1;
+		
+		type.updateIndex( cursor.type.getIndex() );
+		type.updateContainer( this );
+	}
 
 	public ArrayCursor( final ArrayImg< T, ? > container )
 	{
@@ -53,7 +65,7 @@ public class ArrayCursor< T extends NativeType< T > > extends AbstractCursorInt<
 		this.type = container.createLinkedType();
 		this.container = container;
 		this.lastIndex = ( int )container.size() - 1;
-
+		
 		reset();
 	}
 
@@ -104,5 +116,11 @@ public class ArrayCursor< T extends NativeType< T > > extends AbstractCursorInt<
 	public void localize( final int[] position )
 	{
 		IntervalIndexer.indexToPosition( type.getIndex(), container.dim, position );
+	}
+	
+	@Override
+	public ArrayCursor< T > copy()
+	{
+		return new ArrayCursor< T >( this );
 	}
 }

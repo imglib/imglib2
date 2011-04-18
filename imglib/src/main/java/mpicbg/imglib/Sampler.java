@@ -57,4 +57,6 @@ public interface Sampler< T >
 	
 	@Deprecated
 	public T getType();
+	
+	public Sampler< T > copy();
 }

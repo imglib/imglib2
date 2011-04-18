@@ -42,6 +42,11 @@ import mpicbg.imglib.position.transform.Round;
  */
 public class NearestNeighborInterpolator< T > extends Round< RandomAccess< T > > implements RealRandomAccess< T >
 {
+	protected NearestNeighborInterpolator( final NearestNeighborInterpolator< T > nearestNeighborInterpolator )
+	{
+		super( nearestNeighborInterpolator.target.copy() );
+	}
+	
 	protected NearestNeighborInterpolator( final RandomAccessible< T > randomAccessible )
 	{
 		super( randomAccessible.randomAccess() );
@@ -58,5 +63,11 @@ public class NearestNeighborInterpolator< T > extends Round< RandomAccess< T > >
 	final public T getType()
 	{
 		return get();
+	}
+	
+	@Override
+	public NearestNeighborInterpolator< T > copy()
+	{
+		return new NearestNeighborInterpolator< T >( this );
 	}
 }

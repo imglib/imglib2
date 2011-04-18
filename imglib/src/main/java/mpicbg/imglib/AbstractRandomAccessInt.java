@@ -108,4 +108,7 @@ public abstract class AbstractRandomAccessInt< T > extends AbstractLocalizableSa
 			setPosition( localizable.getIntPosition( d ), d );
 		}
 	}
+	
+	@Override
+	abstract public AbstractRandomAccessInt< T > copy();
 }

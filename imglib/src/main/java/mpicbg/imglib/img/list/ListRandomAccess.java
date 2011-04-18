@@ -47,6 +47,20 @@ public class ListRandomAccess< T extends Type< T > > extends AbstractRandomAcces
 	
 	final private int[] step;
 	
+	public ListRandomAccess( final ListRandomAccess< T > randomAccess ) 
+	{
+		super( randomAccess.numDimensions() );
+		
+		container = randomAccess.container;
+		this.pixels = randomAccess.pixels;
+		this.step = container.getSteps();
+		
+		for ( int d = 0; d < n; ++d )
+			position[ d ] = randomAccess.position[ d ];
+		
+		i = randomAccess.i;
+	}
+	
 	public ListRandomAccess( final ListImg< T > container ) 
 	{
 		super( container.numDimensions() );
@@ -133,4 +147,10 @@ public class ListRandomAccess< T extends Type< T > > extends AbstractRandomAcces
 	
 	@Override
 	public T get(){ return pixels.get( i ); }
+	
+	@Override
+	public ListRandomAccess< T > copy()
+	{
+		return new ListRandomAccess< T >( this );
+	}
 }

@@ -48,6 +48,17 @@ final public class ListCursor< T extends Type< T > > extends AbstractCursor< T >
 	final private ArrayList< T > pixels;
 	final private ListImg< T > container;
 	
+	protected ListCursor( final ListCursor< T > cursor )
+	{
+		super( cursor.numDimensions() );
+		
+		container = cursor.container;
+		this.pixels = container.pixels;
+		this.maxNumPixels = cursor.maxNumPixels;
+		
+		i = cursor.i;
+	}
+	
 	public ListCursor( final ListImg< T > container )
 	{
 		super( container.numDimensions() );
@@ -61,6 +72,12 @@ final public class ListCursor< T extends Type< T > > extends AbstractCursor< T >
 	
 	@Override
 	public T get() { return pixels.get( i ); }
+	
+	@Override
+	public ListCursor< T > copy()
+	{
+		return new ListCursor< T >( this );
+	}
 
 	@Override
 	public boolean hasNext() { return i < maxNumPixels; }

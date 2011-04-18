@@ -41,6 +41,24 @@ public class ArrayRandomAccess< T extends NativeType< T > > extends AbstractRand
 	protected final T type;
 	final ArrayImg< T, ? > container;
 	
+	protected ArrayRandomAccess( final ArrayRandomAccess< T > randomAccess ) 
+	{
+		super( randomAccess.numDimensions() );
+		
+		this.container = randomAccess.container;
+		this.type = container.createLinkedType();
+		
+		int index = 0;
+		for ( int d = 0; d < n; d++ )
+		{
+			position[ d ] = randomAccess.position[ d ];
+			index += position[ d ] * container.steps[ d ];
+		}
+		
+		type.updateContainer( this );
+		type.updateIndex( index );
+	}
+	
 	public ArrayRandomAccess( final ArrayImg< T, ? > container ) 
 	{
 		super( container.numDimensions() );
@@ -51,8 +69,8 @@ public class ArrayRandomAccess< T extends NativeType< T > > extends AbstractRand
 		for ( int d = 0; d < n; d++ )
 			position[ d ] = 0;
 
-		setPosition( position );
 		type.updateContainer( this );
+		type.updateIndex( 0 );
 	}	
 	
 	@Override
@@ -92,27 +110,26 @@ public class ArrayRandomAccess< T extends NativeType< T > > extends AbstractRand
 	@Override
 	public void setPosition( final int[] pos )
 	{
+		int index = 0;
 		for ( int d = 0; d < n; ++d )
 		{
-			if ( pos[ d ] != position[ d ] )
-			{
-				type.incIndex( ( pos[ d ] - position[ d ] ) * container.steps[ d ] );
-				position[ d ] = pos[ d ];
-			}
+			position[ d ] = pos[ d ];
+			index += pos[ d ] * container.steps[ d ];
 		}
+		type.updateIndex( index );
 	}
 	
 	@Override
 	public void setPosition( long[] pos )
 	{
+		int index = 0;
 		for ( int d = 0; d < n; ++d )
 		{
-			if ( pos[ d ] != position[ d ] )
-			{
-				type.incIndex( ( ( int ) pos[ d ] - position[ d ] ) * container.steps[ d ] );
-				position[ d ] = ( int ) pos[ d ];
-			}
+			final int p = ( int )pos[ d ];
+			position[ d ] = p;
+			index += p * container.steps[ d ];
 		}
+		type.updateIndex( index );
 	}
 
 	@Override
@@ -120,5 +137,11 @@ public class ArrayRandomAccess< T extends NativeType< T > > extends AbstractRand
 	{
 		type.incIndex( ( pos - position[ dim ] ) * container.steps[ dim ] );
 		position[ dim ] = pos;
+	}
+	
+	@Override
+	public ArrayRandomAccess< T > copy()
+	{
+		return new ArrayRandomAccess< T >( this );
 	}
 }
