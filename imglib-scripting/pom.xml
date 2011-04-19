@@ -13,8 +13,8 @@
 
   <artifactId>imglib2-scripting</artifactId>
 
-  <name>ImgLib Scripting</name>
-  <description>ImgLib scripting infrastructure.</description>
+  <name>ImgLib2 Scripting</name>
+  <description>ImgLib2 scripting infrastructure.</description>
 
   <organization>
     <name>Fiji Is Just ImageJ</name>

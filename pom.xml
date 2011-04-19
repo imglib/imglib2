@@ -10,18 +10,18 @@
   <version>1.0-SNAPSHOT</version>
   <packaging>pom</packaging>
 
-  <name>ImgLib projects</name>
-  <description>Umbrella project for ImgLib projects.</description>
+  <name>ImgLib2 projects</name>
+  <description>Umbrella project for ImgLib2 projects.</description>
   <url>http://pacific.mpi-cbg.de/wiki/index.php/Imglib</url>
   <inceptionYear>2009</inceptionYear>
 
   <modules>
-    <module>GameOfDeath</module>
+    <!--<module>GameOfDeath</module>-->
     <module>imglib</module>
-    <module>imglib-algorithms</module>
-    <module>imglib-ij</module>
+    <!--<module>imglib-algorithms</module>-->
+    <!--<module>imglib-ij</module>-->
     <module>imglib-io</module>
-    <module>imglib-scripting</module>
+    <!--<module>imglib-scripting</module>-->
     <module>imglib-ui</module>
   </modules>
 

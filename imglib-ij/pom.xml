@@ -13,8 +13,8 @@
 
   <artifactId>imglib2-ij</artifactId>
 
-  <name>ImgLib ImageJ</name>
-  <description>ImgLib display logic using ImageJ.</description>
+  <name>ImgLib2 ImageJ</name>
+  <description>ImgLib2 display logic using ImageJ.</description>
 
   <dependencies>
     <dependency>

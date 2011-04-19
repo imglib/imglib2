@@ -13,7 +13,7 @@
 
   <artifactId>imglib2-io</artifactId>
 
-  <name>ImgLib I/O</name>
+  <name>ImgLib2 I/O</name>
   <description>Reads various file formats using Bio-Formats.</description>
 
   <dependencies>
@@ -32,11 +32,11 @@
       <artifactId>imglib2</artifactId>
       <version>${project.version}</version>
     </dependency>
-    <!-- used only by deprecated LOCI.java -->
+    <!-- TODO: remove this dependency; used only by deprecated LOCI.java -->
     <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>imglib2-ij</artifactId>
-      <version>${project.version}</version>
+      <groupId>mpicbg</groupId>
+      <artifactId>imglib-ij</artifactId>
+      <version>2.0-SNAPSHOT</version>
     </dependency>
 
     <dependency>

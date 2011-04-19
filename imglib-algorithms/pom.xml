@@ -13,7 +13,7 @@
 
   <artifactId>imglib2-algorithms</artifactId>
 
-  <name>ImgLib Algorithms</name>
+  <name>ImgLib2 Algorithms</name>
   <description>Useful image processing algorithms.</description>
 
   <dependencies>

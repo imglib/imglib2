@@ -13,7 +13,7 @@
 
   <artifactId>imglib2</artifactId>
 
-  <name>ImgLib</name>
+  <name>ImgLib2</name>
   <description>A multidimensional, type-agnostic image processing library.</description>
 
   <dependencies>

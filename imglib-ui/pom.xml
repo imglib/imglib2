@@ -13,8 +13,8 @@
 
   <artifactId>imglib2-ui</artifactId>
 
-  <name>ImgLib UI</name>
-  <description>ImgLib user interface widgets.</description>
+  <name>ImgLib2 UI</name>
+  <description>ImgLib2 user interface widgets.</description>
 
   <dependencies>
     <dependency>
