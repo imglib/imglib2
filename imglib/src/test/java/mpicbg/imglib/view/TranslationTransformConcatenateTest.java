@@ -22,9 +22,9 @@ public class TranslationTransformConcatenateTest
 
 		TranslationTransform t1t2 = t1.concatenate( t2 );
 
-		Matrix mt1 = t1.getMatrix(); 
-		Matrix mt2 = t2.getMatrix(); 
-		Matrix mt1t2 = t1t2.getMatrix();
+		Matrix mt1 = new Matrix( t1.getMatrix() ); 
+		Matrix mt2 = new Matrix( t2.getMatrix() ); 
+		Matrix mt1t2 = new Matrix( t1t2.getMatrix() );
 
 		if ( mt1.times( mt2 ).minus( mt1t2 ).normF() > 0.1 ) {
 			System.out.println("=======================");
@@ -59,9 +59,9 @@ public class TranslationTransformConcatenateTest
 
 		TranslationTransform t1t2 = t2.preConcatenate( t1 );
 
-		Matrix mt1 = t1.getMatrix(); 
-		Matrix mt2 = t2.getMatrix(); 
-		Matrix mt1t2 = t1t2.getMatrix();
+		Matrix mt1 = new Matrix( t1.getMatrix() ); 
+		Matrix mt2 = new Matrix( t2.getMatrix() ); 
+		Matrix mt1t2 = new Matrix( t1t2.getMatrix() );
 
 		if ( mt1.times( mt2 ).minus( mt1t2 ).normF() > 0.1 ) {
 			System.out.println("=======================");
