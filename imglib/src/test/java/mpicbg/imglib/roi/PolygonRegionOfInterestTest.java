@@ -309,6 +309,8 @@ public class PolygonRegionOfInterestTest {
 					p.addVertex(i, new RealPoint(new double [] {xi, yi}));
 					if (i == 0) {
 						awtP.moveTo(xi, yi);
+					} else {
+						awtP.lineTo(xi, yi);
 					}
 				}
 				awtP.closePath();
@@ -351,6 +353,8 @@ public class PolygonRegionOfInterestTest {
 					p.addVertex(i, new RealPoint(new double [] {xi, yi}));
 					if (i == 0) {
 						awtP.moveTo(xi, yi);
+					} else {
+						awtP.lineTo(xi, yi);
 					}
 				}
 				awtP.closePath();
