@@ -50,12 +50,26 @@ import mpicbg.imglib.RandomAccessible;
  */
 public class OutOfBoundsMirrorSingleBoundary< T > extends AbstractOutOfBoundsMirror< T >
 {
+	public OutOfBoundsMirrorSingleBoundary( final OutOfBoundsMirrorSingleBoundary< T > outOfBounds )
+	{
+		super( outOfBounds );
+	}
+	
 	public < F extends Interval & RandomAccessible< T > > OutOfBoundsMirrorSingleBoundary( final F f )
 	{
 		super( f );
 		
 		for ( int i = 0; i < dimension.length; ++i )
 			p[ i ] = 2 * dimension[ i ] - 2;
+	}
+	
+	
+
+	/* Sampler */
+	
+	final public OutOfBoundsMirrorSingleBoundary< T > copy()
+	{
+		return new OutOfBoundsMirrorSingleBoundary< T >( this );
 	}
 	
 	

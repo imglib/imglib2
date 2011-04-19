@@ -54,7 +54,7 @@ public class OutOfBoundsConstantValue< T extends Type< T > > implements OutOfBou
 	
 	protected boolean isOutOfBounds = false;
 	
-	public OutOfBoundsConstantValue( final OutOfBoundsConstantValue< T > outOfBounds )
+	protected OutOfBoundsConstantValue( final OutOfBoundsConstantValue< T > outOfBounds )
 	{
 		this.value = outOfBounds.value.copy();
 		this.sampler = outOfBounds.sampler.copy();

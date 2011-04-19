@@ -58,6 +58,28 @@ public abstract class AbstractOutOfBoundsMirror< T > implements OutOfBounds< T >
 	
 	protected boolean isOutOfBounds = false;
 	
+	protected AbstractOutOfBoundsMirror( final AbstractOutOfBoundsMirror< T > outOfBounds )
+	{
+		n = outOfBounds.numDimensions();
+		dimension = new long[ n ];
+		min = new long[ n ];
+		position = new long[ n ];
+		p = new long[ n ];
+		dimIsOutOfBounds = new boolean[ n ];
+		inc = new boolean[ n ];
+		for ( int d = 0; d < n; ++d )
+		{
+			dimension[ d ] = outOfBounds.dimension[ d ];
+			min[ d ] = outOfBounds.min[ d ];
+			position[ d ] = outOfBounds.position[ d ];
+			p[ d ] = outOfBounds.p[ d ];
+			dimIsOutOfBounds[ d ] = outOfBounds.dimIsOutOfBounds[ d ];
+			inc[ d ] = outOfBounds.inc[ d ];
+		}
+		
+		outOfBoundsRandomAccess = outOfBounds.outOfBoundsRandomAccess.copy();
+	}
+	
 	public < F extends Interval & RandomAccessible< T > > AbstractOutOfBoundsMirror( final F f )
 	{
 		n = f.numDimensions();
