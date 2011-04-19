@@ -63,7 +63,7 @@ public interface KNearestNeighborSearch< T >
 	
 
 	/**
-	 * Access the location of the <em>i</em><sup>th</sup> nearest neighbor,
+	 * Access the position of the <em>i</em><sup>th</sup> nearest neighbor,
 	 * ordered by square Euclidean distance.
 	 * 
 	 * @param i
