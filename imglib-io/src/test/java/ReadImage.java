@@ -42,6 +42,7 @@ import mpicbg.imglib.img.ImgFactory;
 import mpicbg.imglib.img.array.ArrayImgFactory;
 import mpicbg.imglib.img.planar.PlanarImgFactory;
 import mpicbg.imglib.io.ImageOpener;
+import mpicbg.imglib.io.ImgPlus;
 import mpicbg.imglib.type.NativeType;
 import mpicbg.imglib.type.numeric.RealType;
 import mpicbg.imglib.type.numeric.real.FloatType;
@@ -54,23 +55,25 @@ public class ReadImage {
 	{
 		final ImageOpener imageOpener = new ImageOpener();
 
+		final String[] ids;
 		if (args.length == 0) {
 			final String userHome = System.getProperty("user.home");
-			args = new String[] {
+			ids = new String[] {
 //				userHome + "/data/Spindle_Green_d3d.dv",
 				userHome + "/data/mitosis-test.ipw",
 //				userHome + "/data/test_greys.lif",
 				userHome + "/data/slice1_810nm_40x_z1_pcc100_scanin_20s_01.sdt"
 			};
 		}
+		else ids = args;
 
 		// read all arguments using auto-detected type with default container
 		System.out.println("== AUTO-DETECTED TYPE, DEFAULT CONTAINER ==");
-		for (String arg : args) {
+		for (String id : ids) {
 			try
 			{
-				Img< T > img = imageOpener.openImage(arg);
-				reportInformation(img);
+				ImgPlus< T > img = imageOpener.openImage(id);
+				reportInformation(img.getImg());
 			}
 			catch ( IncompatibleTypeException e )
 			{
@@ -85,8 +88,8 @@ public class ReadImage {
 		for (String arg : args) {
 			try
 			{
-				Img<FloatType> img = imageOpener.openImage(arg, acf);
-				reportInformation(img);
+				ImgPlus<FloatType> img = imageOpener.openImage(arg, acf);
+				reportInformation(img.getImg());
 			}
 			catch ( IncompatibleTypeException e )
 			{
@@ -101,8 +104,8 @@ public class ReadImage {
 		for (String arg : args) {
 			try
 			{
-				Img<FloatType> img = imageOpener.openImage(arg, pcf);
-				reportInformation(img);
+				ImgPlus<FloatType> img = imageOpener.openImage(arg, pcf);
+				reportInformation(img.getImg());
 			}
 			catch ( IncompatibleTypeException e )
 			{
@@ -111,7 +114,7 @@ public class ReadImage {
 		}
 	}
 
-	/** Prints out some useful information about the {@link Image}. */
+	/** Prints out some useful information about the {@link Img}. */
 	public static <T extends RealType<T>> void reportInformation(Img<T> img) {
 		System.out.println(img);
 		final Cursor<T> cursor = img.cursor();
