@@ -30,7 +30,6 @@ package mpicbg.imglib.nearestneighbor;
 
 import mpicbg.imglib.RealLocalizable;
 import mpicbg.imglib.Sampler;
-import mpicbg.imglib.img.NativeImg;
 
 /**
  * <em>k</em>-nearest-neighbor search in an Euclidean space.  The interace
@@ -54,18 +53,13 @@ public interface KNearestNeighborSearch< T >
 
 	/**
 	 * Access the data of the <em>i</em><sup>th</sup> nearest neighbor, ordered
-	 * by square Euclidean distance.  If possible, data is provided per
-	 * reference and might thus be writable.  Nevertheless, if the search is
-	 * implemented on a dataset that accesses data through re-used proxy
-	 * objects (such as {@link NativeImg}, then this will not be the case.  In
-	 * that situation, you will need to acquire a {@link Sampler}, e.g. a
-	 * {@link RandomAccess) at the corresponding location, to get write access
-	 * on the respective element.
+	 * by square Euclidean distance.  Data is accessed through a {@link Sampler}
+	 * that guarantees write access if the underlying data set is writable.
 	 * 
 	 * @param i
 	 * @return
 	 */
-	public T get( final int i );
+	public Sampler< T > getSampler( final int i );
 	
 
 	/**
