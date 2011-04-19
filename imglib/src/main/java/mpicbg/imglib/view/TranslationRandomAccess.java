@@ -26,6 +26,15 @@ public final class TranslationRandomAccess< T > extends AbstractSampler< T > imp
 		tmp = new long[ n ];
 	}
 
+	protected TranslationRandomAccess( final TranslationRandomAccess< T > randomAccess )
+	{
+		super( randomAccess.numDimensions() );
+
+		s = randomAccess.s.copy();
+		translation = randomAccess.translation.clone();
+		tmp = new long[ n ];
+	}
+
 	@Override
 	public void localize( int[] position )
 	{
@@ -173,5 +182,11 @@ public final class TranslationRandomAccess< T > extends AbstractSampler< T > imp
 	public T get()
 	{
 		return s.get();
+	}
+
+	@Override
+	public TranslationRandomAccess< T > copy()
+	{
+		return new TranslationRandomAccess< T >( this );
 	}
 }

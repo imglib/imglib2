@@ -30,6 +30,14 @@ public final class TransformRandomAccess< T > extends AbstractRandomAccess< T >
 		this.transformToSource = transformToSource;
 		this.tmp = new long[ transformToSource.numTargetDimensions() ];
 	}
+
+	protected TransformRandomAccess( final TransformRandomAccess< T > randomAccess )
+	{
+		super( randomAccess.numDimensions() );
+		this.source = randomAccess.source.copy();
+		this.transformToSource = randomAccess.transformToSource;
+		this.tmp = new long[ randomAccess.tmp.length ];
+	}
 	
 	@Override
 	public void fwd( int d )
@@ -137,5 +145,11 @@ public final class TransformRandomAccess< T > extends AbstractRandomAccess< T >
 	public T get()
 	{
 		return source.get();
+	}
+
+	@Override
+	public TransformRandomAccess< T > copy()
+	{
+		return new TransformRandomAccess< T >( this );
 	}
 }

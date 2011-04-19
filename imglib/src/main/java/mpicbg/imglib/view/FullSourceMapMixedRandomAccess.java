@@ -89,6 +89,20 @@ public final class FullSourceMapMixedRandomAccess< T > extends AbstractSampler< 
 		tmpDistance = new long[ m ];
 	}
 
+	protected FullSourceMapMixedRandomAccess( final FullSourceMapMixedRandomAccess< T > randomAccess )
+	{
+		super( randomAccess.numDimensions() );
+
+		this.s = randomAccess.s.copy();
+		this.m = randomAccess.m; 
+		this.translation = randomAccess.translation.clone();
+		this.sourceInv = randomAccess.sourceInv.clone();
+		this.sourceComponent = randomAccess.sourceComponent.clone();
+
+		tmpPosition = translation.clone();
+		tmpDistance = new long[ m ];
+	}
+
 	@Override
 	public void localize( int[] position )
 	{
@@ -312,5 +326,11 @@ public final class FullSourceMapMixedRandomAccess< T > extends AbstractSampler< 
 	public T get()
 	{
 		return s.get();
+	}
+
+	@Override
+	public FullSourceMapMixedRandomAccess< T > copy()
+	{
+		return new FullSourceMapMixedRandomAccess< T >( this );
 	}
 }

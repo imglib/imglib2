@@ -16,6 +16,12 @@ public final class RandomAccessibleZeroMinIntervalCursor< T > extends Localizing
 		randomAccess = interval.randomAccess();
 	}
 
+	protected RandomAccessibleZeroMinIntervalCursor( final RandomAccessibleZeroMinIntervalCursor< T > cursor )
+	{
+		super( cursor );
+		this.randomAccess = cursor.randomAccess.copy();
+	}
+
 	@Override
 	public T get()
 	{
@@ -40,5 +46,11 @@ public final class RandomAccessibleZeroMinIntervalCursor< T > extends Localizing
 	@Override
 	public void remove()
 	{
+	}
+
+	@Override
+	public RandomAccessibleZeroMinIntervalCursor< T > copy()
+	{
+		return new RandomAccessibleZeroMinIntervalCursor< T >( this );
 	}
 }

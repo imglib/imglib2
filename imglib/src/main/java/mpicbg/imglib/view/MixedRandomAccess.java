@@ -92,6 +92,22 @@ public final class MixedRandomAccess< T > extends AbstractRandomAccess< T >
 		tmpDistance = new long[ m ];		
 	}
 
+	protected MixedRandomAccess( final MixedRandomAccess< T > randomAccess )
+	{
+		super( randomAccess.numDimensions() );
+
+		this.s = randomAccess.s.copy();
+		this.m = randomAccess.m;
+
+		this.translation = randomAccess.translation.clone();
+		this.sourceZero = randomAccess.sourceZero.clone();
+		this.sourceInv = randomAccess.sourceInv.clone();
+		this.sourceComponent = randomAccess.sourceComponent.clone();
+
+		tmpPosition = translation.clone();
+		tmpDistance = new long[ m ];		
+	}
+
 	@Override
 	public void fwd( int d )
 	{
@@ -260,5 +276,11 @@ public final class MixedRandomAccess< T > extends AbstractRandomAccess< T >
 	public T get()
 	{
 		return s.get();
+	}
+
+	@Override
+	public MixedRandomAccess< T > copy()
+	{
+		return new MixedRandomAccess< T >( this );
 	}
 }
