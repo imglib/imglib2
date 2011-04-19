@@ -54,7 +54,7 @@ public abstract class AbstractNativeLabeling<T extends Comparable<T>, A extends 
 	@Override
 	public LabelingType<T> createLinkedType()
 	{
-		try{ return linkedType.duplicateTypeOnSameNativeContainer(); }
+		try{ return linkedType.duplicateTypeOnSameNativeImg(); }
 		catch ( NullPointerException e ){ return null; }
 	}
 }

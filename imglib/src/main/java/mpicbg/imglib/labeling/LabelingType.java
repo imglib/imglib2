@@ -209,7 +209,7 @@ public class LabelingType<T extends Comparable<T>> extends AbstractNativeType<La
 	}
 
 	@Override
-	public LabelingType<T> duplicateTypeOnSameNativeContainer() {
+	public LabelingType<T> duplicateTypeOnSameNativeImg() {
 		LabelingType<T> t = new LabelingType<T>(storage, mapping, generation);
 		return t;
 	}
