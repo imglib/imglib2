@@ -59,13 +59,6 @@ public class NearestNeighborInterpolator< T > extends Round< RandomAccess< T > >
 	}
 	
 	@Override
-	@Deprecated
-	final public T getType()
-	{
-		return get();
-	}
-	
-	@Override
 	public NearestNeighborInterpolator< T > copy()
 	{
 		return new NearestNeighborInterpolator< T >( this );

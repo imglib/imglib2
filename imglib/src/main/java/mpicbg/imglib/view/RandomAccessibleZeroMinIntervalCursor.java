@@ -30,13 +30,6 @@ public final class RandomAccessibleZeroMinIntervalCursor< T > extends Localizing
 	}
 
 	@Override
-	@Deprecated
-	public T getType()
-	{
-		return get();
-	}
-
-	@Override
 	public T next()
 	{
 		fwd();

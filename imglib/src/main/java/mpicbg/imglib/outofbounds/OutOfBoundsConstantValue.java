@@ -132,10 +132,6 @@ public class OutOfBoundsConstantValue< T extends Type< T > > implements OutOfBou
 	}
 	
 	@Override
-	@Deprecated
-	final public T getType(){ return get(); }
-	
-	@Override
 	final public OutOfBoundsConstantValue< T > copy()
 	{
 		return new OutOfBoundsConstantValue< T >( this );

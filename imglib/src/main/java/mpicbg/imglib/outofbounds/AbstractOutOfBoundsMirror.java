@@ -134,13 +134,6 @@ public abstract class AbstractOutOfBoundsMirror< T > implements OutOfBounds< T >
 	{
 		return outOfBoundsRandomAccess.get();
 	}
-
-	@Override
-	@Deprecated
-	final public T getType()
-	{
-		return get();
-	}
 	
 	@Override
 	abstract public AbstractOutOfBoundsMirror< T > copy();

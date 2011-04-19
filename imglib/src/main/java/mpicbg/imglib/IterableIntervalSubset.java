@@ -106,13 +106,6 @@ final public class IterableIntervalSubset< T > implements IterableInterval< T >
 		}
 
 		@Override
-		@Deprecated
-		final public T getType()
-		{
-			return cursor.getType();
-		}
-		
-		@Override
 		final public Cursor copy()
 		{
 			return new Cursor( this );

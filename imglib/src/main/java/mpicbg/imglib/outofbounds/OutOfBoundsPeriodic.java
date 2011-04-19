@@ -132,13 +132,6 @@ public class OutOfBoundsPeriodic< T > implements OutOfBounds< T >
 	{
 		return outOfBoundsRandomAccess.get();
 	}
-
-	@Override
-	@Deprecated
-	final public T getType()
-	{
-		return get();
-	}
 	
 	@Override
 	final public OutOfBoundsPeriodic< T > copy()

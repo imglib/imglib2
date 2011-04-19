@@ -261,11 +261,4 @@ public class NLinearInterpolator< T extends NumericType< T > > extends Floor< Ra
 			System.out.print("0");
 		System.out.print ( binary );
 	}
-
-	@Override
-	@Deprecated
-	final public T getType()
-	{
-		return get();
-	}
 }
