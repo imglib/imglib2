@@ -129,6 +129,6 @@ public class KNearestNeighborSearchOnIterableRealInterval< T > implements KNeare
 	@Override
 	public RealCursor< T > getSampler( final int i )
 	{
-		return elements.get( i );
+		return elements[ i ];
 	}
 }
