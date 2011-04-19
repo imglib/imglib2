@@ -24,6 +24,20 @@ public class CellCursor< T extends NativeType< T >, A extends ArrayDataAccess< A
 	 */
 	protected boolean isNotLastCell;
 
+	protected CellCursor( final CellCursor< T, A > cursor )
+	{
+		super( cursor.numDimensions() );
+		
+		this.type = cursor.type.duplicateTypeOnSameNativeImg();
+		this.cursorOnCells = cursor.cursorOnCells.copy();
+		isNotLastCell = cursor.isNotLastCell;
+		lastIndexInCell = cursor.lastIndexInCell;
+		index = cursor.index;
+		
+		type.updateContainer( this );
+		type.updateIndex( index );
+	}
+	
 	public CellCursor( final CellImg< T, A > container )
 	{
 		super( container.numDimensions() );
@@ -44,6 +58,12 @@ public class CellCursor< T extends NativeType< T >, A extends ArrayDataAccess< A
 	public T get()
 	{
 		return type;
+	}
+	
+	@Override
+	public CellCursor< T, A > copy()
+	{
+		return new CellCursor< T, A >( this );
 	}
 
 	@Override

@@ -31,6 +31,33 @@ public class CellRandomAccess< T extends NativeType< T >, A extends ArrayDataAcc
 	 * It is faster to duplicate this here than to access it through type.getIndex(). 
 	 */
 	protected int index;
+	
+	protected CellRandomAccess( final CellRandomAccess< T, A > randomAccess )
+	{
+		super( randomAccess.numDimensions() );
+		
+		this.type = randomAccess.type.duplicateTypeOnSameNativeImg();
+		this.cursorOnCells = randomAccess.cursorOnCells.copy();
+		this.defaultCellDims = randomAccess.defaultCellDims;
+		
+		this.positionOfCurrentCell = new long[ n ];
+		this.positionInCell = new long[ n ];
+		
+		for ( int d = 0; d < n; ++d )
+		{
+			position[ d ] = randomAccess.position[ d ];
+			positionOfCurrentCell[ d ] = randomAccess.positionOfCurrentCell[ d ];
+			positionInCell[ d ] = randomAccess.positionInCell[ d ];
+		}
+		
+		currentCellSteps = randomAccess.currentCellSteps;
+		currentCellMin = randomAccess.currentCellMin;
+		currentCellMax = randomAccess.currentCellMax;
+
+		index = randomAccess.index;
+		type.updateContainer( this );
+		type.updateIndex( index );
+	}
 
 	public CellRandomAccess( final CellImg< T, A > container )
 	{
@@ -61,6 +88,12 @@ public class CellRandomAccess< T extends NativeType< T >, A extends ArrayDataAcc
 	public T get()
 	{
 		return type;
+	}
+	
+	@Override
+	public CellRandomAccess< T, A > copy()
+	{
+		return new CellRandomAccess< T, A >( this );
 	}
 	
 	@Override

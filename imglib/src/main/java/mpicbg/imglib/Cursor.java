@@ -33,4 +33,7 @@ package mpicbg.imglib;
  * @author Tobias Pietzsch & Stephan Preibisch & Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
 public interface Cursor< T > extends RealCursor< T >, Localizable
-{}
+{
+	@Override
+	public Cursor< T > copy();
+}

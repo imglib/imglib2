@@ -26,6 +26,29 @@ public class CellLocalizingCursor< T extends NativeType< T >, A extends ArrayDat
 	 */
 	protected boolean isNotLastCell;
 
+	protected CellLocalizingCursor( final CellLocalizingCursor< T, A > cursor )
+	{
+		super( cursor.numDimensions() );
+		
+		this.type = cursor.type.duplicateTypeOnSameNativeImg();
+		this.cursorOnCells = cursor.cursorOnCells.copy();
+		this.minPositionInCell = new long[ n ];
+		this.maxPositionInCell = new long[ n ];
+		
+		isNotLastCell = cursor.isNotLastCell;
+		lastIndexInCell = cursor.lastIndexInCell;
+		for ( int d = 0; d < n; ++d )
+		{
+			minPositionInCell[ d ] = cursor.minPositionInCell[ d ];
+			maxPositionInCell[ d ] = cursor.maxPositionInCell[ d ];
+			position[ d ] = cursor.position[ d ];
+		}
+		index = cursor.index;
+		
+		type.updateContainer( this );
+		type.updateIndex( index );
+	}
+	
 	public CellLocalizingCursor( final CellImg< T, A > container )
 	{
 		super( container.numDimensions() );
@@ -50,7 +73,15 @@ public class CellLocalizingCursor< T extends NativeType< T >, A extends ArrayDat
 	{
 		return type;
 	}
-
+	
+	
+	@Override
+	public CellLocalizingCursor< T, A > copy()
+	{
+		return new CellLocalizingCursor< T, A >( this );
+	}
+	
+	
 	@Override
 	public boolean hasNext()
 	{
