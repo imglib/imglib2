@@ -62,6 +62,24 @@ public class OutOfBoundsPeriodic< T > implements OutOfBounds< T >
 	
 	protected boolean isOutOfBounds = false;
 	
+	public OutOfBoundsPeriodic( final OutOfBoundsPeriodic< T > outOfBounds )
+	{
+		n = outOfBounds.numDimensions();
+		dimension = new long[ n ];
+		min = new long[ n ];
+		position = new long[ n ];
+		dimIsOutOfBounds = new boolean[ n ];
+		for ( int d = 0; d < n; ++d )
+		{
+			dimension[ d ] = outOfBounds.dimension[ d ];
+			min[ d ] = outOfBounds.min[ d ];
+			position[ d ] = outOfBounds.position[ d ];
+			dimIsOutOfBounds[ d ] = outOfBounds.dimIsOutOfBounds[ d ];
+		}
+		
+		outOfBoundsRandomAccess = outOfBounds.outOfBoundsRandomAccess.copy();
+	}
+	
 	public < F extends Interval & RandomAccessible< T > > OutOfBoundsPeriodic( final F f )
 	{
 		n = f.numDimensions();
@@ -106,6 +124,7 @@ public class OutOfBoundsPeriodic< T > implements OutOfBounds< T >
 		return isOutOfBounds;
 	}
 	
+	
 	/* Sampler */
 	
 	@Override
@@ -119,6 +138,12 @@ public class OutOfBoundsPeriodic< T > implements OutOfBounds< T >
 	final public T getType()
 	{
 		return get();
+	}
+	
+	@Override
+	final public OutOfBoundsPeriodic< T > copy()
+	{
+		return new OutOfBoundsPeriodic< T >( this );
 	}
 	
 	/* Localizable */

@@ -75,6 +75,22 @@ public class NLinearInterpolator< T extends NumericType< T > > extends Floor< Ra
 
 	final protected T tmp;
 
+	protected NLinearInterpolator( final NLinearInterpolator< T > interpolator )
+	{
+		super( interpolator.target.copy() );
+		
+		weights = interpolator.weights.clone();		
+		code = interpolator.code;
+		accumulator = interpolator.accumulator.copy();
+		tmp = interpolator.tmp.copy();
+		
+		for ( int d = 0; d < n; ++d )
+		{
+			position[ d ] = interpolator.position[ d ];
+			floor[ d ] = interpolator.floor[ d ];
+		}
+	}
+	
 	protected NLinearInterpolator( final RandomAccessible< T > randomAccessible, final T type )
 	{
 		super( randomAccessible.randomAccess() );
@@ -158,6 +174,7 @@ public class NLinearInterpolator< T extends NumericType< T > > extends Floor< Ra
 	 * <p>
 	 * {@see http://en.wikipedia.org/wiki/Gray_code}
 	 */
+	@Override
 	public T get()
 	{
 		fillWeights();
@@ -170,6 +187,12 @@ public class NLinearInterpolator< T extends NumericType< T > > extends Floor< Ra
 		target.bck( n - 1 );
 		
 		return accumulator;
+	}
+	
+	@Override
+	public NLinearInterpolator< T > copy()
+	{
+		return new NLinearInterpolator< T >( this );
 	}
 
 	final private void graycodeFwdRecursive ( int dimension )

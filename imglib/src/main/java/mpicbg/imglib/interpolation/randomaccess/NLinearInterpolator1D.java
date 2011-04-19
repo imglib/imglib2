@@ -38,6 +38,11 @@ import mpicbg.imglib.type.numeric.NumericType;
  */
 public class NLinearInterpolator1D< T extends NumericType< T > > extends NLinearInterpolator< T > 
 {	
+	protected NLinearInterpolator1D( final NLinearInterpolator1D< T > interpolator )
+	{
+		super( interpolator );
+	}
+	
 	protected NLinearInterpolator1D( final RandomAccessible< T > randomAccessible, final T type )
 	{
 		super( randomAccessible, type );
@@ -74,5 +79,11 @@ public class NLinearInterpolator1D< T extends NumericType< T > > extends NLinear
 		target.bck( 0 );
 
 		return accumulator;
+	}
+	
+	@Override
+	public NLinearInterpolator1D< T > copy()
+	{
+		return new NLinearInterpolator1D< T >( this );
 	}
 }
