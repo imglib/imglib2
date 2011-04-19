@@ -6,15 +6,15 @@
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-    <groupId>mpicbg</groupId>
-    <artifactId>imglib-base</artifactId>
-    <version>2.0-SNAPSHOT</version>
+    <groupId>net.imglib2</groupId>
+    <artifactId>imglib2-base</artifactId>
+    <version>1.0-SNAPSHOT</version>
   </parent>
 
-  <artifactId>imglib-ij</artifactId>
+  <artifactId>imglib2-ij</artifactId>
 
-  <name>Imglib ImageJ</name>
-  <description>Imglib display logic using ImageJ.</description>
+  <name>ImgLib ImageJ</name>
+  <description>ImgLib display logic using ImageJ.</description>
 
   <dependencies>
     <dependency>
@@ -24,12 +24,12 @@
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>imglib</artifactId>
+      <artifactId>imglib2</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>imglib-algorithms</artifactId>
+      <artifactId>imglib2-algorithms</artifactId>
       <version>${project.version}</version>
     </dependency>
     <!-- TODO: define a real POM for mpicbg project -->
@@ -68,7 +68,7 @@
     </plugins>
   </build>
 
-  <!-- NB: for imglib-base, in case of partial checkout -->
+  <!-- NB: for project parent, in case of partial checkout -->
   <repositories>
     <repository>
       <id>imagej.releases</id>
