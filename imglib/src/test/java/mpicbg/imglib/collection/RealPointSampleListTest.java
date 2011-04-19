@@ -1,4 +1,4 @@
-package mpicbg.imglib.samples;
+package mpicbg.imglib.collection;
 
 import static org.junit.Assert.assertTrue;
 

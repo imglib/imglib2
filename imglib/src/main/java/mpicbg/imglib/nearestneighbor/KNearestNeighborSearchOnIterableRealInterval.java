@@ -28,8 +28,6 @@
 
 package mpicbg.imglib.nearestneighbor;
 
-import java.util.ArrayList;
-
 import mpicbg.imglib.IterableRealInterval;
 import mpicbg.imglib.RealCursor;
 import mpicbg.imglib.RealLocalizable;
@@ -44,7 +42,7 @@ public class KNearestNeighborSearchOnIterableRealInterval< T > implements KNeare
 {
 	final protected IterableRealInterval< T > iterable;
 	
-	final protected int k;
+	final protected int k, n;
 	final protected RealCursor< T >[] elements;
 	final protected double[] squareDistances;
 	
@@ -60,7 +58,7 @@ public class KNearestNeighborSearchOnIterableRealInterval< T > implements KNeare
 	final protected double squareDistance( final RealLocalizable query )
 	{
 		double squareSum = 0;
-		for ( int d = 0; d < k; ++d )
+		for ( int d = 0; d < n; ++d )
 		{
 			final double distance = query.getDoublePosition( d ) - referenceLocation[ d ];
 			squareSum += distance * distance;
@@ -73,6 +71,7 @@ public class KNearestNeighborSearchOnIterableRealInterval< T > implements KNeare
 	{
 		this.iterable = iterable;
 		this.k = k;
+		n = iterable.numDimensions();
 		
 		elements = ( RealCursor< T >[] )( new RealCursor[ k ] );
 		squareDistances = new double[ k ];
