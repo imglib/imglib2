@@ -23,38 +23,35 @@ import mpicbg.imglib.display.ARGBScreenImage;
 import mpicbg.imglib.display.RealARGBConverter;
 import mpicbg.imglib.display.XYProjector;
 import mpicbg.imglib.exception.IncompatibleTypeException;
-import mpicbg.imglib.img.Img;
-import mpicbg.imglib.img.ImgFactory;
-import mpicbg.imglib.img.array.ArrayImgFactory;
 import mpicbg.imglib.io.ImageOpener;
+import mpicbg.imglib.io.ImgPlus;
 import mpicbg.imglib.type.NativeType;
 import mpicbg.imglib.type.numeric.ARGBType;
 import mpicbg.imglib.type.numeric.RealType;
-import mpicbg.imglib.type.numeric.real.FloatType;
 
 public class ImgPanel extends JPanel {
 
 	public class ImgData<T extends RealType<T> & NativeType<T>> {
 		public String name;
-		public Img<T> img;
+		public ImgPlus<T> imgPlus;
 		public ImgPanel owner;
 		public int width, height;
 		public ARGBScreenImage screenImage;
 		public RealARGBConverter<T> converter;
 		public XYProjector<T, ARGBType> projector;
 
-		public ImgData(final String name, final Img<T> img,
+		public ImgData(final String name, final ImgPlus<T> imgPlus,
 			final ImgPanel owner)
 		{
 			this.name = name;
-			this.img = img;
+			this.imgPlus = imgPlus;
 			this.owner = owner;
-			width = (int) img.dimension(0);
-			height = (int) img.dimension(1);
+			width = (int) imgPlus.getImg().dimension(0);
+			height = (int) imgPlus.getImg().dimension(1);
 			screenImage = new ARGBScreenImage(width, height);
 			final int min = 0, max = 255;
 			converter = new RealARGBConverter<T>(min, max);
-			projector = new XYProjector<T, ARGBType>(img,
+			projector = new XYProjector<T, ARGBType>(imgPlus.getImg(),
 				screenImage, converter);
 			projector.map();
 		}
@@ -65,8 +62,8 @@ public class ImgPanel extends JPanel {
 			setBorder(new TitledBorder(imgData.name));
 			setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 			// add one slider per dimension beyond the first two
-			for (int d=2; d<imgData.img.numDimensions(); d++) {
-				final int dimLength = (int) imgData.img.dimension(d);
+			for (int d=2; d<imgData.imgPlus.getImg().numDimensions(); d++) {
+				final int dimLength = (int) imgData.imgPlus.getImg().dimension(d);
 				final JScrollBar bar = new JScrollBar(Adjustable.HORIZONTAL,
 					0, 1, 0, dimLength);
 				final int dim = d;
@@ -85,8 +82,8 @@ public class ImgPanel extends JPanel {
 		}
 	}
 
-	private List<ImgData<?>> images = new ArrayList<ImgData<?>>();
-	private int maxWidth = 0, maxHeight = 0;
+	protected List<ImgData<?>> images = new ArrayList<ImgData<?>>();
+	protected int maxWidth = 0, maxHeight = 0;
 
 	public ImgPanel() {
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
@@ -107,7 +104,7 @@ public class ImgPanel extends JPanel {
 	}
 
 	public <T extends RealType<T> & NativeType<T>> void addImage(final String name,
-		final Img<T> img)
+		final ImgPlus<T> img)
 	{
 		final ImgData<T> imgData = new ImgData<T>(name, img, this);
 		images.add(imgData);
@@ -125,7 +122,7 @@ public class ImgPanel extends JPanel {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		final ImgPanel imgPanel = new ImgPanel();
 		for (String path : paths) {
-			final Img<T> img = loadImage(path);
+			final ImgPlus<T> img = loadImage(path);
 			imgPanel.addImage(path, img);
 		}
 		frame.setContentPane(imgPanel);
@@ -134,7 +131,7 @@ public class ImgPanel extends JPanel {
 		frame.setVisible(true);
 	}
 
-	private static <T extends RealType<T> & NativeType<T>> Img<T> loadImage(String path) {
+	private static <T extends RealType<T> & NativeType<T>> ImgPlus<T> loadImage(String path) {
 		try {
 			return new ImageOpener().openImage(path);
 		}
