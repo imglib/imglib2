@@ -54,6 +54,26 @@ public class OutOfBoundsConstantValue< T extends Type< T > > implements OutOfBou
 	
 	protected boolean isOutOfBounds = false;
 	
+	public OutOfBoundsConstantValue( final OutOfBoundsConstantValue< T > outOfBounds )
+	{
+		this.value = outOfBounds.value.copy();
+		this.sampler = outOfBounds.sampler.copy();
+		n = outOfBounds.n;
+		dimension = new long[ n ];
+		min = new long[ n ];
+		max = new long[ n ];
+		position = new long[ n ];
+		dimIsOutOfBounds = new boolean[ n ];
+		for ( int d = 0; d < n; ++d )
+		{
+			dimension[ d ] = outOfBounds.dimension[ d ];
+			min[ d ] = outOfBounds.min[ d ];
+			max[ d ] = outOfBounds.max[ d ];
+			position[ d ] = outOfBounds.position[ d ];
+			dimIsOutOfBounds[ d ] = outOfBounds.dimIsOutOfBounds[ d ];
+		}
+	}
+	
 	public < F extends Interval & RandomAccessible< T > > OutOfBoundsConstantValue( final F f, final T value )
 	{
 		this.sampler = f.randomAccess();
@@ -114,6 +134,12 @@ public class OutOfBoundsConstantValue< T extends Type< T > > implements OutOfBou
 	@Override
 	@Deprecated
 	final public T getType(){ return get(); }
+	
+	@Override
+	final public OutOfBoundsConstantValue< T > copy()
+	{
+		return new OutOfBoundsConstantValue< T >( this );
+	}
 	
 	
 	/* RasterLocalizable */
