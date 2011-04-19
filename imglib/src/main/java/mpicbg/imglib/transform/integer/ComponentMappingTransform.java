@@ -4,7 +4,6 @@ import mpicbg.imglib.Localizable;
 import mpicbg.imglib.Positionable;
 import mpicbg.imglib.concatenate.Concatenable;
 import mpicbg.imglib.concatenate.PreConcatenable;
-import Jama.Matrix;
 
 /**
  * Map the components of the source vector to obtain the target vector, for
@@ -77,10 +76,18 @@ public class ComponentMappingTransform extends AbstractMixedTransform implements
 	}
 
 	@Override
-	public Matrix getMatrix()
+	public double[][] getMatrix()
 	{
-		// TODO Auto-generated method stub
-		return null;
+		double[][] mat = new double[ numTargetDimensions + 1 ][ numTargetDimensions + 1 ];
+
+		mat[ numTargetDimensions ][ numTargetDimensions] = 1;
+
+		for ( int d = 0; d < numTargetDimensions; ++d )
+		{
+			mat[ d ][ component[ d ] ] = 1 ;
+		}
+
+		return mat;
 	}
 
 	@Override

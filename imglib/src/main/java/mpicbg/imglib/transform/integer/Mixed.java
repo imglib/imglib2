@@ -1,6 +1,5 @@
 package mpicbg.imglib.transform.integer;
 
-import Jama.Matrix;
 import mpicbg.imglib.transform.Transform;
 
 /**
@@ -117,5 +116,5 @@ public interface Mixed extends Transform, BoundingBoxTransform
 	 * Get the matrix that transforms homogeneous source points to homogeneous
 	 * target points. For testing purposes.
 	 */
-	public Matrix getMatrix();
+	public double[][] getMatrix();
 }

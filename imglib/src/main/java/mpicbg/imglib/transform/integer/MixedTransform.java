@@ -4,7 +4,6 @@ import mpicbg.imglib.Localizable;
 import mpicbg.imglib.Positionable;
 import mpicbg.imglib.concatenate.Concatenable;
 import mpicbg.imglib.concatenate.PreConcatenable;
-import Jama.Matrix;
 
 /**
  * Mixed transform allows to express common integer view transformations such as
@@ -421,22 +420,22 @@ public class MixedTransform extends AbstractMixedTransform implements Concatenab
 	 * target points. For testing purposes.
 	 */
 	@Override
-	public Matrix getMatrix()
+	public double[][] getMatrix()
 	{
-		Matrix mat = new Matrix( numTargetDimensions + 1, numSourceDimensions + 1 );
+		double[][] mat = new double[ numTargetDimensions + 1 ][ numSourceDimensions + 1 ];
 
-		mat.set( numTargetDimensions, numSourceDimensions, 1 );
+		mat[ numTargetDimensions ][ numSourceDimensions] = 1;
 
 		for ( int d = 0; d < numTargetDimensions; ++d )
 		{
-			mat.set( d, numSourceDimensions, translation[ d ] );
+			mat[ d ][ numSourceDimensions ] = translation[ d ];
 		}
 
 		for ( int d = 0; d < numTargetDimensions; ++d )
 		{
 			if ( zero[ d ] == false )
 			{
-				mat.set( d, component[ d ], invert[ d ] ? -1 : 1 );
+				mat[ d ][ component[ d ] ] = invert[ d ] ? -1 : 1 ;
 			}
 		}
 

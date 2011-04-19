@@ -23,9 +23,9 @@ public class MixedTransformConcatenateTest
 
 		MixedTransform t1t2 = t1.concatenate( t2 );
 
-		Matrix mt1 = t1.getMatrix(); 
-		Matrix mt2 = t2.getMatrix(); 
-		Matrix mt1t2 = t1t2.getMatrix();
+		Matrix mt1 = new Matrix( t1.getMatrix() ); 
+		Matrix mt2 = new Matrix( t2.getMatrix() ); 
+		Matrix mt1t2 = new Matrix( t1t2.getMatrix() );
 
 		if ( mt1.times( mt2 ).minus( mt1t2 ).normF() > 0.1 ) {
 			System.out.println("=======================");
@@ -60,9 +60,9 @@ public class MixedTransformConcatenateTest
 
 		MixedTransform t1t2 = t2.preConcatenate( t1 );
 
-		Matrix mt1 = t1.getMatrix(); 
-		Matrix mt2 = t2.getMatrix(); 
-		Matrix mt1t2 = t1t2.getMatrix();
+		Matrix mt1 = new Matrix( t1.getMatrix() ); 
+		Matrix mt2 = new Matrix( t2.getMatrix() ); 
+		Matrix mt1t2 = new Matrix( t1t2.getMatrix() );
 
 		if ( mt1.times( mt2 ).minus( mt1t2 ).normF() > 0.1 ) {
 			System.out.println("=======================");
@@ -305,13 +305,13 @@ public class MixedTransformConcatenateTest
 		MixedTransformConcatenateTest test = new MixedTransformConcatenateTest();
 		test.setUp();
 		
-		Matrix m_tr1 = test.tr1.getMatrix(); 
-		Matrix m_tr2 = test.tr2.getMatrix(); 
-		Matrix m_perm1 = test.perm1.getMatrix(); 
-		Matrix m_rot1 = test.rot1.getMatrix(); 
-		Matrix m_proj1 = test.proj1.getMatrix(); 
-		Matrix m_proj2 = test.proj2.getMatrix(); 
-		Matrix m_comp1 = test.comp1.getMatrix(); 
+		Matrix m_tr1 = new Matrix( test.tr1.getMatrix() ); 
+		Matrix m_tr2 = new Matrix( test.tr2.getMatrix() ); 
+		Matrix m_perm1 = new Matrix( test.perm1.getMatrix() ); 
+		Matrix m_rot1 = new Matrix( test.rot1.getMatrix() ); 
+		Matrix m_proj1 = new Matrix( test.proj1.getMatrix() ); 
+		Matrix m_proj2 = new Matrix( test.proj2.getMatrix() ); 
+		Matrix m_comp1 = new Matrix( test.comp1.getMatrix() ); 
 
 		System.out.print( "tr1 = " );
 		m_tr1.print( 1, 0 );

@@ -4,7 +4,6 @@ import mpicbg.imglib.Localizable;
 import mpicbg.imglib.Positionable;
 import mpicbg.imglib.concatenate.Concatenable;
 import mpicbg.imglib.concatenate.PreConcatenable;
-import Jama.Matrix;
 
 public class TranslationTransform extends AbstractMixedTransform implements Translation, Concatenable< Translation >, PreConcatenable< Translation >
 {
@@ -127,16 +126,16 @@ public class TranslationTransform extends AbstractMixedTransform implements Tran
 	 * target points. For testing purposes.
 	 */
 	@Override
-	public Matrix getMatrix()
+	public double[][] getMatrix()
 	{
-		Matrix mat = new Matrix( numTargetDimensions + 1, numTargetDimensions + 1 );
+		double[][] mat = new double[ numTargetDimensions + 1][ numTargetDimensions + 1 ];
 
-		mat.set( numTargetDimensions, numTargetDimensions, 1 );
+		mat[ numTargetDimensions ][ numTargetDimensions] = 1 ;
 
 		for ( int d = 0; d < numTargetDimensions; ++d )
 		{
-			mat.set( d, numTargetDimensions, translation[ d ] );
-			mat.set( d, d, 1 );
+			mat[ d ][ numTargetDimensions ] = translation[ d ];
+			mat[ d ][ d ] = 1;
 		}
 
 		return mat;
@@ -216,16 +215,16 @@ public class TranslationTransform extends AbstractMixedTransform implements Tran
 		}
 
 		@Override
-		public Matrix getMatrix()
+		public double[][] getMatrix()
 		{
-			Matrix mat = new Matrix( numTargetDimensions + 1, numTargetDimensions + 1 );
+			double[][] mat = new double[ numTargetDimensions + 1 ][ numTargetDimensions + 1 ];
 
-			mat.set( numTargetDimensions, numTargetDimensions, 1 );
+			mat[ numTargetDimensions][ numTargetDimensions ] = 1;
 
 			for ( int d = 0; d < numTargetDimensions; ++d )
 			{
-				mat.set( d, numTargetDimensions, -translation[ d ] );
-				mat.set( d, d, 1 );
+				mat[ d ][ numTargetDimensions ] = -translation[ d ];
+				mat[ d ][ d ] = 1;
 			}
 
 			return mat;

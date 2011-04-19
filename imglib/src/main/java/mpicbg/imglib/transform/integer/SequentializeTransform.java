@@ -31,7 +31,7 @@ public class SequentializeTransform implements InvertibleTransform
 
 	protected final InvertibleTransform inverse;
 
-	SequentializeTransform( final long[] sourceDimensions, final int numTargetDimensions )
+	public SequentializeTransform( final long[] sourceDimensions, final int numTargetDimensions )
 	{
 		this.numSourceDimensions = sourceDimensions.length;
 		this.numTargetDimensions = numTargetDimensions;
