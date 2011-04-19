@@ -21,15 +21,14 @@ import static org.junit.Assert.*;
 
 import java.util.List;
 
+import mpicbg.imglib.Cursor;
 import mpicbg.imglib.algorithm.labeling.AllConnectedComponents;
 import mpicbg.imglib.algorithm.labeling.Watershed;
-import mpicbg.imglib.container.DirectAccessContainerFactory;
-import mpicbg.imglib.container.array.ArrayContainerFactory;
-import mpicbg.imglib.cursor.LocalizableCursor;
-import mpicbg.imglib.image.Image;
-import mpicbg.imglib.image.ImageFactory;
-import mpicbg.imglib.labeling.Labeling;
+import mpicbg.imglib.img.NativeImg;
+import mpicbg.imglib.img.array.ArrayImgFactory;
+import mpicbg.imglib.img.basictypeaccess.IntAccess;
 import mpicbg.imglib.labeling.LabelingType;
+import mpicbg.imglib.labeling.NativeImgLabeling;
 import mpicbg.imglib.type.numeric.integer.IntType;
 
 import org.junit.Test;
@@ -38,51 +37,58 @@ public class WatershedTest {
 	private void testSeededCase2D(int [][] image,
 			              	int [][] seeds,
 			              	int [][] expected,
-			              	int [][] structuringElement,
+			              	long [][] structuringElement,
 			              	int background) {
-		int [] imageDimensions = new int [] { image.length, image[0].length };
-		int [] seedDimensions = new int [] { seeds.length, seeds[0].length };
-		int [] outputDimensions = new int [] { expected.length, expected[0].length };
-		DirectAccessContainerFactory containerFactory = new ArrayContainerFactory();
-		ImageFactory<IntType> intFactory = new ImageFactory<IntType>(new IntType(), containerFactory);
-		Image<IntType> imageImage = intFactory.createImage(imageDimensions);
-		ImageFactory<LabelingType<Integer>> labelingFactory = new ImageFactory<LabelingType<Integer>>(new LabelingType<Integer>(), containerFactory);
-		Labeling<Integer> seedLabeling = new Labeling<Integer>(labelingFactory, seedDimensions, "Seeds");
-		Labeling<Integer> outputLabeling = new Labeling<Integer>(labelingFactory, outputDimensions, "Output");
+		long [] imageDimensions = new long [] { image.length, image[0].length };
+		long [] seedDimensions = new long [] { seeds.length, seeds[0].length };
+		long [] outputDimensions = new long [] { expected.length, expected[0].length };
+		NativeImgLabeling<Integer> seedLabeling = new NativeImgLabeling<Integer>(seedDimensions);
+		seedLabeling.setLinkedType(new LabelingType<Integer>(seedLabeling));
+		NativeImgLabeling<Integer> outputLabeling = new NativeImgLabeling<Integer>(outputDimensions);
+		outputLabeling.setLinkedType(new LabelingType<Integer>(outputLabeling));
+		NativeImg<IntType, ? extends IntAccess> imageImage = 
+			new ArrayImgFactory<IntType>().createIntInstance(imageDimensions, 1);
+		imageImage.setLinkedType(new IntType(imageImage));
 		/*
 		 * Fill the image.
 		 */
-		LocalizableCursor<IntType> ic = imageImage.createLocalizableCursor();
-		int [] position = imageImage.createPositionArray();
-		for (IntType t:ic) {
-			ic.getPosition(position);
+		Cursor<IntType> ic = imageImage.localizingCursor();
+		int [] position = new int [imageImage.numDimensions()];
+		while(ic.hasNext()) {
+			IntType t = ic.next();
+			ic.localize(position);
 			t.set(image[position[0]][position[1]]);
 		}
-		ic.close();
 		/*
 		 * Fill the seeded image
 		 */
-		LocalizableCursor<LabelingType<Integer>> sc = seedLabeling.createLocalizableCursor();
-		for (LabelingType<Integer> t:sc) {
-			sc.getPosition(position);
+		Cursor<LabelingType<Integer>> sc = seedLabeling.localizingCursor();
+		while(sc.hasNext()) {
+			LabelingType<Integer> t = sc.next();
+			sc.localize(position);
 			int seedLabel = seeds[position[0]][position[1]];
 			if (seedLabel == background) continue;
 			t.setLabel(seedLabel);
 		}
-		sc.close();
 		if (structuringElement == null) {
 			structuringElement = AllConnectedComponents.getStructuringElement(2);
 		}
 		/*
 		 * Run the seeded watershed algorithm
 		 */
-		Watershed.seededWatershed(imageImage, seedLabeling, structuringElement, outputLabeling);
+		Watershed<IntType, Integer> watershed = new Watershed<IntType, Integer>();
+		watershed.setSeeds(seedLabeling);
+		watershed.setIntensityImage(imageImage);
+		watershed.setStructuringElement(structuringElement);
+		watershed.setOutputLabeling(outputLabeling);
+		assertTrue(watershed.process());
 		/*
 		 * Check against expected
 		 */
-		LocalizableCursor<LabelingType<Integer>> oc = outputLabeling.createLocalizableCursor();
-		for (LabelingType<Integer> t:oc) {
-			oc.getPosition(position);
+		Cursor<LabelingType<Integer>> oc = outputLabeling.localizingCursor();
+		while(oc.hasNext()) {
+			LabelingType<Integer> t = oc.next(); 
+			oc.localize(position);
 			int expectedLabel = expected[position[0]][position[1]];
 			List<Integer> l = t.getLabeling(); 
 			if (expectedLabel == background) {

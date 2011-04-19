@@ -4,20 +4,19 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import mpicbg.imglib.Cursor;
 import mpicbg.imglib.algorithm.OutputAlgorithm;
 import mpicbg.imglib.algorithm.fft.FourierConvolution;
 import mpicbg.imglib.algorithm.math.ComputeMinMax;
 import mpicbg.imglib.algorithm.math.ImageConverter;
 import mpicbg.imglib.algorithm.math.PickImagePeaks;
-import mpicbg.imglib.cursor.LocalizableByDimCursor;
-import mpicbg.imglib.cursor.LocalizableCursor;
-import mpicbg.imglib.cursor.special.RegionOfInterestCursor;
-import mpicbg.imglib.function.Converter;
-import mpicbg.imglib.function.RealTypeConverter;
-import mpicbg.imglib.image.Image;
-import mpicbg.imglib.image.ImageFactory;
+import mpicbg.imglib.img.Img;
+import mpicbg.imglib.img.ImgFactory;
+import mpicbg.imglib.img.NativeImgFactory;
+import mpicbg.imglib.img.array.ArrayImgFactory;
 import mpicbg.imglib.labeling.Labeling;
 import mpicbg.imglib.labeling.LabelingType;
+import mpicbg.imglib.labeling.NativeImgLabeling;
 import mpicbg.imglib.type.numeric.RealType;
 import mpicbg.imglib.type.numeric.real.FloatType;
 import mpicbg.imglib.util.Util;
@@ -49,7 +48,7 @@ import mpicbg.imglib.util.Util;
 public class GradientWatershed<T extends RealType<T>, L extends Comparable<L>>
 implements OutputAlgorithm<LabelingType<L>>
 {
-	protected Image<T> input;
+	protected Img<T> input;
 	protected Labeling<L> output;
 	protected double [] scale;
 	protected double [] sigma1;
@@ -59,11 +58,11 @@ implements OutputAlgorithm<LabelingType<L>>
 	protected double minForegroundPeakHeight = 0;
 	protected boolean wantsToQuantize = true;
 	protected int numQuanta = 100;
-	protected int [][] structuringElement;
+	protected long [][] structuringElement;
 	protected String error_message;
-	protected ImageFactory<LabelingType<L>> labelingFactory;
-	protected Image<FloatType> floatImage;
-	protected ImageFactory<FloatType> floatFactory;
+	protected NativeImgFactory<LabelingType<L>> labelingFactory;
+	protected Img<FloatType> floatImage;
+	protected Img<FloatType> floatFactory;
 	/**
 	 * Constructor
 	 * 
@@ -82,7 +81,7 @@ implements OutputAlgorithm<LabelingType<L>>
 	 * generator if you don't care about names.
 	 */
 	public GradientWatershed(
-			Image<T> input,
+			Img<T> input,
 			double [] scale,
 			double [] sigma1,
 			double [] sigma2,
@@ -91,10 +90,9 @@ implements OutputAlgorithm<LabelingType<L>>
 		this.scale = scale;
 		this.sigma1 = sigma1;
 		this.sigma2 = sigma2;
-		structuringElement = AllConnectedComponents.getStructuringElement(input.getNumDimensions());
+		structuringElement = AllConnectedComponents.getStructuringElement(input.numDimensions());
 		this.names = names;
-		labelingFactory = new ImageFactory<LabelingType<L>>(
-				new LabelingType<L>(), input.getContainerFactory());
+		labelingFactory = new ArrayImgFactory<LabelingType<L>>();
 	}
 	
 	/**
@@ -104,12 +102,12 @@ implements OutputAlgorithm<LabelingType<L>>
 	 * 
 	 * @return the structuring element that defines connectivity
 	 */
-	public int [][] getStructuringElement() {
+	public long [][] getStructuringElement() {
 		return cloneStructuringElement(structuringElement);
 	}
 	
-	static protected int [][] cloneStructuringElement(int [][] structuringElement) {
-		int [][] result = structuringElement.clone();
+	static protected long [][] cloneStructuringElement(long [][] structuringElement) {
+		long [][] result = structuringElement.clone();
 		for (int i=0; i<result.length; i++)
 			result[i] = result[i].clone();
 		return result;
@@ -126,7 +124,7 @@ implements OutputAlgorithm<LabelingType<L>>
 	 * analog structuring element is used.
 	 * @param structuringElement - the new structuring element.
 	 */
-	public void setStructuringElement(int [][] structuringElement) {
+	public void setStructuringElement(long [][] structuringElement) {
 		this.structuringElement = cloneStructuringElement(structuringElement);
 	}
 	/**
@@ -238,11 +236,11 @@ implements OutputAlgorithm<LabelingType<L>>
 	 * @param factory - a customized factory for generating the labeling
 	 * containers.
 	 */
-	public void setOutputImageFactory(ImageFactory<LabelingType<L>> factory) {
+	public void setOutputImageFactory(NativeImgFactory<LabelingType<L>> factory) {
 		labelingFactory = factory;
 	}
 	
-	public ImageFactory<LabelingType<L>> getOutputImageFactory() {
+	public ImgFactory<LabelingType<L>> getOutputImageFactory() {
 		return labelingFactory;
 	}
 	
@@ -302,7 +300,7 @@ implements OutputAlgorithm<LabelingType<L>>
 			error_message = "The dimensions of sigma2 do not match those of the image";
 			return false;
 		}
-		for (int [] coord:structuringElement) {
+		for (long [] coord:structuringElement) {
 			if (coord == null) {
 				error_message = "One of the coordinates of the structuring element is null.";
 				return false;
@@ -323,16 +321,17 @@ implements OutputAlgorithm<LabelingType<L>>
 			}
 		}
 		if (output != null) {
-			int [] dimensions = output.getDimensions();
+			long [] dimensions = new long [output.numDimensions()];
+			output.dimensions(dimensions);
 			if (! checkDimensions(dimensions)) {
 				error_message = "The labeling container does not have the correct number of dimensions";
 				return false;
 			}
 			for (int i=0; i<dimensions.length; i++) {
-				if (dimensions[i] != input.getDimension(i)) {
+				if (dimensions[i] != input.dimension(i)) {
 					error_message = String.format(
 							"The labeling container is not the same size as the image: dimension %d, labeling = %d, image = %d",
-							i, dimensions[i], input.getDimension(i));
+							i, dimensions[i], input.dimension(i));
 					return false;
 				}
 			}
@@ -340,32 +339,33 @@ implements OutputAlgorithm<LabelingType<L>>
 		return true;
 	}
 
-	protected boolean checkDimensions(int [] array) {
-		return array.length == input.getNumDimensions();
+	protected boolean checkDimensions(long[] coord) {
+		return coord.length == input.numDimensions();
 	}
 	protected boolean checkDimensions(double [] array) {
-		return array.length == input.getNumDimensions();
+		return array.length == input.numDimensions();
 	}
 	@Override
 	public boolean process() {
 		floatImage = null;
 		if (output == null) {
-			output = new Labeling<L>(labelingFactory, input.getDimensions(), null);
+			long [] dimensions = new long [input.numDimensions()];
+			input.dimensions(dimensions);
+			output = new NativeImgLabeling<L>(dimensions, labelingFactory);
 		} else {
 			/*
 			 * Initialize the output to all background
 			 */
-			LocalizableCursor<LabelingType<L>> c = output.createLocalizableCursor();
-			List<L> background = c.getType().intern(new ArrayList<L>());
-			for (LabelingType<L> t:c) {
+			Cursor<LabelingType<L>> c = output.localizingCursor();
+			List<L> background = output.firstElement().intern(new ArrayList<L>());
+			for (LabelingType<L> t:output) {
 				t.setLabeling(background);
 			}
-			c.close();
 		}
 		/*
 		 * Get the smoothed image.
 		 */
-		Image<FloatType> kernel = FourierConvolution.createGaussianKernel(
+		Img<FloatType> kernel = FourierConvolution.createGaussianKernel(
 				input.getContainerFactory(), scale);
 		FourierConvolution<FloatType, FloatType> convolution = 
 			new FourierConvolution<FloatType, FloatType>(getFloatImage(), kernel);
