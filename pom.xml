@@ -55,6 +55,7 @@
     <plugins>
       <plugin>
         <artifactId>maven-compiler-plugin</artifactId>
+        <version>2.3.2</version>
         <configuration>
           <source>1.6</source>
           <target>1.6</target>
@@ -62,6 +63,7 @@
       </plugin>
       <plugin>
         <artifactId>maven-jar-plugin</artifactId>
+        <version>2.3.1</version>
         <configuration>
           <archive>
             <manifest>
@@ -81,6 +83,14 @@
       <!-- NB: Generate javadocs as part of site generation. -->
       <plugin>
         <artifactId>maven-javadoc-plugin</artifactId>
+        <version>2.7</version>
+        <configuration>
+          <maxmemory>1024m</maxmemory>
+          <!-- NB: Workaround for javadoc bug when classes in the default
+            package access classes from non-default packages. See:
+            http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=5101868 -->
+          <use>false</use>
+        </configuration>
       </plugin>
     </plugins>
   </reporting>
