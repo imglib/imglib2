@@ -2,8 +2,6 @@ package mpicbg.imglib.roi;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -27,12 +25,21 @@ public class PolygonRegionOfInterest extends AbstractIterableRegionOfInterest {
 	 * 
 	 */
 	static protected class Stripe {
-		final public double yMin, yMax;
+		final public double yMin;
+		public double yMax;
 		final public ArrayList<Double> xTop = new ArrayList<Double>();
 		final public ArrayList<Double> xBottom = new ArrayList<Double>();
 		public Stripe(double yMin, double yMax) {
 			this.yMin = yMin;
 			this.yMax = yMax;
+		}
+		@Override
+		public String toString() {
+			StringBuffer sb = new StringBuffer(String.format("y: %.2f<->%.2f\n", yMin, yMax));
+			for (int i=0; i<xTop.size(); i++) {
+				sb.append(String.format("%d: %.2f<->%.2f\n", i, xTop.get(i), xBottom.get(i)));
+			}
+			return sb.toString();
 		}
 	}
 	
@@ -186,8 +193,15 @@ public class PolygonRegionOfInterest extends AbstractIterableRegionOfInterest {
 						} else if ((j > 0) && (xBottom < stripe.xBottom.get(j-1))) {
 							splitStripe(index, j-1, xTop, xBottom);
 						} else {
-							stripe.xTop.add(j+1, xTop);
-							stripe.xBottom.add(j+1, xBottom);
+							if (xBottom > stripe.xBottom.get(j)) {
+								/*
+								 * Put the new edge after the matching edge
+								 * because the bottom is advanced.
+								 */
+								j++;
+							}
+							stripe.xTop.add(j, xTop);
+							stripe.xBottom.add(j, xBottom);
 							index++;
 						}
 					} 
@@ -197,12 +211,19 @@ public class PolygonRegionOfInterest extends AbstractIterableRegionOfInterest {
 					 */
 					else if (xBottom > stripe.xBottom.get(j)) {
 						splitStripe(index, j, xTop, xBottom);
+					} else
+					/*
+					 * If our xBottom is less than the previous edge's xBottom
+					 * then this edge crosses the previous edge.
+					 */
+					if ((j > 0) && (xBottom < stripe.xBottom.get(j-1))){
+						splitStripe(index, j-1, xTop, xBottom);
 					} else {
 						stripe.xTop.add(j, xTop);
 						stripe.xBottom.add(j, xBottom);
 						index++;
 					}
-				} while((index < stripes.size()) && (y1 >= stripes.get(index).yMin));
+				} while((index < stripes.size()) && (y1 > stripes.get(index).yMin));
 			}
 		}
 	}
@@ -239,7 +260,7 @@ public class PolygonRegionOfInterest extends AbstractIterableRegionOfInterest {
 		 *  
 		 */
 		double yCross = ((yBottom * dTop / dBottom) + yTop) / (1 + dTop / dBottom);
-		
+		stripe.yMax = yCross;
 		Stripe newStripe = new Stripe(yCross, yBottom);
 		stripes.add(stripeIndex+1, newStripe);
 		for (int i=0; i<stripe.xTop.size(); i++) {
@@ -263,7 +284,7 @@ public class PolygonRegionOfInterest extends AbstractIterableRegionOfInterest {
 		if ((stripes.size() == 0) || (stripes.get(0).yMin > y)) return -1;
 		int minimum = 0;
 		int maximum = stripes.size()-1;
-		while (minimum <= maximum) {
+		while (minimum < maximum) {
 			int test_index = (minimum + maximum) / 2;
 			double yMin = stripes.get(test_index).yMin;
 			if (y == yMin) {
@@ -272,10 +293,11 @@ public class PolygonRegionOfInterest extends AbstractIterableRegionOfInterest {
 			if (y > yMin) {
 				minimum = test_index + 1;
 			} else {
-				maximum = test_index + 1;
+				maximum = test_index;
 			}
 		}
-		return minimum;
+		if (stripes.get(minimum).yMin <= y) return minimum;
+		return minimum - 1;
 	}
 	
 	@Override
@@ -306,18 +328,6 @@ public class PolygonRegionOfInterest extends AbstractIterableRegionOfInterest {
 				long area = getAreaOnBehalfOfSize(yTop, xTop, yBottom, xBottom);
 				if (i % 2 == 0) {
 					accumulator += area;
-					/*
-					 * We add 1 if a vertex falls on a pixel and
-					 * we add a whole edge if the whole edge falls
-					 * on pixel boundaries.
-					 */
-					if ((xTop == Math.floor(xTop)) && (yTop == Math.floor(yTop))) {
-						if (xBottom == xTop ) {
-							accumulator += (long)(yBottom - yTop);
-						} else {
-							accumulator++;
-						}
-					}
 				} else {
 					accumulator -= area;
 				}
@@ -400,25 +410,28 @@ public class PolygonRegionOfInterest extends AbstractIterableRegionOfInterest {
 		Stripe stripe = null;
 		int index = 0;
 		while(true) {
-			if ((stripe == null) || stripe.yMax < y)
+			if ((stripe == null) || stripe.yMax < y) {
 				index = findStripeIndex(y);
-			if (index == -1) {
-				/*
-				 *  Position is before any stripe. Set up at the
-				 *  first raster and try again.
-				 */
-				stripe = stripes.get(0);
-				position[0] = Long.MIN_VALUE;
-				position[1] = (long)Math.ceil(stripe.yMin);
-				continue;
+				if (index == -1) {
+					/*
+					 *  Position is before any stripe. Set up at the
+					 *  first raster and try again.
+					 */
+					stripe = stripes.get(0);
+					index = 0;
+					x = Long.MIN_VALUE;
+					y = (long)Math.ceil(stripe.yMin);
+					continue;
+				} else {
+					stripe = stripes.get(index);
+				}
 			}
-			stripe = stripes.get(index);
-			if (stripe.yMax < y) {
+			if (stripe.yMax <= y) {
 				/*
 				 * Previous stripe is wholly before this one.
 				 * Go to next stripe if any.
 				 */
-				if (stripes.size() == index) return false;
+				if (stripes.size() == index+1) return false;
 				y = (long)Math.ceil(stripes.get(index + 1).yMin);
 				continue;
 			}
@@ -433,14 +446,15 @@ public class PolygonRegionOfInterest extends AbstractIterableRegionOfInterest {
 					xInterpolatedLast = (long)Math.ceil(xInterpolated);
 					inside = true;
 				} else {
-					xInterpolated = Math.floor(xInterpolated);
-					if (x <= xInterpolated) {
+					xInterpolated = Math.floor(xInterpolated) + 1;
+					if ((x < xInterpolated) && (xInterpolated > xInterpolatedLast)) {
 						position[0] = xInterpolatedLast;
 						position[1] = (long)y;
-						end[0] = (long)(xInterpolated+1);
+						end[0] = (long)xInterpolated;
 						end[1] = position[1];
 						return true;
 					}
+					inside = false;
 				}
 			}
 			/*
