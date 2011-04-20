@@ -35,10 +35,9 @@ import mpicbg.imglib.img.basictypeaccess.DoubleAccess;
 import mpicbg.imglib.img.basictypeaccess.array.DoubleArray;
 import mpicbg.imglib.type.NativeType;
 import mpicbg.imglib.type.numeric.ExponentialMathType;
-import mpicbg.imglib.type.numeric.RealType;
 import mpicbg.imglib.util.Util;
 
-public class DoubleType extends AbstractRealType<DoubleType> implements RealType<DoubleType>, ExponentialMathType<DoubleType>, NativeType<DoubleType>
+public class DoubleType extends AbstractRealType<DoubleType> implements ExponentialMathType<DoubleType>, NativeType<DoubleType>
 {
 	private int i = 0;
 

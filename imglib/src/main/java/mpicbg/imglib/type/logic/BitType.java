@@ -36,10 +36,9 @@ import mpicbg.imglib.img.basictypeaccess.BitAccess;
 import mpicbg.imglib.img.basictypeaccess.array.BitArray;
 import mpicbg.imglib.type.BooleanType;
 import mpicbg.imglib.type.NativeType;
-import mpicbg.imglib.type.numeric.RealType;
 import mpicbg.imglib.type.numeric.integer.AbstractIntegerType;
 
-public class BitType extends AbstractIntegerType<BitType> implements BooleanType<BitType>, RealType<BitType>, NativeType<BitType>
+public class BitType extends AbstractIntegerType<BitType> implements BooleanType<BitType>, NativeType<BitType>
 {
 	private int i = 0;
 	

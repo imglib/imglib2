@@ -34,9 +34,8 @@ import mpicbg.imglib.img.NativeImgFactory;
 import mpicbg.imglib.img.basictypeaccess.FloatAccess;
 import mpicbg.imglib.img.basictypeaccess.array.FloatArray;
 import mpicbg.imglib.type.NativeType;
-import mpicbg.imglib.type.numeric.ComplexType;
 
-public class ComplexFloatType extends AbstractComplexType<ComplexFloatType> implements ComplexType<ComplexFloatType>, NativeType<ComplexFloatType>
+public class ComplexFloatType extends AbstractComplexType<ComplexFloatType> implements NativeType<ComplexFloatType>
 {
 	private int i = 0;
 	
@@ -151,6 +150,7 @@ public class ComplexFloatType extends AbstractComplexType<ComplexFloatType> impl
 		setImaginary( getImaginaryFloat() - c.getImaginaryFloat() ); 
 	}
 	
+	@Override
 	public void complexConjugate(){ setImaginary( -getImaginaryFloat() ); }
 	
 	public void switchRealComplex()

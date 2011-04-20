@@ -30,7 +30,6 @@ package mpicbg.imglib.img.list;
 import java.util.ArrayList;
 
 import mpicbg.imglib.AbstractCursor;
-import mpicbg.imglib.Cursor;
 import mpicbg.imglib.type.Type;
 import mpicbg.imglib.util.IntervalIndexer;
 

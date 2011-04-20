@@ -34,9 +34,8 @@ import mpicbg.imglib.img.NativeImgFactory;
 import mpicbg.imglib.img.basictypeaccess.FloatAccess;
 import mpicbg.imglib.img.basictypeaccess.array.FloatArray;
 import mpicbg.imglib.type.NativeType;
-import mpicbg.imglib.type.numeric.RealType;
 
-public class FloatType extends AbstractRealType<FloatType> implements RealType<FloatType>, NativeType<FloatType>
+public class FloatType extends AbstractRealType<FloatType> implements NativeType<FloatType>
 {
 	private int i = 0;
 

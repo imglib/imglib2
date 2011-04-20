@@ -3,16 +3,17 @@
  */
 package tests.labeling;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
 
 import mpicbg.imglib.RandomAccess;
 import mpicbg.imglib.img.Img;
 import mpicbg.imglib.img.array.ArrayImgFactory;
-import mpicbg.imglib.labeling.Labeling;
 import mpicbg.imglib.labeling.LabelingOutOfBoundsRandomAccessFactory;
 import mpicbg.imglib.labeling.LabelingType;
 import mpicbg.imglib.labeling.NativeImgLabeling;

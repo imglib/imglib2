@@ -13,7 +13,7 @@ import mpicbg.imglib.type.logic.BitType;
  *implemented by a derived class.
  */
 public abstract class AbstractRegionOfInterest implements RegionOfInterest {
-	private int nDimensions;
+	protected int nDimensions;
 	private double [] cached_real_min;
 	private double [] cached_real_max;
 	/**
@@ -262,11 +262,11 @@ public abstract class AbstractRegionOfInterest implements RegionOfInterest {
 
 	protected void validateRealExtremaCache() {
 		if (cached_real_min == null) {
-			double [] cached_real_min = new double [nDimensions];
-			double [] cached_real_max = new double [nDimensions];
-			getRealExtrema(cached_real_min, cached_real_max);
-			this.cached_real_min = cached_real_min;
-			this.cached_real_max = cached_real_max;
+			double [] cachedRealMin = new double[nDimensions];
+			double [] cachedRealMax = new double[nDimensions];
+			getRealExtrema(cachedRealMin, cachedRealMax);
+			cached_real_min = cachedRealMin;
+			cached_real_max = cachedRealMax;
 		}
 	}
 	

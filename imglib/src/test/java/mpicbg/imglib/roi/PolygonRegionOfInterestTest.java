@@ -3,9 +3,10 @@
  */
 package mpicbg.imglib.roi;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
-import java.awt.Polygon;
 import java.awt.geom.GeneralPath;
 import java.awt.geom.Path2D;
 import java.util.Random;
@@ -357,7 +358,8 @@ public class PolygonRegionOfInterestTest {
 	}
 	
 	/**
-	 * Test method for {@link mpicbg.imglib.roi.AbstractRegionOfInterest#realRandomAccess().size()}.
+	 * Test method for {@link mpicbg.imglib.IterableRealInterval#size()} from
+	 * {@link mpicbg.imglib.roi.AbstractRegionOfInterest#realRandomAccess()}.
 	 */
 	@Test
 	public void testSize() {
