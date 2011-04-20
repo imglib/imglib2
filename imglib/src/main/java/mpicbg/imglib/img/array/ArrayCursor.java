@@ -27,7 +27,8 @@
  */
 package mpicbg.imglib.img.array;
 
-import mpicbg.imglib.img.AbstractImgCursorInt;
+import mpicbg.imglib.AbstractCursorInt;
+import mpicbg.imglib.Cursor;
 import mpicbg.imglib.type.NativeType;
 import mpicbg.imglib.util.IntervalIndexer;
 
@@ -37,13 +38,25 @@ import mpicbg.imglib.util.IntervalIndexer;
  * 
  * @author Stephan Preibisch and Stephan Saalfeld
  */
-public class ArrayCursor< T extends NativeType< T > > extends AbstractImgCursorInt< T >
+public class ArrayCursor< T extends NativeType< T > > extends AbstractCursorInt< T > implements Cursor< T >
 {
 	protected final T type;
 
 	protected final ArrayImg< T, ? > container;
 
 	protected final int lastIndex;
+	
+	protected ArrayCursor( final ArrayCursor< T > cursor )
+	{
+		super( cursor.numDimensions() );
+
+		this.container = cursor.container;
+		this.type = container.createLinkedType();
+		this.lastIndex = ( int )container.size() - 1;
+		
+		type.updateIndex( cursor.type.getIndex() );
+		type.updateContainer( this );
+	}
 
 	public ArrayCursor( final ArrayImg< T, ? > container )
 	{
@@ -52,7 +65,7 @@ public class ArrayCursor< T extends NativeType< T > > extends AbstractImgCursorI
 		this.type = container.createLinkedType();
 		this.container = container;
 		this.lastIndex = ( int )container.size() - 1;
-
+		
 		reset();
 	}
 
@@ -88,12 +101,6 @@ public class ArrayCursor< T extends NativeType< T > > extends AbstractImgCursorI
 	}
 
 	@Override
-	public ArrayImg< T, ? > getImg()
-	{
-		return container;
-	}
-
-	@Override
 	public String toString()
 	{
 		return type.toString();
@@ -109,5 +116,11 @@ public class ArrayCursor< T extends NativeType< T > > extends AbstractImgCursorI
 	public void localize( final int[] position )
 	{
 		IntervalIndexer.indexToPosition( type.getIndex(), container.dim, position );
+	}
+	
+	@Override
+	public ArrayCursor< T > copy()
+	{
+		return new ArrayCursor< T >( this );
 	}
 }

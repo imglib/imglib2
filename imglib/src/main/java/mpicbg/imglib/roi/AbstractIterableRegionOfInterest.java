@@ -157,12 +157,6 @@ public abstract class AbstractIterableRegionOfInterest extends
 				return src.get();
 			}
 
-			@SuppressWarnings("deprecation")
-			@Override
-			public T getType() {
-				return src.getType();
-			}
-
 			@Override
 			public void jumpFwd(long steps) {
 				if (! AbstractIterableRegionOfInterest.this.jumpFwd(steps, position, raster_end)) {

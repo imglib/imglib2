@@ -27,25 +27,199 @@
  */
 package mpicbg.imglib.img.planar;
 
+import mpicbg.imglib.AbstractRandomAccessInt;
 import mpicbg.imglib.type.NativeType;
 
 /**
- * Positionable for a {@link PlanarImg PlanarContainers}
+ * RandomAccess for a {@link PlanarImg PlanarContainers}
  * @param <T>
  *
  * @author Stephan Preibisch and Stephan Saalfeld
  */
-public class PlanarRandomAccess< T extends NativeType< T > > extends AbstractPlanarRandomAccess< T >
+public class PlanarRandomAccess< T extends NativeType< T > > extends AbstractRandomAccessInt< T > implements PlanarImg.PlanarContainerSampler
 {
-	final PlanarImg< T, ? > container;
-
+	final protected int[] sliceSteps;
+	final protected int width;
+	
+	final protected T type;
+	protected int sliceIndex;
+	
+	protected PlanarRandomAccess( final PlanarRandomAccess< T > randomAccess )
+	{
+		super( randomAccess.numDimensions() );
+		
+		sliceSteps = randomAccess.sliceSteps;
+		width = randomAccess.width;
+		sliceIndex = randomAccess.sliceIndex;
+		
+		for ( int d = 0; d < n; ++d )
+			position[ d ] = randomAccess.position[ d ];
+		
+		type = randomAccess.type.duplicateTypeOnSameNativeImg();
+		type.updateContainer( this );
+		type.updateIndex( randomAccess.type.getIndex() );
+	}
+	
+	
 	public PlanarRandomAccess( final PlanarImg< T, ? > container )
 	{
-		super( container );
+		super( container.numDimensions() );
 		
-		this.container = container;
+		sliceSteps = container.sliceSteps;
+		width = ( int ) container.dimension( 0 );
+		
+		type = container.createLinkedType();
+		type.updateIndex( 0 );
+		type.updateContainer( this );		
+	}
+
+	@Override
+	public int getCurrentSliceIndex() { return sliceIndex; }
+
+	@Override
+	public T get() { return type; }
+	
+	@Override
+	public PlanarRandomAccess< T > copy()
+	{
+		return new PlanarRandomAccess< T >( this );
 	}
 	
 	@Override
-	public PlanarImg< T, ? > getImg() { return container; }
+	public void fwd( final int d )
+	{
+		++position[ d ];
+
+		if ( d == 0 )
+			type.incIndex();
+		else if ( d == 1 )
+			type.incIndex( width );
+		else
+		{
+			sliceIndex += sliceSteps[ d ];
+			type.updateContainer( this );
+		}
+	}
+
+	@Override
+	public void bck( final int d )
+	{		
+		--position[ d ];
+		
+		if ( d == 0 )
+			type.decIndex();
+		else if ( d == 1 )
+			type.decIndex( width );
+		else
+		{
+			sliceIndex -= sliceSteps[ d ];
+			type.updateContainer( this );
+		}
+	}
+
+	@Override
+	public void move( final int distance, final int dim )
+	{
+		position[ dim ] += distance;	
+
+		if ( dim == 0 )
+		{
+			type.incIndex( distance );
+		}
+		else if ( dim == 1 )
+		{
+			type.incIndex( distance * width );
+		}
+		else
+		{
+			sliceIndex += sliceSteps[ dim ] * distance;
+			type.updateContainer( this );
+		}
+	}
+
+	@Override
+	public void move( final long distance, final int dim )
+	{
+		move( ( int ) distance, dim );
+	}
+
+	@Override
+	public void setPosition( final int pos, final int dim )
+	{
+		if ( dim == 0 )
+		{
+			type.incIndex( pos - position[ 0 ] );
+		}
+		else if ( dim == 1 )
+		{
+			type.incIndex( ( pos - position[ 1 ] ) * width );			
+		}
+		else
+		{
+			sliceIndex += ( pos - position[ dim ] ) * sliceSteps[ dim ];
+			type.updateContainer( this );
+		}
+		
+		position[ dim ] = pos;
+	}
+
+	@Override
+	public void setPosition( final long pos, final int dim )
+	{
+		setPosition( ( int ) pos, dim );
+	}
+	
+	@Override
+	public void setPosition( final int[] pos )
+	{
+		type.updateIndex( pos[ 0 ] + pos[ 1 ] * width );
+		position[ 0 ] = pos[ 0 ];
+		position[ 1 ] = pos[ 1 ];
+
+		for ( int d = 2; d < n; ++d )
+		{
+			if ( pos[ d ] != position[ d ] )
+			{
+				sliceIndex += ( pos[ d ] - position[ d ] ) * sliceSteps[ d ];
+				position[ d ] = pos[ d ];
+
+				for ( ++d; d < n; ++d )
+				{
+					if ( pos[ d ] != position[ d ] )
+					{
+						sliceIndex += ( pos[ d ] - position[ d ] ) * sliceSteps[ d ];
+						position[ d ] = pos[ d ];
+					}
+				}
+				type.updateContainer( this );
+			}
+		}		
+	}
+
+	@Override
+	public void setPosition( final long[] pos )
+	{	
+		type.updateIndex( ( int ) pos[ 0 ] + ( int ) pos[ 1 ] * width );
+		position[ 0 ] = ( int ) pos[ 0 ];
+		position[ 1 ] = ( int ) pos[ 1 ];
+
+		for ( int d = 2; d < n; ++d )
+		{
+			if ( pos[ d ] != position[ d ] )
+			{
+				sliceIndex += ( pos[ d ] - position[ d ] ) * sliceSteps[ d ];
+				position[ d ] = ( int ) pos[ d ];
+
+				for ( ++d; d < n; ++d )
+				{
+					if ( pos[ d ] != position[ d ] )
+					{
+						sliceIndex += ( pos[ d ] - position[ d ] ) * sliceSteps[ d ];
+						position[ d ] = ( int ) pos[ d ];
+					}
+				}
+				type.updateContainer( this );
+			}
+		}		
+	}
 }

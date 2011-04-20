@@ -41,19 +41,19 @@ import mpicbg.imglib.img.Img;
 import mpicbg.imglib.img.ImgFactory;
 import mpicbg.imglib.img.array.ArrayImgFactory;
 import mpicbg.imglib.img.planar.PlanarImgFactory;
-import mpicbg.imglib.io.ImageOpener;
+import mpicbg.imglib.io.ImgOpener;
 import mpicbg.imglib.io.ImgPlus;
 import mpicbg.imglib.type.NativeType;
 import mpicbg.imglib.type.numeric.RealType;
 import mpicbg.imglib.type.numeric.real.FloatType;
 
-/** A simple test for {@link ImageOpener}. */
+/** A simple test for {@link ImgOpener}. */
 public class ReadImage {
 
 	public static <T extends RealType<T> & NativeType< T >> void main(String[] args)
 		throws FormatException, IOException
 	{
-		final ImageOpener imageOpener = new ImageOpener();
+		final ImgOpener imageOpener = new ImgOpener();
 
 		final String[] ids;
 		if (args.length == 0) {
@@ -72,7 +72,7 @@ public class ReadImage {
 		for (String id : ids) {
 			try
 			{
-				ImgPlus< T > img = imageOpener.openImage(id);
+				ImgPlus< T > img = imageOpener.openImg(id);
 				reportInformation(img.getImg());
 			}
 			catch ( IncompatibleTypeException e )
@@ -88,7 +88,7 @@ public class ReadImage {
 		for (String arg : args) {
 			try
 			{
-				ImgPlus<FloatType> img = imageOpener.openImage(arg, acf);
+				ImgPlus<FloatType> img = imageOpener.openImg(arg, acf);
 				reportInformation(img.getImg());
 			}
 			catch ( IncompatibleTypeException e )
@@ -104,7 +104,7 @@ public class ReadImage {
 		for (String arg : args) {
 			try
 			{
-				ImgPlus<FloatType> img = imageOpener.openImage(arg, pcf);
+				ImgPlus<FloatType> img = imageOpener.openImg(arg, pcf);
 				reportInformation(img.getImg());
 			}
 			catch ( IncompatibleTypeException e )

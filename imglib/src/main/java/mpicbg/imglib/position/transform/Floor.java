@@ -45,7 +45,7 @@ public class Floor< LocalizablePositionable extends Localizable & Positionable >
 {
 	final protected LocalizablePositionable target;
 	
-	final private int n;
+	final protected int n;
 	
 	/* current position, required for relative movement */
 	final protected double[] position;
@@ -232,9 +232,11 @@ public class Floor< LocalizablePositionable extends Localizable & Positionable >
 	{
 		for ( int d = 0; d < n; ++d )
 		{
-			final float realPosition = ( float )position[ d ];
-			this.position[ d ] = realPosition;
-			floor[ d ] = floor( realPosition );
+//			final float realPosition = ( float )position[ d ];
+//			this.position[ d ] = realPosition;
+//			floor[ d ] = floor( realPosition );
+			this.position[ d ] = position[ d ];
+			floor[ d ] = floor( position[ d ] );
 		}
 		target.setPosition( floor );
 	}

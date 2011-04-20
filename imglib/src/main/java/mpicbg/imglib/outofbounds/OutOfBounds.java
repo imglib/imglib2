@@ -27,6 +27,7 @@
  */
 package mpicbg.imglib.outofbounds;
 
+import mpicbg.imglib.Bounded;
 import mpicbg.imglib.RandomAccess;
 
 /**
@@ -34,7 +35,8 @@ import mpicbg.imglib.RandomAccess;
  *
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-public interface OutOfBounds< T > extends RandomAccess< T >
+public interface OutOfBounds< T > extends RandomAccess< T >, Bounded
 {
-	public boolean isOutOfBounds();
+	@Override
+	public OutOfBounds< T > copy();
 }

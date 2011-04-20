@@ -35,42 +35,47 @@ import mpicbg.imglib.util.IntervalIndexer;
 import mpicbg.imglib.util.Util;
 
 /**
- * Use this class to iterate a virtual rectangular {@link Interval} in flat
- * order, that is: row by row, plane by plane, cube by cube, ...  This is useful for
- * iterating an arbitrary interval in a defined order.  For that,
- * connect a {@link ZeroMinIntervalIterator} to a {@link Positionable}.
+ * Use this class to iterate a virtual {@link Interval} in flat order, that is:
+ * row by row, plane by plane, cube by cube, ...  This is useful for iterating
+ * an arbitrary interval in a defined order.  For that, connect an
+ * {@link IntervalIterator} to a {@link Positionable}.
  * 
  * <pre>
  * ...
- * ZeroMinIntervalIterator i = new ZeroMinIntervalIterator(image);
+ * IntervalIterator i = new IntervalIterator(image);
  * RandomAccess<T> s = image.randomAccess();
  * while (i.hasNext()) {
  *   i.fwd();
  *   s.setPosition(i);
- *   s.type().performOperation(...);
+ *   s.get().performOperation(...);
  *   ...
  * }
  * ...
  * </pre>
  * 
- * Note that {@link ZeroMinIntervalIterator} is the right choice in situations where
+ * Note that {@link IntervalIterator} is the right choice in situations where
  * <em>not</em> for each pixel you want to localize and/or set the
  * {@link Positionable} [{@link Sampler}], that is in a sparse sampling situation.
  * For localizing at each iteration step (as in the simplified example above),
- * use {@link FlatIterator} instead.
+ * use {@link LocalizingIntervalIterator} instead.
  *  
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-public class IntervalIterator implements Iterator, Localizable
+public class IntervalIterator implements Iterator, Localizable, Interval
 {
+	final protected int n;
 	final protected long[] dimensions;
 	final protected long[] min;
 	final protected long[] max;
 	final protected long[] steps;
-	final protected int n;
 	final protected long lastIndex;
 	protected long index = -1;
 	
+	/**
+	 * Iterates an {@link Interval} with <em>min</em>=0<sup><em>n</em></sup>.
+	 * 
+	 * @param dimensions
+	 */
 	public IntervalIterator( final long[] dimensions )
 	{
 		n = dimensions.length;
@@ -83,10 +88,10 @@ public class IntervalIterator implements Iterator, Localizable
 		long k = steps[ 0 ] = 1;
 		for ( int d = 0; d < m; )
 		{
-			final long dim = dimensions[ d ];
-			this.dimensions[ d ] = dim;
-			this.max[ d ] = dim - 1;
-			k *= dim;
+			final long dimd = dimensions[ d ];
+			this.dimensions[ d ] = dimd;
+			this.max[ d ] = dimd - 1;
+			k *= dimd;
 			steps[ ++d ] = k;	
 		}
 		final long dimm = dimensions[ m ];
@@ -95,12 +100,19 @@ public class IntervalIterator implements Iterator, Localizable
 		lastIndex = k * dimm - 1;
 	}
 	
+	
+	/**
+	 * Iterates an {@link Interval} with given <em>min</em> and <em>max</em>.
+	 * 
+	 * @param min
+	 * @param max
+	 */
 	public IntervalIterator( final long[] min, final long[] max )
 	{
 		n = min.length;
 		final int m = n - 1;
-		this.min = min.clone();
-		this.max = max.clone();
+		this.min = new long[ n ];
+		this.max = new long[ n ];
 		
 		dimensions = new long[ n ];
 		steps = new long[ n ];
@@ -125,13 +137,17 @@ public class IntervalIterator implements Iterator, Localizable
 		lastIndex = k * sizem - 1;
 	}
 
+	
+	/**
+	 * Iterates a given {@link Interval}.
+	 * 
+	 * @param interval
+	 */
 	public IntervalIterator( final Interval interval )
 	{
 		n = interval.numDimensions();
 		min = new long[ n ];
 		max = new long[ n ];
-		interval.min( min );
-		interval.max( max );
 		
 		final int m = n - 1;
 		dimensions = new long[ n ];
@@ -141,20 +157,20 @@ public class IntervalIterator implements Iterator, Localizable
 		{
 			final long mind = interval.min( d );
 			final long maxd = interval.max( d );
-			this.min[ d ] = mind;
-			this.max[ d ] = maxd;
-			final long s = maxd - mind + 1; 
-			dimensions[ d ] = s;
-			k *= s;
+			final long dimd = interval.dimension( d );
+			min[ d ] = mind;
+			max[ d ] = maxd;
+			dimensions[ d ] = dimd;
+			k *= dimd;
 			steps[ ++d ] = k;
 		}
 		final long minm = interval.min( m );
 		final long maxm = interval.max( m );
-		this.min[ m ] = minm;
-		this.max[ m ] = maxm;
-		final long sizem = maxm - minm + 1;
-		dimensions[ m ] = sizem;
-		lastIndex = k * sizem - 1;
+		final long dimm = interval.dimension( m );
+		min[ m ] = minm;
+		max[ m ] = maxm;
+		dimensions[ m ] = dimm;
+		lastIndex = k * dimm - 1;
 	}
 	
 	static public IntervalIterator create( final Interval interval )
@@ -180,7 +196,8 @@ public class IntervalIterator implements Iterator, Localizable
 	@Override
 	public boolean hasNext() { return index < lastIndex; }
 	
-	/* IntegerLocalizable */
+	
+	/* Localizable */
 
 	@Override
 	public long getLongPosition( final int dim )
@@ -248,5 +265,87 @@ public class IntervalIterator implements Iterator, Localizable
 		final int[] l = new int[ dimensions.length ];
 		localize( l );
 		return Util.printCoordinates( l );
+	}
+
+
+	/* Interval */
+
+	@Override
+	public long dimension( final int d )
+	{
+		return dimensions[ d ];
+	}
+	
+	
+	@Override
+	@SuppressWarnings( "hiding" )
+	public void dimensions( final long[] dimensions )
+	{
+		for ( int d = 0; d < n; ++d )
+			dimensions[ d ] = this.dimensions[ d ];
+	}
+
+
+	@Override
+	public long max( final int d )
+	{
+		return max[ d ];
+	}
+
+
+	@Override
+	@SuppressWarnings( "hiding" )
+	public void max( final long[] max )
+	{
+		for ( int d = 0; d < n; ++d )
+			max[ d ] = this.max[ d ];
+	}
+
+
+	@Override
+	public long min( final int d )
+	{
+		return min[ d ];
+	}
+
+
+	@Override
+	@SuppressWarnings( "hiding" )
+	public void min( final long[] min )
+	{
+		for ( int d = 0; d < n; ++d )
+			min[ d ] = this.min[ d ];
+	}
+
+
+	@Override
+	public double realMax( int d )
+	{
+		return max[ d ];
+	}
+
+
+	@Override
+	@SuppressWarnings( "hiding" )
+	public void realMax( double[] max )
+	{
+		for ( int d = 0; d < n; ++d )
+			max[ d ] = this.max[ d ];
+	}
+
+
+	@Override
+	public double realMin( int d )
+	{
+		return min[ d ];
+	}
+
+
+	@Override
+	@SuppressWarnings( "hiding" )
+	public void realMin( double[] min )
+	{
+		for ( int d = 0; d < n; ++d )
+			min[ d ] = this.min[ d ];
 	}
 }

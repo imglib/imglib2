@@ -87,13 +87,6 @@ public class OrthoSliceCursor< T extends Type< T > > implements Cursor< T >, Int
 	}
 
 	@Override
-	@Deprecated
-	public T getType()
-	{
-		return get();
-	}
-
-	@Override
 	public T get()
 	{
 		return sampler.get();

@@ -27,6 +27,8 @@
  */
 package mpicbg.imglib.img.planar;
 
+import mpicbg.imglib.AbstractCursorInt;
+import mpicbg.imglib.Cursor;
 import mpicbg.imglib.type.NativeType;
 
 /**
@@ -35,20 +37,122 @@ import mpicbg.imglib.type.NativeType;
  *
  * @author Stephan Preibisch and Stephan Saalfeld
  */
-public class PlanarCursor< T extends NativeType< T > > extends AbstractPlanarCursor< T >
+public class PlanarCursor< T extends NativeType< T > > extends AbstractCursorInt< T > implements Cursor< T >, PlanarImg.PlanarContainerSampler
 {
+	protected final T type;
+
 	protected final PlanarImg< T, ? > container;
 
+	protected final int lastIndex, lastSliceIndex;
+	protected int sliceIndex;
+	
+	/**
+	 * The current index of the type.
+	 * It is faster to duplicate this here than to access it through type.getIndex(). 
+	 */
+	protected int index;
+	
+	protected PlanarCursor( final PlanarCursor< T > cursor )
+	{
+		super( cursor.numDimensions() );
+
+		container = cursor.container;
+		this.type = container.createLinkedType();
+		
+		lastIndex = cursor.lastIndex;
+		lastSliceIndex = cursor.lastSliceIndex;
+		sliceIndex = cursor.sliceIndex;
+		index = cursor.index;
+		
+		type.updateContainer( this );
+		type.updateIndex( index );
+	}
+	
 	public PlanarCursor( final PlanarImg< T, ? > container )
 	{
-		super( container );
+		super( container.numDimensions() );
 
+		this.type = container.createLinkedType();
 		this.container = container;
+
+		lastIndex = ( ( n > 1 ) ? container.dimensions[ 1 ] : 1 )  *  container.dimensions[ 0 ] - 1;
+		lastSliceIndex = container.numSlices() - 1;
+		
+		reset();
 	}
 
 	@Override
-	public PlanarImg< T, ? > getImg()
+	public int getCurrentSliceIndex() { return sliceIndex; }
+
+	@Override
+	public T get() { return type; }
+	
+	@Override
+	public PlanarCursor< T > copy()
 	{
-		return container;
+		return new PlanarCursor< T >( this );
+	}
+
+	/**
+	 * Note: This test is fragile in a sense that it returns true for elements
+	 * after the last element as well.
+	 * 
+	 * @return false for the last element 
+	 */
+	@Override
+	public boolean hasNext()
+	{
+		return ( sliceIndex < lastSliceIndex ) || ( index < lastIndex );		
+	}
+
+	@Override
+	public void fwd()
+	{
+		if ( ++index > lastIndex )
+		{
+			index = 0;
+			++sliceIndex;
+			type.updateContainer( this );
+		}
+		type.updateIndex( index );
+	}
+
+	@Override
+	public void jumpFwd( long steps )
+	{
+		long newIndex = index + steps;
+		if ( newIndex > lastIndex )
+		{
+			final long s = newIndex / (lastIndex + 1);
+			newIndex -= s * (lastIndex + 1);
+			sliceIndex += s;
+			type.updateContainer( this );
+		}
+		index = ( int ) newIndex;
+		type.updateIndex( index );
+	}
+
+	@Override
+	public void reset()
+	{
+		sliceIndex = 0;
+		index = -1;
+		type.updateIndex( -1 );
+		type.updateContainer( this );
+	}
+
+	@Override
+	public String toString() { return type.toString(); }
+
+	@Override
+	public void localize( final int[] position )
+	{
+		container.indexToGlobalPosition( sliceIndex, index, position );
+	}
+
+	@Override
+	public int getIntPosition( final int dim )
+	{
+		return container.indexToGlobalPosition( sliceIndex, index, dim );
 	}
 }

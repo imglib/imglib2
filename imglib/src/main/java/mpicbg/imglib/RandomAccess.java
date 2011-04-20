@@ -33,4 +33,7 @@ package mpicbg.imglib;
  * @author Tobias Pietzsch & Stephan Preibisch & Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
 public interface RandomAccess< T > extends Localizable, Positionable, Sampler< T >
-{}
+{
+	@Override
+	RandomAccess< T > copy();
+}

@@ -48,14 +48,27 @@ import mpicbg.imglib.RandomAccessible;
  *
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-public class OutOfBoundsMirrorDoubleBoundary< T > extends AbstractOutOfBoundsMirror< T >
+final public class OutOfBoundsMirrorDoubleBoundary< T > extends AbstractOutOfBoundsMirror< T >
 {
+	protected OutOfBoundsMirrorDoubleBoundary( final OutOfBoundsMirrorDoubleBoundary< T > outOfBounds )
+	{
+		super( outOfBounds );
+	}
+	
 	public < F extends Interval & RandomAccessible< T > > OutOfBoundsMirrorDoubleBoundary( final F f )
 	{
 		super( f );
 		
 		for ( int i = 0; i < dimension.length; ++i )
 			p[ i ] = 2 * dimension[ i ];
+	}
+	
+	
+	/* Sampler */
+	
+	final public OutOfBoundsMirrorDoubleBoundary< T > copy()
+	{
+		return new OutOfBoundsMirrorDoubleBoundary< T >( this );
 	}
 	
 	

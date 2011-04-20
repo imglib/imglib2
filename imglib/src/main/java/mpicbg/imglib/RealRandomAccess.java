@@ -27,10 +27,14 @@
  */
 package mpicbg.imglib;
 
+
 /**
  * 
  *
  * @author Tobias Pietzsch & Stephan Preibisch & Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
 public interface RealRandomAccess< T > extends RealLocalizable, RealPositionable, Sampler< T >
-{}
+{
+	@Override
+	public RealRandomAccess< T > copy();
+}

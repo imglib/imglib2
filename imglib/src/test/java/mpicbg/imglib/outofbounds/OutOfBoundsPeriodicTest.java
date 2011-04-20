@@ -29,9 +29,9 @@ package mpicbg.imglib.outofbounds;
 
 import static org.junit.Assert.assertEquals;
 import mpicbg.imglib.Cursor;
+import mpicbg.imglib.ExtendedRandomAccessibleInterval;
 import mpicbg.imglib.Localizable;
 import mpicbg.imglib.img.Img;
-import mpicbg.imglib.img.ImgRandomAccess;
 import mpicbg.imglib.img.array.ArrayImg;
 import mpicbg.imglib.img.array.ArrayImgFactory;
 import mpicbg.imglib.img.cell.CellImg;
@@ -58,9 +58,9 @@ public class OutOfBoundsPeriodicTest
 	static private CellImg< IntType, ? > cellImage;
 	static private Img< IntType > listImage;
 	
-	static private ImgRandomAccess< IntType > cArray;
-	static private ImgRandomAccess< IntType > cCell;
-	static private ImgRandomAccess< IntType > cList;
+	static private OutOfBoundsRandomAccess< IntType > cArray;
+	static private OutOfBoundsRandomAccess< IntType > cCell;
+	static private OutOfBoundsRandomAccess< IntType > cList;
 	
 	/**
 	 * @throws java.lang.Exception
@@ -121,9 +121,9 @@ public class OutOfBoundsPeriodicTest
 		for ( final IntType t : listImage )
 			t.set( i++ );
 
-		cArray = arrayImage.randomAccess( new OutOfBoundsPeriodicFactory< IntType, Img< IntType > >() );
-		cCell = cellImage.randomAccess( new OutOfBoundsPeriodicFactory< IntType, Img< IntType > >() );
-		cList = listImage.randomAccess( new OutOfBoundsPeriodicFactory< IntType, Img< IntType > >() );
+		cArray = new ExtendedRandomAccessibleInterval< IntType, Img< IntType > >( arrayImage, new OutOfBoundsPeriodicFactory< IntType, Img< IntType > >() ).randomAccess();
+		cCell = new ExtendedRandomAccessibleInterval< IntType, Img< IntType > >( cellImage, new OutOfBoundsPeriodicFactory< IntType, Img< IntType > >() ).randomAccess();
+		cList = new ExtendedRandomAccessibleInterval< IntType, Img< IntType > >( listImage, new OutOfBoundsPeriodicFactory< IntType, Img< IntType > >() ).randomAccess();
 	}
 
 	/**

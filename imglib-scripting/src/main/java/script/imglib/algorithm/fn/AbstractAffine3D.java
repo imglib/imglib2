@@ -14,8 +14,8 @@ import mpicbg.imglib.img.ImgRandomAccess;
 import mpicbg.imglib.img.array.ArrayImg;
 import mpicbg.imglib.img.basictypeaccess.FloatAccess;
 import mpicbg.imglib.interpolation.InterpolatorFactory;
-import mpicbg.imglib.interpolation.linear.LinearInterpolatorFactory;
-import mpicbg.imglib.interpolation.nearestneighbor.NearestNeighborInterpolatorFactory;
+import mpicbg.imglib.interpolation.randomaccess.NLinearInterpolatorFactory;
+import mpicbg.imglib.interpolation.randomaccess.NearestNeighborInterpolatorFactory;
 import mpicbg.imglib.outofbounds.OutOfBoundsConstantValueFactory;
 import mpicbg.imglib.outofbounds.OutOfBoundsFactory;
 import mpicbg.imglib.type.Type;
@@ -131,7 +131,7 @@ public abstract class AbstractAffine3D<T extends NumericType<T>> extends ImgProx
 		final InterpolatorFactory<R,Img<R>> inter;
 		switch (mode) {
 		case LINEAR:
-			inter = new LinearInterpolatorFactory<R,Img<R>>(oobf);
+			inter = new NLinearInterpolatorFactory<R,Img<R>>(oobf);
 			break;
 		case NEAREST_NEIGHBOR:
 			inter = new NearestNeighborInterpolatorFactory<R>(oobf);

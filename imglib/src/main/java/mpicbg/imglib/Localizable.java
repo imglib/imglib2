@@ -29,13 +29,10 @@
  */
 package mpicbg.imglib;
 
-import mpicbg.imglib.img.ImgCursor;
-import mpicbg.imglib.img.ImgRandomAccess;
-
 /**
  * The {@link Localizable} interface can localize itself in an n-dimensional
- * discrete space.  Not only {@link ImgCursor}s can use this 
- * interface, it might be used by much more classes as {@link ImgRandomAccess}s
+ * discrete space.  Not only {@link Cursor}s can use this 
+ * interface, it might be used by much more classes as {@link RandomAccess}s
  * can take any {@link Localizable} as input for where they should move to.
  *  
  * @author Stephan Preibisch & Stephan Saalfeld

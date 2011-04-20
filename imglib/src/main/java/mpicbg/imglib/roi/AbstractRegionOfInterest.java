@@ -220,13 +220,7 @@ public abstract class AbstractRegionOfInterest implements RegionOfInterest {
 		@Override
 		public BitType get() {
 			return bit_type;
-		}
-
-		@Override
-		public BitType getType() {
-			return new BitType();
-		}
-		
+		}		
 	}
 	
 	protected AbstractRegionOfInterest(int nDimensions) {

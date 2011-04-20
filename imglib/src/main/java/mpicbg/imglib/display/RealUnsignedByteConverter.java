@@ -28,40 +28,30 @@
 package mpicbg.imglib.display;
 
 import mpicbg.imglib.converter.Converter;
+import mpicbg.imglib.type.numeric.RealType;
 import mpicbg.imglib.type.numeric.integer.UnsignedByteType;
-import mpicbg.imglib.type.numeric.real.FloatType;
 
 /**
  * 
  *
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-public class RealUnsignedByteConverter implements Converter< FloatType, UnsignedByteType >
+public class RealUnsignedByteConverter< R extends RealType< R > > extends AbstractLinearRange implements Converter< R, UnsignedByteType >
 {
-	protected double min = 0;
-	protected double max = 1;
-	protected double scale = 1;
-	
-	public RealUnsignedByteConverter() {}
-	
-	public RealUnsignedByteConverter( final int min, final int max )
+	public RealUnsignedByteConverter()
 	{
-		this.min = min;
-		this.max = max;
-		scale = max - min;
+		super();		
 	}
 	
-	final static protected int roundPositive( final double a )
+	public RealUnsignedByteConverter( final double min, final double max )
 	{
-		return ( int )( a + 0.5 );
+		super( min, max );
 	}
 	
 	@Override
-	public void convert( final FloatType input, final UnsignedByteType output )
+	public void convert( final R input, final UnsignedByteType output )
 	{
 		final double a = input.getRealDouble();
 		output.set( Math.min( 255, roundPositive( Math.max( 0, ( ( a - min ) / scale * 255.0 ) ) ) ) );
-	}
-	
-	
+	}	
 }

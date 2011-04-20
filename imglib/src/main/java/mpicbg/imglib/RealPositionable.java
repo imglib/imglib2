@@ -64,17 +64,17 @@ public interface RealPositionable extends Positionable
 	 * Move the element relative to its current location using a float[] as
 	 * distance vector.
 	 * 
-	 * @param position
+	 * @param distance
 	 */
-	public void move( float[] position );
+	public void move( float[] distance );
 	
 	/**
 	 * Move the element relative to its current location using a float[] as
 	 * distance vector.
 	 * 
-	 * @param position
+	 * @param distance
 	 */
-	public void move( double[] position );
+	public void move( double[] distance );
 	
 	/**
 	 * Place the element at the same location as a given {@link RealLocalizable}

@@ -1,16 +1,14 @@
 package mpicbg.imglib.img.cell;
 
+import mpicbg.imglib.AbstractCursor;
 import mpicbg.imglib.Cursor;
-import mpicbg.imglib.img.AbstractImgCursor;
 import mpicbg.imglib.img.basictypeaccess.array.ArrayDataAccess;
 import mpicbg.imglib.type.NativeType;
 
-public class CellCursor< T extends NativeType< T >, A extends ArrayDataAccess< A > > extends AbstractImgCursor< T > implements CellImg.CellContainerSampler< T, A >
+public class CellCursor< T extends NativeType< T >, A extends ArrayDataAccess< A > > extends AbstractCursor< T > implements Cursor< T >, CellImg.CellContainerSampler< T, A >
 {
 	protected final T type;
 	
-	protected final CellImg< T, A > container;
-
 	protected final Cursor< Cell< A > > cursorOnCells;
 
 	protected int lastIndexInCell;
@@ -26,12 +24,25 @@ public class CellCursor< T extends NativeType< T >, A extends ArrayDataAccess< A
 	 */
 	protected boolean isNotLastCell;
 
+	protected CellCursor( final CellCursor< T, A > cursor )
+	{
+		super( cursor.numDimensions() );
+		
+		this.type = cursor.type.duplicateTypeOnSameNativeImg();
+		this.cursorOnCells = cursor.cursorOnCells.copy();
+		isNotLastCell = cursor.isNotLastCell;
+		lastIndexInCell = cursor.lastIndexInCell;
+		index = cursor.index;
+		
+		type.updateContainer( this );
+		type.updateIndex( index );
+	}
+	
 	public CellCursor( final CellImg< T, A > container )
 	{
 		super( container.numDimensions() );
 		
 		this.type = container.createLinkedType();
-		this.container = container;
 		this.cursorOnCells = container.cells.cursor();
 		
 		reset();
@@ -47,6 +58,12 @@ public class CellCursor< T extends NativeType< T >, A extends ArrayDataAccess< A
 	public T get()
 	{
 		return type;
+	}
+	
+	@Override
+	public CellCursor< T, A > copy()
+	{
+		return new CellCursor< T, A >( this );
 	}
 
 	@Override
@@ -88,12 +105,6 @@ public class CellCursor< T extends NativeType< T >, A extends ArrayDataAccess< A
 		cursorOnCells.reset();
 		moveToNextCell();
 		type.updateIndex( index );
-	}
-
-	@Override
-	public CellImg< T, ? > getImg()
-	{
-		return container;
 	}
 
 	@Override

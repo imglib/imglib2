@@ -27,8 +27,8 @@
  */
 package mpicbg.imglib.img.array;
 
-//import mpicbg.imglib.container.AbstractImgLocalizingCursor;
-import mpicbg.imglib.img.AbstractImgLocalizingCursorInt;
+import mpicbg.imglib.AbstractLocalizingCursorInt;
+import mpicbg.imglib.Cursor;
 import mpicbg.imglib.type.NativeType;
 import mpicbg.imglib.util.IntervalIndexer;
 
@@ -38,7 +38,7 @@ import mpicbg.imglib.util.IntervalIndexer;
  *
  * @author Stephan Preibisch and Stephan Saalfeld
  */
-public class ArrayLocalizingCursor< T extends NativeType< T > > extends AbstractImgLocalizingCursorInt< T >
+public class ArrayLocalizingCursor< T extends NativeType< T > > extends AbstractLocalizingCursorInt< T > implements Cursor< T >
 {
 	protected final T type;
 
@@ -46,13 +46,42 @@ public class ArrayLocalizingCursor< T extends NativeType< T > > extends Abstract
 
 	protected final int lastIndex;
 
+	/**
+	 * Maximum of the {@link ArrayImg} in every dimension.
+	 * This is used to check isOutOfBounds().
+	 */
+	protected final int[] max;
+	
+	protected ArrayLocalizingCursor( final ArrayLocalizingCursor< T > cursor )
+	{
+		super( cursor.numDimensions() );
+
+		this.container = cursor.container;
+		this.type = container.createLinkedType();
+		this.lastIndex = ( int )container.size() - 1;
+
+		max = new int[ n ];
+		for( int d = 0; d < n; ++d )
+		{
+			position[ d ] = cursor.position[ d ];
+			max[ d ] = cursor.max[ d ];
+		}
+
+		type.updateIndex( cursor.type.getIndex() );
+		type.updateContainer( this );
+	}
+	
 	public ArrayLocalizingCursor( final ArrayImg< T, ? > container )
 	{
-		super( container );
+		super( container.numDimensions() );
 
 		this.container = container;
 		this.type = container.createLinkedType();
 		this.lastIndex = ( int )container.size() - 1;
+
+		max = new int[ n ];
+		for( int d = 0; d < n; ++d )
+			max[ d ] = ( int ) container.max( d );
 
 		reset();
 	}
@@ -76,7 +105,7 @@ public class ArrayLocalizingCursor< T extends NativeType< T > > extends Abstract
 
 		for ( int d = 0; d < n; ++d )
 		{
-			if ( ++position[ d ] >= dimension[ d ] ) position[ d ] = 0;
+			if ( ++position[ d ] > max[ d ] ) position[ d ] = 0;
 			else break;
 		}
 	}
@@ -85,25 +114,25 @@ public class ArrayLocalizingCursor< T extends NativeType< T > > extends Abstract
 	public void jumpFwd( final long steps )
 	{
 		type.incIndex( ( int ) steps );
-		IntervalIndexer.indexToPosition( type.getIndex(), dimension, position );
+		IntervalIndexer.indexToPosition( type.getIndex(), container.dim, position );
 	}
 
 	@Override
 	public void reset()
 	{
-		if ( dimension != null )
-		{
-			type.updateIndex( -1 );
+		type.updateIndex( -1 );
 
-			position[ 0 ] = -1;
+		position[ 0 ] = -1;
 
-			for ( int d = 1; d < n; d++ )
-				position[ d ] = 0;
+		for ( int d = 1; d < n; d++ )
+			position[ d ] = 0;
 
-			type.updateContainer( this );
-		}
+		type.updateContainer( this );
 	}
-
+	
 	@Override
-	public ArrayImg< T, ? > getImg(){ return container; }
+	public ArrayLocalizingCursor< T > copy()
+	{
+		return new ArrayLocalizingCursor< T >( this );
+	}
 }

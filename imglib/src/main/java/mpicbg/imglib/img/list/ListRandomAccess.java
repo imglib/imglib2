@@ -29,10 +29,8 @@ package mpicbg.imglib.img.list;
 
 import java.util.ArrayList;
 
-import mpicbg.imglib.Localizable;
-import mpicbg.imglib.img.AbstractImgRandomAccess;
+import mpicbg.imglib.AbstractRandomAccess;
 import mpicbg.imglib.type.Type;
-import mpicbg.imglib.util.Util;
 
 /**
  * 
@@ -40,7 +38,7 @@ import mpicbg.imglib.util.Util;
  *
  * @author Stephan Preibisch and Stephan Saalfeld
  */
-public class ListRandomAccess< T extends Type< T > > extends AbstractImgRandomAccess< T >
+public class ListRandomAccess< T extends Type< T > > extends AbstractRandomAccess< T >
 {
 	private int i;
 	
@@ -49,9 +47,23 @@ public class ListRandomAccess< T extends Type< T > > extends AbstractImgRandomAc
 	
 	final private int[] step;
 	
+	public ListRandomAccess( final ListRandomAccess< T > randomAccess ) 
+	{
+		super( randomAccess.numDimensions() );
+		
+		container = randomAccess.container;
+		this.pixels = randomAccess.pixels;
+		this.step = container.getSteps();
+		
+		for ( int d = 0; d < n; ++d )
+			position[ d ] = randomAccess.position[ d ];
+		
+		i = randomAccess.i;
+	}
+	
 	public ListRandomAccess( final ListImg< T > container ) 
 	{
-		super( container );
+		super( container.numDimensions() );
 		
 		this.container = container;
 		this.pixels = container.pixels;
@@ -88,33 +100,19 @@ public class ListRandomAccess< T extends Type< T > > extends AbstractImgRandomAc
 	}
 		
 	@Override
-	public void move( final int[] pos )
+	public void move( final int[] distance )
 	{		
 		for ( int d = 0; d < n; ++d )
-			move( pos[ d ], d );
+			move( distance[ d ], d );
 	}
 
 	@Override
-	public void move( final long[] pos )
+	public void move( final long[] distance )
 	{
 		for ( int d = 0; d < n; ++d )
-			move( (int)pos[ d ], d );
+			move( (int)distance[ d ], d );
 	}
 
-	@Override
-	public void move( final Localizable localizable )
-	{
-		localizable.localize( tmp );
-		move( tmp );
-	}
-	
-	@Override
-	public void setPosition( final Localizable localizable )
-	{
-		localizable.localize( tmp );
-		setPosition( tmp );
-	}
-	
 	@Override
 	public void setPosition( final int[] position )
 	{
@@ -148,17 +146,11 @@ public class ListRandomAccess< T extends Type< T > > extends AbstractImgRandomAc
 	}
 	
 	@Override
-	public ListImg< T > getImg(){ return container; }
+	public T get(){ return pixels.get( i ); }
 	
 	@Override
-	public T get(){ return pixels.get( i ); }
-
-	@Override
-	public String toString() 
+	public ListRandomAccess< T > copy()
 	{
-		final long[] t = new long[ n ];
-		localize( t );
-		
-		return Util.printCoordinates( t ) + ": " + get(); 
-	}	
+		return new ListRandomAccess< T >( this );
+	}
 }

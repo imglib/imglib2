@@ -28,7 +28,8 @@
 package mpicbg.imglib;
 
 /**
- * 
+ * An {@link IterableRealInterval} whose elements are located at integer
+ * coordinates. 
  *
  * @author Tobias Pietzsch & Stephan Preibisch & Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */

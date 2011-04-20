@@ -29,9 +29,9 @@ package mpicbg.imglib.img.list;
 
 import java.util.ArrayList;
 
-import mpicbg.imglib.img.AbstractImgLocalizingCursor;
+import mpicbg.imglib.AbstractLocalizingCursor;
+import mpicbg.imglib.Cursor;
 import mpicbg.imglib.type.Type;
-import mpicbg.imglib.util.Util;
 
 /**
  * 
@@ -39,21 +39,44 @@ import mpicbg.imglib.util.Util;
  *
  * @author Stephan Preibisch and Stephan Saalfeld
  */
-final public class ListLocalizingCursor< T extends Type< T > > extends AbstractImgLocalizingCursor< T >
+final public class ListLocalizingCursor< T extends Type< T > > extends AbstractLocalizingCursor< T > implements Cursor< T >
 {
 	private int i;
 	final private int maxNumPixels;
 	
-	final private ArrayList< T > pixels;
-	final private ListImg< T > container;
+	final private long[] max;
 	
-	public ListLocalizingCursor(	final ListImg< T > container )
+	final private ArrayList< T > pixels;
+	
+	public ListLocalizingCursor( final ListLocalizingCursor< T > cursor )
 	{
-		super( container );
+		super( cursor.numDimensions() );
 		
-		this.container = container;
-		this.pixels = container.pixels;
-		this.maxNumPixels = ( int )container.size() - 1;
+		this.pixels = cursor.pixels;
+		this.maxNumPixels = cursor.maxNumPixels;
+
+		this.max = new long[ n ];
+		for ( int d = 0; d < n; ++d )
+		{
+			max[ d ] = cursor.max[ 0 ];
+			position[ d ] = cursor.position[ d ];
+		}
+	
+		i = cursor.i;
+	}
+	
+	public ListLocalizingCursor( final ListImg< T > img )
+	{
+		super( img.numDimensions() );
+		
+		this.pixels = img.pixels;
+		this.maxNumPixels = ( int )img.size() - 1;
+
+		this.max = new long[ n ];
+		for ( int d = 0; d < n; ++d )
+		{
+			max[ d ] = img.max( d );
+		}
 	
 		reset();
 	}
@@ -65,7 +88,7 @@ final public class ListLocalizingCursor< T extends Type< T > > extends AbstractI
 		
 		for ( int d = 0; d < n; d++ )
 		{
-			if ( position[ d ] < dimension[ d ] - 1 )
+			if ( position[ d ] < max[ d ] )
 			{
 				position[ d ]++;
 				
@@ -83,29 +106,20 @@ final public class ListLocalizingCursor< T extends Type< T > > extends AbstractI
 	@Override
 	public void reset()
 	{
-		if ( dimension != null )
-		{
-			i = -1;
-			
-			position[ 0 ] = -1;
-			
-			for ( int d = 1; d < n; d++ )
-				position[ d ] = 0;		
-		}
+		i = -1;
+		
+		position[ 0 ] = -1;
+		
+		for ( int d = 1; d < n; d++ )
+			position[ d ] = 0;		
 	}
 
-	@Override
-	public ListImg< T > getImg(){ return container; }
-	
 	@Override
 	public T get() { return pixels.get( i ); }
 	
 	@Override
-	public String toString() 
+	public ListLocalizingCursor< T > copy()
 	{
-		final long[] tmp = new long[ n ];
-		localize( tmp );
-		
-		return Util.printCoordinates( tmp ) + ": " + get(); 
-	}	
+		return new ListLocalizingCursor< T >( this );
+	}
 }

@@ -9,8 +9,8 @@ import mpicbg.imglib.img.Img;
 import mpicbg.imglib.img.ImgFactory;
 import mpicbg.imglib.img.array.ArrayImgFactory;
 import mpicbg.imglib.img.planar.PlanarImgFactory;
-import mpicbg.imglib.interpolation.nearestneighbor.NearestNeighborInterpolatorFactory;
-import mpicbg.imglib.io.ImageOpener;
+import mpicbg.imglib.interpolation.randomaccess.NearestNeighborInterpolatorFactory;
+import mpicbg.imglib.io.ImgOpener;
 import mpicbg.imglib.io.LOCI;
 import mpicbg.imglib.outofbounds.OutOfBoundsConstantValueFactory;
 import mpicbg.imglib.outofbounds.OutOfBoundsFactory;
@@ -29,7 +29,7 @@ public class OpenDisplayGaussTransformBehaviour
 		
 		try
 		{
-			img = new ImageOpener().openImage( "D:/Temp/Truman/MoreTiles/73_8bit.tif", factory, new FloatType() );
+			img = new ImgOpener().openImg( "D:/Temp/Truman/MoreTiles/73_8bit.tif", factory, new FloatType() );
 		}
 		catch ( Exception e )
 		{

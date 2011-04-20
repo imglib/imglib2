@@ -222,13 +222,4 @@ public class ImagePlusImg< T extends NativeType< T >, A extends ArrayDataAccess<
 			if ( array != null )
 				array.close();
 	}
-
-	@Override
-	protected void finalize() throws Throwable {
-	    try {
-	        close();
-	    } finally {
-	        super.finalize();
-	    }
-	}
 }

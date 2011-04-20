@@ -32,11 +32,9 @@ import java.util.ArrayList;
 import mpicbg.imglib.Interval;
 import mpicbg.imglib.IterableRealInterval;
 import mpicbg.imglib.img.AbstractNativeImg;
-import mpicbg.imglib.img.Img;
 import mpicbg.imglib.img.NativeImg;
 import mpicbg.imglib.img.basictypeaccess.PlanarAccess;
 import mpicbg.imglib.img.basictypeaccess.array.ArrayDataAccess;
-import mpicbg.imglib.outofbounds.OutOfBoundsFactory;
 import mpicbg.imglib.type.NativeType;
 
 
@@ -60,7 +58,7 @@ public class PlanarImg< T extends NativeType< T >, A extends ArrayDataAccess<A> 
 	final protected int numSlices;
 
 	/*
-	 * duplicate of size[] as an int array.
+	 * duplicate of long[] dimension as an int array.
 	 */
 	final protected int[] dimensions;
 
@@ -234,12 +232,6 @@ public class PlanarImg< T extends NativeType< T >, A extends ArrayDataAccess<A> 
 			return new PlanarRandomAccess1D<T>( this );
 		else
 			return new PlanarRandomAccess<T>( this );
-	}
-
-	@Override
-	public PlanarOutOfBoundsRandomAccess< T > randomAccess( OutOfBoundsFactory<T,Img< T >> outOfBoundsFactory )
-	{
-		return new PlanarOutOfBoundsRandomAccess< T >( this, outOfBoundsFactory );
 	}
 
 	@Override

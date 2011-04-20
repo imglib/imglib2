@@ -23,7 +23,7 @@ import mpicbg.imglib.display.ARGBScreenImage;
 import mpicbg.imglib.display.RealARGBConverter;
 import mpicbg.imglib.display.XYProjector;
 import mpicbg.imglib.exception.IncompatibleTypeException;
-import mpicbg.imglib.io.ImageOpener;
+import mpicbg.imglib.io.ImgOpener;
 import mpicbg.imglib.io.ImgPlus;
 import mpicbg.imglib.type.NativeType;
 import mpicbg.imglib.type.numeric.ARGBType;
@@ -133,7 +133,7 @@ public class ImgPanel extends JPanel {
 
 	private static <T extends RealType<T> & NativeType<T>> ImgPlus<T> loadImage(String path) {
 		try {
-			return new ImageOpener().openImage(path);
+			return new ImgOpener().openImg(path);
 		}
 		catch (IncompatibleTypeException e) {
 			e.printStackTrace();

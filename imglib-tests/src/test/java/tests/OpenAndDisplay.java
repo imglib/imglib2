@@ -12,8 +12,8 @@ import mpicbg.imglib.img.ImgFactory;
 import mpicbg.imglib.img.array.ArrayImgFactory;
 import mpicbg.imglib.img.cell.CellImgFactory;
 import mpicbg.imglib.img.list.ListImgFactory;
-import mpicbg.imglib.interpolation.nearestneighbor.NearestNeighborInterpolatorFactory;
-import mpicbg.imglib.io.LOCI;
+import mpicbg.imglib.interpolation.randomaccess.NearestNeighborInterpolatorFactory;
+import mpicbg.imglib.io.ImgOpener;
 import mpicbg.imglib.outofbounds.OutOfBoundsConstantValueFactory;
 import mpicbg.imglib.outofbounds.OutOfBoundsFactory;
 import mpicbg.imglib.outofbounds.OutOfBoundsMirrorFactory;
@@ -25,7 +25,11 @@ public class OpenAndDisplay
 {	
 	public static void test( ImgFactory<FloatType> factory )
 	{
-		Img<FloatType> img = LOCI.openLOCIFloatType( "/home/saalfeld/Desktop/73.tif",  factory );
+		ImgOpener io = new ImgOpener();
+		
+		
+		//Img<FloatType> img = LOCI.openLOCIFloatType( "/home/saalfeld/Desktop/73.tif",  factory );
+		Img<FloatType> img = io.openImg( "/home/saalfeld/Desktop/73.tif",  factory );
 		
 		ImgLib2Display.copyToImagePlus( img, new int[] {2, 0, 1} ).show();
 		

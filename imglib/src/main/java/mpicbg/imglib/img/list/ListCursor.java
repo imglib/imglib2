@@ -29,10 +29,10 @@ package mpicbg.imglib.img.list;
 
 import java.util.ArrayList;
 
-import mpicbg.imglib.img.AbstractImgCursor;
+import mpicbg.imglib.AbstractCursor;
+import mpicbg.imglib.Cursor;
 import mpicbg.imglib.type.Type;
 import mpicbg.imglib.util.IntervalIndexer;
-import mpicbg.imglib.util.Util;
 
 /**
  * 
@@ -40,13 +40,24 @@ import mpicbg.imglib.util.Util;
  *
  * @author Stephan Preibisch and Stephan Saalfeld
  */
-final public class ListCursor< T extends Type< T > > extends AbstractImgCursor< T >
+final public class ListCursor< T extends Type< T > > extends AbstractCursor< T > implements Cursor< T >
 {
 	private int i;
 	final private int maxNumPixels;
 	
 	final private ArrayList< T > pixels;
 	final private ListImg< T > container;
+	
+	protected ListCursor( final ListCursor< T > cursor )
+	{
+		super( cursor.numDimensions() );
+		
+		container = cursor.container;
+		this.pixels = container.pixels;
+		this.maxNumPixels = cursor.maxNumPixels;
+		
+		i = cursor.i;
+	}
 	
 	public ListCursor( final ListImg< T > container )
 	{
@@ -61,6 +72,12 @@ final public class ListCursor< T extends Type< T > > extends AbstractImgCursor< 
 	
 	@Override
 	public T get() { return pixels.get( i ); }
+	
+	@Override
+	public ListCursor< T > copy()
+	{
+		return new ListCursor< T >( this );
+	}
 
 	@Override
 	public boolean hasNext() { return i < maxNumPixels; }
@@ -75,9 +92,6 @@ final public class ListCursor< T extends Type< T > > extends AbstractImgCursor< 
 	public void reset() { i = -1; }
 	
 	@Override
-	public ListImg<T> getImg() { return container; }
-		
-	@Override
 	public long getLongPosition( final int dim )
 	{
 		return IntervalIndexer.indexToPosition( i, container.dim, container.step, dim );
@@ -88,13 +102,4 @@ final public class ListCursor< T extends Type< T > > extends AbstractImgCursor< 
 	{
 		IntervalIndexer.indexToPosition( i, container.dim, position );
 	}
-
-	@Override
-	public String toString() 
-	{
-		final long[] tmp = new long[ n ];
-		localize( tmp );
-		
-		return Util.printCoordinates( tmp ) + ": " + get(); 
-	}	
 }

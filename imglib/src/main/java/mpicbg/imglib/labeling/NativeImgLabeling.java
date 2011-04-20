@@ -18,15 +18,13 @@
 
 package mpicbg.imglib.labeling;
 
-import mpicbg.imglib.img.Img;
-import mpicbg.imglib.img.ImgCursor;
+import mpicbg.imglib.Cursor;
+import mpicbg.imglib.RandomAccess;
 import mpicbg.imglib.img.ImgFactory;
-import mpicbg.imglib.img.ImgRandomAccess;
 import mpicbg.imglib.img.NativeImg;
 import mpicbg.imglib.img.NativeImgFactory;
 import mpicbg.imglib.img.array.ArrayImgFactory;
 import mpicbg.imglib.img.basictypeaccess.IntAccess;
-import mpicbg.imglib.outofbounds.OutOfBoundsFactory;
 
 
 /**
@@ -76,14 +74,8 @@ public class NativeImgLabeling<T extends Comparable<T>>
 	}
 	
 	@Override
-	public ImgRandomAccess<LabelingType<T>> randomAccess() {
+	public RandomAccess<LabelingType<T>> randomAccess() {
 		return img.randomAccess();
-	}
-
-	@Override
-	public ImgRandomAccess<LabelingType<T>> randomAccess(
-			OutOfBoundsFactory<LabelingType<T>, Img<LabelingType<T>>> factory) {
-		return img.randomAccess(factory);
 	}
 
 	/* (non-Javadoc)
@@ -96,12 +88,12 @@ public class NativeImgLabeling<T extends Comparable<T>>
 	}
 
 	@Override
-	public ImgCursor<LabelingType<T>> cursor() {
+	public Cursor<LabelingType<T>> cursor() {
 		return img.cursor();
 	}
 
 	@Override
-	public ImgCursor<LabelingType<T>> localizingCursor() {
+	public Cursor<LabelingType<T>> localizingCursor() {
 		return img.localizingCursor();
 	}
 

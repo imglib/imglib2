@@ -2,17 +2,13 @@ package tests;
 
 import java.util.Arrays;
 
-
-
+import mpicbg.imglib.Cursor;
+import mpicbg.imglib.RandomAccess;
 import mpicbg.imglib.img.Img;
-import mpicbg.imglib.img.ImgCursor;
 import mpicbg.imglib.img.ImgFactory;
-import mpicbg.imglib.img.ImgRandomAccess;
 import mpicbg.imglib.img.array.ArrayImgFactory;
-
 import mpicbg.imglib.type.NativeType;
 import mpicbg.imglib.type.numeric.RealType;
-
 import mpicbg.imglib.type.numeric.real.FloatType;
 import mpicbg.imglib.util.Util;
 
@@ -44,7 +40,7 @@ public class TestBase {
 	 * Check whether an image is identical to a generated image
 	 */
 	protected<T extends RealType<T>> boolean match( Img<T> image, Function function ) {
-		ImgCursor<T> cursor = image.localizingCursor();
+		Cursor<T> cursor = image.localizingCursor();
 		long[] pos = new long[cursor.numDimensions()];
 		while( cursor.hasNext() ) {
 			cursor.fwd();
@@ -59,7 +55,7 @@ public class TestBase {
 	 * Check whether an image is identical to a generated image, with fuzz
 	 */
 	protected<T extends RealType<T>> boolean match( Img<T> image, Function function, float tolerance ) {
-		ImgCursor<T> cursor = image.localizingCursor();
+		Cursor<T> cursor = image.localizingCursor();
 		long[] pos = new long[cursor.numDimensions()];
 		while( cursor.hasNext() ) {
 			cursor.fwd();
@@ -88,7 +84,7 @@ public class TestBase {
 	 */
 	protected<T extends RealType<T>> void signature( Img<T> image, float[] result ) {
 		Arrays.fill( result, 0 );
-		ImgCursor<T> cursor = image.localizingCursor();
+		Cursor<T> cursor = image.localizingCursor();
 		int n = cursor.numDimensions();
 		long[] pos = new long[n];
 		while( cursor.hasNext() ) {
@@ -144,7 +140,7 @@ public class TestBase {
 	 * Convenience helper to access single pixels
 	 */
 	protected<T extends RealType<T>> float get( Img<T> image, int[] pos ) {
-		ImgRandomAccess<T> randomAccess = image.randomAccess();
+		RandomAccess<T> randomAccess = image.randomAccess();
 		randomAccess.setPosition( pos );
 		float result = randomAccess.get().getRealFloat();
 		return result;
@@ -163,7 +159,7 @@ public class TestBase {
 	protected<T extends RealType<T> & NativeType< T >> Img<T> makeImage( T type, Function function, long[] dims ) {
 		ImgFactory<T> factory = new ArrayImgFactory<T>();
 		Img<T> result = factory.create( dims, type );
-		ImgCursor<T> cursor = result.localizingCursor();
+		Cursor<T> cursor = result.localizingCursor();
 		long[] pos = new long[cursor.numDimensions()];
 		while( cursor.hasNext() ) {
 			cursor.fwd();

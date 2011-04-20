@@ -31,6 +31,9 @@ package mpicbg.imglib.img;
 
 import java.util.Iterator;
 
+import mpicbg.imglib.Interval;
+import mpicbg.imglib.RandomAccess;
+
 
 public abstract class AbstractImg< T > implements Img< T >
 {
@@ -161,8 +164,13 @@ public abstract class AbstractImg< T > implements Img< T >
 	{
 		return 0;
 	}
-	
 
+	@Override
+	public RandomAccess< T > randomAccess( Interval interval )
+	{
+		return randomAccess();
+	}
+	
 //	@Override
 //	public OrthoSliceIterator< T > createOrthoSliceIterator( final Image< T > image, final int x, final int y, final int[] position )
 //	{
