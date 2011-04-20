@@ -38,14 +38,14 @@ import java.util.Iterator;
  */
 final public class IterableIntervalSubset< T > implements IterableInterval< T >
 {
-	final private class Cursor implements mpicbg.imglib.Cursor< T >
+	final private class IISCursor implements Cursor< T >
 	{
 		private long index;
 		
-		final private mpicbg.imglib.Cursor< T > cursor;
+		final private Cursor< T > cursor;
 		final private boolean localizing; 
 		
-		private Cursor( final Cursor cursor )
+		private IISCursor( final IISCursor cursor )
 		{
 			this.localizing = cursor.localizing;
 			if ( localizing )
@@ -57,7 +57,7 @@ final public class IterableIntervalSubset< T > implements IterableInterval< T >
 			cursor.jumpFwd( index + 1 );
 		}
 		
-		Cursor( final boolean localizing )
+		IISCursor( final boolean localizing )
 		{
 			this.localizing = localizing;
 			if ( localizing )
@@ -106,9 +106,9 @@ final public class IterableIntervalSubset< T > implements IterableInterval< T >
 		}
 
 		@Override
-		final public Cursor copy()
+		final public IISCursor copy()
 		{
-			return new Cursor( this );
+			return new IISCursor( this );
 		}
 
 		@Override
@@ -198,21 +198,21 @@ final public class IterableIntervalSubset< T > implements IterableInterval< T >
 	}
 
 	@Override
-	final public mpicbg.imglib.Cursor< T > cursor()
+	final public Cursor< T > cursor()
 	{
 		if ( firstIndex == 0 && size == interval.size() )
 			return interval.cursor();
 		else
-			return new Cursor( false );
+			return new IISCursor( false );
 	}
 
 	@Override
-	final public mpicbg.imglib.Cursor< T > localizingCursor()
+	final public Cursor< T > localizingCursor()
 	{
 		if ( firstIndex == 0 && size == interval.size() )
 			return interval.localizingCursor();
 		else
-			return new Cursor( true );
+			return new IISCursor( true );
 	}
 
 	@Override
