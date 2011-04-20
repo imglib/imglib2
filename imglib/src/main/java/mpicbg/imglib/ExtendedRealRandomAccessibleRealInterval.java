@@ -56,7 +56,7 @@ final public class ExtendedRealRandomAccessibleRealInterval< T, F extends RealRa
 	}
 
 	@Override
-	final public RealRandomAccess< T > realRandomAccess()
+	final public RealOutOfBoundsRealRandomAccess< T > realRandomAccess()
 	{
 		return new RealOutOfBoundsRealRandomAccess< T >( interval.numDimensions(), factory.create( interval ) );
 	}

@@ -57,7 +57,7 @@ final public class ExtendedRandomAccessibleInterval< T, F extends RandomAccessib
 	}
 
 	@Override
-	final public RandomAccess< T > randomAccess()
+	final public OutOfBoundsRandomAccess< T > randomAccess()
 	{
 		return new OutOfBoundsRandomAccess< T >( source.numDimensions(), factory.create( source ) );
 	}
