@@ -93,7 +93,7 @@ public final class FullSourceMapMixedRandomAccess< T > extends AbstractSampler< 
 	{
 		super( randomAccess.numDimensions() );
 
-		this.s = randomAccess.s.copy();
+		this.s = randomAccess.s.copyRandomAccess();
 		this.m = randomAccess.m; 
 		this.translation = randomAccess.translation.clone();
 		this.sourceInv = randomAccess.sourceInv.clone();
@@ -332,5 +332,11 @@ public final class FullSourceMapMixedRandomAccess< T > extends AbstractSampler< 
 	public FullSourceMapMixedRandomAccess< T > copy()
 	{
 		return new FullSourceMapMixedRandomAccess< T >( this );
+	}
+
+	@Override
+	public FullSourceMapMixedRandomAccess< T > copyRandomAccess()
+	{
+		return copy();
 	}
 }

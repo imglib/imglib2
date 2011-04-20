@@ -140,4 +140,7 @@ public abstract class AbstractCursorInt< T > extends AbstractSampler< T > implem
 	
 	@Override
 	abstract public AbstractCursorInt< T > copy();
+
+	@Override
+	abstract public AbstractCursorInt< T > copyCursor();
 }

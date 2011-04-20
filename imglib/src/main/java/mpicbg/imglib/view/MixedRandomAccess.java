@@ -96,7 +96,7 @@ public final class MixedRandomAccess< T > extends AbstractRandomAccess< T >
 	{
 		super( randomAccess.numDimensions() );
 
-		this.s = randomAccess.s.copy();
+		this.s = randomAccess.s.copyRandomAccess();
 		this.m = randomAccess.m;
 
 		this.translation = randomAccess.translation.clone();
@@ -282,5 +282,11 @@ public final class MixedRandomAccess< T > extends AbstractRandomAccess< T >
 	public MixedRandomAccess< T > copy()
 	{
 		return new MixedRandomAccess< T >( this );
+	}
+
+	@Override
+	public MixedRandomAccess< T > copyRandomAccess()
+	{
+		return copy();
 	}
 }

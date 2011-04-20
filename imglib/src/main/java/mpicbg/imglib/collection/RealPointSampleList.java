@@ -59,7 +59,13 @@ public class RealPointSampleList< T > implements IterableRealInterval< T >
 			
 			return copy;
 		}
-		
+
+		@Override
+		final public RealCursor< T > copyCursor()
+		{
+			return copy();
+		}
+
 		@Override
 		public double getDoublePosition( final int d )
 		{

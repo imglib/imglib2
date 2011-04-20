@@ -5,7 +5,7 @@ import mpicbg.imglib.Cursor;
 import mpicbg.imglib.img.basictypeaccess.array.ArrayDataAccess;
 import mpicbg.imglib.type.NativeType;
 
-public class CellCursor< T extends NativeType< T >, A extends ArrayDataAccess< A > > extends AbstractCursor< T > implements Cursor< T >, CellImg.CellContainerSampler< T, A >
+public class CellCursor< T extends NativeType< T >, A extends ArrayDataAccess< A > > extends AbstractCursor< T > implements CellImg.CellContainerSampler< T, A >
 {
 	protected final T type;
 	
@@ -29,7 +29,7 @@ public class CellCursor< T extends NativeType< T >, A extends ArrayDataAccess< A
 		super( cursor.numDimensions() );
 		
 		this.type = cursor.type.duplicateTypeOnSameNativeImg();
-		this.cursorOnCells = cursor.cursorOnCells.copy();
+		this.cursorOnCells = cursor.cursorOnCells.copyCursor();
 		isNotLastCell = cursor.isNotLastCell;
 		lastIndexInCell = cursor.lastIndexInCell;
 		index = cursor.index;
@@ -64,6 +64,11 @@ public class CellCursor< T extends NativeType< T >, A extends ArrayDataAccess< A
 	public CellCursor< T, A > copy()
 	{
 		return new CellCursor< T, A >( this );
+	}
+
+	@Override
+	public CellCursor< T, A > copyCursor() {
+		return copy();
 	}
 
 	@Override

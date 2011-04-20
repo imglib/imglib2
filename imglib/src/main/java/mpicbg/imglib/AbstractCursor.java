@@ -136,4 +136,7 @@ public abstract class AbstractCursor< T > extends AbstractSampler< T > implement
 	
 	@Override
 	abstract public AbstractCursor< T > copy();
+
+	@Override
+	abstract public AbstractCursor< T > copyCursor();
 }

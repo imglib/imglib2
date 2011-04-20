@@ -72,4 +72,7 @@ public abstract class AbstractBoundedRandomAccessInt< T > extends AbstractRandom
 	
 	@Override
 	abstract public AbstractBoundedRandomAccessInt< T > copy();
+	
+	@Override
+	abstract public AbstractBoundedRandomAccessInt< T > copyRandomAccess();
 }

@@ -153,4 +153,10 @@ public class ListRandomAccess< T extends Type< T > > extends AbstractRandomAcces
 	{
 		return new ListRandomAccess< T >( this );
 	}
+
+	@Override
+	public ListRandomAccess< T > copyRandomAccess()
+	{
+		return copy();
+	}
 }

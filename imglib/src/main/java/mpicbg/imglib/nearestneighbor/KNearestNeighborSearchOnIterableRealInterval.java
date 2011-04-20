@@ -95,7 +95,7 @@ public class KNearestNeighborSearchOnIterableRealInterval< T > implements KNeare
 			int i = k - 1;
 			if ( squareDistances[ i ] > squareDistance )
 			{
-				final RealCursor< T > candidate = cursor.copy();
+				final RealCursor< T > candidate = cursor.copyCursor();
 				
 				for ( int j = i - 1; i > 0 && squareDistances[ j ] > squareDistance; --i, --j )
 				{

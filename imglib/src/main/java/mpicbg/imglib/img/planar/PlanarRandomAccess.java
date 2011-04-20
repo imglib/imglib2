@@ -86,6 +86,12 @@ public class PlanarRandomAccess< T extends NativeType< T > > extends AbstractRan
 	}
 	
 	@Override
+	public PlanarRandomAccess< T > copyRandomAccess()
+	{
+		return copy();
+	}
+
+	@Override
 	public void fwd( final int d )
 	{
 		++position[ d ];

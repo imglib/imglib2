@@ -90,7 +90,7 @@ public class NearestNeighborSearchOnIterableRealInterval< T > implements Nearest
 			if ( squareDistance > cursorSquareDistance )
 			{
 				squareDistance = cursorSquareDistance;
-				element = cursor.copy();
+				element = cursor.copyCursor();
 			}
 		}
 	}

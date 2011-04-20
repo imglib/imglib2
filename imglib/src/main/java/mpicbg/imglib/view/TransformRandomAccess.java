@@ -34,7 +34,7 @@ public final class TransformRandomAccess< T > extends AbstractRandomAccess< T >
 	protected TransformRandomAccess( final TransformRandomAccess< T > randomAccess )
 	{
 		super( randomAccess.numDimensions() );
-		this.source = randomAccess.source.copy();
+		this.source = randomAccess.source.copyRandomAccess();
 		this.transformToSource = randomAccess.transformToSource;
 		this.tmp = new long[ randomAccess.tmp.length ];
 	}
@@ -151,5 +151,11 @@ public final class TransformRandomAccess< T > extends AbstractRandomAccess< T >
 	public TransformRandomAccess< T > copy()
 	{
 		return new TransformRandomAccess< T >( this );
+	}
+
+	@Override
+	public TransformRandomAccess< T > copyRandomAccess()
+	{
+		return copy();
 	}
 }

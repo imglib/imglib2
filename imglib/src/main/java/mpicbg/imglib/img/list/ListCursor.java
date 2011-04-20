@@ -40,7 +40,7 @@ import mpicbg.imglib.util.IntervalIndexer;
  *
  * @author Stephan Preibisch and Stephan Saalfeld
  */
-final public class ListCursor< T extends Type< T > > extends AbstractCursor< T > implements Cursor< T >
+final public class ListCursor< T extends Type< T > > extends AbstractCursor< T >
 {
 	private int i;
 	final private int maxNumPixels;
@@ -77,6 +77,12 @@ final public class ListCursor< T extends Type< T > > extends AbstractCursor< T >
 	public ListCursor< T > copy()
 	{
 		return new ListCursor< T >( this );
+	}
+
+	@Override
+	public ListCursor< T > copyCursor()
+	{
+		return copy();
 	}
 
 	@Override

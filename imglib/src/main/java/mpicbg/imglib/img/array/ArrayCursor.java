@@ -123,4 +123,10 @@ public class ArrayCursor< T extends NativeType< T > > extends AbstractCursorInt<
 	{
 		return new ArrayCursor< T >( this );
 	}
+
+	@Override
+	public ArrayCursor< T > copyCursor()
+	{
+		return copy();
+	}
 }

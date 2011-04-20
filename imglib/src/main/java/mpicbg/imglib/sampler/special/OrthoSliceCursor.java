@@ -89,7 +89,7 @@ public class OrthoSliceCursor< T extends Type< T > > implements Cursor< T >, Int
 	protected OrthoSliceCursor( final OrthoSliceCursor< T > cursor )
 	{
 		this.interval = cursor.interval;
-		this.sampler = cursor.sampler.copy();
+		this.sampler = cursor.sampler.copyRandomAccess();
 		this.x = cursor.x;
 		this.y = cursor.y;
 		this.w = cursor.w;
@@ -284,5 +284,11 @@ public class OrthoSliceCursor< T extends Type< T > > implements Cursor< T >, Int
 	public OrthoSliceCursor< T > copy()
 	{
 		return new OrthoSliceCursor< T >( this );
+	}
+
+	@Override
+	public OrthoSliceCursor< T > copyCursor()
+	{
+		return copy();
 	}
 }

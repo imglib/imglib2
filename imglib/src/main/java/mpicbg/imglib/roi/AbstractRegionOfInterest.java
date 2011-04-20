@@ -232,6 +232,12 @@ public abstract class AbstractRegionOfInterest implements RegionOfInterest {
 		{
 			return new AROIRandomAccess( this );
 		}
+
+		@Override
+		public AROIRandomAccess copyRealRandomAccess()
+		{
+			return copy();
+		}
 	}
 	
 	protected AbstractRegionOfInterest(int nDimensions) {

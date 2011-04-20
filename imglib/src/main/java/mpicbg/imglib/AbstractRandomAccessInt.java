@@ -111,4 +111,7 @@ public abstract class AbstractRandomAccessInt< T > extends AbstractLocalizableSa
 	
 	@Override
 	abstract public AbstractRandomAccessInt< T > copy();
+
+	@Override
+	abstract public AbstractRandomAccessInt< T > copyRandomAccess();
 }

@@ -144,4 +144,10 @@ public class ArrayRandomAccess< T extends NativeType< T > > extends AbstractRand
 	{
 		return new ArrayRandomAccess< T >( this );
 	}
+
+	@Override
+	public ArrayRandomAccess< T > copyRandomAccess()
+	{
+		return copy();
+	}
 }

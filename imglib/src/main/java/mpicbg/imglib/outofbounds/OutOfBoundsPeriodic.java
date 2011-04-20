@@ -77,7 +77,7 @@ public class OutOfBoundsPeriodic< T > implements OutOfBounds< T >
 			dimIsOutOfBounds[ d ] = outOfBounds.dimIsOutOfBounds[ d ];
 		}
 		
-		outOfBoundsRandomAccess = outOfBounds.outOfBoundsRandomAccess.copy();
+		outOfBoundsRandomAccess = outOfBounds.outOfBoundsRandomAccess.copyRandomAccess();
 	}
 	
 	public < F extends Interval & RandomAccessible< T > > OutOfBoundsPeriodic( final F f )
@@ -138,6 +138,16 @@ public class OutOfBoundsPeriodic< T > implements OutOfBounds< T >
 	{
 		return new OutOfBoundsPeriodic< T >( this );
 	}
+	
+	
+	/* RandomAccess */
+
+	@Override
+	final public OutOfBoundsPeriodic< T > copyRandomAccess()
+	{
+		return copy();
+	}
+	
 	
 	/* Localizable */
 	

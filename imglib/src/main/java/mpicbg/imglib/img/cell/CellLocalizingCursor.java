@@ -5,7 +5,7 @@ import mpicbg.imglib.Cursor;
 import mpicbg.imglib.img.basictypeaccess.array.ArrayDataAccess;
 import mpicbg.imglib.type.NativeType;
 
-public class CellLocalizingCursor< T extends NativeType< T >, A extends ArrayDataAccess< A > > extends AbstractLocalizingCursor< T > implements Cursor< T >, CellImg.CellContainerSampler< T, A >
+public class CellLocalizingCursor< T extends NativeType< T >, A extends ArrayDataAccess< A > > extends AbstractLocalizingCursor< T > implements CellImg.CellContainerSampler< T, A >
 {
 	protected final T type;
 	
@@ -31,7 +31,7 @@ public class CellLocalizingCursor< T extends NativeType< T >, A extends ArrayDat
 		super( cursor.numDimensions() );
 		
 		this.type = cursor.type.duplicateTypeOnSameNativeImg();
-		this.cursorOnCells = cursor.cursorOnCells.copy();
+		this.cursorOnCells = cursor.cursorOnCells.copyCursor();
 		this.minPositionInCell = new long[ n ];
 		this.maxPositionInCell = new long[ n ];
 		
@@ -73,15 +73,19 @@ public class CellLocalizingCursor< T extends NativeType< T >, A extends ArrayDat
 	{
 		return type;
 	}
-	
-	
+
 	@Override
 	public CellLocalizingCursor< T, A > copy()
 	{
 		return new CellLocalizingCursor< T, A >( this );
 	}
-	
-	
+
+	@Override
+	public CellLocalizingCursor< T, A > copyCursor()
+	{
+		return copy();
+	}
+
 	@Override
 	public boolean hasNext()
 	{

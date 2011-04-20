@@ -39,7 +39,7 @@ import mpicbg.imglib.type.Type;
  *
  * @author Stephan Preibisch and Stephan Saalfeld
  */
-final public class ListLocalizingCursor< T extends Type< T > > extends AbstractLocalizingCursor< T > implements Cursor< T >
+final public class ListLocalizingCursor< T extends Type< T > > extends AbstractLocalizingCursor< T >
 {
 	private int i;
 	final private int maxNumPixels;
@@ -121,5 +121,11 @@ final public class ListLocalizingCursor< T extends Type< T > > extends AbstractL
 	public ListLocalizingCursor< T > copy()
 	{
 		return new ListLocalizingCursor< T >( this );
+	}
+
+	@Override
+	public ListLocalizingCursor< T > copyCursor()
+	{
+		return copy();
 	}
 }

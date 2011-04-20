@@ -57,7 +57,7 @@ public class OutOfBoundsConstantValue< T extends Type< T > > implements OutOfBou
 	protected OutOfBoundsConstantValue( final OutOfBoundsConstantValue< T > outOfBounds )
 	{
 		this.value = outOfBounds.value.copy();
-		this.sampler = outOfBounds.sampler.copy();
+		this.sampler = outOfBounds.sampler.copyRandomAccess();
 		n = outOfBounds.n;
 		dimension = new long[ n ];
 		min = new long[ n ];
@@ -136,10 +136,19 @@ public class OutOfBoundsConstantValue< T extends Type< T > > implements OutOfBou
 	{
 		return new OutOfBoundsConstantValue< T >( this );
 	}
-	
-	
+
+
+	/* RandomAccess */
+
+	@Override
+	final public OutOfBoundsConstantValue< T > copyRandomAccess()
+	{
+		return copy();
+	}
+
+
 	/* RasterLocalizable */
-	
+
 	@Override
 	public void localize( final float[] pos )
 	{

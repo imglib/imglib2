@@ -44,7 +44,7 @@ public class NearestNeighborInterpolator< T > extends Round< RandomAccess< T > >
 {
 	protected NearestNeighborInterpolator( final NearestNeighborInterpolator< T > nearestNeighborInterpolator )
 	{
-		super( nearestNeighborInterpolator.target.copy() );
+		super( nearestNeighborInterpolator.target.copyRandomAccess() );
 	}
 	
 	protected NearestNeighborInterpolator( final RandomAccessible< T > randomAccessible )
@@ -62,5 +62,11 @@ public class NearestNeighborInterpolator< T > extends Round< RandomAccess< T > >
 	public NearestNeighborInterpolator< T > copy()
 	{
 		return new NearestNeighborInterpolator< T >( this );
+	}
+
+	@Override
+	public NearestNeighborInterpolator< T > copyRealRandomAccess()
+	{
+		return copy();
 	}
 }

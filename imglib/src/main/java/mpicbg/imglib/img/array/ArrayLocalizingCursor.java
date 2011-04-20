@@ -135,4 +135,10 @@ public class ArrayLocalizingCursor< T extends NativeType< T > > extends Abstract
 	{
 		return new ArrayLocalizingCursor< T >( this );
 	}
+
+	@Override
+	public ArrayLocalizingCursor< T > copyCursor()
+	{
+		return copy();
+	}
 }

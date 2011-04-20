@@ -112,6 +112,12 @@ final public class IterableIntervalSubset< T > implements IterableInterval< T >
 		}
 
 		@Override
+		final public IISCursor copyCursor()
+		{
+			return copy();
+		}
+
+		@Override
 		final public void fwd()
 		{
 			++index;

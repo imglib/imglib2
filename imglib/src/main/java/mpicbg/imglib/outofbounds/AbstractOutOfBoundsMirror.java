@@ -77,7 +77,7 @@ public abstract class AbstractOutOfBoundsMirror< T > implements OutOfBounds< T >
 			inc[ d ] = outOfBounds.inc[ d ];
 		}
 		
-		outOfBoundsRandomAccess = outOfBounds.outOfBoundsRandomAccess.copy();
+		outOfBoundsRandomAccess = outOfBounds.outOfBoundsRandomAccess.copyRandomAccess();
 	}
 	
 	public < F extends Interval & RandomAccessible< T > > AbstractOutOfBoundsMirror( final F f )

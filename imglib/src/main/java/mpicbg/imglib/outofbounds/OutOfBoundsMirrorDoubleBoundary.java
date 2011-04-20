@@ -62,16 +62,25 @@ final public class OutOfBoundsMirrorDoubleBoundary< T > extends AbstractOutOfBou
 		for ( int i = 0; i < dimension.length; ++i )
 			p[ i ] = 2 * dimension[ i ];
 	}
-	
-	
+
+
 	/* Sampler */
-	
+
+	@Override
 	final public OutOfBoundsMirrorDoubleBoundary< T > copy()
 	{
 		return new OutOfBoundsMirrorDoubleBoundary< T >( this );
 	}
-	
-	
+
+	/* RandomAccess */
+
+	@Override
+	final public OutOfBoundsMirrorDoubleBoundary< T > copyRandomAccess()
+	{
+		return copy();
+	}
+
+
 	/* Positionable */
 	
 	@Override

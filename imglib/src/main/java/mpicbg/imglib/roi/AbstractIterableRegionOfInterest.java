@@ -98,7 +98,7 @@ public abstract class AbstractIterableRegionOfInterest extends
 			
 			protected AROICursor( final AROICursor cursor )
 			{
-				randomAccess = cursor.randomAccess.copy();
+				randomAccess = cursor.randomAccess.copyRandomAccess();
 				for ( int d = 0; d < position.length; ++d )
 				{
 					position[ d ] = cursor.position[ d ];
@@ -228,6 +228,11 @@ public abstract class AbstractIterableRegionOfInterest extends
 				return new AROICursor( this );
 			}
 
+			@Override
+			public AROICursor copyCursor()
+			{
+				return copy();
+			}
 		}
 		
 		@Override

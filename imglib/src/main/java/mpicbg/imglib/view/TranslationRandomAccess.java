@@ -30,7 +30,7 @@ public final class TranslationRandomAccess< T > extends AbstractSampler< T > imp
 	{
 		super( randomAccess.numDimensions() );
 
-		s = randomAccess.s.copy();
+		s = randomAccess.s.copyRandomAccess();
 		translation = randomAccess.translation.clone();
 		tmp = new long[ n ];
 	}
@@ -188,5 +188,11 @@ public final class TranslationRandomAccess< T > extends AbstractSampler< T > imp
 	public TranslationRandomAccess< T > copy()
 	{
 		return new TranslationRandomAccess< T >( this );
+	}
+
+	@Override
+	public TranslationRandomAccess< T > copyRandomAccess()
+	{
+		return copy();
 	}
 }

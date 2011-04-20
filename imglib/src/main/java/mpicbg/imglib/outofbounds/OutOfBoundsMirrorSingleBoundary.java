@@ -66,10 +66,20 @@ public class OutOfBoundsMirrorSingleBoundary< T > extends AbstractOutOfBoundsMir
 	
 
 	/* Sampler */
-	
+
+	@Override
 	final public OutOfBoundsMirrorSingleBoundary< T > copy()
 	{
 		return new OutOfBoundsMirrorSingleBoundary< T >( this );
+	}
+	
+	
+	/* RandomAccess */
+
+	@Override
+	final public OutOfBoundsMirrorSingleBoundary< T > copyRandomAccess()
+	{
+		return copy();
 	}
 	
 	

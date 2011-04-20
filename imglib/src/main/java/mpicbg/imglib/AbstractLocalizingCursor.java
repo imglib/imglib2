@@ -65,4 +65,7 @@ public abstract class AbstractLocalizingCursor< T > extends AbstractLocalizableS
 	
 	@Override
 	abstract public AbstractLocalizingCursor< T > copy();
+	
+	@Override
+	abstract public AbstractLocalizingCursor< T > copyCursor();
 }

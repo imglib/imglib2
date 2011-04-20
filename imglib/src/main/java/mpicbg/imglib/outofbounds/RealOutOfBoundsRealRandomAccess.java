@@ -90,6 +90,15 @@ public final class RealOutOfBoundsRealRandomAccess< T > extends AbstractSampler<
 	}
 
 	
+	/* RealRandomAccess */
+	
+	@Override
+	public RealOutOfBoundsRealRandomAccess< T > copyRealRandomAccess()
+	{
+		return copy();
+	}
+
+	
 	/* RealLocalizable */
 
 	@Override

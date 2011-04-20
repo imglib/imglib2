@@ -34,6 +34,15 @@ package mpicbg.imglib;
  */
 public interface Cursor< T > extends RealCursor< T >, Localizable
 {
+	// NB: Ideally, we would utilize covariant inheritance to narrow the return
+	// type of a single copy() method here, rather than needing separate methods
+	// copy(), copyCursor(), copyRandomAccess() and copyRealRandomAccess().
+	// Unfortunately, due to a Javac bug with multiple interface inheritance,
+	// we must avoid doing so for now. For details, see:
+	//     http://bugs.sun.com/view_bug.do?bug_id=6656332
+	// The bug is fixed in JDK7.
 	@Override
-	public Cursor< T > copy();
+	public Cursor< T > copyCursor();
+//	@Override
+//	public Cursor< T > copy();
 }

@@ -189,4 +189,10 @@ public final class OutOfBoundsRandomAccess< T > extends AbstractSampler< T > imp
 	{
 		return new OutOfBoundsRandomAccess< T >( this );
 	}
+
+	@Override
+	public OutOfBoundsRandomAccess< T > copyRandomAccess()
+	{
+		return copy();
+	}
 }

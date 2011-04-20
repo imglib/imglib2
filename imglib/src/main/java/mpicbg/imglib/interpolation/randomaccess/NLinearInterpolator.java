@@ -77,7 +77,7 @@ public class NLinearInterpolator< T extends NumericType< T > > extends Floor< Ra
 
 	protected NLinearInterpolator( final NLinearInterpolator< T > interpolator )
 	{
-		super( interpolator.target.copy() );
+		super( interpolator.target.copyRandomAccess() );
 		
 		weights = interpolator.weights.clone();		
 		code = interpolator.code;
@@ -193,6 +193,12 @@ public class NLinearInterpolator< T extends NumericType< T > > extends Floor< Ra
 	public NLinearInterpolator< T > copy()
 	{
 		return new NLinearInterpolator< T >( this );
+	}
+
+	@Override
+	public NLinearInterpolator< T > copyRealRandomAccess()
+	{
+		return copy();
 	}
 
 	final private void graycodeFwdRecursive ( int dimension )

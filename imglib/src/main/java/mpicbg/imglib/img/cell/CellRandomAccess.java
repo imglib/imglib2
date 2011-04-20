@@ -37,7 +37,7 @@ public class CellRandomAccess< T extends NativeType< T >, A extends ArrayDataAcc
 		super( randomAccess.numDimensions() );
 		
 		this.type = randomAccess.type.duplicateTypeOnSameNativeImg();
-		this.cursorOnCells = randomAccess.cursorOnCells.copy();
+		this.cursorOnCells = randomAccess.cursorOnCells.copyRandomAccess();
 		this.defaultCellDims = randomAccess.defaultCellDims;
 		
 		this.positionOfCurrentCell = new long[ n ];
@@ -96,6 +96,12 @@ public class CellRandomAccess< T extends NativeType< T >, A extends ArrayDataAcc
 		return new CellRandomAccess< T, A >( this );
 	}
 	
+	@Override
+	public CellRandomAccess< T, A > copyRandomAccess()
+	{
+		return copy();
+	}
+
 	@Override
 	public void fwd( final int dim )
 	{
