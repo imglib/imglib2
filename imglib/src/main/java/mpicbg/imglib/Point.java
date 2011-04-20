@@ -5,7 +5,7 @@ package mpicbg.imglib;
  *
  * A Point is a position in Euclidean space specified in integer coordinates.
  */
-public class Point implements Localizable, Positionable, EuclideanSpace {
+public class Point implements Localizable, Positionable {
 
 	final protected long[] position;
 	

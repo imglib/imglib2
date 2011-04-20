@@ -41,7 +41,7 @@ import mpicbg.imglib.img.Img;
  * 
  * @author Tobias Pietzsch, Stephan Preibisch and Stephan Saalfeld
  */
-public abstract class AbstractBoundedRandomAccessInt< T > extends AbstractRandomAccessInt< T > implements RandomAccess< T >, Bounded
+public abstract class AbstractBoundedRandomAccessInt< T > extends AbstractRandomAccessInt< T > implements Bounded
 {
 	/**
 	 * Maximum of the {@link Img} in every dimension.

@@ -5,7 +5,7 @@ package mpicbg.imglib;
  *
  * A point is a location in EuclideanSpace.
  */
-public class RealPoint implements RealLocalizable, RealPositionable, EuclideanSpace
+public class RealPoint implements RealLocalizable, RealPositionable
 {
 	final protected double [] position;
 	
