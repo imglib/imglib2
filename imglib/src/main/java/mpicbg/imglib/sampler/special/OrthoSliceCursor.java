@@ -86,6 +86,19 @@ public class OrthoSliceCursor< T extends Type< T > > implements Cursor< T >, Int
 		reset();
 	}
 
+	protected OrthoSliceCursor( final OrthoSliceCursor< T > cursor )
+	{
+		this.interval = cursor.interval;
+		this.sampler = cursor.sampler.copy();
+		this.x = cursor.x;
+		this.y = cursor.y;
+		this.w = cursor.w;
+		this.h = cursor.h;
+		this.maxX = cursor.maxX;
+		this.maxY = cursor.maxY;
+		this.initialState = cursor.initialState;
+	}
+
 	@Override
 	public T get()
 	{
@@ -265,5 +278,11 @@ public class OrthoSliceCursor< T extends Type< T > > implements Cursor< T >, Int
 	public void realMax( final double[] max )
 	{
 		interval.realMax( max );
+	}
+
+	@Override
+	public OrthoSliceCursor< T > copy()
+	{
+		return new OrthoSliceCursor< T >( this );
 	}
 }
