@@ -28,17 +28,15 @@
 package mpicbg.imglib.outofbounds;
 
 import static org.junit.Assert.assertEquals;
-
 import mpicbg.imglib.Cursor;
+import mpicbg.imglib.ExtendedRandomAccessibleInterval;
 import mpicbg.imglib.Localizable;
 import mpicbg.imglib.img.Img;
-import mpicbg.imglib.img.ImgRandomAccess;
 import mpicbg.imglib.img.array.ArrayImg;
 import mpicbg.imglib.img.array.ArrayImgFactory;
 import mpicbg.imglib.img.cell.CellImg;
 import mpicbg.imglib.img.cell.CellImgFactory;
 import mpicbg.imglib.img.list.ListImgFactory;
-import mpicbg.imglib.outofbounds.OutOfBoundsMirrorFactory;
 import mpicbg.imglib.outofbounds.OutOfBoundsMirrorFactory.Boundary;
 import mpicbg.imglib.type.numeric.integer.IntType;
 
@@ -61,9 +59,9 @@ public class OutOfBoundsMirrorDoubleBoundaryTest
 	static private CellImg< IntType, ? > cellImage;
 	static private Img< IntType > listImage;
 	
-	static private ImgRandomAccess< IntType > cArray;
-	static private ImgRandomAccess< IntType > cCell;
-	static private ImgRandomAccess< IntType > cList;
+	static private OutOfBoundsRandomAccess< IntType > cArray;
+	static private OutOfBoundsRandomAccess< IntType > cCell;
+	static private OutOfBoundsRandomAccess< IntType > cList;
 	
 	/**
 	 * @throws java.lang.Exception
@@ -124,9 +122,9 @@ public class OutOfBoundsMirrorDoubleBoundaryTest
 		for ( final IntType t : listImage )
 			t.set( i++ );
 
-		cArray = arrayImage.randomAccess( new OutOfBoundsMirrorFactory< IntType, Img< IntType > >( Boundary.DOUBLE ) );
-		cCell = cellImage.randomAccess( new OutOfBoundsMirrorFactory< IntType, Img< IntType > >( Boundary.DOUBLE ) );
-		cList = listImage.randomAccess( new OutOfBoundsMirrorFactory< IntType, Img< IntType > >( Boundary.DOUBLE ) );
+		cArray = new ExtendedRandomAccessibleInterval< IntType, Img< IntType > >( arrayImage, new OutOfBoundsMirrorFactory< IntType, Img< IntType > >( Boundary.DOUBLE ) ).randomAccess();
+		cCell = new ExtendedRandomAccessibleInterval< IntType, Img< IntType > >( cellImage, new OutOfBoundsMirrorFactory< IntType, Img< IntType > >( Boundary.DOUBLE ) ).randomAccess();
+		cList = new ExtendedRandomAccessibleInterval< IntType, Img< IntType > >( listImage, new OutOfBoundsMirrorFactory< IntType, Img< IntType > >( Boundary.DOUBLE ) ).randomAccess();
 		
 	}
 
