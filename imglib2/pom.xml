@@ -16,13 +16,14 @@
   <inceptionYear>2009</inceptionYear>
 
   <modules>
-    <!--<module>GameOfDeath</module>-->
-    <module>imglib</module>
-    <!--<module>imglib-algorithms</module>-->
-    <!--<module>imglib-ij</module>-->
-    <module>imglib-io</module>
-    <!--<module>imglib-scripting</module>-->
-    <module>imglib-ui</module>
+    <!--<module>algorithms</module>-->
+    <module>core</module>
+    <!--<module>examples</module>-->
+    <!--<module>ij</module>-->
+    <module>io</module>
+    <!--<module>ops</module>-->
+    <!--<module>scripting</module>-->
+    <module>ui</module>
   </modules>
 
   <properties>
