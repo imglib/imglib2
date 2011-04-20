@@ -1,0 +1,195 @@
+/**
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License 2
+ * as published by the Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ * 
+ * @author Stephan Preibisch
+ */
+package mpicbg.imglib.algorithm.math;
+
+import java.util.Vector;
+import java.util.concurrent.atomic.AtomicInteger;
+
+import mpicbg.imglib.algorithm.Benchmark;
+import mpicbg.imglib.algorithm.MultiThreaded;
+import mpicbg.imglib.algorithm.OutputAlgorithm;
+import mpicbg.imglib.img.Img;
+import mpicbg.imglib.img.ImgCursor;
+import mpicbg.imglib.img.ImgFactory;
+import mpicbg.imglib.img.ImgRandomAccess;
+import mpicbg.imglib.converter.Converter;
+import mpicbg.imglib.multithreading.Chunk;
+import mpicbg.imglib.multithreading.SimpleMultiThreading;
+import mpicbg.imglib.type.Type;
+import mpicbg.imglib.util.Util;
+
+public class ImageConverter< S extends Type<S>, T extends Type<T> > implements OutputAlgorithm<Img<T>>, MultiThreaded, Benchmark
+{
+	final Img<S> image;
+	final Img<T> output;
+	final Converter<S,T> converter;
+
+	long processingTime;
+	int numThreads;
+	String errorMessage = "";
+	
+	public ImageConverter( final Img<S> image, final Img<T> output, final Converter<S,T> converter )
+	{
+		this.image = image;
+		this.output = output;
+		this.converter = converter;
+		
+		setNumThreads();
+	}
+	
+	public ImageConverter( final Img<S> image, final ImgFactory<T> factory, final T destType, final Converter<S,T> converter )
+	{
+		this( image, factory.create( image, destType ),  converter );
+	}
+	
+	@Override
+	public Img<T> getResult() { return output; }
+
+	@Override
+	public boolean checkInput()
+	{
+		if ( errorMessage.length() > 0 )
+		{
+			return false;
+		}
+		else if ( image == null )
+		{
+			errorMessage = "ImageCalculator: [Image<S> image1] is null.";
+			return false;
+		}
+		else if ( output == null )
+		{
+			errorMessage = "ImageCalculator: [Image<T> output] is null.";
+			return false;
+		}
+		else if ( converter == null )
+		{
+			errorMessage = "ImageCalculator: [Converter<S,T>] is null.";
+			return false;
+		}
+		else if ( !image.equalIterationOrder( output ) )
+		{
+			errorMessage = "ImageCalculator: Images have different dimensions, not supported:" + 
+				" Image: " + Util.printCoordinates( Util.intervalDimensions( image ) ) + 
+				" Output: " + Util.printCoordinates( Util.intervalDimensions( output ) );
+			return false;
+		}
+		else
+			return true;
+	}
+
+	@Override
+	public boolean process()
+	{
+		final long startTime = System.currentTimeMillis();
+
+		final long imageSize = image.size();
+
+		final AtomicInteger ai = new AtomicInteger(0);					
+        final Thread[] threads = SimpleMultiThreading.newThreads( getNumThreads() );
+
+        final Vector<Chunk> threadChunks = SimpleMultiThreading.divideIntoChunks( imageSize, numThreads );
+        
+        final boolean isCompatible = image.equalIterationOrder( output ); 
+	
+        for (int ithread = 0; ithread < threads.length; ++ithread)
+            threads[ithread] = new Thread(new Runnable()
+            {
+                public void run()
+                {
+                	// Thread ID
+                	final int myNumber = ai.getAndIncrement();
+        
+                	// get chunk of pixels to process
+                	final Chunk myChunk = threadChunks.get( myNumber );
+                	
+					// check if all container types are comparable so that we can use simple iterators
+					// we assume transivity here
+					if (  isCompatible )
+					{
+						// we can simply use iterators
+						computeSimple( myChunk.getStartPosition(), myChunk.getLoopSize() );
+					}
+					else
+					{
+						// we need a combination of Localizable and LocalizableByDim
+						computeAdvanced( myChunk.getStartPosition(), myChunk.getLoopSize() );
+					}
+
+                }
+            });
+        
+        SimpleMultiThreading.startAndJoin( threads );
+        
+		processingTime = System.currentTimeMillis() - startTime;
+        
+		return true;
+	}
+	
+	protected void computeSimple( final long startPos, final long loopSize )
+	{
+		final ImgCursor<S> cursorIn = image.cursor();
+		final ImgCursor<T> cursorOut = output.cursor();
+		
+		// move to the starting position of the current thread
+		cursorIn.jumpFwd( startPos );
+		cursorOut.jumpFwd( startPos );
+    	
+        // do as many pixels as wanted by this thread
+        for ( long j = 0; j < loopSize; ++j )
+        {
+			cursorIn.fwd();
+			cursorOut.fwd();
+			
+			converter.convert( cursorIn.get(), cursorOut.get() );
+		}		
+	}
+	
+	protected void computeAdvanced( final long startPos, final long loopSize )
+	{
+		final ImgRandomAccess<S> cursorIn = image.randomAccess();
+		final ImgCursor<T> cursorOut = output.cursor();
+		
+		// move to the starting position of the current thread
+		cursorOut.jumpFwd( startPos );
+    	
+        // do as many pixels as wanted by this thread
+        for ( long j = 0; j < loopSize; ++j )
+        {
+			cursorOut.fwd();
+			cursorIn.setPosition( cursorOut );
+			
+			converter.convert( cursorIn.get(), cursorOut.get() );
+		}				
+	}
+
+	@Override
+	public void setNumThreads() { this.numThreads = Runtime.getRuntime().availableProcessors(); }
+
+	@Override
+	public void setNumThreads( final int numThreads ) { this.numThreads = numThreads; }
+
+	@Override
+	public int getNumThreads() { return numThreads; }	
+	
+	@Override
+	public String getErrorMessage() { return errorMessage; }
+
+	@Override
+	public long getProcessingTime() { return processingTime; }
+
+}

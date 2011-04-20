@@ -1,0 +1,219 @@
+package mpicbg.imglib.transform.integer;
+
+import mpicbg.imglib.Localizable;
+import mpicbg.imglib.Positionable;
+import mpicbg.imglib.transform.InvertibleTransform;
+
+/**
+ * Transform n-dimensional to m-dimensional coordinates (m<n) by flattening
+ * dimensions > m. An example of this transformation is the way, a 2D image is
+ * flattened out as a 1D array in memory.
+ * 
+ * @author Tobias Pietzsch
+ */
+public class SequentializeTransform implements InvertibleTransform
+{
+	/**
+	 * dimension of source vector.
+	 */
+	protected final int numSourceDimensions;
+
+	/**
+	 * dimension of target vector.
+	 */
+	protected final int numTargetDimensions;
+
+	protected final int maxSourceDimension;
+
+	protected final int maxTargetDimension;
+
+	protected final long[] seqDimensions;
+
+	protected final InvertibleTransform inverse;
+
+	public SequentializeTransform( final long[] sourceDimensions, final int numTargetDimensions )
+	{
+		this.numSourceDimensions = sourceDimensions.length;
+		this.numTargetDimensions = numTargetDimensions;
+		this.maxTargetDimension = numTargetDimensions - 1;
+		this.maxSourceDimension = numSourceDimensions - 1;
+		assert this.numSourceDimensions > this.numTargetDimensions;
+
+		seqDimensions = new long[ numSourceDimensions ];
+		for ( int d = maxTargetDimension; d < numSourceDimensions; ++d )
+		{
+			seqDimensions[ d ] = sourceDimensions[ d ];
+		}
+
+		inverse = new InvertibleTransform()
+		{
+			@Override
+			public int numSourceDimensions()
+			{
+				return SequentializeTransform.this.numTargetDimensions();
+			}
+
+			@Override
+			public int numTargetDimensions()
+			{
+				return SequentializeTransform.this.numSourceDimensions();
+			}
+
+			@Override
+			public void apply( long[] source, long[] target )
+			{
+				SequentializeTransform.this.applyInverse( target, source );
+			}
+
+			@Override
+			public void apply( int[] source, int[] target )
+			{
+				SequentializeTransform.this.applyInverse( target, source );
+			}
+
+			@Override
+			public void apply( Localizable source, Positionable target )
+			{
+				SequentializeTransform.this.applyInverse( target, source );
+			}
+
+			@Override
+			public void applyInverse( long[] source, long[] target )
+			{
+				SequentializeTransform.this.apply( target, source );
+			}
+
+			@Override
+			public void applyInverse( int[] source, int[] target )
+			{
+				SequentializeTransform.this.apply( target, source );
+			}
+
+			@Override
+			public void applyInverse( Positionable source, Localizable target )
+			{
+				SequentializeTransform.this.apply( target, source );
+			}
+
+			@Override
+			public InvertibleTransform inverse()
+			{
+				return SequentializeTransform.this;
+			}
+		};
+	}
+
+	@Override
+	public int numSourceDimensions()
+	{
+		return numSourceDimensions;
+	}
+
+	@Override
+	public int numTargetDimensions()
+	{
+		return numTargetDimensions;
+	}
+
+	@Override
+	public void apply( long[] source, long[] target )
+	{
+		assert source.length >= numSourceDimensions;
+		assert target.length >= numTargetDimensions;
+
+		for ( int d = 0; d < maxTargetDimension; ++d )
+			target[ d ] = source[ d ];
+		long i = source[ maxSourceDimension ];
+		for ( int d = maxSourceDimension - 1; d >= maxTargetDimension; --d )
+			i = i * seqDimensions[ d ] + source[ d ];
+		target[ maxTargetDimension ] = i;
+	}
+
+	@Override
+	public void apply( int[] source, int[] target )
+	{
+		assert source.length >= numSourceDimensions;
+		assert target.length >= numTargetDimensions;
+
+		for ( int d = 0; d < maxTargetDimension; ++d )
+			target[ d ] = source[ d ];
+		int i = source[ maxSourceDimension ];
+		for ( int d = maxSourceDimension - 1; d >= maxTargetDimension; --d )
+			i = i * ( int ) seqDimensions[ d ] + source[ d ];
+		target[ maxTargetDimension ] = i;
+	}
+
+	@Override
+	public void apply( Localizable source, Positionable target )
+	{
+		assert source.numDimensions() >= numSourceDimensions;
+		assert target.numDimensions() >= numTargetDimensions;
+
+		for ( int d = 0; d < maxTargetDimension; ++d )
+			target.setPosition( source.getLongPosition( d ), d );
+		long i = source.getLongPosition( maxSourceDimension );
+		for ( int d = maxSourceDimension - 1; d >= maxTargetDimension; --d )
+			i = i * seqDimensions[ d ] + source.getLongPosition( d );
+		target.setPosition( i, maxTargetDimension );
+	}
+
+	@Override
+	public void applyInverse( long[] source, long[] target )
+	{
+		assert source.length >= numSourceDimensions;
+		assert target.length >= numTargetDimensions;
+
+		for ( int d = 0; d < maxTargetDimension; ++d )
+			source[ d ] = target[ d ];
+		long i = target[ maxTargetDimension ];
+		for ( int d = maxTargetDimension; d < maxSourceDimension; ++d )
+		{
+			final long j = i / seqDimensions[ d ];
+			source[ d ] = i - j * seqDimensions[ d ];
+			i = j;
+		}
+		source[ maxSourceDimension ] = i;
+	}
+
+	@Override
+	public void applyInverse( int[] source, int[] target )
+	{
+		assert source.length >= numSourceDimensions;
+		assert target.length >= numTargetDimensions;
+
+		for ( int d = 0; d < maxTargetDimension; ++d )
+			source[ d ] = target[ d ];
+		int i = target[ maxTargetDimension ];
+		for ( int d = maxTargetDimension; d < maxSourceDimension; ++d )
+		{
+			final int j = ( int ) ( i / seqDimensions[ d ] );
+			source[ d ] = ( int ) ( i - j * seqDimensions[ d ] );
+			i = j;
+		}
+		source[ maxSourceDimension ] = i;
+	}
+
+	@Override
+	public void applyInverse( Positionable source, Localizable target )
+	{
+		assert source.numDimensions() >= numSourceDimensions;
+		assert target.numDimensions() >= numTargetDimensions;
+
+		for ( int d = 0; d < maxTargetDimension; ++d )
+			source.setPosition( target.getLongPosition( d ), d );
+		long i = target.getLongPosition( maxTargetDimension );
+		for ( int d = maxTargetDimension; d < maxSourceDimension; ++d )
+		{
+			final long j = ( i / seqDimensions[ d ] );
+			source.setPosition( i - j * seqDimensions[ d ], d );
+			i = j;
+		}
+		source.setPosition( i, maxSourceDimension );
+	}
+
+	@Override
+	public InvertibleTransform inverse()
+	{
+		return inverse;
+	}
+}
