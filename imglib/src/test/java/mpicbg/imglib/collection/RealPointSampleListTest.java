@@ -28,10 +28,10 @@ public class RealPointSampleListTest
 			final RealLocalizable a,
 			final RealLocalizable b )
 	{
-		final int n = a.numDimensions();
-		if ( n != b.numDimensions() )
+		final int na = a.numDimensions();
+		if ( na != b.numDimensions() )
 			return false;
-		for ( int d = 0; d < n; ++d )
+		for ( int d = 0; d < na; ++d )
 		{
 			if ( a.getDoublePosition( d ) != b.getDoublePosition( d ) )
 				return false;

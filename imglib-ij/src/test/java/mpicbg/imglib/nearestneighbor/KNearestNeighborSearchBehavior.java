@@ -55,17 +55,17 @@ public class KNearestNeighborSearchBehavior
 		
 		final ImagePlusImgFactory< UnsignedByteType > factory = new ImagePlusImgFactory< UnsignedByteType >();
 		
-		new ImageJ();		
+		new ImageJ();	
 		
 		/* nearest neighbor */
 		final ImagePlusImg< UnsignedByteType, ? > img1 = factory.create( size, new UnsignedByteType() );
 		final Cursor< UnsignedByteType > c1 = img1.localizingCursor();
-		final KNearestNeighborSearchOnIterableRealInterval< UnsignedByteType > search1 = new KNearestNeighborSearchOnIterableRealInterval< UnsignedByteType >( list, 1 );
+		final NearestNeighborSearchOnIterableRealInterval< UnsignedByteType > search1 = new NearestNeighborSearchOnIterableRealInterval< UnsignedByteType >( list );
 		while ( c1.hasNext() )
 		{
 			c1.fwd();
 			search1.search( c1 );
-			c1.get().set( search1.getSampler( 0 ).get() );
+			c1.get().set( search1.getSampler().get() );
 		}
 		
 		try
@@ -78,17 +78,38 @@ public class KNearestNeighborSearchBehavior
 			e.printStackTrace();
 		}
 		
-		/* linear */
+		/* nearest neighbor through k-nearest-neighbor search */
 		final ImagePlusImg< UnsignedByteType, ? > img2 = factory.create( size, new UnsignedByteType() );
 		final Cursor< UnsignedByteType > c2 = img2.localizingCursor();
-		final KNearestNeighborSearchOnIterableRealInterval< UnsignedByteType > search2 = new KNearestNeighborSearchOnIterableRealInterval< UnsignedByteType >( list, 3 );
+		final KNearestNeighborSearchOnIterableRealInterval< UnsignedByteType > search2 = new KNearestNeighborSearchOnIterableRealInterval< UnsignedByteType >( list, 1 );
 		while ( c2.hasNext() )
 		{
 			c2.fwd();
 			search2.search( c2 );
-			double d1 = search2.getDistance( 0 );
-			double d2 = search2.getDistance( 1 );
-			double d3 = search2.getDistance( 2 );
+			c2.get().set( search2.getSampler( 0 ).get() );
+		}
+		
+		try
+		{
+			img2.getImagePlus().show();
+		}
+		catch ( ImgLibException e )
+		{
+			IJ.log( "Didn't work out." );
+			e.printStackTrace();
+		}
+		
+		/* distance */
+		final ImagePlusImg< UnsignedByteType, ? > img3 = factory.create( size, new UnsignedByteType() );
+		final Cursor< UnsignedByteType > c3 = img3.localizingCursor();
+		final KNearestNeighborSearchOnIterableRealInterval< UnsignedByteType > search3 = new KNearestNeighborSearchOnIterableRealInterval< UnsignedByteType >( list, 3 );
+		while ( c3.hasNext() )
+		{
+			c3.fwd();
+			search3.search( c3 );
+			double d1 = search3.getDistance( 0 );
+			double d2 = search3.getDistance( 1 );
+			double d3 = search3.getDistance( 2 );
 			double a = ( d1 + d2 + d3 ) / 2.0;
 			d1 = 1.0 - d1 / a;
 			d2 = 1.0 - d2 / a;
@@ -96,16 +117,16 @@ public class KNearestNeighborSearchBehavior
 			
 			
 			final double v =
-				search2.getSampler( 0 ).get().getRealDouble() * d1 +
-				search2.getSampler( 1 ).get().getRealDouble() * d2 +
-				search2.getSampler( 2 ).get().getRealDouble() * d3;
+				search3.getSampler( 0 ).get().getRealDouble() * d1 +
+				search3.getSampler( 1 ).get().getRealDouble() * d2 +
+				search3.getSampler( 2 ).get().getRealDouble() * d3;
 			
-			c2.get().set( Math.max(  0, Math.min( 255, ( int )Math.round( v ) ) ) );
+			c3.get().set( Math.max(  0, Math.min( 255, ( int )Math.round( v ) ) ) );
 		}
 		
 		try
 		{
-			img2.getImagePlus().show();
+			img3.getImagePlus().show();
 		}
 		catch ( ImgLibException e )
 		{
