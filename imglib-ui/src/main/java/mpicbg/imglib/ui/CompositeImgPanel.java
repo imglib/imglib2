@@ -24,15 +24,15 @@ import mpicbg.imglib.converter.Converter;
 import mpicbg.imglib.display.ARGBScreenImage;
 import mpicbg.imglib.exception.IncompatibleTypeException;
 import mpicbg.imglib.img.Img;
-import mpicbg.imglib.io.ImageOpener;
+import mpicbg.imglib.io.ImgOpener;
+import mpicbg.imglib.io.ImgPlus;
 import mpicbg.imglib.type.NativeType;
 import mpicbg.imglib.type.numeric.ARGBType;
 import mpicbg.imglib.type.numeric.RealType;
 
 public class CompositeImgPanel extends JPanel {
 
-
-	private Color[] createRampLUT(int c) {
+	protected Color[] createRampLUT(int c) {
 		int numcolors = 256;
 		Color[] colorTable = new Color[numcolors];
 		for (int i = 0; i < numcolors; i++) {
@@ -105,8 +105,8 @@ public class CompositeImgPanel extends JPanel {
 			}
 
 		}
-		private List<CompositeImgData<?>> images = new ArrayList<CompositeImgData<?>>();
-		private int maxWidth = 0, maxHeight = 0;
+		protected List<CompositeImgData<?>> images = new ArrayList<CompositeImgData<?>>();
+		protected int maxWidth = 0, maxHeight = 0;
 
 		public CompositeImgPanel() {
 			setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
@@ -129,7 +129,8 @@ public class CompositeImgPanel extends JPanel {
 		}
 
 		public <T extends RealType<T> & NativeType<T>> void addImage(final String name,
-				final Img<T> img) {
+			final Img<T> img)
+		{
 			final CompositeImgData<T> imgData = new CompositeImgData<T>(name, img, this);
 			images.add(imgData);
 			if (imgData.width > maxWidth) {
@@ -142,10 +143,6 @@ public class CompositeImgPanel extends JPanel {
 		}
 
 		public static final <T extends RealType<T> & NativeType<T>> void main(final String[] args) {
-//		final String[] paths = {
-//			"/Users/curtis/data/mitosis-test.ipw",
-//			"/Users/curtis/data/z-series.ome.tif"
-//		};
 			final String[] paths = {
 				"C:/TestImages/TestImages/MyoblastCells.tif"
 			//"C:/TestImages/multi-channel-time-series.ome.tif"
@@ -154,8 +151,8 @@ public class CompositeImgPanel extends JPanel {
 			frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 			final CompositeImgPanel imgPanel = new CompositeImgPanel();
 			for (String path : paths) {
-				final Img<T> img = loadImage(path);
-				imgPanel.addImage(path, img);
+				final ImgPlus<T> img = loadImage(path);
+				imgPanel.addImage(path, img.getImg());
 			}
 			frame.setContentPane(imgPanel);
 			frame.pack();
@@ -163,9 +160,9 @@ public class CompositeImgPanel extends JPanel {
 			frame.setVisible(true);
 		}
 
-		private static <T extends RealType<T> & NativeType<T>> Img<T> loadImage(String path) {
+		private static <T extends RealType<T> & NativeType<T>> ImgPlus<T> loadImage(String path) {
 			try {
-				return new ImageOpener().openImage(path);
+				return new ImgOpener().openImg(path);
 			} catch (IncompatibleTypeException e) {
 				e.printStackTrace();
 			} catch (FormatException e) {
