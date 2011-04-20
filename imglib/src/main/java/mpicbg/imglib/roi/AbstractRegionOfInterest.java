@@ -25,20 +25,25 @@ public abstract class AbstractRegionOfInterest implements RegionOfInterest {
 
 		private BitType bit_type = new BitType();
 		private double [] position;
+		
+		protected AROIRandomAccess( final AROIRandomAccess randomAccess ) {
+			position = randomAccess.position.clone();
+		}
+		
 		public AROIRandomAccess() {
 			position = new double[nDimensions];
 		}
 		@Override
-		public void localize(float[] position) {
-			for (int i = 0; i < position.length; i++) {
-				position[i] = (float)this.position[i];
+		public void localize(float[] pos) {
+			for (int i = 0; i < pos.length; i++) {
+				pos[i] = (float)this.position[i];
 			}
 		}
 
 		@Override
-		public void localize(double[] position) {
-			for (int i = 0; i < position.length; i++) {
-				position[i] = this.position[i];
+		public void localize(double[] pos) {
+			for (int i = 0; i < pos.length; i++) {
+				pos[i] = this.position[i];
 			}
 		}
 
@@ -99,33 +104,33 @@ public abstract class AbstractRegionOfInterest implements RegionOfInterest {
 		}
 
 		@Override
-		public void move(float[] position) {
-			for (int i = 0; i < position.length; i++) {
-				this.position[i] += position[i];
+		public void move(float[] pos) {
+			for (int i = 0; i < pos.length; i++) {
+				this.position[i] += pos[i];
 			}
 			updateCachedMembershipStatus();
 		}
 
 		@Override
-		public void move(double[] position) {
-			for (int i = 0; i < position.length; i++) {
-				this.position[i] += position[i];
+		public void move(double[] pos) {
+			for (int i = 0; i < pos.length; i++) {
+				this.position[i] += pos[i];
 			}
 			updateCachedMembershipStatus();
 		}
 
 		@Override
-		public void move(int[] position) {
-			for (int i = 0; i < position.length; i++) {
-				this.position[i] += position[i];
+		public void move(int[] pos) {
+			for (int i = 0; i < pos.length; i++) {
+				this.position[i] += pos[i];
 			}
 			updateCachedMembershipStatus();
 		}
 
 		@Override
-		public void move(long[] position) {
-			for (int i = 0; i < position.length; i++) {
-				this.position[i] += position[i];
+		public void move(long[] pos) {
+			for (int i = 0; i < pos.length; i++) {
+				this.position[i] += pos[i];
 			}
 			updateCachedMembershipStatus();
 		}
@@ -220,7 +225,13 @@ public abstract class AbstractRegionOfInterest implements RegionOfInterest {
 		@Override
 		public BitType get() {
 			return bit_type;
-		}		
+		}	
+		
+		@Override
+		public AROIRandomAccess copy()
+		{
+			return new AROIRandomAccess( this );
+		}
 	}
 	
 	protected AbstractRegionOfInterest(int nDimensions) {

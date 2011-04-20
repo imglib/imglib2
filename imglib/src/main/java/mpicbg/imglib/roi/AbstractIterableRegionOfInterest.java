@@ -82,7 +82,7 @@ public abstract class AbstractIterableRegionOfInterest extends
 		}
 		
 		protected class AROICursor implements Cursor<T> {
-			private RandomAccess<T> src = AROIIterableInterval.this.src.randomAccess();
+			private RandomAccess<T> randomAccess = AROIIterableInterval.this.src.randomAccess();
 			private long [] position = new long [AbstractIterableRegionOfInterest.this.numDimensions()];
 			private long [] next_position = new long [AbstractIterableRegionOfInterest.this.numDimensions()];
 			private long [] raster_end = new long [AbstractIterableRegionOfInterest.this.numDimensions()];			
@@ -95,33 +95,48 @@ public abstract class AbstractIterableRegionOfInterest extends
 				next_is_valid = false;
 				src_is_valid = false;
 			}
+			
+			protected AROICursor( final AROICursor cursor )
+			{
+				randomAccess = cursor.randomAccess.copy();
+				for ( int d = 0; d < position.length; ++d )
+				{
+					position[ d ] = cursor.position[ d ];
+					next_position[ d ] = cursor.next_position[ d ];
+					raster_end[ d ] = cursor.raster_end[ d ];
+					next_raster_end[ d ] = cursor.next_raster_end[ d ];
+					next_is_valid = cursor.next_is_valid;
+					has_next = cursor.has_next;
+					src_is_valid = cursor.src_is_valid;
+				}
+			}
 
 			public AROICursor() {
 				reset();
 			}
 			@Override
-			public void localize(float[] position) {
-				for ( int d = 0; d < position.length; d++ )
-					position[ d ] = (float)this.position[ d ];
+			public void localize(float[] pos) {
+				for ( int d = 0; d < pos.length; d++ )
+					pos[ d ] = (float)this.position[ d ];
 			}
 
 			@Override
-			public void localize(double[] position) {
-				for ( int d = 0; d < position.length; d++ )
-					position[ d ] = this.position[ d ];
+			public void localize(double[] pos) {
+				for ( int d = 0; d < pos.length; d++ )
+					pos[ d ] = this.position[ d ];
 			}
 
 			@Override
-			public void localize(int[] position) {
-				for ( int d = 0; d < position.length; d++ )
-					position[ d ] = (int)this.position[ d ];
+			public void localize(int[] pos) {
+				for ( int d = 0; d < pos.length; d++ )
+					pos[ d ] = (int)this.position[ d ];
 			
 			}
 
 			@Override
-			public void localize(long[] position) {
-				for ( int d = 0; d < position.length; d++ )
-					position[ d ] = this.position[ d ];
+			public void localize(long[] pos) {
+				for ( int d = 0; d < pos.length; d++ )
+					pos[ d ] = this.position[ d ];
 			}
 
 			@Override
@@ -152,9 +167,9 @@ public abstract class AbstractIterableRegionOfInterest extends
 			@Override
 			public T get() {
 				if (! src_is_valid) {
-					src.setPosition(position);
+					randomAccess.setPosition(position);
 				}
-				return src.get();
+				return randomAccess.get();
 			}
 
 			@Override
@@ -205,6 +220,12 @@ public abstract class AbstractIterableRegionOfInterest extends
 			public void remove() {
 				AbstractIterableRegionOfInterest.this.remove(position);
 				mark_dirty();
+			}
+			
+			@Override
+			public AROICursor copy()
+			{
+				return new AROICursor( this );
 			}
 
 		}
