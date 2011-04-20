@@ -56,7 +56,7 @@
         <configuration>
           <archive>
             <manifest>
-              <packageName>mpicbg.imglib.algorithm</packageName>
+              <packageName>net.imglib2.algorithm</packageName>
             </manifest>
           </archive>
         </configuration>

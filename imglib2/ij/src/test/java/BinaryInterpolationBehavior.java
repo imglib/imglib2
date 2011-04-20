@@ -4,12 +4,12 @@ import ij.ImageJ;
 import java.awt.Rectangle;
 import java.awt.geom.Ellipse2D;
 
-import mpicbg.imglib.algorithm.labeling.BinaryInterpolation2D;
-import mpicbg.imglib.container.shapelist.ShapeList;
-import mpicbg.imglib.container.shapelist.ShapeListCached;
-import mpicbg.imglib.image.Image;
-import mpicbg.imglib.image.display.imagej.ImageJFunctions;
-import mpicbg.imglib.type.logic.BitType;
+import net.imglib2.algorithm.labeling.BinaryInterpolation2D;
+import net.imglib2.container.shapelist.ShapeList;
+import net.imglib2.container.shapelist.ShapeListCached;
+import net.imglib2.image.Image;
+import net.imglib2.image.display.imagej.ImageJFunctions;
+import net.imglib2.type.logic.BitType;
 
 public class BinaryInterpolationBehavior {
 

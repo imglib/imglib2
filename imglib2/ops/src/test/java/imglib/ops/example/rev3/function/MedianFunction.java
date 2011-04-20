@@ -1,4 +1,4 @@
-package imglib.ops.example.rev3.function;
+package net.imglib2.ops.example.rev3.function;
 
 import java.util.Arrays;
 

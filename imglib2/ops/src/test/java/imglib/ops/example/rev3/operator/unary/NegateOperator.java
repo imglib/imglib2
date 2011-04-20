@@ -1,6 +1,6 @@
-package imglib.ops.example.rev3.operator.unary;
+package net.imglib2.ops.example.rev3.operator.unary;
 
-import imglib.ops.example.rev3.operator.UnaryOperator;
+import net.imglib2.ops.example.rev3.operator.UnaryOperator;
 
 public final class NegateOperator implements UnaryOperator
 {

@@ -77,7 +77,7 @@
         <configuration>
           <archive>
             <manifest>
-              <packageName>mpicbg.imglib.scripting</packageName>
+              <packageName>net.imglib2.script</packageName>
             </manifest>
           </archive>
         </configuration>

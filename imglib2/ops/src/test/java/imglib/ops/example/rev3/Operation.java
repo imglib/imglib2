@@ -1,17 +1,17 @@
-package imglib.ops.example.rev3;
+package net.imglib2.ops.example.rev3;
 
-import imglib.ops.example.rev3.constraints.Constraints;
-import imglib.ops.example.rev3.function.IntegerIndexedScalarFunction;
-import imglib.ops.observer.IterationStatus;
-import imglib.ops.observer.IterationStatus.Message;
+import net.imglib2.ops.example.rev3.constraints.Constraints;
+import net.imglib2.ops.example.rev3.function.IntegerIndexedScalarFunction;
+import net.imglib2.ops.observer.IterationStatus;
+import net.imglib2.ops.observer.IterationStatus.Message;
 
 import java.util.Observable;
 import java.util.Observer;
 
-import mpicbg.imglib.cursor.LocalizableByDimCursor;
-import mpicbg.imglib.cursor.special.RegionOfInterestCursor;
-import mpicbg.imglib.image.Image;
-import mpicbg.imglib.type.numeric.RealType;
+import net.imglib2.cursor.LocalizableByDimCursor;
+import net.imglib2.cursor.special.RegionOfInterestCursor;
+import net.imglib2.image.Image;
+import net.imglib2.type.numeric.RealType;
 
 // NOTICE
 //   You can copy an image from another image by creating an ImageFunction on the other image and passing it into an Operation.

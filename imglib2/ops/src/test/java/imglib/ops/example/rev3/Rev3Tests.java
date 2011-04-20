@@ -1,27 +1,27 @@
-package imglib.ops.example.rev3;
+package net.imglib2.ops.example.rev3;
 
 import static org.junit.Assert.assertEquals;
-import imglib.ops.example.rev3.condition.ValueLessThan;
-import imglib.ops.example.rev3.constraints.Constraints;
-import imglib.ops.example.rev3.function.AverageFunction;
-import imglib.ops.example.rev3.function.BinaryFunction;
-import imglib.ops.example.rev3.function.ComposedImageFunction;
-import imglib.ops.example.rev3.function.ConstantFunction;
-import imglib.ops.example.rev3.function.ConvolutionFunction;
-import imglib.ops.example.rev3.function.ImageFunction;
-import imglib.ops.example.rev3.function.IntegerIndexedScalarFunction;
-import imglib.ops.example.rev3.function.UnaryFunction;
-import imglib.ops.example.rev3.operator.BinaryOperator;
-import imglib.ops.example.rev3.operator.UnaryOperator;
-import imglib.ops.example.rev3.operator.binary.AddOperator;
-import imglib.ops.example.rev3.operator.binary.MultiplyOperator;
-import imglib.ops.example.rev3.operator.unary.HalfOperator;
+import net.imglib2.ops.example.rev3.condition.ValueLessThan;
+import net.imglib2.ops.example.rev3.constraints.Constraints;
+import net.imglib2.ops.example.rev3.function.AverageFunction;
+import net.imglib2.ops.example.rev3.function.BinaryFunction;
+import net.imglib2.ops.example.rev3.function.ComposedImageFunction;
+import net.imglib2.ops.example.rev3.function.ConstantFunction;
+import net.imglib2.ops.example.rev3.function.ConvolutionFunction;
+import net.imglib2.ops.example.rev3.function.ImageFunction;
+import net.imglib2.ops.example.rev3.function.IntegerIndexedScalarFunction;
+import net.imglib2.ops.example.rev3.function.UnaryFunction;
+import net.imglib2.ops.example.rev3.operator.BinaryOperator;
+import net.imglib2.ops.example.rev3.operator.UnaryOperator;
+import net.imglib2.ops.example.rev3.operator.binary.AddOperator;
+import net.imglib2.ops.example.rev3.operator.binary.MultiplyOperator;
+import net.imglib2.ops.example.rev3.operator.unary.HalfOperator;
 
-import mpicbg.imglib.container.array.ArrayContainerFactory;
-import mpicbg.imglib.cursor.LocalizableByDimCursor;
-import mpicbg.imglib.image.Image;
-import mpicbg.imglib.image.ImageFactory;
-import mpicbg.imglib.type.numeric.integer.UnsignedByteType;
+import net.imglib2.container.array.ArrayContainerFactory;
+import net.imglib2.cursor.LocalizableByDimCursor;
+import net.imglib2.image.Image;
+import net.imglib2.image.ImageFactory;
+import net.imglib2.type.numeric.integer.UnsignedByteType;
 
 import org.junit.Test;
 

@@ -32,7 +32,7 @@
         <configuration>
           <archive>
             <manifest>
-              <packageName>mpicbg.imglib</packageName>
+              <packageName>net.imglib2</packageName>
             </manifest>
           </archive>
         </configuration>

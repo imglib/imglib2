@@ -5,17 +5,17 @@ import static org.junit.Assert.*;
 import java.awt.Rectangle;
 import java.util.Random;
 
-import mpicbg.imglib.Cursor;
-import mpicbg.imglib.IterableInterval;
-import mpicbg.imglib.Localizable;
-import mpicbg.imglib.RandomAccess;
-import mpicbg.imglib.RandomAccessible;
-import mpicbg.imglib.RealRandomAccess;
-import mpicbg.imglib.img.array.ArrayImgFactory;
-import mpicbg.imglib.roi.AbstractIterableRegionOfInterest;
-import mpicbg.imglib.type.logic.BitType;
-import mpicbg.imglib.type.numeric.integer.IntType;
-import mpicbg.imglib.type.numeric.real.DoubleType;
+import net.imglib2.Cursor;
+import net.imglib2.IterableInterval;
+import net.imglib2.Localizable;
+import net.imglib2.RandomAccess;
+import net.imglib2.RandomAccessible;
+import net.imglib2.RealRandomAccess;
+import net.imglib2.img.array.ArrayImgFactory;
+import net.imglib2.roi.AbstractIterableRegionOfInterest;
+import net.imglib2.type.logic.BitType;
+import net.imglib2.type.numeric.integer.IntType;
+import net.imglib2.type.numeric.real.DoubleType;
 
 import org.junit.Test;
 

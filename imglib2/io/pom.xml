@@ -48,7 +48,7 @@
         <configuration>
           <archive>
             <manifest>
-              <packageName>mpicbg.imglib.io</packageName>
+              <packageName>net.imglib2.io</packageName>
             </manifest>
           </archive>
         </configuration>

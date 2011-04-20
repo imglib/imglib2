@@ -1,23 +1,23 @@
-package imglib.ops;
+package net.imglib2.ops;
 
 import static org.junit.Assert.assertEquals;
-import imglib.ops.condition.PixelOnBorder;
-import imglib.ops.condition.ValueGreaterThan;
-import imglib.ops.condition.ValueLessThan;
-import imglib.ops.function.p1.UnaryOperatorFunction;
-import imglib.ops.function.pn.AvgFunction;
-import imglib.ops.function.pn.ConstFunction;
-import imglib.ops.operation.AssignOperation;
-import imglib.ops.operator.UnaryOperator;
-import imglib.ops.operator.unary.Sqr;
+import net.imglib2.ops.condition.PixelOnBorder;
+import net.imglib2.ops.condition.ValueGreaterThan;
+import net.imglib2.ops.condition.ValueLessThan;
+import net.imglib2.ops.function.p1.UnaryOperatorFunction;
+import net.imglib2.ops.function.pn.AvgFunction;
+import net.imglib2.ops.function.pn.ConstFunction;
+import net.imglib2.ops.operation.AssignOperation;
+import net.imglib2.ops.operator.UnaryOperator;
+import net.imglib2.ops.operator.unary.Sqr;
 
 import org.junit.Test;
 
-import mpicbg.imglib.container.array.ArrayContainerFactory;
-import mpicbg.imglib.cursor.LocalizableByDimCursor;
-import mpicbg.imglib.image.Image;
-import mpicbg.imglib.image.ImageFactory;
-import mpicbg.imglib.type.numeric.integer.UnsignedByteType;
+import net.imglib2.container.array.ArrayContainerFactory;
+import net.imglib2.cursor.LocalizableByDimCursor;
+import net.imglib2.image.Image;
+import net.imglib2.image.ImageFactory;
+import net.imglib2.type.numeric.integer.UnsignedByteType;
 
 @SuppressWarnings("unchecked")
 

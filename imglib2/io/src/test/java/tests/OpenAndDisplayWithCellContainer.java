@@ -3,18 +3,18 @@ package tests;
 import ij.ImageJ;
 import ij.ImagePlus;
 import ij.process.ColorProcessor;
-import mpicbg.imglib.Cursor;
-import mpicbg.imglib.RandomAccess;
-import mpicbg.imglib.display.ARGBScreenImage;
-import mpicbg.imglib.display.RealARGBConverter;
-import mpicbg.imglib.display.XYProjector;
-import mpicbg.imglib.img.Img;
-import mpicbg.imglib.img.ImgFactory;
-import mpicbg.imglib.img.cell.CellImgFactory;
-import mpicbg.imglib.io.ImgOpener;
-import mpicbg.imglib.type.Type;
-import mpicbg.imglib.type.numeric.ARGBType;
-import mpicbg.imglib.type.numeric.real.FloatType;
+import net.imglib2.Cursor;
+import net.imglib2.RandomAccess;
+import net.imglib2.display.ARGBScreenImage;
+import net.imglib2.display.RealARGBConverter;
+import net.imglib2.display.XYProjector;
+import net.imglib2.img.Img;
+import net.imglib2.img.ImgFactory;
+import net.imglib2.img.cell.CellImgFactory;
+import net.imglib2.io.ImgOpener;
+import net.imglib2.type.Type;
+import net.imglib2.type.numeric.ARGBType;
+import net.imglib2.type.numeric.real.FloatType;
 
 public class OpenAndDisplayWithCellContainer
 {

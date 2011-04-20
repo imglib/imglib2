@@ -1,7 +1,7 @@
 package script.imglib.test;
 
-import mpicbg.imglib.image.Image;
-import mpicbg.imglib.type.numeric.integer.UnsignedByteType;
+import net.imglib2.image.Image;
+import net.imglib2.type.numeric.integer.UnsignedByteType;
 import script.imglib.ImgLib;
 import script.imglib.analysis.Histogram;
 

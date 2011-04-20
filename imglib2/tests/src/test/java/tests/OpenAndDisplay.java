@@ -4,21 +4,21 @@ import ij.ImageJ;
 
 import javax.media.j3d.Transform3D;
 
-import mpicbg.imglib.algorithm.gauss.GaussianConvolution;
-import mpicbg.imglib.algorithm.transformation.ImageTransform;
-import mpicbg.imglib.image.display.imagej.ImgLib2Display;
-import mpicbg.imglib.img.Img;
-import mpicbg.imglib.img.ImgFactory;
-import mpicbg.imglib.img.array.ArrayImgFactory;
-import mpicbg.imglib.img.cell.CellImgFactory;
-import mpicbg.imglib.img.list.ListImgFactory;
-import mpicbg.imglib.interpolation.randomaccess.NearestNeighborInterpolatorFactory;
-import mpicbg.imglib.io.ImgOpener;
-import mpicbg.imglib.outofbounds.OutOfBoundsConstantValueFactory;
-import mpicbg.imglib.outofbounds.OutOfBoundsFactory;
-import mpicbg.imglib.outofbounds.OutOfBoundsMirrorFactory;
-import mpicbg.imglib.outofbounds.OutOfBoundsMirrorFactory.Boundary;
-import mpicbg.imglib.type.numeric.real.FloatType;
+import net.imglib2.algorithm.gauss.GaussianConvolution;
+import net.imglib2.algorithm.transformation.ImageTransform;
+import net.imglib2.image.display.imagej.ImgLib2Display;
+import net.imglib2.img.Img;
+import net.imglib2.img.ImgFactory;
+import net.imglib2.img.array.ArrayImgFactory;
+import net.imglib2.img.cell.CellImgFactory;
+import net.imglib2.img.list.ListImgFactory;
+import net.imglib2.interpolation.randomaccess.NearestNeighborInterpolatorFactory;
+import net.imglib2.io.ImgOpener;
+import net.imglib2.outofbounds.OutOfBoundsConstantValueFactory;
+import net.imglib2.outofbounds.OutOfBoundsFactory;
+import net.imglib2.outofbounds.OutOfBoundsMirrorFactory;
+import net.imglib2.outofbounds.OutOfBoundsMirrorFactory.Boundary;
+import net.imglib2.type.numeric.real.FloatType;
 import mpicbg.models.AffineModel3D;
 
 public class OpenAndDisplay

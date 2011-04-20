@@ -27,13 +27,13 @@ import org.junit.Test;
 
 import static org.junit.Assert.*;
 
-import mpicbg.imglib.Cursor;
-import mpicbg.imglib.algorithm.labeling.AllConnectedComponents;
-import mpicbg.imglib.img.array.ArrayImg;
-import mpicbg.imglib.img.array.ArrayImgFactory;
-import mpicbg.imglib.labeling.LabelingType;
-import mpicbg.imglib.labeling.NativeImgLabeling;
-import mpicbg.imglib.type.logic.BitType;
+import net.imglib2.Cursor;
+import net.imglib2.algorithm.labeling.AllConnectedComponents;
+import net.imglib2.img.array.ArrayImg;
+import net.imglib2.img.array.ArrayImgFactory;
+import net.imglib2.labeling.LabelingType;
+import net.imglib2.labeling.NativeImgLabeling;
+import net.imglib2.type.logic.BitType;
 
 public class AllConnectedComponentsTest {
 	private void test2D(boolean [][] input, int[][] expected, long [][] structuringElement, int start, int background) {

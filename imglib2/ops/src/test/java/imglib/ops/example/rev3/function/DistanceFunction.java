@@ -1,4 +1,4 @@
-package imglib.ops.example.rev3.function;
+package net.imglib2.ops.example.rev3.function;
 
 
 // think that maybe you would construct a LessThan Condition with value 2.0 & pass it a DistanceFunction.

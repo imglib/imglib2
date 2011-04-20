@@ -1,8 +1,8 @@
-package imglib.ops.example.rev3.function;
+package net.imglib2.ops.example.rev3.function;
 
-import mpicbg.imglib.cursor.LocalizableByDimCursor;
-import mpicbg.imglib.image.Image;
-import mpicbg.imglib.type.numeric.RealType;
+import net.imglib2.cursor.LocalizableByDimCursor;
+import net.imglib2.image.Image;
+import net.imglib2.type.numeric.RealType;
 
 // turn an image into a function we can access
 // some thought needs to be given to how multithreading would work with such an approach

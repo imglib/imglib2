@@ -30,18 +30,18 @@ import ij.ImageJ;
 
 import java.util.Random;
 
-import mpicbg.imglib.RandomAccess;
-import mpicbg.imglib.cursor.LocalizableByDimCursor;
-import mpicbg.imglib.cursor.special.HyperSphereIterator;
-import mpicbg.imglib.image.Image;
-import mpicbg.imglib.image.ImageFactory;
-import mpicbg.imglib.image.display.imagej.ImageJFunctions;
-import mpicbg.imglib.img.Img;
-import mpicbg.imglib.img.array.ArrayImg;
-import mpicbg.imglib.img.array.ArrayImgFactory;
-import mpicbg.imglib.outofbounds.OutOfBoundsStrategyValueFactory;
-import mpicbg.imglib.type.numeric.real.FloatType;
-import mpicbg.imglib.util.Util;
+import net.imglib2.RandomAccess;
+import net.imglib2.cursor.LocalizableByDimCursor;
+import net.imglib2.cursor.special.HyperSphereIterator;
+import net.imglib2.image.Image;
+import net.imglib2.image.ImageFactory;
+import net.imglib2.image.display.imagej.ImageJFunctions;
+import net.imglib2.img.Img;
+import net.imglib2.img.array.ArrayImg;
+import net.imglib2.img.array.ArrayImgFactory;
+import net.imglib2.outofbounds.OutOfBoundsStrategyValueFactory;
+import net.imglib2.type.numeric.real.FloatType;
+import net.imglib2.util.Util;
 
 public class HyperSphereIteratorBehavior
 {

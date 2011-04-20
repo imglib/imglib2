@@ -2,15 +2,15 @@ package tests;
 
 import java.util.Arrays;
 
-import mpicbg.imglib.Cursor;
-import mpicbg.imglib.RandomAccess;
-import mpicbg.imglib.img.Img;
-import mpicbg.imglib.img.ImgFactory;
-import mpicbg.imglib.img.array.ArrayImgFactory;
-import mpicbg.imglib.type.NativeType;
-import mpicbg.imglib.type.numeric.RealType;
-import mpicbg.imglib.type.numeric.real.FloatType;
-import mpicbg.imglib.util.Util;
+import net.imglib2.Cursor;
+import net.imglib2.RandomAccess;
+import net.imglib2.img.Img;
+import net.imglib2.img.ImgFactory;
+import net.imglib2.img.array.ArrayImgFactory;
+import net.imglib2.type.NativeType;
+import net.imglib2.type.numeric.RealType;
+import net.imglib2.type.numeric.real.FloatType;
+import net.imglib2.util.Util;
 
 /**
  * The base class for JUnit tests

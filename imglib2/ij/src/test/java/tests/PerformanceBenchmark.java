@@ -19,18 +19,18 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import mpicbg.imglib.image.ImagePlusAdapter;
-import mpicbg.imglib.img.Img;
-import mpicbg.imglib.img.ImgFactory;
-import mpicbg.imglib.img.array.ArrayCursor;
-import mpicbg.imglib.img.array.ArrayImg;
-import mpicbg.imglib.img.basictypeaccess.ByteAccess;
-import mpicbg.imglib.img.basictypeaccess.array.ByteArray;
-import mpicbg.imglib.img.cell.CellCursor;
-import mpicbg.imglib.img.cell.CellImgFactory;
-import mpicbg.imglib.img.planar.PlanarCursor;
-import mpicbg.imglib.img.planar.PlanarImg;
-import mpicbg.imglib.type.numeric.integer.UnsignedByteType;
+import net.imglib2.image.ImagePlusAdapter;
+import net.imglib2.img.Img;
+import net.imglib2.img.ImgFactory;
+import net.imglib2.img.array.ArrayCursor;
+import net.imglib2.img.array.ArrayImg;
+import net.imglib2.img.basictypeaccess.ByteAccess;
+import net.imglib2.img.basictypeaccess.array.ByteArray;
+import net.imglib2.img.cell.CellCursor;
+import net.imglib2.img.cell.CellImgFactory;
+import net.imglib2.img.planar.PlanarCursor;
+import net.imglib2.img.planar.PlanarImg;
+import net.imglib2.type.numeric.integer.UnsignedByteType;
 
 /**
  * Tests performance of uint8 image operations with

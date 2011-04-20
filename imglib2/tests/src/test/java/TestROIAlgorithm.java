@@ -1,18 +1,18 @@
-import mpicbg.imglib.cursor.LocalizableByDimCursor;
-import mpicbg.imglib.cursor.LocalizableCursor;
-import mpicbg.imglib.cursor.special.RegionOfInterestCursor;
-import mpicbg.imglib.image.Image;
-import mpicbg.imglib.image.ImagePlusAdapter;
-import mpicbg.imglib.image.display.imagej.ImageJFunctions;
-import mpicbg.imglib.img.array.ArrayImgFactory;
-import mpicbg.imglib.io.LOCI;
-import mpicbg.imglib.type.numeric.RealType;
+import net.imglib2.cursor.LocalizableByDimCursor;
+import net.imglib2.cursor.LocalizableCursor;
+import net.imglib2.cursor.special.RegionOfInterestCursor;
+import net.imglib2.image.Image;
+import net.imglib2.image.ImagePlusAdapter;
+import net.imglib2.image.display.imagej.ImageJFunctions;
+import net.imglib2.img.array.ArrayImgFactory;
+import net.imglib2.io.LOCI;
+import net.imglib2.type.numeric.RealType;
 import ij.IJ;
 import ij.ImagePlus;
 
 import ij.io.OpenDialog;
 
-import mpicbg.imglib.algorithm.ROIAlgorithm;
+import net.imglib2.algorithm.ROIAlgorithm;
 
 
 

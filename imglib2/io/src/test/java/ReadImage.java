@@ -35,17 +35,17 @@ POSSIBILITY OF SUCH DAMAGE.
 import java.io.IOException;
 
 import loci.formats.FormatException;
-import mpicbg.imglib.Cursor;
-import mpicbg.imglib.exception.IncompatibleTypeException;
-import mpicbg.imglib.img.Img;
-import mpicbg.imglib.img.ImgFactory;
-import mpicbg.imglib.img.array.ArrayImgFactory;
-import mpicbg.imglib.img.planar.PlanarImgFactory;
-import mpicbg.imglib.io.ImgOpener;
-import mpicbg.imglib.io.ImgPlus;
-import mpicbg.imglib.type.NativeType;
-import mpicbg.imglib.type.numeric.RealType;
-import mpicbg.imglib.type.numeric.real.FloatType;
+import net.imglib2.Cursor;
+import net.imglib2.exception.IncompatibleTypeException;
+import net.imglib2.img.Img;
+import net.imglib2.img.ImgFactory;
+import net.imglib2.img.array.ArrayImgFactory;
+import net.imglib2.img.planar.PlanarImgFactory;
+import net.imglib2.io.ImgOpener;
+import net.imglib2.io.ImgPlus;
+import net.imglib2.type.NativeType;
+import net.imglib2.type.numeric.RealType;
+import net.imglib2.type.numeric.real.FloatType;
 
 /** A simple test for {@link ImgOpener}. */
 public class ReadImage {

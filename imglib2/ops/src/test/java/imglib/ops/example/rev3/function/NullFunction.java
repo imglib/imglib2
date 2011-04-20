@@ -1,4 +1,4 @@
-package imglib.ops.example.rev3.function;
+package net.imglib2.ops.example.rev3.function;
 
 
 /** a null function can be useful. for example to do a query you could setup you Operation with image, subregion,

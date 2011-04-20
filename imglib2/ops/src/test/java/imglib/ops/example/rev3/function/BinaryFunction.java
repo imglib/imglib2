@@ -1,6 +1,6 @@
-package imglib.ops.example.rev3.function;
+package net.imglib2.ops.example.rev3.function;
 
-import imglib.ops.example.rev3.operator.BinaryOperator;
+import net.imglib2.ops.example.rev3.operator.BinaryOperator;
 
 public final class BinaryFunction implements IntegerIndexedScalarFunction
 {

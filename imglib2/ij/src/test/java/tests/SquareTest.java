@@ -8,16 +8,16 @@ import java.io.File;
 
 import javax.swing.JFileChooser;
 
-import mpicbg.imglib.container.imageplus.ImagePlusContainer;
-import mpicbg.imglib.exception.ImgLibException;
-import mpicbg.imglib.image.Image;
-import mpicbg.imglib.image.display.imagej.ImageJFunctions;
-import mpicbg.imglib.img.Img;
-import mpicbg.imglib.img.ImgCursor;
-import mpicbg.imglib.img.array.ArrayImgFactory;
-import mpicbg.imglib.io.LOCI;
-import mpicbg.imglib.type.numeric.RealType;
-import mpicbg.imglib.type.numeric.real.FloatType;
+import net.imglib2.container.imageplus.ImagePlusContainer;
+import net.imglib2.exception.ImgLibException;
+import net.imglib2.image.Image;
+import net.imglib2.image.display.imagej.ImageJFunctions;
+import net.imglib2.img.Img;
+import net.imglib2.img.ImgCursor;
+import net.imglib2.img.array.ArrayImgFactory;
+import net.imglib2.io.LOCI;
+import net.imglib2.type.numeric.RealType;
+import net.imglib2.type.numeric.real.FloatType;
 
 /**
  * A very simple imglib test that squares an image.

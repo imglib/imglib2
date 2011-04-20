@@ -2,13 +2,13 @@ package tests;
 
 import ij.ImageJ;
 import ij.ImagePlus;
-import mpicbg.imglib.converter.TypeIdentity;
-import mpicbg.imglib.img.Img;
-import mpicbg.imglib.img.array.ArrayImgFactory;
-import mpicbg.imglib.io.ImgOpener;
-import mpicbg.imglib.io.ImgPlus;
-import mpicbg.imglib.type.numeric.real.FloatType;
-import mpicbg.imglib.util.Util;
+import net.imglib2.converter.TypeIdentity;
+import net.imglib2.img.Img;
+import net.imglib2.img.array.ArrayImgFactory;
+import net.imglib2.io.ImgOpener;
+import net.imglib2.io.ImgPlus;
+import net.imglib2.type.numeric.real.FloatType;
+import net.imglib2.util.Util;
 
 public class HyperStackTest
 {

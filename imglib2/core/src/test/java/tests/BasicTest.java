@@ -1,9 +1,9 @@
 package tests;
 
-import mpicbg.imglib.Cursor;
-import mpicbg.imglib.img.Img;
+import net.imglib2.Cursor;
+import net.imglib2.img.Img;
 
-import mpicbg.imglib.type.numeric.real.FloatType;
+import net.imglib2.type.numeric.real.FloatType;
 
 import static org.junit.Assert.assertTrue;
 

@@ -29,9 +29,9 @@
  */
 package game;
 
-import mpicbg.imglib.cursor.Cursor;
-import mpicbg.imglib.image.Image;
-import mpicbg.imglib.image.display.Display;
+import net.imglib2.cursor.Cursor;
+import net.imglib2.image.Image;
+import net.imglib2.image.display.Display;
 
 public class LifeFormDisplay extends Display<LifeForm>
 {

@@ -1,6 +1,6 @@
-package imglib.ops.example.rev3.condition;
+package net.imglib2.ops.example.rev3.condition;
 
-import imglib.ops.example.rev3.function.IntegerIndexedScalarFunction;
+import net.imglib2.ops.example.rev3.function.IntegerIndexedScalarFunction;
 
 public final class Or implements Condition
 {

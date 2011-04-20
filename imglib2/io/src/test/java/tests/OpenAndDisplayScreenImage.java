@@ -7,14 +7,14 @@ import ij.process.ColorProcessor;
 import java.io.IOException;
 
 import loci.formats.FormatException;
-import mpicbg.imglib.display.ARGBScreenImage;
-import mpicbg.imglib.display.RealARGBConverter;
-import mpicbg.imglib.display.XYProjector;
-import mpicbg.imglib.img.Img;
-import mpicbg.imglib.img.array.ArrayImgFactory;
-import mpicbg.imglib.io.ImgOpener;
-import mpicbg.imglib.type.numeric.ARGBType;
-import mpicbg.imglib.type.numeric.real.FloatType;
+import net.imglib2.display.ARGBScreenImage;
+import net.imglib2.display.RealARGBConverter;
+import net.imglib2.display.XYProjector;
+import net.imglib2.img.Img;
+import net.imglib2.img.array.ArrayImgFactory;
+import net.imglib2.io.ImgOpener;
+import net.imglib2.type.numeric.ARGBType;
+import net.imglib2.type.numeric.real.FloatType;
 
 public class OpenAndDisplayScreenImage
 {	

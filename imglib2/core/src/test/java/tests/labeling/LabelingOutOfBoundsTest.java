@@ -11,13 +11,13 @@ import static org.junit.Assert.assertTrue;
 import java.util.Arrays;
 import java.util.List;
 
-import mpicbg.imglib.RandomAccess;
-import mpicbg.imglib.img.Img;
-import mpicbg.imglib.img.array.ArrayImgFactory;
-import mpicbg.imglib.labeling.LabelingOutOfBoundsRandomAccessFactory;
-import mpicbg.imglib.labeling.LabelingType;
-import mpicbg.imglib.labeling.NativeImgLabeling;
-import mpicbg.imglib.outofbounds.OutOfBounds;
+import net.imglib2.RandomAccess;
+import net.imglib2.img.Img;
+import net.imglib2.img.array.ArrayImgFactory;
+import net.imglib2.labeling.LabelingOutOfBoundsRandomAccessFactory;
+import net.imglib2.labeling.LabelingType;
+import net.imglib2.labeling.NativeImgLabeling;
+import net.imglib2.outofbounds.OutOfBounds;
 
 import org.junit.Test;
 
@@ -46,7 +46,7 @@ public class LabelingOutOfBoundsTest {
 	}
 	
 	/**
-	 * Test method for {@link mpicbg.imglib.labeling.LabelingOutOfBoundsRandomAccess#LabelingOutOfBoundsRandomAccess(mpicbg.imglib.img.Img)}.
+	 * Test method for {@link net.imglib2.labeling.LabelingOutOfBoundsRandomAccess#LabelingOutOfBoundsRandomAccess(net.imglib2.img.Img)}.
 	 */
 	@Test
 	public void testLabelingOutOfBoundsRandomAccess() {

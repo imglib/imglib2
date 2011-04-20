@@ -21,15 +21,15 @@ import static org.junit.Assert.*;
 
 import java.util.List;
 
-import mpicbg.imglib.Cursor;
-import mpicbg.imglib.algorithm.labeling.AllConnectedComponents;
-import mpicbg.imglib.algorithm.labeling.Watershed;
-import mpicbg.imglib.img.NativeImg;
-import mpicbg.imglib.img.array.ArrayImgFactory;
-import mpicbg.imglib.img.basictypeaccess.IntAccess;
-import mpicbg.imglib.labeling.LabelingType;
-import mpicbg.imglib.labeling.NativeImgLabeling;
-import mpicbg.imglib.type.numeric.integer.IntType;
+import net.imglib2.Cursor;
+import net.imglib2.algorithm.labeling.AllConnectedComponents;
+import net.imglib2.algorithm.labeling.Watershed;
+import net.imglib2.img.NativeImg;
+import net.imglib2.img.array.ArrayImgFactory;
+import net.imglib2.img.basictypeaccess.IntAccess;
+import net.imglib2.labeling.LabelingType;
+import net.imglib2.labeling.NativeImgLabeling;
+import net.imglib2.type.numeric.integer.IntType;
 
 import org.junit.Test;
 

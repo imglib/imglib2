@@ -21,14 +21,14 @@ import static org.junit.Assert.assertEquals;
 import java.util.ArrayList;
 import java.util.List;
 
-import mpicbg.imglib.algorithm.histogram.Histogram;
-import mpicbg.imglib.algorithm.histogram.HistogramBinFactory;
-import mpicbg.imglib.algorithm.histogram.discrete.DiscreteIntHistogramBinFactory;
-import mpicbg.imglib.container.array.ArrayContainerFactory;
-import mpicbg.imglib.cursor.Cursor;
-import mpicbg.imglib.image.Image;
-import mpicbg.imglib.image.ImageFactory;
-import mpicbg.imglib.type.numeric.integer.UnsignedByteType;
+import net.imglib2.algorithm.histogram.Histogram;
+import net.imglib2.algorithm.histogram.HistogramBinFactory;
+import net.imglib2.algorithm.histogram.discrete.DiscreteIntHistogramBinFactory;
+import net.imglib2.container.array.ArrayContainerFactory;
+import net.imglib2.cursor.Cursor;
+import net.imglib2.image.Image;
+import net.imglib2.image.ImageFactory;
+import net.imglib2.type.numeric.integer.UnsignedByteType;
 
 import org.junit.Test;
 

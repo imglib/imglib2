@@ -2,14 +2,14 @@ package game;
 
 import java.util.Random;
 
-import mpicbg.imglib.container.DirectAccessContainer;
-import mpicbg.imglib.container.DirectAccessContainerFactory;
-import mpicbg.imglib.container.basictypecontainer.IntAccess;
-import mpicbg.imglib.container.basictypecontainer.array.IntArray;
-import mpicbg.imglib.cursor.Cursor;
-import mpicbg.imglib.image.Image;
-import mpicbg.imglib.image.display.Display;
-import mpicbg.imglib.type.numeric.NumericType;
+import net.imglib2.container.DirectAccessContainer;
+import net.imglib2.container.DirectAccessContainerFactory;
+import net.imglib2.container.basictypecontainer.IntAccess;
+import net.imglib2.container.basictypecontainer.array.IntArray;
+import net.imglib2.cursor.Cursor;
+import net.imglib2.image.Image;
+import net.imglib2.image.display.Display;
+import net.imglib2.type.numeric.NumericType;
 
 public class LifeForm implements NumericType<LifeForm>, Comparable<LifeForm>
 {

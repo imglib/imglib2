@@ -1,6 +1,6 @@
-package imglib.ops.example.rev3.function;
+package net.imglib2.ops.example.rev3.function;
 
-import mpicbg.imglib.type.numeric.RealType;
+import net.imglib2.type.numeric.RealType;
 
 /** unused but a valid direction to go. a resample function would be of this type */
 public interface ScalarFunction<T extends RealType<T>>

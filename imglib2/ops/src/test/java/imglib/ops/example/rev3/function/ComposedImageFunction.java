@@ -1,9 +1,9 @@
-package imglib.ops.example.rev3.function;
+package net.imglib2.ops.example.rev3.function;
 
 import java.util.ArrayList;
 
-import mpicbg.imglib.image.Image;
-import mpicbg.imglib.type.numeric.RealType;
+import net.imglib2.image.Image;
+import net.imglib2.type.numeric.RealType;
 
 // NOTES & TODO
 

@@ -6,15 +6,15 @@ import ij.process.ColorProcessor;
 
 import java.util.Random;
 
-import mpicbg.imglib.algorithm.gauss.GaussianConvolution;
-import mpicbg.imglib.container.array.ArrayContainerFactory;
-import mpicbg.imglib.cursor.LocalizableByDimCursor;
-import mpicbg.imglib.image.Image;
-import mpicbg.imglib.image.ImageFactory;
-import mpicbg.imglib.image.display.imagej.ImageJFunctions;
-import mpicbg.imglib.image.display.imagej.ImageJVirtualStack;
-import mpicbg.imglib.outofbounds.OutOfBoundsStrategyMirrorFactory;
-import mpicbg.imglib.outofbounds.OutOfBoundsPeriodicFactory;
+import net.imglib2.algorithm.gauss.GaussianConvolution;
+import net.imglib2.container.array.ArrayContainerFactory;
+import net.imglib2.cursor.LocalizableByDimCursor;
+import net.imglib2.image.Image;
+import net.imglib2.image.ImageFactory;
+import net.imglib2.image.display.imagej.ImageJFunctions;
+import net.imglib2.image.display.imagej.ImageJVirtualStack;
+import net.imglib2.outofbounds.OutOfBoundsStrategyMirrorFactory;
+import net.imglib2.outofbounds.OutOfBoundsPeriodicFactory;
 
 public class Arena
 {

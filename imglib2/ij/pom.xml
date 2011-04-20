@@ -60,7 +60,7 @@
         <configuration>
           <archive>
             <manifest>
-              <packageName>mpicbg.imglib.image.display</packageName>
+              <packageName>net.imglib2.ij</packageName>
             </manifest>
           </archive>
         </configuration>

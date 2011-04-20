@@ -1,9 +1,9 @@
-package imglib.ops.example.rev3.constraints;
+package net.imglib2.ops.example.rev3.constraints;
 
 import java.util.ArrayList;
 
-import imglib.ops.example.rev3.condition.Condition;
-import imglib.ops.example.rev3.function.IntegerIndexedScalarFunction;
+import net.imglib2.ops.example.rev3.condition.Condition;
+import net.imglib2.ops.example.rev3.function.IntegerIndexedScalarFunction;
 
 public class Constraints
 {

@@ -1,4 +1,4 @@
-package imglib.ops.example.rev3.function;
+package net.imglib2.ops.example.rev3.function;
 
 public final class AverageFunction implements IntegerIndexedScalarFunction
 {

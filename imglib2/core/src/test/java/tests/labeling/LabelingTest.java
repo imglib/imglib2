@@ -24,20 +24,20 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
-import mpicbg.imglib.Cursor;
-import mpicbg.imglib.RandomAccess;
-import mpicbg.imglib.RealRandomAccess;
-import mpicbg.imglib.img.Img;
-import mpicbg.imglib.img.array.ArrayImgFactory;
-import mpicbg.imglib.img.basictypeaccess.IntAccess;
-import mpicbg.imglib.labeling.NativeImgLabeling;
-import mpicbg.imglib.labeling.DefaultROIStrategyFactory;
-import mpicbg.imglib.labeling.Labeling;
-import mpicbg.imglib.labeling.LabelingType;
-import mpicbg.imglib.labeling.NativeLabeling;
-import mpicbg.imglib.type.logic.BitType;
-import mpicbg.imglib.type.numeric.integer.IntType;
-import mpicbg.imglib.type.numeric.real.DoubleType;
+import net.imglib2.Cursor;
+import net.imglib2.RandomAccess;
+import net.imglib2.RealRandomAccess;
+import net.imglib2.img.Img;
+import net.imglib2.img.array.ArrayImgFactory;
+import net.imglib2.img.basictypeaccess.IntAccess;
+import net.imglib2.labeling.NativeImgLabeling;
+import net.imglib2.labeling.DefaultROIStrategyFactory;
+import net.imglib2.labeling.Labeling;
+import net.imglib2.labeling.LabelingType;
+import net.imglib2.labeling.NativeLabeling;
+import net.imglib2.type.logic.BitType;
+import net.imglib2.type.numeric.integer.IntType;
+import net.imglib2.type.numeric.real.DoubleType;
 
 import org.junit.Test;
 

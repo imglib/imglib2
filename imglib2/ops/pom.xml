@@ -38,7 +38,7 @@
         <configuration>
           <archive>
             <manifest>
-              <packageName>imglib.ops</packageName>
+              <packageName>net.imglib2.ops</packageName>
             </manifest>
           </archive>
         </configuration>
