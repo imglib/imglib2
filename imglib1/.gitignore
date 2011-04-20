@@ -1,10 +1,5 @@
-target
+*.jar
 .classpath
 .project
 .settings
-IJ_Prefs.txt
-/imglib-algorithms.jar
-/imglib-ij.jar
-/imglib-io.jar
-/imglib-scripting.jar
-/imglib.jar
+target

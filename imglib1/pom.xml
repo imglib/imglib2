@@ -17,12 +17,12 @@
 
   <modules>
     <module>GameOfDeath</module>
-    <module>imglib</module>
-    <module>imglib-algorithms</module>
-    <module>imglib-ij</module>
-    <module>imglib-io</module>
-    <module>imglib-ops</module>
-    <module>imglib-scripting</module>
+    <module>algorithms</module>
+    <module>core</module>
+    <module>ij</module>
+    <module>io</module>
+    <module>ops</module>
+    <module>scripting</module>
   </modules>
 
   <properties>
