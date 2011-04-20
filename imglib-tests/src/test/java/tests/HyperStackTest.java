@@ -1,16 +1,12 @@
 package tests;
 
-import java.io.IOException;
-
 import ij.ImageJ;
 import ij.ImagePlus;
-import loci.formats.FormatException;
 import mpicbg.imglib.converter.TypeIdentity;
-import mpicbg.imglib.exception.IncompatibleTypeException;
-import mpicbg.imglib.image.display.imagej.ImageJVirtualStackFloat;
 import mpicbg.imglib.img.Img;
 import mpicbg.imglib.img.array.ArrayImgFactory;
 import mpicbg.imglib.io.ImgOpener;
+import mpicbg.imglib.io.ImgPlus;
 import mpicbg.imglib.type.numeric.real.FloatType;
 import mpicbg.imglib.util.Util;
 
@@ -25,8 +21,9 @@ public class HyperStackTest
 
 		try
 		{
-			final Img<FloatType> img = io.openImg( imgName,  new ArrayImgFactory<FloatType>(), new FloatType() );
-			final float[] calibration = io.getCalibration();
+			final ImgPlus<FloatType> imgPlus = io.openImg( imgName,  new ArrayImgFactory<FloatType>(), new FloatType() );
+			final Img<FloatType> img = imgPlus.getImg();
+			final float[] calibration = imgPlus.getCalibration();
 			
 			System.out.println( "Calibration: " + Util.printCoordinates( calibration ) );
 			

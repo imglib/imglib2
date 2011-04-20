@@ -27,7 +27,7 @@ public class OpenAndDisplaySliceView
 		{
 			ImgFactory< FloatType > imgFactory = new ArrayImgFactory< FloatType >();
 			final ImgOpener io = new ImgOpener();
-			img = io.openImg( "/home/tobias/Desktop/73.tif", imgFactory, new FloatType() );
+			img = io.openImg( "/home/tobias/Desktop/73.tif", imgFactory, new FloatType() ).getImg();
 		}
 		catch ( Exception e )
 		{
