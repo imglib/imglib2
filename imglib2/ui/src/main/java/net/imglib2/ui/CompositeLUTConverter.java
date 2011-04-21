@@ -35,7 +35,7 @@ import net.imglib2.type.numeric.RealType;
 
 /**
  * Used to create a composite multi-channel image (used by CompositeXYProjector)
- * Accumulates the RGB values in the output/target image. 
+ * Accumulates the values from the lookup tables to the RGB values in the output/target image. 
  *
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  * @author Grant B. Harris
