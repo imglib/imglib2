@@ -4,9 +4,9 @@ import ij.IJ;
 import ij.ImagePlus;
 import ij.io.FileSaver;
 
-import net.imglib2.container.Img;
 import net.imglib2.image.ImagePlusAdapter;
 import net.imglib2.image.display.imagej.ImageJFunctions;
+import net.imglib2.img.Img;
 import net.imglib2.type.numeric.RealType;
 
 /* TODO license? */

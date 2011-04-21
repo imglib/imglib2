@@ -3,10 +3,10 @@ package net.imglib2.script.color;
 import java.awt.Color;
 import java.util.Collection;
 
+import net.imglib2.Cursor;
 import net.imglib2.script.color.fn.ColorFunction;
 import net.imglib2.script.math.fn.IFunction;
 
-import net.imglib2.img.ImgCursor;
 import net.imglib2.img.Img;
 import net.imglib2.type.numeric.RealType;
 
@@ -80,9 +80,16 @@ public final class HSB extends ColorFunction {
 	}
 
 	@Override
-	public final void findCursors(final Collection<ImgCursor<?>> cursors) {
+	public final void findCursors(final Collection<Cursor<?>> cursors) {
 		hue.findCursors(cursors);
 		saturation.findCursors(cursors);
 		brightness.findCursors(cursors);
+	}
+
+	@Override
+	public final void findImgs(final Collection<Img<?>> imgs) {
+		hue.findImgs(imgs);
+		saturation.findImgs(imgs);
+		brightness.findImgs(imgs);
 	}
 }

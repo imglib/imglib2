@@ -23,6 +23,6 @@ public class Channel extends ChannelOp {
 	protected final int getShift() { return shift; }
 
 	public IFunction duplicate() {
-		return new Channel(c.getImg(), channel);
+		return new Channel(img, channel);
 	}
 }

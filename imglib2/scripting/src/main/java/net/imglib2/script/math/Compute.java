@@ -4,10 +4,10 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
+import net.imglib2.Cursor;
 import net.imglib2.script.math.fn.IFunction;
 import net.imglib2.script.math.fn.ImageFunction;
 
-import net.imglib2.img.ImgCursor;
 import net.imglib2.img.Img;
 import net.imglib2.img.array.ArrayImgFactory;
 import net.imglib2.multithreading.SimpleMultiThreading;
@@ -93,14 +93,9 @@ public class Compute {
 
 	/** Find all images in @param op and nested {@link IFunction} instances. */ 
 	static public final Set<Img<?>> findImages(final IFunction op) throws Exception {
-		final HashSet<ImgCursor<?>> cs = new HashSet<ImgCursor<?>>();
-		op.findCursors(cs);
-		//
-		final HashSet<Img<?>> images = new HashSet<Img<?>>();
-		for (final ImgCursor<?> c : cs) {
-			images.add(c.getImg());
-		}
-		return images;
+		final HashSet<Img<?>> imgs = new HashSet<Img<?>>();
+		op.findImgs(imgs);
+		return imgs;
 	}
 
 	/** Implements the core functionality of the {@code apply} method. */ 
@@ -108,7 +103,7 @@ public class Compute {
 	{
 		private final IFunction op;
 		private final Collection<Img<?>> images;
-		private final Collection<ImgCursor<?>> cursors;
+		private final Collection<Cursor<?>> cursors;
 		private final R output;
 		private int numThreads;
 
@@ -117,20 +112,18 @@ public class Compute {
 			this.output = output;
 			this.numThreads = Math.max(1, numThreads);
 			// Collect all cursors and their images involved in the operation
-			this.cursors = new HashSet<ImgCursor<?>>();
+			this.cursors = new HashSet<Cursor<?>>();
 			op.findCursors(this.cursors);
 			//
 			this.images = new HashSet<Img<?>>();
-			for (final ImgCursor<?> c : cursors) {
-				images.add(c.getImg());
-			}
+			op.findImgs(this.images);
 		}
 
-		public abstract void loop(final ImgCursor<R> resultCursor, final long loopSize, final IFunction fn);
+		public abstract void loop(final Cursor<R> resultCursor, final long loopSize, final IFunction fn);
 
 		protected void cleanupCursors() {
 			/* // TODO nothing?
-			for (ImgCursor<?> c : this.cursors) {
+			for (Cursor<?> c : this.cursors) {
 				c.close();
 			}
 			*/
@@ -192,14 +185,14 @@ public class Compute {
 					{
 						public void run()
 						{
-							final ImgCursor<R> resultCursor = result.cursor();
+							final Cursor<R> resultCursor = result.cursor();
 							resultCursor.jumpFwd( start[ID] );
 
 							final IFunction fn = functions[ ID ];
 
-							Collection<ImgCursor<?>> cs = new HashSet<ImgCursor<?>>();
+							Collection<Cursor<?>> cs = new HashSet<Cursor<?>>();
 							fn.findCursors(cs);
-							for (ImgCursor<?> c : cs) {
+							for (Cursor<?> c : cs) {
 								c.jumpFwd( start[ID] );
 							}
 
@@ -222,7 +215,7 @@ public class Compute {
 				final Img<R> result = (Img<R>) (output instanceof DoubleType ? factory.createDoubleInstance(new long[1], 1)
 						 : factory.createFloatInstance(new long[1], 1));
 
-				final ImgCursor<R> c = result.cursor();
+				final Cursor<R> c = result.cursor();
 				this.cursors.add(c); // store for cleanup later
 				loop(c, result.size(), op);
 
@@ -241,7 +234,7 @@ public class Compute {
 	static public final <R extends RealType<R>> Img<R> apply(final IFunction op, final R output, int numThreads) throws Exception
 	{
 		final Loop<R> loop = new Loop<R>(op, output, numThreads) {
-			public final void loop(final ImgCursor<R> resultCursor, final long loopSize, final IFunction fn) {
+			public final void loop(final Cursor<R> resultCursor, final long loopSize, final IFunction fn) {
 				for ( long j = loopSize; j > 0 ; --j )
 				{
 					resultCursor.fwd();
@@ -261,7 +254,7 @@ public class Compute {
 	static public final Img<ARGBType> apply(final IFunction op, final ARGBType output, int numThreads ) throws Exception
 	{
 		final Loop<ARGBType> loop = new Loop<ARGBType>(op, output, numThreads) {
-			public final void loop(final ImgCursor<ARGBType> resultCursor, final long loopSize, final IFunction fn) {
+			public final void loop(final Cursor<ARGBType> resultCursor, final long loopSize, final IFunction fn) {
 				for ( long j = loopSize; j > 0 ; --j )
 				{
 					resultCursor.fwd();

@@ -2,11 +2,11 @@ package net.imglib2.script.color;
 
 import java.util.Collection;
 
+import net.imglib2.Cursor;
 import net.imglib2.script.color.fn.ColorFunction;
 import net.imglib2.script.math.fn.IFunction;
 
 import net.imglib2.img.Img;
-import net.imglib2.img.ImgCursor;
 import net.imglib2.type.numeric.RealType;
 
 /** Given up to 4 channels--each represented by an {@link IFunction},
@@ -87,10 +87,18 @@ public final class RGBA extends ColorFunction {
 	}
 
 	@Override
-	public final void findCursors(final Collection<ImgCursor<?>> cursors) {
+	public final void findCursors(final Collection<Cursor<?>> cursors) {
 		alpha.findCursors(cursors);
 		red.findCursors(cursors);
 		green.findCursors(cursors);
 		blue.findCursors(cursors);
+	}
+
+	@Override
+	public final void findImgs(final Collection<Img<?>> imgs) {
+		alpha.findImgs(imgs);
+		red.findImgs(imgs);
+		green.findImgs(imgs);
+		blue.findImgs(imgs);
 	}
 }
