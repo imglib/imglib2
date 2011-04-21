@@ -13,7 +13,7 @@ public final class Or implements Condition
 	}
 	
 	@Override
-	public boolean isSatisfied(IntegerIndexedScalarFunction function, int[] position)
+	public boolean isSatisfied(IntegerIndexedScalarFunction function, long[] position)
 	{
 		return left.isSatisfied(function, position) || right.isSatisfied(function, position);
 	}

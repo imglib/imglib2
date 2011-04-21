@@ -8,5 +8,5 @@ package net.imglib2.ops.example.rev3.function;
 /** the base interface of most functions in net.imglib2.ops */
 public interface IntegerIndexedScalarFunction
 {
-	double evaluate(int[] position);
+	double evaluate(long[] position);
 }

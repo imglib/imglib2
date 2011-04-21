@@ -5,7 +5,7 @@ public final class AverageFunction implements IntegerIndexedScalarFunction
 	private final IntegerIndexedScalarFunction otherFunction;
 	private final int[] loDeltas;
 	private final int[] hiDeltas;
-	private final int[] relPos;
+	private final long[] relPos;
 	
 	public AverageFunction(IntegerIndexedScalarFunction otherFunction, int[] loDeltas, int[] hiDeltas)
 	{
@@ -16,11 +16,11 @@ public final class AverageFunction implements IntegerIndexedScalarFunction
 		if (loDeltas.length != 3) // TODO - hack - make work in 3d only to get started
 			throw new IllegalArgumentException("only 3d average supported");
 		
-		relPos = new int[3];
+		relPos = new long[3];
 	}
 	
 	@Override
-	public double evaluate(int[] position)
+	public double evaluate(long[] position)
 	{
 		double sum = 0;
 		
@@ -46,8 +46,8 @@ public final class AverageFunction implements IntegerIndexedScalarFunction
 
 		if (numElements == 0)
 			return 0;
-		else
-			return sum / numElements;
+
+		return sum / numElements;
 	}
 
 }

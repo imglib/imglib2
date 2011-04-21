@@ -22,7 +22,7 @@ public class Constraints
 		constraints.add(new ConstraintEntry(function,condition));
 	}
 	
-	public boolean areSatisfied(int[] position)
+	public boolean areSatisfied(long[] position)
 	{
 		if (constraints == null)
 			return true;

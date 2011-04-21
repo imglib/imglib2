@@ -14,7 +14,7 @@ public final class UnaryFunction implements IntegerIndexedScalarFunction
 	}
 	
 	@Override
-	public double evaluate(int[] position)
+	public double evaluate(long[] position)
 	{
 		double input = inputFunction.evaluate(position);
 

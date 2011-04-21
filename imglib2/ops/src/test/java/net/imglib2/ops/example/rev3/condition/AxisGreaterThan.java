@@ -14,7 +14,7 @@ public final class AxisGreaterThan implements Condition
 	}
 	
 	@Override
-	public boolean isSatisfied(IntegerIndexedScalarFunction function, int[] position)
+	public boolean isSatisfied(IntegerIndexedScalarFunction function, long[] position)
 	{
 		return position[axis] > value;
 	}

@@ -2,7 +2,7 @@ package net.imglib2.ops.example.rev3.function;
 
 import java.util.ArrayList;
 
-import net.imglib2.image.Image;
+import net.imglib2.img.Img;
 import net.imglib2.type.numeric.RealType;
 
 // NOTES & TODO
@@ -25,13 +25,13 @@ import net.imglib2.type.numeric.RealType;
 public final class ComposedImageFunction implements IntegerIndexedScalarFunction
 {
 	private ArrayList<SubImageInfo> subImages;
-	private int[] subImageDimensions;
-	private int[] subImagePosition;
+	private long[] subImageDimensions;
+	private long[] subImagePosition;
 	private int subImageSpanSize;
 	
 	private class SubImageInfo
 	{
-		int[] origin;
+		long[] origin;
 		ImageFunction function;
 	}
 
@@ -42,14 +42,14 @@ public final class ComposedImageFunction implements IntegerIndexedScalarFunction
 
 	/** adds a subregion of an image to this COmposedImageFunction. The span of the region must match exactly the span of all previously added
 	 * image subregions. the origin can vary (allowing multiple regions in a single image to be treated as separate planes in the composed image). */
-	public void addImageRegion(Image<? extends RealType<?>> image, int[] origin, int[] span)
+	public void addImageRegion(Img<? extends RealType<?>> image, long[] origin, long[] span)
 	{
 		if (subImages == null)
 		{
 			subImages = new ArrayList<SubImageInfo>();
 			subImageDimensions = span.clone();
 			subImageSpanSize = span.length;
-			subImagePosition = new int[subImageSpanSize];
+			subImagePosition = new long[subImageSpanSize];
 		}
 
 		if (span.length != subImageSpanSize)
@@ -67,9 +67,11 @@ public final class ComposedImageFunction implements IntegerIndexedScalarFunction
 	}
 	
 	@Override
-	public double evaluate(int[] position)
+	public double evaluate(long[] position)
 	{
-		SubImageInfo info = subImages.get(position[subImageSpanSize]);
+		if (subImages == null)
+			throw new IllegalStateException("caller failed to initialize ComposedImageFunction via addImageRegion()");
+		SubImageInfo info = subImages.get((int)position[subImageSpanSize]);
 		for (int i = 0; i < subImageSpanSize; i++)
 			subImagePosition[i] = info.origin[i] + position[i];
 		return info.function.evaluate(subImagePosition);

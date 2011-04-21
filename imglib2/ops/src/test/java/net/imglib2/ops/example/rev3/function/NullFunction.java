@@ -8,7 +8,7 @@ package net.imglib2.ops.example.rev3.function;
 public final class NullFunction implements IntegerIndexedScalarFunction
 {
 	@Override
-	public double evaluate(int[] position)
+	public double evaluate(long[] position)
 	{
 		return Double.NaN;
 	}

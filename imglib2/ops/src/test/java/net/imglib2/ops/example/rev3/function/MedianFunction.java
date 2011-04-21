@@ -7,7 +7,7 @@ public final class MedianFunction implements IntegerIndexedScalarFunction
 	private final IntegerIndexedScalarFunction otherFunction;
 	private final int[] loDeltas;
 	private final int[] hiDeltas;
-	private final int[] relPos;
+	private final long[] relPos;
 	private final double[] workspace;
 	
 	public MedianFunction(IntegerIndexedScalarFunction otherFunction, int[] loDeltas, int[] hiDeltas)
@@ -19,7 +19,7 @@ public final class MedianFunction implements IntegerIndexedScalarFunction
 		if (loDeltas.length != 2) // TODO - hack - make work in 2d only to get started
 			throw new IllegalArgumentException("onbly 2d median supported");
 		
-		relPos = new int[2];
+		relPos = new long[2];
 		
 		int numCols = hiDeltas[0] + 1 + Math.abs(loDeltas[0]);
 		int numRows = hiDeltas[1] + 1 + Math.abs(loDeltas[1]);
@@ -28,7 +28,7 @@ public final class MedianFunction implements IntegerIndexedScalarFunction
 	}
 	
 	@Override
-	public double evaluate(int[] position)
+	public double evaluate(long[] position)
 	{
 		int numElements = 0;
 		

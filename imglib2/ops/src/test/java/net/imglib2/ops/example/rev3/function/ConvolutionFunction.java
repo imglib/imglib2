@@ -8,7 +8,7 @@ public final class ConvolutionFunction implements IntegerIndexedScalarFunction
 	private final IntegerIndexedScalarFunction otherFunction;
 	private final int[] kernelDimensions;
 	private final double[] kernelValues;
-	private final int[] relPos;
+	private final long[] relPos;
 	
 	public ConvolutionFunction(int[] kernelDimensions, double[] kernelValues, IntegerIndexedScalarFunction otherFunction)
 	{
@@ -20,7 +20,7 @@ public final class ConvolutionFunction implements IntegerIndexedScalarFunction
 		if (((kernelDimensions[0] %2) == 0) || ((kernelDimensions[1] %2) == 0))
 			throw new IllegalArgumentException("temporarily only allowing odd numbers for kernel dimensions");
 		
-		this.relPos = new int[2];  // temporary workspace : TODO - this is a 2d hack
+		this.relPos = new long[2];  // temporary workspace : TODO - this is a 2d hack
 
 		this.otherFunction = otherFunction;
 		this.kernelDimensions = kernelDimensions;
@@ -28,7 +28,7 @@ public final class ConvolutionFunction implements IntegerIndexedScalarFunction
 	}
 	
 	@Override
-	public double evaluate(int[] position)
+	public double evaluate(long[] position)
 	{
 		double sum = 0;
 
@@ -46,7 +46,7 @@ public final class ConvolutionFunction implements IntegerIndexedScalarFunction
 				
 				double value = otherFunction.evaluate(relPos);
 				
-				int kPos = relPos[1]*kernelDimensions[0] + relPos[0];
+				int kPos = (int)(relPos[1]*kernelDimensions[0] + relPos[0]);
 				
 				double kernelValue = kernelValues[kPos];
 				

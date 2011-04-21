@@ -1,6 +1,7 @@
 package net.imglib2.ops.example.rev3;
 
 import static org.junit.Assert.assertEquals;
+import net.imglib2.RandomAccess;
 import net.imglib2.ops.example.rev3.condition.ValueLessThan;
 import net.imglib2.ops.example.rev3.constraints.Constraints;
 import net.imglib2.ops.example.rev3.function.AverageFunction;
@@ -17,10 +18,8 @@ import net.imglib2.ops.example.rev3.operator.binary.AddOperator;
 import net.imglib2.ops.example.rev3.operator.binary.MultiplyOperator;
 import net.imglib2.ops.example.rev3.operator.unary.HalfOperator;
 
-import net.imglib2.container.array.ArrayContainerFactory;
-import net.imglib2.cursor.LocalizableByDimCursor;
-import net.imglib2.image.Image;
-import net.imglib2.image.ImageFactory;
+import net.imglib2.img.Img;
+import net.imglib2.img.array.ArrayImgFactory;
 import net.imglib2.type.numeric.integer.UnsignedByteType;
 
 import org.junit.Test;
@@ -30,20 +29,20 @@ public class Rev3Tests
 
 	// ************  private interface ********************************************************
 	
-	private static Image<UnsignedByteType> createImage(int width, int height)
+	private static Img<UnsignedByteType> createImage(int width, int height)
 	{
-		ImageFactory<UnsignedByteType> factory = new ImageFactory<UnsignedByteType>(new UnsignedByteType(), new ArrayContainerFactory());
+		ArrayImgFactory<UnsignedByteType> factory = new ArrayImgFactory<UnsignedByteType>();
 		
-		return factory.createImage(new int[]{width,height});
+		return factory.create(new long[]{width,height}, new UnsignedByteType());
 	}
 
-	private static Image<UnsignedByteType> createPopulatedImage(int width, int height, int[] values)
+	private static Img<UnsignedByteType> createPopulatedImage(int width, int height, int[] values)
 	{
-		Image<UnsignedByteType> image = createImage(width, height);
+		Img<UnsignedByteType> image = createImage(width, height);
 		
-		LocalizableByDimCursor<UnsignedByteType> cursor = image.createLocalizableByDimCursor();
+		RandomAccess<UnsignedByteType> accessor = image.randomAccess();
 		
-		int[] position = new int[2];
+		long[] position = new long[2];
 		
 		int i = 0;
 		
@@ -53,8 +52,8 @@ public class Rev3Tests
 			{
 				position[0] = x;
 				position[1] = y;
-				cursor.setPosition(position);
-				cursor.getType().setInteger(values[i++]);
+				accessor.setPosition(position);
+				accessor.get().setInteger(values[i++]);
 			}
 		}
 
@@ -62,11 +61,11 @@ public class Rev3Tests
 	}
 	
 	
-	private static void assertImageValsEqual(int width, int height, int[] values, Image<UnsignedByteType> image)
+	private static void assertImageValsEqual(int width, int height, int[] values, Img<UnsignedByteType> image)
 	{
-		LocalizableByDimCursor<UnsignedByteType> cursor = image.createLocalizableByDimCursor();
+		RandomAccess<UnsignedByteType> accessor = image.randomAccess();
 
-		int[] position = new int[2];
+		long[] position = new long[2];
 		
 		int i = 0;
 		
@@ -76,8 +75,8 @@ public class Rev3Tests
 			{
 				position[0] = x;
 				position[1] = y;
-				cursor.setPosition(position);
-				assertEquals(values[i++], cursor.getType().getInteger());
+				accessor.setPosition(position);
+				assertEquals(values[i++], accessor.get().getInteger());
 			}
 		}
 	}
@@ -87,11 +86,11 @@ public class Rev3Tests
 	@Test
 	public void testConstantFill()
 	{
-		Image<UnsignedByteType> outputImage = createPopulatedImage(3,3,new int[9]);
+		Img<UnsignedByteType> outputImage = createPopulatedImage(3,3,new int[9]);
 		
 		ConstantFunction function = new ConstantFunction(43);
 		
-		Operation op = new Operation(outputImage, new int[3], new int[]{3,3}, function);
+		Operation op = new Operation(outputImage, new long[2], new long[]{3,3}, function);
 		
 		op.execute();
 		
@@ -101,15 +100,15 @@ public class Rev3Tests
 	@Test
 	public void testCopyOtherImage()
 	{
-		Image<UnsignedByteType> inputImage = createPopulatedImage(3,3,new int[]{1,2,3,4,5,6,7,8,9});
+		Img<UnsignedByteType> inputImage = createPopulatedImage(3,3,new int[]{1,2,3,4,5,6,7,8,9});
 		
-		Image<UnsignedByteType> outputImage = createPopulatedImage(3,3,new int[9]);
+		Img<UnsignedByteType> outputImage = createPopulatedImage(3,3,new int[9]);
 		
 		assertImageValsEqual(3,3,new int[9], outputImage);
 
 		ImageFunction function = new ImageFunction(inputImage);
 		
-		Operation op = new Operation(outputImage, new int[3], new int[]{3,3}, function);
+		Operation op = new Operation(outputImage, new long[2], new long[]{3,3}, function);
 		
 		op.execute();
 		
@@ -122,9 +121,9 @@ public class Rev3Tests
 	{
 		double[] kernel = new double[]{1,1,1,1,1,1,1,1,1};
 
-		Image<UnsignedByteType> inputImage = createPopulatedImage(3,3,new int[]{1,2,3,4,5,6,7,8,9});
+		Img<UnsignedByteType> inputImage = createPopulatedImage(3,3,new int[]{1,2,3,4,5,6,7,8,9});
 		
-		Image<UnsignedByteType> outputImage = createPopulatedImage(3,3,new int[9]);
+		Img<UnsignedByteType> outputImage = createPopulatedImage(3,3,new int[9]);
 		
 		assertImageValsEqual(3,3,new int[9], outputImage);
 
@@ -132,7 +131,7 @@ public class Rev3Tests
 
 		ConvolutionFunction convolver = new ConvolutionFunction(new int[]{3,3}, kernel, imageFunction);
 		
-		Operation op = new Operation(outputImage, new int[]{1,1}, new int[]{1,1}, convolver);
+		Operation op = new Operation(outputImage, new long[]{1,1}, new long[]{1,1}, convolver);
 		
 		op.execute();
 		
@@ -142,11 +141,11 @@ public class Rev3Tests
 	@Test
 	public void testBinaryFunction()
 	{
-		Image<UnsignedByteType> leftImage = createPopulatedImage(3,3,new int[]{1,2,3,4,5,6,7,8,9});
+		Img<UnsignedByteType> leftImage = createPopulatedImage(3,3,new int[]{1,2,3,4,5,6,7,8,9});
 		
-		Image<UnsignedByteType> rightImage = createPopulatedImage(3,3,new int[]{10,20,30,40,50,60,70,80,90});
+		Img<UnsignedByteType> rightImage = createPopulatedImage(3,3,new int[]{10,20,30,40,50,60,70,80,90});
 
-		Image<UnsignedByteType> outputImage = createPopulatedImage(3,3,new int[9]);
+		Img<UnsignedByteType> outputImage = createPopulatedImage(3,3,new int[9]);
 
 		assertImageValsEqual(3,3,new int[9], outputImage);
 
@@ -158,7 +157,7 @@ public class Rev3Tests
 		
 		BinaryFunction addFunc = new BinaryFunction(addOp, leftImageFunction, rightImageFunction);
 		
-		Operation op = new Operation(outputImage, new int[2], new int[]{3,3}, addFunc);
+		Operation op = new Operation(outputImage, new long[2], new long[]{3,3}, addFunc);
 		
 		op.execute();
 		
@@ -168,9 +167,9 @@ public class Rev3Tests
 	@Test
 	public void testUnaryFunction()
 	{
-		Image<UnsignedByteType> inputImage = createPopulatedImage(3,3,new int[]{10,20,30,40,50,60,70,80,90});
+		Img<UnsignedByteType> inputImage = createPopulatedImage(3,3,new int[]{10,20,30,40,50,60,70,80,90});
 
-		Image<UnsignedByteType> outputImage = createPopulatedImage(3,3,new int[9]);
+		Img<UnsignedByteType> outputImage = createPopulatedImage(3,3,new int[9]);
 
 		assertImageValsEqual(3,3,new int[9], outputImage);
 
@@ -180,7 +179,7 @@ public class Rev3Tests
 		
 		UnaryFunction halfFunc = new UnaryFunction(halfOp, inputImageFunction);
 		
-		Operation op = new Operation(outputImage, new int[2], new int[]{3,3}, halfFunc);
+		Operation op = new Operation(outputImage, new long[2], new long[]{3,3}, halfFunc);
 		
 		op.execute();
 		
@@ -192,9 +191,9 @@ public class Rev3Tests
 	{
 		// lets set an Image's values to half(2*Image1 + 3*Image2 + 4)
 		
-		Image<UnsignedByteType> inputImage1 = createPopulatedImage(3,3,new int[]{1,2,3,4,5,6,7,8,9});
-		Image<UnsignedByteType> inputImage2 = createPopulatedImage(3,3,new int[]{5,10,15,20,25,30,35,40,45});
-		Image<UnsignedByteType> outputImage = createPopulatedImage(3,3,new int[9]);
+		Img<UnsignedByteType> inputImage1 = createPopulatedImage(3,3,new int[]{1,2,3,4,5,6,7,8,9});
+		Img<UnsignedByteType> inputImage2 = createPopulatedImage(3,3,new int[]{5,10,15,20,25,30,35,40,45});
+		Img<UnsignedByteType> outputImage = createPopulatedImage(3,3,new int[9]);
 
 		MultiplyOperator multOp = new MultiplyOperator();
 		AddOperator addOp = new AddOperator();
@@ -217,7 +216,7 @@ public class Rev3Tests
 
 		UnaryFunction totalFunc = new UnaryFunction(halfOp, threeTerms);
 		
-		Operation op = new Operation(outputImage, new int[2], new int[]{3,3}, totalFunc);
+		Operation op = new Operation(outputImage, new long[2], new long[]{3,3}, totalFunc);
 		
 		op.execute();
 		
@@ -236,7 +235,7 @@ public class Rev3Tests
 		}
 
 		@Override
-		public double evaluate(int[] position)
+		public double evaluate(long[] position)
 		{
 			return xCoeff*position[0] + yCoeff*position[1];
 		}
@@ -246,9 +245,9 @@ public class Rev3Tests
 	public void testConstraints()
 	{
 		// make an input image
-		Image<UnsignedByteType> inputImage = createImage(9,9);
-		LocalizableByDimCursor<UnsignedByteType> cursor = inputImage.createLocalizableByDimCursor();
-		int[] pos = new int[2];
+		Img<UnsignedByteType> inputImage = createImage(9,9);
+		RandomAccess<UnsignedByteType> accessor = inputImage.randomAccess();
+		long[] pos = new long[2];
 		int i = 0;
 		for (int y = 0; y < 9; y++)
 		{
@@ -256,19 +255,19 @@ public class Rev3Tests
 			for (int x = 0; x < 9; x++)
 			{
 				pos[0] = x;
-				cursor.setPosition(pos);
-				cursor.getType().setReal(i++);
+				accessor.setPosition(pos);
+				accessor.get().setReal(i++);
 			}
 		}
 
 		// make an unassigned output image
-		Image<UnsignedByteType> outputImage = createPopulatedImage(9,9,new int[81]);
+		Img<UnsignedByteType> outputImage = createPopulatedImage(9,9,new int[81]);
 
 		// make a constraint where we are interested in values to right of 
 		
 		ImageFunction imageFunction = new ImageFunction(inputImage);
 		
-		Operation op = new Operation(outputImage, new int[2], new int[]{9,9}, imageFunction);
+		Operation op = new Operation(outputImage, new long[2], new long[]{9,9}, imageFunction);
 		
 		ValueLessThan lessThan22 = new ValueLessThan(22);
 
@@ -282,7 +281,8 @@ public class Rev3Tests
 		
 		op.execute();
 		
-		cursor = outputImage.createLocalizableByDimCursor();
+		accessor = outputImage.randomAccess();
+		
 		i = 0;
 		for (int y = 0; y < 9; y++)
 		{
@@ -290,8 +290,8 @@ public class Rev3Tests
 			for (int x = 0; x < 9; x++)
 			{
 				pos[0] = x;
-				cursor.setPosition(pos);
-				double actualValue = cursor.getType().getRealDouble();
+				accessor.setPosition(pos);
+				double actualValue = accessor.get().getRealDouble();
 				double expectedValue;
 				if (((2*x) + (3*y)) < 22)
 					expectedValue = i;
@@ -310,76 +310,76 @@ public class Rev3Tests
 		
 		// make input images
 		
-		LocalizableByDimCursor<UnsignedByteType> cursor;
+		RandomAccess<UnsignedByteType> accessor;
 
 		// make and populate an input image
-		Image<UnsignedByteType> inputImage1 = createImage(9,9);
-		cursor = inputImage1.createLocalizableByDimCursor();
+		Img<UnsignedByteType> inputImage1 = createImage(9,9);
+		accessor = inputImage1.randomAccess();
 		for (int x = 0; x < 9; x++)
 		{
 			for (int y = 0; y < 9; y++)
 			{
 				int[] pos = new int[]{x,y};
-				cursor.setPosition(pos);
-				cursor.getType().setReal(x*y);
+				accessor.setPosition(pos);
+				accessor.get().setReal(x*y);
 			}
 		}
 		
 		// make and populate an input image
-		Image<UnsignedByteType> inputImage2 = createImage(9,9);
-		cursor = inputImage2.createLocalizableByDimCursor();
+		Img<UnsignedByteType> inputImage2 = createImage(9,9);
+		accessor = inputImage2.randomAccess();
 		for (int x = 0; x < 9; x++)
 		{
 			for (int y = 0; y < 9; y++)
 			{
 				int[] pos = new int[]{x,y};
-				cursor.setPosition(pos);
-				cursor.getType().setReal(x);
+				accessor.setPosition(pos);
+				accessor.get().setReal(x);
 			}
 		}
 
 		// make and populate an input image
-		Image<UnsignedByteType> inputImage3 = createImage(9,9);
-		cursor = inputImage3.createLocalizableByDimCursor();
+		Img<UnsignedByteType> inputImage3 = createImage(9,9);
+		accessor = inputImage3.randomAccess();
 		for (int x = 0; x < 9; x++)
 		{
 			for (int y = 0; y < 9; y++)
 			{
 				int[] pos = new int[]{x,y};
-				cursor.setPosition(pos);
-				cursor.getType().setReal(y);
+				accessor.setPosition(pos);
+				accessor.get().setReal(y);
 			}
 		}
 
 		// make an unassigned output image
 		
-		int[] outputSpan = new int[]{5,5};
+		long[] outputSpan = new long[]{5,5};
 		
-		Image<UnsignedByteType> outputImage = createImage(5,5);
+		Img<UnsignedByteType> outputImage = createImage(5,5);
 		
 		// compose a 3d image from the separate regions of the 2d images
 		
 		ComposedImageFunction composedImage = new ComposedImageFunction();
-		composedImage.addImageRegion(inputImage1, new int[]{0,0}, outputSpan);
-		composedImage.addImageRegion(inputImage2, new int[]{2,2}, outputSpan);
-		composedImage.addImageRegion(inputImage3, new int[]{4,4}, outputSpan);
+		composedImage.addImageRegion(inputImage1, new long[]{0,0}, outputSpan);
+		composedImage.addImageRegion(inputImage2, new long[]{2,2}, outputSpan);
+		composedImage.addImageRegion(inputImage3, new long[]{4,4}, outputSpan);
 		
 		// apply an average of x,y values along the z axis in the ComposedImage
 		
 		IntegerIndexedScalarFunction function = new AverageFunction(composedImage, new int[]{0,0,0}, new int[]{0,0,2});
 		
-		Operation op = new Operation(outputImage, new int[]{0,0}, outputSpan, function);
+		Operation op = new Operation(outputImage, new long[]{0,0}, outputSpan, function);
 		
 		op.execute();
 		
-		cursor = outputImage.createLocalizableByDimCursor();
+		accessor = outputImage.randomAccess();
 		for (int x = 0; x < 5; x++)
 		{
 			for (int y = 0; y < 5; y++)
 			{
 				int[] pos = new int[]{x,y};
-				cursor.setPosition(pos);
-				assertEquals(Math.round(((x*y)+(x+2)+(y+4))/3.0), cursor.getType().getRealDouble(), 0);
+				accessor.setPosition(pos);
+				assertEquals(Math.round(((x*y)+(x+2)+(y+4))/3.0), accessor.get().getRealDouble(), 0);
 			}
 		}
 	}

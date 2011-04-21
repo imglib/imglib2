@@ -1,5 +1,6 @@
 package net.imglib2.ops.example.rev3;
 
+import net.imglib2.Cursor;
 import net.imglib2.ops.example.rev3.constraints.Constraints;
 import net.imglib2.ops.example.rev3.function.IntegerIndexedScalarFunction;
 import net.imglib2.ops.observer.IterationStatus;
@@ -8,9 +9,8 @@ import net.imglib2.ops.observer.IterationStatus.Message;
 import java.util.Observable;
 import java.util.Observer;
 
-import net.imglib2.cursor.LocalizableByDimCursor;
-import net.imglib2.cursor.special.RegionOfInterestCursor;
-import net.imglib2.image.Image;
+import net.imglib2.ops.operation.RegionCursor;  // TODO - this uses temp Rev2 version
+import net.imglib2.img.Img;
 import net.imglib2.type.numeric.RealType;
 
 // NOTICE
@@ -27,23 +27,21 @@ import net.imglib2.type.numeric.RealType;
 
 public class Operation
 {
-	private final Image<? extends RealType<?>> outputImage;
-	private final int[] origin;
+	private final Img<? extends RealType<?>> outputImage;
 	private final IntegerIndexedScalarFunction function;
-	private final RegionOfInterestCursor<? extends RealType<?>> cursor;
+	private final RegionCursor<? extends RealType<?>> cursor;
 	private boolean wasInterrupted;
 	private boolean isDone;
 	private Observable notifier;
 	private Constraints constraints;
 	
 	@SuppressWarnings({"rawtypes","unchecked"})
-	public Operation(Image<? extends RealType<?>> outputImage, int[] origin, int[] span, IntegerIndexedScalarFunction function)
+	public Operation(Img<? extends RealType<?>> outputImage, long[] origin, long[] span, IntegerIndexedScalarFunction function)
 	{
 		this.outputImage = outputImage;
-		this.origin = origin;
 		this.function = function;
-		LocalizableByDimCursor<? extends RealType<?>> tmpCursor = outputImage.createLocalizableByDimCursor();
-		this.cursor = new RegionOfInterestCursor(tmpCursor, origin, span);  // nongeneric instantiation. SAFE?
+		Cursor<? extends RealType<?>> tmpCursor = outputImage.cursor();
+		this.cursor = new RegionCursor(tmpCursor, origin, span);  // nongeneric instantiation. SAFE?
 		this.wasInterrupted = false;
 		this.isDone = false;
 		this.notifier = null;
@@ -58,7 +56,7 @@ public class Operation
 
 	public void execute()  // TODO - make this run in its own thread. multithread it too?
 	{
-		int[] position = new int[outputImage.getNumDimensions()];
+		long[] position = new long[outputImage.numDimensions()];
 
 		Status status = new Status();
 		
@@ -74,19 +72,21 @@ public class Operation
 				break;
 			cursor.fwd();
 			cursor.getPosition(position);
-			for (int i = 0; i < position.length; i++)  // TODO - slowing HACK because RoiCursor returns relative position rather than absolute position
-				position[i] += origin[i];
+			// next three lines needed for imglib1 but not needed for imglib2
+		  // TODO - slowing HACK because RegionOfInterestCursor returns relative position rather than absolute position
+			//for (int i = 0; i < position.length; i++)
+			//	position[i] += origin[i];
 			boolean constraintsSatisfied = constraints.areSatisfied(position);
 			if (constraintsSatisfied)
 			{
 				double newValue = function.evaluate(position);
-				cursor.getType().setReal(newValue);
+				cursor.get().setReal(newValue);
 			}
 			if (notifier != null)
 			{
 				status.message = Message.UPDATE;
 				status.position = position;
-				status.value = cursor.getType().getRealDouble();    // not sure what is best to pass as value if constraints
+				status.value = cursor.get().getRealDouble();        // not sure what is best to pass as value if constraints
 				status.conditionsSatisfied = constraintsSatisfied;  // violated but I think if I pass original value it might be
 				notifier.notifyObservers(status);                   // useful info to caller. its incurs a small performance hit.
 			}
@@ -95,7 +95,7 @@ public class Operation
 		if (notifier != null)
 		{
 			status.message = Message.DONE;
-			status.wasInterrupted = wasInterrupted;
+			status.interruptedStatus = wasInterrupted;
 			notifier.notifyObservers(status);
 		}
 		
@@ -144,10 +144,10 @@ public class Operation
 	private class Status implements IterationStatus
 	{
 		Message message;
-		int[] position;
+		long[] position;
 		double value;
 		boolean conditionsSatisfied;
-		boolean wasInterrupted;
+		boolean interruptedStatus;
 
 		@Override
 		public Message getMessage()
@@ -156,7 +156,7 @@ public class Operation
 		}
 
 		@Override
-		public int[] getPosition()
+		public long[] getPosition()
 		{
 			return position;
 		}
@@ -176,7 +176,7 @@ public class Operation
 		@Override
 		public boolean wasInterrupted()
 		{
-			return wasInterrupted;
+			return interruptedStatus;
 		}
 		
 	}

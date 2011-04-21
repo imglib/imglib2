@@ -1,29 +1,30 @@
 package net.imglib2.ops.condition;
 
-import net.imglib2.cursor.LocalizableCursor;
-import net.imglib2.cursor.LocalizableByDimCursor;
-import net.imglib2.image.Image;
+import net.imglib2.Cursor;
+import net.imglib2.RandomAccess;
 import net.imglib2.type.numeric.RealType;
+import net.imglib2.img.Img;
 
 public class PixelOnBorder<T extends RealType<T>> implements Condition<T>
 {
 	private final double borderValue;
-	private final int[] imageDims;
-	private final int[] neighPos;
-	private final LocalizableByDimCursor<T> neighCursor;
+	private final long[] imageDims;
+	private final long[] neighPos;
+	private final RandomAccess<T> neighAccessor;
 	
-	public PixelOnBorder(final Image<T> image, final double borderValue)
+	public PixelOnBorder(final Img<T> image, final double borderValue)
 	{
 		this.borderValue = borderValue;
-		this.imageDims = image.getDimensions();
-		this.neighPos = image.createPositionArray();
-		this.neighCursor = image.createLocalizableByDimCursor();
+		this.imageDims = new long[image.numDimensions()];
+		image.dimensions(this.imageDims);
+		this.neighPos = new long[image.numDimensions()];
+		this.neighAccessor = image.randomAccess();
 	}
 	
 	@Override
-	public boolean isSatisfied(final LocalizableCursor<T> cursor, final int[] position)
+	public boolean isSatisfied(final Cursor<T> cursor, final long[] position)
 	{
-		double currPixValue = cursor.getType().getRealDouble();
+		double currPixValue = cursor.get().getRealDouble();
 		
 		if (currPixValue != borderValue)
 			return false;
@@ -33,8 +34,8 @@ public class PixelOnBorder<T extends RealType<T>> implements Condition<T>
 		{
 			this.neighPos[0] = position[0]-1;
 			this.neighPos[1] = position[1];
-			this.neighCursor.setPosition(this.neighPos);
-			if (this.neighCursor.getType().getRealDouble() != borderValue)
+			this.neighAccessor.setPosition(this.neighPos);
+			if (this.neighAccessor.get().getRealDouble() != borderValue)
 				return true;
 		}
 
@@ -43,8 +44,8 @@ public class PixelOnBorder<T extends RealType<T>> implements Condition<T>
 		{
 			this.neighPos[0] = position[0]+1;
 			this.neighPos[1] = position[1];
-			this.neighCursor.setPosition(this.neighPos);
-			if (this.neighCursor.getType().getRealDouble() != borderValue)
+			this.neighAccessor.setPosition(this.neighPos);
+			if (this.neighAccessor.get().getRealDouble() != borderValue)
 				return true;
 		}
 
@@ -53,8 +54,8 @@ public class PixelOnBorder<T extends RealType<T>> implements Condition<T>
 		{
 			this.neighPos[0] = position[0];
 			this.neighPos[1] = position[1]-1;
-			this.neighCursor.setPosition(this.neighPos);
-			if (this.neighCursor.getType().getRealDouble() != borderValue)
+			this.neighAccessor.setPosition(this.neighPos);
+			if (this.neighAccessor.get().getRealDouble() != borderValue)
 				return true;
 		}
 
@@ -63,8 +64,8 @@ public class PixelOnBorder<T extends RealType<T>> implements Condition<T>
 		{
 			this.neighPos[0] = position[0];
 			this.neighPos[1] = position[1]+1;
-			this.neighCursor.setPosition(this.neighPos);
-			if (this.neighCursor.getType().getRealDouble() != borderValue)
+			this.neighAccessor.setPosition(this.neighPos);
+			if (this.neighAccessor.get().getRealDouble() != borderValue)
 				return true;
 		}
 

@@ -16,7 +16,7 @@ public final class BinaryFunction implements IntegerIndexedScalarFunction
 	}
 	
 	@Override
-	public double evaluate(int[] position)
+	public double evaluate(long[] position)
 	{
 		double leftValue = leftFunction.evaluate(position);
 

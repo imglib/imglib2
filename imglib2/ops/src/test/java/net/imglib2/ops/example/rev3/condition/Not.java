@@ -12,7 +12,7 @@ public final class Not implements Condition
 	}
 	
 	@Override
-	public boolean isSatisfied(IntegerIndexedScalarFunction function, int[] position)
+	public boolean isSatisfied(IntegerIndexedScalarFunction function, long[] position)
 	{
 		return ! cond.isSatisfied(function, position);
 	}

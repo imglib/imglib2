@@ -6,21 +6,21 @@ package net.imglib2.ops.example.rev3.function;
 
 public final class DistanceFunction implements IntegerIndexedScalarFunction
 {
-	private final int[] referencePoint;
+	private final long[] referencePoint;
 	
-	public DistanceFunction(int[] fromPoint)
+	public DistanceFunction(long[] fromPoint)
 	{
 		referencePoint = fromPoint;
 	}
 	
 	@Override
-	public double evaluate(int[] position)
+	public double evaluate(long[] position)
 	{
 		double sumOfSquares = 0;
 		
 		for (int i = 0; i < position.length; i++)
 		{
-			int delta = position[i] - referencePoint[i];
+			long delta = position[i] - referencePoint[i];
 			sumOfSquares += delta * delta;
 		}
 		

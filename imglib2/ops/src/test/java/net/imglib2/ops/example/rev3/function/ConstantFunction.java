@@ -11,7 +11,7 @@ public final class ConstantFunction implements IntegerIndexedScalarFunction
 	}
 	
 	@Override
-	public double evaluate(int[] position)
+	public double evaluate(long[] position)
 	{
 		return value;
 	}
