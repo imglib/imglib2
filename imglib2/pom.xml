@@ -24,7 +24,7 @@
     <!--<module>examples</module>-->
     <!--<module>ij</module>-->
     <module>io</module>
-    <!--<module>ops</module>-->
+   	<module>ops</module>
     <!--<module>script</module>-->
     <module>ui</module>
   </modules>
