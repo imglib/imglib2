@@ -39,10 +39,10 @@ import net.imglib2.Cursor;
 import net.imglib2.exception.IncompatibleTypeException;
 import net.imglib2.img.Img;
 import net.imglib2.img.ImgFactory;
+import net.imglib2.img.ImgPlus;
 import net.imglib2.img.array.ArrayImgFactory;
 import net.imglib2.img.planar.PlanarImgFactory;
 import net.imglib2.io.ImgOpener;
-import net.imglib2.io.ImgPlus;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.real.FloatType;
@@ -73,7 +73,7 @@ public class ReadImage {
 			try
 			{
 				ImgPlus< T > img = imageOpener.openImg(id);
-				reportInformation(img.getImg());
+				reportInformation(img);
 			}
 			catch ( IncompatibleTypeException e )
 			{
@@ -89,7 +89,7 @@ public class ReadImage {
 			try
 			{
 				ImgPlus<FloatType> img = imageOpener.openImg(arg, acf);
-				reportInformation(img.getImg());
+				reportInformation(img);
 			}
 			catch ( IncompatibleTypeException e )
 			{
@@ -105,7 +105,7 @@ public class ReadImage {
 			try
 			{
 				ImgPlus<FloatType> img = imageOpener.openImg(arg, pcf);
-				reportInformation(img.getImg());
+				reportInformation(img);
 			}
 			catch ( IncompatibleTypeException e )
 			{

@@ -1,9 +1,5 @@
-//
-// ImgOpener.java
-//
-
 /*
-Imglib I/O logic using Bio-Formats.
+ImgLib I/O logic using Bio-Formats.
 
 Copyright (c) 2009, Stephan Preibisch & Stephan Saalfeld.
 All rights reserved.
@@ -58,6 +54,8 @@ import loci.formats.services.OMEXMLService;
 import net.imglib2.exception.IncompatibleTypeException;
 import net.imglib2.img.Img;
 import net.imglib2.img.ImgFactory;
+import net.imglib2.img.ImgPlus;
+import net.imglib2.img.Metadata;
 import net.imglib2.img.basictypeaccess.PlanarAccess;
 import net.imglib2.img.basictypeaccess.array.ArrayDataAccess;
 import net.imglib2.img.basictypeaccess.array.ByteArray;
@@ -67,9 +65,11 @@ import net.imglib2.img.basictypeaccess.array.FloatArray;
 import net.imglib2.img.basictypeaccess.array.IntArray;
 import net.imglib2.img.basictypeaccess.array.LongArray;
 import net.imglib2.img.basictypeaccess.array.ShortArray;
+import net.imglib2.img.planar.PlanarImg;
 import net.imglib2.img.planar.PlanarImgFactory;
 import net.imglib2.sampler.special.OrthoSliceCursor;
 import net.imglib2.type.NativeType;
+import net.imglib2.type.Type;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.integer.ByteType;
 import net.imglib2.type.numeric.integer.IntType;
@@ -83,16 +83,10 @@ import net.imglib2.type.numeric.real.FloatType;
 /**
  * Reads in an imglib Img using Bio-Formats.
  * 
- * @author Curtis Rueden ctrueden at wisc.edu
+ * @author Curtis Rueden
+ * @author Stephan Preibisch
  */
 public class ImgOpener implements StatusReporter {
-
-	// -- Constants --
-
-	public static final String X = "X";
-	public static final String Y = "Y";
-	public static final String Z = "Z";
-	public static final String TIME = "Time";
 
 	// -- Fields --
 
@@ -102,14 +96,13 @@ public class ImgOpener implements StatusReporter {
 	// -- ImgOpener methods --
 
 	/**
-	 * Reads in an {@link ImgPlus} from the given source (e.g., file on
-	 * disk). It will read it into a {@link PlanarImg}, where the {@link Type} T
-	 * is defined by the file format and implements {@link RealType} and
-	 * {@link NativeType}.
+	 * Reads in an {@link ImgPlus} from the given source (e.g., file on disk). It
+	 * will read it into a {@link PlanarImg}, where the {@link Type} T is defined
+	 * by the file format and implements {@link RealType} and {@link NativeType}.
 	 * 
-	 * @throws IncompatibleTypeException
-	 *             if the {@link Type} of the of the file is incompatible with
-	 *             the {@link PlanarImg}
+	 * @throws IncompatibleTypeException if the {@link net.imglib2.type.Type} of
+	 *           the of the file is incompatible with the
+	 *           {@link net.imglib2.img.planar.PlanarImg}
 	 */
 	public <T extends RealType<T> & NativeType<T>> ImgPlus<T> openImg(
 		final String id) throws FormatException, IOException,
@@ -119,16 +112,14 @@ public class ImgOpener implements StatusReporter {
 	}
 
 	/**
-	 * Reads in an {@link ImgPlus} from the given source (e.g., file on
-	 * disk), using the given {@link ImgFactory} to construct the {@link Img}.
-	 * The {@link Type} T is defined by the file format and implements
-	 * {@link RealType} and {@link NativeType}.
+	 * Reads in an {@link ImgPlus} from the given source (e.g., file on disk),
+	 * using the given {@link ImgFactory} to construct the {@link Img}. The
+	 * {@link Type} T is defined by the file format and implements
+	 * {@link RealType} and {@link NativeType}. The {@link Type} of the
+	 * {@link ImgFactory} will be ignored.
 	 * 
-	 * The {@link Type} of the {@link ImgFactory} will be ignored.
-	 * 
-	 * @throws IncompatibleTypeException
-	 *             if the Type of the Img is incompatible with the
-	 *             {@link ImgFactory}
+	 * @throws IncompatibleTypeException if the Type of the Img is incompatible
+	 *           with the {@link ImgFactory}
 	 */
 	public <T extends RealType<T>> ImgPlus<T> openImg(final String id,
 		final ImgFactory<T> imgFactory) throws FormatException, IOException,
@@ -144,11 +135,6 @@ public class ImgOpener implements StatusReporter {
 	 * Reads in an {@link ImgPlus} from the given source (e.g., file on disk),
 	 * using the given {@link ImgFactory} to construct the {@link Img}. The
 	 * {@link Type} T to read is defined by the third parameter T.
-	 * 
-	 * @throws IncompatibleTypeException
-	 *             if the {@link Type} T is not valid for the given
-	 *             {@link ImgFactory}, the {@link Type} of the
-	 *             {@link ImgFactory} itself will be ignored.
 	 */
 	public <T extends RealType<T>> ImgPlus<T> openImg(final String id,
 		final ImgFactory<T> imgFactory, final T type) throws FormatException,
@@ -160,14 +146,13 @@ public class ImgOpener implements StatusReporter {
 
 	/**
 	 * Reads in an {@link ImgPlus} from the given initialized
-	 * {@link IFormatReader}, using the given {@link ImgFactory}.
-	 * 
-	 * The {@link Type} T to read is defined by the third parameter T and it has
-	 * to match the typing of the {@link ImgFactory}.
+	 * {@link IFormatReader}, using the given {@link ImgFactory}. The {@link Type}
+	 * T to read is defined by the third parameter T and it has to match the
+	 * typing of the {@link ImgFactory}.
 	 */
 	public <T extends RealType<T>> ImgPlus<T> openImg(final IFormatReader r,
-		final ImgFactory<T> imgFactory, final T type)
-		throws FormatException, IOException
+		final ImgFactory<T> imgFactory, final T type) throws FormatException,
+		IOException
 	{
 		final String[] dimTypes = getDimTypes(r);
 		final long[] dimLengths = getDimLengths(r);
@@ -397,16 +382,16 @@ public class ImgOpener implements StatusReporter {
 		for (final char dim : dimOrder.toCharArray()) {
 			switch (dim) {
 				case 'X':
-					if (sizeX > 1) dimTypes.add(X);
+					if (sizeX > 1) dimTypes.add(Metadata.X);
 					break;
 				case 'Y':
-					if (sizeY > 1) dimTypes.add(Y);
+					if (sizeY > 1) dimTypes.add(Metadata.Y);
 					break;
 				case 'Z':
-					if (sizeZ > 1) dimTypes.add(Z);
+					if (sizeZ > 1) dimTypes.add(Metadata.Z);
 					break;
 				case 'T':
-					if (sizeT > 1) dimTypes.add(TIME);
+					if (sizeT > 1) dimTypes.add(Metadata.TIME);
 					break;
 				case 'C':
 					for (int c = 0; c < cDimTypes.length; c++) {
@@ -421,8 +406,8 @@ public class ImgOpener implements StatusReporter {
 	}
 
 	/** Retrieves calibration for X,Y,Z,T. **/
-	private float[] getCalibration(final IFormatReader r,
-		final long[] dimensions)
+	private float[]
+		getCalibration(final IFormatReader r, final long[] dimensions)
 	{
 		final float[] calibration = new float[dimensions.length];
 		for (int i = 0; i < calibration.length; ++i)
@@ -521,7 +506,7 @@ public class ImgOpener implements StatusReporter {
 		final int sizeY = r.getSizeY();
 		final int sizeZ = r.getSizeZ();
 		final int sizeT = r.getSizeT();
-		//final String[] cDimTypes = r.getChannelDimTypes();
+		// final String[] cDimTypes = r.getChannelDimTypes();
 		final int[] cDimLengths = r.getChannelDimLengths();
 		final String dimOrder = r.getDimensionOrder();
 
