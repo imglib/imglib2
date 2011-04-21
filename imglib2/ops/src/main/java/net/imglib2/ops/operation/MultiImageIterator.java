@@ -77,7 +77,7 @@ public class MultiImageIterator<T extends RealType<T>>  // don't want to impleme
 	
 	public void fwd()
 	{
-		for (int i = 0; i < regionCursors.length; i++) {
+		for (int i = 0; i < regionCursors.length; i++)
 			regionCursors[i].fwd();
 	}
 	
