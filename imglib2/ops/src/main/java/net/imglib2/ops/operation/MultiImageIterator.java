@@ -77,13 +77,8 @@ public class MultiImageIterator<T extends RealType<T>>  // don't want to impleme
 	
 	public void fwd()
 	{
-		System.out.println("Cursors moving forward");
-		long[] pos = new long[images[0].numDimensions()];
 		for (int i = 0; i < regionCursors.length; i++) {
 			regionCursors[i].fwd();
-			regionCursors[i].getPosition(pos);
-			System.out.println(" cursor "+i+" now at position "+positionToString(pos));
-		}
 	}
 	
 	// -----------------  private interface ------------------------------------------
