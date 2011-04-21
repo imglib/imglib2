@@ -9,7 +9,6 @@ import java.awt.Toolkit;
 import java.awt.Window;
 import java.awt.event.AdjustmentEvent;
 import java.awt.event.AdjustmentListener;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,12 +18,12 @@ import javax.swing.JPanel;
 import javax.swing.JScrollBar;
 import javax.swing.border.TitledBorder;
 
-import loci.formats.FormatException;
 import net.imglib2.converter.Converter;
 import net.imglib2.display.ARGBScreenImage;
 import net.imglib2.exception.IncompatibleTypeException;
 import net.imglib2.img.Img;
 import net.imglib2.img.ImgPlus;
+import net.imglib2.io.ImgIOException;
 import net.imglib2.io.ImgOpener;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.ARGBType;
@@ -152,7 +151,7 @@ public class CompositeImgPanel extends JPanel {
 			final CompositeImgPanel imgPanel = new CompositeImgPanel();
 			for (String path : paths) {
 				final ImgPlus<T> img = loadImage(path);
-				imgPanel.addImage(path, img.getImg());
+				imgPanel.addImage(path, img);
 			}
 			frame.setContentPane(imgPanel);
 			frame.pack();
@@ -165,9 +164,7 @@ public class CompositeImgPanel extends JPanel {
 				return new ImgOpener().openImg(path);
 			} catch (IncompatibleTypeException e) {
 				e.printStackTrace();
-			} catch (FormatException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
+			} catch (ImgIOException e) {
 				e.printStackTrace();
 			}
 			return null;

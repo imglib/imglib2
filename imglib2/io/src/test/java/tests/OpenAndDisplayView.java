@@ -28,7 +28,7 @@ public class OpenAndDisplayView
 		{
 			ImgFactory< FloatType > imgFactory = new ArrayImgFactory< FloatType >();
 			final ImgOpener io = new ImgOpener();
-			img = io.openImg( "/home/tobias/workspace/imglib2/imglib/wingclip.tif", imgFactory, new FloatType() ).getImg();
+			img = io.openImg( "/home/tobias/workspace/imglib2/imglib/wingclip.tif", imgFactory, new FloatType() );
 		}
 		catch ( Exception e )
 		{

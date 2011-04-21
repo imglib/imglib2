@@ -11,7 +11,6 @@ import net.imglib2.img.array.ArrayImgFactory;
 import net.imglib2.img.planar.PlanarImgFactory;
 import net.imglib2.interpolation.randomaccess.NearestNeighborInterpolatorFactory;
 import net.imglib2.io.ImgOpener;
-import net.imglib2.io.LOCI;
 import net.imglib2.outofbounds.OutOfBoundsConstantValueFactory;
 import net.imglib2.outofbounds.OutOfBoundsFactory;
 import net.imglib2.outofbounds.OutOfBoundsMirrorFactory;

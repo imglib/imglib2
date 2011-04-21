@@ -32,9 +32,6 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE.
 */
 
-import java.io.IOException;
-
-import loci.formats.FormatException;
 import net.imglib2.Cursor;
 import net.imglib2.exception.IncompatibleTypeException;
 import net.imglib2.img.Img;
@@ -42,6 +39,7 @@ import net.imglib2.img.ImgFactory;
 import net.imglib2.img.ImgPlus;
 import net.imglib2.img.array.ArrayImgFactory;
 import net.imglib2.img.planar.PlanarImgFactory;
+import net.imglib2.io.ImgIOException;
 import net.imglib2.io.ImgOpener;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
@@ -51,7 +49,7 @@ import net.imglib2.type.numeric.real.FloatType;
 public class ReadImage {
 
 	public static <T extends RealType<T> & NativeType< T >> void main(String[] args)
-		throws FormatException, IOException
+		throws ImgIOException
 	{
 		final ImgOpener imageOpener = new ImgOpener();
 

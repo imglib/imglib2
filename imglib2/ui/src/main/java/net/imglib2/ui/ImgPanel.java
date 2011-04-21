@@ -8,7 +8,6 @@ import java.awt.Toolkit;
 import java.awt.Window;
 import java.awt.event.AdjustmentEvent;
 import java.awt.event.AdjustmentListener;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,12 +17,12 @@ import javax.swing.JPanel;
 import javax.swing.JScrollBar;
 import javax.swing.border.TitledBorder;
 
-import loci.formats.FormatException;
 import net.imglib2.display.ARGBScreenImage;
 import net.imglib2.display.RealARGBConverter;
 import net.imglib2.display.XYProjector;
 import net.imglib2.exception.IncompatibleTypeException;
 import net.imglib2.img.ImgPlus;
+import net.imglib2.io.ImgIOException;
 import net.imglib2.io.ImgOpener;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.ARGBType;
@@ -46,13 +45,12 @@ public class ImgPanel extends JPanel {
 			this.name = name;
 			this.imgPlus = imgPlus;
 			this.owner = owner;
-			width = (int) imgPlus.getImg().dimension(0);
-			height = (int) imgPlus.getImg().dimension(1);
+			width = (int) imgPlus.dimension(0);
+			height = (int) imgPlus.dimension(1);
 			screenImage = new ARGBScreenImage(width, height);
 			final int min = 0, max = 255;
 			converter = new RealARGBConverter<T>(min, max);
-			projector = new XYProjector<T, ARGBType>(imgPlus.getImg(),
-				screenImage, converter);
+			projector = new XYProjector<T, ARGBType>(imgPlus, screenImage, converter);
 			projector.map();
 		}
 	}
@@ -62,8 +60,8 @@ public class ImgPanel extends JPanel {
 			setBorder(new TitledBorder(imgData.name));
 			setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 			// add one slider per dimension beyond the first two
-			for (int d=2; d<imgData.imgPlus.getImg().numDimensions(); d++) {
-				final int dimLength = (int) imgData.imgPlus.getImg().dimension(d);
+			for (int d=2; d<imgData.imgPlus.numDimensions(); d++) {
+				final int dimLength = (int) imgData.imgPlus.dimension(d);
 				final JScrollBar bar = new JScrollBar(Adjustable.HORIZONTAL,
 					0, 1, 0, dimLength);
 				final int dim = d;
@@ -138,10 +136,7 @@ public class ImgPanel extends JPanel {
 		catch (IncompatibleTypeException e) {
 			e.printStackTrace();
 		}
-		catch (FormatException e) {
-			e.printStackTrace();
-		}
-		catch (IOException e) {
+		catch (ImgIOException e) {
 			e.printStackTrace();
 		}
 		return null;

@@ -3,10 +3,10 @@ package tests;
 import ij.ImageJ;
 import ij.ImagePlus;
 import net.imglib2.converter.TypeIdentity;
-import net.imglib2.img.Img;
+import net.imglib2.image.display.imagej.ImageJVirtualStackFloat;
+import net.imglib2.img.ImgPlus;
 import net.imglib2.img.array.ArrayImgFactory;
 import net.imglib2.io.ImgOpener;
-import net.imglib2.io.ImgPlus;
 import net.imglib2.type.numeric.real.FloatType;
 import net.imglib2.util.Util;
 
@@ -21,9 +21,8 @@ public class HyperStackTest
 
 		try
 		{
-			final ImgPlus<FloatType> imgPlus = io.openImg( imgName,  new ArrayImgFactory<FloatType>(), new FloatType() );
-			final Img<FloatType> img = imgPlus.getImg();
-			final float[] calibration = imgPlus.getCalibration();
+			final ImgPlus<FloatType> img = io.openImg( imgName,  new ArrayImgFactory<FloatType>(), new FloatType() );
+			final float[] calibration = img.getCalibration();
 			
 			System.out.println( "Calibration: " + Util.printCoordinates( calibration ) );
 			
