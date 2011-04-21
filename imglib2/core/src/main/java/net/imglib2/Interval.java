@@ -34,9 +34,10 @@ package net.imglib2;
  * that this does <em>not</em> imply that for <em>all</em> coordinates in the
  * {@link Interval} function values exist or can be generated.  It only
  * defines where the minimum and maximum source coordinates are.  E.g. an
- * {@link IterableRealInterval} & {@link RandomAccessible} has a limited number of values and a
- * source coordinate for each.  By that, minimum and maximum are defined but
- * the {@link Function} does not define a value for all coordinates in between.</p>
+ * {@link IterableRealInterval} & {@link RandomAccessible} has a limited number
+ * of values and a source coordinate for each.  By that, minimum and maximum
+ * are defined but the {@link Interval} does not define a value for all
+ * coordinates in between.</p>
  * 
  * <p>TODO Check if array returning getters are a good idea:</p>
  *   <dl>
@@ -61,7 +62,7 @@ public interface Interval extends RealInterval
 	/**
 	 * Write the minimum of each dimension into long[].
 	 * 
-	 * @param size
+	 * @param min
 	 */
 	public void min( long[] min );
 	
@@ -75,7 +76,7 @@ public interface Interval extends RealInterval
 	/**
 	 * Write the minimum of each dimension into long[].
 	 * 
-	 * @param size
+	 * @param max
 	 */
 	public void max( long[] max );
 	
@@ -90,8 +91,6 @@ public interface Interval extends RealInterval
 	 * Get the number of pixels in a given dimension <em>d</em>.
 	 * 
 	 * @param d
-	 * 
-	 * @return
 	 */
 	public long dimension( int d );
 	

@@ -57,7 +57,7 @@ public abstract class AbstractCursorInt< T > extends AbstractSampler< T > implem
 	final private int[] tmp;
 	
 	/**
-	 * @param n number of dimensions in the {@link Img}.
+	 * @param n number of dimensions in the {@link net.imglib2.img.Img}.
 	 */
 	public AbstractCursorInt( final int n )
 	{
@@ -68,7 +68,7 @@ public abstract class AbstractCursorInt< T > extends AbstractSampler< T > implem
 	@Override
 	public void remove()
 	{
-		
+		// NB: no action.
 	}
 
 	@Override
@@ -83,6 +83,7 @@ public abstract class AbstractCursorInt< T > extends AbstractSampler< T > implem
 	 * 
 	 * @param steps
 	 */
+	@Override
 	public void jumpFwd( final long steps )
 	{
 		for ( long j = 0; j < steps; ++j )

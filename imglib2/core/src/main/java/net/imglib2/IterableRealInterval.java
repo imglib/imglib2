@@ -41,8 +41,6 @@ import net.imglib2.img.Img;
  * {@link IterableRealInterval} but not further specified.</p>
  * 
  * @param <T>
- * @param <F>
- * @param <I>
  *
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */

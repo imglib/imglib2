@@ -39,7 +39,7 @@ package net.imglib2;
 public abstract class AbstractLocalizingCursorInt< T > extends AbstractLocalizableSamplerInt< T > implements Cursor< T >
 {
 	/**
-	 * @param n number of dimensions in the {@link Img}.
+	 * @param n number of dimensions in the {@link net.imglib2.img.Img}.
 	 */
 	public AbstractLocalizingCursorInt( final int n )
 	{
@@ -47,7 +47,10 @@ public abstract class AbstractLocalizingCursorInt< T > extends AbstractLocalizab
 	}
 
 	@Override
-	public void remove(){}
+	public void remove()
+	{
+		// NB: no action.
+	}
 
 	@Override
 	public T next()

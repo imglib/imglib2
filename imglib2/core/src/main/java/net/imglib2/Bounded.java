@@ -36,10 +36,6 @@ package net.imglib2;
  */
 public interface Bounded
 {
-	/**
-	 * True if located out of image bounds.
-	 * 
-	 * @return
-	 */
+	/** True if located out of image bounds. */
 	public boolean isOutOfBounds();
 }

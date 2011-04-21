@@ -48,7 +48,7 @@ public abstract class AbstractLocalizableSampler< T > extends AbstractSampler< T
 	final protected long[] position;
 	
 	/**
-	 * @param n number of dimensions in the {@link Img}.
+	 * @param n number of dimensions in the {@link net.imglib2.img.Img}.
 	 */
 	public AbstractLocalizableSampler( final int n )
 	{

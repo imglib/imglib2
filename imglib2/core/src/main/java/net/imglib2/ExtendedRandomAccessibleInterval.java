@@ -69,9 +69,8 @@ final public class ExtendedRandomAccessibleInterval< T, F extends RandomAccessib
 		
 		if ( Util.contains( source, interval ) ) {
 			return source.randomAccess( interval );
-		} else {
-			return randomAccess();
 		}
+		return randomAccess();
 	}
 
 	public RandomAccessibleInterval< T > getSource()

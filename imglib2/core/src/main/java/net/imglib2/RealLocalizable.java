@@ -57,7 +57,7 @@ public interface RealLocalizable extends EuclideanSpace
 	 * Return the current position in a given dimension.
 	 * 
 	 * @param d   dimension
-	 * @return      dimension {@link dim} of current position
+	 * @return      dimension of current position
 	 */
 	public float getFloatPosition( int d );
 	
@@ -65,7 +65,7 @@ public interface RealLocalizable extends EuclideanSpace
 	 * Return the current position in a given dimension.
 	 * 
 	 * @param d   dimension
-	 * @return      dimension {@link dim} of current position
+	 * @return      dimension of current position
 	 */
 	public double getDoublePosition( int d );
 }

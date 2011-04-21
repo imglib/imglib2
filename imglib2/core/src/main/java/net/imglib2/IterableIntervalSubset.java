@@ -153,7 +153,10 @@ final public class IterableIntervalSubset< T > implements IterableInterval< T >
 		}
 
 		@Override
-		final public void remove() {}
+		final public void remove()
+		{
+			// NB: no action.
+		}
 
 		@Override
 		final public int getIntPosition( final int d )
@@ -180,11 +183,11 @@ final public class IterableIntervalSubset< T > implements IterableInterval< T >
 		}
 	}
 	
-	final private long firstIndex;
+	final protected long firstIndex;
 	final private long size;
-	final private long lastIndex;
+	final protected long lastIndex;
 	
-	final private IterableInterval< T > interval;
+	final protected IterableInterval< T > interval;
 	
 	/**
 	 * Make sure that size and last index are dictated by the parent
@@ -208,8 +211,7 @@ final public class IterableIntervalSubset< T > implements IterableInterval< T >
 	{
 		if ( firstIndex == 0 && size == interval.size() )
 			return interval.cursor();
-		else
-			return new IISCursor( false );
+		return new IISCursor( false );
 	}
 
 	@Override
@@ -217,8 +219,7 @@ final public class IterableIntervalSubset< T > implements IterableInterval< T >
 	{
 		if ( firstIndex == 0 && size == interval.size() )
 			return interval.localizingCursor();
-		else
-			return new IISCursor( true );
+		return new IISCursor( true );
 	}
 
 	@Override
@@ -232,8 +233,7 @@ final public class IterableIntervalSubset< T > implements IterableInterval< T >
 				fi.size == size &&
 				interval.equalIterationOrder( fi.interval );
 		}
-		else
-			return false;
+		return false;
 	}
 
 	@Override

@@ -36,7 +36,7 @@ import net.imglib2.util.Util;
  * 
  * <p>
  * This is identical to {@link AbstractLocalizableSampler}, except that
- * the position is limited to {@link Integer.MAX_VALUE} in every dimension.
+ * the position is limited to {@link Integer#MAX_VALUE} in every dimension.
  *  
  * @param <T>
  *
@@ -52,7 +52,7 @@ public abstract class AbstractLocalizableSamplerInt< T > extends AbstractSampler
 	final protected int[] position;
 	
 	/**
-	 * @param n number of dimensions in the {@link Img}.
+	 * @param n number of dimensions in the {@link net.imglib2.img.Img}.
 	 */
 	public AbstractLocalizableSamplerInt( final int n )
 	{

@@ -36,7 +36,7 @@ package net.imglib2;
  * defines where the minimum and maximum source coordinates are.  E.g. an
  * {@link IterableRealInterval} has a limited number of values and a source
  * coordinate for each.  By that, minimum and maximum are defined but the
- * {@link Function} does not define a value for all coordinates in between.
+ * {@link RealInterval} does not define a value for all coordinates in between.
  *
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
@@ -52,7 +52,7 @@ public interface RealInterval extends EuclideanSpace
 	/**
 	 * Write the minimum of each dimension into double[].
 	 * 
-	 * @param size
+	 * @param min
 	 */
 	public void realMin( double[] min );
 	
@@ -66,7 +66,7 @@ public interface RealInterval extends EuclideanSpace
 	/**
 	 * Write the minimum of each dimension into double[].
 	 * 
-	 * @param size
+	 * @param max
 	 */
 	public void realMax( double[] max );
 }

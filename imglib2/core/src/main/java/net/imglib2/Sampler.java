@@ -50,8 +50,6 @@ public interface Sampler< T >
 	/**
 	 * Access the actual <em>T</em> instance providing access to a pixel,
 	 * sub-pixel or integral region value the {@link Sampler} points at.
-	 * 
-	 * @return
 	 */
 	public T get();
 	

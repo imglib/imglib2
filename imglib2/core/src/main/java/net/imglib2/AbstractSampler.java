@@ -29,7 +29,7 @@ package net.imglib2;
 
 /**
  * Superclass of the abstract accessor implementations.
- * Does nothing but store the number {@link n} of dimensions of the
+ * Does nothing but store the number of dimensions of the
  * underlying function.
  * 
  * @author Tobias Pietzsch, Stephan Preibisch and Stephan Saalfeld
@@ -39,12 +39,12 @@ package net.imglib2;
 public abstract class AbstractSampler< T > implements Sampler< T >, EuclideanSpace
 {
 	/**
-	 * the number of dimensions in the {@link Img}.
+	 * the number of dimensions in the {@link net.imglib2.img.Img}.
 	 */
 	final protected int n;
 	
 	/**
-	 * @param n number of dimensions in the {@link Img}.
+	 * @param n number of dimensions in the {@link net.imglib2.img.Img}.
 	 */
 	public AbstractSampler( final int n )
 	{

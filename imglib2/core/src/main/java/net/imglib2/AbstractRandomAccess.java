@@ -42,7 +42,7 @@ package net.imglib2;
 public abstract class AbstractRandomAccess< T > extends AbstractLocalizableSampler< T > implements RandomAccess< T >
 {
 	/**
-	 * @param n number of dimensions in the {@link Img}.
+	 * @param n number of dimensions in the {@link net.imglib2.img.Img}.
 	 */
 	public AbstractRandomAccess( final int n )
 	{
@@ -66,7 +66,7 @@ public abstract class AbstractRandomAccess< T > extends AbstractLocalizableSampl
 	{
 		for ( int d = 0; d < n; ++d )
 		{
-			final long dist = ( long ) distance[ d ];
+			final long dist = distance[ d ];
 
 			if ( dist != 0 )
 				move( dist, d );
