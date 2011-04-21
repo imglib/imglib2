@@ -3,7 +3,8 @@ package net.imglib2.ui;
 import net.imglib2.display.ARGBScreenImage;
 import net.imglib2.display.RealARGBConverter;
 import net.imglib2.display.XYProjector;
-import net.imglib2.io.ImgPlus;
+import net.imglib2.img.ImgPlus;
+
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.ARGBType;
 import net.imglib2.type.numeric.RealType;
