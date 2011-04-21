@@ -1,9 +1,5 @@
-//
-// ImgOpener.java
-//
-
 /*
-Imglib I/O logic using Bio-Formats.
+ImgLib I/O logic using Bio-Formats.
 
 Copyright (c) 2009, Stephan Preibisch & Stephan Saalfeld.
 All rights reserved.
@@ -58,6 +54,8 @@ import loci.formats.services.OMEXMLService;
 import net.imglib2.exception.IncompatibleTypeException;
 import net.imglib2.img.Img;
 import net.imglib2.img.ImgFactory;
+import net.imglib2.img.ImgPlus;
+import net.imglib2.img.Metadata;
 import net.imglib2.img.basictypeaccess.PlanarAccess;
 import net.imglib2.img.basictypeaccess.array.ArrayDataAccess;
 import net.imglib2.img.basictypeaccess.array.ByteArray;
@@ -67,9 +65,11 @@ import net.imglib2.img.basictypeaccess.array.FloatArray;
 import net.imglib2.img.basictypeaccess.array.IntArray;
 import net.imglib2.img.basictypeaccess.array.LongArray;
 import net.imglib2.img.basictypeaccess.array.ShortArray;
+import net.imglib2.img.planar.PlanarImg;
 import net.imglib2.img.planar.PlanarImgFactory;
 import net.imglib2.sampler.special.OrthoSliceCursor;
 import net.imglib2.type.NativeType;
+import net.imglib2.type.Type;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.integer.ByteType;
 import net.imglib2.type.numeric.integer.IntType;
@@ -83,16 +83,10 @@ import net.imglib2.type.numeric.real.FloatType;
 /**
  * Reads in an imglib Img using Bio-Formats.
  * 
- * @author Curtis Rueden ctrueden at wisc.edu
+ * @author Curtis Rueden
+ * @author Stephan Preibisch
  */
 public class ImgOpener implements StatusReporter {
-
-	// -- Constants --
-
-	public static final String X = "X";
-	public static final String Y = "Y";
-	public static final String Z = "Z";
-	public static final String TIME = "Time";
 
 	// -- Fields --
 
@@ -102,72 +96,76 @@ public class ImgOpener implements StatusReporter {
 	// -- ImgOpener methods --
 
 	/**
-	 * Reads in an {@link ImgPlus} from the given source (e.g., file on
-	 * disk). It will read it into a {@link PlanarImg}, where the {@link Type} T
-	 * is defined by the file format and implements {@link RealType} and
-	 * {@link NativeType}.
+	 * Reads in an {@link ImgPlus} from the given source (e.g., file on disk). It
+	 * will read it into a {@link PlanarImg}, where the {@link Type} T is defined
+	 * by the file format and implements {@link RealType} and {@link NativeType}.
 	 * 
-	 * @throws IncompatibleTypeException
-	 *             if the {@link Type} of the of the file is incompatible with
-	 *             the {@link PlanarImg}
+	 * @throws IncompatibleTypeException if the {@link net.imglib2.type.Type} of
+	 *           the of the file is incompatible with the
+	 *           {@link net.imglib2.img.planar.PlanarImg}
 	 */
 	public <T extends RealType<T> & NativeType<T>> ImgPlus<T> openImg(
-		final String id) throws FormatException, IOException,
-		IncompatibleTypeException
+		final String id) throws ImgIOException, IncompatibleTypeException
 	{
 		return openImg(id, new PlanarImgFactory<T>());
 	}
 
 	/**
-	 * Reads in an {@link ImgPlus} from the given source (e.g., file on
-	 * disk), using the given {@link ImgFactory} to construct the {@link Img}.
-	 * The {@link Type} T is defined by the file format and implements
-	 * {@link RealType} and {@link NativeType}.
+	 * Reads in an {@link ImgPlus} from the given source (e.g., file on disk),
+	 * using the given {@link ImgFactory} to construct the {@link Img}. The
+	 * {@link Type} T is defined by the file format and implements
+	 * {@link RealType} and {@link NativeType}. The {@link Type} of the
+	 * {@link ImgFactory} will be ignored.
 	 * 
-	 * The {@link Type} of the {@link ImgFactory} will be ignored.
-	 * 
-	 * @throws IncompatibleTypeException
-	 *             if the Type of the Img is incompatible with the
-	 *             {@link ImgFactory}
+	 * @throws IncompatibleTypeException if the Type of the Img is incompatible
+	 *           with the {@link ImgFactory}
 	 */
 	public <T extends RealType<T>> ImgPlus<T> openImg(final String id,
-		final ImgFactory<T> imgFactory) throws FormatException, IOException,
+		final ImgFactory<T> imgFactory) throws ImgIOException,
 		IncompatibleTypeException
 	{
-		final IFormatReader r = initializeReader(id);
-		final T type = makeType(r.getPixelType());
-		final ImgFactory<T> imgFactoryT = imgFactory.imgFactory(type);
-		return openImg(r, imgFactoryT, type);
+		try {
+			final IFormatReader r = initializeReader(id);
+			final T type = makeType(r.getPixelType());
+			final ImgFactory<T> imgFactoryT = imgFactory.imgFactory(type);
+			return openImg(r, imgFactoryT, type);
+		}
+		catch (final FormatException e) {
+			throw new ImgIOException(e);
+		}
+		catch (final IOException e) {
+			throw new ImgIOException(e);
+		}
 	}
 
 	/**
 	 * Reads in an {@link ImgPlus} from the given source (e.g., file on disk),
 	 * using the given {@link ImgFactory} to construct the {@link Img}. The
 	 * {@link Type} T to read is defined by the third parameter T.
-	 * 
-	 * @throws IncompatibleTypeException
-	 *             if the {@link Type} T is not valid for the given
-	 *             {@link ImgFactory}, the {@link Type} of the
-	 *             {@link ImgFactory} itself will be ignored.
 	 */
 	public <T extends RealType<T>> ImgPlus<T> openImg(final String id,
-		final ImgFactory<T> imgFactory, final T type) throws FormatException,
-		IOException
+		final ImgFactory<T> imgFactory, final T type) throws ImgIOException
 	{
-		final IFormatReader r = initializeReader(id);
-		return openImg(r, imgFactory, type);
+		try {
+			final IFormatReader r = initializeReader(id);
+			return openImg(r, imgFactory, type);
+		}
+		catch (final FormatException e) {
+			throw new ImgIOException(e);
+		}
+		catch (final IOException e) {
+			throw new ImgIOException(e);
+		}
 	}
 
 	/**
 	 * Reads in an {@link ImgPlus} from the given initialized
-	 * {@link IFormatReader}, using the given {@link ImgFactory}.
-	 * 
-	 * The {@link Type} T to read is defined by the third parameter T and it has
-	 * to match the typing of the {@link ImgFactory}.
+	 * {@link IFormatReader}, using the given {@link ImgFactory}. The {@link Type}
+	 * T to read is defined by the third parameter T and it has to match the
+	 * typing of the {@link ImgFactory}.
 	 */
 	public <T extends RealType<T>> ImgPlus<T> openImg(final IFormatReader r,
-		final ImgFactory<T> imgFactory, final T type)
-		throws FormatException, IOException
+		final ImgFactory<T> imgFactory, final T type) throws ImgIOException
 	{
 		final String[] dimTypes = getDimTypes(r);
 		final long[] dimLengths = getDimLengths(r);
@@ -184,63 +182,22 @@ public class ImgOpener implements StatusReporter {
 
 		final ImgPlus<T> imgPlus = new ImgPlus<T>(img, name, dimTypes, cal);
 
-		// TODO - create better container types; either:
-		// 1) an array container type using one byte array per plane
-		// 2) as #1, but with an IFormatReader reference reading planes on demand
-		// 3) as PlanarRandomAccess, but with an IFormatReader reference
-		// reading planes on demand
-
-		// PlanarRandomAccess is useful for efficient access to pixels in ImageJ
-		// (e.g., getPixels)
-		// #1 is useful for efficient Bio-Formats import, and useful for tools
-		// needing byte arrays (e.g., BufferedImage Java3D texturing by reference)
-		// #2 is useful for efficient memory use for tools wanting matching
-		// primitive arrays (e.g., virtual stacks in ImageJ)
-		// #3 is useful for efficient memory use
-
-		// get container
-		final PlanarAccess<?> planarAccess = getPlanarAccess(img);
-		final T inputType = makeType(r.getPixelType());
-		final T outputType = type;
-		final boolean compatibleTypes =
-			outputType.getClass().isAssignableFrom(inputType.getClass());
-
 		final long startTime = System.currentTimeMillis();
 
-		// populate planes
-		final int planeCount = r.getImageCount();
-		if (planarAccess == null || !compatibleTypes) {
-			// use cursor to populate planes
-
-			// NB: This solution is general and works regardless of container,
-			// but at the expense of performance both now and later.
-
-			byte[] plane = null;
-			for (int no = 0; no < planeCount; no++) {
-				notifyListeners(new StatusEvent(no, planeCount, "Reading plane " +
-					(no + 1) + "/" + planeCount));
-				if (plane == null) plane = r.openBytes(no);
-				else r.openBytes(no, plane);
-				populatePlane(r, no, plane, img);
-			}
+		try {
+			readPlanes(r, type, img);
 		}
-		else {
-			// populate the values directly using PlanarAccess interface;
-			// e.g., to a PlanarRandomAccess
-
-			byte[] plane = null;
-			for (int no = 0; no < planeCount; no++) {
-				notifyListeners(new StatusEvent(no, planeCount, "Reading plane " +
-					(no + 1) + "/" + planeCount));
-				if (plane == null) plane = r.openBytes(no);
-				else r.openBytes(no, plane);
-				populatePlane(r, no, plane, planarAccess);
-			}
+		catch (FormatException e) {
+			throw new ImgIOException(e);
 		}
-		r.close();
+		catch (IOException e) {
+			throw new ImgIOException(e);
+		}
 
 		final long endTime = System.currentTimeMillis();
 		final float time = (endTime - startTime) / 1000f;
+
+		final int planeCount = r.getImageCount();
 		notifyListeners(new StatusEvent(planeCount, planeCount, id + ": read " +
 			planeCount + " planes in " + time + "s"));
 
@@ -397,16 +354,16 @@ public class ImgOpener implements StatusReporter {
 		for (final char dim : dimOrder.toCharArray()) {
 			switch (dim) {
 				case 'X':
-					if (sizeX > 1) dimTypes.add(X);
+					if (sizeX > 1) dimTypes.add(Metadata.X);
 					break;
 				case 'Y':
-					if (sizeY > 1) dimTypes.add(Y);
+					if (sizeY > 1) dimTypes.add(Metadata.Y);
 					break;
 				case 'Z':
-					if (sizeZ > 1) dimTypes.add(Z);
+					if (sizeZ > 1) dimTypes.add(Metadata.Z);
 					break;
 				case 'T':
-					if (sizeT > 1) dimTypes.add(TIME);
+					if (sizeT > 1) dimTypes.add(Metadata.TIME);
 					break;
 				case 'C':
 					for (int c = 0; c < cDimTypes.length; c++) {
@@ -421,8 +378,8 @@ public class ImgOpener implements StatusReporter {
 	}
 
 	/** Retrieves calibration for X,Y,Z,T. **/
-	private float[] getCalibration(final IFormatReader r,
-		final long[] dimensions)
+	private float[]
+		getCalibration(final IFormatReader r, final long[] dimensions)
 	{
 		final float[] calibration = new float[dimensions.length];
 		for (int i = 0; i < calibration.length; ++i)
@@ -513,44 +470,65 @@ public class ImgOpener implements StatusReporter {
 		return dimLengths;
 	}
 
-	/** Copies the current dimensional position into the given array. */
-	private void getPosition(final IFormatReader r, final int no,
-		final long[] pos)
+	/**
+	 * Reads planes from the given initialized {@link IFormatReader}
+	 * into the specified {@link Img}.
+	 */
+	private <T extends RealType<T>> void readPlanes(final IFormatReader r,
+		final T type, final Img<T> img) throws FormatException, IOException
 	{
-		final int sizeX = r.getSizeX();
-		final int sizeY = r.getSizeY();
-		final int sizeZ = r.getSizeZ();
-		final int sizeT = r.getSizeT();
-		//final String[] cDimTypes = r.getChannelDimTypes();
-		final int[] cDimLengths = r.getChannelDimLengths();
-		final String dimOrder = r.getDimensionOrder();
+		// TODO - create better container types; either:
+		// 1) an array container type using one byte array per plane
+		// 2) as #1, but with an IFormatReader reference reading planes on demand
+		// 3) as PlanarRandomAccess, but with an IFormatReader reference
+		// reading planes on demand
 
-		final int[] zct = r.getZCTCoords(no);
+		// PlanarRandomAccess is useful for efficient access to pixels in ImageJ
+		// (e.g., getPixels)
+		// #1 is useful for efficient Bio-Formats import, and useful for tools
+		// needing byte arrays (e.g., BufferedImage Java3D texturing by reference)
+		// #2 is useful for efficient memory use for tools wanting matching
+		// primitive arrays (e.g., virtual stacks in ImageJ)
+		// #3 is useful for efficient memory use
 
-		int index = 0;
-		for (int i = 0; i < dimOrder.length(); i++) {
-			final char dim = dimOrder.charAt(i);
-			switch (dim) {
-				case 'X':
-					if (sizeX > 1) index++; // NB: Leave X axis position alone.
-					break;
-				case 'Y':
-					if (sizeY > 1) index++; // NB: Leave Y axis position alone.
-					break;
-				case 'Z':
-					if (sizeZ > 1) pos[index++] = zct[0];
-					break;
-				case 'T':
-					if (sizeT > 1) pos[index++] = zct[2];
-					break;
-				case 'C':
-					final int[] cPos = FormatTools.rasterToPosition(cDimLengths, zct[1]);
-					for (int c = 0; c < cDimLengths.length; c++) {
-						if (cDimLengths[c] > 1) pos[index++] = cPos[c];
-					}
-					break;
+		// get container
+		final PlanarAccess<?> planarAccess = getPlanarAccess(img);
+		final T inputType = makeType(r.getPixelType());
+		final T outputType = type;
+		final boolean compatibleTypes =
+			outputType.getClass().isAssignableFrom(inputType.getClass());
+
+		// populate planes
+		final int planeCount = r.getImageCount();
+		if (planarAccess == null || !compatibleTypes) {
+			// use cursor to populate planes
+
+			// NB: This solution is general and works regardless of container,
+			// but at the expense of performance both now and later.
+
+			byte[] plane = null;
+			for (int no = 0; no < planeCount; no++) {
+				notifyListeners(new StatusEvent(no, planeCount, "Reading plane " +
+					(no + 1) + "/" + planeCount));
+				if (plane == null) plane = r.openBytes(no);
+				else r.openBytes(no, plane);
+				populatePlane(r, no, plane, img);
 			}
 		}
+		else {
+			// populate the values directly using PlanarAccess interface;
+			// e.g., to a PlanarRandomAccess
+
+			byte[] plane = null;
+			for (int no = 0; no < planeCount; no++) {
+				notifyListeners(new StatusEvent(no, planeCount, "Reading plane " +
+					(no + 1) + "/" + planeCount));
+				if (plane == null) plane = r.openBytes(no);
+				else r.openBytes(no, plane);
+				populatePlane(r, no, plane, planarAccess);
+			}
+		}
+		r.close();
 	}
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
@@ -598,32 +576,45 @@ public class ImgOpener implements StatusReporter {
 		}
 	}
 
-	/*
-	private <T extends RealType<T>> void populatePlane(IFormatReader r,
-		int no, byte[] plane, LocalizableByDimCursor<T> cursor)
+	/** Copies the current dimensional position into the given array. */
+	private void getPosition(final IFormatReader r, final int no,
+		final long[] pos)
 	{
 		final int sizeX = r.getSizeX();
 		final int sizeY = r.getSizeY();
-		final int pixelType = r.getPixelType();
-		final boolean little = r.isLittleEndian();
+		final int sizeZ = r.getSizeZ();
+		final int sizeT = r.getSizeT();
+		// final String[] cDimTypes = r.getChannelDimTypes();
+		final int[] cDimLengths = r.getChannelDimLengths();
+		final String dimOrder = r.getDimensionOrder();
 
-		final int[] dimLengths = getDimLengths(r);
-		final int[] pos = new int[dimLengths.length];
+		final int[] zct = r.getZCTCoords(no);
 
-		for (int y=0; y<sizeY; y++) {
-			for (int x=0; x<sizeX; x++) {
-				final int index = sizeY * x + y;
-				final double value = decodeWord(plane, index, pixelType, little);
-				// TODO - need IFormatReader method to get N-dimensional position
-				getPosition(r, no, pos);
-				pos[0] = x;
-				pos[1] = y;
-				cursor.setPosition(pos);
-				cursor.getType().setReal(value);
+		int index = 0;
+		for (int i = 0; i < dimOrder.length(); i++) {
+			final char dim = dimOrder.charAt(i);
+			switch (dim) {
+				case 'X':
+					if (sizeX > 1) index++; // NB: Leave X axis position alone.
+					break;
+				case 'Y':
+					if (sizeY > 1) index++; // NB: Leave Y axis position alone.
+					break;
+				case 'Z':
+					if (sizeZ > 1) pos[index++] = zct[0];
+					break;
+				case 'T':
+					if (sizeT > 1) pos[index++] = zct[2];
+					break;
+				case 'C':
+					final int[] cPos = FormatTools.rasterToPosition(cDimLengths, zct[1]);
+					for (int c = 0; c < cDimLengths.length; c++) {
+						if (cDimLengths[c] > 1) pos[index++] = cPos[c];
+					}
+					break;
 			}
 		}
 	}
-	*/
 
 	private static double decodeWord(final byte[] plane, final int index,
 		final int pixelType, final boolean little)

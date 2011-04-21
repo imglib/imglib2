@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2010, Stephan Saalfeld
+ * Copyright (c) 2009--2010, Stephan Preibisch & Stephan Saalfeld
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -9,7 +9,7 @@
  * list of conditions and the following disclaimer.  Redistributions in binary
  * form must reproduce the above copyright notice, this list of conditions and
  * the following disclaimer in the documentation and/or other materials
- * provided with the distribution.  Neither the name of the imglib project nor
+ * provided with the distribution.  Neither the name of the Fiji project nor
  * the names of its contributors may be used to endorse or promote products
  * derived from this software without specific prior written permission.
  * 
@@ -24,34 +24,29 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
+ *
+ * @author Stephan Preibisch & Stephan Saalfeld
  */
 package net.imglib2.img;
 
-import net.imglib2.IterableInterval;
-import net.imglib2.RandomAccessibleInterval;
-
 /**
- * An {@link Img} is a {@link RandomAccessibleInterval} that has its min at
- * 0<sup><em>n</em></sup> and its max positive.  {@link Img}s store pixels
- * and thus are the basis for conventional image processing.
- *
- * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
+ * An interface for defining metadata that goes along with an {@link Img},
+ * including name, dimensional axes and calibration information.
+ * 
+ * @author Curtis Rueden ctrueden at wisc.edu
+ * @see ImgPlus
  */
-public interface Img< T >
-	extends
-		RandomAccessibleInterval< T >,
-		IterableInterval< T >
-{
-	/**
-	 * Get a {@link ImgFactory} that creates {@link Img}s
-	 * of the same kind as this one.
-	 * 
-	 * This is useful to create Imgs for temporary storage
-	 * in generic methods where the specific Img type is
-	 * unknown.  Note, that the factory can be used even if
-	 * all references to this Img have been invalidated. 
-	 *  
-	 * @return a factory for Imgs of the same kind as this one. 
-	 */
-	public ImgFactory< T > factory();
+public interface Metadata {
+
+	String X = "X";
+	String Y = "Y";
+	String Z = "Z";
+	String TIME = "Time";
+
+	String getName();
+
+	String[] getAxes();
+
+	float[] getCalibration();
+
 }

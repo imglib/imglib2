@@ -1,9 +1,5 @@
-//
-// ImgPlus.java
-//
-
 /*
-Imglib I/O logic using Bio-Formats.
+ImgLib I/O logic using Bio-Formats.
 
 Copyright (c) 2009, Stephan Preibisch & Stephan Saalfeld.
 All rights reserved.
@@ -34,44 +30,21 @@ POSSIBILITY OF SUCH DAMAGE.
 
 package net.imglib2.io;
 
-import net.imglib2.img.Img;
+import net.imglib2.exception.ImgLibException;
 
 /**
- * A simple container for storing an {@link Img} together with its metadata.
- * Metadata includes name, dimensional axes and calibration information.
+ * Exception indicating something went wrong during I/O.
  * 
- * @author Curtis Rueden ctrueden at wisc.edu
+ * @author Curtis Rueden
  */
-public class ImgPlus<T> {
+public class ImgIOException extends ImgLibException {
 
-	private final Img<T> img;
-	private final String name;
-	private final String[] axes;
-	private final float[] cal;
-
-	public ImgPlus(final Img<T> img, final String name, final String[] axes,
-		final float[] cal)
-	{
-		this.img = img;
-		this.name = name;
-		this.axes = axes;
-		this.cal = cal;
+	public ImgIOException(final Object obj, final String message) {
+		super(obj.getClass().getCanonicalName() + ": " + message);
 	}
 
-	public Img<T> getImg() {
-		return img;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public String[] getAxes() {
-		return axes;
-	}
-
-	public float[] getCalibration() {
-		return cal;
+	public ImgIOException(final Throwable t) {
+		super(t);
 	}
 
 }
