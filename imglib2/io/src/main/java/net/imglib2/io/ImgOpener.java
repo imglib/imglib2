@@ -184,6 +184,7 @@ public class ImgOpener implements StatusReporter {
 
 		final long startTime = System.currentTimeMillis();
 
+		final int planeCount = r.getImageCount();
 		try {
 			readPlanes(r, type, img);
 		}
@@ -197,7 +198,6 @@ public class ImgOpener implements StatusReporter {
 		final long endTime = System.currentTimeMillis();
 		final float time = (endTime - startTime) / 1000f;
 
-		final int planeCount = r.getImageCount();
 		notifyListeners(new StatusEvent(planeCount, planeCount, id + ": read " +
 			planeCount + " planes in " + time + "s"));
 
