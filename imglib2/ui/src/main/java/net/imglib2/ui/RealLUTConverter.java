@@ -27,43 +27,36 @@
  */
 package net.imglib2.ui;
 
-import java.awt.Color;
 import net.imglib2.converter.Converter;
 import net.imglib2.display.AbstractLinearRange;
 import net.imglib2.type.numeric.ARGBType;
 import net.imglib2.type.numeric.RealType;
+import net.imglib2.ui.lut.Lut;
 
 /**
  * 
  *
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-public class RealLUTConverter< R extends RealType< R > > extends AbstractLinearRange implements Converter< R, ARGBType >
-{
-	Color[] colors = null;
-	
-	public RealLUTConverter()
-	{
+public class RealLUTConverter< R extends RealType< R>> extends AbstractLinearRange implements Converter< R, ARGBType> {
+
+	Lut lut = null;
+
+	public RealLUTConverter() {
 		super();
 	}
-	
-	public RealLUTConverter( final double min, final double max, final Color[] colors)
-	{
-		super( min, max );
-		this.colors = colors;
+
+	public RealLUTConverter(final double min, final double max, final Lut lut) {
+		super(min, max);
+		this.lut = lut;
 	}
-	
-	
+
 	@Override
-	public void convert( final R input, final ARGBType output )
-	{
+	public void convert(final R input, final ARGBType output) {
 		final double a = input.getRealDouble();
-		final int b = Math.min( 255, roundPositive( Math.max( 0, ( ( a - min ) / scale * 255.0 ) ) ) );
-		Color color = colors[b];
-		final int argb = ARGBType.rgba(color.getRed(),color.getGreen(), color.getBlue(), 0xff);
-		//final int argb = 0xff000000 | ( ( ( b << 8 ) | b ) << 8 ) | b;
-		output.set( argb );
-		
-		//output.add(new ARGBType(argb));
+		final int b = Math.min(255, roundPositive(Math.max(0, ((a - min) / scale * 255.0))));
+		final int argb = ARGBType.rgba(lut.reds[b], lut.greens[b], lut.blues[b], 0xff);
+		output.set(argb);
 	}
+
 }

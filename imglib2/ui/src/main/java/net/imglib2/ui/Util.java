@@ -1,16 +1,11 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package net.imglib2.ui;
 
-import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import loci.formats.FormatException;
+import loci.common.StatusEvent;
+import loci.common.StatusListener;
 import net.imglib2.exception.IncompatibleTypeException;
 import net.imglib2.img.ImgPlus;
 import net.imglib2.io.ImgIOException;
+import net.imglib2.io.ImgIOUtils;
 import net.imglib2.io.ImgOpener;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
@@ -21,15 +16,26 @@ import net.imglib2.type.numeric.RealType;
  */
 public class Util {
 
-	public static <T extends RealType<T> & NativeType<T>> ImgPlus<T> loadImage(String path) {
+		public  static <T extends RealType<T> & NativeType<T>> ImgPlus<T> loadImage(final String url) {
 		try {
-			return new ImgOpener().openImg(path);
-		} catch (ImgIOException ex) {
-			Logger.getLogger(Util.class.getName()).log(Level.SEVERE, null, ex);
-		} catch (IncompatibleTypeException ex) {
-			Logger.getLogger(Util.class.getName()).log(Level.SEVERE, null, ex);
+			System.out.println("Downloading " + url);
+			final String id = ImgIOUtils.cacheId(url);
+			System.out.println("Opening " + id);
+			final ImgOpener imgOpener = new ImgOpener();
+			imgOpener.addStatusListener(new StatusListener() {
+
+				@Override
+				public void statusUpdated(StatusEvent e) {
+					System.out.println(e.getStatusMessage());
+				}
+
+			});
+			return imgOpener.openImg(id);
+		} catch (final IncompatibleTypeException e) {
+			e.printStackTrace();
+		} catch (final ImgIOException e) {
+			e.printStackTrace();
 		}
 		return null;
 	}
-
 }

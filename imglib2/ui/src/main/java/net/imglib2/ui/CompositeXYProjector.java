@@ -30,11 +30,10 @@ package net.imglib2.ui;
 import java.util.ArrayList;
 import net.imglib2.Cursor;
 import net.imglib2.Localizable;
-import net.imglib2.Positionable;
 import net.imglib2.RandomAccess;
 import net.imglib2.IterableInterval;
 import net.imglib2.converter.Converter;
-import net.imglib2.display.Projector;
+import net.imglib2.display.XYProjector;
 import net.imglib2.img.Img;
 
 /**
@@ -44,30 +43,27 @@ import net.imglib2.img.Img;
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  * @author Grant B. Harris
  */
-public class CompositeXYProjector< A, B> implements Projector< A, B>, Positionable, Localizable {
+public class CompositeXYProjector< A, B> extends XYProjector< A, B> {
+//implements Projector< A, B>, Positionable, Localizable {
 
-	final protected Img<A> source;
-	final protected IterableInterval<B> target;
+	//final protected Img<A> source;
+	//final protected IterableInterval<B> target;
+	//final protected long[] position;
 	final protected ArrayList<Converter<A, B>> converters;
-	final protected long[] position;
 	private final int channelDimIndex;
 	private final int numChannels;
 
 	public CompositeXYProjector(final Img<A> source, IterableInterval<B> target,
-			final ArrayList<Converter<A, B>> converters,
-			int channelDimIndex) {
-
-		this.source = source;
-		this.target = target;
+			final ArrayList<Converter<A, B>> converters, int channelDimIndex) {
+		super(source, target, null);
 		this.converters = converters;
 		this.channelDimIndex = channelDimIndex;
 		// check that there is a converter for each channel
 		numChannels = converters.size();
-		System.out.println("source.dimension(channelDimIndex)="+ source.dimension(channelDimIndex)) ;
+		System.out.println("source.dimension(channelDimIndex)=" + source.dimension(channelDimIndex));
 		if (numChannels != source.dimension(channelDimIndex)) {
 			throw new IllegalArgumentException();
 		}
-		position = new long[source.numDimensions()];
 	}
 
 	@Override

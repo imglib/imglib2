@@ -22,14 +22,14 @@ public class CompositeRGBImgData<T extends RealType<T> & NativeType<T>> {
 
 	public String name;
 	public Img<T> img;
-	public CompositeImgPanel owner;
+	public ImageDisplay owner;
 	public int width, height;
 	public ARGBScreenImage screenImage;
 	ArrayList<Converter<T, ARGBType>> converters = new ArrayList<Converter<T, ARGBType>>();
 	//public RealLUTConverter<T> converter = new RealLUTConverter<T>[3];
 	public CompositeXYProjector<T, ARGBType> projector;
 
-	public CompositeRGBImgData(final String name, final Img<T> img, final CompositeImgPanel owner) {
+	public CompositeRGBImgData(final String name, final Img<T> img, final ImageDisplay owner) {
 		this.name = name;
 		this.img = img;
 		this.owner = owner;
