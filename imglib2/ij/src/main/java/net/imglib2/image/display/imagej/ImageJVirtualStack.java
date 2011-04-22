@@ -6,6 +6,7 @@ import ij.process.ByteProcessor;
 import ij.process.ColorProcessor;
 import ij.process.FloatProcessor;
 import ij.process.ImageProcessor;
+import ij.process.ShortProcessor;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.converter.Converter;
 import net.imglib2.display.XYProjector;
@@ -44,6 +45,10 @@ public abstract class ImageJVirtualStack< S, T extends NativeType< T > > extends
 		case ImagePlus.GRAY8:
 			this.bitDepth = 8;
 			imageProcessor = new ByteProcessor( sizeX, sizeY, ( byte[] ) ( ( ArrayDataAccess< ? > ) img.update( null ) ).getCurrentStorageArray(), null );
+			break;
+		case ImagePlus.GRAY16:
+			this.bitDepth = 16;
+			imageProcessor = new ShortProcessor( sizeX, sizeY, ( short[] ) ( ( ArrayDataAccess< ? > ) img.update( null ) ).getCurrentStorageArray(), null );
 			break;
 		case ImagePlus.COLOR_RGB:
 			this.bitDepth = 24;
