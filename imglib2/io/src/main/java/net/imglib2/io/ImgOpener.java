@@ -100,9 +100,8 @@ public class ImgOpener implements StatusReporter {
 	 * will read it into a {@link PlanarImg}, where the {@link Type} T is defined
 	 * by the file format and implements {@link RealType} and {@link NativeType}.
 	 * 
-	 * @throws IncompatibleTypeException if the {@link net.imglib2.type.Type} of
-	 *           the of the file is incompatible with the
-	 *           {@link net.imglib2.img.planar.PlanarImg}
+	 * @throws IncompatibleTypeException if the {@link Type} of
+	 *           the file is incompatible with the {@link PlanarImg}
 	 */
 	public <T extends RealType<T> & NativeType<T>> ImgPlus<T> openImg(
 		final String id) throws ImgIOException, IncompatibleTypeException
