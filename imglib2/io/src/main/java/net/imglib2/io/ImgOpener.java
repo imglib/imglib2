@@ -52,10 +52,11 @@ import loci.formats.meta.IMetadata;
 import loci.formats.meta.MetadataRetrieve;
 import loci.formats.services.OMEXMLService;
 import net.imglib2.exception.IncompatibleTypeException;
+import net.imglib2.img.Axes;
+import net.imglib2.img.Axis;
 import net.imglib2.img.Img;
 import net.imglib2.img.ImgFactory;
 import net.imglib2.img.ImgPlus;
-import net.imglib2.img.Metadata;
 import net.imglib2.img.basictypeaccess.PlanarAccess;
 import net.imglib2.img.basictypeaccess.array.ArrayDataAccess;
 import net.imglib2.img.basictypeaccess.array.ByteArray;
@@ -166,7 +167,7 @@ public class ImgOpener implements StatusReporter {
 	public <T extends RealType<T>> ImgPlus<T> openImg(final IFormatReader r,
 		final ImgFactory<T> imgFactory, final T type) throws ImgIOException
 	{
-		final String[] dimTypes = getDimTypes(r);
+		final Axis[] dimTypes = getDimTypes(r);
 		final long[] dimLengths = getDimLengths(r);
 
 		final String id = r.getCurrentFile();
@@ -339,7 +340,7 @@ public class ImgOpener implements StatusReporter {
 	}
 
 	/** Compiles an N-dimensional list of axis types from the given reader. */
-	private String[] getDimTypes(final IFormatReader r) {
+	private Axis[] getDimTypes(final IFormatReader r) {
 		final int sizeX = r.getSizeX();
 		final int sizeY = r.getSizeY();
 		final int sizeZ = r.getSizeZ();
@@ -347,38 +348,38 @@ public class ImgOpener implements StatusReporter {
 		final String[] cDimTypes = r.getChannelDimTypes();
 		final int[] cDimLengths = r.getChannelDimLengths();
 		final String dimOrder = r.getDimensionOrder();
-		final List<String> dimTypes = new ArrayList<String>();
+		final List<Axis> dimTypes = new ArrayList<Axis>();
 
 		// add core dimensions
 		for (final char dim : dimOrder.toCharArray()) {
 			switch (dim) {
 				case 'X':
-					if (sizeX > 1) dimTypes.add(Metadata.X);
+					if (sizeX > 1) dimTypes.add(Axes.X);
 					break;
 				case 'Y':
-					if (sizeY > 1) dimTypes.add(Metadata.Y);
+					if (sizeY > 1) dimTypes.add(Axes.Y);
 					break;
 				case 'Z':
-					if (sizeZ > 1) dimTypes.add(Metadata.Z);
+					if (sizeZ > 1) dimTypes.add(Axes.Z);
 					break;
 				case 'T':
-					if (sizeT > 1) dimTypes.add(Metadata.TIME);
+					if (sizeT > 1) dimTypes.add(Axes.TIME);
 					break;
 				case 'C':
 					for (int c = 0; c < cDimTypes.length; c++) {
 						final int len = cDimLengths[c];
-						if (len > 1) dimTypes.add(cDimTypes[c]);
+						if (len > 1) dimTypes.add(Axes.get(cDimTypes[c]));
 					}
 					break;
 			}
 		}
 
-		return dimTypes.toArray(new String[0]);
+		return dimTypes.toArray(new Axis[0]);
 	}
 
 	/** Retrieves calibration for X,Y,Z,T. **/
-	private float[]
-		getCalibration(final IFormatReader r, final long[] dimensions)
+	private float[] getCalibration(final IFormatReader r,
+		final long[] dimensions)
 	{
 		final float[] calibration = new float[dimensions.length];
 		for (int i = 0; i < calibration.length; ++i)

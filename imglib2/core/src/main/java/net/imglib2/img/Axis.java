@@ -27,27 +27,21 @@
  *
  * @author Stephan Preibisch & Stephan Saalfeld
  */
+
 package net.imglib2.img;
 
 /**
- * An interface for defining metadata that goes along with an {@link Img},
- * including name, dimensional axes and calibration information.
+ * A dimensional axis label, for describing the dimensional axes of a
+ * {@link Metadata} object (such as an {@link ImgPlus}).
  * 
  * @author Curtis Rueden ctrueden at wisc.edu
- * @see ImgPlus
  */
-public interface Metadata {
+public interface Axis {
 
-	/** Gets the name of the associated {@link Img}. */
-	String getName();
+	String getLabel();
 
-	/** Gets the dimensional axis types of the associated {@link Img}. */
-	Axis[] getAxes();
+	boolean isXY();
 
-	/** Gets the dimensional index of the axis with the given type. */
-	int getAxisIndex(final Axis axis);
-
-	/** Gets the calibration values of the associated {@link Img}. */
-	float[] getCalibration();
+	boolean isSpatial();
 
 }

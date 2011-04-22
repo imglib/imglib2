@@ -48,15 +48,15 @@ public class ImgPlus<T> implements Img<T>, Metadata {
 	private final Img<T> img;
 
 	private final String name;
-	private final String[] axes;
+	private final Axis[] axes;
 	private final float[] cal;
 
 	public ImgPlus(final Img<T> img, final Metadata metadata) {
-		this(img, metadata.getName(), metadata.getAxes(),
-			metadata.getCalibration());
+		this(img, metadata.getName(), metadata.getAxes(), metadata
+			.getCalibration());
 	}
 
-	public ImgPlus(final Img<T> img, final String name, final String[] axes,
+	public ImgPlus(final Img<T> img, final String name, final Axis[] axes,
 		final float[] cal)
 	{
 		this.img = img;
@@ -179,13 +179,21 @@ public class ImgPlus<T> implements Img<T>, Metadata {
 	}
 
 	@Override
-	public String[] getAxes() {
+	public Axis[] getAxes() {
 		return axes;
+	}
+
+	@Override
+	public int getAxisIndex(final Axis axis) {
+		for (int i = 0; i < axes.length; i++) {
+			if (axes[i] == axis) return i;
+		}
+		return -1;
 	}
 
 	@Override
 	public float[] getCalibration() {
 		return cal;
 	}
-
+	
 }
