@@ -18,21 +18,21 @@ public class ImgLib2Display
 
 	public static ImagePlus copyToImagePlus( final Img<FloatType> container, final int[] dim )
 	{
-		return createImagePlus( container, new TypeIdentity<FloatType>(), "image", GRAY32, getDim3( dim ), new int[ container.numDimensions() ] ); 		
+		return createImagePlus( container, new TypeIdentity<FloatType>(), "image", GRAY32, getDim3( dim ), new long[ container.numDimensions() ] ); 		
 	}
 	
 	public static ImagePlus copyToImagePlus( final Img<FloatType> container )
 	{
-		return createImagePlus( container, new TypeIdentity<FloatType>(), "image", GRAY32, getDim3( getStandardDimensions() ), new int[ container.numDimensions() ] ); 
+		return createImagePlus( container, new TypeIdentity<FloatType>(), "image", GRAY32, getDim3( getStandardDimensions() ), new long[ container.numDimensions() ] ); 
 	}
 	
 	public static <T extends Type<T>> ImagePlus copyToImagePlus( final Img<T> container, final Converter<T, FloatType> converter )
 	{
-		return createImagePlus( container, converter, "image", GRAY32, getDim3( getStandardDimensions() ), new int[ container.numDimensions() ] ); 
+		return createImagePlus( container, converter, "image", GRAY32, getDim3( getStandardDimensions() ), new long[ container.numDimensions() ] ); 
 	}
 	
 	protected static <T extends Type<T>>ImagePlus createImagePlus( final Img<T> container, final Converter<T, FloatType> converter, 
-			final String name, final int type, final int[] dim, final int[] dimensionPositions )
+			final String name, final int type, final int[] dim, final long[] dimensionPositions )
 	{	      
 		final int n = container.numDimensions();
 		
@@ -43,7 +43,7 @@ public class ImgLib2Display
         
         final ImageStack stack = new ImageStack( size[ 0 ], size[ 1 ] );
         
-        final int dimPos[] = dimensionPositions.clone();
+        final long dimPos[] = dimensionPositions.clone();
         final int dimX = dim[ 0 ];
         final int dimY = dim[ 1 ];
         final int dimZ = dim[ 2 ];
@@ -66,12 +66,13 @@ public class ImgLib2Display
 	}		
 	
     public static <T extends Type<T>> float[] extractSliceFloat( final Img<T> container, final Converter<T, FloatType> converter,
-    		final int dimX, final int dimY, final int[] dimensionPositions )
+    		final int dimX, final int dimY, final long[] dimensionPositions )
     {
 		final int sizeX = (int) container.dimension( dimX );
 		final int sizeY = (int) container.dimension( dimY );
     	
-    	final OrthoSliceCursor< T > cursor = new OrthoSliceCursor<T>( container, dimX, dimY, dimensionPositions ); 
+    	final OrthoSliceCursor< T > cursor = new OrthoSliceCursor<T>( container, dimX, dimY, dimensionPositions);
+    		//new OrthoSliceCursor<T>( container, dimX, dimY, dimensionPositions ); 
 		final FloatType out = new FloatType();
 		
 		// store the slice image
