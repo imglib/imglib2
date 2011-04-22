@@ -27,32 +27,33 @@
  */
 package net.imglib2.ui;
 
-import java.awt.Color;
 import net.imglib2.converter.Converter;
 import net.imglib2.display.AbstractLinearRange;
 import net.imglib2.type.numeric.ARGBType;
 import net.imglib2.type.numeric.RealType;
+import net.imglib2.ui.lut.Lut;
 
 /**
+ * CompositeLUTConverter contains a lookup table, Lut,  for a channel.
  * Used to create a composite multi-channel image (used by CompositeXYProjector)
  * Accumulates the values from the lookup tables to the RGB values in the output/target image. 
- *
+ * 
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  * @author Grant B. Harris
  */
 public class CompositeLUTConverter< R extends RealType< R > > extends AbstractLinearRange implements Converter< R, ARGBType >
 {
-	Color[] colors = null;
+	Lut lut = null;
 	
 	public CompositeLUTConverter()
 	{
 		super();
 	}
 	
-	public CompositeLUTConverter( final double min, final double max, final Color[] colors)
+	public CompositeLUTConverter( final double min, final double max, final Lut colors)
 	{
 		super( min, max );
-		this.colors = colors;
+		this.lut = colors;
 	}
 	
 	
@@ -61,8 +62,7 @@ public class CompositeLUTConverter< R extends RealType< R > > extends AbstractLi
 	{
 		final double a = input.getRealDouble();
 		final int b = Math.min( 255, roundPositive( Math.max( 0, ( ( a - min ) / scale * 255.0 ) ) ) );
-		Color color = colors[b];
-		final int argb = ARGBType.rgba(color.getRed(),color.getGreen(), color.getBlue(), 0xff);
+		final int argb = ARGBType.rgba(lut.reds[b],lut.greens[b], lut.blues[b], 0xff);
 		output.add(new ARGBType(argb));
 	}
 }

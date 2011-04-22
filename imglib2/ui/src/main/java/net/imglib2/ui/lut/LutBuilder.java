@@ -12,6 +12,7 @@ import java.awt.Rectangle;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
+import javax.swing.BoxLayout;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -197,7 +198,7 @@ public class LutBuilder {
 	public static void main(String[] args) {
 		JFrame fr = new JFrame();
 		fr.setTitle("LUTs");
-		fr.setLayout(new FlowLayout());
+		fr.getContentPane().setLayout(new BoxLayout(fr.getContentPane(), BoxLayout.Y_AXIS));
 		fr.addWindowListener(new WindowAdapter() {
 
 			public void windowClosing(WindowEvent e) {
@@ -226,6 +227,7 @@ public class LutBuilder {
 
 		BufferedImage bi = GraphicsUtilities.createCompatibleImage(width, height);
 		// bi.getData().getDataBuffer().
+		
 		return new ImagePanel(bi);
 	}
 

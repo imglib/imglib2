@@ -30,7 +30,9 @@ public class OpenAndDisplayRotated {
 		RandomAccessibleInterval< FloatType> view = Views.rotatedView(Views.hyperSlice(img, 2, 0), 0, 1);
 
 		final ARGBScreenImage screenImage = new ARGBScreenImage((int) view.dimension(0), (int) view.dimension(1));
-		final XYProjector< FloatType, ARGBType> projector = new XYProjector< FloatType, ARGBType>(view, screenImage, new RealARGBConverter< FloatType>(0, 127));
+		
+		final XYProjector< FloatType, ARGBType> projector = 
+				new XYProjector< FloatType, ARGBType>(view, screenImage, new RealARGBConverter< FloatType>(0, 127));
 
 //		final ColorProcessor cp = new ColorProcessor( screenImage.image() );
 //		final ImagePlus imp = new ImagePlus( "argbScreenProjection", cp );

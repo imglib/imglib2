@@ -21,8 +21,6 @@ import javax.swing.border.TitledBorder;
 import loci.common.StatusEvent;
 import loci.common.StatusListener;
 
-import net.imglib2.converter.Converter;
-import net.imglib2.display.ARGBScreenImage;
 import net.imglib2.exception.IncompatibleTypeException;
 import net.imglib2.img.Img;
 import net.imglib2.img.ImgPlus;
@@ -30,8 +28,9 @@ import net.imglib2.io.ImgIOException;
 import net.imglib2.io.ImgIOUtils;
 import net.imglib2.io.ImgOpener;
 import net.imglib2.type.NativeType;
-import net.imglib2.type.numeric.ARGBType;
 import net.imglib2.type.numeric.RealType;
+import net.imglib2.ui.lut.Lut;
+import net.imglib2.ui.lut.LutBuilder;
 
 public class CompositeImgPanel extends JPanel {
 
@@ -51,43 +50,20 @@ public class CompositeImgPanel extends JPanel {
 		return colorTable;
 	}
 
-	public class CompositeImgData<T extends RealType<T> & NativeType<T>> {
+		public class CompositeSliderPanel extends JPanel {
 
-		public String name;
-		public Img<T> img;
-		public CompositeImgPanel owner;
-		public int width, height;
-		public ARGBScreenImage screenImage;
-		ArrayList<Converter<T,ARGBType>> converters = new ArrayList<Converter<T,ARGBType>>();
-		//public RealLUTConverter<T> converter = new RealLUTConverter<T>[3];
-		public CompositeXYProjector<T, ARGBType> projector;
-
-		public CompositeImgData(final String name, final Img<T> img, final CompositeImgPanel owner) {
-			this.name = name;
-			this.img = img;
-			this.owner = owner;
-			width = (int) img.dimension(0);
-			height = (int) img.dimension(1);
-
-			screenImage = new ARGBScreenImage(width, height);
-			final int min = 0, max = 255;
-
-			converters.add(new CompositeLUTConverter<T>(min, max, createRampLUT(0)));
-			converters.add(new CompositeLUTConverter<T>(min, max, createRampLUT(1)));
-			converters.add(new CompositeLUTConverter<T>(min, max, createRampLUT(2)));
-			int channelDimIndex = 2;
-			projector = new CompositeXYProjector<T, ARGBType>(img, screenImage, converters, channelDimIndex);
-			projector.map();
-		}
-	}
-
-		public class SliderPanel extends JPanel {
-
-			public SliderPanel(final CompositeImgData<?> imgData) {
+			/*
+			 * CompositeSliderPanel
+			 * If there is a channel dimension is displayed as a composite, 
+			 * a slider for that dim should not be added.
+			 */
+			
+			public CompositeSliderPanel(final CompositeImgData<?> imgData) {
 				setBorder(new TitledBorder(imgData.name));
 				setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 				// add one slider per dimension beyond the first two
 				for (int d = 3; d < imgData.img.numDimensions(); d++) {
+					
 					final int dimLength = (int) imgData.img.dimension(d);
 					final JScrollBar bar = new JScrollBar(Adjustable.HORIZONTAL, 0, 1, 0, dimLength);
 					final int dim = d;
@@ -134,7 +110,14 @@ public class CompositeImgPanel extends JPanel {
 		public <T extends RealType<T> & NativeType<T>> void addImage(final String name,
 			final Img<T> img)
 		{
-			final CompositeImgData<T> imgData = new CompositeImgData<T>(name, img, this);
+			// create an RGB 3-channel CompositeImgData, with channel on axis 2
+			ArrayList<Lut> lutList = new ArrayList<Lut>();
+			lutList.add(LutBuilder.getInstance().createLUT("red"));
+			lutList.add(LutBuilder.getInstance().createLUT("green"));
+			lutList.add(LutBuilder.getInstance().createLUT("blue"));
+			int channelDimIndex = 2;
+			final CompositeImgData<T> imgData = new CompositeImgData<T>(name, img, channelDimIndex, lutList, this);
+			//
 			images.add(imgData);
 			if (imgData.width > maxWidth) {
 				maxWidth = imgData.width;
@@ -142,19 +125,21 @@ public class CompositeImgPanel extends JPanel {
 			if (imgData.height > maxHeight) {
 				maxHeight = imgData.height;
 			}
-			add(new SliderPanel(imgData));
+			add(new CompositeSliderPanel(imgData));
 		}
 
 		public static final <T extends RealType<T> & NativeType<T>> void main(final String[] args) {
 			final String[] urls = {
-				"http://loci.wisc.edu/files/software/data/mitosis-test.zip",
-				"http://loci.wisc.edu/files/software/ome-tiff/z-series.zip"
+				"file:///C:/TestImages/TestImages/MyoblastCells.tif"
+				//"http://loci.wisc.edu/files/software/data/mitosis-test.zip"
+					//,				"http://loci.wisc.edu/files/software/ome-tiff/z-series.zip"
 			};
 			final JFrame frame = new JFrame("ImgPanel Test Frame");
 			frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 			final CompositeImgPanel imgPanel = new CompositeImgPanel();
 			for (String url : urls) {
 				final ImgPlus<T> img = loadImage(url);
+				//img.getAxes(Metadata.)
 				imgPanel.addImage(url, img);
 			}
 			frame.setContentPane(imgPanel);

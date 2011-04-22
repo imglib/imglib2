@@ -63,6 +63,7 @@ public class CompositeXYProjector< A, B> implements Projector< A, B>, Positionab
 		this.channelDimIndex = channelDimIndex;
 		// check that there is a converter for each channel
 		numChannels = converters.size();
+		System.out.println("source.dimension(channelDimIndex)="+ source.dimension(channelDimIndex)) ;
 		if (numChannels != source.dimension(channelDimIndex)) {
 			throw new IllegalArgumentException();
 		}

@@ -12,6 +12,7 @@ import net.imglib2.img.Img;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.ARGBType;
 import net.imglib2.type.numeric.RealType;
+import net.imglib2.ui.lut.LutBuilder;
 
 /**
  *
@@ -37,11 +38,16 @@ public class CompositeRGBImgData<T extends RealType<T> & NativeType<T>> {
 
 		screenImage = new ARGBScreenImage(width, height);
 		final int min = 0, max = 255;
+		converters.add(new CompositeLUTConverter<T>(min, max, LutBuilder.getInstance().createLUT("red")));
+		converters.add(new CompositeLUTConverter<T>(min, max, LutBuilder.getInstance().createLUT("green")));
+		converters.add(new CompositeLUTConverter<T>(min, max, LutBuilder.getInstance().createLUT("blue")));
 
-		converters.add(new CompositeLUTConverter<T>(min, max, createRampLUT(0)));
-		converters.add(new CompositeLUTConverter<T>(min, max, createRampLUT(1)));
-		converters.add(new CompositeLUTConverter<T>(min, max, createRampLUT(2)));
+
+//		converters.add(new CompositeLUTConverter<T>(min, max, createRampLUT(0)));
+//		converters.add(new CompositeLUTConverter<T>(min, max, createRampLUT(1)));
+//		converters.add(new CompositeLUTConverter<T>(min, max, createRampLUT(2)));
 		int channelDimIndex = 2;
+		
 		projector = new CompositeXYProjector<T, ARGBType>(img, screenImage, converters, channelDimIndex);
 		projector.map();
 	}

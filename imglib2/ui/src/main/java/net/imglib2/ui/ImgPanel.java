@@ -125,9 +125,10 @@ public class ImgPanel extends JPanel {
 		final String[] args)
 	{
 		final String[] urls = {
-			"http://loci.wisc.edu/files/software/data/mitosis-test.zip",
-			"http://loci.wisc.edu/files/software/ome-tiff/z-series.zip"
+			"http://loci.wisc.edu/files/software/data/mitosis-test.zip"
+			//"http://loci.wisc.edu/files/software/ome-tiff/z-series.zip"
 		};
+		
 		final JFrame frame = new JFrame("ImgPanel Test Frame");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		final ImgPanel imgPanel = new ImgPanel();
