@@ -98,7 +98,10 @@ public enum Axes implements Axis {
 	 * Identifies the <i>Frequency</i> dimensional type, representing a dimension
 	 * consisting of frequencies.
 	 */
-	FREQUENCY("Frequency");
+	FREQUENCY("Frequency"),
+
+	/** Represents an unknown dimensional type. */
+	UNKNOWN("Unknown");
 
 	private static Hashtable<String, Axis> axes =
 		new Hashtable<String, Axis>();
