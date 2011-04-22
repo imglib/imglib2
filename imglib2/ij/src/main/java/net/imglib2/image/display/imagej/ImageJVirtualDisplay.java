@@ -36,8 +36,8 @@ import ij.ImagePlus;
 import ij.ImageStack;
 import ij.process.FloatProcessor;
 import ij.process.ImageProcessor;
-import net.imglib2.image.display.Display;
-import net.imglib2.interpolation.Interpolator;
+import net.imglib2.RandomAccessible;
+import net.imglib2.RealRandomAccess;
 import net.imglib2.type.Type;
 import mpicbg.models.InvertibleCoordinateTransform;
 import mpicbg.models.NoninvertibleModelException;
@@ -164,13 +164,13 @@ public class ImageJVirtualDisplay<T extends Type<T>> extends ImageStack
     	
 		for ( final InverseTransformDescription<T> desc : transformDescription )
 		{
-			final Interpolator<T> it = desc.getImage().createInterpolator( desc.getInterpolatorFactory() );
+			final RealRandomAccess<T> it = desc.getInterpolatorFactory().create( desc.getImage() );
 			final InvertibleCoordinateTransform transform = desc.getTransform();
 	    	final float[] offset = desc.getOffset();
 	
 			try
 			{
-		    	final T type = it.getType();
+		    	final T type = it.get().createVariable();
 		    	final Display<T> display = it.getImage().getDisplay();
 	
 		    	int i = 0;
@@ -188,7 +188,7 @@ public class ImageJVirtualDisplay<T extends Type<T>> extends ImageStack
 			        	position[ dimX ] = x + offset[ dimX ];
 
 			        	transform.applyInverseInPlace( position );
-			        	it.moveTo( position );
+			        	it.setPosition( position );
 			        	
 		        		sliceImg[ i ] += display.get32Bit(type);
 			        	++i;
@@ -199,8 +199,6 @@ public class ImageJVirtualDisplay<T extends Type<T>> extends ImageStack
 			{
 				System.out.println( it + " has a no invertible model: " + e );
 			}
-			
-			it.close();
 		}
      	
     	return sliceImg;
