@@ -49,6 +49,6 @@ public class SliceTransformableExtractionFloat<T extends Type<T>> extends SliceT
 	@Override
 	final protected void setIntensity( final int index )
 	{
-		sliceImg[ index ] += display.get32Bit(type);		
+		sliceImg[ index ] += display.get32Bit(type);
 	}
 }

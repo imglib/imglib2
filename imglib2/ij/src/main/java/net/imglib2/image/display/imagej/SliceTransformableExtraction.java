@@ -30,8 +30,7 @@
 package net.imglib2.image.display.imagej;
 
 import ij.ImagePlus;
-import net.imglib2.image.display.Display;
-import net.imglib2.interpolation.Interpolator;
+import net.imglib2.RealRandomAccess;
 import net.imglib2.multithreading.Stopable;
 import net.imglib2.type.Type;
 import mpicbg.models.AffineModel2D;
@@ -46,11 +45,10 @@ public abstract class SliceTransformableExtraction<T extends Type<T>> extends Th
 {
 	final InverseTransformDescription<T> desc;
 	final InvertibleCoordinateTransform transform;
-	final Interpolator<T> it;
+	final RealRandomAccess<T> it;
 	final float[] offset;
 	final ImagePlus parent;
-	
-	final Display<T> display;
+
 	final T type;
 	final int[] dimensionPositions;
 	final int dimX, dimY, dimZ, slice, sizeX, sizeY, numDimensions;
@@ -67,9 +65,9 @@ public abstract class SliceTransformableExtraction<T extends Type<T>> extends Th
 	{
 		this.desc = desc;
 		this.transform = desc.getTransform();
-		this.it = desc.getImage().createInterpolator( desc.getInterpolatorFactory() );
+		this.it = desc.getInterpolatorFactory().create( desc.getImage() );
 		this.offset = desc.getOffset();
-		this.numDimensions = desc.getImage().getNumDimensions();
+		this.numDimensions = desc.getImage().numDimensions();
 		
 		if ( AffineModel2D.class.isInstance( desc.getTransform() ) ||
 			 AffineModel3D.class.isInstance( desc.getTransform() ) ||
@@ -81,8 +79,7 @@ public abstract class SliceTransformableExtraction<T extends Type<T>> extends Th
 			isAffine = false;
 		
 		this.parent = parent;
-    	this.display = it.getImage().getDisplay();
-    	this.type = this.it.getType();
+    	this.type = this.it.get().createVariable();
 		
 		this.dimX = dimX;
 		this.dimY = dimY;
@@ -151,8 +148,8 @@ public abstract class SliceTransformableExtraction<T extends Type<T>> extends Th
 		    		transform.applyInverseInPlace( position1 );
 		    		transform.applyInverseInPlace( position2 );
 		    		
-		    		it.moveTo( position1 );
-		    		it.moveTo( position2 );
+		    		it.setPosition( position1 );
+		    		it.setPosition( position2 );
 		    		
 		    		for ( int d = 0; d < initialPosition.length; ++d )
 		    		{
@@ -178,8 +175,8 @@ public abstract class SliceTransformableExtraction<T extends Type<T>> extends Th
 		    		transform.applyInverseInPlace( position1 );
 		    		transform.applyInverseInPlace( position2 );
 		    		
-		    		it.moveTo( position1 );
-		    		it.moveTo( position2 );
+		    		it.setPosition( position1 );
+		    		it.setPosition( position2 );
 		    		
 		    		for ( int d = 0; d < initialPosition.length; ++d )
 		    		{
@@ -197,7 +194,7 @@ public abstract class SliceTransformableExtraction<T extends Type<T>> extends Th
 	    			position1[ d ] += offset[ d ];
 	    		
 	    		transform.applyInverseInPlace( position1 );
-	    		it.moveTo( position1 );
+	    		it.setPosition( position1 );
 	    	
 		    	for ( int y = 0; y < sizeY; y++ )
 		    	{		    		
@@ -205,7 +202,6 @@ public abstract class SliceTransformableExtraction<T extends Type<T>> extends Th
 		        	{	        		
 		        		if ( stopThread )
 		        		{
-		        			it.close();
 		        			return;
 		        		}
 		        			
@@ -216,7 +212,7 @@ public abstract class SliceTransformableExtraction<T extends Type<T>> extends Th
 		        		++i;
 		        		
 		        		// we move one step on the corresponding vector in the input image 
-		        		it.moveRel( vectorX );
+		        		it.move( vectorX );
 
 		        	}
 		        	
@@ -241,7 +237,6 @@ public abstract class SliceTransformableExtraction<T extends Type<T>> extends Th
 		        	{	        		
 		        		if ( stopThread )
 		        		{
-		        			it.close();
 		        			return;
 		        		}
 	
@@ -251,7 +246,7 @@ public abstract class SliceTransformableExtraction<T extends Type<T>> extends Th
 			        	position1[ dimX ] = x + offset[ dimX ];
 	
 			        	transform.applyInPlace( position1 );
-			        	it.moveTo( position1 );
+			        	it.setPosition( position1 );
 			        	
 			        	setIntensity( i );
 		        		//sliceImg[ i ] += display.get32Bit(type);
@@ -267,8 +262,6 @@ public abstract class SliceTransformableExtraction<T extends Type<T>> extends Th
 		{
 			System.out.println( it + " has a not invertible model: " + e );
 		}
-		
-		it.close();
 		
 		if ( parent != null)
 			parent.updateAndDraw();
