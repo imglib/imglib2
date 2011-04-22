@@ -47,7 +47,6 @@ import net.imglib2.img.Img;
 import net.imglib2.type.Type;
 import net.imglib2.type.label.FakeType;
 import net.imglib2.type.numeric.ARGBType;
-import net.imglib2.type.numeric.RGBALegacyType;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.integer.UnsignedByteType;
 import net.imglib2.type.numeric.integer.UnsignedShortType;
@@ -90,7 +89,7 @@ public class ImageJFunctions
 				float[] max = new float[ 3 ];
 				
 				for ( int d = 0; d < 3; ++d )
-					max[ d ] = ti.getImage().getDimension( d );
+					max[ d ] = ti.getImage().dimension( d );
 				
 				ti.getTransform().estimateBounds( min, max );
 				//float[][] minMaxDimLocal = Util.getMinMaxDim( ti.getImage().getDimensions(), ti.getTransform() );
@@ -155,27 +154,27 @@ public class ImageJFunctions
 	public static <T extends Type<T>> ImagePlus displayAsVirtualStack( final Img<T> img, String title )
 	{
 		if ( ARGBType.class.isInstance( img.firstElement() ) )
-			return new ImagePlus( title, new ImageJVirtualStack<T>( img, COLOR_RGB, getDim3( getStandardDimensions() ), new int[ img.getNumDimensions() ] ) );
+			return new ImagePlus( title, new ImageJVirtualStack<T>( img, COLOR_RGB, getDim3( getStandardDimensions() ), new int[ img.numDimensions() ] ) );
 		else
-			return new ImagePlus( title, new ImageJVirtualStack<T>( img, GRAY32, getDim3( getStandardDimensions() ), new int[ img.getNumDimensions() ] ) );
+			return new ImagePlus( title, new ImageJVirtualStack<T>( img, GRAY32, getDim3( getStandardDimensions() ), new int[ img.numDimensions() ] ) );
 	}
 
 	public static <T extends Type<T>> ImagePlus displayAsVirtualStack( final Img<T> img, final int type, String title )
 	{
-		return new ImagePlus( title, new ImageJVirtualStack<T>( img, type, getDim3( getStandardDimensions() ), new int[ img.getNumDimensions() ] ) );
+		return new ImagePlus( title, new ImageJVirtualStack<T>( img, type, getDim3( getStandardDimensions() ), new int[ img.numDimensions() ] ) );
 	}
 
 	public static <T extends Type<T>> ImagePlus displayAsVirtualStack( final Img<T> img, final int type, final int[] dim, String title )
 	{
-		return new ImagePlus( img.getName(), new ImageJVirtualStack<T>( img, type, getDim3(dim), new int[ img.getNumDimensions() ] ) );
+		return new ImagePlus( title, new ImageJVirtualStack<T>( img, type, getDim3(dim), new int[ img.numDimensions() ] ) );
 	}
 
 	public static <T extends Type<T>> ImagePlus displayAsVirtualStack( final Img<T> img, final int[] dim, String title )
 	{
 		if ( ARGBType.class.isInstance( img.firstElement() ) )
-			return new ImagePlus( title, new ImageJVirtualStack<T>( img, COLOR_RGB, getDim3(dim), new int[ img.getNumDimensions() ] ) );
+			return new ImagePlus( title, new ImageJVirtualStack<T>( img, COLOR_RGB, getDim3(dim), new int[ img.numDimensions() ] ) );
 		else
-			return new ImagePlus( title, new ImageJVirtualStack<T>( img, GRAY32, getDim3(dim), new int[ img.getNumDimensions() ] ) );
+			return new ImagePlus( title, new ImageJVirtualStack<T>( img, GRAY32, getDim3(dim), new int[ img.numDimensions() ] ) );
 	}
 
 	public static <T extends Type<T>> ImagePlus displayAsVirtualStack( final Img<T> img, final int type, final int[] dim, final int[] dimensionPositions, String title )
@@ -183,10 +182,10 @@ public class ImageJFunctions
 		return new ImagePlus( title, new ImageJVirtualStack<T>( img, type, getDim3(dim), dimensionPositions ) );
 	}
 
-	public static <T extends Type<T>> ImagePlus show( final Img<T> img ) 
+	public static <T extends Type<T>> ImagePlus show( final Img<T> img, final String title ) 
 	{ 
 		img.getDisplay().setMinMax();
-		ImagePlus imp = displayAsVirtualStack( img );
+		ImagePlus imp = displayAsVirtualStack( img, title );
 		
 		imp.show();
 		return imp;
@@ -242,11 +241,6 @@ public class ImageJFunctions
 			dimReady[ d ] = dim[ d ];
 
 		return dimReady;
-	}
-
-	public static <T extends Type<T>> boolean saveAsTiffs( final Img<T> img, String directory, final int type )
-	{
-		return saveAsTiffs( img, directory, img.getName(), type );
 	}
 
 	public static <T extends Type<T>> boolean saveAsTiffs( final Img<T> img, String directory, final String name, final int type )
