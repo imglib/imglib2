@@ -27,7 +27,7 @@
  *
  * @author Stephan Preibisch & Stephan Saalfeld
  */
-package net.imglib2.image.display.imagej;
+package net.imglib2.img.display.imagej;
 
 import java.util.ArrayList;
 import java.util.Collection;

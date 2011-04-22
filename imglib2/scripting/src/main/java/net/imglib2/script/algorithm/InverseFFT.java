@@ -2,7 +2,7 @@ package net.imglib2.script.algorithm;
 
 import net.imglib2.algorithm.fft.FourierTransform;
 import net.imglib2.algorithm.fft.InverseFourierTransform;
-import net.imglib2.image.Image;
+import net.imglib2.img.Image;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.complex.ComplexDoubleType;
 

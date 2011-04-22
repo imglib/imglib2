@@ -7,8 +7,8 @@ import java.awt.geom.Ellipse2D;
 import net.imglib2.algorithm.labeling.BinaryInterpolation2D;
 import net.imglib2.container.shapelist.ShapeList;
 import net.imglib2.container.shapelist.ShapeListCached;
-import net.imglib2.image.Image;
-import net.imglib2.image.display.imagej.ImageJFunctions;
+import net.imglib2.img.Image;
+import net.imglib2.img.display.imagej.ImageJFunctions;
 import net.imglib2.type.logic.BitType;
 
 public class BinaryInterpolationBehavior {

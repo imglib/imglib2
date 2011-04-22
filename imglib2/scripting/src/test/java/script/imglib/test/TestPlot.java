@@ -1,6 +1,6 @@
 package script.imglib.test;
 
-import net.imglib2.image.Image;
+import net.imglib2.img.Image;
 import net.imglib2.type.numeric.integer.UnsignedByteType;
 import script.imglib.ImgLib;
 import script.imglib.analysis.Histogram;
