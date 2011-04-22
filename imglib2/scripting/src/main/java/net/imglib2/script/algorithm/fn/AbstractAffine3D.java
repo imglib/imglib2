@@ -9,8 +9,6 @@ import net.imglib2.script.math.Compute;
 import net.imglib2.algorithm.transformation.ImageTransform;
 import net.imglib2.img.AbstractImg;
 import net.imglib2.img.Img;
-import net.imglib2.img.ImgCursor;
-import net.imglib2.img.ImgRandomAccess;
 import net.imglib2.img.array.ArrayImg;
 import net.imglib2.img.basictypeaccess.FloatAccess;
 import net.imglib2.interpolation.InterpolatorFactory;
@@ -131,10 +129,10 @@ public abstract class AbstractAffine3D<T extends NumericType<T>> extends ImgProx
 		final InterpolatorFactory<R,Img<R>> inter;
 		switch (mode) {
 		case LINEAR:
-			inter = new NLinearInterpolatorFactory<R,Img<R>>(oobf);
+			inter = new NLinearInterpolatorFactory<R>();
 			break;
 		case NEAREST_NEIGHBOR:
-			inter = new NearestNeighborInterpolatorFactory<R>(oobf);
+			inter = new NearestNeighborInterpolatorFactory<R>();
 			break;
 		default:
 			throw new IllegalArgumentException("Scale: don't know how to scale with mode " + mode);

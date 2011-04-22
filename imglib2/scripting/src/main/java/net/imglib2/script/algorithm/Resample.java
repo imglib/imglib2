@@ -9,8 +9,6 @@ import net.imglib2.script.color.RGBA;
 import net.imglib2.script.color.Red;
 import net.imglib2.script.math.Compute;
 import net.imglib2.img.Img;
-import net.imglib2.img.ImgCursor;
-import net.imglib2.interpolation.Interpolator;
 import net.imglib2.interpolation.InterpolatorFactory;
 import net.imglib2.interpolation.randomaccess.NLinearInterpolatorFactory;
 import net.imglib2.interpolation.randomaccess.NearestNeighborInterpolatorFactory;
@@ -104,7 +102,7 @@ public class Resample<N extends NumericType<N>> extends ImgProxy<N>
 		}
 
 		final Interpolator<T,Img<T>> inter = ifac.create(img);
-		final ImgCursor<T> c2 = res.localizingCursor();
+		final Cursor<T> c2 = res.localizingCursor();
 		final float[] s = new float[dim.length];
 		for (int i=0; i<s.length; i++) s[i] = (float)img.dimension(i) / dim[i];
 		final long[] d = new long[dim.length];

@@ -2,12 +2,12 @@ package net.imglib2.script.algorithm.fn;
 
 import java.util.Iterator;
 
+import net.imglib2.Cursor;
+import net.imglib2.Interval;
 import net.imglib2.IterableRealInterval;
+import net.imglib2.RandomAccess;
 import net.imglib2.img.Img;
-import net.imglib2.img.ImgCursor;
 import net.imglib2.img.ImgFactory;
-import net.imglib2.img.ImgRandomAccess;
-import net.imglib2.outofbounds.OutOfBoundsFactory;
 import net.imglib2.type.numeric.NumericType;
 
 public class ImgProxy<T extends NumericType<T>> implements Img<T> {
@@ -99,27 +99,27 @@ public class ImgProxy<T extends NumericType<T>> implements Img<T> {
 	}
 
 	@Override
-	public ImgRandomAccess<T> randomAccess() {
-		return img.randomAccess();
-	}
-
-	@Override
-	public ImgRandomAccess<T> randomAccess(OutOfBoundsFactory<T, Img<T>> factory) {
-		return img.randomAccess(factory);
-	}
-
-	@Override
-	public ImgCursor<T> cursor() {
+	public Cursor<T> cursor() {
 		return img.cursor();
 	}
 
 	@Override
-	public ImgCursor<T> localizingCursor() {
+	public Cursor<T> localizingCursor() {
 		return img.localizingCursor();
 	}
 
 	@Override
 	public ImgFactory<T> factory() {
 		return img.factory();
+	}
+
+	@Override
+	public RandomAccess<T> randomAccess(Interval interval) {
+		return img.randomAccess(interval);
+	}
+
+	@Override
+	public RandomAccess<T> randomAccess() {
+		return randomAccess();
 	}
 }
