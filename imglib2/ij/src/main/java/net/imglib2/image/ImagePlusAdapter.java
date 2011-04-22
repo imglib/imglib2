@@ -42,6 +42,7 @@ import net.imglib2.img.imageplus.IntImagePlus;
 import net.imglib2.img.imageplus.ShortImagePlus;
 import net.imglib2.type.Type;
 import net.imglib2.type.numeric.ARGBType;
+import net.imglib2.type.numeric.ComplexType;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.integer.UnsignedByteType;
 import net.imglib2.type.numeric.integer.UnsignedShortType;
@@ -188,11 +189,11 @@ public class ImagePlusAdapter
 		{		
 			case ImagePlus.GRAY8 : 
 			{
-				return convertToFloat( wrapByte( imp ) );
+				return convertToFloat( wrapByte( imp ), new NumberToFloatConverter<UnsignedByteType>() );
 			}
 			case ImagePlus.GRAY16 : 
 			{
-				return convertToFloat( wrapShort( imp ) );
+				return convertToFloat( wrapShort( imp ), new NumberToFloatConverter<UnsignedShortType>() );
 			}
 			case ImagePlus.GRAY32 : 
 			{
@@ -200,7 +201,7 @@ public class ImagePlusAdapter
 			}
 			case ImagePlus.COLOR_RGB : 
 			{
-				return convertToFloat( wrapRGBA( imp ) );
+				return convertToFloat( wrapRGBA( imp ), new ARGBtoFloatConverter() );
 			}
 			default :
 			{
@@ -209,38 +210,43 @@ public class ImagePlusAdapter
 		}
 	}
 	
+	static private class ARGBtoFloatConverter implements Converter< ARGBType, FloatType >
+	{
+		/** Luminance times alpha. */
+		@Override
+		public void convert(ARGBType input, FloatType output) {
+			final int v = input.get();
+			output.setReal((v >> 24) * (((v >> 16) & 0xff) * 0.299 + ((v >> 8) & 0xff) * 0.587 + (v & 0xff) * 0.144));
+		}
+	}
+	
+	static private class NumberToFloatConverter< T extends ComplexType< T > > implements Converter< T, FloatType >
+	{
+		@Override
+		public void convert(T input, FloatType output) {
+			output.setReal( input.getRealFloat() );
+		}		
+	}
 	
 	/**
-	 * @deprecated TODO This methods does not work for all {@link Img} where T returned by is not constant.  Instead,
-	 * a construct using {@link Converter} should be used.
-	 * 
 	 * @param <T>
 	 * @param input
 	 * @return
 	 */
-	@Deprecated
-	protected static < T extends Type< T > > Img< FloatType > convertToFloat( Img< T > input )
+	protected static < T extends Type< T > > Img< FloatType > convertToFloat(
+			final Img< T > input, final Converter< T, FloatType > c )
 	{		
-		ImagePlusImg< FloatType, ? > output = new ImagePlusImgFactory< FloatType >().create( input, new FloatType() );
+		final ImagePlusImg< FloatType, ? > output = new ImagePlusImgFactory< FloatType >().create( input, new FloatType() );
 	
-		Cursor< T > in = input.cursor();
-		Cursor< FloatType > out = output.cursor();
-	
-		TypeConverter tc = TypeConverter.getTypeConverter( in.get(), out.get() );
-		
-		if ( tc == null )
-		{
-			System.out.println( "Cannot convert from " + in.get().getClass() + " to " + out.get().getClass() );
-			output.close();
-			return null;
-		}
+		final Cursor< T > in = input.cursor();
+		final Cursor< FloatType > out = output.cursor();
 		
 		while ( in.hasNext() )
 		{
 			in.fwd();
 			out.fwd();
 			
-			tc.convert();			
+			c.convert(in.get(), out.get());
 		}
 		
 		return output;
