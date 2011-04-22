@@ -1,5 +1,7 @@
 package net.imglib2.ops.operation;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Observable;
 
 import net.imglib2.ops.condition.Condition;
@@ -8,10 +10,10 @@ import net.imglib2.ops.observer.IterationStatus;
 import net.imglib2.ops.observer.IterationStatus.Message;
 
 import java.util.Observer;
-import net.imglib2.cursor.LocalizableCursor;
-import net.imglib2.cursor.special.RegionOfInterestCursor;
-import net.imglib2.image.Image;
+
+import net.imglib2.Cursor;
 import net.imglib2.type.numeric.RealType;
+import net.imglib2.img.Img;
 
 /**
  * An AssignOperation computes values in an output image. The output image is preallocated here. The AssignOperation uses a RealFunction
@@ -63,7 +65,7 @@ public class AssignOperation<T extends RealType<T>>
 	private int imageCount;
 	private MultiImageIterator<T> cursor;
 	private T outputVariable;
-	private int[][] positions;
+	private long[][] positions;
 	private Observable notifier;
 	private Condition[] conditions;
 	private boolean requireIntersection;
@@ -72,22 +74,21 @@ public class AssignOperation<T extends RealType<T>>
 
 	// -----------------  public interface ------------------------------------------
 	
-	public AssignOperation(Image<T>[] inputs, Image<T> output, RealFunction<T> func)
+	public AssignOperation(Img<T>[] inputs, Img<T> output, RealFunction<T> func)
 	{
 		imageCount = inputs.length+1;
 
-		Image<T>[] images = new Image[imageCount];
+		Img<T>[] images = new Img[imageCount];
 		images[0] = output;
 		for (int i = 1; i <= inputs.length; i++)
 			images[i] = inputs[i-1];
 		
 		cursor = new MultiImageIterator<T>(images);
 		
-		positions = new int[imageCount][];
-		positions[0] = new int[output.getNumDimensions()];
-		for (int i = 1; i < imageCount; i++)
-		{
-			positions[i] = new int[inputs[i-1].getNumDimensions()];
+		positions = new long[imageCount][];
+		positions[0] = new long[output.numDimensions()];
+		for (int i = 1; i < imageCount; i++) {
+			positions[i] = new long[inputs[i-1].numDimensions()];
 		}
 		outputVariable = null;
 		notifier = null;
@@ -118,7 +119,7 @@ public class AssignOperation<T extends RealType<T>>
 		}
 	}
 	
-	public void setOutputRegion(int[] origin, int[] span)
+	public void setOutputRegion(long[] origin, long[] span)
 	{
 		cursor.setRegion(0, origin, span);
 	}
@@ -128,7 +129,7 @@ public class AssignOperation<T extends RealType<T>>
 		conditions[0] = c;
 	}
 	
-	public void setInputRegion(int i, int[] origin, int[] span)
+	public void setInputRegion(int i, long[] origin, long[] span)
 	{
 		cursor.setRegion(i+1, origin, span);
 	}
@@ -152,13 +153,13 @@ public class AssignOperation<T extends RealType<T>>
 	{
 		cursor.initialize();
 
-		RegionOfInterestCursor<T>[] subCursors = cursor.getSubcursors();
+		Cursor<T>[] subCursors = cursor.getSubcursors();
 
-		outputVariable = subCursors[0].getType();
+		outputVariable = subCursors[0].get();
 
-		T[] inputVariables = getInputVariables(subCursors);
+		List<T> inputVariables = getInputVariables(subCursors);
 		
-		int[] position = subCursors[0].createPositionArray();
+		long[] position = new long[subCursors[0].numDimensions()];
 
 		IterationTracker status = new IterationTracker();
 		
@@ -188,7 +189,9 @@ public class AssignOperation<T extends RealType<T>>
 			
 			if (notifier != null)
 			{
-				subCursors[0].getPosition(position);
+				// TODO - as of imglib2 this is slow way might be required. investigate.
+				for (int c = 0; c < subCursors[0].numDimensions(); c++)
+					position[c] = subCursors[0].getLongPosition(c);
 				
 				status.message = Message.UPDATE;
 				status.position = position;
@@ -201,7 +204,7 @@ public class AssignOperation<T extends RealType<T>>
 		if (notifier != null)
 		{
 			status.message = Message.DONE;
-			status.wasInterrupted = wasInterrupted;
+			status.interruptStatus = wasInterrupted;
 			notifier.notifyObservers(status);
 		}
 	}
@@ -213,7 +216,7 @@ public class AssignOperation<T extends RealType<T>>
 
 	// -----------------  private interface ------------------------------------------
 	
-	private boolean conditionsSatisfied(LocalizableCursor<T>[] cursors)
+	private boolean conditionsSatisfied(Cursor<T>[] cursors)
 	{
 		for (int i = 0; i < conditions.length; i++)
 		{
@@ -222,9 +225,11 @@ public class AssignOperation<T extends RealType<T>>
 			if (condition == null)
 				continue;
 			
-			LocalizableCursor<T> subcursor = cursors[i];
+			Cursor<T> subcursor = cursors[i];
 			
-			subcursor.getPosition(positions[i]);
+			// TODO - as of imglib2 this is slow way might be required. investigate.
+			for (int c = 0; c < subcursor.numDimensions(); c++)
+				positions[i][c] = subcursor.getLongPosition(c);
 			
 			if (condition.isSatisfied(subcursor, positions[i]))
 			{
@@ -237,18 +242,21 @@ public class AssignOperation<T extends RealType<T>>
 					return false;
 			}
 		}
+		
 		if (requireIntersection) // intersection - if here everything passed
 			return true;
-		else  // union - if here nothing satisfied the condition
-			return false;
+		
+		//else union - if here nothing satisfied the condition
+		
+		return false;
 	}
 
-	private T[] getInputVariables(RegionOfInterestCursor<T>[] cursors)
+	private List<T> getInputVariables(Cursor<T>[] cursors)
 	{
-		T[] variables = outputVariable.createArray1D(imageCount-1);
+		ArrayList<T> variables = new ArrayList<T>();
 		
-		for (int i = 0; i < variables.length; i++)
-			variables[i] = cursors[i+1].getType();
+		for (int i = 0; i < imageCount-1; i++)
+			variables.add(cursors[i+1].get());
 		
 		return variables;
 	}
@@ -256,10 +264,10 @@ public class AssignOperation<T extends RealType<T>>
 	private class IterationTracker implements IterationStatus
 	{
 		Message message;
-		int[] position;
+		long[] position;
 		double value;
 		boolean conditionsSatisfied;
-		boolean wasInterrupted;
+		boolean interruptStatus;
 
 		@Override
 		public Message getMessage()
@@ -268,7 +276,7 @@ public class AssignOperation<T extends RealType<T>>
 		}
 
 		@Override
-		public int[] getPosition()
+		public long[] getPosition()
 		{
 			return position;
 		}
@@ -288,7 +296,7 @@ public class AssignOperation<T extends RealType<T>>
 		@Override
 		public boolean wasInterrupted()
 		{
-			return wasInterrupted;
+			return interruptStatus;
 		}
 		
 	}

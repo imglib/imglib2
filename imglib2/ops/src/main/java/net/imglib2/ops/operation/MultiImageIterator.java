@@ -1,9 +1,8 @@
 package net.imglib2.ops.operation;
 
-import net.imglib2.cursor.LocalizableByDimCursor;
-import net.imglib2.cursor.special.RegionOfInterestCursor;
-import net.imglib2.image.Image;
+import net.imglib2.Cursor;
 import net.imglib2.type.numeric.RealType;
+import net.imglib2.img.Img;
 
 //TODO
 //Figure out Imglib's preferred way to handle linked cursors. Can they work where span dimensionality differs?
@@ -13,34 +12,35 @@ import net.imglib2.type.numeric.RealType;
 @SuppressWarnings("unchecked")
 public class MultiImageIterator<T extends RealType<T>>  // don't want to implement full Cursor API
 {
-	private Image<T>[] images;
-	private int[][] origins;
-	private int[][] spans;
-	private RegionOfInterestCursor<T>[] cursors;
+	private Img<T>[] images;
+	private long[][] origins;
+	private long[][] spans;
+	private Cursor<T>[] cursors;
+	private RegionCursor[] regionCursors;
 	
 	// -----------------  public interface ------------------------------------------
 
-	public MultiImageIterator(Image<T>[] images)
+	public MultiImageIterator(Img<T>[] images)
 	{
 		this.images = images;
 		int totalImages = images.length;
-		origins = new int[totalImages][];
-		spans = new int[totalImages][];
+		origins = new long[totalImages][];
+		spans = new long[totalImages][];
 		for (int i = 0; i < totalImages; i++)
 		{
-			origins[i] = new int[images[i].getNumDimensions()];
-			spans[i] = images[i].getDimensions().clone();
+			origins[i] = new long[images[i].numDimensions()];
+			spans[i] = new long[images[i].numDimensions()];
+			images[i].dimensions(spans[i]);
 		}
-		cursors = new RegionOfInterestCursor[totalImages];
 	}
 
-	public void setRegion(int i, int[] origin, int[] span)
+	public void setRegion(int i, long[] origin, long[] span)
 	{
 		origins[i] = origin;
 		spans[i] = span;
 	}
 	
-	public RegionOfInterestCursor<T>[] getSubcursors()
+	public Cursor<T>[] getSubcursors()
 	{
 		return cursors;
 	}
@@ -54,19 +54,22 @@ public class MultiImageIterator<T extends RealType<T>>  // don't want to impleme
 			if (numInSpan(spans[i]) != totalSamples)
 				throw new IllegalArgumentException("incompatible span shapes");
 
-		for (int i = 0; i < images.length; i++)
-		{
-			LocalizableByDimCursor<T> dimCursor = images[i].createLocalizableByDimCursor();
-			cursors[i] = new RegionOfInterestCursor<T>(dimCursor, origins[i], spans[i]);
+		cursors = new Cursor[images.length];
+		for (int i = 0; i < images.length; i++) {
+			cursors[i] = images[i].cursor();
 		}
+		
+		regionCursors = new RegionCursor[images.length];
+		for (int i = 0; i < images.length; i++)
+			regionCursors[i] = new RegionCursor<T>(cursors[i], origins[i], spans[i]);
 	}
 	
 	public boolean hasNext()
 	{
-		boolean hasNext = cursors[0].hasNext();
+		boolean hasNext = regionCursors[0].hasNext();
 		
-		for (int i = 1; i < cursors.length; i++)
-			if (hasNext != cursors[i].hasNext())
+		for (int i = 1; i < regionCursors.length; i++)
+			if (hasNext != regionCursors[i].hasNext())
 				throw new IllegalArgumentException("linked cursors are out of sync");
 		
 		return hasNext;
@@ -74,18 +77,30 @@ public class MultiImageIterator<T extends RealType<T>>  // don't want to impleme
 	
 	public void fwd()
 	{
-		for (int i = 0; i < cursors.length; i++)
-			cursors[i].fwd();
+		for (int i = 0; i < regionCursors.length; i++)
+			regionCursors[i].fwd();
 	}
 	
 	// -----------------  private interface ------------------------------------------
+	
+	private String positionToString(long[] position) {
+		String posStr = "[";
+		for (int i = 0; i < position.length; i++) {
+			if (i > 0)
+				posStr += ",";
+			posStr += position[i];
+		}
+		posStr += "]";
+		return posStr;
+	}
 
-	private long numInSpan(int[] span)  // TODO - call Imglib equivalent instead
+	private long numInSpan(long[] span)  // TODO - call Imglib equivalent instead
 	{
 		long total = 1;
-		for (int axisLen : span)
+		for (long axisLen : span)
 			total *= axisLen;
 		return total;
 	}
+	
 }
 

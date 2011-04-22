@@ -62,7 +62,7 @@ public class OpenAndDisplayWithCellContainer
 		{
 			ImgFactory< FloatType > imgFactory = new CellImgFactory<FloatType>( new int[] {64, 64} );
 			final ImgOpener io = new ImgOpener();
-			img = io.openImg( "/home/tobias/Desktop/73.tif", imgFactory, new FloatType() ).getImg();
+			img = io.openImg( "/home/tobias/Desktop/73.tif", imgFactory, new FloatType() );
 		}
 		catch ( Exception e )
 		{

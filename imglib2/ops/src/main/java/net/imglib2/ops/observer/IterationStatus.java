@@ -5,7 +5,7 @@ public interface IterationStatus
 	enum Message {INITIALIZE, UPDATE, DONE};
 	
 	Message getMessage();
-	int[] getPosition();
+	long[] getPosition();
 	double getValue();
 	boolean getConditionsSatisfied();
 	boolean wasInterrupted();
