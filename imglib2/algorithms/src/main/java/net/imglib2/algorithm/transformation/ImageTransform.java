@@ -16,22 +16,23 @@
  */
 package net.imglib2.algorithm.transformation;
 
-import net.imglib2.algorithm.OutputAlgorithm;
-import net.imglib2.img.Img;
-import net.imglib2.img.ImgCursor;
-import net.imglib2.img.ImgFactory;
-import net.imglib2.interpolation.Interpolator;
-import net.imglib2.interpolation.InterpolatorFactory;
-import net.imglib2.type.Type;
 import mpicbg.models.InvertibleBoundable;
 import mpicbg.models.NoninvertibleModelException;
+import net.imglib2.Cursor;
+import net.imglib2.ExtendedRandomAccessibleInterval;
+import net.imglib2.RealRandomAccess;
+import net.imglib2.algorithm.OutputAlgorithm;
+import net.imglib2.img.Img;
+import net.imglib2.img.ImgFactory;
+import net.imglib2.interpolation.InterpolatorFactory;
+import net.imglib2.type.Type;
 
 public class ImageTransform<T extends Type<T>> implements OutputAlgorithm<Img<T>>
 {
 	final InvertibleBoundable transform;
-	final Img<T> container;
+	final ExtendedRandomAccessibleInterval<T, Img<T>> container;
 	final int numDimensions;
-	final InterpolatorFactory<T,Img<T>> interpolatorFactory;
+	final InterpolatorFactory<T,ExtendedRandomAccessibleInterval<T, Img<T>>> interpolatorFactory;
 	
 	ImgFactory<T> outputContainerFactory;
 	
@@ -41,17 +42,12 @@ public class ImageTransform<T extends Type<T>> implements OutputAlgorithm<Img<T>
 	Img<T> transformed;
 	String errorMessage = "";
 		
-	public ImageTransform( final Img<T> container, final InvertibleBoundable transform, final InterpolatorFactory<T,Img<T>> interpolatorFactory )
+	public ImageTransform( final ExtendedRandomAccessibleInterval<T, Img<T>> container, final InvertibleBoundable transform, final InterpolatorFactory<T,ExtendedRandomAccessibleInterval<T, Img<T>>> interpolatorFactory )
 	{
 		this.container = container;
 		this.interpolatorFactory = interpolatorFactory;
 		this.numDimensions = container.numDimensions();
 		this.transform = transform;		
-		this.outputContainerFactory = container.factory();
-
-		// get image dimensions
-		final long[] dimensions = new long[ numDimensions ]; 
-		container.dimensions( dimensions );
 
 		//
 		// first determine new min-max in all dimensions of the image
@@ -61,10 +57,13 @@ public class ImageTransform<T extends Type<T>> implements OutputAlgorithm<Img<T>
 		float[] min = new float[ numDimensions ];
 		float[] max = new float[ numDimensions ];
 
+		final Img<T> source = container.getSource();
+		this.outputContainerFactory = source.factory();
+		
 		for ( int d = 0; d < numDimensions; ++d )
 		{
-			min[ d ] = (float)container.realMin( d ); 
-			max[ d ] = (float)container.realMax( d ); 
+			min[ d ] = (float) source.realMin( d );
+			max[ d ] = (float) source.realMax( d ); 
 		}
 		transform.estimateBounds( min, max );
 		
@@ -80,8 +79,8 @@ public class ImageTransform<T extends Type<T>> implements OutputAlgorithm<Img<T>
 		}		
 	}
 	
-	public void setOutputContainerFactory( final ImgFactory<T> outputContainerFactory ) { this.outputContainerFactory = outputContainerFactory; } 
-	public ImgFactory<T> getOutputImageFactory() { return this.outputContainerFactory; } 
+	public void setOutputContainerFactory( final ImgFactory<T> outputContainerFactory ) { this.outputContainerFactory = outputContainerFactory; }
+	public ImgFactory<T> getOutputContainerFactory() { return this.outputContainerFactory; }
 	
 	public float[] getOffset() { return offset; }
 	public void setOffset( final float[] offset ) 
@@ -107,11 +106,6 @@ public class ImageTransform<T extends Type<T>> implements OutputAlgorithm<Img<T>
 		else if ( container == null )
 		{
 			errorMessage = "AffineTransform: [Container<T> container] is null.";
-			return false;
-		}
-		else if ( interpolatorFactory.getOutOfBoundsStrategyFactory() == null )
-		{
-			errorMessage = "AffineTransform: [OutOfBoundsStrategyFactory<T> of interpolatorFactory] is null.";
 			return false;
 		}
 		else if ( interpolatorFactory == null )
@@ -142,10 +136,10 @@ public class ImageTransform<T extends Type<T>> implements OutputAlgorithm<Img<T>
 			return false;
 		
 		// create the new output image
-		transformed = outputContainerFactory.create( newDim, container.firstElement().createVariable() );
+		transformed = outputContainerFactory.create( newDim, container.getSource().firstElement().createVariable() );
 
-		final ImgCursor<T> transformedIterator = transformed.localizingCursor();
-		final Interpolator<T,Img<T>> interpolator = interpolatorFactory.create( container );
+		final Cursor<T> transformedIterator = transformed.localizingCursor();
+		final RealRandomAccess<T> interpolator = interpolatorFactory.create( container );
 		
 		try
 		{

@@ -29,6 +29,7 @@
  */
 package net.imglib2.image.display.imagej;
 
+import net.imglib2.RandomAccessible;
 import net.imglib2.img.Img;
 import net.imglib2.interpolation.InterpolatorFactory;
 import net.imglib2.type.Type;
@@ -37,12 +38,12 @@ import mpicbg.models.InvertibleBoundable;
 public class InverseTransformDescription<T extends Type<T>> 
 {
 	final InvertibleBoundable transform;
-	final InterpolatorFactory<T, ?> factory;
+	final InterpolatorFactory<T, RandomAccessible<T>> factory;
 	final Img<T> image;
 	final float[] offset;
 	final int numDimensions;
 	
-	public InverseTransformDescription( final InvertibleBoundable transform, final InterpolatorFactory<T, ?> factory, final Img<T> image )
+	public InverseTransformDescription( final InvertibleBoundable transform, final InterpolatorFactory<T, RandomAccessible<T>> factory, final Img<T> image )
 	{
 		this.transform = transform;
 		this.factory = factory;
@@ -52,7 +53,7 @@ public class InverseTransformDescription<T extends Type<T>>
 	}
 	
 	public InvertibleBoundable getTransform() { return transform; }
-	public InterpolatorFactory<T, ?> getInterpolatorFactory() { return factory; }
+	public InterpolatorFactory<T, RandomAccessible<T>> getInterpolatorFactory() { return factory; }
 	public Img<T> getImage() { return image; }
 	
 	public void setOffset( final float[] offset )

@@ -2,13 +2,13 @@ package net.imglib2.script.algorithm;
 
 import java.util.Collection;
 
+import net.imglib2.Cursor;
 import net.imglib2.script.math.Compute;
 import net.imglib2.script.math.fn.IFunction;
 
 import net.imglib2.algorithm.Algorithm;
 import net.imglib2.algorithm.OutputAlgorithm;
 import net.imglib2.img.Img;
-import net.imglib2.img.ImgCursor;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.real.DoubleType;
 
@@ -23,13 +23,15 @@ import net.imglib2.type.numeric.real.DoubleType;
  *  */
 public class Process implements IFunction {
 
-	private final ImgCursor<? extends RealType<?>> c;
+	private final Cursor<? extends RealType<?>> c;
+	private final Img<? extends RealType<?>> img;
 
 	/** Execute the given {@link OutputAlgorithm} and prepare a cursor to deliver
 	 *  its pixel values one by one in successive calls to {@code eval()}. */
 	public Process(final OutputAlgorithm<Img<? extends RealType<?>>> algorithm) throws Exception {
 		execute(algorithm);
-		this.c = algorithm.getResult().cursor();
+		this.img = algorithm.getResult();
+		this.c = this.img.cursor();
 	}
 
 	/** Same as {@code this(algorithmClass, Process.asImage(fn), parameters);} */
@@ -65,12 +67,20 @@ public class Process implements IFunction {
 			result = ((OutputAlgorithm<?>)a).getResult();
 		}
 		if (result instanceof Img<?>) {
-			this.c = ((Img<? extends RealType<?>>)result).cursor();
+			this.img = ((Img<? extends RealType<?>>)result);
+			this.c = this.img.cursor();
 		} else {
+			// The source image
+			this.img = img;
 			this.c = img.cursor();
 		}
 	}
 
+	private Process(final Img<? extends RealType<?>> img) {
+		this.img = img;
+		this.c = this.img.cursor();
+	}
+	
 	/** Evaluate the @param fn for every pixel and return a new {@link Image} with the result.
 	 *  This method enables {@link Algorithm} instances to interact with {@link IFunction},
 	 *  by creating an intermediate (and temporary) {@link DoubleType} {@link Image}. */
@@ -81,17 +91,13 @@ public class Process implements IFunction {
 		}
 	}
 
-	private Process(final ImgCursor<? extends RealType<?>> c) {
-		this.c = c;
-	}
-
 	public Img<? extends RealType<?>> getResult() {
-		return c.getImg();
+		return img;
 	}
 
 	@Override
 	public final IFunction duplicate() throws Exception {
-		return new Process(c.getImg().cursor());
+		return new Process(img);
 	}
 
 	@Override
@@ -101,7 +107,12 @@ public class Process implements IFunction {
 	}
 
 	@Override
-	public final void findCursors(final Collection<ImgCursor<?>> cursors) {
+	public final void findCursors(final Collection<Cursor<?>> cursors) {
 		cursors.add(c);
+	}
+
+	@Override
+	public void findImgs(Collection<Img<?>> imgs) {
+		imgs.add(img);
 	}
 }
