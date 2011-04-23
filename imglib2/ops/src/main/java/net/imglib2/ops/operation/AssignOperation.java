@@ -74,21 +74,22 @@ public class AssignOperation<T extends RealType<T>>
 
 	// -----------------  public interface ------------------------------------------
 	
-	public AssignOperation(Img<T>[] inputs, Img<T> output, RealFunction<T> func)
+	public AssignOperation(List<Img<T>> inputs, Img<T> output, RealFunction<T> func)
 	{
-		imageCount = inputs.length+1;
+		imageCount = inputs.size()+1;
 
 		Img<T>[] images = new Img[imageCount];
 		images[0] = output;
-		for (int i = 1; i <= inputs.length; i++)
-			images[i] = inputs[i-1];
+		for (int i = 1; i < imageCount; i++) {
+			images[i] = inputs.get(i-1);
+		}
 		
 		cursor = new MultiImageIterator<T>(images);
 		
 		positions = new long[imageCount][];
 		positions[0] = new long[output.numDimensions()];
 		for (int i = 1; i < imageCount; i++) {
-			positions[i] = new long[inputs[i-1].numDimensions()];
+			positions[i] = new long[inputs.get(i-1).numDimensions()];
 		}
 		outputVariable = null;
 		notifier = null;
@@ -97,8 +98,8 @@ public class AssignOperation<T extends RealType<T>>
 		function = func;
 		wasInterrupted = false;
 		
-		if ( ! function.canAccept(inputs.length) )
-			throw new IllegalArgumentException("function cannot handle "+inputs.length+" input images");
+		if ( ! function.canAccept(inputs.size()) )
+			throw new IllegalArgumentException("function cannot handle "+inputs.size()+" input images");
 	}
 
 	public void addObserver(Observer o)

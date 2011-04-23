@@ -131,5 +131,8 @@ public class DoubleType extends AbstractRealType<DoubleType> implements Exponent
 	@Override
 	public void decIndex() { --i; }
 	@Override
-	public void decIndex( final int decrement ) { i -= decrement; }		
+	public void decIndex( final int decrement ) { i -= decrement; }
+
+	@Override
+	public int getBitsPerPixel() { return 64; }
 }

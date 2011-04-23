@@ -1,4 +1,4 @@
-package net.imglib2.image.display.imagej;
+package net.imglib2.img.display.imagej;
 
 import ij.ImagePlus;
 import ij.ImageStack;

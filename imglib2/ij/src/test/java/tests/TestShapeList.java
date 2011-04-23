@@ -7,12 +7,12 @@ import java.awt.Polygon;
 import java.awt.Rectangle;
 
 import net.imglib2.algorithm.transformation.ImageTransform;
-import net.imglib2.image.display.imagej.ImageJFunctions;
 import net.imglib2.img.ImgCursor;
 import net.imglib2.img.ImgRandomAccess;
 import net.imglib2.img.array.ArrayImg;
 import net.imglib2.img.array.ArrayImgFactory;
 import net.imglib2.img.cell.CellImgFactory;
+import net.imglib2.img.display.imagej.ImageJFunctions;
 import net.imglib2.img.shapelist.ShapeList;
 import net.imglib2.interpolation.randomaccess.NLinearInterpolatorFactory;
 import net.imglib2.interpolation.randomaccess.NearestNeighborInterpolatorFactory;

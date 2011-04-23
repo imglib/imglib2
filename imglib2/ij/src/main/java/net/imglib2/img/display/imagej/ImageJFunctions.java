@@ -27,7 +27,7 @@
  *
  * @author Stephan Preibisch & Stephan Saalfeld
  */
-package net.imglib2.image.display.imagej;
+package net.imglib2.img.display.imagej;
 
 import ij.ImagePlus;
 import ij.ImageStack;
@@ -40,10 +40,10 @@ import ij.process.ImageProcessor;
 import java.util.Collection;
 
 import net.imglib2.cursor.array.ArrayLocalizableCursor;
-import net.imglib2.image.Image;
-import net.imglib2.image.ImagePlusAdapter;
-import net.imglib2.image.display.Display;
+import net.imglib2.img.Image;
+import net.imglib2.img.ImagePlusAdapter;
 import net.imglib2.img.Img;
+import net.imglib2.img.display.Display;
 import net.imglib2.type.Type;
 import net.imglib2.type.label.FakeType;
 import net.imglib2.type.numeric.ARGBType;

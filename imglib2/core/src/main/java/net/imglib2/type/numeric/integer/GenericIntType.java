@@ -167,4 +167,7 @@ public abstract class GenericIntType<T extends GenericIntType<T>> extends Abstra
 	public void decIndex() { --i; }
 	@Override
 	public void decIndex( final int decrement ) { i -= decrement; }	
+
+	@Override
+	public int getBitsPerPixel() { return 32; }
 }
