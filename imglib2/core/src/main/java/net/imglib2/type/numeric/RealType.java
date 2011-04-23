@@ -38,4 +38,6 @@ public interface RealType<T extends RealType<T>> extends ComplexType<T>, Compara
 	public double getMaxValue();
 	public double getMinValue();
 	public double getMinIncrement();
+
+	public int getBitsPerPixel();
 }
