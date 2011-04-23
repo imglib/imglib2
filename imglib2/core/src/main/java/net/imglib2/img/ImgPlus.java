@@ -45,15 +45,17 @@ import net.imglib2.RandomAccess;
  */
 public class ImgPlus<T> implements Img<T>, Metadata {
 
+	/** The name assigned to the ImgPlus if none is provided. */
+	private static final String DEFAULT_NAME = "Untitled";
+
 	private final Img<T> img;
 
 	private final String name;
 	private final Axis[] axes;
 	private final float[] cal;
 
-	public ImgPlus(final Img<T> img, final Metadata metadata) {
-		this(img, metadata.getName(), metadata.getAxes(),
-			metadata.getCalibration());
+	public ImgPlus(final Img<T> img) {
+		this(img, null, null, null);
 	}
 
 	public ImgPlus(final Img<T> img, final String name) {
@@ -64,11 +66,16 @@ public class ImgPlus<T> implements Img<T>, Metadata {
 		this(img, name, axes, null);
 	}
 
+	public ImgPlus(final Img<T> img, final Metadata metadata) {
+		this(img, metadata.getName(), metadata.getAxes(),
+			metadata.getCalibration());
+	}
+
 	public ImgPlus(final Img<T> img, final String name, final Axis[] axes,
 		final float[] cal)
 	{
 		this.img = img;
-		this.name = name;
+		this.name = validateName(name);
 		this.axes = validateAxes(img.numDimensions(), axes);
 		this.cal = cal;
 	}
@@ -204,9 +211,23 @@ public class ImgPlus<T> implements Img<T>, Metadata {
 		return cal;
 	}
 
+	// -- Utility methods --
+
+	/** Ensures the given {@link Img} is an ImgPlus, wrapping if necessary. */
+	public static <T> ImgPlus<T> wrap(final Img<T> img) {
+		if (img instanceof ImgPlus) return (ImgPlus<T>) img;
+		return new ImgPlus<T>(img);
+	}
+
 	// -- Helper methods --
 
-	/** Creates default axis labels for the given image. */
+	/** Ensures the given name is valid. */
+	private static String validateName(final String name) {
+		if (name == null) return DEFAULT_NAME;
+		return name;
+	}
+
+	/** Ensures the given axis labels are valid. */
 	private static Axis[] validateAxes(final int numDims, final Axis[] axes) {
 		if (axes != null && numDims == axes.length) return axes;
 		final Axis[] validAxes = new Axis[numDims];
