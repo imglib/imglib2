@@ -52,8 +52,16 @@ public class ImgPlus<T> implements Img<T>, Metadata {
 	private final float[] cal;
 
 	public ImgPlus(final Img<T> img, final Metadata metadata) {
-		this(img, metadata.getName(), metadata.getAxes(), metadata
-			.getCalibration());
+		this(img, metadata.getName(), metadata.getAxes(),
+			metadata.getCalibration());
+	}
+
+	public ImgPlus(final Img<T> img, final String name) {
+		this(img, name, null, null);
+	}
+
+	public ImgPlus(final Img<T> img, final String name, final Axis[] axes) {
+		this(img, name, axes, null);
 	}
 
 	public ImgPlus(final Img<T> img, final String name, final Axis[] axes,
@@ -61,7 +69,7 @@ public class ImgPlus<T> implements Img<T>, Metadata {
 	{
 		this.img = img;
 		this.name = name;
-		this.axes = axes;
+		this.axes = validateAxes(img.numDimensions(), axes);
 		this.cal = cal;
 	}
 
@@ -195,5 +203,29 @@ public class ImgPlus<T> implements Img<T>, Metadata {
 	public float[] getCalibration() {
 		return cal;
 	}
-	
+
+	// -- Helper methods --
+
+	/** Creates default axis labels for the given image. */
+	private static Axis[] validateAxes(final int numDims, final Axis[] axes) {
+		if (axes != null && numDims == axes.length) return axes;
+		final Axis[] validAxes = new Axis[numDims];
+		for (int i = 0; i < validAxes.length; i++) {
+			if (axes != null && axes.length > i) validAxes[i] = axes[i];
+			else {
+				switch (i) {
+					case 0:
+						validAxes[i] = Axes.X;
+						break;
+					case 1:
+						validAxes[i] = Axes.Y;
+						break;
+					default:
+						validAxes[i] = Axes.UNKNOWN;
+				}
+			}
+		}
+		return validAxes;
+	}
+
 }
