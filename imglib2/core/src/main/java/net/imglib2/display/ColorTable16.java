@@ -1,5 +1,5 @@
 //
-// ColorTable8.java
+// ColorTable16.java
 //
 
 /*
@@ -34,19 +34,16 @@ POSSIBILITY OF SUCH DAMAGE.
 
 package net.imglib2.display;
 
-import net.imglib2.type.numeric.ARGBType;
-
 /**
- * 8-bit color lookup table.
+ * 16-bit color lookup table.
  * 
  * @author Curtis Rueden
- * @author Grant Harris
  */
-public class ColorTable8 {
+public class ColorTable16 {
 
-	private final byte[][] values;
+	private final short[][] values;
 
-	public ColorTable8(final byte[]... values) {
+	public ColorTable16(final short[]... values) {
 		this.values = values;
 	}
 
@@ -59,34 +56,26 @@ public class ColorTable8 {
 	}
 
 	public int get(final int c, final int i) {
-		return values[c][i] & 0xff;
+		return values[c][i] & 0xffff;
 	}
 
-	public int argb(final int i) {
-		final int r = values[0][i];
-		final int g = values.length > 1 ? values[1][i] : 0;
-		final int b = values.length > 2 ? values[2][i] : 0;
-		final int a = values.length > 3 ? values[3][i] : 0xff;
-		return ARGBType.rgba(r, g, b, a);
-	}
-
-	public byte[][] getValues() {
+	public short[][] getValues() {
 		return values.clone();
 	}
 
-	public byte[] getReds() {
+	public short[] getReds() {
 		return values.length > 0 ? values[0].clone() : null;
 	}
 
-	public byte[] getGreens() {
+	public short[] getGreens() {
 		return values.length > 1 ? values[1].clone() : null;
 	}
 
-	public byte[] getBlues() {
+	public short[] getBlues() {
 		return values.length > 2 ? values[2].clone() : null;
 	}
 
-	public byte[] getAlphas() {
+	public short[] getAlphas() {
 		return values.length > 3 ? values[3].clone() : null;
 	}
 

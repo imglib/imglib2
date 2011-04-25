@@ -30,6 +30,7 @@
 
 package net.imglib2.img;
 
+import net.imglib2.display.ColorTable16;
 import net.imglib2.display.ColorTable8;
 
 /**
@@ -92,6 +93,19 @@ public interface Metadata {
 	 *          planar position array.
 	 */
 	void setColorTable(ColorTable8 lut, int no);
+
+	/** Gets the 16-bit color table at the given position. */
+	ColorTable16 getColorTable16(int no);
+
+	/**
+	 * Sets the 16-bit color table at the given position.
+	 * 
+	 * @param lut The color table to store.
+	 * @param no The position of the color table, typically (but not necessarily)
+	 *          a 1D dimensional planar index rasterized from an N-dimensional
+	 *          planar position array.
+	 */
+	void setColorTable(ColorTable16 lut, int no);
 
 	/** Sets the number of available color tables to the given value. */
 	void setColorTableCount(final int count);

@@ -51,6 +51,7 @@ import loci.formats.ImageReader;
 import loci.formats.ReaderWrapper;
 import loci.formats.meta.IMetadata;
 import loci.formats.services.OMEXMLService;
+import net.imglib2.display.ColorTable16;
 import net.imglib2.display.ColorTable8;
 import net.imglib2.exception.IncompatibleTypeException;
 import net.imglib2.img.Axes;
@@ -418,7 +419,6 @@ public class ImgOpener implements StatusReporter {
 		final long sizeY = r.getSizeY();
 		final long sizeZ = r.getSizeZ();
 		final long sizeT = r.getSizeT();
-		// final String[] cDimTypes = r.getChannelDimTypes();
 		final int[] cDimLengths = r.getChannelDimLengths();
 		final String dimOrder = r.getDimensionOrder();
 
@@ -554,8 +554,8 @@ public class ImgOpener implements StatusReporter {
 			// store color table
 			final byte[][] lut8 = r.get8BitLookupTable();
 			if (lut8 != null) imgPlus.setColorTable(new ColorTable8(lut8), no);
-//			final short[][] lut16 = r.get16BitLookupTable();
-//			if (lut16 != null) imgPlus.setColorTable(new ColorTable16(lut16), no);
+			final short[][] lut16 = r.get16BitLookupTable();
+			if (lut16 != null) imgPlus.setColorTable(new ColorTable16(lut16), no);
 		}
 		r.close();
 	}

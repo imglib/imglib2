@@ -37,6 +37,7 @@ import net.imglib2.Cursor;
 import net.imglib2.Interval;
 import net.imglib2.IterableRealInterval;
 import net.imglib2.RandomAccess;
+import net.imglib2.display.ColorTable16;
 import net.imglib2.display.ColorTable8;
 
 /**
@@ -58,6 +59,7 @@ public class ImgPlus<T> implements Img<T>, Metadata {
 	private int validBits;
 	private int compositeChannelCount;
 	private final ArrayList<ColorTable8> lut8;
+	private final ArrayList<ColorTable16> lut16;
 
 	// -- Constructors --
 
@@ -86,6 +88,7 @@ public class ImgPlus<T> implements Img<T>, Metadata {
 		this.axes = validateAxes(img.numDimensions(), axes);
 		this.cal = cal;
 		lut8 = new ArrayList<ColorTable8>();
+		lut16 = new ArrayList<ColorTable16>();
 	}
 
 	// -- ImgPlus methods --
@@ -278,8 +281,20 @@ public class ImgPlus<T> implements Img<T>, Metadata {
 	}
 
 	@Override
+	public ColorTable16 getColorTable16(final int no) {
+		if (no >= lut16.size()) return null;
+		return lut16.get(no);
+	}
+
+	@Override
+	public void setColorTable(final ColorTable16 lut, final int no) {
+		lut16.set(no, lut);
+	}
+
+	@Override
 	public void setColorTableCount(final int count) {
 		lut8.ensureCapacity(count);
+		lut16.ensureCapacity(count);
 	}
 
 	// -- Utility methods --
