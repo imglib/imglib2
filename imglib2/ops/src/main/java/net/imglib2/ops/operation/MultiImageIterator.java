@@ -1,6 +1,6 @@
 package net.imglib2.ops.operation;
 
-import net.imglib2.Cursor;
+import net.imglib2.RandomAccess;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.img.Img;
 
@@ -15,8 +15,8 @@ public class MultiImageIterator<T extends RealType<T>>  // don't want to impleme
 	private Img<T>[] images;
 	private long[][] origins;
 	private long[][] spans;
-	private Cursor<T>[] cursors;
-	private RegionCursor[] regionCursors;
+	private RandomAccess<T>[] accessors;
+	private RegionCursor<T>[] regionCursors;
 	
 	// -----------------  public interface ------------------------------------------
 
@@ -34,18 +34,12 @@ public class MultiImageIterator<T extends RealType<T>>  // don't want to impleme
 		}
 	}
 
-	public void setRegion(int i, long[] origin, long[] span)
+	public RegionCursor<T>[] getCursors()
 	{
-		origins[i] = origin;
-		spans[i] = span;
-	}
-	
-	public Cursor<T>[] getSubcursors()
-	{
-		return cursors;
+		return regionCursors;
 	}
 
-	/** call after subregions defined and before first hasNext() or fwd() call. tests that all subregions defined are compatible. */
+	/** call after subregions defined and before reset() or next() call. tests that all subregions defined are compatible. */
 	void initialize()  // could call lazily in hasNext() or fwd() but a drag on performance
 	{
 		// make sure all specified regions are shape compatible : for now just test num elements in spans are same
@@ -54,46 +48,47 @@ public class MultiImageIterator<T extends RealType<T>>  // don't want to impleme
 			if (numInSpan(spans[i]) != totalSamples)
 				throw new IllegalArgumentException("incompatible span shapes");
 
-		cursors = new Cursor[images.length];
+		accessors = new RandomAccess[images.length];
 		for (int i = 0; i < images.length; i++) {
-			cursors[i] = images[i].cursor();
+			accessors[i] = images[i].randomAccess();
 		}
 		
 		regionCursors = new RegionCursor[images.length];
 		for (int i = 0; i < images.length; i++)
-			regionCursors[i] = new RegionCursor<T>(cursors[i], origins[i], spans[i]);
+			regionCursors[i] = new RegionCursor<T>(accessors[i], origins[i], spans[i]);
+
+		resetAll();
 	}
 	
-	public boolean hasNext()
-	{
-		boolean hasNext = regionCursors[0].hasNext();
-		
+	public boolean isValid() {
+		boolean firstValid = regionCursors[0].isValid();
+
 		for (int i = 1; i < regionCursors.length; i++)
-			if (hasNext != regionCursors[i].hasNext())
+			if (firstValid != regionCursors[i].isValid())
 				throw new IllegalArgumentException("linked cursors are out of sync");
 		
-		return hasNext;
+		return firstValid;
 	}
 	
-	public void fwd()
+	public void next()
 	{
-		for (int i = 0; i < regionCursors.length; i++)
-			regionCursors[i].fwd();
+		for (RegionCursor<T> cursor : regionCursors)
+			cursor.next();
+	}
+	
+	public void reset()
+	{
+		resetAll();
+	}
+	
+	public void setRegion(int i, long[] origin, long[] span)
+	{
+		origins[i] = origin;
+		spans[i] = span;
 	}
 	
 	// -----------------  private interface ------------------------------------------
 	
-	private String positionToString(long[] position) {
-		String posStr = "[";
-		for (int i = 0; i < position.length; i++) {
-			if (i > 0)
-				posStr += ",";
-			posStr += position[i];
-		}
-		posStr += "]";
-		return posStr;
-	}
-
 	private long numInSpan(long[] span)  // TODO - call Imglib equivalent instead
 	{
 		long total = 1;
@@ -102,5 +97,9 @@ public class MultiImageIterator<T extends RealType<T>>  // don't want to impleme
 		return total;
 	}
 	
+	private void resetAll() {
+		for (RegionCursor<T> cursor : regionCursors)
+			cursor.reset();
+	}
 }
 

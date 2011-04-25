@@ -1,6 +1,5 @@
 package net.imglib2.ops.condition;
 
-import net.imglib2.Cursor;
 import net.imglib2.RandomAccess;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.img.Img;
@@ -22,12 +21,15 @@ public class PixelOnBorder<T extends RealType<T>> implements Condition<T>
 	}
 	
 	@Override
-	public boolean isSatisfied(final Cursor<T> cursor, final long[] position)
+	public boolean isSatisfied(final T value, final long[] position)
 	{
-		double currPixValue = cursor.get().getRealDouble();
+		double currPixValue = value.getRealDouble();
 		
 		if (currPixValue != borderValue)
 			return false;
+		
+		for (int i = 2; i < this.neighPos.length; i++)
+			this.neighPos[i] = position[i];
 		
 		// look left
 		if (position[0] > 0)

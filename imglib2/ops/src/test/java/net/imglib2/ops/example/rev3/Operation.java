@@ -1,6 +1,7 @@
 package net.imglib2.ops.example.rev3;
 
 import net.imglib2.Cursor;
+import net.imglib2.RandomAccess;
 import net.imglib2.ops.example.rev3.constraints.Constraints;
 import net.imglib2.ops.example.rev3.function.IntegerIndexedScalarFunction;
 import net.imglib2.ops.observer.IterationStatus;
@@ -40,8 +41,8 @@ public class Operation
 	{
 		this.outputImage = outputImage;
 		this.function = function;
-		Cursor<? extends RealType<?>> tmpCursor = outputImage.cursor();
-		this.cursor = new RegionCursor(tmpCursor, origin, span);  // nongeneric instantiation. SAFE?
+		RandomAccess<? extends RealType<?>> tmpAccessor = outputImage.randomAccess();
+		this.cursor = new RegionCursor(tmpAccessor, origin, span);  // nongeneric instantiation. SAFE?
 		this.wasInterrupted = false;
 		this.isDone = false;
 		this.notifier = null;
@@ -66,11 +67,12 @@ public class Operation
 			notifier.notifyObservers(status);
 		}
 		
-		while (cursor.hasNext())
+		cursor.reset();
+		
+		while (cursor.isValid())
 		{
 			if (wasInterrupted)
 				break;
-			cursor.fwd();
 			cursor.getPosition(position);
 			// next three lines needed for imglib1 but not needed for imglib2
 		  // TODO - slowing HACK because RegionOfInterestCursor returns relative position rather than absolute position
@@ -80,16 +82,17 @@ public class Operation
 			if (constraintsSatisfied)
 			{
 				double newValue = function.evaluate(position);
-				cursor.get().setReal(newValue);
+				cursor.getValue().setReal(newValue);
 			}
 			if (notifier != null)
 			{
 				status.message = Message.UPDATE;
 				status.position = position;
-				status.value = cursor.get().getRealDouble();        // not sure what is best to pass as value if constraints
+				status.value = cursor.getValue().getRealDouble();   // not sure what is best to pass as value if constraints
 				status.conditionsSatisfied = constraintsSatisfied;  // violated but I think if I pass original value it might be
 				notifier.notifyObservers(status);                   // useful info to caller. its incurs a small performance hit.
 			}
+			cursor.next();
 		}
 		
 		if (notifier != null)

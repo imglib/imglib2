@@ -1,6 +1,5 @@
 package net.imglib2.ops.condition;
 
-import net.imglib2.Cursor;
 import net.imglib2.type.numeric.RealType;
 
 
@@ -14,8 +13,8 @@ public class ValueLessThan<T extends RealType<T>> implements Condition<T>
 	}
 	
 	@Override
-	public boolean isSatisfied(final Cursor<T> cursor, final long[] position)
+	public boolean isSatisfied(final T value, final long[] position)
 	{
-		return cursor.get().getRealDouble() < bound;
+		return value.getRealDouble() < bound;
 	}
 }

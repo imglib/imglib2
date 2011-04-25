@@ -1,52 +1,89 @@
 package net.imglib2.ops.operation;
 
-import net.imglib2.Cursor;
+import net.imglib2.RandomAccess;
 import net.imglib2.type.numeric.RealType;
 
+// Kind of in a predictament
+//   -- need to be able to set the origin of a region so need accessor's ability
+//   -- want to be able to use fwd() like a cursor  (especially for performance)
+//   could have two tracking variables - one of each (slow?)
+//   could use a cursor and call fwd(long steps) appropriately assuming fwd()
+//     is predictable. And depending on how fwd() works knowing which axis gets
+//     crossed and calling fwd(delta) with a correct delta)
+//   could use an accessor and copy Index style increment code from ImageJ2.
+//     But I think that code is slow.
+//   also note the hasNext() and fwd() definition as formulated will cause 1st
+//     pixel value to be skipped
+//   one good thing about random accessor idea: shape compatible regions are
+//     walked in the exact same order depsite differences in dimensionality.
+//     I.e. a 2d XY plane in a 2d image and a 2d XY plane in a 5d image.
+
 public class RegionCursor<K extends RealType<K>> {
-	private Cursor<K> cursor;
-	private long[] minCoords;
-	private long[] maxCoords;
+	private final RandomAccess<K> accessor;
+	private final long[] minCoords;
+	private final long[] maxCoords;
+	private final long[] currCoords;
+	private final int totalDims;
 	
-	public RegionCursor(Cursor<K> cursor, long[] origin, long[] span) {
-		this.cursor = cursor;
+	public RegionCursor(RandomAccess<K> accessor, long[] origin, long[] span) {
+		this.totalDims = accessor.numDimensions();
+		if (origin.length != span.length)
+			throw new IllegalArgumentException("origin and span are of differing dimension lengths");
+		
+		if (totalDims != origin.length)
+			throw new IllegalArgumentException("accessor and origin/span are of differing dimension lengths");
+		
+		for (long dim : span)
+			if (dim < 1)
+				throw new IllegalArgumentException("span cannot have any dimension less than 1");
+		
+		this.accessor = accessor;
 		this.minCoords = origin.clone();
 		this.maxCoords = new long[origin.length];
-		for (int i = 0; i < origin.length; i++)
+		this.currCoords = this.minCoords.clone();
+		for (int i = 0; i < this.totalDims; i++) {
 			this.maxCoords[i] = origin[i] + span[i] - 1;
+			this.currCoords[i] = origin[i];
+		}
 	}
 
-	private boolean cursorOutsideRegion() {
-		for (int i = 0; i < this.minCoords.length; i++) {
-			long indexVal = cursor.getLongPosition(i);
+	public boolean isValid() {
+		for (int i = 0; i < this.totalDims; i++) {
+			long indexVal = this.currCoords[i];
 			if ((indexVal < this.minCoords[i]) || (indexVal > this.maxCoords[i]))
-				return true;
+				return false;
 		}
-		return false;
+		return true;
 	}
 	
-	public boolean hasNext() {
-		int numDims = cursor.numDimensions();
-		for (int i = 0; i < numDims; i++) {
-			if (cursor.getLongPosition(i) < maxCoords[i])
-				return true;
-		}
+	public K getValue() {
+		return this.accessor.get();
+	}
 
-		return false;
+	public void next() {
+		final int lastDim = this.totalDims-1;
+		for (int i = 0; i < this.totalDims; i++) {
+			this.currCoords[i]++;
+			if (this.currCoords[i] <= this.maxCoords[i]) {
+				this.accessor.setPosition(this.currCoords);
+				return;
+			}
+			// else currCoord[i] > maxCoord[i]
+			if (i == lastDim)  // can't increment anymore?
+				return;          // then return pointing out of bounds
+			this.currCoords[i] = 0;
+		}
 	}
 	
-	public void fwd() {
-		cursor.fwd();
-		while (cursorOutsideRegion() && cursor.hasNext())
-			cursor.fwd();
+	public void reset() {
+		for (int i = 0; i < this.currCoords.length; i++)
+			this.currCoords[i] = this.minCoords[i];
+		this.accessor.setPosition(this.currCoords);
+	}
+
+	public void getPosition(long[] index) {
+		for (int i = 0; i < currCoords.length; i++)
+			index[i] = currCoords[i];
 	}
 	
-	public K get() {
-		return cursor.get();
-	}
-	
-	public void getPosition(long[] position) {
-		for (int i = 0; i < position.length; i++)
-			position[i] = cursor.getLongPosition(i);
-	}
 }

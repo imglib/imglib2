@@ -1,6 +1,9 @@
 package net.imglib2.ops;
 
 import static org.junit.Assert.assertEquals;
+
+import java.util.ArrayList;
+
 import net.imglib2.RandomAccess;
 import net.imglib2.ops.condition.PixelOnBorder;
 import net.imglib2.ops.condition.ValueGreaterThan;
@@ -91,7 +94,11 @@ public class Rev2FunctionalIdeasTest
 		
 		UnaryOperatorFunction<UnsignedByteType> function = new UnaryOperatorFunction<UnsignedByteType>(op);
 		
-		AssignOperation<UnsignedByteType> operation = new AssignOperation<UnsignedByteType>(new Img[]{image0}, image0, function);
+		ArrayList<Img<UnsignedByteType>> inputs = new ArrayList<Img<UnsignedByteType>>();
+		inputs.add(image0);
+		
+		AssignOperation<UnsignedByteType> operation =
+			new AssignOperation<UnsignedByteType>(inputs, image0, function);
 		
 		operation.execute();
 		
@@ -111,7 +118,10 @@ public class Rev2FunctionalIdeasTest
 		
 		UnaryOperatorFunction<UnsignedByteType> function = new UnaryOperatorFunction<UnsignedByteType>(op);
 
-		AssignOperation<UnsignedByteType> operation = new AssignOperation<UnsignedByteType>(new Img[]{image0}, image0, function);
+		ArrayList<Img<UnsignedByteType>> inputs = new ArrayList<Img<UnsignedByteType>>();
+		inputs.add(image0);
+
+		AssignOperation<UnsignedByteType> operation = new AssignOperation<UnsignedByteType>(inputs, image0, function);
 
 		operation.setInputCondition(0, new ValueGreaterThan<UnsignedByteType>(4));
 		
@@ -133,7 +143,10 @@ public class Rev2FunctionalIdeasTest
 		
 		UnaryOperatorFunction<UnsignedByteType> function = new UnaryOperatorFunction<UnsignedByteType>(op);
 
-		AssignOperation<UnsignedByteType> operation = new AssignOperation<UnsignedByteType>(new Img[]{image0}, image0, function);
+		ArrayList<Img<UnsignedByteType>> inputs = new ArrayList<Img<UnsignedByteType>>();
+		inputs.add(image0);
+
+		AssignOperation<UnsignedByteType> operation = new AssignOperation<UnsignedByteType>(inputs, image0, function);
 
 		operation.setOutputCondition(new ValueLessThan<UnsignedByteType>(7));
 		
@@ -157,7 +170,10 @@ public class Rev2FunctionalIdeasTest
 		
 		UnaryOperatorFunction<UnsignedByteType> function = new UnaryOperatorFunction<UnsignedByteType>(op);
 
-		AssignOperation<UnsignedByteType> operation = new AssignOperation<UnsignedByteType>(new Img[]{image0}, image1, function);
+		ArrayList<Img<UnsignedByteType>> inputs = new ArrayList<Img<UnsignedByteType>>();
+		inputs.add(image0);
+
+		AssignOperation<UnsignedByteType> operation = new AssignOperation<UnsignedByteType>(inputs, image1, function);
 
 		operation.execute();
 		
@@ -180,7 +196,11 @@ public class Rev2FunctionalIdeasTest
 		
 		AvgFunction<UnsignedByteType> function = new AvgFunction<UnsignedByteType>();
 
-		AssignOperation<UnsignedByteType> operation = new AssignOperation<UnsignedByteType>(new Img[]{image0,image1}, image2, function);
+		ArrayList<Img<UnsignedByteType>> inputs = new ArrayList<Img<UnsignedByteType>>();
+		inputs.add(image0);
+		inputs.add(image1);
+
+		AssignOperation<UnsignedByteType> operation = new AssignOperation<UnsignedByteType>(inputs, image2, function);
 
 		operation.execute();
 		
@@ -210,7 +230,11 @@ public class Rev2FunctionalIdeasTest
 		
 		AvgFunction<UnsignedByteType> function = new AvgFunction<UnsignedByteType>();
 
-		AssignOperation<UnsignedByteType> operation = new AssignOperation<UnsignedByteType>(new Img[]{image0,image1}, image2, function);
+		ArrayList<Img<UnsignedByteType>> inputs = new ArrayList<Img<UnsignedByteType>>();
+		inputs.add(image0);
+		inputs.add(image1);
+
+		AssignOperation<UnsignedByteType> operation = new AssignOperation<UnsignedByteType>(inputs, image2, function);
 
 		operation.setInputCondition(0, new ValueLessThan<UnsignedByteType>(8));
 		operation.setInputRegion(0, new long[]{0,1}, new long[]{2,2});
@@ -244,7 +268,11 @@ public class Rev2FunctionalIdeasTest
 
 		AvgFunction<UnsignedByteType> function = new AvgFunction<UnsignedByteType>();
 
-		AssignOperation<UnsignedByteType> operation = new AssignOperation<UnsignedByteType>(new Img[]{image0,image0}, image1, function);
+		ArrayList<Img<UnsignedByteType>> inputs = new ArrayList<Img<UnsignedByteType>>();
+		inputs.add(image0);
+		inputs.add(image0);
+
+		AssignOperation<UnsignedByteType> operation = new AssignOperation<UnsignedByteType>(inputs, image1, function);
 
 		operation.setInputRegion(0, new long[]{0,0}, new long[]{3,1});
 
@@ -275,7 +303,10 @@ public class Rev2FunctionalIdeasTest
 		
 		ConstFunction<UnsignedByteType> function = new ConstFunction<UnsignedByteType>(1);
 
-		AssignOperation<UnsignedByteType> operation = new AssignOperation<UnsignedByteType>(new Img[]{image0}, image1, function);
+		ArrayList<Img<UnsignedByteType>> inputs = new ArrayList<Img<UnsignedByteType>>();
+		inputs.add(image0);
+
+		AssignOperation<UnsignedByteType> operation = new AssignOperation<UnsignedByteType>(inputs, image1, function);
 		
 		PixelOnBorder<UnsignedByteType> condition = new PixelOnBorder<UnsignedByteType>(image0, 255);
 		

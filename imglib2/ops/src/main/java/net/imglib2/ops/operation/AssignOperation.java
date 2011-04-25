@@ -11,7 +11,6 @@ import net.imglib2.ops.observer.IterationStatus.Message;
 
 import java.util.Observer;
 
-import net.imglib2.Cursor;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.img.Img;
 
@@ -63,7 +62,7 @@ public class AssignOperation<T extends RealType<T>>
 	// -----------------  instance variables ------------------------------------------
 
 	private int imageCount;
-	private MultiImageIterator<T> cursor;
+	private MultiImageIterator<T> iterator;
 	private T outputVariable;
 	private long[][] positions;
 	private Observable notifier;
@@ -74,21 +73,21 @@ public class AssignOperation<T extends RealType<T>>
 
 	// -----------------  public interface ------------------------------------------
 	
-	public AssignOperation(Img<T>[] inputs, Img<T> output, RealFunction<T> func)
+	public AssignOperation(List<Img<T>> inputs, Img<T> output, RealFunction<T> func)
 	{
-		imageCount = inputs.length+1;
+		imageCount = inputs.size() + 1;
 
 		Img<T>[] images = new Img[imageCount];
 		images[0] = output;
-		for (int i = 1; i <= inputs.length; i++)
-			images[i] = inputs[i-1];
+		for (int i = 1; i <= inputs.size(); i++)
+			images[i] = inputs.get(i-1);
 		
-		cursor = new MultiImageIterator<T>(images);
+		iterator = new MultiImageIterator<T>(images);
 		
 		positions = new long[imageCount][];
 		positions[0] = new long[output.numDimensions()];
 		for (int i = 1; i < imageCount; i++) {
-			positions[i] = new long[inputs[i-1].numDimensions()];
+			positions[i] = new long[inputs.get(i-1).numDimensions()];
 		}
 		outputVariable = null;
 		notifier = null;
@@ -97,8 +96,8 @@ public class AssignOperation<T extends RealType<T>>
 		function = func;
 		wasInterrupted = false;
 		
-		if ( ! function.canAccept(inputs.length) )
-			throw new IllegalArgumentException("function cannot handle "+inputs.length+" input images");
+		if ( ! function.canAccept(inputs.size()) )
+			throw new IllegalArgumentException("function cannot handle "+inputs.size()+" input images");
 	}
 
 	public void addObserver(Observer o)
@@ -121,7 +120,7 @@ public class AssignOperation<T extends RealType<T>>
 	
 	public void setOutputRegion(long[] origin, long[] span)
 	{
-		cursor.setRegion(0, origin, span);
+		iterator.setRegion(0, origin, span);
 	}
 	
 	public void setOutputCondition(Condition<T> c)
@@ -131,7 +130,7 @@ public class AssignOperation<T extends RealType<T>>
 	
 	public void setInputRegion(int i, long[] origin, long[] span)
 	{
-		cursor.setRegion(i+1, origin, span);
+		iterator.setRegion(i+1, origin, span);
 	}
 	
 	public void setInputCondition(int i, Condition<T> c)
@@ -151,15 +150,17 @@ public class AssignOperation<T extends RealType<T>>
 
 	public void execute()
 	{
-		cursor.initialize();
+		iterator.initialize();
 
-		Cursor<T>[] subCursors = cursor.getSubcursors();
+		RegionCursor<T>[] subCursors = iterator.getCursors();
+		
+		RegionCursor<T> subCursor0 = subCursors[0];
 
-		outputVariable = subCursors[0].get();
+		outputVariable = subCursor0.getValue();
 
 		List<T> inputVariables = getInputVariables(subCursors);
 		
-		long[] position = new long[subCursors[0].numDimensions()];
+		long[] position = new long[positions[0].length];
 
 		IterationTracker status = new IterationTracker();
 		
@@ -169,12 +170,10 @@ public class AssignOperation<T extends RealType<T>>
 			notifier.notifyObservers(status);
 		}
 
-		while (cursor.hasNext())
+		while (iterator.isValid())
 		{
 			if (wasInterrupted)
 				break;
-			
-			cursor.fwd();
 			
 			double value = Double.NaN;
 
@@ -189,16 +188,15 @@ public class AssignOperation<T extends RealType<T>>
 			
 			if (notifier != null)
 			{
-				// TODO - as of imglib2 this is slow way might be required. investigate.
-				for (int c = 0; c < subCursors[0].numDimensions(); c++)
-					position[c] = subCursors[0].getLongPosition(c);
-				
+				subCursor0.getPosition(position);
 				status.message = Message.UPDATE;
 				status.position = position;
 				status.value = value;
 				status.conditionsSatisfied = conditionsSatisfied;
 				notifier.notifyObservers(status);
 			}
+
+			iterator.next();
 		}
 
 		if (notifier != null)
@@ -216,7 +214,7 @@ public class AssignOperation<T extends RealType<T>>
 
 	// -----------------  private interface ------------------------------------------
 	
-	private boolean conditionsSatisfied(Cursor<T>[] cursors)
+	private boolean conditionsSatisfied(RegionCursor<T>[] cursors)
 	{
 		for (int i = 0; i < conditions.length; i++)
 		{
@@ -225,13 +223,11 @@ public class AssignOperation<T extends RealType<T>>
 			if (condition == null)
 				continue;
 			
-			Cursor<T> subcursor = cursors[i];
+			RegionCursor<T> subcursor = cursors[i];
 			
-			// TODO - as of imglib2 this is slow way might be required. investigate.
-			for (int c = 0; c < subcursor.numDimensions(); c++)
-				positions[i][c] = subcursor.getLongPosition(c);
+			subcursor.getPosition(positions[i]);
 			
-			if (condition.isSatisfied(subcursor, positions[i]))
+			if (condition.isSatisfied(subcursor.getValue(), positions[i]))
 			{
 				if (!requireIntersection)  // if union case we can short circuit with success
 					return true;
@@ -251,12 +247,12 @@ public class AssignOperation<T extends RealType<T>>
 		return false;
 	}
 
-	private List<T> getInputVariables(Cursor<T>[] cursors)
+	private List<T> getInputVariables(RegionCursor<T>[] cursors)
 	{
 		ArrayList<T> variables = new ArrayList<T>();
 		
-		for (int i = 0; i < imageCount-1; i++)
-			variables.add(cursors[i+1].get());
+		for (int i = 1; i < imageCount; i++)
+			variables.add(cursors[i].getValue());
 		
 		return variables;
 	}
