@@ -49,7 +49,6 @@ import loci.formats.FormatTools;
 import loci.formats.IFormatReader;
 import loci.formats.ImageReader;
 import loci.formats.meta.IMetadata;
-import loci.formats.meta.MetadataRetrieve;
 import loci.formats.services.OMEXMLService;
 import net.imglib2.exception.IncompatibleTypeException;
 import net.imglib2.img.Axes;
@@ -82,7 +81,7 @@ import net.imglib2.type.numeric.real.DoubleType;
 import net.imglib2.type.numeric.real.FloatType;
 
 /**
- * Reads in an imglib Img using Bio-Formats.
+ * Reads in an {@link ImgPlus} using Bio-Formats.
  * 
  * @author Curtis Rueden
  * @author Stephan Preibisch
@@ -169,6 +168,7 @@ public class ImgOpener implements StatusReporter {
 	{
 		final Axis[] dimTypes = getDimTypes(r);
 		final long[] dimLengths = getDimLengths(r);
+		final double[] cal = getCalibration(r);
 
 		final String id = r.getCurrentFile();
 		final File idFile = new File(id);
@@ -176,9 +176,6 @@ public class ImgOpener implements StatusReporter {
 
 		// create img object
 		final Img<T> img = imgFactory.create(dimLengths, type);
-
-		// determine calibration of the img
-		final float[] cal = getCalibration(r, dimLengths);
 
 		final ImgPlus<T> imgPlus = new ImgPlus<T>(img, name, dimTypes, cal);
 
@@ -211,7 +208,7 @@ public class ImgOpener implements StatusReporter {
 	public static PlanarAccess<ArrayDataAccess<?>> getPlanarAccess(
 		final Img<?> img)
 	{
-		if (img instanceof PlanarAccess<?>) {
+		if (img instanceof PlanarAccess) {
 			return (PlanarAccess<ArrayDataAccess<?>>) img;
 		}
 		return null;
@@ -377,54 +374,6 @@ public class ImgOpener implements StatusReporter {
 		return dimTypes.toArray(new Axis[0]);
 	}
 
-	/** Retrieves calibration for X,Y,Z,T. **/
-	private float[] getCalibration(final IFormatReader r,
-		final long[] dimensions)
-	{
-		final float[] calibration = new float[dimensions.length];
-		for (int i = 0; i < calibration.length; ++i)
-			calibration[i] = 1;
-
-		try {
-			final String dimOrder = r.getDimensionOrder().toUpperCase();
-			final MetadataRetrieve retrieve =
-				(MetadataRetrieve) r.getMetadataStore();
-
-			// stage coordinates (per plane and series)
-			// retrieve.getPlanePositionX(series, plane);
-			// retrieve.getPlanePositionY(series, plane);
-			// retrieve.getPlanePositionZ(series, plane);
-
-			Double cal;
-
-			final int posX = dimOrder.indexOf('X');
-			cal = retrieve.getPixelsPhysicalSizeX(0);
-			if (posX >= 0 && posX < calibration.length && cal != null &&
-				cal.floatValue() != 0) calibration[posX] = cal.floatValue();
-
-			final int posY = dimOrder.indexOf('Y');
-			cal = retrieve.getPixelsPhysicalSizeY(0);
-			if (posY >= 0 && posY < calibration.length && cal != null &&
-				cal.floatValue() != 0) calibration[posY] = cal.floatValue();
-
-			final int posZ = dimOrder.indexOf('Z');
-			cal = retrieve.getPixelsPhysicalSizeZ(0);
-			if (posZ >= 0 && posZ < calibration.length && cal != null &&
-				cal.floatValue() != 0) calibration[posZ] = cal.floatValue();
-
-			final int posT = dimOrder.indexOf('T');
-			retrieve.getPixelsTimeIncrement(0);
-			cal = retrieve.getPixelsTimeIncrement(0);
-			if (posT >= 0 && posT < calibration.length && cal != null &&
-				cal.floatValue() != 0) calibration[posT] = cal.floatValue();
-		}
-		catch (final Exception e) {
-			// somehow an error occured reading the calibration
-		}
-
-		return calibration;
-	}
-
 	/** Compiles an N-dimensional list of axis lengths from the given reader. */
 	private long[] getDimLengths(final IFormatReader r) {
 		final long sizeX = r.getSizeX();
@@ -468,6 +417,61 @@ public class ImgOpener implements StatusReporter {
 			dimLengths[i] = dimLengthsList.get(i);
 		}
 		return dimLengths;
+	}
+
+	/** Compiles an N-dimensional list of calibration values. */
+	private double[] getCalibration(final IFormatReader r) {
+		final long sizeX = r.getSizeX();
+		final long sizeY = r.getSizeY();
+		final long sizeZ = r.getSizeZ();
+		final long sizeT = r.getSizeT();
+		// final String[] cDimTypes = r.getChannelDimTypes();
+		final int[] cDimLengths = r.getChannelDimLengths();
+		final String dimOrder = r.getDimensionOrder();
+
+		final IMetadata meta = (IMetadata) r.getMetadataStore();
+		Double xCal = meta.getPixelsPhysicalSizeX(0);
+		Double yCal = meta.getPixelsPhysicalSizeY(0);
+		Double zCal = meta.getPixelsPhysicalSizeZ(0);
+		Double tCal = meta.getPixelsTimeIncrement(0);
+		if (xCal == null) xCal = Double.NaN;
+		if (yCal == null) yCal = Double.NaN;
+		if (zCal == null) zCal = Double.NaN;
+		if (tCal == null) tCal = Double.NaN;
+
+		final List<Double> calibrationList = new ArrayList<Double>();
+
+		// add core dimensions
+		for (int i = 0; i < dimOrder.length(); i++) {
+			final char dim = dimOrder.charAt(i);
+			switch (dim) {
+				case 'X':
+					if (sizeX > 1) calibrationList.add(xCal);
+					break;
+				case 'Y':
+					if (sizeY > 1) calibrationList.add(yCal);
+					break;
+				case 'Z':
+					if (sizeZ > 1) calibrationList.add(zCal);
+					break;
+				case 'T':
+					if (sizeT > 1) calibrationList.add(tCal);
+					break;
+				case 'C':
+					for (int c = 0; c < cDimLengths.length; c++) {
+						final long len = cDimLengths[c];
+						if (len > 1) calibrationList.add(Double.NaN);
+					}
+					break;
+			}
+		}
+
+		// convert result to primitive array
+		final double[] calibration = new double[calibrationList.size()];
+		for (int i = 0; i < calibration.length; i++) {
+			calibration[i] = calibrationList.get(i);
+		}
+		return calibration;
 	}
 
 	/**

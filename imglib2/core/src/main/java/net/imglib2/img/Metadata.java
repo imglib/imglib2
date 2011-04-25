@@ -41,13 +41,19 @@ public interface Metadata {
 	/** Gets the name of the associated {@link Img}. */
 	String getName();
 
-	/** Gets the dimensional axis types of the associated {@link Img}. */
-	Axis[] getAxes();
-
 	/** Gets the dimensional index of the axis with the given type. */
 	int getAxisIndex(final Axis axis);
 
-	/** Gets the calibration values of the associated {@link Img}. */
-	float[] getCalibration();
+	/** Gets the associated {@link Img}'s axis at the given dimension. */
+	Axis axis(int d);
+
+	/** Copies the {@link Img}'s axes into the given array. */
+	void axes(Axis[] axes);
+
+	/** Gets the associated {@link Img}'s calibration at the given dimension. */
+	double calibration(int d);
+
+	/** Copies the {@link Img}'s calibration into the given array. */
+	void calibration(double[] cal);
 
 }

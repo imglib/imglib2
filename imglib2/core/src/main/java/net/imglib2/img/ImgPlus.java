@@ -52,7 +52,9 @@ public class ImgPlus<T> implements Img<T>, Metadata {
 
 	private final String name;
 	private final Axis[] axes;
-	private final float[] cal;
+	private final double[] cal;
+
+	// -- Constructors --
 
 	public ImgPlus(final Img<T> img) {
 		this(img, null, null, null);
@@ -67,18 +69,20 @@ public class ImgPlus<T> implements Img<T>, Metadata {
 	}
 
 	public ImgPlus(final Img<T> img, final Metadata metadata) {
-		this(img, metadata.getName(), metadata.getAxes(),
-			metadata.getCalibration());
+		this(img, metadata.getName(), getAxes(img, metadata), getCalibration(img,
+			metadata));
 	}
 
 	public ImgPlus(final Img<T> img, final String name, final Axis[] axes,
-		final float[] cal)
+		final double[] cal)
 	{
 		this.img = img;
 		this.name = validateName(name);
 		this.axes = validateAxes(img.numDimensions(), axes);
 		this.cal = cal;
 	}
+
+	// -- ImgPlus methods --
 
 	public Img<T> getImg() {
 		return img;
@@ -194,11 +198,6 @@ public class ImgPlus<T> implements Img<T>, Metadata {
 	}
 
 	@Override
-	public Axis[] getAxes() {
-		return axes;
-	}
-
-	@Override
 	public int getAxisIndex(final Axis axis) {
 		for (int i = 0; i < axes.length; i++) {
 			if (axes[i] == axis) return i;
@@ -207,8 +206,23 @@ public class ImgPlus<T> implements Img<T>, Metadata {
 	}
 
 	@Override
-	public float[] getCalibration() {
-		return cal;
+	public Axis axis(final int d) {
+		return axes[d];
+	}
+
+	@Override
+	public void axes(final Axis[] target) {
+		for (int i=0; i<target.length; i++) target[i] = axes[i];
+	}
+
+	@Override
+	public double calibration(final int d) {
+		return cal[d];
+	}
+
+	@Override
+	public void calibration(final double[] target) {
+		for (int i=0; i<target.length; i++) target[i] = cal[i];
 	}
 
 	// -- Utility methods --
@@ -247,6 +261,24 @@ public class ImgPlus<T> implements Img<T>, Metadata {
 			}
 		}
 		return validAxes;
+	}
+
+	private static Axis[] getAxes(final Img<?> img, final Metadata metadata) {
+		final Axis[] axes = new Axis[img.numDimensions()];
+		for (int i = 0; i < axes.length; i++) {
+			axes[i] = metadata.axis(i);
+		}
+		return axes;
+	}
+
+	private static double[] getCalibration(final Img<?> img,
+		final Metadata metadata)
+	{
+		final double[] cal = new double[img.numDimensions()];
+		for (int i = 0; i < cal.length; i++) {
+			cal[i] = metadata.calibration(i);
+		}
+		return cal;
 	}
 
 }
