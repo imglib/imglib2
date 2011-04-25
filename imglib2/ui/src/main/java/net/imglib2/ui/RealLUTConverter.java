@@ -35,8 +35,10 @@ import net.imglib2.ui.lut.Lut;
 
 /**
  * 
- *
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
+ * 
+ * Added Lut - lookup table support
+ * @author GBH
  */
 public class RealLUTConverter< R extends RealType< R>> extends AbstractLinearRange implements Converter< R, ARGBType> {
 

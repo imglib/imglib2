@@ -22,13 +22,13 @@ public class PlanarProjection<T extends RealType<T> & NativeType<T>> {
 
 	public String name;
 	public ImgPlus<T> imgPlus;
-	public ImgPanel owner;
+	public ImageDisplay owner;
 	public int width, height;
 	public ARGBScreenImage screenImage;
 	public RealARGBConverter<T> converter;
 	public XYProjector<T, ARGBType> projector;
 
-	public PlanarProjection(final String name, final ImgPlus<T> imgPlus, final ImgPanel owner) {
+	public PlanarProjection(final String name, final ImgPlus<T> imgPlus, final ImageDisplay owner) {
 		this.name = name;
 		this.imgPlus = imgPlus;
 		this.owner = owner;

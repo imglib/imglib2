@@ -44,11 +44,7 @@ import net.imglib2.img.Img;
  * @author Grant B. Harris
  */
 public class CompositeXYProjector< A, B> extends XYProjector< A, B> {
-//implements Projector< A, B>, Positionable, Localizable {
 
-	//final protected Img<A> source;
-	//final protected IterableInterval<B> target;
-	//final protected long[] position;
 	final protected ArrayList<Converter<A, B>> converters;
 	private final int channelDimIndex;
 	private final int numChannels;

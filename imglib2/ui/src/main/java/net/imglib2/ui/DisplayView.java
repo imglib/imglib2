@@ -15,23 +15,20 @@ import net.imglib2.ui.lut.Lut;
 /**
  *
  * Composite color image with arbitrary number of channels, each with a Lut
+ * A View into a a Dataset
  * 
  * @author GBH
  */
-public class ImgProjector<T extends RealType<T> & NativeType<T>> {
+public class DisplayView<T extends RealType<T> & NativeType<T>> {
 
+	
 	private ImgPlus<T> img;
-	private ImageDisplay owner;
 	private ARGBScreenImage screenImage;
 	ArrayList<Converter<T, ARGBType>> converters = new ArrayList<Converter<T, ARGBType>>();
 	private XYProjector<T, ARGBType> projector;
 
 	public ImgPlus<T> getImg() {
 		return img;
-	}
-
-	public ImageDisplay getOwner() {
-		return owner;
 	}
 
 	public ARGBScreenImage getScreenImage() {
@@ -46,12 +43,10 @@ public class ImgProjector<T extends RealType<T> & NativeType<T>> {
 		return projector;
 	}
 
-	public ImgProjector(final String name, final ImgPlus<T> img,
-		int channelDimIndex, ArrayList<Lut> luts,
-		final ImageDisplay owner) {
+	public DisplayView(final String name, final ImgPlus<T> img,
+		int channelDimIndex, ArrayList<Lut> luts) {
 
 		this.img = img;
-		this.owner = owner;
 
 		screenImage = new ARGBScreenImage((int) img.dimension(0), (int) img.dimension(1));
 		final int min = 0, max = 255;

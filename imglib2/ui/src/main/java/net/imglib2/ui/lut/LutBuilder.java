@@ -35,7 +35,7 @@ public class LutBuilder {
 
 	public static String[] lutNames = new String[]{
 		"invert", "fire", "grays", "ice", "spectrum", "3-3-2 RGB", "red",
-		"green", "blue", "cyan", "magenta", "yellow", "redgreen"};
+		"green", "blue", "cyan", "magenta", "yellow", "redgreen", "bty"};
 
 
 

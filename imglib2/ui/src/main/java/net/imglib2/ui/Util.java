@@ -15,6 +15,12 @@ import net.imglib2.type.numeric.RealType;
  * @author GBH
  */
 public class Util {
+	
+	/*
+	 *  Image loading using BioFormats...
+	 * 	- to load a file (on Windows): "file:///C:/TestImages/TestImages/MyoblastCells.tif"
+	 * 	- to load from a URL: "http://loci.wisc.edu/files/software/data/mitosis-test.zip"
+	 */
 
 		public  static <T extends RealType<T> & NativeType<T>> ImgPlus<T> loadImage(final String url) {
 		try {

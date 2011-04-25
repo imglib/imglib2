@@ -50,21 +50,21 @@ public class ImageDisplay extends JPanel {
 		});
 	}
 
-	public class CompositeSliderPanel extends JPanel {
+	public class DimensionSliderPanel extends JPanel {
 		/*
 		 * CompositeSliderPanel
 		 * If there is a channel dimension is displayed as a composite, 
 		 * a slider for that dim should not be added.
 		 */
 
-		public CompositeSliderPanel(final ImgProjector<?> imgProj) {
+		public DimensionSliderPanel(final ImgProjector<?> imgProj) {
 			setBorder(new TitledBorder(imgProj.getImg().getName()));
 			setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 			// add one slider per dimension beyond the first two
 			for (int d = 3; d < imgProj.getImg().numDimensions(); d++) {
+				final int dim = d;
 				final int dimLength = (int) imgProj.getImg().dimension(d);
 				final JScrollBar bar = new JScrollBar(Adjustable.HORIZONTAL, 0, 1, 0, dimLength);
-				final int dim = d;
 				bar.addAdjustmentListener(new AdjustmentListener() {
 
 					@Override
@@ -77,14 +77,42 @@ public class ImageDisplay extends JPanel {
 					}
 
 				});
-				bar.setPreferredSize(new Dimension(200,18));
+				bar.setPreferredSize(new Dimension(200, 18));
 				add(bar);
 			}
 		}
+
 	}
 
+	/*		public class SliderPanel extends JPanel {
+	
+	public SliderPanel(final ImgData<?> imgData) {
+	setBorder(new TitledBorder(imgData.name));
+	setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+	// add one slider per dimension beyond the first two
+	for (int d = 2; d < imgData.imgPlus.numDimensions(); d++) {
+	final int dimLength = (int) imgData.imgPlus.dimension(d);
+	final JScrollBar bar =
+	new JScrollBar(Adjustable.HORIZONTAL, 0, 1, 0, dimLength);
+	final int dim = d;
+	bar.addAdjustmentListener(new AdjustmentListener() {
+	
+	@Override
+	public void adjustmentValueChanged(final AdjustmentEvent e) {
+	final int value = bar.getValue();
+	imgData.projector.setPosition(value, dim);
+	imgData.projector.map();
+	System.out.println("dim #" + dim + ": value->" + value);// TEMP
+	imgData.owner.repaint();
+	}
+	});
+	add(bar);
+	}
+	}
+	}
+	 */
 	public <T extends RealType<T> & NativeType<T>> void addCompositeRGBImage(final String name,
-			final ImgPlus<T> img) {
+		final ImgPlus<T> img) {
 		// create an RGB 3-channel CompositeImgData, with channel on axis 2
 		ArrayList<Lut> lutList = new ArrayList<Lut>();
 		lutList.add(LutBuilder.getInstance().createLUT("red"));
@@ -97,16 +125,22 @@ public class ImageDisplay extends JPanel {
 		final ImgProjector<T> imgData = new ImgProjector<T>(name, img, channelDimIndex, lutList, this);
 		images.add(imgData);
 		setMaxDimension(imgData);
-		add(new CompositeSliderPanel(imgData));
+		add(new DimensionSliderPanel(imgData));
 	}
 
+	
+	/*
+	 * Add a 
+	 */
 	public <T extends RealType<T> & NativeType<T>> void addImage(final String name, final ImgPlus<T> img) {
 		final ImgProjector<T> imgData = new ImgProjector<T>(name, img, -1, null, this);
 		images.add(imgData);
 		setMaxDimension(imgData);
-		add(new CompositeSliderPanel(imgData));
+		add(new DimensionSliderPanel(imgData));
 	}
 
+	
+	
 	private void setMaxDimension(ImgProjector<?> imgData) {
 		int width = (int) imgData.getImg().dimension(0);
 		int height = (int) imgData.getImg().dimension(1);
@@ -129,8 +163,8 @@ public class ImageDisplay extends JPanel {
 	public static final <T extends RealType<T> & NativeType<T>> void main(final String[] args) {
 		final String[] urls = {
 			//"file:///C:/TestImages/TestImages/MyoblastCells.tif"
-		//"http://loci.wisc.edu/files/software/data/mitosis-test.zip"
-		"http://loci.wisc.edu/files/software/ome-tiff/z-series.zip"
+			//"http://loci.wisc.edu/files/software/data/mitosis-test.zip"
+			"http://loci.wisc.edu/files/software/ome-tiff/z-series.zip"
 		};
 		final JFrame frame = new JFrame("ImgPanel Test Frame");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
