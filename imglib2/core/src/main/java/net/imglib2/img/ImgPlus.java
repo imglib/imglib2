@@ -76,8 +76,8 @@ public class ImgPlus<T> implements Img<T>, Metadata {
 	}
 
 	public ImgPlus(final Img<T> img, final Metadata metadata) {
-		this(img, metadata.getName(), getAxes(img, metadata),
-			getCalibration(img, metadata));
+		this(img, metadata.getName(), getAxes(img, metadata), getCalibration(img,
+			metadata));
 	}
 
 	public ImgPlus(final Img<T> img, final String name, final Axis[] axes,
@@ -86,7 +86,7 @@ public class ImgPlus<T> implements Img<T>, Metadata {
 		this.img = img;
 		this.name = validateName(name);
 		this.axes = validateAxes(img.numDimensions(), axes);
-		this.cal = cal;
+		this.cal = validateCalibration(img.numDimensions(), cal);
 		lut8 = new ArrayList<ColorTable8>();
 		lut16 = new ArrayList<ColorTable16>();
 	}
@@ -226,11 +226,12 @@ public class ImgPlus<T> implements Img<T>, Metadata {
 
 	@Override
 	public void axes(final Axis[] target) {
-		for (int i=0; i<target.length; i++) target[i] = axes[i];
+		for (int i = 0; i < target.length; i++)
+			target[i] = axes[i];
 	}
 
 	@Override
-	public void setAxis(Axis axis, int d) {
+	public void setAxis(final Axis axis, final int d) {
 		axes[d] = axis;
 	}
 
@@ -241,11 +242,12 @@ public class ImgPlus<T> implements Img<T>, Metadata {
 
 	@Override
 	public void calibration(final double[] target) {
-		for (int i=0; i<target.length; i++) target[i] = cal[i];
+		for (int i = 0; i < target.length; i++)
+			target[i] = cal[i];
 	}
 
 	@Override
-	public void setCalibration(double value, int d) {
+	public void setCalibration(final double value, final int d) {
 		cal[d] = value;
 	}
 
@@ -255,7 +257,7 @@ public class ImgPlus<T> implements Img<T>, Metadata {
 	}
 
 	@Override
-	public void setValidBits(int bits) {
+	public void setValidBits(final int bits) {
 		validBits = bits;
 	}
 
@@ -333,6 +335,19 @@ public class ImgPlus<T> implements Img<T>, Metadata {
 			}
 		}
 		return validAxes;
+	}
+
+	/** Ensures the given calibration values are valid. */
+	private static double[] validateCalibration(final int numDims,
+		final double[] cal)
+	{
+		if (cal != null && numDims == cal.length) return cal;
+		final double[] validCal = new double[numDims];
+		for (int i = 0; i < validCal.length; i++) {
+			if (cal != null && cal.length > i) validCal[i] = cal[i];
+			else validCal[i] = Double.NaN;
+		}
+		return validCal;
 	}
 
 	private static Axis[] getAxes(final Img<?> img, final Metadata metadata) {
