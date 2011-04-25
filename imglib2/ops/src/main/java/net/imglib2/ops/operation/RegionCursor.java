@@ -3,7 +3,7 @@ package net.imglib2.ops.operation;
 import net.imglib2.RandomAccess;
 import net.imglib2.type.numeric.RealType;
 
-// Kind of in a predictament
+// Kind of in a predicament
 //   -- need to be able to set the origin of a region so need accessor's ability
 //   -- want to be able to use fwd() like a cursor  (especially for performance)
 //   could have two tracking variables - one of each (slow?)
@@ -47,6 +47,15 @@ public class RegionCursor<K extends RealType<K>> {
 		}
 	}
 
+	public void getPosition(long[] index) {
+		for (int i = 0; i < currCoords.length; i++)
+			index[i] = currCoords[i];
+	}
+
+	public K getValue() {
+		return this.accessor.get();
+	}
+
 	public boolean isValid() {
 		for (int i = 0; i < this.totalDims; i++) {
 			long indexVal = this.currCoords[i];
@@ -56,10 +65,6 @@ public class RegionCursor<K extends RealType<K>> {
 		return true;
 	}
 	
-	public K getValue() {
-		return this.accessor.get();
-	}
-
 	public void next() {
 		final int lastDim = this.totalDims-1;
 		for (int i = 0; i < this.totalDims; i++) {
@@ -71,7 +76,7 @@ public class RegionCursor<K extends RealType<K>> {
 			// else currCoord[i] > maxCoord[i]
 			if (i == lastDim)  // can't increment anymore?
 				return;          // then return pointing out of bounds
-			this.currCoords[i] = 0;
+			this.currCoords[i] = this.minCoords[i];
 		}
 	}
 	
@@ -79,11 +84,6 @@ public class RegionCursor<K extends RealType<K>> {
 		for (int i = 0; i < this.currCoords.length; i++)
 			this.currCoords[i] = this.minCoords[i];
 		this.accessor.setPosition(this.currCoords);
-	}
-
-	public void getPosition(long[] index) {
-		for (int i = 0; i < currCoords.length; i++)
-			index[i] = currCoords[i];
 	}
 	
 }
