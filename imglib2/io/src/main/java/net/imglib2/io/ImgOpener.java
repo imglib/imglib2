@@ -48,8 +48,10 @@ import loci.formats.FormatException;
 import loci.formats.FormatTools;
 import loci.formats.IFormatReader;
 import loci.formats.ImageReader;
+import loci.formats.ReaderWrapper;
 import loci.formats.meta.IMetadata;
 import loci.formats.services.OMEXMLService;
+import net.imglib2.display.ColorTable8;
 import net.imglib2.exception.IncompatibleTypeException;
 import net.imglib2.img.Axes;
 import net.imglib2.img.Axis;
@@ -100,8 +102,8 @@ public class ImgOpener implements StatusReporter {
 	 * will read it into a {@link PlanarImg}, where the {@link Type} T is defined
 	 * by the file format and implements {@link RealType} and {@link NativeType}.
 	 * 
-	 * @throws IncompatibleTypeException if the {@link Type} of
-	 *           the file is incompatible with the {@link PlanarImg}
+	 * @throws IncompatibleTypeException if the {@link Type} of the file is
+	 *           incompatible with the {@link PlanarImg}
 	 */
 	public <T extends RealType<T> & NativeType<T>> ImgPlus<T> openImg(
 		final String id) throws ImgIOException, IncompatibleTypeException
@@ -166,35 +168,26 @@ public class ImgOpener implements StatusReporter {
 	public <T extends RealType<T>> ImgPlus<T> openImg(final IFormatReader r,
 		final ImgFactory<T> imgFactory, final T type) throws ImgIOException
 	{
-		final Axis[] dimTypes = getDimTypes(r);
+		// create image and read metadata
 		final long[] dimLengths = getDimLengths(r);
-		final double[] cal = getCalibration(r);
-
-		final String id = r.getCurrentFile();
-		final File idFile = new File(id);
-		final String name = idFile.exists() ? idFile.getName() : id;
-
-		// create img object
 		final Img<T> img = imgFactory.create(dimLengths, type);
+		final ImgPlus<T> imgPlus = makeImgPlus(img, r);
 
-		final ImgPlus<T> imgPlus = new ImgPlus<T>(img, name, dimTypes, cal);
-
+		// read pixels
 		final long startTime = System.currentTimeMillis();
-
+		final String id = r.getCurrentFile();
 		final int planeCount = r.getImageCount();
 		try {
-			readPlanes(r, type, img);
+			readPlanes(r, type, imgPlus);
 		}
-		catch (FormatException e) {
+		catch (final FormatException e) {
 			throw new ImgIOException(e);
 		}
-		catch (IOException e) {
+		catch (final IOException e) {
 			throw new ImgIOException(e);
 		}
-
 		final long endTime = System.currentTimeMillis();
 		final float time = (endTime - startTime) / 1000f;
-
 		notifyListeners(new StatusEvent(planeCount, planeCount, id + ": read " +
 			planeCount + " planes in " + time + "s"));
 
@@ -206,10 +199,10 @@ public class ImgOpener implements StatusReporter {
 	/** Obtains planar access instance backing the given img, if any. */
 	@SuppressWarnings("unchecked")
 	public static PlanarAccess<ArrayDataAccess<?>> getPlanarAccess(
-		final Img<?> img)
+		final ImgPlus<?> img)
 	{
-		if (img instanceof PlanarAccess) {
-			return (PlanarAccess<ArrayDataAccess<?>>) img;
+		if (img.getImg() instanceof PlanarAccess) {
+			return (PlanarAccess<ArrayDataAccess<?>>) img.getImg();
 		}
 		return null;
 	}
@@ -475,11 +468,53 @@ public class ImgOpener implements StatusReporter {
 	}
 
 	/**
-	 * Reads planes from the given initialized {@link IFormatReader}
-	 * into the specified {@link Img}.
+	 * Wraps the given {@link Img} in an {@link ImgPlus} with metadata
+	 * corresponding to the specified initialized {@link IFormatReader}.
+	 */
+	private <T extends RealType<T>> ImgPlus<T> makeImgPlus(final Img<T> img,
+		final IFormatReader r) throws ImgIOException
+	{
+		final String id = r.getCurrentFile();
+		final File idFile = new File(id);
+		final String name = idFile.exists() ? idFile.getName() : id;
+
+		final Axis[] dimTypes = getDimTypes(r);
+		final double[] cal = getCalibration(r);
+
+		final IFormatReader base;
+		try {
+			base = unwrap(r);
+		}
+		catch (final FormatException exc) {
+			throw new ImgIOException(exc);
+		}
+		catch (final IOException exc) {
+			throw new ImgIOException(exc);
+		}
+		final int compositeChannelCount = base.getRGBChannelCount();
+		final int validBits = r.getBitsPerPixel();
+
+		final ImgPlus<T> imgPlus = new ImgPlus<T>(img, name, dimTypes, cal);
+		imgPlus.setValidBits(validBits);
+		imgPlus.setCompositeChannelCount(compositeChannelCount);
+
+		return imgPlus;
+	}
+
+	private IFormatReader unwrap(final IFormatReader r) throws FormatException,
+		IOException
+	{
+		if (!(r instanceof ReaderWrapper)) return r;
+		return ((ReaderWrapper) r).unwrap();
+	}
+
+	/**
+	 * Reads planes from the given initialized {@link IFormatReader} into the
+	 * specified {@link Img}.
 	 */
 	private <T extends RealType<T>> void readPlanes(final IFormatReader r,
-		final T type, final Img<T> img) throws FormatException, IOException
+		final T type, final ImgPlus<T> imgPlus) throws FormatException,
+		IOException
 	{
 		// TODO - create better container types; either:
 		// 1) an array container type using one byte array per plane
@@ -496,7 +531,7 @@ public class ImgOpener implements StatusReporter {
 		// #3 is useful for efficient memory use
 
 		// get container
-		final PlanarAccess<?> planarAccess = getPlanarAccess(img);
+		final PlanarAccess<?> planarAccess = getPlanarAccess(imgPlus);
 		final T inputType = makeType(r.getPixelType());
 		final T outputType = type;
 		final boolean compatibleTypes =
@@ -504,37 +539,28 @@ public class ImgOpener implements StatusReporter {
 
 		// populate planes
 		final int planeCount = r.getImageCount();
-		if (planarAccess == null || !compatibleTypes) {
-			// use cursor to populate planes
+		final boolean isPlanar = planarAccess != null && compatibleTypes;
+		imgPlus.setColorTableCount(planeCount);
 
-			// NB: This solution is general and works regardless of container,
-			// but at the expense of performance both now and later.
+		byte[] plane = null;
+		for (int no = 0; no < planeCount; no++) {
+			notifyListeners(new StatusEvent(no, planeCount, "Reading plane " +
+				(no + 1) + "/" + planeCount));
+			if (plane == null) plane = r.openBytes(no);
+			else r.openBytes(no, plane);
+			if (isPlanar) populatePlane(r, no, plane, planarAccess);
+			else populatePlane(r, no, plane, imgPlus);
 
-			byte[] plane = null;
-			for (int no = 0; no < planeCount; no++) {
-				notifyListeners(new StatusEvent(no, planeCount, "Reading plane " +
-					(no + 1) + "/" + planeCount));
-				if (plane == null) plane = r.openBytes(no);
-				else r.openBytes(no, plane);
-				populatePlane(r, no, plane, img);
-			}
-		}
-		else {
-			// populate the values directly using PlanarAccess interface;
-			// e.g., to a PlanarRandomAccess
-
-			byte[] plane = null;
-			for (int no = 0; no < planeCount; no++) {
-				notifyListeners(new StatusEvent(no, planeCount, "Reading plane " +
-					(no + 1) + "/" + planeCount));
-				if (plane == null) plane = r.openBytes(no);
-				else r.openBytes(no, plane);
-				populatePlane(r, no, plane, planarAccess);
-			}
+			// store color table
+			final byte[][] lut8 = r.get8BitLookupTable();
+			if (lut8 != null) imgPlus.setColorTable(new ColorTable8(lut8), no);
+//			final short[][] lut16 = r.get16BitLookupTable();
+//			if (lut16 != null) imgPlus.setColorTable(new ColorTable16(lut16), no);
 		}
 		r.close();
 	}
 
+	/** Populates plane by reference using {@link PlanarAccess} interface. */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private void populatePlane(final IFormatReader r, final int no,
 		final byte[] plane, final PlanarAccess planarAccess)
@@ -553,8 +579,13 @@ public class ImgOpener implements StatusReporter {
 		planarAccess.setPlane(no, makeArray(planeArray));
 	}
 
+	/**
+	 * Uses a cursor to populate the plane. This solution is general and works
+	 * regardless of container, but at the expense of performance both now and
+	 * later.
+	 */
 	private <T extends RealType<T>> void populatePlane(final IFormatReader r,
-		final int no, final byte[] plane, final Img<T> img)
+		final int no, final byte[] plane, final ImgPlus<T> img)
 	{
 		final int sizeX = r.getSizeX();
 		final int pixelType = r.getPixelType();
@@ -588,7 +619,6 @@ public class ImgOpener implements StatusReporter {
 		final int sizeY = r.getSizeY();
 		final int sizeZ = r.getSizeZ();
 		final int sizeT = r.getSizeT();
-		// final String[] cDimTypes = r.getChannelDimTypes();
 		final int[] cDimLengths = r.getChannelDimLengths();
 		final String dimOrder = r.getDimensionOrder();
 

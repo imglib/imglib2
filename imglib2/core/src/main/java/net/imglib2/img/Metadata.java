@@ -27,7 +27,10 @@
  *
  * @author Stephan Preibisch & Stephan Saalfeld
  */
+
 package net.imglib2.img;
+
+import net.imglib2.display.ColorTable8;
 
 /**
  * An interface for defining metadata that goes along with an {@link Img},
@@ -41,6 +44,9 @@ public interface Metadata {
 	/** Gets the name of the associated {@link Img}. */
 	String getName();
 
+	/** Sets the name of the associated {@link Img}. */
+	void setName(String name);
+
 	/** Gets the dimensional index of the axis with the given type. */
 	int getAxisIndex(final Axis axis);
 
@@ -50,10 +56,44 @@ public interface Metadata {
 	/** Copies the {@link Img}'s axes into the given array. */
 	void axes(Axis[] axes);
 
+	/** Sets the dimensional axis for the given dimension. */
+	void setAxis(Axis axis, int d);
+
 	/** Gets the associated {@link Img}'s calibration at the given dimension. */
 	double calibration(int d);
 
 	/** Copies the {@link Img}'s calibration into the given array. */
 	void calibration(double[] cal);
+
+	/** Sets the image calibration for the given dimension. */
+	void setCalibration(double cal, int d);
+
+	/** Gets the number of valid bits (if appicable to this {@link Img}). */
+	int getValidBits();
+
+	/** Sets the number of valid bits. */
+	void setValidBits(int bits);
+
+	/** Gets the number of channels intended to be displayed together. */
+	int getCompositeChannelCount();
+
+	/** Sets the number of channels intended to be displayed together. */
+	void setCompositeChannelCount(int count);
+
+	/** Gets the 8-bit color table at the given position. */
+	ColorTable8 getColorTable8(int no);
+
+	/**
+	 * Sets the 8-bit color table at the given position.
+	 * 
+	 * @param lut The color table to store.
+	 * @param no The position of the color table, typically (but not necessarily)
+	 *          a 1D dimensional planar index rasterized from an N-dimensional
+	 *          planar position array.
+	 */
+	void setColorTable(ColorTable8 lut, int no);
+
+	/** Sets the number of available color tables to the given value. */
+	void setColorTableCount(final int count);
 
 }

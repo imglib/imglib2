@@ -30,12 +30,14 @@
 
 package net.imglib2.img;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 
 import net.imglib2.Cursor;
 import net.imglib2.Interval;
 import net.imglib2.IterableRealInterval;
 import net.imglib2.RandomAccess;
+import net.imglib2.display.ColorTable8;
 
 /**
  * A simple container for storing an {@link Img} together with its metadata.
@@ -50,9 +52,12 @@ public class ImgPlus<T> implements Img<T>, Metadata {
 
 	private final Img<T> img;
 
-	private final String name;
+	private String name;
 	private final Axis[] axes;
 	private final double[] cal;
+	private int validBits;
+	private int compositeChannelCount;
+	private final ArrayList<ColorTable8> lut8;
 
 	// -- Constructors --
 
@@ -69,8 +74,8 @@ public class ImgPlus<T> implements Img<T>, Metadata {
 	}
 
 	public ImgPlus(final Img<T> img, final Metadata metadata) {
-		this(img, metadata.getName(), getAxes(img, metadata), getCalibration(img,
-			metadata));
+		this(img, metadata.getName(), getAxes(img, metadata),
+			getCalibration(img, metadata));
 	}
 
 	public ImgPlus(final Img<T> img, final String name, final Axis[] axes,
@@ -80,6 +85,7 @@ public class ImgPlus<T> implements Img<T>, Metadata {
 		this.name = validateName(name);
 		this.axes = validateAxes(img.numDimensions(), axes);
 		this.cal = cal;
+		lut8 = new ArrayList<ColorTable8>();
 	}
 
 	// -- ImgPlus methods --
@@ -198,6 +204,11 @@ public class ImgPlus<T> implements Img<T>, Metadata {
 	}
 
 	@Override
+	public void setName(final String name) {
+		this.name = name;
+	}
+
+	@Override
 	public int getAxisIndex(final Axis axis) {
 		for (int i = 0; i < axes.length; i++) {
 			if (axes[i] == axis) return i;
@@ -216,6 +227,11 @@ public class ImgPlus<T> implements Img<T>, Metadata {
 	}
 
 	@Override
+	public void setAxis(Axis axis, int d) {
+		axes[d] = axis;
+	}
+
+	@Override
 	public double calibration(final int d) {
 		return cal[d];
 	}
@@ -223,6 +239,47 @@ public class ImgPlus<T> implements Img<T>, Metadata {
 	@Override
 	public void calibration(final double[] target) {
 		for (int i=0; i<target.length; i++) target[i] = cal[i];
+	}
+
+	@Override
+	public void setCalibration(double value, int d) {
+		cal[d] = value;
+	}
+
+	@Override
+	public int getValidBits() {
+		return validBits;
+	}
+
+	@Override
+	public void setValidBits(int bits) {
+		validBits = bits;
+	}
+
+	@Override
+	public int getCompositeChannelCount() {
+		return compositeChannelCount;
+	}
+
+	@Override
+	public void setCompositeChannelCount(final int value) {
+		compositeChannelCount = value;
+	}
+
+	@Override
+	public ColorTable8 getColorTable8(final int no) {
+		if (no >= lut8.size()) return null;
+		return lut8.get(no);
+	}
+
+	@Override
+	public void setColorTable(final ColorTable8 lut, final int no) {
+		lut8.set(no, lut);
+	}
+
+	@Override
+	public void setColorTableCount(final int count) {
+		lut8.ensureCapacity(count);
 	}
 
 	// -- Utility methods --
