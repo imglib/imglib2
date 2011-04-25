@@ -193,5 +193,8 @@ final public class LongType extends AbstractIntegerType<LongType> implements Nat
 	@Override
 	public void decIndex() { --i; }
 	@Override
-	public void decIndex( final int decrement ) { i -= decrement; }		
+	public void decIndex( final int decrement ) { i -= decrement; }
+
+	@Override
+	public int getBitsPerPixel() { return 64; }
 }

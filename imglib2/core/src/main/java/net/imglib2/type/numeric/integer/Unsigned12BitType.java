@@ -239,5 +239,8 @@ public class Unsigned12BitType extends AbstractIntegerType<Unsigned12BitType> im
 	public Unsigned12BitType copy(){ return new Unsigned12BitType( get() ); }
 
 	@Override
-	public int getEntitiesPerPixel() { return 12; }
+	public int getEntitiesPerPixel() { return 1; }
+
+	@Override
+	public int getBitsPerPixel() { return 12; }
 }

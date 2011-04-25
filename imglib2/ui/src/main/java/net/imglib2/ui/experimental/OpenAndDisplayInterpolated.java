@@ -38,7 +38,7 @@ public class OpenAndDisplayInterpolated
 			interpolator.setPosition( fromPosition );
 			t.set( interpolator.get() );
 		}
-	}
+	} 
 
 	final static public void main( final String[] args )
 	{

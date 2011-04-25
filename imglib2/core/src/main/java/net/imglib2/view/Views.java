@@ -10,12 +10,12 @@ import net.imglib2.util.Util;
 
 public class Views
 {
-	public static < T, F extends RandomAccessibleInterval< T > > RandomAccessible< T > extend( final F randomAccessible, final OutOfBoundsFactory< T, F > factory )
+	public static < T, F extends RandomAccessibleInterval< T > > ExtendedRandomAccessibleInterval< T, F > extend( final F randomAccessible, final OutOfBoundsFactory< T, F > factory )
 	{
 		return new ExtendedRandomAccessibleInterval< T, F >( randomAccessible, factory );
 	}
 
-	public static < T, F extends RandomAccessibleInterval< T > > RandomAccessible< T > extend( final F randomAccessible )
+	public static < T, F extends RandomAccessibleInterval< T > > ExtendedRandomAccessibleInterval< T, F > extend( final F randomAccessible )
 	{
 		return new ExtendedRandomAccessibleInterval< T, F >( randomAccessible, new OutOfBoundsMirrorFactory< T, F >( OutOfBoundsMirrorFactory.Boundary.SINGLE ) );
 	}

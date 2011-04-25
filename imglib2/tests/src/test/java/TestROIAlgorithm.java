@@ -1,10 +1,10 @@
 import net.imglib2.cursor.LocalizableByDimCursor;
 import net.imglib2.cursor.LocalizableCursor;
 import net.imglib2.cursor.special.RegionOfInterestCursor;
-import net.imglib2.image.Image;
-import net.imglib2.image.ImagePlusAdapter;
-import net.imglib2.image.display.imagej.ImageJFunctions;
+import net.imglib2.img.Image;
+import net.imglib2.img.ImagePlusAdapter;
 import net.imglib2.img.array.ArrayImgFactory;
+import net.imglib2.img.display.imagej.ImageJFunctions;
 import net.imglib2.io.LOCI;
 import net.imglib2.type.numeric.RealType;
 import ij.IJ;

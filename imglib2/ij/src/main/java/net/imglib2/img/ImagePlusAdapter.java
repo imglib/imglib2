@@ -27,7 +27,7 @@
  *
  * @author Stephan Preibisch & Stephan Saalfeld
  */
-package net.imglib2.image;
+package net.imglib2.img;
 
 import ij.ImagePlus;
 import ij.measure.Calibration;

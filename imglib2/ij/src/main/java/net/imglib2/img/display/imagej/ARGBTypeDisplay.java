@@ -27,14 +27,14 @@
  *
  * @author Stephan Preibisch & Stephan Saalfeld
  */
-package net.imglib2.image.display.imagej;
+package net.imglib2.img.display.imagej;
 
 import net.imglib2.Cursor;
 import net.imglib2.img.Img;
 import net.imglib2.img.display.Display;
 import net.imglib2.type.numeric.ARGBType;
 
-public class RGBALegacyTypeDisplay extends Display<ARGBType>
+public class ARGBTypeDisplay extends Display<ARGBType>
 {
 	public ARGBTypeDisplay( final Image<ARGBType> img)
 	{

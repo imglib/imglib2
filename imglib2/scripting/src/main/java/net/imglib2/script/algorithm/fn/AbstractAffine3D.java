@@ -141,7 +141,7 @@ public abstract class AbstractAffine3D<T extends NumericType<T>> extends ImgProx
 		}
 
 		final ImageTransform<R> transform;
-		final ExtendedRandomAccessibleInterval<R, Img<R>> imgExt = (ExtendedRandomAccessibleInterval<R, Img<R>>) Views.extend(img, oobf);
+		final ExtendedRandomAccessibleInterval<R, Img<R>> imgExt = Views.extend(img, oobf);
 
 		if (2 == img.numDimensions()) {
 			// Transform the single-plane image in 2D

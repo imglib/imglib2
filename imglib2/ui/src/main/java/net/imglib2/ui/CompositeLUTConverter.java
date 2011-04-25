@@ -41,28 +41,25 @@ import net.imglib2.ui.lut.Lut;
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  * @author Grant B. Harris
  */
-public class CompositeLUTConverter< R extends RealType< R > > extends AbstractLinearRange implements Converter< R, ARGBType >
-{
+public class CompositeLUTConverter< R extends RealType< R>> extends AbstractLinearRange implements Converter< R, ARGBType> {
+
 	Lut lut = null;
-	
-	public CompositeLUTConverter()
-	{
+
+	public CompositeLUTConverter() {
 		super();
 	}
-	
-	public CompositeLUTConverter( final double min, final double max, final Lut colors)
-	{
-		super( min, max );
+
+	public CompositeLUTConverter(final double min, final double max, final Lut colors) {
+		super(min, max);
 		this.lut = colors;
 	}
-	
-	
+
 	@Override
-	public void convert( final R input, final ARGBType output )
-	{
+	public void convert(final R input, final ARGBType output) {
 		final double a = input.getRealDouble();
-		final int b = Math.min( 255, roundPositive( Math.max( 0, ( ( a - min ) / scale * 255.0 ) ) ) );
-		final int argb = ARGBType.rgba(lut.reds[b],lut.greens[b], lut.blues[b], 0xff);
+		final int b = Math.min(255, roundPositive(Math.max(0, ((a - min) / scale * 255.0))));
+		final int argb = ARGBType.rgba(lut.reds[b], lut.greens[b], lut.blues[b], 0xff);
 		output.add(new ARGBType(argb));
 	}
+
 }

@@ -167,4 +167,7 @@ public abstract class GenericShortType<T extends GenericShortType<T>> extends Ab
 	public void decIndex() { --i; }
 	@Override
 	public void decIndex( final int decrement ) { i -= decrement; }	
+
+	@Override
+	public int getBitsPerPixel() { return 16; }
 }
