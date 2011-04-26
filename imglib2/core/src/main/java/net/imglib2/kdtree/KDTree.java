@@ -1,10 +1,13 @@
 package net.imglib2.kdtree;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.ListIterator;
 
 import net.imglib2.EuclideanSpace;
+import net.imglib2.IterableRealInterval;
+import net.imglib2.RealCursor;
 import net.imglib2.RealLocalizable;
 import net.imglib2.util.KthElement;
 
@@ -15,7 +18,7 @@ public class KDTree< T > implements EuclideanSpace // TODO: , IterableRealInterv
 	 */
 	final protected int n;
 
-	final protected Node< T > root;
+	final protected AbstractNode< T > root;
 
 	/**
 	 * Construct a KDTree from the elements in the given list.
@@ -59,6 +62,19 @@ public class KDTree< T > implements EuclideanSpace // TODO: , IterableRealInterv
 		}
 	}
 
+	public KDTree( final IterableRealInterval< T > interval )
+	{
+		this.n = interval.numDimensions();
+		ArrayList< RealCursor< T > > values = new ArrayList< RealCursor< T > >( ( int ) interval.size() );
+		RealCursor< T > cursor = interval.localizingCursor();
+		while ( cursor.hasNext() )
+		{
+			cursor.next();
+			values.add( cursor.copyCursor() );
+		}
+		root = makeSamplerNode( values, 0, values.size() - 1, 0 );
+	}
+	
 	protected static < L extends RealLocalizable > boolean verifyDimensions( final List< L > positions, final int n )
 	{
 		for ( final L position : positions )
@@ -84,7 +100,7 @@ public class KDTree< T > implements EuclideanSpace // TODO: , IterableRealInterv
 		}
 	}
 
-	protected < L extends RealLocalizable > Node< T > makeNode( final List< L > positions, final int i, final int j, final int d, final List< T > values, final int[] permutation )
+	protected < L extends RealLocalizable > ValueNode< T > makeNode( final List< L > positions, final int i, final int j, final int d, final List< T > values, final int[] permutation )
 	{
 		if ( j > i )
 		{
@@ -92,11 +108,11 @@ public class KDTree< T > implements EuclideanSpace // TODO: , IterableRealInterv
 			KthElement.kthElement( i, j, k, positions, permutation, new DimComparator< L >( d ) );
 
 			final int dChild = ( d + 1 == n ) ? 0 : d + 1;
-			return new Node< T >( values.get( permutation[ k ] ), positions.get( k ), d, makeNode( positions, i, k - 1, dChild, values, permutation ), makeNode( positions, k + 1, j, dChild, values, permutation ) );
+			return new ValueNode< T >( values.get( permutation[ k ] ), positions.get( k ), d, makeNode( positions, i, k - 1, dChild, values, permutation ), makeNode( positions, k + 1, j, dChild, values, permutation ) );
 		}
 		else if ( j == i )
 		{
-			return new Node< T >( values.get( permutation[ i ] ), positions.get( i ), d, null, null );
+			return new ValueNode< T >( values.get( permutation[ i ] ), positions.get( i ), d, null, null );
 		}
 		else
 		{
@@ -104,7 +120,7 @@ public class KDTree< T > implements EuclideanSpace // TODO: , IterableRealInterv
 		}
 	}
 
-	protected < L extends RealLocalizable > Node< T > makeNode( final ListIterator< L > first, final ListIterator< L > last, final int d, final List< T > values, final int[] permutation )
+	protected < L extends RealLocalizable > ValueNode< T > makeNode( final ListIterator< L > first, final ListIterator< L > last, final int d, final List< T > values, final int[] permutation )
 	{
 		final int i = first.nextIndex();
 		final int j = last.previousIndex();
@@ -120,21 +136,21 @@ public class KDTree< T > implements EuclideanSpace // TODO: , IterableRealInterv
 			// Node< T > right = makeNode( elements, k + 1, j, dChild );
 			for ( int c = j - last.previousIndex(); c > 0; --c )
 				last.next();
-			Node< T > right = makeNode( first, last, dChild, values, permutation );
+			ValueNode< T > right = makeNode( first, last, dChild, values, permutation );
 
 			// Node< T > left = makeNode( elements, i, k - 1, dChild );
 			for ( int c = first.nextIndex() - i; c > 0; --c )
 				first.previous();
 			for ( int c = last.nextIndex() - k; c > 0; --c )
 				last.previous();
-			Node< T > left = makeNode( first, last, dChild, values, permutation );
+			ValueNode< T > left = makeNode( first, last, dChild, values, permutation );
 
-			return new Node< T >( values.get( permutation[ k ] ), current, d, left, right );
+			return new ValueNode< T >( values.get( permutation[ k ] ), current, d, left, right );
 		}
 		else if ( j == i )
 		{
 			final L current = first.next();
-			return new Node< T >( values.get( permutation[ i ] ), current, d, null, null );
+			return new ValueNode< T >( values.get( permutation[ i ] ), current, d, null, null );
 		}
 		else
 		{
@@ -143,7 +159,7 @@ public class KDTree< T > implements EuclideanSpace // TODO: , IterableRealInterv
 	}
 
 	@SuppressWarnings( "unchecked" )
-	protected < L extends RealLocalizable > Node< T > makeNode( final List< L > elements, final int i, final int j, final int d )
+	protected < L extends RealLocalizable > ValueNode< T > makeNode( final List< L > elements, final int i, final int j, final int d )
 	{
 		if ( j > i )
 		{
@@ -151,11 +167,11 @@ public class KDTree< T > implements EuclideanSpace // TODO: , IterableRealInterv
 			KthElement.kthElement( i, j, k, elements, new DimComparator< L >( d ) );
 
 			final int dChild = ( d + 1 == n ) ? 0 : d + 1;
-			return new Node< T >( ( T ) elements.get( k ), elements.get( k ), d, makeNode( elements, i, k - 1, dChild ), makeNode( elements, k + 1, j, dChild ) );
+			return new ValueNode< T >( ( T ) elements.get( k ), elements.get( k ), d, makeNode( elements, i, k - 1, dChild ), makeNode( elements, k + 1, j, dChild ) );
 		}
 		else if ( j == i )
 		{
-			return new Node< T >( ( T ) elements.get( i ), elements.get( i ), d, null, null );
+			return new ValueNode< T >( ( T ) elements.get( i ), elements.get( i ), d, null, null );
 		}
 		else
 		{
@@ -164,7 +180,7 @@ public class KDTree< T > implements EuclideanSpace // TODO: , IterableRealInterv
 	}
 
 	@SuppressWarnings( "unchecked" )
-	protected < L extends RealLocalizable > Node< T > makeNode( final ListIterator< L > first, final ListIterator< L > last, final int d )
+	protected < L extends RealLocalizable > ValueNode< T > makeNode( final ListIterator< L > first, final ListIterator< L > last, final int d )
 	{
 		final int i = first.nextIndex();
 		final int j = last.previousIndex();
@@ -180,21 +196,21 @@ public class KDTree< T > implements EuclideanSpace // TODO: , IterableRealInterv
 			// Node< T > right = makeNode( elements, k + 1, j, dChild );
 			for ( int c = j - last.previousIndex(); c > 0; --c )
 				last.next();
-			Node< T > right = makeNode( first, last, dChild );
+			ValueNode< T > right = makeNode( first, last, dChild );
 
 			// Node< T > left = makeNode( elements, i, k - 1, dChild );
 			for ( int c = first.nextIndex() - i; c > 0; --c )
 				first.previous();
 			for ( int c = last.nextIndex() - k; c > 0; --c )
 				last.previous();
-			Node< T > left = makeNode( first, last, dChild );
+			ValueNode< T > left = makeNode( first, last, dChild );
 
-			return new Node< T >( ( T ) current, current, d, left, right );
+			return new ValueNode< T >( ( T ) current, current, d, left, right );
 		}
 		else if ( j == i )
 		{
 			L current = first.next();
-			return new Node< T >( ( T ) current, current, d, null, null );
+			return new ValueNode< T >( ( T ) current, current, d, null, null );
 		}
 		else
 		{
@@ -202,7 +218,27 @@ public class KDTree< T > implements EuclideanSpace // TODO: , IterableRealInterv
 		}
 	}
 
-	public Node< T > getRoot()
+	protected SamplerNode< T > makeSamplerNode( final List< RealCursor< T > > elements, final int i, final int j, final int d )
+	{
+		if ( j > i )
+		{
+			final int k = i + ( j - i ) / 2;
+			KthElement.kthElement( i, j, k, elements, new DimComparator< RealCursor< T > >( d ) );
+
+			final int dChild = ( d + 1 == n ) ? 0 : d + 1;
+			return new SamplerNode< T >( elements.get( k ), elements.get( k ), d, makeSamplerNode( elements, i, k - 1, dChild ), makeSamplerNode( elements, k + 1, j, dChild ) );
+		}
+		else if ( j == i )
+		{
+			return new SamplerNode< T >( elements.get( i ), elements.get( i ), d, null, null );
+		}
+		else
+		{
+			return null;
+		}
+	}
+
+	public AbstractNode< T > getRoot()
 	{
 		return root;
 	}
@@ -213,12 +249,12 @@ public class KDTree< T > implements EuclideanSpace // TODO: , IterableRealInterv
 		return n;
 	}
 
-	public String toString( Node< T > node, String indent )
+	public String toString( AbstractNode< T > left, String indent )
 	{
-		if ( node == null )
+		if ( left == null )
 			return "";
 
-		return indent + "- " + node.toString() + "\n" + toString( node.left, indent + "  " ) + toString( node.right, indent + "  " );
+		return indent + "- " + left.toString() + "\n" + toString( left.left, indent + "  " ) + toString( left.right, indent + "  " );
 	}
 
 	public String toString()

@@ -12,7 +12,7 @@ public class NearestNeighborSearchOnKDTree< T > implements NearestNeighborSearch
 	protected final int n;
 	protected final double[] pos;
 
-	protected Node< T > bestPoint;
+	protected AbstractNode< T > bestPoint;
 	protected double bestSquDistance;
 	
 	public NearestNeighborSearchOnKDTree( KDTree< T > tree )
@@ -30,7 +30,7 @@ public class NearestNeighborSearchOnKDTree< T > implements NearestNeighborSearch
 		searchNode( tree.getRoot() );
 	}
 	
-	protected void searchNode( Node< T > current )
+	protected void searchNode( AbstractNode< T > current )
 	{
 		// consider the current node
 		final double distance = current.squDistanceTo( pos );
@@ -45,8 +45,8 @@ public class NearestNeighborSearchOnKDTree< T > implements NearestNeighborSearch
 		final boolean leftIsNearBranch = axisDiff < 0;
 
 		// search the near branch
-		final Node< T > nearChild = leftIsNearBranch ? current.left : current.right;
-		final Node< T > awayChild = leftIsNearBranch ? current.right : current.left;
+		final AbstractNode< T > nearChild = leftIsNearBranch ? current.left : current.right;
+		final AbstractNode< T > awayChild = leftIsNearBranch ? current.right : current.left;
 		if ( nearChild != null )
 			searchNode( nearChild );
 
