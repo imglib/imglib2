@@ -4,7 +4,7 @@ import net.imglib2.RealLocalizable;
 import net.imglib2.Sampler;
 import net.imglib2.nearestneighbor.KNearestNeighborSearch;
 
-public class KNearestNeighborSearchOnKDTree< T extends RealLocalizable > implements KNearestNeighborSearch< T >
+public class KNearestNeighborSearchOnKDTree< T > implements KNearestNeighborSearch< T >
 {
 	protected KDTree< T > tree;
 	

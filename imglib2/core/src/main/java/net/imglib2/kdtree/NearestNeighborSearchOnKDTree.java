@@ -3,7 +3,7 @@ package net.imglib2.kdtree;
 import net.imglib2.RealLocalizable;
 
 
-public class NearestNeighborSearchOnKDTree< T extends RealLocalizable > 
+public class NearestNeighborSearchOnKDTree< T >
 {
 	protected KDTree< T > tree;
 	

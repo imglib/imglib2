@@ -29,7 +29,7 @@ public class KDTreeTest
 		}
 
 		long start = System.currentTimeMillis();
-		final KDTree< RealPoint > kdTree = new KDTree< RealPoint >(points);
+		final KDTree< RealPoint > kdTree = new KDTree< RealPoint >( points, points );
 		NearestNeighborSearchOnKDTree< RealPoint > kd = new NearestNeighborSearchOnKDTree< RealPoint >( kdTree );		
 		final long kdSetupTime = System.currentTimeMillis() - start;
 		System.out.println("kdtree setup took: " + (kdSetupTime) + " ms.");
@@ -124,7 +124,7 @@ public class KDTreeTest
 		}
 
 		long start = System.currentTimeMillis();
-		final KDTree< RealPoint > kdTree = new KDTree< RealPoint >(points);
+		final KDTree< RealPoint > kdTree = new KDTree< RealPoint >( points, points );
 		KNearestNeighborSearchOnKDTree< RealPoint > kd = new KNearestNeighborSearchOnKDTree< RealPoint >( kdTree, neighbors );		
 		final long kdSetupTime = System.currentTimeMillis() - start;
 		System.out.println("kdtree setup took: " + (kdSetupTime) + " ms.");
