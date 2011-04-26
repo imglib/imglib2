@@ -133,6 +133,17 @@
       <timezone>+1</timezone>
     </developer>
     <developer>
+      <id>tobias</id>
+      <name>Tobias Pietzsch</name>
+      <email>pietzsch@mpi-cbg.de</email>
+      <organization>MPI-CBG at Dresden</organization>
+      <organizationUrl>http://mpi-cbg.de/</organizationUrl>
+      <roles>
+        <role>developer</role>
+      </roles>
+      <timezone>+1</timezone>
+    </developer>
+    <developer>
       <id>curtis</id>
       <name>Curtis Rueden</name>
       <email>ctrueden@wisc.edu</email>
@@ -161,6 +172,36 @@
       <timezone>+1</timezone>
       <properties>
         <picUrl>http://loci.wisc.edu/files/loci/images/people/Cardona_pic1.jpg</picUrl>
+      </properties>
+    </developer>
+    <developer>
+      <id>bdezonia</id>
+      <name>Barry DeZonia</name>
+      <email>bdezonia@wisc.edu</email>
+      <url>http://loci.wisc.edu/people/barry-dezonia</url>
+      <organization>UW-Madison LOCI</organization>
+      <organizationUrl>http://loci.wisc.edu/</organizationUrl>
+      <roles>
+        <role>developer</role>
+      </roles>
+      <timezone>-6</timezone>
+      <properties>
+        <picUrl>http://loci.wisc.edu/files/loci/images/people/Barry_DeZonia.jpg</picUrl>
+      </properties>
+    </developer>
+    <developer>
+      <id>gharris</id>
+      <name>Grant Harris</name>
+      <email>gharris@mbl.edu</email>
+      <url>http://loci.wisc.edu/people/grant-harris</url>
+      <organization>MBL at Woods Hole</organization>
+      <organizationUrl>http://www.mbl.edu/</organizationUrl>
+      <roles>
+        <role>developer</role>
+      </roles>
+      <timezone>-5</timezone>
+      <properties>
+        <picUrl>http://www.loci.wisc.edu/files/loci/images/people/GBH-2010.jpg</picUrl>
       </properties>
     </developer>
   </developers>
