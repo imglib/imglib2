@@ -3,7 +3,7 @@ package net.imglib2.kdtree;
 import net.imglib2.RealLocalizable;
 import net.imglib2.Sampler;
 
-public abstract class AbstractNode< T > implements RealLocalizable, Sampler< T >
+public abstract class KDTreeNode< T > implements RealLocalizable, Sampler< T >
 {
 	protected final int n;
 
@@ -11,11 +11,11 @@ public abstract class AbstractNode< T > implements RealLocalizable, Sampler< T >
 
 	protected final int splitDimension;
 	
-	protected final AbstractNode< T > left;
+	protected final KDTreeNode< T > left;
 	
-	protected final AbstractNode< T > right;
+	protected final KDTreeNode< T > right;
 	
-	public AbstractNode( RealLocalizable position, int dimension, final AbstractNode< T > left, final AbstractNode< T > right ) 
+	public KDTreeNode( RealLocalizable position, int dimension, final KDTreeNode< T > left, final KDTreeNode< T > right ) 
 	{
 		this.n = position.numDimensions();
 		this.pos = new double[n];
@@ -25,7 +25,7 @@ public abstract class AbstractNode< T > implements RealLocalizable, Sampler< T >
 		this.right = right;
 	}
 	
-	protected AbstractNode( final AbstractNode< T > node ) 
+	protected KDTreeNode( final KDTreeNode< T > node ) 
 	{
 		this.n = node.n;
 		this.pos = node.pos.clone();
@@ -77,7 +77,7 @@ public abstract class AbstractNode< T > implements RealLocalizable, Sampler< T >
 	}
 
 	@Override
-	public abstract AbstractNode< T > copy();
+	public abstract KDTreeNode< T > copy();
 	
 	public final float squDistanceTo( final float[] p )
 	{

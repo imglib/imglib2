@@ -12,7 +12,7 @@ public class KNearestNeighborSearchOnKDTree< T > implements KNearestNeighborSear
 	protected final double[] pos;
 
 	protected final int k;
-	protected AbstractNode< T >[] bestPoints;
+	protected KDTreeNode< T >[] bestPoints;
 	protected double[] bestSquDistances;
 
 	@SuppressWarnings( "unchecked" )
@@ -22,7 +22,7 @@ public class KNearestNeighborSearchOnKDTree< T > implements KNearestNeighborSear
 		this.n = tree.numDimensions();
 		this.pos = new double[ n ];
 		this.k = k;
-		this.bestPoints = new AbstractNode[ k ];
+		this.bestPoints = new KDTreeNode[ k ];
 		this.bestSquDistances = new double[ k ];
 		for ( int i = 0; i < k; ++i )
 			bestSquDistances[ i ] = Double.MAX_VALUE;
@@ -38,7 +38,7 @@ public class KNearestNeighborSearchOnKDTree< T > implements KNearestNeighborSear
 		searchNode( tree.getRoot() );
 	}
 
-	protected void searchNode( AbstractNode< T > current )
+	protected void searchNode( KDTreeNode< T > current )
 	{
 		// consider the current node
 		final double squDistance = current.squDistanceTo( pos );
@@ -59,8 +59,8 @@ public class KNearestNeighborSearchOnKDTree< T > implements KNearestNeighborSear
 		final boolean leftIsNearBranch = axisDiff < 0;
 
 		// search the near branch
-		final AbstractNode< T > nearChild = leftIsNearBranch ? current.left : current.right;
-		final AbstractNode< T > awayChild = leftIsNearBranch ? current.right : current.left;
+		final KDTreeNode< T > nearChild = leftIsNearBranch ? current.left : current.right;
+		final KDTreeNode< T > awayChild = leftIsNearBranch ? current.right : current.left;
 		if ( nearChild != null )
 			searchNode( nearChild );
 

@@ -9,8 +9,16 @@ import net.imglib2.EuclideanSpace;
 import net.imglib2.IterableRealInterval;
 import net.imglib2.RealCursor;
 import net.imglib2.RealLocalizable;
+import net.imglib2.Sampler;
 import net.imglib2.util.KthElement;
 
+/**
+ * KDTree to access values at RealLocalizable positions.
+ * 
+ * @param <T>
+ *            type of values stored in the tree.
+ * @author Tobias Pietzsch
+ */
 public class KDTree< T > implements EuclideanSpace // TODO: , IterableRealInterval< T >
 {
 	/**
@@ -18,7 +26,83 @@ public class KDTree< T > implements EuclideanSpace // TODO: , IterableRealInterv
 	 */
 	final protected int n;
 
-	final protected AbstractNode< T > root;
+	final protected KDTreeNode< T > root;
+
+	/**
+	 * A KDTreeNode that stores it's value as a reference.
+	 */
+	protected final static class ValueNode< T > extends KDTreeNode< T >
+	{
+		protected final T value;
+
+		public ValueNode( T value, RealLocalizable position, int dimension, final ValueNode< T > left, final ValueNode< T > right )
+		{
+			super( position, dimension, left, right );
+			this.value = value;
+		}
+
+		protected ValueNode( final ValueNode< T > node )
+		{
+			super( node );
+			this.value = node.value;
+		}
+
+		@Override
+		public T get()
+		{
+			return value;
+		}
+
+		@Override
+		public ValueNode< T > copy()
+		{
+			return new ValueNode< T >( this );
+		}
+
+		@Override
+		public String toString()
+		{
+			return "node " + getSplitDimension() + " ? " + getSplitCoordinate() + " | " + value;
+		}
+	}
+
+	/**
+	 * A KDTreeNode that stores it's value as a Sampler.
+	 */
+	protected static final class SamplerNode< T > extends KDTreeNode< T >
+	{
+		protected final Sampler< T > sampler;
+
+		public SamplerNode( Sampler< T > sampler, RealLocalizable position, int dimension, final SamplerNode< T > left, final SamplerNode< T > right )
+		{
+			super( position, dimension, left, right );
+			this.sampler = sampler;
+		}
+
+		protected SamplerNode( final SamplerNode< T > node )
+		{
+			super( node );
+			this.sampler = node.sampler.copy();
+		}
+
+		@Override
+		public T get()
+		{
+			return sampler.get();
+		}
+
+		@Override
+		public SamplerNode< T > copy()
+		{
+			return new SamplerNode< T >( this );
+		}
+
+		@Override
+		public String toString()
+		{
+			return "node " + getSplitDimension() + " ? " + getSplitCoordinate() + " | " + sampler.get();
+		}
+	}
 
 	/**
 	 * Construct a KDTree from the elements in the given list.
@@ -74,7 +158,7 @@ public class KDTree< T > implements EuclideanSpace // TODO: , IterableRealInterv
 		}
 		root = makeSamplerNode( values, 0, values.size() - 1, 0 );
 	}
-	
+
 	protected static < L extends RealLocalizable > boolean verifyDimensions( final List< L > positions, final int n )
 	{
 		for ( final L position : positions )
@@ -238,7 +322,7 @@ public class KDTree< T > implements EuclideanSpace // TODO: , IterableRealInterv
 		}
 	}
 
-	public AbstractNode< T > getRoot()
+	public KDTreeNode< T > getRoot()
 	{
 		return root;
 	}
@@ -249,7 +333,7 @@ public class KDTree< T > implements EuclideanSpace // TODO: , IterableRealInterv
 		return n;
 	}
 
-	public String toString( AbstractNode< T > left, String indent )
+	public String toString( KDTreeNode< T > left, String indent )
 	{
 		if ( left == null )
 			return "";
