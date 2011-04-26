@@ -35,6 +35,9 @@ import net.imglib2.collection.RealPointSampleList;
 import net.imglib2.exception.ImgLibException;
 import net.imglib2.img.imageplus.ImagePlusImg;
 import net.imglib2.img.imageplus.ImagePlusImgFactory;
+import net.imglib2.kdtree.KDTree;
+import net.imglib2.kdtree.KNearestNeighborSearchOnKDTree;
+import net.imglib2.kdtree.NearestNeighborSearchOnKDTree;
 import net.imglib2.type.numeric.integer.UnsignedByteType;
 
 public class KNearestNeighborSearchBehavior
@@ -52,6 +55,8 @@ public class KNearestNeighborSearchBehavior
 		final RealPointSampleList< UnsignedByteType > list = new RealPointSampleList< UnsignedByteType >( 2 );
 		for ( int i = 0; i < samples.length; ++i )
 			list.add( new RealPoint( coordinates[ i ] ), new UnsignedByteType( samples[ i ] ) );
+		
+		final KDTree< UnsignedByteType > kdtree = new KDTree< UnsignedByteType >( list );
 		
 		final ImagePlusImgFactory< UnsignedByteType > factory = new ImagePlusImgFactory< UnsignedByteType >();
 		
@@ -133,5 +138,82 @@ public class KNearestNeighborSearchBehavior
 			IJ.log( "Didn't work out." );
 			e.printStackTrace();
 		}
+
+		/* nearest neighbor on kdtree */
+		final ImagePlusImg< UnsignedByteType, ? > img4 = factory.create( size, new UnsignedByteType() );
+		final Cursor< UnsignedByteType > c4 = img4.localizingCursor();
+		final NearestNeighborSearchOnKDTree< UnsignedByteType > search4 = new NearestNeighborSearchOnKDTree< UnsignedByteType >( kdtree );
+		while ( c4.hasNext() )
+		{
+			c4.fwd();
+			search4.search( c4 );
+			c4.get().set( search4.getSampler().get() );
+		}
+		
+		try
+		{
+			img4.getImagePlus().show();
+		}
+		catch ( ImgLibException e )
+		{
+			IJ.log( "Didn't work out." );
+			e.printStackTrace();
+		}
+
+		/* nearest neighbor through k-nearest-neighbor search on kdtree */
+		final ImagePlusImg< UnsignedByteType, ? > img5= factory.create( size, new UnsignedByteType() );
+		final Cursor< UnsignedByteType > c5 = img5.localizingCursor();
+		final KNearestNeighborSearchOnKDTree< UnsignedByteType > search5 = new KNearestNeighborSearchOnKDTree< UnsignedByteType >( kdtree, 1 );
+		while ( c5.hasNext() )
+		{
+			c5.fwd();
+			search5.search( c5 );
+			c5.get().set( search5.getSampler( 0 ).get() );
+		}
+		
+		try
+		{
+			img5.getImagePlus().show();
+		}
+		catch ( ImgLibException e )
+		{
+			IJ.log( "Didn't work out." );
+			e.printStackTrace();
+		}
+		
+		/* distance on kdtree */
+		final ImagePlusImg< UnsignedByteType, ? > img6 = factory.create( size, new UnsignedByteType() );
+		final Cursor< UnsignedByteType > c6 = img6.localizingCursor();
+		final KNearestNeighborSearchOnKDTree< UnsignedByteType > search6 = new KNearestNeighborSearchOnKDTree< UnsignedByteType >( kdtree, 3 );
+		while ( c6.hasNext() )
+		{
+			c6.fwd();
+			search6.search( c6 );
+			double d1 = search6.getDistance( 0 );
+			double d2 = search6.getDistance( 1 );
+			double d3 = search6.getDistance( 2 );
+			double a = ( d1 + d2 + d3 ) / 2.0;
+			d1 = 1.0 - d1 / a;
+			d2 = 1.0 - d2 / a;
+			d3 = 1.0 - d3 / a;
+			
+			
+			final double v =
+				search6.getSampler( 0 ).get().getRealDouble() * d1 +
+				search6.getSampler( 1 ).get().getRealDouble() * d2 +
+				search6.getSampler( 2 ).get().getRealDouble() * d3;
+			
+			c6.get().set( Math.max(  0, Math.min( 255, ( int )Math.round( v ) ) ) );
+		}
+		
+		try
+		{
+			img6.getImagePlus().show();
+		}
+		catch ( ImgLibException e )
+		{
+			IJ.log( "Didn't work out." );
+			e.printStackTrace();
+		}		
 	}
 }
