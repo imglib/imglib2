@@ -31,7 +31,7 @@ import net.imglib2.IterableInterval;
 import net.imglib2.RandomAccessibleInterval;
 
 /**
- * {@link Img}s are {@link InjectiveInterval} that has its min at
+ * An {@link Img} is a {@link RandomAccessibleInterval} that has its min at
  * 0<sup><em>n</em></sup> and its max positive.  {@link Img}s store pixels
  * and thus are the basis for conventional image processing.
  *

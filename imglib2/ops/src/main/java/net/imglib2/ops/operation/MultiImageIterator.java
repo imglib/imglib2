@@ -1,9 +1,8 @@
 package net.imglib2.ops.operation;
 
-import net.imglib2.cursor.LocalizableByDimCursor;
-import net.imglib2.cursor.special.RegionOfInterestCursor;
-import net.imglib2.image.Image;
+import net.imglib2.RandomAccess;
 import net.imglib2.type.numeric.RealType;
+import net.imglib2.img.Img;
 
 //TODO
 //Figure out Imglib's preferred way to handle linked cursors. Can they work where span dimensionality differs?
@@ -13,39 +12,34 @@ import net.imglib2.type.numeric.RealType;
 @SuppressWarnings("unchecked")
 public class MultiImageIterator<T extends RealType<T>>  // don't want to implement full Cursor API
 {
-	private Image<T>[] images;
-	private int[][] origins;
-	private int[][] spans;
-	private RegionOfInterestCursor<T>[] cursors;
+	private Img<T>[] images;
+	private long[][] origins;
+	private long[][] spans;
+	private RandomAccess<T>[] accessors;
+	private RegionCursor<T>[] regionCursors;
 	
 	// -----------------  public interface ------------------------------------------
 
-	public MultiImageIterator(Image<T>[] images)
+	public MultiImageIterator(Img<T>[] images)
 	{
 		this.images = images;
 		int totalImages = images.length;
-		origins = new int[totalImages][];
-		spans = new int[totalImages][];
+		origins = new long[totalImages][];
+		spans = new long[totalImages][];
 		for (int i = 0; i < totalImages; i++)
 		{
-			origins[i] = new int[images[i].getNumDimensions()];
-			spans[i] = images[i].getDimensions().clone();
+			origins[i] = new long[images[i].numDimensions()];
+			spans[i] = new long[images[i].numDimensions()];
+			images[i].dimensions(spans[i]);
 		}
-		cursors = new RegionOfInterestCursor[totalImages];
 	}
 
-	public void setRegion(int i, int[] origin, int[] span)
+	public RegionCursor<T>[] getCursors()
 	{
-		origins[i] = origin;
-		spans[i] = span;
-	}
-	
-	public RegionOfInterestCursor<T>[] getSubcursors()
-	{
-		return cursors;
+		return regionCursors;
 	}
 
-	/** call after subregions defined and before first hasNext() or fwd() call. tests that all subregions defined are compatible. */
+	/** call after subregions defined and before reset() or next() call. tests that all subregions defined are compatible. */
 	void initialize()  // could call lazily in hasNext() or fwd() but a drag on performance
 	{
 		// make sure all specified regions are shape compatible : for now just test num elements in spans are same
@@ -54,38 +48,58 @@ public class MultiImageIterator<T extends RealType<T>>  // don't want to impleme
 			if (numInSpan(spans[i]) != totalSamples)
 				throw new IllegalArgumentException("incompatible span shapes");
 
-		for (int i = 0; i < images.length; i++)
-		{
-			LocalizableByDimCursor<T> dimCursor = images[i].createLocalizableByDimCursor();
-			cursors[i] = new RegionOfInterestCursor<T>(dimCursor, origins[i], spans[i]);
+		accessors = new RandomAccess[images.length];
+		for (int i = 0; i < images.length; i++) {
+			accessors[i] = images[i].randomAccess();
 		}
+		
+		regionCursors = new RegionCursor[images.length];
+		for (int i = 0; i < images.length; i++)
+			regionCursors[i] = new RegionCursor<T>(accessors[i], origins[i], spans[i]);
+
+		resetAll();
 	}
 	
-	public boolean hasNext()
-	{
-		boolean hasNext = cursors[0].hasNext();
-		
-		for (int i = 1; i < cursors.length; i++)
-			if (hasNext != cursors[i].hasNext())
+	public boolean isValid() {
+		boolean firstValid = regionCursors[0].isValid();
+
+		for (int i = 1; i < regionCursors.length; i++)
+			if (firstValid != regionCursors[i].isValid())
 				throw new IllegalArgumentException("linked cursors are out of sync");
 		
-		return hasNext;
+		return firstValid;
 	}
 	
-	public void fwd()
+	public void next()
 	{
-		for (int i = 0; i < cursors.length; i++)
-			cursors[i].fwd();
+		for (RegionCursor<T> cursor : regionCursors)
+			cursor.next();
+	}
+	
+	public void reset()
+	{
+		resetAll();
+	}
+	
+	public void setRegion(int i, long[] origin, long[] span)
+	{
+		origins[i] = origin;
+		spans[i] = span;
 	}
 	
 	// -----------------  private interface ------------------------------------------
-
-	private long numInSpan(int[] span)  // TODO - call Imglib equivalent instead
+	
+	private long numInSpan(long[] span)  // TODO - call Imglib equivalent instead
 	{
 		long total = 1;
-		for (int axisLen : span)
+		for (long axisLen : span)
 			total *= axisLen;
 		return total;
+	}
+	
+	private void resetAll() {
+		for (RegionCursor<T> cursor : regionCursors)
+			cursor.reset();
 	}
 }
 

@@ -12,6 +12,7 @@ import java.awt.Rectangle;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
+import javax.swing.BoxLayout;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -34,10 +35,12 @@ public class LutBuilder {
 
 	public static String[] lutNames = new String[]{
 		"invert", "fire", "grays", "ice", "spectrum", "3-3-2 RGB", "red",
-		"green", "blue", "cyan", "magenta", "yellow", "redgreen"};
+		"green", "blue", "cyan", "magenta", "yellow", "redgreen", "bty"};
 
-	public LUT createLUT(String arg) {
-		LUT lut = new LUT();
+
+
+	public Lut createLUT(String arg) {
+		Lut lut = new Lut();
 		int nColors = 0;
 
 		if (arg.equals("invert")) {
@@ -195,7 +198,7 @@ public class LutBuilder {
 	public static void main(String[] args) {
 		JFrame fr = new JFrame();
 		fr.setTitle("LUTs");
-		fr.setLayout(new FlowLayout());
+		fr.getContentPane().setLayout(new BoxLayout(fr.getContentPane(), BoxLayout.Y_AXIS));
 		fr.addWindowListener(new WindowAdapter() {
 
 			public void windowClosing(WindowEvent e) {
@@ -208,7 +211,7 @@ public class LutBuilder {
 		String[] names = LutBuilder.lutNames;
 		for (int i = 0; i < names.length; i++) {
 			String name = names[i];
-			LUT lut = lutBldr.createLUT(name);
+			Lut lut = lutBldr.createLUT(name);
 			JComponent panel = createLutStripePanel(lut);
 			panel.setPreferredSize(new Dimension(width, height));
 			fr.add(panel);
@@ -219,11 +222,12 @@ public class LutBuilder {
 		fr.setVisible(true);
 	}
 
-	public static JComponent createLutStripePanel(LUT lut) {
+	public static JComponent createLutStripePanel(Lut lut) {
 		JPanel panel = new JPanel();
 
 		BufferedImage bi = GraphicsUtilities.createCompatibleImage(width, height);
 		// bi.getData().getDataBuffer().
+		
 		return new ImagePanel(bi);
 	}
 

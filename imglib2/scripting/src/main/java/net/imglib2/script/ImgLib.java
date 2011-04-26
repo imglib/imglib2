@@ -1,12 +1,14 @@
 package net.imglib2.script;
 
+import java.io.File;
+
 import ij.IJ;
 import ij.ImagePlus;
 import ij.io.FileSaver;
 
-import net.imglib2.container.Img;
-import net.imglib2.image.ImagePlusAdapter;
-import net.imglib2.image.display.imagej.ImageJFunctions;
+import net.imglib2.img.ImagePlusAdapter;
+import net.imglib2.img.Img;
+import net.imglib2.img.display.imagej.ImageJFunctions;
 import net.imglib2.type.numeric.RealType;
 
 /* TODO license? */
@@ -59,13 +61,13 @@ public class ImgLib {
 
 	/** Wrap an Imglib's {@link Image} as an ImageJ's {@link ImagePlus} of the appropriate type.
 	 * The data is not copied, but accessed with a special-purpose VirtualStack subclass. */
-	static public final ImagePlus wrap(final Img<?> img) {
-		return ImageJFunctions.displayAsVirtualStack(img);
+	static public final <T extends RealType<T>> ImagePlus wrap(final Img<T> img) {
+		return ImageJFunctions.displayAsVirtualStack(img, "ImgLib image");
 	}
 
 	/** Save an image in the appropriate file format according to
 	 * the filename extension specified in {@param path}. */
-	public static<T extends RealType<T>> boolean save(Img<T> image, String path) {
+	public static final <T extends RealType<T>> boolean save(Img<T> image, String path) {
 		int dot = path.lastIndexOf('.');
 		if (dot < 0 || path.length() - dot - 1 > 4)
 			throw new RuntimeException("Could not infer file type from filename: " + path);
@@ -79,7 +81,7 @@ public class ImgLib {
 	 *  as a stack. */
 	public static<T extends RealType<T>> boolean save(Img<T> image, String fileType, String path) {
 		// TODO: use LOCI for this
-		ImagePlus imp = ImageJFunctions.displayAsVirtualStack(image);
+		ImagePlus imp = ImageJFunctions.displayAsVirtualStack(image, new File(path).getName());
 		FileSaver saver = new FileSaver(imp);
 		fileType = fileType.toLowerCase();
 		if (fileType.equals("tif") || fileType.equals("tiff")) {

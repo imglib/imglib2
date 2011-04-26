@@ -73,7 +73,7 @@ final public class ExtendedRandomAccessibleInterval< T, F extends RandomAccessib
 		return randomAccess();
 	}
 
-	public RandomAccessibleInterval< T > getSource()
+	public F getSource()
 	{
 		return source;
 	}

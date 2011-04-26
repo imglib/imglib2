@@ -4,22 +4,19 @@ import ij.ImageJ;
 
 import javax.media.j3d.Transform3D;
 
+import mpicbg.models.AffineModel3D;
 import net.imglib2.algorithm.gauss.GaussianConvolution;
 import net.imglib2.algorithm.transformation.ImageTransform;
-import net.imglib2.image.display.imagej.ImgLib2Display;
 import net.imglib2.img.Img;
 import net.imglib2.img.ImgFactory;
-import net.imglib2.img.array.ArrayImgFactory;
 import net.imglib2.img.cell.CellImgFactory;
-import net.imglib2.img.list.ListImgFactory;
+import net.imglib2.img.display.imagej.ImgLib2Display;
 import net.imglib2.interpolation.randomaccess.NearestNeighborInterpolatorFactory;
 import net.imglib2.io.ImgOpener;
-import net.imglib2.outofbounds.OutOfBoundsConstantValueFactory;
 import net.imglib2.outofbounds.OutOfBoundsFactory;
 import net.imglib2.outofbounds.OutOfBoundsMirrorFactory;
 import net.imglib2.outofbounds.OutOfBoundsMirrorFactory.Boundary;
 import net.imglib2.type.numeric.real.FloatType;
-import mpicbg.models.AffineModel3D;
 
 public class OpenAndDisplay
 {	

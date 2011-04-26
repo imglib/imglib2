@@ -41,4 +41,6 @@ public class ImgLibException extends Exception
 	public ImgLibException( final Object obj, final String message ) { super( obj.getClass().getCanonicalName() + ": " + message ); }
 
 	public ImgLibException() { super(); }
+
+	public ImgLibException( final Throwable t ) { super(t); }
 }

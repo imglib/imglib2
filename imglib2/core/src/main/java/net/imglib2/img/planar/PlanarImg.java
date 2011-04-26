@@ -49,7 +49,7 @@ import net.imglib2.type.NativeType;
  * apply imglib-based algorithm implementations directly on the data stored in
  * an ImageJ {@link Planar}.  For all types that are supported by ImageJ, the
  * {@link PlanarImg} provides access to the pixels of an
- * {@link Planar} instance that can be accessed ({@see #getPlanar()}.
+ * {@link Planar} instance that can be accessed ({@link #getPlanar()}.
  *
  * @author Jan Funke, Stephan Preibisch, Stephan Saalfeld, Johannes Schindelin, Tobias Pietzsch
  */
@@ -197,10 +197,9 @@ public class PlanarImg< T extends NativeType< T >, A extends ArrayDataAccess<A> 
 	{
 		if ( dim == 0 )
 			return indexInSlice % dimensions[ 0 ];
-		else if ( dim == 1 )
+		if ( dim == 1 )
 			return indexInSlice / dimensions[ 0 ];
-		else
-			return ( sliceIndex / sliceSteps[ dim ] ) % dimensions[ dim ];			               
+		return ( sliceIndex / sliceSteps[ dim ] ) % dimensions[ dim ];			               
 	}
 
 	@Override
@@ -208,10 +207,9 @@ public class PlanarImg< T extends NativeType< T >, A extends ArrayDataAccess<A> 
 	{
 		if ( n == 1 )
 			return new PlanarCursor1D< T >( this );
-		else if ( n == 2 )
+		if ( n == 2 )
 			return new PlanarCursor2D< T >( this );
-		else
-			return new PlanarCursor< T >( this );
+		return new PlanarCursor< T >( this );
 	}
 
 	@Override
@@ -219,10 +217,9 @@ public class PlanarImg< T extends NativeType< T >, A extends ArrayDataAccess<A> 
 	{
 		if ( n == 1 )
 			return new PlanarLocalizingCursor1D< T >( this );
-		else if ( n == 2 )
+		if ( n == 2 )
 			return new PlanarLocalizingCursor2D< T >( this );
-		else
-			return new PlanarLocalizingCursor<T>( this );
+		return new PlanarLocalizingCursor<T>( this );
 	}
 
 	@Override
@@ -230,8 +227,7 @@ public class PlanarImg< T extends NativeType< T >, A extends ArrayDataAccess<A> 
 	{
 		if ( n == 1 )
 			return new PlanarRandomAccess1D<T>( this );
-		else
-			return new PlanarRandomAccess<T>( this );
+		return new PlanarRandomAccess<T>( this );
 	}
 
 	@Override

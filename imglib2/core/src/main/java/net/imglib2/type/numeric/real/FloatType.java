@@ -198,5 +198,8 @@ public class FloatType extends AbstractRealType<FloatType> implements NativeType
 	@Override
 	public void decIndex() { --i; }
 	@Override
-	public void decIndex( final int decrement ) { i -= decrement; }	
+	public void decIndex( final int decrement ) { i -= decrement; }
+
+	@Override
+	public int getBitsPerPixel() { return 32; }
 }

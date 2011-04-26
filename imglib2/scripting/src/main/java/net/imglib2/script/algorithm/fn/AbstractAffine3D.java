@@ -1,30 +1,30 @@
 package net.imglib2.script.algorithm.fn;
 
+import java.awt.Image;
+
+import mpicbg.models.AffineModel2D;
+import mpicbg.models.AffineModel3D;
+import net.imglib2.ExtendedRandomAccessibleInterval;
+import net.imglib2.RandomAccessible;
+import net.imglib2.algorithm.transformation.ImageTransform;
+import net.imglib2.img.Img;
+import net.imglib2.interpolation.InterpolatorFactory;
+import net.imglib2.interpolation.randomaccess.NLinearInterpolatorFactory;
+import net.imglib2.interpolation.randomaccess.NearestNeighborInterpolatorFactory;
+import net.imglib2.outofbounds.OutOfBoundsConstantValueFactory;
+import net.imglib2.outofbounds.OutOfBoundsFactory;
 import net.imglib2.script.color.Alpha;
 import net.imglib2.script.color.Blue;
 import net.imglib2.script.color.Green;
 import net.imglib2.script.color.RGBA;
 import net.imglib2.script.color.Red;
 import net.imglib2.script.math.Compute;
-import net.imglib2.algorithm.transformation.ImageTransform;
-import net.imglib2.img.AbstractImg;
-import net.imglib2.img.Img;
-import net.imglib2.img.ImgCursor;
-import net.imglib2.img.ImgRandomAccess;
-import net.imglib2.img.array.ArrayImg;
-import net.imglib2.img.basictypeaccess.FloatAccess;
-import net.imglib2.interpolation.InterpolatorFactory;
-import net.imglib2.interpolation.randomaccess.NLinearInterpolatorFactory;
-import net.imglib2.interpolation.randomaccess.NearestNeighborInterpolatorFactory;
-import net.imglib2.outofbounds.OutOfBoundsConstantValueFactory;
-import net.imglib2.outofbounds.OutOfBoundsFactory;
 import net.imglib2.type.Type;
-import net.imglib2.type.numeric.NumericType;
 import net.imglib2.type.numeric.ARGBType;
+import net.imglib2.type.numeric.NumericType;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.real.FloatType;
-import mpicbg.models.AffineModel2D;
-import mpicbg.models.AffineModel3D;
+import net.imglib2.view.Views;
 
 /** Convenient intermediate class to be able to operate directly on an {@link Image} argument in the constructor. */
 public abstract class AbstractAffine3D<T extends NumericType<T>> extends ImgProxy<T>
@@ -128,25 +128,26 @@ public abstract class AbstractAffine3D<T extends NumericType<T>> extends ImgProx
 
 	static private final <R extends RealType<R>> Img<R> processReal(final Img<R> img, final float[] m,
 			final Mode mode, final OutOfBoundsFactory<R,Img<R>> oobf) throws Exception {
-		final InterpolatorFactory<R,Img<R>> inter;
+		final InterpolatorFactory<R,RandomAccessible<R>> inter;
 		switch (mode) {
 		case LINEAR:
-			inter = new NLinearInterpolatorFactory<R,Img<R>>(oobf);
+			inter = new NLinearInterpolatorFactory<R>();
 			break;
 		case NEAREST_NEIGHBOR:
-			inter = new NearestNeighborInterpolatorFactory<R>(oobf);
+			inter = new NearestNeighborInterpolatorFactory<R>();
 			break;
 		default:
 			throw new IllegalArgumentException("Scale: don't know how to scale with mode " + mode);
 		}
 
 		final ImageTransform<R> transform;
+		final ExtendedRandomAccessibleInterval<R, Img<R>> imgExt = Views.extend(img, oobf);
 
 		if (2 == img.numDimensions()) {
 			// Transform the single-plane image in 2D
 			AffineModel2D aff = new AffineModel2D();
 			aff.set(m[0], m[4], m[1], m[5], m[3], m[7]);
-			transform = new ImageTransform<R>(img, aff, inter);
+			transform = new ImageTransform<R>(imgExt, aff, (InterpolatorFactory) inter);
 		} else if (3 == img.numDimensions()) {
 			// Transform the image in 3D, or each plane in 2D
 			if (m.length < 12) {
@@ -156,7 +157,7 @@ public abstract class AbstractAffine3D<T extends NumericType<T>> extends ImgProx
 			aff.set(m[0], m[1], m[2], m[3],
 					m[4], m[5], m[6], m[7],
 					m[8], m[9], m[10], m[11]);
-			transform = new ImageTransform<R>(img, aff, inter);
+			transform = new ImageTransform<R>(imgExt, aff, (InterpolatorFactory) inter);
 			// Ensure Z dimension is not altered if scaleZ is 1:
 			if (Math.abs(m[10] - 1.0f) < 0.000001 && 0 == m[8] && 0 == m[9]) {
 				long[] d = transform.getNewImageSize();

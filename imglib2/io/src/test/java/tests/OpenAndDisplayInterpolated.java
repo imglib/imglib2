@@ -51,7 +51,7 @@ public class OpenAndDisplayInterpolated
 		try
 		{
 			final ImgOpener io = new ImgOpener();
-			img = io.openImg( "/home/tobias/workspace/imglibworkshop/DrosophilaWing.tif", imgFactory, new FloatType() ).getImg();
+			img = io.openImg( "/home/tobias/workspace/imglibworkshop/DrosophilaWing.tif", imgFactory, new FloatType() );
 		}
 		catch ( Exception e )
 		{

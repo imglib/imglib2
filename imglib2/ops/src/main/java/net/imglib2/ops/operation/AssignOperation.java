@@ -1,5 +1,7 @@
 package net.imglib2.ops.operation;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Observable;
 
 import net.imglib2.ops.condition.Condition;
@@ -8,10 +10,9 @@ import net.imglib2.ops.observer.IterationStatus;
 import net.imglib2.ops.observer.IterationStatus.Message;
 
 import java.util.Observer;
-import net.imglib2.cursor.LocalizableCursor;
-import net.imglib2.cursor.special.RegionOfInterestCursor;
-import net.imglib2.image.Image;
+
 import net.imglib2.type.numeric.RealType;
+import net.imglib2.img.Img;
 
 /**
  * An AssignOperation computes values in an output image. The output image is preallocated here. The AssignOperation uses a RealFunction
@@ -61,9 +62,9 @@ public class AssignOperation<T extends RealType<T>>
 	// -----------------  instance variables ------------------------------------------
 
 	private int imageCount;
-	private MultiImageIterator<T> cursor;
+	private MultiImageIterator<T> iterator;
 	private T outputVariable;
-	private int[][] positions;
+	private long[][] positions;
 	private Observable notifier;
 	private Condition[] conditions;
 	private boolean requireIntersection;
@@ -72,22 +73,21 @@ public class AssignOperation<T extends RealType<T>>
 
 	// -----------------  public interface ------------------------------------------
 	
-	public AssignOperation(Image<T>[] inputs, Image<T> output, RealFunction<T> func)
+	public AssignOperation(List<Img<T>> inputs, Img<T> output, RealFunction<T> func)
 	{
-		imageCount = inputs.length+1;
+		imageCount = inputs.size() + 1;
 
-		Image<T>[] images = new Image[imageCount];
+		Img<T>[] images = new Img[imageCount];
 		images[0] = output;
-		for (int i = 1; i <= inputs.length; i++)
-			images[i] = inputs[i-1];
+		for (int i = 1; i <= inputs.size(); i++)
+			images[i] = inputs.get(i-1);
 		
-		cursor = new MultiImageIterator<T>(images);
+		iterator = new MultiImageIterator<T>(images);
 		
-		positions = new int[imageCount][];
-		positions[0] = new int[output.getNumDimensions()];
-		for (int i = 1; i < imageCount; i++)
-		{
-			positions[i] = new int[inputs[i-1].getNumDimensions()];
+		positions = new long[imageCount][];
+		positions[0] = new long[output.numDimensions()];
+		for (int i = 1; i < imageCount; i++) {
+			positions[i] = new long[inputs.get(i-1).numDimensions()];
 		}
 		outputVariable = null;
 		notifier = null;
@@ -96,8 +96,8 @@ public class AssignOperation<T extends RealType<T>>
 		function = func;
 		wasInterrupted = false;
 		
-		if ( ! function.canAccept(inputs.length) )
-			throw new IllegalArgumentException("function cannot handle "+inputs.length+" input images");
+		if ( ! function.canAccept(inputs.size()) )
+			throw new IllegalArgumentException("function cannot handle "+inputs.size()+" input images");
 	}
 
 	public void addObserver(Observer o)
@@ -118,9 +118,9 @@ public class AssignOperation<T extends RealType<T>>
 		}
 	}
 	
-	public void setOutputRegion(int[] origin, int[] span)
+	public void setOutputRegion(long[] origin, long[] span)
 	{
-		cursor.setRegion(0, origin, span);
+		iterator.setRegion(0, origin, span);
 	}
 	
 	public void setOutputCondition(Condition<T> c)
@@ -128,9 +128,9 @@ public class AssignOperation<T extends RealType<T>>
 		conditions[0] = c;
 	}
 	
-	public void setInputRegion(int i, int[] origin, int[] span)
+	public void setInputRegion(int i, long[] origin, long[] span)
 	{
-		cursor.setRegion(i+1, origin, span);
+		iterator.setRegion(i+1, origin, span);
 	}
 	
 	public void setInputCondition(int i, Condition<T> c)
@@ -150,15 +150,17 @@ public class AssignOperation<T extends RealType<T>>
 
 	public void execute()
 	{
-		cursor.initialize();
+		iterator.initialize();
 
-		RegionOfInterestCursor<T>[] subCursors = cursor.getSubcursors();
-
-		outputVariable = subCursors[0].getType();
-
-		T[] inputVariables = getInputVariables(subCursors);
+		RegionCursor<T>[] subCursors = iterator.getCursors();
 		
-		int[] position = subCursors[0].createPositionArray();
+		RegionCursor<T> subCursor0 = subCursors[0];
+
+		outputVariable = subCursor0.getValue();
+
+		List<T> inputVariables = getInputVariables(subCursors);
+		
+		long[] position = new long[positions[0].length];
 
 		IterationTracker status = new IterationTracker();
 		
@@ -168,12 +170,10 @@ public class AssignOperation<T extends RealType<T>>
 			notifier.notifyObservers(status);
 		}
 
-		while (cursor.hasNext())
+		while (iterator.isValid())
 		{
 			if (wasInterrupted)
 				break;
-			
-			cursor.fwd();
 			
 			double value = Double.NaN;
 
@@ -188,20 +188,21 @@ public class AssignOperation<T extends RealType<T>>
 			
 			if (notifier != null)
 			{
-				subCursors[0].getPosition(position);
-				
+				subCursor0.getPosition(position);
 				status.message = Message.UPDATE;
 				status.position = position;
 				status.value = value;
 				status.conditionsSatisfied = conditionsSatisfied;
 				notifier.notifyObservers(status);
 			}
+
+			iterator.next();
 		}
 
 		if (notifier != null)
 		{
 			status.message = Message.DONE;
-			status.wasInterrupted = wasInterrupted;
+			status.interruptStatus = wasInterrupted;
 			notifier.notifyObservers(status);
 		}
 	}
@@ -213,7 +214,7 @@ public class AssignOperation<T extends RealType<T>>
 
 	// -----------------  private interface ------------------------------------------
 	
-	private boolean conditionsSatisfied(LocalizableCursor<T>[] cursors)
+	private boolean conditionsSatisfied(RegionCursor<T>[] cursors)
 	{
 		for (int i = 0; i < conditions.length; i++)
 		{
@@ -222,11 +223,11 @@ public class AssignOperation<T extends RealType<T>>
 			if (condition == null)
 				continue;
 			
-			LocalizableCursor<T> subcursor = cursors[i];
+			RegionCursor<T> subcursor = cursors[i];
 			
 			subcursor.getPosition(positions[i]);
 			
-			if (condition.isSatisfied(subcursor, positions[i]))
+			if (condition.isSatisfied(subcursor.getValue(), positions[i]))
 			{
 				if (!requireIntersection)  // if union case we can short circuit with success
 					return true;
@@ -237,18 +238,21 @@ public class AssignOperation<T extends RealType<T>>
 					return false;
 			}
 		}
+		
 		if (requireIntersection) // intersection - if here everything passed
 			return true;
-		else  // union - if here nothing satisfied the condition
-			return false;
+		
+		//else union - if here nothing satisfied the condition
+		
+		return false;
 	}
 
-	private T[] getInputVariables(RegionOfInterestCursor<T>[] cursors)
+	private List<T> getInputVariables(RegionCursor<T>[] cursors)
 	{
-		T[] variables = outputVariable.createArray1D(imageCount-1);
+		ArrayList<T> variables = new ArrayList<T>();
 		
-		for (int i = 0; i < variables.length; i++)
-			variables[i] = cursors[i+1].getType();
+		for (int i = 1; i < imageCount; i++)
+			variables.add(cursors[i].getValue());
 		
 		return variables;
 	}
@@ -256,10 +260,10 @@ public class AssignOperation<T extends RealType<T>>
 	private class IterationTracker implements IterationStatus
 	{
 		Message message;
-		int[] position;
+		long[] position;
 		double value;
 		boolean conditionsSatisfied;
-		boolean wasInterrupted;
+		boolean interruptStatus;
 
 		@Override
 		public Message getMessage()
@@ -268,7 +272,7 @@ public class AssignOperation<T extends RealType<T>>
 		}
 
 		@Override
-		public int[] getPosition()
+		public long[] getPosition()
 		{
 			return position;
 		}
@@ -288,7 +292,7 @@ public class AssignOperation<T extends RealType<T>>
 		@Override
 		public boolean wasInterrupted()
 		{
-			return wasInterrupted;
+			return interruptStatus;
 		}
 		
 	}

@@ -167,4 +167,7 @@ public abstract class GenericByteType<T extends GenericByteType<T>> extends Abst
 	public void decIndex() { --i; }
 	@Override
 	public void decIndex( final int decrement ) { i -= decrement; }	
+
+	@Override
+	public int getBitsPerPixel() { return 8; }
 }

@@ -3,7 +3,7 @@ package net.imglib2.script.algorithm;
 import net.imglib2.script.math.Compute;
 import net.imglib2.script.math.fn.IFunction;
 import net.imglib2.algorithm.gauss.GaussianConvolutionReal;
-import net.imglib2.image.Image;
+import net.imglib2.img.Image;
 import net.imglib2.outofbounds.OutOfBoundsStrategyFactory;
 import net.imglib2.outofbounds.OutOfBoundsStrategyMirrorFactory;
 import net.imglib2.type.numeric.RealType;

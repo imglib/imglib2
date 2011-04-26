@@ -1,5 +1,8 @@
 package net.imglib2.script.algorithm;
 
+import net.imglib2.Cursor;
+import net.imglib2.RandomAccessible;
+import net.imglib2.RealRandomAccess;
 import net.imglib2.script.algorithm.fn.AbstractAffine3D.Mode;
 import net.imglib2.script.algorithm.fn.ImgProxy;
 import net.imglib2.script.color.Alpha;
@@ -9,8 +12,6 @@ import net.imglib2.script.color.RGBA;
 import net.imglib2.script.color.Red;
 import net.imglib2.script.math.Compute;
 import net.imglib2.img.Img;
-import net.imglib2.img.ImgCursor;
-import net.imglib2.interpolation.Interpolator;
 import net.imglib2.interpolation.InterpolatorFactory;
 import net.imglib2.interpolation.randomaccess.NLinearInterpolatorFactory;
 import net.imglib2.interpolation.randomaccess.NearestNeighborInterpolatorFactory;
@@ -20,6 +21,7 @@ import net.imglib2.type.numeric.ARGBType;
 import net.imglib2.type.numeric.NumericType;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.real.FloatType;
+import net.imglib2.view.Views;
 
 /** Resample an image in all its dimensions by a given scaling factor and interpolation mode.
  *  
@@ -91,20 +93,20 @@ public class Resample<N extends NumericType<N>> extends ImgProxy<N>
 
 		final Img<T> res = img.factory().create(dim, img.firstElement().createVariable());
 
-		InterpolatorFactory<T,Img<T>> ifac;
+		InterpolatorFactory<T,RandomAccessible<T>> ifac;
 		switch (mode) {
 		case LINEAR:
-			ifac = new NLinearInterpolatorFactory<T>(new OutOfBoundsMirrorFactory<T,Img<T>>(OutOfBoundsMirrorFactory.Boundary.SINGLE));
+			ifac = new NLinearInterpolatorFactory<T>();
 			break;
 		case NEAREST_NEIGHBOR:
-			ifac = new NearestNeighborInterpolatorFactory<T>(new OutOfBoundsMirrorFactory<T,Img<T>>(OutOfBoundsMirrorFactory.Boundary.SINGLE));
+			ifac = new NearestNeighborInterpolatorFactory<T>();
 			break;
 		default:
 			throw new Exception("Resample: unknown mode!");
 		}
 
-		final Interpolator<T,Img<T>> inter = ifac.create(img);
-		final ImgCursor<T> c2 = res.localizingCursor();
+		final RealRandomAccess<T> inter = ifac.create(Views.extend(img, new OutOfBoundsMirrorFactory<T,Img<T>>(OutOfBoundsMirrorFactory.Boundary.SINGLE)));
+		final Cursor<T> c2 = res.localizingCursor();
 		final float[] s = new float[dim.length];
 		for (int i=0; i<s.length; i++) s[i] = (float)img.dimension(i) / dim[i];
 		final long[] d = new long[dim.length];

@@ -26,7 +26,7 @@ public class OpenAndDisplayRotated
 		{
 			ImgFactory< FloatType > imgFactory = new ArrayImgFactory< FloatType >();
 			final ImgOpener io = new ImgOpener();
-			img = io.openImg( "/home/tobias/Desktop/73.tif", imgFactory, new FloatType() ).getImg();
+			img = io.openImg( "/home/tobias/Desktop/73.tif", imgFactory, new FloatType() );
 		}
 		catch ( Exception e )
 		{

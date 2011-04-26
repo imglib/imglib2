@@ -10,11 +10,11 @@ import javax.swing.JFileChooser;
 
 import net.imglib2.container.imageplus.ImagePlusContainer;
 import net.imglib2.exception.ImgLibException;
-import net.imglib2.image.Image;
-import net.imglib2.image.display.imagej.ImageJFunctions;
+import net.imglib2.img.Image;
 import net.imglib2.img.Img;
 import net.imglib2.img.ImgCursor;
 import net.imglib2.img.array.ArrayImgFactory;
+import net.imglib2.img.display.imagej.ImageJFunctions;
 import net.imglib2.io.LOCI;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.real.FloatType;

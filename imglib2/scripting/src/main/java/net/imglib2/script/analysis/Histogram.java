@@ -7,9 +7,9 @@ import java.util.TreeMap;
 
 import javax.swing.JFrame;
 
+import net.imglib2.Cursor;
 import net.imglib2.algorithm.math.ComputeMinMax;
 import net.imglib2.img.Img;
-import net.imglib2.img.ImgCursor;
 import net.imglib2.type.numeric.ARGBType;
 import net.imglib2.type.numeric.RealType;
 
@@ -75,7 +75,7 @@ public class Histogram<T extends RealType<T>> extends TreeMap<Double,Long>
 		if (0.0 == range) {
 			bins[0] = img.size();
 		} else {
-			final ImgCursor<T> c = img.cursor();
+			final Cursor<T> c = img.cursor();
 			// zero-based:
 			final int N = nBins -1;
 			// Analyze the image

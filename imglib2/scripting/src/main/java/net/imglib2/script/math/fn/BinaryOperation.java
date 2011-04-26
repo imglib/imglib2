@@ -3,8 +3,8 @@ package net.imglib2.script.math.fn;
 
 import java.util.Collection;
 
+import net.imglib2.Cursor;
 import net.imglib2.img.Img;
-import net.imglib2.img.ImgCursor;
 import net.imglib2.type.numeric.RealType;
 
 /* An abstract class to facilitate implementing a function that takes two arguments.
@@ -134,7 +134,7 @@ public abstract class BinaryOperation extends FloatImageOperation
 	}
 
 	@Override
-	public final void findCursors(final Collection<ImgCursor<?>> cursors) {
+	public final void findCursors(final Collection<Cursor<?>> cursors) {
 		a.findCursors(cursors);
 		b.findCursors(cursors);
 	}
@@ -142,8 +142,15 @@ public abstract class BinaryOperation extends FloatImageOperation
 	public final IFunction a() { return a; }
 	public final IFunction b() { return b; }
 
+	@Override
 	public IFunction duplicate() throws Exception
 	{
 		return getClass().getConstructor(IFunction.class, IFunction.class).newInstance(a.duplicate(), b.duplicate());
+	}
+	
+	@Override
+	public void findImgs(final Collection<Img<?>> imgs)
+	{
+		a.findImgs(imgs);
 	}
 }
