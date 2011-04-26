@@ -448,4 +448,131 @@ public class KthElementTest
 			assertTrue( values.get( p ).equals( sortedValues.get( p ) ) );
 	}
 
+	@Test
+	public void testMedianFloatObjectFullPermutation()
+	{
+		ArrayList< Float > values = new ArrayList< Float >();
+		for( float f : new float[] {123, 21, 12912, 321, 32, 12345, 249, 5823, 834, 10, 23, 329 } ) {
+			values.add( f );
+		}
+		@SuppressWarnings( "unchecked" )
+		ArrayList< Float > origvalues = ( ArrayList< Float > ) values.clone();
+
+		final int[] permutation = new int[ values.size() ];
+		for( int k = 0; k < permutation.length; ++k )
+			permutation[ k ] = k;
+
+		final int i = 0;
+		final int j = values.size() - 1;
+		int k = i + ( j - i ) / 2;
+		KthElement.kthElement( k, values, permutation );
+
+		// the elements before the k-th should be equal or smaller than the k-th
+		for ( int p = i; p < k; ++p )
+			assertTrue( values.get( p ) <= values.get( k ) );
+
+		// the elements after the k-th should be equal or greater than the k-th
+		for ( int p = k + 1; p <= j; ++p )
+			assertTrue( values.get( p ) >= values.get( k ) );
+
+		for( int p = 0; p < permutation.length; ++p )
+			assertTrue( values.get( p ).equals( origvalues.get( permutation[ p ] ) ) );
+	}
+	
+	@Test
+	public void testMedianFloatObjectFullComparatorPermutation()
+	{
+		ArrayList< Float > values = new ArrayList< Float >();
+		for( float f : new float[] {123, 21, 12912, 321, 32, 12345, 249, 5823, 834, 10, 23, 329 } ) {
+			values.add( f );
+		}
+		@SuppressWarnings( "unchecked" )
+		ArrayList< Float > origvalues = ( ArrayList< Float > ) values.clone();
+
+		final int[] permutation = new int[ values.size() ];
+		for( int k = 0; k < permutation.length; ++k )
+			permutation[ k ] = k;
+
+		final int i = 0;
+		final int j = values.size() - 1;
+		int k = i + ( j - i ) / 2;
+		KthElement.kthElement( k, values, permutation, new ComparableComparator< Float >() );
+
+		// the elements before the k-th should be equal or smaller than the k-th
+		for ( int p = i; p < k; ++p )
+			assertTrue( values.get( p ) <= values.get( k ) );
+
+		// the elements after the k-th should be equal or greater than the k-th
+		for ( int p = k + 1; p <= j; ++p )
+			assertTrue( values.get( p ) >= values.get( k ) );
+
+		for( int p = 0; p < permutation.length; ++p )
+			assertTrue( values.get( p ).equals( origvalues.get( permutation[ p ] ) ) );
+	}
+
+	@Test
+	public void testMedianFloatObjectFullIteratorComparatorPermutation()
+	{
+		ArrayList< Float > values = new ArrayList< Float >();
+		for( float f : new float[] {123, 21, 12912, 321, 32, 12345, 249, 5823, 834, 10, 23, 329 } ) {
+			values.add( f );
+		}
+		@SuppressWarnings( "unchecked" )
+		ArrayList< Float > origvalues = ( ArrayList< Float > ) values.clone();
+
+		final int[] permutation = new int[ values.size() ];
+		for( int k = 0; k < permutation.length; ++k )
+			permutation[ k ] = k;
+
+		final int i = 0;
+		final int j = values.size() - 1;
+		ListIterator< Float > iIterator = values.listIterator( i );
+		ListIterator< Float > jIterator = values.listIterator( j + 1 );
+		int k = i + ( j - i ) / 2;
+		KthElement.kthElement( iIterator, jIterator, k, permutation, new ComparableComparator< Float >() );
+
+		// the elements before the k-th should be equal or smaller than the k-th
+		for ( int p = i; p < k; ++p )
+			assertTrue( values.get( p ) <= values.get( k ) );
+
+		// the elements after the k-th should be equal or greater than the k-th
+		for ( int p = k + 1; p <= j; ++p )
+			assertTrue( values.get( p ) >= values.get( k ) );
+
+		for( int p = 0; p < permutation.length; ++p )
+			assertTrue( values.get( p ).equals( origvalues.get( permutation[ p ] ) ) );
+	}
+	
+	@Test
+	public void testMedianFloatObjectFullIteratorPermutation()
+	{
+		ArrayList< Float > values = new ArrayList< Float >();
+		for( float f : new float[] {123, 21, 12912, 321, 32, 12345, 249, 5823, 834, 10, 23, 329 } ) {
+			values.add( f );
+		}
+		@SuppressWarnings( "unchecked" )
+		ArrayList< Float > origvalues = ( ArrayList< Float > ) values.clone();
+
+		final int[] permutation = new int[ values.size() ];
+		for( int k = 0; k < permutation.length; ++k )
+			permutation[ k ] = k;
+
+		final int i = 0;
+		final int j = values.size() - 1;
+		ListIterator< Float > iIterator = values.listIterator( i );
+		ListIterator< Float > jIterator = values.listIterator( j + 1 );
+		int k = i + ( j - i ) / 2;
+		KthElement.kthElement( iIterator, jIterator, k, permutation );
+
+		// the elements before the k-th should be equal or smaller than the k-th
+		for ( int p = i; p < k; ++p )
+			assertTrue( values.get( p ) <= values.get( k ) );
+
+		// the elements after the k-th should be equal or greater than the k-th
+		for ( int p = k + 1; p <= j; ++p )
+			assertTrue( values.get( p ) >= values.get( k ) );
+
+		for( int p = 0; p < permutation.length; ++p )
+			assertTrue( values.get( p ).equals( origvalues.get( permutation[ p ] ) ) );
+	}
 }
