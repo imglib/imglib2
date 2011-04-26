@@ -45,7 +45,8 @@ public class KDTreeTest
 		}
 		
 		for ( RealPoint t : testpoints ) {
-			final RealPoint nnKdtree = kd.search( t ).get();
+			kd.search( t );
+			final RealPoint nnKdtree = kd.getSampler().get();
 			final RealPoint nnExhaustive = findNearestNeighborExhaustive(points, t);
 
 			boolean equal = true;
@@ -64,7 +65,8 @@ public class KDTreeTest
 
 		start = System.currentTimeMillis();
 		for ( RealPoint t : testpoints ) {
-			final RealPoint nnKdtree = kd.search( t ).get();
+			kd.search( t );
+			final RealPoint nnKdtree = kd.getSampler().get();
 			nnKdtree.getClass();
 		}
 		final long kdTime = System.currentTimeMillis() - start;

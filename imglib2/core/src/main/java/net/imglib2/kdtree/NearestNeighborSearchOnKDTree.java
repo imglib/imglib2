@@ -1,9 +1,11 @@
 package net.imglib2.kdtree;
 
 import net.imglib2.RealLocalizable;
+import net.imglib2.Sampler;
+import net.imglib2.nearestneighbor.NearestNeighborSearch;
 
 
-public class NearestNeighborSearchOnKDTree< T >
+public class NearestNeighborSearchOnKDTree< T > implements NearestNeighborSearch< T >
 {
 	protected KDTree< T > tree;
 	
@@ -20,12 +22,12 @@ public class NearestNeighborSearchOnKDTree< T >
 		this.tree = tree;
 	}
 	
-	public Node< T > search( RealLocalizable p )
+	@Override
+	public void search( RealLocalizable p )
 	{
 		p.localize( pos );
 		bestSquDistance = Double.MAX_VALUE;
 		searchNode( tree.getRoot() );
-		return bestPoint;
 	}
 	
 	protected void searchNode( Node< T > current )
@@ -51,5 +53,29 @@ public class NearestNeighborSearchOnKDTree< T >
 	    // search the away branch - maybe
 		if ( ( axisSquDistance <= bestSquDistance ) && ( awayChild != null ) )
 			searchNode( awayChild );
+	}
+
+	@Override
+	public Sampler< T > getSampler()
+	{
+		return bestPoint;
+	}
+
+	@Override
+	public RealLocalizable getPosition()
+	{
+		return bestPoint;
+	}
+
+	@Override
+	public double getSquareDistance()
+	{
+		return bestSquDistance;
+	}
+
+	@Override
+	public double getDistance()
+	{
+		return Math.sqrt( bestSquDistance );
 	}
 }
