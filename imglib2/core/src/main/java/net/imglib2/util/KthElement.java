@@ -452,7 +452,7 @@ public class KthElement
 	{
 		kthElement( 0, values.size() - 1, k, values );
 	}
-
+		
 	/**
 	 * Partition a sublist such that the k-th smallest value
 	 * is at position {@code k}, elements before the k-th are smaller or equal,
@@ -502,7 +502,7 @@ public class KthElement
 				return;
 		}
 	}
-
+	
 	/**
 	 * Partition a sublist such that the k-th smallest value
 	 * is at position {@code k}, elements before the k-th are smaller or equal,
@@ -549,5 +549,277 @@ public class KthElement
 			else
 				return;
 		}
+	}	
+
+	/**
+	 * Partition a sublist of {@code values} such that the k-th smallest value
+	 * is at position {@code k}, elements before the k-th are smaller or equal
+	 * and elements after the k-th are larger or equal.
+	 * 
+	 * <p>
+	 * The {@code permutation} array is permuted in the same way as the list.
+	 * Usually, this will be an array of indices, so that the partition operation
+	 * can be mirrored in another list:
+	 * Suppose, we have a list of keys and a lists (or several) of values.
+	 * If we use {@code kthElement} to sort the keys, we want to reorder the
+	 * values in the same manner. We pass an indices array [0, 1, 2, ...] and
+	 * use the permutation of the indices to permute the values list.
+	 * </p>
+	 *
+	 * @param i
+	 *            index of first element of subarray
+	 * @param j
+	 *            index of last element of subarray
+	 * @param k
+	 *            index for k-th smallest value. i <= k <= j.
+	 * @param values
+	 *            array
+	 * @param permutation
+	 *            elements of this array are permuted in the same way as the elements in the values list 
+	 * @param compare
+	 *            ordering function on T
+	 */
+	public static < T > void kthElement( int i, int j, int k, List< T > values, final int[] permutation, Comparator< ? super T > comparator )
+	{
+		while ( true )
+		{
+			int pivotpos = partitionSubList( i, j, values, permutation, comparator );
+			if ( pivotpos > k )
+			{
+				// partition lower half
+				j = pivotpos - 1;
+			}
+			else if ( pivotpos < k )
+			{
+				// partition upper half
+				i = pivotpos + 1;
+			}
+			else
+				return;
+		}
 	}
+
+	/**
+	 * Partition a list of {@code values} such that the k-th smallest value is
+	 * at position {@code k}, elements before the k-th are smaller or equal and
+	 * elements after the k-th are larger or equal.
+	 * 
+	 * <p>
+	 * The {@code permutation} array is permuted in the same way as the list.
+	 * Usually, this will be an array of indices, so that the partition operation
+	 * can be mirrored in another list:
+	 * Suppose, we have a list of keys and a lists (or several) of values.
+	 * If we use {@code kthElement} to sort the keys, we want to reorder the
+	 * values in the same manner. We pass an indices array [0, 1, 2, ...] and
+	 * use the permutation of the indices to permute the values list.
+	 * </p>
+	 * 
+	 * @param k
+	 *            index for k-th smallest value. 0 <= k < values.size().
+	 * @param values
+	 *            array
+	 * @param permutation
+	 *            elements of this array are permuted in the same way as the elements in the values list 
+	 * @param compare
+	 *            ordering function on T
+	 */
+	public static < T > void kthElement( int k, List< T > values, final int[] permutation, Comparator< ? super T > comparator )
+	{
+		kthElement( 0, values.size() - 1, k, values, permutation, comparator );
+	}
+
+	/**
+	 * Partition a sublist of {@code values} such that the k-th smallest value
+	 * is at position {@code k}, elements before the k-th are smaller or equal
+	 * and elements after the k-th are larger or equal.
+	 * 
+	 * <p>
+	 * The {@code permutation} array is permuted in the same way as the list.
+	 * Usually, this will be an array of indices, so that the partition operation
+	 * can be mirrored in another list:
+	 * Suppose, we have a list of keys and a lists (or several) of values.
+	 * If we use {@code kthElement} to sort the keys, we want to reorder the
+	 * values in the same manner. We pass an indices array [0, 1, 2, ...] and
+	 * use the permutation of the indices to permute the values list.
+	 * </p>
+	 * 
+	 * @param i
+	 *            index of first element of subarray
+	 * @param j
+	 *            index of last element of subarray
+	 * @param k
+	 *            index for k-th smallest value. i <= k <= j.
+	 * @param values
+	 *            array
+	 * @param permutation
+	 *            elements of this array are permuted in the same way as the elements in the values list 
+	 */
+	public static < T extends Comparable< T > > void kthElement( int i, int j, int k, List< T > values, final int[] permutation )
+	{
+		while ( true )
+		{
+			int pivotpos = partitionSubList( i, j, values, permutation );
+			if ( pivotpos > k )
+			{
+				// partition lower half
+				j = pivotpos - 1;
+			}
+			else if ( pivotpos < k )
+			{
+				// partition upper half
+				i = pivotpos + 1;
+			}
+			else
+				return;
+		}
+	}
+
+	/**
+	 * Partition a list of {@code values} such that the k-th smallest value is
+	 * at position {@code k}, elements before the k-th are smaller or equal and
+	 * elements after the k-th are larger or equal.
+	 * 
+	 * <p>
+	 * The {@code permutation} array is permuted in the same way as the list.
+	 * Usually, this will be an array of indices, so that the partition operation
+	 * can be mirrored in another list:
+	 * Suppose, we have a list of keys and a lists (or several) of values.
+	 * If we use {@code kthElement} to sort the keys, we want to reorder the
+	 * values in the same manner. We pass an indices array [0, 1, 2, ...] and
+	 * use the permutation of the indices to permute the values list.
+	 * </p>
+	 * 
+	 * @param k
+	 *            index for k-th smallest value. 0 <= k < values.size().
+	 * @param values
+	 *            array
+	 * @param permutation
+	 *            elements of this array are permuted in the same way as the elements in the values list 
+	 */
+	public static < T extends Comparable< T > > void kthElement( int k, List< T > values, final int[] permutation )
+	{
+		kthElement( 0, values.size() - 1, k, values, permutation );
+	}
+
+	/**
+	 * Partition a sublist such that the k-th smallest value
+	 * is at position {@code k}, elements before the k-th are smaller or equal,
+	 * and elements after the k-th are larger or equal.
+	 * 
+	 * <p>
+	 * After the function returns, the iterator {@code i} is on the k-th element.
+	 * That is, {@code i.next()} gives the (k+1)-th element.
+	 * </p>
+	 *
+	 * <p>
+	 * The {@code permutation} array is permuted in the same way as the list.
+	 * Usually, this will be an array of indices, so that the partition operation
+	 * can be mirrored in another list:
+	 * Suppose, we have a list of keys and a lists (or several) of values.
+	 * If we use {@code kthElement} to sort the keys, we want to reorder the
+	 * values in the same manner. We pass an indices array [0, 1, 2, ...] and
+	 * use the permutation of the indices to permute the values list.
+	 * </p>
+	 * 
+	 * @param i
+	 *            iterator pointing before first element of the sublist, that
+	 *            is, {@code i.next()} gives you the first element.
+	 * @param j
+	 *            iterator pointing behind the last element of the sublist, that
+	 *            is, {@code i.previous()} gives you the last element.
+	 * @param k
+	 *            index for k-th smallest value. i.nextIndex() <= k <= j.previousIndex().
+	 * @param permutation
+	 *            elements of this array are permuted in the same way as the elements in the values list 
+	 * @param compare
+	 *            ordering function on T
+	 */
+	public static < T > void kthElement( ListIterator< T > i, ListIterator< T > j, int k, final int[] permutation, Comparator< ? super T > comparator )
+	{
+		while ( true )
+		{
+			int iPos = i.nextIndex();
+			int jPos = j.previousIndex();
+			partitionSubList( i, j, permutation, comparator );
+			int pivotpos = i.nextIndex() - 1;
+			if ( pivotpos > k )
+			{
+				// partition lower half
+				for ( int c = i.nextIndex() - iPos; c > 0; --c )
+					i.previous();
+				for ( int c = j.previousIndex() - ( pivotpos - 1 ); c > 0; --c )
+					j.previous();
+			}
+			else if ( pivotpos < k )
+			{
+				// partition upper half
+				for ( int c = i.nextIndex() - ( pivotpos + 1 ); c > 0; --c )
+					i.previous();
+				for ( int c = j.previousIndex() - jPos; c > 0; --c )
+					j.previous();
+			}
+			else
+				return;
+		}
+	}
+
+	/**
+	 * Partition a sublist such that the k-th smallest value
+	 * is at position {@code k}, elements before the k-th are smaller or equal,
+	 * and elements after the k-th are larger or equal.
+	 * 
+	 * <p>
+	 * After the function returns, the iterator {@code i} is on the k-th element.
+	 * That is, {@code i.next()} gives the (k+1)-th element.
+	 * </p>
+	 *
+	 * <p>
+	 * The {@code permutation} array is permuted in the same way as the list.
+	 * Usually, this will be an array of indices, so that the partition operation
+	 * can be mirrored in another list:
+	 * Suppose, we have a list of keys and a lists (or several) of values.
+	 * If we use {@code kthElement} to sort the keys, we want to reorder the
+	 * values in the same manner. We pass an indices array [0, 1, 2, ...] and
+	 * use the permutation of the indices to permute the values list.
+	 * </p>
+	 * 
+	 * @param i
+	 *            iterator pointing before first element of the sublist, that
+	 *            is, {@code i.next()} gives you the first element.
+	 * @param j
+	 *            iterator pointing behind the last element of the sublist, that
+	 *            is, {@code i.previous()} gives you the last element.
+	 * @param k
+	 *            index for k-th smallest value. i.nextIndex() <= k <= j.previousIndex().
+	 * @param permutation
+	 *            elements of this array are permuted in the same way as the elements in the values list 
+	 */
+	public static < T extends Comparable< T > > void kthElement( ListIterator< T > i, ListIterator< T > j, int k, final int[] permutation )
+	{
+		while ( true )
+		{
+			int iPos = i.nextIndex();
+			int jPos = j.previousIndex();
+			partitionSubList( i, j, permutation );
+			int pivotpos = i.nextIndex() - 1;
+			if ( pivotpos > k )
+			{
+				// partition lower half
+				for ( int c = i.nextIndex() - iPos; c > 0; --c )
+					i.previous();
+				for ( int c = j.previousIndex() - ( pivotpos - 1 ); c > 0; --c )
+					j.previous();
+			}
+			else if ( pivotpos < k )
+			{
+				// partition upper half
+				for ( int c = i.nextIndex() - ( pivotpos + 1 ); c > 0; --c )
+					i.previous();
+				for ( int c = j.previousIndex() - jPos; c > 0; --c )
+					j.previous();
+			}
+			else
+				return;
+		}
+	}	
 }

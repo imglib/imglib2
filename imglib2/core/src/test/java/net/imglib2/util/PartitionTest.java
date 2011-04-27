@@ -254,7 +254,7 @@ public class PartitionTest
 		ListIterator< Float > jIterator = values.listIterator( values.size() );
 		final int i = 0;
 		final int j = values.size() - 1;
-		Partition.partitionSubList( iIterator, jIterator, new ComparableComparator< Float >() );
+		Partition.partitionSubList( iIterator, jIterator );
 		final int p = iIterator.nextIndex() - 1;
 
 		assertTrue ( p >= i && p <= j );
@@ -285,7 +285,7 @@ public class PartitionTest
 		ListIterator< Float > jIterator = values.listIterator( values.size() );
 		final int i = 0;
 		final int j = values.size() - 1;
-		Partition.partitionSubList( iIterator, jIterator );
+		Partition.partitionSubList( iIterator, jIterator, new ComparableComparator< Float >() );
 		final int p = iIterator.nextIndex() - 1;
 
 		assertTrue ( p >= i && p <= j );
@@ -299,6 +299,132 @@ public class PartitionTest
 		Collections.sort( values );
 		for ( int k = i; k <= j; ++k )
 			assertTrue( values.get( k ).equals( sortedValues.get( k ) ) );
+	}
+
+	@Test
+	public void testPartitionFloatObjectPermutation()
+	{
+		ArrayList< Float > values = new ArrayList< Float >();
+		for( float f : new float[] {123, 21, 12912, 321, 32, 12345, 249, 5823, 834, 10, 23, 329, 1, 1, 1, 100 } ) {
+			values.add( f );
+		}
+		@SuppressWarnings( "unchecked" )
+		ArrayList< Float > origvalues = ( ArrayList< Float > ) values.clone();
+		
+		final int[] permutation = new int[ values.size() ];
+		for( int k = 0; k < permutation.length; ++k )
+			permutation[ k ] = k;
+
+		final int i = 0;
+		final int j = values.size() - 1;
+		final int p = Partition.partitionSubList( i, j, values, permutation );
+
+		assertTrue ( p >= i && p <= j );
+
+		for ( int k = i; k < p; ++k )
+			assertTrue( values.get( k ).compareTo( values.get( p ) ) < 0 );
+
+		for ( int k = p + 1; k < j; ++k )
+			assertTrue( values.get( k ).compareTo( values.get( p ) ) >= 0 );
+
+		for( int k = 0; k < permutation.length; ++k )
+			assertTrue( values.get( k ).equals( origvalues.get( permutation[ k ] ) ) );
+	}
+
+	@Test
+	public void testPartitionFloatObjectComparatorPermutation()
+	{
+		ArrayList< Float > values = new ArrayList< Float >();
+		for( float f : new float[] {123, 21, 12912, 321, 32, 12345, 249, 5823, 834, 10, 23, 329 } ) {
+			values.add( f );
+		}
+		@SuppressWarnings( "unchecked" )
+		ArrayList< Float > origvalues = ( ArrayList< Float > ) values.clone();
+		
+		final int[] permutation = new int[ values.size() ];
+		for( int k = 0; k < permutation.length; ++k )
+			permutation[ k ] = k;
+
+		final int i = 0;
+		final int j = values.size() - 1;
+		final int p = Partition.partitionSubList( i, j, values, permutation, new ComparableComparator< Float >() );
+
+		assertTrue ( p >= i && p <= j );
+
+		for ( int k = i; k < p; ++k )
+			assertTrue( values.get( k ).compareTo( values.get( p ) ) < 0 );
+
+		for ( int k = p + 1; k < j; ++k )
+			assertTrue( values.get( k ).compareTo( values.get( p ) ) >= 0 );
+		
+		for( int k = 0; k < permutation.length; ++k )
+			assertTrue( values.get( k ).equals( origvalues.get( permutation[ k ] ) ) );
+	}
+
+	@Test
+	public void testPartitionFloatObjectIteratorPermutation()
+	{
+		ArrayList< Float > values = new ArrayList< Float >();
+		for( float f : new float[] {123, 21, 12912, 321, 32, 12345, 249, 5823, 834, 10, 23, 329 } ) {
+			values.add( f );
+		}
+		@SuppressWarnings( "unchecked" )
+		ArrayList< Float > origvalues = ( ArrayList< Float > ) values.clone();
+
+		final int[] permutation = new int[ values.size() ];
+		for( int k = 0; k < permutation.length; ++k )
+			permutation[ k ] = k;
+
+		ListIterator< Float > iIterator = values.listIterator();
+		ListIterator< Float > jIterator = values.listIterator( values.size() );
+		final int i = 0;
+		final int j = values.size() - 1;
+		Partition.partitionSubList( iIterator, jIterator, permutation );
+		final int p = iIterator.nextIndex() - 1;
+
+		assertTrue ( p >= i && p <= j );
+
+		for ( int k = i; k < p; ++k )
+			assertTrue( values.get( k ).compareTo( values.get( p ) ) < 0 );
+
+		for ( int k = p + 1; k < j; ++k )
+			assertTrue( values.get( k ).compareTo( values.get( p ) ) >= 0 );
+		
+		for( int k = 0; k < permutation.length; ++k )
+			assertTrue( values.get( k ).equals( origvalues.get( permutation[ k ] ) ) );
+	}
+
+	@Test
+	public void testPartitionFloatObjectIteratorComparatorPermutation()
+	{
+		ArrayList< Float > values = new ArrayList< Float >();
+		for( float f : new float[] {123, 21, 12912, 321, 32, 12345, 249, 5823, 834, 10, 23, 329 } ) {
+			values.add( f );
+		}
+		@SuppressWarnings( "unchecked" )
+		ArrayList< Float > origvalues = ( ArrayList< Float > ) values.clone();
+
+		final int[] permutation = new int[ values.size() ];
+		for( int k = 0; k < permutation.length; ++k )
+			permutation[ k ] = k;
+
+		ListIterator< Float > iIterator = values.listIterator();
+		ListIterator< Float > jIterator = values.listIterator( values.size() );
+		final int i = 0;
+		final int j = values.size() - 1;
+		Partition.partitionSubList( iIterator, jIterator, permutation, new ComparableComparator< Float >() );
+		final int p = iIterator.nextIndex() - 1;
+
+		assertTrue ( p >= i && p <= j );
+
+		for ( int k = i; k < p; ++k )
+			assertTrue( values.get( k ).compareTo( values.get( p ) ) < 0 );
+
+		for ( int k = p + 1; k < j; ++k )
+			assertTrue( values.get( k ).compareTo( values.get( p ) ) >= 0 );
+		
+		for( int k = 0; k < permutation.length; ++k )
+			assertTrue( values.get( k ).equals( origvalues.get( permutation[ k ] ) ) );
 	}
 
 }

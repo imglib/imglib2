@@ -27,17 +27,24 @@ package net.imglib2.nearestneighbor;
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
+import ij.IJ;
+import ij.ImageJ;
+import ij.ImagePlus;
+import ij.ImageStack;
+import mpicbg.util.Timer;
 import net.imglib2.Cursor;
+import net.imglib2.IterableInterval;
 import net.imglib2.RealPoint;
 import net.imglib2.collection.RealPointSampleList;
 import net.imglib2.exception.ImgLibException;
 import net.imglib2.img.imageplus.ImagePlusImg;
 import net.imglib2.img.imageplus.ImagePlusImgFactory;
+import net.imglib2.kdtree.KDTree;
+import net.imglib2.kdtree.KNearestNeighborSearchOnKDTree;
+import net.imglib2.kdtree.NearestNeighborSearchOnKDTree;
+import net.imglib2.type.Type;
+import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.integer.UnsignedByteType;
-import ij.IJ;
-import ij.ImageJ;
-import ij.ImagePlus;
-import ij.ImageStack;
 
 public class KNearestNeighborSearchBehavior
 {
@@ -49,27 +56,86 @@ public class KNearestNeighborSearchBehavior
 	
 	private KNearestNeighborSearchBehavior(){}
 	
+	final static private < T extends Type< T > > long drawNearestNeighbor(
+			final IterableInterval< T > target,
+			final NearestNeighborSearch< T > nnSearch )
+	{
+		final Timer timer = new Timer();
+		timer.start();
+		final Cursor< T > c = target.localizingCursor();
+		while ( c.hasNext() )
+		{
+			c.fwd();
+			nnSearch.search( c );
+			c.get().set( nnSearch.getSampler().get() );
+		}
+		return timer.stop();
+	}
+	
+	final static private < T extends RealType< T > > long drawWeightedByDistance(
+			final IterableInterval< T > target,
+			final KNearestNeighborSearch< T > knnSearch,
+			final int k,
+			final double p,
+			final double min,
+			final double max )
+	{
+		final Timer timer = new Timer();
+		timer.start();
+		final Cursor< T > c = target.localizingCursor();
+		while ( c.hasNext() )
+		{
+			c.fwd();
+			knnSearch.search( c );
+			double s = 0;
+			double v = 0;
+			for ( int i = 0; i < k; ++i )
+			{
+				final double d = knnSearch.getSquareDistance( i );
+				if ( d > 0.001 )
+				{
+					final double w = 1.0 / Math.pow(  d, p );
+					v += w * knnSearch.getSampler( i ).get().getRealDouble();
+					s += w;
+				}
+				else
+				{
+					s = 1.0;
+					v = knnSearch.getSampler( i ).get().getRealDouble();
+				}
+			}
+			v /= s;
+			
+			c.get().setReal( Math.max(  min, Math.min( max, v ) ) );
+		}
+		return timer.stop();
+	}
+	
+	
+	
 	final static public void main( final String[] args )
 	{
 		final RealPointSampleList< UnsignedByteType > list = new RealPointSampleList< UnsignedByteType >( 2 );
 		for ( int i = 0; i < samples.length; ++i )
 			list.add( new RealPoint( coordinates[ i ] ), new UnsignedByteType( samples[ i ] ) );
 		
+		final KDTree< UnsignedByteType > kdtree = new KDTree< UnsignedByteType >( list );
+		
 		final ImagePlusImgFactory< UnsignedByteType > factory = new ImagePlusImgFactory< UnsignedByteType >();
 		
-		new ImageJ();	
+		new ImageJ();
+		
+		IJ.log( "Linear Search" );
+		IJ.log( "=============" );
 		
 		/* nearest neighbor */
 		IJ.log( "Nearest neighbor ..." );
 		final ImagePlusImg< UnsignedByteType, ? > img1 = factory.create( size, new UnsignedByteType() );
-		final Cursor< UnsignedByteType > c1 = img1.localizingCursor();
-		final NearestNeighborSearchOnIterableRealInterval< UnsignedByteType > search1 = new NearestNeighborSearchOnIterableRealInterval< UnsignedByteType >( list );
-		while ( c1.hasNext() )
-		{
-			c1.fwd();
-			search1.search( c1 );
-			c1.get().set( search1.getSampler().get() );
-		}
+		long t = drawNearestNeighbor(
+				img1,
+				new NearestNeighborSearchOnIterableRealInterval< UnsignedByteType >( list ) );
+		
+		IJ.log( t + "ms " );
 		
 		try
 		{
@@ -85,14 +151,11 @@ public class KNearestNeighborSearchBehavior
 		/* nearest neighbor through k-nearest-neighbor search */
 		IJ.log( "Nearest neighbor through k-nearest-neighbor search ..."  );
 		final ImagePlusImg< UnsignedByteType, ? > img2 = factory.create( size, new UnsignedByteType() );
-		final Cursor< UnsignedByteType > c2 = img2.localizingCursor();
-		final KNearestNeighborSearchOnIterableRealInterval< UnsignedByteType > search2 = new KNearestNeighborSearchOnIterableRealInterval< UnsignedByteType >( list, 1 );
-		while ( c2.hasNext() )
-		{
-			c2.fwd();
-			search2.search( c2 );
-			c2.get().set( search2.getSampler( 0 ).get() );
-		}
+		t = drawNearestNeighbor(
+				img2,
+				new KNearestNeighborSearchOnIterableRealInterval< UnsignedByteType >( list, 1 ) );
+		
+		IJ.log( t + "ms " );
 		
 		try
 		{
@@ -113,37 +176,12 @@ public class KNearestNeighborSearchBehavior
 		for ( int k = 5; k <= 30; k += 5 )
 		{
 			np = 0;
+			t = 0;
 			for ( double p = 0; p <= 2; p += 0.5, ++np )
 			{
 				IJ.log( "  k=" + k + " p=" + String.format( "%.2f", p ) );
 				final ImagePlusImg< UnsignedByteType, ? > img3 = factory.create( size, new UnsignedByteType() );
-				final Cursor< UnsignedByteType > c3 = img3.localizingCursor();
-				final KNearestNeighborSearchOnIterableRealInterval< UnsignedByteType > search3 = new KNearestNeighborSearchOnIterableRealInterval< UnsignedByteType >( list, k );
-				while ( c3.hasNext() )
-				{
-					c3.fwd();
-					search3.search( c3 );
-					double s = 0;
-					double v = 0;
-					for ( int i = 0; i < k; ++i )
-					{
-						final double d = search3.getSquareDistance( i );
-						if ( d > 0.001 )
-						{
-							final double w = 1.0 / Math.pow(  d, p );
-							v += w * search3.getSampler( i ).get().getRealDouble();
-							s += w;
-						}
-						else
-						{
-							s = 1.0;
-							v = search3.getSampler( i ).get().getRealDouble();
-						}
-					}
-					v /= s;
-					
-					c3.get().set( Math.max(  0, Math.min( 255, ( int )Math.round( v ) ) ) );
-				}
+				t += drawWeightedByDistance( img3, new KNearestNeighborSearchOnIterableRealInterval< UnsignedByteType >( list, k ), k, p, 0, 255 );
 				try
 				{
 					distanceStack.addSlice( "k=" + k + " p=" + String.format( "%.2f", p ), img3.getImagePlus().getProcessor() );
@@ -154,6 +192,8 @@ public class KNearestNeighborSearchBehavior
 					e.printStackTrace();
 				}
 			}
+			
+			IJ.log( t + "ms" );
 		}
 		
 		final ImagePlus impDistance = new ImagePlus( "weighted by distance", distanceStack );
@@ -161,5 +201,86 @@ public class KNearestNeighborSearchBehavior
 		impDistance.setDimensions( 1, np, distanceStack.getSize() / np );
 		impDistance.show();
 		IJ.log( "Done." );
+		
+		
+		
+		IJ.log( "KDTree Search" );
+		IJ.log( "=============" );
+		
+		/* nearest neighbor */
+		IJ.log( "Nearest neighbor ..." );
+		final ImagePlusImg< UnsignedByteType, ? > img4 = factory.create( size, new UnsignedByteType() );
+		t = drawNearestNeighbor(
+				img4,
+				new NearestNeighborSearchOnKDTree< UnsignedByteType >( kdtree ) );
+		
+		IJ.log( t + "ms " );
+		
+		try
+		{
+			img4.getImagePlus().show();
+			IJ.log( "Done." );
+		}
+		catch ( ImgLibException e )
+		{
+			IJ.log( "Didn't work out." );
+			e.printStackTrace();
+		}
+		
+		/* nearest neighbor through k-nearest-neighbor search */
+		IJ.log( "Nearest neighbor through k-nearest-neighbor search ..."  );
+		final ImagePlusImg< UnsignedByteType, ? > img5 = factory.create( size, new UnsignedByteType() );
+		t = drawNearestNeighbor(
+				img5,
+				new KNearestNeighborSearchOnKDTree< UnsignedByteType >( kdtree, 1 ) );
+		
+		IJ.log( t + "ms " );
+		
+		try
+		{
+			img5.getImagePlus().show();
+			IJ.log( "Done." );
+		}
+		catch ( ImgLibException e )
+		{
+			IJ.log( "Didn't work out." );
+			e.printStackTrace();
+		}
+		
+		/* weighted by distance */
+		IJ.log( "Weighted by distance ..." );
+		final ImageStack distanceStack2 = new ImageStack( ( int )size[ 0 ], ( int )size[ 1 ] );
+		
+		np = 1;
+		for ( int k = 5; k <= 30; k += 5 )
+		{
+			np = 0;
+			t = 0;
+			for ( double p = 0; p <= 2; p += 0.5, ++np )
+			{
+				IJ.log( "  k=" + k + " p=" + String.format( "%.2f", p ) );
+				final ImagePlusImg< UnsignedByteType, ? > img3 = factory.create( size, new UnsignedByteType() );
+				t += drawWeightedByDistance(
+						img3,
+						new KNearestNeighborSearchOnKDTree< UnsignedByteType >( kdtree, k ), k, p, 0, 255 );
+				try
+				{
+					distanceStack2.addSlice( "k=" + k + " p=" + String.format( "%.2f", p ), img3.getImagePlus().getProcessor() );
+				}
+				catch ( final ImgLibException e )
+				{
+					IJ.log( "Didn't work out." );
+					e.printStackTrace();
+				}
+			}
+			
+			IJ.log( t + "ms" );
+		}
+		
+		final ImagePlus impDistance2 = new ImagePlus( "weighted by distance", distanceStack2 );
+		impDistance2.setOpenAsHyperStack( true );
+		impDistance2.setDimensions( 1, np, distanceStack2.getSize() / np );
+		impDistance2.show();
+		IJ.log( "Done." );		
 	}
 }

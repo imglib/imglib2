@@ -773,4 +773,362 @@ public class Partition
 		}
 		return;
 	}
+	
+	/**
+	 * Partition a sublist of {@code values}.
+	 * 
+	 * The element at index {@code j} is taken as the pivot value. The elements
+	 * {@code [i,j]} are reordered, such that all elements before the pivot are
+	 * smaller and all elements after the pivot are equal or larger than the
+	 * pivot. The index of the pivot element is returned.
+	 * 
+	 * <p>
+	 * The {@code permutation} array is permuted in the same way as the list.
+	 * Usually, this will be an array of indices, so that the partition operation
+	 * can be mirrored in another list:
+	 * Suppose, we have a list of keys and a lists (or several) of values.
+	 * If we use {@code partitionSubList} to sort the keys, we want to reorder the
+	 * values in the same manner. We pass an indices array [0, 1, 2, ...] and
+	 * use the permutation of the indices to permute the values list.
+	 * </p>
+	 *  
+	 * @param i
+	 *            index of first element of the sublist
+	 * @param j
+	 *            index of last element of the sublist
+	 * @param values
+	 *            the list
+	 * @param permutation
+	 *            elements of this array are permuted in the same way as the elements in the values list 
+	 * @param compare
+	 *            ordering function on T
+	 * @return index of pivot element
+	 */
+	public static < T > int partitionSubList( int i, int j, List< T > values, final int[] permutation, Comparator< ? super T > compare )
+	{
+		final int pivotIndex = j;
+		final int permutationPivot = permutation[ j ];
+		T pivot = values.get( j-- );
+
+		A: while ( true )
+		{
+			// move i forward while < pivot (and not at j)
+			while ( i <= j )
+			{
+				T ti = values.get( i );
+				if ( compare.compare( ti, pivot ) >= 0 )
+					break;
+				++i;
+			}
+			// now [i] is the place where the next value < pivot is to be
+			// inserted
+
+			if ( i > j )
+				break;
+
+			// move j backward while >= pivot (and not at i)
+			while ( true )
+			{
+				T tj = values.get( j );
+				if ( compare.compare( tj, pivot ) < 0 )
+				{
+					// swap [j] with [i]
+					final int indicesTmp = permutation[ i ];
+					permutation[ i ] = permutation[ j ];
+					permutation[ j ] = indicesTmp;
+					T tmp = values.get( i );
+					values.set( i, values.get( j ) );
+					values.set( j, tmp );
+					++i;
+					--j;
+					break;
+				}
+				else if ( j == i )
+				{
+					break A;
+				}
+				--j;
+			}
+		}
+
+		// we are done. put the pivot element here.
+		// check whether the element at iLastIndex is <
+		if ( i != pivotIndex )
+		{
+			values.set( pivotIndex, values.get( i ) );
+			values.set( i, pivot );
+			permutation[ pivotIndex ] = permutation[ i ];
+			permutation[ i ] = permutationPivot;
+		}
+		return i;
+	}
+
+	/**
+	 * Partition a sublist of {@code values}.
+	 * 
+	 * The element at index {@code j} is taken as the pivot value. The elements
+	 * {@code [i,j]} are reordered, such that all elements before the pivot are
+	 * smaller and all elements after the pivot are equal or larger than the
+	 * pivot. The index of the pivot element is returned.
+	 * 
+	 * <p>
+	 * The {@code permutation} array is permuted in the same way as the list.
+	 * Usually, this will be an array of indices, so that the partition operation
+	 * can be mirrored in another list:
+	 * Suppose, we have a list of keys and a lists (or several) of values.
+	 * If we use {@code partitionSubList} to sort the keys, we want to reorder the
+	 * values in the same manner. We pass an indices array [0, 1, 2, ...] and
+	 * use the permutation of the indices to permute the values list.
+	 * </p>
+	 * 
+	 * @param i
+	 *            index of first element of the sublist
+	 * @param j
+	 *            index of last element of the sublist
+	 * @param values
+	 *            the list
+	 * @param permutation
+	 *            elements of this array are permuted in the same way as the elements in the values list 
+	 * @return index of pivot element
+	 */
+	public static < T extends Comparable< T > > int partitionSubList( int i, int j, List< T > values, final int[] permutation )
+	{
+		final int pivotIndex = j;
+		final int permutationPivot = permutation[ j ];
+		T pivot = values.get( j-- );
+
+		A: while ( true )
+		{
+			// move i forward while < pivot (and not at j)
+			while ( i <= j )
+			{
+				T ti = values.get( i );
+				if ( ti.compareTo( pivot ) >= 0 )
+					break;
+				++i;
+			}
+			// now [i] is the place where the next value < pivot is to be
+			// inserted
+
+			if ( i > j )
+				break;
+
+			// move j backward while >= pivot (and not at i)
+			while ( true )
+			{
+				T tj = values.get( j );
+				if ( tj.compareTo( pivot ) < 0 )
+				{
+					// swap [j] with [i]
+					final int indicesTmp = permutation[ i ];
+					permutation[ i ] = permutation[ j ];
+					permutation[ j ] = indicesTmp;
+					T tmp = values.get( i );
+					values.set( i, values.get( j ) );
+					values.set( j, tmp );
+					++i;
+					--j;
+					break;
+				}
+				else if ( j == i )
+				{
+					break A;
+				}
+				--j;
+			}
+		}
+
+		// we are done. put the pivot element here.
+		// check whether the element at iLastIndex is <
+		if ( i != pivotIndex )
+		{
+			values.set( pivotIndex, values.get( i ) );
+			values.set( i, pivot );
+			permutation[ pivotIndex ] = permutation[ i ];
+			permutation[ i ] = permutationPivot;
+		}
+		return i;
+	}
+
+	/**
+	 * Partition a sublist.
+	 * 
+	 * The element at {@code j} is taken as the pivot value. The elements
+	 * {@code [i,j]} are reordered, such that all elements before the pivot are
+	 * smaller and all elements after the pivot are equal or larger than the
+	 * pivot. The index of the pivot element is returned.
+	 * 
+	 * <p>
+	 * After the function returns, the iterator {@code i} is on the pivot element.
+	 * That is, {@code i.next()} gives the element <em>after</em> the pivot.
+	 * </p>
+	 * 
+	 * <p>
+	 * The {@code permutation} array is permuted in the same way as the list.
+	 * Usually, this will be an array of indices, so that the partition operation
+	 * can be mirrored in another list:
+	 * Suppose, we have a list of keys and a lists (or several) of values.
+	 * If we use {@code partitionSubList} to sort the keys, we want to reorder the
+	 * values in the same manner. We pass an indices array [0, 1, 2, ...] and
+	 * use the permutation of the indices to permute the values list.
+	 * </p>
+	 *
+	 * @param i
+	 *            iterator pointing before first element of the sublist, that
+	 *            is, {@code i.next()} gives you the first element.
+	 * @param j
+	 *            iterator pointing behind the last element of the sublist, that
+	 *            is, {@code i.previous()} gives you the last element.
+	 * @param permutation
+	 *            elements of this array are permuted in the same way as the elements in the values list 
+	 * @param compare
+	 *            ordering function on T
+	 * @return index of pivot element
+	 */
+	public static < T > void partitionSubList( ListIterator< T > i, ListIterator< T > j, int[] permutation, Comparator< ? super T > compare )
+	{
+		int pivotIndex = j.previousIndex();
+		final int permutationPivot = permutation[ pivotIndex ];
+		T pivot = j.previous();
+
+		A: while ( true )
+		{
+			// move i forward while < pivot (and not at j)
+			while ( i.nextIndex() - 1 <= j.previousIndex() )
+			{
+				T ti = i.next();
+				if ( compare.compare( ti, pivot ) >= 0 )
+				{
+					i.previous();
+					break;
+				}
+			}
+			// now [i] is the place where the next value < pivot is to be
+			// inserted
+			// (via i.next() i.set()
+
+			if ( i.nextIndex() > j.previousIndex() )
+				break;
+
+			// move j backward while >= pivot (and not at i)
+			while ( true )
+			{
+				T tj = j.previous();
+				if ( compare.compare( tj, pivot ) < 0 )
+				{
+					// swap [j] with [i]
+					final int iIndex = i.nextIndex();
+					final int jIndex = j.nextIndex();
+					final int indicesTmp = permutation[ iIndex ];
+					permutation[ iIndex ] = permutation[ jIndex ];
+					permutation[ jIndex ] = indicesTmp;
+					T ti = i.next();
+					i.set( tj );
+					j.set( ti );
+					break;
+				}
+				else if ( j.previousIndex() == i.nextIndex() - 1 )
+				{
+					break A;
+				}
+			}
+		}
+
+		// we are done. put the pivot element here.
+		if ( i.nextIndex() - 1 != pivotIndex )
+		{
+			for ( int c = pivotIndex - j.nextIndex() + 1; c > 0; --c )
+				j.next();
+			final int iIndex = i.nextIndex();
+			j.set( i.next() );
+			i.set( pivot );
+			permutation[ pivotIndex ] = permutation[ iIndex ];
+			permutation[ iIndex ] = permutationPivot;
+		}
+		return;
+	}
+	
+	/**
+	 * Partition a sublist.
+	 * 
+	 * The element at {@code j} is taken as the pivot value. The elements
+	 * {@code [i,j]} are reordered, such that all elements before the pivot are
+	 * smaller, and all elements after the pivot are equal or larger than the
+	 * pivot. The index of the pivot element is returned.
+	 * 
+	 * <p>
+	 * After the function returns, the iterator {@code i} is on the pivot element.
+	 * That is, {@code i.next()} gives the element <em>after</em> the pivot.
+	 * </p>
+	 * 
+	 * @param i
+	 *            iterator pointing before first element of the sublist, that
+	 *            is, {@code i.next()} gives you the first element.
+	 * @param j
+	 *            iterator pointing behind the last element of the sublist, that
+	 *            is, {@code i.previous()} gives you the last element.
+	 * @return index of pivot element
+	 */
+	public static < T extends Comparable< T > > void partitionSubList( ListIterator< T > i, ListIterator< T > j, final int[] permutation )
+	{
+		int pivotIndex = j.previousIndex();
+		final int permutationPivot = permutation[ pivotIndex ];
+		T pivot = j.previous();
+
+		A: while ( true )
+		{
+			// move i forward while < pivot (and not at j)
+			while ( i.nextIndex() - 1 <= j.previousIndex() )
+			{
+				T ti = i.next();
+				if ( ti.compareTo( pivot ) >= 0 )
+				{
+					i.previous();
+					break;
+				}
+			}
+			// now [i] is the place where the next value < pivot is to be
+			// inserted
+			// (via i.next() i.set()
+
+			if ( i.nextIndex() > j.previousIndex() )
+				break;
+
+			// move j backward while >= pivot (and not at i)
+			while ( true )
+			{
+				T tj = j.previous();
+				if ( tj.compareTo( pivot ) < 0 )
+				{
+					// swap [j] with [i]
+					final int iIndex = i.nextIndex();
+					final int jIndex = j.nextIndex();
+					final int indicesTmp = permutation[ iIndex ];
+					permutation[ iIndex ] = permutation[ jIndex ];
+					permutation[ jIndex ] = indicesTmp;
+					T ti = i.next();
+					i.set( tj );
+					j.set( ti );
+					break;
+				}
+				else if ( j.previousIndex() == i.nextIndex() - 1 )
+				{
+					break A;
+				}
+			}
+		}
+
+		// we are done. put the pivot element here.
+		if ( i.nextIndex() - 1 != pivotIndex )
+		{
+			for ( int c = pivotIndex - j.nextIndex() + 1; c > 0; --c )
+				j.next();
+			final int iIndex = i.nextIndex();
+			j.set( i.next() );
+			i.set( pivot );
+			permutation[ pivotIndex ] = permutation[ iIndex ];
+			permutation[ iIndex ] = permutationPivot;
+		}
+		return;
+	}
 }
