@@ -28,44 +28,55 @@
 
 package net.imglib2.display;
 
+import net.imglib2.type.numeric.ARGBType;
+
 /**
- * 8-bit color lookup table.
+ * Abstract superclass for color lookup tables.
  * 
  * @author Curtis Rueden
  */
-public class ColorTable8 extends ColorTable<byte[]> {
+public abstract class ColorTable<T> {
 
-	/** Initializes an 8-bit color table with a linear grayscale ramp. */
-	public ColorTable8() {
-		super(gray());
+	/** Actual color table values. */
+	protected final T[] values;
+
+	/** Initializes a color table with the given table values. */
+	public ColorTable(final T... values) {
+		this.values = values;
 	}
 
-	/** Initializes an 8-bit color table with the given table values. */
-	public ColorTable8(final byte[]... values) {
-		super(values);
+	/** Gets a copy of the entire color table. */
+	public T[] getValues() {
+		return values.clone();
 	}
 
-	@Override
-	public int getLength() {
-		return values[0].length;
+	/** Converts the tuple at the given position into a packed ARGB value. */
+	public int argb(final int i) {
+		final int r = values.length > 0 ? get(0, i) : 0;
+		final int g = values.length > 1 ? get(1, i) : 0;
+		final int b = values.length > 2 ? get(2, i) : 0;
+		final int a = values.length > 3 ? get(3, i) : 0xff;
+		return ARGBType.rgba(r, g, b, a);
 	}
 
-	@Override
-	public int get(final int c, final int i) {
-		return values[c][i] & 0xff;
+	/**
+	 * Gets the number of color components in the table (typically 3 for RGB or 4
+	 * for RGBA).
+	 */
+	public int getComponentCount() {
+		return values.length;
 	}
 
-	// -- Helper methods --
+	/** Gets the number of elements for each color component in the table. */
+	public abstract int getLength();
 
-	/** Creates a linear grayscale ramp with 3 components and 256 values. */
-	private static byte[][] gray() {
-		final byte[][] gray = new byte[3][256];
-		for (int j = 0; j < gray.length; j++) {
-			for (int i = 0; i < gray[j].length; i++) {
-				gray[j][i] = (byte) i;
-			}
-		}
-		return gray;
-	}
+	/**
+	 * Gets an individual value from the color table.
+	 * 
+	 * @param c The color component to query.
+	 * @param i The index into the color table.
+	 * @return The value of the table at the specified position.
+	 */
+	public abstract int get(final int c, final int i);
 
 }

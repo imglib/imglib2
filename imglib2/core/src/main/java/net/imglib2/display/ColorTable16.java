@@ -33,44 +33,39 @@ package net.imglib2.display;
  * 
  * @author Curtis Rueden
  */
-public class ColorTable16 {
+public class ColorTable16 extends ColorTable<short[]> {
 
-	private final short[][] values;
+	/** Initializes a 16-bit color table with a linear grayscale ramp. */
+	public ColorTable16() {
+		super(gray());
+	}
 
+	/** Initializes a 16-bit color table with the given table values. */
 	public ColorTable16(final short[]... values) {
-		this.values = values;
+		super(values);
 	}
 
-	public int getComponentCount() {
-		return values.length;
-	}
-
+	@Override
 	public int getLength() {
 		return values[0].length;
 	}
 
+	@Override
 	public int get(final int c, final int i) {
 		return values[c][i] & 0xffff;
 	}
 
-	public short[][] getValues() {
-		return values.clone();
-	}
+	// -- Helper methods --
 
-	public short[] getReds() {
-		return values.length > 0 ? values[0].clone() : null;
-	}
-
-	public short[] getGreens() {
-		return values.length > 1 ? values[1].clone() : null;
-	}
-
-	public short[] getBlues() {
-		return values.length > 2 ? values[2].clone() : null;
-	}
-
-	public short[] getAlphas() {
-		return values.length > 3 ? values[3].clone() : null;
+	/** Creates a linear grayscale ramp with 3 components and 65536 values. */
+	private static short[][] gray() {
+		final short[][] gray = new short[3][65536];
+		for (int j = 0; j < gray.length; j++) {
+			for (int i = 0; i < gray[j].length; i++) {
+				gray[j][i] = (short) i;
+			}
+		}
+		return gray;
 	}
 
 }
