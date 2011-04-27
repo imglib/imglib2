@@ -5,7 +5,11 @@ import net.imglib2.Sampler;
 import net.imglib2.collection.KDTree;
 import net.imglib2.collection.KDTreeNode;
 
-
+/**
+ * Implementation of {@link NearestNeighborSearch} search for kd-trees.
+ * 
+ * @author Tobias Pietzsch
+ */
 public class NearestNeighborSearchOnKDTree< T > implements NearestNeighborSearch< T >
 {
 	protected KDTree< T > tree;

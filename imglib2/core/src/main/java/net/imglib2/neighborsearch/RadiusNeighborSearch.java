@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2011, Stephan Saalfeld
+ * Copyright (c) 2011, Tobias Pietzsch
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
