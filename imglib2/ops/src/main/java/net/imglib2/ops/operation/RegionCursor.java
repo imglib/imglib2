@@ -39,17 +39,16 @@ public class RegionCursor<K extends RealType<K>> {
 		
 		this.accessor = accessor;
 		this.minCoords = origin.clone();
-		this.maxCoords = new long[origin.length];
 		this.currCoords = this.minCoords.clone();
+		this.maxCoords = new long[this.totalDims];
 		for (int i = 0; i < this.totalDims; i++) {
 			this.maxCoords[i] = origin[i] + span[i] - 1;
-			this.currCoords[i] = origin[i];
 		}
 	}
 
 	public void getPosition(long[] index) {
-		for (int i = 0; i < currCoords.length; i++)
-			index[i] = currCoords[i];
+		for (int i = 0; i < this.totalDims; i++)
+			index[i] = this.currCoords[i];
 	}
 
 	public K getValue() {
@@ -74,14 +73,16 @@ public class RegionCursor<K extends RealType<K>> {
 				return;
 			}
 			// else currCoord[i] > maxCoord[i]
-			if (i == lastDim)  // can't increment anymore?
-				return;          // then return pointing out of bounds
+			if (i == lastDim) { // can't increment anymore?
+				this.accessor.setPosition(this.currCoords);
+				return;           // then return pointing out of bounds
+			}
 			this.currCoords[i] = this.minCoords[i];
 		}
 	}
 	
 	public void reset() {
-		for (int i = 0; i < this.currCoords.length; i++)
+		for (int i = 0; i < this.totalDims; i++)
 			this.currCoords[i] = this.minCoords[i];
 		this.accessor.setPosition(this.currCoords);
 	}
