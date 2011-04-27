@@ -73,7 +73,7 @@ public class RadiusNeighborSearchOnKDTree< T > implements RadiusNeighborSearch< 
 	}
 
 	@Override
-	public int getNumResults()
+	public int numNeighbors()
 	{
 		return resultPoints.size();
 	}

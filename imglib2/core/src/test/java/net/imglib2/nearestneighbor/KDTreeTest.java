@@ -271,7 +271,7 @@ public class KDTreeTest
 		for ( final RealPoint t : testpoints )
 		{
 			kd.search( t, radius, true );
-			final int neighbors = kd.getNumResults();
+			final int neighbors = kd.numNeighbors();
 			final ArrayList< Pair< RealPoint, Double > > radiusExhaustive = findNeighborsRadiusExhaustive( points, t, radius, true );
 
 			if ( neighbors != radiusExhaustive.size() )
@@ -304,7 +304,7 @@ public class KDTreeTest
 		start = System.currentTimeMillis();
 		for ( RealPoint t : testpoints ) {
 			kd.search( t, radius, true );
-			final int neighbors = kd.getNumResults();
+			final int neighbors = kd.numNeighbors();
 			for ( int i = 0; i < neighbors; ++ i )
 			{
 				kd.getSampler( i ).get().getClass();

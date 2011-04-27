@@ -69,7 +69,7 @@ public interface RadiusNeighborSearch< T >
 	 * @return the number of points found within radius after a
 	 *         {@link #search(RealLocalizable, double, boolean)}.
 	 */
-	public int getNumResults();
+	public int numNeighbors();
 
 	/**
 	 * Access the data of the <em>i</em><sup>th</sup> neighbor within radius. If
