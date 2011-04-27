@@ -26,25 +26,25 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-package net.imglib2.nearestneighbor;
+package net.imglib2.neighborsearch;
 
 import net.imglib2.RealLocalizable;
 import net.imglib2.Sampler;
 
 /**
- * Nearest-neighbor search in an Euclidean space.  The interace
+ * <em>k</em>-nearest-neighbor search in an Euclidean space.  The interace
  * describes implementations that perform the search for a specified location
  * and provide access to the data, location and distance of the found nearest
- * neighbor until the next search is performed.  In a multi-threaded
+ * neighbors until the next search is performed.  In a multi-threaded
  * application, each thread will thus need its own
- * {@link NearestNeighborSearch}. 
+ * {@link KNearestNeighborSearch}. 
  *
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-public interface NearestNeighborSearch< T >
+public interface KNearestNeighborSearch< T > extends NearestNeighborSearch< T >
 {
 	/**
-	 * Perform nearest-neighbor search for a reference coordinate.
+	 * Perform <em>k</em>-nearest-neighbor search for a reference coordinate.
 	 * 
 	 * @param reference
 	 */
@@ -52,40 +52,44 @@ public interface NearestNeighborSearch< T >
 	
 
 	/**
-	 * Access the data of the nearest neighbor.  Data is accessed through a
-	 * {@link Sampler} that guarantees write access if the underlying data set
-	 * is writable.
+	 * Access the data of the <em>i</em><sup>th</sup> nearest neighbor, ordered
+	 * by square Euclidean distance.  Data is accessed through a {@link Sampler}
+	 * that guarantees write access if the underlying data set is writable.
 	 * 
+	 * @param i
 	 * @return
 	 */
-	public Sampler< T > getSampler();
+	public Sampler< T > getSampler( final int i );
 	
 
 	/**
-	 * Access the position of the nearest neighbor, ordered by square Euclidean
-	 * distance.
+	 * Access the position of the <em>i</em><sup>th</sup> nearest neighbor,
+	 * ordered by square Euclidean distance.
 	 * 
+	 * @param i
 	 * @return
 	 */
-	public RealLocalizable getPosition();
+	public RealLocalizable getPosition( final int i );
 	
 	
 	/**
 	 * Access the square Euclidean distance between the reference location
-	 * as used for the last search and the nearest neighbor, ordered by square
-	 * Euclidean distance.
+	 * as used for the last search and the <em>i</em><sup>th</sup> nearest
+	 * neighbor, ordered by square Euclidean distance.
 	 * 
+	 * @param i
 	 * @return
 	 */
-	public double getSquareDistance();
+	public double getSquareDistance( final int i );
 	
 
 	/**
 	 * Access the Euclidean distance between the reference location as used for
-	 * the last search and the nearest neighbor, ordered by square Euclidean
-	 * distance.
+	 * the last search and the <em>i</em><sup>th</sup> nearest neighbor,
+	 * ordered by square Euclidean distance.
 	 * 
+	 * @param i
 	 * @return
 	 */
-	public double getDistance();
+	public double getDistance( final int i );
 }

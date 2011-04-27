@@ -1,4 +1,4 @@
-package net.imglib2.kdtree;
+package net.imglib2.collection;
 
 import net.imglib2.RealLocalizable;
 import net.imglib2.Sampler;
@@ -11,9 +11,9 @@ public abstract class KDTreeNode< T > implements RealLocalizable, Sampler< T >
 
 	protected final int splitDimension;
 	
-	protected final KDTreeNode< T > left;
+	public final KDTreeNode< T > left;
 	
-	protected final KDTreeNode< T > right;
+	public final KDTreeNode< T > right;
 	
 	public KDTreeNode( RealLocalizable position, int dimension, final KDTreeNode< T > left, final KDTreeNode< T > right ) 
 	{

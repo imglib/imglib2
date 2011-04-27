@@ -1,8 +1,9 @@
-package net.imglib2.kdtree;
+package net.imglib2.neighborsearch;
 
 import net.imglib2.RealLocalizable;
 import net.imglib2.Sampler;
-import net.imglib2.nearestneighbor.KNearestNeighborSearch;
+import net.imglib2.collection.KDTree;
+import net.imglib2.collection.KDTreeNode;
 
 public class KNearestNeighborSearchOnKDTree< T > implements KNearestNeighborSearch< T >
 {

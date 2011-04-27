@@ -4,6 +4,7 @@ import net.imglib2.RealCursor;
 import net.imglib2.RealLocalizable;
 import net.imglib2.RealPoint;
 import net.imglib2.collection.RealPointSampleList;
+import net.imglib2.neighborsearch.KNearestNeighborSearchOnIterableRealInterval;
 import net.imglib2.type.numeric.real.DoubleType;
 
 import org.junit.Before;

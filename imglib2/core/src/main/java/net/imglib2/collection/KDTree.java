@@ -1,4 +1,4 @@
-package net.imglib2.kdtree;
+package net.imglib2.collection;
 
 import java.util.ArrayList;
 import java.util.Comparator;

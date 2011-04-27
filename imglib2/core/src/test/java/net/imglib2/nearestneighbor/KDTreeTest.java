@@ -1,9 +1,12 @@
-package net.imglib2.kdtree;
+package net.imglib2.nearestneighbor;
 
 import java.util.ArrayList;
 import java.util.Random;
 
 import net.imglib2.RealPoint;
+import net.imglib2.collection.KDTree;
+import net.imglib2.neighborsearch.KNearestNeighborSearchOnKDTree;
+import net.imglib2.neighborsearch.NearestNeighborSearchOnKDTree;
 
 import static org.junit.Assert.*;
 
