@@ -32,7 +32,7 @@ import net.imglib2.RealLocalizable;
 import net.imglib2.Sampler;
 
 /**
- * <em>k</em>-nearest-neighbor search in an Euclidean space.  The interace
+ * <em>k</em>-nearest-neighbor search in an Euclidean space.  The interface
  * describes implementations that perform the search for a specified location
  * and provide access to the data, location and distance of the found nearest
  * neighbors until the next search is performed.  In a multi-threaded
