@@ -27,6 +27,9 @@ public class PolygonRegionOfInterest extends AbstractIterableRegionOfInterest {
 	static protected class Stripe {
 		final public double yMin;
 		public double yMax;
+		/*
+		 * TODO: Replace array lists with accessors that index into arrays to save memory.
+		 */
 		final public ArrayList<Double> xTop = new ArrayList<Double>();
 		final public ArrayList<Double> xBottom = new ArrayList<Double>();
 		public Stripe(double yMin, double yMax) {
@@ -35,9 +38,9 @@ public class PolygonRegionOfInterest extends AbstractIterableRegionOfInterest {
 		}
 		@Override
 		public String toString() {
-			StringBuffer sb = new StringBuffer(String.format("y: %.2f<->%.2f\n", yMin, yMax));
+			StringBuffer sb = new StringBuffer(String.format("\ny: %.2f<->%.2f", yMin, yMax));
 			for (int i=0; i<xTop.size(); i++) {
-				sb.append(String.format("%d: %.2f<->%.2f\n", i, xTop.get(i), xBottom.get(i)));
+				sb.append(String.format("\n\t%d: %.2f<->%.2f", i, xTop.get(i), xBottom.get(i)));
 			}
 			return sb.toString();
 		}
@@ -117,6 +120,60 @@ public class PolygonRegionOfInterest extends AbstractIterableRegionOfInterest {
 	}
 	
 	/**
+	 * Less-than comparison, accounting for roundoff
+	 * 
+	 * @param a
+	 * @param b
+	 * @return true if less than.
+	 */
+	private boolean lt(double a, double b) {
+		return (float)a < (float)b;
+	}
+	
+	/**
+	 * Greater-than comparison, accounting for roundoff
+	 * 
+	 * @param a
+	 * @param b
+	 * @return true if greater than.
+	 */
+	private boolean gt(double a, double b) {
+		return (float)a > (float)b;
+	}
+	
+	/**
+	 * Less-than-or-equal comparison, accounting for roundoff
+	 * 
+	 * @param a
+	 * @param b
+	 * @return true if less than.
+	 */
+	private boolean le(double a, double b) {
+		return (float)a <= (float)b;
+	}
+	
+	/**
+	 * Greater-than-or-equal comparison, accounting for roundoff
+	 * 
+	 * @param a
+	 * @param b
+	 * @return true if greater than.
+	 */
+	private boolean ge(double a, double b) {
+		return (float)a >= (float)b;
+	}
+	
+	/**
+	 * Equal comparison, accounting for roundoff
+	 * 
+	 * @param a
+	 * @param b
+	 * @return true if approximately equal
+	 */
+	private boolean eq(double a, double b) {
+		return (float)a == (float)b;
+	}
+	/**
 	 * Build the cached list of stripes if necessary.
 	 */
 	protected void validate() {
@@ -138,105 +195,110 @@ public class PolygonRegionOfInterest extends AbstractIterableRegionOfInterest {
 				double y0 = p0.getDoublePosition(1);
 				double x1 = p1.getDoublePosition(0);
 				double y1 = p1.getDoublePosition(1);
-				if (y0 == y1) continue;
 				if (y0 > y1) {
 					double temp = x0;
 					temp = x0; x0 = x1; x1 = temp;
 					temp = y0; y0 = y1; y1 = temp;
 				}
 				int index = findStripeIndex(y0);
+				if (y0 == y1) {
+					continue;
+				}
 				do {
 					Stripe stripe = stripes.get(index);
-					double xTop = x0 + (stripe.yMin - y0) * (x1 - x0) / (y1 - y0);
-					double xBottom = x0 + (stripe.yMax - y0) * (x1 - x0) / (y1 - y0);
+					double xBottom = x1;
+					if (y1 != stripe.yMax)
+						xBottom = x0 + (stripe.yMax - y0) * (x1 - x0) / (y1 - y0);
 					/*
 					 * Easy - if the stripe is empty, add the edge
 					 */
 					if (stripe.xTop.size() == 0) {
-						stripe.xTop.add(xTop);
+						stripe.xTop.add(x0);
 						stripe.xBottom.add(xBottom);
-						index++;
-						continue;
-					}
-					/*
-					 * Find j = index of edge with greater or equal xTop.
-					 */
-					int j = 0;
-					double stripe_xTop = Double.MIN_VALUE;
-					for (j = 0; j < stripe.xTop.size(); j++) {
-						stripe_xTop = stripe.xTop.get(j);
-						if (stripe_xTop >= xTop) break; 
-					}
-					/*
-					 * If our xTop is after all other xTop, check
-					 * for xBottom before last and split if so.
-					 */
-					if (j == stripe.xTop.size()) {
-						if (xBottom >= stripe.xBottom.get(j-1)) {
-							stripe.xTop.add(xTop);
-							stripe.xBottom.add(xBottom);
-							index++;
-						} else {
-							splitStripe(index, j-1, xTop, xBottom);
-						}
-					}
-					/*
-					 * If our xTop is equal to some other xTop, then they
-					 * share a vertex. We have to check that xBottom is at
-					 * or after the previous xBottom and that it is at or before
-					 * the succeeding xBottom
-					 */
-					else if (xTop == stripe_xTop) {
-						if ((j < stripe.xTop.size() - 1) && 
-							(xBottom > stripe.xBottom.get(j+1))) {
-							splitStripe(index, j+1, xTop, xBottom);
-						} else if ((j > 0) && (xBottom < stripe.xBottom.get(j-1))) {
-							splitStripe(index, j-1, xTop, xBottom);
-						} else {
-							if (xBottom > stripe.xBottom.get(j)) {
-								/*
-								 * Put the new edge after the matching edge
-								 * because the bottom is advanced.
-								 */
-								j++;
-							}
-							stripe.xTop.add(j, xTop);
-							stripe.xBottom.add(j, xBottom);
-							index++;
-						}
-					} 
-					/*
-					 * If our xBottom is greater than the stripe xBottom, 
-					 * then the edges cross and need to be split. 
-					 */
-					else if (xBottom > stripe.xBottom.get(j)) {
-						splitStripe(index, j, xTop, xBottom);
-					} else
-					/*
-					 * If our xBottom is less than the previous edge's xBottom
-					 * then this edge crosses the previous edge.
-					 */
-					if ((j > 0) && (xBottom < stripe.xBottom.get(j-1))){
-						splitStripe(index, j-1, xTop, xBottom);
 					} else {
-						stripe.xTop.add(j, xTop);
-						stripe.xBottom.add(j, xBottom);
-						index++;
+						/*
+						 * Find j = index of edge with greater or equal xTop.
+						 */
+						int j = 0;
+						double stripe_xTop = Double.MIN_VALUE;
+						for (j = 0; j < stripe.xTop.size(); j++) {
+							stripe_xTop = stripe.xTop.get(j);
+							if (lt(stripe_xTop, x0)) continue;
+							if (gt(stripe_xTop, x0) || (lt(xBottom, stripe.xBottom.get(j)))) break;
+						}
+						/*
+						 * If our xTop is after all other xTop, check
+						 * for xBottom before last and split if so.
+						 */
+						if (j == stripe.xTop.size()) {
+							if ((j > 0) && (ge(xBottom, stripe.xBottom.get(j-1)))){
+								stripe.xTop.add(x0);
+								stripe.xBottom.add(xBottom);
+							} else {
+								xBottom = splitStripe(index, j-1, x0, xBottom);
+							}
+						}
+						/*
+						 * If our xTop is equal to some other xTop, then they
+						 * share a vertex. We have to check that xBottom is at
+						 * or after the previous xBottom and that it is at or before
+						 * the succeeding xBottom
+						 */
+						else if (x0 == stripe_xTop) {
+							if ((j < stripe.xTop.size() - 1) && 
+								 gt(xBottom, stripe.xBottom.get(j+1)))  {
+								xBottom = splitStripe(index, j+1, x0, xBottom);
+							} else if ((j > 0) && lt(xBottom, stripe.xBottom.get(j-1))) {
+								xBottom = splitStripe(index, j-1, x0, xBottom);
+							} else {
+								if (gt(xBottom, stripe.xBottom.get(j))) {
+									/*
+									 * Put the new edge after the matching edge
+									 * because the bottom is advanced.
+									 */
+									j++;
+								}
+								stripe.xTop.add(j, x0);
+								stripe.xBottom.add(j, xBottom);
+							}
+						} 
+						/*
+						 * If our xBottom is greater than the stripe xBottom, 
+						 * then the edges cross and need to be split. 
+						 */
+						else if (gt(xBottom, stripe.xBottom.get(j))) {
+							xBottom = splitStripe(index, j, x0, xBottom);
+						} else
+						/*
+						 * If our xBottom is less than the previous edge's xBottom
+						 * then this edge crosses the previous edge.
+						 */
+						if ((j > 0) && lt(xBottom, stripe.xBottom.get(j-1))){
+							xBottom = splitStripe(index, j-1, x0, xBottom);
+						} else {
+							stripe.xTop.add(j, x0);
+							stripe.xBottom.add(j, xBottom);
+						}
 					}
-				} while((index < stripes.size()) && (y1 > stripes.get(index).yMin));
+					y0 = stripe.yMax;
+					x0 = xBottom;
+					index++;
+				} while((index < stripes.size()) && gt(y1, stripes.get(index).yMin));
 			}
 		}
 	}
 	
 	/**
-	 * Split a stripe in half because two edges cross
+	 * Split a stripe in half because two edges cross. Add the incoming
+	 * edge to the top stripe.
 	 * 
 	 * @param stripeIndex index of the stripe
 	 * @param xIndex index of the crossing edge
 	 * @param xTop xTop of the incoming edge
 	 * @param xBottom xBottom of the incoming edge
+	 * @return x midpoint of the split.
 	 */
-	private void splitStripe(int stripeIndex, int xIndex, double xTop, double xBottom) {
+	private double splitStripe(int stripeIndex, int xIndex, double xTop, double xBottom) {
 		Stripe stripe = stripes.get(stripeIndex);
 		double stripe_xTop = stripe.xTop.get(xIndex);
 		double stripe_xBottom = stripe.xBottom.get(xIndex);
@@ -271,6 +333,13 @@ public class PolygonRegionOfInterest extends AbstractIterableRegionOfInterest {
 			newStripe.xTop.add(xM);
 			newStripe.xBottom.add(xB);
 		}
+		xBottom = stripe.xBottom.get(xIndex);
+		if (xTop > stripe.xTop.get(xIndex)) {
+			xIndex++;
+		}
+		stripe.xTop.add(xIndex, xTop);
+		stripe.xBottom.add(xIndex, xBottom);
+		return xBottom;
 	}
 	 
 	/**
@@ -315,84 +384,6 @@ public class PolygonRegionOfInterest extends AbstractIterableRegionOfInterest {
 	}
 
 	@Override
-	protected long size() {
-		validate();
-		long accumulator = 0;
-		if (stripes.size() == 0) return 0;
-		for (Stripe stripe: stripes) {
-			double yTop = stripe.yMin;
-			double yBottom = stripe.yMax;
-			for (int i=0; i < stripe.xTop.size(); i++) {
-				double xTop = stripe.xTop.get(i);
-				double xBottom = stripe.xBottom.get(i);
-				long area = getAreaOnBehalfOfSize(yTop, xTop, yBottom, xBottom);
-				if (i % 2 == 0) {
-					accumulator += area;
-				} else {
-					accumulator -= area;
-				}
-			}
-		}
-		return accumulator;
-	}
-	
-	private long getAreaOnBehalfOfSize(double y0, double x0, double y1, double x1) {
-		long x_max = this.max(0) + 1;
-		long x_min = (long)Math.min(x0, x1);
-		// Renormalize x to prevent overflow errors
-		x0 = x0 - x_min;
-		x1 = x1 - x_min;
-		x_max = x_max - x_min;
-		double inv_slope = (x1 - x0) / (y1 - y0);
-		double slope = 1 / inv_slope;
-		// Renormalize y to integer bounds
-		//
-		long y1_floor = (long)y1;
-		long y0_ceiling = (long)Math.ceil(y0);
-		double x0_temp = x0 + (y0_ceiling - y0) * inv_slope;
-		x1 = x0 + (y1_floor - y0) * inv_slope;
-		x0 = x0_temp;
-		y1 = y1_floor;
-		y0 = y0_ceiling;
-		//
-		// A pixel at x,y is in the area if
-		// y >= y0
-		// y <= y1
-		// x >= x0 + (y - y0) * (x1 - x0) / (y1 - y0)
-		// x <= x_max
-		//
-		// So the number of pixels at a given y is
-		//
-		// x_max - floor(x0 + (y - y0) * (x1 - x0) / (y1 - y0))
-		// 
-		// y goes from ceil(y0) to floor(y1) inclusive so
-		//
-		// area = x_max * (floor(y1) - ceil(y0) + 1) -
-		//        sum(floor(x0 + (y - y0) * (x1 - x0) / (y1 - y0)), ceil(y0), floor(y1))
-		//
-		// So you can approach this like the Bresenham algorithm. For the case
-		// where s = (y1 - y0) / (x1 - x0), invS = (x1 - x0) / (y1 - y0), abs(invS) < 1
-		//
-		// there is an increase in x every floor(s) y with the first one occurring at
-		// x0 - floor(x0) + invS * (y - y0) > 1
-		// yf = ceil((1 - x0 + floor(x0)) * s + y0)
-		//
-		// We increment X thereafter for every floor(s) y, but there is an accumulated error
-		// of e(y) = x0 + (yf - y0) * invS - floor(x0 + (yf - y0) * invS) + (y - yf) * (s - floor(s))
-		//
-		// and at the end, we find that our x is off by e(floor(y1)) for a total error of
-		// floor(e(floor(y1)) * (floor(y1) - yf + 1) / 2
-		// 
-		//TODO: get rid of this loop.
-		long height = (y1_floor - y0_ceiling + 1);
-		long area = x_max * height;
-		for (long y = y0_ceiling; y <= y1_floor; y++) {
-			area -= x0 + (y - y0) * inv_slope;
-		}
-		return area;
-	}
-
-	@Override
 	protected void getExtrema(long[] minima, long[] maxima) {
 		for (int i=0; i<2; i++) {
 			minima[i] = (long)(this.realMin(i));
@@ -400,6 +391,26 @@ public class PolygonRegionOfInterest extends AbstractIterableRegionOfInterest {
 		}
 	}
 
+	/**
+	 * Given an interpolated value, assign a ceiling accounting
+	 * for roundoff error. 
+	 * @param x
+	 * @return
+	 */
+	private static long ceil(double x) {
+		return (long)Math.ceil((float)x);
+	}
+	
+	/**
+	 * Given an interpolated value, assign a floor accounting
+	 * for roundoff error. 
+	 * @param x
+	 * @return
+	 */
+	private static long floor(double x) {
+		return (long)Math.floor((float)x);
+	}
+	
 	@Override
 	protected boolean nextRaster(long[] position, long[] end) {
 		validate();
@@ -420,7 +431,7 @@ public class PolygonRegionOfInterest extends AbstractIterableRegionOfInterest {
 					stripe = stripes.get(0);
 					index = 0;
 					x = Long.MIN_VALUE;
-					y = (long)Math.ceil(stripe.yMin);
+					y = ceil(stripe.yMin);
 					continue;
 				} else {
 					stripe = stripes.get(index);
@@ -431,9 +442,123 @@ public class PolygonRegionOfInterest extends AbstractIterableRegionOfInterest {
 				 * Previous stripe is wholly before this one.
 				 * Go to next stripe if any.
 				 */
-				if (stripes.size() == index+1) return false;
-				y = (long)Math.ceil(stripes.get(index + 1).yMin);
+				if (stripes.size() == index+1) {
+					if (stripe.yMax == y) {
+						/*
+						 * This is the very end raster of the whole polygon. Pick up
+						 * vertices and horizontal edges.
+						 */
+						int i;
+						for (i=0; i < stripe.xBottom.size() && x > stripe.xBottom.get(i+1); i+=2);
+						for(;i < stripe.xBottom.size(); i+=2) {
+							long xLeft = ceil(stripe.xBottom.get(i));
+							long xRight = floor(stripe.xBottom.get(i+1)) + 1;
+							if (xLeft < xRight) {
+								position[0] = xLeft;
+								end[0] = xRight;
+								position[1] = end[1] = y;
+								return true;
+							}
+						}
+					}
+					return false;
+				}
+				index++;
+				stripe = stripes.get(index);
+				y = ceil(stripe.yMin);
+				x = Long.MIN_VALUE;
 				continue;
+			}
+			/*
+			 * Corner case - at y between last yMax and this yMin
+			 * we have do do a synthesis of all of the vertices
+			 * and horizontal lines in both of them.
+			 */
+			if ((stripe.yMin == y) &&
+				(index > 0) &&
+				(stripes.get(index-1).yMax == y)) {
+				ArrayList<Double> prevX = stripes.get(index-1).xBottom;
+				ArrayList<Double> nextX = stripe.xTop;
+				/*
+				 * Find the two best next candidates from the bottom
+				 * of the previous stripe and the top of the next stripe.
+				 */
+				int iPrev,iNext;
+				for (iPrev = 0; 
+				     iPrev < prevX.size() && 
+				     (prevX.get(iPrev) < x || ceil(prevX.get(iPrev)) == floor(prevX.get(iPrev+1)) + 1);
+				     iPrev += 2);
+				for (iNext = 0; 
+			     iNext < nextX.size() && 
+			     (nextX.get(iNext) < x || ceil(nextX.get(iNext)) == floor(nextX.get(iNext+1)) + 1);
+			     iNext += 2);
+				if (iPrev == prevX.size() && iNext == nextX.size()) {
+					/* No pixel is on the boundary of either stripe */
+					y++;
+					x = Long.MIN_VALUE;
+					continue;
+				}
+				long xLeft = Long.MAX_VALUE;
+				long xRight = Long.MIN_VALUE;
+				if (iPrev < prevX.size() && iNext == nextX.size()) {
+					xLeft = ceil(prevX.get(iPrev));
+					xRight = floor(prevX.get(iPrev+1)) + 1;
+				} else if (iPrev == prevX.size() && iNext < nextX.size()) {
+					xLeft = ceil(nextX.get(iNext));
+					xRight = floor(nextX.get(iNext+1)) + 1;
+				} else {
+					long xLeftPrev = ceil(prevX.get(iPrev));
+					long xRightPrev = floor(prevX.get(iPrev+1)) + 1;
+					long xLeftNext = ceil(nextX.get(iNext));
+					long xRightNext = floor(nextX.get(iNext+1)) + 1;
+					ArrayList<Double> leading, trailing;
+					int iLeading, iTrailing;
+					if (xLeftNext < xLeftPrev) {
+						xLeft = xLeftNext;
+						xRight = xRightNext;
+						iLeading = iNext;
+						iTrailing = iPrev;
+						leading = nextX;
+						trailing = prevX;
+					} else {
+						xLeft = xLeftPrev;
+						xRight = xRightPrev;
+						iLeading = iPrev;
+						iTrailing = iNext;
+						leading = prevX;
+						trailing = nextX;
+					}
+					/*
+					 * It's possible for the top and bottom to alternate, like this:
+					 * 
+					 *   *         *
+					 *  * *      *  *
+					 * *******************
+					 *      *  *      * *
+					 *        *        *
+					 *  
+					 * In these cases, the top and bottom ping-pong between each other.
+					 */
+					while (iTrailing < trailing.size()) {
+						long xTrailingLeft = ceil(trailing.get(iTrailing));
+						if (xTrailingLeft > xRight) break;
+						xRight = Math.max(xRight, floor(trailing.get(iTrailing+1)) + 1);
+						{
+							int temp = iLeading;
+							iLeading = iTrailing;
+							iTrailing = temp + 2;
+						}
+						{
+							ArrayList<Double> temp = leading;
+							leading = trailing;
+							trailing = temp;
+						}
+					}
+				}
+				position[0] = xLeft;
+				end[0] = xRight;
+				position[1] = end[1] = y;
+				return true;
 			}
 			int xIndex;
 			boolean inside = false;
@@ -443,10 +568,10 @@ public class PolygonRegionOfInterest extends AbstractIterableRegionOfInterest {
 				double xBottom = stripe.xBottom.get(xIndex);
 				double xInterpolated = xTop + (xBottom - xTop) * (y - stripe.yMin) / (stripe.yMax - stripe.yMin);
 				if (! inside) {
-					xInterpolatedLast = (long)Math.ceil(xInterpolated);
+					xInterpolatedLast = ceil(xInterpolated);
 					inside = true;
 				} else {
-					xInterpolated = Math.floor(xInterpolated) + 1;
+					xInterpolated = floor(xInterpolated) + 1;
 					if ((x < xInterpolated) && (xInterpolated > xInterpolatedLast)) {
 						position[0] = xInterpolatedLast;
 						position[1] = (long)y;
@@ -467,7 +592,24 @@ public class PolygonRegionOfInterest extends AbstractIterableRegionOfInterest {
 
 	@Override
 	protected boolean isMember(double[] position) {
-		return getEdges(position, null);
+		validate();
+		
+		int index = findStripeIndex(position[1]);
+		if (index == -1) return false;
+		Stripe stripe = stripes.get(index);
+		double y0 = stripe.yMin;
+		double y1 = stripe.yMax;
+		if (y1 < position[1]) return false;
+		boolean is_inside = false;
+		for (int i=0; i < stripe.xTop.size() ; i++) {
+			double x0 = stripe.xTop.get(i);
+			double x1 = stripe.xBottom.get(i);
+			double x = x0 + (position[1] - y0) * (x1 - x0) / (y1 - y0);
+			if (x == position[0]) return true;
+			if (x > position[0]) break;
+			is_inside = ! is_inside;
+		}
+		return is_inside;
 	}
 
 	/**
@@ -548,6 +690,11 @@ public class PolygonRegionOfInterest extends AbstractIterableRegionOfInterest {
 						return true;
 					}
 				}
+				continue;
+			} else if (Math.signum(y_start - position[1]) * Math.signum(y_end - position[1]) > 0) {
+				/*
+				 * Point is wholly above or below if sign of difference of both are -1 (-1*-1 = 1) or 1
+				 */
 				continue;
 			}
 			double x_intercept = interpolateEdgeXAtY(i, position[1]);

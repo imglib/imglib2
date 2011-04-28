@@ -3,11 +3,8 @@
  */
 package net.imglib2.roi;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
-import java.awt.geom.GeneralPath;
 import java.awt.geom.Path2D;
 import java.util.Random;
 
@@ -39,7 +36,7 @@ public class PolygonRegionOfInterestTest {
 		return p;
 	}
 	/**
-	 * Test method for {@link net.imglib2.roi.PolygonRegionOfInterest#PolygonRegionOfInterest()}.
+	 * Test method for {@link mpicbg.imglib.roi.PolygonRegionOfInterest#PolygonRegionOfInterest()}.
 	 */
 	@Test
 	public void testPolygonRegionOfInterest() {
@@ -48,7 +45,7 @@ public class PolygonRegionOfInterestTest {
 	}
 
 	/**
-	 * Test method for {@link net.imglib2.roi.PolygonRegionOfInterest#getVertexCount()}.
+	 * Test method for {@link mpicbg.imglib.roi.PolygonRegionOfInterest#getVertexCount()}.
 	 */
 	@Test
 	public void testGetVertexCount() {
@@ -57,7 +54,7 @@ public class PolygonRegionOfInterestTest {
 	}
 
 	/**
-	 * Test method for {@link net.imglib2.roi.PolygonRegionOfInterest#getVertex(int)}.
+	 * Test method for {@link mpicbg.imglib.roi.PolygonRegionOfInterest#getVertex(int)}.
 	 */
 	@Test
 	public void testGetVertex() {
@@ -76,7 +73,7 @@ public class PolygonRegionOfInterestTest {
 	}
 
 	/**
-	 * Test method for {@link net.imglib2.roi.PolygonRegionOfInterest#addVertex(int, net.imglib2.RealLocalizable)}.
+	 * Test method for {@link mpicbg.imglib.roi.PolygonRegionOfInterest#addVertex(int, mpicbg.imglib.RealLocalizable)}.
 	 */
 	@Test
 	public void testAddVertex() {
@@ -84,7 +81,7 @@ public class PolygonRegionOfInterestTest {
 	}
 
 	/**
-	 * Test method for {@link net.imglib2.roi.PolygonRegionOfInterest#removeVertex(int)}.
+	 * Test method for {@link mpicbg.imglib.roi.PolygonRegionOfInterest#removeVertex(int)}.
 	 */
 	@Test
 	public void testRemoveVertex() {
@@ -104,7 +101,7 @@ public class PolygonRegionOfInterestTest {
 	}
 
 	/**
-	 * Test method for {@link net.imglib2.roi.PolygonRegionOfInterest#setVertexPosition(int, double[])}.
+	 * Test method for {@link mpicbg.imglib.roi.PolygonRegionOfInterest#setVertexPosition(int, double[])}.
 	 */
 	@Test
 	public void testSetVertexPositionIntDoubleArray() {
@@ -122,7 +119,7 @@ public class PolygonRegionOfInterestTest {
 	}
 
 	/**
-	 * Test method for {@link net.imglib2.roi.PolygonRegionOfInterest#setVertexPosition(int, float[])}.
+	 * Test method for {@link mpicbg.imglib.roi.PolygonRegionOfInterest#setVertexPosition(int, float[])}.
 	 */
 	@Test
 	public void testSetVertexPositionIntFloatArray() {
@@ -142,7 +139,7 @@ public class PolygonRegionOfInterestTest {
 	}
 
 	/**
-	 * Test method for {@link net.imglib2.roi.PolygonRegionOfInterest#setVertexPosition(int, net.imglib2.RealLocalizable)}.
+	 * Test method for {@link mpicbg.imglib.roi.PolygonRegionOfInterest#setVertexPosition(int, mpicbg.imglib.RealLocalizable)}.
 	 */
 	@Test
 	public void testSetVertexPositionIntRealLocalizable() {
@@ -160,7 +157,7 @@ public class PolygonRegionOfInterestTest {
 	}
 
 	/**
-	 * Test method for {@link net.imglib2.roi.PolygonRegionOfInterest#getEdgeStart(int)}.
+	 * Test method for {@link mpicbg.imglib.roi.PolygonRegionOfInterest#getEdgeStart(int)}.
 	 */
 	@Test
 	public void testGetEdgeStart() {
@@ -175,7 +172,7 @@ public class PolygonRegionOfInterestTest {
 	}
 
 	/**
-	 * Test method for {@link net.imglib2.roi.PolygonRegionOfInterest#getEdgeEnd(int)}.
+	 * Test method for {@link mpicbg.imglib.roi.PolygonRegionOfInterest#getEdgeEnd(int)}.
 	 */
 	@Test
 	public void testGetEdgeEnd() {
@@ -190,7 +187,7 @@ public class PolygonRegionOfInterestTest {
 	}
 
 	/**
-	 * Test method for {@link net.imglib2.roi.PolygonRegionOfInterest#isHorizontal(int)}.
+	 * Test method for {@link mpicbg.imglib.roi.PolygonRegionOfInterest#isHorizontal(int)}.
 	 */
 	@Test
 	public void testIsHorizontal() {
@@ -202,7 +199,7 @@ public class PolygonRegionOfInterestTest {
 	}
 
 	/**
-	 * Test method for {@link net.imglib2.roi.PolygonRegionOfInterest#interpolateEdgeXAtY(int, double)}.
+	 * Test method for {@link mpicbg.imglib.roi.PolygonRegionOfInterest#interpolateEdgeXAtY(int, double)}.
 	 */
 	@Test
 	public void testInterpolateEdgeXAtY() {
@@ -225,7 +222,7 @@ public class PolygonRegionOfInterestTest {
 		return img;
 	}
 	/**
-	 * Test method for {@link net.imglib2.roi.AbstractIterableRegionOfInterest#getIterableIntervalOverROI(net.imglib2.RandomAccessible)}.
+	 * Test method for {@link mpicbg.imglib.roi.AbstractIterableRegionOfInterest#getIterableIntervalOverROI(mpicbg.imglib.RandomAccessible)}.
 	 */
 	@Test
 	public void testGetIterableIntervalOverROI() {
@@ -236,7 +233,7 @@ public class PolygonRegionOfInterestTest {
 		for (int iteration=0; iteration < 100; iteration++) {
 			for (boolean useFloat: new boolean [] { false, true }) {
 				PolygonRegionOfInterest p = new PolygonRegionOfInterest();
-				Path2D awtP = new Path2D.Double();
+				Path2D awtP = new Path2D.Double(Path2D.WIND_EVEN_ODD);
 				double [] x = new double[5];
 				double [] y = new double[5];
 				for (int i=0; i<5; i++) {
@@ -272,26 +269,8 @@ public class PolygonRegionOfInterestTest {
 					IntType t = c.next();
 					c.localize(position);
 					if (! mask[position[0]][position[1]]) {
-						for (int k=0; k<p.getVertexCount(); k++) {
-							RealLocalizable k1 = p.getEdgeStart(k);
-							RealLocalizable k2 = p.getEdgeEnd(k);
-							double x0 = k1.getDoublePosition(0), y0 = k1.getDoublePosition(1);
-							double x1 = k2.getDoublePosition(0), y1 = k2.getDoublePosition(1);
-							if (Math.signum(position[1] - y0) * Math.signum(position[1] - y1) > 0)
-								continue;
-							if (y0 == y1) { 
-								if ((position[1] == y0) && (Math.signum(position[0] - x0) * Math.signum(position[0] - x1) <=0)) {
-									mask[position[0]][position[1]] = true;
-									break;
-								}
-							} else {
-								double xIntercept = x0 + (position[1] - y0) * (x1 - x0) / (y1 - y0);
-								if (position[0] == xIntercept) {
-									mask[position[0]][position[1]] = true;
-									break;
-								}
-							}
-						}
+						if (isOnEdge(position[0], position[1], p))
+							mask[position[0]][position[1]] = true;
 					}
 					assertTrue(mask[position[0]][position[1]]);
 					mask[position[0]][position[1]] = false;
@@ -305,9 +284,37 @@ public class PolygonRegionOfInterestTest {
 			}
 		}
 	}
+	/**
+	 * Determine whether the given position is on an edge of the polygon
+	 * @param x
+	 * @param y
+	 * @param p
+	 * @return
+	 */
+	protected static boolean isOnEdge(double x, double y, PolygonRegionOfInterest p) {
+		for (int k=0; k < p.getVertexCount(); k++) {
+			RealLocalizable k1 = p.getEdgeStart(k);
+			RealLocalizable k2 = p.getEdgeEnd(k);
+			double x0 = k1.getDoublePosition(0), y0 = k1.getDoublePosition(1);
+			double x1 = k2.getDoublePosition(0), y1 = k2.getDoublePosition(1);
+			if (Math.signum(y - y0) * Math.signum(y - y1) > 0)
+				continue;
+			if (y0 == y1) { 
+				if ((y == y0) && (Math.signum(x - x0) * Math.signum(x - x1) <=0)) {
+					return true;
+				}
+			} else {
+				double xIntercept = x0 + (y - y0) * (x1 - x0) / (y1 - y0);
+				if (x == xIntercept) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
 
 	/**
-	 * Test method for {@link net.imglib2.roi.AbstractRegionOfInterest#numDimensions()}.
+	 * Test method for {@link mpicbg.imglib.roi.AbstractRegionOfInterest#numDimensions()}.
 	 */
 	@Test
 	public void testNumDimensions() {
@@ -315,15 +322,15 @@ public class PolygonRegionOfInterestTest {
 	}
 
 	/**
-	 * Test method for {@link net.imglib2.roi.AbstractRegionOfInterest#realRandomAccess()}.
+	 * Test method for {@link mpicbg.imglib.roi.AbstractRegionOfInterest#realRandomAccess()}.
 	 */
-//	@Test
+	@Test
 	public void testRealRandomAccess() {
 		Random r = new Random(1776);
 		for (int iteration=0; iteration < 100; iteration++) {
 			for (boolean useFloat: new boolean [] { false, true }) {
 				PolygonRegionOfInterest p = new PolygonRegionOfInterest();
-				GeneralPath awtP = new GeneralPath();
+				Path2D awtP = new Path2D.Double(Path2D.WIND_EVEN_ODD);
 				double [] x = new double[5];
 				double [] y = new double[5];
 				for (int i=0; i<5; i++) {
@@ -347,10 +354,12 @@ public class PolygonRegionOfInterestTest {
 				for (int test_iteration=0; test_iteration < 100; test_iteration++) {
 					double [] position = { r.nextFloat() * 30 - 3, r.nextFloat() * 20 - 2};
 					ra.setPosition(position);
-					if (awtP.contains(position[0], position[1])) {
-						assertTrue(ra.get().get());
+					boolean result = ra.get().get();
+					if (awtP.contains(position[0], position[1]) ||
+					    isOnEdge(position[0], position[1], p)) {
+						assertTrue(result);
 					} else {
-						assertFalse(ra.get().get());
+						assertFalse(result);
 					}
 				}
 			}
@@ -358,22 +367,22 @@ public class PolygonRegionOfInterestTest {
 	}
 	
 	/**
-	 * Test method for {@link net.imglib2.IterableRealInterval#size()} from
-	 * {@link net.imglib2.roi.AbstractRegionOfInterest#realRandomAccess()}.
+	 * Test method for {@link mpicbg.imglib.roi.AbstractRegionOfInterest#realRandomAccess().size()}.
 	 */
-//	@Test
+	@Test
 	public void testSize() {
 		Img<IntType> img = makeNumberedArray(23,16);
 		Random r = new Random(2050);
 		for (int iteration=0; iteration < 100; iteration++) {
 			for (boolean useFloat: new boolean [] { false, true }) {
 				PolygonRegionOfInterest p = new PolygonRegionOfInterest();
-				GeneralPath awtP = new GeneralPath();
+				Path2D awtP = new Path2D.Double(Path2D.WIND_EVEN_ODD);
 				double [] x = new double[5];
 				double [] y = new double[5];
 				for (int i=0; i<5; i++) {
-					double xi = r.nextFloat() * 23;
-					double yi = r.nextFloat() * 16;
+					double xi, yi;
+					xi = r.nextFloat() * 23;
+					yi = r.nextFloat() * 16;
 					if (! useFloat) {
 						xi = Math.floor(xi);
 						yi = Math.floor(yi);
@@ -387,11 +396,31 @@ public class PolygonRegionOfInterestTest {
 						awtP.lineTo(xi, yi);
 					}
 				}
+				/*
+				 * Discard case if successive points are co-linear.
+				 */
+				boolean skip = false;
+				for (int i=0; i<5; i++) {
+					double pt[][]  = new double [3][2];
+					for (int j=0; j<3; j++)
+						p.getEdgeStart(i+j).localize(pt[j]);
+					if (pt[1][1] == pt[2][1]) {
+						if (pt[0][1] == pt[1][1])
+							skip = true;
+					} else {
+						double xInterpolated = pt[1][0] + (pt[0][1] - pt[1][1]) * (pt[1][0] - pt[2][0]) / (pt[1][1] - pt[2][1]);
+						if (Math.abs(pt[0][0] - xInterpolated) < .0001)
+							skip = true;
+					}
+				}
+				if (skip) continue;
 				awtP.closePath();
 				int count = 0;
+				boolean [][]mask = new boolean[23][16];
 				for (int i=0; i<23; i++) {
 					for (int j=0; j<16; j++) {
-						if (awtP.contains(i, j)) {
+						if (awtP.contains(i, j) || isOnEdge(i,j, p)) {
+							mask[i][j] = true;
 							count++;
 						}
 					}
