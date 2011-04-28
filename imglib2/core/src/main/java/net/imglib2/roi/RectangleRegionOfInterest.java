@@ -1,10 +1,19 @@
 package net.imglib2.roi;
 
+import net.imglib2.RealLocalizable;
+
 /**
  * @author leek
  *
  * An N-dimensional (hyper) rectangle whose edges are
  * orthogonal to the coordinate system.
+ * 
+ * The rectangle is defined by:
+ * <ul><li>an origin which is the vertex at the minima
+ * of the rectangle's extent in the space.</li>
+ * <li>an extent which is the dimension of the region of interest
+ * extending from the origin</li></ul>
+ * 
  */
 public class RectangleRegionOfInterest extends AbstractIterableRegionOfInterest {
 
@@ -15,7 +24,76 @@ public class RectangleRegionOfInterest extends AbstractIterableRegionOfInterest 
 		this.origin = origin;
 		this.extent = extent;
 	}
+	
+	/**
+	 * Set the origin using a point. Updating the origin will move the rectangle
+	 * without changing its size.
+	 * 
+	 * @param ptOrigin - new origin. This should define the minima of the rectangle
+	 */
+	public void setOrigin(RealLocalizable ptOrigin) {
+		ptOrigin.localize(origin);
+		this.invalidateCachedState();
+	}
+	
+	/**
+	 * Set the origin using a double array of coordinates. Updating the origin will move the rectangle
+	 * without changing its size.
+	 * @param origin the coordinates of the minima of the rectangle
+	 */
+	public void setOrigin(double [] origin) {
+		System.arraycopy(origin, 0, this.origin, 0, numDimensions());
+		invalidateCachedState();
+	}
+	
+	/**
+	 * Set the origin for a particular coordinate
+	 * @param origin new value of the minimum of the rectangle at the given coordinate
+	 * @param d zero-based index of the dimension to be affected
+	 */
+	public void setOrigin(double origin, int d) {
+		this.origin[d] = origin;
+		invalidateCachedState();
+	}
+	
+	/**
+	 * Set the extent of the rectangle. Setting the extent will change
+	 * the rectangle's size while maintaining the position of the origin.
+	 * 
+	 * @param extent the extent (width, height, depth, duration, etc) of the rectangle
+	 */
+	public void setExtent(double [] extent) {
+		System.arraycopy(extent, 0, this.extent, 0, numDimensions());
+		invalidateCachedState();
+	}
 
+	/**
+	 * Set the extent for a single dimension
+	 * @param extent
+	 * @param d
+	 */
+	public void setExtent(double extent, int d) {
+		this.extent[d] = extent;
+		invalidateCachedState();
+	}
+	
+	/**
+	 * Copy the extents of the rectangle into the array provided
+	 * @param extent on output, the extent of the rectanble
+	 */
+	public void getExtent(double [] extent) {
+		System.arraycopy(this.extent, 0, extent, 0, numDimensions());
+	}
+	
+	/**
+	 * Get the extent of the rectangle in one dimension
+	 * @param d dimension in question
+	 * @return extent (eg. width, height) of rectangle in given dimension
+	 */
+	public double getExtent(int d) {
+		return extent[d];
+	}
+	
 	@Override
 	protected boolean nextRaster(long[] position, long[] end) {
 		/*

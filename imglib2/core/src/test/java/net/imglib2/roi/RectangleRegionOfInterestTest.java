@@ -9,6 +9,7 @@ import java.util.Random;
 
 import net.imglib2.Cursor;
 import net.imglib2.RandomAccess;
+import net.imglib2.RealPoint;
 import net.imglib2.RealRandomAccess;
 import net.imglib2.img.Img;
 import net.imglib2.img.array.ArrayImgFactory;
@@ -209,6 +210,114 @@ public class RectangleRegionOfInterestTest {
 				ra.setPosition(llocation);
 				assertEquals(ra.get().get(), is_inside);
 			}
+		}
+	}
+	@Test
+	public void testSetOriginRealLocalizable() {
+		RectangleRegionOfInterest r = new RectangleRegionOfInterest(
+				new double [] { 1.3, 10.5, 2.6 },
+				new double [] { 5.8, 2.1, 3.3 } );
+		RealRandomAccess<BitType> ra = r.realRandomAccess();
+		ra.setPosition(new double [] { .4, .6, .8});
+		assertFalse(ra.get().get());
+		ra.setPosition(new double [] { 6.1, 11.0, 4.0} );
+		assertTrue(ra.get().get());
+		r.setOrigin(new RealPoint(new double [] { .2, .4, .6 }));
+		ra.setPosition(new double [] { .4, .6, .8});
+		assertTrue(ra.get().get());
+		ra.setPosition(new double [] { 6.1, 5.0, 4.0} );
+		assertFalse(ra.get().get());
+	}
+	@Test
+	public void testSetOriginDoubleArray() {
+		RectangleRegionOfInterest r = new RectangleRegionOfInterest(
+				new double [] { 1.3, 10.5, 2.6 },
+				new double [] { 5.8, 2.1, 3.3 } );
+		RealRandomAccess<BitType> ra = r.realRandomAccess();
+		ra.setPosition(new double [] { .4, .6, .8});
+		assertFalse(ra.get().get());
+		ra.setPosition(new double [] { 6.1, 11.0, 4.0} );
+		assertTrue(ra.get().get());
+		r.setOrigin(new double [] { .2, .4, .6 });
+		ra.setPosition(new double [] { .4, .6, .8});
+		assertTrue(ra.get().get());
+		ra.setPosition(new double [] { 6.1, 5.0, 4.0} );
+		assertFalse(ra.get().get());
+	}
+	@Test
+	public void testSetOriginDoubleInt() {
+		RectangleRegionOfInterest r = new RectangleRegionOfInterest(
+				new double [] { 1.3, 10.5, 2.6 },
+				new double [] { 5.8, 2.1, 3.3 } );
+		RealRandomAccess<BitType> ra = r.realRandomAccess();
+		ra.setPosition(new double [] { .4, .6, .8});
+		assertFalse(ra.get().get());
+		ra.setPosition(new double [] { 6.1, 11.0, 4.0} );
+		assertTrue(ra.get().get());
+		double [] test = new double [] { .2, .4, .6 };
+		for (int i=0; i<3; i++) {
+			r.setOrigin(test[i], i);
+		}
+		ra.setPosition(new double [] { .4, .6, .8});
+		assertTrue(ra.get().get());
+		ra.setPosition(new double [] { 6.1, 5.0, 4.0} );
+		assertFalse(ra.get().get());
+	}
+
+	@Test
+	public void testSetExtentDoubleArray() {
+		RectangleRegionOfInterest r = new RectangleRegionOfInterest(
+				new double [] { 1.3, 10.5, 2.6 },
+				new double [] { 5.8, 2.1, 3.3 } );
+		int width = 27;
+		int height = 16;
+		int depth = 17;
+		Img<IntType> img = new ArrayImgFactory<IntType>().create(new long [] {width, height, depth} , new IntType());
+		assertEquals(r.getIterableIntervalOverROI(img).size(), 6 * 2 * 3);
+		double [] test = new double [] { 10, 11, 12}; 
+		r.setExtent(test);
+		assertEquals(r.getIterableIntervalOverROI(img).size(), 10 * 11 * 12);
+		for (int i = 0; i< 3; i++)
+			assertEquals(r.realMax(i), test[i] + r.realMin(i), 0.0);
+	}
+	@Test
+	public void testSetExtentDoubleInt() {
+		RectangleRegionOfInterest r = new RectangleRegionOfInterest(
+				new double [] { 1.3, 10.5, 2.6 },
+				new double [] { 5.8, 2.1, 3.3 } );
+		int width = 27;
+		int height = 16;
+		int depth = 17;
+		Img<IntType> img = new ArrayImgFactory<IntType>().create(new long [] {width, height, depth} , new IntType());
+		assertEquals(r.getIterableIntervalOverROI(img).size(), 6 * 2 * 3);
+		double [] test = new double [] { 10, 11, 12};
+		for (int i=0; i<3; i++) {
+			r.setExtent(test[i], i);
+		}
+		assertEquals(r.getIterableIntervalOverROI(img).size(), 10 * 11 * 12);
+		for (int i = 0; i< 3; i++)
+			assertEquals(r.realMax(i), test[i] + r.realMin(i), 0.0);
+	}
+	@Test
+	public void testGetExtentDoubleArray() {
+		double [] extent = new double [] { 5.8, 2.1, 3.3 }; 
+		RectangleRegionOfInterest r = new RectangleRegionOfInterest(
+				new double [] { 1.3, 10.5, 2.6 },
+				extent);
+		double [] result = new double[3];
+		r.getExtent(result);
+		for (int i=0; i<3; i++) {
+			assertEquals(extent[i], result[i], 0);
+		}
+	}
+	@Test
+	public void testGetExtentInt() {
+		double [] extent = new double [] { 5.8, 2.1, 3.3 }; 
+		RectangleRegionOfInterest r = new RectangleRegionOfInterest(
+				new double [] { 1.3, 10.5, 2.6 },
+				extent);
+		for (int i=0; i<3; i++) {
+			assertEquals(extent[i], r.getExtent(i), 0);
 		}
 	}
 }
