@@ -308,7 +308,7 @@ public class ImgOpener implements StatusReporter {
 
 		IFormatReader r = null;
 		r = new ImageReader();
-//		r = new ChannelFiller(r);
+		r = new ChannelFiller(r);
 		r = new ChannelSeparator(r);
 
 		// attach OME-XML metadata object to reader
