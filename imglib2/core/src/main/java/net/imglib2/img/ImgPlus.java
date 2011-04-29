@@ -294,9 +294,15 @@ public class ImgPlus<T> implements Img<T>, Metadata {
 	}
 
 	@Override
-	public void setColorTableCount(final int count) {
+	public void initializeColorTables(final int count) {
 		lut8.ensureCapacity(count);
 		lut16.ensureCapacity(count);
+		lut8.clear();
+		lut16.clear();
+		for (int i = 0; i < count; i++) {
+			lut8.add(null);
+			lut16.add(null);
+		}
 	}
 
 	// -- Utility methods --

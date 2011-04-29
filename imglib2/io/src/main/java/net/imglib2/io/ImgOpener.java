@@ -308,7 +308,7 @@ public class ImgOpener implements StatusReporter {
 
 		IFormatReader r = null;
 		r = new ImageReader();
-		r = new ChannelFiller(r);
+//		r = new ChannelFiller(r);
 		r = new ChannelSeparator(r);
 
 		// attach OME-XML metadata object to reader
@@ -501,11 +501,20 @@ public class ImgOpener implements StatusReporter {
 		return imgPlus;
 	}
 
+	/**
+	 * Finds the lowest level wrapped reader, preferably a {@link ChannelFiller},
+	 * but otherwise the base reader. This is useful for determining whether the
+	 * input data is intended to be viewed with multiple channels composited
+	 * together.
+	 */
 	private IFormatReader unwrap(final IFormatReader r) throws FormatException,
 		IOException
 	{
 		if (!(r instanceof ReaderWrapper)) return r;
-		return ((ReaderWrapper) r).unwrap();
+		final ReaderWrapper rw = (ReaderWrapper) r;
+		final IFormatReader channelFiller = rw.unwrap(ChannelFiller.class, null);
+		if (channelFiller != null) return channelFiller;
+		return rw.unwrap();
 	}
 
 	/**
@@ -540,7 +549,7 @@ public class ImgOpener implements StatusReporter {
 		// populate planes
 		final int planeCount = r.getImageCount();
 		final boolean isPlanar = planarAccess != null && compatibleTypes;
-		imgPlus.setColorTableCount(planeCount);
+		imgPlus.initializeColorTables(planeCount);
 
 		byte[] plane = null;
 		for (int no = 0; no < planeCount; no++) {
