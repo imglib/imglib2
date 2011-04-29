@@ -313,6 +313,12 @@ public class ImgPlus<T> implements Img<T>, Metadata {
 		return new ImgPlus<T>(img);
 	}
 
+	/** Ensures the given {@link Img} is an ImgPlus, wrapping if necessary. */
+	public static <T> ImgPlus<T> wrap(final Img<T> img, final Metadata metadata) {
+		if (img instanceof ImgPlus) return (ImgPlus<T>) img;
+		return new ImgPlus<T>(img, metadata);
+	}
+
 	// -- Helper methods --
 
 	/** Ensures the given name is valid. */
