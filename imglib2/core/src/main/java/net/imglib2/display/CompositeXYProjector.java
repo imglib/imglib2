@@ -68,7 +68,7 @@ public class CompositeXYProjector<A, B extends NumericType<B>> extends
 		this.dimIndex = dimIndex;
 
 		// check that there is one converter per dimensional position
-		positionCount = source.dimension(dimIndex);
+		positionCount = dimIndex < 0 ? 1 : source.dimension(dimIndex);
 		final int converterCount = converters.size();
 		if (positionCount != converterCount) {
 			throw new IllegalArgumentException("Expected " + positionCount +
@@ -112,7 +112,7 @@ public class CompositeXYProjector<A, B extends NumericType<B>> extends
 			b.setZero();
 			for (int i = 0; i < positionCount; i++) {
 				if (skip(i, single)) continue; // position is excluded from composite
-				sourceRandomAccess.setPosition(i, dimIndex);
+				if (dimIndex >= 0) sourceRandomAccess.setPosition(i, dimIndex);
 				final B bi = b.createVariable();
 				converters.get(i).convert(sourceRandomAccess.get(), bi);
 				b.add(bi); // accumulate converted result
@@ -143,8 +143,13 @@ public class CompositeXYProjector<A, B extends NumericType<B>> extends
 	 */
 	private boolean skip(final int i, final boolean single) {
 		if (composite[i]) return false; // position is included in composite
-		if (single && position[dimIndex] == i) return false; // single mode
+		if (single && position() == i) return false; // single mode
 		return true;
+	}
+
+	/** Gets the current position along the composited axis. */
+	private long position() {
+		return dimIndex < 0 ? 0 : position[dimIndex];
 	}
 
 }

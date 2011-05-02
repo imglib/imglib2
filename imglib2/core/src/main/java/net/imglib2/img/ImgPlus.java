@@ -294,9 +294,15 @@ public class ImgPlus<T> implements Img<T>, Metadata {
 	}
 
 	@Override
-	public void setColorTableCount(final int count) {
+	public void initializeColorTables(final int count) {
 		lut8.ensureCapacity(count);
 		lut16.ensureCapacity(count);
+		lut8.clear();
+		lut16.clear();
+		for (int i = 0; i < count; i++) {
+			lut8.add(null);
+			lut16.add(null);
+		}
 	}
 
 	// -- Utility methods --
@@ -305,6 +311,12 @@ public class ImgPlus<T> implements Img<T>, Metadata {
 	public static <T> ImgPlus<T> wrap(final Img<T> img) {
 		if (img instanceof ImgPlus) return (ImgPlus<T>) img;
 		return new ImgPlus<T>(img);
+	}
+
+	/** Ensures the given {@link Img} is an ImgPlus, wrapping if necessary. */
+	public static <T> ImgPlus<T> wrap(final Img<T> img, final Metadata metadata) {
+		if (img instanceof ImgPlus) return (ImgPlus<T>) img;
+		return new ImgPlus<T>(img, metadata);
 	}
 
 	// -- Helper methods --

@@ -74,7 +74,6 @@ public class RegionCursor<K extends RealType<K>> {
 			}
 			// else currCoord[i] > maxCoord[i]
 			if (i == lastDim) { // can't increment anymore?
-				this.accessor.setPosition(this.currCoords);
 				return;           // then return pointing out of bounds
 			}
 			this.currCoords[i] = this.minCoords[i];

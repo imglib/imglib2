@@ -108,6 +108,6 @@ public interface Metadata {
 	void setColorTable(ColorTable16 lut, int no);
 
 	/** Sets the number of available color tables to the given value. */
-	void setColorTableCount(final int count);
+	void initializeColorTables(final int count);
 
 }
