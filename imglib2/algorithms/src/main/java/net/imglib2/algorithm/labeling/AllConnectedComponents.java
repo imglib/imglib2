@@ -28,7 +28,9 @@ import net.imglib2.img.Img;
 import net.imglib2.labeling.Labeling;
 import net.imglib2.labeling.LabelingOutOfBoundsRandomAccessFactory;
 import net.imglib2.labeling.LabelingType;
+import net.imglib2.outofbounds.OutOfBounds;
 import net.imglib2.outofbounds.OutOfBoundsFactory;
+import net.imglib2.outofbounds.OutOfBoundsRandomAccess;
 import net.imglib2.type.logic.BitType;
 
 /**
@@ -101,8 +103,9 @@ public class AllConnectedComponents {
 		RandomAccess<BitType> raSrc = img.randomAccess();
 		OutOfBoundsFactory<LabelingType<T>, Img<LabelingType<T>>> factory =
 			new LabelingOutOfBoundsRandomAccessFactory<T, Img<LabelingType<T>>>();
-		
-		RandomAccess<LabelingType<T>> raDest = labeling.randomAccess(factory);
+		OutOfBounds<LabelingType<T>> oob = factory.create(labeling);
+		OutOfBoundsRandomAccess<LabelingType<T>> raDest = 
+			new OutOfBoundsRandomAccess<LabelingType<T>>(labeling.numDimensions(), oob);
 		long [] srcPosition = new long [img.numDimensions()];
 		long [] destPosition = new long [labeling.numDimensions()];
 		long [] dimensions = new long [labeling.numDimensions()];
