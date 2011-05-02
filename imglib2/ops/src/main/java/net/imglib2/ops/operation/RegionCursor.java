@@ -1,7 +1,10 @@
 package net.imglib2.ops.operation;
 
 import net.imglib2.RandomAccess;
+import net.imglib2.img.Img;
+import net.imglib2.img.array.ArrayImgFactory;
 import net.imglib2.type.numeric.RealType;
+import net.imglib2.type.numeric.integer.UnsignedByteType;
 
 // Kind of in a predicament
 //   -- need to be able to set the origin of a region so need accessor's ability
@@ -68,8 +71,10 @@ public class RegionCursor<K extends RealType<K>> {
 		for (int i = 0; i < this.totalDims; i++) {
 			this.currCoords[i]++;
 			if (this.currCoords[i] <= this.maxCoords[i]) {
+				// NEW WAY
 				this.accessor.move(1,i);
-				//OLD WAY this.accessor.setPosition(this.currCoords);
+				// OLD WAY - confirmed about 15% slower
+				// this.accessor.setPosition(this.currCoords);
 				return;
 			}
 			// else currCoord[i] > maxCoord[i]
@@ -77,12 +82,34 @@ public class RegionCursor<K extends RealType<K>> {
 				return;           // then return pointing out of bounds
 			}
 			this.currCoords[i] = this.minCoords[i];
+			// NEW WAY
 			this.accessor.move((this.minCoords[i] - this.maxCoords[i]), i);
 		}
 	}
 	
 	public void reset() {
 		resetInternals();
+	}
+	
+	public static void main(String[] args) {
+		//do a speed test
+		final int DimSize = 100;
+		ArrayImgFactory<UnsignedByteType> factory =
+			new ArrayImgFactory<UnsignedByteType>();
+		Img<UnsignedByteType> data =
+			factory.create(new long[]{DimSize,DimSize,DimSize},
+				new UnsignedByteType());
+		long startTime = System.currentTimeMillis();
+		RegionCursor<UnsignedByteType> cursor =
+			new RegionCursor<UnsignedByteType>(data.randomAccess(),
+					new long[]{2,3,4}, new long[]{DimSize-7, DimSize-5, DimSize-3});
+		for (int i = 0; i < 1000; i++) {
+			cursor.reset();
+			while (cursor.isValid())
+				cursor.next();
+		}
+		long endTime = System.currentTimeMillis();
+		System.out.println("Total time in millis = "+(endTime-startTime));
 	}
 
 	// -- helpers --
