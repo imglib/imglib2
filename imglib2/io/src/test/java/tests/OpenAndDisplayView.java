@@ -36,9 +36,10 @@ public class OpenAndDisplayView
 			return;
 		}
 
-		RandomAccessible< FloatType >         view1 = Views.extend( img );	
+		
+		RandomAccessible< FloatType >         view1 = Views.extendMirrorSingle( img );	
 		RandomAccessibleInterval< FloatType > view2 = Views.superIntervalView( view1, new long[] {-20, -20}, new long[] {157, 157} );		
-		RandomAccessible< FloatType >         view3 = Views.extend( view2 );	
+		RandomAccessible< FloatType >         view3 = Views.extendPeriodic( view2 );	
 		RandomAccessibleInterval< FloatType > view4 = Views.superIntervalView( view3, new long[] {-100, -100}, new long[] {357, 357} );		
 		RandomAccessibleInterval< FloatType > view5 = Views.superIntervalView( view4, new long[] {120, 120}, new long[] {117, 117} );		
 		
