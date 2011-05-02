@@ -68,7 +68,8 @@ public class RegionCursor<K extends RealType<K>> {
 		for (int i = 0; i < this.totalDims; i++) {
 			this.currCoords[i]++;
 			if (this.currCoords[i] <= this.maxCoords[i]) {
-				this.accessor.setPosition(this.currCoords);
+				this.accessor.move(1,i);
+				//OLD WAY this.accessor.setPosition(this.currCoords);
 				return;
 			}
 			// else currCoord[i] > maxCoord[i]
@@ -76,6 +77,7 @@ public class RegionCursor<K extends RealType<K>> {
 				return;           // then return pointing out of bounds
 			}
 			this.currCoords[i] = this.minCoords[i];
+			this.accessor.move((this.minCoords[i] - this.maxCoords[i]), i);
 		}
 	}
 	
