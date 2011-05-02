@@ -42,9 +42,9 @@ import net.imglib2.util.Util;
 final public class ExtendedRandomAccessibleInterval< T, F extends RandomAccessibleInterval< T > > implements RandomAccessible< T >
 {
 	final protected F source;
-	final protected OutOfBoundsFactory< T, F > factory;
+	final protected OutOfBoundsFactory< T, ? super F > factory;
 
-	public ExtendedRandomAccessibleInterval( final F source, final OutOfBoundsFactory< T, F > factory )
+	public ExtendedRandomAccessibleInterval( final F source, final OutOfBoundsFactory< T, ? super F > factory )
 	{
 		this.source = source;
 		this.factory = factory;

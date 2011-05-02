@@ -10,7 +10,7 @@ import net.imglib2.util.Util;
 
 public class Views
 {
-	public static < T, F extends RandomAccessibleInterval< T > > ExtendedRandomAccessibleInterval< T, F > extend( final F randomAccessible, final OutOfBoundsFactory< T, F > factory )
+	public static < T, F extends RandomAccessibleInterval< T > > ExtendedRandomAccessibleInterval< T, F > extend( final F randomAccessible, final OutOfBoundsFactory< T, ? super F > factory )
 	{
 		return new ExtendedRandomAccessibleInterval< T, F >( randomAccessible, factory );
 	}
