@@ -6,8 +6,8 @@ import java.util.Observable;
 
 import net.imglib2.ops.condition.Condition;
 import net.imglib2.ops.function.RealFunction;
-import net.imglib2.ops.observer.IterationStatus;
 import net.imglib2.ops.observer.IterationStatus.Message;
+import net.imglib2.ops.observer.IterationTracker;
 
 import java.util.Observer;
 
@@ -56,7 +56,7 @@ import net.imglib2.img.Img;
  * that is all done by reference and delegation. i.e. a 3d composed z stack image made of thirteen 2d images. See how imgib2 supports these concepts.
  */
 
-@SuppressWarnings("unchecked")
+@SuppressWarnings({"unchecked","rawtypes"})
 public class AssignOperation<T extends RealType<T>>
 {
 	// -----------------  instance variables ------------------------------------------
@@ -255,45 +255,5 @@ public class AssignOperation<T extends RealType<T>>
 			variables.add(cursors[i].getValue());
 		
 		return variables;
-	}
-
-	private class IterationTracker implements IterationStatus
-	{
-		Message message;
-		long[] position;
-		double value;
-		boolean conditionsSatisfied;
-		boolean interruptStatus;
-
-		@Override
-		public Message getMessage()
-		{
-			return message;
-		}
-
-		@Override
-		public long[] getPosition()
-		{
-			return position;
-		}
-
-		@Override
-		public double getValue()
-		{
-			return value;
-		}
-
-		@Override
-		public boolean getConditionsSatisfied()
-		{
-			return conditionsSatisfied;
-		}
-
-		@Override
-		public boolean wasInterrupted()
-		{
-			return interruptStatus;
-		}
-		
 	}
 }

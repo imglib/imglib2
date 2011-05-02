@@ -12,8 +12,6 @@ import net.imglib2.type.numeric.RealType;
 //     crossed and calling fwd(delta) with a correct delta)
 //   could use an accessor and copy Index style increment code from ImageJ2.
 //     But I think that code is slow.
-//   also note the hasNext() and fwd() definition as formulated will cause 1st
-//     pixel value to be skipped
 //   one good thing about random accessor idea: shape compatible regions are
 //     walked in the exact same order depsite differences in dimensionality.
 //     I.e. a 2d XY plane in a 2d image and a 2d XY plane in a 5d image.
@@ -44,6 +42,7 @@ public class RegionCursor<K extends RealType<K>> {
 		for (int i = 0; i < this.totalDims; i++) {
 			this.maxCoords[i] = origin[i] + span[i] - 1;
 		}
+		resetInternals();
 	}
 
 	public void getPosition(long[] index) {
@@ -81,9 +80,14 @@ public class RegionCursor<K extends RealType<K>> {
 	}
 	
 	public void reset() {
+		resetInternals();
+	}
+
+	// -- helpers --
+
+	private void resetInternals() {
 		for (int i = 0; i < this.totalDims; i++)
 			this.currCoords[i] = this.minCoords[i];
 		this.accessor.setPosition(this.currCoords);
 	}
-	
 }
