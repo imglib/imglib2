@@ -41,9 +41,9 @@ import net.imglib2.outofbounds.RealOutOfBoundsRealRandomAccess;
 final public class ExtendedRealRandomAccessibleRealInterval< T, F extends RealRandomAccessibleRealInterval< T, F > > implements RealRandomAccessible< T > 
 {
 	final protected F interval;
-	final protected RealOutOfBoundsFactory< T, F > factory;
+	final protected RealOutOfBoundsFactory< T, ? super F > factory;
 
-	public ExtendedRealRandomAccessibleRealInterval( final F interval, final RealOutOfBoundsFactory< T, F > factory )
+	public ExtendedRealRandomAccessibleRealInterval( final F interval, final RealOutOfBoundsFactory< T, ? super F > factory )
 	{
 		this.interval = interval;
 		this.factory = factory;

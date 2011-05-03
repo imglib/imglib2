@@ -27,11 +27,38 @@
  */
 package net.imglib2;
 
-
 /**
+ * A RealCursor iterates over a set of RealLocalizable elements, for example
+ * intensity values sampled at a finite set of arbitrary real positions.
  * 
- *
- * @author Tobias Pietzsch & Stephan Preibisch & Stephan Saalfeld <saalfeld@mpi-cbg.de>
+ * <p>
+ * RealCursor is a combination of several interfaces to achieve this. The
+ * {@link Iterator} interface is used to iterate the set. Use
+ * {@link Iterator#fwd()} to advance the cursor and {@link Iterator#hasNext()}
+ * to check whether there are more elements. Note, that the Cursor starts
+ * <em>before</em> the first element, i.e., you have to call {@code fwd()} once
+ * to move to the first element.
+ * </p>
+ * 
+ * <p>
+ * The {@link RealLocalizable} interface provides access to the position of the
+ * current element. The {@link Sampler#get()} method of the {@link Sampler}
+ * interface provides access to the value of the current element.
+ * </p>
+ * 
+ * <p>
+ * For convenience, Cursor also extends the {@link java.util.Iterator} interface
+ * so that you are able to use Cursors in for-each loops. Calling the
+ * {@link java.util.Iterator#next()} method is equivalent to calling
+ * {@code fwd()} and {@code get()}. That is, after {@code next()} the Cursor is
+ * on the element returned by {@code next()}. {@code get()} can be used to
+ * obtain that element (again), and {@code getPosition()} to obtain its
+ * position. The {@link java.util.Iterator#remove()} method is not supported by
+ * imglib Cursors, in general.
+ * </p>
+ * 
+ * @author Tobias Pietzsch & Stephan Preibisch & Stephan Saalfeld
+ *         <saalfeld@mpi-cbg.de>
  */
 public interface RealCursor< T > extends RealLocalizable, Sampler< T >, Iterator, java.util.Iterator< T >
 {

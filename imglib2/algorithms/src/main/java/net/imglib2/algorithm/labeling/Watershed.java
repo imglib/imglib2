@@ -23,12 +23,15 @@ import java.util.PriorityQueue;
 import net.imglib2.Cursor;
 import net.imglib2.algorithm.OutputAlgorithm;
 import net.imglib2.img.Img;
-import net.imglib2.img.ImgRandomAccess;
 import net.imglib2.labeling.Labeling;
 import net.imglib2.labeling.LabelingOutOfBoundsRandomAccessFactory;
 import net.imglib2.labeling.LabelingType;
 import net.imglib2.labeling.NativeImgLabeling;
-import net.imglib2.type.numeric.ComplexType;
+import net.imglib2.outofbounds.OutOfBounds;
+import net.imglib2.outofbounds.OutOfBoundsConstantValueFactory;
+import net.imglib2.outofbounds.OutOfBoundsFactory;
+import net.imglib2.outofbounds.OutOfBoundsRandomAccess;
+import net.imglib2.type.numeric.RealType;
 
 /**
  * Watershed algorithms. The watershed algorithm segments and labels an image
@@ -47,7 +50,7 @@ import net.imglib2.type.numeric.ComplexType;
  * constrains the watershed boundary.
  * 
  */
-public class Watershed <T extends ComplexType<T>, L extends Comparable<L>>  
+public class Watershed <T extends RealType<T>, L extends Comparable<L>>  
 	implements OutputAlgorithm<Labeling<L>>{
 	
 	protected static class PixelIntensity<U extends Comparable<U>>  
@@ -163,13 +166,27 @@ public class Watershed <T extends ComplexType<T>, L extends Comparable<L>>
 			output = o;
 		}
 		/*
+		 * Make an OutOfBounds for the labels that returns empty labels if out of bounds.
+		 * Make an OutOfBounds for the intensities that returns the maximum intensity if out of bounds
+		 * so that in-bounds will be in a deep valley.
+		 */
+		OutOfBoundsFactory<LabelingType<L>, Labeling<L>> factory =
+			new LabelingOutOfBoundsRandomAccessFactory<L, Labeling<L>>();
+		OutOfBounds<LabelingType<L>> oob = factory.create(output);
+		
+		OutOfBoundsRandomAccess<LabelingType<L>> outputAccess =
+			new OutOfBoundsRandomAccess<LabelingType<L>>(output.numDimensions(),oob);
+		T maxVal = image.firstElement().createVariable();
+		maxVal.setReal(maxVal.getMaxValue());
+		OutOfBoundsFactory<T, Img<T>> oobImageFactory = new OutOfBoundsConstantValueFactory<T, Img<T>>(maxVal);
+		OutOfBoundsRandomAccess<T> imageAccess = 
+			new OutOfBoundsRandomAccess<T>(output.numDimensions(), oobImageFactory.create(image));
+		
+		/*
 		 * Start by loading up a priority queue with the seeded pixels
 		 */
 		PriorityQueue<PixelIntensity<L>> pq = new PriorityQueue<PixelIntensity<L>>();
 		Cursor<LabelingType<L>> c = seeds.localizingCursor();
-		ImgRandomAccess<LabelingType<L>> outputAccess = output.randomAccess(
-				new LabelingOutOfBoundsRandomAccessFactory<L, Img<LabelingType<L>>>());
-		ImgRandomAccess<T> imageAccess = image.randomAccess();
 		
 		long [] dimensions = new long [image.numDimensions()];
 		output.dimensions(dimensions);
