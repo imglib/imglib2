@@ -45,6 +45,7 @@ public class RegionCursor<K extends RealType<K>> {
 		for (int i = 0; i < this.totalDims; i++) {
 			this.maxCoords[i] = origin[i] + span[i] - 1;
 		}
+		
 		resetInternals();
 	}
 
@@ -84,6 +85,8 @@ public class RegionCursor<K extends RealType<K>> {
 			this.currCoords[i] = this.minCoords[i];
 			// NEW WAY
 			this.accessor.move((this.minCoords[i] - this.maxCoords[i]), i);
+				// note: replacing this above subtraction with lookup in a precomputed
+				//   table is significantly (30%) slower!
 		}
 	}
 	
