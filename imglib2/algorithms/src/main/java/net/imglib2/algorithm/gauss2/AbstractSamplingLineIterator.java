@@ -17,8 +17,5 @@ public abstract class AbstractSamplingLineIterator<T> extends AbstractLineIterat
 	public AbstractSamplingLineIterator( final int dim, final long size, final Positionable positionable )
 	{
 		super( dim, size, positionable );
-	}
-	
-	@Override
-	public T getType() { return get(); } 
+	}	
 }

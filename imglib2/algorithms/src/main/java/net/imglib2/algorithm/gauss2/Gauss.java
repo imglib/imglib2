@@ -161,7 +161,7 @@ public abstract class Gauss< C extends NumericType< C > >
 		}
 		else
 		{
-			// TODO
+			// TODO: special case of a one-dimensional Gaussian Convolution, we cannot iterate over n-1 dimensions
 		}
 	}
 }

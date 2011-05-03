@@ -15,4 +15,16 @@ public class SamplingLineIterator<T> extends AbstractSamplingLineIterator<T>
 
 	@Override
 	public T get() { return randomAccess.get(); }
+
+	@Override
+	public SamplingLineIterator<T> copy()
+	{
+		// new instance with same properties
+		SamplingLineIterator<T> c = new SamplingLineIterator<T>( d, sizeMinus1, randomAccess );
+		
+		// update current status
+		c.i = i;
+		
+		return c;
+	}
 }

@@ -24,4 +24,16 @@ public class ConvertingSamplingLineIterator<A,B> extends AbstractSamplingLineIte
 		converter.convert( randomAccess.get(), temp );
 		return temp;
 	}
+
+	@Override
+	public ConvertingSamplingLineIterator<A,B> copy()
+	{
+		// new instance with same properties
+		ConvertingSamplingLineIterator<A, B> c = new ConvertingSamplingLineIterator<A, B>( d, sizeMinus1, randomAccess, converter, temp );
+		
+		// update current status
+		c.i = i;
+		
+		return c;
+	}
 }
