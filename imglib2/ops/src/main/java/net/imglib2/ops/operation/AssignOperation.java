@@ -214,6 +214,11 @@ public class AssignOperation<T extends RealType<T>>
 
 	// -----------------  private interface ------------------------------------------
 	
+	// TODO - bug I think - if union conditions and no conditions set then this
+	// will return false. fix so it works and in an efficent manner. or accept
+	// this behavior: user should not specify union and then not provide any
+	// conditions.
+	
 	private boolean conditionsSatisfied(RegionCursor<T>[] cursors)
 	{
 		for (int i = 0; i < conditions.length; i++)

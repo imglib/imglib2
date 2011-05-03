@@ -15,7 +15,6 @@ public class MultiImageIterator<T extends RealType<T>>  // don't want to impleme
 	private Img<T>[] images;
 	private long[][] origins;
 	private long[][] spans;
-	private RandomAccess<T>[] accessors;
 	private RegionCursor<T>[] regionCursors;
 	
 	// -----------------  public interface ------------------------------------------
@@ -48,14 +47,11 @@ public class MultiImageIterator<T extends RealType<T>>  // don't want to impleme
 			if (numInSpan(spans[i]) != totalSamples)
 				throw new IllegalArgumentException("incompatible span shapes");
 
-		accessors = new RandomAccess[images.length];
-		for (int i = 0; i < images.length; i++) {
-			accessors[i] = images[i].randomAccess();
-		}
-		
 		regionCursors = new RegionCursor[images.length];
-		for (int i = 0; i < images.length; i++)
-			regionCursors[i] = new RegionCursor<T>(accessors[i], origins[i], spans[i]);
+		for (int i = 0; i < images.length; i++) {
+			RandomAccess<T> accessor = images[i].randomAccess();
+			regionCursors[i] = new RegionCursor<T>(accessor, origins[i], spans[i]);
+		}
 
 		resetAll();
 	}
