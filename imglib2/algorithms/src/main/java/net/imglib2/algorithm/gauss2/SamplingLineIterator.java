@@ -1,6 +1,7 @@
 package net.imglib2.algorithm.gauss2;
 
 import net.imglib2.RandomAccess;
+import net.imglib2.img.Img;
 
 public class SamplingLineIterator<T> extends AbstractSamplingLineIterator<T>
 {
@@ -14,10 +15,11 @@ public class SamplingLineIterator<T> extends AbstractSamplingLineIterator<T>
 	 * @param size - number of pixels to iterate
 	 * @param randomAccess - the {@link RandomAccess} which is moved along the line and is 
 	 * placed at the right location (one pixel left of the starting pixel) 
+	 * @param processLine - the line that will be used for processing and is associated with this {@link AbstractSamplingLineIterator} 
 	 */
-	public SamplingLineIterator( final int dim, final long size, final RandomAccess<T> randomAccess )
+	public SamplingLineIterator( final int dim, final long size, final RandomAccess<T> randomAccess, final Img<T> processLine )
 	{
-		super( dim, size, randomAccess );
+		super( dim, size, randomAccess, processLine );
 		
 		this.randomAccess = randomAccess;
 	}
@@ -29,7 +31,7 @@ public class SamplingLineIterator<T> extends AbstractSamplingLineIterator<T>
 	public SamplingLineIterator<T> copy()
 	{
 		// new instance with same properties
-		SamplingLineIterator<T> c = new SamplingLineIterator<T>( d, sizeMinus1, randomAccess );
+		SamplingLineIterator<T> c = new SamplingLineIterator<T>( d, sizeMinus1, randomAccess, getProcessLine() );
 		
 		// update current status
 		c.i = i;

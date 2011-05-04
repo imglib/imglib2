@@ -2,6 +2,7 @@ package net.imglib2.algorithm.gauss2;
 
 import net.imglib2.RandomAccess;
 import net.imglib2.converter.Converter;
+import net.imglib2.img.Img;
 
 public class ConvertingSamplingLineIterator<A,B> extends AbstractSamplingLineIterator<B>
 {
@@ -19,10 +20,11 @@ public class ConvertingSamplingLineIterator<A,B> extends AbstractSamplingLineIte
 	 * placed at the right location (one pixel left of the starting pixel) 
 	 * @param converter - defines how to convert A into B
 	 * @param temp - an instance of B which is necessary for the conversion, holds the result of the conversion
+	 * @param processLine - the line that will be used for processing and is associated with this {@link AbstractSamplingLineIterator} 
 	 */
-	public ConvertingSamplingLineIterator( final int dim, final long size, final RandomAccess<A> randomAccess, final Converter<A, B> converter, final B temp )
+	public ConvertingSamplingLineIterator( final int dim, final long size, final RandomAccess<A> randomAccess, final Converter<A, B> converter, final B temp, final Img<B> processLine )
 	{
-		super( dim, size, randomAccess, randomAccess );
+		super( dim, size, randomAccess, randomAccess, processLine );
 		
 		this.randomAccess = randomAccess;
 		this.converter = converter;
@@ -40,7 +42,7 @@ public class ConvertingSamplingLineIterator<A,B> extends AbstractSamplingLineIte
 	public ConvertingSamplingLineIterator<A,B> copy()
 	{
 		// new instance with same properties
-		ConvertingSamplingLineIterator<A, B> c = new ConvertingSamplingLineIterator<A, B>( d, sizeMinus1, randomAccess, converter, temp );
+		ConvertingSamplingLineIterator<A, B> c = new ConvertingSamplingLineIterator<A, B>( d, sizeMinus1, randomAccess, converter, temp, getProcessLine() );
 		
 		// update current status
 		c.i = i;

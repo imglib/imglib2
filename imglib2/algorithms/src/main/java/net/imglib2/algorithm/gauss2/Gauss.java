@@ -1,5 +1,8 @@
 package net.imglib2.algorithm.gauss2;
 
+import java.util.concurrent.Callable;
+
+import net.imglib2.FinalInterval;
 import net.imglib2.Interval;
 import net.imglib2.Iterator;
 import net.imglib2.Localizable;
@@ -7,7 +10,6 @@ import net.imglib2.Positionable;
 import net.imglib2.RandomAccessible;
 import net.imglib2.Sampler;
 import net.imglib2.converter.Converter;
-import net.imglib2.img.Img;
 import net.imglib2.iterator.LocalizingZeroMinIntervalIterator;
 import net.imglib2.type.Type;
 import net.imglib2.type.numeric.NumericType;
@@ -19,19 +21,20 @@ import net.imglib2.util.Util;
  *
  * @param <T> - Defines the {@link Type} in which the actual computation is performed
  */
-public abstract class Gauss< T extends NumericType< T > >
+public abstract class Gauss< T extends NumericType< T >, R > implements Callable< RandomAccessible< R > >
 {
+	final Interval inputInterval;
+	
 	final int numDimensions;
-	final Interval inputArea;
 	final double[] sigma;
 	final double[][] kernel;
 	
-	public Gauss( final double[] sigma, final Interval inputArea )
+	public Gauss( final double[] sigma, final Interval inputInterval )
 	{
 		this.numDimensions = sigma.length;
 		this.sigma = sigma;		
 		this.kernel = new double[ numDimensions ][];
-		this.inputArea = inputArea;
+		this.inputInterval = inputInterval;
 		
 		computeKernel();
 	}
@@ -39,19 +42,8 @@ public abstract class Gauss< T extends NumericType< T > >
 	/**
 	 * @return - the result of the convolution operation
 	 */
-	public abstract RandomAccessible< T > getResult();
-		
-	/**
-	 * The area for the output/temp that needs to be convolved.
-	 * 
-	 * @param dim - The dimension that is currently processed
-	 * @return - the {@link Interval} defining the output size for the current dimension that is processed
-	 */
-	protected Interval getRange( final int dim )
-	{
-		
-	}
-	
+	public abstract RandomAccessible< R > getResult();
+
 	/**
 	 * An {@link Iterator} that samples a one dimensional line of input data for the current dimension. 
 	 *  
@@ -75,9 +67,10 @@ public abstract class Gauss< T extends NumericType< T > >
 	 *  
 	 * @param dim - The current dimension
 	 * @param range - the size of the output/temp image
+	 * @param inputLineSampler - the input line sampler which knows all the stuff already
 	 * @return - A {@link AbstractSamplingLineIterator} which provides the output
 	 */
-	protected abstract AbstractWritableLineIterator< T > createOutputLineWriter( final int dim, final Interval range );
+	protected abstract AbstractWritableLineIterator< T > createOutputLineWriter( final int dim, final Interval range, final AbstractSamplingLineIterator< T > inputLineSampler );
 		
 	/**
 	 * Writes the computed line back into the output/temp image. The idea is to only iterate
@@ -99,6 +92,9 @@ public abstract class Gauss< T extends NumericType< T > >
 	protected void updateInputLineSampler( final AbstractSamplingLineIterator< T > a, final Interval range, final long[] offset, final Localizable originalLocation )
 	{
 		final Positionable positionable = a.getPositionable();
+		
+		for ( int d = 0; d < numDimensions; ++d )
+			positionable.setPosition( originalLocation.getLongPosition( d ) + offset[ d ], d ); 
 	}
 	
 	/**
@@ -112,6 +108,9 @@ public abstract class Gauss< T extends NumericType< T > >
 	protected void updateOutputLineWriter( final AbstractWritableLineIterator< T > a, final Interval range, final long[] offset, final Localizable originalLocation )
 	{
 		final Positionable positionable = a.getPositionable();		
+
+		for ( int d = 0; d < numDimensions; ++d )
+			positionable.setPosition( originalLocation.getLongPosition( d ) + offset[ d ], d ); 
 	}
 	
 	/**
@@ -122,8 +121,46 @@ public abstract class Gauss< T extends NumericType< T > >
 		for ( int d = 0; d < numDimensions; ++d )
 			this.kernel[ d ] = Util.createGaussianKernel1DDouble( sigma[ d ], true );		
 	}
+
+	/**
+	 * The area for the output/temp that needs to be convolved, always relative to the input {@link RandomAccessible}.
+	 * The area is typically larger than the input, defined by the size of the kernel in each dimension.
+	 * 
+	 * @param dim - The dimension that is currently processed
+	 * @return - the {@link Interval} defining the output size for the current dimension that is processed
+	 */
+	protected Interval getRange( final int dim )
+	{
+		// this is a special case, only the area defined by the input interval
+		// needs to be convolved once
+		if ( numDimensions == 1 )
+			return inputInterval;
+
+		final long[] min = new long[ numDimensions ];
+		final long[] max = new long[ numDimensions ];
+
+		// the given interval is not necessarily zero-bounded
+		min[ 0 ] = inputInterval.min( 0 );
+		max[ 0 ] = inputInterval.max( 0 );
+		
+		for ( int d = 1; d < numDimensions; ++d )
+		{
+			min[ d ] = inputInterval.min( d );
+			max[ d ] = inputInterval.max( d );
+			
+			// all dimensions larger than the current one need to be computed with an extra size defined by the kernel size			
+			if ( d > dim )
+			{
+				min[ d ] = inputInterval.min( d ) - kernel[ d ].length/2;
+				max[ d ] = inputInterval.max( d ) + kernel[ d ].length/2;				
+			}
+		}		
+
+		return new FinalInterval( min, max );
+	}
 	
-	public void run()
+	@Override
+	public RandomAccessible< R > call()
 	{
 		if ( numDimensions > 1 )
 		{
@@ -147,8 +184,8 @@ public abstract class Gauss< T extends NumericType< T > >
 				final AbstractSamplingLineIterator< T > inputLineIterator = createInputLineSampler( dim, range );
 				final Localizable offsetInput = inputLineIterator.getOffset();
 
-				// get the iterator in the input image for the current dimension position
-				final AbstractWritableLineIterator< T > outputLineIterator = createOutputLineWriter( dim, range );
+				// get the iterator in the output image for the current dimension position
+				final AbstractWritableLineIterator< T > outputLineIterator = createOutputLineWriter( dim, range, inputLineIterator );
 				final Localizable offsetOutput = outputLineIterator.getOffset();
 
 				final LocalizingZeroMinIntervalIterator cursorDim = new LocalizingZeroMinIntervalIterator( fakeSize );
@@ -185,5 +222,7 @@ public abstract class Gauss< T extends NumericType< T > >
 		{
 			// TODO: special case of a one-dimensional Gaussian Convolution, we cannot iterate over n-1 dimensions
 		}
+		
+		return getResult();
 	}
 }
