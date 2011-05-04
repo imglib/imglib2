@@ -60,6 +60,7 @@ public class GaussFloat extends Gauss< FloatType, FloatType >
 		// the line that will be used for processing the gaussian convolution
 		final Img< FloatType > processLine;
 		
+		// try to use array if each individual line is not too long
 		if ( sizeProcessLine <= Integer.MAX_VALUE )
 			processLine = new ArrayImgFactory<FloatType>().create( new long[]{ sizeProcessLine }, new FloatType() );
 		else
