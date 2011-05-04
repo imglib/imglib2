@@ -110,4 +110,17 @@ public class Location implements Localizable
 
 	@Override
 	public long getLongPosition( final int d )  { return position[ d ]; }
+	
+	@Override
+	public String toString() {
+		final StringBuilder sb = new StringBuilder();
+		char c = '(';
+		for (int i=0; i<numDimensions(); i++) {
+			sb.append(c);
+			sb.append(position[i]);
+			c = ',';
+		}
+		sb.append(")");
+		return sb.toString();
+	}	
 }

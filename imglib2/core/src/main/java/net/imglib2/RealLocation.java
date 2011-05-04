@@ -106,4 +106,17 @@ public class RealLocation implements RealLocalizable
 
 	@Override
 	public int numDimensions() { return numDimensions;	}
+
+	@Override
+	public String toString() {
+		final StringBuilder sb = new StringBuilder();
+		char c = '(';
+		for (int i=0; i<numDimensions(); i++) {
+			sb.append(c);
+			sb.append(position[i]);
+			c = ',';
+		}
+		sb.append(")");
+		return sb.toString();
+	}
 }
