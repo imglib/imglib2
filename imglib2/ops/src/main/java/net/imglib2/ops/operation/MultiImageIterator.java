@@ -41,11 +41,7 @@ public class MultiImageIterator<T extends RealType<T>>  // don't want to impleme
 	/** call after subregions defined and before reset() or next() call. tests that all subregions defined are compatible. */
 	void initialize()  // could call lazily in hasNext() or fwd() but a drag on performance
 	{
-		// make sure all specified regions are shape compatible : for now just test num elements in spans are same
-		long totalSamples = numInSpan(spans[0]);
-		for (int i = 1; i < spans.length; i++)
-			if (numInSpan(spans[i]) != totalSamples)
-				throw new IllegalArgumentException("incompatible span shapes");
+		testSpansCompatible();
 
 		regionCursors = new RegionCursor[images.length];
 		for (int i = 0; i < images.length; i++) {
@@ -85,17 +81,32 @@ public class MultiImageIterator<T extends RealType<T>>  // don't want to impleme
 	
 	// -----------------  private interface ------------------------------------------
 	
-	private long numInSpan(long[] span)  // TODO - call Imglib equivalent instead
-	{
-		long total = 1;
-		for (long axisLen : span)
-			total *= axisLen;
-		return total;
-	}
-	
 	private void resetAll() {
 		for (RegionCursor<T> cursor : regionCursors)
 			cursor.reset();
+	}
+	
+	private void testSpansCompatible() {
+		for (int i = 1; i < spans.length; i++) {
+			int span0Len = spans[0].length;
+			int spanILen = spans[i].length;
+			int minDims = Math.min(span0Len, spanILen);
+			int maxDims = Math.max(span0Len, spanILen);
+			
+			for (int d = 0; d < minDims; d++) {
+				if (spans[0][d] != spans[i][d])
+					throw new IllegalArgumentException("incompatible span shapes (case 1)");
+			}
+
+			for (int d = minDims; d < maxDims; d++) {
+				if (span0Len > d)
+					if (spans[0][d] != 1)
+						throw new IllegalArgumentException("incompatible span shapes (case 2)");
+				if (spanILen > d)
+					if (spans[i][d] != 1)
+						throw new IllegalArgumentException("incompatible span shapes (case 3)");
+			}
+		}
 	}
 }
 
