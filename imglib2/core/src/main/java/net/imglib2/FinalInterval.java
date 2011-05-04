@@ -4,14 +4,30 @@ package net.imglib2;
 /**
  * Implementation of the {@link Interval} interface.
  * 
- * @author Tobias Pietzsch
+ * @author Tobias Pietzsch, Stephan Preibisch
  */
 public final class FinalInterval implements Interval
 {
 	final protected int n;
 	final protected long[] min;
 	final protected long[] max;
-	
+
+	/**
+	 * Creates a {@link FinalInterval} from another {@link Interval} 
+	 * 
+	 * @param interval - another {@link Interval}
+	 * @param max - the position of the last elements in each dimension
+	 */
+	public FinalInterval ( final Interval interval )
+	{
+		this.n = interval.numDimensions();
+		this.min = new long[ n ];
+		this.max = new long[ n ];
+		
+		interval.min( min );
+		interval.max( max );
+	}
+
 	/**
 	 * Creates an Interval with the boundaries [min, max] (both including) 
 	 * 
