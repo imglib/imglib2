@@ -22,14 +22,13 @@ package net.imglib2.algorithm.fft;
 
 import edu.mines.jtk.dsp.FftComplex;
 import edu.mines.jtk.dsp.FftReal;
+import net.imglib2.Interval;
+import net.imglib2.RandomAccessible;
+import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.algorithm.Benchmark;
 import net.imglib2.algorithm.MultiThreaded;
 import net.imglib2.algorithm.OutputAlgorithm;
-import net.imglib2.image.Image;
-import net.imglib2.outofbounds.OutOfBoundsStrategyFactory;
-import net.imglib2.outofbounds.OutOfBoundsStrategyMirrorExpWindowingFactory;
-import net.imglib2.outofbounds.OutOfBoundsStrategyMirrorFactory;
-import net.imglib2.outofbounds.OutOfBoundsStrategyValueFactory;
+import net.imglib2.img.Img;
 import net.imglib2.type.numeric.ComplexType;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.util.Util;
@@ -40,9 +39,10 @@ public class FourierTransform<T extends RealType<T>, S extends ComplexType<S>> i
 	public static enum Rearrangement { REARRANGE_QUADRANTS, UNCHANGED }
 	public static enum FFTOptimization { SPEED, MEMORY }
 	
-	final Image<T> img;
+	final RandomAccessible<T> input;
+	final Interval interval;
 	final int numDimensions;
-	Image<S> fftImage;
+	Img<S> fftImage;
 	
 	PreProcessing preProcessing;
 	Rearrangement rearrangement;
@@ -51,7 +51,6 @@ public class FourierTransform<T extends RealType<T>, S extends ComplexType<S>> i
 	int[] imageExtension;
 	float relativeFadeOutDistance;
 	int minExtension;
-	OutOfBoundsStrategyFactory<T> strategy;
 	int[] originalSize, originalOffset, extendedSize, extendedZeroPaddedSize;
 	
 	// if you want the image to be extended more use that
@@ -63,70 +62,69 @@ public class FourierTransform<T extends RealType<T>, S extends ComplexType<S>> i
 	int numThreads;
 	long processingTime;
 
-	public FourierTransform( final Image<T> image, final S complexType, final PreProcessing preProcessing, final Rearrangement rearrangement,
+	public FourierTransform( final RandomAccessibleInterval<T> input, final S complexType, final PreProcessing preProcessing, final Rearrangement rearrangement,
 							 final FFTOptimization fftOptimization, final float relativeImageExtension, final float relativeFadeOutDistance,
 							 final int minExtension )
 	{
-		this.img = image;
+		this.input = input;
+		this.interval = input;
 		this.complexType = complexType;
-		this.numDimensions = img.getNumDimensions();
+		this.numDimensions = input.numDimensions();
 		this.extendedSize = new int[ numDimensions ];
 		this.extendedZeroPaddedSize = new int[ numDimensions ];
 		this.imageExtension = new int[ numDimensions ];
 			
-		setPreProcessing( preProcessing );
+		//setPreProcessing( preProcessing );
 		setRearrangement( rearrangement );
 		setFFTOptimization( fftOptimization );
 		setRelativeFadeOutDistance( relativeFadeOutDistance );
 		setRelativeImageExtension( relativeImageExtension );
 		setMinExtension( minExtension );
-		
-		setCustomOutOfBoundsStrategy( null );
 
-		this.originalSize = image.getDimensions();
+		this.originalSize = new int[ numDimensions ];
 		this.originalOffset = new int[ numDimensions ];
+
+		for ( int d = 0; d < numDimensions; ++d )
+		{
+			if ( interval.dimension( d ) > Integer.MAX_VALUE - 1 )
+				throw new RuntimeException( "FFT only supports a maximum size in each dimensions of " + (Integer.MAX_VALUE - 1) + ", but in dimension " + d + " it is " + interval.dimension( d ) );
+			
+			originalSize[ d ] = (int)interval.dimension( d );
+		}
 		
 		this.processingTime = -1;		
 		
 		setNumThreads();
 	}
 	
-	public FourierTransform( final Image<T> image, final S complexType ) 
+	public FourierTransform( final RandomAccessibleInterval<T> input, final S complexType ) 
 	{ 
-		this ( image, complexType, PreProcessing.EXTEND_MIRROR_FADING, Rearrangement.REARRANGE_QUADRANTS, 
+		this ( input, complexType, /*PreProcessing.EXTEND_MIRROR_FADING, */Rearrangement.REARRANGE_QUADRANTS, 
 		       FFTOptimization.SPEED, 0.25f, 0.25f, 12 ); 
 	}
 
-	public FourierTransform( final Image<T> image, final S complexType, final Rearrangement rearrangement ) 
+	public FourierTransform( final RandomAccessibleInterval<T> input, final S complexType, final Rearrangement rearrangement ) 
 	{ 
-		this ( image, complexType );
+		this ( input, complexType );
 		setRearrangement( rearrangement );
 	}
 
-	public FourierTransform( final Image<T> image, final S complexType, final FFTOptimization fftOptimization ) 
+	public FourierTransform( final RandomAccessibleInterval<T> input, final S complexType, final FFTOptimization fftOptimization ) 
 	{ 
-		this ( image, complexType );
+		this ( input, complexType );
 		setFFTOptimization( fftOptimization );
 	}
-
-	public FourierTransform( final Image<T> image, final S complexType, final PreProcessing preProcessing ) 
+	
+	public FourierTransform( final RandomAccessibleInterval<T> input, final S complexType, final PreProcessing preProcessing ) 
 	{ 
-		this ( image, complexType );
+		this ( input, complexType );
 		setPreProcessing( preProcessing );
-	}
-
-	public FourierTransform( final Image<T> image, final S complexType, final OutOfBoundsStrategyFactory<T> strategy ) 
-	{ 
-		this ( image, complexType );
-		setPreProcessing( PreProcessing.USE_GIVEN_OUTOFBOUNDSSTRATEGY );
-		setCustomOutOfBoundsStrategy( strategy );
 	}
 	
 	public void setPreProcessing( final PreProcessing preProcessing ) { this.preProcessing = preProcessing; }
 	public void setRearrangement( final Rearrangement rearrangement ) { this.rearrangement = rearrangement; }
 	public void setFFTOptimization( final FFTOptimization fftOptimization ) { this.fftOptimization = fftOptimization; }
 	public void setRelativeFadeOutDistance( final float relativeFadeOutDistance ) { this.relativeFadeOutDistance = relativeFadeOutDistance; }
-	public void setCustomOutOfBoundsStrategy( final OutOfBoundsStrategyFactory<T> strategy ) { this.strategy = strategy; } 
 	public void setMinExtension( final int minExtension ) { this.minExtension = minExtension; }	
 	public void setImageExtension( final int[] imageExtension ) { this.imageExtension = imageExtension.clone(); }
 	public boolean setExtendedOriginalImageSize( final int[] inputSize )
@@ -150,13 +148,13 @@ public class FourierTransform<T extends RealType<T>, S extends ComplexType<S>> i
 	{ 
 		this.relativeImageExtensionRatio = extensionRatio;
 		
-		for ( int d = 0; d < img.getNumDimensions(); ++d )
+		for ( int d = 0; d < interval.numDimensions(); ++d )
 		{
 			// how much do we want to extend
 			if ( inputSize == null )
-				imageExtension[ d ] = Util.round( img.getDimension( d ) * ( 1 + extensionRatio ) ) - img.getDimension( d );
+				imageExtension[ d ] = (int)Util.round( interval.dimension( d ) * ( 1 + extensionRatio ) ) - (int)interval.dimension( d );
 			else
-				imageExtension[ d ] = Util.round( inputSize[ d ] * ( 1 + extensionRatio ) ) - img.getDimension( d );
+				imageExtension[ d ] = (int)Util.round( inputSize[ d ] * ( 1 + extensionRatio ) ) - (int)interval.dimension( d );
 			
 			if ( imageExtension[ d ] < minExtension )
 				imageExtension[ d ] = minExtension;
@@ -166,19 +164,19 @@ public class FourierTransform<T extends RealType<T>, S extends ComplexType<S>> i
 			//	++imageExtension[ d ];
 						
 			// the new size includes the current image size
-			extendedSize[ d ] = imageExtension[ d ] + img.getDimension( d );
+			extendedSize[ d ] = imageExtension[ d ] + (int)interval.dimension( d );
 		}			
 	} 
 
-	public T getImageType() { return img.createType(); }
+	//public T getImageType() { return input.; }
 	public int[] getExtendedSize() { return extendedSize.clone(); }	
-	public PreProcessing getPreProcessing() { return preProcessing; }
+	//public PreProcessing getPreProcessing() { return preProcessing; }
 	public Rearrangement getRearrangement() { return rearrangement; }
 	public FFTOptimization getFFOptimization() { return fftOptimization; }
 	public float getRelativeImageExtension() { return relativeImageExtensionRatio; } 
 	public int[] getImageExtension() { return imageExtension.clone(); }
 	public float getRelativeFadeOutDistance() { return relativeFadeOutDistance; }
-	public OutOfBoundsStrategyFactory<T> getCustomOutOfBoundsStrategy() { return strategy; }
+	//public OutOfBoundsStrategyFactory<T> getCustomOutOfBoundsStrategy() { return strategy; }
 	public int getMinExtension() { return minExtension; }
 	public int[] getOriginalSize() { return originalSize.clone(); }
 	public int[] getOriginalOffset() { return originalOffset.clone(); }
