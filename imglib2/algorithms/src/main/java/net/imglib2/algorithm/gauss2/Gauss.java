@@ -139,23 +139,46 @@ public abstract class Gauss< T extends NumericType< T >, R > implements Callable
 		final long[] min = new long[ numDimensions ];
 		final long[] max = new long[ numDimensions ];
 
-		// the given interval is not necessarily zero-bounded
-		min[ 0 ] = inputInterval.min( 0 );
-		max[ 0 ] = inputInterval.max( 0 );
-		
-		for ( int d = 1; d < numDimensions; ++d )
+		// the first convolution is relative to the input RandomAccessible 
+		// which is not necessarily zero-bounded
+		if ( dim == 0 )
 		{
-			min[ d ] = inputInterval.min( d );
-			max[ d ] = inputInterval.max( d );
+			min[ 0 ] = inputInterval.min( 0 );
+			max[ 0 ] = inputInterval.max( 0 );
 			
-			// all dimensions larger than the current one need to be computed with an extra size defined by the kernel size			
-			if ( d > dim )
+			// all other dimensions except for the first one need to be 
+			// convolved with an extra size defined by the kernel size
+			// the only exception would be if a OutOfBoundsMirrorStrategy
+			// on top of a Img would be used, this could be checked in a
+			// special Factory class
+			for ( int d = 1; d < numDimensions; ++d )
 			{
 				min[ d ] = inputInterval.min( d ) - kernel[ d ].length/2;
 				max[ d ] = inputInterval.max( d ) + kernel[ d ].length/2;				
 			}
-		}		
+		}
+		else
+		{
+			// now everything is relative to the temp images that have to be
+			// used in the special implementations of the Gaussian convolutions
+			min[ 0 ] = 0;
+			max[ 0 ] = inputInterval.dimension( 0 ) - 1;
 
+			// now for all dimensions that are extended in the temp images
+			for ( int d = 1; d < numDimensions; ++d )
+			{
+				if ( d < dim )
+				{
+					min[ d ] = kernel[ d ].length/2;
+					max[ d ] = inputInterval.dimension( d ) + kernel[ d ].length/2 - 1; 
+				}
+				else // all dimensions larger than the current one need to be computed with an extra size defined by the kernel size			
+				{
+					min[ d ] = 0;
+					max[ d ] = inputInterval.dimension( d ) + kernel[ d ].length/2;				
+				}
+			}		
+		}
 		return new FinalInterval( min, max );
 	}
 	
