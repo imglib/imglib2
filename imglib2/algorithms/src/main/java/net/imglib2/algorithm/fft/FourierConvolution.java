@@ -247,14 +247,18 @@ public class FourierConvolution<T extends RealType<T>, S extends RealType<S>> im
 			final LocalizingZeroMinIntervalIterator cursorDim = new LocalizingZeroMinIntervalIterator( kernel );
 			
 			final int[] position = new int[ numDimensions ];
+			final int[] position2 = new int[ numDimensions ];
+			
 			while ( cursorDim.hasNext() )
 			{
 				cursorDim.fwd();
 				cursorDim.localize( position );
-				kernelCursor.setPosition( position );
 				
 				for ( int d = 0; d < numDimensions; ++d )
 				{
+					// the kernel might not be zero-bounded
+					position2[ d ] = position[ d ] + (int)kernel.min( d );
+					
 					position[ d ] = ( position[ d ] - kernelDim[ d ]/2 + kernelTemplateDim[ d ] ) % kernelTemplateDim[ d ];
 					/*final int tmp = ( position[ d ] - kernelDim[ d ]/2 );
 					
@@ -264,6 +268,7 @@ public class FourierConvolution<T extends RealType<T>, S extends RealType<S>> im
 						position[ d ] = tmp;*/
 				}			
 				
+				kernelCursor.setPosition( position2 );				
 				kernelTemplateCursor.setPosition( position );
 				kernelTemplateCursor.get().set( kernelCursor.get() );
 			}

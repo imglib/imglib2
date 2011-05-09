@@ -432,12 +432,12 @@ A:						while( cursorDim.hasNext() )
 								cursorDim.localize( fakeSize );
 
 								tmp[ 0 ] = 0;
-								tmp2[ 0 ] = -imageOffset[ 0 ];
+								tmp2[ 0 ] = -imageOffset[ 0 ] + (int)input.min( 0 );
 								
 								for ( int d = 1; d < numDimensions; ++d )
 								{
 									tmp[ d ] = fakeSize[ d - 1 ];
-									tmp2[ d ] = fakeSize[ d - 1 ] - imageOffset[ d ];
+									tmp2[ d ] = fakeSize[ d - 1 ] - imageOffset[ d ] + (int)input.min( d );
 								}
 
 								// set the cursor to the beginning of the correct line
@@ -482,10 +482,10 @@ A:						while( cursorDim.hasNext() )
 					else
 					{
 						// multithreading makes no sense here
-						if ( myNumber == 0)
+						if ( myNumber == 0 )
 						{
 							// set the cursor to 0 in the first (and only) dimension
-							cursor.setPosition( -imageOffset[ 0 ], 0 );
+							cursor.setPosition( -imageOffset[ 0 ] + (int)input.min( 0 ), 0 );
 							
 							// get the input data
 							for ( int x = 0; x < realSize-1; ++x )
