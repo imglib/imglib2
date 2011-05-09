@@ -20,19 +20,34 @@
  */
 package net.imglib2.algorithm.fft;
 
+import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.algorithm.Benchmark;
 import net.imglib2.algorithm.MultiThreaded;
 import net.imglib2.algorithm.OutputAlgorithm;
 import net.imglib2.algorithm.fft.FourierTransform.Rearrangement;
-import net.imglib2.image.Image;
+import net.imglib2.exception.IncompatibleTypeException;
+import net.imglib2.img.Img;
+import net.imglib2.img.ImgFactory;
 import net.imglib2.type.numeric.ComplexType;
 import net.imglib2.type.numeric.RealType;
 
-public class InverseFourierTransform<T extends RealType<T>, S extends ComplexType<S>> implements MultiThreaded, OutputAlgorithm<T>, Benchmark
+/**
+ * Computes the inverse Fourier Transform of a given {@link RandomAccessibleInterval} or {@link Img}. The inverse
+ * transform is always performed in place as otherwise more constraints for the input are necessary (has to be copied).
+ * 
+ * If you do not want to compute it in place, make a copy before.
+ * 
+ * @author Stephan Preibisch
+ *
+ * @param <T> - the output, {@link RealType}
+ * @param <S> - the input, {@link ComplexType}
+ */
+public class InverseFourierTransform<T extends RealType<T>, S extends ComplexType<S>> implements MultiThreaded, OutputAlgorithm<Img<T>>, Benchmark
 {
-	final Image<S> fftImage;	
+	final RandomAccessibleInterval<S> fftImage;	
 	final int numDimensions;
-	Image<T> image;
+	final ImgFactory<T> imgFactory;
+	Img<T> image;
 	T type;
 	
 	Rearrangement rearrangement;
@@ -40,21 +55,22 @@ public class InverseFourierTransform<T extends RealType<T>, S extends ComplexTyp
 	String errorMessage = "";
 	int numThreads;
 	long processingTime;
-	boolean scale, inPlace, cropBack;
+	boolean scale, cropBack;
 	int[] originalSize, originalOffset; 
 	float additionalNormalization;
 
-	public InverseFourierTransform( final Image<S> fftImage, final T type, final Rearrangement rearrangement, 
-									final boolean inPlace, final boolean scale, final boolean cropBack, 
+	public InverseFourierTransform( final RandomAccessibleInterval<S> fftImage, final ImgFactory<T> imgFactory, 
+									final T type, final Rearrangement rearrangement, 
+									final boolean scale, final boolean cropBack, 
 									final int[] originalSize, final int[] originalOffset )
 	{
 		this.fftImage = fftImage;
+		this.imgFactory = imgFactory;
 		this.type = type;
-		this.numDimensions = fftImage.getNumDimensions();
+		this.numDimensions = fftImage.numDimensions();
 		
 		this.rearrangement = rearrangement;
 		this.scale = scale;
-		this.inPlace = inPlace;
 		this.cropBack = cropBack;
 		
 		this.additionalNormalization = 1;
@@ -67,24 +83,79 @@ public class InverseFourierTransform<T extends RealType<T>, S extends ComplexTyp
 		
 		setNumThreads();
 	}
-	
-	public InverseFourierTransform( final Image<S> fftImage, final FourierTransform<T,?> forwardTransform )
+
+	/**
+	 * This inverse FFT is computed in place, i.e. the input is destroyed!
+	 * 
+	 * @param fftImage - the input as {@link RandomAccessibleInterval}
+	 * @param imgFactory - the {@link ImgFactory} for the output
+	 * @param forwardTransform - the ForwardTransform ({@link FourierTransform}) which still has all parameters
+	 */
+	public InverseFourierTransform( final RandomAccessibleInterval<S> fftImage, final ImgFactory<T> imgFactory, final FourierTransform<T,?> forwardTransform )
 	{
-		this ( fftImage, forwardTransform.getImageType(), forwardTransform.getRearrangement(), false, true, true, forwardTransform.getFFTInputSize(), forwardTransform.getFFTInputOffset() );
+		this ( fftImage, imgFactory, forwardTransform.getImageType(), forwardTransform.getRearrangement(), true, true, forwardTransform.getFFTInputSize(), forwardTransform.getFFTInputOffset() );
 	}
 
-	public InverseFourierTransform( final Image<S> fftImage, final FourierTransform<?,?> forwardTransform, final T type )
+	/**
+	 * This inverse FFT can be only done in place, i.e. the input is destroyed!
+	 * 
+	 * @param fftImage - the input as {@link RandomAccessibleInterval}
+	 * @param imgFactory - the {@link ImgFactory} for the output
+	 * @param forwardTransform - the ForwardTransform ({@link FourierTransform}) which still has all parameters
+	 * @param type - a Type instance for the output
+	 */
+	public InverseFourierTransform( final RandomAccessibleInterval<S> fftImage, final ImgFactory<T> imgFactory, final FourierTransform<?,?> forwardTransform, final T type )
 	{
-		this ( fftImage, type, forwardTransform.getRearrangement(), false, true, true, forwardTransform.getFFTInputSize(), forwardTransform.getFFTInputOffset() );
+		this ( fftImage, imgFactory, type, forwardTransform.getRearrangement(), true, true, forwardTransform.getFFTInputSize(), forwardTransform.getFFTInputOffset() );
 	}
 
-	public InverseFourierTransform( final Image<S> fftImage, final T type )
+	/**
+	 * This inverse FFT can be only done in place, i.e. the input is destroyed! All parameters need to be set using the set() methods of this class.
+	 * 
+	 * @param fftImage - the input as {@link RandomAccessibleInterval}
+	 * @param imgFactory - the {@link ImgFactory} for the output
+	 * @param type - a Type instance for the output
+	 */
+	public InverseFourierTransform( final RandomAccessibleInterval<S> fftImage, final ImgFactory<T> imgFactory, final T type )
 	{
-		this( fftImage, type, Rearrangement.REARRANGE_QUADRANTS, false, true, false, null, null );
+		this( fftImage, imgFactory, type, Rearrangement.REARRANGE_QUADRANTS, true, false, null, null );
+	}
+
+	/**
+	 * This inverse FFT can be only done in place, if desired.
+	 * 
+	 * @param fftImage - the input as {@link Img}
+	 * @param forwardTransform - the ForwardTransform ({@link FourierTransform}) which still has all parameters
+	 */
+	public InverseFourierTransform( final Img<S> fftImage, final FourierTransform<T,?> forwardTransform ) throws IncompatibleTypeException
+	{
+		this ( fftImage, fftImage.factory().imgFactory( forwardTransform.getImageType() ), forwardTransform.getImageType(), forwardTransform.getRearrangement(), true, true, forwardTransform.getFFTInputSize(), forwardTransform.getFFTInputOffset() );
+	}
+
+	/**
+	 * This inverse FFT can be only done in place, if desired.
+	 * 
+	 * @param fftImage - the input as {@link Img}
+	 * @param forwardTransform - the ForwardTransform ({@link FourierTransform}) which still has all parameters
+	 * @param type - a Type instance for the output
+	 */
+	public InverseFourierTransform( final Img<S> fftImage, final FourierTransform<?,?> forwardTransform, final T type ) throws IncompatibleTypeException
+	{
+		this ( fftImage, fftImage.factory().imgFactory( type ), type, forwardTransform.getRearrangement(), true, true, forwardTransform.getFFTInputSize(), forwardTransform.getFFTInputOffset() );
+	}
+
+	/**
+	 * This inverse FFT can be only done in place, if desired. All parameters need to be set using the set() methods of this class.
+	 * 
+	 * @param fftImage - the input as {@link Img}
+	 * @param type - a Type instance for the output
+	 */
+	public InverseFourierTransform( final Img<S> fftImage, final T type ) throws IncompatibleTypeException
+	{
+		this( fftImage, fftImage.factory().imgFactory( type ), type, Rearrangement.REARRANGE_QUADRANTS, true, false, null, null );
 	}
 	
 	public void setRearrangement( final Rearrangement rearrangement ) { this.rearrangement = rearrangement; }
-	public void setInPlaceTransform( final boolean inPlace ) { this.inPlace = inPlace; }
 	public void setDoScaling( final boolean scale ) { this.scale = scale; }
 	public void setCropBackToOriginalSize( final boolean cropBack ) { this.cropBack = cropBack; }
 	public void setOriginalSize( final int[] originalSize ) { this.originalSize = originalSize; }
@@ -92,7 +163,6 @@ public class InverseFourierTransform<T extends RealType<T>, S extends ComplexTyp
 	public void setAdditionalNormalization( final float additionalNormalization ) { this.additionalNormalization = additionalNormalization; }
 
 	public Rearrangement getRearrangement() { return rearrangement; }
-	public boolean getInPlaceTransform() { return inPlace; }
 	public boolean getDoScaling() { return scale; }
 	public boolean getCropBackToOriginalSize() { return cropBack; }
 	public int[] getOriginalSize() { return originalSize.clone(); }
@@ -105,22 +175,14 @@ public class InverseFourierTransform<T extends RealType<T>, S extends ComplexTyp
 		final long startTime = System.currentTimeMillis();
 
 		// in Place computation will destroy the image
-		final Image<S> complex;		
-		
-		if ( inPlace )
-			complex = fftImage;
-		else
-			complex = fftImage.clone();
+		final RandomAccessibleInterval<S> complex = fftImage;		
 			
 		if ( rearrangement == Rearrangement.REARRANGE_QUADRANTS )
 			FFTFunctions.rearrangeFFTQuadrants( complex, getNumThreads() );
 
 		// perform inverse FFT 					
-		image = FFTFunctions.computeInverseFFT( complex, type, getNumThreads(), scale, cropBack, originalSize, originalOffset, additionalNormalization );
+		image = FFTFunctions.computeInverseFFT( complex, imgFactory, type, getNumThreads(), scale, cropBack, originalSize, originalOffset, additionalNormalization );
 		
-		if ( !inPlace )
-			complex.close();
-
 		processingTime = System.currentTimeMillis() - startTime;
 
         return true;
@@ -139,7 +201,7 @@ public class InverseFourierTransform<T extends RealType<T>, S extends ComplexTyp
 	public int getNumThreads() { return numThreads; }	
 
 	@Override
-	public Image<T> getResult() { return image; }
+	public Img<T> getResult() { return image; }
 
 	@Override
 	public boolean checkInput() 

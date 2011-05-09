@@ -39,6 +39,14 @@ import net.imglib2.util.Util;
 import edu.mines.jtk.dsp.FftComplex;
 import edu.mines.jtk.dsp.FftReal;
 
+/**
+ * Computes the Fourier Transform of a given {@link RandomAccessibleInterval} or {@link Img}.
+ * 
+ * @author Stephan Preibisch
+ *
+ * @param <T> - the intput, {@link RealType}
+ * @param <S> - the ouput, {@link ComplexType}
+ */
 public class FourierTransform<T extends RealType<T>, S extends ComplexType<S>> implements MultiThreaded, OutputAlgorithm<Img<S>>, Benchmark
 {
 	public static enum PreProcessing { NONE, EXTEND_MIRROR, EXTEND_MIRROR_FADING, USE_GIVEN_OUTOFBOUNDSSTRATEGY }

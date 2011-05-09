@@ -36,6 +36,7 @@ import net.imglib2.outofbounds.OutOfBoundsFactory;
 import net.imglib2.type.Type;
 import net.imglib2.type.numeric.ComplexType;
 import net.imglib2.type.numeric.RealType;
+import net.imglib2.util.Util;
 import net.imglib2.view.Views;
 
 final public class FFTFunctions 
@@ -631,13 +632,13 @@ A:						while( cursorDim.hasNext() )
 		return fftImage;
 	}
 	
-	final private static <T extends Type<T>> void rearrangeQuadrantFFTDimZeroSingleDim( final Img<T> fftImage )
+	final private static <T extends Type<T>> void rearrangeQuadrantFFTDimZeroSingleDim( final RandomAccessibleInterval<T> fftImage )
 	{
 		final int sizeDim = (int)fftImage.dimension( 0 );					
 		final int halfSizeDim = sizeDim / 2;
 		final int sizeDimMinus1 = sizeDim - 1;
 
-		final T buffer = fftImage.firstElement().createVariable();
+		final T buffer = Util.getTypeFromInterval( fftImage ).createVariable();
 		
 		final RandomAccess<T> cursor1 = fftImage.randomAccess();
 		final RandomAccess<T> cursor2 = fftImage.randomAccess(); 
@@ -674,7 +675,7 @@ A:						while( cursorDim.hasNext() )
 		cursor2.get().set( buffer );
 	}
 
-	final private static <T extends Type<T>> void rearrangeQuadrantFFTDimZero( final Img<T> fftImage, final int numThreads )
+	final private static <T extends Type<T>> void rearrangeQuadrantFFTDimZero( final RandomAccessibleInterval<T> fftImage, final int numThreads )
 	{
 		final int numDimensions = fftImage.numDimensions();
 		
@@ -699,7 +700,7 @@ A:						while( cursorDim.hasNext() )
 					final int halfSizeDim = sizeDim / 2;
 					final int sizeDimMinus1 = sizeDim - 1;
 		
-					final T buffer = fftImage.firstElement().createVariable();
+					final T buffer = Util.getTypeFromInterval( fftImage ).createVariable();
 					
 					final RandomAccess<T> cursor1 = fftImage.randomAccess(); 
 					final RandomAccess<T> cursor2 = fftImage.randomAccess(); 
@@ -768,7 +769,7 @@ A:						while( cursorDim.hasNext() )
 		SimpleMultiThreading.startAndJoin( threads );		
 	}
 
-	final private static <T extends Type<T>> void rearrangeQuadrantDim( final Img<T> fftImage, final int dim, final int numThreads )
+	final private static <T extends Type<T>> void rearrangeQuadrantDim( final RandomAccessibleInterval<T> fftImage, final int dim, final int numThreads )
 	{
 		final int numDimensions = fftImage.numDimensions();
 		
@@ -793,7 +794,7 @@ A:						while( cursorDim.hasNext() )
 					final int sizeDim = (int)fftImage.dimension( dim );
 					final int halfSizeDim = sizeDim / 2;
 		
-					final T buffer = fftImage.firstElement().createVariable();
+					final T buffer = Util.getTypeFromInterval( fftImage ).createVariable();
 					
 					final RandomAccess<T> cursor1 = fftImage.randomAccess(); 
 					final RandomAccess<T> cursor2 = fftImage.randomAccess(); 
@@ -867,7 +868,7 @@ A:						while( cursorDim.hasNext() )
 		SimpleMultiThreading.startAndJoin( threads );								
 	}
 		
-	final public static <T extends Type<T>> void rearrangeFFTQuadrants( final Img<T> fftImage, final int numThreads )
+	final public static <T extends Type<T>> void rearrangeFFTQuadrants( final RandomAccessibleInterval<T> fftImage, final int numThreads )
 	{
 		rearrangeQuadrantFFTDimZero( fftImage, numThreads );
 		
