@@ -999,7 +999,7 @@ public class Util
 	 * @param rai - the {@link RandomAccessibleInterval}
 	 * @return - an instance of T
 	 */
-	final public static <T> T getTypeFromInterval( final RandomAccessibleInterval<T> rai )
+	final public static <T, F extends Interval & RandomAccessible< T >> T getTypeFromInterval( final F rai )
 	{
 		// create RandomAccess
 		final RandomAccess< T > randomAccess = rai.randomAccess();
