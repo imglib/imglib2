@@ -123,8 +123,9 @@ public abstract class Gauss< T extends NumericType< T >, R > implements Callable
 	}
 
 	/**
-	 * The area for the output/temp that needs to be convolved, always relative to the input {@link RandomAccessible}.
-	 * The area is typically larger than the input, defined by the size of the kernel in each dimension.
+	 * The area for the output/temp that needs to be convolved, always relative to the input of the
+	 * next convolution operation.
+	 * The area is larger than the input, defined by the size of the kernel in each dimension.
 	 * 
 	 * @param dim - The dimension that is currently processed
 	 * @return - the {@link Interval} defining the output size for the current dimension that is processed
