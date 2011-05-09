@@ -99,7 +99,11 @@ public class IntervalIterator implements Iterator, Localizable, Interval
 		this.dimensions[ m ] = dimm;
 		lastIndex = k * dimm - 1;
 	}
-	
+
+	public IntervalIterator( final int[] dimensions )
+	{
+		this( Util.int2long( dimensions ) );
+	}
 	
 	/**
 	 * Iterates an {@link Interval} with given <em>min</em> and <em>max</em>.
@@ -137,6 +141,10 @@ public class IntervalIterator implements Iterator, Localizable, Interval
 		lastIndex = k * sizem - 1;
 	}
 
+	public IntervalIterator( final int[] min, final int[] max )
+	{
+		this( Util.int2long( min ), Util.int2long( max ) );
+	}
 	
 	/**
 	 * Iterates a given {@link Interval}.
