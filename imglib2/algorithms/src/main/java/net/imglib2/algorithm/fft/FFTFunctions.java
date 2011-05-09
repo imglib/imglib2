@@ -131,11 +131,11 @@ final public class FFTFunctions
 								// update all positions except for the one we are currrently doing the inverse fft on
 								cursorDim.localize( fakeSize );
 
-								tmp[ dim ] = 0;								
+								tmp[ dim ] = (int)complex.min( dim );								
 								countDim = 0;						
 								for ( int d = 0; d < numDimensions; ++d )
 									if ( d != dim )
-										tmp[ d ] = fakeSize[ countDim++ ];
+										tmp[ d ] = fakeSize[ countDim++ ] + (int)complex.min( d );
 								
 								// update the cursor in the input image to the current dimension position
 								cursor.setPosition( tmp );
@@ -241,7 +241,7 @@ A:						while( cursorDim.hasNext() )
 								// get all dimensions except the one we are currently doing the fft on
 								cursorDim.localize( fakeSize );
 
-								tmp[ 0 ] = 0;
+								tmp[ 0 ] = (int)complex.min( 0 );
 								if ( cropBack )
 								{
 									// check that we are not out of the cropped image's bounds, then we do not have to compute the
@@ -251,12 +251,13 @@ A:						while( cursorDim.hasNext() )
 										tmp[ d ] = fakeSize[ d - 1 ];
 										if ( tmp[ d ] < originalOffset[ d ] || tmp[ d ] >= originalOffset[ d ] + originalSize[ d ] )
 											continue A;
+										tmp[ d ] += (int)complex.min( d );
 									}
 								}
 								else
 								{
 									for ( int d = 1; d < numDimensions; ++d )									
-										tmp[ d ] = fakeSize[ d - 1 ];
+										tmp[ d ] = fakeSize[ d - 1 ] + (int)complex.min( d );
 								}
 
 								// set the cursor to the beginning of the correct line
@@ -275,10 +276,11 @@ A:						while( cursorDim.hasNext() )
 								// compute the fft in dimension 0 ( complex -> real )
 								fft.complexToReal( 1, tempIn, tempOut );
 										
-								// set the cursor in the fft output image to the right line								
+								// set the cursor in the fft output image to the right line
+								tmp[ 0 ] -= (int)complex.min( 0 );
 								if ( cropBack )
 									for ( int d = 1; d < numDimensions; ++d )									
-										tmp[ d ] -= originalOffset[ d ];									
+										tmp[ d ] -= (originalOffset[ d ] + (int)complex.min( d ));									
 								
 								cursorOut.setPosition( tmp );
 								
