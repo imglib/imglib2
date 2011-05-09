@@ -20,26 +20,26 @@
  */
 package net.imglib2.algorithm.fft;
 
-import edu.mines.jtk.dsp.FftComplex;
-import edu.mines.jtk.dsp.FftReal;
 import net.imglib2.Interval;
-import net.imglib2.RandomAccess;
-import net.imglib2.RandomAccessible;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.algorithm.Benchmark;
 import net.imglib2.algorithm.MultiThreaded;
 import net.imglib2.algorithm.OutputAlgorithm;
+import net.imglib2.exception.IncompatibleTypeException;
 import net.imglib2.img.Img;
+import net.imglib2.img.ImgFactory;
 import net.imglib2.outofbounds.OutOfBoundsConstantValueFactory;
 import net.imglib2.outofbounds.OutOfBoundsFactory;
+import net.imglib2.outofbounds.OutOfBoundsMirrorExpWindowingFactory;
 import net.imglib2.outofbounds.OutOfBoundsMirrorFactory;
 import net.imglib2.outofbounds.OutOfBoundsMirrorFactory.Boundary;
-import net.imglib2.outofbounds.OutOfBoundsMirrorSingleBoundary;
 import net.imglib2.type.numeric.ComplexType;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.util.Util;
+import edu.mines.jtk.dsp.FftComplex;
+import edu.mines.jtk.dsp.FftReal;
 
-public class FourierTransform<T extends RealType<T>, S extends ComplexType<S>> implements MultiThreaded, OutputAlgorithm<S>, Benchmark
+public class FourierTransform<T extends RealType<T>, S extends ComplexType<S>> implements MultiThreaded, OutputAlgorithm<Img<S>>, Benchmark
 {
 	public static enum PreProcessing { NONE, EXTEND_MIRROR, EXTEND_MIRROR_FADING, USE_GIVEN_OUTOFBOUNDSSTRATEGY }
 	public static enum Rearrangement { REARRANGE_QUADRANTS, UNCHANGED }
@@ -49,6 +49,7 @@ public class FourierTransform<T extends RealType<T>, S extends ComplexType<S>> i
 	final Interval interval;
 	final int numDimensions;
 	final T inputType;
+	final ImgFactory<S> imgFactory;
 	Img<S> fftImage;
 	OutOfBoundsFactory<T, RandomAccessibleInterval<T>> outOfBounds;
 	
@@ -70,11 +71,13 @@ public class FourierTransform<T extends RealType<T>, S extends ComplexType<S>> i
 	int numThreads;
 	long processingTime;
 
-	public FourierTransform( final RandomAccessibleInterval<T> input, final S complexType, final PreProcessing preProcessing, final Rearrangement rearrangement,
+	public FourierTransform( final RandomAccessibleInterval<T> input, final ImgFactory<S> imgFactory, final S complexType, 
+							 final PreProcessing preProcessing, final Rearrangement rearrangement,
 							 final FFTOptimization fftOptimization, final float relativeImageExtension, final float relativeFadeOutDistance,
 							 final int minExtension )
 	{
 		this.input = input;
+		this.imgFactory = imgFactory;
 		this.interval = input;
 		this.complexType = complexType;
 		this.numDimensions = input.numDimensions();
@@ -106,33 +109,64 @@ public class FourierTransform<T extends RealType<T>, S extends ComplexType<S>> i
 		setNumThreads();
 	}
 	
-	public FourierTransform( final RandomAccessibleInterval<T> input, final S complexType ) 
+	public FourierTransform( final RandomAccessibleInterval<T> input, final ImgFactory<S> imgFactory, final S complexType ) 
 	{ 
-		this ( input, complexType, PreProcessing.EXTEND_MIRROR_FADING, Rearrangement.REARRANGE_QUADRANTS, 
+		this ( input, imgFactory, complexType, PreProcessing.EXTEND_MIRROR_FADING, Rearrangement.REARRANGE_QUADRANTS, 
 		       FFTOptimization.SPEED, 0.25f, 0.25f, 12 ); 
 	}
 
-	public FourierTransform( final RandomAccessibleInterval<T> input, final S complexType, final Rearrangement rearrangement ) 
+	public FourierTransform( final RandomAccessibleInterval<T> input, final ImgFactory<S> imgFactory, final S complexType, final Rearrangement rearrangement ) 
 	{ 
-		this ( input, complexType );
+		this ( input, imgFactory, complexType );
 		setRearrangement( rearrangement );
 	}
 
-	public FourierTransform( final RandomAccessibleInterval<T> input, final S complexType, final FFTOptimization fftOptimization ) 
+	public FourierTransform( final RandomAccessibleInterval<T> input, final ImgFactory<S> imgFactory, final S complexType, final FFTOptimization fftOptimization ) 
 	{ 
-		this ( input, complexType );
+		this ( input, imgFactory, complexType );
 		setFFTOptimization( fftOptimization );
 	}
 	
-	public FourierTransform( final RandomAccessibleInterval<T> input, final S complexType, final PreProcessing preProcessing ) 
+	public FourierTransform( final RandomAccessibleInterval<T> input, final ImgFactory<S> imgFactory, final S complexType, final PreProcessing preProcessing ) 
 	{ 
-		this ( input, complexType );
+		this ( input, imgFactory, complexType );
 		setPreProcessing( preProcessing );
 	}
 
-	public FourierTransform( final RandomAccessibleInterval<T> input, final S complexType, final OutOfBoundsFactory<T, RandomAccessibleInterval<T>> outOfBounds ) 
+	public FourierTransform( final Img<T> input, final S complexType ) throws IncompatibleTypeException
+	{
+		this ( input, input.factory().imgFactory( complexType ), complexType, PreProcessing.EXTEND_MIRROR_FADING, Rearrangement.REARRANGE_QUADRANTS, 
+		       FFTOptimization.SPEED, 0.25f, 0.25f, 12 ); 
+	}
+	
+	public FourierTransform( final Img<T> input, final S complexType, final Rearrangement rearrangement ) throws IncompatibleTypeException 
 	{ 
-		this ( input, complexType );
+		this ( input, input.factory().imgFactory( complexType ), complexType );
+		setRearrangement( rearrangement );
+	}
+
+	public FourierTransform( final Img<T> input, final S complexType, final PreProcessing preProcessing ) throws IncompatibleTypeException 
+	{ 
+		this ( input, input.factory().imgFactory( complexType ), complexType );
+		setPreProcessing( preProcessing );
+	}
+
+	public FourierTransform( final Img<T> input, final S complexType, final FFTOptimization fftOptimization ) throws IncompatibleTypeException 
+	{ 
+		this ( input, input.factory().imgFactory( complexType ), complexType );
+		setFFTOptimization( fftOptimization );
+	}
+
+	public FourierTransform( final Img<T> input, final S complexType, final OutOfBoundsFactory<T, RandomAccessibleInterval<T>> outOfBounds ) throws IncompatibleTypeException 
+	{ 
+		this ( input, input.factory().imgFactory( complexType ), complexType );
+		this.outOfBounds = outOfBounds;
+		setPreProcessing( PreProcessing.USE_GIVEN_OUTOFBOUNDSSTRATEGY );
+	}
+
+	public FourierTransform( final RandomAccessibleInterval<T> input, final ImgFactory<S> imgFactory, final S complexType, final OutOfBoundsFactory<T, RandomAccessibleInterval<T>> outOfBounds ) 
+	{ 
+		this ( input, imgFactory, complexType );
 		this.outOfBounds = outOfBounds;
 		setPreProcessing( PreProcessing.USE_GIVEN_OUTOFBOUNDSSTRATEGY );
 	}
@@ -248,7 +282,7 @@ public class FourierTransform<T extends RealType<T>, S extends ComplexType<S>> i
 			case EXTEND_MIRROR_FADING:
 			{
 				extendedZeroPaddedSize = getZeroPaddingSize( getExtendedImageSize( input, imageExtension ), fftOptimization );
-				outOfBoundsFactory = new OutOfBoundsStrategyMirrorExpWindowingFactory<T>( relativeFadeOutDistance );				
+				outOfBoundsFactory = new OutOfBoundsMirrorExpWindowingFactory< T, RandomAccessibleInterval<T> >( relativeFadeOutDistance );				
 				break;
 			}			
 			default: // or NONE
@@ -282,7 +316,7 @@ public class FourierTransform<T extends RealType<T>, S extends ComplexType<S>> i
 		}
 		
 		
-		fftImage = FFTFunctions.computeFFT( img, complexType, outOfBoundsFactory, originalOffset, extendedZeroPaddedSize, getNumThreads(), false );
+		fftImage = FFTFunctions.computeFFT( input, imgFactory, complexType, outOfBoundsFactory, originalOffset, extendedZeroPaddedSize, getNumThreads(), false );
 		
 		if ( fftImage == null )
 		{
@@ -347,7 +381,7 @@ public class FourierTransform<T extends RealType<T>, S extends ComplexType<S>> i
 	public int getNumThreads() { return numThreads; }	
 
 	@Override
-	public Image<S> getResult() { return fftImage; }
+	public Img<S> getResult() { return fftImage; }
 
 	@Override
 	public boolean checkInput() 
@@ -356,7 +390,7 @@ public class FourierTransform<T extends RealType<T>, S extends ComplexType<S>> i
 		{
 			return false;
 		}
-		else if ( img == null )
+		else if ( input == null )
 		{
 			errorMessage = "Input image is null";
 			return false;
