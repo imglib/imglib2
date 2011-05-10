@@ -379,5 +379,15 @@ public class ImgPlus<T> implements Img<T>, Metadata {
 		}
 		return cal;
 	}
+	
+	@Override
+	public ImgPlus<T> copy()
+	{
+		final ImgPlus<T> copy = new ImgPlus< T >( img.copy(), name, axes, cal );
+
+		//TODO: Copy color tables...
+		
+		return copy;
+	}	
 
 }

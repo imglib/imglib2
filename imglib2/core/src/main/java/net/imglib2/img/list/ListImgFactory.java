@@ -28,7 +28,6 @@
 package net.imglib2.img.list;
 
 import net.imglib2.exception.IncompatibleTypeException;
-import net.imglib2.img.Img;
 import net.imglib2.img.ImgFactory;
 import net.imglib2.type.Type;
 
@@ -41,12 +40,12 @@ import net.imglib2.type.Type;
 public class ListImgFactory< T extends Type< T > > extends ImgFactory< T >
 {
 	@Override
-	public Img< T > create( final long[] dim, final T type )
+	public ListImg< T > create( final long[] dim, final T type )
 	{
 		return new ListImg< T >( dim, type );
 	}
 	
-	@SuppressWarnings( "unchecked" )
+	@SuppressWarnings( { "unchecked", "rawtypes" } )
 	@Override
 	public <S> ImgFactory<S> imgFactory( final S type ) throws IncompatibleTypeException
 	{
