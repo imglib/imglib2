@@ -312,7 +312,7 @@ A:						while( cursorDim.hasNext() )
 						if ( myNumber == 0)
 						{
 							// set the cursor to 0 in the first (and only) dimension
-							cursor.setPosition( 0, 0 );
+							cursor.setPosition( (int)complex.min( 0 ), 0 );
 							
 							// get the input data
 							// fill the input array with complex image data
