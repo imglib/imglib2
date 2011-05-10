@@ -286,7 +286,6 @@ public class IntervalIterator implements Iterator, Localizable, Interval
 	
 	
 	@Override
-	@SuppressWarnings( "hiding" )
 	public void dimensions( final long[] dimensions )
 	{
 		for ( int d = 0; d < n; ++d )
@@ -302,7 +301,6 @@ public class IntervalIterator implements Iterator, Localizable, Interval
 
 
 	@Override
-	@SuppressWarnings( "hiding" )
 	public void max( final long[] max )
 	{
 		for ( int d = 0; d < n; ++d )
@@ -318,7 +316,6 @@ public class IntervalIterator implements Iterator, Localizable, Interval
 
 
 	@Override
-	@SuppressWarnings( "hiding" )
 	public void min( final long[] min )
 	{
 		for ( int d = 0; d < n; ++d )
@@ -327,15 +324,14 @@ public class IntervalIterator implements Iterator, Localizable, Interval
 
 
 	@Override
-	public double realMax( int d )
+	public double realMax( final int d )
 	{
 		return max[ d ];
 	}
 
 
 	@Override
-	@SuppressWarnings( "hiding" )
-	public void realMax( double[] max )
+	public void realMax( final double[] max )
 	{
 		for ( int d = 0; d < n; ++d )
 			max[ d ] = this.max[ d ];
@@ -343,15 +339,14 @@ public class IntervalIterator implements Iterator, Localizable, Interval
 
 
 	@Override
-	public double realMin( int d )
+	public double realMin( final int d )
 	{
 		return min[ d ];
 	}
 
 
 	@Override
-	@SuppressWarnings( "hiding" )
-	public void realMin( double[] min )
+	public void realMin( final double[] min )
 	{
 		for ( int d = 0; d < n; ++d )
 			min[ d ] = this.min[ d ];
