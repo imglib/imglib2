@@ -20,29 +20,46 @@
  */
 package net.imglib2.algorithm.fft;
 
-import edu.mines.jtk.dsp.FftComplex;
-import edu.mines.jtk.dsp.FftReal;
+import net.imglib2.Interval;
+import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.algorithm.Benchmark;
 import net.imglib2.algorithm.MultiThreaded;
 import net.imglib2.algorithm.OutputAlgorithm;
-import net.imglib2.image.Image;
-import net.imglib2.outofbounds.OutOfBoundsStrategyFactory;
-import net.imglib2.outofbounds.OutOfBoundsStrategyMirrorExpWindowingFactory;
-import net.imglib2.outofbounds.OutOfBoundsStrategyMirrorFactory;
-import net.imglib2.outofbounds.OutOfBoundsStrategyValueFactory;
+import net.imglib2.exception.IncompatibleTypeException;
+import net.imglib2.img.Img;
+import net.imglib2.img.ImgFactory;
+import net.imglib2.outofbounds.OutOfBoundsConstantValueFactory;
+import net.imglib2.outofbounds.OutOfBoundsFactory;
+import net.imglib2.outofbounds.OutOfBoundsMirrorExpWindowingFactory;
+import net.imglib2.outofbounds.OutOfBoundsMirrorFactory;
+import net.imglib2.outofbounds.OutOfBoundsMirrorFactory.Boundary;
 import net.imglib2.type.numeric.ComplexType;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.util.Util;
+import edu.mines.jtk.dsp.FftComplex;
+import edu.mines.jtk.dsp.FftReal;
 
-public class FourierTransform<T extends RealType<T>, S extends ComplexType<S>> implements MultiThreaded, OutputAlgorithm<S>, Benchmark
+/**
+ * Computes the Fourier Transform of a given {@link RandomAccessibleInterval} or {@link Img}.
+ * 
+ * @author Stephan Preibisch
+ *
+ * @param <T> - the intput, {@link RealType}
+ * @param <S> - the ouput, {@link ComplexType}
+ */
+public class FourierTransform<T extends RealType<T>, S extends ComplexType<S>> implements MultiThreaded, OutputAlgorithm<Img<S>>, Benchmark
 {
 	public static enum PreProcessing { NONE, EXTEND_MIRROR, EXTEND_MIRROR_FADING, USE_GIVEN_OUTOFBOUNDSSTRATEGY }
 	public static enum Rearrangement { REARRANGE_QUADRANTS, UNCHANGED }
 	public static enum FFTOptimization { SPEED, MEMORY }
 	
-	final Image<T> img;
+	final RandomAccessibleInterval<T> input;
+	final Interval interval;
 	final int numDimensions;
-	Image<S> fftImage;
+	final T inputType;
+	final ImgFactory<S> imgFactory;
+	Img<S> fftImage;
+	OutOfBoundsFactory<T, RandomAccessibleInterval<T>> outOfBounds;
 	
 	PreProcessing preProcessing;
 	Rearrangement rearrangement;
@@ -51,7 +68,6 @@ public class FourierTransform<T extends RealType<T>, S extends ComplexType<S>> i
 	int[] imageExtension;
 	float relativeFadeOutDistance;
 	int minExtension;
-	OutOfBoundsStrategyFactory<T> strategy;
 	int[] originalSize, originalOffset, extendedSize, extendedZeroPaddedSize;
 	
 	// if you want the image to be extended more use that
@@ -63,16 +79,20 @@ public class FourierTransform<T extends RealType<T>, S extends ComplexType<S>> i
 	int numThreads;
 	long processingTime;
 
-	public FourierTransform( final Image<T> image, final S complexType, final PreProcessing preProcessing, final Rearrangement rearrangement,
+	public FourierTransform( final RandomAccessibleInterval<T> input, final ImgFactory<S> imgFactory, final S complexType, 
+							 final PreProcessing preProcessing, final Rearrangement rearrangement,
 							 final FFTOptimization fftOptimization, final float relativeImageExtension, final float relativeFadeOutDistance,
 							 final int minExtension )
 	{
-		this.img = image;
+		this.input = input;
+		this.imgFactory = imgFactory;
+		this.interval = input;
 		this.complexType = complexType;
-		this.numDimensions = img.getNumDimensions();
+		this.numDimensions = input.numDimensions();
 		this.extendedSize = new int[ numDimensions ];
 		this.extendedZeroPaddedSize = new int[ numDimensions ];
 		this.imageExtension = new int[ numDimensions ];
+		this.inputType = Util.getTypeFromInterval( input );
 			
 		setPreProcessing( preProcessing );
 		setRearrangement( rearrangement );
@@ -80,53 +100,94 @@ public class FourierTransform<T extends RealType<T>, S extends ComplexType<S>> i
 		setRelativeFadeOutDistance( relativeFadeOutDistance );
 		setRelativeImageExtension( relativeImageExtension );
 		setMinExtension( minExtension );
-		
-		setCustomOutOfBoundsStrategy( null );
 
-		this.originalSize = image.getDimensions();
+		this.originalSize = new int[ numDimensions ];
 		this.originalOffset = new int[ numDimensions ];
+
+		for ( int d = 0; d < numDimensions; ++d )
+		{
+			if ( interval.dimension( d ) > Integer.MAX_VALUE - 1 )
+				throw new RuntimeException( "FFT only supports a maximum size in each dimensions of " + (Integer.MAX_VALUE - 1) + ", but in dimension " + d + " it is " + interval.dimension( d ) );
+			
+			originalSize[ d ] = (int)interval.dimension( d );
+		}
 		
 		this.processingTime = -1;		
 		
 		setNumThreads();
 	}
 	
-	public FourierTransform( final Image<T> image, final S complexType ) 
+	public FourierTransform( final RandomAccessibleInterval<T> input, final ImgFactory<S> imgFactory, final S complexType ) 
 	{ 
-		this ( image, complexType, PreProcessing.EXTEND_MIRROR_FADING, Rearrangement.REARRANGE_QUADRANTS, 
+		this ( input, imgFactory, complexType, PreProcessing.EXTEND_MIRROR_FADING, Rearrangement.REARRANGE_QUADRANTS, 
 		       FFTOptimization.SPEED, 0.25f, 0.25f, 12 ); 
 	}
 
-	public FourierTransform( final Image<T> image, final S complexType, final Rearrangement rearrangement ) 
+	public FourierTransform( final RandomAccessibleInterval<T> input, final ImgFactory<S> imgFactory, final S complexType, final Rearrangement rearrangement ) 
 	{ 
-		this ( image, complexType );
+		this ( input, imgFactory, complexType );
 		setRearrangement( rearrangement );
 	}
 
-	public FourierTransform( final Image<T> image, final S complexType, final FFTOptimization fftOptimization ) 
+	public FourierTransform( final RandomAccessibleInterval<T> input, final ImgFactory<S> imgFactory, final S complexType, final FFTOptimization fftOptimization ) 
 	{ 
-		this ( image, complexType );
+		this ( input, imgFactory, complexType );
 		setFFTOptimization( fftOptimization );
 	}
-
-	public FourierTransform( final Image<T> image, final S complexType, final PreProcessing preProcessing ) 
+	
+	public FourierTransform( final RandomAccessibleInterval<T> input, final ImgFactory<S> imgFactory, final S complexType, final PreProcessing preProcessing ) 
 	{ 
-		this ( image, complexType );
+		this ( input, imgFactory, complexType );
 		setPreProcessing( preProcessing );
 	}
 
-	public FourierTransform( final Image<T> image, final S complexType, final OutOfBoundsStrategyFactory<T> strategy ) 
-	{ 
-		this ( image, complexType );
-		setPreProcessing( PreProcessing.USE_GIVEN_OUTOFBOUNDSSTRATEGY );
-		setCustomOutOfBoundsStrategy( strategy );
+	public FourierTransform( final Img<T> input, final S complexType ) throws IncompatibleTypeException
+	{
+		this ( input, input.factory().imgFactory( complexType ), complexType, PreProcessing.EXTEND_MIRROR_FADING, Rearrangement.REARRANGE_QUADRANTS, 
+		       FFTOptimization.SPEED, 0.25f, 0.25f, 12 ); 
 	}
 	
+	public FourierTransform( final Img<T> input, final S complexType, final Rearrangement rearrangement ) throws IncompatibleTypeException 
+	{ 
+		this ( input, input.factory().imgFactory( complexType ), complexType );
+		setRearrangement( rearrangement );
+	}
+
+	public FourierTransform( final Img<T> input, final S complexType, final PreProcessing preProcessing ) throws IncompatibleTypeException 
+	{ 
+		this ( input, input.factory().imgFactory( complexType ), complexType );
+		setPreProcessing( preProcessing );
+	}
+
+	public FourierTransform( final Img<T> input, final S complexType, final FFTOptimization fftOptimization ) throws IncompatibleTypeException 
+	{ 
+		this ( input, input.factory().imgFactory( complexType ), complexType );
+		setFFTOptimization( fftOptimization );
+	}
+
+	public FourierTransform( final Img<T> input, final S complexType, final OutOfBoundsFactory<T, RandomAccessibleInterval<T>> outOfBounds ) throws IncompatibleTypeException 
+	{ 
+		this ( input, input.factory().imgFactory( complexType ), complexType );
+		this.outOfBounds = outOfBounds;
+		setPreProcessing( PreProcessing.USE_GIVEN_OUTOFBOUNDSSTRATEGY );
+	}
+
+	public FourierTransform( final RandomAccessibleInterval<T> input, final ImgFactory<S> imgFactory, final S complexType, final OutOfBoundsFactory<T, RandomAccessibleInterval<T>> outOfBounds ) 
+	{ 
+		this ( input, imgFactory, complexType );
+		this.outOfBounds = outOfBounds;
+		setPreProcessing( PreProcessing.USE_GIVEN_OUTOFBOUNDSSTRATEGY );
+	}
+
 	public void setPreProcessing( final PreProcessing preProcessing ) { this.preProcessing = preProcessing; }
+	public void setCustomOutOfBoundsStrategy( final OutOfBoundsFactory<T, RandomAccessibleInterval<T>> outOfBounds ) 
+	{ 
+		this.outOfBounds = outOfBounds;
+		setPreProcessing( PreProcessing.USE_GIVEN_OUTOFBOUNDSSTRATEGY );
+	}
 	public void setRearrangement( final Rearrangement rearrangement ) { this.rearrangement = rearrangement; }
 	public void setFFTOptimization( final FFTOptimization fftOptimization ) { this.fftOptimization = fftOptimization; }
 	public void setRelativeFadeOutDistance( final float relativeFadeOutDistance ) { this.relativeFadeOutDistance = relativeFadeOutDistance; }
-	public void setCustomOutOfBoundsStrategy( final OutOfBoundsStrategyFactory<T> strategy ) { this.strategy = strategy; } 
 	public void setMinExtension( final int minExtension ) { this.minExtension = minExtension; }	
 	public void setImageExtension( final int[] imageExtension ) { this.imageExtension = imageExtension.clone(); }
 	public boolean setExtendedOriginalImageSize( final int[] inputSize )
@@ -150,13 +211,13 @@ public class FourierTransform<T extends RealType<T>, S extends ComplexType<S>> i
 	{ 
 		this.relativeImageExtensionRatio = extensionRatio;
 		
-		for ( int d = 0; d < img.getNumDimensions(); ++d )
+		for ( int d = 0; d < interval.numDimensions(); ++d )
 		{
 			// how much do we want to extend
 			if ( inputSize == null )
-				imageExtension[ d ] = Util.round( img.getDimension( d ) * ( 1 + extensionRatio ) ) - img.getDimension( d );
+				imageExtension[ d ] = (int)Util.round( interval.dimension( d ) * ( 1 + extensionRatio ) ) - (int)interval.dimension( d );
 			else
-				imageExtension[ d ] = Util.round( inputSize[ d ] * ( 1 + extensionRatio ) ) - img.getDimension( d );
+				imageExtension[ d ] = (int)Util.round( inputSize[ d ] * ( 1 + extensionRatio ) ) - (int)interval.dimension( d );
 			
 			if ( imageExtension[ d ] < minExtension )
 				imageExtension[ d ] = minExtension;
@@ -166,11 +227,11 @@ public class FourierTransform<T extends RealType<T>, S extends ComplexType<S>> i
 			//	++imageExtension[ d ];
 						
 			// the new size includes the current image size
-			extendedSize[ d ] = imageExtension[ d ] + img.getDimension( d );
+			extendedSize[ d ] = imageExtension[ d ] + (int)interval.dimension( d );
 		}			
 	} 
 
-	public T getImageType() { return img.createType(); }
+	public T getImageType() { return inputType; }
 	public int[] getExtendedSize() { return extendedSize.clone(); }	
 	public PreProcessing getPreProcessing() { return preProcessing; }
 	public Rearrangement getRearrangement() { return rearrangement; }
@@ -178,7 +239,7 @@ public class FourierTransform<T extends RealType<T>, S extends ComplexType<S>> i
 	public float getRelativeImageExtension() { return relativeImageExtensionRatio; } 
 	public int[] getImageExtension() { return imageExtension.clone(); }
 	public float getRelativeFadeOutDistance() { return relativeFadeOutDistance; }
-	public OutOfBoundsStrategyFactory<T> getCustomOutOfBoundsStrategy() { return strategy; }
+	public OutOfBoundsFactory<T, RandomAccessibleInterval<T>> getCustomOutOfBoundsStrategy() { return outOfBounds; }
 	public int getMinExtension() { return minExtension; }
 	public int[] getOriginalSize() { return originalSize.clone(); }
 	public int[] getOriginalOffset() { return originalOffset.clone(); }
@@ -205,41 +266,50 @@ public class FourierTransform<T extends RealType<T>, S extends ComplexType<S>> i
 		//
 		// perform FFT on the temporary image
 		//			
-		final OutOfBoundsStrategyFactory<T> outOfBoundsFactory;		
+		final OutOfBoundsFactory<T, RandomAccessibleInterval<T>> outOfBoundsFactory;		
 		switch ( preProcessing )
 		{
 			case USE_GIVEN_OUTOFBOUNDSSTRATEGY:
 			{
-				if ( strategy == null )
+				if ( outOfBounds == null )
 				{
 					errorMessage = "Custom OutOfBoundsStrategyFactory is null, cannot use custom strategy";
 					return false;
 				}				
-				extendedZeroPaddedSize = getZeroPaddingSize( getExtendedImageSize( img, imageExtension ), fftOptimization );
-				outOfBoundsFactory = strategy;				
+				extendedZeroPaddedSize = getZeroPaddingSize( getExtendedImageSize( input, imageExtension ), fftOptimization );
+				outOfBoundsFactory = outOfBounds;				
 				break;
 			}
 			case EXTEND_MIRROR:
 			{	
-				extendedZeroPaddedSize = getZeroPaddingSize( getExtendedImageSize( img, imageExtension ), fftOptimization );
-				outOfBoundsFactory = new OutOfBoundsStrategyMirrorFactory<T>();
+				extendedZeroPaddedSize = getZeroPaddingSize( getExtendedImageSize( input, imageExtension ), fftOptimization );
+				outOfBoundsFactory = new OutOfBoundsMirrorFactory< T, RandomAccessibleInterval<T> >( Boundary.SINGLE );
 				break;
 				
 			}			
 			case EXTEND_MIRROR_FADING:
 			{
-				extendedZeroPaddedSize = getZeroPaddingSize( getExtendedImageSize( img, imageExtension ), fftOptimization );
-				outOfBoundsFactory = new OutOfBoundsStrategyMirrorExpWindowingFactory<T>( relativeFadeOutDistance );				
+				extendedZeroPaddedSize = getZeroPaddingSize( getExtendedImageSize( input, imageExtension ), fftOptimization );
+				outOfBoundsFactory = new OutOfBoundsMirrorExpWindowingFactory< T, RandomAccessibleInterval<T> >( relativeFadeOutDistance );				
 				break;
 			}			
 			default: // or NONE
 			{
 				if ( inputSize == null )
-					extendedZeroPaddedSize = getZeroPaddingSize( img.getDimensions(), fftOptimization );
+				{
+					final int[] tmp = new int[ input.numDimensions() ];
+					
+					for ( int d = 0; d < numDimensions; ++d )
+						tmp[ d ] = (int)input.dimension( d );
+					
+					extendedZeroPaddedSize = getZeroPaddingSize( tmp, fftOptimization );
+				}
 				else
+				{
 					extendedZeroPaddedSize = getZeroPaddingSize( inputSize, fftOptimization );
+				}
 				
-				outOfBoundsFactory = new OutOfBoundsStrategyValueFactory<T>( img.createType() );
+				outOfBoundsFactory = new OutOfBoundsConstantValueFactory<T, RandomAccessibleInterval<T>>( inputType.createVariable() );
 				break;
 			}		
 		}
@@ -250,11 +320,11 @@ public class FourierTransform<T extends RealType<T>, S extends ComplexType<S>> i
 			if ( inputSize != null )
 				inputSizeOffset[ d ] = ( extendedZeroPaddedSize[ d ] - inputSize[ d ] ) / 2;
 			
-			originalOffset[ d ] = ( extendedZeroPaddedSize[ d ] - img.getDimension( d ) ) / 2;			
+			originalOffset[ d ] = ( extendedZeroPaddedSize[ d ] - (int)input.dimension( d ) ) / 2;			
 		}
 		
 		
-		fftImage = FFTFunctions.computeFFT( img, complexType, outOfBoundsFactory, originalOffset, extendedZeroPaddedSize, getNumThreads(), false );
+		fftImage = FFTFunctions.computeFFT( input, imgFactory, complexType, outOfBoundsFactory, originalOffset, extendedZeroPaddedSize, getNumThreads(), false );
 		
 		if ( fftImage == null )
 		{
@@ -271,14 +341,14 @@ public class FourierTransform<T extends RealType<T>, S extends ComplexType<S>> i
         return true;
 	}	
 				
-	protected int[] getExtendedImageSize( final Image<?> img, final int[] imageExtension )
+	protected int[] getExtendedImageSize( final RandomAccessibleInterval<?> input, final int[] imageExtension )
 	{
-		final int[] extendedSize = new int[ img.getNumDimensions() ];
+		final int[] extendedSize = new int[ input.numDimensions() ];
 		
-		for ( int d = 0; d < img.getNumDimensions(); ++d )
+		for ( int d = 0; d < input.numDimensions(); ++d )
 		{
 			// the new size includes the current image size
-			extendedSize[ d ] = imageExtension[ d ] + img.getDimension( d );
+			extendedSize[ d ] = imageExtension[ d ] + (int)input.dimension( d );
 		}
 		
 		return extendedSize;
@@ -319,7 +389,7 @@ public class FourierTransform<T extends RealType<T>, S extends ComplexType<S>> i
 	public int getNumThreads() { return numThreads; }	
 
 	@Override
-	public Image<S> getResult() { return fftImage; }
+	public Img<S> getResult() { return fftImage; }
 
 	@Override
 	public boolean checkInput() 
@@ -328,7 +398,7 @@ public class FourierTransform<T extends RealType<T>, S extends ComplexType<S>> i
 		{
 			return false;
 		}
-		else if ( img == null )
+		else if ( input == null )
 		{
 			errorMessage = "Input image is null";
 			return false;

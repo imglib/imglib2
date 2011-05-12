@@ -35,7 +35,7 @@ import net.imglib2.RandomAccessibleInterval;
  * 0<sup><em>n</em></sup> and its max positive.  {@link Img}s store pixels
  * and thus are the basis for conventional image processing.
  *
- * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
+ * @author Stephan Saalfeld <saalfeld@mpi-cbg.de> and Stephan Preibisch
  */
 public interface Img< T >
 	extends
@@ -54,4 +54,9 @@ public interface Img< T >
 	 * @return a factory for Imgs of the same kind as this one. 
 	 */
 	public ImgFactory< T > factory();
+	
+	/**
+	 * @return - A copy of the current {@link Img} instance, all pixels are duplicated
+	 */
+	public Img< T > copy();
 }

@@ -53,5 +53,16 @@ public interface Sampler< T >
 	 */
 	public T get();
 	
+	/**
+	 * @return - A new {@link Sampler} in the same state accessing the 
+	 * same values.
+	 *  
+	 * It does NOT copy the T, just the state of the {@link Sampler}.
+	 * Otherwise use T.copy() if available.
+	 * 
+	 * Sampler.copy().get() == Sampler.get(), i.e. both hold the same value,
+	 * not necessarily the same instance (this is the case for an 
+	 * {@link ArrayCursor} for example)
+	 */
 	public Sampler< T > copy();
 }

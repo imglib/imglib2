@@ -27,6 +27,7 @@
  */
 package net.imglib2.img.array;
 
+import net.imglib2.Cursor;
 import net.imglib2.Interval;
 import net.imglib2.IterableRealInterval;
 import net.imglib2.img.AbstractNativeImg;
@@ -112,4 +113,23 @@ public class ArrayImg< T extends NativeType< T >, A extends DataAccess > extends
 
 	@Override
 	public ArrayImgFactory<T> factory() { return new ArrayImgFactory<T>(); }
+	
+	@Override
+	public ArrayImg<T,?> copy()
+	{
+		final ArrayImg<T,?> copy = factory().create( dimension, firstElement().createVariable() );
+		
+		final Cursor<T> cursor1 = this.cursor();
+		final Cursor<T> cursor2 = copy.cursor();
+		
+		while ( cursor1.hasNext() )
+		{
+			cursor1.fwd();
+			cursor2.fwd();
+			
+			cursor2.get().set( cursor1.get() );
+		}
+		
+		return copy;
+	}	
 }

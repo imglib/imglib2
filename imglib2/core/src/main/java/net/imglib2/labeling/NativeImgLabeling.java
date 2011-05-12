@@ -106,5 +106,10 @@ public class NativeImgLabeling<T extends Comparable<T>>
 	public IntAccess update(Object updater) {
 		return img.update(updater);
 	}
-	
+	@Override
+	public NativeImgLabeling<T> copy()
+	{
+		//TODO: Copy a NativeImgLabeling<T>
+		return null;
+	}
 }
