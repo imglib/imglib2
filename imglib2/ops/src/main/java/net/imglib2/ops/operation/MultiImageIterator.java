@@ -87,24 +87,27 @@ public class MultiImageIterator<T extends RealType<T>>  // don't want to impleme
 	}
 	
 	private void testSpansCompatible() {
+		int span0Len = spans[0].length;
 		for (int i = 1; i < spans.length; i++) {
-			int span0Len = spans[0].length;
 			int spanILen = spans[i].length;
 			int minDims = Math.min(span0Len, spanILen);
-			int maxDims = Math.max(span0Len, spanILen);
-			
+
+			// test that spans are same in the shared dimensions 
 			for (int d = 0; d < minDims; d++) {
 				if (spans[0][d] != spans[i][d])
 					throw new IllegalArgumentException("incompatible span shapes (case 1)");
 			}
 
-			for (int d = minDims; d < maxDims; d++) {
-				if (span0Len > d)
-					if (spans[0][d] != 1)
-						throw new IllegalArgumentException("incompatible span shapes (case 2)");
-				if (spanILen > d)
-					if (spans[i][d] != 1)
-						throw new IllegalArgumentException("incompatible span shapes (case 3)");
+			// test that remaining dims == 1 : case span0 is longer
+			for (int d = minDims; d < span0Len; d++) {
+				if (spans[0][d] != 1)
+					throw new IllegalArgumentException("incompatible span shapes (case 2)");
+			}
+			
+			// test that remaining dims == 1 : case spanI is longer
+			for (int d = minDims; d < spanILen; d++) {
+				if (spans[i][d] != 1)
+					throw new IllegalArgumentException("incompatible span shapes (case 2)");
 			}
 		}
 	}
