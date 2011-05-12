@@ -15,9 +15,9 @@ import net.imglib2.type.numeric.RealType;
 
 //TODO
 //performance issues
-//1) RegionCursor relied upon. Its uses RandomAccess internally
-//   rather than Cursors. This is because it can work on a
-//   subregion. Imglib needs a fast kind of constrained cursor.
+//1) Regioniterator relied upon. Its uses RandomAccess internally
+//   rather than iterators. This is because it can work on a
+//   subregion. Imglib needs a fast kind of constrained iterator.
 //2) since Condition.isSatisfied() takes a position we get it at
 //   every spot. Make Condition rely only on value to avoid.
 //   Then only calc position if needed by notifier. Less powerful.
@@ -107,20 +107,20 @@ public class TransformOperation<T extends RealType<T>> {
 			notifier.notifyObservers(status);
 		}
 
-		RegionCursor<T> cursor =
-			new RegionCursor<T>(image.randomAccess(), origin, span);
+		RegionIterator<T> iterator =
+			new RegionIterator<T>(image.randomAccess(), origin, span);
 
-		cursor.reset();
-		while (cursor.isValid())
+		iterator.reset();
+		while (iterator.hasNext())
 		{
 			if (wasInterrupted)
 				break;
 			
+			T valueRef = iterator.next();
+			
 			double value = Double.NaN;
 
-			T valueRef = cursor.getValue();
-			
-			cursor.getPosition(position);
+			iterator.getPosition(position);
 			
 			boolean conditionSatisfied = true;
 			if (condition != null)
@@ -142,8 +142,6 @@ public class TransformOperation<T extends RealType<T>> {
 				status.conditionsSatisfied = conditionSatisfied;
 				notifier.notifyObservers(status);
 			}
-
-			cursor.next();
 		}
 
 		if (notifier != null)

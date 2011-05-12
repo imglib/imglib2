@@ -15,7 +15,7 @@ public class MultiImageIterator<T extends RealType<T>>  // don't want to impleme
 	private Img<T>[] images;
 	private long[][] origins;
 	private long[][] spans;
-	private RegionCursor<T>[] regionCursors;
+	private RegionIterator<T>[] regionIterators;
 	
 	// -----------------  public interface ------------------------------------------
 
@@ -33,9 +33,9 @@ public class MultiImageIterator<T extends RealType<T>>  // don't want to impleme
 		}
 	}
 
-	public RegionCursor<T>[] getCursors()
+	public RegionIterator<T>[] getIterators()
 	{
-		return regionCursors;
+		return regionIterators;
 	}
 
 	/** call after subregions defined and before reset() or next() call. tests that all subregions defined are compatible. */
@@ -43,29 +43,29 @@ public class MultiImageIterator<T extends RealType<T>>  // don't want to impleme
 	{
 		testSpansCompatible();
 
-		regionCursors = new RegionCursor[images.length];
+		regionIterators = new RegionIterator[images.length];
 		for (int i = 0; i < images.length; i++) {
 			RandomAccess<T> accessor = images[i].randomAccess();
-			regionCursors[i] = new RegionCursor<T>(accessor, origins[i], spans[i]);
+			regionIterators[i] = new RegionIterator<T>(accessor, origins[i], spans[i]);
 		}
 
 		resetAll();
 	}
 	
-	public boolean isValid() {
-		boolean firstValid = regionCursors[0].isValid();
+	public boolean hasNext() {
+		boolean firstHasNext = regionIterators[0].hasNext();
 
-		for (int i = 1; i < regionCursors.length; i++)
-			if (firstValid != regionCursors[i].isValid())
+		for (int i = 1; i < regionIterators.length; i++)
+			if (firstHasNext != regionIterators[i].hasNext())
 				throw new IllegalArgumentException("linked cursors are out of sync");
 		
-		return firstValid;
+		return firstHasNext;
 	}
 	
 	public void next()
 	{
-		for (RegionCursor<T> cursor : regionCursors)
-			cursor.next();
+		for (RegionIterator<T> iterator : regionIterators)
+			iterator.next();
 	}
 	
 	public void reset()
@@ -82,8 +82,8 @@ public class MultiImageIterator<T extends RealType<T>>  // don't want to impleme
 	// -----------------  private interface ------------------------------------------
 	
 	private void resetAll() {
-		for (RegionCursor<T> cursor : regionCursors)
-			cursor.reset();
+		for (RegionIterator<T> iterator : regionIterators)
+			iterator.reset();
 	}
 	
 	private void testSpansCompatible() {

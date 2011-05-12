@@ -1,6 +1,5 @@
 package net.imglib2.ops.example.rev3;
 
-import net.imglib2.Cursor;
 import net.imglib2.RandomAccess;
 import net.imglib2.ops.example.rev3.constraints.Constraints;
 import net.imglib2.ops.example.rev3.function.IntegerIndexedScalarFunction;
@@ -10,7 +9,7 @@ import net.imglib2.ops.observer.IterationStatus.Message;
 import java.util.Observable;
 import java.util.Observer;
 
-import net.imglib2.ops.operation.RegionCursor;  // TODO - this uses temp Rev2 version
+import net.imglib2.ops.operation.RegionIterator;  // TODO - this uses temp Rev2 version
 import net.imglib2.img.Img;
 import net.imglib2.type.numeric.RealType;
 
@@ -30,7 +29,7 @@ public class Operation
 {
 	private final Img<? extends RealType<?>> outputImage;
 	private final IntegerIndexedScalarFunction function;
-	private final RegionCursor<? extends RealType<?>> cursor;
+	private final RegionIterator<? extends RealType<?>> iterator;
 	private boolean wasInterrupted;
 	private boolean isDone;
 	private Observable notifier;
@@ -42,18 +41,18 @@ public class Operation
 		this.outputImage = outputImage;
 		this.function = function;
 		RandomAccess<? extends RealType<?>> tmpAccessor = outputImage.randomAccess();
-		this.cursor = new RegionCursor(tmpAccessor, origin, span);  // nongeneric instantiation. SAFE?
+		this.iterator = new RegionIterator(tmpAccessor, origin, span);  // nongeneric instantiation. SAFE?
 		this.wasInterrupted = false;
 		this.isDone = false;
 		this.notifier = null;
 		this.constraints = new Constraints();
 	}
 	
-	// Note some inefficiency is execute() for in place transformations (basically because we're maintaining multiple cursors):
-	//   we create a cursor on output image (image 1)
-	//   we then iterate that cursor and use getPosition() to copy position
+	// Note some inefficiency is execute() for in place transformations (basically because we're maintaining multiple iterators):
+	//   we create a iterator on output image (image 1)
+	//   we then iterate that iterator and use getPosition() to copy position
 	//   we then evaluate the function which eventually points to our input image (again image 1)
-	//   it sets its cursor position to position and returns its value
+	//   it sets its iterator position to position and returns its value
 
 	public void execute()  // TODO - make this run in its own thread. multithread it too?
 	{
@@ -67,13 +66,14 @@ public class Operation
 			notifier.notifyObservers(status);
 		}
 		
-		cursor.reset();
+		iterator.reset();
 		
-		while (cursor.isValid())
+		while (iterator.hasNext())
 		{
 			if (wasInterrupted)
 				break;
-			cursor.getPosition(position);
+			iterator.next();
+			iterator.getPosition(position);
 			// next three lines needed for imglib1 but not needed for imglib2
 		  // TODO - slowing HACK because RegionOfInterestCursor returns relative position rather than absolute position
 			//for (int i = 0; i < position.length; i++)
@@ -82,17 +82,16 @@ public class Operation
 			if (constraintsSatisfied)
 			{
 				double newValue = function.evaluate(position);
-				cursor.getValue().setReal(newValue);
+				iterator.getValue().setReal(newValue);
 			}
 			if (notifier != null)
 			{
 				status.message = Message.UPDATE;
 				status.position = position;
-				status.value = cursor.getValue().getRealDouble();   // not sure what is best to pass as value if constraints
+				status.value = iterator.getValue().getRealDouble();   // not sure what is best to pass as value if constraints
 				status.conditionsSatisfied = constraintsSatisfied;  // violated but I think if I pass original value it might be
 				notifier.notifyObservers(status);                   // useful info to caller. its incurs a small performance hit.
 			}
-			cursor.next();
 		}
 		
 		if (notifier != null)

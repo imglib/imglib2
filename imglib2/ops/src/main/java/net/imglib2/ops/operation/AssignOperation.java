@@ -152,13 +152,13 @@ public class AssignOperation<T extends RealType<T>>
 	{
 		iterator.initialize();
 
-		RegionCursor<T>[] subCursors = iterator.getCursors();
+		RegionIterator<T>[] subIterators = iterator.getIterators();
 		
-		RegionCursor<T> subCursor0 = subCursors[0];
+		RegionIterator<T> subIterator0 = subIterators[0];
 
-		outputVariable = subCursor0.getValue();
+		outputVariable = subIterator0.getValue();
 
-		List<T> inputVariables = getInputVariables(subCursors);
+		List<T> inputVariables = getInputVariables(subIterators);
 		
 		long[] position = new long[positions[0].length];
 
@@ -170,14 +170,16 @@ public class AssignOperation<T extends RealType<T>>
 			notifier.notifyObservers(status);
 		}
 
-		while (iterator.isValid())
+		while (iterator.hasNext())
 		{
 			if (wasInterrupted)
 				break;
 			
+			iterator.next();
+
 			double value = Double.NaN;
 
-			boolean conditionsSatisfied = conditionsSatisfied(subCursors); 
+			boolean conditionsSatisfied = conditionsSatisfied(subIterators); 
 
 			if (conditionsSatisfied)
 			{
@@ -188,15 +190,13 @@ public class AssignOperation<T extends RealType<T>>
 			
 			if (notifier != null)
 			{
-				subCursor0.getPosition(position);
+				subIterator0.getPosition(position);
 				status.message = Message.UPDATE;
 				status.position = position;
 				status.value = value;
 				status.conditionsSatisfied = conditionsSatisfied;
 				notifier.notifyObservers(status);
 			}
-
-			iterator.next();
 		}
 
 		if (notifier != null)
@@ -219,7 +219,7 @@ public class AssignOperation<T extends RealType<T>>
 	// this behavior: user should not specify union and then not provide any
 	// conditions.
 	
-	private boolean conditionsSatisfied(RegionCursor<T>[] cursors)
+	private boolean conditionsSatisfied(RegionIterator<T>[] iterators)
 	{
 		for (int i = 0; i < conditions.length; i++)
 		{
@@ -228,11 +228,11 @@ public class AssignOperation<T extends RealType<T>>
 			if (condition == null)
 				continue;
 			
-			RegionCursor<T> subcursor = cursors[i];
+			RegionIterator<T> subIterator = iterators[i];
 			
-			subcursor.getPosition(positions[i]);
+			subIterator.getPosition(positions[i]);
 			
-			if (condition.isSatisfied(subcursor.getValue(), positions[i]))
+			if (condition.isSatisfied(subIterator.getValue(), positions[i]))
 			{
 				if (!requireIntersection)  // if union case we can short circuit with success
 					return true;
@@ -252,12 +252,12 @@ public class AssignOperation<T extends RealType<T>>
 		return false;
 	}
 
-	private List<T> getInputVariables(RegionCursor<T>[] cursors)
+	private List<T> getInputVariables(RegionIterator<T>[] iterators)
 	{
 		ArrayList<T> variables = new ArrayList<T>();
 		
 		for (int i = 1; i < imageCount; i++)
-			variables.add(cursors[i].getValue());
+			variables.add(iterators[i].getValue());
 		
 		return variables;
 	}

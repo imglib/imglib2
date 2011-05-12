@@ -19,14 +19,17 @@ import net.imglib2.type.numeric.integer.UnsignedByteType;
 //     walked in the exact same order depsite differences in dimensionality.
 //     I.e. a 2d XY plane in a 2d image and a 2d XY plane in a 5d image.
 
-public class RegionCursor<K extends RealType<K>> {
+import java.util.Iterator;
+
+public class RegionIterator<K extends RealType<K>> implements Iterator<K> {
 	private final RandomAccess<K> accessor;
 	private final long[] minCoords;
 	private final long[] maxCoords;
 	private final long[] currCoords;
 	private final int totalDims;
+	private boolean haveNotIncremented;
 	
-	public RegionCursor(RandomAccess<K> accessor, long[] origin, long[] span) {
+	public RegionIterator(RandomAccess<K> accessor, long[] origin, long[] span) {
 		this.totalDims = accessor.numDimensions();
 		if (origin.length != span.length)
 			throw new IllegalArgumentException("origin and span are of differing dimension lengths");
@@ -45,7 +48,6 @@ public class RegionCursor<K extends RealType<K>> {
 		for (int i = 0; i < this.totalDims; i++) {
 			this.maxCoords[i] = origin[i] + span[i] - 1;
 		}
-		
 		resetInternals();
 	}
 
@@ -58,16 +60,40 @@ public class RegionCursor<K extends RealType<K>> {
 		return this.accessor.get();
 	}
 
-	public boolean isValid() {
+	@Override
+	public boolean hasNext() {
+		if (this.haveNotIncremented)
+			return true;
 		for (int i = 0; i < this.totalDims; i++) {
-			long indexVal = this.currCoords[i];
-			if ((indexVal < this.minCoords[i]) || (indexVal > this.maxCoords[i]))
-				return false;
+			if (this.currCoords[i] < this.maxCoords[i])
+				return true;
 		}
-		return true;
+		return false;
+	}
+
+	@Override
+	public K next() {
+		incIndex();
+		return this.accessor.get();
 	}
 	
-	public void next() {
+
+	@Override
+	public void remove() {
+		throw new UnsupportedOperationException("remove() not implemented for RegionIterator");
+	}
+	
+	public void reset() {
+		resetInternals();
+	}
+
+	// -- helpers --
+
+	private void incIndex() {
+		if (this.haveNotIncremented) {
+			this.haveNotIncremented = false;
+			return;
+		}
 		final int lastDim = this.totalDims-1;
 		for (int i = 0; i < this.totalDims; i++) {
 			this.currCoords[i]++;
@@ -89,10 +115,15 @@ public class RegionCursor<K extends RealType<K>> {
 				//   table is significantly (30%) slower!
 		}
 	}
-	
-	public void reset() {
-		resetInternals();
+
+	private void resetInternals() {
+		this.haveNotIncremented = true;
+		for (int i = 0; i < this.totalDims; i++)
+			this.currCoords[i] = this.minCoords[i];
+		this.accessor.setPosition(this.currCoords);
 	}
+	
+	// -- speed test code --
 	
 	public static void main(String[] args) {
 		//do a speed test
@@ -103,23 +134,16 @@ public class RegionCursor<K extends RealType<K>> {
 			factory.create(new long[]{DimSize,DimSize,DimSize},
 				new UnsignedByteType());
 		long startTime = System.currentTimeMillis();
-		RegionCursor<UnsignedByteType> cursor =
-			new RegionCursor<UnsignedByteType>(data.randomAccess(),
+		RegionIterator<UnsignedByteType> cursor =
+			new RegionIterator<UnsignedByteType>(data.randomAccess(),
 					new long[]{2,3,4}, new long[]{DimSize-7, DimSize-5, DimSize-3});
 		for (int i = 0; i < 1000; i++) {
 			cursor.reset();
-			while (cursor.isValid())
+			while (cursor.hasNext())
 				cursor.next();
 		}
 		long endTime = System.currentTimeMillis();
 		System.out.println("Total time in millis = "+(endTime-startTime));
 	}
 
-	// -- helpers --
-
-	private void resetInternals() {
-		for (int i = 0; i < this.totalDims; i++)
-			this.currCoords[i] = this.minCoords[i];
-		this.accessor.setPosition(this.currCoords);
-	}
 }
