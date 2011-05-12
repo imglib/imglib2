@@ -109,7 +109,22 @@ public class NativeImgLabeling<T extends Comparable<T>>
 	@Override
 	public NativeImgLabeling<T> copy()
 	{
-		//TODO: Copy a NativeImgLabeling<T>
-		return null;
+		@SuppressWarnings({ "rawtypes", "unchecked" })
+		final NativeImgLabeling<T> result = new NativeImgLabeling<T>(dimension, (NativeImgFactory) factory());
+		LabelingType<T> type = new LabelingType<T>(result);
+		result.setLinkedType(type);
+		final Cursor<LabelingType<T>> cursor1 = img.cursor();
+		final Cursor<LabelingType<T>> cursor2 = result.img.cursor();
+		
+		while ( cursor1.hasNext() )
+		{
+			cursor1.fwd();
+			cursor2.fwd();
+			
+			cursor2.get().set( cursor1.get() );
+		}
+		
+		return result;
+		
 	}
 }
