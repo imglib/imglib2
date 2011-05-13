@@ -34,6 +34,11 @@ POSSIBILITY OF SUCH DAMAGE.
 
 package mpicbg.imglib.io;
 
+import ij.ImagePlus;
+import ij.io.Opener;
+import ij.process.ImageProcessor;
+
+import java.io.File;
 import java.io.IOException;
 
 import loci.formats.ChannelSeparator;
@@ -45,9 +50,12 @@ import loci.formats.meta.IMetadata;
 import loci.formats.meta.MetadataRetrieve;
 import mpicbg.imglib.container.ContainerFactory;
 import mpicbg.imglib.container.array.ArrayContainerFactory;
+import mpicbg.imglib.cursor.LocalizableByDimCursor;
 import mpicbg.imglib.cursor.LocalizablePlaneCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.ImageFactory;
+import mpicbg.imglib.image.display.imagej.ImageJFunctions;
+import mpicbg.imglib.multithreading.SimpleMultiThreading;
 import mpicbg.imglib.type.numeric.RealType;
 import mpicbg.imglib.type.numeric.RGBALegacyType;
 import mpicbg.imglib.type.numeric.integer.ByteType;
@@ -525,10 +533,43 @@ public class LOCI
 		return openLOCIFloatType( path, fileName, new ImageFactory<FloatType>( new FloatType(), factory ), from, to );
 	}
 
-	
 	public static Image<FloatType> openLOCIFloatType( String path, final String fileName, final ImageFactory<FloatType> factory, int from, int to )
-	{				
+	{						
 		path = checkPath( path );
+		
+		final File dir = new File( path + fileName );
+		
+		// read many 2d-images if it is a directory
+		if ( dir.isDirectory() )
+		{
+			final String[] files = dir.list();
+			final int depth = dir.list().length;
+			
+			// get size of first image
+			final Opener io = new Opener();
+			ImagePlus imp2d = io.openImage( dir.getAbsolutePath() + File.separator + files[ 0 ] );
+
+			System.out.println( "Opening '" + fileName + "' [" + imp2d.getWidth() + "x" + imp2d.getHeight() + "x" + depth + " type=" + imp2d.getProcessor().getClass().getSimpleName() + " image=Image<FloatType>]" );
+
+			final Image<FloatType> output = factory.createImage( new int[] {imp2d.getWidth(), imp2d.getHeight(), depth }, fileName );			
+			
+			for ( int i = 0; i < depth; ++i )
+			{
+				imp2d = io.openImage( dir.getAbsolutePath() + File.separator + files[ i ] );
+				final ImageProcessor ip = imp2d.getProcessor();
+				
+				final LocalizablePlaneCursor<FloatType> cursorOut = output.createLocalizablePlaneCursor();
+				cursorOut.reset( 0, 1, new int[]{ 0, 0, i } );
+				
+				while ( cursorOut.hasNext() )
+				{
+					cursorOut.fwd();
+					cursorOut.getType().set( ip.getPixelValue( cursorOut.getPosition( 0 ), cursorOut.getPosition( 1 ) ) );
+				}
+			}			
+			return output;
+		}
+
 		final IFormatReader r = new ChannelSeparator();
 
 		final IMetadata omexmlMeta = MetadataTools.createOMEXMLMetadata();
@@ -543,7 +584,7 @@ public class LOCI
 			final boolean isLittleEndian = r.isLittleEndian();			
 			final int width = r.getSizeX();
 			final int height = r.getSizeY();
-			final int depth = r.getSizeZ();
+			final int depth = r.getSizeZ();				
 			int timepoints = r.getSizeT();
 			int channels = r.getSizeC();
 			final int pixelType = r.getPixelType();
@@ -675,8 +716,8 @@ public class LOCI
 			return img;			
 			
 		}
-		catch (IOException exc) { System.out.println("LOCI.openLOCI(): Sorry, an error occurred: " + exc.getMessage()); return null;}
-		catch (FormatException exc) {System.out.println("LOCI.openLOCI(): Sorry, an error occurred: " + exc.getMessage()); return null;}		
+		catch (IOException exc) { exc.printStackTrace(); System.out.println("LOCI.openLOCI(): Sorry, an error occurred: " + exc.getMessage()); return null;}
+		catch (FormatException exc) { exc.printStackTrace(); System.out.println("LOCI.openLOCI(): Sorry, an error occurred: " + exc.getMessage()); return null;}		
 	}
 
 	public static Image<ByteType> openLOCIByteType( final String fileName, final ContainerFactory factory )
