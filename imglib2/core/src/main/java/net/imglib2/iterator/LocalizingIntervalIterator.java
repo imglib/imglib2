@@ -30,6 +30,7 @@ package net.imglib2.iterator;
 import net.imglib2.Interval;
 import net.imglib2.Positionable;
 import net.imglib2.util.IntervalIndexer;
+import net.imglib2.util.Util;
 
 /**
  * Use this class to iterate a virtual {@link Interval} in flat order, that is:
@@ -68,7 +69,12 @@ public class LocalizingIntervalIterator extends IntervalIterator
 		position = new long[ n ];
 		reset();
 	}
-	
+
+	public LocalizingIntervalIterator( final int[] dimensions )
+	{
+		this( Util.int2long( dimensions ) );
+	}
+
 	public LocalizingIntervalIterator( final long[] min, final long[] max )
 	{
 		super( min, max );
@@ -76,6 +82,11 @@ public class LocalizingIntervalIterator extends IntervalIterator
 		reset();
 	}
 
+	public LocalizingIntervalIterator( final int[] min, final int[] max )
+	{
+		this( Util.int2long( min ), Util.int2long( max ) );
+	}
+	
 	public LocalizingIntervalIterator( final Interval interval )
 	{
 		super( interval );

@@ -29,6 +29,7 @@ package net.imglib2.img.planar;
 
 import java.util.ArrayList;
 
+import net.imglib2.Cursor;
 import net.imglib2.Interval;
 import net.imglib2.IterableRealInterval;
 import net.imglib2.img.AbstractNativeImg;
@@ -255,4 +256,23 @@ public class PlanarImg< T extends NativeType< T >, A extends ArrayDataAccess<A> 
 
 	@Override
 	public PlanarImgFactory< T > factory() { return new PlanarImgFactory<T>(); }
+	
+	@Override
+	public PlanarImg<T,?> copy()
+	{
+		final PlanarImg<T,?> copy = factory().create( dimension, firstElement().createVariable() );
+		
+		final Cursor<T> cursor1 = this.cursor();
+		final Cursor<T> cursor2 = copy.cursor();
+		
+		while ( cursor1.hasNext() )
+		{
+			cursor1.fwd();
+			cursor2.fwd();
+			
+			cursor2.get().set( cursor1.get() );
+		}
+		
+		return copy;
+	}		
 }

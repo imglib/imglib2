@@ -20,6 +20,9 @@ import java.util.List;
 
 import net.imglib2.Interval;
 import net.imglib2.Localizable;
+import net.imglib2.RandomAccess;
+import net.imglib2.RandomAccessible;
+import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.RealInterval;
 import net.imglib2.type.Type;
 import net.imglib2.type.numeric.ExponentialMathType;
@@ -987,5 +990,41 @@ public class Util
 				return false;
 		}
 		return true;
+	}
+	
+	/**
+	 * Gets an instance of T from the {@link RandomAccessibleInterval} by querying the value at the min coordinate
+	 * 
+	 * @param <T> - the T
+	 * @param rai - the {@link RandomAccessibleInterval}
+	 * @return - an instance of T
+	 */
+	final public static <T, F extends Interval & RandomAccessible< T >> T getTypeFromInterval( final F rai )
+	{
+		// create RandomAccess
+		final RandomAccess< T > randomAccess = rai.randomAccess();
+		
+		// place it at the first pixel
+		for ( int d = 0; d < rai.numDimensions(); ++d )
+			randomAccess.setPosition( rai.min(d), d );
+		
+		return randomAccess.get();
+	}
+
+	/**
+	 * Gets an instance of T from the {@link RandomAccessible}
+	 * 
+	 * @param <T> - the T
+	 * @param rai - the {@link RandomAccessible}
+	 * @return - an instance of T
+	 */
+	final public static <T> T getTypeFromRandomAccess( final RandomAccessible<T> ra )
+	{
+		// test that it is not an interval, because in this case a simple get()
+		// at the position of creation will fail
+		if ( RandomAccessibleInterval.class.isInstance( ra ) )
+			return getTypeFromInterval( (RandomAccessibleInterval<T>)ra );
+		else
+			return ra.randomAccess().get();
 	}
 }

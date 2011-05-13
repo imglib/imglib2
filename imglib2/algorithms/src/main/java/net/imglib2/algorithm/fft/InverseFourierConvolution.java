@@ -19,19 +19,35 @@
  */
 package net.imglib2.algorithm.fft;
 
-import net.imglib2.cursor.Cursor;
-import net.imglib2.image.Image;
+import net.imglib2.Cursor;
+import net.imglib2.RandomAccessibleInterval;
+import net.imglib2.exception.IncompatibleTypeException;
+import net.imglib2.img.Img;
+import net.imglib2.img.ImgFactory;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.complex.ComplexFloatType;
 
 /**
  * Convolve an image with the inverse of a kernel which is division in the Fourier domain.
+ * This is the simple, unnormalized version of what is used in the {@link PhaseCorrelation}. 
  *
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
 public class InverseFourierConvolution< T extends RealType< T >, S extends RealType< S > > extends FourierConvolution< T, S >
 {
-	public InverseFourierConvolution( final Image< T > image, final Image< S > kernel )
+	public InverseFourierConvolution( final RandomAccessibleInterval<T> image, final RandomAccessibleInterval<S> kernel,
+			   final ImgFactory<T> imgFactory, final ImgFactory<S> kernelImgFactory,
+			   final ImgFactory<ComplexFloatType> fftImgFactory )
+	{
+		super( image, kernel, imgFactory, kernelImgFactory, fftImgFactory );
+	}
+	
+	public InverseFourierConvolution( final Img<T> image, final Img<S> kernel, final ImgFactory<ComplexFloatType> fftImgFactory )
+	{
+		super( image, kernel, fftImgFactory );
+	}
+	
+	public InverseFourierConvolution( final Img< T > image, final Img< S > kernel ) throws IncompatibleTypeException
 	{
 		super( image, kernel );
 	}
@@ -42,20 +58,17 @@ public class InverseFourierConvolution< T extends RealType< T >, S extends RealT
 	 * @param a
 	 * @param b
 	 */
-	protected void multiply( final Image< ComplexFloatType > a, final Image< ComplexFloatType > b )
+	protected void multiply( final Img< ComplexFloatType > a, final Img< ComplexFloatType > b )
 	{
-		final Cursor<ComplexFloatType> cursorA = a.createCursor();
-		final Cursor<ComplexFloatType> cursorB = b.createCursor();
+		final Cursor<ComplexFloatType> cursorA = a.cursor();
+		final Cursor<ComplexFloatType> cursorB = b.cursor();
 		
 		while ( cursorA.hasNext() )
 		{
 			cursorA.fwd();
 			cursorB.fwd();
 			
-			cursorA.getType().div( cursorB.getType() );
+			cursorA.get().div( cursorB.get() );
 		}
-		
-		cursorA.close();
-		cursorB.close();
 	}
 }

@@ -18,7 +18,9 @@ public abstract class AbstractSamplingLineIterator<T> extends AbstractLineIterat
 	 * @param size - number of pixels to iterate
 	 * @param randomAccess - the {@link RandomAccess} which is moved along the line and is 
 	 * placed at the right location (one pixel left of the starting pixel)
-	 * @param processLine - the line that will be used for processing and is associated with this {@link AbstractSamplingLineIterator} 
+	 * @param processLine - the line that will be used for processing and is associated with this {@link AbstractSamplingLineIterator},
+	 * this is important for multithreading so that each AbstractSamplingLineIterator has its own temporary space for computing the
+	 * gaussian convolution 
 	 */
 	public AbstractSamplingLineIterator( final int dim, final long size, final RandomAccess<T> randomAccess, final Img<T> processLine )
 	{
