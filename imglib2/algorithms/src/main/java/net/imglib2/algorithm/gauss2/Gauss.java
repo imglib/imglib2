@@ -231,8 +231,7 @@ public abstract class Gauss< T extends NumericType< T >, R > implements Callable
 			// but only one way.  In this way we save half the calculations. 
 			// The pixel in the center is done by the left random access.
 			// We perform one movement less than necessary, because in the last pixel before
-			// the center we only need to move the left one which is responsible for the center.
-			
+			// the center we only need to move the left one which is responsible for the center.			
 			for ( long n = 0; n < imgSize; ++n )
 			{
 				input.fwd();
@@ -309,25 +308,80 @@ public abstract class Gauss< T extends NumericType< T >, R > implements Callable
 					
 					randomAccessLeft.get().add( tmp );
 				}
-			}
-			
+			}			
 		}
 		else
 		{
-			/* Here, we face something like that, althought the kernel can be significanly bigger...
+			/* The area to be convolved is actually smaller than the kernel, so
+			 * we face something like that, althought the kernel can potentially be significanly bigger...
 			 * 
 			 * Kernelsize = 5, e.g. [ 0.05 0.25 0.4 0.25 0.05 ]
 			 * 
-			 * Input   --- --- --- --- --- --- ---
-			 * i       |0| |1| |2| |3| |4| |5| |6| 
-			 *         --- --- --- --- --- --- ---
+			 * Input   --- --- --- --- --- --- --- 
+			 * i       |0| |1| |2| |3| |4| |5| |6|
+			 *         --- --- --- --- --- --- --- 
 			 *
-			 * Output          --- --- --- 
-			 * o               |0| |1| |2| 
+			 * Output          --- --- ---  
+			 * o               |0| |1| |2|
 			 *                 --- --- --- 
+
+			 * Input   --- --- --- --- ---  
+			 * i       |0| |1| |2| |3| |4| 
+			 *         --- --- --- --- ---  
+			 *
+			 * Output          --- 
+			 * o               |0| 
+			 *                 ---  
 			 */
 			
+			// convolve the first pixels where the input influences less than kernel.size pixels
+			for ( int i = 0; i < imgSize; ++i )
+			{
+				input.fwd();
+				
+				// copy input into a temp variable, it might be expensive to get()
+				copy.set( input.get() );
+				
+				// set the random access in the processing line to the right position
+				randomAccessLeft.setPosition( -1, 0 );				
+				
+				// now add it to all output values it contributes to
+				for ( int o = 0; o <= i; ++o )
+				{
+					randomAccessLeft.fwd( 0 );
+					
+					tmp.set( copy );
+					tmp.mul( kernel[ i - o ] );
+					
+					randomAccessLeft.get().add( tmp );
+				}				
+			}
 			
+			// convolve the last pixels where the input influences less than kernel.size pixels
+			for ( long i = imgSize; i < imgSize + kernelSizeMinus1; ++i )
+			{
+				// after the fwd() call the random access is at position imgSize as pictured above
+				input.fwd();
+				
+				// copy input into a temp variable, it might be expensive to get()
+				copy.set( input.get() );
+				
+				// set the random access in the processing line to the right position
+				final long position = i - kernelSize; 
+				randomAccessLeft.setPosition( Math.max( -1, position ), 0 );				
+				
+				// now add it to all output values it contributes to
+				int k = Math.max( 0, (int)position + 1 );
+				for ( long o = Math.max( 0, i - kernelSize + 1); o < imgSize; ++o )
+				{
+					randomAccessLeft.fwd( 0 );
+					
+					tmp.set( copy );
+					tmp.mul( kernel[ k++ ] );
+					
+					randomAccessLeft.get().add( tmp );
+				}
+			}						
 		}
 	}
 	
