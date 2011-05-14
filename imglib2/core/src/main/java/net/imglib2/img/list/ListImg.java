@@ -168,5 +168,11 @@ public class ListImg< T extends Type< T > > extends AbstractImg< T >
 		}
 		
 		return copy;
-	}	
+	}
+
+	// Must override or the superclass' numPixels would be returned
+	@Override
+	public long size() {
+		return this.numPixels;
+	}
 }
