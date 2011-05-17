@@ -47,7 +47,45 @@ public class RectangleRegionOfInterestTest {
 				new double [] { 5.6, 2.1 } );
 		assertEquals(r.numDimensions(), 2);
 	}
+	/**
+	 * Test method for {@link net.imglib2.roi.RectangleRegionOfInterest#getOrigin(net.imglib2.RealPositionable)}.
+	 */
+	@Test
+	public void testGetOriginRealPositionable() {
+		RectangleRegionOfInterest r = new RectangleRegionOfInterest(
+				new double [] { 1.3, 10.5},
+				new double [] { 5.6, 2.1 } );
+		RealPoint pt = new RealPoint(2);
+		r.getOrigin(pt);
+		assertEquals(pt.getDoublePosition(0), 1.3, 0);
+		assertEquals(pt.getDoublePosition(1), 10.5, 0);
+	}
 
+	/**
+	 * Test method for {@link net.imglib2.roi.RectangleRegionOfInterest#getOrigin(double[])}.
+	 */
+	@Test
+	public void testGetOriginArrayDouble() {
+		RectangleRegionOfInterest r = new RectangleRegionOfInterest(
+				new double [] { 1.3, 10.5},
+				new double [] { 5.6, 2.1 } );
+		double [] result = new double [2];
+		r.getOrigin(result);
+		assertEquals(result[0], 1.3, 0);
+		assertEquals(result[1], 10.5, 0);
+	}
+	/**
+	 * Test method for {@link net.imglib2.roi.RectangleRegionOfInterest#getOrigin(int)}.
+	 */
+	@Test
+	public void testGetOriginInt() {
+		RectangleRegionOfInterest r = new RectangleRegionOfInterest(
+				new double [] { 1.3, 10.5},
+				new double [] { 5.6, 2.1 } );
+		assertEquals(r.getOrigin(0), 1.3, 0);
+		assertEquals(r.getOrigin(1), 10.5, 0);
+	}	
+	
 	/**
 	 * Test method for {@link net.imglib2.roi.AbstractIterableRegionOfInterest#getIterableIntervalOverROI(net.imglib2.RandomAccessible)}.
 	 */
@@ -318,6 +356,18 @@ public class RectangleRegionOfInterestTest {
 				extent);
 		for (int i=0; i<3; i++) {
 			assertEquals(extent[i], r.getExtent(i), 0);
+		}
+	}
+	@Test
+	public void testGetExtentRealPositionable() {
+		double [] extent = new double [] { 5.8, 2.1, 3.3 }; 
+		RectangleRegionOfInterest r = new RectangleRegionOfInterest(
+				new double [] { 1.3, 10.5, 2.6 },
+				extent);
+		RealPoint pt = new RealPoint(extent.length);
+		r.getExtent(pt);
+		for (int i = 0; i < extent.length; i++) {
+			assertEquals(extent[i], pt.getDoublePosition(i), 0);
 		}
 	}
 }
