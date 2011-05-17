@@ -99,7 +99,11 @@ public class IntervalIterator implements Iterator, Localizable, Interval
 		this.dimensions[ m ] = dimm;
 		lastIndex = k * dimm - 1;
 	}
-	
+
+	public IntervalIterator( final int[] dimensions )
+	{
+		this( Util.int2long( dimensions ) );
+	}
 	
 	/**
 	 * Iterates an {@link Interval} with given <em>min</em> and <em>max</em>.
@@ -137,6 +141,10 @@ public class IntervalIterator implements Iterator, Localizable, Interval
 		lastIndex = k * sizem - 1;
 	}
 
+	public IntervalIterator( final int[] min, final int[] max )
+	{
+		this( Util.int2long( min ), Util.int2long( max ) );
+	}
 	
 	/**
 	 * Iterates a given {@link Interval}.
@@ -278,7 +286,6 @@ public class IntervalIterator implements Iterator, Localizable, Interval
 	
 	
 	@Override
-	@SuppressWarnings( "hiding" )
 	public void dimensions( final long[] dimensions )
 	{
 		for ( int d = 0; d < n; ++d )
@@ -294,7 +301,6 @@ public class IntervalIterator implements Iterator, Localizable, Interval
 
 
 	@Override
-	@SuppressWarnings( "hiding" )
 	public void max( final long[] max )
 	{
 		for ( int d = 0; d < n; ++d )
@@ -310,7 +316,6 @@ public class IntervalIterator implements Iterator, Localizable, Interval
 
 
 	@Override
-	@SuppressWarnings( "hiding" )
 	public void min( final long[] min )
 	{
 		for ( int d = 0; d < n; ++d )
@@ -319,15 +324,14 @@ public class IntervalIterator implements Iterator, Localizable, Interval
 
 
 	@Override
-	public double realMax( int d )
+	public double realMax( final int d )
 	{
 		return max[ d ];
 	}
 
 
 	@Override
-	@SuppressWarnings( "hiding" )
-	public void realMax( double[] max )
+	public void realMax( final double[] max )
 	{
 		for ( int d = 0; d < n; ++d )
 			max[ d ] = this.max[ d ];
@@ -335,15 +339,14 @@ public class IntervalIterator implements Iterator, Localizable, Interval
 
 
 	@Override
-	public double realMin( int d )
+	public double realMin( final int d )
 	{
 		return min[ d ];
 	}
 
 
 	@Override
-	@SuppressWarnings( "hiding" )
-	public void realMin( double[] min )
+	public void realMin( final double[] min )
 	{
 		for ( int d = 0; d < n; ++d )
 			min[ d ] = this.min[ d ];

@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.Random;
 
 import net.imglib2.Cursor;
 import net.imglib2.RandomAccess;
@@ -341,6 +342,26 @@ public class LabelingTest {
 				coords[j] /= labeling.getArea(labels[i]);
 				assertTrue(Math.abs(coords[j] - centers[i][j]) < .5);
 			}
+		}
+	}
+	@Test
+	public void TestCopy() {
+		long [] dimensions = new long [] { 20,30 };
+		Labeling<Integer> labeling = makeLabeling(1, dimensions);
+		Random r = new Random(202030);
+		for (LabelingType<Integer> t:labeling) {
+			t.setLabel(r.nextInt(10)+1);
+		}
+		Img<LabelingType<Integer>> copy = labeling.copy();
+		Cursor<LabelingType<Integer>> c = copy.cursor();
+		RandomAccess<LabelingType<Integer>> ra = labeling.randomAccess();
+		while(c.hasNext()) {
+			LabelingType<Integer> t = c.next();
+			List<Integer> y = t.getLabeling();
+			ra.setPosition(c);
+			List<Integer> x = ra.get().getLabeling();
+			assertEquals(y.size(), 1);
+			assertEquals(x.get(0), y.get(0));
 		}
 	}
 }

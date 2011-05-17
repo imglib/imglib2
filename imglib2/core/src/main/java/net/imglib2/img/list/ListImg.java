@@ -30,6 +30,7 @@ package net.imglib2.img.list;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import net.imglib2.Cursor;
 import net.imglib2.Interval;
 import net.imglib2.IterableRealInterval;
 import net.imglib2.img.AbstractImg;
@@ -148,5 +149,30 @@ public class ListImg< T extends Type< T > > extends AbstractImg< T >
 		}
 
 		return false;
+	}
+
+	@Override
+	public ListImg<T> copy()
+	{
+		final ListImg<T> copy = factory().create( dimension, firstElement().createVariable() );
+		
+		final Cursor<T> cursor1 = this.cursor();
+		final Cursor<T> cursor2 = copy.cursor();
+		
+		while ( cursor1.hasNext() )
+		{
+			cursor1.fwd();
+			cursor2.fwd();
+			
+			cursor2.get().set( cursor1.get() );
+		}
+		
+		return copy;
+	}
+
+	// Must override or the superclass' numPixels would be returned
+	@Override
+	public long size() {
+		return this.numPixels;
 	}
 }

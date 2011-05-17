@@ -25,22 +25,20 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-package net.imglib2.algorithm.math;
+package net.imglib2;
 
-import net.imglib2.Localizable;
-import net.imglib2.util.Util;
 
 /**
- * Provides an instance of {@link Localizable} that can store positions
+ * Provides an instance of {@link RealLocalizable} that can store positions
  * 
  * @author Stephan Preibisch
  */
-public class LocalizablePoint implements Localizable 
+public class RealLocation implements RealLocalizable 
 {
-	final long[] position;
+	final double[] position;
 	final int numDimensions;
 
-	public LocalizablePoint ( final Localizable position )
+	public RealLocation ( final Localizable position )
 	{
 		this( position.numDimensions() );
 
@@ -48,7 +46,7 @@ public class LocalizablePoint implements Localizable
 			this.position[ d ] = position.getLongPosition( d );
 	}
 
-	public LocalizablePoint ( final long[] position )
+	public RealLocation ( final long[] position )
 	{
 		this( position.length );
 
@@ -56,7 +54,7 @@ public class LocalizablePoint implements Localizable
 			this.position[ d ] = position[ d ];
 	}
 
-	public LocalizablePoint ( final int[] position )
+	public RealLocation ( final int[] position )
 	{
 		this( position.length );
 
@@ -64,25 +62,33 @@ public class LocalizablePoint implements Localizable
 			this.position[ d ] = position[ d ];
 	}
 
-	public LocalizablePoint ( final float[] position )
+	public RealLocation ( final float[] position )
 	{
 		this( position.length );
 		
 		for ( int d = 0; d < numDimensions; ++d )
-			this.position[ d ] = Util.round( position[ d ] );
+			this.position[ d ] = position[ d ];
 	}
 
-	public LocalizablePoint ( final int numDimensions )
+	public RealLocation ( final double[] position )
+	{
+		this( position.length );
+		
+		for ( int d = 0; d < numDimensions; ++d )
+			this.position[ d ] = position[ d ];
+	}
+
+	public RealLocation ( final int numDimensions )
 	{
 		this.numDimensions = numDimensions;
-		this.position = new long[ numDimensions ];
+		this.position = new double[ numDimensions ];
 	}
 	
 	@Override
 	public void localize( final float[] position )
 	{
 		for ( int d = 0; d < numDimensions; ++d )
-			position[ d ] = this.position[ d ];
+			position[ d ] = (float)this.position[ d ];
 	}
 
 	@Override
@@ -93,7 +99,7 @@ public class LocalizablePoint implements Localizable
 	}
 
 	@Override
-	public float getFloatPosition( final int d ) { return position[ d ]; }
+	public float getFloatPosition( final int d ) { return (float)position[ d ]; }
 
 	@Override
 	public double getDoublePosition( final int d ) { return position[ d ]; }
@@ -102,22 +108,15 @@ public class LocalizablePoint implements Localizable
 	public int numDimensions() { return numDimensions;	}
 
 	@Override
-	public void localize( final int[] position )
-	{
-		for ( int d = 0; d < numDimensions; ++d )
-			position[ d ] = (int)this.position[ d ];
+	public String toString() {
+		final StringBuilder sb = new StringBuilder();
+		char c = '(';
+		for (int i=0; i<numDimensions(); i++) {
+			sb.append(c);
+			sb.append(position[i]);
+			c = ',';
+		}
+		sb.append(")");
+		return sb.toString();
 	}
-
-	@Override
-	public void localize( final long[] position )
-	{
-		for ( int d = 0; d < numDimensions; ++d )
-			position[ d ] = this.position[ d ];
-	}
-
-	@Override
-	public int getIntPosition( final int d ) { return (int)position[ d ]; }
-
-	@Override
-	public long getLongPosition( final int d )  { return position[ d ]; }
 }

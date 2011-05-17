@@ -20,31 +20,36 @@
  */
 package net.imglib2.algorithm.fft;
 
+import net.imglib2.Cursor;
+import net.imglib2.RandomAccess;
+import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.algorithm.Benchmark;
 import net.imglib2.algorithm.MultiThreaded;
 import net.imglib2.algorithm.OutputAlgorithm;
 import net.imglib2.algorithm.fft.FourierTransform.PreProcessing;
 import net.imglib2.algorithm.fft.FourierTransform.Rearrangement;
-import net.imglib2.algorithm.gauss.GaussianConvolution;
-import net.imglib2.container.ContainerFactory;
-import net.imglib2.cursor.Cursor;
-import net.imglib2.cursor.LocalizableByDimCursor;
-import net.imglib2.cursor.LocalizableCursor;
-import net.imglib2.image.Image;
-import net.imglib2.image.ImageFactory;
-import net.imglib2.outofbounds.OutOfBoundsStrategyValueFactory;
+import net.imglib2.exception.IncompatibleTypeException;
+import net.imglib2.img.Img;
+import net.imglib2.img.ImgFactory;
+import net.imglib2.iterator.LocalizingZeroMinIntervalIterator;
+import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.complex.ComplexFloatType;
 import net.imglib2.type.numeric.real.FloatType;
 import net.imglib2.util.Util;
 
-public class FourierConvolution<T extends RealType<T>, S extends RealType<S>> implements MultiThreaded, OutputAlgorithm<T>, Benchmark
+public class FourierConvolution<T extends RealType<T>, S extends RealType<S>> implements MultiThreaded, OutputAlgorithm<Img<T>>, Benchmark
 {
 	final int numDimensions;
-	Image<T> image, convolved;
-	Image<S> kernel;
-	Image<ComplexFloatType> kernelFFT, imgFFT; 
+	Img<T> convolved;
+	RandomAccessibleInterval<T> image;
+	RandomAccessibleInterval<S> kernel;
+	
+	Img<ComplexFloatType> kernelFFT, imgFFT; 
 	FourierTransform<T, ComplexFloatType> fftImage;
+	final ImgFactory<ComplexFloatType> fftImgFactory;
+	final ImgFactory<T> imgFactory;
+	final ImgFactory<S> kernelImgFactory;
 	
 	final int[] kernelDim;
 
@@ -52,53 +57,89 @@ public class FourierConvolution<T extends RealType<T>, S extends RealType<S>> im
 	int numThreads;
 	long processingTime;
 
-	public FourierConvolution( final Image<T> image, final Image<S> kernel )
+	/**
+	 * Computes a convolution in Fourier space.
+	 * 
+	 * @param image - the input to be convolved
+	 * @param kernel - the kernel for the convolution operation
+	 * @param fftImgFactory - the {@link ImgFactory} that is used to create the FFT's
+	 * @param imgFactory - the {@link ImgFactory} that is used to compute the convolved image
+	 * @param kernelImgFactory - the {@link ImgFactory} that is used to extend the kernel to the right size
+	 */
+	public FourierConvolution( final RandomAccessibleInterval<T> image, final RandomAccessibleInterval<S> kernel,
+							   final ImgFactory<T> imgFactory, final ImgFactory<S> kernelImgFactory,
+							   final ImgFactory<ComplexFloatType> fftImgFactory )
 	{
-		this.numDimensions = image.getNumDimensions();
+		this.numDimensions = image.numDimensions();
 				
 		this.image = image;
 		this.kernel = kernel;
-		this.kernelDim = kernel.getDimensions();
+		this.fftImgFactory = fftImgFactory;
+		this.imgFactory = imgFactory;
+		this.kernelImgFactory = kernelImgFactory;
+		
+		this.kernelDim = new int[ numDimensions ];
+		for ( int d = 0; d < numDimensions; ++d )
+			kernelDim[ d ] = (int)kernel.dimension( d );
+
 		this.kernelFFT = null;
 		this.imgFFT = null;
 		
 		setNumThreads();
 	}
 	
-	public boolean replaceImage( final Image<T> img )
+	/**
+	 * Computes a convolution in Fourier space.
+	 * 
+	 * @param image - the input {@link Img} to be convolved
+	 * @param kernel - the kernel {@link Img} for the convolution operation
+	 * @param fftImgFactory - the {@link ImgFactory} that is used to create the FFT's
+	 */
+	public FourierConvolution( final Img<T> image, final Img<S> kernel, final ImgFactory<ComplexFloatType> fftImgFactory )
 	{
-		if ( !img.getContainer().compareStorageContainerCompatibility( this.image.getContainer() ))
-		{
-			errorMessage = "Image containers are not comparable, cannot exchange image";
-			return false;
-		}
-		else
-		{
-			this.image = img;
-			// the fft has to be recomputed
-			this.imgFFT = null;
-			return true;
-		}
+		this( image, kernel, image.factory(), kernel.factory(), fftImgFactory );
+	}
+	
+	/**
+	 * Computes a convolution in Fourier space.
+	 * 
+	 * @param image - the input {@link Img} to be convolved
+	 * @param kernel - the kernel {@link Img} for the convolution operation
+	 * @throws IncompatibleTypeException if the factory of the input {@link Img}<T> is not compatible with the {@link ComplexFloatType} (it needs to be a {@link NativeType})
+	 */
+	public FourierConvolution( final Img<T> image, final Img<S> kernel ) throws IncompatibleTypeException
+	{
+		this( image, kernel, image.factory(), kernel.factory(), image.factory().imgFactory( new ComplexFloatType() ) );
+	}
+	
+	/**
+	 * @return - the {@link ImgFactory} that is used to create the FFT's
+	 */
+	public ImgFactory<ComplexFloatType> fftImgFactory() { return fftImgFactory; }
+
+	/**
+	 * @return - the {@link ImgFactory} that is used to compute the convolved image
+	 */
+	public ImgFactory<T> imgFactory() { return imgFactory; }
+
+	public boolean replaceInput( final RandomAccessibleInterval<T> img )
+	{
+		this.image = img;
+		// the fft has to be recomputed
+		this.imgFFT = null;
+		return true;
 	}
 
-	public boolean replaceKernel( final Image<S> knl )
+	public boolean replaceKernel( final RandomAccessibleInterval<S> knl )
 	{
-		if ( !knl.getContainer().compareStorageContainerCompatibility( this.kernel.getContainer() ))
-		{
-			errorMessage = "Kernel containers are not comparable, cannot exchange image";
-			return false;
-		}
-		else
-		{
-			this.kernel = knl;
-			// the fft has to be recomputed
-			this.kernelFFT = null;
-			return true;
-		}
+		this.kernel = knl;
+		// the fft has to be recomputed
+		this.kernelFFT = null;
+		return true;
 	}
 
 	
-	final public static Image<FloatType> createGaussianKernel( final ContainerFactory factory, final double sigma, final int numDimensions )
+	final public static Img<FloatType> createGaussianKernel( final ImgFactory<FloatType> factory, final double sigma, final int numDimensions )
 	{
 		final double[ ] sigmas = new double[ numDimensions ];
 		
@@ -108,7 +149,7 @@ public class FourierConvolution<T extends RealType<T>, S extends RealType<S>> im
 		return createGaussianKernel( factory, sigmas );
 	}
 
-	final public static Image<FloatType> createGaussianKernel( final ContainerFactory factory, final double[] sigmas )
+	final public static Img<FloatType> createGaussianKernel( final ImgFactory<FloatType> factory, final double[] sigmas )
 	{
 		final int numDimensions = sigmas.length;
 		
@@ -121,69 +162,25 @@ public class FourierConvolution<T extends RealType<T>, S extends RealType<S>> im
 			imageSize[ d ] = kernel[ d ].length;
 		}
 		
-		final Image<FloatType> kernelImg = new ImageFactory<FloatType>( new FloatType(), factory ).createImage( imageSize );
+		final Img<FloatType> kernelImg = factory.create( imageSize, new FloatType() );
 		
-		final LocalizableCursor<FloatType> cursor = kernelImg.createLocalizableByDimCursor();
+		final Cursor<FloatType> cursor = kernelImg.localizingCursor();
 		final int[] position = new int[ numDimensions ];
 		
 		while ( cursor.hasNext() )
 		{
 			cursor.fwd();
-			cursor.getPosition( position );
+			cursor.localize( position );
 			
 			double value = 1;
 			
 			for ( int d = 0; d < numDimensions; ++d )
 				value *= kernel[ d ][ position[ d ] ];
 			
-			cursor.getType().set( (float)value );
+			cursor.get().set( (float)value );
 		}
-		
-		cursor.close();
 		
 		return kernelImg;
-	}
-	
-	final public static <T extends RealType<T>> Image<T> getGaussianKernel( final ImageFactory<T> imgFactory, final double sigma, final int numDimensions )
-	{
-		final double[ ] sigmas = new double[ numDimensions ];
-		
-		for ( int d = 0; d < numDimensions; ++d )
-			sigmas[ d ] = sigma;
-		
-		return getGaussianKernel( imgFactory, sigmas );
-	}
-	
-	final public static <T extends RealType<T>> Image<T> getGaussianKernel( final ImageFactory<T> imgFactory, final double[] sigma )
-	{
-		final int numDimensions = sigma.length;
-		final int imgSize[] = new int[ numDimensions ];
-		
-		for ( int d = 0; d < numDimensions; ++d )
-			imgSize[ d ] = Util.getSuggestedKernelDiameter( sigma[ d ] );
-		
-		final Image<T> kernel = imgFactory.createImage( imgSize );			
-		final int[] center = new int[ numDimensions ];
-		
-		for ( int d = 0; d < numDimensions; ++d )
-			center[ d ] = kernel.getDimension( d ) / 2;
-				
-		final LocalizableByDimCursor<T> c = kernel.createLocalizableByDimCursor();
-		c.setPosition( center );
-		c.getType().setOne();
-		c.close();
-		
-		final GaussianConvolution<T> gauss = new GaussianConvolution<T>( kernel, new OutOfBoundsStrategyValueFactory<T>(), sigma );
-		
-		if ( !gauss.checkInput() || !gauss.process() )
-		{
-			System.out.println( "Gaussian Convolution failed: " + gauss.getErrorMessage() );
-			return null;
-		}
-		
-		kernel.close();
-		
-		return gauss.getResult();		
 	}
 	
 	@Override
@@ -196,7 +193,7 @@ public class FourierConvolution<T extends RealType<T>, S extends RealType<S>> im
 		//
 		if ( imgFFT == null ) //not computed in a previous step
 		{
-			fftImage = new FourierTransform<T, ComplexFloatType>( image, new ComplexFloatType() );
+			fftImage = new FourierTransform< T, ComplexFloatType >( image, fftImgFactory, new ComplexFloatType() );
 			fftImage.setNumThreads( this.getNumThreads() );
 			
 			// how to extend the input image out of its boundaries for computing the FFT,
@@ -230,29 +227,38 @@ public class FourierConvolution<T extends RealType<T>, S extends RealType<S>> im
 		{
 			// get the size of the kernel image that will be fourier transformed,
 			// it has the same size as the image
-			final int kernelTemplateDim[] = imgFFT.getDimensions();
-			kernelTemplateDim[ 0 ] = ( imgFFT.getDimension( 0 ) - 1 ) * 2;
+			final int kernelTemplateDim[] = new int[ numDimensions ];
+			for ( int d = 0; d < numDimensions; ++d )
+				kernelTemplateDim[ d ] = (int)imgFFT.dimension( d );
+
+			kernelTemplateDim[ 0 ] = ( (int)imgFFT.dimension( 0 ) - 1 ) * 2;
 			
 			// instaniate real valued kernel template
 			// which is of the same container type as the image
 			// so that the computation is easy
-			final ImageFactory<S> kernelTemplateFactory = new ImageFactory<S>( kernel.createType(), image.getContainer().getFactory() );
-			final Image<S> kernelTemplate = kernelTemplateFactory.createImage( kernelTemplateDim );
+			final Img<S> kernelTemplate = kernelImgFactory.create( kernelTemplateDim, Util.getTypeFromInterval( kernel ).createVariable() );
 			
 			// copy the kernel into the kernelTemplate,
 			// the key here is that the center pixel of the kernel (e.g. 13,13,13)
 			// is located at (0,0,0)
-			final LocalizableCursor<S> kernelCursor = kernel.createLocalizableCursor();
-			final LocalizableByDimCursor<S> kernelTemplateCursor = kernelTemplate.createLocalizableByDimCursor();
+			final RandomAccess<S> kernelCursor = kernel.randomAccess();
+			final RandomAccess<S> kernelTemplateCursor = kernelTemplate.randomAccess();
+			
+			final LocalizingZeroMinIntervalIterator cursorDim = new LocalizingZeroMinIntervalIterator( kernel );
 			
 			final int[] position = new int[ numDimensions ];
-			while ( kernelCursor.hasNext() )
+			final int[] position2 = new int[ numDimensions ];
+			
+			while ( cursorDim.hasNext() )
 			{
-				kernelCursor.next();
-				kernelCursor.getPosition( position );
+				cursorDim.fwd();
+				cursorDim.localize( position );
 				
 				for ( int d = 0; d < numDimensions; ++d )
 				{
+					// the kernel might not be zero-bounded
+					position2[ d ] = position[ d ] + (int)kernel.min( d );
+					
 					position[ d ] = ( position[ d ] - kernelDim[ d ]/2 + kernelTemplateDim[ d ] ) % kernelTemplateDim[ d ];
 					/*final int tmp = ( position[ d ] - kernelDim[ d ]/2 );
 					
@@ -262,14 +268,15 @@ public class FourierConvolution<T extends RealType<T>, S extends RealType<S>> im
 						position[ d ] = tmp;*/
 				}			
 				
+				kernelCursor.setPosition( position2 );				
 				kernelTemplateCursor.setPosition( position );
-				kernelTemplateCursor.getType().set( kernelCursor.getType() );
+				kernelTemplateCursor.get().set( kernelCursor.get() );
 			}
 			
 			// 
 			// compute FFT of kernel
 			//
-			final FourierTransform<S, ComplexFloatType> fftKernel = new FourierTransform<S, ComplexFloatType>( kernelTemplate, new ComplexFloatType() );
+			final FourierTransform<S, ComplexFloatType> fftKernel = new FourierTransform<S, ComplexFloatType>( kernelTemplate, fftImgFactory, new ComplexFloatType() );
 			fftKernel.setNumThreads( this.getNumThreads() );
 			
 			fftKernel.setPreProcessing( PreProcessing.NONE );		
@@ -280,7 +287,6 @@ public class FourierConvolution<T extends RealType<T>, S extends RealType<S>> im
 				errorMessage = "FFT of kernel failed: " + fftKernel.getErrorMessage();
 				return false;			
 			}		
-			kernelTemplate.close();		
 			kernelFFT = fftKernel.getResult();
 		}
 		
@@ -292,8 +298,7 @@ public class FourierConvolution<T extends RealType<T>, S extends RealType<S>> im
 		//
 		// Compute inverse Fourier Transform
 		//		
-		final InverseFourierTransform<T, ComplexFloatType> invFFT = new InverseFourierTransform<T, ComplexFloatType>( imgFFT, fftImage );
-		invFFT.setInPlaceTransform( true );
+		final InverseFourierTransform<T, ComplexFloatType> invFFT = new InverseFourierTransform<T, ComplexFloatType>( imgFFT, imgFactory, fftImage );
 		invFFT.setNumThreads( this.getNumThreads() );
 
 		if ( !invFFT.checkInput() || !invFFT.process() )
@@ -301,8 +306,6 @@ public class FourierConvolution<T extends RealType<T>, S extends RealType<S>> im
 			errorMessage = "InverseFFT of image failed: " + invFFT.getErrorMessage();
 			return false;			
 		}
-		
-		imgFFT.close();
 		
 		convolved = invFFT.getResult();	
 		
@@ -316,21 +319,18 @@ public class FourierConvolution<T extends RealType<T>, S extends RealType<S>> im
 	 * @param a
 	 * @param b
 	 */
-	protected void multiply( final Image< ComplexFloatType > a, final Image< ComplexFloatType > b )
+	protected void multiply( final Img< ComplexFloatType > a, final Img< ComplexFloatType > b )
 	{
-		final Cursor<ComplexFloatType> cursorA = a.createCursor();
-		final Cursor<ComplexFloatType> cursorB = b.createCursor();
+		final Cursor<ComplexFloatType> cursorA = a.cursor();
+		final Cursor<ComplexFloatType> cursorB = b.cursor();
 		
 		while ( cursorA.hasNext() )
 		{
 			cursorA.fwd();
 			cursorB.fwd();
 			
-			cursorA.getType().mul( cursorB.getType() );
+			cursorA.get().mul( cursorB.get() );
 		}
-		
-		cursorA.close();
-		cursorB.close();
 	}
 	
 	@Override
@@ -346,7 +346,7 @@ public class FourierConvolution<T extends RealType<T>, S extends RealType<S>> im
 	public int getNumThreads() { return numThreads; }	
 
 	@Override
-	public Image<T> getResult() { return convolved; }
+	public Img<T> getResult() { return convolved; }
 
 	@Override
 	public boolean checkInput() 
@@ -369,23 +369,13 @@ public class FourierConvolution<T extends RealType<T>, S extends RealType<S>> im
 		}
 		
 		for ( int d = 0; d < numDimensions; ++d )
-			if ( kernel.getDimension( d ) % 2 != 1)
+			if ( kernel.dimension( d ) % 2 != 1)
 			{
-				errorMessage = "Kernel image has NO odd dimensionality in dim " + d + " (" + kernel.getDimension( d ) + ")";
+				errorMessage = "Kernel image has NO odd dimensionality in dim " + d + " (" + kernel.dimension( d ) + ")";
 				return false;
 			}
 		
 		return true;
-	}
-	
-	public void close()
-	{
-		kernelFFT.close(); 
-		
-		image = null;
-		convolved = null;
-		kernel = null;
-		kernelFFT = null;
 	}
 
 	@Override

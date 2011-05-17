@@ -10,7 +10,7 @@ import net.imglib2.img.Img;
 import net.imglib2.type.numeric.RealType;
 
 /** Given up to 4 channels--each represented by an {@link IFunction},
- *  this class composes them into an {@link RGBALegacyType} {@link Image}.
+ *  this class composes them into an {@link ARGBType} {@link Image}.
  *  
  *  Channel order: A=4, R=3, G=2, B=1.
  *  

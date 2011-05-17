@@ -2,7 +2,7 @@ package net.imglib2.ops.observer;
 
 public interface IterationStatus
 {
-	enum Message {INITIALIZE, UPDATE, DONE};
+	enum Message {INITIALIZE, UPDATE, DONE}
 	
 	Message getMessage();
 	long[] getPosition();

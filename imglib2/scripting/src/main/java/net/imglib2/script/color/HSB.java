@@ -11,7 +11,7 @@ import net.imglib2.img.Img;
 import net.imglib2.type.numeric.RealType;
 
 /** Given up to 3 channels--each represented by an {@link IFunction},
- *  this class composes them into an {@link RGBALegacyType} {@link Image}
+ *  this class composes them into an {@link ARGBType} {@link Image}
  *  in HSB color space.
  *  
  *  Channel order: 3=H, 2=S, 1=B.

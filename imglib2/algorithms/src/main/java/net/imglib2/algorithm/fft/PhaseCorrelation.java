@@ -28,11 +28,7 @@ import net.imglib2.algorithm.Algorithm;
 import net.imglib2.algorithm.Benchmark;
 import net.imglib2.algorithm.MultiThreaded;
 import net.imglib2.algorithm.fft.FourierTransform.Rearrangement;
-import net.imglib2.cursor.Cursor;
-import net.imglib2.cursor.LocalizableByDimCursor;
-import net.imglib2.cursor.special.LocalNeighborhoodCursor;
-import net.imglib2.cursor.special.RegionOfInterestCursor;
-import net.imglib2.image.Image;
+import net.imglib2.img.Img;
 import net.imglib2.multithreading.SimpleMultiThreading;
 import net.imglib2.outofbounds.OutOfBoundsPeriodicFactory;
 import net.imglib2.type.numeric.RealType;
@@ -44,8 +40,8 @@ public class PhaseCorrelation<T extends RealType<T>, S extends RealType<S>> impl
 {
 	final int numDimensions;
 	boolean computeFFTinParalell = true;
-	Image<T> image1;
-	Image<S> image2;
+	Img<T> image1;
+	Img<S> image2;
 	int numPeaks;
 	int[] minOverlapPx;
 	float normalizationThreshold;
@@ -56,14 +52,14 @@ public class PhaseCorrelation<T extends RealType<T>, S extends RealType<S>> impl
 	int numThreads;
 	long processingTime;
 
-	public PhaseCorrelation( final Image<T> image1, final Image<S> image2, final int numPeaks, final boolean verifyWithCrossCorrelation )
+	public PhaseCorrelation( final Img<T> image1, final Img<S> image2, final int numPeaks, final boolean verifyWithCrossCorrelation )
 	{
 		this.image1 = image1;
 		this.image2 = image2;
 		this.numPeaks = numPeaks;
 		this.verifyWithCrossCorrelation = verifyWithCrossCorrelation;
 
-		this.numDimensions = image1.getNumDimensions();
+		this.numDimensions = image1.numDimensions();
 		this.normalizationThreshold = 1E-5f;
 		
 		this.minOverlapPx = new int[ numDimensions ];		
@@ -73,7 +69,7 @@ public class PhaseCorrelation<T extends RealType<T>, S extends RealType<S>> impl
 		processingTime = -1;
 	}
 	
-	public PhaseCorrelation( final Image<T> image1, final Image<S> image2 )
+	public PhaseCorrelation( final Img<T> image1, final Img<S> image2 )
 	{
 		this( image1, image2, 5, true );
 	}

@@ -66,7 +66,12 @@ public class LocalizingZeroMinIntervalIterator extends LocalizingIntervalIterato
 	{
 		super( dimensions );
 	}
-	
+
+	public LocalizingZeroMinIntervalIterator( final int[] dimensions )
+	{
+		super( dimensions );
+	}
+
 	public LocalizingZeroMinIntervalIterator( final Interval interval )
 	{
 		super( interval );

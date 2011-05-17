@@ -187,4 +187,23 @@ final public class CellImg< T extends NativeType< T >, A extends ArrayDataAccess
 		
 		return false;
 	}
+	
+	@Override
+	public CellImg<T,?> copy()
+	{
+		final CellImg<T,?> copy = factory().create( dimension, firstElement().createVariable() );
+		
+		final Cursor<T> cursor1 = this.cursor();
+		final Cursor<T> cursor2 = copy.cursor();
+		
+		while ( cursor1.hasNext() )
+		{
+			cursor1.fwd();
+			cursor2.fwd();
+			
+			cursor2.get().set( cursor1.get() );
+		}
+		
+		return copy;
+	}	
 }

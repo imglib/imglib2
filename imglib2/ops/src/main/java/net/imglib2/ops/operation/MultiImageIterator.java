@@ -15,8 +15,7 @@ public class MultiImageIterator<T extends RealType<T>>  // don't want to impleme
 	private Img<T>[] images;
 	private long[][] origins;
 	private long[][] spans;
-	private RandomAccess<T>[] accessors;
-	private RegionCursor<T>[] regionCursors;
+	private RegionIterator<T>[] regionIterators;
 	
 	// -----------------  public interface ------------------------------------------
 
@@ -34,46 +33,39 @@ public class MultiImageIterator<T extends RealType<T>>  // don't want to impleme
 		}
 	}
 
-	public RegionCursor<T>[] getCursors()
+	public RegionIterator<T>[] getIterators()
 	{
-		return regionCursors;
+		return regionIterators;
 	}
 
 	/** call after subregions defined and before reset() or next() call. tests that all subregions defined are compatible. */
 	void initialize()  // could call lazily in hasNext() or fwd() but a drag on performance
 	{
-		// make sure all specified regions are shape compatible : for now just test num elements in spans are same
-		long totalSamples = numInSpan(spans[0]);
-		for (int i = 1; i < spans.length; i++)
-			if (numInSpan(spans[i]) != totalSamples)
-				throw new IllegalArgumentException("incompatible span shapes");
+		testSpansCompatible();
 
-		accessors = new RandomAccess[images.length];
+		regionIterators = new RegionIterator[images.length];
 		for (int i = 0; i < images.length; i++) {
-			accessors[i] = images[i].randomAccess();
+			RandomAccess<T> accessor = images[i].randomAccess();
+			regionIterators[i] = new RegionIterator<T>(accessor, origins[i], spans[i]);
 		}
-		
-		regionCursors = new RegionCursor[images.length];
-		for (int i = 0; i < images.length; i++)
-			regionCursors[i] = new RegionCursor<T>(accessors[i], origins[i], spans[i]);
 
 		resetAll();
 	}
 	
-	public boolean isValid() {
-		boolean firstValid = regionCursors[0].isValid();
+	public boolean hasNext() {
+		boolean firstHasNext = regionIterators[0].hasNext();
 
-		for (int i = 1; i < regionCursors.length; i++)
-			if (firstValid != regionCursors[i].isValid())
+		for (int i = 1; i < regionIterators.length; i++)
+			if (firstHasNext != regionIterators[i].hasNext())
 				throw new IllegalArgumentException("linked cursors are out of sync");
 		
-		return firstValid;
+		return firstHasNext;
 	}
 	
 	public void next()
 	{
-		for (RegionCursor<T> cursor : regionCursors)
-			cursor.next();
+		for (RegionIterator<T> iterator : regionIterators)
+			iterator.next();
 	}
 	
 	public void reset()
@@ -89,17 +81,35 @@ public class MultiImageIterator<T extends RealType<T>>  // don't want to impleme
 	
 	// -----------------  private interface ------------------------------------------
 	
-	private long numInSpan(long[] span)  // TODO - call Imglib equivalent instead
-	{
-		long total = 1;
-		for (long axisLen : span)
-			total *= axisLen;
-		return total;
+	private void resetAll() {
+		for (RegionIterator<T> iterator : regionIterators)
+			iterator.reset();
 	}
 	
-	private void resetAll() {
-		for (RegionCursor<T> cursor : regionCursors)
-			cursor.reset();
+	private void testSpansCompatible() {
+		int span0Len = spans[0].length;
+		for (int i = 1; i < spans.length; i++) {
+			int spanILen = spans[i].length;
+			int minDims = Math.min(span0Len, spanILen);
+
+			// test that spans are same in the shared dimensions 
+			for (int d = 0; d < minDims; d++) {
+				if (spans[0][d] != spans[i][d])
+					throw new IllegalArgumentException("incompatible span shapes (case 1)");
+			}
+
+			// test that remaining dims == 1 : case span0 is longer
+			for (int d = minDims; d < span0Len; d++) {
+				if (spans[0][d] != 1)
+					throw new IllegalArgumentException("incompatible span shapes (case 2)");
+			}
+			
+			// test that remaining dims == 1 : case spanI is longer
+			for (int d = minDims; d < spanILen; d++) {
+				if (spans[i][d] != 1)
+					throw new IllegalArgumentException("incompatible span shapes (case 2)");
+			}
+		}
 	}
 }
 

@@ -103,6 +103,7 @@ public class CompositeXYProjector<A, B extends NumericType<B>> extends
 	public void map() {
 		final boolean single = isSingle();
 		final Cursor<B> targetCursor = target.cursor();
+		final B bi = targetCursor.get().createVariable();
 		final RandomAccess<A> sourceRandomAccess = source.randomAccess();
 		sourceRandomAccess.setPosition(position);
 		while (targetCursor.hasNext()) {
@@ -113,7 +114,7 @@ public class CompositeXYProjector<A, B extends NumericType<B>> extends
 			for (int i = 0; i < positionCount; i++) {
 				if (skip(i, single)) continue; // position is excluded from composite
 				if (dimIndex >= 0) sourceRandomAccess.setPosition(i, dimIndex);
-				final B bi = b.createVariable();
+				//final B bi = b.createVariable();
 				converters.get(i).convert(sourceRandomAccess.get(), bi);
 				b.add(bi); // accumulate converted result
 			}
