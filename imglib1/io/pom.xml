@@ -28,22 +28,21 @@
       <version>${bio-formats.version}</version>
     </dependency>
     <dependency>
+	    <!-- used only by deprecated LOCI.java -->
+      <groupId>${imagej.groupId}</groupId>
+      <artifactId>ij</artifactId>
+      <version>${imagej1.version}</version>
+    </dependency>
+    <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>imglib</artifactId>
       <version>${project.version}</version>
     </dependency>
-    <!-- used only by deprecated LOCI.java -->
     <dependency>
+	    <!-- used only by deprecated LOCI.java -->
       <groupId>${project.groupId}</groupId>
       <artifactId>imglib-ij</artifactId>
       <version>${project.version}</version>
-    </dependency>
-
-    <dependency>
-      <groupId>${imagej.groupId}</groupId>
-      <artifactId>ij</artifactId>
-      <version>${imagej1.version}</version>
-      <scope>test</scope>
     </dependency>
   </dependencies>
 
