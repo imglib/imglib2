@@ -27,7 +27,7 @@ public class OpenAndDisplaySliceView
 		{
 			ImgFactory< FloatType > imgFactory = new ArrayImgFactory< FloatType >();
 			final ImgOpener io = new ImgOpener();
-			img = io.openImg( "/home/tobias/Desktop/73.tif", imgFactory, new FloatType() );
+			img = io.openImg( "/home/tobias/workspace/data/73_float.tif", imgFactory, new FloatType() );
 		}
 		catch ( Exception e )
 		{
@@ -35,7 +35,8 @@ public class OpenAndDisplaySliceView
 			return;
 		}
 
-		RandomAccessibleInterval< FloatType > view = Views.hyperSlice( Views.hyperSlice( img, 2, 0 ), 0, 50 );
+		RandomAccessibleInterval< FloatType > view = Views.hyperSlice( img, 2, 10 );
+		System.out.println( img.numDimensions() + "  " + view.numDimensions() ); 
 
 		final ARGBScreenImage screenImage = new ARGBScreenImage( ( int )view.dimension( 0 ), ( int )view.dimension( 1 ) );
 		final XYProjector< FloatType, ARGBType > projector = new XYProjector< FloatType, ARGBType >( view, screenImage, new RealARGBConverter< FloatType >( 0, 255 ) );

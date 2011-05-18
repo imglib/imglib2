@@ -3,6 +3,7 @@ package tests;
 import ij.ImageJ;
 import ij.ImagePlus;
 import ij.process.ColorProcessor;
+import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.display.ARGBScreenImage;
 import net.imglib2.display.RealARGBConverter;
 import net.imglib2.display.XYProjector;
@@ -21,7 +22,7 @@ public class OpenAndDisplayScreenImage
 		new ImageJ();
 		
 		final ImgOpener io = new ImgOpener();
-		Img< FloatType > img = io.openImg( "/home/saalfeld/Desktop/73.tif", new ArrayImgFactory<FloatType>(), new FloatType());
+		RandomAccessibleInterval< FloatType > img = io.openImg( "/home/tobias/workspace/data/73_float.tif", new ArrayImgFactory<FloatType>(), new FloatType());
 		
 		final ARGBScreenImage screenImage = new ARGBScreenImage( ( int )img.dimension( 0 ), ( int )img.dimension( 1 ) );
 		final XYProjector< FloatType, ARGBType > projector = new XYProjector< FloatType, ARGBType >( img, screenImage, new RealARGBConverter< FloatType >( 0, 127 ) );
