@@ -76,8 +76,15 @@ public class ImgPlus<T> implements Img<T>, Metadata {
 	}
 
 	public ImgPlus(final Img<T> img, final Metadata metadata) {
-		this(img, metadata.getName(), getAxes(img, metadata), getCalibration(img,
-			metadata));
+		this(img, metadata.getName(), getAxes(img, metadata),
+			getCalibration(img, metadata));
+		validBits = metadata.getValidBits();
+		compositeChannelCount = metadata.getCompositeChannelCount();
+		final int count = metadata.getColorTableCount();
+		for (int i = 0; i < count; i++) {
+			lut8.add(metadata.getColorTable8(i));
+			lut16.add(metadata.getColorTable16(i));
+		}
 	}
 
 	public ImgPlus(final Img<T> img, final String name, final Axis[] axes,
@@ -305,6 +312,11 @@ public class ImgPlus<T> implements Img<T>, Metadata {
 		}
 	}
 
+	@Override
+	public int getColorTableCount() {
+		return lut8.size();
+	}
+
 	// -- Utility methods --
 
 	/** Ensures the given {@link Img} is an ImgPlus, wrapping if necessary. */
@@ -314,7 +326,8 @@ public class ImgPlus<T> implements Img<T>, Metadata {
 	}
 
 	/** Ensures the given {@link Img} is an ImgPlus, wrapping if necessary. */
-	public static <T> ImgPlus<T> wrap(final Img<T> img, final Metadata metadata) {
+	public static <T> ImgPlus<T> wrap(final Img<T> img, final Metadata metadata)
+	{
 		if (img instanceof ImgPlus) return (ImgPlus<T>) img;
 		return new ImgPlus<T>(img, metadata);
 	}
@@ -379,15 +392,10 @@ public class ImgPlus<T> implements Img<T>, Metadata {
 		}
 		return cal;
 	}
-	
-	@Override
-	public ImgPlus<T> copy()
-	{
-		final ImgPlus<T> copy = new ImgPlus< T >( img.copy(), name, axes, cal );
 
-		//TODO: Copy color tables...
-		
-		return copy;
-	}	
+	@Override
+	public ImgPlus<T> copy() {
+		return new ImgPlus<T>(img.copy(), this);
+	}
 
 }
