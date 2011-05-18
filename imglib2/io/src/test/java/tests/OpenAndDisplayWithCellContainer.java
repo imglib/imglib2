@@ -62,7 +62,7 @@ public class OpenAndDisplayWithCellContainer
 		{
 			ImgFactory< FloatType > imgFactory = new CellImgFactory<FloatType>( new int[] {64, 64} );
 			final ImgOpener io = new ImgOpener();
-			img = io.openImg( "/home/tobias/Desktop/73.tif", imgFactory, new FloatType() );
+			img = io.openImg( "/home/tobias/workspace/data/73_float.tif", imgFactory, new FloatType() );
 		}
 		catch ( Exception e )
 		{
@@ -70,19 +70,12 @@ public class OpenAndDisplayWithCellContainer
 			return;
 		}
 
-//		final Img< FloatType > copy = img.factory().create( img, new FloatType() );
-//		copyLocalizing (img, copy);
-
-//		final Img< FloatType > copy2 = img.factory().create( img, new FloatType() );
-//		copyIterating( img, copy2 );
-
 		Img< FloatType > finalImg = img;
 
 		final ARGBScreenImage screenImage = new ARGBScreenImage( ( int )finalImg.dimension( 0 ), ( int )finalImg.dimension( 1 ) );
 		final XYProjector< FloatType, ARGBType > projector = new XYProjector< FloatType, ARGBType >( finalImg, screenImage, new RealARGBConverter< FloatType >( 0, 255 ) );
 		
-		projector.setPosition( 0, 2 );
-		projector.setPosition( 20, 3 );
+		projector.setPosition( 20, 2 );
 		projector.map();
 
 		final ColorProcessor cp = new ColorProcessor( screenImage.image() );

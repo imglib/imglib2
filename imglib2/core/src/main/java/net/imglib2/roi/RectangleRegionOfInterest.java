@@ -1,6 +1,7 @@
 package net.imglib2.roi;
 
 import net.imglib2.RealLocalizable;
+import net.imglib2.RealPositionable;
 
 /**
  * @author leek
@@ -25,6 +26,30 @@ public class RectangleRegionOfInterest extends AbstractIterableRegionOfInterest 
 		this.extent = extent;
 	}
 	
+	/**
+	 * Write the position into a RealPositionable
+	 * @param ptOrigin write the origin position to this RealPositionable
+	 */
+	public void  getOrigin(RealPositionable ptOrigin) {
+		ptOrigin.setPosition(origin);
+	}
+	
+	/**
+	 * Write the origin position to this array
+	 * @param origin write position here
+	 */
+	public void getOrigin(final double [] origin) {
+		System.arraycopy(this.origin, 0, origin, 0, numDimensions());
+	}
+	
+	/**
+	 * Get one component of the origin position
+	 * @param d the dimension to retrieve
+	 * @return the position of the origin along the given dimension
+	 */
+	public double getOrigin(int d) {
+		return origin[d];
+	}
 	/**
 	 * Set the origin using a point. Updating the origin will move the rectangle
 	 * without changing its size.
@@ -78,8 +103,15 @@ public class RectangleRegionOfInterest extends AbstractIterableRegionOfInterest 
 	}
 	
 	/**
+	 * Write the extent into a RealPositionable
+	 * @param p - RealPositionable that will hold the extent
+	 */
+	public void getExtent(RealPositionable p) {
+		p.setPosition(extent);
+	}
+	/**
 	 * Copy the extents of the rectangle into the array provided
-	 * @param extent on output, the extent of the rectanble
+	 * @param extent on output, the extent of the rectangle
 	 */
 	public void getExtent(double [] extent) {
 		System.arraycopy(this.extent, 0, extent, 0, numDimensions());
