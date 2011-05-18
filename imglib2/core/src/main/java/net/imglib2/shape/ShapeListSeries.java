@@ -3,17 +3,30 @@ package net.imglib2.shape;
 import java.awt.Shape;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import net.imglib2.AbstractRandomAccess;
 import net.imglib2.Interval;
 import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessibleInterval;
 
+/**
+ * A ShapeListSeries is sequence of 2D planes
+ * without bounds and with double floating-point precision in its XY planes
+ * and only integer precision in all other dimensions.
+ * The data for each plane is nothing else than an ordered {@link List} of {@link Shape} instances,
+ * where the latest {@link #add(Shape, Object)}ed {@link Shape} is queried first,
+ * which means that for an image, the latest added Shape paints on top.
+ * Each {@link Shape} has an associated T instance, which is returned when requesting
+ * a value for a position that intersects that {@link Shape}.
+ * 
+ * @author Albert Cardona and Stephan Saalfeld
+ */
 public class ShapeListSeries<T> implements RandomAccessibleInterval<T>
 {
 
-	protected final ArrayList<ArrayList<Shape>> shapeLists = new ArrayList<ArrayList<Shape>>();
-	protected final ArrayList<ArrayList<T>> typeLists = new ArrayList<ArrayList<T>>();
+	protected final List<List<Shape>> shapeLists = new ArrayList<List<Shape>>();
+	protected final List<List<T>> typeLists = new ArrayList<List<T>>();
 
 	final protected long[] dim;
 	final protected T background;
@@ -22,13 +35,30 @@ public class ShapeListSeries<T> implements RandomAccessibleInterval<T>
 		assert dim.length > 2 : "Creating ShapeListSeries with less than 3 dimensions.";
 		this.dim = dim;
 		this.background = background;
+		int n = 1;
+		for (int i=2; i<dim.length; ++i) {
+			n *= dim[i];
+		}
+		for (int i=0; i<n; ++i) {
+			shapeLists.add(new ArrayList<Shape>());
+			typeLists.add(new ArrayList<T>());
+		}
+	}
+	
+	/** @param position The location. Leave x and y empty, which are defined by the {@link Shape} itself.
+	 *  @param s The {@link Shape} to add.
+	 *  @param t The value to add for {@param s}. */
+	public void add(final Shape s, final T t, final long[] position) {
+		final int p = getListIndex(position);
+		shapeLists.get(p).add(s);
+		typeLists.get(p).add(t);
 	}
 	
 	/** @return a shallow copy of the lists of {@link Shape} instances.
 	 *  That is, the {@link Shape} instances themselves are the originals. */
-	public synchronized ArrayList< ArrayList< Shape > > getShapeLists() {
-		final ArrayList< ArrayList< Shape > > sl = new ArrayList< ArrayList< Shape > >();
-		for (final ArrayList< Shape > a : shapeLists)
+	public synchronized List< List< Shape > > getShapeLists() {
+		final List< List< Shape > > sl = new ArrayList< List< Shape > >();
+		for (final List< Shape > a : shapeLists)
 		{
 			sl.add( new ArrayList< Shape >( a ) );
 		}
@@ -38,9 +68,9 @@ public class ShapeListSeries<T> implements RandomAccessibleInterval<T>
 
 	/** @return a shallow copy of the lists of {@link Type} instances.
 	 *  That is, the {@link Type} instances themselves are the originals. */
-	public synchronized ArrayList< ArrayList< T > > getTypeLists() {
-		final ArrayList< ArrayList< T > > tl = new ArrayList< ArrayList< T > >();
-		for (final ArrayList< T > a : typeLists)
+	public synchronized List< List< T > > getTypeLists() {
+		final ArrayList< List< T > > tl = new ArrayList< List< T > >();
+		for (final List< T > a : typeLists)
 		{
 			tl.add( new ArrayList< T >( a ) );
 		}
@@ -48,7 +78,8 @@ public class ShapeListSeries<T> implements RandomAccessibleInterval<T>
 		return tl;
 	}
 
-	/** */
+	/** Given a {@param position} array, return the index of the {@link List} of {@link Shape}
+	 * instances that corresponds to the X,Y plane of that position. */
 	public final int getListIndex(final long[] position) {
 		long p = 0;
 		long f = 1;
@@ -131,8 +162,8 @@ public class ShapeListSeries<T> implements RandomAccessibleInterval<T>
 	}
 
 	public T getShapeType( final double x, final double y, final int listIndex ) {
-		final ArrayList< Shape > shapeList = shapeLists.get( listIndex );
-		for ( int i = shapeList.size() - 1; i >= 0; --i )
+		final List< Shape > shapeList = shapeLists.get( listIndex );
+		for ( int i = shapeList.size() - 1; i > -1; --i )
 		{
 			if ( shapeList.get( i ).contains( x, y ) )
 				return typeLists.get( listIndex ).get( i );
@@ -156,6 +187,7 @@ public class ShapeListSeries<T> implements RandomAccessibleInterval<T>
 				p += f * position[ d ];
 				f *= dim[ d ];
 			}
+			listIndex = p;
 		}
 		
 		@Override

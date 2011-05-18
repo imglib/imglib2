@@ -5,6 +5,7 @@ package net.imglib2.shape;
 
 import java.awt.Shape;
 import java.util.ArrayList;
+import java.util.List;
 
 import net.imglib2.Localizable;
 import net.imglib2.RealLocalizable;
@@ -12,8 +13,15 @@ import net.imglib2.RealRandomAccess;
 import net.imglib2.RealRandomAccessible;
 
 /**
+ * A ShapeList is a 2D {@link RealRandomAccessible}, that is, a 2D plane
+ * without bounds and with double floating-point precision in its data.
+ * The data is nothing else than an ordered {@link List} of {@link Shape} instances,
+ * where the latest {@link #add(Shape, Object)}ed {@link Shape} is queried first,
+ * which means that for an image, the latest added Shape paints on top.
+ * Each {@link Shape} has an associated T instance, which is returned when requesting
+ * a value for a position that intersects that {@link Shape}.
+ * 
  * @author Albert Cardona and Stephan Saalfeld
- *
  */
 public class ShapeList<T> implements RealRandomAccessible<T>
 {
@@ -201,7 +209,7 @@ public class ShapeList<T> implements RealRandomAccessible<T>
 		/** Unsynchronized with {#add}. */
 		@Override
 		public T get() {
-			for (int i=0; i<shapeList.size(); ++i) {
+			for (int i=shapeList.size() -1; i > -1; --i) {
 				if (shapeList.get(i).contains(position[0], position[1])) {
 					return typeList.get(i);
 				}

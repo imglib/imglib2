@@ -4,7 +4,12 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 
-/** Defaults to a FIFO cache. */
+/** Defaults to a FIFO cache.
+ * 
+ * 
+ * @author Albert Cardona
+ * 
+ * */
 public class ShapeListSeriesCached<T> extends ShapeListSeries<T>
 {	
 	protected final Map<Sample,T> cache;
@@ -26,6 +31,7 @@ public class ShapeListSeriesCached<T> extends ShapeListSeries<T>
 			this.y = y;
 			this.listIndex = listIndex;
 		}
+		/** Limited to 2Gb of samples. */
 		@Override
 		public int hashCode() {
 			final long xbits = Double.doubleToLongBits(x);
