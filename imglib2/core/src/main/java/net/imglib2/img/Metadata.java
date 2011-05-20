@@ -30,6 +30,7 @@
 
 package net.imglib2.img;
 
+import net.imglib2.display.ColorTable;
 import net.imglib2.display.ColorTable16;
 import net.imglib2.display.ColorTable8;
 
@@ -109,5 +110,11 @@ public interface Metadata {
 
 	/** Sets the number of available color tables to the given value. */
 	void initializeColorTables(final int count);
+
+	/**
+	 * Gets the number of available {@link ColorTable}s. For {@link Img}s, this
+	 * number typically matches the total number of planes.
+	 */
+	int getColorTableCount();
 
 }

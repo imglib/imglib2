@@ -5,6 +5,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 import net.imglib2.Cursor;
+import net.imglib2.IterableRealInterval;
+import net.imglib2.RealCursor;
 import net.imglib2.script.math.fn.IFunction;
 import net.imglib2.script.math.fn.ImageFunction;
 
@@ -12,6 +14,7 @@ import net.imglib2.img.Img;
 import net.imglib2.img.array.ArrayImgFactory;
 import net.imglib2.multithreading.SimpleMultiThreading;
 import net.imglib2.outofbounds.OutOfBounds;
+import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.NumericType;
 import net.imglib2.type.numeric.ARGBType;
 import net.imglib2.type.numeric.RealType;
@@ -71,114 +74,90 @@ public class Compute {
 
 	/** Ensure that the {@link Container} of each {@link Image} of @param images is compatible
 	 * with all the others. */
-	static public final void checkContainers(final Collection<Img<?>> images) throws Exception {
+	static public final void checkContainers(final Collection<IterableRealInterval<?>> images) throws Exception {
 		if (images.isEmpty())
 			throw new Exception("There aren't any images!");
 
-		final Img<?> first = images.iterator().next();
-		final long[] d1 = new long[first.numDimensions()];
-		final long[] d2 = d1.clone();
+		final IterableRealInterval<?> first = images.iterator().next();
 
-		for ( final Img<?> img : images ) 
+		for ( final IterableRealInterval<?> iri : images ) 
 		{
-			img.dimensions(d2);
-			for (int i=0; i<d1.length; i++)
-				if (d1[i] != d2[i])
+			for (int d=0; d<first.numDimensions(); ++d)
+				if (first.realMin(d) != iri.realMin(d) || first.realMax(d) != iri.realMax(d))
 					throw new Exception("Images have different dimensions!");
 
-			if ( ! first.equalIterationOrder(img))
+			if ( ! first.equalIterationOrder(iri))
 				throw new Exception("Images are of incompatible container types!");
 		}
 	}
 
 	/** Find all images in @param op and nested {@link IFunction} instances. */ 
-	static public final Set<Img<?>> findImages(final IFunction op) throws Exception {
-		final HashSet<Img<?>> imgs = new HashSet<Img<?>>();
+	static public final Set<IterableRealInterval<?>> findImages(final IFunction op) throws Exception {
+		final HashSet<IterableRealInterval<?>> imgs = new HashSet<IterableRealInterval<?>>();
 		op.findImgs(imgs);
 		return imgs;
 	}
 
 	/** Implements the core functionality of the {@code apply} method. */ 
-	static private abstract class Loop<R extends NumericType<R>>
+	static private abstract class Loop<R extends NumericType<R> & NativeType<R>>
 	{
 		private final IFunction op;
-		private final Collection<Img<?>> images;
-		private final Collection<Cursor<?>> cursors;
-		private final R output;
+		private final HashSet<IterableRealInterval<?>> images;
 		private int numThreads;
+		private final R outputType;
 
-		public Loop(final IFunction op, final R output, final int numThreads) throws Exception {
+		public Loop(final IFunction op, final R outputType, final int numThreads) throws Exception {
 			this.op = op;
-			this.output = output;
+			this.outputType = outputType;
 			this.numThreads = Math.max(1, numThreads);
-			// Collect all cursors and their images involved in the operation
-			this.cursors = new HashSet<Cursor<?>>();
-			op.findCursors(this.cursors);
-			//
-			this.images = new HashSet<Img<?>>();
+			// Collect all the images involved in the operation
+			this.images = new HashSet<IterableRealInterval<?>>();
 			op.findImgs(this.images);
 		}
 
 		public abstract void loop(final Cursor<R> resultCursor, final long loopSize, final IFunction fn);
-
-		protected void cleanupCursors() {
-			/* // TODO nothing?
-			for (Cursor<?> c : this.cursors) {
-				c.close();
-			}
-			*/
+		
+		private final long[] extractDimensions(final IterableRealInterval<?> iri) {
+			final long[] dim = new long[iri.numDimensions()];
+			for (int d=0; d<dim.length; ++d)
+				dim[d] = (long) (iri.realMax(d) - iri.realMin(d) + 1);
+			return dim;
 		}
 
-		/** Runs the operation on each voxel and ensures all cursors of {@code op}, and all
-		 * interim cursors created for multithreading, are closed. */
-		public Img<R> run() throws Exception {
-			try {
-				return innerRun();
-			} finally {
-				cleanupCursors();
-			}
-		}
-
-		private final Img<R> innerRun() throws Exception {
+		/** Runs the operation on each voxel and ensures all cursors of {@code op}. */
+		private final Img<R> run() throws Exception {
 			if (images.size() > 0) {
-				// 2 - Check that they are all compatible: same dimensions, same container type
+				// Check that all images are compatible: same dimensions, same container type
 				checkContainers(images);
 
-				final Img<?> first = images.iterator().next();
+				// Store results on a new empty result image
+				final IterableRealInterval<?> first = images.iterator().next();
+				final Img<R> result = new ArrayImgFactory<R>().create(extractDimensions(first), outputType);
 
-				// 3 - Operate on an empty result image
-				final ArrayImgFactory<FloatType> factory = new ArrayImgFactory<FloatType>();
-				final long[] dim = new long[first.numDimensions()];
-				first.dimensions(dim);
-				// TODO use instead the Array<FloatType,FloatAccess> as result
-				final Img<R> result = (Img<R>) (output instanceof DoubleType ? factory.createDoubleInstance(dim, 1)
-																			 : factory.createFloatInstance(dim, 1));
-
-				// Duplicate all: also sets a new cursor for each that has one, so it's unique and reset.
+				// Duplicate all functions: also sets a new cursor for each that has one, so it's unique and reset.
 				final IFunction[] functions = new IFunction[ numThreads ];
-				try
-				{
+				try {
 					for ( int i = 0; i < numThreads; ++i )				
 						functions[ i ] = op.duplicate();
-				}
-				catch ( Exception e ) 
-				{
+				} catch ( Exception e ) {
 					System.out.println( "Running single threaded, operations cannot be duplicated:\n" + e);
 					numThreads = 1;
+					functions[ 0 ] = op;
 				}
 
-				final Thread[] threads = SimpleMultiThreading.newThreads( numThreads );
-				int numPixels = 1;
-				for (int i=0; i<dim.length; i++) numPixels *= dim[i];
+				// Define intervals to operate on, at one per thread:
+				final Thread[] threads = new Thread[ numThreads ];
+				final long numPixels = result.size();
 				final long[] start = new long[numThreads];
 				final long[] length = new long[numThreads];
-				final int inc = numPixels / numThreads;
+				final long inc = numPixels / numThreads;
 				for (int i=0; i<start.length; i++) {
 					start[i] = i * inc;
 					length[i] = inc;
 				}
 				length[length.length-1] = numPixels - start[start.length-1];
 
+				// Run each thread
 				for (int ithread = 0; ithread < threads.length; ++ithread) {
 					final int ID = ithread;
 					threads[ithread] = new Thread(new Runnable()
@@ -190,15 +169,12 @@ public class Compute {
 
 							final IFunction fn = functions[ ID ];
 
-							Collection<Cursor<?>> cs = new HashSet<Cursor<?>>();
+							// Find all cursors present in the operations and jumpFwd them all:
+							final Collection<RealCursor<?>> cs = new HashSet<RealCursor<?>>();
 							fn.findCursors(cs);
-							for (Cursor<?> c : cs) {
+							for (RealCursor<?> c : cs) {
 								c.jumpFwd( start[ID] );
 							}
-
-							// Store for cleanup later
-							Loop.this.cursors.addAll(cs);
-							Loop.this.cursors.add(resultCursor);
 
 							loop(resultCursor, length[ID], fn);
 						}
@@ -210,14 +186,9 @@ public class Compute {
 				return result;
 			} else {
 				// Operations that only involve numbers (for consistency)
-				final ArrayImgFactory<FloatType> factory = new ArrayImgFactory<FloatType>();
-				// TODO use instead the Array<FloatType,FloatAccess> as result
-				final Img<R> result = (Img<R>) (output instanceof DoubleType ? factory.createDoubleInstance(new long[1], 1)
-						 : factory.createFloatInstance(new long[1], 1));
+				final Img<R> result = new ArrayImgFactory<R>().create(new long[1], outputType);
 
-				final Cursor<R> c = result.cursor();
-				this.cursors.add(c); // store for cleanup later
-				loop(c, result.size(), op);
+				loop(result.cursor(), result.size(), op);
 
 				return result;
 			}
@@ -231,7 +202,7 @@ public class Compute {
 	 * @param op The {@link IFunction} to execute.
 	 * @param output An instance of the type of the result image returned by this method.
 	 * @param numThreads The number of threads for parallel execution. */
-	static public final <R extends RealType<R>> Img<R> apply(final IFunction op, final R output, int numThreads) throws Exception
+	static public final <R extends RealType<R> & NativeType<R>> Img<R> apply(IFunction op, R output, int numThreads) throws Exception
 	{
 		final Loop<R> loop = new Loop<R>(op, output, numThreads) {
 			public final void loop(final Cursor<R> resultCursor, final long loopSize, final IFunction fn) {
@@ -251,7 +222,7 @@ public class Compute {
 	 * @param op The {@link IFunction} to execute.
 	 * @param output An instance of the {@link ARGBType} type of the result image returned by this method.
 	 * @param numThreads The number of threads for parallel execution. */
-	static public final Img<ARGBType> apply(final IFunction op, final ARGBType output, int numThreads ) throws Exception
+	static public final Img<ARGBType> apply(IFunction op, ARGBType output, int numThreads ) throws Exception
 	{
 		final Loop<ARGBType> loop = new Loop<ARGBType>(op, output, numThreads) {
 			public final void loop(final Cursor<ARGBType> resultCursor, final long loopSize, final IFunction fn) {
@@ -283,7 +254,7 @@ public class Compute {
 	 * @param op The {@link IFunction} to execute. */
 	static public final Img<FloatType> inFloats(final int numThreads, final IFunction op) throws Exception
 	{
-		return apply(op, new FloatType(), numThreads );
+		return apply(op, new FloatType(), numThreads);
 	}
 
 	/** Execute the given {@param op} {@link IFunction}, which runs for each pixel,

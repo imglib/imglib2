@@ -47,10 +47,4 @@ public class AlgorithmUtil
 		for (int i=0; i<f.length; i++) d[i] = f[i];
 		return d;
 	}
-	
-	public static long[] extractDimensions(final Img<?> img) {
-		final long[] dim = new long[img.numDimensions()];
-		img.dimensions(dim);
-		return dim;
-	}
 }

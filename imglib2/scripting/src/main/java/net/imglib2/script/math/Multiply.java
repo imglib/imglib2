@@ -1,21 +1,21 @@
 package net.imglib2.script.math;
 
+import net.imglib2.IterableRealInterval;
 import net.imglib2.script.math.fn.BinaryOperation;
 import net.imglib2.script.math.fn.IFunction;
-import net.imglib2.img.Img;
 import net.imglib2.type.numeric.RealType;
 
 public class Multiply extends BinaryOperation
 {
-	public Multiply(final Img<? extends RealType<?>> left, final Img<? extends RealType<?>> right) {
+	public Multiply(final IterableRealInterval<? extends RealType<?>> left, final IterableRealInterval<? extends RealType<?>> right) {
 		super(left, right);
 	}
 
-	public Multiply(final IFunction fn, final Img<? extends RealType<?>> right) {
+	public Multiply(final IFunction fn, final IterableRealInterval<? extends RealType<?>> right) {
 		super(fn, right);
 	}
 
-	public Multiply(final Img<? extends RealType<?>> left, final IFunction fn) {
+	public Multiply(final IterableRealInterval<? extends RealType<?>> left, final IFunction fn) {
 		super(left, fn);
 	}
 
@@ -23,11 +23,11 @@ public class Multiply extends BinaryOperation
 		super(fn1, fn2);
 	}
 	
-	public Multiply(final Img<? extends RealType<?>> left, final Number val) {
+	public Multiply(final IterableRealInterval<? extends RealType<?>> left, final Number val) {
 		super(left, val);
 	}
 
-	public Multiply(final Number val,final Img<? extends RealType<?>> right) {
+	public Multiply(final Number val,final IterableRealInterval<? extends RealType<?>> right) {
 		super(val, right);
 	}
 

@@ -1,13 +1,13 @@
 package net.imglib2.script.math;
 
+import net.imglib2.IterableRealInterval;
 import net.imglib2.script.math.fn.IFunction;
 import net.imglib2.script.math.fn.UnaryOperation;
-import net.imglib2.img.Img;
 import net.imglib2.type.numeric.RealType;
 
 public class Tanh extends UnaryOperation {
 
-	public Tanh(final Img<? extends RealType<?>> img) {
+	public Tanh(final IterableRealInterval<? extends RealType<?>> img) {
 		super(img);
 	}
 	public Tanh(final IFunction fn) {
