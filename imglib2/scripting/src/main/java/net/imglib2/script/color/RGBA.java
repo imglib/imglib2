@@ -2,7 +2,8 @@ package net.imglib2.script.color;
 
 import java.util.Collection;
 
-import net.imglib2.Cursor;
+import net.imglib2.IterableRealInterval;
+import net.imglib2.RealCursor;
 import net.imglib2.script.color.fn.ColorFunction;
 import net.imglib2.script.math.fn.IFunction;
 
@@ -10,7 +11,7 @@ import net.imglib2.img.Img;
 import net.imglib2.type.numeric.RealType;
 
 /** Given up to 4 channels--each represented by an {@link IFunction},
- *  this class composes them into an {@link ARGBType} {@link Image}.
+ *  this class composes them into an {@link ARGBType} {@link Img}.
  *  
  *  Channel order: A=4, R=3, G=2, B=1.
  *  
@@ -28,7 +29,7 @@ public final class RGBA extends ColorFunction {
 	}
 
 	/** Interpret the @param img as an ARGB image. */
-	public RGBA(final Img<? extends RealType<?>> img) {
+	public RGBA(final IterableRealInterval<? extends RealType<?>> img) {
 		this(new Channel(img, 3), new Channel(img, 2), new Channel(img, 1), new Channel(img, 4));
 	}
 
@@ -87,7 +88,7 @@ public final class RGBA extends ColorFunction {
 	}
 
 	@Override
-	public final void findCursors(final Collection<Cursor<?>> cursors) {
+	public final void findCursors(final Collection<RealCursor<?>> cursors) {
 		alpha.findCursors(cursors);
 		red.findCursors(cursors);
 		green.findCursors(cursors);
@@ -95,10 +96,10 @@ public final class RGBA extends ColorFunction {
 	}
 
 	@Override
-	public final void findImgs(final Collection<Img<?>> imgs) {
-		alpha.findImgs(imgs);
-		red.findImgs(imgs);
-		green.findImgs(imgs);
-		blue.findImgs(imgs);
+	public final void findImgs(final Collection<IterableRealInterval<?>> iris) {
+		alpha.findImgs(iris);
+		red.findImgs(iris);
+		green.findImgs(iris);
+		blue.findImgs(iris);
 	}
 }

@@ -1,21 +1,21 @@
 package net.imglib2.script.math;
 
+import net.imglib2.IterableRealInterval;
 import net.imglib2.script.math.fn.BinaryOperation;
 import net.imglib2.script.math.fn.IFunction;
-import net.imglib2.img.Img;
 import net.imglib2.type.numeric.RealType;
 
 public class Difference extends BinaryOperation
 {
-	public Difference(final Img<? extends RealType<?>> left, final Img<? extends RealType<?>> right) {
+	public Difference(final IterableRealInterval<? extends RealType<?>> left, final IterableRealInterval<? extends RealType<?>> right) {
 		super(left, right);
 	}
 
-	public Difference(final IFunction fn, final Img<? extends RealType<?>> right) {
+	public Difference(final IFunction fn, final IterableRealInterval<? extends RealType<?>> right) {
 		super(fn, right);
 	}
 
-	public Difference(final Img<? extends RealType<?>> left, final IFunction fn) {
+	public Difference(final IterableRealInterval<? extends RealType<?>> left, final IFunction fn) {
 		super(left, fn);
 	}
 
@@ -23,11 +23,11 @@ public class Difference extends BinaryOperation
 		super(fn1, fn2);
 	}
 	
-	public Difference(final Img<? extends RealType<?>> left, final Number val) {
+	public Difference(final IterableRealInterval<? extends RealType<?>> left, final Number val) {
 		super(left, val);
 	}
 
-	public Difference(final Number val,final Img<? extends RealType<?>> right) {
+	public Difference(final Number val,final IterableRealInterval<? extends RealType<?>> right) {
 		super(val, right);
 	}
 

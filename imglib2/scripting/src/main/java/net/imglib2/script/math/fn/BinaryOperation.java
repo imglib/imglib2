@@ -3,8 +3,8 @@ package net.imglib2.script.math.fn;
 
 import java.util.Collection;
 
-import net.imglib2.Cursor;
-import net.imglib2.img.Img;
+import net.imglib2.IterableRealInterval;
+import net.imglib2.RealCursor;
 import net.imglib2.type.numeric.RealType;
 
 /* An abstract class to facilitate implementing a function that takes two arguments.
@@ -73,17 +73,17 @@ public abstract class BinaryOperation extends FloatImageOperation
 {
 	private final IFunction a, b;
 
-	public BinaryOperation(final Img<? extends RealType<?>> left, final Img<? extends RealType<?>> right) {
+	public BinaryOperation(final IterableRealInterval<? extends RealType<?>> left, final IterableRealInterval<? extends RealType<?>> right) {
 		this.a = new ImageFunction(left);
 		this.b = new ImageFunction(right);
 	}
 
-	public BinaryOperation(final IFunction fn, final Img<? extends RealType<?>> right) {
+	public BinaryOperation(final IFunction fn, final IterableRealInterval<? extends RealType<?>> right) {
 		this.a = fn;
 		this.b = new ImageFunction(right);
 	}
 
-	public BinaryOperation(final Img<? extends RealType<?>> left, final IFunction fn) {
+	public BinaryOperation(final IterableRealInterval<? extends RealType<?>> left, final IFunction fn) {
 		this.a = new ImageFunction(left);
 		this.b = fn;
 	}
@@ -93,12 +93,12 @@ public abstract class BinaryOperation extends FloatImageOperation
 		this.b = fn2;
 	}
 
-	public BinaryOperation(final Img<? extends RealType<?>> left, final Number val) {
+	public BinaryOperation(final IterableRealInterval<? extends RealType<?>> left, final Number val) {
 		this.a = new ImageFunction(left);
 		this.b = new NumberFunction(val);
 	}
 
-	public BinaryOperation(final Number val,final Img<? extends RealType<?>> right) {
+	public BinaryOperation(final Number val,final IterableRealInterval<? extends RealType<?>> right) {
 		this.a = new NumberFunction(val);
 		this.b = new ImageFunction(right);
 	}
@@ -134,7 +134,7 @@ public abstract class BinaryOperation extends FloatImageOperation
 	}
 
 	@Override
-	public final void findCursors(final Collection<Cursor<?>> cursors) {
+	public final void findCursors(final Collection<RealCursor<?>> cursors) {
 		a.findCursors(cursors);
 		b.findCursors(cursors);
 	}
@@ -149,8 +149,8 @@ public abstract class BinaryOperation extends FloatImageOperation
 	}
 	
 	@Override
-	public void findImgs(final Collection<Img<?>> imgs)
+	public void findImgs(final Collection<IterableRealInterval<?>> iris)
 	{
-		a.findImgs(imgs);
+		a.findImgs(iris);
 	}
 }

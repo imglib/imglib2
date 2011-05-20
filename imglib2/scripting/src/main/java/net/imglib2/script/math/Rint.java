@@ -1,13 +1,13 @@
 package net.imglib2.script.math;
 
+import net.imglib2.IterableRealInterval;
 import net.imglib2.script.math.fn.IFunction;
 import net.imglib2.script.math.fn.UnaryOperation;
-import net.imglib2.img.Img;
 import net.imglib2.type.numeric.RealType;
 
 public class Rint extends UnaryOperation {
 
-	public Rint(final Img<? extends RealType<?>> img) {
+	public Rint(final IterableRealInterval<? extends RealType<?>> img) {
 		super(img);
 	}
 	public Rint(final IFunction fn) {

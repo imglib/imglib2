@@ -1,13 +1,13 @@
 package net.imglib2.script.math;
 
+import net.imglib2.IterableRealInterval;
 import net.imglib2.script.math.fn.IFunction;
 import net.imglib2.script.math.fn.UnaryOperation;
-import net.imglib2.img.Img;
 import net.imglib2.type.numeric.RealType;
 
 public class Cos extends UnaryOperation {
 
-	public Cos(final Img<? extends RealType<?>> img) {
+	public Cos(final IterableRealInterval<? extends RealType<?>> img) {
 		super(img);
 	}
 	public Cos(final IFunction fn) {

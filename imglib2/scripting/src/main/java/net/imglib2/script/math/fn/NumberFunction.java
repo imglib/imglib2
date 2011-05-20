@@ -3,8 +3,8 @@ package net.imglib2.script.math.fn;
 
 import java.util.Collection;
 
-import net.imglib2.Cursor;
-import net.imglib2.img.Img;
+import net.imglib2.IterableRealInterval;
+import net.imglib2.RealCursor;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.integer.IntType;
 import net.imglib2.type.numeric.integer.LongType;
@@ -44,7 +44,7 @@ public final class NumberFunction implements IFunction {
 	}
 
 	@Override
-	public final void findCursors(final Collection<Cursor<?>> cursors) {}
+	public final void findCursors(final Collection<RealCursor<?>> cursors) {}
 
 	@Override
 	public IFunction duplicate()
@@ -53,5 +53,5 @@ public final class NumberFunction implements IFunction {
 	}
 
 	@Override
-	public void findImgs(Collection<Img<?>> imgs) {}
+	public void findImgs(Collection<IterableRealInterval<?>> iris) {}
 }

@@ -1,14 +1,14 @@
 package net.imglib2.script.color;
 
+import net.imglib2.IterableRealInterval;
 import net.imglib2.script.color.fn.RGBAOp;
-import net.imglib2.img.Img;
 import net.imglib2.type.numeric.ARGBType;
 
 /** Computes the luminance of each RGB value using the weights
  *  r: 0.299, g: 0.587, b: 0.144 */
 public class Luminance extends RGBAOp {
 
-	public Luminance(final Img<? extends ARGBType> img) {
+	public Luminance(final IterableRealInterval<? extends ARGBType> img) {
 		super(img);
 	}
 

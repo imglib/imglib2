@@ -1,8 +1,8 @@
 package net.imglib2.script.math;
 
+import net.imglib2.IterableRealInterval;
 import net.imglib2.script.math.fn.BinaryOperation;
 import net.imglib2.script.math.fn.IFunction;
-import net.imglib2.img.Img;
 import net.imglib2.type.numeric.RealType;
 
 /** AND two float values by first casting them to int.
@@ -12,15 +12,15 @@ import net.imglib2.type.numeric.RealType;
  *  Imgs when possible. */
 public class And extends BinaryOperation
 {
-	public And(final Img<? extends RealType<?>> left, final Img<? extends RealType<?>> right) {
+	public And(final IterableRealInterval<? extends RealType<?>> left, final IterableRealInterval<? extends RealType<?>> right) {
 		super(left, right);
 	}
 
-	public And(final IFunction fn, final Img<? extends RealType<?>> right) {
+	public And(final IFunction fn, final IterableRealInterval<? extends RealType<?>> right) {
 		super(fn, right);
 	}
 
-	public And(final Img<? extends RealType<?>> left, final IFunction fn) {
+	public And(final IterableRealInterval<? extends RealType<?>> left, final IFunction fn) {
 		super(left, fn);
 	}
 
@@ -28,11 +28,11 @@ public class And extends BinaryOperation
 		super(fn1, fn2);
 	}
 	
-	public And(final Img<? extends RealType<?>> left, final Number val) {
+	public And(final IterableRealInterval<? extends RealType<?>> left, final Number val) {
 		super(left, val);
 	}
 
-	public And(final Number val,final Img<? extends RealType<?>> right) {
+	public And(final Number val,final IterableRealInterval<? extends RealType<?>> right) {
 		super(val, right);
 	}
 

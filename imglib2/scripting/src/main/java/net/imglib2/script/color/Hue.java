@@ -1,14 +1,14 @@
 package net.imglib2.script.color;
 
+import net.imglib2.IterableRealInterval;
 import net.imglib2.script.color.fn.HSBOp;
-import net.imglib2.img.Img;
 import net.imglib2.type.numeric.ARGBType;
 
 /** Extracts the HSB saturation of an RGB pixel. */
 public class Hue extends HSBOp {
 
 	/** Extract the hue component of each pixel, in the range [0, 1]. */
-	public Hue(final Img<? extends ARGBType> img) {
+	public Hue(final IterableRealInterval<? extends ARGBType> img) {
 		super(img);
 	}
 
