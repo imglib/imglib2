@@ -25,7 +25,7 @@ public class OpenAndDisplayRotated
 	
 	final ImgOpener io = new ImgOpener();
 	RandomAccessibleInterval< FloatType > img = Views.rotatedView(
-			io.openImg( "/home/tobias/workspace/data/73_float.tif", new ArrayImgFactory<FloatType>(), new FloatType()),
+	        io.openImg( "/home/tobias/workspace/data/73_float.tif", new ArrayImgFactory<FloatType>(), new FloatType()),
 			0, 1 );
 	
 	final ARGBScreenImage screenImage = new ARGBScreenImage( ( int )img.dimension( 0 ), ( int )img.dimension( 1 ) );
