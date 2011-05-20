@@ -19,6 +19,8 @@ import net.imglib2.script.math.Compute;
 import net.imglib2.script.math.Difference;
 import net.imglib2.script.math.Divide;
 import net.imglib2.script.math.Identity;
+import net.imglib2.script.math.Max;
+import net.imglib2.script.math.Min;
 import net.imglib2.script.math.Multiply;
 import net.imglib2.script.math.Pow;
 import net.imglib2.script.math.Sin;
@@ -212,7 +214,10 @@ public class Benchmark {
 		p("Start differenceCompFn");
 		long t0 = System.nanoTime();
 		try {
-			return Compute.inFloats(new Abs(new Subtract(img, img)));
+			// Potentially overflowing:
+			//return Compute.inFloats(new Abs(new Subtract(img, img)));
+			// Avoiding overflow, like Difference does:
+			return Compute.inFloats(new Subtract(new Max(img, img), new Min(img, img)));
 		} finally {
 			p("  elapsed: " + (System.nanoTime() - t0)/1000000.0);
 		}
@@ -246,7 +251,21 @@ public class Benchmark {
 			
 			String src = "http://imagej.nih.gov/ij/images/bridge.gif";
 			//String src = "/home/albert/Desktop/t2/bridge.gif";
-			Img<UnsignedByteType> img = new ImgOpener().openImg(src);
+			Img<UnsignedByteType> img1 = new ImgOpener().openImg(src);
+			
+			System.out.println("dimensions of image opened by ImgOpener: " + img1.numDimensions());
+			System.out.println(" and 3rd dimension is: " + img1.dimension(2));
+			
+			// turn it into an array image of really just 2D:
+			Img<UnsignedByteType> img = new ArrayImgFactory<UnsignedByteType>().create(new long[]{512, 512}, new UnsignedByteType());
+			Cursor<UnsignedByteType> c1 = img1.cursor();
+			Cursor<UnsignedByteType> c2 = img.cursor();
+			while (c2.hasNext()) {
+				c1.fwd();
+				c2.fwd();
+				c2.get().set(c1.get());
+			}
+			
 			//
 			double mean = 0;
 			for (final UnsignedByteType t : img) mean += t.getRealDouble();
@@ -294,7 +313,7 @@ public class Benchmark {
 			System.out.println("img.numDimensions: " + img.numDimensions());
 			copyToFloatImagePlus(img, "original").show();
 			copyToFloatImagePlus(brightfield, "brightfield").show();
-			copyToFloatImagePlus(Compute.inFloats(2, new Identity(img)), "identity").show();
+			copyToFloatImagePlus(Compute.inFloats(1, new Identity(img)), "identity").show();
 			
 			// A black image: empty
 			Img<UnsignedByteType> darkfield = img.factory().create(Util.intervalDimensions(img), new UnsignedByteType());
