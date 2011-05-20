@@ -122,8 +122,8 @@ public class ImgOpener implements StatusReporter {
 	 * @throws IncompatibleTypeException if the Type of the Img is incompatible
 	 *           with the {@link ImgFactory}
 	 */
-	public <T extends RealType<T>> ImgPlus<T> openImg(final String id,
-		final ImgFactory<T> imgFactory) throws ImgIOException,
+	public <T extends RealType<T> & NativeType<T>> ImgPlus<T> openImg(
+		final String id, final ImgFactory<T> imgFactory) throws ImgIOException,
 		IncompatibleTypeException
 	{
 		try {
@@ -145,8 +145,9 @@ public class ImgOpener implements StatusReporter {
 	 * using the given {@link ImgFactory} to construct the {@link Img}. The
 	 * {@link Type} T to read is defined by the third parameter T.
 	 */
-	public <T extends RealType<T>> ImgPlus<T> openImg(final String id,
-		final ImgFactory<T> imgFactory, final T type) throws ImgIOException
+	public <T extends RealType<T> & NativeType<T>> ImgPlus<T> openImg(
+		final String id, final ImgFactory<T> imgFactory, final T type)
+		throws ImgIOException
 	{
 		try {
 			final IFormatReader r = initializeReader(id);
@@ -166,8 +167,9 @@ public class ImgOpener implements StatusReporter {
 	 * T to read is defined by the third parameter T and it has to match the
 	 * typing of the {@link ImgFactory}.
 	 */
-	public <T extends RealType<T>> ImgPlus<T> openImg(final IFormatReader r,
-		final ImgFactory<T> imgFactory, final T type) throws ImgIOException
+	public <T extends RealType<T> & NativeType<T>> ImgPlus<T> openImg(
+		final IFormatReader r, final ImgFactory<T> imgFactory, final T type)
+		throws ImgIOException
 	{
 		// create image and read metadata
 		final long[] dimLengths = getDimLengths(r);
