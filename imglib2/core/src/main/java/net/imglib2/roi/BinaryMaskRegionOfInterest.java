@@ -9,8 +9,10 @@ import net.imglib2.AbstractCursor;
 import net.imglib2.Cursor;
 import net.imglib2.IterableInterval;
 import net.imglib2.IterableRealInterval;
+import net.imglib2.Positionable;
 import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessible;
+import net.imglib2.RealPositionable;
 import net.imglib2.img.Img;
 import net.imglib2.type.Type;
 import net.imglib2.type.logic.BitType;
@@ -151,12 +153,22 @@ public class BinaryMaskRegionOfInterest<T extends BitType, I extends Img<T>> ext
 		}
 
 		@Override
+		public void realMin(RealPositionable min) {
+			img.realMin(min);
+		}
+
+		@Override
 		public double realMax(int d) {
 			return img.realMax(d);
 		}
 
 		@Override
 		public void realMax(double[] max) {
+			img.realMax(max);
+		}
+
+		@Override
+		public void realMax(RealPositionable max) {
 			img.realMax(max);
 		}
 
@@ -183,6 +195,12 @@ public class BinaryMaskRegionOfInterest<T extends BitType, I extends Img<T>> ext
 		}
 
 		@Override
+		public void min(Positionable min) {
+			validate();
+			min.setPosition( minima );
+		}
+
+		@Override
 		public long max(int d) {
 			validate();
 			return maxima[d];
@@ -194,6 +212,12 @@ public class BinaryMaskRegionOfInterest<T extends BitType, I extends Img<T>> ext
 			System.arraycopy(maxima, 0, max, 0, numDimensions());
 		}
 
+		@Override
+		public void max(Positionable max) {
+			validate();
+			max.setPosition( maxima );
+		}
+		
 		@Override
 		public void dimensions(long[] dimensions) {
 			img.dimensions(dimensions);

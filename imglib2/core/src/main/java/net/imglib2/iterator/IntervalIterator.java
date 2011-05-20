@@ -30,6 +30,8 @@ package net.imglib2.iterator;
 import net.imglib2.Interval;
 import net.imglib2.Localizable;
 import net.imglib2.Iterator;
+import net.imglib2.Positionable;
+import net.imglib2.RealPositionable;
 import net.imglib2.Sampler;
 import net.imglib2.util.IntervalIndexer;
 import net.imglib2.util.Util;
@@ -307,6 +309,11 @@ public class IntervalIterator implements Iterator, Localizable, Interval
 			max[ d ] = this.max[ d ];
 	}
 
+	@Override
+	public void max( final Positionable max )
+	{
+		max.setPosition( this.max );
+	}
 
 	@Override
 	public long min( final int d )
@@ -322,6 +329,11 @@ public class IntervalIterator implements Iterator, Localizable, Interval
 			min[ d ] = this.min[ d ];
 	}
 
+	@Override
+	public void min( final Positionable min )
+	{
+		min.setPosition( this.min );
+	}
 
 	@Override
 	public double realMax( final int d )
@@ -337,6 +349,11 @@ public class IntervalIterator implements Iterator, Localizable, Interval
 			max[ d ] = this.max[ d ];
 	}
 
+	@Override
+	public void realMax( final RealPositionable max )
+	{
+		max.setPosition( this.max );
+	}
 
 	@Override
 	public double realMin( final int d )
@@ -351,4 +368,10 @@ public class IntervalIterator implements Iterator, Localizable, Interval
 		for ( int d = 0; d < n; ++d )
 			min[ d ] = this.min[ d ];
 	}
+
+	@Override
+	public void realMin( final RealPositionable min )
+	{
+		min.setPosition( this.min );
+	}	
 }

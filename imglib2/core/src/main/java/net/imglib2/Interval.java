@@ -48,7 +48,7 @@ package net.imglib2;
  *     <dd>exposes an internal array to the pubic that should be immutable</dd>
  *   </dl>
  *
- * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
+ * @author Stephan Saalfeld <saalfeld@mpi-cbg.de> and Stephan Preibisch
  */
 public interface Interval extends RealInterval
 {
@@ -67,6 +67,13 @@ public interface Interval extends RealInterval
 	public void min( long[] min );
 	
 	/**
+	 * Sets a {@link Positionable} to the minimum of this {@link Interval}
+	 * 
+	 * @param min
+	 */
+	public void min( Positionable min );
+	
+	/**
 	 * 
 	 * @param d dimension
 	 * @return maximum
@@ -79,6 +86,13 @@ public interface Interval extends RealInterval
 	 * @param max
 	 */
 	public void max( long[] max );
+
+	/**
+	 * Sets a {@link Positionable} to the maximum of this {@link Interval}
+	 * 
+	 * @param max
+	 */
+	public void max( Positionable max );
 	
 	/**
 	 * Write the number of pixels in each dimension into long[].

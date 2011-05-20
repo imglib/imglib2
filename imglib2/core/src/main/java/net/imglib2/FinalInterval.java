@@ -77,6 +77,14 @@ public final class FinalInterval implements Interval
 	}
 
 	@Override
+	public void realMin( final RealPositionable minimum )
+	{
+		assert minimum.numDimensions() == n;
+		
+		minimum.setPosition( this.min ); 
+	}
+
+	@Override
 	public double realMax( final int d )
 	{
 		assert d >= 0;
@@ -92,6 +100,14 @@ public final class FinalInterval implements Interval
 		
 		for ( int d = 0; d < n; ++d )
 			maximum[ d ] = this.max[ d ];
+	}
+
+	@Override
+	public void realMax( final RealPositionable m )
+	{
+		assert m.numDimensions() == n;
+		
+		m.setPosition( this.max ); 
 	}
 
 	@Override
@@ -119,6 +135,14 @@ public final class FinalInterval implements Interval
 	}
 
 	@Override
+	public void min( final Positionable m )
+	{
+		assert m.numDimensions() == n;
+		
+		m.setPosition( this.min );
+	}
+
+	@Override
 	public long max( final int d )
 	{
 		assert d >= 0;
@@ -136,6 +160,14 @@ public final class FinalInterval implements Interval
 			maximum[ d ] = this.max[ d ];
 	}
 
+	@Override
+	public void max( final Positionable m )
+	{
+		assert m.numDimensions() == n;
+		
+		m.setPosition( this.max );
+	}
+	
 	@Override
 	public void dimensions( final long[] dimensions )
 	{

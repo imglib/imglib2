@@ -2,6 +2,7 @@ package net.imglib2.roi;
 
 import net.imglib2.Localizable;
 import net.imglib2.RealLocalizable;
+import net.imglib2.RealPositionable;
 import net.imglib2.RealRandomAccess;
 import net.imglib2.type.logic.BitType;
 
@@ -286,6 +287,11 @@ public abstract class AbstractRegionOfInterest implements RegionOfInterest {
 		}
 	}
 
+	protected void realMin(RealPositionable min) {
+		validateRealExtremaCache();
+		min.setPosition( cached_real_min );
+	}
+
 	protected double realMax(int d) {
 		validateRealExtremaCache();
 		return cached_real_max[d];
@@ -296,6 +302,11 @@ public abstract class AbstractRegionOfInterest implements RegionOfInterest {
 		for (int i = 0; i < max.length; i++) {
 			max[i] = cached_real_max[i];
 		}
+	}
+
+	protected void realMax(RealPositionable max) {
+		validateRealExtremaCache();
+		max.setPosition( cached_real_max );
 	}
 
 	@Override

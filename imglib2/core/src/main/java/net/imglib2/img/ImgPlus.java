@@ -36,7 +36,9 @@ import java.util.Iterator;
 import net.imglib2.Cursor;
 import net.imglib2.Interval;
 import net.imglib2.IterableRealInterval;
+import net.imglib2.Positionable;
 import net.imglib2.RandomAccess;
+import net.imglib2.RealPositionable;
 import net.imglib2.display.ColorTable16;
 import net.imglib2.display.ColorTable8;
 
@@ -123,6 +125,11 @@ public class ImgPlus<T> implements Img<T>, Metadata {
 	public void min(final long[] min) {
 		img.min(min);
 	}
+	
+	@Override
+	public void min(final Positionable min) {
+		img.min(min);
+	}
 
 	@Override
 	public long max(final int d) {
@@ -131,6 +138,11 @@ public class ImgPlus<T> implements Img<T>, Metadata {
 
 	@Override
 	public void max(final long[] max) {
+		img.max(max);
+	}
+
+	@Override
+	public void max(final Positionable max) {
 		img.max(max);
 	}
 
@@ -155,12 +167,22 @@ public class ImgPlus<T> implements Img<T>, Metadata {
 	}
 
 	@Override
+	public void realMin(final RealPositionable min) {
+		img.realMin(min);
+	}
+
+	@Override
 	public double realMax(final int d) {
 		return img.realMax(d);
 	}
 
 	@Override
 	public void realMax(final double[] max) {
+		img.realMax(max);
+	}
+
+	@Override
+	public void realMax(final RealPositionable max) {
 		img.realMax(max);
 	}
 
