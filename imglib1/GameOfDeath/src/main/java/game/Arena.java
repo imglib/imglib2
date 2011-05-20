@@ -67,7 +67,7 @@ public class Arena
 			}
 			
 			/* diffusion */
-			final GaussianConvolution<LifeForm> gauss = new GaussianConvolution<LifeForm>( arena, new OutOfBoundsStrategyValueFactory<LifeForm>(), 1.5f );
+			final GaussianConvolution<LifeForm> gauss = new GaussianConvolution<LifeForm>( arena, new OutOfBoundsStrategyMirrorFactory<LifeForm>(), 1.5f );
 			
 			if ( !gauss.checkInput() || ! gauss.process() )
 			{
