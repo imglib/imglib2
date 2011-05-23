@@ -35,6 +35,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import ome.xml.model.primitives.PositiveFloat;
+
 import loci.common.DataTools;
 import loci.common.StatusEvent;
 import loci.common.StatusListener;
@@ -425,13 +427,28 @@ public class ImgOpener implements StatusReporter {
 		final String dimOrder = r.getDimensionOrder();
 
 		final IMetadata meta = (IMetadata) r.getMetadataStore();
-		Double xCal = meta.getPixelsPhysicalSizeX(0);
-		Double yCal = meta.getPixelsPhysicalSizeY(0);
-		Double zCal = meta.getPixelsPhysicalSizeZ(0);
+		PositiveFloat xCalin = meta.getPixelsPhysicalSizeX(0);
+		PositiveFloat yCalin = meta.getPixelsPhysicalSizeY(0);
+		PositiveFloat zCalin = meta.getPixelsPhysicalSizeZ(0);
 		Double tCal = meta.getPixelsTimeIncrement(0);
-		if (xCal == null) xCal = Double.NaN;
-		if (yCal == null) yCal = Double.NaN;
-		if (zCal == null) zCal = Double.NaN;
+		
+		final Double xCal, yCal, zCal;
+		
+		if (xCalin == null) 
+			xCal = Double.NaN;
+		else
+			xCal = xCalin.getValue();
+		
+		if (yCalin == null) 
+			yCal = Double.NaN;
+		else
+			yCal = yCalin.getValue();
+		
+		if (zCalin == null) 
+			zCal = Double.NaN;
+		else
+			zCal = zCalin.getValue();
+		
 		if (tCal == null) tCal = Double.NaN;
 
 		final List<Double> calibrationList = new ArrayList<Double>();
