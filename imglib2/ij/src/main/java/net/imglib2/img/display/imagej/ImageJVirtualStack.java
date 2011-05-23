@@ -20,6 +20,7 @@ public abstract class ImageJVirtualStack< S, T extends NativeType< T > > extends
 	final private XYProjector< S, T > projector;
 
 	final private int size;
+	final private int numDimensions;
 
 	final private int bitDepth;
 
@@ -38,6 +39,7 @@ public abstract class ImageJVirtualStack< S, T extends NativeType< T > > extends
 
 		ArrayImg< T, ? > img = new ArrayImgFactory< T >().create( new long[] { sizeX, sizeY }, type );
 
+		this.numDimensions = source.numDimensions();
 		this.projector = new XYProjector< S, T >( source, img, converter );
 
 		switch ( ijtype )
@@ -71,7 +73,9 @@ public abstract class ImageJVirtualStack< S, T extends NativeType< T > > extends
 	@Override
 	public ImageProcessor getProcessor( final int n )
 	{
-		projector.setPosition( n - 1, 2 );
+		if ( numDimensions > 2 )
+			projector.setPosition( n - 1, 2 );
+		
 		projector.map();
 		return imageProcessor;
 	}
