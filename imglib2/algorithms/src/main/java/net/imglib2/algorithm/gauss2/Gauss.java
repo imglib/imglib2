@@ -1,5 +1,6 @@
 package net.imglib2.algorithm.gauss2;
 
+import net.imglib2.Cursor;
 import net.imglib2.FinalInterval;
 import net.imglib2.Interval;
 import net.imglib2.Iterator;
@@ -158,40 +159,28 @@ public abstract class Gauss< T extends NumericType< T > >
 		// the size of the SamplingLineIterator we need to compute the processLine
 		final long sizeInputData = sizeProcessLine + kernel[ dim ].length - 1;
 
-		final long[] tmp = new long[ numDimensions ];
-		
 		// use the input image if it is the first dimension
 		if ( dim == 0 )
 		{
 			// put the randomAccess into the correct location, the range is relative to the input for dim 0
-			range.min( tmp );			
+			range.min( randomAccess );			
 			
 			// this also sticks out half because we need more input pixels in x due to the convolution (kernel size)
-			tmp[ 0 ] -= (kernel[ 0 ].length / 2) + 1;
+			randomAccess.move( -(kernel[ 0 ].length / 2) - 1, 0 );
 			
 			// here we need more because we need those pixels for later convolutions in higher dimensions,
 			// it has to be computed extra 
 			for ( int d = 1; d < numDimensions; ++d )
-				tmp[ d ] -= kernel[ dim ].length / 2;
-	
-			randomAccess.setPosition( tmp );
+				randomAccess.move( -(kernel[ 0 ].length / 2), d );	
 		}
 		else 
-		{
+		{			
 			// now put the randomAccess into the correct location, the range is relative to the temporary images
-			// and therefore zero-bounded
-			for ( int d = 0; d < numDimensions; ++d )
-			{
-				// there is no overhead necessary for any dimensions that have been convolved already
-				if ( d != dim )
-					tmp[ d ] = 0;
-				else if ( d == dim )
-					tmp[ d ] = -(kernel[ dim ].length / 2) - 1;
-				//else
-				//	tmp[ d ] = -(kernel[ dim ].length / 2);
-			}
+			// and therefore zero-bounded			
+			tmp1.min( randomAccess );
 			
-			randomAccess.setPosition( tmp );
+			// all dimensions start at 0 relative to the temp images, except the dimension that is currently convolved
+			randomAccess.move( -(kernel[ dim ].length / 2) - 1, dim );
 		}
 		
 		// return a new SamplingLineIterator that also keeps the instance of the processing line,
@@ -220,14 +209,9 @@ public abstract class Gauss< T extends NumericType< T > >
 		else
 			randomAccess = tmp2.randomAccess(); // odd dimensions
 		
-		// place the randomAccess at the right location and return the
-		// size of the WritableLineIterator we need to compute the processLine
-
-		// the size of the 1-d line 
+		// the size of the 1-d line, same as the input
 		final long sizeProcessLine = inputLineSampler.getProcessLine().size();
-		
-		final long[] tmp = new long[ numDimensions ];
-		
+				
 		if ( dim == numDimensions - 1 )
 		{
 			// put the randomAccess into the correct location, the range is relative to the input for dim=numDimensions-1
@@ -236,6 +220,8 @@ public abstract class Gauss< T extends NumericType< T > >
 		}
 		else
 		{
+			final long[] tmp = new long[ numDimensions ];
+
 			// now put the randomAccess into the correct location, the range is relative to the temporary images
 			for ( int d = 0; d < numDimensions; ++d )
 			{
@@ -251,7 +237,7 @@ public abstract class Gauss< T extends NumericType< T > >
 			randomAccess.setPosition( tmp );			
 		}
 		
-		return null;
+		return new WritableLineIterator< T >( dim, sizeProcessLine, randomAccess );
 	}
 	
 	/**
@@ -535,7 +521,18 @@ public abstract class Gauss< T extends NumericType< T > >
 	 * 
 	 * @param a - the {@link Iterator}/{@link Sampler} over the current output line.
 	 */
-	protected abstract void writeLine( final WritableLineIterator< T > a );
+	protected void writeLine( final WritableLineIterator< T > a, final SamplingLineIterator< T > inputLineSampler )
+	{
+		final Cursor< T > resultCursor = inputLineSampler.getProcessLine().cursor();
+		
+		while ( resultCursor.hasNext() )
+		{
+			resultCursor.fwd();
+			a.fwd();
+			
+			a.set( resultCursor.get() );
+		}
+	}
 	
 	/**
 	 * Updates the current {@link SamplingLineIterator} to the location of the new line that is processed and
@@ -642,13 +639,25 @@ public abstract class Gauss< T extends NumericType< T > >
 					updateOutputLineWriter( outputLineIterator, range, tmp, offsetOutput );
 	
 					// and write it back to the output/temp image
-					writeLine( outputLineIterator );
+					writeLine( outputLineIterator, inputLineIterator );
 				}
 			}
 		}
 		else
 		{
-			// TODO: special case of a one-dimensional Gaussian Convolution, we cannot iterate over n-1 dimensions
+			final Interval range = getRange( 0 );
+			
+			// create the iterator in the input image for the current dimension
+			final SamplingLineIterator< T > inputLineIterator = createInputLineSampler( 0, range );
+
+			// get the iterator in the output image for the current dimension position
+			final WritableLineIterator< T > outputLineIterator = createOutputLineWriter( 0, range, inputLineIterator );
+			
+			// compute the current line
+			processLine( inputLineIterator, kernel[ 0 ] );
+
+			// and write it back to the output/temp image
+			writeLine( outputLineIterator, inputLineIterator );
 		}
 	}
 }

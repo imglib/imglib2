@@ -37,7 +37,7 @@ public class GaussFloat extends Gauss< FloatType >
 		if ( sizeProcessLine <= Integer.MAX_VALUE )
 			processLine = new ArrayImgFactory< FloatType >().create( new long[]{ sizeProcessLine }, new FloatType() );
 		else
-			processLine = new CellImgFactory< FloatType >( Integer.MAX_VALUE / 2 ).create( new long[]{ sizeProcessLine }, new FloatType() );
+			processLine = new CellImgFactory< FloatType >( Integer.MAX_VALUE / 16 ).create( new long[]{ sizeProcessLine }, new FloatType() );
 		
 		return processLine;
 	}	
