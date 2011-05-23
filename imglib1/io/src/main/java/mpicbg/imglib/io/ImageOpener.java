@@ -39,6 +39,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import ome.xml.model.primitives.PositiveFloat;
+
 import loci.common.DataTools;
 import loci.common.StatusEvent;
 import loci.common.StatusListener;
@@ -412,28 +414,28 @@ public class ImageOpener implements StatusReporter {
 			final String dimOrder = r.getDimensionOrder().toUpperCase();
 			final MetadataRetrieve retrieve = (MetadataRetrieve)r.getMetadataStore();
 			
-			Double cal;
+			PositiveFloat cal;
 			
 			final int posX = dimOrder.indexOf( 'X' );
 			cal = retrieve.getPixelsPhysicalSizeX( 0 );
-			if ( posX >= 0 && posX < calibration.length && cal != null && cal.floatValue() != 0 )
-				calibration[ posX ] = cal.floatValue(); 
+			if ( posX >= 0 && posX < calibration.length && cal != null && cal.getValue() != 0 )
+				calibration[ posX ] = cal.getValue().floatValue(); 
 	
 			final int posY = dimOrder.indexOf( 'Y' );
 			cal = retrieve.getPixelsPhysicalSizeY( 0 );
-			if ( posY >= 0 && posY < calibration.length && cal != null && cal.floatValue() != 0 )
-				calibration[ posY ] = cal.floatValue();
+			if ( posY >= 0 && posY < calibration.length && cal != null && cal.getValue() != 0 )
+				calibration[ posY ] = cal.getValue().floatValue();
 	
 			final int posZ = dimOrder.indexOf( 'Z' );
 			cal = retrieve.getPixelsPhysicalSizeZ( 0 );
-			if ( posZ >= 0 && posZ < calibration.length && cal != null && cal.floatValue() != 0 )
-				calibration[ posZ ] = cal.floatValue();
+			if ( posZ >= 0 && posZ < calibration.length && cal != null && cal.getValue() != 0 )
+				calibration[ posZ ] = cal.getValue().floatValue();
 			
 			final int posT = dimOrder.indexOf( 'T' );
 			retrieve.getPixelsTimeIncrement( 0 );
-			cal = retrieve.getPixelsTimeIncrement( 0 );
-			if ( posT >= 0 && posT < calibration.length && cal != null && cal.floatValue() != 0 )
-				calibration[ posT ] = cal.floatValue();
+			Double cal1 = retrieve.getPixelsTimeIncrement( 0 );
+			if ( posT >= 0 && posT < calibration.length && cal1 != null && cal1.floatValue() != 0 )
+				calibration[ posT ] = cal1.floatValue();
 		}
 		catch ( Exception e ) 
 		{
