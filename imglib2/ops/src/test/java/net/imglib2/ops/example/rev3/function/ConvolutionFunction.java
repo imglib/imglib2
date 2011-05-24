@@ -3,6 +3,10 @@ package net.imglib2.ops.example.rev3.function;
 
 // TODO - could be derived from a plain ScalarFunction taking real coords. probably want to do this eventually. a discrete one and a continuous one.
 
+// TODO
+//   Also define a class called SeparableConvoultionFunction which takes an X and a Y kernel
+//   and does more efficient math calculations. See Burger and Burge for more info.
+
 public final class ConvolutionFunction implements IntegerIndexedScalarFunction
 {
 	private final IntegerIndexedScalarFunction otherFunction;
