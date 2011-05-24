@@ -29,21 +29,30 @@
  */
 package net.imglib2.img.display.imagej;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
 import ij.ImagePlus;
-import net.imglib2.display.RealARGBConverter;
+import net.imglib2.RandomAccessibleInterval;
+import net.imglib2.converter.Converter;
+import net.imglib2.converter.TypeIdentity;
 import net.imglib2.display.RealFloatConverter;
 import net.imglib2.display.RealUnsignedByteConverter;
 import net.imglib2.display.RealUnsignedShortConverter;
 import net.imglib2.img.ImagePlusAdapter;
 import net.imglib2.img.Img;
 import net.imglib2.type.numeric.ARGBType;
+import net.imglib2.type.numeric.IntegerType;
+import net.imglib2.type.numeric.NumericType;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.integer.UnsignedByteType;
 import net.imglib2.type.numeric.integer.UnsignedShortType;
 import net.imglib2.type.numeric.real.FloatType;
+import net.imglib2.util.Util;
 
 public class ImageJFunctions
 {
+	final static AtomicInteger ai = new AtomicInteger();
+	
 	final public static int GRAY8 = ImagePlus.GRAY8;
 	final public static int GRAY32 = ImagePlus.GRAY32;
 	final public static int COLOR_RGB = ImagePlus.COLOR_RGB;
@@ -59,8 +68,33 @@ public class ImageJFunctions
 	public static Img<FloatType> wrapFloat( final ImagePlus imp ) { return ImagePlusAdapter.wrapFloat( imp ); }
 	
 	public static Img<FloatType> convertFloat( final ImagePlus imp ) { return ImagePlusAdapter.convertFloat( imp ); }	
+	
+	public static <T extends NumericType<T>> ImagePlus show( final RandomAccessibleInterval<T> img )
+	{
+		return show( img, "Image " + ai.getAndIncrement() );
+	}
+	
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	public static <T extends NumericType<T>> ImagePlus show( final RandomAccessibleInterval<T> img, final String title )
+	{		
+		final T t = Util.getTypeFromInterval( img );
 		
-	public static <T extends RealType<T>> ImagePlus showFloat( final Img<T> img, final String title ) 
+		if ( ARGBType.class.isInstance( t ) )
+			return showRGB( (Img<ARGBType>)img, new TypeIdentity<ARGBType>(), title );
+		else if ( UnsignedByteType.class.isInstance( t ) )
+			return showUnsignedByte( (Img<RealType>)img, title );
+		else if ( IntegerType.class.isInstance( t ) )
+			return showUnsignedShort( (Img<RealType>)img, title );
+		else if ( RealType.class.isInstance( t ) )
+			return showFloat( (Img<RealType>)img, title );
+		else
+		{
+			System.out.println( "Do not know how to display Type " + t.getClass().getSimpleName() );
+			return null;
+		}
+	}
+	
+	public static <T extends RealType<T>> ImagePlus showFloat( final RandomAccessibleInterval<T> img, final String title ) 
 	{
 		final ImageJVirtualStackFloat<T> stack = new ImageJVirtualStackFloat<T>( img, new RealFloatConverter<T>() );
 		final ImagePlus imp = new ImagePlus( title, stack );
@@ -69,16 +103,16 @@ public class ImageJFunctions
 		return imp;
 	}
 
-	public static <T extends RealType<T>> ImagePlus showRGB( final Img<T> img, final String title ) 
+	public static <T extends NumericType<T>> ImagePlus showRGB( final RandomAccessibleInterval<T> img, final Converter<T, ARGBType> converter, final String title ) 
 	{
-		final ImageJVirtualStackARGB<T> stack = new ImageJVirtualStackARGB<T>( img, new RealARGBConverter<T>( 0, 255 ) );
+		final ImageJVirtualStackARGB<T> stack = new ImageJVirtualStackARGB<T>( img, converter );
 		final ImagePlus imp = new ImagePlus( title, stack );
 		imp.show();
 		
 		return imp;
 	}
 
-	public static <T extends RealType<T>> ImagePlus showUnsignedByte( final Img<T> img, final String title ) 
+	public static <T extends RealType<T>> ImagePlus showUnsignedByte( final RandomAccessibleInterval<T> img, final String title ) 
 	{
 		final ImageJVirtualStackUnsignedByte<T> stack = new ImageJVirtualStackUnsignedByte<T>( img, new RealUnsignedByteConverter<T>( 0, 255 ) );
 		final ImagePlus imp = new ImagePlus( title, stack );
@@ -87,7 +121,7 @@ public class ImageJFunctions
 		return imp;
 	}
 
-	public static <T extends RealType<T>> ImagePlus showUnsignedShort( final Img<T> img, final String title ) 
+	public static <T extends RealType<T>> ImagePlus showUnsignedShort( final RandomAccessibleInterval<T> img, final String title ) 
 	{
 		final ImageJVirtualStackUnsignedShort<T> stack = new ImageJVirtualStackUnsignedShort<T>( img, new RealUnsignedShortConverter<T>( 0, 512 ) );
 		final ImagePlus imp = new ImagePlus( title, stack );
