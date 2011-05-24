@@ -12,11 +12,9 @@ import net.imglib2.algorithm.fft.FourierTransform.PreProcessing;
 import net.imglib2.algorithm.fft.FourierTransform.Rearrangement;
 import net.imglib2.algorithm.floydsteinberg.FloydSteinbergDithering;
 import net.imglib2.algorithm.gauss.DownSample;
-import net.imglib2.img.ContainerFactory;
-import net.imglib2.img.Image;
+import net.imglib2.img.Img;
+import net.imglib2.img.ImgFactory;
 import net.imglib2.img.array.ArrayImgFactory;
-import net.imglib2.img.display.ComplexTypePhaseSpectrumDisplay;
-import net.imglib2.img.display.ComplexTypePowerSpectrumDisplay;
 import net.imglib2.img.display.imagej.ImageJFunctions;
 import net.imglib2.outofbounds.OutOfBoundsPeriodicFactory;
 import net.imglib2.type.logic.BitType;
@@ -27,13 +25,12 @@ import net.imglib2.util.Util;
 
 public class AlgorithmPerformance
 {
-	public AlgorithmPerformance( final ContainerFactory containerFactory, final int numDimensions )
+	public AlgorithmPerformance( final ImgFactory<FloatType> containerFactory, final int numDimensions )
 	{
 		boolean show = false;
 		
-		final Image<FloatType> image = FourierConvolution.createGaussianKernel( containerFactory, 30, numDimensions );
-		image.getDisplay().setMinMax();
-		ImageJFunctions.copyToImagePlus( image ).show();
+		final Img<FloatType> image = FourierConvolution.createGaussianKernel( containerFactory, 30, numDimensions );
+		ImageJFunctions.show( image );
 		
 		System.out.println( "Created Image: " + image );
 		
@@ -57,23 +54,21 @@ public class AlgorithmPerformance
 	
 	public static void main( String[] args )
 	{
-		new AlgorithmPerformance( new ArrayImgFactory(), 2 );
+		new AlgorithmPerformance( new ArrayImgFactory<FloatType>(), 2 );
 	}
 	
-	public static <T extends RealType<T>> double testFFTConvolution( final Image<T> img, boolean show )
+	public static <T extends RealType<T>> double testFFTConvolution( final Img<T> img, boolean show )
 	{
-		final Image<FloatType> kernel = FourierConvolution.createGaussianKernel( new ArrayImgFactory(), 30 + System.currentTimeMillis()%10/10.0, img.getNumDimensions() );		
+		final Img<FloatType> kernel = FourierConvolution.createGaussianKernel( new ArrayImgFactory(), 30 + System.currentTimeMillis()%10/10.0, img.getNumDimensions() );		
 		final FourierConvolution<T, FloatType> fftConvol = new FourierConvolution<T, FloatType>( img, kernel );
 		
 		if ( fftConvol.checkInput() && fftConvol.process() )
 		{
-			Image<T> convolved = fftConvol.getResult();
-			kernel.close();
+			Img<T> convolved = fftConvol.getResult();
 			
 			if ( show )
 			{
-				convolved.getDisplay().setMinMax();
-				ImageJFunctions.copyToImagePlus( convolved ).show();
+				ImageJFunctions.show( convolved );
 			}
 			
 			return fftConvol.getProcessingTime();						
@@ -85,7 +80,7 @@ public class AlgorithmPerformance
 		}
 	}
 
-	public static <T extends RealType<T>> double testDownSampling( final Image<T> img, boolean show )
+	public static <T extends RealType<T>> double testDownSampling( final Img<T> img, boolean show )
 	{
 		final DownSample<T> downSample = new DownSample<T>( img, 0.5f );
 		
@@ -95,18 +90,17 @@ public class AlgorithmPerformance
 			return -1;
 		}
 		
-		final Image<T> downSampledImage = downSample.getResult();
+		final Img<T> downSampledImage = downSample.getResult();
 		
 		if ( show )
 		{
-			downSampledImage.getDisplay().setMinMax();
-			ImageJFunctions.displayAsVirtualStack( downSampledImage ).show();
+			ImageJFunctions.show( downSampledImage );
 		}
 		
 		return -1;
 	}
 
-	public <S extends RealType<S>, T extends RealType<T>> double testPhaseCorrelation( final Image<S> image1, final Image<T> image2, boolean show )	
+	public <S extends RealType<S>, T extends RealType<T>> double testPhaseCorrelation( final Img<S> image1, final Img<T> image2, boolean show )	
 	{
 		PhaseCorrelation<S, T> pc = new PhaseCorrelation<S, T>( image1, image2 );
 		pc.setInvestigateNumPeaks( 10 );
@@ -126,16 +120,16 @@ public class AlgorithmPerformance
 		return pc.getProcessingTime();
 	}
 	
-	public static <T extends RealType<T>> double testDithering( final Image<T> image, boolean show )
+	public static <T extends RealType<T>> double testDithering( final Img<T> image, boolean show )
 	{
 		final FloydSteinbergDithering<T> dither = new FloydSteinbergDithering<T>( image );
 		
 		if ( dither.checkInput() && dither.process() )
 		{
-			final Image<BitType> dithered = dither.getResult();
+			final Img<BitType> dithered = dither.getResult();
 			
 			if ( show )
-				ImageJFunctions.copyToImagePlus( dithered ).show();
+				ImageJFunctions.show( dithered );
 			
 			return dither.getProcessingTime();
 		}
@@ -147,7 +141,7 @@ public class AlgorithmPerformance
 			
 	}
 
-	public static <T extends RealType<T>> double testBandpass( final Image<T> img, boolean show )
+	public static <T extends RealType<T>> double testBandpass( final Img<T> img, boolean show )
 	{
 		// init fft
 		final FourierTransform<T, ComplexFloatType> fft = new FourierTransform<T, ComplexFloatType>( img, new ComplexFloatType() );
@@ -158,7 +152,7 @@ public class AlgorithmPerformance
 		if ( fft.checkInput() && fft.process() )
 		{
 			// get result image
-			final Image<ComplexFloatType> fftImage = fft.getResult();
+			final Img<ComplexFloatType> fftImage = fft.getResult();
 			processingTime += fft.getProcessingTime();
 	
 			// compute bandpass in place
@@ -172,8 +166,7 @@ public class AlgorithmPerformance
 			
 			if ( show )
 			{
-				fftImage.getDisplay().setMinMax();
-				ImageJFunctions.copyToImagePlus( fftImage ).show();
+				ImageJFunctions.show( fftImage );
 			}
 			
 			// init inverse fft
@@ -182,13 +175,11 @@ public class AlgorithmPerformance
 			// comute inverse fft and display result
 			if ( invFFT.checkInput() && invFFT.process())
 			{
-				final Image<T> inv = invFFT.getResult();
+				final Img<T> inv = invFFT.getResult();
 								
 				if ( show )
 				{
-					inv.getDisplay().setMinMax();
-					inv.setName( "Inverse FFT" );
-					ImageJFunctions.copyToImagePlus( inv ).show();
+					ImageJFunctions.show( inv, "Inverse FFT" );
 				}
 			}
 			processingTime += invFFT.getProcessingTime();
@@ -201,7 +192,7 @@ public class AlgorithmPerformance
 		return processingTime;
 	}
 	
-	public double testFFT( final Image<FloatType> img, boolean show )
+	public double testFFT( final Img<FloatType> img, boolean show )
 	{
 		final FourierTransform<FloatType, ComplexFloatType> fft = new FourierTransform<FloatType, ComplexFloatType>( img, new ComplexFloatType() );
 		fft.setNumThreads( 1 );
@@ -210,7 +201,7 @@ public class AlgorithmPerformance
 		
 		double processingTime = 0;
 		
-		final Image<ComplexFloatType> fftImage;
+		final Img<ComplexFloatType> fftImage;
 		
 		if ( fft.checkInput() && fft.process() )
 		{
@@ -220,12 +211,10 @@ public class AlgorithmPerformance
 		
 			if ( show )
 			{
-				fftImage.getDisplay().setMinMax();
-				ImageJFunctions.displayAsVirtualStack( fftImage ).show();			
+				ImageJFunctions.show( fftImage );			
 	
-				fftImage.setDisplay( new ComplexTypePhaseSpectrumDisplay<ComplexFloatType>( fftImage ) );
-				fftImage.getDisplay().setMinMax();
-				ImageJFunctions.displayAsVirtualStack( fftImage ).show();
+				//fftImage.setDisplay( new ComplexTypePhaseSpectrumDisplay<ComplexFloatType>( fftImage ) );
+				ImageJFunctions.show( fftImage );
 			}			
 		}
 		else
@@ -240,12 +229,11 @@ public class AlgorithmPerformance
 		
 		if ( invfft.checkInput() && invfft.process() )
 		{
-			final Image<FloatType> inverseFFT = invfft.getResult();
+			final Img<FloatType> inverseFFT = invfft.getResult();
 			
 			if ( show )
 			{
-				inverseFFT.getDisplay().setMinMax();
-				ImageJFunctions.copyToImagePlus( inverseFFT ).show();
+				ImageJFunctions.show( inverseFFT );
 			}
 			processingTime += invfft.getProcessingTime();
 			return processingTime;
@@ -257,23 +245,22 @@ public class AlgorithmPerformance
 		}
 	}
 	
-	public static <T extends RealType<T>> double testCanvas( final Image<T> img, final float factor, final float fadingRange, final float exponent, boolean show )
+	public static <T extends RealType<T>> double testCanvas( final Img<T> img, final float factor, final float fadingRange, final float exponent, boolean show )
 	{
-		final int[] newSize = new int[ img.getNumDimensions() ];
+		final int[] newSize = new int[ img.numDimensions() ];
 		
-		for ( int d = 0; d < img.getNumDimensions(); ++d )
-			newSize[ d ] = Util.round( img.getDimension( d ) * factor );
+		for ( int d = 0; d < img.numDimensions(); ++d )
+			newSize[ d ] = Util.round( img.dimension( d ) * factor );
 		
-		final CanvasImage<T> canvas = new CanvasImage<T>( img, newSize, new OutOfBoundsPeriodicFactory<T>() );
+		final CanvasImg<T> canvas = new CanvasImg<T>( img, newSize, new OutOfBoundsPeriodicFactory<T, Img<T>>() );
 		
 		if ( canvas.checkInput() && canvas.process() )
 		{
-			Image<T> out = canvas.getResult();
+			Img<T> out = canvas.getResult();
 			
 			if ( show )
 			{
-				out.getDisplay().setMinMax();			
-				ImageJFunctions.displayAsVirtualStack( out ).show();
+				ImageJFunctions.show( out );
 			}
 			
 			return canvas.getProcessingTime();

@@ -1,27 +1,24 @@
 package tests;
 
 import ij.IJ;
-import ij.ImageJ;
-import ij.ImagePlus;
+import ij.ImgJ;
+import ij.ImgPlus;
 
 import java.io.File;
 
 import javax.swing.JFileChooser;
 
-import net.imglib2.container.imageplus.ImagePlusContainer;
 import net.imglib2.exception.ImgLibException;
-import net.imglib2.img.Image;
 import net.imglib2.img.Img;
-import net.imglib2.img.ImgCursor;
 import net.imglib2.img.array.ArrayImgFactory;
 import net.imglib2.img.display.imagej.ImageJFunctions;
-import net.imglib2.io.LOCI;
+import net.imglib2.img.display.imagej.ImgJFunctions;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.real.FloatType;
 
 /**
  * A very simple imglib test that squares an image.
- * Displays both input and output images onscreen using ImageJ.
+ * Displays both input and output images onscreen using ImgJ.
  * 
  * @author Curtis Rueden ctrueden at wisc.edu
  */
@@ -31,25 +28,25 @@ public class SquareTest {
   public void execute() {
     File file = chooseFile();
     if (file == null) return;
-    Image<FloatType> inImg = LOCI.openLOCIFloatType(file.getPath(),
+    Img<FloatType> inImg = LOCI.openLOCIFloatType(file.getPath(),
       new ArrayImgFactory());
-    Image<FloatType> outImg = square(inImg);
+    Img<FloatType> outImg = square(inImg);
 
-    // show ImageJ control panel window
-    if (IJ.getInstance() == null) new ImageJ();
+    // show ImgJ control panel window
+    if (IJ.getInstance() == null) new ImgJ();
     display(inImg, file.getName());
     display(outImg, "Squared");
   }
 
   /** Computes the square of a numeric image. */
-  public <T extends RealType<T>> Image<T> square(Image<T> inputImage) {
-    //ImageFactory<T> factory = new ImageFactory<T>(inputImage.createType(),
+  public <T extends RealType<T>> Img<T> square(Img<T> inputImg) {
+    //ImgFactory<T> factory = new ImgFactory<T>(inputImg.createType(),
     //  new ArrayContainerFactory());
-    //Image<T> outputImage = factory.createImage(new int[] {512, 512});
-    Image<T> outputImage = inputImage.createNewImage();
+    //Img<T> outputImg = factory.createImg(new int[] {512, 512});
+    Img<T> outputImg = inputImg.createNewImg();
 
-    ImgCursor<T> inputCursor = inputImage.createRasterIterator();
-    ImgCursor<T> outputCursor = outputImage.createRasterIterator();
+    ImgCursor<T> inputCursor = inputImg.createRasterIterator();
+    ImgCursor<T> outputCursor = outputImg.createRasterIterator();
     while (inputCursor.hasNext()) {
       inputCursor.fwd();
       outputCursor.fwd();
@@ -58,7 +55,7 @@ public class SquareTest {
     }
     inputCursor.close();
     outputCursor.close();
-    return outputImage;
+    return outputImg;
   }
 
   /** Prompts the user to choose a file on disk. */
@@ -69,23 +66,23 @@ public class SquareTest {
     return jc.getSelectedFile();
   }
 
-  /** Displays the given imglib image as an ImagePlus. */
-  public static <T extends RealType<T>> void display(Image<T> img,
+  /** Displays the given imglib image as an ImgPlus. */
+  public static <T extends RealType<T>> void display(Img<T> img,
     String title)
   {
-    ImagePlus imp = null;
+    ImgPlus imp = null;
     Img<T> c = img.getContainer();
-    if (c instanceof ImagePlusContainer<?, ?>) {
-      ImagePlusContainer<T, ?> ipc = (ImagePlusContainer<T, ?>) c;
+    if (c instanceof ImgPlusContainer<?, ?>) {
+      ImgPlusContainer<T, ?> ipc = (ImgPlusContainer<T, ?>) c;
       try {
-        imp = ipc.getImagePlus();
+        imp = ipc.getImgPlus();
       }
       catch (ImgLibException exc) {
         IJ.log("Warning: " + exc.getMessage());
       }
     }
     if (imp == null) {
-      imp = ImageJFunctions.copyToImagePlus(img);
+      imp = ImageJFunctions.showFloat(img);
     }
     if (title != null) imp.setTitle(title);
     img.getDisplay().setMinMax();

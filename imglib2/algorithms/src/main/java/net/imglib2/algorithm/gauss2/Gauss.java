@@ -69,6 +69,14 @@ public abstract class Gauss< T extends NumericType< T > >
 	protected abstract Img<T> getProcessingLine( final long size );
 	
 	/**
+	 * @return the result of the convolution
+	 */
+	public RandomAccessible<T> getResult()
+	{
+		return output;
+	}
+	
+	/**
 	 * The area for the output/temp that needs to be convolved, always relative to the input of the
 	 * next convolution operation.
 	 * The area is larger than the input, defined by the size of the kernel in each dimension.
