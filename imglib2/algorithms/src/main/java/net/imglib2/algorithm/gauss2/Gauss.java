@@ -175,11 +175,6 @@ public abstract class Gauss< T extends NumericType< T > >
 			
 			// this also sticks out half because we need more input pixels in x due to the convolution (kernel size)
 			randomAccess.move( -(kernel[ 0 ].length / 2) - 1, 0 );
-			
-			// here we need more because we need those pixels for later convolutions in higher dimensions,
-			// it has to be computed extra 
-			for ( int d = 1; d < numDimensions; ++d )
-				randomAccess.move( -(kernel[ 0 ].length / 2), d );	
 		}
 		else 
 		{			
@@ -228,21 +223,12 @@ public abstract class Gauss< T extends NumericType< T > >
 		}
 		else
 		{
-			final long[] tmp = new long[ numDimensions ];
-
-			// now put the randomAccess into the correct location, the range is relative to the temporary images
-			for ( int d = 0; d < numDimensions; ++d )
-			{
-				// there is no overhead necessary for any dimensions that have been convolved already
-				if ( d < dim )
-					tmp[ d ] = 0;
-				else if ( d == dim )
-					tmp[ d ] = -(kernel[ dim ].length / 2) - 1;
-				else
-					tmp[ d ] = -(kernel[ dim ].length / 2);
-			}
+			if ( dim % 2 == 0 )
+				tmp1.min( randomAccess );
+			else
+				tmp2.min( randomAccess );
 			
-			randomAccess.setPosition( tmp );			
+			randomAccess.bck( dim );
 		}
 		
 		return new WritableLineIterator< T >( dim, sizeProcessLine, randomAccess );
@@ -391,7 +377,7 @@ public abstract class Gauss< T extends NumericType< T > >
 					randomAccessRight.get().add( tmp );
 					
 					randomAccessLeft.fwd( 0 );
-					randomAccessLeft.bck( 0 );
+					randomAccessRight.bck( 0 );
 				}
 				
 				// do the last pixel (same as a above, but right one doesn't move)

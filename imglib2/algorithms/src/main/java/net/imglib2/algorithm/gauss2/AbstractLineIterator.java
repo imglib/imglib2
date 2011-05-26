@@ -11,7 +11,7 @@ public abstract class AbstractLineIterator implements Iterator
 	long i;
 	
 	final int d;
-	final long sizeMinus1;
+	final long size;
 	final Positionable positionable;
 	final Localizable offset;
 
@@ -38,7 +38,7 @@ public abstract class AbstractLineIterator implements Iterator
 	public AbstractLineIterator( final int dim, final long size, final Localizable offset, final Positionable positionable )
 	{
 		this.d = dim;
-		this.sizeMinus1 = size;
+		this.size = size;
 		this.positionable = positionable;
 				
 		// store the initial position
@@ -88,5 +88,5 @@ public abstract class AbstractLineIterator implements Iterator
 	public void reset() { i = -1; }
 
 	@Override
-	public boolean hasNext() { return i < sizeMinus1; }
+	public boolean hasNext() { return i < size; }
 }
