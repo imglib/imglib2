@@ -3,11 +3,10 @@ package net.imglib2.img.display.imagej;
 import ij.ImagePlus;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.converter.Converter;
-import net.imglib2.type.Type;
 import net.imglib2.type.numeric.real.FloatType;
 import net.imglib2.view.RandomAccessibleZeroMinIntervalCursor;
 
-public class ImageJVirtualStackFloat< S extends Type< S > > extends ImageJVirtualStack< S, FloatType >
+public class ImageJVirtualStackFloat< S > extends ImageJVirtualStack< S, FloatType >
 {
 	public ImageJVirtualStackFloat( RandomAccessibleInterval< S > source, Converter< S, FloatType > converter )
 	{
