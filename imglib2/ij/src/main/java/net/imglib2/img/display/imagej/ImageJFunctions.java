@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2009--2010, Stephan Preibisch & Stephan Saalfeld
+ * Copyright (c) 2009--2011, Pietzsch, Preibisch & Saalfeld
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -9,7 +9,7 @@
  * list of conditions and the following disclaimer.  Redistributions in binary
  * form must reproduce the above copyright notice, this list of conditions and
  * the following disclaimer in the documentation and/or other materials
- * provided with the distribution.  Neither the name of the Fiji project nor
+ * provided with the distribution.  Neither the name of the imglib project nor
  * the names of its contributors may be used to endorse or promote products
  * derived from this software without specific prior written permission.
  *
@@ -29,9 +29,10 @@
  */
 package net.imglib2.img.display.imagej;
 
+import ij.ImagePlus;
+
 import java.util.concurrent.atomic.AtomicInteger;
 
-import ij.ImagePlus;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.converter.Converter;
 import net.imglib2.converter.TypeIdentity;
@@ -49,13 +50,15 @@ import net.imglib2.type.numeric.integer.UnsignedShortType;
 import net.imglib2.type.numeric.real.FloatType;
 import net.imglib2.util.Util;
 
+/**
+ * Convenience methods for interactions with ImageJ.
+ *
+ * @author Stephan Preibisch and Stephan Saalfeld <saalfeld@mpi-cbg.de>
+ * @version 0.1a
+ */
 public class ImageJFunctions
 {
 	final static AtomicInteger ai = new AtomicInteger();
-	
-	final public static int GRAY8 = ImagePlus.GRAY8;
-	final public static int GRAY32 = ImagePlus.GRAY32;
-	final public static int COLOR_RGB = ImagePlus.COLOR_RGB;
 		
 	public static <T extends RealType<T>> Img< T > wrap( final ImagePlus imp ) { return ImagePlusAdapter.wrap( imp ); }
 	
@@ -75,18 +78,18 @@ public class ImageJFunctions
 	}
 	
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public static <T extends NumericType<T>> ImagePlus show( final RandomAccessibleInterval<T> img, final String title )
-	{		
+	public static < T extends NumericType< T > > ImagePlus show( final RandomAccessibleInterval< T > img, final String title )
+	{
 		final T t = Util.getTypeFromInterval( img );
-		
+
 		if ( ARGBType.class.isInstance( t ) )
-			return showRGB( (Img<ARGBType>)img, new TypeIdentity<ARGBType>(), title );
+			return showRGB( ( RandomAccessibleInterval< ARGBType > ) img, new TypeIdentity< ARGBType >(), title );
 		else if ( UnsignedByteType.class.isInstance( t ) )
-			return showUnsignedByte( (Img<RealType>)img, title );
+			return showUnsignedByte( ( RandomAccessibleInterval< RealType > ) img, title );
 		else if ( IntegerType.class.isInstance( t ) )
-			return showUnsignedShort( (Img<RealType>)img, title );
+			return showUnsignedShort( ( RandomAccessibleInterval< RealType > ) img, title );
 		else if ( RealType.class.isInstance( t ) )
-			return showFloat( (Img<RealType>)img, title );
+			return showFloat( ( RandomAccessibleInterval< RealType > ) img, title );
 		else
 		{
 			System.out.println( "Do not know how to display Type " + t.getClass().getSimpleName() );
@@ -94,42 +97,184 @@ public class ImageJFunctions
 		}
 	}
 	
-	public static <T extends RealType<T>> ImagePlus showFloat( final RandomAccessibleInterval<T> img, final String title ) 
+	
+	/**
+	 * Show a {@link RandomAccessibleInterval} as single channel 32-bit float
+	 * {@link ImagePlus} using a custom {@link Converter}.
+	 * 
+	 * @param <T>
+	 * @param img
+	 * @param converter
+	 * @param title
+	 * @return
+	 */
+	public static < T > ImagePlus showFloat(
+			final RandomAccessibleInterval< T > img,
+			final Converter< T, FloatType > converter,
+			final String title )
 	{
-		final ImageJVirtualStackFloat<T> stack = new ImageJVirtualStackFloat<T>( img, new RealFloatConverter<T>() );
+		final ImageJVirtualStackFloat< T > stack = new ImageJVirtualStackFloat< T >( img, converter );
 		final ImagePlus imp = new ImagePlus( title, stack );
 		imp.show();
-		
+
+		return imp;
+	}
+	
+	/**
+	 * Show a {@link RandomAccessibleInterval} of {@link RealType} pixels as
+	 * single channel 32-bit float using a default {@link Converter}.
+	 * 
+	 * @param <T>
+	 * @param img
+	 * @param title
+	 * @return
+	 */
+	public static < T extends RealType< T > > ImagePlus showFloat( final RandomAccessibleInterval< T > img, final String title )
+	{
+		return showFloat( img, new RealFloatConverter< T >(), title );
+	}
+	
+	/**
+	 * Show a {@link RandomAccessibleInterval} of {@link RealType} pixels as
+	 * single channel 32-bit float using a default {@link Converter}.
+	 * 
+	 * @param <T>
+	 * @param img
+	 * @return
+	 */
+	public static < T extends RealType< T > > ImagePlus showFloat( final RandomAccessibleInterval< T > img )
+	{
+		return showFloat( img, "Image " + ai.getAndIncrement() );
+	}
+	
+	/**
+	 * Show a {@link RandomAccessibleInterval} as 24bit RGB  {@link ImagePlus}
+	 * using a custom {@link Converter}.
+	 * 
+	 * @param <T>
+	 * @param img
+	 * @param converter
+	 * @param title
+	 * @return
+	 */
+	public static < T > ImagePlus showRGB( final RandomAccessibleInterval< T > img, final Converter< T, ARGBType > converter, final String title )
+	{
+		final ImageJVirtualStackARGB< T > stack = new ImageJVirtualStackARGB< T >( img, converter );
+		final ImagePlus imp = new ImagePlus( title, stack );
+		imp.show();
+
 		return imp;
 	}
 
-	public static <T extends NumericType<T>> ImagePlus showRGB( final RandomAccessibleInterval<T> img, final Converter<T, ARGBType> converter, final String title ) 
+	
+	/**
+	 * Show a {@link RandomAccessibleInterval} as single channel 8-bit unsigned
+	 * integer {@link ImagePlus} using a custom {@link Converter}.
+	 * 
+	 * @param <T>
+	 * @param img
+	 * @param title
+	 * @return
+	 */
+	public static < T > ImagePlus showUnsignedByte(
+			final RandomAccessibleInterval< T > img,
+			final Converter< T, UnsignedByteType > converter,
+			final String title )
 	{
-		final ImageJVirtualStackARGB<T> stack = new ImageJVirtualStackARGB<T>( img, converter );
+		final ImageJVirtualStackUnsignedByte< T > stack = new ImageJVirtualStackUnsignedByte< T >( img, converter );
 		final ImagePlus imp = new ImagePlus( title, stack );
 		imp.show();
-		
+
+		return imp;
+	}
+	
+	
+	/**
+	 * Show a {@link RandomAccessibleInterval} of {@link RealType} pixels as
+	 * single channel 8-bit unsigned integer {@link ImagePlus} using a default
+	 * {@link Converter}.
+	 * 
+	 * @param <T>
+	 * @param img
+	 * @param title
+	 * @return
+	 */
+	public static < T extends RealType< T > > ImagePlus showUnsignedByte(
+			final RandomAccessibleInterval< T > img,
+			final String title )
+	{
+		return showUnsignedByte( img, new RealUnsignedByteConverter< T >( 0, 255 ), title );
+	}
+
+	/**
+	 * Show a {@link RandomAccessibleInterval} of {@link RealType} pixels as
+	 * single channel 8-bit unsigned integer {@link ImagePlus} using a default
+	 * {@link Converter}.
+	 * 
+	 * @param <T>
+	 * @param img
+	 * @return
+	 */
+	public static < T extends RealType< T > > ImagePlus showUnsignedByte( final RandomAccessibleInterval< T > img )
+	{
+		return showUnsignedByte( img, "Image " + ai.getAndIncrement() );
+	}
+	
+	/**
+	 * Show a {@link RandomAccessibleInterval} as single channel 16-bit
+	 * unsigned integer {@link ImagePlus} using a custom {@link Converter}.
+	 * 
+	 * @param <T>
+	 * @param img
+	 * @param title
+	 * @return
+	 */
+	public static < T > ImagePlus showUnsignedShort(
+			final RandomAccessibleInterval< T > img,
+			final Converter< T, UnsignedShortType > converter,
+			final String title )
+	{
+		final ImageJVirtualStackUnsignedShort< T > stack = new ImageJVirtualStackUnsignedShort< T >( img, converter );
+		final ImagePlus imp = new ImagePlus( title, stack );
+		imp.show();
+
 		return imp;
 	}
 
-	public static <T extends RealType<T>> ImagePlus showUnsignedByte( final RandomAccessibleInterval<T> img, final String title ) 
+	
+	/**
+	 * Show a {@link RandomAccessibleInterval} of {@link RealType} pixels as
+	 * single channel 16-bit unsigned integer {@link ImagePlus} using a default
+	 * {@link Converter}.
+	 * 
+	 * @param <T>
+	 * @param img
+	 * @param title
+	 * @return
+	 */
+	public static < T extends RealType< T > > ImagePlus showUnsignedShort(
+			final RandomAccessibleInterval< T > img,
+			final String title )
 	{
-		final ImageJVirtualStackUnsignedByte<T> stack = new ImageJVirtualStackUnsignedByte<T>( img, new RealUnsignedByteConverter<T>( 0, 255 ) );
-		final ImagePlus imp = new ImagePlus( title, stack );
-		imp.show();
-		
-		return imp;
+		return showUnsignedShort( img, new RealUnsignedShortConverter< T >( 0, 65535 ), title );
 	}
 
-	public static <T extends RealType<T>> ImagePlus showUnsignedShort( final RandomAccessibleInterval<T> img, final String title ) 
+	/**
+	 * Show a {@link RandomAccessibleInterval} of {@link RealType} pixels as
+	 * single channel 16-bit unsigned integer {@link ImagePlus} using a default
+	 * {@link Converter}.
+	 * 
+	 * @param <T>
+	 * @param img
+	 * @param title
+	 * @return
+	 */
+	public static < T extends RealType< T > > ImagePlus showUnsignedShort(
+			final RandomAccessibleInterval< T > img )
 	{
-		final ImageJVirtualStackUnsignedShort<T> stack = new ImageJVirtualStackUnsignedShort<T>( img, new RealUnsignedShortConverter<T>( 0, 512 ) );
-		final ImagePlus imp = new ImagePlus( title, stack );
-		imp.show();
-		
-		return imp;
+		return showUnsignedShort( img, "Image " + ai.getAndIncrement() );
 	}
-
+	
 	/*
 	public static <T extends Type<T>> ImagePlus copy( final Img<T> img, String title )
 	{

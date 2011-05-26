@@ -34,15 +34,10 @@ import net.imglib2.type.numeric.real.FloatType;
 /**
  * 
  *
- * @author Stephan Preibisch
+ * @author Stephan Saalfeld <saalfeld@mpi-cbg.de> and Stephan Preibisch
  */
 public class RealFloatConverter< R extends RealType< R > > implements Converter< R, FloatType >
 {
-	public RealFloatConverter()
-	{
-		super();		
-	}
-	
 	@Override
 	public void convert( final R input, final FloatType output )
 	{
