@@ -27,7 +27,7 @@ public abstract class Gauss< T extends NumericType< T > >
 {
 	final Interval inputInterval;
 	final Localizable outputOffset;
-	final RandomAccessible<T> input, output;
+	/*final */RandomAccessible<T> input, output;
 	final ImgFactory<T> factory;	
 	final Img<T> tmp1, tmp2;
 	
@@ -189,7 +189,7 @@ public abstract class Gauss< T extends NumericType< T > >
 		// return a new SamplingLineIterator that also keeps the instance of the processing line,
 		// which is important for multithreading so that each SamplingLineIterator has its own
 		// temporary space
-		return new SamplingLineIterator<T>( dim, sizeInputData, randomAccess, getProcessingLine( sizeInputData ) );		
+		return new SamplingLineIterator<T>( dim, sizeInputData, randomAccess, getProcessingLine( sizeProcessLine ) );		
 	}
 	
 	/**
@@ -355,8 +355,12 @@ public abstract class Gauss< T extends NumericType< T > >
 			// The pixel in the center is done by the left random access.
 			// We perform one movement less than necessary, because in the last pixel before
 			// the center we only need to move the left one which is responsible for the center.			
-			for ( long n = 0; n < imgSize; ++n )
+			for ( long n = 0; n < imgSize - kernelSizeMinus1; ++n )
 			{
+				if ( n == 780 )
+				{
+					System.gc();					
+				}
 				input.fwd();
 				
 				// copy input into a temp variable, it might be expensive to get()
@@ -380,7 +384,7 @@ public abstract class Gauss< T extends NumericType< T > >
 					randomAccessRight.bck( 0 );
 				}
 				
-				// do the last pixel (same as a above, but right one doesn't move)
+				// do the last pixel (same as a above, but right cursor doesn't move)
 				tmp.set( copy );
 				tmp.mul( kernel[ kernelSizeHalfMinus1 ] );
 				
@@ -618,7 +622,7 @@ public abstract class Gauss< T extends NumericType< T > >
 				{
 					cursorDim.fwd();							
 	
-					System.out.println( i );
+					System.out.println( i++ );
 					
 					// update all positions except for the one we are currrently doing the fft on
 					cursorDim.localize( fakeSize );
@@ -641,6 +645,9 @@ public abstract class Gauss< T extends NumericType< T > >
 					// and write it back to the output/temp image
 					writeLine( outputLineIterator, inputLineIterator );
 				}
+				
+				//output = tmp1;
+				//return;
 			}
 		}
 		else
