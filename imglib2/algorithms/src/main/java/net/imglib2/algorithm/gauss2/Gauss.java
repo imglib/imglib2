@@ -599,6 +599,8 @@ public abstract class Gauss< T extends NumericType< T > >
 		{
 			for ( int dim = 0; dim < numDimensions; ++dim )
 			{
+				System.out.println( dim );
+				
 				final Interval range = getRange( dim );
 								
 				/**
@@ -623,11 +625,15 @@ public abstract class Gauss< T extends NumericType< T > >
 
 				final LocalizingZeroMinIntervalIterator cursorDim = new LocalizingZeroMinIntervalIterator( fakeSize );
 				
+				long i = 0;
+				
 				// iterate over all dimensions except the one we are computing in
 				while( cursorDim.hasNext() )
 				{
 					cursorDim.fwd();							
 	
+					System.out.println( i );
+					
 					// update all positions except for the one we are currrently doing the fft on
 					cursorDim.localize( fakeSize );
 	
