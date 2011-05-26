@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2009--2011, Stephan Preibisch & Stephan Saalfeld
+ * Copyright (c) 2009--2011, Pietzsch, Preibisch & Saalfeld
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -27,22 +27,16 @@
  */
 package net.imglib2;
 
-import net.imglib2.img.Img;
-import net.imglib2.type.Type;
+import net.imglib2.type.NativeType;
 
 /** 
- * <p>The {@link Sampler} interface provides access to a {@link Type} instance.
- * This {@link Type} instance may point to an actual pixel stored in a
- * {@link Img} or be generated differently.</p>
+ * <p>The {@link Sampler} interface provides access to a value whose type is
+ * specified by the generic parameter T.  This T may point to an actual
+ * {@link Object} as stored in a {@link Collection}, a proxy {@link Object}
+ * that allows reading and writing pixel data of an image (e.g. all
+ * {@link NativeType NativeTypes}), or a proxy {@link Object} whose content
+ * is generated otherwise and may only be readable (e.g. ShapeList2D).</p>
  * 
- * <p>The {@link Sampler} interface unifies pixel access for {@link Iterator},
- * {@link PositionableRasterSampler random access samplers},
- * {@link Interpolator} which are point {@link Sampler Samplers}.</p>
- * 
- * <p>In addition, many operations require integrating a region in a
- * functionally defined way.  The {@link Sampler} interface is the basis of all
- * these strategies.</p>
- *  
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
 public interface Sampler< T >
@@ -57,7 +51,7 @@ public interface Sampler< T >
 	 * @return - A new {@link Sampler} in the same state accessing the 
 	 * same values.
 	 *  
-	 * It does NOT copy the T, just the state of the {@link Sampler}.
+	 * It does NOT copy T, just the state of the {@link Sampler}.
 	 * Otherwise use T.copy() if available.
 	 * 
 	 * Sampler.copy().get() == Sampler.get(), i.e. both hold the same value,
