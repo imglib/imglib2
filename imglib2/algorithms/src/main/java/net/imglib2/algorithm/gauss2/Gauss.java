@@ -180,7 +180,7 @@ public abstract class Gauss< T extends NumericType< T > >
 		{			
 			// now put the randomAccess into the correct location, the range is relative to the temporary images
 			// and therefore zero-bounded			
-			tmp1.min( randomAccess );
+			range.min( randomAccess );
 			
 			// all dimensions start at 0 relative to the temp images, except the dimension that is currently convolved
 			randomAccess.move( -(kernel[ dim ].length / 2) - 1, dim );
@@ -354,13 +354,10 @@ public abstract class Gauss< T extends NumericType< T > >
 			// but only one way.  In this way we save half the calculations. 
 			// The pixel in the center is done by the left random access.
 			// We perform one movement less than necessary, because in the last pixel before
-			// the center we only need to move the left one which is responsible for the center.			
-			for ( long n = 0; n < imgSize - kernelSizeMinus1; ++n )
+			// the center we only need to move the left one which is responsible for the center
+			final long length = imgSize - kernelSizeMinus1;
+			for ( long n = 0; n < length; ++n )
 			{
-				if ( n == 780 )
-				{
-					System.gc();					
-				}
 				input.fwd();
 				
 				// copy input into a temp variable, it might be expensive to get()
@@ -413,7 +410,8 @@ public abstract class Gauss< T extends NumericType< T > >
 			 */
 			
 			// convolve the last pixels where the input influences less than kernel.size pixels
-			for ( long i = imgSize; i < imgSize + kernelSizeMinus1; ++i )
+			final long endLength = imgSize + kernelSizeMinus1;
+			for ( long i = imgSize; i < endLength; ++i )
 			{
 				// after the fwd() call the random access is at position imgSize as pictured above
 				input.fwd();
@@ -589,8 +587,6 @@ public abstract class Gauss< T extends NumericType< T > >
 		{
 			for ( int dim = 0; dim < numDimensions; ++dim )
 			{
-				System.out.println( dim );
-				
 				final Interval range = getRange( dim );
 								
 				/**
@@ -615,14 +611,10 @@ public abstract class Gauss< T extends NumericType< T > >
 
 				final LocalizingZeroMinIntervalIterator cursorDim = new LocalizingZeroMinIntervalIterator( fakeSize );
 				
-				long i = 0;
-				
 				// iterate over all dimensions except the one we are computing in
 				while( cursorDim.hasNext() )
 				{
 					cursorDim.fwd();							
-	
-					System.out.println( i++ );
 					
 					// update all positions except for the one we are currrently doing the fft on
 					cursorDim.localize( fakeSize );
@@ -645,9 +637,6 @@ public abstract class Gauss< T extends NumericType< T > >
 					// and write it back to the output/temp image
 					writeLine( outputLineIterator, inputLineIterator );
 				}
-				
-				//output = tmp1;
-				//return;
 			}
 		}
 		else
