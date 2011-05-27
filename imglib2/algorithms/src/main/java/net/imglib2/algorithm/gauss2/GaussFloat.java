@@ -8,9 +8,8 @@ import net.imglib2.Sampler;
 import net.imglib2.converter.Converter;
 import net.imglib2.img.Img;
 import net.imglib2.img.ImgFactory;
-import net.imglib2.img.array.ArrayImg;
+import net.imglib2.img.NativeImg;
 import net.imglib2.img.array.ArrayImgFactory;
-import net.imglib2.img.basictypeaccess.FloatAccess;
 import net.imglib2.img.basictypeaccess.array.FloatArray;
 import net.imglib2.img.cell.CellImgFactory;
 import net.imglib2.outofbounds.OutOfBoundsFactory;
@@ -82,11 +81,9 @@ final public class GaussFloat extends GaussNativeType< FloatType >
 		final int kernelSizeHalf = kernelSize / 2;
 		final int kernelSizeHalfMinus1 = kernelSizeHalf - 1;
 		
-		final ArrayImg<FloatType, FloatAccess> img = (ArrayImg<FloatType, FloatAccess>)input.getProcessLine();
-		final FloatArray fa = (FloatArray)img.update( null );
-		final float[] v = fa.getCurrentStorageArray();
+		final float[] v = ((FloatArray)((NativeImg<?, ?>)input.getProcessLine()).update( null )).getCurrentStorageArray();
 		
-		final int imgSize = (int)input.getProcessLine().size();
+		final int imgSize = v.length;
 		
 		int indexLeft = 0;
 		int indexRight = 0;
@@ -164,7 +161,40 @@ final public class GaussFloat extends GaussNativeType< FloatType >
 		}
 		else
 		{
-			System.out.println( "not implemented for float" );
+			// convolve the first pixels where the input influences less than kernel.size pixels
+			for ( int i = 0; i < imgSize; ++i )
+			{
+				input.fwd();
+				
+				// copy input into a temp variable, it might be expensive to get()
+				final float copy = input.get().get();
+				
+				// set the random access in the processing line to the right position
+				indexLeft = -1;				
+				
+				// now add it to all output values it contributes to
+				for ( int o = 0; o <= i; ++o )
+					v[ ++indexLeft ] += (float)(copy * kernel[ i - o ]);
+			}
+			
+			// convolve the last pixels where the input influences less than kernel.size pixels
+			for ( int i = imgSize; i < imgSize + kernelSizeMinus1; ++i )
+			{
+				// after the fwd() call the random access is at position imgSize as pictured above
+				input.fwd();
+				
+				// copy input into a temp variable, it might be expensive to get()
+				final float copy = input.get().get();
+				
+				// set the random access in the processing line to the right position
+				final int position = i - kernelSize; 
+				indexLeft = Math.max( -1, position );
+				
+				// now add it to all output values it contributes to
+				int k = Math.max( 0, (int)position + 1 );
+				for ( int o = Math.max( 0, i - kernelSize + 1); o < imgSize; ++o )
+					v[ ++indexLeft ] += (float)(copy * kernel[ k++ ]);
+			}						
 		}
 	}	
 }
