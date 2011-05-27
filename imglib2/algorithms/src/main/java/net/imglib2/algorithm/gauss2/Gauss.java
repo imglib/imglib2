@@ -189,7 +189,7 @@ public abstract class Gauss< T extends NumericType< T > >
 		// return a new SamplingLineIterator that also keeps the instance of the processing line,
 		// which is important for multithreading so that each SamplingLineIterator has its own
 		// temporary space
-		return new SamplingLineIterator<T>( dim, sizeInputData, randomAccess, getProcessingLine( sizeProcessLine ) );		
+		return new SamplingLineIterator<T>( dim, sizeInputData, randomAccess, getProcessingLine( sizeProcessLine ), getProcessingType(), getProcessingType() );		
 	}
 	
 	/**
@@ -249,20 +249,19 @@ public abstract class Gauss< T extends NumericType< T > >
 		final int kernelSizeHalfMinus1 = kernelSizeHalf - 1;
 		
 		// where the result is written to, at least a size of 1
-		final Img< T > processingLine = input.getProcessLine();		
-		final RandomAccess< T > randomAccessLeft = processingLine.randomAccess();
-		final RandomAccess< T > randomAccessRight = processingLine.randomAccess();
-		final T copy = getProcessingType();
-		final T tmp = getProcessingType();
+		final RandomAccess< T > randomAccessLeft = input.randomAccessLeft; //processingLine.randomAccess();
+		final RandomAccess< T > randomAccessRight = input.randomAccessRight; //processingLine.randomAccess();
+		final T copy = input.copy; //getProcessingType();
+		final T tmp = input.tmp; //getProcessingType();
 
-		final long imgSize = processingLine.size();
+		final long imgSize = input.getProcessLine().size();
 
 		// do we have a "normal" convolution where the image is at least 
 		// as big as the kernel, i.e. is the output big enough
 		// so that we have left and kernel.length-1 incomplete convolutions
 		// and at least one convolution in the middle where the input contributes 
 		// to kernel.size pixels?		
-		if ( processingLine.dimension( 0 ) >= kernelSize )
+		if ( imgSize >= kernelSize )
 		{
 			/* This is how the convolution scheme works, we access every input only once as it is potentially expensive.
 			 * We distribute each value according to the kernel over the output line. Iterating the output line is cheap
@@ -380,7 +379,7 @@ public abstract class Gauss< T extends NumericType< T > >
 					randomAccessLeft.fwd( 0 );
 					randomAccessRight.bck( 0 );
 				}
-				
+
 				// do the last pixel (same as a above, but right cursor doesn't move)
 				tmp.set( copy );
 				tmp.mul( kernel[ kernelSizeHalfMinus1 ] );
@@ -396,7 +395,8 @@ public abstract class Gauss< T extends NumericType< T > >
 
 				randomAccessLeft.get().add( tmp );
 			}
-
+			
+				
 			/* Just to visualize it again for the output 
 			 *                                                            imgSize
 			 * Input   --- --- --- --- --- --- --- --- ---     ----- ----- ----- ----- ----- -----
@@ -519,7 +519,8 @@ public abstract class Gauss< T extends NumericType< T > >
 	 */
 	protected void writeLine( final WritableLineIterator< T > a, final SamplingLineIterator< T > inputLineSampler )
 	{
-		final Cursor< T > resultCursor = inputLineSampler.getProcessLine().cursor();
+		final Cursor< T > resultCursor = inputLineSampler.resultCursor; //inputLineSampler.getProcessLine().cursor();
+		resultCursor.reset();
 		
 		while ( resultCursor.hasNext() )
 		{

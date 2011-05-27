@@ -150,4 +150,73 @@ public class ArrayRandomAccess< T extends NativeType< T > > extends AbstractRand
 	{
 		return copy();
 	}
+	
+	/* Special methods for access in one-dimensional arrays only */
+	
+	/**
+	 * Moves one step forward in dimension 0
+	 */
+	public void fwdDim0()
+	{
+		type.incIndex();
+		++position[ 0 ];
+	}
+
+	/**
+	 * Moves one step backward in dimension 0
+	 */
+	public void bckDim0()
+	{
+		type.decIndex();
+		--position[ 0 ];
+	}
+
+	/**
+	 * Moves n steps in dimension 0
+	 * 
+	 * @param distance - how many steps (positive or negative)
+	 */
+	public void moveDim0( final int distance )
+	{
+		type.incIndex( distance );
+		position[ 0 ] += distance;
+	}
+	
+	/**
+	 * Moves n steps in dimension 0
+	 * 
+	 * @param distance - how many steps (positive or negative)
+	 */
+	public void move( final long distance )
+	{
+		type.incIndex( (int)distance );
+		position[ 0 ] += distance;
+	}
+
+	/**
+	 * Sets the {@link ArrayRandomAccess} to a certain position in dimension 0
+	 * 
+	 * Careful: it assumes that it is only a one-dimensional image, all other dimensions would be set to zero (this saves one subtraction)
+	 * 
+	 * @param pos - the new position
+	 */
+	public void setPositionDim0( final int pos )
+	{
+		type.updateIndex( pos );
+		position[ 0 ] = pos;
+	}
+
+	/**
+	 * Sets the {@link ArrayRandomAccess} to a certain position in dimension 0
+	 * 
+	 * Careful: it assumes that it is only a one-dimensional image, all other dimensions would be set to zero (this saves one subtraction)
+	 * 
+	 * @param pos - the new position
+	 */
+	public void setPositionDim0( final long pos )
+	{
+		type.updateIndex( (int)pos );
+		position[ 0 ] = (int)pos;
+	}
+	
 }

@@ -1,11 +1,17 @@
 package net.imglib2.algorithm.gauss2;
 
 import net.imglib2.Interval;
+import net.imglib2.Iterator;
 import net.imglib2.Location;
 import net.imglib2.RandomAccessible;
+import net.imglib2.Sampler;
+import net.imglib2.converter.Converter;
 import net.imglib2.img.Img;
 import net.imglib2.img.ImgFactory;
+import net.imglib2.img.array.ArrayImg;
 import net.imglib2.img.array.ArrayImgFactory;
+import net.imglib2.img.basictypeaccess.FloatAccess;
+import net.imglib2.img.basictypeaccess.array.FloatArray;
 import net.imglib2.img.cell.CellImgFactory;
 import net.imglib2.outofbounds.OutOfBoundsFactory;
 import net.imglib2.outofbounds.OutOfBoundsMirrorFactory;
@@ -13,7 +19,7 @@ import net.imglib2.outofbounds.OutOfBoundsMirrorFactory.Boundary;
 import net.imglib2.type.numeric.real.FloatType;
 import net.imglib2.view.Views;
 
-public class GaussFloat extends Gauss< FloatType >
+final public class GaussFloat extends GaussNativeType< FloatType >
 {
 	public GaussFloat( final double[] sigma, final Img<FloatType> input )
 	{
@@ -47,7 +53,7 @@ public class GaussFloat extends Gauss< FloatType >
 	
 	@Override
 	protected FloatType getProcessingType() { return new FloatType(); }
-	
+
 	@Override
 	protected Img<FloatType> getProcessingLine( final long sizeProcessLine )
 	{
@@ -60,5 +66,105 @@ public class GaussFloat extends Gauss< FloatType >
 			processLine = new CellImgFactory< FloatType >( Integer.MAX_VALUE / 16 ).create( new long[]{ sizeProcessLine }, new FloatType() );
 		
 		return processLine;
+	}	
+	
+	/**
+	 * Compute the current line. It is up to the implementation howto really do that. The idea is to only iterate
+	 * over the input once (that's why it is an {@link Iterator}) as it is potentially an expensive operation 
+	 * (e.g. a {@link Converter} might be involved or we are computing on a rendered input) 
+	 *  
+	 * @param input - the {@link Iterator}/{@link Sampler} over the current input line.
+	 */
+	protected void processLine( final SamplingLineIterator< FloatType > input, final double[] kernel )
+	{
+		final int kernelSize = kernel.length;
+		final int kernelSizeMinus1 = kernelSize - 1;
+		final int kernelSizeHalf = kernelSize / 2;
+		final int kernelSizeHalfMinus1 = kernelSizeHalf - 1;
+		
+		final ArrayImg<FloatType, FloatAccess> img = (ArrayImg<FloatType, FloatAccess>)input.getProcessLine();
+		final FloatArray fa = (FloatArray)img.update( null );
+		final float[] v = fa.getCurrentStorageArray();
+		
+		final int imgSize = (int)input.getProcessLine().size();
+		
+		int indexLeft = 0;
+		int indexRight = 0;
+		
+		if ( imgSize >= kernelSize )
+		{
+			// convolve the first pixels where the input influences less than kernel.size pixels
+			for ( int i = 0; i < kernelSizeMinus1; ++i )
+			{
+				input.fwd();
+				
+				// copy input into a temp variable, it might be expensive to get()
+				final float copy = input.get().get();
+				
+				// set the random access in the processing line to the right position
+				indexLeft = -1;				
+				
+				// now add it to all output values it contributes to
+				for ( int o = 0; o <= i; ++o )
+					v[ ++indexLeft ] += (float)(copy * kernel[ i - o ]);
+			}
+			
+			// convolve all values where the input value contributes to the full kernel
+			final int length = imgSize - kernelSizeMinus1;
+			for ( int n = 0; n < length; ++n )
+			{
+				input.fwd();
+				
+				// copy input into a temp variable, it might be expensive to get()
+				final float copy = input.get().get();
+
+				// set the left and the right random access to the right coordinates
+				// the left random access is always responsible for the center
+				indexLeft = n;
+				indexRight = n + kernelSizeMinus1;
+				
+				// move till the last pixel before the center of the kernel
+				for ( int k = 0; k < kernelSizeHalfMinus1; ++k )
+				{
+					final float tmp = (float)(copy * kernel[ k ]);
+
+					v[ indexLeft++ ] += tmp;
+					v[ indexRight-- ] += tmp;
+				}
+
+				// do the last pixel (same as a above, but right cursor doesn't move)
+				final float tmp = (float)(copy * kernel[ kernelSizeHalfMinus1 ]);
+
+				v[ indexLeft++ ] += tmp;
+				v[ indexRight ] += tmp;
+
+				// do the center pixel
+				v[ indexLeft ] += (float)(copy * kernel[ kernelSizeHalf ]);
+			}
+			
+				
+			// convolve the last pixels where the input influences less than kernel.size pixels
+			final int endLength = imgSize + kernelSizeMinus1;
+			for ( int i = imgSize; i < endLength; ++i )
+			{
+				// after the fwd() call the random access is at position imgSize as pictured above
+				input.fwd();
+				
+				// copy input into a temp variable, it might be expensive to get()
+				final float copy = input.get().get();
+				
+				// set the random access in the processing line to the right position
+				indexLeft = i - kernelSize;				
+				
+				// now add it to all output values it contributes to
+				int k = 0;
+				for ( long o = i - kernelSize + 1; o < imgSize; ++o )
+					v[ ++indexLeft ] += (float)(copy * kernel[ k++ ]);
+			}			
+		}
+		else
+		{
+			System.out.println( "not implemented for float" );
+		}
 	}	
 }
