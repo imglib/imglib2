@@ -23,7 +23,7 @@ public class RealPoint implements RealLocalizable, RealPositionable
 	 * 
 	 * @param position - position of the point
 	 */
-	public RealPoint(final double [] position) {
+	public RealPoint(final double... position) {
 		this.position = position.clone();
 	}
 	
@@ -31,7 +31,7 @@ public class RealPoint implements RealLocalizable, RealPositionable
 	 * Create a point at a definite position
 	 * @param position the initial position. The length of the array determines the dimensionality of the space.
 	 */
-	public RealPoint(final float [] position) {
+	public RealPoint(final float... position) {
 		this.position = new double[position.length];
 		for (int i=0; i < position.length; ++i)
 			this.position[i] = position[i];
