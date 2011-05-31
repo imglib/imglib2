@@ -35,8 +35,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import ome.xml.model.primitives.PositiveFloat;
-
 import loci.common.DataTools;
 import loci.common.StatusEvent;
 import loci.common.StatusListener;
@@ -50,6 +48,7 @@ import loci.formats.FormatException;
 import loci.formats.FormatTools;
 import loci.formats.IFormatReader;
 import loci.formats.ImageReader;
+import loci.formats.MinMaxCalculator;
 import loci.formats.ReaderWrapper;
 import loci.formats.meta.IMetadata;
 import loci.formats.services.OMEXMLService;
@@ -84,6 +83,7 @@ import net.imglib2.type.numeric.integer.UnsignedIntType;
 import net.imglib2.type.numeric.integer.UnsignedShortType;
 import net.imglib2.type.numeric.real.DoubleType;
 import net.imglib2.type.numeric.real.FloatType;
+import ome.xml.model.primitives.PositiveFloat;
 
 /**
  * Reads in an {@link ImgPlus} using Bio-Formats.
@@ -184,6 +184,7 @@ public class ImgOpener implements StatusReporter {
 		final int planeCount = r.getImageCount();
 		try {
 			readPlanes(r, type, imgPlus);
+			populateMinMax(r, imgPlus);
 		}
 		catch (final FormatException e) {
 			throw new ImgIOException(e);
@@ -314,6 +315,7 @@ public class ImgOpener implements StatusReporter {
 		r = new ImageReader();
 		r = new ChannelFiller(r);
 		r = new ChannelSeparator(r);
+		r = new MinMaxCalculator(r);
 
 		// attach OME-XML metadata object to reader
 		try {
@@ -427,28 +429,22 @@ public class ImgOpener implements StatusReporter {
 		final String dimOrder = r.getDimensionOrder();
 
 		final IMetadata meta = (IMetadata) r.getMetadataStore();
-		PositiveFloat xCalin = meta.getPixelsPhysicalSizeX(0);
-		PositiveFloat yCalin = meta.getPixelsPhysicalSizeY(0);
-		PositiveFloat zCalin = meta.getPixelsPhysicalSizeZ(0);
+		final PositiveFloat xCalin = meta.getPixelsPhysicalSizeX(0);
+		final PositiveFloat yCalin = meta.getPixelsPhysicalSizeY(0);
+		final PositiveFloat zCalin = meta.getPixelsPhysicalSizeZ(0);
 		Double tCal = meta.getPixelsTimeIncrement(0);
-		
+
 		final Double xCal, yCal, zCal;
-		
-		if (xCalin == null) 
-			xCal = Double.NaN;
-		else
-			xCal = xCalin.getValue();
-		
-		if (yCalin == null) 
-			yCal = Double.NaN;
-		else
-			yCal = yCalin.getValue();
-		
-		if (zCalin == null) 
-			zCal = Double.NaN;
-		else
-			zCal = zCalin.getValue();
-		
+
+		if (xCalin == null) xCal = Double.NaN;
+		else xCal = xCalin.getValue();
+
+		if (yCalin == null) yCal = Double.NaN;
+		else yCal = yCalin.getValue();
+
+		if (zCalin == null) zCal = Double.NaN;
+		else zCal = zCalin.getValue();
+
 		if (tCal == null) tCal = Double.NaN;
 
 		final List<Double> calibrationList = new ArrayList<Double>();
@@ -636,6 +632,21 @@ public class ImgOpener implements StatusReporter {
 				cursor.getIntPosition(planeX) + cursor.getIntPosition(planeY) * sizeX;
 			final double value = decodeWord(plane, index, pixelType, little);
 			cursor.get().setReal(value);
+		}
+	}
+
+	private <T extends RealType<T> & NativeType<T>> void populateMinMax(
+		final IFormatReader r, final ImgPlus<T> imgPlus) throws FormatException,
+		IOException
+	{
+		final int sizeC = r.getSizeC();
+		final MinMaxCalculator minMaxCalc = (MinMaxCalculator)
+			((ReaderWrapper) r).unwrap(MinMaxCalculator.class, null);
+		for (int c = 0; c < sizeC; c++) {
+			final Double min = minMaxCalc.getChannelKnownMinimum(c);
+			final Double max = minMaxCalc.getChannelKnownMaximum(c);
+			imgPlus.setChannelMinimum(c, min == null ? Double.NaN : min);
+			imgPlus.setChannelMaximum(c, max == null ? Double.NaN : max);
 		}
 	}
 
