@@ -184,7 +184,6 @@ public class ImgOpener implements StatusReporter {
 		final int planeCount = r.getImageCount();
 		try {
 			readPlanes(r, type, imgPlus);
-			populateMinMax(r, imgPlus);
 		}
 		catch (final FormatException e) {
 			throw new ImgIOException(e);
@@ -581,6 +580,7 @@ public class ImgOpener implements StatusReporter {
 			final short[][] lut16 = r.get16BitLookupTable();
 			if (lut16 != null) imgPlus.setColorTable(new ColorTable16(lut16), no);
 		}
+		populateMinMax(r, imgPlus);
 		r.close();
 	}
 
@@ -635,13 +635,13 @@ public class ImgOpener implements StatusReporter {
 		}
 	}
 
-	private <T extends RealType<T> & NativeType<T>> void populateMinMax(
-		final IFormatReader r, final ImgPlus<T> imgPlus) throws FormatException,
-		IOException
+	private void populateMinMax(final IFormatReader r, final ImgPlus<?> imgPlus)
+		throws FormatException, IOException
 	{
 		final int sizeC = r.getSizeC();
-		final MinMaxCalculator minMaxCalc = (MinMaxCalculator)
-			((ReaderWrapper) r).unwrap(MinMaxCalculator.class, null);
+		final ReaderWrapper rw = (ReaderWrapper) r;
+		final MinMaxCalculator minMaxCalc =
+			(MinMaxCalculator) rw.unwrap(MinMaxCalculator.class, null);
 		for (int c = 0; c < sizeC; c++) {
 			final Double min = minMaxCalc.getChannelKnownMinimum(c);
 			final Double max = minMaxCalc.getChannelKnownMaximum(c);
