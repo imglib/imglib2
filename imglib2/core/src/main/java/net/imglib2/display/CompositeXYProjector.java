@@ -86,6 +86,11 @@ public class CompositeXYProjector<A, B extends NumericType<B>> extends
 		composite[index] = on;
 	}
 
+	/** Gets whether the given position index is included in composite values. */
+	public boolean isComposite(final int index) {
+		return composite[index];
+	}
+
 	/**
 	 * Toggles composite mode globally. If true, all positions along the
 	 * dimensional axis are included in the composite; if false, the value will
@@ -95,6 +100,13 @@ public class CompositeXYProjector<A, B extends NumericType<B>> extends
 	public void setComposite(final boolean on) {
 		for (int i = 0; i < composite.length; i++)
 			composite[i] = on;
+	}
+
+	/** Gets whether composite mode is enabled for all positions. */
+	public boolean isComposite() {
+		for (int i = 0; i < composite.length; i++)
+			if (!composite[i]) return false;
+		return true;
 	}
 
 	// -- Projector methods --
