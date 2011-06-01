@@ -261,6 +261,12 @@ final public class IterableIntervalSubset< T > implements IterableInterval< T >
 	}
 
 	@Override
+	final public void realMax( final RealPositionable max )
+	{
+		interval.realMax( max );		
+	}
+
+	@Override
 	final public double realMin( final int d )
 	{
 		return realMin( d );
@@ -268,6 +274,12 @@ final public class IterableIntervalSubset< T > implements IterableInterval< T >
 
 	@Override
 	final public void realMin( final double[] min )
+	{
+		interval.realMin( min );
+	}
+
+	@Override
+	final public void realMin( final RealPositionable min )
 	{
 		interval.realMin( min );
 	}
@@ -309,6 +321,12 @@ final public class IterableIntervalSubset< T > implements IterableInterval< T >
 	}
 
 	@Override
+	final public void max( final Positionable max )
+	{
+		interval.max( max );
+	}
+
+	@Override
 	final public long min( final int d )
 	{
 		return interval.min( d );
@@ -316,6 +334,12 @@ final public class IterableIntervalSubset< T > implements IterableInterval< T >
 
 	@Override
 	final public void min( final long[] min )
+	{
+		interval.min( min );
+	}
+	
+	@Override
+	final public void min( final Positionable min )
 	{
 		interval.min( min );
 	}

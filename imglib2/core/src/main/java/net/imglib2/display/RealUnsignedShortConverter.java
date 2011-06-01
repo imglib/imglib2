@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2009--2010, Stephan Preibisch & Stephan Saalfeld
+ * Copyright (c) 2009--2011, Stephan Saalfeld
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -24,31 +24,34 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- *
- * @author Stephan Preibisch & Stephan Saalfeld
  */
-package net.imglib2.img.display.imagej;
+package net.imglib2.display;
 
-import ij.ImagePlus;
-import net.imglib2.type.Type;
+import net.imglib2.converter.Converter;
+import net.imglib2.type.numeric.RealType;
+import net.imglib2.type.numeric.integer.UnsignedShortType;
 
-public class SliceTransformableExtractionFloat<T extends Type<T>> extends SliceTransformableExtraction<T>
+/**
+ * 
+ *
+ * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
+ */
+public class RealUnsignedShortConverter< R extends RealType< R > > extends AbstractLinearRange implements Converter< R, UnsignedShortType >
 {
-	final float[] sliceImg;
-
-	public SliceTransformableExtractionFloat( final int numImages, final InverseTransformDescription<T> it, final float[] sliceImg, 
-											  final ImagePlus parent, final int[] dimensionPositions, 
-											  final int dimX, final int dimY, final int dimZ, 
-											  final int sizeX, final int sizeY, final int slice)
+	public RealUnsignedShortConverter()
 	{
-		super( numImages, it, parent, dimensionPositions, dimX, dimY, dimZ, sizeX, sizeY, slice );
-
-		this.sliceImg = sliceImg;
+		super();		
+	}
+	
+	public RealUnsignedShortConverter( final double min, final double max )
+	{
+		super( min, max );
 	}
 	
 	@Override
-	final protected void setIntensity( final int index )
+	public void convert( final R input, final UnsignedShortType output )
 	{
-		sliceImg[ index ] += display.get32Bit(type);
-	}
+		final double a = input.getRealDouble();
+		output.set( Math.min( 65535, roundPositive( Math.max( 0, ( ( a - min ) / scale * 65535.0 ) ) ) ) );
+	}	
 }

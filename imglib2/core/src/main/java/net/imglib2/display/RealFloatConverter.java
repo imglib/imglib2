@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2009--2010, Stephan Preibisch & Stephan Saalfeld
+ * Copyright (c) 2009--2011, Stephan Saalfeld
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -24,48 +24,23 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- *
- * @author Stephan Preibisch & Stephan Saalfeld
  */
-package net.imglib2.img.display.imagej;
+package net.imglib2.display;
 
-import net.imglib2.RandomAccessible;
-import net.imglib2.img.Img;
-import net.imglib2.interpolation.InterpolatorFactory;
-import net.imglib2.type.Type;
-import mpicbg.models.InvertibleBoundable;
+import net.imglib2.converter.Converter;
+import net.imglib2.type.numeric.RealType;
+import net.imglib2.type.numeric.real.FloatType;
 
-public class InverseTransformDescription<T extends Type<T>> 
+/**
+ * 
+ *
+ * @author Stephan Saalfeld <saalfeld@mpi-cbg.de> and Stephan Preibisch
+ */
+public class RealFloatConverter< R extends RealType< R > > implements Converter< R, FloatType >
 {
-	final InvertibleBoundable transform;
-	final InterpolatorFactory<T, RandomAccessible<T>> factory;
-	final Img<T> image;
-	final float[] offset;
-	final int numDimensions;
-	
-	public InverseTransformDescription( final InvertibleBoundable transform, final InterpolatorFactory<T, RandomAccessible<T>> factory, final Img<T> image )
+	@Override
+	public void convert( final R input, final FloatType output )
 	{
-		this.transform = transform;
-		this.factory = factory;
-		this.image = image;
-		this.numDimensions = image.numDimensions();
-		this.offset = new float[ numDimensions ];
-	}
-	
-	public InvertibleBoundable getTransform() { return transform; }
-	public InterpolatorFactory<T, RandomAccessible<T>> getInterpolatorFactory() { return factory; }
-	public Img<T> getImage() { return image; }
-	
-	public void setOffset( final float[] offset )
-	{
-		for ( int d = 0; d < numDimensions; ++d )
-			this.offset[ d ] = offset[ d ];
-	}
-	
-	public float[] getOffset() { return offset.clone(); }
-	public void getOffset( final float[] offset )
-	{
-		for ( int d = 0; d < numDimensions; ++d )
-			offset[ d ] = this.offset[ d ];		
-	}
+		output.set( input.getRealFloat() );
+	}	
 }

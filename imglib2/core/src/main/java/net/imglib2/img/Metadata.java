@@ -76,6 +76,18 @@ public interface Metadata {
 	/** Sets the number of valid bits. */
 	void setValidBits(int bits);
 
+	/** Gets the minimum actual pixel value for the given channel. */
+	double getChannelMinimum(int c);
+
+	/** Sets the minimum actual pixel value for the given channel. */
+	void setChannelMinimum(int c, double min);
+
+	/** Gets the maximum actual pixel value for the given channel. */
+	double getChannelMaximum(int c);
+
+	/** Sets the maximum actual pixel value for the given channel. */
+	void setChannelMaximum(int c, double max);
+
 	/** Gets the number of channels intended to be displayed together. */
 	int getCompositeChannelCount();
 

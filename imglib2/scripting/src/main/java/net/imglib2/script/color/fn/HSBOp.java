@@ -2,7 +2,7 @@ package net.imglib2.script.color.fn;
 
 import java.awt.Color;
 
-import net.imglib2.img.Img;
+import net.imglib2.IterableRealInterval;
 import net.imglib2.type.numeric.ARGBType;
 
 /** Extracts the HSB saturation of an RGB pixel. */
@@ -10,7 +10,7 @@ public abstract class HSBOp extends RGBAOp {
 
 	private final float[] hsb = new float[3];
 
-	public HSBOp(final Img<? extends ARGBType> img) {
+	public HSBOp(final IterableRealInterval<? extends ARGBType> img) {
 		super(img);
 	}
 

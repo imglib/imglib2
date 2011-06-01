@@ -33,8 +33,10 @@ import java.awt.Image;
 import net.imglib2.Cursor;
 import net.imglib2.Interval;
 import net.imglib2.Iterator;
+import net.imglib2.Positionable;
 import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessible;
+import net.imglib2.RealPositionable;
 import net.imglib2.img.Img;
 import net.imglib2.img.basictypeaccess.PlanarAccess;
 import net.imglib2.type.Type;
@@ -61,6 +63,7 @@ public class OrthoSliceCursor< T extends Type< T > > implements Cursor< T >, Int
 	
 	final protected RandomAccess< T > sampler;
 	
+	/*
 	private static long[] intToLong( final int[] i )
 	{
 		final long[] l = new long[ i.length ];
@@ -70,6 +73,7 @@ public class OrthoSliceCursor< T extends Type< T > > implements Cursor< T >, Int
 		
 		return l;
 	}
+	*/
 	
 	public < F extends RandomAccessible< T > & Interval > OrthoSliceCursor( final F f, final int x, final int y, final long[] position )
 	{
@@ -233,6 +237,12 @@ public class OrthoSliceCursor< T extends Type< T > > implements Cursor< T >, Int
 	}
 
 	@Override
+	public void min( final Positionable min )
+	{
+		interval.min( min );
+	}
+
+	@Override
 	public long max( final int d )
 	{
 		return interval.max( d );
@@ -240,6 +250,12 @@ public class OrthoSliceCursor< T extends Type< T > > implements Cursor< T >, Int
 
 	@Override
 	public void max( final long[] max )
+	{
+		interval.max( max );
+	}
+
+	@Override
+	public void max( final Positionable max )
 	{
 		interval.max( max );
 	}
@@ -269,6 +285,12 @@ public class OrthoSliceCursor< T extends Type< T > > implements Cursor< T >, Int
 	}
 
 	@Override
+	public void realMin( final RealPositionable min )
+	{
+		interval.realMax( min );
+	}
+
+	@Override
 	public double realMax( final int d )
 	{
 		return interval.realMax( d );
@@ -276,6 +298,12 @@ public class OrthoSliceCursor< T extends Type< T > > implements Cursor< T >, Int
 
 	@Override
 	public void realMax( final double[] max )
+	{
+		interval.realMax( max );
+	}
+
+	@Override
+	public void realMax( final RealPositionable max )
 	{
 		interval.realMax( max );
 	}

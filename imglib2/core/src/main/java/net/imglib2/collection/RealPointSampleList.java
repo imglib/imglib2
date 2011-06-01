@@ -35,6 +35,7 @@ import net.imglib2.IterableRealInterval;
 import net.imglib2.RealCursor;
 import net.imglib2.RealLocalizable;
 import net.imglib2.RealPoint;
+import net.imglib2.RealPositionable;
 
 /**
  * A list of data samples at explicit {@link RealLocalizable real coordinates}. 
@@ -225,6 +226,12 @@ public class RealPointSampleList< T > implements IterableRealInterval< T >
 	}
 
 	@Override
+	public void realMax( final RealPositionable m )
+	{
+		m.setPosition( max );
+	}
+
+	@Override
 	public double realMin( final int d )
 	{
 		return min[ d ];
@@ -235,6 +242,12 @@ public class RealPointSampleList< T > implements IterableRealInterval< T >
 	{
 		for ( int d = 0; d < n; ++d )
 			m[ d ] = min[ d ];
+	}
+
+	@Override
+	public void realMin( final RealPositionable m )
+	{
+		m.setPosition( min );
 	}
 
 	@Override

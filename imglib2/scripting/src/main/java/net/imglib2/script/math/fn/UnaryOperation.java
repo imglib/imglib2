@@ -3,8 +3,8 @@ package net.imglib2.script.math.fn;
 
 import java.util.Collection;
 
-import net.imglib2.Cursor;
-import net.imglib2.img.Img;
+import net.imglib2.IterableRealInterval;
+import net.imglib2.RealCursor;
 import net.imglib2.type.numeric.RealType;
 
 /* An abstract class to facilitate implementing a function that takes one argument.
@@ -42,7 +42,7 @@ public abstract class UnaryOperation extends FloatImageOperation
 {
 	private final IFunction a;
 
-	public UnaryOperation(final Img<? extends RealType<?>> img) {
+	public UnaryOperation(final IterableRealInterval<? extends RealType<?>> img) {
 		this.a = new ImageFunction(img);
 	}
 
@@ -55,12 +55,12 @@ public abstract class UnaryOperation extends FloatImageOperation
 	}
 
 	@Override
-	public final void findCursors(final Collection<Cursor<?>> cursors) {
+	public final void findCursors(final Collection<RealCursor<?>> cursors) {
 		a.findCursors(cursors);
 	}
 
-	/** Call a().eval() to obtain the result as a double of the computation encapsulated by the @field a. 
-	 *  @returns the IFunction @field a*/
+	/** Call a().eval() to obtain the result as a double of the computation encapsulated by the {@field a}. 
+	 *  @returns the IFunction {@field a} */
 	public final IFunction a() { return a; }
 	
 	@Override
@@ -70,8 +70,8 @@ public abstract class UnaryOperation extends FloatImageOperation
 	}
 	
 	@Override
-	public void findImgs(final Collection<Img<?>> imgs)
+	public void findImgs(final Collection<IterableRealInterval<?>> iris)
 	{
-		a.findImgs(imgs);
+		a.findImgs(iris);
 	}
 }

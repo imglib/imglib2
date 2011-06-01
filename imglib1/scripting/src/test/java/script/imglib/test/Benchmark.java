@@ -12,6 +12,7 @@ import mpicbg.imglib.outofbounds.OutOfBoundsStrategyMirrorFactory;
 import mpicbg.imglib.type.numeric.RealType;
 import mpicbg.imglib.type.numeric.integer.UnsignedByteType;
 import mpicbg.imglib.type.numeric.real.FloatType;
+import script.imglib.ImgLib;
 import script.imglib.math.ASin;
 import script.imglib.math.Abs;
 import script.imglib.math.Add;
@@ -226,7 +227,8 @@ public class Benchmark {
 		try {
 			String src = "http://imagej.nih.gov/ij/images/bridge.gif";
 			//String src = "/home/albert/Desktop/t2/bridge.gif";
-			Image<UnsignedByteType> img = LOCI.openLOCIUnsignedByteType(src, new ArrayContainerFactory());
+			//Image<UnsignedByteType> img = LOCI.openLOCIUnsignedByteType(src, new ArrayContainerFactory());
+			Image<UnsignedByteType> img = ImgLib.open(src);
 			//
 			double mean = 0;
 			for (final UnsignedByteType t : img) mean += t.getRealDouble();

@@ -1,29 +1,35 @@
 package script.imglib.test;
 
-import net.imglib2.algorithm.gauss.GaussianConvolutionReal;
-import net.imglib2.container.array.ArrayContainerFactory;
-import net.imglib2.cursor.Cursor;
-import net.imglib2.cursor.LocalizableByDimCursor;
-import net.imglib2.img.Image;
-import net.imglib2.img.ImageFactory;
-import net.imglib2.img.display.imagej.ImageJFunctions;
-import net.imglib2.io.LOCI;
-import net.imglib2.outofbounds.OutOfBoundsStrategyMirrorFactory;
+import ij.ImageJ;
+import ij.ImagePlus;
+import net.imglib2.Cursor;
+import net.imglib2.RandomAccess;
+import net.imglib2.exception.ImgLibException;
+import net.imglib2.img.Img;
+import net.imglib2.img.array.ArrayImgFactory;
+import net.imglib2.img.basictypeaccess.FloatAccess;
+import net.imglib2.img.imageplus.ImagePlusImg;
+import net.imglib2.img.imageplus.ImagePlusImgFactory;
+import net.imglib2.io.ImgOpener;
+import net.imglib2.script.math.ASin;
+import net.imglib2.script.math.Abs;
+import net.imglib2.script.math.Add;
+import net.imglib2.script.math.Cbrt;
+import net.imglib2.script.math.Compute;
+import net.imglib2.script.math.Difference;
+import net.imglib2.script.math.Divide;
+import net.imglib2.script.math.Identity;
+import net.imglib2.script.math.Max;
+import net.imglib2.script.math.Min;
+import net.imglib2.script.math.Multiply;
+import net.imglib2.script.math.Pow;
+import net.imglib2.script.math.Sin;
+import net.imglib2.script.math.Sqrt;
+import net.imglib2.script.math.Subtract;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.integer.UnsignedByteType;
 import net.imglib2.type.numeric.real.FloatType;
-import script.imglib.math.ASin;
-import script.imglib.math.Abs;
-import script.imglib.math.Add;
-import script.imglib.math.Cbrt;
-import script.imglib.math.Compute;
-import script.imglib.math.Difference;
-import script.imglib.math.Divide;
-import script.imglib.math.Multiply;
-import script.imglib.math.Pow;
-import script.imglib.math.Sin;
-import script.imglib.math.Sqrt;
-import script.imglib.math.Subtract;
+import net.imglib2.util.Util;
 
 /* Tested in a MacBookPro 5,5, 4 Gb RAM, 2.4 Ghz
  * running Ubuntu 10.04 with Java 1.6.0_21
@@ -94,58 +100,53 @@ public class Benchmark {
 		System.out.println(s);
 	}
 
-	static public Image<FloatType> scriptCorrectIllumination(
-			final Image<? extends RealType<?>> img,
-			final Image<? extends RealType<?>> brightfield,
-			final Image<? extends RealType<?>> darkfield,
+	static public Img<FloatType> scriptCorrectIllumination(
+			final Img<? extends RealType<?>> img,
+			final Img<? extends RealType<?>> brightfield,
+			final Img<? extends RealType<?>> darkfield,
 			final double mean) throws Exception {
 		p("Start script (correct illumination)...");
 		long t0 = System.nanoTime();
-		Image<FloatType> corrected = Compute.inFloats(1,
+		Img<FloatType> corrected = Compute.inFloats(2,
 				new Multiply(
 						new Divide(
 								new Subtract(img, brightfield),
 								new Subtract(brightfield, darkfield)),
 						mean));
-		p("  elapsed: " + (System.nanoTime() - t0)/1000000.0 + " image " + corrected.getName() );
+		p("  elapsed: " + (System.nanoTime() - t0)/1000000.0 + " image ");
 		return corrected;
 	}
 
-	static public Image<FloatType> correctIllumination(
-			final Image<? extends RealType<?>> img,
-			final Image<? extends RealType<?>> brightfield,
-			final Image<? extends RealType<?>> darkfield,
+	static public Img<FloatType> correctIllumination(
+			final Img<? extends RealType<?>> img,
+			final Img<? extends RealType<?>> brightfield,
+			final Img<? extends RealType<?>> darkfield,
 			final double mean) {
 		p("Start direct (correct illumination)...");
 		long t0 = System.nanoTime();
-		ImageFactory<FloatType> factory = new ImageFactory<FloatType>(new FloatType(), img.getContainerFactory());
-		Image<FloatType> corrected = factory.createImage(img.getDimensions(), "result");
-		final Cursor<FloatType> c = corrected.createCursor();
-		final Cursor<? extends RealType<?>> ci = img.createCursor(),
-											cb = brightfield.createCursor(),
-											cd = darkfield.createCursor();
+		Img<FloatType> corrected = new ArrayImgFactory<FloatType>().create(Util.intervalDimensions(img), new FloatType());
+		final Cursor<FloatType> c = corrected.cursor();
+		final Cursor<? extends RealType<?>> ci = img.cursor(),
+											cb = brightfield.cursor(),
+											cd = darkfield.cursor();
 		while (c.hasNext()) {
 			c.fwd();
 			ci.fwd();
 			cb.fwd();
 			cd.fwd();
-			c.getType().setReal( (  (ci.getType().getRealDouble() - cb.getType().getRealDouble())
-								  / (cb.getType().getRealDouble() - cd.getType().getRealDouble()))
+			c.get().setReal( (  (ci.get().getRealDouble() - cb.get().getRealDouble())
+								  / (cb.get().getRealDouble() - cd.get().getRealDouble()))
 								 * mean);
 		}
-		c.close();
-		ci.close();
-		cb.close();
-		cd.close();
-		p("  elapsed: " + (System.nanoTime() - t0)/1000000.0 + "  image: " + corrected.getName());
+		p("  elapsed: " + (System.nanoTime() - t0)/1000000.0 + "  image");
 		return corrected;
 	}
 
-	static public Image<FloatType> scriptHeavyOperations(
-			final Image<? extends RealType<?>> img) throws Exception {
+	static public Img<FloatType> scriptHeavyOperations(
+			final Img<? extends RealType<?>> img) throws Exception {
 		p("Start script with heavy operations...");
 		long t0 = System.currentTimeMillis();
-		Image<FloatType> corrected = Compute.inFloats(1, 
+		Img<FloatType> corrected = Compute.inFloats(1, 
 				new Multiply(
 					new ASin(
 						new Sin(
@@ -157,51 +158,48 @@ public class Benchmark {
 		return corrected;
 	}
 
-	static public Image<FloatType> heavyOperations(
-			final Image<? extends RealType<?>> img) {
+	static public Img<FloatType> heavyOperations(
+			final Img<? extends RealType<?>> img) {
 		p("Start direct with heavy operations...");
 		long t0 = System.currentTimeMillis();
-		ImageFactory<FloatType> factory = new ImageFactory<FloatType>(new FloatType(), img.getContainerFactory());
-		Image<FloatType> corrected = factory.createImage(img.getDimensions(), "result");
-		final Cursor<FloatType> c = corrected.createCursor();
-		final Cursor<? extends RealType<?>> ci = img.createCursor();
+		Img<FloatType> corrected = new ArrayImgFactory<FloatType>().create(Util.intervalDimensions(img), new FloatType());
+		final Cursor<FloatType> c = corrected.cursor();
+		final Cursor<? extends RealType<?>> ci = img.cursor();
 		while (c.hasNext()) {
 			c.fwd();
 			ci.fwd();
-			c.getType().setReal(
+			c.get().setReal(
 					Math.asin(
 						Math.sin(
-							Math.pow(Math.sqrt(ci.getType().getRealDouble()), 2)
-							/ Math.pow(Math.cbrt(ci.getType().getRealDouble()), 3)))
-					* ci.getType().getRealDouble());					
+							Math.pow(Math.sqrt(ci.get().getRealDouble()), 2)
+							/ Math.pow(Math.cbrt(ci.get().getRealDouble()), 3)))
+					* ci.get().getRealDouble());					
 		}
-		c.close();
-		ci.close();
 		p("  elapsed: " + (System.currentTimeMillis() - t0));
 		return corrected;
 	}
 	
-	static public Image<FloatType> sum(
-			final Image<? extends RealType<?>> img) throws Exception {
-		LocalizableByDimCursor<? extends RealType<?>> c = img.createLocalizableByDimCursor();
-		c.setPosition(new int[]{348, 95});
-		System.out.println("Original pixel at 348,95: " + c.getType().getRealDouble());
+	static public Img<FloatType> sum(
+			final Img<? extends RealType<?>> img) throws Exception {
+		RandomAccess<? extends RealType<?>> c = img.randomAccess();
+		int[] pos = new int[img.numDimensions()];
+		pos[0] = 348;
+		pos[1] = 95;
+		c.setPosition(pos);
+		System.out.println("Original pixel at 348,95: " + c.get().getRealDouble());
 
-		Image<FloatType> result = Compute.inFloats(new Add(img, img, img, img));
+		Img<FloatType> result = Compute.inFloats(new Add(img, img, img, img));
 
-		LocalizableByDimCursor<? extends RealType<?>> r = result.createLocalizableByDimCursor();
-		r.setPosition(new int[]{348, 95});
-		System.out.println("After varargs addition, pixel at 348,95: " + r.getType().getRealDouble()
-				+ " which is 4 * val: " + (c.getType().getRealDouble() * 4 == r.getType().getRealDouble()));
-
-		img.removeAllCursors();
-		result.removeAllCursors();
+		RandomAccess<? extends RealType<?>> r = result.randomAccess();
+		r.setPosition(pos);
+		System.out.println("After varargs addition, pixel at 348,95: " + r.get().getRealDouble()
+				+ " which is 4 * val: " + (c.get().getRealDouble() * 4 == r.get().getRealDouble()));
 		
 		return result;
 	}
 
-	static public Image<FloatType> differenceFn(
-			final Image<? extends RealType<?>> img) throws Exception {
+	static public Img<FloatType> differenceFn(
+			final Img<? extends RealType<?>> img) throws Exception {
 		p("Start differenceFn");
 		long t0 = System.nanoTime();
 		try {
@@ -211,34 +209,77 @@ public class Benchmark {
 		}
 	}
 
-	static public Image<FloatType> differenceCompFn(
-			final Image<? extends RealType<?>> img) throws Exception {
+	static public Img<FloatType> differenceCompFn(
+			final Img<? extends RealType<?>> img) throws Exception {
 		p("Start differenceCompFn");
 		long t0 = System.nanoTime();
 		try {
-			return Compute.inFloats(new Abs(new Subtract(img, img)));
+			// Potentially overflowing:
+			//return Compute.inFloats(new Abs(new Subtract(img, img)));
+			// Avoiding overflow, like Difference does:
+			return Compute.inFloats(new Subtract(new Max(img, img), new Min(img, img)));
 		} finally {
 			p("  elapsed: " + (System.nanoTime() - t0)/1000000.0);
 		}
 	}
 
+	/** Copy the contents from img to an ImagePlus; assumes containers are compatible. */
+	static public ImagePlus copyToFloatImagePlus(final Img<? extends RealType<?>> img, final String title) {
+		ImagePlusImgFactory<FloatType> factory = new ImagePlusImgFactory<FloatType>();
+		ImagePlusImg<FloatType, ?> iml = factory.create(img, new FloatType());
+		Cursor<FloatType> c1 = iml.cursor();
+		Cursor<? extends RealType<?>> c2 = img.cursor();
+		while (c1.hasNext()) {
+			c1.fwd();
+			c2.fwd();
+			c1.get().set(c2.get().getRealFloat());
+		}
+		try {
+			ImagePlus imp = iml.getImagePlus();
+			imp.setTitle(title);
+			return imp;
+		} catch (ImgLibException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
 	public static void main(String[] args) {
 		try {
+			
+			new ImageJ();
+			
 			String src = "http://imagej.nih.gov/ij/images/bridge.gif";
 			//String src = "/home/albert/Desktop/t2/bridge.gif";
-			Image<UnsignedByteType> img = LOCI.openLOCIUnsignedByteType(src, new ArrayContainerFactory());
+			Img<UnsignedByteType> img1 = new ImgOpener().openImg(src);
+			
+			System.out.println("dimensions of image opened by ImgOpener: " + img1.numDimensions());
+			System.out.println(" and 3rd dimension is: " + img1.dimension(2));
+			
+			// turn it into an array image of really just 2D:
+			Img<UnsignedByteType> img = new ArrayImgFactory<UnsignedByteType>().create(new long[]{512, 512}, new UnsignedByteType());
+			Cursor<UnsignedByteType> c1 = img1.cursor();
+			Cursor<UnsignedByteType> c2 = img.cursor();
+			while (c2.hasNext()) {
+				c1.fwd();
+				c2.fwd();
+				c2.get().set(c1.get());
+			}
+			
 			//
 			double mean = 0;
 			for (final UnsignedByteType t : img) mean += t.getRealDouble();
 			mean /= img.size();
 			//
 
-			GaussianConvolutionReal<UnsignedByteType> gauss = new GaussianConvolutionReal<UnsignedByteType>( img, new OutOfBoundsStrategyMirrorFactory<UnsignedByteType>(), 60 );
+			/*
+			GaussianConvolutionReal<UnsignedByteType> gauss = new GaussianConvolutionReal<UnsignedByteType>( img, new OutOfBoundsMirrorFactory(), 60 );
 			gauss.process();
 			
 			System.out.println( "Gauss processing time: " + gauss.getProcessingTime() );
 			
 			Image<UnsignedByteType> brightfield = gauss.getResult();
+			*/
 			
 			/*
 			DownSample<UnsignedByteType> downSample = new DownSample<UnsignedByteType>( img, 0.25f );			
@@ -256,20 +297,36 @@ public class Benchmark {
 			brightfield = imgTransform.getResult();
 			*/
 			
+			/*
 			ImageJFunctions.show( img );
 			ImageJFunctions.show( brightfield );
-						
-			//
-			Image<UnsignedByteType> darkfield = img.createNewImage(); // empty
+			*/
+
+			// A simulated brightfield image
+			// Until Gauss is restored, just use an image with half-tone
+			Img<UnsignedByteType> brightfield = img.factory().create(Util.intervalDimensions(img), new UnsignedByteType());
+			for (UnsignedByteType t : brightfield) {
+				t.set(127);
+			}
+			
+			// Test:
+			System.out.println("img.numDimensions: " + img.numDimensions());
+			copyToFloatImagePlus(img, "original").show();
+			copyToFloatImagePlus(brightfield, "brightfield").show();
+			copyToFloatImagePlus(Compute.inFloats(1, new Identity(img)), "identity").show();
+			
+			// A black image: empty
+			Img<UnsignedByteType> darkfield = img.factory().create(Util.intervalDimensions(img), new UnsignedByteType());
 
 			// Test:
 			for (int i=0; i<4; i++) {
-				correctIllumination(img, brightfield, darkfield, mean);
-				Image<FloatType> corrected = scriptCorrectIllumination(img, brightfield, darkfield, mean);
+				Img<FloatType> corrected1 = correctIllumination(img, brightfield, darkfield, mean);
+				Img<FloatType> corrected2 = scriptCorrectIllumination(img, brightfield, darkfield, mean);
 				
-				if ( i == 0 )
-					ImageJFunctions.show( corrected );
-					
+				if ( i == 0 ) {
+					copyToFloatImagePlus(corrected1, "corrected direct").show();
+					copyToFloatImagePlus(corrected2, "corrected script").show();
+				}
 			}
 
 			for (int i=0; i<4; i++) {

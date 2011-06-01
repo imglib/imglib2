@@ -8,6 +8,7 @@ import net.imglib2.type.numeric.NumericType;
 import net.imglib2.type.numeric.ARGBType;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.real.FloatType;
+import net.imglib2.util.Util;
 import net.imglib2.script.algorithm.fn.AlgorithmUtil;
 import net.imglib2.script.algorithm.fn.ImgProxy;
 import net.imglib2.script.color.Alpha;
@@ -69,11 +70,11 @@ public class Normalize<N extends NumericType<N>> extends ImgProxy<N>
 		}
 		// If min and max are the same, we just return the empty image will all zeros
 		if (0 == cmm.getMin().compareTo(cmm.getMax())) {
-			return img.factory().imgFactory(new FloatType()).create(AlgorithmUtil.extractDimensions(img), new FloatType());
+			return img.factory().imgFactory(new FloatType()).create(Util.intervalDimensions(img), new FloatType());
 		}
 
 		// Copy img into a new target image
-		final Img<FloatType> target = img.factory().imgFactory(new FloatType()).create(AlgorithmUtil.extractDimensions(img), new FloatType());
+		final Img<FloatType> target = img.factory().imgFactory(new FloatType()).create(Util.intervalDimensions(img), new FloatType());
 
 		// Normalize in place the target image
 		final double min = cmm.getMin().getRealDouble();

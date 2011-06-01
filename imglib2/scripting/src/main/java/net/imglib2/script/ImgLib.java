@@ -21,7 +21,7 @@ import net.imglib2.type.numeric.RealType;
  * 
  * @author Johannes Schindelin and Albert Cardona
  * @version 1.0 2010-12-07
- * @see Image
+ * @see Img
  */
 public class ImgLib {
 	/** Open an image from a file path or a web URL. */

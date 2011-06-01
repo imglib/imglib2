@@ -3,7 +3,8 @@ package net.imglib2.script.color;
 import java.awt.Color;
 import java.util.Collection;
 
-import net.imglib2.Cursor;
+import net.imglib2.IterableRealInterval;
+import net.imglib2.RealCursor;
 import net.imglib2.script.color.fn.ColorFunction;
 import net.imglib2.script.math.fn.IFunction;
 
@@ -11,7 +12,7 @@ import net.imglib2.img.Img;
 import net.imglib2.type.numeric.RealType;
 
 /** Given up to 3 channels--each represented by an {@link IFunction},
- *  this class composes them into an {@link ARGBType} {@link Image}
+ *  this class composes them into an {@link ARGBType} {@link Img}
  *  in HSB color space.
  *  
  *  Channel order: 3=H, 2=S, 1=B.
@@ -29,7 +30,7 @@ public final class HSB extends ColorFunction {
 	}
 
 	/** Interpret the @param img as an HSB image. */
-	public HSB(final Img<? extends RealType<?>> img) {
+	public HSB(final IterableRealInterval<? extends RealType<?>> img) {
 		this(new Channel(img, 3), new Channel(img, 2), new Channel(img, 1));
 	}
 
@@ -80,16 +81,16 @@ public final class HSB extends ColorFunction {
 	}
 
 	@Override
-	public final void findCursors(final Collection<Cursor<?>> cursors) {
+	public final void findCursors(final Collection<RealCursor<?>> cursors) {
 		hue.findCursors(cursors);
 		saturation.findCursors(cursors);
 		brightness.findCursors(cursors);
 	}
 
 	@Override
-	public final void findImgs(final Collection<Img<?>> imgs) {
-		hue.findImgs(imgs);
-		saturation.findImgs(imgs);
-		brightness.findImgs(imgs);
+	public final void findImgs(final Collection<IterableRealInterval<?>> iris) {
+		hue.findImgs(iris);
+		saturation.findImgs(iris);
+		brightness.findImgs(iris);
 	}
 }

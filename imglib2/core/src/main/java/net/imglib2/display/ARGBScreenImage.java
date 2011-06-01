@@ -41,6 +41,8 @@ import java.util.Iterator;
 import net.imglib2.Cursor;
 import net.imglib2.IterableInterval;
 import net.imglib2.IterableRealInterval;
+import net.imglib2.Positionable;
+import net.imglib2.RealPositionable;
 import net.imglib2.img.array.ArrayImg;
 import net.imglib2.img.basictypeaccess.array.IntArray;
 import net.imglib2.type.numeric.ARGBType;
@@ -133,6 +135,12 @@ public class ARGBScreenImage implements ScreenImage, IterableInterval< ARGBType 
 	}
 
 	@Override
+	public void realMax( final RealPositionable max )
+	{
+		argbArray.realMax( max );
+	}
+	
+	@Override
 	public double realMin( final int d )
 	{
 		return 0;
@@ -144,6 +152,12 @@ public class ARGBScreenImage implements ScreenImage, IterableInterval< ARGBType 
 		argbArray.realMin( min );
 	}
 
+	@Override
+	public void realMin( final RealPositionable min )
+	{
+		argbArray.realMin( min );
+	}
+	
 	@Override
 	public int numDimensions()
 	{
@@ -169,6 +183,12 @@ public class ARGBScreenImage implements ScreenImage, IterableInterval< ARGBType 
 	}
 
 	@Override
+	public void max( final Positionable max )
+	{
+		argbArray.max( max );
+	}
+
+	@Override
 	public long min( final int d )
 	{
 		return 0;
@@ -176,6 +196,12 @@ public class ARGBScreenImage implements ScreenImage, IterableInterval< ARGBType 
 
 	@Override
 	public void min( final long[] min )
+	{
+		argbArray.min( min );
+	}
+
+	@Override
+	public void min( final Positionable min )
 	{
 		argbArray.min( min );
 	}

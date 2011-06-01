@@ -57,6 +57,13 @@ public interface RealInterval extends EuclideanSpace
 	public void realMin( double[] min );
 	
 	/**
+	 * Sets a {@link RealPositionable} to the minimum of this {@link Interval}
+	 * 
+	 * @param min
+	 */
+	public void realMin( RealPositionable min );
+	
+	/**
 	 * 
 	 * @param d dimension
 	 * @return maximum
@@ -69,4 +76,11 @@ public interface RealInterval extends EuclideanSpace
 	 * @param max
 	 */
 	public void realMax( double[] max );
+
+	/**
+	 * Sets a {@link RealPositionable} to the minimum of this {@link Interval}
+	 * 
+	 * @param min
+	 */
+	public void realMax( RealPositionable max );
 }

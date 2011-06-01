@@ -2,7 +2,8 @@ package net.imglib2.script.color.fn;
 
 import java.util.Collection;
 
-import net.imglib2.Cursor;
+import net.imglib2.IterableRealInterval;
+import net.imglib2.RealCursor;
 import net.imglib2.script.math.Compute;
 import net.imglib2.script.math.fn.IFunction;
 import net.imglib2.script.math.fn.ImageComputation;
@@ -18,12 +19,12 @@ public abstract class ColorFunction implements IFunction, ImageComputation<ARGBT
 	protected static final NumberFunction empty = new NumberFunction(0.0d);
 
 	public static final class Channel implements IFunction {
-		final Cursor<? extends RealType<?>> c;
-		final Img<? extends RealType<?>> img;
+		final RealCursor<? extends RealType<?>> c;
+		final IterableRealInterval<? extends RealType<?>> img;
 		final int shift;
 
 		/** In RGBALegacyType, A=4, R=3, G=2, B=1, or H=3, S=2, B=1 */
-		public Channel(final Img<? extends RealType<?>> img, final int channel) {
+		public Channel(final IterableRealInterval<? extends RealType<?>> img, final int channel) {
 			this.img = img;
 			this.c = img.cursor();
 			this.shift = (channel-1) * 8;
@@ -41,12 +42,12 @@ public abstract class ColorFunction implements IFunction, ImageComputation<ARGBT
 		}
 
 		@Override
-		public final void findCursors(final Collection<Cursor<?>> cursors) {
+		public final void findCursors(final Collection<RealCursor<?>> cursors) {
 			cursors.add(c);
 		}
 		@Override
-		public final void findImgs(final Collection<Img<?>> imgs) {
-			imgs.add(img);
+		public final void findImgs(final Collection<IterableRealInterval<?>> iris) {
+			iris.add(img);
 		}
 	}
 

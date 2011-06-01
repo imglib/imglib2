@@ -50,14 +50,11 @@ import loci.formats.meta.IMetadata;
 import loci.formats.meta.MetadataRetrieve;
 import mpicbg.imglib.container.ContainerFactory;
 import mpicbg.imglib.container.array.ArrayContainerFactory;
-import mpicbg.imglib.cursor.LocalizableByDimCursor;
 import mpicbg.imglib.cursor.LocalizablePlaneCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.ImageFactory;
-import mpicbg.imglib.image.display.imagej.ImageJFunctions;
-import mpicbg.imglib.multithreading.SimpleMultiThreading;
-import mpicbg.imglib.type.numeric.RealType;
 import mpicbg.imglib.type.numeric.RGBALegacyType;
+import mpicbg.imglib.type.numeric.RealType;
 import mpicbg.imglib.type.numeric.integer.ByteType;
 import mpicbg.imglib.type.numeric.integer.ShortType;
 import mpicbg.imglib.type.numeric.integer.Unsigned12BitType;
@@ -235,7 +232,14 @@ public class LOCI
 			}
 			
 			// try read metadata
-			applyMetaData( img, r );
+			try
+			{
+				applyMetaData( img, r );
+			}
+			catch (Exception e)
+			{
+				System.out.println( "Cannot read metadata: " + e );
+			}
 		
 			final int t = 0;			
 			final byte[][] b = new byte[channels][width * height * bytesPerPixel];
@@ -392,7 +396,14 @@ public class LOCI
 			}
 			
 			// try read metadata
-			applyMetaData( img, r );
+			try
+			{
+				applyMetaData( img, r );
+			}
+			catch (Exception e)
+			{
+				System.out.println( "Cannot read metadata: " + e );
+			}
 		
 			final int t = 0;			
 			final byte[][] b = new byte[channels][width * height * bytesPerPixel];
@@ -458,7 +469,7 @@ public class LOCI
 		{
 			final MetadataRetrieve retrieve = (MetadataRetrieve)reader.getMetadataStore();
 			
-			float cal = retrieve.getPixelsPhysicalSizeX( 0 ).floatValue();
+			float cal = retrieve.getPixelsPhysicalSizeX( 0 ).getValue().floatValue();
 			if ( cal == 0)
 			{
 				cal = 1;
@@ -469,7 +480,7 @@ public class LOCI
 			
 			if ( img.getNumDimensions() >= 2 )
 			{
-				cal = retrieve.getPixelsPhysicalSizeY( 0 ).floatValue();
+				cal = retrieve.getPixelsPhysicalSizeY( 0 ).getValue().floatValue();
 				if ( cal == 0)
 				{
 					cal = 1;
@@ -480,7 +491,7 @@ public class LOCI
 			
 			if ( img.getNumDimensions() >= 3 )
 			{
-				cal = retrieve.getPixelsPhysicalSizeZ( 0 ).floatValue();
+				cal = retrieve.getPixelsPhysicalSizeZ( 0 ).getValue().floatValue();
 				if ( cal == 0)
 				{
 					cal = 1;
@@ -642,7 +653,14 @@ public class LOCI
 			}
 			
 			// try read metadata
-			applyMetaData( img, r );
+			try
+			{
+				applyMetaData( img, r );
+			}
+			catch (Exception e)
+			{
+				System.out.println( "Cannot read metadata: " + e );
+			}
 		
 			final int t = 0;			
 			final byte[][] b = new byte[channels][width * height * bytesPerPixel];
@@ -814,7 +832,14 @@ public class LOCI
 			}
 			
 			// try read metadata
-			applyMetaData( img, r );
+			try
+			{
+				applyMetaData( img, r );
+			}
+			catch (Exception e)
+			{
+				System.out.println( "Cannot read metadata: " + e );
+			}
 		
 			final int t = 0;			
 			final byte[][] b = new byte[channels][width * height * bytesPerPixel];
@@ -956,7 +981,14 @@ public class LOCI
 			}
 			
 			// try read metadata
-			applyMetaData( img, r );
+			try
+			{
+				applyMetaData( img, r );
+			}
+			catch (Exception e)
+			{
+				System.out.println( "Cannot read metadata: " + e );
+			}
 		
 			final int t = 0;			
 			final byte[][] b = new byte[channels][width * height * bytesPerPixel];
@@ -1083,7 +1115,14 @@ public class LOCI
 			}
 			
 			// try read metadata
-			applyMetaData( img, r );
+			try
+			{
+				applyMetaData( img, r );
+			}
+			catch (Exception e)
+			{
+				System.out.println( "Cannot read metadata: " + e );
+			}
 
 			final int t = 0;			
 			final byte[][] b = new byte[channels][width * height * bytesPerPixel];

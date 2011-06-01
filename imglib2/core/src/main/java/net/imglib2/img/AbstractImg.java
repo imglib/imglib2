@@ -32,7 +32,9 @@ package net.imglib2.img;
 import java.util.Iterator;
 
 import net.imglib2.Interval;
+import net.imglib2.Positionable;
 import net.imglib2.RandomAccess;
+import net.imglib2.RealPositionable;
 
 
 public abstract class AbstractImg< T > implements Img< T >
@@ -126,6 +128,12 @@ public abstract class AbstractImg< T > implements Img< T >
 	}
 
 	@Override
+	public void realMax( final RealPositionable m )
+	{
+		m.setPosition( max );
+	}
+
+	@Override
 	public double realMin( int d )
 	{
 		return 0;
@@ -136,6 +144,13 @@ public abstract class AbstractImg< T > implements Img< T >
 	{
 		for ( int d = 0; d < n; ++d )
 			m[ d ] = 0;
+	}
+
+	@Override
+	public void realMin( final RealPositionable m )
+	{
+		for ( int d = 0; d < n; ++d )
+			m.setPosition( 0, d );
 	}
 
 	@Override
@@ -152,17 +167,29 @@ public abstract class AbstractImg< T > implements Img< T >
 	}
 
 	@Override
+	public void max( final Positionable m )
+	{
+		m.setPosition( max );
+	}
+
+	@Override
 	public void min( final long[] m )
 	{
 		for ( int d = 0; d < n; ++d )
 			m[ d ] = 0;
 	}
 
-
 	@Override
 	public long min( int d )
 	{
 		return 0;
+	}
+
+	@Override
+	public void min( final Positionable m )
+	{
+		for ( int d = 0; d < n; ++d )
+			m.setPosition( 0, d );
 	}
 
 	@Override

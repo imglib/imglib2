@@ -10,6 +10,7 @@ import javax.swing.JFrame;
 import net.imglib2.Cursor;
 import net.imglib2.algorithm.math.ComputeMinMax;
 import net.imglib2.img.Img;
+import net.imglib2.script.algorithm.fn.AlgorithmUtil;
 import net.imglib2.type.numeric.ARGBType;
 import net.imglib2.type.numeric.RealType;
 
@@ -22,8 +23,6 @@ import org.jfree.chart.renderer.xy.StandardXYBarPainter;
 import org.jfree.chart.renderer.xy.XYBarRenderer;
 import org.jfree.data.statistics.HistogramDataset;
 import org.jfree.data.statistics.HistogramType;
-
-import net.imglib2.script.algorithm.fn.AlgorithmUtil;
 
 /** An histogram of the image (or an image computed from an IFunction)
  * between its minimum and maximum values,

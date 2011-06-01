@@ -1,13 +1,13 @@
 package net.imglib2.script.math;
 
+import net.imglib2.IterableRealInterval;
 import net.imglib2.script.math.fn.IFunction;
 import net.imglib2.script.math.fn.UnaryOperation;
-import net.imglib2.img.Img;
 import net.imglib2.type.numeric.RealType;
 
 public class Expm1 extends UnaryOperation {
 
-	public Expm1(final Img<? extends RealType<?>> img) {
+	public Expm1(final IterableRealInterval<? extends RealType<?>> img) {
 		super(img);
 	}
 	public Expm1(final IFunction fn) {

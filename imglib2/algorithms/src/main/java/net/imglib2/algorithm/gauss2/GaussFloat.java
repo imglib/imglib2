@@ -1,20 +1,34 @@
 package net.imglib2.algorithm.gauss2;
 
 import net.imglib2.Interval;
-import net.imglib2.RandomAccess;
+import net.imglib2.Iterator;
+import net.imglib2.Location;
 import net.imglib2.RandomAccessible;
+import net.imglib2.Sampler;
+import net.imglib2.converter.Converter;
 import net.imglib2.img.Img;
 import net.imglib2.img.ImgFactory;
+import net.imglib2.img.NativeImg;
 import net.imglib2.img.array.ArrayImgFactory;
+import net.imglib2.img.basictypeaccess.array.FloatArray;
 import net.imglib2.img.cell.CellImgFactory;
+import net.imglib2.outofbounds.OutOfBoundsFactory;
+import net.imglib2.outofbounds.OutOfBoundsMirrorFactory;
+import net.imglib2.outofbounds.OutOfBoundsMirrorFactory.Boundary;
 import net.imglib2.type.numeric.real.FloatType;
+import net.imglib2.view.Views;
 
-public class GaussFloat extends Gauss< FloatType, FloatType >
+final public class GaussFloat extends GaussNativeType< FloatType >
 {
-	final RandomAccessible<FloatType> input;
-	final ImgFactory<FloatType> factory;
-	
-	final Img<FloatType> tmp1, tmp2, result;
+	public GaussFloat( final double[] sigma, final Img<FloatType> input )
+	{
+		this( sigma, Views.extend( input, new OutOfBoundsMirrorFactory< FloatType, Img<FloatType> >( Boundary.SINGLE ) ), input, input.factory() );
+	}
+
+	public GaussFloat( final double[] sigma, final Img<FloatType> input, final OutOfBoundsFactory< FloatType, Img<FloatType> > outOfBounds )
+	{
+		this( sigma, Views.extend( input, outOfBounds ), input, input.factory() );
+	}
 	
 	/**
 	 * Computes a Gaussian convolution on a {@link RandomAccessible} of {@link FloatType} in a certain {@link Interval}
@@ -27,30 +41,18 @@ public class GaussFloat extends Gauss< FloatType, FloatType >
 	 */
 	public GaussFloat( final double[] sigma, final RandomAccessible<FloatType> input, final Interval interval, final ImgFactory<FloatType> factory )
 	{
-		super( sigma, interval );
-		
-		this.input = input;
-		this.factory = factory;
-		
-		result = factory.create( interval, new FloatType() );
-		
-		// allocate the temp images
-		final Interval intervalTmp = getTemporaryImgSize();
-		
-		if ( numDimensions > 1 )
-			tmp1 = factory.create( intervalTmp, new FloatType() );
-		else
-			tmp1 = null;
-		
-		if ( numDimensions > 2 )
-			tmp2 = factory.create( intervalTmp, new FloatType() );
-		else
-			tmp2 = null;
+		super( sigma, input, interval, factory.create( interval, new FloatType() ),  new Location( sigma.length ), factory );
+	}
+	
+	@Override
+	public Img<FloatType> getResult()
+	{
+		return (Img<FloatType>)output;
 	}
 	
 	@Override
 	protected FloatType getProcessingType() { return new FloatType(); }
-	
+
 	@Override
 	protected Img<FloatType> getProcessingLine( final long sizeProcessLine )
 	{
@@ -60,49 +62,139 @@ public class GaussFloat extends Gauss< FloatType, FloatType >
 		if ( sizeProcessLine <= Integer.MAX_VALUE )
 			processLine = new ArrayImgFactory< FloatType >().create( new long[]{ sizeProcessLine }, new FloatType() );
 		else
-			processLine = new CellImgFactory< FloatType >( Integer.MAX_VALUE / 2 ).create( new long[]{ sizeProcessLine }, new FloatType() );
+			processLine = new CellImgFactory< FloatType >( Integer.MAX_VALUE / 16 ).create( new long[]{ sizeProcessLine }, new FloatType() );
 		
 		return processLine;
-	}
-
-	@Override
-	public AbstractSamplingLineIterator<FloatType> createInputLineSampler( final int dim, final Interval range )
+	}	
+	
+	/**
+	 * Compute the current line. It is up to the implementation howto really do that. The idea is to only iterate
+	 * over the input once (that's why it is an {@link Iterator}) as it is potentially an expensive operation 
+	 * (e.g. a {@link Converter} might be involved or we are computing on a rendered input) 
+	 *  
+	 * @param input - the {@link Iterator}/{@link Sampler} over the current input line.
+	 */
+	protected void processLine( final SamplingLineIterator< FloatType > input, final double[] kernel )
 	{
-		// the random access on the input data
-		final RandomAccess< FloatType > randomAccess;
+		final int kernelSize = kernel.length;
+		final int kernelSizeMinus1 = kernelSize - 1;
+		final int kernelSizeHalf = kernelSize / 2;
+		final int kernelSizeHalfMinus1 = kernelSizeHalf - 1;
 		
-		if ( dim == 0 )
-			randomAccess = input.randomAccess();
-		else if ( dim % 2 == 1 )
-			randomAccess = tmp1.randomAccess(); // odd dimensions
+		final float[] v = ((FloatArray)((NativeImg<?, ?>)input.getProcessLine()).update( null )).getCurrentStorageArray();
+		
+		final int imgSize = v.length;
+		
+		int indexLeft = 0;
+		int indexRight = 0;
+		
+		if ( imgSize >= kernelSize )
+		{
+			// convolve the first pixels where the input influences less than kernel.size pixels
+			for ( int i = 0; i < kernelSizeMinus1; ++i )
+			{
+				input.fwd();
+				
+				// copy input into a temp variable, it might be expensive to get()
+				final float copy = input.get().get();
+				
+				// set the random access in the processing line to the right position
+				indexLeft = -1;				
+				
+				// now add it to all output values it contributes to
+				for ( int o = 0; o <= i; ++o )
+					v[ ++indexLeft ] += (float)(copy * kernel[ i - o ]);
+			}
+			
+			// convolve all values where the input value contributes to the full kernel
+			final int length = imgSize - kernelSizeMinus1;
+			for ( int n = 0; n < length; ++n )
+			{
+				input.fwd();
+				
+				// copy input into a temp variable, it might be expensive to get()
+				final float copy = input.get().get();
+
+				// set the left and the right random access to the right coordinates
+				// the left random access is always responsible for the center
+				indexLeft = n;
+				indexRight = n + kernelSizeMinus1;
+				
+				// move till the last pixel before the center of the kernel
+				for ( int k = 0; k < kernelSizeHalfMinus1; ++k )
+				{
+					final float tmp = (float)(copy * kernel[ k ]);
+
+					v[ indexLeft++ ] += tmp;
+					v[ indexRight-- ] += tmp;
+				}
+
+				// do the last pixel (same as a above, but right cursor doesn't move)
+				final float tmp = (float)(copy * kernel[ kernelSizeHalfMinus1 ]);
+
+				v[ indexLeft++ ] += tmp;
+				v[ indexRight ] += tmp;
+
+				// do the center pixel
+				v[ indexLeft ] += (float)(copy * kernel[ kernelSizeHalf ]);
+			}
+			
+				
+			// convolve the last pixels where the input influences less than kernel.size pixels
+			final int endLength = imgSize + kernelSizeMinus1;
+			for ( int i = imgSize; i < endLength; ++i )
+			{
+				// after the fwd() call the random access is at position imgSize as pictured above
+				input.fwd();
+				
+				// copy input into a temp variable, it might be expensive to get()
+				final float copy = input.get().get();
+				
+				// set the random access in the processing line to the right position
+				indexLeft = i - kernelSize;				
+				
+				// now add it to all output values it contributes to
+				int k = 0;
+				for ( long o = i - kernelSize + 1; o < imgSize; ++o )
+					v[ ++indexLeft ] += (float)(copy * kernel[ k++ ]);
+			}			
+		}
 		else
-			randomAccess = tmp2.randomAccess(); // even dimensions
-
-		// place the randomAccess at the right location and return the
-		// size of the SamplingLineIterator we need to compute the processLine
-		final long sizeInputData = setupInputLineSampler( dim, range, randomAccess );
-		
-		// return a new SamplingLineIterator that also keeps the instance of the processing line,
-		// which is important for multithreading so that each SamplingLineIterator has its own
-		// temporary space
-		return new SamplingLineIterator<FloatType>( dim, sizeInputData, randomAccess, getProcessingLine( sizeInputData ) );
-	}
-	
-	@Override
-	protected AbstractWritableLineIterator<FloatType> createOutputLineWriter( final int dim, final Interval range, final AbstractSamplingLineIterator<FloatType> inputLineSampler )
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
-	
-	@Override
-	public void writeLine( final AbstractWritableLineIterator<FloatType> a )
-	{
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public RandomAccessible<FloatType> getResult() { return result; }
-
+		{
+			// convolve the first pixels where the input influences less than kernel.size pixels
+			for ( int i = 0; i < imgSize; ++i )
+			{
+				input.fwd();
+				
+				// copy input into a temp variable, it might be expensive to get()
+				final float copy = input.get().get();
+				
+				// set the random access in the processing line to the right position
+				indexLeft = -1;				
+				
+				// now add it to all output values it contributes to
+				for ( int o = 0; o <= i; ++o )
+					v[ ++indexLeft ] += (float)(copy * kernel[ i - o ]);
+			}
+			
+			// convolve the last pixels where the input influences less than kernel.size pixels
+			for ( int i = imgSize; i < imgSize + kernelSizeMinus1; ++i )
+			{
+				// after the fwd() call the random access is at position imgSize as pictured above
+				input.fwd();
+				
+				// copy input into a temp variable, it might be expensive to get()
+				final float copy = input.get().get();
+				
+				// set the random access in the processing line to the right position
+				final int position = i - kernelSize; 
+				indexLeft = Math.max( -1, position );
+				
+				// now add it to all output values it contributes to
+				int k = Math.max( 0, (int)position + 1 );
+				for ( int o = Math.max( 0, i - kernelSize + 1); o < imgSize; ++o )
+					v[ ++indexLeft ] += (float)(copy * kernel[ k++ ]);
+			}						
+		}
+	}	
 }

@@ -1,9 +1,11 @@
 package net.imglib2.view;
 
 import net.imglib2.Interval;
+import net.imglib2.Positionable;
 import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessible;
 import net.imglib2.RandomAccessibleInterval;
+import net.imglib2.RealPositionable;
 import net.imglib2.transform.integer.MixedTransform;
 
 public class MixedTransformView< T > implements TransformedRandomAccessible< T >, RandomAccessibleInterval< T >
@@ -99,6 +101,12 @@ public class MixedTransformView< T > implements TransformedRandomAccessible< T >
 	}
 
 	@Override
+	public void realMax( final RealPositionable m )
+	{
+		m.setPosition( max );
+	}
+
+	@Override
 	public double realMin( int d )
 	{
 		return 0;
@@ -109,6 +117,13 @@ public class MixedTransformView< T > implements TransformedRandomAccessible< T >
 	{
 		for ( int d = 0; d < n; ++d )
 			m[ d ] = 0;
+	}
+
+	@Override
+	public void realMin( final RealPositionable m )
+	{
+		for ( int d = 0; d < n; ++d )
+			m.setPosition( 0, d );
 	}
 
 	@Override
@@ -125,6 +140,12 @@ public class MixedTransformView< T > implements TransformedRandomAccessible< T >
 	}
 
 	@Override
+	public void max( final Positionable m )
+	{
+		m.setPosition( max );
+	}
+
+	@Override
 	public long min( int d )
 	{
 		return 0;
@@ -135,6 +156,13 @@ public class MixedTransformView< T > implements TransformedRandomAccessible< T >
 	{
 		for ( int d = 0; d < n; ++d )
 			m[ d ] = 0;
+	}
+
+	@Override
+	public void min( final Positionable m )
+	{
+		for ( int d = 0; d < n; ++d )
+			m.setPosition( 0, d );
 	}
 
 	@Override

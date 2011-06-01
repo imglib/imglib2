@@ -6,8 +6,10 @@ import java.util.Iterator;
 import net.imglib2.Cursor;
 import net.imglib2.IterableInterval;
 import net.imglib2.IterableRealInterval;
+import net.imglib2.Positionable;
 import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessible;
+import net.imglib2.RealPositionable;
 import net.imglib2.type.Type;
 
 public abstract class AbstractIterableRegionOfInterest extends
@@ -276,6 +278,11 @@ public abstract class AbstractIterableRegionOfInterest extends
 		public void realMin(double[] min) {
 			AbstractIterableRegionOfInterest.this.realMin(min);
 		}
+		
+		@Override
+		public void realMin(RealPositionable min) {
+			AbstractIterableRegionOfInterest.this.realMin(min);
+		}
 
 		@Override
 		public double realMax(int d) {
@@ -284,6 +291,11 @@ public abstract class AbstractIterableRegionOfInterest extends
 
 		@Override
 		public void realMax(double[] max) {
+			AbstractIterableRegionOfInterest.this.realMax(max);
+		}
+
+		@Override
+		public void realMax(RealPositionable max) {
 			AbstractIterableRegionOfInterest.this.realMax(max);
 		}
 
@@ -308,12 +320,22 @@ public abstract class AbstractIterableRegionOfInterest extends
 		}
 
 		@Override
+		public void min(Positionable min) {
+			AbstractIterableRegionOfInterest.this.min(min);
+		}
+
+		@Override
 		public long max(int d) {
 			return AbstractIterableRegionOfInterest.this.max(d);
 		}
 
 		@Override
 		public void max(long[] max) {
+			AbstractIterableRegionOfInterest.this.max(max);
+		}
+
+		@Override
+		public void max(Positionable max) {
 			AbstractIterableRegionOfInterest.this.max(max);
 		}
 
@@ -465,6 +487,11 @@ public abstract class AbstractIterableRegionOfInterest extends
 		}
 	}
 
+	protected void max(Positionable max) {
+		validateExtremaCache();
+		max.setPosition(cached_max);
+	}
+
 	protected long max(int d) {
 		validateExtremaCache();
 		return cached_max[d];
@@ -476,6 +503,11 @@ public abstract class AbstractIterableRegionOfInterest extends
 			min[i] = cached_min[i];
 		}
 		
+	}
+
+	protected void min(Positionable min) {
+		validateExtremaCache();
+		min.setPosition( cached_min );		
 	}
 
 	protected long min(int d) {

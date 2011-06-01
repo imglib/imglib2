@@ -1,8 +1,8 @@
 package net.imglib2.script.color;
 
+import net.imglib2.IterableRealInterval;
 import net.imglib2.script.color.fn.ChannelOp;
 import net.imglib2.script.math.fn.IFunction;
-import net.imglib2.img.Img;
 import net.imglib2.type.numeric.ARGBType;
 
 /** Extracts the pixel value for the desired channel, from 1 to 4,
@@ -12,7 +12,7 @@ public class Channel extends ChannelOp {
 	private final int channel;
 	private final int shift;
 
-	public Channel(final Img<? extends ARGBType> img, final int channel) throws IllegalArgumentException {
+	public Channel(final IterableRealInterval<? extends ARGBType> img, final int channel) throws IllegalArgumentException {
 		super(img);
 		if (channel > 4 || channel < 1) throw new IllegalArgumentException("Channel must be 1 <= channel <= 4"); 
 		this.channel = channel;

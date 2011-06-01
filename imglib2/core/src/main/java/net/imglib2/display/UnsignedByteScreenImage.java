@@ -40,6 +40,8 @@ import java.util.Iterator;
 import net.imglib2.Cursor;
 import net.imglib2.IterableInterval;
 import net.imglib2.IterableRealInterval;
+import net.imglib2.Positionable;
+import net.imglib2.RealPositionable;
 import net.imglib2.img.array.ArrayImg;
 import net.imglib2.img.basictypeaccess.array.ByteArray;
 import net.imglib2.type.numeric.integer.UnsignedByteType;
@@ -144,6 +146,12 @@ public class UnsignedByteScreenImage implements ScreenImage, IterableInterval< U
 	}
 
 	@Override
+	public void realMax( final RealPositionable max )
+	{
+		argbArray.realMax( max );
+	}
+
+	@Override
 	public double realMin( final int d )
 	{
 		return 0;
@@ -151,6 +159,12 @@ public class UnsignedByteScreenImage implements ScreenImage, IterableInterval< U
 
 	@Override
 	public void realMin( final double[] min )
+	{
+		argbArray.realMin( min );
+	}
+
+	@Override
+	public void realMin( final RealPositionable min )
 	{
 		argbArray.realMin( min );
 	}
@@ -178,6 +192,12 @@ public class UnsignedByteScreenImage implements ScreenImage, IterableInterval< U
 	{
 		argbArray.max( max );
 	}
+	
+	@Override
+	public void max( final Positionable max )
+	{
+		argbArray.max( max );
+	}
 
 	@Override
 	public long min( final int d )
@@ -189,6 +209,12 @@ public class UnsignedByteScreenImage implements ScreenImage, IterableInterval< U
 	public void min( final long[] min )
 	{
 		argbArray.min( min );
+	}
+
+	@Override
+	public void min( final Positionable min )
+	{
+		argbArray.max( min );
 	}
 
 	@Override
