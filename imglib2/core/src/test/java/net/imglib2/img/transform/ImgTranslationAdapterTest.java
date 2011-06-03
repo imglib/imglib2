@@ -382,12 +382,12 @@ public class ImgTranslationAdapterTest {
 		assertEquals(position[1], 5);
 		c.next();
 		c.localize(position);
-		assertEquals(position[0], 2);
-		assertEquals(position[1], 6);
-		c.next();
-		c.localize(position);
 		assertEquals(position[0], 3);
 		assertEquals(position[1], 5);
+		c.next();
+		c.localize(position);
+		assertEquals(position[0], 2);
+		assertEquals(position[1], 6);
 		c.next();
 		c.localize(position);
 		assertEquals(position[0], 3);
@@ -525,8 +525,8 @@ public class ImgTranslationAdapterTest {
 		c.next();
 		c.jumpFwd(2);
 		assertTrue(c.hasNext());
-		assertEquals(c.getIntPosition(0), 3);
-		assertEquals(c.getIntPosition(1), 5);
+		assertEquals(c.getIntPosition(0), 2);
+		assertEquals(c.getIntPosition(1), 6);
 	}
 
 	/**
@@ -539,8 +539,8 @@ public class ImgTranslationAdapterTest {
 		c.next();
 		c.fwd();
 		assertTrue(c.hasNext());
-		assertEquals(c.getIntPosition(0), 2);
-		assertEquals(c.getIntPosition(1), 6);
+		assertEquals(c.getIntPosition(0), 3);
+		assertEquals(c.getIntPosition(1), 5);
 	}
 
 	/**
