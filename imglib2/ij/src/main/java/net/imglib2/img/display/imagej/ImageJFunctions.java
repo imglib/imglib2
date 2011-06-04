@@ -60,7 +60,7 @@ public class ImageJFunctions
 {
 	final static AtomicInteger ai = new AtomicInteger();
 		
-	public static <T extends RealType<T>> Img< T > wrap( final ImagePlus imp ) { return ImagePlusAdapter.wrap( imp ); }
+	public static <T extends NumericType<T>> Img< T > wrap( final ImagePlus imp ) { return ImagePlusAdapter.wrap( imp ); }
 	
 	public static Img<UnsignedByteType> wrapByte( final ImagePlus imp ) { return ImagePlusAdapter.wrapByte( imp ); }
 	
