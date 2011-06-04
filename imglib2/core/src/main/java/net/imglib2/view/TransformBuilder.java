@@ -90,7 +90,7 @@ public class TransformBuilder< T >
 	 */
 	protected void appendTransform( Transform t )
 	{
-		if ( BoundingBoxTransform.class.isInstance( t ) )
+		if ( BoundingBoxTransform.class.isInstance( t ) && (boundingBox != null))
 			boundingBox = ( ( BoundingBoxTransform ) t ).transform( boundingBox );
 		else
 			boundingBox = null;

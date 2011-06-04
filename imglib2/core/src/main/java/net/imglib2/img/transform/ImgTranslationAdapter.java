@@ -243,7 +243,7 @@ public class ImgTranslationAdapter<T extends Type, I extends Img<T>> extends Poi
 			public void localize(float[] position) {
 				c.localize(position);
 				for (int i=0; i<numDimensions(); i++) {
-					position[i] += position[i];
+					position[i] += offset[i];
 				}
 			}
 
@@ -251,18 +251,18 @@ public class ImgTranslationAdapter<T extends Type, I extends Img<T>> extends Poi
 			public void localize(double[] position) {
 				c.localize(position);
 				for (int i=0; i<numDimensions(); i++) {
-					position[i] += position[i];
+					position[i] += offset[i];
 				}
 			}
 
 			@Override
 			public float getFloatPosition(int d) {
-				return c.getFloatPosition(d) + position[d];
+				return c.getFloatPosition(d) + offset[d];
 			}
 
 			@Override
 			public double getDoublePosition(int d) {
-				return c.getDoublePosition(d) + position[d];
+				return c.getDoublePosition(d) + offset[d];
 			}
 
 			@Override
@@ -314,7 +314,7 @@ public class ImgTranslationAdapter<T extends Type, I extends Img<T>> extends Poi
 			public void localize(int[] position) {
 				c.localize(position);
 				for (int i=0; i<numDimensions(); i++) {
-					position[i] += position[i];
+					position[i] += offset[i];
 				}
 			}
 
@@ -322,18 +322,18 @@ public class ImgTranslationAdapter<T extends Type, I extends Img<T>> extends Poi
 			public void localize(long[] position) {
 				c.localize(position);
 				for (int i=0; i<numDimensions(); i++) {
-					position[i] += position[i];
+					position[i] += offset[i];
 				}
 			}
 
 			@Override
 			public int getIntPosition(int d) {
-				return c.getIntPosition(d) + (int)position[d];
+				return c.getIntPosition(d) + (int)offset[d];
 			}
 
 			@Override
 			public long getLongPosition(int d) {
-				return c.getIntPosition(d) + position[d];
+				return c.getIntPosition(d) + offset[d];
 			}
 
 			@Override
