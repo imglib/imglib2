@@ -173,6 +173,21 @@ public class ImgOpener implements StatusReporter {
 		final IFormatReader r, final ImgFactory<T> imgFactory, final T type)
 		throws ImgIOException
 	{
+		return openImg(r, imgFactory, type, true);
+	}
+
+	/**
+	 * Reads in an {@link ImgPlus} from the given initialized
+	 * {@link IFormatReader}, using the given {@link ImgFactory}. The {@link Type}
+	 * T to read is defined by the third parameter T and it has to match the
+	 * typing of the {@link ImgFactory}. If the computeMinMax flag is set, the
+	 * {@link ImgPlus}'s channel minimum and maximum metadata is computed and
+	 * populated based on the data's actual pixel values.
+	 */
+	public <T extends RealType<T> & NativeType<T>> ImgPlus<T> openImg(
+		final IFormatReader r, final ImgFactory<T> imgFactory, final T type,
+		final boolean computeMinMax) throws ImgIOException
+	{
 		// create image and read metadata
 		final long[] dimLengths = getDimLengths(r);
 		final Img<T> img = imgFactory.create(dimLengths, type);
@@ -183,7 +198,7 @@ public class ImgOpener implements StatusReporter {
 		final String id = r.getCurrentFile();
 		final int planeCount = r.getImageCount();
 		try {
-			readPlanes(r, type, imgPlus);
+			readPlanes(r, type, imgPlus, computeMinMax);
 		}
 		catch (final FormatException e) {
 			throw new ImgIOException(e);
@@ -536,8 +551,8 @@ public class ImgOpener implements StatusReporter {
 	 * specified {@link Img}.
 	 */
 	private <T extends RealType<T>> void readPlanes(final IFormatReader r,
-		final T type, final ImgPlus<T> imgPlus) throws FormatException,
-		IOException
+		final T type, final ImgPlus<T> imgPlus, final boolean computeMinMax)
+		throws FormatException, IOException
 	{
 		// TODO - create better container types; either:
 		// 1) an array container type using one byte array per plane
@@ -580,7 +595,7 @@ public class ImgOpener implements StatusReporter {
 			final short[][] lut16 = r.get16BitLookupTable();
 			if (lut16 != null) imgPlus.setColorTable(new ColorTable16(lut16), no);
 		}
-		populateMinMax(r, imgPlus);
+		if (computeMinMax) populateMinMax(r, imgPlus);
 		r.close();
 	}
 
