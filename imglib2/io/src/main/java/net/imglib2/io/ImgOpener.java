@@ -180,7 +180,7 @@ public class ImgOpener implements StatusReporter {
 		IncompatibleTypeException
 	{
 		try {
-			final IFormatReader r = initializeReader(id);
+			final IFormatReader r = initializeReader(id, computeMinMax);
 			final T type = makeType(r.getPixelType());
 			final ImgFactory<T> imgFactoryT = imgFactory.imgFactory(type);
 			return openImg(r, imgFactoryT, type, computeMinMax);
@@ -208,9 +208,30 @@ public class ImgOpener implements StatusReporter {
 		final String id, final ImgFactory<T> imgFactory, final T type)
 		throws ImgIOException
 	{
+		return openImg(id, imgFactory, type, false);
+	}
+
+	/**
+	 * Reads in an {@link ImgPlus} from the given source, using the given
+	 * {@link ImgFactory} to construct the {@link Img}. The {@link Type} T to read
+	 * is defined by the third parameter.
+	 * 
+	 * @param imgFactory The {@link ImgFactory} to use for creating the resultant
+	 *          {@link ImgPlus}.
+	 * @param type The {@link Type} T of the output {@link ImgPlus}, which must
+	 *          match the typing of the {@link ImgFactory}.
+	 * @param computeMinMax If set, the {@link ImgPlus}'s channel minimum and
+	 *          maximum metadata is computed and populated based on the data's
+	 *          actual pixel values.
+	 * @throws ImgIOException if there is a problem reading the image data.
+	 */
+	public <T extends RealType<T> & NativeType<T>> ImgPlus<T> openImg(
+		final String id, final ImgFactory<T> imgFactory, final T type,
+		final boolean computeMinMax) throws ImgIOException
+	{
 		try {
-			final IFormatReader r = initializeReader(id);
-			return openImg(r, imgFactory, type);
+			final IFormatReader r = initializeReader(id, computeMinMax);
+			return openImg(r, imgFactory, type, computeMinMax);
 		}
 		catch (final FormatException e) {
 			throw new ImgIOException(e);
@@ -392,8 +413,8 @@ public class ImgOpener implements StatusReporter {
 	// -- Helper methods --
 
 	/** Constructs and initializes a Bio-Formats reader for the given file. */
-	private IFormatReader initializeReader(final String id)
-		throws FormatException, IOException
+	private IFormatReader initializeReader(final String id,
+		final boolean computeMinMax) throws FormatException, IOException
 	{
 		notifyListeners(new StatusEvent("Initializing " + id));
 
@@ -401,7 +422,7 @@ public class ImgOpener implements StatusReporter {
 		r = new ImageReader();
 		r = new ChannelFiller(r);
 		r = new ChannelSeparator(r);
-		r = new MinMaxCalculator(r);
+		if (computeMinMax) r = new MinMaxCalculator(r);
 
 		// attach OME-XML metadata object to reader
 		try {
