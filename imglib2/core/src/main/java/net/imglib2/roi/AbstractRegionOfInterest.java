@@ -275,36 +275,60 @@ public abstract class AbstractRegionOfInterest implements RegionOfInterest {
 		cached_real_min = null;
 		cached_real_max = null;
 	}
-	protected double realMin(int d) {
+	/* (non-Javadoc)
+	 * @see net.imglib2.RealInterval#realMin(int)
+	 */
+	@Override
+	public double realMin(int d) {
 		validateRealExtremaCache();
 		return cached_real_min[d];
 	}
 
-	protected void realMin(double[] min) {
+	/* (non-Javadoc)
+	 * @see net.imglib2.RealInterval#realMin(double[])
+	 */
+	@Override
+	public void realMin(double[] min) {
 		validateRealExtremaCache();
 		for (int i = 0; i < min.length; i++) {
 			min[i] = cached_real_min[i];
 		}
 	}
 
-	protected void realMin(RealPositionable min) {
+	/* (non-Javadoc)
+	 * @see net.imglib2.RealInterval#realMin(net.imglib2.RealPositionable)
+	 */
+	@Override
+	public void realMin(RealPositionable min) {
 		validateRealExtremaCache();
 		min.setPosition( cached_real_min );
 	}
 
-	protected double realMax(int d) {
+	/* (non-Javadoc)
+	 * @see net.imglib2.RealInterval#realMax(int)
+	 */
+	@Override
+	public double realMax(int d) {
 		validateRealExtremaCache();
 		return cached_real_max[d];
 	}
 
-	protected void realMax(double[] max) {
+	/* (non-Javadoc)
+	 * @see net.imglib2.RealInterval#realMax(double[])
+	 */
+	@Override
+	public void realMax(double[] max) {
 		validateRealExtremaCache();
 		for (int i = 0; i < max.length; i++) {
 			max[i] = cached_real_max[i];
 		}
 	}
 
-	protected void realMax(RealPositionable max) {
+	/* (non-Javadoc)
+	 * @see net.imglib2.RealInterval#realMax(net.imglib2.RealPositionable)
+	 */
+	@Override
+	public void realMax(RealPositionable max) {
 		validateRealExtremaCache();
 		max.setPosition( cached_real_max );
 	}
