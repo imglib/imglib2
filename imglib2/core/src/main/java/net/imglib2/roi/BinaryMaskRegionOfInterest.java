@@ -269,8 +269,12 @@ public class BinaryMaskRegionOfInterest<T extends BitType, I extends Img<T>> ext
 		/*
 		 * Quantize by nearest-neighbor (-0.5 < x < 0.5)
 		 */
+		validate();
 		for (int i=0; i<numDimensions(); i++) {
-			randomAccess.get().setPosition(Math.round(position[i]), i);
+			long lPosition = Math.round(position[i]);
+			if ((lPosition < minima[i]) || (lPosition > maxima[i]))
+				return false;
+			randomAccess.get().setPosition(lPosition, i);
 		}
 		return randomAccess.get().get().get();
 	}
