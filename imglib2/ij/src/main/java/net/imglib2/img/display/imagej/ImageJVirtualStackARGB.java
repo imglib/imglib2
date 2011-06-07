@@ -9,7 +9,7 @@ public class ImageJVirtualStackARGB< S > extends ImageJVirtualStack< S, ARGBType
 {
 	public ImageJVirtualStackARGB( RandomAccessibleInterval< S > source, Converter< S, ARGBType > converter )
 	{
-		super( source, converter, new ARGBType(), ImagePlus.COLOR_256 );
+		super( source, converter, new ARGBType(), ImagePlus.COLOR_RGB );
 		imageProcessor.setMinAndMax( 0, 255 );
 	}
 }

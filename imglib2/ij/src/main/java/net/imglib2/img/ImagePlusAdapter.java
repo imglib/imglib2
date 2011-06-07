@@ -43,6 +43,7 @@ import net.imglib2.img.imageplus.ShortImagePlus;
 import net.imglib2.type.Type;
 import net.imglib2.type.numeric.ARGBType;
 import net.imglib2.type.numeric.ComplexType;
+import net.imglib2.type.numeric.NumericType;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.integer.UnsignedByteType;
 import net.imglib2.type.numeric.integer.UnsignedShortType;
@@ -51,7 +52,7 @@ import net.imglib2.type.numeric.real.FloatType;
 public class ImagePlusAdapter
 {
 	@SuppressWarnings( "unchecked" )
-	public static < T extends RealType< T > > Img< T > wrap( final ImagePlus imp )
+	public static < T extends NumericType< T > > Img< T > wrap( final ImagePlus imp )
 	{
 		return ( Img< T > ) wrapLocal( imp );
 	}
