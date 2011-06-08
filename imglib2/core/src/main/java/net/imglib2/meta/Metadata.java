@@ -30,9 +30,6 @@
 
 package net.imglib2.meta;
 
-import net.imglib2.display.ColorTable;
-import net.imglib2.display.ColorTable16;
-import net.imglib2.display.ColorTable8;
 import net.imglib2.img.Img;
 import net.imglib2.img.ImgPlus;
 
