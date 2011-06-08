@@ -35,8 +35,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import ome.xml.model.primitives.PositiveFloat;
-
 import loci.common.DataTools;
 import loci.common.StatusEvent;
 import loci.common.StatusListener;
@@ -50,6 +48,7 @@ import loci.formats.FormatException;
 import loci.formats.FormatTools;
 import loci.formats.IFormatReader;
 import loci.formats.ImageReader;
+import loci.formats.MinMaxCalculator;
 import loci.formats.ReaderWrapper;
 import loci.formats.meta.IMetadata;
 import loci.formats.services.OMEXMLService;
@@ -84,6 +83,7 @@ import net.imglib2.type.numeric.integer.UnsignedIntType;
 import net.imglib2.type.numeric.integer.UnsignedShortType;
 import net.imglib2.type.numeric.real.DoubleType;
 import net.imglib2.type.numeric.real.FloatType;
+import ome.xml.model.primitives.PositiveFloat;
 
 /**
  * Reads in an {@link ImgPlus} using Bio-Formats.
@@ -101,12 +101,14 @@ public class ImgOpener implements StatusReporter {
 	// -- ImgOpener methods --
 
 	/**
-	 * Reads in an {@link ImgPlus} from the given source (e.g., file on disk). It
-	 * will read it into a {@link PlanarImg}, where the {@link Type} T is defined
-	 * by the file format and implements {@link RealType} and {@link NativeType}.
+	 * Reads in an {@link ImgPlus} from the given source. It will read it into a
+	 * {@link PlanarImg}, where the {@link Type} T is defined by the file format
+	 * and implements {@link RealType} and {@link NativeType}.
 	 * 
+	 * @param id The source of the image (e.g., a file on disk).
+	 * @throws ImgIOException if there is a problem reading the image data.
 	 * @throws IncompatibleTypeException if the {@link Type} of the file is
-	 *           incompatible with the {@link PlanarImg}
+	 *           incompatible with the {@link PlanarImg}.
 	 */
 	public <T extends RealType<T> & NativeType<T>> ImgPlus<T> openImg(
 		final String id) throws ImgIOException, IncompatibleTypeException
@@ -115,24 +117,73 @@ public class ImgOpener implements StatusReporter {
 	}
 
 	/**
-	 * Reads in an {@link ImgPlus} from the given source (e.g., file on disk),
-	 * using the given {@link ImgFactory} to construct the {@link Img}. The
-	 * {@link Type} T is defined by the file format and implements
-	 * {@link RealType} and {@link NativeType}. The {@link Type} of the
-	 * {@link ImgFactory} will be ignored.
+	 * Reads in an {@link ImgPlus} from the given source. It will read it into a
+	 * {@link PlanarImg}, where the {@link Type} T is defined by the file format
+	 * and implements {@link RealType} and {@link NativeType}.
 	 * 
-	 * @throws IncompatibleTypeException if the Type of the Img is incompatible
-	 *           with the {@link ImgFactory}
+	 * @param id The source of the image (e.g., a file on disk).
+	 * @param computeMinMax If set, the {@link ImgPlus}'s channel minimum and
+	 *          maximum metadata is computed and populated based on the data's
+	 *          actual pixel values.
+	 * @throws ImgIOException if there is a problem reading the image data.
+	 * @throws IncompatibleTypeException if the {@link Type} of the file is
+	 *           incompatible with the {@link PlanarImg}.
+	 */
+	public <T extends RealType<T> & NativeType<T>> ImgPlus<T> openImg(
+		final String id, final boolean computeMinMax) throws ImgIOException,
+		IncompatibleTypeException
+	{
+		return openImg(id, new PlanarImgFactory<T>(), computeMinMax);
+	}
+
+	/**
+	 * Reads in an {@link ImgPlus} from the given source, using the specified
+	 * {@link ImgFactory} to construct the resultant {@link Img}. The {@link Type}
+	 * T is defined by the file format and implements {@link RealType} and
+	 * {@link NativeType}. The {@link Type} of the {@link ImgFactory} will be
+	 * ignored.
+	 * 
+	 * @param id The source of the image (e.g., a file on disk).
+	 * @param imgFactory The {@link ImgFactory} to use for creating the resultant
+	 *          {@link ImgPlus}.
+	 * @throws ImgIOException if there is a problem reading the image data.
+	 * @throws IncompatibleTypeException if the Type of the {@link Img} is
+	 *           incompatible with the {@link ImgFactory}
 	 */
 	public <T extends RealType<T> & NativeType<T>> ImgPlus<T> openImg(
 		final String id, final ImgFactory<T> imgFactory) throws ImgIOException,
 		IncompatibleTypeException
 	{
+		return openImg(id, imgFactory, true);
+	}
+
+	/**
+	 * Reads in an {@link ImgPlus} from the given source, using the specified
+	 * {@link ImgFactory} to construct the {@link Img}. The {@link Type} T is
+	 * defined by the file format and implements {@link RealType} and
+	 * {@link NativeType}. The {@link Type} of the {@link ImgFactory} will be
+	 * ignored.
+	 * 
+	 * @param id The source of the image (e.g., a file on disk).
+	 * @param imgFactory The {@link ImgFactory} to use for creating the resultant
+	 *          {@link ImgPlus}.
+	 * @param computeMinMax If set, the {@link ImgPlus}'s channel minimum and
+	 *          maximum metadata is computed and populated based on the data's
+	 *          actual pixel values.
+	 * @throws ImgIOException if there is a problem reading the image data.
+	 * @throws IncompatibleTypeException if the {@link Type} of the {@link Img} is
+	 *           incompatible with the {@link ImgFactory}
+	 */
+	public <T extends RealType<T> & NativeType<T>> ImgPlus<T> openImg(
+		final String id, final ImgFactory<T> imgFactory,
+		final boolean computeMinMax) throws ImgIOException,
+		IncompatibleTypeException
+	{
 		try {
-			final IFormatReader r = initializeReader(id);
+			final IFormatReader r = initializeReader(id, computeMinMax);
 			final T type = makeType(r.getPixelType());
 			final ImgFactory<T> imgFactoryT = imgFactory.imgFactory(type);
-			return openImg(r, imgFactoryT, type);
+			return openImg(r, imgFactoryT, type, computeMinMax);
 		}
 		catch (final FormatException e) {
 			throw new ImgIOException(e);
@@ -143,17 +194,44 @@ public class ImgOpener implements StatusReporter {
 	}
 
 	/**
-	 * Reads in an {@link ImgPlus} from the given source (e.g., file on disk),
-	 * using the given {@link ImgFactory} to construct the {@link Img}. The
-	 * {@link Type} T to read is defined by the third parameter T.
+	 * Reads in an {@link ImgPlus} from the given source, using the given
+	 * {@link ImgFactory} to construct the {@link Img}. The {@link Type} T to read
+	 * is defined by the third parameter.
+	 * 
+	 * @param imgFactory The {@link ImgFactory} to use for creating the resultant
+	 *          {@link ImgPlus}.
+	 * @param type The {@link Type} T of the output {@link ImgPlus}, which must
+	 *          match the typing of the {@link ImgFactory}.
+	 * @throws ImgIOException if there is a problem reading the image data.
 	 */
 	public <T extends RealType<T> & NativeType<T>> ImgPlus<T> openImg(
 		final String id, final ImgFactory<T> imgFactory, final T type)
 		throws ImgIOException
 	{
+		return openImg(id, imgFactory, type, false);
+	}
+
+	/**
+	 * Reads in an {@link ImgPlus} from the given source, using the given
+	 * {@link ImgFactory} to construct the {@link Img}. The {@link Type} T to read
+	 * is defined by the third parameter.
+	 * 
+	 * @param imgFactory The {@link ImgFactory} to use for creating the resultant
+	 *          {@link ImgPlus}.
+	 * @param type The {@link Type} T of the output {@link ImgPlus}, which must
+	 *          match the typing of the {@link ImgFactory}.
+	 * @param computeMinMax If set, the {@link ImgPlus}'s channel minimum and
+	 *          maximum metadata is computed and populated based on the data's
+	 *          actual pixel values.
+	 * @throws ImgIOException if there is a problem reading the image data.
+	 */
+	public <T extends RealType<T> & NativeType<T>> ImgPlus<T> openImg(
+		final String id, final ImgFactory<T> imgFactory, final T type,
+		final boolean computeMinMax) throws ImgIOException
+	{
 		try {
-			final IFormatReader r = initializeReader(id);
-			return openImg(r, imgFactory, type);
+			final IFormatReader r = initializeReader(id, computeMinMax);
+			return openImg(r, imgFactory, type, computeMinMax);
 		}
 		catch (final FormatException e) {
 			throw new ImgIOException(e);
@@ -165,13 +243,43 @@ public class ImgOpener implements StatusReporter {
 
 	/**
 	 * Reads in an {@link ImgPlus} from the given initialized
-	 * {@link IFormatReader}, using the given {@link ImgFactory}. The {@link Type}
-	 * T to read is defined by the third parameter T and it has to match the
-	 * typing of the {@link ImgFactory}.
+	 * {@link IFormatReader}, using the given {@link ImgFactory} to construct the
+	 * {@link Img}. The {@link Type} T to read is defined by the third parameter.
+	 * 
+	 * @param r An initialized {@link IFormatReader} to use for reading image
+	 *          data.
+	 * @param imgFactory The {@link ImgFactory} to use for creating the resultant
+	 *          {@link ImgPlus}.
+	 * @param type The {@link Type} T of the output {@link ImgPlus}, which must
+	 *          match the typing of the {@link ImgFactory}.
+	 * @throws ImgIOException if there is a problem reading the image data.
 	 */
 	public <T extends RealType<T> & NativeType<T>> ImgPlus<T> openImg(
 		final IFormatReader r, final ImgFactory<T> imgFactory, final T type)
 		throws ImgIOException
+	{
+		return openImg(r, imgFactory, type, true);
+	}
+
+	/**
+	 * Reads in an {@link ImgPlus} from the given initialized
+	 * {@link IFormatReader}, using the given {@link ImgFactory} to construct the
+	 * {@link Img}. The {@link Type} T to read is defined by the third parameter.
+	 * 
+	 * @param r An initialized {@link IFormatReader} to use for reading image
+	 *          data.
+	 * @param imgFactory The {@link ImgFactory} to use for creating the resultant
+	 *          {@link ImgPlus}.
+	 * @param type The {@link Type} T of the output {@link ImgPlus}, which must
+	 *          match the typing of the {@link ImgFactory}.
+	 * @param computeMinMax If set, the {@link ImgPlus}'s channel minimum and
+	 *          maximum metadata is computed and populated based on the data's
+	 *          actual pixel values.
+	 * @throws ImgIOException if there is a problem reading the image data.
+	 */
+	public <T extends RealType<T> & NativeType<T>> ImgPlus<T> openImg(
+		final IFormatReader r, final ImgFactory<T> imgFactory, final T type,
+		final boolean computeMinMax) throws ImgIOException
 	{
 		// create image and read metadata
 		final long[] dimLengths = getDimLengths(r);
@@ -183,7 +291,7 @@ public class ImgOpener implements StatusReporter {
 		final String id = r.getCurrentFile();
 		final int planeCount = r.getImageCount();
 		try {
-			readPlanes(r, type, imgPlus);
+			readPlanes(r, type, imgPlus, computeMinMax);
 		}
 		catch (final FormatException e) {
 			throw new ImgIOException(e);
@@ -305,8 +413,8 @@ public class ImgOpener implements StatusReporter {
 	// -- Helper methods --
 
 	/** Constructs and initializes a Bio-Formats reader for the given file. */
-	private IFormatReader initializeReader(final String id)
-		throws FormatException, IOException
+	private IFormatReader initializeReader(final String id,
+		final boolean computeMinMax) throws FormatException, IOException
 	{
 		notifyListeners(new StatusEvent("Initializing " + id));
 
@@ -314,6 +422,7 @@ public class ImgOpener implements StatusReporter {
 		r = new ImageReader();
 		r = new ChannelFiller(r);
 		r = new ChannelSeparator(r);
+		if (computeMinMax) r = new MinMaxCalculator(r);
 
 		// attach OME-XML metadata object to reader
 		try {
@@ -427,28 +536,22 @@ public class ImgOpener implements StatusReporter {
 		final String dimOrder = r.getDimensionOrder();
 
 		final IMetadata meta = (IMetadata) r.getMetadataStore();
-		PositiveFloat xCalin = meta.getPixelsPhysicalSizeX(0);
-		PositiveFloat yCalin = meta.getPixelsPhysicalSizeY(0);
-		PositiveFloat zCalin = meta.getPixelsPhysicalSizeZ(0);
+		final PositiveFloat xCalin = meta.getPixelsPhysicalSizeX(0);
+		final PositiveFloat yCalin = meta.getPixelsPhysicalSizeY(0);
+		final PositiveFloat zCalin = meta.getPixelsPhysicalSizeZ(0);
 		Double tCal = meta.getPixelsTimeIncrement(0);
-		
+
 		final Double xCal, yCal, zCal;
-		
-		if (xCalin == null) 
-			xCal = Double.NaN;
-		else
-			xCal = xCalin.getValue();
-		
-		if (yCalin == null) 
-			yCal = Double.NaN;
-		else
-			yCal = yCalin.getValue();
-		
-		if (zCalin == null) 
-			zCal = Double.NaN;
-		else
-			zCal = zCalin.getValue();
-		
+
+		if (xCalin == null) xCal = Double.NaN;
+		else xCal = xCalin.getValue();
+
+		if (yCalin == null) yCal = Double.NaN;
+		else yCal = yCalin.getValue();
+
+		if (zCalin == null) zCal = Double.NaN;
+		else zCal = zCalin.getValue();
+
 		if (tCal == null) tCal = Double.NaN;
 
 		final List<Double> calibrationList = new ArrayList<Double>();
@@ -541,8 +644,8 @@ public class ImgOpener implements StatusReporter {
 	 * specified {@link Img}.
 	 */
 	private <T extends RealType<T>> void readPlanes(final IFormatReader r,
-		final T type, final ImgPlus<T> imgPlus) throws FormatException,
-		IOException
+		final T type, final ImgPlus<T> imgPlus, final boolean computeMinMax)
+		throws FormatException, IOException
 	{
 		// TODO - create better container types; either:
 		// 1) an array container type using one byte array per plane
@@ -585,6 +688,7 @@ public class ImgOpener implements StatusReporter {
 			final short[][] lut16 = r.get16BitLookupTable();
 			if (lut16 != null) imgPlus.setColorTable(new ColorTable16(lut16), no);
 		}
+		if (computeMinMax) populateMinMax(r, imgPlus);
 		r.close();
 	}
 
@@ -636,6 +740,21 @@ public class ImgOpener implements StatusReporter {
 				cursor.getIntPosition(planeX) + cursor.getIntPosition(planeY) * sizeX;
 			final double value = decodeWord(plane, index, pixelType, little);
 			cursor.get().setReal(value);
+		}
+	}
+
+	private void populateMinMax(final IFormatReader r, final ImgPlus<?> imgPlus)
+		throws FormatException, IOException
+	{
+		final int sizeC = r.getSizeC();
+		final ReaderWrapper rw = (ReaderWrapper) r;
+		final MinMaxCalculator minMaxCalc =
+			(MinMaxCalculator) rw.unwrap(MinMaxCalculator.class, null);
+		for (int c = 0; c < sizeC; c++) {
+			final Double min = minMaxCalc.getChannelKnownMinimum(c);
+			final Double max = minMaxCalc.getChannelKnownMaximum(c);
+			imgPlus.setChannelMinimum(c, min == null ? Double.NaN : min);
+			imgPlus.setChannelMaximum(c, max == null ? Double.NaN : max);
 		}
 	}
 
