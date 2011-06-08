@@ -236,7 +236,8 @@ public class GaussianConvolution3< A extends Type<A>, B extends NumericType<B>, 
         	outputSource = temp2;
 
         	// close other temporary datastructure
-            temp1.close();
+        	if ( numDimensions > 1 )
+        		temp1.close();
         }
         
 		final ImageConverter<B, C> convOut = new ImageConverter<B, C>( outputSource, factoryOut, converterOut );
@@ -249,9 +250,14 @@ public class GaussianConvolution3< A extends Type<A>, B extends NumericType<B>, 
 
         // close temporary datastructure 2
         if ( numDimensions % 2 == 0 )
-        	temp1.close();
+        {
+        	if ( numDimensions > 1 )
+        		temp1.close();
+        }
         else
+        {
         	temp2.close();
+        }
 		
 		return convOut.getResult();		
 	}

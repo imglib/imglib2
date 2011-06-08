@@ -75,7 +75,8 @@ public class GaussianConvolution < T extends NumericType<T> > extends GaussianCo
         	output = temp2;
 
         	// close other temporary datastructure
-            temp1.close();
+        	if ( numDimensions > 1 )
+        		temp1.close();
         }
 		
 		return output;		
