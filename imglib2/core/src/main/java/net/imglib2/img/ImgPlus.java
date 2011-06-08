@@ -41,6 +41,7 @@ import net.imglib2.RandomAccess;
 import net.imglib2.RealPositionable;
 import net.imglib2.display.ColorTable16;
 import net.imglib2.display.ColorTable8;
+import net.imglib2.meta.Metadata;
 
 /**
  * A simple container for storing an {@link Img} together with its metadata.

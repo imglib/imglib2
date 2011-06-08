@@ -32,6 +32,8 @@ package net.imglib2.img;
 
 import java.util.Hashtable;
 
+import net.imglib2.meta.Metadata;
+
 /**
  * An enumeration of common dimensional axis labels, for describing the
  * dimensional axes of a {@link Metadata} object (such as an {@link ImgPlus}).

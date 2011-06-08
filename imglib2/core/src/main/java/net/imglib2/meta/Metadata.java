@@ -28,22 +28,20 @@
  * @author Stephan Preibisch & Stephan Saalfeld
  */
 
-package net.imglib2.img;
+package net.imglib2.meta;
 
-import net.imglib2.meta.Metadata;
+import net.imglib2.display.ColorTable;
+import net.imglib2.display.ColorTable16;
+import net.imglib2.display.ColorTable8;
+import net.imglib2.img.Img;
+import net.imglib2.img.ImgPlus;
 
 /**
- * A dimensional axis label, for describing the dimensional axes of a
- * {@link Metadata} object (such as an {@link ImgPlus}).
+ * An interface for defining metadata that goes along with an {@link Img},
+ * including name, dimensional axes and calibration information.
  * 
  * @author Curtis Rueden ctrueden at wisc.edu
+ * @see ImgPlus
  */
-public interface Axis {
-
-	String getLabel();
-
-	boolean isXY();
-
-	boolean isSpatial();
-
+public interface Metadata extends Named, LabeledAxes, ImageMetadata {
 }
