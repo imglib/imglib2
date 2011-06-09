@@ -39,7 +39,7 @@ public class MultiImageIterator<T extends RealType<T>>  // don't want to impleme
 	}
 
 	/** call after subregions defined and before reset() or next() call. tests that all subregions defined are compatible. */
-	void initialize()  // could call lazily in hasNext() or fwd() but a drag on performance
+	public void initialize()  // could call lazily in hasNext() or fwd() but a drag on performance
 	{
 		testSpansCompatible();
 
