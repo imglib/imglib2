@@ -21,6 +21,11 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Stack;
 
+import net.imglib2.AbstractLocalizableSampler;
+import net.imglib2.AbstractRandomAccess;
+import net.imglib2.Interval;
+import net.imglib2.RandomAccess;
+import net.imglib2.RandomAccessible;
 import net.imglib2.RealInterval;
 import net.imglib2.RealLocalizable;
 import net.imglib2.algorithm.kdtree.node.Leaf;
@@ -32,8 +37,14 @@ import net.imglib2.algorithm.kdtree.node.NonLeaf;
  *The volumetric search uses a K-D tree to search for all hyper-rectangular nodes
  *that contain a given point.
  *
+ *You can use this via the RandomAccessible<List<I>> interface:
+ *   Get the RandomAccess<List<I>> interface
+ *   Localize it to your point
+ *   get() performs the search, returning the list.
+ *
  */
-public class VolumetricSearch<I extends RealInterval> extends KDTree<VolumetricSearch.RealIntervalLeaf<I>> {
+public class VolumetricSearch<I extends RealInterval> extends KDTree<VolumetricSearch.RealIntervalLeaf<I>>
+    implements RandomAccessible<List<I>> {
 	final int numDimensions;
 	public VolumetricSearch(List<I> intervals) {
 		super(makeLeaves(intervals));
@@ -201,6 +212,72 @@ public class VolumetricSearch<I extends RealInterval> extends KDTree<VolumetricS
 		}
 		
 		return list;
+	}
+
+	@Override
+	public int numDimensions() {
+		return numDimensions;
+	}
+
+	@Override
+	public AbstractRandomAccess<List<I>> randomAccess() {
+		return new AbstractRandomAccess<List<I>>(numDimensions) {
+
+			@Override
+			public void fwd(int d) {
+				this.position[d]++;
+			}
+
+			@Override
+			public void bck(int d) {
+				this.position[d]--;
+			}
+
+			@Override
+			public void move(long distance, int d) {
+				this.position[d] += distance;
+			}
+
+			@Override
+			public void setPosition(int[] position) {
+				for (int i=0; i<numDimensions; i++) {
+					this.position[i] = position[i];
+				}
+			}
+
+			@Override
+			public void setPosition(long[] position) {
+				for (int i=0; i<numDimensions; i++) {
+					this.position[i] = position[i];
+				}
+			}
+
+			@Override
+			public void setPosition(long position, int d) {
+				this.position[d] = position;
+			}
+
+			@Override
+			public List<I> get() {
+				return find(this);
+			}
+
+			@Override
+			public AbstractRandomAccess<List<I>> copy() {
+				AbstractRandomAccess<List<I>> myCopy = randomAccess();
+				myCopy.setPosition(this);
+				return myCopy;
+			}
+
+			@Override
+			public AbstractRandomAccess<List<I>> copyRandomAccess() {
+				return copy();
+			}};
+	}
+
+	@Override
+	public RandomAccess<List<I>> randomAccess(Interval interval) {
+		return randomAccess();
 	}
 
 }
