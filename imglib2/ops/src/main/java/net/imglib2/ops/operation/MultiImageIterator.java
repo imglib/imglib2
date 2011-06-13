@@ -107,7 +107,7 @@ public class MultiImageIterator<T extends RealType<T>>  // don't want to impleme
 			// test that remaining dims == 1 : case spanI is longer
 			for (int d = minDims; d < spanILen; d++) {
 				if (spans[i][d] != 1)
-					throw new IllegalArgumentException("incompatible span shapes (case 2)");
+					throw new IllegalArgumentException("incompatible span shapes (case 3)");
 			}
 		}
 	}
