@@ -2,7 +2,8 @@ package net.imglib2.ops.operation;
 
 import net.imglib2.RandomAccess;
 import net.imglib2.type.numeric.RealType;
-import net.imglib2.img.Img;
+import net.imglib2.img.Axis;
+import net.imglib2.img.ImgPlus;
 
 //TODO
 //Figure out Imglib's preferred way to handle linked cursors. Can they work where span dimensionality differs?
@@ -12,14 +13,14 @@ import net.imglib2.img.Img;
 @SuppressWarnings("unchecked")
 public class MultiImageIterator<T extends RealType<T>>  // don't want to implement full Cursor API
 {
-	private Img<T>[] images;
+	private ImgPlus<T>[] images;
 	private long[][] origins;
 	private long[][] spans;
 	private RegionIterator<T>[] regionIterators;
 	
 	// -----------------  public interface ------------------------------------------
 
-	public MultiImageIterator(Img<T>[] images)
+	public MultiImageIterator(ImgPlus<T>[] images)
 	{
 		this.images = images;
 		int totalImages = images.length;
@@ -41,7 +42,7 @@ public class MultiImageIterator<T extends RealType<T>>  // don't want to impleme
 	/** call after subregions defined and before reset() or next() call. tests that all subregions defined are compatible. */
 	public void initialize()  // could call lazily in hasNext() or fwd() but a drag on performance
 	{
-		testSpansCompatible();
+		testAllSpansCompatible();
 
 		regionIterators = new RegionIterator[images.length];
 		for (int i = 0; i < images.length; i++) {
@@ -86,30 +87,68 @@ public class MultiImageIterator<T extends RealType<T>>  // don't want to impleme
 			iterator.reset();
 	}
 	
-	private void testSpansCompatible() {
-		int span0Len = spans[0].length;
-		for (int i = 1; i < spans.length; i++) {
-			int spanILen = spans[i].length;
-			int minDims = Math.min(span0Len, spanILen);
+	private void testAllSpansCompatible() {
+		// all span values != 1 must be present and same size in all images
+		// any span value == 1 must either equal 1 in other images or not be present
 
-			// test that spans are same in the shared dimensions 
-			for (int d = 0; d < minDims; d++) {
-				if (spans[0][d] != spans[i][d])
-					throw new IllegalArgumentException("incompatible span shapes (case 1)");
+		ImgPlus<?> firstImgPlus = images[0];
+		
+		for (int i = 1; i < images.length; i++) {
+			testSpansCompatible(firstImgPlus, spans[0], images[i], spans[i]);
+		}
+	}
+	
+	private void testSpansCompatible(ImgPlus<?> img1, long[] span1,
+		ImgPlus<?> img2, long[] span2)
+	{
+		testAxisSizesCompatible(img1, span1, img2, span2);
+		testAxisSizesCompatible(img2, span2, img1, span1);
+		testAxisOrdersCompatible(img1, img2);
+		testAxisOrdersCompatible(img2, img1);
+	}
+	
+	private void testAxisSizesCompatible(ImgPlus<?> img1, long[] span1,
+		ImgPlus<?> img2, long[] span2)
+	{
+		int imgOneNumDims = img1.numDimensions();
+		Axis[] axes = new Axis[imgOneNumDims];
+		img1.axes(axes);
+		for (int i = 0; i < imgOneNumDims; i++) {
+			Axis axis = axes[i];
+			int axisIndex = img2.getAxisIndex(axis);
+			long dimSize = span1[i];
+			if (dimSize == 1) {
+				if (axisIndex >= 0)
+					if (span2[axisIndex] != 1)
+						throw new IllegalArgumentException(
+							"span issue: expecting a dimension of size 1 but have size " +
+							img2.dimension(axisIndex));
 			}
+			else { // dimSize != 1
+				if (axisIndex < 0)
+					throw new IllegalArgumentException(
+						"span issue: expecting image to have "+axis+" axis");
+				if (span2[axisIndex] != dimSize)
+					throw new IllegalArgumentException(
+						"span issue: differing sizes detected for "+axis+" axis");
+			}
+		}
+	}
 
-			// test that remaining dims == 1 : case span0 is longer
-			for (int d = minDims; d < span0Len; d++) {
-				if (spans[0][d] != 1)
-					throw new IllegalArgumentException("incompatible span shapes (case 2)");
-			}
-			
-			// test that remaining dims == 1 : case spanI is longer
-			for (int d = minDims; d < spanILen; d++) {
-				if (spans[i][d] != 1)
-					throw new IllegalArgumentException("incompatible span shapes (case 3)");
+	/** does not test sizes. only checks that relative orders are okay. */
+	private void testAxisOrdersCompatible(ImgPlus<?> img1, ImgPlus<?> img2)
+	{
+		Axis[] axes = new Axis[img1.numDimensions()];
+		img1.axes(axes);
+		int lastAxisIndex = -1;
+		for (int i = 0; i < axes.length; i++) {
+			Axis axis = axes[i];
+			int axisIndex = img2.getAxisIndex(axis);
+			if (axisIndex > 0) {
+				if (axisIndex <= lastAxisIndex)
+					throw new IllegalArgumentException("span issue: axes not in increasing order");
+				lastAxisIndex = axisIndex;
 			}
 		}
 	}
 }
-

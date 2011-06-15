@@ -3,7 +3,7 @@ package net.imglib2.ops.operation;
 import java.util.Observable;
 import java.util.Observer;
 
-import net.imglib2.img.Img;
+import net.imglib2.img.ImgPlus;
 import net.imglib2.ops.condition.Condition;
 import net.imglib2.ops.observer.IterationTracker;
 import net.imglib2.ops.observer.IterationStatus.Message;
@@ -41,7 +41,7 @@ import net.imglib2.type.numeric.RealType;
  */
 public class TransformOperation<T extends RealType<T>> {
 
-	private Img<T> image;
+	private ImgPlus<T> image;
 	private long[] origin;
 	private long[] span;
 	private RealFunc function;
@@ -53,7 +53,7 @@ public class TransformOperation<T extends RealType<T>> {
 		double compute(double value, long[] position);
 	}
 	
-	public TransformOperation(Img<T> image, RealFunc function) {
+	public TransformOperation(ImgPlus<T> image, RealFunc function) {
 		this.image = image;
 		this.origin = new long[image.numDimensions()];
 		this.span = new long[origin.length];

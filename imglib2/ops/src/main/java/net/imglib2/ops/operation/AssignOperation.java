@@ -12,7 +12,7 @@ import net.imglib2.ops.observer.IterationTracker;
 import java.util.Observer;
 
 import net.imglib2.type.numeric.RealType;
-import net.imglib2.img.Img;
+import net.imglib2.img.ImgPlus;
 
 /**
  * An AssignOperation computes values in an output image. The output image is preallocated here. The AssignOperation uses a RealFunction
@@ -73,11 +73,11 @@ public class AssignOperation<T extends RealType<T>>
 
 	// -----------------  public interface ------------------------------------------
 	
-	public AssignOperation(List<Img<T>> inputs, Img<T> output, RealFunction<T> func)
+	public AssignOperation(List<ImgPlus<T>> inputs, ImgPlus<T> output, RealFunction<T> func)
 	{
 		imageCount = inputs.size() + 1;
 
-		Img<T>[] images = new Img[imageCount];
+		ImgPlus<T>[] images = new ImgPlus[imageCount];
 		images[0] = output;
 		for (int i = 1; i <= inputs.size(); i++)
 			images[i] = inputs.get(i-1);

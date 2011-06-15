@@ -18,7 +18,10 @@ import net.imglib2.ops.operator.unary.Sqr;
 
 import org.junit.Test;
 
+import net.imglib2.img.Axes;
+import net.imglib2.img.Axis;
 import net.imglib2.img.Img;
+import net.imglib2.img.ImgPlus;
 import net.imglib2.img.array.ArrayImgFactory;
 import net.imglib2.type.numeric.integer.UnsignedByteType;
 
@@ -28,18 +31,20 @@ public class Rev2FunctionalIdeasTest
 {
 	// ************  private interface ********************************************************
 	
-	private static Img<UnsignedByteType> createImg()
+	private static ImgPlus<UnsignedByteType> createImg()
 	{
 		ArrayImgFactory<UnsignedByteType> factory = new ArrayImgFactory<UnsignedByteType>();
 		
 		//new UnsignedByteType(), new ArrayContainerFactory());
 		
-		return factory.create(new long[]{3,3}, new UnsignedByteType());
+		Img<UnsignedByteType> img = factory.create(new long[]{3,3}, new UnsignedByteType());
+		
+		return new ImgPlus<UnsignedByteType>(img, "junk1", new Axis[]{Axes.X, Axes.Y});
 	}
 
-	private static Img<UnsignedByteType> createPopulatedImg(int[] values)
+	private static ImgPlus<UnsignedByteType> createPopulatedImg(int[] values)
 	{
-		Img<UnsignedByteType> image = createImg();
+		ImgPlus<UnsignedByteType> image = createImg();
 	
 		RandomAccess<UnsignedByteType> accessor = image.randomAccess();
 		
@@ -62,7 +67,7 @@ public class Rev2FunctionalIdeasTest
 	}
 	
 	
-	private static void assertImgValsEqual(int[] values, Img<UnsignedByteType> image)
+	private static void assertImgValsEqual(int[] values, ImgPlus<UnsignedByteType> image)
 	{
 		RandomAccess<UnsignedByteType> accessor = image.randomAccess();
 
@@ -89,7 +94,7 @@ public class Rev2FunctionalIdeasTest
 	{
 		//System.out.println("square all input values");
 		
-		Img<UnsignedByteType> image0 = createPopulatedImg(new int[]{1,2,3,4,5,6,7,8,9});
+		ImgPlus<UnsignedByteType> image0 = createPopulatedImg(new int[]{1,2,3,4,5,6,7,8,9});
 		
 		UnaryOperator op = new Sqr();
 		
@@ -109,7 +114,7 @@ public class Rev2FunctionalIdeasTest
 	{
 		//System.out.println("square those where input values are greater than 4");
 		
-		Img<UnsignedByteType> image0 = createPopulatedImg(new int[]{1,2,3,4,5,6,7,8,9});
+		ImgPlus<UnsignedByteType> image0 = createPopulatedImg(new int[]{1,2,3,4,5,6,7,8,9});
 		
 		UnaryOperator op = new Sqr();
 		
@@ -131,7 +136,7 @@ public class Rev2FunctionalIdeasTest
 	{
 		//System.out.println("square those where original output values are less than 7");
 		
-		Img<UnsignedByteType> image0 = createPopulatedImg(new int[]{1,2,3,4,5,6,7,8,9});
+		ImgPlus<UnsignedByteType> image0 = createPopulatedImg(new int[]{1,2,3,4,5,6,7,8,9});
 		
 		UnaryOperator op = new Sqr();
 		
@@ -153,9 +158,9 @@ public class Rev2FunctionalIdeasTest
 	{
 		//System.out.println("square one image into another");
 		
-		Img<UnsignedByteType> image0 = createPopulatedImg(new int[]{1,2,3,4,5,6,7,8,9});
+		ImgPlus<UnsignedByteType> image0 = createPopulatedImg(new int[]{1,2,3,4,5,6,7,8,9});
 		
-		Img<UnsignedByteType> image1 = createPopulatedImg(new int[]{0,0,0,0,0,0,0,0,0});
+		ImgPlus<UnsignedByteType> image1 = createPopulatedImg(new int[]{0,0,0,0,0,0,0,0,0});
 		
 		UnaryOperator op = new Sqr();
 		
@@ -176,11 +181,11 @@ public class Rev2FunctionalIdeasTest
 	{
 		//System.out.println("average two images into third");
 		
-		Img<UnsignedByteType> image0 = createPopulatedImg(new int[]{1,2,3,4,5,6,7,8,9});
+		ImgPlus<UnsignedByteType> image0 = createPopulatedImg(new int[]{1,2,3,4,5,6,7,8,9});
 		
-		Img<UnsignedByteType> image1 = createPopulatedImg(new int[]{11,12,13,14,15,16,17,18,19});
+		ImgPlus<UnsignedByteType> image1 = createPopulatedImg(new int[]{11,12,13,14,15,16,17,18,19});
 
-		Img<UnsignedByteType> image2 = createPopulatedImg(new int[]{0,0,0,0,0,0,0,0,0});
+		ImgPlus<UnsignedByteType> image2 = createPopulatedImg(new int[]{0,0,0,0,0,0,0,0,0});
 		
 		AvgFunction<UnsignedByteType> function = new AvgFunction<UnsignedByteType>();
 
@@ -200,15 +205,15 @@ public class Rev2FunctionalIdeasTest
 	{
 		//System.out.println("average two images into third conditionally");
 		
-		Img<UnsignedByteType> image0 = createPopulatedImg(new int[]{1,2,3,
+		ImgPlus<UnsignedByteType> image0 = createPopulatedImg(new int[]{1,2,3,
 																		4,5,6,
 																		7,8,9});
 		
-		Img<UnsignedByteType> image1 = createPopulatedImg(new int[]{11,12,13,
+		ImgPlus<UnsignedByteType> image1 = createPopulatedImg(new int[]{11,12,13,
 																		14,15,16,
 																		17,18,19});
 
-		Img<UnsignedByteType> image2 = createPopulatedImg(new int[]{5,5,6,
+		ImgPlus<UnsignedByteType> image2 = createPopulatedImg(new int[]{5,5,6,
 																		6,7,7,
 																		8,8,9});
 		
@@ -238,11 +243,11 @@ public class Rev2FunctionalIdeasTest
 	{
 		//System.out.println("average nonoverlapping regions of a single images into a third");
 		
-		Img<UnsignedByteType> image0 = createPopulatedImg(new int[]{1,2,3,
+		ImgPlus<UnsignedByteType> image0 = createPopulatedImg(new int[]{1,2,3,
 																		4,5,6,
 																		7,8,9});
 		
-		Img<UnsignedByteType> image1 = createPopulatedImg(new int[]{0,0,0,
+		ImgPlus<UnsignedByteType> image1 = createPopulatedImg(new int[]{0,0,0,
 																		0,0,0,
 																		0,0,0});
 
@@ -267,12 +272,12 @@ public class Rev2FunctionalIdeasTest
 	@Test
 	public void testSpatialCondition()
 	{
-		Img<UnsignedByteType> image0 = createPopulatedImg(
+		ImgPlus<UnsignedByteType> image0 = createPopulatedImg(
 				new int[]{0,0,0,
 						0,255,0,
 						0,255,0});
 
-		Img<UnsignedByteType> image1 = createPopulatedImg(
+		ImgPlus<UnsignedByteType> image1 = createPopulatedImg(
 				new int[]{0,0,0,
 						0,0,0,
 						0,0,0});
@@ -293,9 +298,9 @@ public class Rev2FunctionalIdeasTest
 
 	// -- Helper methods --
 
-	private <T> List<Img<T>> makeList(final Img<T>... images) {
-		final List<Img<T>> list = new ArrayList<Img<T>>();
-		for (Img<T> img : images) list.add(img);
+	private <T> List<ImgPlus<T>> makeList(final ImgPlus<T>... images) {
+		final List<ImgPlus<T>> list = new ArrayList<ImgPlus<T>>();
+		for (ImgPlus<T> img : images) list.add(img);
 		return list;
 	}
 
