@@ -42,7 +42,7 @@ public class PlanarCursor2D< T extends NativeType< T > > extends PlanarCursor< T
 	{
 		super( container );
 	}
-	
+
 	@Override
 	public boolean hasNext()
 	{
@@ -54,4 +54,28 @@ public class PlanarCursor2D< T extends NativeType< T > > extends PlanarCursor< T
 	{
 		type.incIndex();
 	}
+
+	@Override
+	public void localize( final int[] position )
+	{
+		final int indexInSlice = type.getIndex();
+		final int dim0 = container.dimensions[ 0 ];
+		position[ 1 ] = indexInSlice / dim0;
+		position[ 0 ] = indexInSlice - position[ 1 ] * dim0;
+	}
+
+	@Override
+	public int getIntPosition( final int dim )
+	{
+		final int indexInSlice = type.getIndex();
+		final int dim0 = container.dimensions[ 0 ];
+		final int pos1 = indexInSlice / dim0;
+		if (dim == 0)
+			return indexInSlice - pos1 * dim0;
+		else if (dim == 1)
+			return pos1;
+		else
+			return 0;
+	}
+
 }

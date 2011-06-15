@@ -170,15 +170,18 @@ public class PlanarImg< T extends NativeType< T >, A extends ArrayDataAccess<A> 
 			position[ 1 ] = indexInSlice / dimensions[ 0 ];
 			position[ 0 ] = indexInSlice - position[ 1 ] * dimensions[ 0 ];
 
-			final int maxDim = dimensions.length - 1;
-			for ( int d = 2; d < maxDim; ++d )
+			if ( n > 2 )
 			{
-				final int j = sliceIndex / dimensions[ d ];
-				position[ d ] = sliceIndex - j * dimensions[ d ];
-				sliceIndex = j;
+				final int maxDim = n - 1;
+				
+				for ( int d = 2; d < maxDim; ++d )
+				{
+					final int j = sliceIndex / dimensions[ d ];
+					position[ d ] = sliceIndex - j * dimensions[ d ];
+					sliceIndex = j;
+				}
+				position[ maxDim ] = sliceIndex;
 			}
-
-			position[ maxDim ] = sliceIndex;
 		} else {
 			position[ 0 ] = indexInSlice;
 		}
