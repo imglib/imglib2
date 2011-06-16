@@ -66,7 +66,7 @@ public class PlanarRandomAccess1D< T extends NativeType< T > > extends PlanarRan
 	@Override
 	public void setPosition( final int pos, final int dim )
 	{
-		type.incIndex( pos - position[ 0 ] );
+		type.updateIndex( pos );
 		position[ 0 ] = pos;
 	}
 	
@@ -82,7 +82,5 @@ public class PlanarRandomAccess1D< T extends NativeType< T > > extends PlanarRan
 	{
 		type.updateIndex( ( int )position[ 0 ] );
 		this.position[ 0 ] = ( int )position[ 0 ];
-	}
-	
-	
+	}	
 }

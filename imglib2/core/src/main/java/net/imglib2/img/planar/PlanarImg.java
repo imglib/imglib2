@@ -197,13 +197,16 @@ public class PlanarImg< T extends NativeType< T >, A extends ArrayDataAccess<A> 
 	 * 
 	 * TODO: move this method to AbstractPlanarCursor? (that seems to be the only place where it is needed)
 	 */
-	public int indexToGlobalPosition( int sliceIndex, final int indexInSlice, final int dim )
+	public int indexToGlobalPosition( final int sliceIndex, final int indexInSlice, final int dim )
 	{
 		if ( dim == 0 )
 			return indexInSlice % dimensions[ 0 ];
-		if ( dim == 1 )
+		else if ( dim == 1 )
 			return indexInSlice / dimensions[ 0 ];
-		return ( sliceIndex / sliceSteps[ dim ] ) % dimensions[ dim ];			               
+		else if ( dim < n )
+			return ( sliceIndex / sliceSteps[ dim ] ) % dimensions[ dim ];
+		else
+			return 0;
 	}
 
 	@Override
@@ -211,9 +214,10 @@ public class PlanarImg< T extends NativeType< T >, A extends ArrayDataAccess<A> 
 	{
 		if ( n == 1 )
 			return new PlanarCursor1D< T >( this );
-		if ( n == 2 )
+		else if ( n == 2 )
 			return new PlanarCursor2D< T >( this );
-		return new PlanarCursor< T >( this );
+		else
+			return new PlanarCursor< T >( this );
 	}
 
 	@Override
@@ -221,9 +225,10 @@ public class PlanarImg< T extends NativeType< T >, A extends ArrayDataAccess<A> 
 	{
 		if ( n == 1 )
 			return new PlanarLocalizingCursor1D< T >( this );
-		if ( n == 2 )
+		else if ( n == 2 )
 			return new PlanarLocalizingCursor2D< T >( this );
-		return new PlanarLocalizingCursor<T>( this );
+		else
+			return new PlanarLocalizingCursor<T>( this );
 	}
 
 	@Override
@@ -231,7 +236,8 @@ public class PlanarImg< T extends NativeType< T >, A extends ArrayDataAccess<A> 
 	{
 		if ( n == 1 )
 			return new PlanarRandomAccess1D<T>( this );
-		return new PlanarRandomAccess<T>( this );
+		else
+			return new PlanarRandomAccess<T>( this );
 	}
 
 	@Override

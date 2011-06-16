@@ -53,5 +53,14 @@ public class PlanarCursor1D< T extends NativeType< T > > extends PlanarCursor< T
 	public void localize( final int[] position )
 	{		
 		position[ 0 ] = type.getIndex();
+	}
+	
+	@Override
+	public int getIntPosition( final int dim )
+	{
+		if ( dim == 0 )
+			return type.getIndex();
+		else
+			return 0;
 	}	
 }

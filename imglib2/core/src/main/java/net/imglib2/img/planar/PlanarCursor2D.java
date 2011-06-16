@@ -70,12 +70,11 @@ public class PlanarCursor2D< T extends NativeType< T > > extends PlanarCursor< T
 		final int indexInSlice = type.getIndex();
 		final int dim0 = container.dimensions[ 0 ];
 		final int pos1 = indexInSlice / dim0;
-		if (dim == 0)
+		if ( dim == 0 )
 			return indexInSlice - pos1 * dim0;
-		else if (dim == 1)
+		else if ( dim == 1 )
 			return pos1;
 		else
 			return 0;
 	}
-
 }
