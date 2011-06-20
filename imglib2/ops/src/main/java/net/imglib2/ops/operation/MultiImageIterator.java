@@ -6,19 +6,22 @@ import net.imglib2.img.Axis;
 import net.imglib2.img.ImgPlus;
 
 //TODO
-//Figure out Imglib's preferred way to handle linked cursors. Can they work where span dimensionality differs?
-//    (a 2D Image to run against a plane in a 5D Image)  Or do I avoid ROICurs and use some transformational view
-//    where dims exactly match?
+//Figure out Imglib's preferred way to handle linked cursors. Can they work
+//  where span dimensionality differs? (a 2D Image to run against a plane in a
+//  5D Image)  Or do I avoid ROICursor and use some transformational view
+//  where dims exactly match?
+
+// Note - don't want to implement full Cursor API
 
 @SuppressWarnings("unchecked")
-public class MultiImageIterator<T extends RealType<T>>  // don't want to implement full Cursor API
+public class MultiImageIterator<T extends RealType<T>>
 {
 	private ImgPlus<T>[] images;
 	private long[][] origins;
 	private long[][] spans;
 	private RegionIterator<T>[] regionIterators;
 	
-	// -----------------  public interface ------------------------------------------
+	// -----------------  public interface --------------------------------------
 
 	public MultiImageIterator(ImgPlus<T>[] images)
 	{
@@ -39,15 +42,19 @@ public class MultiImageIterator<T extends RealType<T>>  // don't want to impleme
 		return regionIterators;
 	}
 
-	/** call after subregions defined and before reset() or next() call. tests that all subregions defined are compatible. */
-	public void initialize()  // could call lazily in hasNext() or fwd() but a drag on performance
+  // could call lazily next method in hasNext() or fwd() but performance drag
+	
+	/** call after subregions defined and before reset() or next() call. tests
+	 *  that all subregions defined are compatible. */
+	public void initialize()
 	{
 		testAllSpansCompatible();
 
 		regionIterators = new RegionIterator[images.length];
 		for (int i = 0; i < images.length; i++) {
 			RandomAccess<T> accessor = images[i].randomAccess();
-			regionIterators[i] = new RegionIterator<T>(accessor, origins[i], spans[i]);
+			regionIterators[i] =
+				new RegionIterator<T>(accessor, origins[i], spans[i]);
 		}
 
 		resetAll();
@@ -80,16 +87,19 @@ public class MultiImageIterator<T extends RealType<T>>  // don't want to impleme
 		spans[i] = span;
 	}
 	
-	// -----------------  private interface ------------------------------------------
-	
+	// -----------------  private interface -------------------------------------
+
+	/** resets each RegionIterator */
 	private void resetAll() {
 		for (RegionIterator<T> iterator : regionIterators)
 			iterator.reset();
 	}
-	
+
+	/** tests that all given spans are shape compatible (and thus iteration
+	 * order compatible) */
 	private void testAllSpansCompatible() {
 		// all span values != 1 must be present and same size in all images
-		// any span value == 1 must either equal 1 in other images or not be present
+		// any span value == 1 must either equal 1 in other images or not present
 
 		ImgPlus<?> firstImgPlus = images[0];
 		
@@ -98,6 +108,10 @@ public class MultiImageIterator<T extends RealType<T>>  // don't want to impleme
 		}
 	}
 	
+	/** checks that spans of two different images are iteration order
+	 *  compatible. each subtest checks one direction of compatibility
+	 *  and thus has to be called twice with parameters reversed to be
+	 *  fully thorough */
 	private void testSpansCompatible(ImgPlus<?> img1, long[] span1,
 		ImgPlus<?> img2, long[] span2)
 	{
@@ -107,6 +121,14 @@ public class MultiImageIterator<T extends RealType<T>>  // don't want to impleme
 		testAxisOrdersCompatible(img2, img1);
 	}
 	
+	/** imagine you have a 2d XY image and a 5d XCZYT image. Note that since
+	 * the X & Y axes are in the same relative order these two images can be
+	 * considered shape compatible if the ranges of C, Z, & T are all 1. The
+	 * RegionIterator will work as expected with such data. The following
+	 * method checks that the given span sizes two images are comparable. I.e.
+	 * either a dimension == 1 (or is not present) or the dimension matches in
+	 * size between the two spans.
+	 */
 	private void testAxisSizesCompatible(ImgPlus<?> img1, long[] span1,
 		ImgPlus<?> img2, long[] span2)
 	{
@@ -135,7 +157,13 @@ public class MultiImageIterator<T extends RealType<T>>  // don't want to impleme
 		}
 	}
 
-	/** does not test sizes. only checks that relative orders are okay. */
+	/** imagine you have a 2d XY image and a 5d XCZYT image. Note that since
+	 * the X & Y axes are in the same relative order these two images can be
+	 * considered shape compatible if the ranges of C, Z, & T are all 1. The
+	 * RegionIterator will work as expected with such data. The following
+	 * method checks that the relative order matches for axes common to two
+	 * images.
+	 */
 	private void testAxisOrdersCompatible(ImgPlus<?> img1, ImgPlus<?> img2)
 	{
 		Axis[] axes = new Axis[img1.numDimensions()];
@@ -146,7 +174,8 @@ public class MultiImageIterator<T extends RealType<T>>  // don't want to impleme
 			int axisIndex = img2.getAxisIndex(axis);
 			if (axisIndex > 0) {
 				if (axisIndex <= lastAxisIndex)
-					throw new IllegalArgumentException("span issue: axes not in increasing order");
+					throw new IllegalArgumentException(
+						"span issue: axes not in increasing order");
 				lastAxisIndex = axisIndex;
 			}
 		}
