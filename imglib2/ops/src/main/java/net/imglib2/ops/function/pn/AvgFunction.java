@@ -1,29 +1,26 @@
 package net.imglib2.ops.function.pn;
 
-import java.util.List;
-
 import net.imglib2.ops.function.RealFunction;
-import net.imglib2.type.numeric.RealType;
 
-public class AvgFunction<T extends RealType<T>> implements RealFunction<T>
+public class AvgFunction implements RealFunction
 {
 	@Override
 	public boolean canAccept(final int numParameters) { return numParameters >= 0; }
 	
 	@Override
-	public void compute(final List<T> inputs, final T output)
+	public double compute(final double[] inputs)
 	{
-		int numElements = inputs.size();
+		int numElements = inputs.length;
 		
 		if (numElements == 0)
-			return;
+			return 0;
 		
 		double sum = 0;
 
-		for (T element : inputs)
-			sum += element.getRealDouble();
+		for (double element : inputs)
+			sum += element;
 		
-		output.setReal(sum / numElements);
+		return sum / numElements;
 	}
 	
 }

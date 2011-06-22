@@ -1,9 +1,6 @@
 package net.imglib2.ops.condition;
 
-import net.imglib2.type.numeric.RealType;
-
-
-public class AxisLessThan<T extends RealType<T>> implements Condition<T>
+public class AxisLessThan implements Condition
 {
 	private final int axis;
 	private final long bound;
@@ -15,7 +12,7 @@ public class AxisLessThan<T extends RealType<T>> implements Condition<T>
 	}
 	
 	@Override
-	public boolean isSatisfied(final T value, final long[] position)
+	public boolean isSatisfied(final double value, final long[] position)
 	{
 		return position[axis] < bound;
 	}

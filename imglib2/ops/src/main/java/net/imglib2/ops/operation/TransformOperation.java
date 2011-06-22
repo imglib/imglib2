@@ -7,6 +7,7 @@ import net.imglib2.img.ImgPlus;
 import net.imglib2.ops.condition.Condition;
 import net.imglib2.ops.observer.IterationTracker;
 import net.imglib2.ops.observer.IterationStatus.Message;
+import net.imglib2.ops.operator.UnaryOperator;
 import net.imglib2.type.numeric.RealType;
 
 // This class hatched to be used later in ImageJ to speed up some basic
@@ -36,16 +37,14 @@ import net.imglib2.type.numeric.RealType;
  * of AssignOperation for performance reasons.
  * 
  * @author Barry DeZonia
- *
- * @param <T>
  */
-public class TransformOperation<T extends RealType<T>> {
+public class TransformOperation {
 
-	private ImgPlus<T> image;
+	private ImgPlus<? extends RealType<?>> image;
 	private long[] origin;
 	private long[] span;
-	private RealFunc function;
-	private Condition<T> condition;
+	private UnaryOperator operator;
+	private Condition condition;
 	private Observable observable;
 	private boolean wasInterrupted;
 
@@ -53,12 +52,14 @@ public class TransformOperation<T extends RealType<T>> {
 		double compute(double value, long[] position);
 	}
 	
-	public TransformOperation(ImgPlus<T> image, RealFunc function) {
+	public TransformOperation(ImgPlus<? extends RealType<?>> image,
+		UnaryOperator operator)
+	{
 		this.image = image;
 		this.origin = new long[image.numDimensions()];
 		this.span = new long[origin.length];
 		image.dimensions(this.span);
-		this.function = function;
+		this.operator = operator;
 		this.condition = null;
 		this.observable = null;
 		this.wasInterrupted = false;
@@ -88,7 +89,7 @@ public class TransformOperation<T extends RealType<T>> {
 		this.span = span.clone();
 	}
 	
-	public void setCondition(Condition<T> c)
+	public void setCondition(Condition c)
 	{
 		this.condition = c;
 	}
@@ -107,8 +108,8 @@ public class TransformOperation<T extends RealType<T>> {
 			notifier.notifyObservers(status);
 		}
 
-		RegionIterator<T> iterator =
-			new RegionIterator<T>(image.randomAccess(), origin, span);
+		RegionIterator iterator =
+			new RegionIterator(image.randomAccess(), origin, span);
 
 		iterator.reset();
 		while (iterator.hasNext())
@@ -116,22 +117,19 @@ public class TransformOperation<T extends RealType<T>> {
 			if (wasInterrupted)
 				break;
 			
-			T valueRef = iterator.next();
+			iterator.next();
 			
-			double value = Double.NaN;
+			double value = iterator.getValue();
 
 			iterator.getPosition(position);
 			
 			boolean conditionSatisfied = true;
 			if (condition != null)
-				conditionSatisfied = condition.isSatisfied(valueRef, position);
+				conditionSatisfied = condition.isSatisfied(value, position);
 
 			if (conditionSatisfied) {
-				double currValue = valueRef.getRealDouble();
-			
-				value = function.compute(currValue, position);
-			
-				valueRef.setReal(value);
+				value = operator.computeValue(value);
+				iterator.setValue(value);
 			}
 			
 			if (notifier != null)

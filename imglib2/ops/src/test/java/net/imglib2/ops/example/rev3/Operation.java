@@ -29,7 +29,7 @@ public class Operation
 {
 	private final Img<? extends RealType<?>> outputImage;
 	private final IntegerIndexedScalarFunction function;
-	private final RegionIterator<? extends RealType<?>> iterator;
+	private final RegionIterator iterator;
 	private boolean wasInterrupted;
 	private boolean isDone;
 	private Observable notifier;
@@ -82,13 +82,13 @@ public class Operation
 			if (constraintsSatisfied)
 			{
 				double newValue = function.evaluate(position);
-				iterator.getValue().setReal(newValue);
+				iterator.setValue(newValue);
 			}
 			if (notifier != null)
 			{
 				status.message = Message.UPDATE;
 				status.position = position;
-				status.value = iterator.getValue().getRealDouble();   // not sure what is best to pass as value if constraints
+				status.value = iterator.getValue();   // not sure what is best to pass as value if constraints
 				status.conditionsSatisfied = constraintsSatisfied;  // violated but I think if I pass original value it might be
 				notifier.notifyObservers(status);                   // useful info to caller. its incurs a small performance hit.
 			}

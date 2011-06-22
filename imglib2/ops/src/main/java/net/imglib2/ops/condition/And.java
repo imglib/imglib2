@@ -1,19 +1,17 @@
 package net.imglib2.ops.condition;
 
-import net.imglib2.type.numeric.RealType;
-
-public class And<T extends RealType<T>> implements Condition<T>
+public class And implements Condition
 {
-	private final Condition<T> condition1, condition2;
+	private final Condition condition1, condition2;
 	
-	public And(final Condition<T> condition1, final Condition<T> condition2)
+	public And(final Condition condition1, final Condition condition2)
 	{
 		this.condition1 = condition1;
 		this.condition2 = condition2;
 	}
 	
 	@Override
-	public boolean isSatisfied(final T value, final long[] position)
+	public boolean isSatisfied(final double value, final long[] position)
 	{
 		return condition1.isSatisfied(value, position) && condition2.isSatisfied(value, position); 
 	}

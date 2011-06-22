@@ -4,14 +4,14 @@ import net.imglib2.RandomAccess;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.img.Img;
 
-public class PixelOnBorder<T extends RealType<T>> implements Condition<T>
+public class PixelOnBorder implements Condition
 {
 	private final double borderValue;
 	private final long[] imageDims;
 	private final long[] neighPos;
-	private final RandomAccess<T> neighAccessor;
+	private final RandomAccess<? extends RealType<?>> neighAccessor;
 	
-	public PixelOnBorder(final Img<T> image, final double borderValue)
+	public PixelOnBorder(final Img<? extends RealType<?>> image, final double borderValue)
 	{
 		this.borderValue = borderValue;
 		this.imageDims = new long[image.numDimensions()];
@@ -21,9 +21,9 @@ public class PixelOnBorder<T extends RealType<T>> implements Condition<T>
 	}
 	
 	@Override
-	public boolean isSatisfied(final T value, final long[] position)
+	public boolean isSatisfied(final double value, final long[] position)
 	{
-		double currPixValue = value.getRealDouble();
+		double currPixValue = value;
 		
 		if (currPixValue != borderValue)
 			return false;

@@ -1,11 +1,8 @@
 package net.imglib2.ops.function.pn;
 
-import java.util.List;
-
 import net.imglib2.ops.function.RealFunction;
-import net.imglib2.type.numeric.RealType;
 
-public class ConstFunction<T extends RealType<T>> implements RealFunction<T>
+public class ConstFunction implements RealFunction
 {
 	private final double value;
 	
@@ -21,9 +18,9 @@ public class ConstFunction<T extends RealType<T>> implements RealFunction<T>
 	}
 
 	@Override
-	public void compute(final List<T> inputs, final T output)
+	public double compute(final double[] inputs)
 	{
-		output.setReal(value);
+		return value;
 	}
 
 }

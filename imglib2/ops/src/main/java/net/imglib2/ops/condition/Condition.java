@@ -1,9 +1,7 @@
 package net.imglib2.ops.condition;
 
-import net.imglib2.type.numeric.RealType;
-
-public interface Condition<T extends RealType<T>>
+public interface Condition
 {
-	boolean isSatisfied(final T value, final long[] position);
+	boolean isSatisfied(final double value, final long[] position);
 }
 

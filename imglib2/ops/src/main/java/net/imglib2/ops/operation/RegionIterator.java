@@ -19,27 +19,30 @@ import net.imglib2.type.numeric.integer.UnsignedByteType;
 //     walked in the exact same order depsite differences in dimensionality.
 //     I.e. a 2d XY plane in a 2d image and a 2d XY plane in a 5d image.
 
-import java.util.Iterator;
-
-public class RegionIterator<K extends RealType<K>> implements Iterator<K> {
-	private final RandomAccess<K> accessor;
+public class RegionIterator {
+	private final RandomAccess<? extends RealType<?>> accessor;
 	private final long[] minCoords;
 	private final long[] maxCoords;
 	private final long[] currCoords;
 	private final int totalDims;
 	private boolean haveNotIncremented;
 	
-	public RegionIterator(RandomAccess<K> accessor, long[] origin, long[] span) {
+	public RegionIterator(RandomAccess<? extends RealType<?>> accessor,
+		long[] origin, long[] span)
+	{
 		this.totalDims = accessor.numDimensions();
 		if (origin.length != span.length)
-			throw new IllegalArgumentException("origin and span are of differing dimension lengths");
+			throw new IllegalArgumentException(
+				"origin and span are of differing dimension lengths");
 		
 		if (totalDims != origin.length)
-			throw new IllegalArgumentException("accessor and origin/span are of differing dimension lengths");
+			throw new IllegalArgumentException(
+				"accessor and origin/span are of differing dimension lengths");
 		
 		for (long dim : span)
 			if (dim < 1)
-				throw new IllegalArgumentException("span cannot have any dimension less than 1");
+				throw new IllegalArgumentException(
+					"span cannot have any dimension less than 1");
 		
 		this.accessor = accessor;
 		this.minCoords = origin.clone();
@@ -56,11 +59,14 @@ public class RegionIterator<K extends RealType<K>> implements Iterator<K> {
 			index[i] = this.currCoords[i];
 	}
 
-	public K getValue() {
-		return this.accessor.get();
+	public double getValue() {
+		return this.accessor.get().getRealDouble();
 	}
 
-	@Override
+	public void setValue(double value) {
+		this.accessor.get().setReal(value);
+	}
+
 	public boolean hasNext() {
 		if (this.haveNotIncremented)
 			return true;
@@ -71,18 +77,11 @@ public class RegionIterator<K extends RealType<K>> implements Iterator<K> {
 		return false;
 	}
 
-	@Override
-	public K next() {
+	public void next() {
 		incIndex();
-		return this.accessor.get();
 	}
 	
 
-	@Override
-	public void remove() {
-		throw new UnsupportedOperationException("remove() not implemented for RegionIterator");
-	}
-	
 	public void reset() {
 		resetInternals();
 	}
@@ -134,8 +133,8 @@ public class RegionIterator<K extends RealType<K>> implements Iterator<K> {
 			factory.create(new long[]{DimSize,DimSize,DimSize},
 				new UnsignedByteType());
 		long startTime = System.currentTimeMillis();
-		RegionIterator<UnsignedByteType> cursor =
-			new RegionIterator<UnsignedByteType>(data.randomAccess(),
+		RegionIterator cursor =
+			new RegionIterator(data.randomAccess(),
 					new long[]{2,3,4}, new long[]{DimSize-7, DimSize-5, DimSize-3});
 		for (int i = 0; i < 1000; i++) {
 			cursor.reset();
