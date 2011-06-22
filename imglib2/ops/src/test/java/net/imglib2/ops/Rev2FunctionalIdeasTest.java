@@ -13,7 +13,9 @@ import net.imglib2.ops.function.p1.UnaryOperatorFunction;
 import net.imglib2.ops.function.pn.AvgFunction;
 import net.imglib2.ops.function.pn.ConstFunction;
 import net.imglib2.ops.operation.AssignOperation;
+import net.imglib2.ops.operation.TransformOperation;
 import net.imglib2.ops.operator.UnaryOperator;
+import net.imglib2.ops.operator.unary.MultiplyByConstant;
 import net.imglib2.ops.operator.unary.Sqr;
 
 import org.junit.Test;
@@ -297,6 +299,38 @@ public class Rev2FunctionalIdeasTest
 		assertImgValsEqual(new int[]{0,0,0,0,1,0,0,1,0}, image1);
 	}
 
+	@Test
+	public void testTransformOperation() {
+		ImgPlus<UnsignedByteType> image0 = createPopulatedImg(
+			new int[]{1,2,3,
+					4,5,6,
+					7,8,9});
+		MultiplyByConstant multiplier = new MultiplyByConstant(3);
+		
+		TransformOperation operation = new TransformOperation(image0, multiplier);
+		
+		operation.execute();
+		
+		assertImgValsEqual(new int[]{3,6,9,12,15,18,21,24,27}, image0);
+	}
+	
+	@Test
+	public void testTransformOperationWithRegion() {
+		ImgPlus<UnsignedByteType> image0 = createPopulatedImg(
+			new int[]{1,2,3,
+					4,5,6,
+					7,8,9});
+		MultiplyByConstant multiplier = new MultiplyByConstant(3);
+		
+		TransformOperation operation = new TransformOperation(image0, multiplier);
+		
+		operation.setRegion(new long[]{0,0}, new long[]{2,2});
+		
+		operation.execute();
+		
+		assertImgValsEqual(new int[]{3,6,3,12,15,6,7,8,9}, image0);
+	}
+	
 	// -- Helper methods --
 
 	private List<ImgPlus<? extends RealType<?>>>
