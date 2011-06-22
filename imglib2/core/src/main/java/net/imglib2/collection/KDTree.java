@@ -35,6 +35,18 @@ public class KDTree< T > implements EuclideanSpace // TODO: , IterableRealInterv
 	{
 		protected final T value;
 
+		/**
+		 * @param value
+		 *            reference to the node's value
+		 * @param position
+		 *            coordinates of this node
+		 * @param dimension
+		 *            dimension along which this node divides the space
+		 * @param left
+		 *            left child node
+		 * @param right
+		 *            right child node
+		 */
 		public ValueNode( T value, RealLocalizable position, int dimension, final ValueNode< T > left, final ValueNode< T > right )
 		{
 			super( position, dimension, left, right );
@@ -73,6 +85,18 @@ public class KDTree< T > implements EuclideanSpace // TODO: , IterableRealInterv
 	{
 		protected final Sampler< T > sampler;
 
+		/**
+		 * @param sampler
+		 *            a sampler providing the node's value
+		 * @param position
+		 *            coordinates of this node
+		 * @param dimension
+		 *            dimension along which this node divides the space
+		 * @param left
+		 *            left child node
+		 * @param right
+		 *            right child node
+		 */
 		public SamplerNode( Sampler< T > sampler, RealLocalizable position, int dimension, final SamplerNode< T > left, final SamplerNode< T > right )
 		{
 			super( position, dimension, left, right );
@@ -146,6 +170,13 @@ public class KDTree< T > implements EuclideanSpace // TODO: , IterableRealInterv
 		}
 	}
 
+	/**
+	 * Construct a KDTree from the elements of the given
+	 * {@link IterableRealInterval}.
+	 * 
+	 * @param interval
+	 *            elements in the tree are obtained by iterating this
+	 */
 	public KDTree( final IterableRealInterval< T > interval )
 	{
 		this.n = interval.numDimensions();
@@ -159,6 +190,11 @@ public class KDTree< T > implements EuclideanSpace // TODO: , IterableRealInterv
 		root = makeSamplerNode( values, 0, values.size() - 1, 0 );
 	}
 
+	/**
+	 * Check whether all positions in the positions list have dimension n.
+	 * 
+	 * @return true, if all positions have dimension n.
+	 */
 	protected static < L extends RealLocalizable > boolean verifyDimensions( final List< L > positions, final int n )
 	{
 		for ( final L position : positions )
@@ -167,6 +203,9 @@ public class KDTree< T > implements EuclideanSpace // TODO: , IterableRealInterv
 		return true;
 	}
 
+	/**
+	 * Compare RealLocalizables by comparing their coordinates in dimension d.
+	 */
 	public static final class DimComparator< L extends RealLocalizable > implements Comparator< L >
 	{
 		final int d;
@@ -184,6 +223,29 @@ public class KDTree< T > implements EuclideanSpace // TODO: , IterableRealInterv
 		}
 	}
 
+	/**
+	 * Construct the tree by recursively adding nodes. The sublist of positions
+	 * between indices i and j (inclusive) is split at the median element with
+	 * respect to coordinates in the given dimension d. The median becomes the
+	 * new node which is returned. The left and right partitions of the sublist
+	 * are processed recursively and form the left and right subtrees of the
+	 * node.
+	 * 
+	 * @param positions
+	 *            list of positions
+	 * @param i
+	 *            start index of sublist to process
+	 * @param j
+	 *            end index of sublist to process
+	 * @param d
+	 *            dimension along which to split the sublist
+	 * @param values
+	 *            list of values corresponding to permuted positions
+	 * @param permutation
+	 *            the index of the values element at index k is permutation[k]
+	 * @return a new node containing the subtree of the given sublist of
+	 *         positions.
+	 */
 	protected < L extends RealLocalizable > ValueNode< T > makeNode( final List< L > positions, final int i, final int j, final int d, final List< T > values, final int[] permutation )
 	{
 		if ( j > i )
@@ -204,6 +266,27 @@ public class KDTree< T > implements EuclideanSpace // TODO: , IterableRealInterv
 		}
 	}
 
+	/**
+	 * Construct the tree by recursively adding nodes. The sublist of positions
+	 * between iterators first and last is split at the median element with
+	 * respect to coordinates in the given dimension d. The median becomes the
+	 * new node which is returned. The left and right partitions of the sublist
+	 * are processed recursively and form the left and right subtrees of the
+	 * node.
+	 * 
+	 * @param first
+	 *            first element of the sublist of positions
+	 * @param last
+	 *            last element of the sublist of positions
+	 * @param d
+	 *            dimension along which to split the sublist
+	 * @param values
+	 *            list of values corresponding to permuted positions
+	 * @param permutation
+	 *            the index of the values element at index k is permutation[k]
+	 * @return a new node containing the subtree of the given sublist of
+	 *         positions.
+	 */
 	protected < L extends RealLocalizable > ValueNode< T > makeNode( final ListIterator< L > first, final ListIterator< L > last, final int d, final List< T > values, final int[] permutation )
 	{
 		final int i = first.nextIndex();
@@ -242,6 +325,19 @@ public class KDTree< T > implements EuclideanSpace // TODO: , IterableRealInterv
 		}
 	}
 
+	/**
+	 * {@see #makeNode(List, int, int, int, List, int[])}. Here, no values are
+	 * attached to the nodes (or rather the positions are the values).
+	 * 
+	 * @param elements
+	 *            list of elements (positions and values at the same time)
+	 * @param i
+	 *            start index of sublist to process
+	 * @param j
+	 *            end index of sublist to process
+	 * @param d
+	 *            dimension along which to split the sublist
+	 */
 	@SuppressWarnings( "unchecked" )
 	protected < L extends RealLocalizable > ValueNode< T > makeNode( final List< L > elements, final int i, final int j, final int d )
 	{
@@ -263,6 +359,18 @@ public class KDTree< T > implements EuclideanSpace // TODO: , IterableRealInterv
 		}
 	}
 
+	/**
+	 * {@see #makeNode(ListIterator, ListIterator, int, List, int[])}. Here, no
+	 * values are attached to the nodes (or rather the positions are the
+	 * values).
+	 * 
+	 * @param first
+	 *            first element of the sublist to process
+	 * @param last
+	 *            last element of the sublist to process
+	 * @param d
+	 *            dimension along which to split the sublist
+	 */
 	@SuppressWarnings( "unchecked" )
 	protected < L extends RealLocalizable > ValueNode< T > makeNode( final ListIterator< L > first, final ListIterator< L > last, final int d )
 	{
@@ -302,6 +410,24 @@ public class KDTree< T > implements EuclideanSpace // TODO: , IterableRealInterv
 		}
 	}
 
+	/**
+	 * Construct the tree by recursively adding nodes. The sublist of elements
+	 * between iterators first and last is split at the median element with
+	 * respect to coordinates in the given dimension d. The median becomes the
+	 * new node which is returned. The left and right partitions of the sublist
+	 * are processed recursively and form the left and right subtrees of the
+	 * node. (The elements of the list are RealCursors which provide coordinates
+	 * and values.)
+	 * 
+	 * @param first
+	 *            first element of the sublist to process
+	 * @param last
+	 *            last element of the sublist to process
+	 * @param d
+	 *            dimension along which to split the sublist
+	 * @return a new node containing the subtree of the given sublist of
+	 *         elements
+	 */
 	protected SamplerNode< T > makeSamplerNode( final List< RealCursor< T > > elements, final int i, final int j, final int d )
 	{
 		if ( j > i )
@@ -322,6 +448,11 @@ public class KDTree< T > implements EuclideanSpace // TODO: , IterableRealInterv
 		}
 	}
 
+	/**
+	 * Get the root node.
+	 * 
+	 * @return the root node.
+	 */
 	public KDTreeNode< T > getRoot()
 	{
 		return root;
