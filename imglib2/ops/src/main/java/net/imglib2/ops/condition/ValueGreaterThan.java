@@ -1,9 +1,6 @@
 package net.imglib2.ops.condition;
 
-import net.imglib2.type.numeric.RealType;
-
-
-public class ValueGreaterThan<T extends RealType<T>> implements Condition<T>
+public class ValueGreaterThan implements Condition
 {
 	private final double bound;
 	
@@ -13,9 +10,9 @@ public class ValueGreaterThan<T extends RealType<T>> implements Condition<T>
 	}
 	
 	@Override
-	public boolean isSatisfied(final T value, final long[] position)
+	public boolean isSatisfied(final double value, final long[] position)
 	{
-		return value.getRealDouble() > bound;
+		return value > bound;
 	}
 }
 

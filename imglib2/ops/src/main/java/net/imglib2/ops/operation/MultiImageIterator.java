@@ -13,17 +13,16 @@ import net.imglib2.img.ImgPlus;
 
 // Note - don't want to implement full Cursor API
 
-@SuppressWarnings("unchecked")
-public class MultiImageIterator<T extends RealType<T>>
+public class MultiImageIterator
 {
-	private ImgPlus<T>[] images;
+	private ImgPlus<? extends RealType<?>>[] images;
 	private long[][] origins;
 	private long[][] spans;
-	private RegionIterator<T>[] regionIterators;
+	private RegionIterator[] regionIterators;
 	
 	// -----------------  public interface --------------------------------------
 
-	public MultiImageIterator(ImgPlus<T>[] images)
+	public MultiImageIterator(ImgPlus<? extends RealType<?>>[] images)
 	{
 		this.images = images;
 		int totalImages = images.length;
@@ -37,7 +36,7 @@ public class MultiImageIterator<T extends RealType<T>>
 		}
 	}
 
-	public RegionIterator<T>[] getIterators()
+	public RegionIterator[] getIterators()
 	{
 		return regionIterators;
 	}
@@ -52,9 +51,9 @@ public class MultiImageIterator<T extends RealType<T>>
 
 		regionIterators = new RegionIterator[images.length];
 		for (int i = 0; i < images.length; i++) {
-			RandomAccess<T> accessor = images[i].randomAccess();
+			RandomAccess<? extends RealType<?>> accessor = images[i].randomAccess();
 			regionIterators[i] =
-				new RegionIterator<T>(accessor, origins[i], spans[i]);
+				new RegionIterator(accessor, origins[i], spans[i]);
 		}
 
 		resetAll();
@@ -72,7 +71,7 @@ public class MultiImageIterator<T extends RealType<T>>
 	
 	public void next()
 	{
-		for (RegionIterator<T> iterator : regionIterators)
+		for (RegionIterator iterator : regionIterators)
 			iterator.next();
 	}
 	
@@ -91,7 +90,7 @@ public class MultiImageIterator<T extends RealType<T>>
 
 	/** resets each RegionIterator */
 	private void resetAll() {
-		for (RegionIterator<T> iterator : regionIterators)
+		for (RegionIterator iterator : regionIterators)
 			iterator.reset();
 	}
 

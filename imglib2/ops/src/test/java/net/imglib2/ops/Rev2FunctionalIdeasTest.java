@@ -23,6 +23,7 @@ import net.imglib2.img.Axis;
 import net.imglib2.img.Img;
 import net.imglib2.img.ImgPlus;
 import net.imglib2.img.array.ArrayImgFactory;
+import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.integer.UnsignedByteType;
 
 @SuppressWarnings("unchecked")
@@ -98,9 +99,9 @@ public class Rev2FunctionalIdeasTest
 		
 		UnaryOperator op = new Sqr();
 		
-		UnaryOperatorFunction<UnsignedByteType> function = new UnaryOperatorFunction<UnsignedByteType>(op);
+		UnaryOperatorFunction function = new UnaryOperatorFunction(op);
 		
-		AssignOperation<UnsignedByteType> operation = new AssignOperation<UnsignedByteType>(makeList(image0), image0, function);
+		AssignOperation operation = new AssignOperation(makeList(image0), image0, function);
 
 		operation.execute();
 		
@@ -118,11 +119,11 @@ public class Rev2FunctionalIdeasTest
 		
 		UnaryOperator op = new Sqr();
 		
-		UnaryOperatorFunction<UnsignedByteType> function = new UnaryOperatorFunction<UnsignedByteType>(op);
+		UnaryOperatorFunction function = new UnaryOperatorFunction(op);
 
-		AssignOperation<UnsignedByteType> operation = new AssignOperation<UnsignedByteType>(makeList(image0), image0, function);
+		AssignOperation operation = new AssignOperation(makeList(image0), image0, function);
 
-		operation.setInputCondition(0, new ValueGreaterThan<UnsignedByteType>(4));
+		operation.setInputCondition(0, new ValueGreaterThan(4));
 		
 		operation.execute();
 		
@@ -140,11 +141,11 @@ public class Rev2FunctionalIdeasTest
 		
 		UnaryOperator op = new Sqr();
 		
-		UnaryOperatorFunction<UnsignedByteType> function = new UnaryOperatorFunction<UnsignedByteType>(op);
+		UnaryOperatorFunction function = new UnaryOperatorFunction(op);
 
-		AssignOperation<UnsignedByteType> operation = new AssignOperation<UnsignedByteType>(makeList(image0), image0, function);
+		AssignOperation operation = new AssignOperation(makeList(image0), image0, function);
 
-		operation.setOutputCondition(new ValueLessThan<UnsignedByteType>(7));
+		operation.setOutputCondition(new ValueLessThan(7));
 		
 		operation.execute();
 		
@@ -164,9 +165,9 @@ public class Rev2FunctionalIdeasTest
 		
 		UnaryOperator op = new Sqr();
 		
-		UnaryOperatorFunction<UnsignedByteType> function = new UnaryOperatorFunction<UnsignedByteType>(op);
+		UnaryOperatorFunction function = new UnaryOperatorFunction(op);
 
-		AssignOperation<UnsignedByteType> operation = new AssignOperation<UnsignedByteType>(makeList(image0), image1, function);
+		AssignOperation operation = new AssignOperation(makeList(image0), image1, function);
 
 		operation.execute();
 		
@@ -187,9 +188,9 @@ public class Rev2FunctionalIdeasTest
 
 		ImgPlus<UnsignedByteType> image2 = createPopulatedImg(new int[]{0,0,0,0,0,0,0,0,0});
 		
-		AvgFunction<UnsignedByteType> function = new AvgFunction<UnsignedByteType>();
+		AvgFunction function = new AvgFunction();
 
-		AssignOperation<UnsignedByteType> operation = new AssignOperation<UnsignedByteType>(makeList(image0, image1), image2, function);
+		AssignOperation operation = new AssignOperation(makeList(image0, image1), image2, function);
 
 		operation.execute();
 		
@@ -217,14 +218,14 @@ public class Rev2FunctionalIdeasTest
 																		6,7,7,
 																		8,8,9});
 		
-		AvgFunction<UnsignedByteType> function = new AvgFunction<UnsignedByteType>();
+		AvgFunction function = new AvgFunction();
 
-		AssignOperation<UnsignedByteType> operation = new AssignOperation<UnsignedByteType>(makeList(image0, image1), image2, function);
+		AssignOperation operation = new AssignOperation(makeList(image0, image1), image2, function);
 
-		operation.setInputCondition(0, new ValueLessThan<UnsignedByteType>(8));
+		operation.setInputCondition(0, new ValueLessThan(8));
 		operation.setInputRegion(0, new long[]{0,1}, new long[]{2,2});
 
-		operation.setInputCondition(1, new ValueGreaterThan<UnsignedByteType>(14));
+		operation.setInputCondition(1, new ValueGreaterThan(14));
 		operation.setInputRegion(1, new long[]{0,1}, new long[]{2,2});
 
 		operation.setOutputRegion(new long[]{0,1}, new long[]{2,2});
@@ -251,9 +252,9 @@ public class Rev2FunctionalIdeasTest
 																		0,0,0,
 																		0,0,0});
 
-		AvgFunction<UnsignedByteType> function = new AvgFunction<UnsignedByteType>();
+		AvgFunction function = new AvgFunction();
 
-		AssignOperation<UnsignedByteType> operation = new AssignOperation<UnsignedByteType>(makeList(image0, image0), image1, function);
+		AssignOperation operation = new AssignOperation(makeList(image0, image0), image1, function);
 
 		operation.setInputRegion(0, new long[]{0,0}, new long[]{3,1});
 
@@ -282,11 +283,11 @@ public class Rev2FunctionalIdeasTest
 						0,0,0,
 						0,0,0});
 		
-		ConstFunction<UnsignedByteType> function = new ConstFunction<UnsignedByteType>(1);
+		ConstFunction function = new ConstFunction(1);
 
-		AssignOperation<UnsignedByteType> operation = new AssignOperation<UnsignedByteType>(makeList(image0), image1, function);
+		AssignOperation operation = new AssignOperation(makeList(image0), image1, function);
 		
-		PixelOnBorder<UnsignedByteType> condition = new PixelOnBorder<UnsignedByteType>(image0, 255);
+		PixelOnBorder condition = new PixelOnBorder(image0, 255);
 		
 		operation.setInputCondition(0, condition);
 		
@@ -298,9 +299,14 @@ public class Rev2FunctionalIdeasTest
 
 	// -- Helper methods --
 
-	private <T> List<ImgPlus<T>> makeList(final ImgPlus<T>... images) {
-		final List<ImgPlus<T>> list = new ArrayList<ImgPlus<T>>();
-		for (ImgPlus<T> img : images) list.add(img);
+	private List<ImgPlus<? extends RealType<?>>>
+		makeList(final ImgPlus<? extends RealType<?>>... images)
+	{
+		
+		final List<ImgPlus<? extends RealType<?>>> list =
+			new ArrayList<ImgPlus<? extends RealType<?>>>();
+		for (ImgPlus<? extends RealType<?>> img : images)
+			list.add(img);
 		return list;
 	}
 

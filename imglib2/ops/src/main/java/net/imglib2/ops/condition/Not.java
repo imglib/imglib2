@@ -1,18 +1,16 @@
 package net.imglib2.ops.condition;
 
-import net.imglib2.type.numeric.RealType;
-
-public class Not<T extends RealType<T>> implements Condition<T>
+public class Not implements Condition
 {
-	private final Condition<T> condition;
+	private final Condition condition;
 	
-	public Not(final Condition<T> condition)
+	public Not(final Condition condition)
 	{
 		this.condition = condition;
 	}
 	
 	@Override
-	public boolean isSatisfied(final T value, final long[] position)
+	public boolean isSatisfied(final double value, final long[] position)
 	{
 		return ! condition.isSatisfied(value, position); 
 	}

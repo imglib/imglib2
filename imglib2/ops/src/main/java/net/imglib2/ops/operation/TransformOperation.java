@@ -45,7 +45,7 @@ public class TransformOperation<T extends RealType<T>> {
 	private long[] origin;
 	private long[] span;
 	private RealFunc function;
-	private Condition<T> condition;
+	private Condition condition;
 	private Observable observable;
 	private boolean wasInterrupted;
 
@@ -88,7 +88,7 @@ public class TransformOperation<T extends RealType<T>> {
 		this.span = span.clone();
 	}
 	
-	public void setCondition(Condition<T> c)
+	public void setCondition(Condition c)
 	{
 		this.condition = c;
 	}
@@ -107,8 +107,8 @@ public class TransformOperation<T extends RealType<T>> {
 			notifier.notifyObservers(status);
 		}
 
-		RegionIterator<T> iterator =
-			new RegionIterator<T>(image.randomAccess(), origin, span);
+		RegionIterator iterator =
+			new RegionIterator(image.randomAccess(), origin, span);
 
 		iterator.reset();
 		while (iterator.hasNext())
@@ -116,7 +116,7 @@ public class TransformOperation<T extends RealType<T>> {
 			if (wasInterrupted)
 				break;
 			
-			T valueRef = iterator.next();
+			iterator.next();
 			
 			double value = Double.NaN;
 
@@ -124,14 +124,11 @@ public class TransformOperation<T extends RealType<T>> {
 			
 			boolean conditionSatisfied = true;
 			if (condition != null)
-				conditionSatisfied = condition.isSatisfied(valueRef, position);
+				conditionSatisfied = condition.isSatisfied(value, position);
 
 			if (conditionSatisfied) {
-				double currValue = valueRef.getRealDouble();
-			
-				value = function.compute(currValue, position);
-			
-				valueRef.setReal(value);
+				value = function.compute(value, position);
+				iterator.setValue(value);
 			}
 			
 			if (notifier != null)

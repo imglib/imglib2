@@ -1,6 +1,5 @@
 package net.imglib2.ops.operation;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
 
@@ -56,40 +55,39 @@ import net.imglib2.img.ImgPlus;
  * that is all done by reference and delegation. i.e. a 3d composed z stack image made of thirteen 2d images. See how imgib2 supports these concepts.
  */
 
-@SuppressWarnings({"unchecked","rawtypes"})
-public class AssignOperation<T extends RealType<T>>
+@SuppressWarnings({"unchecked"})
+public class AssignOperation
 {
 	// -----------------  instance variables ------------------------------------------
 
 	private int imageCount;
-	private MultiImageIterator<T> iterator;
-	private T outputVariable;
+	private MultiImageIterator iterator;
 	private long[][] positions;
 	private Observable notifier;
 	private Condition[] conditions;
 	private boolean requireIntersection;
-	private RealFunction<T> function;
+	private RealFunction function;
 	private boolean wasInterrupted;
 
 	// -----------------  public interface ------------------------------------------
 	
-	public AssignOperation(List<ImgPlus<T>> inputs, ImgPlus<T> output, RealFunction<T> func)
+	public AssignOperation(List<ImgPlus<? extends RealType<?>>> inputs,
+		ImgPlus<? extends RealType<?>> output, RealFunction func)
 	{
 		imageCount = inputs.size() + 1;
 
-		ImgPlus<T>[] images = new ImgPlus[imageCount];
+		ImgPlus<? extends RealType<?>>[] images = new ImgPlus[imageCount];
 		images[0] = output;
 		for (int i = 1; i <= inputs.size(); i++)
 			images[i] = inputs.get(i-1);
 		
-		iterator = new MultiImageIterator<T>(images);
+		iterator = new MultiImageIterator(images);
 		
 		positions = new long[imageCount][];
 		positions[0] = new long[output.numDimensions()];
 		for (int i = 1; i < imageCount; i++) {
 			positions[i] = new long[inputs.get(i-1).numDimensions()];
 		}
-		outputVariable = null;
 		notifier = null;
 		conditions = new Condition[imageCount];
 		requireIntersection = true;
@@ -123,7 +121,7 @@ public class AssignOperation<T extends RealType<T>>
 		iterator.setRegion(0, origin, span);
 	}
 	
-	public void setOutputCondition(Condition<T> c)
+	public void setOutputCondition(Condition c)
 	{
 		conditions[0] = c;
 	}
@@ -133,7 +131,7 @@ public class AssignOperation<T extends RealType<T>>
 		iterator.setRegion(i+1, origin, span);
 	}
 	
-	public void setInputCondition(int i, Condition<T> c)
+	public void setInputCondition(int i, Condition c)
 	{
 		conditions[i+1] = c;
 	}
@@ -152,13 +150,11 @@ public class AssignOperation<T extends RealType<T>>
 	{
 		iterator.initialize();
 
-		RegionIterator<T>[] subIterators = iterator.getIterators();
+		RegionIterator[] subIterators = iterator.getIterators();
 		
-		RegionIterator<T> subIterator0 = subIterators[0];
+		RegionIterator subIterator0 = subIterators[0];
 
-		outputVariable = subIterator0.getValue();
-
-		List<T> inputVariables = getInputVariables(subIterators);
+		double[] inputVariables = new double[subIterators.length-1];
 		
 		long[] position = new long[positions[0].length];
 
@@ -177,17 +173,19 @@ public class AssignOperation<T extends RealType<T>>
 			
 			iterator.next();
 
+			for (int i = 1; i < subIterators.length; i++)
+				inputVariables[i-1] = subIterators[i].getValue();
+			
 			double value = Double.NaN;
 
 			boolean conditionsSatisfied = conditionsSatisfied(subIterators); 
 
 			if (conditionsSatisfied)
 			{
-				function.compute(inputVariables, outputVariable);
-				
-				value = outputVariable.getRealDouble();
+				value = function.compute(inputVariables);
+				subIterator0.setValue(value);
 			}
-			
+
 			if (notifier != null)
 			{
 				subIterator0.getPosition(position);
@@ -219,16 +217,16 @@ public class AssignOperation<T extends RealType<T>>
 	// this behavior: user should not specify union and then not provide any
 	// conditions.
 	
-	private boolean conditionsSatisfied(RegionIterator<T>[] iterators)
+	private boolean conditionsSatisfied(RegionIterator[] iterators)
 	{
 		for (int i = 0; i < conditions.length; i++)
 		{
-			Condition<T> condition = conditions[i];
+			Condition condition = conditions[i];
 			
 			if (condition == null)
 				continue;
 			
-			RegionIterator<T> subIterator = iterators[i];
+			RegionIterator subIterator = iterators[i];
 			
 			subIterator.getPosition(positions[i]);
 			
@@ -250,15 +248,5 @@ public class AssignOperation<T extends RealType<T>>
 		//else union - if here nothing satisfied the condition
 		
 		return false;
-	}
-
-	private List<T> getInputVariables(RegionIterator<T>[] iterators)
-	{
-		ArrayList<T> variables = new ArrayList<T>();
-		
-		for (int i = 1; i < imageCount; i++)
-			variables.add(iterators[i].getValue());
-		
-		return variables;
 	}
 }
