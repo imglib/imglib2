@@ -1,5 +1,6 @@
 package net.imglib2.collection;
 
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -9,6 +10,7 @@ import net.imglib2.EuclideanSpace;
 import net.imglib2.IterableRealInterval;
 import net.imglib2.RealCursor;
 import net.imglib2.RealLocalizable;
+import net.imglib2.RealPositionable;
 import net.imglib2.Sampler;
 import net.imglib2.util.KthElement;
 
@@ -19,7 +21,7 @@ import net.imglib2.util.KthElement;
  *            type of values stored in the tree.
  * @author Tobias Pietzsch
  */
-public class KDTree< T > implements EuclideanSpace // TODO: , IterableRealInterval< T >
+public class KDTree< T > implements EuclideanSpace, IterableRealInterval< T >
 {
 	/**
 	 * the number of dimensions.
@@ -27,6 +29,21 @@ public class KDTree< T > implements EuclideanSpace // TODO: , IterableRealInterv
 	final protected int n;
 
 	final protected KDTreeNode< T > root;
+	
+	/**
+	 * the number of nodes in the tree.
+	 */
+	final protected long size;
+
+	/**
+	 * minimum of each dimension.
+	 */
+	final protected double[] min;
+
+	/**
+	 * maximum of each dimension.
+	 */
+	final protected double[] max;
 
 	/**
 	 * A KDTreeNode that stores it's value as a reference.
@@ -146,10 +163,31 @@ public class KDTree< T > implements EuclideanSpace // TODO: , IterableRealInterv
 		assert values.size() == positions.size();
 
 		this.n = positions.get( 0 ).numDimensions();
+		this.size = positions.size();
 
 		// test that dimensionality is preserved
 		assert ( verifyDimensions( positions, n ) );
 
+		this.min = new double[ n ];
+		this.max = new double[ n ];
+		for ( int d = 0; d < n; ++d )
+		{
+			min[ d ] = Double.MAX_VALUE;
+			max[ d ] = -Double.MAX_VALUE;
+		}
+		for ( L position : positions )
+		{
+			for ( int d = 0; d < n; ++d )
+			{
+				final double x = position.getDoublePosition( d );
+
+				if ( x < min[ d ] )
+					min[ d ] = x;
+				if ( x > max[ d ] )
+					max[ d ] = x;
+			}
+		}
+		
 		if ( values == positions )
 		{
 			if ( positions instanceof java.util.RandomAccess )
@@ -180,6 +218,11 @@ public class KDTree< T > implements EuclideanSpace // TODO: , IterableRealInterv
 	public KDTree( final IterableRealInterval< T > interval )
 	{
 		this.n = interval.numDimensions();
+		this.size = interval.size();
+		this.min = new double[ n ];
+		interval.realMin( this.min );
+		this.max = new double[ n ];
+		interval.realMax( this.max );
 		ArrayList< RealCursor< T > > values = new ArrayList< RealCursor< T > >( ( int ) interval.size() );
 		RealCursor< T > cursor = interval.localizingCursor();
 		while ( cursor.hasNext() )
@@ -475,5 +518,201 @@ public class KDTree< T > implements EuclideanSpace // TODO: , IterableRealInterv
 	public String toString()
 	{
 		return toString( root, "" );
+	}
+
+	@Override
+	public double realMin( int d )
+	{
+		return min[ d ];
+	}
+
+	@Override
+	public void realMin( final double[] m )
+	{
+		for ( int d = 0; d < n; ++d )
+			m[ d ] = min[ d ];
+	}
+
+	@Override
+	public void realMin( final RealPositionable m )
+	{
+		m.setPosition( min );
+	}
+
+	@Override
+	public double realMax( int d )
+	{
+		return max[ d ];
+	}
+
+	@Override
+	public void realMax( final double[] m )
+	{
+		for ( int d = 0; d < n; ++d )
+			m[ d ] = max[ d ];
+	}
+
+	@Override
+	public void realMax( final RealPositionable m )
+	{
+		m.setPosition( max );
+	}
+
+	@Override
+	public long size()
+	{
+		return size;
+	}
+
+	@Override
+	public boolean equalIterationOrder( IterableRealInterval< ? > f )
+	{
+		return false;
+	}
+
+	public final class KDTreeCursor implements RealCursor< T >
+	{
+		private final KDTree< T > tree;
+
+		private final ArrayDeque< KDTreeNode< T > > nodes;
+		
+		private KDTreeNode< T > currentNode;
+		
+		public KDTreeCursor( KDTree< T > kdtree )
+		{
+			this.tree = kdtree;
+			final int capacity = 2 + (int) ( Math.log( kdtree.size() ) / Math.log( 2 ) );
+			this.nodes = new ArrayDeque< KDTreeNode< T > >( capacity );
+			reset();
+		}
+
+		public KDTreeCursor( KDTreeCursor c )
+		{
+			this.tree = c.tree;
+			this.nodes = c.nodes.clone();
+			this.currentNode = c.currentNode;
+		}
+
+		@Override
+		public void localize( float[] position )
+		{
+			currentNode.localize( position );
+		}
+
+		@Override
+		public void localize( double[] position )
+		{
+			currentNode.localize( position );
+		}
+
+		@Override
+		public float getFloatPosition( int d )
+		{
+			return currentNode.getFloatPosition( d );
+		}
+
+		@Override
+		public double getDoublePosition( int d )
+		{
+			return currentNode.getDoublePosition( d );
+		}
+
+		@Override
+		public int numDimensions()
+		{
+			return n;
+		}
+
+		@Override
+		public T get()
+		{
+			return currentNode.get();
+		}
+
+		@Override
+		public KDTreeCursor copy()
+		{
+			return new KDTreeCursor( this );
+		}
+
+		@Override
+		public void jumpFwd( final long steps )
+		{
+			for ( long i = 0; i < steps; ++i )
+				fwd();
+		}
+
+		@Override
+		public void fwd()
+		{
+			if ( nodes.isEmpty() )
+				currentNode = null;
+			else
+			{
+				currentNode = nodes.pop();
+				if ( currentNode.left != null )
+					nodes.push( currentNode.left );
+				if ( currentNode.right != null )
+					nodes.push( currentNode.right );
+			}
+		}
+
+		@Override
+		public void reset()
+		{
+			nodes.clear();
+			nodes.push( tree.getRoot() );
+			currentNode = null;
+		}
+
+		@Override
+		public boolean hasNext()
+		{
+			return ! nodes.isEmpty();
+		}
+
+		@Override
+		public T next()
+		{
+			fwd();
+			return get();
+		}
+
+		@Override
+		public void remove()
+		{
+			// NB: no action.
+		}
+
+		@Override
+		public KDTreeCursor copyCursor()
+		{
+			return copy();
+		}
+		
+	}
+
+	@Override
+	public KDTreeCursor iterator()
+	{
+		return new KDTreeCursor( this );
+	}
+
+	@Override
+	public KDTreeCursor cursor()
+	{
+		return new KDTreeCursor( this );
+	}
+
+	@Override
+	public KDTreeCursor localizingCursor()
+	{
+		return new KDTreeCursor( this );
+	}
+
+	@Override
+	public T firstElement()
+	{
+		return iterator().next();
 	}
 }
