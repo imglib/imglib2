@@ -149,7 +149,7 @@ public class TransformBuilder< T >
 	protected void visitExtended( ExtendedRandomAccessibleInterval< T, ? > randomAccessible )
 	{
 		RandomAccessibleInterval< T > sourceInterval = randomAccessible.getSource();
-		if ( Util.contains( sourceInterval, boundingBox.getInterval() ) )
+		if ( ( boundingBox != null ) && Util.contains( sourceInterval, boundingBox.getInterval() ) )
 			visit( sourceInterval );
 		else
 			source = randomAccessible;
