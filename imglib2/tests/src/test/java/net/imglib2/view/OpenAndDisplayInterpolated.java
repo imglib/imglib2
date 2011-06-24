@@ -1,23 +1,19 @@
-package tests;
+package net.imglib2.view;
 
 import ij.ImageJ;
 import ij.ImagePlus;
-import ij.process.ColorProcessor;
 import net.imglib2.Cursor;
 import net.imglib2.IterableInterval;
 import net.imglib2.RandomAccessible;
 import net.imglib2.RealRandomAccess;
-import net.imglib2.display.ARGBScreenImage;
-import net.imglib2.display.RealARGBConverter;
-import net.imglib2.display.XYProjector;
 import net.imglib2.img.Img;
 import net.imglib2.img.ImgFactory;
 import net.imglib2.img.array.ArrayImgFactory;
+import net.imglib2.img.display.imagej.ImageJFunctions;
 import net.imglib2.interpolation.InterpolatorFactory;
 import net.imglib2.interpolation.randomaccess.NLinearInterpolatorFactory;
 import net.imglib2.interpolation.randomaccess.NearestNeighborInterpolatorFactory;
 import net.imglib2.io.ImgOpener;
-import net.imglib2.type.numeric.ARGBType;
 import net.imglib2.type.numeric.NumericType;
 import net.imglib2.type.numeric.real.FloatType;
 
@@ -60,14 +56,7 @@ public class OpenAndDisplayInterpolated
 		}
 
 		Img< FloatType > interpolatedImg = imgFactory.create( new long[] {200, 200}, new FloatType () );
-		
-		final ARGBScreenImage screenImage = new ARGBScreenImage( ( int )interpolatedImg.dimension( 0 ), ( int )interpolatedImg.dimension( 1 ) );
-		final XYProjector< FloatType, ARGBType > projector = new XYProjector< FloatType, ARGBType >( interpolatedImg, screenImage, new RealARGBConverter< FloatType >( 0, 255 ) );
-
-		final ColorProcessor cp = new ColorProcessor( screenImage.image() );
-		final ImagePlus imp = new ImagePlus( "argbScreenProjection", cp );
-		imp.show();
-		
+				
 		double[] offset;
 		double scale;
 		InterpolatorFactory< FloatType, RandomAccessible< FloatType > > interpolatorFactory;
@@ -75,11 +64,12 @@ public class OpenAndDisplayInterpolated
 		offset = new double[] {50, 10};
 		scale = 1.0;
 		interpolatorFactory = new NLinearInterpolatorFactory< FloatType >();
+		final ImagePlus imp = ImageJFunctions.show( interpolatedImg );
+		imp.getImageStack().getProcessor( 0 ).setMinAndMax( 0, 255 );
 		for ( int i=0; i<2000; ++i ) {
 			copyInterpolatedGeneric( img, interpolatedImg, offset, scale, interpolatorFactory );
-			projector.map();
-			final ColorProcessor cpa = new ColorProcessor( screenImage.image() );
-			imp.setProcessor( cpa );
+			imp.getImageStack().getProcessor( 0 ); // update the internal img data in the underlying ImageJVirtualStack
+			imp.updateAndDraw();
 			offset[0] += 0.2;
 			offset[0] += 0.04;
 			scale *= 0.999;
@@ -90,9 +80,8 @@ public class OpenAndDisplayInterpolated
 		interpolatorFactory = new NearestNeighborInterpolatorFactory< FloatType >();
 		for ( int i=0; i<2000; ++i ) {
 			copyInterpolatedGeneric( img, interpolatedImg, offset, scale, interpolatorFactory );
-			projector.map();
-			final ColorProcessor cpa = new ColorProcessor( screenImage.image() );
-			imp.setProcessor( cpa );
+			imp.getImageStack().getProcessor( 0 ); // update the internal img data in the underlying ImageJVirtualStack
+			imp.updateAndDraw();
 			offset[0] += 0.2;
 			offset[0] += 0.04;
 			scale *= 0.999;

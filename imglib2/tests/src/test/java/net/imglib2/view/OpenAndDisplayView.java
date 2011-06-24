@@ -1,20 +1,14 @@
-package tests;
+package net.imglib2.view;
 
 import ij.ImageJ;
-import ij.ImagePlus;
-import ij.process.ColorProcessor;
 import net.imglib2.RandomAccessible;
 import net.imglib2.RandomAccessibleInterval;
-import net.imglib2.display.ARGBScreenImage;
-import net.imglib2.display.RealARGBConverter;
-import net.imglib2.display.XYProjector;
 import net.imglib2.img.Img;
 import net.imglib2.img.ImgFactory;
 import net.imglib2.img.array.ArrayImgFactory;
+import net.imglib2.img.display.imagej.ImageJFunctions;
 import net.imglib2.io.ImgOpener;
-import net.imglib2.type.numeric.ARGBType;
 import net.imglib2.type.numeric.real.FloatType;
-import net.imglib2.view.Views;
 
 
 public class OpenAndDisplayView
@@ -44,13 +38,7 @@ public class OpenAndDisplayView
 		RandomAccessibleInterval< FloatType > view5 = Views.superIntervalView( view4, new long[] {120, 120}, new long[] {117, 117} );		
 		
 		RandomAccessibleInterval< FloatType > finalView = view5;
-		
-		final ARGBScreenImage screenImage = new ARGBScreenImage( ( int )finalView.dimension( 0 ), ( int )finalView.dimension( 1 ) );
-		final XYProjector< FloatType, ARGBType > projector = new XYProjector< FloatType, ARGBType >( finalView, screenImage, new RealARGBConverter< FloatType >( 0, 255 ) );
-		projector.map();
 
-		final ColorProcessor cp = new ColorProcessor( screenImage.image() );
-		final ImagePlus imp = new ImagePlus( "argbScreenProjection", cp );
-		imp.show();		
+		ImageJFunctions.show( finalView );
 	}
 }

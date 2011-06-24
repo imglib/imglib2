@@ -1,4 +1,4 @@
-package tests;
+package net.imglib2.view;
 
 import ij.ImageJ;
 import ij.ImagePlus;
@@ -7,14 +7,11 @@ import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.display.ARGBScreenImage;
 import net.imglib2.display.RealARGBConverter;
 import net.imglib2.display.XYProjector;
-import net.imglib2.img.Img;
-import net.imglib2.img.ImgFactory;
 import net.imglib2.img.array.ArrayImgFactory;
 import net.imglib2.io.ImgIOException;
 import net.imglib2.io.ImgOpener;
 import net.imglib2.type.numeric.ARGBType;
 import net.imglib2.type.numeric.real.FloatType;
-import net.imglib2.view.Views;
 
 public class OpenAndDisplayRotated
 {	
@@ -35,6 +32,8 @@ public class OpenAndDisplayRotated
 	final ImagePlus imp = new ImagePlus( "argbScreenProjection", cp );
 	imp.show();
 
+	// ImageJFunctions.show( img );
+	
 	for ( int k = 0; k < 3; ++k ) 
 		for ( int i = 0; i < img.dimension( 2 ); ++i )
 		{

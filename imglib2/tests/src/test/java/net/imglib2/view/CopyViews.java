@@ -1,23 +1,16 @@
-package tests;
+package net.imglib2.view;
 
 import ij.ImageJ;
-import ij.ImagePlus;
-import ij.process.ColorProcessor;
 import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessible;
 import net.imglib2.RandomAccessibleInterval;
-import net.imglib2.display.ARGBScreenImage;
-import net.imglib2.display.RealARGBConverter;
-import net.imglib2.display.XYProjector;
 import net.imglib2.img.Img;
 import net.imglib2.img.ImgFactory;
 import net.imglib2.img.array.ArrayImgFactory;
+import net.imglib2.img.display.imagej.ImageJFunctions;
 import net.imglib2.io.ImgOpener;
 import net.imglib2.type.Type;
-import net.imglib2.type.numeric.ARGBType;
 import net.imglib2.type.numeric.real.FloatType;
-import net.imglib2.view.RandomAccessibleZeroMinIntervalCursor;
-import net.imglib2.view.Views;
 
 public class CopyViews
 {
@@ -60,13 +53,14 @@ public class CopyViews
 		copy( Views.flippedView( inputImg, 0 ), Views.superIntervalView( outputImg, new long[] {w,0}, new long[] {w,h} ) );
 		copy( Views.flippedView( inputImg, 1 ), Views.superIntervalView( outputImg, new long[] {0,h}, new long[] {w,h} ) );
 		copy( Views.flippedView( Views.flippedView( inputImg, 1 ), 0 ), Views.superIntervalView( outputImg, new long[] {w,h}, new long[] {w,h} ) );
-		
-		final ARGBScreenImage screenImage = new ARGBScreenImage( ( int )outputImg.dimension( 0 ), ( int )outputImg.dimension( 1 ) );
-		final XYProjector< FloatType, ARGBType > projector = new XYProjector< FloatType, ARGBType >( outputImg, screenImage, new RealARGBConverter< FloatType >( 0, 255 ) );
-		projector.map();
 
-		final ColorProcessor cp = new ColorProcessor( screenImage.image() );
-		final ImagePlus imp = new ImagePlus( "argbScreenProjection", cp );
-		imp.show();		
+		ImageJFunctions.show( outputImg );
+//		final ARGBScreenImage screenImage = new ARGBScreenImage( ( int )outputImg.dimension( 0 ), ( int )outputImg.dimension( 1 ) );
+//		final XYProjector< FloatType, ARGBType > projector = new XYProjector< FloatType, ARGBType >( outputImg, screenImage, new RealARGBConverter< FloatType >( 0, 255 ) );
+//		projector.map();
+//
+//		final ColorProcessor cp = new ColorProcessor( screenImage.image() );
+//		final ImagePlus imp = new ImagePlus( "argbScreenProjection", cp );
+//		imp.show();		
 	}
 }

@@ -7,7 +7,6 @@ import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.display.ARGBScreenImage;
 import net.imglib2.display.RealARGBConverter;
 import net.imglib2.display.XYProjector;
-import net.imglib2.img.Img;
 import net.imglib2.img.array.ArrayImgFactory;
 import net.imglib2.io.ImgIOException;
 import net.imglib2.io.ImgOpener;
