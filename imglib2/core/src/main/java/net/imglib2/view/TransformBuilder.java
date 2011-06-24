@@ -118,6 +118,10 @@ public class TransformBuilder< T >
 		{
 			visitExtended( ( ExtendedRandomAccessibleInterval< T, ? > ) randomAccessible );
 		}
+		else if ( IntervalView.class.isInstance( randomAccessible ) )
+		{
+			visit( ( ( IntervalView< T > ) randomAccessible ).getSource() );
+		}
 		else
 		{
 			source = randomAccessible;
