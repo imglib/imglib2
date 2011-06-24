@@ -1,12 +1,12 @@
 package net.imglib2.view;
 
 import net.imglib2.ExtendedRandomAccessibleInterval;
+import net.imglib2.Interval;
 import net.imglib2.RandomAccessible;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.outofbounds.OutOfBoundsConstantValueFactory;
 import net.imglib2.outofbounds.OutOfBoundsFactory;
 import net.imglib2.outofbounds.OutOfBoundsMirrorFactory;
-import net.imglib2.outofbounds.OutOfBoundsMirrorSingleBoundary;
 import net.imglib2.outofbounds.OutOfBoundsPeriodicFactory;
 import net.imglib2.transform.integer.MixedTransform;
 import net.imglib2.type.Type;
@@ -14,6 +14,16 @@ import net.imglib2.util.Util;
 
 public class Views
 {
+	/**
+	 * Extend a RandomAccessibleInterval with an out-of-bounds strategy.
+	 * 
+	 * @param randomAccessible
+	 *            the interval to extend.
+	 * @param factory
+	 *            the out-of-bounds strategy.
+	 * @return (unbounded) RandomAccessible which extends the input interval to
+	 *         infinity.
+	 */
 	public static < T, F extends RandomAccessibleInterval< T > > ExtendedRandomAccessibleInterval< T, F > extend( final F randomAccessible, final OutOfBoundsFactory< T, ? super F > factory )
 	{
 		return new ExtendedRandomAccessibleInterval< T, F >( randomAccessible, factory );
@@ -77,42 +87,71 @@ public class Views
 		return new ExtendedRandomAccessibleInterval< T, F >( randomAccessible, new OutOfBoundsPeriodicFactory< T, F >() );
 	}
 
-	public static < T > MixedTransformView< T > superIntervalView( final RandomAccessible< T > randomAccessible, long[] offset, long[] dimension )
+	/**
+	 * Define an interval on a RandomAccessible. It is the callers
+	 * responsibility to ensure that the source RandomAccessible is defined in
+	 * the specified interval.
+	 * 
+	 * @param randomAccessible
+	 *            the source
+	 * @param min
+	 *            lower bound of interval
+	 * @param max
+	 *            upper bound of interval
+	 * @return a RandomAccessibleInterval
+	 */
+	public static < T > IntervalView< T > intervalView( final RandomAccessible< T > randomAccessible, long[] min, long[] max )
 	{
-		final int n = randomAccessible.numDimensions();
-		MixedTransform t = new MixedTransform( n, n );
-		t.setTranslation( offset );
-		return new MixedTransformView< T >( randomAccessible, t, dimension );
+		return new IntervalView< T >( randomAccessible, min, max );
 	}
 
-	public static < T > MixedTransformView< T > flippedView( final RandomAccessibleInterval< T > interval, final int d )
+	/**
+	 * Define an interval on a RandomAccessible. It is the callers
+	 * responsibility to ensure that the source RandomAccessible is defined in
+	 * the specified interval.
+	 * 
+	 * @param randomAccessible
+	 *            the source
+	 * @param interval
+	 *            interval boundaries.
+	 * @return a RandomAccessibleInterval
+	 */
+	public static < T > IntervalView< T > intervalView( final RandomAccessible< T > randomAccessible, final Interval interval )
+	{
+		return new IntervalView< T >( randomAccessible, interval );
+	}
+
+
+
+
+	/**
+	 * Translate the source such that the upper left corner is at the origin
+	 * 
+	 * @param interval
+	 *            the source.
+	 * @return view of the source translated to the origin
+	 */
+	public static < T > IntervalView< T > zeroMinView( final RandomAccessibleInterval< T > interval )
 	{
 		final int n = interval.numDimensions();
-		long[] tmp = new long[ n ];
-		tmp[ d ] = interval.max( d );
-		int[] component = new int[ n ];
-		boolean[] inv = new boolean[ n ];
-		for ( int e = 0; e < n; ++e )
-		{
-			component[ e ] = e;
-			inv[ e ] = ( e == d );
-		}
+		final long[] min = new long[ n ];
+		final long[] max = new long[ n ];
+		final long[] offset = new long[ n ];
+		interval.min( offset );
+		interval.max( max );
+		for ( int d = 0; d < n; ++d )
+			max[ d ] -= offset[ d ];
 		MixedTransform t = new MixedTransform( n, n );
-		t.setTranslation( tmp );
-		t.setComponentMapping( component );
-		t.setComponentInversion( inv );
-		interval.dimensions( tmp );
-		System.out.println( Util.printCoordinates( tmp ) );
-		return new MixedTransformView< T >( interval, t, tmp );
+		t.setTranslation( offset );
+		return intervalView( new MixedTransformView< T >( interval, t ), min, max );
 	}
+
 
 	/**
 	 * take a (n-1)-dimensional slice of a n-dimensional view, fixing
 	 * d-component of coordinates to pos.
-	 * 
-	 * TODO: this should work on general views, not just IntervalView
 	 */
-	public static < T > MixedTransformView< T > hyperSlice( final RandomAccessibleInterval< T > view, final int d, long pos )
+	public static < T > MixedTransformView< T > hyperSlice( final RandomAccessible< T > view, final int d, long pos )
 	{
 		final int m = view.numDimensions();
 		final int n = m - 1;
@@ -121,20 +160,17 @@ public class Views
 		translation[ d ] = pos;
 		boolean[] zero = new boolean[ m ];
 		int[] component = new int[ m ];
-		long[] dimension = new long[ n ];
 		for ( int e = 0; e < m; ++e )
 		{
 			if ( e < d )
 			{
 				zero[ e ] = false;
 				component[ e ] = e;
-				dimension[ e ] = view.dimension( e );
 			}
 			else if ( e > d )
 			{
 				zero[ e ] = false;
 				component[ e ] = e - 1;
-				dimension[ e - 1 ] = view.dimension( e );
 			}
 			else
 			{
@@ -145,7 +181,98 @@ public class Views
 		t.setTranslation( translation );
 		t.setComponentZero( zero );
 		t.setComponentMapping( component );
-		return new MixedTransformView< T >( view, t, dimension );
+		return new MixedTransformView< T >( view, t );
+	}
+
+	/**
+	 * take a (n-1)-dimensional slice of a n-dimensional view, fixing
+	 * d-component of coordinates to pos.
+	 */
+	public static < T > IntervalView< T > hyperSlice( final RandomAccessibleInterval< T > view, final int d, long pos )
+	{
+		final int m = view.numDimensions();
+		final int n = m - 1;
+		long[] min = new long[ n ];
+		long[] max = new long[ n ];
+		for ( int e = 0; e < m; ++e )
+		{
+			if ( e < d )
+			{
+				min[ e ] = view.min( e );
+				max[ e ] = view.max( e );
+			}
+			else if ( e > d )
+			{
+				min[ e - 1] = view.min( e );
+				max[ e - 1] = view.max( e );
+			}
+		}
+		return intervalView( hyperSlice( ( RandomAccessible< T > ) view, d, pos), min, max );
+	}
+
+	
+	/**
+	 * Invert the d-axis.
+	 * 
+	 * @param randomAccessible
+	 *            the source
+	 * @param d
+	 *            the axis to invert
+	 */
+	public static < T > MixedTransformView< T > invertedView( final RandomAccessible< T > randomAccessible, final int d )
+	{
+		final int n = randomAccessible.numDimensions();
+		boolean[] inv = new boolean[ n ];
+		inv[ d ] = true;
+		MixedTransform t = new MixedTransform( n, n );
+		t.setComponentInversion( inv );
+		return new MixedTransformView< T >( randomAccessible, t );
+	}
+
+
+	/**
+	 * Invert the d-axis.
+	 * 
+	 * @param interval
+	 *            the source
+	 * @param d
+	 *            the axis to invert
+	 */
+	public static < T > IntervalView< T > invertedView( final RandomAccessibleInterval< T > interval, final int d )
+	{
+		final int n = interval.numDimensions();
+		long[] min = new long[ n ];
+		long[] max = new long[ n ];
+		interval.min( min );
+		interval.max( max );
+		long tmp = min[ d ];
+		min[ d ] = - max[ d ];
+		max[ d ] = - tmp;
+		return intervalView( invertedView( ( RandomAccessible< T > ) interval, d ), min, max );
+	}
+
+
+
+	/**
+	 * Define an interval on a RandomAccessible and translate it such that the
+	 * min corner is at the origin. It is the callers responsibility to ensure
+	 * that the source RandomAccessible is defined in the specified interval.
+	 * 
+	 * @param randomAccessible
+	 *            the source
+	 * @param offset
+	 *            offset of min corner.
+	 * @param dimension
+	 *            size of the interval.
+	 * @return a RandomAccessibleInterval
+	 */
+	public static < T > IntervalView< T > superIntervalView( final RandomAccessible< T > randomAccessible, long[] offset, long[] dimension )
+	{
+		final int n = randomAccessible.numDimensions();
+		final long[] max = new long[ n ];
+		for ( int d = 0; d < n; ++d )
+			max[ d ] = offset[ d ] + dimension[ d ] - 1;
+		return zeroMinView( intervalView( randomAccessible, offset, max ) );
 	}
 
 	/**
@@ -159,6 +286,93 @@ public class Views
 	 * fromAxis=1 and toAxis=0 corresponds to a counter-clock-wise rotation in
 	 * the XY plane.
 	 */
+	public static < T > MixedTransformView< T > rotatedView( final RandomAccessible< T > randomAccessible, final int fromAxis, final int toAxis )
+	{
+		final int n = randomAccessible.numDimensions();
+		int[] component = new int[ n ];
+		boolean[] inv = new boolean[ n ];
+		for ( int e = 0; e < n; ++e )
+		{
+			if ( e == toAxis )
+			{
+				component[ e ] = fromAxis;
+				inv[ e ] = true;
+			}
+			else if ( e == fromAxis )
+			{
+				component[ e ] = toAxis;
+			}
+			else
+			{
+				component[ e ] = e;
+			}
+		}
+		MixedTransform t = new MixedTransform( n, n );
+		t.setComponentMapping( component );
+		t.setComponentInversion( inv );
+		return new MixedTransformView< T >( randomAccessible, t );
+	}
+
+	/**
+	 * Create view that is rotated by 90 degrees. The rotation is specified by
+	 * the fromAxis and toAxis arguments.
+	 * 
+	 * If fromAxis=0 and toAxis=1, this means that the X-axis of the source view
+	 * is mapped to the Y-Axis of the rotated view. That is, it corresponds to a
+	 * 90 degree clock-wise rotation of the source view in the XY plane.
+	 * 
+	 * fromAxis=1 and toAxis=0 corresponds to a counter-clock-wise rotation in
+	 * the XY plane.
+	 */
+	public static < T > IntervalView< T > rotatedView( final RandomAccessibleInterval< T > interval, final int fromAxis, final int toAxis )
+	{
+		final int n = interval.numDimensions();
+		int[] component = new int[ n ];
+		boolean[] inv = new boolean[ n ];
+		for ( int e = 0; e < n; ++e )
+		{
+			if ( e == toAxis )
+			{
+				component[ e ] = fromAxis;
+				inv[ e ] = true;
+			}
+			else if ( e == fromAxis )
+			{
+				component[ e ] = toAxis;
+			}
+			else
+			{
+				component[ e ] = e;
+			}
+		}
+		MixedTransform t = new MixedTransform( n, n );
+		t.setComponentMapping( component );
+		t.setComponentInversion( inv );
+		final long[] min = new long[ n ];
+		final long[] max = new long[ n ];
+		interval.min( min );
+		interval.max( max );
+		final long fromMinNew = - max[ toAxis ];
+		final long fromMaxNew = - min[ toAxis ];
+		min[ toAxis ] = min[ fromAxis ];
+		max[ toAxis ] = max[ fromAxis ];
+		min[ fromAxis ] = fromMinNew;
+		max[ fromAxis ] = fromMaxNew;
+		return new IntervalView< T >( new MixedTransformView< T >( interval, t ), min, max );
+	}
+
+	/**
+	 * Create view that is rotated by 90 degrees. The rotation is specified by
+	 * the fromAxis and toAxis arguments.
+	 * 
+	 * If fromAxis=0 and toAxis=1, this means that the X-axis of the source view
+	 * is mapped to the Y-Axis of the rotated view. That is, it corresponds to a
+	 * 90 degree clock-wise rotation of the source view in the XY plane.
+	 * 
+	 * fromAxis=1 and toAxis=0 corresponds to a counter-clock-wise rotation in
+	 * the XY plane.
+	 */
+	/*
 	public static < T > MixedTransformView< T > rotatedView( final RandomAccessibleInterval< T > interval, final int fromAxis, final int toAxis )
 	{
 		final int n = interval.numDimensions();
@@ -191,5 +405,23 @@ public class Views
 		tmp[ toAxis ] = tmp[ fromAxis ];
 		tmp[ fromAxis ] = fromDim;
 		return new MixedTransformView< T >( interval, t, tmp );
+	}
+	*/
+
+	
+	
+	
+	
+	/**
+	 * Invert the d-axis and shift the resulting view to the origin.
+	 * 
+	 * @param interval
+	 *            the source
+	 * @param d
+	 *            the axis to invert
+	 */
+	public static < T > IntervalView< T > flippedView( final RandomAccessibleInterval< T > interval, final int d )
+	{
+		return zeroMinView( invertedView( interval, d ) );
 	}
 }
