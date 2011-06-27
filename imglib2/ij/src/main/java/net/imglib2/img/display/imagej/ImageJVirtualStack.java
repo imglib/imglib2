@@ -30,9 +30,9 @@ public abstract class ImageJVirtualStack< S, T extends NativeType< T > > extends
 	{
 		super( ( int ) source.dimension( 0 ), ( int ) source.dimension( 1 ), null, null );
 
-		assert source.numDimensions() == 3;
+		assert source.numDimensions() > 1;
 
-		this.size = ( int ) source.dimension( 2 );
+		this.size = ( source.numDimensions() > 2 ) ? ( int ) source.dimension( 2 ) : 1;
 
 		final int sizeX = ( int ) source.dimension( 0 );
 		final int sizeY = ( int ) source.dimension( 1 );

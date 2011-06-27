@@ -30,7 +30,7 @@ public class OpenAndDisplaySliceView
 		}
 
 		RandomAccessibleInterval< FloatType > view = Views.hyperSlice( img, 2, 10 );
-		System.out.println( img.numDimensions() + "  " + view.numDimensions() );
+//		System.out.println( img.numDimensions() + "  " + view.numDimensions() );
 		
 		ImageJFunctions.show( view );
 	}

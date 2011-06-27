@@ -42,7 +42,7 @@ public class RandomAccessTest
 	{
 		long[] offset = new long[] { 1, 10, 0, -5 };
 		long[] dim = new long[] { 10, 10, 10, 10 };
-		RandomAccess< UnsignedByteType > a = Views.superIntervalView( Views.flippedView( Views.hyperSlice( img, 2, 2 ), 3 ), offset, dim ).randomAccess();
+		RandomAccess< UnsignedByteType > a = Views.offsetInterval( Views.flippedView( Views.hyperSlice( img, 2, 2 ), 3 ), offset, dim ).randomAccess();
 		
 		assertTrue( FullSourceMapMixedRandomAccess.class.isInstance( a ) );
 

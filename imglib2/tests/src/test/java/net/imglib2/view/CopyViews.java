@@ -55,38 +55,37 @@ public class CopyViews
 			e.printStackTrace();
 			return;
 		}
-/*
+
 		final long w = inputImg.dimension( 0 );
 		final long h = inputImg.dimension( 1 );
 
 		final long[] dim = new long[] { w * 2, h * 2 };
 		Img< FloatType > outputImg = imgFactory.create( dim, new FloatType() );
 		
-		copy( inputImg, Views.intervalView( outputImg, new long[] {20,20}, new long[] {w-21,h-21} ) );
+		copy( inputImg, Views.superIntervalView( outputImg, new long[] {0,0}, new long[] {w,h} ) );
 		copy( Views.flippedView( inputImg, 0 ), Views.superIntervalView( outputImg, new long[] {w,0}, new long[] {w,h} ) );
 		copy( Views.flippedView( inputImg, 1 ), Views.superIntervalView( outputImg, new long[] {0,h}, new long[] {w,h} ) );
 		copy( Views.flippedView( Views.flippedView( inputImg, 1 ), 0 ), Views.superIntervalView( outputImg, new long[] {w,h}, new long[] {w,h} ) );
-*/
-		final long w = inputImg.dimension( 0 );
-		final long h = inputImg.dimension( 1 );
 
-		final long[] dim = new long[] { w * 5, h * 5 };
-		Img< FloatType > outputImg = imgFactory.create( dim, new FloatType() );
-		
-		copySrc(
-				Views.intervalView( inputImg, new long[] {50,0}, new long[] {100, 100} ), 
-				Views.superIntervalView( outputImg, new long[] {2 * w, 2 * h}, new long[] {1, 1} ) );
-		copySrc( Views.rotatedView( 
-				Views.intervalView( inputImg, new long[] {50,0}, new long[] {100, 100} ), 
-			0, 1 ), Views.superIntervalView( outputImg, new long[] {2 * w, 2 * h}, new long[] {1, 1} ) );
-		copySrc( Views.rotatedView( 
-				Views.intervalView( inputImg, new long[] {50,0}, new long[] {100, 100} ), 
-			1, 0 ), Views.superIntervalView( outputImg, new long[] {2 * w, 2 * h}, new long[] {1, 1} ) );
-//		copySrc( Views.invertedView( inputImg, 0 ), Views.superIntervalView( outputImg, new long[] {2 * w, 2 * h}, new long[] {1, 1} ) );
-//		copySrc( Views.invertedView( inputImg, 1 ), Views.superIntervalView( outputImg, new long[] {2 * w, 2 * h}, new long[] {1, 1} ) );
-
-		
 		ImageJFunctions.show( outputImg );
+
+//		final long w = inputImg.dimension( 0 );
+//		final long h = inputImg.dimension( 1 );
+//
+//		final long[] dim = new long[] { w * 5, h * 5 };
+//		Img< FloatType > outputImg = imgFactory.create( dim, new FloatType() );
+//		
+//		copySrc(
+//				Views.interval( inputImg, new long[] {50,0}, new long[] {100, 100} ), 
+//				Views.offsetInterval( outputImg, new long[] {2 * w, 2 * h}, new long[] {1, 1} ) );
+//		copySrc( Views.rotate( 
+//				Views.interval( inputImg, new long[] {50,0}, new long[] {100, 100} ), 
+//			0, 1 ), Views.offsetInterval( outputImg, new long[] {2 * w, 2 * h}, new long[] {1, 1} ) );
+//		copySrc( Views.rotate( 
+//				Views.interval( inputImg, new long[] {50,0}, new long[] {100, 100} ), 
+//			1, 0 ), Views.offsetInterval( outputImg, new long[] {2 * w, 2 * h}, new long[] {1, 1} ) );
+
+
 //		final ARGBScreenImage screenImage = new ARGBScreenImage( ( int )outputImg.dimension( 0 ), ( int )outputImg.dimension( 1 ) );
 //		final XYProjector< FloatType, ARGBType > projector = new XYProjector< FloatType, ARGBType >( outputImg, screenImage, new RealARGBConverter< FloatType >( 0, 255 ) );
 //		projector.map();
