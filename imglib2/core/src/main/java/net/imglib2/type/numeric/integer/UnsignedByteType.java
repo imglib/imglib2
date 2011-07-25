@@ -101,7 +101,7 @@ public class UnsignedByteType extends GenericByteType<UnsignedByteType>
 	public void setInteger( final int f ){ set( f ); }
 	@Override
 	public void setInteger( final long f ){ set( (int)f ); }
-
+	
 	@Override
 	public double getMaxValue() { return -Byte.MIN_VALUE + Byte.MAX_VALUE; }
 	@Override
@@ -132,4 +132,7 @@ public class UnsignedByteType extends GenericByteType<UnsignedByteType>
 
 	@Override
 	public UnsignedByteType copy(){ return new UnsignedByteType( get() ); }
+
+	@Override
+	public String toString() { return "" + get(); }
 }
