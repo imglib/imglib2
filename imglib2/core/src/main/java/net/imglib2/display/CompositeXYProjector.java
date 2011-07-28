@@ -34,9 +34,8 @@ import net.imglib2.Cursor;
 import net.imglib2.IterableInterval;
 import net.imglib2.RandomAccess;
 import net.imglib2.converter.Converter;
-import net.imglib2.display.XYProjector;
 import net.imglib2.img.Img;
-import net.imglib2.type.numeric.NumericType;
+import net.imglib2.type.numeric.ARGBType;
 
 /**
  * Creates a composite image from across multiple dimensional positions along an
@@ -50,18 +49,18 @@ import net.imglib2.type.numeric.NumericType;
  * @author Grant Harris
  * @see XYProjector for the code upon which this class was based.
  */
-public class CompositeXYProjector<A, B extends NumericType<B>> extends
-	XYProjector<A, B>
+public class CompositeXYProjector<A> extends
+	XYProjector<A, ARGBType>
 {
 
-	private final ArrayList<Converter<A, B>> converters;
+	private final ArrayList<Converter<A, ARGBType>> converters;
 	private final int dimIndex;
 	private final long positionCount;
 	private final boolean[] composite;
 
 	public CompositeXYProjector(final Img<A> source,
-		final IterableInterval<B> target,
-		final ArrayList<Converter<A, B>> converters, final int dimIndex)
+		final IterableInterval<ARGBType> target,
+		final ArrayList<Converter<A, ARGBType>> converters, final int dimIndex)
 	{
 		super(source, target, null);
 		this.converters = converters;
@@ -114,22 +113,37 @@ public class CompositeXYProjector<A, B extends NumericType<B>> extends
 	@Override
 	public void map() {
 		final boolean single = isSingle();
-		final Cursor<B> targetCursor = target.cursor();
-		final B bi = targetCursor.get().createVariable();
+		final Cursor<ARGBType> targetCursor = target.cursor();
+		final ARGBType bi = targetCursor.get().createVariable();
 		final RandomAccess<A> sourceRandomAccess = source.randomAccess();
 		sourceRandomAccess.setPosition(position);
 		while (targetCursor.hasNext()) {
-			final B b = targetCursor.next();
+			final ARGBType element = targetCursor.next();
 			sourceRandomAccess.setPosition(targetCursor.getLongPosition(0), 0);
 			sourceRandomAccess.setPosition(targetCursor.getLongPosition(1), 1);
-			b.setZero();
+			element.setZero();
+			double aSum = 0, rSum = 0, gSum = 0, bSum = 0;
 			for (int i = 0; i < positionCount; i++) {
 				if (skip(i, single)) continue; // position is excluded from composite
 				if (dimIndex >= 0) sourceRandomAccess.setPosition(i, dimIndex);
-				//final B bi = b.createVariable();
 				converters.get(i).convert(sourceRandomAccess.get(), bi);
-				b.add(bi); // accumulate converted result
+
+				// accumulate converted result
+				final int value = bi.get();
+				final int a = ARGBType.alpha(value);
+				final int r = ARGBType.red(value);
+				final int g = ARGBType.green(value);
+				final int b = ARGBType.blue(value);
+				aSum += a;
+				rSum += r;
+				gSum += g;
+				bSum += b;
 			}
+			if (aSum > 255) aSum = 255;
+			if (rSum > 255) rSum = 255;
+			if (gSum > 255) gSum = 255;
+			if (bSum > 255) bSum = 255;
+			element.set(ARGBType.rgba(rSum, gSum, bSum, aSum));
 		}
 	}
 
