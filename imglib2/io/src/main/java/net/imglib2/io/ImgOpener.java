@@ -613,11 +613,20 @@ public class ImgOpener implements StatusReporter {
 		catch (final IOException exc) {
 			throw new ImgIOException(exc);
 		}
-		final int compositeChannelCount = base.getRGBChannelCount();
+		final int rgbChannelCount = base.getRGBChannelCount();
 		final int validBits = r.getBitsPerPixel();
 
 		final ImgPlus<T> imgPlus = new ImgPlus<T>(img, name, dimTypes, cal);
 		imgPlus.setValidBits(validBits);
+
+		int compositeChannelCount = rgbChannelCount;
+		if (rgbChannelCount == 1) {
+			// HACK: Support ImageJ color mode embedded in TIFF files.
+			final String colorMode = (String) r.getMetadataValue("Color mode");
+			if ("composite".equals(colorMode)) {
+				compositeChannelCount = r.getSizeC();
+			}
+		}
 		imgPlus.setCompositeChannelCount(compositeChannelCount);
 
 		return imgPlus;
