@@ -40,6 +40,16 @@ public class DifferenceOfGaussianReal< A extends RealType<A>, B extends RealType
 		this.normalizationFactor = normalizationFactor;
 		this.minPeakValue = minPeakValue;
 	}
+
+	public DifferenceOfGaussianReal( final Image<A> img, final ImageFactory<B> factory,  
+			 						 final OutOfBoundsStrategyFactory<B> outOfBoundsFactory, 
+			 						 final double[] sigma1, final double[] sigma2, final double minPeakValue, final double normalizationFactor )
+	{
+		super( img, factory, new RealTypeConverter<A, B>(), outOfBoundsFactory, sigma1, sigma2, createVariable( factory, minPeakValue ), createVariable( factory, normalizationFactor ) );
+		
+		this.normalizationFactor = normalizationFactor;
+		this.minPeakValue = minPeakValue;
+	}
 	
 	protected static <T extends RealType<T> > T createVariable( final ImageFactory<T> img, final double value )
 	{

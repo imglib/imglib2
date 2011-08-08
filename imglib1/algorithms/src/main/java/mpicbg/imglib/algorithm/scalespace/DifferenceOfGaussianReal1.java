@@ -25,7 +25,13 @@ import mpicbg.imglib.type.numeric.RealType;
 public class DifferenceOfGaussianReal1< A extends RealType<A> > extends DifferenceOfGaussianReal<A, A>
 {
 	public DifferenceOfGaussianReal1( final Image<A> img, OutOfBoundsStrategyFactory<A> outOfBoundsFactory, 
-								  double sigma1, double sigma2, double minPeakValue, double normalizationFactor)
+								      final double sigma1, final double sigma2, double minPeakValue, double normalizationFactor)
+	{
+		super( img, img.getImageFactory(), outOfBoundsFactory, sigma1, sigma2, minPeakValue, normalizationFactor);
+	}
+
+	public DifferenceOfGaussianReal1( final Image<A> img, OutOfBoundsStrategyFactory<A> outOfBoundsFactory, 
+			  						  final double[] sigma1, final double[] sigma2, double minPeakValue, double normalizationFactor)
 	{
 		super( img, img.getImageFactory(), outOfBoundsFactory, sigma1, sigma2, minPeakValue, normalizationFactor);
 	}
