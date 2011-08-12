@@ -64,7 +64,7 @@ public class ScaleSpace< A extends Type<A>, B extends RealType<B> > implements O
 		this.processFactory = processFactory;
 		this.converter = converter;
 		
-		this.scaleSpaceContainerFactory = new ArrayContainerFactory(); //new CellContainerFactory( 64 );
+		this.scaleSpaceContainerFactory = processFactory.getContainerFactory(); //new ArrayContainerFactory(); //new CellContainerFactory( 64 );
 		
 		this.initialSigma = initialSigma;
 		this.scale = 1.0;
@@ -76,6 +76,9 @@ public class ScaleSpace< A extends Type<A>, B extends RealType<B> > implements O
 	@Override
 	public Image<B> getResult() { return scaleSpace; }
 	public ArrayList<DifferenceOfGaussianPeak<B>> getPeaks() { return peaks; }
+	
+	public void setMinImageSize( final int minImageSize ) { this.minImageSize = minImageSize; }
+	public int getMinImageSize() { return minImageSize; }
 	
 	@Override
 	public boolean process()
