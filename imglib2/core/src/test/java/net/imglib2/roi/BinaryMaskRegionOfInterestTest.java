@@ -131,6 +131,24 @@ public class BinaryMaskRegionOfInterestTest {
 		assertEquals(ii.max(1), 7);
 		assertEquals(ii.max(2), 13);
 	}
+	/*
+	 * Regression test of #704
+	 */
+	@Test
+	public void testMaxLongArray() {
+		long [] dims = { 15, 16, 17 };
+		Img<BitType> mask = getMask(dims, new RandomValue()); 
+		RegionOfInterest roi = new RectangleRegionOfInterest(new double [] { 1.1,2.2,3.3 }, new double [] { 4.4, 5.5, 9.9 });
+		BinaryMaskRegionOfInterest<BitType, Img<BitType>> x = new BinaryMaskRegionOfInterest<BitType, Img<BitType>>(
+				getMask(dims, new ROIValue(roi)));
+		IterableInterval<? extends BitType> ii = x.getIterableIntervalOverROI(mask);
+		long [] result = new long [3];
+		ii.max(result);
+		assertEquals(result[0], 5);
+		assertEquals(result[1], 7);
+		assertEquals(result[2], 13);
+		
+	}
 	@Test
 	public void testFirstElement() {
 		long [] dims = { 10, 11, 12 };

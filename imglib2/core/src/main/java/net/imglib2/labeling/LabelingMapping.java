@@ -265,7 +265,7 @@ public class LabelingMapping<T extends Comparable<T>, N extends Number> {
 				}
 				throw new AssertionError(e.getMessage());
 			}
-			interned = new InternedList<T, N>(src, index, this);
+			interned = new InternedList<T, N>(copy, index, this);
 			listsByIndex.add(interned);
 			internedLists.put(interned, interned);
 		}
