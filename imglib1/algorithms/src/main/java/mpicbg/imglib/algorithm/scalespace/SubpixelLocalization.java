@@ -218,11 +218,15 @@ public class SubpixelLocalization< T extends RealType<T> > implements Algorithm,
 				{
 					if ( allowedToMoveInDim[ d ] )
 					{
+						// move to another base location
 						currentPosition[ d ] += Math.signum( subpixelLocation[ d ] );
 						foundStableMaxima = false;
 					}
 					else
 					{
+						// set it to the position that is maximally away when keeping the current base position
+						// e.g. if (0.7) do 4 -> 4.5 (although it should be 4.7, i.e. a new base position of 5) 
+						// or  if (-0.9) do 4 -> 3.5 (although it should be 3.1, i.e. a new base position of 3)
 						subpixelLocation[ d ] = Math.signum( subpixelLocation[ d ] ) * 0.5;
 					}
 				}				
