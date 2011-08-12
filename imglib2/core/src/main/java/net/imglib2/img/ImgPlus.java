@@ -64,7 +64,7 @@ public class ImgPlus<T> implements Img<T>, Metadata {
 	private ArrayList<Double> channelMin;
 	private ArrayList<Double> channelMax;
 
-	private int compositeChannelCount;
+	private int compositeChannelCount = 1;
 	private final ArrayList<ColorTable8> lut8;
 	private final ArrayList<ColorTable16> lut16;
 
