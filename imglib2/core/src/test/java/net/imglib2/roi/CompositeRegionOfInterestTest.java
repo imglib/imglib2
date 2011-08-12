@@ -140,5 +140,26 @@ public class CompositeRegionOfInterestTest {
 		assertOutside(c, 3.5, 5.5);
 		assertOutside(c, 0, 0);
 	}
+	
+	/*
+	 * Regression test of trak # 704
+	 */
+	@Test
+	public void testRealMin() {
+		CompositeRegionOfInterest c = new CompositeRegionOfInterest(new RectangleRegionOfInterest(new double[] {1,2}, new double[] { 3,4}));
+		c.or(new RectangleRegionOfInterest(new double[] {3,5}, new double[] { 3,4}));
+		assertEquals(1, c.realMin(0), 0);
+		assertEquals(2, c.realMin(1), 0);
+	}
 
+	/*
+	 * Regression test of trak # 704
+	 */
+	@Test
+	public void testRealMax() {
+		CompositeRegionOfInterest c = new CompositeRegionOfInterest(new RectangleRegionOfInterest(new double[] {1,2}, new double[] { 3,4}));
+		c.or(new RectangleRegionOfInterest(new double[] {3,5}, new double[] { 3,4}));
+		assertEquals(6, c.realMax(0), 0);
+		assertEquals(9, c.realMax(1), 0);
+	}
 }

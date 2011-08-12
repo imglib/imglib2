@@ -336,6 +336,12 @@ public class LabelingTest {
 				}
 				boolean in_both = ((d[0] <= 25) & (d[1] <= 25));
 				assertEquals(t.getLabeling().size(), in_both?2:1);
+				if (in_both) {
+					// Canonical order is alphabetical, but order of placement
+					// would reverse.
+					assertEquals(t.getLabeling().get(0), "Bar");
+					assertEquals(t.getLabeling().get(1), "Foo");
+				}
 				assertTrue(t.getLabeling().contains(labels[i]));
 			}
 			for (int j=0;j<coords.length; j++) {
