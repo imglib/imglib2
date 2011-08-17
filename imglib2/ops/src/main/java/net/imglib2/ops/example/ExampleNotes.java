@@ -36,6 +36,11 @@ package net.imglib2.ops.example;
 //   all compositions have to be shape compatible to a hyperrectangular region
 //   the compositions can be nested
 
+/**
+ * 
+ * @author Barry DeZonia
+ *
+ */
 public class ExampleNotes {
 
 }
