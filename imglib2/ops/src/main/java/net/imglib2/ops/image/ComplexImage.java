@@ -32,6 +32,7 @@ package net.imglib2.ops.image;
 import net.imglib2.ops.Complex;
 
 /**
+ * Test class
  * 
  * @author Barry DeZonia
  *

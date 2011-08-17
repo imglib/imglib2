@@ -55,7 +55,9 @@ import net.imglib2.type.numeric.RealType;
 //   dimensional space and handled as one dataset
 
 /**
- * 
+ * Replacement class for the old OPS' AssignOperation. Assigns the values of
+ * a region of an Img<RealType> to values from a function.
+ *  
  * @author Barry DeZonia
  *
  */

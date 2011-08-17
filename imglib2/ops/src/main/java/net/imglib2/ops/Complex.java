@@ -34,7 +34,7 @@ package net.imglib2.ops;
  * @author Barry DeZonia
  *
  */
-public final class Complex implements Comparable<Complex>{
+public final class Complex implements Comparable<Complex>, DataCopier<Complex> {
 	private double real;
 	private double imag;
 
@@ -122,6 +122,14 @@ public final class Complex implements Comparable<Complex>{
 		return result;
 	}
 
+	@Override
+	public void setValue(Complex fromValue) {
+		setReal(fromValue.getReal());
+		setImag(fromValue.getImag());
+	}
+
+	// -- private helpers --
+	
 	private double magnitudeSquared() {
 		return real*real + imag*imag;
 	}

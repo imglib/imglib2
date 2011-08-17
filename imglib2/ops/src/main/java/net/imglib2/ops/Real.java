@@ -34,7 +34,7 @@ package net.imglib2.ops;
  * @author Barry DeZonia
  *
  */
-public final class Real implements Comparable<Real> {
+public final class Real implements Comparable<Real>, DataCopier<Real> {
 	private double real;
 	
 	public Real() { real = 0; }
@@ -69,6 +69,11 @@ public final class Real implements Comparable<Real> {
 		long tmp = Double.doubleToLongBits(real);
 		result = result * 31 + (int) (tmp ^ (tmp >>> 32));
 		return result;
+	}
+
+	@Override
+	public void setValue(Real fromValue) {
+		setReal(fromValue.getReal());
 	}
 }
 

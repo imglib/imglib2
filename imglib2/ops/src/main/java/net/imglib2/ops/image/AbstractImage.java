@@ -30,6 +30,7 @@ POSSIBILITY OF SUCH DAMAGE.
 package net.imglib2.ops.image;
 
 /**
+ * Test class
  * 
  * @author Barry DeZonia
  *

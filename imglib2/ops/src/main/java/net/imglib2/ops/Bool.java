@@ -34,7 +34,7 @@ package net.imglib2.ops;
  * @author Barry DeZonia
  *
  */
-public final class Bool implements Comparable<Bool> {
+public final class Bool implements Comparable<Bool>, DataCopier<Bool> {
 	private boolean bool;
 	
 	public Bool() { bool = false; }
@@ -72,6 +72,11 @@ public final class Bool implements Comparable<Bool> {
 			return tmp = 1;
 		result = 31 * result + tmp;
 		return result;
+	}
+	
+	@Override
+	public void setValue(Bool fromValue) {
+		setBool(fromValue.getBool());
 	}
 }
 
