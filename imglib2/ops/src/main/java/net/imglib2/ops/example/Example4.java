@@ -99,12 +99,10 @@ public class Example4 {
 		
 		@Override
 		public boolean isTrue(Neighborhood<long[]> neigh, long[] point) {
-			for (int i = 0; i < point.length; i++) {
-				long dx = point[0] - neigh.getKeyPoint()[0];
-				long dy = point[1] - neigh.getKeyPoint()[1];
-				if (Math.abs(dx) != Math.abs(dy))
-					return false;
-			}
+			long dx = point[0] - neigh.getKeyPoint()[0];
+			long dy = point[1] - neigh.getKeyPoint()[1];
+			if (Math.abs(dx) != Math.abs(dy))
+				return false;
 			return true;
 		}
 	}
