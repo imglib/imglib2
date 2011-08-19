@@ -38,11 +38,12 @@ import net.imglib2.ops.Neighborhood;
  * @author Barry DeZonia
  *
  */
-public class NullFunction<N extends Neighborhood<?>, T> implements Function<N,T> {
+public class NullFunction<INDEX, T> implements Function<INDEX,T> {
 
 	@Override
-	public void evaluate(N input, T output) { // TODO : Could set to NaN?
+	public void evaluate(Neighborhood<INDEX> region, INDEX point, T output) {
 		// do nothing
+		// TODO : Could set to NaN?
 	}
 
 	@Override

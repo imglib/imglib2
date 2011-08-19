@@ -39,7 +39,7 @@ import net.imglib2.ops.Neighborhood;
  * @author Barry DeZonia
  *
  */
-public class ConstantComplexFunction<N extends Neighborhood<?>> implements Function<N,Complex> {
+public class ConstantComplexFunction<INDEX> implements Function<INDEX,Complex> {
 	private double real;
 	private double imag;
 
@@ -49,7 +49,7 @@ public class ConstantComplexFunction<N extends Neighborhood<?>> implements Funct
 	}
 	
 	@Override
-	public void evaluate(N neigh, Complex c) {
+	public void evaluate(Neighborhood<INDEX> neigh, INDEX point, Complex c) {
 		c.setReal(real);
 		c.setImag(imag);
 	}

@@ -29,28 +29,27 @@ POSSIBILITY OF SUCH DAMAGE.
 
 package net.imglib2.ops.function.real;
 
-import net.imglib2.ops.DiscreteIterator;
-import net.imglib2.ops.DiscreteNeigh;
 import net.imglib2.ops.Function;
+import net.imglib2.ops.Neighborhood;
 import net.imglib2.ops.Real;
+import net.imglib2.ops.RegionIndexIterator;
 
 /**
  * 
  * @author Barry DeZonia
  *
  */
-public class RealAverageFunction implements Function<DiscreteNeigh,Real> {
+public class RealAverageFunction implements Function<long[],Real> {
 
-	private DiscreteNeigh region;
-	private Function<DiscreteNeigh,Real> otherFunc;
+	private Function<long[],Real> otherFunc;
 	private Real variable;
+	private RegionIndexIterator iter;
 	
-	public RealAverageFunction(DiscreteNeigh region,
-		Function<DiscreteNeigh,Real> otherFunc)
+	public RealAverageFunction(Function<long[],Real> otherFunc)
 	{
-		this.region = region.duplicate();
 		this.otherFunc = otherFunc;
 		this.variable = createVariable();
+		this.iter = null;
 	}
 	
 	@Override
@@ -59,15 +58,17 @@ public class RealAverageFunction implements Function<DiscreteNeigh,Real> {
 	}
 
 	@Override
-	public void evaluate(DiscreteNeigh input, Real output) {
-		DiscreteIterator iter = input.getIterator();
+	public void evaluate(Neighborhood<long[]> region, long[] point, Real output) {
+		if (iter == null)
+			iter = new RegionIndexIterator(region);
+		else
+			iter.relocate(region.getKeyPoint());
 		iter.reset();
 		double sum = 0;
 		double numElements = 0;
 		while (iter.hasNext()) {
 			iter.fwd();
-			region.moveTo(iter.getPosition());
-			otherFunc.evaluate(region, variable);
+			otherFunc.evaluate(region, iter.getPosition(), variable);
 			sum += variable.getReal();
 			numElements++;
 		}

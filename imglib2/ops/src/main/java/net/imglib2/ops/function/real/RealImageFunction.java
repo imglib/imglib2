@@ -31,8 +31,8 @@ package net.imglib2.ops.function.real;
 
 import net.imglib2.RandomAccess;
 import net.imglib2.img.Img;
-import net.imglib2.ops.DiscreteNeigh;
 import net.imglib2.ops.Function;
+import net.imglib2.ops.Neighborhood;
 import net.imglib2.ops.Real;
 import net.imglib2.type.numeric.RealType;
 
@@ -41,7 +41,7 @@ import net.imglib2.type.numeric.RealType;
  * @author Barry DeZonia
  *
  */
-public class RealImageFunction implements Function<DiscreteNeigh,Real> {
+public class RealImageFunction implements Function<long[],Real> {
 
 	private RandomAccess<? extends RealType<?>> accessor;
 	
@@ -55,8 +55,8 @@ public class RealImageFunction implements Function<DiscreteNeigh,Real> {
 	}
 
 	@Override
-	public void evaluate(DiscreteNeigh input, Real output) {
-		accessor.setPosition(input.getKeyPoint());
+	public void evaluate(Neighborhood<long[]> region, long[] point, Real output) {
+		accessor.setPosition(point);
 		double r = accessor.get().getRealDouble();
 		output.setReal(r);
 	}

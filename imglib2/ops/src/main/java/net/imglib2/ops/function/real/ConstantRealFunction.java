@@ -39,7 +39,7 @@ import net.imglib2.ops.Real;
  * @author Barry DeZonia
  *
  */
-public class ConstantRealFunction<N extends Neighborhood<?>> implements Function<N,Real> {
+public class ConstantRealFunction<INDEX> implements Function<INDEX,Real> {
 	private double real;
 
 	public ConstantRealFunction(double r) {
@@ -47,7 +47,7 @@ public class ConstantRealFunction<N extends Neighborhood<?>> implements Function
 	}
 	
 	@Override
-	public void evaluate(N neigh, Real r) {
+	public void evaluate(Neighborhood<INDEX> region, INDEX point, Real r) {
 		r.setReal(real);
 	}
 	

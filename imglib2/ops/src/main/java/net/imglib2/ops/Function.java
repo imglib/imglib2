@@ -34,8 +34,8 @@ package net.imglib2.ops;
  * @author Barry DeZonia
  *
  */
-public interface Function<INPUT, OUTPUT> {
-	void evaluate(INPUT input, OUTPUT output);
-	OUTPUT createVariable();
+public interface Function<INDEX_TYPE, OUTPUT_TYPE> {
+	void evaluate(Neighborhood<INDEX_TYPE> neigh, INDEX_TYPE point, OUTPUT_TYPE output);
+	OUTPUT_TYPE createVariable();
 }
 

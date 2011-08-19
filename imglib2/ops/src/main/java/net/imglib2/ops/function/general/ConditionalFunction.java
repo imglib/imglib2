@@ -39,24 +39,24 @@ import net.imglib2.ops.Neighborhood;
  * @author Barry DeZonia
  *
  */
-public class ConditionalFunction<N extends Neighborhood<?>, T> implements Function<N,T> {
+public class ConditionalFunction<INDEX, T> implements Function<INDEX,T> {
 
-	private Condition<N> condition;
-	private Function<N,T> f1;
-	private Function<N,T> f2;
+	private Condition<INDEX> condition;
+	private Function<INDEX,T> f1;
+	private Function<INDEX,T> f2;
 	
-	public ConditionalFunction(Condition<N> condition, Function<N,T> f1, Function<N,T> f2) {
+	public ConditionalFunction(Condition<INDEX> condition, Function<INDEX,T> f1, Function<INDEX,T> f2) {
 		this.condition = condition;
 		this.f1 = f1;
 		this.f2 = f2;
 	}
 	
 	@Override
-	public void evaluate(N input, T output) {
-		if (condition.isTrue(input))
-			f1.evaluate(input, output);
+	public void evaluate(Neighborhood<INDEX> region, INDEX point, T output) {
+		if (condition.isTrue(region, point))
+			f1.evaluate(region, point, output);
 		else
-			f2.evaluate(input, output);
+			f2.evaluate(region, point, output);
 	}
 
 	@Override

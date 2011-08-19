@@ -35,7 +35,7 @@ package net.imglib2.ops;
  * @author Barry DeZonia
  *
  */
-public class DiscreteIterator {
+public class RegionIndexIterator implements Iterator<long[]> {
 
 	private boolean invalid;
 	private long[] ctr;
@@ -45,10 +45,10 @@ public class DiscreteIterator {
 	private long[] maxes;
 	private long[] mins;
 	
-	public DiscreteIterator(long[] ctr, long[] negOffs, long[] posOffs) {
+	public RegionIndexIterator(long[] ctr, long[] negOffs, long[] posOffs) {
 		this.ctr = ctr.clone();
-		this.negOffs = negOffs;
-		this.posOffs = posOffs;
+		this.negOffs = negOffs.clone();
+		this.posOffs = posOffs.clone();
 		this.position = new long[ctr.length];
 		this.mins = new long[ctr.length];
 		this.maxes = new long[ctr.length];
@@ -56,6 +56,11 @@ public class DiscreteIterator {
 		reset();
 	}
 
+	public RegionIndexIterator(Neighborhood<long[]> neigh) {
+		this(neigh.getKeyPoint(), neigh.getNegativeOffsets(), neigh.getPositiveOffsets());
+	}
+	
+	@Override
 	public boolean hasNext() {
 		if (invalid) return true;
 		for (int i = 0; i < position.length; i++) {
@@ -65,6 +70,7 @@ public class DiscreteIterator {
 		return false;
 	}
 	
+	@Override
 	public boolean hasPrev() {
 		if (invalid) return true;
 		for (int i = 0; i < position.length; i++) {
@@ -74,6 +80,7 @@ public class DiscreteIterator {
 		return false;
 	}
 	
+	@Override
 	public void fwd() {
 		if (invalid) {
 			first();
@@ -88,6 +95,7 @@ public class DiscreteIterator {
 		throw new IllegalArgumentException("can't move fwd() beyond end of region");
 	}
 	
+	@Override
 	public void bck() {
 		if (invalid) {
 			last();
@@ -102,15 +110,18 @@ public class DiscreteIterator {
 		throw new IllegalArgumentException("can't move bck() before start of region");
 	}
 	
+	@Override
 	public void reset() {
 		invalid = true;
 	}
 	
+	@Override
 	public long[] getPosition() {
 		return position;
 	}
 	
-	public void moveTo(long[] keyPt) {
+	@Override
+	public void relocate(long[] keyPt) {
 		for (int i = 0; i < ctr.length; i++)
 			ctr[i] = keyPt[i];
 		setMinsAndMaxes();

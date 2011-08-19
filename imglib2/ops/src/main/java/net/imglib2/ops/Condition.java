@@ -35,7 +35,7 @@ package net.imglib2.ops;
  * @author Barry DeZonia
  *
  */
-public interface Condition<N extends Neighborhood<?>> {
-	boolean isTrue(N neigh);
+public interface Condition<INDEX> {
+	boolean isTrue(Neighborhood<INDEX> neigh, INDEX point);
 }
 

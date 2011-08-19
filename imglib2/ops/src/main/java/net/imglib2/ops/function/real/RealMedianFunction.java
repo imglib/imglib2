@@ -32,33 +32,33 @@ package net.imglib2.ops.function.real;
 import java.util.ArrayList;
 import java.util.Collections;
 
-import net.imglib2.ops.DiscreteIterator;
-import net.imglib2.ops.DiscreteNeigh;
 import net.imglib2.ops.Function;
+import net.imglib2.ops.Neighborhood;
 import net.imglib2.ops.Real;
+import net.imglib2.ops.RegionIndexIterator;
 
 /**
  * 
  * @author Barry DeZonia
  *
  */
-public class RealMedianFunction implements Function<DiscreteNeigh,Real> {
+public class RealMedianFunction implements Function<long[],Real> {
 
-	private DiscreteNeigh region;
-	private Function<DiscreteNeigh,Real> otherFunc;
+	private Function<long[],Real> otherFunc;
 	private Real variable;
 	private ArrayList<Double> values;
+	private RegionIndexIterator iter;
 	
-	public RealMedianFunction(DiscreteNeigh region,
-		Function<DiscreteNeigh,Real> otherFunc)
+	public RealMedianFunction(Neighborhood<long[]> region,
+		Function<long[],Real> otherFunc)
 	{
-		this.region = region.duplicate();
 		this.otherFunc = otherFunc;
 		this.variable = createVariable();
 		this.values = new ArrayList<Double>();
 		int numNeighs = getNeighborhoodSize(region);
 		for (int i = 0; i < numNeighs; i++)
 			this.values.add(0.0);
+		this.iter = null;
 	}
 	
 	@Override
@@ -67,14 +67,16 @@ public class RealMedianFunction implements Function<DiscreteNeigh,Real> {
 	}
 
 	@Override
-	public void evaluate(DiscreteNeigh input, Real output) {
-		DiscreteIterator iter = input.getIterator();
+	public void evaluate(Neighborhood<long[]> region, long[] point, Real output) {
+		if (iter == null)
+			iter = new RegionIndexIterator(region);
+		else
+			iter.relocate(region.getKeyPoint());
 		iter.reset();
 		int numElements = 0;
 		while (iter.hasNext()) {
 			iter.fwd();
-			region.moveTo(iter.getPosition());
-			otherFunc.evaluate(region, variable);
+			otherFunc.evaluate(region, iter.getPosition(), variable);
 			values.set(numElements++, variable.getReal());
 		}
 		Collections.sort(values);
@@ -89,7 +91,7 @@ public class RealMedianFunction implements Function<DiscreteNeigh,Real> {
 		}
 	}
 
-	private int getNeighborhoodSize(DiscreteNeigh neigh) {
+	private int getNeighborhoodSize(Neighborhood<long[]> neigh) {
 		long[] negOffs = neigh.getNegativeOffsets();
 		long[] posOffs = neigh.getPositiveOffsets();
 		int size = 1;

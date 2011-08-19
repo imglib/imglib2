@@ -36,8 +36,6 @@ package net.imglib2.ops;
  */
 public class DiscreteNeigh extends Neighborhood<long[]> {
 
-	private DiscreteIterator iterator;
-	
 	public DiscreteNeigh(long[] keyPt, long[] negOffs, long[] posOffs) {
 		super(keyPt, negOffs, posOffs);
 		// TODO - do this in base class
@@ -45,30 +43,22 @@ public class DiscreteNeigh extends Neighborhood<long[]> {
 			if ((negOffs[i] < 0) || (posOffs[i] < 0))
 				throw new IllegalArgumentException("DiscreteNeigh() : offsets must be nonnegative in magnitude");
 		}
-		iterator = null; // create lazily: speeds moveTo()
 	}
 	
+	@Override
 	public DiscreteNeigh duplicate() {
 		return new DiscreteNeigh(
 			getKeyPoint().clone(),
 			getNegativeOffsets().clone(),
 			getPositiveOffsets().clone());
 	}
-	
+
 	@Override
-	public void moveTo(long[] newKeyPoint) {
-		super.moveTo(newKeyPoint);
-		if (iterator != null)
-			iterator.moveTo(newKeyPoint);
+	public void restrict(int dimNumber, long[] twoValues) {
+		if ((twoValues[0] < 0) || (twoValues[1] < 0))
+			throw new IllegalArgumentException("DiscreteNeigh : offsets out of range: each one must be >= 0");
+		getNegativeOffsets()[dimNumber] = twoValues[0];
+		getPositiveOffsets()[dimNumber] = twoValues[1];
 	}
-	
-	public DiscreteIterator getIterator() {
-		if (iterator == null)
-			iterator = new DiscreteIterator(
-				getKeyPoint(), getNegativeOffsets(), getPositiveOffsets());
-		return iterator;
-	}
-	
-	// TODO - restrict axis ranges one at a time. do here or in superclass.
 }
 

@@ -31,6 +31,7 @@ package net.imglib2.ops.function.general;
 
 import net.imglib2.ops.DiscreteNeigh;
 import net.imglib2.ops.Function;
+import net.imglib2.ops.Neighborhood;
 
 
 /**
@@ -38,14 +39,14 @@ import net.imglib2.ops.Function;
  * @author Barry DeZonia
  *
  */
-public class DiscreteTranslationFunction<T> implements Function<DiscreteNeigh,T> {
+public class DiscreteTranslationFunction<T> implements Function<long[],T> {
 
-	private Function<DiscreteNeigh,T> otherFunc;
+	private Function<long[],T> otherFunc;
 	private long[] deltas;
 	private long[] localCtr;
 	private DiscreteNeigh localRegion;
 	
-	public DiscreteTranslationFunction(Function<DiscreteNeigh,T> otherFunc,
+	public DiscreteTranslationFunction(Function<long[],T> otherFunc,
 		DiscreteNeigh region, long[] deltas)
 	{
 		this.otherFunc = otherFunc;
@@ -55,12 +56,12 @@ public class DiscreteTranslationFunction<T> implements Function<DiscreteNeigh,T>
 	}
 	
 	@Override
-	public void evaluate(DiscreteNeigh input, T output) {
-		long[] keyPt = input.getKeyPoint();
+	public void evaluate(Neighborhood<long[]> region, long[] point, T output) {
+		long[] keyPt = region.getKeyPoint();
 		for (int i = 0; i < localCtr.length; i++)
 			localCtr[i] = keyPt[i] + deltas[i];
 		localRegion.moveTo(localCtr);
-		otherFunc.evaluate(localRegion, output);
+		otherFunc.evaluate(localRegion, point, output);
 	}
 
 	@Override

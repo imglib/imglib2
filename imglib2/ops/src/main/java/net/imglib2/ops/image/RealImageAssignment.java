@@ -32,10 +32,10 @@ package net.imglib2.ops.image;
 import net.imglib2.RandomAccess;
 import net.imglib2.img.Img;
 import net.imglib2.ops.Condition;
-import net.imglib2.ops.DiscreteIterator;
-import net.imglib2.ops.DiscreteNeigh;
 import net.imglib2.ops.Function;
+import net.imglib2.ops.Neighborhood;
 import net.imglib2.ops.Real;
+import net.imglib2.ops.RegionIndexIterator;
 import net.imglib2.type.numeric.RealType;
 
 // In old AssignOperation could do many things
@@ -64,12 +64,12 @@ import net.imglib2.type.numeric.RealType;
 public class RealImageAssignment {
 
 	private RandomAccess<? extends RealType<?>> accessor;
-	private DiscreteNeigh neigh;
-	private Function<DiscreteNeigh,Real> function;
-	private Condition<DiscreteNeigh> condition;
+	private Neighborhood<long[]> neigh;
+	private Function<long[],Real> function;
+	private Condition<long[]> condition;
 	
-	public RealImageAssignment(Img<? extends RealType<?>> image, DiscreteNeigh neigh,
-			Function<DiscreteNeigh,Real> function)
+	public RealImageAssignment(Img<? extends RealType<?>> image, Neighborhood<long[]> neigh,
+			Function<long[],Real> function)
 	{
 		this.accessor = image.randomAccess();
 		this.neigh = neigh;
@@ -77,7 +77,7 @@ public class RealImageAssignment {
 		this.condition = null;
 	}
 	
-	public void setCondition(Condition<DiscreteNeigh> condition) {
+	public void setCondition(Condition<long[]> condition) {
 		this.condition = condition;
 	}
 	
@@ -86,15 +86,13 @@ public class RealImageAssignment {
 	// - make interruptible
 	
 	public void assign() {
-		DiscreteNeigh region = neigh.duplicate();
 		Real output = function.createVariable();
-		DiscreteIterator iter = neigh.getIterator();
+		RegionIndexIterator iter = new RegionIndexIterator(neigh);
 		while (iter.hasNext()) {
 			iter.fwd();
-			region.moveTo(iter.getPosition());
-			boolean proceed = (condition == null) || (condition.isTrue(region));
+			boolean proceed = (condition == null) || (condition.isTrue(neigh,iter.getPosition()));
 			if (proceed) {
-				function.evaluate(region, output);
+				function.evaluate(neigh, iter.getPosition(), output);
 				accessor.setPosition(iter.getPosition());
 				accessor.get().setReal(output.getReal());
 			}

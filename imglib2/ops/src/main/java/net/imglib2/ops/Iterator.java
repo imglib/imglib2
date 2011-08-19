@@ -27,10 +27,7 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE.
 */
 
-package net.imglib2.ops.condition;
-
-import net.imglib2.ops.Condition;
-import net.imglib2.ops.Neighborhood;
+package net.imglib2.ops;
 
 
 /**
@@ -38,17 +35,12 @@ import net.imglib2.ops.Neighborhood;
  * @author Barry DeZonia
  *
  */
-public class NotCondition<INDEX> implements Condition<INDEX> {
-
-	Condition<INDEX> cond1;
-
-	NotCondition(Condition<INDEX> cond1) {
-		this.cond1 = cond1;
-	}
-	
-	@Override
-	public boolean isTrue(Neighborhood<INDEX> neigh, INDEX point) {
-		return ! cond1.isTrue(neigh, point);
-	}
-
+public interface Iterator<INDEX> {
+	boolean hasNext();
+	boolean hasPrev();
+	void fwd();
+	void bck();
+	void reset();
+	void relocate(INDEX newKeyPoint);
+	INDEX getPosition();
 }

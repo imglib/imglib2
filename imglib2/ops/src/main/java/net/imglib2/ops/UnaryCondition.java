@@ -35,21 +35,21 @@ package net.imglib2.ops;
  * @author Barry DeZonia
  *
  */
-public class UnaryCondition<N extends Neighborhood<?>, T> implements Condition<N> {
+public class UnaryCondition<INDEX, T> implements Condition<INDEX> {
 
-	private Function<N,T> f1;
+	private Function<INDEX,T> f1;
 	private T f1Val;
 	private UnaryRelation<T> relation;
 
-	public UnaryCondition(Function<N,T> f1, UnaryRelation<T> relation) {
+	public UnaryCondition(Function<INDEX,T> f1, UnaryRelation<T> relation) {
 		this.f1 = f1;
 		this.f1Val = f1.createVariable();
 		this.relation = relation;
 	}
 	
 	@Override
-	public boolean isTrue(N neigh) {
-		f1.evaluate(neigh, f1Val);
+	public boolean isTrue(Neighborhood<INDEX> neigh, INDEX point) {
+		f1.evaluate(neigh, point, f1Val);
 		return relation.holds(f1Val);
 	}
 	

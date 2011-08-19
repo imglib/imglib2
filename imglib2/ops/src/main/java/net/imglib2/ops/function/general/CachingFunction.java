@@ -30,8 +30,8 @@ POSSIBILITY OF SUCH DAMAGE.
 package net.imglib2.ops.function.general;
 
 import net.imglib2.ops.DataCopier;
-import net.imglib2.ops.DiscreteNeigh;
 import net.imglib2.ops.Function;
+import net.imglib2.ops.Neighborhood;
 
 
 /**
@@ -45,19 +45,18 @@ import net.imglib2.ops.Function;
  *  
  * @author Barry DeZonia
  */
-public class CachingFunction<T extends DataCopier<T>> implements Function<DiscreteNeigh,T> {
+public class CachingFunction<T extends DataCopier<T>> implements Function<long[],T> {
 
 	// -- instance variables --
 	
-	private Function<DiscreteNeigh,T> otherFunc;
-	private long[] lastCtr;
-	private long[] lastNegOffs;
-	private long[] lastPosOffs;
+	private Function<long[],T> otherFunc;
+	private long[] lastKeyPoint;
+	private long[] lastPoint;
 	private T lastValue;
 
 	// -- constructor --
 	
-	public CachingFunction(Function<DiscreteNeigh,T> otherFunc) {
+	public CachingFunction(Function<long[],T> otherFunc) {
 		this.otherFunc = otherFunc;
 		lastValue = createVariable();
 	}
@@ -65,16 +64,15 @@ public class CachingFunction<T extends DataCopier<T>> implements Function<Discre
 	// -- public interface --
 	
 	@Override
-	public void evaluate(DiscreteNeigh input, T output) {
-		if (lastCtr == null) {
-			lastCtr = new long[input.getNumDims()];
-			lastNegOffs = new long[input.getNumDims()];
-			lastPosOffs = new long[input.getNumDims()];
-			recordInput(input);
+	public void evaluate(Neighborhood<long[]> region, long[] point, T output) {
+		if (lastKeyPoint == null) {
+			lastKeyPoint = region.getKeyPoint().clone();
+			lastPoint = point.clone();
+			otherFunc.evaluate(region, point, lastValue);
 		}
-		else if (!sameInput(input)) {
-			recordInput(input);
-			otherFunc.evaluate(input, lastValue);
+		else if (!sameInput(region, point)) {
+			recordInput(region, point);
+			otherFunc.evaluate(region, point, lastValue);
 		}
 		output.setValue(lastValue);
 	}
@@ -86,33 +84,28 @@ public class CachingFunction<T extends DataCopier<T>> implements Function<Discre
 
 	// -- private helpers --
 	
-	private boolean sameInput(DiscreteNeigh input) {
-		long[] tmp;
-		tmp = input.getKeyPoint();
-		for (int i = 0; i < tmp.length; i++)
-			if (tmp[i] != lastCtr[i])
+	private boolean sameInput(Neighborhood<long[]> region, long[] point) {
+		// NOTE - we will expect that this code only ever called with same region
+		// extents so we won't test negative and positive offsets
+		long[] input, cache;
+		input = region.getKeyPoint();
+		cache = lastKeyPoint;
+		for (int i = 0; i < cache.length; i++)
+			if (input[i] != cache[i])
 				return false;
-		tmp = input.getNegativeOffsets();
-		for (int i = 0; i < tmp.length; i++)
-			if (tmp[i] != lastNegOffs[i])
-				return false;
-		tmp = input.getPositiveOffsets();
-		for (int i = 0; i < tmp.length; i++)
-			if (tmp[i] != lastPosOffs[i])
+		input = point;
+		cache = lastPoint;
+		for (int i = 0; i < cache.length; i++)
+			if (input[i] != cache[i])
 				return false;
 		return true;
 	}
 	
-	private void recordInput(DiscreteNeigh input) {
-		long[] tmp;
-		tmp = input.getKeyPoint();
-		for (int i = 0; i < tmp.length; i++)
-			lastCtr[i] = tmp[i];
-		tmp = input.getNegativeOffsets();
-		for (int i = 0; i < tmp.length; i++)
-			lastNegOffs[i] = tmp[i];
-		tmp = input.getPositiveOffsets();
-		for (int i = 0; i < tmp.length; i++)
-			lastPosOffs[i] = tmp[i];
+	private void recordInput(Neighborhood<long[]> region, long[] point) {
+		long[] keyPt = region.getKeyPoint();
+		for (int i = 0; i < lastPoint.length; i++) {
+			lastKeyPoint[i] = keyPt[i];
+			lastPoint[i] = point[i];
+		}
 	}
 }

@@ -76,5 +76,8 @@ public abstract class Neighborhood<ARRAY> {
 			keyPoint = newKeyPoint;
 		}
 	}
+
+	abstract public Neighborhood<ARRAY> duplicate();
+	abstract public void restrict(int dimNumber, ARRAY twoValues);
 }
 

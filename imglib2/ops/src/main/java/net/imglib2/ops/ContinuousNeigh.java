@@ -46,11 +46,20 @@ public class ContinuousNeigh extends Neighborhood<double[]> {
 		}
 	}
 
+	@Override
 	public ContinuousNeigh duplicate() {
 		return new ContinuousNeigh(
 			getKeyPoint().clone(),
 			getNegativeOffsets().clone(),
 			getPositiveOffsets().clone());
+	}
+
+	@Override
+	public void restrict(int dimNumber, double[] twoValues) {
+		if ((twoValues[0] < 0) || (twoValues[1] < 0))
+			throw new IllegalArgumentException("ContinuousNeigh : offsets out of range: each one must be >= 0");
+		getNegativeOffsets()[dimNumber] = twoValues[0];
+		getPositiveOffsets()[dimNumber] = twoValues[1];
 	}
 }
 

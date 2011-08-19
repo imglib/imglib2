@@ -40,19 +40,19 @@ import net.imglib2.ops.Real;
  * @author Barry DeZonia
  *
  */
-public class ComplexAdapterFunction<N extends Neighborhood<?>> implements Function<N,Complex> {
+public class ComplexAdapterFunction<INDEX> implements Function<INDEX,Complex> {
 
-	private Function<N,Real> realFunc;
+	private Function<INDEX,Real> realFunc;
 	private Real real;
 	
-	public ComplexAdapterFunction(Function<N,Real> realFunc) {
+	public ComplexAdapterFunction(Function<INDEX,Real> realFunc) {
 		this.realFunc = realFunc;
 		this.real = new Real();
 	}
 	
 	@Override
-	public void evaluate(N neigh, Complex value) {
-		realFunc.evaluate(neigh, real);
+	public void evaluate(Neighborhood<INDEX> neigh, INDEX point, Complex value) {
+		realFunc.evaluate(neigh, point, real);
 		value.setReal(real.getReal());
 		value.setImag(0);
 	}

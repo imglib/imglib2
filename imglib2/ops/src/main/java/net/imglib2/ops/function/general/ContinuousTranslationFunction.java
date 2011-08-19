@@ -29,7 +29,7 @@ POSSIBILITY OF SUCH DAMAGE.
 
 package net.imglib2.ops.function.general;
 
-import net.imglib2.ops.ContinuousNeigh;
+import net.imglib2.ops.Neighborhood;
 import net.imglib2.ops.Function;
 
 
@@ -38,15 +38,15 @@ import net.imglib2.ops.Function;
  * @author Barry DeZonia
  *
  */
-public class ContinuousTranslationFunction<T> implements Function<ContinuousNeigh,T> {
+public class ContinuousTranslationFunction<T> implements Function<double[],T> {
 
-	private Function<ContinuousNeigh,T> otherFunc;
+	private Function<double[],T> otherFunc;
 	private double[] deltas;
 	private double[] localCtr;
-	private ContinuousNeigh localRegion;
+	private Neighborhood<double[]> localRegion;
 	
-	public ContinuousTranslationFunction(Function<ContinuousNeigh,T> otherFunc,
-		ContinuousNeigh region, double[] deltas)
+	public ContinuousTranslationFunction(Function<double[],T> otherFunc,
+		Neighborhood<double[]> region, double[] deltas)
 	{
 		this.otherFunc = otherFunc;
 		this.deltas = deltas;
@@ -55,12 +55,12 @@ public class ContinuousTranslationFunction<T> implements Function<ContinuousNeig
 	}
 	
 	@Override
-	public void evaluate(ContinuousNeigh input, T output) {
-		double[] keyPt = input.getKeyPoint();
+	public void evaluate(Neighborhood<double[]> region, double[] point, T output) {
+		double[] keyPt = region.getKeyPoint();
 		for (int i = 0; i < localCtr.length; i++)
 			localCtr[i] = keyPt[i] + deltas[i];
 		localRegion.moveTo(localCtr);
-		otherFunc.evaluate(localRegion, output);
+		otherFunc.evaluate(localRegion, point, output);
 	}
 
 	@Override

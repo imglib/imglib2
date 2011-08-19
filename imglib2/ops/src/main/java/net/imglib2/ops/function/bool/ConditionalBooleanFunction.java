@@ -40,18 +40,18 @@ import net.imglib2.ops.Neighborhood;
  * @author Barry DeZonia
  *
  */
-public class ConditionalBooleanFunction<N extends Neighborhood<?>>
-	implements Function<N,Bool>
+public class ConditionalBooleanFunction<INDEX>
+	implements Function<INDEX,Bool>
 {
-	private Condition<N> condition;
+	private Condition<INDEX> condition;
 
-	public ConditionalBooleanFunction(Condition<N> cond) {
+	public ConditionalBooleanFunction(Condition<INDEX> cond) {
 		this.condition = cond;
 	}
 
 	@Override
-	public void evaluate(N neigh, Bool b) {
-		b.setBool(condition.isTrue(neigh));
+	public void evaluate(Neighborhood<INDEX> neigh, INDEX point, Bool b) {
+		b.setBool(condition.isTrue(neigh, point));
 	}
 	
 	@Override

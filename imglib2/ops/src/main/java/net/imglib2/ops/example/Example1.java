@@ -29,14 +29,18 @@ POSSIBILITY OF SUCH DAMAGE.
 
 package net.imglib2.ops.example;
 
+import net.imglib2.RandomAccess;
+import net.imglib2.img.Img;
+import net.imglib2.img.array.ArrayImgFactory;
 import net.imglib2.ops.DiscreteNeigh;
 import net.imglib2.ops.Function;
 import net.imglib2.ops.Real;
 import net.imglib2.ops.function.general.GeneralBinaryFunction;
 import net.imglib2.ops.function.real.ConstantRealFunction;
 import net.imglib2.ops.function.real.RealImageFunction;
-import net.imglib2.ops.image.RealImage;
 import net.imglib2.ops.operation.binary.real.RealAdd;
+import net.imglib2.type.numeric.RealType;
+import net.imglib2.type.numeric.real.DoubleType;
 
 
 /**
@@ -53,19 +57,24 @@ public class Example1 {
 		return Math.abs(d1-d2) < 0.00001;
 	}
 
-	private static RealImage makeInputImage() {
-		RealImage image = new RealImage(new long[]{XSIZE,YSIZE}, new String[]{"X","Y"});
-		long[] idx = new long[2];
-		Real real = new Real();
+	private static Img<DoubleType> allocateImage() {
+		final ArrayImgFactory<DoubleType> imgFactory = new ArrayImgFactory<DoubleType>();
+		return imgFactory.create(new long[]{XSIZE,YSIZE}, new DoubleType());
+	}
+
+	private static Img<? extends RealType<?>> makeInputImage() {
+		Img<? extends RealType<?>> inputImg = allocateImage();
+		RandomAccess<? extends RealType<?>> accessor = inputImg.randomAccess();
+		long[] pos = new long[2];
 		for (int x = 0; x < XSIZE; x++) {
 			for (int y = 0; y < YSIZE; y++) {
-				idx[0] = x;
-				idx[1] = y;
-				real.setReal(x+y);
-				image.setReal(idx,real);
-			}
+				pos[0] = x;
+				pos[1] = y;
+				accessor.setPosition(pos);
+				accessor.get().setReal(x+y);
+			}			
 		}
-		return image;
+		return inputImg;
 	}
 	
 	// calculate output values by adding 15 to the values of an input image
@@ -74,17 +83,16 @@ public class Example1 {
 		
 		boolean success = true;
 		
-		/*
-		RealImage inputImage = makeInputImage();
+		Img<? extends RealType<?>> inputImage = makeInputImage();
 		
 		DiscreteNeigh neighborhood = new DiscreteNeigh(new long[2], new long[2], new long[2]);
 		
-		Function<DiscreteNeigh,Real> constant = new ConstantRealFunction<DiscreteNeigh>(15);
+		Function<long[],Real> constant = new ConstantRealFunction<long[]>(15);
 		
-		Function<DiscreteNeigh,Real> image = new RealImageFunction(inputImage);
+		Function<long[],Real> image = new RealImageFunction(inputImage);
 
-		Function<DiscreteNeigh,Real> additionFunc =
-			new GeneralBinaryFunction<DiscreteNeigh, Real>(constant, image, new RealAdd());
+		Function<long[],Real> additionFunc =
+			new GeneralBinaryFunction<long[], Real>(constant, image, new RealAdd());
 		
 		long[] index = neighborhood.getKeyPoint();
 		
@@ -93,7 +101,7 @@ public class Example1 {
 			for (int y = 0; y < YSIZE; y++) {
 				index[0] = x;
 				index[1] = y;
-				additionFunc.evaluate(neighborhood, pointValue);
+				additionFunc.evaluate(neighborhood, neighborhood.getKeyPoint(), pointValue);
 				if (! veryClose(pointValue.getReal(), (x+y+15))) {
 					System.out.println(" FAILURE at ("+x+","+y+"): expected ("
 							+(x+y+15)+") actual ("+pointValue.getReal()+")");
@@ -101,7 +109,6 @@ public class Example1 {
 				}
 			}
 		}
-		*/
 		
 		return success;
 	}
