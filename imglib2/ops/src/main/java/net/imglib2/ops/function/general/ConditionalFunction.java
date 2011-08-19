@@ -45,7 +45,7 @@ public class ConditionalFunction<N extends Neighborhood<?>, T> implements Functi
 	private Function<N,T> f1;
 	private Function<N,T> f2;
 	
-	private ConditionalFunction(Condition<N> condition, Function<N,T> f1, Function<N,T> f2) {
+	public ConditionalFunction(Condition<N> condition, Function<N,T> f1, Function<N,T> f2) {
 		this.condition = condition;
 		this.f1 = f1;
 		this.f2 = f2;
