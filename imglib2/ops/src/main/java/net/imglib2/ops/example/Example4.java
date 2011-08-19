@@ -6,12 +6,12 @@ import net.imglib2.img.array.ArrayImgFactory;
 import net.imglib2.ops.Condition;
 import net.imglib2.ops.DiscreteNeigh;
 import net.imglib2.ops.Function;
-import net.imglib2.ops.Neighborhood;
 import net.imglib2.ops.Real;
-import net.imglib2.ops.RegionIndexIterator;
+import net.imglib2.ops.condition.OnTheXYCrossCondition;
 import net.imglib2.ops.function.general.ConditionalFunction;
 import net.imglib2.ops.function.real.ConstantRealFunction;
 import net.imglib2.ops.function.real.RealImageFunction;
+import net.imglib2.ops.function.real.RealProductFunction;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.real.DoubleType;
 
@@ -55,58 +55,6 @@ public class Example4 {
 		return inputImg;
 	}
 	
-	private class ProductFunction implements Function<long[],Real> {
-
-		private Function<long[],Real> otherFunc;
-		private Real variable;
-		
-		public ProductFunction(Function<long[],Real> otherFunc) {
-			this.otherFunc = otherFunc;
-			this.variable = createVariable();
-		}
-		
-		@Override
-		public void evaluate(Neighborhood<long[]> region, long[] point, Real output) {
-			double product = 1;
-			RegionIndexIterator iter = new RegionIndexIterator(region);
-			while (iter.hasNext()) {
-				iter.fwd();
-				otherFunc.evaluate(region, iter.getPosition(), variable);
-				product *= variable.getReal();
-			}
-			output.setReal(product);
-		}
-
-		@Override
-		public Real createVariable() {
-			return new Real();
-		}
-		
-	}
-
-	// Tricky part
-	//   condition is only true for some values relative to outermost neighborhood keypoint.
-	//   condition does not know outermost reference point since its nested in a neighborhood
-	//   local to ProductFunction. maybe key point needs to get passed down in.
-
-	// might need a somewhat large change
-	//   a function is evaluated at a point inside a neighborhood and dumping into a variable
-	//   func.eval(point,neigh,variable);
-	// and Condition would be true at a point in a neigh
-	//    cond.isTrue(point,neigh);
-	
-	private class OnTheXYCrossCondition implements Condition<long[]> {
-		
-		@Override
-		public boolean isTrue(Neighborhood<long[]> neigh, long[] point) {
-			long dx = point[0] - neigh.getKeyPoint()[0];
-			long dy = point[1] - neigh.getKeyPoint()[1];
-			if (Math.abs(dx) != Math.abs(dy))
-				return false;
-			return true;
-		}
-	}
-	
 	private boolean testCrossNeighborhoodProduct() {
 		boolean success = true;
 		
@@ -117,7 +65,7 @@ public class Example4 {
 		Function<long[],Real> input = new RealImageFunction(inputImg);
 		Function<long[],Real> one = new ConstantRealFunction<long[]>(1);
 		Function<long[],Real> conditionalFunc = new ConditionalFunction<long[],Real>(condition, input, one);
-		Function<long[],Real> prodFunc = new ProductFunction(conditionalFunc); 
+		Function<long[],Real> prodFunc = new RealProductFunction(conditionalFunc); 
 		long[] index = new long[2];
 		Real output = new Real();
 		for (int x = 1; x < XSIZE-1; x++) {
