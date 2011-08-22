@@ -55,7 +55,7 @@ public class Example4 {
 		return inputImg;
 	}
 	
-	private boolean testCrossNeighborhoodProduct() {
+	private static boolean testCrossNeighborhoodProduct() {
 		boolean success = true;
 		
 		Img<? extends RealType<?>> inputImg = makeInputImage();
@@ -86,7 +86,7 @@ public class Example4 {
 	
 	public static void main(String[] args) {
 		System.out.println("Example4");
-		if (new Example4().testCrossNeighborhoodProduct())
+		if (testCrossNeighborhoodProduct())
 			System.out.println(" Successful test");
 	}
 }
