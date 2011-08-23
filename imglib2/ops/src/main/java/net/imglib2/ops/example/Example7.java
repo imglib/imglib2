@@ -142,7 +142,7 @@ public class Example7 {
 		Function<long[],Real> function =
 			new ConditionalFunction<long[],Real>(xValCond, xSquaredFunc, yLineFunc);
 		Img<? extends RealType<?>> image = allocateImage();
-		DiscreteNeigh neigh = new DiscreteNeigh(new long[2], new long[2], new long[2]);
+		DiscreteNeigh neigh = new DiscreteNeigh(new long[2], new long[2], new long[]{XSIZE,YSIZE});
 		RealImageAssignment assigner = new RealImageAssignment(image, neigh, function);
 		Condition<long[]> circleCond = new CircularCondition();
 		Condition<long[]> sumCond = new XYSumCondition();
