@@ -118,7 +118,7 @@ public class Example7 {
 			long dx = point[0] - ctrX;
 			long dy = point[1] - ctrY;
 			double dist = Math.sqrt(dx*dx + dy*dy);
-			return dist < CIRCLE_RADIUS;
+			return dist <= CIRCLE_RADIUS;
 		}
 		
 	}
