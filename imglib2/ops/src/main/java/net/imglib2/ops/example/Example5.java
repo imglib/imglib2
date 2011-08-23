@@ -40,7 +40,7 @@ import net.imglib2.ops.function.real.RealConvolutionFunction;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.real.DoubleType;
 
-// a 3x3x3 median example
+// a 3x3 convolution example
 
 /**
  * 
