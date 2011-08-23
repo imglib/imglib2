@@ -60,14 +60,55 @@ public class Example6 {
 	private static final int XSIZE = 250;
 	private static final int YSIZE = 400;
 	
-	private class RealInterpolatorFunction implements Function<double[],Real> {
+	private static Img<DoubleType> allocateImage() {
+		final ArrayImgFactory<DoubleType> imgFactory = new ArrayImgFactory<DoubleType>();
+		return imgFactory.create(new long[]{XSIZE,YSIZE}, new DoubleType());
+	}
+
+	private static Img<? extends RealType<?>> makeInputImage() {
+		Img<? extends RealType<?>> inputImg = allocateImage();
+		RandomAccess<? extends RealType<?>> accessor = inputImg.randomAccess();
+		long[] pos = new long[2];
+		for (int x = 0; x < XSIZE; x++) {
+			for (int y = 0; y < YSIZE; y++) {
+				pos[0] = x;
+				pos[1] = y;
+				accessor.setPosition(pos);
+				accessor.get().setReal(x + 2*y);
+			}			
+		}
+		return inputImg;
+	}
+
+	private static boolean veryClose(double d1, double d2) {
+		return Math.abs(d1-d2) < 0.00001;
+	}
+
+	private static double interpolate(double ix, double iy, double ul, double ur, double ll, double lr) {
+		double value = 0;
+		value += (1-ix)*(1-iy)*ul;
+		value += (1-ix)*(iy)*ll;
+		value += (ix)*(1-iy)*ur;
+		value += (ix)*(iy)*lr;
+		return value;
+	}
+
+	private static double expectedValue(int x, int y, double ix, double iy) {
+		double ul = (x+0) + 2*(y+0);
+		double ur = (x+1) + 2*(y+0);
+		double ll = (x+0) + 2*(y+1);
+		double lr = (x+1) + 2*(y+1);
+		return interpolate(ix,iy,ul,ur,ll,lr);
+	}
+	
+	private static class RealBilinearInterpolatorFunction implements Function<double[],Real> {
 
 		private DiscreteNeigh discreteNeigh;
 		private Function<long[],Real> discreteFunc;
 		private long[] index;
 		private Real ul, ur, ll, lr;
 		
-		public RealInterpolatorFunction(Function<long[],Real> discreteFunc) {
+		public RealBilinearInterpolatorFunction(Function<long[],Real> discreteFunc) {
 			this.discreteFunc = discreteFunc;
 			this.index = new long[2];
 			this.ul = createVariable();
@@ -94,7 +135,7 @@ public class Example6 {
 			getValue((x+1),(y+0),ur);
 			getValue((x+0),(y+1),ll);
 			getValue((x+1),(y+1),lr);
-			double value = interpolatedValue(ix,iy);
+			double value = interpolate(ix, iy, ul.getReal(), ur.getReal(), ll.getReal(), lr.getReal());
 			output.setReal(value);
 		}
 		
@@ -103,10 +144,6 @@ public class Example6 {
 			index[1] = y;
 			discreteNeigh.moveTo(index);
 			discreteFunc.evaluate(discreteNeigh, index, output);
-		}
-		
-		private double interpolatedValue(double ix, double iy) {
-			return interpolate(ix, iy, ul.getReal(), ur.getReal(), ll.getReal(), lr.getReal());
 		}
 		
 		private void initNeigh(Neighborhood<double[]> cNeigh) {
@@ -124,52 +161,11 @@ public class Example6 {
 		}
 	}
 
-	private static double interpolate(double ix, double iy, double ul, double ur, double ll, double lr) {
-		double value = 0;
-		value += (1-ix)*(1-iy)*ul;
-		value += (1-ix)*(iy)*ll;
-		value += (ix)*(1-iy)*ur;
-		value += (ix)*(iy)*lr;
-		return value;
-	}
-
-	private static boolean veryClose(double d1, double d2) {
-		return Math.abs(d1-d2) < 0.00001;
-	}
-
-	private static double expectedValue(int x, int y, double ix, double iy) {
-		double ul = (x+0) + 2*(y+0);
-		double ur = (x+1) + 2*(y+0);
-		double ll = (x+0) + 2*(y+1);
-		double lr = (x+1) + 2*(y+1);
-		return interpolate(ix,iy,ul,ur,ll,lr);
-	}
-	
-	private static Img<DoubleType> allocateImage() {
-		final ArrayImgFactory<DoubleType> imgFactory = new ArrayImgFactory<DoubleType>();
-		return imgFactory.create(new long[]{XSIZE,YSIZE}, new DoubleType());
-	}
-
-	private static Img<? extends RealType<?>> makeInputImage() {
-		Img<? extends RealType<?>> inputImg = allocateImage();
-		RandomAccess<? extends RealType<?>> accessor = inputImg.randomAccess();
-		long[] pos = new long[2];
-		for (int x = 0; x < XSIZE; x++) {
-			for (int y = 0; y < YSIZE; y++) {
-				pos[0] = x;
-				pos[1] = y;
-				accessor.setPosition(pos);
-				accessor.get().setReal(x + 2*y);
-			}			
-		}
-		return inputImg;
-	}
-
 	private static boolean testCase(double ix, double iy) {
 		boolean success = true;
 		Img<? extends RealType<?>> inputImg = makeInputImage();
 		Function<long[],Real> input = new RealImageFunction(inputImg);
-		Function<double[],Real> interpolator = new Example6().new RealInterpolatorFunction(input);
+		Function<double[],Real> interpolator = new RealBilinearInterpolatorFunction(input);
 		ContinuousNeigh neigh = new ContinuousNeigh(new double[2], new double[2], new double[2]);
 		Real variable = new Real();
 		double[] point = new double[2];
