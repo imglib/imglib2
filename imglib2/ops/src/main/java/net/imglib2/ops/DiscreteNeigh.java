@@ -60,5 +60,13 @@ public class DiscreteNeigh extends Neighborhood<long[]> {
 		getNegativeOffsets()[dimNumber] = twoValues[0];
 		getPositiveOffsets()[dimNumber] = twoValues[1];
 	}
+
+	public long size() {
+		long size = 1;
+		for (int i = 0; i < getNumDims(); i++) {
+			size *= 1 + getNegativeOffsets()[i] + getPositiveOffsets()[i];
+		}
+		return size;
+	}
 }
 

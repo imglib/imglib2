@@ -87,7 +87,7 @@ public class Example3 {
 		Img<? extends RealType<?>> image = makeInputImage();
 		DiscreteNeigh inputNeigh = new DiscreteNeigh(new long[3], new long[]{1,1,1}, new long[]{1,1,1});
 		Function<long[],Real> imageFunc = new RealImageFunction(image);
-		Function<long[],Real> medFunc = new RealMedianFunction(inputNeigh,imageFunc);
+		Function<long[],Real> medFunc = new RealMedianFunction(imageFunc);
 		long[] currPt = new long[3];
 		Real variable = new Real();
 		for (int x = 1; x < XSIZE-1; x++) {

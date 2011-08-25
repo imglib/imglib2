@@ -49,15 +49,11 @@ public class RealMedianFunction implements Function<long[],Real> {
 	private ArrayList<Double> values;
 	private RegionIndexIterator iter;
 	
-	public RealMedianFunction(Neighborhood<long[]> region,
-		Function<long[],Real> otherFunc)
+	public RealMedianFunction(Function<long[],Real> otherFunc)
 	{
 		this.otherFunc = otherFunc;
 		this.variable = createVariable();
 		this.values = new ArrayList<Double>();
-		int numNeighs = getNeighborhoodSize(region);
-		for (int i = 0; i < numNeighs; i++)
-			this.values.add(0.0);
 		this.iter = null;
 	}
 	
@@ -68,8 +64,9 @@ public class RealMedianFunction implements Function<long[],Real> {
 
 	@Override
 	public void evaluate(Neighborhood<long[]> region, long[] point, Real output) {
-		if (iter == null)
+		if (iter == null) {
 			iter = new RegionIndexIterator(region);
+		}
 		else
 			iter.relocate(region.getKeyPoint());
 		iter.reset();
@@ -77,7 +74,8 @@ public class RealMedianFunction implements Function<long[],Real> {
 		while (iter.hasNext()) {
 			iter.fwd();
 			otherFunc.evaluate(region, iter.getPosition(), variable);
-			values.set(numElements++, variable.getReal());
+			values.add(variable.getReal());
+			numElements++;
 		}
 		Collections.sort(values);
 		if (numElements == 0)
@@ -89,15 +87,5 @@ public class RealMedianFunction implements Function<long[],Real> {
 			double value2 = values.get((numElements/2));
 			output.setReal((value1 + value2) / 2);
 		}
-	}
-
-	private int getNeighborhoodSize(Neighborhood<long[]> neigh) {
-		long[] negOffs = neigh.getNegativeOffsets();
-		long[] posOffs = neigh.getPositiveOffsets();
-		int size = 1;
-		for (int i = 0; i < neigh.getNumDims(); i++) {
-			size *= 1 + negOffs[i] + posOffs[i];
-		}
-		return size;
 	}
 }

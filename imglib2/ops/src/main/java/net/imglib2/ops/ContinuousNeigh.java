@@ -61,5 +61,13 @@ public class ContinuousNeigh extends Neighborhood<double[]> {
 		getNegativeOffsets()[dimNumber] = twoValues[0];
 		getPositiveOffsets()[dimNumber] = twoValues[1];
 	}
+
+	public double size() {
+		double size = 1;
+		for (int i = 0; i < getNumDims(); i++) {
+			size *= 1 + getNegativeOffsets()[i] + getPositiveOffsets()[i];
+		}
+		return size;
+	}
 }
 
