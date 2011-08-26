@@ -40,6 +40,7 @@ import ij.process.ImageProcessor;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 
 import loci.formats.ChannelSeparator;
 import loci.formats.FormatException;
@@ -554,6 +555,7 @@ public class LOCI
 		if ( dir.isDirectory() )
 		{
 			final String[] files = dir.list();
+			Arrays.sort( files );
 			final int depth = dir.list().length;
 			
 			// get size of first image
@@ -566,6 +568,7 @@ public class LOCI
 			
 			for ( int i = 0; i < depth; ++i )
 			{
+				System.out.println( files[ i ] );
 				imp2d = io.openImage( dir.getAbsolutePath() + File.separator + files[ i ] );
 				final ImageProcessor ip = imp2d.getProcessor();
 				
