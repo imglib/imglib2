@@ -568,7 +568,6 @@ public class LOCI
 			
 			for ( int i = 0; i < depth; ++i )
 			{
-				System.out.println( files[ i ] );
 				imp2d = io.openImage( dir.getAbsolutePath() + File.separator + files[ i ] );
 				final ImageProcessor ip = imp2d.getProcessor();
 				
