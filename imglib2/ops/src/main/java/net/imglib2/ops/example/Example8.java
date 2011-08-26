@@ -47,15 +47,7 @@ import net.imglib2.type.numeric.real.DoubleType;
 // a dual neighborhood example that also uses an out of bounds strategy.
 // each point of output equals the median of the 3x3 XY neighborhood of the 1xZ averages of a 3d image
 
-/*
-Partial implmentation of a method for nesting neighborhoods. Example
-outlined in Example8. The example points out that the code is not
-complete because it should error out and does not. The out of bounds
-code is not in place and thus the median should complain about an
-out of bounds access. But it doesn't. There is some oversight in the
-neighborhood nesting. Keypoints are getting set to (0,0) rather than
-(-1,-1). Debug later. Implementation is illustrative.
-*/
+// TODO - add out of bounds code and fix nested for loops to go [0,SIZE-1] rather than (0,SIZE-1) 
 
 /**
  * 
@@ -101,8 +93,8 @@ public class Example8 {
 		Function<long[],Real> adapFunc = new NeighborhoodAdapterFunction<long[],Real>(avgFunc, avgNeigh);
 		Function<long[],Real> medianFunc = new RealMedianFunction(adapFunc);
 		Real output = new Real();
-		for (int x = 0; x < XSIZE; x++) {
-			for (int y = 0; y < YSIZE; y++) {
+		for (int x = 1; x < XSIZE-1; x++) {
+			for (int y = 1; y < YSIZE-1; y++) {
 				medianNeigh.getKeyPoint()[0] = x;
 				medianNeigh.getKeyPoint()[1] = y;
 				medianNeigh.getKeyPoint()[2] = 0;

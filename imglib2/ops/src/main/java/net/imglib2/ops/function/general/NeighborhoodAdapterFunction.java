@@ -22,7 +22,7 @@ public class NeighborhoodAdapterFunction<INDEX, T> implements Function<INDEX,T> 
 
 	@Override
 	public void evaluate(Neighborhood<INDEX> neigh, INDEX point, T output) {
-		localNeigh.moveTo(neigh.getKeyPoint());
+		localNeigh.moveTo(point);
 		function.evaluate(localNeigh, point, output);
 	}
 
