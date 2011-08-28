@@ -84,7 +84,7 @@ public final class Complex implements Comparable<Complex>, DataCopier<Complex> {
 
 	public void setPolarR(double r) {
 		if (polarInvalid)
-			calcRTheta();
+			calcTheta();
 		this.r = r;
 		calcXY();
 		polarInvalid = false;
@@ -92,7 +92,7 @@ public final class Complex implements Comparable<Complex>, DataCopier<Complex> {
 
 	public void setPolarTheta(double theta) {
 		if (polarInvalid)
-			calcRTheta();
+			calcR();
 		this.theta = theta;
 		calcXY();
 		polarInvalid = false;
@@ -178,11 +178,20 @@ public final class Complex implements Comparable<Complex>, DataCopier<Complex> {
 		y = r * Math.sin(theta);
 	}
 	
-	// TODO : enforce some convention for theta
-	//   either -pi <= theta <= pi or 0 < theta < 2*pi
-	
 	private void calcRTheta() {
+		calcR();
+		calcTheta();
+		polarInvalid = false;
+	}
+	
+	private void calcR() {
 		r = Math.sqrt(magnitudeSquared());
+	}
+	
+	// TODO : enforce some convention for theta
+	//   either -pi <= theta < pi or 0 <= theta < 2*pi
+	
+	private void calcTheta() {
 		if (x == 0) {
 			if (y > 0)
 				theta = Math.PI / 2;
@@ -210,7 +219,6 @@ public final class Complex implements Comparable<Complex>, DataCopier<Complex> {
 			else // x < 0
 				theta = angle + Math.PI;
 		}
-		polarInvalid = false;
 	}
 }
 
