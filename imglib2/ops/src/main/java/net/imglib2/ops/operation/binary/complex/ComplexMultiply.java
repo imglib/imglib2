@@ -41,10 +41,9 @@ public class ComplexMultiply implements BinaryOperation<Complex> {
 
 	@Override
 	public void compute(Complex input1, Complex input2, Complex output) {
-		double r = input1.getReal()*input2.getReal() - input1.getImag()*input2.getImag();
-		double i = input1.getImag()*input2.getReal() + input1.getReal()*input2.getImag();
-		output.setReal(r);
-		output.setImag(i);
+		double r = input1.getX()*input2.getX() - input1.getY()*input2.getY();
+		double i = input1.getY()*input2.getX() + input1.getX()*input2.getY();
+		output.setCartesian(r,i);
 	}
 
 }

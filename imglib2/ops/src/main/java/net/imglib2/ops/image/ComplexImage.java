@@ -52,13 +52,12 @@ public class ComplexImage extends AbstractImage {
 	
 	public void getComplex(long[] index, Complex c) {
 		int element = elementNumber(index);
-		c.setReal(realData[element]);
-		c.setImag(imagData[element]);
+		c.setCartesian(realData[element],imagData[element]);
 	}
 	
 	public void setComplex(long[] index, Complex c) {
 		int element = elementNumber(index);
-		realData[element] = c.getReal();
-		imagData[element] = c.getImag();
+		realData[element] = c.getX();
+		imagData[element] = c.getY();
 	}
 }

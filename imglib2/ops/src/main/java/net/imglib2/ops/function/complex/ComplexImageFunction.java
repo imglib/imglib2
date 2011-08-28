@@ -59,8 +59,7 @@ public class ComplexImageFunction implements Function<long[],Complex> {
 		accessor.setPosition(point);
 		double r = accessor.get().getRealDouble();
 		double i = accessor.get().getImaginaryDouble();
-		output.setReal(r);
-		output.setImag(i);
+		output.setCartesian(r,i);
 	}
 
 }

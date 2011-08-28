@@ -53,8 +53,7 @@ public class ComplexAdapterFunction<INDEX> implements Function<INDEX,Complex> {
 	@Override
 	public void evaluate(Neighborhood<INDEX> neigh, INDEX point, Complex value) {
 		realFunc.evaluate(neigh, point, real);
-		value.setReal(real.getReal());
-		value.setImag(0);
+		value.setCartesian(real.getReal(),0);
 	}
 	
 	@Override

@@ -94,8 +94,8 @@ public class ComplexImageAssignment {
 			if (proceed) {
 				function.evaluate(neigh, iter.getPosition(), output);
 				accessor.setPosition(iter.getPosition());
-				accessor.get().setReal(output.getReal());
-				accessor.get().setImaginary(output.getImag());
+				accessor.get().setReal(output.getX());
+				accessor.get().setImaginary(output.getY());
 			}
 		}
 		

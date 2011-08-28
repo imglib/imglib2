@@ -50,8 +50,7 @@ public class ConstantComplexFunction<INDEX> implements Function<INDEX,Complex> {
 	
 	@Override
 	public void evaluate(Neighborhood<INDEX> neigh, INDEX point, Complex c) {
-		c.setReal(real);
-		c.setImag(imag);
+		c.setCartesian(real,imag);
 	}
 	
 	@Override

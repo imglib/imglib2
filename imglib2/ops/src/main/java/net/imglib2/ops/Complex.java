@@ -35,39 +35,74 @@ package net.imglib2.ops;
  *
  */
 public final class Complex implements Comparable<Complex>, DataCopier<Complex> {
-	private double real;
-	private double imag;
+	private double x;
+	private double y;
+	private boolean polarInvalid;
+	private double r;
+	private double theta;
 
 	public Complex() {
-		real = 0;
-		imag = 0;
+		x = 0;
+		y = 0;
+		polarInvalid = true;
 	}
 	
-	public Complex(double r, double i) {
-		real = r;
-		imag = i;
+	public static Complex createCartesian(double x, double y) {
+		Complex c = new Complex();
+		c.setCartesian(x,y);
+		return c;
 	}
 	
-	public void setReal(double r) {
-		real = r;
+	public static Complex createPolar(double r, double theta) {
+		Complex c = new Complex();
+		c.setPolar(r,theta);
+		return c;
+	}
+	
+	public void setCartesian(double x, double y) {
+		this.x = x;
+		this.y = y;
+		polarInvalid = true;
+	}
+	
+	public void setCartesianX(double x) {
+		this.x = x;
+		polarInvalid = true;
 	}
 
-	public void setImag(double i) {
-		imag = i;
+	public void setCartesianY(double y) {
+		this.y = y;
+		polarInvalid = true;
 	}
 
-	public void setRealImag(double r, double i) {
-		real = r;
-		imag = i;
+	public void setPolar(double r, double theta) {
+		this.r = r;
+		this.theta = theta;
+		polarInvalid = false;
+		calcXY();
 	}
-	
-	public double getReal() { return real; }
-	public double getImag() { return imag; }
+
+	public void setPolarR(double r) {
+		this.r = r;
+		polarInvalid = false;
+		calcXY();
+	}
+
+	public void setPolarTheta(double theta) {
+		this.theta = theta;
+		polarInvalid = false;
+		calcXY();
+	}
+
+	public double getX() { return x; }
+	public double getY() { return y; }
+	public double getModulus() { if (polarInvalid) calcRTheta(); return r; }
+	public double getArgument() { if (polarInvalid) calcRTheta(); return theta; }
 
 	@Override
 	public int compareTo(Complex other) {
-		if (real == other.getReal())
-			if (imag == other.getImag())
+		if (x == other.getX())
+			if (y == other.getY())
 				return 0;
 
 		double myVal = magnitudeSquared();
@@ -81,22 +116,23 @@ public final class Complex implements Comparable<Complex>, DataCopier<Complex> {
 		
 		// magnitudes are equal
 
-		// TODO I'm discriminating here by spatial layout of r & i
+		// TODO I'm discriminating here by spatial layout of x & y
 		// rather than returning 0 all the time. This may not be
-		// mathematically valid. Investigate.
+		// mathematically valid but compareTo maybe less strict.
+		// Investigate.
 		
-		if (real < other.getReal())
+		if (x < other.getX())
 			return -1;
 
-		if (real > other.getReal())
+		if (x > other.getX())
 			return 1;
 
-		// real == other.getReal()
+		// x == other.getX()
 		
-		if (imag < other.getImag())
+		if (y < other.getY())
 			return -1;
 		
-		// imag must be greater than other.getImag()
+		// y must be greater than other.getY()
 		return 1;
 	}
 
@@ -107,7 +143,7 @@ public final class Complex implements Comparable<Complex>, DataCopier<Complex> {
 	public boolean equals(Object obj) {
 		if (obj instanceof Complex) {
 			Complex other = (Complex) obj;
-			return ((real == other.getReal()) && (imag == other.getImag()));
+			return ((x == other.getX()) && (y == other.getY()));
 		}
 		return false;
 	}
@@ -115,23 +151,59 @@ public final class Complex implements Comparable<Complex>, DataCopier<Complex> {
 	@Override
 	public int hashCode() {
 		int result = 17;
-		long tmp = Double.doubleToLongBits(real);
+		long tmp = Double.doubleToLongBits(x);
 		result = 31 * result + (int) (tmp ^ (tmp >>> 32));
-		tmp = Double.doubleToLongBits(imag);
+		tmp = Double.doubleToLongBits(y);
 		result = 31 * result + (int) (tmp ^ (tmp >>> 32));
 		return result;
 	}
 
 	@Override
 	public void setValue(Complex fromValue) {
-		setReal(fromValue.getReal());
-		setImag(fromValue.getImag());
+		setCartesian(fromValue.getX(), fromValue.getY());
 	}
 
 	// -- private helpers --
 	
 	private double magnitudeSquared() {
-		return real*real + imag*imag;
+		return x*x + y*y;
+	}
+	
+	private void calcXY() {
+		x = r * Math.cos(theta);
+		y = r * Math.sin(theta);
+	}
+	
+	private void calcRTheta() {
+		r = Math.sqrt(magnitudeSquared());
+		if (x == 0) {
+			if (y > 0)
+				theta = Math.PI / 2;
+			else if (y < 0)
+				theta = 3 * Math.PI / 2;
+			else // y == 0 : theta indeterminate
+				theta = 0;  // sensible default (?)
+		}
+		else if (y == 0) {
+			if (x > 0)
+				theta = 0;
+			else if (x < 0)
+				theta = Math.PI;
+			else // x == 0 : theta indeterminate
+				theta = 0;  // sensible default (?)
+		}
+		else { // x && y both != 0
+			double angle = Math.atan2(x,y);
+			if (x > 0) {
+				if (y > 0)
+					theta = angle;
+				else // y < 0
+					theta = angle + 2*Math.PI;
+			}
+			else // x < 0
+				theta = angle + Math.PI;
+		}
+		polarInvalid = false;
 	}
 }
 

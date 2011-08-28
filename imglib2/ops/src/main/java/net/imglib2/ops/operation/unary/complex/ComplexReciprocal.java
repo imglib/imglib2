@@ -41,11 +41,10 @@ public class ComplexReciprocal implements UnaryOperation<Complex> {
 
 	@Override
 	public void compute(Complex input, Complex output) {
-		double denom = input.getReal()*input.getReal() + input.getImag()*input.getImag();
-		double r = input.getReal() / denom;
-		double i = -input.getImag() / denom;
-		output.setReal(r);
-		output.setImag(i);
+		double denom = input.getX()*input.getX() + input.getY()*input.getY();
+		double r = input.getX() / denom;
+		double i = -input.getY() / denom;
+		output.setCartesian(r,i);
 	}
 
 }

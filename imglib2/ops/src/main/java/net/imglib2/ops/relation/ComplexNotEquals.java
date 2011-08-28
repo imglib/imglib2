@@ -42,7 +42,7 @@ public class ComplexNotEquals implements BinaryRelation<Complex> {
 
 	@Override
 	public boolean holds(Complex val1, Complex val2) {
-		return (val1.getReal() != val2.getReal()) || (val1.getImag() != val2.getImag());
+		return (val1.getX() != val2.getX()) || (val1.getY() != val2.getY());
 	}
 
 }

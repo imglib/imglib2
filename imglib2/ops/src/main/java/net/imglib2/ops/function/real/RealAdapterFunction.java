@@ -46,12 +46,13 @@ public class RealAdapterFunction<INDEX> implements Function<INDEX,Real> {
 
 	public RealAdapterFunction(Function<INDEX,Complex> complexFunc) {
 		this.complexFunc = complexFunc;
+		this.variable = new Complex();
 	}
 	
 	@Override
 	public void evaluate(Neighborhood<INDEX> region, INDEX point, Real r) {
 		complexFunc.evaluate(region, point, variable);
-		r.setReal(variable.getReal());
+		r.setReal(variable.getX());
 	}
 	
 	@Override

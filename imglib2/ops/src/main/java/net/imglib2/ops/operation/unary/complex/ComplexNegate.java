@@ -41,10 +41,9 @@ public class ComplexNegate implements UnaryOperation<Complex> {
 
 	@Override
 	public void compute(Complex input, Complex output) {
-		double r = -input.getReal();
-		double i = -input.getImag();
-		output.setReal(r);
-		output.setImag(i);
+		double r = -input.getX();
+		double i = -input.getY();
+		output.setCartesian(r,i);
 	}
 
 }

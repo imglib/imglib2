@@ -41,11 +41,10 @@ public class ComplexDivide implements BinaryOperation<Complex> {
 
 	@Override
 	public void compute(Complex input1, Complex input2, Complex output) {
-		double denom = input2.getReal()*input2.getReal() + input2.getImag()*input2.getImag();
-		double r = (input1.getReal()*input2.getReal() + input1.getImag()*input2.getImag()) / denom;
-		double i = (input1.getImag()*input2.getReal() - input1.getReal()*input2.getImag()) / denom;
-		output.setReal(r);
-		output.setImag(i);
+		double denom = input2.getX()*input2.getX() + input2.getY()*input2.getY();
+		double r = (input1.getX()*input2.getX() + input1.getY()*input2.getY()) / denom;
+		double i = (input1.getY()*input2.getX() - input1.getX()*input2.getY()) / denom;
+		output.setCartesian(r, i);
 	}
 
 }
