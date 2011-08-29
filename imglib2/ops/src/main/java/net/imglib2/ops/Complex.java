@@ -103,6 +103,13 @@ public final class Complex implements Comparable<Complex>, DataCopier<Complex> {
 	public double getModulus() { if (polarInvalid) calcRTheta(); return r; }
 	public double getArgument() { if (polarInvalid) calcRTheta(); return theta; }
 
+	public double getPrincipleArgument() {
+		double arg = getArgument();
+		while (arg <= -Math.PI) arg += 2*Math.PI;
+		while (arg > Math.PI) arg -= 2*Math.PI;
+		return arg;
+	}
+	
 	@Override
 	public int compareTo(Complex other) {
 		if (x == other.getX())
