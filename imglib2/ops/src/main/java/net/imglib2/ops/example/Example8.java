@@ -39,8 +39,6 @@ import net.imglib2.ops.function.general.NeighborhoodAdapterFunction;
 import net.imglib2.ops.function.real.RealAverageFunction;
 import net.imglib2.ops.function.real.RealImageFunction;
 import net.imglib2.ops.function.real.RealMedianFunction;
-import net.imglib2.outofbounds.OutOfBoundsConstantValue;
-import net.imglib2.outofbounds.OutOfBoundsConstantValueFactory;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.real.DoubleType;
 

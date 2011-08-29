@@ -84,7 +84,7 @@ public class Example6 {
 		return Math.abs(d1-d2) < 0.00001;
 	}
 
-	private static double interpolate(double ix, double iy, double ul, double ur, double ll, double lr) {
+	public static double interpolate(double ix, double iy, double ul, double ur, double ll, double lr) {
 		double value = 0;
 		value += (1-ix)*(1-iy)*ul;
 		value += (1-ix)*(iy)*ll;
@@ -135,7 +135,7 @@ public class Example6 {
 			getValue((x+1),(y+0),ur);
 			getValue((x+0),(y+1),ll);
 			getValue((x+1),(y+1),lr);
-			double value = interpolate(ix, iy, ul.getReal(), ur.getReal(), ll.getReal(), lr.getReal());
+			double value = Example6.interpolate(ix, iy, ul.getReal(), ur.getReal(), ll.getReal(), lr.getReal());
 			output.setReal(value);
 		}
 		

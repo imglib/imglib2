@@ -68,7 +68,7 @@ public class Example7 {
 		return imgFactory.create(new long[]{XSIZE,YSIZE}, new DoubleType());
 	}
 
-	private static class XValueCondition implements Condition<long[]> {
+	public static class XValueCondition implements Condition<long[]> {
 
 		@Override
 		public boolean isTrue(Neighborhood<long[]> neigh, long[] point) {
@@ -77,7 +77,7 @@ public class Example7 {
 		
 	}
 	
-	private static class XSquaredFunction implements Function<long[],Real> {
+	public static class XSquaredFunction implements Function<long[],Real> {
 
 		@Override
 		public Real createVariable() {
@@ -91,7 +91,7 @@ public class Example7 {
 		
 	}
 
-	private static class YLineFunction implements Function<long[],Real> {
+	public static class YLineFunction implements Function<long[],Real> {
 
 		@Override
 		public Real createVariable() {
@@ -105,12 +105,13 @@ public class Example7 {
 		
 	}
 	
-	private static class CircularCondition implements Condition<long[]> {
+	public static class CircularCondition implements Condition<long[]> {
 
 		long ctrX = XSIZE / 2;
 		long ctrY = YSIZE / 2;
 		
 		public CircularCondition() {
+			// nothing to do
 		}
 		
 		@Override
@@ -123,9 +124,10 @@ public class Example7 {
 		
 	}
 	
-	private static class XYSumCondition implements Condition<long[]> {
+	public static class XYSumCondition implements Condition<long[]> {
 
 		public XYSumCondition() {
+			// nothing to do
 		}
 		
 		@Override

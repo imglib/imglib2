@@ -42,7 +42,7 @@ package net.imglib2.ops.example;
  *
  */
 public class ExampleNotes {
-
+	// nothing to do
 }
 
 
