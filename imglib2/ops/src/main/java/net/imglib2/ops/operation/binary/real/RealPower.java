@@ -31,13 +31,14 @@ package net.imglib2.ops.operation.binary.real;
 
 import net.imglib2.ops.BinaryOperation;
 import net.imglib2.ops.Real;
+import net.imglib2.ops.RealOutput;
 
 /**
  * 
  * @author Barry DeZonia
  *
  */
-public class RealPower implements BinaryOperation<Real> {
+public class RealPower extends RealOutput implements BinaryOperation<Real,Real,Real> {
 
 	@Override
 	public void compute(Real input1, Real input2, Real output) {

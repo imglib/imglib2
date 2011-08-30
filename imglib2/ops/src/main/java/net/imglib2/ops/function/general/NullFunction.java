@@ -47,7 +47,7 @@ public class NullFunction<INDEX, T> implements Function<INDEX,T> {
 	}
 
 	@Override
-	public T createVariable() {
+	public T createOutput() {
 		return null;
 		// TODO - returning null is sort of a problem. Though it makes sense.
 		//  However if we only pass NullFunctions at outermost loop maybe we can avoid

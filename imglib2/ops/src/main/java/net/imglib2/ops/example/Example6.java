@@ -37,6 +37,7 @@ import net.imglib2.ops.DiscreteNeigh;
 import net.imglib2.ops.Function;
 import net.imglib2.ops.Neighborhood;
 import net.imglib2.ops.Real;
+import net.imglib2.ops.RealOutput;
 import net.imglib2.ops.function.real.RealImageFunction;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.real.DoubleType;
@@ -101,7 +102,7 @@ public class Example6 {
 		return interpolate(ix,iy,ul,ur,ll,lr);
 	}
 	
-	private static class RealBilinearInterpolatorFunction implements Function<double[],Real> {
+	private static class RealBilinearInterpolatorFunction extends RealOutput implements Function<double[],Real> {
 
 		private DiscreteNeigh discreteNeigh;
 		private Function<long[],Real> discreteFunc;
@@ -111,16 +112,11 @@ public class Example6 {
 		public RealBilinearInterpolatorFunction(Function<long[],Real> discreteFunc) {
 			this.discreteFunc = discreteFunc;
 			this.index = new long[2];
-			this.ul = createVariable();
-			this.ur = createVariable();
-			this.ll = createVariable();
-			this.lr = createVariable();
+			this.ul = createOutput();
+			this.ur = createOutput();
+			this.ll = createOutput();
+			this.lr = createOutput();
 			this.discreteNeigh = null;
-		}
-		
-		@Override
-		public Real createVariable() {
-			return new Real();
 		}
 
 		@Override

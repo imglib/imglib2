@@ -31,6 +31,7 @@ package net.imglib2.ops.function.complex;
 
 import net.imglib2.RandomAccess;
 import net.imglib2.img.Img;
+import net.imglib2.ops.ComplexOutput;
 import net.imglib2.ops.Function;
 import net.imglib2.ops.Complex;
 import net.imglib2.ops.Neighborhood;
@@ -41,7 +42,7 @@ import net.imglib2.type.numeric.ComplexType;
  * @author Barry DeZonia
  *
  */
-public class ComplexImageFunction implements Function<long[],Complex> {
+public class ComplexImageFunction extends ComplexOutput implements Function<long[],Complex> {
 
 	private RandomAccess<? extends ComplexType<?>> accessor;
 	
@@ -49,11 +50,6 @@ public class ComplexImageFunction implements Function<long[],Complex> {
 		this.accessor = img.randomAccess();
 	}
 	
-	@Override
-	public Complex createVariable() {
-		return new Complex();
-	}
-
 	@Override
 	public void evaluate(Neighborhood<long[]> input, long[] point, Complex output) {
 		accessor.setPosition(point);

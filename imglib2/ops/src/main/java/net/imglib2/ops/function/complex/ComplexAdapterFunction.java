@@ -30,6 +30,7 @@ POSSIBILITY OF SUCH DAMAGE.
 package net.imglib2.ops.function.complex;
 
 import net.imglib2.ops.Complex;
+import net.imglib2.ops.ComplexOutput;
 import net.imglib2.ops.Function;
 import net.imglib2.ops.Neighborhood;
 import net.imglib2.ops.Real;
@@ -40,7 +41,7 @@ import net.imglib2.ops.Real;
  * @author Barry DeZonia
  *
  */
-public class ComplexAdapterFunction<INDEX> implements Function<INDEX,Complex> {
+public class ComplexAdapterFunction<INDEX> extends ComplexOutput implements Function<INDEX,Complex> {
 
 	private Function<INDEX,Real> realFunc;
 	private Real real;
@@ -54,10 +55,5 @@ public class ComplexAdapterFunction<INDEX> implements Function<INDEX,Complex> {
 	public void evaluate(Neighborhood<INDEX> neigh, INDEX point, Complex value) {
 		realFunc.evaluate(neigh, point, real);
 		value.setCartesian(real.getReal(),0);
-	}
-	
-	@Override
-	public Complex createVariable() {
-		return new Complex();
 	}
 }

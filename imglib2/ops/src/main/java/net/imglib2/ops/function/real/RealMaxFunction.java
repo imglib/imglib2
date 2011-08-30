@@ -32,6 +32,7 @@ package net.imglib2.ops.function.real;
 import net.imglib2.ops.Function;
 import net.imglib2.ops.Neighborhood;
 import net.imglib2.ops.Real;
+import net.imglib2.ops.RealOutput;
 import net.imglib2.ops.RegionIndexIterator;
 
 
@@ -40,14 +41,14 @@ import net.imglib2.ops.RegionIndexIterator;
  * @author Barry DeZonia
  *
  */
-public class RealMaxFunction implements Function<long[],Real> {
+public class RealMaxFunction extends RealOutput implements Function<long[],Real> {
 
 	private Function<long[],Real> otherFunc;
 	private Real variable;
 	
 	public RealMaxFunction(Function<long[],Real> otherFunc) {
 		this.otherFunc = otherFunc;
-		this.variable = createVariable();
+		this.variable = createOutput();
 	}
 	
 	@Override
@@ -60,11 +61,6 @@ public class RealMaxFunction implements Function<long[],Real> {
 			max = Math.max(max, variable.getReal());
 		}
 		output.setReal(max);
-	}
-
-	@Override
-	public Real createVariable() {
-		return new Real();
 	}
 	
 }

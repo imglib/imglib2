@@ -31,13 +31,14 @@ package net.imglib2.ops.operation.binary.complex;
 
 import net.imglib2.ops.BinaryOperation;
 import net.imglib2.ops.Complex;
+import net.imglib2.ops.ComplexOutput;
 
 /**
  * 
  * @author Barry DeZonia
  *
  */
-public class ComplexAvg implements BinaryOperation<Complex> {
+public class ComplexAvg extends ComplexOutput implements BinaryOperation<Complex,Complex,Complex> {
 
 	@Override
 	public void compute(Complex input1, Complex input2, Complex output) {
@@ -45,5 +46,4 @@ public class ComplexAvg implements BinaryOperation<Complex> {
 		double i = (input1.getY() + input2.getY()) / 2;
 		output.setCartesian(r,i);
 	}
-
 }

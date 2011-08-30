@@ -32,6 +32,7 @@ package net.imglib2.ops.function.real;
 import net.imglib2.ops.Function;
 import net.imglib2.ops.Neighborhood;
 import net.imglib2.ops.Real;
+import net.imglib2.ops.RealOutput;
 import net.imglib2.ops.RegionIndexIterator;
 
 // TODO
@@ -47,7 +48,7 @@ import net.imglib2.ops.RegionIndexIterator;
  * @author Barry DeZonia
  *
  */
-public class RealConvolutionFunction implements Function<long[],Real> {
+public class RealConvolutionFunction extends RealOutput implements Function<long[],Real> {
 
 	private Function<long[],Real> otherFunc;
 	private Real variable;
@@ -55,7 +56,7 @@ public class RealConvolutionFunction implements Function<long[],Real> {
 	
 	public RealConvolutionFunction(Function<long[],Real> otherFunc, double[] kernel) {
 		this.otherFunc = otherFunc;
-		this.variable = createVariable();
+		this.variable = createOutput();
 		this.kernel = kernel;
 	}
 	
@@ -71,10 +72,4 @@ public class RealConvolutionFunction implements Function<long[],Real> {
 		}
 		output.setReal(sum);
 	}
-
-	@Override
-	public Real createVariable() {
-		return new Real();
-	}
-	
 }

@@ -35,6 +35,7 @@ import java.util.Collections;
 import net.imglib2.ops.Function;
 import net.imglib2.ops.Neighborhood;
 import net.imglib2.ops.Real;
+import net.imglib2.ops.RealOutput;
 import net.imglib2.ops.RegionIndexIterator;
 
 /**
@@ -42,7 +43,7 @@ import net.imglib2.ops.RegionIndexIterator;
  * @author Barry DeZonia
  *
  */
-public class RealMedianFunction implements Function<long[],Real> {
+public class RealMedianFunction extends RealOutput implements Function<long[],Real> {
 
 	private Function<long[],Real> otherFunc;
 	private Real variable;
@@ -52,14 +53,9 @@ public class RealMedianFunction implements Function<long[],Real> {
 	public RealMedianFunction(Function<long[],Real> otherFunc)
 	{
 		this.otherFunc = otherFunc;
-		this.variable = createVariable();
+		this.variable = createOutput();
 		this.values = new ArrayList<Double>();
 		this.iter = null;
-	}
-	
-	@Override
-	public Real createVariable() {
-		return new Real();
 	}
 
 	@Override

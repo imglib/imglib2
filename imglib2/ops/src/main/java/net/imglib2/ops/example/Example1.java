@@ -92,7 +92,7 @@ public class Example1 {
 		Function<long[],Real> image = new RealImageFunction(inputImage);
 
 		Function<long[],Real> additionFunc =
-			new GeneralBinaryFunction<long[], Real>(constant, image, new RealAdd());
+			new GeneralBinaryFunction<long[], Real, Real, Real>(constant, image, new RealAdd());
 		
 		long[] index = neighborhood.getKeyPoint();
 		

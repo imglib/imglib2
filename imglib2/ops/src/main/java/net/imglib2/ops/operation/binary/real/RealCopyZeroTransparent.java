@@ -31,6 +31,7 @@ package net.imglib2.ops.operation.binary.real;
 
 import net.imglib2.ops.BinaryOperation;
 import net.imglib2.ops.Real;
+import net.imglib2.ops.RealOutput;
 
 // NB - this method required by IJ2 for IJ1 compatibility
 
@@ -39,7 +40,7 @@ import net.imglib2.ops.Real;
  * @author Barry DeZonia
  *
  */
-public class RealCopyZeroTransparent implements BinaryOperation<Real> {
+public class RealCopyZeroTransparent extends RealOutput implements BinaryOperation<Real,Real,Real> {
 
 	@Override
 	public void compute(Real input1, Real input2, Real output) {
@@ -48,5 +49,4 @@ public class RealCopyZeroTransparent implements BinaryOperation<Real> {
 		else
 			output.setReal(input2.getReal());
 	}
-
 }

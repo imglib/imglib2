@@ -29,6 +29,7 @@ POSSIBILITY OF SUCH DAMAGE.
 
 package net.imglib2.ops.operation.unary.complex;
 
+import net.imglib2.ops.ComplexOutput;
 import net.imglib2.ops.UnaryOperation;
 import net.imglib2.ops.Complex;
 
@@ -37,7 +38,7 @@ import net.imglib2.ops.Complex;
  * @author Barry DeZonia
  *
  */
-public class ComplexReciprocal implements UnaryOperation<Complex> {
+public class ComplexReciprocal extends ComplexOutput implements UnaryOperation<Complex,Complex> {
 
 	@Override
 	public void compute(Complex input, Complex output) {
@@ -46,5 +47,4 @@ public class ComplexReciprocal implements UnaryOperation<Complex> {
 		double i = -input.getY() / denom;
 		output.setCartesian(r,i);
 	}
-
 }

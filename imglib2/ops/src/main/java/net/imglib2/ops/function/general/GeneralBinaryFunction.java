@@ -38,31 +38,31 @@ import net.imglib2.ops.Neighborhood;
  * @author Barry DeZonia
  *
  */
-public class GeneralBinaryFunction<INDEX, T> implements Function<INDEX,T> {
-	private Function<INDEX,T> f1;
-	private Function<INDEX,T> f2;
-	private T input1;
-	private T input2;
-	private BinaryOperation<T> operation;
+public class GeneralBinaryFunction<INDEX, IT1, IT2, OT> implements Function<INDEX,OT> {
+	private Function<INDEX,IT1> f1;
+	private Function<INDEX,IT2> f2;
+	private IT1 input1;
+	private IT2 input2;
+	private BinaryOperation<IT1,IT2,OT> operation;
 	
-	public GeneralBinaryFunction(Function<INDEX,T> f1, Function<INDEX,T> f2, BinaryOperation<T> operation)
+	public GeneralBinaryFunction(Function<INDEX,IT1> f1, Function<INDEX,IT2> f2, BinaryOperation<IT1,IT2,OT> operation)
 	{
 		this.f1 = f1;
 		this.f2 = f2;
-		this.input1 = createVariable();
-		this.input2 = createVariable();
+		this.input1 = f1.createOutput();
+		this.input2 = f2.createOutput();
 		this.operation = operation;
 	}
 	
 	@Override
-	public void evaluate(Neighborhood<INDEX> region, INDEX point, T output) {
+	public void evaluate(Neighborhood<INDEX> region, INDEX point, OT output) {
 		f1.evaluate(region, point, input1);
 		f2.evaluate(region, point, input2);
 		operation.compute(input1, input2, output);
 	}
 	
 	@Override
-	public T createVariable() {
-		return f1.createVariable();
+	public OT createOutput() {
+		return operation.createOutput();
 	}
 }

@@ -46,8 +46,8 @@ public class BinaryCondition<INDEX, T> implements Condition<INDEX> {
 	public BinaryCondition(Function<INDEX,T> f1, Function<INDEX,T> f2, BinaryRelation<T> relation) {
 		this.f1 = f1;
 		this.f2 = f2;
-		this.f1Val = f1.createVariable();
-		this.f2Val = f2.createVariable();
+		this.f1Val = f1.createOutput();
+		this.f2Val = f2.createOutput();
 		this.relation = relation;
 	}
 	

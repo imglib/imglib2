@@ -65,8 +65,8 @@ public class DiscreteTranslationFunction<T> implements Function<long[],T> {
 	}
 
 	@Override
-	public T createVariable() {
-		return otherFunc.createVariable();
+	public T createOutput() {
+		return otherFunc.createOutput();
 	}
 
 }

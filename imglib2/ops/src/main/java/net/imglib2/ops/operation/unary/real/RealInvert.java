@@ -30,6 +30,7 @@ POSSIBILITY OF SUCH DAMAGE.
 package net.imglib2.ops.operation.unary.real;
 
 import net.imglib2.ops.Real;
+import net.imglib2.ops.RealOutput;
 import net.imglib2.ops.UnaryOperation;
 
 
@@ -38,7 +39,7 @@ import net.imglib2.ops.UnaryOperation;
  * @author Barry DeZonia
  *
  */
-public class RealInvert implements UnaryOperation<Real> {
+public class RealInvert extends RealOutput implements UnaryOperation<Real,Real> {
 
 	private final double actualMin, actualMax;
 

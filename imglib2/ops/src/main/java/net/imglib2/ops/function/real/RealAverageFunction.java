@@ -32,6 +32,7 @@ package net.imglib2.ops.function.real;
 import net.imglib2.ops.Function;
 import net.imglib2.ops.Neighborhood;
 import net.imglib2.ops.Real;
+import net.imglib2.ops.RealOutput;
 import net.imglib2.ops.RegionIndexIterator;
 
 /**
@@ -39,7 +40,7 @@ import net.imglib2.ops.RegionIndexIterator;
  * @author Barry DeZonia
  *
  */
-public class RealAverageFunction implements Function<long[],Real> {
+public class RealAverageFunction extends RealOutput implements Function<long[],Real> {
 
 	private Function<long[],Real> otherFunc;
 	private Real variable;
@@ -48,15 +49,10 @@ public class RealAverageFunction implements Function<long[],Real> {
 	public RealAverageFunction(Function<long[],Real> otherFunc)
 	{
 		this.otherFunc = otherFunc;
-		this.variable = createVariable();
+		this.variable = createOutput();
 		this.iter = null;
 	}
 	
-	@Override
-	public Real createVariable() {
-		return new Real();
-	}
-
 	@Override
 	public void evaluate(Neighborhood<long[]> region, long[] point, Real output) {
 		if (iter == null)

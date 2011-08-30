@@ -33,6 +33,7 @@ import net.imglib2.ops.Condition;
 import net.imglib2.ops.Function;
 import net.imglib2.ops.Neighborhood;
 import net.imglib2.ops.Real;
+import net.imglib2.ops.RealOutput;
 import net.imglib2.ops.condition.AtKeyPointCondition;
 
 // not sure this implementation satisfies the definition of an impulse
@@ -43,18 +44,13 @@ import net.imglib2.ops.condition.AtKeyPointCondition;
  * @author Barry DeZonia
  *
  */
-public class RealImpulseFunction implements Function<long[],Real> {
+public class RealImpulseFunction extends RealOutput implements Function<long[],Real> {
 
 	private Condition<long[]> atKeyPoint;
 	
 	public RealImpulseFunction()
 	{
 		atKeyPoint = new AtKeyPointCondition();
-	}
-	
-	@Override
-	public Real createVariable() {
-		return new Real();
 	}
 
 	@Override

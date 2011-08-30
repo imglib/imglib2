@@ -30,6 +30,7 @@ POSSIBILITY OF SUCH DAMAGE.
 package net.imglib2.ops.function.bool;
 
 import net.imglib2.ops.Bool;
+import net.imglib2.ops.BoolOutput;
 import net.imglib2.ops.Condition;
 import net.imglib2.ops.Function;
 import net.imglib2.ops.Neighborhood;
@@ -40,7 +41,7 @@ import net.imglib2.ops.Neighborhood;
  * @author Barry DeZonia
  *
  */
-public class ConditionalBooleanFunction<INDEX>
+public class ConditionalBooleanFunction<INDEX> extends BoolOutput
 	implements Function<INDEX,Bool>
 {
 	private Condition<INDEX> condition;
@@ -52,11 +53,6 @@ public class ConditionalBooleanFunction<INDEX>
 	@Override
 	public void evaluate(Neighborhood<INDEX> neigh, INDEX point, Bool b) {
 		b.setBool(condition.isTrue(neigh, point));
-	}
-	
-	@Override
-	public Bool createVariable() {
-		return new Bool();
 	}
 }
 

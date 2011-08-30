@@ -34,6 +34,7 @@ import net.imglib2.img.Img;
 import net.imglib2.ops.Function;
 import net.imglib2.ops.Neighborhood;
 import net.imglib2.ops.Real;
+import net.imglib2.ops.RealOutput;
 import net.imglib2.type.numeric.RealType;
 
 /**
@@ -41,17 +42,12 @@ import net.imglib2.type.numeric.RealType;
  * @author Barry DeZonia
  *
  */
-public class RealImageFunction implements Function<long[],Real> {
+public class RealImageFunction extends RealOutput implements Function<long[],Real> {
 
 	private RandomAccess<? extends RealType<?>> accessor;
 	
 	public RealImageFunction(Img<? extends RealType<?>> img) {
 		this.accessor = img.randomAccess();
-	}
-	
-	@Override
-	public Real createVariable() {
-		return new Real();
 	}
 
 	@Override

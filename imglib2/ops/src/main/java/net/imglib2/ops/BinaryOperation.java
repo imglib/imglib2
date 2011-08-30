@@ -34,6 +34,7 @@ package net.imglib2.ops;
  * @author Barry DeZonia
  *
  */
-public interface BinaryOperation<T> {
-	void compute(T input1, T input2, T output);
+public interface BinaryOperation<INPUT1_TYPE, INPUT2_TYPE, OUTPUT_TYPE> {
+	void compute(INPUT1_TYPE input1, INPUT2_TYPE input2, OUTPUT_TYPE output);
+	OUTPUT_TYPE createOutput();
 }

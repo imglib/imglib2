@@ -86,7 +86,7 @@ public class RealImageAssignment {
 	// - make interruptible
 	
 	public void assign() {
-		Real output = function.createVariable();
+		Real output = function.createOutput();
 		RegionIndexIterator iter = new RegionIndexIterator(neigh);
 		while (iter.hasNext()) {
 			iter.fwd();

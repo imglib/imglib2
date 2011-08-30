@@ -36,6 +36,6 @@ package net.imglib2.ops;
  */
 public interface Function<INDEX_TYPE, OUTPUT_TYPE> {
 	void evaluate(Neighborhood<INDEX_TYPE> neigh, INDEX_TYPE point, OUTPUT_TYPE output);
-	OUTPUT_TYPE createVariable();
+	OUTPUT_TYPE createOutput();
 }
 

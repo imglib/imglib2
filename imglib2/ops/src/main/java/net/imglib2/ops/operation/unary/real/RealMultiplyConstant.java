@@ -35,10 +35,11 @@ POSSIBILITY OF SUCH DAMAGE.
 package net.imglib2.ops.operation.unary.real;
 
 import net.imglib2.ops.Real;
+import net.imglib2.ops.RealOutput;
 import net.imglib2.ops.UnaryOperation;
 
 
-public class RealMultiplyConstant implements UnaryOperation<Real> {
+public class RealMultiplyConstant extends RealOutput implements UnaryOperation<Real,Real> {
 
 	private double constant;
 	

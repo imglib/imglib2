@@ -86,7 +86,7 @@ public class ComplexImageAssignment {
 	// - make interruptible
 	
 	public void assign() {
-		Complex output = function.createVariable();
+		Complex output = function.createOutput();
 		RegionIndexIterator iter = new RegionIndexIterator(neigh);
 		while (iter.hasNext()) {
 			iter.fwd();

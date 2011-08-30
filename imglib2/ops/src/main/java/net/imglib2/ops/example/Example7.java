@@ -36,6 +36,7 @@ import net.imglib2.ops.DiscreteNeigh;
 import net.imglib2.ops.Function;
 import net.imglib2.ops.Neighborhood;
 import net.imglib2.ops.Real;
+import net.imglib2.ops.RealOutput;
 import net.imglib2.ops.condition.AndCondition;
 import net.imglib2.ops.function.general.ConditionalFunction;
 import net.imglib2.ops.image.RealImageAssignment;
@@ -77,12 +78,7 @@ public class Example7 {
 		
 	}
 	
-	public static class XSquaredFunction implements Function<long[],Real> {
-
-		@Override
-		public Real createVariable() {
-			return new Real();
-		}
+	public static class XSquaredFunction extends RealOutput implements Function<long[],Real> {
 
 		@Override
 		public void evaluate(Neighborhood<long[]> neigh, long[] point, Real output) {
@@ -91,12 +87,7 @@ public class Example7 {
 		
 	}
 
-	public static class YLineFunction implements Function<long[],Real> {
-
-		@Override
-		public Real createVariable() {
-			return new Real();
-		}
+	public static class YLineFunction extends RealOutput implements Function<long[],Real> {
 
 		@Override
 		public void evaluate(Neighborhood<long[]> neigh, long[] point, Real output) {

@@ -58,7 +58,7 @@ public class CachingFunction<T extends DataCopier<T>> implements Function<long[]
 	
 	public CachingFunction(Function<long[],T> otherFunc) {
 		this.otherFunc = otherFunc;
-		lastValue = createVariable();
+		lastValue = createOutput();
 	}
 	
 	// -- public interface --
@@ -78,8 +78,8 @@ public class CachingFunction<T extends DataCopier<T>> implements Function<long[]
 	}
 
 	@Override
-	public T createVariable() {
-		return otherFunc.createVariable();
+	public T createOutput() {
+		return otherFunc.createOutput();
 	}
 
 	// -- private helpers --

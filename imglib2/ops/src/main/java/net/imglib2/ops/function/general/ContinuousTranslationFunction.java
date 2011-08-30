@@ -64,8 +64,8 @@ public class ContinuousTranslationFunction<T> implements Function<double[],T> {
 	}
 
 	@Override
-	public T createVariable() {
-		return otherFunc.createVariable();
+	public T createOutput() {
+		return otherFunc.createOutput();
 	}
 
 }

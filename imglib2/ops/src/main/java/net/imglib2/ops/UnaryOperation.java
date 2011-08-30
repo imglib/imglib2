@@ -34,6 +34,7 @@ package net.imglib2.ops;
  * @author Barry DeZonia
  *
  */
-public interface UnaryOperation<T> {
-	void compute(T input, T output);
+public interface UnaryOperation<INPUT_TYPE, OUTPUT_TYPE> {
+	void compute(INPUT_TYPE input, OUTPUT_TYPE output);
+	OUTPUT_TYPE createOutput();
 }

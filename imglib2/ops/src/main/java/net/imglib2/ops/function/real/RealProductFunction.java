@@ -32,6 +32,7 @@ package net.imglib2.ops.function.real;
 import net.imglib2.ops.Function;
 import net.imglib2.ops.Neighborhood;
 import net.imglib2.ops.Real;
+import net.imglib2.ops.RealOutput;
 import net.imglib2.ops.RegionIndexIterator;
 
 
@@ -40,14 +41,14 @@ import net.imglib2.ops.RegionIndexIterator;
  * @author Barry DeZonia
  *
  */
-public class RealProductFunction implements Function<long[],Real> {
+public class RealProductFunction extends RealOutput implements Function<long[],Real> {
 
 	private Function<long[],Real> otherFunc;
 	private Real variable;
 	
 	public RealProductFunction(Function<long[],Real> otherFunc) {
 		this.otherFunc = otherFunc;
-		this.variable = createVariable();
+		this.variable = createOutput();
 	}
 	
 	@Override
@@ -61,10 +62,4 @@ public class RealProductFunction implements Function<long[],Real> {
 		}
 		output.setReal(product);
 	}
-
-	@Override
-	public Real createVariable() {
-		return new Real();
-	}
-	
 }

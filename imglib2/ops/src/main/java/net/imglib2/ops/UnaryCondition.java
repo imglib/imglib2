@@ -43,7 +43,7 @@ public class UnaryCondition<INDEX, T> implements Condition<INDEX> {
 
 	public UnaryCondition(Function<INDEX,T> f1, UnaryRelation<T> relation) {
 		this.f1 = f1;
-		this.f1Val = f1.createVariable();
+		this.f1Val = f1.createOutput();
 		this.relation = relation;
 	}
 	

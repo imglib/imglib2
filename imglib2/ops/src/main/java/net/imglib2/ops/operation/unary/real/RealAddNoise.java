@@ -32,6 +32,7 @@ package net.imglib2.ops.operation.unary.real;
 import java.util.Random;
 
 import net.imglib2.ops.Real;
+import net.imglib2.ops.RealOutput;
 import net.imglib2.ops.UnaryOperation;
 
 
@@ -40,7 +41,7 @@ import net.imglib2.ops.UnaryOperation;
  * @author Barry DeZonia
  *
  */
-public class RealAddNoise implements UnaryOperation<Real> {
+public class RealAddNoise extends RealOutput implements UnaryOperation<Real,Real> {
 
 	private double rangeMin;
 	private double rangeMax;

@@ -16,8 +16,8 @@ public class NeighborhoodAdapterFunction<INDEX, T> implements Function<INDEX,T> 
 	}
 	
 	@Override
-	public T createVariable() {
-		return function.createVariable();
+	public T createOutput() {
+		return function.createOutput();
 	}
 
 	@Override

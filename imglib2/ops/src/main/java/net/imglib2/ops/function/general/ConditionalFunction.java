@@ -60,8 +60,8 @@ public class ConditionalFunction<INDEX, T> implements Function<INDEX,T> {
 	}
 
 	@Override
-	public T createVariable() {
-		return f1.createVariable();
+	public T createOutput() {
+		return f1.createOutput();
 	}
 
 }
