@@ -29,6 +29,7 @@ POSSIBILITY OF SUCH DAMAGE.
 
 package net.imglib2.ops.example;
 
+import net.imglib2.RandomAccess;
 import net.imglib2.img.Img;
 import net.imglib2.img.array.ArrayImgFactory;
 import net.imglib2.ops.Condition;
@@ -127,6 +128,43 @@ public class Example7 {
 		}
 		
 	}
+
+	private static boolean veryClose(double d1, double d2) {
+		return Math.abs(d1-d2) < 0.00001;
+	}
+
+	private static double expectedValue(int x, int y) {
+		double ctrX = XSIZE/2;
+		double ctrY = YSIZE/2;
+		double dx = x - ctrX;
+		double dy = y - ctrY;
+		double distFromCtr = Math.sqrt(dx*dx + dy*dy);
+		if (distFromCtr > CIRCLE_RADIUS) return 0;
+		if ((x+y) <= LINE_CONSTANT) return 0;
+		if (x < X_CONSTANT)
+			return x*x;
+		return 3*y + 19;
+	}
+
+	private static boolean testValues(Img<? extends RealType<?>> image) {
+		boolean success = true;
+		RandomAccess<? extends RealType<?>> accessor = image.randomAccess();
+		long[] pos = new long[2];
+		for (int x = 0; x < XSIZE; x++) {
+			for (int y = 0; y < YSIZE; y++) {
+				pos[0] = x;
+				pos[1] = y;
+				accessor.setPosition(pos);
+				double value = accessor.get().getRealDouble();
+				if (!veryClose(value, expectedValue(x, y))) {
+					System.out.println(" FAILURE at ("+x+","+y+"): expected ("
+						+expectedValue(x,y)+") actual ("+value+")");
+					success = false;
+				}
+			}
+		}
+		return success;
+	}
 	
 	private static boolean testComplicatedAssignment() {
 		Condition<long[]> xValCond = new XValueCondition();
@@ -142,8 +180,7 @@ public class Example7 {
 		Condition<long[]> compositeCondition = new AndCondition<long[]>(circleCond,sumCond);
 		assigner.setCondition(compositeCondition);
 		assigner.assign();
-		// TODO - test actual values
-		return true;
+		return testValues(image);
 	}
 	
 	public static void main(String[] args) {
