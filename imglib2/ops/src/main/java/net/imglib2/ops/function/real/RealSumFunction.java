@@ -45,16 +45,22 @@ public class RealSumFunction extends RealOutput implements Function<long[],Real>
 
 	private Function<long[],Real> otherFunc;
 	private Real variable;
+	private RegionIndexIterator iter;
 	
 	public RealSumFunction(Function<long[],Real> otherFunc) {
 		this.otherFunc = otherFunc;
 		this.variable = createOutput();
+		this.iter = null;
 	}
 	
 	@Override
 	public void evaluate(Neighborhood<long[]> region, long[] point, Real output) {
+		if (iter == null)
+			iter = new RegionIndexIterator(region);
+		else
+			iter.relocate(region.getKeyPoint());
+		iter.reset();
 		double sum = 0;
-		RegionIndexIterator iter = new RegionIndexIterator(region);
 		while (iter.hasNext()) {
 			iter.fwd();
 			otherFunc.evaluate(region, iter.getPosition(), variable);

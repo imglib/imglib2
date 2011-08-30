@@ -67,6 +67,7 @@ public class RealMedianFunction extends RealOutput implements Function<long[],Re
 			iter.relocate(region.getKeyPoint());
 		iter.reset();
 		int numElements = 0;
+		values.clear();
 		while (iter.hasNext()) {
 			iter.fwd();
 			otherFunc.evaluate(region, iter.getPosition(), variable);

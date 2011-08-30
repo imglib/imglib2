@@ -53,18 +53,24 @@ public class RealConvolutionFunction extends RealOutput implements Function<long
 	private Function<long[],Real> otherFunc;
 	private Real variable;
 	private double[] kernel;
+	private RegionIndexIterator iter;
 	
 	public RealConvolutionFunction(Function<long[],Real> otherFunc, double[] kernel) {
 		this.otherFunc = otherFunc;
 		this.variable = createOutput();
 		this.kernel = kernel;
+		this.iter = null;
 	}
 	
 	@Override
 	public void evaluate(Neighborhood<long[]> region, long[] point, Real output) {
+		if (iter == null)
+			iter = new RegionIndexIterator(region);
+		else
+			iter.relocate(region.getKeyPoint());
+		iter.reset();
 		int cell = 0;
 		double sum = 0;
-		RegionIndexIterator iter = new RegionIndexIterator(region);
 		while (iter.hasNext()) {
 			iter.fwd();
 			otherFunc.evaluate(region, iter.getPosition(), variable);

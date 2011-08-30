@@ -45,16 +45,22 @@ public class RealProductFunction extends RealOutput implements Function<long[],R
 
 	private Function<long[],Real> otherFunc;
 	private Real variable;
+	private RegionIndexIterator iter;
 	
 	public RealProductFunction(Function<long[],Real> otherFunc) {
 		this.otherFunc = otherFunc;
 		this.variable = createOutput();
+		this.iter = null;
 	}
 	
 	@Override
 	public void evaluate(Neighborhood<long[]> region, long[] point, Real output) {
+		if (iter == null)
+			iter = new RegionIndexIterator(region);
+		else
+			iter.relocate(region.getKeyPoint());
+		iter.reset();
 		double product = 1;
-		RegionIndexIterator iter = new RegionIndexIterator(region);
 		while (iter.hasNext()) {
 			iter.fwd();
 			otherFunc.evaluate(region, iter.getPosition(), variable);

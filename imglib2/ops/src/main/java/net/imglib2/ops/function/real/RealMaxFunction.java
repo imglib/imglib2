@@ -45,16 +45,22 @@ public class RealMaxFunction extends RealOutput implements Function<long[],Real>
 
 	private Function<long[],Real> otherFunc;
 	private Real variable;
+	private RegionIndexIterator iter;
 	
 	public RealMaxFunction(Function<long[],Real> otherFunc) {
 		this.otherFunc = otherFunc;
 		this.variable = createOutput();
+		this.iter = null;
 	}
 	
 	@Override
 	public void evaluate(Neighborhood<long[]> region, long[] point, Real output) {
+		if (iter == null)
+			iter = new RegionIndexIterator(region);
+		else
+			iter.relocate(region.getKeyPoint());
+		iter.reset();
 		double max = Double.NEGATIVE_INFINITY;
-		RegionIndexIterator iter = new RegionIndexIterator(region);
 		while (iter.hasNext()) {
 			iter.fwd();
 			otherFunc.evaluate(region, iter.getPosition(), variable);
