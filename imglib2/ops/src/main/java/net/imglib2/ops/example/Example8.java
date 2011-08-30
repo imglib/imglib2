@@ -29,6 +29,9 @@ POSSIBILITY OF SUCH DAMAGE.
 
 package net.imglib2.ops.example;
 
+import java.util.ArrayList;
+import java.util.Collections;
+
 import net.imglib2.RandomAccess;
 import net.imglib2.img.Img;
 import net.imglib2.img.array.ArrayImgFactory;
@@ -57,6 +60,8 @@ public class Example8 {
 	private static final long YSIZE = 15;
 	private static final long ZSIZE = 5;
 
+	private static Img<? extends RealType<?>> img;
+	
 	private static Img<DoubleType> allocateImage() {
 		final ArrayImgFactory<DoubleType> imgFactory = new ArrayImgFactory<DoubleType>();
 		return imgFactory.create(new long[]{XSIZE,YSIZE,ZSIZE}, new DoubleType());
@@ -81,9 +86,41 @@ public class Example8 {
 		//inputImg.randomAccess(new OutOfBoundsConstantValue(0));
 		return inputImg;
 	}
+
+	private static double average(int x, int y) {
+		RandomAccess<? extends RealType<?>> accessor = img.randomAccess();
+		long[] pos = new long[3];
+		pos[0] = x;
+		pos[1] = y;
+		double sum = 0;
+		double numElements = 0;
+		for (int z = 0; z < ZSIZE; z++) {
+			pos[2] = z;
+			accessor.setPosition(pos);
+			sum += accessor.get().getRealDouble();
+			numElements++;
+		}
+		return sum / numElements;
+	}
 	
+	private static boolean veryClose(double d1, double d2) {
+		return Math.abs(d1-d2) < 0.00001;
+	}
+
+	private static double expectedValue(int x, int y) {
+		ArrayList<Double> values = new ArrayList<Double>();
+		for (int xi = x-1; xi <= x+1; xi++) {
+			for (int yi = y-1; yi <= y+1; yi++) {
+				values.add(average(xi,yi));
+			}
+		}
+		Collections.sort(values);
+		return values.get(4);
+	}
+
 	private static boolean testTwoNeighborhoodFunction() {
-		Img<? extends RealType<?>> img = makeInputImage();
+		boolean success = true;
+		img = makeInputImage();
 		DiscreteNeigh avgNeigh = new DiscreteNeigh(new long[3], new long[]{0,0,0}, new long[]{0,0,ZSIZE-1});
 		DiscreteNeigh medianNeigh = new DiscreteNeigh(new long[3], new long[]{1,1,0}, new long[]{1,1,0});
 		Function<long[],Real> imgFunc = new RealImageFunction(img);
@@ -97,10 +134,14 @@ public class Example8 {
 				medianNeigh.getKeyPoint()[1] = y;
 				medianNeigh.getKeyPoint()[2] = 0;
 				medianFunc.evaluate(medianNeigh, medianNeigh.getKeyPoint(), output);
-				// TODO - test output
+				if (!veryClose(output.getReal(), expectedValue(x, y))) {
+					System.out.println(" FAILURE at ("+x+","+y+"): expected ("
+						+expectedValue(x,y)+") actual ("+output.getReal()+")");
+					success = false;
+				}
 			}			
 		}
-		return true;
+		return success;
 	}
 	
 	public static void main(String[] args) {
