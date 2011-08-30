@@ -32,7 +32,6 @@ package net.imglib2.ops.operation.binary.complex;
 import net.imglib2.ops.BinaryOperation;
 import net.imglib2.ops.Complex;
 import net.imglib2.ops.ComplexOutput;
-import net.imglib2.ops.RealOutput;
 
 /**
  * 

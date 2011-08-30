@@ -30,7 +30,6 @@ POSSIBILITY OF SUCH DAMAGE.
 package net.imglib2.ops.operation.binary.real;
 
 import net.imglib2.ops.BinaryOperation;
-import net.imglib2.ops.Complex;
 import net.imglib2.ops.Real;
 import net.imglib2.ops.RealOutput;
 
