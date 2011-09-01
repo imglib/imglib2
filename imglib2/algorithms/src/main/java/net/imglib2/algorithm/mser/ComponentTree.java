@@ -64,7 +64,7 @@ public class ComponentTree< T extends Comparable< T > & Type< T > >
 	public class Neighborhood
 	{
 		private int n;
-		private final int maxN;
+		private final int nBound;
 
 		public Neighborhood()
 		{
@@ -74,7 +74,7 @@ public class ComponentTree< T extends Comparable< T > & Type< T > >
 		public Neighborhood( int nextNeighborIndex )
 		{
 			n = nextNeighborIndex;
-			maxN = input.numDimensions() * 2 - 1;
+			nBound = input.numDimensions() * 2;
 		}
 		
 		public int getNextNeighborIndex()
@@ -94,14 +94,25 @@ public class ComponentTree< T extends Comparable< T > & Type< T > >
 
 		public boolean hasNext()
 		{
-			return n < maxN;
+			return n < nBound;
 		}
 
-		public void next( final Localizable current, final Positionable neighbor )
+		public boolean next( final Localizable current, final Positionable neighbor )
 		{
 			neighbor.setPosition( current );
-			neighbor.move( n % 2 == 0 ? -1 : 1, n / 2 );
-			++n;
+			final int d = n / 2;
+			if ( n % 2 == 0 )
+			{
+				neighbor.move( -1, d );
+				++n;
+				return current.getLongPosition( d ) - 1 >= 0;
+			}
+			else
+			{
+				neighbor.move( 1, d );				
+				++n;
+				return current.getLongPosition( d ) + 1 < dimensions[ d ];
+			}
 		}
 	}
 
@@ -122,14 +133,20 @@ public class ComponentTree< T extends Comparable< T > & Type< T > >
 		componentStack.push( new ComponentInfo< T >( currentLevel ) );
 		
 		// step 4
+		//for ( int i = 0; i < 3; ++i )
 		while ( true )
 		{
+			//double pos[] = new double[2];
+			//current.localize( pos ); System.out.println("current (" + pos[0] + ", " + pos[1] + ")"); System.out.println("currentLevel = " + currentLevel );
 			while ( n.hasNext() )
 			{
-				n.next( current, neighbor );
+				if ( ! n.next( current, neighbor ) )
+					continue;
 				if ( ! isAccessible( neighbor ) )
 				{
+					markAccessible( neighbor );
 					neighborLevel.set( neighbor.get() );
+					//neighbor.localize( pos ); System.out.println("neighbor (" + pos[0] + ", " + pos[1] + ")"); System.out.println("neighborLevel = " + neighborLevel );
 					if ( neighborLevel.compareTo( currentLevel ) >= 0 )
 					{
 						boundaryPixels.add( new BoundaryPixel< T >( neighbor, neighborLevel, 0 ) );
@@ -139,21 +156,26 @@ public class ComponentTree< T extends Comparable< T > & Type< T > >
 						boundaryPixels.add( new BoundaryPixel< T >( current, currentLevel, n.getNextNeighborIndex() ) );
 						current.setPosition( neighbor );
 						currentLevel.set( neighborLevel );
+						//current.localize( pos ); System.out.println("current (" + pos[0] + ", " + pos[1] + ")"); System.out.println("currentLevel = " + currentLevel );
 	
 						// go to 3, i.e.:
 						componentStack.push( new ComponentInfo< T >( currentLevel ) );
+						//System.out.println( " push new = " + componentStack.peek() );
 						n.reset();
 					}
 				}
 			}
 			
 			// step 5
+			//showComponentStack("step 5");
 			ComponentInfo< T > component = componentStack.peek();
 			component.addPosition( current );
+			//System.out.println( "top component = " + component );
 			
 			// step 6
 			if ( boundaryPixels.isEmpty() )
 			{
+				processStack( currentLevel );
 				System.out.println("done");
 				return;
 			}
@@ -170,6 +192,13 @@ public class ComponentTree< T extends Comparable< T > & Type< T > >
 		}
 	}
 	
+	protected void showComponentStack( String msg )
+	{
+		System.out.println(msg);
+		for ( ComponentInfo< T > c : componentStack )
+			System.out.println( c );
+	}
+	
 	protected void processStack( T value )
 	{
 		while (true)
@@ -183,11 +212,13 @@ public class ComponentTree< T extends Comparable< T > & Type< T > >
 			final int c = value.compareTo( secondComponent.get() );
 			if ( c < 0 )
 			{
+				System.out.println("(raise) " + value);
 				component.setValue( value );
 				componentStack.push( component );
 			}
 			else
 			{
+				System.out.println("(merge " + secondComponent.get() + ") " + value);
 				secondComponent.merge( component );
 				if ( c > 0 )
 					continue;
@@ -197,18 +228,41 @@ public class ComponentTree< T extends Comparable< T > & Type< T > >
 	} 
 	
 	protected void emit( ComponentInfo< T > component )
-	{
-		System.out.println( "new component " + component );
+	{	
+		System.out.println( "emit " + component );
+	
+		for ( int r = 0; r < dimensions[1]; ++r )
+		{
+			System.out.print("| ");
+			for ( int c = 0; c < dimensions[0]; ++c )
+			{
+				boolean set = false;
+				for ( Localizable l : component.locations )
+					if( l.getIntPosition( 0 ) == c && l.getIntPosition( 1 ) == r )
+						set = true;
+				System.out.print( set ? "x " : ". " );
+			}
+			System.out.println("|");
+		}
+		
+		System.out.println();
 	}
 	
 	// -------------------------------------------------------------------------------
 
+//	public static final int[][] testData = new int[][] {
+//		{ 4, 1, 0, 1, 4 },
+//		{ 2, 1, 3, 4, 5 },
+//		{ 1, 0, 2, 1, 2 },
+//		{ 3, 1, 2, 0, 1 },
+//		{ 3, 3, 3, 3, 2 } };
+
 	public static final int[][] testData = new int[][] {
-		{ 4, 1, 0, 1, 4 },
-		{ 2, 1, 3, 4, 5 },
-		{ 1, 0, 2, 1, 2 },
-		{ 3, 1, 2, 0, 1 },
-		{ 3, 3, 3, 3, 2 } };
+		{ 0, 9, 0, 1, 4 },
+		{ 8, 9, 3, 4, 5 },
+		{ 7, 0, 3, 1, 2 },
+		{ 3, 3, 1, 0, 1 },
+		{ 3, 3, 0, 8, 2 } };
 
 	public static void main( String[] args )
 	{
@@ -225,6 +279,9 @@ public class ComponentTree< T extends Comparable< T > & Type< T > >
 			c.localize( pos );
 			c.get().set( testData[ pos[ 1 ] ][ pos[ 0 ] ] );
 		}
+		
+		ComponentTree< IntType > tree = new ComponentTree< IntType >( input, new IntType( Integer.MAX_VALUE ) );
+		tree.run();
 	}
 
 }

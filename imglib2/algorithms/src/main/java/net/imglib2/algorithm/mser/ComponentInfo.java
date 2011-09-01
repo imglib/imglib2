@@ -8,16 +8,22 @@ import net.imglib2.type.Type;
 
 public class ComponentInfo< T extends Type< T > >
 {
+	private static int idGen = 0;
+	
+	final int id;
+	
  	ArrayList< Localizable > locations;
 	
 	T value;
 
 	public ComponentInfo()
 	{
+		id = idGen++;
 	}
 	
 	public ComponentInfo( final T value )
 	{
+		this();
 		this.locations = new ArrayList< Localizable >();
 		this.value = value.copy();
 	}
@@ -39,6 +45,7 @@ public class ComponentInfo< T extends Type< T > >
 	
 	public void merge( final ComponentInfo< T > component )
 	{
+		System.out.println( "merge " + component.id + " into " + id );
 		for ( Localizable l : component.locations )
 		{
 			addPosition( l );
@@ -48,7 +55,7 @@ public class ComponentInfo< T extends Type< T > >
 	@Override
 	public String toString()
 	{
-		String s = "{" + value.toString() + " : ";
+		String s = "{" + value.toString() + " : id=" + id + " : ";
 		boolean first = true;
 		for ( Localizable l : locations )
 		{
@@ -62,6 +69,6 @@ public class ComponentInfo< T extends Type< T > >
 			}
 			s += l.toString();
 		}
-		return s;
+		return s + "}";
 	}
 }
