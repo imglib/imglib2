@@ -67,8 +67,11 @@ public class VirtualImg<T extends NativeType<T>> extends AbstractImg<T> {
 	// TODO
 	// The reader gets shared among all copy()'s and randomAccess()'s and
 	// cursor()'s, etc. so there might be threading issues. Unless we enforce
-	// that only one user of the reader can be defined. Unless reader is
-	// already thread safe.
+	// that only one user of the reader can be defined. Maybe reader is
+	// already thread safe. Investigate.
+
+	// Note - this constructor is clumsy and error prone. so we're making it
+	// private and only invoking (always correctly) through the create() method.
 	
 	private VirtualImg(long[] dims, IFormatReader reader, T type)
 	{
@@ -79,6 +82,12 @@ public class VirtualImg<T extends NativeType<T>> extends AbstractImg<T> {
 		checkPlaneShape();
 	}
 
+	/**
+	 * Factory method for creating VirtualImgs from file names
+	 * @param fileName - name of the file that contains data of interest
+	 * @return a VirtualImg that gives read only access to data one plane at a time
+	 * @throws ImgIOException
+	 */
 	public static VirtualImg<?> create(String fileName) throws ImgIOException {
 		IFormatReader reader;
 		try {
@@ -90,6 +99,7 @@ public class VirtualImg<T extends NativeType<T>> extends AbstractImg<T> {
 		catch (final IOException e) {
 			throw new ImgIOException(e);
 		}
+		
 		long[] dims = ImgOpener.getDimLengths(reader);
 		
 		switch (reader.getPixelType()) {
@@ -109,6 +119,7 @@ public class VirtualImg<T extends NativeType<T>> extends AbstractImg<T> {
 				return new VirtualImg<FloatType>(dims, reader, new FloatType());
 			case FormatTools.DOUBLE:
 				return new VirtualImg<DoubleType>(dims, reader, new DoubleType());
+				// TODO - add LONG case here when supported by BioFormats
 			default:
 				throw new IllegalArgumentException("VirtualImg::create() : unsupported pixel format");
 		}
