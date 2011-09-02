@@ -88,7 +88,7 @@ public class VirtualImg<T extends NativeType<T>> extends AbstractImg<T> {
 	 * @return a VirtualImg that gives read only access to data one plane at a time
 	 * @throws ImgIOException
 	 */
-	public static VirtualImg<?> create(String fileName) throws ImgIOException {
+	public static VirtualImg<? extends NativeType<?>> create(String fileName) throws ImgIOException {
 		IFormatReader reader;
 		try {
 			reader = ImgOpener.createReader(fileName, false);  // TODO - or true?
