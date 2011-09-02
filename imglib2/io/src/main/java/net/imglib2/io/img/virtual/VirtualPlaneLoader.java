@@ -57,7 +57,7 @@ public class VirtualPlaneLoader {
 		this.planeDims = new long[image.numDimensions()-2];
 		for (int i = 0; i < planeDims.length; i++)
 			this.planeDims[i] = image.dimension(i+2);
-		this.planePosLoaded = new long[image.numDimensions()-2];
+		this.planePosLoaded = new long[planeDims.length];
 	}
 	
 	// -- public interface --
@@ -72,13 +72,13 @@ public class VirtualPlaneLoader {
 		for (int i = 0; i < planePosLoaded.length; i++)
 			planePosLoaded[i] = pos[i+2];
 		int planeNum = planeIndex(planeDims, planePosLoaded);
-		byte[] plane = null;
+		byte[] planeBytes = null;
 		try {
-			plane = virtImage.getReader().openBytes(planeNum);
+			planeBytes = virtImage.getReader().openBytes(planeNum);
 		} catch (Exception e) {
 			throw new IllegalArgumentException("cannot load plane "+planeNum);
 		}
-		Object primitivePlane = typeConvert(plane);
+		Object primitivePlane = typeConvert(planeBytes);
 		ArrayDataAccess<?> wrappedPlane = ImgOpener.makeArray(primitivePlane);
 		((PlanarImg)planeImg).setPlane(0, wrappedPlane);
 	}
@@ -107,7 +107,7 @@ public class VirtualPlaneLoader {
 		
 		int bytesPerPix;
 		boolean floating;
-		boolean little = true; // TODO - how should this be set in general?
+		boolean little = false; // TODO - how should this be set in general?
 
 		switch (virtImage.getReader().getPixelType()) {
 			case FormatTools.UINT8:

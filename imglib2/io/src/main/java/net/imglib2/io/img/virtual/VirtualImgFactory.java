@@ -37,9 +37,15 @@ import net.imglib2.exception.IncompatibleTypeException;
 import net.imglib2.img.Img;
 import net.imglib2.img.ImgFactory;
 import net.imglib2.type.NativeType;
+import net.imglib2.type.numeric.RealType;
 
 
-public class VirtualImgFactory<T extends NativeType<T>> extends ImgFactory<T> {
+/**
+ * 
+ * @author Barry DeZonia
+ *
+ */
+public class VirtualImgFactory<T extends NativeType<T> & RealType<T>> extends ImgFactory<T> {
 
 	@Override
 	public Img<T> create(long[] dim, T type) {

@@ -43,6 +43,7 @@ import net.imglib2.img.ImgFactory;
 import net.imglib2.io.ImgIOException;
 import net.imglib2.io.ImgOpener;
 import net.imglib2.type.NativeType;
+import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.integer.ByteType;
 import net.imglib2.type.numeric.integer.IntType;
 import net.imglib2.type.numeric.integer.ShortType;
@@ -58,7 +59,7 @@ import net.imglib2.type.numeric.real.FloatType;
  * @author Barry DeZonia
  *
  */
-public class VirtualImg<T extends NativeType<T>> extends AbstractImg<T> {
+public class VirtualImg<T extends NativeType<T> & RealType<T>> extends AbstractImg<T> {
 
 	private long[] dims;
 	private IFormatReader reader;
@@ -88,10 +89,10 @@ public class VirtualImg<T extends NativeType<T>> extends AbstractImg<T> {
 	 * @return a VirtualImg that gives read only access to data one plane at a time
 	 * @throws ImgIOException
 	 */
-	public static VirtualImg<? extends NativeType<?>> create(String fileName) throws ImgIOException {
-		IFormatReader reader;
+	public static VirtualImg<? extends RealType<?>> create(String fileName) throws ImgIOException {
+		IFormatReader rdr = null;
 		try {
-			reader = ImgOpener.createReader(fileName, false);  // TODO - or true?
+			rdr = ImgOpener.createReader(fileName, false);  // TODO - or true?
 		}
 		catch (final FormatException e) {
 			throw new ImgIOException(e);
@@ -100,25 +101,25 @@ public class VirtualImg<T extends NativeType<T>> extends AbstractImg<T> {
 			throw new ImgIOException(e);
 		}
 		
-		long[] dims = ImgOpener.getDimLengths(reader);
+		long[] dimensions = ImgOpener.getDimLengths(rdr);
 		
-		switch (reader.getPixelType()) {
+		switch (rdr.getPixelType()) {
 			case FormatTools.UINT8:
-				return new VirtualImg<UnsignedByteType>(dims, reader, new UnsignedByteType());
+				return new VirtualImg<UnsignedByteType>(dimensions, rdr, new UnsignedByteType());
 			case FormatTools.INT8:
-				return new VirtualImg<ByteType>(dims, reader, new ByteType());
+				return new VirtualImg<ByteType>(dimensions, rdr, new ByteType());
 			case FormatTools.UINT16:
-				return new VirtualImg<UnsignedShortType>(dims, reader, new UnsignedShortType());
+				return new VirtualImg<UnsignedShortType>(dimensions, rdr, new UnsignedShortType());
 			case FormatTools.INT16:
-				return new VirtualImg<ShortType>(dims, reader, new ShortType());
+				return new VirtualImg<ShortType>(dimensions, rdr, new ShortType());
 			case FormatTools.UINT32:
-				return new VirtualImg<UnsignedIntType>(dims, reader, new UnsignedIntType());
+				return new VirtualImg<UnsignedIntType>(dimensions, rdr, new UnsignedIntType());
 			case FormatTools.INT32:
-				return new VirtualImg<IntType>(dims, reader, new IntType());
+				return new VirtualImg<IntType>(dimensions, rdr, new IntType());
 			case FormatTools.FLOAT:
-				return new VirtualImg<FloatType>(dims, reader, new FloatType());
+				return new VirtualImg<FloatType>(dimensions, rdr, new FloatType());
 			case FormatTools.DOUBLE:
-				return new VirtualImg<DoubleType>(dims, reader, new DoubleType());
+				return new VirtualImg<DoubleType>(dimensions, rdr, new DoubleType());
 				// TODO - add LONG case here when supported by BioFormats
 			default:
 				throw new IllegalArgumentException("VirtualImg::create() : unsupported pixel format");

@@ -35,6 +35,7 @@ import net.imglib2.img.planar.PlanarImgFactory;
 import net.imglib2.img.planar.PlanarRandomAccess;
 import net.imglib2.iterator.IntervalIterator;
 import net.imglib2.type.NativeType;
+import net.imglib2.type.numeric.RealType;
 
 
 /**
@@ -42,7 +43,7 @@ import net.imglib2.type.NativeType;
  * @author Barry DeZonia
  *
  */
-public class VirtualCursor<T extends NativeType<T>> extends AbstractCursor<T> {
+public class VirtualCursor<T extends NativeType<T> & RealType<T>> extends AbstractCursor<T> {
 
 	private VirtualImg<T> virtImage;
 	private IntervalIterator iter;
@@ -61,7 +62,7 @@ public class VirtualCursor<T extends NativeType<T>> extends AbstractCursor<T> {
 		this.planeImg = new PlanarImgFactory<T>().create(planeSize, image.getType().copy());
 		this.accessor = planeImg.randomAccess();
 		this.position = new long[fullDimensions.length];
-		this.planeLoader = new VirtualPlaneLoader(image, planeImg);
+		this.planeLoader = new VirtualPlaneLoader(virtImage, planeImg);
 		planeLoader.loadPlane(position);
 	}
 	

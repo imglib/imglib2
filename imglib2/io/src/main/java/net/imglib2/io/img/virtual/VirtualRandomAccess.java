@@ -39,6 +39,7 @@ import net.imglib2.img.planar.PlanarImg;
 import net.imglib2.img.planar.PlanarImgFactory;
 import net.imglib2.img.planar.PlanarRandomAccess;
 import net.imglib2.type.NativeType;
+import net.imglib2.type.numeric.RealType;
 
 
 /**
@@ -53,7 +54,7 @@ import net.imglib2.type.NativeType;
  *
  * @param <T>
  */
-public class VirtualRandomAccess<T extends NativeType<T>> extends AbstractRandomAccess<T>
+public class VirtualRandomAccess<T extends NativeType<T> & RealType<T>> extends AbstractRandomAccess<T>
 {
 	private VirtualImg<T> virtImage;
 	private PlanarImg<T, ? extends ArrayDataAccess<?>> planeImg;
@@ -72,7 +73,7 @@ public class VirtualRandomAccess<T extends NativeType<T>> extends AbstractRandom
 		long[] planeSize = new long[]{image.dimension(0), image.dimension(1)};
 		this.planeImg = new PlanarImgFactory<T>().create(planeSize, image.getType().copy());
 		this.accessor = planeImg.randomAccess();
-		this.planeLoader = new VirtualPlaneLoader(image, planeImg);
+		this.planeLoader = new VirtualPlaneLoader(virtImage, planeImg);
 		planeLoader.loadPlane(position);
 	}
 
