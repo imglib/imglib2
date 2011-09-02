@@ -6,7 +6,7 @@ import net.imglib2.Localizable;
 import net.imglib2.Location;
 import net.imglib2.type.Type;
 
-public class ComponentInfo< T extends Type< T > >
+public class PixelListComponent< T extends Type< T > > implements Component< T >
 {
 	private static int idGen = 0;
 	
@@ -16,37 +16,55 @@ public class ComponentInfo< T extends Type< T > >
 	
 	T value;
 
-	public ComponentInfo()
+	public PixelListComponent()
 	{
 		id = idGen++;
 	}
 	
-	public ComponentInfo( final T value )
+	public PixelListComponent( final T value )
 	{
 		this();
 		this.locations = new ArrayList< Localizable >();
 		this.value = value.copy();
 	}
 	
+	/* (non-Javadoc)
+	 * @see net.imglib2.algorithm.mser.Component#addPosition(net.imglib2.Localizable)
+	 */
+	@Override
 	public void addPosition( final Localizable position )
 	{
 		locations.add( new Location( position ) );
 	}
 	
-	public T get()
+	/* (non-Javadoc)
+	 * @see net.imglib2.algorithm.mser.Component#get()
+	 */
+	@Override
+	public T getValue()
 	{
 		return value;
 	}
 	
+	/* (non-Javadoc)
+	 * @see net.imglib2.algorithm.mser.Component#setValue(T)
+	 */
+	@Override
 	public void setValue( final T value )
 	{
 		this.value.set( value );
 	}
 	
-	public void merge( final ComponentInfo< T > component )
+	/* (non-Javadoc)
+	 * @see net.imglib2.algorithm.mser.Component#merge(net.imglib2.algorithm.mser.ComponentInfo)
+	 */
+	@Override
+	public void merge( final Component< T > component )
 	{
-		System.out.println( "merge " + component.id + " into " + id );
-		for ( Localizable l : component.locations )
+		final PixelListComponent< T > c = ( PixelListComponent< T > ) component;
+
+		System.out.println( "merge " + c.id + " into " + id );
+		for ( Localizable l : c.locations )
 		{
 			addPosition( l );
 		}
