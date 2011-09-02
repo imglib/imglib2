@@ -23,7 +23,9 @@ public class ComponentTree< T extends Comparable< T > & Type< T >, C extends Com
 	final RandomAccessibleInterval< T > input;
 
 	final ComponentGenerator< T, C > componentGenerator;
-
+	
+	final ComponentHandler< C > componentOutput;
+ 
 	final long[] dimensions;
 
 	final RandomAccessible< BitType > accessiblePixels;
@@ -32,10 +34,11 @@ public class ComponentTree< T extends Comparable< T > & Type< T >, C extends Com
 
 	final Deque< C > componentStack;
 
-	public ComponentTree( final RandomAccessibleInterval< T > input, final ComponentGenerator< T, C > componentGenerator )
+	public ComponentTree( final RandomAccessibleInterval< T > input, final ComponentGenerator< T, C > componentGenerator, final ComponentHandler< C > componentOutput )
 	{
 		this.input = input;
 		this.componentGenerator = componentGenerator;
+		this.componentOutput = componentOutput;
 
 		// final long[] dimensions = new long[ input.numDimensions() ];
 		dimensions = new long[ input.numDimensions() ];
@@ -208,7 +211,7 @@ public class ComponentTree< T extends Comparable< T > & Type< T >, C extends Com
 		{
 			// process component on top of stack
 			C component = componentStack.pop();
-			emit( component );
+			componentOutput.emit( component );
 			
 			// get level of second component on stack
 			C secondComponent = componentStack.peek();
@@ -228,29 +231,6 @@ public class ComponentTree< T extends Comparable< T > & Type< T >, C extends Com
 			}
 			return;
 		}
-	} 
-	
-	protected void emit( C component )
-	{	
-		System.out.println( "emit " + component );
-		
-		PixelListComponent< T > plc = ( PixelListComponent< T > ) component;
-	
-		for ( int r = 0; r < dimensions[1]; ++r )
-		{
-			System.out.print("| ");
-			for ( int c = 0; c < dimensions[0]; ++c )
-			{
-				boolean set = false;
-				for ( Localizable l : plc.locations )
-					if( l.getIntPosition( 0 ) == c && l.getIntPosition( 1 ) == r )
-						set = true;
-				System.out.print( set ? "x " : ". " );
-			}
-			System.out.println("|");
-		}
-		
-		System.out.println();
 	}
 	
 	// -------------------------------------------------------------------------------
@@ -286,7 +266,8 @@ public class ComponentTree< T extends Comparable< T > & Type< T >, C extends Com
 		}
 		
 		final PixelListComponentGenerator< IntType > generator = new PixelListComponentGenerator< IntType >( new IntType( Integer.MAX_VALUE ) );
-		final ComponentTree< IntType, PixelListComponent< IntType > > tree = new ComponentTree< IntType, PixelListComponent< IntType > >( input, generator );
+		final PixelListComponentHandler< IntType > handler = new PixelListComponentHandler< IntType >( dimensions );
+		final ComponentTree< IntType, PixelListComponent< IntType > > tree = new ComponentTree< IntType, PixelListComponent< IntType > >( input, generator, handler );
 		tree.run();
 	}
 

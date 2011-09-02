@@ -1,5 +1,13 @@
 package net.imglib2.algorithm.mser;
 
+/**
+ * Create new components.
+ * 
+ * @author Tobias Pietzsch
+ *
+ * @param <T>
+ * @param <C>
+ */
 public interface ComponentGenerator< T, C extends Component< T > >
 {
 	/**
