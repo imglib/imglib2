@@ -28,6 +28,7 @@ POSSIBILITY OF SUCH DAMAGE.
 
 package net.imglib2.io.img.virtual;
 
+import loci.formats.FormatTools;
 import loci.formats.IFormatReader;
 
 import net.imglib2.Cursor;
@@ -37,6 +38,14 @@ import net.imglib2.img.AbstractImg;
 import net.imglib2.img.Img;
 import net.imglib2.img.ImgFactory;
 import net.imglib2.type.NativeType;
+import net.imglib2.type.numeric.integer.ByteType;
+import net.imglib2.type.numeric.integer.IntType;
+import net.imglib2.type.numeric.integer.ShortType;
+import net.imglib2.type.numeric.integer.UnsignedByteType;
+import net.imglib2.type.numeric.integer.UnsignedIntType;
+import net.imglib2.type.numeric.integer.UnsignedShortType;
+import net.imglib2.type.numeric.real.DoubleType;
+import net.imglib2.type.numeric.real.FloatType;
 
 
 /**
@@ -56,12 +65,12 @@ public class VirtualImg<T extends NativeType<T>> extends AbstractImg<T> {
 	// that only one user of the reader can be defined. Unless reader is
 	// already thread safe.
 	
-	public VirtualImg(long[] dims, IFormatReader reader, T type)
+	public VirtualImg(long[] dims, IFormatReader reader)
 	{
 		super(dims);
 		this.dims = dims.clone();
 		this.reader = reader;
-		this.type = type.copy();
+		this.type = pixelType(reader.getPixelType());
 		checkPlaneShape();
 	}
 
@@ -112,7 +121,7 @@ public class VirtualImg<T extends NativeType<T>> extends AbstractImg<T> {
 
 	@Override
 	public Img<T> copy() {
-		return new VirtualImg<T>(dims, reader, type);
+		return new VirtualImg<T>(dims, reader);
 	}
 
 	public T getType() {
@@ -154,5 +163,42 @@ public class VirtualImg<T extends NativeType<T>> extends AbstractImg<T> {
 		if (!ok)
 			throw new IllegalArgumentException(
 				"VirtualImg : size of dimension "+d+" does not match IFormatReader");
+	}
+
+	// TODO - adapted from ImgOpener::makeType(). Could not fix compiler errors to reuse it.
+	//   Undo this borrowing.
+	
+	@SuppressWarnings("unchecked")
+	private T pixelType(int pixelType) {
+		final NativeType<?> imgLibType;
+		switch (pixelType) {
+			case FormatTools.UINT8:
+				imgLibType = new UnsignedByteType();
+				break;
+			case FormatTools.INT8:
+				imgLibType = new ByteType();
+				break;
+			case FormatTools.UINT16:
+				imgLibType = new UnsignedShortType();
+				break;
+			case FormatTools.INT16:
+				imgLibType = new ShortType();
+				break;
+			case FormatTools.UINT32:
+				imgLibType = new UnsignedIntType();
+				break;
+			case FormatTools.INT32:
+				imgLibType = new IntType();
+				break;
+			case FormatTools.FLOAT:
+				imgLibType = new FloatType();
+				break;
+			case FormatTools.DOUBLE:
+				imgLibType = new DoubleType();
+				break;
+			default:
+				imgLibType = null;
+		}
+		return (T) imgLibType;
 	}
 }
