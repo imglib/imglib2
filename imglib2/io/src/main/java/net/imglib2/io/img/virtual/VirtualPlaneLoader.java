@@ -62,9 +62,12 @@ public class VirtualPlaneLoader {
 	
 	// -- public interface --
 	
-	public void virtualSwap(long[] pos) {
-		if (!planeLoaded(pos))
+	public boolean virtualSwap(long[] pos) {
+		if (!planeLoaded(pos)) {
 			loadPlane(pos);
+			return true;
+		}
+		return false;
 	}
 
 	@SuppressWarnings({"rawtypes","unchecked"})

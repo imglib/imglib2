@@ -72,9 +72,10 @@ public class VirtualRandomAccess<T extends NativeType<T> & RealType<T>> extends 
 		this.virtImage = image;
 		long[] planeSize = new long[]{image.dimension(0), image.dimension(1)};
 		this.planeImg = new PlanarImgFactory<T>().create(planeSize, image.getType().copy());
-		this.accessor = planeImg.randomAccess();
 		this.planeLoader = new VirtualPlaneLoader(virtImage, planeImg);
 		planeLoader.loadPlane(position);
+		// this initialization must follow loadPlane()
+		this.accessor = planeImg.randomAccess();
 	}
 
 	@Override
@@ -121,9 +122,19 @@ public class VirtualRandomAccess<T extends NativeType<T> & RealType<T>> extends 
 
 	@Override
 	public T get() {
-		planeLoader.virtualSwap(position);
-		accessor.setPosition(position[0], 0);
-		accessor.setPosition(position[1], 1);
+		// did we swap a plane?
+		if (planeLoader.virtualSwap(position)) {
+			// we did swap - make a new plane accessor
+			accessor = planeImg.randomAccess();
+			accessor.setPosition(position);
+			// TODO - each plane swap hatches a new accessor. this might be too
+			// costly. Figure out how to resync original accessor.
+		}
+		else { // we did not swap - adjust current accessor
+			accessor.setPosition(position[0], 0);
+			accessor.setPosition(position[1], 1);
+		}
+		
 		return accessor.get();
 	}
 

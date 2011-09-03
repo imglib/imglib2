@@ -60,18 +60,28 @@ public class VirtualCursor<T extends NativeType<T> & RealType<T>> extends Abstra
 		this.iter = new IntervalIterator(fullDimensions);
 		long[] planeSize = new long[]{fullDimensions[0], fullDimensions[1]};
 		this.planeImg = new PlanarImgFactory<T>().create(planeSize, image.getType().copy());
-		this.accessor = planeImg.randomAccess();
 		this.position = new long[fullDimensions.length];
 		this.planeLoader = new VirtualPlaneLoader(virtImage, planeImg);
 		planeLoader.loadPlane(position);
+		// this initialization must follow loadPlane()
+		this.accessor = planeImg.randomAccess();
 	}
 	
 	@Override
 	public T get() {
 		iter.localize(position);
-		planeLoader.virtualSwap(position);
-		accessor.setPosition(position[0], 0);
-		accessor.setPosition(position[1], 1);
+		// did we swap a plane?
+		if (planeLoader.virtualSwap(position)) {
+			// we did swap - make a new plane accessor
+			accessor = planeImg.randomAccess();
+			accessor.setPosition(position);
+			// TODO - each plane swap hatches a new accessor. this might be too
+			// costly. Figure out how to resync original accessor.
+		}
+		else { // we did not swap - adjust current accessor
+			accessor.setPosition(position[0], 0);
+			accessor.setPosition(position[1], 1);
+		}
 		return accessor.get();
 	}
 
