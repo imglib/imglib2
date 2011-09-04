@@ -56,14 +56,14 @@ public class ComplexSin extends ComplexOutput implements UnaryOperation<Complex,
 	private final Complex minusIZ;
 	private final Complex expIZ;
 	private final Complex expMinusIZ;
-	private final Complex sum;
+	private final Complex diff;
 	
 	public ComplexSin() {
 		IZ = new Complex();
 		minusIZ = new Complex();
 		expIZ = new Complex();
 		expMinusIZ = new Complex();
-		sum = new Complex();
+		diff = new Complex();
 	}
 	
 	@Override
@@ -72,7 +72,7 @@ public class ComplexSin extends ComplexOutput implements UnaryOperation<Complex,
 		mulFunc.compute(input, minusI, minusIZ);
 		expFunc.compute(IZ, expIZ);
 		expFunc.compute(minusIZ, expMinusIZ);
-		subFunc.compute(expIZ, expMinusIZ, sum);
-		divFunc.compute(sum, twoI, output);
+		subFunc.compute(expIZ, expMinusIZ, diff);
+		divFunc.compute(diff, twoI, output);
 	}
 }
