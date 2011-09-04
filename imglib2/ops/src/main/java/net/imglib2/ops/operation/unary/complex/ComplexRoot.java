@@ -40,7 +40,7 @@ import net.imglib2.ops.Complex;
  */
 public class ComplexRoot extends ComplexOutput implements UnaryOperation<Complex,Complex> {
 
-	private int power;
+	private final int power;
 	
 	public ComplexRoot(int power) {
 		if (power < 1)

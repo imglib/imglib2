@@ -44,8 +44,8 @@ public class ComplexIntegerPower extends ComplexOutput
 	private static final ComplexReciprocal recipFunc = new ComplexReciprocal();
 	private static final Complex one = Complex.createCartesian(1,0);
 	
-	private int power;
-	private Complex variable;
+	private final int power;
+	private final Complex variable;
 	
 	public ComplexIntegerPower(int power) {
 		this.power = power;
