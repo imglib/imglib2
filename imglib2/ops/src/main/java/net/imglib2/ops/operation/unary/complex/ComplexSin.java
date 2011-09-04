@@ -44,19 +44,19 @@ import net.imglib2.ops.operation.unary.complex.ComplexExp;
  */
 public class ComplexSin extends ComplexOutput implements UnaryOperation<Complex,Complex> {
 
-	private static ComplexExp expFunc = new ComplexExp();
-	private static ComplexSubtract subFunc = new ComplexSubtract();
-	private static ComplexMultiply mulFunc = new ComplexMultiply();
-	private static ComplexDivide divFunc = new ComplexDivide();
-	private static Complex twoI = Complex.createCartesian(0,2);
-	private static Complex I = Complex.createCartesian(0,1);
-	private static Complex minusI = Complex.createCartesian(0,-1);
+	private static final ComplexExp expFunc = new ComplexExp();
+	private static final ComplexSubtract subFunc = new ComplexSubtract();
+	private static final ComplexMultiply mulFunc = new ComplexMultiply();
+	private static final ComplexDivide divFunc = new ComplexDivide();
+	private static final Complex twoI = Complex.createCartesian(0,2);
+	private static final Complex I = Complex.createCartesian(0,1);
+	private static final Complex minusI = Complex.createCartesian(0,-1);
 	
-	private Complex IZ;
-	private Complex minusIZ;
-	private Complex expIZ;
-	private Complex expMinusIZ;
-	private Complex sum;
+	private final Complex IZ;
+	private final Complex minusIZ;
+	private final Complex expIZ;
+	private final Complex expMinusIZ;
+	private final Complex sum;
 	
 	public ComplexSin() {
 		IZ = new Complex();

@@ -44,19 +44,19 @@ import net.imglib2.ops.operation.unary.complex.ComplexExp;
  */
 public class ComplexCos extends ComplexOutput implements UnaryOperation<Complex,Complex> {
 
-	private static ComplexExp expFunc = new ComplexExp();
-	private static ComplexAdd addFunc = new ComplexAdd();
-	private static ComplexMultiply mulFunc = new ComplexMultiply();
-	private static ComplexDivide divFunc = new ComplexDivide();
-	private static Complex two = Complex.createCartesian(2,0);
-	private static Complex I = Complex.createCartesian(0,1);
-	private static Complex minusI = Complex.createCartesian(0,-1);
+	private static final ComplexExp expFunc = new ComplexExp();
+	private static final ComplexAdd addFunc = new ComplexAdd();
+	private static final ComplexMultiply mulFunc = new ComplexMultiply();
+	private static final ComplexDivide divFunc = new ComplexDivide();
+	private static final Complex two = Complex.createCartesian(2,0);
+	private static final Complex I = Complex.createCartesian(0,1);
+	private static final Complex minusI = Complex.createCartesian(0,-1);
 	
-	private Complex IZ;
-	private Complex minusIZ;
-	private Complex expIZ;
-	private Complex expMinusIZ;
-	private Complex sum;
+	private final Complex IZ;
+	private final Complex minusIZ;
+	private final Complex expIZ;
+	private final Complex expMinusIZ;
+	private final Complex sum;
 	
 	public ComplexCos() {
 		IZ = new Complex();
