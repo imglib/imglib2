@@ -33,6 +33,8 @@ import net.imglib2.ops.ComplexOutput;
 import net.imglib2.ops.UnaryOperation;
 import net.imglib2.ops.Complex;
 
+// Note - this uses the formula for the log of the principal branch.
+
 /**
  * 
  * @author Barry DeZonia
@@ -44,7 +46,6 @@ public class ComplexLog extends ComplexOutput implements UnaryOperation<Complex,
 	public void compute(Complex input, Complex output) {
 		double x = Math.log(input.getModulus());
 		double y = input.getPrincipleArgument();
-		output.setCartesian(x,y
-				);
+		output.setCartesian(x,y);
 	}
 }

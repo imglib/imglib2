@@ -43,7 +43,7 @@ public class ComplexDifference extends ComplexOutput implements BinaryOperation<
 	@Override
 	public void compute(Complex input1, Complex input2, Complex output) {
 		double r = Math.abs(input1.getX() - input2.getX());
-		double i = Math.abs(input1.getY() + input2.getY());
+		double i = Math.abs(input1.getY() - input2.getY());
 		output.setCartesian(r,i);
 	}
 }
