@@ -41,7 +41,7 @@ import net.imglib2.ops.UnaryOperation;
  */
 public final class RealArccsc extends RealOutput implements UnaryOperation<Real,Real> {
 
-	private static final RealArcsec sec = new RealArcsec();
+	private static final RealArcsec asec = new RealArcsec();
 	private final Real angle;
 	private final Real tmp;
 	
@@ -54,7 +54,7 @@ public final class RealArccsc extends RealOutput implements UnaryOperation<Real,
 	public void compute(Real input, Real output) {
 		double x = input.getReal();
 		angle.setReal(x / Math.sqrt(x*x - 1));
-		sec.compute(angle, tmp);
+		asec.compute(angle, tmp);
 		if (x <= -1)
 			output.setReal(tmp.getReal() - Math.PI);
 		else
