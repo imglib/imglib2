@@ -41,12 +41,12 @@ import net.imglib2.ops.UnaryOperation;
  * @author Barry DeZonia
  *
  */
-public class RealAddNoise extends RealOutput implements UnaryOperation<Real,Real> {
+public final class RealAddNoise extends RealOutput implements UnaryOperation<Real,Real> {
 
-	private double rangeMin;
-	private double rangeMax;
-	private double rangeStdDev;
-	private Random rng;
+	private final double rangeMin;
+	private final double rangeMax;
+	private final double rangeStdDev;
+	private final Random rng;
 	
 	public RealAddNoise(double min, double max, double stdDev) {
 		this.rangeMin = min;

@@ -38,7 +38,7 @@ import net.imglib2.ops.RealOutput;
  * @author Barry DeZonia
  *
  */
-public class RealDivide extends RealOutput implements BinaryOperation<Real,Real,Real> {
+public final class RealDivide extends RealOutput implements BinaryOperation<Real,Real,Real> {
 
 	@Override
 	public void compute(Real input1, Real input2, Real output) {

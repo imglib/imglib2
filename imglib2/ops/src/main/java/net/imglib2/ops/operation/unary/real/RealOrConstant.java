@@ -39,9 +39,9 @@ import net.imglib2.ops.UnaryOperation;
  * @author Barry DeZonia
  *
  */
-public class RealOrConstant extends RealOutput implements UnaryOperation<Real,Real> {
+public final class RealOrConstant extends RealOutput implements UnaryOperation<Real,Real> {
 
-	private long constant;
+	private final long constant;
 	
 	public RealOrConstant(long constant) {
 		this.constant = constant;

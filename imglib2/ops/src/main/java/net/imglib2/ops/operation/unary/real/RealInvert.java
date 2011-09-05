@@ -39,9 +39,10 @@ import net.imglib2.ops.UnaryOperation;
  * @author Barry DeZonia
  *
  */
-public class RealInvert extends RealOutput implements UnaryOperation<Real,Real> {
+public final class RealInvert extends RealOutput implements UnaryOperation<Real,Real> {
 
-	private final double actualMin, actualMax;
+	private final double actualMin;
+	private final double actualMax;
 
 	public RealInvert(final double actualMin, final double actualMax)
 	{

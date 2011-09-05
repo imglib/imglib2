@@ -38,7 +38,7 @@ import net.imglib2.ops.Complex;
  * @author Barry DeZonia
  *
  */
-public class ComplexCopy extends ComplexOutput implements UnaryOperation<Complex,Complex> {
+public final class ComplexCopy extends ComplexOutput implements UnaryOperation<Complex,Complex> {
 
 	@Override
 	public void compute(Complex input, Complex output) {

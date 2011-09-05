@@ -39,7 +39,7 @@ import net.imglib2.ops.operation.binary.complex.ComplexDivide;
  * @author Barry DeZonia
  *
  */
-public class ComplexCsc extends ComplexOutput implements UnaryOperation<Complex,Complex> {
+public final class ComplexCsc extends ComplexOutput implements UnaryOperation<Complex,Complex> {
 
 	private static final ComplexSin sinFunc = new ComplexSin();
 	private static final ComplexDivide divFunc = new ComplexDivide();

@@ -38,7 +38,7 @@ import net.imglib2.ops.ComplexOutput;
  * @author Barry DeZonia
  *
  */
-public class ComplexCopyRight extends ComplexOutput implements BinaryOperation<Complex,Complex,Complex> {
+public final class ComplexCopyRight extends ComplexOutput implements BinaryOperation<Complex,Complex,Complex> {
 
 	@Override
 	public void compute(Complex input1, Complex input2, Complex output) {

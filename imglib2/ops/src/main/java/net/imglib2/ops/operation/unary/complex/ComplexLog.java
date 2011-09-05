@@ -40,7 +40,7 @@ import net.imglib2.ops.Complex;
  * @author Barry DeZonia
  *
  */
-public class ComplexLog extends ComplexOutput implements UnaryOperation<Complex,Complex> {
+public final class ComplexLog extends ComplexOutput implements UnaryOperation<Complex,Complex> {
 
 	@Override
 	public void compute(Complex input, Complex output) {

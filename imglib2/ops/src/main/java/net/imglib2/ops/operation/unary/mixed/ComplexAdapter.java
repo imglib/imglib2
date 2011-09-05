@@ -44,7 +44,7 @@ import net.imglib2.ops.UnaryOperation;
  * @author Barry DeZonia
  *
  */
-public class ComplexAdapter extends ComplexOutput implements UnaryOperation<Real,Complex> {
+public final class ComplexAdapter extends ComplexOutput implements UnaryOperation<Real,Complex> {
 
 	@Override
 	public void compute(Real input, Complex output) {

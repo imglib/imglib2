@@ -39,9 +39,9 @@ import net.imglib2.ops.UnaryOperation;
  * @author Barry DeZonia
  *
  */
-public class RealReciprocal extends RealOutput implements UnaryOperation<Real,Real> {
+public final class RealReciprocal extends RealOutput implements UnaryOperation<Real,Real> {
 
-	private double dbzVal;
+	private final double dbzVal;
 	
 	public RealReciprocal(double dbzVal) {
 		this.dbzVal = dbzVal;

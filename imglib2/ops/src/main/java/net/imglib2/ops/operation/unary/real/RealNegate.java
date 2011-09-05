@@ -39,7 +39,7 @@ import net.imglib2.ops.UnaryOperation;
  * @author Barry DeZonia
  *
  */
-public class RealNegate extends RealOutput implements UnaryOperation<Real,Real> {
+public final class RealNegate extends RealOutput implements UnaryOperation<Real,Real> {
 
 	@Override
 	public void compute(Real input, Real output) {

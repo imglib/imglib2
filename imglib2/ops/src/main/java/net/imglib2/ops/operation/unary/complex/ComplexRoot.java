@@ -38,7 +38,7 @@ import net.imglib2.ops.Complex;
  * @author Barry DeZonia
  *
  */
-public class ComplexRoot extends ComplexOutput implements UnaryOperation<Complex,Complex> {
+public final class ComplexRoot extends ComplexOutput implements UnaryOperation<Complex,Complex> {
 
 	private final int power;
 	

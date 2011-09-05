@@ -39,7 +39,7 @@ import net.imglib2.ops.operation.binary.complex.ComplexDivide;
  * @author Barry DeZonia
  *
  */
-public class ComplexTan extends ComplexOutput implements UnaryOperation<Complex,Complex> {
+public final class ComplexTan extends ComplexOutput implements UnaryOperation<Complex,Complex> {
 
 	private static final ComplexCos cosFunc = new ComplexCos();
 	private static final ComplexSin sinFunc = new ComplexSin();

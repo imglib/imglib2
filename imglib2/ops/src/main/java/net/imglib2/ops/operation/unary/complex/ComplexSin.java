@@ -42,7 +42,7 @@ import net.imglib2.ops.operation.unary.complex.ComplexExp;
  * @author Barry DeZonia
  *
  */
-public class ComplexSin extends ComplexOutput implements UnaryOperation<Complex,Complex> {
+public final class ComplexSin extends ComplexOutput implements UnaryOperation<Complex,Complex> {
 
 	private static final ComplexExp expFunc = new ComplexExp();
 	private static final ComplexSubtract subFunc = new ComplexSubtract();

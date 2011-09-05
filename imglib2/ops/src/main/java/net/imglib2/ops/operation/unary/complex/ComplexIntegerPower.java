@@ -38,7 +38,7 @@ import net.imglib2.ops.Complex;
  * @author Barry DeZonia
  *
  */
-public class ComplexIntegerPower extends ComplexOutput
+public final class ComplexIntegerPower extends ComplexOutput
 	implements UnaryOperation<Complex,Complex>
 {
 	private static final ComplexReciprocal recipFunc = new ComplexReciprocal();
