@@ -51,6 +51,7 @@ public final class ComplexCsc extends ComplexOutput implements UnaryOperation<Co
 	}
 	
 	// TODO - is it the same but quicker to calculate reciprocal(sin(z))?
+	//   Later - it is the same but tests showed it very slightly slower
 	
 	@Override
 	public void compute(Complex input, Complex output) {
