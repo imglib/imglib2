@@ -32,28 +32,36 @@ package net.imglib2.ops.operation.unary.complex;
 import net.imglib2.ops.ComplexOutput;
 import net.imglib2.ops.UnaryOperation;
 import net.imglib2.ops.Complex;
-import net.imglib2.ops.operation.binary.complex.ComplexDivide;
+import net.imglib2.ops.operation.binary.complex.ComplexAdd;
+import net.imglib2.ops.operation.binary.complex.ComplexMultiply;
+import net.imglib2.ops.operation.binary.complex.ComplexPower;
 
 /**
  * 
  * @author Barry DeZonia
  *
  */
-public final class ComplexSec extends ComplexOutput implements UnaryOperation<Complex,Complex> {
+public final class ComplexArcsinh extends ComplexOutput implements UnaryOperation<Complex,Complex> {
 
 	private static final Complex ONE = Complex.createCartesian(1, 0);
+	private static final Complex ONE_HALF = Complex.createCartesian(0.5, 0);
 
-	private static final ComplexCos cosFunc = new ComplexCos();
-	private static final ComplexDivide divFunc = new ComplexDivide();
+	private static final ComplexMultiply mulFunc = new ComplexMultiply();
+	private static final ComplexPower powFunc = new ComplexPower();
+	private static final ComplexAdd addFunc = new ComplexAdd();
+	private static final ComplexLog logFunc = new ComplexLog();
 	
-	private final Complex cos = new Complex();
-	
-	// TODO - is it the same but quicker to calculate reciprocal(cos(z))?
-	//   Later - it is the same but tests showed it very slightly slower
+	private final Complex zSquared = new Complex();
+	private final Complex miniSum = new Complex();
+	private final Complex root = new Complex();
+	private final Complex sum = new Complex();
 	
 	@Override
-	public void compute(Complex input, Complex output) {
-		cosFunc.compute(input, cos);
-		divFunc.compute(ONE, cos, output);
+	public void compute(Complex z, Complex output) {
+		mulFunc.compute(z, z, zSquared);
+		addFunc.compute(zSquared, ONE, miniSum);
+		powFunc.compute(miniSum, ONE_HALF, root);
+		addFunc.compute(z, root, sum);
+		logFunc.compute(sum, output);
 	}
 }

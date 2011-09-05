@@ -34,26 +34,25 @@ import net.imglib2.ops.UnaryOperation;
 import net.imglib2.ops.Complex;
 import net.imglib2.ops.operation.binary.complex.ComplexDivide;
 
+// TODO - I am not sure this formula is right
+
 /**
  * 
  * @author Barry DeZonia
  *
  */
-public final class ComplexSec extends ComplexOutput implements UnaryOperation<Complex,Complex> {
+public final class ComplexArcsech extends ComplexOutput implements UnaryOperation<Complex,Complex> {
 
 	private static final Complex ONE = Complex.createCartesian(1, 0);
 
-	private static final ComplexCos cosFunc = new ComplexCos();
+	private static final ComplexArccosh arccoshFunc = new ComplexArccosh();
 	private static final ComplexDivide divFunc = new ComplexDivide();
 	
-	private final Complex cos = new Complex();
-	
-	// TODO - is it the same but quicker to calculate reciprocal(cos(z))?
-	//   Later - it is the same but tests showed it very slightly slower
+	private final Complex recipZ = new Complex();
 	
 	@Override
-	public void compute(Complex input, Complex output) {
-		cosFunc.compute(input, cos);
-		divFunc.compute(ONE, cos, output);
+	public void compute(Complex z, Complex output) {
+		divFunc.compute(ONE, z, recipZ);
+		arccoshFunc.compute(recipZ, output);
 	}
 }

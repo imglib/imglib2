@@ -44,35 +44,28 @@ import net.imglib2.ops.operation.unary.complex.ComplexExp;
  */
 public final class ComplexSin extends ComplexOutput implements UnaryOperation<Complex,Complex> {
 
+	private static final Complex TWO_I = Complex.createCartesian(0,2);
+	private static final Complex I = Complex.createCartesian(0,1);
+	private static final Complex MINUS_I = Complex.createCartesian(0,-1);
+
 	private static final ComplexExp expFunc = new ComplexExp();
 	private static final ComplexSubtract subFunc = new ComplexSubtract();
 	private static final ComplexMultiply mulFunc = new ComplexMultiply();
 	private static final ComplexDivide divFunc = new ComplexDivide();
-	private static final Complex twoI = Complex.createCartesian(0,2);
-	private static final Complex I = Complex.createCartesian(0,1);
-	private static final Complex minusI = Complex.createCartesian(0,-1);
 	
-	private final Complex IZ;
-	private final Complex minusIZ;
-	private final Complex expIZ;
-	private final Complex expMinusIZ;
-	private final Complex diff;
-	
-	public ComplexSin() {
-		IZ = new Complex();
-		minusIZ = new Complex();
-		expIZ = new Complex();
-		expMinusIZ = new Complex();
-		diff = new Complex();
-	}
+	private final Complex IZ = new Complex();
+	private final Complex minusIZ = new Complex();
+	private final Complex expIZ = new Complex();
+	private final Complex expMinusIZ = new Complex();
+	private final Complex diff = new Complex();
 	
 	@Override
-	public void compute(Complex input, Complex output) {
-		mulFunc.compute(input, I, IZ);
-		mulFunc.compute(input, minusI, minusIZ);
+	public void compute(Complex z, Complex output) {
+		mulFunc.compute(z, I, IZ);
+		mulFunc.compute(z, MINUS_I, minusIZ);
 		expFunc.compute(IZ, expIZ);
 		expFunc.compute(minusIZ, expMinusIZ);
 		subFunc.compute(expIZ, expMinusIZ, diff);
-		divFunc.compute(diff, twoI, output);
+		divFunc.compute(diff, TWO_I, output);
 	}
 }

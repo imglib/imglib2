@@ -45,13 +45,8 @@ public final class ComplexCot extends ComplexOutput implements UnaryOperation<Co
 	private static final ComplexSin sinFunc = new ComplexSin();
 	private static final ComplexDivide divFunc = new ComplexDivide();
 	
-	private final Complex sin;
-	private final Complex cos;
-	
-	public ComplexCot() {
-		sin = new Complex();
-		cos = new Complex();
-	}
+	private final Complex sin = new Complex();
+	private final Complex cos = new Complex();
 	
 	@Override
 	public void compute(Complex input, Complex output) {

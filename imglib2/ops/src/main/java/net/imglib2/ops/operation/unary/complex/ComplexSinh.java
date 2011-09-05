@@ -44,31 +44,25 @@ import net.imglib2.ops.operation.unary.complex.ComplexExp;
  */
 public final class ComplexSinh extends ComplexOutput implements UnaryOperation<Complex,Complex> {
 
+	private static final Complex TWO = Complex.createCartesian(2,0);
+	private static final Complex MINUS_ONE = Complex.createCartesian(-1,0);
+
 	private static final ComplexExp expFunc = new ComplexExp();
 	private static final ComplexSubtract diffFunc = new ComplexSubtract();
 	private static final ComplexMultiply mulFunc = new ComplexMultiply();
 	private static final ComplexDivide divFunc = new ComplexDivide();
-	private static final Complex two = Complex.createCartesian(2,0);
-	private static final Complex minusOne = Complex.createCartesian(-1,0);
 	
-	private final Complex minusZ;
-	private final Complex expZ;
-	private final Complex expMinusZ;
-	private final Complex diff;
-	
-	public ComplexSinh() {
-		minusZ = new Complex();
-		expZ = new Complex();
-		expMinusZ = new Complex();
-		diff = new Complex();
-	}
+	private final Complex minusZ = new Complex();
+	private final Complex expZ = new Complex();
+	private final Complex expMinusZ = new Complex();
+	private final Complex diff = new Complex();
 	
 	@Override
 	public void compute(Complex input, Complex output) {
-		mulFunc.compute(input, minusOne, minusZ);
 		expFunc.compute(input, expZ);
+		mulFunc.compute(input, MINUS_ONE, minusZ);
 		expFunc.compute(minusZ, expMinusZ);
 		diffFunc.compute(expZ, expMinusZ, diff);
-		divFunc.compute(diff, two, output);
+		divFunc.compute(diff, TWO, output);
 	}
 }

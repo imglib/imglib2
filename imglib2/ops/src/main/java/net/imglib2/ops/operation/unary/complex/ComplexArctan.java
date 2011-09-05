@@ -32,28 +32,41 @@ package net.imglib2.ops.operation.unary.complex;
 import net.imglib2.ops.ComplexOutput;
 import net.imglib2.ops.UnaryOperation;
 import net.imglib2.ops.Complex;
+import net.imglib2.ops.operation.binary.complex.ComplexAdd;
 import net.imglib2.ops.operation.binary.complex.ComplexDivide;
+import net.imglib2.ops.operation.binary.complex.ComplexMultiply;
+import net.imglib2.ops.operation.binary.complex.ComplexSubtract;
 
 /**
  * 
  * @author Barry DeZonia
  *
  */
-public final class ComplexSec extends ComplexOutput implements UnaryOperation<Complex,Complex> {
+public final class ComplexArctan extends ComplexOutput implements UnaryOperation<Complex,Complex> {
 
-	private static final Complex ONE = Complex.createCartesian(1, 0);
-
-	private static final ComplexCos cosFunc = new ComplexCos();
+	private static final Complex ONE = Complex.createCartesian(1,0);
+	private static final Complex I = Complex.createCartesian(0,1);
+	private static final Complex MINUS_I_OVER_TWO = Complex.createCartesian(0,-0.5);
+	
+	private static final ComplexMultiply mulFunc = new ComplexMultiply();
+	private static final ComplexAdd addFunc = new ComplexAdd();
+	private static final ComplexSubtract subFunc = new ComplexSubtract();
 	private static final ComplexDivide divFunc = new ComplexDivide();
+	private static final ComplexLog logFunc = new ComplexLog();
 	
-	private final Complex cos = new Complex();
-	
-	// TODO - is it the same but quicker to calculate reciprocal(cos(z))?
-	//   Later - it is the same but tests showed it very slightly slower
+	private final Complex iz = new Complex();
+	private final Complex sum = new Complex();
+	private final Complex diff = new Complex();
+	private final Complex quotient = new Complex();
+	private final Complex log = new Complex();
 	
 	@Override
-	public void compute(Complex input, Complex output) {
-		cosFunc.compute(input, cos);
-		divFunc.compute(ONE, cos, output);
+	public void compute(Complex z, Complex output) {
+		mulFunc.compute(I, z, iz);
+		addFunc.compute(ONE, iz, sum);
+		subFunc.compute(ONE, iz, diff);
+		divFunc.compute(sum, diff, quotient);
+		logFunc.compute(quotient, log);
+		mulFunc.compute(MINUS_I_OVER_TWO, log, output);
 	}
 }

@@ -45,13 +45,8 @@ public final class ComplexCoth extends ComplexOutput implements UnaryOperation<C
 	private static final ComplexSinh sinhFunc = new ComplexSinh();
 	private static final ComplexDivide divFunc = new ComplexDivide();
 	
-	private final Complex sinh;
-	private final Complex cosh;
-	
-	public ComplexCoth() {
-		sinh = new Complex();
-		cosh = new Complex();
-	}
+	private final Complex sinh = new Complex();
+	private final Complex cosh = new Complex();
 	
 	@Override
 	public void compute(Complex input, Complex output) {

@@ -41,21 +41,21 @@ import net.imglib2.ops.Complex;
 public final class ComplexIntegerPower extends ComplexOutput
 	implements UnaryOperation<Complex,Complex>
 {
+	private static final Complex ONE = Complex.createCartesian(1,0);
+
 	private static final ComplexReciprocal recipFunc = new ComplexReciprocal();
-	private static final Complex one = Complex.createCartesian(1,0);
 	
 	private final int power;
-	private final Complex variable;
+	private final Complex variable = new Complex();
 	
 	public ComplexIntegerPower(int power) {
 		this.power = power;
-		this.variable = new Complex();
 	}
 	
 	@Override
 	public void compute(Complex input, Complex output) {
 		if (power == 0)
-			output.setValue(one);
+			output.setValue(ONE);
 		else {
 			if (power < 0)
 				recipFunc.compute(input, variable);

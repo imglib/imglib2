@@ -41,14 +41,12 @@ import net.imglib2.ops.operation.binary.complex.ComplexDivide;
  */
 public final class ComplexCsch extends ComplexOutput implements UnaryOperation<Complex,Complex> {
 
+	private static final Complex ONE = Complex.createCartesian(1, 0);
+
 	private static final ComplexSinh sinhFunc = new ComplexSinh();
 	private static final ComplexDivide divFunc = new ComplexDivide();
-	private static final Complex one = Complex.createCartesian(1, 0);
-	private final Complex sinh;
 	
-	public ComplexCsch() {
-		sinh = new Complex();
-	}
+	private final Complex sinh = new Complex();
 	
 	// TODO - is it the same but quicker to calculate reciprocal(sin(z))?
 	//   Later - it is the same but tests showed it very slightly slower
@@ -56,6 +54,6 @@ public final class ComplexCsch extends ComplexOutput implements UnaryOperation<C
 	@Override
 	public void compute(Complex input, Complex output) {
 		sinhFunc.compute(input, sinh);
-		divFunc.compute(one, sinh, output);
+		divFunc.compute(ONE, sinh, output);
 	}
 }
