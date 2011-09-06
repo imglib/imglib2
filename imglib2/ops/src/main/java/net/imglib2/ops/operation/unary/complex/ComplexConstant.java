@@ -38,11 +38,11 @@ import net.imglib2.ops.Complex;
  * @author Barry DeZonia
  *
  */
-public final class ComplexSetConstant extends ComplexOutput implements UnaryOperation<Complex,Complex> {
+public final class ComplexConstant extends ComplexOutput implements UnaryOperation<Complex,Complex> {
 
 	private final Complex constant = new Complex();
 	
-	public ComplexSetConstant(Complex constant) {
+	public ComplexConstant(Complex constant) {
 		this.constant.setValue(constant);
 	}
 	
