@@ -48,16 +48,18 @@ public class VirtualPlaneLoader {
 	private PlanarImg<?, ? extends ArrayDataAccess<?>> planeImg;
 	private long[] planeDims;
 	private long[] planePosLoaded;
+	private boolean bytesOnly;
 	
 	// -- constructor --
 	
-	public VirtualPlaneLoader(VirtualImg<?> image, PlanarImg<?, ? extends ArrayDataAccess<?>> planeImg) {
+	public VirtualPlaneLoader(VirtualImg<?> image, PlanarImg<?, ? extends ArrayDataAccess<?>> planeImg, boolean bytesOnly) {
 		this.virtImage = image;
 		this.planeImg = planeImg;
 		this.planeDims = new long[image.numDimensions()-2];
 		for (int i = 0; i < planeDims.length; i++)
 			this.planeDims[i] = image.dimension(i+2);
 		this.planePosLoaded = new long[planeDims.length];
+		this.bytesOnly = bytesOnly;
 	}
 	
 	// -- public interface --
@@ -81,7 +83,13 @@ public class VirtualPlaneLoader {
 		} catch (Exception e) {
 			throw new IllegalArgumentException("cannot load plane "+planeNum);
 		}
-		Object primitivePlane = typeConvert(planeBytes);
+		Object primitivePlane;
+		if (bytesOnly) {
+			primitivePlane = planeBytes;
+		}
+		else { // want type from encoded bytes
+			primitivePlane = typeConvert(planeBytes);
+		}
 		ArrayDataAccess<?> wrappedPlane = ImgOpener.makeArray(primitivePlane);
 		((PlanarImg)planeImg).setPlane(0, wrappedPlane);
 	}

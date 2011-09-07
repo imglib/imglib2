@@ -64,6 +64,7 @@ public class VirtualImg<T extends NativeType<T> & RealType<T>> extends AbstractI
 	private long[] dims;
 	private IFormatReader reader;
 	private T type;
+	private boolean bytesOnly;
 	
 	// TODO
 	// The reader gets shared among all copy()'s and randomAccess()'s and
@@ -74,13 +75,14 @@ public class VirtualImg<T extends NativeType<T> & RealType<T>> extends AbstractI
 	// Note - this constructor is clumsy and error prone. so we're making it
 	// private and only invoking (always correctly) through the create() method.
 	
-	private VirtualImg(long[] dims, IFormatReader reader, T type)
+	private VirtualImg(long[] dims, IFormatReader reader, T type, boolean bytesOnly)
 	{
 		super(dims);
 		this.dims = dims.clone();
 		this.reader = reader;
 		this.type = type.copy();
-		checkPlaneShape();
+		this.bytesOnly = bytesOnly;
+		checkDimensions();
 	}
 
 	/**
@@ -89,7 +91,10 @@ public class VirtualImg<T extends NativeType<T> & RealType<T>> extends AbstractI
 	 * @return a VirtualImg that gives read only access to data one plane at a time
 	 * @throws ImgIOException
 	 */
-	public static VirtualImg<? extends RealType<?>> create(String fileName) throws ImgIOException {
+	public static VirtualImg<? extends RealType<?>>
+		create(String fileName, boolean bytesOnly)
+			throws ImgIOException
+	{
 		IFormatReader rdr = null;
 		try {
 			rdr = ImgOpener.createReader(fileName, false);  // TODO - or true?
@@ -102,24 +107,49 @@ public class VirtualImg<T extends NativeType<T> & RealType<T>> extends AbstractI
 		}
 		
 		long[] dimensions = ImgOpener.getDimLengths(rdr);
+
+		if (bytesOnly) {
+			switch (rdr.getPixelType()) {
+				case FormatTools.UINT8:
+				case FormatTools.INT8:
+					dimensions[0] *= 1;
+					break;
+				case FormatTools.UINT16:
+				case FormatTools.INT16:
+					dimensions[0] *= 2;
+					break;
+				case FormatTools.UINT32:
+				case FormatTools.INT32:
+				case FormatTools.FLOAT:
+					dimensions[0] *= 4;
+					break;
+				case FormatTools.DOUBLE:
+					dimensions[0] *= 8;
+					break;
+					// TODO - add LONG case here when supported by BioFormats
+				default:
+					throw new IllegalArgumentException("VirtualImg::create() : unsupported pixel format");
+			}
+			return new VirtualImg<UnsignedByteType>(dimensions, rdr, new UnsignedByteType(), true);
+		}
 		
 		switch (rdr.getPixelType()) {
 			case FormatTools.UINT8:
-				return new VirtualImg<UnsignedByteType>(dimensions, rdr, new UnsignedByteType());
+				return new VirtualImg<UnsignedByteType>(dimensions, rdr, new UnsignedByteType(), false);
 			case FormatTools.INT8:
-				return new VirtualImg<ByteType>(dimensions, rdr, new ByteType());
+				return new VirtualImg<ByteType>(dimensions, rdr, new ByteType(), false);
 			case FormatTools.UINT16:
-				return new VirtualImg<UnsignedShortType>(dimensions, rdr, new UnsignedShortType());
+				return new VirtualImg<UnsignedShortType>(dimensions, rdr, new UnsignedShortType(), false);
 			case FormatTools.INT16:
-				return new VirtualImg<ShortType>(dimensions, rdr, new ShortType());
+				return new VirtualImg<ShortType>(dimensions, rdr, new ShortType(), false);
 			case FormatTools.UINT32:
-				return new VirtualImg<UnsignedIntType>(dimensions, rdr, new UnsignedIntType());
+				return new VirtualImg<UnsignedIntType>(dimensions, rdr, new UnsignedIntType(), false);
 			case FormatTools.INT32:
-				return new VirtualImg<IntType>(dimensions, rdr, new IntType());
+				return new VirtualImg<IntType>(dimensions, rdr, new IntType(), false);
 			case FormatTools.FLOAT:
-				return new VirtualImg<FloatType>(dimensions, rdr, new FloatType());
+				return new VirtualImg<FloatType>(dimensions, rdr, new FloatType(), false);
 			case FormatTools.DOUBLE:
-				return new VirtualImg<DoubleType>(dimensions, rdr, new DoubleType());
+				return new VirtualImg<DoubleType>(dimensions, rdr, new DoubleType(), false);
 				// TODO - add LONG case here when supported by BioFormats
 			default:
 				throw new IllegalArgumentException("VirtualImg::create() : unsupported pixel format");
@@ -155,7 +185,7 @@ public class VirtualImg<T extends NativeType<T> & RealType<T>> extends AbstractI
 
 	@Override
 	public Img<T> copy() {
-		return new VirtualImg<T>(dims, reader, type);
+		return new VirtualImg<T>(dims, reader, type, bytesOnly);
 	}
 
 	public T getType() {
@@ -166,37 +196,19 @@ public class VirtualImg<T extends NativeType<T> & RealType<T>> extends AbstractI
 		return reader;
 	}
 	
+	public boolean isByteOnly() {
+		return bytesOnly;
+	}
+
 	// -- private helpers --
 	
-	private void checkPlaneShape() {
+	private void checkDimensions() {
 		if (dims.length < 2)
-			throw new IllegalArgumentException("VirtualImg must be of dimension two or higher");
-
-		checkDimension(0);
-		checkDimension(1);
-	}
-	
-	private void checkDimension(int d) {
-		String dimsOrder = reader.getDimensionOrder();
-		
-		char dimName = Character.toUpperCase(dimsOrder.charAt(d));
-
-		boolean ok = false;
-		
-		switch (dimName) {
-			case 'X': ok = (dims[d] == reader.getSizeX()); break;
-			case 'Y': ok = (dims[d] == reader.getSizeY()); break;
-			case 'C': ok = (dims[d] == reader.getSizeC()); break;
-			case 'Z': ok = (dims[d] == reader.getSizeZ()); break;
-			case 'T': ok = (dims[d] == reader.getSizeT()); break;
-			default:
-				throw new IllegalArgumentException(
-					"To match IFormatReader a VirtualImg currently only supports X, Y, Z, C, & T axes");
-		}
-			
-		if (!ok)
 			throw new IllegalArgumentException(
-				"VirtualImg : size of dimension "+d+" does not match IFormatReader");
+				"VirtualImg must be of dimension two or higher");
+		
+		// NOTE - removed code that tested dim0 & dim1 since byteOnly code can mess
+		// with dim0. And we setup dims ourself so we know they are correct.
 	}
 
 }
