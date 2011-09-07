@@ -59,8 +59,9 @@ import net.imglib2.type.numeric.real.FloatType;
  * @author Barry DeZonia
  *
  */
-public class VirtualImg<T extends NativeType<T> & RealType<T>> extends AbstractImg<T> {
-
+public class VirtualImg<T extends NativeType<T> & RealType<T>>
+	extends AbstractImg<T>
+{
 	private long[] dims;
 	private IFormatReader reader;
 	private T type;
@@ -75,7 +76,8 @@ public class VirtualImg<T extends NativeType<T> & RealType<T>> extends AbstractI
 	// Note - this constructor is clumsy and error prone. so we're making it
 	// private and only invoking (always correctly) through the create() method.
 	
-	private VirtualImg(long[] dims, IFormatReader reader, T type, boolean bytesOnly)
+	private VirtualImg(
+		long[] dims, IFormatReader reader, T type, boolean bytesOnly)
 	{
 		super(dims);
 		this.dims = dims.clone();
@@ -88,7 +90,7 @@ public class VirtualImg<T extends NativeType<T> & RealType<T>> extends AbstractI
 	/**
 	 * Factory method for creating VirtualImgs from file names
 	 * @param fileName - name of the file that contains data of interest
-	 * @return a VirtualImg that gives read only access to data one plane at a time
+	 * @return a VirtualImg that gives read only access to data a plane at a time
 	 * @throws ImgIOException
 	 */
 	public static VirtualImg<? extends RealType<?>>
@@ -128,31 +130,42 @@ public class VirtualImg<T extends NativeType<T> & RealType<T>> extends AbstractI
 					break;
 					// TODO - add LONG case here when supported by BioFormats
 				default:
-					throw new IllegalArgumentException("VirtualImg::create() : unsupported pixel format");
+					throw new IllegalArgumentException(
+						"VirtualImg::create() : unsupported pixel format");
 			}
-			return new VirtualImg<UnsignedByteType>(dimensions, rdr, new UnsignedByteType(), true);
+			return new VirtualImg<UnsignedByteType>(
+					dimensions, rdr, new UnsignedByteType(), true);
 		}
 		
 		switch (rdr.getPixelType()) {
 			case FormatTools.UINT8:
-				return new VirtualImg<UnsignedByteType>(dimensions, rdr, new UnsignedByteType(), false);
+				return new VirtualImg<UnsignedByteType>(
+						dimensions, rdr, new UnsignedByteType(), false);
 			case FormatTools.INT8:
-				return new VirtualImg<ByteType>(dimensions, rdr, new ByteType(), false);
+				return new VirtualImg<ByteType>(
+						dimensions, rdr, new ByteType(), false);
 			case FormatTools.UINT16:
-				return new VirtualImg<UnsignedShortType>(dimensions, rdr, new UnsignedShortType(), false);
+				return new VirtualImg<UnsignedShortType>(
+						dimensions, rdr, new UnsignedShortType(), false);
 			case FormatTools.INT16:
-				return new VirtualImg<ShortType>(dimensions, rdr, new ShortType(), false);
+				return new VirtualImg<ShortType>(
+						dimensions, rdr, new ShortType(), false);
 			case FormatTools.UINT32:
-				return new VirtualImg<UnsignedIntType>(dimensions, rdr, new UnsignedIntType(), false);
+				return new VirtualImg<UnsignedIntType>(
+						dimensions, rdr, new UnsignedIntType(), false);
 			case FormatTools.INT32:
-				return new VirtualImg<IntType>(dimensions, rdr, new IntType(), false);
+				return new VirtualImg<IntType>(
+						dimensions, rdr, new IntType(), false);
 			case FormatTools.FLOAT:
-				return new VirtualImg<FloatType>(dimensions, rdr, new FloatType(), false);
+				return new VirtualImg<FloatType>(
+						dimensions, rdr, new FloatType(), false);
 			case FormatTools.DOUBLE:
-				return new VirtualImg<DoubleType>(dimensions, rdr, new DoubleType(), false);
+				return new VirtualImg<DoubleType>(
+						dimensions, rdr, new DoubleType(), false);
 				// TODO - add LONG case here when supported by BioFormats
 			default:
-				throw new IllegalArgumentException("VirtualImg::create() : unsupported pixel format");
+				throw new IllegalArgumentException(
+					"VirtualImg::create() : unsupported pixel format");
 		}
 	}
 	
@@ -207,8 +220,8 @@ public class VirtualImg<T extends NativeType<T> & RealType<T>> extends AbstractI
 			throw new IllegalArgumentException(
 				"VirtualImg must be of dimension two or higher");
 		
-		// NOTE - removed code that tested dim0 & dim1 since byteOnly code can mess
-		// with dim0. And we setup dims ourself so we know they are correct.
+		// NOTE - removed code that tested dim0 & dim1 since byteOnly code can
+		// mess with dim0. And we setup dims ourself so we know they are correct.
 	}
 
 }

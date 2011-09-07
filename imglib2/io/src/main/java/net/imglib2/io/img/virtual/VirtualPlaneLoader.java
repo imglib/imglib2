@@ -52,7 +52,9 @@ public class VirtualPlaneLoader {
 	
 	// -- constructor --
 	
-	public VirtualPlaneLoader(VirtualImg<?> image, PlanarImg<?, ? extends ArrayDataAccess<?>> planeImg, boolean bytesOnly) {
+	public VirtualPlaneLoader(VirtualImg<?> image,
+		PlanarImg<?, ? extends ArrayDataAccess<?>> planeImg, boolean bytesOnly)
+	{
 		this.virtImage = image;
 		this.planeImg = planeImg;
 		this.planeDims = new long[image.numDimensions()-2];
@@ -147,8 +149,9 @@ public class VirtualPlaneLoader {
 			// TODO - BF does not support long[] i.e. FormatTools.INT64
 			default:
 				throw new
-					IllegalArgumentException("Cannot convert byte[] to unknown pixel type "+
-						virtImage.getReader().getPixelType());
+					IllegalArgumentException(
+						"Cannot convert byte[] to unknown pixel type "+
+							virtImage.getReader().getPixelType());
 		}
 		
 		return DataTools.makeDataArray(bytes, bytesPerPix, floating, little);
