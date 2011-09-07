@@ -29,6 +29,7 @@ package net.imglib2.util;
 
 import net.imglib2.Cursor;
 import net.imglib2.img.Img;
+import net.imglib2.type.BooleanType;
 import net.imglib2.type.numeric.IntegerType;
 import net.imglib2.type.numeric.RealType;
 
@@ -122,6 +123,22 @@ public class ImgUtil {
 		}
 	}
 	/**
+	 * @see ImgUtil#copy(double[], int, int[], Img)
+	 */
+	public static <T extends BooleanType<T>> void copy(final boolean [] src, final int offset, final int [] stride, final Img<T> dest) {
+		final Cursor<T> c = dest.localizingCursor();
+		final int [] location = new int[dest.numDimensions()];
+		while (c.hasNext()) {
+			T t = c.next();
+			c.localize(location);
+			int this_offset = offset;
+			for (int i=0; (i < stride.length) && (i < location.length); i++ ) {
+				this_offset += location[i] * stride[i];
+			}
+			t.set(src[this_offset]);
+		}
+	}
+	/**
 	 * Copy the contents of an Img to a double array
 	 * 
 	 * @param <T> the Img's type
@@ -191,6 +208,22 @@ public class ImgUtil {
 				this_offset += location[i] * stride[i];
 			}
 			dest[this_offset] = t.getInteger();
+		}
+	}
+	/**
+	 * @see ImgUtil#copy(Img, double[], int, int[])
+	 */
+	public static <T extends BooleanType<T>> void copy(final Img<T> src, final boolean [] dest, final int offset , final int [] stride) {
+		final Cursor<T> c = src.localizingCursor();
+		int [] location = new int[src.numDimensions()];
+		while (c.hasNext()) {
+			T t = c.next();
+			c.localize(location);
+			int this_offset = offset;
+			for (int i=0; (i < stride.length) && (i < location.length); i++ ) {
+				this_offset += location[i] * stride[i];
+			}
+			dest[this_offset] = t.get();
 		}
 	}
 }
