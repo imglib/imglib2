@@ -41,6 +41,8 @@ import net.imglib2.type.numeric.RealType;
 
 
 /**
+ * Dummy implementation of an ImgFactory for VirtualImgs. Does not actually
+ * do anything. Needed by VirtualImg to satisfy the Img contract.
  * 
  * @author Barry DeZonia
  *

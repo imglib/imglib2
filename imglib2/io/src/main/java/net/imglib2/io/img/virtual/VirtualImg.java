@@ -34,9 +34,7 @@ import loci.formats.FormatException;
 import loci.formats.FormatTools;
 import loci.formats.IFormatReader;
 
-import net.imglib2.Cursor;
 import net.imglib2.IterableRealInterval;
-import net.imglib2.RandomAccess;
 import net.imglib2.img.AbstractImg;
 import net.imglib2.img.Img;
 import net.imglib2.img.ImgFactory;
@@ -55,6 +53,9 @@ import net.imglib2.type.numeric.real.FloatType;
 
 
 /**
+ * This class supports the ability to open an image and only load data into
+ * memory one plane at a time. Data is read only in the sense that though
+ * in memory values can be changed the data is never written to disk.
  * 
  * @author Barry DeZonia
  *
@@ -90,7 +91,11 @@ public class VirtualImg<T extends NativeType<T> & RealType<T>>
 	/**
 	 * Factory method for creating VirtualImgs from file names
 	 * @param fileName - name of the file that contains data of interest
-	 * @return a VirtualImg that gives read only access to data a plane at a time
+	 * @param bytesOnly - a boolean that delineates whether data is to be
+	 *   accessed a byte at a time or in the actual backing primitive type
+	 *   one at a time.
+	 * @return a VirtualImg that gives read only access to data a plane at
+	 *   a time
 	 * @throws ImgIOException
 	 */
 	public static VirtualImg<? extends RealType<?>>
@@ -111,76 +116,26 @@ public class VirtualImg<T extends NativeType<T> & RealType<T>>
 		long[] dimensions = ImgOpener.getDimLengths(rdr);
 
 		if (bytesOnly) {
-			switch (rdr.getPixelType()) {
-				case FormatTools.UINT8:
-				case FormatTools.INT8:
-					dimensions[0] *= 1;
-					break;
-				case FormatTools.UINT16:
-				case FormatTools.INT16:
-					dimensions[0] *= 2;
-					break;
-				case FormatTools.UINT32:
-				case FormatTools.INT32:
-				case FormatTools.FLOAT:
-					dimensions[0] *= 4;
-					break;
-				case FormatTools.DOUBLE:
-					dimensions[0] *= 8;
-					break;
-					// TODO - add LONG case here when supported by BioFormats
-				default:
-					throw new IllegalArgumentException(
-						"VirtualImg::create() : unsupported pixel format");
-			}
+			dimensions[0] *= getByteMultiplier(rdr);
 			return new VirtualImg<UnsignedByteType>(
 					dimensions, rdr, new UnsignedByteType(), true);
 		}
-		
-		switch (rdr.getPixelType()) {
-			case FormatTools.UINT8:
-				return new VirtualImg<UnsignedByteType>(
-						dimensions, rdr, new UnsignedByteType(), false);
-			case FormatTools.INT8:
-				return new VirtualImg<ByteType>(
-						dimensions, rdr, new ByteType(), false);
-			case FormatTools.UINT16:
-				return new VirtualImg<UnsignedShortType>(
-						dimensions, rdr, new UnsignedShortType(), false);
-			case FormatTools.INT16:
-				return new VirtualImg<ShortType>(
-						dimensions, rdr, new ShortType(), false);
-			case FormatTools.UINT32:
-				return new VirtualImg<UnsignedIntType>(
-						dimensions, rdr, new UnsignedIntType(), false);
-			case FormatTools.INT32:
-				return new VirtualImg<IntType>(
-						dimensions, rdr, new IntType(), false);
-			case FormatTools.FLOAT:
-				return new VirtualImg<FloatType>(
-						dimensions, rdr, new FloatType(), false);
-			case FormatTools.DOUBLE:
-				return new VirtualImg<DoubleType>(
-						dimensions, rdr, new DoubleType(), false);
-				// TODO - add LONG case here when supported by BioFormats
-			default:
-				throw new IllegalArgumentException(
-					"VirtualImg::create() : unsupported pixel format");
-		}
+
+		return correctlyTypeVirtualImg(dimensions, rdr);
 	}
 	
 	@Override
-	public RandomAccess<T> randomAccess() {
+	public VirtualRandomAccess<T> randomAccess() {
 		return new VirtualRandomAccess<T>(this);
 	}
 
 	@Override
-	public Cursor<T> cursor() {
+	public VirtualCursor<T> cursor() {
 		return new VirtualCursor<T>(this);
 	}
 
 	@Override
-	public Cursor<T> localizingCursor() {
+	public VirtualCursor<T> localizingCursor() {
 		// TODO - not supporting actual localizing cursor
 		return new VirtualCursor<T>(this);
 	}
@@ -224,4 +179,59 @@ public class VirtualImg<T extends NativeType<T> & RealType<T>>
 		// mess with dim0. And we setup dims ourself so we know they are correct.
 	}
 
+	private static int getByteMultiplier(IFormatReader rdr) {
+		switch (rdr.getPixelType()) {
+			case FormatTools.UINT8:
+			case FormatTools.INT8:
+				return 1;
+			case FormatTools.UINT16:
+			case FormatTools.INT16:
+				return 2;
+			case FormatTools.UINT32:
+			case FormatTools.INT32:
+			case FormatTools.FLOAT:
+				return 4;
+			case FormatTools.DOUBLE:
+				return 8;
+				// TODO - add LONG case here when supported by BioFormats
+			default:
+				throw new IllegalArgumentException(
+					"VirtualImg : unsupported pixel format");
+		}
+	}
+	
+	private static VirtualImg<? extends RealType<?>>
+		correctlyTypeVirtualImg(long[] dimensions, IFormatReader rdr)
+	{
+		switch (rdr.getPixelType()) {
+			case FormatTools.UINT8:
+				return new VirtualImg<UnsignedByteType>(
+						dimensions, rdr, new UnsignedByteType(), false);
+			case FormatTools.INT8:
+				return new VirtualImg<ByteType>(
+						dimensions, rdr, new ByteType(), false);
+			case FormatTools.UINT16:
+				return new VirtualImg<UnsignedShortType>(
+						dimensions, rdr, new UnsignedShortType(), false);
+			case FormatTools.INT16:
+				return new VirtualImg<ShortType>(
+						dimensions, rdr, new ShortType(), false);
+			case FormatTools.UINT32:
+				return new VirtualImg<UnsignedIntType>(
+						dimensions, rdr, new UnsignedIntType(), false);
+			case FormatTools.INT32:
+				return new VirtualImg<IntType>(
+						dimensions, rdr, new IntType(), false);
+			case FormatTools.FLOAT:
+				return new VirtualImg<FloatType>(
+						dimensions, rdr, new FloatType(), false);
+			case FormatTools.DOUBLE:
+				return new VirtualImg<DoubleType>(
+						dimensions, rdr, new DoubleType(), false);
+				// TODO - add LONG case here when supported by BioFormats
+			default:
+				throw new IllegalArgumentException(
+					"VirtualImg : unsupported pixel format");
+		}
+	}
 }

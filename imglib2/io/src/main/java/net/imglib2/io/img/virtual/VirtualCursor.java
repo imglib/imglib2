@@ -29,17 +29,16 @@ POSSIBILITY OF SUCH DAMAGE.
 package net.imglib2.io.img.virtual;
 
 import net.imglib2.AbstractCursor;
-import net.imglib2.img.basictypeaccess.array.ArrayDataAccess;
-import net.imglib2.img.planar.PlanarImg;
-import net.imglib2.img.planar.PlanarImgFactory;
-import net.imglib2.img.planar.PlanarRandomAccess;
 import net.imglib2.iterator.IntervalIterator;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 
 
 /**
- * 
+ * This class manages read only nonspatial access to a virtual image. Data
+ * returned from get() can be written to but any changes are never saved
+ * to disk.
+ *  
  * @author Barry DeZonia
  *
  */
@@ -48,10 +47,8 @@ public class VirtualCursor<T extends NativeType<T> & RealType<T>>
 {
 	private VirtualImg<T> virtImage;
 	private IntervalIterator iter;
-	private PlanarImg<T, ? extends ArrayDataAccess<?>> planeImg;
-	private PlanarRandomAccess<T> accessor;
 	private long[] position;
-	private VirtualPlaneLoader planeLoader;
+	private VirtualAccessor<T> accessor;
 	
 	public VirtualCursor(VirtualImg<T> image) {
 		super(image.numDimensions());
@@ -59,33 +56,14 @@ public class VirtualCursor<T extends NativeType<T> & RealType<T>>
 		long[] fullDimensions = new long[image.numDimensions()];
 		image.dimensions(fullDimensions);
 		this.iter = new IntervalIterator(fullDimensions);
-		long[] planeSize = new long[]{fullDimensions[0], fullDimensions[1]};
-		this.planeImg =
-			new PlanarImgFactory<T>().create(planeSize, image.getType().copy());
 		this.position = new long[fullDimensions.length];
-		this.planeLoader =
-			new VirtualPlaneLoader(virtImage, planeImg, image.isByteOnly());
-		planeLoader.loadPlane(position);
-		// this initialization must follow loadPlane()
-		this.accessor = planeImg.randomAccess();
+		this.accessor = new VirtualAccessor<T>(virtImage);
 	}
 	
 	@Override
 	public T get() {
 		iter.localize(position);
-		// did we swap a plane?
-		if (planeLoader.virtualSwap(position)) {
-			// we did swap - make a new plane accessor
-			accessor = planeImg.randomAccess();
-			accessor.setPosition(position);
-			// TODO - each plane swap hatches a new accessor. this might be too
-			// costly. Figure out how to resync original accessor.
-		}
-		else { // we did not swap - adjust current accessor
-			accessor.setPosition(position[0], 0);
-			accessor.setPosition(position[1], 1);
-		}
-		return accessor.get();
+		return accessor.get(position);
 	}
 
 	@Override
@@ -121,5 +99,9 @@ public class VirtualCursor<T extends NativeType<T> & RealType<T>>
 	@Override
 	public VirtualCursor<T> copyCursor() {
 		return new VirtualCursor<T>(virtImage);
+	}
+	
+	public Object getCurrentPlane() {
+		return accessor.getCurrentPlane();
 	}
 }

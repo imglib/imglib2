@@ -40,16 +40,17 @@ public class VirtualImgTest {
 		// test out cursor
 		
 		long numElements = 0;
-		Cursor<? extends RealType<?>> cursor = image.cursor();
+		VirtualCursor<? extends RealType<?>> cursor = image.cursor();
 		while (cursor.hasNext()) {
 			cursor.next();
 			numElements++;
 		}
 		assertEquals(20*30*10, numElements);
+		assertNotNull(cursor.getCurrentPlane());
 		
 		// test out random access
 		
-		RandomAccess<? extends RealType<?>> accessor = image.randomAccess();
+		VirtualRandomAccess<? extends RealType<?>> accessor = image.randomAccess();
 		long[] pos = new long[3];
 		for (int x = 0; x < 20; x++) {
 			for (int z = 0; z < 10; z++) {
@@ -62,6 +63,7 @@ public class VirtualImgTest {
 				}
 			}
 		}
+		assertNotNull(accessor.getCurrentPlane());
 
 		long xDim = image.dimension(0);
 		
@@ -94,5 +96,6 @@ public class VirtualImgTest {
 				}
 			}
 		}
+		assertNotNull(accessor.getCurrentPlane());
 	}
 }

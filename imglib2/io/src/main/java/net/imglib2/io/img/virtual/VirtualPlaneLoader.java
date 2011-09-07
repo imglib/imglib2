@@ -37,6 +37,11 @@ import net.imglib2.io.ImgOpener;
 
 /**
  * 
+ * This class is responsible for loading one plane of data from an image
+ * using an IFormatReader. The loading is done in a virtual fashion with
+ * planes loaded when a desired position has not been loaded. The data is
+ * loaded into a PlanarImg provided at construction time.
+ *  
  * @author Barry DeZonia
  *
  */
@@ -51,7 +56,15 @@ public class VirtualPlaneLoader {
 	private boolean bytesOnly;
 	
 	// -- constructor --
-	
+
+	/**
+	 * Create a VirtualPlaneLoader on a VirtualImage swapping planes into a
+	 * PlanarImg as needed.
+	 * @param image - the VirtualImg to load planes from
+	 * @param planeImg - the PlanarImg to load planes into
+	 * @param bytesOnly - a flag which defines whether planes passed around
+	 * 		as byte[]'s only or as other primitive array types (int[]'s, etc.).
+	 */
 	public VirtualPlaneLoader(VirtualImg<?> image,
 		PlanarImg<?, ? extends ArrayDataAccess<?>> planeImg, boolean bytesOnly)
 	{
@@ -65,7 +78,12 @@ public class VirtualPlaneLoader {
 	}
 	
 	// -- public interface --
-	
+
+	/**
+	 * Makes sure the plane that contains the data of the given position is
+	 * loaded into the PlanarImg. Only reads data from VirtualImg if not
+	 * already loaded.
+	 */
 	public boolean virtualSwap(long[] pos) {
 		if (!planeLoaded(pos)) {
 			loadPlane(pos);
@@ -74,6 +92,9 @@ public class VirtualPlaneLoader {
 		return false;
 	}
 
+	/**
+	 * Always loads the plane that contains the data of the given position.
+	 */
 	@SuppressWarnings({"rawtypes","unchecked"})
 	public void loadPlane(long[] pos) {
 		for (int i = 0; i < planePosLoaded.length; i++)

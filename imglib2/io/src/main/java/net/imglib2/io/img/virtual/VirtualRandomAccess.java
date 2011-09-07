@@ -34,34 +34,24 @@ POSSIBILITY OF SUCH DAMAGE.
 package net.imglib2.io.img.virtual;
 
 import net.imglib2.AbstractRandomAccess;
-import net.imglib2.img.basictypeaccess.array.ArrayDataAccess;
-import net.imglib2.img.planar.PlanarImg;
-import net.imglib2.img.planar.PlanarImgFactory;
-import net.imglib2.img.planar.PlanarRandomAccess;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 
 
 /**
- * This class manages read only random access to a virtual image. The random
- * access position is modified as needed. When user tries to get a value from
- * this accessor planes are loaded into memory by an IFormatReader as needed.
- * Planes are stored in a two dimensional PlanarImg that contains a single
- * plane. The user can modify the plane values but the changes are never saved
+ * This class manages read only spatial access to a virtual image. Data
+ * returned from get() can be written to but any changes are never saved
  * to disk.
  *  
  * @author Barry DeZonia
  *
- * @param <T>
  */
 public class VirtualRandomAccess<T extends NativeType<T> & RealType<T>>
 	extends AbstractRandomAccess<T>
 {
 	private VirtualImg<T> virtImage;
-	private PlanarImg<T, ? extends ArrayDataAccess<?>> planeImg;
-	private PlanarRandomAccess<T> accessor;
-	private VirtualPlaneLoader planeLoader;
-
+	private VirtualAccessor<T> accessor;
+	
 	/**
 	 * Constructor
 	 * 
@@ -70,15 +60,8 @@ public class VirtualRandomAccess<T extends NativeType<T> & RealType<T>>
 	public VirtualRandomAccess(VirtualImg<T> image)
 	{
 		super(image.numDimensions());
+		this.accessor = new VirtualAccessor<T>(image);
 		this.virtImage = image;
-		long[] planeSize = new long[]{image.dimension(0), image.dimension(1)};
-		this.planeImg =
-			new PlanarImgFactory<T>().create(planeSize, image.getType().copy());
-		this.planeLoader =
-			new VirtualPlaneLoader(virtImage, planeImg, image.isByteOnly());
-		planeLoader.loadPlane(position);
-		// this initialization must follow loadPlane()
-		this.accessor = planeImg.randomAccess();
 	}
 
 	@Override
@@ -125,20 +108,10 @@ public class VirtualRandomAccess<T extends NativeType<T> & RealType<T>>
 
 	@Override
 	public T get() {
-		// did we swap a plane?
-		if (planeLoader.virtualSwap(position)) {
-			// we did swap - make a new plane accessor
-			accessor = planeImg.randomAccess();
-			accessor.setPosition(position);
-			// TODO - each plane swap hatches a new accessor. this might be too
-			// costly. Figure out how to resync original accessor.
-		}
-		else { // we did not swap - adjust current accessor
-			accessor.setPosition(position[0], 0);
-			accessor.setPosition(position[1], 1);
-		}
-		
-		return accessor.get();
+		return accessor.get(position);
 	}
-
+	
+	public Object getCurrentPlane() {
+		return accessor.getCurrentPlane();
+	}
 }
