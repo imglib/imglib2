@@ -224,7 +224,7 @@ public class DefaultROIStrategy<T extends Comparable<T>, L extends Labeling<T>>
 			do {
 				int i;
 				for (i = 0; i < numDimensions(); i++) {
-					if (position[i] >= max[i]-1) {
+					if (position[i] >= max[i]) {
 						position[i] = min[i];
 					} else {
 						position[i]++;
@@ -238,7 +238,7 @@ public class DefaultROIStrategy<T extends Comparable<T>, L extends Labeling<T>>
 			do {
 				end[0]++;
 				randomAccess.setPosition(end);
-			} while ((end[0] < max[0]) && (randomAccess.get().getLabeling().contains(label)));
+			} while ((end[0] <= max[0]) && (randomAccess.get().getLabeling().contains(label)));
 			return true;
 		}
 
