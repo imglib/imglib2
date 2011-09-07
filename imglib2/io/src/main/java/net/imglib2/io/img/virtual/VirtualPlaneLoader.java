@@ -141,7 +141,6 @@ public class VirtualPlaneLoader {
 		
 		int bytesPerPix;
 		boolean floating;
-		boolean little = false; // TODO - how should this be set in general?
 
 		switch (virtImage.getReader().getPixelType()) {
 			case FormatTools.UINT8:
@@ -175,6 +174,6 @@ public class VirtualPlaneLoader {
 							virtImage.getReader().getPixelType());
 		}
 		
-		return DataTools.makeDataArray(bytes, bytesPerPix, floating, little);
+		return DataTools.makeDataArray(bytes, bytesPerPix, floating, virtImage.getReader().isLittleEndian());
 	}
 }
