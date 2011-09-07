@@ -205,10 +205,18 @@ public class ComponentTree< T extends Comparable< T > & Type< T >, C extends Com
 			System.out.println( c );
 	}
 	
+	/**
+	 * This is called whenever the current value is raised.
+	 * 
+	 * @param value
+	 */
 	protected void processStack( T value )
 	{
+		int iterations = 0; // TODO: remove
 		while (true)
 		{
+			++iterations; // TODO: remove
+//			showComponentStack("stack before:");
 			// process component on top of stack
 			C component = componentStack.pop();
 			componentOutput.emit( component );
@@ -218,22 +226,35 @@ public class ComponentTree< T extends Comparable< T > & Type< T >, C extends Com
 			final int c = value.compareTo( secondComponent.getValue() );
 			if ( c < 0 )
 			{
-				System.out.println("(raise) " + value);
+				System.out.println("(raise component " + ( ( PixelListComponent< T > ) component).id + " to level " + value + ")");
 				component.setValue( value );
 				componentStack.push( component );
 			}
 			else
 			{
-				System.out.println("(merge " + secondComponent.getValue() + ") " + value);
+				System.out.println("(merge component " + ( ( PixelListComponent< T > ) component).id + " into " + ( ( PixelListComponent< T > ) secondComponent).id + ")");
 				secondComponent.merge( component );
 				if ( c > 0 )
 					continue;
 			}
+			if ( iterations > 1 ) // TODO: remove
+			{
+				System.out.println( "----processStack: " + iterations + " iterations.");
+				System.exit( 0 );
+			}
+//			showComponentStack("stack after:");
 			return;
 		}
 	}
 	
 	// -------------------------------------------------------------------------------
+
+	public static final int[][] testData = new int[][] {
+		{ 8, 7, 6, 7, 1 },
+		{ 8, 8, 5, 8, 1 },
+		{ 2, 3, 4, 3, 2 },
+		{ 1, 8, 3, 8, 1 },
+		{ 1, 2, 2, 2, 1 } };
 
 //	public static final int[][] testData = new int[][] {
 //		{ 4, 1, 0, 1, 4 },
@@ -242,12 +263,14 @@ public class ComponentTree< T extends Comparable< T > & Type< T >, C extends Com
 //		{ 3, 1, 2, 0, 1 },
 //		{ 3, 3, 3, 3, 2 } };
 
-	public static final int[][] testData = new int[][] {
-		{ 0, 9, 0, 1, 4 },
-		{ 8, 9, 3, 4, 5 },
-		{ 7, 0, 3, 1, 2 },
-		{ 3, 3, 1, 0, 1 },
-		{ 3, 3, 0, 8, 2 } };
+//	public static final int[][] testData = new int[][] {
+//		{ 0, 9, 0, 1, 4, 0, 2 },
+//		{ 8, 9, 3, 4, 5, 0, 3 },
+//		{ 7, 0, 3, 1, 2, 0, 4 },
+//		{ 5, 1, 5, 5, 5, 5, 5 },
+//		{ 7, 1, 2, 3, 4, 5, 6 },
+//		{ 3, 3, 1, 0, 1, 5, 1 },
+//		{ 3, 3, 0, 8, 2, 1, 1 } };
 
 	public static void main( String[] args )
 	{
@@ -264,7 +287,7 @@ public class ComponentTree< T extends Comparable< T > & Type< T >, C extends Com
 			c.localize( pos );
 			c.get().set( testData[ pos[ 1 ] ][ pos[ 0 ] ] );
 		}
-		
+
 		final PixelListComponentGenerator< IntType > generator = new PixelListComponentGenerator< IntType >( new IntType( Integer.MAX_VALUE ) );
 		final PixelListComponentHandler< IntType > handler = new PixelListComponentHandler< IntType >( dimensions );
 		final ComponentTree< IntType, PixelListComponent< IntType > > tree = new ComponentTree< IntType, PixelListComponent< IntType > >( input, generator, handler );

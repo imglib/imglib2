@@ -63,7 +63,6 @@ public class PixelListComponent< T extends Type< T > > implements Component< T >
 	{
 		final PixelListComponent< T > c = ( PixelListComponent< T > ) component;
 
-		System.out.println( "merge " + c.id + " into " + id );
 		for ( Localizable l : c.locations )
 		{
 			addPosition( l );
