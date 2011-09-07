@@ -67,18 +67,13 @@ public class VirtualAccessor<T extends NativeType<T> & RealType<T>> {
 	}
 	
 	public T get(long[] position) {
-		// did we swap a plane?
+
 		if (planeLoader.virtualSwap(position)) {
-			// we did swap - make a new plane accessor
-			accessor = planeImg.randomAccess();
-			accessor.setPosition(position);
-			// TODO - each plane swap hatches a new accessor. this might be too
-			// costly. Figure out how to resync original accessor.
+			accessor.get().updateContainer(accessor);
 		}
-		else { // we did not swap - adjust current accessor
-			accessor.setPosition(position[0], 0);
-			accessor.setPosition(position[1], 1);
-		}
+		
+		accessor.setPosition(position[0], 0);
+		accessor.setPosition(position[1], 1);
 		
 		return accessor.get();
 	}
