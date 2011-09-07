@@ -117,11 +117,10 @@ public class VirtualImg<T extends NativeType<T> & RealType<T>>
 
 		if (bytesOnly) {
 			dimensions[0] *= getByteMultiplier(rdr);
-			return new VirtualImg<UnsignedByteType>(
-					dimensions, rdr, new UnsignedByteType(), true);
+			return byteTypedVirtualImg(dimensions, rdr);
 		}
 
-		return correctlyTypeVirtualImg(dimensions, rdr);
+		return correctlyTypedVirtualImg(dimensions, rdr);
 	}
 	
 	@Override
@@ -179,21 +178,28 @@ public class VirtualImg<T extends NativeType<T> & RealType<T>>
 		// mess with dim0. And we setup dims ourself so we know they are correct.
 	}
 
-	private static int getByteMultiplier(IFormatReader rdr) {
+	private static int getByteMultiplier(IFormatReader rdr)
+	{
 		switch (rdr.getPixelType()) {
+
 			case FormatTools.UINT8:
 			case FormatTools.INT8:
 				return 1;
+		
 			case FormatTools.UINT16:
 			case FormatTools.INT16:
 				return 2;
+			
 			case FormatTools.UINT32:
 			case FormatTools.INT32:
 			case FormatTools.FLOAT:
 				return 4;
+			
 			case FormatTools.DOUBLE:
 				return 8;
-				// TODO - add LONG case here when supported by BioFormats
+			
+			// TODO - add LONG case here when supported by BioFormats
+		
 			default:
 				throw new IllegalArgumentException(
 					"VirtualImg : unsupported pixel format");
@@ -201,34 +207,59 @@ public class VirtualImg<T extends NativeType<T> & RealType<T>>
 	}
 	
 	private static VirtualImg<? extends RealType<?>>
-		correctlyTypeVirtualImg(long[] dimensions, IFormatReader rdr)
+		byteTypedVirtualImg(long[] dimensions, IFormatReader rdr)
+	{
+		return new VirtualImg<UnsignedByteType>(
+				dimensions, rdr, new UnsignedByteType(), true);
+	}
+
+	private static VirtualImg<? extends RealType<?>>
+		correctlyTypedVirtualImg(long[] dimensions, IFormatReader rdr)
 	{
 		switch (rdr.getPixelType()) {
+			
 			case FormatTools.UINT8:
+			
 				return new VirtualImg<UnsignedByteType>(
 						dimensions, rdr, new UnsignedByteType(), false);
+		
 			case FormatTools.INT8:
+			
 				return new VirtualImg<ByteType>(
 						dimensions, rdr, new ByteType(), false);
+			
 			case FormatTools.UINT16:
+			
 				return new VirtualImg<UnsignedShortType>(
 						dimensions, rdr, new UnsignedShortType(), false);
+			
 			case FormatTools.INT16:
+			
 				return new VirtualImg<ShortType>(
 						dimensions, rdr, new ShortType(), false);
+			
 			case FormatTools.UINT32:
+			
 				return new VirtualImg<UnsignedIntType>(
 						dimensions, rdr, new UnsignedIntType(), false);
+			
 			case FormatTools.INT32:
+			
 				return new VirtualImg<IntType>(
 						dimensions, rdr, new IntType(), false);
+			
 			case FormatTools.FLOAT:
+			
 				return new VirtualImg<FloatType>(
 						dimensions, rdr, new FloatType(), false);
+			
 			case FormatTools.DOUBLE:
+			
 				return new VirtualImg<DoubleType>(
 						dimensions, rdr, new DoubleType(), false);
-				// TODO - add LONG case here when supported by BioFormats
+			
+			// TODO - add LONG case here when supported by BioFormats
+			
 			default:
 				throw new IllegalArgumentException(
 					"VirtualImg : unsupported pixel format");
