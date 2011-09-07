@@ -32,9 +32,9 @@ package net.imglib2.meta;
 import net.imglib2.img.Img;
 
 /**
- * @author Lee Kamentsky
+ * Interface for things that have names
  *
- *Interface for things that have names
+ * @author Lee Kamentsky
  */
 public interface Named {
 	/** Gets the name of the associated {@link Img} or other object. */

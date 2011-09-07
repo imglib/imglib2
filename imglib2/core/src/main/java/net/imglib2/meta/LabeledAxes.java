@@ -33,10 +33,10 @@ import net.imglib2.img.Axis;
 import net.imglib2.img.Img;
 
 /**
- * @author Lee Kamentsky
+ * An interface that gives EuclideanSpace objects names and calibrations
+ * for their dimensions.
  *
- *An interface that gives EuclideanSpace objects names and calibrations
- *for their dimensions.
+ * @author Lee Kamentsky
  */
 public interface LabeledAxes {
 
