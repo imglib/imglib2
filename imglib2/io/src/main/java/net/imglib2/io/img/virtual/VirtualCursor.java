@@ -111,12 +111,12 @@ public class VirtualCursor<T extends NativeType<T> & RealType<T>> extends Abstra
 	}
 
 	@Override
-	public AbstractCursor<T> copy() {
+	public VirtualCursor<T> copy() {
 		return new VirtualCursor<T>(virtImage);
 	}
 
 	@Override
-	public AbstractCursor<T> copyCursor() {
+	public VirtualCursor<T> copyCursor() {
 		return new VirtualCursor<T>(virtImage);
 	}
 }
