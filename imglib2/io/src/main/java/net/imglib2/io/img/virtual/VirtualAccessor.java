@@ -61,7 +61,6 @@ public class VirtualAccessor<T extends NativeType<T> & RealType<T>> {
 			new PlanarImgFactory<T>().create(planeSize, virtImage.getType().copy());
 		this.planeLoader =
 			new VirtualPlaneLoader(virtImage, planeImg, virtImage.isByteOnly());
-		planeLoader.loadPlane(new long[virtImage.numDimensions()]);
 		// this initialization must follow loadPlane()
 		this.accessor = planeImg.randomAccess();
 	}

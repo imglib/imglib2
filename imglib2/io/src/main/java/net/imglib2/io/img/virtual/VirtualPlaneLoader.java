@@ -75,6 +75,7 @@ public class VirtualPlaneLoader {
 			this.planeDims[i] = image.dimension(i+2);
 		this.planePosLoaded = new long[planeDims.length];
 		this.bytesOnly = bytesOnly;
+		loadPlane(new long[image.numDimensions()]);
 	}
 	
 	// -- public interface --
