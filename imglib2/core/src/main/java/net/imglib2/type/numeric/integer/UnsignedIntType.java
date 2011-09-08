@@ -88,7 +88,51 @@ public class UnsignedIntType extends GenericIntType<UnsignedIntType>
 		final long a = getUnsignedInt( getValue() );
 		setValue( getCodedSignedInt( ( int )Util.round( a * c ) ) );
 	}
+	@Override
+	public void add( final UnsignedIntType c )
+	{
+		set( get() + c.get() );
+	}
 
+	@Override
+	public void div( final UnsignedIntType c )
+	{
+		set( get() / c.get() );
+	}
+
+	@Override
+	public void mul( final UnsignedIntType c )
+	{
+		set( get() * c.get() );
+	}
+
+	@Override
+	public void sub( final UnsignedIntType c )
+	{
+		set( get() - c.get() );
+	}
+
+	@Override
+	public void setOne() { set( 1 ); }
+
+	@Override
+	public void setZero() { set( 0 ); }
+
+	@Override
+	public void inc()
+	{
+		set( get() + 1 );
+	}
+
+	@Override
+	public void dec()
+	{
+		set( get() - 1 );
+	}
+	
+	@Override
+	public String toString(){ return "" + get(); }
+	
 	public long get(){ return getUnsignedInt( getValue() ); }
 	public void set( final long f ){ setValue( getCodedSignedInt( f ) ); }
 
@@ -106,12 +150,6 @@ public class UnsignedIntType extends GenericIntType<UnsignedIntType>
 	@Override
 	public double getMinValue()  { return 0; }
 	
-	@Override
-	public void div( final UnsignedIntType c )
-	{
-		set( get() / c.get() );
-	}
-
 	@Override
 	public int compareTo( final UnsignedIntType c ) 
 	{

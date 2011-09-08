@@ -89,6 +89,30 @@ public class UnsignedByteType extends GenericByteType<UnsignedByteType>
 		final int a = getUnsignedByte( getValue() );
 		setValue( getCodedSignedByte( ( int )Util.round( a * c ) ) );
 	}
+	
+	@Override
+	public void add( final UnsignedByteType c )
+	{
+		set( get() + c.get() );
+	}
+
+	@Override
+	public void div( final UnsignedByteType c )
+	{
+		set( get() / c.get() );
+	}
+
+	@Override
+	public void mul( final UnsignedByteType c )
+	{
+		set( get() * c.get() );
+	}
+
+	@Override
+	public void sub( final UnsignedByteType c )
+	{
+		set( get() - c.get() );
+	}
 
 	public int get(){ return getUnsignedByte( getValue() ); }
 	public void set( final int f ){ setValue( getCodedSignedByte( f ) ); }
@@ -106,12 +130,6 @@ public class UnsignedByteType extends GenericByteType<UnsignedByteType>
 	public double getMaxValue() { return -Byte.MIN_VALUE + Byte.MAX_VALUE; }
 	@Override
 	public double getMinValue()  { return 0; }
-
-	@Override
-	public void div( final UnsignedByteType c )
-	{
-		set( get() / c.get() );
-	}
 
 	@Override
 	public int compareTo( final UnsignedByteType c ) 
