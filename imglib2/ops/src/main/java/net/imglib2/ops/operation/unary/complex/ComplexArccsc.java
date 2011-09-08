@@ -34,6 +34,8 @@ import net.imglib2.ops.UnaryOperation;
 import net.imglib2.ops.Complex;
 import net.imglib2.ops.operation.binary.complex.ComplexDivide;
 
+// DONE - verified formula with Mathworld's definition for Inverse Cosecant
+
 /**
  * 
  * @author Barry DeZonia

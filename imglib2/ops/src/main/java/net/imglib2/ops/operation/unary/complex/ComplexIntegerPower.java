@@ -62,9 +62,8 @@ public final class ComplexIntegerPower extends ComplexOutput
 			else // power > 0
 				variable.setValue(input);
 			double r = Math.pow(variable.getModulus(), power);
-			double theta = power * variable.getArgument();
+			double theta = Complex.findPrincipleArgument(power * variable.getArgument());
 			output.setPolar(r, theta);
-			output.setPolar(r, output.getPrincipleArgument());
 		}
 	}
 }

@@ -34,6 +34,8 @@ import net.imglib2.ops.RealOutput;
 import net.imglib2.ops.UnaryOperation;
 
 
+//DONE - verified formula with Mathworld's definition for Inverse Cosecant
+
 /**
  * 
  * @author Barry DeZonia

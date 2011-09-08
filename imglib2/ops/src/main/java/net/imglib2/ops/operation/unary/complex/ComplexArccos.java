@@ -37,6 +37,8 @@ import net.imglib2.ops.operation.binary.complex.ComplexMultiply;
 import net.imglib2.ops.operation.binary.complex.ComplexPower;
 import net.imglib2.ops.operation.binary.complex.ComplexSubtract;
 
+// TODO - note a reference. MathWorld does not have same formula.
+
 /**
  * 
  * @author Barry DeZonia
