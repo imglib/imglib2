@@ -37,6 +37,8 @@ import net.imglib2.ops.operation.binary.complex.ComplexMultiply;
 import net.imglib2.ops.operation.binary.complex.ComplexPower;
 import net.imglib2.ops.operation.binary.complex.ComplexSubtract;
 
+// DONE - verified formula with Mathworld's definition for Inverse Trigonometric Functions
+
 /**
  * 
  * @author Barry DeZonia
