@@ -41,6 +41,7 @@ import ij.process.ShortProcessor;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 
 import loci.formats.ChannelSeparator;
 import loci.formats.FormatException;
@@ -588,6 +589,7 @@ public class LOCI
 		if ( dir.isDirectory() )
 		{
 			final String[] files = dir.list();
+			Arrays.sort( files );
 			final int depth = dir.list().length;
 			
 			// get size of first image
