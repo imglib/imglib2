@@ -80,6 +80,8 @@ public class VirtualImgTest {
 		for (int x = 0; x < 20; x++) {
 			for (int z = 0; z < 10; z++) {
 				for (int y = 0; y < 30; y++) {
+					// NOTE - the following code might fail on a Power PC architecture.
+					// Might need to test for platform & order hi/lo tests appropriately
 					short expected = (short) (x + 2*y + 3*z); 
 					int hi = (expected & 0xff00) >> 8;
 					int lo = expected & 0xff;
