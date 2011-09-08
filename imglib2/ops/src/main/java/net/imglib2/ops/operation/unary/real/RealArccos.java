@@ -34,6 +34,8 @@ import net.imglib2.ops.RealOutput;
 import net.imglib2.ops.UnaryOperation;
 
 
+// DONE - no complex formula to verify
+
 /**
  * 
  * @author Barry DeZonia

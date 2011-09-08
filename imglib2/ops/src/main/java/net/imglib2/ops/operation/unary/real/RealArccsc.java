@@ -44,13 +44,8 @@ import net.imglib2.ops.UnaryOperation;
 public final class RealArccsc extends RealOutput implements UnaryOperation<Real,Real> {
 
 	private static final RealArcsec asec = new RealArcsec();
-	private final Real angle;
-	private final Real tmp;
-	
-	public RealArccsc() {
-		angle = new Real();
-		tmp = new Real();
-	}
+	private final Real angle = new Real();
+	private final Real tmp = new Real();
 	
 	@Override
 	public void compute(Real input, Real output) {

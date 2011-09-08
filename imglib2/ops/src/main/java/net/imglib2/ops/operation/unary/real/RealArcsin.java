@@ -33,6 +33,7 @@ import net.imglib2.ops.Real;
 import net.imglib2.ops.RealOutput;
 import net.imglib2.ops.UnaryOperation;
 
+// DONE - no complex formula to verify
 
 /**
  * 

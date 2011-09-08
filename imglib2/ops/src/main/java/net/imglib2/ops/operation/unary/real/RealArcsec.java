@@ -33,6 +33,7 @@ import net.imglib2.ops.Real;
 import net.imglib2.ops.RealOutput;
 import net.imglib2.ops.UnaryOperation;
 
+//DONE - verified formula with Mathworld's definition for Inverse Secant
 
 /**
  * 
@@ -42,20 +43,15 @@ import net.imglib2.ops.UnaryOperation;
 public final class RealArcsec extends RealOutput implements UnaryOperation<Real,Real> {
 
 	private static final RealArccot acot = new RealArccot();
-	private final Real angle;
-	private final Real tmp;
-	
-	public RealArcsec() {
-		angle = new Real();
-		tmp = new Real();
-	}
+	private final Real angle = new Real();
+	private final Real tmp = new Real();
 	
 	@Override
 	public void compute(Real input, Real output) {
 		double x = input.getReal();
 		angle.setReal(1.0 / Math.sqrt(x*x - 1));
 		acot.compute(angle, tmp);
-		if (x <= -1)
+		if (x < -1)
 			output.setReal(Math.PI - tmp.getReal());
 		else
 			output.setReal(tmp.getReal());
