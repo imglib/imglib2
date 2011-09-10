@@ -43,19 +43,23 @@ import net.imglib2.ops.UnaryOperation;
  */
 public final class RealArccsc extends RealOutput implements UnaryOperation<Real,Real> {
 
-	private static final RealArcsec asec = new RealArcsec();
+	private static final RealArccos acos = new RealArccos();
 	private final Real angle = new Real();
 	private final Real tmp = new Real();
 	
 	@Override
 	public void compute(Real input, Real output) {
 		double x = input.getReal();
-		angle.setReal(x / Math.sqrt(x*x - 1));
-		asec.compute(angle, tmp);
-		if (x <= -1)
-			output.setReal(tmp.getReal() - Math.PI);
-		else
-			output.setReal(tmp.getReal());
+		if ((x > -1) && (x < 1))
+			throw new IllegalArgumentException("arccsc(x) : x out of range");
+		else if (x == -1)
+			output.setReal(-Math.PI/2);
+		else if (x == 1)
+			output.setReal(Math.PI/2);
+		else {
+			tmp.setReal(Math.sqrt(x*x - 1) / x);
+			acos.compute(tmp, angle);
+			output.setReal(angle.getReal());
+		}
 	}
-
 }
