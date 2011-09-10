@@ -37,7 +37,7 @@ import net.imglib2.ops.operation.binary.complex.ComplexMultiply;
 import net.imglib2.ops.operation.binary.complex.ComplexPower;
 import net.imglib2.ops.operation.binary.complex.ComplexSubtract;
 
-// DONE - verified formula with Mathworld's definition for Inverse Trigonometric Functions
+//Handbook of Mathematics and Computational Science, Harris & Stocker, Springer, 2006
 
 /**
  * 
@@ -46,10 +46,9 @@ import net.imglib2.ops.operation.binary.complex.ComplexSubtract;
  */
 public final class ComplexArccos extends ComplexOutput implements UnaryOperation<Complex,Complex> {
 
-	private static final Complex I = Complex.createCartesian(0, 1);
+	private static final Complex MINUS_I = Complex.createCartesian(0, -1);
 	private static final Complex ONE = Complex.createCartesian(1, 0);
 	private static final Complex ONE_HALF = Complex.createCartesian(0.5, 0);
-	private static final Complex PI_OVER_2 = Complex.createCartesian(Math.PI/2, 0);
 
 	private static final ComplexMultiply mulFunc = new ComplexMultiply();
 	private static final ComplexSubtract diffFunc = new ComplexSubtract();
@@ -57,23 +56,19 @@ public final class ComplexArccos extends ComplexOutput implements UnaryOperation
 	private static final ComplexAdd addFunc = new ComplexAdd();
 	private static final ComplexLog logFunc = new ComplexLog();
 	
-	private final Complex iz = new Complex();
 	private final Complex zSquared = new Complex();
 	private final Complex miniSum = new Complex();
 	private final Complex root = new Complex();
 	private final Complex sum = new Complex();
 	private final Complex logSum = new Complex();
-	private final Complex angle = new Complex();
 	
 	@Override
 	public void compute(Complex z, Complex output) {
-		mulFunc.compute(I, z, iz);
 		mulFunc.compute(z, z, zSquared);
-		diffFunc.compute(ONE, zSquared, miniSum);
+		diffFunc.compute(zSquared, ONE, miniSum);
 		powFunc.compute(miniSum, ONE_HALF, root);
-		addFunc.compute(iz, root, sum);
+		addFunc.compute(z, root, sum);
 		logFunc.compute(sum, logSum);
-		mulFunc.compute(I, logSum, angle);
-		addFunc.compute(PI_OVER_2, angle, output);
+		mulFunc.compute(MINUS_I, logSum, output);
 	}
 }
