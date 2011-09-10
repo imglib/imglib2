@@ -33,6 +33,8 @@ import net.imglib2.ops.ComplexOutput;
 import net.imglib2.ops.UnaryOperation;
 import net.imglib2.ops.Complex;
 
+//Handbook of Mathematics and Computational Science, Harris & Stocker, Springer, 2006
+
 /**
  * 
  * @author Barry DeZonia

@@ -33,6 +33,8 @@ import net.imglib2.ops.BinaryOperation;
 import net.imglib2.ops.Complex;
 import net.imglib2.ops.ComplexOutput;
 
+// TODO - unverified formula
+
 /**
  * 
  * @author Barry DeZonia

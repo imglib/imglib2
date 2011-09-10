@@ -35,6 +35,8 @@ import net.imglib2.ops.ComplexOutput;
 import net.imglib2.ops.operation.unary.complex.ComplexExp;
 import net.imglib2.ops.operation.unary.complex.ComplexLog;
 
+//Handbook of Mathematics and Computational Science, Harris & Stocker, Springer, 2006
+
 /**
  * 
  * @author Barry DeZonia

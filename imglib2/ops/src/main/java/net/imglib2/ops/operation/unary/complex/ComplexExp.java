@@ -33,6 +33,8 @@ import net.imglib2.ops.ComplexOutput;
 import net.imglib2.ops.UnaryOperation;
 import net.imglib2.ops.Complex;
 
+// Complex Variables and Applications, Brown and Churchill, 7th edition
+
 /**
  * 
  * @author Barry DeZonia
