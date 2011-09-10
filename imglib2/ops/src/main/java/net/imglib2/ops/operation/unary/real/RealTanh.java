@@ -42,8 +42,8 @@ import net.imglib2.ops.UnaryOperation;
 public final class RealTanh extends RealOutput implements UnaryOperation<Real,Real> {
 
 	@Override
-	public void compute(Real input, Real output) {
-		double value = Math.tanh(input.getReal());
+	public void compute(Real x, Real output) {
+		double value = Math.tanh(x.getReal());
 		output.setReal(value);
 	}
 

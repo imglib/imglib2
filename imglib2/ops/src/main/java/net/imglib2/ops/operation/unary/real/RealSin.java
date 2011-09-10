@@ -42,8 +42,8 @@ import net.imglib2.ops.UnaryOperation;
 public final class RealSin extends RealOutput implements UnaryOperation<Real,Real> {
 
 	@Override
-	public void compute(Real input, Real output) {
-		double value = Math.sin(input.getReal());
+	public void compute(Real x, Real output) {
+		double value = Math.sin(x.getReal());
 		output.setReal(value);
 	}
 

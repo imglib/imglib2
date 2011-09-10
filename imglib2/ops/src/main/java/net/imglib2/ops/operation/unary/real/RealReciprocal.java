@@ -48,8 +48,8 @@ public final class RealReciprocal extends RealOutput implements UnaryOperation<R
 	}
 	
 	@Override
-	public void compute(Real input, Real output) {
-		double inputVal = input.getReal();
+	public void compute(Real x, Real output) {
+		double inputVal = x.getReal();
 		if (inputVal == 0)
 			output.setReal(dbzVal);
 		else

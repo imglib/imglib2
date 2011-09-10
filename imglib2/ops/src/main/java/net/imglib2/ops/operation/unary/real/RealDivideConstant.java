@@ -50,12 +50,12 @@ public final class RealDivideConstant extends RealOutput implements UnaryOperati
 	}
 	
 	@Override
-	public void compute(Real input, Real output) {
+	public void compute(Real x, Real output) {
 		if (constant == 0) {
 			output.setReal(dbzVal);
 		}
 		else { // not dividing by zero
-			double value = input.getReal() / constant;
+			double value = x.getReal() / constant;
 			output.setReal(value);
 		}
 	}

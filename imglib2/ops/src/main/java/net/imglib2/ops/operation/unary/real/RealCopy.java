@@ -42,8 +42,8 @@ import net.imglib2.ops.UnaryOperation;
 public final class RealCopy extends RealOutput implements UnaryOperation<Real,Real> {
 
 	@Override
-	public void compute(Real input, Real output) {
-		output.setValue(input);
+	public void compute(Real x, Real output) {
+		output.setValue(x);
 	}
 
 }

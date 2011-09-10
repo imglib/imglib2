@@ -48,8 +48,8 @@ public final class RealSubtractConstant extends RealOutput implements UnaryOpera
 	}
 	
 	@Override
-	public void compute(Real input, Real output) {
-		double value = input.getReal() - constant;
+	public void compute(Real x, Real output) {
+		double value = x.getReal() - constant;
 		output.setReal(value);
 	}
 

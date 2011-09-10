@@ -48,8 +48,8 @@ public final class RealAddConstant extends RealOutput implements UnaryOperation<
 	}
 	
 	@Override
-	public void compute(Real input, Real output) {
-		double value = input.getReal() + constant;
+	public void compute(Real x, Real output) {
+		double value = x.getReal() + constant;
 		output.setReal(value);
 	}
 

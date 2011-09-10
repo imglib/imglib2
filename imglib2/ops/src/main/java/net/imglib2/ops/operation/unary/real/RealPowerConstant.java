@@ -48,8 +48,8 @@ public final class RealPowerConstant extends RealOutput implements UnaryOperatio
 	}
 	
 	@Override
-	public void compute(Real input, Real output) {
-		double value = Math.pow(input.getReal(), constant);
+	public void compute(Real x, Real output) {
+		double value = Math.pow(x.getReal(), constant);
 		output.setReal(value);
 	}
 

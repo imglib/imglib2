@@ -44,8 +44,8 @@ import net.imglib2.ops.UnaryOperation;
 public final class RealArctan extends RealOutput implements UnaryOperation<Real,Real> {
 
 	@Override
-	public void compute(Real input, Real output) {
-		double value = Math.atan(input.getReal());
+	public void compute(Real x, Real output) {
+		double value = Math.atan(x.getReal());
 		output.setReal(value);
 	}
 

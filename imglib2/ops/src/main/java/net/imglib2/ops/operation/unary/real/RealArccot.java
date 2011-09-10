@@ -44,9 +44,9 @@ import net.imglib2.ops.UnaryOperation;
 public final class RealArccot extends RealOutput implements UnaryOperation<Real,Real> {
 
 	@Override
-	public void compute(Real input, Real output) {
-		double value = Math.atan(1.0/input.getReal());
-		if (input.getReal() < 0)
+	public void compute(Real x, Real output) {
+		double value = Math.atan(1.0/x.getReal());
+		if (x.getReal() < 0)
 			value += Math.PI;
 		output.setReal(value);
 	}
