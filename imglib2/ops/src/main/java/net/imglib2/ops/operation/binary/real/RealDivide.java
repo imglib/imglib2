@@ -41,8 +41,8 @@ import net.imglib2.ops.RealOutput;
 public final class RealDivide extends RealOutput implements BinaryOperation<Real,Real,Real> {
 
 	@Override
-	public void compute(Real input1, Real input2, Real output) {
-		double value = input1.getReal() / input2.getReal();
+	public void compute(Real x1, Real x2, Real output) {
+		double value = x1.getReal() / x2.getReal();
 		output.setReal(value);
 	}
 }
