@@ -51,9 +51,9 @@ public final class ComplexTan extends ComplexOutput implements UnaryOperation<Co
 	private final Complex cos = new Complex();
 	
 	@Override
-	public void compute(Complex input, Complex output) {
-		sinFunc.compute(input, sin);
-		cosFunc.compute(input, cos);
+	public void compute(Complex z, Complex output) {
+		sinFunc.compute(z, sin);
+		cosFunc.compute(z, cos);
 		divFunc.compute(sin, cos, output);
 	}
 }

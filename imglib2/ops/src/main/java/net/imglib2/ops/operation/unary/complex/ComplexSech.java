@@ -54,9 +54,8 @@ public final class ComplexSech extends ComplexOutput implements UnaryOperation<C
 	//   Later - it is the same but tests showed it very slightly slower
 	
 	@Override
-	public void compute(Complex input, Complex output) {
-		// TODO - avoid divide by zero. check input values
-		coshFunc.compute(input, cosh);
+	public void compute(Complex z, Complex output) {
+		coshFunc.compute(z, cosh);
 		divFunc.compute(ONE, cosh, output);
 	}
 }

@@ -60,9 +60,9 @@ public final class ComplexSinh extends ComplexOutput implements UnaryOperation<C
 	private final Complex diff = new Complex();
 	
 	@Override
-	public void compute(Complex input, Complex output) {
-		expFunc.compute(input, expZ);
-		mulFunc.compute(input, MINUS_ONE, minusZ);
+	public void compute(Complex z, Complex output) {
+		expFunc.compute(z, expZ);
+		mulFunc.compute(z, MINUS_ONE, minusZ);
 		expFunc.compute(minusZ, expMinusZ);
 		diffFunc.compute(expZ, expMinusZ, diff);
 		divFunc.compute(diff, TWO, output);

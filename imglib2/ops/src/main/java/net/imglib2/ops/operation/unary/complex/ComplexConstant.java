@@ -47,7 +47,7 @@ public final class ComplexConstant extends ComplexOutput implements UnaryOperati
 	}
 	
 	@Override
-	public void compute(Complex input, Complex output) {
+	public void compute(Complex z, Complex output) {
 		output.setValue(constant);
 	}
 }

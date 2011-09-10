@@ -55,14 +55,14 @@ public final class ComplexIntegerPower extends ComplexOutput
 	}
 	
 	@Override
-	public void compute(Complex input, Complex output) {
+	public void compute(Complex z, Complex output) {
 		if (power == 0)
 			output.setValue(ONE);
 		else {
 			if (power < 0)
-				recipFunc.compute(input, variable);
+				recipFunc.compute(z, variable);
 			else // power > 0
-				variable.setValue(input);
+				variable.setValue(z);
 			double r = Math.pow(variable.getModulus(), power);
 			double theta = Complex.findPrincipleArgument(power * variable.getArgument());
 			output.setPolar(r, theta);

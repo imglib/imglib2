@@ -54,9 +54,8 @@ public final class ComplexCsc extends ComplexOutput implements UnaryOperation<Co
 	//   Later - it is the same but tests showed it very slightly slower
 	
 	@Override
-	public void compute(Complex input, Complex output) {
-		// TODO - avoid divide by zero. check input values
-		sinFunc.compute(input, sin);
+	public void compute(Complex z, Complex output) {
+		sinFunc.compute(z, sin);
 		divFunc.compute(ONE, sin, output);
 	}
 }

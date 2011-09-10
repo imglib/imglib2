@@ -51,9 +51,9 @@ public final class ComplexCoth extends ComplexOutput implements UnaryOperation<C
 	private final Complex cosh = new Complex();
 	
 	@Override
-	public void compute(Complex input, Complex output) {
-		sinhFunc.compute(input, sinh);
-		coshFunc.compute(input, cosh);
+	public void compute(Complex z, Complex output) {
+		sinhFunc.compute(z, sinh);
+		coshFunc.compute(z, cosh);
 		divFunc.compute(cosh, sinh, output);
 	}
 }

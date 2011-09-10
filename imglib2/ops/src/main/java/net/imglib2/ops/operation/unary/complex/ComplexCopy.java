@@ -41,7 +41,7 @@ import net.imglib2.ops.Complex;
 public final class ComplexCopy extends ComplexOutput implements UnaryOperation<Complex,Complex> {
 
 	@Override
-	public void compute(Complex input, Complex output) {
-		output.setValue(input);
+	public void compute(Complex z, Complex output) {
+		output.setValue(z);
 	}
 }

@@ -45,9 +45,9 @@ import net.imglib2.ops.Complex;
 public final class ComplexLog extends ComplexOutput implements UnaryOperation<Complex,Complex> {
 
 	@Override
-	public void compute(Complex input, Complex output) {
-		double x = Math.log(input.getModulus());
-		double y = input.getPrincipleArgument();
+	public void compute(Complex z, Complex output) {
+		double x = Math.log(z.getModulus());
+		double y = z.getPrincipleArgument();
 		output.setCartesian(x,y);
 	}
 }

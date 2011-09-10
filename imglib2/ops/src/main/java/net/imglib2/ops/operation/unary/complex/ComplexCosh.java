@@ -60,9 +60,9 @@ public final class ComplexCosh extends ComplexOutput implements UnaryOperation<C
 	private final Complex sum = new Complex();
 	
 	@Override
-	public void compute(Complex input, Complex output) {
-		expFunc.compute(input, expZ);
-		mulFunc.compute(input, MINUS_ONE, minusZ);
+	public void compute(Complex z, Complex output) {
+		expFunc.compute(z, expZ);
+		mulFunc.compute(z, MINUS_ONE, minusZ);
 		expFunc.compute(minusZ, expMinusZ);
 		addFunc.compute(expZ, expMinusZ, sum);
 		divFunc.compute(sum, TWO, output);

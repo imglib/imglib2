@@ -54,9 +54,8 @@ public final class ComplexSec extends ComplexOutput implements UnaryOperation<Co
 	//   Later - it is the same but tests showed it very slightly slower
 	
 	@Override
-	public void compute(Complex input, Complex output) {
-		// TODO - avoid divide by zero. check input values
-		cosFunc.compute(input, cos);
+	public void compute(Complex z, Complex output) {
+		cosFunc.compute(z, cos);
 		divFunc.compute(ONE, cos, output);
 	}
 }

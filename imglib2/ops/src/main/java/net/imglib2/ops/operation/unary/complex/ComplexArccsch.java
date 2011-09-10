@@ -43,7 +43,6 @@ import net.imglib2.ops.operation.binary.complex.ComplexDivide;
  */
 public final class ComplexArccsch extends ComplexOutput implements UnaryOperation<Complex,Complex> {
 
-	private static final Complex ZERO = Complex.createCartesian(0, 0);
 	private static final Complex ONE = Complex.createCartesian(1, 0);
 
 	private static final ComplexArcsinh arcsinhFunc = new ComplexArcsinh();
@@ -53,14 +52,7 @@ public final class ComplexArccsch extends ComplexOutput implements UnaryOperatio
 	
 	@Override
 	public void compute(Complex z, Complex output) {
-		if (z.equals(ZERO)) {
-			throw new IllegalArgumentException("arccsch(z) : z value invalid");
-			// TODO - this might be wrong
-			//   might need to set a value instead. try in mathematica and see answer
-		}
-		else {
-			divFunc.compute(ONE, z, recipZ);
-			arcsinhFunc.compute(recipZ, output);
-		}
+		divFunc.compute(ONE, z, recipZ);
+		arcsinhFunc.compute(recipZ, output);
 	}
 }
