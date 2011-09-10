@@ -43,10 +43,10 @@ import net.imglib2.ops.ComplexOutput;
 public final class ComplexDivide extends ComplexOutput implements BinaryOperation<Complex,Complex,Complex> {
 
 	@Override
-	public void compute(Complex input1, Complex input2, Complex output) {
-		double denom = input2.getX()*input2.getX() + input2.getY()*input2.getY();
-		double r = (input1.getX()*input2.getX() + input1.getY()*input2.getY()) / denom;
-		double i = (input1.getY()*input2.getX() - input1.getX()*input2.getY()) / denom;
-		output.setCartesian(r, i);
+	public void compute(Complex z1, Complex z2, Complex output) {
+		double denom = z2.getX()*z2.getX() + z2.getY()*z2.getY();
+		double x = (z1.getX()*z2.getX() + z1.getY()*z2.getY()) / denom;
+		double y = (z1.getY()*z2.getX() - z1.getX()*z2.getY()) / denom;
+		output.setCartesian(x, y);
 	}
 }
