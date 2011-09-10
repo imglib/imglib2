@@ -34,7 +34,7 @@ import net.imglib2.ops.UnaryOperation;
 import net.imglib2.ops.Complex;
 import net.imglib2.ops.operation.binary.complex.ComplexDivide;
 
-// TODO - I am not sure this formula is right
+// Formula taken from MATLAB documentation
 
 /**
  * 
@@ -43,6 +43,7 @@ import net.imglib2.ops.operation.binary.complex.ComplexDivide;
  */
 public final class ComplexArcsech extends ComplexOutput implements UnaryOperation<Complex,Complex> {
 
+	private static final Complex ZERO = Complex.createCartesian(0, 0);
 	private static final Complex ONE = Complex.createCartesian(1, 0);
 
 	private static final ComplexArccosh arccoshFunc = new ComplexArccosh();
@@ -52,7 +53,14 @@ public final class ComplexArcsech extends ComplexOutput implements UnaryOperatio
 	
 	@Override
 	public void compute(Complex z, Complex output) {
-		divFunc.compute(ONE, z, recipZ);
-		arccoshFunc.compute(recipZ, output);
+		if (z.equals(ZERO)) {
+			throw new IllegalArgumentException("arcsech(z) : z value invalid");
+			// TODO - this might be wrong
+			//   might need to set a value instead. try in mathematica and see answer
+		}
+		else {
+			divFunc.compute(ONE, z, recipZ);
+			arccoshFunc.compute(recipZ, output);
+		}
 	}
 }
