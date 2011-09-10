@@ -43,9 +43,9 @@ import net.imglib2.ops.UnaryOperation;
 public final class RealArccoth extends RealOutput implements UnaryOperation<Real,Real> {
 
 	@Override
-	public void compute(Real input, Real output) {
-		double x = input.getReal();
-		double value = 0.5 * Math.log((x+1) / (x-1));
+	public void compute(Real x, Real output) {
+		double xt = x.getReal();
+		double value = 0.5 * Math.log((xt+1) / (xt-1));
 		output.setReal(value);
 	}
 

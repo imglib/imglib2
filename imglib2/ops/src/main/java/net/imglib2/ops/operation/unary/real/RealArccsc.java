@@ -48,16 +48,16 @@ public final class RealArccsc extends RealOutput implements UnaryOperation<Real,
 	private final Real tmp = new Real();
 	
 	@Override
-	public void compute(Real input, Real output) {
-		double x = input.getReal();
-		if ((x > -1) && (x < 1))
+	public void compute(Real x, Real output) {
+		double xt = x.getReal();
+		if ((xt > -1) && (xt < 1))
 			throw new IllegalArgumentException("arccsc(x) : x out of range");
-		else if (x == -1)
+		else if (xt == -1)
 			output.setReal(-Math.PI/2);
-		else if (x == 1)
+		else if (xt == 1)
 			output.setReal(Math.PI/2);
 		else {
-			tmp.setReal(Math.sqrt(x*x - 1) / x);
+			tmp.setReal(Math.sqrt(xt*xt - 1) / xt);
 			acos.compute(tmp, angle);
 			output.setReal(angle.getReal());
 		}

@@ -47,19 +47,19 @@ public final class RealArcsec extends RealOutput implements UnaryOperation<Real,
 	private final Real tmp = new Real();
 	
 	@Override
-	public void compute(Real input, Real output) {
-		double x = input.getReal();
-		if ((x > -1) && (x < 1))
+	public void compute(Real x, Real output) {
+		double xt = x.getReal();
+		if ((xt > -1) && (xt < 1))
 			throw new IllegalArgumentException("arcsec(x) : x out of range");
-		else if (x == -1)
+		else if (xt == -1)
 			output.setReal(Math.PI);
-		else if (x == 1)
+		else if (xt == 1)
 			output.setReal(0);
 		else { // |x| > 1
-			tmp.setReal(Math.sqrt(x*x - 1)/x);
+			tmp.setReal(Math.sqrt(xt*xt - 1)/xt);
 			asin.compute(tmp, angle);
 			double value = angle.getReal();
-			if (x < -1)
+			if (xt < -1)
 				value += Math.PI;
 			output.setReal(value);
 		}

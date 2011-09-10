@@ -43,10 +43,10 @@ import net.imglib2.ops.UnaryOperation;
 public final class RealArcsinh extends RealOutput implements UnaryOperation<Real,Real> {
 
 	@Override
-	public void compute(Real input, Real output) {
-		double x = input.getReal();
-		double delta = Math.sqrt(x*x + 1);
-		double value = Math.log(x+delta);
+	public void compute(Real x, Real output) {
+		double xt = x.getReal();
+		double delta = Math.sqrt(xt*xt + 1);
+		double value = Math.log(xt+delta);
 		output.setReal(value);
 	}
 
