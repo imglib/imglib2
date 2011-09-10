@@ -33,7 +33,8 @@ import net.imglib2.ops.Real;
 import net.imglib2.ops.RealOutput;
 import net.imglib2.ops.UnaryOperation;
 
-//DONE - verified formula with Mathworld's definition for Inverse Cotangent
+//Handbook of Mathematics and Computational Science, Harris & Stocker, Springer, 2006
+
 
 /**
  * 
@@ -44,11 +45,9 @@ public final class RealArccot extends RealOutput implements UnaryOperation<Real,
 
 	@Override
 	public void compute(Real input, Real output) {
-		double value = Math.atan(input.getReal());
+		double value = Math.atan(1.0/input.getReal());
 		if (input.getReal() < 0)
-			value = -(Math.PI/2) - value;
-		else
-			value = (Math.PI/2) - value;
+			value += Math.PI;
 		output.setReal(value);
 	}
 
