@@ -164,6 +164,21 @@ public class AllConnectedComponentsTest {
 		test2D(input, expected, null, 1, 0);
 	}
 	@Test
+	public void testBigBigObject() {
+		/*
+		 * This is a regression test of a bug reported
+		 * by Jean-Yves Tinevez. The code should fail on a
+		 * 2-d array that needs to push more than 675 / 2 elements.
+		 */
+		boolean [][] input = new boolean [100][100];
+		int [][] expected = new int [100][100];
+		for (int i=0;i<input.length; i++) {
+			Arrays.fill(input[i], true);
+			Arrays.fill(expected[i], 1);
+		}
+		test2D(input, expected, null, 1, 0);
+	}
+	@Test
 	public void testCustomStrel() {
 		boolean [][] input = new boolean [][] {
 				{ false, false, false, false, false },
