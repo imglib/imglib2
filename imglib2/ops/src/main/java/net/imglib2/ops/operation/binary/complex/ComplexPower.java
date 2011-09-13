@@ -48,13 +48,8 @@ public final class ComplexPower extends ComplexOutput implements BinaryOperation
 	private static final ComplexMultiply mulFunc = new ComplexMultiply();
 	private static final ComplexExp expFunc = new ComplexExp();
 	
-	private final Complex logA;
-	private final Complex zLogA;
-	
-	public ComplexPower() {
-		logA = new Complex();
-		zLogA = new Complex();
-	}
+	private final Complex logA = new Complex();
+	private final Complex zLogA = new Complex();
 	
 	@Override
 	public void compute(Complex a, Complex z, Complex output) {
