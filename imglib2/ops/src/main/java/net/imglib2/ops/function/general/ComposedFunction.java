@@ -31,17 +31,17 @@ package net.imglib2.ops.function.general;
 
 import java.util.ArrayList;
 
-import net.imglib2.ops.DataCopier;
 import net.imglib2.ops.Function;
 import net.imglib2.ops.Neighborhood;
 
 // TODO - this is a simple implementation. It only works from a fixed point
-// along an outer axis. Ideally in the future we'd have different shaped
-// functions that would have regions within their domains stitched together.
+// along a axis. Ideally in the future we'd have different shaped functions
+// that would have regions within their domains stitched together.
 
 // NOTE you cannot change dimensionality of functions. i.e. this might be
 // a 3d function made up of other 3d functions. No stacks of 2d functions
-// making a 3d function. Fix? Or make a stacked implementation too.
+// making a 3d function. Fix? Or make a stacked implementation too. Maybe
+// a function can be lifted from 2d to N-d with each new dimension size==1.
 
 // Limitation : requires long[]'s. what about double[]'s?
 
@@ -50,18 +50,19 @@ import net.imglib2.ops.Neighborhood;
  * @author Barry DeZonia
  *
  */
-public class ComposedFunction<T extends DataCopier<T>> implements Function<long[],T> {
+public class ComposedFunction<T> implements Function<long[],T> {
 
 	private ArrayList<Function<long[],T>> functions;
 	private ArrayList<Long> widths;
 	private long startIndex;
 	private long[] relativePosition;
 	private Neighborhood<long[]> localNeigh;
-	private int last;
+	private int dimension;
 	
-	public ComposedFunction(long startPoint) {
+	public ComposedFunction(int dim, long startPoint) {
 		functions = new ArrayList<Function<long[],T>>();
 		widths = new ArrayList<Long>();
+		dimension = dim;
 		startIndex = startPoint;
 		relativePosition = null;
 		localNeigh = null;
@@ -76,12 +77,11 @@ public class ComposedFunction<T extends DataCopier<T>> implements Function<long[
 	public void evaluate(Neighborhood<long[]> neigh, long[] point, T output) {
 		if (relativePosition == null) {
 			relativePosition = new long[point.length];
-			last = point.length-1;
 			localNeigh = neigh.duplicate();
 		}
 		for (int i = 0; i < relativePosition.length; i++)
 			relativePosition[i] = point[i];
-		long indexVal = point[last];
+		long indexVal = point[dimension];
 		long currSpot = startIndex;
 		for (int i = 0; i < functions.size(); i++) {
 			long functionWidth = widths.get(i);
@@ -91,7 +91,7 @@ public class ComposedFunction<T extends DataCopier<T>> implements Function<long[
 				return;
 			}
 			currSpot += functionWidth;
-			relativePosition[last] -= functionWidth;
+			relativePosition[dimension] -= functionWidth;
 		}
 		throw new IllegalArgumentException(
 				"ComposedFunction::evaluate() - given point is out of bounds");
@@ -101,6 +101,7 @@ public class ComposedFunction<T extends DataCopier<T>> implements Function<long[
 	public T createOutput() {
 		if (functions.size() > 0)
 			return functions.get(0).createOutput();
-		throw new IllegalArgumentException("ComposedFunction has not been initialized yet.");
+		throw new IllegalArgumentException(
+				"ComposedFunction has not been initialized yet.");
 	}
 }
