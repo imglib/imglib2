@@ -35,6 +35,11 @@ import net.imglib2.ops.Real;
 import net.imglib2.ops.RealOutput;
 import net.imglib2.ops.RegionIndexIterator;
 
+// NOTE : convolution and correlation are similar operations whose output is
+//   rotated by 180 degrees for the same kernel. You can get one or the other
+//   from the same function by rotating the input kernel by 180 degrees. As
+//   implemented below this function is really a Correlation.
+
 // TODO
 //   A convolution is really a GeneralBinaryOperation between an input function
 //   and a kernel function. For efficiency this class exists. For generality a
