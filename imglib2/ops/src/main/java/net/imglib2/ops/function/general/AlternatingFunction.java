@@ -68,7 +68,7 @@ public class AlternatingFunction<T> implements Function<long[],T> {
 		}
 		for (int i = 0; i < relativePosition.length; i++)
 			relativePosition[i] = point[i];
-		relativePosition[dimension] /= functions.size();
+		relativePosition[dimension] /= functions.size();  // TODO - assumes pos >= 0 here
 		localNeigh.moveTo(relativePosition);
 		int funcNum = (int) (point[dimension] % functions.size());
 		functions.get(funcNum).evaluate(localNeigh, relativePosition, output);
