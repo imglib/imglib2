@@ -45,6 +45,8 @@ import net.imglib2.ops.Neighborhood;
 
 // Limitation : requires long[]'s. what about double[]'s?
 
+// NOTE - this function composed of a number of 0-based functions
+
 /**
  * 
  * @author Barry DeZonia
@@ -52,18 +54,18 @@ import net.imglib2.ops.Neighborhood;
  */
 public class ComposedFunction<T> implements Function<long[],T> {
 
+	private int dimension;
+	private long startIndex;
 	private ArrayList<Function<long[],T>> functions;
 	private ArrayList<Long> widths;
-	private long startIndex;
 	private long[] relativePosition;
 	private Neighborhood<long[]> localNeigh;
-	private int dimension;
 	
 	public ComposedFunction(int dim, long startPoint) {
-		functions = new ArrayList<Function<long[],T>>();
-		widths = new ArrayList<Long>();
 		dimension = dim;
 		startIndex = startPoint;
+		functions = new ArrayList<Function<long[],T>>();
+		widths = new ArrayList<Long>();
 		relativePosition = null;
 		localNeigh = null;
 	}
@@ -71,6 +73,8 @@ public class ComposedFunction<T> implements Function<long[],T> {
 	public void add(Function<long[],T> function, long width) {
 		functions.add(function);
 		widths.add(width);
+		if (width < 1)
+			throw new IllegalArgumentException("ComposedFunction: function domain width must be positive");
 	}
 	
 	@Override
@@ -81,6 +85,7 @@ public class ComposedFunction<T> implements Function<long[],T> {
 		}
 		for (int i = 0; i < relativePosition.length; i++)
 			relativePosition[i] = point[i];
+		relativePosition[dimension] -= startIndex;
 		long indexVal = point[dimension];
 		long currSpot = startIndex;
 		for (int i = 0; i < functions.size(); i++) {
