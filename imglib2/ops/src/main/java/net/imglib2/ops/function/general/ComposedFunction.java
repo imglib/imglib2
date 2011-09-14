@@ -47,6 +47,10 @@ import net.imglib2.ops.Neighborhood;
 
 // NOTE - this function composed of a number of 0-based functions
 
+// TODO - use a data structure that does not require O(n) function searches
+// in the evaluate method. Can certainly find a O(log n) solution using
+// some tagged tree structure.
+
 /**
  * 
  * @author Barry DeZonia
