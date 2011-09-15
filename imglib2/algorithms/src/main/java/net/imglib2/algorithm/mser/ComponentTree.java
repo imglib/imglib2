@@ -212,10 +212,8 @@ public class ComponentTree< T extends Comparable< T > & Type< T >, C extends Com
 	 */
 	protected void processStack( T value )
 	{
-		int iterations = 0; // TODO: remove
 		while (true)
 		{
-			++iterations; // TODO: remove
 //			showComponentStack("stack before:");
 			// process component on top of stack
 			C component = componentStack.pop();
@@ -226,21 +224,16 @@ public class ComponentTree< T extends Comparable< T > & Type< T >, C extends Com
 			final int c = value.compareTo( secondComponent.getValue() );
 			if ( c < 0 )
 			{
-				System.out.println("(raise component " + ( ( PixelListComponent< T > ) component).id + " to level " + value + ")");
+//				System.out.println("(raise component " + ( ( PixelListComponent< T > ) component).id + " to level " + value + ")");
 				component.setValue( value );
 				componentStack.push( component );
 			}
 			else
 			{
-				System.out.println("(merge component " + ( ( PixelListComponent< T > ) component).id + " into " + ( ( PixelListComponent< T > ) secondComponent).id + ")");
+//				System.out.println("(merge component " + ( ( PixelListComponent< T > ) component).id + " into " + ( ( PixelListComponent< T > ) secondComponent).id + ")");
 				secondComponent.merge( component );
 				if ( c > 0 )
 					continue;
-			}
-			if ( iterations > 1 ) // TODO: remove
-			{
-				System.out.println( "----processStack: " + iterations + " iterations.");
-				System.exit( 0 );
 			}
 //			showComponentStack("stack after:");
 			return;
