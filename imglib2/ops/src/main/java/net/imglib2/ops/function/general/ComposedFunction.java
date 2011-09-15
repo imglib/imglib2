@@ -51,6 +51,16 @@ import net.imglib2.ops.Neighborhood;
 // in the evaluate method. Can certainly find a O(log n) solution using
 // some tagged tree structure.
 
+// As defined there is a (serious?) limitation of ComposedFunction. Imagine
+// we stitch together three 1x3 functions to make a 3x3 composed function.
+// And then we query it passing in a 3x3 neighborhood. The evaluate() code
+// dispatches to the 1x3 subfunctions at each point. If they look outside
+// their 1x3 neighborhood (since their passed a 3x3) they won't be pulling
+// values from the their neighboring functions. Perhaps we need to keep
+// smaller local neighborhoods around (1 per function) and locate them so
+// that their underlying functions don't go out of bounds. This limitation
+// needs to be thought about more.
+
 /**
  * 
  * @author Barry DeZonia
