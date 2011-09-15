@@ -43,7 +43,7 @@ public final class ComplexZero extends ComplexOutput implements UnaryOperation<C
 	private static final Complex ZERO = Complex.createCartesian(0, 0);
 	
 	@Override
-	public void compute(Complex input, Complex output) {
+	public void compute(Complex z, Complex output) {
 		output.setValue(ZERO);
 	}
 }

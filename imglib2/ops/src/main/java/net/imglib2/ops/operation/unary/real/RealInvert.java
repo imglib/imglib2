@@ -51,8 +51,8 @@ public final class RealInvert extends RealOutput implements UnaryOperation<Real,
 	}
 
 	@Override
-	public void compute(Real input, Real output) {
-		double value = actualMax - (input.getReal() - actualMin);
+	public void compute(Real x, Real output) {
+		double value = actualMax - (x.getReal() - actualMin);
 		output.setReal(value);
 	}
 }

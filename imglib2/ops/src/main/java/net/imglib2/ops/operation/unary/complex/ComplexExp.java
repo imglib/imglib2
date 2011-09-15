@@ -33,6 +33,8 @@ import net.imglib2.ops.ComplexOutput;
 import net.imglib2.ops.UnaryOperation;
 import net.imglib2.ops.Complex;
 
+// Complex Variables and Applications, Brown and Churchill, 7th edition
+
 /**
  * 
  * @author Barry DeZonia
@@ -41,10 +43,10 @@ import net.imglib2.ops.Complex;
 public final class ComplexExp extends ComplexOutput implements UnaryOperation<Complex,Complex> {
 
 	@Override
-	public void compute(Complex input, Complex output) {
-		double constant = Math.exp(input.getX());
-		double r = constant * Math.cos(input.getY());
-		double i = constant * Math.sin(input.getY());
-		output.setCartesian(r,i);
+	public void compute(Complex z, Complex output) {
+		double constant = Math.exp(z.getX());
+		double x = constant * Math.cos(z.getY());
+		double y = constant * Math.sin(z.getY());
+		output.setCartesian(x,y);
 	}
 }

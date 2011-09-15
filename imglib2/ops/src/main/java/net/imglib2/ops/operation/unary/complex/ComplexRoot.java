@@ -33,6 +33,8 @@ import net.imglib2.ops.ComplexOutput;
 import net.imglib2.ops.UnaryOperation;
 import net.imglib2.ops.Complex;
 
+//Handbook of Mathematics and Computational Science, Harris & Stocker, Springer, 2006
+
 /**
  * 
  * @author Barry DeZonia
@@ -49,9 +51,9 @@ public final class ComplexRoot extends ComplexOutput implements UnaryOperation<C
 	}
 	
 	@Override
-	public void compute(Complex input, Complex output) {
-		double r = Math.pow(input.getModulus(), 1.0/power);
-		double theta = input.getPrincipleArgument() / power;
+	public void compute(Complex z, Complex output) {
+		double r = Math.pow(z.getModulus(), 1.0/power);
+		double theta = z.getPrincipleArgument() / power;
 		output.setPolar(r, theta);
 	}
 }

@@ -48,8 +48,8 @@ public final class RealXorConstant extends RealOutput implements UnaryOperation<
 	}
 	
 	@Override
-	public void compute(Real input, Real output) {
-		long value = constant ^ (long) input.getReal();
+	public void compute(Real x, Real output) {
+		long value = constant ^ (long) x.getReal();
 		output.setReal(value);
 	}
 

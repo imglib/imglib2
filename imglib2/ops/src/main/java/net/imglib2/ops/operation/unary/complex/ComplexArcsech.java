@@ -34,7 +34,7 @@ import net.imglib2.ops.UnaryOperation;
 import net.imglib2.ops.Complex;
 import net.imglib2.ops.operation.binary.complex.ComplexDivide;
 
-// TODO - I am not sure this formula is right
+// Formula taken from MATLAB documentation
 
 /**
  * 

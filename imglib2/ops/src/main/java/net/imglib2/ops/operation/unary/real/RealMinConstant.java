@@ -48,8 +48,8 @@ public final class RealMinConstant extends RealOutput implements UnaryOperation<
 	}
 	
 	@Override
-	public void compute(Real input, Real output) {
-		double value = input.getReal();
+	public void compute(Real x, Real output) {
+		double value = x.getReal();
 		if (value > constant)
 			output.setReal(value);
 		else

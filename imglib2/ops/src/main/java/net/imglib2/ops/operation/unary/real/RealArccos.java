@@ -34,6 +34,8 @@ import net.imglib2.ops.RealOutput;
 import net.imglib2.ops.UnaryOperation;
 
 
+// DONE - no complex formula to verify
+
 /**
  * 
  * @author Barry DeZonia
@@ -42,8 +44,8 @@ import net.imglib2.ops.UnaryOperation;
 public final class RealArccos extends RealOutput implements UnaryOperation<Real,Real> {
 
 	@Override
-	public void compute(Real input, Real output) {
-		double value = Math.acos(input.getReal());
+	public void compute(Real x, Real output) {
+		double value = Math.acos(x.getReal());
 		output.setReal(value);
 	}
 

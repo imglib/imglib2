@@ -41,7 +41,7 @@ import net.imglib2.ops.RealOutput;
 public final class RealCopyRight extends RealOutput implements BinaryOperation<Real,Real,Real> {
 
 	@Override
-	public void compute(Real input1, Real input2, Real output) {
-		output.setReal(input2.getReal());
+	public void compute(Real x1, Real x2, Real output) {
+		output.setReal(x2.getReal());
 	}
 }

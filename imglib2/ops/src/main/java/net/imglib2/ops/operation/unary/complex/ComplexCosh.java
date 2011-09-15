@@ -37,6 +37,8 @@ import net.imglib2.ops.operation.binary.complex.ComplexDivide;
 import net.imglib2.ops.operation.binary.complex.ComplexMultiply;
 import net.imglib2.ops.operation.unary.complex.ComplexExp;
 
+//Handbook of Mathematics and Computational Science, Harris & Stocker, Springer, 2006
+
 /**
  * 
  * @author Barry DeZonia
@@ -58,9 +60,9 @@ public final class ComplexCosh extends ComplexOutput implements UnaryOperation<C
 	private final Complex sum = new Complex();
 	
 	@Override
-	public void compute(Complex input, Complex output) {
-		expFunc.compute(input, expZ);
-		mulFunc.compute(input, MINUS_ONE, minusZ);
+	public void compute(Complex z, Complex output) {
+		expFunc.compute(z, expZ);
+		mulFunc.compute(z, MINUS_ONE, minusZ);
 		expFunc.compute(minusZ, expMinusZ);
 		addFunc.compute(expZ, expMinusZ, sum);
 		divFunc.compute(sum, TWO, output);

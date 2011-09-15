@@ -47,8 +47,8 @@ import net.imglib2.ops.UnaryOperation;
 public final class ComplexAdapter extends ComplexOutput implements UnaryOperation<Real,Complex> {
 
 	@Override
-	public void compute(Real input, Complex output) {
-		output.setCartesian(input.getReal(), 0);
+	public void compute(Real x, Complex output) {
+		output.setCartesian(x.getReal(), 0);
 	}
 
 }

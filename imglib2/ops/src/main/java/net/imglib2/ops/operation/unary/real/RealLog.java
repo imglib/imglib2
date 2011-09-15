@@ -42,8 +42,8 @@ import net.imglib2.ops.UnaryOperation;
 public final class RealLog extends RealOutput implements UnaryOperation<Real,Real> {
 
 	@Override
-	public void compute(Real input, Real output) {
-		double value = Math.log(input.getReal());
+	public void compute(Real x, Real output) {
+		double value = Math.log(x.getReal());
 		output.setReal(value);
 	}
 

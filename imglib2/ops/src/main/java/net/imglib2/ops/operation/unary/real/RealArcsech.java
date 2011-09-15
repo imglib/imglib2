@@ -33,6 +33,7 @@ import net.imglib2.ops.Real;
 import net.imglib2.ops.RealOutput;
 import net.imglib2.ops.UnaryOperation;
 
+//Handbook of Mathematics and Computational Science, Harris & Stocker, Springer, 2006
 
 /**
  * 
@@ -42,10 +43,10 @@ import net.imglib2.ops.UnaryOperation;
 public final class RealArcsech extends RealOutput implements UnaryOperation<Real,Real> {
 
 	@Override
-	public void compute(Real input, Real output) {
-		double x = input.getReal();
-		double numer = 1 + Math.sqrt(1 - x*x);
-		double value = Math.log(numer / x);
+	public void compute(Real x, Real output) {
+		double xt = x.getReal();
+		double numer = 1 + Math.sqrt(1 - xt*xt);
+		double value = Math.log(numer / xt);
 		output.setReal(value);
 	}
 

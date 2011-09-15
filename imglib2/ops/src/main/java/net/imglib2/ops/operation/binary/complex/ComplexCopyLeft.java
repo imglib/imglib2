@@ -41,7 +41,7 @@ import net.imglib2.ops.ComplexOutput;
 public final class ComplexCopyLeft extends ComplexOutput implements BinaryOperation<Complex,Complex,Complex> {
 
 	@Override
-	public void compute(Complex input1, Complex input2, Complex output) {
-		output.setValue(input1);
+	public void compute(Complex z1, Complex z2, Complex output) {
+		output.setValue(z1);
 	}
 }

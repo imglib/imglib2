@@ -33,6 +33,7 @@ import net.imglib2.ops.Real;
 import net.imglib2.ops.RealOutput;
 import net.imglib2.ops.UnaryOperation;
 
+// DONE - no complex formula to verify
 
 /**
  * 
@@ -42,8 +43,8 @@ import net.imglib2.ops.UnaryOperation;
 public final class RealArcsin extends RealOutput implements UnaryOperation<Real,Real> {
 
 	@Override
-	public void compute(Real input, Real output) {
-		double value = Math.asin(input.getReal());
+	public void compute(Real x, Real output) {
+		double value = Math.asin(x.getReal());
 		output.setReal(value);
 	}
 

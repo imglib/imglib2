@@ -27,25 +27,58 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE.
 */
 
-package net.imglib2.ops.operation.unary.real;
+package net.imglib2.ops.function.general;
 
-import net.imglib2.ops.Real;
-import net.imglib2.ops.RealOutput;
-import net.imglib2.ops.UnaryOperation;
+import java.util.ArrayList;
 
-//Handbook of Mathematics and Computational Science, Harris & Stocker, Springer, 2006
+import net.imglib2.ops.Function;
+import net.imglib2.ops.Neighborhood;
+
+// This is a proof of concept implementation that would allow one to interleave
+// a number of input datasets or other functions.
 
 /**
  * 
  * @author Barry DeZonia
  *
  */
-public final class RealCsc extends RealOutput implements UnaryOperation<Real,Real> {
+public class AlternatingFunction<T> implements Function<long[],T> {
 
-	@Override
-	public void compute(Real x, Real output) {
-		double value = 1.0 / Math.sin(x.getReal());
-		output.setReal(value);
+	private ArrayList<Function<long[],T>> functions;
+	private long[] relativePosition;
+	private Neighborhood<long[]> localNeigh;
+	private int dimension;
+	
+	public AlternatingFunction(int dim) {
+		functions = new ArrayList<Function<long[],T>>();
+		dimension = dim;
+		relativePosition = null;
+		localNeigh = null;
 	}
 
+	public void add(Function<long[],T> function) {
+		functions.add(function);
+	}
+	
+	@Override
+	public void evaluate(Neighborhood<long[]> neigh, long[] point, T output) {
+		if (relativePosition == null) {
+			relativePosition = new long[point.length];
+			localNeigh = neigh.duplicate();
+		}
+		for (int i = 0; i < relativePosition.length; i++)
+			relativePosition[i] = point[i];
+		relativePosition[dimension] /= functions.size();  // TODO - assumes pos >= 0 here
+		localNeigh.moveTo(relativePosition);
+		int funcNum = (int) (point[dimension] % functions.size());
+		functions.get(funcNum).evaluate(localNeigh, relativePosition, output);
+	}
+
+	@Override
+	public T createOutput() {
+		if (functions.size() > 0)
+			return functions.get(0).createOutput();
+		throw new IllegalArgumentException(
+				"AlternatingFunction has not been initialized yet.");
+	}
 }

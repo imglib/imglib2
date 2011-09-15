@@ -57,11 +57,11 @@ public final class RealAddNoise extends RealOutput implements UnaryOperation<Rea
 	}
 	
 	@Override
-	public void compute(Real input, Real output) {
+	public void compute(Real x, Real output) {
 		int i = 0;
 		do
 		{
-			double newVal = input.getReal() + (rng.nextGaussian() * rangeStdDev);
+			double newVal = x.getReal() + (rng.nextGaussian() * rangeStdDev);
 			
 			if ((rangeMin <= newVal) && (newVal <=rangeMax)) {
 				output.setReal(newVal);

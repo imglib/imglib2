@@ -34,6 +34,8 @@ import net.imglib2.ops.UnaryOperation;
 import net.imglib2.ops.Complex;
 import net.imglib2.ops.operation.binary.complex.ComplexDivide;
 
+//Formula taken from MATLAB documentation
+
 /**
  * 
  * @author Barry DeZonia

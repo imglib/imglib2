@@ -33,6 +33,7 @@ import net.imglib2.ops.Real;
 import net.imglib2.ops.RealOutput;
 import net.imglib2.ops.UnaryOperation;
 
+//Handbook of Mathematics and Computational Science, Harris & Stocker, Springer, 2006
 
 /**
  * 
@@ -42,8 +43,8 @@ import net.imglib2.ops.UnaryOperation;
 public final class RealCsch extends RealOutput implements UnaryOperation<Real,Real> {
 
 	@Override
-	public void compute(Real input, Real output) {
-		double value = 1.0 / Math.sinh(input.getReal());
+	public void compute(Real x, Real output) {
+		double value = 1.0 / Math.sinh(x.getReal());
 		output.setReal(value);
 	}
 

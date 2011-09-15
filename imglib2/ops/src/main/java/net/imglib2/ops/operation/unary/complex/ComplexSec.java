@@ -34,6 +34,8 @@ import net.imglib2.ops.UnaryOperation;
 import net.imglib2.ops.Complex;
 import net.imglib2.ops.operation.binary.complex.ComplexDivide;
 
+//Formula taken from MATLAB documentation
+
 /**
  * 
  * @author Barry DeZonia
@@ -52,8 +54,8 @@ public final class ComplexSec extends ComplexOutput implements UnaryOperation<Co
 	//   Later - it is the same but tests showed it very slightly slower
 	
 	@Override
-	public void compute(Complex input, Complex output) {
-		cosFunc.compute(input, cos);
+	public void compute(Complex z, Complex output) {
+		cosFunc.compute(z, cos);
 		divFunc.compute(ONE, cos, output);
 	}
 }

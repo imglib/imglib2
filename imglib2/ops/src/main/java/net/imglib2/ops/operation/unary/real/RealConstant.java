@@ -48,7 +48,7 @@ public final class RealConstant extends RealOutput implements UnaryOperation<Rea
 	}
 	
 	@Override
-	public void compute(Real input, Real output) {
+	public void compute(Real x, Real output) {
 		output.setReal(constant);
 	}
 

@@ -42,8 +42,8 @@ import net.imglib2.ops.UnaryOperation;
 public final class RealCosh extends RealOutput implements UnaryOperation<Real,Real> {
 
 	@Override
-	public void compute(Real input, Real output) {
-		double value = Math.cosh(input.getReal());
+	public void compute(Real x, Real output) {
+		double value = Math.cosh(x.getReal());
 		output.setReal(value);
 	}
 
