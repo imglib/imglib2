@@ -46,6 +46,14 @@ public class RealLocation implements RealLocalizable
 			this.position[ d ] = position.getLongPosition( d );
 	}
 
+	public RealLocation ( final RealLocalizable position )
+	{
+		this( position.numDimensions() );
+
+		for ( int d = 0; d < numDimensions; ++d )
+			this.position[ d ] = position.getDoublePosition( d );
+	}
+
 	public RealLocation ( final long[] position )
 	{
 		this( position.length );
