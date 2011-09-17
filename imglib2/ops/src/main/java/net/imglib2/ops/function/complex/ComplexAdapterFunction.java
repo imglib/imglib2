@@ -34,6 +34,7 @@ import net.imglib2.ops.ComplexOutput;
 import net.imglib2.ops.Function;
 import net.imglib2.ops.Neighborhood;
 import net.imglib2.ops.Real;
+import net.imglib2.ops.function.real.ConstantRealFunction;
 
 
 /**
@@ -43,17 +44,29 @@ import net.imglib2.ops.Real;
  */
 public class ComplexAdapterFunction<INDEX> extends ComplexOutput implements Function<INDEX,Complex> {
 
-	private Function<INDEX,Real> realFunc;
-	private Real real;
+	private Function<INDEX,Real> realFunc1;
+	private Function<INDEX,Real> realFunc2;
+	private Real real1;
+	private Real real2;
 	
 	public ComplexAdapterFunction(Function<INDEX,Real> realFunc) {
-		this.realFunc = realFunc;
-		this.real = new Real();
+		this.realFunc1 = realFunc;
+		this.realFunc2 = new ConstantRealFunction<INDEX>(0);
+		this.real1 = new Real();
+		this.real2 = new Real();
+	}
+	
+	public ComplexAdapterFunction(Function<INDEX,Real> realFunc1, Function<INDEX,Real> realFunc2) {
+		this.realFunc1 = realFunc1;
+		this.realFunc2 = realFunc2;
+		this.real1 = new Real();
+		this.real2 = new Real();
 	}
 	
 	@Override
 	public void evaluate(Neighborhood<INDEX> neigh, INDEX point, Complex value) {
-		realFunc.evaluate(neigh, point, real);
-		value.setCartesian(real.getReal(),0);
+		realFunc1.evaluate(neigh, point, real1);
+		realFunc2.evaluate(neigh, point, real2);
+		value.setCartesian(real1.getReal(),real2.getReal());
 	}
 }
