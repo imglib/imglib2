@@ -49,10 +49,10 @@ public class CachingFunction<T extends DataCopier<T>> implements Function<long[]
 
 	// -- instance variables --
 	
-	private Function<long[],T> otherFunc;
+	private final Function<long[],T> otherFunc;
 	private long[] lastKeyPoint;
 	private long[] lastPoint;
-	private T lastValue;
+	private final T lastValue;
 
 	// -- constructor --
 	

@@ -63,9 +63,9 @@ import net.imglib2.type.numeric.ComplexType;
  */
 public class ComplexImageAssignment {
 
-	private RandomAccess<? extends ComplexType<?>> accessor;
-	private Neighborhood<long[]> neigh;
-	private Function<long[],Complex> function;
+	private final RandomAccess<? extends ComplexType<?>> accessor;
+	private final Neighborhood<long[]> neigh;
+	private final Function<long[],Complex> function;
 	private Condition<long[]> condition;
 	
 	public ComplexImageAssignment(Img<? extends ComplexType<?>> image, Neighborhood<long[]> neigh,

@@ -37,9 +37,9 @@ package net.imglib2.ops;
  */
 public class UnaryCondition<INDEX, T> implements Condition<INDEX> {
 
-	private Function<INDEX,T> f1;
-	private T f1Val;
-	private UnaryRelation<T> relation;
+	private final Function<INDEX,T> f1;
+	private final T f1Val;
+	private final UnaryRelation<T> relation;
 
 	public UnaryCondition(Function<INDEX,T> f1, UnaryRelation<T> relation) {
 		this.f1 = f1;

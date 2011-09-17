@@ -45,9 +45,9 @@ import net.imglib2.ops.RegionIndexIterator;
  */
 public class RealMedianFunction extends RealOutput implements Function<long[],Real> {
 
-	private Function<long[],Real> otherFunc;
-	private Real variable;
-	private ArrayList<Double> values;
+	private final Function<long[],Real> otherFunc;
+	private final Real variable;
+	private final ArrayList<Double> values;
 	private RegionIndexIterator iter;
 	
 	public RealMedianFunction(Function<long[],Real> otherFunc)

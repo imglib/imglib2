@@ -44,10 +44,10 @@ import net.imglib2.ops.Neighborhood;
  */
 public class AlternatingFunction<T> implements Function<long[],T> {
 
-	private ArrayList<Function<long[],T>> functions;
+	private final ArrayList<Function<long[],T>> functions;
 	private long[] relativePosition;
 	private Neighborhood<long[]> localNeigh;
-	private int dimension;
+	private final int dimension;
 	
 	public AlternatingFunction(int dim) {
 		functions = new ArrayList<Function<long[],T>>();

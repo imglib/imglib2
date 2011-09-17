@@ -41,9 +41,9 @@ import net.imglib2.ops.UnaryOperation;
 public class GeneralUnaryFunction<INDEX, INPUT_TYPE, OUTPUT_TYPE>
 	implements Function<INDEX,OUTPUT_TYPE>
 {
-	private Function<INDEX,INPUT_TYPE> f1;
-	private INPUT_TYPE temp;
-	private UnaryOperation<INPUT_TYPE,OUTPUT_TYPE> operation;
+	private final Function<INDEX,INPUT_TYPE> f1;
+	private final INPUT_TYPE temp;
+	private final UnaryOperation<INPUT_TYPE,OUTPUT_TYPE> operation;
 	
 	public GeneralUnaryFunction(
 			Function<INDEX,INPUT_TYPE> f1,

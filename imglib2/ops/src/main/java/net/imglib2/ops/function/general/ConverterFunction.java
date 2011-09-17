@@ -47,9 +47,9 @@ import net.imglib2.ops.UnaryOperation;
 public class ConverterFunction<INDEX,INTERMEDIATE_TYPE,FINAL_TYPE>
 	implements Function<INDEX,FINAL_TYPE>
 {
-	private Function<INDEX,INTERMEDIATE_TYPE> intermediateFunc;
-	private UnaryOperation<INTERMEDIATE_TYPE,FINAL_TYPE> operation;
-	private INTERMEDIATE_TYPE variable;
+	private final Function<INDEX,INTERMEDIATE_TYPE> intermediateFunc;
+	private final UnaryOperation<INTERMEDIATE_TYPE,FINAL_TYPE> operation;
+	private final INTERMEDIATE_TYPE variable;
 
 	public ConverterFunction(Function<INDEX,INTERMEDIATE_TYPE> func,
 		UnaryOperation<INTERMEDIATE_TYPE,FINAL_TYPE> operation)

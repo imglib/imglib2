@@ -55,9 +55,9 @@ import net.imglib2.ops.RegionIndexIterator;
  */
 public class RealConvolutionFunction extends RealOutput implements Function<long[],Real> {
 
-	private Function<long[],Real> otherFunc;
-	private Real variable;
-	private double[] kernel;
+	private final Function<long[],Real> otherFunc;
+	private final Real variable;
+	private final double[] kernel;
 	private RegionIndexIterator iter;
 	
 	public RealConvolutionFunction(Function<long[],Real> otherFunc, double[] kernel) {

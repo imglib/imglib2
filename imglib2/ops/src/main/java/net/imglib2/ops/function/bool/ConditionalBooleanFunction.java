@@ -44,7 +44,7 @@ import net.imglib2.ops.Neighborhood;
 public class ConditionalBooleanFunction<INDEX> extends BoolOutput
 	implements Function<INDEX,Bool>
 {
-	private Condition<INDEX> condition;
+	private final Condition<INDEX> condition;
 
 	public ConditionalBooleanFunction(Condition<INDEX> cond) {
 		this.condition = cond;

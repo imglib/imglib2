@@ -68,10 +68,10 @@ import net.imglib2.ops.Neighborhood;
  */
 public class ComposedFunction<T> implements Function<long[],T> {
 
-	private int dimension;
-	private long startIndex;
-	private ArrayList<Function<long[],T>> functions;
-	private ArrayList<Long> widths;
+	private final int dimension;
+	private final long startIndex;
+	private final ArrayList<Function<long[],T>> functions;
+	private final ArrayList<Long> widths;
 	private long[] relativePosition;
 	private Neighborhood<long[]> localNeigh;
 	

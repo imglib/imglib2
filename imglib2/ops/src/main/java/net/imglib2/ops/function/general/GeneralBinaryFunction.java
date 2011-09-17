@@ -41,11 +41,11 @@ import net.imglib2.ops.Neighborhood;
 public class GeneralBinaryFunction<INDEX, INPUT1_TYPE, INPUT2_TYPE, OUTPUT_TYPE>
 	implements Function<INDEX,OUTPUT_TYPE>
 {
-	private Function<INDEX,INPUT1_TYPE> f1;
-	private Function<INDEX,INPUT2_TYPE> f2;
-	private INPUT1_TYPE input1;
-	private INPUT2_TYPE input2;
-	private BinaryOperation<INPUT1_TYPE,INPUT2_TYPE,OUTPUT_TYPE> operation;
+	private final Function<INDEX,INPUT1_TYPE> f1;
+	private final Function<INDEX,INPUT2_TYPE> f2;
+	private final INPUT1_TYPE input1;
+	private final INPUT2_TYPE input2;
+	private final BinaryOperation<INPUT1_TYPE,INPUT2_TYPE,OUTPUT_TYPE> operation;
 	
 	public GeneralBinaryFunction(
 			Function<INDEX,INPUT1_TYPE> f1,

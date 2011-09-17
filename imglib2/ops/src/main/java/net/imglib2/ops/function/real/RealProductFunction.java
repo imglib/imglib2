@@ -43,8 +43,8 @@ import net.imglib2.ops.RegionIndexIterator;
  */
 public class RealProductFunction extends RealOutput implements Function<long[],Real> {
 
-	private Function<long[],Real> otherFunc;
-	private Real variable;
+	private final Function<long[],Real> otherFunc;
+	private final Real variable;
 	private RegionIndexIterator iter;
 	
 	public RealProductFunction(Function<long[],Real> otherFunc) {

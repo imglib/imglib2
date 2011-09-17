@@ -40,10 +40,10 @@ import net.imglib2.ops.Function;
  */
 public class ContinuousTranslationFunction<T> implements Function<double[],T> {
 
-	private Function<double[],T> otherFunc;
-	private double[] deltas;
-	private double[] localCtr;
-	private Neighborhood<double[]> localRegion;
+	private final Function<double[],T> otherFunc;
+	private final double[] deltas;
+	private final double[] localCtr;
+	private final Neighborhood<double[]> localRegion;
 	
 	public ContinuousTranslationFunction(Function<double[],T> otherFunc,
 		Neighborhood<double[]> region, double[] deltas)

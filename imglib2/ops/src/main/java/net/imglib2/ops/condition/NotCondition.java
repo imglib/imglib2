@@ -40,9 +40,9 @@ import net.imglib2.ops.Neighborhood;
  */
 public class NotCondition<INDEX> implements Condition<INDEX> {
 
-	Condition<INDEX> cond1;
+	private final Condition<INDEX> cond1;
 
-	NotCondition(Condition<INDEX> cond1) {
+	public NotCondition(Condition<INDEX> cond1) {
 		this.cond1 = cond1;
 	}
 	

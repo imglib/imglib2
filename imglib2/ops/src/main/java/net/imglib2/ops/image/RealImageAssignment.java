@@ -63,9 +63,9 @@ import net.imglib2.type.numeric.RealType;
  */
 public class RealImageAssignment {
 
-	private RandomAccess<? extends RealType<?>> accessor;
-	private Neighborhood<long[]> neigh;
-	private Function<long[],Real> function;
+	private final RandomAccess<? extends RealType<?>> accessor;
+	private final Neighborhood<long[]> neigh;
+	private final Function<long[],Real> function;
 	private Condition<long[]> condition;
 	
 	public RealImageAssignment(Img<? extends RealType<?>> image, Neighborhood<long[]> neigh,

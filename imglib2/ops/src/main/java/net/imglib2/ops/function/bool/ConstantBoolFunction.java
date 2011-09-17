@@ -41,7 +41,7 @@ import net.imglib2.ops.Neighborhood;
  *
  */
 public class ConstantBoolFunction<INDEX> extends BoolOutput implements Function<INDEX,Bool> {
-	private boolean bool;
+	private final boolean bool;
 
 	public ConstantBoolFunction(boolean b) {
 		bool = b;
