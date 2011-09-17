@@ -44,7 +44,7 @@ import net.imglib2.type.numeric.ComplexType;
  */
 public class ComplexImageFunction extends ComplexOutput implements Function<long[],Complex> {
 
-	private RandomAccess<? extends ComplexType<?>> accessor;
+	private final RandomAccess<? extends ComplexType<?>> accessor;
 	
 	public ComplexImageFunction(Img<? extends ComplexType<?>> img) {
 		this.accessor = img.randomAccess();

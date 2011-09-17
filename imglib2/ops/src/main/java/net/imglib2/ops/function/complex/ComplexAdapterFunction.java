@@ -44,14 +44,14 @@ import net.imglib2.ops.function.real.ConstantRealFunction;
  */
 public class ComplexAdapterFunction<INDEX> extends ComplexOutput implements Function<INDEX,Complex> {
 
-	private Function<INDEX,Real> realFunc1;
-	private Function<INDEX,Real> realFunc2;
-	private Real real1;
-	private Real real2;
+	private final Function<INDEX,Real> realFunc1;
+	private final Function<INDEX,Real> realFunc2;
+	private final Real real1;
+	private final Real real2;
 	
 	public ComplexAdapterFunction(Function<INDEX,Real> realFunc) {
 		this.realFunc1 = realFunc;
-		this.realFunc2 = new ConstantRealFunction<INDEX>(0);
+		this.realFunc2 = new ConstantRealFunction<INDEX>(new Real(0));
 		this.real1 = new Real();
 		this.real2 = new Real();
 	}

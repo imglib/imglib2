@@ -41,15 +41,16 @@ import net.imglib2.ops.RealOutput;
  *
  */
 public class ConstantRealFunction<INDEX> extends RealOutput implements Function<INDEX,Real> {
-	private double real;
+	private final Real real;
 
-	public ConstantRealFunction(double r) {
-		real = r;
+	public ConstantRealFunction(Real r) {
+		real = new Real();
+		real.setValue(r);
 	}
 	
 	@Override
 	public void evaluate(Neighborhood<INDEX> region, INDEX point, Real r) {
-		r.setReal(real);
+		r.setValue(real);
 	}
 }
 
