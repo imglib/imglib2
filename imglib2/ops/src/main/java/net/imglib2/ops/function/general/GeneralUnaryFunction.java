@@ -38,12 +38,16 @@ import net.imglib2.ops.UnaryOperation;
  * @author Barry DeZonia
  *
  */
-public class GeneralUnaryFunction<INDEX, IT, OT> implements Function<INDEX,OT> {
-	private Function<INDEX,IT> f1;
-	private IT temp;
-	private UnaryOperation<IT,OT> operation;
+public class GeneralUnaryFunction<INDEX, INPUT_TYPE, OUTPUT_TYPE>
+	implements Function<INDEX,OUTPUT_TYPE>
+{
+	private Function<INDEX,INPUT_TYPE> f1;
+	private INPUT_TYPE temp;
+	private UnaryOperation<INPUT_TYPE,OUTPUT_TYPE> operation;
 	
-	public GeneralUnaryFunction(Function<INDEX,IT> f1, UnaryOperation<IT,OT> operation)
+	public GeneralUnaryFunction(
+			Function<INDEX,INPUT_TYPE> f1,
+			UnaryOperation<INPUT_TYPE,OUTPUT_TYPE> operation)
 	{
 		this.f1 = f1;
 		this.temp = f1.createOutput();
@@ -51,13 +55,13 @@ public class GeneralUnaryFunction<INDEX, IT, OT> implements Function<INDEX,OT> {
 	}
 	
 	@Override
-	public void evaluate(Neighborhood<INDEX> region, INDEX point, OT output) {
+	public void evaluate(Neighborhood<INDEX> region, INDEX point, OUTPUT_TYPE output) {
 		f1.evaluate(region, point, temp);
 		operation.compute(temp, output);
 	}
 
 	@Override
-	public OT createOutput() {
+	public OUTPUT_TYPE createOutput() {
 		return operation.createOutput();
 	}
 	
