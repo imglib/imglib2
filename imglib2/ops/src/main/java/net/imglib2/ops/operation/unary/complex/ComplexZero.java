@@ -46,4 +46,9 @@ public final class ComplexZero extends ComplexOutput implements UnaryOperation<C
 	public void compute(Complex z, Complex output) {
 		output.setValue(ZERO);
 	}
+	
+	@Override
+	public ComplexZero duplicate() {
+		return new ComplexZero();
+	}
 }

@@ -45,4 +45,9 @@ public final class RealDifference extends RealOutput implements BinaryOperation<
 		double value = Math.abs(x1.getReal() - x2.getReal());
 		output.setReal(value);
 	}
+
+	@Override
+	public RealDifference duplicate() {
+		return new RealDifference();
+	}
 }

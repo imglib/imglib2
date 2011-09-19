@@ -53,4 +53,8 @@ public final class RealMultiplyConstant extends RealOutput implements UnaryOpera
 		output.setReal(value);
 	}
 
+	@Override
+	public RealMultiplyConstant duplicate() {
+		return new RealMultiplyConstant(constant);
+	}
 }

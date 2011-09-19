@@ -58,4 +58,8 @@ public class BinaryCondition<INDEX, T> implements Condition<INDEX> {
 		return relation.holds(f1Val,f2Val);
 	}
 	
+	@Override
+	public BinaryCondition<INDEX, T> duplicate() {
+		return new BinaryCondition<INDEX, T>(f1.duplicate(), f2.duplicate(), relation.duplicate());
+	}
 }

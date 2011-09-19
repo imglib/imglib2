@@ -49,4 +49,9 @@ public class AtKeyPointCondition implements Condition<long[]> {
 		}
 		return true;
 	}
+	
+	@Override
+	public AtKeyPointCondition duplicate() {
+		return new AtKeyPointCondition();
+	}
 }

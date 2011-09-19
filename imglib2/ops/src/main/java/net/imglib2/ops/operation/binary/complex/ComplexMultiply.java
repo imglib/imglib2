@@ -48,4 +48,9 @@ public final class ComplexMultiply extends ComplexOutput implements BinaryOperat
 		double y = z1.getY()*z2.getX() + z1.getX()*z2.getY();
 		output.setCartesian(x,y);
 	}
+
+	@Override
+	public ComplexMultiply duplicate() {
+		return new ComplexMultiply();
+	}
 }

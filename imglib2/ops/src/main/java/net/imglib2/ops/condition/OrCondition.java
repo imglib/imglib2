@@ -53,4 +53,8 @@ public class OrCondition<INDEX> implements Condition<INDEX> {
 		return cond1.isTrue(neigh, point) || cond2.isTrue(neigh, point);
 	}
 
+	@Override
+	public OrCondition<INDEX> duplicate() {
+		return new OrCondition<INDEX>(cond1.duplicate(), cond2.duplicate());
+	}
 }

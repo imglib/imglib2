@@ -83,4 +83,9 @@ public class RealConvolutionFunction extends RealOutput implements Function<long
 		}
 		output.setReal(sum);
 	}
+
+	@Override
+	public RealConvolutionFunction duplicate() {
+		return new RealConvolutionFunction(otherFunc.duplicate(), kernel.clone());
+	}
 }

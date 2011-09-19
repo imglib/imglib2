@@ -68,4 +68,9 @@ public class RealProductFunction extends RealOutput implements Function<long[],R
 		}
 		output.setReal(product);
 	}
+
+	@Override
+	public RealProductFunction duplicate() {
+		return new RealProductFunction(otherFunc.duplicate());
+	}
 }

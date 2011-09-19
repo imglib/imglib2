@@ -56,4 +56,8 @@ public final class RealMaxConstant extends RealOutput implements UnaryOperation<
 			output.setReal(constant);
 	}
 
+	@Override
+	public RealMaxConstant duplicate() {
+		return new RealMaxConstant(constant);
+	}
 }

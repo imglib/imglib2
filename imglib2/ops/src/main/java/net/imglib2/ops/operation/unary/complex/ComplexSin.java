@@ -70,4 +70,9 @@ public final class ComplexSin extends ComplexOutput implements UnaryOperation<Co
 		subFunc.compute(expIZ, expMinusIZ, diff);
 		divFunc.compute(diff, TWO_I, output);
 	}
+	
+	@Override
+	public ComplexSin duplicate() {
+		return new ComplexSin();
+	}
 }

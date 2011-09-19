@@ -53,4 +53,8 @@ public final class RealSubtractConstant extends RealOutput implements UnaryOpera
 		output.setReal(value);
 	}
 
+	@Override
+	public RealSubtractConstant duplicate() {
+		return new RealSubtractConstant(constant);
+	}
 }

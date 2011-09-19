@@ -45,4 +45,9 @@ public final class RealDivide extends RealOutput implements BinaryOperation<Real
 		double value = x1.getReal() / x2.getReal();
 		output.setReal(value);
 	}
+
+	@Override
+	public RealDivide duplicate() {
+		return new RealDivide();
+	}
 }

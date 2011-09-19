@@ -74,4 +74,9 @@ public final class ComplexArcsin extends ComplexOutput implements UnaryOperation
 		logFunc.compute(sum, logSum);
 		mulFunc.compute(MINUS_I, logSum, output);
 	}
+	
+	@Override
+	public ComplexArcsin duplicate() {
+		return new ComplexArcsin();
+	}
 }

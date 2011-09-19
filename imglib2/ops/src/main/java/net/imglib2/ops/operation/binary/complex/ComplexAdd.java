@@ -48,4 +48,9 @@ public final class ComplexAdd extends ComplexOutput implements BinaryOperation<C
 		double y = z1.getY() + z2.getY();
 		output.setCartesian(x, y);
 	}
+
+	@Override
+	public ComplexAdd duplicate() {
+		return new ComplexAdd();
+	}
 }

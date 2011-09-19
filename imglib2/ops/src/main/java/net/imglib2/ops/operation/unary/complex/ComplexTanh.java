@@ -56,4 +56,9 @@ public final class ComplexTanh extends ComplexOutput implements UnaryOperation<C
 		coshFunc.compute(z, cosh);
 		divFunc.compute(sinh, cosh, output);
 	}
+	
+	@Override
+	public ComplexTanh duplicate() {
+		return new ComplexTanh();
+	}
 }

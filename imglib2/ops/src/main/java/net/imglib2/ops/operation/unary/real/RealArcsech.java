@@ -50,4 +50,8 @@ public final class RealArcsech extends RealOutput implements UnaryOperation<Real
 		output.setReal(value);
 	}
 
+	@Override
+	public RealArcsech duplicate() {
+		return new RealArcsech();
+	}
 }

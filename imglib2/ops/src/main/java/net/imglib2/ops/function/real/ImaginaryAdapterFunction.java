@@ -55,5 +55,10 @@ public class ImaginaryAdapterFunction<INDEX> extends RealOutput implements Funct
 		complexFunc.evaluate(region, point, variable);
 		r.setReal(variable.getY());
 	}
+
+	@Override
+	public ImaginaryAdapterFunction<INDEX> duplicate() {
+		return new ImaginaryAdapterFunction<INDEX>(complexFunc.duplicate());
+	}
 }
 

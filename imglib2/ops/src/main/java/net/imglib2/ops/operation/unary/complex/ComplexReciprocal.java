@@ -49,4 +49,9 @@ public final class ComplexReciprocal extends ComplexOutput implements UnaryOpera
 		double y = -z.getY() / denom;
 		output.setCartesian(x,y);
 	}
+	
+	@Override
+	public ComplexReciprocal duplicate() {
+		return new ComplexReciprocal();
+	}
 }

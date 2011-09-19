@@ -55,5 +55,10 @@ public class RealAdapterFunction<INDEX> extends RealOutput implements Function<I
 		complexFunc.evaluate(region, point, variable);
 		r.setReal(variable.getX());
 	}
+
+	@Override
+	public RealAdapterFunction<INDEX> duplicate() {
+		return new RealAdapterFunction<INDEX>(complexFunc.duplicate());
+	}
 }
 

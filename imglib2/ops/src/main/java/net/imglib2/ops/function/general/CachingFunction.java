@@ -82,6 +82,12 @@ public class CachingFunction<T extends DataCopier<T>> implements Function<long[]
 		return otherFunc.createOutput();
 	}
 
+	
+	@Override
+	public CachingFunction<T> duplicate() {
+		return new CachingFunction<T>(otherFunc.duplicate());
+	}
+
 	// -- private helpers --
 	
 	private boolean sameInput(Neighborhood<long[]> region, long[] point) {

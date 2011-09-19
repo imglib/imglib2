@@ -46,4 +46,9 @@ public final class ComplexDifference extends ComplexOutput implements BinaryOper
 		double y = Math.abs(z1.getY() - z2.getY());
 		output.setCartesian(x,y);
 	}
+
+	@Override
+	public ComplexDifference duplicate() {
+		return new ComplexDifference();
+	}
 }

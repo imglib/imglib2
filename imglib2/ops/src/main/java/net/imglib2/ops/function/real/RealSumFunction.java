@@ -68,5 +68,9 @@ public class RealSumFunction extends RealOutput implements Function<long[],Real>
 		}
 		output.setReal(sum);
 	}
-	
+
+	@Override
+	public RealSumFunction duplicate() {
+		return new RealSumFunction(otherFunc.duplicate());
+	}
 }

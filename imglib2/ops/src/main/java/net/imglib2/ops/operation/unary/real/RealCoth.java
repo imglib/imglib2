@@ -48,4 +48,8 @@ public final class RealCoth extends RealOutput implements UnaryOperation<Real,Re
 		output.setReal(value);
 	}
 
+	@Override
+	public RealCoth duplicate() {
+		return new RealCoth();
+	}
 }

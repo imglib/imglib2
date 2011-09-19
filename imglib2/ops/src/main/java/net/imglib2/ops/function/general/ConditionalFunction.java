@@ -63,5 +63,9 @@ public class ConditionalFunction<INDEX, T> implements Function<INDEX,T> {
 	public T createOutput() {
 		return f1.createOutput();
 	}
-
+	
+	@Override
+	public ConditionalFunction<INDEX,T> duplicate() {
+		return new ConditionalFunction<INDEX, T>(condition.duplicate(), f1.duplicate(), f2.duplicate());
+	}
 }

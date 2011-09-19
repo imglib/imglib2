@@ -49,4 +49,8 @@ public final class RealArccoth extends RealOutput implements UnaryOperation<Real
 		output.setReal(value);
 	}
 
+	@Override
+	public RealArccoth duplicate() {
+		return new RealArccoth();
+	}
 }

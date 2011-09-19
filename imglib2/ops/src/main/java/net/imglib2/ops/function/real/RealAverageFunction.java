@@ -74,4 +74,8 @@ public class RealAverageFunction extends RealOutput implements Function<long[],R
 			output.setReal(sum / numElements);
 	}
 
+	@Override
+	public RealAverageFunction duplicate() {
+		return new RealAverageFunction(otherFunc.duplicate());
+	}
 }

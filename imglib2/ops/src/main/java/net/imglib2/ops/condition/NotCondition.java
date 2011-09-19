@@ -50,5 +50,10 @@ public class NotCondition<INDEX> implements Condition<INDEX> {
 	public boolean isTrue(Neighborhood<INDEX> neigh, INDEX point) {
 		return ! cond1.isTrue(neigh, point);
 	}
+	
+	@Override
+	public NotCondition<INDEX> duplicate() {
+		return new NotCondition<INDEX>(cond1.duplicate());
+	}
 
 }

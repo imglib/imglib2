@@ -48,4 +48,8 @@ public final class RealSec extends RealOutput implements UnaryOperation<Real,Rea
 		output.setReal(value);
 	}
 
+	@Override
+	public RealSec duplicate() {
+		return new RealSec();
+	}
 }

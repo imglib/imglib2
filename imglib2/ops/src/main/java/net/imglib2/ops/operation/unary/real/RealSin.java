@@ -47,4 +47,8 @@ public final class RealSin extends RealOutput implements UnaryOperation<Real,Rea
 		output.setReal(value);
 	}
 
+	@Override
+	public RealSin duplicate() {
+		return new RealSin();
+	}
 }

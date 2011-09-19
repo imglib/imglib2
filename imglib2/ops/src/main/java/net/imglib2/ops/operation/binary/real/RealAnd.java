@@ -45,4 +45,9 @@ public final class RealAnd extends RealOutput implements BinaryOperation<Real,Re
 		double value = (long) x1.getReal() & (long) x2.getReal();
 		output.setReal(value);
 	}
+
+	@Override
+	public RealAnd duplicate() {
+		return new RealAnd();
+	}
 }

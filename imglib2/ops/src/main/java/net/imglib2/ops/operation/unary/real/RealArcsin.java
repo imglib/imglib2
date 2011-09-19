@@ -48,4 +48,8 @@ public final class RealArcsin extends RealOutput implements UnaryOperation<Real,
 		output.setReal(value);
 	}
 
+	@Override
+	public RealArcsin duplicate() {
+		return new RealArcsin();
+	}
 }

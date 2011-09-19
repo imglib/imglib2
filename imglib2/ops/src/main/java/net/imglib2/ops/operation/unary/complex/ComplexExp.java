@@ -49,4 +49,9 @@ public final class ComplexExp extends ComplexOutput implements UnaryOperation<Co
 		double y = constant * Math.sin(z.getY());
 		output.setCartesian(x,y);
 	}
+	
+	@Override
+	public ComplexExp duplicate() {
+		return new ComplexExp();
+	}
 }

@@ -85,4 +85,9 @@ public class RealMedianFunction extends RealOutput implements Function<long[],Re
 			output.setReal((value1 + value2) / 2);
 		}
 	}
+
+	@Override
+	public RealMedianFunction duplicate() {
+		return new RealMedianFunction(otherFunc.duplicate());
+	}
 }

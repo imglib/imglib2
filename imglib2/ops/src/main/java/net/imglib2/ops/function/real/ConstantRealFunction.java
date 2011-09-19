@@ -52,5 +52,10 @@ public class ConstantRealFunction<INDEX> extends RealOutput implements Function<
 	public void evaluate(Neighborhood<INDEX> region, INDEX point, Real r) {
 		r.setValue(real);
 	}
+
+	@Override
+	public ConstantRealFunction<INDEX> duplicate() {
+		return new ConstantRealFunction<INDEX>(real);
+	}
 }
 

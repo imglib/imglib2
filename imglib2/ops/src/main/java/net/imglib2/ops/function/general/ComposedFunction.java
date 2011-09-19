@@ -123,4 +123,12 @@ public class ComposedFunction<T> implements Function<long[],T> {
 		throw new IllegalArgumentException(
 				"ComposedFunction has not been initialized yet.");
 	}
+	
+	@Override
+	public ComposedFunction<T> duplicate() {
+		ComposedFunction<T> newFunc = new ComposedFunction<T>(dimension, startIndex);
+		for (int i = 0; i < functions.size(); i++)
+			newFunc.add(functions.get(i).duplicate(), widths.get(i));
+		return newFunc;
+	}
 }

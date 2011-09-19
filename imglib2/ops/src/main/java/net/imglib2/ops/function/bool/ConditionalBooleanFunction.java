@@ -54,5 +54,10 @@ public class ConditionalBooleanFunction<INDEX> extends BoolOutput
 	public void evaluate(Neighborhood<INDEX> neigh, INDEX point, Bool b) {
 		b.setBool(condition.isTrue(neigh, point));
 	}
+	
+	@Override
+	public ConditionalBooleanFunction<INDEX> duplicate() {
+		return new ConditionalBooleanFunction<INDEX>(condition.duplicate());
+	}
 }
 

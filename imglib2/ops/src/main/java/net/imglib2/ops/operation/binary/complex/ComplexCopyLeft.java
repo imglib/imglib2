@@ -44,4 +44,9 @@ public final class ComplexCopyLeft extends ComplexOutput implements BinaryOperat
 	public void compute(Complex z1, Complex z2, Complex output) {
 		output.setValue(z1);
 	}
+
+	@Override
+	public ComplexCopyLeft duplicate() {
+		return new ComplexCopyLeft();
+	}
 }

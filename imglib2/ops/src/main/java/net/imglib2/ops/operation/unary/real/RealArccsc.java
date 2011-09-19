@@ -62,4 +62,9 @@ public final class RealArccsc extends RealOutput implements UnaryOperation<Real,
 			output.setReal(angle.getReal());
 		}
 	}
+
+	@Override
+	public RealArccsc duplicate() {
+		return new RealArccsc();
+	}
 }

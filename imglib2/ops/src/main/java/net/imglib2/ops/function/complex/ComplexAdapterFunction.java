@@ -69,4 +69,9 @@ public class ComplexAdapterFunction<INDEX> extends ComplexOutput implements Func
 		realFunc2.evaluate(neigh, point, real2);
 		value.setCartesian(real1.getReal(),real2.getReal());
 	}
+	
+	@Override
+	public ComplexAdapterFunction<INDEX> duplicate() {
+		return new ComplexAdapterFunction<INDEX>(realFunc1.duplicate(), realFunc2.duplicate());
+	}
 }

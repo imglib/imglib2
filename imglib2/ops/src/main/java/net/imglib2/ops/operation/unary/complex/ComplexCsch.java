@@ -58,4 +58,9 @@ public final class ComplexCsch extends ComplexOutput implements UnaryOperation<C
 		sinhFunc.compute(z, sinh);
 		divFunc.compute(ONE, sinh, output);
 	}
+	
+	@Override
+	public ComplexCsch duplicate() {
+		return new ComplexCsch();
+	}
 }

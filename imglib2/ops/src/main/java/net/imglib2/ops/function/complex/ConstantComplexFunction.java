@@ -52,5 +52,10 @@ public class ConstantComplexFunction<INDEX> extends ComplexOutput implements Fun
 	public void evaluate(Neighborhood<INDEX> neigh, INDEX point, Complex c) {
 		c.setValue(complex);
 	}
+	
+	@Override
+	public ConstantComplexFunction<INDEX> duplicate() {
+		return new ConstantComplexFunction<INDEX>(complex);
+	}
 }
 

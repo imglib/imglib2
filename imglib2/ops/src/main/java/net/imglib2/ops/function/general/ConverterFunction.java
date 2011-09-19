@@ -70,4 +70,9 @@ public class ConverterFunction<INDEX,INTERMEDIATE_TYPE,FINAL_TYPE>
 	public FINAL_TYPE createOutput() {
 		return operation.createOutput();
 	}
+	
+	@Override
+	public ConverterFunction<INDEX,INTERMEDIATE_TYPE,FINAL_TYPE> duplicate() {
+		return new ConverterFunction<INDEX, INTERMEDIATE_TYPE, FINAL_TYPE>(intermediateFunc.duplicate(), operation.duplicate());
+	}
 }

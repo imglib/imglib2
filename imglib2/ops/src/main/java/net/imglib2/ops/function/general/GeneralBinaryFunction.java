@@ -72,4 +72,10 @@ public class GeneralBinaryFunction<INDEX, INPUT1_TYPE, INPUT2_TYPE, OUTPUT_TYPE>
 	public OUTPUT_TYPE createOutput() {
 		return operation.createOutput();
 	}
+
+	@Override
+	public GeneralBinaryFunction<INDEX, INPUT1_TYPE, INPUT2_TYPE, OUTPUT_TYPE> duplicate() {
+		return new GeneralBinaryFunction<INDEX, INPUT1_TYPE, INPUT2_TYPE, OUTPUT_TYPE>(
+				f1.duplicate(), f2.duplicate(), operation.duplicate());
+	}
 }

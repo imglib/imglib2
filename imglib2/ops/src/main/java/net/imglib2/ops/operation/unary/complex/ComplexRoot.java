@@ -56,4 +56,9 @@ public final class ComplexRoot extends ComplexOutput implements UnaryOperation<C
 		double theta = z.getPrincipleArgument() / power;
 		output.setPolar(r, theta);
 	}
+	
+	@Override
+	public ComplexRoot duplicate() {
+		return new ComplexRoot(power);
+	}
 }

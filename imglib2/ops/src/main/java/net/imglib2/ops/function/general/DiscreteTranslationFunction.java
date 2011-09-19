@@ -69,4 +69,8 @@ public class DiscreteTranslationFunction<T> implements Function<long[],T> {
 		return otherFunc.createOutput();
 	}
 
+	@Override
+	public DiscreteTranslationFunction<T> duplicate() {
+		return new DiscreteTranslationFunction<T>(otherFunc.duplicate(), localRegion.duplicate(), deltas.clone());
+	}
 }

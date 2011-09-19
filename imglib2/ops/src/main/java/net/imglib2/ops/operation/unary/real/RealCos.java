@@ -47,4 +47,8 @@ public final class RealCos extends RealOutput implements UnaryOperation<Real,Rea
 		output.setReal(value);
 	}
 
+	@Override
+	public RealCos duplicate() {
+		return new RealCos();
+	}
 }

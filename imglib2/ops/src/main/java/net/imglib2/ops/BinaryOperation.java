@@ -37,4 +37,5 @@ package net.imglib2.ops;
 public interface BinaryOperation<INPUT1_TYPE, INPUT2_TYPE, OUTPUT_TYPE> {
 	void compute(INPUT1_TYPE input1, INPUT2_TYPE input2, OUTPUT_TYPE output);
 	OUTPUT_TYPE createOutput();
+	BinaryOperation<INPUT1_TYPE, INPUT2_TYPE, OUTPUT_TYPE> duplicate();
 }

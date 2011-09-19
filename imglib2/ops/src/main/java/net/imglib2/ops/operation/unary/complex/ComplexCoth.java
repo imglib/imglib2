@@ -56,4 +56,9 @@ public final class ComplexCoth extends ComplexOutput implements UnaryOperation<C
 		coshFunc.compute(z, cosh);
 		divFunc.compute(cosh, sinh, output);
 	}
+	
+	@Override
+	public ComplexCoth duplicate() {
+		return new ComplexCoth();
+	}
 }

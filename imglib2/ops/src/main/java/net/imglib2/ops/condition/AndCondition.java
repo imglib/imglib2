@@ -52,5 +52,10 @@ public class AndCondition<INDEX> implements Condition<INDEX> {
 	public boolean isTrue(Neighborhood<INDEX> neigh, INDEX point) {
 		return cond1.isTrue(neigh, point) && cond2.isTrue(neigh, point);
 	}
+	
+	@Override
+	public AndCondition<INDEX> duplicate() {
+		return new AndCondition<INDEX>(cond1.duplicate(), cond2.duplicate());
+	}
 
 }

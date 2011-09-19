@@ -58,4 +58,9 @@ public final class ComplexSec extends ComplexOutput implements UnaryOperation<Co
 		cosFunc.compute(z, cos);
 		divFunc.compute(ONE, cos, output);
 	}
+	
+	@Override
+	public ComplexSec duplicate() {
+		return new ComplexSec();
+	}
 }

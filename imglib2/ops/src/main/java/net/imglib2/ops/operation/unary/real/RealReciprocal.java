@@ -56,4 +56,8 @@ public final class RealReciprocal extends RealOutput implements UnaryOperation<R
 			output.setReal(1.0 / inputVal);
 	}
 
+	@Override
+	public RealReciprocal duplicate() {
+		return new RealReciprocal(dbzVal);
+	}
 }

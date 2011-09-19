@@ -53,4 +53,8 @@ public final class RealAndConstant extends RealOutput implements UnaryOperation<
 		output.setReal(value);
 	}
 
+	@Override
+	public RealAndConstant duplicate() {
+		return new RealAndConstant(constant);
+	}
 }

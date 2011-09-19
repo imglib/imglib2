@@ -48,4 +48,8 @@ public final class RealSech extends RealOutput implements UnaryOperation<Real,Re
 		output.setReal(value);
 	}
 
+	@Override
+	public RealSech duplicate() {
+		return new RealSech();
+	}
 }

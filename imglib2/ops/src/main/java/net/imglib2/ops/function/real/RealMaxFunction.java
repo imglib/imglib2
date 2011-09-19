@@ -68,5 +68,9 @@ public class RealMaxFunction extends RealOutput implements Function<long[],Real>
 		}
 		output.setReal(max);
 	}
-	
+
+	@Override
+	public RealMaxFunction duplicate() {
+		return new RealMaxFunction(otherFunc.duplicate());
+	}
 }

@@ -61,4 +61,8 @@ public class RealImpulseFunction extends RealOutput implements Function<long[],R
 			output.setReal(0);
 	}
 
+	@Override
+	public RealImpulseFunction duplicate() {
+		return new RealImpulseFunction();
+	}
 }

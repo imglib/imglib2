@@ -55,4 +55,9 @@ public final class ComplexArccsch extends ComplexOutput implements UnaryOperatio
 		divFunc.compute(ONE, z, recipZ);
 		arcsinhFunc.compute(recipZ, output);
 	}
+	
+	@Override
+	public ComplexArccsch duplicate() {
+		return new ComplexArccsch();
+	}
 }

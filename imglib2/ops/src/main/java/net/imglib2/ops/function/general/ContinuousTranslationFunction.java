@@ -67,5 +67,9 @@ public class ContinuousTranslationFunction<T> implements Function<double[],T> {
 	public T createOutput() {
 		return otherFunc.createOutput();
 	}
-
+	
+	@Override
+	public ContinuousTranslationFunction<T> duplicate() {
+		return new ContinuousTranslationFunction<T>(otherFunc.duplicate(), localRegion.duplicate(), deltas.clone());
+	}
 }

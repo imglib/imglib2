@@ -68,4 +68,9 @@ public final class ComplexArccoth extends ComplexOutput implements UnaryOperatio
 		logFunc.compute(quotient, log);
 		mulFunc.compute(ONE_HALF, log, output);
 	}
+	
+	@Override
+	public ComplexArccoth duplicate() {
+		return new ComplexArccoth();
+	}
 }

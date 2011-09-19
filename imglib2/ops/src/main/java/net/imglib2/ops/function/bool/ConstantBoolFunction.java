@@ -51,5 +51,10 @@ public class ConstantBoolFunction<INDEX> extends BoolOutput implements Function<
 	public void evaluate(Neighborhood<INDEX> neigh, INDEX point, Bool b) {
 		b.setBool(bool);
 	}
+	
+	@Override
+	public ConstantBoolFunction<INDEX> duplicate() {
+		return new ConstantBoolFunction<INDEX>(bool);
+	}
 }
 

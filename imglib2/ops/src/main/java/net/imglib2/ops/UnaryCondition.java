@@ -53,4 +53,8 @@ public class UnaryCondition<INDEX, T> implements Condition<INDEX> {
 		return relation.holds(f1Val);
 	}
 	
+	@Override
+	public UnaryCondition<INDEX, T> duplicate() {
+		return new UnaryCondition<INDEX, T>(f1.duplicate(), relation.duplicate());
+	}
 }

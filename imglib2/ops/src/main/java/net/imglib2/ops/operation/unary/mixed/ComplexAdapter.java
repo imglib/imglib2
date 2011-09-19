@@ -51,4 +51,8 @@ public final class ComplexAdapter extends ComplexOutput implements UnaryOperatio
 		output.setCartesian(x.getReal(), 0);
 	}
 
+	@Override
+	public ComplexAdapter duplicate() {
+		return new ComplexAdapter();
+	}
 }

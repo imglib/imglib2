@@ -46,4 +46,8 @@ public final class RealPower extends RealOutput implements BinaryOperation<Real,
 		output.setReal(value);
 	}
 
+	@Override
+	public RealPower duplicate() {
+		return new RealPower();
+	}
 }

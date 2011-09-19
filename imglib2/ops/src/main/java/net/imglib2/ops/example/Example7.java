@@ -77,6 +77,10 @@ public class Example7 {
 			return point[0] < X_CONSTANT;
 		}
 		
+		@Override
+		public XValueCondition duplicate() {
+			return new XValueCondition();
+		}
 	}
 	
 	public static class XSquaredFunction extends RealOutput implements Function<long[],Real> {
@@ -86,6 +90,11 @@ public class Example7 {
 			output.setReal(point[0]*point[0]);
 		}
 		
+		@Override
+		public XSquaredFunction duplicate() {
+			return new XSquaredFunction();
+		}
+		
 	}
 
 	public static class YLineFunction extends RealOutput implements Function<long[],Real> {
@@ -93,6 +102,11 @@ public class Example7 {
 		@Override
 		public void evaluate(Neighborhood<long[]> neigh, long[] point, Real output) {
 			output.setReal(3*point[1]+19);
+		}
+		
+		@Override
+		public YLineFunction duplicate() {
+			return new YLineFunction();
 		}
 		
 	}
@@ -114,6 +128,10 @@ public class Example7 {
 			return dist <= CIRCLE_RADIUS;
 		}
 		
+		@Override
+		public CircularCondition duplicate() {
+			return new CircularCondition();
+		}
 	}
 	
 	public static class XYSumCondition implements Condition<long[]> {
@@ -127,6 +145,10 @@ public class Example7 {
 			return (point[0] + point[1]) > LINE_CONSTANT;
 		}
 		
+		@Override
+		public XYSumCondition duplicate() {
+			return new XYSumCondition();
+		}
 	}
 
 	private static boolean veryClose(double d1, double d2) {

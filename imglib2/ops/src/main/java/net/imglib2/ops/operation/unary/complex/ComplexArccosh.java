@@ -68,4 +68,9 @@ public final class ComplexArccosh extends ComplexOutput implements UnaryOperatio
 		addFunc.compute(z, root, sum);
 		logFunc.compute(sum, output);
 	}
+	
+	@Override
+	public ComplexArccosh duplicate() {
+		return new ComplexArccosh();
+	}
 }

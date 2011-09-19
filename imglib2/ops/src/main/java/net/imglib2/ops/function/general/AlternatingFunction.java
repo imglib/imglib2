@@ -81,4 +81,12 @@ public class AlternatingFunction<T> implements Function<long[],T> {
 		throw new IllegalArgumentException(
 				"AlternatingFunction has not been initialized yet.");
 	}
+	
+	@Override
+	public AlternatingFunction<T> duplicate() {
+		AlternatingFunction<T> newFunc = new AlternatingFunction<T>(dimension);
+		for (Function<long[],T> f : functions)
+			newFunc.add(f.duplicate());
+		return newFunc;
+	}
 }

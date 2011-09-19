@@ -48,4 +48,9 @@ public final class ComplexAvg extends ComplexOutput implements BinaryOperation<C
 		double y = (z1.getY() + z2.getY()) / 2;
 		output.setCartesian(x,y);
 	}
+
+	@Override
+	public ComplexAvg duplicate() {
+		return new ComplexAvg();
+	}
 }

@@ -67,4 +67,9 @@ public final class ComplexSinh extends ComplexOutput implements UnaryOperation<C
 		diffFunc.compute(expZ, expMinusZ, diff);
 		divFunc.compute(diff, TWO, output);
 	}
+	
+	@Override
+	public ComplexSinh duplicate() {
+		return new ComplexSinh();
+	}
 }

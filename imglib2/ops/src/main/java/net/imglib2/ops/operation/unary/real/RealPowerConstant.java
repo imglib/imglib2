@@ -53,4 +53,8 @@ public final class RealPowerConstant extends RealOutput implements UnaryOperatio
 		output.setReal(value);
 	}
 
+	@Override
+	public RealPowerConstant duplicate() {
+		return new RealPowerConstant(constant);
+	}
 }

@@ -74,4 +74,8 @@ public final class RealAddNoise extends RealOutput implements UnaryOperation<Rea
 		while(true);
 	}
 
+	@Override
+	public RealAddNoise duplicate() {
+		return new RealAddNoise(rangeMin, rangeMax, rangeStdDev);
+	}
 }

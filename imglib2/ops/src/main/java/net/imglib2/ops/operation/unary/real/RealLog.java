@@ -47,4 +47,8 @@ public final class RealLog extends RealOutput implements UnaryOperation<Real,Rea
 		output.setReal(value);
 	}
 
+	@Override
+	public RealLog duplicate() {
+		return new RealLog();
+	}
 }
