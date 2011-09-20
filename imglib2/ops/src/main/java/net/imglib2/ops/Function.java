@@ -49,16 +49,12 @@ public interface Function<INDEX_TYPE, OUTPUT_TYPE> {
 	/**
 	 * A helper that can bypass the limitation of generic classes from creating
 	 * new instances of generic types.
-	 * 
-	 * @return
 	 */
 	OUTPUT_TYPE createOutput();
 	
 	/**
 	 * A helper that allows one to create a copy of a function. This method is
 	 * key for supporting multithreaded calculations during image assignment.
-	 * 
-	 * @return
 	 */
 	Function<INDEX_TYPE,OUTPUT_TYPE> duplicate();
 }

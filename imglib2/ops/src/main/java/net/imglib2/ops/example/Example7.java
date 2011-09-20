@@ -33,7 +33,6 @@ import net.imglib2.RandomAccess;
 import net.imglib2.img.Img;
 import net.imglib2.img.array.ArrayImgFactory;
 import net.imglib2.ops.Condition;
-import net.imglib2.ops.DiscreteNeigh;
 import net.imglib2.ops.Function;
 import net.imglib2.ops.Neighborhood;
 import net.imglib2.ops.Real;
@@ -59,8 +58,8 @@ import net.imglib2.type.numeric.real.DoubleType;
  */
 public class Example7 {
 
-	private static final long XSIZE = 600;
-	private static final long YSIZE = 600;
+	private static final long XSIZE = 1201;
+	private static final long YSIZE = 1201;
 	private static final long CIRCLE_RADIUS = 200;
 	private static final long LINE_CONSTANT = 650;
 	private static final long X_CONSTANT = 400;
@@ -195,8 +194,7 @@ public class Example7 {
 		Function<long[],Real> function =
 			new ConditionalFunction<long[],Real>(xValCond, xSquaredFunc, yLineFunc);
 		Img<? extends RealType<?>> image = allocateImage();
-		DiscreteNeigh neigh = new DiscreteNeigh(new long[2], new long[2], new long[]{XSIZE,YSIZE});
-		RealImageAssignment assigner = new RealImageAssignment(image, neigh, function);
+		RealImageAssignment assigner = new RealImageAssignment(image, new long[2], new long[]{XSIZE,YSIZE}, function, new long[2], new long[2]);
 		Condition<long[]> circleCond = new CircularCondition();
 		Condition<long[]> sumCond = new XYSumCondition();
 		Condition<long[]> compositeCondition = new AndCondition<long[]>(circleCond,sumCond);
