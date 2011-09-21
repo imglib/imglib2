@@ -194,7 +194,9 @@ public class ImageAssignment<IMG_TYPE,INTERNAL_TYPE> {
 
 	// -- private helpers --
 	
-	// right now determines best axis to divide along by returning the biggest axis
+	/**
+	 * Determines best axis to divide along. Currently chooses biggest axis.
+	 */
 	private int chooseBestAxis() {
 		int bestAxis = 0;
 		long bestAxisSize = span[bestAxis];
@@ -208,6 +210,9 @@ public class ImageAssignment<IMG_TYPE,INTERNAL_TYPE> {
 		return bestAxis;
 	}
 
+	/**
+	 * Determines how many threads to use
+	 */
 	private int chooseNumThreads(int axis) {
 		int maxThreads = Runtime.getRuntime().availableProcessors();
 		if (maxThreads == 1) return 1;
@@ -219,6 +224,9 @@ public class ImageAssignment<IMG_TYPE,INTERNAL_TYPE> {
 		return maxThreads;
 	}
 
+	/**
+	 * Calculates the number of elements in the output region span
+	 */
 	private long numElements(long[] sp) {
 		if (sp.length == 0) return 0;
 		long numElems = sp[0];
@@ -227,6 +235,9 @@ public class ImageAssignment<IMG_TYPE,INTERNAL_TYPE> {
 		return numElems;
 	}
 
+	/** Creates a Runnable task that can be submitted to the thread executor.
+	 * The task assigns values to a subset of the output region.
+	 */
 	private Runnable task(
 		TypeBridge<IMG_TYPE,INTERNAL_TYPE> bridge,
 		long[] imageOrigin,
@@ -255,6 +266,10 @@ public class ImageAssignment<IMG_TYPE,INTERNAL_TYPE> {
 				pOffsets.clone());
 	}
 
+	/**
+	 * RegionRunner is the workhorse for assigning output values from the
+	 * evaluation of the input function across a subset of the output region.
+	 */
 	private class RegionRunner implements Runnable {
 		
 		private final TypeBridge<IMG_TYPE,INTERNAL_TYPE> bridge;
@@ -263,6 +278,9 @@ public class ImageAssignment<IMG_TYPE,INTERNAL_TYPE> {
 		private final DiscreteNeigh region;
 		private final DiscreteNeigh neighborhood;
 
+		/**
+		 * Constructor
+		 */
 		public RegionRunner(
 			TypeBridge<IMG_TYPE,INTERNAL_TYPE> bridge,
 			long[] origin,
@@ -278,7 +296,10 @@ public class ImageAssignment<IMG_TYPE,INTERNAL_TYPE> {
  			this.region = buildRegion(origin, span);
 			this.neighborhood = new DiscreteNeigh(new long[negOffs.length], negOffs, posOffs);
 		}
-		
+
+		/**
+		 * Conditionally assigns pixels in the output region.
+		 */
 		@Override
 		public void run() {
 			final RandomAccess<? extends IMG_TYPE> accessor = bridge.randomAccess();
@@ -298,6 +319,10 @@ public class ImageAssignment<IMG_TYPE,INTERNAL_TYPE> {
 			}
 		}
 		
+		/**
+		 * Builds a DiscreteNeigh region from an origin and span. The
+		 * DiscreteNeigh is needed for use with a RegionIndexIterator.
+		 */
 		private DiscreteNeigh buildRegion(long[] org, long[] spn) {
 			long[] pOffsets = new long[org.length];
 			for (int i = 0; i < org.length; i++)
