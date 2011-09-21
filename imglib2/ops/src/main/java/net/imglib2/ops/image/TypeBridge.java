@@ -30,57 +30,12 @@ POSSIBILITY OF SUCH DAMAGE.
 package net.imglib2.ops.image;
 
 import net.imglib2.RandomAccess;
-import net.imglib2.img.Img;
-import net.imglib2.ops.Condition;
-import net.imglib2.ops.Function;
-import net.imglib2.ops.Complex;
-import net.imglib2.type.numeric.ComplexType;
 
 /**
- * Replacement class for the old OPS' AssignOperation. Assigns the values of
- * a region of an Img<ComplexType> to values from a function.
- *  
  * @author Barry DeZonia
- *
  */
-public class ComplexImageAssignment {
-
-	private final Img<? extends ComplexType<?>> image;
-	private ImageAssignment<ComplexType<?>, Complex> assigner;
-	
-	private class ComplexTranslator implements TypeBridge<ComplexType<?>,Complex> {
-
-		@Override
-		public void setPixel(RandomAccess<? extends ComplexType<?>> accessor, Complex value) {
-			accessor.get().setComplexNumber(value.getX(), value.getY());
-		}
-
-		@Override
-		public RandomAccess<? extends ComplexType<?>> randomAccess() {
-			return image.randomAccess();
-		}
-
-	}
-	
-	public ComplexImageAssignment(Img<? extends ComplexType<?>> image, long[] origin, long[] span,
-			Function<long[],Complex> func, long[] negOffs, long[] posOffs)
-	{
-		this.image = image;
-		this.assigner =
-			new ImageAssignment<ComplexType<?>,Complex>(
-					new ComplexTranslator(),
-					origin,
-					span,
-					func,
-					negOffs,
-					posOffs);
-	}
-	
-	public void setCondition(Condition<long[]> condition) {
-		assigner.setCondition(condition);
-	}
-	
-	public void assign() {
-		assigner.assign();
-	}
+public interface TypeBridge<IMG_TYPE, INTERNAL_TYPE> {
+	RandomAccess<? extends IMG_TYPE> randomAccess();
+	void setPixel(RandomAccess<? extends IMG_TYPE> accessor, INTERNAL_TYPE value);
 }
+
