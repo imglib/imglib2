@@ -47,7 +47,7 @@ import net.imglib2.type.numeric.RealType;
 // - set regions of input and output
 //     Now this can be done by creating a complex Condition
 // - interrupt from another thread
-//     still to do
+//     Done via abort()
 // - observe the iteration
 //     still to do
 // regions in same image could be handled by a translation function that
@@ -56,6 +56,9 @@ import net.imglib2.type.numeric.RealType;
 //   a translation function takes a function and a coord transform
 // now also these regions, if shape compatible, can be composed into a N+1
 //   dimensional space and handled as one dataset
+// TODO
+// - add listeners in assign (like progress indicators, stat collectors, etc.)
+
 
 /**
  * Replacement class for the old OPS' AssignOperation. Assigns the values of
@@ -75,9 +78,22 @@ public class RealImageAssignment {
 	private final long[] span;
 	private final long[] negOffs;
 	private final long[] posOffs;
-
+	private ExecutorService executor;
+	
 	// -- constructor --
 	
+	/**
+	 * Constructor. Note that if negOffs and posOffs are all zero this operation
+	 * represents a point operation.
+	 * 
+	 * @param image - the Img<RealType> to assign data values to
+	 * @param origin - the origin of the region to assign within the image
+	 * @param span - the extents of the region to assign within the image
+	 * @param function - the function to evaluate at each point of the region
+	 * @param negOffs - the extents in the negative direction of the input neighborhood
+	 * @param posOffs - the extents in the positive direction of the input neighborhood
+	 * 
+	 */
 	public RealImageAssignment(
 		Img<? extends RealType<?>> image,
 		long[] origin,
@@ -96,36 +112,70 @@ public class RealImageAssignment {
 	}
 	
 	// -- public interface --
-	
+
+	/**
+	 * Sets a condition that must be satisfied before each pixel assignment
+	 * can take place. The condition is tested at each point in the assignment
+	 * region.
+	 */
 	public void setCondition(Condition<long[]> condition) {
-		this.cond = condition.duplicate();
+		this.cond = (condition == null ? null : condition.duplicate());
 	}
 	
-	// TODO
-	// - add listeners (like progress indicators, stat collectors, etc.)
-	// - make interruptible
-	
+	/**
+	 * Assign pixels using input variables specified in constructor.
+	 */
 	public void assign() {
 		int axis = chooseBestAxis();
 		int numThreads = chooseNumThreads(axis);
 		long length = span[axis] / numThreads;
 		if (span[axis] % numThreads > 0) length++;
 		long startIndex = origin[axis]; 
-		ExecutorService executor = Executors.newFixedThreadPool(numThreads);
+		synchronized (this) {
+			executor = Executors.newFixedThreadPool(numThreads);
+		}
 		while (startIndex < span[axis]) {
 			Runnable task =
 					task(img, origin, span, axis, startIndex, length, func, cond, negOffs, posOffs);
-			executor.submit(task);
+			synchronized (this) {
+				executor.submit(task);
+			}
 			startIndex += length;
 		}
-		executor.shutdown();
-		while (!executor.isTerminated()) {
+		boolean terminated = true;
+		synchronized (this) {
+			executor.shutdown();
+			terminated = executor.isTerminated();
+		}
+		while (!terminated) {
 			try { Thread.sleep(100); } catch (Exception e) { /* do nothing */ }
+			synchronized (this) {
+				terminated = executor.isTerminated();
+				if (terminated) executor =  null;
+			}
 		}
 	}
 
+	/**
+	 * Abort an in progress assignment.
+	 */
 	public void abort() {
-		// TODO - stop all executing threads
+		boolean terminated = true;
+		synchronized (this) {
+			if (executor != null) {
+				executor.shutdownNow();
+				terminated = executor.isTerminated();
+			}
+		}
+		while (!terminated) {
+			try { Thread.sleep(100); } catch (Exception e) { /* do nothing */ }
+			synchronized (this) {
+				if (executor == null)
+					terminated = true;
+				else
+					terminated = executor.isTerminated();
+			}
+		}
 	}
 
 	// -- private helpers --
@@ -181,14 +231,14 @@ public class RealImageAssignment {
 		final long[] regSpan = imageSpan.clone();
 		regSpan[axis] = length;
 		return
-				new RegionRunner(
-					image,
-					regOrigin,
-					regSpan,
-					fn.duplicate(),
-					(cnd == null ? null : cnd.duplicate()),
-					nOffsets.clone(),
-					pOffsets.clone());
+			new RegionRunner(
+				image,
+				regOrigin,
+				regSpan,
+				fn.duplicate(),
+				(cnd == null ? null : cnd.duplicate()),
+				nOffsets.clone(),
+				pOffsets.clone());
 	}
 
 	private class RegionRunner implements Runnable {
