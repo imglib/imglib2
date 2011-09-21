@@ -37,16 +37,21 @@ import net.imglib2.ops.Complex;
 import net.imglib2.type.numeric.ComplexType;
 
 /**
- * Replacement class for the old OPS' AssignOperation. Assigns the values of
- * a region of an Img<ComplexType> to values from a function.
+ * Defines and runs an assignment of pixels within a region of an
+ * Img<ComplexType> with values from a function. Assignments can
+ * be conditional and can be aborted.
  *  
  * @author Barry DeZonia
  *
  */
 public class ComplexImageAssignment {
 
+	// -- instance variables --
+	
 	private final Img<? extends ComplexType<?>> image;
 	private ImageAssignment<ComplexType<?>, Complex> assigner;
+	
+	// -- private helpers --
 	
 	private class ComplexTranslator implements TypeBridge<ComplexType<?>,Complex> {
 
@@ -62,6 +67,22 @@ public class ComplexImageAssignment {
 
 	}
 	
+	// -- public interface --
+	
+	/**
+	 * Constructor. A working neighborhood is built using negOffs and
+	 * posOffs. If they are zero in extent the working neighborhood is
+	 * a single pixel. This neighborhood is moved point by point over
+	 * the Img<?> and passed to the function for evaluation.
+	 * 
+	 * @param image - the Img<ComplexType<?>> to assign data values to
+	 * @param origin - the origin of the region to assign within the Img<?>
+	 * @param span - the extents of the region to assign within the Img<?>
+	 * @param function - the function to evaluate at each point of the region
+	 * @param negOffs - the extents in the negative direction of the working neighborhood
+	 * @param posOffs - the extents in the positive direction of the working neighborhood
+	 * 
+	 */
 	public ComplexImageAssignment(Img<? extends ComplexType<?>> image, long[] origin, long[] span,
 			Function<long[],Complex> func, long[] negOffs, long[] posOffs)
 	{
@@ -75,12 +96,29 @@ public class ComplexImageAssignment {
 					negOffs,
 					posOffs);
 	}
-	
+
+	/**
+	 * Sets a condition that must be satisfied before each pixel assignment
+	 * can take place. The condition is tested at each point in the assignment
+	 * region. Should be called after construction but before the call to
+	 * assign().
+	 */
 	public void setCondition(Condition<long[]> condition) {
 		assigner.setCondition(condition);
 	}
 	
+	/**
+	 * Assign pixels using input variables specified in constructor. Can be
+	 * aborted using abort().
+	 */
 	public void assign() {
 		assigner.assign();
+	}
+	
+	/**
+	 * Aborts an in progress assignment. If no assignment is running has no effect.
+	 */
+	public void abort() {
+		assigner.abort();
 	}
 }

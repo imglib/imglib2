@@ -77,7 +77,7 @@ public class ImageAssignment<IMG_TYPE,INTERNAL_TYPE> {
 	private final long[] negOffs;
 	private final long[] posOffs;
 	private ExecutorService executor;
-	private boolean aborted;
+	private boolean assigning;
 	
 	// -- constructor --
 	
@@ -110,7 +110,7 @@ public class ImageAssignment<IMG_TYPE,INTERNAL_TYPE> {
 		this.posOffs = posOffs.clone();
 		this.func = function.duplicate();
 		this.cond = null;
-		this.aborted = false;
+		this.assigning = false;
 	}
 	
 	// -- public interface --
@@ -129,16 +129,17 @@ public class ImageAssignment<IMG_TYPE,INTERNAL_TYPE> {
 	 * aborted using abort().
 	 */
 	public void assign() {
-		int axis = chooseBestAxis();
-		int numThreads = chooseNumThreads(axis);
-		long length = span[axis] / numThreads;
-		if (span[axis] % numThreads > 0) length++;
-		long startIndex = origin[axis]; 
-		synchronized (this) {
-			if (aborted) {
-				aborted = false;  // reset flag so assign() can be called again
-				return;
-			}
+		int axis;
+		int numThreads;
+		long startIndex;
+		long length;
+		synchronized(this) {
+			assigning = true;
+			axis = chooseBestAxis();
+			numThreads = chooseNumThreads(axis);
+			length = span[axis] / numThreads;
+			if (span[axis] % numThreads > 0) length++;
+			startIndex = origin[axis]; 
 			executor = Executors.newFixedThreadPool(numThreads);
 		}
 		while (startIndex < span[axis]) {
@@ -153,26 +154,28 @@ public class ImageAssignment<IMG_TYPE,INTERNAL_TYPE> {
 		synchronized (this) {
 			executor.shutdown();
 			terminated = executor.isTerminated();
+			if (terminated) executor = null;
 		}
 		while (!terminated) {
 			try { Thread.sleep(100); } catch (Exception e) { /* do nothing */ }
 			synchronized (this) {
 				terminated = executor.isTerminated();
-				if (terminated) executor =  null;
+				if (terminated) executor = null;
 			}
 		}
 		synchronized (this) {
-			aborted = false;  // reset flag so assign() can be called again
+			assigning = false;
 		}
 	}
 
 	/**
-	 * Aborts an in progress assignment. TODO - not yet safe if assign() not running.
+	 * Aborts an in progress assignment. Has no effect if not currently
+	 * running an assign() operation.
 	 */
 	public void abort() {
 		boolean terminated = true;
 		synchronized (this) {
-			aborted = true;
+			if (!assigning) return;
 			if (executor != null) {
 				executor.shutdownNow();
 				terminated = executor.isTerminated();
