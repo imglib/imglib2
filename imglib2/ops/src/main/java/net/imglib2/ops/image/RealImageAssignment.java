@@ -70,10 +70,10 @@ public class RealImageAssignment {
 	// -- public interface --
 	
 	/**
-	 * Constructor. A working neighborhood is built using negOffs and
-	 * posOffs. If they are zero in extent the working neighborhood is
-	 * a single pixel. This neighborhood is moved point by point over
-	 * the Img<?> and passed to the function for evaluation.
+	 * General constructor. A working neighborhood is built using negOffs and
+	 * posOffs. If they are zero in extent the working neighborhood is a
+	 * single pixel. This neighborhood is moved point by point over the Img<?>
+	 * and passed to the function for evaluation.
 	 * 
 	 * @param image - the Img<RealType<?>> to assign data values to
 	 * @param origin - the origin of the region to assign within the Img<?>
@@ -95,6 +95,23 @@ public class RealImageAssignment {
 					func,
 					negOffs,
 					posOffs);
+	}
+	
+	/**
+	 * Constructor for a single point input neighborhood. This neighborhood is
+	 * moved point by point over the Img<?> and passed to the function for
+	 * evaluation.
+	 * 
+	 * @param image - the Img<RealType<?>> to assign data values to
+	 * @param origin - the origin of the region to assign within the Img<?>
+	 * @param span - the extents of the region to assign within the Img<?>
+	 * @param function - the point function to evaluate at each point of the region
+	 * 
+	 */
+	public RealImageAssignment(Img<? extends RealType<?>> image, long[] origin, long[] span,
+			Function<long[],Real> func)
+	{
+		this(image,origin,span,func,new long[span.length],new long[span.length]);
 	}
 	
 	/**
