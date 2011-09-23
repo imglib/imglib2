@@ -33,6 +33,8 @@ import net.imglib2.ops.Real;
 import net.imglib2.ops.RealOutput;
 import net.imglib2.ops.UnaryOperation;
 
+//formula from mathworld.com documentation
+
 /**
  * 
  * @author Barry DeZonia
