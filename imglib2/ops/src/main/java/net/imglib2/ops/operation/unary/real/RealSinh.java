@@ -47,4 +47,8 @@ public final class RealSinh extends RealOutput implements UnaryOperation<Real,Re
 		output.setReal(value);
 	}
 
+	@Override
+	public RealSinh duplicate() {
+		return new RealSinh();
+	}
 }

@@ -47,4 +47,8 @@ public final class RealAbs extends RealOutput implements UnaryOperation<Real,Rea
 		output.setReal(value);
 	}
 
+	@Override
+	public RealAbs duplicate() {
+		return new RealAbs();
+	}
 }

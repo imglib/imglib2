@@ -44,4 +44,9 @@ public final class RealCopyLeft extends RealOutput implements BinaryOperation<Re
 	public void compute(Real x1, Real x2, Real output) {
 		output.setReal(x1.getReal());
 	}
+
+	@Override
+	public RealCopyLeft duplicate() {
+		return new RealCopyLeft();
+	}
 }

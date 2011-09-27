@@ -57,4 +57,8 @@ public class NullFunction<INDEX, T> implements Function<INDEX,T> {
 		//  destroying existing data. That need may now be obsolete. Investigate.
 	}
 
+	@Override
+	public NullFunction<INDEX,T> duplicate() {
+		return new NullFunction<INDEX,T>();
+	}
 }

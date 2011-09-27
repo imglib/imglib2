@@ -51,4 +51,8 @@ public final class ImaginaryAdapter extends RealOutput implements UnaryOperation
 		output.setReal(input.getY());
 	}
 
+	@Override
+	public ImaginaryAdapter duplicate() {
+		return new ImaginaryAdapter();
+	}
 }

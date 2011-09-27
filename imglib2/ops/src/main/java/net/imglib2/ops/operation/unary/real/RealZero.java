@@ -46,4 +46,8 @@ public final class RealZero extends RealOutput implements UnaryOperation<Real,Re
 		output.setReal(0);
 	}
 
+	@Override
+	public RealZero duplicate() {
+		return new RealZero();
+	}
 }

@@ -50,4 +50,9 @@ public final class ComplexLog extends ComplexOutput implements UnaryOperation<Co
 		double y = z.getPrincipleArgument();
 		output.setCartesian(x,y);
 	}
+	
+	@Override
+	public ComplexLog duplicate() {
+		return new ComplexLog();
+	}
 }

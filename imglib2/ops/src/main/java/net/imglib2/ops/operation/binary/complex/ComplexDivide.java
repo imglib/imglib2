@@ -49,4 +49,9 @@ public final class ComplexDivide extends ComplexOutput implements BinaryOperatio
 		double y = (z1.getY()*z2.getX() - z1.getX()*z2.getY()) / denom;
 		output.setCartesian(x, y);
 	}
+
+	@Override
+	public ComplexDivide duplicate() {
+		return new ComplexDivide();
+	}
 }

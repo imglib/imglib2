@@ -70,4 +70,9 @@ public final class ComplexCos extends ComplexOutput implements UnaryOperation<Co
 		addFunc.compute(expIZ, expMinusIZ, sum);
 		divFunc.compute(sum, TWO, output);
 	}
+	
+	@Override
+	public ComplexCos duplicate() {
+		return new ComplexCos();
+	}
 }

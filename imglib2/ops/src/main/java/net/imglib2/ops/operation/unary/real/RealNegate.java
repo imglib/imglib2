@@ -47,4 +47,8 @@ public final class RealNegate extends RealOutput implements UnaryOperation<Real,
 		output.setReal(value);
 	}
 
+	@Override
+	public RealNegate duplicate() {
+		return new RealNegate();
+	}
 }

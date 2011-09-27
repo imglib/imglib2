@@ -46,4 +46,8 @@ public final class RealSubtract extends RealOutput implements BinaryOperation<Re
 		output.setReal(value);
 	}
 
+	@Override
+	public RealSubtract duplicate() {
+		return new RealSubtract();
+	}
 }

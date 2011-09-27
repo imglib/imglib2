@@ -46,4 +46,8 @@ public final class RealCopy extends RealOutput implements UnaryOperation<Real,Re
 		output.setValue(x);
 	}
 
+	@Override
+	public RealCopy duplicate() {
+		return new RealCopy();
+	}
 }

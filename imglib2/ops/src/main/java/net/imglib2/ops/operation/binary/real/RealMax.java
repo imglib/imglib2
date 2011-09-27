@@ -49,4 +49,9 @@ public final class RealMax extends RealOutput implements BinaryOperation<Real,Re
 			value = x2.getReal();
 		output.setReal(value);
 	}
+
+	@Override
+	public RealMax duplicate() {
+		return new RealMax();
+	}
 }

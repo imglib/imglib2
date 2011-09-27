@@ -46,7 +46,7 @@ import net.imglib2.ops.condition.AtKeyPointCondition;
  */
 public class RealImpulseFunction extends RealOutput implements Function<long[],Real> {
 
-	private Condition<long[]> atKeyPoint;
+	private final Condition<long[]> atKeyPoint;
 	
 	public RealImpulseFunction()
 	{
@@ -61,4 +61,8 @@ public class RealImpulseFunction extends RealOutput implements Function<long[],R
 			output.setReal(0);
 	}
 
+	@Override
+	public RealImpulseFunction duplicate() {
+		return new RealImpulseFunction();
+	}
 }

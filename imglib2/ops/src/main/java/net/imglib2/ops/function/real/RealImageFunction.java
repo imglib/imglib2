@@ -44,9 +44,11 @@ import net.imglib2.type.numeric.RealType;
  */
 public class RealImageFunction extends RealOutput implements Function<long[],Real> {
 
-	private RandomAccess<? extends RealType<?>> accessor;
+	private final Img<? extends RealType<?>> img;
+	private final RandomAccess<? extends RealType<?>> accessor;
 	
 	public RealImageFunction(Img<? extends RealType<?>> img) {
+		this.img = img;
 		this.accessor = img.randomAccess();
 	}
 
@@ -57,4 +59,8 @@ public class RealImageFunction extends RealOutput implements Function<long[],Rea
 		output.setReal(r);
 	}
 
+	@Override
+	public RealImageFunction duplicate() {
+		return new RealImageFunction(img);
+	}
 }

@@ -38,11 +38,15 @@ import net.imglib2.ops.Complex;
  * @author Barry DeZonia
  *
  */
-public class ComplexNotEquals implements BinaryRelation<Complex> {
+public final class ComplexNotEquals implements BinaryRelation<Complex> {
 
 	@Override
 	public boolean holds(Complex val1, Complex val2) {
 		return (val1.getX() != val2.getX()) || (val1.getY() != val2.getY());
 	}
 
+	@Override
+	public ComplexNotEquals duplicate() {
+		return new ComplexNotEquals();
+	}
 }

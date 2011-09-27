@@ -48,4 +48,8 @@ public final class RealCot extends RealOutput implements UnaryOperation<Real,Rea
 		output.setReal(value);
 	}
 
+	@Override
+	public RealCot duplicate() {
+		return new RealCot();
+	}
 }

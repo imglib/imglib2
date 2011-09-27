@@ -46,4 +46,8 @@ public final class RealXor extends RealOutput implements BinaryOperation<Real,Re
 		output.setReal(value);
 	}
 
+	@Override
+	public RealXor duplicate() {
+		return new RealXor();
+	}
 }

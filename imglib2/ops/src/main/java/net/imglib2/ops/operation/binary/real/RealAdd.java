@@ -45,4 +45,9 @@ public final class RealAdd extends RealOutput implements BinaryOperation<Real,Re
 		double value = x1.getReal() + x2.getReal();
 		output.setReal(value);
 	}
+
+	@Override
+	public RealAdd duplicate() {
+		return new RealAdd();
+	}
 }

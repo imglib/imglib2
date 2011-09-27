@@ -57,4 +57,9 @@ public final class ComplexPower extends ComplexOutput implements BinaryOperation
 		mulFunc.compute(z, logA, zLogA);
 		expFunc.compute(zLogA, output);
 	}
+
+	@Override
+	public ComplexPower duplicate() {
+		return new ComplexPower();
+	}
 }

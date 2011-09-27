@@ -27,44 +27,15 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE.
 */
 
-package net.imglib2.ops.operation.unary.real;
+package net.imglib2.ops.image;
 
-import net.imglib2.ops.Real;
-import net.imglib2.ops.RealOutput;
-import net.imglib2.ops.UnaryOperation;
-
-
-//verified formula with Mathworld's definition for Inverse Cosecant
+import net.imglib2.RandomAccess;
 
 /**
- * 
  * @author Barry DeZonia
- *
  */
-public final class RealArccsc extends RealOutput implements UnaryOperation<Real,Real> {
-
-	private static final RealArccos acos = new RealArccos();
-	private final Real angle = new Real();
-	private final Real tmp = new Real();
-	
-	@Override
-	public void compute(Real x, Real output) {
-		double xt = x.getReal();
-		if ((xt > -1) && (xt < 1))
-			throw new IllegalArgumentException("arccsc(x) : x out of range");
-		else if (xt == -1)
-			output.setReal(-Math.PI/2);
-		else if (xt == 1)
-			output.setReal(Math.PI/2);
-		else {
-			tmp.setReal(Math.sqrt(xt*xt - 1) / xt);
-			acos.compute(tmp, angle);
-			output.setReal(angle.getReal());
-		}
-	}
-
-	@Override
-	public RealArccsc duplicate() {
-		return new RealArccsc();
-	}
+public interface TypeBridge<IMG_TYPE, INTERNAL_TYPE> {
+	RandomAccess<? extends IMG_TYPE> randomAccess();
+	void setPixel(RandomAccess<? extends IMG_TYPE> accessor, INTERNAL_TYPE value);
 }
+

@@ -53,4 +53,8 @@ public final class RealXorConstant extends RealOutput implements UnaryOperation<
 		output.setReal(value);
 	}
 
+	@Override
+	public RealXorConstant duplicate() {
+		return new RealXorConstant(constant);
+	}
 }

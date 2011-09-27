@@ -40,15 +40,20 @@ import net.imglib2.ops.Neighborhood;
  */
 public class NotCondition<INDEX> implements Condition<INDEX> {
 
-	Condition<INDEX> cond1;
+	private final Condition<INDEX> cond1;
 
-	NotCondition(Condition<INDEX> cond1) {
+	public NotCondition(Condition<INDEX> cond1) {
 		this.cond1 = cond1;
 	}
 	
 	@Override
 	public boolean isTrue(Neighborhood<INDEX> neigh, INDEX point) {
 		return ! cond1.isTrue(neigh, point);
+	}
+	
+	@Override
+	public NotCondition<INDEX> duplicate() {
+		return new NotCondition<INDEX>(cond1.duplicate());
 	}
 
 }

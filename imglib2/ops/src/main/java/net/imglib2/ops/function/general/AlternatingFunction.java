@@ -44,10 +44,10 @@ import net.imglib2.ops.Neighborhood;
  */
 public class AlternatingFunction<T> implements Function<long[],T> {
 
-	private ArrayList<Function<long[],T>> functions;
+	private final ArrayList<Function<long[],T>> functions;
 	private long[] relativePosition;
 	private Neighborhood<long[]> localNeigh;
-	private int dimension;
+	private final int dimension;
 	
 	public AlternatingFunction(int dim) {
 		functions = new ArrayList<Function<long[],T>>();
@@ -80,5 +80,13 @@ public class AlternatingFunction<T> implements Function<long[],T> {
 			return functions.get(0).createOutput();
 		throw new IllegalArgumentException(
 				"AlternatingFunction has not been initialized yet.");
+	}
+	
+	@Override
+	public AlternatingFunction<T> duplicate() {
+		AlternatingFunction<T> newFunc = new AlternatingFunction<T>(dimension);
+		for (Function<long[],T> f : functions)
+			newFunc.add(f.duplicate());
+		return newFunc;
 	}
 }

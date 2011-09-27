@@ -5,8 +5,8 @@ import net.imglib2.ops.Neighborhood;
 
 public class NeighborhoodAdapterFunction<INDEX, T> implements Function<INDEX,T> {
 
-	private Function<INDEX,T> function;
-	private Neighborhood<INDEX> localNeigh;
+	private final Function<INDEX,T> function;
+	private final Neighborhood<INDEX> localNeigh;
 	
 	public NeighborhoodAdapterFunction(
 			Function<INDEX,T> function, Neighborhood<INDEX> localNeigh)
@@ -26,4 +26,8 @@ public class NeighborhoodAdapterFunction<INDEX, T> implements Function<INDEX,T> 
 		function.evaluate(localNeigh, point, output);
 	}
 
+	@Override
+	public NeighborhoodAdapterFunction<INDEX, T> duplicate() {
+		return new NeighborhoodAdapterFunction<INDEX, T>(function.duplicate(), localNeigh.duplicate());
+	}
 }

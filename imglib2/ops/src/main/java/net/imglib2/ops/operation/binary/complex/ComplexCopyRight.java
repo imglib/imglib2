@@ -44,4 +44,9 @@ public final class ComplexCopyRight extends ComplexOutput implements BinaryOpera
 	public void compute(Complex z1, Complex z2, Complex output) {
 		output.setValue(z2);
 	}
+
+	@Override
+	public ComplexCopyRight duplicate() {
+		return new ComplexCopyRight();
+	}
 }

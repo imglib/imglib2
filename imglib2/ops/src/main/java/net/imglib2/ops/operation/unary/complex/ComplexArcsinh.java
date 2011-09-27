@@ -66,4 +66,9 @@ public final class ComplexArcsinh extends ComplexOutput implements UnaryOperatio
 		addFunc.compute(z, root, sum);
 		logFunc.compute(sum, output);
 	}
+	
+	@Override
+	public ComplexArcsinh duplicate() {
+		return new ComplexArcsinh();
+	}
 }

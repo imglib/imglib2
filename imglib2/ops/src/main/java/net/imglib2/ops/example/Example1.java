@@ -87,7 +87,7 @@ public class Example1 {
 		
 		DiscreteNeigh neighborhood = new DiscreteNeigh(new long[2], new long[2], new long[2]);
 		
-		Function<long[],Real> constant = new ConstantRealFunction<long[]>(15);
+		Function<long[],Real> constant = new ConstantRealFunction<long[]>(new Real(15));
 		
 		Function<long[],Real> image = new RealImageFunction(inputImage);
 

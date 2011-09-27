@@ -49,4 +49,8 @@ public final class RealArctanh extends RealOutput implements UnaryOperation<Real
 		output.setReal(value);
 	}
 
+	@Override
+	public RealArctanh duplicate() {
+		return new RealArctanh();
+	}
 }

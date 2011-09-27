@@ -44,9 +44,11 @@ import net.imglib2.type.numeric.ComplexType;
  */
 public class ComplexImageFunction extends ComplexOutput implements Function<long[],Complex> {
 
-	private RandomAccess<? extends ComplexType<?>> accessor;
+	private final Img<? extends ComplexType<?>> img;
+	private final RandomAccess<? extends ComplexType<?>> accessor;
 	
 	public ComplexImageFunction(Img<? extends ComplexType<?>> img) {
+		this.img = img;
 		this.accessor = img.randomAccess();
 	}
 	
@@ -58,4 +60,8 @@ public class ComplexImageFunction extends ComplexOutput implements Function<long
 		output.setCartesian(r,i);
 	}
 
+	@Override
+	public ComplexImageFunction duplicate() {
+		return new ComplexImageFunction(img);
+	}
 }

@@ -65,4 +65,8 @@ public final class RealArcsec extends RealOutput implements UnaryOperation<Real,
 		}
 	}
 
+	@Override
+	public RealArcsec duplicate() {
+		return new RealArcsec();
+	}
 }

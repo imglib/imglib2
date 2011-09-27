@@ -41,17 +41,21 @@ import net.imglib2.ops.Neighborhood;
  *
  */
 public class ConstantComplexFunction<INDEX> extends ComplexOutput implements Function<INDEX,Complex> {
-	private double real;
-	private double imag;
+	private final Complex complex;
 
-	public ConstantComplexFunction(double r, double i) {
-		real = r;
-		imag = i;
+	public ConstantComplexFunction(Complex c) {
+		complex = new Complex();
+		complex.setValue(c);
 	}
 	
 	@Override
 	public void evaluate(Neighborhood<INDEX> neigh, INDEX point, Complex c) {
-		c.setCartesian(real,imag);
+		c.setValue(complex);
+	}
+	
+	@Override
+	public ConstantComplexFunction<INDEX> duplicate() {
+		return new ConstantComplexFunction<INDEX>(complex);
 	}
 }
 

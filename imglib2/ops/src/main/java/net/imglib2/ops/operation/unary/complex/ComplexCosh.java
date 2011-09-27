@@ -67,4 +67,9 @@ public final class ComplexCosh extends ComplexOutput implements UnaryOperation<C
 		addFunc.compute(expZ, expMinusZ, sum);
 		divFunc.compute(sum, TWO, output);
 	}
+	
+	@Override
+	public ComplexCosh duplicate() {
+		return new ComplexCosh();
+	}
 }

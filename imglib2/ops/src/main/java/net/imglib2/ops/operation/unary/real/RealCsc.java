@@ -48,4 +48,8 @@ public final class RealCsc extends RealOutput implements UnaryOperation<Real,Rea
 		output.setReal(value);
 	}
 
+	@Override
+	public RealCsc duplicate() {
+		return new RealCsc();
+	}
 }

@@ -71,4 +71,9 @@ public final class ComplexArctan extends ComplexOutput implements UnaryOperation
 		logFunc.compute(quotient, log);
 		mulFunc.compute(MINUS_I_OVER_TWO, log, output);
 	}
+	
+	@Override
+	public ComplexArctan duplicate() {
+		return new ComplexArctan();
+	}
 }

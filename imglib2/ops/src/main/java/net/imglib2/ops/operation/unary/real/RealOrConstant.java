@@ -53,4 +53,8 @@ public final class RealOrConstant extends RealOutput implements UnaryOperation<R
 		output.setReal(value);
 	}
 
+	@Override
+	public RealOrConstant duplicate() {
+		return new RealOrConstant(constant);
+	}
 }

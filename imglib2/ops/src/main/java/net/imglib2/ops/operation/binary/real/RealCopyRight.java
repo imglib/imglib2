@@ -44,4 +44,9 @@ public final class RealCopyRight extends RealOutput implements BinaryOperation<R
 	public void compute(Real x1, Real x2, Real output) {
 		output.setReal(x2.getReal());
 	}
+
+	@Override
+	public RealCopyRight duplicate() {
+		return new RealCopyRight();
+	}
 }

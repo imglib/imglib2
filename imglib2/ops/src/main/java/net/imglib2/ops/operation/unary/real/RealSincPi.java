@@ -33,38 +33,29 @@ import net.imglib2.ops.Real;
 import net.imglib2.ops.RealOutput;
 import net.imglib2.ops.UnaryOperation;
 
-
-//verified formula with Mathworld's definition for Inverse Cosecant
+//formula from mathworld.com documentation
 
 /**
  * 
  * @author Barry DeZonia
  *
  */
-public final class RealArccsc extends RealOutput implements UnaryOperation<Real,Real> {
+public class RealSincPi extends RealOutput implements UnaryOperation<Real,Real> {
 
-	private static final RealArccos acos = new RealArccos();
-	private final Real angle = new Real();
-	private final Real tmp = new Real();
-	
 	@Override
-	public void compute(Real x, Real output) {
-		double xt = x.getReal();
-		if ((xt > -1) && (xt < 1))
-			throw new IllegalArgumentException("arccsc(x) : x out of range");
-		else if (xt == -1)
-			output.setReal(-Math.PI/2);
-		else if (xt == 1)
-			output.setReal(Math.PI/2);
-		else {
-			tmp.setReal(Math.sqrt(xt*xt - 1) / xt);
-			acos.compute(tmp, angle);
-			output.setReal(angle.getReal());
-		}
+	public void compute(Real input, Real output) {
+		double x = input.getReal();
+		double value;
+		if (x == 0)
+			value = 1;
+		else
+			value = Math.sin(Math.PI * x) / (Math.PI * x);
+		output.setReal(value);
 	}
 
 	@Override
-	public RealArccsc duplicate() {
-		return new RealArccsc();
+	public RealSincPi duplicate() {
+		return new RealSincPi();
 	}
+
 }

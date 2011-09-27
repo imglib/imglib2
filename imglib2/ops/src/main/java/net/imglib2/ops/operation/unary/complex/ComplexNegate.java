@@ -46,4 +46,9 @@ public final class ComplexNegate extends ComplexOutput implements UnaryOperation
 		double y = -z.getY();
 		output.setCartesian(x,y);
 	}
+	
+	@Override
+	public ComplexNegate duplicate() {
+		return new ComplexNegate();
+	}
 }

@@ -47,4 +47,8 @@ public final class RealSqr extends RealOutput implements UnaryOperation<Real,Rea
 		output.setReal(value*value);
 	}
 
+	@Override
+	public RealSqr duplicate() {
+		return new RealSqr();
+	}
 }

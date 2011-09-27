@@ -68,4 +68,9 @@ public final class ComplexIntegerPower extends ComplexOutput
 			output.setPolar(r, theta);
 		}
 	}
+	
+	@Override
+	public ComplexIntegerPower duplicate() {
+		return new ComplexIntegerPower(power);
+	}
 }

@@ -33,71 +33,109 @@ import net.imglib2.RandomAccess;
 import net.imglib2.img.Img;
 import net.imglib2.ops.Condition;
 import net.imglib2.ops.Function;
-import net.imglib2.ops.Neighborhood;
 import net.imglib2.ops.Real;
-import net.imglib2.ops.RegionIndexIterator;
 import net.imglib2.type.numeric.RealType;
 
-// In old AssignOperation could do many things
-// - set conditions on each input and output image
-//     Now this can be done by creating a complex Condition
-// - set regions of input and output
-//     Now this can be done by creating a complex Condition
-// - interrupt from another thread
-//     still to do
-// - observe the iteration
-//     still to do
-// regions in same image could be handled by a translation function that
-//   transforms from one space to another
-// regions in different images can also be handled this way
-//   a translation function takes a function and a coord transform
-// now also these regions, if shape compatible, can be composed into a N+1
-//   dimensional space and handled as one dataset
-
 /**
- * Replacement class for the old OPS' AssignOperation. Assigns the values of
- * a region of an Img<RealType> to values from a function.
+ * Defines and runs an assignment of pixels within a region of an
+ * Img<RealType> with values from a function. Assignments can
+ * be conditional and can be aborted.
  *  
  * @author Barry DeZonia
  *
  */
 public class RealImageAssignment {
 
-	private RandomAccess<? extends RealType<?>> accessor;
-	private Neighborhood<long[]> neigh;
-	private Function<long[],Real> function;
-	private Condition<long[]> condition;
+	// -- instance variables --
 	
-	public RealImageAssignment(Img<? extends RealType<?>> image, Neighborhood<long[]> neigh,
-			Function<long[],Real> function)
-	{
-		this.accessor = image.randomAccess();
-		this.neigh = neigh;
-		this.function = function;
-		this.condition = null;
-	}
+	private final Img<? extends RealType<?>> image;
+	private ImageAssignment<RealType<?>, Real> assigner;
 	
-	public void setCondition(Condition<long[]> condition) {
-		this.condition = condition;
-	}
+	// -- private helpers --
 	
-	// TODO
-	// - add listeners (like progress indicators, stat collectors, etc.)
-	// - make interruptible
-	
-	public void assign() {
-		Real output = function.createOutput();
-		RegionIndexIterator iter = new RegionIndexIterator(neigh);
-		while (iter.hasNext()) {
-			iter.fwd();
-			boolean proceed = (condition == null) || (condition.isTrue(neigh,iter.getPosition()));
-			if (proceed) {
-				function.evaluate(neigh, iter.getPosition(), output);
-				accessor.setPosition(iter.getPosition());
-				accessor.get().setReal(output.getReal());
-			}
+	private class RealTranslator implements TypeBridge<RealType<?>,Real> {
+
+		@Override
+		public void setPixel(RandomAccess<? extends RealType<?>> accessor, Real value) {
+			accessor.get().setReal(value.getReal());
 		}
-		
+
+		@Override
+		public RandomAccess<? extends RealType<?>> randomAccess() {
+			return image.randomAccess();
+		}
+
+	}
+	
+	// -- public interface --
+	
+	/**
+	 * General constructor. A working neighborhood is built using negOffs and
+	 * posOffs. If they are zero in extent the working neighborhood is a
+	 * single pixel. This neighborhood is moved point by point over the Img<?>
+	 * and passed to the function for evaluation.
+	 * 
+	 * @param image - the Img<RealType<?>> to assign data values to
+	 * @param origin - the origin of the region to assign within the Img<?>
+	 * @param span - the extents of the region to assign within the Img<?>
+	 * @param function - the function to evaluate at each point of the region
+	 * @param negOffs - the extents in the negative direction of the working neighborhood
+	 * @param posOffs - the extents in the positive direction of the working neighborhood
+	 * 
+	 */
+	public RealImageAssignment(Img<? extends RealType<?>> image, long[] origin, long[] span,
+			Function<long[],Real> func, long[] negOffs, long[] posOffs)
+	{
+		this.image = image;
+		this.assigner =
+			new ImageAssignment<RealType<?>,Real>(
+					new RealTranslator(),
+					origin,
+					span,
+					func,
+					negOffs,
+					posOffs);
+	}
+	
+	/**
+	 * Constructor for a single point input neighborhood. This neighborhood is
+	 * moved point by point over the Img<?> and passed to the function for
+	 * evaluation.
+	 * 
+	 * @param image - the Img<RealType<?>> to assign data values to
+	 * @param origin - the origin of the region to assign within the Img<?>
+	 * @param span - the extents of the region to assign within the Img<?>
+	 * @param function - the point function to evaluate at each point of the region
+	 * 
+	 */
+	public RealImageAssignment(Img<? extends RealType<?>> image, long[] origin, long[] span,
+			Function<long[],Real> func)
+	{
+		this(image,origin,span,func,new long[span.length],new long[span.length]);
+	}
+	
+	/**
+	 * Sets a condition that must be satisfied before each pixel assignment
+	 * can take place. The condition is tested at each point in the assignment
+	 * region. Should be called after construction but before the call to
+	 * assign().
+	 */
+	public void setCondition(Condition<long[]> condition) {
+		assigner.setCondition(condition);
 	}
 
+	/**
+	 * Assign pixels using input variables specified in constructor. Can be
+	 * aborted using abort().
+	 */
+	public void assign() {
+		assigner.assign();
+	}
+	
+	/**
+	 * Aborts an in progress assignment. If no assignment is running has no effect.
+	 */
+	public void abort() {
+		assigner.abort();
+	}
 }

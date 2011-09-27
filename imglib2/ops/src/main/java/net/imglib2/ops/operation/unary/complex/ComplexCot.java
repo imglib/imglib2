@@ -56,4 +56,9 @@ public final class ComplexCot extends ComplexOutput implements UnaryOperation<Co
 		cosFunc.compute(z, cos);
 		divFunc.compute(cos, sin, output);
 	}
+	
+	@Override
+	public ComplexCot duplicate() {
+		return new ComplexCot();
+	}
 }

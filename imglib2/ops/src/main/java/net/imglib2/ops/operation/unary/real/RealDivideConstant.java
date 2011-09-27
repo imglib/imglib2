@@ -60,4 +60,8 @@ public final class RealDivideConstant extends RealOutput implements UnaryOperati
 		}
 	}
 
+	@Override
+	public RealDivideConstant duplicate() {
+		return new RealDivideConstant(constant,dbzVal);
+	}
 }

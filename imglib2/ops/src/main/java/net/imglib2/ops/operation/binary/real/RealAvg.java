@@ -45,4 +45,9 @@ public final class RealAvg extends RealOutput implements BinaryOperation<Real,Re
 		double value = (x1.getReal() + x2.getReal()) / 2;
 		output.setReal(value);
 	}
+
+	@Override
+	public RealAvg duplicate() {
+		return new RealAvg();
+	}
 }

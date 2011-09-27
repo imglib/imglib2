@@ -38,11 +38,15 @@ import net.imglib2.ops.Bool;
  * @author Barry DeZonia
  *
  */
-public class BoolEquals implements BinaryRelation<Bool> {
+public final class BoolEquals implements BinaryRelation<Bool> {
 
 	@Override
 	public boolean holds(Bool val1, Bool val2) {
 		return val1.getBool() == val2.getBool();
 	}
 
+	@Override
+	public BoolEquals duplicate() {
+		return new BoolEquals();
+	}
 }

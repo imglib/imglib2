@@ -68,10 +68,10 @@ import net.imglib2.ops.Neighborhood;
  */
 public class ComposedFunction<T> implements Function<long[],T> {
 
-	private int dimension;
-	private long startIndex;
-	private ArrayList<Function<long[],T>> functions;
-	private ArrayList<Long> widths;
+	private final int dimension;
+	private final long startIndex;
+	private final ArrayList<Function<long[],T>> functions;
+	private final ArrayList<Long> widths;
 	private long[] relativePosition;
 	private Neighborhood<long[]> localNeigh;
 	
@@ -122,5 +122,13 @@ public class ComposedFunction<T> implements Function<long[],T> {
 			return functions.get(0).createOutput();
 		throw new IllegalArgumentException(
 				"ComposedFunction has not been initialized yet.");
+	}
+	
+	@Override
+	public ComposedFunction<T> duplicate() {
+		ComposedFunction<T> newFunc = new ComposedFunction<T>(dimension, startIndex);
+		for (int i = 0; i < functions.size(); i++)
+			newFunc.add(functions.get(i).duplicate(), widths.get(i));
+		return newFunc;
 	}
 }

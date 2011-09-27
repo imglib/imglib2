@@ -48,4 +48,9 @@ public final class ComplexConjugate extends ComplexOutput implements UnaryOperat
 		double y = -z.getY();
 		output.setCartesian(x,y);
 	}
+	
+	@Override
+	public ComplexConjugate duplicate() {
+		return new ComplexConjugate();
+	}
 }

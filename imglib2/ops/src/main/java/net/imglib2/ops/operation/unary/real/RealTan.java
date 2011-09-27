@@ -47,4 +47,8 @@ public final class RealTan extends RealOutput implements UnaryOperation<Real,Rea
 		output.setReal(value);
 	}
 
+	@Override
+	public RealTan duplicate() {
+		return new RealTan();
+	}
 }

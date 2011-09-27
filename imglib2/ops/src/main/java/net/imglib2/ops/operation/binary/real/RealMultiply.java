@@ -46,4 +46,8 @@ public final class RealMultiply extends RealOutput implements BinaryOperation<Re
 		output.setReal(value);
 	}
 
+	@Override
+	public RealMultiply duplicate() {
+		return new RealMultiply();
+	}
 }

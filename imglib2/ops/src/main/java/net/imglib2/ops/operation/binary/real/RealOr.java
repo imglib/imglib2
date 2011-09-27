@@ -46,4 +46,8 @@ public final class RealOr extends RealOutput implements BinaryOperation<Real,Rea
 		output.setReal(value);
 	}
 
+	@Override
+	public RealOr duplicate() {
+		return new RealOr();
+	}
 }

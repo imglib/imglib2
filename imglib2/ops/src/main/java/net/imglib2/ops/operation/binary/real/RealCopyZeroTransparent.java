@@ -49,4 +49,9 @@ public final class RealCopyZeroTransparent extends RealOutput implements BinaryO
 		else
 			output.setReal(x2.getReal());
 	}
+
+	@Override
+	public RealCopyZeroTransparent duplicate() {
+		return new RealCopyZeroTransparent();
+	}
 }

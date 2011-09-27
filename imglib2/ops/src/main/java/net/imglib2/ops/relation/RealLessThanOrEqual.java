@@ -38,11 +38,15 @@ import net.imglib2.ops.Real;
  * @author Barry DeZonia
  *
  */
-public class RealLessThanOrEqual implements BinaryRelation<Real> {
+public final class RealLessThanOrEqual implements BinaryRelation<Real> {
 
 	@Override
 	public boolean holds(Real val1, Real val2) {
 		return val1.getReal() <= val2.getReal();
 	}
 
+	@Override
+	public RealLessThanOrEqual duplicate() {
+		return new RealLessThanOrEqual();
+	}
 }

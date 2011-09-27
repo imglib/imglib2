@@ -89,11 +89,13 @@ public class MixedTransformConcatenateTest
 	
 	MixedTransform tr1;
 	MixedTransform tr2;
+	MixedTransform tr3;
 	MixedTransform perm1;
 	MixedTransform rot1;
 	MixedTransform proj1;
 	MixedTransform proj2;
 	MixedTransform comp1;
+	MixedTransform slice1;
 	TranslationTransform translation1;
 	
 	@Before
@@ -127,10 +129,30 @@ public class MixedTransformConcatenateTest
 
 		proj2 = new MixedTransform( 2, 3 );
 
+		slice1 = new MixedTransform( 2, 3 );
+		slice1.setTranslation( new long[] { 233, 0, 0 } );
+		slice1.setComponentMapping( new int[] { 0, 0, 1 } );
+		slice1.setComponentZero( new boolean[] { true, false, false } );
+		
+		tr3 = new MixedTransform( 2, 2 );
+		tr3.setTranslation( new long[] { 10, 10 } );
+
 		comp1 = rot1.concatenate( tr2 );
 		
 		translation1 = new TranslationTransform( new long[] {2011, 3, 24} );
     }
+
+	@Test
+	public void concatenateSlice1Tr3()
+	{
+		assertTrue( testConcatenation( slice1, tr3 ) );
+	}
+
+	@Test
+	public void preconcatenateSlice1Tr3()
+	{
+		assertTrue( testPreConcatenation( slice1, tr3 ) );
+	}
 
 	@Test
 	public void concatenateProj1Tr1()

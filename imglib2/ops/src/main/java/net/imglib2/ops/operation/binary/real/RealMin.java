@@ -50,4 +50,8 @@ public final class RealMin extends RealOutput implements BinaryOperation<Real,Re
 		output.setReal(value);
 	}
 
+	@Override
+	public RealMin duplicate() {
+		return new RealMin();
+	}
 }

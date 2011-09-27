@@ -56,4 +56,9 @@ public final class ComplexTan extends ComplexOutput implements UnaryOperation<Co
 		cosFunc.compute(z, cos);
 		divFunc.compute(sin, cos, output);
 	}
+	
+	@Override
+	public ComplexTan duplicate() {
+		return new ComplexTan();
+	}
 }

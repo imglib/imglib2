@@ -38,14 +38,19 @@ import net.imglib2.ops.Neighborhood;
  * @author Barry DeZonia
  *
  */
-public class GeneralBinaryFunction<INDEX, IT1, IT2, OT> implements Function<INDEX,OT> {
-	private Function<INDEX,IT1> f1;
-	private Function<INDEX,IT2> f2;
-	private IT1 input1;
-	private IT2 input2;
-	private BinaryOperation<IT1,IT2,OT> operation;
+public class GeneralBinaryFunction<INDEX, INPUT1_TYPE, INPUT2_TYPE, OUTPUT_TYPE>
+	implements Function<INDEX,OUTPUT_TYPE>
+{
+	private final Function<INDEX,INPUT1_TYPE> f1;
+	private final Function<INDEX,INPUT2_TYPE> f2;
+	private final INPUT1_TYPE input1;
+	private final INPUT2_TYPE input2;
+	private final BinaryOperation<INPUT1_TYPE,INPUT2_TYPE,OUTPUT_TYPE> operation;
 	
-	public GeneralBinaryFunction(Function<INDEX,IT1> f1, Function<INDEX,IT2> f2, BinaryOperation<IT1,IT2,OT> operation)
+	public GeneralBinaryFunction(
+			Function<INDEX,INPUT1_TYPE> f1,
+			Function<INDEX,INPUT2_TYPE> f2,
+			BinaryOperation<INPUT1_TYPE,INPUT2_TYPE,OUTPUT_TYPE> operation)
 	{
 		this.f1 = f1;
 		this.f2 = f2;
@@ -55,14 +60,22 @@ public class GeneralBinaryFunction<INDEX, IT1, IT2, OT> implements Function<INDE
 	}
 	
 	@Override
-	public void evaluate(Neighborhood<INDEX> region, INDEX point, OT output) {
+	public void evaluate(
+			Neighborhood<INDEX> region, INDEX point, OUTPUT_TYPE output)
+	{
 		f1.evaluate(region, point, input1);
 		f2.evaluate(region, point, input2);
 		operation.compute(input1, input2, output);
 	}
 	
 	@Override
-	public OT createOutput() {
+	public OUTPUT_TYPE createOutput() {
 		return operation.createOutput();
+	}
+
+	@Override
+	public GeneralBinaryFunction<INDEX, INPUT1_TYPE, INPUT2_TYPE, OUTPUT_TYPE> duplicate() {
+		return new GeneralBinaryFunction<INDEX, INPUT1_TYPE, INPUT2_TYPE, OUTPUT_TYPE>(
+				f1.duplicate(), f2.duplicate(), operation.duplicate());
 	}
 }

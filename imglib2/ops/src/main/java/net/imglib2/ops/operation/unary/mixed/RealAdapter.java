@@ -51,4 +51,8 @@ public final class RealAdapter extends RealOutput implements UnaryOperation<Comp
 		output.setReal(input.getX());
 	}
 
+	@Override
+	public RealAdapter duplicate() {
+		return new RealAdapter();
+	}
 }

@@ -48,4 +48,9 @@ public final class ComplexSubtract extends ComplexOutput implements BinaryOperat
 		double y = z1.getY() - z2.getY();
 		output.setCartesian(x,y);
 	}
+
+	@Override
+	public ComplexSubtract duplicate() {
+		return new ComplexSubtract();
+	}
 }

@@ -58,4 +58,9 @@ public final class ComplexCsc extends ComplexOutput implements UnaryOperation<Co
 		sinFunc.compute(z, sin);
 		divFunc.compute(ONE, sin, output);
 	}
+	
+	@Override
+	public ComplexCsc duplicate() {
+		return new ComplexCsc();
+	}
 }

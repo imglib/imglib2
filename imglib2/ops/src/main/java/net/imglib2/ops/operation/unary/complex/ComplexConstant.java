@@ -50,4 +50,9 @@ public final class ComplexConstant extends ComplexOutput implements UnaryOperati
 	public void compute(Complex z, Complex output) {
 		output.setValue(constant);
 	}
+	
+	@Override
+	public ComplexConstant duplicate() {
+		return new ComplexConstant(constant);
+	}
 }

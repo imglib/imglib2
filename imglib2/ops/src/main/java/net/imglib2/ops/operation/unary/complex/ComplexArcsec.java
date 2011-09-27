@@ -55,4 +55,9 @@ public final class ComplexArcsec extends ComplexOutput implements UnaryOperation
 		divFunc.compute(ONE, z, recipZ);
 		arccosFunc.compute(recipZ, output);
 	}
+	
+	@Override
+	public ComplexArcsec duplicate() {
+		return new ComplexArcsec();
+	}
 }

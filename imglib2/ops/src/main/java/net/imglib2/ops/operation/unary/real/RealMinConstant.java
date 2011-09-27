@@ -56,4 +56,8 @@ public final class RealMinConstant extends RealOutput implements UnaryOperation<
 			output.setReal(constant);
 	}
 
+	@Override
+	public RealMinConstant duplicate() {
+		return new RealMinConstant(constant);
+	}
 }
