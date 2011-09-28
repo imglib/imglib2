@@ -131,7 +131,7 @@ public class ImageAssignment<IMG_TYPE,INTERNAL_TYPE> {
 	public void assign() {
 		int axis;
 		int numThreads;
-		long startIndex;
+		long startOffset;
 		long length;
 		synchronized(this) {
 			assigning = true;
@@ -139,16 +139,17 @@ public class ImageAssignment<IMG_TYPE,INTERNAL_TYPE> {
 			numThreads = chooseNumThreads(axis);
 			length = span[axis] / numThreads;
 			if (span[axis] % numThreads > 0) length++;
-			startIndex = origin[axis]; 
+			startOffset = 0;
 			executor = Executors.newFixedThreadPool(numThreads);
 		}
-		while (startIndex < span[axis]) {
+		while (startOffset < span[axis]) {
+			if (startOffset + length > span[axis]) length = span[axis] - startOffset;
 			Runnable task =
-					task(bridge, origin, span, axis, startIndex, length, func, cond, negOffs, posOffs);
+					task(bridge, origin, span, axis, origin[axis] + startOffset, length, func, cond, negOffs, posOffs);
 			synchronized (this) {
 				executor.submit(task);
 			}
-			startIndex += length;
+			startOffset += length;
 		}
 		boolean terminated = true;
 		synchronized (this) {
