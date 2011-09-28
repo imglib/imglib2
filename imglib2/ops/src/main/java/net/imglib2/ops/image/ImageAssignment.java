@@ -240,7 +240,7 @@ public class ImageAssignment<IMG_TYPE,INTERNAL_TYPE> {
 	 * The task assigns values to a subset of the output region.
 	 */
 	private Runnable task(
-		TypeBridge<IMG_TYPE,INTERNAL_TYPE> bridge,
+		TypeBridge<IMG_TYPE,INTERNAL_TYPE> br,
 		long[] imageOrigin,
 		long[] imageSpan,
 		int axis,
@@ -258,7 +258,7 @@ public class ImageAssignment<IMG_TYPE,INTERNAL_TYPE> {
 		regSpan[axis] = length;
 		return
 			new RegionRunner(
-				bridge,
+				br,
 				regOrigin,
 				regSpan,
 				fn.duplicate(),
@@ -273,7 +273,7 @@ public class ImageAssignment<IMG_TYPE,INTERNAL_TYPE> {
 	 */
 	private class RegionRunner implements Runnable {
 		
-		private final TypeBridge<IMG_TYPE,INTERNAL_TYPE> bridge;
+		private final TypeBridge<IMG_TYPE,INTERNAL_TYPE> br;
 		private final Function<long[],INTERNAL_TYPE> function;
 		private final Condition<long[]> condition;
 		private final DiscreteNeigh region;
@@ -291,7 +291,7 @@ public class ImageAssignment<IMG_TYPE,INTERNAL_TYPE> {
 			long[] negOffs,
 			long[] posOffs)
 		{
-			this.bridge = bridge;
+			this.br = bridge;
 			this.function = func;
 			this.condition = cond;
  			this.region = buildRegion(origin, span);
@@ -303,7 +303,7 @@ public class ImageAssignment<IMG_TYPE,INTERNAL_TYPE> {
 		 */
 		@Override
 		public void run() {
-			final RandomAccess<? extends IMG_TYPE> accessor = bridge.randomAccess();
+			final RandomAccess<? extends IMG_TYPE> accessor = br.randomAccess();
 			final INTERNAL_TYPE output = function.createOutput();
 			final RegionIndexIterator iter = new RegionIndexIterator(region);
 			while (iter.hasNext()) {
@@ -315,7 +315,7 @@ public class ImageAssignment<IMG_TYPE,INTERNAL_TYPE> {
 				if (proceed) {
 					function.evaluate(neighborhood, iter.getPosition(), output);
 					accessor.setPosition(iter.getPosition());
-					bridge.setPixel(accessor, output);
+					br.setPixel(accessor, output);
 				}
 			}
 		}
