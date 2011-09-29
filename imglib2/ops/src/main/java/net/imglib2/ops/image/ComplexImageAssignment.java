@@ -53,6 +53,7 @@ public class ComplexImageAssignment {
 	
 	// -- private helpers --
 	
+	@SuppressWarnings("synthetic-access")
 	private class ComplexTranslator implements TypeBridge<ComplexType<?>,Complex> {
 
 		@Override
@@ -78,11 +79,12 @@ public class ComplexImageAssignment {
 	 * @param image - the Img<ComplexType<?>> to assign data values to
 	 * @param origin - the origin of the region to assign within the Img<?>
 	 * @param span - the extents of the region to assign within the Img<?>
-	 * @param function - the function to evaluate at each point of the region
+	 * @param func - the function to evaluate at each point of the region
 	 * @param negOffs - the extents in the negative direction of the working neighborhood
 	 * @param posOffs - the extents in the positive direction of the working neighborhood
 	 * 
 	 */
+	@SuppressWarnings("synthetic-access")
 	public ComplexImageAssignment(Img<? extends ComplexType<?>> image, long[] origin, long[] span,
 			Function<long[],Complex> func, long[] negOffs, long[] posOffs)
 	{
@@ -105,7 +107,7 @@ public class ComplexImageAssignment {
 	 * @param image - the Img<ComplexType<?>> to assign data values to
 	 * @param origin - the origin of the region to assign within the Img<?>
 	 * @param span - the extents of the region to assign within the Img<?>
-	 * @param function - the point function to evaluate at each point of the region
+	 * @param func - the point function to evaluate at each point of the region
 	 * 
 	 */
 	public ComplexImageAssignment(Img<? extends ComplexType<?>> image, long[] origin, long[] span,
