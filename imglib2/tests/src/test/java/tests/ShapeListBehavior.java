@@ -1,27 +1,20 @@
-package net.imglib2.test;
+package tests;
 
 import ij.ImageJ;
 import ij.ImagePlus;
 
+import java.awt.Image;
 import java.awt.Polygon;
 import java.awt.Rectangle;
 
-import net.imglib2.algorithm.transformation.ImageTransform;
-import net.imglib2.cursor.LocalizableByDimCursor;
-import net.imglib2.cursor.LocalizableCursor;
-import net.imglib2.img.Image;
-import net.imglib2.img.ImageFactory;
-import net.imglib2.img.array.ArrayContainerFactory;
-import net.imglib2.img.cell.CellImgFactory;
-import net.imglib2.img.display.imagej.ImageJFunctions;
-import net.imglib2.img.shapelist.ShapeList;
-import net.imglib2.img.shapelist.ShapeListCached;
-import net.imglib2.interpolation.randomaccess.NLinearInterpolatorFactory;
-import net.imglib2.outofbounds.OutOfBoundsStrategyValueFactory;
-import net.imglib2.type.numeric.RealType;
-import net.imglib2.type.numeric.integer.ByteType;
 import mpicbg.models.AffineModel3D;
 import mpicbg.models.TranslationModel3D;
+import net.imglib2.algorithm.transformation.ImageTransform;
+import net.imglib2.img.cell.CellImgFactory;
+import net.imglib2.img.display.imagej.ImageJFunctions;
+import net.imglib2.interpolation.randomaccess.NLinearInterpolatorFactory;
+import net.imglib2.type.numeric.RealType;
+import net.imglib2.type.numeric.integer.ByteType;
 
 /**
  * 
