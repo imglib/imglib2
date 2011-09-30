@@ -31,6 +31,7 @@ import mpicbg.imglib.cursor.LocalizableCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.ImageFactory;
 import mpicbg.imglib.multithreading.SimpleMultiThreading;
+import mpicbg.imglib.outofbounds.OutOfBoundsStrategyPeriodicFactory;
 import mpicbg.imglib.type.numeric.RealType;
 import mpicbg.imglib.type.numeric.real.DoubleType;
 
@@ -41,6 +42,7 @@ public class SubpixelLocalization< T extends RealType<T> > implements Algorithm,
 	
 	int maxNumMoves = 4;
 	boolean allowMaximaTolerance = false;
+	boolean canMoveOutside = false;
 	float maximaTolerance = 0.01f;
 	
 	final ImageFactory<DoubleType> doubleArrayFactory;
@@ -65,6 +67,7 @@ public class SubpixelLocalization< T extends RealType<T> > implements Algorithm,
 	}
 	
 	public void setAllowMaximaTolerance( final boolean allowMaximaTolerance ) { this.allowMaximaTolerance = allowMaximaTolerance; }
+	public void setCanMoveOutside( final boolean canMoveOutside ) { this.canMoveOutside = canMoveOutside; }
 	public void setMaximaTolerance( final float maximaTolerance ) { this.maximaTolerance = maximaTolerance; }
 	public void setLaPlaceImage( final Image<T> laPlacian ) { this.laPlacian = laPlacian; }
 	public void setDoGPeaks( final List< DifferenceOfGaussianPeak<T> > peaks ) { this.peaks = peaks; }
@@ -72,6 +75,7 @@ public class SubpixelLocalization< T extends RealType<T> > implements Algorithm,
 	public void setAllowedToMoveInDim( final boolean[] allowedToMoveInDim ) { this.allowedToMoveInDim = allowedToMoveInDim.clone(); }
 	
 	public boolean getAllowMaximaTolerance() { return allowMaximaTolerance; }
+	public boolean getCanMoveOutside() { return canMoveOutside; }
 	public float getMaximaTolerance() { return maximaTolerance; }
 	public Image<T> getLaPlaceImage() { return laPlacian; }
 	public List<DifferenceOfGaussianPeak<T>> getDoGPeaks() { return peaks; }
@@ -133,7 +137,12 @@ public class SubpixelLocalization< T extends RealType<T> > implements Algorithm,
 		final int[] currentPosition = peak.getPosition();
 		
 		// the cursor for the computation (one that cannot move out of image)
-		final LocalizableByDimCursor<T> cursor = laPlacian.createLocalizableByDimCursor();
+		final LocalizableByDimCursor<T> cursor;
+		
+		if ( canMoveOutside )
+			cursor = laPlacian.createLocalizableByDimCursor( new OutOfBoundsStrategyPeriodicFactory<T>());
+		else
+			cursor = laPlacian.createLocalizableByDimCursor();
 		
 		// the current hessian matrix and derivative vector
 		Image<DoubleType> hessianMatrix = doubleArrayFactory.createImage( new int[] { cursor.getNumDimensions(), cursor.getNumDimensions() } );
@@ -246,10 +255,11 @@ public class SubpixelLocalization< T extends RealType<T> > implements Algorithm,
 			// check validity of the new location if there is a need to move
 			pointsValid = true;
 
-			if ( !foundStableMaxima ) 
-				for ( int d = 0; d < numDimensions; ++d )
-					if ( currentPosition[ d ] <= 0 || currentPosition[ d ] >= laPlacian.getDimension( d ) - 1 ) 
-						pointsValid = false;
+			if ( !canMoveOutside )
+				if ( !foundStableMaxima ) 
+					for ( int d = 0; d < numDimensions; ++d )
+						if ( currentPosition[ d ] <= 0 || currentPosition[ d ] >= laPlacian.getDimension( d ) - 1 ) 
+							pointsValid = false;
 			
 		} 
 		while ( numMoves <= maxNumMoves && !foundStableMaxima && pointsValid );
