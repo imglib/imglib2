@@ -30,7 +30,6 @@ package mpicbg.imglib.container.imageplus;
 import ij.ImagePlus;
 import ij.ImageStack;
 import ij.process.ColorProcessor;
-
 import mpicbg.imglib.container.basictypecontainer.array.IntArray;
 import mpicbg.imglib.exception.ImgLibException;
 import mpicbg.imglib.type.Type;
@@ -106,6 +105,15 @@ public class IntImagePlus<T extends Type<T>> extends ImagePlusContainer<T, IntAr
 			for ( int z = 0; z < depth; ++z )
 				for ( int c = 0; c < channels; ++c )
 					mirror.add( new IntArray( ( int[] )imp.getStack().getProcessor( imp.getStackIndex( c + 1, z + 1 , t + 1 ) ).getPixels() ) );
+	}
+
+	/**
+	 * This has to be overwritten, otherwise two different instances exist (one in the imageplus, one in the mirror)
+	 */
+	@Override
+	public void setPlane( final int no, final IntArray plane ) 
+	{ 
+		System.arraycopy( plane.getCurrentStorageArray(), 0, mirror.get( no ).getCurrentStorageArray(), 0, plane.getCurrentStorageArray().length );
 	}
 
 	@Override
