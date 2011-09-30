@@ -79,7 +79,11 @@ public final class MixedRandomAccess< T > extends AbstractRandomAccess< T >
 		}
 		for ( int d = 0; d < m; ++d )
 		{
-			if ( !targetZero[ d ] )
+			if ( targetZero[ d ] )
+			{
+				s.setPosition( translation[ d ], d );
+			}
+			else
 			{
 				final int e = targetComponent[ d ];
 				sourceZero[ e ] = false;
@@ -133,7 +137,7 @@ public final class MixedRandomAccess< T > extends AbstractRandomAccess< T >
 		position[ d ] -= 1;
 		if ( !sourceZero[ d ] )
 		{
-			if ( sourceZero[ d ] )
+			if ( sourceInv[ d ] )
 			{
 				s.fwd( sourceComponent[ d ] );
 			}

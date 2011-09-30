@@ -148,8 +148,21 @@ public class LabelingTest {
 		assertFalse(labeling.getExtents("Bar", minExtents, maxExtents));
 		assertTrue(labeling.getExtents("Foo", minExtents, maxExtents));
 		assertArrayEquals(coordinates[0], minExtents);
-		long [] expectedMaxExtents = coordinates[0].clone();
-		for (int i = 0; i<3; i++) expectedMaxExtents[i]++;
+		assertArrayEquals(coordinates[0], maxExtents);
+	}
+	@Test
+	public void testExtentsMany() {
+		long [][] coordinates = {{ 1,4,5}, {2,3,6} };
+		long [] expectedMinExtents = { 1,3,5 };
+		long [] expectedMaxExtents = { 2,4,6 };
+		String [] labels = { "Foo", "Foo" };
+		long [] dimensions = new long [] { 5,6,7};
+		Labeling<String> labeling = makeLabeling(coordinates, labels, dimensions);
+		long [] minExtents = new long[3];
+		long [] maxExtents = new long[3];
+		assertFalse(labeling.getExtents("Bar", minExtents, maxExtents));
+		assertTrue(labeling.getExtents("Foo", minExtents, maxExtents));
+		assertArrayEquals(expectedMinExtents, minExtents);
 		assertArrayEquals(expectedMaxExtents, maxExtents);
 	}
 	@Test
@@ -220,7 +233,7 @@ public class LabelingTest {
 			assertEquals(c.getLongPosition(2), 2);
 			assertEquals(expected, t.get());
 		}
-		assertEquals(iterations, 1);
+		assertEquals(1, iterations);
 	}
 	
 	@Test
@@ -235,7 +248,7 @@ public class LabelingTest {
 		long [] maxExtents = new long[3];
 		assertTrue(labeling.getExtents("Foo", minExtents, maxExtents));
 		assertArrayEquals(new long [] { 5,4,3}, minExtents);
-		assertArrayEquals(new long [] { 16, 15, 14 }, maxExtents);
+		assertArrayEquals(new long [] { 15, 14, 13 }, maxExtents);
 		/*
 		 * Test the raster start which should be 5, 9, 8
 		 */

@@ -78,17 +78,51 @@ public class UnsignedShortType extends GenericShortType<UnsignedShortType>
 	@Override
 	public void mul( final float c )
 	{
-		final int a = getUnsignedShort( getValue() );
-		setValue( getCodedSignedShort( Util.round( a * c ) ) );
+		set( Util.round( get() * c ) );
 	}
 
 	@Override
 	public void mul( final double c )
 	{
-		final int a = getUnsignedShort( getValue() );
-		setValue( getCodedSignedShort( ( int )Util.round( a * c ) ) );
+		set( ( int )Util.round( get() * c ) );
 	}
 
+	@Override
+	public void add( final UnsignedShortType c )
+	{
+		set( get() + c.get() );
+	}
+
+	@Override
+	public void div( final UnsignedShortType c )
+	{
+		set( get() / c.get() );
+	}
+
+	@Override
+	public void mul( final UnsignedShortType c )
+	{
+		set( get() * c.get() );
+	}
+
+	@Override
+	public void sub( final UnsignedShortType c )
+	{
+		set( get() - c.get() );
+	}
+	
+	@Override
+	public void inc()
+	{
+		set( get() + 1 );
+	}
+
+	@Override
+	public void dec()
+	{
+		set( get() - 1 );
+	}	
+	
 	public int get() { return getUnsignedShort( getValue() ); }
 	public void set( final int f ) { setValue( getCodedSignedShort( f ) ); }
 	
@@ -105,12 +139,6 @@ public class UnsignedShortType extends GenericShortType<UnsignedShortType>
 	public double getMaxValue() { return -Short.MIN_VALUE + Short.MAX_VALUE; }
 	@Override
 	public double getMinValue()  { return 0; }
-
-	@Override
-	public void div( final UnsignedShortType c )
-	{
-		set( get() / c.get() );
-	}
 
 	@Override
 	public int compareTo( final UnsignedShortType c ) 
@@ -131,4 +159,7 @@ public class UnsignedShortType extends GenericShortType<UnsignedShortType>
 
 	@Override
 	public UnsignedShortType copy(){ return new UnsignedShortType( get() ); }
+	
+	@Override
+	public String toString() { return "" + get(); }
 }

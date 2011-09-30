@@ -212,6 +212,17 @@ public class SubpixelLocalization< T extends RealType<T> > implements Algorithm,
 			
 			for ( int d = 0; d < numDimensions; ++d )
 			{
+				// Normally, above an offset of 0.5 the base position
+				// has to be changed, e.g. a subpixel location of 4.7
+				// would mean that the new base location is 5 with an offset of -0.3
+				//
+				// If we allow an increasing maxima tolerance we will 
+				// not change the base position that easily. Sometimes
+				// it simply jumps from left to right and back, because
+				// it is 4.51 (i.e. goto 5), then 4.49 (i.e. goto 4)
+				// Then we say, ok, lets keep the base position even if 
+				// the subpixel location is 0.6...
+				
 				final double threshold = allowMaximaTolerance ? 0.5 + numMoves * maximaTolerance : 0.5;
 				
 				if ( Math.abs( subpixelLocation[ d ] ) > threshold )

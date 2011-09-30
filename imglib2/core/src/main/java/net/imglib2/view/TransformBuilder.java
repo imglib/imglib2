@@ -1,7 +1,6 @@
 package net.imglib2.view;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.LinkedList;
 import java.util.ListIterator;
 
 import net.imglib2.ExtendedRandomAccessibleInterval;
@@ -55,7 +54,7 @@ public class TransformBuilder< T >
 	 * {@link #source} RandomAccess to obtain a RandomAccess in the target
 	 * coordinate system.
 	 */
-	List< Transform > transforms;
+	LinkedList< Transform > transforms;
 
 	/**
 	 * Create a new TransformBuilder. Starting from {@code randomAccessible}, go
@@ -74,27 +73,28 @@ public class TransformBuilder< T >
 	 */
 	TransformBuilder( Interval interval, RandomAccessible< T > randomAccessible )
 	{
-		transforms = new ArrayList< Transform >();
+		transforms = new LinkedList< Transform >();
 		boundingBox = ( interval == null) ? null : new BoundingBox( interval );
 		System.out.println( randomAccessible );
 		visit( randomAccessible );
 	}
 
 	/**
-	 * Append a transform to the {@link #transforms} list. Also apply the
-	 * transform to {@link #boundingBox}, which This is called while traversing
-	 * the view hierarchy.
+	 * Prepend a transform to the {@link #transforms} list. Also apply the
+	 * transform to {@link #boundingBox}, which will be used to specify the
+	 * interval for the RandomAccess on the final source (at the end of the view
+	 * chain). This is called while traversing the view hierarchy.
 	 * 
 	 * @param t
 	 *            the transform to add.
 	 */
-	protected void appendTransform( Transform t )
+	protected void prependTransform( Transform t )
 	{
-		if ( BoundingBoxTransform.class.isInstance( t ) && (boundingBox != null))
+		if ( BoundingBoxTransform.class.isInstance( t ) && ( boundingBox != null ) )
 			boundingBox = ( ( BoundingBoxTransform ) t ).transform( boundingBox );
 		else
 			boundingBox = null;
-		transforms.add( t );
+		transforms.addFirst( t );
 	}
 
 	/**
@@ -137,7 +137,7 @@ public class TransformBuilder< T >
 	 */
 	protected void visitTransformed( TransformedRandomAccessible< T > randomAccessible )
 	{
-		appendTransform( randomAccessible.getTransformToSource() );
+		prependTransform( randomAccessible.getTransformToSource() );
 		visit( randomAccessible.getSource() );
 	}
 
@@ -210,9 +210,9 @@ public class TransformBuilder< T >
 		net.imglib2.concatenate.Util.join( transforms );
 
 		// TODO: simplify transform list
-		for ( ListIterator< Transform > i = transforms.listIterator( transforms.size() ); i.hasPrevious(); )
+		for ( ListIterator< Transform > i = transforms.listIterator(); i.hasNext(); )
 		{
-			Transform t = i.previous();
+			Transform t = i.next();
 			if ( Mixed.class.isInstance( t ) )
 			{
 				Mixed mixed = ( Mixed ) t;
@@ -235,9 +235,9 @@ public class TransformBuilder< T >
 		
 		// build RandomAccessibles
 		RandomAccessible< T > result = source;
-		for ( ListIterator< Transform > i = transforms.listIterator( transforms.size() ); i.hasPrevious(); )
+		for ( ListIterator< Transform > i = transforms.listIterator(); i.hasNext(); )
 		{
-			Transform t = i.previous();
+			Transform t = i.next();
 			if ( MixedTransform.class.isInstance( t ) )
 				result = wrapMixedTransform( result, ( MixedTransform ) t );
 			else if ( TranslationTransform.class.isInstance( t ) )

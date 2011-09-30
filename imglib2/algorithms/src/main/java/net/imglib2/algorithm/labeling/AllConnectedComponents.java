@@ -49,7 +49,7 @@ public class AllConnectedComponents {
 		public void push(long [] position) {
 			int insertPoint = this.position * dimensions;
 			if (storage.length == insertPoint) {
-				long [] newStorage = new long [storage.length * 3 / 2];
+				long [] newStorage = new long [(this.position * 3 / 2) * dimensions];
 				System.arraycopy(storage, 0, newStorage, 0, storage.length);
 				storage = newStorage;
 			}

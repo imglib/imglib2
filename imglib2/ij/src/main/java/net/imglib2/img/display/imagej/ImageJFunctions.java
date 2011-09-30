@@ -81,15 +81,17 @@ public class ImageJFunctions
 	public static < T extends NumericType< T > > ImagePlus wrap( final RandomAccessibleInterval< T > img, final String title )
 	{
 		final T t = Util.getTypeFromInterval( img );
-
+		
+		/* Casting madness thanks to a long standing javac bug, see e.g. http://bugs.sun.com/view_bug.do?bug_id=6548436 */
+		/* TODO remove casting madness as soon as the bug is fixed */
 		if ( ARGBType.class.isInstance( t ) )
-			return wrapRGB( ( RandomAccessibleInterval< ARGBType > ) img, title );
+			return wrapRGB( ( RandomAccessibleInterval< ARGBType > )( Object )img, title );
 		else if ( UnsignedByteType.class.isInstance( t ) )
-			return wrapUnsignedByte( ( RandomAccessibleInterval< RealType > ) img, title );
+			return wrapUnsignedByte( ( RandomAccessibleInterval< RealType > )( Object )img, title );
 		else if ( IntegerType.class.isInstance( t ) )
-			return wrapUnsignedShort( ( RandomAccessibleInterval< RealType > ) img, title );
+			return wrapUnsignedShort( ( RandomAccessibleInterval< RealType > )( Object )img, title );
 		else if ( RealType.class.isInstance( t ) )
-			return wrapFloat( ( RandomAccessibleInterval< RealType > ) img, title );
+			return wrapFloat( ( RandomAccessibleInterval< RealType > )( Object )img, title );
 		else
 		{
 			System.out.println( "Do not know how to display Type " + t.getClass().getSimpleName() );

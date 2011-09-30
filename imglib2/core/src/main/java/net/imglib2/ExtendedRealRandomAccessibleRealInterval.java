@@ -38,7 +38,7 @@ import net.imglib2.outofbounds.RealOutOfBoundsRealRandomAccess;
  *
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-final public class ExtendedRealRandomAccessibleRealInterval< T, F extends RealRandomAccessibleRealInterval< T, F > > implements RealRandomAccessible< T > 
+final public class ExtendedRealRandomAccessibleRealInterval< T, F extends RealRandomAccessibleRealInterval< T > > implements RealRandomAccessible< T > 
 {
 	final protected F interval;
 	final protected RealOutOfBoundsFactory< T, ? super F > factory;

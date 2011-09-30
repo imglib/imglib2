@@ -76,7 +76,11 @@ public final class FullSourceMapMixedRandomAccess< T > extends AbstractSampler< 
 		sourceComponent = new int[ n ];
 		for ( int d = 0; d < m; ++d )
 		{
-			if ( !targetZero[ d ] )
+			if ( targetZero[ d ] )
+			{
+				s.setPosition( translation[ d ], d );
+			}
+			else
 			{
 				final int e = targetComponent[ d ];
 				// sourceZero[ e ] = false;

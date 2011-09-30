@@ -62,7 +62,7 @@ public class BoundingBox {
 	public void update(final long[] position) {
 		for (int i = 0; i<min.length; i++) {
 			if (position[i] < min[i]) min[i] = position[i];
-			if (position[i] >= max[i]) max[i] = position[i]+1;
+			if (position[i] > max[i]) max[i] = position[i];
 		}
 	}
 }
