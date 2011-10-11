@@ -5,9 +5,13 @@ import ij.ImagePlus;
 import ij.io.FileSaver;
 
 import net.imglib2.exception.ImgLibException;
+import net.imglib2.exception.IncompatibleTypeException;
 import net.imglib2.img.ImagePlusAdapter;
 import net.imglib2.img.Img;
 import net.imglib2.img.imageplus.ImagePlusImgFactory;
+import net.imglib2.io.ImgIOException;
+import net.imglib2.io.ImgOpener;
+import net.imglib2.io.img.virtual.VirtualImgFactory;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 
@@ -21,27 +25,18 @@ import net.imglib2.type.numeric.RealType;
  * @see Img
  */
 public class ImgLib {
-	/** Open an image from a file path or a web URL. */
-	public static<T extends RealType<T>> Img<T> open(String pathOrURL) {
-		// In the future, when dimensions can be called by name properly:
-		//return new ImageOpener().<T>openImage(pathOrURL);
-		// For now:
-		return wrap(IJ.openImage(pathOrURL));
+	/** Open an image from a file path or a web URL. 
+	 * @throws IncompatibleTypeException 
+	 * @throws ImgIOException */
+	public static<T extends RealType<T> & NativeType<T>> Img<T> open(String pathOrURL) throws ImgIOException, IncompatibleTypeException {
+		return new ImgOpener().openImg(pathOrURL);
+		// Old:
+		//return wrap(IJ.openImage(pathOrURL));
 	}
 
-	// TODO virtual images with ImgLib.
-	// TODO At least planes, like ImageJ's VirtualStack.
-	// TODO One should be able to define the minimum X*Y*Z*T*etc block unit
-	//      to have loaded at any given time. This could be the cell storage strategy,
-	//      where each cell is paged in and out.
-	/** //The PlanarContainer grabs the native array, so it's not virtual anymore.
-	static public final <R extends RealType<R>> Image<R> openVirtual(final String filepath) throws FormatException, IOException {
-		ChannelSeparator r = new ChannelSeparator();
-		r.setId(filepath);
-		BFVirtualStack bfv = new BFVirtualStack(filepath, r, false, false, false);
-		return ImgLib.wrap(new ImagePlus(filepath, bfv));
+	public static<T extends RealType<T> & NativeType<T>> Img<T> openVirtual(String pathOrUrl) throws ImgIOException, IncompatibleTypeException {
+		return new ImgOpener().openImg(pathOrUrl, new VirtualImgFactory<T>());
 	}
-	*/
 
 	/** Wrap an ImageJ's {@link ImagePlus} as an Imglib {@link Image} of the appropriate type.
 	 * The data is not copied, but merely accessed with a PlanarArrayContainer.
