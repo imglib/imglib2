@@ -18,12 +18,13 @@ package net.imglib2.algorithm.floydsteinberg;
 
 import java.util.Random;
 
+import net.imglib2.Cursor;
+import net.imglib2.ExtendedRandomAccessibleInterval;
+import net.imglib2.RandomAccess;
 import net.imglib2.algorithm.Benchmark;
 import net.imglib2.algorithm.OutputAlgorithm;
 import net.imglib2.algorithm.math.ComputeMinMax;
 import net.imglib2.img.Img;
-import net.imglib2.img.ImgCursor;
-import net.imglib2.img.ImgRandomAccess;
 import net.imglib2.img.array.ArrayImgFactory;
 import net.imglib2.exception.IncompatibleTypeException;
 import net.imglib2.iterator.ZeroMinIntervalIterator;
@@ -90,9 +91,15 @@ public class FloydSteinbergDithering<T extends RealType<T>> implements OutputAlg
 		final ZeroMinIntervalIterator cursor = new ZeroMinIntervalIterator( dim );
 
 		// we also need a Cursors for the input, the output and the kernel image
-		final ImgRandomAccess<T> cursorInput = img.randomAccess( new OutOfBoundsConstantValueFactory<T,Img<T>>( img.firstElement().createVariable() ) );
-		final ImgRandomAccess<BitType> cursorOutput = result.randomAccess();
-		final ImgCursor<FloatType> cursorKernel = errorDiffusionKernel.localizingCursor();
+		final RandomAccess<T> cursorInput
+			= new ExtendedRandomAccessibleInterval<T,Img<T>>
+				(img, new OutOfBoundsConstantValueFactory<T, Img<T>>
+					( img.firstElement().createVariable() ))
+						.randomAccess( img );
+			
+			//img.randomAccess( new OutOfBoundsConstantValueFactory<T,Img<T>>( img.firstElement().createVariable() ) );
+		final RandomAccess<BitType> cursorOutput = result.randomAccess();
+		final Cursor<FloatType> cursorKernel = errorDiffusionKernel.cursor();
 		
 		while( cursor.hasNext() )
 		{
@@ -166,7 +173,7 @@ public class FloydSteinbergDithering<T extends RealType<T>> implements OutputAlg
 		{
 			final Img<FloatType> kernel = factory.create( new long[] { 3, 3 }, new FloatType() );
 			
-			final ImgRandomAccess<FloatType> cursor = kernel.randomAccess();
+			final RandomAccess<FloatType> cursor = kernel.randomAccess();
 			
 			// For the 2d-case as well:
 			// |-  -  -|
@@ -191,7 +198,7 @@ public class FloydSteinbergDithering<T extends RealType<T>> implements OutputAlg
 		else
 		{
 			final Img<FloatType> kernel = factory.create( Util.getArrayFromValue( 3L, numDimensions), new FloatType() );				
-			final ImgCursor<FloatType> cursor = kernel.localizingCursor();
+			final Cursor<FloatType> cursor = kernel.cursor();
 			
 			final int numValues = (int) ( kernel.size() / 2 );
 			final float[] rndValues = new float[ numValues ];
