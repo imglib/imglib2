@@ -44,8 +44,10 @@ public class PhaseCorrelation<T extends RealType<T>, S extends RealType<S>> impl
 {
 	final int numDimensions;
 	boolean computeFFTinParalell = true;
+	boolean keepPCM = false;
 	Image<T> image1;
 	Image<S> image2;
+	Image<FloatType> invPCM;
 	int numPeaks;
 	int[] minOverlapPx;
 	float normalizationThreshold;
@@ -80,6 +82,7 @@ public class PhaseCorrelation<T extends RealType<T>, S extends RealType<S>> impl
 	
 	public void setComputeFFTinParalell( final boolean computeFFTinParalell ) { this.computeFFTinParalell = computeFFTinParalell; }
 	public void setInvestigateNumPeaks( final int numPeaks ) { this.numPeaks = numPeaks; }
+	public void setKeepPhaseCorrelationMatrix( final boolean keepPCM ) { this.keepPCM = keepPCM; }
 	public void setNormalizationThreshold( final int normalizationThreshold ) { this.normalizationThreshold = normalizationThreshold; }
 	public void setVerifyWithCrossCorrelation( final boolean verifyWithCrossCorrelation ) { this.verifyWithCrossCorrelation = verifyWithCrossCorrelation; }
 	public void setMinimalPixelOverlap( final int[] minOverlapPx ) { this.minOverlapPx = minOverlapPx.clone(); } 
@@ -91,9 +94,11 @@ public class PhaseCorrelation<T extends RealType<T>, S extends RealType<S>> impl
 	
 	public boolean getComputeFFTinParalell() { return computeFFTinParalell; }
 	public int getInvestigateNumPeaks() { return numPeaks; }
+	public boolean getKeepPhaseCorrelationMatrix() { return keepPCM; }
 	public float getNormalizationThreshold() { return normalizationThreshold; }
 	public boolean getVerifyWithCrossCorrelation() { return verifyWithCrossCorrelation; }
 	public int[] getMinimalPixelOverlap() { return minOverlapPx.clone(); }
+	public Image<FloatType> getPhaseCorrelationMatrix() { return invPCM; }
 	public PhaseCorrelationPeak getShift() { return phaseCorrelationPeaks.get( phaseCorrelationPeaks.size() -1 ); }
 	public ArrayList<PhaseCorrelationPeak> getAllShifts() { return phaseCorrelationPeaks; }
 	
@@ -189,7 +194,7 @@ public class PhaseCorrelation<T extends RealType<T>, S extends RealType<S>> impl
 		fftImage1.close();
 		fftImage2.close();
 		
-		final Image<FloatType> invPCM = invFFT.getResult();
+		invPCM = invFFT.getResult();
 		
 		/*
 		invPCM.getDisplay().setMinMax();
@@ -206,6 +211,9 @@ public class PhaseCorrelation<T extends RealType<T>, S extends RealType<S>> impl
 			return true;
 
 		verifyWithCrossCorrelation( phaseCorrelationPeaks, invPCM.getDimensions(), image1, image2 );
+		
+		if ( !keepPCM )
+			invPCM.close();
 		
 		return true;
 	}
@@ -236,8 +244,11 @@ public class PhaseCorrelation<T extends RealType<T>, S extends RealType<S>> impl
 						else
 							peakPosition[ d ] -= dimInvPCM[ d ];
 					}
-				}				
-				newPeakList.add( new PhaseCorrelationPeak( peakPosition, peak.getPhaseCorrelationPeak() ) );
+				}
+				
+				final PhaseCorrelationPeak newPeak = new PhaseCorrelationPeak( peakPosition, peak.getPhaseCorrelationPeak() );
+				newPeak.setOriginalInvPCMPosition( peak.getOriginalInvPCMPosition() );
+				newPeakList.add( newPeak );
 			}			
 		}
 		

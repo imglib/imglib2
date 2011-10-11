@@ -92,6 +92,15 @@ public class FloatImagePlus< T extends NativeType< T > > extends ImagePlusImg< T
 					mirror.add( new FloatArray( ( float[] )imp.getStack().getProcessor( imp.getStackIndex( c + 1, z + 1 , t + 1 ) ).getPixels() ) );
 	}
 
+	/**
+	 * This has to be overwritten, otherwise two different instances exist (one in the imageplus, one in the mirror)
+	 */
+	@Override
+	public void setPlane( final int no, final FloatArray plane ) 
+	{ 
+		System.arraycopy( plane.getCurrentStorageArray(), 0, mirror.get( no ).getCurrentStorageArray(), 0, plane.getCurrentStorageArray().length );
+	}
+
 	@Override
 	public void close() 
 	{
