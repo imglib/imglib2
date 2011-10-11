@@ -12,4 +12,11 @@ public class Util
 		if (ob instanceof Number) return new NumberFunction((Number)ob);
 		throw new IllegalArgumentException("Cannot compose a function with " + ob);
 	}
+	
+	static public final long[] extractDimensions(final IterableRealInterval<?> iri) {
+		final long[] dim = new long[iri.numDimensions()];
+		for (int d=0; d<dim.length; ++d)
+			dim[d] = (long) (iri.realMax(d) - iri.realMin(d) + 1);
+		return dim;
+	}
 }
