@@ -77,6 +77,10 @@ public class Compute {
 	static public final void checkContainers(final Collection<IterableRealInterval<?>> images) throws Exception {
 		if (images.isEmpty())
 			throw new Exception("There aren't any images!");
+		
+		if (1 == images.size()) {
+			return;
+		}
 
 		final IterableRealInterval<?> first = images.iterator().next();
 
@@ -141,6 +145,7 @@ public class Compute {
 						functions[ i ] = op.duplicate();
 				} catch ( Exception e ) {
 					System.out.println( "Running single threaded, operations cannot be duplicated:\n" + e);
+					e.printStackTrace();
 					numThreads = 1;
 					functions[ 0 ] = op;
 				}
