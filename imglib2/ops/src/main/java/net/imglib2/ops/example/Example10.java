@@ -36,7 +36,7 @@ import net.imglib2.ops.Complex;
 import net.imglib2.ops.DiscreteNeigh;
 import net.imglib2.ops.Function;
 import net.imglib2.ops.Real;
-import net.imglib2.ops.function.complex.ComplexAdapterFunction;
+import net.imglib2.ops.function.complex.CartesianComplexFunction;
 import net.imglib2.ops.function.complex.DFTFunction;
 import net.imglib2.ops.function.complex.IDFTFunction;
 import net.imglib2.ops.function.real.RealImageFunction;
@@ -84,7 +84,7 @@ public class Example10 {
 
 	private static boolean testDFT() {
 		image = new RealImageFunction(testImg);
-		Function<long[],Complex> spatialFunction = new ComplexAdapterFunction<long[]>(image);
+		Function<long[],Complex> spatialFunction = new CartesianComplexFunction<long[]>(image);
 		dft = new DFTFunction(spatialFunction, new long[]{XSIZE,YSIZE}, new long[2], new long[2]);
 		// TODO - test something
 		return true;
