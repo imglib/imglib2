@@ -50,23 +50,19 @@ public class ComplexImageFunction
 {
 	// -- instance variables --
 	
-	private final Img<? extends ComplexType<?>> img;
 	private final RandomAccess<? extends ComplexType<?>> accessor;
 	
 	// -- private constructor used by duplicate() --
 	
 	private ComplexImageFunction(
-		Img<? extends ComplexType<?>> img,
 		RandomAccess<? extends ComplexType<?>> acc)
 	{
-		this.img = img;
 		this.accessor = acc;
 	}
 	
 	// -- public constructors --
 	
 	public ComplexImageFunction(Img<? extends ComplexType<?>> img) {
-		this.img = img;
 		this.accessor = img.randomAccess();
 	}
 	
@@ -74,7 +70,6 @@ public class ComplexImageFunction
 		Img<? extends ComplexType<?>> img,
 		OutOfBoundsFactory<? extends ComplexType<?>,Img<? extends ComplexType<?>>> factory)
 	{
-		this.img = img;
 		@SuppressWarnings({"rawtypes","unchecked"})
 		RandomAccessible< ? extends ComplexType<?> > extendedRandAcessible =
 				new ExtendedRandomAccessibleInterval(img, factory);
@@ -94,6 +89,6 @@ public class ComplexImageFunction
 
 	@Override
 	public ComplexImageFunction duplicate() {
-		return new ComplexImageFunction(img, accessor.copyRandomAccess());
+		return new ComplexImageFunction(accessor.copyRandomAccess());
 	}
 }

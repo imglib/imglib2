@@ -50,23 +50,19 @@ public class RealImageFunction
 {
 	// -- instance variables --
 	
-	private final Img<? extends RealType<?>> img;
 	private final RandomAccess<? extends RealType<?>> accessor;
 	
 	// -- private constructor used by duplicate() --
 	
 	private RealImageFunction(
-		Img<? extends RealType<?>> img,
 		RandomAccess<? extends RealType<?>> acc)
 	{
-		this.img = img;
 		this.accessor = acc;
 	}
 	
 	// -- public constructors --
 	
 	public RealImageFunction(Img<? extends RealType<?>> img) {
-		this.img = img;
 		this.accessor = img.randomAccess();
 	}
 	
@@ -74,7 +70,6 @@ public class RealImageFunction
 		Img<? extends RealType<?>> img,
 		OutOfBoundsFactory<? extends RealType<?>,Img<? extends RealType<?>>> factory)
 	{
-		this.img = img;
 		@SuppressWarnings({"rawtypes","unchecked"})
 		RandomAccessible< ? extends RealType<?>> extendedRandAcessible =
 				new ExtendedRandomAccessibleInterval(img, factory);
@@ -93,6 +88,6 @@ public class RealImageFunction
 
 	@Override
 	public RealImageFunction duplicate() {
-		return new RealImageFunction(img, accessor.copyRandomAccess());
+		return new RealImageFunction(accessor.copyRandomAccess());
 	}
 }
