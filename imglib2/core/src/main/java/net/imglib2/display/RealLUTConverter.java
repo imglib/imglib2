@@ -61,6 +61,10 @@ public class RealLUTConverter<R extends RealType<R>> extends
 		setLUT(lut);
 	}
 
+	public ColorTable8 getLUT() {
+		return lut;
+	}
+
 	public void setLUT(final ColorTable8 lut) {
 		this.lut = lut == null ? new ColorTable8() : lut;
 	}
