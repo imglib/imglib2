@@ -2,8 +2,6 @@ package net.imglib2.algorithm.mser;
 
 import java.util.ArrayList;
 
-import org.junit.internal.matchers.IsCollectionContaining;
-
 import net.imglib2.Localizable;
 import net.imglib2.type.numeric.IntegerType;
 

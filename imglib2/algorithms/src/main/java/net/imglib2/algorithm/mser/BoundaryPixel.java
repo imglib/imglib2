@@ -4,7 +4,7 @@ import net.imglib2.Localizable;
 import net.imglib2.Location;
 import net.imglib2.type.Type;
 
-public class BoundaryPixel< T extends Type< T > & Comparable< T > > extends Location implements Comparable< BoundaryPixel< T > >
+public final class BoundaryPixel< T extends Type< T > & Comparable< T > > extends Location implements Comparable< BoundaryPixel< T > >
 {
 	T value;	
 

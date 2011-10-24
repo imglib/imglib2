@@ -1,7 +1,6 @@
 package net.imglib2.algorithm.mser;
 
 import java.util.ArrayDeque;
-import java.util.ArrayList;
 import java.util.Deque;
 import java.util.PriorityQueue;
 
@@ -18,7 +17,7 @@ import net.imglib2.type.Type;
 import net.imglib2.type.logic.BitType;
 import net.imglib2.type.numeric.integer.IntType;
 
-public class ComponentTree< T extends Comparable< T > & Type< T >, C extends Component< T > >
+public final class ComponentTree< T extends Comparable< T > & Type< T >, C extends Component< T > >
 {
 	final RandomAccessibleInterval< T > input;
 
@@ -67,7 +66,7 @@ public class ComponentTree< T extends Comparable< T > & Type< T >, C extends Com
 		return accessiblePixelsRA.get().get();
 	}
 	
-	public class Neighborhood
+	public final class Neighborhood
 	{
 		private int n;
 		private final int nBound;
@@ -103,6 +102,7 @@ public class ComponentTree< T extends Comparable< T > & Type< T >, C extends Com
 			return n < nBound;
 		}
 
+		// return false if the neighbor pixel is out of the image
 		public boolean next( final Localizable current, final Positionable neighbor )
 		{
 			neighbor.setPosition( current );
@@ -126,7 +126,7 @@ public class ComponentTree< T extends Comparable< T > & Type< T >, C extends Com
 	{
 		RandomAccess< T > current = input.randomAccess();
 		RandomAccess< T > neighbor = input.randomAccess();
-		Neighborhood n = new Neighborhood();
+		final Neighborhood n = new Neighborhood();
 		input.min( current );
 		T currentLevel = current.get().createVariable();
 		T neighborLevel = current.get().createVariable();
@@ -174,7 +174,7 @@ public class ComponentTree< T extends Comparable< T > & Type< T >, C extends Com
 			
 			// step 5
 			//showComponentStack("step 5");
-			C component = componentStack.peek();
+			C component = componentStack.peek(); // TODO: no need to peek(), just keep it in local variable when it's created 
 			component.addPosition( current );
 			//System.out.println( "top component = " + component );
 			
