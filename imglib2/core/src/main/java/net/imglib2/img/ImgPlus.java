@@ -435,7 +435,7 @@ public class ImgPlus<T> implements Img<T>, Metadata {
 		final double[] validCal = new double[numDims];
 		for (int i = 0; i < validCal.length; i++) {
 			if (cal != null && cal.length > i) validCal[i] = cal[i];
-			else validCal[i] = Double.NaN;
+			else validCal[i] = 1;
 		}
 		return validCal;
 	}
