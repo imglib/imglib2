@@ -28,6 +28,10 @@ public final class SimpleMserEvaluationNode< T extends IntegerType< T > >
 	 */
 	public double score;
 	public boolean isScoreValid;
+	
+	public final int n;
+	public double[] mean; // mean of region (x, y, z, ...)
+	public double[] cov; // independent elements of covariance of region (xx, xy, xz, ..., yy, yz, ..., zz, ...)
 
 	//for verbose output:
 	public final ArrayList< Localizable > locations;
@@ -39,25 +43,25 @@ public final class SimpleMserEvaluationNode< T extends IntegerType< T > >
 		size = component.getSize();
 
 		ancestors = new ArrayList< SimpleMserEvaluationNode< T > >();
-		SimpleMserEvaluationNode< T > n = component.getEvaluationNode();
+		SimpleMserEvaluationNode< T > node = component.getEvaluationNode();
 		long historySize = 0;
-		if ( n != null )
+		if ( node != null )
 		{
-			historySize = n.size;
-			n = createIntermediateNodes( component.getEvaluationNode(), value, delta, minimaProcessor );
-			ancestors.add( n );
-			n.setSuccessor( this );
+			historySize = node.size;
+			node = createIntermediateNodes( component.getEvaluationNode(), value, delta, minimaProcessor );
+			ancestors.add( node );
+			node.setSuccessor( this );
 		}
 
-		SimpleMserEvaluationNode< T > historyWinner = n;
+		SimpleMserEvaluationNode< T > historyWinner = node;
 		for ( SimpleMserComponent< T > c : component.getAncestors() )
 		{
-			n = createIntermediateNodes( c.getEvaluationNode(), component.getValue().getIntegerLong(), delta, minimaProcessor );
-			ancestors.add( n );
-			n.setSuccessor( this );
+			node = createIntermediateNodes( c.getEvaluationNode(), component.getValue().getIntegerLong(), delta, minimaProcessor );
+			ancestors.add( node );
+			node.setSuccessor( this );
 			if ( c.getSize() > historySize )
 			{
-				historyWinner = n;
+				historyWinner = node;
 				historySize = c.getSize();
 			}
 		}
@@ -74,7 +78,20 @@ public final class SimpleMserEvaluationNode< T extends IntegerType< T > >
 			locations = null;
 			componentId = 0;
 		}
-		
+
+		n = component.n;
+		mean = new double[ n ];
+		cov = new double[ ( n * (n+1) ) / 2 ];
+		for ( int i = 0; i < n; ++i )
+			mean[ i ] = component.sumPos[ i ] / size;
+		int k = 0;
+		for ( int i = 0; i < n; ++i )
+			for ( int j = i; j < n; ++j )
+			{
+				cov[ k ] = component.sumSquPos[ k ] / size - mean[ i ] * mean[ j ];
+				++k;
+			}
+
 		component.setEvaluationNode( this );
 		isScoreValid = computeMserScore( delta );
 		if ( isScoreValid )
@@ -91,6 +108,9 @@ public final class SimpleMserEvaluationNode< T extends IntegerType< T > >
 		historyAncestor = ancestor;
 		size = ancestor.size;
 		this.value = value;
+		n = ancestor.n;
+		mean = ancestor.mean;
+		cov = ancestor.cov;
 
 		if ( verbose )
 		{
@@ -158,7 +178,7 @@ public final class SimpleMserEvaluationNode< T extends IntegerType< T > >
 	{
 		if ( isScoreValid && historyAncestor.isScoreValid )
 			if ( ( score <= historyAncestor.score ) && ( score < successor.score ) )
-				minimaProcessor.foundNewMinimum( this );
+				minimaProcessor.foundNewMinimum( this );				
 	}
 
 	@Override
