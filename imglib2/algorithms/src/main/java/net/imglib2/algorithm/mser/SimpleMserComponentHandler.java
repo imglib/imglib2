@@ -3,8 +3,8 @@ package net.imglib2.algorithm.mser;
 import net.imglib2.type.numeric.IntegerType;
 
 public class SimpleMserComponentHandler< T extends IntegerType< T > >
-		implements ComponentGenerator< T, SimpleMserComponent< T > >,
-		ComponentHandler< SimpleMserComponent< T > >
+		implements Component.Generator< T, SimpleMserComponent< T > >,
+		Component.Handler< SimpleMserComponent< T > >
 {
 	public interface SimpleMserProcessor< T extends IntegerType< T > >
 	{

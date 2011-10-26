@@ -2,7 +2,7 @@ package net.imglib2.algorithm.mser;
 
 import net.imglib2.type.Type;
 
-public class PixelListComponentGenerator< T extends Type< T > > implements ComponentGenerator< T, PixelListComponent< T > >
+public class PixelListComponentGenerator< T extends Type< T > > implements Component.Generator< T, PixelListComponent< T > >
 {
 	final T maxValue;
 	

@@ -2,7 +2,7 @@ package net.imglib2.algorithm.mser;
 
 import net.imglib2.type.numeric.IntegerType;
 
-public class MserComponentGenerator< T extends IntegerType< T > > implements ComponentGenerator< T, MserComponent< T > >
+public class MserComponentGenerator< T extends IntegerType< T > > implements Component.Generator< T, MserComponent< T > >
 {
 	final T maxValue;
 	

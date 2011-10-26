@@ -3,83 +3,50 @@ package net.imglib2.algorithm.mser;
 import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.PriorityQueue;
+import java.util.Set;
 
-import net.imglib2.Cursor;
 import net.imglib2.Localizable;
+import net.imglib2.Location;
 import net.imglib2.Positionable;
 import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessible;
 import net.imglib2.RandomAccessibleInterval;
-import net.imglib2.img.Img;
 import net.imglib2.img.ImgFactory;
 import net.imglib2.img.array.ArrayImgFactory;
 import net.imglib2.type.Type;
 import net.imglib2.type.logic.BitType;
-import net.imglib2.type.numeric.integer.IntType;
 
 public final class ComponentTree< T extends Comparable< T > & Type< T >, C extends Component< T > >
 {
-	final RandomAccessibleInterval< T > input;
-
-	final ComponentGenerator< T, C > componentGenerator;
-	
-	final ComponentHandler< C > componentOutput;
- 
-	final long[] dimensions;
-
-	final RandomAccessible< BitType > accessiblePixels;
-
-	final PriorityQueue< BoundaryPixel< T > > boundaryPixels;
-
-	final Deque< C > componentStack;
-
-	public ComponentTree( final RandomAccessibleInterval< T > input, final ComponentGenerator< T, C > componentGenerator, final ComponentHandler< C > componentOutput )
+	/**
+	 * Iterate pixel positions in 4-neighborhood.
+	 */
+	private final class Neighborhood
 	{
-		this.input = input;
-		this.componentGenerator = componentGenerator;
-		this.componentOutput = componentOutput;
-
-		// final long[] dimensions = new long[ input.numDimensions() ];
-		dimensions = new long[ input.numDimensions() ];
-		input.dimensions( dimensions );
-
-		ImgFactory< BitType > imgFactory = new ArrayImgFactory< BitType >();
-		accessiblePixels = imgFactory.create( dimensions, new BitType() );
-
-		boundaryPixels = new PriorityQueue< BoundaryPixel< T > >();
-
-		componentStack = new ArrayDeque< C >();
-		componentStack.push( componentGenerator.createMaxComponent() );
-	}
-	
-	void markAccessible( final Localizable position )
-	{
-		RandomAccess< BitType > accessiblePixelsRA = accessiblePixels.randomAccess();
-		accessiblePixelsRA.setPosition( position );
-		accessiblePixelsRA.get().set( true );
-	}
-
-	boolean isAccessible( final Localizable position )
-	{
-		RandomAccess< BitType > accessiblePixelsRA = accessiblePixels.randomAccess();
-		accessiblePixelsRA.setPosition( position );
-		return accessiblePixelsRA.get().get();
-	}
-	
-	public final class Neighborhood
-	{
+		/**
+		 * index of the next neighbor to visit.
+		 * 0 is pixel at x-1,
+		 * 1 is pixel at x+1,
+		 * 2 is pixel at y-1,
+		 * 3 is pixel at y+1, and so on.
+		 */
 		private int n;
-		private final int nBound;
-
-		public Neighborhood()
-		{
-			this( 0 );
-		}
 		
-		public Neighborhood( int nextNeighborIndex )
+		/**
+		 * number of neighbors, e.g., 4 for 2d images.
+		 */
+		private final int nBound;
+		
+		/**
+		 * image dimensions. used to check out-of-bounds.
+		 */
+		final long[] dimensions;
+
+		public Neighborhood( final long[] dim )
 		{
-			n = nextNeighborIndex;
-			nBound = input.numDimensions() * 2;
+			n = 0;
+			nBound = dim.length * 2;
+			dimensions = dim;
 		}
 		
 		public int getNextNeighborIndex()
@@ -102,9 +69,15 @@ public final class ComponentTree< T extends Comparable< T > & Type< T >, C exten
 			return n < nBound;
 		}
 
-		// return false if the neighbor pixel is out of the image
+		/**
+		 * Set neighbor to the next (according to {@link ComponentTree.Neighborhood#n}) neighbor position of current.
+		 * @param current
+		 * @param neighbor
+		 * @return false if the neighbor position is out of bounds, true otherwise.
+		 */
 		public boolean next( final Localizable current, final Positionable neighbor )
 		{
+			// TODO: can setting full position be avoided?
 			neighbor.setPosition( current );
 			final int d = n / 2;
 			if ( n % 2 == 0 )
@@ -122,61 +95,136 @@ public final class ComponentTree< T extends Comparable< T > & Type< T >, C exten
 		}
 	}
 
-	public void run()
+	/**
+	 * A pixel position on the heap of boundary pixels to be processed next.
+	 * The heap is sorted by pixel values.
+	 */
+	private final class BoundaryPixel extends Location implements Comparable< BoundaryPixel >
+	{
+		private final T value;	
+
+		// TODO: this should be some kind of iterator over the neighborhood
+		private final int nextNeighborIndex;
+
+		public BoundaryPixel( final Localizable position, final T value, int nextNeighborIndex )
+		{
+			super( position );
+			this.nextNeighborIndex = nextNeighborIndex;
+			this.value = value.copy();
+		}
+
+		public int getNextNeighborIndex()
+		{
+			return nextNeighborIndex;
+		}
+
+		public T get()
+		{
+			return value;
+		}
+		
+		@Override
+		public int compareTo( BoundaryPixel o )
+		{
+			return value.compareTo( o.value );
+		}
+	}
+
+	private final Component.Generator< T, C > componentGenerator;
+	
+	private final Component.Handler< C > componentOutput;
+ 
+	private final Neighborhood neighborhood;
+
+	private final RandomAccessible< BitType > visited;
+
+	private final RandomAccess< BitType > visitedRandomAccess;
+
+	private final PriorityQueue< BoundaryPixel > boundaryPixels;
+
+	private final Deque< C > componentStack;
+
+	public ComponentTree( final RandomAccessibleInterval< T > input, final Component.Generator< T, C > componentGenerator, final Component.Handler< C > componentOutput )
+	{
+		this.componentGenerator = componentGenerator;
+		this.componentOutput = componentOutput;
+
+		final long[] dimensions = new long[ input.numDimensions() ];
+		input.dimensions( dimensions );
+
+		ImgFactory< BitType > imgFactory = new ArrayImgFactory< BitType >();
+		visited = imgFactory.create( dimensions, new BitType() );
+		visitedRandomAccess = visited.randomAccess();
+
+		neighborhood = new Neighborhood( dimensions );
+
+		boundaryPixels = new PriorityQueue< BoundaryPixel >();
+
+		componentStack = new ArrayDeque< C >();
+		componentStack.push( componentGenerator.createMaxComponent() );
+		
+		run( input );
+	}
+	
+	private void visit( final Localizable position )
+	{
+		visitedRandomAccess.setPosition( position );
+		visitedRandomAccess.get().set( true );
+	}
+
+	private boolean wasVisited( final Localizable position )
+	{
+		visitedRandomAccess.setPosition( position );
+		return visitedRandomAccess.get().get();
+	}
+	
+
+	private void run( final RandomAccessibleInterval< T > input )
 	{
 		RandomAccess< T > current = input.randomAccess();
 		RandomAccess< T > neighbor = input.randomAccess();
-		final Neighborhood n = new Neighborhood();
 		input.min( current );
 		T currentLevel = current.get().createVariable();
 		T neighborLevel = current.get().createVariable();
 
 		// step 2
-		markAccessible( current );
+		visit( current );
 		currentLevel.set( current.get() );
 		
 		// step 3
 		componentStack.push( componentGenerator.createComponent( currentLevel ) );
 		
 		// step 4
-		//for ( int i = 0; i < 3; ++i )
 		while ( true )
 		{
-			//double pos[] = new double[2];
-			//current.localize( pos ); System.out.println("current (" + pos[0] + ", " + pos[1] + ")"); System.out.println("currentLevel = " + currentLevel );
-			while ( n.hasNext() )
+			while ( neighborhood.hasNext() )
 			{
-				if ( ! n.next( current, neighbor ) )
+				if ( ! neighborhood.next( current, neighbor ) )
 					continue;
-				if ( ! isAccessible( neighbor ) )
+				if ( ! wasVisited( neighbor ) )
 				{
-					markAccessible( neighbor );
+					visit( neighbor );
 					neighborLevel.set( neighbor.get() );
-					//neighbor.localize( pos ); System.out.println("neighbor (" + pos[0] + ", " + pos[1] + ")"); System.out.println("neighborLevel = " + neighborLevel );
 					if ( neighborLevel.compareTo( currentLevel ) >= 0 )
 					{
-						boundaryPixels.add( new BoundaryPixel< T >( neighbor, neighborLevel, 0 ) );
+						boundaryPixels.add( new BoundaryPixel( neighbor, neighborLevel, 0 ) );
 					}
 					else
 					{
-						boundaryPixels.add( new BoundaryPixel< T >( current, currentLevel, n.getNextNeighborIndex() ) );
+						boundaryPixels.add( new BoundaryPixel( current, currentLevel, neighborhood.getNextNeighborIndex() ) );
 						current.setPosition( neighbor );
 						currentLevel.set( neighborLevel );
-						//current.localize( pos ); System.out.println("current (" + pos[0] + ", " + pos[1] + ")"); System.out.println("currentLevel = " + currentLevel );
 	
 						// go to 3, i.e.:
 						componentStack.push( componentGenerator.createComponent( currentLevel ) );
-						//System.out.println( " push new = " + componentStack.peek() );
-						n.reset();
+						neighborhood.reset();
 					}
 				}
 			}
 			
 			// step 5
-			//showComponentStack("step 5");
 			C component = componentStack.peek(); // TODO: no need to peek(), just keep it in local variable when it's created 
 			component.addPosition( current );
-			//System.out.println( "top component = " + component );
 			
 			// step 6
 			if ( boundaryPixels.isEmpty() )
@@ -186,7 +234,7 @@ public final class ComponentTree< T extends Comparable< T > & Type< T >, C exten
 				return;
 			}
 			
-			BoundaryPixel< T > p = boundaryPixels.poll();
+			BoundaryPixel p = boundaryPixels.poll();
 			if ( p.get().compareTo( currentLevel ) != 0 )
 			{
 				// step 7
@@ -194,15 +242,8 @@ public final class ComponentTree< T extends Comparable< T > & Type< T >, C exten
 			}
 			current.setPosition( p );
 			currentLevel.set( p.get() );
-			n.setNextNeighborIndex( p.getNextNeighborIndex() );
+			neighborhood.setNextNeighborIndex( p.getNextNeighborIndex() );
 		}
-	}
-	
-	protected void showComponentStack( String msg )
-	{
-		System.out.println(msg);
-		for ( C c : componentStack )
-			System.out.println( c );
 	}
 	
 	/**
@@ -210,11 +251,10 @@ public final class ComponentTree< T extends Comparable< T > & Type< T >, C exten
 	 * 
 	 * @param value
 	 */
-	protected void processStack( T value )
+	private void processStack( T value )
 	{
 		while (true)
 		{
-//			showComponentStack("stack before:");
 			// process component on top of stack
 			C component = componentStack.pop();
 			componentOutput.emit( component );
@@ -224,67 +264,16 @@ public final class ComponentTree< T extends Comparable< T > & Type< T >, C exten
 			final int c = value.compareTo( secondComponent.getValue() );
 			if ( c < 0 )
 			{
-//				System.out.println("(raise component " + ( ( PixelListComponent< T > ) component).id + " to level " + value + ")");
 				component.setValue( value );
 				componentStack.push( component );
 			}
 			else
 			{
-//				System.out.println("(merge component " + ( ( PixelListComponent< T > ) component).id + " into " + ( ( PixelListComponent< T > ) secondComponent).id + ")");
 				secondComponent.merge( component );
 				if ( c > 0 )
 					continue;
 			}
-//			showComponentStack("stack after:");
 			return;
 		}
 	}
-	
-	// -------------------------------------------------------------------------------
-
-	public static final int[][] testData = new int[][] {
-		{ 8, 7, 6, 7, 1 },
-		{ 8, 8, 5, 8, 1 },
-		{ 2, 3, 4, 3, 2 },
-		{ 1, 8, 3, 8, 1 },
-		{ 1, 2, 2, 2, 1 } };
-
-//	public static final int[][] testData = new int[][] {
-//		{ 4, 1, 0, 1, 4 },
-//		{ 2, 1, 3, 4, 5 },
-//		{ 1, 0, 2, 1, 2 },
-//		{ 3, 1, 2, 0, 1 },
-//		{ 3, 3, 3, 3, 2 } };
-
-//	public static final int[][] testData = new int[][] {
-//		{ 0, 9, 0, 1, 4, 0, 2 },
-//		{ 8, 9, 3, 4, 5, 0, 3 },
-//		{ 7, 0, 3, 1, 2, 0, 4 },
-//		{ 5, 1, 5, 5, 5, 5, 5 },
-//		{ 7, 1, 2, 3, 4, 5, 6 },
-//		{ 3, 3, 1, 0, 1, 5, 1 },
-//		{ 3, 3, 0, 8, 2, 1, 1 } };
-
-	public static void main( String[] args )
-	{
-		final long[] dimensions = new long[] { testData[ 0 ].length, testData.length };
-		ImgFactory< IntType > imgFactory = new ArrayImgFactory< IntType >();
-		Img< IntType > input = imgFactory.create( dimensions, new IntType() );
-
-		// fill input image with test data
-		int[] pos = new int[ 2 ];
-		Cursor< IntType > c = input.localizingCursor();
-		while ( c.hasNext() )
-		{
-			c.fwd();
-			c.localize( pos );
-			c.get().set( testData[ pos[ 1 ] ][ pos[ 0 ] ] );
-		}
-
-		final PixelListComponentGenerator< IntType > generator = new PixelListComponentGenerator< IntType >( new IntType( Integer.MAX_VALUE ) );
-		final PixelListComponentHandler< IntType > handler = new PixelListComponentHandler< IntType >( dimensions );
-		final ComponentTree< IntType, PixelListComponent< IntType > > tree = new ComponentTree< IntType, PixelListComponent< IntType > >( input, generator, handler );
-		tree.run();
-	}
-
 }

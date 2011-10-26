@@ -3,7 +3,7 @@ package net.imglib2.algorithm.mser;
 import net.imglib2.Localizable;
 import net.imglib2.type.Type;
 
-public class PixelListComponentHandler< T extends Type< T > > implements ComponentHandler< PixelListComponent< T > >
+public class PixelListComponentHandler< T extends Type< T > > implements Component.Handler< PixelListComponent< T > >
 {
 	final long[] dimensions;
 

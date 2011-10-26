@@ -2,7 +2,7 @@ package net.imglib2.algorithm.mser;
 
 import net.imglib2.type.numeric.IntegerType;
 
-public class MserComponentHandler< T extends IntegerType< T > > implements ComponentHandler< MserComponent< T > >, MserProcessor< T >
+public class MserComponentHandler< T extends IntegerType< T > > implements Component.Handler< MserComponent< T > >, MserProcessor< T >
 {
 	final T delta;
 	final MserProcessor< T > p;

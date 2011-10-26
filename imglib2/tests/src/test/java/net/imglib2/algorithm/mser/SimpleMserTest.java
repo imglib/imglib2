@@ -140,8 +140,7 @@ public class SimpleMserTest< T extends IntegerType< T > > implements SimpleMserP
 		//SimpleMserTest< IntType > procNewMser = new SimpleMserTest< IntType >( impImg, stack, w, h );
 		SimpleMserFilter< IntType > procNewMser = new SimpleMserFilter< IntType >( minSize, maxSize, maxVar, new SimpleMserTest< IntType >( impImg, stack, w, h ) );
 		final SimpleMserComponentHandler< IntType > handler = new SimpleMserComponentHandler< IntType >( img.numDimensions(), new IntType( Integer.MAX_VALUE ), delta, procNewMser );
-		final ComponentTree< IntType, SimpleMserComponent< IntType > > tree = new ComponentTree< IntType, SimpleMserComponent< IntType > >( img, handler, handler );
-		tree.run();
+		new ComponentTree< IntType, SimpleMserComponent< IntType > >( img, handler, handler );
 		ImagePlus imp = new ImagePlus("components", stack);
 		imp.show();
 	}
