@@ -1,72 +1,92 @@
 package net.imglib2.algorithm.mser;
 
-import java.util.ArrayList;
+import java.util.Iterator;
 
 import net.imglib2.Localizable;
-import net.imglib2.Location;
+import net.imglib2.Point;
+import net.imglib2.RandomAccess;
 import net.imglib2.type.Type;
+import net.imglib2.type.numeric.integer.LongType;
+import net.imglib2.util.IntervalIndexer;
 
-public class PixelListComponent< T extends Type< T > > implements Component< T >
+public class PixelListComponent< T extends Type< T > > implements Component< T >, Iterable< Localizable >
 {
 	private static int idGen = 0;
 	
 	final int id;
 	
- 	ArrayList< Localizable > locations;
+	private long headIndex;
+	
+	private final long[] tailPos;
+	
+	private final RandomAccess< LongType > locationsAccess;
+
+	private final long[] dimensions;
 	
 	T value;
 
-	public PixelListComponent()
+	long size;
+		
+	public PixelListComponent( final T value, final PixelListComponentGenerator< T > generator )
 	{
 		id = idGen++;
-	}
-	
-	public PixelListComponent( final T value )
-	{
-		this();
-		this.locations = new ArrayList< Localizable >();
+		locationsAccess = generator.linkedList.randomAccess();
+		headIndex = 0;
+		size = 0;
+		dimensions = generator.dimensions;
+		tailPos = new long[ dimensions.length ];
 		this.value = value.copy();
 	}
 	
-	/* (non-Javadoc)
-	 * @see net.imglib2.algorithm.mser.Component#addPosition(net.imglib2.Localizable)
-	 */
 	@Override
 	public void addPosition( final Localizable position )
 	{
-		locations.add( new Location( position ) );
+		if ( size == 0 )
+		{
+			position.localize( tailPos );
+			final long i = IntervalIndexer.positionToIndex( tailPos, dimensions );
+			headIndex = i;
+		}
+		else
+		{
+			locationsAccess.setPosition( tailPos );
+			position.localize( tailPos );
+			final long i = IntervalIndexer.positionToIndex( tailPos, dimensions );
+			locationsAccess.get().set( i );
+		}		
+		++size;
 	}
 	
-	/* (non-Javadoc)
-	 * @see net.imglib2.algorithm.mser.Component#get()
-	 */
 	@Override
 	public T getValue()
 	{
 		return value;
 	}
 	
-	/* (non-Javadoc)
-	 * @see net.imglib2.algorithm.mser.Component#setValue(T)
-	 */
 	@Override
 	public void setValue( final T value )
 	{
 		this.value.set( value );
 	}
 	
-	/* (non-Javadoc)
-	 * @see net.imglib2.algorithm.mser.Component#merge(net.imglib2.algorithm.mser.ComponentInfo)
-	 */
 	@Override
 	public void merge( final Component< T > component )
 	{
 		final PixelListComponent< T > c = ( PixelListComponent< T > ) component;
-
-		for ( Localizable l : c.locations )
+		if ( size == 0 )
 		{
-			addPosition( l );
+			headIndex = c.headIndex;
+			for ( int i = 0; i < tailPos.length; ++i )
+				tailPos[i] = c.tailPos[i];
 		}
+		else
+		{
+			locationsAccess.setPosition( tailPos );
+			locationsAccess.get().set( c.headIndex );
+			for ( int i = 0; i < tailPos.length; ++i )
+				tailPos[i] = c.tailPos[i];
+		}
+		size += c.size;
 	}
 
 	@Override
@@ -74,7 +94,7 @@ public class PixelListComponent< T extends Type< T > > implements Component< T >
 	{
 		String s = "{" + value.toString() + " : id=" + id + " : ";
 		boolean first = true;
-		for ( Localizable l : locations )
+		for ( Localizable l : this )
 		{
 			if ( first )
 			{
@@ -87,5 +107,47 @@ public class PixelListComponent< T extends Type< T > > implements Component< T >
 			s += l.toString();
 		}
 		return s + "}";
+	}
+	
+	public class PixelListIterator implements Iterator< Localizable >
+	{
+		private long i;
+		private long nextIndex;
+		private final long[] tmp;
+		private final Point pos;
+		
+		public PixelListIterator()
+		{
+			i = 0;
+			nextIndex = headIndex;
+			tmp = new long[ dimensions.length ];
+			pos = new Point( dimensions.length );
+		}
+		
+		@Override
+		public boolean hasNext()
+		{
+			return i < size;
+		}
+
+		@Override
+		public Localizable next()
+		{
+			++i;
+			IntervalIndexer.indexToPosition( nextIndex, dimensions, tmp );
+			pos.setPosition( tmp );
+			locationsAccess.setPosition( tmp );
+			nextIndex = locationsAccess.get().get();
+			return pos;
+		}
+
+		@Override
+		public void remove() {}
+	}
+
+	@Override
+	public Iterator< Localizable > iterator()
+	{
+		return new PixelListIterator();
 	}
 }

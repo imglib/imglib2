@@ -24,7 +24,7 @@ public class PixelListComponentHandler< T extends Type< T > > implements Compone
 			for ( int c = 0; c < dimensions[0]; ++c )
 			{
 				boolean set = false;
-				for ( Localizable l : component.locations )
+				for ( Localizable l : component )
 					if( l.getIntPosition( 0 ) == c && l.getIntPosition( 1 ) == r )
 						set = true;
 				System.out.print( set ? "x " : ". " );

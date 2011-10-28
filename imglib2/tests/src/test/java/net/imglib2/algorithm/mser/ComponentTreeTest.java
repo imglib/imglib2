@@ -1,10 +1,12 @@
 package net.imglib2.algorithm.mser;
 
 import net.imglib2.Cursor;
+import net.imglib2.exception.IncompatibleTypeException;
 import net.imglib2.img.Img;
 import net.imglib2.img.ImgFactory;
 import net.imglib2.img.array.ArrayImgFactory;
 import net.imglib2.type.numeric.integer.IntType;
+import net.imglib2.type.numeric.integer.LongType;
 
 public class ComponentTreeTest
 {
@@ -47,8 +49,15 @@ public class ComponentTreeTest
 			c.get().set( testData[ pos[ 1 ] ][ pos[ 0 ] ] );
 		}
 
-		final PixelListComponentGenerator< IntType > generator = new PixelListComponentGenerator< IntType >( new IntType( Integer.MAX_VALUE ) );
-		final PixelListComponentHandler< IntType > handler = new PixelListComponentHandler< IntType >( dimensions );
-		new ComponentTree< IntType, PixelListComponent< IntType > >( input, generator, handler );
+		try
+		{
+			PixelListComponentGenerator< IntType > generator = new PixelListComponentGenerator< IntType >( new IntType( Integer.MAX_VALUE ), input, imgFactory.imgFactory( new LongType() ) );
+			final PixelListComponentHandler< IntType > handler = new PixelListComponentHandler< IntType >( dimensions );
+			new ComponentTree< IntType, PixelListComponent< IntType > >( input, generator, handler );
+		}
+		catch ( IncompatibleTypeException e )
+		{
+			e.printStackTrace();
+		}
 	}
 }
