@@ -6,7 +6,6 @@ import ij.ImagePlus;
 import ij.ImageStack;
 import ij.gui.EllipseRoi;
 import ij.gui.Overlay;
-import ij.gui.PointRoi;
 import ij.process.ByteProcessor;
 import net.imglib2.Cursor;
 import net.imglib2.Localizable;
@@ -18,6 +17,7 @@ import net.imglib2.img.display.imagej.ImageJFunctions;
 import net.imglib2.io.ImgOpener;
 import net.imglib2.type.numeric.IntegerType;
 import net.imglib2.type.numeric.integer.IntType;
+import net.imglib2.type.numeric.integer.LongType;
 
 public class SimpleMserTest< T extends IntegerType< T > > implements SimpleMserProcessor< T >
 {
@@ -66,7 +66,7 @@ public class SimpleMserTest< T extends IntegerType< T > > implements SimpleMserP
 
 		ByteProcessor byteProcessor = new ByteProcessor( w, h );
 		byte[] pixels = ( byte[] )byteProcessor.getPixels();
-		for ( Localizable l : node.locations )
+		for ( Localizable l : node.pixelList )
 		{
 			int x = l.getIntPosition( 0 );
 			int y = l.getIntPosition( 1 );
@@ -105,7 +105,7 @@ public class SimpleMserTest< T extends IntegerType< T > > implements SimpleMserP
 			{
 				ImgFactory< IntType > imgFactory = new ArrayImgFactory< IntType >();
 				final ImgOpener io = new ImgOpener();
-				img = io.openImg( "/home/tobias/workspace/data/img2.tif", imgFactory, new IntType() );
+				img = io.openImg( "/home/tobias/workspace/data/img1.tif", imgFactory, new IntType() );
 			}
 			catch ( Exception e )
 			{
@@ -139,7 +139,7 @@ public class SimpleMserTest< T extends IntegerType< T > > implements SimpleMserP
 		ImageStack stack = new ImageStack( w, h );
 		//SimpleMserTest< IntType > procNewMser = new SimpleMserTest< IntType >( impImg, stack, w, h );
 		SimpleMserFilter< IntType > procNewMser = new SimpleMserFilter< IntType >( minSize, maxSize, maxVar, new SimpleMserTest< IntType >( impImg, stack, w, h ) );
-		final SimpleMserComponentHandler< IntType > handler = new SimpleMserComponentHandler< IntType >( img.numDimensions(), new IntType( Integer.MAX_VALUE ), delta, procNewMser );
+		final SimpleMserComponentHandler< IntType > handler = new SimpleMserComponentHandler< IntType >( new IntType( Integer.MAX_VALUE ), img, new ArrayImgFactory< LongType >(), delta, procNewMser );
 		new ComponentTree< IntType, SimpleMserComponent< IntType > >( img, handler, handler );
 		ImagePlus imp = new ImagePlus("components", stack);
 		imp.show();

@@ -1,6 +1,10 @@
 package net.imglib2.algorithm.mser;
 
+import net.imglib2.RandomAccessibleInterval;
+import net.imglib2.img.Img;
+import net.imglib2.img.ImgFactory;
 import net.imglib2.type.numeric.IntegerType;
+import net.imglib2.type.numeric.integer.LongType;
 
 public class SimpleMserComponentHandler< T extends IntegerType< T > >
 		implements Component.Generator< T, SimpleMserComponent< T > >,
@@ -21,26 +25,30 @@ public class SimpleMserComponentHandler< T extends IntegerType< T > >
 	
 	final long delta;
 	
-	final int n;
+	final long[] dimensions;
 	
-	public SimpleMserComponentHandler( final int numDimensions, final T maxValue, final long delta, final SimpleMserProcessor< T > procNewMser )
+	final Img< LongType > linkedList;
+
+	public SimpleMserComponentHandler( final T maxValue, final RandomAccessibleInterval< T > input, final ImgFactory< LongType > imgFactory, final long delta, final SimpleMserProcessor< T > procNewMser )
 	{
 		this.maxValue = maxValue;
 		this.delta = delta;
-		this.n = numDimensions;
 		this.procNewMser = procNewMser;
+		dimensions = new long[ input.numDimensions() ];
+		input.dimensions( dimensions );
+		linkedList = imgFactory.create( dimensions, new LongType() );
 	}
 
 	@Override
 	public SimpleMserComponent< T > createComponent( T value )
 	{
-		return new SimpleMserComponent< T >( value, n );
+		return new SimpleMserComponent< T >( value, this );
 	}
 
 	@Override
 	public SimpleMserComponent< T > createMaxComponent()
 	{
-		return new SimpleMserComponent< T >( maxValue, n );
+		return new SimpleMserComponent< T >( maxValue, this );
 	}
 
 	@Override

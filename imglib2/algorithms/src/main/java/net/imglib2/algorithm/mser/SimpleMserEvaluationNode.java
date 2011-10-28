@@ -7,8 +7,6 @@ import net.imglib2.type.numeric.IntegerType;
 
 public final class SimpleMserEvaluationNode< T extends IntegerType< T > >
 {
-	public static final boolean verbose = true;
-
 	/**
 	 * Threshold value of the connected component.
 	 */
@@ -18,6 +16,8 @@ public final class SimpleMserEvaluationNode< T extends IntegerType< T > >
 	 * Size (number of pixels) of the connected component.
 	 */
 	public final long size;
+
+	public final PixelList pixelList;
 
 	public final ArrayList< SimpleMserEvaluationNode< T > > ancestors;
 	public final SimpleMserEvaluationNode< T > historyAncestor;
@@ -33,14 +33,11 @@ public final class SimpleMserEvaluationNode< T extends IntegerType< T > >
 	public double[] mean; // mean of region (x, y, z, ...)
 	public double[] cov; // independent elements of covariance of region (xx, xy, xz, ..., yy, yz, ..., zz, ...)
 
-	//for verbose output:
-	public final ArrayList< Localizable > locations;
-	public final int componentId;
-
 	public SimpleMserEvaluationNode( final SimpleMserComponent< T > component, final long delta, final SimpleMserComponentHandler.SimpleMserProcessor< T > minimaProcessor )
 	{
 		value = component.getValue().getIntegerLong();
-		size = component.getSize();
+		pixelList = new PixelList( component.pixelList );
+		size = pixelList.size();
 
 		ancestors = new ArrayList< SimpleMserEvaluationNode< T > >();
 		SimpleMserEvaluationNode< T > node = component.getEvaluationNode();
@@ -68,17 +65,6 @@ public final class SimpleMserEvaluationNode< T extends IntegerType< T > >
 		
 		historyAncestor = historyWinner;
 		
-		if ( verbose )
-		{
-			locations = getLocationsFromComponent( component );
-			componentId = component.id;
-		}
-		else
-		{
-			locations = null;
-			componentId = 0;
-		}
-
 		n = component.n;
 		mean = new double[ n ];
 		cov = new double[ ( n * (n+1) ) / 2 ];
@@ -107,44 +93,28 @@ public final class SimpleMserEvaluationNode< T extends IntegerType< T > >
 
 		historyAncestor = ancestor;
 		size = ancestor.size;
+		pixelList = ancestor.pixelList;
 		this.value = value;
 		n = ancestor.n;
 		mean = ancestor.mean;
 		cov = ancestor.cov;
-
-		if ( verbose )
-		{
-			locations = ancestor.locations;
-			componentId = ancestor.componentId;
-		}
-		else
-		{
-			locations = null;
-			componentId = 0;
-		}
 
 		isScoreValid = computeMserScore( delta );
 		if ( isScoreValid )
 			ancestor.evaluateLocalMinimum( minimaProcessor );
 	}
 
-	@SuppressWarnings( "unchecked" )
-	private ArrayList< Localizable > getLocationsFromComponent( final SimpleMserComponent< T > component )
-	{
-		return ( ArrayList< Localizable > ) component.locations.clone();
-	}
-
 	private SimpleMserEvaluationNode< T > createIntermediateNodes( final SimpleMserEvaluationNode< T > fromNode, final long toValue, final long delta, final SimpleMserComponentHandler.SimpleMserProcessor< T > minimaProcessor )
 	{
-		SimpleMserEvaluationNode< T > n = fromNode;
-		for ( long v = n.value + 1; v < toValue; ++v )
-			n = new SimpleMserEvaluationNode< T >( n, v, delta, minimaProcessor );
-		return n;
+		SimpleMserEvaluationNode< T > node = fromNode;
+		for ( long v = node.value + 1; v < toValue; ++v )
+			node = new SimpleMserEvaluationNode< T >( node, v, delta, minimaProcessor );
+		return node;
 	}
 
-	private void setSuccessor( SimpleMserEvaluationNode< T > n )
+	private void setSuccessor( SimpleMserEvaluationNode< T > node )
 	{
-		successor = n;
+		successor = node;
 	}
 
 	/**
@@ -157,13 +127,13 @@ public final class SimpleMserEvaluationNode< T extends IntegerType< T > >
 		// we are looking for a precursor node with value == (this.value - delta)
 		final long valueMinus = value - delta;
 		// go back in history until we find a node with (value == valueMinus)
-		SimpleMserEvaluationNode< T > n = historyAncestor;
-		while ( n != null  &&  n.value > valueMinus )
-			n = n.historyAncestor;
-		if ( n == null )
+		SimpleMserEvaluationNode< T > node = historyAncestor;
+		while ( node != null  &&  node.value > valueMinus )
+			node = node.historyAncestor;
+		if ( node == null )
 			// we cannot compute the mser score because the history is too short.
 			return false;
-		score = ( size - n.size ) / ( ( double ) size );
+		score = ( size - node.size ) / ( ( double ) size );
 		return true;		
 	}
 
@@ -184,30 +154,25 @@ public final class SimpleMserEvaluationNode< T extends IntegerType< T > >
 	@Override
 	public String toString()
 	{
-		if ( verbose )
+		String s = "SimpleMserEvaluationNode";
+		s += ", size = " + size;
+		s += ", history = [";
+		SimpleMserEvaluationNode< T > node = historyAncestor;
+		boolean first = true;
+		while ( node != null )
 		{
-			String s = "SimpleMserEvaluationNode constructed from component " + componentId;
-			s += ", size=" + size;
-			s += ", history = [";
-			SimpleMserEvaluationNode< T > n = historyAncestor;
-			boolean first = true;
-			while ( n != null )
-			{
-				if ( first )
-					first = false;
-				else
-					s += ", ";	
-				s += "(" + n.value + "; " + n.size;
-				if ( n.isScoreValid )
-					s += " s " + n.score + ")";
-				else
-					s += " s --)";
-				n = n.historyAncestor;
-			}
-			s += "]";
-			return s;
+			if ( first )
+				first = false;
+			else
+				s += ", ";	
+			s += "(" + node.value + "; " + node.size;
+			if ( node.isScoreValid )
+				s += " s " + node.score + ")";
+			else
+				s += " s --)";
+			node = node.historyAncestor;
 		}
-		else
-			return super.toString();
+		s += "]";
+		return s;
 	}
 }

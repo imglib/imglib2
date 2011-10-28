@@ -3,7 +3,6 @@ package net.imglib2.algorithm.mser;
 import java.util.ArrayList;
 
 import net.imglib2.Localizable;
-import net.imglib2.Location;
 import net.imglib2.type.numeric.IntegerType;
 
 public final class SimpleMserComponent< T extends IntegerType< T > > implements Component< T >
@@ -12,7 +11,7 @@ public final class SimpleMserComponent< T extends IntegerType< T > > implements 
 	
 	final int id;
 	
- 	final ArrayList< Localizable > locations;
+	PixelList pixelList;
 	
 	/**
 	 * number of dimensions in the image.
@@ -23,8 +22,6 @@ public final class SimpleMserComponent< T extends IntegerType< T > > implements 
 	final double[] sumSquPos; // sum of independent elements of outer product of position (xx, xy, xz, ..., yy, yz, ..., zz, ...)
 
 	final T value;
-	
-	long size;
 	
 	final private long[] tmp;
 
@@ -40,15 +37,14 @@ public final class SimpleMserComponent< T extends IntegerType< T > > implements 
 	 */
 	SimpleMserEvaluationNode< T > evaluationNode;
 
-	public SimpleMserComponent( final T value, final int numDimensions )
+	public SimpleMserComponent( final T value, final SimpleMserComponentHandler< T > handler )
 	{
 		id = idGen++;
-		this.locations = new ArrayList< Localizable >();
-		this.n = numDimensions;
+		pixelList = new PixelList( handler.linkedList.randomAccess(), handler.dimensions );
+		n = handler.dimensions.length;
 		sumPos = new double[ n ];
 		sumSquPos = new double[ ( n * (n+1) ) / 2 ];
 		this.value = value.copy();
-		this.size = 0;
 		this.ancestors = new ArrayList< SimpleMserComponent< T > >();
 		this.evaluationNode = null;
 		tmp = new long[ n ];
@@ -57,8 +53,7 @@ public final class SimpleMserComponent< T extends IntegerType< T > > implements 
 	@Override
 	public void addPosition( final Localizable position )
 	{
-		locations.add( new Location( position ) );
-		++size;
+		pixelList.addPosition( position );
 		position.localize( tmp );
 		int k = 0;
 		for ( int i = 0; i < n; ++i )
@@ -85,8 +80,7 @@ public final class SimpleMserComponent< T extends IntegerType< T > > implements 
 	public void merge( final Component< T > component )
 	{
 		final SimpleMserComponent< T > c = ( SimpleMserComponent< T > ) component;
-		locations.addAll( c.locations );
-		size += c.size;
+		pixelList.merge( c.pixelList );
 		for ( int i = 0; i < sumPos.length; ++i )
 			sumPos[ i ] += c.sumPos[ i ];
 		for ( int i = 0; i < sumSquPos.length; ++i )
@@ -112,13 +106,14 @@ public final class SimpleMserComponent< T extends IntegerType< T > > implements 
 			}
 			s += c.id;
 		}
-		s += "] (level = " + value.toString() + ", size = " + size + ")";
+		s += "] (level = " + value.toString() + ", size = " + pixelList.size() + ")";
 		return s + "}";
 	}
 
+	// TODO --> rename to size()
 	public long getSize()
 	{
-		return size;
+		return pixelList.size();
 	}
 	
 	public ArrayList< SimpleMserComponent< T > > getAncestors()
