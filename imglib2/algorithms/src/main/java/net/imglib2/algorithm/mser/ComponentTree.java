@@ -3,7 +3,6 @@ package net.imglib2.algorithm.mser;
 import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.PriorityQueue;
-import java.util.Set;
 
 import net.imglib2.Localizable;
 import net.imglib2.Location;

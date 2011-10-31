@@ -2,7 +2,6 @@ package net.imglib2.algorithm.mser;
 
 import java.util.ArrayList;
 
-import net.imglib2.Localizable;
 import net.imglib2.type.numeric.IntegerType;
 
 public final class SimpleMserEvaluationNode< T extends IntegerType< T > >
@@ -32,6 +31,13 @@ public final class SimpleMserEvaluationNode< T extends IntegerType< T > >
 	public final int n;
 	public double[] mean; // mean of region (x, y, z, ...)
 	public double[] cov; // independent elements of covariance of region (xx, xy, xz, ..., yy, yz, ..., zz, ...)
+
+
+	/**
+	 * MSERs associated to this region or its children. To build up the MSER
+	 * tree.
+	 */
+	final ArrayList< SimpleMserTree< T >.Mser > mserThisOrAncestors;
 
 	public SimpleMserEvaluationNode( final SimpleMserComponent< T > component, final long delta, final SimpleMserComponentHandler.SimpleMserProcessor< T > minimaProcessor )
 	{
@@ -83,6 +89,15 @@ public final class SimpleMserEvaluationNode< T extends IntegerType< T > >
 		if ( isScoreValid )
 			for ( SimpleMserEvaluationNode< T > a : ancestors )
 				a.evaluateLocalMinimum( minimaProcessor );
+
+		if ( ancestors.size() == 1 )
+			mserThisOrAncestors = ancestors.get( 0 ).mserThisOrAncestors;
+		else
+		{
+			mserThisOrAncestors = new ArrayList< SimpleMserTree< T >.Mser >();
+			for ( SimpleMserEvaluationNode< T > a : ancestors )
+				mserThisOrAncestors.addAll( a.mserThisOrAncestors );
+		}
 	}
 
 	private SimpleMserEvaluationNode( final SimpleMserEvaluationNode< T > ancestor, final long value, final long delta, final SimpleMserComponentHandler.SimpleMserProcessor< T > minimaProcessor )
@@ -102,6 +117,8 @@ public final class SimpleMserEvaluationNode< T extends IntegerType< T > >
 		isScoreValid = computeMserScore( delta );
 		if ( isScoreValid )
 			ancestor.evaluateLocalMinimum( minimaProcessor );
+
+		mserThisOrAncestors = ancestor.mserThisOrAncestors;
 	}
 
 	private SimpleMserEvaluationNode< T > createIntermediateNodes( final SimpleMserEvaluationNode< T > fromNode, final long toValue, final long delta, final SimpleMserComponentHandler.SimpleMserProcessor< T > minimaProcessor )
