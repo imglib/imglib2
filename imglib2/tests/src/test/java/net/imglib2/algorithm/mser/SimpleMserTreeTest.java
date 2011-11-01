@@ -1,6 +1,12 @@
 package net.imglib2.algorithm.mser;
 
-import net.imglib2.Cursor;
+import ij.IJ;
+import ij.ImageJ;
+import ij.ImagePlus;
+import ij.ImageStack;
+import ij.gui.EllipseRoi;
+import ij.gui.Overlay;
+import ij.process.ByteProcessor;
 import net.imglib2.Localizable;
 import net.imglib2.img.Img;
 import net.imglib2.img.ImgFactory;
@@ -10,13 +16,6 @@ import net.imglib2.io.ImgOpener;
 import net.imglib2.type.numeric.IntegerType;
 import net.imglib2.type.numeric.integer.IntType;
 import net.imglib2.type.numeric.integer.LongType;
-import ij.IJ;
-import ij.ImageJ;
-import ij.ImagePlus;
-import ij.ImageStack;
-import ij.gui.EllipseRoi;
-import ij.gui.Overlay;
-import ij.process.ByteProcessor;
 
 public class SimpleMserTreeTest< T extends IntegerType< T > >
 {
@@ -79,7 +78,7 @@ public class SimpleMserTreeTest< T extends IntegerType< T > >
 	
 	public void visualise( SimpleMserTree< T > tree )
 	{
-		for ( SimpleMserTree< T >.Mser mser : tree.roots )
+		for ( SimpleMserTree< T >.Mser mser : tree.roots() )
 		{
 			visualise( mser );
 		}
@@ -91,6 +90,7 @@ public class SimpleMserTreeTest< T extends IntegerType< T > >
 		final long minSize = 10;
 		final long maxSize = 100*100;
 		final double maxVar = 0.8;
+		final double minDiversity = 0.5;
 		
 		new ImageJ();
 		
@@ -107,10 +107,11 @@ public class SimpleMserTreeTest< T extends IntegerType< T > >
 			return;
 		}
 	
-		final SimpleMserTree< IntType > tree = new SimpleMserTree< IntType >();
+		final SimpleMserTree< IntType > tree = new SimpleMserTree< IntType >( minDiversity );
 		final SimpleMserFilter< IntType > procNewMser = new SimpleMserFilter< IntType >( minSize, maxSize, maxVar, tree );
 		final SimpleMserComponentHandler< IntType > handler = new SimpleMserComponentHandler< IntType >( new IntType( Integer.MAX_VALUE ), img, new ArrayImgFactory< LongType >(), delta, procNewMser );
 		new ComponentTree< IntType, SimpleMserComponent< IntType > >( img, handler, handler );
+		tree.pruneDuplicates();
 
 		
 		ImagePlus impImg = ImageJFunctions.show( img );

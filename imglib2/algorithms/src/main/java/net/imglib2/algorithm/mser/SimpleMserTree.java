@@ -109,11 +109,48 @@ public class SimpleMserTree< T extends IntegerType< T > > implements SimpleMserP
 		}
 	}
 	
-	final HashSet< Mser > roots;
+	private final HashSet< Mser > roots;
+
+	private final double minDiversity;
 	
-	public SimpleMserTree()
+	public SimpleMserTree( final double minDiversity )
 	{
 		roots = new HashSet< Mser >();
+		this.minDiversity = minDiversity;
+	}
+
+	public void pruneDuplicates()
+	{
+		for ( Mser mser : roots )
+			pruneChildren ( mser );
+	}
+
+	public HashSet< Mser > roots()
+	{
+		return roots;
+	}
+
+	private void pruneChildren( Mser mser )
+	{
+		final ArrayList< Mser > validAncestors = new ArrayList< Mser >();
+		for ( int i = 0; i < mser.ancestors.size(); ++i )
+		{
+			Mser m = mser.ancestors.get( i );
+			double div = ( mser.size() - m.size() ) / (double) mser.size();
+			if ( div > minDiversity )
+			{
+				validAncestors.add( m );
+				pruneChildren( m );
+			}
+			else
+			{
+				mser.ancestors.addAll( m.ancestors );
+				for ( Mser m2 : m.ancestors )
+					m2.successor = mser;
+			}
+		}
+		mser.ancestors.clear();
+		mser.ancestors.addAll( validAncestors );
 	}
 
 	@Override
