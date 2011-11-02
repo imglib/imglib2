@@ -409,20 +409,18 @@ public class PhaseCorrelation<T extends RealType<T>, S extends RealType<S>> impl
 		
 		final long[] endImage1 = new long[ offsetImage1.length ];
 		for (int i=0; i<endImage1.length; ++i) {
-			endImage1[i] = offsetImage1[i] + overlapSize[i];
+			endImage1[i] = offsetImage1[i] + overlapSize[i] -1;
 		}
 		final long[] endImage2 = new long[ offsetImage2.length ];
 		for (int i=0; i<endImage2.length; ++i) {
-			endImage2[i] = offsetImage2[i] + overlapSize[i];
+			endImage2[i] = offsetImage2[i] + overlapSize[i] -1;
 		}
 
 		// ROI over the images, which are extended with zero values.
 		final Cursor<T> roiCursor1 = new RandomAccessibleIntervalCursor<T>(
-				Views.interval(
-						Views.extendValue(image1, image1.firstElement().createVariable()), offsetImage1, endImage1));
+				Views.interval(image1, offsetImage1, endImage1));
 		final Cursor<S> roiCursor2 = new RandomAccessibleIntervalCursor<S>(
-				Views.interval(
-						Views.extendValue(image2, image2.firstElement().createVariable()), offsetImage2, endImage2));
+				Views.interval(image2, offsetImage2, endImage2));
 
 		//
 		// compute average
