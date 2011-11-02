@@ -47,7 +47,7 @@ public final class ComplexIntegerPower extends ComplexOutput
 
 	private static final ComplexReciprocal recipFunc = new ComplexReciprocal();
 	
-	private final int power;
+	private int power;
 	private final Complex variable = new Complex();
 	
 	public ComplexIntegerPower(int power) {
@@ -59,8 +59,10 @@ public final class ComplexIntegerPower extends ComplexOutput
 		if (power == 0)
 			output.setValue(ONE);
 		else {
-			if (power < 0)
+			if (power < 0) {
 				recipFunc.compute(z, variable);
+				power = -power;
+			}
 			else // power > 0
 				variable.setValue(z);
 			double r = Math.pow(variable.getModulus(), power);
