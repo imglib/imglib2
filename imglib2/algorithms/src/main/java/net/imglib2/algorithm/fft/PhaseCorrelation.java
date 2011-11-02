@@ -20,27 +20,22 @@
  */
 package net.imglib2.algorithm.fft;
 
-import ij.ImageJ;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import net.imglib2.Cursor;
-import net.imglib2.ExtendedRandomAccessibleInterval;
 import net.imglib2.algorithm.Algorithm;
 import net.imglib2.algorithm.Benchmark;
 import net.imglib2.algorithm.MultiThreaded;
 import net.imglib2.algorithm.fft.FourierTransform.Rearrangement;
 import net.imglib2.exception.IncompatibleTypeException;
 import net.imglib2.img.Img;
-import net.imglib2.img.display.imagej.ImageJFunctions;
 import net.imglib2.multithreading.SimpleMultiThreading;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.complex.ComplexFloatType;
 import net.imglib2.type.numeric.real.FloatType;
 import net.imglib2.util.Util;
-import net.imglib2.view.IterableRandomAccessibleInterval;
 import net.imglib2.view.RandomAccessibleIntervalCursor;
 import net.imglib2.view.Views;
 
@@ -187,8 +182,6 @@ public class PhaseCorrelation<T extends RealType<T>, S extends RealType<S>> impl
 			// multiply fftImage1 and fftImage2 which yields the phase correlation spectrum
 			//
 			multiplyInPlace( fftImage1, fftImage2 );
-
-			new ImageJ();
 			
 			//
 			// invert fftImage1 which contains the phase correlation spectrum
@@ -211,7 +204,6 @@ public class PhaseCorrelation<T extends RealType<T>, S extends RealType<S>> impl
 
 			final Img<FloatType> invPCM = invFFT.getResult();
 
-			ImageJFunctions.show(invPCM, "invPCM");
 			/*
 		invPCM.getDisplay().setMinMax();
 		invPCM.setName("invPCM");
