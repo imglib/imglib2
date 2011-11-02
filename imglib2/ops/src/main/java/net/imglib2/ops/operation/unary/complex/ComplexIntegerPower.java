@@ -43,32 +43,18 @@ import net.imglib2.ops.Complex;
 public final class ComplexIntegerPower extends ComplexOutput
 	implements UnaryOperation<Complex,Complex>
 {
-	private static final Complex ONE = Complex.createCartesian(1,0);
-
-	private static final ComplexReciprocal recipFunc = new ComplexReciprocal();
-	
-	private int power;
-	private final Complex variable = new Complex();
+	private final int power;
 	
 	public ComplexIntegerPower(int power) {
 		this.power = power;
 	}
-	
+
 	@Override
 	public void compute(Complex z, Complex output) {
-		if (power == 0)
-			output.setValue(ONE);
-		else {
-			if (power < 0) {
-				recipFunc.compute(z, variable);
-				power = -power;
-			}
-			else // power > 0
-				variable.setValue(z);
-			double r = Math.pow(variable.getModulus(), power);
-			double theta = Complex.findPrincipleArgument(power * variable.getArgument());
-			output.setPolar(r, theta);
-		}
+		// NB: valid for ALL integral powers: 0, +/-1, +/-2, +/-3, ...
+		double r = Math.pow(z.getModulus(), power);
+		double theta = Complex.findPrincipleArgument(power * z.getArgument());
+		output.setPolar(r, theta);
 	}
 	
 	@Override
