@@ -1,6 +1,5 @@
 package net.imglib2.script;
 
-import ij.IJ;
 import ij.ImagePlus;
 import ij.io.FileSaver;
 
@@ -8,7 +7,7 @@ import net.imglib2.exception.ImgLibException;
 import net.imglib2.exception.IncompatibleTypeException;
 import net.imglib2.img.ImagePlusAdapter;
 import net.imglib2.img.Img;
-import net.imglib2.img.imageplus.ImagePlusImgFactory;
+import net.imglib2.img.display.imagej.ImageJFunctions;
 import net.imglib2.io.ImgIOException;
 import net.imglib2.io.ImgOpener;
 import net.imglib2.io.img.virtual.VirtualImgFactory;
@@ -49,7 +48,34 @@ public class ImgLib {
 	 * The data is not copied, but accessed with a special-purpose VirtualStack subclass. 
 	 * @throws ImgLibException */
 	static public final <T extends RealType<T> & NativeType<T>> ImagePlus wrap(final Img<T> img) throws ImgLibException {
-		return new ImagePlusImgFactory<T>().create(img, img.firstElement().createVariable()).getImagePlus();
+		//return new ImagePlusImgFactory<T>().create(img, img.firstElement().createVariable()).getImagePlus();
+		return wrap(img, "");
+	}
+	
+	/** Wrap an Imglib's {@link Image} as an ImageJ's {@link ImagePlus} of the appropriate type.
+	 * The data is not copied, but accessed with a special-purpose VirtualStack subclass. 
+	 * @throws ImgLibException */
+	static public final <T extends RealType<T> & NativeType<T>> ImagePlus wrap(final Img<T> img, final String title) throws ImgLibException {
+		//ImagePlus imp = new ImagePlusImgFactory<T>().create(img, img.firstElement().createVariable()).getImagePlus();
+		//imp.setTitle(title);
+		//return imp;
+		return ImageJFunctions.wrap(img, title);
+	}
+	
+	/** Wrap an Imglib's {@link Image} as an ImageJ's {@link ImagePlus} of the appropriate type.
+	 * The data is not copied, but accessed with a special-purpose VirtualStack subclass. 
+	 * @throws ImgLibException */
+	static public final <T extends RealType<T> & NativeType<T>> ImagePlus show(final Img<T> img) throws ImgLibException {
+		return show(img, "");
+	}
+	
+	/** Wrap an Imglib's {@link Image} as an ImageJ's {@link ImagePlus} of the appropriate type.
+	 * The data is not copied, but accessed with a special-purpose VirtualStack subclass. 
+	 * @throws ImgLibException */
+	static public final <T extends RealType<T> & NativeType<T>> ImagePlus show(final Img<T> img, final String title) throws ImgLibException {
+		ImagePlus imp = wrap(img, title);
+		imp.show();
+		return imp;
 	}
 
 	/** Save an image in the appropriate file format according to
