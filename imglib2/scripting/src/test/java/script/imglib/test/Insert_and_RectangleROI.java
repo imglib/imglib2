@@ -1,12 +1,10 @@
 package script.imglib.test;
 
-
 import ij.ImageJ;
 import net.imglib2.img.Img;
-import net.imglib2.img.array.ArrayImg;
-import net.imglib2.img.basictypeaccess.array.FloatArray;
 import net.imglib2.script.ImgLib;
 import net.imglib2.script.edit.Insert;
+import net.imglib2.script.edit.FloatImage;
 import net.imglib2.script.math.Add;
 import net.imglib2.script.view.RectangleROI;
 import net.imglib2.type.numeric.real.FloatType;
@@ -17,15 +15,12 @@ public class Insert_and_RectangleROI {
 	static public final void main(String[] args) {
 		// Create image
 		long[] dim = new long[]{512, 512};
-		float[] pixels = new float[(int)(dim[0] * dim[1])];
-		ArrayImg<FloatType,FloatArray> im1 = new ArrayImg<FloatType,FloatArray>(new FloatArray(pixels), dim, 1);
-		im1.setLinkedType(new FloatType(im1));
+		
+		Img<FloatType> im1 = new FloatImage(dim);
 
 		// Create two images with various areas filled
 		Add fn1 = new Add(127, new RectangleROI<FloatType>(im1, 100, 100, dim[0] - 200, dim[1] - 200));
 		Add fn2 = new Add(255, new RectangleROI<FloatType>(im1, 0, 0, 100, 100));
-
-		
 
 		try {
 			// Insert the second into the first
