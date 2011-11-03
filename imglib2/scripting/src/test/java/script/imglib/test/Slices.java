@@ -4,6 +4,8 @@ import java.io.File;
 
 import ij.ImageJ;
 import net.imglib2.img.Img;
+import net.imglib2.img.array.ArrayImgFactory;
+import net.imglib2.io.ImgOpener;
 import net.imglib2.script.ImgLib;
 import net.imglib2.script.slice.SliceXY;
 import net.imglib2.type.numeric.integer.ByteType;
@@ -21,12 +23,14 @@ public class Slices {
 			
 			System.out.println("exists:" + new File(src).exists());
 				
-			Img<ByteType> img = ImgLib.open(src);
+			//Img<ByteType> img = ImgLib.open(src);
+			
+			Img<ByteType> img2 = new ImgOpener().openImg(src, new ArrayImgFactory<ByteType>(), new ByteType());
 
-			Img<FloatType> r = new SliceXY<ByteType>(img, 23).asImage();
+			Img<FloatType> r = new SliceXY<ByteType>(img2, 23).asImage();
 
 			ImgLib.wrap(r).show();
-			ImgLib.wrap(img).show();
+			ImgLib.wrap(img2).show();
 
 		} catch (Exception e) {
 			e.printStackTrace();
