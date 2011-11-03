@@ -1,15 +1,11 @@
 package script.imglib.test;
 
-import java.io.File;
-
 import ij.ImageJ;
+
 import net.imglib2.img.Img;
-import net.imglib2.img.array.ArrayImgFactory;
-import net.imglib2.io.ImgOpener;
 import net.imglib2.script.ImgLib;
 import net.imglib2.script.slice.SliceXY;
-import net.imglib2.type.numeric.integer.ByteType;
-import net.imglib2.type.numeric.real.FloatType;
+import net.imglib2.type.numeric.integer.UnsignedByteType;
 
 public class Slices {
 
@@ -19,22 +15,16 @@ public class Slices {
 		
 		try {
 			String src = "http://imagej.nih.gov/ij/images/bat-cochlea-volume.zip";
-			src = "/home/albert/Desktop/t2/bat-cochlea-volume.tif";
+			//String src = "/home/albert/Desktop/t2/bat-cochlea-volume.tif";	
+			Img<UnsignedByteType> img = ImgLib.open(src);
 			
-			System.out.println("exists:" + new File(src).exists());
-				
-			//Img<ByteType> img = ImgLib.open(src);
-			
-			Img<ByteType> img2 = new ImgOpener().openImg(src, new ArrayImgFactory<ByteType>(), new ByteType());
+			Img<UnsignedByteType> s = new SliceXY<UnsignedByteType>(img, 23);
 
-			Img<FloatType> r = new SliceXY<ByteType>(img2, 23).asImage();
-
-			ImgLib.wrap(r).show();
-			ImgLib.wrap(img2).show();
+			ImgLib.wrap(s, "23").show();
+			ImgLib.wrap(img, "bat").show();
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
 	}
 }
