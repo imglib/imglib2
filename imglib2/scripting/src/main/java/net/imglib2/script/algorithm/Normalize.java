@@ -9,7 +9,6 @@ import net.imglib2.type.numeric.ARGBType;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.real.FloatType;
 import net.imglib2.util.Util;
-import net.imglib2.script.algorithm.fn.AlgorithmUtil;
 import net.imglib2.script.algorithm.fn.ImgProxy;
 import net.imglib2.script.color.Alpha;
 import net.imglib2.script.color.Blue;
