@@ -14,7 +14,7 @@ public class TestLocalNeighborhoodCursor {
 			
 			Img<FloatType> img = new ArrayImgFactory<FloatType>().create(new int[]{1, 1}, new FloatType());
 			LocalNeighborhoodCursor<FloatType> lnc =
-				new LocalNeighborhoodCursor<FloatType>(Views.extendPeriodic(img).randomAccess(), 1);
+				new LocalNeighborhoodCursor<FloatType>(Views.extendMirrorSingle(img).randomAccess(), 1);
 			Cursor<FloatType> cursor = img.cursor();
 			
 			long[] pos = new long[img.numDimensions()];
