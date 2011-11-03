@@ -55,11 +55,9 @@ public class Insert<T extends RealType<T>, RI extends IterableInterval<T> & Rand
 		protected final double eval() {
 			tc.fwd();
 			tc.localize(position);
-			if (inside(position, min, max)) {
-				sc.fwd();
-				return sc.get().getRealDouble();
-			}
-			return tc.get().getRealDouble();
+			return inside(position, min, max) ?
+					  sc.next().getRealDouble()
+					: tc.get().getRealDouble();
 		}
 	}
 	private final class RandomAccessCopier extends Copier
