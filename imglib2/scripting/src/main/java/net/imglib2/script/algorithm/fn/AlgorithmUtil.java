@@ -47,4 +47,19 @@ public class AlgorithmUtil
 		for (int i=0; i<f.length; i++) d[i] = f[i];
 		return d;
 	}
+	
+	public static long[] asLongArray(final Collection<Number> ls) {
+		final long[] d = new long[ls.size()];
+		int i = 0;
+		for (final Number num : ls) d[i++] = num.longValue();
+		return d;
+	}
+
+	public static final int size(final long[] dim) {
+		long size = 1;
+		for (int i=0; i<dim.length; ++i) {
+			size *= dim[i];
+		}
+		return (int)size;
+	}
 }
