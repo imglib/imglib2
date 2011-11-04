@@ -243,7 +243,7 @@ public abstract class TypeConverter
 			{
 				final public void convert() 
 				{
-					out.set( in.get() & 0xff );
+					out.set( in.get() & 0xffff );
 				}
 			};
 		}
