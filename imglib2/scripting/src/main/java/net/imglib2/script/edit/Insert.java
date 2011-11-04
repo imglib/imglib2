@@ -17,6 +17,8 @@ import net.imglib2.view.Views;
 
 /**
  * Lazy copy one image into another, with a positive or negative offset.
+ * None of the two given images are altered; rather, this is an {@link IFunction}
+ * that, when executed, generates a new image with the combination of the two input images.
  * 
  * @author Albert Cardona
  *

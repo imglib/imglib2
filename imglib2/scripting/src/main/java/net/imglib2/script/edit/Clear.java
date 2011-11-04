@@ -6,6 +6,7 @@ import net.imglib2.script.math.fn.UnaryOperation;
 import net.imglib2.type.numeric.RealType;
 
 /** Return 0 for all values.
+ * Equivalent to creating a new empty image with the dimensions of the input.
  * 
  * @author Albert Cardona
  */
