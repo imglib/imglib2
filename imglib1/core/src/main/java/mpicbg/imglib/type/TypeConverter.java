@@ -33,6 +33,7 @@ import mpicbg.imglib.type.numeric.integer.ByteType;
 import mpicbg.imglib.type.numeric.integer.IntType;
 import mpicbg.imglib.type.numeric.integer.LongType;
 import mpicbg.imglib.type.numeric.integer.ShortType;
+import mpicbg.imglib.type.numeric.integer.UnsignedShortType;
 import mpicbg.imglib.type.numeric.real.FloatType;
 
 public abstract class TypeConverter
@@ -50,6 +51,9 @@ public abstract class TypeConverter
 			return getTypeConverter((ShortType)input, output); */
 		if ( (Object)input instanceof ShortType )
 			return getTypeConverter((ShortType)(Object)input, output);
+		
+		if ( (Object)input instanceof UnsignedShortType )
+			return getTypeConverter((UnsignedShortType)(Object)input, output);
 		
 		System.out.println("mpi.imglib.type.TypeConverter(): Do not know how to convert Type " + input.getClass() );		
 		return null;		
@@ -164,6 +168,41 @@ public abstract class TypeConverter
 		}
 		
 		System.out.println("mpi.imglib.type.TypeConverter(): Do not know how to convert Type ShortType to Type " + output.getClass() );		
+		return null;		
+	}
+	
+	public static <A extends Type< A > > TypeConverter getTypeConverter( final UnsignedShortType in, final A output ) 
+	{
+		
+		if ( UnsignedShortType.class.isInstance( output ) ) 
+		{
+			/* inconvertible types due to javac bug 6548436: final ShortType out = (ShortType)output; */
+			final UnsignedShortType out = (UnsignedShortType)(Object)output;
+			
+			return new TypeConverter() 
+			{
+				final public void convert() 
+				{
+					out.set( in );
+				}
+			};
+		}
+
+		if ( FloatType.class.isInstance( output ) ) 
+		{
+			/* inconvertible types due to javac bug 6548436: final FloatType out = (FloatType)output; */
+			final FloatType out = (FloatType)(Object)output;
+			
+			return new TypeConverter() 
+			{
+				final public void convert() 
+				{
+					out.set( in.get() );
+				}
+			};
+		}
+		
+		System.out.println("mpi.imglib.type.TypeConverter(): Do not know how to convert Type UnsignedShortType to Type " + output.getClass() );		
 		return null;		
 	}
 	
