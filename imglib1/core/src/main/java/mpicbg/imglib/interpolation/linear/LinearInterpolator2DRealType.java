@@ -41,7 +41,6 @@ public class LinearInterpolator2DRealType<T extends RealType<T>> extends LinearI
 	protected LinearInterpolator2DRealType( final Image<T> img, final InterpolatorFactory<T> interpolatorFactory, final OutOfBoundsStrategyFactory<T> outOfBoundsStrategyFactory )
 	{
 		super( img, interpolatorFactory, outOfBoundsStrategyFactory, false );
-		System.out.println( "ja" );
 		tmpLocation = new int[ 2 ];				
 		moveTo( position );		
 	}
