@@ -47,10 +47,12 @@ public class UnsignedIntType extends GenericIntType<UnsignedIntType>
 	
 	public static int getCodedSignedIntChecked( long unsignedInt )
 	{
-		if ( unsignedInt < 0 )
+		if ( unsignedInt < 0)
 			unsignedInt = 0;
-		else if ( unsignedInt > 4294967295l )
-			unsignedInt = 4294967295l;
+		/*
+		else if ( unsignedInt > 0xffffffffL ) // note that this is never true
+			unsignedInt = 0xffffffffL;
+		*/
 		
 		return getCodedSignedInt( unsignedInt );
 	}
@@ -146,7 +148,7 @@ public class UnsignedIntType extends GenericIntType<UnsignedIntType>
 	public void setInteger( final long f ){ set( f ); }
 
 	@Override
-	public double getMaxValue() { return -((double)Integer.MIN_VALUE) + Integer.MAX_VALUE; }
+	public double getMaxValue() { return 0xffffffffL; }
 	@Override
 	public double getMinValue()  { return 0; }
 	
