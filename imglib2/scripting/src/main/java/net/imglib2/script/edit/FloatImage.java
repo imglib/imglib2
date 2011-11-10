@@ -13,9 +13,13 @@ public class FloatImage extends ArrayImg<FloatType, FloatArray>
 	public FloatImage(final List<Number> dim) {
 		this(AlgorithmUtil.asLongArray(dim));
 	}
-	
+
 	public FloatImage(final long[] dim) {
-		super(new FloatArray(new float[AlgorithmUtil.size(dim)]), dim, 1);
+		this(dim, new float[AlgorithmUtil.size(dim)]);
+	}
+
+	public FloatImage(final long[] dim, final float[] pixels) {
+		super(new FloatArray(pixels), dim, 1);
 		setLinkedType(new FloatType(this));
 	}
 }

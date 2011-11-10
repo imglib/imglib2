@@ -15,7 +15,11 @@ public class UnsignedShortImage extends ArrayImg<UnsignedShortType, ShortArray>
 	}
 	
 	public UnsignedShortImage(final long[] dim) {
-		super(new ShortArray(new short[AlgorithmUtil.size(dim)]), dim, 1);
+		this(dim, new short[AlgorithmUtil.size(dim)]);
+	}
+	
+	public UnsignedShortImage(final long[] dim, final short[] pixels) {
+		super(new ShortArray(pixels), dim, 1);
 		setLinkedType(new UnsignedShortType(this));
 	}
 }

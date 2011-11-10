@@ -13,9 +13,13 @@ public class UnsignedByteImage extends ArrayImg<UnsignedByteType, ByteArray>
 	public UnsignedByteImage(final List<Number> dim) {
 		this(AlgorithmUtil.asLongArray(dim));
 	}
-	
+
 	public UnsignedByteImage(final long[] dim) {
-		super(new ByteArray(new byte[AlgorithmUtil.size(dim)]), dim, 1);
+		this(dim, new byte[AlgorithmUtil.size(dim)]);
+	}
+
+	public UnsignedByteImage(final long[] dim, final byte[] pixels) {
+		super(new ByteArray(pixels), dim, 1);
 		setLinkedType(new UnsignedByteType(this));
 	}
 }
