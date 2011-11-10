@@ -49,10 +49,8 @@ public class UnsignedIntType extends GenericIntType<UnsignedIntType>
 	{
 		if ( unsignedInt < 0)
 			unsignedInt = 0;
-		/*
-		else if ( unsignedInt > 0xffffffffL ) // note that this is never true
+		else if ( unsignedInt > 0xffffffffL )
 			unsignedInt = 0xffffffffL;
-		*/
 		
 		return getCodedSignedInt( unsignedInt );
 	}
