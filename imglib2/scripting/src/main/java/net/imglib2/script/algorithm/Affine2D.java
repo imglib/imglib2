@@ -18,8 +18,8 @@ public class Affine2D<N extends NumericType<N>> extends Affine3D<N>
 			final Number scaleX, final Number shearX, 
 			final Number shearY, final Number scaleY,
 			final Number translateX, final Number translateY) throws Exception {
-		this(fn, scaleX.floatValue(), shearX.floatValue(), translateX.floatValue(),
-				 shearY.floatValue(), scaleY.floatValue(), translateY.floatValue(),
+		this(fn, scaleX, shearX, translateX,
+				 shearY, scaleY, translateY,
 				 Affine3D.BEST, 0);
 	}
 
