@@ -47,12 +47,10 @@ public class UnsignedIntType extends GenericIntType<UnsignedIntType>
 	
 	public static int getCodedSignedIntChecked( long unsignedInt )
 	{
-		if ( unsignedInt < 0)
+		if ( unsignedInt < 0 )
 			unsignedInt = 0;
-		/*
-		else if ( unsignedInt > 0xffffffffL ) // note that this is never true
+		else if ( unsignedInt > 0xffffffffL )
 			unsignedInt = 0xffffffffL;
-		*/
 		
 		return getCodedSignedInt( unsignedInt );
 	}
@@ -133,19 +131,19 @@ public class UnsignedIntType extends GenericIntType<UnsignedIntType>
 	}
 	
 	@Override
-	public String toString(){ return "" + get(); }
+	public String toString() { return "" + get(); }
 	
-	public long get(){ return getUnsignedInt( getValue() ); }
-	public void set( final long f ){ setValue( getCodedSignedInt( f ) ); }
+	public long get() { return getUnsignedInt( getValue() ); }
+	public void set( final long f ) { setValue( getCodedSignedInt( f ) ); }
 
 	@Override
-	public int getInteger(){ return (int)get(); }
+	public int getInteger() { return (int)get(); }
 	@Override
 	public long getIntegerLong() { return get(); }
 	@Override
-	public void setInteger( final int f ){ set( f ); }
+	public void setInteger( final int f ) { set( f ); }
 	@Override
-	public void setInteger( final long f ){ set( f ); }
+	public void setInteger( final long f ) { set( f ); }
 
 	@Override
 	public double getMaxValue() { return 0xffffffffL; }
@@ -167,8 +165,8 @@ public class UnsignedIntType extends GenericIntType<UnsignedIntType>
 	}
 
 	@Override
-	public UnsignedIntType createVariable(){ return new UnsignedIntType( 0 ); }
+	public UnsignedIntType createVariable() { return new UnsignedIntType( 0 ); }
 
 	@Override
-	public UnsignedIntType copy(){ return new UnsignedIntType( get() ); }
+	public UnsignedIntType copy() { return new UnsignedIntType( get() ); }
 }
