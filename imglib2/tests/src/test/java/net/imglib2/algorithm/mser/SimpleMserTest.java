@@ -89,7 +89,7 @@ public class SimpleMserTest< T extends IntegerType< T > > implements SimpleMserP
 
 	public static void main( String[] args )
 	{
-		final long delta = 10;
+		final int delta = 10;
 		final long minSize = 10;
 		final long maxSize = 100*100;
 		final double maxVar = 0.8;
@@ -139,7 +139,7 @@ public class SimpleMserTest< T extends IntegerType< T > > implements SimpleMserP
 		ImageStack stack = new ImageStack( w, h );
 		//SimpleMserTest< IntType > procNewMser = new SimpleMserTest< IntType >( impImg, stack, w, h );
 		SimpleMserFilter< IntType > procNewMser = new SimpleMserFilter< IntType >( minSize, maxSize, maxVar, new SimpleMserTest< IntType >( impImg, stack, w, h ) );
-		final SimpleMserComponentHandler< IntType > handler = new SimpleMserComponentHandler< IntType >( new IntType( Integer.MAX_VALUE ), img, new ArrayImgFactory< LongType >(), delta, procNewMser );
+		final SimpleMserComponentHandler< IntType > handler = new SimpleMserComponentHandler< IntType >( new IntType( Integer.MAX_VALUE ), img, new ArrayImgFactory< LongType >(), new IntType( delta ), procNewMser );
 		new ComponentTree< IntType, SimpleMserComponent< IntType > >( img, handler, handler );
 		ImagePlus imp = new ImagePlus("components", stack);
 		imp.show();

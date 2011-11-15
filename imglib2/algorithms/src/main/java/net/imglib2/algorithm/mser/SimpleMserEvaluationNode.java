@@ -2,14 +2,14 @@ package net.imglib2.algorithm.mser;
 
 import java.util.ArrayList;
 
-import net.imglib2.type.numeric.IntegerType;
+import net.imglib2.type.numeric.RealType;
 
-public final class SimpleMserEvaluationNode< T extends IntegerType< T > >
+public final class SimpleMserEvaluationNode< T extends RealType< T > >
 {
 	/**
 	 * Threshold value of the connected component.
 	 */
-	public final long value;
+	public final T value;
 
 	/**
 	 * Size (number of pixels) of the connected component.
@@ -38,9 +38,9 @@ public final class SimpleMserEvaluationNode< T extends IntegerType< T > >
 	 */
 	final ArrayList< SimpleMserTree< T >.Mser > mserThisOrAncestors;
 
-	public SimpleMserEvaluationNode( final SimpleMserComponent< T > component, final long delta, final SimpleMserComponentHandler.SimpleMserProcessor< T > minimaProcessor )
+	public SimpleMserEvaluationNode( final SimpleMserComponent< T > component, final T delta, final SimpleMserComponentHandler.SimpleMserProcessor< T > minimaProcessor )
 	{
-		value = component.getValue().getIntegerLong();
+		value = component.getValue().copy();
 		pixelList = new PixelList( component.pixelList );
 		size = pixelList.size();
 
@@ -99,7 +99,7 @@ public final class SimpleMserEvaluationNode< T extends IntegerType< T > >
 		}
 	}
 
-	private SimpleMserEvaluationNode( final SimpleMserEvaluationNode< T > ancestor, final long value, final long delta, final SimpleMserComponentHandler.SimpleMserProcessor< T > minimaProcessor )
+	private SimpleMserEvaluationNode( final SimpleMserEvaluationNode< T > ancestor, final T value, final T delta, final SimpleMserComponentHandler.SimpleMserProcessor< T > minimaProcessor )
 	{
 		ancestors = new ArrayList< SimpleMserEvaluationNode< T > >();
 		ancestors.add( ancestor );
@@ -123,7 +123,7 @@ public final class SimpleMserEvaluationNode< T extends IntegerType< T > >
 		mserThisOrAncestors = ancestor.mserThisOrAncestors;
 	}
 
-	private SimpleMserEvaluationNode< T > createIntermediateNodes( final SimpleMserEvaluationNode< T > fromNode, final long toValue, final long delta, final SimpleMserComponentHandler.SimpleMserProcessor< T > minimaProcessor )
+	private SimpleMserEvaluationNode< T > createIntermediateNodes( final SimpleMserEvaluationNode< T > fromNode, final T toValue, final T delta, final SimpleMserComponentHandler.SimpleMserProcessor< T > minimaProcessor )
 	{
 		SimpleMserEvaluationNode< T > node = fromNode;
 		node = new SimpleMserEvaluationNode< T >( node, toValue, delta, minimaProcessor );
@@ -154,19 +154,20 @@ public final class SimpleMserEvaluationNode< T extends IntegerType< T > >
 	 *            there is no node with that exact value. In this case,
 	 *            isIntermediate has no influence.)
 	 */
-	private boolean computeMserScore( final long delta, final boolean isIntermediate )
+	private boolean computeMserScore( final T delta, final boolean isIntermediate )
 	{
 		// we are looking for a precursor node with value == (this.value - delta)
-		final long valueMinus = value - delta;
+		final T valueMinus = value.copy();
+		valueMinus.sub( delta );
 
 		// go back in history until we find a node with (value <= valueMinus)
 		SimpleMserEvaluationNode< T > node = historyAncestor;
-		while ( node != null  &&  node.value > valueMinus )
+		while ( node != null  &&  node.value.compareTo( valueMinus ) > 0 )
 			node = node.historyAncestor;
 		if ( node == null )
 			// we cannot compute the mser score because the history is too short.
 			return false;
-		if ( isIntermediate && node.value == valueMinus && node.historyAncestor != null )
+		if ( isIntermediate && node.value.compareTo( valueMinus ) == 0 && node.historyAncestor != null )
 			node = node.historyAncestor;
 		score = ( size - node.size ) / ( ( double ) size );
 		return true;		
@@ -179,7 +180,7 @@ public final class SimpleMserEvaluationNode< T extends IntegerType< T > >
 	 * called, when the mser score for the next component in the branch is
 	 * available.)
 	 */
-	private void evaluateLocalMinimum( final SimpleMserComponentHandler.SimpleMserProcessor< T > minimaProcessor, final long delta )
+	private void evaluateLocalMinimum( final SimpleMserComponentHandler.SimpleMserProcessor< T > minimaProcessor, final T delta )
 	{
 		if ( isScoreValid )
 		{
@@ -192,11 +193,16 @@ public final class SimpleMserEvaluationNode< T extends IntegerType< T > >
 				if ( ( score <= below.score ) && ( score < successor.score ) )
 					minimaProcessor.foundNewMinimum( this );
 			}
-			else if ( ( value - delta ) > below.value )
-				// we are just above the bottom of a branch and this components
-				// value is high enough above the bottom value to make its score=0.
-				// so let's pretend we found a minimum here...
-				minimaProcessor.foundNewMinimum( this );
+			else
+			{
+				final T valueMinus = value.copy();
+				valueMinus.sub( delta );
+				if ( valueMinus.compareTo( below.value ) > 0 )
+					// we are just above the bottom of a branch and this components
+					// value is high enough above the bottom value to make its score=0.
+					// so let's pretend we found a minimum here...
+					minimaProcessor.foundNewMinimum( this );
+			}
 		}
 	}
 

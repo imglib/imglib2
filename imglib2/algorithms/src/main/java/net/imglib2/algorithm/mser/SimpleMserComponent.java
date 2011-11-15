@@ -3,9 +3,9 @@ package net.imglib2.algorithm.mser;
 import java.util.ArrayList;
 
 import net.imglib2.Localizable;
-import net.imglib2.type.numeric.IntegerType;
+import net.imglib2.type.numeric.RealType;
 
-public final class SimpleMserComponent< T extends IntegerType< T > > implements Component< T >
+public final class SimpleMserComponent< T extends RealType< T > > implements Component< T >
 {
 	private static int idGen = 0;
 	

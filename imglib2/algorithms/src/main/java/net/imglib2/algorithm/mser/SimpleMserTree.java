@@ -6,9 +6,9 @@ import java.util.Iterator;
 
 import net.imglib2.Localizable;
 import net.imglib2.algorithm.mser.SimpleMserComponentHandler.SimpleMserProcessor;
-import net.imglib2.type.numeric.IntegerType;
+import net.imglib2.type.numeric.RealType;
 
-public class SimpleMserTree< T extends IntegerType< T > > implements SimpleMserProcessor< T >
+public class SimpleMserTree< T extends RealType< T > > implements SimpleMserProcessor< T >
 {
 	public class Mser implements Iterable< Localizable >
 	{
@@ -19,7 +19,7 @@ public class SimpleMserTree< T extends IntegerType< T > > implements SimpleMserP
 		/**
 		 * Threshold value of the connected component.
 		 */
-		private final long value;
+		private final T value;
 
 		/**
 		 * MSER score : |Q_{i+\Delta} - Q_i| / |Q_i|.
@@ -56,7 +56,7 @@ public class SimpleMserTree< T extends IntegerType< T > > implements SimpleMserP
 		/**
 		 * @return the image threshold that created the extremal region.
 		 */
-		public long value()
+		public T value()
 		{
 			return value;
 		}

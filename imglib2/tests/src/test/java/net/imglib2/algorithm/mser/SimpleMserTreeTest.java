@@ -14,7 +14,6 @@ import net.imglib2.Localizable;
 import net.imglib2.img.Img;
 import net.imglib2.img.ImgFactory;
 import net.imglib2.img.array.ArrayImgFactory;
-import net.imglib2.img.cell.ArrayRandomAccessBenchmark.Benchmark;
 import net.imglib2.img.display.imagej.ImageJFunctions;
 import net.imglib2.io.ImgOpener;
 import net.imglib2.type.numeric.IntegerType;
@@ -128,7 +127,7 @@ public class SimpleMserTreeTest< T extends IntegerType< T > >
 
 	public static void main( String[] args )
 	{
-		final long delta = 10;
+		final int delta = 10;
 		final long minSize = 10;
 		final long maxSize = 100*100;
 		final double maxVar = 0.8;
@@ -156,7 +155,7 @@ public class SimpleMserTreeTest< T extends IntegerType< T > >
 			{
 				final SimpleMserTree< IntType > tree = new SimpleMserTree< IntType >( minDiversity );
 				final SimpleMserFilter< IntType > procNewMser = new SimpleMserFilter< IntType >( minSize, maxSize, maxVar, tree );
-				final SimpleMserComponentHandler< IntType > handler = new SimpleMserComponentHandler< IntType >( new IntType( Integer.MAX_VALUE ), img, new ArrayImgFactory< LongType >(), delta, procNewMser );
+				final SimpleMserComponentHandler< IntType > handler = new SimpleMserComponentHandler< IntType >( new IntType( Integer.MAX_VALUE ), img, new ArrayImgFactory< LongType >(), new IntType( delta ), procNewMser );
 				new ComponentTree< IntType, SimpleMserComponent< IntType > >( img, handler, handler );
 				tree.pruneDuplicates();
 			}
@@ -164,7 +163,7 @@ public class SimpleMserTreeTest< T extends IntegerType< T > >
 
 		final SimpleMserTree< IntType > tree = new SimpleMserTree< IntType >( minDiversity );
 		final SimpleMserFilter< IntType > procNewMser = new SimpleMserFilter< IntType >( minSize, maxSize, maxVar, tree );
-		final SimpleMserComponentHandler< IntType > handler = new SimpleMserComponentHandler< IntType >( new IntType( Integer.MAX_VALUE ), img, new ArrayImgFactory< LongType >(), delta, procNewMser );
+		final SimpleMserComponentHandler< IntType > handler = new SimpleMserComponentHandler< IntType >( new IntType( Integer.MAX_VALUE ), img, new ArrayImgFactory< LongType >(), new IntType( delta ), procNewMser );
 		new ComponentTree< IntType, SimpleMserComponent< IntType > >( img, handler, handler );
 		tree.pruneDuplicates();
 		
