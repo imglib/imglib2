@@ -32,7 +32,6 @@ public final class SimpleMserEvaluationNode< T extends IntegerType< T > >
 	public double[] mean; // mean of region (x, y, z, ...)
 	public double[] cov; // independent elements of covariance of region (xx, xy, xz, ..., yy, yz, ..., zz, ...)
 
-
 	/**
 	 * MSERs associated to this region or its children. To build up the MSER
 	 * tree.
@@ -51,7 +50,7 @@ public final class SimpleMserEvaluationNode< T extends IntegerType< T > >
 		if ( node != null )
 		{
 			historySize = node.size;
-			node = createIntermediateNodes( component.getEvaluationNode(), value, delta, minimaProcessor );
+			node = createIntermediateNodes( node, value, delta, minimaProcessor );
 			ancestors.add( node );
 			node.setSuccessor( this );
 		}
@@ -59,7 +58,7 @@ public final class SimpleMserEvaluationNode< T extends IntegerType< T > >
 		SimpleMserEvaluationNode< T > historyWinner = node;
 		for ( SimpleMserComponent< T > c : component.getAncestors() )
 		{
-			node = createIntermediateNodes( c.getEvaluationNode(), component.getValue().getIntegerLong(), delta, minimaProcessor );
+			node = createIntermediateNodes( c.getEvaluationNode(), value, delta, minimaProcessor );
 			ancestors.add( node );
 			node.setSuccessor( this );
 			if ( c.getSize() > historySize )
@@ -85,10 +84,10 @@ public final class SimpleMserEvaluationNode< T extends IntegerType< T > >
 			}
 
 		component.setEvaluationNode( this );
-		isScoreValid = computeMserScore( delta );
+		isScoreValid = computeMserScore( delta, false );
 		if ( isScoreValid )
 			for ( SimpleMserEvaluationNode< T > a : ancestors )
-				a.evaluateLocalMinimum( minimaProcessor );
+				a.evaluateLocalMinimum( minimaProcessor, delta );
 
 		if ( ancestors.size() == 1 )
 			mserThisOrAncestors = ancestors.get( 0 ).mserThisOrAncestors;
@@ -114,9 +113,12 @@ public final class SimpleMserEvaluationNode< T extends IntegerType< T > >
 		mean = ancestor.mean;
 		cov = ancestor.cov;
 
-		isScoreValid = computeMserScore( delta );
-		if ( isScoreValid )
-			ancestor.evaluateLocalMinimum( minimaProcessor );
+		isScoreValid = computeMserScore( delta, true );
+//		All our ancestors are non-intermediate, and
+//		non-intermediate nodes are never minimal because their score is
+//		never smaller than that of the successor intermediate node.
+//		if ( isScoreValid )
+//			ancestor.evaluateLocalMinimum( minimaProcessor, delta );
 
 		mserThisOrAncestors = ancestor.mserThisOrAncestors;
 	}
@@ -124,8 +126,7 @@ public final class SimpleMserEvaluationNode< T extends IntegerType< T > >
 	private SimpleMserEvaluationNode< T > createIntermediateNodes( final SimpleMserEvaluationNode< T > fromNode, final long toValue, final long delta, final SimpleMserComponentHandler.SimpleMserProcessor< T > minimaProcessor )
 	{
 		SimpleMserEvaluationNode< T > node = fromNode;
-		for ( long v = node.value + 1; v < toValue; ++v )
-			node = new SimpleMserEvaluationNode< T >( node, v, delta, minimaProcessor );
+		node = new SimpleMserEvaluationNode< T >( node, toValue, delta, minimaProcessor );
 		return node;
 	}
 
@@ -135,21 +136,38 @@ public final class SimpleMserEvaluationNode< T extends IntegerType< T > >
 	}
 
 	/**
-	 * Evaluate the mser score at this connected component.
-	 * This may fail if the connected component tree is not built far enough
-	 * down from the current node.
+	 * Evaluate the mser score at this connected component. This may fail if the
+	 * connected component tree is not built far enough down from the current
+	 * node. The mser score is computed as |Q_{i+delta} - Q_i| / |Q_i|, where
+	 * Q_i is this component and Q_{i+delta} is the component delta steps down
+	 * the component tree (threshold level is delta lower than this).
+	 * 
+	 * @param delta
+	 * @param isIntermediate
+	 *            whether this is an intermediate node. This influences the
+	 *            search for the Q_{i+delta} in the following way. If a node
+	 *            with value equal to i+delta is found, then this is a
+	 *            non-intermediate node and there is an intermediate node with
+	 *            the same value below it. If isIntermediate is true Q_{i+delta}
+	 *            is set to the intermediate node. (The other possibility is,
+	 *            that we find a node with value smaller than i+delta, i.e.,
+	 *            there is no node with that exact value. In this case,
+	 *            isIntermediate has no influence.)
 	 */
-	private boolean computeMserScore( final long delta )
+	private boolean computeMserScore( final long delta, final boolean isIntermediate )
 	{
 		// we are looking for a precursor node with value == (this.value - delta)
 		final long valueMinus = value - delta;
-		// go back in history until we find a node with (value == valueMinus)
+
+		// go back in history until we find a node with (value <= valueMinus)
 		SimpleMserEvaluationNode< T > node = historyAncestor;
 		while ( node != null  &&  node.value > valueMinus )
 			node = node.historyAncestor;
 		if ( node == null )
 			// we cannot compute the mser score because the history is too short.
 			return false;
+		if ( isIntermediate && node.value == valueMinus && node.historyAncestor != null )
+			node = node.historyAncestor;
 		score = ( size - node.size ) / ( ( double ) size );
 		return true;		
 	}
@@ -161,11 +179,25 @@ public final class SimpleMserEvaluationNode< T extends IntegerType< T > >
 	 * called, when the mser score for the next component in the branch is
 	 * available.)
 	 */
-	private void evaluateLocalMinimum( final SimpleMserComponentHandler.SimpleMserProcessor< T > minimaProcessor )
+	private void evaluateLocalMinimum( final SimpleMserComponentHandler.SimpleMserProcessor< T > minimaProcessor, final long delta )
 	{
-		if ( isScoreValid && historyAncestor.isScoreValid )
-			if ( ( score <= historyAncestor.score ) && ( score < successor.score ) )
-				minimaProcessor.foundNewMinimum( this );				
+		if ( isScoreValid )
+		{
+			SimpleMserEvaluationNode< T > below = historyAncestor;
+			while ( below.isScoreValid && below.size == size )
+				below = below.historyAncestor;
+			if ( below.isScoreValid )
+			{
+					below = below.historyAncestor;
+				if ( ( score <= below.score ) && ( score < successor.score ) )
+					minimaProcessor.foundNewMinimum( this );
+			}
+			else if ( ( value - delta ) > below.value )
+				// we are just above the bottom of a branch and this components
+				// value is high enough above the bottom value to make its score=0.
+				// so let's pretend we found a minimum here...
+				minimaProcessor.foundNewMinimum( this );
+		}
 	}
 
 	@Override
