@@ -1,5 +1,8 @@
 package net.imglib2.algorithm.mser;
 
+import java.util.ArrayList;
+import java.util.Collections;
+
 import ij.IJ;
 import ij.ImageJ;
 import ij.ImagePlus;
@@ -11,6 +14,7 @@ import net.imglib2.Localizable;
 import net.imglib2.img.Img;
 import net.imglib2.img.ImgFactory;
 import net.imglib2.img.array.ArrayImgFactory;
+import net.imglib2.img.cell.ArrayRandomAccessBenchmark.Benchmark;
 import net.imglib2.img.display.imagej.ImageJFunctions;
 import net.imglib2.io.ImgOpener;
 import net.imglib2.type.numeric.IntegerType;
@@ -84,6 +88,44 @@ public class SimpleMserTreeTest< T extends IntegerType< T > >
 		}
 	}
 
+	public static Long median( ArrayList<Long> values )
+	{
+		Collections.sort(values);
+
+		if (values.size() % 2 == 1)
+			return values.get((values.size() + 1) / 2 - 1);
+		else {
+			long lower = values.get(values.size() / 2 - 1);
+			long upper = values.get(values.size() / 2);
+
+			return (lower + upper) / 2;
+		}
+	}
+	public interface Benchmark
+	{
+		public void run();
+	}
+
+	public static void benchmark( Benchmark b )
+	{
+		ArrayList<Long> times = new ArrayList<Long>( 100 );
+		final int numRuns = 20;
+		for ( int i = 0; i < numRuns; ++i )
+		{
+			long startTime = System.currentTimeMillis();
+			b.run();
+			long endTime = System.currentTimeMillis();
+			times.add( endTime - startTime );
+		}
+		for ( int i = 0; i < numRuns; ++i )
+		{
+			System.out.println( "run " + i + ": " + times.get( i ) + " ms" );
+		}
+		System.out.println();
+		System.out.println( "median: " + median( times ) + " ms" );
+		System.out.println();
+	}
+
 	public static void main( String[] args )
 	{
 		final long delta = 10;
@@ -94,7 +136,7 @@ public class SimpleMserTreeTest< T extends IntegerType< T > >
 		
 		new ImageJ();
 		
-		Img< IntType > img = null;		
+		final Img< IntType > img;		
 		try
 		{
 			ImgFactory< IntType > imgFactory = new ArrayImgFactory< IntType >();
@@ -107,12 +149,24 @@ public class SimpleMserTreeTest< T extends IntegerType< T > >
 			return;
 		}
 	
+		System.out.println( "benchmarking..." );
+		benchmark( new Benchmark()
+		{
+			public void run()
+			{
+				final SimpleMserTree< IntType > tree = new SimpleMserTree< IntType >( minDiversity );
+				final SimpleMserFilter< IntType > procNewMser = new SimpleMserFilter< IntType >( minSize, maxSize, maxVar, tree );
+				final SimpleMserComponentHandler< IntType > handler = new SimpleMserComponentHandler< IntType >( new IntType( Integer.MAX_VALUE ), img, new ArrayImgFactory< LongType >(), delta, procNewMser );
+				new ComponentTree< IntType, SimpleMserComponent< IntType > >( img, handler, handler );
+				tree.pruneDuplicates();
+			}
+		} );
+
 		final SimpleMserTree< IntType > tree = new SimpleMserTree< IntType >( minDiversity );
 		final SimpleMserFilter< IntType > procNewMser = new SimpleMserFilter< IntType >( minSize, maxSize, maxVar, tree );
 		final SimpleMserComponentHandler< IntType > handler = new SimpleMserComponentHandler< IntType >( new IntType( Integer.MAX_VALUE ), img, new ArrayImgFactory< LongType >(), delta, procNewMser );
 		new ComponentTree< IntType, SimpleMserComponent< IntType > >( img, handler, handler );
 		tree.pruneDuplicates();
-
 		
 		ImagePlus impImg = ImageJFunctions.show( img );
 		IJ.run( "Enhance Contrast", "saturated=0.35" );
