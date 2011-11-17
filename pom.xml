@@ -25,7 +25,7 @@
     <bio-formats.version>4.4-SNAPSHOT</bio-formats.version>
     <imagej.groupId>net.imagej</imagej.groupId>
     <imagej.version>${project.version}</imagej.version>
-    <imagej1.version>[1.45p,)</imagej1.version>
+    <imagej1.version>[1.45s,)</imagej1.version>
     <!-- NB: Avoid platform encoding warning when copying resources. -->
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
