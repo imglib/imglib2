@@ -38,9 +38,14 @@
       <version>${project.version}</version>
     </dependency>
     <dependency>
-    	<groupId>junit</groupId>
-    	<artifactId>junit</artifactId>
-    	<version>4.9</version>
+      <groupId>jama</groupId>
+      <artifactId>jama</artifactId>
+      <version>1.0.2</version>
+    </dependency>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>4.9</version>
     </dependency>
   </dependencies>
 
