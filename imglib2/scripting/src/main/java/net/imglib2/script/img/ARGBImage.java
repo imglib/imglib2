@@ -1,4 +1,4 @@
-package net.imglib2.script.edit;
+package net.imglib2.script.img;
 
 import java.util.List;
 
