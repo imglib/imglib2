@@ -19,12 +19,17 @@
   <dependencies>
     <dependency>
       <groupId>${bio-formats.groupId}</groupId>
-      <artifactId>bio-formats</artifactId>
+      <artifactId>loci-common</artifactId>
       <version>${bio-formats.version}</version>
     </dependency>
     <dependency>
       <groupId>${bio-formats.groupId}</groupId>
-      <artifactId>loci-common</artifactId>
+      <artifactId>ome-xml</artifactId>
+      <version>${bio-formats.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>${bio-formats.groupId}</groupId>
+      <artifactId>scifio</artifactId>
       <version>${bio-formats.version}</version>
     </dependency>
     <dependency>
@@ -34,10 +39,10 @@
     </dependency>
 
     <dependency>
-      <groupId>${imagej.groupId}</groupId>
-      <artifactId>ij</artifactId>
-      <version>${imagej1.version}</version>
-      <scope>test</scope>
+      <groupId>${bio-formats.groupId}</groupId>
+      <artifactId>bio-formats</artifactId>
+      <version>${bio-formats.version}</version>
+      <scope>runtime</scope>
     </dependency>
 
     <dependency>

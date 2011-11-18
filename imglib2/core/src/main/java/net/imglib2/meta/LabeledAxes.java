@@ -27,15 +27,17 @@
  *
  * @author Stephan Preibisch & Stephan Saalfeld
  */
+
 package net.imglib2.meta;
 
+import net.imglib2.EuclideanSpace;
 import net.imglib2.img.Axis;
 import net.imglib2.img.Img;
 
 /**
- * An interface that gives EuclideanSpace objects names and calibrations
+ * An interface that gives {@link EuclideanSpace} objects names and calibrations
  * for their dimensions.
- *
+ * 
  * @author Lee Kamentsky
  */
 public interface LabeledAxes {
