@@ -1,6 +1,7 @@
 package net.imglib2.algorithm.mser;
 
 import java.util.ArrayDeque;
+import java.util.Comparator;
 import java.util.Deque;
 import java.util.PriorityQueue;
 
@@ -15,7 +16,7 @@ import net.imglib2.img.array.ArrayImgFactory;
 import net.imglib2.type.Type;
 import net.imglib2.type.logic.BitType;
 
-public final class ComponentTree< T extends Comparable< T > & Type< T >, C extends Component< T > >
+public final class ComponentTree< T extends Type< T >, C extends Component< T > >
 {
 	/**
 	 * Iterate pixel positions in 4-neighborhood.
@@ -125,7 +126,8 @@ public final class ComponentTree< T extends Comparable< T > & Type< T >, C exten
 		@Override
 		public int compareTo( BoundaryPixel o )
 		{
-			return value.compareTo( o.value );
+//			return value.compareTo( o.value );
+			return comparator.compare( value, o.value );
 		}
 	}
 
@@ -142,8 +144,10 @@ public final class ComponentTree< T extends Comparable< T > & Type< T >, C exten
 	private final PriorityQueue< BoundaryPixel > boundaryPixels;
 
 	private final Deque< C > componentStack;
+	
+	private final Comparator< T > comparator;
 
-	public ComponentTree( final RandomAccessibleInterval< T > input, final Component.Generator< T, C > componentGenerator, final Component.Handler< C > componentOutput )
+	public ComponentTree( final RandomAccessibleInterval< T > input, final Component.Generator< T, C > componentGenerator, final Component.Handler< C > componentOutput, final Comparator< T > comparator )
 	{
 		this.componentGenerator = componentGenerator;
 		this.componentOutput = componentOutput;
@@ -161,6 +165,8 @@ public final class ComponentTree< T extends Comparable< T > & Type< T >, C exten
 
 		componentStack = new ArrayDeque< C >();
 		componentStack.push( componentGenerator.createMaxComponent() );
+		
+		this.comparator = comparator;
 		
 		run( input );
 	}
@@ -204,7 +210,8 @@ public final class ComponentTree< T extends Comparable< T > & Type< T >, C exten
 				{
 					visit( neighbor );
 					neighborLevel.set( neighbor.get() );
-					if ( neighborLevel.compareTo( currentLevel ) >= 0 )
+//					if ( neighborLevel.compareTo( currentLevel ) >= 0 )
+					if ( comparator.compare( neighborLevel, currentLevel ) >= 0 )
 					{
 						boundaryPixels.add( new BoundaryPixel( neighbor, neighborLevel, 0 ) );
 					}
@@ -229,12 +236,11 @@ public final class ComponentTree< T extends Comparable< T > & Type< T >, C exten
 			if ( boundaryPixels.isEmpty() )
 			{
 				processStack( currentLevel );
-				System.out.println("done");
 				return;
 			}
 			
 			BoundaryPixel p = boundaryPixels.poll();
-			if ( p.get().compareTo( currentLevel ) != 0 )
+			if ( comparator.compare( p.get(), currentLevel ) != 0 )
 			{
 				// step 7
 				processStack( p.get() );
@@ -260,7 +266,7 @@ public final class ComponentTree< T extends Comparable< T > & Type< T >, C exten
 			
 			// get level of second component on stack
 			C secondComponent = componentStack.peek();
-			final int c = value.compareTo( secondComponent.getValue() );
+			final int c = comparator.compare( value, secondComponent.getValue() );
 			if ( c < 0 )
 			{
 				component.setValue( value );

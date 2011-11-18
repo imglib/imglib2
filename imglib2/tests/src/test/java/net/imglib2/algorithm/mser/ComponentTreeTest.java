@@ -1,6 +1,7 @@
 package net.imglib2.algorithm.mser;
 
 import net.imglib2.Cursor;
+import net.imglib2.algorithm.mser.SimpleMserTreeTest.DarkToBrightComparator;
 import net.imglib2.exception.IncompatibleTypeException;
 import net.imglib2.img.Img;
 import net.imglib2.img.ImgFactory;
@@ -51,9 +52,10 @@ public class ComponentTreeTest
 
 		try
 		{
+			final DarkToBrightComparator< IntType > darkToBrightComparator = new DarkToBrightComparator< IntType >();
 			PixelListComponentGenerator< IntType > generator = new PixelListComponentGenerator< IntType >( new IntType( Integer.MAX_VALUE ), input, imgFactory.imgFactory( new LongType() ) );
 			final PixelListComponentHandler< IntType > handler = new PixelListComponentHandler< IntType >( dimensions );
-			new ComponentTree< IntType, PixelListComponent< IntType > >( input, generator, handler );
+			new ComponentTree< IntType, PixelListComponent< IntType > >( input, generator, handler, darkToBrightComparator );
 		}
 		catch ( IncompatibleTypeException e )
 		{

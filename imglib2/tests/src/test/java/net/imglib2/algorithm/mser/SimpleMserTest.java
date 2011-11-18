@@ -10,6 +10,8 @@ import ij.process.ByteProcessor;
 import net.imglib2.Cursor;
 import net.imglib2.Localizable;
 import net.imglib2.algorithm.mser.SimpleMserComponentHandler.SimpleMserProcessor;
+import net.imglib2.algorithm.mser.SimpleMserTreeTest.DarkToBrightComparator;
+import net.imglib2.algorithm.mser.SimpleMserTreeTest.DarkToBrightDelta;
 import net.imglib2.img.Img;
 import net.imglib2.img.ImgFactory;
 import net.imglib2.img.array.ArrayImgFactory;
@@ -138,9 +140,11 @@ public class SimpleMserTest< T extends IntegerType< T > > implements SimpleMserP
 
 		ImageStack stack = new ImageStack( w, h );
 		//SimpleMserTest< IntType > procNewMser = new SimpleMserTest< IntType >( impImg, stack, w, h );
+		final DarkToBrightDelta< IntType > darkToBrightDelta = new DarkToBrightDelta< IntType >( new IntType( delta ) );
+		final DarkToBrightComparator< IntType > darkToBrightComparator = new DarkToBrightComparator< IntType >();
 		SimpleMserFilter< IntType > procNewMser = new SimpleMserFilter< IntType >( minSize, maxSize, maxVar, new SimpleMserTest< IntType >( impImg, stack, w, h ) );
-		final SimpleMserComponentHandler< IntType > handler = new SimpleMserComponentHandler< IntType >( new IntType( Integer.MAX_VALUE ), img, new ArrayImgFactory< LongType >(), new IntType( delta ), procNewMser );
-		new ComponentTree< IntType, SimpleMserComponent< IntType > >( img, handler, handler );
+		final SimpleMserComponentHandler< IntType > handler = new SimpleMserComponentHandler< IntType >( new IntType( Integer.MAX_VALUE ), darkToBrightComparator, img, new ArrayImgFactory< LongType >(), darkToBrightDelta, procNewMser );
+		new ComponentTree< IntType, SimpleMserComponent< IntType > >( img, handler, handler, darkToBrightComparator );
 		ImagePlus imp = new ImagePlus("components", stack);
 		imp.show();
 	}

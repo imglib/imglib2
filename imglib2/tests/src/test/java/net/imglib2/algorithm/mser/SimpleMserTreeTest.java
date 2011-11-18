@@ -2,6 +2,7 @@ package net.imglib2.algorithm.mser;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 
 import ij.IJ;
 import ij.ImageJ;
@@ -17,6 +18,8 @@ import net.imglib2.img.array.ArrayImgFactory;
 import net.imglib2.img.display.imagej.ImageJFunctions;
 import net.imglib2.io.ImgOpener;
 import net.imglib2.type.numeric.IntegerType;
+import net.imglib2.type.numeric.NumericType;
+import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.integer.IntType;
 import net.imglib2.type.numeric.integer.LongType;
 
@@ -108,7 +111,7 @@ public class SimpleMserTreeTest< T extends IntegerType< T > >
 	public static void benchmark( Benchmark b )
 	{
 		ArrayList<Long> times = new ArrayList<Long>( 100 );
-		final int numRuns = 20;
+		final int numRuns = 200;
 		for ( int i = 0; i < numRuns; ++i )
 		{
 			long startTime = System.currentTimeMillis();
@@ -124,6 +127,33 @@ public class SimpleMserTreeTest< T extends IntegerType< T > >
 		System.out.println( "median: " + median( times ) + " ms" );
 		System.out.println();
 	}
+	
+	public static class DarkToBrightComparator< T extends RealType< T > > implements Comparator< T >
+	{
+		@Override
+		public int compare( T o1, T o2 )
+		{
+			return o1.compareTo( o2 );
+		}
+	}
+
+	public static class DarkToBrightDelta< T extends NumericType< T > > implements ComputeDeltaValue< T >
+	{
+		private final T delta;
+
+		DarkToBrightDelta( final T delta )
+		{
+			this.delta = delta;
+		}
+
+		@Override
+		public T valueMinusDelta( T value )
+		{
+			final T valueMinus = value.copy();
+			valueMinus.sub( delta );
+			return valueMinus;
+		}
+	}
 
 	public static void main( String[] args )
 	{
@@ -132,8 +162,6 @@ public class SimpleMserTreeTest< T extends IntegerType< T > >
 		final long maxSize = 100*100;
 		final double maxVar = 0.8;
 		final double minDiversity = 0.5;
-		
-		new ImageJ();
 		
 		final Img< IntType > img;		
 		try
@@ -153,20 +181,25 @@ public class SimpleMserTreeTest< T extends IntegerType< T > >
 		{
 			public void run()
 			{
+				final DarkToBrightDelta< IntType > darkToBrightDelta = new DarkToBrightDelta< IntType >( new IntType( delta ) );
+				final DarkToBrightComparator< IntType > darkToBrightComparator = new DarkToBrightComparator< IntType >();
 				final SimpleMserTree< IntType > tree = new SimpleMserTree< IntType >( minDiversity );
 				final SimpleMserFilter< IntType > procNewMser = new SimpleMserFilter< IntType >( minSize, maxSize, maxVar, tree );
-				final SimpleMserComponentHandler< IntType > handler = new SimpleMserComponentHandler< IntType >( new IntType( Integer.MAX_VALUE ), img, new ArrayImgFactory< LongType >(), new IntType( delta ), procNewMser );
-				new ComponentTree< IntType, SimpleMserComponent< IntType > >( img, handler, handler );
+				final SimpleMserComponentHandler< IntType > handler = new SimpleMserComponentHandler< IntType >( new IntType( Integer.MAX_VALUE ), darkToBrightComparator, img, new ArrayImgFactory< LongType >(), darkToBrightDelta, procNewMser );
+				new ComponentTree< IntType, SimpleMserComponent< IntType > >( img, handler, handler, darkToBrightComparator );
 				tree.pruneDuplicates();
 			}
 		} );
 
+		final DarkToBrightDelta< IntType > darkToBrightDelta = new DarkToBrightDelta< IntType >( new IntType( delta ) );
+		final DarkToBrightComparator< IntType > darkToBrightComparator = new DarkToBrightComparator< IntType >();
 		final SimpleMserTree< IntType > tree = new SimpleMserTree< IntType >( minDiversity );
 		final SimpleMserFilter< IntType > procNewMser = new SimpleMserFilter< IntType >( minSize, maxSize, maxVar, tree );
-		final SimpleMserComponentHandler< IntType > handler = new SimpleMserComponentHandler< IntType >( new IntType( Integer.MAX_VALUE ), img, new ArrayImgFactory< LongType >(), new IntType( delta ), procNewMser );
-		new ComponentTree< IntType, SimpleMserComponent< IntType > >( img, handler, handler );
+		final SimpleMserComponentHandler< IntType > handler = new SimpleMserComponentHandler< IntType >( new IntType( Integer.MAX_VALUE ), darkToBrightComparator, img, new ArrayImgFactory< LongType >(), darkToBrightDelta, procNewMser );
+		new ComponentTree< IntType, SimpleMserComponent< IntType > >( img, handler, handler, darkToBrightComparator );
 		tree.pruneDuplicates();
 		
+		new ImageJ();		
 		ImagePlus impImg = ImageJFunctions.show( img );
 		IJ.run( "Enhance Contrast", "saturated=0.35" );
 

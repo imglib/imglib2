@@ -1,5 +1,7 @@
 package net.imglib2.algorithm.mser;
 
+import java.util.Comparator;
+
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.img.Img;
 import net.imglib2.img.ImgFactory;
@@ -21,17 +23,20 @@ public class SimpleMserComponentHandler< T extends RealType< T > >
 
 	final T maxValue;
 	
+	final Comparator< T > comparator;
+	
 	final SimpleMserProcessor< T > procNewMser;
 	
-	final T delta;
+	final ComputeDeltaValue< T > delta;
 	
 	final long[] dimensions;
 	
 	final Img< LongType > linkedList;
 
-	public SimpleMserComponentHandler( final T maxValue, final RandomAccessibleInterval< T > input, final ImgFactory< LongType > imgFactory, final T delta, final SimpleMserProcessor< T > procNewMser )
+	public SimpleMserComponentHandler( final T maxValue, final Comparator< T > comparator, final RandomAccessibleInterval< T > input, final ImgFactory< LongType > imgFactory, final ComputeDeltaValue< T > delta, final SimpleMserProcessor< T > procNewMser )
 	{
 		this.maxValue = maxValue;
+		this.comparator = comparator;
 		this.delta = delta;
 		this.procNewMser = procNewMser;
 		dimensions = new long[ input.numDimensions() ];
@@ -54,7 +59,7 @@ public class SimpleMserComponentHandler< T extends RealType< T > >
 	@Override
 	public void emit( SimpleMserComponent< T > component )
 	{
-		new SimpleMserEvaluationNode< T >( component, delta, procNewMser );
+		new SimpleMserEvaluationNode< T >( component, comparator, delta, procNewMser );
 		component.clearAncestors();
 	}
 }
