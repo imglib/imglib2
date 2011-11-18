@@ -41,7 +41,7 @@ import net.imglib2.img.Img;
  */
 public interface ImageMetadata {
 
-	/** Gets the number of valid bits (if appicable to this {@link Img}). */
+	/** Gets the number of valid bits (if applicable to this {@link Img}). */
 	int getValidBits();
 
 	/** Sets the number of valid bits. */
