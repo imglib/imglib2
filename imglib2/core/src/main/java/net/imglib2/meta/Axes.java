@@ -28,11 +28,11 @@
  * @author Stephan Preibisch & Stephan Saalfeld
  */
 
-package net.imglib2.img;
+package net.imglib2.meta;
 
 import java.util.Hashtable;
 
-import net.imglib2.meta.CalibratedSpace;
+import net.imglib2.img.ImgPlus;
 
 /**
  * An enumeration of common dimensional axis labels, for describing the
@@ -40,7 +40,7 @@ import net.imglib2.meta.CalibratedSpace;
  * 
  * @author Curtis Rueden
  */
-public enum Axes implements Axis {
+public enum Axes implements AxisType {
 
 	/**
 	 * Identifies the <i>X</i> dimensional type, representing a dimension in the
@@ -105,17 +105,17 @@ public enum Axes implements Axis {
 	/** Represents an unknown dimensional type. */
 	UNKNOWN("Unknown");
 
-	private static Hashtable<String, Axis> axes =
-		new Hashtable<String, Axis>();
+	private static Hashtable<String, AxisType> axes =
+		new Hashtable<String, AxisType>();
 
 	static {
-		for (final Axis axis : Axes.values()) {
+		for (final AxisType axis : Axes.values()) {
 			axes.put(axis.getLabel(), axis);
 		}
 	}
 
-	public synchronized static Axis get(final String label) {
-		Axis axis = axes.get(label);
+	public synchronized static AxisType get(final String label) {
+		AxisType axis = axes.get(label);
 		if (axis == null) {
 			axis = new CustomAxis(label);
 			axes.put(label, axis);
@@ -123,7 +123,7 @@ public enum Axes implements Axis {
 		return axis;
 	}
 
-	public static boolean isXY(final Axis dimLabel) {
+	public static boolean isXY(final AxisType dimLabel) {
 		return dimLabel == Axes.X || dimLabel == Axes.Y;
 	}
 
@@ -163,7 +163,7 @@ public enum Axes implements Axis {
 	 * A custom dimensional axis label, for describing the dimensional axes of a
 	 * {@link CalibratedSpace} object (such as an {@link ImgPlus}).
 	 */
-	public static class CustomAxis implements Axis {
+	public static class CustomAxis implements AxisType {
 
 		private final String label;
 

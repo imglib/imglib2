@@ -31,7 +31,6 @@
 package net.imglib2.meta;
 
 import net.imglib2.EuclideanSpace;
-import net.imglib2.img.Axis;
 import net.imglib2.img.Img;
 
 /**
@@ -42,16 +41,16 @@ import net.imglib2.img.Img;
 public interface CalibratedSpace extends EuclideanSpace {
 
 	/** Gets the dimensional index of the axis with the given type. */
-	int getAxisIndex(final Axis axis);
+	int getAxisIndex(final AxisType axis);
 
 	/** Gets the associated {@link Img}'s axis at the given dimension. */
-	Axis axis(int d);
+	AxisType axis(int d);
 
 	/** Copies the {@link Img}'s axes into the given array. */
-	void axes(Axis[] axes);
+	void axes(AxisType[] axes);
 
 	/** Sets the dimensional axis for the given dimension. */
-	void setAxis(Axis axis, int d);
+	void setAxis(AxisType axis, int d);
 
 	/** Gets the associated {@link Img}'s calibration at the given dimension. */
 	double calibration(int d);
