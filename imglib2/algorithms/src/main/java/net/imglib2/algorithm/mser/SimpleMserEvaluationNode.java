@@ -51,7 +51,7 @@ public final class SimpleMserEvaluationNode< T extends RealType< T > >
 		if ( node != null )
 		{
 			historySize = node.size;
-			node = createIntermediateNodes( node, value, comparator, delta, minimaProcessor );
+			node = new SimpleMserEvaluationNode< T >( node, value, comparator, delta, minimaProcessor );
 			ancestors.add( node );
 			node.setSuccessor( this );
 		}
@@ -59,7 +59,7 @@ public final class SimpleMserEvaluationNode< T extends RealType< T > >
 		SimpleMserEvaluationNode< T > historyWinner = node;
 		for ( SimpleMserComponent< T > c : component.getAncestors() )
 		{
-			node = createIntermediateNodes( c.getEvaluationNode(), value, comparator, delta, minimaProcessor );
+			node = new SimpleMserEvaluationNode< T >( c.getEvaluationNode(), value, comparator, delta, minimaProcessor );
 			ancestors.add( node );
 			node.setSuccessor( this );
 			if ( c.getSize() > historySize )
@@ -122,13 +122,6 @@ public final class SimpleMserEvaluationNode< T extends RealType< T > >
 //			ancestor.evaluateLocalMinimum( minimaProcessor, delta );
 
 		mserThisOrAncestors = ancestor.mserThisOrAncestors;
-	}
-
-	private SimpleMserEvaluationNode< T > createIntermediateNodes( final SimpleMserEvaluationNode< T > fromNode, final T toValue, final Comparator< T > comparator, final ComputeDeltaValue< T > delta, final SimpleMserComponentHandler.SimpleMserProcessor< T > minimaProcessor )
-	{
-		SimpleMserEvaluationNode< T > node = fromNode;
-		node = new SimpleMserEvaluationNode< T >( node, toValue, comparator, delta, minimaProcessor );
-		return node;
 	}
 
 	private void setSuccessor( SimpleMserEvaluationNode< T > node )
