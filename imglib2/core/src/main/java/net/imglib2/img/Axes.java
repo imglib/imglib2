@@ -114,7 +114,7 @@ public enum Axes implements Axis {
 		}
 	}
 
-	public static Axis get(final String label) {
+	public synchronized static Axis get(final String label) {
 		Axis axis = axes.get(label);
 		if (axis == null) {
 			axis = new CustomAxis(label);
