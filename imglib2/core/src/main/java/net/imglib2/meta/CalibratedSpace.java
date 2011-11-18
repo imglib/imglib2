@@ -35,12 +35,11 @@ import net.imglib2.img.Axis;
 import net.imglib2.img.Img;
 
 /**
- * An interface that gives {@link EuclideanSpace} objects names and calibrations
- * for their dimensions.
+ * A Euclidean space whose dimensions have names and calibrations.
  * 
  * @author Lee Kamentsky
  */
-public interface CalibratedSpace {
+public interface CalibratedSpace extends EuclideanSpace {
 
 	/** Gets the dimensional index of the axis with the given type. */
 	int getAxisIndex(final Axis axis);
