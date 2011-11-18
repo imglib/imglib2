@@ -40,7 +40,7 @@ import net.imglib2.img.Img;
  * 
  * @author Lee Kamentsky
  */
-public interface LabeledAxes {
+public interface CalibratedSpace {
 
 	/** Gets the dimensional index of the axis with the given type. */
 	int getAxisIndex(final Axis axis);

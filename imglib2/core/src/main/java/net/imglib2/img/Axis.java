@@ -30,11 +30,11 @@
 
 package net.imglib2.img;
 
-import net.imglib2.meta.Metadata;
+import net.imglib2.meta.CalibratedSpace;
 
 /**
  * A dimensional axis label, for describing the dimensional axes of a
- * {@link Metadata} object (such as an {@link ImgPlus}).
+ * {@link CalibratedSpace} object (such as an {@link ImgPlus}).
  * 
  * @author Curtis Rueden ctrueden at wisc.edu
  */

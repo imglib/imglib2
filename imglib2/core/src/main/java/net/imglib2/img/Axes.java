@@ -32,11 +32,11 @@ package net.imglib2.img;
 
 import java.util.Hashtable;
 
-import net.imglib2.meta.Metadata;
+import net.imglib2.meta.CalibratedSpace;
 
 /**
  * An enumeration of common dimensional axis labels, for describing the
- * dimensional axes of a {@link Metadata} object (such as an {@link ImgPlus}).
+ * dimensional axes of a {@link CalibratedSpace} object (such as an {@link ImgPlus}).
  * 
  * @author Curtis Rueden
  */
@@ -161,7 +161,7 @@ public enum Axes implements Axis {
 
 	/**
 	 * A custom dimensional axis label, for describing the dimensional axes of a
-	 * {@link Metadata} object (such as an {@link ImgPlus}).
+	 * {@link CalibratedSpace} object (such as an {@link ImgPlus}).
 	 */
 	public static class CustomAxis implements Axis {
 
