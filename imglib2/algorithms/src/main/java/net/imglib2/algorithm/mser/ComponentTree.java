@@ -126,7 +126,6 @@ public final class ComponentTree< T extends Type< T >, C extends Component< T > 
 		@Override
 		public int compareTo( BoundaryPixel o )
 		{
-//			return value.compareTo( o.value );
 			return comparator.compare( value, o.value );
 		}
 	}
@@ -210,7 +209,6 @@ public final class ComponentTree< T extends Type< T >, C extends Component< T > 
 				{
 					visit( neighbor );
 					neighborLevel.set( neighbor.get() );
-//					if ( neighborLevel.compareTo( currentLevel ) >= 0 )
 					if ( comparator.compare( neighborLevel, currentLevel ) >= 0 )
 					{
 						boundaryPixels.add( new BoundaryPixel( neighbor, neighborLevel, 0 ) );
@@ -229,7 +227,7 @@ public final class ComponentTree< T extends Type< T >, C extends Component< T > 
 			}
 			
 			// step 5
-			C component = componentStack.peek(); // TODO: no need to peek(), just keep it in local variable when it's created 
+			C component = componentStack.peek();
 			component.addPosition( current );
 			
 			// step 6
