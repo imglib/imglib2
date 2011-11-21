@@ -18,10 +18,28 @@ import net.imglib2.type.logic.BitType;
 
 public final class ComponentTree< T extends Type< T >, C extends Component< T > >
 {
+	public static final class DarkToBright< T extends Comparable< T > > implements Comparator< T >
+	{
+		@Override
+		public int compare( final T o1, final T o2 )
+		{
+			return o1.compareTo( o2 );
+		}
+	}
+
+	public static final class BrightToDark< T extends Comparable< T > > implements Comparator< T >
+	{
+		@Override
+		public int compare( final T o1, final T o2 )
+		{
+			return o2.compareTo( o1 );
+		}
+	}
+
 	/**
 	 * Iterate pixel positions in 4-neighborhood.
 	 */
-	private final class Neighborhood
+	private static final class Neighborhood
 	{
 		/**
 		 * index of the next neighbor to visit.

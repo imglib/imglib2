@@ -2,7 +2,6 @@ package net.imglib2.algorithm.mser;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 
 import ij.IJ;
 import ij.ImageJ;
@@ -19,7 +18,6 @@ import net.imglib2.img.display.imagej.ImageJFunctions;
 import net.imglib2.io.ImgOpener;
 import net.imglib2.type.numeric.IntegerType;
 import net.imglib2.type.numeric.NumericType;
-import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.integer.IntType;
 import net.imglib2.type.numeric.integer.LongType;
 
@@ -128,15 +126,6 @@ public class SimpleMserTreeTest< T extends IntegerType< T > >
 		System.out.println();
 	}
 	
-	public static class DarkToBrightComparator< T extends RealType< T > > implements Comparator< T >
-	{
-		@Override
-		public int compare( T o1, T o2 )
-		{
-			return o1.compareTo( o2 );
-		}
-	}
-
 	public static class DarkToBrightDelta< T extends NumericType< T > > implements ComputeDeltaValue< T >
 	{
 		private final T delta;
@@ -182,7 +171,7 @@ public class SimpleMserTreeTest< T extends IntegerType< T > >
 			public void run()
 			{
 				final DarkToBrightDelta< IntType > darkToBrightDelta = new DarkToBrightDelta< IntType >( new IntType( delta ) );
-				final DarkToBrightComparator< IntType > darkToBrightComparator = new DarkToBrightComparator< IntType >();
+				final ComponentTree.DarkToBright< IntType > darkToBrightComparator = new ComponentTree.DarkToBright< IntType >();
 				final SimpleMserTree< IntType > tree = new SimpleMserTree< IntType >( minDiversity );
 				final SimpleMserFilter< IntType > procNewMser = new SimpleMserFilter< IntType >( minSize, maxSize, maxVar, tree );
 				final SimpleMserComponentHandler< IntType > handler = new SimpleMserComponentHandler< IntType >( new IntType( Integer.MAX_VALUE ), darkToBrightComparator, img, new ArrayImgFactory< LongType >(), darkToBrightDelta, procNewMser );
@@ -192,7 +181,7 @@ public class SimpleMserTreeTest< T extends IntegerType< T > >
 		} );
 
 		final DarkToBrightDelta< IntType > darkToBrightDelta = new DarkToBrightDelta< IntType >( new IntType( delta ) );
-		final DarkToBrightComparator< IntType > darkToBrightComparator = new DarkToBrightComparator< IntType >();
+		final ComponentTree.DarkToBright< IntType > darkToBrightComparator = new ComponentTree.DarkToBright< IntType >();
 		final SimpleMserTree< IntType > tree = new SimpleMserTree< IntType >( minDiversity );
 		final SimpleMserFilter< IntType > procNewMser = new SimpleMserFilter< IntType >( minSize, maxSize, maxVar, tree );
 		final SimpleMserComponentHandler< IntType > handler = new SimpleMserComponentHandler< IntType >( new IntType( Integer.MAX_VALUE ), darkToBrightComparator, img, new ArrayImgFactory< LongType >(), darkToBrightDelta, procNewMser );
