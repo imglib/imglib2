@@ -6,7 +6,7 @@ import net.imglib2.img.ImgFactory;
 import net.imglib2.type.Type;
 import net.imglib2.type.numeric.integer.LongType;
 
-public class PixelListComponentGenerator< T extends Type< T > > implements Component.Generator< T, PixelListComponent< T > >
+public class PixelListComponentGenerator< T extends Type< T > > implements Component.Generator< T, PixelListComponentIntermediate< T > >
 {
 	final T maxValue;
 	
@@ -23,14 +23,14 @@ public class PixelListComponentGenerator< T extends Type< T > > implements Compo
 	}
 	
 	@Override
-	public PixelListComponent< T > createComponent( T value )
+	public PixelListComponentIntermediate< T > createComponent( T value )
 	{
-		return new PixelListComponent< T >( value, this );
+		return new PixelListComponentIntermediate< T >( value, this );
 	}
 
 	@Override
-	public PixelListComponent< T > createMaxComponent()
+	public PixelListComponentIntermediate< T > createMaxComponent()
 	{
-		return new PixelListComponent< T >( maxValue, this );
+		return new PixelListComponentIntermediate< T >( maxValue, this );
 	}
 }

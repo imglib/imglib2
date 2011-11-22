@@ -1,75 +1,71 @@
 package net.imglib2.algorithm.mser;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 
 import net.imglib2.Localizable;
 import net.imglib2.type.Type;
 
-public class PixelListComponent< T extends Type< T > > implements Component< T >, Iterable< Localizable >
+public class PixelListComponent< T extends Type< T > > implements Iterable< Localizable >
 {
-	private static int idGen = 0;
-	
-	final int id;
-	
-	T value;
-	
-	PixelList pixelList;
+	private final ArrayList< PixelListComponent< T > > ancestors;
 
-	public PixelListComponent( final T value, final PixelListComponentGenerator< T > generator )
+	private PixelListComponent< T > successor;
+
+	/**
+	 * Threshold value of the connected component.
+	 */
+	private final T value;
+
+	/**
+	 * Pixels in the component.
+	 */
+	private final PixelList pixelList;
+
+	PixelListComponent( PixelListComponentIntermediate< T > intermediate )
 	{
-		id = idGen++;
-		pixelList = new PixelList( generator.linkedList.randomAccess(), generator.dimensions );
-		this.value = value.copy();
+		ancestors = new ArrayList< PixelListComponent< T > >();
+		successor = null;
+		value = intermediate.getValue().copy();
+		pixelList = new PixelList( intermediate.pixelList );
+		for ( PixelListComponentIntermediate< T > c : intermediate.ancestors )
+		{
+			ancestors.add( c.emittedComponent );
+			c.emittedComponent.successor = this;
+		}
+		intermediate.emittedComponent = this;
+		intermediate.ancestors.clear();
 	}
-	
-	@Override
-	public void addPosition( final Localizable position )
-	{
-		pixelList.addPosition( position );
-	}
-	
-	@Override
-	public T getValue()
+
+	/**
+	 * @return the image threshold that created the extremal region.
+	 */
+	public T value()
 	{
 		return value;
 	}
-	
-	@Override
-	public void setValue( final T value )
+
+	/**
+	 * @return number of pixels the extremal region.
+	 */
+	public long size()
 	{
-		this.value.set( value );
-	}
-	
-	@Override
-	public void merge( final Component< T > component )
-	{
-		final PixelListComponent< T > c = ( PixelListComponent< T > ) component;
-		pixelList.merge( c.pixelList );
+		return pixelList.size();
 	}
 
-	@Override
-	public String toString()
-	{
-		String s = "{" + value.toString() + " : id=" + id + " : ";
-		boolean first = true;
-		for ( Localizable l : this )
-		{
-			if ( first )
-			{
-				first = false;
-			}
-			else
-			{
-				s += ", ";
-			}
-			s += l.toString();
-		}
-		return s + "}";
-	}
-	
 	@Override
 	public Iterator< Localizable > iterator()
 	{
 		return pixelList.iterator();
+	}
+
+	public ArrayList< PixelListComponent< T > > getAncestors()
+	{
+		return ancestors;
+	}
+	
+	public PixelListComponent< T > getSuccessor()
+	{
+		return successor;
 	}
 }
