@@ -175,7 +175,7 @@ public class SimpleMserTreeTest< T extends IntegerType< T > >
 				final SimpleMserTree< IntType > tree = new SimpleMserTree< IntType >( minDiversity );
 				final SimpleMserFilter< IntType > procNewMser = new SimpleMserFilter< IntType >( minSize, maxSize, maxVar, tree );
 				final SimpleMserComponentHandler< IntType > handler = new SimpleMserComponentHandler< IntType >( new IntType( Integer.MAX_VALUE ), darkToBrightComparator, img, new ArrayImgFactory< LongType >(), darkToBrightDelta, procNewMser );
-				new ComponentTree< IntType, SimpleMserComponent< IntType > >( img, handler, handler, darkToBrightComparator );
+				ComponentTree.buildComponentTree( img, handler, handler, darkToBrightComparator );
 				tree.pruneDuplicates();
 			}
 		} );
@@ -185,7 +185,7 @@ public class SimpleMserTreeTest< T extends IntegerType< T > >
 		final SimpleMserTree< IntType > tree = new SimpleMserTree< IntType >( minDiversity );
 		final SimpleMserFilter< IntType > procNewMser = new SimpleMserFilter< IntType >( minSize, maxSize, maxVar, tree );
 		final SimpleMserComponentHandler< IntType > handler = new SimpleMserComponentHandler< IntType >( new IntType( Integer.MAX_VALUE ), darkToBrightComparator, img, new ArrayImgFactory< LongType >(), darkToBrightDelta, procNewMser );
-		new ComponentTree< IntType, SimpleMserComponent< IntType > >( img, handler, handler, darkToBrightComparator );
+		ComponentTree.buildComponentTree( img, handler, handler, darkToBrightComparator );
 		tree.pruneDuplicates();
 		
 		new ImageJ();		

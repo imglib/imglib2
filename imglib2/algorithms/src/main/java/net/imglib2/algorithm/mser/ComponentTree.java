@@ -18,6 +18,16 @@ import net.imglib2.type.logic.BitType;
 
 public final class ComponentTree< T extends Type< T >, C extends Component< T > >
 {
+	public static < T extends Type< T >, C extends Component< T > > void buildComponentTree( final RandomAccessibleInterval< T > input, final Component.Generator< T, C > componentGenerator, final Component.Handler< C > componentHandler, final Comparator< T > comparator )
+	{
+		new ComponentTree< T, C >( input, componentGenerator, componentHandler, comparator );
+	}
+
+	public static < T extends Type< T > & Comparable< T >, C extends Component< T > > void buildComponentTree( final RandomAccessibleInterval< T > input, final Component.Generator< T, C > componentGenerator, final Component.Handler< C > componentHandler, boolean darkToBright )
+	{
+		new ComponentTree< T, C >( input, componentGenerator, componentHandler, darkToBright ? new DarkToBright< T >() : new BrightToDark< T >() );
+	}
+
 	public static final class DarkToBright< T extends Comparable< T > > implements Comparator< T >
 	{
 		@Override
@@ -164,7 +174,7 @@ public final class ComponentTree< T extends Type< T >, C extends Component< T > 
 	
 	private final Comparator< T > comparator;
 
-	public ComponentTree( final RandomAccessibleInterval< T > input, final Component.Generator< T, C > componentGenerator, final Component.Handler< C > componentOutput, final Comparator< T > comparator )
+	private ComponentTree( final RandomAccessibleInterval< T > input, final Component.Generator< T, C > componentGenerator, final Component.Handler< C > componentOutput, final Comparator< T > comparator )
 	{
 		this.componentGenerator = componentGenerator;
 		this.componentOutput = componentOutput;
