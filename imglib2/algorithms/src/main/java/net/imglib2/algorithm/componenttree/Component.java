@@ -2,6 +2,26 @@ package net.imglib2.algorithm.componenttree;
 
 import net.imglib2.Localizable;
 
+/**
+ * This interface is used by {@link ComponentTree} to build the component tree
+ * of an image. In the algorithm described by D. Nister and H. Stewenius in
+ * "Linear Time Maximally Stable Extremal Regions" (ECCV 2008) a stack of
+ * incomplete components is maintained while visiting the pixels of the input
+ * image. {@link Component} represents an element on the component stack, i.e.,
+ * a connected component in the making.
+ *
+ * It provides methods to get/set the threshold value for the connected
+ * component, to add pixels to the component, and to merge it with another
+ * component.
+ *
+ * {@link ComponentTree} uses a {@link Component.Generator} to create new
+ * components and emits completed components to a {@link Component.Handler}.
+ *
+ * @author Tobias Pietzsch
+ *
+ * @param <T>
+ *            value type of the input image.
+ */
 public interface Component< T >
 {
 	/**
@@ -10,7 +30,9 @@ public interface Component< T >
 	 * @author Tobias Pietzsch
 	 *
 	 * @param <T>
+	 *            value type of the input image.
 	 * @param <C>
+	 *            component type.
 	 */
 	public interface Generator< T, C extends Component< T > >
 	{
@@ -39,9 +61,19 @@ public interface Component< T >
 	 * @author Tobias Pietzsch
 	 * 
 	 * @param <C>
+	 *            component type.
 	 */
 	public interface Handler< C >
 	{
+		/**
+		 * {@link ComponentTree} calls this for every completed component. NOTE
+		 * THAT THE COMPONENT IS RE-USED BY {@link ComponentTree}! That is,
+		 * after calling emit() new pixels may be added, etc. Do not store the
+		 * component object but rather copy the relevant data!
+		 *
+		 * @param component
+		 *            a completed component
+		 */
 		public void emit( C component );
 	}
 
