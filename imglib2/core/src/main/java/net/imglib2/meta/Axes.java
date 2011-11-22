@@ -35,8 +35,8 @@ import java.util.Hashtable;
 import net.imglib2.img.ImgPlus;
 
 /**
- * An enumeration of common dimensional axis labels, for describing the
- * dimensional axes of a {@link CalibratedSpace} object (such as an {@link ImgPlus}).
+ * An enumeration of common dimensional axis types, for describing the
+ * dimensions of a {@link CalibratedSpace} object (such as an {@link ImgPlus}).
  * 
  * @author Curtis Rueden
  */
@@ -117,7 +117,7 @@ public enum Axes implements AxisType {
 	public synchronized static AxisType get(final String label) {
 		AxisType axis = axes.get(label);
 		if (axis == null) {
-			axis = new CustomAxis(label);
+			axis = new CustomAxisType(label);
 			axes.put(label, axis);
 		}
 		return axis;
@@ -160,14 +160,14 @@ public enum Axes implements AxisType {
 	// -- Helper classes --
 
 	/**
-	 * A custom dimensional axis label, for describing the dimensional axes of a
+	 * A custom dimensional axis type, for describing the dimensional axes of a
 	 * {@link CalibratedSpace} object (such as an {@link ImgPlus}).
 	 */
-	public static class CustomAxis implements AxisType {
+	public static class CustomAxisType implements AxisType {
 
 		private final String label;
 
-		public CustomAxis(final String label) {
+		public CustomAxisType(final String label) {
 			this.label = label;
 		}
 

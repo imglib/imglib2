@@ -33,7 +33,7 @@ package net.imglib2.meta;
 import net.imglib2.img.ImgPlus;
 
 /**
- * A dimensional axis type, for describing the dimensional axes of a
+ * A dimensional axis type, for describing the dimensions of a
  * {@link CalibratedSpace} object (such as an {@link ImgPlus}).
  * 
  * @author Curtis Rueden ctrueden at wisc.edu
