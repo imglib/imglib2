@@ -1,4 +1,4 @@
-package net.imglib2.algorithm.mser;
+package net.imglib2.algorithm.componenttree;
 
 import java.util.ArrayDeque;
 import java.util.Comparator;

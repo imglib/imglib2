@@ -1,6 +1,7 @@
-package net.imglib2.algorithm.mser;
+package net.imglib2.algorithm.componenttree.pixellist;
 
 import net.imglib2.RandomAccessibleInterval;
+import net.imglib2.algorithm.componenttree.Component;
 import net.imglib2.img.Img;
 import net.imglib2.img.ImgFactory;
 import net.imglib2.type.Type;

@@ -11,6 +11,7 @@ import ij.gui.EllipseRoi;
 import ij.gui.Overlay;
 import ij.process.ByteProcessor;
 import net.imglib2.Localizable;
+import net.imglib2.algorithm.componenttree.ComponentTree;
 import net.imglib2.img.Img;
 import net.imglib2.img.ImgFactory;
 import net.imglib2.img.array.ArrayImgFactory;

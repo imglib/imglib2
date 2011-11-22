@@ -3,6 +3,7 @@ package net.imglib2.algorithm.mser;
 import java.util.ArrayList;
 import java.util.Comparator;
 
+import net.imglib2.algorithm.componenttree.pixellist.PixelList;
 import net.imglib2.type.numeric.RealType;
 
 public final class SimpleMserEvaluationNode< T extends RealType< T > >

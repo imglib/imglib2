@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 
 import net.imglib2.Localizable;
+import net.imglib2.algorithm.componenttree.pixellist.PixelList;
 import net.imglib2.algorithm.mser.SimpleMserComponentHandler.SimpleMserProcessor;
 import net.imglib2.type.numeric.RealType;
 

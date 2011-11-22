@@ -3,6 +3,8 @@ package net.imglib2.algorithm.mser;
 import java.util.ArrayList;
 
 import net.imglib2.Localizable;
+import net.imglib2.algorithm.componenttree.Component;
+import net.imglib2.algorithm.componenttree.pixellist.PixelList;
 import net.imglib2.type.numeric.RealType;
 
 public final class SimpleMserComponent< T extends RealType< T > > implements Component< T >

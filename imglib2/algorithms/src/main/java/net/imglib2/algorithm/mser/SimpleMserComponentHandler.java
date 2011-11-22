@@ -3,6 +3,7 @@ package net.imglib2.algorithm.mser;
 import java.util.Comparator;
 
 import net.imglib2.RandomAccessibleInterval;
+import net.imglib2.algorithm.componenttree.Component;
 import net.imglib2.img.Img;
 import net.imglib2.img.ImgFactory;
 import net.imglib2.type.numeric.RealType;

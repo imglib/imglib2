@@ -1,9 +1,11 @@
-package net.imglib2.algorithm.mser;
+package net.imglib2.algorithm.componenttree.pixellist;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 
 import net.imglib2.RandomAccessibleInterval;
+import net.imglib2.algorithm.componenttree.Component;
+import net.imglib2.algorithm.componenttree.ComponentTree;
 import net.imglib2.img.ImgFactory;
 import net.imglib2.img.array.ArrayImgFactory;
 import net.imglib2.img.cell.CellImgFactory;

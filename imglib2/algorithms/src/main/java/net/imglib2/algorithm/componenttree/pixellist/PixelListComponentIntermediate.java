@@ -1,9 +1,10 @@
-package net.imglib2.algorithm.mser;
+package net.imglib2.algorithm.componenttree.pixellist;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 
 import net.imglib2.Localizable;
+import net.imglib2.algorithm.componenttree.Component;
 import net.imglib2.type.Type;
 
 public final class PixelListComponentIntermediate< T extends Type< T > > implements Component< T >, Iterable< Localizable >
@@ -53,7 +54,7 @@ public final class PixelListComponentIntermediate< T extends Type< T > > impleme
 	@Override
 	public void merge( final Component< T > component )
 	{
-		final PixelListComponentIntermediate< T > c = ( PixelListComponentIntermediate< T > ) component;
+		final PixelListComponentIntermediate< T > c = (PixelListComponentIntermediate< T > ) component;
 		pixelList.merge( c.pixelList );
 		ancestors.add( c );
 	}
