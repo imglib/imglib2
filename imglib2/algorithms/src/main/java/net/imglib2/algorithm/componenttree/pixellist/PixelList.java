@@ -13,15 +13,15 @@ public final class PixelList implements Iterable< Localizable >
 	private final RandomAccess< LongType > locationsAccess;
 
 	private final long[] dimensions;
-	
+
 	private long headIndex;
-	
+
 	private final long[] tailPos;
-	
+
 	private long size;
 
 	/**
-	 * 
+	 *
 	 * @param locationsAccess
 	 *            RandomAccess into the index image to store the linked list.
 	 * @param dimensions
@@ -59,7 +59,7 @@ public final class PixelList implements Iterable< Localizable >
 			position.localize( tailPos );
 			final long i = IntervalIndexer.positionToIndex( tailPos, dimensions );
 			locationsAccess.get().set( i );
-		}		
+		}
 		++size;
 	}
 
@@ -87,7 +87,7 @@ public final class PixelList implements Iterable< Localizable >
 		private long nextIndex;
 		private final long[] tmp;
 		private final Point pos;
-		
+
 		public PixelListIterator()
 		{
 			i = 0;
@@ -95,7 +95,7 @@ public final class PixelList implements Iterable< Localizable >
 			tmp = new long[ dimensions.length ];
 			pos = new Point( dimensions.length );
 		}
-		
+
 		@Override
 		public boolean hasNext()
 		{
@@ -122,7 +122,7 @@ public final class PixelList implements Iterable< Localizable >
 	{
 		return new PixelListIterator();
 	}
-	
+
 	public long size()
 	{
 		return size;

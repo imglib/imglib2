@@ -6,11 +6,29 @@ import java.util.Iterator;
 import net.imglib2.Localizable;
 import net.imglib2.type.Type;
 
-public class PixelListComponent< T extends Type< T > > implements Iterable< Localizable >
+/**
+ * A connected component of the image thresholded at {@link #value()}. The set
+ * of pixels can be accessed by iterating ({@ling #iterator()}) the component.
+ *
+ * This is a node in a {@link PixelListComponentTree}. The child and parent
+ * nodes can be accessed by {@link #getChildren()} and {@link #getParent()}.
+ *
+ * @author Tobias Pietzsch
+ *
+ * @param <T>
+ *            value type of the input image.
+ */
+public final class PixelListComponent< T extends Type< T > > implements Iterable< Localizable >
 {
-	private final ArrayList< PixelListComponent< T > > ancestors;
+	/**
+	 * child nodes in the {@link PixelListComponentTree}.
+	 */
+	private final ArrayList< PixelListComponent< T > > children;
 
-	private PixelListComponent< T > successor;
+	/**
+	 * parent node in the {@link PixelListComponentTree}.
+	 */
+	private PixelListComponent< T > parent;
 
 	/**
 	 * Threshold value of the connected component.
@@ -24,20 +42,22 @@ public class PixelListComponent< T extends Type< T > > implements Iterable< Loca
 
 	PixelListComponent( PixelListComponentIntermediate< T > intermediate )
 	{
-		ancestors = new ArrayList< PixelListComponent< T > >();
-		successor = null;
+		children = new ArrayList< PixelListComponent< T > >();
+		parent = null;
 		value = intermediate.getValue().copy();
 		pixelList = new PixelList( intermediate.pixelList );
-		for ( PixelListComponentIntermediate< T > c : intermediate.ancestors )
+		for ( PixelListComponentIntermediate< T > c : intermediate.children )
 		{
-			ancestors.add( c.emittedComponent );
-			c.emittedComponent.successor = this;
+			children.add( c.emittedComponent );
+			c.emittedComponent.parent = this;
 		}
 		intermediate.emittedComponent = this;
-		intermediate.ancestors.clear();
+		intermediate.children.clear();
 	}
 
 	/**
+	 * Get the image threshold that created the extremal region.
+	 *
 	 * @return the image threshold that created the extremal region.
 	 */
 	public T value()
@@ -46,6 +66,8 @@ public class PixelListComponent< T extends Type< T > > implements Iterable< Loca
 	}
 
 	/**
+	 * Get the number of pixels the extremal region.
+	 *
 	 * @return number of pixels the extremal region.
 	 */
 	public long size()
@@ -53,19 +75,35 @@ public class PixelListComponent< T extends Type< T > > implements Iterable< Loca
 		return pixelList.size();
 	}
 
+	/**
+	 * Get an iterator over the pixel locations ({@link Localizable}) in this
+	 * connected component.
+	 *
+	 * @return iterator over locations.
+	 */
 	@Override
 	public Iterator< Localizable > iterator()
 	{
 		return pixelList.iterator();
 	}
 
-	public ArrayList< PixelListComponent< T > > getAncestors()
+	/**
+	 * Get the children of this node in the {@link PixelListComponentTree}.
+	 *
+	 * @return the children of this node in the {@link PixelListComponentTree}.
+	 */
+	public ArrayList< PixelListComponent< T > > getChildren()
 	{
-		return ancestors;
+		return children;
 	}
-	
-	public PixelListComponent< T > getSuccessor()
+
+	/**
+	 * Get the parent of this node in the {@link PixelListComponentTree}.
+	 *
+	 * @return the parent of this node in the {@link PixelListComponentTree}.
+	 */
+	public PixelListComponent< T > getParent()
 	{
-		return successor;
+		return parent;
 	}
 }

@@ -7,14 +7,38 @@ import net.imglib2.img.ImgFactory;
 import net.imglib2.type.Type;
 import net.imglib2.type.numeric.integer.LongType;
 
-public class PixelListComponentGenerator< T extends Type< T > > implements Component.Generator< T, PixelListComponentIntermediate< T > >
+/**
+ * Implementation of {@link Component.Generator} for creating
+ * {@link PixelListComponentIntermediate} components. According to the
+ * dimensions of the input image it creates a {@link LongType} {@link Img} to
+ * store the {@link PixelList} used in the components.
+ *
+ * @author Tobias Pietzsch
+ *
+ * @param <T>
+ *            value type of the input image.
+ */
+public final class PixelListComponentGenerator< T extends Type< T > > implements Component.Generator< T, PixelListComponentIntermediate< T > >
 {
 	final T maxValue;
-	
+
 	final long[] dimensions;
-	
+
 	final Img< LongType > linkedList;
 
+	/**
+	 * According to the dimensions of the input image, create a {@link LongType}
+	 * {@link Img} to store the {@link PixelList} used in the components
+	 * generated {@link #createComponent(Type)}.
+	 *
+	 * @param maxValue
+	 *            a value (e.g., grey-level) greater than any occurring in the
+	 *            input image.
+	 * @param input
+	 *            input image.
+	 * @param imgFactory
+	 *            used to create PixelList image.
+	 */
 	public PixelListComponentGenerator( final T maxValue, final RandomAccessibleInterval< T > input, final ImgFactory< LongType > imgFactory )
 	{
 		this.maxValue = maxValue;
@@ -22,7 +46,7 @@ public class PixelListComponentGenerator< T extends Type< T > > implements Compo
 		input.dimensions( dimensions );
 		linkedList = imgFactory.create( dimensions, new LongType() );
 	}
-	
+
 	@Override
 	public PixelListComponentIntermediate< T > createComponent( T value )
 	{

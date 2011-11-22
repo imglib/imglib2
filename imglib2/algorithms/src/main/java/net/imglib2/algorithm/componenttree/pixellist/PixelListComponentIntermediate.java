@@ -14,13 +14,13 @@ public final class PixelListComponentIntermediate< T extends Type< T > > impleme
 	final PixelList pixelList;
 
 	/**
-	 * A list of PixelListComponentBuilder merged into this one since it was last emitted.
+	 * A list of PixelListComponentIntermediate merged into this one since it was last emitted.
 	 * (For building up component tree.)
 	 */
-	final ArrayList< PixelListComponentIntermediate< T > > ancestors;
+	final ArrayList< PixelListComponentIntermediate< T > > children;
 
 	/**
-	 * The PixelListComponent assigned to this PixelListComponentBuilder when it was last emitted.
+	 * The PixelListComponent assigned to this PixelListComponentIntermediate when it was last emitted.
 	 * (For building up component tree.)
 	 */
 	PixelListComponent< T > emittedComponent;
@@ -29,7 +29,7 @@ public final class PixelListComponentIntermediate< T extends Type< T > > impleme
 	{
 		pixelList = new PixelList( generator.linkedList.randomAccess(), generator.dimensions );
 		this.value = value.copy();
-		ancestors = new ArrayList< PixelListComponentIntermediate< T > >();
+		children = new ArrayList< PixelListComponentIntermediate< T > >();
 		emittedComponent = null;
 	}
 
@@ -56,7 +56,7 @@ public final class PixelListComponentIntermediate< T extends Type< T > > impleme
 	{
 		final PixelListComponentIntermediate< T > c = (PixelListComponentIntermediate< T > ) component;
 		pixelList.merge( c.pixelList );
-		ancestors.add( c );
+		children.add( c );
 	}
 
 	@Override
