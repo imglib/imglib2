@@ -28,11 +28,10 @@
       <artifactId>mines-jtk</artifactId>
       <version>20100113</version>
     </dependency>
-    <!-- TODO: define a real POM for fiji-plugins project -->
     <dependency>
-		  <groupId>jama</groupId>
-		  <artifactId>jama</artifactId>
-		  <version>1.0.2</version>
+      <groupId>jama</groupId>
+      <artifactId>jama</artifactId>
+      <version>1.0.2</version>
     </dependency>
     <!-- TODO: define a real POM for mpicbg project -->
     <dependency>

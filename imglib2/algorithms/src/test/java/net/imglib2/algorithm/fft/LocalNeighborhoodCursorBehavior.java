@@ -6,7 +6,7 @@ import net.imglib2.img.array.ArrayImgFactory;
 import net.imglib2.type.numeric.real.FloatType;
 import net.imglib2.view.Views;
 
-public class TestLocalNeighborhoodCursor {
+public class LocalNeighborhoodCursorBehavior {
 
 	public static final void main(String[] args) {
 		

@@ -830,7 +830,7 @@ public class ImgOpener implements StatusReporter {
 				value = DataTools.bytesToShort(plane, 2 * index, 2, little);
 				break;
 			case FormatTools.UINT32:
-				value = DataTools.bytesToInt(plane, 4 * index, 4, little) & 0xffffffff;
+				value = DataTools.bytesToInt(plane, 4 * index, 4, little) & 0xffffffffL;
 				break;
 			case FormatTools.INT32:
 				value = DataTools.bytesToInt(plane, 4 * index, 4, little);
@@ -839,7 +839,7 @@ public class ImgOpener implements StatusReporter {
 				value = DataTools.bytesToFloat(plane, 4 * index, 4, little);
 				break;
 			case FormatTools.DOUBLE:
-				value = DataTools.bytesToDouble(plane, 4 * index, 4, little);
+				value = DataTools.bytesToDouble(plane, 8 * index, 8, little);
 				break;
 			default:
 				value = Double.NaN;

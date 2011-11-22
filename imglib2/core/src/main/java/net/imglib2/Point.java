@@ -1,9 +1,9 @@
 package net.imglib2;
 
 /**
- * @author leek
- *
  * A Point is a position in Euclidean space specified in integer coordinates.
+ *
+ * @author Lee Kamentsky
  */
 public class Point implements Localizable, Positionable {
 

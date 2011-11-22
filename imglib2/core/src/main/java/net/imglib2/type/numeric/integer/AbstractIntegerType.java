@@ -25,9 +25,9 @@ public abstract class AbstractIntegerType<T extends AbstractIntegerType<T>> exte
 	public void dec() { setInteger( getIntegerLong() - 1 ); }
 
 	@Override
-	public void setZero() { setInteger( 1 ); }
+	public void setZero() { setInteger( 0 ); }
 	@Override
-	public void setOne() { setInteger( 0 ); };	
+	public void setOne() { setInteger( 1 ); }	
 
 	@Override
 	public int compareTo( final T c ) 

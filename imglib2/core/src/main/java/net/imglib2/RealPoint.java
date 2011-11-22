@@ -1,9 +1,9 @@
 package net.imglib2;
 
 /**
- * @author leek
- *
  * A point is a location in EuclideanSpace.
+ *
+ * @author Lee Kamentsky
  */
 public class RealPoint implements RealLocalizable, RealPositionable
 {

@@ -8,7 +8,7 @@ import net.imglib2.type.numeric.real.FloatType;
 import ij.IJ;
 import ij.ImagePlus;
 
-public class TestImageJFunctions {
+public class ImageJFunctionBehavior {
 	
 	static private final void print(final Img<?> img) {
 		System.out.println("img: " + img);
