@@ -7,31 +7,40 @@ import net.imglib2.algorithm.componenttree.Component;
 import net.imglib2.algorithm.componenttree.pixellist.PixelList;
 import net.imglib2.type.Type;
 
-public final class MserComponentIntermediate< T extends Type< T > > implements Component< T >
+final class MserComponentIntermediate< T extends Type< T > > implements Component< T >
 {
-	private static int idGen = 0;
-	
-	final int id;
-	
-	PixelList pixelList;
-	
+	/**
+	 * Threshold value of the connected component.
+	 */
+	private final T value;
+
+	/**
+	 * Pixels in the component.
+	 */
+	final PixelList pixelList;
+
 	/**
 	 * number of dimensions in the image.
 	 */
 	final int n;
-	
-	final double[] sumPos; // position sum (x, y, z, ...)
-	final double[] sumSquPos; // sum of independent elements of outer product of position (xx, xy, xz, ..., yy, yz, ..., zz, ...)
 
-	final T value;
-	
-	final private long[] tmp;
+	/**
+	 * sum of pixel positions (x, y, z, ...).
+	 */
+	final double[] sumPos;
+
+	/**
+	 * sum of independent elements of outer product of position (xx, xy, xz, ..., yy, yz, ..., zz, ...).
+	 */
+	final double[] sumSquPos;
+
+	private final long[] tmp;
 
 	/**
 	 * A list of MserComponent merged into this one since it was last emitted.
 	 * (For building up MSER evaluation structure.)
 	 */
-	ArrayList< MserComponentIntermediate< T > > ancestors;
+	ArrayList< MserComponentIntermediate< T > > children;
 	
 	/**
 	 * The MserEvaluationNode assigned to this MserComponent when it was last emitted.
@@ -39,15 +48,14 @@ public final class MserComponentIntermediate< T extends Type< T > > implements C
 	 */
 	MserEvaluationNode< T > evaluationNode;
 
-	public MserComponentIntermediate( final T value, final MserComponentGenerator< T > generator )
+	MserComponentIntermediate( final T value, final MserComponentGenerator< T > generator )
 	{
-		id = idGen++;
 		pixelList = new PixelList( generator.linkedList.randomAccess(), generator.dimensions );
 		n = generator.dimensions.length;
 		sumPos = new double[ n ];
 		sumSquPos = new double[ ( n * (n+1) ) / 2 ];
 		this.value = value.copy();
-		this.ancestors = new ArrayList< MserComponentIntermediate< T > >();
+		this.children = new ArrayList< MserComponentIntermediate< T > >();
 		this.evaluationNode = null;
 		tmp = new long[ n ];
 	}
@@ -87,16 +95,15 @@ public final class MserComponentIntermediate< T extends Type< T > > implements C
 			sumPos[ i ] += c.sumPos[ i ];
 		for ( int i = 0; i < sumSquPos.length; ++i )
 			sumSquPos[ i ] += c.sumSquPos[ i ];
-		ancestors.add( c );
+		children.add( c );
 	}
 
 	@Override
 	public String toString()
 	{
-		String s = "id=" + id;
-		s += " [";
+		String s = "{" + value.toString() + " : ";
 		boolean first = true;
-		for ( MserComponentIntermediate< T > c : ancestors )
+		for ( Localizable l : pixelList )
 		{
 			if ( first )
 			{
@@ -104,35 +111,24 @@ public final class MserComponentIntermediate< T extends Type< T > > implements C
 			}
 			else
 			{
-				s += ",";
+				s += ", ";
 			}
-			s += c.id;
+			s += l.toString();
 		}
-		s += "] (level = " + value.toString() + ", size = " + pixelList.size() + ")";
 		return s + "}";
 	}
 
-	public long size()
+	long size()
 	{
 		return pixelList.size();
 	}
 	
-	public ArrayList< MserComponentIntermediate< T > > getAncestors()
-	{
-		return ancestors;
-	}
-	
-	public void clearAncestors()
-	{
-		ancestors.clear();
-	}
-
-	public MserEvaluationNode< T > getEvaluationNode()
+	MserEvaluationNode< T > getEvaluationNode()
 	{
 		return evaluationNode;
 	}
 	
-	public void setEvaluationNode( MserEvaluationNode< T > node )
+	void setEvaluationNode( MserEvaluationNode< T > node )
 	{
 		evaluationNode = node;
 	}

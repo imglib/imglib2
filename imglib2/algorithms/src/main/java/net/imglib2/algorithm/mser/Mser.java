@@ -7,11 +7,29 @@ import net.imglib2.Localizable;
 import net.imglib2.algorithm.componenttree.pixellist.PixelList;
 import net.imglib2.type.Type;
 
-public class Mser< T extends Type< T > > implements Iterable< Localizable >
+/**
+ * A maximally stable extremal region (MSER) of the image thresholded at {@link #value()}. The set
+ * of pixels can be accessed by iterating ({@link #iterator()}) the component.
+ *
+ * This is a node in a {@link MserTree}. The child and parent
+ * nodes can be accessed by {@link #getChildren()} and {@link #getParent()}.
+ *
+ * @author Tobias Pietzsch
+ *
+ * @param <T>
+ *            value type of the input image.
+ */
+public final class Mser< T extends Type< T > > implements Iterable< Localizable >
 {
-	public final ArrayList< Mser< T > > ancestors;
+	/**
+	 * child nodes in the {@link MserTree}.
+	 */
+	final ArrayList< Mser< T > > children;
 
-	public Mser< T > successor;
+	/**
+	 * parent node in the {@link MserTree}.
+	 */
+	Mser< T > parent;
 
 	/**
 	 * Threshold value of the connected component.
@@ -19,14 +37,14 @@ public class Mser< T extends Type< T > > implements Iterable< Localizable >
 	private final T value;
 
 	/**
-	 * MSER score : |Q_{i+\Delta} - Q_i| / |Q_i|.
-	 */
-	private final double score;
-
-	/**
 	 * Pixels in the component.
 	 */
 	private final PixelList pixelList;
+
+	/**
+	 * MSER score : |Q_{i+\Delta} - Q_i| / |Q_i|.
+	 */
+	private final double score;
 
 	/**
 	 * Mean of the pixel positions in the region.
@@ -38,10 +56,10 @@ public class Mser< T extends Type< T > > implements Iterable< Localizable >
 	 */
 	private final double[] cov;
 
-	public Mser( MserEvaluationNode< T > node )
+	Mser( MserEvaluationNode< T > node )
 	{
-		ancestors = new ArrayList< Mser< T > >();
-		successor = null;
+		children = new ArrayList< Mser< T > >();
+		parent = null;
 
 		value = node.value;
 		score = node.score;
@@ -51,6 +69,8 @@ public class Mser< T extends Type< T > > implements Iterable< Localizable >
 	}
 
 	/**
+	 * Get the image threshold that created the extremal region.
+	 *
 	 * @return the image threshold that created the extremal region.
 	 */
 	public T value()
@@ -59,7 +79,9 @@ public class Mser< T extends Type< T > > implements Iterable< Localizable >
 	}
 
 	/**
-	 * @return number of pixels the extremal region.
+	 * Get the number of pixels in the extremal region.
+	 *
+	 * @return number of pixels in the extremal region.
 	 */
 	public long size()
 	{
@@ -99,9 +121,35 @@ public class Mser< T extends Type< T > > implements Iterable< Localizable >
 		return cov;
 	}
 
+	/**
+	 * Get an iterator over the pixel locations ({@link Localizable}) in this
+	 * connected component.
+	 *
+	 * @return iterator over locations.
+	 */
 	@Override
 	public Iterator< Localizable > iterator()
 	{
 		return pixelList.iterator();
+	}
+
+	/**
+	 * Get the children of this node in the {@link MserTree}.
+	 *
+	 * @return the children of this node in the {@link MserTree}.
+	 */
+	public ArrayList< Mser< T > > getChildren()
+	{
+		return children;
+	}
+
+	/**
+	 * Get the parent of this node in the {@link MserTree}.
+	 *
+	 * @return the parent of this node in the {@link MserTree}.
+	 */
+	public Mser< T > getParent()
+	{
+		return parent;
 	}
 }

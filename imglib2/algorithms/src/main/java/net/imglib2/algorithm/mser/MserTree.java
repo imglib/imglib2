@@ -8,7 +8,7 @@ import java.util.Iterator;
 import net.imglib2.algorithm.componenttree.Component;
 import net.imglib2.type.Type;
 
-public class MserTree< T extends Type< T > > implements Component.Handler< MserComponentIntermediate< T > >, Iterable< Mser< T > >
+public final class MserTree< T extends Type< T > > implements Component.Handler< MserComponentIntermediate< T > >, Iterable< Mser< T > >
 {
 	private final HashSet< Mser< T > > roots;
 
@@ -48,46 +48,46 @@ public class MserTree< T extends Type< T > > implements Component.Handler< MserC
 
 	private void pruneChildren( Mser< T > mser )
 	{
-		final ArrayList< Mser< T > > validAncestors = new ArrayList< Mser< T > >();
-		for ( int i = 0; i < mser.ancestors.size(); ++i )
+		final ArrayList< Mser< T > > validChildren = new ArrayList< Mser< T > >();
+		for ( int i = 0; i < mser.children.size(); ++i )
 		{
-			Mser< T > m = mser.ancestors.get( i );
+			Mser< T > m = mser.children.get( i );
 			double div = ( mser.size() - m.size() ) / (double) mser.size();
 			if ( div > minDiversity )
 			{
-				validAncestors.add( m );
+				validChildren.add( m );
 				pruneChildren( m );
 			}
 			else
 			{
-				mser.ancestors.addAll( m.ancestors );
-				for ( Mser< T > m2 : m.ancestors )
-					m2.successor = mser;
+				mser.children.addAll( m.children );
+				for ( Mser< T > m2 : m.children )
+					m2.parent = mser;
 			}
 		}
-		mser.ancestors.clear();
-		mser.ancestors.addAll( validAncestors );
-		nodes.addAll( validAncestors );
+		mser.children.clear();
+		mser.children.addAll( validChildren );
+		nodes.addAll( validChildren );
 	}
 
 	@Override
 	public void emit( MserComponentIntermediate< T > component )
 	{
 		new MserEvaluationNode< T >( component, comparator, delta, this );
-		component.clearAncestors();
+		component.children.clear();
 	}
 
-	public void foundNewMinimum( MserEvaluationNode< T > node )
+	void foundNewMinimum( MserEvaluationNode< T > node )
 	{
 		if ( node.size >= minSize && node.size <= maxSize && node.score <= maxVar )
 		{
 			Mser< T > mser = new Mser< T >( node );
-			for ( Mser< T > m : node.mserThisOrAncestors )
-				mser.ancestors.add( m );
-			node.mserThisOrAncestors.clear();
-			node.mserThisOrAncestors.add( mser );
+			for ( Mser< T > m : node.mserThisOrChildren )
+				mser.children.add( m );
+			node.mserThisOrChildren.clear();
+			node.mserThisOrChildren.add( mser );
 			
-			for ( Mser< T > m : mser.ancestors )
+			for ( Mser< T > m : mser.children )
 				roots.remove( m );
 			roots.add( mser );
 			nodes.add( mser );

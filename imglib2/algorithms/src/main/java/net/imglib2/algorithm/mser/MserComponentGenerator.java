@@ -7,7 +7,7 @@ import net.imglib2.img.ImgFactory;
 import net.imglib2.type.Type;
 import net.imglib2.type.numeric.integer.LongType;
 
-public class MserComponentGenerator< T extends Type< T > > implements Component.Generator< T, MserComponentIntermediate< T > >
+final class MserComponentGenerator< T extends Type< T > > implements Component.Generator< T, MserComponentIntermediate< T > >
 {
 	final T maxValue;
 

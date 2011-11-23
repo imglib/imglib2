@@ -6,63 +6,93 @@ import java.util.Comparator;
 import net.imglib2.algorithm.componenttree.pixellist.PixelList;
 import net.imglib2.type.Type;
 
-public final class MserEvaluationNode< T extends Type< T > >
+final class MserEvaluationNode< T extends Type< T > >
 {
 	/**
 	 * Threshold value of the connected component.
 	 */
-	public final T value;
+	final T value;
 
 	/**
 	 * Size (number of pixels) of the connected component.
 	 */
-	public final long size;
+	final long size;
 
-	public final PixelList pixelList;
+	/**
+	 * Pixels in the component.
+	 */
+	final PixelList pixelList;
 
-	public final ArrayList< MserEvaluationNode< T > > ancestors;
-	public final MserEvaluationNode< T > historyAncestor;
-	public MserEvaluationNode< T > successor;
+	/**
+	 * Children of this {@link MserEvaluationNode} in the component tree.
+	 */
+	private final ArrayList< MserEvaluationNode< T > > children;
+
+	/**
+	 * The child in the component tree from which we inherit the component size history.
+	 */
+	private final MserEvaluationNode< T > historyChild;
+
+	/**
+	 * Parent of this {@link MserEvaluationNode} in the component tree.
+	 */
+	private MserEvaluationNode< T > parent;
 	
 	/**
 	 * MSER score : |Q_{i+\Delta} - Q_i| / |Q_i|. 
 	 */
-	public double score;
-	public boolean isScoreValid;
+	double score;
+
+	/**
+	 * Whether the {@link #score} is valid.
+	 * (Otherwise it has not or cannot be computed.)
+	 */
+	private boolean isScoreValid;
 	
-	public final int n;
-	public double[] mean; // mean of region (x, y, z, ...)
-	public double[] cov; // independent elements of covariance of region (xx, xy, xz, ..., yy, yz, ..., zz, ...)
+	/**
+	 * Number of dimensions in the image.
+	 */
+	final int n;
+
+	/**
+	 * Mean of pixel positions (x, y, z, ...).
+	 */
+	final double[] mean;
+
+	/**
+	 * Independent elements of the covariance of pixel positions (xx, xy, xz, ..., yy, yz, ..., zz, ...).
+	 */
+	final double[] cov;
 
 	/**
 	 * {@link Mser}s associated to this region or its children. To build up the MSER
 	 * tree.
 	 */
-	final ArrayList< Mser< T > > mserThisOrAncestors;
+	final ArrayList< Mser< T > > mserThisOrChildren;
 
-	public MserEvaluationNode( final MserComponentIntermediate< T > component, final Comparator< T > comparator, final ComputeDeltaValue< T > delta, final MserTree< T > tree )
+	MserEvaluationNode( final MserComponentIntermediate< T > component, final Comparator< T > comparator, final ComputeDeltaValue< T > delta, final MserTree< T > tree )
 	{
 		value = component.getValue().copy();
 		pixelList = new PixelList( component.pixelList );
 		size = pixelList.size();
 
-		ancestors = new ArrayList< MserEvaluationNode< T > >();
+		children = new ArrayList< MserEvaluationNode< T > >();
 		MserEvaluationNode< T > node = component.getEvaluationNode();
 		long historySize = 0;
 		if ( node != null )
 		{
 			historySize = node.size;
 			node = new MserEvaluationNode< T >( node, value, comparator, delta );
-			ancestors.add( node );
-			node.setSuccessor( this );
+			children.add( node );
+			node.setParent( this );
 		}
 
 		MserEvaluationNode< T > historyWinner = node;
-		for ( MserComponentIntermediate< T > c : component.getAncestors() )
+		for ( MserComponentIntermediate< T > c : component.children )
 		{
 			node = new MserEvaluationNode< T >( c.getEvaluationNode(), value, comparator, delta );
-			ancestors.add( node );
-			node.setSuccessor( this );
+			children.add( node );
+			node.setParent( this );
 			if ( c.size() > historySize )
 			{
 				historyWinner = node;
@@ -70,7 +100,7 @@ public final class MserEvaluationNode< T extends Type< T > >
 			}
 		}
 		
-		historyAncestor = historyWinner;
+		historyChild = historyWinner;
 		
 		n = component.n;
 		mean = new double[ n ];
@@ -88,46 +118,46 @@ public final class MserEvaluationNode< T extends Type< T > >
 		component.setEvaluationNode( this );
 		isScoreValid = computeMserScore( delta, comparator, false );
 		if ( isScoreValid )
-			for ( MserEvaluationNode< T > a : ancestors )
+			for ( MserEvaluationNode< T > a : children )
 				a.evaluateLocalMinimum( tree, delta, comparator );
 
-		if ( ancestors.size() == 1 )
-			mserThisOrAncestors = ancestors.get( 0 ).mserThisOrAncestors;
+		if ( children.size() == 1 )
+			mserThisOrChildren = children.get( 0 ).mserThisOrChildren;
 		else
 		{
-			mserThisOrAncestors = new ArrayList< Mser< T > >();
-			for ( MserEvaluationNode< T > a : ancestors )
-				mserThisOrAncestors.addAll( a.mserThisOrAncestors );
+			mserThisOrChildren = new ArrayList< Mser< T > >();
+			for ( MserEvaluationNode< T > a : children )
+				mserThisOrChildren.addAll( a.mserThisOrChildren );
 		}
 	}
 
-	private MserEvaluationNode( final MserEvaluationNode< T > ancestor, final T value, final Comparator< T > comparator, final ComputeDeltaValue< T > delta )
+	private MserEvaluationNode( final MserEvaluationNode< T > child, final T value, final Comparator< T > comparator, final ComputeDeltaValue< T > delta )
 	{
-		ancestors = new ArrayList< MserEvaluationNode< T > >();
-		ancestors.add( ancestor );
-		ancestor.setSuccessor( this );
+		children = new ArrayList< MserEvaluationNode< T > >();
+		children.add( child );
+		child.setParent( this );
 
-		historyAncestor = ancestor;
-		size = ancestor.size;
-		pixelList = ancestor.pixelList;
+		historyChild = child;
+		size = child.size;
+		pixelList = child.pixelList;
 		this.value = value;
-		n = ancestor.n;
-		mean = ancestor.mean;
-		cov = ancestor.cov;
+		n = child.n;
+		mean = child.mean;
+		cov = child.cov;
 
 		isScoreValid = computeMserScore( delta, comparator, true );
-//		All our ancestors are non-intermediate, and
+//		All our children are non-intermediate, and
 //		non-intermediate nodes are never minimal because their score is
-//		never smaller than that of the successor intermediate node.
+//		never smaller than that of the parent intermediate node.
 //		if ( isScoreValid )
-//			ancestor.evaluateLocalMinimum( minimaProcessor, delta );
+//			child.evaluateLocalMinimum( minimaProcessor, delta );
 
-		mserThisOrAncestors = ancestor.mserThisOrAncestors;
+		mserThisOrChildren = child.mserThisOrChildren;
 	}
 
-	private void setSuccessor( MserEvaluationNode< T > node )
+	private void setParent( MserEvaluationNode< T > node )
 	{
-		successor = node;
+		parent = node;
 	}
 
 	/**
@@ -155,14 +185,14 @@ public final class MserEvaluationNode< T extends Type< T > >
 		final T valueMinus = delta.valueMinusDelta( value );
 
 		// go back in history until we find a node with (value <= valueMinus)
-		MserEvaluationNode< T > node = historyAncestor;
+		MserEvaluationNode< T > node = historyChild;
 		while ( node != null  &&  comparator.compare( node.value, valueMinus ) > 0 )
-			node = node.historyAncestor;
+			node = node.historyChild;
 		if ( node == null )
 			// we cannot compute the mser score because the history is too short.
 			return false;
-		if ( isIntermediate && comparator.compare( node.value, valueMinus ) == 0 && node.historyAncestor != null )
-			node = node.historyAncestor;
+		if ( isIntermediate && comparator.compare( node.value, valueMinus ) == 0 && node.historyChild != null )
+			node = node.historyChild;
 		score = ( size - node.size ) / ( ( double ) size );
 		return true;		
 	}
@@ -178,13 +208,13 @@ public final class MserEvaluationNode< T extends Type< T > >
 	{
 		if ( isScoreValid )
 		{
-			MserEvaluationNode< T > below = historyAncestor;
+			MserEvaluationNode< T > below = historyChild;
 			while ( below.isScoreValid && below.size == size )
-				below = below.historyAncestor;
+				below = below.historyChild;
 			if ( below.isScoreValid )
 			{
-					below = below.historyAncestor;
-				if ( ( score <= below.score ) && ( score < successor.score ) )
+					below = below.historyChild;
+				if ( ( score <= below.score ) && ( score < parent.score ) )
 					tree.foundNewMinimum( this );
 			}
 			else
@@ -205,7 +235,7 @@ public final class MserEvaluationNode< T extends Type< T > >
 		String s = "SimpleMserEvaluationNode";
 		s += ", size = " + size;
 		s += ", history = [";
-		MserEvaluationNode< T > node = historyAncestor;
+		MserEvaluationNode< T > node = historyChild;
 		boolean first = true;
 		while ( node != null )
 		{
@@ -218,7 +248,7 @@ public final class MserEvaluationNode< T extends Type< T > >
 				s += " s " + node.score + ")";
 			else
 				s += " s --)";
-			node = node.historyAncestor;
+			node = node.historyChild;
 		}
 		s += "]";
 		return s;
