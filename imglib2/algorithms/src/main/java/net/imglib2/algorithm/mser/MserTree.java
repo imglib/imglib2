@@ -4,10 +4,9 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 
-import net.imglib2.algorithm.mser.MserComponentHandler.SimpleMserProcessor;
 import net.imglib2.type.Type;
 
-public class MserTree< T extends Type< T > > implements SimpleMserProcessor< T >, Iterable< Mser< T > >
+public class MserTree< T extends Type< T > > implements Iterable< Mser< T > >
 {
 	private final HashSet< Mser< T > > roots;
 
@@ -63,7 +62,6 @@ public class MserTree< T extends Type< T > > implements SimpleMserProcessor< T >
 		nodes.addAll( validAncestors );
 	}
 
-	@Override
 	public void foundNewMinimum( MserEvaluationNode< T > node )
 	{
 		if ( node.size >= minSize && node.size <= maxSize && node.score <= maxVar )

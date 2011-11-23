@@ -40,7 +40,7 @@ public final class MserEvaluationNode< T extends Type< T > >
 	 */
 	final ArrayList< Mser< T > > mserThisOrAncestors;
 
-	public MserEvaluationNode( final MserComponentIntermediate< T > component, final Comparator< T > comparator, final ComputeDeltaValue< T > delta, final MserComponentHandler.SimpleMserProcessor< T > minimaProcessor )
+	public MserEvaluationNode( final MserComponentIntermediate< T > component, final Comparator< T > comparator, final ComputeDeltaValue< T > delta, final MserTree< T > minimaProcessor )
 	{
 		value = component.getValue().copy();
 		pixelList = new PixelList( component.pixelList );
@@ -101,7 +101,7 @@ public final class MserEvaluationNode< T extends Type< T > >
 		}
 	}
 
-	private MserEvaluationNode( final MserEvaluationNode< T > ancestor, final T value, final Comparator< T > comparator, final ComputeDeltaValue< T > delta, final MserComponentHandler.SimpleMserProcessor< T > minimaProcessor )
+	private MserEvaluationNode( final MserEvaluationNode< T > ancestor, final T value, final Comparator< T > comparator, final ComputeDeltaValue< T > delta, final MserTree< T > minimaProcessor )
 	{
 		ancestors = new ArrayList< MserEvaluationNode< T > >();
 		ancestors.add( ancestor );
@@ -174,7 +174,7 @@ public final class MserEvaluationNode< T extends Type< T > >
 	 * called, when the mser score for the next component in the branch is
 	 * available.)
 	 */
-	private void evaluateLocalMinimum( final MserComponentHandler.SimpleMserProcessor< T > minimaProcessor, final ComputeDeltaValue< T > delta, final Comparator< T > comparator )
+	private void evaluateLocalMinimum( final MserTree< T > minimaProcessor, final ComputeDeltaValue< T > delta, final Comparator< T > comparator )
 	{
 		if ( isScoreValid )
 		{
