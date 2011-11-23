@@ -1,5 +1,6 @@
 package net.imglib2.algorithm.mser;
 
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -61,7 +62,7 @@ public class MserTreeTest< T extends IntegerType< T > >
 		this.h = h;
 	}
 	
-	public void visualise( Mser< T > mser )
+	public void visualise( Mser< T > mser, Color color )
 	{
 		ByteProcessor byteProcessor = new ByteProcessor( w, h );
 		byte[] pixels = ( byte[] )byteProcessor.getPixels();
@@ -73,14 +74,16 @@ public class MserTreeTest< T extends IntegerType< T > >
 		}
 		String label = "" + mser.value();
 		stack.addSlice( label, byteProcessor );
-	
-		ov.add( createEllipse( mser.mean(), mser.cov(), 3 ) );
+
+		EllipseRoi ellipse = createEllipse( mser.mean(), mser.cov(), 3 );
+		ellipse.setStrokeColor( color );
+		ov.add( ellipse );
 	}
 	
-	public void visualise( MserTree< T > tree )
+	public void visualise( MserTree< T > tree, Color color )
 	{
 		for ( Mser< T > mser : tree )
-			visualise( mser );
+			visualise( mser, color );
 	}
 
 	public static Long median( ArrayList<Long> values )
@@ -134,7 +137,7 @@ public class MserTreeTest< T extends IntegerType< T > >
 		{
 			ImgFactory< IntType > imgFactory = new ArrayImgFactory< IntType >();
 			final ImgOpener io = new ImgOpener();
-			img = io.openImg( "/home/tobias/workspace/data/img1.tif", imgFactory, new IntType() );
+			img = io.openImg( "/home/tobias/workspace/data/img1inv.tif", imgFactory, new IntType() );
 		}
 		catch ( Exception e )
 		{
@@ -163,6 +166,13 @@ public class MserTreeTest< T extends IntegerType< T > >
 		ComponentTree.buildComponentTree( img, generator, tree, darkToBrightComparator );
 		tree.pruneDuplicates();
 		
+		final ComputeDeltaBrightToDark< IntType > brightToDarkDelta = new ComputeDeltaBrightToDark< IntType >( new IntType( delta ) );
+		final ComponentTree.BrightToDark< IntType > brightToDarkComparator = new ComponentTree.BrightToDark< IntType >();
+		final MserTree< IntType > treeBrightToDark = new MserTree< IntType >( brightToDarkComparator, brightToDarkDelta, minSize, maxSize, maxVar, minDiversity );
+		final MserComponentGenerator< IntType > generatorb = new MserComponentGenerator< IntType >( new IntType( Integer.MIN_VALUE ), img, new ArrayImgFactory< LongType >() );
+		ComponentTree.buildComponentTree( img, generatorb, treeBrightToDark, brightToDarkComparator );
+		treeBrightToDark.pruneDuplicates();
+
 		new ImageJ();		
 		ImagePlus impImg = ImageJFunctions.show( img );
 		IJ.run( "Enhance Contrast", "saturated=0.35" );
@@ -174,7 +184,8 @@ public class MserTreeTest< T extends IntegerType< T > >
 		ImageStack stack = new ImageStack( w, h );
 		
 		final MserTreeTest< IntType > vis = new MserTreeTest< IntType >( impImg, stack, w, h );
-		vis.visualise( tree );
+		vis.visualise( tree, Color.CYAN );
+		vis.visualise( treeBrightToDark, Color.MAGENTA );
 
 		ImagePlus imp = new ImagePlus("components", stack);
 		imp.show();
