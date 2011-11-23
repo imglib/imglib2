@@ -13,8 +13,34 @@ import net.imglib2.type.Type;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.integer.LongType;
 
+/**
+ * Component tree of an image stored as a tree of {@link PixelListComponent}s.
+ * This class is used both to represent and build the tree.
+ * For building the tree {@link Component.Handler} is implemented to gather
+ * {@link PixelListComponentIntermediate} emitted by {@link ComponentTree}.
+ *
+ * @author Tobias Pietzsch
+ *
+ * @param <T>
+ *            value type of the input image.
+ */
 public final class PixelListComponentTree< T extends Type< T > > implements Component.Handler< PixelListComponentIntermediate< T > >, Iterable< PixelListComponent< T > >
 {
+	/**
+	 * Build a component tree from an input image. Calls
+	 * {@link #buildComponentTree(RandomAccessibleInterval, RealType, ImgFactory, boolean)}
+	 * using an {@link ArrayImgFactory} or {@link CellImgFactory} depending on
+	 * input image size.
+	 *
+	 * @param input
+	 *            the input image.
+	 * @param type
+	 *            a variable of the input image type.
+	 * @param darkToBright
+	 *            whether to apply thresholds from dark to bright (true) or
+	 *            bright to dark (false)
+	 * @return component tree of the image.
+	 */
 	public static < T extends RealType< T > > PixelListComponentTree< T > buildComponentTree( final RandomAccessibleInterval< T > input, final T type, boolean darkToBright )
 	{
 		final int numDimensions = input.numDimensions();
@@ -28,6 +54,21 @@ public final class PixelListComponentTree< T extends Type< T > > implements Comp
 			return buildComponentTree( input, type, new ArrayImgFactory< LongType >(), darkToBright );
 	}
 
+	/**
+	 * Build a component tree from an input image.
+	 *
+	 * @param input
+	 *            the input image.
+	 * @param type
+	 *            a variable of the input image type.
+	 * @param imgFactory
+	 *            used for creating the {@link PixelList} image {@see
+	 *            PixelListComponentGenerator}.
+	 * @param darkToBright
+	 *            whether to apply thresholds from dark to bright (true) or
+	 *            bright to dark (false)
+	 * @return component tree of the image.
+	 */
 	public static < T extends RealType< T > > PixelListComponentTree< T > buildComponentTree( final RandomAccessibleInterval< T > input, final T type, final ImgFactory< LongType > imgFactory, boolean darkToBright )
 	{
 		T max = type.createVariable();
@@ -43,7 +84,7 @@ public final class PixelListComponentTree< T extends Type< T > > implements Comp
 
 	private final ArrayList< PixelListComponent< T > > nodes;
 
-	public PixelListComponentTree()
+	private PixelListComponentTree()
 	{
 		root = null;
 		nodes = new ArrayList< PixelListComponent< T > >();
@@ -57,12 +98,22 @@ public final class PixelListComponentTree< T extends Type< T > > implements Comp
 		nodes.add( component );
 	}
 
+	/**
+	 * Returns an iterator over all connected components in the tree.
+	 *
+	 * @return iterator over all connected components in the tree.
+	 */
 	@Override
 	public Iterator< PixelListComponent< T > > iterator()
 	{
 		return nodes.iterator();
 	}
 
+	/**
+	 * Get the root component.
+	 *
+	 * @return root component.
+	 */
 	public PixelListComponent< T > root()
 	{
 		return root;

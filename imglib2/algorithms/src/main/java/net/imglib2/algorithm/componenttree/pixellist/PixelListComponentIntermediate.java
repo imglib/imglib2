@@ -7,25 +7,43 @@ import net.imglib2.Localizable;
 import net.imglib2.algorithm.componenttree.Component;
 import net.imglib2.type.Type;
 
-public final class PixelListComponentIntermediate< T extends Type< T > > implements Component< T >, Iterable< Localizable >
+/**
+ * Implementation of {@link Component} that stores a list of associated pixels
+ * in a {@link PixelList}.
+ *
+ * @author Tobias Pietzsch
+ *
+ * @param <T>
+ *            value type of the input image.
+ */
+final class PixelListComponentIntermediate< T extends Type< T > > implements Component< T >, Iterable< Localizable >
 {
 	private T value;
 
 	final PixelList pixelList;
 
 	/**
-	 * A list of PixelListComponentIntermediate merged into this one since it was last emitted.
-	 * (For building up component tree.)
+	 * A list of PixelListComponentIntermediate merged into this one since it
+	 * was last emitted. (For building up component tree.)
 	 */
 	final ArrayList< PixelListComponentIntermediate< T > > children;
 
 	/**
-	 * The PixelListComponent assigned to this PixelListComponentIntermediate when it was last emitted.
-	 * (For building up component tree.)
+	 * The PixelListComponent assigned to this PixelListComponentIntermediate
+	 * when it was last emitted. (For building up component tree.)
 	 */
 	PixelListComponent< T > emittedComponent;
 
-	public PixelListComponentIntermediate( final T value, final PixelListComponentGenerator< T > generator )
+	/**
+	 * Create new empty component.
+	 *
+	 * @param value
+	 *            (initial) threshold value {@see #getValue()}.
+	 * @param generator
+	 *            the {@link PixelListComponentGenerator#linkedList} is used to
+	 *            store the {@link #pixelList}.
+	 */
+	PixelListComponentIntermediate( final T value, final PixelListComponentGenerator< T > generator )
 	{
 		pixelList = new PixelList( generator.linkedList.randomAccess(), generator.dimensions );
 		this.value = value.copy();

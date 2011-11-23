@@ -87,6 +87,9 @@ public final class ComponentTree< T extends Type< T >, C extends Component< T > 
 		new ComponentTree< T, C >( input, componentGenerator, componentHandler, darkToBright ? new DarkToBright< T >() : new BrightToDark< T >() );
 	}
 
+	/**
+	 * Default comparator for {@link Comparable} pixel values for dark-to-bright pass.
+	 */
 	public static final class DarkToBright< T extends Comparable< T > > implements Comparator< T >
 	{
 		@Override
@@ -96,6 +99,9 @@ public final class ComponentTree< T extends Type< T >, C extends Component< T > 
 		}
 	}
 
+	/**
+	 * Default comparator for {@link Comparable} pixel values for bright-to-dark pass.
+	 */
 	public static final class BrightToDark< T extends Comparable< T > > implements Comparator< T >
 	{
 		@Override

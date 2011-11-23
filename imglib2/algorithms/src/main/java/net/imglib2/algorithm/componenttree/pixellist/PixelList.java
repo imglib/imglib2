@@ -5,23 +5,45 @@ import java.util.Iterator;
 import net.imglib2.Localizable;
 import net.imglib2.Point;
 import net.imglib2.RandomAccess;
+import net.imglib2.RandomAccessible;
 import net.imglib2.type.numeric.integer.LongType;
 import net.imglib2.util.IntervalIndexer;
 
+/**
+ * A singly-linked list of pixel locations stored in a {@link RandomAccessible}.
+ * (the value at a given location in the {@link RandomAccessible} is the index
+ * of the next location in the list.)
+ *
+ * @author Tobias Pietzsch
+ */
 public final class PixelList implements Iterable< Localizable >
 {
+	/**
+	 * RandomAccess into the index image to store the linked list.
+	 */
 	private final RandomAccess< LongType > locationsAccess;
 
+	/**
+	 * Dimensions of the index image.
+	 */
 	private final long[] dimensions;
 
+	/**
+	 * Index of first location in the list.
+	 */
 	private long headIndex;
 
+	/**
+	 * Last location in the list.
+	 */
 	private final long[] tailPos;
 
+	/**
+	 * length of the list.
+	 */
 	private long size;
 
 	/**
-	 *
 	 * @param locationsAccess
 	 *            RandomAccess into the index image to store the linked list.
 	 * @param dimensions
@@ -45,6 +67,9 @@ public final class PixelList implements Iterable< Localizable >
 		this.size = l.size;
 	}
 
+	/**
+	 * Append a pixel location to the list. 
+	 */
 	public void addPosition( final Localizable position )
 	{
 		if ( size == 0 )
@@ -63,6 +88,9 @@ public final class PixelList implements Iterable< Localizable >
 		++size;
 	}
 
+	/**
+	 * Append another {@link PixelList} to this one. 
+	 */
 	public void merge( final PixelList l )
 	{
 		if ( size == 0 )
@@ -123,6 +151,11 @@ public final class PixelList implements Iterable< Localizable >
 		return new PixelListIterator();
 	}
 
+	/**
+	 * Get the size of the list.
+	 *
+	 * @return number of elements in this list.
+	 */
 	public long size()
 	{
 		return size;

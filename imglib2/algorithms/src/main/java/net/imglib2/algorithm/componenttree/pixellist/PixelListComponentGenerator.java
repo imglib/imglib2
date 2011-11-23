@@ -1,5 +1,7 @@
 package net.imglib2.algorithm.componenttree.pixellist;
 
+import java.util.LinkedList;
+
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.algorithm.componenttree.Component;
 import net.imglib2.img.Img;
@@ -18,12 +20,18 @@ import net.imglib2.type.numeric.integer.LongType;
  * @param <T>
  *            value type of the input image.
  */
-public final class PixelListComponentGenerator< T extends Type< T > > implements Component.Generator< T, PixelListComponentIntermediate< T > >
+final class PixelListComponentGenerator< T extends Type< T > > implements Component.Generator< T, PixelListComponentIntermediate< T > >
 {
-	final T maxValue;
+	private final T maxValue;
 
+	/**
+	 * Dimensions of the {@link LinkedList} image.
+	 */
 	final long[] dimensions;
 
+	/**
+	 * Represents a singly-linked list of pixel locations {@see PixelList}. 
+	 */
 	final Img< LongType > linkedList;
 
 	/**
@@ -39,7 +47,7 @@ public final class PixelListComponentGenerator< T extends Type< T > > implements
 	 * @param imgFactory
 	 *            used to create PixelList image.
 	 */
-	public PixelListComponentGenerator( final T maxValue, final RandomAccessibleInterval< T > input, final ImgFactory< LongType > imgFactory )
+	PixelListComponentGenerator( final T maxValue, final RandomAccessibleInterval< T > input, final ImgFactory< LongType > imgFactory )
 	{
 		this.maxValue = maxValue;
 		dimensions = new long[ input.numDimensions() ];

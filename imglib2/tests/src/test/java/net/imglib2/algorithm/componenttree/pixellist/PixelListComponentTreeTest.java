@@ -9,6 +9,12 @@ import net.imglib2.img.ImgFactory;
 import net.imglib2.img.array.ArrayImgFactory;
 import net.imglib2.type.numeric.integer.IntType;
 
+/**
+ * Example of computing the {@link PixelListComponentTree} of an image.
+ *
+ * @author Tobias Pietzsch
+ *
+ */
 public class PixelListComponentTreeTest
 {
 	public static final int[][] testData = new int[][] {
