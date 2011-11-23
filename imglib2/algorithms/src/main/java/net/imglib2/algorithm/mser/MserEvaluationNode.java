@@ -35,12 +35,12 @@ public final class MserEvaluationNode< T extends Type< T > >
 	public double[] cov; // independent elements of covariance of region (xx, xy, xz, ..., yy, yz, ..., zz, ...)
 
 	/**
-	 * MSERs associated to this region or its children. To build up the MSER
+	 * {@link Mser}s associated to this region or its children. To build up the MSER
 	 * tree.
 	 */
 	final ArrayList< Mser< T > > mserThisOrAncestors;
 
-	public MserEvaluationNode( final MserComponentIntermediate< T > component, final Comparator< T > comparator, final ComputeDeltaValue< T > delta, final MserTree< T > minimaProcessor )
+	public MserEvaluationNode( final MserComponentIntermediate< T > component, final Comparator< T > comparator, final ComputeDeltaValue< T > delta, final MserTree< T > tree )
 	{
 		value = component.getValue().copy();
 		pixelList = new PixelList( component.pixelList );
@@ -52,7 +52,7 @@ public final class MserEvaluationNode< T extends Type< T > >
 		if ( node != null )
 		{
 			historySize = node.size;
-			node = new MserEvaluationNode< T >( node, value, comparator, delta, minimaProcessor );
+			node = new MserEvaluationNode< T >( node, value, comparator, delta );
 			ancestors.add( node );
 			node.setSuccessor( this );
 		}
@@ -60,7 +60,7 @@ public final class MserEvaluationNode< T extends Type< T > >
 		MserEvaluationNode< T > historyWinner = node;
 		for ( MserComponentIntermediate< T > c : component.getAncestors() )
 		{
-			node = new MserEvaluationNode< T >( c.getEvaluationNode(), value, comparator, delta, minimaProcessor );
+			node = new MserEvaluationNode< T >( c.getEvaluationNode(), value, comparator, delta );
 			ancestors.add( node );
 			node.setSuccessor( this );
 			if ( c.size() > historySize )
@@ -89,7 +89,7 @@ public final class MserEvaluationNode< T extends Type< T > >
 		isScoreValid = computeMserScore( delta, comparator, false );
 		if ( isScoreValid )
 			for ( MserEvaluationNode< T > a : ancestors )
-				a.evaluateLocalMinimum( minimaProcessor, delta, comparator );
+				a.evaluateLocalMinimum( tree, delta, comparator );
 
 		if ( ancestors.size() == 1 )
 			mserThisOrAncestors = ancestors.get( 0 ).mserThisOrAncestors;
@@ -101,7 +101,7 @@ public final class MserEvaluationNode< T extends Type< T > >
 		}
 	}
 
-	private MserEvaluationNode( final MserEvaluationNode< T > ancestor, final T value, final Comparator< T > comparator, final ComputeDeltaValue< T > delta, final MserTree< T > minimaProcessor )
+	private MserEvaluationNode( final MserEvaluationNode< T > ancestor, final T value, final Comparator< T > comparator, final ComputeDeltaValue< T > delta )
 	{
 		ancestors = new ArrayList< MserEvaluationNode< T > >();
 		ancestors.add( ancestor );
@@ -174,7 +174,7 @@ public final class MserEvaluationNode< T extends Type< T > >
 	 * called, when the mser score for the next component in the branch is
 	 * available.)
 	 */
-	private void evaluateLocalMinimum( final MserTree< T > minimaProcessor, final ComputeDeltaValue< T > delta, final Comparator< T > comparator )
+	private void evaluateLocalMinimum( final MserTree< T > tree, final ComputeDeltaValue< T > delta, final Comparator< T > comparator )
 	{
 		if ( isScoreValid )
 		{
@@ -185,7 +185,7 @@ public final class MserEvaluationNode< T extends Type< T > >
 			{
 					below = below.historyAncestor;
 				if ( ( score <= below.score ) && ( score < successor.score ) )
-					minimaProcessor.foundNewMinimum( this );
+					tree.foundNewMinimum( this );
 			}
 			else
 			{
@@ -194,7 +194,7 @@ public final class MserEvaluationNode< T extends Type< T > >
 					// we are just above the bottom of a branch and this components
 					// value is high enough above the bottom value to make its score=0.
 					// so let's pretend we found a minimum here...
-					minimaProcessor.foundNewMinimum( this );
+					tree.foundNewMinimum( this );
 			}
 		}
 	}

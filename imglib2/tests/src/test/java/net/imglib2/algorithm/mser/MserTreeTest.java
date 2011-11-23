@@ -149,20 +149,18 @@ public class MserTreeTest< T extends IntegerType< T > >
 			{
 				final ComputeDeltaDarkToBright< IntType > darkToBrightDelta = new ComputeDeltaDarkToBright< IntType >( new IntType( delta ) );
 				final ComponentTree.DarkToBright< IntType > darkToBrightComparator = new ComponentTree.DarkToBright< IntType >();
-				final MserTree< IntType > tree = new MserTree< IntType >( minSize, maxSize, maxVar, minDiversity );
+				final MserTree< IntType > tree = new MserTree< IntType >( darkToBrightComparator, darkToBrightDelta, minSize, maxSize, maxVar, minDiversity );
 				final MserComponentGenerator< IntType > generator = new MserComponentGenerator< IntType >( new IntType( Integer.MAX_VALUE ), img, new ArrayImgFactory< LongType >() );
-				final MserComponentHandler< IntType > handler = new MserComponentHandler< IntType >( darkToBrightComparator, darkToBrightDelta, tree );
-				ComponentTree.buildComponentTree( img, generator, handler, darkToBrightComparator );
+				ComponentTree.buildComponentTree( img, generator, tree, darkToBrightComparator );
 				tree.pruneDuplicates();
 			}
 		} );
 
 		final ComputeDeltaDarkToBright< IntType > darkToBrightDelta = new ComputeDeltaDarkToBright< IntType >( new IntType( delta ) );
 		final ComponentTree.DarkToBright< IntType > darkToBrightComparator = new ComponentTree.DarkToBright< IntType >();
-		final MserTree< IntType > tree = new MserTree< IntType >( minSize, maxSize, maxVar, minDiversity );
+		final MserTree< IntType > tree = new MserTree< IntType >( darkToBrightComparator, darkToBrightDelta, minSize, maxSize, maxVar, minDiversity );
 		final MserComponentGenerator< IntType > generator = new MserComponentGenerator< IntType >( new IntType( Integer.MAX_VALUE ), img, new ArrayImgFactory< LongType >() );
-		final MserComponentHandler< IntType > handler = new MserComponentHandler< IntType >( darkToBrightComparator, darkToBrightDelta, tree );
-		ComponentTree.buildComponentTree( img, generator, handler, darkToBrightComparator );
+		ComponentTree.buildComponentTree( img, generator, tree, darkToBrightComparator );
 		tree.pruneDuplicates();
 		
 		new ImageJ();		

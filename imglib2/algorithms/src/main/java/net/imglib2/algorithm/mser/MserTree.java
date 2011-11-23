@@ -1,16 +1,22 @@
 package net.imglib2.algorithm.mser;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Iterator;
 
+import net.imglib2.algorithm.componenttree.Component;
 import net.imglib2.type.Type;
 
-public class MserTree< T extends Type< T > > implements Iterable< Mser< T > >
+public class MserTree< T extends Type< T > > implements Component.Handler< MserComponentIntermediate< T > >, Iterable< Mser< T > >
 {
 	private final HashSet< Mser< T > > roots;
 
 	private final ArrayList< Mser< T > > nodes;
+
+	private final Comparator< T > comparator;
+
+	private final ComputeDeltaValue< T > delta;
 
 	private final long minSize;
 
@@ -20,10 +26,12 @@ public class MserTree< T extends Type< T > > implements Iterable< Mser< T > >
 
 	private final double minDiversity;
 	
-	public MserTree( final long minSize, final long maxSize, final double maxVar, final double minDiversity )
+	public MserTree( final Comparator< T > comparator, final ComputeDeltaValue< T > delta, final long minSize, final long maxSize, final double maxVar, final double minDiversity )
 	{
 		roots = new HashSet< Mser< T > >();
 		nodes = new ArrayList< Mser< T > >();
+		this.comparator = comparator;
+		this.delta = delta;
 		this.minSize = minSize;
 		this.maxSize = maxSize;
 		this.maxVar = maxVar;
@@ -60,6 +68,13 @@ public class MserTree< T extends Type< T > > implements Iterable< Mser< T > >
 		mser.ancestors.clear();
 		mser.ancestors.addAll( validAncestors );
 		nodes.addAll( validAncestors );
+	}
+
+	@Override
+	public void emit( MserComponentIntermediate< T > component )
+	{
+		new MserEvaluationNode< T >( component, comparator, delta, this );
+		component.clearAncestors();
 	}
 
 	public void foundNewMinimum( MserEvaluationNode< T > node )
