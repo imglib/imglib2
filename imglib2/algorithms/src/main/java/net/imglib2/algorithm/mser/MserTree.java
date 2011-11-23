@@ -2,31 +2,32 @@ package net.imglib2.algorithm.mser;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Iterator;
 
 import net.imglib2.algorithm.mser.MserComponentHandler.SimpleMserProcessor;
 import net.imglib2.type.Type;
 
-public class MserTree< T extends Type< T > > implements SimpleMserProcessor< T >
+public class MserTree< T extends Type< T > > implements SimpleMserProcessor< T >, Iterable< Mser< T > >
 {
 	private final HashSet< Mser< T > > roots;
+
+	private final ArrayList< Mser< T > > nodes;
 
 	private final double minDiversity;
 	
 	public MserTree( final double minDiversity )
 	{
 		roots = new HashSet< Mser< T > >();
+		nodes = new ArrayList< Mser< T > >();
 		this.minDiversity = minDiversity;
 	}
 
 	public void pruneDuplicates()
 	{
+		nodes.clear();
 		for ( Mser< T > mser : roots )
 			pruneChildren ( mser );
-	}
-
-	public HashSet< Mser< T > > roots()
-	{
-		return roots;
+		nodes.addAll( roots );
 	}
 
 	private void pruneChildren( Mser< T > mser )
@@ -50,6 +51,7 @@ public class MserTree< T extends Type< T > > implements SimpleMserProcessor< T >
 		}
 		mser.ancestors.clear();
 		mser.ancestors.addAll( validAncestors );
+		nodes.addAll( validAncestors );
 	}
 
 	@Override
@@ -64,5 +66,16 @@ public class MserTree< T extends Type< T > > implements SimpleMserProcessor< T >
 		for ( Mser< T > m : mser.ancestors )
 			roots.remove( m );
 		roots.add( mser );
+	}
+
+	@Override
+	public Iterator< Mser< T > > iterator()
+	{
+		return nodes.iterator();
+	}
+
+	public HashSet< Mser< T > > roots()
+	{
+		return roots;
 	}
 }

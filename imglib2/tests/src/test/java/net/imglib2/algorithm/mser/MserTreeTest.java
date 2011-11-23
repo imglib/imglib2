@@ -76,17 +76,12 @@ public class MserTreeTest< T extends IntegerType< T > >
 		stack.addSlice( label, byteProcessor );
 	
 		ov.add( createEllipse( mser.mean(), mser.cov(), 3 ) );
-		
-		for ( Mser< T > m : mser.ancestors )
-			visualise( m );
 	}
 	
 	public void visualise( MserTree< T > tree )
 	{
-		for ( Mser< T > mser : tree.roots() )
-		{
+		for ( Mser< T > mser : tree )
 			visualise( mser );
-		}
 	}
 
 	public static Long median( ArrayList<Long> values )
