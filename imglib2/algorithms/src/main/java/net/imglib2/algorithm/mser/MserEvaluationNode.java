@@ -40,7 +40,7 @@ public final class MserEvaluationNode< T extends RealType< T > >
 	 */
 	final ArrayList< MserTree< T >.Mser > mserThisOrAncestors;
 
-	public MserEvaluationNode( final MserComponent< T > component, final Comparator< T > comparator, final ComputeDeltaValue< T > delta, final MserComponentHandler.SimpleMserProcessor< T > minimaProcessor )
+	public MserEvaluationNode( final MserComponentIntermediate< T > component, final Comparator< T > comparator, final ComputeDeltaValue< T > delta, final MserComponentHandler.SimpleMserProcessor< T > minimaProcessor )
 	{
 		value = component.getValue().copy();
 		pixelList = new PixelList( component.pixelList );
@@ -58,15 +58,15 @@ public final class MserEvaluationNode< T extends RealType< T > >
 		}
 
 		MserEvaluationNode< T > historyWinner = node;
-		for ( MserComponent< T > c : component.getAncestors() )
+		for ( MserComponentIntermediate< T > c : component.getAncestors() )
 		{
 			node = new MserEvaluationNode< T >( c.getEvaluationNode(), value, comparator, delta, minimaProcessor );
 			ancestors.add( node );
 			node.setSuccessor( this );
-			if ( c.getSize() > historySize )
+			if ( c.size() > historySize )
 			{
 				historyWinner = node;
-				historySize = c.getSize();
+				historySize = c.size();
 			}
 		}
 		

@@ -10,8 +10,8 @@ import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.integer.LongType;
 
 public class MserComponentHandler< T extends RealType< T > >
-		implements Component.Generator< T, MserComponent< T > >,
-		Component.Handler< MserComponent< T > >
+		implements Component.Generator< T, MserComponentIntermediate< T > >,
+		Component.Handler< MserComponentIntermediate< T > >
 {
 	public interface SimpleMserProcessor< T extends RealType< T > >
 	{
@@ -46,19 +46,19 @@ public class MserComponentHandler< T extends RealType< T > >
 	}
 
 	@Override
-	public MserComponent< T > createComponent( T value )
+	public MserComponentIntermediate< T > createComponent( T value )
 	{
-		return new MserComponent< T >( value, this );
+		return new MserComponentIntermediate< T >( value, this );
 	}
 
 	@Override
-	public MserComponent< T > createMaxComponent()
+	public MserComponentIntermediate< T > createMaxComponent()
 	{
-		return new MserComponent< T >( maxValue, this );
+		return new MserComponentIntermediate< T >( maxValue, this );
 	}
 
 	@Override
-	public void emit( MserComponent< T > component )
+	public void emit( MserComponentIntermediate< T > component )
 	{
 		new MserEvaluationNode< T >( component, comparator, delta, procNewMser );
 		component.clearAncestors();
