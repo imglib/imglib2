@@ -1,7 +1,6 @@
 package net.imglib2.algorithm.componenttree.pixellist;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 
 import net.imglib2.Localizable;
 import net.imglib2.algorithm.componenttree.Component;
@@ -16,10 +15,16 @@ import net.imglib2.type.Type;
  * @param <T>
  *            value type of the input image.
  */
-final class PixelListComponentIntermediate< T extends Type< T > > implements Component< T >, Iterable< Localizable >
+final class PixelListComponentIntermediate< T extends Type< T > > implements Component< T >
 {
-	private T value;
+	/**
+	 * Threshold value of the connected component.
+	 */
+	private final T value;
 
+	/**
+	 * Pixels in the component.
+	 */
 	final PixelList pixelList;
 
 	/**
@@ -82,7 +87,7 @@ final class PixelListComponentIntermediate< T extends Type< T > > implements Com
 	{
 		String s = "{" + value.toString() + " : ";
 		boolean first = true;
-		for ( Localizable l : this )
+		for ( Localizable l : pixelList )
 		{
 			if ( first )
 			{
@@ -95,11 +100,5 @@ final class PixelListComponentIntermediate< T extends Type< T > > implements Com
 			s += l.toString();
 		}
 		return s + "}";
-	}
-
-	@Override
-	public Iterator< Localizable > iterator()
-	{
-		return pixelList.iterator();
 	}
 }

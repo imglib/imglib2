@@ -66,9 +66,9 @@ public final class PixelListComponent< T extends Type< T > > implements Iterable
 	}
 
 	/**
-	 * Get the number of pixels the extremal region.
+	 * Get the number of pixels in the extremal region.
 	 *
-	 * @return number of pixels the extremal region.
+	 * @return number of pixels in the extremal region.
 	 */
 	public long size()
 	{
