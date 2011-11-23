@@ -18,7 +18,6 @@ import net.imglib2.img.array.ArrayImgFactory;
 import net.imglib2.img.display.imagej.ImageJFunctions;
 import net.imglib2.io.ImgOpener;
 import net.imglib2.type.numeric.IntegerType;
-import net.imglib2.type.numeric.NumericType;
 import net.imglib2.type.numeric.integer.IntType;
 import net.imglib2.type.numeric.integer.LongType;
 
@@ -122,24 +121,6 @@ public class MserTreeTest< T extends IntegerType< T > >
 		System.out.println();
 	}
 	
-	public static class DarkToBrightDelta< T extends NumericType< T > > implements ComputeDeltaValue< T >
-	{
-		private final T delta;
-
-		DarkToBrightDelta( final T delta )
-		{
-			this.delta = delta;
-		}
-
-		@Override
-		public T valueMinusDelta( T value )
-		{
-			final T valueMinus = value.copy();
-			valueMinus.sub( delta );
-			return valueMinus;
-		}
-	}
-
 	public static void main( String[] args )
 	{
 		final int delta = 10;
@@ -166,7 +147,7 @@ public class MserTreeTest< T extends IntegerType< T > >
 		{
 			public void run()
 			{
-				final DarkToBrightDelta< IntType > darkToBrightDelta = new DarkToBrightDelta< IntType >( new IntType( delta ) );
+				final ComputeDeltaDarkToBright< IntType > darkToBrightDelta = new ComputeDeltaDarkToBright< IntType >( new IntType( delta ) );
 				final ComponentTree.DarkToBright< IntType > darkToBrightComparator = new ComponentTree.DarkToBright< IntType >();
 				final MserTree< IntType > tree = new MserTree< IntType >( minDiversity );
 				final MserFilter< IntType > procNewMser = new MserFilter< IntType >( minSize, maxSize, maxVar, tree );
@@ -177,7 +158,7 @@ public class MserTreeTest< T extends IntegerType< T > >
 			}
 		} );
 
-		final DarkToBrightDelta< IntType > darkToBrightDelta = new DarkToBrightDelta< IntType >( new IntType( delta ) );
+		final ComputeDeltaDarkToBright< IntType > darkToBrightDelta = new ComputeDeltaDarkToBright< IntType >( new IntType( delta ) );
 		final ComponentTree.DarkToBright< IntType > darkToBrightComparator = new ComponentTree.DarkToBright< IntType >();
 		final MserTree< IntType > tree = new MserTree< IntType >( minDiversity );
 		final MserFilter< IntType > procNewMser = new MserFilter< IntType >( minSize, maxSize, maxVar, tree );
