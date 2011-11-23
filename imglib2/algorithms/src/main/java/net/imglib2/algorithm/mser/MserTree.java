@@ -7,9 +7,9 @@ import java.util.Iterator;
 import net.imglib2.Localizable;
 import net.imglib2.algorithm.componenttree.pixellist.PixelList;
 import net.imglib2.algorithm.mser.MserComponentHandler.SimpleMserProcessor;
-import net.imglib2.type.numeric.RealType;
+import net.imglib2.type.Type;
 
-public class MserTree< T extends RealType< T > > implements SimpleMserProcessor< T >
+public class MserTree< T extends Type< T > > implements SimpleMserProcessor< T >
 {
 	public class Mser implements Iterable< Localizable >
 	{

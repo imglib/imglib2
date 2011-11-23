@@ -6,14 +6,14 @@ import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.algorithm.componenttree.Component;
 import net.imglib2.img.Img;
 import net.imglib2.img.ImgFactory;
-import net.imglib2.type.numeric.RealType;
+import net.imglib2.type.Type;
 import net.imglib2.type.numeric.integer.LongType;
 
-public class MserComponentHandler< T extends RealType< T > >
+public class MserComponentHandler< T extends Type< T > >
 		implements Component.Generator< T, MserComponentIntermediate< T > >,
 		Component.Handler< MserComponentIntermediate< T > >
 {
-	public interface SimpleMserProcessor< T extends RealType< T > >
+	public interface SimpleMserProcessor< T extends Type< T > >
 	{
 		/**
 		 * Called when a {@link MserEvaluationNode} is found to be a local minimum of the MSER score.

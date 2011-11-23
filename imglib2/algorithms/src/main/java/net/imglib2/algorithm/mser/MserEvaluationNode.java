@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.Comparator;
 
 import net.imglib2.algorithm.componenttree.pixellist.PixelList;
-import net.imglib2.type.numeric.RealType;
+import net.imglib2.type.Type;
 
-public final class MserEvaluationNode< T extends RealType< T > >
+public final class MserEvaluationNode< T extends Type< T > >
 {
 	/**
 	 * Threshold value of the connected component.

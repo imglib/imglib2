@@ -1,9 +1,9 @@
 package net.imglib2.algorithm.mser;
 
 import net.imglib2.algorithm.mser.MserComponentHandler.SimpleMserProcessor;
-import net.imglib2.type.numeric.IntegerType;
+import net.imglib2.type.Type;
 
-public class MserFilter< T extends IntegerType< T > > implements SimpleMserProcessor< T >
+public class MserFilter< T extends Type< T > > implements SimpleMserProcessor< T >
 {
 	final long minSize;
 	final long maxSize;

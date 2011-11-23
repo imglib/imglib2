@@ -5,9 +5,9 @@ import java.util.ArrayList;
 import net.imglib2.Localizable;
 import net.imglib2.algorithm.componenttree.Component;
 import net.imglib2.algorithm.componenttree.pixellist.PixelList;
-import net.imglib2.type.numeric.RealType;
+import net.imglib2.type.Type;
 
-public final class MserComponentIntermediate< T extends RealType< T > > implements Component< T >
+public final class MserComponentIntermediate< T extends Type< T > > implements Component< T >
 {
 	private static int idGen = 0;
 	
