@@ -11,11 +11,11 @@ import net.imglib2.type.Type;
 
 public class MserTree< T extends Type< T > > implements SimpleMserProcessor< T >
 {
-	public class Mser implements Iterable< Localizable >
+	public static class Mser< T extends Type< T > > implements Iterable< Localizable >
 	{
-		public final ArrayList< Mser > ancestors;
+		public final ArrayList< Mser< T > > ancestors;
 
-		public Mser successor;
+		public Mser< T > successor;
 
 		/**
 		 * Threshold value of the connected component.
@@ -44,7 +44,7 @@ public class MserTree< T extends Type< T > > implements SimpleMserProcessor< T >
 
 		public Mser( MserEvaluationNode< T > node )
 		{
-			ancestors = new ArrayList< Mser >();
+			ancestors = new ArrayList< Mser< T > >();
 			successor = null;
 
 			value = node.value;
@@ -110,33 +110,33 @@ public class MserTree< T extends Type< T > > implements SimpleMserProcessor< T >
 		}
 	}
 	
-	private final HashSet< Mser > roots;
+	private final HashSet< Mser< T > > roots;
 
 	private final double minDiversity;
 	
 	public MserTree( final double minDiversity )
 	{
-		roots = new HashSet< Mser >();
+		roots = new HashSet< Mser< T > >();
 		this.minDiversity = minDiversity;
 	}
 
 	public void pruneDuplicates()
 	{
-		for ( Mser mser : roots )
+		for ( Mser< T > mser : roots )
 			pruneChildren ( mser );
 	}
 
-	public HashSet< Mser > roots()
+	public HashSet< Mser< T > > roots()
 	{
 		return roots;
 	}
 
-	private void pruneChildren( Mser mser )
+	private void pruneChildren( Mser< T > mser )
 	{
-		final ArrayList< Mser > validAncestors = new ArrayList< Mser >();
+		final ArrayList< Mser< T > > validAncestors = new ArrayList< Mser< T > >();
 		for ( int i = 0; i < mser.ancestors.size(); ++i )
 		{
-			Mser m = mser.ancestors.get( i );
+			Mser< T > m = mser.ancestors.get( i );
 			double div = ( mser.size() - m.size() ) / (double) mser.size();
 			if ( div > minDiversity )
 			{
@@ -146,7 +146,7 @@ public class MserTree< T extends Type< T > > implements SimpleMserProcessor< T >
 			else
 			{
 				mser.ancestors.addAll( m.ancestors );
-				for ( Mser m2 : m.ancestors )
+				for ( Mser< T > m2 : m.ancestors )
 					m2.successor = mser;
 			}
 		}
@@ -157,13 +157,13 @@ public class MserTree< T extends Type< T > > implements SimpleMserProcessor< T >
 	@Override
 	public void foundNewMinimum( MserEvaluationNode< T > node )
 	{
-		Mser mser = new Mser( node );
-		for ( Mser m : node.mserThisOrAncestors )
+		Mser< T > mser = new Mser< T >( node );
+		for ( Mser< T > m : node.mserThisOrAncestors )
 			mser.ancestors.add( m );
 		node.mserThisOrAncestors.clear();
 		node.mserThisOrAncestors.add( mser );
 		
-		for ( Mser m : mser.ancestors )
+		for ( Mser< T > m : mser.ancestors )
 			roots.remove( m );
 		roots.add( mser );
 	}

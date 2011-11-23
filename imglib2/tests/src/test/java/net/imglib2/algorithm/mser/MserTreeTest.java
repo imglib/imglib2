@@ -62,7 +62,7 @@ public class MserTreeTest< T extends IntegerType< T > >
 		this.h = h;
 	}
 	
-	public void visualise( MserTree< T >.Mser mser )
+	public void visualise( MserTree.Mser< T > mser )
 	{
 		ByteProcessor byteProcessor = new ByteProcessor( w, h );
 		byte[] pixels = ( byte[] )byteProcessor.getPixels();
@@ -77,13 +77,13 @@ public class MserTreeTest< T extends IntegerType< T > >
 	
 		ov.add( createEllipse( mser.mean(), mser.cov(), 3 ) );
 		
-		for ( MserTree< T >.Mser m : mser.ancestors )
+		for ( MserTree.Mser< T > m : mser.ancestors )
 			visualise( m );
 	}
 	
 	public void visualise( MserTree< T > tree )
 	{
-		for ( MserTree< T >.Mser mser : tree.roots() )
+		for ( MserTree.Mser< T > mser : tree.roots() )
 		{
 			visualise( mser );
 		}
