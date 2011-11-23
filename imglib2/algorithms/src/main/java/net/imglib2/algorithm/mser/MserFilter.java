@@ -1,9 +1,9 @@
 package net.imglib2.algorithm.mser;
 
-import net.imglib2.algorithm.mser.SimpleMserComponentHandler.SimpleMserProcessor;
+import net.imglib2.algorithm.mser.MserComponentHandler.SimpleMserProcessor;
 import net.imglib2.type.numeric.IntegerType;
 
-public class SimpleMserFilter< T extends IntegerType< T > > implements SimpleMserProcessor< T >
+public class MserFilter< T extends IntegerType< T > > implements SimpleMserProcessor< T >
 {
 	final long minSize;
 	final long maxSize;
@@ -15,7 +15,7 @@ public class SimpleMserFilter< T extends IntegerType< T > > implements SimpleMse
 	
 	private int numDiscarded = 0;
 
-	public SimpleMserFilter( final long minSize, final long maxSize, final double maxVar, SimpleMserProcessor< T > procNewMser )
+	public MserFilter( final long minSize, final long maxSize, final double maxVar, SimpleMserProcessor< T > procNewMser )
 	{
 		this.minSize = minSize;
 		this.maxSize = maxSize;
@@ -24,7 +24,7 @@ public class SimpleMserFilter< T extends IntegerType< T > > implements SimpleMse
 	}
 
 	@Override
-	public void foundNewMinimum( SimpleMserEvaluationNode< T > node )
+	public void foundNewMinimum( MserEvaluationNode< T > node )
 	{
 		if ( node.size >= minSize && node.size <= maxSize && node.score <= maxVar )
 			procNewMser.foundNewMinimum( node );

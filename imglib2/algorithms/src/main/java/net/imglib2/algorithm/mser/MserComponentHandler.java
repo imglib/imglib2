@@ -9,9 +9,9 @@ import net.imglib2.img.ImgFactory;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.integer.LongType;
 
-public class SimpleMserComponentHandler< T extends RealType< T > >
-		implements Component.Generator< T, SimpleMserComponent< T > >,
-		Component.Handler< SimpleMserComponent< T > >
+public class MserComponentHandler< T extends RealType< T > >
+		implements Component.Generator< T, MserComponent< T > >,
+		Component.Handler< MserComponent< T > >
 {
 	public interface SimpleMserProcessor< T extends RealType< T > >
 	{
@@ -19,7 +19,7 @@ public class SimpleMserComponentHandler< T extends RealType< T > >
 		 * Called when a {@link MserEvaluationNode} is found to be a local minimum of the MSER score.
 		 * @param node
 		 */
-		public abstract void foundNewMinimum( SimpleMserEvaluationNode< T > node );
+		public abstract void foundNewMinimum( MserEvaluationNode< T > node );
 	}
 
 	final T maxValue;
@@ -34,7 +34,7 @@ public class SimpleMserComponentHandler< T extends RealType< T > >
 	
 	final Img< LongType > linkedList;
 
-	public SimpleMserComponentHandler( final T maxValue, final Comparator< T > comparator, final RandomAccessibleInterval< T > input, final ImgFactory< LongType > imgFactory, final ComputeDeltaValue< T > delta, final SimpleMserProcessor< T > procNewMser )
+	public MserComponentHandler( final T maxValue, final Comparator< T > comparator, final RandomAccessibleInterval< T > input, final ImgFactory< LongType > imgFactory, final ComputeDeltaValue< T > delta, final SimpleMserProcessor< T > procNewMser )
 	{
 		this.maxValue = maxValue;
 		this.comparator = comparator;
@@ -46,21 +46,21 @@ public class SimpleMserComponentHandler< T extends RealType< T > >
 	}
 
 	@Override
-	public SimpleMserComponent< T > createComponent( T value )
+	public MserComponent< T > createComponent( T value )
 	{
-		return new SimpleMserComponent< T >( value, this );
+		return new MserComponent< T >( value, this );
 	}
 
 	@Override
-	public SimpleMserComponent< T > createMaxComponent()
+	public MserComponent< T > createMaxComponent()
 	{
-		return new SimpleMserComponent< T >( maxValue, this );
+		return new MserComponent< T >( maxValue, this );
 	}
 
 	@Override
-	public void emit( SimpleMserComponent< T > component )
+	public void emit( MserComponent< T > component )
 	{
-		new SimpleMserEvaluationNode< T >( component, comparator, delta, procNewMser );
+		new MserEvaluationNode< T >( component, comparator, delta, procNewMser );
 		component.clearAncestors();
 	}
 }

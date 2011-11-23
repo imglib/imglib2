@@ -6,10 +6,10 @@ import java.util.Iterator;
 
 import net.imglib2.Localizable;
 import net.imglib2.algorithm.componenttree.pixellist.PixelList;
-import net.imglib2.algorithm.mser.SimpleMserComponentHandler.SimpleMserProcessor;
+import net.imglib2.algorithm.mser.MserComponentHandler.SimpleMserProcessor;
 import net.imglib2.type.numeric.RealType;
 
-public class SimpleMserTree< T extends RealType< T > > implements SimpleMserProcessor< T >
+public class MserTree< T extends RealType< T > > implements SimpleMserProcessor< T >
 {
 	public class Mser implements Iterable< Localizable >
 	{
@@ -42,7 +42,7 @@ public class SimpleMserTree< T extends RealType< T > > implements SimpleMserProc
 		 */
 		private final double[] cov;
 
-		public Mser( SimpleMserEvaluationNode< T > node )
+		public Mser( MserEvaluationNode< T > node )
 		{
 			ancestors = new ArrayList< Mser >();
 			successor = null;
@@ -114,7 +114,7 @@ public class SimpleMserTree< T extends RealType< T > > implements SimpleMserProc
 
 	private final double minDiversity;
 	
-	public SimpleMserTree( final double minDiversity )
+	public MserTree( final double minDiversity )
 	{
 		roots = new HashSet< Mser >();
 		this.minDiversity = minDiversity;
@@ -155,7 +155,7 @@ public class SimpleMserTree< T extends RealType< T > > implements SimpleMserProc
 	}
 
 	@Override
-	public void foundNewMinimum( SimpleMserEvaluationNode< T > node )
+	public void foundNewMinimum( MserEvaluationNode< T > node )
 	{
 		Mser mser = new Mser( node );
 		for ( Mser m : node.mserThisOrAncestors )

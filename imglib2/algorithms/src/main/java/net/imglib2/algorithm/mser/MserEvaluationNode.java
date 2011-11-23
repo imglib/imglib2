@@ -6,7 +6,7 @@ import java.util.Comparator;
 import net.imglib2.algorithm.componenttree.pixellist.PixelList;
 import net.imglib2.type.numeric.RealType;
 
-public final class SimpleMserEvaluationNode< T extends RealType< T > >
+public final class MserEvaluationNode< T extends RealType< T > >
 {
 	/**
 	 * Threshold value of the connected component.
@@ -20,9 +20,9 @@ public final class SimpleMserEvaluationNode< T extends RealType< T > >
 
 	public final PixelList pixelList;
 
-	public final ArrayList< SimpleMserEvaluationNode< T > > ancestors;
-	public final SimpleMserEvaluationNode< T > historyAncestor;
-	public SimpleMserEvaluationNode< T > successor;
+	public final ArrayList< MserEvaluationNode< T > > ancestors;
+	public final MserEvaluationNode< T > historyAncestor;
+	public MserEvaluationNode< T > successor;
 	
 	/**
 	 * MSER score : |Q_{i+\Delta} - Q_i| / |Q_i|. 
@@ -38,29 +38,29 @@ public final class SimpleMserEvaluationNode< T extends RealType< T > >
 	 * MSERs associated to this region or its children. To build up the MSER
 	 * tree.
 	 */
-	final ArrayList< SimpleMserTree< T >.Mser > mserThisOrAncestors;
+	final ArrayList< MserTree< T >.Mser > mserThisOrAncestors;
 
-	public SimpleMserEvaluationNode( final SimpleMserComponent< T > component, final Comparator< T > comparator, final ComputeDeltaValue< T > delta, final SimpleMserComponentHandler.SimpleMserProcessor< T > minimaProcessor )
+	public MserEvaluationNode( final MserComponent< T > component, final Comparator< T > comparator, final ComputeDeltaValue< T > delta, final MserComponentHandler.SimpleMserProcessor< T > minimaProcessor )
 	{
 		value = component.getValue().copy();
 		pixelList = new PixelList( component.pixelList );
 		size = pixelList.size();
 
-		ancestors = new ArrayList< SimpleMserEvaluationNode< T > >();
-		SimpleMserEvaluationNode< T > node = component.getEvaluationNode();
+		ancestors = new ArrayList< MserEvaluationNode< T > >();
+		MserEvaluationNode< T > node = component.getEvaluationNode();
 		long historySize = 0;
 		if ( node != null )
 		{
 			historySize = node.size;
-			node = new SimpleMserEvaluationNode< T >( node, value, comparator, delta, minimaProcessor );
+			node = new MserEvaluationNode< T >( node, value, comparator, delta, minimaProcessor );
 			ancestors.add( node );
 			node.setSuccessor( this );
 		}
 
-		SimpleMserEvaluationNode< T > historyWinner = node;
-		for ( SimpleMserComponent< T > c : component.getAncestors() )
+		MserEvaluationNode< T > historyWinner = node;
+		for ( MserComponent< T > c : component.getAncestors() )
 		{
-			node = new SimpleMserEvaluationNode< T >( c.getEvaluationNode(), value, comparator, delta, minimaProcessor );
+			node = new MserEvaluationNode< T >( c.getEvaluationNode(), value, comparator, delta, minimaProcessor );
 			ancestors.add( node );
 			node.setSuccessor( this );
 			if ( c.getSize() > historySize )
@@ -88,22 +88,22 @@ public final class SimpleMserEvaluationNode< T extends RealType< T > >
 		component.setEvaluationNode( this );
 		isScoreValid = computeMserScore( delta, comparator, false );
 		if ( isScoreValid )
-			for ( SimpleMserEvaluationNode< T > a : ancestors )
+			for ( MserEvaluationNode< T > a : ancestors )
 				a.evaluateLocalMinimum( minimaProcessor, delta, comparator );
 
 		if ( ancestors.size() == 1 )
 			mserThisOrAncestors = ancestors.get( 0 ).mserThisOrAncestors;
 		else
 		{
-			mserThisOrAncestors = new ArrayList< SimpleMserTree< T >.Mser >();
-			for ( SimpleMserEvaluationNode< T > a : ancestors )
+			mserThisOrAncestors = new ArrayList< MserTree< T >.Mser >();
+			for ( MserEvaluationNode< T > a : ancestors )
 				mserThisOrAncestors.addAll( a.mserThisOrAncestors );
 		}
 	}
 
-	private SimpleMserEvaluationNode( final SimpleMserEvaluationNode< T > ancestor, final T value, final Comparator< T > comparator, final ComputeDeltaValue< T > delta, final SimpleMserComponentHandler.SimpleMserProcessor< T > minimaProcessor )
+	private MserEvaluationNode( final MserEvaluationNode< T > ancestor, final T value, final Comparator< T > comparator, final ComputeDeltaValue< T > delta, final MserComponentHandler.SimpleMserProcessor< T > minimaProcessor )
 	{
-		ancestors = new ArrayList< SimpleMserEvaluationNode< T > >();
+		ancestors = new ArrayList< MserEvaluationNode< T > >();
 		ancestors.add( ancestor );
 		ancestor.setSuccessor( this );
 
@@ -125,7 +125,7 @@ public final class SimpleMserEvaluationNode< T extends RealType< T > >
 		mserThisOrAncestors = ancestor.mserThisOrAncestors;
 	}
 
-	private void setSuccessor( SimpleMserEvaluationNode< T > node )
+	private void setSuccessor( MserEvaluationNode< T > node )
 	{
 		successor = node;
 	}
@@ -155,7 +155,7 @@ public final class SimpleMserEvaluationNode< T extends RealType< T > >
 		final T valueMinus = delta.valueMinusDelta( value );
 
 		// go back in history until we find a node with (value <= valueMinus)
-		SimpleMserEvaluationNode< T > node = historyAncestor;
+		MserEvaluationNode< T > node = historyAncestor;
 		while ( node != null  &&  comparator.compare( node.value, valueMinus ) > 0 )
 			node = node.historyAncestor;
 		if ( node == null )
@@ -174,11 +174,11 @@ public final class SimpleMserEvaluationNode< T extends RealType< T > >
 	 * called, when the mser score for the next component in the branch is
 	 * available.)
 	 */
-	private void evaluateLocalMinimum( final SimpleMserComponentHandler.SimpleMserProcessor< T > minimaProcessor, final ComputeDeltaValue< T > delta, final Comparator< T > comparator )
+	private void evaluateLocalMinimum( final MserComponentHandler.SimpleMserProcessor< T > minimaProcessor, final ComputeDeltaValue< T > delta, final Comparator< T > comparator )
 	{
 		if ( isScoreValid )
 		{
-			SimpleMserEvaluationNode< T > below = historyAncestor;
+			MserEvaluationNode< T > below = historyAncestor;
 			while ( below.isScoreValid && below.size == size )
 				below = below.historyAncestor;
 			if ( below.isScoreValid )
@@ -205,7 +205,7 @@ public final class SimpleMserEvaluationNode< T extends RealType< T > >
 		String s = "SimpleMserEvaluationNode";
 		s += ", size = " + size;
 		s += ", history = [";
-		SimpleMserEvaluationNode< T > node = historyAncestor;
+		MserEvaluationNode< T > node = historyAncestor;
 		boolean first = true;
 		while ( node != null )
 		{

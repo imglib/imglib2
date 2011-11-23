@@ -7,7 +7,7 @@ import net.imglib2.algorithm.componenttree.Component;
 import net.imglib2.algorithm.componenttree.pixellist.PixelList;
 import net.imglib2.type.numeric.RealType;
 
-public final class SimpleMserComponent< T extends RealType< T > > implements Component< T >
+public final class MserComponent< T extends RealType< T > > implements Component< T >
 {
 	private static int idGen = 0;
 	
@@ -31,15 +31,15 @@ public final class SimpleMserComponent< T extends RealType< T > > implements Com
 	 * A list of MserComponent merged into this one since it was last emitted.
 	 * (For building up MSER evaluation structure.)
 	 */
-	ArrayList< SimpleMserComponent< T > > ancestors;
+	ArrayList< MserComponent< T > > ancestors;
 	
 	/**
 	 * The MserEvaluationNode assigned to this MserComponent when it was last emitted.
 	 * (For building up MSER evaluation structure.)
 	 */
-	SimpleMserEvaluationNode< T > evaluationNode;
+	MserEvaluationNode< T > evaluationNode;
 
-	public SimpleMserComponent( final T value, final SimpleMserComponentHandler< T > handler )
+	public MserComponent( final T value, final MserComponentHandler< T > handler )
 	{
 		id = idGen++;
 		pixelList = new PixelList( handler.linkedList.randomAccess(), handler.dimensions );
@@ -47,7 +47,7 @@ public final class SimpleMserComponent< T extends RealType< T > > implements Com
 		sumPos = new double[ n ];
 		sumSquPos = new double[ ( n * (n+1) ) / 2 ];
 		this.value = value.copy();
-		this.ancestors = new ArrayList< SimpleMserComponent< T > >();
+		this.ancestors = new ArrayList< MserComponent< T > >();
 		this.evaluationNode = null;
 		tmp = new long[ n ];
 	}
@@ -81,7 +81,7 @@ public final class SimpleMserComponent< T extends RealType< T > > implements Com
 	@Override
 	public void merge( final Component< T > component )
 	{
-		final SimpleMserComponent< T > c = ( SimpleMserComponent< T > ) component;
+		final MserComponent< T > c = ( MserComponent< T > ) component;
 		pixelList.merge( c.pixelList );
 		for ( int i = 0; i < sumPos.length; ++i )
 			sumPos[ i ] += c.sumPos[ i ];
@@ -96,7 +96,7 @@ public final class SimpleMserComponent< T extends RealType< T > > implements Com
 		String s = "id=" + id;
 		s += " [";
 		boolean first = true;
-		for ( SimpleMserComponent< T > c : ancestors )
+		for ( MserComponent< T > c : ancestors )
 		{
 			if ( first )
 			{
@@ -118,7 +118,7 @@ public final class SimpleMserComponent< T extends RealType< T > > implements Com
 		return pixelList.size();
 	}
 	
-	public ArrayList< SimpleMserComponent< T > > getAncestors()
+	public ArrayList< MserComponent< T > > getAncestors()
 	{
 		return ancestors;
 	}
@@ -128,12 +128,12 @@ public final class SimpleMserComponent< T extends RealType< T > > implements Com
 		ancestors.clear();
 	}
 
-	public SimpleMserEvaluationNode< T > getEvaluationNode()
+	public MserEvaluationNode< T > getEvaluationNode()
 	{
 		return evaluationNode;
 	}
 	
-	public void setEvaluationNode( SimpleMserEvaluationNode< T > node )
+	public void setEvaluationNode( MserEvaluationNode< T > node )
 	{
 		evaluationNode = node;
 	}

@@ -22,7 +22,7 @@ import net.imglib2.type.numeric.NumericType;
 import net.imglib2.type.numeric.integer.IntType;
 import net.imglib2.type.numeric.integer.LongType;
 
-public class SimpleMserTreeTest< T extends IntegerType< T > >
+public class MserTreeTest< T extends IntegerType< T > >
 {
 	final ImagePlus imp;
 	final Overlay ov;
@@ -52,7 +52,7 @@ public class SimpleMserTreeTest< T extends IntegerType< T > >
 		return ellipse;
 	}
 
-	public SimpleMserTreeTest( final ImagePlus imp, final ImageStack stack, final int w, final int h )
+	public MserTreeTest( final ImagePlus imp, final ImageStack stack, final int w, final int h )
 	{
 		this.imp = imp;
 		ov = new Overlay();
@@ -62,7 +62,7 @@ public class SimpleMserTreeTest< T extends IntegerType< T > >
 		this.h = h;
 	}
 	
-	public void visualise( SimpleMserTree< T >.Mser mser )
+	public void visualise( MserTree< T >.Mser mser )
 	{
 		ByteProcessor byteProcessor = new ByteProcessor( w, h );
 		byte[] pixels = ( byte[] )byteProcessor.getPixels();
@@ -77,13 +77,13 @@ public class SimpleMserTreeTest< T extends IntegerType< T > >
 	
 		ov.add( createEllipse( mser.mean(), mser.cov(), 3 ) );
 		
-		for ( SimpleMserTree< T >.Mser m : mser.ancestors )
+		for ( MserTree< T >.Mser m : mser.ancestors )
 			visualise( m );
 	}
 	
-	public void visualise( SimpleMserTree< T > tree )
+	public void visualise( MserTree< T > tree )
 	{
-		for ( SimpleMserTree< T >.Mser mser : tree.roots() )
+		for ( MserTree< T >.Mser mser : tree.roots() )
 		{
 			visualise( mser );
 		}
@@ -173,9 +173,9 @@ public class SimpleMserTreeTest< T extends IntegerType< T > >
 			{
 				final DarkToBrightDelta< IntType > darkToBrightDelta = new DarkToBrightDelta< IntType >( new IntType( delta ) );
 				final ComponentTree.DarkToBright< IntType > darkToBrightComparator = new ComponentTree.DarkToBright< IntType >();
-				final SimpleMserTree< IntType > tree = new SimpleMserTree< IntType >( minDiversity );
-				final SimpleMserFilter< IntType > procNewMser = new SimpleMserFilter< IntType >( minSize, maxSize, maxVar, tree );
-				final SimpleMserComponentHandler< IntType > handler = new SimpleMserComponentHandler< IntType >( new IntType( Integer.MAX_VALUE ), darkToBrightComparator, img, new ArrayImgFactory< LongType >(), darkToBrightDelta, procNewMser );
+				final MserTree< IntType > tree = new MserTree< IntType >( minDiversity );
+				final MserFilter< IntType > procNewMser = new MserFilter< IntType >( minSize, maxSize, maxVar, tree );
+				final MserComponentHandler< IntType > handler = new MserComponentHandler< IntType >( new IntType( Integer.MAX_VALUE ), darkToBrightComparator, img, new ArrayImgFactory< LongType >(), darkToBrightDelta, procNewMser );
 				ComponentTree.buildComponentTree( img, handler, handler, darkToBrightComparator );
 				tree.pruneDuplicates();
 			}
@@ -183,9 +183,9 @@ public class SimpleMserTreeTest< T extends IntegerType< T > >
 
 		final DarkToBrightDelta< IntType > darkToBrightDelta = new DarkToBrightDelta< IntType >( new IntType( delta ) );
 		final ComponentTree.DarkToBright< IntType > darkToBrightComparator = new ComponentTree.DarkToBright< IntType >();
-		final SimpleMserTree< IntType > tree = new SimpleMserTree< IntType >( minDiversity );
-		final SimpleMserFilter< IntType > procNewMser = new SimpleMserFilter< IntType >( minSize, maxSize, maxVar, tree );
-		final SimpleMserComponentHandler< IntType > handler = new SimpleMserComponentHandler< IntType >( new IntType( Integer.MAX_VALUE ), darkToBrightComparator, img, new ArrayImgFactory< LongType >(), darkToBrightDelta, procNewMser );
+		final MserTree< IntType > tree = new MserTree< IntType >( minDiversity );
+		final MserFilter< IntType > procNewMser = new MserFilter< IntType >( minSize, maxSize, maxVar, tree );
+		final MserComponentHandler< IntType > handler = new MserComponentHandler< IntType >( new IntType( Integer.MAX_VALUE ), darkToBrightComparator, img, new ArrayImgFactory< LongType >(), darkToBrightDelta, procNewMser );
 		ComponentTree.buildComponentTree( img, handler, handler, darkToBrightComparator );
 		tree.pruneDuplicates();
 		
@@ -199,7 +199,7 @@ public class SimpleMserTreeTest< T extends IntegerType< T > >
 		final int h = ( int ) dimensions[1];
 		ImageStack stack = new ImageStack( w, h );
 		
-		final SimpleMserTreeTest< IntType > vis = new SimpleMserTreeTest< IntType >( impImg, stack, w, h );
+		final MserTreeTest< IntType > vis = new MserTreeTest< IntType >( impImg, stack, w, h );
 		vis.visualise( tree );
 
 		ImagePlus imp = new ImagePlus("components", stack);
