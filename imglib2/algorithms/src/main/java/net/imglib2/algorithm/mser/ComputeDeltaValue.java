@@ -17,5 +17,5 @@ public interface ComputeDeltaValue< T >
 	 *
 	 * @return (value - delta)
 	 */
-	public T valueMinusDelta( T value );
+	public T valueMinusDelta( final T value );
 }

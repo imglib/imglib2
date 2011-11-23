@@ -2,7 +2,7 @@ package net.imglib2.algorithm.mser;
 
 import net.imglib2.type.numeric.NumericType;
 
-public class ComputeDeltaDarkToBright< T extends NumericType< T > > implements ComputeDeltaValue< T >
+public final class ComputeDeltaDarkToBright< T extends NumericType< T > > implements ComputeDeltaValue< T >
 {
 	private final T delta;
 
@@ -12,7 +12,7 @@ public class ComputeDeltaDarkToBright< T extends NumericType< T > > implements C
 	}
 
 	@Override
-	public T valueMinusDelta( T value )
+	public T valueMinusDelta( final T value )
 	{
 		final T valueMinus = value.copy();
 		valueMinus.sub( delta );
