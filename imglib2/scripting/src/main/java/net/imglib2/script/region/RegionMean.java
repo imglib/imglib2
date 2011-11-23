@@ -5,11 +5,11 @@ import net.imglib2.img.Img;
 import net.imglib2.script.region.fn.ARegionFn;
 import net.imglib2.type.numeric.RealType;
 
-public class Mean<T extends RealType<T>> extends ARegionFn<T>
+public class RegionMean<T extends RealType<T>> extends ARegionFn<T>
 {
 	private final double size;
 	
-	public Mean(Img<T> img, RandomAccess<T> ra, long span) {
+	public RegionMean(Img<T> img, RandomAccess<T> ra, long span) {
 		super(img, ra, span);
 		this.size = img.size();
 	}

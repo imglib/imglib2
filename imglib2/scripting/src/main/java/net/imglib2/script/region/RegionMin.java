@@ -5,9 +5,9 @@ import net.imglib2.img.Img;
 import net.imglib2.script.region.fn.ARegionFn;
 import net.imglib2.type.numeric.RealType;
 
-public class Min<T extends RealType<T>> extends ARegionFn<T>
+public class RegionMin<T extends RealType<T>> extends ARegionFn<T>
 {
-	public Min(Img<T> img, RandomAccess<T> ra, long span) {
+	public RegionMin(Img<T> img, RandomAccess<T> ra, long span) {
 		super(img, ra, span);
 	}
 

@@ -5,9 +5,9 @@ import net.imglib2.img.Img;
 import net.imglib2.script.region.fn.ARegionFn;
 import net.imglib2.type.numeric.RealType;
 
-public class Max<T extends RealType<T>> extends ARegionFn<T>
+public class RegionMax<T extends RealType<T>> extends ARegionFn<T>
 {
-	public Max(Img<T> img, RandomAccess<T> ra, long span) {
+	public RegionMax(Img<T> img, RandomAccess<T> ra, long span) {
 		super(img, ra, span);
 	}
 
