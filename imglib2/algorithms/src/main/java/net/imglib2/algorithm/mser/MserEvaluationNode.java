@@ -38,7 +38,7 @@ public final class MserEvaluationNode< T extends Type< T > >
 	 * MSERs associated to this region or its children. To build up the MSER
 	 * tree.
 	 */
-	final ArrayList< MserTree.Mser< T > > mserThisOrAncestors;
+	final ArrayList< Mser< T > > mserThisOrAncestors;
 
 	public MserEvaluationNode( final MserComponentIntermediate< T > component, final Comparator< T > comparator, final ComputeDeltaValue< T > delta, final MserComponentHandler.SimpleMserProcessor< T > minimaProcessor )
 	{
@@ -95,7 +95,7 @@ public final class MserEvaluationNode< T extends Type< T > >
 			mserThisOrAncestors = ancestors.get( 0 ).mserThisOrAncestors;
 		else
 		{
-			mserThisOrAncestors = new ArrayList< MserTree.Mser< T > >();
+			mserThisOrAncestors = new ArrayList< Mser< T > >();
 			for ( MserEvaluationNode< T > a : ancestors )
 				mserThisOrAncestors.addAll( a.mserThisOrAncestors );
 		}
