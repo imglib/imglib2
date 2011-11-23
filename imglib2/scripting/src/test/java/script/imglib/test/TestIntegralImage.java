@@ -12,6 +12,7 @@ import net.imglib2.type.numeric.real.FloatType;
 
 public class TestIntegralImage {
 
+	@SuppressWarnings("unused")
 	static public final void main(String[] args) {
 		try {
 			FloatImage fi = new FloatImage(new long[]{10, 10, 10});
@@ -19,7 +20,7 @@ public class TestIntegralImage {
 			while (c.hasNext()) {
 				c.next().set(1);
 			}
-			IntegralImage<FloatType> ig = new IntegralImage<FloatType>(fi);
+			IntegralImage ig = new IntegralImage(fi);
 			
 			RandomAccess<DoubleType> p = ig.randomAccess();
 			p.setPosition(new long[]{9, 9, 9});
