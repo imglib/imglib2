@@ -28,19 +28,19 @@
  * @author Stephan Preibisch & Stephan Saalfeld
  */
 
-package net.imglib2.img;
+package net.imglib2.meta;
 
 import java.util.Hashtable;
 
-import net.imglib2.meta.Metadata;
+import net.imglib2.img.ImgPlus;
 
 /**
- * An enumeration of common dimensional axis labels, for describing the
- * dimensional axes of a {@link Metadata} object (such as an {@link ImgPlus}).
+ * An enumeration of common dimensional axis types, for describing the
+ * dimensions of a {@link CalibratedSpace} object (such as an {@link ImgPlus}).
  * 
  * @author Curtis Rueden
  */
-public enum Axes implements Axis {
+public enum Axes implements AxisType {
 
 	/**
 	 * Identifies the <i>X</i> dimensional type, representing a dimension in the
@@ -105,25 +105,25 @@ public enum Axes implements Axis {
 	/** Represents an unknown dimensional type. */
 	UNKNOWN("Unknown");
 
-	private static Hashtable<String, Axis> axes =
-		new Hashtable<String, Axis>();
+	private static Hashtable<String, AxisType> axes =
+		new Hashtable<String, AxisType>();
 
 	static {
-		for (final Axis axis : Axes.values()) {
+		for (final AxisType axis : Axes.values()) {
 			axes.put(axis.getLabel(), axis);
 		}
 	}
 
-	public static Axis get(final String label) {
-		Axis axis = axes.get(label);
+	public synchronized static AxisType get(final String label) {
+		AxisType axis = axes.get(label);
 		if (axis == null) {
-			axis = new CustomAxis(label);
+			axis = new CustomAxisType(label);
 			axes.put(label, axis);
 		}
 		return axis;
 	}
 
-	public static boolean isXY(final Axis dimLabel) {
+	public static boolean isXY(final AxisType dimLabel) {
 		return dimLabel == Axes.X || dimLabel == Axes.Y;
 	}
 
@@ -160,14 +160,14 @@ public enum Axes implements Axis {
 	// -- Helper classes --
 
 	/**
-	 * A custom dimensional axis label, for describing the dimensional axes of a
-	 * {@link Metadata} object (such as an {@link ImgPlus}).
+	 * A custom dimensional axis type, for describing the dimensional axes of a
+	 * {@link CalibratedSpace} object (such as an {@link ImgPlus}).
 	 */
-	public static class CustomAxis implements Axis {
+	public static class CustomAxisType implements AxisType {
 
 		private final String label;
 
-		public CustomAxis(final String label) {
+		public CustomAxisType(final String label) {
 			this.label = label;
 		}
 
