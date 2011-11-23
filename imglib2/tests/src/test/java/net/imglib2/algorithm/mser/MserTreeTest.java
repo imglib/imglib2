@@ -175,8 +175,9 @@ public class MserTreeTest< T extends IntegerType< T > >
 				final ComponentTree.DarkToBright< IntType > darkToBrightComparator = new ComponentTree.DarkToBright< IntType >();
 				final MserTree< IntType > tree = new MserTree< IntType >( minDiversity );
 				final MserFilter< IntType > procNewMser = new MserFilter< IntType >( minSize, maxSize, maxVar, tree );
-				final MserComponentHandler< IntType > handler = new MserComponentHandler< IntType >( new IntType( Integer.MAX_VALUE ), darkToBrightComparator, img, new ArrayImgFactory< LongType >(), darkToBrightDelta, procNewMser );
-				ComponentTree.buildComponentTree( img, handler, handler, darkToBrightComparator );
+				final MserComponentGenerator< IntType > generator = new MserComponentGenerator< IntType >( new IntType( Integer.MAX_VALUE ), img, new ArrayImgFactory< LongType >() );
+				final MserComponentHandler< IntType > handler = new MserComponentHandler< IntType >( darkToBrightComparator, darkToBrightDelta, procNewMser );
+				ComponentTree.buildComponentTree( img, generator, handler, darkToBrightComparator );
 				tree.pruneDuplicates();
 			}
 		} );
@@ -185,8 +186,9 @@ public class MserTreeTest< T extends IntegerType< T > >
 		final ComponentTree.DarkToBright< IntType > darkToBrightComparator = new ComponentTree.DarkToBright< IntType >();
 		final MserTree< IntType > tree = new MserTree< IntType >( minDiversity );
 		final MserFilter< IntType > procNewMser = new MserFilter< IntType >( minSize, maxSize, maxVar, tree );
-		final MserComponentHandler< IntType > handler = new MserComponentHandler< IntType >( new IntType( Integer.MAX_VALUE ), darkToBrightComparator, img, new ArrayImgFactory< LongType >(), darkToBrightDelta, procNewMser );
-		ComponentTree.buildComponentTree( img, handler, handler, darkToBrightComparator );
+		final MserComponentGenerator< IntType > generator = new MserComponentGenerator< IntType >( new IntType( Integer.MAX_VALUE ), img, new ArrayImgFactory< LongType >() );
+		final MserComponentHandler< IntType > handler = new MserComponentHandler< IntType >( darkToBrightComparator, darkToBrightDelta, procNewMser );
+		ComponentTree.buildComponentTree( img, generator, handler, darkToBrightComparator );
 		tree.pruneDuplicates();
 		
 		new ImageJ();		

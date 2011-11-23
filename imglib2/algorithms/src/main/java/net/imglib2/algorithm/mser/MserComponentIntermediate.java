@@ -39,11 +39,11 @@ public final class MserComponentIntermediate< T extends Type< T > > implements C
 	 */
 	MserEvaluationNode< T > evaluationNode;
 
-	public MserComponentIntermediate( final T value, final MserComponentHandler< T > handler )
+	public MserComponentIntermediate( final T value, final MserComponentGenerator< T > generator )
 	{
 		id = idGen++;
-		pixelList = new PixelList( handler.linkedList.randomAccess(), handler.dimensions );
-		n = handler.dimensions.length;
+		pixelList = new PixelList( generator.linkedList.randomAccess(), generator.dimensions );
+		n = generator.dimensions.length;
 		sumPos = new double[ n ];
 		sumSquPos = new double[ ( n * (n+1) ) / 2 ];
 		this.value = value.copy();
