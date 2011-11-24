@@ -15,6 +15,7 @@ public class TestIntegralImagePerformance {
 	public static void main(String[] args) {
 		final int side = 2048;
 		final float[] pix = new float[side * side];
+		for (int i=0; i<pix.length; ++i) pix[i] = 1;
 		final FloatProcessor fp = new FloatProcessor(side, side, pix, null);
 		final FloatImage fii = new FloatImage(new long[]{side, side}, pix);
 		
