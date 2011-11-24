@@ -1,6 +1,7 @@
 package net.imglib2.algorithm.componenttree.pixellist;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Iterator;
 
 import net.imglib2.RandomAccessibleInterval;
@@ -73,10 +74,60 @@ public final class PixelListComponentTree< T extends Type< T > > implements Comp
 	{
 		T max = type.createVariable();
 		max.setReal( darkToBright ? type.getMaxValue() : type.getMinValue() );
-		System.out.println( "max = " + max );
 		final PixelListComponentGenerator< T > generator = new PixelListComponentGenerator< T >( max, input, imgFactory );
 		final PixelListComponentTree< T > tree = new PixelListComponentTree< T >();
 		ComponentTree.buildComponentTree( input, generator, tree, darkToBright );
+		return tree;
+	}
+
+	/**
+	 * Build a component tree from an input image. Calls
+	 * {@link #buildComponentTree(RandomAccessibleInterval, Type, Comparator, ImgFactory)}
+	 * using an {@link ArrayImgFactory} or {@link CellImgFactory} depending on
+	 * input image size.
+	 *
+	 * @param input
+	 *            the input image.
+	 * @param maxValue
+	 *            a value (e.g., grey-level) greater than any occurring in the
+	 *            input image.
+	 * @param comparator
+	 *            determines ordering of threshold values.
+	 * @return component tree of the image.
+	 */
+	public static < T extends Type< T > > PixelListComponentTree< T > buildComponentTree( final RandomAccessibleInterval< T > input, final T maxValue, final Comparator< T > comparator )
+	{
+		final int numDimensions = input.numDimensions();
+		long size = 1;
+		for ( int d = 0; d < numDimensions; ++d )
+			size *= input.dimension( d );
+		if( size > Integer.MAX_VALUE ) {
+			int cellSize = ( int ) Math.pow( Integer.MAX_VALUE / new LongType().getEntitiesPerPixel(), 1.0 / numDimensions );
+			return buildComponentTree( input, maxValue, comparator, new CellImgFactory< LongType >( cellSize ) );
+		} else
+			return buildComponentTree( input, maxValue, comparator, new ArrayImgFactory< LongType >() );
+	}
+
+	/**
+	 * Build a component tree from an input image.
+	 *
+	 * @param input
+	 *            the input image.
+	 * @param maxValue
+	 *            a value (e.g., grey-level) greater than any occurring in the
+	 *            input image.
+	 * @param comparator
+	 *            determines ordering of threshold values.
+	 * @param imgFactory
+	 *            used for creating the {@link PixelList} image {@see
+	 *            PixelListComponentGenerator}.
+	 * @return component tree of the image.
+	 */
+	public static < T extends Type< T > > PixelListComponentTree< T > buildComponentTree( final RandomAccessibleInterval< T > input, final T maxValue, final Comparator< T > comparator, final ImgFactory< LongType > imgFactory )
+	{
+		final PixelListComponentGenerator< T > generator = new PixelListComponentGenerator< T >( maxValue, input, imgFactory );
+		final PixelListComponentTree< T > tree = new PixelListComponentTree< T >();
+		ComponentTree.buildComponentTree( input, generator, tree, comparator );
 		return tree;
 	}
 
