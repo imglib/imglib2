@@ -137,7 +137,7 @@ public class MserTreeTest< T extends IntegerType< T > >
 		{
 			ImgFactory< IntType > imgFactory = new ArrayImgFactory< IntType >();
 			final ImgOpener io = new ImgOpener();
-			img = io.openImg( "/home/tobias/workspace/data/img1inv.tif", imgFactory, new IntType() );
+			img = io.openImg( "/home/tobias/workspace/data/img1.tif", imgFactory, new IntType() );
 		}
 		catch ( Exception e )
 		{
@@ -150,28 +150,12 @@ public class MserTreeTest< T extends IntegerType< T > >
 		{
 			public void run()
 			{
-				final ComputeDeltaDarkToBright< IntType > darkToBrightDelta = new ComputeDeltaDarkToBright< IntType >( new IntType( delta ) );
-				final ComponentTree.DarkToBright< IntType > darkToBrightComparator = new ComponentTree.DarkToBright< IntType >();
-				final MserTree< IntType > tree = new MserTree< IntType >( darkToBrightComparator, darkToBrightDelta, minSize, maxSize, maxVar, minDiversity );
-				final MserComponentGenerator< IntType > generator = new MserComponentGenerator< IntType >( new IntType( Integer.MAX_VALUE ), img, new ArrayImgFactory< LongType >() );
-				ComponentTree.buildComponentTree( img, generator, tree, darkToBrightComparator );
-				tree.pruneDuplicates();
+				final MserTree< IntType > tree = MserTree.buildMserTree( img, new IntType( delta ), minSize, maxSize, maxVar, minDiversity, true );
 			}
 		} );
 
-		final ComputeDeltaDarkToBright< IntType > darkToBrightDelta = new ComputeDeltaDarkToBright< IntType >( new IntType( delta ) );
-		final ComponentTree.DarkToBright< IntType > darkToBrightComparator = new ComponentTree.DarkToBright< IntType >();
-		final MserTree< IntType > tree = new MserTree< IntType >( darkToBrightComparator, darkToBrightDelta, minSize, maxSize, maxVar, minDiversity );
-		final MserComponentGenerator< IntType > generator = new MserComponentGenerator< IntType >( new IntType( Integer.MAX_VALUE ), img, new ArrayImgFactory< LongType >() );
-		ComponentTree.buildComponentTree( img, generator, tree, darkToBrightComparator );
-		tree.pruneDuplicates();
-		
-		final ComputeDeltaBrightToDark< IntType > brightToDarkDelta = new ComputeDeltaBrightToDark< IntType >( new IntType( delta ) );
-		final ComponentTree.BrightToDark< IntType > brightToDarkComparator = new ComponentTree.BrightToDark< IntType >();
-		final MserTree< IntType > treeBrightToDark = new MserTree< IntType >( brightToDarkComparator, brightToDarkDelta, minSize, maxSize, maxVar, minDiversity );
-		final MserComponentGenerator< IntType > generatorb = new MserComponentGenerator< IntType >( new IntType( Integer.MIN_VALUE ), img, new ArrayImgFactory< LongType >() );
-		ComponentTree.buildComponentTree( img, generatorb, treeBrightToDark, brightToDarkComparator );
-		treeBrightToDark.pruneDuplicates();
+		final MserTree< IntType > treeDarkToBright = MserTree.buildMserTree( img, new IntType( delta ), minSize, maxSize, maxVar, minDiversity, true );
+		final MserTree< IntType > treeBrightToDark = MserTree.buildMserTree( img, new IntType( delta ), minSize, maxSize, maxVar, minDiversity, false );
 
 		new ImageJ();		
 		ImagePlus impImg = ImageJFunctions.show( img );
@@ -184,7 +168,7 @@ public class MserTreeTest< T extends IntegerType< T > >
 		ImageStack stack = new ImageStack( w, h );
 		
 		final MserTreeTest< IntType > vis = new MserTreeTest< IntType >( impImg, stack, w, h );
-		vis.visualise( tree, Color.CYAN );
+		vis.visualise( treeDarkToBright, Color.CYAN );
 		vis.visualise( treeBrightToDark, Color.MAGENTA );
 
 		ImagePlus imp = new ImagePlus("components", stack);

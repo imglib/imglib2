@@ -39,7 +39,7 @@ final class MserEvaluationNode< T extends Type< T > >
 	private MserEvaluationNode< T > parent;
 	
 	/**
-	 * MSER score : |Q_{i+\Delta} - Q_i| / |Q_i|. 
+	 * MSER score : |R_i - R_{i-\Delta}| / |R_i|.
 	 */
 	double score;
 
@@ -163,19 +163,19 @@ final class MserEvaluationNode< T extends Type< T > >
 	/**
 	 * Evaluate the mser score at this connected component. This may fail if the
 	 * connected component tree is not built far enough down from the current
-	 * node. The mser score is computed as |Q_{i+delta} - Q_i| / |Q_i|, where
-	 * Q_i is this component and Q_{i+delta} is the component delta steps down
+	 * node. The mser score is computed as |R_i - R_{i-\Delta}| / |R_i|, where
+	 * R_i is this component and R_{i-delta} is the component delta steps down
 	 * the component tree (threshold level is delta lower than this).
 	 * 
 	 * @param delta
 	 * @param isIntermediate
 	 *            whether this is an intermediate node. This influences the
-	 *            search for the Q_{i+delta} in the following way. If a node
-	 *            with value equal to i+delta is found, then this is a
+	 *            search for the R_{i-delta} in the following way. If a node
+	 *            with value equal to i-delta is found, then this is a
 	 *            non-intermediate node and there is an intermediate node with
-	 *            the same value below it. If isIntermediate is true Q_{i+delta}
+	 *            the same value below it. If isIntermediate is true R_{i-delta}
 	 *            is set to the intermediate node. (The other possibility is,
-	 *            that we find a node with value smaller than i+delta, i.e.,
+	 *            that we find a node with value smaller than i-delta, i.e.,
 	 *            there is no node with that exact value. In this case,
 	 *            isIntermediate has no influence.)
 	 */

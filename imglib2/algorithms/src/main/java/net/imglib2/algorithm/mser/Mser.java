@@ -42,7 +42,7 @@ public final class Mser< T extends Type< T > > implements Iterable< Localizable 
 	private final PixelList pixelList;
 
 	/**
-	 * MSER score : |Q_{i+\Delta} - Q_i| / |Q_i|.
+	 * MSER score : |R_i - R_{i-\Delta}| / |R_i|.
 	 */
 	private final double score;
 
@@ -89,7 +89,7 @@ public final class Mser< T extends Type< T > > implements Iterable< Localizable 
 	}
 
 	/**
-	 * The MSER score is computed as |Q_{i+delta} - Q_i| / |Q_i|.
+	 * The MSER score is computed as |R_i - R_{i-\Delta}| / |R_i|.
 	 * 
 	 * @return the MSER score.
 	 */
