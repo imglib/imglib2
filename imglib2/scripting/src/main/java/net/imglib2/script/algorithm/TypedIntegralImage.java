@@ -10,10 +10,10 @@ import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.util.Util;
 
-/** n-dimensional integral image that stores sums using type I.
- * Care must be taken that sums do not overflow the capacity of type I.
+/** n-dimensional integral image that stores sums using type {@param <RI>}.
+ * Care must be taken that sums do not overflow the capacity of type {@param <RI>}.
  * 
- * Sums are done with double floating-point precision and then set to the integral image type I,
+ * Sums are done with double floating-point precision and then set to the integral image type {@param <RI>},
  * which may crop the values according to the type's capabilities.
  * 
  * @author Albert Cardona
