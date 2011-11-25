@@ -51,7 +51,7 @@ public class AlgorithmUtil
 		return d;
 	}
 	
-	public static long[] asLongArray(final Collection<Number> ls) {
+	public static long[] asLongArray(final Collection<? extends Number> ls) {
 		final long[] d = new long[ls.size()];
 		int i = 0;
 		for (final Number num : ls) d[i++] = num.longValue();
