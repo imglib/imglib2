@@ -38,12 +38,17 @@ import net.imglib2.ops.Complex;
  * @author Barry DeZonia
  *
  */
-public class ComplexNegate extends ComplexOutput implements UnaryOperation<Complex,Complex> {
+public final class ComplexNegate extends ComplexOutput implements UnaryOperation<Complex,Complex> {
 
 	@Override
-	public void compute(Complex input, Complex output) {
-		double r = -input.getX();
-		double i = -input.getY();
-		output.setCartesian(r,i);
+	public void compute(Complex z, Complex output) {
+		double x = -z.getX();
+		double y = -z.getY();
+		output.setCartesian(x,y);
+	}
+	
+	@Override
+	public ComplexNegate duplicate() {
+		return new ComplexNegate();
 	}
 }

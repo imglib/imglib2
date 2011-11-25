@@ -38,12 +38,12 @@ package net.imglib2.ops;
 public class RegionIndexIterator implements Iterator<long[]> {
 
 	private boolean invalid;
-	private long[] ctr;
-	private long[] negOffs;
-	private long[] posOffs;
-	private long[] position;
-	private long[] maxes;
-	private long[] mins;
+	private final long[] ctr;
+	private final long[] negOffs;
+	private final long[] posOffs;
+	private final long[] position;
+	private final long[] maxes;
+	private final long[] mins;
 	
 	public RegionIndexIterator(long[] ctr, long[] negOffs, long[] posOffs) {
 		this.ctr = ctr.clone();

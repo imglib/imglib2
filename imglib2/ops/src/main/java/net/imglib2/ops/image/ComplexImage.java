@@ -38,8 +38,8 @@ import net.imglib2.ops.Complex;
  *
  */
 public class ComplexImage extends AbstractImage {
-	private double[] realData;
-	private double[] imagData;
+	private final double[] realData;
+	private final double[] imagData;
 	
 	public ComplexImage(long[] dims, String[] axes) {
 		super(dims, axes);

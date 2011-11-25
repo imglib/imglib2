@@ -75,6 +75,12 @@ public class OrthoSliceCursor< T extends Type< T > > implements Cursor< T >, Int
 	}
 	*/
 	
+	/**
+	 * @param f The {@link RandomAccessible} and {@link Interval} object, such as an {@link Img}.
+	 * @param x One of the two dimensions of the orthoslice plane.
+	 * @param y The other dimension of the orthoslice plane.
+	 * @param position The starting point for the sampler, that is, the offset to the first value to consider.
+	 */
 	public < F extends RandomAccessible< T > & Interval > OrthoSliceCursor( final F f, final int x, final int y, final long[] position )
 	{
 		interval = f;

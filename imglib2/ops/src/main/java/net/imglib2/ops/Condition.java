@@ -36,6 +36,9 @@ package net.imglib2.ops;
  *
  */
 public interface Condition<INDEX> {
+	
 	boolean isTrue(Neighborhood<INDEX> neigh, INDEX point);
+	
+	Condition<INDEX> duplicate();
 }
 

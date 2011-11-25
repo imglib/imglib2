@@ -39,21 +39,25 @@ import net.imglib2.ops.UnaryOperation;
  * @author Barry DeZonia
  *
  */
-public class RealMaxConstant extends RealOutput implements UnaryOperation<Real,Real> {
+public final class RealMaxConstant extends RealOutput implements UnaryOperation<Real,Real> {
 
-	private double constant;
+	private final double constant;
 	
 	public RealMaxConstant(double constant) {
 		this.constant = constant;
 	}
 	
 	@Override
-	public void compute(Real input, Real output) {
-		double value = input.getReal();
+	public void compute(Real x, Real output) {
+		double value = x.getReal();
 		if (value < constant)
 			output.setReal(value);
 		else
 			output.setReal(constant);
 	}
 
+	@Override
+	public RealMaxConstant duplicate() {
+		return new RealMaxConstant(constant);
+	}
 }

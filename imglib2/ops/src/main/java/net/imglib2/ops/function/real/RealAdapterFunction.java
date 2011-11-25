@@ -42,8 +42,8 @@ import net.imglib2.ops.RealOutput;
  *
  */
 public class RealAdapterFunction<INDEX> extends RealOutput implements Function<INDEX,Real> {
-	private Function<INDEX,Complex> complexFunc;
-	private Complex variable;
+	private final Function<INDEX,Complex> complexFunc;
+	private final Complex variable;
 
 	public RealAdapterFunction(Function<INDEX,Complex> complexFunc) {
 		this.complexFunc = complexFunc;
@@ -54,6 +54,11 @@ public class RealAdapterFunction<INDEX> extends RealOutput implements Function<I
 	public void evaluate(Neighborhood<INDEX> region, INDEX point, Real r) {
 		complexFunc.evaluate(region, point, variable);
 		r.setReal(variable.getX());
+	}
+
+	@Override
+	public RealAdapterFunction<INDEX> duplicate() {
+		return new RealAdapterFunction<INDEX>(complexFunc.duplicate());
 	}
 }
 

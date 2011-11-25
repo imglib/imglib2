@@ -37,11 +37,15 @@ import net.imglib2.ops.Real;
  * @author Barry DeZonia
  *
  */
-public class RealNotEquals implements BinaryRelation<Real> {
+public final class RealNotEquals implements BinaryRelation<Real> {
 
 	@Override
 	public boolean holds(Real val1, Real val2) {
 		return val1.getReal() != val2.getReal();
 	}
 
+	@Override
+	public RealNotEquals duplicate() {
+		return new RealNotEquals();
+	}
 }

@@ -93,6 +93,20 @@ public class Util
 
 		return (float)Math.sqrt( dist );
 	}
+	
+	final public static float computeDistance( final long[] position1, final long[] position2 )
+	{
+		float dist = 0;
+
+		for ( int d = 0; d < position1.length; ++d )
+		{
+			final long pos = position2[ d ] - position1[ d ];
+
+			dist += pos*pos;
+		}
+
+		return (float)Math.sqrt( dist );
+	}
 
 	final public static float computeLength( final int[] position )
 	{

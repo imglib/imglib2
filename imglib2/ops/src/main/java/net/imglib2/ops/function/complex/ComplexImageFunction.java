@@ -29,12 +29,15 @@ POSSIBILITY OF SUCH DAMAGE.
 
 package net.imglib2.ops.function.complex;
 
+import net.imglib2.ExtendedRandomAccessibleInterval;
 import net.imglib2.RandomAccess;
+import net.imglib2.RandomAccessible;
 import net.imglib2.img.Img;
 import net.imglib2.ops.ComplexOutput;
 import net.imglib2.ops.Function;
 import net.imglib2.ops.Complex;
 import net.imglib2.ops.Neighborhood;
+import net.imglib2.outofbounds.OutOfBoundsFactory;
 import net.imglib2.type.numeric.ComplexType;
 
 /**
@@ -42,20 +45,50 @@ import net.imglib2.type.numeric.ComplexType;
  * @author Barry DeZonia
  *
  */
-public class ComplexImageFunction extends ComplexOutput implements Function<long[],Complex> {
-
-	private RandomAccess<? extends ComplexType<?>> accessor;
+public class ComplexImageFunction
+	extends ComplexOutput implements Function<long[],Complex>
+{
+	// -- instance variables --
+	
+	private final RandomAccess<? extends ComplexType<?>> accessor;
+	
+	// -- private constructor used by duplicate() --
+	
+	private ComplexImageFunction(
+		RandomAccess<? extends ComplexType<?>> acc)
+	{
+		this.accessor = acc;
+	}
+	
+	// -- public constructors --
 	
 	public ComplexImageFunction(Img<? extends ComplexType<?>> img) {
 		this.accessor = img.randomAccess();
 	}
 	
+	public ComplexImageFunction(
+		Img<? extends ComplexType<?>> img,
+		OutOfBoundsFactory<? extends ComplexType<?>,Img<? extends ComplexType<?>>> factory)
+	{
+		@SuppressWarnings({"rawtypes","unchecked"})
+		RandomAccessible< ? extends ComplexType<?> > extendedRandAcessible =
+				new ExtendedRandomAccessibleInterval(img, factory);
+		this.accessor =  extendedRandAcessible.randomAccess();
+	}
+	
+	// -- public interface --
+	
 	@Override
-	public void evaluate(Neighborhood<long[]> input, long[] point, Complex output) {
+	public void evaluate(Neighborhood<long[]> input, long[] point, Complex output)
+	{
 		accessor.setPosition(point);
 		double r = accessor.get().getRealDouble();
 		double i = accessor.get().getImaginaryDouble();
 		output.setCartesian(r,i);
 	}
 
+	@Override
+	public ComplexImageFunction duplicate() {
+		return new ComplexImageFunction(accessor.copyRandomAccess());
+	}
 }

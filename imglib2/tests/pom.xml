@@ -18,13 +18,13 @@
 
   <dependencies>
     <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>imglib2</artifactId>
-      <version>${project.version}</version>
+      <groupId>${imagej.groupId}</groupId>
+      <artifactId>ij</artifactId>
+      <version>${imagej1.version}</version>
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>imglib2-algorithms</artifactId>
+      <artifactId>imglib2</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
@@ -37,22 +37,19 @@
       <artifactId>imglib2-io</artifactId>
       <version>${project.version}</version>
     </dependency>
-  </dependencies>
+    <dependency>
+      <groupId>jama</groupId>
+      <artifactId>jama</artifactId>
+      <version>1.0.2</version>
+    </dependency>
 
-  <build>
-    <plugins>
-      <plugin>
-        <artifactId>maven-jar-plugin</artifactId>
-        <configuration>
-          <archive>
-            <manifest>
-              <packageName>net.imglib2.io</packageName>
-            </manifest>
-          </archive>
-        </configuration>
-      </plugin>
-    </plugins>
-  </build>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>4.9</version>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
 
   <!-- NB: for project parent, in case of partial checkout -->
   <repositories>

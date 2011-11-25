@@ -55,8 +55,6 @@ import loci.formats.services.OMEXMLService;
 import net.imglib2.display.ColorTable16;
 import net.imglib2.display.ColorTable8;
 import net.imglib2.exception.IncompatibleTypeException;
-import net.imglib2.img.Axes;
-import net.imglib2.img.Axis;
 import net.imglib2.img.Img;
 import net.imglib2.img.ImgFactory;
 import net.imglib2.img.ImgPlus;
@@ -71,6 +69,8 @@ import net.imglib2.img.basictypeaccess.array.LongArray;
 import net.imglib2.img.basictypeaccess.array.ShortArray;
 import net.imglib2.img.planar.PlanarImg;
 import net.imglib2.img.planar.PlanarImgFactory;
+import net.imglib2.meta.Axes;
+import net.imglib2.meta.AxisType;
 import net.imglib2.sampler.special.OrthoSliceCursor;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.Type;
@@ -410,14 +410,9 @@ public class ImgOpener implements StatusReporter {
 		}
 	}
 
-	// -- Helper methods --
-
-	/** Constructs and initializes a Bio-Formats reader for the given file. */
-	private IFormatReader initializeReader(final String id,
+	public static IFormatReader createReader(final String id,
 		final boolean computeMinMax) throws FormatException, IOException
 	{
-		notifyListeners(new StatusEvent("Initializing " + id));
-
 		IFormatReader r = null;
 		r = new ImageReader();
 		r = new ChannelFiller(r);
@@ -442,47 +437,9 @@ public class ImgOpener implements StatusReporter {
 
 		return r;
 	}
-
-	/** Compiles an N-dimensional list of axis types from the given reader. */
-	private Axis[] getDimTypes(final IFormatReader r) {
-		final int sizeX = r.getSizeX();
-		final int sizeY = r.getSizeY();
-		final int sizeZ = r.getSizeZ();
-		final int sizeT = r.getSizeT();
-		final String[] cDimTypes = r.getChannelDimTypes();
-		final int[] cDimLengths = r.getChannelDimLengths();
-		final String dimOrder = r.getDimensionOrder();
-		final List<Axis> dimTypes = new ArrayList<Axis>();
-
-		// add core dimensions
-		for (final char dim : dimOrder.toCharArray()) {
-			switch (dim) {
-				case 'X':
-					if (sizeX > 1) dimTypes.add(Axes.X);
-					break;
-				case 'Y':
-					if (sizeY > 1) dimTypes.add(Axes.Y);
-					break;
-				case 'Z':
-					if (sizeZ > 1) dimTypes.add(Axes.Z);
-					break;
-				case 'T':
-					if (sizeT > 1) dimTypes.add(Axes.TIME);
-					break;
-				case 'C':
-					for (int c = 0; c < cDimTypes.length; c++) {
-						final int len = cDimLengths[c];
-						if (len > 1) dimTypes.add(Axes.get(cDimTypes[c]));
-					}
-					break;
-			}
-		}
-
-		return dimTypes.toArray(new Axis[0]);
-	}
-
+	
 	/** Compiles an N-dimensional list of axis lengths from the given reader. */
-	private long[] getDimLengths(final IFormatReader r) {
+	public static long[] getDimLengths(final IFormatReader r) {
 		final long sizeX = r.getSizeX();
 		final long sizeY = r.getSizeY();
 		final long sizeZ = r.getSizeZ();
@@ -524,6 +481,55 @@ public class ImgOpener implements StatusReporter {
 			dimLengths[i] = dimLengthsList.get(i);
 		}
 		return dimLengths;
+	}
+
+	// -- Helper methods --
+
+	/** Constructs and initializes a Bio-Formats reader for the given file. */
+	private IFormatReader initializeReader(final String id,
+		final boolean computeMinMax) throws FormatException, IOException
+	{
+		notifyListeners(new StatusEvent("Initializing " + id));
+
+		return createReader(id, computeMinMax);
+	}
+
+	/** Compiles an N-dimensional list of axis types from the given reader. */
+	private AxisType[] getDimTypes(final IFormatReader r) {
+		final int sizeX = r.getSizeX();
+		final int sizeY = r.getSizeY();
+		final int sizeZ = r.getSizeZ();
+		final int sizeT = r.getSizeT();
+		final String[] cDimTypes = r.getChannelDimTypes();
+		final int[] cDimLengths = r.getChannelDimLengths();
+		final String dimOrder = r.getDimensionOrder();
+		final List<AxisType> dimTypes = new ArrayList<AxisType>();
+
+		// add core dimensions
+		for (final char dim : dimOrder.toCharArray()) {
+			switch (dim) {
+				case 'X':
+					if (sizeX > 1) dimTypes.add(Axes.X);
+					break;
+				case 'Y':
+					if (sizeY > 1) dimTypes.add(Axes.Y);
+					break;
+				case 'Z':
+					if (sizeZ > 1) dimTypes.add(Axes.Z);
+					break;
+				case 'T':
+					if (sizeT > 1) dimTypes.add(Axes.TIME);
+					break;
+				case 'C':
+					for (int c = 0; c < cDimTypes.length; c++) {
+						final int len = cDimLengths[c];
+						if (len > 1) dimTypes.add(Axes.get(cDimTypes[c]));
+					}
+					break;
+			}
+		}
+
+		return dimTypes.toArray(new AxisType[0]);
 	}
 
 	/** Compiles an N-dimensional list of calibration values. */
@@ -600,7 +606,7 @@ public class ImgOpener implements StatusReporter {
 		final File idFile = new File(id);
 		final String name = idFile.exists() ? idFile.getName() : id;
 
-		final Axis[] dimTypes = getDimTypes(r);
+		final AxisType[] dimTypes = getDimTypes(r);
 		final double[] cal = getCalibration(r);
 
 		final IFormatReader base;
@@ -824,7 +830,7 @@ public class ImgOpener implements StatusReporter {
 				value = DataTools.bytesToShort(plane, 2 * index, 2, little);
 				break;
 			case FormatTools.UINT32:
-				value = DataTools.bytesToInt(plane, 4 * index, 4, little) & 0xffffffff;
+				value = DataTools.bytesToInt(plane, 4 * index, 4, little) & 0xffffffffL;
 				break;
 			case FormatTools.INT32:
 				value = DataTools.bytesToInt(plane, 4 * index, 4, little);
@@ -833,7 +839,7 @@ public class ImgOpener implements StatusReporter {
 				value = DataTools.bytesToFloat(plane, 4 * index, 4, little);
 				break;
 			case FormatTools.DOUBLE:
-				value = DataTools.bytesToDouble(plane, 4 * index, 4, little);
+				value = DataTools.bytesToDouble(plane, 8 * index, 8, little);
 				break;
 			default:
 				value = Double.NaN;

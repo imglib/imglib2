@@ -37,6 +37,7 @@ package mpicbg.imglib.io;
 import ij.ImagePlus;
 import ij.io.Opener;
 import ij.process.ImageProcessor;
+import ij.process.ShortProcessor;
 
 import java.io.File;
 import java.io.IOException;
@@ -331,6 +332,39 @@ public class LOCI
 		r.setMetadataStore( omexmlMeta );
 
 		final String id = path + fileName;
+
+		final File dir = new File( path + fileName );
+		
+		// read many 2d-images if it is a directory
+		if ( dir.isDirectory() )
+		{
+			final String[] files = dir.list();
+			final int depth = dir.list().length;
+			
+			// get size of first image
+			final Opener io = new Opener();
+			ImagePlus imp2d = io.openImage( dir.getAbsolutePath() + File.separator + files[ 0 ] );
+
+			System.out.println( "Opening '" + fileName + "' [" + imp2d.getWidth() + "x" + imp2d.getHeight() + "x" + depth + " type=" + imp2d.getProcessor().getClass().getSimpleName() + " image=Image<ShortType>]" );
+
+			final Image<ShortType> output = factory.createImage( new int[] {imp2d.getWidth(), imp2d.getHeight(), depth }, fileName );			
+			
+			for ( int i = 0; i < depth; ++i )
+			{
+				imp2d = io.openImage( dir.getAbsolutePath() + File.separator + files[ i ] );
+				final ShortProcessor ip = (ShortProcessor)imp2d.getProcessor();
+				
+				final LocalizablePlaneCursor<ShortType> cursorOut = output.createLocalizablePlaneCursor();
+				cursorOut.reset( 0, 1, new int[]{ 0, 0, i } );
+				
+				while ( cursorOut.hasNext() )
+				{
+					cursorOut.fwd();
+					cursorOut.getType().set( (short)ip.get( cursorOut.getPosition( 0 ), cursorOut.getPosition( 1 ) ) );
+				}
+			}			
+			return output;
+		}
 		
 		try 
 		{

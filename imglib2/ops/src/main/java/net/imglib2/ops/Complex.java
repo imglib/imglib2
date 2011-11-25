@@ -47,6 +47,13 @@ public final class Complex implements Comparable<Complex>, DataCopier<Complex> {
 		polarInvalid = true;
 	}
 	
+	public static double findPrincipleArgument(double angle) {
+		double arg = angle;
+		while (arg <= -Math.PI) arg += 2*Math.PI;
+		while (arg > Math.PI) arg -= 2*Math.PI;
+		return arg;
+	}
+	
 	public static Complex createCartesian(double x, double y) {
 		Complex c = new Complex();
 		c.setCartesian(x,y);
@@ -104,10 +111,7 @@ public final class Complex implements Comparable<Complex>, DataCopier<Complex> {
 	public double getArgument() { if (polarInvalid) calcRTheta(); return theta; }
 
 	public double getPrincipleArgument() {
-		double arg = getArgument();
-		while (arg <= -Math.PI) arg += 2*Math.PI;
-		while (arg > Math.PI) arg -= 2*Math.PI;
-		return arg;
+		return findPrincipleArgument(getArgument());
 	}
 	
 	@Override

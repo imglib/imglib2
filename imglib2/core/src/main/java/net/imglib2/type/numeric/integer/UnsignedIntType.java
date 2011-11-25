@@ -49,8 +49,8 @@ public class UnsignedIntType extends GenericIntType<UnsignedIntType>
 	{
 		if ( unsignedInt < 0 )
 			unsignedInt = 0;
-		else if ( unsignedInt > 4294967295l )
-			unsignedInt = 4294967295l;
+		else if ( unsignedInt > 0xffffffffL )
+			unsignedInt = 0xffffffffL;
 		
 		return getCodedSignedInt( unsignedInt );
 	}
@@ -88,30 +88,68 @@ public class UnsignedIntType extends GenericIntType<UnsignedIntType>
 		final long a = getUnsignedInt( getValue() );
 		setValue( getCodedSignedInt( ( int )Util.round( a * c ) ) );
 	}
+	@Override
+	public void add( final UnsignedIntType c )
+	{
+		set( get() + c.get() );
+	}
 
-	public long get(){ return getUnsignedInt( getValue() ); }
-	public void set( final long f ){ setValue( getCodedSignedInt( f ) ); }
-
-	@Override
-	public int getInteger(){ return (int)get(); }
-	@Override
-	public long getIntegerLong() { return get(); }
-	@Override
-	public void setInteger( final int f ){ set( f ); }
-	@Override
-	public void setInteger( final long f ){ set( f ); }
-
-	@Override
-	public double getMaxValue() { return -((double)Integer.MIN_VALUE) + Integer.MAX_VALUE; }
-	@Override
-	public double getMinValue()  { return 0; }
-	
 	@Override
 	public void div( final UnsignedIntType c )
 	{
 		set( get() / c.get() );
 	}
 
+	@Override
+	public void mul( final UnsignedIntType c )
+	{
+		set( get() * c.get() );
+	}
+
+	@Override
+	public void sub( final UnsignedIntType c )
+	{
+		set( get() - c.get() );
+	}
+
+	@Override
+	public void setOne() { set( 1 ); }
+
+	@Override
+	public void setZero() { set( 0 ); }
+
+	@Override
+	public void inc()
+	{
+		set( get() + 1 );
+	}
+
+	@Override
+	public void dec()
+	{
+		set( get() - 1 );
+	}
+	
+	@Override
+	public String toString() { return "" + get(); }
+	
+	public long get() { return getUnsignedInt( getValue() ); }
+	public void set( final long f ) { setValue( getCodedSignedInt( f ) ); }
+
+	@Override
+	public int getInteger() { return (int)get(); }
+	@Override
+	public long getIntegerLong() { return get(); }
+	@Override
+	public void setInteger( final int f ) { set( f ); }
+	@Override
+	public void setInteger( final long f ) { set( f ); }
+
+	@Override
+	public double getMaxValue() { return 0xffffffffL; }
+	@Override
+	public double getMinValue()  { return 0; }
+	
 	@Override
 	public int compareTo( final UnsignedIntType c ) 
 	{
@@ -127,8 +165,8 @@ public class UnsignedIntType extends GenericIntType<UnsignedIntType>
 	}
 
 	@Override
-	public UnsignedIntType createVariable(){ return new UnsignedIntType( 0 ); }
+	public UnsignedIntType createVariable() { return new UnsignedIntType( 0 ); }
 
 	@Override
-	public UnsignedIntType copy(){ return new UnsignedIntType( get() ); }
+	public UnsignedIntType copy() { return new UnsignedIntType( get() ); }
 }

@@ -41,6 +41,8 @@ import net.imglib2.RandomAccess;
 import net.imglib2.RealPositionable;
 import net.imglib2.display.ColorTable16;
 import net.imglib2.display.ColorTable8;
+import net.imglib2.meta.Axes;
+import net.imglib2.meta.AxisType;
 import net.imglib2.meta.Metadata;
 
 /**
@@ -57,7 +59,7 @@ public class ImgPlus<T> implements Img<T>, Metadata {
 	private final Img<T> img;
 
 	private String name;
-	private final Axis[] axes;
+	private final AxisType[] axes;
 	private final double[] cal;
 	private int validBits;
 
@@ -78,7 +80,7 @@ public class ImgPlus<T> implements Img<T>, Metadata {
 		this(img, name, null, null);
 	}
 
-	public ImgPlus(final Img<T> img, final String name, final Axis[] axes) {
+	public ImgPlus(final Img<T> img, final String name, final AxisType[] axes) {
 		this(img, name, axes, null);
 	}
 
@@ -94,7 +96,7 @@ public class ImgPlus<T> implements Img<T>, Metadata {
 		}
 	}
 
-	public ImgPlus(final Img<T> img, final String name, final Axis[] axes,
+	public ImgPlus(final Img<T> img, final String name, final AxisType[] axes,
 		final double[] cal)
 	{
 		this.img = img;
@@ -248,7 +250,7 @@ public class ImgPlus<T> implements Img<T>, Metadata {
 	}
 
 	@Override
-	public int getAxisIndex(final Axis axis) {
+	public int getAxisIndex(final AxisType axis) {
 		for (int i = 0; i < axes.length; i++) {
 			if (axes[i] == axis) return i;
 		}
@@ -256,18 +258,18 @@ public class ImgPlus<T> implements Img<T>, Metadata {
 	}
 
 	@Override
-	public Axis axis(final int d) {
+	public AxisType axis(final int d) {
 		return axes[d];
 	}
 
 	@Override
-	public void axes(final Axis[] target) {
+	public void axes(final AxisType[] target) {
 		for (int i = 0; i < target.length; i++)
 			target[i] = axes[i];
 	}
 
 	@Override
-	public void setAxis(final Axis axis, final int d) {
+	public void setAxis(final AxisType axis, final int d) {
 		axes[d] = axis;
 	}
 
@@ -406,9 +408,9 @@ public class ImgPlus<T> implements Img<T>, Metadata {
 	}
 
 	/** Ensures the given axis labels are valid. */
-	private static Axis[] validateAxes(final int numDims, final Axis[] axes) {
+	private static AxisType[] validateAxes(final int numDims, final AxisType[] axes) {
 		if (axes != null && numDims == axes.length) return axes;
-		final Axis[] validAxes = new Axis[numDims];
+		final AxisType[] validAxes = new AxisType[numDims];
 		for (int i = 0; i < validAxes.length; i++) {
 			if (axes != null && axes.length > i) validAxes[i] = axes[i];
 			else {
@@ -435,13 +437,13 @@ public class ImgPlus<T> implements Img<T>, Metadata {
 		final double[] validCal = new double[numDims];
 		for (int i = 0; i < validCal.length; i++) {
 			if (cal != null && cal.length > i) validCal[i] = cal[i];
-			else validCal[i] = Double.NaN;
+			else validCal[i] = 1;
 		}
 		return validCal;
 	}
 
-	private static Axis[] getAxes(final Img<?> img, final Metadata metadata) {
-		final Axis[] axes = new Axis[img.numDimensions()];
+	private static AxisType[] getAxes(final Img<?> img, final Metadata metadata) {
+		final AxisType[] axes = new AxisType[img.numDimensions()];
 		for (int i = 0; i < axes.length; i++) {
 			axes[i] = metadata.axis(i);
 		}

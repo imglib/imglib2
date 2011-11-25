@@ -39,18 +39,22 @@ import net.imglib2.ops.UnaryOperation;
  * @author Barry DeZonia
  *
  */
-public class RealPowerConstant extends RealOutput implements UnaryOperation<Real,Real> {
+public final class RealPowerConstant extends RealOutput implements UnaryOperation<Real,Real> {
 
-	private double constant;
+	private final double constant;
 	
 	public RealPowerConstant(double constant) {
 		this.constant = constant;
 	}
 	
 	@Override
-	public void compute(Real input, Real output) {
-		double value = Math.pow(input.getReal(), constant);
+	public void compute(Real x, Real output) {
+		double value = Math.pow(x.getReal(), constant);
 		output.setReal(value);
 	}
 
+	@Override
+	public RealPowerConstant duplicate() {
+		return new RealPowerConstant(constant);
+	}
 }

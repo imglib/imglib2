@@ -41,7 +41,7 @@ import net.imglib2.ops.Neighborhood;
  *
  */
 public class ConstantBoolFunction<INDEX> extends BoolOutput implements Function<INDEX,Bool> {
-	private boolean bool;
+	private final boolean bool;
 
 	public ConstantBoolFunction(boolean b) {
 		bool = b;
@@ -50,6 +50,11 @@ public class ConstantBoolFunction<INDEX> extends BoolOutput implements Function<
 	@Override
 	public void evaluate(Neighborhood<INDEX> neigh, INDEX point, Bool b) {
 		b.setBool(bool);
+	}
+	
+	@Override
+	public ConstantBoolFunction<INDEX> duplicate() {
+		return new ConstantBoolFunction<INDEX>(bool);
 	}
 }
 

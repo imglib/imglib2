@@ -24,17 +24,20 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import net.imglib2.Cursor;
 import net.imglib2.algorithm.Algorithm;
 import net.imglib2.algorithm.Benchmark;
 import net.imglib2.algorithm.MultiThreaded;
 import net.imglib2.algorithm.fft.FourierTransform.Rearrangement;
+import net.imglib2.exception.IncompatibleTypeException;
 import net.imglib2.img.Img;
 import net.imglib2.multithreading.SimpleMultiThreading;
-import net.imglib2.outofbounds.OutOfBoundsPeriodicFactory;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.complex.ComplexFloatType;
 import net.imglib2.type.numeric.real.FloatType;
 import net.imglib2.util.Util;
+import net.imglib2.view.RandomAccessibleIntervalCursor;
+import net.imglib2.view.Views;
 
 public class PhaseCorrelation<T extends RealType<T>, S extends RealType<S>> implements MultiThreaded, Algorithm, Benchmark
 {
@@ -91,122 +94,140 @@ public class PhaseCorrelation<T extends RealType<T>, S extends RealType<S>> impl
 	public boolean getVerifyWithCrossCorrelation() { return verifyWithCrossCorrelation; }
 	public int[] getMinimalPixelOverlap() { return minOverlapPx.clone(); }
 	public PhaseCorrelationPeak getShift() { return phaseCorrelationPeaks.get( phaseCorrelationPeaks.size() -1 ); }
+	
+	/*
+	 * If checked with cross-correlation, the last one is the best.
+	 */
 	public ArrayList<PhaseCorrelationPeak> getAllShifts() { return phaseCorrelationPeaks; }
 	
 	@Override
 	public boolean process()
-	{		
-		// get the maximal dimensions of both images
-		final int[] maxDim = getMaxDim( image1, image2 );
-		
-		// compute fourier transforms
-		final FourierTransform<T, ComplexFloatType> fft1 = new FourierTransform<T, ComplexFloatType>( image1, new ComplexFloatType() );
-		final FourierTransform<S, ComplexFloatType> fft2 = new FourierTransform<S, ComplexFloatType>( image2, new ComplexFloatType() );
-		fft1.setRelativeImageExtension( 0.1f );
-		fft2.setRelativeImageExtension( 0.1f );
-		fft1.setRelativeFadeOutDistance( 0.1f );
-		fft2.setRelativeFadeOutDistance( 0.1f );		
-		fft1.setRearrangement( Rearrangement.UNCHANGED );
-		fft2.setRearrangement( Rearrangement.UNCHANGED );
-		
-		boolean sizeFound = false;
-		
-		// check if the size was enough ( there is a minimum extension )
-		do
-		{
-			sizeFound = true;
+	{
+		final long startTime = System.currentTimeMillis();
+		try {
 
-			fft1.setExtendedOriginalImageSize( maxDim );
-			fft2.setExtendedOriginalImageSize( maxDim );
-			
-			for ( int d = 0; d < numDimensions; ++d )
+			// get the maximal dimensions of both images
+			final int[] maxDim = getMaxDim( image1, image2 );
+
+			// compute fourier transforms
+			final FourierTransform<T, ComplexFloatType> fft1;
+			final FourierTransform<S, ComplexFloatType> fft2;
+			try {
+				fft1 = new FourierTransform<T, ComplexFloatType>( image1, new ComplexFloatType() );
+				fft2 = new FourierTransform<S, ComplexFloatType>( image2, new ComplexFloatType() );
+			} catch (IncompatibleTypeException e) {
+				e.printStackTrace();
+				return false;
+			}
+			fft1.setRelativeImageExtension( 0.1f );
+			fft2.setRelativeImageExtension( 0.1f );
+			fft1.setRelativeFadeOutDistance( 0.1f );
+			fft2.setRelativeFadeOutDistance( 0.1f );		
+			fft1.setRearrangement( Rearrangement.UNCHANGED );
+			fft2.setRearrangement( Rearrangement.UNCHANGED );
+
+			boolean sizeFound = false;
+
+			// check if the size was enough ( there is a minimum extension )
+			do
 			{
-				final int diff = Math.abs( fft1.getExtendedSize()[ d ] - fft2.getExtendedSize()[ d ] );
-				
-				if ( diff > 0 )
+				sizeFound = true;
+
+				fft1.setExtendedOriginalImageSize( maxDim );
+				fft2.setExtendedOriginalImageSize( maxDim );
+
+				for ( int d = 0; d < numDimensions; ++d )
 				{
-					maxDim[ d ] += diff;
-					sizeFound = false;
-				}
-			}			
-		}
-		while( !sizeFound );
-				
-		if ( !fft1.checkInput() )
-		{
-			errorMessage = "Fourier Transform of first image failed: " + fft1.getErrorMessage(); 
-			return false;
-		}
+					final int diff = Math.abs( fft1.getExtendedSize()[ d ] - fft2.getExtendedSize()[ d ] );
+
+					if ( diff > 0 )
+					{
+						maxDim[ d ] += diff;
+						sizeFound = false;
+					}
+				}			
+			}
+			while( !sizeFound );
+
+			if ( !fft1.checkInput() )
+			{
+				errorMessage = "Fourier Transform of first image failed: " + fft1.getErrorMessage(); 
+				return false;
+			}
+
+			if ( !fft2.checkInput() )
+			{
+				errorMessage = "Fourier Transform of second image failed: " + fft2.getErrorMessage(); 
+				return false;
+			}
+
+			//
+			// compute the fft's
+			//
+			if ( !computeFFT( fft1, fft2 ) )
+			{
+				errorMessage = "Fourier Transform of failed: fft1=" + fft1.getErrorMessage() + " fft2=" + fft2.getErrorMessage();
+				return false;
+			}
+
+			final Img<ComplexFloatType> fftImage1 = fft1.getResult();
+			final Img<ComplexFloatType> fftImage2 = fft2.getResult();
+
+			//
+			// normalize and compute complex conjugate of fftImage2
+			//
+			normalizeAndConjugate( fftImage1, fftImage2 );
+
+			//
+			// multiply fftImage1 and fftImage2 which yields the phase correlation spectrum
+			//
+			multiplyInPlace( fftImage1, fftImage2 );
 			
-		if ( !fft2.checkInput() )
-		{
-			errorMessage = "Fourier Transform of second image failed: " + fft2.getErrorMessage(); 
-			return false;
-		}
-		
-		//
-		// compute the fft's
-		//
-		if ( !computeFFT( fft1, fft2 ) )
-		{
-			errorMessage = "Fourier Transform of failed: fft1=" + fft1.getErrorMessage() + " fft2=" + fft2.getErrorMessage();
-			return false;
-		}
-				
-		final Image<ComplexFloatType> fftImage1 = fft1.getResult();
-		final Image<ComplexFloatType> fftImage2 = fft2.getResult();
+			//
+			// invert fftImage1 which contains the phase correlation spectrum
+			//
+			final InverseFourierTransform<FloatType, ComplexFloatType> invFFT;
+			try {
+				invFFT = new InverseFourierTransform<FloatType, ComplexFloatType>( fftImage1, fft1, new FloatType() );
+			} catch (Exception e) {
+				e.printStackTrace();
+				return false;
+			}
+			//invFFT.setInPlaceTransform( true );
+			invFFT.setCropBackToOriginalSize( false );
 
-		//
-		// normalize and compute complex conjugate of fftImage2
-		//
-		normalizeAndConjugate( fftImage1, fftImage2 );
-		
-		//
-		// multiply fftImage1 and fftImage2 which yields the phase correlation spectrum
-		//
-		multiplyInPlace( fftImage1, fftImage2 );
-		
-		//
-		// invert fftImage1 which contains the phase correlation spectrum
-		//
-		final InverseFourierTransform<FloatType, ComplexFloatType> invFFT = new InverseFourierTransform<FloatType, ComplexFloatType>( fftImage1, fft1, new FloatType() );
-		invFFT.setInPlaceTransform( true );
-		invFFT.setCropBackToOriginalSize( false );
-		
-		if ( !invFFT.checkInput() || !invFFT.process() )
-		{
-			errorMessage = "Inverse Fourier Transform of failed: " + invFFT.getErrorMessage();
-			return false;			
-		}
+			if ( !invFFT.checkInput() || !invFFT.process() )
+			{
+				errorMessage = "Inverse Fourier Transform of failed: " + invFFT.getErrorMessage();
+				return false;			
+			}
 
-		//
-		// close the fft images
-		//
-		fftImage1.close();
-		fftImage2.close();
-		
-		final Image<FloatType> invPCM = invFFT.getResult();
-		
-		/*
+			final Img<FloatType> invPCM = invFFT.getResult();
+
+			/*
 		invPCM.getDisplay().setMinMax();
 		invPCM.setName("invPCM");
 		ImageJFunctions.copyToImagePlus( invPCM ).show();
-		*/
-		
-		//
-		// extract the peaks
-		//
-		phaseCorrelationPeaks = extractPhaseCorrelationPeaks( invPCM, numPeaks, fft1, fft2 );
-		
-		if ( !verifyWithCrossCorrelation )
-			return true;
+			 */
 
-		verifyWithCrossCorrelation( phaseCorrelationPeaks, invPCM.getDimensions(), image1, image2 );
-		
-		return true;
+			//
+			// extract the peaks
+			//
+			phaseCorrelationPeaks = extractPhaseCorrelationPeaks( invPCM, numPeaks, fft1, fft2 );
+
+			if ( !verifyWithCrossCorrelation )
+				return true;
+
+			verifyWithCrossCorrelation( phaseCorrelationPeaks, Util.intervalDimensions( invPCM ), image1, image2 );
+
+			return true;
+			
+		} finally {
+			processingTime = System.currentTimeMillis() - startTime;
+		}
 	}
 	
-	protected void verifyWithCrossCorrelation( final ArrayList<PhaseCorrelationPeak> peakList, final int[] dimInvPCM, final Image<T> image1, final Image<S> image2 )
+	protected void verifyWithCrossCorrelation( final ArrayList<PhaseCorrelationPeak> peakList, final long[] dimInvPCM, final Img<T> img1, final Img<S> img2 )
 	{
 		final boolean[][] coordinates = Util.getRecursiveCoordinates( numDimensions );
 		
@@ -221,7 +242,7 @@ public class PhaseCorrelation<T extends RealType<T>, S extends RealType<S>> impl
 			{
 				final boolean[] currentPossiblity = coordinates[ i ];
 				
-				final int[] peakPosition = peak.getPosition();
+				final long[] peakPosition = peak.getPosition();
 				
 				for ( int d = 0; d < currentPossiblity.length; ++d )
 				{
@@ -276,34 +297,34 @@ public class PhaseCorrelation<T extends RealType<T>, S extends RealType<S>> impl
 		Collections.sort( peakList );		
 	}
 
-	public static <T extends RealType<T>, S extends RealType<S>> double testCrossCorrelation( final int[] shift, final Image<T> image1, final Image<S> image2 )
+	public static <T extends RealType<T>, S extends RealType<S>> double testCrossCorrelation( final long[] shift, final Img<T> image1, final Img<S> image2 )
 	{
 		return testCrossCorrelation( shift, image1, image2, 5 );
 	}
 
-	public static <T extends RealType<T>, S extends RealType<S>> double testCrossCorrelation( final int[] shift, final Image<T> image1, final Image<S> image2, final int minOverlapPx )
+	public static <T extends RealType<T>, S extends RealType<S>> double testCrossCorrelation( final long[] shift, final Img<T> image1, final Img<S> image2, final int minOverlapPx )
 	{
 		return testCrossCorrelation( shift, image1, image2, minOverlapPx, null );
 	}
 
-	public static <T extends RealType<T>, S extends RealType<S>> double testCrossCorrelation( final int[] shift, final Image<T> image1, final Image<S> image2, final int minOverlapPx, final long[] numPixels )
+	public static <T extends RealType<T>, S extends RealType<S>> double testCrossCorrelation( final long[] shift, final Img<T> image1, final Img<S> image2, final int minOverlapPx, final long[] numPixels )
 	{
-		return testCrossCorrelation( shift, image1, image2, Util.getArrayFromValue( minOverlapPx, image1.getNumDimensions()), numPixels );
+		return testCrossCorrelation( shift, image1, image2, Util.getArrayFromValue( minOverlapPx, image1.numDimensions()), numPixels );
 	}
 
-	public static <T extends RealType<T>, S extends RealType<S>> double testCrossCorrelation( final int[] shift, final Image<T> image1, final Image<S> image2, final int[] minOverlapPx )
+	public static <T extends RealType<T>, S extends RealType<S>> double testCrossCorrelation( final long[] shift, final Img<T> image1, final Img<S> image2, final int[] minOverlapPx )
 	{
 		return testCrossCorrelation( shift, image1, image2, minOverlapPx, null );
 	}
 
-	public static <T extends RealType<T>, S extends RealType<S>> double testCrossCorrelation( final int[] shift, final Image<T> image1, final Image<S> image2, final int[] minOverlapPx, final long[] numPixels )
+	public static <T extends RealType<T>, S extends RealType<S>> double testCrossCorrelation( final long[] shift, final Img<T> image1, final Img<S> image2, final int[] minOverlapPx, final long[] numPixels )
 	{
-		final int numDimensions = image1.getNumDimensions();
+		final int numDimensions = image1.numDimensions();
 		double correlationCoefficient = 0;
 		
-		final int[] overlapSize = new int[ numDimensions ];
-		final int[] offsetImage1 = new int[ numDimensions ];
-		final int[] offsetImage2 = new int[ numDimensions ];
+		final long[] overlapSize = new long[ numDimensions ];
+		final long[] offsetImage1 = new long[ numDimensions ];
+		final long[] offsetImage2 = new long[ numDimensions ];
 		
 		long numPx = 1;
 		
@@ -311,7 +332,7 @@ public class PhaseCorrelation<T extends RealType<T>, S extends RealType<S>> impl
 		{
 			if ( shift[ d ] >= 0 )
 			{
-				// two possiblities
+				// two possibilities
 				//
 				//               shift=start              end
 				//                 |					   |
@@ -324,7 +345,7 @@ public class PhaseCorrelation<T extends RealType<T>, S extends RealType<S>> impl
 				//    Image 2      -------------------
 				
 				// they are not overlapping ( this might happen due to fft zeropadding and extension
-				if ( shift[ d ] >= image1.getDimension( d ) )
+				if ( shift[ d ] >= image1.dimension( d ) )
 				{
 					if ( numPixels != null && numPixels.length > 0 )
 						numPixels[ 0 ] = 0;
@@ -334,11 +355,11 @@ public class PhaseCorrelation<T extends RealType<T>, S extends RealType<S>> impl
 				
 				offsetImage1[ d ] = shift[ d ];
 				offsetImage2[ d ] = 0;
-				overlapSize[ d ] = Math.min( image1.getDimension( d ) - shift[ d ],  image2.getDimension( d ) );
+				overlapSize[ d ] = Math.min( image1.dimension( d ) - shift[ d ],  image2.dimension( d ) );
 			}
 			else
 			{
-				// two possiblities
+				// two possibilities
 				//
 				//          shift start                	  end
 				//            |	   |			`		   |
@@ -351,7 +372,7 @@ public class PhaseCorrelation<T extends RealType<T>, S extends RealType<S>> impl
 				//    Image 2 -------------------
 				
 				// they are not overlapping ( this might happen due to fft zeropadding and extension
-				if ( shift[ d ] >= image2.getDimension( d ) )
+				if ( shift[ d ] >= image2.dimension( d ) )
 				{
 					if ( numPixels != null && numPixels.length > 0 )
 						numPixels[ 0 ] = 0;
@@ -361,7 +382,7 @@ public class PhaseCorrelation<T extends RealType<T>, S extends RealType<S>> impl
 
 				offsetImage1[ d ] = 0;
 				offsetImage2[ d ] = -shift[ d ];
-				overlapSize[ d ] = Math.min( image2.getDimension( d ) + shift[ d ],  image1.getDimension( d ) );				
+				overlapSize[ d ] = Math.min( image2.dimension( d ) + shift[ d ],  image1.dimension( d ) );				
 			}
 			
 			numPx *= overlapSize[ d ];
@@ -377,13 +398,22 @@ public class PhaseCorrelation<T extends RealType<T>, S extends RealType<S>> impl
 
 		if ( numPixels != null && numPixels.length > 0 )
 			numPixels[ 0 ] = numPx;
-
-		final LocalizableByDimCursor<T> cursor1 = image1.createLocalizableByDimCursor();
-		final LocalizableByDimCursor<S> cursor2 = image2.createLocalizableByDimCursor();
 		
-		final RegionOfInterestCursor<T> roiCursor1 = cursor1.createRegionOfInterestCursor( offsetImage1, overlapSize );
-		final RegionOfInterestCursor<S> roiCursor2 = cursor2.createRegionOfInterestCursor( offsetImage2, overlapSize );
-						
+		final long[] endImage1 = new long[ offsetImage1.length ];
+		for (int i=0; i<endImage1.length; ++i) {
+			endImage1[i] = offsetImage1[i] + overlapSize[i] -1;
+		}
+		final long[] endImage2 = new long[ offsetImage2.length ];
+		for (int i=0; i<endImage2.length; ++i) {
+			endImage2[i] = offsetImage2[i] + overlapSize[i] -1;
+		}
+
+		// ROI over the images, which are extended with zero values.
+		final Cursor<T> roiCursor1 = new RandomAccessibleIntervalCursor<T>(
+				Views.interval(image1, offsetImage1, endImage1));
+		final Cursor<S> roiCursor2 = new RandomAccessibleIntervalCursor<S>(
+				Views.interval(image2, offsetImage2, endImage2));
+
 		//
 		// compute average
 		//
@@ -395,8 +425,8 @@ public class PhaseCorrelation<T extends RealType<T>, S extends RealType<S>> impl
 			roiCursor1.fwd();
 			roiCursor2.fwd();
 
-			avg1 += cursor1.getType().getRealFloat();
-			avg2 += cursor2.getType().getRealFloat();
+			avg1 += roiCursor1.get().getRealFloat();
+			avg2 += roiCursor2.get().getRealFloat();
 		}
 
 		avg1 /= (double) numPx;
@@ -416,8 +446,8 @@ public class PhaseCorrelation<T extends RealType<T>, S extends RealType<S>> impl
 			roiCursor1.fwd();
 			roiCursor2.fwd();
 
-			final float pixel1 = cursor1.getType().getRealFloat();
-			final float pixel2 = cursor2.getType().getRealFloat();
+			final float pixel1 = roiCursor1.get().getRealFloat();
+			final float pixel2 = roiCursor2.get().getRealFloat();
 			
 			final double dist1 = pixel1 - avg1;
 			final double dist2 = pixel2 - avg2;
@@ -446,25 +476,21 @@ public class PhaseCorrelation<T extends RealType<T>, S extends RealType<S>> impl
 		// compute correlation coeffienct
 		correlationCoefficient = coVar / (stDev1 * stDev2);
 		
-		roiCursor1.close();
-		roiCursor2.close();
-		cursor1.close();
-		cursor2.close();
-		
 		return correlationCoefficient;
 	}
 	
-	protected ArrayList<PhaseCorrelationPeak> extractPhaseCorrelationPeaks( final Image<FloatType> invPCM, final int numPeaks,
+	protected ArrayList<PhaseCorrelationPeak> extractPhaseCorrelationPeaks( final Img<FloatType> invPCM, final int numPeaks,
 	                                                                        final FourierTransform<?,?> fft1, final FourierTransform<?,?> fft2 )
 	{
 		final ArrayList<PhaseCorrelationPeak> peakList = new ArrayList<PhaseCorrelationPeak>();
 		
 		for ( int i = 0; i < numPeaks; ++i )
-			peakList.add( new PhaseCorrelationPeak( new int[ numDimensions ], -Float.MAX_VALUE) );
+			peakList.add( new PhaseCorrelationPeak( new long[ numDimensions ], -Float.MAX_VALUE) );
 
-		final LocalizableByDimCursor<FloatType> cursor = invPCM.createLocalizableByDimCursor( new OutOfBoundsPeriodicFactory<FloatType>() );
-		final LocalNeighborhoodCursor<FloatType> localCursor = cursor.createLocalNeighborhoodCursor();
-				
+		final Cursor<FloatType> cursor = invPCM.cursor();
+		final LocalNeighborhoodCursor<FloatType> localCursor =
+			new LocalNeighborhoodCursor<FloatType>( Views.extendPeriodic(invPCM).randomAccess(), 1 );
+
 		final int[] originalOffset1 = fft1.getOriginalOffset();
 		final int[] originalOffset2 = fft2.getOriginalOffset();
 
@@ -473,28 +499,30 @@ public class PhaseCorrelation<T extends RealType<T>, S extends RealType<S>> impl
 		for ( int d = 0; d < numDimensions; ++d )
 			offset[ d ] = originalOffset2[ d ] - originalOffset1[ d ];
 		
-		final int[] imgSize = invPCM.getDimensions();
+		final long[] imgSize = Util.intervalDimensions( invPCM );
+
+		final long[] position = new long[ invPCM.numDimensions() ];
 
 		while ( cursor.hasNext() )
 		{
 			cursor.fwd();
 			
-			// set the local cursor to the current position of the mother cursor
-			localCursor.update();
-			
+			// Obtain copy of current position
+			cursor.localize(position);
+
+			// Reset localCursor
+			localCursor.reset(position);
+
 			// the value we are checking for if it is a maximum
-			final float value = cursor.getType().get();
+			final float value = cursor.get().get();
 			boolean isMax = true;
 			
 			// iterate over local environment while value is still the maximum
 			while ( localCursor.hasNext() && isMax )
 			{
 				localCursor.fwd();								
-				isMax = ( cursor.getType().get() <= value );
+				isMax = ( cursor.get().get() <= value );
 			}
-			
-			// reset the mothercursor and this cursor
-			localCursor.reset();
 
 			if ( isMax )
 			{
@@ -519,7 +547,7 @@ public class PhaseCorrelation<T extends RealType<T>, S extends RealType<S>> impl
 					peakList.remove( lowestValueIndex );
 
 					// add new peak
-					final int[] position = cursor.getPosition();
+					cursor.localize( position );
 					
 					for ( int d = 0; d < numDimensions; ++d )
 					{
@@ -530,7 +558,7 @@ public class PhaseCorrelation<T extends RealType<T>, S extends RealType<S>> impl
 					}
 
 					final PhaseCorrelationPeak pcp = new PhaseCorrelationPeak( position, value );
-					pcp.setOriginalInvPCMPosition( cursor.getPosition() );
+					pcp.setOriginalInvPCMPosition( position );
 					peakList.add( pcp );
 				}
 			}			
@@ -542,34 +570,31 @@ public class PhaseCorrelation<T extends RealType<T>, S extends RealType<S>> impl
 		return peakList;
 	}
 	
-	protected static int[] getMaxDim( final Image<?> image1, final Image<?> image2 )
+	protected static int[] getMaxDim( final Img<?> image1, final Img<?> image2 )
 	{
-		final int[] maxDim = new int[ image1.getNumDimensions() ];
+		final int[] maxDim = new int[ image1.numDimensions() ];
 		
-		for ( int d = 0; d < image1.getNumDimensions(); ++d )
-			maxDim[ d ] = Math.max( image1.getDimension( d ), image2.getDimension( d ) );
+		for ( int d = 0; d < image1.numDimensions(); ++d )
+			maxDim[ d ] = (int) Math.max( image1.dimension( d ), image2.dimension( d ) );
 		
 		return maxDim;
 	}
 	
-	protected void multiplyInPlace( final Image<ComplexFloatType> fftImage1, final Image<ComplexFloatType> fftImage2 )
+	protected void multiplyInPlace( final Img<ComplexFloatType> fftImage1, final Img<ComplexFloatType> fftImage2 )
 	{
-		final Cursor<ComplexFloatType> cursor1 = fftImage1.createCursor();
-		final Cursor<ComplexFloatType> cursor2 = fftImage2.createCursor();
+		final Cursor<ComplexFloatType> cursor1 = fftImage1.cursor();
+		final Cursor<ComplexFloatType> cursor2 = fftImage2.cursor();
 		
 		while ( cursor1.hasNext() )
 		{
 			cursor1.fwd();
 			cursor2.fwd();
 			
-			cursor1.getType().mul( cursor2.getType() );
+			cursor1.get().mul( cursor2.get() );
 		}
-				
-		cursor1.close();
-		cursor2.close();
 	}
 	
-	protected void normalizeAndConjugate( final Image<ComplexFloatType> fftImage1, final Image<ComplexFloatType> fftImage2 )
+	protected void normalizeAndConjugate( final Img<ComplexFloatType> fftImage1, final Img<ComplexFloatType> fftImage2 )
 	{
 		final AtomicInteger ai = new AtomicInteger(0);
 		Thread[] threads = SimpleMultiThreading.newThreads( Math.min( 2, numThreads ) );
@@ -600,50 +625,46 @@ public class PhaseCorrelation<T extends RealType<T>, S extends RealType<S>> impl
 		SimpleMultiThreading.startAndJoin( threads );		
 	}
 	
-	private static final void normalizeComplexImage( final Image<ComplexFloatType> fftImage, final float normalizationThreshold )
+	private static final void normalizeComplexImage( final Img<ComplexFloatType> fftImage, final float normalizationThreshold )
 	{
-		final Cursor<ComplexFloatType> cursor = fftImage.createCursor();
+		final Cursor<ComplexFloatType> cursor = fftImage.cursor();
 
 		while ( cursor.hasNext() )
 		{
 			cursor.fwd();
-			normalizeLength( cursor.getType(), normalizationThreshold );
-		}
-				
-		cursor.close();		
+			normalizeLength( cursor.get(), normalizationThreshold );
+		}	
 	}
 	
-	private static final void normalizeAndConjugateComplexImage( final Image<ComplexFloatType> fftImage, final float normalizationThreshold )
+	private static final void normalizeAndConjugateComplexImage( final Img<ComplexFloatType> fftImage, final float normalizationThreshold )
 	{
-		final Cursor<ComplexFloatType> cursor = fftImage.createCursor();
+		final Cursor<ComplexFloatType> cursor = fftImage.cursor();
 		
 		while ( cursor.hasNext() )
 		{
 			cursor.fwd();
 			
-			normalizeLength( cursor.getType(), normalizationThreshold );
-			cursor.getType().complexConjugate();
-		}
-				
-		cursor.close();		
+			normalizeLength( cursor.get(), normalizationThreshold );
+			cursor.get().complexConjugate();
+		}	
 	}
 	
 	private static void normalizeLength( final ComplexFloatType type, final float threshold )
 	{
 		final float real = type.getRealFloat();
-		final float complex = type.getComplexFloat();
+		final float complex = type.getImaginaryFloat();
 		
 		final float length = (float)Math.sqrt( real*real + complex*complex );
 		
 		if ( length < threshold )
 		{
 			type.setReal( 0 );
-			type.setComplex( 0 );
+			type.setImaginary( 0 );
 		}
 		else
 		{
 			type.setReal( real / length );
-			type.setComplex( complex / length );
+			type.setImaginary( complex / length );
 		}
 	}
 		
@@ -719,7 +740,7 @@ public class PhaseCorrelation<T extends RealType<T>, S extends RealType<S>> impl
 			return false;
 		}
 		
-		if ( image1.getNumDimensions() != image2.getNumDimensions() )
+		if ( image1.numDimensions() != image2.numDimensions() )
 		{
 			errorMessage = "Dimensionality of images is not the same";
 			return false;

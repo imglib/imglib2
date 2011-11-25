@@ -63,7 +63,7 @@ public class Example4 {
 		DiscreteNeigh neigh = new DiscreteNeigh(new long[2], new long[]{1,1}, new long[]{1,1});
 		Condition<long[]> condition = new OnTheXYCrossCondition();
 		Function<long[],Real> input = new RealImageFunction(inputImg);
-		Function<long[],Real> one = new ConstantRealFunction<long[]>(1);
+		Function<long[],Real> one = new ConstantRealFunction<long[]>(new Real(1));
 		Function<long[],Real> conditionalFunc = new ConditionalFunction<long[],Real>(condition, input, one);
 		Function<long[],Real> prodFunc = new RealProductFunction(conditionalFunc); 
 		long[] index = new long[2];

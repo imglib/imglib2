@@ -53,14 +53,14 @@ public class PhaseCorrelationPeak implements Comparable<PhaseCorrelationPeak>
 	}
 	
 	public void setPosition( final int[] position ) { this.position = position.clone(); }
-	public void setOriginalInvPCMPosition( final int[] originalInvPCMPosition ) { this.originalInvPCMPosition = originalInvPCMPosition; }
+	public void setOriginalInvPCMPosition( final int[] originalInvPCMPosition ) { this.originalInvPCMPosition = originalInvPCMPosition.clone(); }
 	public void setPhaseCorrelationPeak( final float phaseCorrelationPeak ) { this.phaseCorrelationPeak = phaseCorrelationPeak; }
 	public void setCrossCorrelationPeak( final float crossCorrelationPeak ) { this.crossCorrelationPeak = crossCorrelationPeak; }
 	public void setSortPhaseCorrelation( final boolean sortPhaseCorrelation ) { this.sortPhaseCorrelation = sortPhaseCorrelation; }
 	public void setNumPixels( final long numPixels ) { this.numPixels = numPixels; }
 	
 	public int[] getPosition() { return position.clone(); }
-	public int[] getOriginalInvPCMPosition() { return originalInvPCMPosition; }
+	public int[] getOriginalInvPCMPosition() { return originalInvPCMPosition.clone(); }
 	public float getPhaseCorrelationPeak() { return phaseCorrelationPeak; }
 	public float getCrossCorrelationPeak() { return crossCorrelationPeak; }
 	public boolean getSortPhaseCorrelation() { return sortPhaseCorrelation; }

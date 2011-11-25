@@ -39,11 +39,15 @@ import net.imglib2.ops.UnaryOperation;
  * @author Barry DeZonia
  *
  */
-public class RealZero extends RealOutput implements UnaryOperation<Real,Real> {
+public final class RealZero extends RealOutput implements UnaryOperation<Real,Real> {
 
 	@Override
-	public void compute(Real input, Real output) {
+	public void compute(Real x, Real output) {
 		output.setReal(0);
 	}
 
+	@Override
+	public RealZero duplicate() {
+		return new RealZero();
+	}
 }

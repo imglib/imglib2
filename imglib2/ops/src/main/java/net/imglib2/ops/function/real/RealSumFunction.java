@@ -43,8 +43,8 @@ import net.imglib2.ops.RegionIndexIterator;
  */
 public class RealSumFunction extends RealOutput implements Function<long[],Real> {
 
-	private Function<long[],Real> otherFunc;
-	private Real variable;
+	private final Function<long[],Real> otherFunc;
+	private final Real variable;
 	private RegionIndexIterator iter;
 	
 	public RealSumFunction(Function<long[],Real> otherFunc) {
@@ -68,5 +68,9 @@ public class RealSumFunction extends RealOutput implements Function<long[],Real>
 		}
 		output.setReal(sum);
 	}
-	
+
+	@Override
+	public RealSumFunction duplicate() {
+		return new RealSumFunction(otherFunc.duplicate());
+	}
 }

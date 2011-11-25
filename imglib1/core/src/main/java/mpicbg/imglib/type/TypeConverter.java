@@ -33,6 +33,8 @@ import mpicbg.imglib.type.numeric.integer.ByteType;
 import mpicbg.imglib.type.numeric.integer.IntType;
 import mpicbg.imglib.type.numeric.integer.LongType;
 import mpicbg.imglib.type.numeric.integer.ShortType;
+import mpicbg.imglib.type.numeric.integer.UnsignedByteType;
+import mpicbg.imglib.type.numeric.integer.UnsignedShortType;
 import mpicbg.imglib.type.numeric.real.FloatType;
 
 public abstract class TypeConverter
@@ -46,10 +48,16 @@ public abstract class TypeConverter
 		if ( (Object)input instanceof ByteType )
 			return getTypeConverter((ByteType)(Object)input, output);
 
+		if ( (Object)input instanceof UnsignedByteType )
+			return getTypeConverter((UnsignedByteType)(Object)input, output);
+
 		/* inconvertible types due to javac bug 6548436: if ( input instanceof ShortType )
 			return getTypeConverter((ShortType)input, output); */
 		if ( (Object)input instanceof ShortType )
 			return getTypeConverter((ShortType)(Object)input, output);
+		
+		if ( (Object)input instanceof UnsignedShortType )
+			return getTypeConverter((UnsignedShortType)(Object)input, output);
 		
 		System.out.println("mpi.imglib.type.TypeConverter(): Do not know how to convert Type " + input.getClass() );		
 		return null;		
@@ -132,6 +140,83 @@ public abstract class TypeConverter
 		return null;		
 	}
 
+	public static <A extends Type< A > > TypeConverter getTypeConverter( final UnsignedByteType in, final A output ) 
+	{
+		
+		if ( UnsignedByteType.class.isInstance( output ) ) 
+		{
+			/* inconvertible types due to javac bug 6548436: final ByteType out = (ByteType)output; */
+			final UnsignedByteType out = (UnsignedByteType)(Object)output;
+			
+			return new TypeConverter() 
+			{
+				final public void convert() 
+				{
+					out.set( in );
+				}
+			};
+		}
+
+		if ( ShortType.class.isInstance( output ) ) 
+		{
+			/* inconvertible types due to javac bug 6548436: final ShortType out = (ShortType)output; */
+			final ShortType out = (ShortType)(Object)output;
+			
+			return new TypeConverter() 
+			{
+				final public void convert() 
+				{
+					out.set( (short)( in.get() ) );
+				}
+			};
+		}
+
+		if ( IntType.class.isInstance( output ) )
+		{
+			/* inconvertible types due to javac bug 6548436: final IntType out = (IntType)output; */
+			final IntType out = (IntType)(Object)output;
+			
+			return new TypeConverter() 
+			{
+				final public void convert() 
+				{
+					out.set( in.get() );
+				}
+			};
+		}
+
+		if ( LongType.class.isInstance( output ) ) 
+		{
+			/* inconvertible types due to javac bug 6548436: final IntType out = (IntType)output; */
+			final IntType out = (IntType)(Object)output;
+			
+			return new TypeConverter() 
+			{
+				final public void convert() 
+				{
+					out.set( in.get() );
+				}
+			};
+		}
+		
+		if ( FloatType.class.isInstance( output ) ) 
+		{
+			/* inconvertible types due to javac bug 6548436: final FloatType out = (FloatType)output; */
+			final FloatType out = (FloatType)(Object)output;
+			
+			return new TypeConverter() 
+			{
+				final public void convert() 
+				{
+					out.set( in.get() );
+				}
+			};
+		}
+		
+		System.out.println("mpi.imglib.type.TypeConverter(): Do not know how to convert Type UnsignedByteType to Type " + output.getClass() );		
+		return null;		
+	}
+
 	public static <A extends Type< A > > TypeConverter getTypeConverter( final ShortType in, final A output ) 
 	{
 		
@@ -158,12 +243,47 @@ public abstract class TypeConverter
 			{
 				final public void convert() 
 				{
-					out.set( in.get() & 0xff );
+					out.set( in.get() & 0xffff );
 				}
 			};
 		}
 		
 		System.out.println("mpi.imglib.type.TypeConverter(): Do not know how to convert Type ShortType to Type " + output.getClass() );		
+		return null;		
+	}
+	
+	public static <A extends Type< A > > TypeConverter getTypeConverter( final UnsignedShortType in, final A output ) 
+	{
+		
+		if ( UnsignedShortType.class.isInstance( output ) ) 
+		{
+			/* inconvertible types due to javac bug 6548436: final ShortType out = (ShortType)output; */
+			final UnsignedShortType out = (UnsignedShortType)(Object)output;
+			
+			return new TypeConverter() 
+			{
+				final public void convert() 
+				{
+					out.set( in );
+				}
+			};
+		}
+
+		if ( FloatType.class.isInstance( output ) ) 
+		{
+			/* inconvertible types due to javac bug 6548436: final FloatType out = (FloatType)output; */
+			final FloatType out = (FloatType)(Object)output;
+			
+			return new TypeConverter() 
+			{
+				final public void convert() 
+				{
+					out.set( in.get() );
+				}
+			};
+		}
+		
+		System.out.println("mpi.imglib.type.TypeConverter(): Do not know how to convert Type UnsignedShortType to Type " + output.getClass() );		
 		return null;		
 	}
 	

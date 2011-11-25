@@ -36,6 +36,6 @@ package net.imglib2;
  *
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-public interface RealRandomAccessibleRealInterval< T, F > extends RealRandomAccessible< T >, RealInterval
+public interface RealRandomAccessibleRealInterval< T > extends RealRandomAccessible< T >, RealInterval
 {
 }

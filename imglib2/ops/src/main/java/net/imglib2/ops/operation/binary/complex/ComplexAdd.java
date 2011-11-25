@@ -33,17 +33,24 @@ import net.imglib2.ops.BinaryOperation;
 import net.imglib2.ops.Complex;
 import net.imglib2.ops.ComplexOutput;
 
+//Handbook of Mathematics and Computational Science, Harris & Stocker, Springer, 2006
+
 /**
  * 
  * @author Barry DeZonia
  *
  */
-public class ComplexAdd extends ComplexOutput implements BinaryOperation<Complex,Complex,Complex> {
+public final class ComplexAdd extends ComplexOutput implements BinaryOperation<Complex,Complex,Complex> {
 
 	@Override
-	public void compute(Complex input1, Complex input2, Complex output) {
-		double r = input1.getX() + input2.getX();
-		double i = input1.getY() + input2.getY();
-		output.setCartesian(r, i);
+	public void compute(Complex z1, Complex z2, Complex output) {
+		double x = z1.getX() + z2.getX();
+		double y = z1.getY() + z2.getY();
+		output.setCartesian(x, y);
+	}
+
+	@Override
+	public ComplexAdd duplicate() {
+		return new ComplexAdd();
 	}
 }

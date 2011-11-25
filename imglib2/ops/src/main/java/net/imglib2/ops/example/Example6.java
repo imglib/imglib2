@@ -135,6 +135,11 @@ public class Example6 {
 			output.setReal(value);
 		}
 		
+		@Override
+		public RealBilinearInterpolatorFunction duplicate() {
+			return null;
+		}
+		
 		private void getValue(long x, long y, Real output) {
 			index[0] = x;
 			index[1] = y;

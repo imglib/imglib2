@@ -38,7 +38,7 @@ import net.imglib2.ops.Real;
  *
  */
 public class RealImage extends AbstractImage {
-	private double[] realData;
+	private final double[] realData;
 	
 	public RealImage(long[] dims, String[] axes) {
 		super(dims, axes);

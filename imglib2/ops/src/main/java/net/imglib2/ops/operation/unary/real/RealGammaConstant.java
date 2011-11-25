@@ -39,17 +39,17 @@ import net.imglib2.ops.UnaryOperation;
  * @author Barry DeZonia
  *
  */
-public class RealGammaConstant extends RealOutput implements UnaryOperation<Real,Real> {
+public final class RealGammaConstant extends RealOutput implements UnaryOperation<Real,Real> {
 
-	private double constant;
+	private final double constant;
 	
 	public RealGammaConstant(double constant) {
 		this.constant = constant;
 	}
 	
 	@Override
-	public void compute(Real input, Real output) {
-		double inputVal = input.getReal();
+	public void compute(Real x, Real output) {
+		double inputVal = x.getReal();
 		if (inputVal <= 0)
 			output.setReal(0);
 		else {
@@ -58,4 +58,8 @@ public class RealGammaConstant extends RealOutput implements UnaryOperation<Real
 		}
 	}
 
+	@Override
+	public RealGammaConstant duplicate() {
+		return new RealGammaConstant(constant);
+	}
 }

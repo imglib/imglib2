@@ -19,11 +19,11 @@ package net.imglib2.algorithm.math;
 import java.util.Vector;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import net.imglib2.Cursor;
 import net.imglib2.algorithm.Algorithm;
 import net.imglib2.algorithm.Benchmark;
 import net.imglib2.algorithm.MultiThreaded;
 import net.imglib2.img.Img;
-import net.imglib2.img.ImgCursor;
 import net.imglib2.multithreading.Chunk;
 import net.imglib2.multithreading.SimpleMultiThreading;
 import net.imglib2.type.Type;
@@ -111,7 +111,7 @@ public class ComputeMinMax<T extends Type<T> & Comparable<T>> implements Algorit
 
 	protected void compute( final long startPos, final long loopSize, final T min, final T max )
 	{
-		final ImgCursor<T> cursor = image.cursor();
+		final Cursor<T> cursor = image.cursor();
 		
 		// init min and max
 		cursor.fwd();

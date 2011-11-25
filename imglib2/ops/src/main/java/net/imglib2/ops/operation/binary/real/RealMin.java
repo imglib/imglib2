@@ -38,16 +38,20 @@ import net.imglib2.ops.RealOutput;
  * @author Barry DeZonia
  *
  */
-public class RealMin extends RealOutput implements BinaryOperation<Real,Real,Real> {
+public final class RealMin extends RealOutput implements BinaryOperation<Real,Real,Real> {
 
 	@Override
-	public void compute(Real input1, Real input2, Real output) {
+	public void compute(Real x1, Real x2, Real output) {
 		double value;
-		if (input1.getReal() < input2.getReal())
-			value = input1.getReal();
+		if (x1.getReal() < x2.getReal())
+			value = x1.getReal();
 		else
-			value = input2.getReal();
+			value = x2.getReal();
 		output.setReal(value);
 	}
 
+	@Override
+	public RealMin duplicate() {
+		return new RealMin();
+	}
 }

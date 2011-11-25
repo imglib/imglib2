@@ -39,18 +39,22 @@ import net.imglib2.ops.UnaryOperation;
  * @author Barry DeZonia
  *
  */
-public class RealSubtractConstant extends RealOutput implements UnaryOperation<Real,Real> {
+public final class RealSubtractConstant extends RealOutput implements UnaryOperation<Real,Real> {
 
-	private double constant;
+	private final double constant;
 	
 	public RealSubtractConstant(double constant) {
 		this.constant = constant;
 	}
 	
 	@Override
-	public void compute(Real input, Real output) {
-		double value = input.getReal() - constant;
+	public void compute(Real x, Real output) {
+		double value = x.getReal() - constant;
 		output.setReal(value);
 	}
 
+	@Override
+	public RealSubtractConstant duplicate() {
+		return new RealSubtractConstant(constant);
+	}
 }

@@ -40,8 +40,8 @@ import net.imglib2.ops.Neighborhood;
  */
 public class AndCondition<INDEX> implements Condition<INDEX> {
 
-	private Condition<INDEX> cond1;
-	private Condition<INDEX> cond2;
+	private final Condition<INDEX> cond1;
+	private final Condition<INDEX> cond2;
 
 	public AndCondition(Condition<INDEX> cond1, Condition<INDEX> cond2) {
 		this.cond1 = cond1;
@@ -51,6 +51,11 @@ public class AndCondition<INDEX> implements Condition<INDEX> {
 	@Override
 	public boolean isTrue(Neighborhood<INDEX> neigh, INDEX point) {
 		return cond1.isTrue(neigh, point) && cond2.isTrue(neigh, point);
+	}
+	
+	@Override
+	public AndCondition<INDEX> duplicate() {
+		return new AndCondition<INDEX>(cond1.duplicate(), cond2.duplicate());
 	}
 
 }

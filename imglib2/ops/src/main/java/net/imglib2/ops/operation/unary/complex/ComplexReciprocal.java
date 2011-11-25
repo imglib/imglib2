@@ -33,18 +33,25 @@ import net.imglib2.ops.ComplexOutput;
 import net.imglib2.ops.UnaryOperation;
 import net.imglib2.ops.Complex;
 
+//Complex Variables and Applications, Brown and Churchill, 7th edition
+
 /**
  * 
  * @author Barry DeZonia
  *
  */
-public class ComplexReciprocal extends ComplexOutput implements UnaryOperation<Complex,Complex> {
+public final class ComplexReciprocal extends ComplexOutput implements UnaryOperation<Complex,Complex> {
 
 	@Override
-	public void compute(Complex input, Complex output) {
-		double denom = input.getX()*input.getX() + input.getY()*input.getY();
-		double r = input.getX() / denom;
-		double i = -input.getY() / denom;
-		output.setCartesian(r,i);
+	public void compute(Complex z, Complex output) {
+		double denom = z.getX()*z.getX() + z.getY()*z.getY();
+		double x = z.getX() / denom;
+		double y = -z.getY() / denom;
+		output.setCartesian(x,y);
+	}
+	
+	@Override
+	public ComplexReciprocal duplicate() {
+		return new ComplexReciprocal();
 	}
 }

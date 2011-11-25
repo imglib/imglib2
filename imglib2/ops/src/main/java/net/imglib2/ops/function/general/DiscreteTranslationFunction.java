@@ -41,10 +41,10 @@ import net.imglib2.ops.Neighborhood;
  */
 public class DiscreteTranslationFunction<T> implements Function<long[],T> {
 
-	private Function<long[],T> otherFunc;
-	private long[] deltas;
-	private long[] localCtr;
-	private DiscreteNeigh localRegion;
+	private final Function<long[],T> otherFunc;
+	private final long[] deltas;
+	private final long[] localCtr;
+	private final DiscreteNeigh localRegion;
 	
 	public DiscreteTranslationFunction(Function<long[],T> otherFunc,
 		DiscreteNeigh region, long[] deltas)
@@ -69,4 +69,8 @@ public class DiscreteTranslationFunction<T> implements Function<long[],T> {
 		return otherFunc.createOutput();
 	}
 
+	@Override
+	public DiscreteTranslationFunction<T> duplicate() {
+		return new DiscreteTranslationFunction<T>(otherFunc.duplicate(), localRegion.duplicate(), deltas.clone());
+	}
 }

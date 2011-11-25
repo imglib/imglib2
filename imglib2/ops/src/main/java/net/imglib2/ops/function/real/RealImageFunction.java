@@ -29,12 +29,15 @@ POSSIBILITY OF SUCH DAMAGE.
 
 package net.imglib2.ops.function.real;
 
+import net.imglib2.ExtendedRandomAccessibleInterval;
 import net.imglib2.RandomAccess;
+import net.imglib2.RandomAccessible;
 import net.imglib2.img.Img;
-import net.imglib2.ops.Function;
-import net.imglib2.ops.Neighborhood;
-import net.imglib2.ops.Real;
 import net.imglib2.ops.RealOutput;
+import net.imglib2.ops.Function;
+import net.imglib2.ops.Real;
+import net.imglib2.ops.Neighborhood;
+import net.imglib2.outofbounds.OutOfBoundsFactory;
 import net.imglib2.type.numeric.RealType;
 
 /**
@@ -42,19 +45,49 @@ import net.imglib2.type.numeric.RealType;
  * @author Barry DeZonia
  *
  */
-public class RealImageFunction extends RealOutput implements Function<long[],Real> {
-
-	private RandomAccess<? extends RealType<?>> accessor;
+public class RealImageFunction
+	extends RealOutput implements Function<long[],Real>
+{
+	// -- instance variables --
+	
+	private final RandomAccess<? extends RealType<?>> accessor;
+	
+	// -- private constructor used by duplicate() --
+	
+	private RealImageFunction(
+		RandomAccess<? extends RealType<?>> acc)
+	{
+		this.accessor = acc;
+	}
+	
+	// -- public constructors --
 	
 	public RealImageFunction(Img<? extends RealType<?>> img) {
 		this.accessor = img.randomAccess();
 	}
-
+	
+	public RealImageFunction(
+		Img<? extends RealType<?>> img,
+		OutOfBoundsFactory<? extends RealType<?>,Img<? extends RealType<?>>> factory)
+	{
+		@SuppressWarnings({"rawtypes","unchecked"})
+		RandomAccessible< ? extends RealType<?>> extendedRandAcessible =
+				new ExtendedRandomAccessibleInterval(img, factory);
+		this.accessor =  extendedRandAcessible.randomAccess();
+	}
+	
+	// -- public interface --
+	
 	@Override
-	public void evaluate(Neighborhood<long[]> region, long[] point, Real output) {
+	public void evaluate(Neighborhood<long[]> input, long[] point, Real output)
+	{
 		accessor.setPosition(point);
 		double r = accessor.get().getRealDouble();
 		output.setReal(r);
 	}
 
+	@Override
+	public RealImageFunction duplicate() {
+		return new RealImageFunction(accessor.copyRandomAccess());
+	}
 }

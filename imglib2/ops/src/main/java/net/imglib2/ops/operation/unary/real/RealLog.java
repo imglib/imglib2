@@ -39,12 +39,16 @@ import net.imglib2.ops.UnaryOperation;
  * @author Barry DeZonia
  *
  */
-public class RealLog extends RealOutput implements UnaryOperation<Real,Real> {
+public final class RealLog extends RealOutput implements UnaryOperation<Real,Real> {
 
 	@Override
-	public void compute(Real input, Real output) {
-		double value = Math.log(input.getReal());
+	public void compute(Real x, Real output) {
+		double value = Math.log(x.getReal());
 		output.setReal(value);
 	}
 
+	@Override
+	public RealLog duplicate() {
+		return new RealLog();
+	}
 }

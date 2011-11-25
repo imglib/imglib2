@@ -35,13 +35,13 @@ import net.imglib2.display.ColorTable8;
 import net.imglib2.img.Img;
 
 /**
- * @author Lee Kamentsky
+ * Metadata relating to channels and intensity scales.
  *
- *Metadata relating to channels and intensity scales
+ * @author Lee Kamentsky
  */
 public interface ImageMetadata {
 
-	/** Gets the number of valid bits (if appicable to this {@link Img}). */
+	/** Gets the number of valid bits (if applicable to this {@link Img}). */
 	int getValidBits();
 
 	/** Sets the number of valid bits. */

@@ -46,4 +46,9 @@ public class OnTheXYCrossCondition implements Condition<long[]> {
 		long dy = point[1] - neigh.getKeyPoint()[1];
 		return Math.abs(dx) == Math.abs(dy);
 	}
+
+	@Override
+	public OnTheXYCrossCondition duplicate() {
+		return new OnTheXYCrossCondition();
+	}
 }

@@ -39,10 +39,10 @@ import net.imglib2.ops.UnaryOperation;
  * @author Barry DeZonia
  *
  */
-public class RealDivideConstant extends RealOutput implements UnaryOperation<Real,Real> {
+public final class RealDivideConstant extends RealOutput implements UnaryOperation<Real,Real> {
 
-	private double constant;
-	private double dbzVal;
+	private final double constant;
+	private final double dbzVal;
 	
 	public RealDivideConstant(double constant, double dbzVal) {
 		this.constant = constant;
@@ -50,14 +50,18 @@ public class RealDivideConstant extends RealOutput implements UnaryOperation<Rea
 	}
 	
 	@Override
-	public void compute(Real input, Real output) {
+	public void compute(Real x, Real output) {
 		if (constant == 0) {
 			output.setReal(dbzVal);
 		}
 		else { // not dividing by zero
-			double value = input.getReal() / constant;
+			double value = x.getReal() / constant;
 			output.setReal(value);
 		}
 	}
 
+	@Override
+	public RealDivideConstant duplicate() {
+		return new RealDivideConstant(constant,dbzVal);
+	}
 }

@@ -38,12 +38,16 @@ import net.imglib2.ops.RealOutput;
  * @author Barry DeZonia
  *
  */
-public class RealPower extends RealOutput implements BinaryOperation<Real,Real,Real> {
+public final class RealPower extends RealOutput implements BinaryOperation<Real,Real,Real> {
 
 	@Override
-	public void compute(Real input1, Real input2, Real output) {
-		double value = Math.pow(input1.getReal(),input2.getReal());
+	public void compute(Real x1, Real x2, Real output) {
+		double value = Math.pow(x1.getReal(), x2.getReal());
 		output.setReal(value);
 	}
 
+	@Override
+	public RealPower duplicate() {
+		return new RealPower();
+	}
 }

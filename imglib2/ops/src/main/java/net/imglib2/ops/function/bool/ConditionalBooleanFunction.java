@@ -44,7 +44,7 @@ import net.imglib2.ops.Neighborhood;
 public class ConditionalBooleanFunction<INDEX> extends BoolOutput
 	implements Function<INDEX,Bool>
 {
-	private Condition<INDEX> condition;
+	private final Condition<INDEX> condition;
 
 	public ConditionalBooleanFunction(Condition<INDEX> cond) {
 		this.condition = cond;
@@ -53,6 +53,11 @@ public class ConditionalBooleanFunction<INDEX> extends BoolOutput
 	@Override
 	public void evaluate(Neighborhood<INDEX> neigh, INDEX point, Bool b) {
 		b.setBool(condition.isTrue(neigh, point));
+	}
+	
+	@Override
+	public ConditionalBooleanFunction<INDEX> duplicate() {
+		return new ConditionalBooleanFunction<INDEX>(condition.duplicate());
 	}
 }
 

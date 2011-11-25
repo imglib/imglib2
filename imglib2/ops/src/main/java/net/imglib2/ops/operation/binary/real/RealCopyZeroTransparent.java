@@ -40,13 +40,18 @@ import net.imglib2.ops.RealOutput;
  * @author Barry DeZonia
  *
  */
-public class RealCopyZeroTransparent extends RealOutput implements BinaryOperation<Real,Real,Real> {
+public final class RealCopyZeroTransparent extends RealOutput implements BinaryOperation<Real,Real,Real> {
 
 	@Override
-	public void compute(Real input1, Real input2, Real output) {
-		if (input2.getReal() == 0)
-			output.setReal(input1.getReal());
+	public void compute(Real x1, Real x2, Real output) {
+		if (x2.getReal() == 0)
+			output.setReal(x1.getReal());
 		else
-			output.setReal(input2.getReal());
+			output.setReal(x2.getReal());
+	}
+
+	@Override
+	public RealCopyZeroTransparent duplicate() {
+		return new RealCopyZeroTransparent();
 	}
 }

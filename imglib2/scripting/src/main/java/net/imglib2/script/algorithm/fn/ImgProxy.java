@@ -5,7 +5,9 @@ import java.util.Iterator;
 import net.imglib2.Cursor;
 import net.imglib2.Interval;
 import net.imglib2.IterableRealInterval;
+import net.imglib2.Positionable;
 import net.imglib2.RandomAccess;
+import net.imglib2.RealPositionable;
 import net.imglib2.img.Img;
 import net.imglib2.img.ImgFactory;
 import net.imglib2.type.numeric.NumericType;
@@ -120,11 +122,31 @@ public class ImgProxy<T extends NumericType<T>> implements Img<T> {
 
 	@Override
 	public RandomAccess<T> randomAccess() {
-		return randomAccess();
+		return img.randomAccess();
 	}
 
 	@Override
 	public Img<T> copy() {
 		return img.copy();
+	}
+
+	@Override
+	public void min(Positionable min) {
+		img.min(min);
+	}
+
+	@Override
+	public void max(Positionable max) {
+		img.max(max);
+	}
+
+	@Override
+	public void realMin(RealPositionable min) {
+		img.realMin(min);
+	}
+
+	@Override
+	public void realMax(RealPositionable max) {
+		img.realMax(max);
 	}
 }

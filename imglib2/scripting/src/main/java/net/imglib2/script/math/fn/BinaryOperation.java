@@ -152,5 +152,6 @@ public abstract class BinaryOperation extends FloatImageOperation
 	public void findImgs(final Collection<IterableRealInterval<?>> iris)
 	{
 		a.findImgs(iris);
+		b.findImgs(iris);
 	}
 }

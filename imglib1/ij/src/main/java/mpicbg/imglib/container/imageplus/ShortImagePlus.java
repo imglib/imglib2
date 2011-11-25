@@ -108,6 +108,20 @@ public class ShortImagePlus<T extends Type<T>> extends ImagePlusContainer<T, Sho
 					mirror.add( new ShortArray( ( short[] )imp.getStack().getProcessor( imp.getStackIndex( c + 1, z + 1 , t + 1 ) ).getPixels() ) );
 	}
 
+	/**
+	 * This has to be overwritten, otherwise two different instances exist (one in the imageplus, one in the mirror)
+	 */
+	@Override
+	public void setPlane( final int no, final ShortArray plane ) 
+	{
+		// TODO: this should work, but does not for plane 0, why??? 
+		//mirror.set( no, plane );		
+		//imp.getStack().setPixels( plane.getCurrentStorageArray(), no + 1 );
+		
+		System.arraycopy( plane.getCurrentStorageArray(), 0, mirror.get( no ).getCurrentStorageArray(), 0, plane.getCurrentStorageArray().length );
+	}
+
+
 	@Override
 	public void close() 
 	{

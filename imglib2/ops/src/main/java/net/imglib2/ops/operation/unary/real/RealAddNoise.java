@@ -41,12 +41,12 @@ import net.imglib2.ops.UnaryOperation;
  * @author Barry DeZonia
  *
  */
-public class RealAddNoise extends RealOutput implements UnaryOperation<Real,Real> {
+public final class RealAddNoise extends RealOutput implements UnaryOperation<Real,Real> {
 
-	private double rangeMin;
-	private double rangeMax;
-	private double rangeStdDev;
-	private Random rng;
+	private final double rangeMin;
+	private final double rangeMax;
+	private final double rangeStdDev;
+	private final Random rng;
 	
 	public RealAddNoise(double min, double max, double stdDev) {
 		this.rangeMin = min;
@@ -57,11 +57,11 @@ public class RealAddNoise extends RealOutput implements UnaryOperation<Real,Real
 	}
 	
 	@Override
-	public void compute(Real input, Real output) {
+	public void compute(Real x, Real output) {
 		int i = 0;
 		do
 		{
-			double newVal = input.getReal() + (rng.nextGaussian() * rangeStdDev);
+			double newVal = x.getReal() + (rng.nextGaussian() * rangeStdDev);
 			
 			if ((rangeMin <= newVal) && (newVal <=rangeMax)) {
 				output.setReal(newVal);
@@ -74,4 +74,8 @@ public class RealAddNoise extends RealOutput implements UnaryOperation<Real,Real
 		while(true);
 	}
 
+	@Override
+	public RealAddNoise duplicate() {
+		return new RealAddNoise(rangeMin, rangeMax, rangeStdDev);
+	}
 }

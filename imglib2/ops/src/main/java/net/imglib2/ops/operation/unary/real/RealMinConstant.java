@@ -39,21 +39,25 @@ import net.imglib2.ops.UnaryOperation;
  * @author Barry DeZonia
  *
  */
-public class RealMinConstant extends RealOutput implements UnaryOperation<Real,Real> {
+public final class RealMinConstant extends RealOutput implements UnaryOperation<Real,Real> {
 
-	private double constant;
+	private final double constant;
 	
 	public RealMinConstant(double constant) {
 		this.constant = constant;
 	}
 	
 	@Override
-	public void compute(Real input, Real output) {
-		double value = input.getReal();
+	public void compute(Real x, Real output) {
+		double value = x.getReal();
 		if (value > constant)
 			output.setReal(value);
 		else
 			output.setReal(constant);
 	}
 
+	@Override
+	public RealMinConstant duplicate() {
+		return new RealMinConstant(constant);
+	}
 }

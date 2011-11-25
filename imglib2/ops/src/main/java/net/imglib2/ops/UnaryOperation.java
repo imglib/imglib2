@@ -37,4 +37,5 @@ package net.imglib2.ops;
 public interface UnaryOperation<INPUT_TYPE, OUTPUT_TYPE> {
 	void compute(INPUT_TYPE input, OUTPUT_TYPE output);
 	OUTPUT_TYPE createOutput();
+	UnaryOperation<INPUT_TYPE, OUTPUT_TYPE> duplicate();
 }

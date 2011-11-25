@@ -41,9 +41,9 @@ import net.imglib2.ops.Neighborhood;
  */
 public class ConditionalFunction<INDEX, T> implements Function<INDEX,T> {
 
-	private Condition<INDEX> condition;
-	private Function<INDEX,T> f1;
-	private Function<INDEX,T> f2;
+	private final Condition<INDEX> condition;
+	private final Function<INDEX,T> f1;
+	private final Function<INDEX,T> f2;
 	
 	public ConditionalFunction(Condition<INDEX> condition, Function<INDEX,T> f1, Function<INDEX,T> f2) {
 		this.condition = condition;
@@ -63,5 +63,9 @@ public class ConditionalFunction<INDEX, T> implements Function<INDEX,T> {
 	public T createOutput() {
 		return f1.createOutput();
 	}
-
+	
+	@Override
+	public ConditionalFunction<INDEX,T> duplicate() {
+		return new ConditionalFunction<INDEX, T>(condition.duplicate(), f1.duplicate(), f2.duplicate());
+	}
 }

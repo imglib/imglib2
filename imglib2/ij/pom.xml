@@ -27,11 +27,6 @@
       <artifactId>imglib2</artifactId>
       <version>${project.version}</version>
     </dependency>
-    <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>imglib2-algorithms</artifactId>
-      <version>${project.version}</version>
-    </dependency>
     <!-- TODO: define a real POM for mpicbg project -->
     <dependency>
       <groupId>mpicbg</groupId>

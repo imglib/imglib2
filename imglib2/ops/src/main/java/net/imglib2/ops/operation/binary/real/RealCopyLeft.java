@@ -38,10 +38,15 @@ import net.imglib2.ops.RealOutput;
  * @author Barry DeZonia
  *
  */
-public class RealCopyLeft extends RealOutput implements BinaryOperation<Real,Real,Real> {
+public final class RealCopyLeft extends RealOutput implements BinaryOperation<Real,Real,Real> {
 
 	@Override
-	public void compute(Real input1, Real input2, Real output) {
-		output.setReal(input1.getReal());
+	public void compute(Real x1, Real x2, Real output) {
+		output.setReal(x1.getReal());
+	}
+
+	@Override
+	public RealCopyLeft duplicate() {
+		return new RealCopyLeft();
 	}
 }

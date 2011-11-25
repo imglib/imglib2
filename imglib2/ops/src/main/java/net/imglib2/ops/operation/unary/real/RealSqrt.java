@@ -39,12 +39,16 @@ import net.imglib2.ops.UnaryOperation;
  * @author Barry DeZonia
  *
  */
-public class RealSqrt extends RealOutput implements UnaryOperation<Real,Real> {
+public final class RealSqrt extends RealOutput implements UnaryOperation<Real,Real> {
 
 	@Override
-	public void compute(Real input, Real output) {
-		double value = Math.sqrt(input.getReal());
+	public void compute(Real x, Real output) {
+		double value = Math.sqrt(x.getReal());
 		output.setReal(value);
 	}
 
+	@Override
+	public RealSqrt duplicate() {
+		return new RealSqrt();
+	}
 }

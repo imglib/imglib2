@@ -42,8 +42,8 @@ import net.imglib2.ops.RegionIndexIterator;
  */
 public class RealAverageFunction extends RealOutput implements Function<long[],Real> {
 
-	private Function<long[],Real> otherFunc;
-	private Real variable;
+	private final Function<long[],Real> otherFunc;
+	private final Real variable;
 	private RegionIndexIterator iter;
 	
 	public RealAverageFunction(Function<long[],Real> otherFunc)
@@ -74,4 +74,8 @@ public class RealAverageFunction extends RealOutput implements Function<long[],R
 			output.setReal(sum / numElements);
 	}
 
+	@Override
+	public RealAverageFunction duplicate() {
+		return new RealAverageFunction(otherFunc.duplicate());
+	}
 }

@@ -37,8 +37,8 @@ package net.imglib2.ops.image;
  */
 public abstract class AbstractImage {
 
-	private long[] dims;
-	private String[] axes;
+	private final long[] dims;
+	private final String[] axes;
 	
 	protected AbstractImage(long[] dims, String[] axes) {
 		this.dims = dims;
