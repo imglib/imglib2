@@ -4,7 +4,7 @@ import net.imglib2.IterableInterval;
 import net.imglib2.RandomAccessible;
 import net.imglib2.type.numeric.RealType;
 
-public class Copy<R extends RealType<R>, RI extends IterableInterval<R> & RandomAccessible<R>> extends Insert<R, RI>
+public class Copy<R extends RealType<R>, RI extends IterableInterval<R> & RandomAccessible<R>, T extends RealType<T>> extends Insert<R, RI, T>
 {
 	/**
 	 * Copies {@param source} into {@param target}.
@@ -13,7 +13,7 @@ public class Copy<R extends RealType<R>, RI extends IterableInterval<R> & Random
 	 * @param source
 	 * @param target
 	 */
-	public Copy(final RI source, final IterableInterval<R> target) {
+	public Copy(final RI source, final IterableInterval<T> target) {
 		super(source, target, new long[source.numDimensions()]);
 	}
 }
