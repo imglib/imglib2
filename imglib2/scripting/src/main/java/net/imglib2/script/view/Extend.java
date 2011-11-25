@@ -11,21 +11,29 @@ import net.imglib2.view.Views;
 public class Extend<T extends RealType<T>> extends RandomAccessibleIntervalImgProxy<T>
 {
 	public Extend(final RandomAccessibleInterval<T> img, final long[] offset, final long[] dimension, final Number value) {
-		super(Views.offsetInterval(Views.extendValue(img, AlgorithmUtil.type(img, value.doubleValue())), offset, dimension));
+		super(Views.zeroMin(
+				Views.offsetInterval(
+						Views.extendValue(img, AlgorithmUtil.type(img, value.doubleValue())), offset, dimension)));
 	}
 
-	public Extend(final RandomAccessibleInterval<T> img, final List<Number> offset, final List<Number> dimension, final Number value) {
+	public Extend(final RandomAccessibleInterval<T> img, final List<? extends Number> offset, final List<? extends Number> dimension, final Number value) {
 		this(img, AlgorithmUtil.asLongArray(offset), AlgorithmUtil.asLongArray(dimension), value);
 	}
 	
 	public Extend(final RandomAccessibleInterval<T> img, final long[] dimension, final Number value) {
-		super(Views.offsetInterval(
-				Views.extendValue(img, AlgorithmUtil.type(img, value.doubleValue())),
-				new long[Math.max(img.numDimensions(), dimension.length)],
-				dimension));
+		super(Views.interval(
+					Views.extendValue(img, AlgorithmUtil.type(img, value.doubleValue())),
+					new long[Math.max(img.numDimensions(), dimension.length)],
+					asMax(dimension)));
 	}
 	
-	public Extend(final RandomAccessibleInterval<T> img, final List<Number> dimension, final Number value) {
+	private static final long[] asMax(final long[] dimension) {
+		final long[] max = new long[dimension.length];
+		for (int i=0; i<dimension.length; ++i) max[i] = dimension[i] - 1;
+		return max;
+	}
+
+	public Extend(final RandomAccessibleInterval<T> img, final List<? extends Number> dimension, final Number value) {
 		this(img, AlgorithmUtil.asLongArray(dimension), value);
 	}
 	
@@ -41,7 +49,7 @@ public class Extend<T extends RealType<T>> extends RandomAccessibleIntervalImgPr
 
 	/** Defaults to an out of bounds value of 0. */
 	@SuppressWarnings("boxing")
-	public Extend(final RandomAccessibleInterval<T> img, final List<Number> offset, final List<Number> dimension) {
+	public Extend(final RandomAccessibleInterval<T> img, final List<? extends Number> offset, final List<? extends Number> dimension) {
 		this(img, offset, dimension, 0);
 	}
 	
@@ -53,7 +61,7 @@ public class Extend<T extends RealType<T>> extends RandomAccessibleIntervalImgPr
 	
 	/** Defaults to an out of bounds value of 0. */
 	@SuppressWarnings("boxing")
-	public Extend(final RandomAccessibleInterval<T> img, final List<Number> dimension) {
+	public Extend(final RandomAccessibleInterval<T> img, final List<? extends Number> dimension) {
 		this(img, dimension, 0);
 	}
 	
