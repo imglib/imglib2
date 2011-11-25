@@ -1,9 +1,5 @@
 package net.imglib2.algorithm.mser;
 
-import java.awt.Color;
-import java.util.ArrayList;
-import java.util.Collections;
-
 import ij.IJ;
 import ij.ImageJ;
 import ij.ImagePlus;
@@ -11,8 +7,12 @@ import ij.ImageStack;
 import ij.gui.EllipseRoi;
 import ij.gui.Overlay;
 import ij.process.ByteProcessor;
+
+import java.awt.Color;
+import java.util.ArrayList;
+import java.util.Collections;
+
 import net.imglib2.Localizable;
-import net.imglib2.algorithm.componenttree.ComponentTree;
 import net.imglib2.img.Img;
 import net.imglib2.img.ImgFactory;
 import net.imglib2.img.array.ArrayImgFactory;
@@ -20,7 +20,6 @@ import net.imglib2.img.display.imagej.ImageJFunctions;
 import net.imglib2.io.ImgOpener;
 import net.imglib2.type.numeric.IntegerType;
 import net.imglib2.type.numeric.integer.IntType;
-import net.imglib2.type.numeric.integer.LongType;
 
 public class MserTreeTest< T extends IntegerType< T > >
 {

@@ -20,6 +20,11 @@ import net.imglib2.type.numeric.integer.LongType;
  * For building the tree {@link Component.Handler} is implemented to gather
  * {@link PixelListComponentIntermediate} emitted by {@link ComponentTree}.
  *
+ * <p>
+ * <strong>TODO</strong> Add support for non-zero-min RandomAccessibleIntervals.
+ * (Currently, we assume that the input image is a <em>zero-min</em> interval.)
+ * </p>
+ *
  * @author Tobias Pietzsch
  *
  * @param <T>

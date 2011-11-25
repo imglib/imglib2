@@ -32,6 +32,11 @@ import net.imglib2.type.logic.BitType;
  * the {@link Component.Handler} implementation. See {@link PixelListComponentTree}
  * for an example.
  *
+ * <p>
+ * <strong>TODO</strong> Add support for non-zero-min RandomAccessibleIntervals.
+ * (Currently, we assume that the input image is a <em>zero-min</em> interval.)
+ * </p>
+ *
  * @author Tobias Pietzsch
  *
  * @param <T>

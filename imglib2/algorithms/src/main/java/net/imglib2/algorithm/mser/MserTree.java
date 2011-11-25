@@ -48,6 +48,11 @@ import net.imglib2.type.numeric.integer.LongType;
  * <math style="display:block"><mfrac><mfenced open="|" close="|"><mrow><mi>B</mi><mo lspace=mediummathspace rspace=mediummathspace>\</mo><mi>A</mi></mrow></mfenced><mfenced open="|" close="|"><mi>B</mi></mfenced></mfrac><mo>&le;</mo><mi>minDiversity</mi></math>
  * </p>
  *
+ * <p>
+ * <strong>TODO</strong> Add support for non-zero-min RandomAccessibleIntervals.
+ * (Currently, we assume that the input image is a <em>zero-min</em> interval.)
+ * </p>
+ *
  * @author Tobias Pietzsch
  *
  * @param <T>
