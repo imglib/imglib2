@@ -1,7 +1,10 @@
 package net.imglib2.script.algorithm.fn;
 
 import net.imglib2.Cursor;
+import net.imglib2.IterableRealInterval;
 import net.imglib2.RandomAccessibleInterval;
+import net.imglib2.img.array.ArrayImg;
+import net.imglib2.img.list.ListImg;
 import net.imglib2.type.numeric.NumericType;
 import net.imglib2.util.Util;
 import net.imglib2.view.IterableRandomAccessibleInterval;
@@ -12,7 +15,7 @@ public class RandomAccessibleIntervalImgProxy<T extends NumericType<T>> extends 
 	
 	public RandomAccessibleIntervalImgProxy(final RandomAccessibleInterval<T> rai) {
 		super(rai, Util.intervalDimensions(rai));
-		this.irai = new IterableRandomAccessibleInterval<T>(rai);
+		this.irai = new IterableRandomAccessibleInterval<T>(rai); // iterate in flat order like ArrayImg
 	}
 
 	@Override
@@ -28,5 +31,12 @@ public class RandomAccessibleIntervalImgProxy<T extends NumericType<T>> extends 
 	@Override
 	public RandomAccessibleIntervalImgProxy<T> copy() {
 		return new RandomAccessibleIntervalImgProxy<T>(rai);
+	}
+	
+	/** Iterates in flat order like {@link ArrayImg} or {@link ListImg},
+	 * given the kind of cursor that it returns. */
+	@Override
+	public boolean equalIterationOrder(final IterableRealInterval<?> f) {
+		return irai.equalIterationOrder(f);
 	}
 }

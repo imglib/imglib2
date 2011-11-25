@@ -11,6 +11,8 @@ import net.imglib2.RandomAccessible;
 import net.imglib2.RealPositionable;
 import net.imglib2.img.Img;
 import net.imglib2.img.ImgFactory;
+import net.imglib2.img.array.ArrayImg;
+import net.imglib2.img.list.ListImg;
 import net.imglib2.type.numeric.NumericType;
 import net.imglib2.view.RandomAccessibleZeroMinIntervalCursor;
 import net.imglib2.view.Views;
@@ -159,9 +161,15 @@ public class RandomAccessibleImgProxy<T extends NumericType<T>, RAI extends Rand
 		return cursor().next();
 	}
 
+	/** Flat iteration order like {@link ArrayImg}. */
 	@Override
-	public boolean equalIterationOrder(IterableRealInterval<?> f) {
-		return false;
+	public boolean equalIterationOrder(final IterableRealInterval<?> f) {
+		if (rai.numDimensions() != f.numDimensions())
+			return false;
+		// Compatible with the flat-iterating images:
+		return getClass().isInstance(f)
+		  || ArrayImg.class.isInstance(f)
+		  || ListImg.class.isInstance(f);
 	}
 
 	@Override
