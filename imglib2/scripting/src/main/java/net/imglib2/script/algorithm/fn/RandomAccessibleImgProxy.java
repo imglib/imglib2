@@ -33,6 +33,10 @@ public class RandomAccessibleImgProxy<T extends NumericType<T>, RAI extends Rand
 		this.dims = dims;
 	}
 	
+	public RAI getRandomAccessible() {
+		return this.rai;
+	}
+	
 	@Override
 	public RandomAccess<T> randomAccess() {
 		return rai.randomAccess();

@@ -18,6 +18,10 @@ public class RandomAccessibleIntervalImgProxy<T extends NumericType<T>> extends 
 		this.irai = new IterableRandomAccessibleInterval<T>(rai); // iterate in flat order like ArrayImg
 	}
 
+	public RandomAccessibleInterval<T> getRandomAccessibleInterval() {
+		return this.rai;
+	}
+
 	@Override
 	public Cursor<T> cursor() {
 		return irai.cursor();
