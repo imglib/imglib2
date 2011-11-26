@@ -6,8 +6,8 @@ import net.imglib2.exception.ImgLibException;
 import net.imglib2.img.Img;
 import net.imglib2.script.ImgLib;
 import net.imglib2.script.view.Extend;
-import net.imglib2.script.view.ExtendMirroringDouble;
-import net.imglib2.script.view.ExtendMirroringSingle;
+import net.imglib2.script.view.ExtendMirrorDouble;
+import net.imglib2.script.view.ExtendMirrorSingle;
 import net.imglib2.script.view.ExtendPeriodic;
 import net.imglib2.type.numeric.integer.UnsignedByteType;
 
@@ -18,8 +18,8 @@ public class TestExtend
 		Img<UnsignedByteType> img = ImgLib.wrap(IJ.openImage("/home/albert/Desktop/t2/bridge.gif"));
 		
 		Img<UnsignedByteType> multiPeriodic = new ExtendPeriodic<UnsignedByteType>(img, new long[]{2048,2048});
-		Img<UnsignedByteType> multiMirroredDouble = new ExtendMirroringDouble<UnsignedByteType>(img, new long[]{2048, 2048});
-		Img<UnsignedByteType> multiMirroredSingle = new ExtendMirroringSingle<UnsignedByteType>(img, new long[]{2048, 2048});
+		Img<UnsignedByteType> multiMirroredDouble = new ExtendMirrorDouble<UnsignedByteType>(img, new long[]{2048, 2048});
+		Img<UnsignedByteType> multiMirroredSingle = new ExtendMirrorSingle<UnsignedByteType>(img, new long[]{2048, 2048});
 		Img<UnsignedByteType> centered = new Extend<UnsignedByteType>(img, new long[]{-768, -768}, new long[]{2048, 2048}, 0);
 		
 		// Above, notice the negative offsets. This needs fixing, it's likely due to recent change
