@@ -25,6 +25,6 @@ public class GenericRotate<R extends RealType<R>> extends RandomAccessibleInterv
 		} else {
 			throw new IllegalArgumentException("Invalid Mode: " + mode);
 		}
-		return iv;
+		return Views.zeroMin(iv);
 	}
 }
