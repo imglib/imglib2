@@ -16,7 +16,7 @@ public final class Clear extends UnaryOperation
 		super(fn);
 	}
 
-	public Clear(final IterableRealInterval<? extends RealType<?>> img) {
+	public <R extends RealType<R>> Clear(final IterableRealInterval<R> img) {
 		super(img);
 	}
 

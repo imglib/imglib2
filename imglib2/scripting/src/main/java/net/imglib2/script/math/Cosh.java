@@ -7,7 +7,7 @@ import net.imglib2.type.numeric.RealType;
 
 public class Cosh extends UnaryOperation {
 
-	public Cosh(final IterableRealInterval<? extends RealType<?>> img) {
+	public <R extends RealType<R>> Cosh(final IterableRealInterval<R> img) {
 		super(img);
 	}
 	public Cosh(final IFunction fn) {

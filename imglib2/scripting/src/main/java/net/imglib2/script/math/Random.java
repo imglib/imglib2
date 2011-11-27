@@ -6,6 +6,7 @@ public class Random extends UnaryOperation
 {
 	private final java.util.Random rand;
 
+	@SuppressWarnings("boxing")
 	public Random() {
 		this(System.currentTimeMillis());
 	}

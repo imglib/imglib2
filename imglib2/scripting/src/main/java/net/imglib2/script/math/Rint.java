@@ -7,7 +7,7 @@ import net.imglib2.type.numeric.RealType;
 
 public class Rint extends UnaryOperation {
 
-	public Rint(final IterableRealInterval<? extends RealType<?>> img) {
+	public <R extends RealType<R>> Rint(final IterableRealInterval<R> img) {
 		super(img);
 	}
 	public Rint(final IFunction fn) {

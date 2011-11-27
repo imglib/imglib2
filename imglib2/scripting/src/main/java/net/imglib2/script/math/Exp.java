@@ -7,7 +7,7 @@ import net.imglib2.type.numeric.RealType;
 
 public class Exp extends UnaryOperation {
 
-	public Exp(final IterableRealInterval<? extends RealType<?>> img) {
+	public <R extends RealType<R>> Exp(final IterableRealInterval<R> img) {
 		super(img);
 	}
 	public Exp(final IFunction fn) {

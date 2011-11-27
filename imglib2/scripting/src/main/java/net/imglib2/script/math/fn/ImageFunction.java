@@ -8,12 +8,12 @@ import net.imglib2.type.numeric.RealType;
 
 /** A function to that returns every pixel of a given {@link Image}
  *  at every call to {@link eval}. */
-public final class ImageFunction implements IFunction {
+public final class ImageFunction<T extends RealType<T>> implements IFunction {
 
-	private final IterableRealInterval<? extends RealType<?>> img;
-	private final RealCursor<? extends RealType<?>> c;
+	private final IterableRealInterval<T> img;
+	private final RealCursor<T> c;
 
-	public ImageFunction(final IterableRealInterval<? extends RealType<?>> img) {
+	public ImageFunction(final IterableRealInterval<T> img) {
 		this.img = img;
 		this.c = img.cursor();
 	}
@@ -23,6 +23,12 @@ public final class ImageFunction implements IFunction {
 		c.fwd();
 		return c.get().getRealDouble();
 	}
+	
+	/** Same as {@link #eval()} but returns the {@link RealType}. */
+	public final T next() {
+		c.fwd();
+		return c.get();
+	}
 
 	@Override
 	public final void findCursors(final Collection<RealCursor<?>> cursors) {
@@ -30,9 +36,9 @@ public final class ImageFunction implements IFunction {
 	}
 
 	@Override
-	public IFunction duplicate()
+	public ImageFunction<T> duplicate()
 	{
-		return new ImageFunction(img);
+		return new ImageFunction<T>(img);
 	}
 
 	@Override

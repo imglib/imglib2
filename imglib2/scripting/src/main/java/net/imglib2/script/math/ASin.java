@@ -7,7 +7,7 @@ import net.imglib2.type.numeric.RealType;
 
 public class ASin extends UnaryOperation {
 
-	public ASin(final IterableRealInterval<? extends RealType<?>> img) {
+	public <R extends RealType<R>> ASin(final IterableRealInterval<R> img) {
 		super(img);
 	}
 	public ASin(final IFunction fn) {
