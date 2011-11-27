@@ -58,10 +58,10 @@ public class IntImagePlus< T extends NativeType< T > > extends ImagePlusImg< T, 
 				imp.setOpenAsHyperStack( true );
 			
 			mirror.clear();		
-			for ( int c = 0; c < channels; ++c )
-				for ( int t = 0; t < frames; ++t )
-					for ( int z = 0; z < depth; ++z )
-						mirror.add( new IntArray( ( int[] )imp.getStack().getPixels( imp.getStackIndex( c + 1, z + 1 , t + 1 ) ) ) );
+			for ( int t = 0; t < frames; ++t )
+				for ( int z = 0; z < depth; ++z )
+					for ( int c = 0; c < channels; ++c )
+						mirror.add( new IntArray( ( int[] ) imp.getStack().getPixels( imp.getStackIndex( c + 1, z + 1, t + 1 ) ) ) );
 		}
 		else
 		{
@@ -86,9 +86,9 @@ public class IntImagePlus< T extends NativeType< T > > extends ImagePlusImg< T, 
 		this.imp = imp;
 		
 		mirror.clear();		
-		for ( int c = 0; c < channels; ++c )
-			for ( int t = 0; t < frames; ++t )
-				for ( int z = 0; z < depth; ++z )
+		for ( int t = 0; t < frames; ++t )
+			for ( int z = 0; z < depth; ++z )
+				for ( int c = 0; c < channels; ++c )
 					mirror.add( new IntArray( ( int[] )imp.getStack().getProcessor( imp.getStackIndex( c + 1, z + 1 , t + 1 ) ).getPixels() ) );
 	}
 
