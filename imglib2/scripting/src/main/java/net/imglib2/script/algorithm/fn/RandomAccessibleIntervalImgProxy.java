@@ -36,11 +36,4 @@ public class RandomAccessibleIntervalImgProxy<T extends NumericType<T>> extends 
 	public RandomAccessibleIntervalImgProxy<T> copy() {
 		return new RandomAccessibleIntervalImgProxy<T>(rai);
 	}
-	
-	/** Iterates in flat order like {@link ArrayImg} or {@link ListImg},
-	 * given the kind of cursor that it returns. */
-	@Override
-	public boolean equalIterationOrder(final IterableRealInterval<?> f) {
-		return irai.equalIterationOrder(f);
-	}
 }

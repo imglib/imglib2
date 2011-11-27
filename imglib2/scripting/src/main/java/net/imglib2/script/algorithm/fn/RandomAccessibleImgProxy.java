@@ -170,6 +170,9 @@ public class RandomAccessibleImgProxy<T extends NumericType<T>, RAI extends Rand
 	public boolean equalIterationOrder(final IterableRealInterval<?> f) {
 		if (rai.numDimensions() != f.numDimensions())
 			return false;
+		for (int d=0; d<numDimensions(); ++d)
+			if (dimension(d) != (long)(f.realMax(d) - f.realMin(d) + 1))
+				return false;
 		// Compatible with the flat-iterating images:
 		return getClass().isInstance(f)
 		  || ArrayImg.class.isInstance(f)
