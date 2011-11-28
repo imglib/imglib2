@@ -1,4 +1,4 @@
-package net.imglib2.algorithm.mser;
+package net.imglib2.algorithm.componenttree.mser;
 
 /**
  * For a given threshold value compute the threshold value delta steps down the component tree.

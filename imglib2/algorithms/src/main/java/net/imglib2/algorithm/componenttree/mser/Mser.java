@@ -1,4 +1,4 @@
-package net.imglib2.algorithm.mser;
+package net.imglib2.algorithm.componenttree.mser;
 
 import java.util.ArrayList;
 import java.util.Iterator;
