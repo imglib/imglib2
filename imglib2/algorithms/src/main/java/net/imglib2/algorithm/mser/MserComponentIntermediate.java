@@ -7,6 +7,18 @@ import net.imglib2.algorithm.componenttree.Component;
 import net.imglib2.algorithm.componenttree.pixellist.PixelList;
 import net.imglib2.type.Type;
 
+/**
+ * Implementation of {@link Component} that stores a list of associated pixels
+ * in a {@link PixelList}, maintains running sums over pixel positions to
+ * compute mean and covariance. It keeps track of which components were merged
+ * into this since it was last emitted (this is used to establish region size
+ * history).
+ *
+ * @author Tobias Pietzsch
+ *
+ * @param <T>
+ *            value type of the input image.
+ */
 final class MserComponentIntermediate< T extends Type< T > > implements Component< T >
 {
 	/**
@@ -37,17 +49,26 @@ final class MserComponentIntermediate< T extends Type< T > > implements Componen
 	private final long[] tmp;
 
 	/**
-	 * A list of MserComponent merged into this one since it was last emitted.
-	 * (For building up MSER evaluation structure.)
+	 * A list of {@link MserComponentIntermediate} merged into this one since it
+	 * was last emitted. (For building up MSER evaluation structure.)
 	 */
 	ArrayList< MserComponentIntermediate< T > > children;
 	
 	/**
-	 * The MserEvaluationNode assigned to this MserComponent when it was last emitted.
-	 * (For building up MSER evaluation structure.)
+	 * The {@link MserEvaluationNode} assigned to this MserComponent when it was
+	 * last emitted. (For building up MSER evaluation structure.)
 	 */
 	MserEvaluationNode< T > evaluationNode;
 
+	/**
+	 * Create new empty component.
+	 *
+	 * @param value
+	 *            (initial) threshold value {@see #getValue()}.
+	 * @param generator
+	 *            the {@link MserComponentGenerator#linkedList} is used to store
+	 *            the {@link #pixelList}.
+	 */
 	MserComponentIntermediate( final T value, final MserComponentGenerator< T > generator )
 	{
 		pixelList = new PixelList( generator.linkedList.randomAccess(), generator.dimensions );
@@ -118,16 +139,31 @@ final class MserComponentIntermediate< T extends Type< T > > implements Componen
 		return s + "}";
 	}
 
+	/**
+	 * Get the number of pixels in the component.
+	 *
+	 * @return number of pixels in the component.
+	 */
 	long size()
 	{
 		return pixelList.size();
 	}
 	
+	/**
+	 * Get the {@link MserEvaluationNode} assigned to this
+	 * {@link MserComponentIntermediate} when it was last emitted.
+	 *
+	 * @return {@link MserEvaluationNode} last emitted from the component.
+	 */
 	MserEvaluationNode< T > getEvaluationNode()
 	{
 		return evaluationNode;
 	}
 	
+	/**
+	 * Set the {@link MserEvaluationNode} created from this
+	 * {@link MserComponentIntermediate} when it is emitted.
+	 */
 	void setEvaluationNode( MserEvaluationNode< T > node )
 	{
 		evaluationNode = node;

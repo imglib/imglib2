@@ -2,7 +2,17 @@ package net.imglib2.algorithm.mser;
 
 import net.imglib2.type.numeric.NumericType;
 
-public final class ComputeDeltaDarkToBright< T extends NumericType< T > > implements ComputeDeltaValue< T >
+/**
+ * Default implementation of {@link ComputeDelta} for dark-to-bright pass for
+ * {@link NumericType}. For a given threshold value <em>a</em> compute the
+ * threshold value delta steps down the component tree: <em>a-delta</em>.
+ *
+ * @author Tobias Pietzsch
+ *
+ * @param <T>
+ *            value type of the input image.
+ */
+public final class ComputeDeltaDarkToBright< T extends NumericType< T > > implements ComputeDelta< T >
 {
 	private final T delta;
 

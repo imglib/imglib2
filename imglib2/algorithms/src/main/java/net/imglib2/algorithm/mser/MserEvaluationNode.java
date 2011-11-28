@@ -6,6 +6,32 @@ import java.util.Comparator;
 import net.imglib2.algorithm.componenttree.pixellist.PixelList;
 import net.imglib2.type.Type;
 
+/**
+ * Store {@link PixelList}, mean, covariance, instability score, parent, and
+ * children of a extremal region. A tree of {@link MserEvaluationNode} is built
+ * from emitted {@link MserComponentIntermediate}. As soon as the parent of a
+ * node is available, it is checked whether the instability score is a local
+ * minimum. In this case, it is passed to
+ * {@link MserTree#foundNewMinimum(MserEvaluationNode)}, where a MSER is
+ * created.
+ *
+ * We construct the component tree for generic types, which means that we cannot
+ * raise the threshold values in steps of 1 (value type might be continuous or
+ * non-numeric). To create a tree whose every branch covers a continuous range
+ * of values, two nodes are created for every {@link MserComponentIntermediate}.
+ * These mark the range of values covered by that component. The first node is
+ * called the <em>"direct"</em> or <em>"non-intermediate node"</em> and is
+ * created, when the {@link MserComponentIntermediate} is emitted. It marks the
+ * lower bound (inclusive) of the value range. When the parent of the
+ * {@link MserComponentIntermediate} is emitted, the
+ * <em>"intermediate node"</em> is created which covers the same pixels as the
+ * direct node but marks the upper bound (exclusive) of the value range.
+ *
+ * @author Tobias Pietzsch
+ *
+ * @param <T>
+ *            value type of the input image.
+ */
 final class MserEvaluationNode< T extends Type< T > >
 {
 	/**
@@ -70,7 +96,7 @@ final class MserEvaluationNode< T extends Type< T > >
 	 */
 	final ArrayList< Mser< T > > mserThisOrChildren;
 
-	MserEvaluationNode( final MserComponentIntermediate< T > component, final Comparator< T > comparator, final ComputeDeltaValue< T > delta, final MserTree< T > tree )
+	MserEvaluationNode( final MserComponentIntermediate< T > component, final Comparator< T > comparator, final ComputeDelta< T > delta, final MserTree< T > tree )
 	{
 		value = component.getValue().copy();
 		pixelList = new PixelList( component.pixelList );
@@ -82,6 +108,7 @@ final class MserEvaluationNode< T extends Type< T > >
 		if ( node != null )
 		{
 			historySize = node.size;
+			// create intermediate MserEvaluationNode between last emitted and this node.
 			node = new MserEvaluationNode< T >( node, value, comparator, delta );
 			children.add( node );
 			node.setParent( this );
@@ -90,6 +117,7 @@ final class MserEvaluationNode< T extends Type< T > >
 		MserEvaluationNode< T > historyWinner = node;
 		for ( MserComponentIntermediate< T > c : component.children )
 		{
+			// create intermediate MserEvaluationNode between child and this node.
 			node = new MserEvaluationNode< T >( c.getEvaluationNode(), value, comparator, delta );
 			children.add( node );
 			node.setParent( this );
@@ -131,7 +159,7 @@ final class MserEvaluationNode< T extends Type< T > >
 		}
 	}
 
-	private MserEvaluationNode( final MserEvaluationNode< T > child, final T value, final Comparator< T > comparator, final ComputeDeltaValue< T > delta )
+	private MserEvaluationNode( final MserEvaluationNode< T > child, final T value, final Comparator< T > comparator, final ComputeDelta< T > delta )
 	{
 		children = new ArrayList< MserEvaluationNode< T > >();
 		children.add( child );
@@ -179,7 +207,7 @@ final class MserEvaluationNode< T extends Type< T > >
 	 *            there is no node with that exact value. In this case,
 	 *            isIntermediate has no influence.)
 	 */
-	private boolean computeMserScore( final ComputeDeltaValue< T > delta, final Comparator< T > comparator, final boolean isIntermediate )
+	private boolean computeMserScore( final ComputeDelta< T > delta, final Comparator< T > comparator, final boolean isIntermediate )
 	{
 		// we are looking for a precursor node with value == (this.value - delta)
 		final T valueMinus = delta.valueMinusDelta( value );
@@ -204,7 +232,7 @@ final class MserEvaluationNode< T extends Type< T > >
 	 * called, when the mser score for the next component in the branch is
 	 * available.)
 	 */
-	private void evaluateLocalMinimum( final MserTree< T > tree, final ComputeDeltaValue< T > delta, final Comparator< T > comparator )
+	private void evaluateLocalMinimum( final MserTree< T > tree, final ComputeDelta< T > delta, final Comparator< T > comparator )
 	{
 		if ( isScoreValid )
 		{

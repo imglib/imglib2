@@ -125,7 +125,7 @@ public final class MserTree< T extends Type< T > > implements Component.Handler<
 		max.setReal( darkToBright ? delta.getMaxValue() : delta.getMinValue() );
 		final MserComponentGenerator< T > generator = new MserComponentGenerator< T >( max, input, imgFactory );
 		final Comparator< T > comparator = darkToBright ? new ComponentTree.DarkToBright< T >() : new ComponentTree.BrightToDark< T >();
-		final ComputeDeltaValue< T > computeDelta = darkToBright ? new ComputeDeltaDarkToBright< T >( delta ) : new ComputeDeltaBrightToDark< T >( delta ); 
+		final ComputeDelta< T > computeDelta = darkToBright ? new ComputeDeltaDarkToBright< T >( delta ) : new ComputeDeltaBrightToDark< T >( delta ); 
 		final MserTree< T > tree = new MserTree< T >( comparator, computeDelta, minSize, maxSize, maxVar, minDiversity );
 		ComponentTree.buildComponentTree( input, generator, tree, comparator );
 		tree.pruneDuplicates();
@@ -134,7 +134,7 @@ public final class MserTree< T extends Type< T > > implements Component.Handler<
 
 	/**
 	 * Build a MSER tree from an input image. Calls
-	 * {@link #buildMserTree(RandomAccessibleInterval, ComputeDeltaValue, long, long, double, double, ImgFactory, Type, Comparator)}
+	 * {@link #buildMserTree(RandomAccessibleInterval, ComputeDelta, long, long, double, double, ImgFactory, Type, Comparator)}
 	 * using an {@link ArrayImgFactory} or {@link CellImgFactory} depending on
 	 * input image size.
 	 *
@@ -157,7 +157,7 @@ public final class MserTree< T extends Type< T > > implements Component.Handler<
 	 *            determines ordering of threshold values.
 	 * @return MSER tree of the image.
 	 */
-	public static < T extends Type< T > > MserTree< T > buildMserTree( final RandomAccessibleInterval< T > input, final ComputeDeltaValue< T > computeDelta, final long minSize, final long maxSize, final double maxVar, final double minDiversity, final T maxValue, final Comparator< T > comparator )
+	public static < T extends Type< T > > MserTree< T > buildMserTree( final RandomAccessibleInterval< T > input, final ComputeDelta< T > computeDelta, final long minSize, final long maxSize, final double maxVar, final double minDiversity, final T maxValue, final Comparator< T > comparator )
 	{
 		final int numDimensions = input.numDimensions();
 		long size = 1;
@@ -195,7 +195,7 @@ public final class MserTree< T extends Type< T > > implements Component.Handler<
 	 *            determines ordering of threshold values.
 	 * @return MSER tree of the image.
 	 */
-	public static < T extends Type< T > > MserTree< T > buildMserTree( final RandomAccessibleInterval< T > input, final ComputeDeltaValue< T > computeDelta, final long minSize, final long maxSize, final double maxVar, final double minDiversity, final ImgFactory< LongType > imgFactory, final T maxValue, final Comparator< T > comparator )
+	public static < T extends Type< T > > MserTree< T > buildMserTree( final RandomAccessibleInterval< T > input, final ComputeDelta< T > computeDelta, final long minSize, final long maxSize, final double maxVar, final double minDiversity, final ImgFactory< LongType > imgFactory, final T maxValue, final Comparator< T > comparator )
 	{
 		final MserComponentGenerator< T > generator = new MserComponentGenerator< T >( maxValue, input, imgFactory );
 		final MserTree< T > tree = new MserTree< T >( comparator, computeDelta, minSize, maxSize, maxVar, minDiversity );
@@ -210,17 +210,29 @@ public final class MserTree< T extends Type< T > > implements Component.Handler<
 
 	private final Comparator< T > comparator;
 
-	private final ComputeDeltaValue< T > delta;
+	private final ComputeDelta< T > delta;
 
+	/**
+	 * Minimum size (in pixels) of accepted MSER.
+	 */
 	private final long minSize;
 
+	/**
+	 * Maximum size (in pixels) of accepted MSER.
+	 */
 	private final long maxSize;
 
+	/**
+	 * Maximum instability score of accepted MSER.
+	 */
 	private final double maxVar;
 
+	/**
+	 * Minimal diversity of adjacent accepted MSER.
+	 */
 	private final double minDiversity;
 	
-	MserTree( final Comparator< T > comparator, final ComputeDeltaValue< T > delta, final long minSize, final long maxSize, final double maxVar, final double minDiversity )
+	MserTree( final Comparator< T > comparator, final ComputeDelta< T > delta, final long minSize, final long maxSize, final double maxVar, final double minDiversity )
 	{
 		roots = new HashSet< Mser< T > >();
 		nodes = new ArrayList< Mser< T > >();
@@ -300,6 +312,11 @@ public final class MserTree< T extends Type< T > > implements Component.Handler<
 		}
 	}
 
+	/**
+	 * Returns an iterator over all MSERs in the tree.
+	 *
+	 * @return iterator over all MSERss in the tree.
+	 */
 	@Override
 	public Iterator< Mser< T > > iterator()
 	{
