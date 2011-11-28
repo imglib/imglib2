@@ -232,7 +232,7 @@ public final class MserTree< T extends Type< T > > implements Component.Handler<
 	 */
 	private final double minDiversity;
 	
-	MserTree( final Comparator< T > comparator, final ComputeDelta< T > delta, final long minSize, final long maxSize, final double maxVar, final double minDiversity )
+	private MserTree( final Comparator< T > comparator, final ComputeDelta< T > delta, final long minSize, final long maxSize, final double maxVar, final double minDiversity )
 	{
 		roots = new HashSet< Mser< T > >();
 		nodes = new ArrayList< Mser< T > >();
