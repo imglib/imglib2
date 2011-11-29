@@ -38,6 +38,12 @@
       <version>${project.version}</version>
     </dependency>
     <dependency>
+      <!-- TODO: define a real POM for mpicbg project -->
+      <groupId>${mpicbg.groupId}</groupId>
+      <artifactId>mpicbg</artifactId>
+      <version>${mpicbg.version}</version>
+    </dependency>
+    <dependency>
       <groupId>jama</groupId>
       <artifactId>jama</artifactId>
       <version>1.0.2</version>

@@ -27,13 +27,14 @@
       <artifactId>imglib2</artifactId>
       <version>${project.version}</version>
     </dependency>
-    <!-- TODO: define a real POM for mpicbg project -->
-    <dependency>
-      <groupId>mpicbg</groupId>
-      <artifactId>mpicbg</artifactId>
-      <version>20100908</version>
-    </dependency>
 
+    <dependency>
+      <!-- TODO: define a real POM for mpicbg project -->
+      <groupId>${mpicbg.groupId}</groupId>
+      <artifactId>mpicbg</artifactId>
+      <version>${mpicbg.version}</version>
+      <scope>test</scope>
+    </dependency>
     <dependency>
       <groupId>ijaux</groupId>
       <artifactId>pixlib</artifactId>

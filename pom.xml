@@ -26,6 +26,8 @@
     <imagej.groupId>net.imagej</imagej.groupId>
     <imagej.version>${project.version}</imagej.version>
     <imagej1.version>[1.45s,)</imagej1.version>
+    <mpicbg.groupId>mpicbg</mpicbg.groupId>
+    <mpicbg.version>20111128</mpicbg.version>
     <!-- NB: Avoid platform encoding warning when copying resources. -->
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>

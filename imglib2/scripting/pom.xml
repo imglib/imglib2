@@ -48,15 +48,15 @@
       <version>${project.version}</version>
     </dependency>
     <dependency>
+      <!-- TODO: define a real POM for mpicbg project -->
+      <groupId>${mpicbg.groupId}</groupId>
+      <artifactId>mpicbg</artifactId>
+      <version>${mpicbg.version}</version>
+    </dependency>
+    <dependency>
       <groupId>jfree</groupId>
       <artifactId>jfreechart</artifactId>
       <version>1.0.13</version>
-    </dependency>
-    <!-- TODO: define a real POM for mpicbg project -->
-    <dependency>
-      <groupId>mpicbg</groupId>
-      <artifactId>mpicbg</artifactId>
-      <version>20100908</version>
     </dependency>
   </dependencies>
 

@@ -47,6 +47,13 @@
       <version>${project.version}</version>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <!-- TODO: define a real POM for mpicbg project -->
+      <groupId>${mpicbg.groupId}</groupId>
+      <artifactId>mpicbg</artifactId>
+      <version>${mpicbg.version}</version>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
 
   <!-- NB: for project parent, in case of partial checkout -->
