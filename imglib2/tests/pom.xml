@@ -18,12 +18,6 @@
 
   <dependencies>
     <dependency>
-      <groupId>${imagej.groupId}</groupId>
-      <artifactId>ij</artifactId>
-      <version>${imagej1.version}</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>imglib2</artifactId>
       <version>${project.version}</version>
@@ -39,6 +33,12 @@
       <groupId>${project.groupId}</groupId>
       <artifactId>imglib2-io</artifactId>
       <version>${project.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>${imagej.groupId}</groupId>
+      <artifactId>ij</artifactId>
+      <version>${imagej1.version}</version>
       <scope>test</scope>
     </dependency>
     <dependency>

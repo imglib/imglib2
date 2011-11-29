@@ -18,6 +18,17 @@
 
   <dependencies>
     <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>imglib</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <!-- used only by deprecated LOCI.java -->
+      <groupId>${project.groupId}</groupId>
+      <artifactId>imglib-ij</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
       <groupId>${bio-formats.groupId}</groupId>
       <artifactId>loci-common</artifactId>
       <version>${bio-formats.version}</version>
@@ -37,17 +48,6 @@
       <groupId>${imagej.groupId}</groupId>
       <artifactId>ij</artifactId>
       <version>${imagej1.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>imglib</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <!-- used only by deprecated LOCI.java -->
-      <groupId>${project.groupId}</groupId>
-      <artifactId>imglib-ij</artifactId>
-      <version>${project.version}</version>
     </dependency>
 
     <dependency>
