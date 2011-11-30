@@ -3,6 +3,8 @@ package script.imglib.test;
 import net.imglib2.img.Img;
 import net.imglib2.script.ImgLib;
 import net.imglib2.script.algorithm.Affine2D;
+import net.imglib2.script.algorithm.FlipHorizontal;
+import net.imglib2.script.algorithm.FlipVertical;
 import net.imglib2.script.algorithm.Rotate180;
 import net.imglib2.script.algorithm.Rotate270;
 import net.imglib2.script.algorithm.Rotate90;
@@ -18,7 +20,8 @@ public class TestTransformations {
 	static public final void main(String[] arg) {
 		try {
 			// Open a color image with dimensions X,Y,Color
-			Img<UnsignedByteType> img = ImgLib.open("/home/albert/Desktop/t2/clown.png");
+			//Img<UnsignedByteType> img = ImgLib.open("/home/albert/Desktop/t2/clown.png");
+			Img<UnsignedByteType> img = ImgLib.open("http://imagej.nih.gov/ij/images/clown.png");
 			long width = img.max(0) + 1;
 			long height = img.max(1) + 1;
 			long colors = img.max(2) + 1;
@@ -28,7 +31,7 @@ public class TestTransformations {
 			// Make the image squared in X,Y if it isn't by acquiring a RectangleROI of it
 			long side = Math.min(width, height);
 			RectangleROI<UnsignedByteType> roi = new RectangleROI<UnsignedByteType>(img, 0, 0, side, side);
-			long[] canvasDims = new long[]{side * 4, side * 6, colors};
+			long[] canvasDims = new long[]{side * 4, side * 5, colors};
 			
 			ImgLib.show(roi, "roi");
 			
@@ -57,7 +60,13 @@ public class TestTransformations {
 					new long[]{-side * 3, -side, 0}); // TODO notice these negative values indicate positive offset
 			// TODO the Affine2D introduces a strange mirroring noise at the bottom
 			
-			ImgLib.show(ins11.asImage());
+			
+			// Third row:
+			Paste<UnsignedByteType> ins20 = new Paste<UnsignedByteType>(new FlipHorizontal<UnsignedByteType>(roi), ins11, new long[]{0, -side * 4, 0});
+			Paste<UnsignedByteType> ins21 = new Paste<UnsignedByteType>(new FlipVertical<UnsignedByteType>(roi), ins20, new long[]{-side, -side * 4, 0});
+			
+			
+			ImgLib.show(ins21.asImage());
 			
 
 		} catch (Exception e) {
