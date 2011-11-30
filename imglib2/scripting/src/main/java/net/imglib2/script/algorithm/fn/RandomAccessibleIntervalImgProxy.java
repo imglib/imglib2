@@ -1,10 +1,7 @@
 package net.imglib2.script.algorithm.fn;
 
 import net.imglib2.Cursor;
-import net.imglib2.IterableRealInterval;
 import net.imglib2.RandomAccessibleInterval;
-import net.imglib2.img.array.ArrayImg;
-import net.imglib2.img.list.ListImg;
 import net.imglib2.type.numeric.NumericType;
 import net.imglib2.util.Util;
 import net.imglib2.view.IterableRandomAccessibleInterval;
