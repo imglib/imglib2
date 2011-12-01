@@ -8,7 +8,7 @@ import net.imglib2.script.algorithm.FlipVertical;
 import net.imglib2.script.algorithm.Rotate180;
 import net.imglib2.script.algorithm.Rotate270;
 import net.imglib2.script.algorithm.Rotate90;
-import net.imglib2.script.edit.Paste;
+import net.imglib2.script.filter.Paste;
 import net.imglib2.script.img.FloatImage;
 import net.imglib2.script.view.ExtendMirrorDouble;
 import net.imglib2.script.view.ROI;

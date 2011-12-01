@@ -1,4 +1,4 @@
-package net.imglib2.script.edit;
+package net.imglib2.script.filter;
 
 import java.util.ArrayList;
 import java.util.Collection;
