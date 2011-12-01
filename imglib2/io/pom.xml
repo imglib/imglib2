@@ -5,7 +5,7 @@
     http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <parent> 
+  <parent>
     <groupId>net.imglib2</groupId>
     <artifactId>imglib-pom-imglib2</artifactId>
     <version>2.0-SNAPSHOT</version>
@@ -17,6 +17,11 @@
   <description>Reads various file formats using Bio-Formats.</description>
 
   <dependencies>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>imglib2</artifactId>
+      <version>${project.version}</version>
+    </dependency>
     <dependency>
       <groupId>${bio-formats.groupId}</groupId>
       <artifactId>loci-common</artifactId>
@@ -31,11 +36,6 @@
       <groupId>${bio-formats.groupId}</groupId>
       <artifactId>scifio</artifactId>
       <version>${bio-formats.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>imglib2</artifactId>
-      <version>${project.version}</version>
     </dependency>
 
     <dependency>

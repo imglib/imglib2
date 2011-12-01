@@ -22,17 +22,17 @@
       <artifactId>imglib2</artifactId>
       <version>${project.version}</version>
     </dependency>
-    <!-- TODO: define a real POM for mines-jtk project -->
     <dependency>
+      <!-- TODO: define a real POM for mpicbg project -->
+      <groupId>${mpicbg.groupId}</groupId>
+      <artifactId>mpicbg</artifactId>
+      <version>${mpicbg.version}</version>
+    </dependency>
+    <dependency>
+      <!-- TODO: define a real POM for mines-jtk project -->
       <groupId>edu.mines</groupId>
       <artifactId>mines-jtk</artifactId>
       <version>20100113</version>
-    </dependency>
-    <!-- TODO: define a real POM for mpicbg project -->
-    <dependency>
-      <groupId>mpicbg</groupId>
-      <artifactId>mpicbg</artifactId>
-      <version>20100908</version>
     </dependency>
 
     <dependency>
