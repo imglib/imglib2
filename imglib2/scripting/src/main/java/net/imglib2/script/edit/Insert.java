@@ -14,7 +14,7 @@ import net.imglib2.view.Views;
  * Copy a source image into a target image, with a positive or negative offset;
  * then this instance becomes a proxy to the target image.
  * 
- * The target image is altered in place.
+ * The target image is altered in place, and this instance becomes a proxy to it.
  * 
  * @author Albert Cardona
  *

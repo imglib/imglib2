@@ -42,6 +42,7 @@ public class Duplicate<T extends NumericType<T>> extends ImgProxy<T>
 		return copy;
 	}
 
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private static final <R extends NumericType<R>> Img<R> process(final IterableInterval<R> img) {
 		if (img instanceof Img) {
 			return ((Img<R>)img).copy();
