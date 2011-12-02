@@ -10,12 +10,12 @@ import net.imglib2.RealPoint;
 import net.imglib2.RealPositionable;
 
 /**
- * @author leek
+ * A (hyper) ellipse defined by an origin and a radius per dimension
+ * where the region of interest is defined by:
  *
- *A (hyper) ellipse defined by an origin and a radius per dimension
- *where the region of interest is defined by:
+ * &sum;((X<sup>n</sup> - O<sup>n</sup>)/R<sup>n</sup>)<sup>2</sup> <= 1
  *
- *&sum;((X<sup>n</sup> - O<sup>n</sup>)/R<sup>n</sup>)<sup>2</sup> <= 1
+ * @author Lee Kamentsky
  */
 public class EllipseRegionOfInterest extends AbstractIterableRegionOfInterest {
 
