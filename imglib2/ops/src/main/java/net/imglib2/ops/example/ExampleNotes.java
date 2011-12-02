@@ -60,7 +60,7 @@ public class ExampleNotes {
 //   unary ops
 //   constraints
 //   assign operation
-//   imglib integration
+//   imglib integration  
 
 //Make a function that uses a condition to decide whether to evaluate
 //the function or not (i.e. condition could be a mask)
