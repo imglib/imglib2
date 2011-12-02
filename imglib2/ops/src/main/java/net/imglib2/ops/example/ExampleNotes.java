@@ -70,6 +70,6 @@ public class ExampleNotes {
 // note that regions always define a point. so there is no such empty
 //   region. this might cause minor problems with assign ops passed
 //   zero sized regions. but maybe that is impossible.
-
+ 
 // note that many of the unary ops use a constant value
 //   could make them binary ops passing a constant function
