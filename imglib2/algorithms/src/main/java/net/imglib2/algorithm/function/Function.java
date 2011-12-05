@@ -1,4 +1,4 @@
-package net.imglib2.algorithm.math;
+package net.imglib2.algorithm.function;
 
 import net.imglib2.type.Type;
 
