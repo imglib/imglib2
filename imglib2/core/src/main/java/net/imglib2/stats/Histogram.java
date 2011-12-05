@@ -27,7 +27,7 @@
  *
  * @author Larry Lindsey
  */
-package net.imglib2.histogram;
+package net.imglib2.stats;
 
 import java.util.ArrayList;
 import java.util.Arrays;
