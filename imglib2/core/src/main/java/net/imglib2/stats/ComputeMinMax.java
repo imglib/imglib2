@@ -14,7 +14,7 @@
  * 
  * @author Stephan Preibisch
  */
-package net.imglib2.algorithm.math;
+package net.imglib2.stats;
 
 import java.util.Vector;
 import java.util.concurrent.atomic.AtomicInteger;
