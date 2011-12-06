@@ -313,6 +313,16 @@ public final class MserTree< T extends Type< T > > implements Component.Handler<
 	}
 
 	/**
+	 * Get number of detected MSERs.
+	 *
+	 * @return number of detected MSERs.
+	 */
+	public int size()
+	{
+		return nodes.size();
+	}
+
+	/**
 	 * Returns an iterator over all MSERs in the tree.
 	 *
 	 * @return iterator over all MSERss in the tree.
