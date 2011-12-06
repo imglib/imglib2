@@ -50,11 +50,6 @@ final class MserEvaluationNode< T extends Type< T > >
 	final PixelList pixelList;
 
 	/**
-	 * Children of this {@link MserEvaluationNode} in the component tree.
-	 */
-	private final ArrayList< MserEvaluationNode< T > > children;
-
-	/**
 	 * The child in the component tree from which we inherit the component size history.
 	 */
 	private final MserEvaluationNode< T > historyChild;
@@ -102,7 +97,7 @@ final class MserEvaluationNode< T extends Type< T > >
 		pixelList = new PixelList( component.pixelList );
 		size = pixelList.size();
 
-		children = new ArrayList< MserEvaluationNode< T > >();
+		final ArrayList< MserEvaluationNode< T > > children = new ArrayList< MserEvaluationNode< T > >();
 		MserEvaluationNode< T > node = component.getEvaluationNode();
 		long historySize = 0;
 		if ( node != null )
@@ -161,8 +156,6 @@ final class MserEvaluationNode< T extends Type< T > >
 
 	private MserEvaluationNode( final MserEvaluationNode< T > child, final T value, final Comparator< T > comparator, final ComputeDelta< T > delta )
 	{
-		children = new ArrayList< MserEvaluationNode< T > >();
-		children.add( child );
 		child.setParent( this );
 
 		historyChild = child;
