@@ -8,13 +8,16 @@ import java.util.TreeSet;
 import net.imglib2.RealLocalizable;
 import net.imglib2.RealPoint;
 
+/**
+ * TODO
+ *
+ * @author Lee Kamentsky
+ */
 public class PolygonRegionOfInterest extends AbstractIterableRegionOfInterest {
 
 	protected ArrayList<RealPoint> points = new ArrayList<RealPoint>();
 	
 	/**
-	 * @author leek
-	 *
 	 * We decompose the polygon into stripes from yMin to yMin which have
 	 * arrays of xTop and xBottom describing the polygon boundary between yMin and yMax.
 	 * Inside and outside is determined by whether you cross an even number of boundaries
@@ -22,7 +25,6 @@ public class PolygonRegionOfInterest extends AbstractIterableRegionOfInterest {
 	 * 
 	 * There is no vertex (explicit or implied) that falls between yMin and yMax
 	 * which makes it easy to binary search for your chunk.
-	 * 
 	 */
 	static protected class Stripe {
 		final public double yMin;

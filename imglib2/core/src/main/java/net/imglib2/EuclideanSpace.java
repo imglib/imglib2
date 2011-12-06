@@ -32,5 +32,6 @@ package net.imglib2;
  */
 public interface EuclideanSpace
 {
+	/** Gets the space's number of dimensions. */
 	public int numDimensions();
 }

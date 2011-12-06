@@ -4,8 +4,6 @@ import net.imglib2.RealLocalizable;
 import net.imglib2.RealPositionable;
 
 /**
- * @author leek
- *
  * An N-dimensional (hyper) rectangle whose edges are
  * orthogonal to the coordinate system.
  * 
@@ -15,6 +13,7 @@ import net.imglib2.RealPositionable;
  * <li>an extent which is the dimension of the region of interest
  * extending from the origin</li></ul>
  * 
+ * @author Lee Kamentsky
  */
 public class RectangleRegionOfInterest extends AbstractIterableRegionOfInterest {
 
