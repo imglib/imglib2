@@ -42,8 +42,9 @@ import net.imglib2.type.Type;
 import net.imglib2.type.logic.BitType;
 
 /**
- * @author leek
+ * TODO
  *
+ * @author Lee Kamentsky
  */
 public class BinaryMaskRegionOfInterest<T extends BitType, I extends Img<T>> extends
 		AbstractRegionOfInterest implements IterableRegionOfInterest {
