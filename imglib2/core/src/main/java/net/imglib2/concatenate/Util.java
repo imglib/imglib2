@@ -23,7 +23,7 @@ public class Util
 	@SuppressWarnings( { "unchecked", "rawtypes" } )
 	public static < T > void join( List< T > objects )
 	{
-		print( objects );
+		// print( objects );
 		int oldConcatenablesSize;
 		do
 		{
@@ -56,7 +56,7 @@ public class Util
 					}
 				}
 			}
-			print( objects );
+			// print( objects );
 		}
 		while ( oldConcatenablesSize != objects.size() );
 	}

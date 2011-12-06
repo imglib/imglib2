@@ -75,7 +75,7 @@ public class TransformBuilder< T >
 	{
 		transforms = new LinkedList< Transform >();
 		boundingBox = ( interval == null) ? null : new BoundingBox( interval );
-		System.out.println( randomAccessible );
+		// System.out.println( randomAccessible );
 		visit( randomAccessible );
 	}
 
