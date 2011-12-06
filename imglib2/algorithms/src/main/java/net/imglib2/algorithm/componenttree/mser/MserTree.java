@@ -232,6 +232,14 @@ public final class MserTree< T extends Type< T > > implements Component.Handler<
 	 */
 	private final double minDiversity;
 	
+	/**
+	 * The number of minima found {@see #foundNewMinimum(MserEvaluationNode)}
+	 * since the last {@link #pruneDuplicates()}.
+	 */
+	private int minimaFoundSinceLastPrune;
+
+	private static final int pruneAfterNMinima = 1000;
+
 	private MserTree( final Comparator< T > comparator, final ComputeDelta< T > delta, final long minSize, final long maxSize, final double maxVar, final double minDiversity )
 	{
 		roots = new HashSet< Mser< T > >();
@@ -242,6 +250,7 @@ public final class MserTree< T extends Type< T > > implements Component.Handler<
 		this.maxSize = maxSize;
 		this.maxVar = maxVar;
 		this.minDiversity = minDiversity;
+		minimaFoundSinceLastPrune = 0;
 	}
 
 	/**
@@ -309,6 +318,11 @@ public final class MserTree< T extends Type< T > > implements Component.Handler<
 				roots.remove( m );
 			roots.add( mser );
 			nodes.add( mser );
+			if ( ++minimaFoundSinceLastPrune == pruneAfterNMinima )
+			{
+				minimaFoundSinceLastPrune = 0;
+				pruneDuplicates();
+			}
 		}
 	}
 
