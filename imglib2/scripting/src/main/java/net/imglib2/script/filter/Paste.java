@@ -33,7 +33,7 @@ public class Paste<T extends RealType<T>> extends FloatImageOperation
 		this.a = new ImageFunction<T>(new RandomAccessibleIntervalImgProxy<T>(
 				Views.interval(
 						Views.translate(Views.extendValue(source, background), offset),
-						new AbstractInterval(Util.extractDimensions(target)){})));
+						new AbstractInterval(Util.intervalDimensions(target)){})));
 		this.b = new ImageFunction<R>(target);
 	}
 
@@ -63,7 +63,7 @@ public class Paste<T extends RealType<T>> extends FloatImageOperation
 		return new AbstractInterval(
 				iris.isEmpty() ?
 						new long[]{1}
-						: Util.extractDimensions(iris.get(0))) {};
+						: Util.intervalDimensions(iris.get(0))) {};
 	}
 	
 	/** For cloning this {@link IFunction}. */

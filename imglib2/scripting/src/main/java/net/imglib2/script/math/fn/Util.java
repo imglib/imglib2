@@ -14,10 +14,17 @@ public class Util
 		throw new IllegalArgumentException("Cannot compose a function with " + ob);
 	}
 	
-	static public final long[] extractDimensions(final RealInterval iri) {
+	static public final long[] intervalDimensions(final RealInterval iri) {
 		final long[] dim = new long[iri.numDimensions()];
 		for (int d=0; d<dim.length; ++d)
 			dim[d] = (long) (iri.realMax(d) - iri.realMin(d) + 1);
 		return dim;
+	}
+
+	public static final long size(final IterableRealInterval<?> b) {
+		long size = 1;
+		for (int i=b.numDimensions() -1; i > -1; --i)
+			size *= (b.realMax(i) - b.realMin(i) + 1);
+		return size;
 	}
 }
