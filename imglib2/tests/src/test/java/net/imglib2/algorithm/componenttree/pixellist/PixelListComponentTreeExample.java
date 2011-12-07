@@ -15,7 +15,7 @@ import net.imglib2.type.numeric.integer.IntType;
  * @author Tobias Pietzsch
  *
  */
-public class PixelListComponentTreeTest
+public class PixelListComponentTreeExample
 {
 	public static final int[][] testData = new int[][] {
 		{ 8, 7, 6, 7, 1 },

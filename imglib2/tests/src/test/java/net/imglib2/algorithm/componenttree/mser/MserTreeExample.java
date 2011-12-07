@@ -22,7 +22,7 @@ import net.imglib2.type.numeric.integer.UnsignedByteType;
  * @author Tobias Pietzsch
  *
  */
-public class MserTreeTest< T extends IntegerType< T > >
+public class MserTreeExample< T extends IntegerType< T > >
 {
 	final ImagePlus imp;
 	final Overlay ov;
@@ -30,7 +30,7 @@ public class MserTreeTest< T extends IntegerType< T > >
 	final int w;
 	final int h;
 
-	public MserTreeTest( final ImagePlus imp, final ImageStack stack )
+	public MserTreeExample( final ImagePlus imp, final ImageStack stack )
 	{
 		this.imp = imp;
 		ov = new Overlay();
@@ -123,7 +123,7 @@ public class MserTreeTest< T extends IntegerType< T > >
 
 		final MserTree< UnsignedByteType > treeDarkToBright = MserTree.buildMserTree( img, new UnsignedByteType( delta ), minSize, maxSize, maxVar, minDiversity, true );
 		final MserTree< UnsignedByteType > treeBrightToDark = MserTree.buildMserTree( img, new UnsignedByteType( delta ), minSize, maxSize, maxVar, minDiversity, false );
-		final MserTreeTest< UnsignedByteType > vis = new MserTreeTest< UnsignedByteType >( impImg, stack );
+		final MserTreeExample< UnsignedByteType > vis = new MserTreeExample< UnsignedByteType >( impImg, stack );
 		vis.visualise( treeDarkToBright, Color.CYAN );
 		vis.visualise( treeBrightToDark, Color.MAGENTA );
 
