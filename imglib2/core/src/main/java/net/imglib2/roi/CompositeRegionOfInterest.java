@@ -37,9 +37,9 @@ import net.imglib2.RealRandomAccess;
 import net.imglib2.type.logic.BitType;
 
 /**
- * @author Lee Kamentsky
+ * A composite region of interest contains all points in its member regions of interest
  *
- *A composite region of interest contains all points in its member regions of interest
+ * @author Lee Kamentsky
  */
 public class CompositeRegionOfInterest extends AbstractRegionOfInterest {
 	private enum Operation {

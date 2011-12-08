@@ -53,6 +53,12 @@
       <version>4.9</version>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>imglib2-algorithms</artifactId>
+      <version>${project.version}</version>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
 
   <!-- NB: for project parent, in case of partial checkout -->

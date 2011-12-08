@@ -27,7 +27,7 @@
  *
  * @author Larry Lindsey
  */
-package net.imglib2.algorithm.histogram;
+package net.imglib2.stats;
 
 import net.imglib2.type.Type;
 

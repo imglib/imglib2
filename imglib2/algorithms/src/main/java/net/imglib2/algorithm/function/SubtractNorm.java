@@ -16,7 +16,6 @@
  */
 package net.imglib2.algorithm.function;
 
-import net.imglib2.algorithm.math.Function;
 import net.imglib2.type.numeric.NumericType;
 
 public class SubtractNorm< A extends NumericType<A> > implements Function< A, A, A >
