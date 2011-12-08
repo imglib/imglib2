@@ -1,16 +1,16 @@
 package net.imglib2.script.analysis;
 
 import net.imglib2.IterableRealInterval;
-import net.imglib2.script.analysis.fn.NumericReduce;
+import net.imglib2.script.analysis.fn.ReduceOperation;
 import net.imglib2.script.math.fn.IFunction;
 import net.imglib2.type.numeric.RealType;
 
 /** Find the maximum value.
  * 
- * @see ImgMin
+ * @see ImgMin, Reduction, ReduceFn
  * @author Albert Cardona
  */
-public class ImgMax extends NumericReduce
+public class ImgMax extends ReduceOperation
 {
 	private static final long serialVersionUID = 1L;
 
@@ -23,7 +23,8 @@ public class ImgMax extends NumericReduce
 	}
 
 	@Override
-	protected final double reduce(final double r, final double v) {
+	public
+	final double reduce(final double r, final double v) {
 		return Math.max(r, v);
 	}
 }
