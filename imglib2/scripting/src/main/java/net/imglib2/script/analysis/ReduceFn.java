@@ -1,4 +1,4 @@
-package net.imglib2.script.analysis.fn;
+package net.imglib2.script.analysis;
 
 public interface ReduceFn
 {

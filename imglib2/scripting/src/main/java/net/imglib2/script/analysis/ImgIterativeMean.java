@@ -1,7 +1,7 @@
 package net.imglib2.script.analysis;
 
 import net.imglib2.IterableRealInterval;
-import net.imglib2.script.analysis.fn.ReduceOperation;
+import net.imglib2.script.analysis.fn.NumericReduceOperation;
 import net.imglib2.script.math.fn.IFunction;
 import net.imglib2.type.numeric.RealType;
 
@@ -10,7 +10,7 @@ import net.imglib2.type.numeric.RealType;
  * @see ImgMean, Reduction, ReduceFn
  * @author Albert Cardona
  */
-public class ImgIterativeMean extends ReduceOperation
+public class ImgIterativeMean extends NumericReduceOperation
 {
 	private static final long serialVersionUID = 1L;
 

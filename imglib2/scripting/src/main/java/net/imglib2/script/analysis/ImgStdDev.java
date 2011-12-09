@@ -1,7 +1,7 @@
 package net.imglib2.script.analysis;
 
 import net.imglib2.IterableRealInterval;
-import net.imglib2.script.analysis.fn.ReduceOperation;
+import net.imglib2.script.analysis.fn.NumericReduceOperation;
 import net.imglib2.script.math.Compute;
 import net.imglib2.script.math.fn.IFunction;
 import net.imglib2.type.numeric.RealType;
@@ -10,7 +10,7 @@ import net.imglib2.type.numeric.RealType;
  * 
  * @author Albert Cardona
  */
-public class ImgStdDev extends ReduceOperation
+public final class ImgStdDev extends NumericReduceOperation
 {
 	private static final long serialVersionUID = 1L;
 	private final double mean;
@@ -30,17 +30,26 @@ public class ImgStdDev extends ReduceOperation
 	public ImgStdDev(final IterableRealInterval<? extends RealType<?>> img, final Number mean) throws Exception {
 		super(img);
 		this.mean = mean.doubleValue();
+		invoke();
 	}
 
 	@Override
-	public
-	final double reduce(final double r, final double v) {
+	public final double reduce(final double r, final double v) {
 		return r + Math.pow(v - mean, 2);
 	}
 	
+	@SuppressWarnings("boxing")
 	@Override
-	public
-	final double end(final double r) {
+	public final Double initial() {
+		return 0d;
+	}
+	
+	@Override
+	public final double end(final double r) {
 		return r / (imgSize -1);
+	}
+
+	public final double mean() {
+		return mean;
 	}
 }
