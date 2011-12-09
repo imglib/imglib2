@@ -13,7 +13,7 @@ import net.imglib2.type.numeric.RealType;
  * 
  * Suppose you want a function that returns the average value of two values. You could write:
 <code>
-Image<> extends RealType<?>> img1 = ...,
+Img<> extends RealType<?>> img1 = ...,
                                 img2 = ...;
 IFunction avg = new Divide(new Add(img1, img2), 2);
 </code>
@@ -22,15 +22,15 @@ IFunction avg = new Divide(new Add(img1, img2), 2);
 <code>
 public class Average extends BinaryOperation
 {
-    public Average(final Image<? extends RealType<?>> left, final Image<? extends RealType<?>> right) {
+    public Average(final Img<? extends RealType<?>> left, final Img<? extends RealType<?>> right) {
 		super(left, right);
 	}
 
-	public Average(final IFunction fn, final Image<? extends RealType<?>> right) {
+	public Average(final IFunction fn, final Img<? extends RealType<?>> right) {
 		super(fn, right);
 	}
 
-	public Average(final Image<? extends RealType<?>> left, final IFunction fn) {
+	public Average(final Img<? extends RealType<?>> left, final IFunction fn) {
 		super(left, fn);
 	}
 
@@ -38,11 +38,11 @@ public class Average extends BinaryOperation
 		super(fn1, fn2);
 	}
 	
-	public Average(final Image<? extends RealType<?>> left, final Number val) {
+	public Average(final Img<? extends RealType<?>> left, final Number val) {
 		super(left, val);
 	}
 
-	public Average(final Number val,final Image<? extends RealType<?>> right) {
+	public Average(final Number val,final Img<? extends RealType<?>> right) {
 		super(val, right);
 	}
 
@@ -120,7 +120,7 @@ public abstract class BinaryOperation extends FloatImageOperation
 
 	/** Compose: "fn(a1, fn(a2, fn(a3, fn(a4, a5))))".
 	 *  Will fail with either {@link IllegalArgumentException} or {@link ClassCastException}
-	 *  when the @param elem contains instances of classes other than {@link Image},
+	 *  when the {@param elem} contains instances of classes other than {@link IterableRealInterval},
 	 *  {@link Number}, or {@link IFunction}. */
 	public BinaryOperation(final Object... elem) throws Exception {
 		this.a = Util.wrap(elem[0]);
