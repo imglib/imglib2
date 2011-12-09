@@ -1,11 +1,20 @@
 package net.imglib2.script.math.fn;
 
 import net.imglib2.IterableRealInterval;
+import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.RealInterval;
+import net.imglib2.img.array.ArrayImg;
+import net.imglib2.img.list.ListImg;
 import net.imglib2.type.numeric.RealType;
+import net.imglib2.view.IterableRandomAccessibleInterval;
 
 public class Util
 {
+	/** Return an IFunction constructed from the {@param ob}.
+	 * 
+	 * @param ob May be any of {@link IterableRealInterval}, {@link IFunction} or {@link Number}.
+	 * @return
+	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	static public final IFunction wrap(final Object ob) {
 		if (ob instanceof IterableRealInterval<?>) return new ImageFunction((IterableRealInterval<? extends RealType<?>>)ob);
@@ -26,5 +35,20 @@ public class Util
 		for (int i=b.numDimensions() -1; i > -1; --i)
 			size *= (b.realMax(i) - b.realMin(i) + 1);
 		return size;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public static final <T extends RealType<T>> IterableRealInterval<T> flatIterable(final RealInterval ri) {
+		// If it's any of the known classes that iterates flat, accept as is:
+		if ( ArrayImg.class.isInstance( ri )
+		  || ListImg.class.isInstance( ri )
+		  || IterableRandomAccessibleInterval.class.isInstance(ri)) {
+			return (IterableRealInterval<T>) ri;
+		}
+		// If it's a random accessible, then wrap:
+		if ( ri instanceof RandomAccessibleInterval ) {
+			return new IterableRandomAccessibleInterval<T>((RandomAccessibleInterval<T>)ri);
+		}
+		throw new IllegalArgumentException("Don't know how to flat-iterate image " + ri);
 	}
 }
