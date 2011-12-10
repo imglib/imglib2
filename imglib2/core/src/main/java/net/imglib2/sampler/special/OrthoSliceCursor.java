@@ -217,7 +217,9 @@ public class OrthoSliceCursor< T extends Type< T > > implements Cursor< T >, Int
 	@Override
 	public boolean hasNext()
 	{
-		return sampler.getIntPosition( y ) < maxY || sampler.getIntPosition( x ) < maxX;
+		// if we do not query for the initial state, hasNext is false if the 
+		// size of the second dimension is only 1
+		return sampler.getIntPosition( y ) < maxY || sampler.getIntPosition( x ) < maxX || initialState;
 	}
 
 	@Override
