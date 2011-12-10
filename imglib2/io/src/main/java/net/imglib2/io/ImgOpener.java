@@ -83,6 +83,7 @@ import net.imglib2.type.numeric.integer.UnsignedIntType;
 import net.imglib2.type.numeric.integer.UnsignedShortType;
 import net.imglib2.type.numeric.real.DoubleType;
 import net.imglib2.type.numeric.real.FloatType;
+import net.imglib2.util.Util;
 import ome.xml.model.primitives.PositiveFloat;
 
 /**
@@ -151,7 +152,7 @@ public class ImgOpener implements StatusReporter {
 	 *           incompatible with the {@link ImgFactory}
 	 */
 	public <T extends RealType<T> & NativeType<T>> ImgPlus<T> openImg(
-		final String id, final ImgFactory<T> imgFactory) throws ImgIOException,
+		final String id, final ImgFactory<?> imgFactory) throws ImgIOException,
 		IncompatibleTypeException
 	{
 		return openImg(id, imgFactory, true);
@@ -175,7 +176,7 @@ public class ImgOpener implements StatusReporter {
 	 *           incompatible with the {@link ImgFactory}
 	 */
 	public <T extends RealType<T> & NativeType<T>> ImgPlus<T> openImg(
-		final String id, final ImgFactory<T> imgFactory,
+		final String id, final ImgFactory<?> imgFactory,
 		final boolean computeMinMax) throws ImgIOException,
 		IncompatibleTypeException
 	{
@@ -455,10 +456,10 @@ public class ImgOpener implements StatusReporter {
 			final char dim = dimOrder.charAt(i);
 			switch (dim) {
 				case 'X':
-					if (sizeX > 1) dimLengthsList.add(sizeX);
+					if (sizeX > 0) dimLengthsList.add(sizeX);
 					break;
 				case 'Y':
-					if (sizeY > 1) dimLengthsList.add(sizeY);
+					if (sizeY > 0) dimLengthsList.add(sizeY);
 					break;
 				case 'Z':
 					if (sizeZ > 1) dimLengthsList.add(sizeZ);

@@ -616,7 +616,7 @@ public abstract class Gauss< T extends NumericType< T > >
 				final long[] fakeSize = new long[ numDimensions - 1 ];
 				final long[] tmp = new long[ numDimensions ];
 				
-				// get all dimensions except the one we are currently doing the fft on
+				// get all dimensions except the one we are currently doing the gauss on
 				int countDim = 0;						
 				for ( int d = 0; d < numDimensions; ++d )
 					if ( d != dim )
@@ -637,7 +637,7 @@ public abstract class Gauss< T extends NumericType< T > >
 				{
 					cursorDim.fwd();							
 					
-					// update all positions except for the one we are currrently doing the fft on
+					// update all positions except for the one we are currrently doing the gauss on
 					cursorDim.localize( fakeSize );
 	
 					tmp[ dim ] = 0;								

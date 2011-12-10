@@ -181,6 +181,8 @@ final public class GaussFloat extends GaussNativeType< FloatType >
 		}
 		else
 		{
+			//System.out.println( "kernel: " + kernel.length + " img: " + imgSize );
+			
 			// convolve the first pixels where the input influences less than kernel.size pixels
 			for ( int i = 0; i < imgSize; ++i )
 			{
