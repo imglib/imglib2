@@ -151,7 +151,7 @@ public class ImgOpener implements StatusReporter {
 	 *           incompatible with the {@link ImgFactory}
 	 */
 	public <T extends RealType<T> & NativeType<T>> ImgPlus<T> openImg(
-		final String id, final ImgFactory<T> imgFactory) throws ImgIOException,
+		final String id, final ImgFactory<?> imgFactory) throws ImgIOException,
 		IncompatibleTypeException
 	{
 		return openImg(id, imgFactory, true);
@@ -175,7 +175,7 @@ public class ImgOpener implements StatusReporter {
 	 *           incompatible with the {@link ImgFactory}
 	 */
 	public <T extends RealType<T> & NativeType<T>> ImgPlus<T> openImg(
-		final String id, final ImgFactory<T> imgFactory,
+		final String id, final ImgFactory<?> imgFactory,
 		final boolean computeMinMax) throws ImgIOException,
 		IncompatibleTypeException
 	{
