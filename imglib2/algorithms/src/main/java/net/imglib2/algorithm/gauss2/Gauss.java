@@ -20,6 +20,8 @@
  */
 package net.imglib2.algorithm.gauss2;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
 import net.imglib2.Cursor;
 import net.imglib2.FinalInterval;
 import net.imglib2.Interval;
@@ -33,6 +35,7 @@ import net.imglib2.converter.Converter;
 import net.imglib2.img.Img;
 import net.imglib2.img.ImgFactory;
 import net.imglib2.iterator.LocalizingZeroMinIntervalIterator;
+import net.imglib2.multithreading.SimpleMultiThreading;
 import net.imglib2.type.Type;
 import net.imglib2.type.numeric.NumericType;
 import net.imglib2.util.Util;
@@ -56,10 +59,13 @@ public abstract class Gauss< T extends NumericType< T > >
 	final double[] sigma;
 	final double[][] kernel;
 	
+	int numThreads;
+	
 	public Gauss( final double[] sigma, final RandomAccessible<T> input, final Interval inputInterval, 
 				  final RandomAccessible<T> output, final Localizable outputOffset, 
 				  final ImgFactory<T> factory, final T type )
 	{
+		this.numThreads = Runtime.getRuntime().availableProcessors();
 		this.numDimensions = sigma.length;
 		this.input = input;
 		this.output = output;
@@ -612,62 +618,85 @@ public abstract class Gauss< T extends NumericType< T > >
 	 */
 	protected Interval getTemporaryImgSize() { return getRange( 0 ); } 
 	
+	public int getNumThreads() { return numThreads; }
+	public void setNumThreads( final int numThreads ) { this.numThreads = Math.max( 1, numThreads ); }
+	
 	public void call()
 	{
 		if ( numDimensions > 1 )
 		{
-			for ( int dim = 0; dim < numDimensions; ++dim )
+			for ( int d = 0; d < numDimensions; ++d )
 			{
-				final Interval range = getRange( dim );
+				final int dim = d;
+				final int numThreads = getNumThreads();
+				
+				final AtomicInteger ai = new AtomicInteger();
+				final Thread[] threads = SimpleMultiThreading.newThreads( numThreads );
+				
+				for (int ithread = 0; ithread < threads.length; ++ithread)
+					threads[ithread] = new Thread(new Runnable()
+					{
+						public void run()
+						{
+							final int myNumber = ai.getAndIncrement();
+
+							final Interval range = getRange( dim );
+											
+							/**
+							 * Here create a virtual LocalizingZeroMinIntervalIterator to iterate through all dimensions except the one we are computing in 
+							 */	
+							final long[] fakeSize = new long[ numDimensions - 1 ];
+							final long[] tmp = new long[ numDimensions ];
+							
+							// get all dimensions except the one we are currently doing the gauss on
+							int countDim = 0;						
+							for ( int d = 0; d < numDimensions; ++d )
+								if ( d != dim )
+									fakeSize[ countDim++ ] = range.dimension( d );
+				
+							// create the iterator in the input image for the current dimension
+							final SamplingLineIterator< T > inputLineIterator = createInputLineSampler( dim, range );
+							final Localizable offsetInput = inputLineIterator.getOffset();
+			
+							// get the iterator in the output image for the current dimension position
+							final WritableLineIterator< T > outputLineIterator = createOutputLineWriter( dim, range, inputLineIterator );
+							final Localizable offsetOutput = outputLineIterator.getOffset();
+			
+							final LocalizingZeroMinIntervalIterator cursorDim = new LocalizingZeroMinIntervalIterator( fakeSize );
+							
+							// iterate over all dimensions except the one we are computing in
+							while( cursorDim.hasNext() )
+							{
+								cursorDim.fwd();							
 								
-				/**
-				 * Here create a virtual LocalizingZeroMinIntervalIterator to iterate through all dimensions except the one we are computing in 
-				 */	
-				final long[] fakeSize = new long[ numDimensions - 1 ];
-				final long[] tmp = new long[ numDimensions ];
+								if ( numThreads == 1 || cursorDim.getIntPosition( 0 ) % numThreads == myNumber )
+								{
+									// update all positions except for the one we are currrently doing the gauss on
+									cursorDim.localize( fakeSize );
+					
+									tmp[ dim ] = 0;								
+									countDim = 0;						
+									for ( int d = 0; d < numDimensions; ++d )
+										if ( d != dim )
+											tmp[ d ] = fakeSize[ countDim++ ];
+									
+									// update the iterator in the input image for the current dimension position
+									updateInputLineSampler( inputLineIterator, range, tmp, offsetInput );
+									
+									// compute the current line
+									processLine( inputLineIterator, kernel[ dim ] );
+					
+									// update the iterator in the input image for the current dimension position
+									updateOutputLineWriter( outputLineIterator, range, tmp, offsetOutput );
+					
+									// and write it back to the output/temp image
+									writeLine( outputLineIterator, inputLineIterator );
+								}
+							}
+					}
+				});
 				
-				// get all dimensions except the one we are currently doing the gauss on
-				int countDim = 0;						
-				for ( int d = 0; d < numDimensions; ++d )
-					if ( d != dim )
-						fakeSize[ countDim++ ] = range.dimension( d );
-	
-				// create the iterator in the input image for the current dimension
-				final SamplingLineIterator< T > inputLineIterator = createInputLineSampler( dim, range );
-				final Localizable offsetInput = inputLineIterator.getOffset();
-
-				// get the iterator in the output image for the current dimension position
-				final WritableLineIterator< T > outputLineIterator = createOutputLineWriter( dim, range, inputLineIterator );
-				final Localizable offsetOutput = outputLineIterator.getOffset();
-
-				final LocalizingZeroMinIntervalIterator cursorDim = new LocalizingZeroMinIntervalIterator( fakeSize );
-				
-				// iterate over all dimensions except the one we are computing in
-				while( cursorDim.hasNext() )
-				{
-					cursorDim.fwd();							
-					
-					// update all positions except for the one we are currrently doing the gauss on
-					cursorDim.localize( fakeSize );
-	
-					tmp[ dim ] = 0;								
-					countDim = 0;						
-					for ( int d = 0; d < numDimensions; ++d )
-						if ( d != dim )
-							tmp[ d ] = fakeSize[ countDim++ ];
-					
-					// update the iterator in the input image for the current dimension position
-					updateInputLineSampler( inputLineIterator, range, tmp, offsetInput );
-					
-					// compute the current line
-					processLine( inputLineIterator, kernel[ dim ] );
-	
-					// update the iterator in the input image for the current dimension position
-					updateOutputLineWriter( outputLineIterator, range, tmp, offsetOutput );
-	
-					// and write it back to the output/temp image
-					writeLine( outputLineIterator, inputLineIterator );
-				}
+				SimpleMultiThreading.startAndJoin( threads );
 			}
 		}
 		else
