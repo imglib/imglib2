@@ -30,14 +30,14 @@ POSSIBILITY OF SUCH DAMAGE.
 package net.imglib2.ops.relation;
 
 import net.imglib2.ops.BinaryRelation;
-import net.imglib2.ops.Real;
+import net.imglib2.type.numeric.RealType;
 
 /**
  * 
  * @author Barry DeZonia
  *
  */
-public final class RealNear implements BinaryRelation<Real> {
+public final class RealNear<T extends RealType<T>> implements BinaryRelation<T> {
 
 	private final double tol;
 	
@@ -50,12 +50,12 @@ public final class RealNear implements BinaryRelation<Real> {
 	}
 	
 	@Override
-	public boolean holds(Real val1, Real val2) {
-		return Math.abs(val1.getReal() - val2.getReal()) <= tol;
+	public boolean holds(T val1, T val2) {
+		return Math.abs(val1.getRealDouble() - val2.getRealDouble()) <= tol;
 	}
 
 	@Override
-	public RealNear duplicate() {
-		return new RealNear(tol);
+	public RealNear<T> duplicate() {
+		return new RealNear<T>(tol);
 	}
 }
