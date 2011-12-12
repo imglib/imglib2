@@ -1,17 +1,42 @@
+/**
+ * Copyright (c) 2011, Stephan Preibisch & Stephan Saalfeld
+ * All rights reserved.
+ * 
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ * 
+ * Redistributions of source code must retain the above copyright notice, this
+ * list of conditions and the following disclaimer.  Redistributions in binary
+ * form must reproduce the above copyright notice, this list of conditions and
+ * the following disclaimer in the documentation and/or other materials
+ * provided with the distribution.  Neither the name of the imglib project nor
+ * the names of its contributors may be used to endorse or promote products
+ * derived from this software without specific prior written permission.
+ * 
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
+ */
 package game;
 
 import java.util.Random;
 
-import net.imglib2.container.DirectAccessContainer;
-import net.imglib2.container.DirectAccessContainerFactory;
-import net.imglib2.container.basictypecontainer.IntAccess;
-import net.imglib2.container.basictypecontainer.array.IntArray;
-import net.imglib2.cursor.Cursor;
-import net.imglib2.image.Image;
-import net.imglib2.image.display.Display;
+import net.imglib2.img.NativeImg;
+import net.imglib2.img.NativeImgFactory;
+import net.imglib2.img.basictypeaccess.IntAccess;
+import net.imglib2.img.basictypeaccess.array.IntArray;
+import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.NumericType;
 
-public class LifeForm implements NumericType<LifeForm>, Comparable<LifeForm>
+public class LifeForm implements NumericType<LifeForm>, Comparable<LifeForm>, NativeType<LifeForm>
 {
 	final static protected Random rnd = new Random();
 	
@@ -19,13 +44,13 @@ public class LifeForm implements NumericType<LifeForm>, Comparable<LifeForm>
 	
 	protected int nameI = 0, weightI = 1;
 
-	final DirectAccessContainer<LifeForm, ? extends IntAccess> storage;
+	final NativeImg<LifeForm, ? extends IntAccess> storage;
 	
 	// the (sub)DirectAccessContainer that holds the information 
 	IntAccess b;
 	
 	// this is the constructor if you want it to read from an array
-	public LifeForm( DirectAccessContainer<LifeForm, ? extends IntAccess> lifeFormStorage )
+	public LifeForm( NativeImg<LifeForm, ? extends IntAccess> lifeFormStorage )
 	{
 		storage = lifeFormStorage;
 	}
@@ -43,10 +68,10 @@ public class LifeForm implements NumericType<LifeForm>, Comparable<LifeForm>
 	public LifeForm() { this( 0, 0 ); }
 
 	@Override
-	public DirectAccessContainer<LifeForm, ? extends IntAccess> createSuitableDirectAccessContainer( final DirectAccessContainerFactory storageFactory, final int dim[] )
+	public NativeImg<LifeForm, ? extends IntAccess> createSuitableNativeImg( final NativeImgFactory<LifeForm> storageFactory, final long dim[] )
 	{
 		// create the container
-		final DirectAccessContainer<LifeForm, ? extends IntAccess> container = storageFactory.createIntInstance( dim, 2 );
+		final NativeImg<LifeForm, ? extends IntAccess> container = storageFactory.createIntInstance( dim, 2 );
 		
 		// create a Type that is linked to the container
 		final LifeForm linkedType = new LifeForm( container );
@@ -58,7 +83,7 @@ public class LifeForm implements NumericType<LifeForm>, Comparable<LifeForm>
 	}
 	
 	@Override
-	public void updateContainer( final Cursor<?> c ) 
+	public void updateContainer( final Object c ) 
 	{ 
 		b = storage.update( c );		
 	}
@@ -126,25 +151,13 @@ public class LifeForm implements NumericType<LifeForm>, Comparable<LifeForm>
 	public void setZero() { setWeight( 0 ); }
 
 	@Override
-	public LifeForm[] createArray1D(int size1) { return new LifeForm[ size1 ]; }
-
-	@Override
-	public LifeForm[][] createArray2D(int size1, int size2) { return new LifeForm[ size1 ][ size2 ]; }
-
-	@Override
-	public LifeForm[][][] createArray3D(int size1, int size2, int size3) { return new LifeForm[ size1 ][ size2 ][ size3 ]; }
-
-	@Override
 	public LifeForm createVariable() { return new LifeForm(); }
 
 	@Override
-	public LifeForm duplicateTypeOnSameDirectAccessContainer() { return new LifeForm( storage ); }
+	public LifeForm duplicateTypeOnSameNativeImg() { return new LifeForm( storage ); }
 
 	@Override
-	public Display<LifeForm> getDefaultDisplay( final Image<LifeForm> image ) { return new LifeFormDisplay( image ); }
-
-	@Override
-	public int getIndex() { return i;	}
+	public int getIndex() { return i; }
 
 	@Override
 	public void set( final LifeForm c ) { set( c.getName(), c.getWeight() ); }
