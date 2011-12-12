@@ -29,9 +29,8 @@ POSSIBILITY OF SUCH DAMAGE.
 
 package net.imglib2.ops.operation.unary.real;
 
-import net.imglib2.ops.Real;
-import net.imglib2.ops.RealOutput;
 import net.imglib2.ops.UnaryOperation;
+import net.imglib2.type.numeric.RealType;
 
 
 /**
@@ -39,7 +38,7 @@ import net.imglib2.ops.UnaryOperation;
  * @author Barry DeZonia
  *
  */
-public final class RealReciprocal extends RealOutput implements UnaryOperation<Real,Real> {
+public final class RealReciprocal<T extends RealType<T>> implements UnaryOperation<T,T> {
 
 	private final double dbzVal;
 	
@@ -48,8 +47,8 @@ public final class RealReciprocal extends RealOutput implements UnaryOperation<R
 	}
 	
 	@Override
-	public void compute(Real x, Real output) {
-		double inputVal = x.getReal();
+	public void compute(T x, T output) {
+		double inputVal = x.getRealDouble();
 		if (inputVal == 0)
 			output.setReal(dbzVal);
 		else
@@ -57,8 +56,8 @@ public final class RealReciprocal extends RealOutput implements UnaryOperation<R
 	}
 
 	@Override
-	public RealReciprocal duplicate() {
-		return new RealReciprocal(dbzVal);
+	public RealReciprocal<T> copy() {
+		return new RealReciprocal<T>(dbzVal);
 	}
 	
 	@Override

@@ -29,9 +29,8 @@ POSSIBILITY OF SUCH DAMAGE.
 
 package net.imglib2.ops.operation.unary.real;
 
-import net.imglib2.ops.Real;
-import net.imglib2.ops.RealOutput;
 import net.imglib2.ops.UnaryOperation;
+import net.imglib2.type.numeric.RealType;
 
 //Handbook of Mathematics and Computational Science, Harris & Stocker, Springer, 2006
 
@@ -40,17 +39,17 @@ import net.imglib2.ops.UnaryOperation;
  * @author Barry DeZonia
  *
  */
-public final class RealCot extends RealOutput implements UnaryOperation<Real,Real> {
+public final class RealCot<T extends RealType<T>> implements UnaryOperation<T,T> {
 
 	@Override
-	public void compute(Real x, Real output) {
-		double value = 1.0 / Math.tan(x.getReal());
+	public void compute(T x, T output) {
+		double value = 1.0 / Math.tan(x.getRealDouble());
 		output.setReal(value);
 	}
 
 	@Override
-	public RealCot duplicate() {
-		return new RealCot();
+	public RealCot<T> copy() {
+		return new RealCot<T>();
 	}
 	
 	@Override

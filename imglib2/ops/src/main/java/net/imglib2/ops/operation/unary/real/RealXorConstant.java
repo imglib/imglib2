@@ -53,7 +53,7 @@ public final class RealXorConstant<T extends RealType<T>> implements UnaryOperat
 	}
 
 	@Override
-	public RealXorConstant<T> duplicate() {
+	public RealXorConstant<T> copy() {
 		return new RealXorConstant<T>(constant);
 	}
 	

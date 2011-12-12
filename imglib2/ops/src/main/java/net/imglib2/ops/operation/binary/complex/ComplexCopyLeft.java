@@ -46,7 +46,7 @@ public final class ComplexCopyLeft extends ComplexOutput implements BinaryOperat
 	}
 
 	@Override
-	public ComplexCopyLeft duplicate() {
+	public ComplexCopyLeft copy() {
 		return new ComplexCopyLeft();
 	}
 }

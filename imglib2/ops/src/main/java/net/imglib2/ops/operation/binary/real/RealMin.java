@@ -51,7 +51,7 @@ public final class RealMin extends RealOutput implements BinaryOperation<Real,Re
 	}
 
 	@Override
-	public RealMin duplicate() {
+	public RealMin copy() {
 		return new RealMin();
 	}
 }

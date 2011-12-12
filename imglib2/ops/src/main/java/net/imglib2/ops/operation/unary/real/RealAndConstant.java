@@ -53,7 +53,7 @@ public final class RealAndConstant<T extends RealType<T>> implements UnaryOperat
 	}
 
 	@Override
-	public RealAndConstant<T> duplicate() {
+	public RealAndConstant<T> copy() {
 		return new RealAndConstant<T>(constant);
 	}
 

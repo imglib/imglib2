@@ -60,7 +60,7 @@ public final class ComplexCsc extends ComplexOutput implements UnaryOperation<Co
 	}
 	
 	@Override
-	public ComplexCsc duplicate() {
+	public ComplexCsc copy() {
 		return new ComplexCsc();
 	}
 }

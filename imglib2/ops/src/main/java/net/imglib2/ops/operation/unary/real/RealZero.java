@@ -46,7 +46,7 @@ public final class RealZero<T extends RealType<T>> implements UnaryOperation<T,T
 	}
 
 	@Override
-	public RealZero<T> duplicate() {
+	public RealZero<T> copy() {
 		return new RealZero<T>();
 	}
 	

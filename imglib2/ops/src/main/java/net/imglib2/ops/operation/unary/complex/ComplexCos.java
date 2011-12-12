@@ -72,7 +72,7 @@ public final class ComplexCos extends ComplexOutput implements UnaryOperation<Co
 	}
 	
 	@Override
-	public ComplexCos duplicate() {
+	public ComplexCos copy() {
 		return new ComplexCos();
 	}
 }

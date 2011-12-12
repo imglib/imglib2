@@ -58,7 +58,7 @@ public final class ComplexCot extends ComplexOutput implements UnaryOperation<Co
 	}
 	
 	@Override
-	public ComplexCot duplicate() {
+	public ComplexCot copy() {
 		return new ComplexCot();
 	}
 }

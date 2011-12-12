@@ -53,7 +53,7 @@ public final class RealMultiplyConstant<T extends RealType<T>> implements UnaryO
 	}
 
 	@Override
-	public RealMultiplyConstant<T> duplicate() {
+	public RealMultiplyConstant<T> copy() {
 		return new RealMultiplyConstant<T>(constant);
 	}
 

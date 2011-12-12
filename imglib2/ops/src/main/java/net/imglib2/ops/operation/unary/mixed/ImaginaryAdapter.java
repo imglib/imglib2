@@ -52,7 +52,7 @@ public final class ImaginaryAdapter extends RealOutput implements UnaryOperation
 	}
 
 	@Override
-	public ImaginaryAdapter duplicate() {
+	public ImaginaryAdapter copy() {
 		return new ImaginaryAdapter();
 	}
 }

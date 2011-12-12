@@ -56,7 +56,7 @@ public final class RealMaxConstant<T extends RealType<T>> implements UnaryOperat
 	}
 
 	@Override
-	public RealMaxConstant<T> duplicate() {
+	public RealMaxConstant<T> copy() {
 		return new RealMaxConstant<T>(constant);
 	}
 

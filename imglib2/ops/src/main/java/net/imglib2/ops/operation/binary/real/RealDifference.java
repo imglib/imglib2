@@ -47,7 +47,7 @@ public final class RealDifference extends RealOutput implements BinaryOperation<
 	}
 
 	@Override
-	public RealDifference duplicate() {
+	public RealDifference copy() {
 		return new RealDifference();
 	}
 }

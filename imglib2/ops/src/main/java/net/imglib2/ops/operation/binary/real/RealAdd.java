@@ -46,7 +46,7 @@ public final class RealAdd<T extends RealType<T>> implements BinaryOperation<T,T
 	}
 
 	@Override
-	public RealAdd<T> duplicate() {
+	public RealAdd<T> copy() {
 		return new RealAdd<T>();
 	}
 

@@ -29,7 +29,7 @@ public class CopyImgOperation<T extends Type<T>> implements UnaryOperation<Img<T
 	}
 
 	@Override
-	public UnaryOperation<Img<T>, Img<T>> duplicate() {
+	public UnaryOperation<Img<T>, Img<T>> copy() {
 		// TODO Auto-generated method stub
 		return null;
 	}

@@ -69,6 +69,6 @@ public class GeneralUnaryFunction<INDEX, INPUT_TYPE, OUTPUT_TYPE>
 	@Override
 	public GeneralUnaryFunction<INDEX, INPUT_TYPE, OUTPUT_TYPE> duplicate() {
 		return new GeneralUnaryFunction<INDEX, INPUT_TYPE, OUTPUT_TYPE>(
-				f1.duplicate(), operation.duplicate());
+				f1.duplicate(), operation.copy());
 	}
 }

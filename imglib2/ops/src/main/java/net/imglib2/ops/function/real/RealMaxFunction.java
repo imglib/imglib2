@@ -71,6 +71,6 @@ public class RealMaxFunction extends RealOutput implements Function<long[],Real>
 
 	@Override
 	public RealMaxFunction duplicate() {
-		return new RealMaxFunction(otherFunc.duplicate());
+		return new RealMaxFunction(otherFunc.copy());
 	}
 }

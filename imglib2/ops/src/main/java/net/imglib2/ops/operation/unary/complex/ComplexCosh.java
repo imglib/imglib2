@@ -69,7 +69,7 @@ public final class ComplexCosh extends ComplexOutput implements UnaryOperation<C
 	}
 	
 	@Override
-	public ComplexCosh duplicate() {
+	public ComplexCosh copy() {
 		return new ComplexCosh();
 	}
 }

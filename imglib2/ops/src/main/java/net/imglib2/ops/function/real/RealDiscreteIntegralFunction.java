@@ -62,6 +62,6 @@ public class RealDiscreteIntegralFunction extends RealOutput implements Function
 
 	@Override
 	public RealDiscreteIntegralFunction duplicate() {
-		return new RealDiscreteIntegralFunction(otherFunc.duplicate());
+		return new RealDiscreteIntegralFunction(otherFunc.copy());
 	}
 }

@@ -52,7 +52,7 @@ public final class ComplexConstant extends ComplexOutput implements UnaryOperati
 	}
 	
 	@Override
-	public ComplexConstant duplicate() {
+	public ComplexConstant copy() {
 		return new ComplexConstant(constant);
 	}
 }

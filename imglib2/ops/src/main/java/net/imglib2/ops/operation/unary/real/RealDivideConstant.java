@@ -60,7 +60,7 @@ public final class RealDivideConstant<T extends RealType<T>> implements UnaryOpe
 	}
 
 	@Override
-	public RealDivideConstant<T> duplicate() {
+	public RealDivideConstant<T> copy() {
 		return new RealDivideConstant<T>(constant,dbzVal);
 	}
 

@@ -46,7 +46,7 @@ public final class RealCopyRight extends RealOutput implements BinaryOperation<R
 	}
 
 	@Override
-	public RealCopyRight duplicate() {
+	public RealCopyRight copy() {
 		return new RealCopyRight();
 	}
 }

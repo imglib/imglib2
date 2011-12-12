@@ -48,7 +48,7 @@ public final class ComplexDifference extends ComplexOutput implements BinaryOper
 	}
 
 	@Override
-	public ComplexDifference duplicate() {
+	public ComplexDifference copy() {
 		return new ComplexDifference();
 	}
 }

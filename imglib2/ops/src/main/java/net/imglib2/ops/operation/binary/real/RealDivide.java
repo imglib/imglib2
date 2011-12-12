@@ -47,7 +47,7 @@ public final class RealDivide extends RealOutput implements BinaryOperation<Real
 	}
 
 	@Override
-	public RealDivide duplicate() {
+	public RealDivide copy() {
 		return new RealDivide();
 	}
 }

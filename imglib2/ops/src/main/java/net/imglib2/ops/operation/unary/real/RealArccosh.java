@@ -52,7 +52,7 @@ public final class RealArccosh<T extends RealType<T>> implements UnaryOperation<
 	}
 
 	@Override
-	public RealArccosh<T> duplicate() {
+	public RealArccosh<T> copy() {
 		return new RealArccosh<T>();
 	}
 	

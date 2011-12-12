@@ -46,7 +46,7 @@ public final class ComplexCopyRight extends ComplexOutput implements BinaryOpera
 	}
 
 	@Override
-	public ComplexCopyRight duplicate() {
+	public ComplexCopyRight copy() {
 		return new ComplexCopyRight();
 	}
 }

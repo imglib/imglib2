@@ -59,7 +59,7 @@ public final class ComplexPower extends ComplexOutput implements BinaryOperation
 	}
 
 	@Override
-	public ComplexPower duplicate() {
+	public ComplexPower copy() {
 		return new ComplexPower();
 	}
 }

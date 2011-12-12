@@ -58,7 +58,7 @@ public final class ComplexIntegerPower extends ComplexOutput
 	}
 	
 	@Override
-	public ComplexIntegerPower duplicate() {
+	public ComplexIntegerPower copy() {
 		return new ComplexIntegerPower(power);
 	}
 }

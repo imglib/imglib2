@@ -52,7 +52,7 @@ public final class ComplexLog extends ComplexOutput implements UnaryOperation<Co
 	}
 	
 	@Override
-	public ComplexLog duplicate() {
+	public ComplexLog copy() {
 		return new ComplexLog();
 	}
 }

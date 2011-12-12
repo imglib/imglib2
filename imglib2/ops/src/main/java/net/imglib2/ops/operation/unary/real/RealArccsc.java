@@ -43,11 +43,16 @@ import net.imglib2.type.numeric.RealType;
 public final class RealArccsc<T extends RealType<T>> implements UnaryOperation<T,T> {
 
 	private final RealArccos<T> acos = new RealArccos<T>();
-	private final T angle = acos.createOutput(dataHint);
-	private final T tmp = acos.createOutput(dataHint);
+	private T angle;
+	private T tmp;
 	
 	@Override
 	public void compute(T x, T output) {
+		// lazy initialization
+		if (angle == null) {
+			angle = acos.createOutput(x);
+			tmp = acos.createOutput(x);
+		}
 		double xt = x.getRealDouble();
 		if ((xt > -1) && (xt < 1))
 			throw new IllegalArgumentException("arccsc(x) : x out of range");
@@ -63,7 +68,7 @@ public final class RealArccsc<T extends RealType<T>> implements UnaryOperation<T
 	}
 
 	@Override
-	public RealArccsc<T> duplicate() {
+	public RealArccsc<T> copy() {
 		return new RealArccsc<T>();
 	}
 	

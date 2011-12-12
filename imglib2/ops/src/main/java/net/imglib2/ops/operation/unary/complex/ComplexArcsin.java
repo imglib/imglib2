@@ -76,7 +76,7 @@ public final class ComplexArcsin extends ComplexOutput implements UnaryOperation
 	}
 	
 	@Override
-	public ComplexArcsin duplicate() {
+	public ComplexArcsin copy() {
 		return new ComplexArcsin();
 	}
 }

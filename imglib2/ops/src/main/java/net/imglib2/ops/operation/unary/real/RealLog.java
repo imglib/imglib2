@@ -47,7 +47,7 @@ public final class RealLog<T extends RealType<T>> implements UnaryOperation<T,T>
 	}
 
 	@Override
-	public RealLog<T> duplicate() {
+	public RealLog<T> copy() {
 		return new RealLog<T>();
 	}
 

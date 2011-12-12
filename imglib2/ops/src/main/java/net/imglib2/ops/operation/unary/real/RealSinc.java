@@ -29,9 +29,8 @@ POSSIBILITY OF SUCH DAMAGE.
 
 package net.imglib2.ops.operation.unary.real;
 
-import net.imglib2.ops.Real;
-import net.imglib2.ops.RealOutput;
 import net.imglib2.ops.UnaryOperation;
+import net.imglib2.type.numeric.RealType;
 
 //formula from mathworld.com documentation
 
@@ -40,11 +39,11 @@ import net.imglib2.ops.UnaryOperation;
  * @author Barry DeZonia
  *
  */
-public class RealSinc extends RealOutput implements UnaryOperation<Real,Real> {
+public class RealSinc<T extends RealType<T>> implements UnaryOperation<T,T> {
 
 	@Override
-	public void compute(Real input, Real output) {
-		double x = input.getReal();
+	public void compute(T input, T output) {
+		double x = input.getRealDouble();
 		double value;
 		if (x == 0)
 			value = 1;
@@ -54,8 +53,8 @@ public class RealSinc extends RealOutput implements UnaryOperation<Real,Real> {
 	}
 
 	@Override
-	public RealSinc duplicate() {
-		return new RealSinc();
+	public RealSinc<T> copy() {
+		return new RealSinc<T>();
 	}
 
 	

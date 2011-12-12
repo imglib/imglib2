@@ -71,6 +71,6 @@ public class RealMinFunction extends RealOutput implements Function<long[],Real>
 
 	@Override
 	public RealMinFunction duplicate() {
-		return new RealMinFunction(otherFunc.duplicate());
+		return new RealMinFunction(otherFunc.copy());
 	}
 }

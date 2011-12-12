@@ -47,7 +47,7 @@ public final class RealNegate<T extends RealType<T>> implements UnaryOperation<T
 	}
 
 	@Override
-	public RealNegate<T> duplicate() {
+	public RealNegate<T> copy() {
 		return new RealNegate<T>();
 	}
 	

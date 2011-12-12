@@ -29,9 +29,8 @@ POSSIBILITY OF SUCH DAMAGE.
 
 package net.imglib2.ops.operation.unary.real;
 
-import net.imglib2.ops.Real;
-import net.imglib2.ops.RealOutput;
 import net.imglib2.ops.UnaryOperation;
+import net.imglib2.type.numeric.RealType;
 
 //verified formula with Mathworld's definition for Inverse Secant
 
@@ -40,15 +39,19 @@ import net.imglib2.ops.UnaryOperation;
  * @author Barry DeZonia
  *
  */
-public final class RealArcsec extends RealOutput implements UnaryOperation<Real,Real> {
+public final class RealArcsec<T extends RealType<T>> implements UnaryOperation<T,T> {
 
-	private static final RealArcsin asin = new RealArcsin();
-	private final Real angle = new Real();
-	private final Real tmp = new Real();
+	private final RealArcsin<T> asin = new RealArcsin<T>();
+	private T angle = null;
+	private T tmp = null;
 	
 	@Override
-	public void compute(Real x, Real output) {
-		double xt = x.getReal();
+	public void compute(T x, T output) {
+		if (angle == null) {
+			angle = createOutput(x);
+			tmp = createOutput(x);
+		}
+		double xt = x.getRealDouble();
 		if ((xt > -1) && (xt < 1))
 			throw new IllegalArgumentException("arcsec(x) : x out of range");
 		else if (xt == -1)
@@ -58,7 +61,7 @@ public final class RealArcsec extends RealOutput implements UnaryOperation<Real,
 		else { // |x| > 1
 			tmp.setReal(Math.sqrt(xt*xt - 1)/xt);
 			asin.compute(tmp, angle);
-			double value = angle.getReal();
+			double value = angle.getRealDouble();
 			if (xt < -1)
 				value += Math.PI;
 			output.setReal(value);
@@ -66,8 +69,8 @@ public final class RealArcsec extends RealOutput implements UnaryOperation<Real,
 	}
 
 	@Override
-	public RealArcsec duplicate() {
-		return new RealArcsec();
+	public RealArcsec<T> copy() {
+		return new RealArcsec<T>();
 	}
 	
 	@Override

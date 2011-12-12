@@ -29,9 +29,8 @@ POSSIBILITY OF SUCH DAMAGE.
 
 package net.imglib2.ops.operation.unary.real;
 
-import net.imglib2.ops.Real;
-import net.imglib2.ops.RealOutput;
 import net.imglib2.ops.UnaryOperation;
+import net.imglib2.type.numeric.RealType;
 
 // DONE - no complex formula to verify
 
@@ -40,17 +39,17 @@ import net.imglib2.ops.UnaryOperation;
  * @author Barry DeZonia
  *
  */
-public final class RealArcsin extends RealOutput implements UnaryOperation<Real,Real> {
+public final class RealArcsin<T extends RealType<T>> implements UnaryOperation<T,T> {
 
 	@Override
-	public void compute(Real x, Real output) {
-		double value = Math.asin(x.getReal());
+	public void compute(T x, T output) {
+		double value = Math.asin(x.getRealDouble());
 		output.setReal(value);
 	}
 
 	@Override
-	public RealArcsin duplicate() {
-		return new RealArcsin();
+	public RealArcsin<T> copy() {
+		return new RealArcsin<T>();
 	}
 	
 	@Override

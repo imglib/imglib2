@@ -29,30 +29,29 @@ POSSIBILITY OF SUCH DAMAGE.
 
 package net.imglib2.ops.operation.unary.real;
 
-import net.imglib2.ops.Real;
-import net.imglib2.ops.RealOutput;
 import net.imglib2.ops.UnaryOperation;
+import net.imglib2.type.numeric.RealType;
 
 /**
  * 
  * @author Barry DeZonia
  *
  */
-public final class RealSign extends RealOutput implements UnaryOperation<Real,Real> {
+public final class RealSign<T extends RealType<T>> implements UnaryOperation<T,T> {
 
 	@Override
-	public void compute(Real x, Real output) {
-		if (x.getReal() < 0)
+	public void compute(T x, T output) {
+		if (x.getRealDouble() < 0)
 			output.setReal(-1);
-		else if (x.getReal() > 0)
+		else if (x.getRealDouble() > 0)
 			output.setReal(1);
 		else
 			output.setReal(0);
 	}
 
 	@Override
-	public RealSign duplicate() {
-		return new RealSign();
+	public RealSign<T> copy() {
+		return new RealSign<T>();
 	}
 	
 	@Override

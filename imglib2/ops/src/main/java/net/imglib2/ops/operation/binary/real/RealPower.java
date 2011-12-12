@@ -47,7 +47,7 @@ public final class RealPower extends RealOutput implements BinaryOperation<Real,
 	}
 
 	@Override
-	public RealPower duplicate() {
+	public RealPower copy() {
 		return new RealPower();
 	}
 }

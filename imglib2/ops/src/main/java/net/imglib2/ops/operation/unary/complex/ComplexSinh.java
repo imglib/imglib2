@@ -69,7 +69,7 @@ public final class ComplexSinh extends ComplexOutput implements UnaryOperation<C
 	}
 	
 	@Override
-	public ComplexSinh duplicate() {
+	public ComplexSinh copy() {
 		return new ComplexSinh();
 	}
 }

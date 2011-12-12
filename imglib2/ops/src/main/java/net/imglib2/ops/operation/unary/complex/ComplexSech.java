@@ -60,7 +60,7 @@ public final class ComplexSech extends ComplexOutput implements UnaryOperation<C
 	}
 	
 	@Override
-	public ComplexSech duplicate() {
+	public ComplexSech copy() {
 		return new ComplexSech();
 	}
 }

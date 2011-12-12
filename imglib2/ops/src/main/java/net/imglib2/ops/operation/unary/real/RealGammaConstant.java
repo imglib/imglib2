@@ -29,9 +29,8 @@ POSSIBILITY OF SUCH DAMAGE.
 
 package net.imglib2.ops.operation.unary.real;
 
-import net.imglib2.ops.Real;
-import net.imglib2.ops.RealOutput;
 import net.imglib2.ops.UnaryOperation;
+import net.imglib2.type.numeric.RealType;
 
 
 /**
@@ -39,7 +38,7 @@ import net.imglib2.ops.UnaryOperation;
  * @author Barry DeZonia
  *
  */
-public final class RealGammaConstant extends RealOutput implements UnaryOperation<Real,Real> {
+public final class RealGammaConstant<T extends RealType<T>> implements UnaryOperation<T,T> {
 
 	private final double constant;
 	
@@ -48,8 +47,8 @@ public final class RealGammaConstant extends RealOutput implements UnaryOperatio
 	}
 	
 	@Override
-	public void compute(Real x, Real output) {
-		double inputVal = x.getReal();
+	public void compute(T x, T output) {
+		double inputVal = x.getRealDouble();
 		if (inputVal <= 0)
 			output.setReal(0);
 		else {
@@ -59,8 +58,8 @@ public final class RealGammaConstant extends RealOutput implements UnaryOperatio
 	}
 
 	@Override
-	public RealGammaConstant duplicate() {
-		return new RealGammaConstant(constant);
+	public RealGammaConstant<T> copy() {
+		return new RealGammaConstant<T>(constant);
 	}
 	
 	@Override
