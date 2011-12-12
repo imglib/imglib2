@@ -46,7 +46,7 @@ public final class RealEquals<T extends RealType<T>> implements BinaryRelation<T
 	}
 
 	@Override
-	public RealEquals<T> duplicate() {
+	public RealEquals<T> copy() {
 		return new RealEquals<T>();
 	}
 }

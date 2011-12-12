@@ -46,7 +46,7 @@ public final class RealLessThan<T extends RealType<T>> implements BinaryRelation
 	}
 
 	@Override
-	public RealLessThan<T> duplicate() {
+	public RealLessThan<T> copy() {
 		return new RealLessThan<T>();
 	}
 }

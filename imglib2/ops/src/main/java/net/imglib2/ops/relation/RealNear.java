@@ -55,7 +55,7 @@ public final class RealNear<T extends RealType<T>> implements BinaryRelation<T> 
 	}
 
 	@Override
-	public RealNear<T> duplicate() {
+	public RealNear<T> copy() {
 		return new RealNear<T>(tol);
 	}
 }

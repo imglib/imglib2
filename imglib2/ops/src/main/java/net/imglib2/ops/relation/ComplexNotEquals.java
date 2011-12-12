@@ -46,7 +46,7 @@ public final class ComplexNotEquals implements BinaryRelation<Complex> {
 	}
 
 	@Override
-	public ComplexNotEquals duplicate() {
+	public ComplexNotEquals copy() {
 		return new ComplexNotEquals();
 	}
 }

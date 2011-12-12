@@ -46,7 +46,7 @@ public final class BoolNotEquals implements BinaryRelation<BitType> {
 	}
 
 	@Override
-	public BoolNotEquals duplicate() {
+	public BoolNotEquals copy() {
 		return new BoolNotEquals();
 	}
 }

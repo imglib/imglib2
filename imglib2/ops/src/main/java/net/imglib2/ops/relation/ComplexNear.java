@@ -61,7 +61,7 @@ public final class ComplexNear implements BinaryRelation<Complex> {
 	}
 
 	@Override
-	public ComplexNear duplicate() {
+	public ComplexNear copy() {
 		return new ComplexNear(rTol, iTol);
 	}
 }

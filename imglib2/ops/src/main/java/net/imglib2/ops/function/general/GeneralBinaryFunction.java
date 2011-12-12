@@ -76,6 +76,6 @@ public class GeneralBinaryFunction<INDEX, INPUT1_TYPE, INPUT2_TYPE, OUTPUT_TYPE>
 	@Override
 	public GeneralBinaryFunction<INDEX, INPUT1_TYPE, INPUT2_TYPE, OUTPUT_TYPE> duplicate() {
 		return new GeneralBinaryFunction<INDEX, INPUT1_TYPE, INPUT2_TYPE, OUTPUT_TYPE>(
-				f1.duplicate(), f2.duplicate(), operation.duplicate());
+				f1.duplicate(), f2.duplicate(), operation.copy());
 	}
 }

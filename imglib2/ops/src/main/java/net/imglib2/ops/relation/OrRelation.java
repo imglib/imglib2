@@ -52,7 +52,7 @@ public final class OrRelation<T> implements BinaryRelation<T> {
 	}
 
 	@Override
-	public OrRelation<T> duplicate() {
-		return new OrRelation<T>(rel1.duplicate(), rel2.duplicate());
+	public OrRelation<T> copy() {
+		return new OrRelation<T>(rel1.copy(), rel2.copy());
 	}
 }

@@ -46,7 +46,7 @@ public final class RealGreaterThan<T extends RealType<T>> implements BinaryRelat
 	}
 
 	@Override
-	public RealGreaterThan<T> duplicate() {
+	public RealGreaterThan<T> copy() {
 		return new RealGreaterThan<T>();
 	}
 }

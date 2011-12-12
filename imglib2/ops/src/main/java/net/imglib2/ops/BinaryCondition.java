@@ -60,6 +60,6 @@ public class BinaryCondition<INDEX, T> implements Condition<INDEX> {
 	
 	@Override
 	public BinaryCondition<INDEX, T> duplicate() {
-		return new BinaryCondition<INDEX, T>(f1.duplicate(), f2.duplicate(), relation.duplicate());
+		return new BinaryCondition<INDEX, T>(f1.duplicate(), f2.duplicate(), relation.copy());
 	}
 }

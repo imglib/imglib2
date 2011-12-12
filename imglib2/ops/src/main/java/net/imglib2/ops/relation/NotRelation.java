@@ -50,7 +50,7 @@ public final class NotRelation<T> implements UnaryRelation<T> {
 	}
 
 	@Override
-	public NotRelation<T> duplicate() {
-		return new NotRelation<T>(relation.duplicate());
+	public NotRelation<T> copy() {
+		return new NotRelation<T>(relation.copy());
 	}
 }

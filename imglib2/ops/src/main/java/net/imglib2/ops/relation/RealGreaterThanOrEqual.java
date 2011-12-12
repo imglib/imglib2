@@ -46,7 +46,7 @@ public final class RealGreaterThanOrEqual<T extends RealType<T>> implements Bina
 	}
 
 	@Override
-	public RealGreaterThanOrEqual<T> duplicate() {
+	public RealGreaterThanOrEqual<T> copy() {
 		return new RealGreaterThanOrEqual<T>();
 	}
 }

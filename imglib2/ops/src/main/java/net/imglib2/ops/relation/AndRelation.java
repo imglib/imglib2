@@ -52,7 +52,7 @@ public final class AndRelation<T> implements BinaryRelation<T> {
 	}
 
 	@Override
-	public AndRelation<T> duplicate() {
-		return new AndRelation<T>(rel1.duplicate(), rel2.duplicate());
+	public AndRelation<T> copy() {
+		return new AndRelation<T>(rel1.copy(), rel2.copy());
 	}
 }

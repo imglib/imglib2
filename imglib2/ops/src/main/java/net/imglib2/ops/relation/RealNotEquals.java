@@ -45,7 +45,7 @@ public final class RealNotEquals<T extends RealType<T>> implements BinaryRelatio
 	}
 
 	@Override
-	public RealNotEquals<T> duplicate() {
+	public RealNotEquals<T> copy() {
 		return new RealNotEquals<T>();
 	}
 }

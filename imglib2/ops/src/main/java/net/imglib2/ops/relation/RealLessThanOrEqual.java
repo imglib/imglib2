@@ -46,7 +46,7 @@ public final class RealLessThanOrEqual<T extends RealType<T>> implements BinaryR
 	}
 
 	@Override
-	public RealLessThanOrEqual<T> duplicate() {
+	public RealLessThanOrEqual<T> copy() {
 		return new RealLessThanOrEqual<T>();
 	}
 }
