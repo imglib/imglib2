@@ -113,7 +113,7 @@ public class CellImgFactory< T extends NativeType<T> > extends NativeImgFactory<
 	{
 		dimensions = checkDimensions( dimensions );
 		int[] cellSize = checkCellSize( defaultCellDimensions, dimensions );
-		return new CellImg< T, BitArray >( this, new BitArray( 1 ), dimensions, cellSize, entitiesPerPixel );
+		return new CellImg< T, BitArray >( this, new ListImgCells< BitArray >( new BitArray( 1 ), entitiesPerPixel, dimensions, cellSize ) );
 	}
 
 	@Override
@@ -121,7 +121,7 @@ public class CellImgFactory< T extends NativeType<T> > extends NativeImgFactory<
 	{
 		dimensions = checkDimensions( dimensions );
 		int[] cellSize = checkCellSize( defaultCellDimensions, dimensions );
-		return new CellImg< T, ByteArray >( this, new ByteArray( 1 ), dimensions, cellSize, entitiesPerPixel );
+		return new CellImg< T, ByteArray >( this, new ListImgCells< ByteArray >( new ByteArray( 1 ), entitiesPerPixel, dimensions, cellSize ) );
 	}
 
 	@Override
@@ -129,7 +129,7 @@ public class CellImgFactory< T extends NativeType<T> > extends NativeImgFactory<
 	{
 		dimensions = checkDimensions( dimensions );
 		int[] cellSize = checkCellSize( defaultCellDimensions, dimensions );
-		return new CellImg< T, CharArray >( this, new CharArray( 1 ), dimensions, cellSize, entitiesPerPixel );
+		return new CellImg< T, CharArray >( this, new ListImgCells< CharArray >( new CharArray( 1 ), entitiesPerPixel, dimensions, cellSize ) );
 	}
 
 	@Override
@@ -137,7 +137,7 @@ public class CellImgFactory< T extends NativeType<T> > extends NativeImgFactory<
 	{
 		dimensions = checkDimensions( dimensions );
 		int[] cellSize = checkCellSize( defaultCellDimensions, dimensions );
-		return new CellImg< T, ShortArray >( this, new ShortArray( 1 ), dimensions, cellSize, entitiesPerPixel );
+		return new CellImg< T, ShortArray >( this, new ListImgCells< ShortArray >( new ShortArray( 1 ), entitiesPerPixel, dimensions, cellSize ) );
 	}
 
 	@Override
@@ -145,7 +145,7 @@ public class CellImgFactory< T extends NativeType<T> > extends NativeImgFactory<
 	{
 		dimensions = checkDimensions( dimensions );
 		int[] cellSize = checkCellSize( defaultCellDimensions, dimensions );
-		return new CellImg< T, IntArray >( this, new IntArray( 1 ), dimensions, cellSize, entitiesPerPixel );
+		return new CellImg< T, IntArray >( this, new ListImgCells< IntArray >( new IntArray( 1 ), entitiesPerPixel, dimensions, cellSize ) );
 	}
 
 	@Override
@@ -153,7 +153,7 @@ public class CellImgFactory< T extends NativeType<T> > extends NativeImgFactory<
 	{
 		dimensions = checkDimensions( dimensions );
 		int[] cellSize = checkCellSize( defaultCellDimensions, dimensions );
-		return new CellImg< T, LongArray >( this, new LongArray( 1 ), dimensions, cellSize, entitiesPerPixel );
+		return new CellImg< T, LongArray >( this, new ListImgCells< LongArray >( new LongArray( 1 ), entitiesPerPixel, dimensions, cellSize ) );
 	}
 
 	@Override
@@ -161,7 +161,7 @@ public class CellImgFactory< T extends NativeType<T> > extends NativeImgFactory<
 	{
 		dimensions = checkDimensions( dimensions );
 		int[] cellSize = checkCellSize( defaultCellDimensions, dimensions );
-		return new CellImg< T, FloatArray >( this, new FloatArray( 1 ), dimensions, cellSize, entitiesPerPixel );
+		return new CellImg< T, FloatArray >( this, new ListImgCells< FloatArray >( new FloatArray( 1 ), entitiesPerPixel, dimensions, cellSize ) );
 	}
 
 	@Override
@@ -169,7 +169,7 @@ public class CellImgFactory< T extends NativeType<T> > extends NativeImgFactory<
 	{
 		dimensions = checkDimensions( dimensions );
 		int[] cellSize = checkCellSize( defaultCellDimensions, dimensions );
-		return new CellImg< T, DoubleArray >( this, new DoubleArray( 1 ), dimensions, cellSize, entitiesPerPixel );
+		return new CellImg< T, DoubleArray >( this, new ListImgCells< DoubleArray >( new DoubleArray( 1 ), entitiesPerPixel, dimensions, cellSize ) );
 	}
 
 	@SuppressWarnings( { "unchecked", "rawtypes" } )

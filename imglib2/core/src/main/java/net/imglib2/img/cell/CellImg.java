@@ -18,50 +18,30 @@ final public class CellImg< T extends NativeType< T >, A extends ArrayDataAccess
 {
 	final protected CellImgFactory< T > factory;
 	
-	final protected Img< Cell< A > > cells;
+	final protected Cells< A > cells;
 	
 	/**
 	 *  Dimensions of a standard cell.
 	 *  Cells on the max border of the image may be cut off and have different dimensions.
 	 */
 	final int[] cellDims;
-
-	public CellImg( final CellImgFactory< T > factory, final A creator, final long[] dimensions, final int[] cellDimensions, int entitiesPerPixel )
+	
+	private static long[] getDimensionsFromCells( final Cells< ? > cells )
 	{
-		super( dimensions, entitiesPerPixel );
-		
-		this.factory = factory;
-
-		cellDims = cellDimensions.clone(); 
-
-		final long[] numCells = new long[ n ];
-		final int[] borderSize = new int[ n ];
-		final long[] currentCellOffset = new long[ n ];
-		final int[] currentCellDims = new int[ n ];
-
-		for ( int d = 0; d < n; ++d ) {
-			numCells[ d ] = ( dimensions[ d ] - 1 ) / cellDims[ d ] + 1;
-			borderSize[ d ] = ( int )( dimensions[ d ] - (numCells[ d ] - 1) * cellDims[ d ] );
-		}
-
-		cells = new ListImgFactory< Cell< A > >().create( numCells, new Cell< A >( n ) );
-
-		Cursor< Cell < A > > cellCursor = cells.localizingCursor();		
-		while ( cellCursor.hasNext() ) {
-			Cell< A > c = cellCursor.next();
-			
-			cellCursor.localize( currentCellOffset );
-			for ( int d = 0; d < n; ++d )
-			{
-				currentCellDims[ d ] = ( int )( (currentCellOffset[d] + 1 == numCells[d])  ?  borderSize[ d ]  :  cellDims[ d ] );
-				currentCellOffset[ d ] *= cellDims[ d ];
-			}
-			
-			c.set( new Cell< A >( creator, currentCellDims, currentCellOffset, entitiesPerPixel ) );
-		}
+		final long[] dim = new long[ cells.numDimensions() ];
+		cells.dimensions( dim );
+		return dim;
 	}
 
-
+	public CellImg( final CellImgFactory< T > factory, final Cells< A > cells )
+	{
+		super( getDimensionsFromCells( cells ), cells.getEntitiesPerPixel() );
+		
+		this.factory = factory;
+		this.cells = cells;
+		cellDims = new int[ cells.numDimensions() ];
+		cells.cellDimensions( cellDims );
+	}
 
 	/**
 	 * This interface is implemented by all samplers on the {@link CellImg}. It
