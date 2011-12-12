@@ -38,7 +38,7 @@ import net.imglib2.ops.Complex;
  * @author Barry DeZonia
  *
  */
-public final class ComplexNear implements BinaryRelation<Complex> {
+public final class ComplexNear implements BinaryRelation<Complex,Complex> {
 
 	private final double rTol;
 	private final double iTol;

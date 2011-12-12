@@ -3,7 +3,7 @@ package net.imglib2.ops.example;
 import net.imglib2.Cursor;
 import net.imglib2.img.Img;
 import net.imglib2.img.array.ArrayImgFactory;
-import net.imglib2.ops.operation.binary.realtype.RealTypeAdd;
+import net.imglib2.ops.operation.binary.real.RealAdd;
 import net.imglib2.type.numeric.real.DoubleType;
 
 public class Example12 {
@@ -35,7 +35,7 @@ public class Example12 {
 		fillImage(in2, 2);
 		Img<DoubleType> out = allocateImage();
 		fillImage(out, 0);
-		RealTypeAdd<DoubleType> op = new RealTypeAdd<DoubleType>();
+		RealAdd<DoubleType> op = new RealAdd<DoubleType>();
 		Cursor<DoubleType> ic1 = in1.cursor();
 		Cursor<DoubleType> ic2 = in2.cursor();
 		Cursor<DoubleType> oc = out.cursor();

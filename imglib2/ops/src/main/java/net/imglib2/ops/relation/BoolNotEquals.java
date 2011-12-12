@@ -38,7 +38,7 @@ import net.imglib2.type.logic.BitType;
  * @author Barry DeZonia
  *
  */
-public final class BoolNotEquals implements BinaryRelation<BitType> {
+public final class BoolNotEquals implements BinaryRelation<BitType,BitType> {
 
 	@Override
 	public boolean holds(BitType val1, BitType val2) {

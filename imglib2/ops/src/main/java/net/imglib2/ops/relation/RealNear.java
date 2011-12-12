@@ -37,7 +37,7 @@ import net.imglib2.type.numeric.RealType;
  * @author Barry DeZonia
  *
  */
-public final class RealNear<T extends RealType<T>> implements BinaryRelation<T> {
+public final class RealNear<T extends RealType<T>, U extends RealType<U>> implements BinaryRelation<T,U> {
 
 	private final double tol;
 	
@@ -50,12 +50,12 @@ public final class RealNear<T extends RealType<T>> implements BinaryRelation<T> 
 	}
 	
 	@Override
-	public boolean holds(T val1, T val2) {
+	public boolean holds(T val1, U val2) {
 		return Math.abs(val1.getRealDouble() - val2.getRealDouble()) <= tol;
 	}
 
 	@Override
-	public RealNear<T> copy() {
-		return new RealNear<T>(tol);
+	public RealNear<T,U> copy() {
+		return new RealNear<T,U>(tol);
 	}
 }

@@ -35,15 +35,15 @@ package net.imglib2.ops;
  * @author Barry DeZonia
  *
  */
-public class BinaryCondition<INDEX, T> implements Condition<INDEX> {
+public class BinaryCondition<INDEX, T, U> implements Condition<INDEX> {
 
 	private final Function<INDEX,T> f1;
-	private final Function<INDEX,T> f2;
+	private final Function<INDEX,U> f2;
 	private final T f1Val;
-	private final T f2Val;
-	private final BinaryRelation<T> relation;
+	private final U f2Val;
+	private final BinaryRelation<T,U> relation;
 
-	public BinaryCondition(Function<INDEX,T> f1, Function<INDEX,T> f2, BinaryRelation<T> relation) {
+	public BinaryCondition(Function<INDEX,T> f1, Function<INDEX,U> f2, BinaryRelation<T,U> relation) {
 		this.f1 = f1;
 		this.f2 = f2;
 		this.f1Val = f1.createOutput();
@@ -59,7 +59,7 @@ public class BinaryCondition<INDEX, T> implements Condition<INDEX> {
 	}
 	
 	@Override
-	public BinaryCondition<INDEX, T> duplicate() {
-		return new BinaryCondition<INDEX, T>(f1.duplicate(), f2.duplicate(), relation.copy());
+	public BinaryCondition<INDEX,T,U> duplicate() {
+		return new BinaryCondition<INDEX,T,U>(f1.duplicate(), f2.duplicate(), relation.copy());
 	}
 }

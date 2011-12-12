@@ -35,8 +35,8 @@ package net.imglib2.ops;
  * @author Barry DeZonia
  *
  */
-public interface BinaryRelation<T> {
-	boolean holds(T val1, T val2);
-	BinaryRelation<T> copy();
+public interface BinaryRelation<T,U> {
+	boolean holds(T val1, U val2);
+	BinaryRelation<T,U> copy();
 }
 

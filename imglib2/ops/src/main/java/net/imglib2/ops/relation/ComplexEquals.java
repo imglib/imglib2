@@ -38,7 +38,7 @@ import net.imglib2.ops.Complex;
  * @author Barry DeZonia
  *
  */
-public final class ComplexEquals implements BinaryRelation<Complex> {
+public final class ComplexEquals implements BinaryRelation<Complex,Complex> {
 
 	@Override
 	public boolean holds(Complex val1, Complex val2) {

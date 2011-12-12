@@ -38,15 +38,15 @@ import net.imglib2.type.numeric.RealType;
  * @author Barry DeZonia
  *
  */
-public final class RealEquals<T extends RealType<T>> implements BinaryRelation<T> {
+public final class RealEquals<T extends RealType<T>,U extends RealType<U>> implements BinaryRelation<T,U> {
 
 	@Override
-	public boolean holds(T val1, T val2) {
+	public boolean holds(T val1, U val2) {
 		return val1.getRealDouble() == val2.getRealDouble();
 	}
 
 	@Override
-	public RealEquals<T> copy() {
-		return new RealEquals<T>();
+	public RealEquals<T,U> copy() {
+		return new RealEquals<T,U>();
 	}
 }
