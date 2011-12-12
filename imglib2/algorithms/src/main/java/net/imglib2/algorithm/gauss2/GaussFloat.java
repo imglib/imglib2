@@ -40,6 +40,8 @@ import net.imglib2.view.Views;
 
 final public class GaussFloat extends GaussNativeType< FloatType >
 {
+	protected boolean isArray;
+	
 	public GaussFloat( final double[] sigma, final Img<FloatType> input )
 	{
 		this( sigma, Views.extend( input, new OutOfBoundsMirrorFactory< FloatType, Img<FloatType> >( Boundary.SINGLE ) ), input, input.factory() );
@@ -80,9 +82,15 @@ final public class GaussFloat extends GaussNativeType< FloatType >
 		
 		// try to use array if each individual line is not too long
 		if ( sizeProcessLine <= Integer.MAX_VALUE )
+		{
+			isArray = true;
 			processLine = new ArrayImgFactory< FloatType >().create( new long[]{ sizeProcessLine }, new FloatType() );
+		}
 		else
+		{
+			isArray = false;
 			processLine = new CellImgFactory< FloatType >( Integer.MAX_VALUE / 16 ).create( new long[]{ sizeProcessLine }, new FloatType() );
+		}
 		
 		return processLine;
 	}	
@@ -96,6 +104,12 @@ final public class GaussFloat extends GaussNativeType< FloatType >
 	 */
 	protected void processLine( final SamplingLineIterator< FloatType > input, final double[] kernel )
 	{
+		if ( !isArray() )
+		{
+			super.processLine( input, kernel );
+			return;
+		}
+		
 		final int kernelSize = kernel.length;
 		final int kernelSizeMinus1 = kernelSize - 1;
 		final int kernelSizeHalf = kernelSize / 2;
@@ -221,5 +235,8 @@ final public class GaussFloat extends GaussNativeType< FloatType >
 					v[ o ] += (float)(copy * kernel[ k++ ]);
 			}
 		}
-	}	
+	}
+
+	@Override
+	protected boolean isArray() { return isArray; }	
 }

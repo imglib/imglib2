@@ -40,6 +40,7 @@ public abstract class GaussNativeType< T extends NumericType< T > & NativeType< 
 		super( sigma, input, inputInterval, output, outputOffset, factory );
 	}
 
+	protected abstract boolean isArray(); 
 	/**
 	 * Compute the current line. It is up to the implementation howto really do that. The idea is to only iterate
 	 * over the input once (that's why it is an {@link Iterator}) as it is potentially an expensive operation 
@@ -49,6 +50,12 @@ public abstract class GaussNativeType< T extends NumericType< T > & NativeType< 
 	 */
 	protected void processLine( final SamplingLineIterator< T > input, final double[] kernel )
 	{
+		if ( !isArray() )
+		{
+			super.processLine( input, kernel );
+			return;
+		}
+
 		final int kernelSize = kernel.length;
 		final int kernelSizeMinus1 = kernelSize - 1;
 		final int kernelSizeHalf = kernelSize / 2;
@@ -167,12 +174,12 @@ public abstract class GaussNativeType< T extends NumericType< T > & NativeType< 
 				copy.set( input.get() );
 				
 				// set the random access in the processing line to the right position
-				randomAccessLeft.setPosition( -1, 0 );				
+				randomAccessLeft.setPositionDim0( -1 );				
 				
 				// now add it to all output values it contributes to
 				for ( int o = 0; o <= i; ++o )
 				{
-					randomAccessLeft.fwd( 0 );
+					randomAccessLeft.fwdDim0();
 					
 					tmp.set( copy );
 					tmp.mul( kernel[ i - o ] );
@@ -180,7 +187,7 @@ public abstract class GaussNativeType< T extends NumericType< T > & NativeType< 
 					randomAccessLeft.get().add( tmp );
 				}				
 			}
-			
+
 			// convolve the last pixels where the input influences less than kernel.size pixels
 			for ( long i = imgSize; i < imgSize + kernelSizeMinus1; ++i )
 			{
@@ -189,16 +196,24 @@ public abstract class GaussNativeType< T extends NumericType< T > & NativeType< 
 				
 				// copy input into a temp variable, it might be expensive to get()
 				copy.set( input.get() );
-				
+
 				// set the random access in the processing line to the right position
-				final long position = i - kernelSize; 
-				randomAccessLeft.setPosition( Math.max( -1, position ), 0 );				
-				
 				// now add it to all output values it contributes to
-				int k = Math.max( 0, (int)position + 1 );
-				for ( long o = Math.max( 0, i - kernelSize + 1); o < imgSize; ++o )
+				long o = i - kernelSize + 1;
+				int k = 0;
+				
+				if ( o < 0 )
 				{
-					randomAccessLeft.fwd( 0 );
+					k = -(int)o;
+					o = 0;
+				}
+
+				randomAccessLeft.setPositionDim0( o - 1 );				
+
+				// now add it to all output values it contributes to
+				for ( ; o < imgSize; ++o )
+				{
+					randomAccessLeft.fwdDim0();
 					
 					tmp.set( copy );
 					tmp.mul( kernel[ k++ ] );

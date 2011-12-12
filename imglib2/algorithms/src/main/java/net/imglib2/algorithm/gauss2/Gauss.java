@@ -501,7 +501,7 @@ public abstract class Gauss< T extends NumericType< T > >
 					randomAccessLeft.get().add( tmp );
 				}				
 			}
-			
+
 			// convolve the last pixels where the input influences less than kernel.size pixels
 			for ( long i = imgSize; i < imgSize + kernelSizeMinus1; ++i )
 			{
@@ -510,14 +510,22 @@ public abstract class Gauss< T extends NumericType< T > >
 				
 				// copy input into a temp variable, it might be expensive to get()
 				copy.set( input.get() );
-				
+
 				// set the random access in the processing line to the right position
-				final long position = i - kernelSize; 
-				randomAccessLeft.setPosition( Math.max( -1, position ), 0 );				
-				
 				// now add it to all output values it contributes to
-				int k = Math.max( 0, (int)position + 1 );
-				for ( long o = Math.max( 0, i - kernelSize + 1); o < imgSize; ++o )
+				long o = i - kernelSize + 1;
+				int k = 0;
+				
+				if ( o < 0 )
+				{
+					k = -(int)o;
+					o = 0;
+				}
+
+				randomAccessLeft.setPosition( o - 1, 0 );				
+
+				// now add it to all output values it contributes to
+				for ( ; o < imgSize; ++o )
 				{
 					randomAccessLeft.fwd( 0 );
 					
