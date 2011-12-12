@@ -181,13 +181,11 @@ final public class GaussFloat extends GaussNativeType< FloatType >
 		}
 		else
 		{
-			//System.out.println( "kernel: " + kernel.length + " img: " + imgSize );
-			
 			// convolve the first pixels where the input influences less than kernel.size pixels
 			for ( int i = 0; i < imgSize; ++i )
 			{
 				input.fwd();
-				
+
 				// copy input into a temp variable, it might be expensive to get()
 				final float copy = input.get().get();
 				
@@ -209,14 +207,19 @@ final public class GaussFloat extends GaussNativeType< FloatType >
 				final float copy = input.get().get();
 				
 				// set the random access in the processing line to the right position
-				final int position = i - kernelSize; 
-				indexLeft = Math.max( -1, position );
-				
 				// now add it to all output values it contributes to
-				int k = Math.max( 0, (int)position + 1 );
-				for ( int o = Math.max( 0, i - kernelSize + 1); o < imgSize; ++o )
-					v[ ++indexLeft ] += (float)(copy * kernel[ k++ ]);
-			}						
+				int o = i - kernelSize + 1;
+				int k = 0;
+				
+				if ( o < 0 )
+				{
+					k = -o;
+					o = 0;
+				}
+
+				for ( ; o < imgSize; ++o )
+					v[ o ] += (float)(copy * kernel[ k++ ]);
+			}
 		}
 	}	
 }
