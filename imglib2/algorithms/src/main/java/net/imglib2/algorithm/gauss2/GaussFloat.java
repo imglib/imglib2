@@ -54,7 +54,7 @@ final public class GaussFloat extends Gauss< FloatType >
 	 */
 	public GaussFloat( final double[] sigma, final RandomAccessible<FloatType> input, final Interval interval, final ImgFactory<FloatType> factory )
 	{
-		super( sigma, input, interval, factory.create( interval, new FloatType() ), new Location( sigma.length ), factory );
+		super( sigma, input, interval, factory.create( interval, new FloatType() ), new Location( sigma.length ), factory, new FloatType() );
 	}
 
 	/**
@@ -70,7 +70,7 @@ final public class GaussFloat extends Gauss< FloatType >
 	 */
 	public GaussFloat( final double[] sigma, final RandomAccessible<FloatType> input, final Interval interval, final RandomAccessible<FloatType> output, final Localizable outputOffset, final ImgFactory<FloatType> factory )
 	{
-		super( sigma, input, interval, output, outputOffset, factory );
+		super( sigma, input, interval, output, outputOffset, factory, new FloatType() );
 	}
 	
 	/**
@@ -123,9 +123,6 @@ final public class GaussFloat extends Gauss< FloatType >
 		gauss.call();
 	}
 	
-	@Override
-	protected FloatType getProcessingType() { return new FloatType(); }
-
 	@Override
 	protected Img<FloatType> getProcessingLine( final long sizeProcessLine )
 	{

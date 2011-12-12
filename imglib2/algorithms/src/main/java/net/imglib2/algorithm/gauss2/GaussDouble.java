@@ -54,7 +54,7 @@ final public class GaussDouble extends Gauss< DoubleType >
 	 */
 	public GaussDouble( final double[] sigma, final RandomAccessible<DoubleType> input, final Interval interval, final ImgFactory<DoubleType> factory )
 	{
-		super( sigma, input, interval, factory.create( interval, new DoubleType() ), new Location( sigma.length ), factory );
+		super( sigma, input, interval, factory.create( interval, new DoubleType() ), new Location( sigma.length ), factory, new DoubleType() );
 	}
 
 	/**
@@ -70,7 +70,7 @@ final public class GaussDouble extends Gauss< DoubleType >
 	 */
 	public GaussDouble( final double[] sigma, final RandomAccessible<DoubleType> input, final Interval interval, final RandomAccessible<DoubleType> output, final Localizable outputOffset, final ImgFactory<DoubleType> factory )
 	{
-		super( sigma, input, interval, output, outputOffset, factory );
+		super( sigma, input, interval, output, outputOffset, factory, new DoubleType() );
 	}
 	
 	/**
@@ -122,9 +122,6 @@ final public class GaussDouble extends Gauss< DoubleType >
 		final GaussDouble gauss = new GaussDouble( sigma, input, interval, output, outputOffset, factory );
 		gauss.call();
 	}
-	
-	@Override
-	protected DoubleType getProcessingType() { return new DoubleType(); }
 
 	@Override
 	protected Img<DoubleType> getProcessingLine( final long sizeProcessLine )

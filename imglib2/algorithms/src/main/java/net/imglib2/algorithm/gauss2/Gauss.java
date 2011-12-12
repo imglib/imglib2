@@ -50,6 +50,7 @@ public abstract class Gauss< T extends NumericType< T > >
 	/*final */RandomAccessible<T> input, output;
 	final ImgFactory<T> factory;	
 	final Img<T> tmp1, tmp2;
+	final T type;
 	
 	final int numDimensions;
 	final double[] sigma;
@@ -57,12 +58,13 @@ public abstract class Gauss< T extends NumericType< T > >
 	
 	public Gauss( final double[] sigma, final RandomAccessible<T> input, final Interval inputInterval, 
 				  final RandomAccessible<T> output, final Localizable outputOffset, 
-				  final ImgFactory<T> factory )
+				  final ImgFactory<T> factory, final T type )
 	{
 		this.numDimensions = sigma.length;
 		this.input = input;
 		this.output = output;
 		this.factory = factory;
+		this.type = type;
 		
 		this.sigma = sigma;		
 		this.kernel = new double[ numDimensions ][];
@@ -85,7 +87,7 @@ public abstract class Gauss< T extends NumericType< T > >
 			tmp2 = null;		
 	}
 	
-	protected abstract T getProcessingType();
+	protected T getProcessingType() { return type.createVariable(); }
 	protected abstract Img<T> getProcessingLine( final long size );
 	
 	/**
