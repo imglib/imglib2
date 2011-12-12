@@ -37,7 +37,6 @@ import net.imglib2.outofbounds.OutOfBoundsMirrorFactory;
 import net.imglib2.outofbounds.OutOfBoundsMirrorFactory.Boundary;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.NumericType;
-import net.imglib2.type.numeric.real.FloatType;
 import net.imglib2.view.Views;
 
 public class GaussNativeType< T extends NumericType< T > & NativeType< T > > extends Gauss< T >
