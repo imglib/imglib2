@@ -22,6 +22,7 @@ package net.imglib2.algorithm.gauss2;
 
 import net.imglib2.Interval;
 import net.imglib2.Iterator;
+import net.imglib2.Localizable;
 import net.imglib2.Location;
 import net.imglib2.RandomAccessible;
 import net.imglib2.Sampler;
@@ -38,22 +39,12 @@ import net.imglib2.outofbounds.OutOfBoundsMirrorFactory.Boundary;
 import net.imglib2.type.numeric.real.FloatType;
 import net.imglib2.view.Views;
 
-final public class GaussFloat extends GaussNativeType< FloatType >
+final public class GaussFloat extends Gauss< FloatType >
 {
 	protected boolean isArray;
 	
-	public GaussFloat( final double[] sigma, final Img<FloatType> input )
-	{
-		this( sigma, Views.extend( input, new OutOfBoundsMirrorFactory< FloatType, Img<FloatType> >( Boundary.SINGLE ) ), input, input.factory() );
-	}
-
-	public GaussFloat( final double[] sigma, final Img<FloatType> input, final OutOfBoundsFactory< FloatType, Img<FloatType> > outOfBounds )
-	{
-		this( sigma, Views.extend( input, outOfBounds ), input, input.factory() );
-	}
-	
 	/**
-	 * Computes a Gaussian convolution on a {@link RandomAccessible} of {@link FloatType} in a certain {@link Interval}
+	 * Computes a Gaussian convolution with float precision on a {@link RandomAccessible} of {@link FloatType} in a certain {@link Interval}
 	 * and returns an {@link Img} defined by the {@link ImgFactory} containing the result
 	 * 
 	 * @param sigma - the sigma for the convolution
@@ -63,13 +54,73 @@ final public class GaussFloat extends GaussNativeType< FloatType >
 	 */
 	public GaussFloat( final double[] sigma, final RandomAccessible<FloatType> input, final Interval interval, final ImgFactory<FloatType> factory )
 	{
-		super( sigma, input, interval, factory.create( interval, new FloatType() ),  new Location( sigma.length ), factory );
+		super( sigma, input, interval, factory.create( interval, new FloatType() ), new Location( sigma.length ), factory );
+	}
+
+	/**
+	 * Computes a Gaussian convolution with float precision on a {@link RandomAccessible} of {@link FloatType} in a certain {@link Interval}
+	 * and writes it into a given {@link RandomAccessible} at a specific location
+	 * 
+	 * @param sigma - the sigma for the convolution
+	 * @param input - the {@link RandomAccessible} to work on
+	 * @param interval - the area that is convolved
+	 * @param output - the {@link RandomAccessible} where the output will be written to
+	 * @param outputOffset - the offset that corresponds to the first pixel in output {@link RandomAccessible}
+	 * @param factory - the {@link ImgFactory} for creating temporary images
+	 */
+	public GaussFloat( final double[] sigma, final RandomAccessible<FloatType> input, final Interval interval, final RandomAccessible<FloatType> output, final Localizable outputOffset, final ImgFactory<FloatType> factory )
+	{
+		super( sigma, input, interval, output, outputOffset, factory );
 	}
 	
-	@Override
-	public Img<FloatType> getResult()
+	/**
+	 * Computes a Gaussian convolution with float precision on an entire {@link Img} using the {@link OutOfBoundsMirrorFactory} with single boundary
+	 * 
+	 * @param sigma - the sigma for the convolution
+	 * @param input - the input {@link Img}
+	 */
+	public GaussFloat( final double[] sigma, final Img<FloatType> input )
 	{
-		return (Img<FloatType>)output;
+		this( sigma, Views.extend( input, new OutOfBoundsMirrorFactory< FloatType, Img<FloatType> >( Boundary.SINGLE ) ), input, input.factory() );
+	}
+
+	/**
+	 * Computes a Gaussian convolution with float precision on an entire {@link Img}
+	 * 
+	 * @param sigma - the sigma for the convolution
+	 * @param input - the input {@link Img}
+	 * @param outOfBounds - the {@link OutOfBoundsFactory} to use
+	 */
+	public GaussFloat( final double[] sigma, final Img<FloatType> input, final OutOfBoundsFactory< FloatType, Img<FloatType> > outOfBounds )
+	{
+		this( sigma, Views.extend( input, outOfBounds ), input, input.factory() );
+	}
+
+	public static Img< FloatType > gauss( final double[] sigma, final Img< FloatType> input )
+	{
+		final GaussFloat gauss = new GaussFloat( sigma, input );
+		gauss.call();
+		return (Img<FloatType>)gauss.getResult();
+	}
+
+	public static Img< FloatType > gauss( final double[] sigma, final Img< FloatType> input, final OutOfBoundsFactory< FloatType, Img<FloatType> > outOfBounds )
+	{
+		final GaussFloat gauss = new GaussFloat( sigma, input, outOfBounds );
+		gauss.call();
+		return (Img<FloatType>)gauss.getResult();
+	}
+
+	public static Img<FloatType> gauss( final double[] sigma, final RandomAccessible<FloatType> input, final Interval interval, final ImgFactory<FloatType> factory )
+	{
+		final GaussFloat gauss = new GaussFloat( sigma, input, interval, factory );
+		gauss.call();
+		return (Img<FloatType>)gauss.getResult();
+	}
+	
+	public static void gauss( final double[] sigma, final RandomAccessible<FloatType> input, final Interval interval, final RandomAccessible<FloatType> output, final Localizable outputOffset, final ImgFactory<FloatType> factory )
+	{
+		final GaussFloat gauss = new GaussFloat( sigma, input, interval, output, outputOffset, factory );
+		gauss.call();
 	}
 	
 	@Override
@@ -237,6 +288,5 @@ final public class GaussFloat extends GaussNativeType< FloatType >
 		}
 	}
 
-	@Override
 	protected boolean isArray() { return isArray; }	
 }
