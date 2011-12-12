@@ -49,7 +49,7 @@ public final class RealCsc extends RealOutput implements UnaryOperation<Real,Rea
 	}
 
 	@Override
-	public RealCsc duplicate() {
+	public RealCsc copy() {
 		return new RealCsc();
 	}
 	

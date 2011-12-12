@@ -54,7 +54,7 @@ public final class RealSubtractConstant extends RealOutput implements UnaryOpera
 	}
 
 	@Override
-	public RealSubtractConstant duplicate() {
+	public RealSubtractConstant copy() {
 		return new RealSubtractConstant(constant);
 	}
 	

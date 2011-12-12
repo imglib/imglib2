@@ -51,7 +51,7 @@ public final class ComplexExp extends ComplexOutput implements UnaryOperation<Co
 	}
 	
 	@Override
-	public ComplexExp duplicate() {
+	public ComplexExp copy() {
 		return new ComplexExp();
 	}
 }

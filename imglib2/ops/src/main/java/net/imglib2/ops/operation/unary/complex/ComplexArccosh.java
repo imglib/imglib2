@@ -70,7 +70,7 @@ public final class ComplexArccosh extends ComplexOutput implements UnaryOperatio
 	}
 	
 	@Override
-	public ComplexArccosh duplicate() {
+	public ComplexArccosh copy() {
 		return new ComplexArccosh();
 	}
 }

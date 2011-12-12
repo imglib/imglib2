@@ -72,7 +72,7 @@ public final class ComplexSin extends ComplexOutput implements UnaryOperation<Co
 	}
 	
 	@Override
-	public ComplexSin duplicate() {
+	public ComplexSin copy() {
 		return new ComplexSin();
 	}
 }

@@ -47,7 +47,7 @@ public final class RealAbs<T extends RealType<T>> implements UnaryOperation<T,T>
 	}
 
 	@Override
-	public RealAbs<T> duplicate() {
+	public RealAbs<T> copy() {
 		return new RealAbs<T>();
 	}
 

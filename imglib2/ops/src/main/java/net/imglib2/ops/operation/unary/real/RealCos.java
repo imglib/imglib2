@@ -48,7 +48,7 @@ public final class RealCos extends RealOutput implements UnaryOperation<Real,Rea
 	}
 
 	@Override
-	public RealCos duplicate() {
+	public RealCos copy() {
 		return new RealCos();
 	}
 	

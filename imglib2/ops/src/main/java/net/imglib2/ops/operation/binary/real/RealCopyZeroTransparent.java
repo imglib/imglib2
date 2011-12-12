@@ -51,7 +51,7 @@ public final class RealCopyZeroTransparent extends RealOutput implements BinaryO
 	}
 
 	@Override
-	public RealCopyZeroTransparent duplicate() {
+	public RealCopyZeroTransparent copy() {
 		return new RealCopyZeroTransparent();
 	}
 }

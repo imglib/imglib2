@@ -50,7 +50,7 @@ public final class RealArctan extends RealOutput implements UnaryOperation<Real,
 	}
 
 	@Override
-	public RealArctan duplicate() {
+	public RealArctan copy() {
 		return new RealArctan();
 	}
 	

@@ -55,7 +55,7 @@ public final class RealMinConstant<T extends RealType<T>> implements UnaryOperat
 	}
 
 	@Override
-	public RealMinConstant<T> duplicate() {
+	public RealMinConstant<T> copy() {
 		return new RealMinConstant<T>(constant);
 	}
 

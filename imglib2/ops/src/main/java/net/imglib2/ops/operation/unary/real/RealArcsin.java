@@ -49,7 +49,7 @@ public final class RealArcsin extends RealOutput implements UnaryOperation<Real,
 	}
 
 	@Override
-	public RealArcsin duplicate() {
+	public RealArcsin copy() {
 		return new RealArcsin();
 	}
 	

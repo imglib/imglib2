@@ -49,7 +49,7 @@ public final class RealSec extends RealOutput implements UnaryOperation<Real,Rea
 	}
 
 	@Override
-	public RealSec duplicate() {
+	public RealSec copy() {
 		return new RealSec();
 	}
 	

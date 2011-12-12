@@ -47,7 +47,7 @@ public final class RealMultiply extends RealOutput implements BinaryOperation<Re
 	}
 
 	@Override
-	public RealMultiply duplicate() {
+	public RealMultiply copy() {
 		return new RealMultiply();
 	}
 }

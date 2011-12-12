@@ -52,7 +52,7 @@ public final class RealArccot extends RealOutput implements UnaryOperation<Real,
 	}
 
 	@Override
-	public RealArccot duplicate() {
+	public RealArccot copy() {
 		return new RealArccot();
 	}
 	

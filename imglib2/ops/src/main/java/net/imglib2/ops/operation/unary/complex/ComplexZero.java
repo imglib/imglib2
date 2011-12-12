@@ -48,7 +48,7 @@ public final class ComplexZero extends ComplexOutput implements UnaryOperation<C
 	}
 	
 	@Override
-	public ComplexZero duplicate() {
+	public ComplexZero copy() {
 		return new ComplexZero();
 	}
 }

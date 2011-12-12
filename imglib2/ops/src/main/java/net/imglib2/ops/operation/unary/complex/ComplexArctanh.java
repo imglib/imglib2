@@ -70,7 +70,7 @@ public final class ComplexArctanh extends ComplexOutput implements UnaryOperatio
 	}
 	
 	@Override
-	public ComplexArctanh duplicate() {
+	public ComplexArctanh copy() {
 		return new ComplexArctanh();
 	}
 }

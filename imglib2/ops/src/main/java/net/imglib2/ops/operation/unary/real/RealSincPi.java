@@ -54,7 +54,7 @@ public class RealSincPi extends RealOutput implements UnaryOperation<Real,Real> 
 	}
 
 	@Override
-	public RealSincPi duplicate() {
+	public RealSincPi copy() {
 		return new RealSincPi();
 	}
 

@@ -46,7 +46,7 @@ public final class ComplexCopy extends ComplexOutput implements UnaryOperation<C
 	}
 	
 	@Override
-	public ComplexCopy duplicate() {
+	public ComplexCopy copy() {
 		return new ComplexCopy();
 	}
 }

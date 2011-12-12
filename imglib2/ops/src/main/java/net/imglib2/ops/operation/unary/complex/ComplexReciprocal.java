@@ -51,7 +51,7 @@ public final class ComplexReciprocal extends ComplexOutput implements UnaryOpera
 	}
 	
 	@Override
-	public ComplexReciprocal duplicate() {
+	public ComplexReciprocal copy() {
 		return new ComplexReciprocal();
 	}
 }

@@ -53,7 +53,7 @@ public final class RealArccosh extends RealOutput implements UnaryOperation<Real
 	}
 
 	@Override
-	public RealArccosh duplicate() {
+	public RealArccosh copy() {
 		return new RealArccosh();
 	}
 	

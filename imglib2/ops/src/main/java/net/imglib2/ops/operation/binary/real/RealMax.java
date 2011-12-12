@@ -51,7 +51,7 @@ public final class RealMax extends RealOutput implements BinaryOperation<Real,Re
 	}
 
 	@Override
-	public RealMax duplicate() {
+	public RealMax copy() {
 		return new RealMax();
 	}
 }

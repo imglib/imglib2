@@ -50,7 +50,7 @@ public final class ComplexConjugate extends ComplexOutput implements UnaryOperat
 	}
 	
 	@Override
-	public ComplexConjugate duplicate() {
+	public ComplexConjugate copy() {
 		return new ComplexConjugate();
 	}
 }

@@ -57,7 +57,7 @@ public final class ComplexArccsch extends ComplexOutput implements UnaryOperatio
 	}
 	
 	@Override
-	public ComplexArccsch duplicate() {
+	public ComplexArccsch copy() {
 		return new ComplexArccsch();
 	}
 }

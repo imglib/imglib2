@@ -74,7 +74,7 @@ public final class RealAddNoise<T extends RealType<T>> implements UnaryOperation
 	}
 
 	@Override
-	public RealAddNoise<T> duplicate() {
+	public RealAddNoise<T> copy() {
 		return new RealAddNoise<T>(rangeMin, rangeMax, rangeStdDev);
 	}
 

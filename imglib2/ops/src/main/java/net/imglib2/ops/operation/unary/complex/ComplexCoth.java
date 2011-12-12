@@ -58,7 +58,7 @@ public final class ComplexCoth extends ComplexOutput implements UnaryOperation<C
 	}
 	
 	@Override
-	public ComplexCoth duplicate() {
+	public ComplexCoth copy() {
 		return new ComplexCoth();
 	}
 }

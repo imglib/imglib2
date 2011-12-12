@@ -68,7 +68,7 @@ public final class ComplexArcsinh extends ComplexOutput implements UnaryOperatio
 	}
 	
 	@Override
-	public ComplexArcsinh duplicate() {
+	public ComplexArcsinh copy() {
 		return new ComplexArcsinh();
 	}
 }

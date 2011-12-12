@@ -48,7 +48,7 @@ public final class ComplexNegate extends ComplexOutput implements UnaryOperation
 	}
 	
 	@Override
-	public ComplexNegate duplicate() {
+	public ComplexNegate copy() {
 		return new ComplexNegate();
 	}
 }

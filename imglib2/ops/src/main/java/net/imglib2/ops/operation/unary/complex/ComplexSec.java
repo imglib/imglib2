@@ -60,7 +60,7 @@ public final class ComplexSec extends ComplexOutput implements UnaryOperation<Co
 	}
 	
 	@Override
-	public ComplexSec duplicate() {
+	public ComplexSec copy() {
 		return new ComplexSec();
 	}
 }

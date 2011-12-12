@@ -57,7 +57,7 @@ public final class RealReciprocal extends RealOutput implements UnaryOperation<R
 	}
 
 	@Override
-	public RealReciprocal duplicate() {
+	public RealReciprocal copy() {
 		return new RealReciprocal(dbzVal);
 	}
 	

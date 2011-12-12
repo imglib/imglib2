@@ -50,7 +50,7 @@ public final class ComplexAdd extends ComplexOutput implements BinaryOperation<C
 	}
 
 	@Override
-	public ComplexAdd duplicate() {
+	public ComplexAdd copy() {
 		return new ComplexAdd();
 	}
 }

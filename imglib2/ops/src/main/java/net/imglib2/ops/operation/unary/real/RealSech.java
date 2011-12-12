@@ -49,7 +49,7 @@ public final class RealSech extends RealOutput implements UnaryOperation<Real,Re
 	}
 
 	@Override
-	public RealSech duplicate() {
+	public RealSech copy() {
 		return new RealSech();
 	}
 	

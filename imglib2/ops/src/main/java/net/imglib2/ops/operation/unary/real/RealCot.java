@@ -49,7 +49,7 @@ public final class RealCot extends RealOutput implements UnaryOperation<Real,Rea
 	}
 
 	@Override
-	public RealCot duplicate() {
+	public RealCot copy() {
 		return new RealCot();
 	}
 	

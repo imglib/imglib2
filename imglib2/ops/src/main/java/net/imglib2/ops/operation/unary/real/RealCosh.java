@@ -48,7 +48,7 @@ public final class RealCosh extends RealOutput implements UnaryOperation<Real,Re
 	}
 
 	@Override
-	public RealCosh duplicate() {
+	public RealCosh copy() {
 		return new RealCosh();
 	}
 	

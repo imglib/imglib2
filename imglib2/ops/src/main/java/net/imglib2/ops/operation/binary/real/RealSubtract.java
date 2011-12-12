@@ -47,7 +47,7 @@ public final class RealSubtract extends RealOutput implements BinaryOperation<Re
 	}
 
 	@Override
-	public RealSubtract duplicate() {
+	public RealSubtract copy() {
 		return new RealSubtract();
 	}
 }

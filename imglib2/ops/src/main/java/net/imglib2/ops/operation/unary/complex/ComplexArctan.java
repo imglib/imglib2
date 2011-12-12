@@ -73,7 +73,7 @@ public final class ComplexArctan extends ComplexOutput implements UnaryOperation
 	}
 	
 	@Override
-	public ComplexArctan duplicate() {
+	public ComplexArctan copy() {
 		return new ComplexArctan();
 	}
 }

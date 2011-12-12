@@ -50,7 +50,7 @@ public final class ComplexAvg extends ComplexOutput implements BinaryOperation<C
 	}
 
 	@Override
-	public ComplexAvg duplicate() {
+	public ComplexAvg copy() {
 		return new ComplexAvg();
 	}
 }

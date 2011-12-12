@@ -84,7 +84,7 @@ public class RealContinuousIntegralFunction extends RealOutput implements Functi
 
 	@Override
 	public RealContinuousIntegralFunction duplicate() {
-		return new RealContinuousIntegralFunction(otherFunc.duplicate(), deltas);
+		return new RealContinuousIntegralFunction(otherFunc.copy(), deltas);
 	}
 
 	// -- private helpers --

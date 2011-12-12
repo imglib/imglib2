@@ -51,7 +51,7 @@ public final class RealSign extends RealOutput implements UnaryOperation<Real,Re
 	}
 
 	@Override
-	public RealSign duplicate() {
+	public RealSign copy() {
 		return new RealSign();
 	}
 	

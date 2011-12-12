@@ -47,7 +47,7 @@ public final class RealAvg extends RealOutput implements BinaryOperation<Real,Re
 	}
 
 	@Override
-	public RealAvg duplicate() {
+	public RealAvg copy() {
 		return new RealAvg();
 	}
 }

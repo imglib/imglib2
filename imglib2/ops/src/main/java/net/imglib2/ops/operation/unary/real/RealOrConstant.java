@@ -54,7 +54,7 @@ public final class RealOrConstant extends RealOutput implements UnaryOperation<R
 	}
 
 	@Override
-	public RealOrConstant duplicate() {
+	public RealOrConstant copy() {
 		return new RealOrConstant(constant);
 	}
 	

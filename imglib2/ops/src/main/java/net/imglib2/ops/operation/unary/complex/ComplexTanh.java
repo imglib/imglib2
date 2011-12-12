@@ -58,7 +58,7 @@ public final class ComplexTanh extends ComplexOutput implements UnaryOperation<C
 	}
 	
 	@Override
-	public ComplexTanh duplicate() {
+	public ComplexTanh copy() {
 		return new ComplexTanh();
 	}
 }

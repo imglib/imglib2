@@ -52,7 +52,7 @@ public final class RealAdapter extends RealOutput implements UnaryOperation<Comp
 	}
 
 	@Override
-	public RealAdapter duplicate() {
+	public RealAdapter copy() {
 		return new RealAdapter();
 	}
 }

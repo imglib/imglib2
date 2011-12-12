@@ -54,7 +54,7 @@ public final class RealPowerConstant extends RealOutput implements UnaryOperatio
 	}
 
 	@Override
-	public RealPowerConstant duplicate() {
+	public RealPowerConstant copy() {
 		return new RealPowerConstant(constant);
 	}
 	

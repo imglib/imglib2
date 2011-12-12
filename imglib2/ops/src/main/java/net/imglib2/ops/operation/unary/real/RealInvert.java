@@ -56,7 +56,7 @@ public final class RealInvert<T extends RealType<T>> implements UnaryOperation<T
 	}
 
 	@Override
-	public RealInvert<T> duplicate() {
+	public RealInvert<T> copy() {
 		return new RealInvert<T>(actualMin,actualMax);
 	}
 

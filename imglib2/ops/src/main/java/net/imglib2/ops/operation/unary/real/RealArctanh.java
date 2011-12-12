@@ -50,7 +50,7 @@ public final class RealArctanh extends RealOutput implements UnaryOperation<Real
 	}
 
 	@Override
-	public RealArctanh duplicate() {
+	public RealArctanh copy() {
 		return new RealArctanh();
 	}
 	

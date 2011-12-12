@@ -58,7 +58,7 @@ public final class ComplexRoot extends ComplexOutput implements UnaryOperation<C
 	}
 	
 	@Override
-	public ComplexRoot duplicate() {
+	public ComplexRoot copy() {
 		return new ComplexRoot(power);
 	}
 }

@@ -50,7 +50,7 @@ public final class ComplexMultiply extends ComplexOutput implements BinaryOperat
 	}
 
 	@Override
-	public ComplexMultiply duplicate() {
+	public ComplexMultiply copy() {
 		return new ComplexMultiply();
 	}
 }

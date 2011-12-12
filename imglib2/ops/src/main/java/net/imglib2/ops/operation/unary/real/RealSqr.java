@@ -48,7 +48,7 @@ public final class RealSqr extends RealOutput implements UnaryOperation<Real,Rea
 	}
 
 	@Override
-	public RealSqr duplicate() {
+	public RealSqr copy() {
 		return new RealSqr();
 	}
 	

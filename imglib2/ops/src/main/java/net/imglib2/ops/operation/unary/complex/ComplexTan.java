@@ -58,7 +58,7 @@ public final class ComplexTan extends ComplexOutput implements UnaryOperation<Co
 	}
 	
 	@Override
-	public ComplexTan duplicate() {
+	public ComplexTan copy() {
 		return new ComplexTan();
 	}
 }

@@ -51,7 +51,7 @@ public final class RealArcsech extends RealOutput implements UnaryOperation<Real
 	}
 
 	@Override
-	public RealArcsech duplicate() {
+	public RealArcsech copy() {
 		return new RealArcsech();
 	}
 	

@@ -54,7 +54,7 @@ public class RealSinc extends RealOutput implements UnaryOperation<Real,Real> {
 	}
 
 	@Override
-	public RealSinc duplicate() {
+	public RealSinc copy() {
 		return new RealSinc();
 	}
 

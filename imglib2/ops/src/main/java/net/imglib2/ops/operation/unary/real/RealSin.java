@@ -48,7 +48,7 @@ public final class RealSin extends RealOutput implements UnaryOperation<Real,Rea
 	}
 
 	@Override
-	public RealSin duplicate() {
+	public RealSin copy() {
 		return new RealSin();
 	}
 	

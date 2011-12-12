@@ -47,7 +47,7 @@ public final class RealXor extends RealOutput implements BinaryOperation<Real,Re
 	}
 
 	@Override
-	public RealXor duplicate() {
+	public RealXor copy() {
 		return new RealXor();
 	}
 }

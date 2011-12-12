@@ -38,5 +38,5 @@ public interface UnaryOperation<INPUT_TYPE, OUTPUT_TYPE> {
 	void compute(INPUT_TYPE input, OUTPUT_TYPE output);
 	//OUTPUT_TYPE createOutput();
 	OUTPUT_TYPE createOutput(INPUT_TYPE dataHint);
-	UnaryOperation<INPUT_TYPE, OUTPUT_TYPE> duplicate();
+	UnaryOperation<INPUT_TYPE, OUTPUT_TYPE> copy();
 }

@@ -59,7 +59,7 @@ public final class RealGammaConstant extends RealOutput implements UnaryOperatio
 	}
 
 	@Override
-	public RealGammaConstant duplicate() {
+	public RealGammaConstant copy() {
 		return new RealGammaConstant(constant);
 	}
 	

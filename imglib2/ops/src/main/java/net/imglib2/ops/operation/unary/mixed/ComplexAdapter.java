@@ -52,7 +52,7 @@ public final class ComplexAdapter extends ComplexOutput implements UnaryOperatio
 	}
 
 	@Override
-	public ComplexAdapter duplicate() {
+	public ComplexAdapter copy() {
 		return new ComplexAdapter();
 	}
 }

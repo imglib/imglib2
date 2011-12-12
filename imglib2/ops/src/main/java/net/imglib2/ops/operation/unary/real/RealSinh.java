@@ -48,7 +48,7 @@ public final class RealSinh extends RealOutput implements UnaryOperation<Real,Re
 	}
 
 	@Override
-	public RealSinh duplicate() {
+	public RealSinh copy() {
 		return new RealSinh();
 	}
 	

@@ -51,7 +51,7 @@ public final class ComplexDivide extends ComplexOutput implements BinaryOperatio
 	}
 
 	@Override
-	public ComplexDivide duplicate() {
+	public ComplexDivide copy() {
 		return new ComplexDivide();
 	}
 }

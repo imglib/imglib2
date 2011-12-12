@@ -50,7 +50,7 @@ public final class RealArccos extends RealOutput implements UnaryOperation<Real,
 	}
 
 	@Override
-	public RealArccos duplicate() {
+	public RealArccos copy() {
 		return new RealArccos();
 	}
 	
