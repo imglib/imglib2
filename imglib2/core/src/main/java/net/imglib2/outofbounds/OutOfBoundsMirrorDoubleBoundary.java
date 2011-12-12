@@ -168,19 +168,14 @@ final public class OutOfBoundsMirrorDoubleBoundary< T > extends AbstractOutOfBou
 			}
 			else
 			{
-				/* catches mod == 1 to no additional cost */
-				try
+				position %= x;
+				if ( position >= mod )
 				{
-					position %= x;
-					if ( position >= mod )
-					{
-						position = x - position - 1;
-						inc[ d ] = !pos;
-					}
-					else
-						inc[ d ] = pos;
+					position = x - position - 1;
+					inc[ d ] = !pos;
 				}
-				catch ( ArithmeticException e ){ position = 0; }
+				else
+					inc[ d ] = pos;
 			}
 		}
 		else
