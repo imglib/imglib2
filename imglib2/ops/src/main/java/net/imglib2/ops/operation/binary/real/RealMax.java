@@ -30,28 +30,30 @@ POSSIBILITY OF SUCH DAMAGE.
 package net.imglib2.ops.operation.binary.real;
 
 import net.imglib2.ops.BinaryOperation;
-import net.imglib2.ops.Real;
-import net.imglib2.ops.RealOutput;
+import net.imglib2.type.numeric.RealType;
 
 /**
  * 
  * @author Barry DeZonia
  *
  */
-public final class RealMax extends RealOutput implements BinaryOperation<Real,Real,Real> {
+public final class RealMax<T extends RealType<T>> implements BinaryOperation<T,T,T> {
 
 	@Override
-	public void compute(Real x1, Real x2, Real output) {
-		double value;
-		if (x1.getReal() > x2.getReal())
-			value = x1.getReal();
+	public void compute(T x1, T x2, T output) {
+		if (x1.getRealDouble() > x2.getRealDouble())
+			output.set(x1);
 		else
-			value = x2.getReal();
-		output.setReal(value);
+			output.set(x2);
 	}
 
 	@Override
-	public RealMax copy() {
-		return new RealMax();
+	public RealMax<T> copy() {
+		return new RealMax<T>();
+	}
+
+	@Override
+	public T createOutput(T dataHint1, T dataHint2) {
+		return dataHint1.createVariable();
 	}
 }

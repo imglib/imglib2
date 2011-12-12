@@ -30,24 +30,28 @@ POSSIBILITY OF SUCH DAMAGE.
 package net.imglib2.ops.operation.binary.real;
 
 import net.imglib2.ops.BinaryOperation;
-import net.imglib2.ops.Real;
-import net.imglib2.ops.RealOutput;
+import net.imglib2.type.numeric.RealType;
 
 /**
  * 
  * @author Barry DeZonia
  *
  */
-public final class RealDifference extends RealOutput implements BinaryOperation<Real,Real,Real> {
+public final class RealDifference<T extends RealType<T>> implements BinaryOperation<T,T,T> {
 
 	@Override
-	public void compute(Real x1, Real x2, Real output) {
-		double value = Math.abs(x1.getReal() - x2.getReal());
+	public void compute(T x1, T x2, T output) {
+		double value = Math.abs(x1.getRealDouble() - x2.getRealDouble());
 		output.setReal(value);
 	}
 
 	@Override
-	public RealDifference copy() {
-		return new RealDifference();
+	public RealDifference<T> copy() {
+		return new RealDifference<T>();
+	}
+
+	@Override
+	public T createOutput(T dataHint1, T dataHint2) {
+		return dataHint1.createVariable();
 	}
 }

@@ -41,8 +41,8 @@ public final class RealAdd<T extends RealType<T>> implements BinaryOperation<T,T
 
 	@Override
 	public void compute(T x1, T x2,T output) {
-		double value = x1.getRealDouble() + x2.getRealDouble();
-		output.setReal(value);
+		output.set(x1);
+		output.add(x2);
 	}
 
 	@Override

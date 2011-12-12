@@ -30,8 +30,7 @@ POSSIBILITY OF SUCH DAMAGE.
 package net.imglib2.ops.operation.binary.real;
 
 import net.imglib2.ops.BinaryOperation;
-import net.imglib2.ops.Real;
-import net.imglib2.ops.RealOutput;
+import net.imglib2.type.numeric.RealType;
 
 // NB - this method required by IJ2 for IJ1 compatibility
 
@@ -40,18 +39,23 @@ import net.imglib2.ops.RealOutput;
  * @author Barry DeZonia
  *
  */
-public final class RealCopyZeroTransparent extends RealOutput implements BinaryOperation<Real,Real,Real> {
+public final class RealCopyZeroTransparent<T extends RealType<T>> implements BinaryOperation<T,T,T> {
 
 	@Override
-	public void compute(Real x1, Real x2, Real output) {
-		if (x2.getReal() == 0)
-			output.setReal(x1.getReal());
+	public void compute(T x1, T x2, T output) {
+		if (x2.getRealDouble() == 0)
+			output.set(x1);
 		else
-			output.setReal(x2.getReal());
+			output.set(x2);
 	}
 
 	@Override
-	public RealCopyZeroTransparent copy() {
-		return new RealCopyZeroTransparent();
+	public RealCopyZeroTransparent<T> copy() {
+		return new RealCopyZeroTransparent<T>();
+	}
+
+	@Override
+	public T createOutput(T dataHint1, T dataHint2) {
+		return dataHint1.createVariable();
 	}
 }
