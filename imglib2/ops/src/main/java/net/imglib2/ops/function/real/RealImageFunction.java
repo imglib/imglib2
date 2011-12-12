@@ -33,9 +33,7 @@ import net.imglib2.ExtendedRandomAccessibleInterval;
 import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessible;
 import net.imglib2.img.Img;
-import net.imglib2.ops.RealOutput;
 import net.imglib2.ops.Function;
-import net.imglib2.ops.Real;
 import net.imglib2.ops.Neighborhood;
 import net.imglib2.outofbounds.OutOfBoundsFactory;
 import net.imglib2.type.numeric.RealType;
@@ -45,33 +43,31 @@ import net.imglib2.type.numeric.RealType;
  * @author Barry DeZonia
  *
  */
-public class RealImageFunction
-	extends RealOutput implements Function<long[],Real>
+public class RealImageFunction<T extends RealType<T>> implements Function<long[],T>
 {
 	// -- instance variables --
 	
-	private final RandomAccess<? extends RealType<?>> accessor;
+	private final RandomAccess<T> accessor;
 	
 	// -- private constructor used by duplicate() --
 	
-	private RealImageFunction(
-		RandomAccess<? extends RealType<?>> acc)
+	private RealImageFunction(RandomAccess<T> acc)
 	{
 		this.accessor = acc;
 	}
 	
 	// -- public constructors --
 	
-	public RealImageFunction(Img<? extends RealType<?>> img) {
+	public RealImageFunction(Img<T> img) {
 		this.accessor = img.randomAccess();
 	}
 	
 	public RealImageFunction(
-		Img<? extends RealType<?>> img,
-		OutOfBoundsFactory<? extends RealType<?>,Img<? extends RealType<?>>> factory)
+		Img<T> img,
+		OutOfBoundsFactory<T,Img<T>> factory)
 	{
 		@SuppressWarnings({"rawtypes","unchecked"})
-		RandomAccessible< ? extends RealType<?>> extendedRandAcessible =
+		RandomAccessible<T> extendedRandAcessible =
 				new ExtendedRandomAccessibleInterval(img, factory);
 		this.accessor =  extendedRandAcessible.randomAccess();
 	}
@@ -79,7 +75,7 @@ public class RealImageFunction
 	// -- public interface --
 	
 	@Override
-	public void evaluate(Neighborhood<long[]> input, long[] point, Real output)
+	public void evaluate(Neighborhood<long[]> input, long[] point, T output)
 	{
 		accessor.setPosition(point);
 		double r = accessor.get().getRealDouble();
@@ -87,7 +83,12 @@ public class RealImageFunction
 	}
 
 	@Override
-	public RealImageFunction duplicate() {
-		return new RealImageFunction(accessor.copyRandomAccess());
+	public RealImageFunction<T> duplicate() {
+		return new RealImageFunction<T>(accessor.copyRandomAccess());
+	}
+
+	@Override
+	public T createOutput() {
+		return accessor.get().createVariable();
 	}
 }

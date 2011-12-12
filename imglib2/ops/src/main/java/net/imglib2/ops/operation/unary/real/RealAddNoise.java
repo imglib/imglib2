@@ -31,9 +31,8 @@ package net.imglib2.ops.operation.unary.real;
 
 import java.util.Random;
 
-import net.imglib2.ops.Real;
-import net.imglib2.ops.RealOutput;
 import net.imglib2.ops.UnaryOperation;
+import net.imglib2.type.numeric.RealType;
 
 
 /**
@@ -41,7 +40,7 @@ import net.imglib2.ops.UnaryOperation;
  * @author Barry DeZonia
  *
  */
-public final class RealAddNoise extends RealOutput implements UnaryOperation<Real,Real> {
+public final class RealAddNoise<T extends RealType<T>> implements UnaryOperation<T,T> {
 
 	private final double rangeMin;
 	private final double rangeMax;
@@ -57,11 +56,11 @@ public final class RealAddNoise extends RealOutput implements UnaryOperation<Rea
 	}
 	
 	@Override
-	public void compute(Real x, Real output) {
+	public void compute(T x, T output) {
 		int i = 0;
 		do
 		{
-			double newVal = x.getReal() + (rng.nextGaussian() * rangeStdDev);
+			double newVal = x.getRealDouble() + (rng.nextGaussian() * rangeStdDev);
 			
 			if ((rangeMin <= newVal) && (newVal <=rangeMax)) {
 				output.setReal(newVal);
@@ -75,7 +74,12 @@ public final class RealAddNoise extends RealOutput implements UnaryOperation<Rea
 	}
 
 	@Override
-	public RealAddNoise duplicate() {
-		return new RealAddNoise(rangeMin, rangeMax, rangeStdDev);
+	public RealAddNoise<T> duplicate() {
+		return new RealAddNoise<T>(rangeMin, rangeMax, rangeStdDev);
+	}
+
+	@Override
+	public T createOutput(T dataHint) {
+		return dataHint.createVariable();
 	}
 }

@@ -13,7 +13,7 @@ public class RealTypeAdd<T extends RealType<T>> implements BinaryOperation<T,T,T
 
 	@Override
 	public T createOutput() {
-		return null;
+		throw new UnsupportedOperationException();
 	}
 
 	@Override

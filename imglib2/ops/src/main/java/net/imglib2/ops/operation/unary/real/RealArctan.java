@@ -53,4 +53,10 @@ public final class RealArctan extends RealOutput implements UnaryOperation<Real,
 	public RealArctan duplicate() {
 		return new RealArctan();
 	}
+	
+	@Override
+	public T createOutput(T dataHint) {
+		return dataHint.createVariable();
+	}
+
 }

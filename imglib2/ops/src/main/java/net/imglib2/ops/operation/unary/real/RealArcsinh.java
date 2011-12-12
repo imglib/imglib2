@@ -54,4 +54,10 @@ public final class RealArcsinh extends RealOutput implements UnaryOperation<Real
 	public RealArcsinh duplicate() {
 		return new RealArcsinh();
 	}
+	
+	@Override
+	public T createOutput(T dataHint) {
+		return dataHint.createVariable();
+	}
+
 }

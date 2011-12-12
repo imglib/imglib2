@@ -52,4 +52,10 @@ public final class RealArcsin extends RealOutput implements UnaryOperation<Real,
 	public RealArcsin duplicate() {
 		return new RealArcsin();
 	}
+	
+	@Override
+	public T createOutput(T dataHint) {
+		return dataHint.createVariable();
+	}
+
 }

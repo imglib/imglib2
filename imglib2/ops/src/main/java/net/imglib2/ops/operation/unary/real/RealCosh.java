@@ -51,4 +51,10 @@ public final class RealCosh extends RealOutput implements UnaryOperation<Real,Re
 	public RealCosh duplicate() {
 		return new RealCosh();
 	}
+	
+	@Override
+	public T createOutput(T dataHint) {
+		return dataHint.createVariable();
+	}
+
 }

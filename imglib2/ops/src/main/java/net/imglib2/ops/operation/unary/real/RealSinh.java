@@ -51,4 +51,10 @@ public final class RealSinh extends RealOutput implements UnaryOperation<Real,Re
 	public RealSinh duplicate() {
 		return new RealSinh();
 	}
+	
+	@Override
+	public T createOutput(T dataHint) {
+		return dataHint.createVariable();
+	}
+
 }

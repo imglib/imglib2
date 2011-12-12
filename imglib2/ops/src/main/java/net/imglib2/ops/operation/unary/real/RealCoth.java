@@ -52,4 +52,10 @@ public final class RealCoth extends RealOutput implements UnaryOperation<Real,Re
 	public RealCoth duplicate() {
 		return new RealCoth();
 	}
+	
+	@Override
+	public T createOutput(T dataHint) {
+		return dataHint.createVariable();
+	}
+
 }

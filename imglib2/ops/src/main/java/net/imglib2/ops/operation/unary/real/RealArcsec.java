@@ -69,4 +69,10 @@ public final class RealArcsec extends RealOutput implements UnaryOperation<Real,
 	public RealArcsec duplicate() {
 		return new RealArcsec();
 	}
+	
+	@Override
+	public T createOutput(T dataHint) {
+		return dataHint.createVariable();
+	}
+
 }

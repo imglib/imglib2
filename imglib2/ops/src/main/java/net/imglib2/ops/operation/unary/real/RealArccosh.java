@@ -56,4 +56,10 @@ public final class RealArccosh extends RealOutput implements UnaryOperation<Real
 	public RealArccosh duplicate() {
 		return new RealArccosh();
 	}
+	
+	@Override
+	public T createOutput(T dataHint) {
+		return dataHint.createVariable();
+	}
+
 }

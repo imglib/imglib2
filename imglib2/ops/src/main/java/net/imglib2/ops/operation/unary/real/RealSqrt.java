@@ -51,4 +51,10 @@ public final class RealSqrt extends RealOutput implements UnaryOperation<Real,Re
 	public RealSqrt duplicate() {
 		return new RealSqrt();
 	}
+	
+	@Override
+	public T createOutput(T dataHint) {
+		return dataHint.createVariable();
+	}
+
 }

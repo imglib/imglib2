@@ -52,4 +52,10 @@ public final class RealCsc extends RealOutput implements UnaryOperation<Real,Rea
 	public RealCsc duplicate() {
 		return new RealCsc();
 	}
+	
+	@Override
+	public T createOutput(T dataHint) {
+		return dataHint.createVariable();
+	}
+
 }

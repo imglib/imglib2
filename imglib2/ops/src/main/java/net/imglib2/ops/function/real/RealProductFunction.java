@@ -31,9 +31,8 @@ package net.imglib2.ops.function.real;
 
 import net.imglib2.ops.Function;
 import net.imglib2.ops.Neighborhood;
-import net.imglib2.ops.Real;
-import net.imglib2.ops.RealOutput;
 import net.imglib2.ops.RegionIndexIterator;
+import net.imglib2.type.numeric.RealType;
 
 
 /**
@@ -41,20 +40,20 @@ import net.imglib2.ops.RegionIndexIterator;
  * @author Barry DeZonia
  *
  */
-public class RealProductFunction extends RealOutput implements Function<long[],Real> {
+public class RealProductFunction<T extends RealType<T>>  implements Function<long[],T> {
 
-	private final Function<long[],Real> otherFunc;
-	private final Real variable;
+	private final Function<long[],T> otherFunc;
+	private final T variable;
 	private RegionIndexIterator iter;
 	
-	public RealProductFunction(Function<long[],Real> otherFunc) {
+	public RealProductFunction(Function<long[],T> otherFunc) {
 		this.otherFunc = otherFunc;
 		this.variable = createOutput();
 		this.iter = null;
 	}
 	
 	@Override
-	public void evaluate(Neighborhood<long[]> region, long[] point, Real output) {
+	public void evaluate(Neighborhood<long[]> region, long[] point, T output) {
 		if (iter == null)
 			iter = new RegionIndexIterator(region);
 		else
@@ -64,13 +63,18 @@ public class RealProductFunction extends RealOutput implements Function<long[],R
 		while (iter.hasNext()) {
 			iter.fwd();
 			otherFunc.evaluate(region, iter.getPosition(), variable);
-			product *= variable.getReal();
+			product *= variable.getRealDouble();
 		}
 		output.setReal(product);
 	}
 
 	@Override
-	public RealProductFunction duplicate() {
-		return new RealProductFunction(otherFunc.duplicate());
+	public RealProductFunction<T> duplicate() {
+		return new RealProductFunction<T>(otherFunc.duplicate());
+	}
+
+	@Override
+	public T createOutput() {
+		return otherFunc.createOutput();
 	}
 }

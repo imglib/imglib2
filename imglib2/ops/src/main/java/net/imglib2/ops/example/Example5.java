@@ -34,10 +34,8 @@ import net.imglib2.img.Img;
 import net.imglib2.img.array.ArrayImgFactory;
 import net.imglib2.ops.DiscreteNeigh;
 import net.imglib2.ops.Function;
-import net.imglib2.ops.Real;
 import net.imglib2.ops.function.real.RealImageFunction;
 import net.imglib2.ops.function.real.RealConvolutionFunction;
-import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.real.DoubleType;
 
 // a 3x3 convolution example
@@ -86,9 +84,9 @@ public class Example5 {
 		return imgFactory.create(new long[]{XSIZE,YSIZE}, new DoubleType());
 	}
 
-	private static Img<? extends RealType<?>> makeInputImage() {
-		Img<? extends RealType<?>> inputImg = allocateImage();
-		RandomAccess<? extends RealType<?>> accessor = inputImg.randomAccess();
+	private static Img<DoubleType> makeInputImage() {
+		Img<DoubleType> inputImg = allocateImage();
+		RandomAccess<DoubleType> accessor = inputImg.randomAccess();
 		long[] pos = new long[2];
 		for (int x = 0; x < XSIZE; x++) {
 			for (int y = 0; y < YSIZE; y++) {
@@ -105,21 +103,21 @@ public class Example5 {
 	
 	private static boolean test3x3Convolution() {
 		boolean success = true;
-		Img<? extends RealType<?>> image = makeInputImage();
+		Img<DoubleType> image = makeInputImage();
 		DiscreteNeigh inputNeigh = new DiscreteNeigh(new long[2], new long[]{1,1}, new long[]{1,1});
-		Function<long[],Real> imageFunc = new RealImageFunction(image);
-		Function<long[],Real> convFunc = new RealConvolutionFunction(imageFunc,KERNEL);
+		Function<long[],DoubleType> imageFunc = new RealImageFunction<DoubleType>(image);
+		Function<long[],DoubleType> convFunc = new RealConvolutionFunction<DoubleType>(imageFunc,KERNEL);
 		long[] currPt = new long[2];
-		Real variable = new Real();
+		DoubleType variable = new DoubleType();
 		for (int x = 1; x < XSIZE-1; x++) {
 			for (int y = 1; y < YSIZE-1; y++) {
 				currPt[0] = x;
 				currPt[1] = y;
 				inputNeigh.moveTo(currPt);
 				convFunc.evaluate(inputNeigh, currPt, variable);
-				if (!veryClose(variable.getReal(), expectedValue(x, y))) {
+				if (!veryClose(variable.getRealDouble(), expectedValue(x, y))) {
 					System.out.println(" FAILURE at ("+x+","+y+"): expected ("
-						+expectedValue(x, y)+") actual ("+variable.getReal()+")");
+						+expectedValue(x, y)+") actual ("+variable.getRealDouble()+")");
 					success = false;
 				}
 			}

@@ -29,12 +29,11 @@ POSSIBILITY OF SUCH DAMAGE.
 
 package net.imglib2.ops.function.complex;
 
-import net.imglib2.ops.Complex;
-import net.imglib2.ops.ComplexOutput;
 import net.imglib2.ops.Function;
 import net.imglib2.ops.Neighborhood;
-import net.imglib2.ops.Real;
+import net.imglib2.ops.TempComplexType;
 import net.imglib2.ops.function.real.ConstantRealFunction;
+import net.imglib2.type.numeric.RealType;
 
 
 /**
@@ -42,36 +41,42 @@ import net.imglib2.ops.function.real.ConstantRealFunction;
  * @author Barry DeZonia
  *
  */
-public class CartesianComplexFunction<INDEX> extends ComplexOutput implements Function<INDEX,Complex> {
+public class CartesianComplexFunction<INDEX,T extends RealType<T>>
+	implements Function<INDEX,TempComplexType> {
 
-	private final Function<INDEX,Real> realFunc1;
-	private final Function<INDEX,Real> realFunc2;
-	private final Real real1;
-	private final Real real2;
+	private final Function<INDEX,T> realFunc1;
+	private final Function<INDEX,T> realFunc2;
+	private final T real1;
+	private final T real2;
 	
-	public CartesianComplexFunction(Function<INDEX,Real> realFunc) {
+	public CartesianComplexFunction(Function<INDEX,T> realFunc) {
 		this.realFunc1 = realFunc;
-		this.realFunc2 = new ConstantRealFunction<INDEX>(new Real(0));
-		this.real1 = new Real();
-		this.real2 = new Real();
+		this.realFunc2 = new ConstantRealFunction<INDEX,T>(realFunc.createOutput(),0);
+		this.real1 = realFunc.createOutput();
+		this.real2 = realFunc.createOutput();
 	}
 	
-	public CartesianComplexFunction(Function<INDEX,Real> realFunc1, Function<INDEX,Real> realFunc2) {
+	public CartesianComplexFunction(Function<INDEX,T> realFunc1, Function<INDEX,T> realFunc2) {
 		this.realFunc1 = realFunc1;
 		this.realFunc2 = realFunc2;
-		this.real1 = new Real();
-		this.real2 = new Real();
+		this.real1 = realFunc1.createOutput();
+		this.real2 = realFunc1.createOutput();
 	}
 	
 	@Override
-	public void evaluate(Neighborhood<INDEX> neigh, INDEX point, Complex value) {
+	public void evaluate(Neighborhood<INDEX> neigh, INDEX point, TempComplexType value) {
 		realFunc1.evaluate(neigh, point, real1);
 		realFunc2.evaluate(neigh, point, real2);
-		value.setCartesian(real1.getReal(),real2.getReal());
+		value.setComplexNumber(real1.getRealDouble(),real2.getRealDouble());
 	}
 	
 	@Override
-	public CartesianComplexFunction<INDEX> duplicate() {
-		return new CartesianComplexFunction<INDEX>(realFunc1.duplicate(), realFunc2.duplicate());
+	public CartesianComplexFunction<INDEX,T> duplicate() {
+		return new CartesianComplexFunction<INDEX,T>(realFunc1.duplicate(), realFunc2.duplicate());
+	}
+
+	@Override
+	public TempComplexType createOutput() {
+		return new TempComplexType();
 	}
 }

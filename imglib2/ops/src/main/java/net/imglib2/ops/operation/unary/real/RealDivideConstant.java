@@ -29,9 +29,8 @@ POSSIBILITY OF SUCH DAMAGE.
 
 package net.imglib2.ops.operation.unary.real;
 
-import net.imglib2.ops.Real;
-import net.imglib2.ops.RealOutput;
 import net.imglib2.ops.UnaryOperation;
+import net.imglib2.type.numeric.RealType;
 
 
 /**
@@ -39,7 +38,7 @@ import net.imglib2.ops.UnaryOperation;
  * @author Barry DeZonia
  *
  */
-public final class RealDivideConstant extends RealOutput implements UnaryOperation<Real,Real> {
+public final class RealDivideConstant<T extends RealType<T>> implements UnaryOperation<T,T> {
 
 	private final double constant;
 	private final double dbzVal;
@@ -50,18 +49,23 @@ public final class RealDivideConstant extends RealOutput implements UnaryOperati
 	}
 	
 	@Override
-	public void compute(Real x, Real output) {
+	public void compute(T x, T output) {
 		if (constant == 0) {
 			output.setReal(dbzVal);
 		}
 		else { // not dividing by zero
-			double value = x.getReal() / constant;
+			double value = x.getRealDouble() / constant;
 			output.setReal(value);
 		}
 	}
 
 	@Override
-	public RealDivideConstant duplicate() {
-		return new RealDivideConstant(constant,dbzVal);
+	public RealDivideConstant<T> duplicate() {
+		return new RealDivideConstant<T>(constant,dbzVal);
+	}
+
+	@Override
+	public T createOutput(T dataHint) {
+		return dataHint.createVariable();
 	}
 }

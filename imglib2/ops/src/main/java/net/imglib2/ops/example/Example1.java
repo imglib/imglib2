@@ -34,12 +34,10 @@ import net.imglib2.img.Img;
 import net.imglib2.img.array.ArrayImgFactory;
 import net.imglib2.ops.DiscreteNeigh;
 import net.imglib2.ops.Function;
-import net.imglib2.ops.Real;
 import net.imglib2.ops.function.general.GeneralBinaryFunction;
 import net.imglib2.ops.function.real.ConstantRealFunction;
 import net.imglib2.ops.function.real.RealImageFunction;
 import net.imglib2.ops.operation.binary.real.RealAdd;
-import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.real.DoubleType;
 
 
@@ -62,9 +60,9 @@ public class Example1 {
 		return imgFactory.create(new long[]{XSIZE,YSIZE}, new DoubleType());
 	}
 
-	private static Img<? extends RealType<?>> makeInputImage() {
-		Img<? extends RealType<?>> inputImg = allocateImage();
-		RandomAccess<? extends RealType<?>> accessor = inputImg.randomAccess();
+	private static Img<DoubleType> makeInputImage() {
+		Img<DoubleType> inputImg = allocateImage();
+		RandomAccess<DoubleType> accessor = inputImg.randomAccess();
 		long[] pos = new long[2];
 		for (int x = 0; x < XSIZE; x++) {
 			for (int y = 0; y < YSIZE; y++) {
@@ -83,28 +81,29 @@ public class Example1 {
 		
 		boolean success = true;
 		
-		Img<? extends RealType<?>> inputImage = makeInputImage();
+		Img<DoubleType> inputImage = makeInputImage();
 		
 		DiscreteNeigh neighborhood = new DiscreteNeigh(new long[2], new long[2], new long[2]);
 		
-		Function<long[],Real> constant = new ConstantRealFunction<long[]>(new Real(15));
+		Function<long[],DoubleType> constant = new ConstantRealFunction<long[],DoubleType>(inputImage.firstElement(),15);
 		
-		Function<long[],Real> image = new RealImageFunction(inputImage);
+		Function<long[],DoubleType> image = new RealImageFunction<DoubleType>(inputImage);
 
-		Function<long[],Real> additionFunc =
-			new GeneralBinaryFunction<long[], Real, Real, Real>(constant, image, new RealAdd());
+		Function<long[],DoubleType> additionFunc =
+			new GeneralBinaryFunction<long[], DoubleType, DoubleType, DoubleType>
+			(constant, image, new RealAdd<DoubleType>());
 		
 		long[] index = neighborhood.getKeyPoint();
 		
-		Real pointValue = new Real();
+		DoubleType pointValue = new DoubleType();
 		for (int x = 0; x < XSIZE; x++) {
 			for (int y = 0; y < YSIZE; y++) {
 				index[0] = x;
 				index[1] = y;
 				additionFunc.evaluate(neighborhood, neighborhood.getKeyPoint(), pointValue);
-				if (! veryClose(pointValue.getReal(), (x+y+15))) {
+				if (! veryClose(pointValue.getRealDouble(), (x+y+15))) {
 					System.out.println(" FAILURE at ("+x+","+y+"): expected ("
-							+(x+y+15)+") actual ("+pointValue.getReal()+")");
+							+(x+y+15)+") actual ("+pointValue.getRealDouble()+")");
 					success = false;
 				}
 			}

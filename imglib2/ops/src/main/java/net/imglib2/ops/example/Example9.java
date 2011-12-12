@@ -34,7 +34,6 @@ import net.imglib2.img.Img;
 import net.imglib2.img.array.ArrayImgFactory;
 import net.imglib2.ops.DiscreteNeigh;
 import net.imglib2.ops.Function;
-import net.imglib2.ops.Real;
 import net.imglib2.ops.function.general.GeneralBinaryFunction;
 import net.imglib2.ops.function.general.GeneralUnaryFunction;
 import net.imglib2.ops.function.real.RealConvolutionFunction;
@@ -57,7 +56,7 @@ public class Example9 {
 	private static final int XSIZE = 45;
 	private static final int YSIZE = 104;
 	
-	private static Img<? extends RealType<?>> img;
+	private static Img<DoubleType> img;
 
 	private static long[] globalPos = new long[2];
 
@@ -68,9 +67,9 @@ public class Example9 {
 		return imgFactory.create(new long[]{XSIZE,YSIZE}, new DoubleType());
 	}
 
-	private static Img<? extends RealType<?>> makeInputImage() {
-		Img<? extends RealType<?>> inputImg = allocateImage();
-		RandomAccess<? extends RealType<?>> accessor = inputImg.randomAccess();
+	private static Img<DoubleType> makeInputImage() {
+		Img<DoubleType> inputImg = allocateImage();
+		RandomAccess<DoubleType> accessor = inputImg.randomAccess();
 		long[] pos = new long[3];
 		for (int x = 0; x < XSIZE; x++) {
 			pos[0] = x;
@@ -140,23 +139,23 @@ public class Example9 {
 		boolean success = true;
 		img = makeInputImage();
 		DiscreteNeigh neigh = new DiscreteNeigh(new long[2], new long[]{1,1}, new long[]{1,1});
-		Function<long[],Real> imgFunc = new RealImageFunction(img);
+		Function<long[],DoubleType> imgFunc = new RealImageFunction<DoubleType>(img);
 		double[] kernel1 = new double[]{-1,-2,-1,0,0,0,1,2,1};
 		double[] kernel2 = new double[]{-1,0,1,-2,0,2,-1,0,1};
-		Function<long[],Real> convFunc1 = new RealConvolutionFunction(imgFunc, kernel1);
-		Function<long[],Real> convFunc2 = new RealConvolutionFunction(imgFunc, kernel2);
-		Function<long[],Real> absFunc1 = new GeneralUnaryFunction<long[], Real, Real>(convFunc1, new RealAbs());
-		Function<long[],Real> absFunc2 = new GeneralUnaryFunction<long[], Real, Real>(convFunc2, new RealAbs());
-		Function<long[],Real> addFunc = new GeneralBinaryFunction<long[], Real, Real, Real>(absFunc1, absFunc2, new RealAdd());
-		Real output = new Real();
+		Function<long[],DoubleType> convFunc1 = new RealConvolutionFunction<DoubleType>(imgFunc, kernel1);
+		Function<long[],DoubleType> convFunc2 = new RealConvolutionFunction<DoubleType>(imgFunc, kernel2);
+		Function<long[],DoubleType> absFunc1 = new GeneralUnaryFunction<long[], DoubleType, DoubleType>(convFunc1, new RealAbs<DoubleType>());
+		Function<long[],DoubleType> absFunc2 = new GeneralUnaryFunction<long[], DoubleType, DoubleType>(convFunc2, new RealAbs<DoubleType>());
+		Function<long[],DoubleType> addFunc = new GeneralBinaryFunction<long[], DoubleType, DoubleType, DoubleType>(absFunc1, absFunc2, new RealAdd<DoubleType>());
+		DoubleType output = new DoubleType();
 		for (int x = 1; x < XSIZE-1; x++) {
 			for (int y = 1; y < YSIZE-1; y++) {
 				neigh.getKeyPoint()[0] = x;
 				neigh.getKeyPoint()[1] = y;
 				addFunc.evaluate(neigh, neigh.getKeyPoint(), output);
-				if (!veryClose(output.getReal(), expectedValue(x, y))) {
+				if (!veryClose(output.getRealDouble(), expectedValue(x, y))) {
 					System.out.println(" FAILURE at ("+x+","+y+"): expected ("
-						+expectedValue(x,y)+") actual ("+output.getReal()+")");
+						+expectedValue(x,y)+") actual ("+output.getRealDouble()+")");
 					success = false;
 				}
 			}			

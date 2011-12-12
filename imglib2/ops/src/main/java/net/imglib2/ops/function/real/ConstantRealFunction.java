@@ -31,8 +31,7 @@ package net.imglib2.ops.function.real;
 
 import net.imglib2.ops.Function;
 import net.imglib2.ops.Neighborhood;
-import net.imglib2.ops.Real;
-import net.imglib2.ops.RealOutput;
+import net.imglib2.type.numeric.RealType;
 
 
 /**
@@ -40,22 +39,27 @@ import net.imglib2.ops.RealOutput;
  * @author Barry DeZonia
  *
  */
-public class ConstantRealFunction<INDEX> extends RealOutput implements Function<INDEX,Real> {
-	private final Real real;
+public class ConstantRealFunction<INDEX, T extends RealType<T>> implements Function<INDEX,T> {
+	private final T real;
 
-	public ConstantRealFunction(Real r) {
-		real = new Real();
-		real.setValue(r);
+	public ConstantRealFunction(T typeHint, double r) {
+		real = typeHint.createVariable();
+		real.setReal(r);
 	}
 	
 	@Override
-	public void evaluate(Neighborhood<INDEX> region, INDEX point, Real r) {
-		r.setValue(real);
+	public void evaluate(Neighborhood<INDEX> region, INDEX point, T r) {
+		r.set(real);
 	}
 
 	@Override
-	public ConstantRealFunction<INDEX> duplicate() {
-		return new ConstantRealFunction<INDEX>(real);
+	public ConstantRealFunction<INDEX,T> duplicate() {
+		return new ConstantRealFunction<INDEX,T>(real, real.getRealDouble());
+	}
+
+	@Override
+	public T createOutput() {
+		return real.createVariable();
 	}
 }
 

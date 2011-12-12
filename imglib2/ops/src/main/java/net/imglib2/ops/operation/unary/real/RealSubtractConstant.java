@@ -57,4 +57,10 @@ public final class RealSubtractConstant extends RealOutput implements UnaryOpera
 	public RealSubtractConstant duplicate() {
 		return new RealSubtractConstant(constant);
 	}
+	
+	@Override
+	public T createOutput(T dataHint) {
+		return dataHint.createVariable();
+	}
+
 }

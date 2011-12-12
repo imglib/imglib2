@@ -58,4 +58,10 @@ public class RealSincPi extends RealOutput implements UnaryOperation<Real,Real> 
 		return new RealSincPi();
 	}
 
+	
+	@Override
+	public T createOutput(T dataHint) {
+		return dataHint.createVariable();
+	}
+
 }

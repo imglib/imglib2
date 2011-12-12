@@ -51,4 +51,10 @@ public final class RealCos extends RealOutput implements UnaryOperation<Real,Rea
 	public RealCos duplicate() {
 		return new RealCos();
 	}
+	
+	@Override
+	public T createOutput(T dataHint) {
+		return dataHint.createVariable();
+	}
+
 }

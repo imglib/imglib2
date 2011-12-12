@@ -60,4 +60,10 @@ public final class RealReciprocal extends RealOutput implements UnaryOperation<R
 	public RealReciprocal duplicate() {
 		return new RealReciprocal(dbzVal);
 	}
+	
+	@Override
+	public T createOutput(T dataHint) {
+		return dataHint.createVariable();
+	}
+
 }

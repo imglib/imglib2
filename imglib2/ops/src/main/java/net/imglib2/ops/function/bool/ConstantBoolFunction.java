@@ -29,10 +29,9 @@ POSSIBILITY OF SUCH DAMAGE.
 
 package net.imglib2.ops.function.bool;
 
-import net.imglib2.ops.Bool;
-import net.imglib2.ops.BoolOutput;
 import net.imglib2.ops.Function;
 import net.imglib2.ops.Neighborhood;
+import net.imglib2.type.logic.BitType;
 
 
 /**
@@ -40,7 +39,7 @@ import net.imglib2.ops.Neighborhood;
  * @author Barry DeZonia
  *
  */
-public class ConstantBoolFunction<INDEX> extends BoolOutput implements Function<INDEX,Bool> {
+public class ConstantBoolFunction<INDEX> implements Function<INDEX,BitType> {
 	private final boolean bool;
 
 	public ConstantBoolFunction(boolean b) {
@@ -48,13 +47,18 @@ public class ConstantBoolFunction<INDEX> extends BoolOutput implements Function<
 	}
 	
 	@Override
-	public void evaluate(Neighborhood<INDEX> neigh, INDEX point, Bool b) {
-		b.setBool(bool);
+	public void evaluate(Neighborhood<INDEX> neigh, INDEX point, BitType b) {
+		b.set(bool);
 	}
 	
 	@Override
 	public ConstantBoolFunction<INDEX> duplicate() {
 		return new ConstantBoolFunction<INDEX>(bool);
+	}
+
+	@Override
+	public BitType createOutput() {
+		return new BitType();
 	}
 }
 

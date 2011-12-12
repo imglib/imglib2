@@ -35,8 +35,6 @@ import net.imglib2.img.array.ArrayImgFactory;
 import net.imglib2.ops.Condition;
 import net.imglib2.ops.Function;
 import net.imglib2.ops.Neighborhood;
-import net.imglib2.ops.Real;
-import net.imglib2.ops.RealOutput;
 import net.imglib2.ops.condition.AndCondition;
 import net.imglib2.ops.function.general.ConditionalFunction;
 import net.imglib2.ops.image.RealImageAssignment;
@@ -82,10 +80,10 @@ public class Example7 {
 		}
 	}
 	
-	public static class XSquaredFunction extends RealOutput implements Function<long[],Real> {
+	public static class XSquaredFunction implements Function<long[],DoubleType> {
 
 		@Override
-		public void evaluate(Neighborhood<long[]> neigh, long[] point, Real output) {
+		public void evaluate(Neighborhood<long[]> neigh, long[] point, DoubleType output) {
 			output.setReal(point[0]*point[0]);
 		}
 		
@@ -93,19 +91,29 @@ public class Example7 {
 		public XSquaredFunction duplicate() {
 			return new XSquaredFunction();
 		}
+
+		@Override
+		public DoubleType createOutput() {
+			return new DoubleType();
+		}
 		
 	}
 
-	public static class YLineFunction extends RealOutput implements Function<long[],Real> {
+	public static class YLineFunction implements Function<long[],DoubleType> {
 
 		@Override
-		public void evaluate(Neighborhood<long[]> neigh, long[] point, Real output) {
+		public void evaluate(Neighborhood<long[]> neigh, long[] point, DoubleType output) {
 			output.setReal(3*point[1]+19);
 		}
 		
 		@Override
 		public YLineFunction duplicate() {
 			return new YLineFunction();
+		}
+
+		@Override
+		public DoubleType createOutput() {
+			return new DoubleType();
 		}
 		
 	}
@@ -189,11 +197,11 @@ public class Example7 {
 	
 	private static boolean testComplicatedAssignment() {
 		Condition<long[]> xValCond = new XValueCondition();
-		Function<long[],Real> xSquaredFunc = new XSquaredFunction();
-		Function<long[],Real> yLineFunc = new YLineFunction();
-		Function<long[],Real> function =
-			new ConditionalFunction<long[],Real>(xValCond, xSquaredFunc, yLineFunc);
-		Img<? extends RealType<?>> image = allocateImage();
+		Function<long[],DoubleType> xSquaredFunc = new XSquaredFunction();
+		Function<long[],DoubleType> yLineFunc = new YLineFunction();
+		Function<long[],DoubleType> function =
+			new ConditionalFunction<long[],DoubleType>(xValCond, xSquaredFunc, yLineFunc);
+		Img<DoubleType> image = allocateImage();
 		RealImageAssignment assigner = new RealImageAssignment(image, new long[2], new long[]{XSIZE,YSIZE}, function, new long[2], new long[2]);
 		Condition<long[]> circleCond = new CircularCondition();
 		Condition<long[]> sumCond = new XYSumCondition();

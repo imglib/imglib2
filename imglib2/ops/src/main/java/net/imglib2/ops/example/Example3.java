@@ -34,11 +34,9 @@ import net.imglib2.img.Img;
 import net.imglib2.img.array.ArrayImgFactory;
 import net.imglib2.ops.DiscreteNeigh;
 import net.imglib2.ops.Function;
-import net.imglib2.ops.Real;
 import net.imglib2.ops.function.real.RealImageFunction;
 import net.imglib2.ops.function.real.RealMedianFunction;
-import net.imglib2.type.numeric.RealType;
-import net.imglib2.type.numeric.real.DoubleType;
+import net.imglib2.type.numeric.integer.LongType;
 
 // a 3x3x3 median example
 
@@ -57,14 +55,14 @@ public class Example3 {
 		return Math.abs(d1-d2) < 0.00001;
 	}
 
-	private static Img<DoubleType> allocateImage() {
-		final ArrayImgFactory<DoubleType> imgFactory = new ArrayImgFactory<DoubleType>();
-		return imgFactory.create(new long[]{XSIZE,YSIZE,ZSIZE}, new DoubleType());
+	private static Img<LongType> allocateImage() {
+		final ArrayImgFactory<LongType> imgFactory = new ArrayImgFactory<LongType>();
+		return imgFactory.create(new long[]{XSIZE,YSIZE,ZSIZE}, new LongType());
 	}
 
-	private static Img<? extends RealType<?>> makeInputImage() {
-		Img<? extends RealType<?>> inputImg = allocateImage();
-		RandomAccess<? extends RealType<?>> accessor = inputImg.randomAccess();
+	private static Img<LongType> makeInputImage() {
+		Img<LongType> inputImg = allocateImage();
+		RandomAccess<LongType> accessor = inputImg.randomAccess();
 		long[] pos = new long[3];
 		for (int x = 0; x < XSIZE; x++) {
 			for (int y = 0; y < YSIZE; y++) {
@@ -84,12 +82,12 @@ public class Example3 {
 	
 	private static boolean test3x3x3Median() {
 		boolean success = true;
-		Img<? extends RealType<?>> image = makeInputImage();
+		Img<LongType> image = makeInputImage();
 		DiscreteNeigh inputNeigh = new DiscreteNeigh(new long[3], new long[]{1,1,1}, new long[]{1,1,1});
-		Function<long[],Real> imageFunc = new RealImageFunction(image);
-		Function<long[],Real> medFunc = new RealMedianFunction(imageFunc);
+		Function<long[],LongType> imageFunc = new RealImageFunction<LongType>(image);
+		Function<long[],LongType> medFunc = new RealMedianFunction<LongType>(imageFunc);
 		long[] currPt = new long[3];
-		Real variable = new Real();
+		LongType variable = new LongType();
 		for (int x = 1; x < XSIZE-1; x++) {
 			for (int y = 1; y < YSIZE-1; y++) {
 				for (int z = 1; z < ZSIZE-1; z++) {
@@ -98,9 +96,9 @@ public class Example3 {
 					currPt[2] = z;
 					inputNeigh.moveTo(currPt);
 					medFunc.evaluate(inputNeigh, currPt, variable);
-					if (!veryClose(variable.getReal(), x + 2*y + 3*z)) {
+					if (!veryClose(variable.getRealDouble(), x + 2*y + 3*z)) {
 						System.out.println(" FAILURE at ("+x+","+y+"): expected ("
-							+(x + 2*y + 3*z)+") actual ("+variable.getReal()+")");
+							+(x + 2*y + 3*z)+") actual ("+variable.getRealDouble()+")");
 						success = false;
 					}
 				}

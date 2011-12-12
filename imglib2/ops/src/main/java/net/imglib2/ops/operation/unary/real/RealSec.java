@@ -52,4 +52,10 @@ public final class RealSec extends RealOutput implements UnaryOperation<Real,Rea
 	public RealSec duplicate() {
 		return new RealSec();
 	}
+	
+	@Override
+	public T createOutput(T dataHint) {
+		return dataHint.createVariable();
+	}
+
 }

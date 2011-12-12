@@ -51,4 +51,10 @@ public final class RealTanh extends RealOutput implements UnaryOperation<Real,Re
 	public RealTanh duplicate() {
 		return new RealTanh();
 	}
+	
+	@Override
+	public T createOutput(T dataHint) {
+		return dataHint.createVariable();
+	}
+
 }

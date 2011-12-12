@@ -52,4 +52,10 @@ public final class RealSech extends RealOutput implements UnaryOperation<Real,Re
 	public RealSech duplicate() {
 		return new RealSech();
 	}
+	
+	@Override
+	public T createOutput(T dataHint) {
+		return dataHint.createVariable();
+	}
+
 }

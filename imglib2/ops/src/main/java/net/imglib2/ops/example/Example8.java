@@ -37,12 +37,10 @@ import net.imglib2.img.Img;
 import net.imglib2.img.array.ArrayImgFactory;
 import net.imglib2.ops.DiscreteNeigh;
 import net.imglib2.ops.Function;
-import net.imglib2.ops.Real;
 import net.imglib2.ops.function.general.NeighborhoodAdapterFunction;
 import net.imglib2.ops.function.real.RealAverageFunction;
 import net.imglib2.ops.function.real.RealImageFunction;
 import net.imglib2.ops.function.real.RealMedianFunction;
-import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.real.DoubleType;
 
 // a dual neighborhood example that also uses an out of bounds strategy.
@@ -60,16 +58,16 @@ public class Example8 {
 	private static final long YSIZE = 15;
 	private static final long ZSIZE = 5;
 
-	private static Img<? extends RealType<?>> img;
+	private static Img<DoubleType> img;
 	
 	private static Img<DoubleType> allocateImage() {
 		final ArrayImgFactory<DoubleType> imgFactory = new ArrayImgFactory<DoubleType>();
 		return imgFactory.create(new long[]{XSIZE,YSIZE,ZSIZE}, new DoubleType());
 	}
 
-	private static Img<? extends RealType<?>> makeInputImage() {
-		Img<? extends RealType<?>> inputImg = allocateImage();
-		RandomAccess<? extends RealType<?>> accessor = inputImg.randomAccess();
+	private static Img<DoubleType> makeInputImage() {
+		Img<DoubleType> inputImg = allocateImage();
+		RandomAccess<DoubleType> accessor = inputImg.randomAccess();
 		long[] pos = new long[3];
 		for (int x = 0; x < XSIZE; x++) {
 			for (int y = 0; y < YSIZE; y++) {
@@ -88,7 +86,7 @@ public class Example8 {
 	}
 
 	private static double average(int x, int y) {
-		RandomAccess<? extends RealType<?>> accessor = img.randomAccess();
+		RandomAccess<DoubleType> accessor = img.randomAccess();
 		long[] pos = new long[3];
 		pos[0] = x;
 		pos[1] = y;
@@ -123,20 +121,20 @@ public class Example8 {
 		img = makeInputImage();
 		DiscreteNeigh avgNeigh = new DiscreteNeigh(new long[3], new long[]{0,0,0}, new long[]{0,0,ZSIZE-1});
 		DiscreteNeigh medianNeigh = new DiscreteNeigh(new long[3], new long[]{1,1,0}, new long[]{1,1,0});
-		Function<long[],Real> imgFunc = new RealImageFunction(img);
-		Function<long[],Real> avgFunc = new RealAverageFunction(imgFunc);
-		Function<long[],Real> adapFunc = new NeighborhoodAdapterFunction<long[],Real>(avgFunc, avgNeigh);
-		Function<long[],Real> medianFunc = new RealMedianFunction(adapFunc);
-		Real output = new Real();
+		Function<long[],DoubleType> imgFunc = new RealImageFunction<DoubleType>(img);
+		Function<long[],DoubleType> avgFunc = new RealAverageFunction<DoubleType>(imgFunc);
+		Function<long[],DoubleType> adapFunc = new NeighborhoodAdapterFunction<long[],DoubleType>(avgFunc, avgNeigh);
+		Function<long[],DoubleType> medianFunc = new RealMedianFunction<DoubleType>(adapFunc);
+		DoubleType output = new DoubleType();
 		for (int x = 1; x < XSIZE-1; x++) {
 			for (int y = 1; y < YSIZE-1; y++) {
 				medianNeigh.getKeyPoint()[0] = x;
 				medianNeigh.getKeyPoint()[1] = y;
 				medianNeigh.getKeyPoint()[2] = 0;
 				medianFunc.evaluate(medianNeigh, medianNeigh.getKeyPoint(), output);
-				if (!veryClose(output.getReal(), expectedValue(x, y))) {
+				if (!veryClose(output.getRealDouble(), expectedValue(x, y))) {
 					System.out.println(" FAILURE at ("+x+","+y+"): expected ("
-						+expectedValue(x,y)+") actual ("+output.getReal()+")");
+						+expectedValue(x,y)+") actual ("+output.getRealDouble()+")");
 					success = false;
 				}
 			}			

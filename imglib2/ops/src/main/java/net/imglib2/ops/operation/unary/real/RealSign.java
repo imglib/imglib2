@@ -54,4 +54,10 @@ public final class RealSign extends RealOutput implements UnaryOperation<Real,Re
 	public RealSign duplicate() {
 		return new RealSign();
 	}
+	
+	@Override
+	public T createOutput(T dataHint) {
+		return dataHint.createVariable();
+	}
+
 }

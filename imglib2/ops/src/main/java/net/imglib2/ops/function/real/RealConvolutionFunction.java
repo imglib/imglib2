@@ -31,9 +31,8 @@ package net.imglib2.ops.function.real;
 
 import net.imglib2.ops.Function;
 import net.imglib2.ops.Neighborhood;
-import net.imglib2.ops.Real;
-import net.imglib2.ops.RealOutput;
 import net.imglib2.ops.RegionIndexIterator;
+import net.imglib2.type.numeric.RealType;
 
 // NOTE : convolution and correlation are similar operations whose output is
 //   rotated by 180 degrees for the same kernel. You can get one or the other
@@ -53,14 +52,14 @@ import net.imglib2.ops.RegionIndexIterator;
  * @author Barry DeZonia
  *
  */
-public class RealConvolutionFunction extends RealOutput implements Function<long[],Real> {
+public class RealConvolutionFunction<T extends RealType<T>> implements Function<long[],T> {
 
-	private final Function<long[],Real> otherFunc;
-	private final Real variable;
+	private final Function<long[],T> otherFunc;
+	private final T variable;
 	private final double[] kernel;
 	private RegionIndexIterator iter;
 	
-	public RealConvolutionFunction(Function<long[],Real> otherFunc, double[] kernel) {
+	public RealConvolutionFunction(Function<long[],T> otherFunc, double[] kernel) {
 		this.otherFunc = otherFunc;
 		this.variable = createOutput();
 		this.kernel = kernel;
@@ -68,7 +67,7 @@ public class RealConvolutionFunction extends RealOutput implements Function<long
 	}
 	
 	@Override
-	public void evaluate(Neighborhood<long[]> region, long[] point, Real output) {
+	public void evaluate(Neighborhood<long[]> region, long[] point, T output) {
 		if (iter == null)
 			iter = new RegionIndexIterator(region);
 		else
@@ -79,13 +78,18 @@ public class RealConvolutionFunction extends RealOutput implements Function<long
 		while (iter.hasNext()) {
 			iter.fwd();
 			otherFunc.evaluate(region, iter.getPosition(), variable);
-			sum += variable.getReal() * kernel[cell++];
+			sum += variable.getRealDouble() * kernel[cell++];
 		}
 		output.setReal(sum);
 	}
 
 	@Override
-	public RealConvolutionFunction duplicate() {
-		return new RealConvolutionFunction(otherFunc.duplicate(), kernel.clone());
+	public RealConvolutionFunction<T> duplicate() {
+		return new RealConvolutionFunction<T>(otherFunc.duplicate(), kernel.clone());
+	}
+
+	@Override
+	public T createOutput() {
+		return otherFunc.createOutput();
 	}
 }

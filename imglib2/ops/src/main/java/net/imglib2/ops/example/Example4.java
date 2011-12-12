@@ -6,13 +6,11 @@ import net.imglib2.img.array.ArrayImgFactory;
 import net.imglib2.ops.Condition;
 import net.imglib2.ops.DiscreteNeigh;
 import net.imglib2.ops.Function;
-import net.imglib2.ops.Real;
 import net.imglib2.ops.condition.OnTheXYCrossCondition;
 import net.imglib2.ops.function.general.ConditionalFunction;
 import net.imglib2.ops.function.real.ConstantRealFunction;
 import net.imglib2.ops.function.real.RealImageFunction;
 import net.imglib2.ops.function.real.RealProductFunction;
-import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.real.DoubleType;
 
 // get values that are an average of the 5 values in a 3x3 cross
@@ -40,9 +38,9 @@ public class Example4 {
 		return imgFactory.create(new long[]{XSIZE,YSIZE}, new DoubleType());
 	}
 
-	private static Img<? extends RealType<?>> makeInputImage() {
-		Img<? extends RealType<?>> inputImg = allocateImage();
-		RandomAccess<? extends RealType<?>> accessor = inputImg.randomAccess();
+	private static Img<DoubleType> makeInputImage() {
+		Img<DoubleType> inputImg = allocateImage();
+		RandomAccess<DoubleType> accessor = inputImg.randomAccess();
 		long[] pos = new long[2];
 		for (int x = 0; x < XSIZE; x++) {
 			for (int y = 0; y < YSIZE; y++) {
@@ -58,25 +56,25 @@ public class Example4 {
 	private static boolean testCrossNeighborhoodProduct() {
 		boolean success = true;
 		
-		Img<? extends RealType<?>> inputImg = makeInputImage();
+		Img<DoubleType> inputImg = makeInputImage();
 		
 		DiscreteNeigh neigh = new DiscreteNeigh(new long[2], new long[]{1,1}, new long[]{1,1});
 		Condition<long[]> condition = new OnTheXYCrossCondition();
-		Function<long[],Real> input = new RealImageFunction(inputImg);
-		Function<long[],Real> one = new ConstantRealFunction<long[]>(new Real(1));
-		Function<long[],Real> conditionalFunc = new ConditionalFunction<long[],Real>(condition, input, one);
-		Function<long[],Real> prodFunc = new RealProductFunction(conditionalFunc); 
+		Function<long[],DoubleType> input = new RealImageFunction<DoubleType>(inputImg);
+		Function<long[],DoubleType> one = new ConstantRealFunction<long[],DoubleType>(inputImg.firstElement(),1);
+		Function<long[],DoubleType> conditionalFunc = new ConditionalFunction<long[],DoubleType>(condition, input, one);
+		Function<long[],DoubleType> prodFunc = new RealProductFunction<DoubleType>(conditionalFunc); 
 		long[] index = new long[2];
-		Real output = new Real();
+		DoubleType output = new DoubleType();
 		for (int x = 1; x < XSIZE-1; x++) {
 			for (int y = 1; y < YSIZE-1; y++) {
 				index[0] = x;
 				index[1] = y;
 				neigh.moveTo(index);
 				prodFunc.evaluate(neigh, neigh.getKeyPoint(), output);
-				if (!veryClose(output.getReal(), expectedValue(x,y))) {
+				if (!veryClose(output.getRealDouble(), expectedValue(x,y))) {
 					System.out.println(" FAILURE at ("+x+","+y+"): expected ("
-						+expectedValue(x,y)+") actual ("+output.getReal()+")");
+						+expectedValue(x,y)+") actual ("+output.getRealDouble()+")");
 					success = false;
 				}
 			}

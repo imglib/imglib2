@@ -36,8 +36,6 @@ import net.imglib2.ops.ContinuousNeigh;
 import net.imglib2.ops.DiscreteNeigh;
 import net.imglib2.ops.Function;
 import net.imglib2.ops.Neighborhood;
-import net.imglib2.ops.Real;
-import net.imglib2.ops.RealOutput;
 import net.imglib2.ops.function.real.RealImageFunction;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.real.DoubleType;
@@ -66,9 +64,9 @@ public class Example6 {
 		return imgFactory.create(new long[]{XSIZE,YSIZE}, new DoubleType());
 	}
 
-	private static Img<? extends RealType<?>> makeInputImage() {
-		Img<? extends RealType<?>> inputImg = allocateImage();
-		RandomAccess<? extends RealType<?>> accessor = inputImg.randomAccess();
+	private static Img<DoubleType> makeInputImage() {
+		Img<DoubleType> inputImg = allocateImage();
+		RandomAccess<DoubleType> accessor = inputImg.randomAccess();
 		long[] pos = new long[2];
 		for (int x = 0; x < XSIZE; x++) {
 			for (int y = 0; y < YSIZE; y++) {
@@ -102,14 +100,15 @@ public class Example6 {
 		return interpolate(ix,iy,ul,ur,ll,lr);
 	}
 	
-	private static class RealBilinearInterpolatorFunction extends RealOutput implements Function<double[],Real> {
+	private static class RealBilinearInterpolatorFunction<T extends RealType<T>> 
+	implements Function<double[],T> {
 
 		private DiscreteNeigh discreteNeigh;
-		private Function<long[],Real> discreteFunc;
+		private Function<long[],T> discreteFunc;
 		private long[] index;
-		private Real ul, ur, ll, lr;
+		private T ul, ur, ll, lr;
 		
-		public RealBilinearInterpolatorFunction(Function<long[],Real> discreteFunc) {
+		public RealBilinearInterpolatorFunction(Function<long[],T> discreteFunc) {
 			this.discreteFunc = discreteFunc;
 			this.index = new long[2];
 			this.ul = createOutput();
@@ -120,7 +119,7 @@ public class Example6 {
 		}
 
 		@Override
-		public void evaluate(Neighborhood<double[]> neigh, double[] point, Real output) {
+		public void evaluate(Neighborhood<double[]> neigh, double[] point, T output) {
 			if (discreteNeigh == null)
 				initNeigh(neigh);
 			long x = (long) Math.floor(point[0]);
@@ -131,16 +130,17 @@ public class Example6 {
 			getValue((x+1),(y+0),ur);
 			getValue((x+0),(y+1),ll);
 			getValue((x+1),(y+1),lr);
-			double value = Example6.interpolate(ix, iy, ul.getReal(), ur.getReal(), ll.getReal(), lr.getReal());
+			double value = Example6.interpolate(ix, iy, ul.getRealDouble(), 
+					ur.getRealDouble(), ll.getRealDouble(), lr.getRealDouble());
 			output.setReal(value);
 		}
 		
 		@Override
-		public RealBilinearInterpolatorFunction duplicate() {
-			return null;
+		public RealBilinearInterpolatorFunction<T> duplicate() {
+			throw new UnsupportedOperationException("not needed yet");
 		}
 		
-		private void getValue(long x, long y, Real output) {
+		private void getValue(long x, long y, T output) {
 			index[0] = x;
 			index[1] = y;
 			discreteNeigh.moveTo(index);
@@ -160,15 +160,20 @@ public class Example6 {
 			posOffs[1] = (long) cNeigh.getPositiveOffsets()[1];
 			discreteNeigh = new DiscreteNeigh(keyPt, negOffs, posOffs);
 		}
+
+		@Override
+		public T createOutput() {
+			return discreteFunc.createOutput();
+		}
 	}
 
 	private static boolean testCase(double ix, double iy) {
 		boolean success = true;
-		Img<? extends RealType<?>> inputImg = makeInputImage();
-		Function<long[],Real> input = new RealImageFunction(inputImg);
-		Function<double[],Real> interpolator = new RealBilinearInterpolatorFunction(input);
+		Img<DoubleType> inputImg = makeInputImage();
+		Function<long[],DoubleType> input = new RealImageFunction<DoubleType>(inputImg);
+		Function<double[],DoubleType> interpolator = new RealBilinearInterpolatorFunction<DoubleType>(input);
 		ContinuousNeigh neigh = new ContinuousNeigh(new double[2], new double[2], new double[2]);
-		Real variable = new Real();
+		DoubleType variable = new DoubleType();
 		double[] point = new double[2];
 		for (int x = 0; x < XSIZE-2; x++) {
 			for (int y = 0; y < YSIZE-2; y++) {
@@ -176,9 +181,9 @@ public class Example6 {
 				point[1] = y + iy;
 				neigh.moveTo(point);
 				interpolator.evaluate(neigh, point, variable);
-				if (!veryClose(variable.getReal(), expectedValue(x, y, ix, iy))) {
+				if (!veryClose(variable.getRealDouble(), expectedValue(x, y, ix, iy))) {
 					System.out.println(" FAILURE at ("+(x+ix)+","+(y+iy)+"): expected ("
-						+expectedValue(x,y,ix,iy)+") actual ("+variable.getReal()+")");
+						+expectedValue(x,y,ix,iy)+") actual ("+variable.getRealDouble()+")");
 					success = false;
 				}
 			}

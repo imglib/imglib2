@@ -68,7 +68,7 @@ public class ConverterFunction<INDEX,INTERMEDIATE_TYPE,FINAL_TYPE>
 	
 	@Override
 	public FINAL_TYPE createOutput() {
-		return operation.createOutput();
+		return operation.createOutput(variable);
 	}
 	
 	@Override

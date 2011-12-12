@@ -57,4 +57,10 @@ public final class RealPowerConstant extends RealOutput implements UnaryOperatio
 	public RealPowerConstant duplicate() {
 		return new RealPowerConstant(constant);
 	}
+	
+	@Override
+	public T createOutput(T dataHint) {
+		return dataHint.createVariable();
+	}
+
 }

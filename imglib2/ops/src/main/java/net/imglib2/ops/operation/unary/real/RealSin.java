@@ -51,4 +51,10 @@ public final class RealSin extends RealOutput implements UnaryOperation<Real,Rea
 	public RealSin duplicate() {
 		return new RealSin();
 	}
+	
+	@Override
+	public T createOutput(T dataHint) {
+		return dataHint.createVariable();
+	}
+
 }

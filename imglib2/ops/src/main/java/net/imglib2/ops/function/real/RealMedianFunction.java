@@ -34,23 +34,22 @@ import java.util.Collections;
 
 import net.imglib2.ops.Function;
 import net.imglib2.ops.Neighborhood;
-import net.imglib2.ops.Real;
-import net.imglib2.ops.RealOutput;
 import net.imglib2.ops.RegionIndexIterator;
+import net.imglib2.type.numeric.RealType;
 
 /**
  * 
  * @author Barry DeZonia
  *
  */
-public class RealMedianFunction extends RealOutput implements Function<long[],Real> {
+public class RealMedianFunction<T extends RealType<T>> implements Function<long[],T> {
 
-	private final Function<long[],Real> otherFunc;
-	private final Real variable;
+	private final Function<long[],T> otherFunc;
+	private final T variable;
 	private final ArrayList<Double> values;
 	private RegionIndexIterator iter;
 	
-	public RealMedianFunction(Function<long[],Real> otherFunc)
+	public RealMedianFunction(Function<long[],T> otherFunc)
 	{
 		this.otherFunc = otherFunc;
 		this.variable = createOutput();
@@ -59,7 +58,7 @@ public class RealMedianFunction extends RealOutput implements Function<long[],Re
 	}
 
 	@Override
-	public void evaluate(Neighborhood<long[]> region, long[] point, Real output) {
+	public void evaluate(Neighborhood<long[]> region, long[] point, T output) {
 		if (iter == null) {
 			iter = new RegionIndexIterator(region);
 		}
@@ -71,7 +70,7 @@ public class RealMedianFunction extends RealOutput implements Function<long[],Re
 		while (iter.hasNext()) {
 			iter.fwd();
 			otherFunc.evaluate(region, iter.getPosition(), variable);
-			values.add(variable.getReal());
+			values.add(variable.getRealDouble());
 			numElements++;
 		}
 		Collections.sort(values);
@@ -87,7 +86,12 @@ public class RealMedianFunction extends RealOutput implements Function<long[],Re
 	}
 
 	@Override
-	public RealMedianFunction duplicate() {
-		return new RealMedianFunction(otherFunc.duplicate());
+	public RealMedianFunction<T> duplicate() {
+		return new RealMedianFunction<T>(otherFunc.duplicate());
+	}
+
+	@Override
+	public T createOutput() {
+		return this.otherFunc.createOutput();
 	}
 }

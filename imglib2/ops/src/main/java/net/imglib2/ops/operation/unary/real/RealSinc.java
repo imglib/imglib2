@@ -58,4 +58,10 @@ public class RealSinc extends RealOutput implements UnaryOperation<Real,Real> {
 		return new RealSinc();
 	}
 
+	
+	@Override
+	public T createOutput(T dataHint) {
+		return dataHint.createVariable();
+	}
+
 }

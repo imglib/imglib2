@@ -62,7 +62,7 @@ public class GeneralUnaryFunction<INDEX, INPUT_TYPE, OUTPUT_TYPE>
 
 	@Override
 	public OUTPUT_TYPE createOutput() {
-		return operation.createOutput();
+		return operation.createOutput(temp);
 	}
 	
 

@@ -29,9 +29,8 @@ POSSIBILITY OF SUCH DAMAGE.
 
 package net.imglib2.ops.operation.unary.real;
 
-import net.imglib2.ops.Real;
-import net.imglib2.ops.RealOutput;
 import net.imglib2.ops.UnaryOperation;
+import net.imglib2.type.numeric.RealType;
 
 
 /**
@@ -39,8 +38,7 @@ import net.imglib2.ops.UnaryOperation;
  * @author Barry DeZonia
  *
  */
-public final class RealMinConstant extends RealOutput implements UnaryOperation<Real,Real> {
-
+public final class RealMinConstant<T extends RealType<T>> implements UnaryOperation<T,T> {
 	private final double constant;
 	
 	public RealMinConstant(double constant) {
@@ -48,8 +46,8 @@ public final class RealMinConstant extends RealOutput implements UnaryOperation<
 	}
 	
 	@Override
-	public void compute(Real x, Real output) {
-		double value = x.getReal();
+	public void compute(T x, T output) {
+		double value = x.getRealDouble();
 		if (value > constant)
 			output.setReal(value);
 		else
@@ -57,7 +55,12 @@ public final class RealMinConstant extends RealOutput implements UnaryOperation<
 	}
 
 	@Override
-	public RealMinConstant duplicate() {
-		return new RealMinConstant(constant);
+	public RealMinConstant<T> duplicate() {
+		return new RealMinConstant<T>(constant);
+	}
+
+	@Override
+	public T createOutput(T dataHint) {
+		return dataHint.createVariable();
 	}
 }

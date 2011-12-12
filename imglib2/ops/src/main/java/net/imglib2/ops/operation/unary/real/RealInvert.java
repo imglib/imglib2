@@ -29,9 +29,8 @@ POSSIBILITY OF SUCH DAMAGE.
 
 package net.imglib2.ops.operation.unary.real;
 
-import net.imglib2.ops.Real;
-import net.imglib2.ops.RealOutput;
 import net.imglib2.ops.UnaryOperation;
+import net.imglib2.type.numeric.RealType;
 
 
 /**
@@ -39,7 +38,7 @@ import net.imglib2.ops.UnaryOperation;
  * @author Barry DeZonia
  *
  */
-public final class RealInvert extends RealOutput implements UnaryOperation<Real,Real> {
+public final class RealInvert<T extends RealType<T>> implements UnaryOperation<T,T> {
 
 	private final double actualMin;
 	private final double actualMax;
@@ -51,14 +50,19 @@ public final class RealInvert extends RealOutput implements UnaryOperation<Real,
 	}
 
 	@Override
-	public void compute(Real x, Real output) {
-		double value = actualMax - (x.getReal() - actualMin);
+	public void compute(T x, T output) {
+		double value = actualMax - (x.getRealDouble() - actualMin);
 		output.setReal(value);
 	}
 
 	@Override
-	public RealInvert duplicate() {
-		return new RealInvert(actualMin,actualMax);
+	public RealInvert<T> duplicate() {
+		return new RealInvert<T>(actualMin,actualMax);
+	}
+
+	@Override
+	public T createOutput(T dataHint) {
+		return dataHint.createVariable();
 	}
 }
 
