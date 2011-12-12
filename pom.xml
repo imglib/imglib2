@@ -22,10 +22,12 @@
 
   <properties>
     <bio-formats.groupId>loci</bio-formats.groupId>
-    <bio-formats.version>4.3.3-SNAPSHOT</bio-formats.version>
+    <bio-formats.version>4.4-SNAPSHOT</bio-formats.version>
     <imagej.groupId>net.imagej</imagej.groupId>
     <imagej.version>${project.version}</imagej.version>
-    <imagej1.version>[1.45p,)</imagej1.version>
+    <imagej1.version>[1.45s,)</imagej1.version>
+    <mpicbg.groupId>mpicbg</mpicbg.groupId>
+    <mpicbg.version>20111128</mpicbg.version>
     <!-- NB: Avoid platform encoding warning when copying resources. -->
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -262,6 +264,11 @@
     <repository>
       <id>loci.snapshots</id>
       <url>http://dev.loci.wisc.edu/maven2/snapshots</url>
+    </repository>
+    <!-- NB: for commons-math -->
+    <repository>
+      <id>apache.snapshots</id>
+      <url>https://repository.apache.org/content/repositories/snapshots</url>
     </repository>
     <!-- NB: for various dependencies -->
     <repository>

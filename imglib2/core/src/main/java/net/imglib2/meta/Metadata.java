@@ -37,8 +37,9 @@ import net.imglib2.img.ImgPlus;
  * An interface for defining metadata that goes along with an {@link Img},
  * including name, dimensional axes and calibration information.
  * 
- * @author Curtis Rueden ctrueden at wisc.edu
+ * @author Curtis Rueden
  * @see ImgPlus
  */
-public interface Metadata extends Named, LabeledAxes, ImageMetadata {
+public interface Metadata extends Named, CalibratedSpace, ImageMetadata {
+	// marker interface - no implementation needed
 }

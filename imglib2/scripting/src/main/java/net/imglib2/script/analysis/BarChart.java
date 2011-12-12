@@ -54,6 +54,7 @@ public class BarChart extends JFrame
 		return chart;
 	}
 
+	@SuppressWarnings("boxing")
 	static private final JFreeChart createChart(final Collection<? extends Number> data, final String title,
 			final String xLabel, final String yLabel) {
 		DefaultCategoryDataset dcd = new DefaultCategoryDataset();

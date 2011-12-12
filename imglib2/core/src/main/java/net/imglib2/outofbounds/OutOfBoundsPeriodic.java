@@ -56,7 +56,30 @@ public class OutOfBoundsPeriodic< T > implements OutOfBounds< T >
 	
 	final protected int n;
 	
-	final protected long[] dimension, position, min;
+	/**
+	 * Dimensions of the wrapped {@link RandomAccessible}.
+	 */
+	final protected long[] dimension;
+
+	/**
+	 * Position relative to min, for internal calculations.
+	 * <em>zeroMinPos = position - min</em>.
+	 */
+	final protected long[] position;
+
+	/**
+	 * Minimum of the wrapped {@link RandomAccessible}.
+	 */
+	final protected long[] min;
+
+	final protected long[] beforeMin;
+
+	/**
+	 * Maximum of the wrapped {@link RandomAccessible}.
+	 */
+	final protected long[] max;
+
+	final protected long[] pastMax;
 	
 	final protected boolean[] dimIsOutOfBounds;
 	
@@ -67,12 +90,18 @@ public class OutOfBoundsPeriodic< T > implements OutOfBounds< T >
 		n = outOfBounds.numDimensions();
 		dimension = new long[ n ];
 		min = new long[ n ];
+		beforeMin = new long[ n ];
+		max = new long[ n ];
+		pastMax = new long[ n ];
 		position = new long[ n ];
 		dimIsOutOfBounds = new boolean[ n ];
 		for ( int d = 0; d < n; ++d )
 		{
 			dimension[ d ] = outOfBounds.dimension[ d ];
 			min[ d ] = outOfBounds.min[ d ];
+			beforeMin[ d ] = outOfBounds.beforeMin[ d ];
+			max[ d ] = outOfBounds.max[ d ];
+			pastMax[ d ] = outOfBounds.pastMax[ d ];
 			position[ d ] = outOfBounds.position[ d ];
 			dimIsOutOfBounds[ d ] = outOfBounds.dimIsOutOfBounds[ d ];
 		}
@@ -87,6 +116,15 @@ public class OutOfBoundsPeriodic< T > implements OutOfBounds< T >
 		f.dimensions( dimension );
 		min = new long[ n ];
 		f.min( min );
+		max = new long[ n ];
+		f.max( max );
+		beforeMin = new long[ n ];
+		pastMax = new long[ n ];
+		for ( int d = 0; d < n; ++d )
+		{
+			beforeMin[ d ] = min[ d ] - 1;
+			pastMax[ d ] = max[ d ] + 1;
+		}
 		position = new long[ n ];
 		dimIsOutOfBounds = new boolean[ n ];
 		
@@ -155,52 +193,52 @@ public class OutOfBoundsPeriodic< T > implements OutOfBounds< T >
 	public void localize( final float[] pos )
 	{
 		for ( int d = 0; d < n; ++d )
-			pos[ d ] = this.position[ d ] + min[ d ];
+			pos[ d ] = this.position[ d ];
 	}
 
 	@Override
 	public void localize( final double[] pos )
 	{
 		for ( int d = 0; d < n; ++d )
-			pos[ d ] = this.position[ d ] + min[ d ];
+			pos[ d ] = this.position[ d ];
 	}
 
 	@Override
 	public void localize( final int[] pos )
 	{
 		for ( int d = 0; d < n; ++d )
-			pos[ d ] = ( int )( this.position[ d ] + min[ d ] );
+			pos[ d ] = ( int )( this.position[ d ] );
 	}
 	
 	@Override
 	public void localize( final long[] pos )
 	{
 		for ( int d = 0; d < n; ++d )
-			pos[ d ] = this.position[ d ] + min[ d ];
+			pos[ d ] = this.position[ d ];
 	}
 	
 	@Override
 	public float getFloatPosition( final int d )
 	{
-		return position[ d ] + min[ d ];
+		return position[ d ];
 	}
 
 	@Override
 	public double getDoublePosition( final int d )
 	{
-		return position[ d ] + min[ d ];
+		return position[ d ];
 	}
 
 	@Override
 	public int getIntPosition( final int d )
 	{
-		return ( int )( position[ d ] + min[ d ] );
+		return ( int )( position[ d ] );
 	}
 
 	@Override
 	public long getLongPosition( final int d )
 	{
-		return position[ d ] + min[ d ];
+		return position[ d ];
 	}
 	
 	
@@ -210,17 +248,17 @@ public class OutOfBoundsPeriodic< T > implements OutOfBounds< T >
 	final public void fwd( final int d )
 	{
 		final long p = ++position[ d ];
-		if ( p == 0 )
+		if ( p == min[ d ] )
 		{
 			dimIsOutOfBounds[ d ] = false;
 			checkOutOfBounds();
 		}
-		else if ( p == dimension[ d ] )
+		else if ( p == pastMax[ d ] )
 			dimIsOutOfBounds[ d ] = isOutOfBounds = true;
 		
-		final long q = outOfBoundsRandomAccess.getLongPosition( d ) + 1;
-		if ( q == dimension[ d ] )
-			outOfBoundsRandomAccess.setPosition( 0, d );
+		final long q = outOfBoundsRandomAccess.getLongPosition( d );
+		if ( q == max[ d ] )
+			outOfBoundsRandomAccess.setPosition( min[ d ], d );
 		else
 			outOfBoundsRandomAccess.fwd( d  );
 	}
@@ -228,44 +266,46 @@ public class OutOfBoundsPeriodic< T > implements OutOfBounds< T >
 	@Override
 	final public void bck( final int d )
 	{
-		final long p = position[ d ]--;
-		if ( p == 0 )
+		final long p = --position[ d ];
+		if ( p == beforeMin[ d ] )
 			dimIsOutOfBounds[ d ] = isOutOfBounds = true;
-		else if ( p == dimension[ d ] )
+		else if ( p == max[ d ] )
 		{
 			dimIsOutOfBounds[ d ] = false;
 			checkOutOfBounds();
 		}
 		
 		final long q = outOfBoundsRandomAccess.getLongPosition( d );
-		if ( q == 0 )
-			outOfBoundsRandomAccess.setPosition( dimension[ d ] - 1, d );
+		if ( q == min[ d ] )
+			outOfBoundsRandomAccess.setPosition( max[ d ], d );
 		else
 			outOfBoundsRandomAccess.bck( d  );
 	}
 	
 	@Override
-	final public void setPosition( long position, final int d )
+	final public void setPosition( final long position, final int d )
 	{
-		position -= min[ d ];
 		this.position[ d ] = position;
-		final long mod = dimension[ d ];
-		if ( position < 0 )
+		final long minD = min[ d ];
+		final long maxD = max[ d ];
+		if ( position < minD )
 		{
-			outOfBoundsRandomAccess.setPosition( mod - 1 + ( ( position + 1 ) % mod ), d );
+			outOfBoundsRandomAccess.setPosition( maxD - ( maxD - position ) % dimension[ d ], d );
 			dimIsOutOfBounds[ d ] = isOutOfBounds = true;
 		}
-		else if ( position >= mod )
+		else if ( position > maxD )
 		{
-			outOfBoundsRandomAccess.setPosition( position % mod, d );
+			outOfBoundsRandomAccess.setPosition( minD + ( position - minD ) % dimension[ d ], d );
 			dimIsOutOfBounds[ d ] = isOutOfBounds = true;
 		}
 		else
 		{
 			outOfBoundsRandomAccess.setPosition( position, d );
-			dimIsOutOfBounds[ d ] = false;
 			if ( isOutOfBounds )
+			{
+				dimIsOutOfBounds[ d ] = false;
 				checkOutOfBounds();
+			}
 		}
 	}
 	

@@ -50,6 +50,11 @@ public class IterableRandomAccessibleInterval< T > implements IterableInterval< 
 	final protected RandomAccessibleInterval< T > interval;
 	final long size;
 	
+	public static < T > IterableRandomAccessibleInterval< T > create( final RandomAccessibleInterval< T > interval )
+	{
+		return new IterableRandomAccessibleInterval< T >( interval );
+	}
+
 	public IterableRandomAccessibleInterval( final RandomAccessibleInterval< T > interval )
 	{
 		this.interval = interval;

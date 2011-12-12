@@ -60,7 +60,7 @@ public class ExampleNotes {
 //   unary ops
 //   constraints
 //   assign operation
-//   imglib integration
+//   imglib integration  
 
 //Make a function that uses a condition to decide whether to evaluate
 //the function or not (i.e. condition could be a mask)
@@ -70,6 +70,6 @@ public class ExampleNotes {
 // note that regions always define a point. so there is no such empty
 //   region. this might cause minor problems with assign ops passed
 //   zero sized regions. but maybe that is impossible.
-
+ 
 // note that many of the unary ops use a constant value
 //   could make them binary ops passing a constant function

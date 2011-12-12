@@ -1,7 +1,28 @@
+/**
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License 2
+ * as published by the Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ * 
+ * An execption is the 1D FFT implementation of Dave Hale which we use as a
+ * library, wich is released under the terms of the Common Public License -
+ * v1.0, which is available at http://www.eclipse.org/legal/cpl-v10.html  
+ *
+ * @author Stephan Preibisch
+ */
 package net.imglib2.algorithm.gauss2;
 
 import net.imglib2.Interval;
 import net.imglib2.Iterator;
+import net.imglib2.Localizable;
 import net.imglib2.Location;
 import net.imglib2.RandomAccessible;
 import net.imglib2.Sampler;
@@ -18,20 +39,12 @@ import net.imglib2.outofbounds.OutOfBoundsMirrorFactory.Boundary;
 import net.imglib2.type.numeric.real.FloatType;
 import net.imglib2.view.Views;
 
-final public class GaussFloat extends GaussNativeType< FloatType >
+final public class GaussFloat extends Gauss< FloatType >
 {
-	public GaussFloat( final double[] sigma, final Img<FloatType> input )
-	{
-		this( sigma, Views.extend( input, new OutOfBoundsMirrorFactory< FloatType, Img<FloatType> >( Boundary.SINGLE ) ), input, input.factory() );
-	}
-
-	public GaussFloat( final double[] sigma, final Img<FloatType> input, final OutOfBoundsFactory< FloatType, Img<FloatType> > outOfBounds )
-	{
-		this( sigma, Views.extend( input, outOfBounds ), input, input.factory() );
-	}
+	protected boolean isArray;
 	
 	/**
-	 * Computes a Gaussian convolution on a {@link RandomAccessible} of {@link FloatType} in a certain {@link Interval}
+	 * Computes a Gaussian convolution with float precision on a {@link RandomAccessible} of {@link FloatType} in a certain {@link Interval}
 	 * and returns an {@link Img} defined by the {@link ImgFactory} containing the result
 	 * 
 	 * @param sigma - the sigma for the convolution
@@ -41,18 +54,75 @@ final public class GaussFloat extends GaussNativeType< FloatType >
 	 */
 	public GaussFloat( final double[] sigma, final RandomAccessible<FloatType> input, final Interval interval, final ImgFactory<FloatType> factory )
 	{
-		super( sigma, input, interval, factory.create( interval, new FloatType() ),  new Location( sigma.length ), factory );
+		super( sigma, input, interval, factory.create( interval, new FloatType() ), new Location( sigma.length ), factory, new FloatType() );
 	}
-	
-	@Override
-	public Img<FloatType> getResult()
-	{
-		return (Img<FloatType>)output;
-	}
-	
-	@Override
-	protected FloatType getProcessingType() { return new FloatType(); }
 
+	/**
+	 * Computes a Gaussian convolution with float precision on a {@link RandomAccessible} of {@link FloatType} in a certain {@link Interval}
+	 * and writes it into a given {@link RandomAccessible} at a specific location
+	 * 
+	 * @param sigma - the sigma for the convolution
+	 * @param input - the {@link RandomAccessible} to work on
+	 * @param interval - the area that is convolved
+	 * @param output - the {@link RandomAccessible} where the output will be written to
+	 * @param outputOffset - the offset that corresponds to the first pixel in output {@link RandomAccessible}
+	 * @param factory - the {@link ImgFactory} for creating temporary images
+	 */
+	public GaussFloat( final double[] sigma, final RandomAccessible<FloatType> input, final Interval interval, final RandomAccessible<FloatType> output, final Localizable outputOffset, final ImgFactory<FloatType> factory )
+	{
+		super( sigma, input, interval, output, outputOffset, factory, new FloatType() );
+	}
+	
+	/**
+	 * Computes a Gaussian convolution with float precision on an entire {@link Img} using the {@link OutOfBoundsMirrorFactory} with single boundary
+	 * 
+	 * @param sigma - the sigma for the convolution
+	 * @param input - the input {@link Img}
+	 */
+	public GaussFloat( final double[] sigma, final Img<FloatType> input )
+	{
+		this( sigma, Views.extend( input, new OutOfBoundsMirrorFactory< FloatType, Img<FloatType> >( Boundary.SINGLE ) ), input, input.factory() );
+	}
+
+	/**
+	 * Computes a Gaussian convolution with float precision on an entire {@link Img}
+	 * 
+	 * @param sigma - the sigma for the convolution
+	 * @param input - the input {@link Img}
+	 * @param outOfBounds - the {@link OutOfBoundsFactory} to use
+	 */
+	public GaussFloat( final double[] sigma, final Img<FloatType> input, final OutOfBoundsFactory< FloatType, Img<FloatType> > outOfBounds )
+	{
+		this( sigma, Views.extend( input, outOfBounds ), input, input.factory() );
+	}
+
+	public static Img< FloatType > gauss( final double[] sigma, final Img< FloatType> input )
+	{
+		final GaussFloat gauss = new GaussFloat( sigma, input );
+		gauss.call();
+		return (Img<FloatType>)gauss.getResult();
+	}
+
+	public static Img< FloatType > gauss( final double[] sigma, final Img< FloatType> input, final OutOfBoundsFactory< FloatType, Img<FloatType> > outOfBounds )
+	{
+		final GaussFloat gauss = new GaussFloat( sigma, input, outOfBounds );
+		gauss.call();
+		return (Img<FloatType>)gauss.getResult();
+	}
+
+	public static Img<FloatType> gauss( final double[] sigma, final RandomAccessible<FloatType> input, final Interval interval, final ImgFactory<FloatType> factory )
+	{
+		final GaussFloat gauss = new GaussFloat( sigma, input, interval, factory );
+		gauss.call();
+		return (Img<FloatType>)gauss.getResult();
+	}
+	
+	public static void gauss( final double[] sigma, final RandomAccessible<FloatType> input, final Interval interval, final RandomAccessible<FloatType> output, final Localizable outputOffset, final ImgFactory<FloatType> factory )
+	{
+		final GaussFloat gauss = new GaussFloat( sigma, input, interval, output, outputOffset, factory );
+		gauss.call();
+	}
+	
 	@Override
 	protected Img<FloatType> getProcessingLine( final long sizeProcessLine )
 	{
@@ -60,9 +130,15 @@ final public class GaussFloat extends GaussNativeType< FloatType >
 		
 		// try to use array if each individual line is not too long
 		if ( sizeProcessLine <= Integer.MAX_VALUE )
+		{
+			isArray = true;
 			processLine = new ArrayImgFactory< FloatType >().create( new long[]{ sizeProcessLine }, new FloatType() );
+		}
 		else
+		{
+			isArray = false;
 			processLine = new CellImgFactory< FloatType >( Integer.MAX_VALUE / 16 ).create( new long[]{ sizeProcessLine }, new FloatType() );
+		}
 		
 		return processLine;
 	}	
@@ -76,6 +152,12 @@ final public class GaussFloat extends GaussNativeType< FloatType >
 	 */
 	protected void processLine( final SamplingLineIterator< FloatType > input, final double[] kernel )
 	{
+		if ( !isArray() )
+		{
+			super.processLine( input, kernel );
+			return;
+		}
+		
 		final int kernelSize = kernel.length;
 		final int kernelSizeMinus1 = kernelSize - 1;
 		final int kernelSizeHalf = kernelSize / 2;
@@ -165,7 +247,7 @@ final public class GaussFloat extends GaussNativeType< FloatType >
 			for ( int i = 0; i < imgSize; ++i )
 			{
 				input.fwd();
-				
+
 				// copy input into a temp variable, it might be expensive to get()
 				final float copy = input.get().get();
 				
@@ -187,14 +269,21 @@ final public class GaussFloat extends GaussNativeType< FloatType >
 				final float copy = input.get().get();
 				
 				// set the random access in the processing line to the right position
-				final int position = i - kernelSize; 
-				indexLeft = Math.max( -1, position );
-				
 				// now add it to all output values it contributes to
-				int k = Math.max( 0, (int)position + 1 );
-				for ( int o = Math.max( 0, i - kernelSize + 1); o < imgSize; ++o )
-					v[ ++indexLeft ] += (float)(copy * kernel[ k++ ]);
-			}						
+				int o = i - kernelSize + 1;
+				int k = 0;
+				
+				if ( o < 0 )
+				{
+					k = -o;
+					o = 0;
+				}
+
+				for ( ; o < imgSize; ++o )
+					v[ o ] += (float)(copy * kernel[ k++ ]);
+			}
 		}
-	}	
+	}
+
+	protected boolean isArray() { return isArray; }	
 }

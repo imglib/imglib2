@@ -10,7 +10,7 @@ import net.imglib2.img.Img;
 import net.imglib2.img.display.imagej.ImageJFunctions;
 import net.imglib2.io.ImgIOException;
 import net.imglib2.io.ImgOpener;
-import net.imglib2.io.img.virtual.VirtualImgFactory;
+import net.imglib2.io.img.virtual.VirtualImg;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 
@@ -34,7 +34,7 @@ public class ImgLib {
 	}
 
 	public static<T extends RealType<T> & NativeType<T>> Img<T> openVirtual(String pathOrUrl) throws ImgIOException, IncompatibleTypeException {
-		return new ImgOpener().openImg(pathOrUrl, new VirtualImgFactory<T>());
+		return (Img<T>) VirtualImg.create(pathOrUrl, false);
 	}
 
 	/** Wrap an ImageJ's {@link ImagePlus} as an Imglib {@link Image} of the appropriate type.

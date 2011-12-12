@@ -4,7 +4,7 @@ import ij.ImageJ;
 import net.imglib2.img.Img;
 import net.imglib2.script.ImgLib;
 import net.imglib2.script.edit.Insert;
-import net.imglib2.script.edit.FloatImage;
+import net.imglib2.script.img.FloatImage;
 import net.imglib2.script.math.Add;
 import net.imglib2.script.view.RectangleROI;
 import net.imglib2.type.numeric.real.FloatType;
