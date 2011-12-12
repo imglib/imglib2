@@ -119,7 +119,7 @@ public class OutOfBoundsMirrorExpWindowing< T extends NumericType< T > > extends
 		if ( isOutOfBounds() )
 		{
 			type.set( outOfBoundsRandomAccess.get() );
-			type.mul( getWeight( position ) );
+			type.mul( getWeight( zeroMinPos ) );
 			return type;
 		}
 		else
