@@ -32,9 +32,8 @@ package net.imglib2.ops.function.real;
 import net.imglib2.ops.Condition;
 import net.imglib2.ops.Function;
 import net.imglib2.ops.Neighborhood;
-import net.imglib2.ops.Real;
-import net.imglib2.ops.RealOutput;
 import net.imglib2.ops.condition.AtKeyPointCondition;
+import net.imglib2.type.numeric.RealType;
 
 // not sure this implementation satisfies the definition of an impulse
 // function. designed as an example.
@@ -44,17 +43,19 @@ import net.imglib2.ops.condition.AtKeyPointCondition;
  * @author Barry DeZonia
  *
  */
-public class RealImpulseFunction extends RealOutput implements Function<long[],Real> {
+public class RealImpulseFunction<T extends RealType<T>> implements Function<long[],T> {
 
+	private final T dataHint;
 	private final Condition<long[]> atKeyPoint;
 	
-	public RealImpulseFunction()
+	public RealImpulseFunction(T dataHint)
 	{
-		atKeyPoint = new AtKeyPointCondition();
+		this.dataHint = dataHint.createVariable();
+		this.atKeyPoint = new AtKeyPointCondition();
 	}
 
 	@Override
-	public void evaluate(Neighborhood<long[]> region, long[] point, Real output) {
+	public void evaluate(Neighborhood<long[]> region, long[] point, T output) {
 		if (atKeyPoint.isTrue(region, point))
 			output.setReal(1);
 		else
@@ -62,7 +63,12 @@ public class RealImpulseFunction extends RealOutput implements Function<long[],R
 	}
 
 	@Override
-	public RealImpulseFunction duplicate() {
-		return new RealImpulseFunction();
+	public RealImpulseFunction<T> duplicate() {
+		return new RealImpulseFunction<T>(dataHint);
+	}
+
+	@Override
+	public T createOutput() {
+		return dataHint.createVariable();
 	}
 }

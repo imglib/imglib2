@@ -31,31 +31,33 @@ package net.imglib2.ops.function.real;
 
 import net.imglib2.ops.Function;
 import net.imglib2.ops.Neighborhood;
-import net.imglib2.ops.Real;
-import net.imglib2.ops.RealOutput;
+import net.imglib2.type.numeric.RealType;
 
 // TODO - An example implementation of a real integral function.
 // Note that it does a very simple approximation. Modify to use the
-// multidimensional equivalent of a trapezoidal interpolation rule.
+// multidimensional equivalent of a trapezoidal interpolation rule
+// or simpson's or some appropriate integration fit.
 
 /**
  * 
  * @author Barry DeZonia
  *
  */
-public class RealContinuousIntegralFunction extends RealOutput implements Function<double[],Real> {
+public class RealContinuousIntegralFunction<T extends RealType<T>>
+	implements Function<double[],T>
+{
 
 	// -- instance variables --
 	
-	private final Function<double[],Real> otherFunc;
+	private final Function<double[],T> otherFunc;
 	private final double[] deltas;
 	private final double cellSize;
-	private final Real variable;
+	private final T variable;
 	private double[] position;
 	
 	// -- constructor --
 	
-	public RealContinuousIntegralFunction(Function<double[],Real> otherFunc, double[] deltas) {
+	public RealContinuousIntegralFunction(Function<double[],T> otherFunc, double[] deltas) {
 		this.otherFunc = otherFunc;
 		this.deltas = deltas.clone();
 		this.variable = createOutput();
@@ -66,7 +68,7 @@ public class RealContinuousIntegralFunction extends RealOutput implements Functi
 	// -- public interface --
 	
 	@Override
-	public void evaluate(Neighborhood<double[]> region, double[] point, Real output) {
+	public void evaluate(Neighborhood<double[]> region, double[] point, T output) {
 		
 		for (int i = 0; i < position.length; i++)
 			position[i] = point[i] - region.getNegativeOffsets()[i];
@@ -76,15 +78,15 @@ public class RealContinuousIntegralFunction extends RealOutput implements Functi
 		boolean done = false;
 		while (!done) {
 			otherFunc.evaluate(region, position, variable);
-			sum += variable.getReal() * cellSize;
+			sum += variable.getRealDouble() * cellSize;
 			done = !nextPosition(position, region);
 		}
 		output.setReal(sum);
 	}
 
 	@Override
-	public RealContinuousIntegralFunction duplicate() {
-		return new RealContinuousIntegralFunction(otherFunc.copy(), deltas);
+	public RealContinuousIntegralFunction<T> duplicate() {
+		return new RealContinuousIntegralFunction<T>(otherFunc.duplicate(), deltas);
 	}
 
 	// -- private helpers --
@@ -105,5 +107,10 @@ public class RealContinuousIntegralFunction extends RealOutput implements Functi
 			pos[i] = region.getKeyPoint()[i] - region.getNegativeOffsets()[i];
 		}
 		return false;
+	}
+
+	@Override
+	public T createOutput() {
+		return otherFunc.createOutput();
 	}
 }

@@ -23,20 +23,12 @@ public class CopyImgOperation<T extends Type<T>> implements UnaryOperation<Img<T
 	}
 
 	@Override
-	public Img<T> createOutput() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public UnaryOperation<Img<T>, Img<T>> copy() {
-		// TODO Auto-generated method stub
-		return null;
+	public CopyImgOperation<T> copy() {
+		return new CopyImgOperation<T>();
 	}
 
 	@Override
 	public Img<T> createOutput(Img<T> in) {
-		// TODO Auto-generated method stub
 		return in.factory().create(in, in.firstElement());
 	}
 
