@@ -29,9 +29,8 @@ POSSIBILITY OF SUCH DAMAGE.
 
 package net.imglib2.ops.operation.unary.real;
 
-import net.imglib2.ops.Real;
-import net.imglib2.ops.RealOutput;
 import net.imglib2.ops.UnaryOperation;
+import net.imglib2.type.numeric.RealType;
 
 
 //verified formula with Mathworld's definition for Inverse Cosecant
@@ -41,15 +40,15 @@ import net.imglib2.ops.UnaryOperation;
  * @author Barry DeZonia
  *
  */
-public final class RealArccsc extends RealOutput implements UnaryOperation<Real,Real> {
+public final class RealArccsc<T extends RealType<T>> implements UnaryOperation<T,T> {
 
-	private static final RealArccos acos = new RealArccos();
-	private final Real angle = new Real();
-	private final Real tmp = new Real();
+	private final RealArccos<T> acos = new RealArccos<T>();
+	private final T angle = acos.createOutput(dataHint);
+	private final T tmp = acos.createOutput(dataHint);
 	
 	@Override
-	public void compute(Real x, Real output) {
-		double xt = x.getReal();
+	public void compute(T x, T output) {
+		double xt = x.getRealDouble();
 		if ((xt > -1) && (xt < 1))
 			throw new IllegalArgumentException("arccsc(x) : x out of range");
 		else if (xt == -1)
@@ -59,13 +58,13 @@ public final class RealArccsc extends RealOutput implements UnaryOperation<Real,
 		else {
 			tmp.setReal(Math.sqrt(xt*xt - 1) / xt);
 			acos.compute(tmp, angle);
-			output.setReal(angle.getReal());
+			output.setReal(angle.getRealDouble());
 		}
 	}
 
 	@Override
-	public RealArccsc duplicate() {
-		return new RealArccsc();
+	public RealArccsc<T> duplicate() {
+		return new RealArccsc<T>();
 	}
 	
 	@Override
