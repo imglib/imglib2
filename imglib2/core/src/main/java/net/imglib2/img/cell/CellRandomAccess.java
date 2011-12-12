@@ -15,7 +15,7 @@ public class CellRandomAccess< T extends NativeType< T >, A extends ArrayDataAcc
 {
 	protected final T type;
 	
-	protected final RandomAccess< Cell< A > > cursorOnCells; // randomAccessOnCells;
+	protected final RandomAccess< Cell< A > > randomAccessOnCells;
 
 	protected final int[] defaultCellDims;
 
@@ -37,7 +37,7 @@ public class CellRandomAccess< T extends NativeType< T >, A extends ArrayDataAcc
 		super( randomAccess.numDimensions() );
 		
 		this.type = randomAccess.type.duplicateTypeOnSameNativeImg();
-		this.cursorOnCells = randomAccess.cursorOnCells.copyRandomAccess();
+		this.randomAccessOnCells = randomAccess.randomAccessOnCells.copyRandomAccess();
 		this.defaultCellDims = randomAccess.defaultCellDims;
 		
 		this.positionOfCurrentCell = new long[ n ];
@@ -64,7 +64,7 @@ public class CellRandomAccess< T extends NativeType< T >, A extends ArrayDataAcc
 		super( container.numDimensions() );
 		
 		this.type = container.createLinkedType();
-		this.cursorOnCells = container.cells.randomAccess();
+		this.randomAccessOnCells = container.cells.randomAccess();
 		this.defaultCellDims = container.cellDims;
 		
 		this.positionOfCurrentCell = new long[ n ];
@@ -74,14 +74,14 @@ public class CellRandomAccess< T extends NativeType< T >, A extends ArrayDataAcc
 			position[ d ] = 0;
 		
 		container.splitGlobalPosition( position, positionOfCurrentCell, positionInCell );
-		cursorOnCells.setPosition( positionOfCurrentCell );
+		randomAccessOnCells.setPosition( positionOfCurrentCell );
 		updatePosition();
 	}
 
 	@Override
 	public Cell< A > getCell()
 	{
-		return cursorOnCells.get();
+		return randomAccessOnCells.get();
 	}
 
 	@Override
@@ -108,7 +108,7 @@ public class CellRandomAccess< T extends NativeType< T >, A extends ArrayDataAcc
 		index += currentCellSteps[ dim ];
 		if ( ++position[ dim ] > currentCellMax[ dim ] )
 		{
-			cursorOnCells.fwd( dim );			
+			randomAccessOnCells.fwd( dim );			
 			updatePosition();
 		}
 		type.updateIndex( index );
@@ -120,7 +120,7 @@ public class CellRandomAccess< T extends NativeType< T >, A extends ArrayDataAcc
 		index -= currentCellSteps[ dim ];
 		if ( --position[ dim ] < currentCellMin[ dim ] )
 		{
-			cursorOnCells.bck( dim );			
+			randomAccessOnCells.bck( dim );			
 			updatePosition();
 		}
 		type.updateIndex( index );
@@ -133,7 +133,7 @@ public class CellRandomAccess< T extends NativeType< T >, A extends ArrayDataAcc
 		position[ dim ] += distance;
 		if ( position[ dim ] < currentCellMin[ dim ] || position[ dim ] > currentCellMax[ dim ] )
 		{
-			cursorOnCells.setPosition( position[ dim ] / defaultCellDims[ dim ], dim );			
+			randomAccessOnCells.setPosition( position[ dim ] / defaultCellDims[ dim ], dim );			
 			updatePosition();
 		}
 		type.updateIndex( index );
@@ -150,7 +150,7 @@ public class CellRandomAccess< T extends NativeType< T >, A extends ArrayDataAcc
 				position[ d ] += distance[ d ];
 				if ( position[ d ] < currentCellMin[ d ] || position[ d ] > currentCellMax[ d ] )
 				{
-					cursorOnCells.setPosition( position[ d ] / defaultCellDims[ d ], d );
+					randomAccessOnCells.setPosition( position[ d ] / defaultCellDims[ d ], d );
 
 					for ( ++d; d < n; ++d )
 					{
@@ -159,7 +159,7 @@ public class CellRandomAccess< T extends NativeType< T >, A extends ArrayDataAcc
 							position[ d ] += distance[ d ];
 							if ( position[ d ] < currentCellMin[ d ] || position[ d ] > currentCellMax[ d ] )
 							{
-								cursorOnCells.setPosition( position[ d ] / defaultCellDims[ d ], d );
+								randomAccessOnCells.setPosition( position[ d ] / defaultCellDims[ d ], d );
 							}
 						}
 					}
@@ -182,7 +182,7 @@ public class CellRandomAccess< T extends NativeType< T >, A extends ArrayDataAcc
 				position[ d ] += distance[ d ];
 				if ( position[ d ] < currentCellMin[ d ] || position[ d ] > currentCellMax[ d ] )
 				{
-					cursorOnCells.setPosition( position[ d ] / defaultCellDims[ d ], d );
+					randomAccessOnCells.setPosition( position[ d ] / defaultCellDims[ d ], d );
 
 					for ( ++d; d < n; ++d )
 					{
@@ -191,7 +191,7 @@ public class CellRandomAccess< T extends NativeType< T >, A extends ArrayDataAcc
 							position[ d ] += distance[ d ];
 							if ( position[ d ] < currentCellMin[ d ] || position[ d ] > currentCellMax[ d ] )
 							{
-								cursorOnCells.setPosition( position[ d ] / defaultCellDims[ d ], d );
+								randomAccessOnCells.setPosition( position[ d ] / defaultCellDims[ d ], d );
 							}
 						}
 					}
@@ -210,7 +210,7 @@ public class CellRandomAccess< T extends NativeType< T >, A extends ArrayDataAcc
 		position[ dim ] = pos;
 		if ( pos < currentCellMin[ dim ] || pos > currentCellMax[ dim ] )
 		{
-			cursorOnCells.setPosition( pos / defaultCellDims[ dim ], dim );			
+			randomAccessOnCells.setPosition( pos / defaultCellDims[ dim ], dim );			
 			updatePosition();
 		}
 		type.updateIndex( index );
@@ -227,7 +227,7 @@ public class CellRandomAccess< T extends NativeType< T >, A extends ArrayDataAcc
 				position[ d ] = pos[ d ];
 				if ( position[ d ] < currentCellMin[ d ] || position[ d ] > currentCellMax[ d ] )
 				{
-					cursorOnCells.setPosition( position[ d ] / defaultCellDims[ d ], d );
+					randomAccessOnCells.setPosition( position[ d ] / defaultCellDims[ d ], d );
 
 					for ( ++d; d < n; ++d )
 					{
@@ -236,7 +236,7 @@ public class CellRandomAccess< T extends NativeType< T >, A extends ArrayDataAcc
 							position[ d ] = pos[ d ];
 							if ( position[ d ] < currentCellMin[ d ] || position[ d ] > currentCellMax[ d ] )
 							{
-								cursorOnCells.setPosition( position[ d ] / defaultCellDims[ d ], d );
+								randomAccessOnCells.setPosition( position[ d ] / defaultCellDims[ d ], d );
 							}
 						}
 					}
@@ -259,7 +259,7 @@ public class CellRandomAccess< T extends NativeType< T >, A extends ArrayDataAcc
 				position[ d ] = pos[ d ];
 				if ( position[ d ] < currentCellMin[ d ] || position[ d ] > currentCellMax[ d ] )
 				{
-					cursorOnCells.setPosition( position[ d ] / defaultCellDims[ d ], d );
+					randomAccessOnCells.setPosition( position[ d ] / defaultCellDims[ d ], d );
 
 					for ( ++d; d < n; ++d )
 					{
@@ -268,7 +268,7 @@ public class CellRandomAccess< T extends NativeType< T >, A extends ArrayDataAcc
 							position[ d ] = pos[ d ];
 							if ( position[ d ] < currentCellMin[ d ] || position[ d ] > currentCellMax[ d ] )
 							{
-								cursorOnCells.setPosition( position[ d ] / defaultCellDims[ d ], d );
+								randomAccessOnCells.setPosition( position[ d ] / defaultCellDims[ d ], d );
 							}
 						}
 					}
