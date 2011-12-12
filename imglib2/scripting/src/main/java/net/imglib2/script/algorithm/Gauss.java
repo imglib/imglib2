@@ -73,6 +73,6 @@ public class Gauss<T extends RealType<T>> extends ImgProxy<FloatType>
 	static private final Img<FloatType>
 	processFloat(final Img<FloatType> img, final double[] sigma) throws Exception {
 		final GaussFloat g = new GaussFloat(sigma, img);
-		return g.getResult();
+		return (Img<FloatType>)g.getResult();
 	}
 }
