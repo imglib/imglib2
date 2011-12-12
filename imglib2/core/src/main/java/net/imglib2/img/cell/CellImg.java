@@ -3,9 +3,7 @@ package net.imglib2.img.cell;
 import net.imglib2.Cursor;
 import net.imglib2.IterableRealInterval;
 import net.imglib2.img.AbstractNativeImg;
-import net.imglib2.img.Img;
 import net.imglib2.img.basictypeaccess.array.ArrayDataAccess;
-import net.imglib2.img.list.ListImgFactory;
 import net.imglib2.type.NativeType;
 
 /**
@@ -14,11 +12,11 @@ import net.imglib2.type.NativeType;
  * @param <T>
  * @param <A>
  */
-final public class CellImg< T extends NativeType< T >, A extends ArrayDataAccess< A > > extends AbstractNativeImg< T, A >
+final public class CellImg< T extends NativeType< T >, A extends ArrayDataAccess< A >, C extends Cell< A > > extends AbstractNativeImg< T, A >
 {
 	final protected CellImgFactory< T > factory;
 	
-	final protected Cells< A > cells;
+	final protected Cells< A, C > cells;
 	
 	/**
 	 *  Dimensions of a standard cell.
@@ -26,14 +24,14 @@ final public class CellImg< T extends NativeType< T >, A extends ArrayDataAccess
 	 */
 	final int[] cellDims;
 	
-	private static long[] getDimensionsFromCells( final Cells< ? > cells )
+	private static long[] getDimensionsFromCells( final Cells< ?, ? > cells )
 	{
 		final long[] dim = new long[ cells.numDimensions() ];
 		cells.dimensions( dim );
 		return dim;
 	}
 
-	public CellImg( final CellImgFactory< T > factory, final Cells< A > cells )
+	public CellImg( final CellImgFactory< T > factory, final Cells< A, C > cells )
 	{
 		super( getDimensionsFromCells( cells ), cells.getEntitiesPerPixel() );
 		
@@ -47,12 +45,12 @@ final public class CellImg< T extends NativeType< T >, A extends ArrayDataAccess
 	 * This interface is implemented by all samplers on the {@link CellImg}. It
 	 * allows the container to ask for the cell the sampler is currently in.
 	 */
-	public interface CellContainerSampler<T extends NativeType< T >, A extends ArrayDataAccess< A > >
+	public interface CellContainerSampler<T extends NativeType< T >, A extends ArrayDataAccess< A >, C extends Cell< A > >
 	{
 		/**
 		 * @return the cell the sampler is currently in.
 		 */
-		public Cell< A > getCell();
+		public C getCell();
 	}
 
 	@Override
@@ -64,7 +62,7 @@ final public class CellImg< T extends NativeType< T >, A extends ArrayDataAccess
 		 * know what to do with a CellCursor, however, it is not using it's
 		 * parameter anyway.
 		 */
-		return ( ( CellContainerSampler< T, A > ) cursor ).getCell().getData();
+		return ( ( CellContainerSampler< T, A, C > ) cursor ).getCell().getData();
 	}
 
 
@@ -124,21 +122,21 @@ final public class CellImg< T extends NativeType< T >, A extends ArrayDataAccess
 
 
 	@Override
-	public CellCursor< T, A > cursor()
+	public CellCursor< T, A, C > cursor()
 	{
-		return new CellCursor< T, A >( this );
+		return new CellCursor< T, A, C >( this );
 	}
 
 	@Override
-	public CellLocalizingCursor< T, A > localizingCursor()
+	public CellLocalizingCursor< T, A, C > localizingCursor()
 	{
-		return new CellLocalizingCursor< T, A >( this );
+		return new CellLocalizingCursor< T, A, C >( this );
 	}
 
 	@Override
-	public CellRandomAccess< T, A > randomAccess()
+	public CellRandomAccess< T, A, C > randomAccess()
 	{
-		return new CellRandomAccess< T, A >( this );
+		return new CellRandomAccess< T, A, C >( this );
 	}
 
 	@Override
@@ -156,7 +154,7 @@ final public class CellImg< T extends NativeType< T >, A extends ArrayDataAccess
 		
 		if ( getClass().isInstance( f ) )
 		{
-			CellImg< T, A > other = (CellImg< T, A >) f;
+			CellImg< T, A, C > other = (CellImg< T, A, C >) f;
 
 			for ( int d = 0; d < n; ++d ) 
 				if ( this.dimension[ d ] != other.dimension[ d ] || this.cellDims[ d ] != other.cellDims[ d ] )
@@ -169,9 +167,9 @@ final public class CellImg< T extends NativeType< T >, A extends ArrayDataAccess
 	}
 	
 	@Override
-	public CellImg<T,?> copy()
+	public CellImg<T,?,?> copy()
 	{
-		final CellImg<T,?> copy = factory().create( dimension, firstElement().createVariable() );
+		final CellImg<T,?,?> copy = factory().create( dimension, firstElement().createVariable() );
 		
 		final Cursor<T> cursor1 = this.cursor();
 		final Cursor<T> cursor2 = copy.cursor();

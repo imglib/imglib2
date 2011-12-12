@@ -1,111 +1,48 @@
 package net.imglib2.img.cell;
 
 import net.imglib2.img.basictypeaccess.array.ArrayDataAccess;
-import net.imglib2.type.Type;
-import net.imglib2.util.IntervalIndexer;
 
-public class Cell< A extends ArrayDataAccess< A > > implements Type< Cell< A > > 
+public interface Cell< A extends ArrayDataAccess< A > >
 {
-	final protected int n;
+	public A getData();
 
-	final int[] dimensions;
-	final int[] steps;
-	final long[] offset;
-	final long[] max;
+	/**
+	 * 
+	 * @param d dimension
+	 * @return minimum
+	 */
+	public long min( final int d );
 
-	protected int numPixels;
+	/**
+	 * Write the minimum of each dimension into long[].
+	 * 
+	 * @param min
+	 */
+	public void min( long[] min );
 
-	private A data;
-	
-	public Cell( final A creator, final int[] dim, final long[] offset, final int entitiesPerPixel )
-	{
-		dimensions = dim.clone();
-		n = dimensions.length;		
-		steps = new int[ n ];
-		IntervalIndexer.createAllocationSteps( dimensions, steps );
-		this.offset = offset.clone();
+	/**
+	 * Write the number of pixels in each dimension into long[].
+	 * 
+	 * @param dimensions
+	 */
+	public void dimensions( int[] dimensions );
 
-		max = new long[ n ];
-		for ( int d = 0; d < n; ++d ) {
-			max[ d ] = offset[ d ] + dimensions[ d ] - 1;
-		}
-		
-		int nPixels = 1;
-		for ( int d = 0; d < n; ++d ) {
-			nPixels *= dimensions[ d ];
-		}
-		numPixels = nPixels;
-		
-		this.data = creator.createArray( numPixels * entitiesPerPixel );
-	}
+	/**
+	 * Get the number of pixels in a given dimension <em>d</em>.
+	 * 
+	 * @param d
+	 */
+	public int dimension( int d );
 
-	public Cell(final int numDimensions)
-	{
-		n = numDimensions;
+	/**
+	 * @return number of pixels in this cell.
+	 */
+	public long size();
 
-		dimensions = new int[ n ];
-		steps = new int[ n ];
-		offset = new long[ n ];
-		max = new long[ n ];
+	public long indexToGlobalPosition( int index, int d );
 
-		numPixels = 0;
+	public void indexToGlobalPosition( int index, final long[] position );
 
-		this.data = null;
-	}
-
-	public A getData()
-	{
-		return data;
-	}
-
-
-	@Override
-	public Cell<A> copy()
-	{
-		Cell<A> c = new Cell<A>( n );
-		c.set( this );
-		return c;
-	}
-
-	@Override
-	public void set( Cell<A> c )
-	{
-		assert( n == c.n );
-
-		for ( int d = 0; d < n; ++d ) {
-			dimensions[ d ] = c.dimensions[ d ];
-			steps[ d ] = c.steps[ d ];
-			offset[ d ] = c.offset[ d ];
-			max[ d ] = c.max[ d ];
-		}
-		numPixels = c.numPixels;
-
-		this.data = c.data;		
-	}
-
-	@Override
-	public Cell<A> createVariable()
-	{
-		return new Cell<A>( n );
-	}
-
-	public long size()
-	{
-		return numPixels;
-	}
-
-	public long indexToGlobalPosition( int index, int dimension )
-	{
-		return IntervalIndexer.indexToPosition( index, dimensions, steps, dimension ) + offset[ dimension ];
-	}
-
-	public void indexToGlobalPosition( int index, final long[] position )
-	{
-		IntervalIndexer.indexToPosition( index, dimensions, position );
-		for ( int d = 0; d < position.length; ++d )
-			position[ d ] += offset[ d ];
-	}
-	
 	/**
 	 * compute the index in the underlying flat array of this cell
 	 * which corresponds to a local position (i.e., relative to the
@@ -114,8 +51,10 @@ public class Cell< A extends ArrayDataAccess< A > > implements Type< Cell< A > >
 	 * @param position   a local position
 	 * @return corresponding index
 	 */
-	public int localPositionToIndex( final long[] position )
-	{
-		return IntervalIndexer.positionToIndex( position, dimensions );
-	}
+	public int localPositionToIndex( final long[] position );
+	
+	// TODO: is this really faster, or should we just copy, e.g., void getStepsArray( final int steps[] )?
+	public int[] getStepsArray();
+	public long[] getMinArray();
+	public long[] getMaxArray();	
 }

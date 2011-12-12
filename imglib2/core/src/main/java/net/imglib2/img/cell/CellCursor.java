@@ -5,11 +5,11 @@ import net.imglib2.Cursor;
 import net.imglib2.img.basictypeaccess.array.ArrayDataAccess;
 import net.imglib2.type.NativeType;
 
-public class CellCursor< T extends NativeType< T >, A extends ArrayDataAccess< A > > extends AbstractCursor< T > implements CellImg.CellContainerSampler< T, A >
+public class CellCursor< T extends NativeType< T >, A extends ArrayDataAccess< A >, C extends Cell< A > > extends AbstractCursor< T > implements CellImg.CellContainerSampler< T, A, C >
 {
 	protected final T type;
 	
-	protected final Cursor< Cell< A > > cursorOnCells;
+	protected final Cursor< C > cursorOnCells;
 
 	protected int lastIndexInCell;
 
@@ -24,7 +24,7 @@ public class CellCursor< T extends NativeType< T >, A extends ArrayDataAccess< A
 	 */
 	protected boolean isNotLastCell;
 
-	protected CellCursor( final CellCursor< T, A > cursor )
+	protected CellCursor( final CellCursor< T, A, C > cursor )
 	{
 		super( cursor.numDimensions() );
 		
@@ -38,7 +38,7 @@ public class CellCursor< T extends NativeType< T >, A extends ArrayDataAccess< A
 		type.updateIndex( index );
 	}
 	
-	public CellCursor( final CellImg< T, A > container )
+	public CellCursor( final CellImg< T, A, C > container )
 	{
 		super( container.numDimensions() );
 		
@@ -49,7 +49,7 @@ public class CellCursor< T extends NativeType< T >, A extends ArrayDataAccess< A
 	}
 
 	@Override
-	public Cell< A > getCell()
+	public C getCell()
 	{
 		return cursorOnCells.get();
 	}
@@ -61,13 +61,13 @@ public class CellCursor< T extends NativeType< T >, A extends ArrayDataAccess< A
 	}
 	
 	@Override
-	public CellCursor< T, A > copy()
+	public CellCursor< T, A, C > copy()
 	{
-		return new CellCursor< T, A >( this );
+		return new CellCursor< T, A, C >( this );
 	}
 
 	@Override
-	public CellCursor< T, A > copyCursor() {
+	public CellCursor< T, A, C > copyCursor() {
 		return copy();
 	}
 

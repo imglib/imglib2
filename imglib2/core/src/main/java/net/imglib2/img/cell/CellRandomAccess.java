@@ -11,11 +11,11 @@ import net.imglib2.type.NativeType;
  * No checks are performed to determine whether we stay in the same cell.
  * Instead, the cell position is computed and set on every access.  
  */
-public class CellRandomAccess< T extends NativeType< T >, A extends ArrayDataAccess< A > > extends AbstractRandomAccess< T > implements CellImg.CellContainerSampler< T, A >
+public class CellRandomAccess< T extends NativeType< T >, A extends ArrayDataAccess< A >, C extends Cell< A > > extends AbstractRandomAccess< T > implements CellImg.CellContainerSampler< T, A, C >
 {
 	protected final T type;
 	
-	protected final RandomAccess< Cell< A > > randomAccessOnCells;
+	protected final RandomAccess< C > randomAccessOnCells;
 
 	protected final int[] defaultCellDims;
 
@@ -32,7 +32,7 @@ public class CellRandomAccess< T extends NativeType< T >, A extends ArrayDataAcc
 	 */
 	protected int index;
 	
-	protected CellRandomAccess( final CellRandomAccess< T, A > randomAccess )
+	protected CellRandomAccess( final CellRandomAccess< T, A, C > randomAccess )
 	{
 		super( randomAccess.numDimensions() );
 		
@@ -59,7 +59,7 @@ public class CellRandomAccess< T extends NativeType< T >, A extends ArrayDataAcc
 		type.updateIndex( index );
 	}
 
-	public CellRandomAccess( final CellImg< T, A > container )
+	public CellRandomAccess( final CellImg< T, A, C > container )
 	{
 		super( container.numDimensions() );
 		
@@ -79,7 +79,7 @@ public class CellRandomAccess< T extends NativeType< T >, A extends ArrayDataAcc
 	}
 
 	@Override
-	public Cell< A > getCell()
+	public C getCell()
 	{
 		return randomAccessOnCells.get();
 	}
@@ -91,13 +91,13 @@ public class CellRandomAccess< T extends NativeType< T >, A extends ArrayDataAcc
 	}
 	
 	@Override
-	public CellRandomAccess< T, A > copy()
+	public CellRandomAccess< T, A, C > copy()
 	{
-		return new CellRandomAccess< T, A >( this );
+		return new CellRandomAccess< T, A, C >( this );
 	}
 	
 	@Override
-	public CellRandomAccess< T, A > copyRandomAccess()
+	public CellRandomAccess< T, A, C > copyRandomAccess()
 	{
 		return copy();
 	}
@@ -287,11 +287,11 @@ public class CellRandomAccess< T extends NativeType< T >, A extends ArrayDataAcc
 	 */
 	private void updatePosition()
 	{
-		final Cell< A > cell = getCell();
+		final C cell = getCell();
 
-		currentCellSteps = cell.steps;
-		currentCellMin = cell.offset;			
-		currentCellMax = cell.max;			
+		currentCellSteps = cell.getStepsArray(); // TODO cell.steps;
+		currentCellMin = cell.getMinArray(); // TODO cell.min;			
+		currentCellMax = cell.getMaxArray(); // TODO cell.max;			
 
 		for ( int d = 0; d < n; ++d )
 			positionInCell[ d ] = position[ d ] - currentCellMin[ d ];

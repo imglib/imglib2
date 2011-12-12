@@ -2,12 +2,10 @@ package net.imglib2.img.cell;
 
 import net.imglib2.Cursor;
 import net.imglib2.EuclideanSpace;
-import net.imglib2.IterableInterval;
 import net.imglib2.RandomAccess;
-import net.imglib2.RandomAccessible;
 import net.imglib2.img.basictypeaccess.array.ArrayDataAccess;
 
-public interface Cells< A extends ArrayDataAccess< A > > extends EuclideanSpace
+public interface Cells< A extends ArrayDataAccess< A >, C extends Cell< A > > extends EuclideanSpace
 {
 	/**
 	 * Write the number of pixels in each dimension into long[].
@@ -41,9 +39,9 @@ public interface Cells< A extends ArrayDataAccess< A > > extends EuclideanSpace
 	
 	public int getEntitiesPerPixel();
 
-	public RandomAccess< Cell< A > > randomAccess();
+	public RandomAccess< C > randomAccess();
 
-	public Cursor< Cell< A > > cursor();
+	public Cursor< C > cursor();
 
-	public Cursor< Cell< A >> localizingCursor();
+	public Cursor< C > localizingCursor();
 }

@@ -6,13 +6,13 @@ import net.imglib2.img.basictypeaccess.array.ArrayDataAccess;
 import net.imglib2.img.list.ListImg;
 import net.imglib2.img.list.ListImgFactory;
 
-public class ListImgCells< A extends ArrayDataAccess< A > > implements Cells< A >
+public class ListImgCells< A extends ArrayDataAccess< A > > implements Cells< A, ListImgCell< A > >
 {
 	private final int entitiesPerPixel;
 	private final int n;
 	private final long[] dimensions;
 	private final int[] cellDimensions;
-	private final ListImg< Cell< A > > cells;
+	private final ListImg< ListImgCell< A > > cells;
 	
 	public ListImgCells( final A creator, int entitiesPerPixel, final long[] dimensions, final int[] cellDimensions  )
 	{
@@ -31,11 +31,11 @@ public class ListImgCells< A extends ArrayDataAccess< A > > implements Cells< A 
 			borderSize[ d ] = ( int )( dimensions[ d ] - (numCells[ d ] - 1) * cellDimensions[ d ] );
 		}
 
-		cells = new ListImgFactory< Cell< A > >().create( numCells, new Cell< A >( n ) );
+		cells = new ListImgFactory< ListImgCell< A > >().create( numCells, new ListImgCell< A >( n ) );
 
-		Cursor< Cell < A > > cellCursor = cells.localizingCursor();		
+		Cursor< ListImgCell < A > > cellCursor = cells.localizingCursor();
 		while ( cellCursor.hasNext() ) {
-			Cell< A > c = cellCursor.next();
+			ListImgCell< A > c = cellCursor.next();
 			
 			cellCursor.localize( currentCellOffset );
 			for ( int d = 0; d < n; ++d )
@@ -44,24 +44,24 @@ public class ListImgCells< A extends ArrayDataAccess< A > > implements Cells< A 
 				currentCellOffset[ d ] *= cellDimensions[ d ];
 			}
 			
-			c.set( new Cell< A >( creator, currentCellDims, currentCellOffset, entitiesPerPixel ) );
+			c.set( new ListImgCell< A >( creator, currentCellDims, currentCellOffset, entitiesPerPixel ) );
 		}
 	}
 	
 	@Override
-	public RandomAccess< Cell< A > > randomAccess()
+	public RandomAccess< ListImgCell< A > > randomAccess()
 	{
 		return cells.randomAccess();
 	}
 
 	@Override
-	public Cursor< Cell< A > > cursor()
+	public Cursor< ListImgCell< A > > cursor()
 	{
 		return cells.cursor();
 	}
 
 	@Override
-	public Cursor< Cell< A >> localizingCursor()
+	public Cursor< ListImgCell< A > > localizingCursor()
 	{
 		return cells.localizingCursor();
 	}
