@@ -266,7 +266,7 @@ public class OutOfBoundsPeriodic< T > implements OutOfBounds< T >
 	@Override
 	final public void bck( final int d )
 	{
-		final long p = position[ d ]--;
+		final long p = --position[ d ];
 		if ( p == beforeMin[ d ] )
 			dimIsOutOfBounds[ d ] = isOutOfBounds = true;
 		else if ( p == max[ d ] )
