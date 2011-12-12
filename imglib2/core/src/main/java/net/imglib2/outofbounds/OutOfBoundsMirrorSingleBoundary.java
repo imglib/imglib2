@@ -210,6 +210,6 @@ public class OutOfBoundsMirrorSingleBoundary< T > extends AbstractOutOfBoundsMir
 			inc[ d ] = pos;
 		}
 		
-		outOfBoundsRandomAccess.setPosition( position, d );
+		outOfBoundsRandomAccess.setPosition( position += min[ d ], d );
 	}
 }

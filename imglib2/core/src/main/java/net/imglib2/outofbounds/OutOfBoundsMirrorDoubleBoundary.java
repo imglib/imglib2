@@ -189,6 +189,6 @@ final public class OutOfBoundsMirrorDoubleBoundary< T > extends AbstractOutOfBou
 			inc[ d ] = pos;
 		}
 		
-		outOfBoundsRandomAccess.setPosition( position, d );
+		outOfBoundsRandomAccess.setPosition( position + min[ d ], d );
 	}
 }
