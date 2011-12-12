@@ -22,25 +22,67 @@ package net.imglib2.algorithm.gauss2;
 
 import net.imglib2.Interval;
 import net.imglib2.Iterator;
-import net.imglib2.Localizable;
+import net.imglib2.Location;
 import net.imglib2.RandomAccessible;
 import net.imglib2.Sampler;
 import net.imglib2.converter.Converter;
+import net.imglib2.img.Img;
 import net.imglib2.img.ImgFactory;
+import net.imglib2.img.array.ArrayImgFactory;
 import net.imglib2.img.array.ArrayRandomAccess;
+import net.imglib2.img.cell.CellImgFactory;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.NumericType;
+import net.imglib2.type.numeric.real.FloatType;
 
-public abstract class GaussNativeType< T extends NumericType< T > & NativeType< T > > extends Gauss< T >
+public class GaussNativeType< T extends NumericType< T > & NativeType< T > > extends Gauss< T >
 {
-	public GaussNativeType( final double[] sigma, final RandomAccessible<T> input, final Interval inputInterval, 
-			  final RandomAccessible<T> output, final Localizable outputOffset, 
-			  final ImgFactory<T> factory )
+	final T type;
+	protected boolean isArray;
+	
+	/**
+	 * Computes a Gaussian convolution on a {@link RandomAccessible} of {@link FloatType} in a certain {@link Interval}
+	 * and returns an {@link Img} defined by the {@link ImgFactory} containing the result.
+	 * 
+	 * WARNING: This is a very slow implementation as it is not written for {@link NativeType}. If your type is {@link NativeType},
+	 * use {@link GaussNativeType} instead!
+	 * 
+	 * @param sigma - the sigma for the convolution
+	 * @param input - the {@link RandomAccessible} to work on
+	 * @param interval - the area that is convolved
+	 * @param factory - the {@link ImgFactory} that defines the temporary and output images to be used
+	 */
+	public GaussNativeType( final double[] sigma, final RandomAccessible<T> input, final Interval interval, final ImgFactory<T> factory, final T type )
 	{
-		super( sigma, input, inputInterval, output, outputOffset, factory );
+		super( sigma, input, interval, factory.create( interval, type ), new Location( sigma.length ), factory );
+		this.type = type;
 	}
 
-	protected abstract boolean isArray(); 
+	protected boolean isArray() { return isArray; }
+
+	@Override
+	protected T getProcessingType() { return type.createVariable(); }
+
+	@Override
+	protected Img<T> getProcessingLine( final long sizeProcessLine )
+	{
+		final Img<T> processLine;
+		
+		// try to use array if each individual line is not too long
+		if ( sizeProcessLine <= Integer.MAX_VALUE )
+		{
+			isArray = true;
+			processLine = new ArrayImgFactory< T >().create( new long[]{ sizeProcessLine }, getProcessingType() );
+		}
+		else
+		{
+			isArray = false;
+			processLine = new CellImgFactory< T >( Integer.MAX_VALUE / 16 ).create( new long[]{ sizeProcessLine }, getProcessingType() );
+		}
+		
+		return processLine;
+	}	
+
 	/**
 	 * Compute the current line. It is up to the implementation howto really do that. The idea is to only iterate
 	 * over the input once (that's why it is an {@link Iterator}) as it is potentially an expensive operation 
