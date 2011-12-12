@@ -65,12 +65,12 @@ import net.imglib2.ops.RegionIndexIterator;
  * @author Barry DeZonia
  *
  */
-public class ImageAssignment<IMG_TYPE,INTERNAL_TYPE> {
+public class ImageAssignment<PIXEL_TYPE> {
 
 	// -- instance variables --
 	
-	private final TypeBridge<IMG_TYPE,INTERNAL_TYPE> bridge;
-	private final Function<long[],INTERNAL_TYPE> func;
+	//private final TypeBridge<IMG_TYPE,INTERNAL_TYPE> bridge;
+	private final Function<long[],PIXEL_TYPE> func;
 	private Condition<long[]> cond;
 	private final long[] origin;
 	private final long[] span;
@@ -96,14 +96,12 @@ public class ImageAssignment<IMG_TYPE,INTERNAL_TYPE> {
 	 * 
 	 */
 	public ImageAssignment(
-		TypeBridge<IMG_TYPE,INTERNAL_TYPE> bridge,
 		long[] origin,
 		long[] span,
-		Function<long[],INTERNAL_TYPE> function,
+		Function<long[],PIXEL_TYPE> function,
 		long[] negOffs,
 		long[] posOffs)
 	{
-		this.bridge = bridge;
 		this.origin = origin.clone();
 		this.span = span.clone();
 		this.negOffs = negOffs.clone();
