@@ -19,6 +19,8 @@ import net.imglib2.view.Views;
  * @author Albert Cardona
  *
  * @param <T>
+ * @param <RI>
+ * @param <Y>
  */
 public class Insert<T extends RealType<T>, RI extends IterableInterval<T> & RandomAccessible<T>, Y extends RealType<Y>> extends IterableIntervalProxy<Y>
 {
