@@ -33,8 +33,9 @@ import net.imglib2.RandomAccess;
 import net.imglib2.img.Img;
 import net.imglib2.ops.Condition;
 import net.imglib2.ops.Function;
-import net.imglib2.ops.Real;
 import net.imglib2.type.numeric.RealType;
+
+//TODO - NOTE - DISABLED FOR NOW - GOING AWAY
 
 /**
  * Defines and runs an assignment of pixels within a region of an
@@ -42,17 +43,18 @@ import net.imglib2.type.numeric.RealType;
  * be conditional and can be aborted.
  *  
  * @author Barry DeZonia
- *
+ * @deprecated
  */
 public class RealImageAssignment {
 
 	// -- instance variables --
 	
-	private final Img<? extends RealType<?>> image;
-	private ImageAssignment<RealType<?>, Real> assigner;
+	private Img<? extends RealType<?>> image;
+	//private ImageAssignment<RealType<?>, Real> assigner;
 	
 	// -- private helpers --
 	
+	/*
 	@SuppressWarnings("synthetic-access")
 	private class RealTranslator implements TypeBridge<RealType<?>,Real> {
 
@@ -67,6 +69,7 @@ public class RealImageAssignment {
 		}
 
 	}
+	*/
 	
 	// -- public interface --
 	
@@ -84,20 +87,22 @@ public class RealImageAssignment {
 	 * @param posOffs - the extents in the positive direction of the working neighborhood
 	 * 
 	 */
+	/*
 	@SuppressWarnings("synthetic-access")
 	public RealImageAssignment(Img<? extends RealType<?>> image, long[] origin, long[] span,
 			Function<long[],Real> func, long[] negOffs, long[] posOffs)
 	{
 		this.image = image;
-		this.assigner =
-			new ImageAssignment<RealType<?>,Real>(
-					new RealTranslator(),
-					origin,
-					span,
-					func,
-					negOffs,
-					posOffs);
+		//this.assigner =
+		//	new ImageAssignment<RealType<?>,Real>(
+		//			new RealTranslator(),
+		//			origin,
+		//			span,
+		//			func,
+		//			negOffs,
+		//			posOffs);
 	}
+	*/
 	
 	/**
 	 * Constructor for a single point input neighborhood. This neighborhood is
@@ -110,11 +115,13 @@ public class RealImageAssignment {
 	 * @param func - the point function to evaluate at each point of the region
 	 * 
 	 */
+	/*
 	public RealImageAssignment(Img<? extends RealType<?>> image, long[] origin, long[] span,
 			Function<long[],Real> func)
 	{
 		this(image,origin,span,func,new long[span.length],new long[span.length]);
 	}
+	*/
 	
 	/**
 	 * Sets a condition that must be satisfied before each pixel assignment
@@ -123,7 +130,7 @@ public class RealImageAssignment {
 	 * assign().
 	 */
 	public void setCondition(Condition<long[]> condition) {
-		assigner.setCondition(condition);
+		//assigner.setCondition(condition);
 	}
 
 	/**
@@ -131,13 +138,13 @@ public class RealImageAssignment {
 	 * aborted using abort().
 	 */
 	public void assign() {
-		assigner.assign();
+		//assigner.assign();
 	}
 	
 	/**
 	 * Aborts an in progress assignment. If no assignment is running has no effect.
 	 */
 	public void abort() {
-		assigner.abort();
+		//assigner.abort();
 	}
 }

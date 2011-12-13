@@ -33,10 +33,12 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import net.imglib2.RandomAccess;
+import net.imglib2.img.Img;
 import net.imglib2.ops.Condition;
 import net.imglib2.ops.DiscreteNeigh;
 import net.imglib2.ops.Function;
 import net.imglib2.ops.RegionIndexIterator;
+import net.imglib2.type.numeric.ComplexType;
 
 // In old AssignOperation could do many things
 // - set conditions on each input and output image
@@ -58,19 +60,18 @@ import net.imglib2.ops.RegionIndexIterator;
 
 
 /**
- * Worker class for RealImageAssignment and ComplexImageAssignment.
- * A multithreaded implementation. Assigns the values of a region of
+ * A multithreaded implementation that assigns the values of a region of
  * an Img<?> to values from a function.
  *  
  * @author Barry DeZonia
  *
  */
-public class ImageAssignment<PIXEL_TYPE> {
+public class ImageAssignment<DATA_TYPE extends ComplexType<DATA_TYPE>> {
 
 	// -- instance variables --
 	
-	//private final TypeBridge<IMG_TYPE,INTERNAL_TYPE> bridge;
-	private final Function<long[],PIXEL_TYPE> func;
+	private final Img<DATA_TYPE> img;
+	private final Function<long[],DATA_TYPE> func;
 	private Condition<long[]> cond;
 	private final long[] origin;
 	private final long[] span;
@@ -87,7 +88,7 @@ public class ImageAssignment<PIXEL_TYPE> {
 	 * a single pixel. This neighborhood is moved point by point over
 	 * the Img<?> and passed to the function for evaluation.
 	 * 
-	 * @param bridge - the interface to the Img<?> to assign data values to
+	 * @param img - the Img<?> to assign data values to
 	 * @param origin - the origin of the region to assign within the Img<?>
 	 * @param span - the extents of the region to assign within the Img<?>
 	 * @param function - the function to evaluate at each point of the region
@@ -96,12 +97,14 @@ public class ImageAssignment<PIXEL_TYPE> {
 	 * 
 	 */
 	public ImageAssignment(
+		Img<DATA_TYPE> img,
 		long[] origin,
 		long[] span,
-		Function<long[],PIXEL_TYPE> function,
+		Function<long[],DATA_TYPE> function,
 		long[] negOffs,
 		long[] posOffs)
 	{
+		this.img = img;
 		this.origin = origin.clone();
 		this.span = span.clone();
 		this.negOffs = negOffs.clone();
@@ -111,6 +114,33 @@ public class ImageAssignment<PIXEL_TYPE> {
 		this.assigning = false;
 	}
 	
+	/**
+	 * Constructor. Working neighborhood is assumed to be a single pixel.
+	 * This neighborhood is moved point by point over
+	 * the Img<?> and passed to the function for evaluation.
+	 * 
+	 * @param img - the Img<?> to assign data values to
+	 * @param origin - the origin of the region to assign within the Img<?>
+	 * @param span - the extents of the region to assign within the Img<?>
+	 * @param function - the function to evaluate at each point of the region
+	 * 
+	 */
+	public ImageAssignment(
+			Img<DATA_TYPE> img,
+			long[] origin,
+			long[] span,
+			Function<long[],DATA_TYPE> function)
+		{
+			this.img = img;
+			this.origin = origin.clone();
+			this.span = span.clone();
+			this.negOffs = new long[origin.length];  // ALL ZERO
+			this.posOffs = new long[origin.length];  // ALL ZERO
+			this.func = function.copy();
+			this.cond = null;
+			this.assigning = false;
+		}
+		
 	// -- public interface --
 
 	/**
@@ -143,7 +173,7 @@ public class ImageAssignment<PIXEL_TYPE> {
 		while (startOffset < span[axis]) {
 			if (startOffset + length > span[axis]) length = span[axis] - startOffset;
 			Runnable task =
-					task(bridge, origin, span, axis, origin[axis] + startOffset, length, func, cond, negOffs, posOffs);
+					task(img, origin, span, axis, origin[axis] + startOffset, length, func, cond, negOffs, posOffs);
 			synchronized (this) {
 				executor.submit(task);
 			}
@@ -238,13 +268,13 @@ public class ImageAssignment<PIXEL_TYPE> {
 	 * The task assigns values to a subset of the output region.
 	 */
 	private Runnable task(
-		TypeBridge<IMG_TYPE,INTERNAL_TYPE> br,
+		Img<DATA_TYPE> img,
 		long[] imageOrigin,
 		long[] imageSpan,
 		int axis,
 		long startIndex,
 		long length,
-		Function<long[],INTERNAL_TYPE> fn,
+		Function<long[],DATA_TYPE> fn,
 		Condition<long[]> cnd,
 		long[] nOffsets,
 		long[] pOffsets)
@@ -256,7 +286,7 @@ public class ImageAssignment<PIXEL_TYPE> {
 		regSpan[axis] = length;
 		return
 			new RegionRunner(
-				br,
+				img,
 				regOrigin,
 				regSpan,
 				fn.copy(),
@@ -271,8 +301,8 @@ public class ImageAssignment<PIXEL_TYPE> {
 	 */
 	private class RegionRunner implements Runnable {
 		
-		private final TypeBridge<IMG_TYPE,INTERNAL_TYPE> br;
-		private final Function<long[],INTERNAL_TYPE> function;
+		private final Img<DATA_TYPE> img;
+		private final Function<long[],DATA_TYPE> function;
 		private final Condition<long[]> condition;
 		private final DiscreteNeigh region;
 		private final DiscreteNeigh neighborhood;
@@ -281,15 +311,15 @@ public class ImageAssignment<PIXEL_TYPE> {
 		 * Constructor
 		 */
 		public RegionRunner(
-			TypeBridge<IMG_TYPE,INTERNAL_TYPE> bridge,
+			Img<DATA_TYPE> img,
 			long[] origin,
 			long[] span,
-			Function<long[],INTERNAL_TYPE> func,
+			Function<long[],DATA_TYPE> func,
 			Condition<long[]> cond,
 			long[] negOffs,
 			long[] posOffs)
 		{
-			this.br = bridge;
+			this.img = img;
 			this.function = func;
 			this.condition = cond;
  			this.region = buildRegion(origin, span);
@@ -301,8 +331,8 @@ public class ImageAssignment<PIXEL_TYPE> {
 		 */
 		@Override
 		public void run() {
-			final RandomAccess<? extends IMG_TYPE> accessor = br.randomAccess();
-			final INTERNAL_TYPE output = function.createOutput();
+			final RandomAccess<DATA_TYPE> accessor = img.randomAccess();
+			final DATA_TYPE output = function.createOutput();
 			final RegionIndexIterator iter = new RegionIndexIterator(region);
 			while (iter.hasNext()) {
 				iter.fwd();
@@ -313,7 +343,7 @@ public class ImageAssignment<PIXEL_TYPE> {
 				if (proceed) {
 					function.evaluate(neighborhood, iter.getPosition(), output);
 					accessor.setPosition(iter.getPosition());
-					br.setPixel(accessor, output);
+					accessor.get().set(output);
 				}
 			}
 		}

@@ -36,20 +36,22 @@ import net.imglib2.ops.Function;
 import net.imglib2.ops.Complex;
 import net.imglib2.type.numeric.ComplexType;
 
+// TODO - NOTE - DISABLED FOR NOW - GOING AWAY
+
 /**
  * Defines and runs an assignment of pixels within a region of an
  * Img<ComplexType> with values from a function. Assignments can
  * be conditional and can be aborted.
  *  
  * @author Barry DeZonia
- *
+ * @deprecated
  */
 public class ComplexImageAssignment {
 
 	// -- instance variables --
 	
 	private final Img<? extends ComplexType<?>> image;
-	private ImageAssignment<ComplexType<?>, Complex> assigner;
+	//private ImageAssignment<ComplexType<?>, Complex> assigner;
 	
 	// -- private helpers --
 	
@@ -89,14 +91,14 @@ public class ComplexImageAssignment {
 			Function<long[],Complex> func, long[] negOffs, long[] posOffs)
 	{
 		this.image = image;
-		this.assigner =
-			new ImageAssignment<ComplexType<?>,Complex>(
-					new ComplexTranslator(),
-					origin,
-					span,
-					func,
-					negOffs,
-					posOffs);
+		//this.assigner =
+		//	new ImageAssignment<ComplexType<?>,Complex>(
+		//			new ComplexTranslator(),
+		//			origin,
+		//			span,
+		//			func,
+		//			negOffs,
+		//			posOffs);
 	}
 
 	/**
@@ -123,7 +125,7 @@ public class ComplexImageAssignment {
 	 * assign().
 	 */
 	public void setCondition(Condition<long[]> condition) {
-		assigner.setCondition(condition);
+		//assigner.setCondition(condition);
 	}
 	
 	/**
@@ -131,13 +133,13 @@ public class ComplexImageAssignment {
 	 * aborted using abort().
 	 */
 	public void assign() {
-		assigner.assign();
+		//assigner.assign();
 	}
 	
 	/**
 	 * Aborts an in progress assignment. If no assignment is running has no effect.
 	 */
 	public void abort() {
-		assigner.abort();
+		//assigner.abort();
 	}
 }
