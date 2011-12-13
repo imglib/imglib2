@@ -8,7 +8,7 @@ import net.imglib2.script.algorithm.fn.ImgProxy;
 import net.imglib2.script.math.Compute;
 import net.imglib2.script.math.fn.IFunction;
 import net.imglib2.script.math.fn.ImageFunction;
-import net.imglib2.algorithm.gauss2.GaussFloat;
+import net.imglib2.algorithm.gauss.GaussFloat;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.real.FloatType;
 

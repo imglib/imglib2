@@ -34,7 +34,7 @@ import ij.process.ColorProcessor;
 import java.util.Random;
 
 import net.imglib2.RandomAccess;
-import net.imglib2.algorithm.gauss2.GaussGeneral;
+import net.imglib2.algorithm.gauss.GaussGeneral;
 import net.imglib2.img.Img;
 import net.imglib2.img.array.ArrayImgFactory;
 import net.imglib2.img.display.imagej.ImageJFunctions;

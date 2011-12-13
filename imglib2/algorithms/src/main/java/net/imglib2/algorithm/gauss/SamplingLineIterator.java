@@ -18,7 +18,7 @@
  *
  * @author Stephan Preibisch
  */
-package net.imglib2.algorithm.gauss2;
+package net.imglib2.algorithm.gauss;
 
 import net.imglib2.Cursor;
 import net.imglib2.RandomAccess;

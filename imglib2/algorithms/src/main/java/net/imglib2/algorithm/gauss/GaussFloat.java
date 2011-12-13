@@ -18,7 +18,7 @@
  *
  * @author Stephan Preibisch
  */
-package net.imglib2.algorithm.gauss2;
+package net.imglib2.algorithm.gauss;
 
 import net.imglib2.Interval;
 import net.imglib2.Iterator;
