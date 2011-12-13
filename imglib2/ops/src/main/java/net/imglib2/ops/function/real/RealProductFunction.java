@@ -69,8 +69,8 @@ public class RealProductFunction<T extends RealType<T>>  implements Function<lon
 	}
 
 	@Override
-	public RealProductFunction<T> duplicate() {
-		return new RealProductFunction<T>(otherFunc.duplicate());
+	public RealProductFunction<T> copy() {
+		return new RealProductFunction<T>(otherFunc.copy());
 	}
 
 	@Override

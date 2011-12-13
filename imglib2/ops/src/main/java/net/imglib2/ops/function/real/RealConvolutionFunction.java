@@ -84,8 +84,8 @@ public class RealConvolutionFunction<T extends RealType<T>> implements Function<
 	}
 
 	@Override
-	public RealConvolutionFunction<T> duplicate() {
-		return new RealConvolutionFunction<T>(otherFunc.duplicate(), kernel.clone());
+	public RealConvolutionFunction<T> copy() {
+		return new RealConvolutionFunction<T>(otherFunc.copy(), kernel.clone());
 	}
 
 	@Override

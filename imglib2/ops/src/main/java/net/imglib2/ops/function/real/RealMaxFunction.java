@@ -69,8 +69,8 @@ public class RealMaxFunction<T extends RealType<T>> implements Function<long[],T
 	}
 
 	@Override
-	public RealMaxFunction<T> duplicate() {
-		return new RealMaxFunction<T>(otherFunc.duplicate());
+	public RealMaxFunction<T> copy() {
+		return new RealMaxFunction<T>(otherFunc.copy());
 	}
 
 	@Override

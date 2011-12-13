@@ -77,7 +77,7 @@ public abstract class Neighborhood<ARRAY> {
 		}
 	}
 
-	abstract public Neighborhood<ARRAY> duplicate();
+	abstract public Neighborhood<ARRAY> copy();
 	abstract public void restrict(int dimNumber, ARRAY twoValues);
 }
 

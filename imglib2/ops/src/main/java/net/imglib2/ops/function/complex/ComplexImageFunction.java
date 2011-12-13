@@ -77,7 +77,7 @@ public class ComplexImageFunction implements Function<long[],TempComplexType>
 	// -- public interface --
 	
 	@Override
-	public ComplexImageFunction duplicate() {
+	public ComplexImageFunction copy() {
 		return new ComplexImageFunction(accessor.copyRandomAccess());
 	}
 

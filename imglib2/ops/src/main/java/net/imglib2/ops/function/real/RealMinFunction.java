@@ -69,8 +69,8 @@ public class RealMinFunction<T extends RealType<T>> implements Function<long[],T
 	}
 
 	@Override
-	public RealMinFunction<T> duplicate() {
-		return new RealMinFunction<T>(otherFunc.duplicate());
+	public RealMinFunction<T> copy() {
+		return new RealMinFunction<T>(otherFunc.copy());
 	}
 
 	@Override

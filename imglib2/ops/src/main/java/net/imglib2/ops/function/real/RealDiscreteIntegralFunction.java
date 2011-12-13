@@ -61,8 +61,8 @@ public class RealDiscreteIntegralFunction<T extends RealType<T>>
 	}
 
 	@Override
-	public RealDiscreteIntegralFunction<T> duplicate() {
-		return new RealDiscreteIntegralFunction<T>(otherFunc.duplicate());
+	public RealDiscreteIntegralFunction<T> copy() {
+		return new RealDiscreteIntegralFunction<T>(otherFunc.copy());
 	}
 
 	@Override

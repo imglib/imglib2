@@ -63,7 +63,7 @@ public class RealImpulseFunction<T extends RealType<T>> implements Function<long
 	}
 
 	@Override
-	public RealImpulseFunction<T> duplicate() {
+	public RealImpulseFunction<T> copy() {
 		return new RealImpulseFunction<T>(dataHint);
 	}
 

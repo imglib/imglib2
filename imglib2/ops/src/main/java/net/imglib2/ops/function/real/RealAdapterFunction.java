@@ -57,8 +57,8 @@ public class RealAdapterFunction<INDEX> extends RealOutput implements Function<I
 	}
 
 	@Override
-	public RealAdapterFunction<INDEX> duplicate() {
-		return new RealAdapterFunction<INDEX>(complexFunc.duplicate());
+	public RealAdapterFunction<INDEX> copy() {
+		return new RealAdapterFunction<INDEX>(complexFunc.copy());
 	}
 }
 

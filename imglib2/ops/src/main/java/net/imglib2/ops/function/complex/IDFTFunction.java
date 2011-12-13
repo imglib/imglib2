@@ -98,8 +98,8 @@ public class IDFTFunction extends ComplexOutput implements Function<long[],Compl
 	}
 
 	@Override
-	public DFTFunction duplicate() {
-		return new DFTFunction(freqFunction.duplicate(),span,negOffs,posOffs);
+	public DFTFunction copy() {
+		return new DFTFunction(freqFunction.copy(),span,negOffs,posOffs);
 	}
 
 	// -- private helpers --

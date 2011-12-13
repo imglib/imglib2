@@ -98,8 +98,8 @@ public class DFTFunction extends ComplexOutput implements Function<long[],Comple
 	}
 
 	@Override
-	public DFTFunction duplicate() {
-		return new DFTFunction(spatialFunction.duplicate(),span,negOffs,posOffs);
+	public DFTFunction copy() {
+		return new DFTFunction(spatialFunction.copy(),span,negOffs,posOffs);
 	}
 
 	// -- private helpers --

@@ -71,7 +71,7 @@ public class PolarComplexFunction<INDEX> extends ComplexOutput implements Functi
 	}
 	
 	@Override
-	public PolarComplexFunction<INDEX> duplicate() {
+	public PolarComplexFunction<INDEX> copy() {
 		return new PolarComplexFunction<INDEX>(realFunc1.copy(), realFunc2.copy());
 	}
 }

@@ -71,8 +71,8 @@ public class CartesianComplexFunction<INDEX,T extends RealType<T>>
 	}
 	
 	@Override
-	public CartesianComplexFunction<INDEX,T> duplicate() {
-		return new CartesianComplexFunction<INDEX,T>(realFunc1.duplicate(), realFunc2.duplicate());
+	public CartesianComplexFunction<INDEX,T> copy() {
+		return new CartesianComplexFunction<INDEX,T>(realFunc1.copy(), realFunc2.copy());
 	}
 
 	@Override

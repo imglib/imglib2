@@ -72,7 +72,7 @@ public class ConverterFunction<INDEX,INTERMEDIATE_TYPE,FINAL_TYPE>
 	}
 	
 	@Override
-	public ConverterFunction<INDEX,INTERMEDIATE_TYPE,FINAL_TYPE> duplicate() {
-		return new ConverterFunction<INDEX, INTERMEDIATE_TYPE, FINAL_TYPE>(intermediateFunc.duplicate(), operation.copy());
+	public ConverterFunction<INDEX,INTERMEDIATE_TYPE,FINAL_TYPE> copy() {
+		return new ConverterFunction<INDEX, INTERMEDIATE_TYPE, FINAL_TYPE>(intermediateFunc.copy(), operation.copy());
 	}
 }

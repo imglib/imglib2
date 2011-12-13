@@ -54,8 +54,8 @@ public class ConditionalBooleanFunction<INDEX> implements Function<INDEX,BitType
 	}
 	
 	@Override
-	public ConditionalBooleanFunction<INDEX> duplicate() {
-		return new ConditionalBooleanFunction<INDEX>(condition.duplicate());
+	public ConditionalBooleanFunction<INDEX> copy() {
+		return new ConditionalBooleanFunction<INDEX>(condition.copy());
 	}
 
 	@Override

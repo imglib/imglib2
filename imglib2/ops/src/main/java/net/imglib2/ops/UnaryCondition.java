@@ -54,7 +54,7 @@ public class UnaryCondition<INDEX, T> implements Condition<INDEX> {
 	}
 	
 	@Override
-	public UnaryCondition<INDEX, T> duplicate() {
-		return new UnaryCondition<INDEX, T>(f1.duplicate(), relation.copy());
+	public UnaryCondition<INDEX, T> copy() {
+		return new UnaryCondition<INDEX, T>(f1.copy(), relation.copy());
 	}
 }

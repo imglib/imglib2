@@ -69,8 +69,8 @@ public class RealSumFunction<T extends RealType<T>> implements Function<long[],T
 	}
 
 	@Override
-	public RealSumFunction<T> duplicate() {
-		return new RealSumFunction<T>(otherFunc.duplicate());
+	public RealSumFunction<T> copy() {
+		return new RealSumFunction<T>(otherFunc.copy());
 	}
 
 	@Override

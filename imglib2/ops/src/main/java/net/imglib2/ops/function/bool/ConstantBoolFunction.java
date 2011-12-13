@@ -52,7 +52,7 @@ public class ConstantBoolFunction<INDEX> implements Function<INDEX,BitType> {
 	}
 	
 	@Override
-	public ConstantBoolFunction<INDEX> duplicate() {
+	public ConstantBoolFunction<INDEX> copy() {
 		return new ConstantBoolFunction<INDEX>(bool);
 	}
 

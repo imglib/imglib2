@@ -106,7 +106,7 @@ public class ImageAssignment<PIXEL_TYPE> {
 		this.span = span.clone();
 		this.negOffs = negOffs.clone();
 		this.posOffs = posOffs.clone();
-		this.func = function.duplicate();
+		this.func = function.copy();
 		this.cond = null;
 		this.assigning = false;
 	}
@@ -119,7 +119,7 @@ public class ImageAssignment<PIXEL_TYPE> {
 	 * region.
 	 */
 	public void setCondition(Condition<long[]> condition) {
-		this.cond = (condition == null ? null : condition.duplicate());
+		this.cond = (condition == null ? null : condition.copy());
 	}
 	
 	/**
@@ -259,8 +259,8 @@ public class ImageAssignment<PIXEL_TYPE> {
 				br,
 				regOrigin,
 				regSpan,
-				fn.duplicate(),
-				(cnd == null ? null : cnd.duplicate()),
+				fn.copy(),
+				(cnd == null ? null : cnd.copy()),
 				nOffsets.clone(),
 				pOffsets.clone());
 	}

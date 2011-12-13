@@ -86,8 +86,8 @@ public class RealMedianFunction<T extends RealType<T>> implements Function<long[
 	}
 
 	@Override
-	public RealMedianFunction<T> duplicate() {
-		return new RealMedianFunction<T>(otherFunc.duplicate());
+	public RealMedianFunction<T> copy() {
+		return new RealMedianFunction<T>(otherFunc.copy());
 	}
 
 	@Override

@@ -136,7 +136,7 @@ public class Example6 {
 		}
 		
 		@Override
-		public RealBilinearInterpolatorFunction<T> duplicate() {
+		public RealBilinearInterpolatorFunction<T> copy() {
 			throw new UnsupportedOperationException("not needed yet");
 		}
 		

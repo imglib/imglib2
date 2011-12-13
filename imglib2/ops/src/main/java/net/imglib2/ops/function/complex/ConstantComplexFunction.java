@@ -54,7 +54,7 @@ public class ConstantComplexFunction<INDEX> extends ComplexOutput implements Fun
 	}
 	
 	@Override
-	public ConstantComplexFunction<INDEX> duplicate() {
+	public ConstantComplexFunction<INDEX> copy() {
 		return new ConstantComplexFunction<INDEX>(complex);
 	}
 }

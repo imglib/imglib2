@@ -57,8 +57,8 @@ public class ImaginaryAdapterFunction<INDEX> extends RealOutput implements Funct
 	}
 
 	@Override
-	public ImaginaryAdapterFunction<INDEX> duplicate() {
-		return new ImaginaryAdapterFunction<INDEX>(complexFunc.duplicate());
+	public ImaginaryAdapterFunction<INDEX> copy() {
+		return new ImaginaryAdapterFunction<INDEX>(complexFunc.copy());
 	}
 }
 

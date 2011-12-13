@@ -83,7 +83,7 @@ public class RealImageFunction<T extends RealType<T>> implements Function<long[]
 	}
 
 	@Override
-	public RealImageFunction<T> duplicate() {
+	public RealImageFunction<T> copy() {
 		return new RealImageFunction<T>(accessor.copyRandomAccess());
 	}
 

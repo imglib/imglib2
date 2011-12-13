@@ -85,8 +85,8 @@ public class RealContinuousIntegralFunction<T extends RealType<T>>
 	}
 
 	@Override
-	public RealContinuousIntegralFunction<T> duplicate() {
-		return new RealContinuousIntegralFunction<T>(otherFunc.duplicate(), deltas);
+	public RealContinuousIntegralFunction<T> copy() {
+		return new RealContinuousIntegralFunction<T>(otherFunc.copy(), deltas);
 	}
 
 	// -- private helpers --

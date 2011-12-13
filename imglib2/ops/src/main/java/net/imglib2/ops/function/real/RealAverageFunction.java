@@ -74,8 +74,8 @@ public class RealAverageFunction<T extends RealType<T>> implements Function<long
 	}
 
 	@Override
-	public RealAverageFunction<T> duplicate() {
-		return new RealAverageFunction<T>(otherFunc.duplicate());
+	public RealAverageFunction<T> copy() {
+		return new RealAverageFunction<T>(otherFunc.copy());
 	}
 
 	@Override

@@ -53,7 +53,7 @@ public class ConstantRealFunction<INDEX, T extends RealType<T>> implements Funct
 	}
 
 	@Override
-	public ConstantRealFunction<INDEX,T> duplicate() {
+	public ConstantRealFunction<INDEX,T> copy() {
 		return new ConstantRealFunction<INDEX,T>(real, real.getRealDouble());
 	}
 

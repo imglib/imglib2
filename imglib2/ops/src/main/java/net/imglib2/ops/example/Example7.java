@@ -75,7 +75,7 @@ public class Example7 {
 		}
 		
 		@Override
-		public XValueCondition duplicate() {
+		public XValueCondition copy() {
 			return new XValueCondition();
 		}
 	}
@@ -88,7 +88,7 @@ public class Example7 {
 		}
 		
 		@Override
-		public XSquaredFunction duplicate() {
+		public XSquaredFunction copy() {
 			return new XSquaredFunction();
 		}
 
@@ -107,7 +107,7 @@ public class Example7 {
 		}
 		
 		@Override
-		public YLineFunction duplicate() {
+		public YLineFunction copy() {
 			return new YLineFunction();
 		}
 
@@ -136,7 +136,7 @@ public class Example7 {
 		}
 		
 		@Override
-		public CircularCondition duplicate() {
+		public CircularCondition copy() {
 			return new CircularCondition();
 		}
 	}
@@ -153,7 +153,7 @@ public class Example7 {
 		}
 		
 		@Override
-		public XYSumCondition duplicate() {
+		public XYSumCondition copy() {
 			return new XYSumCondition();
 		}
 	}

@@ -20,7 +20,7 @@ public class InsideRoiCondition implements Condition<double[]> {
 	}
 
 	@Override
-	public Condition<double[]> duplicate() {
+	public Condition<double[]> copy() {
 		// TODO should copy ROI
 		return new InsideRoiCondition(roi);
 	}
