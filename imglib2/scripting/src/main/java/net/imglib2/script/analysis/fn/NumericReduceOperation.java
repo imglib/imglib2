@@ -30,7 +30,7 @@ public abstract class NumericReduceOperation extends NumericResult<Double> imple
 
 	@SuppressWarnings("boxing")
 	protected void invoke() {
-		super.d = Reduction.compute(img, this);
+		super.d = Reduction.reduce(img, this);
 	}
 
 	// Reasonable default

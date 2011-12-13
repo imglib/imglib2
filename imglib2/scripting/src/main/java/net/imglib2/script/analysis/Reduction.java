@@ -11,10 +11,10 @@ public class Reduction extends NumericResult<Double>
 
 	@SuppressWarnings("boxing")
 	public Reduction(final IterableRealInterval<? extends RealType<?>> img,  final ReduceFn fn) {
-		super(compute(img, fn));
+		super(reduce(img, fn));
 	}
 
-	static public final double compute(final IterableRealInterval<? extends RealType<?>> img,  final ReduceFn fn) {
+	static public final double reduce(final IterableRealInterval<? extends RealType<?>> img,  final ReduceFn fn) {
 		final RealCursor<? extends RealType<?>> c = img.cursor();
 		Double initial = fn.initial();
 		double r;
