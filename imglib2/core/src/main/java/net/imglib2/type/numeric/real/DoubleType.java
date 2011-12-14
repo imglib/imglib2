@@ -32,7 +32,6 @@ package net.imglib2.type.numeric.real;
 import net.imglib2.img.NativeImg;
 import net.imglib2.img.NativeImgFactory;
 import net.imglib2.img.basictypeaccess.DoubleAccess;
-import net.imglib2.img.basictypeaccess.FloatAccess;
 import net.imglib2.img.basictypeaccess.array.DoubleArray;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.ExponentialMathType;
