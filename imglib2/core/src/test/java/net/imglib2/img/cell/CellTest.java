@@ -10,7 +10,6 @@ import net.imglib2.img.basictypeaccess.array.DoubleArray;
 import net.imglib2.img.basictypeaccess.array.FloatArray;
 import net.imglib2.img.basictypeaccess.array.IntArray;
 import net.imglib2.img.basictypeaccess.array.ShortArray;
-import net.imglib2.img.cell.Cell;
 
 import org.junit.Test;
 
@@ -33,10 +32,10 @@ public class CellTest
 			1296
 		};
 
-	public < A extends ArrayDataAccess< A > > void testConstruction( A creator )
+	public < A extends ArrayDataAccess< A > > void testConstruction( final A creator )
 	{
 		for ( int i = 0; i < dim.length; ++i ) {
-			Cell< A > cell = new ListImgCell< A >( creator, dim[ i ], offset[ i ], 2);			
+			final AbstractCell< A > cell = new DefaultCell< A >( creator, dim[ i ], offset[ i ], 2);
 			assertTrue( creator.getClass().isInstance( cell.getData() ) );
 			assertTrue( cell.size() == expectedLength[ i ] );
 		}
@@ -66,9 +65,9 @@ public class CellTest
 	@Test
 	public void testLocalIndexCalculation()
 	{
-		Cell< FloatArray > cell = new ListImgCell< FloatArray >( new FloatArray( 1 ), new int[] {20, 8, 10}, new long[] { 0, 9876543210l, 222 } , 2);
-		long[][] position = { {3, 4, 5}, {12, 0, 3}, {3, 2, 0} };
-		int[] expectedIndex = { 883, 492, 43 };
+		final AbstractCell< FloatArray > cell = new DefaultCell< FloatArray >( new FloatArray( 1 ), new int[] {20, 8, 10}, new long[] { 0, 9876543210l, 222 } , 2);
+		final long[][] position = { {3, 4, 5}, {12, 0, 3}, {3, 2, 0} };
+		final int[] expectedIndex = { 883, 492, 43 };
 		for ( int i = 0; i < position.length; ++i ) {
 			assertTrue( cell.localPositionToIndex( position[ i ] ) == expectedIndex[ i ]);
 		}
@@ -77,11 +76,11 @@ public class CellTest
 	@Test
 	public void testGlobalPositionCalculation()
 	{
-		Cell< FloatArray > cell = new ListImgCell< FloatArray >( new FloatArray( 1 ), new int[] {20, 8, 10}, new long[] { 0, 9876543210l, 222 } , 2);
-		int[] index = { 883, 492, 43 };
-		long[][] expectedPosition = { {3, 9876543214l, 227}, {12, 9876543210l, 225}, {3, 9876543212l, 222} };
+		final AbstractCell< FloatArray > cell = new DefaultCell< FloatArray >( new FloatArray( 1 ), new int[] {20, 8, 10}, new long[] { 0, 9876543210l, 222 } , 2);
+		final int[] index = { 883, 492, 43 };
+		final long[][] expectedPosition = { {3, 9876543214l, 227}, {12, 9876543210l, 225}, {3, 9876543212l, 222} };
 		for ( int i = 0; i < index.length; ++i ) {
-			long[] position = new long[ 3 ];
+			final long[] position = new long[ 3 ];
 			cell.indexToGlobalPosition( index[ i ], position );
 			assertArrayEquals( expectedPosition[ i ], position );
 			for ( int d = 0; d < position.length; ++d )

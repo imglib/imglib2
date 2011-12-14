@@ -5,16 +5,17 @@ import net.imglib2.RandomAccess;
 import net.imglib2.img.basictypeaccess.array.ArrayDataAccess;
 import net.imglib2.img.list.ListImg;
 import net.imglib2.img.list.ListImgFactory;
+import net.imglib2.img.list.ListLocalizingCursor;
 
-public class ListImgCells< A extends ArrayDataAccess< A > > implements Cells< A, ListImgCell< A > >
+public class ListImgCells< A extends ArrayDataAccess< A > > implements Cells< A, DefaultCell< A > >
 {
 	private final int entitiesPerPixel;
 	private final int n;
 	private final long[] dimensions;
 	private final int[] cellDimensions;
-	private final ListImg< ListImgCell< A > > cells;
-	
-	public ListImgCells( final A creator, int entitiesPerPixel, final long[] dimensions, final int[] cellDimensions  )
+	private final ListImg< DefaultCell< A > > cells;
+
+	public ListImgCells( final A creator, final int entitiesPerPixel, final long[] dimensions, final int[] cellDimensions  )
 	{
 		this.entitiesPerPixel = entitiesPerPixel;
 		this.n = dimensions.length;
@@ -31,37 +32,35 @@ public class ListImgCells< A extends ArrayDataAccess< A > > implements Cells< A,
 			borderSize[ d ] = ( int )( dimensions[ d ] - (numCells[ d ] - 1) * cellDimensions[ d ] );
 		}
 
-		cells = new ListImgFactory< ListImgCell< A > >().create( numCells, new ListImgCell< A >( n ) );
+		cells = new ListImgFactory< DefaultCell< A > >().create( numCells, new DefaultCell< A >( creator, new int[1], new long[1], entitiesPerPixel ) );
 
-		Cursor< ListImgCell < A > > cellCursor = cells.localizingCursor();
+		final ListLocalizingCursor< DefaultCell < A > > cellCursor = cells.localizingCursor();
 		while ( cellCursor.hasNext() ) {
-			ListImgCell< A > c = cellCursor.next();
-			
+			cellCursor.fwd();
 			cellCursor.localize( currentCellOffset );
 			for ( int d = 0; d < n; ++d )
 			{
-				currentCellDims[ d ] = ( int )( (currentCellOffset[d] + 1 == numCells[d])  ?  borderSize[ d ]  :  cellDimensions[ d ] );
+				currentCellDims[ d ] = ( (currentCellOffset[d] + 1 == numCells[d])  ?  borderSize[ d ]  :  cellDimensions[ d ] );
 				currentCellOffset[ d ] *= cellDimensions[ d ];
 			}
-			
-			c.set( new ListImgCell< A >( creator, currentCellDims, currentCellOffset, entitiesPerPixel ) );
+			cellCursor.set( new DefaultCell< A >( creator, currentCellDims, currentCellOffset, entitiesPerPixel ) );
 		}
 	}
-	
+
 	@Override
-	public RandomAccess< ListImgCell< A > > randomAccess()
+	public RandomAccess< DefaultCell< A > > randomAccess()
 	{
 		return cells.randomAccess();
 	}
 
 	@Override
-	public Cursor< ListImgCell< A > > cursor()
+	public Cursor< DefaultCell< A > > cursor()
 	{
 		return cells.cursor();
 	}
 
 	@Override
-	public Cursor< ListImgCell< A > > localizingCursor()
+	public Cursor< DefaultCell< A > > localizingCursor()
 	{
 		return cells.localizingCursor();
 	}
@@ -83,21 +82,21 @@ public class ListImgCells< A extends ArrayDataAccess< A > > implements Cells< A,
 	public long dimension( final int d )
 	{
 		try { return this.dimensions[ d ]; }
-		catch ( ArrayIndexOutOfBoundsException e ) { return 1; }
+		catch ( final ArrayIndexOutOfBoundsException e ) { return 1; }
 	}
 
 	@Override
-	public void cellDimensions( int[] s )
+	public void cellDimensions( final int[] s )
 	{
 		for ( int i = 0; i < n; ++i )
 			s[ i ] = cellDimensions[ i ];
 	}
 
 	@Override
-	public int cellDimension( int d )
+	public int cellDimension( final int d )
 	{
 		try { return this.cellDimensions[ d ]; }
-		catch ( ArrayIndexOutOfBoundsException e ) { return 1; }
+		catch ( final ArrayIndexOutOfBoundsException e ) { return 1; }
 	}
 
 	@Override

@@ -56,7 +56,7 @@ public class OutOfBoundsMirrorDoubleBoundaryTest
 	final private long[] dim = new long[]{ 5, 4, 3 };
 
 	static private ArrayImg< IntType, ? > arrayImage;
-	static private CellImg< IntType, ? > cellImage;
+	static private CellImg< IntType, ?, ? > cellImage;
 	static private Img< IntType > listImage;
 	
 	static private OutOfBoundsRandomAccess< IntType > cArray;

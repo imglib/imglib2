@@ -5,22 +5,22 @@ import net.imglib2.Cursor;
 import net.imglib2.img.basictypeaccess.array.ArrayDataAccess;
 import net.imglib2.type.NativeType;
 
-public class CellLocalizingCursor< T extends NativeType< T >, A extends ArrayDataAccess< A >, C extends Cell< A > > extends AbstractLocalizingCursor< T > implements CellImg.CellContainerSampler< T, A, C >
+public class CellLocalizingCursor< T extends NativeType< T >, A extends ArrayDataAccess< A >, C extends AbstractCell< A > > extends AbstractLocalizingCursor< T > implements CellImg.CellContainerSampler< T, A, C >
 {
 	protected final T type;
-	
+
 	protected final Cursor< C > cursorOnCells;
 
 	protected int lastIndexInCell;
-	final long[] minPositionInCell; 
+	final long[] minPositionInCell;
 	final long[] maxPositionInCell;
 
 	/**
 	 * The current index of the type.
-	 * It is faster to duplicate this here than to access it through type.getIndex(). 
+	 * It is faster to duplicate this here than to access it through type.getIndex().
 	 */
 	protected int index;
-	
+
 	/**
 	 * Caches cursorOnCells.hasNext().
 	 */
@@ -29,12 +29,12 @@ public class CellLocalizingCursor< T extends NativeType< T >, A extends ArrayDat
 	protected CellLocalizingCursor( final CellLocalizingCursor< T, A, C > cursor )
 	{
 		super( cursor.numDimensions() );
-		
+
 		this.type = cursor.type.duplicateTypeOnSameNativeImg();
 		this.cursorOnCells = cursor.cursorOnCells.copyCursor();
 		this.minPositionInCell = new long[ n ];
 		this.maxPositionInCell = new long[ n ];
-		
+
 		isNotLastCell = cursor.isNotLastCell;
 		lastIndexInCell = cursor.lastIndexInCell;
 		for ( int d = 0; d < n; ++d )
@@ -44,20 +44,20 @@ public class CellLocalizingCursor< T extends NativeType< T >, A extends ArrayDat
 			position[ d ] = cursor.position[ d ];
 		}
 		index = cursor.index;
-		
+
 		type.updateContainer( this );
 		type.updateIndex( index );
 	}
-	
+
 	public CellLocalizingCursor( final CellImg< T, A, C > container )
 	{
 		super( container.numDimensions() );
-		
+
 		this.type = container.createLinkedType();
 		this.cursorOnCells = container.cells.cursor();
 		this.minPositionInCell = new long[ n ];
 		this.maxPositionInCell = new long[ n ];
-		
+
 		reset();
 	}
 
@@ -93,7 +93,7 @@ public class CellLocalizingCursor< T extends NativeType< T >, A extends ArrayDat
 	}
 
 	@Override
-	public void jumpFwd( long steps )
+	public void jumpFwd( final long steps )
 	{
 		long newIndex = index + steps;
 		while ( newIndex > lastIndexInCell )
@@ -104,7 +104,7 @@ public class CellLocalizingCursor< T extends NativeType< T >, A extends ArrayDat
 			lastIndexInCell = ( int )( getCell().size() - 1);
 		}
 
-		C c = getCell();
+		final C c = getCell();
 		for ( int d = 0; d < n; ++d ) {
 			minPositionInCell[ d ] = c.min( d );
 			maxPositionInCell[ d ] = minPositionInCell[ d ] + c.dimension( d ) - 1;
@@ -116,7 +116,7 @@ public class CellLocalizingCursor< T extends NativeType< T >, A extends ArrayDat
 		type.updateIndex( index );
 		type.updateContainer( this );
 	}
-	
+
 	@Override
 	public void fwd()
 	{
@@ -146,13 +146,13 @@ public class CellLocalizingCursor< T extends NativeType< T >, A extends ArrayDat
 
 	/**
 	 * Move cursor right before the first element of the next cell.
-	 * Update type, position, and index variables. 
+	 * Update type, position, and index variables.
 	 */
 	private void moveToNextCell()
 	{
 		cursorOnCells.fwd();
 		isNotLastCell = cursorOnCells.hasNext();
-		C c = getCell();
+		final C c = getCell();
 
 		lastIndexInCell = ( int )( c.size() - 1);
 		for ( int d = 0; d < n; ++d ) {
