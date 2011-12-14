@@ -30,23 +30,34 @@ POSSIBILITY OF SUCH DAMAGE.
 package net.imglib2.ops.operation.binary.complex;
 
 import net.imglib2.ops.BinaryOperation;
-import net.imglib2.ops.Complex;
-import net.imglib2.ops.sandbox.ComplexOutput;
+import net.imglib2.type.numeric.ComplexType;
 
 /**
  * 
  * @author Barry DeZonia
  *
  */
-public final class ComplexCopyLeft extends ComplexOutput implements BinaryOperation<Complex,Complex,Complex> {
+public final class ComplexCopyLeft<T extends ComplexType<T>, U extends ComplexType<U>,
+	V extends ComplexType<V>> implements BinaryOperation<T,U,V> {
 
+	private final V type;
+	
+	public ComplexCopyLeft(V type) {
+		this.type = type;
+	}
+	
 	@Override
-	public void compute(Complex z1, Complex z2, Complex output) {
-		output.setValue(z1);
+	public void compute(T z1, U z2, V output) {
+		output.setComplexNumber(z1.getRealDouble(), z1.getImaginaryDouble());
 	}
 
 	@Override
-	public ComplexCopyLeft copy() {
-		return new ComplexCopyLeft();
+	public ComplexCopyLeft<T,U,V> copy() {
+		return new ComplexCopyLeft<T,U,V>(type);
+	}
+
+	@Override
+	public V createOutput(T dataHint1, U dataHint2) {
+		return type.createVariable();
 	}
 }

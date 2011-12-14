@@ -33,6 +33,7 @@ import net.imglib2.ops.UnaryOperation;
 import net.imglib2.ops.Complex;
 import net.imglib2.ops.operation.binary.complex.ComplexDivide;
 import net.imglib2.ops.sandbox.ComplexOutput;
+import net.imglib2.type.numeric.ComplexType;
 
 //Handbook of Mathematics and Computational Science, Harris & Stocker, Springer, 2006
 
@@ -41,7 +42,8 @@ import net.imglib2.ops.sandbox.ComplexOutput;
  * @author Barry DeZonia
  *
  */
-public final class ComplexTanh extends ComplexOutput implements UnaryOperation<Complex,Complex> {
+public final class ComplexTanh<T extends ComplexType<T>>
+	implements UnaryOperation<T,T> {
 
 	private static final ComplexCosh coshFunc = new ComplexCosh();
 	private static final ComplexSinh sinhFunc = new ComplexSinh();
@@ -60,5 +62,10 @@ public final class ComplexTanh extends ComplexOutput implements UnaryOperation<C
 	@Override
 	public ComplexTanh copy() {
 		return new ComplexTanh();
+	}
+
+	@Override
+	public T createOutput(T dataHint) {
+		return dataHint.createVariable();
 	}
 }

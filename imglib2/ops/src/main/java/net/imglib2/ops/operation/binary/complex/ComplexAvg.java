@@ -30,8 +30,7 @@ POSSIBILITY OF SUCH DAMAGE.
 package net.imglib2.ops.operation.binary.complex;
 
 import net.imglib2.ops.BinaryOperation;
-import net.imglib2.ops.Complex;
-import net.imglib2.ops.sandbox.ComplexOutput;
+import net.imglib2.type.numeric.ComplexType;
 
 // TODO - unverified formula
 
@@ -40,17 +39,29 @@ import net.imglib2.ops.sandbox.ComplexOutput;
  * @author Barry DeZonia
  *
  */
-public final class ComplexAvg extends ComplexOutput implements BinaryOperation<Complex,Complex,Complex> {
+public final class ComplexAvg<T extends ComplexType<T>, U extends ComplexType<U>,
+	V extends ComplexType<V>> implements BinaryOperation<T,U,V> {
 
+	private final V type;
+	
+	public ComplexAvg(V type) {
+		this.type = type;
+	}
+	
 	@Override
-	public void compute(Complex z1, Complex z2, Complex output) {
-		double x = (z1.getX() + z2.getX()) / 2;
-		double y = (z1.getY() + z2.getY()) / 2;
-		output.setCartesian(x,y);
+	public void compute(T z1, U z2, V output) {
+		double x = (z1.getRealDouble() + z2.getRealDouble()) / 2;
+		double y = (z1.getImaginaryDouble() + z2.getImaginaryDouble()) / 2;
+		output.setComplexNumber(x,y);
 	}
 
 	@Override
-	public ComplexAvg copy() {
-		return new ComplexAvg();
+	public ComplexAvg<T,U,V> copy() {
+		return new ComplexAvg<T,U,V>(type);
+	}
+
+	@Override
+	public V createOutput(T dataHint1, U dataHint2) {
+		return type.createVariable();
 	}
 }

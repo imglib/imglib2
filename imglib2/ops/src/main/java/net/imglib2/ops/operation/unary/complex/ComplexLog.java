@@ -32,6 +32,7 @@ package net.imglib2.ops.operation.unary.complex;
 import net.imglib2.ops.UnaryOperation;
 import net.imglib2.ops.Complex;
 import net.imglib2.ops.sandbox.ComplexOutput;
+import net.imglib2.type.numeric.ComplexType;
 
 //Handbook of Mathematics and Computational Science, Harris & Stocker, Springer, 2006
 
@@ -42,17 +43,29 @@ import net.imglib2.ops.sandbox.ComplexOutput;
  * @author Barry DeZonia
  *
  */
-public final class ComplexLog extends ComplexOutput implements UnaryOperation<Complex,Complex> {
+public final class ComplexLog<T extends ComplexType<T>, U extends ComplexType<U>>
+	implements UnaryOperation<T,U> {
 
+	private final U type;
+	
+	public ComplexLog(U type) {
+		this.type = type;
+	}
+	
 	@Override
-	public void compute(Complex z, Complex output) {
+	public void compute(T z, U output) {
 		double x = Math.log(z.getModulus());
 		double y = z.getPrincipleArgument();
 		output.setCartesian(x,y);
 	}
 	
 	@Override
-	public ComplexLog copy() {
-		return new ComplexLog();
+	public ComplexLog<T,U> copy() {
+		return new ComplexLog<T,U>(type);
+	}
+
+	@Override
+	public U createOutput(T dataHint) {
+		return type.createVariable();
 	}
 }

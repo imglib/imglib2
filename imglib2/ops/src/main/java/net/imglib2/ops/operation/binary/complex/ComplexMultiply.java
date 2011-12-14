@@ -30,8 +30,7 @@ POSSIBILITY OF SUCH DAMAGE.
 package net.imglib2.ops.operation.binary.complex;
 
 import net.imglib2.ops.BinaryOperation;
-import net.imglib2.ops.Complex;
-import net.imglib2.ops.sandbox.ComplexOutput;
+import net.imglib2.type.numeric.ComplexType;
 
 //Handbook of Mathematics and Computational Science, Harris & Stocker, Springer, 2006
 
@@ -40,17 +39,29 @@ import net.imglib2.ops.sandbox.ComplexOutput;
  * @author Barry DeZonia
  *
  */
-public final class ComplexMultiply extends ComplexOutput implements BinaryOperation<Complex,Complex,Complex> {
+public final class ComplexMultiply<T extends ComplexType<T>, U extends ComplexType<U>,
+	V extends ComplexType<V>> implements BinaryOperation<T,U,V> {
 
+	private final V type;
+	
+	public ComplexMultiply(V type) {
+		this.type = type;
+	}
+	
 	@Override
-	public void compute(Complex z1, Complex z2, Complex output) {
-		double x = z1.getX()*z2.getX() - z1.getY()*z2.getY();
-		double y = z1.getY()*z2.getX() + z1.getX()*z2.getY();
-		output.setCartesian(x,y);
+	public void compute(T z1, U z2, V output) {
+		double x = z1.getRealDouble()*z2.getRealDouble() - z1.getImaginaryDouble()*z2.getImaginaryDouble();
+		double y = z1.getImaginaryDouble()*z2.getRealDouble() + z1.getRealDouble()*z2.getImaginaryDouble();
+		output.setComplexNumber(x,y);
 	}
 
 	@Override
-	public ComplexMultiply copy() {
-		return new ComplexMultiply();
+	public ComplexMultiply<T,U,V> copy() {
+		return new ComplexMultiply<T,U,V>(type);
+	}
+
+	@Override
+	public V createOutput(T dataHint1, U dataHint2) {
+		return type.createVariable();
 	}
 }

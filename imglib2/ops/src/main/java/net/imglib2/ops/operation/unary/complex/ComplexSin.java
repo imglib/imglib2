@@ -36,6 +36,7 @@ import net.imglib2.ops.operation.binary.complex.ComplexMultiply;
 import net.imglib2.ops.operation.binary.complex.ComplexSubtract;
 import net.imglib2.ops.operation.unary.complex.ComplexExp;
 import net.imglib2.ops.sandbox.ComplexOutput;
+import net.imglib2.type.numeric.ComplexType;
 
 //Handbook of Mathematics and Computational Science, Harris & Stocker, Springer, 2006
 
@@ -44,7 +45,8 @@ import net.imglib2.ops.sandbox.ComplexOutput;
  * @author Barry DeZonia
  *
  */
-public final class ComplexSin extends ComplexOutput implements UnaryOperation<Complex,Complex> {
+public final class ComplexSin<T extends ComplexType<T>>
+	implements UnaryOperation<T,T> {
 
 	private static final Complex TWO_I = Complex.createCartesian(0,2);
 	private static final Complex I = Complex.createCartesian(0,1);
@@ -74,5 +76,10 @@ public final class ComplexSin extends ComplexOutput implements UnaryOperation<Co
 	@Override
 	public ComplexSin copy() {
 		return new ComplexSin();
+	}
+
+	@Override
+	public T createOutput(T dataHint) {
+		return dataHint.createVariable();
 	}
 }

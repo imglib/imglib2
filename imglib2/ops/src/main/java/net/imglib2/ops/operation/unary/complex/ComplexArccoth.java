@@ -36,6 +36,7 @@ import net.imglib2.ops.operation.binary.complex.ComplexDivide;
 import net.imglib2.ops.operation.binary.complex.ComplexMultiply;
 import net.imglib2.ops.operation.binary.complex.ComplexSubtract;
 import net.imglib2.ops.sandbox.ComplexOutput;
+import net.imglib2.type.numeric.ComplexType;
 
 //Handbook of Mathematics and Computational Science, Harris & Stocker, Springer, 2006
 
@@ -44,7 +45,8 @@ import net.imglib2.ops.sandbox.ComplexOutput;
  * @author Barry DeZonia
  *
  */
-public final class ComplexArccoth extends ComplexOutput implements UnaryOperation<Complex,Complex> {
+public final class ComplexArccoth<T extends ComplexType<T>>
+	implements UnaryOperation<T,T> {
 
 	private static final Complex ONE = Complex.createCartesian(1,0);
 	private static final Complex ONE_HALF = Complex.createCartesian(0.5,0);
@@ -72,5 +74,10 @@ public final class ComplexArccoth extends ComplexOutput implements UnaryOperatio
 	@Override
 	public ComplexArccoth copy() {
 		return new ComplexArccoth();
+	}
+
+	@Override
+	public T createOutput(T dataHint) {
+		return dataHint.createVariable();
 	}
 }

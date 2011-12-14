@@ -33,6 +33,7 @@ import net.imglib2.ops.UnaryOperation;
 import net.imglib2.ops.Complex;
 import net.imglib2.ops.operation.binary.complex.ComplexDivide;
 import net.imglib2.ops.sandbox.ComplexOutput;
+import net.imglib2.type.numeric.ComplexType;
 
 //Handbook of Mathematics and Computational Science, Harris & Stocker, Springer, 2006
 
@@ -41,7 +42,8 @@ import net.imglib2.ops.sandbox.ComplexOutput;
  * @author Barry DeZonia
  *
  */
-public final class ComplexCot extends ComplexOutput implements UnaryOperation<Complex,Complex> {
+public final class ComplexCot<T extends ComplexType<T>>
+	implements UnaryOperation<T,T> {
 
 	private static final ComplexCos cosFunc = new ComplexCos();
 	private static final ComplexSin sinFunc = new ComplexSin();
@@ -60,5 +62,10 @@ public final class ComplexCot extends ComplexOutput implements UnaryOperation<Co
 	@Override
 	public ComplexCot copy() {
 		return new ComplexCot();
+	}
+
+	@Override
+	public T createOutput(T dataHint) {
+		return dataHint.createVariable();
 	}
 }

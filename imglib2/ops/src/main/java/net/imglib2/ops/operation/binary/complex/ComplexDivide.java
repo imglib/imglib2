@@ -30,8 +30,7 @@ POSSIBILITY OF SUCH DAMAGE.
 package net.imglib2.ops.operation.binary.complex;
 
 import net.imglib2.ops.BinaryOperation;
-import net.imglib2.ops.Complex;
-import net.imglib2.ops.sandbox.ComplexOutput;
+import net.imglib2.type.numeric.ComplexType;
 
 //Handbook of Mathematics and Computational Science, Harris & Stocker, Springer, 2006
 
@@ -40,18 +39,30 @@ import net.imglib2.ops.sandbox.ComplexOutput;
  * @author Barry DeZonia
  *
  */
-public final class ComplexDivide extends ComplexOutput implements BinaryOperation<Complex,Complex,Complex> {
+public final class ComplexDivide<T extends ComplexType<T>, U extends ComplexType<U>,
+	V extends ComplexType<V>> implements BinaryOperation<T,U,V> {
 
+	private final V type;
+	
+	public ComplexDivide(V type) {
+		this.type = type;
+	}
+	
 	@Override
-	public void compute(Complex z1, Complex z2, Complex output) {
-		double denom = z2.getX()*z2.getX() + z2.getY()*z2.getY();
-		double x = (z1.getX()*z2.getX() + z1.getY()*z2.getY()) / denom;
-		double y = (z1.getY()*z2.getX() - z1.getX()*z2.getY()) / denom;
-		output.setCartesian(x, y);
+	public void compute(T z1, U z2, V output) {
+		double denom = z2.getRealDouble()*z2.getRealDouble() + z2.getImaginaryDouble()*z2.getImaginaryDouble();
+		double x = (z1.getRealDouble()*z2.getRealDouble() + z1.getImaginaryDouble()*z2.getImaginaryDouble()) / denom;
+		double y = (z1.getImaginaryDouble()*z2.getRealDouble() - z1.getRealDouble()*z2.getImaginaryDouble()) / denom;
+		output.setComplexNumber(x, y);
 	}
 
 	@Override
-	public ComplexDivide copy() {
-		return new ComplexDivide();
+	public ComplexDivide<T,U,V> copy() {
+		return new ComplexDivide<T,U,V>(type);
+	}
+
+	@Override
+	public V createOutput(T dataHint1, U dataHint2) {
+		return type.createVariable();
 	}
 }

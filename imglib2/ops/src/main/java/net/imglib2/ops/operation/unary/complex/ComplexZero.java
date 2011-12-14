@@ -32,23 +32,34 @@ package net.imglib2.ops.operation.unary.complex;
 import net.imglib2.ops.UnaryOperation;
 import net.imglib2.ops.Complex;
 import net.imglib2.ops.sandbox.ComplexOutput;
+import net.imglib2.type.numeric.ComplexType;
 
 /**
  * 
  * @author Barry DeZonia
  *
  */
-public final class ComplexZero extends ComplexOutput implements UnaryOperation<Complex,Complex> {
+public final class ComplexZero<T extends ComplexType<T>>
+	implements UnaryOperation<T,T> {
 
-	private static final Complex ZERO = Complex.createCartesian(0, 0);
+	private final T zero;
+	
+	public ComplexZero(T type) {
+		zero = 
+	}
 	
 	@Override
-	public void compute(Complex z, Complex output) {
-		output.setValue(ZERO);
+	public void compute(T z, T output) {
+		output.set(zero);
 	}
 	
 	@Override
 	public ComplexZero copy() {
 		return new ComplexZero();
+	}
+
+	@Override
+	public T createOutput(T dataHint) {
+		return dataHint.createVariable();
 	}
 }

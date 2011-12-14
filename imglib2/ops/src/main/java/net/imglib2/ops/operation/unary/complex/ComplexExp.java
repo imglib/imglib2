@@ -39,11 +39,17 @@ import net.imglib2.type.numeric.ComplexType;
  * @author Barry DeZonia
  *
  */
-public final class ComplexExp<T extends ComplexType<T>>
-	implements UnaryOperation<T,T> {
+public final class ComplexExp<T extends ComplexType<T>, U extends ComplexType<U>>
+	implements UnaryOperation<T,U> {
 
+	private final U type;
+	
+	public ComplexExp(U type) {
+		this.type = type;
+	}
+	
 	@Override
-	public void compute(T z, T output) {
+	public void compute(T z, U output) {
 		double constant = Math.exp(z.getRealDouble());
 		double x = constant * Math.cos(z.getImaginaryDouble());
 		double y = constant * Math.sin(z.getImaginaryDouble());
@@ -51,12 +57,12 @@ public final class ComplexExp<T extends ComplexType<T>>
 	}
 	
 	@Override
-	public ComplexExp<T> copy() {
-		return new ComplexExp<T>();
+	public ComplexExp<T,U> copy() {
+		return new ComplexExp<T,U>(type);
 	}
 
 	@Override
-	public T createOutput(T dataHint) {
-		return dataHint.createVariable();
+	public U createOutput(T dataHint) {
+		return type.createVariable();
 	}
 }

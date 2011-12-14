@@ -32,13 +32,15 @@ package net.imglib2.ops.operation.unary.complex;
 import net.imglib2.ops.UnaryOperation;
 import net.imglib2.ops.Complex;
 import net.imglib2.ops.sandbox.ComplexOutput;
+import net.imglib2.type.numeric.ComplexType;
 
 /**
  * 
  * @author Barry DeZonia
  *
  */
-public final class ComplexNegate extends ComplexOutput implements UnaryOperation<Complex,Complex> {
+public final class ComplexNegate<T extends ComplexType<T>>
+	implements UnaryOperation<T,T> {
 
 	@Override
 	public void compute(Complex z, Complex output) {
@@ -50,5 +52,10 @@ public final class ComplexNegate extends ComplexOutput implements UnaryOperation
 	@Override
 	public ComplexNegate copy() {
 		return new ComplexNegate();
+	}
+
+	@Override
+	public T createOutput(T dataHint) {
+		return dataHint.createVariable();
 	}
 }

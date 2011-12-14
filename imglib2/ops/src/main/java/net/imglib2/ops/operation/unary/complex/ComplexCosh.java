@@ -36,6 +36,7 @@ import net.imglib2.ops.operation.binary.complex.ComplexDivide;
 import net.imglib2.ops.operation.binary.complex.ComplexMultiply;
 import net.imglib2.ops.operation.unary.complex.ComplexExp;
 import net.imglib2.ops.sandbox.ComplexOutput;
+import net.imglib2.type.numeric.ComplexType;
 
 //Handbook of Mathematics and Computational Science, Harris & Stocker, Springer, 2006
 
@@ -44,7 +45,8 @@ import net.imglib2.ops.sandbox.ComplexOutput;
  * @author Barry DeZonia
  *
  */
-public final class ComplexCosh extends ComplexOutput implements UnaryOperation<Complex,Complex> {
+public final class ComplexCosh<T extends ComplexType<T>>
+	implements UnaryOperation<T,T> {
 
 	private static final Complex TWO = Complex.createCartesian(2,0);
 	private static final Complex MINUS_ONE = Complex.createCartesian(-1,0);
@@ -71,5 +73,10 @@ public final class ComplexCosh extends ComplexOutput implements UnaryOperation<C
 	@Override
 	public ComplexCosh copy() {
 		return new ComplexCosh();
+	}
+
+	@Override
+	public T createOutput(T dataHint) {
+		return dataHint.createVariable();
 	}
 }

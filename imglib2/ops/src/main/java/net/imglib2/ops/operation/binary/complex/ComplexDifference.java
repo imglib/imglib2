@@ -30,25 +30,36 @@ POSSIBILITY OF SUCH DAMAGE.
 package net.imglib2.ops.operation.binary.complex;
 
 import net.imglib2.ops.BinaryOperation;
-import net.imglib2.ops.Complex;
-import net.imglib2.ops.sandbox.ComplexOutput;
+import net.imglib2.type.numeric.ComplexType;
 
 /**
  * 
  * @author Barry DeZonia
  *
  */
-public final class ComplexDifference extends ComplexOutput implements BinaryOperation<Complex,Complex,Complex> {
+public final class ComplexDifference<T extends ComplexType<T>, U extends ComplexType<U>,
+	V extends ComplexType<V>> implements BinaryOperation<T,U,V> {
 
+	private final V type;
+	
+	public ComplexDifference(V type) {
+		this.type = type;
+	}
+	
 	@Override
-	public void compute(Complex z1, Complex z2, Complex output) {
-		double x = Math.abs(z1.getX() - z2.getX());
-		double y = Math.abs(z1.getY() - z2.getY());
-		output.setCartesian(x,y);
+	public void compute(T z1, U z2, V output) {
+		double x = Math.abs(z1.getRealDouble() - z2.getRealDouble());
+		double y = Math.abs(z1.getImaginaryDouble() - z2.getImaginaryDouble());
+		output.setComplexNumber(x,y);
 	}
 
 	@Override
-	public ComplexDifference copy() {
-		return new ComplexDifference();
+	public ComplexDifference<T,U,V> copy() {
+		return new ComplexDifference<T,U,V>(type);
+	}
+
+	@Override
+	public V createOutput(T dataHint1, U dataHint2) {
+		return type.createVariable();
 	}
 }

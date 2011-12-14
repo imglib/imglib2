@@ -32,6 +32,7 @@ package net.imglib2.ops.operation.unary.complex;
 import net.imglib2.ops.UnaryOperation;
 import net.imglib2.ops.Complex;
 import net.imglib2.ops.sandbox.ComplexOutput;
+import net.imglib2.type.numeric.ComplexType;
 
 //Handbook of Mathematics and Computational Science, Harris & Stocker, Springer, 2006
 
@@ -40,7 +41,8 @@ import net.imglib2.ops.sandbox.ComplexOutput;
  * @author Barry DeZonia
  *
  */
-public final class ComplexRoot extends ComplexOutput implements UnaryOperation<Complex,Complex> {
+public final class ComplexRoot<T extends ComplexType<T>>
+	implements UnaryOperation<T,T> {
 
 	private final int power;
 	
@@ -60,5 +62,10 @@ public final class ComplexRoot extends ComplexOutput implements UnaryOperation<C
 	@Override
 	public ComplexRoot copy() {
 		return new ComplexRoot(power);
+	}
+
+	@Override
+	public T createOutput(T dataHint) {
+		return dataHint.createVariable();
 	}
 }

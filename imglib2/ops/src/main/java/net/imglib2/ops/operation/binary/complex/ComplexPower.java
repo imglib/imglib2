@@ -30,10 +30,9 @@ POSSIBILITY OF SUCH DAMAGE.
 package net.imglib2.ops.operation.binary.complex;
 
 import net.imglib2.ops.BinaryOperation;
-import net.imglib2.ops.Complex;
 import net.imglib2.ops.operation.unary.complex.ComplexExp;
 import net.imglib2.ops.operation.unary.complex.ComplexLog;
-import net.imglib2.ops.sandbox.ComplexOutput;
+import net.imglib2.type.numeric.ComplexType;
 
 //Handbook of Mathematics and Computational Science, Harris & Stocker, Springer, 2006
 
@@ -42,24 +41,41 @@ import net.imglib2.ops.sandbox.ComplexOutput;
  * @author Barry DeZonia
  *
  */
-public final class ComplexPower extends ComplexOutput implements BinaryOperation<Complex,Complex,Complex> {
+public final class ComplexPower<T extends ComplexType<T>, U extends ComplexType<U>,
+	V extends ComplexType<V>> implements BinaryOperation<T,U,V> {
 
-	private static final ComplexLog logFunc = new ComplexLog();
-	private static final ComplexMultiply mulFunc = new ComplexMultiply();
-	private static final ComplexExp expFunc = new ComplexExp();
+	private final ComplexLog<T,V> logFunc;
+	private final ComplexMultiply<U,V,V> mulFunc;
+	private final ComplexExp<V,V> expFunc;
 	
-	private final Complex logA = new Complex();
-	private final Complex zLogA = new Complex();
+	private final V logA;
+	private final V zLogA;
+	
+	private final V type;
+	
+	public ComplexPower(V type) {
+		this.type = type;
+		logFunc = new ComplexLog<T,V>(type);
+		mulFunc = new ComplexMultiply<U,V,V>(type);
+		expFunc = new ComplexExp<V,V>(type);
+		logA = type.createVariable();
+		zLogA = type.createVariable();
+	}
 	
 	@Override
-	public void compute(Complex a, Complex z, Complex output) {
+	public void compute(T a, U z, V output) {
 		logFunc.compute(a, logA);
 		mulFunc.compute(z, logA, zLogA);
 		expFunc.compute(zLogA, output);
 	}
 
 	@Override
-	public ComplexPower copy() {
-		return new ComplexPower();
+	public ComplexPower<T,U,V> copy() {
+		return new ComplexPower<T,U,V>(type);
+	}
+
+	@Override
+	public V createOutput(T dataHint1, U dataHint2) {
+		return type.createVariable();
 	}
 }

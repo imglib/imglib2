@@ -32,6 +32,7 @@ package net.imglib2.ops.operation.unary.complex;
 import net.imglib2.ops.UnaryOperation;
 import net.imglib2.ops.Complex;
 import net.imglib2.ops.sandbox.ComplexOutput;
+import net.imglib2.type.numeric.ComplexType;
 
 //Complex Variables and Applications, Brown and Churchill, 7th edition
 
@@ -40,7 +41,8 @@ import net.imglib2.ops.sandbox.ComplexOutput;
  * @author Barry DeZonia
  *
  */
-public final class ComplexReciprocal extends ComplexOutput implements UnaryOperation<Complex,Complex> {
+public final class ComplexReciprocal<T extends ComplexType<T>>
+	implements UnaryOperation<T,T> {
 
 	@Override
 	public void compute(Complex z, Complex output) {
@@ -53,5 +55,10 @@ public final class ComplexReciprocal extends ComplexOutput implements UnaryOpera
 	@Override
 	public ComplexReciprocal copy() {
 		return new ComplexReciprocal();
+	}
+
+	@Override
+	public T createOutput(T dataHint) {
+		return dataHint.createVariable();
 	}
 }

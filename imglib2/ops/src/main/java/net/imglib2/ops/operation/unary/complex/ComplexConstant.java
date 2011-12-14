@@ -32,13 +32,15 @@ package net.imglib2.ops.operation.unary.complex;
 import net.imglib2.ops.UnaryOperation;
 import net.imglib2.ops.Complex;
 import net.imglib2.ops.sandbox.ComplexOutput;
+import net.imglib2.type.numeric.ComplexType;
 
 /**
  * 
  * @author Barry DeZonia
  *
  */
-public final class ComplexConstant extends ComplexOutput implements UnaryOperation<Complex,Complex> {
+public final class ComplexConstant<T extends ComplexType<T>>
+	implements UnaryOperation<T,T> {
 
 	private final Complex constant = new Complex();
 	
@@ -54,5 +56,10 @@ public final class ComplexConstant extends ComplexOutput implements UnaryOperati
 	@Override
 	public ComplexConstant copy() {
 		return new ComplexConstant(constant);
+	}
+
+	@Override
+	public T createOutput(T dataHint) {
+		return dataHint.createVariable();
 	}
 }

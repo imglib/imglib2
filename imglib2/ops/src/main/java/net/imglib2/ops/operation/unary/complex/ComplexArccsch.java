@@ -33,6 +33,7 @@ import net.imglib2.ops.UnaryOperation;
 import net.imglib2.ops.Complex;
 import net.imglib2.ops.operation.binary.complex.ComplexDivide;
 import net.imglib2.ops.sandbox.ComplexOutput;
+import net.imglib2.type.numeric.ComplexType;
 
 //Formula taken from MATLAB documentation
 
@@ -41,7 +42,8 @@ import net.imglib2.ops.sandbox.ComplexOutput;
  * @author Barry DeZonia
  *
  */
-public final class ComplexArccsch extends ComplexOutput implements UnaryOperation<Complex,Complex> {
+public final class ComplexArccsch<T extends ComplexType<T>>
+	implements UnaryOperation<T,T> {
 
 	private static final Complex ONE = Complex.createCartesian(1, 0);
 
@@ -59,5 +61,10 @@ public final class ComplexArccsch extends ComplexOutput implements UnaryOperatio
 	@Override
 	public ComplexArccsch copy() {
 		return new ComplexArccsch();
+	}
+
+	@Override
+	public T createOutput(T dataHint) {
+		return dataHint.createVariable();
 	}
 }

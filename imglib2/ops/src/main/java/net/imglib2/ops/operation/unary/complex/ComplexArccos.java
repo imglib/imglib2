@@ -30,12 +30,12 @@ POSSIBILITY OF SUCH DAMAGE.
 package net.imglib2.ops.operation.unary.complex;
 
 import net.imglib2.ops.UnaryOperation;
-import net.imglib2.ops.Complex;
 import net.imglib2.ops.operation.binary.complex.ComplexAdd;
 import net.imglib2.ops.operation.binary.complex.ComplexMultiply;
 import net.imglib2.ops.operation.binary.complex.ComplexPower;
 import net.imglib2.ops.operation.binary.complex.ComplexSubtract;
 import net.imglib2.ops.sandbox.ComplexOutput;
+import net.imglib2.type.numeric.ComplexType;
 
 //Handbook of Mathematics and Computational Science, Harris & Stocker, Springer, 2006
 
@@ -44,26 +44,45 @@ import net.imglib2.ops.sandbox.ComplexOutput;
  * @author Barry DeZonia
  *
  */
-public final class ComplexArccos extends ComplexOutput implements UnaryOperation<Complex,Complex> {
-
-	private static final Complex MINUS_I = Complex.createCartesian(0, -1);
-	private static final Complex ONE = Complex.createCartesian(1, 0);
-	private static final Complex ONE_HALF = Complex.createCartesian(0.5, 0);
+public final class ComplexArccos<T extends ComplexType<T>>
+	implements UnaryOperation<T,T> {
 
 	private static final ComplexMultiply mulFunc = new ComplexMultiply();
 	private static final ComplexSubtract diffFunc = new ComplexSubtract();
 	private static final ComplexPower powFunc = new ComplexPower();
 	private static final ComplexAdd addFunc = new ComplexAdd();
-	private static final ComplexLog logFunc = new ComplexLog();
+
+	private T type;
 	
-	private final Complex zSquared = new Complex();
-	private final Complex miniSum = new Complex();
-	private final Complex root = new Complex();
-	private final Complex sum = new Complex();
-	private final Complex logSum = new Complex();
+	private final ComplexLog<T> logFunc = new ComplexLog<T>();
+
+	private final T MINUS_I;
+	private final T ONE;
+	private final T ONE_HALF;
+
+	private final T zSquared;
+	private final T miniSum;
+	private final T root;
+	private final T sum;
+	private final T logSum;
+	
+	public ComplexArccos(T type) {
+		this.type = type;
+		MINUS_I = createOutput(type);
+		ONE = createOutput(type);
+		ONE_HALF = createOutput(type);
+		zSquared = createOutput(type);
+		miniSum = createOutput(type);
+		root = createOutput(type);
+		sum = createOutput(type);
+		logSum = createOutput(type);
+		ONE.setComplexNumber(1, 0);
+		MINUS_I.setComplexNumber(0, -1);
+		ONE_HALF.setComplexNumber(0.5, 0);
+	}
 	
 	@Override
-	public void compute(Complex z, Complex output) {
+	public void compute(T z, T output) {
 		mulFunc.compute(z, z, zSquared);
 		diffFunc.compute(zSquared, ONE, miniSum);
 		powFunc.compute(miniSum, ONE_HALF, root);
@@ -73,7 +92,12 @@ public final class ComplexArccos extends ComplexOutput implements UnaryOperation
 	}
 	
 	@Override
-	public ComplexArccos copy() {
-		return new ComplexArccos();
+	public ComplexArccos<T> copy() {
+		return new ComplexArccos<T>(type);
+	}
+
+	@Override
+	public T createOutput(T dataHint) {
+		return dataHint.createVariable();
 	}
 }
