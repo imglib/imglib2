@@ -33,14 +33,14 @@ import net.imglib2.RandomAccess;
 import net.imglib2.img.Img;
 import net.imglib2.img.ImgFactory;
 import net.imglib2.img.array.ArrayImgFactory;
-import net.imglib2.ops.Complex;
-import net.imglib2.ops.ComplexOutput;
 import net.imglib2.ops.DiscreteNeigh;
 import net.imglib2.ops.Function;
 import net.imglib2.ops.Neighborhood;
 import net.imglib2.ops.operation.binary.complex.ComplexAdd;
 import net.imglib2.ops.operation.binary.complex.ComplexMultiply;
 import net.imglib2.ops.operation.unary.complex.ComplexExp;
+import net.imglib2.ops.sandbox.ComplexOutput;
+import net.imglib2.type.numeric.ComplexType;
 import net.imglib2.type.numeric.complex.ComplexDoubleType;
 
 // example implementation of a Discrete Fourier Transform function
@@ -51,18 +51,17 @@ import net.imglib2.type.numeric.complex.ComplexDoubleType;
  * @author Barry DeZonia
  *
  */
-public class DFTFunction extends ComplexOutput implements Function<long[],Complex> {
+public class DFTFunction<T extends ComplexType<T>> extends ComplexOutput implements Function<long[],T> {
 
 	// -- static class variables --
 	
 	private static final ComplexAdd adder = new ComplexAdd();
 	private static final ComplexExp exper = new ComplexExp();
 	private static final ComplexMultiply multiplier = new ComplexMultiply();
-	private static final Complex MINUS_TWO_PI_I = Complex.createCartesian(0, -2*Math.PI);
 
 	// -- instance variables --
 	
-	private Function<long[],Complex> spatialFunction;
+	private Function<long[],T> spatialFunction;
 	private long[] span;
 	private long[] negOffs;
 	private long[] posOffs;
@@ -70,21 +69,31 @@ public class DFTFunction extends ComplexOutput implements Function<long[],Comple
 	private ComplexImageFunction dataArray;
 
 	// -- temporary per instance working variables --
-	private final Complex constant = new Complex();
-	private final Complex expVal = new Complex();
-	private final Complex funcVal = new Complex();
-	private final Complex spatialExponent = new Complex();
+	private final T type;
+	private final T MINUS_TWO_PI_I;
+	private final T constant;
+	private final T expVal;
+	private final T funcVal;
+	private final T spatialExponent;
 	
 	// -- constructor --
 	
-	public DFTFunction(Function<long[],Complex> spatialFunction, long[] span, long[] negOffs, long[] posOffs) {
+	public DFTFunction(Function<long[],T> spatialFunction, long[] span, long[] negOffs, long[] posOffs, T type) {
 		if (span.length != 2)
 			throw new IllegalArgumentException("DFTFunction is only designed for two dimensional functions");
+		this.type = type;
 		this.spatialFunction = spatialFunction;
 		this.span = span.clone();
 		this.negOffs = negOffs.clone();
 		this.posOffs = posOffs.clone();
 		this.neighborhood = new DiscreteNeigh(span.clone(), this.negOffs, this.posOffs);
+		this.MINUS_TWO_PI_I = createOutput();
+		this.MINUS_TWO_PI_I.setReal(0);
+		this.MINUS_TWO_PI_I.setImaginary(-2*Math.PI);
+		this.constant = createOutput();
+		this.expVal = createOutput();
+		this.funcVal = createOutput();
+		this.spatialExponent = createOutput();
 		this.dataArray = createDataArray();
 	}
 	
@@ -92,14 +101,19 @@ public class DFTFunction extends ComplexOutput implements Function<long[],Comple
 	
 	@Override
 	public void
-		evaluate(Neighborhood<long[]> neigh, long[] point, Complex output)
+		evaluate(Neighborhood<long[]> neigh, long[] point, T output)
 	{
 		dataArray.evaluate(neigh, point, output);
 	}
 
 	@Override
-	public DFTFunction copy() {
-		return new DFTFunction(spatialFunction.copy(),span,negOffs,posOffs);
+	public DFTFunction<T> copy() {
+		return new DFTFunction<T>(spatialFunction.copy(),span,negOffs,posOffs,type);
+	}
+
+	@Override
+	public T createOutput() {
+		return type.createVariable();
 	}
 
 	// -- private helpers --
@@ -113,13 +127,13 @@ public class DFTFunction extends ComplexOutput implements Function<long[],Comple
 		final RandomAccess<ComplexDoubleType> oAccessor = img.randomAccess();
 		final long[] iPosition = new long[2];
 		final long[] oPosition = new long[2];
-		final Complex sum = new Complex();
-		final Complex xyTerm = new Complex(); 
+		final T sum = createOutput();
+		final T xyTerm = createOutput(); 
 		for (int ox = 0; ox < span[0]; ox++) {
 			oPosition[0] = ox;
 			for (int oy = 0; oy < span[1]; oy++) {
 				oPosition[1] = oy;
-				sum.setCartesian(0, 0);
+				sum.setComplexNumber(0, 0);
 				for (int ix = 0; ix < span[0]; ix++) {
 					iPosition[0] = ix;
 					for (int iy = 0; iy < span[1]; iy++) {
@@ -129,18 +143,19 @@ public class DFTFunction extends ComplexOutput implements Function<long[],Comple
 					}
 				}
 				oAccessor.setPosition(oPosition);
-				oAccessor.get().setComplexNumber(sum.getX(), sum.getY());
+				oAccessor.get().setComplexNumber(
+					sum.getRealDouble(), sum.getImaginaryDouble());
 			}
 		}
 		return new ComplexImageFunction(img);
 	}
 	
-	private void calcTermAtPoint(long[] oPosition, long[] iPosition, Complex xyTerm) {
+	private void calcTermAtPoint(long[] oPosition, long[] iPosition, T xyTerm) {
 		neighborhood.moveTo(iPosition);
 		spatialFunction.evaluate(neighborhood, iPosition, funcVal);
 		double val = ((double)oPosition[0]) * iPosition[0] / span[0];
 		val += ((double)oPosition[1]) * iPosition[1] / span[1];
-		spatialExponent.setCartesian(val, 0);
+		spatialExponent.setComplexNumber(val, 0);
 		multiplier.compute(MINUS_TWO_PI_I, spatialExponent, constant);
 		exper.compute(constant, expVal);
 		multiplier.compute(funcVal, expVal, xyTerm);

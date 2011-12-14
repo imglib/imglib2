@@ -30,15 +30,14 @@ POSSIBILITY OF SUCH DAMAGE.
 package net.imglib2.ops.relation;
 
 import net.imglib2.ops.BinaryRelation;
-import net.imglib2.ops.Complex;
-
+import net.imglib2.type.numeric.ComplexType;
 
 /**
  * 
  * @author Barry DeZonia
  *
  */
-public final class ComplexNear implements BinaryRelation<Complex,Complex> {
+public final class ComplexNear<T extends ComplexType<T>> implements BinaryRelation<T,T> {
 
 	private final double rTol;
 	private final double iTol;
@@ -54,14 +53,14 @@ public final class ComplexNear implements BinaryRelation<Complex,Complex> {
 	}
 	
 	@Override
-	public boolean holds(Complex val1, Complex val2) {
+	public boolean holds(T val1, T val2) {
 		return
-				Math.abs(val1.getX() - val2.getX()) <= rTol &&
-				Math.abs(val1.getY() - val2.getY()) <= iTol;
+			Math.abs(val1.getRealDouble() - val2.getRealDouble()) <= rTol &&
+			Math.abs(val1.getImaginaryDouble() - val2.getImaginaryDouble()) <= iTol;
 	}
 
 	@Override
-	public ComplexNear copy() {
-		return new ComplexNear(rTol, iTol);
+	public ComplexNear<T> copy() {
+		return new ComplexNear<T>(rTol, iTol);
 	}
 }

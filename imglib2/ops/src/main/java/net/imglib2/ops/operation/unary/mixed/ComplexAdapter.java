@@ -29,10 +29,9 @@ POSSIBILITY OF SUCH DAMAGE.
 
 package net.imglib2.ops.operation.unary.mixed;
 
-import net.imglib2.ops.Complex;
-import net.imglib2.ops.ComplexOutput;
-import net.imglib2.ops.Real;
 import net.imglib2.ops.UnaryOperation;
+import net.imglib2.type.numeric.ComplexType;
+import net.imglib2.type.numeric.RealType;
 
 // This is an example implementation of a mixed parameter UnaryOperation.
 // There is a ComplexAdapterFunction in the ops.function.complex package.
@@ -44,15 +43,27 @@ import net.imglib2.ops.UnaryOperation;
  * @author Barry DeZonia
  *
  */
-public final class ComplexAdapter extends ComplexOutput implements UnaryOperation<Real,Complex> {
-
+public final class ComplexAdapter<R extends RealType<R>,C extends ComplexType<C>>
+	implements UnaryOperation<R,C>
+{
+	private final C type;
+	
+	public ComplexAdapter(C type) {
+		this.type = type;
+	}
+	
 	@Override
-	public void compute(Real x, Complex output) {
-		output.setCartesian(x.getReal(), 0);
+	public void compute(R x, C output) {
+		output.setComplexNumber(x.getRealDouble(), 0);
 	}
 
 	@Override
-	public ComplexAdapter copy() {
-		return new ComplexAdapter();
+	public ComplexAdapter<R,C> copy() {
+		return new ComplexAdapter<R,C>(type);
+	}
+
+	@Override
+	public C createOutput(R dataHint) {
+		return type.createVariable();
 	}
 }

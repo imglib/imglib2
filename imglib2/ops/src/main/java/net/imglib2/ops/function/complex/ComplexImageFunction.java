@@ -31,11 +31,9 @@ package net.imglib2.ops.function.complex;
 
 import net.imglib2.ExtendedRandomAccessibleInterval;
 import net.imglib2.RandomAccess;
-import net.imglib2.RandomAccessible;
 import net.imglib2.img.Img;
 import net.imglib2.ops.Function;
 import net.imglib2.ops.Neighborhood;
-import net.imglib2.ops.TempComplexType;
 import net.imglib2.outofbounds.OutOfBoundsFactory;
 import net.imglib2.type.numeric.ComplexType;
 
@@ -44,55 +42,52 @@ import net.imglib2.type.numeric.ComplexType;
  * @author Barry DeZonia
  *
  */
-public class ComplexImageFunction implements Function<long[],TempComplexType>
+public class ComplexImageFunction<T extends ComplexType<T>> implements Function<long[],T>
 {
 	// -- instance variables --
 	
-	private final RandomAccess<? extends ComplexType<?>> accessor;
+	private final RandomAccess<T> accessor;
+	private final T type;
 	
 	// -- private constructor used by duplicate() --
 	
-	private ComplexImageFunction(
-		RandomAccess<? extends ComplexType<?>> acc)
+	private ComplexImageFunction(RandomAccess<T> acc, T type)
 	{
 		this.accessor = acc;
+		this.type = type;
 	}
 	
 	// -- public constructors --
 	
-	public ComplexImageFunction(Img<? extends ComplexType<?>> img) {
-		this.accessor = img.randomAccess();
+	public ComplexImageFunction(Img<T> img, T type) {
+		this(img.randomAccess(), type);
 	}
 	
+	@SuppressWarnings({"rawtypes","unchecked"})
 	public ComplexImageFunction(
-		Img<? extends ComplexType<?>> img,
-		OutOfBoundsFactory<? extends ComplexType<?>,Img<? extends ComplexType<?>>> factory)
+		Img<T> img,
+		OutOfBoundsFactory<T,Img<T>> factory, T type)
 	{
-		@SuppressWarnings({"rawtypes","unchecked"})
-		RandomAccessible< ? extends ComplexType<?> > extendedRandAcessible =
-				new ExtendedRandomAccessibleInterval(img, factory);
-		this.accessor =  extendedRandAcessible.randomAccess();
+		this(new ExtendedRandomAccessibleInterval(img, factory).randomAccess(), type);
 	}
 	
 	// -- public interface --
 	
 	@Override
-	public ComplexImageFunction copy() {
-		return new ComplexImageFunction(accessor.copyRandomAccess());
+	public ComplexImageFunction<T> copy() {
+		return new ComplexImageFunction<T>(accessor.copyRandomAccess(), type);
 	}
 
 	@Override
 	public void evaluate(Neighborhood<long[]> neigh, long[] point,
-			TempComplexType output)
+			T output)
 	{
 		accessor.setPosition(point);
-		double r = accessor.get().getRealDouble();
-		double i = accessor.get().getImaginaryDouble();
-		output.setComplexNumber(r,i);
+		output.set(accessor.get());
 	}
 
 	@Override
-	public TempComplexType createOutput() {
-		return new TempComplexType();
+	public T createOutput() {
+		return type.createVariable();
 	}
 }

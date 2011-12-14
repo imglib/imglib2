@@ -30,11 +30,13 @@ POSSIBILITY OF SUCH DAMAGE.
 package net.imglib2.ops.function.complex;
 
 import net.imglib2.ops.Complex;
-import net.imglib2.ops.ComplexOutput;
 import net.imglib2.ops.Function;
 import net.imglib2.ops.Neighborhood;
 import net.imglib2.ops.Real;
 import net.imglib2.ops.function.real.ConstantRealFunction;
+import net.imglib2.ops.sandbox.ComplexOutput;
+import net.imglib2.type.numeric.ComplexType;
+import net.imglib2.type.numeric.complex.ComplexDoubleType;
 
 
 /**
@@ -73,5 +75,10 @@ public class PolarComplexFunction<INDEX> extends ComplexOutput implements Functi
 	@Override
 	public PolarComplexFunction<INDEX> copy() {
 		return new PolarComplexFunction<INDEX>(realFunc1.copy(), realFunc2.copy());
+	}
+
+	@Override
+	public ComplexType<?> createOutput() {
+		return new ComplexDoubleType();
 	}
 }

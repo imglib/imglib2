@@ -29,10 +29,10 @@ POSSIBILITY OF SUCH DAMAGE.
 
 package net.imglib2.ops.operation.unary.complex;
 
-import net.imglib2.ops.ComplexOutput;
 import net.imglib2.ops.UnaryOperation;
 import net.imglib2.ops.Complex;
 import net.imglib2.ops.operation.binary.complex.ComplexDivide;
+import net.imglib2.ops.sandbox.ComplexOutput;
 
 // verified formula with Mathworld's definition for Inverse Cosecant
 

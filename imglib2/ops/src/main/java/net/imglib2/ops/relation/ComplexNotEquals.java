@@ -30,7 +30,7 @@ POSSIBILITY OF SUCH DAMAGE.
 package net.imglib2.ops.relation;
 
 import net.imglib2.ops.BinaryRelation;
-import net.imglib2.ops.Complex;
+import net.imglib2.type.numeric.ComplexType;
 
 
 /**
@@ -38,15 +38,16 @@ import net.imglib2.ops.Complex;
  * @author Barry DeZonia
  *
  */
-public final class ComplexNotEquals implements BinaryRelation<Complex,Complex> {
+public final class ComplexNotEquals<T extends ComplexType<T>> implements BinaryRelation<T,T> {
 
 	@Override
-	public boolean holds(Complex val1, Complex val2) {
-		return (val1.getX() != val2.getX()) || (val1.getY() != val2.getY());
+	public boolean holds(T val1, T val2) {
+		return (val1.getRealDouble() != val2.getRealDouble()) ||
+				(val1.getImaginaryDouble() != val2.getImaginaryDouble());
 	}
 
 	@Override
-	public ComplexNotEquals copy() {
-		return new ComplexNotEquals();
+	public ComplexEquals<T> copy() {
+		return new ComplexEquals<T>();
 	}
 }

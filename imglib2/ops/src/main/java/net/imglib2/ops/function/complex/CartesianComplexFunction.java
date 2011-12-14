@@ -31,8 +31,8 @@ package net.imglib2.ops.function.complex;
 
 import net.imglib2.ops.Function;
 import net.imglib2.ops.Neighborhood;
-import net.imglib2.ops.TempComplexType;
 import net.imglib2.ops.function.real.ConstantRealFunction;
+import net.imglib2.ops.sandbox.TempComplexType;
 import net.imglib2.type.numeric.RealType;
 
 

@@ -29,9 +29,9 @@ POSSIBILITY OF SUCH DAMAGE.
 
 package net.imglib2.ops.operation.unary.complex;
 
-import net.imglib2.ops.ComplexOutput;
 import net.imglib2.ops.UnaryOperation;
 import net.imglib2.ops.Complex;
+import net.imglib2.ops.sandbox.ComplexOutput;
 
 //Handbook of Mathematics and Computational Science, Harris & Stocker, Springer, 2006
 

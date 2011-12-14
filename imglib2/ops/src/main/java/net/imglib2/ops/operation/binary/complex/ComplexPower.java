@@ -31,9 +31,9 @@ package net.imglib2.ops.operation.binary.complex;
 
 import net.imglib2.ops.BinaryOperation;
 import net.imglib2.ops.Complex;
-import net.imglib2.ops.ComplexOutput;
 import net.imglib2.ops.operation.unary.complex.ComplexExp;
 import net.imglib2.ops.operation.unary.complex.ComplexLog;
+import net.imglib2.ops.sandbox.ComplexOutput;
 
 //Handbook of Mathematics and Computational Science, Harris & Stocker, Springer, 2006
 

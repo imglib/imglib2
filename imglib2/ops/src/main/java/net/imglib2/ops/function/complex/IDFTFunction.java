@@ -34,13 +34,14 @@ import net.imglib2.img.Img;
 import net.imglib2.img.ImgFactory;
 import net.imglib2.img.array.ArrayImgFactory;
 import net.imglib2.ops.Complex;
-import net.imglib2.ops.ComplexOutput;
 import net.imglib2.ops.DiscreteNeigh;
 import net.imglib2.ops.Function;
 import net.imglib2.ops.Neighborhood;
 import net.imglib2.ops.operation.binary.complex.ComplexAdd;
 import net.imglib2.ops.operation.binary.complex.ComplexMultiply;
 import net.imglib2.ops.operation.unary.complex.ComplexExp;
+import net.imglib2.ops.sandbox.ComplexOutput;
+import net.imglib2.type.numeric.ComplexType;
 import net.imglib2.type.numeric.complex.ComplexDoubleType;
 
 // example implementation of a Inverse Discrete Fourier Transform function
@@ -100,6 +101,11 @@ public class IDFTFunction extends ComplexOutput implements Function<long[],Compl
 	@Override
 	public DFTFunction copy() {
 		return new DFTFunction(freqFunction.copy(),span,negOffs,posOffs);
+	}
+
+	@Override
+	public ComplexType<?> createOutput() {
+		return new ComplexDoubleType();
 	}
 
 	// -- private helpers --
