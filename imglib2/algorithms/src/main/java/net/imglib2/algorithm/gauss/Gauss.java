@@ -43,8 +43,8 @@ public class Gauss
 		{
 			if ( FloatType.class.isInstance( input.firstElement() ) )
 			{
-				@SuppressWarnings( "unchecked" )
-				final Img< FloatType > img = (Img<FloatType>) input;
+				@SuppressWarnings( { "rawtypes", "unchecked" } )
+				final Img< FloatType > img = (Img) input;
 				gauss = new GaussFloat( sigma, img );
 			}
 			else
@@ -90,8 +90,8 @@ public class Gauss
 		{
 			if ( FloatType.class.isInstance( image.firstElement() ) )
 			{
-				@SuppressWarnings( "unchecked" )
-				final Img< FloatType > img = (Img<FloatType>) image;
+				@SuppressWarnings( { "rawtypes", "unchecked" } )
+				final Img< FloatType > img = (Img) image;
 				gauss = new GaussFloat( sigma, Views.extend( img, outofbounds ), image, img, new Location( sigma.length ), image.factory().imgFactory( new FloatType() ) );
 			}
 			else
