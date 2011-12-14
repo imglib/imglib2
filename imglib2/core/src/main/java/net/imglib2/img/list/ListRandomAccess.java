@@ -30,7 +30,6 @@ package net.imglib2.img.list;
 import java.util.ArrayList;
 
 import net.imglib2.AbstractRandomAccess;
-import net.imglib2.type.Type;
 
 /**
  * 
@@ -38,7 +37,7 @@ import net.imglib2.type.Type;
  *
  * @author Stephan Preibisch and Stephan Saalfeld
  */
-public class ListRandomAccess< T extends Type< T > > extends AbstractRandomAccess< T >
+public class ListRandomAccess< T > extends AbstractRandomAccess< T >
 {
 	private int i;
 	
