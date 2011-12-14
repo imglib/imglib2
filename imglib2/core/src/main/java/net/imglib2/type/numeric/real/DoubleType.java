@@ -32,6 +32,7 @@ package net.imglib2.type.numeric.real;
 import net.imglib2.img.NativeImg;
 import net.imglib2.img.NativeImgFactory;
 import net.imglib2.img.basictypeaccess.DoubleAccess;
+import net.imglib2.img.basictypeaccess.FloatAccess;
 import net.imglib2.img.basictypeaccess.array.DoubleArray;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.ExponentialMathType;
@@ -58,6 +59,13 @@ public class DoubleType extends AbstractRealType<DoubleType> implements Exponent
 		img = null;
 		dataAccess = new DoubleArray( 1 );
 		set( value );
+	}
+
+	// this is the constructor if you want to specify the dataAccess
+	public DoubleType( final DoubleAccess access )
+	{
+		img = null;
+		dataAccess = access;
 	}
 
 	// this is the constructor if you want it to be a variable
