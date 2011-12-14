@@ -39,7 +39,7 @@ import net.imglib2.outofbounds.OutOfBoundsMirrorFactory.Boundary;
 import net.imglib2.type.numeric.real.FloatType;
 import net.imglib2.view.Views;
 
-final public class GaussFloat extends Gauss< FloatType >
+final public class GaussFloat extends AbstractGauss< FloatType >
 {
 	protected boolean isArray;
 	

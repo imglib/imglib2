@@ -39,7 +39,7 @@ import net.imglib2.outofbounds.OutOfBoundsMirrorFactory.Boundary;
 import net.imglib2.type.numeric.real.DoubleType;
 import net.imglib2.view.Views;
 
-final public class GaussDouble extends Gauss< DoubleType >
+final public class GaussDouble extends AbstractGauss< DoubleType >
 {
 	protected boolean isArray;
 	

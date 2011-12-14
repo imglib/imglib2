@@ -14,7 +14,7 @@ import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.NumericType;
 import net.imglib2.view.Views;
 
-public class GaussGeneral< T extends NumericType< T > > extends Gauss< T >
+public class GaussGeneral< T extends NumericType< T > > extends AbstractGauss< T >
 {
 	/**
 	 * Computes a Gaussian convolution on a {@link RandomAccessible} in a certain {@link Interval}

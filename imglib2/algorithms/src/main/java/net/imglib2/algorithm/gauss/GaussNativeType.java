@@ -39,7 +39,7 @@ import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.NumericType;
 import net.imglib2.view.Views;
 
-public class GaussNativeType< T extends NumericType< T > & NativeType< T > > extends Gauss< T >
+public class GaussNativeType< T extends NumericType< T > & NativeType< T > > extends AbstractGauss< T >
 {
 	protected boolean isArray;
 	
