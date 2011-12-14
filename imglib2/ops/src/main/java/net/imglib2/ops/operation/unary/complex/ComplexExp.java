@@ -30,7 +30,7 @@ POSSIBILITY OF SUCH DAMAGE.
 package net.imglib2.ops.operation.unary.complex;
 
 import net.imglib2.ops.UnaryOperation;
-import net.imglib2.ops.sandbox.ComplexOutput;
+import net.imglib2.type.numeric.ComplexType;
 
 // Complex Variables and Applications, Brown and Churchill, 7th edition
 
@@ -39,18 +39,24 @@ import net.imglib2.ops.sandbox.ComplexOutput;
  * @author Barry DeZonia
  *
  */
-public final class ComplexExp extends ComplexOutput implements UnaryOperation<Complex,Complex> {
+public final class ComplexExp<T extends ComplexType<T>>
+	implements UnaryOperation<T,T> {
 
 	@Override
-	public void compute(Complex z, Complex output) {
-		double constant = Math.exp(z.getX());
-		double x = constant * Math.cos(z.getY());
-		double y = constant * Math.sin(z.getY());
-		output.setCartesian(x,y);
+	public void compute(T z, T output) {
+		double constant = Math.exp(z.getRealDouble());
+		double x = constant * Math.cos(z.getImaginaryDouble());
+		double y = constant * Math.sin(z.getImaginaryDouble());
+		output.setComplexNumber(x,y);
 	}
 	
 	@Override
-	public ComplexExp copy() {
-		return new ComplexExp();
+	public ComplexExp<T> copy() {
+		return new ComplexExp<T>();
+	}
+
+	@Override
+	public T createOutput(T dataHint) {
+		return dataHint.createVariable();
 	}
 }
