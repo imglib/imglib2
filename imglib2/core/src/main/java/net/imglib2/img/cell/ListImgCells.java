@@ -1,11 +1,11 @@
 package net.imglib2.img.cell;
 
-import net.imglib2.Cursor;
-import net.imglib2.RandomAccess;
 import net.imglib2.img.basictypeaccess.array.ArrayDataAccess;
+import net.imglib2.img.list.ListCursor;
 import net.imglib2.img.list.ListImg;
 import net.imglib2.img.list.ListImgFactory;
 import net.imglib2.img.list.ListLocalizingCursor;
+import net.imglib2.img.list.ListRandomAccess;
 
 public class ListImgCells< A extends ArrayDataAccess< A > > implements Cells< A, DefaultCell< A > >
 {
@@ -48,19 +48,19 @@ public class ListImgCells< A extends ArrayDataAccess< A > > implements Cells< A,
 	}
 
 	@Override
-	public RandomAccess< DefaultCell< A > > randomAccess()
+	public ListRandomAccess< DefaultCell< A > > randomAccess()
 	{
 		return cells.randomAccess();
 	}
 
 	@Override
-	public Cursor< DefaultCell< A > > cursor()
+	public ListCursor< DefaultCell< A > > cursor()
 	{
 		return cells.cursor();
 	}
 
 	@Override
-	public Cursor< DefaultCell< A > > localizingCursor()
+	public ListLocalizingCursor< DefaultCell< A > > localizingCursor()
 	{
 		return cells.localizingCursor();
 	}
