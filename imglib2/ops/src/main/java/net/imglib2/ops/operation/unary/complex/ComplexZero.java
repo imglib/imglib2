@@ -30,8 +30,6 @@ POSSIBILITY OF SUCH DAMAGE.
 package net.imglib2.ops.operation.unary.complex;
 
 import net.imglib2.ops.UnaryOperation;
-import net.imglib2.ops.Complex;
-import net.imglib2.ops.sandbox.ComplexOutput;
 import net.imglib2.type.numeric.ComplexType;
 
 /**
@@ -39,27 +37,29 @@ import net.imglib2.type.numeric.ComplexType;
  * @author Barry DeZonia
  *
  */
-public final class ComplexZero<T extends ComplexType<T>>
-	implements UnaryOperation<T,T> {
+public final class ComplexZero<T extends ComplexType<T>, U extends ComplexType<U>>
+	implements UnaryOperation<T,U> {
 
-	private final T zero;
+	private final U type;
+	private final U zero;
 	
-	public ComplexZero(T type) {
-		zero = 
+	public ComplexZero(U type) {
+		this.type = type;
+		this.zero = type.createVariable();
 	}
 	
 	@Override
-	public void compute(T z, T output) {
+	public void compute(T z, U output) {
 		output.set(zero);
 	}
 	
 	@Override
-	public ComplexZero copy() {
-		return new ComplexZero();
+	public ComplexZero<T,U> copy() {
+		return new ComplexZero<T,U>(type);
 	}
 
 	@Override
-	public T createOutput(T dataHint) {
-		return dataHint.createVariable();
+	public U createOutput(T dataHint) {
+		return type.createVariable();
 	}
 }
