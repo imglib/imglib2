@@ -32,15 +32,14 @@ package net.imglib2.ops.example;
 import net.imglib2.RandomAccess;
 import net.imglib2.img.Img;
 import net.imglib2.img.array.ArrayImgFactory;
-import net.imglib2.ops.Complex;
 import net.imglib2.ops.DiscreteNeigh;
 import net.imglib2.ops.Function;
-import net.imglib2.ops.Real;
 import net.imglib2.ops.function.complex.CartesianComplexFunction;
 import net.imglib2.ops.function.complex.DFTFunction;
 import net.imglib2.ops.function.complex.IDFTFunction;
 import net.imglib2.ops.function.real.RealImageFunction;
 import net.imglib2.type.numeric.RealType;
+import net.imglib2.type.numeric.complex.ComplexDoubleType;
 import net.imglib2.type.numeric.real.DoubleType;
 
 
@@ -54,9 +53,9 @@ public class Example10 {
 	private static final long XSIZE = 50;
 	private static final long YSIZE = 50;
 	
-	private static Img<? extends RealType<?>> testImg;
-	private static Function<long[],Real> image;
-	private static Function<long[],Complex> dft;
+	private static Img<DoubleType> testImg;
+	private static Function<long[],DoubleType> image;
+	private static Function<long[],ComplexDoubleType> dft;
 	
 	private static boolean veryClose(double d1, double d2) {
 		return Math.abs(d1-d2) < 0.00001;
@@ -83,8 +82,9 @@ public class Example10 {
 	}
 
 	private static boolean testDFT() {
-		image = new RealImageFunction(testImg);
-		Function<long[],Complex> spatialFunction = new CartesianComplexFunction<long[]>(image);
+		image = new RealImageFunction<DoubleType>(testImg);
+		Function<long[],ComplexDoubleType> spatialFunction =
+			new CartesianComplexFunction<long[],DoubleType,DoubleType,ComplexDoubleType>(image);
 		dft = new DFTFunction(spatialFunction, new long[]{XSIZE,YSIZE}, new long[2], new long[2]);
 		// TODO - test something
 		return true;

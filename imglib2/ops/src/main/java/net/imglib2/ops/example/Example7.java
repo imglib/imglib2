@@ -37,7 +37,7 @@ import net.imglib2.ops.Function;
 import net.imglib2.ops.Neighborhood;
 import net.imglib2.ops.condition.AndCondition;
 import net.imglib2.ops.function.general.ConditionalFunction;
-import net.imglib2.ops.image.RealImageAssignment;
+import net.imglib2.ops.image.ImageAssignment;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.real.DoubleType;
 
@@ -202,7 +202,7 @@ public class Example7 {
 		Function<long[],DoubleType> function =
 			new ConditionalFunction<long[],DoubleType>(xValCond, xSquaredFunc, yLineFunc);
 		Img<DoubleType> image = allocateImage();
-		RealImageAssignment assigner = new RealImageAssignment(image, new long[2], new long[]{XSIZE,YSIZE}, function, new long[2], new long[2]);
+		ImageAssignment<DoubleType> assigner = new ImageAssignment<DoubleType>(image, new long[2], new long[]{XSIZE,YSIZE}, function, new long[2], new long[2]);
 		Condition<long[]> circleCond = new CircularCondition();
 		Condition<long[]> sumCond = new XYSumCondition();
 		Condition<long[]> compositeCondition = new AndCondition<long[]>(circleCond,sumCond);
