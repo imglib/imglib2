@@ -33,7 +33,6 @@ import net.imglib2.RandomAccess;
 import net.imglib2.img.Img;
 import net.imglib2.img.ImgFactory;
 import net.imglib2.img.array.ArrayImgFactory;
-import net.imglib2.img.cell.CellImgFactory;
 import net.imglib2.ops.DiscreteNeigh;
 import net.imglib2.ops.Function;
 import net.imglib2.ops.Neighborhood;
@@ -41,6 +40,7 @@ import net.imglib2.ops.operation.binary.complex.ComplexAdd;
 import net.imglib2.ops.operation.binary.complex.ComplexMultiply;
 import net.imglib2.ops.operation.unary.complex.ComplexExp;
 import net.imglib2.type.numeric.ComplexType;
+import net.imglib2.type.numeric.complex.ComplexDoubleType;
 
 // example implementation of a Discrete Fourier Transform function
 //   - textbook definitions and thus SLOW
@@ -59,7 +59,7 @@ public class DFTFunction<T extends ComplexType<T>> implements Function<long[],T>
 	private long[] negOffs;
 	private long[] posOffs;
 	private DiscreteNeigh neighborhood;
-	private ComplexImageFunction<T> dataArray;
+	private ComplexImageFunction<ComplexDoubleType> dataArray;
 
 	// -- temporary per instance working variables --
 	private final ComplexAdd<T,T,T> adder;
@@ -72,6 +72,8 @@ public class DFTFunction<T extends ComplexType<T>> implements Function<long[],T>
 	private final T funcVal;
 	private final T spatialExponent;
 	
+	private ComplexDoubleType tmp;
+	
 	private final T type;
 
 	// -- constructor --
@@ -81,6 +83,8 @@ public class DFTFunction<T extends ComplexType<T>> implements Function<long[],T>
 			throw new IllegalArgumentException("DFTFunction is only designed for two dimensional functions");
 		
 		this.type = type;
+		
+		this.tmp = new ComplexDoubleType();
 		
 		this.adder = new ComplexAdd<T,T,T>(type);
 		this.exper = new ComplexExp<T,T>(type);
@@ -109,7 +113,8 @@ public class DFTFunction<T extends ComplexType<T>> implements Function<long[],T>
 	public void
 		evaluate(Neighborhood<long[]> neigh, long[] point, T output)
 	{
-		dataArray.evaluate(neigh, point, output);
+		dataArray.evaluate(neigh, point, tmp);
+		output.setComplexNumber(tmp.getRealDouble(), tmp.getImaginaryDouble());
 	}
 
 	@Override
@@ -126,11 +131,11 @@ public class DFTFunction<T extends ComplexType<T>> implements Function<long[],T>
 	
 	// TODO - use a ComplexImageAssignment here instead? Speed. Elegance?
 	
-	private ComplexImageFunction<T> createDataArray() {
+	private ComplexImageFunction<ComplexDoubleType> createDataArray() {
 		// TODO - this factory is always an array in memory with corresponding limitations
-		final ImgFactory<T> imgFactory = new CellImgFactory<T>();
-		final Img<T> img = imgFactory.create(span, type.createVariable());
-		final RandomAccess<T> oAccessor = img.randomAccess();
+		final ImgFactory<ComplexDoubleType> imgFactory = new ArrayImgFactory<ComplexDoubleType>();
+		final Img<ComplexDoubleType> img = imgFactory.create(span, new ComplexDoubleType());
+		final RandomAccess<ComplexDoubleType> oAccessor = img.randomAccess();
 		final long[] iPosition = new long[2];
 		final long[] oPosition = new long[2];
 		final T sum = createOutput();
@@ -153,7 +158,7 @@ public class DFTFunction<T extends ComplexType<T>> implements Function<long[],T>
 					sum.getRealDouble(), sum.getImaginaryDouble());
 			}
 		}
-		return new ComplexImageFunction<T>(img,type);
+		return new ComplexImageFunction<ComplexDoubleType>(img,new ComplexDoubleType());
 	}
 	
 	private void calcTermAtPoint(long[] oPosition, long[] iPosition, T xyTerm) {

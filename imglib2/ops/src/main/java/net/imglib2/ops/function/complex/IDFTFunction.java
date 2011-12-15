@@ -50,60 +50,81 @@ import net.imglib2.type.numeric.complex.ComplexDoubleType;
  * @author Barry DeZonia
  *
  */
-public class IDFTFunction extends ComplexOutput implements Function<long[],Complex> {
-
-	// -- static class variables --
-	
-	private static final ComplexAdd adder = new ComplexAdd();
-	private static final ComplexExp exper = new ComplexExp();
-	private static final ComplexMultiply multiplier = new ComplexMultiply();
-	private static final Complex TWO_PI_I = Complex.createCartesian(0, 2*Math.PI);
+public class IDFTFunction<T extends ComplexType<T>> implements Function<long[],T> {
 
 	// -- instance variables --
 	
-	private Function<long[],Complex> freqFunction;
+	private Function<long[],T> freqFunction;
 	private long[] span;
 	private long[] negOffs;
 	private long[] posOffs;
 	private DiscreteNeigh neighborhood;
-	private ComplexImageFunction dataArray;
+	private ComplexImageFunction<ComplexDoubleType> dataArray;
 
 	// -- temporary per instance working variables --
-	private final Complex constant = new Complex();
-	private final Complex expVal = new Complex();
-	private final Complex funcVal = new Complex();
-	private final Complex spatialExponent = new Complex();
+	private final ComplexAdd<T,T,T> adder;
+	private final ComplexExp<T,T> exper;
+	private final ComplexMultiply<T,T,T> multiplier;
+
+	private final T TWO_PI_I;
+
+	private final T constant;
+	private final T expVal;
+	private final T funcVal;
+	private final T spatialExponent;
+
+	private final ComplexDoubleType tmp;
+	
+	private final T type;
 	
 	// -- constructor --
 	
-	public IDFTFunction(Function<long[],Complex> freqFunction, long[] span, long[] negOffs, long[] posOffs) {
+	public IDFTFunction(Function<long[],T> freqFunction, long[] span, long[] negOffs, long[] posOffs, T type) {
 		if (span.length != 2)
 			throw new IllegalArgumentException("IDFTFunction is only designed for two dimensional functions");
+		this.type = type;
+	
+		this.tmp = new ComplexDoubleType();
+		
 		this.freqFunction = freqFunction;
 		this.span = span.clone();
 		this.negOffs = negOffs.clone();
 		this.posOffs = posOffs.clone();
 		this.neighborhood = new DiscreteNeigh(span.clone(), this.negOffs, this.posOffs);
 		this.dataArray = createDataArray();
+
+		adder = new ComplexAdd<T,T,T>(type);
+		exper = new ComplexExp<T,T>(type);
+		multiplier = new ComplexMultiply<T,T,T>(type);
+
+		TWO_PI_I = type.createVariable();
+
+		constant = type.createVariable();
+		expVal = type.createVariable();
+		funcVal = type.createVariable();
+		spatialExponent = type.createVariable();
+
+		TWO_PI_I.setComplexNumber(0, 2*Math.PI);
 	}
 	
 	// -- public interface --
 	
 	@Override
 	public void
-		evaluate(Neighborhood<long[]> neigh, long[] point, Complex output)
+		evaluate(Neighborhood<long[]> neigh, long[] point, T output)
 	{
-		dataArray.evaluate(neigh, point, output);
+		dataArray.evaluate(neigh, point, tmp);
+		output.setComplexNumber(tmp.getRealDouble(), tmp.getImaginaryDouble());
 	}
 
 	@Override
-	public DFTFunction copy() {
-		return new DFTFunction(freqFunction.copy(),span,negOffs,posOffs);
+	public DFTFunction<T> copy() {
+		return new DFTFunction<T>(freqFunction.copy(),span,negOffs,posOffs,type);
 	}
 
 	@Override
-	public ComplexType<?> createOutput() {
-		return new ComplexDoubleType();
+	public T createOutput() {
+		return type.createVariable();
 	}
 
 	// -- private helpers --
@@ -112,20 +133,20 @@ public class IDFTFunction extends ComplexOutput implements Function<long[],Compl
 
 	// NOTE - may be centered over 0,0 instead of over M/2, N/2
 	
-	private ComplexImageFunction createDataArray() {
+	private ComplexImageFunction<ComplexDoubleType> createDataArray() {
 		// TODO - this factory is always an array in memory with corresponding limitations
 		final ImgFactory<ComplexDoubleType> imgFactory = new ArrayImgFactory<ComplexDoubleType>();
 		final Img<ComplexDoubleType> img = imgFactory.create(span, new ComplexDoubleType());
 		final RandomAccess<ComplexDoubleType> oAccessor = img.randomAccess();
 		final long[] iPosition = new long[2];
 		final long[] oPosition = new long[2];
-		final Complex sum = new Complex();
-		final Complex uvTerm = new Complex(); 
+		final T sum = type.createVariable();
+		final T uvTerm = type.createVariable(); 
 		for (int ou = 0; ou < span[0]; ou++) {
 			oPosition[0] = ou;
 			for (int ov = 0; ov < span[1]; ov++) {
 				oPosition[1] = ov;
-				sum.setCartesian(0, 0);
+				sum.setZero();
 				for (int iu = 0; iu < span[0]; iu++) {
 					iPosition[0] = iu;
 					for (int iv = 0; iv < span[1]; iv++) {
@@ -134,22 +155,22 @@ public class IDFTFunction extends ComplexOutput implements Function<long[],Compl
 						adder.compute(sum, uvTerm, sum);
 					}
 				}
-				sum.setCartesian(
-					sum.getX() / (span[0]*span[1]),
-					sum.getY() / (span[0]*span[1]));
+				sum.setComplexNumber(
+					sum.getRealDouble() / (span[0]*span[1]),
+					sum.getImaginaryDouble() / (span[0]*span[1]));
 				oAccessor.setPosition(oPosition);
-				oAccessor.get().setComplexNumber(sum.getX(), sum.getY());
+				oAccessor.get().setComplexNumber(sum.getRealDouble(), sum.getImaginaryDouble());
 			}
 		}
-		return new ComplexImageFunction(img);
+		return new ComplexImageFunction<ComplexDoubleType>(img,new ComplexDoubleType());
 	}
 	
-	private void calcTermAtPoint(long[] oPosition, long[] iPosition, Complex uvTerm) {
+	private void calcTermAtPoint(long[] oPosition, long[] iPosition, T uvTerm) {
 		neighborhood.moveTo(iPosition);
 		freqFunction.evaluate(neighborhood, iPosition, funcVal);
 		double val = ((double)oPosition[0]) * iPosition[0] / span[0];
 		val += ((double)oPosition[1]) * iPosition[1] / span[1];
-		spatialExponent.setCartesian(val, 0);
+		spatialExponent.setComplexNumber(val, 0);
 		multiplier.compute(TWO_PI_I, spatialExponent, constant);
 		exper.compute(constant, expVal);
 		multiplier.compute(funcVal, expVal, uvTerm);
