@@ -29,9 +29,8 @@ POSSIBILITY OF SUCH DAMAGE.
 
 package net.imglib2.ops.operation.unary.complex;
 
+import net.imglib2.ops.ComplexHelper;
 import net.imglib2.ops.UnaryOperation;
-import net.imglib2.ops.Complex;
-import net.imglib2.ops.sandbox.ComplexOutput;
 import net.imglib2.type.numeric.ComplexType;
 
 //Handbook of Mathematics and Computational Science, Harris & Stocker, Springer, 2006
@@ -41,30 +40,35 @@ import net.imglib2.type.numeric.ComplexType;
  * @author Barry DeZonia
  *
  */
-public final class ComplexIntegerPower<T extends ComplexType<T>>
-	implements UnaryOperation<T,T> {
+public final class ComplexIntegerPower<T extends ComplexType<T>,U extends ComplexType<U>>
+	implements UnaryOperation<T,U>
 {
 	private final int power;
 	
-	public ComplexIntegerPower(int power) {
+	private final U type;
+	
+	public ComplexIntegerPower(int power, U type) {
+		this.type = type;
 		this.power = power;
 	}
 
 	@Override
-	public void compute(Complex z, Complex output) {
+	public void compute(T z, U output) {
 		// NB: valid for ALL integral powers: 0, +/-1, +/-2, +/-3, ...
-		double r = Math.pow(z.getModulus(), power);
-		double theta = Complex.findPrincipleArgument(power * z.getArgument());
-		output.setPolar(r, theta);
+		double modulus = ComplexHelper.getModulus(z);
+		double argument = ComplexHelper.getArgument(z);
+		double r = Math.pow(modulus, power);
+		double theta = ComplexHelper.getPrincipleArgument(power * argument);
+		ComplexHelper.setPolar(output, r, theta);
 	}
 	
 	@Override
-	public ComplexIntegerPower copy() {
-		return new ComplexIntegerPower(power);
+	public ComplexIntegerPower<T,U> copy() {
+		return new ComplexIntegerPower<T,U>(power,type);
 	}
 
 	@Override
-	public T createOutput(T dataHint) {
-		return dataHint.createVariable();
+	public U createOutput(T dataHint) {
+		return type.createVariable();
 	}
 }

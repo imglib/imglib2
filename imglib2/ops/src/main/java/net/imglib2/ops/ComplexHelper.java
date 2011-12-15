@@ -27,65 +27,33 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE.
 */
 
-package net.imglib2.ops.operation.unary.complex;
+package net.imglib2.ops;
 
-import net.imglib2.ops.UnaryOperation;
-import net.imglib2.ops.operation.binary.complex.ComplexDivide;
 import net.imglib2.type.numeric.ComplexType;
 
-//Formula taken from MATLAB documentation
-
 /**
+ * Static utility class for implementing methods common to complex types.
+ * These should make their way into Imglib classes when possible.
  * 
  * @author Barry DeZonia
  *
  */
-public final class ComplexSec<T extends ComplexType<T>,U extends ComplexType<U>>
-	implements UnaryOperation<T,U> {
-
-	private final ComplexCopy<T,U> copyFunc;
-	private final ComplexCos<U,U> cosFunc;
-	private final ComplexDivide<U,U,U> divFunc;
+public class ComplexHelper {
 	
-	private final U ONE;
-
-	private final U z;
-	private final U cos;
-	
-	private final U type;
-	
-	// TODO - is it the same but quicker to calculate reciprocal(sin(z))?
-	//   Later - it is the same but tests showed it very slightly slower
-
-	public ComplexSec(U type) {
-		this.type = type;
-
-		copyFunc = new ComplexCopy<T,U>(type);
-		cosFunc = new ComplexCos<U,U>(type);
-		divFunc = new ComplexDivide<U,U,U>(type);
-		
-		ONE = type.createVariable();
-
-		z = type.createVariable();
-		cos = type.createVariable();
-		
-		ONE.setComplexNumber(1, 0);
-	}
-
-	@Override
-	public void compute(T in, U output) {
-		copyFunc.compute(in, z);
-		cosFunc.compute(z, cos);
-		divFunc.compute(ONE, cos, output);
+	private ComplexHelper() {
+		// do not instantiate
 	}
 	
-	@Override
-	public ComplexSec<T,U> copy() {
-		return new ComplexSec<T,U>(type);
+	public static double getModulus(ComplexType<?> complex) {
 	}
 
-	@Override
-	public U createOutput(T dataHint) {
-		return type.createVariable();
+	public static double getArgument(ComplexType<?> complex) {
+	}
+
+	public static double getPrincipleArgument(double angle) {
+	}
+	
+	public static void setPolar(ComplexType<?> c, double r, double theta) {
+		blaggo;
 	}
 }

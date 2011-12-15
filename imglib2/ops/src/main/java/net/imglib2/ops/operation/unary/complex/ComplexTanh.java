@@ -30,9 +30,7 @@ POSSIBILITY OF SUCH DAMAGE.
 package net.imglib2.ops.operation.unary.complex;
 
 import net.imglib2.ops.UnaryOperation;
-import net.imglib2.ops.Complex;
 import net.imglib2.ops.operation.binary.complex.ComplexDivide;
-import net.imglib2.ops.sandbox.ComplexOutput;
 import net.imglib2.type.numeric.ComplexType;
 
 //Handbook of Mathematics and Computational Science, Harris & Stocker, Springer, 2006
@@ -42,30 +40,48 @@ import net.imglib2.type.numeric.ComplexType;
  * @author Barry DeZonia
  *
  */
-public final class ComplexTanh<T extends ComplexType<T>>
-	implements UnaryOperation<T,T> {
+public final class ComplexTanh<T extends ComplexType<T>,U extends ComplexType<U>>
+	implements UnaryOperation<T,U> {
 
-	private static final ComplexCosh coshFunc = new ComplexCosh();
-	private static final ComplexSinh sinhFunc = new ComplexSinh();
-	private static final ComplexDivide divFunc = new ComplexDivide();
+	private final ComplexCopy<T,U> copyFunc;
+	private final ComplexCosh<U,U> coshFunc;
+	private final ComplexSinh<U,U> sinhFunc;
+	private final ComplexDivide<U,U,U> divFunc;
 	
-	private final Complex sinh = new Complex();
-	private final Complex cosh = new Complex();
+	private final U z;
+	private final U sinh;
+	private final U cosh;
+
+	private final U type;
+	
+	public ComplexTanh(U type) {
+		this.type = type;
+
+		copyFunc = new ComplexCopy<T,U>(type);
+		coshFunc = new ComplexCosh<U,U>(type);
+		sinhFunc = new ComplexSinh<U,U>(type);
+		divFunc = new ComplexDivide<U,U,U>(type);
+		
+		z = type.createVariable();
+		sinh = type.createVariable();
+		cosh = type.createVariable();
+	}
 	
 	@Override
-	public void compute(Complex z, Complex output) {
+	public void compute(T in, U output) {
+		copyFunc.compute(in, z);
 		sinhFunc.compute(z, sinh);
 		coshFunc.compute(z, cosh);
 		divFunc.compute(sinh, cosh, output);
 	}
 	
 	@Override
-	public ComplexTanh copy() {
-		return new ComplexTanh();
+	public ComplexTanh<T,U> copy() {
+		return new ComplexTanh<T,U>(type);
 	}
 
 	@Override
-	public T createOutput(T dataHint) {
-		return dataHint.createVariable();
+	public U createOutput(T dataHint) {
+		return type.createVariable();
 	}
 }

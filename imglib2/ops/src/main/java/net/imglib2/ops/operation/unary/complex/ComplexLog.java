@@ -29,9 +29,8 @@ POSSIBILITY OF SUCH DAMAGE.
 
 package net.imglib2.ops.operation.unary.complex;
 
+import net.imglib2.ops.ComplexHelper;
 import net.imglib2.ops.UnaryOperation;
-import net.imglib2.ops.Complex;
-import net.imglib2.ops.sandbox.ComplexOutput;
 import net.imglib2.type.numeric.ComplexType;
 
 //Handbook of Mathematics and Computational Science, Harris & Stocker, Springer, 2006
@@ -54,9 +53,11 @@ public final class ComplexLog<T extends ComplexType<T>, U extends ComplexType<U>
 	
 	@Override
 	public void compute(T z, U output) {
-		double x = Math.log(z.getModulus());
-		double y = z.getPrincipleArgument();
-		output.setCartesian(x,y);
+		double modulus = ComplexHelper.getModulus(z);
+		double argument = ComplexHelper.getArgument(z);
+		double x = Math.log(modulus);
+		double y = ComplexHelper.getPrincipleArgument(argument);
+		output.setComplexNumber(x,y);
 	}
 	
 	@Override

@@ -29,9 +29,8 @@ POSSIBILITY OF SUCH DAMAGE.
 
 package net.imglib2.ops.operation.unary.complex;
 
+import net.imglib2.ops.ComplexHelper;
 import net.imglib2.ops.UnaryOperation;
-import net.imglib2.ops.Complex;
-import net.imglib2.ops.sandbox.ComplexOutput;
 import net.imglib2.type.numeric.ComplexType;
 
 //Handbook of Mathematics and Computational Science, Harris & Stocker, Springer, 2006
@@ -41,31 +40,37 @@ import net.imglib2.type.numeric.ComplexType;
  * @author Barry DeZonia
  *
  */
-public final class ComplexRoot<T extends ComplexType<T>>
-	implements UnaryOperation<T,T> {
+public final class ComplexRoot<T extends ComplexType<T>,U extends ComplexType<U>>
+	implements UnaryOperation<T,U> {
 
 	private final int power;
+
+	private final U type;
 	
-	public ComplexRoot(int power) {
+	public ComplexRoot(int power, U type) {
+		this.type = type;
 		if (power < 1)
 			throw new IllegalArgumentException("ComplexRoot requires a positive number of roots");
 		this.power = power;
 	}
 	
 	@Override
-	public void compute(Complex z, Complex output) {
-		double r = Math.pow(z.getModulus(), 1.0/power);
-		double theta = z.getPrincipleArgument() / power;
-		output.setPolar(r, theta);
+	public void compute(T z, U output) {
+		double modulus = ComplexHelper.getModulus(z);
+		double argument = ComplexHelper.getArgument(z);
+		double princpArg = ComplexHelper.getPrincipleArgument(argument);
+		double r = Math.pow(modulus, 1.0/power);
+		double theta = princpArg / power;
+		ComplexHelper.setPolar(output, r, theta);
 	}
 	
 	@Override
-	public ComplexRoot copy() {
-		return new ComplexRoot(power);
+	public ComplexRoot<T,U> copy() {
+		return new ComplexRoot<T,U>(power, type);
 	}
 
 	@Override
-	public T createOutput(T dataHint) {
-		return dataHint.createVariable();
+	public U createOutput(T dataHint) {
+		return type.createVariable();
 	}
 }

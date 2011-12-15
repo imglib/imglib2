@@ -30,9 +30,7 @@ POSSIBILITY OF SUCH DAMAGE.
 package net.imglib2.ops.operation.unary.complex;
 
 import net.imglib2.ops.UnaryOperation;
-import net.imglib2.ops.Complex;
 import net.imglib2.ops.operation.binary.complex.ComplexDivide;
-import net.imglib2.ops.sandbox.ComplexOutput;
 import net.imglib2.type.numeric.ComplexType;
 
 //Handbook of Mathematics and Computational Science, Harris & Stocker, Springer, 2006
@@ -42,30 +40,48 @@ import net.imglib2.type.numeric.ComplexType;
  * @author Barry DeZonia
  *
  */
-public final class ComplexTan<T extends ComplexType<T>>
-	implements UnaryOperation<T,T> {
+public final class ComplexTan<T extends ComplexType<T>,U extends ComplexType<U>>
+	implements UnaryOperation<T,U> {
 
-	private static final ComplexCos cosFunc = new ComplexCos();
-	private static final ComplexSin sinFunc = new ComplexSin();
-	private static final ComplexDivide divFunc = new ComplexDivide();
+	private final ComplexCopy<T,U> copyFunc;
+	private final ComplexCos<U,U> cosFunc;
+	private final ComplexSin<U,U> sinFunc;
+	private final ComplexDivide<U,U,U> divFunc;
 	
-	private final Complex sin = new Complex();
-	private final Complex cos = new Complex();
+	private final U z;
+	private final U sin;
+	private final U cos;
+
+	private final U type;
+	
+	public ComplexTan(U type) {
+		this.type = type;
+
+		copyFunc = new ComplexCopy<T,U>(type);
+		cosFunc = new ComplexCos<U,U>(type);
+		sinFunc = new ComplexSin<U,U>(type);
+		divFunc = new ComplexDivide<U,U,U>(type);
+		
+		z = type.createVariable();
+		sin = type.createVariable();
+		cos = type.createVariable();
+	}
 	
 	@Override
-	public void compute(Complex z, Complex output) {
+	public void compute(T in, U output) {
+		copyFunc.compute(in, z);
 		sinFunc.compute(z, sin);
 		cosFunc.compute(z, cos);
 		divFunc.compute(sin, cos, output);
 	}
 	
 	@Override
-	public ComplexTan copy() {
-		return new ComplexTan();
+	public ComplexTan<T,U> copy() {
+		return new ComplexTan<T,U>(type);
 	}
 
 	@Override
-	public T createOutput(T dataHint) {
-		return dataHint.createVariable();
+	public U createOutput(T dataHint) {
+		return type.createVariable();
 	}
 }
