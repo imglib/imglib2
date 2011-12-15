@@ -53,9 +53,6 @@ public final class ComplexArccos<T extends ComplexType<T>, U extends ComplexType
 	private final ComplexAdd<U,U,U> addFunc;
 	private final ComplexLog<U,U> logFunc;
 
-	private U type;
-	
-
 	private final U MINUS_I;
 	private final U ONE;
 	private final U ONE_HALF;
@@ -67,6 +64,8 @@ public final class ComplexArccos<T extends ComplexType<T>, U extends ComplexType
 	private final U sum;
 	private final U logSum;
 	
+	private U type;
+
 	public ComplexArccos(U type) {
 		this.type = type;
 		
