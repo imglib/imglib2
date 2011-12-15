@@ -29,11 +29,10 @@ POSSIBILITY OF SUCH DAMAGE.
 
 package net.imglib2.ops.function.real;
 
-import net.imglib2.ops.Complex;
 import net.imglib2.ops.Function;
 import net.imglib2.ops.Neighborhood;
-import net.imglib2.ops.Real;
-import net.imglib2.ops.RealOutput;
+import net.imglib2.type.numeric.ComplexType;
+import net.imglib2.type.numeric.RealType;
 
 
 /**
@@ -41,24 +40,33 @@ import net.imglib2.ops.RealOutput;
  * @author Barry DeZonia
  *
  */
-public class RealAdapterFunction<INDEX> extends RealOutput implements Function<INDEX,Real> {
-	private final Function<INDEX,Complex> complexFunc;
-	private final Complex variable;
-
-	public RealAdapterFunction(Function<INDEX,Complex> complexFunc) {
+public class RealAdapterFunction<INDEX,C extends ComplexType<C>, R extends RealType<R>> 
+	implements Function<INDEX,R> {
+	
+	private final Function<INDEX,C> complexFunc;
+	private final C cType;
+	private final R rType;
+	
+	public RealAdapterFunction(Function<INDEX,C> complexFunc, C cType, R rType) {
+		this.rType = rType;
+		this.cType = cType.createVariable();
 		this.complexFunc = complexFunc;
-		this.variable = new Complex();
 	}
 	
 	@Override
-	public void evaluate(Neighborhood<INDEX> region, INDEX point, Real r) {
-		complexFunc.evaluate(region, point, variable);
-		r.setReal(variable.getX());
+	public void evaluate(Neighborhood<INDEX> region, INDEX point, R r) {
+		complexFunc.evaluate(region, point, cType);
+		r.setReal(cType.getRealDouble());
 	}
 
 	@Override
-	public RealAdapterFunction<INDEX> copy() {
-		return new RealAdapterFunction<INDEX>(complexFunc.copy());
+	public RealAdapterFunction<INDEX,C,R> copy() {
+		return new RealAdapterFunction<INDEX,C,R>(complexFunc.copy(),cType,rType);
+	}
+
+	@Override
+	public R createOutput() {
+		return rType.createVariable();
 	}
 }
 
