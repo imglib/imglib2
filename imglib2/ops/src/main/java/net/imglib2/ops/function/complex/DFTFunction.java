@@ -29,8 +29,6 @@ POSSIBILITY OF SUCH DAMAGE.
 
 package net.imglib2.ops.function.complex;
 
-import java.util.Arrays;
-
 import net.imglib2.RandomAccess;
 import net.imglib2.img.Img;
 import net.imglib2.img.ImgFactory;
@@ -104,8 +102,7 @@ public class DFTFunction<T extends ComplexType<T>> implements Function<long[],T>
 		this.funcVal = createOutput();
 		this.spatialExponent = createOutput();
 
-		this.MINUS_TWO_PI_I.setReal(0);
-		this.MINUS_TWO_PI_I.setImaginary(-2*Math.PI);
+		this.MINUS_TWO_PI_I.setComplexNumber(0,-2*Math.PI);
 
 		this.dataArray = createDataArray();
 	}
@@ -147,7 +144,7 @@ public class DFTFunction<T extends ComplexType<T>> implements Function<long[],T>
 			oPosition[0] = ox;
 			for (int oy = 0; oy < span[1]; oy++) {
 				oPosition[1] = oy;
-				sum.setComplexNumber(0, 0);
+				sum.setZero();
 				for (int ix = 0; ix < span[0]; ix++) {
 					iPosition[0] = ix;
 					for (int iy = 0; iy < span[1]; iy++) {
