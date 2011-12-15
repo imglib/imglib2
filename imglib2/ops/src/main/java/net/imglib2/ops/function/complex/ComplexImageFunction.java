@@ -51,9 +51,9 @@ public class ComplexImageFunction<T extends ComplexType<T>> implements Function<
 	
 	// -- private constructor used by duplicate() --
 	
-	private ComplexImageFunction(RandomAccess<T> acc, T type)
+	private ComplexImageFunction(RandomAccess<T> accessor, T type)
 	{
-		this.accessor = acc;
+		this.accessor = accessor;
 		this.type = type;
 	}
 	

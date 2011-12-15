@@ -33,15 +33,14 @@ import net.imglib2.RandomAccess;
 import net.imglib2.img.Img;
 import net.imglib2.img.ImgFactory;
 import net.imglib2.img.array.ArrayImgFactory;
+import net.imglib2.img.cell.CellImgFactory;
 import net.imglib2.ops.DiscreteNeigh;
 import net.imglib2.ops.Function;
 import net.imglib2.ops.Neighborhood;
 import net.imglib2.ops.operation.binary.complex.ComplexAdd;
 import net.imglib2.ops.operation.binary.complex.ComplexMultiply;
 import net.imglib2.ops.operation.unary.complex.ComplexExp;
-import net.imglib2.ops.sandbox.ComplexOutput;
 import net.imglib2.type.numeric.ComplexType;
-import net.imglib2.type.numeric.complex.ComplexDoubleType;
 
 // example implementation of a Discrete Fourier Transform function
 //   - textbook definitions and thus SLOW
@@ -51,13 +50,7 @@ import net.imglib2.type.numeric.complex.ComplexDoubleType;
  * @author Barry DeZonia
  *
  */
-public class DFTFunction<T extends ComplexType<T>> extends ComplexOutput implements Function<long[],T> {
-
-	// -- static class variables --
-	
-	private static final ComplexAdd adder = new ComplexAdd();
-	private static final ComplexExp exper = new ComplexExp();
-	private static final ComplexMultiply multiplier = new ComplexMultiply();
+public class DFTFunction<T extends ComplexType<T>> implements Function<long[],T> {
 
 	// -- instance variables --
 	
@@ -66,35 +59,48 @@ public class DFTFunction<T extends ComplexType<T>> extends ComplexOutput impleme
 	private long[] negOffs;
 	private long[] posOffs;
 	private DiscreteNeigh neighborhood;
-	private ComplexImageFunction dataArray;
+	private ComplexImageFunction<T> dataArray;
 
 	// -- temporary per instance working variables --
-	private final T type;
+	private final ComplexAdd<T,T,T> adder;
+	private final ComplexExp<T,T> exper;
+	private final ComplexMultiply<T,T,T> multiplier;
+
 	private final T MINUS_TWO_PI_I;
 	private final T constant;
 	private final T expVal;
 	private final T funcVal;
 	private final T spatialExponent;
 	
+	private final T type;
+
 	// -- constructor --
 	
 	public DFTFunction(Function<long[],T> spatialFunction, long[] span, long[] negOffs, long[] posOffs, T type) {
 		if (span.length != 2)
 			throw new IllegalArgumentException("DFTFunction is only designed for two dimensional functions");
+		
 		this.type = type;
+		
+		this.adder = new ComplexAdd<T,T,T>(type);
+		this.exper = new ComplexExp<T,T>(type);
+		this.multiplier = new ComplexMultiply<T,T,T>(type);
+		
 		this.spatialFunction = spatialFunction;
 		this.span = span.clone();
 		this.negOffs = negOffs.clone();
 		this.posOffs = posOffs.clone();
 		this.neighborhood = new DiscreteNeigh(span.clone(), this.negOffs, this.posOffs);
+		
 		this.MINUS_TWO_PI_I = createOutput();
-		this.MINUS_TWO_PI_I.setReal(0);
-		this.MINUS_TWO_PI_I.setImaginary(-2*Math.PI);
 		this.constant = createOutput();
 		this.expVal = createOutput();
 		this.funcVal = createOutput();
 		this.spatialExponent = createOutput();
 		this.dataArray = createDataArray();
+
+		this.MINUS_TWO_PI_I.setReal(0);
+		this.MINUS_TWO_PI_I.setImaginary(-2*Math.PI);
 	}
 	
 	// -- public interface --
@@ -120,11 +126,11 @@ public class DFTFunction<T extends ComplexType<T>> extends ComplexOutput impleme
 	
 	// TODO - use a ComplexImageAssignment here instead? Speed. Elegance?
 	
-	private ComplexImageFunction createDataArray() {
+	private ComplexImageFunction<T> createDataArray() {
 		// TODO - this factory is always an array in memory with corresponding limitations
-		final ImgFactory<ComplexDoubleType> imgFactory = new ArrayImgFactory<ComplexDoubleType>();
-		final Img<ComplexDoubleType> img = imgFactory.create(span, new ComplexDoubleType());
-		final RandomAccess<ComplexDoubleType> oAccessor = img.randomAccess();
+		final ImgFactory<T> imgFactory = new CellImgFactory<T>();
+		final Img<T> img = imgFactory.create(span, type.createVariable());
+		final RandomAccess<T> oAccessor = img.randomAccess();
 		final long[] iPosition = new long[2];
 		final long[] oPosition = new long[2];
 		final T sum = createOutput();
@@ -147,7 +153,7 @@ public class DFTFunction<T extends ComplexType<T>> extends ComplexOutput impleme
 					sum.getRealDouble(), sum.getImaginaryDouble());
 			}
 		}
-		return new ComplexImageFunction(img);
+		return new ComplexImageFunction<T>(img,type);
 	}
 	
 	private void calcTermAtPoint(long[] oPosition, long[] iPosition, T xyTerm) {

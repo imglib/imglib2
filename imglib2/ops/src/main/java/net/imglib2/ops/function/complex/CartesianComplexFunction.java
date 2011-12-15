@@ -31,8 +31,7 @@ package net.imglib2.ops.function.complex;
 
 import net.imglib2.ops.Function;
 import net.imglib2.ops.Neighborhood;
-import net.imglib2.ops.function.real.ConstantRealFunction;
-import net.imglib2.ops.sandbox.TempComplexType;
+import net.imglib2.type.numeric.ComplexType;
 import net.imglib2.type.numeric.RealType;
 
 
@@ -41,42 +40,37 @@ import net.imglib2.type.numeric.RealType;
  * @author Barry DeZonia
  *
  */
-public class CartesianComplexFunction<INDEX,T extends RealType<T>>
-	implements Function<INDEX,TempComplexType> {
+public class CartesianComplexFunction<INDEX,R1 extends RealType<R1>,R2 extends RealType<R2>,C extends ComplexType<C>>
+	implements Function<INDEX,C> {
 
-	private final Function<INDEX,T> realFunc1;
-	private final Function<INDEX,T> realFunc2;
-	private final T real1;
-	private final T real2;
+	private final Function<INDEX,R1> realFunc1;
+	private final Function<INDEX,R2> realFunc2;
+	private final R1 real1;
+	private final R2 real2;
+	private final C cType;
 	
-	public CartesianComplexFunction(Function<INDEX,T> realFunc) {
-		this.realFunc1 = realFunc;
-		this.realFunc2 = new ConstantRealFunction<INDEX,T>(realFunc.createOutput(),0);
-		this.real1 = realFunc.createOutput();
-		this.real2 = realFunc.createOutput();
-	}
-	
-	public CartesianComplexFunction(Function<INDEX,T> realFunc1, Function<INDEX,T> realFunc2) {
+	public CartesianComplexFunction(Function<INDEX,R1> realFunc1, Function<INDEX,R2> realFunc2, C cType) {
+		this.cType = cType;
 		this.realFunc1 = realFunc1;
 		this.realFunc2 = realFunc2;
 		this.real1 = realFunc1.createOutput();
-		this.real2 = realFunc1.createOutput();
+		this.real2 = realFunc2.createOutput();
 	}
 	
 	@Override
-	public void evaluate(Neighborhood<INDEX> neigh, INDEX point, TempComplexType value) {
+	public void evaluate(Neighborhood<INDEX> neigh, INDEX point, C value) {
 		realFunc1.evaluate(neigh, point, real1);
 		realFunc2.evaluate(neigh, point, real2);
 		value.setComplexNumber(real1.getRealDouble(),real2.getRealDouble());
 	}
 	
 	@Override
-	public CartesianComplexFunction<INDEX,T> copy() {
-		return new CartesianComplexFunction<INDEX,T>(realFunc1.copy(), realFunc2.copy());
+	public CartesianComplexFunction<INDEX,R1,R2,C> copy() {
+		return new CartesianComplexFunction<INDEX,R1,R2,C>(realFunc1.copy(), realFunc2.copy(), cType);
 	}
 
 	@Override
-	public TempComplexType createOutput() {
-		return new TempComplexType();
+	public C createOutput() {
+		return cType.createVariable();
 	}
 }
