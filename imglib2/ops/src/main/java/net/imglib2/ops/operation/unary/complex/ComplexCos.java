@@ -30,12 +30,10 @@ POSSIBILITY OF SUCH DAMAGE.
 package net.imglib2.ops.operation.unary.complex;
 
 import net.imglib2.ops.UnaryOperation;
-import net.imglib2.ops.Complex;
 import net.imglib2.ops.operation.binary.complex.ComplexAdd;
 import net.imglib2.ops.operation.binary.complex.ComplexDivide;
 import net.imglib2.ops.operation.binary.complex.ComplexMultiply;
 import net.imglib2.ops.operation.unary.complex.ComplexExp;
-import net.imglib2.ops.sandbox.ComplexOutput;
 import net.imglib2.type.numeric.ComplexType;
 
 //Handbook of Mathematics and Computational Science, Harris & Stocker, Springer, 2006
@@ -45,26 +43,56 @@ import net.imglib2.type.numeric.ComplexType;
  * @author Barry DeZonia
  *
  */
-public final class ComplexCos<T extends ComplexType<T>>
-	implements UnaryOperation<T,T> {
+public final class ComplexCos<T extends ComplexType<T>,U extends ComplexType<U>>
+	implements UnaryOperation<T,U> {
 
-	private static final Complex TWO = Complex.createCartesian(2,0);
-	private static final Complex I = Complex.createCartesian(0,1);
-	private static final Complex MINUS_I = Complex.createCartesian(0,-1);
-
-	private static final ComplexExp expFunc = new ComplexExp();
-	private static final ComplexAdd addFunc = new ComplexAdd();
-	private static final ComplexMultiply mulFunc = new ComplexMultiply();
-	private static final ComplexDivide divFunc = new ComplexDivide();
+	private final ComplexCopy<T,U> copyFunc;
+	private final ComplexExp<U,U> expFunc;
+	private final ComplexAdd<U,U,U> addFunc;
+	private final ComplexMultiply<U,U,U> mulFunc;
+	private final ComplexDivide<U,U,U> divFunc;
 	
-	private final Complex IZ = new Complex();
-	private final Complex minusIZ = new Complex();
-	private final Complex expIZ = new Complex();
-	private final Complex expMinusIZ = new Complex();
-	private final Complex sum = new Complex();
+	private final U TWO;
+	private final U I;
+	private final U MINUS_I;
+
+	private final U z;
+	private final U IZ;
+	private final U minusIZ;
+	private final U expIZ;
+	private final U expMinusIZ;
+	private final U sum;
+
+	private U type;
+	
+	public ComplexCos(U type) {
+		this.type = type;
+		
+		copyFunc = new ComplexCopy<T,U>(type);
+		expFunc = new ComplexExp<U,U>(type);
+		addFunc = new ComplexAdd<U,U,U>(type);
+		mulFunc = new ComplexMultiply<U,U,U>(type);
+		divFunc = new ComplexDivide<U,U,U>(type);
+		
+		TWO = type.createVariable();
+		I = type.createVariable();
+		MINUS_I = type.createVariable();
+
+		z = type.createVariable();
+		IZ = type.createVariable();
+		minusIZ = type.createVariable();
+		expIZ = type.createVariable();
+		expMinusIZ = type.createVariable();
+		sum = type.createVariable();
+
+		TWO.setComplexNumber(2,0);
+		I.setComplexNumber(0,1);
+		MINUS_I.setComplexNumber(0,-1);
+	}
 	
 	@Override
-	public void compute(Complex z, Complex output) {
+	public void compute(T in, U output) {
+		copyFunc.compute(in, z);
 		mulFunc.compute(z, I, IZ);
 		mulFunc.compute(z, MINUS_I, minusIZ);
 		expFunc.compute(IZ, expIZ);
@@ -74,12 +102,12 @@ public final class ComplexCos<T extends ComplexType<T>>
 	}
 	
 	@Override
-	public ComplexCos copy() {
-		return new ComplexCos();
+	public ComplexCos<T,U> copy() {
+		return new ComplexCos<T,U>(type);
 	}
 
 	@Override
-	public T createOutput(T dataHint) {
-		return dataHint.createVariable();
+	public U createOutput(T dataHint) {
+		return type.createVariable();
 	}
 }
