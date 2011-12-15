@@ -30,12 +30,10 @@ POSSIBILITY OF SUCH DAMAGE.
 package net.imglib2.ops.operation.unary.complex;
 
 import net.imglib2.ops.UnaryOperation;
-import net.imglib2.ops.Complex;
 import net.imglib2.ops.operation.binary.complex.ComplexAdd;
 import net.imglib2.ops.operation.binary.complex.ComplexDivide;
 import net.imglib2.ops.operation.binary.complex.ComplexMultiply;
 import net.imglib2.ops.operation.binary.complex.ComplexSubtract;
-import net.imglib2.ops.sandbox.ComplexOutput;
 import net.imglib2.type.numeric.ComplexType;
 
 //Handbook of Mathematics and Computational Science, Harris & Stocker, Springer, 2006
@@ -45,25 +43,50 @@ import net.imglib2.type.numeric.ComplexType;
  * @author Barry DeZonia
  *
  */
-public final class ComplexArctanh<T extends ComplexType<T>>
-	implements UnaryOperation<T,T> {
+public final class ComplexArctanh<T extends ComplexType<T>,U extends ComplexType<U>>
+	implements UnaryOperation<T,U> {
 
-	private static final Complex ONE = Complex.createCartesian(1,0);
-	private static final Complex ONE_HALF = Complex.createCartesian(0.5,0);
+	private final ComplexCopy<T,U> copyFunc;
+	private final ComplexMultiply<U,U,U> mulFunc;
+	private final ComplexAdd<U,U,U> addFunc;
+	private final ComplexSubtract<U,U,U> subFunc;
+	private final ComplexDivide<U,U,U> divFunc;
+	private final ComplexLog<U,U> logFunc;
+
+	private final U ONE;
+	private final U ONE_HALF;
 	
-	private static final ComplexMultiply mulFunc = new ComplexMultiply();
-	private static final ComplexAdd addFunc = new ComplexAdd();
-	private static final ComplexSubtract subFunc = new ComplexSubtract();
-	private static final ComplexDivide divFunc = new ComplexDivide();
-	private static final ComplexLog logFunc = new ComplexLog();
+	private final U z;
+	private final U sum;
+	private final U diff;
+	private final U quotient;
+	private final U log;
 	
-	private final Complex sum = new Complex();
-	private final Complex diff = new Complex();
-	private final Complex quotient = new Complex();
-	private final Complex log = new Complex();
+	private final U type;
+	
+	public ComplexArctanh(U type) {
+		this.type = type;
+
+		copyFunc = new ComplexCopy<T,U>(type);
+		mulFunc = new ComplexMultiply<U,U,U>(type);
+		addFunc = new ComplexAdd<U,U,U>(type);
+		subFunc = new ComplexSubtract<U,U,U>(type);
+		divFunc = new ComplexDivide<U,U,U>(type);
+		logFunc = new ComplexLog<U,U>(type);
+
+		ONE = type.createVariable();
+		ONE_HALF = type.createVariable();
+		
+		z = type.createVariable();
+		sum = type.createVariable();
+		diff = type.createVariable();
+		quotient = type.createVariable();
+		log = type.createVariable();
+	}
 	
 	@Override
-	public void compute(Complex z, Complex output) {
+	public void compute(T in, U output) {
+		copyFunc.compute(in, z);
 		addFunc.compute(ONE, z, sum);
 		subFunc.compute(ONE, z, diff);
 		divFunc.compute(sum, diff, quotient);
@@ -72,12 +95,12 @@ public final class ComplexArctanh<T extends ComplexType<T>>
 	}
 	
 	@Override
-	public ComplexArctanh copy() {
-		return new ComplexArctanh();
+	public ComplexArctanh<T,U> copy() {
+		return new ComplexArctanh<T,U>(type);
 	}
 
 	@Override
-	public T createOutput(T dataHint) {
-		return dataHint.createVariable();
+	public U createOutput(T dataHint) {
+		return type.createVariable();
 	}
 }

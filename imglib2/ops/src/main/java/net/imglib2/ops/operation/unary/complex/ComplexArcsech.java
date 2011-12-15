@@ -30,9 +30,7 @@ POSSIBILITY OF SUCH DAMAGE.
 package net.imglib2.ops.operation.unary.complex;
 
 import net.imglib2.ops.UnaryOperation;
-import net.imglib2.ops.Complex;
 import net.imglib2.ops.operation.binary.complex.ComplexDivide;
-import net.imglib2.ops.sandbox.ComplexOutput;
 import net.imglib2.type.numeric.ComplexType;
 
 // Formula taken from MATLAB documentation
@@ -42,29 +40,49 @@ import net.imglib2.type.numeric.ComplexType;
  * @author Barry DeZonia
  *
  */
-public final class ComplexArcsech<T extends ComplexType<T>>
-	implements UnaryOperation<T,T> {
+public final class ComplexArcsech<T extends ComplexType<T>,U extends ComplexType<U>>
+	implements UnaryOperation<T,U> {
 
-	private static final Complex ONE = Complex.createCartesian(1, 0);
+	private final U ONE;
 
-	private static final ComplexArccosh arccoshFunc = new ComplexArccosh();
-	private static final ComplexDivide divFunc = new ComplexDivide();
+	private final ComplexCopy<T,U> copyFunc; 
+	private final ComplexArccosh<U,U> arccoshFunc;
+	private final ComplexDivide<U,U,U> divFunc;
 	
-	private final Complex recipZ = new Complex();
+	private final U z;
+	private final U recipZ;
+
+	private final U type;
+	
+	public ComplexArcsech(U type) {
+		this.type = type;
+
+		copyFunc = new ComplexCopy<T,U>(type);
+		arccoshFunc = new ComplexArccosh<U,U>(type);
+		divFunc = new ComplexDivide<U,U,U>(type);
+		
+		ONE = type.createVariable();
+		
+		z = type.createVariable();
+		recipZ = type.createVariable();
+		
+		ONE.setComplexNumber(1, 0);
+	}
 	
 	@Override
-	public void compute(Complex z, Complex output) {
+	public void compute(T in, U output) {
+		copyFunc.compute(in,z);
 		divFunc.compute(ONE, z, recipZ);
 		arccoshFunc.compute(recipZ, output);
 	}
 	
 	@Override
-	public ComplexArcsech copy() {
-		return new ComplexArcsech();
+	public ComplexArcsech<T,U> copy() {
+		return new ComplexArcsech<T,U>(type);
 	}
 
 	@Override
-	public T createOutput(T dataHint) {
-		return dataHint.createVariable();
+	public U createOutput(T dataHint) {
+		return type.createVariable();
 	}
 }
