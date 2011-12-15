@@ -29,6 +29,8 @@ POSSIBILITY OF SUCH DAMAGE.
 
 package net.imglib2.ops.function.complex;
 
+import java.util.Arrays;
+
 import net.imglib2.RandomAccess;
 import net.imglib2.img.Img;
 import net.imglib2.img.ImgFactory;
@@ -101,10 +103,11 @@ public class DFTFunction<T extends ComplexType<T>> implements Function<long[],T>
 		this.expVal = createOutput();
 		this.funcVal = createOutput();
 		this.spatialExponent = createOutput();
-		this.dataArray = createDataArray();
 
 		this.MINUS_TWO_PI_I.setReal(0);
 		this.MINUS_TWO_PI_I.setImaginary(-2*Math.PI);
+
+		this.dataArray = createDataArray();
 	}
 	
 	// -- public interface --

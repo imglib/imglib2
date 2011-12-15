@@ -91,7 +91,6 @@ public class IDFTFunction<T extends ComplexType<T>> implements Function<long[],T
 		this.negOffs = negOffs.clone();
 		this.posOffs = posOffs.clone();
 		this.neighborhood = new DiscreteNeigh(span.clone(), this.negOffs, this.posOffs);
-		this.dataArray = createDataArray();
 
 		adder = new ComplexAdd<T,T,T>(type);
 		exper = new ComplexExp<T,T>(type);
@@ -105,6 +104,8 @@ public class IDFTFunction<T extends ComplexType<T>> implements Function<long[],T
 		spatialExponent = type.createVariable();
 
 		TWO_PI_I.setComplexNumber(0, 2*Math.PI);
+
+		this.dataArray = createDataArray();
 	}
 	
 	// -- public interface --
