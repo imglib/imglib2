@@ -37,8 +37,8 @@ import net.imglib2.ops.Function;
 import net.imglib2.ops.function.complex.CartesianComplexFunction;
 import net.imglib2.ops.function.complex.DFTFunction;
 import net.imglib2.ops.function.complex.IDFTFunction;
+import net.imglib2.ops.function.real.ConstantRealFunction;
 import net.imglib2.ops.function.real.RealImageFunction;
-import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.complex.ComplexDoubleType;
 import net.imglib2.type.numeric.real.DoubleType;
 
@@ -66,9 +66,9 @@ public class Example10 {
 		return imgFactory.create(new long[]{XSIZE,YSIZE}, new DoubleType());
 	}
 
-	private static Img<? extends RealType<?>> makeInputImage() {
-		Img<? extends RealType<?>> inputImg = allocateImage();
-		RandomAccess<? extends RealType<?>> accessor = inputImg.randomAccess();
+	private static Img<DoubleType> makeInputImage() {
+		Img<DoubleType> inputImg = allocateImage();
+		RandomAccess<DoubleType> accessor = inputImg.randomAccess();
 		long[] pos = new long[2];
 		for (int x = 0; x < XSIZE; x++) {
 			for (int y = 0; y < YSIZE; y++) {
@@ -83,9 +83,12 @@ public class Example10 {
 
 	private static boolean testDFT() {
 		image = new RealImageFunction<DoubleType>(testImg);
+		Function<long[],DoubleType> zero = new ConstantRealFunction<long[],DoubleType>(new DoubleType(),0);
 		Function<long[],ComplexDoubleType> spatialFunction =
-			new CartesianComplexFunction<long[],DoubleType,DoubleType,ComplexDoubleType>(image);
-		dft = new DFTFunction(spatialFunction, new long[]{XSIZE,YSIZE}, new long[2], new long[2]);
+			new CartesianComplexFunction<long[],DoubleType,DoubleType,ComplexDoubleType>
+			(image,zero,new ComplexDoubleType());
+		dft = new DFTFunction<ComplexDoubleType>(
+				spatialFunction, new long[]{XSIZE,YSIZE}, new long[2], new long[2], new ComplexDoubleType());
 		// TODO - test something
 		return true;
 	}
@@ -93,10 +96,11 @@ public class Example10 {
 	private static boolean testIDFT() {
 		boolean success = true;
 		DiscreteNeigh neigh = new DiscreteNeigh(new long[2], new long[2], new long[2]);
-		Function<long[],Complex> idft = new IDFTFunction(dft, new long[]{XSIZE,YSIZE}, new long[2], new long[2]);
+		Function<long[],ComplexDoubleType> idft = new IDFTFunction<ComplexDoubleType>(
+			dft, new long[]{XSIZE,YSIZE}, new long[2], new long[2], new ComplexDoubleType());
 		long[] pos = new long[2];
-		Real original = new Real();
-		Complex computed = new Complex();
+		DoubleType original = new DoubleType();
+		ComplexDoubleType computed = new ComplexDoubleType();
 		for (int x = 0; x < XSIZE; x++) {
 			for (int y = 0; y < YSIZE; y++) {
 				pos[0] = x;
@@ -105,11 +109,11 @@ public class Example10 {
 				image.evaluate(neigh, pos, original);
 				idft.evaluate(neigh, pos, computed);
 				if (
-						(!veryClose(computed.getX(), original.getReal())) ||
-						(!veryClose(computed.getY(), 0)))
+						(!veryClose(computed.getRealDouble(), original.getRealDouble())) ||
+						(!veryClose(computed.getImaginaryDouble(), 0)))
 				{
 					System.out.println(" FAILURE at ("+x+","+y+"): expected ("
-							+original.getReal()+",0) actual ("+computed.getX()+","+computed.getY()+")");
+							+original.getRealDouble()+",0) actual ("+computed.getRealDouble()+","+computed.getImaginaryDouble()+")");
 					success = false;
 				}
 			}

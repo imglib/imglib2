@@ -34,10 +34,8 @@ import net.imglib2.img.Img;
 import net.imglib2.img.array.ArrayImgFactory;
 import net.imglib2.ops.DiscreteNeigh;
 import net.imglib2.ops.Function;
-import net.imglib2.ops.Real;
 import net.imglib2.ops.function.real.RealImageFunction;
 import net.imglib2.outofbounds.OutOfBoundsPeriodicFactory;
-import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.real.DoubleType;
 
 // an example testing out of bounds access for a real image function
@@ -63,9 +61,9 @@ public class Example11 {
 		return imgFactory.create(new long[]{XSIZE,YSIZE}, new DoubleType());
 	}
 
-	private static Img<? extends RealType<?>> makeInputImage() {
-		Img<? extends RealType<?>> inputImg = allocateRealImage();
-		RandomAccess<? extends RealType<?>> accessor = inputImg.randomAccess();
+	private static Img<DoubleType> makeInputImage() {
+		Img<DoubleType> inputImg = allocateRealImage();
+		RandomAccess<DoubleType> accessor = inputImg.randomAccess();
 		long[] pos = new long[3];
 		for (int x = 0; x < XSIZE; x++) {
 			for (int y = 0; y < YSIZE; y++) {
@@ -80,15 +78,17 @@ public class Example11 {
 	
 	private static boolean testOutOfBounds() {
 		boolean success = true;
-		Img<? extends RealType<?>> image = makeInputImage();
+		Img<DoubleType> image = makeInputImage();
 		DiscreteNeigh inputNeigh = new DiscreteNeigh(new long[2], new long[]{1,1}, new long[]{1,1});
-		Function<long[],Real> imageFunc = new RealImageFunction(image, new OutOfBoundsPeriodicFactory());
+		Function<long[],DoubleType> imageFunc =
+			new RealImageFunction<DoubleType>(
+				image, new OutOfBoundsPeriodicFactory<DoubleType, Img<DoubleType>>());
 		long[] currPt = new long[2];
-		Real inbounds = new Real();
-		Real left = new Real();
-		Real right = new Real();
-		Real top = new Real();
-		Real bottom = new Real();
+		DoubleType inbounds = new DoubleType();
+		DoubleType left = new DoubleType();
+		DoubleType right = new DoubleType();
+		DoubleType top = new DoubleType();
+		DoubleType bottom = new DoubleType();
 		for (int x = 0; x < XSIZE; x++) {
 			for (int y = 0; y < YSIZE; y++) {
 				currPt[0] = x;
@@ -99,36 +99,36 @@ public class Example11 {
 				currPt[1] = y;
 				inputNeigh.moveTo(currPt);
 				imageFunc.evaluate(inputNeigh, currPt, left);
-				if (!veryClose(inbounds.getReal(), left.getReal())) {
+				if (!veryClose(inbounds.getRealDouble(), left.getRealDouble())) {
 					System.out.println(" FAILURE at ("+x+","+y+"): expected ("
-						+(inbounds.getReal())+") actual ("+left.getReal()+")");
+						+(inbounds.getRealDouble())+") actual ("+left.getRealDouble()+")");
 					success = false;
 				}
 				currPt[0] = x + XSIZE;
 				currPt[1] = y;
 				inputNeigh.moveTo(currPt);
 				imageFunc.evaluate(inputNeigh, currPt, right);
-				if (!veryClose(inbounds.getReal(), right.getReal())) {
+				if (!veryClose(inbounds.getRealDouble(), right.getRealDouble())) {
 					System.out.println(" FAILURE at ("+x+","+y+"): expected ("
-						+(inbounds.getReal())+") actual ("+right.getReal()+")");
+						+(inbounds.getRealDouble())+") actual ("+right.getRealDouble()+")");
 					success = false;
 				}
 				currPt[0] = x;
 				currPt[1] = y - YSIZE;
 				inputNeigh.moveTo(currPt);
 				imageFunc.evaluate(inputNeigh, currPt, top);
-				if (!veryClose(inbounds.getReal(), top.getReal())) {
+				if (!veryClose(inbounds.getRealDouble(), top.getRealDouble())) {
 					System.out.println(" FAILURE at ("+x+","+y+"): expected ("
-						+(inbounds.getReal())+") actual ("+top.getReal()+")");
+						+(inbounds.getRealDouble())+") actual ("+top.getRealDouble()+")");
 					success = false;
 				}
 				currPt[0] = x;
 				currPt[1] = y + YSIZE;
 				inputNeigh.moveTo(currPt);
 				imageFunc.evaluate(inputNeigh, currPt, bottom);
-				if (!veryClose(inbounds.getReal(), bottom.getReal())) {
+				if (!veryClose(inbounds.getRealDouble(), bottom.getRealDouble())) {
 					System.out.println(" FAILURE at ("+x+","+y+"): expected ("
-						+(inbounds.getReal())+") actual ("+bottom.getReal()+")");
+						+(inbounds.getRealDouble())+") actual ("+bottom.getRealDouble()+")");
 					success = false;
 				}
 			}
