@@ -30,12 +30,10 @@ POSSIBILITY OF SUCH DAMAGE.
 package net.imglib2.ops.operation.unary.complex;
 
 import net.imglib2.ops.UnaryOperation;
-import net.imglib2.ops.Complex;
 import net.imglib2.ops.operation.binary.complex.ComplexDivide;
 import net.imglib2.ops.operation.binary.complex.ComplexMultiply;
 import net.imglib2.ops.operation.binary.complex.ComplexSubtract;
 import net.imglib2.ops.operation.unary.complex.ComplexExp;
-import net.imglib2.ops.sandbox.ComplexOutput;
 import net.imglib2.type.numeric.ComplexType;
 
 //Handbook of Mathematics and Computational Science, Harris & Stocker, Springer, 2006
@@ -45,24 +43,51 @@ import net.imglib2.type.numeric.ComplexType;
  * @author Barry DeZonia
  *
  */
-public final class ComplexSinh<T extends ComplexType<T>>
-	implements UnaryOperation<T,T> {
+public final class ComplexSinh<T extends ComplexType<T>,U extends ComplexType<U>>
+	implements UnaryOperation<T,U> {
 
-	private static final Complex TWO = Complex.createCartesian(2,0);
-	private static final Complex MINUS_ONE = Complex.createCartesian(-1,0);
-
-	private static final ComplexExp expFunc = new ComplexExp();
-	private static final ComplexSubtract diffFunc = new ComplexSubtract();
-	private static final ComplexMultiply mulFunc = new ComplexMultiply();
-	private static final ComplexDivide divFunc = new ComplexDivide();
+	private final ComplexCopy<T,U> copyFunc;
+	private final ComplexExp<U,U> expFunc;
+	private final ComplexSubtract<U,U,U> diffFunc;
+	private final ComplexMultiply<U,U,U> mulFunc;
+	private final ComplexDivide<U,U,U> divFunc;
 	
-	private final Complex minusZ = new Complex();
-	private final Complex expZ = new Complex();
-	private final Complex expMinusZ = new Complex();
-	private final Complex diff = new Complex();
+	private final U TWO;
+	private final U MINUS_ONE;
+
+	private final U z;
+	private final U minusZ;
+	private final U expZ;
+	private final U expMinusZ;
+	private final U diff;
+
+	private final U type;
+	
+	public ComplexSinh(U type) {
+		this.type = type;
+		
+		copyFunc = new ComplexCopy<T,U>(type);
+		expFunc = new ComplexExp<U,U>(type);
+		diffFunc = new ComplexSubtract<U,U,U>(type);
+		mulFunc = new ComplexMultiply<U,U,U>(type);
+		divFunc = new ComplexDivide<U,U,U>(type);
+		
+		TWO = type.createVariable();
+		MINUS_ONE = type.createVariable();
+
+		z = type.createVariable();
+		minusZ = type.createVariable();
+		expZ = type.createVariable();
+		expMinusZ = type.createVariable();
+		diff = type.createVariable();
+
+		TWO.setComplexNumber(2,0);
+		MINUS_ONE.setComplexNumber(-1,0);
+	}
 	
 	@Override
-	public void compute(Complex z, Complex output) {
+	public void compute(T in, U output) {
+		copyFunc.compute(in, z);
 		expFunc.compute(z, expZ);
 		mulFunc.compute(z, MINUS_ONE, minusZ);
 		expFunc.compute(minusZ, expMinusZ);
@@ -71,12 +96,12 @@ public final class ComplexSinh<T extends ComplexType<T>>
 	}
 	
 	@Override
-	public ComplexSinh copy() {
-		return new ComplexSinh();
+	public ComplexSinh<T,U> copy() {
+		return new ComplexSinh<T,U>(type);
 	}
 
 	@Override
-	public T createOutput(T dataHint) {
-		return dataHint.createVariable();
+	public U createOutput(T dataHint) {
+		return type.createVariable();
 	}
 }
