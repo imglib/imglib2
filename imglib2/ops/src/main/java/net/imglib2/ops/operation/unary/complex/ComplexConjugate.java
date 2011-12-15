@@ -30,8 +30,6 @@ POSSIBILITY OF SUCH DAMAGE.
 package net.imglib2.ops.operation.unary.complex;
 
 import net.imglib2.ops.UnaryOperation;
-import net.imglib2.ops.Complex;
-import net.imglib2.ops.sandbox.ComplexOutput;
 import net.imglib2.type.numeric.ComplexType;
 
 //Handbook of Mathematics and Computational Science, Harris & Stocker, Springer, 2006
@@ -41,23 +39,29 @@ import net.imglib2.type.numeric.ComplexType;
  * @author Barry DeZonia
  *
  */
-public final class ComplexConjugate<T extends ComplexType<T>>
-	implements UnaryOperation<T,T> {
+public final class ComplexConjugate<T extends ComplexType<T>, U extends ComplexType<U>>
+	implements UnaryOperation<T,U> {
 
-	@Override
-	public void compute(Complex z, Complex output) {
-		double x = z.getX();
-		double y = -z.getY();
-		output.setCartesian(x,y);
+	private U type;
+	
+	public ComplexConjugate(U type) {
+		this.type = type;
 	}
 	
 	@Override
-	public ComplexConjugate copy() {
-		return new ComplexConjugate();
+	public void compute(T z, U output) {
+		double x = z.getRealDouble();
+		double y = -z.getImaginaryDouble();
+		output.setComplexNumber(x,y);
+	}
+	
+	@Override
+	public ComplexConjugate<T,U> copy() {
+		return new ComplexConjugate<T,U>(type);
 	}
 
 	@Override
-	public T createOutput(T dataHint) {
-		return dataHint.createVariable();
+	public U createOutput(T dataHint) {
+		return type.createVariable();
 	}
 }
