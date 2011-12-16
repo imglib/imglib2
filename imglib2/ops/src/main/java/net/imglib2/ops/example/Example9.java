@@ -148,6 +148,7 @@ public class Example9 {
 		img = makeInputImage();
 		DiscreteNeigh neigh = new DiscreteNeigh(new long[2],
 				new long[] { 1, 1 }, new long[] { 1, 1 });
+		DoubleType outType = new DoubleType();
 		Function<long[], DoubleType> imgFunc = new RealImageFunction<DoubleType>(
 				img);
 		double[] kernel1 = new double[] { -1, -2, -1, 0, 0, 0, 1, 2, 1 };
@@ -157,12 +158,12 @@ public class Example9 {
 		Function<long[], DoubleType> convFunc2 = new RealConvolutionFunction<DoubleType>(
 				imgFunc, kernel2);
 		Function<long[], DoubleType> absFunc1 = new GeneralUnaryFunction<long[], DoubleType, DoubleType>(
-				convFunc1, new RealAbs<DoubleType, DoubleType>());
+				convFunc1, new RealAbs<DoubleType, DoubleType>(), outType);
 		Function<long[], DoubleType> absFunc2 = new GeneralUnaryFunction<long[], DoubleType, DoubleType>(
-				convFunc2, new RealAbs<DoubleType, DoubleType>());
+				convFunc2, new RealAbs<DoubleType, DoubleType>(), outType);
 		Function<long[], DoubleType> addFunc = new GeneralBinaryFunction<long[], DoubleType, DoubleType, DoubleType>(
 				absFunc1, absFunc2,
-				new RealAdd<DoubleType, DoubleType, DoubleType>());
+				new RealAdd<DoubleType, DoubleType, DoubleType>(), outType);
 		DoubleType output = new DoubleType();
 		for (int x = 1; x < XSIZE - 1; x++) {
 			for (int y = 1; y < YSIZE - 1; y++) {

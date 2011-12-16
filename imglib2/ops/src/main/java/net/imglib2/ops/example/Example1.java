@@ -93,7 +93,7 @@ public class Example1 {
 
 		Function<long[], DoubleType> additionFunc = new GeneralBinaryFunction<long[], DoubleType, DoubleType, DoubleType>(
 				constant, image,
-				new RealAdd<DoubleType, DoubleType, DoubleType>());
+				new RealAdd<DoubleType, DoubleType, DoubleType>(), new DoubleType());
 
 		long[] index = neighborhood.getKeyPoint();
 
