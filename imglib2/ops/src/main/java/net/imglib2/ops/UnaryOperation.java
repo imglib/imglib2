@@ -29,7 +29,7 @@ POSSIBILITY OF SUCH DAMAGE.
 
 package net.imglib2.ops;
 
-/**
+/** 
  * 
  * @author Barry DeZonia
  *
