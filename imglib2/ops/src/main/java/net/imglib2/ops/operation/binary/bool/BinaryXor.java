@@ -51,8 +51,8 @@ public class BinaryXor implements BinaryOperation<BitType,BitType,BitType> {
 	}
 
 	@Override
-	public BinaryAndNot copy() {
-		return new BinaryAndNot();
+	public BinaryXor copy() {
+		return new BinaryXor();
 	}
 
 }

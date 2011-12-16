@@ -27,33 +27,14 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE.
 */
 
-package net.imglib2.ops.operation.binary.bool;
-
-import net.imglib2.ops.BinaryOperation;
-import net.imglib2.type.logic.BitType;
+package net.imglib2.ops;
 
 /**
  * 
- * @author Barry DeZonia
+ * @author Christian Dietz
  *
  */
-public class BinaryAndNot implements BinaryOperation<BitType,BitType,BitType> {
-
-	@Override
-	public void compute(BitType input1, BitType input2, BitType output) {
-		boolean value = input1.get() && !input2.get();
-		output.set(value);
-	}
-
-	@Override
-	public BitType createOutput(BitType dataHint1, BitType dataHint2) {
-		return new BitType();
-	}
-
-	@Override
-	public BinaryAndNot copy() {
-		return new BinaryAndNot();
-	}
-
+public interface UnaryOutputOperation<INPUT,OUTPUT> extends UnaryOperation<INPUT,OUTPUT> {
+	OUTPUT createEmptyOutput(INPUT in);
+	OUTPUT compute(INPUT in);
 }
-
