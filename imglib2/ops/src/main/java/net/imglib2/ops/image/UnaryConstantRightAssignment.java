@@ -5,7 +5,7 @@ import net.imglib2.IterableInterval;
 import net.imglib2.ops.BinaryOperation;
 import net.imglib2.type.numeric.RealType;
 
-public class UnaryConstantRightAssignment<V extends RealType<V>, T extends RealType<T>, O extends RealType<V>>
+public class UnaryConstantRightAssignment<T extends RealType<T>, V extends RealType<V>, O extends RealType<O>>
 		implements BinaryOperation<IterableInterval<T>, V, IterableInterval<O>> {
 
 	private BinaryOperation<T, V, O> m_op;
@@ -31,7 +31,7 @@ public class UnaryConstantRightAssignment<V extends RealType<V>, T extends RealT
 
 	@Override
 	public BinaryOperation<IterableInterval<T>, V, IterableInterval<O>> copy() {
-		return new UnaryConstantRightAssignment<V, T, O>(m_op);
+		return new UnaryConstantRightAssignment<T, V, O>(m_op);
 	}
 
 }
