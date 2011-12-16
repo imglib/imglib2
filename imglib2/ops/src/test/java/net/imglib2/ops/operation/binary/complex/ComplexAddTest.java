@@ -16,10 +16,10 @@ public class ComplexAddTest {
 
 	@Test
 	public void test() {
-		for (double r1 = -20.0; r1 <= 20.0; r1 += Math.PI / 10)
-			for (double i1 = -20.0; i1 <= 20.0; i1 += Math.PI / 11)
-				for (double r2 = -20.0; r2 <= 20.0; r2 += Math.PI / 12)
-					for (double i2 = -20.0; i2 <= 20.0; i2 += Math.PI / 13)
+		for (double r1 = -10.0; r1 <= 10.0; r1 += Math.PI / 10)
+			for (double i1 = -10.0; i1 <= 10.0; i1 += Math.PI / 11)
+				for (double r2 = -10.0; r2 <= 10.0; r2 += Math.PI / 12)
+					for (double i2 = -10.0; i2 <= 10.0; i2 += Math.PI / 13)
 						doCase(r1,i1,r2,i2);
 			
 	}
