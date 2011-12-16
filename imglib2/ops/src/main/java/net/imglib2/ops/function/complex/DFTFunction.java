@@ -5,12 +5,12 @@ All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are met:
-  * Redistributions of source code must retain the above copyright
+ * Redistributions of source code must retain the above copyright
     notice, this list of conditions and the following disclaimer.
-  * Redistributions in binary form must reproduce the above copyright
+ * Redistributions in binary form must reproduce the above copyright
     notice, this list of conditions and the following disclaimer in the
     documentation and/or other materials provided with the distribution.
-  * Neither the name of the Fiji project developers nor the
+ * Neither the name of the Fiji project developers nor the
     names of its contributors may be used to endorse or promote products
     derived from this software without specific prior written permission.
 
@@ -25,7 +25,7 @@ INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
 CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE.
-*/
+ */
 
 package net.imglib2.ops.function.complex;
 
@@ -48,13 +48,14 @@ import net.imglib2.type.numeric.complex.ComplexDoubleType;
 /**
  * 
  * @author Barry DeZonia
- *
+ * 
  */
-public class DFTFunction<T extends ComplexType<T>> implements Function<long[],T> {
+public class DFTFunction<T extends ComplexType<T>> implements
+		Function<long[], T> {
 
 	// -- instance variables --
-	
-	private Function<long[],T> spatialFunction;
+
+	private Function<long[], T> spatialFunction;
 	private long[] span;
 	private long[] negOffs;
 	private long[] posOffs;
@@ -62,64 +63,66 @@ public class DFTFunction<T extends ComplexType<T>> implements Function<long[],T>
 	private ComplexImageFunction<ComplexDoubleType> dataArray;
 
 	// -- temporary per instance working variables --
-	private final ComplexAdd<T,T,T> adder;
-	private final ComplexExp<T,T> exper;
-	private final ComplexMultiply<T,T,T> multiplier;
+	private final ComplexAdd<T, T, T> adder;
+	private final ComplexExp<T, T> exper;
+	private final ComplexMultiply<T, T, T> multiplier;
 
 	private final T MINUS_TWO_PI_I;
 	private final T constant;
 	private final T expVal;
 	private final T funcVal;
 	private final T spatialExponent;
-	
+
 	private ComplexDoubleType tmp;
-	
+
 	private final T type;
 
 	// -- constructor --
-	
-	public DFTFunction(Function<long[],T> spatialFunction, long[] span, long[] negOffs, long[] posOffs, T type) {
+
+	public DFTFunction(Function<long[], T> spatialFunction, long[] span,
+			long[] negOffs, long[] posOffs, T type) {
 		if (span.length != 2)
-			throw new IllegalArgumentException("DFTFunction is only designed for two dimensional functions");
-		
+			throw new IllegalArgumentException(
+					"DFTFunction is only designed for two dimensional functions");
+
 		this.type = type;
-		
+
 		this.tmp = new ComplexDoubleType();
-		
-		this.adder = new ComplexAdd<T,T,T>(type);
-		this.exper = new ComplexExp<T,T>(type);
-		this.multiplier = new ComplexMultiply<T,T,T>(type);
-		
+
+		this.adder = new ComplexAdd<T, T, T>();
+		this.exper = new ComplexExp<T, T>();
+		this.multiplier = new ComplexMultiply<T, T, T>();
+
 		this.spatialFunction = spatialFunction;
 		this.span = span.clone();
 		this.negOffs = negOffs.clone();
 		this.posOffs = posOffs.clone();
-		this.neighborhood = new DiscreteNeigh(span.clone(), this.negOffs, this.posOffs);
-		
+		this.neighborhood = new DiscreteNeigh(span.clone(), this.negOffs,
+				this.posOffs);
+
 		this.MINUS_TWO_PI_I = createOutput();
 		this.constant = createOutput();
 		this.expVal = createOutput();
 		this.funcVal = createOutput();
 		this.spatialExponent = createOutput();
 
-		this.MINUS_TWO_PI_I.setComplexNumber(0,-2*Math.PI);
+		this.MINUS_TWO_PI_I.setComplexNumber(0, -2 * Math.PI);
 
 		this.dataArray = createDataArray();
 	}
-	
+
 	// -- public interface --
-	
+
 	@Override
-	public void
-		evaluate(Neighborhood<long[]> neigh, long[] point, T output)
-	{
+	public void evaluate(Neighborhood<long[]> neigh, long[] point, T output) {
 		dataArray.evaluate(neigh, point, tmp);
 		output.setComplexNumber(tmp.getRealDouble(), tmp.getImaginaryDouble());
 	}
 
 	@Override
 	public DFTFunction<T> copy() {
-		return new DFTFunction<T>(spatialFunction.copy(),span,negOffs,posOffs,type);
+		return new DFTFunction<T>(spatialFunction.copy(), span, negOffs,
+				posOffs, type);
 	}
 
 	@Override
@@ -128,18 +131,20 @@ public class DFTFunction<T extends ComplexType<T>> implements Function<long[],T>
 	}
 
 	// -- private helpers --
-	
+
 	// TODO - use a ComplexImageAssignment here instead? Speed. Elegance?
-	
+
 	private ComplexImageFunction<ComplexDoubleType> createDataArray() {
-		// TODO - this factory is always an array in memory with corresponding limitations
+		// TODO - this factory is always an array in memory with corresponding
+		// limitations
 		final ImgFactory<ComplexDoubleType> imgFactory = new ArrayImgFactory<ComplexDoubleType>();
-		final Img<ComplexDoubleType> img = imgFactory.create(span, new ComplexDoubleType());
+		final Img<ComplexDoubleType> img = imgFactory.create(span,
+				new ComplexDoubleType());
 		final RandomAccess<ComplexDoubleType> oAccessor = img.randomAccess();
 		final long[] iPosition = new long[2];
 		final long[] oPosition = new long[2];
 		final T sum = createOutput();
-		final T xyTerm = createOutput(); 
+		final T xyTerm = createOutput();
 		for (int ox = 0; ox < span[0]; ox++) {
 			oPosition[0] = ox;
 			for (int oy = 0; oy < span[1]; oy++) {
@@ -154,18 +159,19 @@ public class DFTFunction<T extends ComplexType<T>> implements Function<long[],T>
 					}
 				}
 				oAccessor.setPosition(oPosition);
-				oAccessor.get().setComplexNumber(
-					sum.getRealDouble(), sum.getImaginaryDouble());
+				oAccessor.get().setComplexNumber(sum.getRealDouble(),
+						sum.getImaginaryDouble());
 			}
 		}
-		return new ComplexImageFunction<ComplexDoubleType>(img,new ComplexDoubleType());
+		return new ComplexImageFunction<ComplexDoubleType>(img,
+				new ComplexDoubleType());
 	}
-	
+
 	private void calcTermAtPoint(long[] oPosition, long[] iPosition, T xyTerm) {
 		neighborhood.moveTo(iPosition);
 		spatialFunction.evaluate(neighborhood, iPosition, funcVal);
-		double val = ((double)oPosition[0]) * iPosition[0] / span[0];
-		val += ((double)oPosition[1]) * iPosition[1] / span[1];
+		double val = ((double) oPosition[0]) * iPosition[0] / span[0];
+		val += ((double) oPosition[1]) * iPosition[1] / span[1];
 		spatialExponent.setComplexNumber(val, 0);
 		multiplier.compute(MINUS_TWO_PI_I, spatialExponent, constant);
 		exper.compute(constant, expVal);

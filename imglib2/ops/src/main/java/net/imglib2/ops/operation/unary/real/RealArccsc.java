@@ -5,12 +5,12 @@ All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are met:
-  * Redistributions of source code must retain the above copyright
+ * Redistributions of source code must retain the above copyright
     notice, this list of conditions and the following disclaimer.
-  * Redistributions in binary form must reproduce the above copyright
+ * Redistributions in binary form must reproduce the above copyright
     notice, this list of conditions and the following disclaimer in the
     documentation and/or other materials provided with the distribution.
-  * Neither the name of the Fiji project developers nor the
+ * Neither the name of the Fiji project developers nor the
     names of its contributors may be used to endorse or promote products
     derived from this software without specific prior written permission.
 
@@ -25,56 +25,51 @@ INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
 CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE.
-*/
+ */
 
 package net.imglib2.ops.operation.unary.real;
 
 import net.imglib2.ops.UnaryOperation;
 import net.imglib2.type.numeric.RealType;
 
-
 //verified formula with Mathworld's definition for Inverse Cosecant
 
 /**
  * 
  * @author Barry DeZonia
- *
+ * 
  */
-public final class RealArccsc<T extends RealType<T>> implements UnaryOperation<T,T> {
+public final class RealArccsc<T extends RealType<T>, V extends RealType<V>>
+		implements UnaryOperation<T, V> {
 
-	private final RealArccos<T> acos = new RealArccos<T>();
+	private final RealArccos<T, T> acos = new RealArccos<T, T>();
 	private T angle;
 	private T tmp;
-	
+
 	@Override
-	public void compute(T x, T output) {
+	public V compute(T x, V output) {
 		// lazy initialization
 		if (angle == null) {
-			angle = acos.createOutput(x);
-			tmp = acos.createOutput(x);
+			angle = x.createVariable();
+			tmp = x.createVariable();
 		}
 		double xt = x.getRealDouble();
 		if ((xt > -1) && (xt < 1))
 			throw new IllegalArgumentException("arccsc(x) : x out of range");
 		else if (xt == -1)
-			output.setReal(-Math.PI/2);
+			output.setReal(-Math.PI / 2);
 		else if (xt == 1)
-			output.setReal(Math.PI/2);
+			output.setReal(Math.PI / 2);
 		else {
-			tmp.setReal(Math.sqrt(xt*xt - 1) / xt);
+			tmp.setReal(Math.sqrt(xt * xt - 1) / xt);
 			acos.compute(tmp, angle);
 			output.setReal(angle.getRealDouble());
 		}
+		return output;
 	}
 
 	@Override
-	public RealArccsc<T> copy() {
-		return new RealArccsc<T>();
+	public RealArccsc<T, V> copy() {
+		return new RealArccsc<T, V>();
 	}
-	
-	@Override
-	public T createOutput(T dataHint) {
-		return dataHint.createVariable();
-	}
-
 }

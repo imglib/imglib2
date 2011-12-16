@@ -5,12 +5,12 @@ All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are met:
-  * Redistributions of source code must retain the above copyright
+ * Redistributions of source code must retain the above copyright
     notice, this list of conditions and the following disclaimer.
-  * Redistributions in binary form must reproduce the above copyright
+ * Redistributions in binary form must reproduce the above copyright
     notice, this list of conditions and the following disclaimer in the
     documentation and/or other materials provided with the distribution.
-  * Neither the name of the Fiji project developers nor the
+ * Neither the name of the Fiji project developers nor the
     names of its contributors may be used to endorse or promote products
     derived from this software without specific prior written permission.
 
@@ -25,7 +25,7 @@ INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
 CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE.
-*/
+ */
 
 package net.imglib2.ops.operation.binary.real;
 
@@ -35,25 +35,23 @@ import net.imglib2.type.numeric.RealType;
 /**
  * 
  * @author Barry DeZonia
- *
+ * 
  */
-public final class RealMin<T extends RealType<T>> implements BinaryOperation<T,T,T> {
+public final class RealMin<T extends RealType<T>, V extends RealType<V>, O extends RealType<O>>
+		implements BinaryOperation<T, V, O> {
 
 	@Override
-	public void compute(T x1, T x2, T output) {
+	public O compute(T x1, V x2, O output) {
 		if (x1.getRealDouble() < x2.getRealDouble())
-			output.set(x1);
+			output.setReal(x1.getRealDouble());
 		else
-			output.set(x2);
+			output.setReal(x2.getRealDouble());
+
+		return output;
 	}
 
 	@Override
-	public RealMin<T> copy() {
-		return new RealMin<T>();
-	}
-
-	@Override
-	public T createOutput(T dataHint1, T dataHint2) {
-		return dataHint1.createVariable();
+	public RealMin<T, V, O> copy() {
+		return new RealMin<T, V, O>();
 	}
 }

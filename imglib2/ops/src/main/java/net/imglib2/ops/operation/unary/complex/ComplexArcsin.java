@@ -5,12 +5,12 @@ All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are met:
-  * Redistributions of source code must retain the above copyright
+ * Redistributions of source code must retain the above copyright
     notice, this list of conditions and the following disclaimer.
-  * Redistributions in binary form must reproduce the above copyright
+ * Redistributions in binary form must reproduce the above copyright
     notice, this list of conditions and the following disclaimer in the
     documentation and/or other materials provided with the distribution.
-  * Neither the name of the Fiji project developers nor the
+ * Neither the name of the Fiji project developers nor the
     names of its contributors may be used to endorse or promote products
     derived from this software without specific prior written permission.
 
@@ -25,7 +25,7 @@ INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
 CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE.
-*/
+ */
 
 package net.imglib2.ops.operation.unary.complex;
 
@@ -41,18 +41,18 @@ import net.imglib2.type.numeric.ComplexType;
 /**
  * 
  * @author Barry DeZonia
- *
+ * 
  */
 public final class ComplexArcsin<T extends ComplexType<T>, U extends ComplexType<U>>
-	implements UnaryOperation<T,U> {
+		implements UnaryOperation<T, U> {
 
-	private final ComplexCopy<T,U> copyFunc;
-	private final ComplexMultiply<U,U,U> mulFunc;
-	private final ComplexSubtract<U,U,U> diffFunc;
-	private final ComplexPower<U,U,U> powFunc;
-	private final ComplexAdd<U,U,U> addFunc;
-	private final ComplexLog<U,U> logFunc;
-	
+	private final ComplexCopy<T, U> copyFunc;
+	private final ComplexMultiply<U, U, U> mulFunc;
+	private final ComplexSubtract<U, U, U> diffFunc;
+	private final ComplexPower<U, U, U> powFunc;
+	private final ComplexAdd<U, U, U> addFunc;
+	private final ComplexLog<U, U> logFunc;
+
 	private final U I;
 	private final U MINUS_I;
 	private final U ONE;
@@ -67,22 +67,22 @@ public final class ComplexArcsin<T extends ComplexType<T>, U extends ComplexType
 	private final U logSum;
 
 	private U type;
-	
+
 	public ComplexArcsin(U type) {
 		this.type = type;
 
-		copyFunc = new ComplexCopy<T,U>(type);
-		mulFunc = new ComplexMultiply<U,U,U>(type);
-		diffFunc = new ComplexSubtract<U,U,U>(type);
-		powFunc = new ComplexPower<U,U,U>(type);
-		addFunc = new ComplexAdd<U,U,U>(type);
-		logFunc = new ComplexLog<U,U>(type);
+		copyFunc = new ComplexCopy<T, U>();
+		mulFunc = new ComplexMultiply<U, U, U>();
+		diffFunc = new ComplexSubtract<U, U, U>();
+		powFunc = new ComplexPower<U, U, U>(type);
+		addFunc = new ComplexAdd<U, U, U>();
+		logFunc = new ComplexLog<U, U>();
 
 		I = type.createVariable();
 		MINUS_I = type.createVariable();
 		ONE = type.createVariable();
 		ONE_HALF = type.createVariable();
-		
+
 		z = type.createVariable();
 		iz = type.createVariable();
 		zSquared = type.createVariable();
@@ -90,15 +90,15 @@ public final class ComplexArcsin<T extends ComplexType<T>, U extends ComplexType
 		root = type.createVariable();
 		sum = type.createVariable();
 		logSum = type.createVariable();
-		
+
 		I.setComplexNumber(0, 1);
 		MINUS_I.setComplexNumber(0, -1);
 		ONE.setComplexNumber(1, 0);
 		ONE_HALF.setComplexNumber(0.5, 0);
 	}
-	
+
 	@Override
-	public void compute(T in, U output) {
+	public U compute(T in, U output) {
 		copyFunc.compute(in, z);
 		mulFunc.compute(I, z, iz);
 		mulFunc.compute(z, z, zSquared);
@@ -107,15 +107,11 @@ public final class ComplexArcsin<T extends ComplexType<T>, U extends ComplexType
 		addFunc.compute(iz, root, sum);
 		logFunc.compute(sum, logSum);
 		mulFunc.compute(MINUS_I, logSum, output);
-	}
-	
-	@Override
-	public ComplexArcsin<T,U> copy() {
-		return new ComplexArcsin<T,U>(type);
+		return output;
 	}
 
 	@Override
-	public U createOutput(T dataHint) {
-		return type.createVariable();
+	public ComplexArcsin<T, U> copy() {
+		return new ComplexArcsin<T, U>(type);
 	}
 }

@@ -5,12 +5,12 @@ All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are met:
-  * Redistributions of source code must retain the above copyright
+ * Redistributions of source code must retain the above copyright
     notice, this list of conditions and the following disclaimer.
-  * Redistributions in binary form must reproduce the above copyright
+ * Redistributions in binary form must reproduce the above copyright
     notice, this list of conditions and the following disclaimer in the
     documentation and/or other materials provided with the distribution.
-  * Neither the name of the Fiji project developers nor the
+ * Neither the name of the Fiji project developers nor the
     names of its contributors may be used to endorse or promote products
     derived from this software without specific prior written permission.
 
@@ -25,7 +25,7 @@ INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
 CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE.
-*/
+ */
 
 package net.imglib2.ops.operation.unary.real;
 
@@ -34,19 +34,19 @@ import java.util.Random;
 import net.imglib2.ops.UnaryOperation;
 import net.imglib2.type.numeric.RealType;
 
-
 /**
  * 
  * @author Barry DeZonia
- *
+ * 
  */
-public final class RealAddNoise<T extends RealType<T>> implements UnaryOperation<T,T> {
+public final class RealAddNoise<T extends RealType<T>, V extends RealType<V>>
+		implements UnaryOperation<T, V> {
 
 	private final double rangeMin;
 	private final double rangeMax;
 	private final double rangeStdDev;
 	private final Random rng;
-	
+
 	public RealAddNoise(double min, double max, double stdDev) {
 		this.rangeMin = min;
 		this.rangeMax = max;
@@ -54,32 +54,28 @@ public final class RealAddNoise<T extends RealType<T>> implements UnaryOperation
 		this.rng = new Random();
 		this.rng.setSeed(System.currentTimeMillis());
 	}
-	
+
 	@Override
-	public void compute(T x, T output) {
+	public V compute(T x, V output) {
 		int i = 0;
-		do
-		{
-			double newVal = x.getRealDouble() + (rng.nextGaussian() * rangeStdDev);
-			
-			if ((rangeMin <= newVal) && (newVal <=rangeMax)) {
+		do {
+			double newVal = x.getRealDouble()
+					+ (rng.nextGaussian() * rangeStdDev);
+
+			if ((rangeMin <= newVal) && (newVal <= rangeMax)) {
 				output.setReal(newVal);
-				return;
+				return output;
 			}
-			
+
 			if (i++ > 100)
-				throw new IllegalArgumentException("noise function failing to terminate. probably misconfigured.");
-		}
-		while(true);
+				throw new IllegalArgumentException(
+						"noise function failing to terminate. probably misconfigured.");
+		} while (true);
 	}
 
 	@Override
-	public RealAddNoise<T> copy() {
-		return new RealAddNoise<T>(rangeMin, rangeMax, rangeStdDev);
+	public RealAddNoise<T, V> copy() {
+		return new RealAddNoise<T, V>(rangeMin, rangeMax, rangeStdDev);
 	}
 
-	@Override
-	public T createOutput(T dataHint) {
-		return dataHint.createVariable();
-	}
 }

@@ -5,12 +5,12 @@ All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are met:
-  * Redistributions of source code must retain the above copyright
+ * Redistributions of source code must retain the above copyright
     notice, this list of conditions and the following disclaimer.
-  * Redistributions in binary form must reproduce the above copyright
+ * Redistributions in binary form must reproduce the above copyright
     notice, this list of conditions and the following disclaimer in the
     documentation and/or other materials provided with the distribution.
-  * Neither the name of the Fiji project developers nor the
+ * Neither the name of the Fiji project developers nor the
     names of its contributors may be used to endorse or promote products
     derived from this software without specific prior written permission.
 
@@ -25,7 +25,7 @@ INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
 CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE.
-*/
+ */
 
 package net.imglib2.ops.operation.unary.complex;
 
@@ -41,21 +41,21 @@ import net.imglib2.type.numeric.ComplexType;
 /**
  * 
  * @author Barry DeZonia
- *
+ * 
  */
-public final class ComplexArctan<T extends ComplexType<T>,U extends ComplexType<U>>
-	implements UnaryOperation<T,U> {
+public final class ComplexArctan<T extends ComplexType<T>, U extends ComplexType<U>>
+		implements UnaryOperation<T, U> {
 
 	private final U ONE;;
 	private final U I;
 	private final U MINUS_I_OVER_TWO;
-	
-	private final ComplexCopy<T,U> copyFunc;
-	private final ComplexMultiply<U,U,U> mulFunc;
-	private final ComplexAdd<U,U,U> addFunc;
-	private final ComplexSubtract<U,U,U> subFunc;
-	private final ComplexDivide<U,U,U> divFunc;
-	private final ComplexLog<U,U> logFunc;
+
+	private final ComplexCopy<T, U> copyFunc;
+	private final ComplexMultiply<U, U, U> mulFunc;
+	private final ComplexAdd<U, U, U> addFunc;
+	private final ComplexSubtract<U, U, U> subFunc;
+	private final ComplexDivide<U, U, U> divFunc;
+	private final ComplexLog<U, U> logFunc;
 
 	private final U z;
 	private final U iz;
@@ -63,37 +63,37 @@ public final class ComplexArctan<T extends ComplexType<T>,U extends ComplexType<
 	private final U diff;
 	private final U quotient;
 	private final U log;
-	
+
 	private final U type;
-	
+
 	public ComplexArctan(U type) {
 		this.type = type;
 
-		copyFunc = new ComplexCopy<T,U>(type);
-		mulFunc = new ComplexMultiply<U,U,U>(type);
-		addFunc = new ComplexAdd<U,U,U>(type);
-		subFunc = new ComplexSubtract<U,U,U>(type);
-		divFunc = new ComplexDivide<U,U,U>(type);
-		logFunc = new ComplexLog<U,U>(type);
+		copyFunc = new ComplexCopy<T, U>();
+		mulFunc = new ComplexMultiply<U, U, U>();
+		addFunc = new ComplexAdd<U, U, U>();
+		subFunc = new ComplexSubtract<U, U, U>();
+		divFunc = new ComplexDivide<U, U, U>();
+		logFunc = new ComplexLog<U, U>();
 
 		ONE = type.createVariable();
 		I = type.createVariable();
 		MINUS_I_OVER_TWO = type.createVariable();
-		
+
 		z = type.createVariable();
 		iz = type.createVariable();
 		sum = type.createVariable();
 		diff = type.createVariable();
 		quotient = type.createVariable();
 		log = type.createVariable();
-		
-		ONE.setComplexNumber(1,0);
-		I.setComplexNumber(0,1);
-		MINUS_I_OVER_TWO.setComplexNumber(0,-0.5);
+
+		ONE.setComplexNumber(1, 0);
+		I.setComplexNumber(0, 1);
+		MINUS_I_OVER_TWO.setComplexNumber(0, -0.5);
 	}
-	
+
 	@Override
-	public void compute(T in, U output) {
+	public U compute(T in, U output) {
 		copyFunc.compute(in, z);
 		mulFunc.compute(I, z, iz);
 		addFunc.compute(ONE, iz, sum);
@@ -101,15 +101,12 @@ public final class ComplexArctan<T extends ComplexType<T>,U extends ComplexType<
 		divFunc.compute(sum, diff, quotient);
 		logFunc.compute(quotient, log);
 		mulFunc.compute(MINUS_I_OVER_TWO, log, output);
-	}
-	
-	@Override
-	public ComplexArctan<T,U> copy() {
-		return new ComplexArctan<T,U>(type);
+		return output;
 	}
 
 	@Override
-	public U createOutput(T dataHint) {
-		return type.createVariable();
+	public ComplexArctan<T, U> copy() {
+		return new ComplexArctan<T, U>(type);
 	}
+
 }

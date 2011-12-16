@@ -47,10 +47,11 @@ public final class ComplexNegate<T extends ComplexType<T>,U extends ComplexType<
 	}
 	
 	@Override
-	public void compute(T z, U output) {
+	public U compute(T z, U output) {
 		double x = z.getRealDouble();
 		double y = -z.getImaginaryDouble();
 		output.setComplexNumber(x,y);
+		return output;
 	}
 	
 	@Override
@@ -58,8 +59,4 @@ public final class ComplexNegate<T extends ComplexType<T>,U extends ComplexType<
 		return new ComplexNegate<T,U>(type);
 	}
 
-	@Override
-	public U createOutput(T dataHint) {
-		return type.createVariable();
-	}
 }

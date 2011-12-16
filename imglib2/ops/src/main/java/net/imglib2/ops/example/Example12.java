@@ -10,14 +10,14 @@ public class Example12 {
 
 	private static final int XSIZE = 10;
 	private static final int YSIZE = 20;
-	
+
 	private static boolean veryClose(double d1, double d2) {
-		return Math.abs(d1-d2) < 0.00001;
+		return Math.abs(d1 - d2) < 0.00001;
 	}
 
 	private static Img<DoubleType> allocateImage() {
 		final ArrayImgFactory<DoubleType> imgFactory = new ArrayImgFactory<DoubleType>();
-		return imgFactory.create(new long[]{XSIZE,YSIZE}, new DoubleType());
+		return imgFactory.create(new long[] { XSIZE, YSIZE }, new DoubleType());
 	}
 
 	private static void fillImage(Img<DoubleType> img, double value) {
@@ -27,7 +27,7 @@ public class Example12 {
 			cursor.get().set(value);
 		}
 	}
-	
+
 	public static void main(String[] args) {
 		Img<DoubleType> in1 = allocateImage();
 		fillImage(in1, 1);
@@ -35,29 +35,28 @@ public class Example12 {
 		fillImage(in2, 2);
 		Img<DoubleType> out = allocateImage();
 		fillImage(out, 0);
-		RealAdd<DoubleType> op = new RealAdd<DoubleType>();
+		RealAdd<DoubleType, DoubleType, DoubleType> op = new RealAdd<DoubleType, DoubleType, DoubleType>();
 		Cursor<DoubleType> ic1 = in1.cursor();
 		Cursor<DoubleType> ic2 = in2.cursor();
 		Cursor<DoubleType> oc = out.cursor();
-		while ((ic1.hasNext()) &&
-				(ic2.hasNext()) &&
-				(oc.hasNext())) {
+		while ((ic1.hasNext()) && (ic2.hasNext()) && (oc.hasNext())) {
 			ic1.fwd();
 			ic2.fwd();
 			oc.fwd();
 			op.compute(ic1.get(), ic2.get(), oc.get());
 		}
-		
+
 		System.out.println("checking pixel values");
 		oc.reset();
 		while (oc.hasNext()) {
-			//System.out.println(i++);
+			// System.out.println(i++);
 			oc.fwd();
 			double value = oc.get().getRealDouble();
-			if (!veryClose(value,1+2)) {
+			if (!veryClose(value, 1 + 2)) {
 				System.out.println("IMAGES ARE DIFFERENT");
 			}
 		}
-		System.out.println("if no error messages were printed then tests were successful");
+		System.out
+				.println("if no error messages were printed then tests were successful");
 	}
 }

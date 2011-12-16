@@ -5,12 +5,12 @@ All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are met:
-  * Redistributions of source code must retain the above copyright
+ * Redistributions of source code must retain the above copyright
     notice, this list of conditions and the following disclaimer.
-  * Redistributions in binary form must reproduce the above copyright
+ * Redistributions in binary form must reproduce the above copyright
     notice, this list of conditions and the following disclaimer in the
     documentation and/or other materials provided with the distribution.
-  * Neither the name of the Fiji project developers nor the
+ * Neither the name of the Fiji project developers nor the
     names of its contributors may be used to endorse or promote products
     derived from this software without specific prior written permission.
 
@@ -25,7 +25,7 @@ INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
 CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE.
-*/
+ */
 
 package net.imglib2.ops.operation.unary.complex;
 
@@ -41,17 +41,17 @@ import net.imglib2.type.numeric.ComplexType;
 /**
  * 
  * @author Barry DeZonia
- *
+ * 
  */
-public final class ComplexCos<T extends ComplexType<T>,U extends ComplexType<U>>
-	implements UnaryOperation<T,U> {
+public final class ComplexCos<T extends ComplexType<T>, U extends ComplexType<U>>
+		implements UnaryOperation<T, U> {
 
-	private final ComplexCopy<T,U> copyFunc;
-	private final ComplexExp<U,U> expFunc;
-	private final ComplexAdd<U,U,U> addFunc;
-	private final ComplexMultiply<U,U,U> mulFunc;
-	private final ComplexDivide<U,U,U> divFunc;
-	
+	private final ComplexCopy<T, U> copyFunc;
+	private final ComplexExp<U, U> expFunc;
+	private final ComplexAdd<U, U, U> addFunc;
+	private final ComplexMultiply<U, U, U> mulFunc;
+	private final ComplexDivide<U, U, U> divFunc;
+
 	private final U TWO;
 	private final U I;
 	private final U MINUS_I;
@@ -64,16 +64,16 @@ public final class ComplexCos<T extends ComplexType<T>,U extends ComplexType<U>>
 	private final U sum;
 
 	private U type;
-	
+
 	public ComplexCos(U type) {
 		this.type = type;
-		
-		copyFunc = new ComplexCopy<T,U>(type);
-		expFunc = new ComplexExp<U,U>(type);
-		addFunc = new ComplexAdd<U,U,U>(type);
-		mulFunc = new ComplexMultiply<U,U,U>(type);
-		divFunc = new ComplexDivide<U,U,U>(type);
-		
+
+		copyFunc = new ComplexCopy<T, U>();
+		expFunc = new ComplexExp<U, U>();
+		addFunc = new ComplexAdd<U, U, U>();
+		mulFunc = new ComplexMultiply<U, U, U>();
+		divFunc = new ComplexDivide<U, U, U>();
+
 		TWO = type.createVariable();
 		I = type.createVariable();
 		MINUS_I = type.createVariable();
@@ -85,13 +85,13 @@ public final class ComplexCos<T extends ComplexType<T>,U extends ComplexType<U>>
 		expMinusIZ = type.createVariable();
 		sum = type.createVariable();
 
-		TWO.setComplexNumber(2,0);
-		I.setComplexNumber(0,1);
-		MINUS_I.setComplexNumber(0,-1);
+		TWO.setComplexNumber(2, 0);
+		I.setComplexNumber(0, 1);
+		MINUS_I.setComplexNumber(0, -1);
 	}
-	
+
 	@Override
-	public void compute(T in, U output) {
+	public U compute(T in, U output) {
 		copyFunc.compute(in, z);
 		mulFunc.compute(z, I, IZ);
 		mulFunc.compute(z, MINUS_I, minusIZ);
@@ -99,15 +99,12 @@ public final class ComplexCos<T extends ComplexType<T>,U extends ComplexType<U>>
 		expFunc.compute(minusIZ, expMinusIZ);
 		addFunc.compute(expIZ, expMinusIZ, sum);
 		divFunc.compute(sum, TWO, output);
-	}
-	
-	@Override
-	public ComplexCos<T,U> copy() {
-		return new ComplexCos<T,U>(type);
+		return output;
 	}
 
 	@Override
-	public U createOutput(T dataHint) {
-		return type.createVariable();
+	public ComplexCos<T, U> copy() {
+		return new ComplexCos<T, U>(type);
 	}
+
 }

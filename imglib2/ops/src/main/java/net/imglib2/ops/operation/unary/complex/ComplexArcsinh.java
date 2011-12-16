@@ -5,12 +5,12 @@ All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are met:
-  * Redistributions of source code must retain the above copyright
+ * Redistributions of source code must retain the above copyright
     notice, this list of conditions and the following disclaimer.
-  * Redistributions in binary form must reproduce the above copyright
+ * Redistributions in binary form must reproduce the above copyright
     notice, this list of conditions and the following disclaimer in the
     documentation and/or other materials provided with the distribution.
-  * Neither the name of the Fiji project developers nor the
+ * Neither the name of the Fiji project developers nor the
     names of its contributors may be used to endorse or promote products
     derived from this software without specific prior written permission.
 
@@ -25,7 +25,7 @@ INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
 CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE.
-*/
+ */
 
 package net.imglib2.ops.operation.unary.complex;
 
@@ -40,17 +40,17 @@ import net.imglib2.type.numeric.ComplexType;
 /**
  * 
  * @author Barry DeZonia
- *
+ * 
  */
 public final class ComplexArcsinh<T extends ComplexType<T>, U extends ComplexType<U>>
-	implements UnaryOperation<T,U> {
+		implements UnaryOperation<T, U> {
 
-	private final ComplexCopy<T,U> copyFunc;
-	private final ComplexMultiply<U,U,U> mulFunc;
-	private final ComplexPower<U,U,U> powFunc;
-	private final ComplexAdd<U,U,U> addFunc;
-	private final ComplexLog<U,U> logFunc;
-	
+	private final ComplexCopy<T, U> copyFunc;
+	private final ComplexMultiply<U, U, U> mulFunc;
+	private final ComplexPower<U, U, U> powFunc;
+	private final ComplexAdd<U, U, U> addFunc;
+	private final ComplexLog<U, U> logFunc;
+
 	private final U ONE;
 	private final U ONE_HALF;
 
@@ -61,16 +61,16 @@ public final class ComplexArcsinh<T extends ComplexType<T>, U extends ComplexTyp
 	private final U sum;
 
 	private final U type;
-	
+
 	public ComplexArcsinh(U type) {
 		this.type = type;
 
-		copyFunc = new ComplexCopy<T,U>(type);
-		mulFunc= new ComplexMultiply<U,U,U>(type);
-		powFunc = new ComplexPower<U,U,U>(type);
-		addFunc = new ComplexAdd<U,U,U>(type);
-		logFunc = new ComplexLog<U,U>(type);
-		
+		copyFunc = new ComplexCopy<T, U>();
+		mulFunc = new ComplexMultiply<U, U, U>();
+		powFunc = new ComplexPower<U, U, U>(type);
+		addFunc = new ComplexAdd<U, U, U>();
+		logFunc = new ComplexLog<U, U>();
+
 		ONE = type.createVariable();
 		ONE_HALF = type.createVariable();
 
@@ -79,28 +79,24 @@ public final class ComplexArcsinh<T extends ComplexType<T>, U extends ComplexTyp
 		miniSum = type.createVariable();
 		root = type.createVariable();
 		sum = type.createVariable();
-		
+
 		ONE.setComplexNumber(1, 0);
 		ONE_HALF.setComplexNumber(0.5, 0);
 	}
-	
+
 	@Override
-	public void compute(T in, U output) {
+	public U compute(T in, U output) {
 		copyFunc.compute(in, z);
 		mulFunc.compute(z, z, zSquared);
 		addFunc.compute(zSquared, ONE, miniSum);
 		powFunc.compute(miniSum, ONE_HALF, root);
 		addFunc.compute(z, root, sum);
-		logFunc.compute(sum, output);
-	}
-	
-	@Override
-	public ComplexArcsinh<T,U> copy() {
-		return new ComplexArcsinh<T,U>(type);
+		return logFunc.compute(sum, output);
 	}
 
 	@Override
-	public U createOutput(T dataHint) {
-		return type.createVariable();
+	public ComplexArcsinh<T, U> copy() {
+		return new ComplexArcsinh<T, U>(type);
 	}
+
 }

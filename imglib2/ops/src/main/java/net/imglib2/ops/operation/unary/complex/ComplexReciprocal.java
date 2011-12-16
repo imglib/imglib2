@@ -49,20 +49,16 @@ public final class ComplexReciprocal<T extends ComplexType<T>,U extends ComplexT
 	}
 	
 	@Override
-	public void compute(T z, U output) {
+	public U compute(T z, U output) {
 		double denom = z.getRealDouble()*z.getRealDouble() + z.getImaginaryDouble()*z.getImaginaryDouble();
 		double x = z.getRealDouble() / denom;
 		double y = -z.getImaginaryDouble() / denom;
 		output.setComplexNumber(x,y);
+		return output;
 	}
 	
 	@Override
 	public ComplexReciprocal<T,U> copy() {
 		return new ComplexReciprocal<T,U>(type);
-	}
-
-	@Override
-	public U createOutput(T dataHint) {
-		return type.createVariable();
 	}
 }

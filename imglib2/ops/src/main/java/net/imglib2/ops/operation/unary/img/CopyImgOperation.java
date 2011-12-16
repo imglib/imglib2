@@ -5,14 +5,15 @@ import net.imglib2.img.Img;
 import net.imglib2.ops.UnaryOperation;
 import net.imglib2.type.Type;
 
-public class CopyImgOperation<T extends Type<T>> implements UnaryOperation<Img<T>, Img<T>> {
+public class CopyImgOperation<T extends Type<T>> implements
+		UnaryOperation<Img<T>, Img<T>> {
 
 	public CopyImgOperation() {
-		
+
 	}
-	
+
 	@Override
-	public void compute(Img<T> input, Img<T> output) {
+	public Img<T> compute(Img<T> input, Img<T> output) {
 		Cursor<T> c1 = input.cursor();
 		Cursor<T> c2 = output.cursor();
 		while ((c1.hasNext() && c2.hasNext())) {
@@ -20,16 +21,13 @@ public class CopyImgOperation<T extends Type<T>> implements UnaryOperation<Img<T
 			c2.fwd();
 			c2.get().set(c1.get());
 		}
+		
+		return output;
 	}
 
 	@Override
 	public CopyImgOperation<T> copy() {
 		return new CopyImgOperation<T>();
-	}
-
-	@Override
-	public Img<T> createOutput(Img<T> in) {
-		return in.factory().create(in, in.firstElement());
 	}
 
 }

@@ -38,8 +38,8 @@ import net.imglib2.type.numeric.RealType;
  * @author Barry DeZonia
  *
  */
-public final class RealPowerConstant<T extends RealType<T>> implements UnaryOperation<T,T> {
-
+public final class RealPowerConstant<T extends RealType<T>, V extends RealType<T>>
+implements UnaryOperation<T, V> {
 	private final double constant;
 	
 	public RealPowerConstant(double constant) {
@@ -47,19 +47,15 @@ public final class RealPowerConstant<T extends RealType<T>> implements UnaryOper
 	}
 	
 	@Override
-	public void compute(T x, T output) {
+	public V compute(T x, V output) {
 		double value = Math.pow(x.getRealDouble(), constant);
 		output.setReal(value);
+		return output;
 	}
 
 	@Override
-	public RealPowerConstant<T> copy() {
-		return new RealPowerConstant<T>(constant);
-	}
-	
-	@Override
-	public T createOutput(T dataHint) {
-		return dataHint.createVariable();
+	public RealPowerConstant<T,V> copy() {
+		return new RealPowerConstant<T,V>(constant);
 	}
 
 }

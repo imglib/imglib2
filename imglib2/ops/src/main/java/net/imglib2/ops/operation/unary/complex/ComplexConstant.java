@@ -5,12 +5,12 @@ All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are met:
-  * Redistributions of source code must retain the above copyright
+ * Redistributions of source code must retain the above copyright
     notice, this list of conditions and the following disclaimer.
-  * Redistributions in binary form must reproduce the above copyright
+ * Redistributions in binary form must reproduce the above copyright
     notice, this list of conditions and the following disclaimer in the
     documentation and/or other materials provided with the distribution.
-  * Neither the name of the Fiji project developers nor the
+ * Neither the name of the Fiji project developers nor the
     names of its contributors may be used to endorse or promote products
     derived from this software without specific prior written permission.
 
@@ -25,7 +25,7 @@ INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
 CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE.
-*/
+ */
 
 package net.imglib2.ops.operation.unary.complex;
 
@@ -35,30 +35,27 @@ import net.imglib2.type.numeric.ComplexType;
 /**
  * 
  * @author Barry DeZonia
- *
+ * 
  */
-public final class ComplexConstant<T extends ComplexType<T>,U extends ComplexType<U>>
-	implements UnaryOperation<T,U> {
+public final class ComplexConstant<T extends ComplexType<T>, U extends ComplexType<U>>
+		implements UnaryOperation<T, U> {
 
 	private final U constant;
-	
+
 	public ComplexConstant(U constant) {
 		this.constant = constant.createVariable();
 		this.constant.set(constant);
 	}
-	
+
 	@Override
-	public void compute(T z, U output) {
+	public U compute(T z, U output) {
 		output.set(constant);
-	}
-	
-	@Override
-	public ComplexConstant<T,U> copy() {
-		return new ComplexConstant<T,U>(constant);
+		return output;
 	}
 
 	@Override
-	public U createOutput(T dataHint) {
-		return constant.createVariable();
+	public ComplexConstant<T, U> copy() {
+		return new ComplexConstant<T, U>(constant);
 	}
+
 }

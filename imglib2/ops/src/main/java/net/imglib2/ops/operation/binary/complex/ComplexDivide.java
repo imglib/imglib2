@@ -5,12 +5,12 @@ All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are met:
-  * Redistributions of source code must retain the above copyright
+ * Redistributions of source code must retain the above copyright
     notice, this list of conditions and the following disclaimer.
-  * Redistributions in binary form must reproduce the above copyright
+ * Redistributions in binary form must reproduce the above copyright
     notice, this list of conditions and the following disclaimer in the
     documentation and/or other materials provided with the distribution.
-  * Neither the name of the Fiji project developers nor the
+ * Neither the name of the Fiji project developers nor the
     names of its contributors may be used to endorse or promote products
     derived from this software without specific prior written permission.
 
@@ -25,7 +25,7 @@ INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
 CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE.
-*/
+ */
 
 package net.imglib2.ops.operation.binary.complex;
 
@@ -37,32 +37,28 @@ import net.imglib2.type.numeric.ComplexType;
 /**
  * 
  * @author Barry DeZonia
- *
+ * 
  */
-public final class ComplexDivide<T extends ComplexType<T>, U extends ComplexType<U>,
-	V extends ComplexType<V>> implements BinaryOperation<T,U,V> {
+public final class ComplexDivide<T extends ComplexType<T>, U extends ComplexType<U>, V extends ComplexType<V>>
+		implements BinaryOperation<T, U, V> {
 
-	private final V type;
-	
-	public ComplexDivide(V type) {
-		this.type = type;
-	}
-	
 	@Override
-	public void compute(T z1, U z2, V output) {
-		double denom = z2.getRealDouble()*z2.getRealDouble() + z2.getImaginaryDouble()*z2.getImaginaryDouble();
-		double x = (z1.getRealDouble()*z2.getRealDouble() + z1.getImaginaryDouble()*z2.getImaginaryDouble()) / denom;
-		double y = (z1.getImaginaryDouble()*z2.getRealDouble() - z1.getRealDouble()*z2.getImaginaryDouble()) / denom;
+	public V compute(T z1, U z2, V output) {
+		double denom = z2.getRealDouble() * z2.getRealDouble()
+				+ z2.getImaginaryDouble() * z2.getImaginaryDouble();
+		double x = (z1.getRealDouble() * z2.getRealDouble() + z1
+				.getImaginaryDouble() * z2.getImaginaryDouble())
+				/ denom;
+		double y = (z1.getImaginaryDouble() * z2.getRealDouble() - z1
+				.getRealDouble() * z2.getImaginaryDouble())
+				/ denom;
 		output.setComplexNumber(x, y);
+		return output;
 	}
 
 	@Override
-	public ComplexDivide<T,U,V> copy() {
-		return new ComplexDivide<T,U,V>(type);
+	public ComplexDivide<T, U, V> copy() {
+		return new ComplexDivide<T, U, V>();
 	}
 
-	@Override
-	public V createOutput(T dataHint1, U dataHint2) {
-		return type.createVariable();
-	}
 }
