@@ -57,7 +57,11 @@ public class ComplexMultiplyTest {
 		op.compute(input1, input2, output);
 		double real = r1*r2 - i1*i2;
 		double imag = r1*i2 + i1*r2;
+		// if textbook implementation of algorithm
 		assertEquals(real, output.getRealDouble(), 0);
 		assertEquals(imag, output.getImaginaryDouble(), 0);
+		// if optimized algorithm to minimize multiplications
+		//assertEquals(real, output.getRealDouble(), 0.0001);
+		//assertEquals(imag, output.getImaginaryDouble(), 0.0001);
 	}
 }

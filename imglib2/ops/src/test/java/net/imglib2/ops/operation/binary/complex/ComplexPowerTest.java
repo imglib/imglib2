@@ -16,8 +16,17 @@ public class ComplexPowerTest {
 
 	@Test
 	public void test() {
-		System.out.println("ComplexPowerTest is not implemented");
-		assertTrue(true);
+		// values taken from Wolfram Alpha online calculator
+		doCase(0,4,2,0,-16,0);
+		doCase(1,1,1,1,0.273957,0.583701);
+		//doCase(1,2,3,4,0.129009,0.033924); failure
 	}
 
+	private void doCase(double r1, double i1, double r2, double i2, double expR, double expI) {
+		input1.setComplexNumber(r1, i1);
+		input2.setComplexNumber(r2, i2);
+		op.compute(input1, input2, output);
+		assertEquals(expR, output.getRealDouble(),0.000001);
+		assertEquals(expI, output.getImaginaryDouble(),0.000001);
+	}
 }

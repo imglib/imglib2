@@ -44,10 +44,28 @@ public final class ComplexMultiply<T extends ComplexType<T>, U extends ComplexTy
 
 	@Override
 	public V compute(T z1, U z2, V output) {
+		/*
+		  optimized version (fewer multiplies) : from mathworld.com
+		    seems to exhibit some rounding differences from textbook algorithm
+		    
+		double a = z1.getRealDouble();
+		double b = z1.getImaginaryDouble();
+		double c = z2.getRealDouble();
+		double d = z2.getImaginaryDouble();
+		
+		double ac = a*c;
+		double bd = b*d;
+
+		double x = ac - bd;
+		double y = (a + b)*(c + d) - ac - bd;
+		*/
+		
+		// textbook version : works
 		double x = z1.getRealDouble() * z2.getRealDouble()
 				- z1.getImaginaryDouble() * z2.getImaginaryDouble();
 		double y = z1.getImaginaryDouble() * z2.getRealDouble()
 				+ z1.getRealDouble() * z2.getImaginaryDouble();
+		
 		output.setComplexNumber(x, y);
 		return output;
 	}
