@@ -7,7 +7,7 @@ import net.imglib2.type.numeric.RealType;
 
 public class Cos extends UnaryOperation {
 
-	public Cos(final IterableRealInterval<? extends RealType<?>> img) {
+	public <R extends RealType<R>> Cos(final IterableRealInterval<R> img) {
 		super(img);
 	}
 	public Cos(final IFunction fn) {

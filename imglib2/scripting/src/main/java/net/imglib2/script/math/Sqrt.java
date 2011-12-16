@@ -7,7 +7,7 @@ import net.imglib2.type.numeric.RealType;
 
 public class Sqrt extends UnaryOperation {
 
-	public Sqrt(final IterableRealInterval<? extends RealType<?>> img) {
+	public <R extends RealType<R>> Sqrt(final IterableRealInterval<R> img) {
 		super(img);
 	}
 	public Sqrt(final IFunction fn) {

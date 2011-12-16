@@ -17,4 +17,16 @@ public class Dimensions extends ArrayList<Long> {
 			add((long)(img.realMax(i) - img.realMin(i)) + 1);
 		}
 	}
+	
+	/**
+	 * Extract the dimensins of {@param img} multipled by the {@param factor}.
+	 * @param img The interval to extract the dimensions of.
+	 * @param factor The factor to multiply the dimensions.
+	 */
+	@SuppressWarnings("boxing")
+	public Dimensions(final RealInterval img, final Number factor) {
+		for (int i=0; i<img.numDimensions(); ++i) {
+			add((long)((img.realMax(i) - img.realMin(i) + 1) * factor.doubleValue()));
+		}
+	}
 }
