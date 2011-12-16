@@ -32,6 +32,7 @@ package net.imglib2.ops.function.general;
 import net.imglib2.ops.Function;
 import net.imglib2.ops.Neighborhood;
 import net.imglib2.ops.UnaryOperation;
+import net.imglib2.type.numeric.ComplexType;
 
 // NOTE - this class would not support a ConditionalFunction as that
 // implementation uses neigh info to calc one value or another. This could
@@ -43,14 +44,19 @@ import net.imglib2.ops.UnaryOperation;
  * @author Barry DeZonia
  * 
  */
-public class ConverterFunction<INDEX, INTERMEDIATE_TYPE, FINAL_TYPE> implements
+public class ConverterFunction<INDEX, INTERMEDIATE_TYPE,
+	FINAL_TYPE extends ComplexType<FINAL_TYPE>> implements
 		Function<INDEX, FINAL_TYPE> {
 	private final Function<INDEX, INTERMEDIATE_TYPE> intermediateFunc;
 	private final UnaryOperation<INTERMEDIATE_TYPE, FINAL_TYPE> operation;
 	private final INTERMEDIATE_TYPE variable;
-
+	private final FINAL_TYPE type;
+	
 	public ConverterFunction(Function<INDEX, INTERMEDIATE_TYPE> func,
-			UnaryOperation<INTERMEDIATE_TYPE, FINAL_TYPE> operation) {
+			UnaryOperation<INTERMEDIATE_TYPE, FINAL_TYPE> operation,
+			FINAL_TYPE type)
+	{
+		this.type = type;
 		this.intermediateFunc = func;
 		this.operation = operation;
 		this.variable = func.createOutput();
@@ -65,13 +71,12 @@ public class ConverterFunction<INDEX, INTERMEDIATE_TYPE, FINAL_TYPE> implements
 
 	@Override
 	public FINAL_TYPE createOutput() {
-		// TODO
-		return null;
+		return type.createVariable();
 	}
 
 	@Override
 	public ConverterFunction<INDEX, INTERMEDIATE_TYPE, FINAL_TYPE> copy() {
 		return new ConverterFunction<INDEX, INTERMEDIATE_TYPE, FINAL_TYPE>(
-				intermediateFunc.copy(), operation.copy());
+				intermediateFunc.copy(), operation.copy(), type);
 	}
 }

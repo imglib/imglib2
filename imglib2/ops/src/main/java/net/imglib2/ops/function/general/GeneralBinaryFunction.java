@@ -32,23 +32,28 @@ package net.imglib2.ops.function.general;
 import net.imglib2.ops.BinaryOperation;
 import net.imglib2.ops.Function;
 import net.imglib2.ops.Neighborhood;
+import net.imglib2.type.numeric.ComplexType;
 
 /**
  * 
  * @author Barry DeZonia
  * 
  */
-public class GeneralBinaryFunction<INDEX, INPUT1_TYPE, INPUT2_TYPE, OUTPUT_TYPE>
+public class GeneralBinaryFunction<INDEX, INPUT1_TYPE, INPUT2_TYPE,
+	OUTPUT_TYPE extends ComplexType<OUTPUT_TYPE>>
 		implements Function<INDEX, OUTPUT_TYPE> {
 	private final Function<INDEX, INPUT1_TYPE> f1;
 	private final Function<INDEX, INPUT2_TYPE> f2;
 	private final INPUT1_TYPE input1;
 	private final INPUT2_TYPE input2;
 	private final BinaryOperation<INPUT1_TYPE, INPUT2_TYPE, OUTPUT_TYPE> operation;
+	private final OUTPUT_TYPE type;
 
 	public GeneralBinaryFunction(Function<INDEX, INPUT1_TYPE> f1,
 			Function<INDEX, INPUT2_TYPE> f2,
-			BinaryOperation<INPUT1_TYPE, INPUT2_TYPE, OUTPUT_TYPE> operation) {
+			BinaryOperation<INPUT1_TYPE, INPUT2_TYPE, OUTPUT_TYPE> operation,
+			OUTPUT_TYPE type) {
+		this.type = type;
 		this.f1 = f1;
 		this.f2 = f2;
 		this.input1 = f1.createOutput();
@@ -67,12 +72,11 @@ public class GeneralBinaryFunction<INDEX, INPUT1_TYPE, INPUT2_TYPE, OUTPUT_TYPE>
 	@Override
 	public GeneralBinaryFunction<INDEX, INPUT1_TYPE, INPUT2_TYPE, OUTPUT_TYPE> copy() {
 		return new GeneralBinaryFunction<INDEX, INPUT1_TYPE, INPUT2_TYPE, OUTPUT_TYPE>(
-				f1.copy(), f2.copy(), operation.copy());
+				f1.copy(), f2.copy(), operation.copy(), type);
 	}
 
 	@Override
 	public OUTPUT_TYPE createOutput() {
-		// TODO
-		return null;
+		return type.createVariable();
 	}
 }

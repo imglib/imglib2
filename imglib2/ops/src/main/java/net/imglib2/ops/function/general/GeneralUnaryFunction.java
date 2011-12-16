@@ -32,20 +32,24 @@ package net.imglib2.ops.function.general;
 import net.imglib2.ops.Function;
 import net.imglib2.ops.Neighborhood;
 import net.imglib2.ops.UnaryOperation;
+import net.imglib2.type.numeric.ComplexType;
 
 /**
  * 
  * @author Barry DeZonia
  * 
  */
-public class GeneralUnaryFunction<INDEX, INPUT_TYPE, OUTPUT_TYPE> implements
+public class GeneralUnaryFunction<INDEX, INPUT_TYPE,
+	OUTPUT_TYPE extends ComplexType<OUTPUT_TYPE>> implements
 		Function<INDEX, OUTPUT_TYPE> {
 	private final Function<INDEX, INPUT_TYPE> f1;
 	private final INPUT_TYPE temp;
 	private final UnaryOperation<INPUT_TYPE, OUTPUT_TYPE> operation;
+	private final OUTPUT_TYPE type;
 
 	public GeneralUnaryFunction(Function<INDEX, INPUT_TYPE> f1,
-			UnaryOperation<INPUT_TYPE, OUTPUT_TYPE> operation) {
+			UnaryOperation<INPUT_TYPE, OUTPUT_TYPE> operation, OUTPUT_TYPE type) {
+		this.type = type;
 		this.f1 = f1;
 		this.temp = f1.createOutput();
 		this.operation = operation;
@@ -61,12 +65,11 @@ public class GeneralUnaryFunction<INDEX, INPUT_TYPE, OUTPUT_TYPE> implements
 	@Override
 	public GeneralUnaryFunction<INDEX, INPUT_TYPE, OUTPUT_TYPE> copy() {
 		return new GeneralUnaryFunction<INDEX, INPUT_TYPE, OUTPUT_TYPE>(
-				f1.copy(), operation.copy());
+				f1.copy(), operation.copy(), type);
 	}
 
 	@Override
 	public OUTPUT_TYPE createOutput() {
-		// TODO function
-		return null;
+		return type.createVariable();
 	}
 }
