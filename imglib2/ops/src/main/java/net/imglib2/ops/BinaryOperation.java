@@ -38,7 +38,5 @@ public interface BinaryOperation<INPUT1_TYPE, INPUT2_TYPE, OUTPUT_TYPE> {
 	OUTPUT_TYPE compute(INPUT1_TYPE input1, INPUT2_TYPE input2,
 			OUTPUT_TYPE output);
 
-	// OUTPUT_TYPE createOutput();
-	// OUTPUT_TYPE createOutput(INPUT1_TYPE dataHint1, INPUT2_TYPE dataHint2);
 	BinaryOperation<INPUT1_TYPE, INPUT2_TYPE, OUTPUT_TYPE> copy();
 }
