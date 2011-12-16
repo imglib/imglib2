@@ -45,7 +45,7 @@ public final class ComplexSubtract<T extends ComplexType<T>, U extends ComplexTy
 	@Override
 	public V compute(T z1, U z2, V output) {
 		double x = z1.getRealDouble() - z2.getRealDouble();
-		double y = z1.getRealDouble() - z2.getRealDouble();
+		double y = z1.getImaginaryDouble() - z2.getImaginaryDouble();
 		output.setComplexNumber(x, y);
 		return output;
 	}
