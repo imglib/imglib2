@@ -16,7 +16,8 @@ public class InsideRoiCondition implements Condition<double[]> {
 	
 	@Override
 	public boolean isTrue(Neighborhood<double[]> neigh, double[] point) {
-		return roi.isMember(point);
+		// return roi.isMember(point); // protected! not public!
+		throw new UnsupportedOperationException("unimplemented");
 	}
 
 	@Override

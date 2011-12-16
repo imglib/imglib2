@@ -277,7 +277,7 @@ public abstract class AbstractRegionOfInterest implements RegionOfInterest {
 	 * @param position position in question
 	 * @return true if a member
 	 */
-	abstract public boolean isMember(double [] position);
+	abstract protected boolean isMember(double [] position);
 	
 	/**
 	 * Get the minimum and maximum corners of a bounding hypercube
