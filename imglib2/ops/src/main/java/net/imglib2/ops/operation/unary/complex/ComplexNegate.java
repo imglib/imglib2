@@ -48,7 +48,7 @@ public final class ComplexNegate<T extends ComplexType<T>,U extends ComplexType<
 	
 	@Override
 	public U compute(T z, U output) {
-		double x = z.getRealDouble();
+		double x = -z.getRealDouble();
 		double y = -z.getImaginaryDouble();
 		output.setComplexNumber(x,y);
 		return output;

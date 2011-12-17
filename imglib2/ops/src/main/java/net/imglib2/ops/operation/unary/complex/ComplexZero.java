@@ -40,21 +40,21 @@ import net.imglib2.type.numeric.ComplexType;
 public final class ComplexZero<T extends ComplexType<T>, U extends ComplexType<U>>
 		implements UnaryOperation<T, U> {
 
-	private final U zero;
+	private final U type;
 
 	public ComplexZero(U type) {
-		this.zero = type.createVariable();
+		this.type = type;
 	}
 
 	@Override
 	public U compute(T z, U output) {
-		output.set(zero);
+		output.setZero();
 		return output;
 	}
 
 	@Override
 	public ComplexZero<T, U> copy() {
-		return new ComplexZero<T, U>(zero);
+		return new ComplexZero<T, U>(type);
 	}
 
 }
