@@ -41,60 +41,66 @@ import net.imglib2.type.numeric.ComplexType;
 public class ComplexHelper {
 	
 	private ComplexHelper() {
-		// do not instantiate
+		// utility class - do not instantiate
 	}
 	
+	/**
+	 * Gets the modulus (magnitude, radius, r, etc.) of a given complex number
+	 */
 	public static double getModulus(ComplexType<?> z) {
 		return Math.sqrt(getModulus2(z));
 	}
 
+	/**
+	 * Gets the square of the modulus (magnitude, radius, r, etc.) of a given
+	 * complex number
+	 */
 	public static double getModulus2(ComplexType<?> z) {
 		return
 			z.getRealDouble()*z.getRealDouble() +
 			z.getImaginaryDouble()*z.getImaginaryDouble();
 	}
 	
+	/**
+	 * Gets the argument (angle, theta, etc.) of a given complex number
+	 */
 	public static double getArgument(ComplexType<?> z) {
-		double theta;
 		double x = z.getRealDouble();
 		double y = z.getImaginaryDouble();
+		double theta;
 		if (x == 0) {
 			if (y > 0)
-				theta = Math.PI / 2;
+				theta = Math.PI / 2;  // looks fine
 			else if (y < 0)
-				theta = 3 * Math.PI / 2;
+				theta = -Math.PI / 2;  // looks fine
 			else // y == 0 : theta indeterminate
-				theta = 0;  // sensible default (?)
+				theta = 0;  // sensible default
 		}
 		else if (y == 0) {
 			if (x > 0)
-				theta = 0;
-			else if (x < 0)
-				theta = Math.PI;
-			else // x == 0 : theta indeterminate
-				theta = 0;  // sensible default (?)
+				theta = 0;  // looks fine
+			else // (x < 0)
+				theta = Math.PI;  // looks fine
 		}
-		else { // x && y both != 0
-			double angle = Math.atan2(x,y);
-			if (x > 0) {
-				if (y > 0)
-					theta = angle;
-				else // y < 0
-					theta = angle + 2*Math.PI;
-			}
-			else // x < 0
-				theta = angle + Math.PI;
-		}
+		else // x && y both != 0
+			theta = Math.atan2(y,x);
+		
 		return theta;
 	}
 
+	/**
+	 * Normalizes an angle in radians to -Math.PI < angle <= Math.PI
+	 */
 	public static double getPrincipleArgument(double angle) {
 		double arg = angle;
 		while (arg <= -Math.PI) arg += 2*Math.PI;
 		while (arg > Math.PI) arg -= 2*Math.PI;
 		return arg;
 	}
-	
+
+	/**
+	 * Sets the value of a complex number to a given (r,theta) combination
+	 */
 	public static void setPolar(ComplexType<?> z, double r, double theta) {
 		double x = r * Math.cos(theta);
 		double y = r * Math.sin(theta);
