@@ -63,6 +63,8 @@ public class SlicingTransform extends AbstractMixedTransform implements Slicing,
 	public SlicingTransform( final int sourceDim, final int targetDim )
 	{
 		super( targetDim );
+		assert sourceDim <= targetDim;
+
 		numSourceDimensions = sourceDim;
 		translation = new long[ targetDim ];
 		zero = new boolean[ targetDim ];
