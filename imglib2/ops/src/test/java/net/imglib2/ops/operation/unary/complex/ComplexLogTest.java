@@ -2,7 +2,6 @@ package net.imglib2.ops.operation.unary.complex;
 
 import static org.junit.Assert.*;
 
-import net.imglib2.ops.ComplexHelper;
 import net.imglib2.type.numeric.complex.ComplexDoubleType;
 
 import org.junit.Test;
