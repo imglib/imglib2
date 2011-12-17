@@ -3,6 +3,7 @@ package net.imglib2.view;
 import net.imglib2.Interval;
 import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessible;
+import net.imglib2.transform.integer.Mixed;
 import net.imglib2.transform.integer.MixedTransform;
 
 public class MixedTransformView< T > implements TransformedRandomAccessible< T >
@@ -10,12 +11,12 @@ public class MixedTransformView< T > implements TransformedRandomAccessible< T >
 	protected final int n;
 
 	protected final RandomAccessible< T > source;
-	
+
 	protected final MixedTransform transformToSource;
 
 	protected RandomAccessible< T > fullViewRandomAccessible;
-		
-	public MixedTransformView( RandomAccessible< T > source, MixedTransform transformToSource )
+
+	public MixedTransformView( RandomAccessible< T > source, final Mixed transformToSource )
 	{
 		assert source.numDimensions() == transformToSource.numTargetDimensions();
 
@@ -28,7 +29,7 @@ public class MixedTransformView< T > implements TransformedRandomAccessible< T >
 
 		if ( MixedTransformView.class.isInstance( source ) )
 		{
-			MixedTransformView< T > v = ( MixedTransformView< T > ) source;
+			final MixedTransformView< T > v = ( MixedTransformView< T > ) source;
 			this.source = v.getSource();
 			this.transformToSource = v.getTransformToSource().concatenate( transformToSource );
 		}
@@ -39,7 +40,7 @@ public class MixedTransformView< T > implements TransformedRandomAccessible< T >
 			this.transformToSource = new MixedTransform( n, sourceDim );
 			this.transformToSource.set( transformToSource );
 		}
-		
+
 		fullViewRandomAccessible = null;
 	}
 
@@ -48,12 +49,12 @@ public class MixedTransformView< T > implements TransformedRandomAccessible< T >
 	{
 		return n;
 	}
-	
+
 	@Override
 	public String toString()
 	{
 		String className = this.getClass().getCanonicalName();
-		className = className.substring( className.lastIndexOf(".") + 1, className.length());		
+		className = className.substring( className.lastIndexOf(".") + 1, className.length());
 		return className + "(" + super.toString() + ")";
 	}
 
@@ -70,16 +71,16 @@ public class MixedTransformView< T > implements TransformedRandomAccessible< T >
 	}
 
 	@Override
-	public RandomAccess< T > randomAccess( Interval interval )
+	public RandomAccess< T > randomAccess( final Interval interval )
 	{
-		return TransformBuilder.getEfficientRandomAccessible( interval, this ).randomAccess(); 
+		return TransformBuilder.getEfficientRandomAccessible( interval, this ).randomAccess();
 	}
 
 	@Override
 	public RandomAccess< T > randomAccess()
 	{
 		if ( fullViewRandomAccessible == null )
-			fullViewRandomAccessible = TransformBuilder.getEfficientRandomAccessible( null, this ); 
+			fullViewRandomAccessible = TransformBuilder.getEfficientRandomAccessible( null, this );
 		return fullViewRandomAccessible.randomAccess();
 	}
 }

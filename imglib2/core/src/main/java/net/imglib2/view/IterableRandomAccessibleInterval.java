@@ -34,6 +34,7 @@ import net.imglib2.Interval;
 import net.imglib2.IterableInterval;
 import net.imglib2.IterableRealInterval;
 import net.imglib2.Positionable;
+import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.RealPositionable;
 import net.imglib2.img.array.ArrayImg;
@@ -45,7 +46,7 @@ import net.imglib2.img.array.ArrayImg;
  *
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-public class IterableRandomAccessibleInterval< T > implements IterableInterval< T >
+public class IterableRandomAccessibleInterval< T > implements IterableInterval< T >, RandomAccessibleInterval< T >
 {
 	final protected RandomAccessibleInterval< T > interval;
 	final long size;
@@ -204,5 +205,17 @@ public class IterableRandomAccessibleInterval< T > implements IterableInterval< 
 	public Cursor< T > localizingCursor()
 	{
 		return cursor();
+	}
+
+	@Override
+	public RandomAccess< T > randomAccess()
+	{
+		return interval.randomAccess();
+	}
+
+	@Override
+	public RandomAccess< T > randomAccess( Interval i )
+	{
+		return interval.randomAccess( i );
 	}
 }
