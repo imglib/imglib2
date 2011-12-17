@@ -29,10 +29,6 @@ public class ComplexPowerTest {
 		input1.setComplexNumber(r1, i1);
 		input2.setComplexNumber(r2, i2);
 		op.compute(input1, input2, output);
-		ComplexDoubleType estimate = new ComplexDoubleType();
-		ComplexArctanh<ComplexDoubleType,ComplexDoubleType> atanh =
-				new ComplexArctanh<ComplexDoubleType,ComplexDoubleType>(estimate);
-		
 		assertEquals(expR, output.getRealDouble(),0.000001);
 		assertEquals(expI, output.getImaginaryDouble(),0.000001);
 	}
