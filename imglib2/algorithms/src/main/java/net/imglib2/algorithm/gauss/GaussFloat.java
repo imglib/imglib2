@@ -173,7 +173,12 @@ final public class GaussFloat extends AbstractGauss< FloatType >
 		if ( imgSize >= kernelSize )
 		{
 			// convolve the first pixels where the input influences less than kernel.size pixels
-			for ( int i = 0; i < kernelSizeMinus1; ++i )
+
+			// the FIRST pixel is a special case as we cannot set the cursor to -1 (might not be defined)
+			// copy input into a temp variable, it might be expensive to get()			
+			v[ 0 ] += (float)(input.get().get() * kernel[ 0 ]);
+			
+			for ( int i = 1; i < kernelSizeMinus1; ++i )
 			{
 				input.fwd();
 				
@@ -244,7 +249,12 @@ final public class GaussFloat extends AbstractGauss< FloatType >
 		else
 		{
 			// convolve the first pixels where the input influences less than kernel.size pixels
-			for ( int i = 0; i < imgSize; ++i )
+
+			// the FIRST pixel is a special case as we cannot set the cursor to -1 (might not be defined)
+			// copy input into a temp variable, it might be expensive to get()			
+			v[ 0 ] += (float)(input.get().get() * kernel[ 0 ]);
+			
+			for ( int i = 1; i < imgSize; ++i )
 			{
 				input.fwd();
 
