@@ -8,6 +8,7 @@ import net.imglib2.RandomAccessible;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.converter.ConvertedIterableRandomAccessibleInterval;
 import net.imglib2.converter.ConvertedRandomAccessible;
+import net.imglib2.converter.ConvertedRandomAccessibleInterval;
 import net.imglib2.converter.sampler.RealDoubleSamplerConverter;
 import net.imglib2.converter.sampler.RealFloatSamplerConverter;
 import net.imglib2.exception.IncompatibleTypeException;
@@ -108,7 +109,7 @@ public class Gauss
 			{
 				final Img< T > output = img.factory().create( img, img.firstElement() );
 				
-				final RandomAccessible<FloatType> rIn = new ConvertedRandomAccessible< T, FloatType >( img, new RealFloatSamplerConverter<T>());
+				final RandomAccessible<FloatType> rIn = Views.extend( new ConvertedRandomAccessibleInterval< T, FloatType >( img, new RealFloatSamplerConverter<T>()), outofbounds );
 				final RandomAccessible<FloatType> rOut = new ConvertedRandomAccessible< T, FloatType >( output, new RealFloatSamplerConverter<T>());
 				
 				inFloat( sigma, rIn, img, rOut, new Location( sigma.length ), img.factory().imgFactory( new FloatType() ) );
@@ -287,7 +288,7 @@ public class Gauss
 			{
 				final Img< T > output = img.factory().create( img, img.firstElement() );
 				
-				final RandomAccessible<DoubleType> rIn = new ConvertedRandomAccessible< T, DoubleType >( img, new RealDoubleSamplerConverter<T>());
+				final RandomAccessible<DoubleType> rIn = Views.extend( new ConvertedRandomAccessibleInterval< T, DoubleType >( img, new RealDoubleSamplerConverter<T>()), outofbounds );
 				final RandomAccessible<DoubleType> rOut = new ConvertedRandomAccessible< T, DoubleType >( output, new RealDoubleSamplerConverter<T>());
 				
 				inDouble( sigma, rIn, img, rOut, new Location( sigma.length ), img.factory().imgFactory( new DoubleType() ) );
