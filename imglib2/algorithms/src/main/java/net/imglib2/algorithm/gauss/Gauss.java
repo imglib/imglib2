@@ -194,14 +194,14 @@ public class Gauss
 			@SuppressWarnings( { "rawtypes", "unchecked" } )
 			final RandomAccessible< FloatType > rOut = (RandomAccessible) output;
 			
-			new GaussFloat( sigma, rIn, interval, rOut, origin, imgFactory );			
+			new GaussFloat( sigma, rIn, interval, rOut, origin, imgFactory ).call();			
 		}
 		else
 		{
 			final RandomAccessible<FloatType> rIn = new ConvertedRandomAccessible< T, FloatType >( img, new RealFloatSamplerConverter<T>());
 			final RandomAccessible<FloatType> rOut = new ConvertedRandomAccessible< T, FloatType >( output, new RealFloatSamplerConverter<T>());
 			
-			new GaussFloat( sigma, rIn, interval, rOut, origin, imgFactory );
+			new GaussFloat( sigma, rIn, interval, rOut, origin, imgFactory ).call();
 		}
 	}
 
@@ -373,14 +373,14 @@ public class Gauss
 			@SuppressWarnings( { "rawtypes", "unchecked" } )
 			final RandomAccessible< DoubleType > rOut = (RandomAccessible) output;
 			
-			new GaussDouble( sigma, rIn, interval, rOut, origin, imgFactory );			
+			new GaussDouble( sigma, rIn, interval, rOut, origin, imgFactory ).call();			
 		}
 		else
 		{
 			final RandomAccessible<DoubleType> rIn = new ConvertedRandomAccessible< T, DoubleType >( img, new RealDoubleSamplerConverter<T>());
 			final RandomAccessible<DoubleType> rOut = new ConvertedRandomAccessible< T, DoubleType >( output, new RealDoubleSamplerConverter<T>());
 			
-			new GaussDouble( sigma, rIn, interval, rOut, origin, imgFactory );
+			new GaussDouble( sigma, rIn, interval, rOut, origin, imgFactory ).call();
 		}
 	}
 
