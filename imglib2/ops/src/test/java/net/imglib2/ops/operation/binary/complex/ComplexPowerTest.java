@@ -2,7 +2,6 @@ package net.imglib2.ops.operation.binary.complex;
 
 import static org.junit.Assert.*;
 
-import net.imglib2.ops.operation.unary.complex.ComplexArctanh;
 import net.imglib2.type.numeric.complex.ComplexDoubleType;
 
 import org.junit.Test;
@@ -29,7 +28,7 @@ public class ComplexPowerTest {
 		input1.setComplexNumber(r1, i1);
 		input2.setComplexNumber(r2, i2);
 		op.compute(input1, input2, output);
-		assertEquals(expR, output.getRealDouble(),0.000001);
-		assertEquals(expI, output.getImaginaryDouble(),0.000001);
+		assertEquals(expR, output.getRealDouble(), 0.000001);
+		assertEquals(expI, output.getImaginaryDouble(), 0.000001);
 	}
 }

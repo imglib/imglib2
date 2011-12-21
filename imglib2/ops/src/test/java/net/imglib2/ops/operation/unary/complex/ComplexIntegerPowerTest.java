@@ -43,8 +43,8 @@ public class ComplexIntegerPowerTest {
 			input2.setComplexNumber(r1, i1);
 			op.compute(input1, output1);
 			opFull.compute(input2, power, output2);
-			assertEquals(output1.getRealDouble(), output2.getRealDouble(),0.000001);
-			assertEquals(output1.getImaginaryDouble(), output2.getImaginaryDouble(),0.000001);
+			assertEquals(output1.getRealDouble(), output2.getRealDouble(), 0.000001);
+			assertEquals(output1.getImaginaryDouble(), output2.getImaginaryDouble(), 0.000001);
 		}
 	}
 }
