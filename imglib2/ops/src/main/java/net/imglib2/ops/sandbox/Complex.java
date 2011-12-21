@@ -36,7 +36,7 @@ import net.imglib2.ops.DataCopier;
  * @author Barry DeZonia
  *
  */
-public final class ComplexShmomplex implements Comparable<Complex>, DataCopier<Complex> {
+public final class Complex implements Comparable<Complex>, DataCopier<Complex> {
 	private double x;
 	private double y;
 	private boolean polarInvalid;

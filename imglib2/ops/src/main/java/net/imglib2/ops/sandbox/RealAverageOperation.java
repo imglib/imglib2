@@ -21,6 +21,7 @@ public class RealAverageOperation<U extends RealType<U>,V extends RealType<V>>
 	}
 
 	public V createOutput(U dataHint) {
+		return null;
 	}
 
 	public RealAverageOperation<U,V> copy() {

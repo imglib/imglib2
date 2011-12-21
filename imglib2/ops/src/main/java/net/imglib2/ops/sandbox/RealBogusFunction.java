@@ -2,6 +2,7 @@ package net.imglib2.ops.sandbox;
 
 import net.imglib2.IterableInterval;
 import net.imglib2.ops.Function;
+import net.imglib2.ops.Neighborhood;
 import net.imglib2.ops.UnaryOperation;
 import net.imglib2.type.numeric.RealType;
 
@@ -23,19 +24,24 @@ public class RealBogusFunction<IN,OUT extends RealType<OUT>> implements Function
 		//   and avoiding recalculation?
 		//interval.???;
 		op.compute(interval.firstElement(), output);
-		interval.
-		
+		// interval.
 		// impulse function??
 	}
 
 	@Override
 	public OUT createOutput() {
-		return type.createVariable();
+		return null;
 	}
 
 	@Override
 	public Function<IN, OUT> copy() {
-		return new RealBogusFunction<IN,OUT>(type);
+		return new RealBogusFunction<IN,OUT>(op);
+	}
+
+	@Override
+	public void evaluate(Neighborhood<IN> neigh, IN point, OUT output) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

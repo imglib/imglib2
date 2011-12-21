@@ -3,7 +3,7 @@ package net.imglib2.ops.sandbox;
 import net.imglib2.type.numeric.ComplexType;
 import net.imglib2.type.numeric.real.DoubleType;
 
-public class TempComplexTypeBlag implements ComplexType<TempComplexType>{
+public class TempComplexType implements ComplexType<TempComplexType>{
 
 	@Override
 	public void add(TempComplexType c) {

@@ -1,14 +1,14 @@
 package net.imglib2.ops.sandbox;
 
-import net.imglib2.ops.Complex;
 import net.imglib2.ops.operation.binary.complex.ComplexDivide;
 import net.imglib2.ops.operation.unary.complex.ComplexCos;
 import net.imglib2.ops.operation.unary.complex.ComplexReciprocal;
+import net.imglib2.type.numeric.complex.ComplexDoubleType;
 
 public class Test {
 
-	private static final ComplexCos cosFunc = new ComplexCos();
-	private static final ComplexReciprocal recipFunc = new ComplexReciprocal();
+	private static final ComplexCos cosFunc = new ComplexCos(new ComplexDoubleType());
+	private static final ComplexReciprocal recipFunc = new ComplexReciprocal(new ComplexDoubleType());
 	private static final ComplexDivide divFunc = new ComplexDivide();
 	private static final Complex one = Complex.createCartesian(1, 0);
 		
