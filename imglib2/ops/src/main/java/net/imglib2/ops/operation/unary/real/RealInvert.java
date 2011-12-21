@@ -38,17 +38,35 @@ import net.imglib2.type.numeric.RealType;
  * 
  */
 public final class RealInvert<T extends RealType<T>, V extends RealType<V>>
-		implements UnaryOperation<T, V> {
+		implements UnaryOperation<T, V>
+{
+	private double actualMin;
+	private double actualMax;
 
-	@Override
-	public V compute(T x, V output) {
-		double value = x.getMaxValue() - (x.getRealDouble() - x.getMinValue());
-		output.setReal(value);
-		return output;
+	public RealInvert() {
+		this.actualMax = Double.NaN;
+		this.actualMin = Double.NaN;
+	}
+	
+	public RealInvert(final double actualMin, final double actualMax)
+	{
+		this.actualMax = actualMax;
+		this.actualMin = actualMin;
 	}
 
 	@Override
+	public V compute(T x, V output) {
+		if (actualMax == Double.NaN) {
+			actualMax = x.getMaxValue();
+			actualMin = x.getMinValue();
+		}
+		double value = actualMax - (x.getRealDouble() - actualMin);
+		output.setReal(value);
+		return output;
+	}
+	
+	@Override
 	public RealInvert<T, V> copy() {
-		return new RealInvert<T, V>();
+		return new RealInvert<T, V>(actualMin, actualMax);
 	}
 }
