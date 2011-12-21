@@ -39,7 +39,8 @@ import net.imglib2.type.numeric.RealType;
  *
  */
 public final class RealPowerConstant<T extends RealType<T>, V extends RealType<V>>
-implements UnaryOperation<T, V> {
+	implements UnaryOperation<T, V>
+{
 	private final double constant;
 	
 	public RealPowerConstant(double constant) {

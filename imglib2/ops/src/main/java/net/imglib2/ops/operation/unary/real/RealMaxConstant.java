@@ -38,20 +38,21 @@ import net.imglib2.type.numeric.RealType;
  * 
  */
 public final class RealMaxConstant<T extends RealType<T>, V extends RealType<V>>
-		implements UnaryOperation<T, V> {
-	private final T constant;
+	implements UnaryOperation<T, V>
+{
+	private final double constant;
 
-	public RealMaxConstant(T constant) {
+	public RealMaxConstant(double constant) {
 		this.constant = constant;
 	}
 
 	@Override
 	public V compute(T x, V output) {
 		double value = x.getRealDouble();
-		if (value < constant.getRealDouble())
+		if (value < constant)
 			output.setReal(value);
 		else
-			output.setReal(constant.getRealDouble());
+			output.setReal(constant);
 		return output;
 	}
 

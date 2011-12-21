@@ -38,16 +38,18 @@ import net.imglib2.type.numeric.RealType;
  * 
  */
 public final class RealSubtractConstant<T extends RealType<T>, V extends RealType<V>>
-		implements UnaryOperation<T, V> {
-	private final T constant;
+	implements UnaryOperation<T, V>
+{
+	private final double constant;
 
-	public RealSubtractConstant(T constant) {
+	public RealSubtractConstant(double constant) {
 		this.constant = constant;
 	}
 
 	@Override
 	public V compute(T x, V output) {
-		output.setReal(x.getRealDouble() - constant.getRealDouble());
+		double value = x.getRealDouble() - constant;
+		output.setReal(value);
 		return output;
 	}
 

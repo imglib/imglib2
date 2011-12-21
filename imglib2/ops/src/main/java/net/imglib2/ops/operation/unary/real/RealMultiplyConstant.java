@@ -38,8 +38,8 @@ import net.imglib2.ops.UnaryOperation;
 import net.imglib2.type.numeric.RealType;
 
 public final class RealMultiplyConstant<T extends RealType<T>, V extends RealType<V>>
-		implements UnaryOperation<T, V> {
-
+	implements UnaryOperation<T, V>
+{
 	private final double constant;
 
 	public RealMultiplyConstant(double constant) {

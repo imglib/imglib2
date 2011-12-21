@@ -38,7 +38,8 @@ import net.imglib2.type.numeric.RealType;
  * 
  */
 public final class RealXorConstant<T extends RealType<T>, V extends RealType<V>>
-		implements UnaryOperation<T, V> {
+	implements UnaryOperation<T, V>
+{
 	private final long constant;
 
 	public RealXorConstant(long constant) {
