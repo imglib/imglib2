@@ -70,7 +70,7 @@ public class ImageAssignment<DATA_TYPE extends ComplexType<DATA_TYPE>> {
 
 	// -- instance variables --
 	
-	private final Img<DATA_TYPE> img;
+	private final Img<DATA_TYPE> image;
 	private final Function<long[],DATA_TYPE> func;
 	private Condition<long[]> cond;
 	private final long[] origin;
@@ -104,7 +104,7 @@ public class ImageAssignment<DATA_TYPE extends ComplexType<DATA_TYPE>> {
 		long[] negOffs,
 		long[] posOffs)
 	{
-		this.img = img;
+		this.image = img;
 		this.origin = origin.clone();
 		this.span = span.clone();
 		this.negOffs = negOffs.clone();
@@ -131,7 +131,7 @@ public class ImageAssignment<DATA_TYPE extends ComplexType<DATA_TYPE>> {
 			long[] span,
 			Function<long[],DATA_TYPE> function)
 		{
-			this.img = img;
+			this.image = img;
 			this.origin = origin.clone();
 			this.span = span.clone();
 			this.negOffs = new long[origin.length];  // ALL ZERO
@@ -173,7 +173,7 @@ public class ImageAssignment<DATA_TYPE extends ComplexType<DATA_TYPE>> {
 		while (startOffset < span[axis]) {
 			if (startOffset + length > span[axis]) length = span[axis] - startOffset;
 			Runnable task =
-					task(img, origin, span, axis, origin[axis] + startOffset, length, func, cond, negOffs, posOffs);
+					task(image, origin, span, axis, origin[axis] + startOffset, length, func, cond, negOffs, posOffs);
 			synchronized (this) {
 				executor.submit(task);
 			}
