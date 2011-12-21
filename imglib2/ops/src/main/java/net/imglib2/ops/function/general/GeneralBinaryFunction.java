@@ -32,7 +32,7 @@ package net.imglib2.ops.function.general;
 import net.imglib2.ops.BinaryOperation;
 import net.imglib2.ops.Function;
 import net.imglib2.ops.Neighborhood;
-import net.imglib2.type.numeric.ComplexType;
+import net.imglib2.type.numeric.NumericType;
 
 /**
  * 
@@ -40,8 +40,9 @@ import net.imglib2.type.numeric.ComplexType;
  * 
  */
 public class GeneralBinaryFunction<INDEX, INPUT1_TYPE, INPUT2_TYPE,
-	OUTPUT_TYPE extends ComplexType<OUTPUT_TYPE>>
-		implements Function<INDEX, OUTPUT_TYPE> {
+		OUTPUT_TYPE extends NumericType<OUTPUT_TYPE>>
+	implements Function<INDEX, OUTPUT_TYPE>
+{
 	private final Function<INDEX, INPUT1_TYPE> f1;
 	private final Function<INDEX, INPUT2_TYPE> f2;
 	private final INPUT1_TYPE input1;

@@ -32,7 +32,7 @@ package net.imglib2.ops.function.general;
 import net.imglib2.ops.Function;
 import net.imglib2.ops.Neighborhood;
 import net.imglib2.ops.UnaryOperation;
-import net.imglib2.type.numeric.ComplexType;
+import net.imglib2.type.numeric.NumericType;
 
 // NOTE - this class would not support a ConditionalFunction as that
 // implementation uses neigh info to calc one value or another. This could
@@ -45,8 +45,9 @@ import net.imglib2.type.numeric.ComplexType;
  * 
  */
 public class ConverterFunction<INDEX, INTERMEDIATE_TYPE,
-	FINAL_TYPE extends ComplexType<FINAL_TYPE>> implements
-		Function<INDEX, FINAL_TYPE> {
+		FINAL_TYPE extends NumericType<FINAL_TYPE>>
+	implements Function<INDEX, FINAL_TYPE>
+{
 	private final Function<INDEX, INTERMEDIATE_TYPE> intermediateFunc;
 	private final UnaryOperation<INTERMEDIATE_TYPE, FINAL_TYPE> operation;
 	private final INTERMEDIATE_TYPE variable;

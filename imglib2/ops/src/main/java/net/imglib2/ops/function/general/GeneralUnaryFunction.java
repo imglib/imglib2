@@ -32,7 +32,7 @@ package net.imglib2.ops.function.general;
 import net.imglib2.ops.Function;
 import net.imglib2.ops.Neighborhood;
 import net.imglib2.ops.UnaryOperation;
-import net.imglib2.type.numeric.ComplexType;
+import net.imglib2.type.numeric.NumericType;
 
 /**
  * 
@@ -40,8 +40,9 @@ import net.imglib2.type.numeric.ComplexType;
  * 
  */
 public class GeneralUnaryFunction<INDEX, INPUT_TYPE,
-	OUTPUT_TYPE extends ComplexType<OUTPUT_TYPE>> implements
-		Function<INDEX, OUTPUT_TYPE> {
+		OUTPUT_TYPE extends NumericType<OUTPUT_TYPE>>
+	implements Function<INDEX, OUTPUT_TYPE>
+{
 	private final Function<INDEX, INPUT_TYPE> f1;
 	private final INPUT_TYPE temp;
 	private final UnaryOperation<INPUT_TYPE, OUTPUT_TYPE> operation;
