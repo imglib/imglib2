@@ -37,7 +37,7 @@ import net.imglib2.type.numeric.RealType;
  * @author Barry DeZonia
  * 
  */
-public final class RealConstant<T extends RealType<T>, V extends RealType<T>>
+public final class RealConstant<T extends RealType<T>, V extends RealType<V>>
 		implements UnaryOperation<T, V> {
 
 	private final double constant;

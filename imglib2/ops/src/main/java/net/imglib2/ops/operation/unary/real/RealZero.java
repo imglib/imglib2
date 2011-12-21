@@ -37,11 +37,11 @@ import net.imglib2.type.numeric.RealType;
  * @author Barry DeZonia
  * 
  */
-public final class RealZero<T extends RealType<T>, V extends RealType<T>>
+public final class RealZero<T extends RealType<T>, V extends RealType<V>>
 		implements UnaryOperation<T, V> {
 	@Override
 	public V compute(T x, V output) {
-		output.setReal(0);
+		output.setZero();
 		return output;
 	}
 

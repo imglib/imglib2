@@ -39,7 +39,7 @@ import net.imglib2.type.numeric.RealType;
  * @author Barry DeZonia
  * 
  */
-public class RealSinc<T extends RealType<T>, V extends RealType<T>> implements
+public class RealSinc<T extends RealType<T>, V extends RealType<V>> implements
 		UnaryOperation<T, V> {
 	@Override
 	public V compute(T input, V output) {
