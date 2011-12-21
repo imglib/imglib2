@@ -37,30 +37,31 @@ import net.imglib2.type.numeric.ComplexType;
  * @author Barry DeZonia
  *
  */
-public final class ComplexNear<T extends ComplexType<T>> implements BinaryRelation<T,T> {
-
+public final class ComplexCartesianNear<T extends ComplexType<T>,U extends ComplexType<U>>
+	implements BinaryRelation<T,U>
+{
 	private final double rTol;
 	private final double iTol;
 
-	public ComplexNear() {
+	public ComplexCartesianNear() {
 		rTol = 0.000001;
 		iTol = 0.000001;
 	}
 	
-	public ComplexNear(double rTol, double iTol) {
+	public ComplexCartesianNear(double rTol, double iTol) {
 		this.rTol = rTol;
 		this.iTol = iTol;
 	}
 	
 	@Override
-	public boolean holds(T val1, T val2) {
+	public boolean holds(T val1, U val2) {
 		return
 			Math.abs(val1.getRealDouble() - val2.getRealDouble()) <= rTol &&
 			Math.abs(val1.getImaginaryDouble() - val2.getImaginaryDouble()) <= iTol;
 	}
 
 	@Override
-	public ComplexNear<T> copy() {
-		return new ComplexNear<T>(rTol, iTol);
+	public ComplexCartesianNear<T,U> copy() {
+		return new ComplexCartesianNear<T,U>(rTol, iTol);
 	}
 }

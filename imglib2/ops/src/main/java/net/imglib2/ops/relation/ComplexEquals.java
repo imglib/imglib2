@@ -38,16 +38,17 @@ import net.imglib2.type.numeric.ComplexType;
  * @author Barry DeZonia
  *
  */
-public final class ComplexEquals<T extends ComplexType<T>> implements BinaryRelation<T,T> {
-
+public final class ComplexEquals<T extends ComplexType<T>,U extends ComplexType<U>>
+	implements BinaryRelation<T,U>
+{
 	@Override
-	public boolean holds(T val1, T val2) {  // val1.equals(val2)
+	public boolean holds(T val1, U val2) {
 		return (val1.getRealDouble() == val2.getRealDouble()) &&
 				(val1.getImaginaryDouble() == val2.getImaginaryDouble());
 	}
 
 	@Override
-	public ComplexEquals<T> copy() {
-		return new ComplexEquals<T>();
+	public ComplexEquals<T,U> copy() {
+		return new ComplexEquals<T,U>();
 	}
 }
