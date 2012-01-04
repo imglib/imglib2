@@ -1,19 +1,10 @@
 package mpicbg.imglib.cursor.special;
 
-import ij.ImagePlus;
-import mpicbg.imglib.container.array.ArrayContainerFactory;
-import mpicbg.imglib.cursor.Cursor;
 import mpicbg.imglib.cursor.Localizable;
-import mpicbg.imglib.cursor.LocalizableByDimCursor;
-import mpicbg.imglib.cursor.LocalizableCursor;
 import mpicbg.imglib.image.Image;
-import mpicbg.imglib.image.ImageFactory;
-import mpicbg.imglib.image.display.imagej.ImageJFunctions;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyValueFactory;
 import mpicbg.imglib.type.numeric.RealType;
-import mpicbg.imglib.type.numeric.integer.UnsignedByteType;
-import mpicbg.imglib.type.numeric.real.FloatType;
 
 public final class DiscCursor <T extends RealType<T>>  extends DomainCursor<T> {
 
@@ -261,98 +252,4 @@ public final class DiscCursor <T extends RealType<T>>  extends DomainCursor<T> {
 		}
 	}
 	
-	/*
-	 * MAIN METHOD
-	 */
-	
-	public static void main(String[] args) {
-
-		Image<UnsignedByteType> testImage = new ImageFactory<UnsignedByteType>(
-				new UnsignedByteType(),
-				new ArrayContainerFactory()
-		).createImage(new int[] {80, 80});
-
-		float radius = 5; // µm
-		float[] calibration = new float[] {0.5f, 1f}; 
-		DiscCursor<UnsignedByteType> cursor = new DiscCursor<UnsignedByteType>(
-				testImage, 
-				new float[] {20, 20}, // in µm
-				radius, // µm
-				calibration);
-		int volume = 0;
-		while(cursor.hasNext()) {
-			volume++;
-			cursor.fwd();
-//			cursor.getType().set((int) cursor.getDistanceSquared()); // to check we paint a disc in physical coordinates
-			cursor.getType().inc(); // to check we did not walk multiple times on a single pixel
-		}
-		cursor.close();
-
-		int  maxPixelValue = 0;
-		Cursor<UnsignedByteType> c = testImage.createCursor();
-		while(c.hasNext()) {
-			c.fwd();
-			if (c.getType().get() > maxPixelValue) 
-				maxPixelValue = c.getType().get();
-		}
-		c.close();
-
-		System.out.println(String.format("Cursor for a disc of radius %.1f", radius));
-		System.out.println(String.format("Volume iterated prediction: %d pixels.", cursor.getNPixels()));
-		System.out.println(String.format("Iterated actually over %d pixels, real volume is: %.1f", volume, 4/3.0*Math.PI*radius*radius*radius));
-		System.out.println(String.format("Each pixel have been walked on at most %d times.", maxPixelValue));
-
-
-		// Visualize results
-		ij.ImageJ.main(args);
-
-		ImagePlus imp = ImageJFunctions.copyToImagePlus(testImage);
-		imp.getCalibration().pixelWidth = calibration[0];
-		imp.getCalibration().pixelHeight = calibration[1];
-		imp.getCalibration().setUnit("um");
-		imp.show();
-		float iRadius = 5;
-
-		// Iterates over all pixels of the image, using the sphere cursor as a neighborhood cursor.
-		// We simply convolve.
-
-		Image<FloatType> newImage = new ImageFactory<FloatType>(
-				new FloatType(),
-				new ArrayContainerFactory()
-		).createImage(testImage.getDimensions());
-		LocalizableCursor<UnsignedByteType> mainCursor = testImage.createLocalizableCursor();
-		LocalizableByDimCursor<FloatType> destCursor = newImage.createLocalizableByDimCursor();
-		DiscCursor<UnsignedByteType> discCursor = new DiscCursor<UnsignedByteType>(testImage, mainCursor, iRadius, calibration);
-		System.out.println("\nUsing the sphere cursor to convolve the whole image with a disc of radius " + iRadius + "...");
-		int sum;
-		int pixelNumber = 0;
-		long start = System.currentTimeMillis();
-		while (mainCursor.hasNext()) {
-			mainCursor.fwd();
-			discCursor.moveCenterTo(mainCursor);
-			sum = 0;
-			while (discCursor.hasNext()) {
-				discCursor.fwd();
-				sum += discCursor.getType().get();
-				pixelNumber++;
-			}
-			destCursor.setPosition(mainCursor);
-			destCursor.getType().set(sum);
-		}
-		discCursor.close();
-		mainCursor.close();
-		destCursor.close();
-		long end = System.currentTimeMillis();
-		System.out.println(String.format("Iterated over in total %d pixels in %d ms: %.1e pixel/s.", pixelNumber, (end-start), pixelNumber/((float) (end-start)/1000) ));
-
-		ImagePlus dest = ImageJFunctions.copyToImagePlus(newImage);
-		dest.getCalibration().pixelWidth = calibration[0];
-		dest.getCalibration().pixelHeight = calibration[1];
-		dest.getCalibration().setUnit("um");
-		dest.show();
-
-
-	}
-
-
 }
