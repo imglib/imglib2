@@ -1,10 +1,10 @@
 /**
  * Copyright (c) 2009--2010, Stephan Preibisch & Stephan Saalfeld
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * Redistributions of source code must retain the above copyright notice, this
  * list of conditions and the following disclaimer.  Redistributions in binary
  * form must reproduce the above copyright notice, this list of conditions and
@@ -12,7 +12,7 @@
  * provided with the distribution.  Neither the name of the Fiji project nor
  * the names of its contributors may be used to endorse or promote products
  * derived from this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -42,16 +42,19 @@ public class UnsignedByteType extends GenericByteType<UnsignedByteType>
 	// this is the constructor if you want it to be a variable
 	public UnsignedByteType( final int value ) { super( getCodedSignedByteChecked(value) ); }
 
+	// this is the constructor if you want to specify the dataAccess
+	public UnsignedByteType( final ByteAccess access ) { super( access ); }
+
 	// this is the constructor if you want it to be a variable
 	public UnsignedByteType() { this( 0 ); }
-	
+
 	public static byte getCodedSignedByteChecked( int unsignedByte )
 	{
 		if ( unsignedByte < 0 )
 			unsignedByte = 0;
 		else if ( unsignedByte > 255 )
 			unsignedByte = 255;
-		
+
 		return getCodedSignedByte( unsignedByte );
 	}
 	public static byte getCodedSignedByte( final int unsignedByte ) { return (byte)( unsignedByte & 0xff );	}
@@ -62,23 +65,23 @@ public class UnsignedByteType extends GenericByteType<UnsignedByteType>
 	{
 		// create the container
 		final NativeImg<UnsignedByteType, ? extends ByteAccess> container = storageFactory.createByteInstance( dim, 1 );
-		
+
 		// create a Type that is linked to the container
 		final UnsignedByteType linkedType = new UnsignedByteType( container );
-		
+
 		// pass it to the NativeContainer
 		container.setLinkedType( linkedType );
-		
+
 		return container;
 	}
-	
+
 	@Override
 	public UnsignedByteType duplicateTypeOnSameNativeImg() { return new UnsignedByteType( img ); }
-	
+
 	@Override
 	public void mul( final float c )
 	{
-		
+
 		final int a = getUnsignedByte( getValue() );
 		setValue( getCodedSignedByte( Util.round( a * c ) ) );
 	}
@@ -89,7 +92,7 @@ public class UnsignedByteType extends GenericByteType<UnsignedByteType>
 		final int a = getUnsignedByte( getValue() );
 		setValue( getCodedSignedByte( ( int )Util.round( a * c ) ) );
 	}
-	
+
 	@Override
 	public void add( final UnsignedByteType c )
 	{
@@ -116,7 +119,7 @@ public class UnsignedByteType extends GenericByteType<UnsignedByteType>
 
 	public int get(){ return getUnsignedByte( getValue() ); }
 	public void set( final int f ){ setValue( getCodedSignedByte( f ) ); }
-	
+
 	@Override
 	public int getInteger(){ return get(); }
 	@Override
@@ -125,23 +128,23 @@ public class UnsignedByteType extends GenericByteType<UnsignedByteType>
 	public void setInteger( final int f ){ set( f ); }
 	@Override
 	public void setInteger( final long f ){ set( (int)f ); }
-	
+
 	@Override
 	public double getMaxValue() { return -Byte.MIN_VALUE + Byte.MAX_VALUE; }
 	@Override
 	public double getMinValue()  { return 0; }
 
 	@Override
-	public int compareTo( final UnsignedByteType c ) 
+	public int compareTo( final UnsignedByteType c )
 	{
 		final int a = get();
 		final int b = c.get();
-		
+
 		if ( a > b )
 			return 1;
 		else if ( a < b )
 			return -1;
-		else 
+		else
 			return 0;
 	}
 

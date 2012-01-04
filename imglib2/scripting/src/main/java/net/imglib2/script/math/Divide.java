@@ -7,15 +7,15 @@ import net.imglib2.type.numeric.RealType;
 
 public class Divide extends BinaryOperation
 {
-	public Divide(final IterableRealInterval<? extends RealType<?>> left, final IterableRealInterval<? extends RealType<?>> right) {
+	public <S extends RealType<S>, R extends RealType<R>> Divide(final IterableRealInterval<S> left, final IterableRealInterval<R> right) {
 		super(left, right);
 	}
 
-	public Divide(final IFunction fn, final IterableRealInterval<? extends RealType<?>> right) {
+	public <R extends RealType<R>> Divide(final IFunction fn, final IterableRealInterval<R> right) {
 		super(fn, right);
 	}
 
-	public Divide(final IterableRealInterval<? extends RealType<?>> left, final IFunction fn) {
+	public <R extends RealType<R>> Divide(final IterableRealInterval<R> left, final IFunction fn) {
 		super(left, fn);
 	}
 
@@ -23,11 +23,11 @@ public class Divide extends BinaryOperation
 		super(fn1, fn2);
 	}
 	
-	public Divide(final IterableRealInterval<? extends RealType<?>> left, final Number val) {
+	public <R extends RealType<R>> Divide(final IterableRealInterval<R> left, final Number val) {
 		super(left, val);
 	}
 
-	public Divide(final Number val,final IterableRealInterval<? extends RealType<?>> right) {
+	public <R extends RealType<R>> Divide(final Number val,final IterableRealInterval<R> right) {
 		super(val, right);
 	}
 
@@ -48,16 +48,19 @@ public class Divide extends BinaryOperation
 	}
 
 	/** 1 / img */
-	public Divide(final IterableRealInterval<? extends RealType<?>> right) {
+	@SuppressWarnings("boxing")
+	public <R extends RealType<R>> Divide(final IterableRealInterval<R> right) {
 		super(1, right);
 	}
 
 	/** 1 / val */
+	@SuppressWarnings("boxing")
 	public Divide(final Number val) {
 		super(1, val);
 	}
 
 	/** 1 / fn.eval() */
+	@SuppressWarnings("boxing")
 	public Divide(final IFunction fn) {
 		super(1, fn);
 	}
