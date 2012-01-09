@@ -31,6 +31,7 @@ package net.imglib2.ops.operation.unary.real;
 
 import net.imglib2.ops.UnaryOperation;
 import net.imglib2.type.numeric.RealType;
+import net.imglib2.type.numeric.real.DoubleType;
 
 //verified formula with Mathworld's definition for Inverse Secant
 
@@ -39,19 +40,15 @@ import net.imglib2.type.numeric.RealType;
  * @author Barry DeZonia
  * 
  */
-public final class RealArcsec<T extends RealType<T>, V extends RealType<V>>
-		implements UnaryOperation<T, V> {
-
-	private final RealArcsin<T, T> asin = new RealArcsin<T, T>();
-	private T angle = null;
-	private T tmp = null;
+public final class RealArcsec
+		implements UnaryOperation<RealType<?>, RealType<?>>
+{
+	private final RealArcsin asin = new RealArcsin();
+	private DoubleType angle = new DoubleType();
+	private DoubleType tmp = new DoubleType();
 
 	@Override
-	public V compute(T x, V output) {
-		if (angle == null) {
-			angle = x.createVariable();
-			tmp = x.createVariable();
-		}
+	public RealType<?> compute(RealType<?> x, RealType<?> output) {
 		double xt = x.getRealDouble();
 		if ((xt > -1) && (xt < 1))
 			throw new IllegalArgumentException("arcsec(x) : x out of range");
@@ -71,8 +68,8 @@ public final class RealArcsec<T extends RealType<T>, V extends RealType<V>>
 	}
 
 	@Override
-	public RealArcsec<T, V> copy() {
-		return new RealArcsec<T, V>();
+	public RealArcsec copy() {
+		return new RealArcsec();
 	}
 
 }

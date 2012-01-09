@@ -37,8 +37,9 @@ import net.imglib2.type.numeric.RealType;
  * @author Barry DeZonia
  * 
  */
-public final class RealReciprocal<T extends RealType<T>, V extends RealType<V>>
-		implements UnaryOperation<T, V> {
+public final class RealReciprocal
+		implements UnaryOperation<RealType<?>, RealType<?>>
+{
 	private final double dbzVal;
 
 	public RealReciprocal(double dbzVal) {
@@ -46,7 +47,7 @@ public final class RealReciprocal<T extends RealType<T>, V extends RealType<V>>
 	}
 
 	@Override
-	public V compute(T x, V output) {
+	public RealType<?> compute(RealType<?> x, RealType<?> output) {
 		double inputVal = x.getRealDouble();
 		if (inputVal == 0)
 			output.setReal(dbzVal);
@@ -57,7 +58,7 @@ public final class RealReciprocal<T extends RealType<T>, V extends RealType<V>>
 	}
 
 	@Override
-	public RealReciprocal<T, V> copy() {
-		return new RealReciprocal<T, V>(dbzVal);
+	public RealReciprocal copy() {
+		return new RealReciprocal(dbzVal);
 	}
 }

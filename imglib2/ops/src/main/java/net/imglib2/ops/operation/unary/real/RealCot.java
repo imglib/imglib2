@@ -39,19 +39,19 @@ import net.imglib2.type.numeric.RealType;
  * @author Barry DeZonia
  * 
  */
-public final class RealCot<T extends RealType<T>, V extends RealType<V>>
-		implements UnaryOperation<T, V> {
-
+public final class RealCot
+		implements UnaryOperation<RealType<?>, RealType<?>>
+{
 	@Override
-	public V compute(T x, V output) {
+	public RealType<?> compute(RealType<?> x, RealType<?> output) {
 		double value = 1.0 / Math.tan(x.getRealDouble());
 		output.setReal(value);
 		return output;
 	}
 
 	@Override
-	public RealCot<T, V> copy() {
-		return new RealCot<T, V>();
+	public RealCot copy() {
+		return new RealCot();
 	}
 
 }

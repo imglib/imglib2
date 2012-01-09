@@ -37,8 +37,8 @@ import net.imglib2.type.numeric.RealType;
  * @author Barry DeZonia
  * 
  */
-public final class RealDivideConstant<T extends RealType<T>, V extends RealType<V>>
-	implements UnaryOperation<T, V>
+public final class RealDivideConstant
+	implements UnaryOperation<RealType<?>, RealType<?>>
 {
 	private final double constant;
 	private final double dbzVal;
@@ -49,7 +49,7 @@ public final class RealDivideConstant<T extends RealType<T>, V extends RealType<
 	}
 
 	@Override
-	public V compute(T x, V output) {
+	public RealType<?> compute(RealType<?> x, RealType<?> output) {
 		if (constant == 0) {
 			output.setReal(dbzVal);
 		} else { // not dividing by zero
@@ -60,8 +60,8 @@ public final class RealDivideConstant<T extends RealType<T>, V extends RealType<
 	}
 
 	@Override
-	public RealDivideConstant<T, V> copy() {
-		return new RealDivideConstant<T, V>(constant, dbzVal);
+	public RealDivideConstant copy() {
+		return new RealDivideConstant(constant, dbzVal);
 	}
 
 }

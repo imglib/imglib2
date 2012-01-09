@@ -37,18 +37,19 @@ import net.imglib2.type.numeric.RealType;
  * @author Barry DeZonia
  * 
  */
-public final class RealSqr<T extends RealType<T>, V extends RealType<V>>
-		implements UnaryOperation<T, V> {
+public final class RealSqr
+		implements UnaryOperation<RealType<?>, RealType<?>>
+{
 	@Override
-	public V compute(T x, V output) {
+	public RealType<?> compute(RealType<?> x, RealType<?> output) {
 		double value = x.getRealDouble();
 		output.setReal(value * value);
 		return output;
 	}
 
 	@Override
-	public RealSqr<T, V> copy() {
-		return new RealSqr<T, V>();
+	public RealSqr copy() {
+		return new RealSqr();
 	}
 
 }

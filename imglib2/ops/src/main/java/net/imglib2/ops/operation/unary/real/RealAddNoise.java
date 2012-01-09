@@ -39,9 +39,9 @@ import net.imglib2.type.numeric.RealType;
  * @author Barry DeZonia
  * 
  */
-public final class RealAddNoise<T extends RealType<T>, V extends RealType<V>>
-		implements UnaryOperation<T, V> {
-
+public final class RealAddNoise
+		implements UnaryOperation<RealType<?>, RealType<?>>
+{
 	private final double rangeMin;
 	private final double rangeMax;
 	private final double rangeStdDev;
@@ -56,7 +56,7 @@ public final class RealAddNoise<T extends RealType<T>, V extends RealType<V>>
 	}
 
 	@Override
-	public V compute(T x, V output) {
+	public RealType<?> compute(RealType<?> x, RealType<?> output) {
 		int i = 0;
 		do {
 			double newVal = x.getRealDouble()
@@ -74,8 +74,8 @@ public final class RealAddNoise<T extends RealType<T>, V extends RealType<V>>
 	}
 
 	@Override
-	public RealAddNoise<T, V> copy() {
-		return new RealAddNoise<T, V>(rangeMin, rangeMax, rangeStdDev);
+	public RealAddNoise copy() {
+		return new RealAddNoise(rangeMin, rangeMax, rangeStdDev);
 	}
 
 }

@@ -39,11 +39,11 @@ import net.imglib2.type.numeric.RealType;
  * @author Barry DeZonia
  * 
  */
-public final class RealArctan<T extends RealType<T>, V extends RealType<V>>
-		implements UnaryOperation<T, V> {
-
+public final class RealArctan
+		implements UnaryOperation<RealType<?>, RealType<?>>
+{
 	@Override
-	public V compute(T x, V output) {
+	public RealType<?> compute(RealType<?> x, RealType<?> output) {
 		double value = Math.atan(x.getRealDouble());
 		output.setReal(value);
 
@@ -51,8 +51,8 @@ public final class RealArctan<T extends RealType<T>, V extends RealType<V>>
 	}
 
 	@Override
-	public RealArctan<T, V> copy() {
-		return new RealArctan<T, V>();
+	public RealArctan copy() {
+		return new RealArctan();
 	}
 
 }

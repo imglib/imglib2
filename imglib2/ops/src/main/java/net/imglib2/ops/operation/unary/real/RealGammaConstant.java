@@ -37,8 +37,8 @@ import net.imglib2.type.numeric.RealType;
  * @author Barry DeZonia
  * 
  */
-public final class RealGammaConstant<T extends RealType<T>, V extends RealType<V>>
-	implements UnaryOperation<T, V>
+public final class RealGammaConstant
+	implements UnaryOperation<RealType<?>, RealType<?>>
 {
 	private final double constant;
 
@@ -47,7 +47,7 @@ public final class RealGammaConstant<T extends RealType<T>, V extends RealType<V
 	}
 
 	@Override
-	public V compute(T x, V output) {
+	public RealType<?> compute(RealType<?> x, RealType<?> output) {
 		double inputVal = x.getRealDouble();
 		if (inputVal <= 0)
 			output.setReal(0);
@@ -59,8 +59,8 @@ public final class RealGammaConstant<T extends RealType<T>, V extends RealType<V
 	}
 
 	@Override
-	public RealGammaConstant<T, V> copy() {
-		return new RealGammaConstant<T, V>(constant);
+	public RealGammaConstant copy() {
+		return new RealGammaConstant(constant);
 	}
 
 }

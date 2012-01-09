@@ -38,7 +38,8 @@ import net.imglib2.ops.Condition;
 import net.imglib2.ops.DiscreteNeigh;
 import net.imglib2.ops.Function;
 import net.imglib2.ops.RegionIndexIterator;
-import net.imglib2.type.numeric.ComplexType;
+import net.imglib2.type.numeric.RealType;
+import net.imglib2.type.numeric.real.DoubleType;
 
 // In old AssignOperation could do many things
 // - set conditions on each input and output image
@@ -66,12 +67,12 @@ import net.imglib2.type.numeric.ComplexType;
  * @author Barry DeZonia
  *
  */
-public class ImageAssignment<DATA_TYPE extends ComplexType<DATA_TYPE>> {
+public class ImageAssignment<DATA_TYPE extends RealType<DATA_TYPE>> {
 
 	// -- instance variables --
 	
 	private final Img<DATA_TYPE> image;
-	private final Function<long[],DATA_TYPE> func;
+	private final Function<long[],RealType<?>> func;
 	private Condition<long[]> cond;
 	private final long[] origin;
 	private final long[] span;
@@ -100,7 +101,7 @@ public class ImageAssignment<DATA_TYPE extends ComplexType<DATA_TYPE>> {
 		Img<DATA_TYPE> img,
 		long[] origin,
 		long[] span,
-		Function<long[],DATA_TYPE> function,
+		Function<long[],RealType<?>> function,
 		long[] negOffs,
 		long[] posOffs)
 	{
@@ -126,20 +127,20 @@ public class ImageAssignment<DATA_TYPE extends ComplexType<DATA_TYPE>> {
 	 * 
 	 */
 	public ImageAssignment(
-			Img<DATA_TYPE> img,
-			long[] origin,
-			long[] span,
-			Function<long[],DATA_TYPE> function)
-		{
-			this.image = img;
-			this.origin = origin.clone();
-			this.span = span.clone();
-			this.negOffs = new long[origin.length];  // ALL ZERO
-			this.posOffs = new long[origin.length];  // ALL ZERO
-			this.func = function.copy();
-			this.cond = null;
-			this.assigning = false;
-		}
+		Img<DATA_TYPE> img,
+		long[] origin,
+		long[] span,
+		Function<long[],RealType<?>> function)
+	{
+		this.image = img;
+		this.origin = origin.clone();
+		this.span = span.clone();
+		this.negOffs = new long[origin.length];  // ALL ZERO
+		this.posOffs = new long[origin.length];  // ALL ZERO
+		this.func = function.copy();
+		this.cond = null;
+		this.assigning = false;
+	}
 		
 	// -- public interface --
 
@@ -274,7 +275,7 @@ public class ImageAssignment<DATA_TYPE extends ComplexType<DATA_TYPE>> {
 		int axis,
 		long startIndex,
 		long length,
-		Function<long[],DATA_TYPE> fn,
+		Function<long[],RealType<?>> fn,
 		Condition<long[]> cnd,
 		long[] nOffsets,
 		long[] pOffsets)
@@ -302,7 +303,7 @@ public class ImageAssignment<DATA_TYPE extends ComplexType<DATA_TYPE>> {
 	private class RegionRunner implements Runnable {
 		
 		private final Img<DATA_TYPE> img;
-		private final Function<long[],DATA_TYPE> function;
+		private final Function<long[],RealType<?>> function;
 		private final Condition<long[]> condition;
 		private final DiscreteNeigh region;
 		private final DiscreteNeigh neighborhood;
@@ -314,7 +315,7 @@ public class ImageAssignment<DATA_TYPE extends ComplexType<DATA_TYPE>> {
 			Img<DATA_TYPE> img,
 			long[] origin,
 			long[] span,
-			Function<long[],DATA_TYPE> func,
+			Function<long[],RealType<?>> func,
 			Condition<long[]> cond,
 			long[] negOffs,
 			long[] posOffs)
@@ -332,7 +333,8 @@ public class ImageAssignment<DATA_TYPE extends ComplexType<DATA_TYPE>> {
 		@Override
 		public void run() {
 			final RandomAccess<DATA_TYPE> accessor = img.randomAccess();
-			final DATA_TYPE output = function.createOutput();
+			// TODO COMPLEX
+			final DoubleType output = new DoubleType();
 			final RegionIndexIterator iter = new RegionIndexIterator(region);
 			while (iter.hasNext()) {
 				iter.fwd();
@@ -343,7 +345,9 @@ public class ImageAssignment<DATA_TYPE extends ComplexType<DATA_TYPE>> {
 				if (proceed) {
 					function.evaluate(neighborhood, iter.getPosition(), output);
 					accessor.setPosition(iter.getPosition());
-					accessor.get().set(output);
+					accessor.get().setReal(output.getRealDouble());
+					// TODO COMPLEX
+					//accessor.get().setImaginary(output.getImaginaryDouble());
 				}
 			}
 		}

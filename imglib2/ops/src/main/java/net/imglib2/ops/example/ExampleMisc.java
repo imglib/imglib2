@@ -19,17 +19,17 @@ public class ExampleMisc {
 		long[] origin = new long[] { 0, 0 };
 		long[] span = new long[] { 50, 40 };
 
-		RealSqr<UnsignedByteType, UnsignedByteType> op = new RealSqr<UnsignedByteType, UnsignedByteType>();
+		RealSqr op = new RealSqr();
 
 		Function<long[], UnsignedByteType> imageFunc = new RealImageFunction<UnsignedByteType>(
-				inputImg);
+				inputImg, new UnsignedByteType());
 
 		Function<long[], UnsignedByteType> func = null;
 		// new GeneralUnaryFunction<long[],UnsignedByteType>(imageFunc, op);
 
 		Condition condition = new AtKeyPointCondition();
 
-		ImageAssignment<UnsignedByteType> assigner = new ImageAssignment<UnsignedByteType>(
+		ImageAssignment assigner = new ImageAssignment(
 				outputImg, origin, span, func);
 
 		assigner.setCondition(condition);

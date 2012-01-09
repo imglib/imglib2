@@ -47,29 +47,34 @@ public class RealImageFunction<T extends RealType<T>> implements Function<long[]
 {
 	// -- instance variables --
 	
-	private final RandomAccess<T> accessor;
+	private final RandomAccess<? extends RealType<?>> accessor;
+	private final T type;
 	
 	// -- private constructor used by duplicate() --
 	
-	private RealImageFunction(RandomAccess<T> acc)
+	private RealImageFunction(RandomAccess<? extends RealType<?>> acc, T type)
 	{
 		this.accessor = acc;
+		this.type = type;
 	}
 	
 	// -- public constructors --
 	
-	public RealImageFunction(Img<T> img) {
+	public RealImageFunction(Img<? extends RealType<?>> img, T type) {
 		this.accessor = img.randomAccess();
+		this.type = type;
 	}
 	
-	public RealImageFunction(
-		Img<T> img,
-		OutOfBoundsFactory<T,Img<T>> factory)
+	public <K extends RealType<K>> RealImageFunction(
+		Img<K> img,
+		OutOfBoundsFactory<K,Img<K>> factory,
+		T type)
 	{
 		@SuppressWarnings({"rawtypes","unchecked"})
 		RandomAccessible<T> extendedRandAcessible =
 				new ExtendedRandomAccessibleInterval(img, factory);
 		this.accessor =  extendedRandAcessible.randomAccess();
+		this.type = type;
 	}
 	
 	// -- public interface --
@@ -80,15 +85,16 @@ public class RealImageFunction<T extends RealType<T>> implements Function<long[]
 		accessor.setPosition(point);
 		double r = accessor.get().getRealDouble();
 		output.setReal(r);
+		//output.setImaginary(0);
 	}
 
 	@Override
 	public RealImageFunction<T> copy() {
-		return new RealImageFunction<T>(accessor.copyRandomAccess());
+		return new RealImageFunction<T>(accessor.copyRandomAccess(), type.copy());
 	}
 
 	@Override
 	public T createOutput() {
-		return accessor.get().createVariable();
+		return type.createVariable();
 	}
 }

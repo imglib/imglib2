@@ -37,19 +37,19 @@ import net.imglib2.type.numeric.RealType;
  * @author Barry DeZonia
  * 
  */
-public final class RealCosh<T extends RealType<T>, V extends RealType<V>>
-		implements UnaryOperation<T, V> {
-
+public final class RealCosh
+		implements UnaryOperation<RealType<?>, RealType<?>>
+{
 	@Override
-	public V compute(T x, V output) {
+	public RealType<?> compute(RealType<?> x, RealType<?> output) {
 		double value = Math.cosh(x.getRealDouble());
 		output.setReal(value);
 		return output;
 	}
 
 	@Override
-	public RealCosh<T, V> copy() {
-		return new RealCosh<T, V>();
+	public RealCosh copy() {
+		return new RealCosh();
 	}
 
 }

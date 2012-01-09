@@ -39,11 +39,11 @@ import net.imglib2.type.numeric.RealType;
  * @author Barry DeZonia
  * 
  */
-public class RealSincPi<T extends RealType<T>, V extends RealType<V>>
-		implements UnaryOperation<T, V> {
-	
+public class RealSincPi
+		implements UnaryOperation<RealType<?>, RealType<?>>
+{
 	@Override
-	public V compute(T input, V output) {
+	public RealType<?> compute(RealType<?> input, RealType<?> output) {
 		double x = input.getRealDouble();
 		double value;
 		if (x == 0)
@@ -55,8 +55,8 @@ public class RealSincPi<T extends RealType<T>, V extends RealType<V>>
 	}
 
 	@Override
-	public RealSincPi<T, V> copy() {
-		return new RealSincPi<T, V>();
+	public RealSincPi copy() {
+		return new RealSincPi();
 	}
 
 }

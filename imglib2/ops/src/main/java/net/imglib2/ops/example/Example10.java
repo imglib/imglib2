@@ -82,7 +82,7 @@ public class Example10 {
 	}
 
 	private static boolean testDFT() {
-		image = new RealImageFunction<DoubleType>(testImg);
+		image = new RealImageFunction<DoubleType>(testImg, new DoubleType());
 		Function<long[],DoubleType> zero = new ConstantRealFunction<long[],DoubleType>(new DoubleType(),0);
 		Function<long[],ComplexDoubleType> spatialFunction =
 			new CartesianComplexFunction<long[],DoubleType,DoubleType,ComplexDoubleType>

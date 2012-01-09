@@ -37,10 +37,11 @@ import net.imglib2.type.numeric.RealType;
  * @author Barry DeZonia
  * 
  */
-public final class RealSign<T extends RealType<T>, V extends RealType<V>>
-		implements UnaryOperation<T, V> {
+public final class RealSign
+		implements UnaryOperation<RealType<?>, RealType<?>>
+{
 	@Override
-	public V compute(T x, V output) {
+	public RealType<?> compute(RealType<?> x, RealType<?> output) {
 		if (x.getRealDouble() < 0)
 			output.setReal(-1);
 		else if (x.getRealDouble() > 0)
@@ -51,8 +52,8 @@ public final class RealSign<T extends RealType<T>, V extends RealType<V>>
 	}
 
 	@Override
-	public RealSign<T, V> copy() {
-		return new RealSign<T, V>();
+	public RealSign copy() {
+		return new RealSign();
 	}
 
 }

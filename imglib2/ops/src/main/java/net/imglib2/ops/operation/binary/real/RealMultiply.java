@@ -37,18 +37,18 @@ import net.imglib2.type.numeric.RealType;
  * @author Barry DeZonia
  * 
  */
-public final class RealMultiply<T extends RealType<T>, V extends RealType<V>, O extends RealType<O>>
-		implements BinaryOperation<T, V, O> {
-
+public final class RealMultiply
+		implements BinaryOperation<RealType<?>, RealType<?>, RealType<?>>
+{
 	@Override
-	public O compute(T x1, V x2, O output) {
+	public RealType<?> compute(RealType<?> x1, RealType<?> x2, RealType<?> output) {
 		output.setReal(x1.getRealDouble() * x2.getRealDouble());
 		return output;
 	}
 
 	@Override
-	public RealMultiply<T, V, O> copy() {
-		return new RealMultiply<T, V, O>();
+	public RealMultiply copy() {
+		return new RealMultiply();
 	}
 
 }

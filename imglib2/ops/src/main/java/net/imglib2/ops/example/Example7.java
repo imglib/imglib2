@@ -202,7 +202,7 @@ public class Example7 {
 		Function<long[],DoubleType> function =
 			new ConditionalFunction<long[],DoubleType>(xValCond, xSquaredFunc, yLineFunc);
 		Img<DoubleType> image = allocateImage();
-		ImageAssignment<DoubleType> assigner = new ImageAssignment<DoubleType>(image, new long[2], new long[]{XSIZE,YSIZE}, function, new long[2], new long[2]);
+		ImageAssignment assigner = new ImageAssignment(image, new long[2], new long[]{XSIZE,YSIZE}, function, new long[2], new long[2]);
 		Condition<long[]> circleCond = new CircularCondition();
 		Condition<long[]> sumCond = new XYSumCondition();
 		Condition<long[]> compositeCondition = new AndCondition<long[]>(circleCond,sumCond);

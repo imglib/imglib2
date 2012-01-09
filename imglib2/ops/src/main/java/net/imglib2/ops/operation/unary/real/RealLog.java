@@ -37,19 +37,19 @@ import net.imglib2.type.numeric.RealType;
  * @author Barry DeZonia
  * 
  */
-public final class RealLog<T extends RealType<T>, V extends RealType<V>>
-		implements UnaryOperation<T, V> {
-
+public final class RealLog
+		implements UnaryOperation<RealType<?>, RealType<?>>
+{
 	@Override
-	public V compute(T x, V output) {
+	public RealType<?> compute(RealType<?> x, RealType<?> output) {
 		double value = Math.log(x.getRealDouble());
 		output.setReal(value);
 		return output;
 	}
 
 	@Override
-	public RealLog<T, V> copy() {
-		return new RealLog<T, V>();
+	public RealLog copy() {
+		return new RealLog();
 	}
 
 }

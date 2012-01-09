@@ -35,7 +35,7 @@ public class Example12 {
 		fillImage(in2, 2);
 		Img<DoubleType> out = allocateImage();
 		fillImage(out, 0);
-		RealAdd<DoubleType, DoubleType, DoubleType> op = new RealAdd<DoubleType, DoubleType, DoubleType>();
+		RealAdd op = new RealAdd();
 		Cursor<DoubleType> ic1 = in1.cursor();
 		Cursor<DoubleType> ic2 = in2.cursor();
 		Cursor<DoubleType> oc = out.cursor();

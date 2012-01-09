@@ -37,8 +37,8 @@ import net.imglib2.type.numeric.RealType;
  * @author Barry DeZonia
  * 
  */
-public final class RealConstant<T extends RealType<T>, V extends RealType<V>>
-	implements UnaryOperation<T, V>
+public final class RealConstant
+	implements UnaryOperation<RealType<?>, RealType<?>>
 {
 	private final double constant;
 
@@ -47,14 +47,14 @@ public final class RealConstant<T extends RealType<T>, V extends RealType<V>>
 	}
 
 	@Override
-	public V compute(T x, V output) {
+	public RealType<?> compute(RealType<?> x, RealType<?> output) {
 		output.setReal(constant);
 		return output;
 	}
 
 	@Override
-	public RealConstant<T, V> copy() {
-		return new RealConstant<T, V>(constant);
+	public RealConstant copy() {
+		return new RealConstant(constant);
 	}
 
 }

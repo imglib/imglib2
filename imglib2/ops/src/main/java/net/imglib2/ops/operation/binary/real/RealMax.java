@@ -37,11 +37,11 @@ import net.imglib2.type.numeric.RealType;
  * @author Barry DeZonia
  * 
  */
-public final class RealMax<T extends RealType<T>, V extends RealType<V>, O extends RealType<O>>
-		implements BinaryOperation<T, V, O> {
-
+public final class RealMax
+		implements BinaryOperation<RealType<?>,RealType<?>,RealType<?>>
+{
 	@Override
-	public O compute(T x1, V x2, O output) {
+	public RealType<?> compute(RealType<?> x1, RealType<?> x2, RealType<?> output) {
 		if (x1.getRealDouble() > x2.getRealDouble())
 			output.setReal(x1.getRealDouble());
 		else
@@ -51,7 +51,7 @@ public final class RealMax<T extends RealType<T>, V extends RealType<V>, O exten
 	}
 
 	@Override
-	public RealMax<T, V, O> copy() {
-		return new RealMax<T, V, O>();
+	public RealMax copy() {
+		return new RealMax();
 	}
 }

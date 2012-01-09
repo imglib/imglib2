@@ -37,8 +37,8 @@ import net.imglib2.type.numeric.RealType;
  * @author Barry DeZonia
  * 
  */
-public final class RealMaxConstant<T extends RealType<T>, V extends RealType<V>>
-	implements UnaryOperation<T, V>
+public final class RealMaxConstant
+	implements UnaryOperation<RealType<?>, RealType<?>>
 {
 	private final double constant;
 
@@ -47,7 +47,7 @@ public final class RealMaxConstant<T extends RealType<T>, V extends RealType<V>>
 	}
 
 	@Override
-	public V compute(T x, V output) {
+	public RealType<?> compute(RealType<?> x, RealType<?> output) {
 		double value = x.getRealDouble();
 		if (value < constant)
 			output.setReal(value);
@@ -57,8 +57,8 @@ public final class RealMaxConstant<T extends RealType<T>, V extends RealType<V>>
 	}
 
 	@Override
-	public RealMaxConstant<T, V> copy() {
-		return new RealMaxConstant<T, V>(constant);
+	public RealMaxConstant copy() {
+		return new RealMaxConstant(constant);
 	}
 
 }

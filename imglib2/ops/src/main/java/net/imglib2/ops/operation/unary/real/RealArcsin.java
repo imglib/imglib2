@@ -39,11 +39,11 @@ import net.imglib2.type.numeric.RealType;
  * @author Barry DeZonia
  * 
  */
-public final class RealArcsin<T extends RealType<T>, V extends RealType<V>>
-		implements UnaryOperation<T, V> {
-
+public final class RealArcsin
+		implements UnaryOperation<RealType<?>, RealType<?>>
+{
 	@Override
-	public V compute(T x, V output) {
+	public RealType<?> compute(RealType<?> x, RealType<?> output) {
 		double value = Math.asin(x.getRealDouble());
 		output.setReal(value);
 
@@ -51,8 +51,8 @@ public final class RealArcsin<T extends RealType<T>, V extends RealType<V>>
 	}
 
 	@Override
-	public RealArcsin<T, V> copy() {
-		return new RealArcsin<T, V>();
+	public RealArcsin copy() {
+		return new RealArcsin();
 	}
 
 }

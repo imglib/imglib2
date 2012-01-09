@@ -37,17 +37,17 @@ import net.imglib2.type.numeric.RealType;
  * @author Barry DeZonia
  * 
  */
-public final class RealAbs<T extends RealType<T>, V extends RealType<V>>
-		implements UnaryOperation<T, V> {
-
+public final class RealAbs
+		implements UnaryOperation<RealType<?>, RealType<?>>
+{
 	@Override
-	public V compute(T x, V output) {
+	public RealType<?> compute(RealType<?> x, RealType<?> output) {
 		output.setReal(Math.abs(x.getRealDouble()));
 		return output;
 	}
 
 	@Override
-	public RealAbs<T, V> copy() {
-		return new RealAbs<T, V>();
+	public RealAbs copy() {
+		return new RealAbs();
 	}
 }

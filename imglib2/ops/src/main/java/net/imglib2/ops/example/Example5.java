@@ -105,7 +105,7 @@ public class Example5 {
 		boolean success = true;
 		Img<DoubleType> image = makeInputImage();
 		DiscreteNeigh inputNeigh = new DiscreteNeigh(new long[2], new long[]{1,1}, new long[]{1,1});
-		Function<long[],DoubleType> imageFunc = new RealImageFunction<DoubleType>(image);
+		Function<long[],DoubleType> imageFunc = new RealImageFunction<DoubleType>(image, new DoubleType());
 		Function<long[],DoubleType> convFunc = new RealConvolutionFunction<DoubleType>(imageFunc,KERNEL);
 		long[] currPt = new long[2];
 		DoubleType variable = new DoubleType();

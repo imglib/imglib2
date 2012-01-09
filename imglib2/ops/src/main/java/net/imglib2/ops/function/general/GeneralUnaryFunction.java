@@ -32,24 +32,24 @@ package net.imglib2.ops.function.general;
 import net.imglib2.ops.Function;
 import net.imglib2.ops.Neighborhood;
 import net.imglib2.ops.UnaryOperation;
-import net.imglib2.type.numeric.NumericType;
+import net.imglib2.type.numeric.RealType;
 
 /**
  * 
  * @author Barry DeZonia
  * 
  */
-public class GeneralUnaryFunction<INDEX, INPUT_TYPE,
-		OUTPUT_TYPE extends NumericType<OUTPUT_TYPE>>
+public class GeneralUnaryFunction<INDEX, INPUT_TYPE extends RealType<INPUT_TYPE>,
+		OUTPUT_TYPE extends RealType<OUTPUT_TYPE>>
 	implements Function<INDEX, OUTPUT_TYPE>
 {
 	private final Function<INDEX, INPUT_TYPE> f1;
 	private final INPUT_TYPE temp;
-	private final UnaryOperation<INPUT_TYPE, OUTPUT_TYPE> operation;
+	private final UnaryOperation<RealType<?>, RealType<?>> operation;
 	private final OUTPUT_TYPE type;
 
 	public GeneralUnaryFunction(Function<INDEX, INPUT_TYPE> f1,
-			UnaryOperation<INPUT_TYPE, OUTPUT_TYPE> operation, OUTPUT_TYPE type) {
+			UnaryOperation<RealType<?>, RealType<?>> operation, OUTPUT_TYPE type) {
 		this.type = type;
 		this.f1 = f1;
 		this.temp = f1.createOutput();
@@ -66,7 +66,7 @@ public class GeneralUnaryFunction<INDEX, INPUT_TYPE,
 	@Override
 	public GeneralUnaryFunction<INDEX, INPUT_TYPE, OUTPUT_TYPE> copy() {
 		return new GeneralUnaryFunction<INDEX, INPUT_TYPE, OUTPUT_TYPE>(
-				f1.copy(), operation.copy(), type);
+			f1.copy(), operation.copy(), type);
 	}
 
 	@Override

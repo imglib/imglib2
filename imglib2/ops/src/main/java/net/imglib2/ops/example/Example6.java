@@ -170,7 +170,7 @@ public class Example6 {
 	private static boolean testCase(double ix, double iy) {
 		boolean success = true;
 		Img<DoubleType> inputImg = makeInputImage();
-		Function<long[],DoubleType> input = new RealImageFunction<DoubleType>(inputImg);
+		Function<long[],DoubleType> input = new RealImageFunction<DoubleType>(inputImg, new DoubleType());
 		Function<double[],DoubleType> interpolator = new RealBilinearInterpolatorFunction<DoubleType>(input);
 		ContinuousNeigh neigh = new ContinuousNeigh(new double[2], new double[2], new double[2]);
 		DoubleType variable = new DoubleType();

@@ -39,11 +39,11 @@ import net.imglib2.type.numeric.RealType;
  * @author Barry DeZonia
  * 
  */
-public final class RealCopyZeroTransparent<T extends RealType<T>, V extends RealType<V>, O extends RealType<O>>
-		implements BinaryOperation<T, V, O> {
-
+public final class RealCopyZeroTransparent
+		implements BinaryOperation<RealType<?>, RealType<?>, RealType<?>>
+{
 	@Override
-	public O compute(T x1, V x2, O output) {
+	public RealType<?> compute(RealType<?> x1, RealType<?> x2, RealType<?> output) {
 		if (x2.getRealDouble() == 0)
 			output.setReal(x1.getRealDouble());
 		else
@@ -52,7 +52,7 @@ public final class RealCopyZeroTransparent<T extends RealType<T>, V extends Real
 	}
 
 	@Override
-	public RealCopyZeroTransparent<T, V, O> copy() {
-		return new RealCopyZeroTransparent<T, V, O>();
+	public RealCopyZeroTransparent copy() {
+		return new RealCopyZeroTransparent();
 	}
 }

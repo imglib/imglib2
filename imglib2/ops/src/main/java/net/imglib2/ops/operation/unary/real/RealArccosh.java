@@ -39,11 +39,11 @@ import net.imglib2.type.numeric.RealType;
  * @author Barry DeZonia
  * 
  */
-public final class RealArccosh<T extends RealType<T>, V extends RealType<V>>
-		implements UnaryOperation<T, V> {
-
+public final class RealArccosh
+		implements UnaryOperation<RealType<?>, RealType<?>>
+{
 	@Override
-	public V compute(T x, V output) {
+	public RealType<?> compute(RealType<?> x, RealType<?> output) {
 		double xt = x.getRealDouble();
 		double delta = Math.sqrt(xt * xt - 1);
 		if (xt <= -1)
@@ -54,8 +54,8 @@ public final class RealArccosh<T extends RealType<T>, V extends RealType<V>>
 	}
 
 	@Override
-	public RealArccosh<T, V> copy() {
-		return new RealArccosh<T, V>();
+	public RealArccosh copy() {
+		return new RealArccosh();
 	}
 
 }

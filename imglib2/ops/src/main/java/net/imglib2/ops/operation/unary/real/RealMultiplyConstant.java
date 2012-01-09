@@ -37,8 +37,8 @@ package net.imglib2.ops.operation.unary.real;
 import net.imglib2.ops.UnaryOperation;
 import net.imglib2.type.numeric.RealType;
 
-public final class RealMultiplyConstant<T extends RealType<T>, V extends RealType<V>>
-	implements UnaryOperation<T, V>
+public final class RealMultiplyConstant
+	implements UnaryOperation<RealType<?>, RealType<?>>
 {
 	private final double constant;
 
@@ -47,14 +47,14 @@ public final class RealMultiplyConstant<T extends RealType<T>, V extends RealTyp
 	}
 
 	@Override
-	public V compute(T x, V output) {
+	public RealType<?> compute(RealType<?> x, RealType<?> output) {
 		double value = x.getRealDouble() * constant;
 		output.setReal(value);
 		return output;
 	}
 
 	@Override
-	public RealMultiplyConstant<T, V> copy() {
-		return new RealMultiplyConstant<T, V>(constant);
+	public RealMultiplyConstant copy() {
+		return new RealMultiplyConstant(constant);
 	}
 }

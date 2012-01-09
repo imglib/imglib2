@@ -31,6 +31,7 @@ package net.imglib2.ops.operation.unary.real;
 
 import net.imglib2.ops.UnaryOperation;
 import net.imglib2.type.numeric.RealType;
+import net.imglib2.type.numeric.real.DoubleType;
 
 //verified formula with Mathworld's definition for Inverse Cosecant
 
@@ -39,20 +40,15 @@ import net.imglib2.type.numeric.RealType;
  * @author Barry DeZonia
  * 
  */
-public final class RealArccsc<T extends RealType<T>, V extends RealType<V>>
-		implements UnaryOperation<T, V> {
-
-	private final RealArccos<T, T> acos = new RealArccos<T, T>();
-	private T angle;
-	private T tmp;
+public final class RealArccsc
+		implements UnaryOperation<RealType<?>, RealType<?>>
+{
+	private static final RealArccos acos = new RealArccos();
+	private DoubleType angle = new DoubleType();
+	private DoubleType tmp = new DoubleType();
 
 	@Override
-	public V compute(T x, V output) {
-		// lazy initialization
-		if (angle == null) {
-			angle = x.createVariable();
-			tmp = x.createVariable();
-		}
+	public RealType<?> compute(RealType<?> x, RealType<?> output) {
 		double xt = x.getRealDouble();
 		if ((xt > -1) && (xt < 1))
 			throw new IllegalArgumentException("arccsc(x) : x out of range");
@@ -69,7 +65,7 @@ public final class RealArccsc<T extends RealType<T>, V extends RealType<V>>
 	}
 
 	@Override
-	public RealArccsc<T, V> copy() {
-		return new RealArccsc<T, V>();
+	public RealArccsc copy() {
+		return new RealArccsc();
 	}
 }

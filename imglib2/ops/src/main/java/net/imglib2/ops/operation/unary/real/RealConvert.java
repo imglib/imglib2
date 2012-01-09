@@ -37,8 +37,9 @@ import net.imglib2.type.numeric.RealType;
  * @author Barry DeZonia
  * 
  */
-public final class RealConvert<T extends RealType<T>, U extends RealType<U>>
-		implements UnaryOperation<T, U> {
+public final class RealConvert
+		implements UnaryOperation<RealType<?>, RealType<?>>
+{
 	private double scale;
 	private double inputMin;
 	private double inputMax;
@@ -55,7 +56,7 @@ public final class RealConvert<T extends RealType<T>, U extends RealType<U>>
 	}
 
 	@Override
-	public U compute(T x, U output) {
+	public RealType<?> compute(RealType<?> x, RealType<?> output) {
 		double value = (x.getRealDouble() - inputMin) * scale + outputMin;
 		output.setReal(value);
 
@@ -63,7 +64,7 @@ public final class RealConvert<T extends RealType<T>, U extends RealType<U>>
 	}
 
 	@Override
-	public RealConvert<T, U> copy() {
-		return new RealConvert<T, U>(inputMin, inputMax, outputMin, outputMax);
+	public RealConvert copy() {
+		return new RealConvert(inputMin, inputMax, outputMin, outputMax);
 	}
 }
