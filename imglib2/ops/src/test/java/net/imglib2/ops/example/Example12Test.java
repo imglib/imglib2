@@ -1,26 +1,30 @@
 package net.imglib2.ops.example;
 
+import static org.junit.Assert.*;
+
+import org.junit.Test;
+
 import net.imglib2.Cursor;
 import net.imglib2.img.Img;
 import net.imglib2.img.array.ArrayImgFactory;
 import net.imglib2.ops.operation.binary.real.RealAdd;
 import net.imglib2.type.numeric.real.DoubleType;
 
-public class Example12 {
+public class Example12Test {
 
-	private static final int XSIZE = 10;
-	private static final int YSIZE = 20;
+	private final int XSIZE = 10;
+	private final int YSIZE = 20;
 
-	private static boolean veryClose(double d1, double d2) {
+	private boolean veryClose(double d1, double d2) {
 		return Math.abs(d1 - d2) < 0.00001;
 	}
 
-	private static Img<DoubleType> allocateImage() {
+	private Img<DoubleType> allocateImage() {
 		final ArrayImgFactory<DoubleType> imgFactory = new ArrayImgFactory<DoubleType>();
 		return imgFactory.create(new long[] { XSIZE, YSIZE }, new DoubleType());
 	}
 
-	private static void fillImage(Img<DoubleType> img, double value) {
+	private void fillImage(Img<DoubleType> img, double value) {
 		Cursor<DoubleType> cursor = img.cursor();
 		while (cursor.hasNext()) {
 			cursor.fwd();
@@ -28,7 +32,8 @@ public class Example12 {
 		}
 	}
 
-	public static void main(String[] args) {
+	@Test
+	public void test() {
 		Img<DoubleType> in1 = allocateImage();
 		fillImage(in1, 1);
 		Img<DoubleType> in2 = allocateImage();
@@ -46,17 +51,12 @@ public class Example12 {
 			op.compute(ic1.get(), ic2.get(), oc.get());
 		}
 
-		System.out.println("checking pixel values");
 		oc.reset();
 		while (oc.hasNext()) {
 			// System.out.println(i++);
 			oc.fwd();
 			double value = oc.get().getRealDouble();
-			if (!veryClose(value, 1 + 2)) {
-				System.out.println("IMAGES ARE DIFFERENT");
-			}
+			assertTrue(veryClose(value, 1 + 2));
 		}
-		System.out
-				.println("if no error messages were printed then tests were successful");
 	}
 }

@@ -29,6 +29,10 @@ POSSIBILITY OF SUCH DAMAGE.
 
 package net.imglib2.ops.example;
 
+import static org.junit.Assert.*;
+
+import org.junit.Test;
+
 import net.imglib2.RandomAccess;
 import net.imglib2.img.Img;
 import net.imglib2.img.array.ArrayImgFactory;
@@ -47,21 +51,21 @@ import net.imglib2.type.numeric.real.DoubleType;
  * @author Barry DeZonia
  *
  */
-public class Example11 {
+public class Example11Test {
 
-	private static final int XSIZE = 2;
-	private static final int YSIZE = 2;
+	private final int XSIZE = 2;
+	private final int YSIZE = 2;
 
-	private static boolean veryClose(double d1, double d2) {
+	private boolean veryClose(double d1, double d2) {
 		return Math.abs(d1-d2) < 0.00001;
 	}
 
-	private static Img<DoubleType> allocateRealImage() {
+	private Img<DoubleType> allocateRealImage() {
 		final ArrayImgFactory<DoubleType> imgFactory = new ArrayImgFactory<DoubleType>();
 		return imgFactory.create(new long[]{XSIZE,YSIZE}, new DoubleType());
 	}
 
-	private static Img<DoubleType> makeInputImage() {
+	private Img<DoubleType> makeInputImage() {
 		Img<DoubleType> inputImg = allocateRealImage();
 		RandomAccess<DoubleType> accessor = inputImg.randomAccess();
 		long[] pos = new long[3];
@@ -76,8 +80,8 @@ public class Example11 {
 		return inputImg;
 	}
 	
-	private static boolean testOutOfBounds() {
-		boolean success = true;
+	@Test
+	public void testOutOfBounds() {
 		Img<DoubleType> image = makeInputImage();
 		DiscreteNeigh inputNeigh = new DiscreteNeigh(new long[2], new long[]{1,1}, new long[]{1,1});
 		Function<long[],DoubleType> imageFunc =
@@ -101,46 +105,51 @@ public class Example11 {
 				currPt[1] = y;
 				inputNeigh.moveTo(currPt);
 				imageFunc.evaluate(inputNeigh, currPt, left);
-				if (!veryClose(inbounds.getRealDouble(), left.getRealDouble())) {
+				assertTrue(veryClose(inbounds.getRealDouble(), left.getRealDouble()));
+				/*
+				{
 					System.out.println(" FAILURE at ("+x+","+y+"): expected ("
 						+(inbounds.getRealDouble())+") actual ("+left.getRealDouble()+")");
 					success = false;
 				}
+				*/
 				currPt[0] = x + XSIZE;
 				currPt[1] = y;
 				inputNeigh.moveTo(currPt);
 				imageFunc.evaluate(inputNeigh, currPt, right);
-				if (!veryClose(inbounds.getRealDouble(), right.getRealDouble())) {
+				assertTrue(veryClose(inbounds.getRealDouble(), right.getRealDouble()));
+				/*
+				{
 					System.out.println(" FAILURE at ("+x+","+y+"): expected ("
 						+(inbounds.getRealDouble())+") actual ("+right.getRealDouble()+")");
 					success = false;
 				}
+				*/
 				currPt[0] = x;
 				currPt[1] = y - YSIZE;
 				inputNeigh.moveTo(currPt);
 				imageFunc.evaluate(inputNeigh, currPt, top);
-				if (!veryClose(inbounds.getRealDouble(), top.getRealDouble())) {
+				assertTrue(veryClose(inbounds.getRealDouble(), top.getRealDouble()));
+				/*
+				{
 					System.out.println(" FAILURE at ("+x+","+y+"): expected ("
 						+(inbounds.getRealDouble())+") actual ("+top.getRealDouble()+")");
 					success = false;
 				}
+				*/
 				currPt[0] = x;
 				currPt[1] = y + YSIZE;
 				inputNeigh.moveTo(currPt);
 				imageFunc.evaluate(inputNeigh, currPt, bottom);
-				if (!veryClose(inbounds.getRealDouble(), bottom.getRealDouble())) {
+				assertTrue(veryClose(inbounds.getRealDouble(), bottom.getRealDouble()));
+				/*
+				{
 					System.out.println(" FAILURE at ("+x+","+y+"): expected ("
 						+(inbounds.getRealDouble())+") actual ("+bottom.getRealDouble()+")");
 					success = false;
 				}
+				*/
 			}
 		}
-		return success;
-	}
-	
-	public static void main(String[] args) {
-		System.out.println("Example11");
-		if (testOutOfBounds())
-			System.out.println(" Successful test");
 	}
 }

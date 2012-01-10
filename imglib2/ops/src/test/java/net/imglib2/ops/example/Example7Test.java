@@ -29,6 +29,10 @@ POSSIBILITY OF SUCH DAMAGE.
 
 package net.imglib2.ops.example;
 
+import static org.junit.Assert.*;
+
+import org.junit.Test;
+
 import net.imglib2.RandomAccess;
 import net.imglib2.img.Img;
 import net.imglib2.img.array.ArrayImgFactory;
@@ -54,20 +58,20 @@ import net.imglib2.type.numeric.real.DoubleType;
  * @author Barry DeZonia
  *
  */
-public class Example7 {
+public class Example7Test {
 
-	private static final long XSIZE = 1201;
-	private static final long YSIZE = 1201;
-	private static final long CIRCLE_RADIUS = 200;
-	private static final long LINE_CONSTANT = 650;
-	private static final long X_CONSTANT = 400;
+	private final long XSIZE = 1201;
+	private final long YSIZE = 1201;
+	private final long CIRCLE_RADIUS = 200;
+	private final long LINE_CONSTANT = 650;
+	private final long X_CONSTANT = 400;
 	
-	private static Img<DoubleType> allocateImage() {
+	private Img<DoubleType> allocateImage() {
 		final ArrayImgFactory<DoubleType> imgFactory = new ArrayImgFactory<DoubleType>();
 		return imgFactory.create(new long[]{XSIZE,YSIZE}, new DoubleType());
 	}
 
-	public static class XValueCondition implements Condition<long[]> {
+	public class XValueCondition implements Condition<long[]> {
 
 		@Override
 		public boolean isTrue(Neighborhood<long[]> neigh, long[] point) {
@@ -80,7 +84,7 @@ public class Example7 {
 		}
 	}
 	
-	public static class XSquaredFunction implements Function<long[],DoubleType> {
+	public class XSquaredFunction implements Function<long[],DoubleType> {
 
 		@Override
 		public void evaluate(Neighborhood<long[]> neigh, long[] point, DoubleType output) {
@@ -99,7 +103,7 @@ public class Example7 {
 		
 	}
 
-	public static class YLineFunction implements Function<long[],DoubleType> {
+	public class YLineFunction implements Function<long[],DoubleType> {
 
 		@Override
 		public void evaluate(Neighborhood<long[]> neigh, long[] point, DoubleType output) {
@@ -118,7 +122,7 @@ public class Example7 {
 		
 	}
 	
-	public static class CircularCondition implements Condition<long[]> {
+	public class CircularCondition implements Condition<long[]> {
 
 		long ctrX = XSIZE / 2;
 		long ctrY = YSIZE / 2;
@@ -141,7 +145,7 @@ public class Example7 {
 		}
 	}
 	
-	public static class XYSumCondition implements Condition<long[]> {
+	public class XYSumCondition implements Condition<long[]> {
 
 		public XYSumCondition() {
 			// nothing to do
@@ -158,11 +162,11 @@ public class Example7 {
 		}
 	}
 
-	private static boolean veryClose(double d1, double d2) {
+	private boolean veryClose(double d1, double d2) {
 		return Math.abs(d1-d2) < 0.00001;
 	}
 
-	private static double expectedValue(int x, int y) {
+	private double expectedValue(int x, int y) {
 		double ctrX = XSIZE/2;
 		double ctrY = YSIZE/2;
 		double dx = x - ctrX;
@@ -175,8 +179,7 @@ public class Example7 {
 		return 3*y + 19;
 	}
 
-	private static boolean testValues(Img<? extends RealType<?>> image) {
-		boolean success = true;
+	private void testValues(Img<? extends RealType<?>> image) {
 		RandomAccess<? extends RealType<?>> accessor = image.randomAccess();
 		long[] pos = new long[2];
 		for (int x = 0; x < XSIZE; x++) {
@@ -185,17 +188,19 @@ public class Example7 {
 				pos[1] = y;
 				accessor.setPosition(pos);
 				double value = accessor.get().getRealDouble();
-				if (!veryClose(value, expectedValue(x, y))) {
+				assertTrue(veryClose(value, expectedValue(x, y)));
+				/*
+				{
 					System.out.println(" FAILURE at ("+x+","+y+"): expected ("
 						+expectedValue(x,y)+") actual ("+value+")");
-					success = false;
 				}
+				*/
 			}
 		}
-		return success;
 	}
 	
-	private static boolean testComplicatedAssignment() {
+	@Test
+	public void testComplicatedAssignment() {
 		Condition<long[]> xValCond = new XValueCondition();
 		Function<long[],DoubleType> xSquaredFunc = new XSquaredFunction();
 		Function<long[],DoubleType> yLineFunc = new YLineFunction();
@@ -210,12 +215,6 @@ public class Example7 {
 		Condition<long[]> compositeCondition = new AndCondition<long[]>(circleCond,sumCond);
 		assigner.setCondition(compositeCondition);
 		assigner.assign();
-		return testValues(image);
-	}
-	
-	public static void main(String[] args) {
-		System.out.println("Example7");
-		if (testComplicatedAssignment())
-			System.out.println(" Successful test");
+		testValues(image);
 	}
 }

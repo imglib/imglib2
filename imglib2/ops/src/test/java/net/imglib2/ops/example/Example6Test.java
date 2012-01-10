@@ -29,6 +29,10 @@ POSSIBILITY OF SUCH DAMAGE.
 
 package net.imglib2.ops.example;
 
+import static org.junit.Assert.*;
+
+import org.junit.Test;
+
 import net.imglib2.RandomAccess;
 import net.imglib2.img.Img;
 import net.imglib2.img.array.ArrayImgFactory;
@@ -54,17 +58,17 @@ import net.imglib2.type.numeric.real.DoubleType;
  * @author Barry DeZonia
  *
  */
-public class Example6 {
+public class Example6Test {
 
-	private static final int XSIZE = 250;
-	private static final int YSIZE = 400;
+	private final int XSIZE = 250;
+	private final int YSIZE = 400;
 	
-	private static Img<DoubleType> allocateImage() {
+	private Img<DoubleType> allocateImage() {
 		final ArrayImgFactory<DoubleType> imgFactory = new ArrayImgFactory<DoubleType>();
 		return imgFactory.create(new long[]{XSIZE,YSIZE}, new DoubleType());
 	}
 
-	private static Img<DoubleType> makeInputImage() {
+	private Img<DoubleType> makeInputImage() {
 		Img<DoubleType> inputImg = allocateImage();
 		RandomAccess<DoubleType> accessor = inputImg.randomAccess();
 		long[] pos = new long[2];
@@ -79,11 +83,11 @@ public class Example6 {
 		return inputImg;
 	}
 
-	private static boolean veryClose(double d1, double d2) {
+	private boolean veryClose(double d1, double d2) {
 		return Math.abs(d1-d2) < 0.00001;
 	}
 
-	public static double interpolate(double ix, double iy, double ul, double ur, double ll, double lr) {
+	public double interpolate(double ix, double iy, double ul, double ur, double ll, double lr) {
 		double value = 0;
 		value += (1-ix)*(1-iy)*ul;
 		value += (1-ix)*(iy)*ll;
@@ -92,7 +96,7 @@ public class Example6 {
 		return value;
 	}
 
-	private static double expectedValue(int x, int y, double ix, double iy) {
+	private double expectedValue(int x, int y, double ix, double iy) {
 		double ul = (x+0) + 2*(y+0);
 		double ur = (x+1) + 2*(y+0);
 		double ll = (x+0) + 2*(y+1);
@@ -100,7 +104,7 @@ public class Example6 {
 		return interpolate(ix,iy,ul,ur,ll,lr);
 	}
 	
-	private static class RealBilinearInterpolatorFunction<T extends RealType<T>> 
+	private class RealBilinearInterpolatorFunction<T extends RealType<T>> 
 	implements Function<double[],T> {
 
 		private DiscreteNeigh discreteNeigh;
@@ -130,7 +134,7 @@ public class Example6 {
 			getValue((x+1),(y+0),ur);
 			getValue((x+0),(y+1),ll);
 			getValue((x+1),(y+1),lr);
-			double value = Example6.interpolate(ix, iy, ul.getRealDouble(), 
+			double value = interpolate(ix, iy, ul.getRealDouble(), 
 					ur.getRealDouble(), ll.getRealDouble(), lr.getRealDouble());
 			output.setReal(value);
 		}
@@ -167,8 +171,7 @@ public class Example6 {
 		}
 	}
 
-	private static boolean testCase(double ix, double iy) {
-		boolean success = true;
+	private void doTestCase(double ix, double iy) {
 		Img<DoubleType> inputImg = makeInputImage();
 		Function<long[],DoubleType> input = new RealImageFunction<DoubleType>(inputImg, new DoubleType());
 		Function<double[],DoubleType> interpolator = new RealBilinearInterpolatorFunction<DoubleType>(input);
@@ -181,29 +184,24 @@ public class Example6 {
 				point[1] = y + iy;
 				neigh.moveTo(point);
 				interpolator.evaluate(neigh, point, variable);
-				if (!veryClose(variable.getRealDouble(), expectedValue(x, y, ix, iy))) {
+				assertTrue(veryClose(variable.getRealDouble(), expectedValue(x, y, ix, iy)));
+				/*
+				{
 					System.out.println(" FAILURE at ("+(x+ix)+","+(y+iy)+"): expected ("
 						+expectedValue(x,y,ix,iy)+") actual ("+variable.getRealDouble()+")");
 					success = false;
 				}
+				*/
 			}
 		}
-		return success;
 	}
 	
-	private static boolean testInterpolation() {
-		boolean success = true;
+	@Test
+	public void testInterpolation() {
 		for (double ix = 0; ix <= 1; ix += 0.1) {
 			for (double iy = 0; iy <= 1; iy += 0.1) {
-				success &= testCase(ix,iy);
+				doTestCase(ix,iy);
 			}
 		}
-		return success;
-	}
-	
-	public static void main(String[] args) {
-		System.out.println("Example6");
-		if (testInterpolation())
-			System.out.println(" Successful test");
 	}
 }

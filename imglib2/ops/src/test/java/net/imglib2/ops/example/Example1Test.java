@@ -29,6 +29,10 @@ POSSIBILITY OF SUCH DAMAGE.
 
 package net.imglib2.ops.example;
 
+import static org.junit.Assert.*;
+
+import org.junit.Test;
+
 import net.imglib2.RandomAccess;
 import net.imglib2.img.Img;
 import net.imglib2.img.array.ArrayImgFactory;
@@ -45,21 +49,21 @@ import net.imglib2.type.numeric.real.DoubleType;
  * @author Barry DeZonia
  * 
  */
-public class Example1 {
+public class Example1Test {
 
-	private static final long XSIZE = 100;
-	private static final long YSIZE = 200;
+	private final long XSIZE = 100;
+	private final long YSIZE = 200;
 
-	private static boolean veryClose(double d1, double d2) {
+	private boolean veryClose(double d1, double d2) {
 		return Math.abs(d1 - d2) < 0.00001;
 	}
 
-	private static Img<DoubleType> allocateImage() {
+	private Img<DoubleType> allocateImage() {
 		final ArrayImgFactory<DoubleType> imgFactory = new ArrayImgFactory<DoubleType>();
 		return imgFactory.create(new long[] { XSIZE, YSIZE }, new DoubleType());
 	}
 
-	private static Img<DoubleType> makeInputImage() {
+	private Img<DoubleType> makeInputImage() {
 		Img<DoubleType> inputImg = allocateImage();
 		RandomAccess<DoubleType> accessor = inputImg.randomAccess();
 		long[] pos = new long[2];
@@ -74,11 +78,10 @@ public class Example1 {
 		return inputImg;
 	}
 
-	// calculate output values by adding 15 to the values of an input image
+	@Test
+	public void testAssignment() {
 
-	private static boolean testAssignment() {
-
-		boolean success = true;
+		// calculate output values by adding 15 to the values of an input image
 
 		Img<DoubleType> inputImage = makeInputImage();
 
@@ -103,21 +106,17 @@ public class Example1 {
 				index[1] = y;
 				additionFunc.evaluate(neighborhood, neighborhood.getKeyPoint(),
 						pointValue);
-				if (!veryClose(pointValue.getRealDouble(), (x + y + 15))) {
+				assertTrue(veryClose(pointValue.getRealDouble(), (x + y + 15)));
+				/*
+				{
 					System.out.println(" FAILURE at (" + x + "," + y
 							+ "): expected (" + (x + y + 15) + ") actual ("
 							+ pointValue.getRealDouble() + ")");
 					success = false;
 				}
+				*/
 			}
 		}
-
-		return success;
 	}
 
-	public static void main(String[] args) {
-		System.out.println("Example1");
-		if (testAssignment())
-			System.out.println(" Successful test");
-	}
 }

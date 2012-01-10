@@ -29,40 +29,45 @@ POSSIBILITY OF SUCH DAMAGE.
 
 package net.imglib2.ops.example;
 
+import static org.junit.Assert.*;
+
+import org.junit.Test;
+
 import net.imglib2.RandomAccess;
 import net.imglib2.img.Img;
 import net.imglib2.img.array.ArrayImgFactory;
 import net.imglib2.ops.DiscreteNeigh;
 import net.imglib2.ops.Function;
+import net.imglib2.ops.function.real.RealAverageFunction;
 import net.imglib2.ops.function.real.RealImageFunction;
-import net.imglib2.ops.function.real.RealMedianFunction;
-import net.imglib2.type.numeric.integer.LongType;
+import net.imglib2.type.numeric.real.DoubleType;
 
-// a 3x3x3 median example
+
+// take an average of the z values of a 3d image
 
 /**
  * 
  * @author Barry DeZonia
  *
  */
-public class Example3 {
+public class Example2Test {
 
-	private static final int XSIZE = 50;
-	private static final int YSIZE = 75;
-	private static final int ZSIZE = 100;
+	private final int XSIZE = 50;
+	private final int YSIZE = 75;
+	private final int ZSIZE = 5;
 
-	private static boolean veryClose(double d1, double d2) {
+	private boolean veryClose(double d1, double d2) {
 		return Math.abs(d1-d2) < 0.00001;
 	}
 
-	private static Img<LongType> allocateImage() {
-		final ArrayImgFactory<LongType> imgFactory = new ArrayImgFactory<LongType>();
-		return imgFactory.create(new long[]{XSIZE,YSIZE,ZSIZE}, new LongType());
+	private Img<DoubleType> allocateImage() {
+		final ArrayImgFactory<DoubleType> imgFactory = new ArrayImgFactory<DoubleType>();
+		return imgFactory.create(new long[]{XSIZE,YSIZE,ZSIZE}, new DoubleType());
 	}
 
-	private static Img<LongType> makeInputImage() {
-		Img<LongType> inputImg = allocateImage();
-		RandomAccess<LongType> accessor = inputImg.randomAccess();
+	private Img<DoubleType> makeInputImage() {
+		Img<DoubleType> inputImg = allocateImage();
+		RandomAccess<DoubleType> accessor = inputImg.randomAccess();
 		long[] pos = new long[3];
 		for (int x = 0; x < XSIZE; x++) {
 			for (int y = 0; y < YSIZE; y++) {
@@ -71,45 +76,39 @@ public class Example3 {
 					pos[1] = y;
 					pos[2] = z;
 					accessor.setPosition(pos);
-					accessor.get().setReal(x + 2*y + 3*z);
+					accessor.get().setReal(x+y+z);
 				}
 			}			
 		}
 		return inputImg;
 	}
 	
-	// calculate output values as a median of 3x3x3 cells of image
-	
-	private static boolean test3x3x3Median() {
-		boolean success = true;
-		Img<LongType> image = makeInputImage();
-		DiscreteNeigh inputNeigh = new DiscreteNeigh(new long[3], new long[]{1,1,1}, new long[]{1,1,1});
-		Function<long[],LongType> imageFunc = new RealImageFunction<LongType>(image, new LongType());
-		Function<long[],LongType> medFunc = new RealMedianFunction<LongType>(imageFunc);
-		long[] currPt = new long[3];
-		LongType variable = new LongType();
-		for (int x = 1; x < XSIZE-1; x++) {
-			for (int y = 1; y < YSIZE-1; y++) {
-				for (int z = 1; z < ZSIZE-1; z++) {
-					currPt[0] = x;
-					currPt[1] = y;
-					currPt[2] = z;
-					inputNeigh.moveTo(currPt);
-					medFunc.evaluate(inputNeigh, currPt, variable);
-					if (!veryClose(variable.getRealDouble(), x + 2*y + 3*z)) {
-						System.out.println(" FAILURE at ("+x+","+y+"): expected ("
-							+(x + 2*y + 3*z)+") actual ("+variable.getRealDouble()+")");
-						success = false;
-					}
+	@Test
+	public void testZAveraging() {
+
+		// calculate output values as an average of a number of Z planes
+		
+		Img<DoubleType> image = makeInputImage();
+		DiscreteNeigh inputNeigh = new DiscreteNeigh(new long[]{0,0,0}, new long[]{0,0,0}, new long[]{0,0,ZSIZE-1});
+		Function<long[],DoubleType> imageFunc = new RealImageFunction<DoubleType>(image, new DoubleType());
+		Function<long[],DoubleType> aveFunc = new RealAverageFunction<DoubleType>(imageFunc);
+		long[] currPt = inputNeigh.getKeyPoint();
+		DoubleType variable = new DoubleType();
+		for (int x = 0; x < XSIZE; x++) {
+			for (int y = 0; y < YSIZE; y++) {
+				currPt[0] = x;
+				currPt[1] = y;
+				currPt[2] = 0;
+				aveFunc.evaluate(inputNeigh, currPt, variable);
+				assertTrue(veryClose(variable.getRealDouble(), x+y+((0.0+1+2+3+4) / 5.0)));
+				/*
+				{
+					System.out.println(" FAILURE at ("+x+","+y+"): expected ("
+						+(x+y+((0.0+1+2+3+4) / 5.0))+") actual ("+variable.getRealDouble()+")");
+					success = false;
 				}
+				*/
 			}
 		}
-		return success;
-	}
-	
-	public static void main(String[] args) {
-		System.out.println("Example3");
-		if (test3x3x3Median())
-			System.out.println(" Successful test");
 	}
 }

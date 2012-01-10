@@ -29,6 +29,10 @@ POSSIBILITY OF SUCH DAMAGE.
 
 package net.imglib2.ops.example;
 
+import static org.junit.Assert.*;
+
+import org.junit.Test;
+
 import net.imglib2.RandomAccess;
 import net.imglib2.img.Img;
 import net.imglib2.img.array.ArrayImgFactory;
@@ -50,7 +54,7 @@ import net.imglib2.type.numeric.real.DoubleType;
  * @author Barry DeZonia
  * 
  */
-public class Example9 {
+public class Example9Test {
 
 	private static final int XSIZE = 45;
 	private static final int YSIZE = 104;
@@ -143,8 +147,8 @@ public class Example9 {
 		return Math.abs(gx) + Math.abs(gy);
 	}
 
-	private static boolean testSobel() {
-		boolean success = true;
+	@Test
+	public void testSobel() {
 		img = makeInputImage();
 		DiscreteNeigh neigh = new DiscreteNeigh(new long[2],
 				new long[] { 1, 1 }, new long[] { 1, 1 });
@@ -169,20 +173,16 @@ public class Example9 {
 				neigh.getKeyPoint()[0] = x;
 				neigh.getKeyPoint()[1] = y;
 				addFunc.evaluate(neigh, neigh.getKeyPoint(), output);
-				if (!veryClose(output.getRealDouble(), expectedValue(x, y))) {
+				assertTrue(veryClose(output.getRealDouble(), expectedValue(x, y)));
+				/*
+				{
 					System.out.println(" FAILURE at (" + x + "," + y
 							+ "): expected (" + expectedValue(x, y)
 							+ ") actual (" + output.getRealDouble() + ")");
 					success = false;
 				}
+				*/
 			}
 		}
-		return success;
-	}
-
-	public static void main(String[] args) {
-		System.out.println("Example9");
-		if (testSobel())
-			System.out.println(" Successful test");
 	}
 }

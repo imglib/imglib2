@@ -29,8 +29,12 @@ POSSIBILITY OF SUCH DAMAGE.
 
 package net.imglib2.ops.example;
 
+import static org.junit.Assert.*;
+
 import java.util.ArrayList;
 import java.util.Collections;
+
+import org.junit.Test;
 
 import net.imglib2.RandomAccess;
 import net.imglib2.img.Img;
@@ -53,19 +57,19 @@ import net.imglib2.type.numeric.real.DoubleType;
  * @author Barry DeZonia
  *
  */
-public class Example8 {
-	private static final long XSIZE = 20;
-	private static final long YSIZE = 15;
-	private static final long ZSIZE = 5;
+public class Example8Test {
+	private final long XSIZE = 20;
+	private final long YSIZE = 15;
+	private final long ZSIZE = 5;
 
-	private static Img<DoubleType> img;
+	private Img<DoubleType> img;
 	
-	private static Img<DoubleType> allocateImage() {
+	private Img<DoubleType> allocateImage() {
 		final ArrayImgFactory<DoubleType> imgFactory = new ArrayImgFactory<DoubleType>();
 		return imgFactory.create(new long[]{XSIZE,YSIZE,ZSIZE}, new DoubleType());
 	}
 
-	private static Img<DoubleType> makeInputImage() {
+	private Img<DoubleType> makeInputImage() {
 		Img<DoubleType> inputImg = allocateImage();
 		RandomAccess<DoubleType> accessor = inputImg.randomAccess();
 		long[] pos = new long[3];
@@ -85,7 +89,7 @@ public class Example8 {
 		return inputImg;
 	}
 
-	private static double average(int x, int y) {
+	private double average(int x, int y) {
 		RandomAccess<DoubleType> accessor = img.randomAccess();
 		long[] pos = new long[3];
 		pos[0] = x;
@@ -101,11 +105,11 @@ public class Example8 {
 		return sum / numElements;
 	}
 	
-	private static boolean veryClose(double d1, double d2) {
+	private boolean veryClose(double d1, double d2) {
 		return Math.abs(d1-d2) < 0.00001;
 	}
 
-	private static double expectedValue(int x, int y) {
+	private double expectedValue(int x, int y) {
 		ArrayList<Double> values = new ArrayList<Double>();
 		for (int xi = x-1; xi <= x+1; xi++) {
 			for (int yi = y-1; yi <= y+1; yi++) {
@@ -116,8 +120,8 @@ public class Example8 {
 		return values.get(4);
 	}
 
-	private static boolean testTwoNeighborhoodFunction() {
-		boolean success = true;
+	@Test
+	public void testTwoNeighborhoodFunction() {
 		img = makeInputImage();
 		DiscreteNeigh avgNeigh = new DiscreteNeigh(new long[3], new long[]{0,0,0}, new long[]{0,0,ZSIZE-1});
 		DiscreteNeigh medianNeigh = new DiscreteNeigh(new long[3], new long[]{1,1,0}, new long[]{1,1,0});
@@ -132,19 +136,15 @@ public class Example8 {
 				medianNeigh.getKeyPoint()[1] = y;
 				medianNeigh.getKeyPoint()[2] = 0;
 				medianFunc.evaluate(medianNeigh, medianNeigh.getKeyPoint(), output);
-				if (!veryClose(output.getRealDouble(), expectedValue(x, y))) {
+				assertTrue(veryClose(output.getRealDouble(), expectedValue(x, y)));
+				/*
+				{
 					System.out.println(" FAILURE at ("+x+","+y+"): expected ("
 						+expectedValue(x,y)+") actual ("+output.getRealDouble()+")");
 					success = false;
 				}
+				 */
 			}			
 		}
-		return success;
-	}
-	
-	public static void main(String[] args) {
-		System.out.println("Example8");
-		if (testTwoNeighborhoodFunction())
-			System.out.println(" Successful test");
 	}
 }
