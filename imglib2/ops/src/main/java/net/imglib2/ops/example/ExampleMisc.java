@@ -7,6 +7,7 @@ import net.imglib2.ops.condition.AtKeyPointCondition;
 import net.imglib2.ops.function.real.RealImageFunction;
 import net.imglib2.ops.image.ImageAssignment;
 import net.imglib2.ops.operation.unary.real.RealSqr;
+import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.integer.UnsignedByteType;
 
 public class ExampleMisc {
@@ -24,7 +25,7 @@ public class ExampleMisc {
 		Function<long[], UnsignedByteType> imageFunc = new RealImageFunction<UnsignedByteType>(
 				inputImg, new UnsignedByteType());
 
-		Function<long[], UnsignedByteType> func = null;
+		Function<long[], RealType<?>> func = null;
 		// new GeneralUnaryFunction<long[],UnsignedByteType>(imageFunc, op);
 
 		Condition condition = new AtKeyPointCondition();

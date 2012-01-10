@@ -67,12 +67,12 @@ import net.imglib2.type.numeric.real.DoubleType;
  * @author Barry DeZonia
  *
  */
-public class ImageAssignment<DATA_TYPE extends RealType<DATA_TYPE>> {
+public class ImageAssignment {
 
 	// -- instance variables --
 	
-	private final Img<DATA_TYPE> image;
-	private final Function<long[],RealType<?>> func;
+	private final Img<? extends RealType<?>> image;
+	private final Function<long[], RealType<?>> func;
 	private Condition<long[]> cond;
 	private final long[] origin;
 	private final long[] span;
@@ -98,7 +98,7 @@ public class ImageAssignment<DATA_TYPE extends RealType<DATA_TYPE>> {
 	 * 
 	 */
 	public ImageAssignment(
-		Img<DATA_TYPE> img,
+		Img<? extends RealType<?>> img,
 		long[] origin,
 		long[] span,
 		Function<long[],RealType<?>> function,
@@ -127,10 +127,10 @@ public class ImageAssignment<DATA_TYPE extends RealType<DATA_TYPE>> {
 	 * 
 	 */
 	public ImageAssignment(
-		Img<DATA_TYPE> img,
+		Img<? extends RealType<?>> img,
 		long[] origin,
 		long[] span,
-		Function<long[],RealType<?>> function)
+		Function<long[], RealType<?>> function)
 	{
 		this.image = img;
 		this.origin = origin.clone();
@@ -269,13 +269,13 @@ public class ImageAssignment<DATA_TYPE extends RealType<DATA_TYPE>> {
 	 * The task assigns values to a subset of the output region.
 	 */
 	private Runnable task(
-		Img<DATA_TYPE> img,
+		Img<? extends RealType<?>> img,
 		long[] imageOrigin,
 		long[] imageSpan,
 		int axis,
 		long startIndex,
 		long length,
-		Function<long[],RealType<?>> fn,
+		Function<long[], RealType<?>> fn,
 		Condition<long[]> cnd,
 		long[] nOffsets,
 		long[] pOffsets)
@@ -302,8 +302,8 @@ public class ImageAssignment<DATA_TYPE extends RealType<DATA_TYPE>> {
 	 */
 	private class RegionRunner implements Runnable {
 		
-		private final Img<DATA_TYPE> img;
-		private final Function<long[],RealType<?>> function;
+		private final Img<? extends RealType<?>> img;
+		private final Function<long[], RealType<?>> function;
 		private final Condition<long[]> condition;
 		private final DiscreteNeigh region;
 		private final DiscreteNeigh neighborhood;
@@ -312,10 +312,10 @@ public class ImageAssignment<DATA_TYPE extends RealType<DATA_TYPE>> {
 		 * Constructor
 		 */
 		public RegionRunner(
-			Img<DATA_TYPE> img,
+			Img<? extends RealType<?>> img,
 			long[] origin,
 			long[] span,
-			Function<long[],RealType<?>> func,
+			Function<long[], RealType<?>> func,
 			Condition<long[]> cond,
 			long[] negOffs,
 			long[] posOffs)
@@ -332,7 +332,7 @@ public class ImageAssignment<DATA_TYPE extends RealType<DATA_TYPE>> {
 		 */
 		@Override
 		public void run() {
-			final RandomAccess<DATA_TYPE> accessor = img.randomAccess();
+			final RandomAccess<? extends RealType<?>> accessor = img.randomAccess();
 			// TODO COMPLEX
 			final DoubleType output = new DoubleType();
 			final RegionIndexIterator iter = new RegionIndexIterator(region);
