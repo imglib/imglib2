@@ -36,7 +36,7 @@ import net.imglib2.script.algorithm.fn.AlgorithmUtil;
  *  @param matrix The values of the transformation matrix, ordered as explained above.
  *  @param mode Either LINEAR or NEAREST_NEIGHBOR.
  *  
- *  The constructors accept either an {@link Image} or an {@link IFunction} from which an {@link Image} is generated.
+ *  The constructors accept either an {@link Img} or an {@link IFunction} from which an {@link Img} is generated.
  *  
  *  See the underlying transformation model classes: {@link AffineModel2D, AffineModel3D};
  */

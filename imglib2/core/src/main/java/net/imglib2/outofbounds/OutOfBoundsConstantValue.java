@@ -284,7 +284,7 @@ public class OutOfBoundsConstantValue< T extends Type< T > > implements OutOfBou
 	public void setPosition( final int position, final int dim )
 	{
 		this.position[ dim ] = position;
-		if ( position < 0 || position >= dimension[ dim ] )
+		if ( position < min[ dim ] || position > max[ dim ] )
 			dimIsOutOfBounds[ dim ] = isOutOfBounds = true;
 		else
 		{

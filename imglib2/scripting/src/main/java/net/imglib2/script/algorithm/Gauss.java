@@ -8,7 +8,7 @@ import net.imglib2.script.algorithm.fn.ImgProxy;
 import net.imglib2.script.math.Compute;
 import net.imglib2.script.math.fn.IFunction;
 import net.imglib2.script.math.fn.ImageFunction;
-import net.imglib2.algorithm.gauss2.GaussFloat;
+import net.imglib2.algorithm.gauss.GaussFloat;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.real.FloatType;
 
@@ -73,6 +73,6 @@ public class Gauss<T extends RealType<T>> extends ImgProxy<FloatType>
 	static private final Img<FloatType>
 	processFloat(final Img<FloatType> img, final double[] sigma) throws Exception {
 		final GaussFloat g = new GaussFloat(sigma, img);
-		return g.getResult();
+		return (Img<FloatType>)g.getResult();
 	}
 }

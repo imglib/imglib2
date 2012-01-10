@@ -2,10 +2,13 @@ package net.imglib2.script.algorithm.fn;
 
 import java.util.Collection;
 
+import net.imglib2.RandomAccess;
+import net.imglib2.RandomAccessible;
 import net.imglib2.img.Img;
 import net.imglib2.script.color.fn.ColorFunction;
 import net.imglib2.script.math.Compute;
 import net.imglib2.script.math.fn.IFunction;
+import net.imglib2.type.numeric.RealType;
 
 public class AlgorithmUtil
 {
@@ -48,7 +51,7 @@ public class AlgorithmUtil
 		return d;
 	}
 	
-	public static long[] asLongArray(final Collection<Number> ls) {
+	public static long[] asLongArray(final Collection<? extends Number> ls) {
 		final long[] d = new long[ls.size()];
 		int i = 0;
 		for (final Number num : ls) d[i++] = num.longValue();
@@ -61,5 +64,19 @@ public class AlgorithmUtil
 			size *= dim[i];
 		}
 		return (int)size;
+	}
+
+	/** Given a {@param value}, create an appropriate {@link Type} subclass for it, using the type of the {@param img}. */
+	public static final <T extends RealType<T>> T type(final RandomAccessible<T> img, final double value) {
+		if (img instanceof Img) {
+			final T t = ((Img<T>)img).firstElement().createVariable();
+			t.setReal(value);
+			return t;
+		}
+		final RandomAccess<T> ra = img.randomAccess();
+		ra.fwd(0);
+		final T t = ra.get().createVariable();
+		t.setReal(value);
+		return t;
 	}
 }

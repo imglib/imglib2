@@ -7,7 +7,7 @@ import net.imglib2.type.numeric.RealType;
 
 public class Tanh extends UnaryOperation {
 
-	public Tanh(final IterableRealInterval<? extends RealType<?>> img) {
+	public <R extends RealType<R>> Tanh(final IterableRealInterval<R> img) {
 		super(img);
 	}
 	public Tanh(final IFunction fn) {

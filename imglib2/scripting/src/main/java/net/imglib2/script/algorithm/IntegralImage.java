@@ -8,8 +8,6 @@ import net.imglib2.type.numeric.real.DoubleType;
  * Will overflow if any sum is larger than Double.MAX_VALUE.
  * 
  * @author Albert cardona
- *
- * @param <R> The type of the input image.
  */
 public class IntegralImage extends TypedIntegralImage<DoubleType>
 {

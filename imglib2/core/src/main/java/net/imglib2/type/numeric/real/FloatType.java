@@ -58,6 +58,13 @@ public class FloatType extends AbstractRealType<FloatType> implements NativeType
 		set( value );
 	}
 
+	// this is the constructor if you want to specify the dataAccess
+	public FloatType( final FloatAccess access )
+	{
+		img = null;
+		dataAccess = access;
+	}
+
 	// this is the constructor if you want it to be a variable
 	public FloatType() { this( 0 ); }
 

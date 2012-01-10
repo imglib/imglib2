@@ -8,7 +8,7 @@ import net.imglib2.type.numeric.RealType;
 /** Returns the natural logarithm of the sum of the argument and 1. */
 public class Log1p extends UnaryOperation {
 
-	public Log1p(final IterableRealInterval<? extends RealType<?>> img) {
+	public <R extends RealType<R>> Log1p(final IterableRealInterval<R> img) {
 		super(img);
 	}
 	public Log1p(final IFunction fn) {

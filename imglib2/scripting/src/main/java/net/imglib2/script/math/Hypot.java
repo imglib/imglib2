@@ -7,15 +7,15 @@ import net.imglib2.type.numeric.RealType;
 
 public class Hypot extends BinaryOperation
 {
-	public Hypot(final IterableRealInterval<? extends RealType<?>> left, final IterableRealInterval<? extends RealType<?>> right) {
+	public <S extends RealType<S>, R extends RealType<R>> Hypot(final IterableRealInterval<S> left, final IterableRealInterval<R> right) {
 		super(left, right);
 	}
 
-	public Hypot(final IFunction fn, final IterableRealInterval<? extends RealType<?>> right) {
+	public <R extends RealType<R>> Hypot(final IFunction fn, final IterableRealInterval<R> right) {
 		super(fn, right);
 	}
 
-	public Hypot(final IterableRealInterval<? extends RealType<?>> left, final IFunction fn) {
+	public <R extends RealType<R>> Hypot(final IterableRealInterval<R> left, final IFunction fn) {
 		super(left, fn);
 	}
 
@@ -23,11 +23,11 @@ public class Hypot extends BinaryOperation
 		super(fn1, fn2);
 	}
 	
-	public Hypot(final IterableRealInterval<? extends RealType<?>> left, final Number val) {
+	public <R extends RealType<R>> Hypot(final IterableRealInterval<R> left, final Number val) {
 		super(left, val);
 	}
 
-	public Hypot(final Number val,final IterableRealInterval<? extends RealType<?>> right) {
+	public <R extends RealType<R>> Hypot(final Number val,final IterableRealInterval<R> right) {
 		super(val, right);
 	}
 

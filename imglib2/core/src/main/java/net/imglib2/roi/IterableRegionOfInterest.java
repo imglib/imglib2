@@ -8,11 +8,10 @@ import net.imglib2.RandomAccessible;
 import net.imglib2.type.Type;
 
 /**
- * @author leek
- *
  * An IterableRegionOfInterest provides cursors that allow
  * a user to iterate over the pixels in the region of interest.
  * 
+ * @author Lee Kamentsky
  */
 public interface IterableRegionOfInterest extends RegionOfInterest {
 	/**
