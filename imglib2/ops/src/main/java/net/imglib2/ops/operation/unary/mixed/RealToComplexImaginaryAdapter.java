@@ -43,18 +43,18 @@ import net.imglib2.type.numeric.RealType;
  * @author Barry DeZonia
  * 
  */
-public final class RealToComplexImaginaryAdapter<R extends RealType<R>, C extends ComplexType<C>>
-		implements UnaryOperation<R, C> {
+public final class RealToComplexImaginaryAdapter
+		implements UnaryOperation<RealType<?>, ComplexType<?>> {
 
 	@Override
-	public C compute(R x, C output) {
+	public ComplexType<?> compute(RealType<?> x, ComplexType<?> output) {
 		output.setComplexNumber(0, x.getRealDouble());
 		return output;
 	}
 
 	@Override
-	public RealToComplexImaginaryAdapter<R, C> copy() {
-		return new RealToComplexImaginaryAdapter<R, C>();
+	public RealToComplexImaginaryAdapter copy() {
+		return new RealToComplexImaginaryAdapter();
 	}
 
 }
