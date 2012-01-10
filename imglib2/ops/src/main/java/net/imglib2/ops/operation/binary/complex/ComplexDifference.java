@@ -37,11 +37,11 @@ import net.imglib2.type.numeric.ComplexType;
  * @author Barry DeZonia
  * 
  */
-public final class ComplexDifference<T extends ComplexType<T>, U extends ComplexType<U>, V extends ComplexType<V>>
-		implements BinaryOperation<T, U, V> {
+public final class ComplexDifference
+		implements BinaryOperation<ComplexType<?>, ComplexType<?>, ComplexType<?>> {
 
 	@Override
-	public V compute(T z1, U z2, V output) {
+	public ComplexType<?> compute(ComplexType<?> z1, ComplexType<?> z2, ComplexType<?> output) {
 		double x = Math.abs(z1.getRealDouble() - z2.getRealDouble());
 		double y = Math.abs(z1.getImaginaryDouble() - z2.getImaginaryDouble());
 		output.setComplexNumber(x, y);
@@ -49,8 +49,8 @@ public final class ComplexDifference<T extends ComplexType<T>, U extends Complex
 	}
 
 	@Override
-	public ComplexDifference<T, U, V> copy() {
-		return new ComplexDifference<T, U, V>();
+	public ComplexDifference copy() {
+		return new ComplexDifference();
 	}
 
 }

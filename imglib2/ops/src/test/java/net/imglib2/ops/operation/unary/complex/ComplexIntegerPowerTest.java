@@ -9,8 +9,7 @@ import org.junit.Test;
 
 public class ComplexIntegerPowerTest {
 
-	private ComplexPower<ComplexDoubleType,ComplexDoubleType,ComplexDoubleType> opFull =
-			new ComplexPower<ComplexDoubleType,ComplexDoubleType,ComplexDoubleType>(new ComplexDoubleType());
+	private ComplexPower opFull = new ComplexPower();
 	private ComplexDoubleType input1 = new ComplexDoubleType();
 	private ComplexDoubleType input2 = new ComplexDoubleType();
 	private ComplexDoubleType output1 = new ComplexDoubleType();
@@ -33,12 +32,10 @@ public class ComplexIntegerPowerTest {
 	}
 
 	private void doCase(double r1, double i1) {
-		ComplexDoubleType type = new ComplexDoubleType();
 		for (int i = 0; i < 13; i++) {
 			ComplexDoubleType power = new ComplexDoubleType();
 			power.setComplexNumber(i, 0);
-			ComplexIntegerPower<ComplexDoubleType,ComplexDoubleType> op =
-				new ComplexIntegerPower<ComplexDoubleType, ComplexDoubleType>(i, type);
+			ComplexIntegerPower op = new ComplexIntegerPower(i);
 			input1.setComplexNumber(r1, i1);
 			input2.setComplexNumber(r1, i1);
 			op.compute(input1, output1);

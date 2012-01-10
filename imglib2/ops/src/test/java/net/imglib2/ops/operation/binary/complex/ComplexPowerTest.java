@@ -8,8 +8,7 @@ import org.junit.Test;
 
 public class ComplexPowerTest {
 
-	private ComplexPower<ComplexDoubleType,ComplexDoubleType,ComplexDoubleType> op =
-			new ComplexPower<ComplexDoubleType,ComplexDoubleType,ComplexDoubleType>(new ComplexDoubleType());
+	private ComplexPower op = new ComplexPower();
 	private ComplexDoubleType input1 = new ComplexDoubleType();
 	private ComplexDoubleType input2 = new ComplexDoubleType();
 	private ComplexDoubleType output = new ComplexDoubleType();

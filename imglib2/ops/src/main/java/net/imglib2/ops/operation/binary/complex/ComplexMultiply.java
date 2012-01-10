@@ -39,11 +39,11 @@ import net.imglib2.type.numeric.ComplexType;
  * @author Barry DeZonia
  * 
  */
-public final class ComplexMultiply<T extends ComplexType<T>, U extends ComplexType<U>, V extends ComplexType<V>>
-		implements BinaryOperation<T, U, V> {
+public final class ComplexMultiply
+		implements BinaryOperation<ComplexType<?>,ComplexType<?>,ComplexType<?>> {
 
 	@Override
-	public V compute(T z1, U z2, V output) {
+	public ComplexType<?> compute(ComplexType<?> z1, ComplexType<?> z2, ComplexType<?> output) {
 		/*
 		  optimized version (fewer multiplies) : from mathworld.com
 		    seems to exhibit some rounding differences from textbook algorithm
@@ -71,8 +71,8 @@ public final class ComplexMultiply<T extends ComplexType<T>, U extends ComplexTy
 	}
 
 	@Override
-	public ComplexMultiply<T, U, V> copy() {
-		return new ComplexMultiply<T, U, V>();
+	public ComplexMultiply copy() {
+		return new ComplexMultiply();
 	}
 
 }

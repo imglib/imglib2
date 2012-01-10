@@ -32,6 +32,7 @@ package net.imglib2.ops.operation.unary.complex;
 import net.imglib2.ops.UnaryOperation;
 import net.imglib2.ops.operation.binary.complex.ComplexDivide;
 import net.imglib2.type.numeric.ComplexType;
+import net.imglib2.type.numeric.complex.ComplexDoubleType;
 
 // Formula taken from MATLAB documentation
 
@@ -40,46 +41,26 @@ import net.imglib2.type.numeric.ComplexType;
  * @author Barry DeZonia
  * 
  */
-public final class ComplexArcsech<T extends ComplexType<T>, U extends ComplexType<U>>
-		implements UnaryOperation<T, U> {
+public final class ComplexArcsech
+		implements UnaryOperation<ComplexType<?>, ComplexType<?>> {
 
-	private final U ONE;
+	private static final ComplexArccosh arccoshFunc = new ComplexArccosh();
+	private static final ComplexDivide divFunc = new ComplexDivide();
 
-	private final ComplexCopy<T, U> copyFunc;
-	private final ComplexArccosh<U, U> arccoshFunc;
-	private final ComplexDivide<U, U, U> divFunc;
+	private static final ComplexDoubleType ONE = new ComplexDoubleType(1,0);
 
-	private final U z;
-	private final U recipZ;
-
-	private final U type;
-
-	public ComplexArcsech(U type) {
-		this.type = type;
-
-		copyFunc = new ComplexCopy<T, U>();
-		arccoshFunc = new ComplexArccosh<U, U>(type);
-		divFunc = new ComplexDivide<U, U, U>();
-
-		ONE = type.createVariable();
-
-		z = type.createVariable();
-		recipZ = type.createVariable();
-
-		ONE.setComplexNumber(1, 0);
-	}
+	private final ComplexDoubleType recipZ = new ComplexDoubleType();
 
 	@Override
-	public U compute(T in, U output) {
-		copyFunc.compute(in, z);
+	public ComplexType<?> compute(ComplexType<?> z, ComplexType<?> output) {
 		divFunc.compute(ONE, z, recipZ);
 		arccoshFunc.compute(recipZ, output);
 		return output;
 	}
 
 	@Override
-	public ComplexArcsech<T, U> copy() {
-		return new ComplexArcsech<T, U>(type);
+	public ComplexArcsech copy() {
+		return new ComplexArcsech();
 	}
 
 }

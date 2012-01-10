@@ -37,17 +37,11 @@ import net.imglib2.type.numeric.ComplexType;
  * @author Barry DeZonia
  *
  */
-public final class ComplexNegate<T extends ComplexType<T>,U extends ComplexType<U>>
-	implements UnaryOperation<T,U> {
+public final class ComplexNegate
+	implements UnaryOperation<ComplexType<?>,ComplexType<?>> {
 
-	private final U type;
-	
-	public ComplexNegate(U type) {
-		this.type = type;
-	}
-	
 	@Override
-	public U compute(T z, U output) {
+	public ComplexType<?> compute(ComplexType<?> z, ComplexType<?> output) {
 		double x = -z.getRealDouble();
 		double y = -z.getImaginaryDouble();
 		output.setComplexNumber(x,y);
@@ -55,8 +49,8 @@ public final class ComplexNegate<T extends ComplexType<T>,U extends ComplexType<
 	}
 	
 	@Override
-	public ComplexNegate<T,U> copy() {
-		return new ComplexNegate<T,U>(type);
+	public ComplexNegate copy() {
+		return new ComplexNegate();
 	}
 
 }

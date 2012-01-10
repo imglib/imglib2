@@ -8,8 +8,7 @@ import org.junit.Test;
 
 public class ComplexAvgTest {
 
-	private ComplexAvg<ComplexDoubleType,ComplexDoubleType,ComplexDoubleType> op =
-			new ComplexAvg<ComplexDoubleType,ComplexDoubleType,ComplexDoubleType>();
+	private ComplexAvg op =	new ComplexAvg();
 	private ComplexDoubleType input1 = new ComplexDoubleType();
 	private ComplexDoubleType input2 = new ComplexDoubleType();
 	private ComplexDoubleType output = new ComplexDoubleType();

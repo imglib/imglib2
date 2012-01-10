@@ -35,6 +35,7 @@ import net.imglib2.ops.operation.binary.complex.ComplexMultiply;
 import net.imglib2.ops.operation.binary.complex.ComplexSubtract;
 import net.imglib2.ops.operation.unary.complex.ComplexExp;
 import net.imglib2.type.numeric.ComplexType;
+import net.imglib2.type.numeric.complex.ComplexDoubleType;
 
 //Handbook of Mathematics and Computational Science, Harris & Stocker, Springer, 2006
 
@@ -43,56 +44,26 @@ import net.imglib2.type.numeric.ComplexType;
  * @author Barry DeZonia
  * 
  */
-public final class ComplexSin<T extends ComplexType<T>, U extends ComplexType<U>>
-		implements UnaryOperation<T, U> {
+public final class ComplexSin
+		implements UnaryOperation<ComplexType<?>, ComplexType<?>> {
 
-	private final ComplexCopy<T, U> copyFunc;
-	private final ComplexExp<U, U> expFunc;
-	private final ComplexSubtract<U, U, U> subFunc;
-	private final ComplexMultiply<U, U, U> mulFunc;
-	private final ComplexDivide<U, U, U> divFunc;
+	private static final ComplexExp expFunc = new ComplexExp();
+	private static final ComplexSubtract subFunc = new ComplexSubtract();
+	private static final ComplexMultiply mulFunc = new ComplexMultiply();
+	private static final ComplexDivide divFunc = new ComplexDivide();
 
-	private final U TWO_I;
-	private final U I;
-	private final U MINUS_I;
+	private static final ComplexDoubleType TWO_I = new ComplexDoubleType(0,2);
+	private static final ComplexDoubleType I = new ComplexDoubleType(0,1);
+	private static final ComplexDoubleType MINUS_I = new ComplexDoubleType(0,-1);
 
-	private final U z;
-	private final U IZ;
-	private final U minusIZ;
-	private final U expIZ;
-	private final U expMinusIZ;
-	private final U diff;
-
-	private U type;
-
-	public ComplexSin(U type) {
-		this.type = type;
-
-		copyFunc = new ComplexCopy<T, U>();
-		expFunc = new ComplexExp<U, U>();
-		subFunc = new ComplexSubtract<U, U, U>();
-		mulFunc = new ComplexMultiply<U, U, U>();
-		divFunc = new ComplexDivide<U, U, U>();
-
-		TWO_I = type.createVariable();
-		I = type.createVariable();
-		MINUS_I = type.createVariable();
-
-		z = type.createVariable();
-		IZ = type.createVariable();
-		minusIZ = type.createVariable();
-		expIZ = type.createVariable();
-		expMinusIZ = type.createVariable();
-		diff = type.createVariable();
-
-		TWO_I.setComplexNumber(0, 2);
-		I.setComplexNumber(0, 1);
-		MINUS_I.setComplexNumber(0, -1);
-	}
+	private final ComplexDoubleType IZ = new ComplexDoubleType();
+	private final ComplexDoubleType minusIZ = new ComplexDoubleType();
+	private final ComplexDoubleType expIZ = new ComplexDoubleType();
+	private final ComplexDoubleType expMinusIZ = new ComplexDoubleType();
+	private final ComplexDoubleType diff = new ComplexDoubleType();
 
 	@Override
-	public U compute(T in, U output) {
-		copyFunc.compute(in, z);
+	public ComplexType<?> compute(ComplexType<?> z, ComplexType<?> output) {
 		mulFunc.compute(z, I, IZ);
 		mulFunc.compute(z, MINUS_I, minusIZ);
 		expFunc.compute(IZ, expIZ);
@@ -103,8 +74,8 @@ public final class ComplexSin<T extends ComplexType<T>, U extends ComplexType<U>
 	}
 
 	@Override
-	public ComplexSin<T, U> copy() {
-		return new ComplexSin<T, U>(type);
+	public ComplexSin copy() {
+		return new ComplexSin();
 	}
 
 }

@@ -32,6 +32,7 @@ package net.imglib2.ops.operation.unary.complex;
 import net.imglib2.ops.UnaryOperation;
 import net.imglib2.ops.operation.binary.complex.ComplexDivide;
 import net.imglib2.type.numeric.ComplexType;
+import net.imglib2.type.numeric.complex.ComplexDoubleType;
 
 // verified formula with Mathworld's definition for Inverse Cosecant
 
@@ -40,43 +41,26 @@ import net.imglib2.type.numeric.ComplexType;
  * @author Barry DeZonia
  * 
  */
-public final class ComplexArccsc<T extends ComplexType<T>, U extends ComplexType<U>>
-		implements UnaryOperation<T, U> {
+public final class ComplexArccsc
+		implements UnaryOperation<ComplexType<?>, ComplexType<?>> {
 
-	private final ComplexCopy<T, U> copyFunc;
-	private final ComplexArcsin<U, U> arcsinFunc;
-	private final ComplexDivide<U, U, U> divFunc;
+	private static final ComplexArcsin arcsinFunc = new ComplexArcsin();
+	private static final ComplexDivide divFunc = new ComplexDivide();
 
-	private final U ONE;
+	private static final ComplexDoubleType ONE = new ComplexDoubleType(1,0);
 
-	private final U z;
-	private final U recipZ;
-
-	private U type;
-
-	public ComplexArccsc(U type) {
-		this.type = type;
-
-		copyFunc = new ComplexCopy<T, U>();
-		arcsinFunc = new ComplexArcsin<U, U>(type);
-		divFunc = new ComplexDivide<U, U, U>();
-
-		ONE = type.createVariable();
-
-		z = type.createVariable();
-		recipZ = type.createVariable();
-	}
+	private final ComplexDoubleType recipZ = new ComplexDoubleType();
 
 	@Override
-	public U compute(T in, U output) {
-		copyFunc.compute(in, z);
+	public ComplexType<?> compute(ComplexType<?> z, ComplexType<?> output) {
 		divFunc.compute(ONE, z, recipZ);
-		return arcsinFunc.compute(recipZ, output);
+		arcsinFunc.compute(recipZ, output);
+		return output;
 	}
 
 	@Override
-	public ComplexArccsc<T, U> copy() {
-		return new ComplexArccsc<T, U>(type);
+	public ComplexArccsc copy() {
+		return new ComplexArccsc();
 	}
 
 }

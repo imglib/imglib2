@@ -33,6 +33,7 @@ import net.imglib2.ops.BinaryOperation;
 import net.imglib2.ops.operation.unary.complex.ComplexExp;
 import net.imglib2.ops.operation.unary.complex.ComplexLog;
 import net.imglib2.type.numeric.ComplexType;
+import net.imglib2.type.numeric.complex.ComplexDoubleType;
 
 //Handbook of Mathematics and Computational Science, Harris & Stocker, Springer, 2006
 
@@ -41,37 +42,27 @@ import net.imglib2.type.numeric.ComplexType;
  * @author Barry DeZonia
  * 
  */
-public final class ComplexPower<T extends ComplexType<T>, U extends ComplexType<U>, V extends ComplexType<V>>
-		implements BinaryOperation<T, U, V> {
+public final class ComplexPower
+		implements BinaryOperation<ComplexType<?>, ComplexType<?>, ComplexType<?>> {
 
-	private final ComplexLog<T, V> logFunc;
-	private final ComplexMultiply<U, V, V> mulFunc;
-	private final ComplexExp<V, V> expFunc;
+	private static final ComplexLog logFunc = new ComplexLog();
+	private static final ComplexMultiply mulFunc = new ComplexMultiply();
+	private static  final ComplexExp expFunc = new ComplexExp();
 
-	private final V logA;
-	private final V zLogA;
-
-	private final V type;
-
-	public ComplexPower(V type) {
-		this.type = type;
-		logFunc = new ComplexLog<T, V>();
-		mulFunc = new ComplexMultiply<U, V, V>();
-		expFunc = new ComplexExp<V, V>();
-		logA = type.createVariable();
-		zLogA = type.createVariable();
-	}
+	private final ComplexDoubleType logA = new ComplexDoubleType();
+	private final ComplexDoubleType zLogA = new ComplexDoubleType();
 
 	@Override
-	public V compute(T a, U z, V output) {
+	public ComplexType<?> compute(ComplexType<?> a, ComplexType<?> z, ComplexType<?> output) {
 		logFunc.compute(a, logA);
 		mulFunc.compute(z, logA, zLogA);
-		return expFunc.compute(zLogA, output);
+		expFunc.compute(zLogA, output);
+		return output;
 	}
 
 	@Override
-	public ComplexPower<T, U, V> copy() {
-		return new ComplexPower<T, U, V>(type);
+	public ComplexPower copy() {
+		return new ComplexPower();
 	}
 
 }

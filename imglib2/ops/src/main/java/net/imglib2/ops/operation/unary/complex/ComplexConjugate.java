@@ -39,17 +39,11 @@ import net.imglib2.type.numeric.ComplexType;
  * @author Barry DeZonia
  * 
  */
-public final class ComplexConjugate<T extends ComplexType<T>, U extends ComplexType<U>>
-		implements UnaryOperation<T, U> {
-
-	private U type;
-
-	public ComplexConjugate(U type) {
-		this.type = type;
-	}
+public final class ComplexConjugate
+		implements UnaryOperation<ComplexType<?>, ComplexType<?>> {
 
 	@Override
-	public U compute(T z, U output) {
+	public ComplexType<?> compute(ComplexType<?> z, ComplexType<?> output) {
 		double x = z.getRealDouble();
 		double y = -z.getImaginaryDouble();
 		output.setComplexNumber(x, y);
@@ -57,8 +51,8 @@ public final class ComplexConjugate<T extends ComplexType<T>, U extends ComplexT
 	}
 
 	@Override
-	public ComplexConjugate<T, U> copy() {
-		return new ComplexConjugate<T, U>(type);
+	public ComplexConjugate copy() {
+		return new ComplexConjugate();
 	}
 
 }

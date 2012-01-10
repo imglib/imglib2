@@ -8,8 +8,7 @@ import org.junit.Test;
 
 public class ComplexCopyLeftTest {
 
-	private ComplexCopyLeft<ComplexDoubleType,ComplexDoubleType,ComplexDoubleType> op =
-			new ComplexCopyLeft<ComplexDoubleType,ComplexDoubleType,ComplexDoubleType>();
+	private ComplexCopyLeft op = new ComplexCopyLeft();
 	private ComplexDoubleType input1 = new ComplexDoubleType();
 	private ComplexDoubleType input2 = new ComplexDoubleType();
 	private ComplexDoubleType output = new ComplexDoubleType();

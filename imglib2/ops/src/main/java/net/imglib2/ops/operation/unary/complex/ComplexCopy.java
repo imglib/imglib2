@@ -37,19 +37,19 @@ import net.imglib2.type.numeric.ComplexType;
  * @author Barry DeZonia
  * 
  */
-public final class ComplexCopy<T extends ComplexType<T>, U extends ComplexType<U>>
-		implements UnaryOperation<T, U> {
+public final class ComplexCopy
+		implements UnaryOperation<ComplexType<?>, ComplexType<?>> {
 
 	@Override
-	public U compute(T z, U output) {
+	public ComplexType<?> compute(ComplexType<?> z, ComplexType<?> output) {
 		output.setReal(z.getRealDouble());
 		output.setImaginary(z.getImaginaryDouble());
 		return output;
 	}
 
 	@Override
-	public ComplexCopy<T, U> copy() {
-		return new ComplexCopy<T, U>();
+	public ComplexCopy copy() {
+		return new ComplexCopy();
 	}
 
 }

@@ -32,6 +32,7 @@ package net.imglib2.ops.operation.unary.complex;
 import net.imglib2.ops.UnaryOperation;
 import net.imglib2.ops.operation.binary.complex.ComplexDivide;
 import net.imglib2.type.numeric.ComplexType;
+import net.imglib2.type.numeric.complex.ComplexDoubleType;
 
 //Handbook of Mathematics and Computational Science, Harris & Stocker, Springer, 2006
 
@@ -40,36 +41,18 @@ import net.imglib2.type.numeric.ComplexType;
  * @author Barry DeZonia
  * 
  */
-public final class ComplexTanh<T extends ComplexType<T>, U extends ComplexType<U>>
-		implements UnaryOperation<T, U> {
+public final class ComplexTanh
+		implements UnaryOperation<ComplexType<?>, ComplexType<?>> {
 
-	private final ComplexCopy<T, U> copyFunc;
-	private final ComplexCosh<U, U> coshFunc;
-	private final ComplexSinh<U, U> sinhFunc;
-	private final ComplexDivide<U, U, U> divFunc;
+	private static final ComplexCosh coshFunc = new ComplexCosh();
+	private static final ComplexSinh sinhFunc = new ComplexSinh();
+	private static final ComplexDivide divFunc = new ComplexDivide();
 
-	private final U z;
-	private final U sinh;
-	private final U cosh;
-
-	private final U type;
-
-	public ComplexTanh(U type) {
-		this.type = type;
-
-		copyFunc = new ComplexCopy<T, U>();
-		coshFunc = new ComplexCosh<U, U>(type);
-		sinhFunc = new ComplexSinh<U, U>(type);
-		divFunc = new ComplexDivide<U, U, U>();
-
-		z = type.createVariable();
-		sinh = type.createVariable();
-		cosh = type.createVariable();
-	}
+	private final ComplexDoubleType sinh = new ComplexDoubleType();
+	private final ComplexDoubleType cosh = new ComplexDoubleType();
 
 	@Override
-	public U compute(T in, U output) {
-		copyFunc.compute(in, z);
+	public ComplexType<?> compute(ComplexType<?> z, ComplexType<?> output) {
 		sinhFunc.compute(z, sinh);
 		coshFunc.compute(z, cosh);
 		divFunc.compute(sinh, cosh, output);
@@ -77,8 +60,8 @@ public final class ComplexTanh<T extends ComplexType<T>, U extends ComplexType<U
 	}
 
 	@Override
-	public ComplexTanh<T, U> copy() {
-		return new ComplexTanh<T, U>(type);
+	public ComplexTanh copy() {
+		return new ComplexTanh();
 	}
 
 }

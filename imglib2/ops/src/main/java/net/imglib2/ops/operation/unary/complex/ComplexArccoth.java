@@ -35,6 +35,7 @@ import net.imglib2.ops.operation.binary.complex.ComplexDivide;
 import net.imglib2.ops.operation.binary.complex.ComplexMultiply;
 import net.imglib2.ops.operation.binary.complex.ComplexSubtract;
 import net.imglib2.type.numeric.ComplexType;
+import net.imglib2.type.numeric.complex.ComplexDoubleType;
 
 //Handbook of Mathematics and Computational Science, Harris & Stocker, Springer, 2006
 
@@ -43,54 +44,25 @@ import net.imglib2.type.numeric.ComplexType;
  * @author Barry DeZonia
  * 
  */
-public final class ComplexArccoth<T extends ComplexType<T>, U extends ComplexType<U>>
-		implements UnaryOperation<T, U> {
+public final class ComplexArccoth
+		implements UnaryOperation<ComplexType<?>,ComplexType<?>> {
 
-	private final ComplexCopy<T, U> copyFunc;
-	private final ComplexMultiply<U, U, U> mulFunc;
-	private final ComplexAdd<U, U, U> addFunc;
-	private final ComplexSubtract<U, U, U> subFunc;
-	private final ComplexDivide<U, U, U> divFunc;
-	private final ComplexLog<U, U> logFunc;
+	private static final ComplexMultiply mulFunc = new ComplexMultiply();
+	private static final ComplexAdd addFunc = new ComplexAdd();
+	private static final ComplexSubtract subFunc = new ComplexSubtract();
+	private static final ComplexDivide divFunc = new ComplexDivide();
+	private static final ComplexLog logFunc = new ComplexLog();
 
-	private final U ONE;
-	private final U ONE_HALF;
+	private static final ComplexDoubleType ONE = new ComplexDoubleType(1,0);
+	private static final ComplexDoubleType ONE_HALF = new ComplexDoubleType(0.5f,0);
 
-	private final U z;
-	private final U sum;
-	private final U diff;
-	private final U quotient;
-	private final U log;
-
-	private final U type;
-
-	public ComplexArccoth(U type) {
-
-		this.type = type;
-
-		copyFunc = new ComplexCopy<T, U>();
-		mulFunc = new ComplexMultiply<U, U, U>();
-		addFunc = new ComplexAdd<U, U, U>();
-		subFunc = new ComplexSubtract<U, U, U>();
-		divFunc = new ComplexDivide<U, U, U>();
-		logFunc = new ComplexLog<U, U>();
-
-		ONE = type.createVariable();
-		ONE_HALF = type.createVariable();
-
-		z = type.createVariable();
-		sum = type.createVariable();
-		diff = type.createVariable();
-		quotient = type.createVariable();
-		log = type.createVariable();
-
-		ONE.setComplexNumber(1, 0);
-		ONE_HALF.setComplexNumber(0.5, 0);
-	}
+	private final ComplexDoubleType sum = new ComplexDoubleType();
+	private final ComplexDoubleType diff = new ComplexDoubleType();
+	private final ComplexDoubleType quotient = new ComplexDoubleType();
+	private final ComplexDoubleType log = new ComplexDoubleType();
 
 	@Override
-	public U compute(T in, U output) {
-		copyFunc.compute(in, z);
+	public ComplexType<?> compute(ComplexType<?> z, ComplexType<?> output) {
 		addFunc.compute(z, ONE, sum);
 		subFunc.compute(z, ONE, diff);
 		divFunc.compute(sum, diff, quotient);
@@ -100,8 +72,8 @@ public final class ComplexArccoth<T extends ComplexType<T>, U extends ComplexTyp
 	}
 
 	@Override
-	public ComplexArccoth<T, U> copy() {
-		return new ComplexArccoth<T, U>(type);
+	public ComplexArccoth copy() {
+		return new ComplexArccoth();
 	}
 
 }

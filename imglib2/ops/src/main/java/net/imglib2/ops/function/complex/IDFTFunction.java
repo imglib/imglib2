@@ -63,9 +63,9 @@ public class IDFTFunction<T extends ComplexType<T>> implements
 	private ComplexImageFunction<ComplexDoubleType> dataArray;
 
 	// -- temporary per instance working variables --
-	private final ComplexAdd<T, T, T> adder;
-	private final ComplexExp<T, T> exper;
-	private final ComplexMultiply<T, T, T> multiplier;
+	private final ComplexAdd adder;
+	private final ComplexExp exper;
+	private final ComplexMultiply multiplier;
 
 	private final T TWO_PI_I;
 
@@ -96,9 +96,9 @@ public class IDFTFunction<T extends ComplexType<T>> implements
 		this.neighborhood = new DiscreteNeigh(span.clone(), this.negOffs,
 				this.posOffs);
 
-		adder = new ComplexAdd<T, T, T>();
-		exper = new ComplexExp<T, T>();
-		multiplier = new ComplexMultiply<T, T, T>();
+		adder = new ComplexAdd();
+		exper = new ComplexExp();
+		multiplier = new ComplexMultiply();
 
 		TWO_PI_I = type.createVariable();
 

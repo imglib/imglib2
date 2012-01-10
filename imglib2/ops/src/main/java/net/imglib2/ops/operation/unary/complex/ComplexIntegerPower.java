@@ -40,20 +40,17 @@ import net.imglib2.type.numeric.ComplexType;
  * @author Barry DeZonia
  * 
  */
-public final class ComplexIntegerPower<T extends ComplexType<T>, U extends ComplexType<U>>
-		implements UnaryOperation<T, U> {
+public final class ComplexIntegerPower
+		implements UnaryOperation<ComplexType<?>, ComplexType<?>> {
 	
 	private final int power;
 
-	private final U type;
-
-	public ComplexIntegerPower(int power, U type) {
-		this.type = type;
+	public ComplexIntegerPower(int power) {
 		this.power = power;
 	}
 
 	@Override
-	public U compute(T z, U output) {
+	public ComplexType<?> compute(ComplexType<?> z, ComplexType<?> output) {
 		// NB: valid for ALL integral powers: 0, +/-1, +/-2, +/-3, ...
 		double modulus = ComplexHelper.getModulus(z);
 		double argument = ComplexHelper.getArgument(z);
@@ -64,8 +61,8 @@ public final class ComplexIntegerPower<T extends ComplexType<T>, U extends Compl
 	}
 
 	@Override
-	public ComplexIntegerPower<T, U> copy() {
-		return new ComplexIntegerPower<T, U>(power, type);
+	public ComplexIntegerPower copy() {
+		return new ComplexIntegerPower(power);
 	}
 
 }

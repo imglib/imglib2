@@ -39,11 +39,11 @@ import net.imglib2.type.numeric.ComplexType;
  * @author Barry DeZonia
  * 
  */
-public final class ComplexAdd<T extends ComplexType<T>, U extends ComplexType<U>, V extends ComplexType<V>>
-		implements BinaryOperation<T, U, V> {
+public final class ComplexAdd
+		implements BinaryOperation<ComplexType<?>, ComplexType<?>, ComplexType<?>> {
 
 	@Override
-	public V compute(T z1, U z2, V output) {
+	public ComplexType<?> compute(ComplexType<?> z1, ComplexType<?> z2, ComplexType<?> output) {
 		double x = z1.getRealDouble() + z2.getRealDouble();
 		double y = z1.getImaginaryDouble() + z2.getImaginaryDouble();
 		output.setComplexNumber(x, y);
@@ -51,8 +51,8 @@ public final class ComplexAdd<T extends ComplexType<T>, U extends ComplexType<U>
 	}
 
 	@Override
-	public ComplexAdd<T, U, V> copy() {
-		return new ComplexAdd<T, U, V>();
+	public ComplexAdd copy() {
+		return new ComplexAdd();
 	}
 
 }

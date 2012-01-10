@@ -8,8 +8,7 @@ import org.junit.Test;
 
 public class ComplexSubtractTest {
 
-	private ComplexSubtract<ComplexDoubleType,ComplexDoubleType,ComplexDoubleType> op =
-			new ComplexSubtract<ComplexDoubleType,ComplexDoubleType,ComplexDoubleType>();
+	private ComplexSubtract op = new ComplexSubtract();
 	private ComplexDoubleType input1 = new ComplexDoubleType();
 	private ComplexDoubleType input2 = new ComplexDoubleType();
 	private ComplexDoubleType output = new ComplexDoubleType();

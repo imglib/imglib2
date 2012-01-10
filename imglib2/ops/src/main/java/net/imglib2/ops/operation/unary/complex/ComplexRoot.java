@@ -40,15 +40,12 @@ import net.imglib2.type.numeric.ComplexType;
  * @author Barry DeZonia
  * 
  */
-public final class ComplexRoot<T extends ComplexType<T>, U extends ComplexType<U>>
-		implements UnaryOperation<T, U> {
+public final class ComplexRoot
+		implements UnaryOperation<ComplexType<?>, ComplexType<?>> {
 
 	private final int power;
 
-	private final U type;
-
-	public ComplexRoot(int power, U type) {
-		this.type = type;
+	public ComplexRoot(int power) {
 		if (power < 1)
 			throw new IllegalArgumentException(
 					"ComplexRoot requires a positive number of roots");
@@ -56,7 +53,7 @@ public final class ComplexRoot<T extends ComplexType<T>, U extends ComplexType<U
 	}
 
 	@Override
-	public U compute(T z, U output) {
+	public ComplexType<?> compute(ComplexType<?> z, ComplexType<?> output) {
 		double modulus = ComplexHelper.getModulus(z);
 		double argument = ComplexHelper.getArgument(z);
 		double princpArg = ComplexHelper.getPrincipleArgument(argument);
@@ -67,7 +64,7 @@ public final class ComplexRoot<T extends ComplexType<T>, U extends ComplexType<U
 	}
 
 	@Override
-	public ComplexRoot<T, U> copy() {
-		return new ComplexRoot<T, U>(power, type);
+	public ComplexRoot copy() {
+		return new ComplexRoot(power);
 	}
 }

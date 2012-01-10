@@ -32,6 +32,7 @@ package net.imglib2.ops.operation.unary.complex;
 import net.imglib2.ops.UnaryOperation;
 import net.imglib2.ops.operation.binary.complex.ComplexDivide;
 import net.imglib2.type.numeric.ComplexType;
+import net.imglib2.type.numeric.complex.ComplexDoubleType;
 
 //Handbook of Mathematics and Computational Science, Harris & Stocker, Springer, 2006
 
@@ -40,36 +41,18 @@ import net.imglib2.type.numeric.ComplexType;
  * @author Barry DeZonia
  * 
  */
-public final class ComplexCot<T extends ComplexType<T>, U extends ComplexType<U>>
-		implements UnaryOperation<T, U> {
+public final class ComplexCot
+		implements UnaryOperation<ComplexType<?>, ComplexType<?>> {
 
-	private final ComplexCopy<T, U> copyFunc;
-	private final ComplexCos<U, U> cosFunc;
-	private final ComplexSin<U, U> sinFunc;
-	private final ComplexDivide<U, U, U> divFunc;
+	private static final ComplexCos cosFunc = new ComplexCos();
+	private static final ComplexSin sinFunc = new ComplexSin();
+	private static final ComplexDivide divFunc = new ComplexDivide();
 
-	private final U z;
-	private final U sin;
-	private final U cos;
-
-	private final U type;
-
-	public ComplexCot(U type) {
-		this.type = type;
-
-		copyFunc = new ComplexCopy<T, U>();
-		cosFunc = new ComplexCos<U, U>(type);
-		sinFunc = new ComplexSin<U, U>(type);
-		divFunc = new ComplexDivide<U, U, U>();
-
-		z = type.createVariable();
-		sin = type.createVariable();
-		cos = type.createVariable();
-	}
+	private final ComplexDoubleType sin = new ComplexDoubleType();
+	private final ComplexDoubleType cos = new ComplexDoubleType();
 
 	@Override
-	public U compute(T in, U output) {
-		copyFunc.compute(in, z);
+	public ComplexType<?> compute(ComplexType<?> z, ComplexType<?> output) {
 		sinFunc.compute(z, sin);
 		cosFunc.compute(z, cos);
 		divFunc.compute(cos, sin, output);
@@ -77,8 +60,8 @@ public final class ComplexCot<T extends ComplexType<T>, U extends ComplexType<U>
 	}
 
 	@Override
-	public ComplexCot<T, U> copy() {
-		return new ComplexCot<T, U>(type);
+	public ComplexCot copy() {
+		return new ComplexCot();
 	}
 
 }

@@ -35,6 +35,7 @@ import net.imglib2.ops.operation.binary.complex.ComplexDivide;
 import net.imglib2.ops.operation.binary.complex.ComplexMultiply;
 import net.imglib2.ops.operation.binary.complex.ComplexSubtract;
 import net.imglib2.type.numeric.ComplexType;
+import net.imglib2.type.numeric.complex.ComplexDoubleType;
 
 //Handbook of Mathematics and Computational Science, Harris & Stocker, Springer, 2006
 
@@ -43,58 +44,27 @@ import net.imglib2.type.numeric.ComplexType;
  * @author Barry DeZonia
  * 
  */
-public final class ComplexArctan<T extends ComplexType<T>, U extends ComplexType<U>>
-		implements UnaryOperation<T, U> {
+public final class ComplexArctan
+		implements UnaryOperation<ComplexType<?>, ComplexType<?>> {
 
-	private final U ONE;;
-	private final U I;
-	private final U MINUS_I_OVER_TWO;
+	private static final ComplexMultiply mulFunc = new ComplexMultiply();
+	private static final ComplexAdd addFunc = new ComplexAdd();
+	private static final ComplexSubtract subFunc = new ComplexSubtract();
+	private static final ComplexDivide divFunc = new ComplexDivide();
+	private static final ComplexLog logFunc = new ComplexLog();
 
-	private final ComplexCopy<T, U> copyFunc;
-	private final ComplexMultiply<U, U, U> mulFunc;
-	private final ComplexAdd<U, U, U> addFunc;
-	private final ComplexSubtract<U, U, U> subFunc;
-	private final ComplexDivide<U, U, U> divFunc;
-	private final ComplexLog<U, U> logFunc;
+	private static final ComplexDoubleType ONE = new ComplexDoubleType(1,0);
+	private static final ComplexDoubleType I = new ComplexDoubleType(0,1);
+	private static final ComplexDoubleType MINUS_I_OVER_TWO = new ComplexDoubleType(0,-0.5f);
 
-	private final U z;
-	private final U iz;
-	private final U sum;
-	private final U diff;
-	private final U quotient;
-	private final U log;
-
-	private final U type;
-
-	public ComplexArctan(U type) {
-		this.type = type;
-
-		copyFunc = new ComplexCopy<T, U>();
-		mulFunc = new ComplexMultiply<U, U, U>();
-		addFunc = new ComplexAdd<U, U, U>();
-		subFunc = new ComplexSubtract<U, U, U>();
-		divFunc = new ComplexDivide<U, U, U>();
-		logFunc = new ComplexLog<U, U>();
-
-		ONE = type.createVariable();
-		I = type.createVariable();
-		MINUS_I_OVER_TWO = type.createVariable();
-
-		z = type.createVariable();
-		iz = type.createVariable();
-		sum = type.createVariable();
-		diff = type.createVariable();
-		quotient = type.createVariable();
-		log = type.createVariable();
-
-		ONE.setComplexNumber(1, 0);
-		I.setComplexNumber(0, 1);
-		MINUS_I_OVER_TWO.setComplexNumber(0, -0.5);
-	}
+	private final ComplexDoubleType iz = new ComplexDoubleType();
+	private final ComplexDoubleType sum = new ComplexDoubleType();
+	private final ComplexDoubleType diff = new ComplexDoubleType();
+	private final ComplexDoubleType quotient = new ComplexDoubleType();
+	private final ComplexDoubleType log = new ComplexDoubleType();
 
 	@Override
-	public U compute(T in, U output) {
-		copyFunc.compute(in, z);
+	public ComplexType<?> compute(ComplexType<?> z, ComplexType<?> output) {
 		mulFunc.compute(I, z, iz);
 		addFunc.compute(ONE, iz, sum);
 		subFunc.compute(ONE, iz, diff);
@@ -105,8 +75,8 @@ public final class ComplexArctan<T extends ComplexType<T>, U extends ComplexType
 	}
 
 	@Override
-	public ComplexArctan<T, U> copy() {
-		return new ComplexArctan<T, U>(type);
+	public ComplexArctan copy() {
+		return new ComplexArctan();
 	}
 
 }

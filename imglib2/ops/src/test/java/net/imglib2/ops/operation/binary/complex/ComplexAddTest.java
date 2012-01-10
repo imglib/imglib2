@@ -8,8 +8,7 @@ import org.junit.Test;
 
 public class ComplexAddTest {
 
-	private ComplexAdd<ComplexDoubleType,ComplexDoubleType,ComplexDoubleType> op =
-			new ComplexAdd<ComplexDoubleType,ComplexDoubleType,ComplexDoubleType>();
+	private ComplexAdd op =	new ComplexAdd();
 	private ComplexDoubleType input1 = new ComplexDoubleType();
 	private ComplexDoubleType input2 = new ComplexDoubleType();
 	private ComplexDoubleType output = new ComplexDoubleType();

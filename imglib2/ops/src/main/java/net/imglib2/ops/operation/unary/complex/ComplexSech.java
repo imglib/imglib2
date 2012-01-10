@@ -32,6 +32,7 @@ package net.imglib2.ops.operation.unary.complex;
 import net.imglib2.ops.UnaryOperation;
 import net.imglib2.ops.operation.binary.complex.ComplexDivide;
 import net.imglib2.type.numeric.ComplexType;
+import net.imglib2.type.numeric.complex.ComplexDoubleType;
 
 //Formula taken from MATLAB documentation
 
@@ -40,48 +41,28 @@ import net.imglib2.type.numeric.ComplexType;
  * @author Barry DeZonia
  * 
  */
-public final class ComplexSech<T extends ComplexType<T>, U extends ComplexType<U>>
-		implements UnaryOperation<T, U> {
+public final class ComplexSech
+		implements UnaryOperation<ComplexType<?>, ComplexType<?>> {
 
-	private final ComplexCopy<T, U> copyFunc;
-	private final ComplexCosh<U, U> coshFunc;
-	private final ComplexDivide<U, U, U> divFunc;
+	private static final ComplexCosh coshFunc = new ComplexCosh();
+	private static final ComplexDivide divFunc = new ComplexDivide();
 
-	private final U ONE;
+	private static final ComplexDoubleType ONE = new ComplexDoubleType(1,0);
 
-	private final U z;
-	private final U cosh;
-
-	private final U type;
+	private final ComplexDoubleType cosh = new ComplexDoubleType();
 
 	// TODO - is it the same but quicker to calculate reciprocal(sin(z))?
 	// Later - it is the same but tests showed it very slightly slower
 
-	public ComplexSech(U type) {
-		this.type = type;
-
-		copyFunc = new ComplexCopy<T, U>();
-		coshFunc = new ComplexCosh<U, U>(type);
-		divFunc = new ComplexDivide<U, U, U>();
-
-		ONE = type.createVariable();
-
-		z = type.createVariable();
-		cosh = type.createVariable();
-
-		ONE.setComplexNumber(1, 0);
-	}
-
 	@Override
-	public U compute(T in, U output) {
-		copyFunc.compute(in, z);
+	public ComplexType<?> compute(ComplexType<?> z, ComplexType<?> output) {
 		coshFunc.compute(z, cosh);
 		divFunc.compute(ONE, cosh, output);
 		return output;
 	}
 
 	@Override
-	public ComplexSech<T, U> copy() {
-		return new ComplexSech<T, U>(type);
+	public ComplexSech copy() {
+		return new ComplexSech();
 	}
 }

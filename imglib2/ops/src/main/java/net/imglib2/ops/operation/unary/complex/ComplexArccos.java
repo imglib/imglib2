@@ -35,6 +35,7 @@ import net.imglib2.ops.operation.binary.complex.ComplexMultiply;
 import net.imglib2.ops.operation.binary.complex.ComplexPower;
 import net.imglib2.ops.operation.binary.complex.ComplexSubtract;
 import net.imglib2.type.numeric.ComplexType;
+import net.imglib2.type.numeric.complex.ComplexDoubleType;
 
 //Handbook of Mathematics and Computational Science, Harris & Stocker, Springer, 2006
 
@@ -43,58 +44,27 @@ import net.imglib2.type.numeric.ComplexType;
  * @author Barry DeZonia
  * 
  */
-public final class ComplexArccos<T extends ComplexType<T>, U extends ComplexType<U>>
-		implements UnaryOperation<T, U> {
+public final class ComplexArccos
+		implements UnaryOperation<ComplexType<?>, ComplexType<?>> {
 
-	private final ComplexCopy<T, U> copyFunc;
-	private final ComplexMultiply<U, U, U> mulFunc;
-	private final ComplexSubtract<U, U, U> diffFunc;
-	private final ComplexPower<U, U, U> powFunc;
-	private final ComplexAdd<U, U, U> addFunc;
-	private final ComplexLog<U, U> logFunc;
+	private static final ComplexMultiply mulFunc = new ComplexMultiply();
+	private static final ComplexSubtract diffFunc = new ComplexSubtract();
+	private static final ComplexPower powFunc = new ComplexPower();
+	private static final ComplexAdd addFunc = new ComplexAdd();
+	private static final ComplexLog logFunc = new ComplexLog();
 
-	private final U MINUS_I;
-	private final U ONE;
-	private final U ONE_HALF;
+	private static final ComplexDoubleType MINUS_I = new ComplexDoubleType(0,-1);
+	private static final ComplexDoubleType ONE = new ComplexDoubleType(1,0);
+	private static final ComplexDoubleType ONE_HALF = new ComplexDoubleType(0.5f,0);
 
-	private final U z;
-	private final U zSquared;
-	private final U miniSum;
-	private final U root;
-	private final U sum;
-	private final U logSum;
-
-	private U type;
-
-	public ComplexArccos(U type) {
-		this.type = type;
-
-		copyFunc = new ComplexCopy<T, U>();
-		mulFunc = new ComplexMultiply<U, U, U>();
-		diffFunc = new ComplexSubtract<U, U, U>();
-		powFunc = new ComplexPower<U, U, U>(type);
-		addFunc = new ComplexAdd<U, U, U>();
-		logFunc = new ComplexLog<U, U>();
-
-		MINUS_I = type.createVariable();
-		ONE = type.createVariable();
-		ONE_HALF = type.createVariable();
-
-		z = type.createVariable();
-		zSquared = type.createVariable();
-		miniSum = type.createVariable();
-		root = type.createVariable();
-		sum = type.createVariable();
-		logSum = type.createVariable();
-
-		ONE.setComplexNumber(1, 0);
-		MINUS_I.setComplexNumber(0, -1);
-		ONE_HALF.setComplexNumber(0.5, 0);
-	}
+	private final ComplexDoubleType zSquared = new ComplexDoubleType();
+	private final ComplexDoubleType miniSum = new ComplexDoubleType();
+	private final ComplexDoubleType root = new ComplexDoubleType();
+	private final ComplexDoubleType sum = new ComplexDoubleType();
+	private final ComplexDoubleType logSum = new ComplexDoubleType();
 
 	@Override
-	public U compute(T in, U output) {
-		copyFunc.compute(in, z);
+	public ComplexType<?> compute(ComplexType<?> z, ComplexType<?> output) {
 		mulFunc.compute(z, z, zSquared);
 		diffFunc.compute(zSquared, ONE, miniSum);
 		powFunc.compute(miniSum, ONE_HALF, root);
@@ -105,8 +75,8 @@ public final class ComplexArccos<T extends ComplexType<T>, U extends ComplexType
 	}
 
 	@Override
-	public ComplexArccos<T, U> copy() {
-		return new ComplexArccos<T, U>(type);
+	public ComplexArccos copy() {
+		return new ComplexArccos();
 	}
 
 }

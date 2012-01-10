@@ -39,11 +39,11 @@ import net.imglib2.type.numeric.ComplexType;
  * @author Barry DeZonia
  * 
  */
-public final class ComplexAvg<T extends ComplexType<T>, U extends ComplexType<U>, V extends ComplexType<V>>
-		implements BinaryOperation<T, U, V> {
+public final class ComplexAvg
+		implements BinaryOperation<ComplexType<?>, ComplexType<?>, ComplexType<?>> {
 
 	@Override
-	public V compute(T z1, U z2, V output) {
+	public ComplexType<?> compute(ComplexType<?> z1, ComplexType<?> z2, ComplexType<?> output) {
 		double x = (z1.getRealDouble() + z2.getRealDouble()) / 2;
 		double y = (z1.getImaginaryDouble() + z2.getImaginaryDouble()) / 2;
 		output.setComplexNumber(x, y);
@@ -51,8 +51,8 @@ public final class ComplexAvg<T extends ComplexType<T>, U extends ComplexType<U>
 	}
 
 	@Override
-	public ComplexAvg<T, U, V> copy() {
-		return new ComplexAvg<T, U, V>();
+	public ComplexAvg copy() {
+		return new ComplexAvg();
 	}
 
 }

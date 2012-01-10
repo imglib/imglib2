@@ -8,8 +8,7 @@ import org.junit.Test;
 
 public class ComplexExpTest {
 
-	private ComplexExp<ComplexDoubleType,ComplexDoubleType> op =
-			new ComplexExp<ComplexDoubleType,ComplexDoubleType>();
+	private ComplexExp op = new ComplexExp();
 	private ComplexDoubleType input1 = new ComplexDoubleType();
 	private ComplexDoubleType output = new ComplexDoubleType();
 
