@@ -30,7 +30,6 @@ POSSIBILITY OF SUCH DAMAGE.
 package net.imglib2.ops.operation.unary.complex;
 
 import net.imglib2.ops.UnaryOperation;
-import net.imglib2.ops.operation.binary.complex.ComplexDivide;
 import net.imglib2.type.numeric.ComplexType;
 import net.imglib2.type.numeric.complex.ComplexDoubleType;
 
@@ -45,15 +44,13 @@ public final class ComplexArccsch
 		implements UnaryOperation<ComplexType<?>, ComplexType<?>> {
 
 	private static final ComplexArcsinh arcsinhFunc = new ComplexArcsinh();
-	private static final ComplexDivide divFunc = new ComplexDivide();
-
-	private static final ComplexDoubleType ONE = new ComplexDoubleType(1,0);
+	private static final ComplexReciprocal recipFunc = new ComplexReciprocal();
 
 	private final ComplexDoubleType recipZ = new ComplexDoubleType();
 
 	@Override
 	public ComplexType<?> compute(ComplexType<?> z, ComplexType<?> output) {
-		divFunc.compute(ONE, z, recipZ);
+		recipFunc.compute(z, recipZ);
 		arcsinhFunc.compute(recipZ, output);
 		return output;
 	}

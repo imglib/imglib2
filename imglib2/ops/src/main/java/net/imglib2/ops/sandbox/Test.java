@@ -25,13 +25,13 @@ public class Test {
 	}
 	
 	public static void main(String[] args) {
-		System.out.println("Listing differences");
+		System.out.println("Listing differences to screen");
 		ComplexDoubleType cos = new ComplexDoubleType();
 		ComplexDoubleType out1 = new ComplexDoubleType();
 		ComplexDoubleType out2 = new ComplexDoubleType();
 		for (double x = -100; x <= 100; x += 0.5) {
 			for (double y = -100; y <= 100; y += 0.3) {
-				ComplexDoubleType input = new ComplexDoubleType((float)x,(float)y);
+				ComplexDoubleType input = new ComplexDoubleType(x,y);
 				cosFunc.compute(input, cos);
 				method1(cos, out1);
 				method2(cos, out2);
@@ -40,12 +40,15 @@ public class Test {
 					System.out.println("Methods differ!");
 			}
 		}
-		System.out.println("Done!");
+		System.out.println("Done listing differences to screen");
+		System.out.println("Running speed tests");
 		
+		ComplexDoubleType input = new ComplexDoubleType();
 		long pt1 = System.currentTimeMillis();
 		for (double x = -300; x <= 300; x += 0.2) {
 			for (double y = -300; y <= 300; y += 0.1) {
-				ComplexDoubleType input = new ComplexDoubleType((float)x,(float)y);
+				input.setReal(x);
+				input.setImaginary(y);
 				cosFunc.compute(input, cos);
 				method1(cos, out1);
 			}
@@ -53,7 +56,8 @@ public class Test {
 		long pt2 = System.currentTimeMillis();
 		for (double x = -300; x <= 300; x += 0.2) {
 			for (double y = -300; y <= 300; y += 0.1) {
-				ComplexDoubleType input = new ComplexDoubleType((float)x,(float)y);
+				input.setReal(x);
+				input.setImaginary(y);
 				cosFunc.compute(input, cos);
 				method2(cos, out2);
 			}
@@ -61,7 +65,32 @@ public class Test {
 		long pt3 = System.currentTimeMillis();
 		
 		System.out.println("Total milleseconds");
-		System.out.println("  method1 = "+(pt2-pt1));
-		System.out.println("  method2 = "+(pt3-pt2));
+		System.out.println("  method1 (divide(1,z))   = "+(pt2-pt1));
+		System.out.println("  method2 (reciprocal(z)) = "+(pt3-pt2));
+	
+		pt1 = System.currentTimeMillis();
+		for (double x = -300; x <= 300; x += 0.2) {
+			for (double y = -300; y <= 300; y += 0.1) {
+				input.setReal(x);
+				input.setImaginary(y);
+				cosFunc.compute(input, cos);
+				method1(cos, out1);
+			}
+		}
+		pt2 = System.currentTimeMillis();
+		for (double x = -300; x <= 300; x += 0.2) {
+			for (double y = -300; y <= 300; y += 0.1) {
+				input.setReal(x);
+				input.setImaginary(y);
+				cosFunc.compute(input, cos);
+				method2(cos, out2);
+			}
+		}
+		pt3 = System.currentTimeMillis();
+		
+		System.out.println("Total milleseconds");
+		System.out.println("  method1 (divide(1,z))   = "+(pt2-pt1));
+		System.out.println("  method2 (reciprocal(z)) = "+(pt3-pt2));
 	}
+	
 }

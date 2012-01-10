@@ -54,7 +54,7 @@ public class ComplexDoubleType extends AbstractComplexType<ComplexDoubleType> im
 	}
 	
 	// this is the constructor if you want it to be a variable
-	public ComplexDoubleType( final float r, final float i )
+	public ComplexDoubleType( final double r, final double i )
 	{
 		img = null;
 		dataAccess = new DoubleArray( 2 );
@@ -103,7 +103,7 @@ public class ComplexDoubleType extends AbstractComplexType<ComplexDoubleType> im
 	@Override
 	public void setImaginary( final double i ){ dataAccess.setValue( imaginaryI, i ); }
 	
-	public void set( final float r, final float i ) 
+	public void set( final double r, final double i ) 
 	{ 
 		dataAccess.setValue( realI, r );
 		dataAccess.setValue( imaginaryI, i );

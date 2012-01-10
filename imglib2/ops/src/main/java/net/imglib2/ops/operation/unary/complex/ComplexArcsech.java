@@ -45,15 +45,13 @@ public final class ComplexArcsech
 		implements UnaryOperation<ComplexType<?>, ComplexType<?>> {
 
 	private static final ComplexArccosh arccoshFunc = new ComplexArccosh();
-	private static final ComplexDivide divFunc = new ComplexDivide();
-
-	private static final ComplexDoubleType ONE = new ComplexDoubleType(1,0);
+	private static final ComplexReciprocal recipFunc = new ComplexReciprocal();
 
 	private final ComplexDoubleType recipZ = new ComplexDoubleType();
 
 	@Override
 	public ComplexType<?> compute(ComplexType<?> z, ComplexType<?> output) {
-		divFunc.compute(ONE, z, recipZ);
+		recipFunc.compute(z, recipZ);
 		arccoshFunc.compute(recipZ, output);
 		return output;
 	}
