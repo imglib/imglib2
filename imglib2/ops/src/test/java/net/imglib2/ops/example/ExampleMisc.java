@@ -44,12 +44,12 @@ public class ExampleMisc {
 
 	public static void main(String[] args) {
 
-		RealType r = new UnsignedByteType();
-		ComplexType c = new ComplexDoubleType();
+		RealType<?> r = new UnsignedByteType();
+		ComplexType<?> c = new ComplexDoubleType();
 		
-		System.out.println(r.getClass()+" is a RealType : "+(r instanceof RealType));
-		System.out.println(r.getClass()+" is a ComplexType : "+(r instanceof ComplexType));
-		System.out.println(c.getClass()+" is a RealType : "+(c instanceof RealType));
-		System.out.println(c.getClass()+" is a ComplexType : "+(c instanceof ComplexType));
+		System.out.println(r.getClass()+" is a RealType : "+(r instanceof RealType<?>));
+		System.out.println(r.getClass()+" is a ComplexType : "+(r instanceof ComplexType<?>));
+		System.out.println(c.getClass()+" is a RealType : "+(c instanceof RealType<?>));
+		System.out.println(c.getClass()+" is a ComplexType : "+(c instanceof ComplexType<?>));
 	}
 }
