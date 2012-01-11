@@ -29,6 +29,8 @@ POSSIBILITY OF SUCH DAMAGE.
 
 package net.imglib2.ops.image;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -38,8 +40,7 @@ import net.imglib2.ops.Condition;
 import net.imglib2.ops.DiscreteNeigh;
 import net.imglib2.ops.Function;
 import net.imglib2.ops.RegionIndexIterator;
-import net.imglib2.type.numeric.RealType;
-import net.imglib2.type.numeric.real.DoubleType;
+import net.imglib2.type.numeric.ComplexType;
 
 // In old AssignOperation could do many things
 // - set conditions on each input and output image
@@ -70,115 +71,79 @@ import net.imglib2.type.numeric.real.DoubleType;
 public class ImageAssignment {
 
 	// -- instance variables --
-	
-	private final Img<? extends RealType<?>> image;
-	private final Function<long[], RealType<?>> func;
-	private Condition<long[]> cond;
-	private final long[] origin;
-	private final long[] span;
-	private final long[] negOffs;
-	private final long[] posOffs;
+
 	private ExecutorService executor;
 	private boolean assigning;
+	private List<Runnable> tasks;
 	
 	// -- constructor --
 	
 	/**
-	 * Constructor. A working neighborhood is built using negOffs and
-	 * posOffs. If they are zero in extent the working neighborhood is
-	 * a single pixel. This neighborhood is moved point by point over
-	 * the Img<?> and passed to the function for evaluation.
+	 * Constructor. A working neighborhood is built using negOffs and posOffs. If
+	 * they are zero in extent the working neighborhood is a single pixel. This
+	 * neighborhood is moved point by point over the Img<?> and passed to the
+	 * function for evaluation. Pixels are assigned in the Img<?> if the given
+	 * condition is satisfied at that point.
 	 * 
 	 * @param img - the Img<?> to assign data values to
 	 * @param origin - the origin of the region to assign within the Img<?>
 	 * @param span - the extents of the region to assign within the Img<?>
 	 * @param function - the function to evaluate at each point of the region
+	 * @param condition - the condition that must be satisfied
 	 * @param negOffs - the extents in the negative direction of the working neighborhood
 	 * @param posOffs - the extents in the positive direction of the working neighborhood
 	 * 
 	 */
 	public ImageAssignment(
-		Img<? extends RealType<?>> img,
+		Img<? extends ComplexType<?>> img,
 		long[] origin,
 		long[] span,
-		Function<long[],RealType<?>> function,
+		Function<long[],? extends ComplexType<?>> function,
+		Condition<long[]> condition,
 		long[] negOffs,
 		long[] posOffs)
 	{
-		this.image = img;
-		this.origin = origin.clone();
-		this.span = span.clone();
-		this.negOffs = negOffs.clone();
-		this.posOffs = posOffs.clone();
-		this.func = function.copy();
-		this.cond = null;
 		this.assigning = false;
+		this.executor = null;
+		this.tasks = null;
+		setupTasks(img, origin, span, function, condition, negOffs, posOffs);
 	}
 	
 	/**
-	 * Constructor. Working neighborhood is assumed to be a single pixel.
-	 * This neighborhood is moved point by point over
-	 * the Img<?> and passed to the function for evaluation.
-	 * 
+	 * Constructor. A working neighborhood is assumed to be a single pixel. This
+	 * neighborhood is moved point by point over the Img<?> and passed to the
+	 * function for evaluation. Pixels are assigned in the Img<?> if the given
+	 * condition is satisfied at that point.
+	 *
 	 * @param img - the Img<?> to assign data values to
 	 * @param origin - the origin of the region to assign within the Img<?>
 	 * @param span - the extents of the region to assign within the Img<?>
 	 * @param function - the function to evaluate at each point of the region
+	 * @param condition - the condition that must be satisfied
 	 * 
 	 */
 	public ImageAssignment(
-		Img<? extends RealType<?>> img,
+		Img<? extends ComplexType<?>> img,
 		long[] origin,
 		long[] span,
-		Function<long[], RealType<?>> function)
+		Function<long[], ? extends ComplexType<?>> function,
+		Condition<long[]> condition)
 	{
-		this.image = img;
-		this.origin = origin.clone();
-		this.span = span.clone();
-		this.negOffs = new long[origin.length];  // ALL ZERO
-		this.posOffs = new long[origin.length];  // ALL ZERO
-		this.func = function.copy();
-		this.cond = null;
-		this.assigning = false;
+		this(img, origin, span, function, condition, new long[origin.length], new long[origin.length]);
 	}
 		
 	// -- public interface --
 
 	/**
-	 * Sets a condition that must be satisfied before each pixel assignment
-	 * can take place. The condition is tested at each point in the assignment
-	 * region.
-	 */
-	public void setCondition(Condition<long[]> condition) {
-		this.cond = (condition == null ? null : condition.copy());
-	}
-	
-	/**
 	 * Assign pixels using input variables specified in constructor. Can be
 	 * aborted using abort().
 	 */
 	public void assign() {
-		int axis;
-		int numThreads;
-		long startOffset;
-		long length;
 		synchronized(this) {
 			assigning = true;
-			axis = chooseBestAxis();
-			numThreads = chooseNumThreads(axis);
-			length = span[axis] / numThreads;
-			if (span[axis] % numThreads > 0) length++;
-			startOffset = 0;
-			executor = Executors.newFixedThreadPool(numThreads);
-		}
-		while (startOffset < span[axis]) {
-			if (startOffset + length > span[axis]) length = span[axis] - startOffset;
-			Runnable task =
-					task(image, origin, span, axis, origin[axis] + startOffset, length, func, cond, negOffs, posOffs);
-			synchronized (this) {
+			executor = Executors.newFixedThreadPool(tasks.size());
+			for (Runnable task : tasks)
 				executor.submit(task);
-			}
-			startOffset += length;
 		}
 		boolean terminated = true;
 		synchronized (this) {
@@ -223,11 +188,35 @@ public class ImageAssignment {
 	}
 
 	// -- private helpers --
-	
+
+	private void setupTasks(
+		Img<? extends ComplexType<?>> img,
+		long[] origin,
+		long[] span,
+		Function<long[],? extends ComplexType<?>> func,
+		Condition<long[]> cond,
+		long[] negOffs,
+		long[] posOffs)
+	{
+		tasks = new ArrayList<Runnable>();
+		int axis = chooseBestAxis(span);
+		int numThreads = chooseNumThreads(span,axis);
+		long length = span[axis] / numThreads;
+		if (span[axis] % numThreads > 0) length++;
+		long startOffset = 0;
+		while (startOffset < span[axis]) {
+			if (startOffset + length > span[axis]) length = span[axis] - startOffset;
+			Runnable task =
+					task(img, origin, span, axis, origin[axis] + startOffset, length, func, cond, negOffs, posOffs);
+			tasks.add(task);
+			startOffset += length;
+		}
+	}
+
 	/**
 	 * Determines best axis to divide along. Currently chooses biggest axis.
 	 */
-	private int chooseBestAxis() {
+	private int chooseBestAxis(long[] span) {
 		int bestAxis = 0;
 		long bestAxisSize = span[bestAxis];
 		for (int i = 1; i < span.length; i++) {
@@ -243,7 +232,7 @@ public class ImageAssignment {
 	/**
 	 * Determines how many threads to use
 	 */
-	private int chooseNumThreads(int axis) {
+	private int chooseNumThreads(long[] span, int axis) {
 		int maxThreads = Runtime.getRuntime().availableProcessors();
 		if (maxThreads == 1) return 1;
 		long numElements = numElements(span);
@@ -257,11 +246,11 @@ public class ImageAssignment {
 	/**
 	 * Calculates the number of elements in the output region span
 	 */
-	private long numElements(long[] sp) {
-		if (sp.length == 0) return 0;
-		long numElems = sp[0];
-		for (int i = 1; i < sp.length; i++)
-			numElems *= sp[i];
+	private long numElements(long[] span) {
+		if (span.length == 0) return 0;
+		long numElems = span[0];
+		for (int i = 1; i < span.length; i++)
+			numElems *= span[i];
 		return numElems;
 	}
 
@@ -269,13 +258,13 @@ public class ImageAssignment {
 	 * The task assigns values to a subset of the output region.
 	 */
 	private Runnable task(
-		Img<? extends RealType<?>> img,
+		Img<? extends ComplexType<?>> img,
 		long[] imageOrigin,
 		long[] imageSpan,
 		int axis,
 		long startIndex,
 		long length,
-		Function<long[], RealType<?>> fn,
+		Function<long[], ? extends ComplexType<?>> fn,
 		Condition<long[]> cnd,
 		long[] nOffsets,
 		long[] pOffsets)
@@ -285,6 +274,10 @@ public class ImageAssignment {
 		regOrigin[axis] = startIndex;
 		final long[] regSpan = imageSpan.clone();
 		regSpan[axis] = length;
+		
+		// FIXME - warning unavoidable at moment. We don't have the type. If
+		// we remove typing from RegionRunner it won't compile.
+
 		return
 			new RegionRunner(
 				img,
@@ -300,10 +293,10 @@ public class ImageAssignment {
 	 * RegionRunner is the workhorse for assigning output values from the
 	 * evaluation of the input function across a subset of the output region.
 	 */
-	private class RegionRunner implements Runnable {
+	private class RegionRunner<K extends ComplexType<K>> implements Runnable {
 		
-		private final Img<? extends RealType<?>> img;
-		private final Function<long[], RealType<?>> function;
+		private final Img<K> img;
+		private final Function<long[], K> function;
 		private final Condition<long[]> condition;
 		private final DiscreteNeigh region;
 		private final DiscreteNeigh neighborhood;
@@ -312,10 +305,10 @@ public class ImageAssignment {
 		 * Constructor
 		 */
 		public RegionRunner(
-			Img<? extends RealType<?>> img,
+			Img<K> img,
 			long[] origin,
 			long[] span,
-			Function<long[], RealType<?>> func,
+			Function<long[], K> func,
 			Condition<long[]> cond,
 			long[] negOffs,
 			long[] posOffs)
@@ -332,9 +325,8 @@ public class ImageAssignment {
 		 */
 		@Override
 		public void run() {
-			final RandomAccess<? extends RealType<?>> accessor = img.randomAccess();
-			// TODO COMPLEX
-			final DoubleType output = new DoubleType();
+			final RandomAccess<K> accessor = img.randomAccess();
+			final K output = function.createOutput();
 			final RegionIndexIterator iter = new RegionIndexIterator(region);
 			while (iter.hasNext()) {
 				iter.fwd();
@@ -346,8 +338,15 @@ public class ImageAssignment {
 					function.evaluate(neighborhood, iter.getPosition(), output);
 					accessor.setPosition(iter.getPosition());
 					accessor.get().setReal(output.getRealDouble());
-					// TODO COMPLEX
-					//accessor.get().setImaginary(output.getImaginaryDouble());
+					accessor.get().setImaginary(output.getImaginaryDouble());
+					// FIXME
+					// Note - for real datasets this imaginary assignment may waste cpu
+					// cycles. Perhaps it can get optimized away by the JIT. But maybe not
+					// since the type is not really known because this class is really
+					// constructed from a raw type. We'd need to test how the JIT handles
+					// this situation. Note that in past incarnations this class used
+					// assigner classes. The complex version set R & I but the real
+					// version just set R. We could adopt that approach once again.
 				}
 			}
 		}
@@ -357,10 +356,11 @@ public class ImageAssignment {
 		 * DiscreteNeigh is needed for use with a RegionIndexIterator.
 		 */
 		private DiscreteNeigh buildRegion(long[] org, long[] spn) {
+			long[] nOffsets = new long[org.length];
 			long[] pOffsets = new long[org.length];
 			for (int i = 0; i < org.length; i++)
 				pOffsets[i] = spn[i] - 1;
-			return new DiscreteNeigh(org, new long[org.length], pOffsets);
+			return new DiscreteNeigh(org, nOffsets, pOffsets);
 		}
 	}
 }

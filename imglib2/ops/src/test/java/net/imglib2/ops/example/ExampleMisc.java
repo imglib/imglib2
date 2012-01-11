@@ -3,11 +3,15 @@ package net.imglib2.ops.example;
 import net.imglib2.img.Img;
 import net.imglib2.ops.Condition;
 import net.imglib2.ops.Function;
+import net.imglib2.ops.UnaryOperation;
 import net.imglib2.ops.condition.AtKeyPointCondition;
+import net.imglib2.ops.function.general.GeneralUnaryFunction;
 import net.imglib2.ops.function.real.RealImageFunction;
 import net.imglib2.ops.image.ImageAssignment;
 import net.imglib2.ops.operation.unary.real.RealSqr;
+import net.imglib2.type.numeric.ComplexType;
 import net.imglib2.type.numeric.RealType;
+import net.imglib2.type.numeric.complex.ComplexDoubleType;
 import net.imglib2.type.numeric.integer.UnsignedByteType;
 
 public class ExampleMisc {
@@ -20,20 +24,18 @@ public class ExampleMisc {
 		long[] origin = new long[] { 0, 0 };
 		long[] span = new long[] { 50, 40 };
 
-		RealSqr op = new RealSqr();
+		UnaryOperation<RealType<?>,RealType<?>> op = new RealSqr();
 
 		Function<long[], UnsignedByteType> imageFunc = new RealImageFunction<UnsignedByteType>(
 				inputImg, new UnsignedByteType());
 
-		Function<long[], RealType<?>> func = null;
-		// new GeneralUnaryFunction<long[],UnsignedByteType>(imageFunc, op);
+		Function<long[], UnsignedByteType> func =
+			new GeneralUnaryFunction<long[],UnsignedByteType,UnsignedByteType>(imageFunc, op, new UnsignedByteType());
 
-		Condition condition = new AtKeyPointCondition();
+		Condition<long[]> condition = new AtKeyPointCondition();
 
 		ImageAssignment assigner = new ImageAssignment(
-				outputImg, origin, span, func);
-
-		assigner.setCondition(condition);
+				outputImg, origin, span, func, condition);
 
 		assigner.assign(); // processed in parallel
 
@@ -42,5 +44,12 @@ public class ExampleMisc {
 
 	public static void main(String[] args) {
 
+		RealType r = new UnsignedByteType();
+		ComplexType c = new ComplexDoubleType();
+		
+		System.out.println(r.getClass()+" is a RealType : "+(r instanceof RealType));
+		System.out.println(r.getClass()+" is a ComplexType : "+(r instanceof ComplexType));
+		System.out.println(c.getClass()+" is a RealType : "+(c instanceof RealType));
+		System.out.println(c.getClass()+" is a ComplexType : "+(c instanceof ComplexType));
 	}
 }

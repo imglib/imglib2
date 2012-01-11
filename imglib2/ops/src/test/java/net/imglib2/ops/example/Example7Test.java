@@ -208,12 +208,11 @@ public class Example7Test {
 			new ConditionalFunction<long[],DoubleType>(xValCond, xSquaredFunc, yLineFunc);
 		Img<DoubleType> image = allocateImage();
 		// FIXME - ugly hack to avoid compiler issues
-		final Function<long[],RealType<?>> castFunc = (Function<long[],RealType<?>>) ((Function)function);
-		ImageAssignment assigner = new ImageAssignment(image, new long[2], new long[]{XSIZE,YSIZE}, castFunc, new long[2], new long[2]);
+		//final Function<long[],RealType<?>> castFunc = (Function<long[],RealType<?>>) ((Function)function);
 		Condition<long[]> circleCond = new CircularCondition();
 		Condition<long[]> sumCond = new XYSumCondition();
 		Condition<long[]> compositeCondition = new AndCondition<long[]>(circleCond,sumCond);
-		assigner.setCondition(compositeCondition);
+		ImageAssignment assigner = new ImageAssignment(image, new long[2], new long[]{XSIZE,YSIZE}, function, compositeCondition, new long[2], new long[2]);
 		assigner.assign();
 		testValues(image);
 	}
