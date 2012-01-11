@@ -8,7 +8,7 @@ import net.imglib2.concatenate.PreConcatenable;
 /**
  * Map the components of the source vector to obtain the target vector, for
  * instance transform (x,y,z) to (x,z,y).
- * 
+ *
  * <p>
  * The intended use of ComponentMapping is as a dimension permutation. The
  * mapping is implemented as a inverse lookup, i.e., every component of the
@@ -16,7 +16,7 @@ import net.imglib2.concatenate.PreConcatenable;
  * <em>Note, that it is not allowed to set this array such that a source component
  * is mapped to several target components!</em>
  * </p>
- * 
+ *
  * @author Tobias Pietzsch
  */
 public class ComponentMappingTransform extends AbstractMixedTransform implements ComponentMapping, Concatenable< ComponentMapping >, PreConcatenable< ComponentMapping >
@@ -35,6 +35,11 @@ public class ComponentMappingTransform extends AbstractMixedTransform implements
 			component[ d ] = d;
 	}
 
+	/**
+	 * @param component
+	 *            array specifying for each component of the target vector from
+	 *            which source vector component should it be taken.
+	 */
 	public ComponentMappingTransform( final int[] component )
 	{
 		super( component.length );
@@ -58,12 +63,12 @@ public class ComponentMappingTransform extends AbstractMixedTransform implements
 
 	/**
 	 * Set for each target dimensions from which source dimension it is taken.
-	 * 
+	 *
 	 * <p>
 	 * For instance, if the transform maps 3D (x,y,z) coordinates to 2D (z,x,y)
 	 * coordinate this will be [2, 0, 1].
 	 * </p>
-	 * 
+	 *
 	 * @param component
 	 *            array that says for each component of the target vector from
 	 *            which source vector component it should be taken.
@@ -78,7 +83,7 @@ public class ComponentMappingTransform extends AbstractMixedTransform implements
 	@Override
 	public double[][] getMatrix()
 	{
-		double[][] mat = new double[ numTargetDimensions + 1 ][ numTargetDimensions + 1 ];
+		final double[][] mat = new double[ numTargetDimensions + 1 ][ numTargetDimensions + 1 ];
 
 		mat[ numTargetDimensions ][ numTargetDimensions] = 1;
 
@@ -91,7 +96,7 @@ public class ComponentMappingTransform extends AbstractMixedTransform implements
 	}
 
 	@Override
-	public void apply( long[] source, long[] target )
+	public void apply( final long[] source, final long[] target )
 	{
 		assert source.length >= numTargetDimensions;
 		assert target.length >= numTargetDimensions;
@@ -101,7 +106,7 @@ public class ComponentMappingTransform extends AbstractMixedTransform implements
 	}
 
 	@Override
-	public void apply( int[] source, int[] target )
+	public void apply( final int[] source, final int[] target )
 	{
 		assert source.length >= numTargetDimensions;
 		assert target.length >= numTargetDimensions;
@@ -111,7 +116,7 @@ public class ComponentMappingTransform extends AbstractMixedTransform implements
 	}
 
 	@Override
-	public void apply( Localizable source, Positionable target )
+	public void apply( final Localizable source, final Positionable target )
 	{
 		assert source.numDimensions() >= numTargetDimensions;
 		assert target.numDimensions() >= numTargetDimensions;
@@ -121,11 +126,11 @@ public class ComponentMappingTransform extends AbstractMixedTransform implements
 	}
 
 	@Override
-	public ComponentMappingTransform concatenate( ComponentMapping t )
+	public ComponentMappingTransform concatenate( final ComponentMapping t )
 	{
 		assert numTargetDimensions == t.numTargetDimensions();
-		
-		ComponentMappingTransform result = new ComponentMappingTransform( numTargetDimensions );
+
+		final ComponentMappingTransform result = new ComponentMappingTransform( numTargetDimensions );
 
 		for ( int d = 0; d < numTargetDimensions; ++d )
 			result.component[ d ] = t.getComponentMapping( this.component[ d ] );
@@ -140,11 +145,11 @@ public class ComponentMappingTransform extends AbstractMixedTransform implements
 	}
 
 	@Override
-	public Concatenable< ComponentMapping > preConcatenate( ComponentMapping t )
+	public ComponentMappingTransform preConcatenate( final ComponentMapping t )
 	{
 		assert numTargetDimensions == t.numTargetDimensions();
-		
-		ComponentMappingTransform result = new ComponentMappingTransform( numTargetDimensions );
+
+		final ComponentMappingTransform result = new ComponentMappingTransform( numTargetDimensions );
 
 		for ( int d = 0; d < numTargetDimensions; ++d )
 			result.component[ d ] = this.component[ t.getComponentMapping( d ) ];

@@ -1,10 +1,10 @@
 /**
  * Copyright (c) 2009--2010, Stephan Preibisch & Stephan Saalfeld
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * Redistributions of source code must retain the above copyright notice, this
  * list of conditions and the following disclaimer.  Redistributions in binary
  * form must reproduce the above copyright notice, this list of conditions and
@@ -12,7 +12,7 @@
  * provided with the distribution.  Neither the name of the Fiji project nor
  * the names of its contributors may be used to endorse or promote products
  * derived from this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -37,41 +37,44 @@ import net.imglib2.util.Util;
 public class UnsignedShortType extends GenericShortType<UnsignedShortType>
 {
 	// this is the constructor if you want it to read from an array
-	public UnsignedShortType( NativeImg<UnsignedShortType, ? extends ShortAccess> img ) { super( img ); }
+	public UnsignedShortType( final NativeImg<UnsignedShortType, ? extends ShortAccess> img ) { super( img ); }
 
 	// this is the constructor if you want it to be a variable
 	public UnsignedShortType( final int value ) { super( getCodedSignedShortChecked(value) ); }
 
+	// this is the constructor if you want to specify the dataAccess
+	public UnsignedShortType( final ShortAccess access ) { super( access ); }
+
 	// this is the constructor if you want it to be a variable
 	public UnsignedShortType() { this( 0 ); }
-	
+
 	public static short getCodedSignedShortChecked( int unsignedShort )
 	{
 		if ( unsignedShort < 0 )
 			unsignedShort = 0;
 		else if ( unsignedShort > 65535 )
 			unsignedShort = 65535;
-		
+
 		return getCodedSignedShort( unsignedShort );
 	}
 	public static short getCodedSignedShort( final int unsignedShort ) { return (short)( unsignedShort & 0xffff );	}
 	public static int getUnsignedShort( final short signedShort ) { return signedShort & 0xffff; }
-	
+
 	@Override
 	public NativeImg<UnsignedShortType, ? extends ShortAccess> createSuitableNativeImg( final NativeImgFactory<UnsignedShortType> storageFactory, final long dim[] )
 	{
 		// create the container
 		final NativeImg<UnsignedShortType, ? extends ShortAccess> container = storageFactory.createShortInstance( dim, 1 );
-		
+
 		// create a Type that is linked to the container
 		final UnsignedShortType linkedType = new UnsignedShortType( container );
-		
+
 		// pass it to the NativeContainer
 		container.setLinkedType( linkedType );
-		
+
 		return container;
 	}
-	
+
 	@Override
 	public UnsignedShortType duplicateTypeOnSameNativeImg() { return new UnsignedShortType( img ); }
 
@@ -110,7 +113,7 @@ public class UnsignedShortType extends GenericShortType<UnsignedShortType>
 	{
 		set( get() - c.get() );
 	}
-	
+
 	@Override
 	public void inc()
 	{
@@ -121,11 +124,11 @@ public class UnsignedShortType extends GenericShortType<UnsignedShortType>
 	public void dec()
 	{
 		set( get() - 1 );
-	}	
-	
+	}
+
 	public int get() { return getUnsignedShort( getValue() ); }
 	public void set( final int f ) { setValue( getCodedSignedShort( f ) ); }
-	
+
 	@Override
 	public int getInteger(){ return get(); }
 	@Override
@@ -141,25 +144,25 @@ public class UnsignedShortType extends GenericShortType<UnsignedShortType>
 	public double getMinValue()  { return 0; }
 
 	@Override
-	public int compareTo( final UnsignedShortType c ) 
+	public int compareTo( final UnsignedShortType c )
 	{
 		final int a = get();
 		final int b = c.get();
-		
+
 		if ( a > b )
 			return 1;
 		else if ( a < b )
 			return -1;
-		else 
+		else
 			return 0;
 	}
-	
+
 	@Override
 	public UnsignedShortType createVariable(){ return new UnsignedShortType( 0 ); }
 
 	@Override
 	public UnsignedShortType copy(){ return new UnsignedShortType( get() ); }
-	
+
 	@Override
 	public String toString() { return "" + get(); }
 }

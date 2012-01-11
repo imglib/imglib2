@@ -6,24 +6,22 @@ import net.imglib2.concatenate.Concatenable;
 import net.imglib2.concatenate.PreConcatenable;
 
 /**
- * Mixed transform allows to express common integer view transformations such as
- * translation, rotation, rotoinversion, and projection.
+ * Map the components of the source vector to a slice of the target space, for
+ * instance transform (x,y) to (x,C,y) where C is a constant.
  *
  * <p>
- * It transform a n-dimensional source vector to a m-dimensional target vector,
- * and can be represented as a <em>m+1</em> &times; <em>n+1</em> homogeneous
- * matrix. The mixed transform can be decomposed as follows:
+ * A {@link SlicingTransform} transform a n-dimensional source vector to a
+ * m-dimensional target vector, where m >= n. It can be represented as a
+ * <em>m+1</em> &times; <em>n+1</em> homogeneous matrix. The
+ * {@link SlicingTransform} can be decomposed as follows:
  * <ol>
- * <li>project down (discard some components of the source vector)</li>
  * <li>component permutation</li>
- * <li>component inversion</li>
- * <li>project up (add zero components in the target vector)</li>
- * <li>translation</li>
+ * <li>project up & position (add constant components in the target vector)</li>
  * </ol>
  * </p>
  *
  * <p>
- * The project down and component permutation steps are implemented by the
+ * The  component permutation step is implemented by the
  * {@link #setComponentMapping(int[]) component mapping}. This is a lookup array
  * that specifies for each target dimension from which source dimension it is
  * taken.
@@ -33,18 +31,12 @@ import net.imglib2.concatenate.PreConcatenable;
  *
  * @author Tobias Pietzsch
  */
-public class MixedTransform extends AbstractMixedTransform implements Concatenable< Mixed >, PreConcatenable< Mixed >
+public class SlicingTransform extends AbstractMixedTransform implements Slicing, Concatenable< Slicing >, PreConcatenable< Slicing >
 {
 	/**
 	 * dimension of source vector.
 	 */
 	protected final int numSourceDimensions;
-
-	/**
-	 * translation is added to the target vector after applying permutation,
-	 * projection, inversion operations.
-	 */
-	protected final long[] translation;
 
 	/**
 	 * for each component of the target vector (before translation). should the
@@ -54,24 +46,28 @@ public class MixedTransform extends AbstractMixedTransform implements Concatenab
 	protected final boolean[] zero;
 
 	/**
-	 * for each component of the target vector (before translation). should the
-	 * source vector component be inverted (true).
+	 * translation is added to the target vector after applying the permutation and
+	 * project-up operations. Only translation values for dimensions that have not
+	 * been assigned a source vector component are used.
+	 * For instance, if you project (x,y) to (x,y,z) only the translation value for
+	 * z is used.
 	 */
-	protected final boolean[] invert;
+	protected final long[] translation;
 
 	/**
-	 * for each component of the target vector (before translation). from which
+	 * specifies for each component of the target vector from which
 	 * source vector component should it be taken.
 	 */
 	protected final int[] component;
 
-	public MixedTransform( final int sourceDim, final int targetDim )
+	public SlicingTransform( final int sourceDim, final int targetDim )
 	{
 		super( targetDim );
-		this.numSourceDimensions = sourceDim;
+		assert sourceDim <= targetDim;
+
+		numSourceDimensions = sourceDim;
 		translation = new long[ targetDim ];
 		zero = new boolean[ targetDim ];
-		invert = new boolean[ targetDim ];
 		component = new int[ targetDim ];
 		for ( int d = 0; d < targetDim; ++d )
 		{
@@ -98,14 +94,14 @@ public class MixedTransform extends AbstractMixedTransform implements Concatenab
 	{
 		assert t.length == numTargetDimensions;
 		for ( int d = 0; d < numTargetDimensions; ++d )
-			t[ d ] = translation[ d ];
+			t[ d ] = zero[ d ] ? translation[ d ] : 0;
 	}
 
 	@Override
 	public long getTranslation( final int d )
 	{
 		assert d <= numTargetDimensions;
-		return translation[ d ];
+		return zero[ d ] ? translation[ d ] : 0;
 	}
 
 	public void setTranslation( final long[] t )
@@ -120,9 +116,7 @@ public class MixedTransform extends AbstractMixedTransform implements Concatenab
 	{
 		assert zero.length >= numTargetDimensions;
 		for ( int d = 0; d < numTargetDimensions; ++d )
-		{
 			zero[ d ] = this.zero[ d ];
-		}
 	}
 
 	@Override
@@ -150,9 +144,7 @@ public class MixedTransform extends AbstractMixedTransform implements Concatenab
 	{
 		assert zero.length >= numTargetDimensions;
 		for ( int d = 0; d < numTargetDimensions; ++d )
-		{
 			this.zero[ d ] = zero[ d ];
-		}
 	}
 
 	@Override
@@ -160,9 +152,7 @@ public class MixedTransform extends AbstractMixedTransform implements Concatenab
 	{
 		assert component.length >= numTargetDimensions;
 		for ( int d = 0; d < numTargetDimensions; ++d )
-		{
 			component[ d ] = this.component[ d ];
-		}
 	}
 
 	@Override
@@ -197,49 +187,7 @@ public class MixedTransform extends AbstractMixedTransform implements Concatenab
 	{
 		assert component.length >= numTargetDimensions;
 		for ( int d = 0; d < numTargetDimensions; ++d )
-		{
 			this.component[ d ] = component[ d ];
-		}
-	}
-
-	@Override
-	public void getComponentInversion( @SuppressWarnings( "hiding" ) final boolean[] invert )
-	{
-		assert invert.length >= numTargetDimensions;
-		for ( int d = 0; d < numTargetDimensions; ++d )
-		{
-			invert[ d ] = this.invert[ d ];
-		}
-	}
-
-	@Override
-	public boolean getComponentInversion( final int d )
-	{
-		assert d <= numTargetDimensions;
-		return invert[ d ];
-	}
-
-	/**
-	 * Set for each target component, whether the source component it is taken
-	 * from should be inverted.
-	 *
-	 * <p>
-	 * For instance, if rotating a 2D (x,y) coordinates by 180 degrees will map
-	 * it to (-x,-y). In this case, this will be [true, true].
-	 * </p>
-	 *
-	 * @param component
-	 *            array that says for each component of the target vector
-	 *            (before translation) whether the source vector component it is
-	 *            taken from should be inverted (true).
-	 */
-	public void setComponentInversion( final boolean[] invert )
-	{
-		assert invert.length >= numTargetDimensions;
-		for ( int d = 0; d < numTargetDimensions; ++d )
-		{
-			this.invert[ d ] = invert[ d ];
-		}
 	}
 
 	@Override
@@ -249,17 +197,7 @@ public class MixedTransform extends AbstractMixedTransform implements Concatenab
 		assert target.length >= numTargetDimensions;
 
 		for ( int d = 0; d < numTargetDimensions; ++d )
-		{
-			target[ d ] = translation[ d ];
-			if ( !zero[ d ] )
-			{
-				final long v = source[ component[ d ] ];
-				if ( invert[ d ] )
-					target[ d ] -= v;
-				else
-					target[ d ] += v;
-			}
-		}
+			target[ d ] = zero[ d ] ? translation[ d ] : source[ component[ d ] ];
 	}
 
 	@Override
@@ -269,17 +207,7 @@ public class MixedTransform extends AbstractMixedTransform implements Concatenab
 		assert target.length >= numTargetDimensions;
 
 		for ( int d = 0; d < numTargetDimensions; ++d )
-		{
-			target[ d ] = ( int ) translation[ d ];
-			if ( !zero[ d ] )
-			{
-				final long v = source[ component[ d ] ];
-				if ( invert[ d ] )
-					target[ d ] -= v;
-				else
-					target[ d ] += v;
-			}
-		}
+			target[ d ] = zero[ d ] ? ( int ) translation[ d ] : source[ component[ d ] ];
 	}
 
 	@Override
@@ -289,55 +217,34 @@ public class MixedTransform extends AbstractMixedTransform implements Concatenab
 		assert target.numDimensions() >= numTargetDimensions;
 
 		for ( int d = 0; d < numTargetDimensions; ++d )
-		{
-			long pos = translation[ d ];
-			if ( !zero[ d ] )
-			{
-				final long v = source.getLongPosition( component[ d ] );;
-				if ( invert[ d ] )
-					pos -= v;
-				else
-					pos += v;
-			}
-			target.setPosition( pos, d );
-		}
+			target.setPosition( zero[ d ] ? ( int ) translation[ d ] : source.getLongPosition( component[ d ] ), d );
 	}
 
 	@Override
-	public MixedTransform concatenate( final Mixed t )
+	public SlicingTransform concatenate( final Slicing t )
 	{
 		assert this.numSourceDimensions == t.numTargetDimensions();
 
-		final MixedTransform result = new MixedTransform( t.numSourceDimensions(), this.numTargetDimensions );
+		final SlicingTransform result = new SlicingTransform( t.numSourceDimensions(), this.numTargetDimensions );
 
 		for ( int d = 0; d < result.numTargetDimensions; ++d )
 		{
-			result.translation[ d ] = this.translation[ d ];
 			if ( this.zero[ d ] )
 			{
 				result.zero[ d ] = true;
-				result.invert[ d ] = false;
-				result.component[ d ] = 0;
+				result.translation[ d ] = this.translation[ d ];
 			}
 			else
 			{
 				final int c = this.component[ d ];
-				final long v = t.getTranslation( c );
-				if ( this.invert[ d ] )
-					result.translation[ d ] -= v;
-				else
-					result.translation[ d ] += v;
-
 				if ( t.getComponentZero( c ) )
 				{
 					result.zero[ d ] = true;
-					result.invert[ d ] = false;
-					result.component[ d ] = 0;
+					result.translation[ d ] = t.getTranslation( c );
 				}
 				else
 				{
 					result.zero[ d ] = false;
-					result.invert[ d ] = ( this.invert[ d ] != t.getComponentInversion( c ) );
 					result.component[ d ] = t.getComponentMapping( c );
 				}
 			}
@@ -346,46 +253,36 @@ public class MixedTransform extends AbstractMixedTransform implements Concatenab
 	}
 
 	@Override
-	public Class< Mixed > getConcatenableClass()
+	public Class< Slicing > getConcatenableClass()
 	{
-		return Mixed.class;
+		return Slicing.class;
 	}
 
 	@Override
-	public MixedTransform preConcatenate( final Mixed t )
+	public SlicingTransform preConcatenate( final Slicing t )
 	{
 		assert t.numSourceDimensions() == this.numTargetDimensions;
 
-		final MixedTransform result = new MixedTransform( this.numSourceDimensions, t.numTargetDimensions() );
+		final SlicingTransform result = new SlicingTransform( this.numSourceDimensions, t.numTargetDimensions() );
 
 		for ( int d = 0; d < result.numTargetDimensions; ++d )
 		{
-			result.translation[ d ] = t.getTranslation( d );
 			if ( t.getComponentZero( d ) )
 			{
 				result.zero[ d ] = true;
-				result.invert[ d ] = false;
-				result.component[ d ] = 0;
+				result.translation[ d ] = t.getTranslation( d );
 			}
 			else
 			{
 				final int c = t.getComponentMapping( d );
-				final long v = this.translation[ c ];
-				if ( t.getComponentInversion( d ) )
-					result.translation[ d ] -= v;
-				else
-					result.translation[ d ] += v;
-
 				if ( this.zero[ c ] )
 				{
 					result.zero[ d ] = true;
-					result.invert[ d ] = false;
-					result.component[ d ] = 0;
+					result.translation[ d ] = this.translation[ c ];
 				}
 				else
 				{
 					result.zero[ d ] = false;
-					result.invert[ d ] = ( t.getComponentInversion( d ) != this.invert[ c ] );
 					result.component[ d ] = this.component[ c ];
 				}
 			}
@@ -394,9 +291,9 @@ public class MixedTransform extends AbstractMixedTransform implements Concatenab
 	}
 
 	@Override
-	public Class< Mixed > getPreConcatenableClass()
+	public Class< Slicing > getPreConcatenableClass()
 	{
-		return Mixed.class;
+		return Slicing.class;
 	}
 
 	/**
@@ -404,7 +301,7 @@ public class MixedTransform extends AbstractMixedTransform implements Concatenab
 	 *
 	 * @param transform
 	 */
-	public void set( final Mixed transform )
+	public void set( final Slicing transform )
 	{
 		assert numSourceDimensions == transform.numSourceDimensions();
 		assert numTargetDimensions == transform.numTargetDimensions();
@@ -412,7 +309,6 @@ public class MixedTransform extends AbstractMixedTransform implements Concatenab
 		transform.getTranslation( translation );
 		transform.getComponentZero( zero );
 		transform.getComponentMapping( component );
-		transform.getComponentInversion( invert );
 	}
 
 	/**
@@ -427,41 +323,12 @@ public class MixedTransform extends AbstractMixedTransform implements Concatenab
 		mat[ numTargetDimensions ][ numSourceDimensions] = 1;
 
 		for ( int d = 0; d < numTargetDimensions; ++d )
-		{
-			mat[ d ][ numSourceDimensions ] = translation[ d ];
-		}
+			mat[ d ][ numSourceDimensions ] = getTranslation( d );
 
 		for ( int d = 0; d < numTargetDimensions; ++d )
-		{
 			if ( zero[ d ] == false )
-			{
-				mat[ d ][ component[ d ] ] = invert[ d ] ? -1 : 1 ;
-			}
-		}
+				mat[ d ][ component[ d ] ] = 1 ;
 
 		return mat;
-	}
-
-	/**
-	 * Check whether the transforms has a full mapping of source to target
-	 * components (no source component is discarded).
-	 *
-	 * @return whether there is a full mapping of source to target components.
-	 */
-	public boolean hasFullSourceMapping()
-	{
-		final boolean[] sourceMapped = new boolean[ numSourceDimensions ];
-		for ( int d = 0; d < numTargetDimensions; ++d )
-		{
-			if ( !zero[ d ] )
-			{
-				sourceMapped[ component[ d ] ] = true;
-			}
-		}
-		for ( int d = 0; d < numSourceDimensions; ++d )
-		{
-			if ( !sourceMapped[ d ] ) { return false; }
-		}
-		return true;
 	}
 }

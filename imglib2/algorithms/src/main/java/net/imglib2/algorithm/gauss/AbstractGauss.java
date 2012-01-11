@@ -202,7 +202,7 @@ public abstract class AbstractGauss< T extends NumericType< T > >
 			range.min( randomAccess );			
 			
 			// this also sticks out half because we need more input pixels in x due to the convolution (kernel size)
-			randomAccess.move( -(kernel[ 0 ].length / 2) - 1, 0 );
+			randomAccess.move( -(kernel[ 0 ].length / 2), 0 );
 		}
 		else 
 		{			
@@ -211,7 +211,7 @@ public abstract class AbstractGauss< T extends NumericType< T > >
 			range.min( randomAccess );
 			
 			// all dimensions start at 0 relative to the temp images, except the dimension that is currently convolved
-			randomAccess.move( -(kernel[ dim ].length / 2) - 1, dim );
+			randomAccess.move( -(kernel[ dim ].length / 2), dim );
 		}
 		
 		// return a new SamplingLineIterator that also keeps the instance of the processing line,
@@ -247,16 +247,13 @@ public abstract class AbstractGauss< T extends NumericType< T > >
 		{
 			// put the randomAccess into the correct location, the range is relative to the input for dim=numDimensions-1
 			randomAccess.setPosition( outputOffset );
-			randomAccess.bck( dim );
 		}
 		else
 		{
 			if ( dim % 2 == 0 )
 				tmp1.min( randomAccess );
 			else
-				tmp2.min( randomAccess );
-			
-			randomAccess.bck( dim );
+				tmp2.min( randomAccess );			
 		}
 		
 		return new WritableLineIterator< T >( dim, sizeProcessLine, randomAccess );
@@ -352,7 +349,19 @@ public abstract class AbstractGauss< T extends NumericType< T > >
 			 */
 			
 			// convolve the first pixels where the input influences less than kernel.size pixels
-			for ( int i = 0; i < kernelSizeMinus1; ++i )
+			
+			// the FIRST pixel is a special case as we cannot set the cursor to -1 (might not be defined)
+			// copy input into a temp variable, it might be expensive to get()
+			copy.set( input.get() );
+			
+			// set the random access in the processing line to the right position
+			randomAccessLeft.setPosition( 0, 0 );				
+			
+			// now add it to the one output values it contributes to
+			copy.mul( kernel[ 0 ] );
+			randomAccessLeft.get().add( copy );
+			
+			for ( int i = 1; i < kernelSizeMinus1; ++i )
 			{
 				input.fwd();
 				
@@ -488,7 +497,19 @@ public abstract class AbstractGauss< T extends NumericType< T > >
 			 */
 			
 			// convolve the first pixels where the input influences less than kernel.size pixels
-			for ( int i = 0; i < imgSize; ++i )
+
+			// the FIRST pixel is a special case as we cannot set the cursor to -1 (might not be defined)
+			// copy input into a temp variable, it might be expensive to get()
+			copy.set( input.get() );
+			
+			// set the random access in the processing line to the right position
+			randomAccessLeft.setPosition( 0, 0 );				
+			
+			// now add it to all output values it contributes to				
+			copy.mul( kernel[ 0 ] );
+			randomAccessLeft.get().add( copy );
+
+			for ( int i = 1; i < imgSize; ++i )
 			{
 				input.fwd();
 				
@@ -557,6 +578,13 @@ public abstract class AbstractGauss< T extends NumericType< T > >
 	{
 		final Cursor< T > resultCursor = inputLineSampler.resultCursor; //inputLineSampler.getProcessLine().cursor();
 		resultCursor.reset();
+		
+		// the first pixel is special as we cannot move it to -1 (might not be defined)
+		if ( resultCursor.hasNext() )
+		{
+			resultCursor.fwd();
+			a.set( resultCursor.get() );			
+		}
 		
 		while ( resultCursor.hasNext() )
 		{
