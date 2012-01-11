@@ -5,6 +5,7 @@ import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Iterator;
 
+import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.algorithm.componenttree.Component;
 import net.imglib2.algorithm.componenttree.ComponentTree;
@@ -60,6 +61,34 @@ import net.imglib2.type.numeric.integer.LongType;
  */
 public final class MserTree< T extends Type< T > > implements Component.Handler< MserComponentIntermediate< T > >, Iterable< Mser< T > >
 {
+	/**
+	 * Build a MSER tree from an input image. Calls
+	 * {@link #buildMserTree(RandomAccessibleInterval, RealType, long, long, double, double, ImgFactory, boolean)}
+	 * using an {@link ArrayImgFactory} or {@link CellImgFactory} depending on
+	 * input image size.
+	 *
+	 * @param input
+	 *            the input image.
+	 * @param delta
+	 *            delta for computing instability score.
+	 * @param minSize
+	 *            minimum size (in pixels) of accepted MSER.
+	 * @param maxSize
+	 *            maximum size (in pixels) of accepted MSER.
+	 * @param maxVar
+	 *            maximum instability score of accepted MSER.
+	 * @param minDiversity
+	 *            minimal diversity of adjacent accepted MSER.
+	 * @param darkToBright
+	 *            whether to apply thresholds from dark to bright (true) or
+	 *            bright to dark (false)
+	 * @return MSER tree of the image.
+	 */
+	public static < T extends RealType< T > > MserTree< T > buildMserTree( final RandomAccessibleInterval< T > input, final double delta, final long minSize, final long maxSize, final double maxVar, final double minDiversity, boolean darkToBright )
+	{
+		return buildMserTree( input, MserTree.getDeltaVariable( input, delta ), minSize, maxSize, maxVar, minDiversity, darkToBright );
+	}
+
 	/**
 	 * Build a MSER tree from an input image. Calls
 	 * {@link #buildMserTree(RandomAccessibleInterval, RealType, long, long, double, double, ImgFactory, boolean)}
@@ -202,6 +231,19 @@ public final class MserTree< T extends Type< T > > implements Component.Handler<
 		ComponentTree.buildComponentTree( input, generator, tree, comparator );
 		tree.pruneDuplicates();
 		return tree;
+	}
+
+	/**
+	 * Create a variable of type T with value delta by copying
+	 * and setting a value from the input {@link RandomAccessibleInterval}.
+	 */
+	private static < T extends RealType< T > > T getDeltaVariable( final RandomAccessibleInterval< T > input, double delta )
+	{
+		RandomAccess< T > a = input.randomAccess();
+		input.min( a );
+		T deltaT = a.get().createVariable();
+		deltaT.setReal( delta );
+		return deltaT;
 	}
 
 	private final HashSet< Mser< T > > roots;
