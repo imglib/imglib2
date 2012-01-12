@@ -1,11 +1,11 @@
-package net.imglib2.ops.sandbox;
+package net.imglib2.ops.example;
 
 import net.imglib2.ops.operation.binary.complex.ComplexDivide;
 import net.imglib2.ops.operation.unary.complex.ComplexCos;
 import net.imglib2.ops.operation.unary.complex.ComplexReciprocal;
 import net.imglib2.type.numeric.complex.ComplexDoubleType;
 
-public class Test {
+public class SpeedCalcs {
 
 	private static final ComplexCos cosFunc = new ComplexCos();
 	private static final ComplexReciprocal recipFunc = new ComplexReciprocal();
