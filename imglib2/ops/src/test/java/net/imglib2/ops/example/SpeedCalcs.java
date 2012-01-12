@@ -65,8 +65,9 @@ public class SpeedCalcs {
 		long pt3 = System.currentTimeMillis();
 		
 		System.out.println("Total milleseconds");
-		System.out.println("  method1 (divide(1,z))   = "+(pt2-pt1));
-		System.out.println("  method2 (reciprocal(z)) = "+(pt3-pt2));
+		System.out.println("  trial 1 of 2");
+		System.out.println("    method1 (divide(1,z))   = "+(pt2-pt1));
+		System.out.println("    method2 (reciprocal(z)) = "+(pt3-pt2));
 	
 		pt1 = System.currentTimeMillis();
 		for (double x = -300; x <= 300; x += 0.2) {
@@ -88,9 +89,9 @@ public class SpeedCalcs {
 		}
 		pt3 = System.currentTimeMillis();
 		
-		System.out.println("Total milleseconds");
-		System.out.println("  method1 (divide(1,z))   = "+(pt2-pt1));
-		System.out.println("  method2 (reciprocal(z)) = "+(pt3-pt2));
+		System.out.println("  trial 2 of 2");
+		System.out.println("    method1 (divide(1,z))   = "+(pt2-pt1));
+		System.out.println("    method2 (reciprocal(z)) = "+(pt3-pt2));
 	}
 	
 }
