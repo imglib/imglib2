@@ -30,7 +30,7 @@ POSSIBILITY OF SUCH DAMAGE.
 package net.imglib2.ops.operation.binary.real;
 
 import net.imglib2.ops.BinaryOperation;
-import net.imglib2.type.numeric.RealType;
+import net.imglib2.type.numeric.ComplexType;
 
 /**
  * 
@@ -38,10 +38,10 @@ import net.imglib2.type.numeric.RealType;
  * 
  */
 public final class RealMax
-		implements BinaryOperation<RealType<?>,RealType<?>,RealType<?>>
+		implements BinaryOperation<ComplexType<?>,ComplexType<?>,ComplexType<?>>
 {
 	@Override
-	public RealType<?> compute(RealType<?> x1, RealType<?> x2, RealType<?> output) {
+	public ComplexType<?> compute(ComplexType<?> x1, ComplexType<?> x2, ComplexType<?> output) {
 		if (x1.getRealDouble() > x2.getRealDouble())
 			output.setReal(x1.getRealDouble());
 		else

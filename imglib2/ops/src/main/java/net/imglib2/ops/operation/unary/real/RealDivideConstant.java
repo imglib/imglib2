@@ -30,7 +30,7 @@ POSSIBILITY OF SUCH DAMAGE.
 package net.imglib2.ops.operation.unary.real;
 
 import net.imglib2.ops.UnaryOperation;
-import net.imglib2.type.numeric.RealType;
+import net.imglib2.type.numeric.ComplexType;
 
 /**
  * 
@@ -38,7 +38,7 @@ import net.imglib2.type.numeric.RealType;
  * 
  */
 public final class RealDivideConstant
-	implements UnaryOperation<RealType<?>, RealType<?>>
+	implements UnaryOperation<ComplexType<?>, ComplexType<?>>
 {
 	private final double constant;
 	private final double dbzVal;
@@ -49,7 +49,7 @@ public final class RealDivideConstant
 	}
 
 	@Override
-	public RealType<?> compute(RealType<?> x, RealType<?> output) {
+	public ComplexType<?> compute(ComplexType<?> x, ComplexType<?> output) {
 		if (constant == 0) {
 			output.setReal(dbzVal);
 		} else { // not dividing by zero

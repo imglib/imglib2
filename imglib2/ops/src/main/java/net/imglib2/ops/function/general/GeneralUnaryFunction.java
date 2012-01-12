@@ -32,24 +32,24 @@ package net.imglib2.ops.function.general;
 import net.imglib2.ops.Function;
 import net.imglib2.ops.Neighborhood;
 import net.imglib2.ops.UnaryOperation;
-import net.imglib2.type.numeric.RealType;
+import net.imglib2.type.numeric.ComplexType;
 
 /**
  * 
  * @author Barry DeZonia
  * 
  */
-public class GeneralUnaryFunction<INDEX, INPUT_TYPE extends RealType<INPUT_TYPE>,
-		OUTPUT_TYPE extends RealType<OUTPUT_TYPE>>
+public class GeneralUnaryFunction<INDEX, INPUT_TYPE extends ComplexType<INPUT_TYPE>,
+		OUTPUT_TYPE extends ComplexType<OUTPUT_TYPE>>
 	implements Function<INDEX, OUTPUT_TYPE>
 {
 	private final Function<INDEX, INPUT_TYPE> f1;
 	private final INPUT_TYPE temp;
-	private final UnaryOperation<RealType<?>, RealType<?>> operation;
+	private final UnaryOperation<ComplexType<?>, ComplexType<?>> operation;
 	private final OUTPUT_TYPE type;
 
 	public GeneralUnaryFunction(Function<INDEX, INPUT_TYPE> f1,
-			UnaryOperation<RealType<?>, RealType<?>> operation, OUTPUT_TYPE type) {
+			UnaryOperation<ComplexType<?>, ComplexType<?>> operation, OUTPUT_TYPE type) {
 		this.type = type;
 		this.f1 = f1;
 		this.temp = f1.createOutput();

@@ -35,10 +35,10 @@ POSSIBILITY OF SUCH DAMAGE.
 package net.imglib2.ops.operation.unary.real;
 
 import net.imglib2.ops.UnaryOperation;
-import net.imglib2.type.numeric.RealType;
+import net.imglib2.type.numeric.ComplexType;
 
 public final class RealMultiplyConstant
-	implements UnaryOperation<RealType<?>, RealType<?>>
+	implements UnaryOperation<ComplexType<?>, ComplexType<?>>
 {
 	private final double constant;
 
@@ -47,7 +47,7 @@ public final class RealMultiplyConstant
 	}
 
 	@Override
-	public RealType<?> compute(RealType<?> x, RealType<?> output) {
+	public ComplexType<?> compute(ComplexType<?> x, ComplexType<?> output) {
 		double value = x.getRealDouble() * constant;
 		output.setReal(value);
 		return output;

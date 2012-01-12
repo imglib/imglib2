@@ -30,7 +30,7 @@ POSSIBILITY OF SUCH DAMAGE.
 package net.imglib2.ops.operation.unary.real;
 
 import net.imglib2.ops.UnaryOperation;
-import net.imglib2.type.numeric.RealType;
+import net.imglib2.type.numeric.ComplexType;
 
 
 /**
@@ -39,7 +39,7 @@ import net.imglib2.type.numeric.RealType;
  *
  */
 public final class RealPowerConstant
-	implements UnaryOperation<RealType<?>, RealType<?>>
+	implements UnaryOperation<ComplexType<?>, ComplexType<?>>
 {
 	private final double constant;
 	
@@ -48,7 +48,7 @@ public final class RealPowerConstant
 	}
 	
 	@Override
-	public RealType<?> compute(RealType<?> x, RealType<?> output) {
+	public ComplexType<?> compute(ComplexType<?> x, ComplexType<?> output) {
 		double value = Math.pow(x.getRealDouble(), constant);
 		output.setReal(value);
 		return output;

@@ -32,7 +32,7 @@ package net.imglib2.ops.operation.unary.real;
 import java.util.Random;
 
 import net.imglib2.ops.UnaryOperation;
-import net.imglib2.type.numeric.RealType;
+import net.imglib2.type.numeric.ComplexType;
 
 /**
  * 
@@ -40,7 +40,7 @@ import net.imglib2.type.numeric.RealType;
  * 
  */
 public final class RealAddNoise
-		implements UnaryOperation<RealType<?>, RealType<?>>
+		implements UnaryOperation<ComplexType<?>, ComplexType<?>>
 {
 	private final double rangeMin;
 	private final double rangeMax;
@@ -56,7 +56,7 @@ public final class RealAddNoise
 	}
 
 	@Override
-	public RealType<?> compute(RealType<?> x, RealType<?> output) {
+	public ComplexType<?> compute(ComplexType<?> x, ComplexType<?> output) {
 		int i = 0;
 		do {
 			double newVal = x.getRealDouble()

@@ -30,7 +30,7 @@ POSSIBILITY OF SUCH DAMAGE.
 package net.imglib2.ops.operation.unary.real;
 
 import net.imglib2.ops.UnaryOperation;
-import net.imglib2.type.numeric.RealType;
+import net.imglib2.type.numeric.ComplexType;
 
 /**
  * 
@@ -38,10 +38,10 @@ import net.imglib2.type.numeric.RealType;
  * 
  */
 public final class RealCopy
-		implements UnaryOperation<RealType<?>, RealType<?>>
+		implements UnaryOperation<ComplexType<?>, ComplexType<?>>
 {
 	@Override
-	public RealType<?> compute(RealType<?> x, RealType<?> output) {
+	public ComplexType<?> compute(ComplexType<?> x, ComplexType<?> output) {
 		output.setReal(x.getRealDouble());
 		return output;
 	}

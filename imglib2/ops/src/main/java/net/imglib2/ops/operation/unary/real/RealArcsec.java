@@ -30,7 +30,7 @@ POSSIBILITY OF SUCH DAMAGE.
 package net.imglib2.ops.operation.unary.real;
 
 import net.imglib2.ops.UnaryOperation;
-import net.imglib2.type.numeric.RealType;
+import net.imglib2.type.numeric.ComplexType;
 import net.imglib2.type.numeric.real.DoubleType;
 
 //verified formula with Mathworld's definition for Inverse Secant
@@ -41,14 +41,14 @@ import net.imglib2.type.numeric.real.DoubleType;
  * 
  */
 public final class RealArcsec
-		implements UnaryOperation<RealType<?>, RealType<?>>
+		implements UnaryOperation<ComplexType<?>, ComplexType<?>>
 {
 	private final RealArcsin asin = new RealArcsin();
 	private DoubleType angle = new DoubleType();
 	private DoubleType tmp = new DoubleType();
 
 	@Override
-	public RealType<?> compute(RealType<?> x, RealType<?> output) {
+	public ComplexType<?> compute(ComplexType<?> x, ComplexType<?> output) {
 		double xt = x.getRealDouble();
 		if ((xt > -1) && (xt < 1))
 			throw new IllegalArgumentException("arcsec(x) : x out of range");

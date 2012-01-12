@@ -32,7 +32,7 @@ package net.imglib2.ops.function.general;
 import net.imglib2.ops.BinaryOperation;
 import net.imglib2.ops.Function;
 import net.imglib2.ops.Neighborhood;
-import net.imglib2.type.numeric.RealType;
+import net.imglib2.type.numeric.ComplexType;
 
 /**
  * 
@@ -40,21 +40,21 @@ import net.imglib2.type.numeric.RealType;
  * 
  */
 public class GeneralBinaryFunction<INDEX,
-		INPUT1_TYPE extends RealType<INPUT1_TYPE>,
-		INPUT2_TYPE extends RealType<INPUT2_TYPE>,
-		OUTPUT_TYPE extends RealType<OUTPUT_TYPE>>
+		INPUT1_TYPE extends ComplexType<INPUT1_TYPE>,
+		INPUT2_TYPE extends ComplexType<INPUT2_TYPE>,
+		OUTPUT_TYPE extends ComplexType<OUTPUT_TYPE>>
 	implements Function<INDEX, OUTPUT_TYPE>
 {
 	private final Function<INDEX, INPUT1_TYPE> f1;
 	private final Function<INDEX, INPUT2_TYPE> f2;
 	private final INPUT1_TYPE input1;
 	private final INPUT2_TYPE input2;
-	private final BinaryOperation<RealType<?>,RealType<?>,RealType<?>> operation;
+	private final BinaryOperation<ComplexType<?>,ComplexType<?>,ComplexType<?>> operation;
 	private final OUTPUT_TYPE type;
 
 	public GeneralBinaryFunction(Function<INDEX, INPUT1_TYPE> f1,
 			Function<INDEX, INPUT2_TYPE> f2,
-			BinaryOperation<RealType<?>,RealType<?>,RealType<?>> operation,
+			BinaryOperation<ComplexType<?>,ComplexType<?>,ComplexType<?>> operation,
 			OUTPUT_TYPE type) {
 		this.type = type;
 		this.f1 = f1;

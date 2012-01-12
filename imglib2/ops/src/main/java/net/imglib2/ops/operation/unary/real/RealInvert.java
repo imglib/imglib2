@@ -30,7 +30,7 @@ POSSIBILITY OF SUCH DAMAGE.
 package net.imglib2.ops.operation.unary.real;
 
 import net.imglib2.ops.UnaryOperation;
-import net.imglib2.type.numeric.RealType;
+import net.imglib2.type.numeric.ComplexType;
 
 /**
  * 
@@ -38,16 +38,11 @@ import net.imglib2.type.numeric.RealType;
  * 
  */
 public final class RealInvert
-		implements UnaryOperation<RealType<?>, RealType<?>>
+		implements UnaryOperation<ComplexType<?>, ComplexType<?>>
 {
 	private double actualMin;
 	private double actualMax;
 
-	public RealInvert() {
-		this.actualMax = Double.NaN;
-		this.actualMin = Double.NaN;
-	}
-	
 	public RealInvert(final double actualMin, final double actualMax)
 	{
 		this.actualMax = actualMax;
@@ -55,11 +50,7 @@ public final class RealInvert
 	}
 
 	@Override
-	public RealType<?> compute(RealType<?> x, RealType<?> output) {
-		if (actualMax == Double.NaN) {
-			actualMax = x.getMaxValue();
-			actualMin = x.getMinValue();
-		}
+	public ComplexType<?> compute(ComplexType<?> x, ComplexType<?> output) {
 		double value = actualMax - (x.getRealDouble() - actualMin);
 		output.setReal(value);
 		return output;

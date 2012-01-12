@@ -30,7 +30,7 @@ POSSIBILITY OF SUCH DAMAGE.
 package net.imglib2.ops.operation.unary.real;
 
 import net.imglib2.ops.UnaryOperation;
-import net.imglib2.type.numeric.RealType;
+import net.imglib2.type.numeric.ComplexType;
 
 //formula from mathworld.com documentation
 
@@ -40,10 +40,10 @@ import net.imglib2.type.numeric.RealType;
  * 
  */
 public class RealSincPi
-		implements UnaryOperation<RealType<?>, RealType<?>>
+		implements UnaryOperation<ComplexType<?>, ComplexType<?>>
 {
 	@Override
-	public RealType<?> compute(RealType<?> input, RealType<?> output) {
+	public ComplexType<?> compute(ComplexType<?> input, ComplexType<?> output) {
 		double x = input.getRealDouble();
 		double value;
 		if (x == 0)

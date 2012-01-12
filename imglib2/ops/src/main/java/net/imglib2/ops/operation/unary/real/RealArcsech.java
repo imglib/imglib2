@@ -30,7 +30,7 @@ POSSIBILITY OF SUCH DAMAGE.
 package net.imglib2.ops.operation.unary.real;
 
 import net.imglib2.ops.UnaryOperation;
-import net.imglib2.type.numeric.RealType;
+import net.imglib2.type.numeric.ComplexType;
 
 //Handbook of Mathematics and Computational Science, Harris & Stocker, Springer, 2006
 
@@ -40,10 +40,10 @@ import net.imglib2.type.numeric.RealType;
  * 
  */
 public final class RealArcsech
-		implements UnaryOperation<RealType<?>, RealType<?>>
+		implements UnaryOperation<ComplexType<?>, ComplexType<?>>
 {
 	@Override
-	public RealType<?> compute(RealType<?> x, RealType<?> output) {
+	public ComplexType<?> compute(ComplexType<?> x, ComplexType<?> output) {
 		double xt = x.getRealDouble();
 		double numer = 1 + Math.sqrt(1 - xt * xt);
 		double value = Math.log(numer / xt);

@@ -24,7 +24,7 @@ public class ExampleMisc {
 		long[] origin = new long[] { 0, 0 };
 		long[] span = new long[] { 50, 40 };
 
-		UnaryOperation<RealType<?>,RealType<?>> op = new RealSqr();
+		UnaryOperation<ComplexType<?>,ComplexType<?>> op = new RealSqr();
 
 		Function<long[], UnsignedByteType> imageFunc = new RealImageFunction<UnsignedByteType>(
 				inputImg, new UnsignedByteType());
