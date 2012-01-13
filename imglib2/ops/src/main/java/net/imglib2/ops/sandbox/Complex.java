@@ -200,38 +200,24 @@ public final class Complex implements Comparable<Complex>, DataCopier<Complex> {
 	private void calcR() {
 		r = Math.sqrt(magnitudeSquared());
 	}
-	
-	// TODO : enforce some convention for theta
-	//   either -pi <= theta < pi or 0 <= theta < 2*pi
-	
+
 	private void calcTheta() {
 		if (x == 0) {
 			if (y > 0)
-				theta = Math.PI / 2;
+				theta = Math.PI / 2;  // looks fine
 			else if (y < 0)
-				theta = 3 * Math.PI / 2;
+				theta = -Math.PI / 2;  // looks fine
 			else // y == 0 : theta indeterminate
-				theta = 0;  // sensible default (?)
+				theta = 0;  // sensible default
 		}
 		else if (y == 0) {
 			if (x > 0)
-				theta = 0;
-			else if (x < 0)
-				theta = Math.PI;
-			else // x == 0 : theta indeterminate
-				theta = 0;  // sensible default (?)
+				theta = 0;  // looks fine
+			else // (x < 0)
+				theta = Math.PI;  // looks fine
 		}
-		else { // x && y both != 0
-			double angle = Math.atan2(x,y);
-			if (x > 0) {
-				if (y > 0)
-					theta = angle;
-				else // y < 0
-					theta = angle + 2*Math.PI;
-			}
-			else // x < 0
-				theta = angle + Math.PI;
-		}
+		else // x && y both != 0
+			theta = Math.atan2(y,x);
 	}
 }
 
