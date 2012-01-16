@@ -34,31 +34,31 @@ package net.imglib2;
 public abstract class AbstractRealRandomAccess<T> extends
 		AbstractRealLocalizableSampler<T> implements RealRandomAccess<T> {
 
-	protected AbstractRealRandomAccess(int nDimensions) {
-		super(nDimensions);
+	protected AbstractRealRandomAccess(final int n) {
+		super(n);
 	}
 
 	/* (non-Javadoc)
 	 * @see net.imglib2.Positionable#fwd(int)
 	 */
 	@Override
-	public void fwd(int d) {
-		position[d] ++;
+	public void fwd(final int d) {
+		++position[d];
 	}
 
 	/* (non-Javadoc)
 	 * @see net.imglib2.Positionable#bck(int)
 	 */
 	@Override
-	public void bck(int d) {
-		position[d]--;
+	public void bck(final int d) {
+		--position[d];
 	}
 
 	/* (non-Javadoc)
 	 * @see net.imglib2.Positionable#move(int, int)
 	 */
 	@Override
-	public void move(int distance, int d) {
+	public void move(final int distance, final int d) {
 		position[d] += distance;
 	}
 
@@ -66,7 +66,7 @@ public abstract class AbstractRealRandomAccess<T> extends
 	 * @see net.imglib2.Positionable#move(long, int)
 	 */
 	@Override
-	public void move(long distance, int d) {
+	public void move(final long distance, final int d) {
 		position[d] += distance;
 	}
 
@@ -74,9 +74,9 @@ public abstract class AbstractRealRandomAccess<T> extends
 	 * @see net.imglib2.Positionable#move(net.imglib2.Localizable)
 	 */
 	@Override
-	public void move(Localizable localizable) {
-		for (int i=0; i< numDimensions(); i++) {
-			this.position[i] += localizable.getDoublePosition(i);
+	public void move(final Localizable localizable) {
+		for (int d=0; d< n; d++) {
+			this.position[d] += localizable.getDoublePosition(d);
 		}
 	}
 
@@ -84,9 +84,9 @@ public abstract class AbstractRealRandomAccess<T> extends
 	 * @see net.imglib2.Positionable#move(int[])
 	 */
 	@Override
-	public void move(int[] distance) {
-		for (int i=0; i< numDimensions(); i++) {
-			this.position[i] += distance[i];
+	public void move(final int[] distance) {
+		for (int d=0; d< n; d++) {
+			this.position[d] += distance[d];
 		}
 	}
 
@@ -94,9 +94,9 @@ public abstract class AbstractRealRandomAccess<T> extends
 	 * @see net.imglib2.Positionable#move(long[])
 	 */
 	@Override
-	public void move(long[] distance) {
-		for (int i=0; i< numDimensions(); i++) {
-			this.position[i] += distance[i];
+	public void move(final long[] distance) {
+		for (int d=0; d< n; d++) {
+			this.position[d] += distance[d];
 		}
 	}
 
@@ -104,7 +104,7 @@ public abstract class AbstractRealRandomAccess<T> extends
 	 * @see net.imglib2.Positionable#setPosition(net.imglib2.Localizable)
 	 */
 	@Override
-	public void setPosition(Localizable localizable) {
+	public void setPosition(final Localizable localizable) {
 		localizable.localize(position);
 	}
 
@@ -112,9 +112,9 @@ public abstract class AbstractRealRandomAccess<T> extends
 	 * @see net.imglib2.Positionable#setPosition(int[])
 	 */
 	@Override
-	public void setPosition(int[] position) {
-		for (int i=0; i < numDimensions(); i++) {
-			this.position[i] = position[i]; 
+	public void setPosition(final int[] position) {
+		for (int d=0; d < n; d++) {
+			this.position[d] = position[d]; 
 		}
 	}
 
@@ -122,9 +122,9 @@ public abstract class AbstractRealRandomAccess<T> extends
 	 * @see net.imglib2.Positionable#setPosition(long[])
 	 */
 	@Override
-	public void setPosition(long[] position) {
-		for (int i=0; i < numDimensions(); i++) {
-			this.position[i] = position[i]; 
+	public void setPosition(final long[] position) {
+		for (int d=0; d < n; d++) {
+			this.position[d] = position[d]; 
 		}
 	}
 
@@ -132,7 +132,7 @@ public abstract class AbstractRealRandomAccess<T> extends
 	 * @see net.imglib2.Positionable#setPosition(int, int)
 	 */
 	@Override
-	public void setPosition(int position, int d) {
+	public void setPosition(final int position, final int d) {
 		this.position[d] = position;
 	}
 
@@ -140,7 +140,7 @@ public abstract class AbstractRealRandomAccess<T> extends
 	 * @see net.imglib2.Positionable#setPosition(long, int)
 	 */
 	@Override
-	public void setPosition(long position, int d) {
+	public void setPosition(final long position, final int d) {
 		this.position[d] = position;
 	}
 
@@ -148,7 +148,7 @@ public abstract class AbstractRealRandomAccess<T> extends
 	 * @see net.imglib2.RealPositionable#move(float, int)
 	 */
 	@Override
-	public void move(float distance, int d) {
+	public void move(final float distance, final int d) {
 		this.position[d] += distance;
 	}
 
@@ -156,7 +156,7 @@ public abstract class AbstractRealRandomAccess<T> extends
 	 * @see net.imglib2.RealPositionable#move(double, int)
 	 */
 	@Override
-	public void move(double distance, int d) {
+	public void move(final double distance, final int d) {
 		this.position[d] += distance;
 	}
 
@@ -164,8 +164,8 @@ public abstract class AbstractRealRandomAccess<T> extends
 	 * @see net.imglib2.RealPositionable#move(net.imglib2.RealLocalizable)
 	 */
 	@Override
-	public void move(RealLocalizable localizable) {
-		for (int i=0; i< numDimensions(); i++) {
+	public void move(final RealLocalizable localizable) {
+		for (int i=0; i< n; i++) {
 			this.position[i] += localizable.getDoublePosition(i);
 		}
 	}
@@ -174,8 +174,8 @@ public abstract class AbstractRealRandomAccess<T> extends
 	 * @see net.imglib2.RealPositionable#move(float[])
 	 */
 	@Override
-	public void move(float[] distance) {
-		for (int i=0; i< numDimensions(); i++) {
+	public void move(final float[] distance) {
+		for (int i=0; i< n; i++) {
 			this.position[i] += distance[i];
 		}
 	}
@@ -184,8 +184,8 @@ public abstract class AbstractRealRandomAccess<T> extends
 	 * @see net.imglib2.RealPositionable#move(double[])
 	 */
 	@Override
-	public void move(double[] distance) {
-		for (int i=0; i< numDimensions(); i++) {
+	public void move(final double[] distance) {
+		for (int i=0; i< n; i++) {
 			this.position[i] += distance[i];
 		}
 	}
@@ -194,7 +194,7 @@ public abstract class AbstractRealRandomAccess<T> extends
 	 * @see net.imglib2.RealPositionable#setPosition(net.imglib2.RealLocalizable)
 	 */
 	@Override
-	public void setPosition(RealLocalizable localizable) {
+	public void setPosition(final RealLocalizable localizable) {
 		localizable.localize(position);
 	}
 
@@ -202,8 +202,8 @@ public abstract class AbstractRealRandomAccess<T> extends
 	 * @see net.imglib2.RealPositionable#setPosition(float[])
 	 */
 	@Override
-	public void setPosition(float[] position) {
-		for (int i=0; i< numDimensions(); i++) {
+	public void setPosition(final float[] position) {
+		for (int i=0; i< n; i++) {
 			this.position[i] = position[i];
 		}
 	}
@@ -212,8 +212,8 @@ public abstract class AbstractRealRandomAccess<T> extends
 	 * @see net.imglib2.RealPositionable#setPosition(double[])
 	 */
 	@Override
-	public void setPosition(double[] position) {
-		for (int i=0; i< numDimensions(); i++) {
+	public void setPosition(final double[] position) {
+		for (int i=0; i< n; i++) {
 			this.position[i] = position[i];
 		}
 	}
@@ -222,7 +222,7 @@ public abstract class AbstractRealRandomAccess<T> extends
 	 * @see net.imglib2.RealPositionable#setPosition(float, int)
 	 */
 	@Override
-	public void setPosition(float position, int d) {
+	public void setPosition(final float position, final int d) {
 		this.position[d] = position;
 	}
 
@@ -230,7 +230,7 @@ public abstract class AbstractRealRandomAccess<T> extends
 	 * @see net.imglib2.RealPositionable#setPosition(double, int)
 	 */
 	@Override
-	public void setPosition(double position, int d) {
+	public void setPosition(final double position, final int d) {
 		this.position[d] = position;
 	}
 }
