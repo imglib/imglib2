@@ -24,7 +24,7 @@ public class RealPoint implements RealLocalizable, RealPositionable
 	 * @param position - position of the point
 	 */
 	public RealPoint(final double... position) {
-		this.position = position;
+		this.position = position.clone();
 	}
 	
 	/**
