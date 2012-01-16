@@ -3,7 +3,7 @@
  */
 package net.imglib2;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
@@ -18,7 +18,7 @@ public class RealPointTest {
 	 */
 	@Test
 	public void testRealPointInt() {
-		RealPoint p = new RealPoint(3);
+		final RealPoint p = new RealPoint(3);
 		assertEquals(p.numDimensions(), 3);
 		for (int i=0; i<3; i++) {
 			assertEquals(p.getDoublePosition(i), 0, 0);
@@ -30,8 +30,8 @@ public class RealPointTest {
 	 */
 	@Test
 	public void testRealPointDoubleArray() {
-		double [] expected = new double[] { 1.5, 2.5, 4.5, 6.5 };
-		RealPoint p = new RealPoint(expected);
+		final double [] expected = new double[] { 1.5, 2.5, 4.5, 6.5 };
+		final RealPoint p = new RealPoint(expected);
 		assertEquals(p.numDimensions(), 4);
 		for (int i=0; i<4; i++) {
 			assertEquals(p.getDoublePosition(i), expected[i], 0);
@@ -43,8 +43,8 @@ public class RealPointTest {
 	 */
 	@Test
 	public void testRealPointFloatArray() {
-		float [] expected = new float[] { 1.5f, 2.5f, 4.5f, 6.5f };
-		RealPoint p = new RealPoint(expected);
+		final float [] expected = new float[] { 1.5f, 2.5f, 4.5f, 6.5f };
+		final RealPoint p = new RealPoint(expected);
 		assertEquals(p.numDimensions(), 4);
 		for (int i=0; i<4; i++) {
 			assertEquals(p.getFloatPosition(i), expected[i], 0);
@@ -52,7 +52,7 @@ public class RealPointTest {
 	}
 	@Test
 	public void testRealPointRealLocalizable() {
-		RealPoint p = new RealPoint(new RealPoint(new double[] {15.3,2.1,1.2}));
+		final RealPoint p = new RealPoint(new RealPoint(new double[] {15.3,2.1,1.2}));
 		assertEquals(p.numDimensions(), 3);
 		assertEquals(p.getDoublePosition(0), 15.3, 0);
 		assertEquals(p.getDoublePosition(1), 2.1, 0);
@@ -64,8 +64,8 @@ public class RealPointTest {
 	@Test
 	public void testFwd() {
 		for (int i=0; i<3; i++) {
-			double [] expected = new double[] { 1.5, 2.5, 4.5, 6.5 };
-			RealPoint p = new RealPoint(expected);
+			final double [] expected = new double[] { 1.5, 2.5, 4.5, 6.5 };
+			final RealPoint p = new RealPoint(expected);
 			p.fwd(i);
 			expected[i] += 1;
 			for (int j=0; j<4; j++) {
@@ -80,8 +80,8 @@ public class RealPointTest {
 	@Test
 	public void testBck() {
 		for (int i=0; i<3; i++) {
-			double [] expected = new double[] { 1.5, 2.5, 4.5, 6.5 };
-			RealPoint p = new RealPoint(expected);
+			final double [] expected = new double[] { 1.5, 2.5, 4.5, 6.5 };
+			final RealPoint p = new RealPoint(expected);
 			p.bck(i);
 			expected[i] -= 1;
 			for (int j=0; j<4; j++) {
@@ -95,10 +95,10 @@ public class RealPointTest {
 	 */
 	@Test
 	public void testMoveIntInt() {
-		int [] move = { 1, 5, -3, 16 };
+		final int [] move = { 1, 5, -3, 16 };
 		for (int i=0; i<move.length; i++) {
-			double [] expected = new double[] { 1.5, 2.5, 4.5, 6.5 };
-			RealPoint p = new RealPoint(expected);
+			final double [] expected = new double[] { 1.5, 2.5, 4.5, 6.5 };
+			final RealPoint p = new RealPoint(expected);
 			p.move(move[i], i);
 			expected[i] += move[i];
 			for (int j=0; j<4; j++) {
@@ -112,10 +112,10 @@ public class RealPointTest {
 	 */
 	@Test
 	public void testMoveLongInt() {
-		long [] move = { 1, 5, -3, 16 };
+		final long [] move = { 1, 5, -3, 16 };
 		for (int i=0; i<move.length; i++) {
-			double [] expected = new double[] { 1.5, 2.5, 4.5, 6.5 };
-			RealPoint p = new RealPoint(expected);
+			final double [] expected = new double[] { 1.5, 2.5, 4.5, 6.5 };
+			final RealPoint p = new RealPoint(expected);
 			p.move(move[i], i);
 			expected[i] += move[i];
 			for (int j=0; j<4; j++) {
@@ -129,10 +129,10 @@ public class RealPointTest {
 	 */
 	@Test
 	public void testMoveLocalizable() {
-		double [] initial = { 5.3, 2.6, 3.1, -852.1 };
-		double [] displacement = { 98.2, -16, 44.2, 0 };
-		RealPoint p1 = new RealPoint(initial);
-		RealPoint p2 = new RealPoint(displacement);
+		final double [] initial = { 5.3, 2.6, 3.1, -852.1 };
+		final double [] displacement = { 98.2, -16, 44.2, 0 };
+		final RealPoint p1 = new RealPoint(initial.clone());
+		final RealPoint p2 = new RealPoint(displacement);
 		p1.move(p2);
 		for (int j=0; j<4; j++) {
 			assertEquals(p1.getDoublePosition(j), initial[j] + displacement[j], 0);
@@ -144,9 +144,9 @@ public class RealPointTest {
 	 */
 	@Test
 	public void testMoveIntArray() {
-		double [] initial = { 5.3, 2.6, 3.1, -852.1 };
-		int [] displacement = { 98, -16, 44, 0 };
-		RealPoint p1 = new RealPoint(initial);
+		final double [] initial = { 5.3, 2.6, 3.1, -852.1 };
+		final int [] displacement = { 98, -16, 44, 0 };
+		final RealPoint p1 = new RealPoint(initial.clone());
 		p1.move(displacement);
 		for (int j=0; j<4; j++) {
 			assertEquals(p1.getDoublePosition(j), initial[j] + displacement[j], 0);
@@ -158,9 +158,9 @@ public class RealPointTest {
 	 */
 	@Test
 	public void testMoveLongArray() {
-		double [] initial = { 5.3, 2.6, 3.1, -852.1 };
-		long [] displacement = { 98, -16, 44, 0 };
-		RealPoint p1 = new RealPoint(initial);
+		final double [] initial = { 5.3, 2.6, 3.1, -852.1 };
+		final long [] displacement = { 98, -16, 44, 0 };
+		final RealPoint p1 = new RealPoint(initial.clone());
 		p1.move(displacement);
 		for (int j=0; j<4; j++) {
 			assertEquals(p1.getDoublePosition(j), initial[j] + displacement[j], 0);
@@ -172,10 +172,10 @@ public class RealPointTest {
 	 */
 	@Test
 	public void testSetPositionLocalizable() {
-		double [] initial = { 5.3, 2.6, 3.1, -852.1 };
-		long [] fynal = { 98, -16, 44, 0 };
-		RealPoint p1 = new RealPoint(initial);
-		Point p2 = new Point(fynal);
+		final double [] initial = { 5.3, 2.6, 3.1, -852.1 };
+		final long [] fynal = { 98, -16, 44, 0 };
+		final RealPoint p1 = new RealPoint(initial);
+		final Point p2 = new Point(fynal);
 		p1.setPosition(p2);
 		for (int j=0; j<4; j++) {
 			assertEquals(p1.getDoublePosition(j), fynal[j], 0);
@@ -187,9 +187,9 @@ public class RealPointTest {
 	 */
 	@Test
 	public void testSetPositionIntArray() {
-		double [] initial = { 5.3, 2.6, 3.1, -852.1 };
-		int [] fynal = { 98, -16, 44, 0 };
-		RealPoint p1 = new RealPoint(initial);
+		final double [] initial = { 5.3, 2.6, 3.1, -852.1 };
+		final int [] fynal = { 98, -16, 44, 0 };
+		final RealPoint p1 = new RealPoint(initial);
 		p1.setPosition(fynal);
 		for (int j=0; j<4; j++) {
 			assertEquals(p1.getDoublePosition(j), fynal[j], 0);
@@ -201,9 +201,9 @@ public class RealPointTest {
 	 */
 	@Test
 	public void testSetPositionLongArray() {
-		double [] initial = { 5.3, 2.6, 3.1, -852.1 };
-		long [] fynal = { 98, -16, 44, 0 };
-		RealPoint p1 = new RealPoint(initial);
+		final double [] initial = { 5.3, 2.6, 3.1, -852.1 };
+		final long [] fynal = { 98, -16, 44, 0 };
+		final RealPoint p1 = new RealPoint(initial);
 		p1.setPosition(fynal);
 		for (int j=0; j<4; j++) {
 			assertEquals(p1.getDoublePosition(j), fynal[j], 0);
@@ -215,10 +215,10 @@ public class RealPointTest {
 	 */
 	@Test
 	public void testSetPositionIntInt() {
-		double [] initial = { 5.3, 2.6, 3.1, -852.1 };
-		int [] fynal = { 98, -16, 44, 0 };
+		final double [] initial = { 5.3, 2.6, 3.1, -852.1 };
+		final int [] fynal = { 98, -16, 44, 0 };
 		for (int i=0; i<initial.length; i++) {
-			RealPoint p1 = new RealPoint(initial);
+			final RealPoint p1 = new RealPoint(initial);
 			p1.setPosition(fynal[i], i);
 			assertEquals(p1.getDoublePosition(i), fynal[i], 0);
 		}
@@ -229,10 +229,10 @@ public class RealPointTest {
 	 */
 	@Test
 	public void testSetPositionLongInt() {
-		double [] initial = { 5.3, 2.6, 3.1, -852.1 };
-		long [] fynal = { 98, -16, 44, 0 };
+		final double [] initial = { 5.3, 2.6, 3.1, -852.1 };
+		final long [] fynal = { 98, -16, 44, 0 };
 		for (int i=0; i<initial.length; i++) {
-			RealPoint p1 = new RealPoint(initial);
+			final RealPoint p1 = new RealPoint(initial);
 			p1.setPosition(fynal[i], i);
 			assertEquals(p1.getDoublePosition(i), fynal[i], 0);
 		}
@@ -243,8 +243,8 @@ public class RealPointTest {
 	 */
 	@Test
 	public void testNumDimensions() {
-		double [] initial = { 5.3, 2.6, 3.1, -852.1 };
-		RealPoint p1 = new RealPoint(initial);
+		final double [] initial = { 5.3, 2.6, 3.1, -852.1 };
+		final RealPoint p1 = new RealPoint(initial);
 		assertEquals(4, p1.numDimensions());
 	}
 
@@ -253,10 +253,10 @@ public class RealPointTest {
 	 */
 	@Test
 	public void testMoveFloatInt() {
-		double [] initial = { 5.3, 2.6, 3.1, -852.1 };
-		float [] displacement = { 4.2f, 77.1f, -2f, 51.4f };
+		final double [] initial = { 5.3, 2.6, 3.1, -852.1 };
+		final float [] displacement = { 4.2f, 77.1f, -2f, 51.4f };
 		for (int i=0; i<initial.length; i++) {
-			RealPoint p1 = new RealPoint(initial);
+			final RealPoint p1 = new RealPoint(initial.clone());
 			p1.move(displacement[i], i);
 			for (int j=0; j<4; j++) {
 				double expected = initial[j];
@@ -271,10 +271,10 @@ public class RealPointTest {
 	 */
 	@Test
 	public void testMoveDoubleInt() {
-		double [] initial = { 5.3, 2.6, 3.1, -852.1 };
-		double [] displacement = { 4.2, 77.1, -2, 51.4 };
+		final double [] initial = { 5.3, 2.6, 3.1, -852.1 };
+		final double [] displacement = { 4.2, 77.1, -2, 51.4 };
 		for (int i=0; i<initial.length; i++) {
-			RealPoint p1 = new RealPoint(initial);
+			final RealPoint p1 = new RealPoint(initial.clone());
 			p1.move(displacement[i], i);
 			for (int j=0; j<4; j++) {
 				double expected = initial[j];
@@ -289,10 +289,10 @@ public class RealPointTest {
 	 */
 	@Test
 	public void testMoveRealLocalizable() {
-		double [] initial = { 5.3, 2.6, 3.1, -852.1 };
-		double [] displacement = { 4.2, 77.1, -2, 51.4 };
-		RealPoint p1 = new RealPoint(initial);
-		RealPoint p2 = new RealPoint(displacement);
+		final double [] initial = { 5.3, 2.6, 3.1, -852.1 };
+		final double [] displacement = { 4.2, 77.1, -2, 51.4 };
+		final RealPoint p1 = new RealPoint(initial.clone());
+		final RealPoint p2 = new RealPoint(displacement);
 		p1.move(p2);
 		for (int j=0; j<4; j++) {
 			assertEquals(p1.getDoublePosition(j), initial[j] + displacement[j], 0);
@@ -304,9 +304,9 @@ public class RealPointTest {
 	 */
 	@Test
 	public void testMoveFloatArray() {
-		double [] initial = { 5.3, 2.6, 3.1, -852.1 };
-		float [] displacement = { 4.2f, 77.1f, -2f, 51.4f };
-		RealPoint p1 = new RealPoint(initial);
+		final double [] initial = { 5.3, 2.6, 3.1, -852.1 };
+		final float [] displacement = { 4.2f, 77.1f, -2f, 51.4f };
+		final RealPoint p1 = new RealPoint(initial.clone());
 		p1.move(displacement);
 		for (int j=0; j<4; j++) {
 			assertEquals(p1.getDoublePosition(j), initial[j] + displacement[j], 0);
@@ -318,9 +318,9 @@ public class RealPointTest {
 	 */
 	@Test
 	public void testMoveDoubleArray() {
-		double [] initial = { 5.3, 2.6, 3.1, -852.1 };
-		double [] displacement = { 4.2, 77.1, -2, 51.4 };
-		RealPoint p1 = new RealPoint(initial);
+		final double [] initial = { 5.3, 2.6, 3.1, -852.1 };
+		final double [] displacement = { 4.2, 77.1, -2, 51.4 };
+		final RealPoint p1 = new RealPoint(initial.clone());
 		p1.move(displacement);
 		for (int j=0; j<4; j++) {
 			assertEquals(p1.getDoublePosition(j), initial[j] + displacement[j], 0);
@@ -332,10 +332,10 @@ public class RealPointTest {
 	 */
 	@Test
 	public void testSetPositionRealLocalizable() {
-		double [] initial = { 5.3, 2.6, 3.1, -852.1 };
-		double [] fynal = { 98.2, -16.1, 44.7, 0 };
-		RealPoint p1 = new RealPoint(initial);
-		RealPoint p2 = new RealPoint(fynal);
+		final double [] initial = { 5.3, 2.6, 3.1, -852.1 };
+		final double [] fynal = { 98.2, -16.1, 44.7, 0 };
+		final RealPoint p1 = new RealPoint(initial);
+		final RealPoint p2 = new RealPoint(fynal);
 		p1.setPosition(p2);
 		for (int j=0; j<4; j++) {
 			assertEquals(p1.getDoublePosition(j), fynal[j], 0);
@@ -347,9 +347,9 @@ public class RealPointTest {
 	 */
 	@Test
 	public void testSetPositionFloatArray() {
-		double [] initial = { 5.3, 2.6, 3.1, -852.1 };
-		float [] fynal = { 98.2f, -16.1f, 44.7f, 0f };
-		RealPoint p1 = new RealPoint(initial);
+		final double [] initial = { 5.3, 2.6, 3.1, -852.1 };
+		final float [] fynal = { 98.2f, -16.1f, 44.7f, 0f };
+		final RealPoint p1 = new RealPoint(initial);
 		p1.setPosition(fynal);
 		for (int j=0; j<4; j++) {
 			assertEquals(p1.getDoublePosition(j), fynal[j], 0);
@@ -361,9 +361,9 @@ public class RealPointTest {
 	 */
 	@Test
 	public void testSetPositionDoubleArray() {
-		double [] initial = { 5.3, 2.6, 3.1, -852.1 };
-		double [] fynal = { 98.2, -16.1, 44.7, 0 };
-		RealPoint p1 = new RealPoint(initial);
+		final double [] initial = { 5.3, 2.6, 3.1, -852.1 };
+		final double [] fynal = { 98.2, -16.1, 44.7, 0 };
+		final RealPoint p1 = new RealPoint(initial);
 		p1.setPosition(fynal);
 		for (int j=0; j<4; j++) {
 			assertEquals(p1.getDoublePosition(j), fynal[j], 0);
@@ -375,10 +375,10 @@ public class RealPointTest {
 	 */
 	@Test
 	public void testSetPositionFloatInt() {
-		double [] initial = { 5.3, 2.6, 3.1, -852.1 };
-		float [] fynal = { 98.2f, -16.1f, 44.7f, 0f };
+		final double [] initial = { 5.3, 2.6, 3.1, -852.1 };
+		final float [] fynal = { 98.2f, -16.1f, 44.7f, 0f };
 		for (int i=0; i<initial.length; i++) {
-			RealPoint p1 = new RealPoint(initial);
+			final RealPoint p1 = new RealPoint(initial);
 			p1.setPosition(fynal[i], i);
 			for (int j=0; j<4; j++) {
 				if (i == j)
@@ -394,10 +394,10 @@ public class RealPointTest {
 	 */
 	@Test
 	public void testSetPositionDoubleInt() {
-		double [] initial = { 5.3, 2.6, 3.1, -852.1 };
-		double [] fynal = { 98.2, -16.1, 44.7, 0 };
+		final double [] initial = { 5.3, 2.6, 3.1, -852.1 };
+		final double [] fynal = { 98.2, -16.1, 44.7, 0 };
 		for (int i=0; i<initial.length; i++) {
-			RealPoint p1 = new RealPoint(initial);
+			final RealPoint p1 = new RealPoint(initial);
 			p1.setPosition(fynal[i], i);
 			for (int j=0; j<4; j++) {
 				if (i == j)
@@ -413,9 +413,9 @@ public class RealPointTest {
 	 */
 	@Test
 	public void testLocalizeFloatArray() {
-		double [] initial = { 5.3, 2.6, 3.1, -852.1 };
-		float [] result = new float[initial.length];
-		RealPoint p1 = new RealPoint(initial);
+		final double [] initial = { 5.3, 2.6, 3.1, -852.1 };
+		final float [] result = new float[initial.length];
+		final RealPoint p1 = new RealPoint(initial);
 		p1.localize(result);
 		for (int j=0; j<4; j++) {
 			assertEquals(result[j], (float)(initial[j]), 0);
@@ -427,9 +427,9 @@ public class RealPointTest {
 	 */
 	@Test
 	public void testLocalizeDoubleArray() {
-		double [] initial = { 5.3, 2.6, 3.1, -852.1 };
-		double [] result = new double[initial.length];
-		RealPoint p1 = new RealPoint(initial);
+		final double [] initial = { 5.3, 2.6, 3.1, -852.1 };
+		final double [] result = new double[initial.length];
+		final RealPoint p1 = new RealPoint(initial);
 		p1.localize(result);
 		for (int j=0; j<4; j++) {
 			assertEquals(result[j], initial[j], 0);
@@ -441,8 +441,8 @@ public class RealPointTest {
 	 */
 	@Test
 	public void testGetFloatPosition() {
-		double [] initial = { 5.3, 2.6, 3.1, -852.1 };
-		RealPoint p1 = new RealPoint(initial);
+		final double [] initial = { 5.3, 2.6, 3.1, -852.1 };
+		final RealPoint p1 = new RealPoint(initial);
 		for (int j=0; j<4; j++) {
 			assertEquals(p1.getFloatPosition(j), (float)(initial[j]), 0);
 		}
@@ -453,8 +453,8 @@ public class RealPointTest {
 	 */
 	@Test
 	public void testGetDoublePosition() {
-		double [] initial = { 5.3, 2.6, 3.1, -852.1 };
-		RealPoint p1 = new RealPoint(initial);
+		final double [] initial = { 5.3, 2.6, 3.1, -852.1 };
+		final RealPoint p1 = new RealPoint(initial);
 		for (int j=0; j<4; j++) {
 			assertEquals(p1.getDoublePosition(j), initial[j], 0);
 		}
