@@ -13,6 +13,13 @@ import net.imglib2.type.numeric.complex.ComplexDoubleType;
 import net.imglib2.type.numeric.integer.UnsignedByteType;
 import net.imglib2.type.numeric.real.DoubleType;
 
+/**
+ * This is a mock up class for testing the idea of functions working on
+ * intervals rather than working with other functions.
+ * 
+ * @author Barry DeZonia
+ *
+ */
 public class FunctionDefinitionIdeas {
 
 	/*
@@ -31,7 +38,8 @@ public class FunctionDefinitionIdeas {
 		void relocate(long[] newOrigin);
 	}
 	*/
-	
+
+	// NOTE - see how output can be any type passed in
 	private interface ComplexFunction<T> {
 		void evaluate(long[] coordinate, SubInterval<T> interval, ComplexType<?> output);
 		T createVariable();
@@ -152,7 +160,8 @@ public class FunctionDefinitionIdeas {
 	}
 
 	// Note how Avg func is dummified in that it no longer averages another function
-	// but rather has an interval of actual data values
+	// but rather has an interval of actual data values. Less powerful. Cannot
+	// create mathematical data.
 	
 	private class AverageFunction<T extends Type<T>> implements ComplexFunction<T> {
 
@@ -222,7 +231,7 @@ public class FunctionDefinitionIdeas {
 		func.evaluate(keyPt, subInterval, output);
 
 		// now slide along an image and repeatedly eval func at new center
-		//   NOTE: will need to make work with out of bounds enabled intervals
+		//   NOTE: should already work with out of bounds enabled intervals
 		subInterval = new SubInterval<UnsignedByteType>(interval,new long[]{2,2}, new long[]{2,2}); // 5x5 neigh
 
 		for (long x = 0; x < MAX_X; x++) {
