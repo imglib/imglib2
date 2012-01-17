@@ -30,325 +30,209 @@ package net.imglib2.realtransform;
 import net.imglib2.AbstractRealRandomAccess;
 import net.imglib2.Localizable;
 import net.imglib2.RealLocalizable;
+import net.imglib2.RealPoint;
 import net.imglib2.RealRandomAccess;
-import net.imglib2.Sampler;
+import net.imglib2.RealRandomAccessible;
 
 /**
- * 
+ * {@link RealRandomAccess} that generates its samples from a target
+ * {@link RealRandomAccessible} at coordinates transformed by a
+ * {@link RealTransform}.
  *
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
 public class RealTransformRealRandomAccess< T, R extends RealTransform > extends AbstractRealRandomAccess< T >
 {
 	final protected R transform;
-	final double[] targetPosition;
+	final protected RealPoint sourcePosition; 
+	final protected RealRandomAccessible< T > target;
+	final protected RealRandomAccess< T > targetAccess;
 	
-	protected RealTransformRealRandomAccess( final R transform )
+	protected RealTransformRealRandomAccess( final RealRandomAccessible< T > target, final R transform )
 	{
 		super( transform.numSourceDimensions() );
+		sourcePosition = RealPoint.wrap( position );
 		this.transform = transform;
-		targetPosition = new double[ transform.numTargetDimensions() ];
-		transform.apply( position, targetPosition );
+		this.target = target;
+		this.targetAccess = target.realRandomAccess();
+		apply();
 	}
-
-	/* (non-Javadoc)
-	 * @see net.imglib2.RealLocalizable#localize(float[])
-	 */
-	@Override
-	public void localize( final float[] position )
+	
+	final private void apply()
 	{
-		// TODO Auto-generated method stub
-
+		transform.apply( sourcePosition, targetAccess );
 	}
 
-	/* (non-Javadoc)
-	 * @see net.imglib2.RealLocalizable#localize(double[])
-	 */
-	@Override
-	public void localize( final double[] position )
-	{
-		// TODO Auto-generated method stub
-
-	}
-
-	/* (non-Javadoc)
-	 * @see net.imglib2.RealLocalizable#getFloatPosition(int)
-	 */
-	@Override
-	public float getFloatPosition( final int d )
-	{
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	/* (non-Javadoc)
-	 * @see net.imglib2.RealLocalizable#getDoublePosition(int)
-	 */
-	@Override
-	public double getDoublePosition( final int d )
-	{
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	/* (non-Javadoc)
-	 * @see net.imglib2.EuclideanSpace#numDimensions()
-	 */
-	@Override
-	public int numDimensions()
-	{
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	/* (non-Javadoc)
-	 * @see net.imglib2.RealPositionable#move(float, int)
-	 */
 	@Override
 	public void move( final float distance, final int d )
 	{
-		// TODO Auto-generated method stub
-
+		super.move( distance, d );
+		apply();
 	}
 
-	/* (non-Javadoc)
-	 * @see net.imglib2.RealPositionable#move(double, int)
-	 */
 	@Override
 	public void move( final double distance, final int d )
 	{
-		// TODO Auto-generated method stub
-
+		super.move( distance, d );
+		apply();
 	}
 
-	/* (non-Javadoc)
-	 * @see net.imglib2.RealPositionable#move(net.imglib2.RealLocalizable)
-	 */
 	@Override
 	public void move( final RealLocalizable localizable )
 	{
-		// TODO Auto-generated method stub
-
+		super.move( localizable );
+		apply();
 	}
 
-	/* (non-Javadoc)
-	 * @see net.imglib2.RealPositionable#move(float[])
-	 */
 	@Override
 	public void move( final float[] distance )
 	{
-		// TODO Auto-generated method stub
-
+		super.move( distance );
+		apply();
 	}
 
-	/* (non-Javadoc)
-	 * @see net.imglib2.RealPositionable#move(double[])
-	 */
 	@Override
 	public void move( final double[] distance )
 	{
-		// TODO Auto-generated method stub
-
+		super.move( distance );
+		apply();
 	}
 
-	/* (non-Javadoc)
-	 * @see net.imglib2.RealPositionable#setPosition(net.imglib2.RealLocalizable)
-	 */
 	@Override
 	public void setPosition( final RealLocalizable localizable )
 	{
-		// TODO Auto-generated method stub
-
+		super.setPosition( localizable );
+		apply();
 	}
 
-	/* (non-Javadoc)
-	 * @see net.imglib2.RealPositionable#setPosition(float[])
-	 */
 	@Override
-	public void setPosition( final float[] position )
+	public void setPosition( final float[] pos )
 	{
-		// TODO Auto-generated method stub
-
+		super.setPosition( pos );
+		apply();
 	}
 
-	/* (non-Javadoc)
-	 * @see net.imglib2.RealPositionable#setPosition(double[])
-	 */
 	@Override
-	public void setPosition( final double[] position )
+	public void setPosition( final double[] pos )
 	{
-		// TODO Auto-generated method stub
-
+		super.setPosition( pos );
+		apply();
 	}
 
-	/* (non-Javadoc)
-	 * @see net.imglib2.RealPositionable#setPosition(float, int)
-	 */
 	@Override
-	public void setPosition( final float position, final int d )
+	public void setPosition( final float pos, final int d )
 	{
-		// TODO Auto-generated method stub
-
+		super.setPosition( pos, d );
+		apply();
 	}
 
-	/* (non-Javadoc)
-	 * @see net.imglib2.RealPositionable#setPosition(double, int)
-	 */
 	@Override
-	public void setPosition( final double position, final int d )
+	public void setPosition( final double pos, final int d )
 	{
-		// TODO Auto-generated method stub
-
+		super.setPosition( pos, d );
+		apply();
 	}
 
-	/* (non-Javadoc)
-	 * @see net.imglib2.Positionable#fwd(int)
-	 */
 	@Override
 	public void fwd( final int d )
 	{
-		// TODO Auto-generated method stub
-
+		super.fwd( d );
+		apply();
 	}
 
-	/* (non-Javadoc)
-	 * @see net.imglib2.Positionable#bck(int)
-	 */
 	@Override
 	public void bck( final int d )
 	{
-		// TODO Auto-generated method stub
-
+		super.bck( d );
+		apply();
 	}
 
-	/* (non-Javadoc)
-	 * @see net.imglib2.Positionable#move(int, int)
-	 */
 	@Override
 	public void move( final int distance, final int d )
 	{
-		// TODO Auto-generated method stub
-
+		super.move( distance, d );
+		apply();
 	}
 
-	/* (non-Javadoc)
-	 * @see net.imglib2.Positionable#move(long, int)
-	 */
 	@Override
 	public void move( final long distance, final int d )
 	{
-		// TODO Auto-generated method stub
-
+		super.move( distance, d );
+		apply();
 	}
 
-	/* (non-Javadoc)
-	 * @see net.imglib2.Positionable#move(net.imglib2.Localizable)
-	 */
 	@Override
 	public void move( final Localizable localizable )
 	{
-		// TODO Auto-generated method stub
-
+		super.move( localizable );
+		apply();
 	}
 
-	/* (non-Javadoc)
-	 * @see net.imglib2.Positionable#move(int[])
-	 */
 	@Override
 	public void move( final int[] distance )
 	{
-		// TODO Auto-generated method stub
-
+		super.move( distance );
+		apply();
 	}
 
-	/* (non-Javadoc)
-	 * @see net.imglib2.Positionable#move(long[])
-	 */
 	@Override
 	public void move( final long[] distance )
 	{
-		// TODO Auto-generated method stub
-
+		super.move( distance );
+		apply();
 	}
 
-	/* (non-Javadoc)
-	 * @see net.imglib2.Positionable#setPosition(net.imglib2.Localizable)
-	 */
 	@Override
 	public void setPosition( final Localizable localizable )
 	{
-		// TODO Auto-generated method stub
-
+		super.setPosition( localizable );
+		apply();
 	}
 
-	/* (non-Javadoc)
-	 * @see net.imglib2.Positionable#setPosition(int[])
-	 */
 	@Override
-	public void setPosition( final int[] position )
+	public void setPosition( final int[] pos )
 	{
-		// TODO Auto-generated method stub
-
+		super.setPosition( pos );
+		apply();
 	}
 
-	/* (non-Javadoc)
-	 * @see net.imglib2.Positionable#setPosition(long[])
-	 */
 	@Override
-	public void setPosition( final long[] position )
+	public void setPosition( final long[] pos )
 	{
-		// TODO Auto-generated method stub
-
+		super.setPosition( pos );
+		apply();
 	}
 
-	/* (non-Javadoc)
-	 * @see net.imglib2.Positionable#setPosition(int, int)
-	 */
 	@Override
-	public void setPosition( final int position, final int d )
+	public void setPosition( final int pos, final int d )
 	{
-		// TODO Auto-generated method stub
-
+		super.setPosition( pos, d );
+		apply();
 	}
 
-	/* (non-Javadoc)
-	 * @see net.imglib2.Positionable#setPosition(long, int)
-	 */
 	@Override
-	public void setPosition( final long position, final int d )
+	public void setPosition( final long pos, final int d )
 	{
-		// TODO Auto-generated method stub
-
+		super.setPosition( pos, d );
+		apply();
 	}
 
-	/* (non-Javadoc)
-	 * @see net.imglib2.Sampler#get()
-	 */
 	@Override
 	public T get()
 	{
-		// TODO Auto-generated method stub
-		return null;
+		return targetAccess.get();
 	}
 
-	/* (non-Javadoc)
-	 * @see net.imglib2.Sampler#copy()
-	 */
 	@Override
-	public Sampler< T > copy()
+	public RealTransformRealRandomAccess< T, R > copy()
 	{
-		// TODO Auto-generated method stub
-		return null;
+		return new RealTransformRealRandomAccess< T, R >( target, transform );
 	}
 
-	/* (non-Javadoc)
-	 * @see net.imglib2.RealRandomAccess#copyRealRandomAccess()
-	 */
 	@Override
 	public RealRandomAccess< T > copyRealRandomAccess()
 	{
-		// TODO Auto-generated method stub
-		return null;
+		return copy();
 	}
 
 }
