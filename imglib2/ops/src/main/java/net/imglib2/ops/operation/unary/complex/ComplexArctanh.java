@@ -54,7 +54,7 @@ public final class ComplexArctanh
 	private static final ComplexLog logFunc = new ComplexLog();
 
 	private static final ComplexDoubleType ONE = new ComplexDoubleType(1,0);
-	private static final ComplexDoubleType ONE_HALF = new ComplexDoubleType(0,0.5f);
+	private static final ComplexDoubleType ONE_HALF = new ComplexDoubleType(0,0.5);
 
 	private final ComplexDoubleType sum = new ComplexDoubleType();
 	private final ComplexDoubleType diff = new ComplexDoubleType();
