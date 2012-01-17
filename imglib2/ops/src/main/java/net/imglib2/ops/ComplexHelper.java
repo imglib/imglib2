@@ -70,17 +70,17 @@ public class ComplexHelper {
 		double theta;
 		if (x == 0) {
 			if (y > 0)
-				theta = Math.PI / 2;  // looks fine
+				theta = Math.PI / 2;
 			else if (y < 0)
-				theta = -Math.PI / 2;  // looks fine
+				theta = -Math.PI / 2;
 			else // y == 0 : theta indeterminate
 				theta = Double.NaN;
 		}
 		else if (y == 0) {
 			if (x > 0)
-				theta = 0;  // looks fine
+				theta = 0;
 			else // (x < 0)
-				theta = Math.PI;  // looks fine
+				theta = Math.PI;
 		}
 		else // x && y both != 0
 			theta = Math.atan2(y,x);
