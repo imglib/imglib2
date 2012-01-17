@@ -55,7 +55,7 @@ public final class ComplexArccos
 
 	private static final ComplexDoubleType MINUS_I = new ComplexDoubleType(0,-1);
 	private static final ComplexDoubleType ONE = new ComplexDoubleType(1,0);
-	private static final ComplexDoubleType ONE_HALF = new ComplexDoubleType(0.5,0);
+	private static final ComplexDoubleType ONE_HALF = new ComplexDoubleType(0.5f,0);
 
 	private final ComplexDoubleType zSquared = new ComplexDoubleType();
 	private final ComplexDoubleType miniSum = new ComplexDoubleType();

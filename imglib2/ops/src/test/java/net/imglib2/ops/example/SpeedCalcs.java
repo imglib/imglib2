@@ -31,7 +31,7 @@ public class SpeedCalcs {
 		ComplexDoubleType out2 = new ComplexDoubleType();
 		for (double x = -100; x <= 100; x += 0.5) {
 			for (double y = -100; y <= 100; y += 0.3) {
-				ComplexDoubleType input = new ComplexDoubleType(x,y);
+				ComplexDoubleType input = new ComplexDoubleType((float)x,(float)y);
 				cosFunc.compute(input, cos);
 				method1(cos, out1);
 				method2(cos, out2);

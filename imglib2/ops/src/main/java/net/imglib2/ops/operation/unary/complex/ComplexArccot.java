@@ -55,7 +55,7 @@ public final class ComplexArccot
 
 	private static final ComplexDoubleType ONE = new ComplexDoubleType(1,0);
 	private static final ComplexDoubleType I = new ComplexDoubleType(0,1);
-	private static final ComplexDoubleType I_OVER_TWO = new ComplexDoubleType(0,0.5);
+	private static final ComplexDoubleType I_OVER_TWO = new ComplexDoubleType(0,0.5f);
 
 	private final ComplexDoubleType iz = new ComplexDoubleType();
 	private final ComplexDoubleType sum = new ComplexDoubleType();
