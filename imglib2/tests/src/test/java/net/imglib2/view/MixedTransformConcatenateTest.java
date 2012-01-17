@@ -1,9 +1,9 @@
 package net.imglib2.view;
 
 import static org.junit.Assert.assertTrue;
-
 import net.imglib2.transform.integer.Mixed;
 import net.imglib2.transform.integer.MixedTransform;
+import net.imglib2.transform.integer.SlicingTransform;
 import net.imglib2.transform.integer.TranslationTransform;
 
 import org.junit.Before;
@@ -13,7 +13,7 @@ import Jama.Matrix;
 
 public class MixedTransformConcatenateTest
 {
-	public static boolean testConcatenation( MixedTransform t1, Mixed t2 )
+	public static boolean testConcatenation( final MixedTransform t1, final Mixed t2 )
 	{
 		if (t1.numSourceDimensions() != t2.numTargetDimensions() )
 		{
@@ -21,17 +21,17 @@ public class MixedTransformConcatenateTest
 			return false;
 		}
 
-		MixedTransform t1t2 = t1.concatenate( t2 );
+		final MixedTransform t1t2 = t1.concatenate( t2 );
 
-		Matrix mt1 = new Matrix( t1.getMatrix() ); 
-		Matrix mt2 = new Matrix( t2.getMatrix() ); 
-		Matrix mt1t2 = new Matrix( t1t2.getMatrix() );
+		final Matrix mt1 = new Matrix( t1.getMatrix() );
+		final Matrix mt2 = new Matrix( t2.getMatrix() );
+		final Matrix mt1t2 = new Matrix( t1t2.getMatrix() );
 
 		if ( mt1.times( mt2 ).minus( mt1t2 ).normF() > 0.1 ) {
 			System.out.println("=======================");
 			System.out.println("t1: " + t1.numSourceDimensions() + " -> " + t1.numTargetDimensions() + " (n -> m)" );
 			System.out.println("t2: " + t2.numSourceDimensions() + " -> " + t2.numTargetDimensions() + " (n -> m)" );
-			System.out.println("t1t2: " + t1t2.numSourceDimensions() + " -> " + t1t2.numTargetDimensions() + " (n -> m)" );			
+			System.out.println("t1t2: " + t1t2.numSourceDimensions() + " -> " + t1t2.numTargetDimensions() + " (n -> m)" );
 
 			System.out.print( "t1 = " );
 			mt1.print( 1, 0 );
@@ -49,8 +49,8 @@ public class MixedTransformConcatenateTest
 
 		return true;
 	}
-	
-	public static boolean testPreConcatenation( Mixed t1, MixedTransform t2 )
+
+	public static boolean testPreConcatenation( final Mixed t1, final MixedTransform t2 )
 	{
 		if (t1.numSourceDimensions() != t2.numTargetDimensions() )
 		{
@@ -58,17 +58,17 @@ public class MixedTransformConcatenateTest
 			return false;
 		}
 
-		MixedTransform t1t2 = t2.preConcatenate( t1 );
+		final MixedTransform t1t2 = t2.preConcatenate( t1 );
 
-		Matrix mt1 = new Matrix( t1.getMatrix() ); 
-		Matrix mt2 = new Matrix( t2.getMatrix() ); 
-		Matrix mt1t2 = new Matrix( t1t2.getMatrix() );
+		final Matrix mt1 = new Matrix( t1.getMatrix() );
+		final Matrix mt2 = new Matrix( t2.getMatrix() );
+		final Matrix mt1t2 = new Matrix( t1t2.getMatrix() );
 
 		if ( mt1.times( mt2 ).minus( mt1t2 ).normF() > 0.1 ) {
 			System.out.println("=======================");
 			System.out.println("t1: " + t1.numSourceDimensions() + " -> " + t1.numTargetDimensions() + " (n -> m)" );
 			System.out.println("t2: " + t2.numSourceDimensions() + " -> " + t2.numTargetDimensions() + " (n -> m)" );
-			System.out.println("t1t2: " + t1t2.numSourceDimensions() + " -> " + t1t2.numTargetDimensions() + " (n -> m)" );			
+			System.out.println("t1t2: " + t1t2.numSourceDimensions() + " -> " + t1t2.numTargetDimensions() + " (n -> m)" );
 
 			System.out.print( "t1 = " );
 			mt1.print( 1, 0 );
@@ -86,7 +86,7 @@ public class MixedTransformConcatenateTest
 
 		return true;
 	}
-	
+
 	MixedTransform tr1;
 	MixedTransform tr2;
 	MixedTransform tr3;
@@ -97,10 +97,11 @@ public class MixedTransformConcatenateTest
 	MixedTransform comp1;
 	MixedTransform slice1;
 	TranslationTransform translation1;
-	
+	SlicingTransform slicing1;
+
 	@Before
 	public void setUp()
-    { 
+    {
 		tr1 = new MixedTransform( 3, 3 );
 		long[] translation = new long[] {3, 4, 5};
 		tr1.setTranslation( translation );
@@ -116,7 +117,7 @@ public class MixedTransformConcatenateTest
 		perm1.setComponentZero( zero );
 		perm1.setComponentMapping( component );
 		perm1.setComponentInversion( inv );
-		
+
 		rot1 = new MixedTransform( 3, 3 );
 		zero = new boolean[] {false, false, false};
 		inv = new boolean[] {false, true, false};
@@ -124,7 +125,7 @@ public class MixedTransformConcatenateTest
 		rot1.setComponentZero( zero );
 		rot1.setComponentMapping( component );
 		rot1.setComponentInversion( inv );
-		
+
 		proj1 = new MixedTransform( 3, 2 );
 
 		proj2 = new MixedTransform( 2, 3 );
@@ -133,13 +134,18 @@ public class MixedTransformConcatenateTest
 		slice1.setTranslation( new long[] { 233, 0, 0 } );
 		slice1.setComponentMapping( new int[] { 0, 0, 1 } );
 		slice1.setComponentZero( new boolean[] { true, false, false } );
-		
+
 		tr3 = new MixedTransform( 2, 2 );
 		tr3.setTranslation( new long[] { 10, 10 } );
 
 		comp1 = rot1.concatenate( tr2 );
-		
+
 		translation1 = new TranslationTransform( new long[] {2011, 3, 24} );
+
+		slicing1 = new SlicingTransform( 2, 3 );
+		slicing1.setComponentMapping( new int[] { 0, 1, 0 } );
+		slicing1.setComponentZero( new boolean[] { false, false, true } );
+		slicing1.setTranslation( new long[] { 0, 0, 100 } );
     }
 
 	@Test
@@ -177,7 +183,7 @@ public class MixedTransformConcatenateTest
 	{
 		assertTrue( testPreConcatenation( tr1, tr2 ) );
 	}
-	
+
 	@Test
 	public void concatenateTr1Perm1()
 	{
@@ -189,7 +195,7 @@ public class MixedTransformConcatenateTest
 	{
 		assertTrue( testPreConcatenation( tr1, perm1 ) );
 	}
-	
+
 	@Test
 	public void concatenateTr1Rot1()
 	{
@@ -201,7 +207,7 @@ public class MixedTransformConcatenateTest
 	{
 		assertTrue( testPreConcatenation( tr1, rot1 ) );
 	}
-	
+
 	@Test
 	public void concatenateRot1Tr1()
 	{
@@ -213,7 +219,7 @@ public class MixedTransformConcatenateTest
 	{
 		assertTrue( testPreConcatenation( rot1, tr1 ) );
 	}
-	
+
 	@Test
 	public void concatenateProj1Proj2()
 	{
@@ -236,8 +242,8 @@ public class MixedTransformConcatenateTest
 	public void preconcatenateProj2Proj1()
 	{
 		assertTrue( testPreConcatenation( proj2, proj1 ) );
-	}	
-	
+	}
+
 	@Test
 	public void concatenateComp1Tr1()
 	{
@@ -255,13 +261,13 @@ public class MixedTransformConcatenateTest
 	{
 		assertTrue( testConcatenation( tr1, comp1 ) );
 	}
-	
+
 	@Test
 	public void preconcatenateTr1Comp1()
 	{
 		assertTrue( testPreConcatenation( tr1, comp1 ) );
 	}
-	
+
 	@Test
 	public void concatenateComp1Rot1()
 	{
@@ -279,25 +285,25 @@ public class MixedTransformConcatenateTest
 	{
 		assertTrue( testConcatenation( rot1, comp1 ) );
 	}
-	
+
 	@Test
 	public void preconcatenateRot1Comp1()
 	{
 		assertTrue( testPreConcatenation( rot1, comp1 ) );
 	}
-	
+
 	@Test
 	public void concatenateProj1Comp1()
 	{
 		assertTrue( testConcatenation( proj1, comp1 ) );
 	}
-	
+
 	@Test
 	public void preconcatenateProj1Comp1()
 	{
 		assertTrue( testPreConcatenation( proj1, comp1 ) );
 	}
-	
+
 	@Test
 	public void concatenateComp1Proj2()
 	{
@@ -322,38 +328,48 @@ public class MixedTransformConcatenateTest
 		assertTrue( testPreConcatenation( translation1, comp1 ) );
 	}
 
-	public static void main( String[] args )
+	@Test
+	public void concatenateComp1Slicing1()
 	{
-		MixedTransformConcatenateTest test = new MixedTransformConcatenateTest();
+		assertTrue( testConcatenation( comp1, slicing1 ) );
+	}
+
+	public static void main( final String[] args )
+	{
+		final MixedTransformConcatenateTest test = new MixedTransformConcatenateTest();
 		test.setUp();
-		
-		Matrix m_tr1 = new Matrix( test.tr1.getMatrix() ); 
-		Matrix m_tr2 = new Matrix( test.tr2.getMatrix() ); 
-		Matrix m_perm1 = new Matrix( test.perm1.getMatrix() ); 
-		Matrix m_rot1 = new Matrix( test.rot1.getMatrix() ); 
-		Matrix m_proj1 = new Matrix( test.proj1.getMatrix() ); 
-		Matrix m_proj2 = new Matrix( test.proj2.getMatrix() ); 
-		Matrix m_comp1 = new Matrix( test.comp1.getMatrix() ); 
+
+		final Matrix m_tr1 = new Matrix( test.tr1.getMatrix() );
+		final Matrix m_tr2 = new Matrix( test.tr2.getMatrix() );
+		final Matrix m_perm1 = new Matrix( test.perm1.getMatrix() );
+		final Matrix m_rot1 = new Matrix( test.rot1.getMatrix() );
+		final Matrix m_proj1 = new Matrix( test.proj1.getMatrix() );
+		final Matrix m_proj2 = new Matrix( test.proj2.getMatrix() );
+		final Matrix m_comp1 = new Matrix( test.comp1.getMatrix() );
+		final Matrix m_slicing1 = new Matrix( test.slicing1.getMatrix() );
 
 		System.out.print( "tr1 = " );
 		m_tr1.print( 1, 0 );
-		
+
 		System.out.print( "tr2 = " );
 		m_tr2.print( 1, 0 );
-		
+
 		System.out.print( "perm1 = " );
 		m_perm1.print( 1, 0 );
-		
+
 		System.out.print( "rot1 = " );
 		m_rot1.print( 1, 0 );
-		
+
 		System.out.print( "proj1 = " );
 		m_proj1.print( 1, 0 );
-		
+
 		System.out.print( "proj2 = " );
 		m_proj2.print( 1, 0 );
-		
+
 		System.out.print( "comp1 = " );
 		m_comp1.print( 1, 0 );
+
+		System.out.print( "m_slicing1 = " );
+		m_slicing1.print( 1, 0 );
 	}
 }

@@ -10,6 +10,17 @@ public class RealPoint implements RealLocalizable, RealPositionable
 	final protected double [] position;
 	
 	/**
+	 * Protected constructor that re-uses the passed position array.
+	 * 
+	 * @param position
+	 * @param x unused parameter that changes the method signature
+	 */
+	protected RealPoint( final double[] position, final Object x )
+	{
+		this.position = position;
+	}
+	
+	/**
 	 * Create a point in <i>nDimensional</i> space initialized to 0,0,...
 	 * @param nDimensions - # of dimensions of the space
 	 */
@@ -207,5 +218,10 @@ public class RealPoint implements RealLocalizable, RealPositionable
 		}
 		sb.append(")");
 		return sb.toString();
+	}
+	
+	static public RealPoint wrap( final double[] position )
+	{
+		return new RealPoint( position, null );
 	}
 }

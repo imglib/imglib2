@@ -9,6 +9,7 @@ import net.imglib2.IterableRealInterval;
 import net.imglib2.RealCursor;
 import net.imglib2.script.math.fn.IFunction;
 import net.imglib2.script.math.fn.ImageFunction;
+import net.imglib2.script.math.fn.Util;
 
 import net.imglib2.img.Img;
 import net.imglib2.img.array.ArrayImgFactory;
@@ -73,13 +74,15 @@ import net.imglib2.type.numeric.real.FloatType;
 public class Compute {
 
 	/** Ensure that the {@link Container} of each {@link Image} of @param images is compatible
-	 * with all the others. */
-	static public final void checkContainers(final Collection<IterableRealInterval<?>> images) throws Exception {
+	 * with all the others.
+	 * @return true if all containers are compatible.
+	 * @throws Exception if there aren't any images or if images have different dimensions. */
+	static public final boolean checkContainers(final Collection<IterableRealInterval<?>> images) throws Exception {
 		if (images.isEmpty())
 			throw new Exception("There aren't any images!");
 		
 		if (1 == images.size()) {
-			return;
+			return true;
 		}
 
 		final IterableRealInterval<?> first = images.iterator().next();
@@ -87,12 +90,17 @@ public class Compute {
 		for ( final IterableRealInterval<?> iri : images ) 
 		{
 			for (int d=0; d<first.numDimensions(); ++d)
-				if (first.realMin(d) != iri.realMin(d) || first.realMax(d) != iri.realMax(d))
+				if (first.realMin(d) != iri.realMin(d) || first.realMax(d) != iri.realMax(d)) {
 					throw new Exception("Images have different dimensions!");
+				}
 
-			if ( ! first.equalIterationOrder(iri))
-				throw new Exception("Images are of incompatible container types!");
+			if ( ! first.equalIterationOrder(iri)) {
+				System.out.println("Images are of incompatible container types!");
+				System.out.println("First: " + first.getClass() + " is incompatible with: " + iri.getClass());
+				return false;
+			}
 		}
+		return true;
 	}
 
 	/** Find all images in @param op and nested {@link IFunction} instances. */ 
@@ -120,23 +128,17 @@ public class Compute {
 		}
 
 		public abstract void loop(final Cursor<R> resultCursor, final long loopSize, final IFunction fn);
-		
-		private final long[] extractDimensions(final IterableRealInterval<?> iri) {
-			final long[] dim = new long[iri.numDimensions()];
-			for (int d=0; d<dim.length; ++d)
-				dim[d] = (long) (iri.realMax(d) - iri.realMin(d) + 1);
-			return dim;
-		}
 
 		/** Runs the operation on each voxel and ensures all cursors of {@code op}. */
 		private final Img<R> run() throws Exception {
 			if (images.size() > 0) {
-				// Check that all images are compatible: same dimensions, same container type
+				// Check that all images are compatible: same dimensions.
+				// (All images will be flat-iterable, by definition of the ImageFunction class.)
 				checkContainers(images);
 
 				// Store results on a new empty result image
 				final IterableRealInterval<?> first = images.iterator().next();
-				final Img<R> result = new ArrayImgFactory<R>().create(extractDimensions(first), outputType);
+				final Img<R> result = new ArrayImgFactory<R>().create(Util.intervalDimensions(first), outputType);
 
 				// Duplicate all functions: also sets a new cursor for each that has one, so it's unique and reset.
 				final IFunction[] functions = new IFunction[ numThreads ];
@@ -307,22 +309,22 @@ public class Compute {
 
 	/** Convenience method to avoid confusion with script wrappers that are themselves {@link Image}
 	 *  rather than {@link IFunction}; this method ends up creating a copy of the image, in {@link FloatType}. */
-	static public final Img<FloatType> inFloats(final Img<? extends RealType<?>> img) throws Exception {
-		return inFloats(new ImageFunction(img));
+	static public final <R extends RealType<R>> Img<FloatType> inFloats(final Img<R> img) throws Exception {
+		return inFloats(new ImageFunction<R>(img));
 	}
 
 	/** Convenience method to avoid confusion with script wrappers that are themselves {@link Image}
 	 *  rather than {@link IFunction}; this method ends up creating a copy of the image, in {@link DoubleType}. */
-	static public final Img<DoubleType> inDoubles(final Img<? extends RealType<?>> img) throws Exception {
-		return inDoubles(new ImageFunction(img));
+	static public final <R extends RealType<R>> Img<DoubleType> inDoubles(final Img<R> img) throws Exception {
+		return inDoubles(new ImageFunction<R>(img));
 	}
 
 	/** Convenience method to avoid confusion with script wrappers that are themselves {@link Image}
 	 *  rather than {@link IFunction}; this method ends up creating a copy of the image, in {@link ARGBType}.
 	 *  This method transforms an {@link IFunction} operation that returns a {@code double} for every pixel
 	 *  into an RGBA image, by casting each double to an {@code int}. */
-	static public final Img<ARGBType> inRGBA(final Img<? extends RealType<?>> img) throws Exception
+	static public final <R extends RealType<R>> Img<ARGBType> inRGBA(final Img<R> img) throws Exception
 	{
-		return inRGBA(new ImageFunction(img));
+		return inRGBA(new ImageFunction<R>(img));
 	}
 }

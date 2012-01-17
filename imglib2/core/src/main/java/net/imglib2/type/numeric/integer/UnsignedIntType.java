@@ -1,10 +1,10 @@
 /**
  * Copyright (c) 2009--2010, Stephan Preibisch & Stephan Saalfeld
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * Redistributions of source code must retain the above copyright notice, this
  * list of conditions and the following disclaimer.  Redistributions in binary
  * form must reproduce the above copyright notice, this list of conditions and
@@ -12,7 +12,7 @@
  * provided with the distribution.  Neither the name of the Fiji project nor
  * the names of its contributors may be used to endorse or promote products
  * derived from this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -37,21 +37,24 @@ import net.imglib2.util.Util;
 public class UnsignedIntType extends GenericIntType<UnsignedIntType>
 {
 	// this is the constructor if you want it to read from an array
-	public UnsignedIntType( NativeImg<UnsignedIntType, ? extends IntAccess> img ) { super( img ); }
+	public UnsignedIntType( final NativeImg<UnsignedIntType, ? extends IntAccess> img ) { super( img ); }
 
 	// this is the constructor if you want it to be a variable
 	public UnsignedIntType( final long value ) { super( getCodedSignedIntChecked(value) ); }
 
+	// this is the constructor if you want to specify the dataAccess
+	public UnsignedIntType( final IntAccess access ) { super( access ); }
+
 	// this is the constructor if you want it to be a variable
 	public UnsignedIntType() { this( 0 ); }
-	
+
 	public static int getCodedSignedIntChecked( long unsignedInt )
 	{
 		if ( unsignedInt < 0 )
 			unsignedInt = 0;
 		else if ( unsignedInt > 0xffffffffL )
 			unsignedInt = 0xffffffffL;
-		
+
 		return getCodedSignedInt( unsignedInt );
 	}
 	public static int getCodedSignedInt( final long unsignedInt ) { return (int)( unsignedInt & 0xffffffff ); }
@@ -62,16 +65,16 @@ public class UnsignedIntType extends GenericIntType<UnsignedIntType>
 	{
 		// create the container
 		final NativeImg<UnsignedIntType, ? extends IntAccess> container = storageFactory.createIntInstance( dim, 1 );
-		
+
 		// create a Type that is linked to the container
 		final UnsignedIntType linkedType = new UnsignedIntType( container );
-		
+
 		// pass it to the NativeContainer
 		container.setLinkedType( linkedType );
-		
+
 		return container;
 	}
-	
+
 	@Override
 	public UnsignedIntType duplicateTypeOnSameNativeImg() { return new UnsignedIntType( img ); }
 
@@ -129,10 +132,10 @@ public class UnsignedIntType extends GenericIntType<UnsignedIntType>
 	{
 		set( get() - 1 );
 	}
-	
+
 	@Override
 	public String toString() { return "" + get(); }
-	
+
 	public long get() { return getUnsignedInt( getValue() ); }
 	public void set( final long f ) { setValue( getCodedSignedInt( f ) ); }
 
@@ -149,18 +152,18 @@ public class UnsignedIntType extends GenericIntType<UnsignedIntType>
 	public double getMaxValue() { return 0xffffffffL; }
 	@Override
 	public double getMinValue()  { return 0; }
-	
+
 	@Override
-	public int compareTo( final UnsignedIntType c ) 
+	public int compareTo( final UnsignedIntType c )
 	{
 		final long a = get();
 		final long b = c.get();
-		
+
 		if ( a > b )
 			return 1;
 		else if ( a < b )
 			return -1;
-		else 
+		else
 			return 0;
 	}
 

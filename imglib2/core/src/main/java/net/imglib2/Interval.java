@@ -81,7 +81,7 @@ public interface Interval extends RealInterval
 	public long max( final int d );
 	
 	/**
-	 * Write the minimum of each dimension into long[].
+	 * Write the maximum of each dimension into long[].
 	 * 
 	 * @param max
 	 */

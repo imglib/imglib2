@@ -31,7 +31,7 @@ import net.imglib2.img.array.ArrayImg;
 import net.imglib2.img.basictypeaccess.DataAccess;
 
 /**
- * The {@link Type} class is responsible for computing. It can be instaniated as a variable holding one single value only or with
+ * The {@link Type} class is responsible for computing. It can be instantiated as a variable holding one single value only or with
  * a NativeContainer. There is no differentiation between the two cases except for the constructor to avoid double implementations. 
  * 
  * The {@link Type} is the only class that is aware of the actual data type, i.e. which basic type ({@link DataAccess}) is used to 

@@ -390,19 +390,27 @@ public final class ComponentTree< T extends Type< T >, C extends Component< T > 
 
 			// get level of second component on stack
 			C secondComponent = componentStack.peek();
-			final int c = comparator.compare( value, secondComponent.getValue() );
-			if ( c < 0 )
+			try
 			{
-				component.setValue( value );
+				final int c = comparator.compare( value, secondComponent.getValue() );
+				if ( c < 0 )
+				{
+					component.setValue( value );
+					componentStack.push( component );
+				}
+				else
+				{
+					secondComponent.merge( component );
+					if ( c > 0 )
+						continue;
+				}
+				return;
+			}
+			catch ( NullPointerException e )
+			{
 				componentStack.push( component );
+				return;
 			}
-			else
-			{
-				secondComponent.merge( component );
-				if ( c > 0 )
-					continue;
-			}
-			return;
 		}
 	}
 }

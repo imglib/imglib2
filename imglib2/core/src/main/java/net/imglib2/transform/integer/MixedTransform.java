@@ -8,7 +8,7 @@ import net.imglib2.concatenate.PreConcatenable;
 /**
  * Mixed transform allows to express common integer view transformations such as
  * translation, rotation, rotoinversion, and projection.
- * 
+ *
  * <p>
  * It transform a n-dimensional source vector to a m-dimensional target vector,
  * and can be represented as a <em>m+1</em> &times; <em>n+1</em> homogeneous
@@ -21,7 +21,7 @@ import net.imglib2.concatenate.PreConcatenable;
  * <li>translation</li>
  * </ol>
  * </p>
- * 
+ *
  * <p>
  * The project down and component permutation steps are implemented by the
  * {@link #setComponentMapping(int[]) component mapping}. This is a lookup array
@@ -30,7 +30,7 @@ import net.imglib2.concatenate.PreConcatenable;
  * <em>Note, that it is not allowed to set this array such that a source component
  * is mapped to several target components!</em>
  * </p>
- * 
+ *
  * @author Tobias Pietzsch
  */
 public class MixedTransform extends AbstractMixedTransform implements Concatenable< Mixed >, PreConcatenable< Mixed >
@@ -134,12 +134,12 @@ public class MixedTransform extends AbstractMixedTransform implements Concatenab
 
 	/**
 	 * Set which target dimensions are _not_ taken from source dimensions.
-	 * 
+	 *
 	 * <p>
 	 * For instance, if the transform maps 2D (x,y) coordinates to the first two
 	 * components of a 3D (x,y,z) coordinate, this will be [false, false, true]
 	 * </p>
-	 * 
+	 *
 	 * @param zero
 	 *            array that says for each component of the target vector
 	 *            (before translation) whether the value should be taken from a
@@ -174,7 +174,7 @@ public class MixedTransform extends AbstractMixedTransform implements Concatenab
 
 	/**
 	 * Set for each target dimensions from which source dimension it is taken.
-	 * 
+	 *
 	 * <p>
 	 * For instance, if the transform maps 2D (x,y) coordinates to the first two
 	 * components of a 3D (x,y,z) coordinate, this will be [0, 1, x]. Here, x
@@ -182,12 +182,12 @@ public class MixedTransform extends AbstractMixedTransform implements Concatenab
 	 * to any source dimension, which can be realized using
 	 * {@link #setZero(boolean[])}.
 	 * </p>
-	 * 
+	 *
 	 * <p>
 	 * <em>Note, that it is not allowed to set the {@code component} array such that
 	 * a source component is mapped to several target components!</em>
 	 * </p>
-	 * 
+	 *
 	 * @param component
 	 *            array that says for each component of the target vector
 	 *            (before translation) from which source vector component it
@@ -222,12 +222,12 @@ public class MixedTransform extends AbstractMixedTransform implements Concatenab
 	/**
 	 * Set for each target component, whether the source component it is taken
 	 * from should be inverted.
-	 * 
+	 *
 	 * <p>
 	 * For instance, if rotating a 2D (x,y) coordinates by 180 degrees will map
 	 * it to (-x,-y). In this case, this will be [true, true].
 	 * </p>
-	 * 
+	 *
 	 * @param component
 	 *            array that says for each component of the target vector
 	 *            (before translation) whether the source vector component it is
@@ -243,7 +243,7 @@ public class MixedTransform extends AbstractMixedTransform implements Concatenab
 	}
 
 	@Override
-	public void apply( long[] source, long[] target )
+	public void apply( final long[] source, final long[] target )
 	{
 		assert source.length >= numSourceDimensions;
 		assert target.length >= numTargetDimensions;
@@ -263,7 +263,7 @@ public class MixedTransform extends AbstractMixedTransform implements Concatenab
 	}
 
 	@Override
-	public void apply( int[] source, int[] target )
+	public void apply( final int[] source, final int[] target )
 	{
 		assert source.length >= numSourceDimensions;
 		assert target.length >= numTargetDimensions;
@@ -283,7 +283,7 @@ public class MixedTransform extends AbstractMixedTransform implements Concatenab
 	}
 
 	@Override
-	public void apply( Localizable source, Positionable target )
+	public void apply( final Localizable source, final Positionable target )
 	{
 		assert source.numDimensions() >= numSourceDimensions;
 		assert target.numDimensions() >= numTargetDimensions;
@@ -304,11 +304,11 @@ public class MixedTransform extends AbstractMixedTransform implements Concatenab
 	}
 
 	@Override
-	public MixedTransform concatenate( Mixed t )
+	public MixedTransform concatenate( final Mixed t )
 	{
 		assert this.numSourceDimensions == t.numTargetDimensions();
 
-		MixedTransform result = new MixedTransform( t.numSourceDimensions(), this.numTargetDimensions );
+		final MixedTransform result = new MixedTransform( t.numSourceDimensions(), this.numTargetDimensions );
 
 		for ( int d = 0; d < result.numTargetDimensions; ++d )
 		{
@@ -352,11 +352,11 @@ public class MixedTransform extends AbstractMixedTransform implements Concatenab
 	}
 
 	@Override
-	public MixedTransform preConcatenate( Mixed t )
+	public MixedTransform preConcatenate( final Mixed t )
 	{
 		assert t.numSourceDimensions() == this.numTargetDimensions;
 
-		MixedTransform result = new MixedTransform( this.numSourceDimensions, t.numTargetDimensions() );
+		final MixedTransform result = new MixedTransform( this.numSourceDimensions, t.numTargetDimensions() );
 
 		for ( int d = 0; d < result.numTargetDimensions; ++d )
 		{
@@ -401,7 +401,7 @@ public class MixedTransform extends AbstractMixedTransform implements Concatenab
 
 	/**
 	 * set parameters to <code>transform</code>.
-	 * 
+	 *
 	 * @param transform
 	 */
 	public void set( final Mixed transform )
@@ -422,7 +422,7 @@ public class MixedTransform extends AbstractMixedTransform implements Concatenab
 	@Override
 	public double[][] getMatrix()
 	{
-		double[][] mat = new double[ numTargetDimensions + 1 ][ numSourceDimensions + 1 ];
+		final double[][] mat = new double[ numTargetDimensions + 1 ][ numSourceDimensions + 1 ];
 
 		mat[ numTargetDimensions ][ numSourceDimensions] = 1;
 
@@ -445,7 +445,7 @@ public class MixedTransform extends AbstractMixedTransform implements Concatenab
 	/**
 	 * Check whether the transforms has a full mapping of source to target
 	 * components (no source component is discarded).
-	 * 
+	 *
 	 * @return whether there is a full mapping of source to target components.
 	 */
 	public boolean hasFullSourceMapping()
