@@ -58,7 +58,7 @@ public class KNearestNeighborSearchPhyllotaxisBehavior
 	
 	final static private Random rnd = new Random( 1234 );
 	
-	final static private long[] size = new long[]{ 640, 480 };
+	final static private long[] size = new long[]{ 1024, 768 };
 	
 	final static private int m = 10000;
 
@@ -86,7 +86,7 @@ public class KNearestNeighborSearchPhyllotaxisBehavior
 			final double cos = Math.cos( phi ) * r + tx;
 			final double sin = Math.sin( phi ) * r + ty;
 			
-			sample = Math.max( 0, Math.min( 65535, ( int )Math.round( i ) ) );
+			sample = Math.max( 0, Math.min( 65535, Math.round( i ) ) );
 			
 			samples[ i ] = sample;
 			coordinates[ i ][ 0 ] = cos;
@@ -114,7 +114,7 @@ public class KNearestNeighborSearchPhyllotaxisBehavior
 			final double cos = Math.cos( phi ) * r + tx;
 			final double sin = Math.sin( phi ) * r + ty;
 			
-			sample = Math.max( 0, Math.min( 65535, ( int )Math.round( i ) ) );
+			sample = Math.max( 0, Math.min( 65535, Math.round( i ) ) );
 			
 			samples[ i ] = sample;
 			coordinates[ i ][ 0 ] = cos;
@@ -143,7 +143,7 @@ public class KNearestNeighborSearchPhyllotaxisBehavior
 			final double cos = Math.cos( phi ) * r + tx;
 			final double sin = Math.sin( phi ) * r + ty;
 			
-			phyllotaxisSample = Math.max( 0, Math.min( 65535, ( int )Math.round( i ) ) );
+			phyllotaxisSample = Math.max( 0, Math.min( 65535, Math.round( i ) ) );
 			phyllotaxis.add( new RealPoint( new double[]{ cos, sin, 0 } ), new UnsignedShortType( phyllotaxisSample ) );
 			
 			final int fibonacciSample;
@@ -288,7 +288,7 @@ public class KNearestNeighborSearchPhyllotaxisBehavior
 			impComposite.updateAndDraw();
 			IJ.log( "Done." );
 		}
-		catch ( ImgLibException e )
+		catch ( final ImgLibException e )
 		{
 			IJ.log( "Didn't work out." );
 			e.printStackTrace();
