@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2011, Stephan Saalfeld
+ * Copyright (c) 2009--2012, ImgLib2 developers
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -25,7 +25,6 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-
 package net.imglib2;
 
 import net.imglib2.outofbounds.OutOfBoundsFactory;
@@ -37,7 +36,8 @@ import net.imglib2.util.Util;
  * through an {@link OutOfBoundsFactory}.
  * Note that it is not an Interval itself.
  *
- * @author Tobias Pietzsch, Stephan Saalfeld <saalfeld@mpi-cbg.de>
+ * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
+ * @author Tobias Pietzsch
  */
 final public class ExtendedRandomAccessibleInterval< T, F extends RandomAccessibleInterval< T > > implements RandomAccessible< T >
 {
@@ -63,11 +63,12 @@ final public class ExtendedRandomAccessibleInterval< T, F extends RandomAccessib
 	}
 
 	@Override
-	final public RandomAccess< T > randomAccess( Interval interval )
+	final public RandomAccess< T > randomAccess( final Interval interval )
 	{
 		assert source.numDimensions() == interval.numDimensions();
 		
-		if ( Util.contains( source, interval ) ) {
+		if ( Util.contains( source, interval ) )
+		{
 			return source.randomAccess( interval );
 		}
 		return randomAccess();

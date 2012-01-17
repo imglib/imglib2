@@ -38,29 +38,29 @@ public abstract class AbstractRealLocalizableSampler<T> extends AbstractSampler<
 		RealLocalizable {
 
 	protected final double [] position;
-	protected AbstractRealLocalizableSampler(int nDimensions) {
+	protected AbstractRealLocalizableSampler(final int nDimensions) {
 		super(nDimensions);
 		position = new double [nDimensions];
 	}
 	@Override
-	public void localize(float[] position) {
+	public void localize(final float[] pos) {
 		for (int i=0; i<numDimensions(); i++) {
-			this.position[i] = position[i];
+			this.position[i] = pos[i];
 		}
 	}
 
 	@Override
-	public void localize(double[] position) {
-		System.arraycopy(position, 0, this.position, 0, numDimensions());
+	public void localize(final double[] pos) {
+		System.arraycopy(pos, 0, this.position, 0, numDimensions());
 	}
 
 	@Override
-	public float getFloatPosition(int d) {
+	public float getFloatPosition(final int d) {
 		return (float)position[d];
 	}
 
 	@Override
-	public double getDoublePosition(int d) {
+	public double getDoublePosition(final int d) {
 		return position[d];
 	}
 

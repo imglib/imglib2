@@ -124,8 +124,8 @@ public class LabelingMapping<T extends Comparable<T>, N extends Number> {
 		}
 
 		@Override
-		public boolean addAll(int index, Collection<? extends T1> c) {
-			return value.addAll(index, c);
+		public boolean addAll(int i, Collection<? extends T1> c) {
+			return value.addAll(i, c);
 		}
 
 		@Override
@@ -144,8 +144,8 @@ public class LabelingMapping<T extends Comparable<T>, N extends Number> {
 		}
 
 		@Override
-		public T1 get(int index) {
-			return value.get(index);
+		public T1 get(int i) {
+			return value.get(i);
 		}
 
 		@Override
@@ -154,13 +154,13 @@ public class LabelingMapping<T extends Comparable<T>, N extends Number> {
 		}
 
 		@Override
-		public void add(int index, T1 element) {
-			value.add(index, element);
+		public void add(int i, T1 element) {
+			value.add(i, element);
 		}
 
 		@Override
-		public T1 remove(int index) {
-			return value.remove(index);
+		public T1 remove(int i) {
+			return value.remove(i);
 		}
 
 		@Override
@@ -179,8 +179,8 @@ public class LabelingMapping<T extends Comparable<T>, N extends Number> {
 		}
 
 		@Override
-		public ListIterator<T1> listIterator(int index) {
-			return value.listIterator(index);
+		public ListIterator<T1> listIterator(int i) {
+			return value.listIterator(i);
 		}
 
 		@Override
@@ -291,8 +291,8 @@ public class LabelingMapping<T extends Comparable<T>, N extends Number> {
 	 */
 	public List<T> getLabels() {
 		HashSet<T> result = new HashSet<T>();
-		for (InternedList<T,N> instance: listsByIndex) {
-			for (T label: instance) {
+		for (InternedList<T,N> inst: listsByIndex) {
+			for (T label: inst) {
 				result.add(label);
 			}
 		}

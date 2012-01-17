@@ -28,8 +28,8 @@
 package net.imglib2.iterator;
 
 import net.imglib2.Interval;
-import net.imglib2.Localizable;
 import net.imglib2.Iterator;
+import net.imglib2.Localizable;
 import net.imglib2.Positionable;
 import net.imglib2.RealPositionable;
 import net.imglib2.Sampler;
@@ -288,10 +288,10 @@ public class IntervalIterator implements Iterator, Localizable, Interval
 	
 	
 	@Override
-	public void dimensions( final long[] dimensions )
+	public void dimensions( final long[] dim )
 	{
 		for ( int d = 0; d < n; ++d )
-			dimensions[ d ] = this.dimensions[ d ];
+			dim[ d ] = this.dimensions[ d ];
 	}
 
 
@@ -303,16 +303,16 @@ public class IntervalIterator implements Iterator, Localizable, Interval
 
 
 	@Override
-	public void max( final long[] max )
+	public void max( final long[] target )
 	{
 		for ( int d = 0; d < n; ++d )
-			max[ d ] = this.max[ d ];
+			target[ d ] = this.max[ d ];
 	}
 
 	@Override
-	public void max( final Positionable max )
+	public void max( final Positionable target )
 	{
-		max.setPosition( this.max );
+		target.setPosition( this.max );
 	}
 
 	@Override
@@ -323,16 +323,16 @@ public class IntervalIterator implements Iterator, Localizable, Interval
 
 
 	@Override
-	public void min( final long[] min )
+	public void min( final long[] target )
 	{
 		for ( int d = 0; d < n; ++d )
-			min[ d ] = this.min[ d ];
+			target[ d ] = this.min[ d ];
 	}
 
 	@Override
-	public void min( final Positionable min )
+	public void min( final Positionable target )
 	{
-		min.setPosition( this.min );
+		target.setPosition( this.min );
 	}
 
 	@Override
@@ -343,16 +343,16 @@ public class IntervalIterator implements Iterator, Localizable, Interval
 
 
 	@Override
-	public void realMax( final double[] max )
+	public void realMax( final double[] target )
 	{
 		for ( int d = 0; d < n; ++d )
-			max[ d ] = this.max[ d ];
+			target[ d ] = this.max[ d ];
 	}
 
 	@Override
-	public void realMax( final RealPositionable max )
+	public void realMax( final RealPositionable target )
 	{
-		max.setPosition( this.max );
+		target.setPosition( this.max );
 	}
 
 	@Override
@@ -363,15 +363,15 @@ public class IntervalIterator implements Iterator, Localizable, Interval
 
 
 	@Override
-	public void realMin( final double[] min )
+	public void realMin( final double[] target )
 	{
 		for ( int d = 0; d < n; ++d )
-			min[ d ] = this.min[ d ];
+			target[ d ] = this.min[ d ];
 	}
 
 	@Override
-	public void realMin( final RealPositionable min )
+	public void realMin( final RealPositionable target )
 	{
-		min.setPosition( this.min );
+		target.setPosition( this.min );
 	}	
 }
