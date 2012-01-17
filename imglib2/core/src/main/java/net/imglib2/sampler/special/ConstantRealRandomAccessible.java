@@ -29,6 +29,7 @@ package net.imglib2.sampler.special;
 
 import net.imglib2.AbstractRealRandomAccess;
 import net.imglib2.AbstractSampler;
+import net.imglib2.RealInterval;
 import net.imglib2.RealRandomAccess;
 import net.imglib2.RealRandomAccessible;
 
@@ -61,7 +62,7 @@ public class ConstantRealRandomAccessible<T> implements RealRandomAccessible<T> 
 	}
 	private final int nDimensions;
 	private final T constant;
-	public ConstantRealRandomAccessible(T constant, int nDimensions) {
+	public ConstantRealRandomAccessible(final T constant, final int nDimensions) {
 		this.nDimensions = nDimensions;
 		this.constant = constant;
 	}
@@ -75,5 +76,10 @@ public class ConstantRealRandomAccessible<T> implements RealRandomAccessible<T> 
 		return new ConstantRealRandomAccess() {
 		};
 	}
-
+	
+	@Override
+	public RealRandomAccess<T> realRandomAccess( final RealInterval interval ) {
+		return new ConstantRealRandomAccess() {
+		};
+	}
 }

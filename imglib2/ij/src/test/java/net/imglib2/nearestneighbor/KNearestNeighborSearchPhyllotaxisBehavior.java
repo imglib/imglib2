@@ -58,7 +58,7 @@ public class KNearestNeighborSearchPhyllotaxisBehavior
 	
 	final static private Random rnd = new Random( 1234 );
 	
-	final static private long[] size = new long[]{ 1024, 768 };
+	final static private long[] size = new long[]{ 640, 480 };
 	
 	final static private int m = 10000;
 

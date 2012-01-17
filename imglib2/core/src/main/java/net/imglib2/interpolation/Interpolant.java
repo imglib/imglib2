@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2010, Stephan Saalfeld
+ * Copyright (c) 2009--2012, ImgLib2 developers
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -25,26 +25,45 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-package net.imglib2;
+package net.imglib2.interpolation;
 
+import net.imglib2.EuclideanSpace;
+import net.imglib2.RealInterval;
+import net.imglib2.RealRandomAccess;
+import net.imglib2.RealRandomAccessible;
 
 /**
- * <p><em>f:R<sup>n</sup>&rarr;T</em></p>
+ * A {@link RealRandomAccessible} that is generated through interpolation.
  * 
- * <p>A function over real space that can create a random access
- * {@link Sampler}.</p>
- * 
- *
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
+ * @author Tobias Pietzsch
  */
-public interface RealRandomAccessible< T > extends EuclideanSpace
+final public class Interpolant< T, F extends EuclideanSpace > implements RealRandomAccessible< T >
 {
-	/**
-	 * Create a random access sampler for real coordinates.
-	 * 
-	 * @return random access sampler
-	 */
-	public RealRandomAccess< T > realRandomAccess();
+	final protected F source;
+	final InterpolatorFactory< T, F > factory;
 	
-	public RealRandomAccess< T > realRandomAccess( RealInterval interval );
+	public Interpolant( final F source, final InterpolatorFactory< T, F > factory )
+	{
+		this.source = source;
+		this.factory = factory;
+	}
+	
+	@Override
+	public int numDimensions()
+	{
+		return source.numDimensions();
+	}
+
+	@Override
+	public RealRandomAccess< T > realRandomAccess()
+	{
+		return factory.create( source );
+	}
+
+	@Override
+	public RealRandomAccess< T > realRandomAccess( final RealInterval interval )
+	{
+		return factory.create( source, interval );
+	}
 }

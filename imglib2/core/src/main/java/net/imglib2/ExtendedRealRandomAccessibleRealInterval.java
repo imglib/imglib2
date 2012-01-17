@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2011, Stephan Saalfeld
+ * Copyright (c) 2009--2012, ImgLib2 developers
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -25,11 +25,11 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-
 package net.imglib2;
 
 import net.imglib2.outofbounds.RealOutOfBoundsFactory;
 import net.imglib2.outofbounds.RealOutOfBoundsRealRandomAccess;
+import net.imglib2.util.Util;
 
 /**
  * Implements {@link RealRandomAccessible} for a {@link RealRandomAccessibleRealInterval}
@@ -40,24 +40,36 @@ import net.imglib2.outofbounds.RealOutOfBoundsRealRandomAccess;
  */
 final public class ExtendedRealRandomAccessibleRealInterval< T, F extends RealRandomAccessibleRealInterval< T > > implements RealRandomAccessible< T > 
 {
-	final protected F interval;
+	final protected F source;
 	final protected RealOutOfBoundsFactory< T, ? super F > factory;
 
-	public ExtendedRealRandomAccessibleRealInterval( final F interval, final RealOutOfBoundsFactory< T, ? super F > factory )
+	public ExtendedRealRandomAccessibleRealInterval( final F source, final RealOutOfBoundsFactory< T, ? super F > factory )
 	{
-		this.interval = interval;
+		this.source = source;
 		this.factory = factory;
 	}
 	
 	@Override
 	final public int numDimensions()
 	{
-		return interval.numDimensions();
+		return source.numDimensions();
 	}
 
 	@Override
 	final public RealOutOfBoundsRealRandomAccess< T > realRandomAccess()
 	{
-		return new RealOutOfBoundsRealRandomAccess< T >( interval.numDimensions(), factory.create( interval ) );
+		return new RealOutOfBoundsRealRandomAccess< T >( source.numDimensions(), factory.create( source ) );
+	}
+	
+	@Override
+	final public RealRandomAccess< T > realRandomAccess( final RealInterval interval )
+	{
+		assert source.numDimensions() == interval.numDimensions();
+		
+		if ( Util.contains( source, interval ) )
+		{
+			return source.realRandomAccess();
+		}
+		return realRandomAccess();
 	}
 }
