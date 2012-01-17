@@ -34,57 +34,56 @@ import net.imglib2.Interval;
 import net.imglib2.IterableInterval;
 import net.imglib2.IterableRealInterval;
 import net.imglib2.Positionable;
-import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.RealPositionable;
 import net.imglib2.img.array.ArrayImg;
 
 /**
  * Generates {@link Cursor Cursors} that iterate a
- * {@link RandomAccessibleInterval} in flat order, that is: row by row, plane by
- * plane, cube by cube, ...
- * 
+ * {@link RandomAccessibleInterval} in flat order, that is: row by row, plane
+ * by plane, cube by cube, ...  
+ *
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-public class IterableRandomAccessibleInterval<T> implements
-		IterableInterval<T>, RandomAccessibleInterval<T> {
-	final protected RandomAccessibleInterval<T> interval;
+public class IterableRandomAccessibleInterval< T > implements IterableInterval< T >
+{
+	final protected RandomAccessibleInterval< T > interval;
 	final long size;
-
-	public static <T> IterableRandomAccessibleInterval<T> create(
-			final RandomAccessibleInterval<T> interval) {
-		return new IterableRandomAccessibleInterval<T>(interval);
-	}
-
-	public IterableRandomAccessibleInterval(
-			final RandomAccessibleInterval<T> interval) {
+	
+	public IterableRandomAccessibleInterval( final RandomAccessibleInterval< T > interval )
+	{
 		this.interval = interval;
 		final int n = interval.numDimensions();
-		long s = interval.dimension(0);
-		for (int d = 1; d < n; ++d)
-			d *= interval.dimension(d);
+		long s = interval.dimension( 0 );
+		for ( int d = 1; d < n; ++d )
+			d *= interval.dimension( d );
 		size = s;
 	}
-
+	
 	@Override
-	public long size() {
+	public long size()
+	{
 		return size;
 	}
 
 	@Override
-	public T firstElement() {
+	public T firstElement()
+	{
 		return interval.randomAccess().get();
 	}
 
 	@Override
-	public boolean equalIterationOrder(final IterableRealInterval<?> f) {
+	public boolean equalIterationOrder( final IterableRealInterval< ? > f )
+	{
 		final int n = numDimensions();
-		if (f.numDimensions() == n
-				&& (IterableRandomAccessibleInterval.class.isInstance(f) || ArrayImg.class
-						.isInstance(f))) {
-			final Interval fAsInterval = (Interval) f;
-			for (int d = 0; d < n; ++d) {
-				if (dimension(d) == fAsInterval.dimension(d))
+		if (
+				f.numDimensions() == n &&
+				( IterableRandomAccessibleInterval.class.isInstance( f ) || ArrayImg.class.isInstance( f ) ) )
+		{
+			final Interval fAsInterval = ( Interval )f;
+			for ( int d = 0; d < n; ++d )
+			{
+				if ( dimension( d ) == fAsInterval.dimension( d ) )
 					continue;
 				else
 					return false;
@@ -95,102 +94,110 @@ public class IterableRandomAccessibleInterval<T> implements
 	}
 
 	@Override
-	public double realMin(final int d) {
-		return interval.realMin(d);
+	public double realMin( final int d )
+	{
+		return interval.realMin( d );
 	}
 
 	@Override
-	public void realMin(final double[] min) {
-		interval.realMin(min);
+	public void realMin( final double[] min )
+	{
+		interval.realMin( min );
 	}
 
 	@Override
-	public void realMin(final RealPositionable min) {
-		interval.realMin(min);
+	public void realMin( final RealPositionable min )
+	{
+		interval.realMin( min );
 	}
 
 	@Override
-	public double realMax(final int d) {
-		return interval.realMax(d);
+	public double realMax( final int d )
+	{
+		return interval.realMax( d );
 	}
 
 	@Override
-	public void realMax(final double[] max) {
-		interval.realMax(max);
+	public void realMax( final double[] max )
+	{
+		interval.realMax( max );
 	}
 
 	@Override
-	public void realMax(final RealPositionable max) {
-		interval.realMax(max);
+	public void realMax( final RealPositionable max )
+	{
+		interval.realMax( max );
 	}
 
 	@Override
-	public int numDimensions() {
+	public int numDimensions()
+	{
 		return interval.numDimensions();
 	}
 
 	@Override
-	public Iterator<T> iterator() {
+	public Iterator< T > iterator()
+	{
 		return cursor();
 	}
 
 	@Override
-	public long min(final int d) {
-		return interval.min(d);
+	public long min( final int d )
+	{
+		return interval.min( d );
 	}
 
 	@Override
-	public void min(final long[] min) {
-		interval.min(min);
+	public void min( final long[] min )
+	{
+		interval.min( min );
 	}
 
 	@Override
-	public void min(final Positionable min) {
-		interval.min(min);
+	public void min( final Positionable min )
+	{
+		interval.min( min );
 	}
 
 	@Override
-	public long max(final int d) {
-		return interval.max(d);
+	public long max( final int d )
+	{
+		return interval.max( d );
 	}
 
 	@Override
-	public void max(final long[] max) {
-		interval.max(max);
+	public void max( final long[] max )
+	{
+		interval.max( max );
 	}
 
 	@Override
-	public void max(final Positionable max) {
-		interval.max(max);
+	public void max( final Positionable max )
+	{
+		interval.max( max );
 	}
 
 	@Override
-	public void dimensions(final long[] dimensions) {
-		interval.dimensions(dimensions);
+	public void dimensions( final long[] dimensions )
+	{
+		interval.dimensions( dimensions );
 	}
 
 	@Override
-	public long dimension(final int d) {
-		return interval.dimension(d);
+	public long dimension( final int d )
+	{
+		return interval.dimension( d );
 	}
 
 	@Override
-	public Cursor<T> cursor() {
-		return new RandomAccessibleIntervalCursor<T>(interval);
+	public Cursor< T > cursor()
+	{
+		return new RandomAccessibleIntervalCursor< T >( interval );
 	}
 
 	@Override
-	public Cursor<T> localizingCursor() {
+	public Cursor< T > localizingCursor()
+	{
 		return cursor();
-	}
-
-	@Override
-	public RandomAccess<T> randomAccess() {
-		return interval.randomAccess();
-	}
-
-	@Override
-	public RandomAccess<T> randomAccess(Interval i) {
-		return interval.randomAccess(i);
 	}
 }

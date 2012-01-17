@@ -198,7 +198,7 @@ public class DefaultROIStrategy<T extends Comparable<T>, L extends Labeling<T>>
 		}
 
 		@Override
-		public boolean isMember(double[] position) {
+		protected boolean isMember(double[] position) {
 			for (int i = 0; i < position.length; i++) {
 				randomAccess.setPosition((int)position[i], i);
 			}
