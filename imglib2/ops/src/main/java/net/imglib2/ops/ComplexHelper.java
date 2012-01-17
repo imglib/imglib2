@@ -74,7 +74,7 @@ public class ComplexHelper {
 			else if (y < 0)
 				theta = -Math.PI / 2;  // looks fine
 			else // y == 0 : theta indeterminate
-				theta = 0;  // sensible default
+				theta = Double.NaN;
 		}
 		else if (y == 0) {
 			if (x > 0)
