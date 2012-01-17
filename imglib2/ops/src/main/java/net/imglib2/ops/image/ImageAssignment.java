@@ -147,6 +147,9 @@ public class ImageAssignment {
 		}
 		boolean terminated = true;
 		synchronized (this) {
+			// TODO - does this shutdown() call return immediately or wait until
+			// everything is complete. If it waits then this synchronized block will
+			// keep abort() from being able to work.
 			executor.shutdown();
 			terminated = executor.isTerminated();
 			if (terminated) executor = null;
@@ -168,6 +171,7 @@ public class ImageAssignment {
 	 * running an assign() operation.
 	 */
 	public void abort() {
+		// TODO - this method maybe ineffective. See TODO note in assign().
 		boolean terminated = true;
 		synchronized (this) {
 			if (!assigning) return;
