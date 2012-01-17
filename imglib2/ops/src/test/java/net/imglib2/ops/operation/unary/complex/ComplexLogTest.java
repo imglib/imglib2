@@ -21,7 +21,7 @@ public class ComplexLogTest {
 		
 		// try 0 case
 		
-		doCase(0,0,Math.log(0),0);
+		doCase(0,0,Math.log(0),Double.NaN);
 
 		// try all the cardinal directions
 		
