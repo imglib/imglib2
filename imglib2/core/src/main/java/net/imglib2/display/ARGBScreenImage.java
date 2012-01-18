@@ -38,12 +38,16 @@ import java.awt.image.SampleModel;
 import java.awt.image.WritableRaster;
 import java.util.Iterator;
 
-import net.imglib2.Cursor;
+import net.imglib2.Interval;
 import net.imglib2.IterableInterval;
 import net.imglib2.IterableRealInterval;
 import net.imglib2.Positionable;
+import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.RealPositionable;
+import net.imglib2.img.array.ArrayCursor;
 import net.imglib2.img.array.ArrayImg;
+import net.imglib2.img.array.ArrayLocalizingCursor;
+import net.imglib2.img.array.ArrayRandomAccess;
 import net.imglib2.img.basictypeaccess.array.IntArray;
 import net.imglib2.type.numeric.ARGBType;
 
@@ -52,7 +56,7 @@ import net.imglib2.type.numeric.ARGBType;
  *
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-public class ARGBScreenImage implements ScreenImage, IterableInterval< ARGBType >
+public class ARGBScreenImage implements ScreenImage, IterableInterval< ARGBType >, RandomAccessibleInterval< ARGBType >
 {
 	final protected int[] data; 
 	final protected ArrayImg< ARGBType, IntArray > argbArray;
@@ -78,10 +82,10 @@ public class ARGBScreenImage implements ScreenImage, IterableInterval< ARGBType 
 		argbArray = new ArrayImg< ARGBType, IntArray >( new IntArray( data ), new long[]{ width, height }, 1 );
 		argbArray.setLinkedType( new ARGBType( argbArray ) );
 
-		SampleModel sampleModel = ARGB_COLOR_MODEL.createCompatibleWritableRaster( 1, 1 ).getSampleModel()
+		final SampleModel sampleModel = ARGB_COLOR_MODEL.createCompatibleWritableRaster( 1, 1 ).getSampleModel()
 									.createCompatibleSampleModel( width, height );
-		DataBuffer dataBuffer = new DataBufferInt( data, width * height, 0 );
-		WritableRaster rgbRaster = Raster.createWritableRaster( sampleModel, dataBuffer, null );
+		final DataBuffer dataBuffer = new DataBufferInt( data, width * height, 0 );
+		final WritableRaster rgbRaster = Raster.createWritableRaster( sampleModel, dataBuffer, null );
 		image = new BufferedImage( ARGB_COLOR_MODEL, rgbRaster, false, null );
 	}
 	
@@ -99,13 +103,13 @@ public class ARGBScreenImage implements ScreenImage, IterableInterval< ARGBType 
 	}
 
 	@Override
-	public Cursor< ARGBType > cursor()
+	public ArrayCursor< ARGBType > cursor()
 	{
 		return argbArray.cursor();
 	}
 
 	@Override
-	public Cursor< ARGBType > localizingCursor()
+	public ArrayLocalizingCursor< ARGBType > localizingCursor()
 	{
 		return argbArray.localizingCursor();
 	}
@@ -222,5 +226,17 @@ public class ARGBScreenImage implements ScreenImage, IterableInterval< ARGBType 
 	public ARGBType firstElement()
 	{
 		return iterator().next();
+	}
+
+	@Override
+	public ArrayRandomAccess< ARGBType > randomAccess()
+	{
+		return argbArray.randomAccess();
+	}
+
+	@Override
+	public ArrayRandomAccess< ARGBType > randomAccess( final Interval interval )
+	{
+		return argbArray.randomAccess( interval );
 	}
 }
