@@ -9,7 +9,7 @@ import net.imglib2.RandomAccessible;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.display.ARGBScreenImage;
 import net.imglib2.display.RealARGBConverter;
-import net.imglib2.display.XYProjector;
+import net.imglib2.display.XYRandomAccessibleProjector;
 import net.imglib2.img.array.ArrayImgFactory;
 import net.imglib2.interpolation.Interpolant;
 import net.imglib2.interpolation.InterpolatorFactory;
@@ -56,7 +56,7 @@ public class OpenAndDisplayAffineTransformedScreenImage
 		
 		final ARGBScreenImage screenImage = new ARGBScreenImage( ( int )img.dimension( 0 ), ( int )img.dimension( 1 ) );
 //		final XYProjector< UnsignedShortType, ARGBType > projector = new XYProjector< UnsignedShortType, ARGBType >( transformedPixels, screenImage, new RealARGBConverter< UnsignedShortType >( 0, 4095 ) );
-		final XYProjector< UnsignedShortType, ARGBType > projector = new XYProjector< UnsignedShortType, ARGBType >( mapping, screenImage, new RealARGBConverter< UnsignedShortType >( 0, 4095 ) );
+		final XYRandomAccessibleProjector< UnsignedShortType, ARGBType > projector = new XYRandomAccessibleProjector< UnsignedShortType, ARGBType >( mapping, screenImage, new RealARGBConverter< UnsignedShortType >( 0, 4095 ) );
 //		final XYProjector< UnsignedShortType, ARGBType > projector = new XYProjector< UnsignedShortType, ARGBType >( channel, screenImage, new RealARGBConverter< UnsignedShortType >( 0, 4095 ) );
 		
 		final ColorProcessor cp = new ColorProcessor( screenImage.image() );
@@ -80,9 +80,8 @@ public class OpenAndDisplayAffineTransformedScreenImage
 			}
 			IJ.log( "loop " + ( k + 1 ) + ": " + timer.stop() );
 		}
-		projector.map();
 		
-		projector.setPosition( img.dimension( 3 ) / 2, 2 );
+		projector.setPosition( img.dimension( 2 ), 2 );
 		projector.map();
 		final ColorProcessor cpa = new ColorProcessor( screenImage.image() );
 		imp.setProcessor( cpa );
