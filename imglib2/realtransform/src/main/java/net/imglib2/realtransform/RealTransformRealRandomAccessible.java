@@ -62,7 +62,6 @@ public class RealTransformRealRandomAccessible< T, R extends RealTransform > imp
 			super( transform.numSourceDimensions() );
 			sourcePosition = RealPoint.wrap( position );
 			this.targetAccess = target.realRandomAccess();
-			apply();
 		}
 		
 		final private void apply()
@@ -74,159 +73,138 @@ public class RealTransformRealRandomAccessible< T, R extends RealTransform > imp
 		public void move( final float distance, final int d )
 		{
 			super.move( distance, d );
-			apply();
 		}
 
 		@Override
 		public void move( final double distance, final int d )
 		{
 			super.move( distance, d );
-			apply();
 		}
 
 		@Override
 		public void move( final RealLocalizable localizable )
 		{
 			super.move( localizable );
-			apply();
 		}
 
 		@Override
 		public void move( final float[] distance )
 		{
 			super.move( distance );
-			apply();
 		}
 
 		@Override
 		public void move( final double[] distance )
 		{
 			super.move( distance );
-			apply();
 		}
 
 		@Override
 		public void setPosition( final RealLocalizable localizable )
 		{
 			super.setPosition( localizable );
-			apply();
 		}
 
 		@Override
 		public void setPosition( final float[] pos )
 		{
 			super.setPosition( pos );
-			apply();
 		}
 
 		@Override
 		public void setPosition( final double[] pos )
 		{
 			super.setPosition( pos );
-			apply();
 		}
 
 		@Override
 		public void setPosition( final float pos, final int d )
 		{
 			super.setPosition( pos, d );
-			apply();
 		}
 
 		@Override
 		public void setPosition( final double pos, final int d )
 		{
 			super.setPosition( pos, d );
-			apply();
 		}
 
 		@Override
 		public void fwd( final int d )
 		{
 			super.fwd( d );
-			apply();
 		}
 
 		@Override
 		public void bck( final int d )
 		{
 			super.bck( d );
-			apply();
 		}
 
 		@Override
 		public void move( final int distance, final int d )
 		{
 			super.move( distance, d );
-			apply();
 		}
 
 		@Override
 		public void move( final long distance, final int d )
 		{
 			super.move( distance, d );
-			apply();
 		}
 
 		@Override
 		public void move( final Localizable localizable )
 		{
 			super.move( localizable );
-			apply();
 		}
 
 		@Override
 		public void move( final int[] distance )
 		{
 			super.move( distance );
-			apply();
 		}
 
 		@Override
 		public void move( final long[] distance )
 		{
 			super.move( distance );
-			apply();
 		}
 
 		@Override
 		public void setPosition( final Localizable localizable )
 		{
 			super.setPosition( localizable );
-			apply();
 		}
 
 		@Override
 		public void setPosition( final int[] pos )
 		{
 			super.setPosition( pos );
-			apply();
 		}
 
 		@Override
 		public void setPosition( final long[] pos )
 		{
 			super.setPosition( pos );
-			apply();
 		}
 
 		@Override
 		public void setPosition( final int pos, final int d )
 		{
 			super.setPosition( pos, d );
-			apply();
 		}
 
 		@Override
 		public void setPosition( final long pos, final int d )
 		{
 			super.setPosition( pos, d );
-			apply();
 		}
 
 		@Override
 		public T get()
 		{
+			apply();
 			return targetAccess.get();
 		}
 

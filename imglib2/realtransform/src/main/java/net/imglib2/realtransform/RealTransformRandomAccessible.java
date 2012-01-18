@@ -60,7 +60,6 @@ public class RealTransformRandomAccessible< T, R extends RealTransform > extends
 			super( transform.numSourceDimensions() );
 			sourcePosition = Point.wrap( position );
 			this.targetAccess = target.realRandomAccess();
-			apply();
 		}
 		
 		final private void apply()
@@ -72,21 +71,18 @@ public class RealTransformRandomAccessible< T, R extends RealTransform > extends
 		public void fwd( final int d )
 		{
 			++position[ d ];
-			apply();
 		}
 
 		@Override
 		public void bck( final int d )
 		{
 			--position[ d ];
-			apply();
 		}
 
 		@Override
 		public void move( final long distance, final int d )
 		{
 			position[ d ] += distance;
-			apply();
 		}
 
 		@Override
@@ -94,7 +90,6 @@ public class RealTransformRandomAccessible< T, R extends RealTransform > extends
 		{
 			for ( int d = 0; d < n; ++d )
 				position[ d ] = pos[ d ];
-			apply();
 		}
 
 		@Override
@@ -102,19 +97,18 @@ public class RealTransformRandomAccessible< T, R extends RealTransform > extends
 		{
 			for ( int d = 0; d < n; ++d )
 				position[ d ] = pos[ d ];
-			apply();
 		}
 
 		@Override
 		public void setPosition( final long pos, final int d )
 		{
 			position[ d ] = pos;
-			apply();
 		}
 
 		@Override
 		public T get()
 		{
+			apply();
 			return targetAccess.get();
 		}
 
