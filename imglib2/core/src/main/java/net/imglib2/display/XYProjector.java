@@ -28,11 +28,11 @@
 package net.imglib2.display;
 
 import net.imglib2.Cursor;
+import net.imglib2.IterableInterval;
 import net.imglib2.Localizable;
 import net.imglib2.Positionable;
 import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessible;
-import net.imglib2.IterableInterval;
 import net.imglib2.converter.Converter;
 
 /**
@@ -47,7 +47,7 @@ public class XYProjector< A, B > implements Projector< A, B >, Positionable, Loc
 	final protected Converter< A, B > converter;
 	final protected long[] position; 
 	
-	public XYProjector( final RandomAccessible< A > source, IterableInterval< B > target, final Converter< A, B > converter )
+	public XYProjector( final RandomAccessible< A > source, final IterableInterval< B > target, final Converter< A, B > converter )
 	{
 		this.source = source;
 		this.target = target;
@@ -58,14 +58,18 @@ public class XYProjector< A, B > implements Projector< A, B >, Positionable, Loc
 	@Override
 	public void map()
 	{
+		final long[] sourcePosition = position.clone();
 		final Cursor< B > targetCursor = target.cursor();
 		final RandomAccess< A > sourceRandomAccess = source.randomAccess();
-		sourceRandomAccess.setPosition( position );
+		sourceRandomAccess.setPosition( sourcePosition );
 		while ( targetCursor.hasNext() )
 		{
 			final B b = targetCursor.next();
-			sourceRandomAccess.setPosition( targetCursor.getLongPosition( 0 ), 0 );
-			sourceRandomAccess.setPosition( targetCursor.getLongPosition( 1 ), 1 );
+			sourcePosition[ 0 ] = targetCursor.getLongPosition( 0 );
+			sourcePosition[ 1 ] = targetCursor.getLongPosition( 1 );
+			sourceRandomAccess.setPosition( sourcePosition );
+//			sourceRandomAccess.setPosition( targetCursor.getLongPosition( 0 ), 0 );
+//			sourceRandomAccess.setPosition( targetCursor.getLongPosition( 1 ), 1 );
 			converter.convert( sourceRandomAccess.get(), b );
 		}
 	}
