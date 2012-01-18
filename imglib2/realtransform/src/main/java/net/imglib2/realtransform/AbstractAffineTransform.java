@@ -65,7 +65,7 @@ public abstract class AbstractAffineTransform implements Affine
 		i = a.inverse();
 		t = new double[ n ];
 		for ( int r = 0; r < n; ++r )
-			t[ r ] = a.get( r, n );
+			t[ r ] = matrix.get( r, n );
 	}
 	
 	protected AbstractAffineTransform( final Matrix a, final Matrix i, final double[] t )
@@ -149,9 +149,9 @@ public abstract class AbstractAffineTransform implements Affine
 		{
 			double ar = 0;
 			for ( int c = 0; c < n; ++c )
-				ar += source[ c ] * a.get( r, c ) + t[ c ];
+				ar += source[ c ] * a.get( r, c );
 			
-			target[ r ] = ar;
+			target[ r ] = ar + t[ r ];
 		}
 	}
 
@@ -164,9 +164,9 @@ public abstract class AbstractAffineTransform implements Affine
 		{
 			double ar = 0;
 			for ( int c = 0; c < n; ++c )
-				ar += source[ c ] * a.get( r, c ) + t[ c ];
+				ar += source[ c ] * a.get( r, c );
 			
-			target[ r ] = ( float )ar;
+			target[ r ] = ( float )( ar + t[ r ] );
 		}
 	}
 
@@ -179,9 +179,9 @@ public abstract class AbstractAffineTransform implements Affine
 		{
 			double ar = 0;
 			for ( int c = 0; c < n; ++c )
-				ar += source.getDoublePosition( c ) * a.get( r, c ) + t[ c ];
+				ar += source.getDoublePosition( c ) * a.get( r, c );
 			
-			target.setPosition( ar, r );
+			target.setPosition( ar + t[ r ], r );
 		}
 	}
 
