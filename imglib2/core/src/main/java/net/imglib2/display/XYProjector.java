@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2009--2011, Stephan Saalfeld
+ * Copyright (c) 2009--2012, ImgLib2 developers
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -9,7 +9,7 @@
  * list of conditions and the following disclaimer.  Redistributions in binary
  * form must reproduce the above copyright notice, this list of conditions and
  * the following disclaimer in the documentation and/or other materials
- * provided with the distribution.  Neither the name of the Fiji project nor
+ * provided with the distribution.  Neither the name of the imglib project nor
  * the names of its contributors may be used to endorse or promote products
  * derived from this software without specific prior written permission.
  * 
@@ -58,18 +58,14 @@ public class XYProjector< A, B > implements Projector< A, B >, Positionable, Loc
 	@Override
 	public void map()
 	{
-		final long[] sourcePosition = position.clone();
 		final Cursor< B > targetCursor = target.cursor();
 		final RandomAccess< A > sourceRandomAccess = source.randomAccess();
-		sourceRandomAccess.setPosition( sourcePosition );
+		sourceRandomAccess.setPosition( position );
 		while ( targetCursor.hasNext() )
 		{
 			final B b = targetCursor.next();
-			sourcePosition[ 0 ] = targetCursor.getLongPosition( 0 );
-			sourcePosition[ 1 ] = targetCursor.getLongPosition( 1 );
-			sourceRandomAccess.setPosition( sourcePosition );
-//			sourceRandomAccess.setPosition( targetCursor.getLongPosition( 0 ), 0 );
-//			sourceRandomAccess.setPosition( targetCursor.getLongPosition( 1 ), 1 );
+			sourceRandomAccess.setPosition( targetCursor.getLongPosition( 0 ), 0 );
+			sourceRandomAccess.setPosition( targetCursor.getLongPosition( 1 ), 1 );
 			converter.convert( sourceRandomAccess.get(), b );
 		}
 	}
