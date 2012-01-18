@@ -28,9 +28,8 @@
 package net.imglib2.display;
 
 import net.imglib2.Cursor;
+import net.imglib2.FinalInterval;
 import net.imglib2.IterableInterval;
-import net.imglib2.Localizable;
-import net.imglib2.Positionable;
 import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessible;
 import net.imglib2.converter.Converter;
@@ -40,26 +39,30 @@ import net.imglib2.converter.Converter;
  *
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-public class XYProjector< A, B > implements Projector< A, B >, Positionable, Localizable
+public class XYProjector< A, B > extends AbstractXYProjector< A, B >
 {
-	final protected RandomAccessible< A > source;
 	final protected IterableInterval< B > target;
-	final protected Converter< A, B > converter;
-	final protected long[] position; 
 	
 	public XYProjector( final RandomAccessible< A > source, final IterableInterval< B > target, final Converter< A, B > converter )
 	{
-		this.source = source;
+		super( source, converter );
 		this.target = target;
-		this.converter = converter;
-		position = new long[ source.numDimensions() ];
 	}
 
 	@Override
 	public void map()
 	{
+		for ( int d = 2; d < position.length; ++d )
+			min[ d ] = max[ d ] = position[ d ];
+		
+		min[ 0 ] = target.min( 0 );
+		min[ 1 ] = target.min( 1 );
+		max[ 0 ] = target.max( 0 );
+		max[ 1 ] = target.max( 1 );
+		final FinalInterval sourceInterval = new FinalInterval( min, max );
+		
 		final Cursor< B > targetCursor = target.cursor();
-		final RandomAccess< A > sourceRandomAccess = source.randomAccess();
+		final RandomAccess< A > sourceRandomAccess = source.randomAccess( sourceInterval );
 		sourceRandomAccess.setPosition( position );
 		while ( targetCursor.hasNext() )
 		{
@@ -68,141 +71,5 @@ public class XYProjector< A, B > implements Projector< A, B >, Positionable, Loc
 			sourceRandomAccess.setPosition( targetCursor.getLongPosition( 1 ), 1 );
 			converter.convert( sourceRandomAccess.get(), b );
 		}
-	}
-
-	@Override
-	public void bck( final int d )
-	{
-		position[ d ] -= 1;
-	}
-
-	@Override
-	public void fwd( final int d )
-	{
-		position[ d ] += 1;
-	}
-
-	@Override
-	public void move( final int distance, final int d )
-	{
-		position[ d ] += distance;
-	}
-
-	@Override
-	public void move( final long distance, final int d )
-	{
-		position[ d ] += distance;
-	}
-
-	@Override
-	public void move( final Localizable localizable )
-	{
-		for ( int d = 0; d < position.length; ++d )
-			position[ d ] += localizable.getLongPosition( d );
-	}
-
-	@Override
-	public void move( final int[] p )
-	{
-		for ( int d = 0; d < position.length; ++d )
-			position[ d ] += p[ d ];
-	}
-
-	@Override
-	public void move( final long[] p )
-	{
-		for ( int d = 0; d < position.length; ++d )
-			position[ d ] += p[ d ];
-	}
-
-	@Override
-	public void setPosition( final Localizable localizable )
-	{
-		for ( int d = 0; d < position.length; ++d )
-			position[ d ] = localizable.getLongPosition( d );
-	}
-
-	@Override
-	public void setPosition( final int[] p )
-	{
-		for ( int d = 0; d < position.length; ++d )
-			position[ d ] = p[ d ];
-	}
-
-	@Override
-	public void setPosition( final long[] p )
-	{
-		for ( int d = 0; d < position.length; ++d )
-			position[ d ] = p[ d ];
-	}
-
-	@Override
-	public void setPosition( final int p, final int d )
-	{
-		position[ d ] = p;
-	}
-
-	@Override
-	public void setPosition( final long p, final int d )
-	{
-		position[ d ] = p;
-	}
-
-	@Override
-	public int numDimensions()
-	{
-		return position.length;
-	}
-
-	@Override
-	public int getIntPosition( final int d )
-	{
-		return ( int )position[ d ];
-	}
-
-	@Override
-	public long getLongPosition( final int d )
-	{
-		return position[ d ];
-	}
-
-	@Override
-	public void localize( final int[] p )
-	{
-		for ( int d = 0; d < p.length; ++d )
-			p[ d ] = ( int )position[ d ];
-	}
-
-	@Override
-	public void localize( final long[] p )
-	{
-		for ( int d = 0; d < p.length; ++d )
-			p[ d ] = position[ d ];
-	}
-
-	@Override
-	public double getDoublePosition( final int d )
-	{
-		return position[ d ];
-	}
-
-	@Override
-	public float getFloatPosition( final int d )
-	{
-		return position[ d ];
-	}
-
-	@Override
-	public void localize( final float[] p )
-	{
-		for ( int d = 0; d < p.length; ++d )
-			p[ d ] = position[ d ];
-	}
-
-	@Override
-	public void localize( final double[] p )
-	{
-		for ( int d = 0; d < p.length; ++d )
-			p[ d ] = position[ d ];
 	}
 }
