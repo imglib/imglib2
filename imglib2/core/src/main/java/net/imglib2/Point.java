@@ -10,6 +10,17 @@ public class Point implements Localizable, Positionable {
 	final protected long[] position;
 	
 	/**
+	 * Protected constructor that re-uses the passed position array.
+	 * 
+	 * @param position
+	 * @param x unused parameter that changes the method signature
+	 */
+	protected Point( final long[] position, final Object x )
+	{
+		this.position = position;
+	}
+	
+	/**
 	 * Create a point at 0 in <i>nDimensional</i> space.
 	 * @param nDimensions # of dimensions in the space
 	 */
@@ -172,5 +183,10 @@ public class Point implements Localizable, Positionable {
 		}
 		sb.append(")");
 		return sb.toString();
+	}
+	
+	static public Point wrap( final long[] position )
+	{
+		return new Point( position, null );
 	}
 }
