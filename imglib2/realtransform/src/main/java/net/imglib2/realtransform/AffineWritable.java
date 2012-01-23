@@ -28,6 +28,7 @@
 package net.imglib2.realtransform;
 
 
+
 /**
  * An <em>n</em>-dimensional affine transformation whose
  * <em>n</em>&times;(<em>n</em>+1) affine transformation matrix can be accessed
@@ -35,15 +36,38 @@ package net.imglib2.realtransform;
  *
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-public interface Affine extends InvertibleRealTransform
+public interface AffineWritable
 {
 	/**
-	 * Get a field of the <em>n</em>&times;(<em>n</em>+1) affine transformation
+	 * Set a field of the <em>n</em>&times;(<em>n</em>+1) affine transformation
 	 * matrix.
 	 * 
+	 * @param value
 	 * @param row
 	 * @param column
 	 * @return
 	 */
-	public double get( final int row, final int column );
+	public void set( final double value, final int row, final int column );
+	
+	/**
+	 * Set the <em>n</em>&times;(<em>n</em>+1) affine transformation matrix
+	 * with double values.
+	 * 
+	 * @param values
+	 * @param row
+	 * @param column
+	 * @return
+	 */
+	public void set( final double... values );
+	
+	/**
+	 * Set the <em>n</em>&times;(<em>n</em>+1) affine transformation matrix
+	 * with double values from a [row][column] addressed array.
+	 * 
+	 * @param values
+	 * @param row
+	 * @param column
+	 * @return
+	 */
+	public void set( final double[][] values );
 }

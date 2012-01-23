@@ -28,6 +28,7 @@
 package net.imglib2.realtransform;
 
 import net.imglib2.RealLocalizable;
+import net.imglib2.RealPoint;
 import net.imglib2.RealPositionable;
 import Jama.Matrix;
 
@@ -37,95 +38,80 @@ import Jama.Matrix;
  *
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-public abstract class AbstractAffineTransform implements Affine
+public abstract class AbstractAffineTransform implements AffineReadable, AffineWritable
 {
 	final protected int n;
-	final protected Matrix a, i;
+	
+	final protected Matrix a;
 	final protected double[] t;
+	
+	final protected RealPoint[] ds;
+	
+	protected AbstractAffineTransform( final int n, final Object x )
+	{
+		this.n = n;
+		a = new Matrix( n, n );
+		t = new double[ n ];
+		ds = new RealPoint[ n ];
+	}
+	
+	protected AbstractAffineTransform( final Matrix a, final double[] t )
+	{
+		assert
+			a.getRowDimension() == t.length &&
+			a.getColumnDimension() == t.length : "The passed arrays must be n*n and the t-vector n.";
+		
+		this.n = t.length;
+		this.a = a;
+		this.t = t;
+		ds = new RealPoint[ n ];
+		for ( int r = 0; r < n; ++r )
+			ds[ r ] = new RealPoint( n );
+		
+		updateDs();
+	}
+	
+	public AbstractAffineTransform( final Matrix matrix )
+	{
+		this( matrix.getRowDimension(), null );
+		
+		assert matrix.getRowDimension() == matrix.getColumnDimension() - 1 : "The passed affine matrix must be of the format (n-1)*n.";
+		
+		a.setMatrix( 0, n - 1, 0, n - 1, matrix );
+		for ( int r = 0; r < n; ++r )
+		{
+			t[ r ] = matrix.get( r, n );
+			ds[ r ] = new RealPoint( n );
+		}
+		updateDs();
+	}
 	
 	public AbstractAffineTransform( final int n )
 	{
 		this.n = n;
 		a = new Matrix( n, n );
+		ds = new RealPoint[ n ];
 		
 		for ( int r = 0; r < n; ++r )
+		{
+			final RealPoint d = new RealPoint( n );
 			a.set( r, r, 1.0 );
+			d.setPosition( 1.0, r );
+			ds[ r ] = d;
+		}
 		
 		t = new double[ n ];
-		i = a.copy();
 	}
 	
-	public AbstractAffineTransform( final Matrix matrix )
-	{
-		assert matrix.getRowDimension() == matrix.getColumnDimension() - 1 : "The passed affine matrix must be of the format (n-1)*n.";
-		
-		n = matrix.getRowDimension();
-		a = new Matrix( n, n );
-		a.setMatrix( 0, n - 1, 0, n - 1, matrix );
-		i = a.inverse();
-		t = new double[ n ];
-		for ( int r = 0; r < n; ++r )
-			t[ r ] = matrix.get( r, n );
-	}
 	
-	protected AbstractAffineTransform( final Matrix a, final Matrix i, final double[] t )
+	protected void updateDs()
 	{
-		assert
-			a.getRowDimension() == t.length &&
-			a.getColumnDimension() == t.length &&
-			i.getRowDimension() == t.length &&
-			i.getColumnDimension() == t.length : "The passed arrays must be n*n and the t-vector n*1.";
-		
-		this.n = t.length;
-		this.a = a;
-		this.i = i;
-		this.t = t;
-	}
-	
-	@Override
-	public void applyInverse( final double[] source, final double[] target )
-	{
-		assert source.length == n && target.length == n : "Source or target vector dimensions do not match with the transformation.";
-		
-		for ( int r = 0; r < n; ++r )
+		for ( int c = 0; c < n; ++c )
 		{
-			double ar = 0;
-			for ( int c = 0; c < n; ++c )
-				ar += ( target[ c ] - t[ c ] ) * i.get( r, c );
-			
-			source[ r ] = ar;
+			final RealPoint d = ds[ c ];
+			for ( int r = 0; r < n; ++r )
+				d.setPosition( a.get( r, c ), r );
 		}
-	}
-
-	@Override
-	public void applyInverse( final float[] source, final float[] target )
-	{
-		assert source.length == n && target.length == n : "Source or target vector dimensions do not match with the transformation.";
-		
-		for ( int r = 0; r < n; ++r )
-		{
-			double ar = 0;
-			for ( int c = 0; c < n; ++c )
-				ar += ( target[ c ] - t[ c ] ) * i.get( r, c );
-			
-			source[ r ] = ( float )ar;
-		}
-	}
-
-	@Override
-	public void applyInverse( final RealPositionable source, final RealLocalizable target )
-	{
-		assert source.numDimensions() == n && target.numDimensions() == n : "Source or target vector dimensions do not match with the transformation.";
-		
-		for ( int r = 0; r < n; ++r )
-		{
-			double ar = 0;
-			for ( int c = 0; c < n; ++c )
-				ar += ( target.getDoublePosition( c ) - t[ c ] ) * i.get( r, c );
-			
-			source.setPosition( ar, r );
-		}
-			
 	}
 
 	@Override
@@ -156,21 +142,6 @@ public abstract class AbstractAffineTransform implements Affine
 	}
 
 	@Override
-	public void apply( final float[] source, final float[] target )
-	{
-		assert source.length == n && target.length == n : "Source or target vector dimensions do not match with the transformation.";
-
-		for ( int r = 0; r < n; ++r )
-		{
-			double ar = 0;
-			for ( int c = 0; c < n; ++c )
-				ar += source[ c ] * a.get( r, c );
-			
-			target[ r ] = ( float )( ar + t[ r ] );
-		}
-	}
-
-	@Override
 	public void apply( final RealLocalizable source, final RealPositionable target )
 	{
 		assert source.numDimensions() == n && target.numDimensions() == n : "Source or target vector dimensions do not match with the transformation.";
@@ -192,5 +163,11 @@ public abstract class AbstractAffineTransform implements Affine
 			return t[ row ];
 		else
 			return a.get( row, column );
+	}
+	
+	@Override
+	public RealLocalizable d( final int d )
+	{
+		return ds[ d ];
 	}
 }

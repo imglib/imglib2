@@ -27,10 +27,7 @@
  */
 package net.imglib2.realtransform;
 
-import net.imglib2.AbstractRandomAccess;
 import net.imglib2.Interval;
-import net.imglib2.Point;
-import net.imglib2.RandomAccessible;
 import net.imglib2.RealInterval;
 import net.imglib2.RealRandomAccess;
 import net.imglib2.RealRandomAccessible;
@@ -40,8 +37,11 @@ import net.imglib2.RealRandomAccessible;
  *
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-public class RealTransformRandomAccessible< T, R extends RealTransform > extends RealTransformRealRandomAccessible< T, R > implements RandomAccessible< T >
+public class ConstantAffineRandomAccessible< T, R extends AffineReadable > extends AffineRandomAccessible< T, R >
 {
+	final protected AffineTransform constantAffine;
+	final protected double[][] ds;
+	
 	/**
 	 * {@link RealRandomAccess} that generates its samples from a target
 	 * {@link RealRandomAccessible} at coordinates transformed by a
@@ -49,90 +49,60 @@ public class RealTransformRandomAccessible< T, R extends RealTransform > extends
 	 *
 	 * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
 	 */
-	public class RealTransformRandomAccess extends AbstractRandomAccess< T >
+	public class AffineRandomAccess extends AffineRandomAccessible< T, R >.AffineRandomAccess
 	{
-		final protected Point sourcePosition; 
-		final protected RealRandomAccess< T > targetAccess;
-		
-		protected RealTransformRandomAccess()
+		protected AffineRandomAccess()
 		{
-			super( transform.numSourceDimensions() );
-			sourcePosition = Point.wrap( position );
-			this.targetAccess = target.realRandomAccess();
+			super();
 		}
 		
-		final protected void apply()
+		@Override
+		protected void scaleMove( final double distance, final int d )
 		{
-			transform.apply( sourcePosition, targetAccess );
+			final double[] dd = ds[ d ];
+			for ( int ddd = 0; ddd < n; ++ddd )
+				move[ ddd ] = distance * dd[ ddd ];
 		}
-
+		
 		@Override
 		public void fwd( final int d )
 		{
 			++position[ d ];
+			targetAccess.move( ds[ d ] );
 		}
 
+
 		@Override
-		public void bck( final int d )
+		public AffineRandomAccess copy()
 		{
-			--position[ d ];
+			return new AffineRandomAccess();
 		}
 
 		@Override
-		public void move( final long distance, final int d )
-		{
-			position[ d ] += distance;
-		}
-
-		@Override
-		public void setPosition( final int[] pos )
-		{
-			for ( int d = 0; d < n; ++d )
-				position[ d ] = pos[ d ];
-		}
-
-		@Override
-		public void setPosition( final long[] pos )
-		{
-			for ( int d = 0; d < n; ++d )
-				position[ d ] = pos[ d ];
-		}
-
-		@Override
-		public void setPosition( final long pos, final int d )
-		{
-			position[ d ] = pos;
-		}
-
-		@Override
-		public T get()
-		{
-			apply();
-			return targetAccess.get();
-		}
-
-		@Override
-		public RealTransformRandomAccess copy()
-		{
-			return new RealTransformRandomAccess();
-		}
-
-		@Override
-		public AbstractRandomAccess< T > copyRandomAccess()
+		public AffineRandomAccess copyRandomAccess()
 		{
 			return copy();
 		}
 	}
 	
-	public RealTransformRandomAccessible( final RealRandomAccessible< T > target, final R transform )
+	public ConstantAffineRandomAccessible( final RealRandomAccessible< T > target, final R transform )
 	{
 		super( target, transform );
+		constantAffine = new AffineTransform( target.numDimensions() );
+		constantAffine.set( transform );
+		ds = new double[ constantAffine.numSourceDimensions() ][];
+		for ( int r = 0; r < ds.length; ++r )
+		{
+			final double[] d = new double[ ds.length ];
+			constantAffine.d( r ).localize( d );
+			ds[ r ] = d;
+		}
 	}
-
+	
 	@Override
-	public RealTransformRandomAccess randomAccess()
+	public AffineRandomAccess randomAccess()
 	{
-		return new RealTransformRandomAccess();
+		return new AffineRandomAccess();
 	}
 
 	/**
@@ -140,8 +110,8 @@ public class RealTransformRandomAccessible< T, R extends RealTransform > extends
 	 * boundaries of a transferred {@link RealInterval}.
 	 */
 	@Override
-	public RealTransformRandomAccess randomAccess( final Interval interval )
+	public AffineRandomAccess randomAccess( final Interval interval )
 	{
 		return randomAccess();
-	}	
+	}
 }

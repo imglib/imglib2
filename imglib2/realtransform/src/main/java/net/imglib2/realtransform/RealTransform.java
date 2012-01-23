@@ -39,7 +39,8 @@ import net.imglib2.RealPositionable;
  * <em>target</em> vector.
  * </p>
  * 
- * @author Tobias Pietzsch, Stephan Saalfeld
+ * @author Tobias Pietzsch
+ * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
 public interface RealTransform
 {
@@ -58,7 +59,8 @@ public interface RealTransform
 	public int numTargetDimensions();
 
 	/**
-	 * Apply the {@link RealTransform} to a source vector to obtain a target vector.
+	 * Apply the {@link RealTransform} to a source vector to obtain a target
+	 * vector.  Source and target must not reference the same vector.
 	 * 
 	 * @param source
 	 *            source coordinates.
@@ -68,7 +70,8 @@ public interface RealTransform
 	public void apply( final double[] source, final double[] target );
 
 	/**
-	 * Apply the {@link RealTransform} to a source vector to obtain a target vector.
+	 * Apply the {@link RealTransform} to a source vector to obtain a target
+	 * vector.  Source and target must not reference the same vector.
 	 * 
 	 * @param source
 	 *            source coordinates.
@@ -78,8 +81,9 @@ public interface RealTransform
 	public void apply( final float[] source, final float[] target );
 
 	/**
-	 * Apply the {@link RealTransform} to a source {@link RealLocalizable} to obtain a
-	 * target {@link RealPositionable}.
+	 * Apply the {@link RealTransform} to a source {@link RealLocalizable} to
+	 * obtain a target {@link RealPositionable}.  Source and target must not
+	 * reference the same vector.
 	 * 
 	 * @param source
 	 *            source coordinates.
