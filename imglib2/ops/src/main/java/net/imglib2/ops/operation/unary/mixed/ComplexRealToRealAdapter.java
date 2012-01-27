@@ -39,6 +39,7 @@ import net.imglib2.type.numeric.RealType;
 // and passing it to a ConverterFunction in ops.function.general.
 
 /**
+ * Sets an output real to the real component of a complex number.
  * 
  * @author Barry DeZonia
  * 

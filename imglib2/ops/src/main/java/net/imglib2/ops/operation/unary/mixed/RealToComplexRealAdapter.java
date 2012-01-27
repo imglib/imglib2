@@ -39,6 +39,9 @@ import net.imglib2.type.numeric.RealType;
 // and passing it to a ConverterFunction in ops.function.general.
 
 /**
+ * Sets an output complex number from an input real number. The imaginary
+ * component of the output will be 0. The real component of the output will
+ * equal the value of the real input.
  * 
  * @author Barry DeZonia
  * 
