@@ -12,6 +12,9 @@ public class CopyImgOperation<T extends Type<T>> implements
 
 	}
 
+	// NOTE / TODO - incomplete. Assumes equal iteration order and sizes between
+	// input and output.
+	
 	@Override
 	public Img<T> compute(Img<T> input, Img<T> output) {
 		Cursor<T> c1 = input.cursor();
