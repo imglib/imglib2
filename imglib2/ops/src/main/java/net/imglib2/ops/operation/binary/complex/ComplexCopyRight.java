@@ -33,7 +33,9 @@ import net.imglib2.ops.BinaryOperation;
 import net.imglib2.type.numeric.ComplexType;
 
 /**
- * 
+ * Sets a complex number output to the right (or second) of two complex number
+ * inputs.
+ *
  * @author Barry DeZonia
  * 
  */

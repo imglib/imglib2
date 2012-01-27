@@ -35,6 +35,8 @@ import net.imglib2.type.numeric.ComplexType;
 //Handbook of Mathematics and Computational Science, Harris & Stocker, Springer, 2006
 
 /**
+ * Sets a complex number output to the division of a complex number by a second
+ * complex number.
  * 
  * @author Barry DeZonia
  * 

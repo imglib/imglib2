@@ -35,6 +35,9 @@ import net.imglib2.type.numeric.ComplexType;
 // NB - this method required by IJ2 for IJ1 compatibility
 
 /**
+ * A real operation that sets the real component of an output. The output value
+ * is determined based upon input 2. If input 2 is zero then output is assigned
+ * from input 1. Otherwise output is assigned from input 2.
  * 
  * @author Barry DeZonia
  * 

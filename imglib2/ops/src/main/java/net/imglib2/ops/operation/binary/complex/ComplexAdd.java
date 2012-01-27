@@ -35,6 +35,7 @@ import net.imglib2.type.numeric.ComplexType;
 //Handbook of Mathematics and Computational Science, Harris & Stocker, Springer, 2006
 
 /**
+ * Sets a complex number output to the sum of two complex number inputs.
  * 
  * @author Barry DeZonia
  * 

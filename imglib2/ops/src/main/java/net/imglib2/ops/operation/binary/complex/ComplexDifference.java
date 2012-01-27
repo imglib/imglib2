@@ -33,6 +33,8 @@ import net.imglib2.ops.BinaryOperation;
 import net.imglib2.type.numeric.ComplexType;
 
 /**
+ * Sets a complex number output to the (positive) difference of two complex
+ * number inputs.
  * 
  * @author Barry DeZonia
  * 

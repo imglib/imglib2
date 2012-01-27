@@ -33,6 +33,7 @@ import net.imglib2.ops.BinaryOperation;
 import net.imglib2.type.logic.BitType;
 
 /**
+ * Sets a BitType output to the XOR of two BitType numbers.
  * 
  * @author Barry DeZonia
  * 

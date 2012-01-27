@@ -35,7 +35,10 @@ import net.imglib2.type.numeric.ComplexType;
 //Handbook of Mathematics and Computational Science, Harris & Stocker, Springer, 2006
 
 /**
- * 
+ * Sets a complex number output to the difference (signed) of two complex number
+ * inputs. The subtraction is calculated by subtracting the second number from
+ * the first.
+ *
  * @author Barry DeZonia
  * 
  */

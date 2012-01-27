@@ -33,7 +33,9 @@ import net.imglib2.ops.BinaryOperation;
 import net.imglib2.type.logic.BitType;
 
 /**
- * 
+ * Sets a BitType output to the result of ANDing a first BitType value with the
+ * NOT of a second BitType number.
+ *  
  * @author Barry DeZonia
  * 
  */

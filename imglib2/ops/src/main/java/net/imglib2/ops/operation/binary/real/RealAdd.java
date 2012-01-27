@@ -33,6 +33,8 @@ import net.imglib2.ops.BinaryOperation;
 import net.imglib2.type.numeric.ComplexType;
 
 /**
+ * A real operation that sets the real component of an output to the addition of
+ * the real components of two inputs.
  * 
  * @author Barry DeZonia
  * 
