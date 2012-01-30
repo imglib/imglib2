@@ -36,6 +36,8 @@ import net.imglib2.type.numeric.real.DoubleType;
 //verified formula with Mathworld's definition for Inverse Cosecant
 
 /**
+ * Sets the real component of an output complex number to the inverse cosecant
+ * of the real component of an input complex number.
  * 
  * @author Barry DeZonia
  * 

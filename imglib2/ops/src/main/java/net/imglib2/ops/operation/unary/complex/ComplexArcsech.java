@@ -36,6 +36,8 @@ import net.imglib2.type.numeric.complex.ComplexDoubleType;
 // Formula taken from MATLAB documentation
 
 /**
+ * Sets an output complex number to the inverse hyperbolic secant of an
+ * input complex number.
  * 
  * @author Barry DeZonia
  * 

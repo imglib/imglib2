@@ -33,6 +33,10 @@ import net.imglib2.ops.UnaryOperation;
 import net.imglib2.type.numeric.ComplexType;
 
 /**
+ * Sets the real component of an output complex number to the division of
+ * the real component of an input complex number by a constant value. The
+ * constant value is specified in the constructor. In the case of division
+ * by zero the value is set to a value also specified in the constructor.
  * 
  * @author Barry DeZonia
  * 

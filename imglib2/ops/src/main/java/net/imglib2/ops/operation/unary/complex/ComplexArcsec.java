@@ -36,6 +36,8 @@ import net.imglib2.type.numeric.complex.ComplexDoubleType;
 //verified formula with Mathworld's definition for Inverse Secant
 
 /**
+ * Sets an output complex number to the inverse secant of an input complex
+ * number.
  * 
  * @author Barry DeZonia
  * 

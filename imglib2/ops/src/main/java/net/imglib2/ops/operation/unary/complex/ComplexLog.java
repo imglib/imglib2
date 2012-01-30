@@ -38,6 +38,7 @@ import net.imglib2.type.numeric.ComplexType;
 // Note - this uses the formula for the log of the principal branch.
 
 /**
+ * Sets an output complex number to the log of an input complex number.
  * 
  * @author Barry DeZonia
  * 

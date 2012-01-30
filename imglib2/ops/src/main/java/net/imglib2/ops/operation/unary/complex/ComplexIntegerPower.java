@@ -36,6 +36,8 @@ import net.imglib2.type.numeric.ComplexType;
 //Handbook of Mathematics and Computational Science, Harris & Stocker, Springer, 2006
 
 /**
+ * Sets an output complex number to the raising of a complex number to an
+ * integer power. The power is set in the constructor.
  * 
  * @author Barry DeZonia
  * 

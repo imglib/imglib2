@@ -33,6 +33,7 @@ import net.imglib2.ops.UnaryOperation;
 import net.imglib2.type.numeric.ComplexType;
 
 /**
+ * Sets an output complex number to the value of an input complex number.
  * 
  * @author Barry DeZonia
  * 

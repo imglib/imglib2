@@ -33,6 +33,9 @@ import net.imglib2.ops.UnaryOperation;
 import net.imglib2.type.numeric.ComplexType;
 
 /**
+ * Sets the real component of an output complex number to a scaling of the real
+ * component of an input complex number into a new range. The range parameters
+ * are specifed in the constructor.
  * 
  * @author Barry DeZonia
  * 
@@ -46,6 +49,13 @@ public final class RealConvert
 	private double outputMin;
 	private double outputMax;
 
+	/**
+	 * Constructor.
+	 * @param inputMin - the minimum value of the input range
+	 * @param inputMax - the maximum value of the input range
+	 * @param outputMin - the minimum value of the output range
+	 * @param outputMax - the maximum value of the output range
+	 */
 	public RealConvert(double inputMin, double inputMax, double outputMin,
 			double outputMax) {
 		this.inputMin = inputMin;

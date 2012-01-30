@@ -33,6 +33,10 @@ import net.imglib2.ops.UnaryOperation;
 import net.imglib2.type.numeric.ComplexType;
 
 /**
+ * Sets the real component of an output complex number to the real component of
+ * an input complex number unless it exceeds a maximum value. If it exceeds the
+ * maximum value then it sets the output real component to that maximum value.
+ * The maximum value is specified in the constructor.
  * 
  * @author Barry DeZonia
  * 

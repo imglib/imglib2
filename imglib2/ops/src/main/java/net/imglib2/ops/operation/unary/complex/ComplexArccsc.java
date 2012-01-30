@@ -36,6 +36,8 @@ import net.imglib2.type.numeric.complex.ComplexDoubleType;
 // verified formula with Mathworld's definition for Inverse Cosecant
 
 /**
+ * Sets an output complex number to the inverse cosecant of an input
+ * complex number.
  * 
  * @author Barry DeZonia
  * 

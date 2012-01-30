@@ -33,6 +33,8 @@ import net.imglib2.ops.UnaryOperation;
 import net.imglib2.type.numeric.ComplexType;
 
 /**
+ * Sets the real component of an output complex number to the real component of
+ * an input complex number.
  * 
  * @author Barry DeZonia
  * 

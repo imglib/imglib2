@@ -33,6 +33,9 @@ import net.imglib2.ops.UnaryOperation;
 import net.imglib2.type.numeric.ComplexType;
 
 /**
+ * Sets the real component of an output complex number to the inversion of
+ * the real component of an input complex number about a range. The range is
+ * specifed in the constructor.
  * 
  * @author Barry DeZonia
  * 
@@ -43,6 +46,11 @@ public final class RealInvert
 	private double actualMin;
 	private double actualMax;
 
+	/**
+	 * Constructor.
+	 * @param actualMin - minimum value of the range to invert about
+	 * @param actualMax - maximum value of the range to invert about
+	 */
 	public RealInvert(final double actualMin, final double actualMax)
 	{
 		this.actualMax = actualMax;

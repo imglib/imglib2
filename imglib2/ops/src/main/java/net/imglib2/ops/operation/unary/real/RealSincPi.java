@@ -35,6 +35,9 @@ import net.imglib2.type.numeric.ComplexType;
 //formula from mathworld.com documentation
 
 /**
+ * Sets the real component of an output complex number to the since (pi version)
+ * of the real component of an input complex number. The pi version of sin is
+ * defined as sin(x*pi) / (x*pi).
  * 
  * @author Barry DeZonia
  * 

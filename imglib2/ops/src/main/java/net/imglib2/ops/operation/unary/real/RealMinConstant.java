@@ -33,6 +33,10 @@ import net.imglib2.ops.UnaryOperation;
 import net.imglib2.type.numeric.ComplexType;
 
 /**
+ * Sets the real component of an output complex number to the real component of
+ * an input complex number unless it is less then a minimum value. If it is less
+ * than the minimum value then it sets the output real component to that minimum
+ * value. The minimum value is specified in the constructor.
  * 
  * @author Barry DeZonia
  * 

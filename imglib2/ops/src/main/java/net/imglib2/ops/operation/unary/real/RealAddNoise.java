@@ -35,6 +35,9 @@ import net.imglib2.ops.UnaryOperation;
 import net.imglib2.type.numeric.ComplexType;
 
 /**
+ * Sets the real component of an output complex number to the addition of
+ * the real component of an input complex number with an amount of Gaussian
+ * noise. The noise parameters are specified in the constructor.
  * 
  * @author Barry DeZonia
  * 
@@ -47,6 +50,12 @@ public final class RealAddNoise
 	private final double rangeStdDev;
 	private final Random rng;
 
+	/**
+	 * Constructor specifying noise parameters.
+	 * @param min - the desired lower bound on the output pixel values
+	 * @param max - the desired upper bound on the output pixel values
+	 * @param stdDev - the stand deviation of the gaussian random variable
+	 */
 	public RealAddNoise(double min, double max, double stdDev) {
 		this.rangeMin = min;
 		this.rangeMax = max;

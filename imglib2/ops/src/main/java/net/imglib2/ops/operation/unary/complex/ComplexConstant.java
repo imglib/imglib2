@@ -33,6 +33,8 @@ import net.imglib2.ops.UnaryOperation;
 import net.imglib2.type.numeric.ComplexType;
 
 /**
+ * Sets an output complex number to a constant. The constant is specified in
+ * the constructor.
  * 
  * @author Barry DeZonia
  * 

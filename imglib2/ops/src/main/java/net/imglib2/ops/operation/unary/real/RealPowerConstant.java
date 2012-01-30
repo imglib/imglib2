@@ -34,6 +34,9 @@ import net.imglib2.type.numeric.ComplexType;
 
 
 /**
+ * Sets the real component of an output complex number to the raising of
+ * the real component of an input complex number to a constant value. The
+ * constant value is specified in the constructor.
  * 
  * @author Barry DeZonia
  *

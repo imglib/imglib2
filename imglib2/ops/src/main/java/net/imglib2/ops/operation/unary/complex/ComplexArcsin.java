@@ -40,6 +40,8 @@ import net.imglib2.type.numeric.complex.ComplexDoubleType;
 //Handbook of Mathematics and Computational Science, Harris & Stocker, Springer, 2006
 
 /**
+ * Sets an output complex number to the inverse sine of an input complex
+ * number.
  * 
  * @author Barry DeZonia
  * 

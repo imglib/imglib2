@@ -33,6 +33,7 @@ import net.imglib2.ops.UnaryOperation;
 import net.imglib2.type.numeric.ComplexType;
 
 /**
+ * Sets an output complex number to the complex number zero.
  * 
  * @author Barry DeZonia
  * 

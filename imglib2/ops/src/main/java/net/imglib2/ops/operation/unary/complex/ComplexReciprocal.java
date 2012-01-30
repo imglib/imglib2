@@ -35,6 +35,8 @@ import net.imglib2.type.numeric.ComplexType;
 //Complex Variables and Applications, Brown and Churchill, 7th edition
 
 /**
+ * Sets an output complex number to the reciprocal of an input complex
+ * number.
  * 
  * @author Barry DeZonia
  *

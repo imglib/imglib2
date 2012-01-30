@@ -35,6 +35,8 @@ import net.imglib2.type.numeric.ComplexType;
 //Handbook of Mathematics and Computational Science, Harris & Stocker, Springer, 2006
 
 /**
+ * Sets the real component of an output complex number to the inverse hyperbolic
+ * cosecant of the real component of an input complex number.
  * 
  * @author Barry DeZonia
  * 

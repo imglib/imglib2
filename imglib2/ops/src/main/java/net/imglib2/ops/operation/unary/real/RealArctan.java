@@ -35,6 +35,8 @@ import net.imglib2.type.numeric.ComplexType;
 // DONE - no complex formula to verify
 
 /**
+ * Sets the real component of an output complex number to the inverse tangent of
+ * the real component of an input complex number.
  * 
  * @author Barry DeZonia
  * 

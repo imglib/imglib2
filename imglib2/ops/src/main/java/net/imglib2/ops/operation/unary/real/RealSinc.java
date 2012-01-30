@@ -35,6 +35,9 @@ import net.imglib2.type.numeric.ComplexType;
 //formula from mathworld.com documentation
 
 /**
+ * Sets the real component of an output complex number to the sinc value of
+ * the real component of an input complex number. The sinc function is defined
+ * as sin(x) / x.
  * 
  * @author Barry DeZonia
  * 

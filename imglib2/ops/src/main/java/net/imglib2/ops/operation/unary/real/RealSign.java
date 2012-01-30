@@ -33,6 +33,9 @@ import net.imglib2.ops.UnaryOperation;
 import net.imglib2.type.numeric.ComplexType;
 
 /**
+ * Sets the real component of an output complex number -1, 0, or 1 depending
+ * upon the relationship of the real component of an input complex number to
+ * zero. -1 if less than zero. 1 if greater than zero. 0 otherwise.
  * 
  * @author Barry DeZonia
  * 
