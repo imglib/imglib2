@@ -312,6 +312,16 @@ public class AffineTransform3D implements AffineReadable, Concatenable< AffineTr
 	}
 	
 	@Override
+	public double[] getRowPackedCopy()
+	{
+		return new double[]{
+				a.m00, a.m01, a.m02, a.m03,
+				a.m10, a.m11, a.m12, a.m13,
+				a.m20, a.m21, a.m22, a.m23
+		};
+	}
+	
+	@Override
 	public Class< AffineTransform3D > getConcatenableClass()
 	{
 		return AffineTransform3D.class;

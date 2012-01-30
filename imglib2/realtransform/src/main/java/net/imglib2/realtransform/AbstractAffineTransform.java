@@ -166,6 +166,19 @@ public abstract class AbstractAffineTransform implements AffineReadable, AffineW
 	}
 	
 	@Override
+	public double[] getRowPackedCopy()
+	{
+		final double[] copy = new double[ n * n + n ];
+		for ( int r = 0, i = 0; r < n; ++r, ++i )
+		{
+			for ( int c = 0; c < n; ++c, ++i )
+				copy[ i ] = a.get( r, c );
+			copy[ i ] = t[ r ];
+		}
+		return copy;
+	}
+	
+	@Override
 	public RealLocalizable d( final int d )
 	{
 		return ds[ d ];

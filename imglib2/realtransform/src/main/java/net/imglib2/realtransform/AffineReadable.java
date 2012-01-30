@@ -49,6 +49,8 @@ public interface AffineReadable extends InvertibleRealTransform
 	 */
 	public double get( final int row, final int column );
 	
+	public double[] getRowPackedCopy();
+	
 	/**
 	 * Get the constant partial differential vector for dimension d.
 	 * 
