@@ -35,7 +35,7 @@ import net.imglib2.type.numeric.ComplexType;
 /**
  * Sets the real component of an output complex number to the inversion of
  * the real component of an input complex number about a range. The range is
- * specifed in the constructor.
+ * specified in the constructor.
  * 
  * @author Barry DeZonia
  * 

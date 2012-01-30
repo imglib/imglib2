@@ -35,7 +35,7 @@ import net.imglib2.type.numeric.ComplexType;
 /**
  * Sets the real component of an output complex number to a scaling of the real
  * component of an input complex number into a new range. The range parameters
- * are specifed in the constructor.
+ * are specified in the constructor.
  * 
  * @author Barry DeZonia
  * 

@@ -35,7 +35,7 @@ import net.imglib2.type.numeric.ComplexType;
 // Complex Variables and Applications, Brown and Churchill, 7th edition
 
 /**
- * Returns a complex number representing the exponentiation of an input complex
+ * Sets an output complex number to the exponentiation of an input complex
  * number (the constant e raised to a complex power).
  * 
  * @author Barry DeZonia
