@@ -217,22 +217,65 @@ public class Interactive3DRotationTest implements PlugIn, KeyListener, MouseWhee
 		
 		private double perspectiveX( final double[] p, final double d, final double w2 )
 		{
-			return ( p[ 0 ] - w2 ) / 10 / ( p[ 2 ] + d ) * d + w2 / 5;
+			return ( p[ 0 ] - w2 ) / 10 / ( p[ 2 ] / 10 + d ) * d + w2 / 5;
 		}
 		
 		private double perspectiveY( final double[] p, final double d, final double h2 )
 		{
-			return ( p[ 1 ] - h2 ) / 10 / ( p[ 2 ] + d ) * d + h2 / 5;
+			return ( p[ 1 ] - h2 ) / 10 / ( p[ 2 ] / 10 + d ) * d + h2 / 5;
+		}
+		
+		private void splitEdge(
+				final double[] a,
+				final double[] b,
+				final GeneralPath before,
+				final GeneralPath behind,
+				final double d2,
+				final double w2,
+				final double h2 )
+		{
+			final double[] t = new double[ 3 ];
+			if ( a[ 2 ] <= 0 )
+			{
+				before.moveTo( perspectiveX( a, d2, w2 ), perspectiveY( a, d2, h2 ) );
+				if ( b[ 2 ] <= 0 )
+					before.lineTo( perspectiveX( b, d2, w2 ), perspectiveY( b, d2, h2 ) );					
+				else
+				{
+					final double d = a[ 2 ] / ( a[ 2 ] - b[ 2 ] );
+					t[ 0 ] = ( b[ 0 ] - a[ 0 ] ) * d + a[ 0 ];
+					t[ 1 ] = ( b[ 1 ] - a[ 1 ] ) * d + a[ 1 ];
+					before.lineTo( perspectiveX( t, d2, w2 ), perspectiveY( t, d2, h2 ) );
+					behind.moveTo( perspectiveX( t, d2, w2 ), perspectiveY( t, d2, h2 ) );
+					behind.lineTo( perspectiveX( b, d2, w2 ), perspectiveY( b, d2, h2 ) );
+				}
+			}
+			else
+			{
+				behind.moveTo( perspectiveX( a, d2, w2 ), perspectiveY( a, d2, h2 ) );
+				if ( b[ 2 ] > 0 )
+					behind.lineTo( perspectiveX( b, d2, w2 ), perspectiveY( b, d2, h2 ) );					
+				else
+				{
+					final double d = a[ 2 ] / ( a[ 2 ] - b[ 2 ] );
+					t[ 0 ] = ( b[ 0 ] - a[ 0 ] ) * d + a[ 0 ];
+					t[ 1 ] = ( b[ 1 ] - a[ 1 ] ) * d + a[ 1 ];
+					behind.lineTo( perspectiveX( t, d2, w2 ), perspectiveY( t, d2, h2 ) );
+					before.moveTo( perspectiveX( t, d2, w2 ), perspectiveY( t, d2, h2 ) );
+					before.lineTo( perspectiveX( b, d2, w2 ), perspectiveY( b, d2, h2 ) );
+				}
+			}
+			
 		}
 		
 		public void visualizeOrientation()
 		{
-			final double w = img.dimension( 0 );
-			final double h = img.dimension( 1 ) * yScale;
-			final double d = img.dimension( 2 ) * zScale;
-			final double w2 = w / 2;
-			final double h2 = h / 2;
-			final double d2 = 10 * d;
+			final double w = img.dimension( 0 ) - 1;
+			final double h = img.dimension( 1 ) - 1;
+			final double d = img.dimension( 2 ) - 1;
+			final double w2 = ( w + 1 ) / 2.0;
+			final double h2 = ( h + 1 ) / 2.0 * yScale;
+			final double d2 = d ;
 			
 			final double[] p000 = new double[]{ 0, 0, 0 };
 			final double[] p100 = new double[]{ w, 0, 0 };
@@ -262,26 +305,22 @@ public class Interactive3DRotationTest implements PlugIn, KeyListener, MouseWhee
 			reducedAffineCopy.apply( p111, q111 );
 			
 			final GeneralPath box = new GeneralPath();
-			box.moveTo( perspectiveX( q000, d2, w2 ), perspectiveY( q000, d2, h2 ) );
-			box.lineTo( perspectiveX( q100, d2, w2 ), perspectiveY( q100, d2, h2 ) );
-			box.lineTo( perspectiveX( q110, d2, w2 ), perspectiveY( q110, d2, h2 ) );
-			box.lineTo( perspectiveX( q010, d2, w2 ), perspectiveY( q010, d2, h2 ) );
-			box.lineTo( perspectiveX( q000, d2, w2 ), perspectiveY( q000, d2, h2 ) );
+			final GeneralPath boxBehind = new GeneralPath();
 			
-			box.lineTo( perspectiveX( q001, d2, w2 ), perspectiveY( q001, d2, h2 ) );
-			box.lineTo( perspectiveX( q101, d2, w2 ), perspectiveY( q101, d2, h2 ) );
-			box.lineTo( perspectiveX( q111, d2, w2 ), perspectiveY( q111, d2, h2 ) );
-			box.lineTo( perspectiveX( q011, d2, w2 ), perspectiveY( q011, d2, h2 ) );
-			box.lineTo( perspectiveX( q001, d2, w2 ), perspectiveY( q001, d2, h2 ) );
+			splitEdge( q000, q100, box, boxBehind, d2, w2, h2 );
+			splitEdge( q100, q110, box, boxBehind, d2, w2, h2 );
+			splitEdge( q110, q010, box, boxBehind, d2, w2, h2 );
+			splitEdge( q010, q000, box, boxBehind, d2, w2, h2 );
 			
-			box.moveTo( perspectiveX( q100, d2, w2 ), perspectiveY( q100, d2, h2 ) );
-			box.lineTo( perspectiveX( q101, d2, w2 ), perspectiveY( q101, d2, h2 ) );
+			splitEdge( q001, q101, box, boxBehind, d2, w2, h2 );
+			splitEdge( q101, q111, box, boxBehind, d2, w2, h2 );
+			splitEdge( q111, q011, box, boxBehind, d2, w2, h2 );
+			splitEdge( q011, q001, box, boxBehind, d2, w2, h2 );
 			
-			box.moveTo( perspectiveX( q010, d2, w2 ), perspectiveY( q010, d2, h2 ) );
-			box.lineTo( perspectiveX( q011, d2, w2 ), perspectiveY( q011, d2, h2 ) );
-			
-			box.moveTo( perspectiveX( q110, d2, w2 ), perspectiveY( q110, d2, h2 ) );
-			box.lineTo( perspectiveX( q111, d2, w2 ), perspectiveY( q111, d2, h2 ) );
+			splitEdge( q000, q001, box, boxBehind, d2, w2, h2 );
+			splitEdge( q100, q101, box, boxBehind, d2, w2, h2 );
+			splitEdge( q110, q111, box, boxBehind, d2, w2, h2 );
+			splitEdge( q010, q011, box, boxBehind, d2, w2, h2 );
 			
 			/* virtual slice canvas */
 			final GeneralPath canvas = new GeneralPath();
@@ -289,14 +328,17 @@ public class Interactive3DRotationTest implements PlugIn, KeyListener, MouseWhee
 			canvas.lineTo( perspectiveX( p100, d2, w2 ), perspectiveY( p100, d2, h2 ) );
 			canvas.lineTo( perspectiveX( p110, d2, w2 ), perspectiveY( p110, d2, h2 ) );
 			canvas.lineTo( perspectiveX( p010, d2, w2 ), perspectiveY( p010, d2, h2 ) );
-			canvas.lineTo( perspectiveX( p000, d2, w2 ), perspectiveY( p000, d2, h2 ) );
+			canvas.closePath();
 			
 			final Image image = imp.getImage();
 			final Graphics2D graphics = ( Graphics2D )image.getGraphics();
-			graphics.setPaint( Color.YELLOW );
+			graphics.setPaint( Color.MAGENTA );
+			graphics.draw( boxBehind );
+			graphics.setPaint( new Color( 0x80ffffff, true ) );
+			graphics.fill( canvas );
+			graphics.setPaint( Color.GREEN );
 			graphics.draw( box );
-			graphics.setPaint( Color.RED );
-			graphics.draw( canvas );
+			
 		}
 	}
 	
@@ -383,10 +425,11 @@ public class Interactive3DRotationTest implements PlugIn, KeyListener, MouseWhee
 		yScale = imgPlus.calibration( 1 ) / imgPlus.calibration( 0 );
 		zScale = imgPlus.calibration( 2 ) / imgPlus.calibration( 0 );
 		
-		currentSlice = ( imgPlus.dimension( 2 ) / 2 - 0.5 ) * zScale;
 		final int w = ( int )img.dimension( 0 );
 		final int h = ( int )img.dimension( 1 );
 		final int d = ( int )img.dimension( 2 );
+		
+		currentSlice = ( d / 2.0 - 0.5 ) * zScale;
 		
 		/* un-scale */
 		final AffineTransform3D unScale = new AffineTransform3D();
@@ -524,22 +567,22 @@ public class Interactive3DRotationTest implements PlugIn, KeyListener, MouseWhee
 			final float v = keyModfiedSpeed( e.getModifiersEx() );
 			if ( e.getKeyCode() == KeyEvent.VK_LEFT )
 			{
-				rotate( axis, -v );
+				rotate( axis, v );
 				update();
 			}
 			else if ( e.getKeyCode() == KeyEvent.VK_RIGHT )
 			{
-				rotate( axis, v );
+				rotate( axis, -v );
 				update();
 			}
 			else if ( e.getKeyCode() == KeyEvent.VK_COMMA )
 			{
-				shift( -v );
+				shift( v );
 				update();
 			}
 			else if ( e.getKeyCode() == KeyEvent.VK_PERIOD )
 			{
-				shift( v );
+				shift( -v );
 				update();
 			}
 			else if ( e.getKeyCode() == KeyEvent.VK_I )
@@ -617,7 +660,7 @@ public class Interactive3DRotationTest implements PlugIn, KeyListener, MouseWhee
 	public void mouseWheelMoved( final MouseWheelEvent e )
 	{
 		final float v = keyModfiedSpeed( e.getModifiersEx() );
-		final int s = e.getWheelRotation();
+		final int s = -e.getWheelRotation();
 		shift( v * s );
 		update();		
 	}
@@ -629,7 +672,7 @@ public class Interactive3DRotationTest implements PlugIn, KeyListener, MouseWhee
 		dX = oX - e.getX();
 		dY = oY - e.getY();
 		rotation.set( mouseRotation );
-		rotate( 0, dY * v );
+		rotate( 0, -dY * v );
 		rotate( 1, dX * v );
 		update();
 	}
