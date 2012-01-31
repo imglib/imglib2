@@ -620,21 +620,19 @@ public class Interactive3DRotationTest implements PlugIn, KeyListener, MouseWhee
 				IJ.showMessage(
 						"Interactive Stack Rotation",
 						"Mouse control:" + NL + " " + NL +
-						"Pan and tilt the stack by dragging the image in the canvas and" + NL +
-						"browse alongside the z-axis using the mouse-wheel and the slice bar." + NL + " " + NL +
+						"Pan and tilt the volume by dragging the image in the canvas and" + NL +
+						"browse alongside the z-axis using the mouse-wheel." + NL + " " + NL +
 						"Key control:" + NL + " " + NL +
 						"X - Select x-axis as rotation axis." + NL +
 						"Y - Select y-axis as rotation axis." + NL +
 						"Z - Select z-axis as rotation axis." + NL +
-						"CURSOR LEFT - Rotate counter-clockwise around the choosen rotation axis." + NL +
-						"CURSOR RIGHT - Rotate clockwise around the choosen rotation axis." + NL +
+						"CURSOR LEFT - Rotate clockwise around the choosen rotation axis." + NL +
+						"CURSOR RIGHT - Rotate counter-clockwise around the choosen rotation axis." + NL +
 						"./> - Forward alongside z-axis." + NL +
 						",/< - Backward alongside z-axis." + NL +
 						"SHIFT - Rotate and browse 10x faster." + NL +
 						"CTRL - Rotate and browse 10x slower." + NL +
-						"CURSOR RIGHT - Rotate clockwise around the choosen rotation axis." + NL +
-						"ENTER - Apply the rotation and render the full stack." + NL +
-						"ESC - Return to the original stack." + NL +
+						"ENTER/ESC - Return." + NL +
 						"I - Toggle interpolation." + NL +
 						"E - Export the current rotation to the log window." );
 			}
