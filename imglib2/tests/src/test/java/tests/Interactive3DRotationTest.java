@@ -33,6 +33,7 @@ import net.imglib2.img.ImgPlus;
 import net.imglib2.img.array.ArrayImgFactory;
 import net.imglib2.interpolation.Interpolant;
 import net.imglib2.interpolation.InterpolatorFactory;
+import net.imglib2.interpolation.randomaccess.LanczosInterpolatorFactory;
 import net.imglib2.interpolation.randomaccess.NLinearInterpolatorFactory;
 import net.imglib2.interpolation.randomaccess.NearestNeighborInterpolatorFactory;
 import net.imglib2.io.ImgIOException;
@@ -217,6 +218,10 @@ public class Interactive3DRotationTest implements PlugIn, KeyListener, MouseWhee
 			
 		}
 		
+		public void useLanczosInterpolation() {
+			projector = createProjector( img, reducedAffineCopy.inverse(), laFactory, converter );			
+		}
+		
 		private double perspectiveX( final double[] p, final double d, final double w2 )
 		{
 			return ( p[ 0 ] - w2 ) / 10 / ( p[ 2 ] / 10 + d ) * d + w2 / 5;
@@ -378,6 +383,7 @@ public class Interactive3DRotationTest implements PlugIn, KeyListener, MouseWhee
 	
 	final private NearestNeighborInterpolatorFactory< UnsignedShortType > nnFactory = new NearestNeighborInterpolatorFactory< UnsignedShortType >();
 	final private NLinearInterpolatorFactory< UnsignedShortType > nlFactory = new NLinearInterpolatorFactory< UnsignedShortType >();
+	final private LanczosInterpolatorFactory< UnsignedShortType > laFactory = new LanczosInterpolatorFactory< UnsignedShortType >();
 	final private RealARGBConverter< UnsignedShortType > converter = new RealARGBConverter< UnsignedShortType >( 0, 4095 );
 	
 	final static private float step = ( float )Math.PI / 180;
@@ -422,7 +428,7 @@ public class Interactive3DRotationTest implements PlugIn, KeyListener, MouseWhee
 		final ImgPlus< UnsignedShortType > imgPlus;
 		try
 		{
-			imgPlus = io.openImg( "/home/saalfeld/Desktop/l1-cns.tif", new ArrayImgFactory< UnsignedShortType >(), new UnsignedShortType());
+			imgPlus = io.openImg( "/Users/preibischs/Downloads/l1-cns.tif", new ArrayImgFactory< UnsignedShortType >(), new UnsignedShortType());
 			img = imgPlus.getImg();
 		}
 		catch ( final ImgIOException e )
@@ -611,6 +617,11 @@ public class Interactive3DRotationTest implements PlugIn, KeyListener, MouseWhee
 				painter.toggleInterpolation();
 				update();
 			}
+			else if ( e.getKeyCode() == KeyEvent.VK_L )
+			{
+				painter.useLanczosInterpolation();
+				update();
+			}
 			else if ( e.getKeyCode() == KeyEvent.VK_E )
 			{
 				IJ.log( rotation.toString() );
@@ -634,6 +645,7 @@ public class Interactive3DRotationTest implements PlugIn, KeyListener, MouseWhee
 						"CTRL - Rotate and browse 10x slower." + NL +
 						"ENTER/ESC - Return." + NL +
 						"I - Toggle interpolation." + NL +
+						"L - Use Lanczos interpolation." + NL +
 						"E - Export the current rotation to the log window." );
 			}
 			else if ( e.getKeyCode() == KeyEvent.VK_PLUS || e.getKeyCode() == KeyEvent.VK_EQUALS )
