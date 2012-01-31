@@ -8,8 +8,10 @@ import ij.process.ColorProcessor;
 
 import java.awt.Canvas;
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.RenderingHints;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
@@ -268,7 +270,7 @@ public class Interactive3DRotationTest implements PlugIn, KeyListener, MouseWhee
 			
 		}
 		
-		public void visualizeOrientation()
+		private void visualizeOrientation()
 		{
 			final double w = img.dimension( 0 ) - 1;
 			final double h = img.dimension( 1 ) - 1;
@@ -295,6 +297,15 @@ public class Interactive3DRotationTest implements PlugIn, KeyListener, MouseWhee
 			final double[] q011 = new double[ 3 ];
 			final double[] q111 = new double[ 3 ];
 			
+			final double[] px = new double[]{ w / 2, 0, 0 };
+			final double[] py = new double[]{ 0, h / 2, 0 };
+			final double[] pz = new double[]{ 0, 0, d / 2 };
+			
+			final double[] qx = new double[ 3 ];
+			final double[] qy = new double[ 3 ];
+			final double[] qz = new double[ 3 ];
+			
+			
 			reducedAffineCopy.apply( p000, q000 );
 			reducedAffineCopy.apply( p100, q100 );
 			reducedAffineCopy.apply( p010, q010 );
@@ -303,6 +314,10 @@ public class Interactive3DRotationTest implements PlugIn, KeyListener, MouseWhee
 			reducedAffineCopy.apply( p101, q101 );
 			reducedAffineCopy.apply( p011, q011 );
 			reducedAffineCopy.apply( p111, q111 );
+			
+			reducedAffineCopy.apply( px, qx );
+			reducedAffineCopy.apply( py, qy );
+			reducedAffineCopy.apply( pz, qz );
 			
 			final GeneralPath box = new GeneralPath();
 			final GeneralPath boxBehind = new GeneralPath();
@@ -332,12 +347,18 @@ public class Interactive3DRotationTest implements PlugIn, KeyListener, MouseWhee
 			
 			final Image image = imp.getImage();
 			final Graphics2D graphics = ( Graphics2D )image.getGraphics();
+			graphics.setRenderingHint( RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON );
 			graphics.setPaint( Color.MAGENTA );
 			graphics.draw( boxBehind );
 			graphics.setPaint( new Color( 0x80ffffff, true ) );
 			graphics.fill( canvas );
 			graphics.setPaint( Color.GREEN );
 			graphics.draw( box );
+			graphics.setPaint( Color.WHITE );
+			graphics.setFont( new Font( "SansSerif", Font.PLAIN, 8 ) );
+			graphics.drawString("x", ( float )perspectiveX( qx, d2, w2 ), ( float )perspectiveY( qx, d2, h2 ) - 2 );
+			graphics.drawString("y", ( float )perspectiveX( qy, d2, w2 ), ( float )perspectiveY( qy, d2, h2 ) - 2 );
+			graphics.drawString("z", ( float )perspectiveX( qz, d2, w2 ), ( float )perspectiveY( qz, d2, h2 ) - 2 );
 			
 		}
 	}
