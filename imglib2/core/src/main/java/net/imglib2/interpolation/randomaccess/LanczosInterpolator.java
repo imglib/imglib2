@@ -1,3 +1,30 @@
+/**
+ * Copyright (c) 2009--2012, ImgLib2 developers
+ * All rights reserved.
+ * 
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ * 
+ * Redistributions of source code must retain the above copyright notice, this
+ * list of conditions and the following disclaimer.  Redistributions in binary
+ * form must reproduce the above copyright notice, this list of conditions and
+ * the following disclaimer in the documentation and/or other materials
+ * provided with the distribution.  Neither the name of the imglib project nor
+ * the names of its contributors may be used to endorse or promote products
+ * derived from this software without specific prior written permission.
+ * 
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
+ */
 package net.imglib2.interpolation.randomaccess;
 
 import net.imglib2.Localizable;
@@ -13,11 +40,13 @@ import net.imglib2.type.numeric.RealType;
  * n-dimensional float-based Lanczos Interpolation
  * 
  * @author Stephan Preibisch
+ * @author Stephan Saalfeld
  */
 public class LanczosInterpolator< T extends RealType< T > > implements RealRandomAccess< T >
 {
 	final protected static float piSquare = (float) ( Math.PI * Math.PI );
-
+	final static protected int preCalculationScale = 10;
+	
 	final double alphaD;
 	final int alpha, n;	
 	final T interpolatedValue;	
@@ -29,6 +58,8 @@ public class LanczosInterpolator< T extends RealType< T > > implements RealRando
 	
 	final double minValue, maxValue;
 	final boolean clipping;
+	
+	final double[] sinc;
 
 	/**
 	 * Creates a new Lanczos-interpolation
@@ -41,6 +72,8 @@ public class LanczosInterpolator< T extends RealType< T > > implements RealRando
 	{
 		this.alpha = alpha;
 		this.alphaD = alpha;
+		
+		sinc = preCalculateSinc( alpha, preCalculationScale );
 		
 		this.n = randomAccessible.numDimensions();
 		this.min = new long[ n ];
@@ -69,6 +102,8 @@ public class LanczosInterpolator< T extends RealType< T > > implements RealRando
 		this.alpha = interpolator.alpha;
 		this.alphaD = interpolator.alphaD;
 		
+		sinc = interpolator.sinc.clone();
+		
 		this.n = interpolator.n;
 		this.min = interpolator.min.clone();
 		this.max = interpolator.max.clone();
@@ -83,6 +118,17 @@ public class LanczosInterpolator< T extends RealType< T > > implements RealRando
 		this.interpolatedValue = interpolator.interpolatedValue.copy();
 		this.minValue = interpolator.minValue;
 		this.maxValue = interpolator.maxValue;
+	}
+	
+	final static private double[] preCalculateSinc( final int max, final int scale )
+	{
+		final double[] sinc = new double[ max * scale + 2 ];
+		for ( int i = 0; i < sinc.length; ++i )
+		{
+			final double x = ( double )i / ( double )preCalculationScale;
+			sinc[ i ] = sinc( x, max );
+		}
+		return sinc;
 	}
 
 	@Override
@@ -100,9 +146,8 @@ public class LanczosInterpolator< T extends RealType< T > > implements RealRando
 			double v = 1.0;
 			
 			// TODO: this could be smarter, usually only changes in x ...
-			// Btw, this cannot be pre-computed as position[] is double ...
 			for ( int d = 0; d < n; ++d )
-				v *= sinc( position[ d ] - iterator.getLongPosition( d ), alphaD );
+				v *= sinc2( position[ d ] - iterator.getLongPosition( d ) );
 			
 			randomAccess.setPosition( iterator );
 			convolved += randomAccess.get().getRealFloat() * v;
@@ -130,23 +175,31 @@ public class LanczosInterpolator< T extends RealType< T > > implements RealRando
 			return (( a * Math.sin( Math.PI * x ) * Math.sin( Math.PI * x / a ) ) / ( piSquare * x * x ));
 	}
 	
+	final private double sinc2( final double x )
+	{
+		final double y = x < 0 ? -preCalculationScale * x : preCalculationScale * x;
+		final int yi = ( int )y;
+		final double d = y - yi;
+		return ( sinc[ yi + 1 ] - sinc[ yi ] ) * d + sinc[ yi ];
+	}
+	
 	private static final long floor( final double value )
 	{
 		return value > 0 ? (long)value : (long)value-1;
 	}
 
 	@Override
-	public void localize( final float[] position ) 
+	public void localize( final float[] pos ) 
 	{
 		for ( int d = 0; d < n; ++d )
-			position[ d ] = (float)this.position[ d ];
+			pos[ d ] = (float)this.position[ d ];
 	}
 
 	@Override
-	public void localize( final double[] position ) 
+	public void localize( final double[] pos ) 
 	{
 		for ( int d = 0; d < n; ++d )
-			position[ d ] = this.position[ d ];
+			pos[ d ] = this.position[ d ];
 	}
 
 	@Override
