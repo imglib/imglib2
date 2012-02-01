@@ -39,7 +39,7 @@ import net.imglib2.interpolation.randomaccess.NearestNeighborInterpolatorFactory
 import net.imglib2.io.ImgIOException;
 import net.imglib2.io.ImgOpener;
 import net.imglib2.realtransform.AffineRandomAccessible;
-import net.imglib2.realtransform.AffineReadable;
+import net.imglib2.realtransform.AffineGet;
 import net.imglib2.realtransform.AffineTransform3D;
 import net.imglib2.type.Type;
 import net.imglib2.type.numeric.ARGBType;
@@ -408,14 +408,14 @@ public class Interactive3DRotationTest implements PlugIn, KeyListener, MouseWhee
 
 	private < T extends Type< T > > XYRandomAccessibleProjector< T, ARGBType > createProjector(
 			final RandomAccessibleInterval< T > source,
-			final AffineReadable affine,
+			final AffineGet affine,
 			final InterpolatorFactory< T, RandomAccessible< T > > interpolatorFactory,
 			final Converter< T, ARGBType > conv )
 	{
 		final T template = source.randomAccess().get().copy();
 		final RandomAccessible< T > extendedImg = Views.extendValue( source, template );
 		final Interpolant< T, RandomAccessible< T > > interpolant = new Interpolant< T, RandomAccessible< T > >( extendedImg, interpolatorFactory );
-		final AffineRandomAccessible< T, AffineReadable > mapping = new AffineRandomAccessible< T, AffineReadable >( interpolant, affine );
+		final AffineRandomAccessible< T, AffineGet > mapping = new AffineRandomAccessible< T, AffineGet >( interpolant, affine );
 		screenImage = new ARGBScreenImage( ( int )source.dimension( 0 ), ( int )source.dimension( 1 ) );
 		return new XYRandomAccessibleProjector< T, ARGBType >( mapping, screenImage, conv );
 	}
@@ -428,7 +428,7 @@ public class Interactive3DRotationTest implements PlugIn, KeyListener, MouseWhee
 		final ImgPlus< UnsignedShortType > imgPlus;
 		try
 		{
-			imgPlus = io.openImg( "/Users/preibischs/Downloads/l1-cns.tif", new ArrayImgFactory< UnsignedShortType >(), new UnsignedShortType());
+			imgPlus = io.openImg( "/home/saalfeld/Desktop/l1-cns.tif", new ArrayImgFactory< UnsignedShortType >(), new UnsignedShortType());
 			img = imgPlus.getImg();
 		}
 		catch ( final ImgIOException e )

@@ -16,14 +16,12 @@ import net.imglib2.interpolation.Interpolant;
 import net.imglib2.interpolation.randomaccess.NearestNeighborInterpolatorFactory;
 import net.imglib2.io.ImgIOException;
 import net.imglib2.io.ImgOpener;
+import net.imglib2.realtransform.AffineGet;
 import net.imglib2.realtransform.AffineRandomAccessible;
-import net.imglib2.realtransform.AffineReadable;
-import net.imglib2.realtransform.AffineTransform;
 import net.imglib2.realtransform.AffineTransform3D;
 import net.imglib2.type.numeric.ARGBType;
 import net.imglib2.type.numeric.integer.UnsignedShortType;
 import net.imglib2.view.Views;
-import Jama.Matrix;
 
 public class OpenAndDisplayAffineTransformedScreenImage
 {	
@@ -42,9 +40,9 @@ public class OpenAndDisplayAffineTransformedScreenImage
 				{ 0, 0.5 * imgPlus.calibration( 1 ) / imgPlus.calibration( 0 ), 0, img.dimension( 1 ) * 0.25 },
 				{ 0, 0, 0.5 * imgPlus.calibration( 0 ) / imgPlus.calibration( 0 ), 0 }
 		};
-		final AffineTransform affine = new AffineTransform( new Matrix( matrix ) );
-//		final AffineTransform3D affine = new AffineTransform3D();
-//		affine.set( matrix[ 0 ][ 0 ], matrix[ 0 ][ 1 ], matrix[ 0 ][ 2 ], matrix[ 0 ][ 3 ], matrix[ 1 ][ 0 ], matrix[ 1 ][ 1 ], matrix[ 1 ][ 2 ], matrix[ 1 ][ 3 ], matrix[ 2 ][ 0 ], matrix[ 2 ][ 1 ], matrix[ 2 ][ 2 ], matrix[ 2 ][ 3 ] );
+//		final AffineTransform affine = new AffineTransform( new Matrix( matrix ) );
+		final AffineTransform3D affine = new AffineTransform3D();
+		affine.set( matrix[ 0 ][ 0 ], matrix[ 0 ][ 1 ], matrix[ 0 ][ 2 ], matrix[ 0 ][ 3 ], matrix[ 1 ][ 0 ], matrix[ 1 ][ 1 ], matrix[ 1 ][ 2 ], matrix[ 1 ][ 3 ], matrix[ 2 ][ 0 ], matrix[ 2 ][ 1 ], matrix[ 2 ][ 2 ], matrix[ 2 ][ 3 ] );
 		
 		final NearestNeighborInterpolatorFactory< UnsignedShortType > interpolatorFactory = new NearestNeighborInterpolatorFactory< UnsignedShortType >();
 //		final InterpolatorFactory< UnsignedShortType, RandomAccessible< UnsignedShortType> > interpolatorFactory = new NLinearInterpolatorFactory< UnsignedShortType >();
@@ -55,16 +53,16 @@ public class OpenAndDisplayAffineTransformedScreenImage
 		final Interpolant< UnsignedShortType, RandomAccessible< UnsignedShortType > > interpolant = new Interpolant< UnsignedShortType, RandomAccessible< UnsignedShortType > >( extendedImg, interpolatorFactory );
 //		final RealTransformRandomAccessible< UnsignedShortType, AffineTransform3D > mapping = new RealTransformRandomAccessible< UnsignedShortType, AffineTransform3D >( interpolant, affine );
 //		final AffineRealRandomAccessible< UnsignedShortType, Affine > mapping = new AffineRealRandomAccessible< UnsignedShortType, Affine >( interpolant, affine );
-		final AffineRandomAccessible< UnsignedShortType, AffineReadable > mapping = new AffineRandomAccessible< UnsignedShortType, AffineReadable >( interpolant, affine );
+		final AffineRandomAccessible< UnsignedShortType, AffineGet > mapping = new AffineRandomAccessible< UnsignedShortType, AffineGet >( interpolant, affine );
 //		final ConstantAffineRandomAccessible< UnsignedShortType, AffineTransform3D > mapping = new ConstantAffineRandomAccessible< UnsignedShortType, AffineTransform3D >( interpolant, affine );
 //		final RandomAccessibleOnRealRandomAccessible< UnsignedShortType > transformedPixels = new RandomAccessibleOnRealRandomAccessible< UnsignedShortType >( mapping );
 		
 		
 		final ARGBScreenImage screenImage = new ARGBScreenImage( ( int )img.dimension( 0 ), ( int )img.dimension( 1 ) );
+//		final XYProjector< UnsignedShortType, ARGBType > projector = new XYProjector< UnsignedShortType, ARGBType >( mapping, screenImage, new RealARGBConverter< UnsignedShortType >( 0, 4095 ) );
 //		final XYProjector< UnsignedShortType, ARGBType > projector = new XYProjector< UnsignedShortType, ARGBType >( transformedPixels, screenImage, new RealARGBConverter< UnsignedShortType >( 0, 4095 ) );
 		final XYRandomAccessibleProjector< UnsignedShortType, ARGBType > projector = new XYRandomAccessibleProjector< UnsignedShortType, ARGBType >( mapping, screenImage, new RealARGBConverter< UnsignedShortType >( 0, 4095 ) );
 //		final XYRandomAccessibleProjector< UnsignedShortType, ARGBType > projector = new XYRandomAccessibleProjector< UnsignedShortType, ARGBType >( transformedPixels, screenImage, new RealARGBConverter< UnsignedShortType >( 0, 4095 ) );
-//		final XYProjector< UnsignedShortType, ARGBType > projector = new XYProjector< UnsignedShortType, ARGBType >( channel, screenImage, new RealARGBConverter< UnsignedShortType >( 0, 4095 ) );
 		
 		final ColorProcessor cp = new ColorProcessor( screenImage.image() );
 		final ImagePlus imp = new ImagePlus( "argbScreenProjection", cp );

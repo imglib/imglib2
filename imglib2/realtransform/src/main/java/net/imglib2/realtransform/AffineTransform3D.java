@@ -12,7 +12,7 @@ import net.imglib2.concatenate.Concatenable;
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  * 
  */
-public class AffineTransform3D implements AffineReadable, Concatenable< AffineTransform3D >
+public class AffineTransform3D implements AffineGet, AffineSet, Concatenable< AffineTransform3D >
 {
 	final static protected class AffineMatrix3D
 	{
@@ -550,5 +550,117 @@ public class AffineTransform3D implements AffineReadable, Concatenable< AffineTr
 			a.m00 + ", " + a.m01 + ", " + a.m02 + ", " + a.m03 + ", " +
 			a.m10 + ", " + a.m11 + ", " + a.m12 + ", " + a.m13 + ", " +
 			a.m20 + ", " + a.m21 + ", " + a.m22 + ", " + a.m23 + ")";
+	}
+
+	@Override
+	public void set( final double value, final int row, final int column )
+	{
+		assert row >= 0 && row < 3 && column >= 0 && column < 4 : "Index out of bounds, a 3d affine matrix is a 3x4 matrix.";
+		
+		switch( row )
+		{
+		case 0:
+			switch( column )
+			{
+			case 0:
+				a.m00 = value;
+				break;
+			case 1:
+				a.m01 = value;
+				break;
+			case 2:
+				a.m02 = value;
+				break;
+			default:
+				a.m03 = value;
+			}
+			break;
+		case 1:
+			switch( column )
+			{
+			case 0:
+				a.m10 = value;
+				break;
+			case 1:
+				a.m11 = value;
+				break;
+			case 2:
+				a.m12 = value;
+				break;
+			default:
+				a.m13 = value;
+			}
+			break;
+		default:
+			switch( column )
+			{
+			case 0:
+				a.m20 = value;
+				break;
+			case 1:
+				a.m21 = value;
+				break;
+			case 2:
+				a.m22 = value;
+				break;
+			default:
+				a.m23 = value;
+			}
+			break;
+		}
+		
+		updateDs();
+		invert();
+		inverse.updateDs();
+	}
+
+	@Override
+	public void set( final double... values )
+	{
+		assert values.length == 12 : "Input dimensions do not match.  A 3d affine matrix is a 3x4 matrix.";
+		
+		a.m00 = values[ 0 ];
+		a.m01 = values[ 1 ];
+		a.m02 = values[ 2 ];
+		a.m03 = values[ 3 ];
+		
+		a.m10 = values[ 4 ];
+		a.m11 = values[ 5 ];
+		a.m12 = values[ 6 ];
+		a.m13 = values[ 7 ];
+		
+		a.m20 = values[ 8 ];
+		a.m21 = values[ 9 ];
+		a.m22 = values[ 10 ];
+		a.m23 = values[ 11 ];
+		
+		updateDs();
+		invert();
+		inverse.updateDs();
+	}
+
+	@Override
+	public void set( final double[][] values )
+	{
+		assert values.length == 3 && values[ 0 ].length == 4 && values[ 1 ].length == 4 && values[ 2 ].length == 4: "Input dimensions do not match.  A 3d affine matrix is a 3x4 matrix.";
+		
+		a.m00 = values[ 0 ][ 0 ];
+		a.m01 = values[ 0 ][ 1 ];
+		a.m02 = values[ 0 ][ 2 ];
+		a.m03 = values[ 0 ][ 3 ];
+		
+		a.m10 = values[ 1 ][ 0 ];
+		a.m11 = values[ 1 ][ 1 ];
+		a.m12 = values[ 1 ][ 2 ];
+		a.m13 = values[ 1 ][ 3 ];
+		
+		a.m20 = values[ 2 ][ 0 ];
+		a.m21 = values[ 2 ][ 1 ];
+		a.m22 = values[ 2 ][ 2 ];
+		a.m23 = values[ 2 ][ 3 ];
+		
+		updateDs();
+		invert();
+		inverse.updateDs();
 	}
 }

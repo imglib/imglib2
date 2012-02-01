@@ -38,7 +38,7 @@ import Jama.Matrix;
  *
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-public abstract class AbstractAffineTransform implements AffineReadable, AffineWritable
+public abstract class AbstractAffineTransform implements AffineGet, AffineSet
 {
 	final protected int n;
 	

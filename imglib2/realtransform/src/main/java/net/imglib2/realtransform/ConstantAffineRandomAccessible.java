@@ -38,7 +38,7 @@ import net.imglib2.RealRandomAccessible;
  *
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-public class ConstantAffineRandomAccessible< T, R extends AffineReadable > extends AffineRandomAccessible< T, R >
+public class ConstantAffineRandomAccessible< T, R extends AffineGet > extends AffineRandomAccessible< T, R >
 {
 	final protected double[][] ds;
 	final protected double[] affine;
@@ -131,7 +131,6 @@ public class ConstantAffineRandomAccessible< T, R extends AffineReadable > exten
 	public ConstantAffineRandomAccessible( final RealRandomAccessible< T > target, final R transform )
 	{
 		super( target, transform );
-		final int n = target.numDimensions();
 		affine = transform.getRowPackedCopy();
 		ds = new double[ transform.numSourceDimensions() ][];
 		for ( int r = 0; r < ds.length; ++r )

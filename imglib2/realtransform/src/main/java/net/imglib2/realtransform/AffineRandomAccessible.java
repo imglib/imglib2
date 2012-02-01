@@ -38,7 +38,7 @@ import net.imglib2.RealRandomAccessible;
  *
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-public class AffineRandomAccessible< T, R extends AffineReadable > extends RealTransformRandomAccessible< T, R >
+public class AffineRandomAccessible< T, R extends AffineGet > extends RealTransformRandomAccessible< T, R >
 {
 	/**
 	 * {@link RealRandomAccess} that generates its samples from a target

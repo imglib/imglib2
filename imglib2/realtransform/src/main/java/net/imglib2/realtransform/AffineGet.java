@@ -27,6 +27,7 @@
  */
 package net.imglib2.realtransform;
 
+import net.imglib2.RealLocalizable;
 
 
 /**
@@ -36,38 +37,37 @@ package net.imglib2.realtransform;
  *
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-public interface AffineWritable
+public interface AffineGet extends InvertibleRealTransform
 {
 	/**
-	 * Set a field of the <em>n</em>&times;(<em>n</em>+1) affine transformation
+	 * Get a field of the <em>n</em>&times;(<em>n</em>+1) affine transformation
 	 * matrix.
 	 * 
-	 * @param value
 	 * @param row
 	 * @param column
 	 * @return
 	 */
-	public void set( final double value, final int row, final int column );
+	public double get( final int row, final int column );
+	
+	public double[] getRowPackedCopy();
 	
 	/**
-	 * Set the <em>n</em>&times;(<em>n</em>+1) affine transformation matrix
-	 * with double values.
+	 * Get the constant partial differential vector for dimension d.
 	 * 
-	 * @param values
-	 * @param row
-	 * @param column
+	 * @param d
 	 * @return
 	 */
-	public void set( final double... values );
+	public RealLocalizable d( int d );
 	
-	/**
-	 * Set the <em>n</em>&times;(<em>n</em>+1) affine transformation matrix
-	 * with double values from a [row][column] addressed array.
-	 * 
-	 * @param values
-	 * @param row
-	 * @param column
-	 * @return
-	 */
-	public void set( final double[][] values );
+	// NB: Ideally, we would utilize covariant inheritance to narrow the return
+	// type of a single inverse() method here, rather than needing separate
+	// methods inverse(), inverseAffine().  Unfortunately, due to a Javac bug
+	// with multiple interface inheritance, we must avoid doing so for now. For
+	// details, see:
+	//     http://bugs.sun.com/view_bug.do?bug_id=6656332
+	// The bug is fixed in JDK7.
+	
+	public AffineGet inverseAffine();
+//	@Override
+//	Affine inverse();
 }

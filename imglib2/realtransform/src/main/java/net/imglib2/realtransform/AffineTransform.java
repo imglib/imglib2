@@ -37,7 +37,7 @@ import Jama.Matrix;
  *
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-public class AffineTransform extends AbstractAffineTransform implements Concatenable< AffineReadable >
+public class AffineTransform extends AbstractAffineTransform implements Concatenable< AffineGet >
 {
 	final protected AffineTransform inverse;
 	
@@ -140,7 +140,7 @@ public class AffineTransform extends AbstractAffineTransform implements Concaten
 		return inverse();
 	}
 	
-	public void set( final AffineReadable affine )
+	public void set( final AffineGet affine )
 	{
 		assert n == affine.numSourceDimensions() : "Dimensions do not match.";
 		
@@ -175,7 +175,7 @@ public class AffineTransform extends AbstractAffineTransform implements Concaten
 	}
 
 	@Override
-	public Concatenable< AffineReadable > concatenate( final AffineReadable affine )
+	public Concatenable< AffineGet > concatenate( final AffineGet affine )
 	{
 		assert affine.numSourceDimensions() == numSourceDimensions() : "Dimensions do not match.";
 		
@@ -206,9 +206,9 @@ public class AffineTransform extends AbstractAffineTransform implements Concaten
 	}
 
 	@Override
-	public Class< AffineReadable > getConcatenableClass()
+	public Class< AffineGet > getConcatenableClass()
 	{
-		return AffineReadable.class;
+		return AffineGet.class;
 	}
 
 	@Override
