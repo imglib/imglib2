@@ -113,7 +113,7 @@ public class InverseFourierTransform<T extends RealType<T>, S extends ComplexTyp
 			complex = fftImage.clone();
 			
 		if ( rearrangement == Rearrangement.REARRANGE_QUADRANTS )
-			FFTFunctions.rearrangeFFTQuadrants( complex, getNumThreads() );
+			FFTFunctions.rearrangeFFTQuadrants( complex, false, getNumThreads() );
 
 		// perform inverse FFT 					
 		image = FFTFunctions.computeInverseFFT( complex, type, getNumThreads(), scale, cropBack, originalSize, originalOffset, additionalNormalization );
