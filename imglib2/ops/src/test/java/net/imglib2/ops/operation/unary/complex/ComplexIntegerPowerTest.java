@@ -32,7 +32,7 @@ public class ComplexIntegerPowerTest {
 	}
 
 	private void doCase(double r1, double i1) {
-		for (int i = 0; i < 13; i++) {
+		for (int i = 0; i < 26; i++) {  // NOTE - diverges at 27 or higher
 			ComplexDoubleType power = new ComplexDoubleType();
 			power.setComplexNumber(i, 0);
 			ComplexIntegerPower op = new ComplexIntegerPower(i);
@@ -40,8 +40,17 @@ public class ComplexIntegerPowerTest {
 			input2.setComplexNumber(r1, i1);
 			op.compute(input1, output1);
 			opFull.compute(input2, power, output2);
-			assertEquals(output1.getRealDouble(), output2.getRealDouble(), 0.000001);
-			assertEquals(output1.getImaginaryDouble(), output2.getImaginaryDouble(), 0.000001);
+			assertTrue(near(output1.getRealDouble(), output2.getRealDouble(), 0.000001));
+			assertTrue(near(output1.getImaginaryDouble(), output2.getImaginaryDouble(), 0.000001));
 		}
+	}
+	
+	private boolean near(double d1, double d2, double tol) {
+		if (d1 == 0 || d2 == 0) {
+			return Math.abs(d1-d2) < tol;
+		}
+
+		double ratio = d1 / d2;
+		return (Math.abs(ratio) - 1) < tol;
 	}
 }
