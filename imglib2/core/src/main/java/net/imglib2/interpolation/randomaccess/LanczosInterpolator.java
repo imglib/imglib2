@@ -37,14 +37,14 @@ import net.imglib2.iterator.OffsetableLocalizingIntervalIterator;
 import net.imglib2.type.numeric.RealType;
 
 /**
- * n-dimensional float-based Lanczos Interpolation
+ * n-dimensional double-based Lanczos Interpolation
  * 
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
  */
 public class LanczosInterpolator< T extends RealType< T > > implements RealRandomAccess< T >
 {
-	final protected static float piSquare = (float) ( Math.PI * Math.PI );
+	final protected static double piSquare = Math.PI * Math.PI;
 	final static protected int preCalculationScale = 10;
 	
 	final double alphaD;
@@ -150,7 +150,7 @@ public class LanczosInterpolator< T extends RealType< T > > implements RealRando
 				v *= sinc2( position[ d ] - iterator.getLongPosition( d ) );
 			
 			randomAccess.setPosition( iterator );
-			convolved += randomAccess.get().getRealFloat() * v;
+			convolved += randomAccess.get().getRealDouble() * v;
 		}
 		
 		// do clipping if desired (it should be, except maybe for float or double input)
