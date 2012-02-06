@@ -29,18 +29,21 @@ POSSIBILITY OF SUCH DAMAGE.
 
 package net.imglib2.ops.operation.unary.real;
 
-import net.imglib2.ops.Real;
-import net.imglib2.ops.RealOutput;
 import net.imglib2.ops.UnaryOperation;
+import net.imglib2.type.numeric.ComplexType;
 
 
 /**
+ * Sets the real component of an output complex number to the raising of
+ * the real component of an input complex number to a constant value. The
+ * constant value is specified in the constructor.
  * 
  * @author Barry DeZonia
  *
  */
-public final class RealPowerConstant extends RealOutput implements UnaryOperation<Real,Real> {
-
+public final class RealPowerConstant
+	implements UnaryOperation<ComplexType<?>, ComplexType<?>>
+{
 	private final double constant;
 	
 	public RealPowerConstant(double constant) {
@@ -48,13 +51,15 @@ public final class RealPowerConstant extends RealOutput implements UnaryOperatio
 	}
 	
 	@Override
-	public void compute(Real x, Real output) {
-		double value = Math.pow(x.getReal(), constant);
+	public ComplexType<?> compute(ComplexType<?> x, ComplexType<?> output) {
+		double value = Math.pow(x.getRealDouble(), constant);
 		output.setReal(value);
+		return output;
 	}
 
 	@Override
-	public RealPowerConstant duplicate() {
+	public RealPowerConstant copy() {
 		return new RealPowerConstant(constant);
 	}
+
 }

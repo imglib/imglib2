@@ -71,6 +71,22 @@
       </plugin>
       <plugin>
         <artifactId>maven-assembly-plugin</artifactId>
+        <version>2.2.2</version>
+      </plugin>
+      <plugin>
+        <artifactId>maven-site-plugin</artifactId>
+        <version>3.0</version>
+      </plugin>
+      <plugin>
+        <artifactId>maven-source-plugin</artifactId>
+        <version>2.1.2</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>jar</goal>
+            </goals>
+          </execution>
+        </executions>
       </plugin>
     </plugins>
   </build>
@@ -211,7 +227,7 @@
   <issueManagement>
     <!--
     <system>Trac</system>
-    <url>http://dev.imagejdev.org/trac/imglib/</url>
+    <url>http://code.imagej.net/trac/imglib/</url>
     -->
     <system>Bugzilla</system>
     <url>http://pacific.mpi-cbg.de/cgi-bin/bugzilla/</url>
@@ -219,7 +235,7 @@
 
   <ciManagement>
     <system>Hudson</system>
-    <url>http://dev.imagejdev.org:8080/</url>
+    <url>http://code.imagej.net:8080/</url>
   </ciManagement>
 
   <mailingLists>
@@ -240,21 +256,21 @@
   </mailingLists>
 
   <scm>
-    <connection>scm:git://dev.imagejdev.org/imglib</connection>
-    <developerConnection>scm:git@dev.imagejdev.org:imglib</developerConnection>
+    <connection>scm:git://code.imagej.net/imglib</connection>
+    <developerConnection>scm:git@code.imagej.net:imglib</developerConnection>
     <tag>HEAD</tag>
-    <url>http://dev.imagejdev.org/trac/imglib</url>
+    <url>http://code.imagej.net/trac/imglib</url>
   </scm>
 
   <repositories>
     <!-- NB: for imagej -->
     <repository>
       <id>imagej.releases</id>
-      <url>http://dev.imagejdev.org/maven2/releases</url>
+      <url>http://code.imagej.net/maven2/releases</url>
     </repository>
     <repository>
       <id>imagej.snapshots</id>
-      <url>http://dev.imagejdev.org/maven2/snapshots</url>
+      <url>http://code.imagej.net/maven2/snapshots</url>
     </repository>
     <!-- NB: for bio-formats -->
     <repository>
@@ -273,7 +289,7 @@
     <!-- NB: for various dependencies -->
     <repository>
       <id>imagej.thirdparty</id>
-      <url>http://dev.imagejdev.org/maven2/thirdparty</url>
+      <url>http://code.imagej.net/maven2/thirdparty</url>
     </repository>
   </repositories>
 
@@ -281,12 +297,12 @@
     <repository>
       <id>imagej.releases</id>
       <name>ImageJ Releases Repository</name>
-      <url>dav:http://dev.imagejdev.org:8081/content/repositories/releases</url>
+      <url>dav:http://code.imagej.net:8081/content/repositories/releases</url>
     </repository>
     <snapshotRepository>
       <id>imagej.snapshots</id>
       <name>ImageJ Snapshots Repository</name>
-      <url>dav:http://dev.imagejdev.org:8081/content/repositories/snapshots</url>
+      <url>dav:http://code.imagej.net:8081/content/repositories/snapshots</url>
     </snapshotRepository>
   </distributionManagement>
 

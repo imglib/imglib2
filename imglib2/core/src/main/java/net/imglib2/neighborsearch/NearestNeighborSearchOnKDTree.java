@@ -28,6 +28,12 @@ public class NearestNeighborSearchOnKDTree< T > implements NearestNeighborSearch
 	}
 	
 	@Override
+	public int numDimensions()
+	{
+		return n;
+	}
+	
+	@Override
 	public void search( RealLocalizable p )
 	{
 		p.localize( pos );
@@ -82,5 +88,15 @@ public class NearestNeighborSearchOnKDTree< T > implements NearestNeighborSearch
 	public double getDistance()
 	{
 		return Math.sqrt( bestSquDistance );
+	}
+	
+	@Override
+	public NearestNeighborSearchOnKDTree< T > copy()
+	{
+		final NearestNeighborSearchOnKDTree< T > copy = new NearestNeighborSearchOnKDTree< T >( tree );
+		System.arraycopy( pos, 0, copy.pos, 0, pos.length );
+		copy.bestPoint = bestPoint;
+		copy.bestSquDistance = bestSquDistance;
+		return copy;
 	}
 }

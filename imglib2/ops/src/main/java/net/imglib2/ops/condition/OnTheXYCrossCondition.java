@@ -48,7 +48,7 @@ public class OnTheXYCrossCondition implements Condition<long[]> {
 	}
 
 	@Override
-	public OnTheXYCrossCondition duplicate() {
+	public OnTheXYCrossCondition copy() {
 		return new OnTheXYCrossCondition();
 	}
 }

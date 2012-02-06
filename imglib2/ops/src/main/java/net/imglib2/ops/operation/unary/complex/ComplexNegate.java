@@ -29,26 +29,30 @@ POSSIBILITY OF SUCH DAMAGE.
 
 package net.imglib2.ops.operation.unary.complex;
 
-import net.imglib2.ops.ComplexOutput;
 import net.imglib2.ops.UnaryOperation;
-import net.imglib2.ops.Complex;
+import net.imglib2.type.numeric.ComplexType;
 
 /**
+ * Sets an output complex number to the negation of an input complex
+ * number.
  * 
  * @author Barry DeZonia
  *
  */
-public final class ComplexNegate extends ComplexOutput implements UnaryOperation<Complex,Complex> {
+public final class ComplexNegate
+	implements UnaryOperation<ComplexType<?>,ComplexType<?>> {
 
 	@Override
-	public void compute(Complex z, Complex output) {
-		double x = -z.getX();
-		double y = -z.getY();
-		output.setCartesian(x,y);
+	public ComplexType<?> compute(ComplexType<?> z, ComplexType<?> output) {
+		double x = -z.getRealDouble();
+		double y = -z.getImaginaryDouble();
+		output.setComplexNumber(x,y);
+		return output;
 	}
 	
 	@Override
-	public ComplexNegate duplicate() {
+	public ComplexNegate copy() {
 		return new ComplexNegate();
 	}
+
 }

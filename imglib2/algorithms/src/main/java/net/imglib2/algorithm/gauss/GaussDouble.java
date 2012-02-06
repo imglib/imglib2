@@ -39,7 +39,7 @@ import net.imglib2.outofbounds.OutOfBoundsMirrorFactory.Boundary;
 import net.imglib2.type.numeric.real.DoubleType;
 import net.imglib2.view.Views;
 
-final public class GaussDouble extends Gauss< DoubleType >
+final public class GaussDouble extends AbstractGauss< DoubleType >
 {
 	protected boolean isArray;
 	
@@ -150,6 +150,7 @@ final public class GaussDouble extends Gauss< DoubleType >
 	 *  
 	 * @param input - the {@link Iterator}/{@link Sampler} over the current input line.
 	 */
+	@Override
 	protected void processLine( final SamplingLineIterator< DoubleType > input, final double[] kernel )
 	{
 		if ( !isArray() )
@@ -173,7 +174,12 @@ final public class GaussDouble extends Gauss< DoubleType >
 		if ( imgSize >= kernelSize )
 		{
 			// convolve the first pixels where the input influences less than kernel.size pixels
-			for ( int i = 0; i < kernelSizeMinus1; ++i )
+			
+			// the FIRST pixel is a special case as we cannot set the cursor to -1 (might not be defined)
+			// copy input into a temp variable, it might be expensive to get()			
+			v[ 0 ] += input.get().get() * kernel[ 0 ];
+
+			for ( int i = 1; i < kernelSizeMinus1; ++i )
 			{
 				input.fwd();
 				
@@ -244,7 +250,12 @@ final public class GaussDouble extends Gauss< DoubleType >
 		else
 		{
 			// convolve the first pixels where the input influences less than kernel.size pixels
-			for ( int i = 0; i < imgSize; ++i )
+			
+			// the FIRST pixel is a special case as we cannot set the cursor to -1 (might not be defined)
+			// copy input into a temp variable, it might be expensive to get()			
+			v[ 0 ] += input.get().get() * kernel[ 0 ];
+			
+			for ( int i = 1; i < imgSize; ++i )
 			{
 				input.fwd();
 

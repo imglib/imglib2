@@ -33,9 +33,7 @@ import net.imglib2.ExtendedRandomAccessibleInterval;
 import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessible;
 import net.imglib2.img.Img;
-import net.imglib2.ops.RealOutput;
 import net.imglib2.ops.Function;
-import net.imglib2.ops.Real;
 import net.imglib2.ops.Neighborhood;
 import net.imglib2.outofbounds.OutOfBoundsFactory;
 import net.imglib2.type.numeric.RealType;
@@ -45,49 +43,58 @@ import net.imglib2.type.numeric.RealType;
  * @author Barry DeZonia
  *
  */
-public class RealImageFunction
-	extends RealOutput implements Function<long[],Real>
+public class RealImageFunction<T extends RealType<T>> implements Function<long[],T>
 {
 	// -- instance variables --
 	
 	private final RandomAccess<? extends RealType<?>> accessor;
+	private final T type;
 	
 	// -- private constructor used by duplicate() --
 	
-	private RealImageFunction(
-		RandomAccess<? extends RealType<?>> acc)
+	private RealImageFunction(RandomAccess<? extends RealType<?>> acc, T type)
 	{
 		this.accessor = acc;
+		this.type = type;
 	}
 	
 	// -- public constructors --
 	
-	public RealImageFunction(Img<? extends RealType<?>> img) {
+	public RealImageFunction(Img<? extends RealType<?>> img, T type) {
 		this.accessor = img.randomAccess();
+		this.type = type;
 	}
 	
-	public RealImageFunction(
-		Img<? extends RealType<?>> img,
-		OutOfBoundsFactory<? extends RealType<?>,Img<? extends RealType<?>>> factory)
+	public <K extends RealType<K>> RealImageFunction(
+		Img<K> img,
+		OutOfBoundsFactory<K,Img<K>> factory,
+		T type)
 	{
 		@SuppressWarnings({"rawtypes","unchecked"})
-		RandomAccessible< ? extends RealType<?>> extendedRandAcessible =
+		RandomAccessible<T> extendedRandAcessible =
 				new ExtendedRandomAccessibleInterval(img, factory);
 		this.accessor =  extendedRandAcessible.randomAccess();
+		this.type = type;
 	}
 	
 	// -- public interface --
 	
 	@Override
-	public void evaluate(Neighborhood<long[]> input, long[] point, Real output)
+	public void evaluate(Neighborhood<long[]> input, long[] point, T output)
 	{
 		accessor.setPosition(point);
 		double r = accessor.get().getRealDouble();
 		output.setReal(r);
+		//output.setImaginary(0);
 	}
 
 	@Override
-	public RealImageFunction duplicate() {
-		return new RealImageFunction(accessor.copyRandomAccess());
+	public RealImageFunction<T> copy() {
+		return new RealImageFunction<T>(accessor.copyRandomAccess(), type.copy());
+	}
+
+	@Override
+	public T createOutput() {
+		return type.createVariable();
 	}
 }

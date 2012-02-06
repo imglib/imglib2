@@ -80,6 +80,12 @@ public class KNearestNeighborSearchOnIterableRealInterval< T > implements KNeare
 	}
 	
 	@Override
+	public int numDimensions()
+	{
+		return n;
+	}
+	
+	@Override
 	public void search( final RealLocalizable reference )
 	{
 		for ( int i = 0; i < k; ++i )
@@ -160,5 +166,18 @@ public class KNearestNeighborSearchOnIterableRealInterval< T > implements KNeare
 	public double getDistance()
 	{
 		return getDistance( 0 );
+	}
+	
+	@Override
+	public KNearestNeighborSearchOnIterableRealInterval< T > copy()
+	{
+		final KNearestNeighborSearchOnIterableRealInterval< T > copy = new KNearestNeighborSearchOnIterableRealInterval< T >( iterable, k );
+		System.arraycopy( referenceLocation, 0, copy.referenceLocation, 0, referenceLocation.length );
+		for ( int i = 0; i < k; ++i )
+		{
+			copy.elements[ i ] = elements[ i ];
+			copy.squareDistances[ i ] = squareDistances[ i ];
+		}
+		return copy;
 	}
 }

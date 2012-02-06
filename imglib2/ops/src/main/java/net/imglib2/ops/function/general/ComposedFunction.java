@@ -95,7 +95,7 @@ public class ComposedFunction<T> implements Function<long[],T> {
 	public void evaluate(Neighborhood<long[]> neigh, long[] point, T output) {
 		if (relativePosition == null) {
 			relativePosition = new long[point.length];
-			localNeigh = neigh.duplicate();
+			localNeigh = neigh.copy();
 		}
 		for (int i = 0; i < relativePosition.length; i++)
 			relativePosition[i] = point[i];
@@ -125,10 +125,10 @@ public class ComposedFunction<T> implements Function<long[],T> {
 	}
 	
 	@Override
-	public ComposedFunction<T> duplicate() {
+	public ComposedFunction<T> copy() {
 		ComposedFunction<T> newFunc = new ComposedFunction<T>(dimension, startIndex);
 		for (int i = 0; i < functions.size(); i++)
-			newFunc.add(functions.get(i).duplicate(), widths.get(i));
+			newFunc.add(functions.get(i).copy(), widths.get(i));
 		return newFunc;
 	}
 }

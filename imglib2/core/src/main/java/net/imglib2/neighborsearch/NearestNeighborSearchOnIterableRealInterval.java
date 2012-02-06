@@ -76,6 +76,12 @@ public class NearestNeighborSearchOnIterableRealInterval< T > implements Nearest
 	}
 	
 	@Override
+	public int numDimensions()
+	{
+		return n;
+	}
+	
+	@Override
 	public void search( final RealLocalizable reference )
 	{
 		squareDistance = Double.MAX_VALUE;
@@ -120,5 +126,15 @@ public class NearestNeighborSearchOnIterableRealInterval< T > implements Nearest
 	public double getDistance()
 	{
 		return Math.sqrt( squareDistance );
+	}
+	
+	@Override
+	public NearestNeighborSearchOnIterableRealInterval< T > copy()
+	{
+		final NearestNeighborSearchOnIterableRealInterval< T > copy = new NearestNeighborSearchOnIterableRealInterval< T >( iterable );
+		System.arraycopy( referenceLocation, 0, copy.referenceLocation, 0, referenceLocation.length );
+		copy.element = element;
+		copy.squareDistance = squareDistance;
+		return copy;
 	}
 }

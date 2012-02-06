@@ -60,6 +60,13 @@ public class DoubleType extends AbstractRealType<DoubleType> implements Exponent
 		set( value );
 	}
 
+	// this is the constructor if you want to specify the dataAccess
+	public DoubleType( final DoubleAccess access )
+	{
+		img = null;
+		dataAccess = access;
+	}
+
 	// this is the constructor if you want it to be a variable
 	public DoubleType() { this( 0 ); }
 

@@ -39,7 +39,7 @@ import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.NumericType;
 import net.imglib2.view.Views;
 
-public class GaussNativeType< T extends NumericType< T > & NativeType< T > > extends Gauss< T >
+public class GaussNativeType< T extends NumericType< T > & NativeType< T > > extends AbstractGauss< T >
 {
 	protected boolean isArray;
 	
@@ -147,7 +147,21 @@ public class GaussNativeType< T extends NumericType< T > & NativeType< T > > ext
 		if ( imgSize >= kernelSize )
 		{
 			// convolve the first pixels where the input influences less than kernel.size pixels
-			for ( int i = 0; i < kernelSizeMinus1; ++i )
+			
+			// the FIRST pixel is a special case as we cannot set the cursor to -1 (might not be defined)
+			// copy input into a temp variable, it might be expensive to get()
+			
+			// copy input into a temp variable, it might be expensive to get()
+			copy.set( input.get() );
+			
+			// set the random access in the processing line to the right position
+			randomAccessLeft.setPositionDim0( 0 );				
+			
+			// now add it to all output values it contributes to				
+			copy.mul( kernel[ 0 ] );
+			randomAccessLeft.get().add( copy );
+
+			for ( int i = 1; i < kernelSizeMinus1; ++i )
 			{
 				input.fwd();
 				
@@ -242,7 +256,21 @@ public class GaussNativeType< T extends NumericType< T > & NativeType< T > > ext
 		else
 		{
 			// convolve the first pixels where the input influences less than kernel.size pixels
-			for ( int i = 0; i < imgSize; ++i )
+
+			// the FIRST pixel is a special case as we cannot set the cursor to -1 (might not be defined)
+			// copy input into a temp variable, it might be expensive to get()
+			
+			// copy input into a temp variable, it might be expensive to get()
+			copy.set( input.get() );
+			
+			// set the random access in the processing line to the right position
+			randomAccessLeft.setPositionDim0( 0 );				
+			
+			// now add it to all output values it contributes to
+			copy.mul( kernel[ 0 ] );				
+			randomAccessLeft.get().add( copy );
+
+			for ( int i = 1; i < imgSize; ++i )
 			{
 				input.fwd();
 				

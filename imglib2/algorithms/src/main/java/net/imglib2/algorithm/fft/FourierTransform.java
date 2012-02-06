@@ -16,7 +16,7 @@
  * library, wich is released under the terms of the Common Public License -
  * v1.0, which is available at http://www.eclipse.org/legal/cpl-v10.html  
  *
- * @author Stephan Preibisch
+ * @author Stephan Preibisch (stephan.preibisch@gmx.de)
  */
 package net.imglib2.algorithm.fft;
 
@@ -42,7 +42,7 @@ import edu.mines.jtk.dsp.FftReal;
 /**
  * Computes the Fourier Transform of a given {@link RandomAccessibleInterval} or {@link Img}.
  * 
- * @author Stephan Preibisch
+ * @author Stephan Preibisch (stephan.preibisch@gmx.de)
  *
  * @param <T> - the intput, {@link RealType}
  * @param <S> - the ouput, {@link ComplexType}
@@ -334,7 +334,7 @@ public class FourierTransform<T extends RealType<T>, S extends ComplexType<S>> i
 
 		// rearrange quadrants if wanted
 		if ( rearrangement == Rearrangement.REARRANGE_QUADRANTS )
-			FFTFunctions.rearrangeFFTQuadrants( fftImage, getNumThreads() );
+			FFTFunctions.rearrangeFFTQuadrants( fftImage, true, getNumThreads() );
 			
         processingTime = System.currentTimeMillis() - startTime;
 
