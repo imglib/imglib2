@@ -44,22 +44,22 @@ import net.imglib2.type.numeric.RealType;
  */
 public class LanczosInterpolator< T extends RealType< T > > implements RealRandomAccess< T >
 {
-	final protected static double piSquare = Math.PI * Math.PI;
+	final static protected double piSquare = Math.PI * Math.PI;
 	final static protected int preCalculationScale = 10;
 	
-	final double alphaD;
-	final int alpha, n;	
-	final T interpolatedValue;	
-	final long[] min, max, size;
-	final double[] position;
+	final protected double alphaD;
+	final protected int alpha, n;	
+	final protected T interpolatedValue;	
+	final protected long[] min, max, size;
+	final protected double[] position;
 	
-	final OffsetableLocalizingIntervalIterator iterator;
-	final RandomAccess< T > randomAccess;
+	final protected OffsetableLocalizingIntervalIterator iterator;
+	final protected RandomAccess< T > randomAccess;
 	
-	final double minValue, maxValue;
-	final boolean clipping;
+	final protected double minValue, maxValue;
+	final protected boolean clipping;
 	
-	final double[] sinc;
+	final protected double[] sinc;
 
 	/**
 	 * Creates a new Lanczos-interpolation
