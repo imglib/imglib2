@@ -5,12 +5,12 @@ All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are met:
-  * Redistributions of source code must retain the above copyright
+ * Redistributions of source code must retain the above copyright
     notice, this list of conditions and the following disclaimer.
-  * Redistributions in binary form must reproduce the above copyright
+ * Redistributions in binary form must reproduce the above copyright
     notice, this list of conditions and the following disclaimer in the
     documentation and/or other materials provided with the distribution.
-  * Neither the name of the Fiji project developers nor the
+ * Neither the name of the Fiji project developers nor the
     names of its contributors may be used to endorse or promote products
     derived from this software without specific prior written permission.
 
@@ -25,41 +25,46 @@ INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
 CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE.
-*/
+ */
 
 package net.imglib2.ops.operation.binary.complex;
 
 import net.imglib2.ops.BinaryOperation;
-import net.imglib2.ops.Complex;
-import net.imglib2.ops.ComplexOutput;
 import net.imglib2.ops.operation.unary.complex.ComplexExp;
 import net.imglib2.ops.operation.unary.complex.ComplexLog;
+import net.imglib2.type.numeric.ComplexType;
+import net.imglib2.type.numeric.complex.ComplexDoubleType;
 
 //Handbook of Mathematics and Computational Science, Harris & Stocker, Springer, 2006
 
 /**
+ * Sets a complex number output to the result of raising a complex number to a
+ * complex power represented by a second complex number.
  * 
  * @author Barry DeZonia
- *
+ * 
  */
-public final class ComplexPower extends ComplexOutput implements BinaryOperation<Complex,Complex,Complex> {
+public final class ComplexPower
+		implements BinaryOperation<ComplexType<?>, ComplexType<?>, ComplexType<?>> {
 
 	private static final ComplexLog logFunc = new ComplexLog();
 	private static final ComplexMultiply mulFunc = new ComplexMultiply();
-	private static final ComplexExp expFunc = new ComplexExp();
-	
-	private final Complex logA = new Complex();
-	private final Complex zLogA = new Complex();
-	
+	private static  final ComplexExp expFunc = new ComplexExp();
+
+	private final ComplexDoubleType logA = new ComplexDoubleType();
+	private final ComplexDoubleType zLogA = new ComplexDoubleType();
+
 	@Override
-	public void compute(Complex a, Complex z, Complex output) {
+	public ComplexType<?> compute(ComplexType<?> a, ComplexType<?> z, ComplexType<?> output) {
 		logFunc.compute(a, logA);
 		mulFunc.compute(z, logA, zLogA);
 		expFunc.compute(zLogA, output);
+		return output;
 	}
 
 	@Override
-	public ComplexPower duplicate() {
+	public ComplexPower copy() {
 		return new ComplexPower();
 	}
+
 }

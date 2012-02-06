@@ -54,8 +54,8 @@ public class AndCondition<INDEX> implements Condition<INDEX> {
 	}
 	
 	@Override
-	public AndCondition<INDEX> duplicate() {
-		return new AndCondition<INDEX>(cond1.duplicate(), cond2.duplicate());
+	public AndCondition<INDEX> copy() {
+		return new AndCondition<INDEX>(cond1.copy(), cond2.copy());
 	}
 
 }

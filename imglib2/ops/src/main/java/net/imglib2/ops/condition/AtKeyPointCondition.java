@@ -51,7 +51,7 @@ public class AtKeyPointCondition implements Condition<long[]> {
 	}
 	
 	@Override
-	public AtKeyPointCondition duplicate() {
+	public AtKeyPointCondition copy() {
 		return new AtKeyPointCondition();
 	}
 }

@@ -30,7 +30,7 @@ POSSIBILITY OF SUCH DAMAGE.
 package net.imglib2.ops.relation;
 
 import net.imglib2.ops.BinaryRelation;
-import net.imglib2.ops.Bool;
+import net.imglib2.type.logic.BitType;
 
 
 /**
@@ -38,15 +38,15 @@ import net.imglib2.ops.Bool;
  * @author Barry DeZonia
  *
  */
-public final class BoolEquals implements BinaryRelation<Bool> {
+public final class BoolEquals implements BinaryRelation<BitType,BitType> {
 
 	@Override
-	public boolean holds(Bool val1, Bool val2) {
-		return val1.getBool() == val2.getBool();
+	public boolean holds(BitType val1, BitType val2) {
+		return val1.get() == val2.get();
 	}
 
 	@Override
-	public BoolEquals duplicate() {
+	public BoolEquals copy() {
 		return new BoolEquals();
 	}
 }

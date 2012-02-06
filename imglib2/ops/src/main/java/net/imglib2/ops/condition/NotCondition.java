@@ -52,8 +52,8 @@ public class NotCondition<INDEX> implements Condition<INDEX> {
 	}
 	
 	@Override
-	public NotCondition<INDEX> duplicate() {
-		return new NotCondition<INDEX>(cond1.duplicate());
+	public NotCondition<INDEX> copy() {
+		return new NotCondition<INDEX>(cond1.copy());
 	}
 
 }
