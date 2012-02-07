@@ -1,4 +1,4 @@
-package fiji.plugin.cwnt.test;
+
 
 import ij.IJ;
 import ij.ImagePlus;
