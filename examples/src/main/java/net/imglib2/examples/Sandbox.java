@@ -1,4 +1,4 @@
-package net.imglib.examples;
+package net.imglib2.examples;
 
 import ij.ImageJ;
 

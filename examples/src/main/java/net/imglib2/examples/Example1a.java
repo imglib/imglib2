@@ -1,4 +1,4 @@
-package mpicbg.imglib.workshop.prewritten;
+package net.imglib2.examples;
 
 import java.io.File;
 
@@ -14,7 +14,7 @@ import ij.io.Opener;
 /**
  * Opens a file with ImageJ and wraps it into an ImgLib {@link Image}.
  *
- * @author Stephan Preibisch & Stephan Saalfeld
+ * @author Stephan Preibisch &amp; Stephan Saalfeld
  *
  */
 public class Example1a

@@ -1,4 +1,4 @@
-package mpicbg.imglib.workshop.prewritten;
+package net.imglib2.examples;
 
 import mpicbg.imglib.container.cell.CellContainerFactory;
 import mpicbg.imglib.image.Image;

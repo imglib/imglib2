@@ -1,4 +1,4 @@
-package mpicbg.imglib.workshop.prewritten;
+package net.imglib2.examples;
 
 import mpicbg.imglib.algorithm.fft.FourierConvolution;
 import mpicbg.imglib.algorithm.fft.FourierTransform;

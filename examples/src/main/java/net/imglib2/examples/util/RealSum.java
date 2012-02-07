@@ -1,5 +1,5 @@
 /* BSD-licensed reimplementation */
-package mpicbg.util;
+package net.imglib2.examples.util;
 
 /**
  * A simple accumulator of double values.

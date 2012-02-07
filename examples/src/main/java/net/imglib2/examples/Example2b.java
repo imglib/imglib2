@@ -1,10 +1,13 @@
-package mpicbg.imglib.workshop.prewritten;
+package net.imglib2.examples;
 
 import java.io.File;
 
+import mpicbg.imglib.container.ContainerFactory;
 import mpicbg.imglib.container.array.ArrayContainerFactory;
+import mpicbg.imglib.container.cell.CellContainerFactory;
 import mpicbg.imglib.cursor.Cursor;
 import mpicbg.imglib.image.Image;
+import mpicbg.imglib.image.ImageFactory;
 import mpicbg.imglib.image.display.imagej.ImageJFunctions;
 import mpicbg.imglib.io.LOCI;
 import mpicbg.imglib.type.Type;
@@ -12,15 +15,16 @@ import mpicbg.imglib.type.numeric.real.FloatType;
 import ij.ImageJ;
 
 /**
- * Here we want to copy an Image into another one using a generic method
+ * Here we want to copy an Image into another with a different Container one using a generic method,
+ * but we cannot do it with simple Cursors
  *
  * @author Stephan Preibisch & Stephan Saalfeld
  *
  */
-public class Example2a
+public class Example2b
 {
 
-	public Example2a()
+	public Example2b()
 	{
 		// define the file to open
 		File file = new File( "DrosophilaWing.tif" );
@@ -29,17 +33,18 @@ public class Example2a
 		Image<FloatType> image = LOCI.openLOCIFloatType( file.getAbsolutePath(), new ArrayContainerFactory() );
 
 		// copy the image
-		Image<FloatType> duplicate = copyImage( image );
+		Image<FloatType> duplicate = copyImage( image, new CellContainerFactory( 20 ) );
 
 		// display the copy
 		duplicate.getDisplay().setMinMax();
 		ImageJFunctions.displayAsVirtualStack( duplicate ).show();
 	}
 
-	public <T extends Type<T>> Image<T> copyImage( final Image<T> input )
+	public <T extends Type<T>> Image<T> copyImage( final Image<T> input, final ContainerFactory containerFactory )
 	{
-		// create a new Image with the same properties
-		Image<T> output = input.createNewImage();
+		// create a new Image with the same dimensions
+		ImageFactory<T> imageFactory = new ImageFactory<T>( input.createType(), containerFactory );
+		Image<T> output = imageFactory.createImage( input.getDimensions(), "Copy of " + input.getName() );
 
 		// create a cursor for both images
 		Cursor<T> cursorInput = input.createCursor();
@@ -60,9 +65,6 @@ public class Example2a
 		cursorInput.close();
 		cursorOutput.close();
 
-		// rename the output image
-		output.setName( "Copy of " + input.getName() );
-
 		//. return the copy
 		return output;
 	}
@@ -73,6 +75,6 @@ public class Example2a
 		new ImageJ();
 
 		// run the example
-		new Example2a();
+		new Example2b();
 	}
 }

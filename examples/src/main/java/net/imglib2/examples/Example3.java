@@ -1,8 +1,10 @@
-package mpicbg.imglib.workshop.prewritten;
+package net.imglib2.examples;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
+
+import net.imglib.examples.util.RealSum;
 
 import mpicbg.imglib.container.array.ArrayContainerFactory;
 import mpicbg.imglib.cursor.Cursor;
@@ -11,7 +13,6 @@ import mpicbg.imglib.io.LOCI;
 import mpicbg.imglib.type.Type;
 import mpicbg.imglib.type.numeric.RealType;
 import mpicbg.imglib.type.numeric.real.FloatType;
-import mpicbg.util.RealSum;
 import ij.ImageJ;
 
 /**
