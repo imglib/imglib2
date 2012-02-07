@@ -2,6 +2,7 @@ package net.imglib2.examples;
 
 import net.imglib2.img.Img;
 import net.imglib2.img.display.imagej.ImageJFunctions;
+import net.imglib2.io.ImgOpener;
 import ij.ImageJ;
 
 /**
@@ -14,9 +15,9 @@ public class Example9
 {
 	public Example9()
 	{
-		// open with LOCI using an ArrayContainer
-		Img<FloatType> image = LOCI.openLOCIFloatType( "JohannesAndAlbert.jpg", new ArrayContainerFactory() );
-		Img<FloatType> kernel = LOCI.openLOCIFloatType( "kernelAlbert.tif", new ArrayContainerFactory() );
+		// open with ImgOpener using an ArrayContainer
+		Img<FloatType> image = ImgOpener.openLOCIFloatType( "JohannesAndAlbert.jpg", new ArrayContainerFactory() );
+		Img<FloatType> kernel = ImgOpener.openLOCIFloatType( "kernelAlbert.tif", new ArrayContainerFactory() );
 
 		final FourierTransform< FloatType, ComplexFloatType > fft = new FourierTransform< FloatType, ComplexFloatType >( kernel, new ComplexFloatType() );
 		final Img< ComplexFloatType > kernelFFT;

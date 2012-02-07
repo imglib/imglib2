@@ -6,6 +6,7 @@ import java.io.File;
 
 import net.imglib2.img.Img;
 import net.imglib2.img.display.imagej.ImageJFunctions;
+import net.imglib2.io.ImgOpener;
 
 /**
  * Use of Gaussian Convolution on the Image
@@ -20,8 +21,8 @@ public class Example7
 		// define the file to open
 		File file = new File( "street_bw.tif" );
 
-		// open with LOCI using an ArrayContainer
-		Img<FloatType> image = LOCI.openLOCIFloatType( file.getAbsolutePath(), new ArrayContainerFactory() );
+		// open with ImgOpener using an ArrayContainer
+		Img<FloatType> image = ImgOpener.openLOCIFloatType( file.getAbsolutePath(), new ArrayContainerFactory() );
 
 		// display maxima
 		image.getDisplay().setMinMax();
