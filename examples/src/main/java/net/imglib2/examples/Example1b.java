@@ -25,7 +25,7 @@ public class Example1b
 		File file = new File( "DrosophilaWing.tif" );
 
 		// open with ImgOpener using an ArrayContainer
-		Img<T> image = ImgOpener.openLOCI( file.getAbsolutePath(), new ArrayContainerFactory() );
+		Img<T> image = ImgOpener.openImg( file.getAbsolutePath(), new ArrayContainerFactory() );
 
 		// display it via ImgLib using ImageJ
 		ImageJFunctions.show( image ).show();
