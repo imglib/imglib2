@@ -24,7 +24,7 @@ public class Example2b
 		File file = new File( "DrosophilaWing.tif" );
 
 		// open with ImgOpener using an ArrayContainer
-		Img<FloatType> image = ImgOpener.openLOCIFloatType( file.getAbsolutePath(), new ArrayContainerFactory() );
+		Img<FloatType> image = new ImgOpener().openLOCIFloatType( file.getAbsolutePath(), new ArrayContainerFactory() );
 
 		// copy the image
 		Img<FloatType> duplicate = copyImage( image, new CellContainerFactory( 20 ) );

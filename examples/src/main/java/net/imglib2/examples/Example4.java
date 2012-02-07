@@ -23,7 +23,7 @@ public class Example4
 		File file = new File( "DrosophilaWing.tif" );
 
 		// open with ImgOpener using an ArrayContainer
-		Img<FloatType> image = ImgOpener.openLOCIFloatType( file.getAbsolutePath(), new ArrayContainerFactory() );
+		Img<FloatType> image = new ImgOpener().openLOCIFloatType( file.getAbsolutePath(), new ArrayContainerFactory() );
 
 		// find local maxima and paint them into another image as spheres
 		Img<BitType> display = findAndDisplayLocalMaxima( image, new BitType() );

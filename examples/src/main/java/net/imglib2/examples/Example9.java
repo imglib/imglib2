@@ -16,8 +16,8 @@ public class Example9
 	public Example9()
 	{
 		// open with ImgOpener using an ArrayContainer
-		Img<FloatType> image = ImgOpener.openLOCIFloatType( "JohannesAndAlbert.jpg", new ArrayContainerFactory() );
-		Img<FloatType> kernel = ImgOpener.openLOCIFloatType( "kernelAlbert.tif", new ArrayContainerFactory() );
+		Img<FloatType> image = new ImgOpener().openLOCIFloatType( "JohannesAndAlbert.jpg", new ArrayContainerFactory() );
+		Img<FloatType> kernel = new ImgOpener().openLOCIFloatType( "kernelAlbert.tif", new ArrayContainerFactory() );
 
 		final FourierTransform< FloatType, ComplexFloatType > fft = new FourierTransform< FloatType, ComplexFloatType >( kernel, new ComplexFloatType() );
 		final Img< ComplexFloatType > kernelFFT;

@@ -22,7 +22,7 @@ public class Example7
 		File file = new File( "street_bw.tif" );
 
 		// open with ImgOpener using an ArrayContainer
-		Img<FloatType> image = ImgOpener.openLOCIFloatType( file.getAbsolutePath(), new ArrayContainerFactory() );
+		Img<FloatType> image = new ImgOpener().openLOCIFloatType( file.getAbsolutePath(), new ArrayContainerFactory() );
 
 		// display maxima
 		image.getDisplay().setMinMax();

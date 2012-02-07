@@ -25,13 +25,13 @@ public class Example1b
 		File file = new File( "DrosophilaWing.tif" );
 
 		// open with ImgOpener using an ArrayContainer
-		Img<T> image = ImgOpener.openImg( file.getAbsolutePath(), new ArrayContainerFactory() );
+		Img<T> image = new ImgOpener().openImg( file.getAbsolutePath(), new ArrayContainerFactory() );
 
 		// display it via ImgLib using ImageJ
 		ImageJFunctions.show( image ).show();
 
 		// open with ImgOpener as Float using an ArrayContainer
-		Img<FloatType> imageFloat = ImgOpener.openLOCIFloatType( file.getAbsolutePath(), new CellContainerFactory( 10 ) );
+		Img<FloatType> imageFloat = new ImgOpener().openLOCIFloatType( file.getAbsolutePath(), new CellContainerFactory( 10 ) );
 
 		// display it via ImgLib using ImageJ
 		imageFloat.getDisplay().setMinMax();

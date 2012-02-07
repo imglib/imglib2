@@ -16,8 +16,8 @@ public class Example8
 	public Example8()
 	{
 		// open with ImgOpener using an ArrayContainer
-		Img<FloatType> image = ImgOpener.openLOCIFloatType( "DrosophilaWing.tif", new ArrayContainerFactory() );
-		Img<FloatType> kernel = ImgOpener.openLOCIFloatType( "kernelGauss.tif", new ArrayContainerFactory() );
+		Img<FloatType> image = new ImgOpener().openLOCIFloatType( "DrosophilaWing.tif", new ArrayContainerFactory() );
+		Img<FloatType> kernel = new ImgOpener().openLOCIFloatType( "kernelGauss.tif", new ArrayContainerFactory() );
 
 		// normalize the kernel
 		NormalizeImageFloat<FloatType> normImage = new NormalizeImageFloat<FloatType>( kernel );

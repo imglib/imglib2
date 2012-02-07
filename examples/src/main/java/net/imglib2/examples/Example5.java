@@ -23,7 +23,7 @@ public class Example5
 		File file = new File( "DrosophilaWingSmall.tif" );
 
 		// open with ImgOpener using an ArrayContainer
-		Img<FloatType> image = ImgOpener.openLOCIFloatType( file.getAbsolutePath(), new ArrayContainerFactory() );
+		Img<FloatType> image = new ImgOpener().openLOCIFloatType( file.getAbsolutePath(), new ArrayContainerFactory() );
 
 		// test serveral out of bounds strategies
 		testCanvas( image, new OutOfBoundsStrategyValueFactory<FloatType>() );
