@@ -51,7 +51,7 @@ public class ComplexDoubleType extends ComplexTypeImpl<ComplexDoubleType> implem
 	}
 	
 	// this is the constructor if you want it to be a variable
-	public ComplexDoubleType( final float real, final float complex )
+	public ComplexDoubleType( final double real, final double complex )
 	{
 		storage = null;
 		b = new DoubleArray( 2 );
@@ -103,7 +103,7 @@ public class ComplexDoubleType extends ComplexTypeImpl<ComplexDoubleType> implem
 	@Override
 	public void setComplex( final double complex ){ b.setValue( complexI, complex ); }
 	
-	public void set( final float real, final float complex ) 
+	public void set( final double real, final double complex ) 
 	{ 
 		b.setValue( realI, real );
 		b.setValue( complexI, complex );
