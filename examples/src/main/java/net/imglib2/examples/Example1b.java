@@ -2,6 +2,7 @@ package net.imglib2.examples;
 
 import java.io.File;
 
+import net.imglib2.img.display.imagej.ImageJFunctions;
 import net.imglib2.type.numeric.RealType;
 
 import ij.ImageJ;

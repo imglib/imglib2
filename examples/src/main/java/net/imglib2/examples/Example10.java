@@ -6,6 +6,8 @@ import java.awt.Polygon;
 import java.awt.geom.CubicCurve2D;
 import java.awt.geom.RoundRectangle2D;
 
+import net.imglib2.img.display.imagej.ImageJFunctions;
+
 /**
  * Create a ShapeList container that computes data on the fly by just storing the shapes.
  * This also an example for a 3-dimensional "algorithm"

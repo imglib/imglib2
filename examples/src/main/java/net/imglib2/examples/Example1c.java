@@ -1,5 +1,6 @@
 package net.imglib2.examples;
 
+import net.imglib2.img.display.imagej.ImageJFunctions;
 import ij.ImageJ;
 
 /**

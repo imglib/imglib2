@@ -4,6 +4,8 @@ import ij.ImageJ;
 
 import java.io.File;
 
+import net.imglib2.img.display.imagej.ImageJFunctions;
+
 /**
  * Use of Gaussian Convolution on the Image
  *
