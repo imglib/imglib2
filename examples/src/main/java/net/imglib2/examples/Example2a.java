@@ -31,43 +31,12 @@ public class Example2a<T extends RealType<T> & NativeType<T>>
 		Img<T> image = new ImgOpener().openImg( file.getAbsolutePath());
 
 		// copy the image
-		Img<FloatType> duplicate = copyImage( image );
+		Img<T> duplicate = image.copy();
 
 		// display the copy
 		ImagePlus imp = ImageJFunctions.show( duplicate );
 		imp.resetDisplayRange();
 		imp.show();
-	}
-
-	public <T extends Type<T>> Img<T> copyImage( final Img<T> input )
-	{
-		// create a new Image with the same properties
-		Img<T> output = input.createNewImage();
-
-		// create a cursor for both images
-		Cursor<T> cursorInput = input.createCursor();
-		Cursor<T> cursorOutput = output.createCursor();
-
-		// iterate over the input cursor
-		while ( cursorInput.hasNext() )
-		{
-			// move both forward
-			cursorInput.fwd();
-			cursorOutput.fwd();
-
-			// set the value of this pixel of the output image, every Type supports T.set( T type )
-			cursorOutput.getType().set( cursorInput.getType() );
-		}
-
-		// close the cursors
-		cursorInput.close();
-		cursorOutput.close();
-
-		// rename the output image
-		output.setName( "Copy of " + input.getName() );
-
-		//. return the copy
-		return output;
 	}
 
 	public static<T extends RealType<T> & NativeType<T>> void main( String[] args ) throws ImgIOException, IncompatibleTypeException
