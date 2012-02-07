@@ -27,134 +27,151 @@
  */
 package net.imglib2.interpolation.randomaccess;
 
-import net.imglib2.Localizable;
 import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessible;
-import net.imglib2.RealLocalizable;
 import net.imglib2.RealRandomAccess;
 import net.imglib2.Sampler;
-import net.imglib2.iterator.OffsetableLocalizingIntervalIterator;
+import net.imglib2.position.transform.FloorOffset;
 import net.imglib2.type.numeric.RealType;
 
 /**
  * n-dimensional double-based Lanczos Interpolation
  * 
  * @author Stephan Preibisch
- * @author Stephan Saalfeld
+ * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-public class LanczosInterpolator< T extends RealType< T > > implements RealRandomAccess< T >
+public class LanczosInterpolator< T extends RealType< T > > extends FloorOffset< RandomAccess< T > > implements RealRandomAccess< T >
 {
 	final static protected double piSquare = Math.PI * Math.PI;
-	final static protected int preCalculationScale = 10;
+	final static protected int lutScale = 10;
 	
-	final protected double alphaD;
-	final protected int alpha, n;	
+	final protected int alpha;
 	final protected T interpolatedValue;	
-	final protected long[] min, max, size;
-	final protected double[] position;
-	
-	final protected OffsetableLocalizingIntervalIterator iterator;
-	final protected RandomAccess< T > randomAccess;
+	final protected long[] size, max;
 	
 	final protected double minValue, maxValue;
-	final protected boolean clipping;
+	final protected boolean clip;
 	
-	final protected double[] sinc;
+	final protected double[] lut, products;
+	
+	final static private long[] createOffset( final int a, final int n )
+	{
+		final long[] offset = new long[ n ];
+		for ( int d = 0; d < n; ++d )
+			offset[ d ] = -a + 1;
+		return offset;
+	}
 
 	/**
 	 * Creates a new Lanczos-interpolation
 	 * 
 	 * @param randomAccessible - the {@link RandomAccessible} to work on
-	 * @param alpha - the radius of values to incorporate (ideally the whole image)
-	 * @param clipping - clips the value to range of the {@link RealType}, i.e. tests if the interpolated value is out of range
+	 * @param alpha - the radius of values to incorporate (typically 2 or 3)
+	 * @param clip - clips the value to range of the {@link RealType}, i.e. tests if the interpolated value is out of range
 	 */
-	public LanczosInterpolator( final RandomAccessible< T > randomAccessible, final int alpha, final boolean clipping )
+	public LanczosInterpolator( final RandomAccessible< T > randomAccessible, final int alpha, final boolean clip )
 	{
+		super( randomAccessible.randomAccess(), createOffset( alpha, randomAccessible.numDimensions() ) );
+		
 		this.alpha = alpha;
-		this.alphaD = alpha;
 		
-		sinc = preCalculateSinc( alpha, preCalculationScale );
+		lut = createLanczosLUT( alpha, lutScale );
+		products = new double[ n + 1 ];
+		products[ n ] = 1.0;
 		
-		this.n = randomAccessible.numDimensions();
-		this.min = new long[ n ];
-		this.max = new long[ n ];
 		this.size = new long[ n ];
-		this.position = new double[ n ];
+		this.max = new long[ n ];
 		
 		for ( int d = 0; d < n; ++d )
-		{
 			size[ d ] = alpha * 2;
-			max[ d ] = size[ d ] - 1;
-		}
 		
-		this.clipping = clipping;
+		this.clip = clip;
 		
-		this.iterator = new OffsetableLocalizingIntervalIterator( min, max );
-		this.randomAccess = randomAccessible.randomAccess();
-		
-		this.interpolatedValue = randomAccess.get().createVariable();
+		this.interpolatedValue = target.get().createVariable();
 		this.minValue = interpolatedValue.getMinValue();
 		this.maxValue = interpolatedValue.getMaxValue();
 	}
 
 	public LanczosInterpolator( final LanczosInterpolator< T > interpolator )
 	{
+		super( interpolator.target.copyRandomAccess(), interpolator.offset );
+		
 		this.alpha = interpolator.alpha;
-		this.alphaD = interpolator.alphaD;
 		
-		sinc = interpolator.sinc.clone();
+		lut = interpolator.lut.clone();
+		products = interpolator.products.clone();
 		
-		this.n = interpolator.n;
-		this.min = interpolator.min.clone();
-		this.max = interpolator.max.clone();
 		this.size = interpolator.size.clone();
-		this.position = interpolator.position.clone();
+		this.max = interpolator.max.clone();
 				
-		this.clipping = interpolator.clipping;
-		
-		this.iterator = new OffsetableLocalizingIntervalIterator( min, max );
-		this.randomAccess = interpolator.randomAccess.copyRandomAccess();
+		this.clip = interpolator.clip;
 		
 		this.interpolatedValue = interpolator.interpolatedValue.copy();
 		this.minValue = interpolator.minValue;
 		this.maxValue = interpolator.maxValue;
 	}
 	
-	final static private double[] preCalculateSinc( final int max, final int scale )
+	final static private double[] createLanczosLUT( final int max, final int scale )
 	{
-		final double[] sinc = new double[ max * scale + 2 ];
-		for ( int i = 0; i < sinc.length; ++i )
+		final double[] lut = new double[ max * scale + 2 ];
+		for ( int i = 0; i < lut.length; ++i )
 		{
-			final double x = ( double )i / ( double )preCalculationScale;
-			sinc[ i ] = sinc( x, max );
+			final double x = ( double )i / ( double )lutScale;
+			lut[ i ] = lanczos( x, max );
 		}
-		return sinc;
+		return lut;
 	}
-
+	
+	final protected void resetKernel()
+	{
+		for ( int d = n - 1; d >= 0; --d )
+		{
+			final long p = target.getLongPosition( d );
+			max[ d ] = p + size[ d ];
+			products[ d ] = lookUpLanczos( position[ d ] - p ) * products[ d + 1 ];
+		}
+	}
+	
+	final protected void accumulate( final int d )
+	{
+		for ( int e = d; e >= 0; --e )
+			products[ e ] = lookUpLanczos( position[ e ] - target.getLongPosition( e ) ) * products[ e + 1 ];
+	}
+	
+	
 	@Override
 	public T get() 
 	{
-		// set now offset and reset
-		iterator.setMin( min );
-		
 		double convolved = 0;
 		
-		while ( iterator.hasNext() )
+		resetKernel();
+		
+		boolean proceed = true;
+		
+A:		while ( proceed )
 		{
-			iterator.fwd();
+			convolved += target.get().getRealDouble() * products[ 0 ];
 			
-			double v = 1.0;
-			
-			// TODO: this could be smarter, usually only changes in x ...
 			for ( int d = 0; d < n; ++d )
-				v *= sinc2( position[ d ] - iterator.getLongPosition( d ) );
-			
-			randomAccess.setPosition( iterator );
-			convolved += randomAccess.get().getRealDouble() * v;
+			{
+				target.fwd( d );
+				final long p = target.getLongPosition( d );
+				if ( p < max[ d ] )
+				{
+					products[ d ] = lookUpLanczos( position[ d ] - p ) * products[ ++d ];
+					continue A;
+				}
+				else
+				{
+					target.move( -size[ d ], d );
+					accumulate( d );
+				}
+			}
+			proceed = false;
 		}
 		
 		// do clipping if desired (it should be, except maybe for float or double input)
-		if ( clipping )
+		if ( clip )
 		{
 			if ( convolved < minValue )
 				convolved = minValue;
@@ -167,7 +184,7 @@ public class LanczosInterpolator< T extends RealType< T > > implements RealRando
 		return interpolatedValue; 
 	}
 
-	private static final double sinc( final double x, final double a )
+	private static final double lanczos( final double x, final double a )
 	{
 		if ( x == 0 )
 			return 1;
@@ -175,230 +192,12 @@ public class LanczosInterpolator< T extends RealType< T > > implements RealRando
 			return (( a * Math.sin( Math.PI * x ) * Math.sin( Math.PI * x / a ) ) / ( piSquare * x * x ));
 	}
 	
-	final private double sinc2( final double x )
+	final private double lookUpLanczos( final double x )
 	{
-		final double y = x < 0 ? -preCalculationScale * x : preCalculationScale * x;
+		final double y = x < 0 ? -lutScale * x : lutScale * x;
 		final int yi = ( int )y;
 		final double d = y - yi;
-		return ( sinc[ yi + 1 ] - sinc[ yi ] ) * d + sinc[ yi ];
-	}
-	
-	private static final long floor( final double value )
-	{
-		return value > 0 ? (long)value : (long)value-1;
-	}
-
-	@Override
-	public void localize( final float[] pos ) 
-	{
-		for ( int d = 0; d < n; ++d )
-			pos[ d ] = (float)this.position[ d ];
-	}
-
-	@Override
-	public void localize( final double[] pos ) 
-	{
-		for ( int d = 0; d < n; ++d )
-			pos[ d ] = this.position[ d ];
-	}
-
-	@Override
-	public float getFloatPosition( final int d ) { return (float)position[ d ]; }
-
-	@Override
-	public double getDoublePosition( final int d ) { return position[ d ]; }
-
-	@Override
-	public int numDimensions() { return n; }
-
-	@Override
-	public void move( final float distance, final int d ) 
-	{ 
-		position[ d ] += distance;
-		min[ d ] = floor( this.position[ d ] ) - alpha + 1;
-	}
-
-	@Override
-	public void move( final double distance, final int d ) 
-	{ 
-		position[ d ] += distance; 
-		min[ d ] = floor( this.position[ d ] ) - alpha + 1;
-	}
-
-	@Override
-	public void move( final RealLocalizable localizable ) 
-	{
-		for ( int d = 0; d < n; ++d )
-		{
-			position[ d ] += localizable.getDoublePosition( d );
-			min[ d ] = floor( this.position[ d ] ) - alpha + 1;
-		}
-	}
-
-	@Override
-	public void move( final float[] distance )
-	{
-		for ( int d = 0; d < n; ++d )
-		{
-			position[ d ] += distance[ d ];
-			min[ d ] = floor( this.position[ d ] ) - alpha + 1;
-		}
-	}
-
-	@Override
-	public void move( final double[] distance )
-	{
-		for ( int d = 0; d < n; ++d )
-		{
-			position[ d ] += distance[ d ];
-			min[ d ] = floor( this.position[ d ] ) - alpha + 1;
-		}
-	}
-
-	@Override
-	public void setPosition( final RealLocalizable localizable )
-	{
-		for ( int d = 0; d < n; ++d )
-		{
-			position[ d ] = localizable.getDoublePosition( d );
-			min[ d ] = floor( this.position[ d ] ) - alpha + 1;
-		}
-	}
-
-	@Override
-	public void setPosition( final float[] position )
-	{
-		for ( int d = 0; d < n; ++d )
-		{
-			this.position[ d ] = position[ d ];
-			min[ d ] = floor( this.position[ d ] ) - alpha + 1;
-		}
-	}
-
-	@Override
-	public void setPosition( final double[] position )
-	{
-		for ( int d = 0; d < n; ++d )
-		{
-			this.position[ d ] = position[ d ];
-			min[ d ] = floor( this.position[ d ] ) - alpha + 1;
-		}
-	}
-
-	@Override
-	public void setPosition( final float position, final int d ) 
-	{ 
-		this.position[ d ] = position; 
-		min[ d ] = floor( this.position[ d ] ) - alpha + 1;		
-	}
-
-	@Override
-	public void setPosition( final double position, final int d ) 
-	{ 
-		this.position[ d ] = position; 
-		min[ d ] = floor( this.position[ d ] ) - alpha + 1;		
-	}
-
-	@Override
-	public void fwd( final int d ) 
-	{ 
-		++position[ d ]; 
-		min[ d ] = floor( this.position[ d ] ) - alpha + 1;		
-	}
-
-	@Override
-	public void bck( final int d ) 
-	{ 
-		--position[ d ]; 
-		min[ d ] = floor( this.position[ d ] ) - alpha + 1;		
-	}
-
-	@Override
-	public void move( final int distance, final int d ) 
-	{ 
-		position[ d ] += distance; 
-		min[ d ] = floor( this.position[ d ] ) - alpha + 1;		
-	}
-
-	@Override
-	public void move( final long distance, final int d )  
-	{ 
-		position[ d ] += distance; 
-		min[ d ] = floor( this.position[ d ] ) - alpha + 1;		
-	}
-
-	@Override
-	public void move( final Localizable localizable )
-	{
-		for ( int d = 0; d < n; ++d )
-		{
-			position[ d ] += localizable.getDoublePosition( d );
-			min[ d ] = floor( this.position[ d ] ) - alpha + 1;		
-		}
-	}
-
-	@Override
-	public void move( final int[] distance )
-	{
-		for ( int d = 0; d < n; ++d )
-		{
-			position[ d ] += distance[ d ];
-			min[ d ] = floor( this.position[ d ] ) - alpha + 1;		
-		}
-	}
-
-	@Override
-	public void move( final long[] distance )
-	{
-		for ( int d = 0; d < n; ++d )
-		{
-			position[ d ] += distance[ d ];
-			min[ d ] = floor( this.position[ d ] ) - alpha + 1;		
-		}
-	}
-
-	@Override
-	public void setPosition( final Localizable localizable )
-	{
-		for ( int d = 0; d < n; ++d )
-		{
-			position[ d ] = localizable.getDoublePosition( d );
-			min[ d ] = floor( this.position[ d ] ) - alpha + 1;		
-		}
-	}
-
-	@Override
-	public void setPosition( final int[] position )
-	{
-		for ( int d = 0; d < n; ++d )
-		{
-			this.position[ d ] = position[ d ];
-			min[ d ] = floor( this.position[ d ] ) - alpha + 1;		
-		}
-	}
-
-	@Override
-	public void setPosition( final long[] position )
-	{
-		for ( int d = 0; d < n; ++d )
-		{
-			this.position[ d ] = position[ d ];
-			min[ d ] = floor( this.position[ d ] ) - alpha + 1;		
-		}
-	}
-
-	@Override
-	public void setPosition( final int position, final int d ) 
-	{ 
-		this.position[ d ] = position; 
-		min[ d ] = floor( this.position[ d ] ) - alpha + 1;		
-	}
-
-	@Override
-	public void setPosition( final long position, final int d ) 
-	{ 
-		this.position[ d ] = position;
-		min[ d ] = floor( this.position[ d ] ) - alpha + 1;		
+		return ( lut[ yi + 1 ] - lut[ yi ] ) * d + lut[ yi ];
 	}
 
 	@Override
