@@ -1,10 +1,10 @@
-package mpicbg.imglib.workshop;
+package net.imglib.examples;
 
 import ij.ImageJ;
 
-public class Example
+public class Sandbox
 {
-	public Example()
+	public Sandbox()
 	{
 
 	}
@@ -15,6 +15,6 @@ public class Example
 		new ImageJ();
 
 		// run the example
-		new Example();
+		new Sandbox();
 	}
 }
