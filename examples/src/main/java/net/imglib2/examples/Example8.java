@@ -1,6 +1,7 @@
 package net.imglib2.examples;
 
 import net.imglib2.img.Img;
+import net.imglib2.img.array.ArrayImgFactory;
 import net.imglib2.img.display.imagej.ImageJFunctions;
 import net.imglib2.io.ImgOpener;
 import ij.ImageJ;
@@ -16,8 +17,8 @@ public class Example8
 	public Example8()
 	{
 		// open with ImgOpener using an ArrayContainer
-		Img<FloatType> image = new ImgOpener().openLOCIFloatType( "DrosophilaWing.tif", new ArrayContainerFactory() );
-		Img<FloatType> kernel = new ImgOpener().openLOCIFloatType( "kernelGauss.tif", new ArrayContainerFactory() );
+		Img<FloatType> image = new ImgOpener().openLOCIFloatType( "DrosophilaWing.tif", new ArrayImgFactory<T>() );
+		Img<FloatType> kernel = new ImgOpener().openLOCIFloatType( "kernelGauss.tif", new ArrayImgFactory<T>() );
 
 		// normalize the kernel
 		NormalizeImageFloat<FloatType> normImage = new NormalizeImageFloat<FloatType>( kernel );

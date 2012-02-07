@@ -5,6 +5,7 @@ import ij.ImageJ;
 import java.io.File;
 
 import net.imglib2.img.Img;
+import net.imglib2.img.array.ArrayImgFactory;
 import net.imglib2.img.display.imagej.ImageJFunctions;
 import net.imglib2.io.ImgOpener;
 import net.imglib2.type.numeric.RealType;
@@ -23,7 +24,7 @@ public class Example5
 		File file = new File( "DrosophilaWingSmall.tif" );
 
 		// open with ImgOpener using an ArrayContainer
-		Img<FloatType> image = new ImgOpener().openLOCIFloatType( file.getAbsolutePath(), new ArrayContainerFactory() );
+		Img<FloatType> image = new ImgOpener().openLOCIFloatType( file.getAbsolutePath(), new ArrayImgFactory<T>() );
 
 		// test serveral out of bounds strategies
 		testCanvas( image, new OutOfBoundsStrategyValueFactory<FloatType>() );

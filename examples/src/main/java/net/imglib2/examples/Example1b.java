@@ -3,6 +3,7 @@ package net.imglib2.examples;
 import java.io.File;
 
 import net.imglib2.img.Img;
+import net.imglib2.img.array.ArrayImgFactory;
 import net.imglib2.img.display.imagej.ImageJFunctions;
 import net.imglib2.io.ImgOpener;
 import net.imglib2.type.numeric.RealType;
@@ -25,7 +26,7 @@ public class Example1b
 		File file = new File( "DrosophilaWing.tif" );
 
 		// open with ImgOpener using an ArrayContainer
-		Img<T> image = new ImgOpener().openImg( file.getAbsolutePath(), new ArrayContainerFactory() );
+		Img<T> image = new ImgOpener().openImg( file.getAbsolutePath(), new ArrayImgFactory<T>() );
 
 		// display it via ImgLib using ImageJ
 		ImageJFunctions.show( image ).show();

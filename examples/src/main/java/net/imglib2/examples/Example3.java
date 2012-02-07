@@ -6,6 +6,7 @@ import java.util.Collections;
 
 import net.imglib.examples.util.RealSum;
 import net.imglib2.img.Img;
+import net.imglib2.img.array.ArrayImgFactory;
 import net.imglib2.io.ImgOpener;
 import net.imglib2.type.numeric.RealType;
 
@@ -25,7 +26,7 @@ public class Example3
 		File file = new File( "DrosophilaWing.tif" );
 
 		// open with ImgOpener using an ArrayContainer
-		Img<FloatType> image = new ImgOpener().openLOCIFloatType( file.getAbsolutePath(), new ArrayContainerFactory() );
+		Img<FloatType> image = new ImgOpener().openLOCIFloatType( file.getAbsolutePath(), new ArrayImgFactory<T>() );
 
 		// compute min and max of the Image
 		FloatType min = image.createType();
