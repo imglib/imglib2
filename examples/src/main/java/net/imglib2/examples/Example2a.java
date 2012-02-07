@@ -6,6 +6,8 @@ import net.imglib2.img.Img;
 import net.imglib2.img.array.ArrayImgFactory;
 import net.imglib2.img.display.imagej.ImageJFunctions;
 import net.imglib2.io.ImgOpener;
+import net.imglib2.type.NativeType;
+import net.imglib2.type.numeric.RealType;
 
 import ij.ImageJ;
 import ij.ImagePlus;
@@ -16,16 +18,16 @@ import ij.ImagePlus;
  * @author Stephan Preibisch &amp; Stephan Saalfeld
  *
  */
-public class Example2a
+public class Example2a<T extends RealType<T> & NativeType<T>>
 {
 
-	public Example2a()
+	public Example2a() throws ImgIOException, IncompatibleTypeException
 	{
 		// define the file to open
 		File file = new File( "DrosophilaWing.tif" );
 
 		// open with ImgOpener using an ArrayContainer
-		Img<FloatType> image = new ImgOpener().openLOCIFloatType( file.getAbsolutePath(), new ArrayImgFactory<T>() );
+		Img<T> image = new ImgOpener().openImg( file.getAbsolutePath(), new ArrayImgFactory<T>() );
 
 		// copy the image
 		Img<FloatType> duplicate = copyImage( image );
@@ -67,12 +69,12 @@ public class Example2a
 		return output;
 	}
 
-	public static void main( String[] args )
+	public static<T extends RealType<T> & NativeType<T>> void main( String[] args ) throws ImgIOException, IncompatibleTypeException
 	{
 		// open an ImageJ window
 		new ImageJ();
 
 		// run the example
-		new Example2a();
+		new Example2a<T>();
 	}
 }
