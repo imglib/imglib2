@@ -4,6 +4,8 @@ import ij.ImageJ;
 
 import java.io.File;
 
+import net.imglib2.type.numeric.RealType;
+
 /**
  * Illustrate what the outside strategies do
  *

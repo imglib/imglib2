@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 import net.imglib.examples.util.RealSum;
+import net.imglib2.type.numeric.RealType;
 
 import ij.ImageJ;
 
