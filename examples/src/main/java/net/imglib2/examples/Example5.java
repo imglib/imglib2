@@ -46,7 +46,7 @@ public class Example5
 
 			out.setName( outofboundsFactory.getClass().getSimpleName() + " took " + canvas.getProcessingTime() + " ms." );
 			out.getDisplay().setMinMax();
-			ImageJFunctions.displayAsVirtualStack( out ).show();
+			ImageJFunctions.show( out ).show();
 		}
 		else
 		{

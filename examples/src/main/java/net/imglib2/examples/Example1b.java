@@ -26,14 +26,14 @@ public class Example1b
 		Image<T> image = LOCI.openLOCI( file.getAbsolutePath(), new ArrayContainerFactory() );
 
 		// display it via ImgLib using ImageJ
-		ImageJFunctions.displayAsVirtualStack( image ).show();
+		ImageJFunctions.show( image ).show();
 
 		// open with LOCI as Float using an ArrayContainer
 		Image<FloatType> imageFloat = LOCI.openLOCIFloatType( file.getAbsolutePath(), new CellContainerFactory( 10 ) );
 
 		// display it via ImgLib using ImageJ
 		imageFloat.getDisplay().setMinMax();
-		ImageJFunctions.displayAsVirtualStack( imageFloat ).show();
+		ImageJFunctions.show( imageFloat ).show();
 	}
 
 

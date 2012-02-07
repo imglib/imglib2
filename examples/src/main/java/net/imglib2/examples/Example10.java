@@ -35,7 +35,7 @@ public class Example10
 
 		// display the image
 		shapeListImage.getDisplay().setMinMax();
-		ImageJFunctions.displayAsVirtualStack( shapeListImage ).show();
+		ImageJFunctions.show( shapeListImage ).show();
 	}
 
 	public static void main( String[] args )

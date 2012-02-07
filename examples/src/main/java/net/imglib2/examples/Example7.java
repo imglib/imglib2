@@ -41,7 +41,7 @@ public class Example7
 
 		// display
 		convolved.getDisplay().setMinMax();
-		ImageJFunctions.displayAsVirtualStack( convolved ).show();
+		ImageJFunctions.show( convolved ).show();
 	}
 
 	public static void main( String[] args )

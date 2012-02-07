@@ -28,7 +28,7 @@ public class Example2a
 
 		// display the copy
 		duplicate.getDisplay().setMinMax();
-		ImageJFunctions.displayAsVirtualStack( duplicate ).show();
+		ImageJFunctions.show( duplicate ).show();
 	}
 
 	public <T extends Type<T>> Image<T> copyImage( final Image<T> input )

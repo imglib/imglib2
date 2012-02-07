@@ -23,8 +23,8 @@ public class Example1c
 		final Image<FloatType> image2 = image1.createNewImage();
 
 		// display both (but they are empty)
-		ImageJFunctions.displayAsVirtualStack( image1 ).show();
-		ImageJFunctions.displayAsVirtualStack( image2 ).show();
+		ImageJFunctions.show( image1 ).show();
+		ImageJFunctions.show( image2 ).show();
 	}
 
 	public static void main( String[] args )

@@ -37,14 +37,14 @@ public class Example6
 
 		// display
 		convolved.getDisplay().setMinMax();
-		ImageJFunctions.displayAsVirtualStack( convolved ).show();
+		ImageJFunctions.show( convolved ).show();
 
 		// find maxima again
 		final Image<ByteType> maxima = Example4.findAndDisplayLocalMaxima( convolved, new ByteType() );
 
 		// display maxima
 		maxima.getDisplay().setMinMax();
-		ImageJFunctions.displayAsVirtualStack( maxima ).show();
+		ImageJFunctions.show( maxima ).show();
 	}
 
 	public static void main( String[] args )
