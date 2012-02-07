@@ -8,6 +8,7 @@ import net.imglib2.img.display.imagej.ImageJFunctions;
 import net.imglib2.io.ImgOpener;
 
 import ij.ImageJ;
+import ij.ImagePlus;
 
 /**
  * Here we want to copy an Image into another with a different Container one using a generic method,
@@ -30,8 +31,9 @@ public class Example2c
 		Img<FloatType> duplicate = copyImage( image, new CellContainerFactory( 20 ) );
 
 		// display the copy
-		duplicate.getDisplay().setMinMax();
-		ImageJFunctions.show( duplicate ).show();
+		final ImagePlus imp = ImageJFunctions.show( duplicate );
+		imp.resetDisplayRange();
+		imp.show();
 	}
 
 	public <T extends Type<T>> Img<T> copyImage( final Img<T> input, final ContainerFactory containerFactory )

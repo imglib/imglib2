@@ -5,6 +5,7 @@ import net.imglib2.img.array.ArrayImgFactory;
 import net.imglib2.img.display.imagej.ImageJFunctions;
 import net.imglib2.io.ImgOpener;
 import ij.ImageJ;
+import ij.ImagePlus;
 
 /**
  * Perform template matching through Convolution int the Fourier domain
@@ -64,16 +65,19 @@ public class Example9
 		kernel = normImage.getResult();
 
 		// display all
-		kernel.getDisplay().setMinMax();
-		kernel.setName( "kernel" );
-		ImageJFunctions.copyToImagePlus( kernel ).show();
+		final ImagePlus impKernel = ImageJFunctions.show( kernel );
+		impKernel.resetDisplayRange();
+		impKernel.setTitle( "kernel" );
+		impKernel.show();
 
-		kernelInverse.getDisplay().setMinMax();
-		kernelInverse.setName( "inverse kernel" );
-		ImageJFunctions.copyToImagePlus( kernelInverse ).show();
+		final ImagePlus impKernelInverse = ImageJFunctions.show( kernelInverse );
+		impKernelInverse.resetDisplayRange();
+		impKernelInverse.setTitle( "inverse kernel" );
+		impKernelInverse.show();
 
-		image.getDisplay().setMinMax();
-		ImageJFunctions.copyToImagePlus( image ).show();
+		final ImagePlus impImage = ImageJFunctions.show( image );
+		impImage.resetDisplayRange();
+		impImage.show();
 
 		// compute fourier convolution
 		FourierConvolution<FloatType, FloatType> fourierConvolution = new FourierConvolution<FloatType, FloatType>( image, kernelInverse );
@@ -85,10 +89,11 @@ public class Example9
 		}
 
 		Img<FloatType> convolved = fourierConvolution.getResult();
-		convolved.setName( "("  + fourierConvolution.getProcessingTime() + " ms) Convolution of " + image.getName() );
 
-		convolved.getDisplay().setMinMax();
-		ImageJFunctions.copyToImagePlus( convolved ).show();
+		final ImagePlus impConvolved = ImageJFunctions.show( convolved );
+		impConvolved.resetDisplayRange();
+		impConvolved.setTitle( "("  + fourierConvolution.getProcessingTime() + " ms) Convolution of " + image.getName() );
+		impConvolved.show();
 
 	}
 

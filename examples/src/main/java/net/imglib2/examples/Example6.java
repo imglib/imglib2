@@ -1,6 +1,7 @@
 package net.imglib2.examples;
 
 import ij.ImageJ;
+import ij.ImagePlus;
 
 import java.io.File;
 
@@ -39,15 +40,17 @@ public class Example6
 		Img<FloatType> convolved = gauss.getResult();
 
 		// display
-		convolved.getDisplay().setMinMax();
-		ImageJFunctions.show( convolved ).show();
+		final ImagePlus imp = ImageJFunctions.show( convolved );
+		imp.resetDisplayRange();
+		imp.show();
 
 		// find maxima again
 		final Img<ByteType> maxima = Example4.findAndDisplayLocalMaxima( convolved, new ByteType() );
 
 		// display maxima
-		maxima.getDisplay().setMinMax();
-		ImageJFunctions.show( maxima ).show();
+		final ImagePlus impMaxima = ImageJFunctions.show( maxima );
+		impMaxima.resetDisplayRange();
+		impMaxima.show();
 	}
 
 	public static void main( String[] args )

@@ -1,6 +1,7 @@
 package net.imglib2.examples;
 
 import ij.ImageJ;
+import ij.ImagePlus;
 
 import java.awt.Polygon;
 import java.awt.geom.CubicCurve2D;
@@ -35,8 +36,9 @@ public class Example10
 		}
 
 		// display the image
-		shapeListImage.getDisplay().setMinMax();
-		ImageJFunctions.show( shapeListImage ).show();
+		final ImagePlus imp = ImageJFunctions.show( shapeListImage );
+		imp.resetDisplayRange();
+		imp.show();
 	}
 
 	public static void main( String[] args )

@@ -1,6 +1,7 @@
 package net.imglib2.examples;
 
 import ij.ImageJ;
+import ij.ImagePlus;
 
 import java.io.File;
 
@@ -26,8 +27,9 @@ public class Example7
 		Img<FloatType> image = new ImgOpener().openLOCIFloatType( file.getAbsolutePath(), new ArrayImgFactory<T>() );
 
 		// display maxima
-		image.getDisplay().setMinMax();
-		ImageJFunctions.copyToImagePlus( image ).show();
+		final ImagePlus imp = ImageJFunctions.show( image );
+		imp.resetDisplayRange();
+		imp.show();
 
 		// perform gaussian convolution
 		GaussianConvolution<FloatType> gauss = new GaussianConvolution<FloatType>( image, new OutOfBoundsStrategyMirrorFactory<FloatType>(), new double[]{ 0, 0, 4} );
@@ -43,8 +45,9 @@ public class Example7
 		Img<FloatType> convolved = gauss.getResult();
 
 		// display
-		convolved.getDisplay().setMinMax();
-		ImageJFunctions.show( convolved ).show();
+		final ImagePlus impConvolved = ImageJFunctions.show( convolved );
+		impConvolved.resetDisplayRange();
+		impConvolved.show();
 	}
 
 	public static void main( String[] args )

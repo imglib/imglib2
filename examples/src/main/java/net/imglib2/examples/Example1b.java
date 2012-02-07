@@ -9,6 +9,7 @@ import net.imglib2.io.ImgOpener;
 import net.imglib2.type.numeric.RealType;
 
 import ij.ImageJ;
+import ij.ImagePlus;
 
 
 /**
@@ -35,8 +36,9 @@ public class Example1b
 		Img<FloatType> imageFloat = new ImgOpener().openLOCIFloatType( file.getAbsolutePath(), new CellContainerFactory( 10 ) );
 
 		// display it via ImgLib using ImageJ
-		imageFloat.getDisplay().setMinMax();
-		ImageJFunctions.show( imageFloat ).show();
+		final ImagePlus imp = ImageJFunctions.show( imageFloat );
+		imp.resetDisplayRange();
+		imp.show();
 	}
 
 

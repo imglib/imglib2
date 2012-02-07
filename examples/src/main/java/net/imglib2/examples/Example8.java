@@ -5,6 +5,7 @@ import net.imglib2.img.array.ArrayImgFactory;
 import net.imglib2.img.display.imagej.ImageJFunctions;
 import net.imglib2.io.ImgOpener;
 import ij.ImageJ;
+import ij.ImagePlus;
 
 /**
  * Perform a gaussian convolution using fourier convolution
@@ -33,12 +34,14 @@ public class Example8
 		kernel = normImage.getResult();
 
 		// display all
-		kernel.getDisplay().setMinMax();
-		kernel.setName( "kernel" );
-		ImageJFunctions.copyToImagePlus( kernel ).show();
+		final ImagePlus impKernel = ImageJFunctions.show( kernel );
+		impKernel.resetDisplayRange();
+		impKernel.setTitle( "kernel" );
+		impKernel.show();
 
-		image.getDisplay().setMinMax();
-		ImageJFunctions.copyToImagePlus( image ).show();
+		final ImagePlus imp = ImageJFunctions.show( image );
+		imp.resetDisplayRange();
+		imp.show();
 
 		// compute fourier convolution
 		FourierConvolution<FloatType, FloatType> fourierConvolution = new FourierConvolution<FloatType, FloatType>( image, kernel );
@@ -50,10 +53,11 @@ public class Example8
 		}
 
 		Img<FloatType> convolved = fourierConvolution.getResult();
-		convolved.setName( "("  + fourierConvolution.getProcessingTime() + " ms) Convolution of " + image.getName() );
 
-		convolved.getDisplay().setMinMax();
-		ImageJFunctions.copyToImagePlus( convolved ).show();
+		final ImagePlus impConvolved = ImageJFunctions.show( convolved );
+		impConvolved.resetDisplayRange();
+		impConvolved.setTitle( "("  + fourierConvolution.getProcessingTime() + " ms) Convolution of " + image.getName() );
+		impConvolved.show();
 
 	}
 

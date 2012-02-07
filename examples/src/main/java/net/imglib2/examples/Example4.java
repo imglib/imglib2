@@ -9,6 +9,7 @@ import net.imglib2.io.ImgOpener;
 import net.imglib2.type.numeric.RealType;
 
 import ij.ImageJ;
+import ij.ImagePlus;
 
 /**
  * Here we use special cursors to find the local maxima and display them with spheres in another image
@@ -30,10 +31,12 @@ public class Example4
 		Img<BitType> display = findAndDisplayLocalMaxima( image, new BitType() );
 
 		// display output and input
-		image.getDisplay().setMinMax();
-		display.getDisplay().setMinMax();
-		ImageJFunctions.copyToImagePlus( image ).show();
-		ImageJFunctions.copyToImagePlus( display ).show();
+		final ImagePlus impImage = ImageJFunctions.show( image );
+		impImage.resetDisplayRange();
+		impImage.show();
+		final ImagePlus impDisplay = ImageJFunctions.show( display );
+		impDisplay.resetDisplayRange();
+		impDisplay.show();
 	}
 
 	public static <T extends Comparable<T> & Type<T>, U extends RealType<U>> Img<U> findAndDisplayLocalMaxima( final Img<T> image, final U outputType )

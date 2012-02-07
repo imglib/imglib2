@@ -1,6 +1,7 @@
 package net.imglib2.examples;
 
 import ij.ImageJ;
+import ij.ImagePlus;
 
 import java.io.File;
 
@@ -47,9 +48,10 @@ public class Example5
 		{
 			Img<T> out = canvas.getResult();
 
-			out.setName( outofboundsFactory.getClass().getSimpleName() + " took " + canvas.getProcessingTime() + " ms." );
-			out.getDisplay().setMinMax();
-			ImageJFunctions.show( out ).show();
+			final ImagePlus imp = ImageJFunctions.show( out );
+			imp.resetDisplayRange();
+			imp.setTitle( outofboundsFactory.getClass().getSimpleName() + " took " + canvas.getProcessingTime() + " ms." );
+			imp.show();
 		}
 		else
 		{
