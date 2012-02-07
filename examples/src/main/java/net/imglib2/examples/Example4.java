@@ -6,6 +6,7 @@ import net.imglib2.img.Img;
 import net.imglib2.img.array.ArrayImgFactory;
 import net.imglib2.img.display.imagej.ImageJFunctions;
 import net.imglib2.io.ImgOpener;
+import net.imglib2.type.numeric.real.FloatType;
 import net.imglib2.type.numeric.RealType;
 
 import ij.ImageJ;
@@ -25,7 +26,7 @@ public class Example4
 		File file = new File( "DrosophilaWing.tif" );
 
 		// open with ImgOpener using an ArrayContainer
-		Img<FloatType> image = new ImgOpener().openLOCIFloatType( file.getAbsolutePath(), new ArrayImgFactory<T>() );
+		Img<FloatType> image = new ImgOpener().openImg( file.getAbsolutePath(), new ArrayImgFactory<FloatType>() );
 
 		// find local maxima and paint them into another image as spheres
 		Img<BitType> display = findAndDisplayLocalMaxima( image, new BitType() );
