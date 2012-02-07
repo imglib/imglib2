@@ -15,7 +15,7 @@ import ij.ImageJ;
 /**
  * Opens a file with LOCI Bioformats as an ImgLib {@link Image}.
  *
- * @author Stephan Preibisch & Stephan Saalfeld
+ * @author Stephan Preibisch &amp; Stephan Saalfeld
  *
  */
 public class Example1b

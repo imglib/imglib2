@@ -18,7 +18,7 @@ import ij.ImageJ;
  * Here we want to copy an Image into another with a different Container one using a generic method,
  * but we cannot do it with simple Cursors
  *
- * @author Stephan Preibisch & Stephan Saalfeld
+ * @author Stephan Preibisch &amp; Stephan Saalfeld
  *
  */
 public class Example2b

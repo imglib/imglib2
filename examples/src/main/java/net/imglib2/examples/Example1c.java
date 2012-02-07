@@ -11,7 +11,7 @@ import ij.ImageJ;
 /**
  * Create a new ImgLib {@link Image} of {@link Type} {@link FloatType}
  *
- * @author Stephan Preibisch & Stephan Saalfeld
+ * @author Stephan Preibisch &amp; Stephan Saalfeld
  *
  */
 public class Example1c

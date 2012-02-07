@@ -14,7 +14,7 @@ import ij.ImageJ;
 /**
  * Here we want to copy an Image into another one using a generic method
  *
- * @author Stephan Preibisch & Stephan Saalfeld
+ * @author Stephan Preibisch &amp; Stephan Saalfeld
  *
  */
 public class Example2a

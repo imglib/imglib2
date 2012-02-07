@@ -21,7 +21,7 @@ import ij.ImageJ;
 /**
  * Here we use special cursors to find the local maxima and display them with spheres in another image
  *
- * @author Stephan Preibisch & Stephan Saalfeld
+ * @author Stephan Preibisch &amp; Stephan Saalfeld
  *
  */
 public class Example4

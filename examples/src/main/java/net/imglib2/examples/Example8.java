@@ -12,7 +12,7 @@ import mpicbg.imglib.type.numeric.real.FloatType;
 /**
  * Perform a gaussian convolution using fourier convolution
  *
- * @author Stephan Preibisch & Stephan Saalfeld
+ * @author Stephan Preibisch &amp; Stephan Saalfeld
  *
  */
 public class Example8

@@ -18,7 +18,7 @@ import ij.ImageJ;
 /**
  * Perform a generic min, max search and compute the median and average intensity of the image
  *
- * @author Stephan Preibisch & Stephan Saalfeld
+ * @author Stephan Preibisch &amp; Stephan Saalfeld
  *
  */
 public class Example3

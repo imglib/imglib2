@@ -15,7 +15,7 @@ import ij.ImageJ;
 /**
  * Perform template matching through Convolution int the Fourier domain
  *
- * @author Stephan Preibisch & Stephan Saalfeld
+ * @author Stephan Preibisch &amp; Stephan Saalfeld
  *
  */
 public class Example9

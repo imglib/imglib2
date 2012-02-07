@@ -19,7 +19,7 @@ import ij.ImageJ;
  * Here we want to copy an Image into another with a different Container one using a generic method,
  * using a Localizable and a LocalizableByDimCursor
  *
- * @author Stephan Preibisch & Stephan Saalfeld
+ * @author Stephan Preibisch &amp; Stephan Saalfeld
  *
  */
 public class Example2c
