@@ -20,18 +20,18 @@
 
   <dependencies>
     <dependency>
-      <groupId>mpicbg</groupId>
-      <artifactId>imglib</artifactId>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>imglib2</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
-      <groupId>mpicbg</groupId>
-      <artifactId>imglib-ij</artifactId>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>imglib2-ij</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
-      <groupId>mpicbg</groupId>
-      <artifactId>imglib-io</artifactId>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>imglib2-io</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
