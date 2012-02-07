@@ -10,7 +10,7 @@ import ij.ImageJ;
 
 /**
  * Create a new ImgLib {@link Image} of {@link Type} {@link FloatType}
- *  
+ *
  * @author Stephan Preibisch & Stephan Saalfeld
  *
  */
@@ -20,23 +20,23 @@ public class Example1c
 	{
 		// create the Factory that will instantiate the Image
 		final ImageFactory<FloatType> imageFactory = new ImageFactory<FloatType>( new FloatType(), new CellContainerFactory() );
-		
+
 		// create an Image
 		final Image<FloatType> image1 = imageFactory.createImage( new int[] { 20, 30, 40 } );
-		
+
 		// create another Image with exactly the same properties
 		final Image<FloatType> image2 = image1.createNewImage();
-		
+
 		// display both (but they are empty)
 		ImageJFunctions.displayAsVirtualStack( image1 ).show();
-		ImageJFunctions.displayAsVirtualStack( image2 ).show();		
+		ImageJFunctions.displayAsVirtualStack( image2 ).show();
 	}
-	
+
 	public static void main( String[] args )
 	{
 		// open an ImageJ window
 		new ImageJ();
-		
+
 		// run the example
 		new Example1c();
 	}

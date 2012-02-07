@@ -14,7 +14,7 @@ import mpicbg.imglib.type.numeric.real.FloatType;
 
 /**
  * Use of Gaussian Convolution on the Image
- * 
+ *
  * @author Stephan Preibisch & Stephan Saalfeld
  *
  */
@@ -30,31 +30,31 @@ public class Example7
 
 		// display maxima
 		image.getDisplay().setMinMax();
-		ImageJFunctions.copyToImagePlus( image ).show();		
-		
+		ImageJFunctions.copyToImagePlus( image ).show();
+
 		// perform gaussian convolution
 		GaussianConvolution<FloatType> gauss = new GaussianConvolution<FloatType>( image, new OutOfBoundsStrategyMirrorFactory<FloatType>(), new double[]{ 0, 0, 4} );
-		
+
 		// run the algorithm
 		if( !gauss.checkInput() || !gauss.process() )
 		{
 			System.out.println( "Error running gaussian convolution: " + gauss.getErrorMessage() );
 			return;
 		}
-		
+
 		// get the result
 		Image<FloatType> convolved = gauss.getResult();
-		
+
 		// display
 		convolved.getDisplay().setMinMax();
 		ImageJFunctions.displayAsVirtualStack( convolved ).show();
 	}
-	
+
 	public static void main( String[] args )
 	{
 		// open an ImageJ window
 		new ImageJ();
-		
+
 		// run the example
 		new Example7();
 	}

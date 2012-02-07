@@ -14,7 +14,7 @@ import ij.ImageJ;
 
 /**
  * Opens a file with LOCI Bioformats as an ImgLib {@link Image}.
- *  
+ *
  * @author Stephan Preibisch & Stephan Saalfeld
  *
  */
@@ -28,10 +28,10 @@ public class Example1b
 
 		// open with LOCI using an ArrayContainer
 		Image<T> image = LOCI.openLOCI( file.getAbsolutePath(), new ArrayContainerFactory() );
-		
+
 		// display it via ImgLib using ImageJ
 		ImageJFunctions.displayAsVirtualStack( image ).show();
-		
+
 		// open with LOCI as Float using an ArrayContainer
 		Image<FloatType> imageFloat = LOCI.openLOCIFloatType( file.getAbsolutePath(), new CellContainerFactory( 10 ) );
 
@@ -39,13 +39,13 @@ public class Example1b
 		imageFloat.getDisplay().setMinMax();
 		ImageJFunctions.displayAsVirtualStack( imageFloat ).show();
 	}
-	
-	
+
+
 	public static void main( String[] args )
 	{
 		// open an ImageJ window
 		new ImageJ();
-		
+
 		// run the example
 		new Example1b();
 	}
