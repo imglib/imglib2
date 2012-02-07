@@ -2,17 +2,6 @@ package net.imglib2.examples;
 
 import java.io.File;
 
-import mpicbg.imglib.container.ContainerFactory;
-import mpicbg.imglib.container.array.ArrayContainerFactory;
-import mpicbg.imglib.container.cell.CellContainerFactory;
-import mpicbg.imglib.cursor.LocalizableByDimCursor;
-import mpicbg.imglib.cursor.LocalizableCursor;
-import mpicbg.imglib.image.Image;
-import mpicbg.imglib.image.ImageFactory;
-import mpicbg.imglib.image.display.imagej.ImageJFunctions;
-import mpicbg.imglib.io.LOCI;
-import mpicbg.imglib.type.Type;
-import mpicbg.imglib.type.numeric.real.FloatType;
 import ij.ImageJ;
 
 /**

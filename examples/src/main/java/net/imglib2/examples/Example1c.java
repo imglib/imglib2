@@ -1,11 +1,5 @@
 package net.imglib2.examples;
 
-import mpicbg.imglib.container.cell.CellContainerFactory;
-import mpicbg.imglib.image.Image;
-import mpicbg.imglib.image.ImageFactory;
-import mpicbg.imglib.image.display.imagej.ImageJFunctions;
-import mpicbg.imglib.type.Type;
-import mpicbg.imglib.type.numeric.real.FloatType;
 import ij.ImageJ;
 
 /**

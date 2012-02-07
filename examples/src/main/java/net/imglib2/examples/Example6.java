@@ -4,15 +4,6 @@ import ij.ImageJ;
 
 import java.io.File;
 
-import mpicbg.imglib.algorithm.gauss.GaussianConvolution;
-import mpicbg.imglib.container.array.ArrayContainerFactory;
-import mpicbg.imglib.image.Image;
-import mpicbg.imglib.image.display.imagej.ImageJFunctions;
-import mpicbg.imglib.io.LOCI;
-import mpicbg.imglib.outofbounds.OutOfBoundsStrategyValueFactory;
-import mpicbg.imglib.type.numeric.integer.ByteType;
-import mpicbg.imglib.type.numeric.real.FloatType;
-
 /**
  * Use of Gaussian Convolution on the Image
  *
