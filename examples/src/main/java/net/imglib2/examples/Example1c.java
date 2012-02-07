@@ -1,5 +1,6 @@
 package net.imglib2.examples;
 
+import net.imglib2.img.Img;
 import net.imglib2.img.display.imagej.ImageJFunctions;
 import ij.ImageJ;
 
@@ -17,10 +18,10 @@ public class Example1c
 		final ImageFactory<FloatType> imageFactory = new ImageFactory<FloatType>( new FloatType(), new CellContainerFactory() );
 
 		// create an Image
-		final Image<FloatType> image1 = imageFactory.createImage( new int[] { 20, 30, 40 } );
+		final Img<FloatType> image1 = imageFactory.createImage( new int[] { 20, 30, 40 } );
 
 		// create another Image with exactly the same properties
-		final Image<FloatType> image2 = image1.createNewImage();
+		final Img<FloatType> image2 = image1.createNewImage();
 
 		// display both (but they are empty)
 		ImageJFunctions.show( image1 ).show();

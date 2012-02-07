@@ -2,6 +2,7 @@ package net.imglib2.examples;
 
 import java.io.File;
 
+import net.imglib2.img.Img;
 import net.imglib2.img.display.imagej.ImageJFunctions;
 import net.imglib2.type.numeric.RealType;
 
@@ -21,10 +22,10 @@ public class Example4
 		File file = new File( "DrosophilaWing.tif" );
 
 		// open with LOCI using an ArrayContainer
-		Image<FloatType> image = LOCI.openLOCIFloatType( file.getAbsolutePath(), new ArrayContainerFactory() );
+		Img<FloatType> image = LOCI.openLOCIFloatType( file.getAbsolutePath(), new ArrayContainerFactory() );
 
 		// find local maxima and paint them into another image as spheres
-		Image<BitType> display = findAndDisplayLocalMaxima( image, new BitType() );
+		Img<BitType> display = findAndDisplayLocalMaxima( image, new BitType() );
 
 		// display output and input
 		image.getDisplay().setMinMax();
@@ -33,11 +34,11 @@ public class Example4
 		ImageJFunctions.copyToImagePlus( display ).show();
 	}
 
-	public static <T extends Comparable<T> & Type<T>, U extends RealType<U>> Image<U> findAndDisplayLocalMaxima( final Image<T> image, final U outputType )
+	public static <T extends Comparable<T> & Type<T>, U extends RealType<U>> Img<U> findAndDisplayLocalMaxima( final Img<T> image, final U outputType )
 	{
 		// Create a new image of the provided RealType U
 		ImageFactory<U> imageFactory = new ImageFactory<U>( outputType, image.getContainerFactory() );
-		Image<U> output = imageFactory.createImage( image.getDimensions() );
+		Img<U> output = imageFactory.createImage( image.getDimensions() );
 
 		// create a Cursor that runs over the image and checks in a 3^n neighborhood if it is a maxima
 		LocalizableCursor<T> cursor1 = image.createLocalizableCursor();

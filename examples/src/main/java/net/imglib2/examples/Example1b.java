@@ -2,6 +2,7 @@ package net.imglib2.examples;
 
 import java.io.File;
 
+import net.imglib2.img.Img;
 import net.imglib2.img.display.imagej.ImageJFunctions;
 import net.imglib2.type.numeric.RealType;
 
@@ -23,13 +24,13 @@ public class Example1b
 		File file = new File( "DrosophilaWing.tif" );
 
 		// open with LOCI using an ArrayContainer
-		Image<T> image = LOCI.openLOCI( file.getAbsolutePath(), new ArrayContainerFactory() );
+		Img<T> image = LOCI.openLOCI( file.getAbsolutePath(), new ArrayContainerFactory() );
 
 		// display it via ImgLib using ImageJ
 		ImageJFunctions.show( image ).show();
 
 		// open with LOCI as Float using an ArrayContainer
-		Image<FloatType> imageFloat = LOCI.openLOCIFloatType( file.getAbsolutePath(), new CellContainerFactory( 10 ) );
+		Img<FloatType> imageFloat = LOCI.openLOCIFloatType( file.getAbsolutePath(), new CellContainerFactory( 10 ) );
 
 		// display it via ImgLib using ImageJ
 		imageFloat.getDisplay().setMinMax();

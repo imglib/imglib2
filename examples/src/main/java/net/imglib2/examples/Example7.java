@@ -4,6 +4,7 @@ import ij.ImageJ;
 
 import java.io.File;
 
+import net.imglib2.img.Img;
 import net.imglib2.img.display.imagej.ImageJFunctions;
 
 /**
@@ -20,7 +21,7 @@ public class Example7
 		File file = new File( "street_bw.tif" );
 
 		// open with LOCI using an ArrayContainer
-		Image<FloatType> image = LOCI.openLOCIFloatType( file.getAbsolutePath(), new ArrayContainerFactory() );
+		Img<FloatType> image = LOCI.openLOCIFloatType( file.getAbsolutePath(), new ArrayContainerFactory() );
 
 		// display maxima
 		image.getDisplay().setMinMax();
@@ -37,7 +38,7 @@ public class Example7
 		}
 
 		// get the result
-		Image<FloatType> convolved = gauss.getResult();
+		Img<FloatType> convolved = gauss.getResult();
 
 		// display
 		convolved.getDisplay().setMinMax();

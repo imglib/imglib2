@@ -6,6 +6,7 @@ import java.awt.Polygon;
 import java.awt.geom.CubicCurve2D;
 import java.awt.geom.RoundRectangle2D;
 
+import net.imglib2.img.Img;
 import net.imglib2.img.display.imagej.ImageJFunctions;
 
 /**
@@ -23,7 +24,7 @@ public class Example10
 
 		// Create ShapeList
 		final ShapeList< RGBALegacyType > shapeList = new ShapeList< RGBALegacyType >( new int[]{ 500, 500, depth },  new RGBALegacyType() );
-		final Image< RGBALegacyType > shapeListImage = new Image< RGBALegacyType >( shapeList, shapeList.getBackground(), "ShapeListContainer" );
+		final Img< RGBALegacyType > shapeListImage = new Img< RGBALegacyType >( shapeList, shapeList.getBackground(), "ShapeListContainer" );
 
 		// add some shapes
 		for ( int i = 0; i < depth; ++i )

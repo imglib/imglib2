@@ -4,6 +4,7 @@ import ij.ImageJ;
 
 import java.io.File;
 
+import net.imglib2.img.Img;
 import net.imglib2.img.display.imagej.ImageJFunctions;
 
 /**
@@ -20,7 +21,7 @@ public class Example6
 		File file = new File( "DrosophilaWing.tif" );
 
 		// open with LOCI using an ArrayContainer
-		Image<FloatType> image = LOCI.openLOCIFloatType( file.getAbsolutePath(), new ArrayContainerFactory() );
+		Img<FloatType> image = LOCI.openLOCIFloatType( file.getAbsolutePath(), new ArrayContainerFactory() );
 
 		// perform gaussian convolution
 		GaussianConvolution<FloatType> gauss = new GaussianConvolution<FloatType>( image, new OutOfBoundsStrategyValueFactory<FloatType>(), 4 );
@@ -33,14 +34,14 @@ public class Example6
 		}
 
 		// get the result
-		Image<FloatType> convolved = gauss.getResult();
+		Img<FloatType> convolved = gauss.getResult();
 
 		// display
 		convolved.getDisplay().setMinMax();
 		ImageJFunctions.show( convolved ).show();
 
 		// find maxima again
-		final Image<ByteType> maxima = Example4.findAndDisplayLocalMaxima( convolved, new ByteType() );
+		final Img<ByteType> maxima = Example4.findAndDisplayLocalMaxima( convolved, new ByteType() );
 
 		// display maxima
 		maxima.getDisplay().setMinMax();

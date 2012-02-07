@@ -1,5 +1,6 @@
 package net.imglib2.examples;
 
+import net.imglib2.img.Img;
 import net.imglib2.img.display.imagej.ImageJFunctions;
 import ij.ImageJ;
 
@@ -14,8 +15,8 @@ public class Example8
 	public Example8()
 	{
 		// open with LOCI using an ArrayContainer
-		Image<FloatType> image = LOCI.openLOCIFloatType( "DrosophilaWing.tif", new ArrayContainerFactory() );
-		Image<FloatType> kernel = LOCI.openLOCIFloatType( "kernelGauss.tif", new ArrayContainerFactory() );
+		Img<FloatType> image = LOCI.openLOCIFloatType( "DrosophilaWing.tif", new ArrayContainerFactory() );
+		Img<FloatType> kernel = LOCI.openLOCIFloatType( "kernelGauss.tif", new ArrayContainerFactory() );
 
 		// normalize the kernel
 		NormalizeImageFloat<FloatType> normImage = new NormalizeImageFloat<FloatType>( kernel );
@@ -46,7 +47,7 @@ public class Example8
 			return;
 		}
 
-		Image<FloatType> convolved = fourierConvolution.getResult();
+		Img<FloatType> convolved = fourierConvolution.getResult();
 		convolved.setName( "("  + fourierConvolution.getProcessingTime() + " ms) Convolution of " + image.getName() );
 
 		convolved.getDisplay().setMinMax();
