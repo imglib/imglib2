@@ -21,10 +21,15 @@ public class Example1c
 		final ImgFactory< FloatType > imgFactory = new CellImgFactory< FloatType >( 5 );
 
 		// create an 3d-Img with dimensions 20x30x40 (here cellsize is 5x5x5)Ø
-		final Img< FloatType > image1 = imgFactory.create( new long[] { 20, 30, 40 }, new FloatType() );
+		final Img< FloatType > img1 = imgFactory.create( new long[] { 20, 30, 40 }, new FloatType() );
 
+		// create another image with the same size
+		// note that the input provides the size for the new image as it implements the Interval interface
+		final Img< FloatType > img2 = imgFactory.create( img1, img1.firstElement() );
+		
 		// display both (but they are empty)
-		ImageJFunctions.show( image1 ).show();
+		ImageJFunctions.show( img1 ).show();
+		ImageJFunctions.show( img2 ).show();
 	}
 
 	public static void main( String[] args )
