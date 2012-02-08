@@ -36,7 +36,7 @@ public class Example1a
 		final Img<T> image = ImagePlusAdapter.wrap( imp );
 
 		// display it via ImgLib using ImageJ
-		ImageJFunctions.show( image ).show();
+		ImageJFunctions.show( image );
 	}
 
 
