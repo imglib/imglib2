@@ -14,8 +14,6 @@ import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.real.FloatType;
 
 import ij.ImageJ;
-import ij.ImagePlus;
-
 
 /**
  * Opens a file with ImgOpener Bioformats as an ImgLib {@link Image}.
@@ -43,9 +41,7 @@ public class Example1b
 		Img<FloatType> imageFloat = new ImgOpener().openImg( file.getAbsolutePath(), new CellImgFactory<FloatType>( 10 ), new FloatType() );
 
 		// display it via ImgLib using ImageJ
-		final ImagePlus imp = ImageJFunctions.show( imageFloat );
-		imp.resetDisplayRange();
-		imp.show();
+		ImageJFunctions.show( imageFloat );
 	}
 
 
