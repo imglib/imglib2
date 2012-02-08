@@ -1,5 +1,7 @@
 package net.imglib2.examples;
 
+import ij.ImageJ;
+
 import java.io.File;
 
 import net.imglib2.exception.IncompatibleTypeException;
@@ -9,9 +11,6 @@ import net.imglib2.io.ImgIOException;
 import net.imglib2.io.ImgOpener;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
-
-import ij.ImageJ;
-import ij.ImagePlus;
 
 /**
  * Here we want to copy an Image into another one using a generic method
