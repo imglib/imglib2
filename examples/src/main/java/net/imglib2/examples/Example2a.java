@@ -34,9 +34,7 @@ public class Example2a<T extends RealType<T> & NativeType<T>>
 		Img<T> duplicate = image.copy();
 
 		// display the copy
-		ImagePlus imp = ImageJFunctions.show( duplicate );
-		imp.resetDisplayRange();
-		imp.show();
+		ImageJFunctions.show( duplicate );
 	}
 
 	public static<T extends RealType<T> & NativeType<T>> void main( String[] args ) throws ImgIOException, IncompatibleTypeException
