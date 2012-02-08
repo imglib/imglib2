@@ -136,6 +136,22 @@ public class Util
 		return temp[ Math.min( length - 1, Math.max(0 ,(int)Math.round( (length - 1) * percentile ) ) ) ];
 	}
 
+	/**
+	 * Computes the percentile of a collection of float (percentile 0.5 roughly corresponds to median)
+	 * @param values - the values
+	 * @param percentile - the percentile [0...1]
+	 * @return the corresponding value
+	 */
+	public static float computePercentile( final float[] values, final float percentile )
+	{
+		final float temp[] = values.clone();
+		final int length = temp.length;
+		
+		quicksort( temp );
+		
+		return temp[ Math.min( length - 1, Math.max(0 ,(int)Math.round( (length - 1) * percentile ) ) ) ];
+	}
+
 	public static double computeAverageDouble( final List<Double> values )
 	{
 		final double size = values.size();
