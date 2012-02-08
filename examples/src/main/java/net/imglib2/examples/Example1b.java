@@ -32,12 +32,14 @@ public class Example1b
 		File file = new File( "DrosophilaWing.tif" );
 
 		// open with ImgOpener using an ArrayImgFactory, here the return type will be defined by the opener
+		// the opener will ignore the Type of the ArrayImgFactory
 		Img<T> image = new ImgOpener().openImg( file.getAbsolutePath(), new ArrayImgFactory< T >() );
 
 		// display it via ImgLib using ImageJ
 		ImageJFunctions.show( image ).show();
 
 		// open with ImgOpener as Float using a CellImgFactory, it will be opened as float independent of the type of the image
+		// to enforce to open it as FloatType, an instance of FloatType has to be passed along
 		Img<FloatType> imageFloat = new ImgOpener().openImg( file.getAbsolutePath(), new CellImgFactory<FloatType>( 10 ), new FloatType() );
 
 		// display it via ImgLib using ImageJ
