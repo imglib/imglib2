@@ -66,6 +66,9 @@ public class FourierConvolution<T extends RealType<T>, S extends RealType<S>> im
 		setNumThreads();
 	}
 	
+	public Image< T > getImage() { return image; }
+	public Image< S > getKernel() { return kernel; }
+
 	public boolean replaceImage( final Image<T> img )
 	{
 		if ( !img.getContainer().compareStorageContainerCompatibility( this.image.getContainer() ))
@@ -414,5 +417,4 @@ public class FourierConvolution<T extends RealType<T>, S extends RealType<S>> im
 
 	@Override
 	public String getErrorMessage()  { return errorMessage; }
-
 }
