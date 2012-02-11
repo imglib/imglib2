@@ -112,7 +112,10 @@ main:		while( cursorDim.hasNext() )
 
 				// set the cursor in the integral image to the right position
 				cursorOut.setPosition( tmpOut );
-
+				
+				// integrate over the line
+				integrateLineDim0( converter, cursorIn, cursorOut, sum, tmpVar, size );
+				/*
 				// compute the first pixel
 				converter.convert( cursorIn.getType(), sum );
 				cursorOut.getType().set( sum );
@@ -126,6 +129,7 @@ main:		while( cursorDim.hasNext() )
 					sum.add( tmpVar );
 					cursorOut.getType().set( sum );
 				}
+				*/
 			}
 
 			cursorIn.close();
@@ -203,6 +207,9 @@ main:		while( cursorDim.hasNext() )
 				// update the cursor in the input image to the current dimension position
 				cursor.setPosition( tmp );
 
+				// sum up line
+				integrateLine( d, cursor, sum, size );
+				/*
 				// init sum on first pixel that is not zero
 				sum.set( cursor.getType() );
 
@@ -213,12 +220,44 @@ main:		while( cursorDim.hasNext() )
 					sum.add( cursor.getType() );
 					cursor.getType().set( sum );
 				}
+				*/
 			}
 
 			cursor.close();
 		}
 
 		return true;
+	}
+	
+	protected void integrateLineDim0( final Converter< R, T > converter, final LocalizableByDimCursor< R > cursorIn, final LocalizableByDimCursor< T > cursorOut, final T sum, final T tmpVar, final int size )
+	{
+		// compute the first pixel
+		converter.convert( cursorIn.getType(), sum );
+		cursorOut.getType().set( sum );
+
+		for ( int i = 2; i < size; ++i )
+		{
+			cursorIn.fwd( 0 );
+			cursorOut.fwd( 0 );
+
+			converter.convert( cursorIn.getType(), tmpVar );
+			sum.add( tmpVar );
+			cursorOut.getType().set( sum );
+		}		
+	}
+
+	protected void integrateLine( final int d, final LocalizableByDimCursor< T > cursor, final T sum, final int size )
+	{
+		// init sum on first pixel that is not zero
+		sum.set( cursor.getType() );
+
+		for ( int i = 2; i < size; ++i )
+		{
+			cursor.fwd( d );
+
+			sum.add( cursor.getType() );
+			cursor.getType().set( sum );
+		}
 	}
 
 	@Override
