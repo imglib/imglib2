@@ -27,7 +27,7 @@ public class ScaleAreaAveraging2d< T extends RealType<T>, R extends RealType<R>>
 		
 		if ( targetType.getClass().isInstance( integralImg.createType() ) )
 		{
-			converter = (Converter<T, R>) new VoidConverter<T>();
+			converter = (Converter<T, R>) (Converter<?,?>) new VoidConverter<T>(); // double cast to workaround javac error
 		}
 		else
 		{
