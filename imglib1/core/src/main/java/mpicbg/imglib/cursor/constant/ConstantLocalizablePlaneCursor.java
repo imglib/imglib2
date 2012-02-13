@@ -1,0 +1,139 @@
+/**
+ * Copyright (c) 2009--2012, Tobias Pietzsch, Stephan Preibisch & Stephan Saalfeld
+ * All rights reserved.
+ * 
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ * 
+ * Redistributions of source code must retain the above copyright notice, this
+ * list of conditions and the following disclaimer.  Redistributions in binary
+ * form must reproduce the above copyright notice, this list of conditions and
+ * the following disclaimer in the documentation and/or other materials
+ * provided with the distribution.  Neither the name of the Fiji project nor
+ * the names of its contributors may be used to endorse or promote products
+ * derived from this software without specific prior written permission.
+ * 
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
+ */
+package mpicbg.imglib.cursor.constant;
+
+import mpicbg.imglib.container.constant.ConstantContainer;
+import mpicbg.imglib.cursor.LocalizablePlaneCursor;
+import mpicbg.imglib.cursor.shapelist.ShapeListLocalizablePlaneCursor;
+import mpicbg.imglib.image.Image;
+import mpicbg.imglib.type.Type;
+
+/**
+ * A simple {@link LocalizablePlaneCursor} that always returns the same value at each position. Here I just used Saalfeld's
+ * implementation from the {@link ShapeListLocalizablePlaneCursor}.
+ * 
+ * @author Stephan Saalfeld & Stephan Preibisch
+ *
+ * @param <T>
+ */
+public class ConstantLocalizablePlaneCursor <T extends Type<T>> extends ConstantLocalizableByDimCursor<T> implements LocalizablePlaneCursor<T>
+{
+	protected int planeDimA, planeDimB;
+	
+	/**
+	 * A simple {@link LocalizablePlaneCursor} that always returns the same value at each position. Here I just used Saalfeld's
+	 * implementation from the {@link ShapeListLocalizablePlaneCursor}.
+	 * 
+	 * @author Stephan Saalfeld & Stephan Preibisch
+	 *
+	 * @param <T>
+	 */
+	public ConstantLocalizablePlaneCursor( final ConstantContainer< T > container, final Image< T > image, final T type ) 
+	{
+		super( container, image, type );
+	}	
+	
+	/**
+	 * TODO Not the most efficient way to calculate this on demand.  Better: count an index while moving...
+	 */
+	@Override 
+	public boolean hasNext()
+	{
+		final int sizeB = dimensions[ planeDimB ] - 1;
+		if ( position[ planeDimB ] < sizeB )
+			return true;
+		else if ( position[ planeDimB ] > sizeB )
+			return false;
+		
+		final int sizeA = dimensions[ planeDimA ] - 1;
+		if ( position[ planeDimA ] < sizeA )
+			return true;
+		
+		return false;
+	}
+	
+	@Override
+	public void fwd()
+	{
+		if ( ++position[ planeDimA ] >= dimensions[ planeDimA ] )
+		{
+			position[ planeDimA ] = 0;
+			++position[ planeDimB ];
+		}
+	}
+	
+	@Override
+	public void reset( final int planeDimA, final int planeDimB, final int[] dimensionPositions )
+	{
+		this.planeDimA = planeDimA;
+		this.planeDimB = planeDimB;
+		
+		setPosition( dimensionPositions );
+		position[ planeDimA ] = -1;
+		position[ planeDimA ] = 0;				
+	}
+
+	@Override
+	public void reset( final int planeDimA, final int planeDimB )
+	{
+		if ( dimensions == null )
+			return;
+
+		reset( planeDimA, planeDimB, new int[ numDimensions ] );
+	}
+	
+	@Override
+	public void reset()
+	{
+		if ( dimensions == null )
+			return;
+		
+		reset( 0, 1, new int[ numDimensions ] );		
+	}
+
+	@Override
+	public void getPosition( int[] position )
+	{
+		for ( int d = 0; d < numDimensions; d++ )
+			position[ d ] = this.position[ d ];
+	}
+	
+	@Override
+	public int[] getPosition(){ return position.clone(); }
+	
+	@Override
+	public int getPosition( final int dim ){ return position[ dim ]; }
+	
+	@Override
+	public void setPosition( final int[] position )
+	{
+		for ( int d = 0; d < numDimensions; d++ )
+			this.position[ d ] = position[ d ];
+	}
+	
+}
