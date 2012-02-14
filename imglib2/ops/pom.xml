@@ -22,6 +22,12 @@
       <artifactId>imglib2</artifactId>
       <version>${project.version}</version>
     </dependency>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>4.8.1</version>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
 
   <build>
@@ -43,11 +49,11 @@
   <repositories>
     <repository>
       <id>imagej.releases</id>
-      <url>http://dev.imagejdev.org/maven2/releases</url>
+      <url>http://code.imagej.net/maven2/releases</url>
     </repository>
     <repository>
       <id>imagej.snapshots</id>
-      <url>http://dev.imagejdev.org/maven2/snapshots</url>
+      <url>http://code.imagej.net/maven2/snapshots</url>
     </repository>
   </repositories>
 

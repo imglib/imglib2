@@ -7,15 +7,15 @@ import net.imglib2.type.numeric.RealType;
 
 public class Difference extends BinaryOperation
 {
-	public Difference(final IterableRealInterval<? extends RealType<?>> left, final IterableRealInterval<? extends RealType<?>> right) {
+	public <S extends RealType<S>, R extends RealType<R>> Difference(final IterableRealInterval<S> left, final IterableRealInterval<R> right) {
 		super(left, right);
 	}
 
-	public Difference(final IFunction fn, final IterableRealInterval<? extends RealType<?>> right) {
+	public <R extends RealType<R>> Difference(final IFunction fn, final IterableRealInterval<R> right) {
 		super(fn, right);
 	}
 
-	public Difference(final IterableRealInterval<? extends RealType<?>> left, final IFunction fn) {
+	public <R extends RealType<R>> Difference(final IterableRealInterval<R> left, final IFunction fn) {
 		super(left, fn);
 	}
 
@@ -23,11 +23,11 @@ public class Difference extends BinaryOperation
 		super(fn1, fn2);
 	}
 	
-	public Difference(final IterableRealInterval<? extends RealType<?>> left, final Number val) {
+	public <R extends RealType<R>> Difference(final IterableRealInterval<R> left, final Number val) {
 		super(left, val);
 	}
 
-	public Difference(final Number val,final IterableRealInterval<? extends RealType<?>> right) {
+	public <R extends RealType<R>> Difference(final Number val,final IterableRealInterval<R> right) {
 		super(val, right);
 	}
 

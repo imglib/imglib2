@@ -264,7 +264,7 @@ public class FourierTransform<T extends RealType<T>, S extends ComplexType<S>> i
 
 		// rearrange quadrants if wanted
 		if ( rearrangement == Rearrangement.REARRANGE_QUADRANTS )
-			FFTFunctions.rearrangeFFTQuadrants( fftImage, getNumThreads() );
+			FFTFunctions.rearrangeFFTQuadrants( fftImage, true, getNumThreads() );
 			
         processingTime = System.currentTimeMillis() - startTime;
 

@@ -56,7 +56,7 @@ final public class ListLocalizingCursor< T > extends AbstractLocalizingCursor< T
 		this.max = new long[ n ];
 		for ( int d = 0; d < n; ++d )
 		{
-			max[ d ] = cursor.max[ 0 ];
+			max[ d ] = cursor.max[ d ];
 			position[ d ] = cursor.position[ d ];
 		}
 

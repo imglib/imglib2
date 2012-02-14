@@ -64,7 +64,7 @@ public class AlternatingFunction<T> implements Function<long[],T> {
 	public void evaluate(Neighborhood<long[]> neigh, long[] point, T output) {
 		if (relativePosition == null) {
 			relativePosition = new long[point.length];
-			localNeigh = neigh.duplicate();
+			localNeigh = neigh.copy();
 		}
 		for (int i = 0; i < relativePosition.length; i++)
 			relativePosition[i] = point[i];
@@ -83,10 +83,10 @@ public class AlternatingFunction<T> implements Function<long[],T> {
 	}
 	
 	@Override
-	public AlternatingFunction<T> duplicate() {
+	public AlternatingFunction<T> copy() {
 		AlternatingFunction<T> newFunc = new AlternatingFunction<T>(dimension);
 		for (Function<long[],T> f : functions)
-			newFunc.add(f.duplicate());
+			newFunc.add(f.copy());
 		return newFunc;
 	}
 }

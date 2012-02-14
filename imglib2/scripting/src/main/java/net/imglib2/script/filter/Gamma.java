@@ -40,8 +40,8 @@ public class Gamma extends AbstractFilterFn
 	}
 
 	@SuppressWarnings("boxing")
-	public Gamma(final IterableRealInterval<? extends RealType<?>> img, final Number val) {
-		this(new ImageFunction(img), val, 0, img.firstElement().getMaxValue());
+	public <R extends RealType<R>> Gamma(final IterableRealInterval<R> img, final Number val) {
+		this(new ImageFunction<R>(img), val, 0, img.firstElement().getMaxValue());
 	}
 
 	@Override

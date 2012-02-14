@@ -1,10 +1,10 @@
 /**
  * Copyright (c) 2009--2010, Stephan Preibisch & Stephan Saalfeld
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * Redistributions of source code must retain the above copyright notice, this
  * list of conditions and the following disclaimer.  Redistributions in binary
  * form must reproduce the above copyright notice, this list of conditions and
@@ -12,7 +12,7 @@
  * provided with the distribution.  Neither the name of the Fiji project nor
  * the names of its contributors may be used to endorse or promote products
  * derived from this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -39,16 +39,23 @@ import net.imglib2.util.Util;
 final public class LongType extends AbstractIntegerType<LongType> implements NativeType<LongType>
 {
 	private int i = 0;
-	
+
 	final protected NativeImg<LongType, ? extends LongAccess> img;
-	
-	// the DataAccess that holds the information 
+
+	// the DataAccess that holds the information
 	protected LongAccess dataAccess;
-	
+
 	// this is the constructor if you want it to read from an array
-	public LongType( NativeImg<LongType, ? extends LongAccess> longStorage )
+	public LongType( final NativeImg<LongType, ? extends LongAccess> longStorage )
 	{
 		img = longStorage;
+	}
+
+	// this is the constructor if you want to specify the dataAccess
+	public LongType( final LongAccess access )
+	{
+		img = null;
+		dataAccess = access;
 	}
 
 	// this is the constructor if you want it to be a variable
@@ -67,13 +74,13 @@ final public class LongType extends AbstractIntegerType<LongType> implements Nat
 	{
 		// create the container
 		final NativeImg<LongType, ? extends LongAccess> container = storageFactory.createLongInstance( dim, 1 );
-		
+
 		// create a Type that is linked to the container
 		final LongType linkedType = new LongType( container );
-		
+
 		// pass it to the NativeContainer
 		container.setLinkedType( linkedType );
-		
+
 		return container;
 	}
 
@@ -82,7 +89,7 @@ final public class LongType extends AbstractIntegerType<LongType> implements Nat
 
 	@Override
 	public LongType duplicateTypeOnSameNativeImg() { return new LongType( img ); }
-	
+
 	public long get(){ return dataAccess.getValue( i ); }
 	public void set( final long f ){ dataAccess.setValue( i, f ); }
 
@@ -94,12 +101,12 @@ final public class LongType extends AbstractIntegerType<LongType> implements Nat
 	public void setInteger( final int f ){ set( f ); }
 	@Override
 	public void setInteger( final long f ){ set( f ); }
-	
+
 	@Override
 	public double getMaxValue() { return Long.MAX_VALUE; }
 	@Override
 	public double getMinValue()  { return Long.MIN_VALUE; }
-	
+
 	@Override
 	public void mul( final float c )
 	{
@@ -111,7 +118,7 @@ final public class LongType extends AbstractIntegerType<LongType> implements Nat
 	{
 		set( Util.round( get() * c ) );
 	}
-	
+
 	@Override
 	public void add( final LongType c )
 	{
@@ -137,18 +144,18 @@ final public class LongType extends AbstractIntegerType<LongType> implements Nat
 	}
 
 	@Override
-	public int compareTo( final LongType c ) 
-	{ 
+	public int compareTo( final LongType c )
+	{
 		final long a = get();
 		final long b = c.get();
 		if ( a > b )
 			return 1;
 		else if ( a < b )
 			return -1;
-		else 
+		else
 			return 0;
 	}
-	
+
 	@Override
 	public void set( final LongType c ){ set( c.get() ); }
 
@@ -177,7 +184,7 @@ final public class LongType extends AbstractIntegerType<LongType> implements Nat
 
 	@Override
 	public LongType copy(){ return new LongType( get() ); }
-	
+
 	@Override
 	public int getEntitiesPerPixel() { return 1; }
 
@@ -185,7 +192,7 @@ final public class LongType extends AbstractIntegerType<LongType> implements Nat
 	public void updateIndex( final int index ) { this.i = index; }
 	@Override
 	public int getIndex() { return i; }
-	
+
 	@Override
 	public void incIndex() { ++i; }
 	@Override

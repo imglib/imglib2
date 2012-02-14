@@ -7,7 +7,7 @@ import net.imglib2.type.numeric.RealType;
 
 public class Cbrt extends UnaryOperation {
 
-	public Cbrt(final IterableRealInterval<? extends RealType<?>> img) {
+	public <R extends RealType<R>> Cbrt(final IterableRealInterval<R> img) {
 		super(img);
 	}
 	public Cbrt(final IFunction fn) {

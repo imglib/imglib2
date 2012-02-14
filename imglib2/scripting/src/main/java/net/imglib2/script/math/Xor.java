@@ -12,15 +12,15 @@ import net.imglib2.type.numeric.RealType;
  *  Imgs when possible. */
 public class Xor extends BinaryOperation
 {
-	public Xor(final IterableRealInterval<? extends RealType<?>> left, final IterableRealInterval<? extends RealType<?>> right) {
+	public <S extends RealType<S>, R extends RealType<R>> Xor(final IterableRealInterval<S> left, final IterableRealInterval<R> right) {
 		super(left, right);
 	}
 
-	public Xor(final IFunction fn, final IterableRealInterval<? extends RealType<?>> right) {
+	public <R extends RealType<R>> Xor(final IFunction fn, final IterableRealInterval<R> right) {
 		super(fn, right);
 	}
 
-	public Xor(final IterableRealInterval<? extends RealType<?>> left, final IFunction fn) {
+	public <R extends RealType<R>> Xor(final IterableRealInterval<R> left, final IFunction fn) {
 		super(left, fn);
 	}
 
@@ -28,11 +28,11 @@ public class Xor extends BinaryOperation
 		super(fn1, fn2);
 	}
 	
-	public Xor(final IterableRealInterval<? extends RealType<?>> left, final Number val) {
+	public <R extends RealType<R>> Xor(final IterableRealInterval<R> left, final Number val) {
 		super(left, val);
 	}
 
-	public Xor(final Number val,final IterableRealInterval<? extends RealType<?>> right) {
+	public <R extends RealType<R>> Xor(final Number val,final IterableRealInterval<R> right) {
 		super(val, right);
 	}
 

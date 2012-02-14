@@ -5,12 +5,12 @@ All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are met:
-  * Redistributions of source code must retain the above copyright
+ * Redistributions of source code must retain the above copyright
     notice, this list of conditions and the following disclaimer.
-  * Redistributions in binary form must reproduce the above copyright
+ * Redistributions in binary form must reproduce the above copyright
     notice, this list of conditions and the following disclaimer in the
     documentation and/or other materials provided with the distribution.
-  * Neither the name of the Fiji project developers nor the
+ * Neither the name of the Fiji project developers nor the
     names of its contributors may be used to endorse or promote products
     derived from this software without specific prior written permission.
 
@@ -25,33 +25,35 @@ INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
 CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE.
-*/
+ */
 
 package net.imglib2.ops.operation.binary.real;
 
 import net.imglib2.ops.BinaryOperation;
-import net.imglib2.ops.Real;
-import net.imglib2.ops.RealOutput;
+import net.imglib2.type.numeric.ComplexType;
 
 /**
+ * A real operation that sets the real component of an output to the minimum
+ * value of the real components of input 1 and input 2.
  * 
  * @author Barry DeZonia
- *
+ * 
  */
-public final class RealMin extends RealOutput implements BinaryOperation<Real,Real,Real> {
-
+public final class RealMin
+		implements BinaryOperation<ComplexType<?>,ComplexType<?>,ComplexType<?>>
+{
 	@Override
-	public void compute(Real x1, Real x2, Real output) {
-		double value;
-		if (x1.getReal() < x2.getReal())
-			value = x1.getReal();
+	public ComplexType<?> compute(ComplexType<?> x1, ComplexType<?> x2, ComplexType<?> output) {
+		if (x1.getRealDouble() < x2.getRealDouble())
+			output.setReal(x1.getRealDouble());
 		else
-			value = x2.getReal();
-		output.setReal(value);
+			output.setReal(x2.getRealDouble());
+
+		return output;
 	}
 
 	@Override
-	public RealMin duplicate() {
+	public RealMin copy() {
 		return new RealMin();
 	}
 }

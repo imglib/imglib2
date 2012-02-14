@@ -36,23 +36,23 @@ import net.imglib2.ops.BinaryRelation;
  * @author Barry DeZonia
  *
  */
-public final class AndRelation<T> implements BinaryRelation<T> {
+public final class AndRelation<T,U> implements BinaryRelation<T,U> {
 
-	private final BinaryRelation<T> rel1;
-	private final BinaryRelation<T> rel2;
+	private final BinaryRelation<T,U> rel1;
+	private final BinaryRelation<T,U> rel2;
 
-	public AndRelation(BinaryRelation<T> rel1,BinaryRelation<T> rel2) {
+	public AndRelation(BinaryRelation<T,U> rel1,BinaryRelation<T,U> rel2) {
 		this.rel1 = rel1;
 		this.rel2 = rel2;
 	}
 	
 	@Override
-	public boolean holds(T val1, T val2) {
-		return rel1.holds(val1,val2) && rel2.holds(val1, val2);
+	public boolean holds(T val1, U val2) {
+		return rel1.holds(val1, val2) && rel2.holds(val1, val2);
 	}
 
 	@Override
-	public AndRelation<T> duplicate() {
-		return new AndRelation<T>(rel1.duplicate(), rel2.duplicate());
+	public AndRelation<T,U> copy() {
+		return new AndRelation<T,U>(rel1.copy(), rel2.copy());
 	}
 }

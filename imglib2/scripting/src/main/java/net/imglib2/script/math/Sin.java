@@ -7,7 +7,7 @@ import net.imglib2.type.numeric.RealType;
 
 public class Sin extends UnaryOperation {
 
-	public Sin(final IterableRealInterval<? extends RealType<?>> img) {
+	public <R extends RealType<R>> Sin(final IterableRealInterval<R> img) {
 		super(img);
 	}
 	public Sin(final IFunction fn) {

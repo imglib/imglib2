@@ -7,7 +7,7 @@ import net.imglib2.type.numeric.RealType;
 
 public class ToRadians extends UnaryOperation {
 
-	public ToRadians(final IterableRealInterval<? extends RealType<?>> img) {
+	public <R extends RealType<R>> ToRadians(final IterableRealInterval<R> img) {
 		super(img);
 	}
 	public ToRadians(final IFunction fn) {

@@ -27,7 +27,7 @@ public class NeighborhoodAdapterFunction<INDEX, T> implements Function<INDEX,T> 
 	}
 
 	@Override
-	public NeighborhoodAdapterFunction<INDEX, T> duplicate() {
-		return new NeighborhoodAdapterFunction<INDEX, T>(function.duplicate(), localNeigh.duplicate());
+	public NeighborhoodAdapterFunction<INDEX, T> copy() {
+		return new NeighborhoodAdapterFunction<INDEX, T>(function.copy(), localNeigh.copy());
 	}
 }

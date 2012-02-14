@@ -7,15 +7,15 @@ import net.imglib2.type.numeric.RealType;
 
 /** Returns sqrt(x2 +y2) without intermediate overflow or underflow. */
 public class IEEEremainder extends BinaryOperation {
-	public IEEEremainder(final IterableRealInterval<? extends RealType<?>> left, final IterableRealInterval<? extends RealType<?>> right) {
+	public <S extends RealType<S>, R extends RealType<R>> IEEEremainder(final IterableRealInterval<S> left, final IterableRealInterval<R> right) {
 		super(left, right);
 	}
 
-	public IEEEremainder(final IFunction fn, final IterableRealInterval<? extends RealType<?>> right) {
+	public <R extends RealType<R>> IEEEremainder(final IFunction fn, final IterableRealInterval<R> right) {
 		super(fn, right);
 	}
 
-	public IEEEremainder(final IterableRealInterval<? extends RealType<?>> left, final IFunction fn) {
+	public <R extends RealType<R>> IEEEremainder(final IterableRealInterval<R> left, final IFunction fn) {
 		super(left, fn);
 	}
 
@@ -23,11 +23,11 @@ public class IEEEremainder extends BinaryOperation {
 		super(fn1, fn2);
 	}
 	
-	public IEEEremainder(final IterableRealInterval<? extends RealType<?>> left, final Number val) {
+	public <R extends RealType<R>> IEEEremainder(final IterableRealInterval<R> left, final Number val) {
 		super(left, val);
 	}
 
-	public IEEEremainder(final Number val,final IterableRealInterval<? extends RealType<?>> right) {
+	public <R extends RealType<R>> IEEEremainder(final Number val,final IterableRealInterval<R> right) {
 		super(val, right);
 	}
 
