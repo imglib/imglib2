@@ -46,14 +46,19 @@ import net.imglib2.type.numeric.complex.ComplexDoubleType;
  * @author Barry DeZonia
  * 
  */
-public final class ComplexArccoth
-		implements UnaryOperation<ComplexType<?>,ComplexType<?>> {
-
-	private static final ComplexMultiply mulFunc = new ComplexMultiply();
-	private static final ComplexAdd addFunc = new ComplexAdd();
-	private static final ComplexSubtract subFunc = new ComplexSubtract();
-	private static final ComplexDivide divFunc = new ComplexDivide();
-	private static final ComplexLog logFunc = new ComplexLog();
+public final class ComplexArccoth<I extends ComplexType<I>, O extends ComplexType<O>>
+	implements UnaryOperation<I,O>
+{
+	private final ComplexAdd<I,ComplexDoubleType,ComplexDoubleType>
+		addFunc = new ComplexAdd<I,ComplexDoubleType,ComplexDoubleType>();
+	private final ComplexSubtract<I,ComplexDoubleType,ComplexDoubleType>
+		subFunc = new ComplexSubtract<I,ComplexDoubleType,ComplexDoubleType>();
+	private final ComplexDivide<ComplexDoubleType,ComplexDoubleType,ComplexDoubleType>
+		divFunc = new ComplexDivide<ComplexDoubleType,ComplexDoubleType,ComplexDoubleType>();
+	private final ComplexLog<ComplexDoubleType,ComplexDoubleType>
+		logFunc = new ComplexLog<ComplexDoubleType,ComplexDoubleType>();
+	private final ComplexMultiply<ComplexDoubleType,ComplexDoubleType,O>
+		mulFunc = new ComplexMultiply<ComplexDoubleType,ComplexDoubleType,O>();
 
 	private static final ComplexDoubleType ONE = new ComplexDoubleType(1,0);
 	private static final ComplexDoubleType ONE_HALF = new ComplexDoubleType(0.5,0);
@@ -64,7 +69,7 @@ public final class ComplexArccoth
 	private final ComplexDoubleType log = new ComplexDoubleType();
 
 	@Override
-	public ComplexType<?> compute(ComplexType<?> z, ComplexType<?> output) {
+	public O compute(I z, O output) {
 		addFunc.compute(z, ONE, sum);
 		subFunc.compute(z, ONE, diff);
 		divFunc.compute(sum, diff, quotient);
@@ -74,8 +79,8 @@ public final class ComplexArccoth
 	}
 
 	@Override
-	public ComplexArccoth copy() {
-		return new ComplexArccoth();
+	public ComplexArccoth<I,O> copy() {
+		return new ComplexArccoth<I,O>();
 	}
 
 }

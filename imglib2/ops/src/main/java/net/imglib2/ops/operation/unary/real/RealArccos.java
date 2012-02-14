@@ -41,19 +41,19 @@ import net.imglib2.type.numeric.ComplexType;
  * @author Barry DeZonia
  * 
  */
-public final class RealArccos
-		implements UnaryOperation<ComplexType<?>, ComplexType<?>>
+public final class RealArccos<I extends ComplexType<I>, O extends ComplexType<O>>
+	implements UnaryOperation<I,O>
 {
 	@Override
-	public ComplexType<?> compute(ComplexType<?> x, ComplexType<?> output) {
+	public O compute(I x, O output) {
 		double value = Math.acos(x.getRealDouble());
 		output.setReal(value);
 		return output;
 	}
 
 	@Override
-	public RealArccos copy() {
-		return new RealArccos();
+	public RealArccos<I,O> copy() {
+		return new RealArccos<I,O>();
 	}
 
 }

@@ -39,19 +39,19 @@ import net.imglib2.type.numeric.ComplexType;
  * @author Barry DeZonia
  * 
  */
-public final class RealSinh
-		implements UnaryOperation<ComplexType<?>, ComplexType<?>>
+public final class RealSinh<I extends ComplexType<I>, O extends ComplexType<O>>
+	implements UnaryOperation<I,O>
 {
 	@Override
-	public ComplexType<?> compute(ComplexType<?> x, ComplexType<?> output) {
+	public O compute(I x, O output) {
 		double value = Math.sinh(x.getRealDouble());
 		output.setReal(value);
 		return output;
 	}
 
 	@Override
-	public RealSinh copy() {
-		return new RealSinh();
+	public RealSinh<I,O> copy() {
+		return new RealSinh<I,O>();
 	}
 
 }

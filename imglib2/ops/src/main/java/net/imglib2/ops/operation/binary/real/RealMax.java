@@ -39,11 +39,14 @@ import net.imglib2.type.numeric.ComplexType;
  * @author Barry DeZonia
  * 
  */
-public final class RealMax
-		implements BinaryOperation<ComplexType<?>,ComplexType<?>,ComplexType<?>>
+public final class RealMax<
+		I1 extends ComplexType<I1>,
+		I2 extends ComplexType<I2>,
+		O extends ComplexType<O>>
+	implements BinaryOperation<I1, I2, O>
 {
 	@Override
-	public ComplexType<?> compute(ComplexType<?> x1, ComplexType<?> x2, ComplexType<?> output) {
+	public O compute(I1 x1, I2 x2, O output) {
 		if (x1.getRealDouble() > x2.getRealDouble())
 			output.setReal(x1.getRealDouble());
 		else
@@ -53,7 +56,7 @@ public final class RealMax
 	}
 
 	@Override
-	public RealMax copy() {
-		return new RealMax();
+	public RealMax<I1,I2,O> copy() {
+		return new RealMax<I1,I2,O>();
 	}
 }

@@ -39,18 +39,18 @@ import net.imglib2.type.numeric.ComplexType;
  * @author Barry DeZonia
  * 
  */
-public final class RealSqrt
-		implements UnaryOperation<ComplexType<?>, ComplexType<?>>
+public final class RealSqrt<I extends ComplexType<I>, O extends ComplexType<O>>
+	implements UnaryOperation<I,O>
 {
 	@Override
-	public ComplexType<?> compute(ComplexType<?> x, ComplexType<?> output) {
+	public O compute(I x, O output) {
 		output.setReal(Math.sqrt(x.getRealDouble()));
 		return output;
 	}
 
 	@Override
-	public RealSqrt copy() {
-		return new RealSqrt();
+	public RealSqrt<I,O> copy() {
+		return new RealSqrt<I,O>();
 	}
 
 }

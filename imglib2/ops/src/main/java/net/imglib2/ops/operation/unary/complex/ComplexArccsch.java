@@ -33,33 +33,35 @@ import net.imglib2.ops.UnaryOperation;
 import net.imglib2.type.numeric.ComplexType;
 import net.imglib2.type.numeric.complex.ComplexDoubleType;
 
-//Formula taken from MATLAB documentation
+// verified formula with Mathworld's definition for Inverse Cosecant
 
 /**
- * Sets an output complex number to the inverse hyperbolic cosescant of an
- * input complex number.
+ * Sets an output complex number to the inverse hyperbolic cosecant of an input
+ * complex number.
  * 
  * @author Barry DeZonia
  * 
  */
-public final class ComplexArccsch
-		implements UnaryOperation<ComplexType<?>, ComplexType<?>> {
-
-	private static final ComplexArcsinh arcsinhFunc = new ComplexArcsinh();
-	private static final ComplexReciprocal recipFunc = new ComplexReciprocal();
+public final class ComplexArccsch<I extends ComplexType<I>, O extends ComplexType<O>>
+	implements UnaryOperation<I,O>
+{
+	private final ComplexReciprocal<I,ComplexDoubleType>
+		recipFunc = new ComplexReciprocal<I,ComplexDoubleType>();
+	private final ComplexArcsinh<ComplexDoubleType,O>
+		arcsinhFunc = new ComplexArcsinh<ComplexDoubleType,O>();
 
 	private final ComplexDoubleType recipZ = new ComplexDoubleType();
 
 	@Override
-	public ComplexType<?> compute(ComplexType<?> z, ComplexType<?> output) {
+	public O compute(I z, O output) {
 		recipFunc.compute(z, recipZ);
 		arcsinhFunc.compute(recipZ, output);
 		return output;
 	}
 
 	@Override
-	public ComplexArccsch copy() {
-		return new ComplexArccsch();
+	public ComplexArccsch<I,O> copy() {
+		return new ComplexArccsch<I,O>();
 	}
 
 }

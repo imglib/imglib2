@@ -50,9 +50,9 @@ import net.imglib2.type.numeric.complex.ComplexDoubleType;
  * @author Barry DeZonia
  * 
  */
-public class DFTFunction<T extends ComplexType<T>> implements
-		Function<long[], T> {
-
+public class DFTFunction<T extends ComplexType<T>>
+	implements Function<long[], T>
+{
 	// -- instance variables --
 
 	private Function<long[], T> spatialFunction;
@@ -60,12 +60,12 @@ public class DFTFunction<T extends ComplexType<T>> implements
 	private long[] negOffs;
 	private long[] posOffs;
 	private DiscreteNeigh neighborhood;
-	private ComplexImageFunction<ComplexDoubleType> dataArray;
+	private ComplexImageFunction<ComplexDoubleType,ComplexDoubleType> dataArray;
 
 	// -- temporary per instance working variables --
-	private final ComplexAdd adder;
-	private final ComplexExp exper;
-	private final ComplexMultiply multiplier;
+	private final ComplexAdd<T,T,T> adder;
+	private final ComplexExp<T,T> exper;
+	private final ComplexMultiply<T,T,T> multiplier;
 
 	private final T MINUS_TWO_PI_I;
 	private final T constant;
@@ -89,10 +89,10 @@ public class DFTFunction<T extends ComplexType<T>> implements
 
 		this.tmp = new ComplexDoubleType();
 
-		this.adder = new ComplexAdd();
-		this.exper = new ComplexExp();
-		this.multiplier = new ComplexMultiply();
-
+		this.adder = new ComplexAdd<T,T,T>();
+		this.exper = new ComplexExp<T,T>();
+		this.multiplier = new ComplexMultiply<T,T,T>();
+		
 		this.spatialFunction = spatialFunction;
 		this.span = span.clone();
 		this.negOffs = negOffs.clone();
@@ -134,7 +134,7 @@ public class DFTFunction<T extends ComplexType<T>> implements
 
 	// TODO - use a ComplexImageAssignment here instead? Speed. Elegance?
 
-	private ComplexImageFunction<ComplexDoubleType> createDataArray() {
+	private ComplexImageFunction<ComplexDoubleType,ComplexDoubleType> createDataArray() {
 		// TODO - this factory is always an array in memory with corresponding
 		// limitations
 		final ImgFactory<ComplexDoubleType> imgFactory = new ArrayImgFactory<ComplexDoubleType>();
@@ -163,7 +163,7 @@ public class DFTFunction<T extends ComplexType<T>> implements
 						sum.getImaginaryDouble());
 			}
 		}
-		return new ComplexImageFunction<ComplexDoubleType>(img,
+		return new ComplexImageFunction<ComplexDoubleType,ComplexDoubleType>(img,
 				new ComplexDoubleType());
 	}
 

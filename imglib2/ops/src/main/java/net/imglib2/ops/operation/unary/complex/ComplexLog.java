@@ -43,11 +43,11 @@ import net.imglib2.type.numeric.ComplexType;
  * @author Barry DeZonia
  * 
  */
-public final class ComplexLog
-		implements UnaryOperation<ComplexType<?>, ComplexType<?>> {
-
+public final class ComplexLog<I extends ComplexType<I>, O extends ComplexType<O>>
+	implements UnaryOperation<I,O>
+{
 	@Override
-	public ComplexType<?> compute(ComplexType<?> z, ComplexType<?> output) {
+	public O compute(I z, O output) {
 		double modulus = ComplexHelper.getModulus(z);
 		double argument = ComplexHelper.getArgument(z);
 		double x = Math.log(modulus);
@@ -57,8 +57,8 @@ public final class ComplexLog
 	}
 
 	@Override
-	public ComplexLog copy() {
-		return new ComplexLog();
+	public ComplexLog<I,O> copy() {
+		return new ComplexLog<I,O>();
 	}
 
 }

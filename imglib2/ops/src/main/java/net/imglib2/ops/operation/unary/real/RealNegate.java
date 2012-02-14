@@ -39,19 +39,19 @@ import net.imglib2.type.numeric.ComplexType;
  * @author Barry DeZonia
  * 
  */
-public final class RealNegate
-		implements UnaryOperation<ComplexType<?>, ComplexType<?>>
+public final class RealNegate<I extends ComplexType<I>, O extends ComplexType<O>>
+	implements UnaryOperation<I,O>
 {
 	@Override
-	public ComplexType<?> compute(ComplexType<?> x, ComplexType<?> output) {
+	public O compute(I x, O output) {
 		double value = -x.getRealDouble();
 		output.setReal(value);
 		return output;
 	}
 
 	@Override
-	public RealNegate copy() {
-		return new RealNegate();
+	public RealNegate<I,O> copy() {
+		return new RealNegate<I,O>();
 	}
 
 }

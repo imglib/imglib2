@@ -40,8 +40,8 @@ import net.imglib2.type.numeric.ComplexType;
  * @author Barry DeZonia
  * 
  */
-public final class RealGammaConstant
-	implements UnaryOperation<ComplexType<?>, ComplexType<?>>
+public final class RealGammaConstant<I extends ComplexType<I>, O extends ComplexType<O>>
+	implements UnaryOperation<I,O>
 {
 	private final double constant;
 
@@ -50,7 +50,7 @@ public final class RealGammaConstant
 	}
 
 	@Override
-	public ComplexType<?> compute(ComplexType<?> x, ComplexType<?> output) {
+	public O compute(I x, O output) {
 		double inputVal = x.getRealDouble();
 		if (inputVal <= 0)
 			output.setReal(0);
@@ -62,8 +62,8 @@ public final class RealGammaConstant
 	}
 
 	@Override
-	public RealGammaConstant copy() {
-		return new RealGammaConstant(constant);
+	public RealGammaConstant<I,O> copy() {
+		return new RealGammaConstant<I,O>(constant);
 	}
 
 }

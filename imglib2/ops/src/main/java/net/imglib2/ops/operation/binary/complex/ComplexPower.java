@@ -44,18 +44,25 @@ import net.imglib2.type.numeric.complex.ComplexDoubleType;
  * @author Barry DeZonia
  * 
  */
-public final class ComplexPower
-		implements BinaryOperation<ComplexType<?>, ComplexType<?>, ComplexType<?>> {
-
-	private static final ComplexLog logFunc = new ComplexLog();
-	private static final ComplexMultiply mulFunc = new ComplexMultiply();
-	private static  final ComplexExp expFunc = new ComplexExp();
+public final class ComplexPower<
+		I1 extends ComplexType<I1>,
+		I2 extends ComplexType<I2>,
+		O extends ComplexType<O>>
+	implements BinaryOperation<I1,I2,O>
+{
+	private final ComplexLog<I1,ComplexDoubleType> logFunc =
+			new ComplexLog<I1,ComplexDoubleType>();
+	private final
+		ComplexMultiply<I2,ComplexDoubleType,ComplexDoubleType>
+			mulFunc =	new ComplexMultiply<I2,ComplexDoubleType,ComplexDoubleType>();
+	private final ComplexExp<ComplexDoubleType,O> expFunc =
+			new ComplexExp<ComplexDoubleType,O>();
 
 	private final ComplexDoubleType logA = new ComplexDoubleType();
 	private final ComplexDoubleType zLogA = new ComplexDoubleType();
 
 	@Override
-	public ComplexType<?> compute(ComplexType<?> a, ComplexType<?> z, ComplexType<?> output) {
+	public O compute(I1 a, I2 z, O output) {
 		logFunc.compute(a, logA);
 		mulFunc.compute(z, logA, zLogA);
 		expFunc.compute(zLogA, output);
@@ -63,8 +70,8 @@ public final class ComplexPower
 	}
 
 	@Override
-	public ComplexPower copy() {
-		return new ComplexPower();
+	public ComplexPower<I1,I2,O> copy() {
+		return new ComplexPower<I1,I2,O>();
 	}
 
 }

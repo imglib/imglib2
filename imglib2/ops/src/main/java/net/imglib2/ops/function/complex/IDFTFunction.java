@@ -60,12 +60,12 @@ public class IDFTFunction<T extends ComplexType<T>> implements
 	private long[] negOffs;
 	private long[] posOffs;
 	private DiscreteNeigh neighborhood;
-	private ComplexImageFunction<ComplexDoubleType> dataArray;
+	private ComplexImageFunction<ComplexDoubleType,ComplexDoubleType> dataArray;
 
 	// -- temporary per instance working variables --
-	private final ComplexAdd adder;
-	private final ComplexExp exper;
-	private final ComplexMultiply multiplier;
+	private final ComplexAdd<T,T,T> adder;
+	private final ComplexExp<T,T> exper;
+	private final ComplexMultiply<T,T,T> multiplier;
 
 	private final T TWO_PI_I;
 
@@ -96,9 +96,9 @@ public class IDFTFunction<T extends ComplexType<T>> implements
 		this.neighborhood = new DiscreteNeigh(span.clone(), this.negOffs,
 				this.posOffs);
 
-		adder = new ComplexAdd();
-		exper = new ComplexExp();
-		multiplier = new ComplexMultiply();
+		adder = new ComplexAdd<T,T,T>();
+		exper = new ComplexExp<T,T>();
+		multiplier = new ComplexMultiply<T,T,T>();
 
 		TWO_PI_I = type.createVariable();
 
@@ -137,7 +137,7 @@ public class IDFTFunction<T extends ComplexType<T>> implements
 
 	// NOTE - may be centered over 0,0 instead of over M/2, N/2
 
-	private ComplexImageFunction<ComplexDoubleType> createDataArray() {
+	private ComplexImageFunction<ComplexDoubleType,ComplexDoubleType> createDataArray() {
 		// TODO - this factory is always an array in memory with corresponding
 		// limitations
 		final ImgFactory<ComplexDoubleType> imgFactory = new ArrayImgFactory<ComplexDoubleType>();
@@ -168,7 +168,7 @@ public class IDFTFunction<T extends ComplexType<T>> implements
 						sum.getImaginaryDouble());
 			}
 		}
-		return new ComplexImageFunction<ComplexDoubleType>(img,
+		return new ComplexImageFunction<ComplexDoubleType,ComplexDoubleType>(img,
 				new ComplexDoubleType());
 	}
 

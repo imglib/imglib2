@@ -39,11 +39,11 @@ import net.imglib2.type.numeric.ComplexType;
  * @author Barry DeZonia
  * 
  */
-public final class RealSin
-		implements UnaryOperation<ComplexType<?>, ComplexType<?>>
+public final class RealSin<I extends ComplexType<I>, O extends ComplexType<O>>
+	implements UnaryOperation<I,O>
 {
 	@Override
-	public ComplexType<?> compute(ComplexType<?> x, ComplexType<?> output) {
+	public O compute(I x, O output) {
 		double value = Math.sin(x.getRealDouble());
 		output.setReal(value);
 
@@ -51,8 +51,8 @@ public final class RealSin
 	}
 
 	@Override
-	public RealSin copy() {
-		return new RealSin();
+	public RealSin<I,O> copy() {
+		return new RealSin<I,O>();
 	}
 
 }

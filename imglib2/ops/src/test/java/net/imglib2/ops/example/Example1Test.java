@@ -95,7 +95,7 @@ public class Example1Test {
 				inputImage, new DoubleType());
 
 		Function<long[], DoubleType> additionFunc = new GeneralBinaryFunction<long[], DoubleType, DoubleType, DoubleType>(
-				constant, image, new RealAdd(), new DoubleType());
+				constant, image, new RealAdd<DoubleType,DoubleType,DoubleType>(), new DoubleType());
 
 		long[] index = neighborhood.getKeyPoint();
 

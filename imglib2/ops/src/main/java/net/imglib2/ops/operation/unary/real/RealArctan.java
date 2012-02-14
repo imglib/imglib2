@@ -41,11 +41,11 @@ import net.imglib2.type.numeric.ComplexType;
  * @author Barry DeZonia
  * 
  */
-public final class RealArctan
-		implements UnaryOperation<ComplexType<?>, ComplexType<?>>
+public final class RealArctan<I extends ComplexType<I>, O extends ComplexType<O>>
+	implements UnaryOperation<I,O>
 {
 	@Override
-	public ComplexType<?> compute(ComplexType<?> x, ComplexType<?> output) {
+	public O compute(I x, O output) {
 		double value = Math.atan(x.getRealDouble());
 		output.setReal(value);
 
@@ -53,8 +53,8 @@ public final class RealArctan
 	}
 
 	@Override
-	public RealArctan copy() {
-		return new RealArctan();
+	public RealArctan<I,O> copy() {
+		return new RealArctan<I,O>();
 	}
 
 }

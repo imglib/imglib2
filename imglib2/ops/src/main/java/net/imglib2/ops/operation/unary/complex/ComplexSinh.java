@@ -46,13 +46,19 @@ import net.imglib2.type.numeric.complex.ComplexDoubleType;
  * @author Barry DeZonia
  * 
  */
-public final class ComplexSinh
-		implements UnaryOperation<ComplexType<?>, ComplexType<?>> {
-
-	private static final ComplexExp expFunc = new ComplexExp();
-	private static final ComplexSubtract diffFunc = new ComplexSubtract();
-	private static final ComplexMultiply mulFunc = new ComplexMultiply();
-	private static final ComplexDivide divFunc = new ComplexDivide();
+public final class ComplexSinh<I extends ComplexType<I>, O extends ComplexType<O>>
+	implements UnaryOperation<I,O>
+{
+	private final ComplexExp<I,ComplexDoubleType>
+		expFunc1 = new ComplexExp<I,ComplexDoubleType>();
+	private final ComplexMultiply<I,ComplexDoubleType,ComplexDoubleType>
+		mulFunc = new ComplexMultiply<I,ComplexDoubleType,ComplexDoubleType>();
+	private final ComplexExp<ComplexDoubleType,ComplexDoubleType>
+		expFunc2 = new ComplexExp<ComplexDoubleType,ComplexDoubleType>();
+	private final ComplexSubtract<ComplexDoubleType,ComplexDoubleType, ComplexDoubleType>
+		diffFunc = new ComplexSubtract<ComplexDoubleType,ComplexDoubleType,ComplexDoubleType>();
+	private final ComplexDivide<ComplexDoubleType,ComplexDoubleType,O>
+		divFunc = new ComplexDivide<ComplexDoubleType,ComplexDoubleType,O>();
 
 	private static final ComplexDoubleType TWO = new ComplexDoubleType(2,0);
 	private static final ComplexDoubleType MINUS_ONE = new ComplexDoubleType(-1,0);
@@ -63,18 +69,18 @@ public final class ComplexSinh
 	private final ComplexDoubleType diff = new ComplexDoubleType();
 
 	@Override
-	public ComplexType<?> compute(ComplexType<?> z, ComplexType<?> output) {
-		expFunc.compute(z, expZ);
+	public O compute(I z, O output) {
+		expFunc1.compute(z, expZ);
 		mulFunc.compute(z, MINUS_ONE, minusZ);
-		expFunc.compute(minusZ, expMinusZ);
+		expFunc2.compute(minusZ, expMinusZ);
 		diffFunc.compute(expZ, expMinusZ, diff);
 		divFunc.compute(diff, TWO, output);
 		return output;
 	}
 
 	@Override
-	public ComplexSinh copy() {
-		return new ComplexSinh();
+	public ComplexSinh<I,O> copy() {
+		return new ComplexSinh<I,O>();
 	}
 
 }

@@ -42,11 +42,11 @@ import net.imglib2.type.numeric.ComplexType;
  * @author Barry DeZonia
  * 
  */
-public class RealSincPi
-		implements UnaryOperation<ComplexType<?>, ComplexType<?>>
+public class RealSincPi<I extends ComplexType<I>, O extends ComplexType<O>>
+	implements UnaryOperation<I,O>
 {
 	@Override
-	public ComplexType<?> compute(ComplexType<?> input, ComplexType<?> output) {
+	public O compute(I input, O output) {
 		double x = input.getRealDouble();
 		double value;
 		if (x == 0)
@@ -58,8 +58,8 @@ public class RealSincPi
 	}
 
 	@Override
-	public RealSincPi copy() {
-		return new RealSincPi();
+	public RealSincPi<I,O> copy() {
+		return new RealSincPi<I,O>();
 	}
 
 }

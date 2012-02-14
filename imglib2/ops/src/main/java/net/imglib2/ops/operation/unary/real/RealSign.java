@@ -40,11 +40,11 @@ import net.imglib2.type.numeric.ComplexType;
  * @author Barry DeZonia
  * 
  */
-public final class RealSign
-		implements UnaryOperation<ComplexType<?>, ComplexType<?>>
+public final class RealSign<I extends ComplexType<I>, O extends ComplexType<O>>
+	implements UnaryOperation<I,O>
 {
 	@Override
-	public ComplexType<?> compute(ComplexType<?> x, ComplexType<?> output) {
+	public O compute(I x, O output) {
 		if (x.getRealDouble() < 0)
 			output.setReal(-1);
 		else if (x.getRealDouble() > 0)
@@ -55,8 +55,8 @@ public final class RealSign
 	}
 
 	@Override
-	public RealSign copy() {
-		return new RealSign();
+	public RealSign<I,O> copy() {
+		return new RealSign<I,O>();
 	}
 
 }

@@ -46,14 +46,21 @@ import net.imglib2.type.numeric.complex.ComplexDoubleType;
  * @author Barry DeZonia
  * 
  */
-public final class ComplexArccot
-		implements UnaryOperation<ComplexType<?>, ComplexType<?>> {
-
-	private static final ComplexMultiply mulFunc = new ComplexMultiply();
-	private static final ComplexAdd addFunc = new ComplexAdd();
-	private static final ComplexSubtract subFunc = new ComplexSubtract();
-	private static final ComplexDivide divFunc = new ComplexDivide();
-	private static final ComplexLog logFunc = new ComplexLog();
+public final class ComplexArccot<I extends ComplexType<I>, O extends ComplexType<O>>
+	implements UnaryOperation<I,O>
+{
+	private final ComplexMultiply<ComplexDoubleType,I,ComplexDoubleType>
+		mulFunc1 = new ComplexMultiply<ComplexDoubleType,I,ComplexDoubleType>();
+	private final ComplexAdd<ComplexDoubleType,ComplexDoubleType,ComplexDoubleType>
+		addFunc = new ComplexAdd<ComplexDoubleType,ComplexDoubleType,ComplexDoubleType>();
+	private final ComplexSubtract<ComplexDoubleType,ComplexDoubleType,ComplexDoubleType>
+		subFunc = new ComplexSubtract<ComplexDoubleType,ComplexDoubleType,ComplexDoubleType>();
+	private final ComplexDivide<ComplexDoubleType,ComplexDoubleType,ComplexDoubleType>
+		divFunc = new ComplexDivide<ComplexDoubleType,ComplexDoubleType,ComplexDoubleType>();
+	private final ComplexLog<ComplexDoubleType,ComplexDoubleType>
+		logFunc = new ComplexLog<ComplexDoubleType,ComplexDoubleType>();
+	private final ComplexMultiply<ComplexDoubleType,ComplexDoubleType,O>
+		mulFunc2 = new ComplexMultiply<ComplexDoubleType,ComplexDoubleType,O>();
 
 	private static final ComplexDoubleType ONE = new ComplexDoubleType(1,0);
 	private static final ComplexDoubleType I = new ComplexDoubleType(0,1);
@@ -66,18 +73,18 @@ public final class ComplexArccot
 	private final ComplexDoubleType log = new ComplexDoubleType();
 
 	@Override
-	public ComplexType<?> compute(ComplexType<?> z, ComplexType<?> output) {
-		mulFunc.compute(I, z, iz);
+	public O compute(I z, O output) {
+		mulFunc1.compute(I, z, iz);
 		addFunc.compute(iz, ONE, sum);
 		subFunc.compute(iz, ONE, diff);
 		divFunc.compute(sum, diff, quotient);
 		logFunc.compute(quotient, log);
-		mulFunc.compute(I_OVER_TWO, log, output);
+		mulFunc2.compute(I_OVER_TWO, log, output);
 		return output;
 	}
 
 	@Override
-	public ComplexArccot copy() {
-		return new ComplexArccot();
+	public ComplexArccot<I,O> copy() {
+		return new ComplexArccot<I,O>();
 	}
 }

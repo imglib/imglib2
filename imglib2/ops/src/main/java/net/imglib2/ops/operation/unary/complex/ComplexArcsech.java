@@ -42,24 +42,26 @@ import net.imglib2.type.numeric.complex.ComplexDoubleType;
  * @author Barry DeZonia
  * 
  */
-public final class ComplexArcsech
-		implements UnaryOperation<ComplexType<?>, ComplexType<?>> {
-
-	private static final ComplexArccosh arccoshFunc = new ComplexArccosh();
-	private static final ComplexReciprocal recipFunc = new ComplexReciprocal();
+public final class ComplexArcsech<I extends ComplexType<I>, O extends ComplexType<O>>
+	implements UnaryOperation<I,O>
+{
+	private final ComplexReciprocal<I,ComplexDoubleType>
+		recipFunc = new ComplexReciprocal<I,ComplexDoubleType>();
+	private final ComplexArccosh<ComplexDoubleType,O>
+		arccoshFunc = new ComplexArccosh<ComplexDoubleType,O>();
 
 	private final ComplexDoubleType recipZ = new ComplexDoubleType();
 
 	@Override
-	public ComplexType<?> compute(ComplexType<?> z, ComplexType<?> output) {
+	public O compute(I z, O output) {
 		recipFunc.compute(z, recipZ);
 		arccoshFunc.compute(recipZ, output);
 		return output;
 	}
 
 	@Override
-	public ComplexArcsech copy() {
-		return new ComplexArcsech();
+	public ComplexArcsech<I,O> copy() {
+		return new ComplexArcsech<I,O>();
 	}
 
 }

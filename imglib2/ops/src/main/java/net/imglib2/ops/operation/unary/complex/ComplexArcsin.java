@@ -46,14 +46,23 @@ import net.imglib2.type.numeric.complex.ComplexDoubleType;
  * @author Barry DeZonia
  * 
  */
-public final class ComplexArcsin
-		implements UnaryOperation<ComplexType<?>, ComplexType<?>> {
-
-	private static final ComplexMultiply mulFunc = new ComplexMultiply();
-	private static final ComplexSubtract diffFunc = new ComplexSubtract();
-	private static final ComplexPower powFunc = new ComplexPower();
-	private static final ComplexAdd addFunc = new ComplexAdd();
-	private static final ComplexLog logFunc = new ComplexLog();
+public final class ComplexArcsin<I extends ComplexType<I>, O extends ComplexType<O>>
+	implements UnaryOperation<I,O>
+{
+	private final ComplexMultiply<ComplexDoubleType,I,ComplexDoubleType>
+		mulFunc1 = new ComplexMultiply<ComplexDoubleType, I, ComplexDoubleType>();
+	private final ComplexMultiply<I,I,ComplexDoubleType>
+		mulFunc2 = new ComplexMultiply<I,I,ComplexDoubleType>();
+	private final ComplexSubtract<ComplexDoubleType,ComplexDoubleType,ComplexDoubleType>
+		diffFunc = new ComplexSubtract<ComplexDoubleType, ComplexDoubleType, ComplexDoubleType>();
+	private final ComplexPower<ComplexDoubleType, ComplexDoubleType, ComplexDoubleType>
+		powFunc = new ComplexPower<ComplexDoubleType, ComplexDoubleType, ComplexDoubleType>();
+	private final ComplexAdd<ComplexDoubleType, ComplexDoubleType, ComplexDoubleType>
+		addFunc = new ComplexAdd<ComplexDoubleType, ComplexDoubleType, ComplexDoubleType>();
+	private final ComplexLog<ComplexDoubleType, ComplexDoubleType>
+		logFunc = new ComplexLog<ComplexDoubleType, ComplexDoubleType>();
+	private final ComplexMultiply<ComplexDoubleType, ComplexDoubleType, O>
+		mulFunc3 = new ComplexMultiply<ComplexDoubleType, ComplexDoubleType, O>();
 
 	private static final ComplexDoubleType I = new ComplexDoubleType(0,1);
 	private static final ComplexDoubleType MINUS_I = new ComplexDoubleType(0,-1);
@@ -68,19 +77,19 @@ public final class ComplexArcsin
 	private final ComplexDoubleType logSum = new ComplexDoubleType();
 
 	@Override
-	public ComplexType<?> compute(ComplexType<?> z, ComplexType<?> output) {
-		mulFunc.compute(I, z, iz);
-		mulFunc.compute(z, z, zSquared);
+	public O compute(I z, O output) {
+		mulFunc1.compute(I, z, iz);
+		mulFunc2.compute(z, z, zSquared);
 		diffFunc.compute(ONE, zSquared, miniSum);
 		powFunc.compute(miniSum, ONE_HALF, root);
 		addFunc.compute(iz, root, sum);
 		logFunc.compute(sum, logSum);
-		mulFunc.compute(MINUS_I, logSum, output);
+		mulFunc3.compute(MINUS_I, logSum, output);
 		return output;
 	}
 
 	@Override
-	public ComplexArcsin copy() {
-		return new ComplexArcsin();
+	public ComplexArcsin<I,O> copy() {
+		return new ComplexArcsin<I,O>();
 	}
 }

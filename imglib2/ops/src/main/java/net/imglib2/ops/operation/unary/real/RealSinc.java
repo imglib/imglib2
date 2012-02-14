@@ -42,11 +42,11 @@ import net.imglib2.type.numeric.ComplexType;
  * @author Barry DeZonia
  * 
  */
-public class RealSinc implements
-		UnaryOperation<ComplexType<?>, ComplexType<?>>
+public class RealSinc<I extends ComplexType<I>, O extends ComplexType<O>>
+	implements UnaryOperation<I,O>
 {
 	@Override
-	public ComplexType<?> compute(ComplexType<?> input, ComplexType<?> output) {
+	public O compute(I input, O output) {
 		double x = input.getRealDouble();
 		double value;
 		if (x == 0)
@@ -59,8 +59,8 @@ public class RealSinc implements
 	}
 
 	@Override
-	public RealSinc copy() {
-		return new RealSinc();
+	public RealSinc<I,O> copy() {
+		return new RealSinc<I,O>();
 	}
 
 }

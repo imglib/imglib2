@@ -39,18 +39,21 @@ import net.imglib2.type.numeric.ComplexType;
  * @author Barry DeZonia
  * 
  */
-public final class RealDivide
-		implements BinaryOperation<ComplexType<?>, ComplexType<?>, ComplexType<?>>
+public final class RealDivide<
+		I1 extends ComplexType<I1>,
+		I2 extends ComplexType<I2>,
+		O extends ComplexType<O>>
+	implements BinaryOperation<I1, I2, O>
 {
 	@Override
-	public ComplexType<?> compute(ComplexType<?> x1, ComplexType<?> x2, ComplexType<?> output) {
+	public O compute(I1 x1, I2 x2, O output) {
 		output.setReal(x1.getRealDouble() / x2.getRealDouble());
 
 		return output;
 	}
 
 	@Override
-	public RealDivide copy() {
-		return new RealDivide();
+	public RealDivide<I1,I2,O> copy() {
+		return new RealDivide<I1,I2,O>();
 	}
 }

@@ -39,19 +39,19 @@ import net.imglib2.type.numeric.ComplexType;
  * @author Barry DeZonia
  * 
  */
-public final class RealCosh
-		implements UnaryOperation<ComplexType<?>, ComplexType<?>>
+public final class RealCosh<I extends ComplexType<I>, O extends ComplexType<O>>
+	implements UnaryOperation<I,O>
 {
 	@Override
-	public ComplexType<?> compute(ComplexType<?> x, ComplexType<?> output) {
+	public O compute(I x, O output) {
 		double value = Math.cosh(x.getRealDouble());
 		output.setReal(value);
 		return output;
 	}
 
 	@Override
-	public RealCosh copy() {
-		return new RealCosh();
+	public RealCosh<I,O> copy() {
+		return new RealCosh<I,O>();
 	}
 
 }

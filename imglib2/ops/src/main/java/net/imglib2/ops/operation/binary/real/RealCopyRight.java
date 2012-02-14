@@ -39,17 +39,20 @@ import net.imglib2.type.numeric.ComplexType;
  * @author Barry DeZonia
  * 
  */
-public final class RealCopyRight
-		implements BinaryOperation<ComplexType<?>, ComplexType<?>, ComplexType<?>>
+public final class RealCopyRight<
+		I1 extends ComplexType<I1>,
+		I2 extends ComplexType<I2>,
+		O extends ComplexType<O>>
+	implements BinaryOperation<I1, I2, O>
 {
 	@Override
-	public ComplexType<?> compute(ComplexType<?> x1, ComplexType<?> x2, ComplexType<?> output) {
+	public O compute(I1 x1, I2 x2, O output) {
 		output.setReal(x2.getRealDouble());
 		return output;
 	}
 
 	@Override
-	public RealCopyRight copy() {
-		return new RealCopyRight();
+	public RealCopyRight<I1,I2,O> copy() {
+		return new RealCopyRight<I1,I2,O>();
 	}
 }

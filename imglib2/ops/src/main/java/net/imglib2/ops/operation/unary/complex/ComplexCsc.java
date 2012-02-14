@@ -42,24 +42,26 @@ import net.imglib2.type.numeric.complex.ComplexDoubleType;
  * @author Barry DeZonia
  * 
  */
-public final class ComplexCsc
-		implements UnaryOperation<ComplexType<?>, ComplexType<?>> {
-
-	private static final ComplexSin sinFunc = new ComplexSin();
-	private static final ComplexReciprocal recipFunc = new ComplexReciprocal();
+public final class ComplexCsc<I extends ComplexType<I>, O extends ComplexType<O>>
+	implements UnaryOperation<I,O>
+{
+	private final ComplexSin<I,ComplexDoubleType>
+		sinFunc = new ComplexSin<I,ComplexDoubleType>();
+	private final ComplexReciprocal<ComplexDoubleType,O>
+		recipFunc = new ComplexReciprocal<ComplexDoubleType,O>();
 
 	private final ComplexDoubleType sin = new ComplexDoubleType();
 
 	@Override
-	public ComplexType<?> compute(ComplexType<?> z, ComplexType<?> output) {
+	public O compute(I z, O output) {
 		sinFunc.compute(z, sin);
 		recipFunc.compute(sin, output);
 		return output;
 	}
 
 	@Override
-	public ComplexCsc copy() {
-		return new ComplexCsc();
+	public ComplexCsc<I,O> copy() {
+		return new ComplexCsc<I,O>();
 	}
 
 }

@@ -42,9 +42,9 @@ import net.imglib2.type.numeric.ComplexType;
  * @author Barry DeZonia
  * 
  */
-public final class ComplexRoot
-		implements UnaryOperation<ComplexType<?>, ComplexType<?>> {
-
+public final class ComplexRoot<I extends ComplexType<I>, O extends ComplexType<O>>
+	implements UnaryOperation<I,O>
+{
 	private final int power;
 
 	public ComplexRoot(int power) {
@@ -55,7 +55,7 @@ public final class ComplexRoot
 	}
 
 	@Override
-	public ComplexType<?> compute(ComplexType<?> z, ComplexType<?> output) {
+	public O compute(I z, O output) {
 		double modulus = ComplexHelper.getModulus(z);
 		double argument = ComplexHelper.getArgument(z);
 		double princpArg = ComplexHelper.getPrincipleArgument(argument);
@@ -66,7 +66,7 @@ public final class ComplexRoot
 	}
 
 	@Override
-	public ComplexRoot copy() {
-		return new ComplexRoot(power);
+	public ComplexRoot<I,O> copy() {
+		return new ComplexRoot<I,O>(power);
 	}
 }

@@ -63,12 +63,12 @@ import net.imglib2.type.numeric.ComplexType;
 
 /**
  * A multithreaded implementation that assigns the values of a region of
- * an Img<?> to values from a function.
+ * an Img<A> to values from a Function<long[],B>. A and B extend ComplexType<?>.
  *  
  * @author Barry DeZonia
  *
  */
-public class ImageAssignment {
+public class ImageAssignment<A extends ComplexType<A>,B extends ComplexType<B>> {
 
 	// -- instance variables --
 
@@ -85,20 +85,20 @@ public class ImageAssignment {
 	 * function for evaluation. Pixels are assigned in the Img<?> if the given
 	 * condition is satisfied at that point.
 	 * 
-	 * @param img - the Img<?> to assign data values to
-	 * @param origin - the origin of the region to assign within the Img<?>
-	 * @param span - the extents of the region to assign within the Img<?>
-	 * @param function - the function to evaluate at each point of the region
+	 * @param img - the Img<A extends ComplexType<A>> to assign data values to
+	 * @param origin - the origin of the region to assign within the Img<A>
+	 * @param span - the extents of the region to assign within the Img<A>
+	 * @param function - the Function<long[],B> to evaluate at each point of the region
 	 * @param condition - the condition that must be satisfied
 	 * @param negOffs - the extents in the negative direction of the working neighborhood
 	 * @param posOffs - the extents in the positive direction of the working neighborhood
 	 * 
 	 */
 	public ImageAssignment(
-		Img<? extends ComplexType<?>> img,
+		Img<A> img,
 		long[] origin,
 		long[] span,
-		Function<long[],? extends ComplexType<?>> function,
+		Function<long[],B> function,
 		Condition<long[]> condition,
 		long[] negOffs,
 		long[] posOffs)
@@ -111,22 +111,22 @@ public class ImageAssignment {
 	
 	/**
 	 * Constructor. A working neighborhood is assumed to be a single pixel. This
-	 * neighborhood is moved point by point over the Img<?> and passed to the
-	 * function for evaluation. Pixels are assigned in the Img<?> if the given
+	 * neighborhood is moved point by point over the Img<A> and passed to the
+	 * function for evaluation. Pixels are assigned in the Img<A> if the given
 	 * condition is satisfied at that point.
 	 *
-	 * @param img - the Img<?> to assign data values to
-	 * @param origin - the origin of the region to assign within the Img<?>
-	 * @param span - the extents of the region to assign within the Img<?>
-	 * @param function - the function to evaluate at each point of the region
+	 * @param img - the Img<A extends ComplexType<A>> to assign data values to
+	 * @param origin - the origin of the region to assign within the Img<A>
+	 * @param span - the extents of the region to assign within the Img<A>
+	 * @param function - the Function<long[],B> to evaluate at each point of the region
 	 * @param condition - the condition that must be satisfied
 	 * 
 	 */
 	public ImageAssignment(
-		Img<? extends ComplexType<?>> img,
+		Img<A> img,
 		long[] origin,
 		long[] span,
-		Function<long[], ? extends ComplexType<?>> function,
+		Function<long[],B> function,
 		Condition<long[]> condition)
 	{
 		this(img, origin, span, function, condition, new long[origin.length], new long[origin.length]);
@@ -194,10 +194,10 @@ public class ImageAssignment {
 	// -- private helpers --
 
 	private void setupTasks(
-		Img<? extends ComplexType<?>> img,
+		Img<A> img,
 		long[] origin,
 		long[] span,
-		Function<long[],? extends ComplexType<?>> func,
+		Function<long[],B> func,
 		Condition<long[]> cond,
 		long[] negOffs,
 		long[] posOffs)
@@ -262,13 +262,13 @@ public class ImageAssignment {
 	 * The task assigns values to a subset of the output region.
 	 */
 	private Runnable task(
-		Img<? extends ComplexType<?>> img,
+		Img<A> img,
 		long[] imageOrigin,
 		long[] imageSpan,
 		int axis,
 		long startIndex,
 		long length,
-		Function<long[], ? extends ComplexType<?>> fn,
+		Function<long[],B> fn,
 		Condition<long[]> cnd,
 		long[] nOffsets,
 		long[] pOffsets)
@@ -283,7 +283,7 @@ public class ImageAssignment {
 		// we remove typing from RegionRunner it won't compile.
 
 		return
-			new RegionRunner(
+			new RegionRunner<A,B>(
 				img,
 				regOrigin,
 				regSpan,
@@ -297,10 +297,11 @@ public class ImageAssignment {
 	 * RegionRunner is the workhorse for assigning output values from the
 	 * evaluation of the input function across a subset of the output region.
 	 */
-	private class RegionRunner<K extends ComplexType<K>> implements Runnable {
-		
-		private final Img<K> img;
-		private final Function<long[], K> function;
+	private class RegionRunner<U extends ComplexType<U>, V extends ComplexType<V>>
+		implements Runnable
+	{
+		private final Img<U> img;
+		private final Function<long[], V> function;
 		private final Condition<long[]> condition;
 		private final DiscreteNeigh region;
 		private final DiscreteNeigh neighborhood;
@@ -309,10 +310,10 @@ public class ImageAssignment {
 		 * Constructor
 		 */
 		public RegionRunner(
-			Img<K> img,
+			Img<U> img,
 			long[] origin,
 			long[] span,
-			Function<long[], K> func,
+			Function<long[], V> func,
 			Condition<long[]> cond,
 			long[] negOffs,
 			long[] posOffs)
@@ -329,8 +330,8 @@ public class ImageAssignment {
 		 */
 		@Override
 		public void run() {
-			final RandomAccess<K> accessor = img.randomAccess();
-			final K output = function.createOutput();
+			final RandomAccess<U> accessor = img.randomAccess();
+			final V output = function.createOutput();
 			final RegionIndexIterator iter = new RegionIndexIterator(region);
 			while (iter.hasNext()) {
 				iter.fwd();

@@ -42,8 +42,8 @@ import net.imglib2.type.numeric.ComplexType;
  * @author Barry DeZonia
  * 
  */
-public final class RealAddNoise
-		implements UnaryOperation<ComplexType<?>, ComplexType<?>>
+public final class RealAddNoise<I extends ComplexType<I>, O extends ComplexType<O>>
+	implements UnaryOperation<I,O>
 {
 	private final double rangeMin;
 	private final double rangeMax;
@@ -65,7 +65,7 @@ public final class RealAddNoise
 	}
 
 	@Override
-	public ComplexType<?> compute(ComplexType<?> x, ComplexType<?> output) {
+	public O compute(I x, O output) {
 		int i = 0;
 		do {
 			double newVal = x.getRealDouble()
@@ -83,8 +83,8 @@ public final class RealAddNoise
 	}
 
 	@Override
-	public RealAddNoise copy() {
-		return new RealAddNoise(rangeMin, rangeMax, rangeStdDev);
+	public RealAddNoise<I,O> copy() {
+		return new RealAddNoise<I,O>(rangeMin, rangeMax, rangeStdDev);
 	}
 
 }

@@ -45,8 +45,8 @@ import net.imglib2.type.numeric.ComplexType;
  * @author Barry DeZonia
  *
  */
-public final class RealMultiplyConstant
-	implements UnaryOperation<ComplexType<?>, ComplexType<?>>
+public final class RealMultiplyConstant<I extends ComplexType<I>, O extends ComplexType<O>>
+	implements UnaryOperation<I,O>
 {
 	private final double constant;
 
@@ -55,14 +55,14 @@ public final class RealMultiplyConstant
 	}
 
 	@Override
-	public ComplexType<?> compute(ComplexType<?> x, ComplexType<?> output) {
+	public O compute(I x, O output) {
 		double value = x.getRealDouble() * constant;
 		output.setReal(value);
 		return output;
 	}
 
 	@Override
-	public RealMultiplyConstant copy() {
-		return new RealMultiplyConstant(constant);
+	public RealMultiplyConstant<I,O> copy() {
+		return new RealMultiplyConstant<I,O>(constant);
 	}
 }

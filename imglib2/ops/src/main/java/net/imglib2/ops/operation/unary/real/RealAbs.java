@@ -39,17 +39,17 @@ import net.imglib2.type.numeric.ComplexType;
  * @author Barry DeZonia
  * 
  */
-public final class RealAbs
-		implements UnaryOperation<ComplexType<?>, ComplexType<?>>
+public final class RealAbs<I extends ComplexType<I>, O extends ComplexType<O>>
+		implements UnaryOperation<I,O>
 {
 	@Override
-	public ComplexType<?> compute(ComplexType<?> x, ComplexType<?> output) {
+	public O compute(I x, O output) {
 		output.setReal(Math.abs(x.getRealDouble()));
 		return output;
 	}
 
 	@Override
-	public RealAbs copy() {
-		return new RealAbs();
+	public RealAbs<I,O> copy() {
+		return new RealAbs<I,O>();
 	}
 }

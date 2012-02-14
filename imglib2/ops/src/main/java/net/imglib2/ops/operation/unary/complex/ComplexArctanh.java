@@ -46,14 +46,19 @@ import net.imglib2.type.numeric.complex.ComplexDoubleType;
  * @author Barry DeZonia
  * 
  */
-public final class ComplexArctanh
-		implements UnaryOperation<ComplexType<?>, ComplexType<?>> {
-
-	private static final ComplexMultiply mulFunc = new ComplexMultiply();
-	private static final ComplexAdd addFunc = new ComplexAdd();
-	private static final ComplexSubtract subFunc = new ComplexSubtract();
-	private static final ComplexDivide divFunc = new ComplexDivide();
-	private static final ComplexLog logFunc = new ComplexLog();
+public final class ComplexArctanh<I extends ComplexType<I>, O extends ComplexType<O>>
+	implements UnaryOperation<I,O>
+{
+	private final ComplexAdd<ComplexDoubleType,I,ComplexDoubleType>
+		addFunc = new ComplexAdd<ComplexDoubleType, I, ComplexDoubleType>();
+	private final ComplexSubtract<ComplexDoubleType, I, ComplexDoubleType>
+		subFunc = new ComplexSubtract<ComplexDoubleType, I, ComplexDoubleType>();
+	private final ComplexDivide<ComplexDoubleType, ComplexDoubleType, ComplexDoubleType>
+		divFunc = new ComplexDivide<ComplexDoubleType, ComplexDoubleType, ComplexDoubleType>();
+	private final ComplexLog<ComplexDoubleType, ComplexDoubleType>
+		logFunc = new ComplexLog<ComplexDoubleType, ComplexDoubleType>();
+	private final ComplexMultiply<ComplexDoubleType, ComplexDoubleType, O>
+		mulFunc = new ComplexMultiply<ComplexDoubleType, ComplexDoubleType, O>();
 
 	private static final ComplexDoubleType ONE = new ComplexDoubleType(1,0);
 	private static final ComplexDoubleType ONE_HALF = new ComplexDoubleType(0,0.5);
@@ -64,7 +69,7 @@ public final class ComplexArctanh
 	private final ComplexDoubleType log = new ComplexDoubleType();
 
 	@Override
-	public ComplexType<?> compute(ComplexType<?> z, ComplexType<?> output) {
+	public O compute(I z, O output) {
 		addFunc.compute(ONE, z, sum);
 		subFunc.compute(ONE, z, diff);
 		divFunc.compute(sum, diff, quotient);
@@ -74,8 +79,8 @@ public final class ComplexArctanh
 	}
 
 	@Override
-	public ComplexArctanh copy() {
-		return new ComplexArctanh();
+	public ComplexArctanh<I,O> copy() {
+		return new ComplexArctanh<I,O>();
 	}
 
 }

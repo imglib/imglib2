@@ -42,11 +42,14 @@ import net.imglib2.type.numeric.ComplexType;
  * @author Barry DeZonia
  * 
  */
-public final class RealCopyZeroTransparent
-		implements BinaryOperation<ComplexType<?>, ComplexType<?>, ComplexType<?>>
+public final class RealCopyZeroTransparent<
+		I1 extends ComplexType<I1>,
+		I2 extends ComplexType<I2>,
+		O extends ComplexType<O>>
+	implements BinaryOperation<I1, I2, O>
 {
 	@Override
-	public ComplexType<?> compute(ComplexType<?> x1, ComplexType<?> x2, ComplexType<?> output) {
+	public O compute(I1 x1, I2 x2, O output) {
 		if (x2.getRealDouble() == 0)
 			output.setReal(x1.getRealDouble());
 		else
@@ -55,7 +58,7 @@ public final class RealCopyZeroTransparent
 	}
 
 	@Override
-	public RealCopyZeroTransparent copy() {
-		return new RealCopyZeroTransparent();
+	public RealCopyZeroTransparent<I1,I2,O> copy() {
+		return new RealCopyZeroTransparent<I1,I2,O>();
 	}
 }

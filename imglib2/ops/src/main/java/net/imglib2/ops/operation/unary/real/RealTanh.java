@@ -39,19 +39,19 @@ import net.imglib2.type.numeric.ComplexType;
  * @author Barry DeZonia
  * 
  */
-public final class RealTanh
-		implements UnaryOperation<ComplexType<?>, ComplexType<?>>
+public final class RealTanh<I extends ComplexType<I>, O extends ComplexType<O>>
+	implements UnaryOperation<I,O>
 {
 	@Override
-	public ComplexType<?> compute(ComplexType<?> x, ComplexType<?> output) {
+	public O compute(I x, O output) {
 		double value = Math.tanh(x.getRealDouble());
 		output.setReal(value);
 		return output;
 	}
 
 	@Override
-	public RealTanh copy() {
-		return new RealTanh();
+	public RealTanh<I,O> copy() {
+		return new RealTanh<I,O>();
 	}
 
 }

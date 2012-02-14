@@ -41,11 +41,11 @@ import net.imglib2.type.numeric.ComplexType;
  * @author Barry DeZonia
  * 
  */
-public final class RealArctanh
-		implements UnaryOperation<ComplexType<?>, ComplexType<?>>
+public final class RealArctanh<I extends ComplexType<I>, O extends ComplexType<O>>
+	implements UnaryOperation<I,O>
 {
 	@Override
-	public ComplexType<?> compute(ComplexType<?> x, ComplexType<?> output) {
+	public O compute(I x, O output) {
 		double xt = x.getRealDouble();
 		double value = 0.5 * Math.log((1 + xt) / (1 - xt));
 		output.setReal(value);
@@ -53,8 +53,8 @@ public final class RealArctanh
 	}
 
 	@Override
-	public RealArctanh copy() {
-		return new RealArctanh();
+	public RealArctanh<I,O> copy() {
+		return new RealArctanh<I,O>();
 	}
 
 }

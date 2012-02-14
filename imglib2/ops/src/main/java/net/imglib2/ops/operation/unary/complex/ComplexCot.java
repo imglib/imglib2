@@ -43,18 +43,21 @@ import net.imglib2.type.numeric.complex.ComplexDoubleType;
  * @author Barry DeZonia
  * 
  */
-public final class ComplexCot
-		implements UnaryOperation<ComplexType<?>, ComplexType<?>> {
-
-	private static final ComplexCos cosFunc = new ComplexCos();
-	private static final ComplexSin sinFunc = new ComplexSin();
-	private static final ComplexDivide divFunc = new ComplexDivide();
+public final class ComplexCot<I extends ComplexType<I>, O extends ComplexType<O>>
+	implements UnaryOperation<I,O>
+{
+	private final ComplexSin<I,ComplexDoubleType>
+		sinFunc = new ComplexSin<I,ComplexDoubleType>();
+	private final ComplexCos<I,ComplexDoubleType>
+		cosFunc = new ComplexCos<I,ComplexDoubleType>();
+	private final ComplexDivide<ComplexDoubleType,ComplexDoubleType,O>
+		divFunc = new ComplexDivide<ComplexDoubleType,ComplexDoubleType,O>();
 
 	private final ComplexDoubleType sin = new ComplexDoubleType();
 	private final ComplexDoubleType cos = new ComplexDoubleType();
 
 	@Override
-	public ComplexType<?> compute(ComplexType<?> z, ComplexType<?> output) {
+	public O compute(I z, O output) {
 		sinFunc.compute(z, sin);
 		cosFunc.compute(z, cos);
 		divFunc.compute(cos, sin, output);
@@ -62,8 +65,8 @@ public final class ComplexCot
 	}
 
 	@Override
-	public ComplexCot copy() {
-		return new ComplexCot();
+	public ComplexCot<I,O> copy() {
+		return new ComplexCot<I,O>();
 	}
 
 }

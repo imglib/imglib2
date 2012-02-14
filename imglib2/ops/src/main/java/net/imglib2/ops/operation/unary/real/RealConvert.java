@@ -40,8 +40,8 @@ import net.imglib2.type.numeric.ComplexType;
  * @author Barry DeZonia
  * 
  */
-public final class RealConvert
-		implements UnaryOperation<ComplexType<?>, ComplexType<?>>
+public final class RealConvert<I extends ComplexType<I>, O extends ComplexType<O>>
+	implements UnaryOperation<I,O>
 {
 	private double scale;
 	private double inputMin;
@@ -66,7 +66,7 @@ public final class RealConvert
 	}
 
 	@Override
-	public ComplexType<?> compute(ComplexType<?> x, ComplexType<?> output) {
+	public O compute(I x, O output) {
 		double value = (x.getRealDouble() - inputMin) * scale + outputMin;
 		output.setReal(value);
 
@@ -74,7 +74,7 @@ public final class RealConvert
 	}
 
 	@Override
-	public RealConvert copy() {
-		return new RealConvert(inputMin, inputMax, outputMin, outputMax);
+	public RealConvert<I,O> copy() {
+		return new RealConvert<I,O>(inputMin, inputMax, outputMin, outputMax);
 	}
 }

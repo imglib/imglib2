@@ -41,8 +41,8 @@ import net.imglib2.type.numeric.ComplexType;
  * @author Barry DeZonia
  * 
  */
-public final class RealMaxConstant
-	implements UnaryOperation<ComplexType<?>, ComplexType<?>>
+public final class RealMaxConstant<I extends ComplexType<I>, O extends ComplexType<O>>
+	implements UnaryOperation<I,O>
 {
 	private final double constant;
 
@@ -51,7 +51,7 @@ public final class RealMaxConstant
 	}
 
 	@Override
-	public ComplexType<?> compute(ComplexType<?> x, ComplexType<?> output) {
+	public O compute(I x, O output) {
 		double value = x.getRealDouble();
 		if (value < constant)
 			output.setReal(value);
@@ -61,8 +61,8 @@ public final class RealMaxConstant
 	}
 
 	@Override
-	public RealMaxConstant copy() {
-		return new RealMaxConstant(constant);
+	public RealMaxConstant<I,O> copy() {
+		return new RealMaxConstant<I,O>(constant);
 	}
 
 }

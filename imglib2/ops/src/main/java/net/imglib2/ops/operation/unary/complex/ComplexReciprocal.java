@@ -41,11 +41,11 @@ import net.imglib2.type.numeric.ComplexType;
  * @author Barry DeZonia
  *
  */
-public final class ComplexReciprocal
-	implements UnaryOperation<ComplexType<?>,ComplexType<?>> {
-
+public final class ComplexReciprocal<I extends ComplexType<I>, O extends ComplexType<O>>
+	implements UnaryOperation<I,O>
+{
 	@Override
-	public ComplexType<?> compute(ComplexType<?> z, ComplexType<?> output) {
+	public O compute(I z, O output) {
 		double denom = z.getRealDouble()*z.getRealDouble() + z.getImaginaryDouble()*z.getImaginaryDouble();
 		double x = z.getRealDouble() / denom;
 		double y = -z.getImaginaryDouble() / denom;
@@ -54,7 +54,7 @@ public final class ComplexReciprocal
 	}
 	
 	@Override
-	public ComplexReciprocal copy() {
-		return new ComplexReciprocal();
+	public ComplexReciprocal<I,O> copy() {
+		return new ComplexReciprocal<I,O>();
 	}
 }

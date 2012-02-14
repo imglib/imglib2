@@ -42,15 +42,16 @@ import net.imglib2.type.numeric.real.DoubleType;
  * @author Barry DeZonia
  * 
  */
-public final class RealArccsc
-		implements UnaryOperation<ComplexType<?>, ComplexType<?>>
+public final class RealArccsc<I extends ComplexType<I>, O extends ComplexType<O>>
+	implements UnaryOperation<I,O>
 {
-	private static final RealArccos acos = new RealArccos();
+	private static final RealArccos<DoubleType,DoubleType> acos =
+			new RealArccos<DoubleType,DoubleType>();
 	private DoubleType angle = new DoubleType();
 	private DoubleType tmp = new DoubleType();
 
 	@Override
-	public ComplexType<?> compute(ComplexType<?> x, ComplexType<?> output) {
+	public O compute(I x, O output) {
 		double xt = x.getRealDouble();
 		if ((xt > -1) && (xt < 1))
 			throw new IllegalArgumentException("arccsc(x) : x out of range");
@@ -67,7 +68,7 @@ public final class RealArccsc
 	}
 
 	@Override
-	public RealArccsc copy() {
-		return new RealArccsc();
+	public RealArccsc<I,O> copy() {
+		return new RealArccsc<I,O>();
 	}
 }

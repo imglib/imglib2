@@ -39,8 +39,8 @@ import net.imglib2.type.numeric.ComplexType;
  * @author Barry DeZonia
  * 
  */
-public final class RealReciprocal
-		implements UnaryOperation<ComplexType<?>, ComplexType<?>>
+public final class RealReciprocal<I extends ComplexType<I>, O extends ComplexType<O>>
+	implements UnaryOperation<I,O>
 {
 	private final double dbzVal;
 
@@ -49,7 +49,7 @@ public final class RealReciprocal
 	}
 
 	@Override
-	public ComplexType<?> compute(ComplexType<?> x, ComplexType<?> output) {
+	public O compute(I x, O output) {
 		double inputVal = x.getRealDouble();
 		if (inputVal == 0)
 			output.setReal(dbzVal);
@@ -60,7 +60,7 @@ public final class RealReciprocal
 	}
 
 	@Override
-	public RealReciprocal copy() {
-		return new RealReciprocal(dbzVal);
+	public RealReciprocal<I,O> copy() {
+		return new RealReciprocal<I,O>(dbzVal);
 	}
 }

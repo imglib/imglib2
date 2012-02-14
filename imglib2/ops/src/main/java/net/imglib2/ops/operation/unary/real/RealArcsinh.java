@@ -41,11 +41,11 @@ import net.imglib2.type.numeric.ComplexType;
  * @author Barry DeZonia
  * 
  */
-public final class RealArcsinh
-		implements UnaryOperation<ComplexType<?>, ComplexType<?>>
+public final class RealArcsinh<I extends ComplexType<I>, O extends ComplexType<O>>
+	implements UnaryOperation<I,O>
 {
 	@Override
-	public ComplexType<?> compute(ComplexType<?> x, ComplexType<?> output) {
+	public O compute(I x, O output) {
 		double xt = x.getRealDouble();
 		double delta = Math.sqrt(xt * xt + 1);
 		double value = Math.log(xt + delta);
@@ -54,8 +54,8 @@ public final class RealArcsinh
 	}
 
 	@Override
-	public RealArcsinh copy() {
-		return new RealArcsinh();
+	public RealArcsinh<I,O> copy() {
+		return new RealArcsinh<I,O>();
 	}
 
 }

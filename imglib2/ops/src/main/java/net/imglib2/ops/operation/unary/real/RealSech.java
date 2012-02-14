@@ -41,19 +41,19 @@ import net.imglib2.type.numeric.ComplexType;
  * @author Barry DeZonia
  * 
  */
-public final class RealSech
-		implements UnaryOperation<ComplexType<?>, ComplexType<?>>
+public final class RealSech<I extends ComplexType<I>, O extends ComplexType<O>>
+	implements UnaryOperation<I,O>
 {
 	@Override
-	public ComplexType<?> compute(ComplexType<?> x, ComplexType<?> output) {
+	public O compute(I x, O output) {
 		double value = 1.0 / Math.cosh(x.getRealDouble());
 		output.setReal(value);
 		return output;
 	}
 
 	@Override
-	public RealSech copy() {
-		return new RealSech();
+	public RealSech<I,O> copy() {
+		return new RealSech<I,O>();
 	}
 
 }

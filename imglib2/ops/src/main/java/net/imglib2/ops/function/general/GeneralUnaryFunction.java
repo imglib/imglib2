@@ -45,11 +45,11 @@ public class GeneralUnaryFunction<INDEX, INPUT_TYPE extends ComplexType<INPUT_TY
 {
 	private final Function<INDEX, INPUT_TYPE> f1;
 	private final INPUT_TYPE temp;
-	private final UnaryOperation<ComplexType<?>, ComplexType<?>> operation;
+	private final UnaryOperation<INPUT_TYPE, OUTPUT_TYPE> operation;
 	private final OUTPUT_TYPE type;
 
 	public GeneralUnaryFunction(Function<INDEX, INPUT_TYPE> f1,
-			UnaryOperation<ComplexType<?>, ComplexType<?>> operation, OUTPUT_TYPE type) {
+			UnaryOperation<INPUT_TYPE, OUTPUT_TYPE> operation, OUTPUT_TYPE type) {
 		this.type = type;
 		this.f1 = f1;
 		this.temp = f1.createOutput();

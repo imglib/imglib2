@@ -40,11 +40,14 @@ import net.imglib2.type.numeric.ComplexType;
  * @author Barry DeZonia
  * 
  */
-public final class RealOr
-		implements BinaryOperation<ComplexType<?>,ComplexType<?>,ComplexType<?>>
+public final class RealOr<
+		I1 extends ComplexType<I1>,
+		I2 extends ComplexType<I2>,
+		O extends ComplexType<O>>
+	implements BinaryOperation<I1, I2, O>
 {
 	@Override
-	public ComplexType<?> compute(ComplexType<?> x1, ComplexType<?> x2, ComplexType<?> output) {
+	public O compute(I1 x1, I2 x2, O output) {
 		double value = (long) x1.getRealDouble() | (long) x2.getRealDouble();
 		output.setReal(value);
 
@@ -52,8 +55,8 @@ public final class RealOr
 	}
 
 	@Override
-	public RealOr copy() {
-		return new RealOr();
+	public RealOr<I1,I2,O> copy() {
+		return new RealOr<I1,I2,O>();
 	}
 
 }

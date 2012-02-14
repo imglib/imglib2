@@ -41,19 +41,19 @@ import net.imglib2.type.numeric.ComplexType;
  * @author Barry DeZonia
  * 
  */
-public final class RealCot
-		implements UnaryOperation<ComplexType<?>, ComplexType<?>>
+public final class RealCot<I extends ComplexType<I>, O extends ComplexType<O>>
+	implements UnaryOperation<I,O>
 {
 	@Override
-	public ComplexType<?> compute(ComplexType<?> x, ComplexType<?> output) {
+	public O compute(I x, O output) {
 		double value = 1.0 / Math.tan(x.getRealDouble());
 		output.setReal(value);
 		return output;
 	}
 
 	@Override
-	public RealCot copy() {
-		return new RealCot();
+	public RealCot<I,O> copy() {
+		return new RealCot<I,O>();
 	}
 
 }

@@ -42,23 +42,25 @@ import net.imglib2.type.numeric.complex.ComplexDoubleType;
  * @author Barry DeZonia
  * 
  */
-public final class ComplexSech
-		implements UnaryOperation<ComplexType<?>, ComplexType<?>> {
-
-	private static final ComplexCosh coshFunc = new ComplexCosh();
-	private static final ComplexReciprocal recipFunc = new ComplexReciprocal();
+public final class ComplexSech<I extends ComplexType<I>, O extends ComplexType<O>>
+	implements UnaryOperation<I,O>
+{
+	private final ComplexCosh<I,ComplexDoubleType>
+		coshFunc = new ComplexCosh<I,ComplexDoubleType>();
+	private final ComplexReciprocal<ComplexDoubleType,O>
+		recipFunc = new ComplexReciprocal<ComplexDoubleType,O>();
 
 	private final ComplexDoubleType cosh = new ComplexDoubleType();
 
 	@Override
-	public ComplexType<?> compute(ComplexType<?> z, ComplexType<?> output) {
+	public O compute(I z, O output) {
 		coshFunc.compute(z, cosh);
 		recipFunc.compute(cosh, output);
 		return output;
 	}
 
 	@Override
-	public ComplexSech copy() {
-		return new ComplexSech();
+	public ComplexSech<I,O> copy() {
+		return new ComplexSech<I,O>();
 	}
 }

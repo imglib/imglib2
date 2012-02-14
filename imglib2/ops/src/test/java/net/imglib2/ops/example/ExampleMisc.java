@@ -5,8 +5,8 @@ import net.imglib2.ops.Condition;
 import net.imglib2.ops.Function;
 import net.imglib2.ops.UnaryOperation;
 import net.imglib2.ops.condition.AtKeyPointCondition;
+import net.imglib2.ops.function.complex.ComplexImageFunction;
 import net.imglib2.ops.function.general.GeneralUnaryFunction;
-import net.imglib2.ops.function.real.RealImageFunction;
 import net.imglib2.ops.image.ImageAssignment;
 import net.imglib2.ops.operation.unary.real.RealSqr;
 import net.imglib2.type.numeric.ComplexType;
@@ -24,17 +24,21 @@ public class ExampleMisc {
 		long[] origin = new long[] { 0, 0 };
 		long[] span = new long[] { 50, 40 };
 
-		UnaryOperation<ComplexType<?>,ComplexType<?>> op = new RealSqr();
+		UnaryOperation<ComplexDoubleType,ComplexDoubleType> op =
+				new RealSqr<ComplexDoubleType, ComplexDoubleType>();
 
-		Function<long[], UnsignedByteType> imageFunc = new RealImageFunction<UnsignedByteType>(
-				inputImg, new UnsignedByteType());
+		Function<long[], ComplexDoubleType> imageFunc =
+				new ComplexImageFunction<UnsignedByteType,ComplexDoubleType>(
+						inputImg, new ComplexDoubleType());
 
-		Function<long[], UnsignedByteType> func =
-			new GeneralUnaryFunction<long[],UnsignedByteType,UnsignedByteType>(imageFunc, op, new UnsignedByteType());
+		Function<long[], ComplexDoubleType> func =
+			new GeneralUnaryFunction<long[],ComplexDoubleType,ComplexDoubleType>(
+					imageFunc, op, new ComplexDoubleType());
 
 		Condition<long[]> condition = new AtKeyPointCondition();
 
-		ImageAssignment assigner = new ImageAssignment(
+		ImageAssignment<UnsignedByteType,ComplexDoubleType> assigner =
+				new ImageAssignment<UnsignedByteType,ComplexDoubleType>(
 				outputImg, origin, span, func, condition);
 
 		assigner.assign(); // processed in parallel

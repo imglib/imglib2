@@ -38,18 +38,18 @@ import net.imglib2.type.numeric.ComplexType;
  * @author Barry DeZonia
  * 
  */
-public final class RealZero
-		implements UnaryOperation<ComplexType<?>, ComplexType<?>>
+public final class RealZero<I extends ComplexType<I>, O extends ComplexType<O>>
+	implements UnaryOperation<I,O>
 {
 	@Override
-	public ComplexType<?> compute(ComplexType<?> x, ComplexType<?> output) {
+	public O compute(I x, O output) {
 		output.setZero();
 		return output;
 	}
 
 	@Override
-	public RealZero copy() {
-		return new RealZero();
+	public RealZero<I,O> copy() {
+		return new RealZero<I,O>();
 	}
 
 }

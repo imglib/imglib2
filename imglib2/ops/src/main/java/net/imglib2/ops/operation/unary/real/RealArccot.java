@@ -41,11 +41,11 @@ import net.imglib2.type.numeric.ComplexType;
  * @author Barry DeZonia
  * 
  */
-public final class RealArccot
-		implements UnaryOperation<ComplexType<?>, ComplexType<?>>
+public final class RealArccot<I extends ComplexType<I>, O extends ComplexType<O>>
+	implements UnaryOperation<I,O>
 {
 	@Override
-	public ComplexType<?> compute(ComplexType<?> x, ComplexType<?> output) {
+	public O compute(I x, O output) {
 		double value = Math.atan(1.0 / x.getRealDouble());
 		if (x.getRealDouble() < 0)
 			value += Math.PI;
@@ -54,8 +54,8 @@ public final class RealArccot
 	}
 
 	@Override
-	public RealArccot copy() {
-		return new RealArccot();
+	public RealArccot<I,O> copy() {
+		return new RealArccot<I,O>();
 	}
 
 }

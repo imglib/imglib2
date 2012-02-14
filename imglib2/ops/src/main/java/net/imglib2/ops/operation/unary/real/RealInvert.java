@@ -40,32 +40,32 @@ import net.imglib2.type.numeric.ComplexType;
  * @author Barry DeZonia
  * 
  */
-public final class RealInvert
-		implements UnaryOperation<ComplexType<?>, ComplexType<?>>
+public final class RealInvert<I extends ComplexType<I>, O extends ComplexType<O>>
+	implements UnaryOperation<I,O>
 {
-	private double actualMin;
-	private double actualMax;
+	private double specifiedMin;
+	private double specifiedMax;
 
 	/**
 	 * Constructor.
-	 * @param actualMin - minimum value of the range to invert about
-	 * @param actualMax - maximum value of the range to invert about
+	 * @param specifiedMin - minimum value of the range to invert about
+	 * @param specifiedMax - maximum value of the range to invert about
 	 */
-	public RealInvert(final double actualMin, final double actualMax)
+	public RealInvert(final double specifiedMin, final double specifiedMax)
 	{
-		this.actualMax = actualMax;
-		this.actualMin = actualMin;
+		this.specifiedMax = specifiedMax;
+		this.specifiedMin = specifiedMin;
 	}
 
 	@Override
-	public ComplexType<?> compute(ComplexType<?> x, ComplexType<?> output) {
-		double value = actualMax - (x.getRealDouble() - actualMin);
+	public O compute(I x, O output) {
+		double value = specifiedMax - (x.getRealDouble() - specifiedMin);
 		output.setReal(value);
 		return output;
 	}
 	
 	@Override
-	public RealInvert copy() {
-		return new RealInvert(actualMin, actualMax);
+	public RealInvert<I,O> copy() {
+		return new RealInvert<I,O>(specifiedMin, specifiedMax);
 	}
 }

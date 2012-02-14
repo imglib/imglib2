@@ -42,9 +42,9 @@ import net.imglib2.type.numeric.ComplexType;
  * @author Barry DeZonia
  * 
  */
-public final class ComplexIntegerPower
-		implements UnaryOperation<ComplexType<?>, ComplexType<?>> {
-	
+public final class ComplexIntegerPower<I extends ComplexType<I>, O extends ComplexType<O>>
+	implements UnaryOperation<I,O>
+{	
 	private final int power;
 
 	public ComplexIntegerPower(int power) {
@@ -52,7 +52,7 @@ public final class ComplexIntegerPower
 	}
 
 	@Override
-	public ComplexType<?> compute(ComplexType<?> z, ComplexType<?> output) {
+	public O compute(I z, O output) {
 		// NB: valid for ALL integral powers: 0, +/-1, +/-2, +/-3, ...
 		double modulus = ComplexHelper.getModulus(z);
 		double argument = ComplexHelper.getArgument(z);
@@ -63,8 +63,8 @@ public final class ComplexIntegerPower
 	}
 
 	@Override
-	public ComplexIntegerPower copy() {
-		return new ComplexIntegerPower(power);
+	public ComplexIntegerPower<I,O> copy() {
+		return new ComplexIntegerPower<I,O>(power);
 	}
 
 }

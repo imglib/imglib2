@@ -46,13 +46,17 @@ import net.imglib2.type.numeric.complex.ComplexDoubleType;
  * @author Barry DeZonia
  * 
  */
-public final class ComplexCos
-		implements UnaryOperation<ComplexType<?>, ComplexType<?>> {
-
-	private static final ComplexExp expFunc = new ComplexExp();
-	private static final ComplexAdd addFunc = new ComplexAdd();
-	private static final ComplexMultiply mulFunc = new ComplexMultiply();
-	private static final ComplexDivide divFunc = new ComplexDivide();
+public final class ComplexCos<I extends ComplexType<I>, O extends ComplexType<O>>
+	implements UnaryOperation<I,O>
+{
+	private final ComplexMultiply<I,ComplexDoubleType,ComplexDoubleType>
+		mulFunc = new ComplexMultiply<I,ComplexDoubleType,ComplexDoubleType>();
+	private final ComplexExp<ComplexDoubleType,ComplexDoubleType>
+		expFunc = new ComplexExp<ComplexDoubleType, ComplexDoubleType>();
+	private final ComplexAdd<ComplexDoubleType,ComplexDoubleType,ComplexDoubleType>
+		addFunc = new ComplexAdd<ComplexDoubleType, ComplexDoubleType, ComplexDoubleType>();
+	private final ComplexDivide<ComplexDoubleType,ComplexDoubleType,O>
+		divFunc = new ComplexDivide<ComplexDoubleType, ComplexDoubleType, O>();
 
 	private static final ComplexDoubleType TWO = new ComplexDoubleType(2,0);
 	private static final ComplexDoubleType I = new ComplexDoubleType(0,1);
@@ -65,7 +69,7 @@ public final class ComplexCos
 	private final ComplexDoubleType sum = new ComplexDoubleType();
 
 	@Override
-	public ComplexType<?> compute(ComplexType<?> z, ComplexType<?> output) {
+	public O compute(I z, O output) {
 		mulFunc.compute(z, I, IZ);
 		mulFunc.compute(z, MINUS_I, minusIZ);
 		expFunc.compute(IZ, expIZ);
@@ -76,8 +80,8 @@ public final class ComplexCos
 	}
 
 	@Override
-	public ComplexCos copy() {
-		return new ComplexCos();
+	public ComplexCos<I,O> copy() {
+		return new ComplexCos<I,O>();
 	}
 
 }

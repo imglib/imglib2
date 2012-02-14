@@ -41,8 +41,8 @@ import net.imglib2.type.numeric.ComplexType;
  * @author Barry DeZonia
  * 
  */
-public final class RealDivideConstant
-	implements UnaryOperation<ComplexType<?>, ComplexType<?>>
+public final class RealDivideConstant<I extends ComplexType<I>, O extends ComplexType<O>>
+	implements UnaryOperation<I,O>
 {
 	private final double constant;
 	private final double dbzVal;
@@ -53,7 +53,7 @@ public final class RealDivideConstant
 	}
 
 	@Override
-	public ComplexType<?> compute(ComplexType<?> x, ComplexType<?> output) {
+	public O compute(I x, O output) {
 		if (constant == 0) {
 			output.setReal(dbzVal);
 		} else { // not dividing by zero
@@ -64,8 +64,8 @@ public final class RealDivideConstant
 	}
 
 	@Override
-	public RealDivideConstant copy() {
-		return new RealDivideConstant(constant, dbzVal);
+	public RealDivideConstant<I,O> copy() {
+		return new RealDivideConstant<I,O>(constant, dbzVal);
 	}
 
 }

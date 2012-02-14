@@ -41,19 +41,19 @@ import net.imglib2.type.numeric.ComplexType;
  * @author Barry DeZonia
  * 
  */
-public final class RealSec
-		implements UnaryOperation<ComplexType<?>, ComplexType<?>>
+public final class RealSec<I extends ComplexType<I>, O extends ComplexType<O>>
+	implements UnaryOperation<I,O>
 {
 	@Override
-	public ComplexType<?> compute(ComplexType<?> x, ComplexType<?> output) {
+	public O compute(I x, O output) {
 		double value = 1.0 / Math.cos(x.getRealDouble());
 		output.setReal(value);
 		return output;
 	}
 
 	@Override
-	public RealSec copy() {
-		return new RealSec();
+	public RealSec<I,O> copy() {
+		return new RealSec<I,O>();
 	}
 
 }

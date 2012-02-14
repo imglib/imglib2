@@ -162,11 +162,11 @@ public class Example9Test {
 		Function<long[], DoubleType> convFunc2 = new RealConvolutionFunction<DoubleType>(
 				imgFunc, kernel2);
 		Function<long[], DoubleType> absFunc1 = new GeneralUnaryFunction<long[], DoubleType, DoubleType>(
-				convFunc1, new RealAbs(), new DoubleType());
+				convFunc1, new RealAbs<DoubleType,DoubleType>(), new DoubleType());
 		Function<long[], DoubleType> absFunc2 = new GeneralUnaryFunction<long[], DoubleType, DoubleType>(
-				convFunc2, new RealAbs(), new DoubleType());
+				convFunc2, new RealAbs<DoubleType,DoubleType>(), new DoubleType());
 		Function<long[], DoubleType> addFunc = new GeneralBinaryFunction<long[], DoubleType, DoubleType, DoubleType>(
-				absFunc1, absFunc2,	new RealAdd(), outType);
+				absFunc1, absFunc2,	new RealAdd<DoubleType,DoubleType,DoubleType>(), outType);
 		DoubleType output = new DoubleType();
 		for (int x = 1; x < XSIZE - 1; x++) {
 			for (int y = 1; y < YSIZE - 1; y++) {
