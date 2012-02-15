@@ -37,9 +37,9 @@ import net.imglib2.type.numeric.RealType;
  * @author Barry DeZonia
  */
 public interface RealBinaryOperation<
-	I1 extends RealType<I1>,
-	I2 extends RealType<I2>,
-	O extends RealType<O>>
+		I1 extends RealType<I1>,
+		I2 extends RealType<I2>,
+		O extends RealType<O>>
 	extends ComplexBinaryOperation<I1,I2,O>
 {
 	// no methods: this interface is type constraining and nothing else

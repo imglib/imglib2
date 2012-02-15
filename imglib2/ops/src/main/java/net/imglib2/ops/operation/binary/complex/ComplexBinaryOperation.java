@@ -37,9 +37,9 @@ import net.imglib2.type.numeric.ComplexType;
  * @author Barry DeZonia
  */
 public interface ComplexBinaryOperation<
-	I1 extends ComplexType<I1>,
-	I2 extends ComplexType<I2>,
-	O extends ComplexType<O>>
+		I1 extends ComplexType<I1>,
+		I2 extends ComplexType<I2>,
+		O extends ComplexType<O>>
 	extends BinaryOperation<I1,I2,O>
 {
 	// no methods: this interface is type constraining and nothing else
