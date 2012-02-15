@@ -29,7 +29,6 @@ POSSIBILITY OF SUCH DAMAGE.
 
 package net.imglib2.ops.operation.unary.complex;
 
-import net.imglib2.ops.UnaryOperation;
 import net.imglib2.ops.operation.binary.complex.ComplexDivide;
 import net.imglib2.ops.operation.binary.complex.ComplexMultiply;
 import net.imglib2.ops.operation.binary.complex.ComplexSubtract;
@@ -46,7 +45,7 @@ import net.imglib2.type.numeric.complex.ComplexDoubleType;
  * 
  */
 public final class ComplexSin<I extends ComplexType<I>, O extends ComplexType<O>>
-	implements UnaryOperation<I,O>
+	implements ComplexUnaryOperation<I,O>
 {
 	private final ComplexMultiply<I,ComplexDoubleType,ComplexDoubleType>
 		mulFunc = new ComplexMultiply<I,ComplexDoubleType,ComplexDoubleType>();

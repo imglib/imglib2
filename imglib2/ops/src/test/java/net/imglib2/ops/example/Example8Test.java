@@ -125,7 +125,7 @@ public class Example8Test {
 		img = makeInputImage();
 		DiscreteNeigh avgNeigh = new DiscreteNeigh(new long[3], new long[]{0,0,0}, new long[]{0,0,ZSIZE-1});
 		DiscreteNeigh medianNeigh = new DiscreteNeigh(new long[3], new long[]{1,1,0}, new long[]{1,1,0});
-		Function<long[],DoubleType> imgFunc = new RealImageFunction<DoubleType>(img, new DoubleType());
+		Function<long[],DoubleType> imgFunc = new RealImageFunction<DoubleType,DoubleType>(img, new DoubleType());
 		Function<long[],DoubleType> avgFunc = new RealAverageFunction<DoubleType>(imgFunc);
 		Function<long[],DoubleType> adapFunc = new NeighborhoodAdapterFunction<long[],DoubleType>(avgFunc, avgNeigh);
 		Function<long[],DoubleType> medianFunc = new RealMedianFunction<DoubleType>(adapFunc);

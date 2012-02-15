@@ -29,8 +29,7 @@ POSSIBILITY OF SUCH DAMAGE.
 
 package net.imglib2.ops.operation.unary.real;
 
-import net.imglib2.ops.UnaryOperation;
-import net.imglib2.type.numeric.ComplexType;
+import net.imglib2.type.numeric.RealType;
 
 /**
  * Sets the real component of an output complex number to the square root of
@@ -39,8 +38,8 @@ import net.imglib2.type.numeric.ComplexType;
  * @author Barry DeZonia
  * 
  */
-public final class RealSqrt<I extends ComplexType<I>, O extends ComplexType<O>>
-	implements UnaryOperation<I,O>
+public final class RealSqrt<I extends RealType<I>, O extends RealType<O>>
+	implements RealUnaryOperation<I,O>
 {
 	@Override
 	public O compute(I x, O output) {

@@ -91,7 +91,7 @@ public class Example1Test {
 		Function<long[], DoubleType> constant = new ConstantRealFunction<long[], DoubleType>(
 				inputImage.firstElement(), 15);
 
-		Function<long[], DoubleType> image = new RealImageFunction<DoubleType>(
+		Function<long[], DoubleType> image = new RealImageFunction<DoubleType,DoubleType>(
 				inputImage, new DoubleType());
 
 		Function<long[], DoubleType> additionFunc = new GeneralBinaryFunction<long[], DoubleType, DoubleType, DoubleType>(

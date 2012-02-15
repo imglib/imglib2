@@ -29,7 +29,6 @@ POSSIBILITY OF SUCH DAMAGE.
 
 package net.imglib2.ops.operation.unary.complex;
 
-import net.imglib2.ops.UnaryOperation;
 import net.imglib2.type.numeric.ComplexType;
 import net.imglib2.type.numeric.complex.ComplexDoubleType;
 
@@ -43,7 +42,7 @@ import net.imglib2.type.numeric.complex.ComplexDoubleType;
  * 
  */
 public final class ComplexSec<I extends ComplexType<I>, O extends ComplexType<O>>
-	implements UnaryOperation<I,O>
+	implements ComplexUnaryOperation<I,O>
 {
 	private final ComplexCos<I,ComplexDoubleType>
 		cosFunc = new ComplexCos<I,ComplexDoubleType>();

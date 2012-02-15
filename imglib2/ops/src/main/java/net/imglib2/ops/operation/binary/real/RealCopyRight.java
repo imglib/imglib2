@@ -29,8 +29,7 @@ POSSIBILITY OF SUCH DAMAGE.
 
 package net.imglib2.ops.operation.binary.real;
 
-import net.imglib2.ops.BinaryOperation;
-import net.imglib2.type.numeric.ComplexType;
+import net.imglib2.type.numeric.RealType;
 
 /**
  * A real operation that sets the real component of an output to the real
@@ -40,10 +39,10 @@ import net.imglib2.type.numeric.ComplexType;
  * 
  */
 public final class RealCopyRight<
-		I1 extends ComplexType<I1>,
-		I2 extends ComplexType<I2>,
-		O extends ComplexType<O>>
-	implements BinaryOperation<I1, I2, O>
+		I1 extends RealType<I1>,
+		I2 extends RealType<I2>,
+		O extends RealType<O>>
+	implements RealBinaryOperation<I1, I2, O>
 {
 	@Override
 	public O compute(I1 x1, I2 x2, O output) {

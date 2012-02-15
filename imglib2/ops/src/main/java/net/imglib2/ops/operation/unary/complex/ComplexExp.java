@@ -29,7 +29,6 @@ POSSIBILITY OF SUCH DAMAGE.
 
 package net.imglib2.ops.operation.unary.complex;
 
-import net.imglib2.ops.UnaryOperation;
 import net.imglib2.type.numeric.ComplexType;
 
 // Complex Variables and Applications, Brown and Churchill, 7th edition
@@ -42,7 +41,7 @@ import net.imglib2.type.numeric.ComplexType;
  * 
  */
 public final class ComplexExp<I extends ComplexType<I>, O extends ComplexType<O>>
-	implements UnaryOperation<I,O>
+	implements ComplexUnaryOperation<I,O>
 {
 	@Override
 	public O compute(I z, O output) {

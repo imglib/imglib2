@@ -153,7 +153,7 @@ public class Example9Test {
 		DiscreteNeigh neigh = new DiscreteNeigh(new long[2],
 				new long[] { 1, 1 }, new long[] { 1, 1 });
 		DoubleType outType = new DoubleType();
-		Function<long[], DoubleType> imgFunc = new RealImageFunction<DoubleType>(
+		Function<long[], DoubleType> imgFunc = new RealImageFunction<DoubleType,DoubleType>(
 				img, new DoubleType());
 		double[] kernel1 = new double[] { -1, -2, -1, 0, 0, 0, 1, 2, 1 };
 		double[] kernel2 = new double[] { -1, 0, 1, -2, 0, 2, -1, 0, 1 };

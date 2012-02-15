@@ -64,7 +64,7 @@ public class Example4Test {
 		
 		DiscreteNeigh neigh = new DiscreteNeigh(new long[2], new long[]{1,1}, new long[]{1,1});
 		Condition<long[]> condition = new OnTheXYCrossCondition();
-		Function<long[],DoubleType> input = new RealImageFunction<DoubleType>(inputImg, new DoubleType());
+		Function<long[],DoubleType> input = new RealImageFunction<DoubleType,DoubleType>(inputImg, new DoubleType());
 		Function<long[],DoubleType> one = new ConstantRealFunction<long[],DoubleType>(inputImg.firstElement(),1);
 		Function<long[],DoubleType> conditionalFunc = new ConditionalFunction<long[],DoubleType>(condition, input, one);
 		Function<long[],DoubleType> prodFunc = new RealProductFunction<DoubleType>(conditionalFunc); 

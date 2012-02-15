@@ -29,7 +29,6 @@ POSSIBILITY OF SUCH DAMAGE.
 
 package net.imglib2.ops.operation.unary.complex;
 
-import net.imglib2.ops.UnaryOperation;
 import net.imglib2.ops.operation.binary.complex.ComplexAdd;
 import net.imglib2.ops.operation.binary.complex.ComplexDivide;
 import net.imglib2.ops.operation.binary.complex.ComplexMultiply;
@@ -47,7 +46,7 @@ import net.imglib2.type.numeric.complex.ComplexDoubleType;
  * 
  */
 public final class ComplexArctan<I extends ComplexType<I>, O extends ComplexType<O>>
-	implements UnaryOperation<I,O>
+	implements ComplexUnaryOperation<I,O>
 {
 	private final ComplexMultiply<ComplexDoubleType,I,ComplexDoubleType>
 		mulFunc1 = new ComplexMultiply<ComplexDoubleType, I, ComplexDoubleType>();

@@ -29,7 +29,6 @@ POSSIBILITY OF SUCH DAMAGE.
 
 package net.imglib2.ops.operation.binary.complex;
 
-import net.imglib2.ops.BinaryOperation;
 import net.imglib2.type.numeric.ComplexType;
 
 /**
@@ -43,7 +42,7 @@ public final class ComplexCopyLeft<
 		I1 extends ComplexType<I1>,
 		I2 extends ComplexType<I2>,
 		O extends ComplexType<O>>
-	implements BinaryOperation<I1,I2,O>
+	implements ComplexBinaryOperation<I1,I2,O>
 {
 	@Override
 	public O compute(I1 z1, I2 z2, O output) {

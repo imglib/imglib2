@@ -38,6 +38,10 @@ import net.imglib2.outofbounds.OutOfBoundsFactory;
 import net.imglib2.type.numeric.ComplexType;
 
 /**
+ * ComplexImageFunction wraps an Img<? extends ComplexType<?>> and allows one to
+ * treat it as a function. ComplexImageFunction has two types <I,O>. I is the
+ * type of the image data (such as ComplexFloatType) while O is the type of
+ * output the function should assign to (such as ComplexDoubleType).
  * 
  * @author Barry DeZonia
  *
@@ -80,8 +84,7 @@ public class ComplexImageFunction<I extends ComplexType<I>,O extends ComplexType
 	}
 
 	@Override
-	public void evaluate(Neighborhood<long[]> neigh, long[] point,
-			O output)
+	public void evaluate(Neighborhood<long[]> neigh, long[] point, O output)
 	{
 		accessor.setPosition(point);
 		output.setReal(accessor.get().getRealDouble());

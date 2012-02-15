@@ -30,7 +30,6 @@ POSSIBILITY OF SUCH DAMAGE.
 package net.imglib2.ops.operation.unary.complex;
 
 import net.imglib2.ops.ComplexHelper;
-import net.imglib2.ops.UnaryOperation;
 import net.imglib2.type.numeric.ComplexType;
 
 //Handbook of Mathematics and Computational Science, Harris & Stocker, Springer, 2006
@@ -43,7 +42,7 @@ import net.imglib2.type.numeric.ComplexType;
  * 
  */
 public final class ComplexRoot<I extends ComplexType<I>, O extends ComplexType<O>>
-	implements UnaryOperation<I,O>
+	implements ComplexUnaryOperation<I,O>
 {
 	private final int power;
 

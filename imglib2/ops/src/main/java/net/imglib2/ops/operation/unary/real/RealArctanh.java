@@ -29,8 +29,7 @@ POSSIBILITY OF SUCH DAMAGE.
 
 package net.imglib2.ops.operation.unary.real;
 
-import net.imglib2.ops.UnaryOperation;
-import net.imglib2.type.numeric.ComplexType;
+import net.imglib2.type.numeric.RealType;
 
 //Handbook of Mathematics and Computational Science, Harris & Stocker, Springer, 2006
 
@@ -41,8 +40,8 @@ import net.imglib2.type.numeric.ComplexType;
  * @author Barry DeZonia
  * 
  */
-public final class RealArctanh<I extends ComplexType<I>, O extends ComplexType<O>>
-	implements UnaryOperation<I,O>
+public final class RealArctanh<I extends RealType<I>, O extends RealType<O>>
+	implements RealUnaryOperation<I,O>
 {
 	@Override
 	public O compute(I x, O output) {

@@ -29,7 +29,6 @@ POSSIBILITY OF SUCH DAMAGE.
 
 package net.imglib2.ops.operation.binary.complex;
 
-import net.imglib2.ops.BinaryOperation;
 import net.imglib2.ops.operation.unary.complex.ComplexExp;
 import net.imglib2.ops.operation.unary.complex.ComplexLog;
 import net.imglib2.type.numeric.ComplexType;
@@ -48,7 +47,7 @@ public final class ComplexPower<
 		I1 extends ComplexType<I1>,
 		I2 extends ComplexType<I2>,
 		O extends ComplexType<O>>
-	implements BinaryOperation<I1,I2,O>
+	implements ComplexBinaryOperation<I1,I2,O>
 {
 	private final ComplexLog<I1,ComplexDoubleType> logFunc =
 			new ComplexLog<I1,ComplexDoubleType>();

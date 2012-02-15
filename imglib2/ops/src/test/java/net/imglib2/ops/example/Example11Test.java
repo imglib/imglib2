@@ -85,7 +85,7 @@ public class Example11Test {
 		Img<DoubleType> image = makeInputImage();
 		DiscreteNeigh inputNeigh = new DiscreteNeigh(new long[2], new long[]{1,1}, new long[]{1,1});
 		Function<long[],DoubleType> imageFunc =
-			new RealImageFunction<DoubleType>(
+			new RealImageFunction<DoubleType,DoubleType>(
 				image,
 				new OutOfBoundsPeriodicFactory<DoubleType, Img<DoubleType>>(),
 				new DoubleType());
