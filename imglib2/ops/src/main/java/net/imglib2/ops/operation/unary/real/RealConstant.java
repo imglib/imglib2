@@ -32,7 +32,7 @@ package net.imglib2.ops.operation.unary.real;
 import net.imglib2.type.numeric.RealType;
 
 /**
- * Sets the real component of an output complex number to a constant value. The
+ * Sets the real component of an output real number to a constant value. The
  * constant value is specified in the constructor.
  * 
  * @author Barry DeZonia

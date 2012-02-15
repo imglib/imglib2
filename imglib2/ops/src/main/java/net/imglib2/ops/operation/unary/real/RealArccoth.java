@@ -34,8 +34,8 @@ import net.imglib2.type.numeric.RealType;
 //Handbook of Mathematics and Computational Science, Harris & Stocker, Springer, 2006
 
 /**
- * Sets the real component of an output complex number to the inverse hyperbolic
- * cotangent of the real component of an input complex number.
+ * Sets the real component of an output real number to the inverse hyperbolic
+ * cotangent of the real component of an input real number.
  * 
  * @author Barry DeZonia
  * 

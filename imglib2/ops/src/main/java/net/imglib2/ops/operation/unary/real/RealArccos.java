@@ -34,8 +34,8 @@ import net.imglib2.type.numeric.RealType;
 // DONE - no complex formula to verify
 
 /**
- * Sets the real component of an output complex number to the inverse cosine of
- * the real component of an input complex number.
+ * Sets the real component of an output real number to the inverse cosine of
+ * the real component of an input real number.
  * 
  * @author Barry DeZonia
  * 

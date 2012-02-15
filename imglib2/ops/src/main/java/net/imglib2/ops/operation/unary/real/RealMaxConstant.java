@@ -32,8 +32,8 @@ package net.imglib2.ops.operation.unary.real;
 import net.imglib2.type.numeric.RealType;
 
 /**
- * Sets the real component of an output complex number to the real component of
- * an input complex number unless it exceeds a maximum value. If it exceeds the
+ * Sets the real component of an output real number to the real component of
+ * an input real number unless it exceeds a maximum value. If it exceeds the
  * maximum value then it sets the output real component to that maximum value.
  * The maximum value is specified in the constructor.
  * 

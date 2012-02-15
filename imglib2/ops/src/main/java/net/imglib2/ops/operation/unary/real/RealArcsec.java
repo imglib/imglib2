@@ -35,8 +35,8 @@ import net.imglib2.type.numeric.real.DoubleType;
 //verified formula with Mathworld's definition for Inverse Secant
 
 /**
- * Sets the real component of an output complex number to the inverse secant of
- * the real component of an input complex number.
+ * Sets the real component of an output real number to the inverse secant of
+ * the real component of an input real number.
  * 
  * @author Barry DeZonia
  * 

@@ -32,8 +32,8 @@ package net.imglib2.ops.operation.unary.real;
 import net.imglib2.type.numeric.RealType;
 
 /**
- * Sets the real component of an output complex number to the gamma value of
- * the real component of an input complex number. The constant value is
+ * Sets the real component of an output real number to the gamma value of
+ * the real component of an input real number. The constant value is
  * specified in the constructor.
  * 
  * @author Barry DeZonia

@@ -34,8 +34,8 @@ import java.util.Random;
 import net.imglib2.type.numeric.RealType;
 
 /**
- * Sets the real component of an output complex number to the addition of
- * the real component of an input complex number with an amount of Gaussian
+ * Sets the real component of an output real number to the addition of
+ * the real component of an input real number with an amount of Gaussian
  * noise. The noise parameters are specified in the constructor.
  * 
  * @author Barry DeZonia

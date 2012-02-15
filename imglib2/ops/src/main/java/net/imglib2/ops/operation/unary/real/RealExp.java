@@ -32,8 +32,8 @@ package net.imglib2.ops.operation.unary.real;
 import net.imglib2.type.numeric.RealType;
 
 /**
- * Sets the real component of an output complex number to the exponentiation of
- * the real component of an input complex number. (e raised to a power)
+ * Sets the real component of an output real number to the exponentiation of
+ * the real component of an input real number. (e raised to a power)
  * 
  * @author Barry DeZonia
  * 

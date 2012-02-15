@@ -32,8 +32,8 @@ package net.imglib2.ops.operation.unary.real;
 import net.imglib2.type.numeric.RealType;
 
 /**
- * Sets the real component of an output complex number to a scaling of the real
- * component of an input complex number into a new range. The range parameters
+ * Sets the real component of an output real number to a scaling of the real
+ * component of an input real number into a new range. The range parameters
  * are specified in the constructor.
  * 
  * @author Barry DeZonia

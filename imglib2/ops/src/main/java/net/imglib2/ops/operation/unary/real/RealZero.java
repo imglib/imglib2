@@ -32,7 +32,7 @@ package net.imglib2.ops.operation.unary.real;
 import net.imglib2.type.numeric.RealType;
 
 /**
- * Sets the real component of an output complex number to zero.
+ * Sets the real component of an output real number to zero.
  * 
  * @author Barry DeZonia
  * 

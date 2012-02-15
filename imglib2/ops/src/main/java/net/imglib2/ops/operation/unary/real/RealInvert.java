@@ -32,8 +32,8 @@ package net.imglib2.ops.operation.unary.real;
 import net.imglib2.type.numeric.RealType;
 
 /**
- * Sets the real component of an output complex number to the inversion of
- * the real component of an input complex number about a range. The range is
+ * Sets the real component of an output real number to the inversion of
+ * the real component of an input real number about a range. The range is
  * specified in the constructor.
  * 
  * @author Barry DeZonia

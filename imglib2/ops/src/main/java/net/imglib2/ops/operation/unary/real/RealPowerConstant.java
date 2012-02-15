@@ -33,8 +33,8 @@ import net.imglib2.type.numeric.RealType;
 
 
 /**
- * Sets the real component of an output complex number to the raising of
- * the real component of an input complex number to a constant value. The
+ * Sets the real component of an output real number to the raising of
+ * the real component of an input real number to a constant value. The
  * constant value is specified in the constructor.
  * 
  * @author Barry DeZonia
