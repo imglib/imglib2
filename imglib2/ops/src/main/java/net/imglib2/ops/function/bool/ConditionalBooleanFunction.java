@@ -29,11 +29,10 @@ POSSIBILITY OF SUCH DAMAGE.
 
 package net.imglib2.ops.function.bool;
 
-import net.imglib2.ops.Bool;
-import net.imglib2.ops.BoolOutput;
 import net.imglib2.ops.Condition;
 import net.imglib2.ops.Function;
 import net.imglib2.ops.Neighborhood;
+import net.imglib2.type.logic.BitType;
 
 
 /**
@@ -41,8 +40,7 @@ import net.imglib2.ops.Neighborhood;
  * @author Barry DeZonia
  *
  */
-public class ConditionalBooleanFunction<INDEX> extends BoolOutput
-	implements Function<INDEX,Bool>
+public class ConditionalBooleanFunction<INDEX> implements Function<INDEX,BitType>
 {
 	private final Condition<INDEX> condition;
 
@@ -51,13 +49,18 @@ public class ConditionalBooleanFunction<INDEX> extends BoolOutput
 	}
 
 	@Override
-	public void evaluate(Neighborhood<INDEX> neigh, INDEX point, Bool b) {
-		b.setBool(condition.isTrue(neigh, point));
+	public void evaluate(Neighborhood<INDEX> neigh, INDEX point, BitType b) {
+		b.set(condition.isTrue(neigh, point));
 	}
 	
 	@Override
-	public ConditionalBooleanFunction<INDEX> duplicate() {
-		return new ConditionalBooleanFunction<INDEX>(condition.duplicate());
+	public ConditionalBooleanFunction<INDEX> copy() {
+		return new ConditionalBooleanFunction<INDEX>(condition.copy());
+	}
+
+	@Override
+	public BitType createOutput() {
+		return new BitType();
 	}
 }
 

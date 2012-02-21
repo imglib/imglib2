@@ -54,7 +54,7 @@ public class OrCondition<INDEX> implements Condition<INDEX> {
 	}
 
 	@Override
-	public OrCondition<INDEX> duplicate() {
-		return new OrCondition<INDEX>(cond1.duplicate(), cond2.duplicate());
+	public OrCondition<INDEX> copy() {
+		return new OrCondition<INDEX>(cond1.copy(), cond2.copy());
 	}
 }

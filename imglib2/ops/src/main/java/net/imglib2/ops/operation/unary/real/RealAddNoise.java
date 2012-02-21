@@ -5,12 +5,12 @@ All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are met:
-  * Redistributions of source code must retain the above copyright
+ * Redistributions of source code must retain the above copyright
     notice, this list of conditions and the following disclaimer.
-  * Redistributions in binary form must reproduce the above copyright
+ * Redistributions in binary form must reproduce the above copyright
     notice, this list of conditions and the following disclaimer in the
     documentation and/or other materials provided with the distribution.
-  * Neither the name of the Fiji project developers nor the
+ * Neither the name of the Fiji project developers nor the
     names of its contributors may be used to endorse or promote products
     derived from this software without specific prior written permission.
 
@@ -25,29 +25,37 @@ INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
 CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE.
-*/
+ */
 
 package net.imglib2.ops.operation.unary.real;
 
 import java.util.Random;
 
-import net.imglib2.ops.Real;
-import net.imglib2.ops.RealOutput;
 import net.imglib2.ops.UnaryOperation;
-
+import net.imglib2.type.numeric.ComplexType;
 
 /**
+ * Sets the real component of an output complex number to the addition of
+ * the real component of an input complex number with an amount of Gaussian
+ * noise. The noise parameters are specified in the constructor.
  * 
  * @author Barry DeZonia
- *
+ * 
  */
-public final class RealAddNoise extends RealOutput implements UnaryOperation<Real,Real> {
-
+public final class RealAddNoise<I extends ComplexType<I>, O extends ComplexType<O>>
+	implements UnaryOperation<I,O>
+{
 	private final double rangeMin;
 	private final double rangeMax;
 	private final double rangeStdDev;
 	private final Random rng;
-	
+
+	/**
+	 * Constructor specifying noise parameters.
+	 * @param min - the desired lower bound on the output pixel values
+	 * @param max - the desired upper bound on the output pixel values
+	 * @param stdDev - the stand deviation of the gaussian random variable
+	 */
 	public RealAddNoise(double min, double max, double stdDev) {
 		this.rangeMin = min;
 		this.rangeMax = max;
@@ -55,27 +63,28 @@ public final class RealAddNoise extends RealOutput implements UnaryOperation<Rea
 		this.rng = new Random();
 		this.rng.setSeed(System.currentTimeMillis());
 	}
-	
+
 	@Override
-	public void compute(Real x, Real output) {
+	public O compute(I x, O output) {
 		int i = 0;
-		do
-		{
-			double newVal = x.getReal() + (rng.nextGaussian() * rangeStdDev);
-			
-			if ((rangeMin <= newVal) && (newVal <=rangeMax)) {
+		do {
+			double newVal = x.getRealDouble()
+					+ (rng.nextGaussian() * rangeStdDev);
+
+			if ((rangeMin <= newVal) && (newVal <= rangeMax)) {
 				output.setReal(newVal);
-				return;
+				return output;
 			}
-			
+
 			if (i++ > 100)
-				throw new IllegalArgumentException("noise function failing to terminate. probably misconfigured.");
-		}
-		while(true);
+				throw new IllegalArgumentException(
+						"noise function failing to terminate. probably misconfigured.");
+		} while (true);
 	}
 
 	@Override
-	public RealAddNoise duplicate() {
-		return new RealAddNoise(rangeMin, rangeMax, rangeStdDev);
+	public RealAddNoise<I,O> copy() {
+		return new RealAddNoise<I,O>(rangeMin, rangeMax, rangeStdDev);
 	}
+
 }

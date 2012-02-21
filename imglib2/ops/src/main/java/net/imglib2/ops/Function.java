@@ -56,6 +56,6 @@ public interface Function<INDEX_TYPE, OUTPUT_TYPE> {
 	 * A helper that allows one to create a copy of a function. This method is
 	 * key for supporting multithreaded calculations during image assignment.
 	 */
-	Function<INDEX_TYPE,OUTPUT_TYPE> duplicate();
+	Function<INDEX_TYPE,OUTPUT_TYPE> copy();
 }
 

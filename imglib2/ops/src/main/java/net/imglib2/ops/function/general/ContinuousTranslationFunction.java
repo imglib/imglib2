@@ -50,7 +50,7 @@ public class ContinuousTranslationFunction<T> implements Function<double[],T> {
 	{
 		this.otherFunc = otherFunc;
 		this.deltas = deltas;
-		this.localRegion = region.duplicate();
+		this.localRegion = region.copy();
 		this.localCtr = new double[deltas.length];
 	}
 	
@@ -69,7 +69,7 @@ public class ContinuousTranslationFunction<T> implements Function<double[],T> {
 	}
 	
 	@Override
-	public ContinuousTranslationFunction<T> duplicate() {
-		return new ContinuousTranslationFunction<T>(otherFunc.duplicate(), localRegion.duplicate(), deltas.clone());
+	public ContinuousTranslationFunction<T> copy() {
+		return new ContinuousTranslationFunction<T>(otherFunc.copy(), localRegion.copy(), deltas.clone());
 	}
 }

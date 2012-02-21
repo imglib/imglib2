@@ -62,6 +62,11 @@ public class KNearestNeighborSearchOnKDTree< T > implements KNearestNeighborSear
 			bestSquDistances[ i ] = Double.MAX_VALUE;
 	}
 	
+	@Override
+	public int numDimensions()
+	{
+		return n;
+	}
 	
 	@Override
 	public void search( RealLocalizable reference )
@@ -153,5 +158,18 @@ public class KNearestNeighborSearchOnKDTree< T > implements KNearestNeighborSear
 	public double getDistance()
 	{
 		return getDistance( 0 );
+	}
+	
+	@Override
+	public KNearestNeighborSearchOnKDTree< T > copy()
+	{
+		final KNearestNeighborSearchOnKDTree< T > copy = new KNearestNeighborSearchOnKDTree< T >( tree, k );
+		System.arraycopy( pos, 0, copy.pos, 0, pos.length );
+		for ( int i = 0; i < k; ++i )
+		{
+			copy.bestPoints[ i ] = bestPoints[ i ];
+			copy.bestSquDistances[ i ] = bestSquDistances[ i ];
+		}
+		return copy;
 	}
 }

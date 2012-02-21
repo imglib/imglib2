@@ -16,7 +16,7 @@
  * library, wich is released under the terms of the Common Public License -
  * v1.0, which is available at http://www.eclipse.org/legal/cpl-v10.html  
  *
- * @author Stephan Preibisch
+ * @author Stephan Preibisch (stephan.preibisch@gmx.de)
  */
 package net.imglib2.algorithm.fft;
 
@@ -38,6 +38,21 @@ import net.imglib2.type.numeric.complex.ComplexFloatType;
 import net.imglib2.type.numeric.real.FloatType;
 import net.imglib2.util.Util;
 
+/**
+ * Computes a convolution of an {@link Img} or {@link RandomAccessibleInterval} with an kernel. The computation is based on the Fourier
+ * convolution theorem and computation time is therefore independent of the size of kernel (except the kernel becomes bigger than the input,
+ * which makes limited sense).
+ * 
+ * It is possible to exchange the kernel or the image if a series of images is convolved with the same kernel - or if an image has to be convolved
+ * with multiple kernels.
+ * 
+ * The precision of the computation is {@link ComplexFloatType}.
+ * 
+ * @author Stephan Preibisch (stephan.preibisch@gmx.de)
+ *
+ * @param <T> - {@link RealType} of the image
+ * @param <S> - {@link RealType} of the kernel
+ */
 public class FourierConvolution<T extends RealType<T>, S extends RealType<S>> implements MultiThreaded, OutputAlgorithm<Img<T>>, Benchmark
 {
 	final int numDimensions;

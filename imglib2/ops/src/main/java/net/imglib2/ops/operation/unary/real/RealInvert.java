@@ -5,12 +5,12 @@ All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are met:
-  * Redistributions of source code must retain the above copyright
+ * Redistributions of source code must retain the above copyright
     notice, this list of conditions and the following disclaimer.
-  * Redistributions in binary form must reproduce the above copyright
+ * Redistributions in binary form must reproduce the above copyright
     notice, this list of conditions and the following disclaimer in the
     documentation and/or other materials provided with the distribution.
-  * Neither the name of the Fiji project developers nor the
+ * Neither the name of the Fiji project developers nor the
     names of its contributors may be used to endorse or promote products
     derived from this software without specific prior written permission.
 
@@ -25,40 +25,47 @@ INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
 CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE.
-*/
+ */
 
 package net.imglib2.ops.operation.unary.real;
 
-import net.imglib2.ops.Real;
-import net.imglib2.ops.RealOutput;
 import net.imglib2.ops.UnaryOperation;
-
+import net.imglib2.type.numeric.ComplexType;
 
 /**
+ * Sets the real component of an output complex number to the inversion of
+ * the real component of an input complex number about a range. The range is
+ * specified in the constructor.
  * 
  * @author Barry DeZonia
- *
+ * 
  */
-public final class RealInvert extends RealOutput implements UnaryOperation<Real,Real> {
+public final class RealInvert<I extends ComplexType<I>, O extends ComplexType<O>>
+	implements UnaryOperation<I,O>
+{
+	private double specifiedMin;
+	private double specifiedMax;
 
-	private final double actualMin;
-	private final double actualMax;
-
-	public RealInvert(final double actualMin, final double actualMax)
+	/**
+	 * Constructor.
+	 * @param specifiedMin - minimum value of the range to invert about
+	 * @param specifiedMax - maximum value of the range to invert about
+	 */
+	public RealInvert(final double specifiedMin, final double specifiedMax)
 	{
-		this.actualMax = actualMax;
-		this.actualMin = actualMin;
+		this.specifiedMax = specifiedMax;
+		this.specifiedMin = specifiedMin;
 	}
 
 	@Override
-	public void compute(Real x, Real output) {
-		double value = actualMax - (x.getReal() - actualMin);
+	public O compute(I x, O output) {
+		double value = specifiedMax - (x.getRealDouble() - specifiedMin);
 		output.setReal(value);
+		return output;
 	}
-
+	
 	@Override
-	public RealInvert duplicate() {
-		return new RealInvert(actualMin,actualMax);
+	public RealInvert<I,O> copy() {
+		return new RealInvert<I,O>(specifiedMin, specifiedMax);
 	}
 }
-

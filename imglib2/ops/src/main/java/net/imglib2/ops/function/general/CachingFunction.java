@@ -84,8 +84,8 @@ public class CachingFunction<T extends DataCopier<T>> implements Function<long[]
 
 	
 	@Override
-	public CachingFunction<T> duplicate() {
-		return new CachingFunction<T>(otherFunc.duplicate());
+	public CachingFunction<T> copy() {
+		return new CachingFunction<T>(otherFunc.copy());
 	}
 
 	// -- private helpers --

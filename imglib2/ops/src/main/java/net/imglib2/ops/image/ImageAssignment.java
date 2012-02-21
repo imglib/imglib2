@@ -29,14 +29,18 @@ POSSIBILITY OF SUCH DAMAGE.
 
 package net.imglib2.ops.image;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import net.imglib2.RandomAccess;
+import net.imglib2.img.Img;
 import net.imglib2.ops.Condition;
 import net.imglib2.ops.DiscreteNeigh;
 import net.imglib2.ops.Function;
 import net.imglib2.ops.RegionIndexIterator;
+import net.imglib2.type.numeric.ComplexType;
 
 // In old AssignOperation could do many things
 // - set conditions on each input and output image
@@ -58,101 +62,94 @@ import net.imglib2.ops.RegionIndexIterator;
 
 
 /**
- * Worker class for RealImageAssignment and ComplexImageAssignment.
- * A multithreaded implementation. Assigns the values of a region of
- * an Img<?> to values from a function.
+ * A multithreaded implementation that assigns the values of a region of
+ * an Img<A> to values from a Function<long[],B>. A and B extend ComplexType<?>.
  *  
  * @author Barry DeZonia
  *
  */
-public class ImageAssignment<IMG_TYPE,INTERNAL_TYPE> {
+public class ImageAssignment<A extends ComplexType<A>,B extends ComplexType<B>> {
 
 	// -- instance variables --
-	
-	private final TypeBridge<IMG_TYPE,INTERNAL_TYPE> bridge;
-	private final Function<long[],INTERNAL_TYPE> func;
-	private Condition<long[]> cond;
-	private final long[] origin;
-	private final long[] span;
-	private final long[] negOffs;
-	private final long[] posOffs;
+
 	private ExecutorService executor;
 	private boolean assigning;
+	private List<Runnable> tasks;
 	
 	// -- constructor --
 	
 	/**
-	 * Constructor. A working neighborhood is built using negOffs and
-	 * posOffs. If they are zero in extent the working neighborhood is
-	 * a single pixel. This neighborhood is moved point by point over
-	 * the Img<?> and passed to the function for evaluation.
+	 * Constructor. A working neighborhood is built using negOffs and posOffs. If
+	 * they are zero in extent the working neighborhood is a single pixel. This
+	 * neighborhood is moved point by point over the Img<?> and passed to the
+	 * function for evaluation. Pixels are assigned in the Img<?> if the given
+	 * condition is satisfied at that point.
 	 * 
-	 * @param bridge - the interface to the Img<?> to assign data values to
-	 * @param origin - the origin of the region to assign within the Img<?>
-	 * @param span - the extents of the region to assign within the Img<?>
-	 * @param function - the function to evaluate at each point of the region
+	 * @param img - the Img<A extends ComplexType<A>> to assign data values to
+	 * @param origin - the origin of the region to assign within the Img<A>
+	 * @param span - the extents of the region to assign within the Img<A>
+	 * @param function - the Function<long[],B> to evaluate at each point of the region
+	 * @param condition - the condition that must be satisfied
 	 * @param negOffs - the extents in the negative direction of the working neighborhood
 	 * @param posOffs - the extents in the positive direction of the working neighborhood
 	 * 
 	 */
 	public ImageAssignment(
-		TypeBridge<IMG_TYPE,INTERNAL_TYPE> bridge,
+		Img<A> img,
 		long[] origin,
 		long[] span,
-		Function<long[],INTERNAL_TYPE> function,
+		Function<long[],B> function,
+		Condition<long[]> condition,
 		long[] negOffs,
 		long[] posOffs)
 	{
-		this.bridge = bridge;
-		this.origin = origin.clone();
-		this.span = span.clone();
-		this.negOffs = negOffs.clone();
-		this.posOffs = posOffs.clone();
-		this.func = function.duplicate();
-		this.cond = null;
 		this.assigning = false;
+		this.executor = null;
+		this.tasks = null;
+		setupTasks(img, origin, span, function, condition, negOffs, posOffs);
 	}
 	
+	/**
+	 * Constructor. A working neighborhood is assumed to be a single pixel. This
+	 * neighborhood is moved point by point over the Img<A> and passed to the
+	 * function for evaluation. Pixels are assigned in the Img<A> if the given
+	 * condition is satisfied at that point.
+	 *
+	 * @param img - the Img<A extends ComplexType<A>> to assign data values to
+	 * @param origin - the origin of the region to assign within the Img<A>
+	 * @param span - the extents of the region to assign within the Img<A>
+	 * @param function - the Function<long[],B> to evaluate at each point of the region
+	 * @param condition - the condition that must be satisfied
+	 * 
+	 */
+	public ImageAssignment(
+		Img<A> img,
+		long[] origin,
+		long[] span,
+		Function<long[],B> function,
+		Condition<long[]> condition)
+	{
+		this(img, origin, span, function, condition, new long[origin.length], new long[origin.length]);
+	}
+		
 	// -- public interface --
 
-	/**
-	 * Sets a condition that must be satisfied before each pixel assignment
-	 * can take place. The condition is tested at each point in the assignment
-	 * region.
-	 */
-	public void setCondition(Condition<long[]> condition) {
-		this.cond = (condition == null ? null : condition.duplicate());
-	}
-	
 	/**
 	 * Assign pixels using input variables specified in constructor. Can be
 	 * aborted using abort().
 	 */
 	public void assign() {
-		int axis;
-		int numThreads;
-		long startOffset;
-		long length;
 		synchronized(this) {
 			assigning = true;
-			axis = chooseBestAxis();
-			numThreads = chooseNumThreads(axis);
-			length = span[axis] / numThreads;
-			if (span[axis] % numThreads > 0) length++;
-			startOffset = 0;
-			executor = Executors.newFixedThreadPool(numThreads);
-		}
-		while (startOffset < span[axis]) {
-			if (startOffset + length > span[axis]) length = span[axis] - startOffset;
-			Runnable task =
-					task(bridge, origin, span, axis, origin[axis] + startOffset, length, func, cond, negOffs, posOffs);
-			synchronized (this) {
+			executor = Executors.newFixedThreadPool(tasks.size());
+			for (Runnable task : tasks)
 				executor.submit(task);
-			}
-			startOffset += length;
 		}
 		boolean terminated = true;
 		synchronized (this) {
+			// TODO - does this shutdown() call return immediately or wait until
+			// everything is complete. If it waits then this synchronized block will
+			// keep abort() from being able to work.
 			executor.shutdown();
 			terminated = executor.isTerminated();
 			if (terminated) executor = null;
@@ -174,6 +171,7 @@ public class ImageAssignment<IMG_TYPE,INTERNAL_TYPE> {
 	 * running an assign() operation.
 	 */
 	public void abort() {
+		// TODO - this method maybe ineffective. See TODO note in assign().
 		boolean terminated = true;
 		synchronized (this) {
 			if (!assigning) return;
@@ -194,11 +192,35 @@ public class ImageAssignment<IMG_TYPE,INTERNAL_TYPE> {
 	}
 
 	// -- private helpers --
-	
+
+	private void setupTasks(
+		Img<A> img,
+		long[] origin,
+		long[] span,
+		Function<long[],B> func,
+		Condition<long[]> cond,
+		long[] negOffs,
+		long[] posOffs)
+	{
+		tasks = new ArrayList<Runnable>();
+		int axis = chooseBestAxis(span);
+		int numThreads = chooseNumThreads(span,axis);
+		long length = span[axis] / numThreads;
+		if (span[axis] % numThreads > 0) length++;
+		long startOffset = 0;
+		while (startOffset < span[axis]) {
+			if (startOffset + length > span[axis]) length = span[axis] - startOffset;
+			Runnable task =
+					task(img, origin, span, axis, origin[axis] + startOffset, length, func, cond, negOffs, posOffs);
+			tasks.add(task);
+			startOffset += length;
+		}
+	}
+
 	/**
 	 * Determines best axis to divide along. Currently chooses biggest axis.
 	 */
-	private int chooseBestAxis() {
+	private int chooseBestAxis(long[] span) {
 		int bestAxis = 0;
 		long bestAxisSize = span[bestAxis];
 		for (int i = 1; i < span.length; i++) {
@@ -214,7 +236,7 @@ public class ImageAssignment<IMG_TYPE,INTERNAL_TYPE> {
 	/**
 	 * Determines how many threads to use
 	 */
-	private int chooseNumThreads(int axis) {
+	private int chooseNumThreads(long[] span, int axis) {
 		int maxThreads = Runtime.getRuntime().availableProcessors();
 		if (maxThreads == 1) return 1;
 		long numElements = numElements(span);
@@ -228,11 +250,11 @@ public class ImageAssignment<IMG_TYPE,INTERNAL_TYPE> {
 	/**
 	 * Calculates the number of elements in the output region span
 	 */
-	private long numElements(long[] sp) {
-		if (sp.length == 0) return 0;
-		long numElems = sp[0];
-		for (int i = 1; i < sp.length; i++)
-			numElems *= sp[i];
+	private long numElements(long[] span) {
+		if (span.length == 0) return 0;
+		long numElems = span[0];
+		for (int i = 1; i < span.length; i++)
+			numElems *= span[i];
 		return numElems;
 	}
 
@@ -240,13 +262,13 @@ public class ImageAssignment<IMG_TYPE,INTERNAL_TYPE> {
 	 * The task assigns values to a subset of the output region.
 	 */
 	private Runnable task(
-		TypeBridge<IMG_TYPE,INTERNAL_TYPE> br,
+		Img<A> img,
 		long[] imageOrigin,
 		long[] imageSpan,
 		int axis,
 		long startIndex,
 		long length,
-		Function<long[],INTERNAL_TYPE> fn,
+		Function<long[],B> fn,
 		Condition<long[]> cnd,
 		long[] nOffsets,
 		long[] pOffsets)
@@ -256,13 +278,17 @@ public class ImageAssignment<IMG_TYPE,INTERNAL_TYPE> {
 		regOrigin[axis] = startIndex;
 		final long[] regSpan = imageSpan.clone();
 		regSpan[axis] = length;
+		
+		// FIXME - warning unavoidable at moment. We don't have the type. If
+		// we remove typing from RegionRunner it won't compile.
+
 		return
-			new RegionRunner(
-				br,
+			new RegionRunner<A,B>(
+				img,
 				regOrigin,
 				regSpan,
-				fn.duplicate(),
-				(cnd == null ? null : cnd.duplicate()),
+				fn.copy(),
+				(cnd == null ? null : cnd.copy()),
 				nOffsets.clone(),
 				pOffsets.clone());
 	}
@@ -271,10 +297,11 @@ public class ImageAssignment<IMG_TYPE,INTERNAL_TYPE> {
 	 * RegionRunner is the workhorse for assigning output values from the
 	 * evaluation of the input function across a subset of the output region.
 	 */
-	private class RegionRunner implements Runnable {
-		
-		private final TypeBridge<IMG_TYPE,INTERNAL_TYPE> br;
-		private final Function<long[],INTERNAL_TYPE> function;
+	private class RegionRunner<U extends ComplexType<U>, V extends ComplexType<V>>
+		implements Runnable
+	{
+		private final Img<U> img;
+		private final Function<long[], V> function;
 		private final Condition<long[]> condition;
 		private final DiscreteNeigh region;
 		private final DiscreteNeigh neighborhood;
@@ -283,15 +310,15 @@ public class ImageAssignment<IMG_TYPE,INTERNAL_TYPE> {
 		 * Constructor
 		 */
 		public RegionRunner(
-			TypeBridge<IMG_TYPE,INTERNAL_TYPE> bridge,
+			Img<U> img,
 			long[] origin,
 			long[] span,
-			Function<long[],INTERNAL_TYPE> func,
+			Function<long[], V> func,
 			Condition<long[]> cond,
 			long[] negOffs,
 			long[] posOffs)
 		{
-			this.br = bridge;
+			this.img = img;
 			this.function = func;
 			this.condition = cond;
  			this.region = buildRegion(origin, span);
@@ -303,8 +330,8 @@ public class ImageAssignment<IMG_TYPE,INTERNAL_TYPE> {
 		 */
 		@Override
 		public void run() {
-			final RandomAccess<? extends IMG_TYPE> accessor = br.randomAccess();
-			final INTERNAL_TYPE output = function.createOutput();
+			final RandomAccess<U> accessor = img.randomAccess();
+			final V output = function.createOutput();
 			final RegionIndexIterator iter = new RegionIndexIterator(region);
 			while (iter.hasNext()) {
 				iter.fwd();
@@ -315,7 +342,16 @@ public class ImageAssignment<IMG_TYPE,INTERNAL_TYPE> {
 				if (proceed) {
 					function.evaluate(neighborhood, iter.getPosition(), output);
 					accessor.setPosition(iter.getPosition());
-					br.setPixel(accessor, output);
+					accessor.get().setReal(output.getRealDouble());
+					accessor.get().setImaginary(output.getImaginaryDouble());
+					// FIXME
+					// Note - for real datasets this imaginary assignment may waste cpu
+					// cycles. Perhaps it can get optimized away by the JIT. But maybe not
+					// since the type is not really known because this class is really
+					// constructed from a raw type. We'd need to test how the JIT handles
+					// this situation. Note that in past incarnations this class used
+					// assigner classes. The complex version set R & I but the real
+					// version just set R. We could adopt that approach once again.
 				}
 			}
 		}
@@ -325,10 +361,11 @@ public class ImageAssignment<IMG_TYPE,INTERNAL_TYPE> {
 		 * DiscreteNeigh is needed for use with a RegionIndexIterator.
 		 */
 		private DiscreteNeigh buildRegion(long[] org, long[] spn) {
+			long[] nOffsets = new long[org.length];
 			long[] pOffsets = new long[org.length];
 			for (int i = 0; i < org.length; i++)
 				pOffsets[i] = spn[i] - 1;
-			return new DiscreteNeigh(org, new long[org.length], pOffsets);
+			return new DiscreteNeigh(org, nOffsets, pOffsets);
 		}
 	}
 }
