@@ -18,7 +18,7 @@ MAIN_CLASS=tests.PerformanceBenchmark
 
 # copy dependent JARs first
 cd "$DIR/../../.."
-mvn package dependency:copy-dependencies
+mvn -DskipTests package dependency:copy-dependencies
 cd -
 
 # 1 million
