@@ -9,7 +9,7 @@ TARGET="$DIR/../../../target"
 
 CP=\
 $TARGET'/dependency/*':\
-$TARGET/imglib-ij-2.0-SNAPSHOT.jar:\
+$TARGET/imglib2-ij-2.0-SNAPSHOT.jar:\
 $TARGET/test-classes
 
 JAVA=java

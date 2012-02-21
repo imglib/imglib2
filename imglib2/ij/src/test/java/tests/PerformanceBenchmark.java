@@ -44,13 +44,13 @@ public class PerformanceBenchmark {
 
 	private static final String METHOD_RAW = "Raw";
 	private static final String METHOD_IMAGEJ = "ImageJ";
-	private static final String METHOD_IMGLIB_ARRAY = "Imglib (Array)";
-	private static final String METHOD_IMGLIB_CELL = "Imglib (Cell)";
-	private static final String METHOD_IMGLIB_PLANAR = "Imglib (Planar)";
-	private static final String METHOD_IMGLIB_IMAGEPLUS = "Imglib (ImagePlus)";
-	private static final String METHOD_PIXLIB_REFLECTION = "Pixlib (Reflection)";
-	private static final String METHOD_PIXLIB_GENERIC = "Pixlib (Generic Array)";
-	private static final String METHOD_PIXLIB_BYTE = "Pixlib (Byte Array)";
+	private static final String METHOD_IMGLIB_ARRAY = "ImgLib2 (Array)";
+	private static final String METHOD_IMGLIB_CELL = "ImgLib2 (Cell)";
+	private static final String METHOD_IMGLIB_PLANAR = "ImgLib2 (Planar)";
+	private static final String METHOD_IMGLIB_IMAGEPLUS = "ImgLib2 (ImagePlus)";
+	private static final String METHOD_PIXLIB_REFLECTION = "PixLib (Reflection)";
+	private static final String METHOD_PIXLIB_GENERIC = "PixLib (Generic Array)";
+	private static final String METHOD_PIXLIB_BYTE = "PixLib (Byte Array)";
 
 	private final int width, height;
 	private final byte[] rawData;
