@@ -9,7 +9,7 @@ TARGET="$DIR/../../../target"
 
 CP=\
 $TARGET'/dependency/*':\
-$TARGET/imglib-ij-2.0-SNAPSHOT.jar:\
+$TARGET/imglib2-ij-2.0-SNAPSHOT.jar:\
 $TARGET/test-classes
 
 JAVA=java
@@ -18,7 +18,7 @@ MAIN_CLASS=tests.PerformanceBenchmark
 
 # copy dependent JARs first
 cd "$DIR/../../.."
-mvn package dependency:copy-dependencies
+mvn -DskipTests package dependency:copy-dependencies
 cd -
 
 # 1 million
