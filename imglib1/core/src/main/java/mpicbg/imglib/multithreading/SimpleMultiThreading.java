@@ -95,6 +95,12 @@ public class SimpleMultiThreading
 
 	public static void startTask(Runnable run, int numThreads)
 	{
+		if ( 1 == numThreads )
+		{
+			run.run();
+			return;
+		}
+		
 		Thread[] threads = newThreads(numThreads);
 
 		for (int ithread = 0; ithread < threads.length; ++ithread)
@@ -116,6 +122,12 @@ public class SimpleMultiThreading
 
 	public static void startAndJoin(Thread[] threads)
 	{
+		if ( 1 == threads.length )
+		{
+			threads[0].run();
+			return;
+		}
+		
 		for (int ithread = 0; ithread < threads.length; ++ithread)
 		{
 			threads[ithread].setPriority(Thread.NORM_PRIORITY);
