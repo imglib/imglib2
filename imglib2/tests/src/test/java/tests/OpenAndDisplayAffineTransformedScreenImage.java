@@ -57,14 +57,13 @@ public class OpenAndDisplayAffineTransformedScreenImage
 //		final ConstantAffineRandomAccessible< UnsignedShortType, AffineTransform3D > mapping = new ConstantAffineRandomAccessible< UnsignedShortType, AffineTransform3D >( interpolant, affine );
 //		final RandomAccessibleOnRealRandomAccessible< UnsignedShortType > transformedPixels = new RandomAccessibleOnRealRandomAccessible< UnsignedShortType >( mapping );
 		
-		
-		final ARGBScreenImage screenImage = new ARGBScreenImage( ( int )img.dimension( 0 ), ( int )img.dimension( 1 ) );
+		final ColorProcessor cp = new ColorProcessor( ( int )img.dimension( 0 ), ( int )img.dimension( 1 ) );
+		final ARGBScreenImage screenImage = new ARGBScreenImage( cp.getWidth(), cp.getHeight(), ( int[] )cp.getPixels() );
 //		final XYProjector< UnsignedShortType, ARGBType > projector = new XYProjector< UnsignedShortType, ARGBType >( mapping, screenImage, new RealARGBConverter< UnsignedShortType >( 0, 4095 ) );
 //		final XYProjector< UnsignedShortType, ARGBType > projector = new XYProjector< UnsignedShortType, ARGBType >( transformedPixels, screenImage, new RealARGBConverter< UnsignedShortType >( 0, 4095 ) );
 		final XYRandomAccessibleProjector< UnsignedShortType, ARGBType > projector = new XYRandomAccessibleProjector< UnsignedShortType, ARGBType >( mapping, screenImage, new RealARGBConverter< UnsignedShortType >( 0, 4095 ) );
 //		final XYRandomAccessibleProjector< UnsignedShortType, ARGBType > projector = new XYRandomAccessibleProjector< UnsignedShortType, ARGBType >( transformedPixels, screenImage, new RealARGBConverter< UnsignedShortType >( 0, 4095 ) );
 		
-		final ColorProcessor cp = new ColorProcessor( screenImage.image() );
 		final ImagePlus imp = new ImagePlus( "argbScreenProjection", cp );
 		imp.show();
 		
@@ -79,8 +78,6 @@ public class OpenAndDisplayAffineTransformedScreenImage
 			{
 				projector.setPosition( i, 2 );
 				projector.map();
-				final ColorProcessor cpa = new ColorProcessor( screenImage.image() );
-				imp.setProcessor( cpa );
 				imp.updateAndDraw();
 			}
 			IJ.log( "loop " + ( k + 1 ) + ": " + timer.stop() );
@@ -122,10 +119,7 @@ public class OpenAndDisplayAffineTransformedScreenImage
 				//System.out.println( affine );
 				
 				projector.map();
-				//final ColorProcessor cpa = new ColorProcessor( screenImage.image() );
-				//imp.setProcessor( cpa );
-				//imp.updateAndDraw();
-				imp.setImage( screenImage.image() );
+				imp.updateAndDraw();
 			}
 			IJ.log( "loop " + ( k + 1 ) + ": " + timer.stop() );
 		}
