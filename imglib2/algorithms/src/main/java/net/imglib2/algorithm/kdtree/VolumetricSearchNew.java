@@ -66,18 +66,11 @@ public class VolumetricSearchNew< I extends RealInterval > implements RandomAcce
 			return list;
 
 		final Stack< KDTreeNode< I >> toDo = new Stack< KDTreeNode< I >>();
-		final Integer[] kk = new Integer[ numDimensions * 2 ];
-		for ( int i = 0; i < kk.length; i++ )
-		{
-			kk[ i ] = i;
-		}
-		final Stack< Integer > toDoK = new Stack< Integer >();
 		toDo.push( kdtree.getRoot() );
-		toDoK.push( kk[ 0 ] );
 		while ( toDo.size() > 0 )
 		{
 			final KDTreeNode< I > node = toDo.pop();
-			final int k = toDoK.pop();
+			final int k = node.getSplitDimension();
 
 			// check this interval
 			final I interval = node.get();
@@ -94,7 +87,6 @@ public class VolumetricSearchNew< I extends RealInterval > implements RandomAcce
 				list.add( interval );
 
 			// possibly add children
-			final Integer nextK = kk[ ( k + 1 ) % ( numDimensions * 2 ) ];
 			if ( k < numDimensions )
 			{
 				// The coordinate is a minimum.
@@ -102,15 +94,9 @@ public class VolumetricSearchNew< I extends RealInterval > implements RandomAcce
 				// which still could be lower.
 				// Otherwise (coordinate is smaller/equal position, take the right branch as well
 				if ( node.left != null )
-				{
 					toDo.push( node.left );
-					toDoK.push( nextK );
-				}
 				if ( node.right != null && node.getSplitCoordinate() <= position[ k ] )
-				{
 					toDo.push( node.right );
-					toDoK.push( nextK );
-				}
 			}
 			else
 			{
@@ -119,15 +105,9 @@ public class VolumetricSearchNew< I extends RealInterval > implements RandomAcce
 				// which still could be higher.
 				// Otherwise (coordinate is larger/equal position, take the left branch as well
 				if ( node.right != null )
-				{
 					toDo.push( node.right );
-					toDoK.push( nextK );
-				}
 				if ( node.left != null && node.getSplitCoordinate() >= position[ k - numDimensions ] )
-				{
 					toDo.push( node.left );
-					toDoK.push( nextK );
-				}
 			}
 		}
 
