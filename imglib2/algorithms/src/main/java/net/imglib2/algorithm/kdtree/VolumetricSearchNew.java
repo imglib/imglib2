@@ -11,7 +11,6 @@ import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessible;
 import net.imglib2.RealInterval;
 import net.imglib2.RealLocalizable;
-import net.imglib2.RealPoint;
 import net.imglib2.collection.KDTree;
 import net.imglib2.collection.KDTreeNode;
 
@@ -19,7 +18,7 @@ public class VolumetricSearchNew< I extends RealInterval > implements RandomAcce
 {
 	final int numDimensions;
 
-	final KDTree< I > kdtree;
+	final KDTree< IntervalWrapper< I > > kdtree;
 
 	public VolumetricSearchNew( final List< I > intervals )
 	{
@@ -31,23 +30,67 @@ public class VolumetricSearchNew< I extends RealInterval > implements RandomAcce
 		{
 			numDimensions = intervals.get( 0 ).numDimensions();
 		}
-		kdtree = new KDTree< I >( intervals, makePoints( intervals ) );
+		final ArrayList< IntervalWrapper< I > > wrappers = new ArrayList< IntervalWrapper< I > >( intervals.size() );
+		for ( final I interval : intervals )
+			wrappers.add( new IntervalWrapper< I >( interval ) );
+		kdtree = new KDTree< IntervalWrapper< I > >( wrappers, wrappers );
 	}
 
-	private ArrayList< RealPoint > makePoints( final List< I > intervals )
+	private static class IntervalWrapper< I extends RealInterval > implements RealLocalizable
 	{
-		final ArrayList< RealPoint > points = new ArrayList< RealPoint >( intervals.size() );
-		final double[] position = new double[ 2 * numDimensions ];
-		for ( final I interval : intervals )
+		final I interval;
+
+		final int n;
+
+		public IntervalWrapper( final I interval )
 		{
-			for ( int d = 0; d < numDimensions; ++d )
+			this.interval = interval;
+			this.n = interval.numDimensions();
+		}
+
+		public I get()
+		{
+			return interval;
+		}
+
+		@Override
+		public int numDimensions()
+		{
+			return 2 * n;
+		}
+
+		@Override
+		public void localize( final float[] position )
+		{
+			for ( int d = 0; d < n; ++d )
+			{
+				position[ d ] = ( float ) interval.realMin( d );
+				position[ d + n ] = ( float ) interval.realMax( d );
+			}
+		}
+
+		@Override
+		public void localize( final double[] position )
+		{
+			for ( int d = 0; d < n; ++d )
 			{
 				position[ d ] = interval.realMin( d );
-				position[ d + numDimensions ] = interval.realMax( d );
+				position[ d + n ] = interval.realMax( d );
 			}
-			points.add( new RealPoint( position ) );
 		}
-		return points;
+
+		@Override
+		public float getFloatPosition( final int d )
+		{
+			return ( float ) getDoublePosition( d );
+		}
+
+		@Override
+		public double getDoublePosition( final int d )
+		{
+			return ( d < n ) ? interval.realMin( d ) : interval.realMax( d - n );
+		}
+
 	}
 
 	/**
@@ -65,15 +108,15 @@ public class VolumetricSearchNew< I extends RealInterval > implements RandomAcce
 		if ( kdtree.getRoot() == null )
 			return list;
 
-		final Stack< KDTreeNode< I >> toDo = new Stack< KDTreeNode< I >>();
+		final Stack< KDTreeNode< IntervalWrapper< I > > > toDo = new Stack< KDTreeNode< IntervalWrapper< I > > >();
 		toDo.push( kdtree.getRoot() );
 		while ( toDo.size() > 0 )
 		{
-			final KDTreeNode< I > node = toDo.pop();
+			final KDTreeNode< IntervalWrapper< I > > node = toDo.pop();
 			final int k = node.getSplitDimension();
 
 			// check this interval
-			final I interval = node.get();
+			final I interval = node.get().get();
 			boolean good = true;
 			for ( int i = 0; i < numDimensions; i++ )
 			{
