@@ -19,7 +19,7 @@ public class VolumetricSearchTest {
 		final ArrayList<FinalInterval> list = new ArrayList<FinalInterval>();
 		list.add(new FinalInterval(new long[] {0,0}, new long [] { 1,1} ));
 		list.add(new FinalInterval(new long[] {2,2}, new long [] { 3,3} ));
-		new VolumetricSearchNew<FinalInterval>(list);
+		new VolumetricSearch<FinalInterval>(list);
 	}
 
 	@Test
@@ -32,7 +32,7 @@ public class VolumetricSearchTest {
 		final long [] min = new long[3];
 		final long [] max = new long[3];
 		final double [] position = new double[3];
-		for (int i=0; i<100000; i++) {
+		for (int i=0; i<100; i++) {
 			final int nIntervals = random.nextInt(50) + 1;
 			final ArrayList<FinalInterval> list = new ArrayList<FinalInterval>();
 			for (int j=0;j<nIntervals; j++) {
@@ -45,7 +45,7 @@ public class VolumetricSearchTest {
 			for (int j=0; j<3; j++) {
 				position[j] = random.nextDouble() * 100.0;
 			}
-			final VolumetricSearchNew<FinalInterval> vs = new VolumetricSearchNew<FinalInterval>(list);
+			final VolumetricSearch<FinalInterval> vs = new VolumetricSearch<FinalInterval>(list);
 			final List<FinalInterval> result = vs.find(new RealPoint(position));
 			for (final FinalInterval interval:result) {
 				for (int j=0; j<3; j++) {
