@@ -67,10 +67,11 @@ public class IntegralImage<R extends RealType<R>, T extends RealType<T>> impleme
 				// Get the value of the first element in the row
 				sum = p.getType().getRealDouble();
 				// Set the value of each row element to the sum of itself and the previous
+				
 				for (long i=1; i<dimLength; ++i) {
-					p.move(1, d);
+					p.fwd( d ); //p.move(1, d);
 					tmp = p.getType();
-					sum = tmp.getRealDouble() + sum;
+					sum = sum + tmp.getRealDouble();
 					tmp.setReal(sum);
 				}
 				// Go to next row
