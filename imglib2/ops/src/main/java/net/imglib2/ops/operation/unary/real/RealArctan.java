@@ -29,23 +29,22 @@ POSSIBILITY OF SUCH DAMAGE.
 
 package net.imglib2.ops.operation.unary.real;
 
-import net.imglib2.ops.UnaryOperation;
-import net.imglib2.type.numeric.ComplexType;
+import net.imglib2.type.numeric.RealType;
 
 // DONE - no complex formula to verify
 
 /**
- * Sets the real component of an output complex number to the inverse tangent of
- * the real component of an input complex number.
+ * Sets the real component of an output real number to the inverse tangent of
+ * the real component of an input real number.
  * 
  * @author Barry DeZonia
  * 
  */
-public final class RealArctan
-		implements UnaryOperation<ComplexType<?>, ComplexType<?>>
+public final class RealArctan<I extends RealType<I>, O extends RealType<O>>
+	implements RealUnaryOperation<I,O>
 {
 	@Override
-	public ComplexType<?> compute(ComplexType<?> x, ComplexType<?> output) {
+	public O compute(I x, O output) {
 		double value = Math.atan(x.getRealDouble());
 		output.setReal(value);
 
@@ -53,8 +52,8 @@ public final class RealArctan
 	}
 
 	@Override
-	public RealArctan copy() {
-		return new RealArctan();
+	public RealArctan<I,O> copy() {
+		return new RealArctan<I,O>();
 	}
 
 }

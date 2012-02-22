@@ -29,20 +29,19 @@ POSSIBILITY OF SUCH DAMAGE.
 
 package net.imglib2.ops.operation.unary.real;
 
-import net.imglib2.ops.UnaryOperation;
-import net.imglib2.type.numeric.ComplexType;
+import net.imglib2.type.numeric.RealType;
 
 /**
- * Sets the real component of an output complex number to the real component of
- * an input complex number unless it exceeds a maximum value. If it exceeds the
+ * Sets the real component of an output real number to the real component of
+ * an input real number unless it exceeds a maximum value. If it exceeds the
  * maximum value then it sets the output real component to that maximum value.
  * The maximum value is specified in the constructor.
  * 
  * @author Barry DeZonia
  * 
  */
-public final class RealMaxConstant
-	implements UnaryOperation<ComplexType<?>, ComplexType<?>>
+public final class RealMaxConstant<I extends RealType<I>, O extends RealType<O>>
+	implements RealUnaryOperation<I,O>
 {
 	private final double constant;
 
@@ -51,7 +50,7 @@ public final class RealMaxConstant
 	}
 
 	@Override
-	public ComplexType<?> compute(ComplexType<?> x, ComplexType<?> output) {
+	public O compute(I x, O output) {
 		double value = x.getRealDouble();
 		if (value < constant)
 			output.setReal(value);
@@ -61,8 +60,8 @@ public final class RealMaxConstant
 	}
 
 	@Override
-	public RealMaxConstant copy() {
-		return new RealMaxConstant(constant);
+	public RealMaxConstant<I,O> copy() {
+		return new RealMaxConstant<I,O>(constant);
 	}
 
 }

@@ -7,9 +7,12 @@ import net.imglib2.type.numeric.complex.ComplexDoubleType;
 
 public class SpeedCalcs {
 
-	private static final ComplexCos cosFunc = new ComplexCos();
-	private static final ComplexReciprocal recipFunc = new ComplexReciprocal();
-	private static final ComplexDivide divFunc = new ComplexDivide();
+	private static final ComplexCos<ComplexDoubleType,ComplexDoubleType>
+		cosFunc =	new ComplexCos<ComplexDoubleType, ComplexDoubleType>();
+	private static final ComplexReciprocal<ComplexDoubleType,ComplexDoubleType>
+		recipFunc = new ComplexReciprocal<ComplexDoubleType, ComplexDoubleType>();
+	private static final ComplexDivide<ComplexDoubleType,ComplexDoubleType,ComplexDoubleType>
+		divFunc = new ComplexDivide<ComplexDoubleType, ComplexDoubleType, ComplexDoubleType>();
 	private static final ComplexDoubleType one = new ComplexDoubleType(1,0);
 		
 	static void method1(ComplexDoubleType in, ComplexDoubleType out) {

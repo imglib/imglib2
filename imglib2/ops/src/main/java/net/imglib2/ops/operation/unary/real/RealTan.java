@@ -29,29 +29,28 @@ POSSIBILITY OF SUCH DAMAGE.
 
 package net.imglib2.ops.operation.unary.real;
 
-import net.imglib2.ops.UnaryOperation;
-import net.imglib2.type.numeric.ComplexType;
+import net.imglib2.type.numeric.RealType;
 
 /**
- * Sets the real component of an output complex number to the tangent of
- * the real component of an input complex number.
+ * Sets the real component of an output real number to the tangent of
+ * the real component of an input real number.
  * 
  * @author Barry DeZonia
  * 
  */
-public final class RealTan
-		implements UnaryOperation<ComplexType<?>, ComplexType<?>>
+public final class RealTan<I extends RealType<I>, O extends RealType<O>>
+	implements RealUnaryOperation<I,O>
 {
 	@Override
-	public ComplexType<?> compute(ComplexType<?> x, ComplexType<?> output) {
+	public O compute(I x, O output) {
 		double value = Math.tan(x.getRealDouble());
 		output.setReal(value);
 		return output;
 	}
 
 	@Override
-	public RealTan copy() {
-		return new RealTan();
+	public RealTan<I,O> copy() {
+		return new RealTan<I,O>();
 	}
 
 }

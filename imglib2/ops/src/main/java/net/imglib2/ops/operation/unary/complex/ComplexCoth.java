@@ -29,7 +29,6 @@ POSSIBILITY OF SUCH DAMAGE.
 
 package net.imglib2.ops.operation.unary.complex;
 
-import net.imglib2.ops.UnaryOperation;
 import net.imglib2.ops.operation.binary.complex.ComplexDivide;
 import net.imglib2.type.numeric.ComplexType;
 import net.imglib2.type.numeric.complex.ComplexDoubleType;
@@ -37,33 +36,36 @@ import net.imglib2.type.numeric.complex.ComplexDoubleType;
 //Handbook of Mathematics and Computational Science, Harris & Stocker, Springer, 2006
 
 /**
- * Sets an output complex number to the hyperbolic cotangent of an input
- * complex number.
+ * Sets an output complex number to the hyperbolic cotangent of an input complex
+ * number.
  * 
  * @author Barry DeZonia
  * 
  */
-public final class ComplexCoth
-		implements UnaryOperation<ComplexType<?>, ComplexType<?>> {
-
-	private static final ComplexCosh coshFunc = new ComplexCosh();
-	private static final ComplexSinh sinhFunc = new ComplexSinh();
-	private static final ComplexDivide divFunc = new ComplexDivide();
+public final class ComplexCoth<I extends ComplexType<I>, O extends ComplexType<O>>
+	implements ComplexUnaryOperation<I,O>
+{
+	private final ComplexSinh<I,ComplexDoubleType>
+		sinFunc = new ComplexSinh<I,ComplexDoubleType>();
+	private final ComplexCosh<I,ComplexDoubleType>
+		cosFunc = new ComplexCosh<I,ComplexDoubleType>();
+	private final ComplexDivide<ComplexDoubleType,ComplexDoubleType,O>
+		divFunc = new ComplexDivide<ComplexDoubleType,ComplexDoubleType,O>();
 
 	private final ComplexDoubleType sinh = new ComplexDoubleType();
 	private final ComplexDoubleType cosh = new ComplexDoubleType();
 
 	@Override
-	public ComplexType<?> compute(ComplexType<?> z, ComplexType<?> output) {
-		sinhFunc.compute(z, sinh);
-		coshFunc.compute(z, cosh);
+	public O compute(I z, O output) {
+		sinFunc.compute(z, sinh);
+		cosFunc.compute(z, cosh);
 		divFunc.compute(cosh, sinh, output);
 		return output;
 	}
 
 	@Override
-	public ComplexCoth copy() {
-		return new ComplexCoth();
+	public ComplexCoth<I,O> copy() {
+		return new ComplexCoth<I,O>();
 	}
 
 }

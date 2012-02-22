@@ -49,12 +49,12 @@ public class GeneralBinaryFunction<INDEX,
 	private final Function<INDEX, INPUT2_TYPE> f2;
 	private final INPUT1_TYPE input1;
 	private final INPUT2_TYPE input2;
-	private final BinaryOperation<ComplexType<?>,ComplexType<?>,ComplexType<?>> operation;
+	private final BinaryOperation<INPUT1_TYPE,INPUT2_TYPE,OUTPUT_TYPE> operation;
 	private final OUTPUT_TYPE type;
 
 	public GeneralBinaryFunction(Function<INDEX, INPUT1_TYPE> f1,
 			Function<INDEX, INPUT2_TYPE> f2,
-			BinaryOperation<ComplexType<?>,ComplexType<?>,ComplexType<?>> operation,
+			BinaryOperation<INPUT1_TYPE,INPUT2_TYPE,OUTPUT_TYPE> operation,
 			OUTPUT_TYPE type) {
 		this.type = type;
 		this.f1 = f1;

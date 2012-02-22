@@ -29,29 +29,28 @@ POSSIBILITY OF SUCH DAMAGE.
 
 package net.imglib2.ops.operation.unary.real;
 
-import net.imglib2.ops.UnaryOperation;
-import net.imglib2.type.numeric.ComplexType;
+import net.imglib2.type.numeric.RealType;
 
 /**
- * Sets the real component of an output complex number to the hyperbolic sine of
- * the real component of an input complex number.
+ * Sets the real component of an output real number to the hyperbolic sine of
+ * the real component of an input real number.
  * 
  * @author Barry DeZonia
  * 
  */
-public final class RealSinh
-		implements UnaryOperation<ComplexType<?>, ComplexType<?>>
+public final class RealSinh<I extends RealType<I>, O extends RealType<O>>
+	implements RealUnaryOperation<I,O>
 {
 	@Override
-	public ComplexType<?> compute(ComplexType<?> x, ComplexType<?> output) {
+	public O compute(I x, O output) {
 		double value = Math.sinh(x.getRealDouble());
 		output.setReal(value);
 		return output;
 	}
 
 	@Override
-	public RealSinh copy() {
-		return new RealSinh();
+	public RealSinh<I,O> copy() {
+		return new RealSinh<I,O>();
 	}
 
 }

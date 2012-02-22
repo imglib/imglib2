@@ -29,19 +29,18 @@ POSSIBILITY OF SUCH DAMAGE.
 
 package net.imglib2.ops.operation.unary.real;
 
-import net.imglib2.ops.UnaryOperation;
-import net.imglib2.type.numeric.ComplexType;
+import net.imglib2.type.numeric.RealType;
 
 /**
- * Sets the real component of an output complex number to the addition of
- * the real component of an input complex number with a constant value. The
+ * Sets the real component of an output real number to the addition of
+ * the real component of an input real number with a constant value. The
  * constant value is specified in the constructor.
  * 
  * @author Barry DeZonia
  * 
  */
-public final class RealAddConstant
-	implements UnaryOperation<ComplexType<?>, ComplexType<?>>
+public final class RealAddConstant<I extends RealType<I>, O extends RealType<O>>
+	implements RealUnaryOperation<I,O>
 {
 	private final double constant;
 
@@ -50,15 +49,15 @@ public final class RealAddConstant
 	}
 
 	@Override
-	public ComplexType<?> compute(ComplexType<?> x, ComplexType<?> output) {
+	public O compute(I x, O output) {
 		double value = x.getRealDouble() + constant;
 		output.setReal(value);
 		return output;
 	}
 
 	@Override
-	public RealAddConstant copy() {
-		return new RealAddConstant(constant);
+	public RealAddConstant<I,O> copy() {
+		return new RealAddConstant<I,O>(constant);
 	}
 
 }

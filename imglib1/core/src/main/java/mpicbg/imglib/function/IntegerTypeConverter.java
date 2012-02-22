@@ -11,36 +11,26 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
- * 
- * @author Johannes Schindelin and Stephan Preibisch
+ *
+ * @author Stephan Preibisch
  */
-package net.imglib2.algorithm.kdtree;
+package mpicbg.imglib.function;
 
-import java.util.Comparator;
-
-import net.imglib2.algorithm.kdtree.node.Leaf;
+import mpicbg.imglib.type.numeric.IntegerType;
 
 /**
- * Compares which {@link Leaf} is closer to another {@link Leaf}
- * 
- * @author Johannes Schindelin and Stephan Preibisch
+ * Converts an {@link IntegerType} into another one without doing any range checking
  *
- * @param <T>
+ * @author Stephan Preibisch
+ *
+ * @param <A> - the input {@link IntegerType}
+ * @param <B> - the output {@link IntegerType}
  */
-public class DistanceComparator< T extends Leaf<T> > implements Comparator<T>
+public class IntegerTypeConverter< A extends IntegerType<A>, B extends IntegerType<B> > implements Converter<A, B>
 {
-	final T point;
-	
-	public DistanceComparator( final T point )
-	{
-		this.point = point;
-	}
-	
 	@Override
-	public int compare( final T a, final T b ) 
+	public void convert( final A input, final B output )
 	{
-		final double distA = point.distanceTo( a );
-		final double distB = point.distanceTo( b );
-		return distA < distB ? -1 : distA > distB ? +1 : 0;
+		output.setInteger( input.getIntegerLong() );
 	}
 }

@@ -29,19 +29,18 @@ POSSIBILITY OF SUCH DAMAGE.
 
 package net.imglib2.ops.operation.unary.real;
 
-import net.imglib2.ops.UnaryOperation;
-import net.imglib2.type.numeric.ComplexType;
+import net.imglib2.type.numeric.RealType;
 
 /**
- * Sets the real component of an output complex number to the gamma value of
- * the real component of an input complex number. The constant value is
+ * Sets the real component of an output real number to the gamma value of
+ * the real component of an input real number. The constant value is
  * specified in the constructor.
  * 
  * @author Barry DeZonia
  * 
  */
-public final class RealGammaConstant
-	implements UnaryOperation<ComplexType<?>, ComplexType<?>>
+public final class RealGammaConstant<I extends RealType<I>, O extends RealType<O>>
+	implements RealUnaryOperation<I,O>
 {
 	private final double constant;
 
@@ -50,7 +49,7 @@ public final class RealGammaConstant
 	}
 
 	@Override
-	public ComplexType<?> compute(ComplexType<?> x, ComplexType<?> output) {
+	public O compute(I x, O output) {
 		double inputVal = x.getRealDouble();
 		if (inputVal <= 0)
 			output.setReal(0);
@@ -62,8 +61,8 @@ public final class RealGammaConstant
 	}
 
 	@Override
-	public RealGammaConstant copy() {
-		return new RealGammaConstant(constant);
+	public RealGammaConstant<I,O> copy() {
+		return new RealGammaConstant<I,O>(constant);
 	}
 
 }

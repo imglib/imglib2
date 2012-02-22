@@ -29,20 +29,19 @@ POSSIBILITY OF SUCH DAMAGE.
 
 package net.imglib2.ops.operation.unary.real;
 
-import net.imglib2.ops.UnaryOperation;
-import net.imglib2.type.numeric.ComplexType;
+import net.imglib2.type.numeric.RealType;
 
 /**
- * Sets the real component of an output complex number to the division of
- * the real component of an input complex number by a constant value. The
+ * Sets the real component of an output real number to the division of
+ * the real component of an input real number by a constant value. The
  * constant value is specified in the constructor. In the case of division
  * by zero the value is set to a value also specified in the constructor.
  * 
  * @author Barry DeZonia
  * 
  */
-public final class RealDivideConstant
-	implements UnaryOperation<ComplexType<?>, ComplexType<?>>
+public final class RealDivideConstant<I extends RealType<I>, O extends RealType<O>>
+	implements RealUnaryOperation<I,O>
 {
 	private final double constant;
 	private final double dbzVal;
@@ -53,7 +52,7 @@ public final class RealDivideConstant
 	}
 
 	@Override
-	public ComplexType<?> compute(ComplexType<?> x, ComplexType<?> output) {
+	public O compute(I x, O output) {
 		if (constant == 0) {
 			output.setReal(dbzVal);
 		} else { // not dividing by zero
@@ -64,8 +63,8 @@ public final class RealDivideConstant
 	}
 
 	@Override
-	public RealDivideConstant copy() {
-		return new RealDivideConstant(constant, dbzVal);
+	public RealDivideConstant<I,O> copy() {
+		return new RealDivideConstant<I,O>(constant, dbzVal);
 	}
 
 }

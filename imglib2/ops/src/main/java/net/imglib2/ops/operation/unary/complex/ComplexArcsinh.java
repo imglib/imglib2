@@ -29,7 +29,6 @@ POSSIBILITY OF SUCH DAMAGE.
 
 package net.imglib2.ops.operation.unary.complex;
 
-import net.imglib2.ops.UnaryOperation;
 import net.imglib2.ops.operation.binary.complex.ComplexAdd;
 import net.imglib2.ops.operation.binary.complex.ComplexMultiply;
 import net.imglib2.ops.operation.binary.complex.ComplexPower;
@@ -45,13 +44,19 @@ import net.imglib2.type.numeric.complex.ComplexDoubleType;
  * @author Barry DeZonia
  * 
  */
-public final class ComplexArcsinh
-		implements UnaryOperation<ComplexType<?>, ComplexType<?>> {
-
-	private static final ComplexMultiply mulFunc = new ComplexMultiply();
-	private static final ComplexPower powFunc = new ComplexPower();
-	private static final ComplexAdd addFunc = new ComplexAdd();
-	private static final ComplexLog logFunc = new ComplexLog();
+public final class ComplexArcsinh<I extends ComplexType<I>, O extends ComplexType<O>>
+	implements ComplexUnaryOperation<I,O>
+{
+	private final ComplexMultiply<I,I,ComplexDoubleType>
+		mulFunc = new ComplexMultiply<I,I,ComplexDoubleType>();
+	private final ComplexAdd<ComplexDoubleType,ComplexDoubleType,ComplexDoubleType>
+		addFunc1 = new ComplexAdd<ComplexDoubleType, ComplexDoubleType, ComplexDoubleType>();
+	private final ComplexPower<ComplexDoubleType,ComplexDoubleType,ComplexDoubleType>
+		powFunc = new ComplexPower<ComplexDoubleType, ComplexDoubleType, ComplexDoubleType>();
+	private final ComplexAdd<I,ComplexDoubleType,ComplexDoubleType>
+		addFunc2 = new ComplexAdd<I, ComplexDoubleType, ComplexDoubleType>();
+	private final ComplexLog<ComplexDoubleType,O>
+		logFunc = new ComplexLog<ComplexDoubleType,O>();
 
 	private static final ComplexDoubleType ONE = new ComplexDoubleType(1,0);
 	private static final ComplexDoubleType ONE_HALF = new ComplexDoubleType(0.5,0);
@@ -62,18 +67,18 @@ public final class ComplexArcsinh
 	private final ComplexDoubleType sum = new ComplexDoubleType();
 
 	@Override
-	public ComplexType<?> compute(ComplexType<?> z, ComplexType<?> output) {
+	public O compute(I z, O output) {
 		mulFunc.compute(z, z, zSquared);
-		addFunc.compute(zSquared, ONE, miniSum);
+		addFunc1.compute(zSquared, ONE, miniSum);
 		powFunc.compute(miniSum, ONE_HALF, root);
-		addFunc.compute(z, root, sum);
+		addFunc2.compute(z, root, sum);
 		logFunc.compute(sum, output);
 		return output;
 	}
 
 	@Override
-	public ComplexArcsinh copy() {
-		return new ComplexArcsinh();
+	public ComplexArcsinh<I,O> copy() {
+		return new ComplexArcsinh<I,O>();
 	}
 
 }

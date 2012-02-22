@@ -29,8 +29,7 @@ POSSIBILITY OF SUCH DAMAGE.
 
 package net.imglib2.ops.operation.binary.real;
 
-import net.imglib2.ops.BinaryOperation;
-import net.imglib2.type.numeric.ComplexType;
+import net.imglib2.type.numeric.RealType;
 
 /**
  * A real operation that sets the real component of an output to the addition of
@@ -39,17 +38,20 @@ import net.imglib2.type.numeric.ComplexType;
  * @author Barry DeZonia
  * 
  */
-public final class RealAdd
-		implements BinaryOperation<ComplexType<?>, ComplexType<?>, ComplexType<?>>
+public final class RealAdd<
+		I1 extends RealType<I1>,
+		I2 extends RealType<I2>,
+		O extends RealType<O>>
+	implements RealBinaryOperation<I1, I2, O>
 {
 	@Override
-	public ComplexType<?> compute(ComplexType<?> x1, ComplexType<?> x2, ComplexType<?> output) {
+	public O compute(I1 x1, I2 x2, O output) {
 		output.setReal(x1.getRealDouble() + x2.getRealDouble());
 		return output;
 	}
 
 	@Override
-	public RealAdd copy() {
-		return new RealAdd();
+	public RealAdd<I1,I2,O> copy() {
+		return new RealAdd<I1,I2,O>();
 	}
 }

@@ -29,18 +29,17 @@ POSSIBILITY OF SUCH DAMAGE.
 
 package net.imglib2.ops.operation.unary.real;
 
-import net.imglib2.ops.UnaryOperation;
-import net.imglib2.type.numeric.ComplexType;
+import net.imglib2.type.numeric.RealType;
 
 /**
- * Sets the real component of an output complex number to the reciprocal of
- * the real component of an input complex number.
+ * Sets the real component of an output real number to the reciprocal of
+ * the real component of an input real number.
  * 
  * @author Barry DeZonia
  * 
  */
-public final class RealReciprocal
-		implements UnaryOperation<ComplexType<?>, ComplexType<?>>
+public final class RealReciprocal<I extends RealType<I>, O extends RealType<O>>
+	implements RealUnaryOperation<I,O>
 {
 	private final double dbzVal;
 
@@ -49,7 +48,7 @@ public final class RealReciprocal
 	}
 
 	@Override
-	public ComplexType<?> compute(ComplexType<?> x, ComplexType<?> output) {
+	public O compute(I x, O output) {
 		double inputVal = x.getRealDouble();
 		if (inputVal == 0)
 			output.setReal(dbzVal);
@@ -60,7 +59,7 @@ public final class RealReciprocal
 	}
 
 	@Override
-	public RealReciprocal copy() {
-		return new RealReciprocal(dbzVal);
+	public RealReciprocal<I,O> copy() {
+		return new RealReciprocal<I,O>(dbzVal);
 	}
 }

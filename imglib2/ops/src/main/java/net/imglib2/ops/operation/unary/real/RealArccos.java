@@ -29,31 +29,30 @@ POSSIBILITY OF SUCH DAMAGE.
 
 package net.imglib2.ops.operation.unary.real;
 
-import net.imglib2.ops.UnaryOperation;
-import net.imglib2.type.numeric.ComplexType;
+import net.imglib2.type.numeric.RealType;
 
 // DONE - no complex formula to verify
 
 /**
- * Sets the real component of an output complex number to the inverse cosine of
- * the real component of an input complex number.
+ * Sets the real component of an output real number to the inverse cosine of
+ * the real component of an input real number.
  * 
  * @author Barry DeZonia
  * 
  */
-public final class RealArccos
-		implements UnaryOperation<ComplexType<?>, ComplexType<?>>
+public final class RealArccos<I extends RealType<I>, O extends RealType<O>>
+	implements RealUnaryOperation<I,O>
 {
 	@Override
-	public ComplexType<?> compute(ComplexType<?> x, ComplexType<?> output) {
+	public O compute(I x, O output) {
 		double value = Math.acos(x.getRealDouble());
 		output.setReal(value);
 		return output;
 	}
 
 	@Override
-	public RealArccos copy() {
-		return new RealArccos();
+	public RealArccos<I,O> copy() {
+		return new RealArccos<I,O>();
 	}
 
 }

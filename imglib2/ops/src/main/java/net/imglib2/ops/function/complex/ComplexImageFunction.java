@@ -38,20 +38,25 @@ import net.imglib2.outofbounds.OutOfBoundsFactory;
 import net.imglib2.type.numeric.ComplexType;
 
 /**
+ * ComplexImageFunction wraps an Img<? extends ComplexType<?>> and allows one to
+ * treat it as a function. ComplexImageFunction has two types <I,O>. I is the
+ * type of the image data (such as ComplexFloatType) while O is the type of
+ * output the function should assign to (such as ComplexDoubleType).
  * 
  * @author Barry DeZonia
  *
  */
-public class ComplexImageFunction<T extends ComplexType<T>> implements Function<long[],T>
+public class ComplexImageFunction<I extends ComplexType<I>,O extends ComplexType<O>>
+	implements Function<long[],O>
 {
 	// -- instance variables --
 	
-	private final RandomAccess<T> accessor;
-	private final T type;
+	private final RandomAccess<I> accessor;
+	private final O type;
 	
 	// -- private constructor used by duplicate() --
 	
-	private ComplexImageFunction(RandomAccess<T> accessor, T type)
+	private ComplexImageFunction(RandomAccess<I> accessor, O type)
 	{
 		this.accessor = accessor;
 		this.type = type;
@@ -59,14 +64,14 @@ public class ComplexImageFunction<T extends ComplexType<T>> implements Function<
 	
 	// -- public constructors --
 	
-	public ComplexImageFunction(Img<T> img, T type) {
+	public ComplexImageFunction(Img<I> img, O type) {
 		this(img.randomAccess(), type);
 	}
 	
 	@SuppressWarnings({"rawtypes","unchecked"})
 	public ComplexImageFunction(
-		Img<T> img,
-		OutOfBoundsFactory<T,Img<T>> factory, T type)
+		Img<I> img,
+		OutOfBoundsFactory<I,Img<I>> factory, O type)
 	{
 		this(new ExtendedRandomAccessibleInterval(img, factory).randomAccess(), type);
 	}
@@ -74,20 +79,20 @@ public class ComplexImageFunction<T extends ComplexType<T>> implements Function<
 	// -- public interface --
 	
 	@Override
-	public ComplexImageFunction<T> copy() {
-		return new ComplexImageFunction<T>(accessor.copyRandomAccess(), type);
+	public ComplexImageFunction<I,O> copy() {
+		return new ComplexImageFunction<I,O>(accessor.copyRandomAccess(), type);
 	}
 
 	@Override
-	public void evaluate(Neighborhood<long[]> neigh, long[] point,
-			T output)
+	public void evaluate(Neighborhood<long[]> neigh, long[] point, O output)
 	{
 		accessor.setPosition(point);
-		output.set(accessor.get());
+		output.setReal(accessor.get().getRealDouble());
+		output.setImaginary(accessor.get().getImaginaryDouble());
 	}
 
 	@Override
-	public T createOutput() {
+	public O createOutput() {
 		return type.createVariable();
 	}
 }

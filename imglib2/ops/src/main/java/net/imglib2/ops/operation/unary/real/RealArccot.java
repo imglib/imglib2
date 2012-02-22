@@ -29,23 +29,22 @@ POSSIBILITY OF SUCH DAMAGE.
 
 package net.imglib2.ops.operation.unary.real;
 
-import net.imglib2.ops.UnaryOperation;
-import net.imglib2.type.numeric.ComplexType;
+import net.imglib2.type.numeric.RealType;
 
 //Handbook of Mathematics and Computational Science, Harris & Stocker, Springer, 2006
 
 /**
- * Sets the real component of an output complex number to the inverse cotangent
- * of the real component of an input complex number.
+ * Sets the real component of an output real number to the inverse cotangent
+ * of the real component of an input real number.
  * 
  * @author Barry DeZonia
  * 
  */
-public final class RealArccot
-		implements UnaryOperation<ComplexType<?>, ComplexType<?>>
+public final class RealArccot<I extends RealType<I>, O extends RealType<O>>
+	implements RealUnaryOperation<I,O>
 {
 	@Override
-	public ComplexType<?> compute(ComplexType<?> x, ComplexType<?> output) {
+	public O compute(I x, O output) {
 		double value = Math.atan(1.0 / x.getRealDouble());
 		if (x.getRealDouble() < 0)
 			value += Math.PI;
@@ -54,8 +53,8 @@ public final class RealArccot
 	}
 
 	@Override
-	public RealArccot copy() {
-		return new RealArccot();
+	public RealArccot<I,O> copy() {
+		return new RealArccot<I,O>();
 	}
 
 }

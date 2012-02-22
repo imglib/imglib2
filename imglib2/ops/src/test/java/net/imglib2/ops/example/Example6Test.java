@@ -173,7 +173,7 @@ public class Example6Test {
 
 	private void doTestCase(double ix, double iy) {
 		Img<DoubleType> inputImg = makeInputImage();
-		Function<long[],DoubleType> input = new RealImageFunction<DoubleType>(inputImg, new DoubleType());
+		Function<long[],DoubleType> input = new RealImageFunction<DoubleType,DoubleType>(inputImg, new DoubleType());
 		Function<double[],DoubleType> interpolator = new RealBilinearInterpolatorFunction<DoubleType>(input);
 		ContinuousNeigh neigh = new ContinuousNeigh(new double[2], new double[2], new double[2]);
 		DoubleType variable = new DoubleType();

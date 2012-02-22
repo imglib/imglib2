@@ -89,7 +89,7 @@ public class Example3Test {
 		
 		Img<LongType> image = makeInputImage();
 		DiscreteNeigh inputNeigh = new DiscreteNeigh(new long[3], new long[]{1,1,1}, new long[]{1,1,1});
-		Function<long[],LongType> imageFunc = new RealImageFunction<LongType>(image, new LongType());
+		Function<long[],LongType> imageFunc = new RealImageFunction<LongType,LongType>(image, new LongType());
 		Function<long[],LongType> medFunc = new RealMedianFunction<LongType>(imageFunc);
 		long[] currPt = new long[3];
 		LongType variable = new LongType();

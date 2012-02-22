@@ -29,20 +29,19 @@ POSSIBILITY OF SUCH DAMAGE.
 
 package net.imglib2.ops.operation.unary.real;
 
-import net.imglib2.ops.UnaryOperation;
-import net.imglib2.type.numeric.ComplexType;
+import net.imglib2.type.numeric.RealType;
 
 /**
- * Sets the real component of an output complex number to the real component of
- * an input complex number unless it is less then a minimum value. If it is less
+ * Sets the real component of an output real number to the real component of
+ * an input real number unless it is less then a minimum value. If it is less
  * than the minimum value then it sets the output real component to that minimum
  * value. The minimum value is specified in the constructor.
  * 
  * @author Barry DeZonia
  * 
  */
-public final class RealMinConstant
-	implements UnaryOperation<ComplexType<?>, ComplexType<?>>
+public final class RealMinConstant<I extends RealType<I>, O extends RealType<O>>
+	implements RealUnaryOperation<I,O>
 {
 	private final double constant;
 
@@ -51,7 +50,7 @@ public final class RealMinConstant
 	}
 
 	@Override
-	public ComplexType<?> compute(ComplexType<?> x, ComplexType<?> output) {
+	public O compute(I x, O output) {
 		double value = x.getRealDouble();
 		if (value > constant)
 			output.setReal(value);
@@ -61,7 +60,7 @@ public final class RealMinConstant
 	}
 
 	@Override
-	public RealMinConstant copy() {
-		return new RealMinConstant(constant);
+	public RealMinConstant<I,O> copy() {
+		return new RealMinConstant<I,O>(constant);
 	}
 }

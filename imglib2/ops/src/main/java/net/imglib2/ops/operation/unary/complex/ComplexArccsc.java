@@ -29,7 +29,6 @@ POSSIBILITY OF SUCH DAMAGE.
 
 package net.imglib2.ops.operation.unary.complex;
 
-import net.imglib2.ops.UnaryOperation;
 import net.imglib2.type.numeric.ComplexType;
 import net.imglib2.type.numeric.complex.ComplexDoubleType;
 
@@ -42,24 +41,26 @@ import net.imglib2.type.numeric.complex.ComplexDoubleType;
  * @author Barry DeZonia
  * 
  */
-public final class ComplexArccsc
-		implements UnaryOperation<ComplexType<?>, ComplexType<?>> {
-
-	private static final ComplexArcsin arcsinFunc = new ComplexArcsin();
-	private static final ComplexReciprocal recipFunc = new ComplexReciprocal();
+public final class ComplexArccsc<I extends ComplexType<I>, O extends ComplexType<O>>
+	implements ComplexUnaryOperation<I,O>
+{
+	private final ComplexReciprocal<I,ComplexDoubleType>
+		recipFunc = new ComplexReciprocal<I,ComplexDoubleType>();
+	private final ComplexArcsin<ComplexDoubleType,O>
+		arcsinFunc = new ComplexArcsin<ComplexDoubleType,O>();
 
 	private final ComplexDoubleType recipZ = new ComplexDoubleType();
 
 	@Override
-	public ComplexType<?> compute(ComplexType<?> z, ComplexType<?> output) {
+	public O compute(I z, O output) {
 		recipFunc.compute(z, recipZ);
 		arcsinFunc.compute(recipZ, output);
 		return output;
 	}
 
 	@Override
-	public ComplexArccsc copy() {
-		return new ComplexArccsc();
+	public ComplexArccsc<I,O> copy() {
+		return new ComplexArccsc<I,O>();
 	}
 
 }

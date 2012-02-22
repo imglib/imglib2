@@ -16,7 +16,7 @@ import net.imglib2.util.KthElement;
 
 /**
  * KDTree to access values at RealLocalizable positions.
- * 
+ *
  * @param <T>
  *            type of values stored in the tree.
  * @author Tobias Pietzsch
@@ -29,7 +29,7 @@ public class KDTree< T > implements EuclideanSpace, IterableRealInterval< T >
 	final protected int n;
 
 	final protected KDTreeNode< T > root;
-	
+
 	/**
 	 * the number of nodes in the tree.
 	 */
@@ -147,12 +147,12 @@ public class KDTree< T > implements EuclideanSpace, IterableRealInterval< T >
 
 	/**
 	 * Construct a KDTree from the elements in the given list.
-	 * 
+	 *
 	 * <p>
 	 * Note that the constructor can be called with the same list for both
 	 * {@code values == positions} if {@code T extends RealLocalizable}.
 	 * </p>
-	 * 
+	 *
 	 * @param values
 	 *            a list of values
 	 * @param positions
@@ -187,7 +187,7 @@ public class KDTree< T > implements EuclideanSpace, IterableRealInterval< T >
 					max[ d ] = x;
 			}
 		}
-		
+
 		if ( values == positions )
 		{
 			if ( positions instanceof java.util.RandomAccess )
@@ -211,7 +211,7 @@ public class KDTree< T > implements EuclideanSpace, IterableRealInterval< T >
 	/**
 	 * Construct a KDTree from the elements of the given
 	 * {@link IterableRealInterval}.
-	 * 
+	 *
 	 * @param interval
 	 *            elements in the tree are obtained by iterating this
 	 */
@@ -235,7 +235,7 @@ public class KDTree< T > implements EuclideanSpace, IterableRealInterval< T >
 
 	/**
 	 * Check whether all positions in the positions list have dimension n.
-	 * 
+	 *
 	 * @return true, if all positions have dimension n.
 	 */
 	protected static < L extends RealLocalizable > boolean verifyDimensions( final List< L > positions, final int n )
@@ -273,7 +273,7 @@ public class KDTree< T > implements EuclideanSpace, IterableRealInterval< T >
 	 * new node which is returned. The left and right partitions of the sublist
 	 * are processed recursively and form the left and right subtrees of the
 	 * node.
-	 * 
+	 *
 	 * @param positions
 	 *            list of positions
 	 * @param i
@@ -316,7 +316,7 @@ public class KDTree< T > implements EuclideanSpace, IterableRealInterval< T >
 	 * new node which is returned. The left and right partitions of the sublist
 	 * are processed recursively and form the left and right subtrees of the
 	 * node.
-	 * 
+	 *
 	 * @param first
 	 *            first element of the sublist of positions
 	 * @param last
@@ -371,7 +371,7 @@ public class KDTree< T > implements EuclideanSpace, IterableRealInterval< T >
 	/**
 	 * {@see #makeNode(List, int, int, int, List, int[])}. Here, no values are
 	 * attached to the nodes (or rather the positions are the values).
-	 * 
+	 *
 	 * @param elements
 	 *            list of elements (positions and values at the same time)
 	 * @param i
@@ -406,7 +406,7 @@ public class KDTree< T > implements EuclideanSpace, IterableRealInterval< T >
 	 * {@see #makeNode(ListIterator, ListIterator, int, List, int[])}. Here, no
 	 * values are attached to the nodes (or rather the positions are the
 	 * values).
-	 * 
+	 *
 	 * @param first
 	 *            first element of the sublist to process
 	 * @param last
@@ -455,17 +455,19 @@ public class KDTree< T > implements EuclideanSpace, IterableRealInterval< T >
 
 	/**
 	 * Construct the tree by recursively adding nodes. The sublist of elements
-	 * between iterators first and last is split at the median element with
+	 * between indices i and j (inclusive) is split at the median element with
 	 * respect to coordinates in the given dimension d. The median becomes the
 	 * new node which is returned. The left and right partitions of the sublist
 	 * are processed recursively and form the left and right subtrees of the
 	 * node. (The elements of the list are RealCursors which provide coordinates
 	 * and values.)
-	 * 
-	 * @param first
-	 *            first element of the sublist to process
-	 * @param last
-	 *            last element of the sublist to process
+	 *
+	 * @param elements
+	 *            list of elements (positions and values at the same time)
+	 * @param i
+	 *            start index of sublist to process
+	 * @param j
+	 *            end index of sublist to process
 	 * @param d
 	 *            dimension along which to split the sublist
 	 * @return a new node containing the subtree of the given sublist of
@@ -493,7 +495,7 @@ public class KDTree< T > implements EuclideanSpace, IterableRealInterval< T >
 
 	/**
 	 * Get the root node.
-	 * 
+	 *
 	 * @return the root node.
 	 */
 	public KDTreeNode< T > getRoot()
@@ -575,9 +577,9 @@ public class KDTree< T > implements EuclideanSpace, IterableRealInterval< T >
 		private final KDTree< T > tree;
 
 		private final ArrayDeque< KDTreeNode< T > > nodes;
-		
+
 		private KDTreeNode< T > currentNode;
-		
+
 		public KDTreeCursor( KDTree< T > kdtree )
 		{
 			this.tree = kdtree;
@@ -689,7 +691,7 @@ public class KDTree< T > implements EuclideanSpace, IterableRealInterval< T >
 		{
 			return copy();
 		}
-		
+
 	}
 
 	@Override

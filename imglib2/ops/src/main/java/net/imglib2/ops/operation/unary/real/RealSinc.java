@@ -29,24 +29,23 @@ POSSIBILITY OF SUCH DAMAGE.
 
 package net.imglib2.ops.operation.unary.real;
 
-import net.imglib2.ops.UnaryOperation;
-import net.imglib2.type.numeric.ComplexType;
+import net.imglib2.type.numeric.RealType;
 
 //formula from mathworld.com documentation
 
 /**
- * Sets the real component of an output complex number to the sinc value of
- * the real component of an input complex number. The sinc function is defined
+ * Sets the real component of an output real number to the sinc value of
+ * the real component of an input real number. The sinc function is defined
  * as sin(x) / x.
  * 
  * @author Barry DeZonia
  * 
  */
-public class RealSinc implements
-		UnaryOperation<ComplexType<?>, ComplexType<?>>
+public class RealSinc<I extends RealType<I>, O extends RealType<O>>
+	implements RealUnaryOperation<I,O>
 {
 	@Override
-	public ComplexType<?> compute(ComplexType<?> input, ComplexType<?> output) {
+	public O compute(I input, O output) {
 		double x = input.getRealDouble();
 		double value;
 		if (x == 0)
@@ -59,8 +58,8 @@ public class RealSinc implements
 	}
 
 	@Override
-	public RealSinc copy() {
-		return new RealSinc();
+	public RealSinc<I,O> copy() {
+		return new RealSinc<I,O>();
 	}
 
 }

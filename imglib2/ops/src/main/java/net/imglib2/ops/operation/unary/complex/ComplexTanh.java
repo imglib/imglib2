@@ -29,7 +29,6 @@ POSSIBILITY OF SUCH DAMAGE.
 
 package net.imglib2.ops.operation.unary.complex;
 
-import net.imglib2.ops.UnaryOperation;
 import net.imglib2.ops.operation.binary.complex.ComplexDivide;
 import net.imglib2.type.numeric.ComplexType;
 import net.imglib2.type.numeric.complex.ComplexDoubleType;
@@ -43,18 +42,21 @@ import net.imglib2.type.numeric.complex.ComplexDoubleType;
  * @author Barry DeZonia
  * 
  */
-public final class ComplexTanh
-		implements UnaryOperation<ComplexType<?>, ComplexType<?>> {
-
-	private static final ComplexCosh coshFunc = new ComplexCosh();
-	private static final ComplexSinh sinhFunc = new ComplexSinh();
-	private static final ComplexDivide divFunc = new ComplexDivide();
+public final class ComplexTanh<I extends ComplexType<I>, O extends ComplexType<O>>
+	implements ComplexUnaryOperation<I,O>
+{
+	private final ComplexSinh<I,ComplexDoubleType>
+		sinhFunc = new ComplexSinh<I,ComplexDoubleType>();
+	private final ComplexCosh<I,ComplexDoubleType>
+		coshFunc = new ComplexCosh<I,ComplexDoubleType>();
+	private final ComplexDivide<ComplexDoubleType,ComplexDoubleType,O>
+		divFunc = new ComplexDivide<ComplexDoubleType,ComplexDoubleType,O>();
 
 	private final ComplexDoubleType sinh = new ComplexDoubleType();
 	private final ComplexDoubleType cosh = new ComplexDoubleType();
 
 	@Override
-	public ComplexType<?> compute(ComplexType<?> z, ComplexType<?> output) {
+	public O compute(I z, O output) {
 		sinhFunc.compute(z, sinh);
 		coshFunc.compute(z, cosh);
 		divFunc.compute(sinh, cosh, output);
@@ -62,8 +64,8 @@ public final class ComplexTanh
 	}
 
 	@Override
-	public ComplexTanh copy() {
-		return new ComplexTanh();
+	public ComplexTanh<I,O> copy() {
+		return new ComplexTanh<I,O>();
 	}
 
 }

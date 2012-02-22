@@ -29,31 +29,30 @@ POSSIBILITY OF SUCH DAMAGE.
 
 package net.imglib2.ops.operation.unary.real;
 
-import net.imglib2.ops.UnaryOperation;
-import net.imglib2.type.numeric.ComplexType;
+import net.imglib2.type.numeric.RealType;
 
 //Handbook of Mathematics and Computational Science, Harris & Stocker, Springer, 2006
 
 /**
- * Sets the real component of an output complex number to the cosecant of
- * the real component of an input complex number.
+ * Sets the real component of an output real number to the cosecant of
+ * the real component of an input real number.
  * 
  * @author Barry DeZonia
  * 
  */
-public final class RealCsc
-		implements UnaryOperation<ComplexType<?>, ComplexType<?>>
+public final class RealCsc<I extends RealType<I>, O extends RealType<O>>
+	implements RealUnaryOperation<I,O>
 {
 	@Override
-	public ComplexType<?> compute(ComplexType<?> x, ComplexType<?> output) {
+	public O compute(I x, O output) {
 		double value = 1.0 / Math.sin(x.getRealDouble());
 		output.setReal(value);
 		return output;
 	}
 
 	@Override
-	public RealCsc copy() {
-		return new RealCsc();
+	public RealCsc<I,O> copy() {
+		return new RealCsc<I,O>();
 	}
 
 }

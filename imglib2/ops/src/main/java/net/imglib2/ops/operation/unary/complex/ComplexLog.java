@@ -30,7 +30,6 @@ POSSIBILITY OF SUCH DAMAGE.
 package net.imglib2.ops.operation.unary.complex;
 
 import net.imglib2.ops.ComplexHelper;
-import net.imglib2.ops.UnaryOperation;
 import net.imglib2.type.numeric.ComplexType;
 
 //Handbook of Mathematics and Computational Science, Harris & Stocker, Springer, 2006
@@ -43,11 +42,11 @@ import net.imglib2.type.numeric.ComplexType;
  * @author Barry DeZonia
  * 
  */
-public final class ComplexLog
-		implements UnaryOperation<ComplexType<?>, ComplexType<?>> {
-
+public final class ComplexLog<I extends ComplexType<I>, O extends ComplexType<O>>
+	implements ComplexUnaryOperation<I,O>
+{
 	@Override
-	public ComplexType<?> compute(ComplexType<?> z, ComplexType<?> output) {
+	public O compute(I z, O output) {
 		double modulus = ComplexHelper.getModulus(z);
 		double argument = ComplexHelper.getArgument(z);
 		double x = Math.log(modulus);
@@ -57,8 +56,8 @@ public final class ComplexLog
 	}
 
 	@Override
-	public ComplexLog copy() {
-		return new ComplexLog();
+	public ComplexLog<I,O> copy() {
+		return new ComplexLog<I,O>();
 	}
 
 }

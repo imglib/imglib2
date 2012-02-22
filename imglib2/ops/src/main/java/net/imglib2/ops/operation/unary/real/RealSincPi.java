@@ -29,24 +29,23 @@ POSSIBILITY OF SUCH DAMAGE.
 
 package net.imglib2.ops.operation.unary.real;
 
-import net.imglib2.ops.UnaryOperation;
-import net.imglib2.type.numeric.ComplexType;
+import net.imglib2.type.numeric.RealType;
 
 //formula from mathworld.com documentation
 
 /**
- * Sets the real component of an output complex number to the since (pi version)
- * of the real component of an input complex number. The pi version of sin is
+ * Sets the real component of an output real number to the sinc (pi version)
+ * of the real component of an input real number. The pi version of sinc is
  * defined as sin(x*pi) / (x*pi).
  * 
  * @author Barry DeZonia
  * 
  */
-public class RealSincPi
-		implements UnaryOperation<ComplexType<?>, ComplexType<?>>
+public class RealSincPi<I extends RealType<I>, O extends RealType<O>>
+	implements RealUnaryOperation<I,O>
 {
 	@Override
-	public ComplexType<?> compute(ComplexType<?> input, ComplexType<?> output) {
+	public O compute(I input, O output) {
 		double x = input.getRealDouble();
 		double value;
 		if (x == 0)
@@ -58,8 +57,8 @@ public class RealSincPi
 	}
 
 	@Override
-	public RealSincPi copy() {
-		return new RealSincPi();
+	public RealSincPi<I,O> copy() {
+		return new RealSincPi<I,O>();
 	}
 
 }

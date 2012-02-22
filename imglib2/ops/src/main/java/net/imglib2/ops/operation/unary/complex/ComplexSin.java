@@ -29,7 +29,6 @@ POSSIBILITY OF SUCH DAMAGE.
 
 package net.imglib2.ops.operation.unary.complex;
 
-import net.imglib2.ops.UnaryOperation;
 import net.imglib2.ops.operation.binary.complex.ComplexDivide;
 import net.imglib2.ops.operation.binary.complex.ComplexMultiply;
 import net.imglib2.ops.operation.binary.complex.ComplexSubtract;
@@ -45,13 +44,17 @@ import net.imglib2.type.numeric.complex.ComplexDoubleType;
  * @author Barry DeZonia
  * 
  */
-public final class ComplexSin
-		implements UnaryOperation<ComplexType<?>, ComplexType<?>> {
-
-	private static final ComplexExp expFunc = new ComplexExp();
-	private static final ComplexSubtract subFunc = new ComplexSubtract();
-	private static final ComplexMultiply mulFunc = new ComplexMultiply();
-	private static final ComplexDivide divFunc = new ComplexDivide();
+public final class ComplexSin<I extends ComplexType<I>, O extends ComplexType<O>>
+	implements ComplexUnaryOperation<I,O>
+{
+	private final ComplexMultiply<I,ComplexDoubleType,ComplexDoubleType>
+		mulFunc = new ComplexMultiply<I,ComplexDoubleType,ComplexDoubleType>();
+	private final ComplexExp<ComplexDoubleType,ComplexDoubleType>
+		expFunc = new ComplexExp<ComplexDoubleType,ComplexDoubleType>();
+	private final ComplexSubtract<ComplexDoubleType,ComplexDoubleType,ComplexDoubleType>
+		subFunc = new ComplexSubtract<ComplexDoubleType,ComplexDoubleType,ComplexDoubleType>();
+	private final ComplexDivide<ComplexDoubleType,ComplexDoubleType,O>
+		divFunc = new ComplexDivide<ComplexDoubleType,ComplexDoubleType,O>();
 
 	private static final ComplexDoubleType TWO_I = new ComplexDoubleType(0,2);
 	private static final ComplexDoubleType I = new ComplexDoubleType(0,1);
@@ -64,7 +67,7 @@ public final class ComplexSin
 	private final ComplexDoubleType diff = new ComplexDoubleType();
 
 	@Override
-	public ComplexType<?> compute(ComplexType<?> z, ComplexType<?> output) {
+	public O compute(I z, O output) {
 		mulFunc.compute(z, I, IZ);
 		mulFunc.compute(z, MINUS_I, minusIZ);
 		expFunc.compute(IZ, expIZ);
@@ -75,8 +78,8 @@ public final class ComplexSin
 	}
 
 	@Override
-	public ComplexSin copy() {
-		return new ComplexSin();
+	public ComplexSin<I,O> copy() {
+		return new ComplexSin<I,O>();
 	}
 
 }

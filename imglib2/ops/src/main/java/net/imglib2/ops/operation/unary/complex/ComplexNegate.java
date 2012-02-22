@@ -29,7 +29,6 @@ POSSIBILITY OF SUCH DAMAGE.
 
 package net.imglib2.ops.operation.unary.complex;
 
-import net.imglib2.ops.UnaryOperation;
 import net.imglib2.type.numeric.ComplexType;
 
 /**
@@ -39,11 +38,11 @@ import net.imglib2.type.numeric.ComplexType;
  * @author Barry DeZonia
  *
  */
-public final class ComplexNegate
-	implements UnaryOperation<ComplexType<?>,ComplexType<?>> {
-
+public final class ComplexNegate<I extends ComplexType<I>, O extends ComplexType<O>>
+	implements ComplexUnaryOperation<I,O>
+{
 	@Override
-	public ComplexType<?> compute(ComplexType<?> z, ComplexType<?> output) {
+	public O compute(I z, O output) {
 		double x = -z.getRealDouble();
 		double y = -z.getImaginaryDouble();
 		output.setComplexNumber(x,y);
@@ -51,8 +50,8 @@ public final class ComplexNegate
 	}
 	
 	@Override
-	public ComplexNegate copy() {
-		return new ComplexNegate();
+	public ComplexNegate<I,O> copy() {
+		return new ComplexNegate<I,O>();
 	}
 
 }

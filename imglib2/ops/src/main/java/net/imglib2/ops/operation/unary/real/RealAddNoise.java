@@ -31,19 +31,18 @@ package net.imglib2.ops.operation.unary.real;
 
 import java.util.Random;
 
-import net.imglib2.ops.UnaryOperation;
-import net.imglib2.type.numeric.ComplexType;
+import net.imglib2.type.numeric.RealType;
 
 /**
- * Sets the real component of an output complex number to the addition of
- * the real component of an input complex number with an amount of Gaussian
+ * Sets the real component of an output real number to the addition of
+ * the real component of an input real number with an amount of Gaussian
  * noise. The noise parameters are specified in the constructor.
  * 
  * @author Barry DeZonia
  * 
  */
-public final class RealAddNoise
-		implements UnaryOperation<ComplexType<?>, ComplexType<?>>
+public final class RealAddNoise<I extends RealType<I>, O extends RealType<O>>
+	implements RealUnaryOperation<I,O>
 {
 	private final double rangeMin;
 	private final double rangeMax;
@@ -65,7 +64,7 @@ public final class RealAddNoise
 	}
 
 	@Override
-	public ComplexType<?> compute(ComplexType<?> x, ComplexType<?> output) {
+	public O compute(I x, O output) {
 		int i = 0;
 		do {
 			double newVal = x.getRealDouble()
@@ -83,8 +82,8 @@ public final class RealAddNoise
 	}
 
 	@Override
-	public RealAddNoise copy() {
-		return new RealAddNoise(rangeMin, rangeMax, rangeStdDev);
+	public RealAddNoise<I,O> copy() {
+		return new RealAddNoise<I,O>(rangeMin, rangeMax, rangeStdDev);
 	}
 
 }

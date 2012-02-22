@@ -29,19 +29,18 @@ POSSIBILITY OF SUCH DAMAGE.
 
 package net.imglib2.ops.operation.unary.real;
 
-import net.imglib2.ops.UnaryOperation;
-import net.imglib2.type.numeric.ComplexType;
+import net.imglib2.type.numeric.RealType;
 
 /**
- * Sets the real component of an output complex number to a scaling of the real
- * component of an input complex number into a new range. The range parameters
+ * Sets the real component of an output real number to a scaling of the real
+ * component of an input real number into a new range. The range parameters
  * are specified in the constructor.
  * 
  * @author Barry DeZonia
  * 
  */
-public final class RealConvert
-		implements UnaryOperation<ComplexType<?>, ComplexType<?>>
+public final class RealConvert<I extends RealType<I>, O extends RealType<O>>
+	implements RealUnaryOperation<I,O>
 {
 	private double scale;
 	private double inputMin;
@@ -66,7 +65,7 @@ public final class RealConvert
 	}
 
 	@Override
-	public ComplexType<?> compute(ComplexType<?> x, ComplexType<?> output) {
+	public O compute(I x, O output) {
 		double value = (x.getRealDouble() - inputMin) * scale + outputMin;
 		output.setReal(value);
 
@@ -74,7 +73,7 @@ public final class RealConvert
 	}
 
 	@Override
-	public RealConvert copy() {
-		return new RealConvert(inputMin, inputMax, outputMin, outputMax);
+	public RealConvert<I,O> copy() {
+		return new RealConvert<I,O>(inputMin, inputMax, outputMin, outputMax);
 	}
 }

@@ -29,7 +29,6 @@ POSSIBILITY OF SUCH DAMAGE.
 
 package net.imglib2.ops.operation.unary.complex;
 
-import net.imglib2.ops.UnaryOperation;
 import net.imglib2.type.numeric.ComplexType;
 import net.imglib2.type.numeric.complex.ComplexDoubleType;
 
@@ -42,23 +41,25 @@ import net.imglib2.type.numeric.complex.ComplexDoubleType;
  * @author Barry DeZonia
  * 
  */
-public final class ComplexSech
-		implements UnaryOperation<ComplexType<?>, ComplexType<?>> {
-
-	private static final ComplexCosh coshFunc = new ComplexCosh();
-	private static final ComplexReciprocal recipFunc = new ComplexReciprocal();
+public final class ComplexSech<I extends ComplexType<I>, O extends ComplexType<O>>
+	implements ComplexUnaryOperation<I,O>
+{
+	private final ComplexCosh<I,ComplexDoubleType>
+		coshFunc = new ComplexCosh<I,ComplexDoubleType>();
+	private final ComplexReciprocal<ComplexDoubleType,O>
+		recipFunc = new ComplexReciprocal<ComplexDoubleType,O>();
 
 	private final ComplexDoubleType cosh = new ComplexDoubleType();
 
 	@Override
-	public ComplexType<?> compute(ComplexType<?> z, ComplexType<?> output) {
+	public O compute(I z, O output) {
 		coshFunc.compute(z, cosh);
 		recipFunc.compute(cosh, output);
 		return output;
 	}
 
 	@Override
-	public ComplexSech copy() {
-		return new ComplexSech();
+	public ComplexSech<I,O> copy() {
+		return new ComplexSech<I,O>();
 	}
 }

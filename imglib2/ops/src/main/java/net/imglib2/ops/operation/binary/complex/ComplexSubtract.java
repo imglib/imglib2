@@ -29,7 +29,6 @@ POSSIBILITY OF SUCH DAMAGE.
 
 package net.imglib2.ops.operation.binary.complex;
 
-import net.imglib2.ops.BinaryOperation;
 import net.imglib2.type.numeric.ComplexType;
 
 //Handbook of Mathematics and Computational Science, Harris & Stocker, Springer, 2006
@@ -42,11 +41,14 @@ import net.imglib2.type.numeric.ComplexType;
  * @author Barry DeZonia
  * 
  */
-public final class ComplexSubtract
-		implements BinaryOperation<ComplexType<?>, ComplexType<?>, ComplexType<?>> {
-
+public final class ComplexSubtract<
+		I1 extends ComplexType<I1>,
+		I2 extends ComplexType<I2>,
+		O extends ComplexType<O>>
+	implements ComplexBinaryOperation<I1,I2,O>
+{
 	@Override
-	public ComplexType<?> compute(ComplexType<?> z1, ComplexType<?> z2, ComplexType<?> output) {
+	public O compute(I1 z1, I2 z2, O output) {
 		double x = z1.getRealDouble() - z2.getRealDouble();
 		double y = z1.getImaginaryDouble() - z2.getImaginaryDouble();
 		output.setComplexNumber(x, y);
@@ -54,8 +56,8 @@ public final class ComplexSubtract
 	}
 
 	@Override
-	public ComplexSubtract copy() {
-		return new ComplexSubtract();
+	public ComplexSubtract<I1,I2,O> copy() {
+		return new ComplexSubtract<I1,I2,O>();
 	}
 
 }

@@ -29,43 +29,42 @@ POSSIBILITY OF SUCH DAMAGE.
 
 package net.imglib2.ops.operation.unary.real;
 
-import net.imglib2.ops.UnaryOperation;
-import net.imglib2.type.numeric.ComplexType;
+import net.imglib2.type.numeric.RealType;
 
 /**
- * Sets the real component of an output complex number to the inversion of
- * the real component of an input complex number about a range. The range is
+ * Sets the real component of an output real number to the inversion of
+ * the real component of an input real number about a range. The range is
  * specified in the constructor.
  * 
  * @author Barry DeZonia
  * 
  */
-public final class RealInvert
-		implements UnaryOperation<ComplexType<?>, ComplexType<?>>
+public final class RealInvert<I extends RealType<I>, O extends RealType<O>>
+	implements RealUnaryOperation<I,O>
 {
-	private double actualMin;
-	private double actualMax;
+	private double specifiedMin;
+	private double specifiedMax;
 
 	/**
 	 * Constructor.
-	 * @param actualMin - minimum value of the range to invert about
-	 * @param actualMax - maximum value of the range to invert about
+	 * @param specifiedMin - minimum value of the range to invert about
+	 * @param specifiedMax - maximum value of the range to invert about
 	 */
-	public RealInvert(final double actualMin, final double actualMax)
+	public RealInvert(final double specifiedMin, final double specifiedMax)
 	{
-		this.actualMax = actualMax;
-		this.actualMin = actualMin;
+		this.specifiedMax = specifiedMax;
+		this.specifiedMin = specifiedMin;
 	}
 
 	@Override
-	public ComplexType<?> compute(ComplexType<?> x, ComplexType<?> output) {
-		double value = actualMax - (x.getRealDouble() - actualMin);
+	public O compute(I x, O output) {
+		double value = specifiedMax - (x.getRealDouble() - specifiedMin);
 		output.setReal(value);
 		return output;
 	}
 	
 	@Override
-	public RealInvert copy() {
-		return new RealInvert(actualMin, actualMax);
+	public RealInvert<I,O> copy() {
+		return new RealInvert<I,O>(specifiedMin, specifiedMax);
 	}
 }

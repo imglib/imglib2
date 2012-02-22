@@ -39,20 +39,25 @@ import net.imglib2.outofbounds.OutOfBoundsFactory;
 import net.imglib2.type.numeric.RealType;
 
 /**
+ * RealImageFunction wraps an Img<? extends RealType<?>> and allows one to treat
+ * it as a function. RealImageFunction has two types <I,O>. I is the type of
+ * the image data (such as UnsignedByteType) while O is the type of output the
+ * function should assign to (such as DoubleType).
  * 
  * @author Barry DeZonia
  *
  */
-public class RealImageFunction<T extends RealType<T>> implements Function<long[],T>
+public class RealImageFunction<I extends RealType<I>, O extends RealType<O>>
+	implements Function<long[],O>
 {
 	// -- instance variables --
 	
-	private final RandomAccess<? extends RealType<?>> accessor;
-	private final T type;
+	private final RandomAccess<I> accessor;
+	private final O type;
 	
 	// -- private constructor used by duplicate() --
 	
-	private RealImageFunction(RandomAccess<? extends RealType<?>> acc, T type)
+	private RealImageFunction(RandomAccess<I> acc, O type)
 	{
 		this.accessor = acc;
 		this.type = type;
@@ -60,18 +65,18 @@ public class RealImageFunction<T extends RealType<T>> implements Function<long[]
 	
 	// -- public constructors --
 	
-	public RealImageFunction(Img<? extends RealType<?>> img, T type) {
+	public RealImageFunction(Img<I> img, O type) {
 		this.accessor = img.randomAccess();
 		this.type = type;
 	}
 	
-	public <K extends RealType<K>> RealImageFunction(
-		Img<K> img,
-		OutOfBoundsFactory<K,Img<K>> factory,
-		T type)
+	public RealImageFunction(
+		Img<I> img,
+		OutOfBoundsFactory<I,Img<I>> factory,
+		O type)
 	{
 		@SuppressWarnings({"rawtypes","unchecked"})
-		RandomAccessible<T> extendedRandAcessible =
+		RandomAccessible<I> extendedRandAcessible =
 				new ExtendedRandomAccessibleInterval(img, factory);
 		this.accessor =  extendedRandAcessible.randomAccess();
 		this.type = type;
@@ -80,21 +85,20 @@ public class RealImageFunction<T extends RealType<T>> implements Function<long[]
 	// -- public interface --
 	
 	@Override
-	public void evaluate(Neighborhood<long[]> input, long[] point, T output)
+	public void evaluate(Neighborhood<long[]> input, long[] point, O output)
 	{
 		accessor.setPosition(point);
 		double r = accessor.get().getRealDouble();
 		output.setReal(r);
-		//output.setImaginary(0);
 	}
 
 	@Override
-	public RealImageFunction<T> copy() {
-		return new RealImageFunction<T>(accessor.copyRandomAccess(), type.copy());
+	public RealImageFunction<I,O> copy() {
+		return new RealImageFunction<I,O>(accessor.copyRandomAccess(), type.copy());
 	}
 
 	@Override
-	public T createOutput() {
+	public O createOutput() {
 		return type.createVariable();
 	}
 }
