@@ -41,6 +41,11 @@ public class ScaleAreaAveraging2d< T extends RealType<T>, R extends RealType<R>>
 		this.integralImg = integralImg;
 		this.converter = converter;
 	}
+	
+	public void setOutputDimensions(final int width, final int height) {
+		size[0] = width;
+		size[1] = height;
+	}
 
 	@Override
 	public boolean checkInput() {return true;}
