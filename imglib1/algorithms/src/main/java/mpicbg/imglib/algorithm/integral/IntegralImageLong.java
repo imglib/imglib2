@@ -13,7 +13,7 @@ import mpicbg.imglib.type.numeric.integer.LongType;
  *
  * @param <R>
  */
-public class IntegralImageLong< R extends NumericType< R > > extends IntegralImage2< R, LongType >
+public class IntegralImageLong< R extends NumericType< R > > extends IntegralImage< R, LongType >
 {
 
 	public IntegralImageLong( final Image<R> img, final LongType type, final Converter<R, LongType> converter) 

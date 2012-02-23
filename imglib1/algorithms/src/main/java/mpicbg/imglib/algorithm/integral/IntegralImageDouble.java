@@ -13,7 +13,7 @@ import mpicbg.imglib.type.numeric.real.DoubleType;
  *
  * @param <R>
  */
-public class IntegralImageDouble< R extends NumericType< R > > extends IntegralImage2< R, DoubleType >
+public class IntegralImageDouble< R extends NumericType< R > > extends IntegralImage< R, DoubleType >
 {
 
 	public IntegralImageDouble( final Image<R> img, final DoubleType type, final Converter<R, DoubleType> converter) 
