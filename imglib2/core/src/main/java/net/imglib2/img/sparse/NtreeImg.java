@@ -31,34 +31,61 @@ package net.imglib2.img.sparse;
 
 import net.imglib2.Cursor;
 import net.imglib2.IterableRealInterval;
-import net.imglib2.img.AbstractImg;
+import net.imglib2.RandomAccess;
+import net.imglib2.img.AbstractNativeImg;
 import net.imglib2.img.Img;
 import net.imglib2.img.ImgFactory;
-import net.imglib2.type.Type;
+import net.imglib2.img.basictypeaccess.IntAccess;
+import net.imglib2.type.NativeType;
 
 /**
  * @author Tobias Pietzsch
  *
  */
-public class NtreeImg< T extends Type< T > > extends AbstractImg< T >
+public class NtreeImg< T extends NativeType< T > > extends AbstractNativeImg< T, IntAccess >
 {
-	/**
-	 * @param size
-	 */
-	public NtreeImg( final long[] size )
+
+	final Ntree< Integer > ntree;
+
+	public static class NtreeIntAccess implements IntAccess
 	{
-		super( size );
+		Ntree< Integer > ntree;
 
-		// set the maximum number of levels in the octree.
-		// This is how many times to split the maximum dimension
-		// in half to arrive at a single pixel
+		@Override
+		public void close()
+		{
+		}
 
-		// TODO Auto-generated constructor stub
+		@Override
+		public int getValue( final int index )
+		{
+			// TODO ignore index, get tree position from RandomAccess/Cursor/...
+			return 0;
+		}
+
+		@Override
+		public void setValue( final int index, final int value )
+		{
+			// TODO ignore index, get tree position from RandomAccess/Cursor/...
+		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
+	public NtreeImg( final long[] dimensions )
+	{
+		super( dimensions, 1 );
+		ntree = new Ntree< Integer >( dimensions, 0 );
+	}
+
+	// updater is the RandomAccess / Cursor etc
+	// each one should get a fresh IntAccess wrapper
+	@Override
+	public IntAccess update( final Object updater )
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	/* (non-Javadoc)
 	 * @see net.imglib2.img.Img#factory()
 	 */
 	@Override
@@ -68,9 +95,7 @@ public class NtreeImg< T extends Type< T > > extends AbstractImg< T >
 		return null;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
+	/* (non-Javadoc)
 	 * @see net.imglib2.img.Img#copy()
 	 */
 	@Override
@@ -80,20 +105,17 @@ public class NtreeImg< T extends Type< T > > extends AbstractImg< T >
 		return null;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
+	/* (non-Javadoc)
 	 * @see net.imglib2.RandomAccessible#randomAccess()
 	 */
 	@Override
-	public NtreeRandomAccess< T > randomAccess()
+	public RandomAccess< T > randomAccess()
 	{
-		return new NtreeRandomAccess< T >( this );
+		// TODO Auto-generated method stub
+		return null;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
+	/* (non-Javadoc)
 	 * @see net.imglib2.IterableInterval#cursor()
 	 */
 	@Override
@@ -103,9 +125,7 @@ public class NtreeImg< T extends Type< T > > extends AbstractImg< T >
 		return null;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
+	/* (non-Javadoc)
 	 * @see net.imglib2.IterableInterval#localizingCursor()
 	 */
 	@Override
@@ -115,11 +135,8 @@ public class NtreeImg< T extends Type< T > > extends AbstractImg< T >
 		return null;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see net.imglib2.IterableRealInterval#equalIterationOrder(net.imglib2.
-	 * IterableRealInterval)
+	/* (non-Javadoc)
+	 * @see net.imglib2.IterableRealInterval#equalIterationOrder(net.imglib2.IterableRealInterval)
 	 */
 	@Override
 	public boolean equalIterationOrder( final IterableRealInterval< ? > f )
