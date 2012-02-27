@@ -1,0 +1,189 @@
+/**
+ * Copyright (c) 2009--2012, ImgLib2 developers
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ * Redistributions of source code must retain the above copyright notice, this
+ * list of conditions and the following disclaimer.  Redistributions in binary
+ * form must reproduce the above copyright notice, this list of conditions and
+ * the following disclaimer in the documentation and/or other materials
+ * provided with the distribution.  Neither the name of the Fiji project nor
+ * the names of its contributors may be used to endorse or promote products
+ * derived from this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
+ *
+ * @author Tobias Pietzsch
+ */
+package net.imglib2.img.sparse;
+
+/**
+ * N-dimensional equivalent to a quad/oct-tree.
+ *
+ * @author Tobias Pietzsch
+ */
+public class Ntree< T extends Comparable< T > >
+{
+	public static class NtreeNode< T >
+	{
+		private T value;
+
+		private final NtreeNode< T > parent;
+
+		private NtreeNode< T >[] children;
+
+		private NtreeNode( final NtreeNode< T > parent, final T value )
+		{
+			this.parent = parent;
+			this.value = value;
+		}
+
+		boolean hasChildren()
+		{
+			return children != null;
+		}
+
+		public T getValue()
+		{
+			return value;
+		}
+
+		public void setValue( final T value )
+		{
+			this.value = value;
+		}
+	}
+
+	/**
+	 * number of dimensions.
+	 */
+	final int n;
+
+	/**
+	 * maximum depth of the tree.
+	 */
+	final int numTreeLevels;
+
+	/**
+	 * how many children (if any) each node has.
+	 */
+	final int numChildren;
+
+	NtreeNode< T > root;
+
+	/**
+	 * Create a ntree structure capable of representing an array of the given
+	 * dimensions. Initially, the tree contains only a root node and represents
+	 * an array of uniform values.
+	 *
+	 * @param dimensions
+	 *            of the array
+	 * @param value
+	 *            uniform value of all pixels in the array
+	 */
+	public Ntree( final long[] dimensions, final T value )
+	{
+		n = dimensions.length;
+
+		// set the maximum number of levels in the ntree.
+		// This is how many times to split the maximum dimension
+		// in half to arrive at a single pixel
+		long maxdim = 0;
+		for ( int d = 0; d < n; ++d )
+			maxdim = Math.max( maxdim, dimensions[ d ] );
+		numTreeLevels = ( int ) Math.ceil( Math.log( maxdim ) / Math.log( 2 ) ) + 1;
+
+		numChildren = 1 << n;
+
+		root = new NtreeNode< T >( null, value );
+	}
+
+	/**
+	 * Get the lowest-level node containing position. Note that position is not
+	 * necessarily the only pixel inside the node. So use this for read-access
+	 * to pixel values only.
+	 *
+	 * @param position
+	 *            a position inside the image.
+	 * @return the lowest-level node containing position.
+	 */
+	NtreeNode< T > getNode( final long[] position )
+	{
+		NtreeNode< T > current = root;
+		for ( int l = numTreeLevels - 2; l >= 0; --l )
+		{
+			if ( !current.hasChildren() )
+				break;
+
+			final long bitmask = 1 << l;
+			int childindex = 0;
+			for ( int d = 0; d < n; ++d )
+				if ( ( position[ d ] & bitmask ) != 0 )
+					childindex |= 1 << d;
+			current = current.children[ childindex ];
+		}
+		return current;
+	}
+
+	/**
+	 * Create a node containing only position (if it does not exist already).
+	 * This may insert nodes at several levels in the tree.
+	 *
+	 * @param position
+	 *            a position inside the image.
+	 * @return node containing exactly position.
+	 */
+	NtreeNode< T > createNote( final long[] position )
+	{
+		NtreeNode< T > current = root;
+		for ( int l = numTreeLevels - 2; l >= 0; --l )
+		{
+			if ( !current.hasChildren() )
+			{
+				current.children = new NtreeNode[ numChildren ];
+				for ( int i = 0; i < numChildren; ++i )
+					current.children[ i ] = new NtreeNode< T >( current, current.value );
+			}
+
+			final long bitmask = 1 << l;
+			int childindex = 0;
+			for ( int d = 0; d < n; ++d )
+				if ( ( position[ d ] & bitmask ) != 0 )
+					childindex |= 1 << d;
+			current = current.children[ childindex ];
+		}
+		return current;
+	}
+
+	/**
+	 * If all the children of our parent have the same value remove them all.
+	 * Call recursively for parent.
+	 *
+	 * @param node
+	 */
+	void mergeUpwards( final NtreeNode< T > node )
+	{
+		final NtreeNode< T > parent = node.parent;
+		if ( parent == null )
+			return;
+		final NtreeNode< T > child0 = parent.children[ 0 ];
+		for ( int i = 1; i < numChildren; ++i )
+			if ( child0.getValue().compareTo( parent.children[ i ].getValue() ) != 0 )
+				return;
+		parent.setValue( child0.getValue() );
+		parent.children = null;
+		mergeUpwards( parent );
+	}
+}

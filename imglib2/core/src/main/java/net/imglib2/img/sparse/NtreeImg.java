@@ -42,41 +42,6 @@ import net.imglib2.type.Type;
  */
 public class NtreeImg< T extends Type< T > > extends AbstractImg< T >
 {
-	static class NtreeNode< T extends Type< T > >
-	{
-		private T value;
-
-		private NtreeNode< T >[] children;
-
-		boolean hasChildren()
-		{
-			return children != null;
-		}
-	}
-
-	NtreeNode< T > root;
-
-	// highest bit set in any of the dimension[] fields
-	final int numTreeLevels;
-
-	NtreeNode< T > getNode( final long[] position )
-	{
-		NtreeNode< T > current = root;
-		for ( int l = numTreeLevels; l > 0; --l )
-		{
-			if ( ! current.hasChildren() )
-				break;
-
-			final long bitmask = 1 << l;
-			int childindex = 0;
-			for ( int d = 0; d < n; ++d )
-				if ( ( position[ d ] & bitmask ) != 0 )
-					childindex |= 1 << d;
-			current = current.children[ childindex ];
-		}
-		return current;
-	}
-
 	/**
 	 * @param size
 	 */
@@ -87,12 +52,7 @@ public class NtreeImg< T extends Type< T > > extends AbstractImg< T >
 		// set the maximum number of levels in the octree.
 		// This is how many times to split the maximum dimension
 		// in half to arrive at a single pixel
-		long maxdim = 0;
-		for ( int d = 0; d < n; ++d )
-			maxdim = Math.max( maxdim, dimension[ d ] );
-		numTreeLevels = ( int ) Math.ceil( Math.log( maxdim ) / Math.log( 2 ) ) + 1;
 
-		root = null;
 		// TODO Auto-generated constructor stub
 	}
 
