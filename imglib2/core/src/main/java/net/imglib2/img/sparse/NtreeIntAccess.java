@@ -29,64 +29,40 @@
  */
 package net.imglib2.img.sparse;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
-import org.junit.Test;
+import net.imglib2.img.basictypeaccess.IntAccess;
 
 /**
- * @author Tobias Pietzsch
+ * IntAccess based on a {@link Ntree}<Integer>.
  *
+ * @author Tobias Pietzsch
  */
-public class NtreeTest
+public final class NtreeIntAccess implements IntAccess
 {
-	@Test
-	public void test_getNode()
-	{
-		final int v = 10;
-		final Ntree< Integer > t = new Ntree< Integer >( new long[]{ 256, 257, 100 }, v );
-		final long[] pos = new long[] {27, 38, 99};
-		final Ntree.NtreeNode< Integer > n = t.getNode( pos );
+	private final Ntree< Integer > ntree;
 
-		assertTrue( n != null );
-		assertTrue( n.getValue() == v );
+	private final long[] position;
+
+	public NtreeIntAccess( final Ntree< Integer > ntree, final long[] position )
+	{
+		this.ntree = ntree;
+		this.position = position;
 	}
 
-	@Test
-	public void test_createNote()
+	@Override
+	public void close()
+	{}
+
+	@Override
+	public int getValue( final int index )
 	{
-		final int v = 10;
-		final Ntree< Integer > t = new Ntree< Integer >( new long[]{ 256, 257, 100 }, v );
-		final long[] pos = new long[] {27, 38, 99};
-		final Ntree.NtreeNode< Integer > n = t.createNode( pos );
-
-		assertTrue( n != null );
-		assertTrue( n.getValue() == v );
-
-		n.setValue( v + 1 );
-		final long[] pos2 = new long[] {28, 38, 99};
-		final Ntree.NtreeNode< Integer > n2 = t.getNode( pos2 );
-
-		assertTrue( n2 != null );
-		assertTrue( n2.getValue() == v );
+		// ignore index, get tree position from RandomAccess/Cursor
+		return ntree.getNode( position ).getValue();
 	}
 
-	@Test
-	public void test_mergeUpwards()
+	@Override
+	public void setValue( final int index, final int value )
 	{
-		final int v = 10;
-		final Ntree< Integer > t = new Ntree< Integer >( new long[]{ 256, 257, 100 }, v );
-		final long[] pos = new long[] {27, 38, 99};
-		t.createNode( pos ).setValue( v + 1 );
-
-		final Ntree.NtreeNode< Integer > n = t.getNode( pos );
-		assertTrue( n != null );
-		assertTrue( n.getValue() == v + 1 );
-		assertTrue( t.root.hasChildren() );
-
-		n.setValue( v );
-		t.mergeUpwards( n );
-
-		assertFalse( t.root.hasChildren() );
+		// ignore index, get tree position from RandomAccess/Cursor
+		ntree.createNodeWithValue( position, value );
 	}
 }

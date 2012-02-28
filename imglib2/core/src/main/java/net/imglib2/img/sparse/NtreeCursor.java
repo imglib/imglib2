@@ -29,64 +29,80 @@
  */
 package net.imglib2.img.sparse;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
-import org.junit.Test;
+import net.imglib2.Cursor;
+import net.imglib2.img.sparse.NtreeImg.PositionProvider;
+import net.imglib2.iterator.LocalizingIntervalIterator;
+import net.imglib2.type.NativeType;
 
 /**
  * @author Tobias Pietzsch
  *
  */
-public class NtreeTest
+public final class NtreeCursor< T extends NativeType< T > > extends LocalizingIntervalIterator implements Cursor< T >, PositionProvider
 {
-	@Test
-	public void test_getNode()
-	{
-		final int v = 10;
-		final Ntree< Integer > t = new Ntree< Integer >( new long[]{ 256, 257, 100 }, v );
-		final long[] pos = new long[] {27, 38, 99};
-		final Ntree.NtreeNode< Integer > n = t.getNode( pos );
+	private final NtreeImg< T > img;
 
-		assertTrue( n != null );
-		assertTrue( n.getValue() == v );
+	private final T type;
+
+	public NtreeCursor( final NtreeImg< T > img )
+	{
+		super( img );
+
+		this.img = img;
+		this.type = img.createLinkedType();
+
+		for ( int d = 0; d < n; d++ )
+			position[ d ] = 0;
+
+		type.updateContainer( this );
 	}
 
-	@Test
-	public void test_createNote()
+	private NtreeCursor( final NtreeCursor< T > cursor )
 	{
-		final int v = 10;
-		final Ntree< Integer > t = new Ntree< Integer >( new long[]{ 256, 257, 100 }, v );
-		final long[] pos = new long[] {27, 38, 99};
-		final Ntree.NtreeNode< Integer > n = t.createNode( pos );
+		super( cursor );
 
-		assertTrue( n != null );
-		assertTrue( n.getValue() == v );
+		this.img = cursor.img;
+		this.type = img.createLinkedType();
 
-		n.setValue( v + 1 );
-		final long[] pos2 = new long[] {28, 38, 99};
-		final Ntree.NtreeNode< Integer > n2 = t.getNode( pos2 );
+		for ( int d = 0; d < n; d++ )
+			position[ d ] = cursor.position[ d ];
 
-		assertTrue( n2 != null );
-		assertTrue( n2.getValue() == v );
+		type.updateContainer( this );
 	}
 
-	@Test
-	public void test_mergeUpwards()
+	@Override
+	public T get()
 	{
-		final int v = 10;
-		final Ntree< Integer > t = new Ntree< Integer >( new long[]{ 256, 257, 100 }, v );
-		final long[] pos = new long[] {27, 38, 99};
-		t.createNode( pos ).setValue( v + 1 );
+		return type;
+	}
 
-		final Ntree.NtreeNode< Integer > n = t.getNode( pos );
-		assertTrue( n != null );
-		assertTrue( n.getValue() == v + 1 );
-		assertTrue( t.root.hasChildren() );
+	@Override
+	public T next()
+	{
+		fwd();
+		return get();
+	}
 
-		n.setValue( v );
-		t.mergeUpwards( n );
+	@Override
+	public void remove()
+	{
+	}
 
-		assertFalse( t.root.hasChildren() );
+	@Override
+	public NtreeCursor< T > copy()
+	{
+		return new NtreeCursor< T >( this );
+	}
+
+	@Override
+	public NtreeCursor< T > copyCursor()
+	{
+		return copy();
+	}
+
+	@Override
+	public long[] getPosition()
+	{
+		return position;
 	}
 }

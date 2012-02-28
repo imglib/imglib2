@@ -30,13 +30,13 @@
 package net.imglib2.img.sparse;
 
 /**
- * N-dimensional equivalent to a quad/oct-tree.
+ * N-dimensional equivalent of a quad/oct-tree.
  *
  * @author Tobias Pietzsch
  */
-public class Ntree< T extends Comparable< T > >
+public final class Ntree< T extends Comparable< T > >
 {
-	public static class NtreeNode< T >
+	public static final class NtreeNode< T >
 	{
 		private T value;
 
@@ -111,6 +111,36 @@ public class Ntree< T extends Comparable< T > >
 	}
 
 	/**
+	 * helper method for the copy constructor {@link #Ntree(Ntree)} to
+	 * create a deep copy of the tree.
+	 */
+	@SuppressWarnings( "unchecked" )
+	private NtreeNode< T > copyRecursively( final NtreeNode< T > node, final NtreeNode< T > newParent )
+	{
+		final NtreeNode< T > copy = new NtreeNode< T >( newParent, node.getValue() );
+		if ( node.hasChildren() )
+		{
+			copy.children = new NtreeNode[ numChildren ];
+			for ( int i = 0; i < numChildren; ++i )
+			{
+				copy.children[ i ] = copyRecursively( node.children[ i ], copy );
+			}
+		}
+		return copy;
+	}
+
+	/**
+	 * Copy constructor. Create a deep copy of ntree.
+	 */
+	Ntree( final Ntree< T > ntree )
+	{
+		n = ntree.n;
+		numTreeLevels = ntree.numTreeLevels;
+		numChildren = ntree.numChildren;
+		root = copyRecursively( ntree.root, null );
+	}
+
+	/**
 	 * Get the lowest-level node containing position. Note that position is not
 	 * necessarily the only pixel inside the node. So use this for read-access
 	 * to pixel values only.
@@ -145,7 +175,7 @@ public class Ntree< T extends Comparable< T > >
 	 *            a position inside the image.
 	 * @return node containing exactly position.
 	 */
-	NtreeNode< T > createNote( final long[] position )
+	NtreeNode< T > createNode( final long[] position )
 	{
 		NtreeNode< T > current = root;
 		for ( int l = numTreeLevels - 2; l >= 0; --l )
@@ -154,7 +184,7 @@ public class Ntree< T extends Comparable< T > >
 			{
 				current.children = new NtreeNode[ numChildren ];
 				for ( int i = 0; i < numChildren; ++i )
-					current.children[ i ] = new NtreeNode< T >( current, current.value );
+					current.children[ i ] = new NtreeNode< T >( current, current.getValue() );
 			}
 
 			final long bitmask = 1 << l;
@@ -168,22 +198,66 @@ public class Ntree< T extends Comparable< T > >
 	}
 
 	/**
+	 * Set the value at position and get the lowest-level node containing
+	 * position. Note that position is not necessarily the only pixel inside the
+	 * node, if the value matches neighboring values. If necessary, new nodes
+	 * will be created. If possible, nodes will be merged.
+	 *
+	 * @param position
+	 *            a position inside the image.
+	 * @param value
+	 *            value to store at position.
+	 * @return node containing position.
+	 */
+	NtreeNode< T > createNodeWithValue( final long[] position, final T value )
+	{
+		NtreeNode< T > current = root;
+		for ( int l = numTreeLevels - 2; l >= 0; --l )
+		{
+			if ( !current.hasChildren() )
+			{
+				if ( current.getValue().compareTo( value ) == 0 )
+					return current;
+				else
+				{
+					current.children = new NtreeNode[ numChildren ];
+					for ( int i = 0; i < numChildren; ++i )
+						current.children[ i ] = new NtreeNode< T >( current, current.getValue() );
+				}
+			}
+
+			final long bitmask = 1 << l;
+			int childindex = 0;
+			for ( int d = 0; d < n; ++d )
+				if ( ( position[ d ] & bitmask ) != 0 )
+					childindex |= 1 << d;
+			current = current.children[ childindex ];
+		}
+		if ( current.getValue().compareTo( value ) == 0 )
+			return current;
+		current.setValue( value );
+		return mergeUpwards( current );
+	}
+
+	/**
 	 * If all the children of our parent have the same value remove them all.
 	 * Call recursively for parent.
 	 *
 	 * @param node
+	 *            the starting node (whose parents should be tested recursively).
+	 * @return node that the starting node was ultimately merged into.
 	 */
-	void mergeUpwards( final NtreeNode< T > node )
+	NtreeNode< T > mergeUpwards( final NtreeNode< T > node )
 	{
 		final NtreeNode< T > parent = node.parent;
 		if ( parent == null )
-			return;
+			return node;
 		final NtreeNode< T > child0 = parent.children[ 0 ];
 		for ( int i = 1; i < numChildren; ++i )
 			if ( child0.getValue().compareTo( parent.children[ i ].getValue() ) != 0 )
-				return;
+				return node;
 		parent.setValue( child0.getValue() );
 		parent.children = null;
-		mergeUpwards( parent );
+		return mergeUpwards( parent );
 	}
 }
