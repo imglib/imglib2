@@ -8,9 +8,9 @@ import java.util.TreeMap;
 import javax.swing.JFrame;
 
 import net.imglib2.Cursor;
+import net.imglib2.algorithm.stats.ComputeMinMax;
 import net.imglib2.img.Img;
 import net.imglib2.script.algorithm.fn.AlgorithmUtil;
-import net.imglib2.stats.ComputeMinMax;
 import net.imglib2.type.numeric.ARGBType;
 import net.imglib2.type.numeric.RealType;
 
