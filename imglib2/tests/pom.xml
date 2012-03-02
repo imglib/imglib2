@@ -25,6 +25,12 @@
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
+      <artifactId>imglib2-algorithms</artifactId>
+      <version>${project.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
       <artifactId>imglib2-ij</artifactId>
       <version>${project.version}</version>
       <scope>test</scope>
@@ -51,12 +57,6 @@
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
       <version>4.9</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>imglib2-algorithms</artifactId>
-      <version>${project.version}</version>
       <scope>test</scope>
     </dependency>
   </dependencies>
