@@ -117,7 +117,7 @@
 
   <organization>
     <name>Fiji Is Just ImageJ</name>
-    <url>http://pacific.mpi-cbg.de/</url>
+    <url>http://fiji.sc/</url>
   </organization>
 
   <developers>
@@ -230,7 +230,7 @@
     <url>http://code.imagej.net/trac/imglib/</url>
     -->
     <system>Bugzilla</system>
-    <url>http://pacific.mpi-cbg.de/cgi-bin/bugzilla/</url>
+    <url>http://fiji.sc/cgi-bin/bugzilla/</url>
   </issueManagement>
 
   <ciManagement>
@@ -239,6 +239,13 @@
   </ciManagement>
 
   <mailingLists>
+    <mailingList>
+      <name>ImageJ-devel</name>
+      <subscribe>http://imagej.net/mailman/listinfo/imagej-devel</subscribe>
+      <unsubscribe>http://imagej.net/mailman/listinfo/imagej-devel</unsubscribe>
+      <post>imagej-devel@imagej.net</post>
+      <archive>http://imagej.net/pipermail/imagej-devel/</archive>
+    </mailingList>
     <mailingList>
       <name>Fiji-users</name>
       <subscribe>http://groups.google.com/group/fiji-users</subscribe>
@@ -256,10 +263,10 @@
   </mailingLists>
 
   <scm>
-    <connection>scm:git://code.imagej.net/imglib</connection>
-    <developerConnection>scm:git@code.imagej.net:imglib</developerConnection>
+    <connection>scm:git://github.com/imagej/imglib.git</connection>
+    <developerConnection>scm:git@github.com:imagej/imglib.git</developerConnection>
     <tag>HEAD</tag>
-    <url>http://code.imagej.net/trac/imglib</url>
+    <url>http://github.com/imagej/imglib</url>
   </scm>
 
   <repositories>
