@@ -122,7 +122,7 @@ public class ImgProxy<T extends NumericType<T>> implements Img<T> {
 
 	@Override
 	public RandomAccess<T> randomAccess() {
-		return randomAccess();
+		return img.randomAccess();
 	}
 
 	@Override

@@ -46,7 +46,7 @@ public class DiscreteNeigh extends Neighborhood<long[]> {
 	}
 	
 	@Override
-	public DiscreteNeigh duplicate() {
+	public DiscreteNeigh copy() {
 		return new DiscreteNeigh(
 			getKeyPoint().clone(),
 			getNegativeOffsets().clone(),

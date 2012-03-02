@@ -29,29 +29,32 @@ POSSIBILITY OF SUCH DAMAGE.
 
 package net.imglib2.ops.operation.unary.complex;
 
-import net.imglib2.ops.ComplexOutput;
 import net.imglib2.ops.UnaryOperation;
-import net.imglib2.ops.Complex;
+import net.imglib2.type.numeric.ComplexType;
 
 //Complex Variables and Applications, Brown and Churchill, 7th edition
 
 /**
+ * Sets an output complex number to the reciprocal of an input complex
+ * number.
  * 
  * @author Barry DeZonia
  *
  */
-public final class ComplexReciprocal extends ComplexOutput implements UnaryOperation<Complex,Complex> {
-
+public final class ComplexReciprocal<I extends ComplexType<I>, O extends ComplexType<O>>
+	implements UnaryOperation<I,O>
+{
 	@Override
-	public void compute(Complex z, Complex output) {
-		double denom = z.getX()*z.getX() + z.getY()*z.getY();
-		double x = z.getX() / denom;
-		double y = -z.getY() / denom;
-		output.setCartesian(x,y);
+	public O compute(I z, O output) {
+		double denom = z.getRealDouble()*z.getRealDouble() + z.getImaginaryDouble()*z.getImaginaryDouble();
+		double x = z.getRealDouble() / denom;
+		double y = -z.getImaginaryDouble() / denom;
+		output.setComplexNumber(x,y);
+		return output;
 	}
 	
 	@Override
-	public ComplexReciprocal duplicate() {
-		return new ComplexReciprocal();
+	public ComplexReciprocal<I,O> copy() {
+		return new ComplexReciprocal<I,O>();
 	}
 }

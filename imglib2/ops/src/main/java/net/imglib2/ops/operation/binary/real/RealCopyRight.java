@@ -5,12 +5,12 @@ All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are met:
-  * Redistributions of source code must retain the above copyright
+ * Redistributions of source code must retain the above copyright
     notice, this list of conditions and the following disclaimer.
-  * Redistributions in binary form must reproduce the above copyright
+ * Redistributions in binary form must reproduce the above copyright
     notice, this list of conditions and the following disclaimer in the
     documentation and/or other materials provided with the distribution.
-  * Neither the name of the Fiji project developers nor the
+ * Neither the name of the Fiji project developers nor the
     names of its contributors may be used to endorse or promote products
     derived from this software without specific prior written permission.
 
@@ -25,28 +25,34 @@ INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
 CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE.
-*/
+ */
 
 package net.imglib2.ops.operation.binary.real;
 
 import net.imglib2.ops.BinaryOperation;
-import net.imglib2.ops.Real;
-import net.imglib2.ops.RealOutput;
+import net.imglib2.type.numeric.ComplexType;
 
 /**
+ * A real operation that sets the real component of an output to the real
+ * component of the right (or second) of two inputs.
  * 
  * @author Barry DeZonia
- *
+ * 
  */
-public final class RealCopyRight extends RealOutput implements BinaryOperation<Real,Real,Real> {
-
+public final class RealCopyRight<
+		I1 extends ComplexType<I1>,
+		I2 extends ComplexType<I2>,
+		O extends ComplexType<O>>
+	implements BinaryOperation<I1, I2, O>
+{
 	@Override
-	public void compute(Real x1, Real x2, Real output) {
-		output.setReal(x2.getReal());
+	public O compute(I1 x1, I2 x2, O output) {
+		output.setReal(x2.getRealDouble());
+		return output;
 	}
 
 	@Override
-	public RealCopyRight duplicate() {
-		return new RealCopyRight();
+	public RealCopyRight<I1,I2,O> copy() {
+		return new RealCopyRight<I1,I2,O>();
 	}
 }

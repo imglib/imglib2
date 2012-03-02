@@ -5,12 +5,12 @@ All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are met:
-  * Redistributions of source code must retain the above copyright
+ * Redistributions of source code must retain the above copyright
     notice, this list of conditions and the following disclaimer.
-  * Redistributions in binary form must reproduce the above copyright
+ * Redistributions in binary form must reproduce the above copyright
     notice, this list of conditions and the following disclaimer in the
     documentation and/or other materials provided with the distribution.
-  * Neither the name of the Fiji project developers nor the
+ * Neither the name of the Fiji project developers nor the
     names of its contributors may be used to endorse or promote products
     derived from this software without specific prior written permission.
 
@@ -25,34 +25,38 @@ INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
 CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE.
-*/
+ */
 
 package net.imglib2.ops.operation.unary.complex;
 
-import net.imglib2.ops.ComplexOutput;
 import net.imglib2.ops.UnaryOperation;
-import net.imglib2.ops.Complex;
+import net.imglib2.type.numeric.ComplexType;
 
 /**
+ * Sets an output complex number to a constant. The constant is specified in
+ * the constructor.
  * 
  * @author Barry DeZonia
- *
+ * 
  */
-public final class ComplexConstant extends ComplexOutput implements UnaryOperation<Complex,Complex> {
+public final class ComplexConstant<I extends ComplexType<I>, O extends ComplexType<O>>
+	implements UnaryOperation<I,O>
+{
+	private final ComplexType<?> constant;
 
-	private final Complex constant = new Complex();
-	
-	public ComplexConstant(Complex constant) {
-		this.constant.setValue(constant);
+	public ComplexConstant(ComplexType<?> constant) {
+		this.constant = constant;
 	}
-	
+
 	@Override
-	public void compute(Complex z, Complex output) {
-		output.setValue(constant);
+	public O compute(I z, O output) {
+		output.setComplexNumber(constant.getRealDouble(), constant.getImaginaryDouble());
+		return output;
 	}
-	
+
 	@Override
-	public ComplexConstant duplicate() {
-		return new ComplexConstant(constant);
+	public ComplexConstant<I,O> copy() {
+		return new ComplexConstant<I,O>(constant);
 	}
+
 }

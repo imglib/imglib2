@@ -88,7 +88,7 @@ public class OutOfBoundsMirrorSingleBoundary< T > extends AbstractOutOfBoundsMir
 	@Override
 	final public void fwd( final int d ) 
 	{
-		final long x = ++position[ d ];
+		final long x = ++zeroMinPos[ d ];
 		if ( x == 0 )
 		{
 			dimIsOutOfBounds[ d ] = false;
@@ -123,7 +123,7 @@ public class OutOfBoundsMirrorSingleBoundary< T > extends AbstractOutOfBoundsMir
 	@Override
 	final public void bck( final int d ) 
 	{
-		final long x = position[ d ]--;
+		final long x = zeroMinPos[ d ]--;
 		if ( x == 0 )
 			dimIsOutOfBounds[ d ] = isOutOfBounds = true;
 		else if ( x == dimension[ d ] )
@@ -159,7 +159,7 @@ public class OutOfBoundsMirrorSingleBoundary< T > extends AbstractOutOfBoundsMir
 	final public void setPosition( long position, final int d )
 	{
 		position -= min[ d ];
-		this.position[ d ] = position;
+		this.zeroMinPos[ d ] = position;
 		final long mod = dimension[ d ];
 		final boolean pos;
 		if ( position < 0 )
@@ -210,6 +210,6 @@ public class OutOfBoundsMirrorSingleBoundary< T > extends AbstractOutOfBoundsMir
 			inc[ d ] = pos;
 		}
 		
-		outOfBoundsRandomAccess.setPosition( position, d );
+		outOfBoundsRandomAccess.setPosition( position += min[ d ], d );
 	}
 }

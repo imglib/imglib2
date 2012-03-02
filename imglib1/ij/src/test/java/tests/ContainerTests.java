@@ -127,8 +127,8 @@ public class ContainerTests
 		final float[] reference = createReference( img );
 		
 		// swap quadrants forth and back
-		FFTFunctions.rearrangeFFTQuadrants( img, 8 );
-		FFTFunctions.rearrangeFFTQuadrants( img, 8 );
+		FFTFunctions.rearrangeFFTQuadrants( img, true, 8 );
+		FFTFunctions.rearrangeFFTQuadrants( img, false, 8 );
 		
 		boolean succesful = test( img, reference );
 		

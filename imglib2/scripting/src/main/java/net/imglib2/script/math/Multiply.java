@@ -7,15 +7,15 @@ import net.imglib2.type.numeric.RealType;
 
 public class Multiply extends BinaryOperation
 {
-	public Multiply(final IterableRealInterval<? extends RealType<?>> left, final IterableRealInterval<? extends RealType<?>> right) {
+	public <S extends RealType<S>, R extends RealType<R>> Multiply(final IterableRealInterval<S> left, final IterableRealInterval<R> right) {
 		super(left, right);
 	}
 
-	public Multiply(final IFunction fn, final IterableRealInterval<? extends RealType<?>> right) {
+	public <R extends RealType<R>> Multiply(final IFunction fn, final IterableRealInterval<R> right) {
 		super(fn, right);
 	}
 
-	public Multiply(final IterableRealInterval<? extends RealType<?>> left, final IFunction fn) {
+	public <R extends RealType<R>> Multiply(final IterableRealInterval<R> left, final IFunction fn) {
 		super(left, fn);
 	}
 
@@ -23,11 +23,11 @@ public class Multiply extends BinaryOperation
 		super(fn1, fn2);
 	}
 	
-	public Multiply(final IterableRealInterval<? extends RealType<?>> left, final Number val) {
+	public <R extends RealType<R>> Multiply(final IterableRealInterval<R> left, final Number val) {
 		super(left, val);
 	}
 
-	public Multiply(final Number val,final IterableRealInterval<? extends RealType<?>> right) {
+	public <R extends RealType<R>> Multiply(final Number val,final IterableRealInterval<R> right) {
 		super(val, right);
 	}
 

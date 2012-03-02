@@ -7,7 +7,7 @@ import net.imglib2.type.numeric.RealType;
 
 public class ACos extends UnaryOperation {
 
-	public ACos(final IterableRealInterval<? extends RealType<?>> img) {
+	public <R extends RealType<R>> ACos(final IterableRealInterval<R> img) {
 		super(img);
 	}
 	public ACos(final IFunction fn) {

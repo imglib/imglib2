@@ -7,15 +7,15 @@ import net.imglib2.type.numeric.RealType;
 
 public class Pow extends BinaryOperation
 {
-	public Pow(final IterableRealInterval<? extends RealType<?>> left, final IterableRealInterval<? extends RealType<?>> right) {
+	public <S extends RealType<S>, R extends RealType<R>> Pow(final IterableRealInterval<S> left, final IterableRealInterval<R> right) {
 		super(left, right);
 	}
 
-	public Pow(final IFunction fn, final IterableRealInterval<? extends RealType<?>> right) {
+	public <R extends RealType<R>> Pow(final IFunction fn, final IterableRealInterval<R> right) {
 		super(fn, right);
 	}
 
-	public Pow(final IterableRealInterval<? extends RealType<?>> left, final IFunction fn) {
+	public <R extends RealType<R>> Pow(final IterableRealInterval<R> left, final IFunction fn) {
 		super(left, fn);
 	}
 
@@ -23,11 +23,11 @@ public class Pow extends BinaryOperation
 		super(fn1, fn2);
 	}
 	
-	public Pow(final IterableRealInterval<? extends RealType<?>> left, final Number val) {
+	public <R extends RealType<R>> Pow(final IterableRealInterval<R> left, final Number val) {
 		super(left, val);
 	}
 
-	public Pow(final Number val,final IterableRealInterval<? extends RealType<?>> right) {
+	public <R extends RealType<R>> Pow(final Number val,final IterableRealInterval<R> right) {
 		super(val, right);
 	}
 

@@ -32,7 +32,7 @@ public final class NumberFunction implements IFunction {
 	}
 
 	/** Defaults to DoubleType, and treats Byte as unsigned. */
-	private static final RealType<?> asType(final Number val) {
+	public static final RealType<?> asType(final Number val) {
 		final Class<? extends Number> c = val.getClass();
 		if (c == Double.class) return new DoubleType(val.doubleValue());
 		else if (c == Long.class) return new LongType(val.longValue());

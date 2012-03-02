@@ -12,15 +12,15 @@ import net.imglib2.type.numeric.RealType;
  *  Imgs when possible. */
 public class Or extends BinaryOperation
 {
-	public Or(final IterableRealInterval<? extends RealType<?>> left, final IterableRealInterval<? extends RealType<?>> right) {
+	public <S extends RealType<S>, R extends RealType<R>> Or(final IterableRealInterval<S> left, final IterableRealInterval<R> right) {
 		super(left, right);
 	}
 
-	public Or(final IFunction fn, final IterableRealInterval<? extends RealType<?>> right) {
+	public <R extends RealType<R>> Or(final IFunction fn, final IterableRealInterval<R> right) {
 		super(fn, right);
 	}
 
-	public Or(final IterableRealInterval<? extends RealType<?>> left, final IFunction fn) {
+	public <R extends RealType<R>> Or(final IterableRealInterval<R> left, final IFunction fn) {
 		super(left, fn);
 	}
 
@@ -28,11 +28,11 @@ public class Or extends BinaryOperation
 		super(fn1, fn2);
 	}
 	
-	public Or(final IterableRealInterval<? extends RealType<?>> left, final Number val) {
+	public <R extends RealType<R>> Or(final IterableRealInterval<R> left, final Number val) {
 		super(left, val);
 	}
 
-	public Or(final Number val,final IterableRealInterval<? extends RealType<?>> right) {
+	public <R extends RealType<R>> Or(final Number val,final IterableRealInterval<R> right) {
 		super(val, right);
 	}
 

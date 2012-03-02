@@ -55,6 +55,9 @@ public class Arena
 	
 		final float growth = 1.05f;
 		
+		long numFrames = 0;
+		final long start = System.currentTimeMillis();
+
 		while ( true )
 		{			
 			/* growth */
@@ -76,10 +79,15 @@ public class Arena
 			}
 			
 			arena = gauss.getResult();
-						
-			//arena.getDisplay().setMinMax();
-			arena.getDisplay().setMinMax( 0, arena.getDisplay().getMax() );
+
+			++numFrames;
+			final long time = System.currentTimeMillis() - start;
+			double fps = numFrames*1000 / (double)time;
 			
+			if ( numFrames % 25 == 0 )
+				System.out.println( "fps: " + fps );
+
+			arena.getDisplay().setMinMax( 0, arena.getDisplay().getMax() );
 			updateDisplay( imp, arena );
 		}
 	}

@@ -27,18 +27,14 @@
       <artifactId>imglib2</artifactId>
       <version>${project.version}</version>
     </dependency>
-    <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>imglib2-algorithms</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <!-- TODO: define a real POM for mpicbg project -->
-    <dependency>
-      <groupId>mpicbg</groupId>
-      <artifactId>mpicbg</artifactId>
-      <version>20100908</version>
-    </dependency>
 
+    <dependency>
+      <!-- TODO: define a real POM for mpicbg project -->
+      <groupId>${mpicbg.groupId}</groupId>
+      <artifactId>mpicbg</artifactId>
+      <version>${mpicbg.version}</version>
+      <scope>test</scope>
+    </dependency>
     <dependency>
       <groupId>ijaux</groupId>
       <artifactId>pixlib</artifactId>
@@ -72,11 +68,11 @@
   <repositories>
     <repository>
       <id>imagej.releases</id>
-      <url>http://dev.imagejdev.org/maven2/releases</url>
+      <url>http://code.imagej.net/maven2/releases</url>
     </repository>
     <repository>
       <id>imagej.snapshots</id>
-      <url>http://dev.imagejdev.org/maven2/snapshots</url>
+      <url>http://code.imagej.net/maven2/snapshots</url>
     </repository>
   </repositories>
 

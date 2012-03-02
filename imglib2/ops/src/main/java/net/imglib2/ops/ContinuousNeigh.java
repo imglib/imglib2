@@ -47,7 +47,7 @@ public class ContinuousNeigh extends Neighborhood<double[]> {
 	}
 
 	@Override
-	public ContinuousNeigh duplicate() {
+	public ContinuousNeigh copy() {
 		return new ContinuousNeigh(
 			getKeyPoint().clone(),
 			getNegativeOffsets().clone(),

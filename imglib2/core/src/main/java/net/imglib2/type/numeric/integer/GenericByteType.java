@@ -1,10 +1,10 @@
 /**
  * Copyright (c) 2009--2010, Stephan Preibisch & Stephan Saalfeld
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * Redistributions of source code must retain the above copyright notice, this
  * list of conditions and the following disclaimer.  Redistributions in binary
  * form must reproduce the above copyright notice, this list of conditions and
@@ -12,7 +12,7 @@
  * provided with the distribution.  Neither the name of the Fiji project nor
  * the names of its contributors may be used to endorse or promote products
  * derived from this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -40,16 +40,16 @@ public abstract class GenericByteType<T extends GenericByteType<T>> extends Abst
 	int i = 0;
 
 	final protected NativeImg<T, ? extends ByteAccess> img;
-	
-	// the DataAccess that holds the information 
+
+	// the DataAccess that holds the information
 	protected ByteAccess dataAccess;
-	
+
 	// this is the constructor if you want it to read from an array
-	public GenericByteType( NativeImg<T, ? extends ByteAccess> byteStorage )
+	public GenericByteType( final NativeImg<T, ? extends ByteAccess> byteStorage )
 	{
 		img = byteStorage;
 	}
-	
+
 	// this is the constructor if you want it to be a variable
 	protected GenericByteType( final byte value )
 	{
@@ -58,21 +58,28 @@ public abstract class GenericByteType<T extends GenericByteType<T>> extends Abst
 		setValue( value );
 	}
 
+	// this is the constructor if you want to specify the dataAccess
+	protected GenericByteType( final ByteAccess access )
+	{
+		img = null;
+		dataAccess = access;
+	}
+
 	// this is the constructor if you want it to be a variable
 	protected GenericByteType() { this( ( byte )0 ); }
-			
+
 	@Override
 	public int getEntitiesPerPixel() { return 1; }
 
 	@Override
-	public void updateContainer( final Object c ) 
-	{ 
-		dataAccess = img.update( c ); 
+	public void updateContainer( final Object c )
+	{
+		dataAccess = img.update( c );
 	}
-	
+
 	protected byte getValue(){ return dataAccess.getValue( i ); }
 	protected void setValue( final byte f ){ dataAccess.setValue( i, f ); }
-	
+
 	@Override
 	public void mul( final float c )
 	{
@@ -116,18 +123,18 @@ public abstract class GenericByteType<T extends GenericByteType<T>> extends Abst
 	}
 
 	@Override
-	public int compareTo( final T c ) 
-	{ 
+	public int compareTo( final T c )
+	{
 		final byte a = getValue();
 		final byte b = c.getValue();
 		if ( a > b )
 			return 1;
 		else if ( a < b )
 			return -1;
-		else 
+		else
 			return 0;
 	}
-	
+
 	@Override
 	public void set( final T c ) { setValue( c.getValue() );	}
 
@@ -150,7 +157,7 @@ public abstract class GenericByteType<T extends GenericByteType<T>> extends Abst
 		byte a = getValue();
 		setValue( --a );
 	}
-	
+
 	@Override
 	public String toString() { return "" + getValue(); }
 
@@ -158,7 +165,7 @@ public abstract class GenericByteType<T extends GenericByteType<T>> extends Abst
 	public void updateIndex( final int index ) { i = index; }
 	@Override
 	public int getIndex() { return i; }
-	
+
 	@Override
 	public void incIndex() { ++i; }
 	@Override
@@ -166,7 +173,7 @@ public abstract class GenericByteType<T extends GenericByteType<T>> extends Abst
 	@Override
 	public void decIndex() { --i; }
 	@Override
-	public void decIndex( final int decrement ) { i -= decrement; }	
+	public void decIndex( final int decrement ) { i -= decrement; }
 
 	@Override
 	public int getBitsPerPixel() { return 8; }

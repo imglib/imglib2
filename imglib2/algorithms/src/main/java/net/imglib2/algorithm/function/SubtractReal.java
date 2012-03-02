@@ -16,7 +16,6 @@
  */
 package net.imglib2.algorithm.function;
 
-import net.imglib2.algorithm.math.Function;
 import net.imglib2.type.numeric.RealType;
 
 public class SubtractReal< A extends RealType<A>, B extends RealType<B>, C extends RealType<C> > implements Function< A, B, C >

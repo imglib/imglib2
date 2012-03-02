@@ -7,7 +7,7 @@ import net.imglib2.type.numeric.RealType;
 
 public class Round extends UnaryOperation {
 
-	public Round(final IterableRealInterval<? extends RealType<?>> img) {
+	public <R extends RealType<R>> Round(final IterableRealInterval<R> img) {
 		super(img);
 	}
 	public Round(final IFunction fn) {

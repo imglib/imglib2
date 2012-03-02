@@ -7,7 +7,7 @@ import net.imglib2.type.numeric.RealType;
 
 public class Sinh extends UnaryOperation {
 
-	public Sinh(final IterableRealInterval<? extends RealType<?>> img) {
+	public <R extends RealType<R>> Sinh(final IterableRealInterval<R> img) {
 		super(img);
 	}
 	public Sinh(final IFunction fn) {

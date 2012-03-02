@@ -55,8 +55,6 @@ import loci.formats.services.OMEXMLService;
 import net.imglib2.display.ColorTable16;
 import net.imglib2.display.ColorTable8;
 import net.imglib2.exception.IncompatibleTypeException;
-import net.imglib2.img.Axes;
-import net.imglib2.img.Axis;
 import net.imglib2.img.Img;
 import net.imglib2.img.ImgFactory;
 import net.imglib2.img.ImgPlus;
@@ -71,6 +69,8 @@ import net.imglib2.img.basictypeaccess.array.LongArray;
 import net.imglib2.img.basictypeaccess.array.ShortArray;
 import net.imglib2.img.planar.PlanarImg;
 import net.imglib2.img.planar.PlanarImgFactory;
+import net.imglib2.meta.Axes;
+import net.imglib2.meta.AxisType;
 import net.imglib2.sampler.special.OrthoSliceCursor;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.Type;
@@ -83,6 +83,7 @@ import net.imglib2.type.numeric.integer.UnsignedIntType;
 import net.imglib2.type.numeric.integer.UnsignedShortType;
 import net.imglib2.type.numeric.real.DoubleType;
 import net.imglib2.type.numeric.real.FloatType;
+import net.imglib2.util.Util;
 import ome.xml.model.primitives.PositiveFloat;
 
 /**
@@ -151,7 +152,7 @@ public class ImgOpener implements StatusReporter {
 	 *           incompatible with the {@link ImgFactory}
 	 */
 	public <T extends RealType<T> & NativeType<T>> ImgPlus<T> openImg(
-		final String id, final ImgFactory<T> imgFactory) throws ImgIOException,
+		final String id, final ImgFactory<?> imgFactory) throws ImgIOException,
 		IncompatibleTypeException
 	{
 		return openImg(id, imgFactory, true);
@@ -175,7 +176,7 @@ public class ImgOpener implements StatusReporter {
 	 *           incompatible with the {@link ImgFactory}
 	 */
 	public <T extends RealType<T> & NativeType<T>> ImgPlus<T> openImg(
-		final String id, final ImgFactory<T> imgFactory,
+		final String id, final ImgFactory<?> imgFactory,
 		final boolean computeMinMax) throws ImgIOException,
 		IncompatibleTypeException
 	{
@@ -455,10 +456,10 @@ public class ImgOpener implements StatusReporter {
 			final char dim = dimOrder.charAt(i);
 			switch (dim) {
 				case 'X':
-					if (sizeX > 1) dimLengthsList.add(sizeX);
+					if (sizeX > 0) dimLengthsList.add(sizeX);
 					break;
 				case 'Y':
-					if (sizeY > 1) dimLengthsList.add(sizeY);
+					if (sizeY > 0) dimLengthsList.add(sizeY);
 					break;
 				case 'Z':
 					if (sizeZ > 1) dimLengthsList.add(sizeZ);
@@ -495,7 +496,7 @@ public class ImgOpener implements StatusReporter {
 	}
 
 	/** Compiles an N-dimensional list of axis types from the given reader. */
-	private Axis[] getDimTypes(final IFormatReader r) {
+	private AxisType[] getDimTypes(final IFormatReader r) {
 		final int sizeX = r.getSizeX();
 		final int sizeY = r.getSizeY();
 		final int sizeZ = r.getSizeZ();
@@ -503,7 +504,7 @@ public class ImgOpener implements StatusReporter {
 		final String[] cDimTypes = r.getChannelDimTypes();
 		final int[] cDimLengths = r.getChannelDimLengths();
 		final String dimOrder = r.getDimensionOrder();
-		final List<Axis> dimTypes = new ArrayList<Axis>();
+		final List<AxisType> dimTypes = new ArrayList<AxisType>();
 
 		// add core dimensions
 		for (final char dim : dimOrder.toCharArray()) {
@@ -529,7 +530,7 @@ public class ImgOpener implements StatusReporter {
 			}
 		}
 
-		return dimTypes.toArray(new Axis[0]);
+		return dimTypes.toArray(new AxisType[0]);
 	}
 
 	/** Compiles an N-dimensional list of calibration values. */
@@ -606,7 +607,7 @@ public class ImgOpener implements StatusReporter {
 		final File idFile = new File(id);
 		final String name = idFile.exists() ? idFile.getName() : id;
 
-		final Axis[] dimTypes = getDimTypes(r);
+		final AxisType[] dimTypes = getDimTypes(r);
 		final double[] cal = getCalibration(r);
 
 		final IFormatReader base;

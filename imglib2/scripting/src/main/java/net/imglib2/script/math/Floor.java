@@ -7,7 +7,7 @@ import net.imglib2.type.numeric.RealType;
 
 public class Floor extends UnaryOperation {
 
-	public Floor(final IterableRealInterval<? extends RealType<?>> img) {
+	public <R extends RealType<R>> Floor(final IterableRealInterval<R> img) {
 		super(img);
 	}
 	public Floor(final IFunction fn) {

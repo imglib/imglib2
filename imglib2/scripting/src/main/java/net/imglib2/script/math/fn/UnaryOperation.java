@@ -42,8 +42,8 @@ public abstract class UnaryOperation extends FloatImageOperation
 {
 	private final IFunction a;
 
-	public UnaryOperation(final IterableRealInterval<? extends RealType<?>> img) {
-		this.a = new ImageFunction(img);
+	public <R extends RealType<R>> UnaryOperation(final IterableRealInterval<R> img) {
+		this.a = new ImageFunction<R>(img);
 	}
 
 	public UnaryOperation(final IFunction fn) {

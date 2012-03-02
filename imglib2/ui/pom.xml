@@ -22,11 +22,16 @@
       <artifactId>imglib2</artifactId>
       <version>${project.version}</version>
     </dependency>
-    <!-- TEMP - for development only -->
     <dependency>
-    	<groupId>${project.groupId}</groupId>
-    	<artifactId>imglib2-io</artifactId>
-    	<version>${project.version}</version>
+      <!-- TEMP - for development only -->
+      <groupId>${project.groupId}</groupId>
+      <artifactId>imglib2-io</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>${bio-formats.groupId}</groupId>
+      <artifactId>loci-common</artifactId>
+      <version>${bio-formats.version}</version>
     </dependency>
   </dependencies>
 
@@ -49,11 +54,11 @@
   <repositories>
     <repository>
       <id>imagej.releases</id>
-      <url>http://dev.imagejdev.org/maven2/releases</url>
+      <url>http://code.imagej.net/maven2/releases</url>
     </repository>
     <repository>
       <id>imagej.snapshots</id>
-      <url>http://dev.imagejdev.org/maven2/snapshots</url>
+      <url>http://code.imagej.net/maven2/snapshots</url>
     </repository>
   </repositories>
 

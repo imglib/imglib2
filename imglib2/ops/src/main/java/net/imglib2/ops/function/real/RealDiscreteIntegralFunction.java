@@ -31,37 +31,42 @@ package net.imglib2.ops.function.real;
 
 import net.imglib2.ops.Function;
 import net.imglib2.ops.Neighborhood;
-import net.imglib2.ops.Real;
-import net.imglib2.ops.RealOutput;
+import net.imglib2.type.numeric.RealType;
 
 /**
  * 
  * @author Barry DeZonia
  *
  */
-public class RealDiscreteIntegralFunction extends RealOutput implements Function<long[],Real> {
-
+public class RealDiscreteIntegralFunction<T extends RealType<T>>
+	implements Function<long[],T>
+{
 	// -- instance variables --
 
-	private final Function<long[], Real> otherFunc;
-	private final RealSumFunction sumFunc;
+	private final Function<long[], T> otherFunc;
+	private final RealSumFunction<T> sumFunc;
 	
 	// -- constructor --
 	
-	public RealDiscreteIntegralFunction(Function<long[],Real> otherFunc) {
+	public RealDiscreteIntegralFunction(Function<long[],T> otherFunc) {
 		this.otherFunc = otherFunc;
-		this.sumFunc = new RealSumFunction(otherFunc);
+		this.sumFunc = new RealSumFunction<T>(otherFunc);
 	}
 	
 	// -- public interface --
 	
 	@Override
-	public void evaluate(Neighborhood<long[]> region, long[] point, Real output) {
+	public void evaluate(Neighborhood<long[]> region, long[] point, T output) {
 		sumFunc.evaluate(region, point, output);
 	}
 
 	@Override
-	public RealDiscreteIntegralFunction duplicate() {
-		return new RealDiscreteIntegralFunction(otherFunc.duplicate());
+	public RealDiscreteIntegralFunction<T> copy() {
+		return new RealDiscreteIntegralFunction<T>(otherFunc.copy());
+	}
+
+	@Override
+	public T createOutput() {
+		return otherFunc.createOutput();
 	}
 }
