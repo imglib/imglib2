@@ -10,7 +10,6 @@ import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.NumericType;
 import net.imglib2.util.Util;
 
-/** Works for some cases but not for all. */
 public class Duplicate<T extends NumericType<T>> extends ImgProxy<T>
 {
 	public Duplicate(final IterableInterval<T> img) {
