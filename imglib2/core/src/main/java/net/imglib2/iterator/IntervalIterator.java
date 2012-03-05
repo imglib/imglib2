@@ -206,6 +206,10 @@ public class IntervalIterator implements Iterator, Localizable, Interval
 	@Override
 	public boolean hasNext() { return index < lastIndex; }
 	
+	/**
+	 * @return - the current iteration index
+	 */
+	public long getIndex() { return index; }
 	
 	/* Localizable */
 
