@@ -44,6 +44,19 @@ import net.imglib2.util.IntervalIndexer;
  */
 public class LocalNeighborhoodCursor< T > implements Cursor< T >
 {
+	/**
+	 * A static constructor that potentially creates a better {@link LocalNeighborhoodCursor} depending on the type of the {@link RandomAccessible} and dimensionality.
+	 * 
+	 * @param source - the data on which to iterate
+	 * @param center - the center location of the 3x3x3...x3 environment that will be skipped
+	 * 
+	 * @return a new {@link LocalNeighborhoodCursor}
+	 */
+	public static < T > LocalNeighborhoodCursor< T > create( final RandomAccessible< T > source, final Localizable center )
+	{
+		return new LocalNeighborhoodCursor<T>( source, center );
+	}
+	
 	final RandomAccessible< T > source;
 	final protected RandomAccess< T > randomAccess;
 	
