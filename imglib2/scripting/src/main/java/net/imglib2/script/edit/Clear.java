@@ -20,6 +20,8 @@ public final class Clear extends UnaryOperation
 		super(img);
 	}
 
+	/** Present only for completeness. {@param val} is give to {@link UnaryOperation} super constructor,
+	 * but {@link #eval()} always returns 0. */
 	public Clear(final Number val) {
 		super(val);
 	}
