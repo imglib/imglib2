@@ -43,6 +43,20 @@ import net.imglib2.Sampler;
 
 public class HyperSphereCursor< T > implements Cursor< T >
 {
+	/**
+	 * A static constructor that potentially creates a better {@link HyperSphereCursor} depending on the type of the {@link RandomAccessible}
+	 * 
+	 * @param source - the data on which to iterate
+	 * @param center - the center of the sphere
+	 * @param radius - the radius of the sphere
+	 * 
+	 * @return a new {@link HyperSphereCursor}
+	 */
+	public static < T > HyperSphereCursor< T > create( final RandomAccessible< T > source, final Localizable center, final long radius )
+	{
+		return new HyperSphereCursor<T>( source, center, radius );
+	}
+	
 	final RandomAccessible< T > source;
 	final protected Localizable center;
 	final protected RandomAccess< T > randomAccess;
