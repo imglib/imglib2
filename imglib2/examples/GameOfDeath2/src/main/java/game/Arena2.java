@@ -29,7 +29,9 @@ package game;
 
 import ij.ImageJ;
 import ij.ImagePlus;
+import ij.ImageStack;
 import ij.process.ColorProcessor;
+import ij.process.ImageProcessor;
 
 import java.util.Random;
 
@@ -43,17 +45,27 @@ import net.imglib2.outofbounds.OutOfBoundsMirrorFactory.Boundary;
 
 public class Arena2
 {
+	final boolean exportAsStack = true;
+	final int numFramesMovie = 1000;
+	
 	final static int raceA = 0;
 	final static int raceB = 1;
 	final static int raceC = 2;
 	
 	final int maxRace = 3;
 	
+	final int width = 384;
+	final int height = 256;
+	
 	public Arena2( )
-	{		
-		final ArrayImgFactory<LifeForm> factory = new ArrayImgFactory<LifeForm>();
-		Img<LifeForm> arena = factory.create( new long[] { 384, 256 }, new LifeForm() );
+	{
+		ImageStack stack = null;
 		
+		if ( exportAsStack )
+			stack = new ImageStack( width, height );
+		
+		final ArrayImgFactory<LifeForm> factory = new ArrayImgFactory<LifeForm>();
+		Img<LifeForm> arena = factory.create( new long[] { width, height }, new LifeForm() );
 	
 		final RandomAccess<LifeForm> cursor = arena.randomAccess();
 		
@@ -77,7 +89,13 @@ public class Arena2
 		final LifeFormARGBConverter display = new LifeFormARGBConverter( 0, 1 );
 		final ImagePlus imp = ImageJFunctions.wrapRGB( arena, display, "Arena2" ); //ImageJFunctions.copyToImagePlus( arena, ImageJFunctions.COLOR_RGB );
 		imp.show();
-	
+		
+		if ( exportAsStack )
+		{
+			ImageProcessor ip = (ImageProcessor)imp.getProcessor().clone();
+			stack.addSlice( "", ip );
+		}
+		
 		final float growth = 1.05f;
 		
 		long numFrames = 0;
@@ -111,6 +129,18 @@ public class Arena2
 			display.setMax( getMax( arena ) );
 
 			updateDisplay( imp, arena, display );
+			
+			if ( exportAsStack )
+			{
+				if ( numFrames <= numFramesMovie )
+				{
+					ImageProcessor ip = (ImageProcessor)imp.getProcessor().clone();
+					stack.addSlice( "", ip );
+				}
+				
+				if ( numFrames == numFramesMovie )
+					new ImagePlus( "movie", stack ).show();
+			}
 		}
 	}
 	
