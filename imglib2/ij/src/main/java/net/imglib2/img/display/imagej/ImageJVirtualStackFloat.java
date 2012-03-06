@@ -5,6 +5,7 @@ import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.converter.Converter;
 import net.imglib2.type.numeric.real.FloatType;
 import net.imglib2.view.RandomAccessibleZeroMinIntervalCursor;
+import net.imglib2.view.Views;
 
 public class ImageJVirtualStackFloat< S > extends ImageJVirtualStack< S, FloatType >
 {
@@ -16,7 +17,7 @@ public class ImageJVirtualStackFloat< S > extends ImageJVirtualStack< S, FloatTy
 	
 	public void setMinMax ( final RandomAccessibleInterval< S > source, final Converter< S, FloatType > converter )
 	{		
-		final RandomAccessibleZeroMinIntervalCursor< S > cursor = new RandomAccessibleZeroMinIntervalCursor< S >( source );
+		final RandomAccessibleZeroMinIntervalCursor< S > cursor = new RandomAccessibleZeroMinIntervalCursor< S >( Views.isZeroMin( source ) ? source : Views.zeroMin( source ) );
 		final FloatType t = new FloatType();
 		
 		if ( cursor.hasNext() ) 

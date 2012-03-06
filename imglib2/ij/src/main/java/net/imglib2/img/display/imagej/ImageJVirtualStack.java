@@ -42,18 +42,8 @@ public abstract class ImageJVirtualStack< S, T extends NativeType< T > > extends
 
 		this.numDimensions = source.numDimensions();
 
-		// test whether the source interval starts at (0,0,...,0)
-		boolean isZeroMin = true;
-		for ( int d = 0; d < numDimensions; ++d )
-		{
-			if ( source.min(d) != 0 )
-			{
-				isZeroMin = false;
-				break;
-			}
-		}
 		// if the source interval is not zero-min, we wrap it into a view that translates it to the origin
-		this.projector = new XYProjector< S, T >( isZeroMin ? source : Views.zeroMin( source ), img, converter );
+		this.projector = new XYProjector< S, T >( Views.isZeroMin( source ) ? source : Views.zeroMin( source ), img, converter );
 
 		switch ( ijtype )
 		{
