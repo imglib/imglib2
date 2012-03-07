@@ -58,7 +58,7 @@ public final class ComplexPolarNear<T extends ComplexType<T>,U extends ComplexTy
 		if (Math.abs(val1.getPowerDouble() - val2.getPowerDouble()) > rTol) return false;
 		double theta1 = val1.getPhaseDouble();
 		double theta2 = val2.getPhaseDouble();
-		if (Math.abs(theta1-theta2) < thetaTol) return true;
+		if (Math.abs(theta1-theta2) <= thetaTol) return true;
 		// angles might be separated by near 2 pi
 		if (theta1 < theta2) {
 			while (theta1 < theta2) theta1 += 2*Math.PI;
@@ -66,8 +66,7 @@ public final class ComplexPolarNear<T extends ComplexType<T>,U extends ComplexTy
 		else { // theta2 < theta1
 			while (theta2 < theta1) theta2 += 2*Math.PI;
 		}
-		if (Math.abs(theta1-theta2) < thetaTol) return true;
-		return false;
+		return Math.abs(theta1-theta2) <= thetaTol;
 	}
 
 	@Override
