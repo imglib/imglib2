@@ -1,10 +1,10 @@
 /**
  * Copyright (c) 2009--2010, Stephan Preibisch & Stephan Saalfeld
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * Redistributions of source code must retain the above copyright notice, this
  * list of conditions and the following disclaimer.  Redistributions in binary
  * form must reproduce the above copyright notice, this list of conditions and
@@ -12,7 +12,7 @@
  * provided with the distribution.  Neither the name of the Fiji project nor
  * the names of its contributors may be used to endorse or promote products
  * derived from this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -33,98 +33,98 @@ package net.imglib2;
 /**
  * An element that can be positioned in n-dimensional discrete space.
  *
- * @author Stephan Saalfeld <saalfeld@mpi-cbg.de> and Stephan Preibisch
+ * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>, Stephan Preibisch, Tobias Pietzsch
  */
 public interface Positionable extends EuclideanSpace
 {
 	/**
 	 * Move by 1 in one dimension.
-	 * 
-	 * @param d
+	 *
+	 * @param d dimension
 	 */
 	public void fwd( int d );
-	
+
 	/**
 	 * Move by -1 in one dimension.
-	 * 
-	 * @param d
+	 *
+	 * @param d dimension
 	 */
 	public void bck( int d );
-	
+
 	/**
 	 * Move the element in one dimension for some distance.
-	 *  
-	 * @param distance
-	 * @param d
+	 *
+	 * @param distance relative offset in dimension d
+	 * @param d dimension
 	 */
 	public void move( int distance, int d );
-	
+
 	/**
 	 * Move the element in one dimension for some distance.
-	 *  
-	 * @param distance
-	 * @param d
+	 *
+	 * @param distance relative offset in dimension d
+	 * @param d dimension
 	 */
 	public void move( long distance, int d );
 
 	/**
 	 * Move the element relative to its current location using an
 	 * {@link Localizable} as distance vector.
-	 * 
-	 * @param localizable
+	 *
+	 * @param localizable relative offset
 	 */
 	public void move( Localizable localizable );
-	
+
 	/**
 	 * Move the element relative to its current location using an int[] as
 	 * distance vector.
-	 * 
-	 * @param distance
+	 *
+	 * @param distance relative offset
 	 */
 	public void move( int[] distance );
-	
+
 	/**
 	 * Move the element relative to its current location using a long[] as
 	 * distance vector.
-	 * 
-	 * @param distance
+	 *
+	 * @param distance relative offset
 	 */
 	public void move( long[] distance );
-	
+
 	/**
 	 * Place the element at the same location as a given {@link Localizable}
-	 * 
-	 * @param localizable
+	 *
+	 * @param localizable relative offset
 	 */
 	public void setPosition( Localizable localizable );
-	
+
 	/**
 	 * Set the position of the element.
-	 * 
-	 * @param position
+	 *
+	 * @param position absolute position
 	 */
 	public void setPosition( int[] position );
-	
+
 	/**
 	 * Set the position of the element.
-	 * 
-	 * @param position
+	 *
+	 * @param position absolute position
 	 */
 	public void setPosition( long[] position );
-	
+
 	/**
 	 * Set the position of the element for one dimension.
-	 * 
-	 * @param position
-	 * @param d
+	 *
+	 * @param position absolute position in dimension d
+	 * @param d dimension
 	 */
-	public void setPosition( int position, int d );		
-	
+	public void setPosition( int position, int d );
+
 	/**
 	 * Set the position of the element for one dimension.
-	 * 
-	 * @param position
-	 * @param d
+	 *
+	 * @param position absolute position in dimension d
+	 * @param d dimension
 	 */
 	public void setPosition( long position, int d );
 }
