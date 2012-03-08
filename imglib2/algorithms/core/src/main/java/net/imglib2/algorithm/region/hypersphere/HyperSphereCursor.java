@@ -25,10 +25,9 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-package net.imglib2.sampler.special;
+package net.imglib2.algorithm.region.hypersphere;
 
 import net.imglib2.Cursor;
-import net.imglib2.Localizable;
 import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessible;
 import net.imglib2.Sampler;
@@ -43,22 +42,8 @@ import net.imglib2.Sampler;
 
 public class HyperSphereCursor< T > implements Cursor< T >
 {
-	/**
-	 * A static constructor that potentially creates a better {@link HyperSphereCursor} depending on the type of the {@link RandomAccessible}
-	 * 
-	 * @param source - the data on which to iterate
-	 * @param center - the center of the sphere
-	 * @param radius - the radius of the sphere
-	 * 
-	 * @return a new {@link HyperSphereCursor}
-	 */
-	public static < T > HyperSphereCursor< T > create( final RandomAccessible< T > source, final Localizable center, final long radius )
-	{
-		return new HyperSphereCursor<T>( source, center, radius );
-	}
-	
 	final RandomAccessible< T > source;
-	final protected Localizable center;
+	final protected long[] center;
 	final protected RandomAccess< T > randomAccess;
 	
 	final protected long radius;
@@ -70,7 +55,7 @@ public class HyperSphereCursor< T > implements Cursor< T >
 	// the remaining number of steps in each dimension we still have to go
 	final long[] s;
 	
-	public HyperSphereCursor( final RandomAccessible< T > source, final Localizable center, final long radius )
+	public HyperSphereCursor( final RandomAccessible< T > source, final long[] center, final long radius )
 	{
 		this.source = source;
 		this.center = center;
@@ -119,7 +104,7 @@ public class HyperSphereCursor< T > implements Cursor< T >
 			else
 			{
 				s[ d ] = r[ d ] = 0;
-				randomAccess.setPosition( center.getLongPosition( d ), d );
+				randomAccess.setPosition( center[ d ], d );
 			}
 		}
 
@@ -133,7 +118,7 @@ public class HyperSphereCursor< T > implements Cursor< T >
 			s[ e ] = 2 * rad;
 			r[ e ] = rad;
 			
-			randomAccess.setPosition( center.getLongPosition( e ) - rad, e );
+			randomAccess.setPosition( center[ e ] - rad, e );
 		}
 	}
 
@@ -145,10 +130,10 @@ public class HyperSphereCursor< T > implements Cursor< T >
 		for ( int d = 0; d < maxDim; ++d )
 		{
 			r[ d ] = s[ d ] = 0;
-			randomAccess.setPosition( center.getLongPosition( d ), d ); 
+			randomAccess.setPosition( center[ d ], d ); 
 		}
 		
-		randomAccess.setPosition( center.getLongPosition( maxDim ) - radius - 1, maxDim  );
+		randomAccess.setPosition( center[ maxDim ] - radius - 1, maxDim  );
 		
 		r[ maxDim ] = radius;
 		s[ maxDim ] = 1 + 2 * radius;			
