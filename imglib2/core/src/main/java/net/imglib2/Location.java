@@ -69,17 +69,17 @@ public class Location implements Localizable
 	}
 	
 	@Override
-	public void localize( final float[] position )
+	public void localize( final float[] pos )
 	{
 		for ( int d = 0; d < numDimensions; ++d )
-			position[ d ] = this.position[ d ];
+			pos[ d ] = this.position[ d ];
 	}
 
 	@Override
-	public void localize( final double[] position )
+	public void localize( final double[] pos )
 	{
 		for ( int d = 0; d < numDimensions; ++d )
-			position[ d ] = this.position[ d ];
+			pos[ d ] = this.position[ d ];
 	}
 
 	@Override
@@ -92,17 +92,17 @@ public class Location implements Localizable
 	public int numDimensions() { return numDimensions;	}
 
 	@Override
-	public void localize( final int[] position )
+	public void localize( final int[] pos )
 	{
 		for ( int d = 0; d < numDimensions; ++d )
-			position[ d ] = (int)this.position[ d ];
+			pos[ d ] = (int)this.position[ d ];
 	}
 
 	@Override
-	public void localize( final long[] position )
+	public void localize( final long[] pos )
 	{
 		for ( int d = 0; d < numDimensions; ++d )
-			position[ d ] = this.position[ d ];
+			pos[ d ] = this.position[ d ];
 	}
 
 	@Override

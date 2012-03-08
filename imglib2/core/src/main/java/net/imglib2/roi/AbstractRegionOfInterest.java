@@ -28,6 +28,7 @@
 package net.imglib2.roi;
 
 import net.imglib2.Localizable;
+import net.imglib2.RealInterval;
 import net.imglib2.RealLocalizable;
 import net.imglib2.RealPositionable;
 import net.imglib2.RealRandomAccess;
@@ -51,8 +52,8 @@ public abstract class AbstractRegionOfInterest implements RegionOfInterest {
 	 */
 	protected class AROIRandomAccess implements RealRandomAccess<BitType> {
 
-		private BitType bit_type = new BitType();
-		private double [] position;
+		private final BitType bit_type = new BitType();
+		private final double [] position;
 		
 		protected AROIRandomAccess( final AROIRandomAccess randomAccess ) {
 			position = randomAccess.position.clone();
@@ -62,26 +63,26 @@ public abstract class AbstractRegionOfInterest implements RegionOfInterest {
 			position = new double[nDimensions];
 		}
 		@Override
-		public void localize(float[] pos) {
+		public void localize(final float[] pos) {
 			for (int i = 0; i < pos.length; i++) {
 				pos[i] = (float)this.position[i];
 			}
 		}
 
 		@Override
-		public void localize(double[] pos) {
+		public void localize(final double[] pos) {
 			for (int i = 0; i < pos.length; i++) {
 				pos[i] = this.position[i];
 			}
 		}
 
 		@Override
-		public float getFloatPosition(int dim) {
+		public float getFloatPosition(final int dim) {
 			return (float)position[dim];
 		}
 
 		@Override
-		public double getDoublePosition(int dim) {
+		public double getDoublePosition(final int dim) {
 			return position[dim];
 		}
 
@@ -92,31 +93,31 @@ public abstract class AbstractRegionOfInterest implements RegionOfInterest {
 		}
 
 		@Override
-		public void move(float distance, int dim) {
+		public void move(final float distance, final int dim) {
 			position[dim] += distance;
 			updateCachedMembershipStatus();
 		}
 
 		@Override
-		public void move(double distance, int dim) {
+		public void move(final double distance, final int dim) {
 			position[dim] += distance;
 			updateCachedMembershipStatus();
 		}
 
 		@Override
-		public void move(int distance, int dim) {
+		public void move(final int distance, final int dim) {
 			position[dim] += distance;
 			updateCachedMembershipStatus();
 		}
 
 		@Override
-		public void move(long distance, int dim) {
+		public void move(final long distance, final int dim) {
 			position[dim] += distance;
 			updateCachedMembershipStatus();
 		}
 
 		@Override
-		public void move(RealLocalizable localizable) {
+		public void move(final RealLocalizable localizable) {
 			for (int i = 0; i < position.length; i++) {
 				position[i] += localizable.getDoublePosition(i);
 			}
@@ -124,7 +125,7 @@ public abstract class AbstractRegionOfInterest implements RegionOfInterest {
 		}
 
 		@Override
-		public void move(Localizable localizable) {
+		public void move(final Localizable localizable) {
 			for (int i = 0; i < position.length; i++) {
 				position[i] += localizable.getDoublePosition(i);
 			}
@@ -132,7 +133,7 @@ public abstract class AbstractRegionOfInterest implements RegionOfInterest {
 		}
 
 		@Override
-		public void move(float[] pos) {
+		public void move(final float[] pos) {
 			for (int i = 0; i < pos.length; i++) {
 				this.position[i] += pos[i];
 			}
@@ -140,7 +141,7 @@ public abstract class AbstractRegionOfInterest implements RegionOfInterest {
 		}
 
 		@Override
-		public void move(double[] pos) {
+		public void move(final double[] pos) {
 			for (int i = 0; i < pos.length; i++) {
 				this.position[i] += pos[i];
 			}
@@ -148,7 +149,7 @@ public abstract class AbstractRegionOfInterest implements RegionOfInterest {
 		}
 
 		@Override
-		public void move(int[] pos) {
+		public void move(final int[] pos) {
 			for (int i = 0; i < pos.length; i++) {
 				this.position[i] += pos[i];
 			}
@@ -156,7 +157,7 @@ public abstract class AbstractRegionOfInterest implements RegionOfInterest {
 		}
 
 		@Override
-		public void move(long[] pos) {
+		public void move(final long[] pos) {
 			for (int i = 0; i < pos.length; i++) {
 				this.position[i] += pos[i];
 			}
@@ -164,13 +165,13 @@ public abstract class AbstractRegionOfInterest implements RegionOfInterest {
 		}
 
 		@Override
-		public void setPosition(RealLocalizable localizable) {
+		public void setPosition(final RealLocalizable localizable) {
 			localizable.localize(position);
 			updateCachedMembershipStatus();
 		}
 
 		@Override
-		public void setPosition(Localizable localizable) {
+		public void setPosition(final Localizable localizable) {
 			for (int i = 0; i < position.length; i++) {
 				this.position[i] = localizable.getDoublePosition(i);
 			}
@@ -178,7 +179,7 @@ public abstract class AbstractRegionOfInterest implements RegionOfInterest {
 		}
 
 		@Override
-		public void setPosition(float[] position) {
+		public void setPosition(final float[] position) {
 			for (int i = 0; i < position.length; i++) {
 				this.position[i] = position[i];
 			}
@@ -186,7 +187,7 @@ public abstract class AbstractRegionOfInterest implements RegionOfInterest {
 		}
 
 		@Override
-		public void setPosition(double[] position) {
+		public void setPosition(final double[] position) {
 			for (int i = 0; i < position.length; i++) {
 				this.position[i] = position[i];
 			}
@@ -194,7 +195,7 @@ public abstract class AbstractRegionOfInterest implements RegionOfInterest {
 		}
 
 		@Override
-		public void setPosition(int[] position) {
+		public void setPosition(final int[] position) {
 			for (int i = 0; i < position.length; i++) {
 				this.position[i] = position[i];
 			}
@@ -202,7 +203,7 @@ public abstract class AbstractRegionOfInterest implements RegionOfInterest {
 		}
 
 		@Override
-		public void setPosition(long[] position) {
+		public void setPosition(final long[] position) {
 			for (int i = 0; i < position.length; i++) {
 				this.position[i] = position[i];
 			}
@@ -210,26 +211,26 @@ public abstract class AbstractRegionOfInterest implements RegionOfInterest {
 		}
 
 		@Override
-		public void setPosition(float position, int dim) {
+		public void setPosition(final float position, final int dim) {
 			this.position[dim] = position;
 			updateCachedMembershipStatus();
 		}
 
 		@Override
-		public void setPosition(double position, int dim) {
+		public void setPosition(final double position, final int dim) {
 			this.position[dim] = position;
 			updateCachedMembershipStatus();
 		}
 
 
 		@Override
-		public void setPosition(int position, int dim) {
+		public void setPosition(final int position, final int dim) {
 			this.position[dim] = position;
 			updateCachedMembershipStatus();
 		}
 
 		@Override
-		public void setPosition(long position, int dim) {
+		public void setPosition(final long position, final int dim) {
 			this.position[dim] = position;
 			updateCachedMembershipStatus();
 		}
@@ -239,13 +240,13 @@ public abstract class AbstractRegionOfInterest implements RegionOfInterest {
 		}
 		
 		@Override
-		public void fwd(int dim) {
+		public void fwd(final int dim) {
 			position[dim] += 1;
 			updateCachedMembershipStatus();
 		}
 
 		@Override
-		public void bck(int dim) {
+		public void bck(final int dim) {
 			position[dim] -= 1;
 			updateCachedMembershipStatus();
 		}
@@ -268,7 +269,7 @@ public abstract class AbstractRegionOfInterest implements RegionOfInterest {
 		}
 	}
 	
-	protected AbstractRegionOfInterest(int nDimensions) {
+	protected AbstractRegionOfInterest(final int nDimensions) {
 		this.nDimensions = nDimensions;
 	}
 	
@@ -290,8 +291,8 @@ public abstract class AbstractRegionOfInterest implements RegionOfInterest {
 
 	protected void validateRealExtremaCache() {
 		if (cached_real_min == null) {
-			double [] cachedRealMin = new double[nDimensions];
-			double [] cachedRealMax = new double[nDimensions];
+			final double [] cachedRealMin = new double[nDimensions];
+			final double [] cachedRealMax = new double[nDimensions];
 			getRealExtrema(cachedRealMin, cachedRealMax);
 			cached_real_min = cachedRealMin;
 			cached_real_max = cachedRealMax;
@@ -306,7 +307,7 @@ public abstract class AbstractRegionOfInterest implements RegionOfInterest {
 	 * @see net.imglib2.RealInterval#realMin(int)
 	 */
 	@Override
-	public double realMin(int d) {
+	public double realMin(final int d) {
 		validateRealExtremaCache();
 		return cached_real_min[d];
 	}
@@ -315,7 +316,7 @@ public abstract class AbstractRegionOfInterest implements RegionOfInterest {
 	 * @see net.imglib2.RealInterval#realMin(double[])
 	 */
 	@Override
-	public void realMin(double[] min) {
+	public void realMin(final double[] min) {
 		validateRealExtremaCache();
 		for (int i = 0; i < min.length; i++) {
 			min[i] = cached_real_min[i];
@@ -326,7 +327,7 @@ public abstract class AbstractRegionOfInterest implements RegionOfInterest {
 	 * @see net.imglib2.RealInterval#realMin(net.imglib2.RealPositionable)
 	 */
 	@Override
-	public void realMin(RealPositionable min) {
+	public void realMin(final RealPositionable min) {
 		validateRealExtremaCache();
 		min.setPosition( cached_real_min );
 	}
@@ -335,7 +336,7 @@ public abstract class AbstractRegionOfInterest implements RegionOfInterest {
 	 * @see net.imglib2.RealInterval#realMax(int)
 	 */
 	@Override
-	public double realMax(int d) {
+	public double realMax(final int d) {
 		validateRealExtremaCache();
 		return cached_real_max[d];
 	}
@@ -344,7 +345,7 @@ public abstract class AbstractRegionOfInterest implements RegionOfInterest {
 	 * @see net.imglib2.RealInterval#realMax(double[])
 	 */
 	@Override
-	public void realMax(double[] max) {
+	public void realMax(final double[] max) {
 		validateRealExtremaCache();
 		for (int i = 0; i < max.length; i++) {
 			max[i] = cached_real_max[i];
@@ -355,7 +356,7 @@ public abstract class AbstractRegionOfInterest implements RegionOfInterest {
 	 * @see net.imglib2.RealInterval#realMax(net.imglib2.RealPositionable)
 	 */
 	@Override
-	public void realMax(RealPositionable max) {
+	public void realMax(final RealPositionable max) {
 		validateRealExtremaCache();
 		max.setPosition( cached_real_max );
 	}
@@ -369,5 +370,13 @@ public abstract class AbstractRegionOfInterest implements RegionOfInterest {
 	public RealRandomAccess<BitType> realRandomAccess() {
 		return new AROIRandomAccess();
 	}
-
+	
+	/**
+	 * TODO Check if constraining real random access to an interval could be
+	 *   exploited for a more efficient solution.
+	 */
+	@Override
+	public RealRandomAccess<BitType> realRandomAccess( final RealInterval interval ) {
+		return realRandomAccess();
+	}
 }

@@ -59,6 +59,7 @@ public class ImgPlus<T> implements Img<T>, Metadata {
 	private final Img<T> img;
 
 	private String name;
+	private String source = "";
 	private final AxisType[] axes;
 	private final double[] cal;
 	private int validBits;
@@ -107,6 +108,7 @@ public class ImgPlus<T> implements Img<T>, Metadata {
 		channelMax = new ArrayList<Double>();
 		lut8 = new ArrayList<ColorTable8>();
 		lut16 = new ArrayList<ColorTable16>();
+		setSource("");
 	}
 
 	// -- ImgPlus methods --
@@ -384,6 +386,16 @@ public class ImgPlus<T> implements Img<T>, Metadata {
 		return lut8.size();
 	}
 
+	@Override
+	public String getSource() {
+		return source;
+	}
+	
+	@Override
+	public void setSource(String source) {
+		this.source = source;
+	}
+	
 	// -- Utility methods --
 
 	/** Ensures the given {@link Img} is an ImgPlus, wrapping if necessary. */

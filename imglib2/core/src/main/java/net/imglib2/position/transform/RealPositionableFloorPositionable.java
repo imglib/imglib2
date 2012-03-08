@@ -63,6 +63,34 @@ public class RealPositionableFloorPositionable< P extends RealLocalizable & Real
 		floor = new long[ n ];
 	}
 	
+	final static protected long floor( final double r )
+	{
+		return r < 0 ? ( long )r - 1 : ( long )r;
+	}
+	
+	final static protected long floor( final float r )
+	{
+		return r < 0 ? ( long )r - 1 : ( long )r;
+	}
+	
+	final static protected void floor( final double[] r, final long[] f )
+	{
+		for ( int d = 0; d < r.length; ++d )
+			f[ d ] = floor( r[ d ] );
+	}
+	
+	final static protected void floor( final float[] r, final long[] f )
+	{
+		for ( int d = 0; d < r.length; ++d )
+			f[ d ] = floor( r[ d ] );
+	}
+	
+	final static protected void floor( final RealLocalizable r, final long[] f )
+	{
+		for ( int d = 0; d < f.length; ++d )
+			f[ d ] = floor( r.getDoublePosition( d ) );
+	}
+	
 	
 	/* EuclideanSpace */
 	
@@ -76,21 +104,21 @@ public class RealPositionableFloorPositionable< P extends RealLocalizable & Real
 	public void move( final float distance, final int d )
 	{
 		source.move( distance, d );
-		target.setPosition( Floor.floor( source.getDoublePosition( d ) ), d );
+		target.setPosition( floor( source.getDoublePosition( d ) ), d );
 	}
 
 	@Override
 	public void move( final double distance, final int d )
 	{
 		source.move( distance, d );
-		target.setPosition( Floor.floor( source.getDoublePosition( d ) ), d );
+		target.setPosition( floor( source.getDoublePosition( d ) ), d );
 	}
 
 	@Override
 	public void move( final RealLocalizable localizable )
 	{
 		source.move( localizable );
-		Floor.floor( source, floor );
+		floor( source, floor );
 		target.setPosition( floor );
 	}
 
@@ -98,7 +126,7 @@ public class RealPositionableFloorPositionable< P extends RealLocalizable & Real
 	public void move( final float[] distance )
 	{
 		source.move( distance );
-		Floor.floor( source, floor );
+		floor( source, floor );
 		target.setPosition( floor );
 	}
 
@@ -106,7 +134,7 @@ public class RealPositionableFloorPositionable< P extends RealLocalizable & Real
 	public void move( final double[] distance )
 	{
 		source.move( distance );
-		Floor.floor( source, floor );
+		floor( source, floor );
 		target.setPosition( floor );
 	}
 
@@ -114,7 +142,7 @@ public class RealPositionableFloorPositionable< P extends RealLocalizable & Real
 	public void setPosition( final RealLocalizable localizable )
 	{
 		source.setPosition( localizable );
-		Floor.floor( localizable, floor );
+		floor( localizable, floor );
 		target.setPosition( floor );
 	}
 
@@ -122,7 +150,7 @@ public class RealPositionableFloorPositionable< P extends RealLocalizable & Real
 	public void setPosition( final float[] position )
 	{
 		source.setPosition( position );
-		Floor.floor( position, floor );
+		floor( position, floor );
 		target.setPosition( floor );
 	}
 
@@ -130,7 +158,7 @@ public class RealPositionableFloorPositionable< P extends RealLocalizable & Real
 	public void setPosition( final double[] position )
 	{
 		source.setPosition( position );
-		Floor.floor( position, floor );
+		floor( position, floor );
 		target.setPosition( floor );
 	}
 
@@ -138,14 +166,14 @@ public class RealPositionableFloorPositionable< P extends RealLocalizable & Real
 	public void setPosition( final float position, final int d )
 	{
 		source.setPosition( position, d );
-		target.setPosition( Floor.floor( position ), d );
+		target.setPosition( floor( position ), d );
 	}
 
 	@Override
 	public void setPosition( final double position, final int d )
 	{
 		source.setPosition( position, d );
-		target.setPosition( Floor.floor( position ), d );
+		target.setPosition( floor( position ), d );
 	}
 
 	

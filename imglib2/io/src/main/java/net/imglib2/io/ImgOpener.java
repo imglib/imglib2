@@ -83,7 +83,6 @@ import net.imglib2.type.numeric.integer.UnsignedIntType;
 import net.imglib2.type.numeric.integer.UnsignedShortType;
 import net.imglib2.type.numeric.real.DoubleType;
 import net.imglib2.type.numeric.real.FloatType;
-import net.imglib2.util.Util;
 import ome.xml.model.primitives.PositiveFloat;
 
 /**
@@ -300,6 +299,7 @@ public class ImgOpener implements StatusReporter {
 		catch (final IOException e) {
 			throw new ImgIOException(e);
 		}
+		imgPlus.setSource(id);
 		final long endTime = System.currentTimeMillis();
 		final float time = (endTime - startTime) / 1000f;
 		notifyListeners(new StatusEvent(planeCount, planeCount, id + ": read " +

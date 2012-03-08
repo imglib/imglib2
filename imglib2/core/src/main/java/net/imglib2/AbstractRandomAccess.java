@@ -52,7 +52,7 @@ public abstract class AbstractRandomAccess< T > extends AbstractLocalizableSampl
 	@Override
 	public void move( final int distance, final int dim )
 	{
-		move( ( long ) distance, dim );
+		move( ( long )distance, dim );
 	}
 
 	@Override

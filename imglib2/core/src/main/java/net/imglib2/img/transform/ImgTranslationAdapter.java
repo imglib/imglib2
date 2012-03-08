@@ -31,7 +31,6 @@ package net.imglib2.img.transform;
 
 import java.util.Iterator;
 
-import net.imglib2.AbstractRandomAccess;
 import net.imglib2.Cursor;
 import net.imglib2.Interval;
 import net.imglib2.IterableRealInterval;
@@ -51,13 +50,13 @@ import net.imglib2.view.TransformView;
  * @author Lee Kamentsky
  *
  */
-public class ImgTranslationAdapter<T extends Type, I extends Img<T>> extends Point implements Img<T> {
+public class ImgTranslationAdapter<T extends Type< T >, I extends Img<T>> extends Point implements Img<T> {
 	protected final I img;
 	/**
 	 * Initialize the translation adapter with zero translation and the image to adapt
 	 * @param img - the image to be accessed at the translated coordinates.
 	 */
-	public ImgTranslationAdapter(I img) {
+	public ImgTranslationAdapter(final I img) {
 		super(img.numDimensions());
 		this.img = img;
 	}
@@ -68,7 +67,7 @@ public class ImgTranslationAdapter<T extends Type, I extends Img<T>> extends Poi
 	 * @param img - image to be adapted
 	 * @param offset - offset image coordinate 0,0... so it appears to be at offset[0], offset[1] ...
 	 */
-	public ImgTranslationAdapter(I img, long [] offset) {
+	public ImgTranslationAdapter(final I img, final long [] offset) {
 		super(offset);
 		this.img = img;
 	}
@@ -78,7 +77,7 @@ public class ImgTranslationAdapter<T extends Type, I extends Img<T>> extends Poi
 	 * @param img - image to be adapted
 	 * @param localizable - img's 0,0 will appear to be at this localizable's coordinates.
 	 */
-	public ImgTranslationAdapter(I img, Localizable localizable) {
+	public ImgTranslationAdapter(final I img, final Localizable localizable) {
 		super(localizable);
 		this.img = img;
 	}
@@ -95,7 +94,7 @@ public class ImgTranslationAdapter<T extends Type, I extends Img<T>> extends Poi
 	 * @see net.imglib2.RandomAccessible#randomAccess(net.imglib2.Interval)
 	 */
 	@Override
-	public RandomAccess<T> randomAccess(Interval interval) {
+	public RandomAccess<T> randomAccess(final Interval interval) {
 		return new TransformView<T>(img, getTranslationTransform()).randomAccess(interval);
 	}
 
@@ -104,7 +103,7 @@ public class ImgTranslationAdapter<T extends Type, I extends Img<T>> extends Poi
 	 * @return a TranslationTransform that can be applied in a TransformView to generate a RandomAccesible.
 	 */
 	protected TranslationTransform getTranslationTransform() {
-		long [] translation = new long[numDimensions()];
+		final long [] translation = new long[numDimensions()];
 		for (int i=0; i<numDimensions(); i++) {
 			translation[i] = -position[i];
 		}
@@ -115,7 +114,7 @@ public class ImgTranslationAdapter<T extends Type, I extends Img<T>> extends Poi
 	 * @see net.imglib2.Interval#min(int)
 	 */
 	@Override
-	public long min(int d) {
+	public long min(final int d) {
 		return img.min(d) + position[d];
 	}
 
@@ -123,7 +122,7 @@ public class ImgTranslationAdapter<T extends Type, I extends Img<T>> extends Poi
 	 * @see net.imglib2.Interval#min(long[])
 	 */
 	@Override
-	public void min(long[] min) {
+	public void min(final long[] min) {
 		img.min(min);
 		for (int i=0; i<numDimensions(); i++) {
 			min[i] += position[i];
@@ -134,7 +133,7 @@ public class ImgTranslationAdapter<T extends Type, I extends Img<T>> extends Poi
 	 * @see net.imglib2.Interval#min(net.imglib2.Positionable)
 	 */
 	@Override
-	public void min(Positionable min) {
+	public void min(final Positionable min) {
 		img.min(min);
 		min.move(this);
 	}
@@ -143,7 +142,7 @@ public class ImgTranslationAdapter<T extends Type, I extends Img<T>> extends Poi
 	 * @see net.imglib2.Interval#max(int)
 	 */
 	@Override
-	public long max(int d) {
+	public long max(final int d) {
 		return img.max(d) + position[d];
 	}
 
@@ -151,7 +150,7 @@ public class ImgTranslationAdapter<T extends Type, I extends Img<T>> extends Poi
 	 * @see net.imglib2.Interval#max(long[])
 	 */
 	@Override
-	public void max(long[] max) {
+	public void max(final long[] max) {
 		img.max(max);
 		for (int i=0; i<numDimensions(); i++) {
 			max[i] += position[i];
@@ -162,7 +161,7 @@ public class ImgTranslationAdapter<T extends Type, I extends Img<T>> extends Poi
 	 * @see net.imglib2.Interval#max(net.imglib2.Positionable)
 	 */
 	@Override
-	public void max(Positionable max) {
+	public void max(final Positionable max) {
 		img.max(max);
 		max.move(this);
 	}
@@ -171,7 +170,7 @@ public class ImgTranslationAdapter<T extends Type, I extends Img<T>> extends Poi
 	 * @see net.imglib2.Interval#dimensions(long[])
 	 */
 	@Override
-	public void dimensions(long[] dimensions) {
+	public void dimensions(final long[] dimensions) {
 		img.dimensions(dimensions);
 	}
 
@@ -179,7 +178,7 @@ public class ImgTranslationAdapter<T extends Type, I extends Img<T>> extends Poi
 	 * @see net.imglib2.Interval#dimension(int)
 	 */
 	@Override
-	public long dimension(int d) {
+	public long dimension(final int d) {
 		return img.dimension(d);
 	}
 
@@ -187,12 +186,12 @@ public class ImgTranslationAdapter<T extends Type, I extends Img<T>> extends Poi
 	 * @see net.imglib2.RealInterval#realMin(int)
 	 */
 	@Override
-	public double realMin(int d) {
+	public double realMin(final int d) {
 		return img.realMin(d) + position[d];
 	}
 
 	@Override
-	public void realMin(double[] min) {
+	public void realMin(final double[] min) {
 		img.realMin(min);
 		for (int i=0; i<numDimensions(); i++) {
 			min[i] += position[i];
@@ -200,18 +199,18 @@ public class ImgTranslationAdapter<T extends Type, I extends Img<T>> extends Poi
 	}
 
 	@Override
-	public void realMin(RealPositionable min) {
+	public void realMin(final RealPositionable min) {
 		img.realMin(min);
 		min.move(this);
 	}
 
 	@Override
-	public double realMax(int d) {
+	public double realMax(final int d) {
 		return img.realMax(d) + position[d];
 	}
 
 	@Override
-	public void realMax(double[] max) {
+	public void realMax(final double[] max) {
 		img.realMax(max);
 		for (int i=0; i<numDimensions(); i++) {
 			max[i] += position[i];
@@ -219,7 +218,7 @@ public class ImgTranslationAdapter<T extends Type, I extends Img<T>> extends Poi
 	}
 
 	@Override
-	public void realMax(RealPositionable max) {
+	public void realMax(final RealPositionable max) {
 		img.realMax(max);
 		max.move(this);
 	}
@@ -240,28 +239,28 @@ public class ImgTranslationAdapter<T extends Type, I extends Img<T>> extends Poi
 		return new Cursor<T>() {
 
 			@Override
-			public void localize(float[] position) {
-				c.localize(position);
+			public void localize(final float[] pos) {
+				c.localize(pos);
 				for (int i=0; i<numDimensions(); i++) {
-					position[i] += offset[i];
+					pos[i] += offset[i];
 				}
 			}
 
 			@Override
-			public void localize(double[] position) {
-				c.localize(position);
+			public void localize(final double[] pos) {
+				c.localize(pos);
 				for (int i=0; i<numDimensions(); i++) {
-					position[i] += offset[i];
+					pos[i] += offset[i];
 				}
 			}
 
 			@Override
-			public float getFloatPosition(int d) {
+			public float getFloatPosition(final int d) {
 				return c.getFloatPosition(d) + offset[d];
 			}
 
 			@Override
-			public double getDoublePosition(int d) {
+			public double getDoublePosition(final int d) {
 				return c.getDoublePosition(d) + offset[d];
 			}
 
@@ -281,7 +280,7 @@ public class ImgTranslationAdapter<T extends Type, I extends Img<T>> extends Poi
 			}
 
 			@Override
-			public void jumpFwd(long steps) {
+			public void jumpFwd(final long steps) {
 				c.jumpFwd(steps);
 			}
 
@@ -311,28 +310,28 @@ public class ImgTranslationAdapter<T extends Type, I extends Img<T>> extends Poi
 			}
 
 			@Override
-			public void localize(int[] position) {
-				c.localize(position);
+			public void localize(final int[] pos) {
+				c.localize(pos);
 				for (int i=0; i<numDimensions(); i++) {
-					position[i] += offset[i];
+					pos[i] += offset[i];
 				}
 			}
 
 			@Override
-			public void localize(long[] position) {
-				c.localize(position);
+			public void localize(final long[] pos) {
+				c.localize(pos);
 				for (int i=0; i<numDimensions(); i++) {
-					position[i] += offset[i];
+					pos[i] += offset[i];
 				}
 			}
 
 			@Override
-			public int getIntPosition(int d) {
+			public int getIntPosition(final int d) {
 				return c.getIntPosition(d) + (int)offset[d];
 			}
 
 			@Override
-			public long getLongPosition(int d) {
+			public long getLongPosition(final int d) {
 				return c.getIntPosition(d) + offset[d];
 			}
 
@@ -354,7 +353,7 @@ public class ImgTranslationAdapter<T extends Type, I extends Img<T>> extends Poi
 	}
 
 	@Override
-	public boolean equalIterationOrder(IterableRealInterval<?> f) {
+	public boolean equalIterationOrder(final IterableRealInterval<?> f) {
 		return img.equalIterationOrder(f);
 	}
 

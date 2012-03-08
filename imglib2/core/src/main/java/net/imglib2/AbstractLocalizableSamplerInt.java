@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2009--2010, Stephan Preibisch & Stephan Saalfeld
+ * Copyright (c) 2009--2012, ImgLib2 developers
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -9,7 +9,7 @@
  * list of conditions and the following disclaimer.  Redistributions in binary
  * form must reproduce the above copyright notice, this list of conditions and
  * the following disclaimer in the documentation and/or other materials
- * provided with the distribution.  Neither the name of the Fiji project nor
+ * provided with the distribution.  Neither the name of the imglib project nor
  * the names of its contributors may be used to endorse or promote products
  * derived from this software without specific prior written permission.
  * 
@@ -40,7 +40,9 @@ import net.imglib2.util.Util;
  *  
  * @param <T>
  *
- * @author Stephan Preibisch, Stephan Saalfeld, Tobias Pietzsch
+ * @author Stephan Preibisch
+ * @author Stephan Saalfeld
+ * @author Tobias Pietzsch
  */
 public abstract class AbstractLocalizableSamplerInt< T > extends AbstractSampler< T > implements Localizable
 {
@@ -65,28 +67,28 @@ public abstract class AbstractLocalizableSamplerInt< T > extends AbstractSampler
 	public void localize( final float[] pos )
 	{
 		for ( int d = 0; d < n; d++ )
-			pos[ d ] = this.position[ d ];
+			pos[ d ] = position[ d ];
 	}
 
 	@Override
 	public void localize( final double[] pos )
 	{
 		for ( int d = 0; d < n; d++ )
-			pos[ d ] = this.position[ d ];
+			pos[ d ] = position[ d ];
 	}
 
 	@Override
-	public void localize( int[] pos )
+	public void localize( final int[] pos )
 	{
 		for ( int d = 0; d < n; d++ )
-			pos[ d ] = this.position[ d ];
+			pos[ d ] = position[ d ];
 	}
 	
 	@Override
-	public void localize( long[] pos )
+	public void localize( final long[] pos )
 	{
 		for ( int d = 0; d < n; d++ )
-			pos[ d ] = this.position[ d ];
+			pos[ d ] = position[ d ];
 	}
 	
 	@Override

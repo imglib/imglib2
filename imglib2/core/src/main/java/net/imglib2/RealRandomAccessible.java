@@ -45,4 +45,6 @@ public interface RealRandomAccessible< T > extends EuclideanSpace
 	 * @return random access sampler
 	 */
 	public RealRandomAccess< T > realRandomAccess();
+	
+	public RealRandomAccess< T > realRandomAccess( RealInterval interval );
 }

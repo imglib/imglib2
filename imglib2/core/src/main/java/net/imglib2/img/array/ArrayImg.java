@@ -93,6 +93,9 @@ public class ArrayImg< T extends NativeType< T >, A extends DataAccess > extends
 	public ArrayRandomAccess< T > randomAccess() { return new ArrayRandomAccess< T >( this ); }
 
 	@Override
+	public ArrayRandomAccess< T > randomAccess( final Interval interval ){ return randomAccess(); }
+
+	@Override
 	public boolean equalIterationOrder( final IterableRealInterval< ? > f )
 	{
 		if ( f.numDimensions() != this.numDimensions() )

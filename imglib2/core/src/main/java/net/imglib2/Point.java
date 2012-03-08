@@ -10,10 +10,21 @@ public class Point implements Localizable, Positionable {
 	final protected long[] position;
 	
 	/**
+	 * Protected constructor that re-uses the passed position array.
+	 * 
+	 * @param position
+	 * @param x unused parameter that changes the method signature
+	 */
+	protected Point( final long[] position, final Object x )
+	{
+		this.position = position;
+	}
+	
+	/**
 	 * Create a point at 0 in <i>nDimensional</i> space.
 	 * @param nDimensions # of dimensions in the space
 	 */
-	public Point(final int nDimensions) {
+	public Point( final int nDimensions ) {
 		position = new long [nDimensions];
 	}
 	
@@ -21,7 +32,7 @@ public class Point implements Localizable, Positionable {
 	 * Create a point at a definite position
 	 * @param position the initial position. The length of the array determines the dimensionality of the space.
 	 */
-	public Point(final long [] position) {
+	public Point( final long... position ) {
 		this.position = position.clone();
 	}
 
@@ -29,7 +40,7 @@ public class Point implements Localizable, Positionable {
 	 * Create a point at a definite position
 	 * @param position the initial position. The length of the array determines the dimensionality of the space.
 	 */
-	public Point(final int [] position) {
+	public Point( final int... position ) {
 		this.position = new long[position.length];
 		for (int i=0; i < position.length; ++i) {
 			this.position[i] = position[i];
@@ -40,7 +51,7 @@ public class Point implements Localizable, Positionable {
 	 * Create a point using the position of a {@link Localizable}
 	 * @param localizable get position from here
 	 */
-	public Point(final Localizable localizable) {
+	public Point( final Localizable localizable ) {
 		position = new long [localizable.numDimensions()];
 		localizable.localize(position);
 	}
@@ -172,5 +183,10 @@ public class Point implements Localizable, Positionable {
 		}
 		sb.append(")");
 		return sb.toString();
+	}
+	
+	static public Point wrap( final long[] position )
+	{
+		return new Point( position, null );
 	}
 }
