@@ -34,7 +34,7 @@ import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.integer.UnsignedByteType;
 import net.imglib2.view.Views;
 
-public class Interactive2DRotationTest< T extends RealType< T > & NativeType< T > > extends AbstractInteractiveTest< T >
+public class Interactive2DRotationExample< T extends RealType< T > & NativeType< T > > extends AbstractInteractiveExample< T >
 {
 	final static private double step = Math.PI /180;
 	private double theta = 0.0;
@@ -71,7 +71,7 @@ public class Interactive2DRotationTest< T extends RealType< T > & NativeType< T 
 	
 	private double yScale;
 	
-	public Interactive2DRotationTest( final ImgPlus< T > imgPlus, final RealARGBConverter< T > converter )
+	public Interactive2DRotationExample( final ImgPlus< T > imgPlus, final RealARGBConverter< T > converter )
 	{
 		this.imgPlus = imgPlus;
 		this.converter = converter;
@@ -331,6 +331,6 @@ public class Interactive2DRotationTest< T extends RealType< T > & NativeType< T 
 			e.printStackTrace();
 			return;
 		}
-		new Interactive2DRotationTest< UnsignedByteType >( imgPlus, new RealARGBConverter< UnsignedByteType >( 0, 255 ) ).run( "" );
+		new Interactive2DRotationExample< UnsignedByteType >( imgPlus, new RealARGBConverter< UnsignedByteType >( 0, 255 ) ).run( "" );
 	}
 }
