@@ -30,8 +30,8 @@ import net.imglib2.view.Views;
  *  For proper scaling, see {@link Scale2D} and {@link Scale3D}. */
 public class Resample<N extends NumericType<N>> extends ImgProxy<N>
 {
-	static public final Mode LINEAR = Affine3D.LINEAR;
-	static public final Mode NEAREST_NEIGHBOR = Affine3D.NEAREST_NEIGHBOR;
+	static public final Mode LINEAR = Affine3D.Mode.LINEAR;
+	static public final Mode NEAREST_NEIGHBOR = Affine3D.Mode.NEAREST_NEIGHBOR;
 	static public final Mode BEST = Affine3D.BEST;
 
 	/** Resample an {@link Image} with the best possible mode. */

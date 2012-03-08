@@ -27,19 +27,20 @@
  *
  * @author Stephan Preibisch & Stephan Saalfeld
  */
-
 package net.imglib2.meta;
 
-import net.imglib2.img.Img;
-import net.imglib2.img.ImgPlus;
-
 /**
- * An interface for defining metadata that goes along with an {@link Img},
- * including name, dimensional axes and calibration information.
- * 
- * @author Curtis Rueden
- * @see ImgPlus
+ * Interface for classes who track their source. Image files have sources (such
+ * as "/usr/me/ImageFile.tif"). This information may be of interest to others.
+ *  
+ * @author Barry DeZonia
+ *
  */
-public interface Metadata extends Named, Sourced, CalibratedSpace, ImageMetadata {
-	// marker interface - no implementation needed
+public interface Sourced {
+
+	/** Sets the source String */
+	void setSource(String source);
+	
+	/** Gets the source String */
+	String getSource();
 }

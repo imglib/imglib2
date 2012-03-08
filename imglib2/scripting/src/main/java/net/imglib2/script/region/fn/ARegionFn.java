@@ -30,8 +30,6 @@ public abstract class ARegionFn<T extends RealType<T>> extends FloatImageOperati
 	 * 
 	 * @param img The original {@link Img} to iterate over.
 	 * @param ra A {@link RandomAccess} that iterates {@param img} with an {@link OutOfBounds} strategy.
-	 * @param f2 A function to reduce the sequence of values in the region.
-	 * @param f1 A function to process the result of the reduce operation.
 	 * @param span The amount of values to consider before and after the current value, in each dimension, and that is used to create the {@link LocalNeighborhoodCursor}.
 	 */
 	public ARegionFn(

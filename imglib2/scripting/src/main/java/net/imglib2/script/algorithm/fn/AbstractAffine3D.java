@@ -31,8 +31,8 @@ public abstract class AbstractAffine3D<T extends NumericType<T>> extends ImgProx
 {
 	static public enum Mode { LINEAR, NEAREST_NEIGHBOR }
 
-	static public final Mode LINEAR = Mode.LINEAR;
-	static public final Mode NEAREST_NEIGHBOR = Mode.NEAREST_NEIGHBOR;
+	//static public final Mode LINEAR = Mode.LINEAR;
+	//static public final Mode NEAREST_NEIGHBOR = Mode.NEAREST_NEIGHBOR;
 	static public final Mode BEST = Mode.LINEAR;
 
 	/** With a default {@link OutOfBoundsStrategyValueFactory} with @param outside. */

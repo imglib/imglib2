@@ -371,6 +371,21 @@ public class Views
 			max[ d ] = dimension[ d ] - 1;
 		return interval( translate( randomAccessible, offset ), min, max );
 	}
+	
+	/**
+	 * test whether the source interval starts at (0,0,...,0)
+	 * 
+	 * @param interval - the {@link Interval} to test
+	 * @return true if zero-bounded, false otherwise
+	 */
+	public static boolean isZeroMin( final Interval interval )
+	{
+		for ( int d = 0; d < interval.numDimensions(); ++d )
+			if ( interval.min( d ) != 0 )
+				return false;
+		
+		return true;
+	}
 
 
 	/**

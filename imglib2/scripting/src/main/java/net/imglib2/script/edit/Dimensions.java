@@ -19,7 +19,7 @@ public class Dimensions extends ArrayList<Long> {
 	}
 	
 	/**
-	 * Extract the dimensins of {@param img} multipled by the {@param factor}.
+	 * Extract the dimensions of {@param img} multiplied by the {@param factor}.
 	 * @param img The interval to extract the dimensions of.
 	 * @param factor The factor to multiply the dimensions.
 	 */

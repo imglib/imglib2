@@ -30,7 +30,6 @@ POSSIBILITY OF SUCH DAMAGE.
 package net.imglib2.ops.relation;
 
 import net.imglib2.ops.BinaryRelation;
-import net.imglib2.ops.ComplexHelper;
 import net.imglib2.type.numeric.ComplexType;
 
 /**
@@ -56,13 +55,18 @@ public final class ComplexPolarNear<T extends ComplexType<T>,U extends ComplexTy
 	
 	@Override
 	public boolean holds(T val1, U val2) {
-		if (Math.abs(val1.getRealDouble() - val2.getRealDouble()) > rTol) return false;
-		double theta1 = ComplexHelper.getArgument(val1);
-		double theta2 = ComplexHelper.getArgument(val2);
-		if (Math.abs(theta1-theta2) < thetaTol) return true;
-		// what about angles that are separated by near 2 pi?
-		if (Math.abs(theta1-theta2) < 2*Math.PI - thetaTol) return true;
-		return false;
+		if (Math.abs(val1.getPowerDouble() - val2.getPowerDouble()) > rTol) return false;
+		double theta1 = val1.getPhaseDouble();
+		double theta2 = val2.getPhaseDouble();
+		if (Math.abs(theta1-theta2) <= thetaTol) return true;
+		// angles might be separated by near 2 pi
+		if (theta1 < theta2) {
+			while (theta1 < theta2) theta1 += 2*Math.PI;
+		}
+		else { // theta2 < theta1
+			while (theta2 < theta1) theta2 += 2*Math.PI;
+		}
+		return Math.abs(theta1-theta2) <= thetaTol;
 	}
 
 	@Override

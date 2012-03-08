@@ -6,38 +6,32 @@
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-    <groupId>net.imglib2</groupId>
-    <artifactId>pom-imglib2</artifactId>
+    <groupId>mpicbg</groupId>
+    <artifactId>pom-imglib1</artifactId>
     <version>2.0-SNAPSHOT</version>
   </parent>
 
-  <artifactId>imglib2-tests</artifactId>
+  <artifactId>imglib-tests</artifactId>
 
-  <name>ImgLib2 Tests</name>
-  <description>Integration tests for ImgLib2.</description>
+  <name>ImgLib1 Tests</name>
+  <description>Integration tests for imglib.</description>
 
   <dependencies>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>imglib2</artifactId>
+      <artifactId>imglib</artifactId>
       <version>${project.version}</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>imglib2-algorithms</artifactId>
+      <artifactId>imglib-algorithms</artifactId>
       <version>${project.version}</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>imglib2-ij</artifactId>
-      <version>${project.version}</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>imglib2-io</artifactId>
+      <artifactId>imglib-ij</artifactId>
       <version>${project.version}</version>
       <scope>test</scope>
     </dependency>
@@ -46,28 +40,6 @@
       <artifactId>ij</artifactId>
       <version>${imagej1.version}</version>
       <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>jama</groupId>
-      <artifactId>jama</artifactId>
-      <version>1.0.2</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>4.9</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-    	<groupId>net.imglib2</groupId>
-    	<artifactId>imglib2-realtransform</artifactId>
-    	<version>2.0-SNAPSHOT</version>
-    </dependency>
-    <dependency>
-    	<groupId>mpicbg</groupId>
-    	<artifactId>mpicbg</artifactId>
-    	<version>20111128</version>
     </dependency>
   </dependencies>
 

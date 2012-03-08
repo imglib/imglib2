@@ -1,8 +1,8 @@
 package net.imglib2.script.algorithm;
 
-import net.imglib2.IterableInterval;
+import net.imglib2.algorithm.integral.IntegralImgDouble;
+import net.imglib2.converter.Converter;
 import net.imglib2.img.Img;
-import net.imglib2.img.array.ArrayImgFactory;
 import net.imglib2.script.algorithm.fn.ImgProxy;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.real.DoubleType;
@@ -15,15 +15,20 @@ import net.imglib2.type.numeric.real.DoubleType;
  */
 public class IntegralImage extends ImgProxy<DoubleType>
 {
-	public IntegralImage(final IterableInterval<? extends RealType<?>> img) {
+	public <T extends RealType<T>> IntegralImage(final Img<T> img) {
 		super(process(img));
 	}
 
-	private static final Img<DoubleType> process(
-			final IterableInterval<? extends RealType<?>> img) {
-		final net.imglib2.algorithm.integral.IntegralImage<DoubleType> o =
-			new net.imglib2.algorithm.integral.IntegralImage<DoubleType>(
-				img, new DoubleType(), new ArrayImgFactory<DoubleType>());
+	private static final <T extends RealType<T>> Img<DoubleType> process(
+			final Img<T> img) {
+		final IntegralImgDouble<T> o =
+			new IntegralImgDouble<T>(img, new DoubleType(),
+				new Converter<T, DoubleType>() {
+					@Override
+					public final void convert(final T input, final DoubleType output) {
+						output.set(input.getRealDouble());
+					}
+				});
 		o.process();
 		return o.getResult();
 	}
