@@ -49,6 +49,12 @@ public interface AffineGet extends InvertibleRealTransform
 	 */
 	public double get( final int row, final int column );
 	
+	/**
+	 * Get a copy of the <em>n</em>&times;(<em>n</em>+1) affine transformation
+	 * matrix as a row packed array similar to Jama.
+	 *  
+	 * @return
+	 */
 	public double[] getRowPackedCopy();
 	
 	/**
@@ -69,5 +75,5 @@ public interface AffineGet extends InvertibleRealTransform
 	
 	public AffineGet inverseAffine();
 //	@Override
-//	Affine inverse();
+//	AffineGet inverse();
 }

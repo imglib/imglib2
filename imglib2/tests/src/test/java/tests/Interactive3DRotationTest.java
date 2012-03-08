@@ -218,7 +218,7 @@ public class Interactive3DRotationTest< T extends RealType< T > & NativeType< T 
 	{
 		this.imgPlus = imgPlus;
 		this.converter = converter;
-		cp = new ColorProcessor( 800, 600 );
+		cp = new ColorProcessor( 400, 300 );
 		img = imgPlus.getImg();
 	}
 	
