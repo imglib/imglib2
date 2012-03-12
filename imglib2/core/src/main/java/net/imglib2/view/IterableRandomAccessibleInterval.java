@@ -38,6 +38,7 @@ import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.RealPositionable;
 import net.imglib2.img.array.ArrayImg;
+import net.imglib2.img.list.ListImg;
 
 /**
  * Generates {@link Cursor Cursors} that iterate a
@@ -53,6 +54,14 @@ public class IterableRandomAccessibleInterval< T > implements IterableInterval< 
 
 	public static < T > IterableRandomAccessibleInterval< T > create( final RandomAccessibleInterval< T > interval )
 	{
+		/*
+		if ( Img.class.isInstance( interval ) )
+		{
+			Img<T> i = (Img<T>)interval;
+			return i;
+		}
+		*/
+		
 		return new IterableRandomAccessibleInterval< T >( interval );
 	}
 
@@ -75,7 +84,9 @@ public class IterableRandomAccessibleInterval< T > implements IterableInterval< 
 	@Override
 	public T firstElement()
 	{
-		return interval.randomAccess().get();
+		// we cannot simply create an randomaccessible on interval
+		// this does not ensure it will be placed at the first element
+		return cursor().next();
 	}
 
 	@Override
@@ -84,7 +95,7 @@ public class IterableRandomAccessibleInterval< T > implements IterableInterval< 
 		final int n = numDimensions();
 		if (
 				f.numDimensions() == n &&
-				( IterableRandomAccessibleInterval.class.isInstance( f ) || ArrayImg.class.isInstance( f ) ) )
+				( IterableRandomAccessibleInterval.class.isInstance( f ) || ArrayImg.class.isInstance( f ) || ListImg.class.isInstance( f ) ) )
 		{
 			final Interval fAsInterval = ( Interval )f;
 			for ( int d = 0; d < n; ++d )
