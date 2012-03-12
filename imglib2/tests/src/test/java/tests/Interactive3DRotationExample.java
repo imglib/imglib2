@@ -34,7 +34,7 @@ import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.integer.UnsignedShortType;
 import net.imglib2.view.Views;
 
-public class Interactive3DRotationTest< T extends RealType< T > & NativeType< T > > extends AbstractInteractiveTest< T >
+public class Interactive3DRotationExample< T extends RealType< T > & NativeType< T > > extends AbstractInteractiveExample< T >
 {
 	@Override
 	final protected synchronized void copyState()
@@ -214,7 +214,7 @@ public class Interactive3DRotationTest< T extends RealType< T > & NativeType< T 
 	/* the current slice index (rotated z) in isotropic x,y,z space */
 	private double currentSlice = 0;
 	
-	public Interactive3DRotationTest( final ImgPlus< T > imgPlus, final RealARGBConverter< T > converter )
+	public Interactive3DRotationExample( final ImgPlus< T > imgPlus, final RealARGBConverter< T > converter )
 	{
 		this.imgPlus = imgPlus;
 		this.converter = converter;
@@ -559,6 +559,6 @@ public class Interactive3DRotationTest< T extends RealType< T > & NativeType< T 
 			e.printStackTrace();
 			return;
 		}
-		new Interactive3DRotationTest< UnsignedShortType >( imgPlus, new RealARGBConverter< UnsignedShortType >( 0, 4095 ) ).run( "" );
+		new Interactive3DRotationExample< UnsignedShortType >( imgPlus, new RealARGBConverter< UnsignedShortType >( 0, 4095 ) ).run( "" );
 	}
 }

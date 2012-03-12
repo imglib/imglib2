@@ -24,7 +24,7 @@ import net.imglib2.type.numeric.ARGBType;
 import net.imglib2.type.numeric.integer.UnsignedShortType;
 import net.imglib2.view.Views;
 
-public class TestLanczos
+public class LanczosExample
 {	
 	final static public void main( final String[] args )
 		throws ImgIOException

@@ -29,9 +29,9 @@
       <version>${project.version}</version>
     </dependency>
     <dependency>
-      <groupId>${bio-formats.groupId}</groupId>
+      <groupId>${scifio.groupId}</groupId>
       <artifactId>loci-common</artifactId>
-      <version>${bio-formats.version}</version>
+      <version>${scifio.version}</version>
     </dependency>
   </dependencies>
 

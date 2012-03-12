@@ -24,7 +24,7 @@ import net.imglib2.interpolation.randomaccess.NearestNeighborInterpolatorFactory
 import net.imglib2.type.numeric.ARGBType;
 import net.imglib2.type.numeric.RealType;
 
-public abstract class AbstractInteractiveTest< T extends RealType< T > > implements PlugIn, KeyListener, MouseWheelListener, MouseListener, MouseMotionListener
+public abstract class AbstractInteractiveExample< T extends RealType< T > > implements PlugIn, KeyListener, MouseWheelListener, MouseListener, MouseMotionListener
 {
 	final protected class GUI
 	{
@@ -57,16 +57,16 @@ public abstract class AbstractInteractiveTest< T extends RealType< T > > impleme
 		 */
 		final void takeOverGui()
 		{
-			canvas.addKeyListener( AbstractInteractiveTest.this );
-			window.addKeyListener( AbstractInteractiveTest.this );
+			canvas.addKeyListener( AbstractInteractiveExample.this );
+			window.addKeyListener( AbstractInteractiveExample.this );
 			
-			canvas.addMouseMotionListener( AbstractInteractiveTest.this );
+			canvas.addMouseMotionListener( AbstractInteractiveExample.this );
 			
-			canvas.addMouseListener( AbstractInteractiveTest.this );
+			canvas.addMouseListener( AbstractInteractiveExample.this );
 			
-			ij.addKeyListener( AbstractInteractiveTest.this );
+			ij.addKeyListener( AbstractInteractiveExample.this );
 			
-			window.addMouseWheelListener( AbstractInteractiveTest.this );
+			window.addMouseWheelListener( AbstractInteractiveExample.this );
 		}
 		
 		/**
@@ -121,12 +121,12 @@ public abstract class AbstractInteractiveTest< T extends RealType< T > > impleme
 			for ( final MouseWheelListener l : windowMouseWheelListeners )
 				window.removeMouseWheelListener( l );
 			
-			canvas.removeKeyListener( AbstractInteractiveTest.this );
-			window.removeKeyListener( AbstractInteractiveTest.this );
-			ij.removeKeyListener( AbstractInteractiveTest.this );
-			canvas.removeMouseListener( AbstractInteractiveTest.this );
-			canvas.removeMouseMotionListener( AbstractInteractiveTest.this );
-			window.removeMouseWheelListener( AbstractInteractiveTest.this );
+			canvas.removeKeyListener( AbstractInteractiveExample.this );
+			window.removeKeyListener( AbstractInteractiveExample.this );
+			ij.removeKeyListener( AbstractInteractiveExample.this );
+			canvas.removeMouseListener( AbstractInteractiveExample.this );
+			canvas.removeMouseMotionListener( AbstractInteractiveExample.this );
+			window.removeMouseWheelListener( AbstractInteractiveExample.this );
 		}
 	}
 	
