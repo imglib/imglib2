@@ -29,7 +29,6 @@ package net.imglib2.algorithm.region.hypersphere;
 
 import java.util.Iterator;
 
-import net.imglib2.Cursor;
 import net.imglib2.IterableInterval;
 import net.imglib2.IterableRealInterval;
 import net.imglib2.Localizable;
@@ -40,13 +39,10 @@ import net.imglib2.RealPositionable;
 public class HyperSphere< T > implements IterableInterval< T >
 {
 	final int numDimensions;
-	long radius, size;
+	long radius;
 
 	final RandomAccessible< T > source;
 	final long[] center;
-	
-	// this is lazy, we hold on HyperSphereCursor to get important information
-	final HyperSphereCursor< T > cursor;
 	
 	public HyperSphere( final RandomAccessible< T > source, final Localizable center, final long radius )
 	{
@@ -54,29 +50,67 @@ public class HyperSphere< T > implements IterableInterval< T >
 		this.source = source;
 		this.center = new long[ numDimensions ];
 		center.localize( this.center );
-		this.radius = radius;
 		
-		this.cursor = new HyperSphereCursor< T >( source, this.center, radius );
+		updateRadius( radius );
+	}
+
+	public void updateCenter( final long[] center )
+	{
+		for ( int d = 0; d < numDimensions; ++d )
+			this.center[ d ] = center[ d ];
+	}
+	
+	public void updateCenter( final Localizable center )
+	{
+		for ( int d = 0; d < numDimensions; ++d )
+			this.center[ d ] = center.getLongPosition( d );
+	}
+	
+	public void updateRadius( final long radius )
+	{
+		this.radius = radius;
+	}
+	
+	/**
+	 * Compute the number of elements for iteration
+	 */
+	protected long computeSize()
+	{
+		final HyperSphereCursor< T > cursor = new HyperSphereCursor< T >( source, this.center, radius );
 		
 		// "compute number of pixels"
-		size = 0;
+		long size = 0;
 		while ( cursor.hasNext() )
 		{
 			cursor.fwd();
 			++size;
 		}
 		
-		// set it to the first pixel
-		cursor.reset();
-		cursor.fwd();
-
+		return size;
 	}
 	
-	@Override
-	public long size() { return size; }
+	public void update( final Localizable center, final long radius )
+	{
+		updateCenter( center );
+		updateRadius( radius );
+	}
+
+	public void update( final long[] center, final long radius )
+	{
+		updateCenter( center );
+		updateRadius( radius );
+	}
 
 	@Override
-	public T firstElement() { return cursor.get(); }
+	public long size() { return computeSize(); }
+
+	@Override
+	public T firstElement() 
+	{
+		HyperSphereCursor< T > cursor = new HyperSphereCursor< T >( source, center, radius );
+		cursor.fwd();
+		return cursor.get();
+	}
 
 	@Override
 	public boolean equalIterationOrder( final IterableRealInterval<?> f )  { return false; }
@@ -170,8 +204,8 @@ public class HyperSphere< T > implements IterableInterval< T >
 	public long dimension( final int d ) { return radius * 2 + 1; }
 
 	@Override
-	public Cursor<T> cursor() { return localizingCursor(); }
+	public HyperSphereCursor< T > cursor() { return localizingCursor(); }
 
 	@Override
-	public Cursor<T> localizingCursor() { return new HyperSphereCursor< T >( source, center, radius ); }
+	public HyperSphereCursor< T > localizingCursor() { return new HyperSphereCursor< T >( source, center, radius ); }
 }

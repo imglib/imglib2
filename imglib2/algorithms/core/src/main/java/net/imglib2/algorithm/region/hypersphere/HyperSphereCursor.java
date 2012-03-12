@@ -30,7 +30,6 @@ package net.imglib2.algorithm.region.hypersphere;
 import net.imglib2.Cursor;
 import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessible;
-import net.imglib2.Sampler;
 
 /**
  * Iterate over all pixels in an n-dimensional sphere.
@@ -187,8 +186,8 @@ public class HyperSphereCursor< T > implements Cursor< T >
 	public long getLongPosition( final int d )  { return randomAccess.getLongPosition( d ); }
 
 	@Override
-	public Cursor<T> copyCursor() { return new HyperSphereCursor< T >( this ); }
+	public HyperSphereCursor< T > copyCursor() { return new HyperSphereCursor< T >( this ); }
 	
 	@Override
-	public Sampler<T> copy() { return copyCursor(); }
+	public HyperSphereCursor< T > copy() { return copyCursor(); }
 }
