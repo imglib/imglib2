@@ -25,13 +25,11 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-package net.imglib2.sampler.special;
+package net.imglib2.algorithm.region.localneighborhood;
 
 import net.imglib2.Cursor;
-import net.imglib2.Localizable;
 import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessible;
-import net.imglib2.Sampler;
 import net.imglib2.iterator.LocalizingZeroMinIntervalIterator;
 import net.imglib2.util.IntervalIndexer;
 
@@ -43,20 +41,7 @@ import net.imglib2.util.IntervalIndexer;
  * @param <T>
  */
 public class LocalNeighborhoodCursor< T > implements Cursor< T >
-{
-	/**
-	 * A static constructor that potentially creates a better {@link LocalNeighborhoodCursor} depending on the type of the {@link RandomAccessible} and dimensionality.
-	 * 
-	 * @param source - the data on which to iterate
-	 * @param center - the center location of the 3x3x3...x3 environment that will be skipped
-	 * 
-	 * @return a new {@link LocalNeighborhoodCursor}
-	 */
-	public static < T > LocalNeighborhoodCursor< T > create( final RandomAccessible< T > source, final Localizable center )
-	{
-		return new LocalNeighborhoodCursor<T>( source, center );
-	}
-	
+{	
 	final RandomAccessible< T > source;
 	final protected RandomAccess< T > randomAccess;
 	
@@ -73,7 +58,7 @@ public class LocalNeighborhoodCursor< T > implements Cursor< T >
 	 * @param source - the data as {@link RandomAccessible}
 	 * @param center - the center location of the 3x3x3...x3 environment that will be skipped
 	 */
-	public LocalNeighborhoodCursor( final RandomAccessible< T > source, final Localizable center )
+	public LocalNeighborhoodCursor( final RandomAccessible< T > source, final long[] center )
 	{
 		this.source = source;
 		this.randomAccess = source.randomAccess();
@@ -85,19 +70,17 @@ public class LocalNeighborhoodCursor< T > implements Cursor< T >
 		final int[] dim = new int[ numDimensions ];
 		final int[] dim2 = new int[ numDimensions ];
 
-		center.localize( positionMinus1 );
-		
 		for ( int d = 0; d < numDimensions; ++d )
 		{
 			dim[ d ] = 3;
 			dim2[ d ] = 1;
-			--positionMinus1[ d ];
+			positionMinus1[ d ] = center[ d ] - 1;
 		}
 		
 		this.driver = new LocalizingZeroMinIntervalIterator( dim );
 		this.centralPositionIndex = IntervalIndexer.positionToIndex( dim2, dim );
 	}
-
+	
 	public LocalNeighborhoodCursor( final LocalNeighborhoodCursor< T > cursor )
 	{
 		this.source = cursor.source;
@@ -118,19 +101,12 @@ public class LocalNeighborhoodCursor< T > implements Cursor< T >
 		this.centralPositionIndex = cursor.centralPositionIndex;
 	}
 	
-	/**
-	 * Updates its center position to the current location of the Localizable
-	 * 
-	 * @param center - the new center location
-	 */
-	public void update( final Localizable center )
+	public void updateCenter( final long[] center )
 	{
-		center.localize( positionMinus1 );
-
 		for ( int d = 0; d < numDimensions; ++d )
-			--positionMinus1[ d ];
-
-		this.driver.reset();		
+			positionMinus1[ d ] = center[ d ] - 1;
+		
+		reset();
 	}
 
 	@Override
@@ -199,8 +175,8 @@ public class LocalNeighborhoodCursor< T > implements Cursor< T >
 	public long getLongPosition( final int d )  { return randomAccess.getLongPosition( d ); }
 	
 	@Override
-	public Cursor<T> copyCursor() { return new LocalNeighborhoodCursor< T >( this ); }
+	public LocalNeighborhoodCursor<T> copyCursor() { return new LocalNeighborhoodCursor< T >( this ); }
 	
 	@Override
-	public Sampler<T> copy() { return copyCursor(); }
+	public LocalNeighborhoodCursor<T> copy() { return copyCursor(); }
 }
