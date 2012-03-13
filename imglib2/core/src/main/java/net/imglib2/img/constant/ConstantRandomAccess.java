@@ -29,7 +29,6 @@ package net.imglib2.img.constant;
 
 import net.imglib2.AbstractRandomAccess;
 import net.imglib2.RandomAccess;
-import net.imglib2.type.Type;
 
 /**
  * A simple {@link RandomAccess} that always returns the same value at each position, but is positioned correctly.
@@ -38,15 +37,15 @@ import net.imglib2.type.Type;
  *
  * @param <T>
  */
-public class ConstantRandomAccess< T extends Type< T > > extends AbstractRandomAccess< T >
+public class ConstantRandomAccess< T > extends AbstractRandomAccess< T >
 {
 	final T type;
 	
-	public ConstantRandomAccess( final ConstantImg< T > container )
+	public ConstantRandomAccess( final T type, final int numDimensions )
 	{
-		super( container.numDimensions() );
+		super( numDimensions );
 		
-		this.type = container.type;
+		this.type = type;
 	}
 	
 	public ConstantRandomAccess( final ConstantRandomAccess< T > cursor )

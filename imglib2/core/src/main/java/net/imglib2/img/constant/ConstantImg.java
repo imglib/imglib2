@@ -73,21 +73,18 @@ public class ConstantImg < T extends Type< T > > extends AbstractImg< T >
 	public Img< T > copy() { return new ConstantImg< T >( dim, type ); }
 
 	@Override
-	public RandomAccess< T > randomAccess() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	public RandomAccess< T > randomAccess() { return new ConstantRandomAccess< T >( type, this.numDimensions() ); }
 
 	@Override
-	public Cursor< T > cursor() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	public Cursor< T > cursor() { return new ConstantCursor< T >( type, this.numDimensions(), dim, this.numPixels ); }
 
 	@Override
-	public Cursor< T > localizingCursor() {
-		// TODO Auto-generated method stub
-		return null;
+	public Cursor< T > localizingCursor() 
+	{
+		final long[] max = new long[ this.numDimensions() ];		
+		this.max( max );
+		
+		return new ConstantLocalizingCursor< T >( type, this.numDimensions(), max, this.numPixels );
 	}
 
 	@Override

@@ -44,21 +44,16 @@ public class ConstantLocalizingCursor < T extends Type< T > > extends AbstractLo
 	
 	final long maxNumPixels;
 	final T type;
-	final ConstantImg< T > container;
 
 	final private long[] max;
 
-	public ConstantLocalizingCursor( final ConstantImg< T > container )
+	public ConstantLocalizingCursor( final T type, final int numDimensions, final long[] max, final long numPixels )
 	{
-		super( container.numDimensions() );
+		super( numDimensions );
 		
-		this.maxNumPixels = container.size() - 1;
-		this.type = container.type;
-		this.container = container;
-		this.max = new long[ n ];
-		
-		for ( int d = 0; d < n; ++d )
-			max[ d ] = container.max( d );
+		this.maxNumPixels = numPixels - 1;
+		this.type = type;
+		this.max = max;
 		
 		reset();
 	}
@@ -69,14 +64,10 @@ public class ConstantLocalizingCursor < T extends Type< T > > extends AbstractLo
 		
 		this.maxNumPixels = cursor.maxNumPixels;
 		this.type = cursor.type;
-		this.container = cursor.container;		
-		this.max = new long[ n ];
+		this.max = cursor.max;
 		
 		for ( int d = 0; d < n; ++d )
-		{
-			max[ d ] = cursor.max[ d ];
 			position[ d ] = cursor.position[ d ];
-		}
 	
 		i = cursor.i;		
 	}

@@ -28,7 +28,6 @@
 package net.imglib2.img.constant;
 
 import net.imglib2.AbstractCursor;
-import net.imglib2.type.Type;
 import net.imglib2.util.IntervalIndexer;
 
 /**
@@ -39,21 +38,21 @@ import net.imglib2.util.IntervalIndexer;
  *
  * @param <T>
  */
-public class ConstantCursor < T extends Type< T > > extends AbstractCursor< T >
+public class ConstantCursor < T > extends AbstractCursor< T >
 {
 	long i;
+	final long[] dimensions;
 	
 	final long maxNumPixels;
 	final T type;
-	final ConstantImg< T > container;
-
-	public ConstantCursor( final ConstantImg< T > container ) 
+	
+	public ConstantCursor( final T type, final int numDimensions, final long[] dimensions, final long numPixels ) 
 	{
-		super( container.numDimensions() );
+		super( numDimensions );
 
-		this.maxNumPixels = container.size() - 1;
-		this.type = container.type;
-		this.container = container;
+		this.maxNumPixels = numPixels - 1;
+		this.type = type;
+		this.dimensions = dimensions;
 	}
 	
 	public ConstantCursor( final ConstantCursor< T > cursor )
@@ -62,8 +61,8 @@ public class ConstantCursor < T extends Type< T > > extends AbstractCursor< T >
 		
 		this.maxNumPixels = cursor.maxNumPixels;
 		this.type = cursor.type;
-		this.container = cursor.container;
 		this.i = cursor.i;
+		this.dimensions = cursor.dimensions;
 	}
 	
 	@Override
@@ -79,10 +78,10 @@ public class ConstantCursor < T extends Type< T > > extends AbstractCursor< T >
 	public void fwd() { ++i; }
 
 	@Override
-	public void localize( final long[] position ) { IntervalIndexer.indexToPosition( i, container.dim, position ); }
+	public void localize( final long[] position ) { IntervalIndexer.indexToPosition( i, dimensions, position ); }
 
 	@Override
-	public long getLongPosition( final int d ) { return IntervalIndexer.indexToPosition( i, container.dim, d ); }
+	public long getLongPosition( final int d ) { return IntervalIndexer.indexToPosition( i, dimensions, d ); }
 
 	@Override
 	public ConstantCursor<T> copy()  { return new ConstantCursor< T >( this ); }
