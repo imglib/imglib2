@@ -1,10 +1,10 @@
 /**
  * Copyright (c) 2009--2012, ImgLib2 developers
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * Redistributions of source code must retain the above copyright notice, this
  * list of conditions and the following disclaimer.  Redistributions in binary
  * form must reproduce the above copyright notice, this list of conditions and
@@ -12,7 +12,7 @@
  * provided with the distribution.  Neither the name of the imglib project nor
  * the names of its contributors may be used to endorse or promote products
  * derived from this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -32,14 +32,14 @@ import net.imglib2.util.Util;
 /**
  * Abstract base class for localizable samplers.
  * The current position is stored in a long[] field and used to
- * implement the {@link Localizable} interface. 
- *  
+ * implement the {@link Localizable} interface.
+ *
  * @param <T>
  *
  * @author Stephan Preibisch
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-public abstract class AbstractLocalizableSampler< T > extends AbstractSampler< T > implements Localizable
+public abstract class AbstractLocalizableSampler< T > extends AbstractEuclideanSpace implements Localizable, Sampler< T >
 {
 	/**
 	 * The {@link Localizable} interface is implemented using the position
@@ -47,7 +47,7 @@ public abstract class AbstractLocalizableSampler< T > extends AbstractSampler< T
 	 * the {@link Sampler}.
 	 */
 	final protected long[] position;
-	
+
 	/**
 	 * @param n number of dimensions in the {@link net.imglib2.img.Img}.
 	 */
@@ -57,7 +57,7 @@ public abstract class AbstractLocalizableSampler< T > extends AbstractSampler< T
 
 		position = new long[ n ];
 	}
-	
+
 	@Override
 	public void localize( final float[] pos )
 	{
@@ -78,29 +78,29 @@ public abstract class AbstractLocalizableSampler< T > extends AbstractSampler< T
 		for ( int d = 0; d < n; d++ )
 			pos[ d ] = ( int )position[ d ];
 	}
-	
+
 	@Override
 	public void localize( final long[] pos )
 	{
 		for ( int d = 0; d < n; d++ )
 			pos[ d ] = position[ d ];
 	}
-	
+
 	@Override
 	public float getFloatPosition( final int dim ){ return position[ dim ]; }
-	
+
 	@Override
 	public double getDoublePosition( final int dim ){ return position[ dim ]; }
-	
+
 	@Override
 	public int getIntPosition( final int dim ){ return ( int )position[ dim ]; }
 
 	@Override
 	public long getLongPosition( final int dim ){ return position[ dim ]; }
-	
+
 	@Override
 	public String toString(){ return Util.printCoordinates( position ) + " = " + get(); }
-	
+
 	@Override
 	abstract public AbstractLocalizableSampler< T > copy();
 }

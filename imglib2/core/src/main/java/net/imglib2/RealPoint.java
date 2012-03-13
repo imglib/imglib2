@@ -1,10 +1,10 @@
 /**
  * Copyright (c) 2009--2012, ImgLib2 developers
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * Redistributions of source code must retain the above copyright notice, this
  * list of conditions and the following disclaimer.  Redistributions in binary
  * form must reproduce the above copyright notice, this list of conditions and
@@ -12,7 +12,7 @@
  * provided with the distribution.  Neither the name of the imglib project nor
  * the names of its contributors may be used to endorse or promote products
  * derived from this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -32,222 +32,236 @@ package net.imglib2;
  *
  * @author Lee Kamentsky
  * @author Stephan Saalfeld
+ * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  */
-public class RealPoint implements RealLocalizable, RealPositionable
+public class RealPoint extends AbstractRealLocalizable implements RealPositionable
 {
-	final protected double[] position;
-	
 	/**
 	 * Protected constructor that re-uses the passed position array.
-	 * 
+	 *
 	 * @param position
-	 * @param x unused parameter that changes the method signature
+	 * @param x
+	 *            unused parameter that changes the method signature
 	 */
 	protected RealPoint( final double[] position, final Object x )
 	{
-		this.position = position;
+		super( position );
 	}
-	
+
 	/**
 	 * Create a point in <i>nDimensional</i> space initialized to 0,0,...
-	 * @param nDimensions - # of dimensions of the space
+	 *
+	 * @param n
+	 *            number of dimensions of the space
 	 */
-	public RealPoint(final int nDimensions) {
-		position = new double[nDimensions];
+	public RealPoint( final int n )
+	{
+		super( n );
 	}
-	
+
 	/**
-	 * Create a point at a definite location in a space of the
-	 * dimensionality of the position.
-	 * 
-	 * @param position - position of the point
+	 * Create a point at a definite location in a space of the dimensionality of
+	 * the position.
+	 *
+	 * @param position
+	 *            - position of the point
 	 */
-	public RealPoint(final double... position) {
-		this.position = position.clone();
+	public RealPoint( final double... position )
+	{
+		super( position.clone() );
 	}
-	
+
 	/**
 	 * Create a point at a definite position
-	 * @param position the initial position. The length of the array determines the dimensionality of the space.
+	 *
+	 * @param position
+	 *            the initial position. The length of the array determines the
+	 *            dimensionality of the space.
 	 */
-	public RealPoint(final float... position) {
-		this.position = new double[position.length];
-		for (int i=0; i < position.length; ++i)
-			this.position[i] = position[i];
+	public RealPoint( final float... position )
+	{
+		super( position.length );
+		setPosition( position );
 	}
-	
+
 	/**
-	 * Create a point using the position of a localizable
-	 * @param localizable get position from here
+	 * Create a point using the position of a {@link Localizable}
+	 *
+	 * @param localizable
+	 *            get position from here
 	 */
-	public RealPoint(final RealLocalizable localizable) {
-		position = new double[localizable.numDimensions()];
-		localizable.localize(position);
-	}
-	
-	@Override
-	public void fwd(final int d) {
-		position[d] += 1;
+	public RealPoint( final RealLocalizable localizable )
+	{
+		super( localizable.numDimensions() );
+		localizable.localize( position );
 	}
 
 	@Override
-	public void bck(final int d) {
-		position[d] -= 1;
+	public void fwd( final int d )
+	{
+		++position[ d ];
 	}
 
 	@Override
-	public void move(final int distance, final int d) {
-		position[d] += distance;
+	public void bck( final int d )
+	{
+		--position[ d ];
 	}
 
 	@Override
-	public void move(final long distance, final int d) {
-		position[d] += distance;
+	public void move( final int distance, final int d )
+	{
+		position[ d ] += distance;
 	}
 
 	@Override
-	public void move(final Localizable localizable) {
-		for (int i=0; i < position.length; ++i)
-			position[i] += localizable.getDoublePosition(i);
+	public void move( final long distance, final int d )
+	{
+		position[ d ] += distance;
 	}
 
 	@Override
-	public void move(final int[] pos) {
-		for (int i=0; i < position.length; ++i) {
-			position[i] += pos[i];
-		}
+	public void move( final Localizable localizable )
+	{
+		for ( int d = 0; d < n; d++ )
+			this.position[ d ] += localizable.getDoublePosition( d );
 	}
 
 	@Override
-	public void move(final long[] pos) {
-		for (int i=0; i < position.length; ++i)
-			position[i] += pos[i];
+	public void move( final int[] distance )
+	{
+		for ( int d = 0; d < n; d++ )
+			this.position[ d ] += distance[ d ];
 	}
 
 	@Override
-	public void setPosition(final Localizable localizable) {
-		for (int i=0; i < position.length; ++i)
-			position[i] = localizable.getDoublePosition(i);
+	public void move( final long[] distance )
+	{
+		for ( int d = 0; d < n; d++ )
+			this.position[ d ] += distance[ d ];
 	}
 
 	@Override
-	public void setPosition(final int[] pos) {
-		for (int i=0; i < position.length; ++i)
-			position[i] = pos[i];
+	public void setPosition( final Localizable localizable )
+	{
+		for ( int d = 0; d < n; d++ )
+			this.position[ d ] = localizable.getDoublePosition( d );
 	}
 
 	@Override
-	public void setPosition(final long[] pos) {
-		for (int i=0; i < position.length; ++i)
-			position[i] = pos[i];
+	public void setPosition( final int[] position )
+	{
+		for ( int d = 0; d < n; d++ )
+			this.position[ d ] = position[ d ];
 	}
 
 	@Override
-	public void setPosition(final int pos, final int d) {
-		position[d] = pos;
+	public void setPosition( final long[] position )
+	{
+		for ( int d = 0; d < n; d++ )
+			this.position[ d ] = position[ d ];
 	}
 
 	@Override
-	public void setPosition(final long pos, final int d) {
-		position[d] = pos;
+	public void setPosition( final int position, final int d )
+	{
+		this.position[ d ] = position;
 	}
 
 	@Override
-	public int numDimensions() {
-		return position.length;
+	public void setPosition( final long position, final int d )
+	{
+		this.position[ d ] = position;
 	}
 
 	@Override
-	public void move(final float distance, final int d) {
-		position[d] += distance;
+	public void move( final float distance, final int d )
+	{
+		this.position[ d ] += distance;
 	}
 
 	@Override
-	public void move(final double distance, final int d) {
-		position[d] += distance;
+	public void move( final double distance, final int d )
+	{
+		this.position[ d ] += distance;
 	}
 
 	@Override
-	public void move(final RealLocalizable localizable) {
-		for (int i=0; i < position.length; ++i)
-			position[i] += localizable.getDoublePosition(i);
+	public void move( final RealLocalizable localizable )
+	{
+		for ( int i = 0; i < n; i++ )
+			this.position[ i ] += localizable.getDoublePosition( i );
 	}
 
 	@Override
-	public void move(final float[] pos) {
-		for (int i=0; i < position.length; ++i)
-			position[i] += pos[i];
+	public void move( final float[] distance )
+	{
+		for ( int i = 0; i < n; i++ )
+			this.position[ i ] += distance[ i ];
 	}
 
 	@Override
-	public void move(final double[] pos) {
-		for (int i=0; i < position.length; ++i)
-			position[i] += pos[i];
+	public void move( final double[] distance )
+	{
+		for ( int i = 0; i < n; i++ )
+			this.position[ i ] += distance[ i ];
 	}
 
 	@Override
-	public void setPosition(final RealLocalizable localizable) {
-		for (int i=0; i < position.length; ++i)
-			position[i] = localizable.getDoublePosition(i);
+	public void setPosition( final RealLocalizable localizable )
+	{
+		for ( int d = 0; d < n; d++ )
+			this.position[ d ] = localizable.getDoublePosition( d );
 	}
 
 	@Override
-	public void setPosition(final float[] pos) {
-		for (int i=0; i < position.length; ++i)
-			position[i] = pos[i];
+	public void setPosition( final float[] position )
+	{
+		for ( int i = 0; i < n; i++ )
+			this.position[ i ] = position[ i ];
 	}
 
 	@Override
-	public void setPosition(final double[] pos) {
-		for (int i=0; i < position.length; ++i)
-			position[i] = pos[i];
+	public void setPosition( final double[] position )
+	{
+		for ( int i = 0; i < n; i++ )
+			this.position[ i ] = position[ i ];
 	}
 
 	@Override
-	public void setPosition(final float pos, final int d) {
-		position[d] = pos;
+	public void setPosition( final float position, final int d )
+	{
+		this.position[ d ] = position;
 	}
 
 	@Override
-	public void setPosition(final double pos, final int d) {
-		position[d] = pos;
+	public void setPosition( final double position, final int d )
+	{
+		this.position[ d ] = position;
 	}
 
 	@Override
-	public void localize(final float[] pos) {
-		for (int i=0; i < position.length; ++i)
-			pos[i] = (float)(position[i]);
-	}
-
-	@Override
-	public void localize(final double[] pos) {
-		for (int i=0; i < position.length; ++i)
-			pos[i] = position[i];
-	}
-
-	@Override
-	public float getFloatPosition(final int d) {
-		return (float)(position[d]);
-	}
-
-	@Override
-	public double getDoublePosition(final int d) {
-		return position[d];
-	}
-	
-	@Override
-	public String toString() {
+	public String toString()
+	{
 		final StringBuilder sb = new StringBuilder();
 		char c = '(';
-		for (int i=0; i<numDimensions(); i++) {
-			sb.append(c);
-			sb.append(position[i]);
+		for ( int i = 0; i < numDimensions(); i++ )
+		{
+			sb.append( c );
+			sb.append( position[ i ] );
 			c = ',';
 		}
-		sb.append(")");
+		sb.append( ")" );
 		return sb.toString();
 	}
-	
+
+	/**
+	 * Create a point that stores its coordinates in the provided position
+	 * array.
+	 *
+	 * @param position
+	 *            array to use for storing the position.
+	 */
 	static public RealPoint wrap( final double[] position )
 	{
 		return new RealPoint( position, null );

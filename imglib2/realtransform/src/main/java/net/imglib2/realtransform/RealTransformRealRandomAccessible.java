@@ -1,10 +1,10 @@
 /**
  * Copyright (c) 2009--2012, ImgLib2 developers
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * Redistributions of source code must retain the above copyright notice, this
  * list of conditions and the following disclaimer.  Redistributions in binary
  * form must reproduce the above copyright notice, this list of conditions and
@@ -12,7 +12,7 @@
  * provided with the distribution.  Neither the name of the imglib project nor
  * the names of its contributors may be used to endorse or promote products
  * derived from this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -27,14 +27,13 @@
  */
 package net.imglib2.realtransform;
 
-import net.imglib2.AbstractRealRandomAccess;
 import net.imglib2.RealInterval;
 import net.imglib2.RealPoint;
 import net.imglib2.RealRandomAccess;
 import net.imglib2.RealRandomAccessible;
 
 /**
- * 
+ *
  *
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
@@ -42,7 +41,7 @@ public class RealTransformRealRandomAccessible< T, R extends RealTransform > imp
 {
 	final protected RealRandomAccessible< T > target;
 	final protected R transform;
-	
+
 	/**
 	 * {@link RealRandomAccess} that generates its samples from a target
 	 * {@link RealRandomAccessible} at coordinates transformed by a
@@ -50,18 +49,18 @@ public class RealTransformRealRandomAccessible< T, R extends RealTransform > imp
 	 *
 	 * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
 	 */
-	public class RealTransformRealRandomAccess extends AbstractRealRandomAccess< T >
+	public class RealTransformRealRandomAccess extends RealPoint implements RealRandomAccess< T >
 	{
-		final protected RealPoint sourcePosition; 
+		final protected RealPoint sourcePosition;
 		final protected RealRandomAccess< T > targetAccess;
-		
+
 		protected RealTransformRealRandomAccess()
 		{
 			super( transform.numSourceDimensions() );
 			sourcePosition = RealPoint.wrap( position );
 			this.targetAccess = target.realRandomAccess();
 		}
-		
+
 		final protected void apply()
 		{
 			transform.apply( sourcePosition, targetAccess );
@@ -87,15 +86,15 @@ public class RealTransformRealRandomAccessible< T, R extends RealTransform > imp
 		}
 
 	}
-	
+
 	public RealTransformRealRandomAccessible( final RealRandomAccessible< T > target, final R transform )
 	{
 		assert target.numDimensions() == transform.numTargetDimensions();
-		
+
 		this.target = target;
 		this.transform = transform;
 	}
-	
+
 	@Override
 	public int numDimensions()
 	{

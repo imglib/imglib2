@@ -1,10 +1,10 @@
 /**
  * Copyright (c) 2009--2011, Stephan Preibisch & Stephan Saalfeld
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * Redistributions of source code must retain the above copyright notice, this
  * list of conditions and the following disclaimer.  Redistributions in binary
  * form must reproduce the above copyright notice, this list of conditions and
@@ -12,7 +12,7 @@
  * provided with the distribution.  Neither the name of the imglib project nor
  * the names of its contributors may be used to endorse or promote products
  * derived from this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -27,18 +27,19 @@
  */
 package net.imglib2.outofbounds;
 
-import net.imglib2.AbstractSampler;
+import net.imglib2.AbstractEuclideanSpace;
 import net.imglib2.Bounded;
 import net.imglib2.Localizable;
 import net.imglib2.RealLocalizable;
 import net.imglib2.RealRandomAccess;
+import net.imglib2.RealRandomAccessible;
 
 /**
  * @author Tobias Pietzsch
  *
  * @param <T>
  */
-public final class RealOutOfBoundsRealRandomAccess< T > extends AbstractSampler< T > implements RealRandomAccess< T >, Bounded
+public final class RealOutOfBoundsRealRandomAccess< T > extends AbstractEuclideanSpace implements RealRandomAccess< T >, Bounded
 {
 	/**
 	 *  performs the actual moves and generates/queries a Type
@@ -54,7 +55,7 @@ public final class RealOutOfBoundsRealRandomAccess< T > extends AbstractSampler<
 		super( realOutOfBoundsRealRandomAccess.n );
 		this.outOfBounds = realOutOfBoundsRealRandomAccess.outOfBounds.copy();
 	}
-	
+
 	/**
 	 * @param n number of dimensions in the {@link RealRandomAccessible}.
 	 * @param outOfBounds
@@ -65,51 +66,51 @@ public final class RealOutOfBoundsRealRandomAccess< T > extends AbstractSampler<
 		this.outOfBounds = outOfBounds;
 	}
 
-	
+
 	/* Bounded */
-	
+
 	@Override
 	public boolean isOutOfBounds()
 	{
 		return outOfBounds.isOutOfBounds();
 	}
 
-	
+
 	/* Sampler */
-	
+
 	@Override
 	public T get()
 	{
 		return outOfBounds.get();
 	}
-	
+
 	@Override
 	public RealOutOfBoundsRealRandomAccess< T > copy()
 	{
 		return new RealOutOfBoundsRealRandomAccess< T >( this );
 	}
 
-	
+
 	/* RealRandomAccess */
-	
+
 	@Override
 	public RealOutOfBoundsRealRandomAccess< T > copyRealRandomAccess()
 	{
 		return copy();
 	}
 
-	
+
 	/* RealLocalizable */
 
 	@Override
 	final public void localize( final float[] position ){ outOfBounds.localize( position ); }
-	
+
 	@Override
 	final public void localize( final double[] position ){ outOfBounds.localize( position ); }
-	
+
 	@Override
 	final public double getDoublePosition( final int dim ){ return outOfBounds.getDoublePosition( dim ); }
-	
+
 	@Override
 	final public float  getFloatPosition( final int dim ){ return outOfBounds.getFloatPosition( dim ); }
 
@@ -117,71 +118,71 @@ public final class RealOutOfBoundsRealRandomAccess< T > extends AbstractSampler<
 	/* RealPositionable */
 
 	@Override
-	public void move( float distance, int d ) { outOfBounds.move( distance, d ); }
+	public void move( final float distance, final int d ) { outOfBounds.move( distance, d ); }
 
 	@Override
-	public void move( double distance, int d ) { outOfBounds.move( distance, d ); }
+	public void move( final double distance, final int d ) { outOfBounds.move( distance, d ); }
 
 	@Override
-	public void move( RealLocalizable localizable ) { outOfBounds.move( localizable ); }
+	public void move( final RealLocalizable localizable ) { outOfBounds.move( localizable ); }
 
 	@Override
-	public void move( float[] distance ) { outOfBounds.move( distance ); }
+	public void move( final float[] distance ) { outOfBounds.move( distance ); }
 
 	@Override
-	public void move( double[] distance ) { outOfBounds.move( distance ); }
+	public void move( final double[] distance ) { outOfBounds.move( distance ); }
 
 	@Override
-	public void setPosition( RealLocalizable localizable ) { outOfBounds.setPosition( localizable ); }
+	public void setPosition( final RealLocalizable localizable ) { outOfBounds.setPosition( localizable ); }
 
 	@Override
-	public void setPosition( float[] position ) { outOfBounds.setPosition( position ); }
+	public void setPosition( final float[] position ) { outOfBounds.setPosition( position ); }
 
 	@Override
-	public void setPosition( double[] position ) { outOfBounds.setPosition( position ); }
+	public void setPosition( final double[] position ) { outOfBounds.setPosition( position ); }
 
 	@Override
-	public void setPosition( float position, int d ) { outOfBounds.setPosition( position, d ); }
+	public void setPosition( final float position, final int d ) { outOfBounds.setPosition( position, d ); }
 
 	@Override
-	public void setPosition( double position, int d ) { outOfBounds.setPosition( position, d ); }
+	public void setPosition( final double position, final int d ) { outOfBounds.setPosition( position, d ); }
 
-	
+
 	/* Positionable */
 
 	@Override
-	public void fwd( int d ) { outOfBounds.fwd( d ); }
+	public void fwd( final int d ) { outOfBounds.fwd( d ); }
 
 	@Override
-	public void bck( int d ) { outOfBounds.bck( d ); }
+	public void bck( final int d ) { outOfBounds.bck( d ); }
 
 	@Override
-	public void move( int distance, int d ) { outOfBounds.move( distance, d ); }
+	public void move( final int distance, final int d ) { outOfBounds.move( distance, d ); }
 
 	@Override
-	public void move( long distance, int d ) { outOfBounds.move( distance, d ); }
+	public void move( final long distance, final int d ) { outOfBounds.move( distance, d ); }
 
 	@Override
-	public void move( Localizable localizable ) { outOfBounds.move( localizable ); }
+	public void move( final Localizable localizable ) { outOfBounds.move( localizable ); }
 
 	@Override
-	public void move( int[] distance ) { outOfBounds.move( distance ); }
+	public void move( final int[] distance ) { outOfBounds.move( distance ); }
 
 	@Override
-	public void move( long[] distance ) { outOfBounds.move( distance ); }
+	public void move( final long[] distance ) { outOfBounds.move( distance ); }
 
 	@Override
-	public void setPosition( Localizable localizable ) { outOfBounds.setPosition( localizable ); }
+	public void setPosition( final Localizable localizable ) { outOfBounds.setPosition( localizable ); }
 
 	@Override
-	public void setPosition( int[] position ) { outOfBounds.setPosition( position ); }
+	public void setPosition( final int[] position ) { outOfBounds.setPosition( position ); }
 
 	@Override
-	public void setPosition( long[] position ) { outOfBounds.setPosition( position ); }
+	public void setPosition( final long[] position ) { outOfBounds.setPosition( position ); }
 
 	@Override
-	public void setPosition( int position, int d ) { outOfBounds.setPosition( position, d ); }
+	public void setPosition( final int position, final int d ) { outOfBounds.setPosition( position, d ); }
 
 	@Override
-	public void setPosition( long position, int d ) { outOfBounds.setPosition( position, d ); }
+	public void setPosition( final long position, final int d ) { outOfBounds.setPosition( position, d ); }
 }

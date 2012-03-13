@@ -1,10 +1,10 @@
 /**
- * Copyright (c) 2009--2010, Stephan Preibisch & Stephan Saalfeld
+ * Copyright (c) 2009--2012, ImgLib2 developers
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * Redistributions of source code must retain the above copyright notice, this
  * list of conditions and the following disclaimer.  Redistributions in binary
  * form must reproduce the above copyright notice, this list of conditions and
@@ -12,7 +12,7 @@
  * provided with the distribution.  Neither the name of the Fiji project nor
  * the names of its contributors may be used to endorse or promote products
  * derived from this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -24,29 +24,31 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
+ *
+ * @author Tobias Pietzsch
  */
 package net.imglib2;
 
 /**
- * Superclass of the abstract accessor implementations.
- * Does nothing but store the number of dimensions of the
- * underlying function.
- * 
- * @author Tobias Pietzsch, Stephan Preibisch and Stephan Saalfeld
+ * Superclass of abstract EuclideanSpace implementations (accessors, containers,
+ * etc). Does nothing but store the number of dimensions of the underlying
+ * function.
  *
- * @param < T > the type to be returned by {@link #get()}
+ * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>, Stephan Preibisch and
+ *         Stephan Saalfeld
  */
-public abstract class AbstractSampler< T > implements Sampler< T >, EuclideanSpace
+public abstract class AbstractEuclideanSpace implements EuclideanSpace
 {
 	/**
-	 * the number of dimensions in the {@link net.imglib2.img.Img}.
+	 * the number of dimensions.
 	 */
 	final protected int n;
-	
+
 	/**
-	 * @param n number of dimensions in the {@link net.imglib2.img.Img}.
+	 * @param n
+	 *            number of dimensions.
 	 */
-	public AbstractSampler( final int n )
+	public AbstractEuclideanSpace( final int n )
 	{
 		this.n = n;
 	}
@@ -56,7 +58,4 @@ public abstract class AbstractSampler< T > implements Sampler< T >, EuclideanSpa
 	{
 		return n;
 	}
-	
-	@Override
-	abstract public AbstractSampler< T > copy();
 }
