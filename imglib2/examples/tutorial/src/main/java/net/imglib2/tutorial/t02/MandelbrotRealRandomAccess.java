@@ -29,10 +29,11 @@
  */
 package net.imglib2.tutorial.t02;
 
-import net.imglib2.AbstractRealRandomAccess;
+import net.imglib2.RealPoint;
+import net.imglib2.RealRandomAccess;
 import net.imglib2.type.numeric.integer.UnsignedByteType;
 
-class MandelbrotRealRandomAccess extends AbstractRealRandomAccess< UnsignedByteType >
+class MandelbrotRealRandomAccess extends RealPoint implements RealRandomAccess< UnsignedByteType >
 {
 	final UnsignedByteType t;
 
