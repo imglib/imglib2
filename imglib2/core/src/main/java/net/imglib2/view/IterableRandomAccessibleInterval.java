@@ -54,14 +54,6 @@ public class IterableRandomAccessibleInterval< T > implements IterableInterval< 
 
 	public static < T > IterableRandomAccessibleInterval< T > create( final RandomAccessibleInterval< T > interval )
 	{
-		/*
-		if ( Img.class.isInstance( interval ) )
-		{
-			Img<T> i = (Img<T>)interval;
-			return i;
-		}
-		*/
-		
 		return new IterableRandomAccessibleInterval< T >( interval );
 	}
 
