@@ -10,8 +10,11 @@ import net.imglib2.outofbounds.OutOfBoundsConstantValueFactory;
 import net.imglib2.outofbounds.OutOfBoundsFactory;
 import net.imglib2.outofbounds.OutOfBoundsMirrorFactory;
 import net.imglib2.outofbounds.OutOfBoundsPeriodicFactory;
+import net.imglib2.outofbounds.OutOfBoundsRandomValueFactory;
 import net.imglib2.transform.integer.MixedTransform;
 import net.imglib2.type.Type;
+import net.imglib2.type.numeric.RealType;
+import net.imglib2.util.Util;
 
 public class Views
 {
@@ -72,6 +75,24 @@ public class Views
 	public static < T extends Type< T >, F extends RandomAccessibleInterval< T > > ExtendedRandomAccessibleInterval< T, F > extendValue( final F randomAccessible, final T value )
 	{
 		return new ExtendedRandomAccessibleInterval< T, F >( randomAccessible, new OutOfBoundsConstantValueFactory< T, F >( value ) );
+	}
+
+	/**
+	 * Extend a RandomAccessibleInterval with a random-value out-of-bounds
+	 * strategy. {@see OutOfBoundsRandomValue}.
+	 * 
+	 * @param randomAccessible
+	 *            the interval to extend.
+	 * @param min
+	 *            the minimal random value
+	 * @param max
+	 *            the maximal random value
+	 * @return (unbounded) RandomAccessible which extends the input interval to
+	 *         infinity.
+	 */
+	public static < T extends RealType< T >, F extends RandomAccessibleInterval< T > > ExtendedRandomAccessibleInterval< T, F > extendRandom( final F randomAccessible, final double min, final double max )
+	{
+		return new ExtendedRandomAccessibleInterval< T, F >( randomAccessible, new OutOfBoundsRandomValueFactory< T, F >( Util.getTypeFromRandomAccess( randomAccessible ), min, max ) );
 	}
 
 	/**
