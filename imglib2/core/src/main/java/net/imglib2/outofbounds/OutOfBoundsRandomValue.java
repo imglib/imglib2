@@ -27,55 +27,73 @@
  */
 package net.imglib2.outofbounds;
 
+import java.util.Random;
+
 import net.imglib2.Interval;
 import net.imglib2.RandomAccessible;
-import net.imglib2.type.Type;
+import net.imglib2.type.numeric.RealType;
 
 /**
+ * Return a random value in a certain range when outside of the Interval
  * 
  * @param <T>
  *
- * @author Stephan Preibisch and Stephan Saalfeld
+ * @author Stephan Preibisch
  */
-public class OutOfBoundsConstantValue< T extends Type< T > > extends AbstractOutOfBoundsValue< T >
+public class OutOfBoundsRandomValue< T extends RealType< T > > extends AbstractOutOfBoundsValue< T >
 {
-	final protected T value;
+	final T value;
 	
-	protected OutOfBoundsConstantValue( final OutOfBoundsConstantValue< T > outOfBounds )
+	final double min, max, range;
+	final Random rnd;
+
+	protected OutOfBoundsRandomValue( final OutOfBoundsRandomValue< T > outOfBounds )
 	{
 		super( outOfBounds );
+		
 		this.value = outOfBounds.value.copy();
+		this.min = outOfBounds.min;
+		this.max = outOfBounds.max;
+		this.range = outOfBounds.range;
+		this.rnd = new Random();
 	}
 	
-	public < F extends Interval & RandomAccessible< T > > OutOfBoundsConstantValue( final F f, final T value )
+	public < F extends Interval & RandomAccessible< T > > OutOfBoundsRandomValue( final F f, final T value, final Random rnd, final double min, final double max )
 	{
 		super( f, value );
+	
 		this.value = value;
+		this.rnd = rnd;
+		this.min = min;
+		this.max = max;
+		this.range = max - min;
 	}
-
-	/* Sampler */
 	
 	@Override
 	final public T get()
 	{
-		//System.out.println( getLocationAsString() + " " + isOutOfBounds );
 		if ( isOutOfBounds )
+		{
+			value.setReal( rnd.nextDouble() * range + min );
 			return value;
+		}
 		else
+		{
 			return sampler.get();
+		}
 	}
 	
 	@Override
-	final public OutOfBoundsConstantValue< T > copy()
+	final public OutOfBoundsRandomValue< T > copy()
 	{
-		return new OutOfBoundsConstantValue< T >( this );
+		return new OutOfBoundsRandomValue< T >( this );
 	}
 
 
 	/* RandomAccess */
 
 	@Override
-	final public OutOfBoundsConstantValue< T > copyRandomAccess()
+	final public OutOfBoundsRandomValue< T > copyRandomAccess()
 	{
 		return copy();
 	}
