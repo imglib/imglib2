@@ -33,7 +33,13 @@ import net.imglib2.RealPoint;
 import net.imglib2.RealRandomAccess;
 import net.imglib2.type.numeric.integer.UnsignedByteType;
 
-class MandelbrotRealRandomAccess extends RealPoint implements RealRandomAccess< UnsignedByteType >
+/**
+ * A RealRandomAccess that procedurally generates values (iteration count)
+ * for the mandelbrot set.
+ *
+ * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
+ */
+public class MandelbrotRealRandomAccess extends RealPoint implements RealRandomAccess< UnsignedByteType >
 {
 	final UnsignedByteType t;
 

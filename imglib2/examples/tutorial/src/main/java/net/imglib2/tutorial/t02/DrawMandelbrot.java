@@ -30,7 +30,6 @@
 package net.imglib2.tutorial.t02;
 
 import net.imglib2.Cursor;
-import net.imglib2.RealLocalizable;
 import net.imglib2.RealRandomAccess;
 import net.imglib2.img.Img;
 import net.imglib2.img.array.ArrayImgFactory;
@@ -38,28 +37,18 @@ import net.imglib2.img.display.imagej.ImageJFunctions;
 import net.imglib2.type.numeric.integer.UnsignedByteType;
 
 /**
- * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
+ * Use {@link MandelbrotRealRandomAccess} to render a mandelbrot fractal.
  *
+ * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  */
 public class DrawMandelbrot
 {
-	static void showMandelbrot( final RealLocalizable center, final double zoom, final int[] dimensions )
-	{
-		final double scale = 1.0 / zoom;
-		final double[] offset = new double[2];
-		for ( int d=0; d<2; ++d )
-			offset[ d ] = center.getDoublePosition( d ) - scale * 0.5 * dimensions[ d ];
-
-		System.out.println( scale + " " + offset[0] + " " + offset[1] );
-
-	}
-
 	public static void main( final String[] args )
 	{
 		final int[] dimensions = new int[] { 600, 400 };
 		final Img< UnsignedByteType > img = new ArrayImgFactory< UnsignedByteType >().create( dimensions, new UnsignedByteType() );
 
-		final RealRandomAccess< UnsignedByteType > mandelbrot = new MandelbrotRealRandomAccess();
+		final RealRandomAccess< UnsignedByteType > mb = new MandelbrotRealRandomAccess();
 
 		//final double scale = 0.000125;
 		//final double[] offset = new double[] { -1.3875, 0.045 };
@@ -72,9 +61,10 @@ public class DrawMandelbrot
 		{
 			cursor.fwd();
 			for ( int d = 0; d < 2; ++d )
-				mandelbrot.setPosition( scale * cursor.getIntPosition( d ) + offset[ d ], d );
-			cursor.get().set( mandelbrot.get() );
+				mb.setPosition( scale * cursor.getIntPosition( d ) + offset[ d ], d );
+			cursor.get().set( mb.get() );
 		}
+
 		ImageJFunctions.show( img );
 	}
 }
