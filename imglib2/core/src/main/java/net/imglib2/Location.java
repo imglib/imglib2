@@ -1,10 +1,10 @@
 /**
  * Copyright (c) 2011, Tobias Pietzsch & Stephan Preibisch & Stephan Saalfeld
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * Redistributions of source code must retain the above copyright notice, this
  * list of conditions and the following disclaimer.  Redistributions in binary
  * form must reproduce the above copyright notice, this list of conditions and
@@ -12,7 +12,7 @@
  * provided with the distribution.  Neither the name of the imglib project nor
  * the names of its contributors may be used to endorse or promote products
  * derived from this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -30,97 +30,30 @@ package net.imglib2;
 
 /**
  * Provides an instance of {@link Localizable} that can store positions
- * 
+ *
+ * TODO: replace this by Point everywhere it is used. Then remove it.
+ *
  * @author Stephan Preibisch
  */
-public class Location implements Localizable 
+public class Location extends Point
 {
-	final long[] position;
-	final int numDimensions;
-
 	public Location ( final Localizable position )
 	{
-		this( position.numDimensions() );
-
-		for ( int d = 0; d < numDimensions; ++d )
-			this.position[ d ] = position.getLongPosition( d );
+		super( position );
 	}
 
 	public Location ( final long[] position )
 	{
-		this( position.length );
-
-		for ( int d = 0; d < numDimensions; ++d )
-			this.position[ d ] = position[ d ];
+		super( position );
 	}
 
 	public Location ( final int[] position )
 	{
-		this( position.length );
-
-		for ( int d = 0; d < numDimensions; ++d )
-			this.position[ d ] = position[ d ];
+		super( position );
 	}
 
 	public Location ( final int numDimensions )
 	{
-		this.numDimensions = numDimensions;
-		this.position = new long[ numDimensions ];
+		super( numDimensions );
 	}
-	
-	@Override
-	public void localize( final float[] pos )
-	{
-		for ( int d = 0; d < numDimensions; ++d )
-			pos[ d ] = this.position[ d ];
-	}
-
-	@Override
-	public void localize( final double[] pos )
-	{
-		for ( int d = 0; d < numDimensions; ++d )
-			pos[ d ] = this.position[ d ];
-	}
-
-	@Override
-	public float getFloatPosition( final int d ) { return position[ d ]; }
-
-	@Override
-	public double getDoublePosition( final int d ) { return position[ d ]; }
-
-	@Override
-	public int numDimensions() { return numDimensions;	}
-
-	@Override
-	public void localize( final int[] pos )
-	{
-		for ( int d = 0; d < numDimensions; ++d )
-			pos[ d ] = (int)this.position[ d ];
-	}
-
-	@Override
-	public void localize( final long[] pos )
-	{
-		for ( int d = 0; d < numDimensions; ++d )
-			pos[ d ] = this.position[ d ];
-	}
-
-	@Override
-	public int getIntPosition( final int d ) { return (int)position[ d ]; }
-
-	@Override
-	public long getLongPosition( final int d )  { return position[ d ]; }
-	
-	@Override
-	public String toString() {
-		final StringBuilder sb = new StringBuilder();
-		char c = '(';
-		for (int i=0; i<numDimensions(); i++) {
-			sb.append(c);
-			sb.append(position[i]);
-			c = ',';
-		}
-		sb.append(")");
-		return sb.toString();
-	}	
 }
