@@ -2,11 +2,11 @@ package net.imglib2.util;
 
 
 /**
- * @author Tobias Pietzsch
- *
  * N-dimensional data is often stored in a flat 1-dimensional array.
  * This class provides convenience methods to translate between N-dimensional
  * indices (positions) and 1-dimensional indices.
+ *
+ * @author Tobias Pietzsch
  */
 public class IntervalIndexer
 {
