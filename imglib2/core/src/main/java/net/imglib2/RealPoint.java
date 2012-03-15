@@ -149,8 +149,7 @@ public class RealPoint extends AbstractRealLocalizable implements RealPositionab
 	@Override
 	public void setPosition( final Localizable localizable )
 	{
-		for ( int d = 0; d < n; d++ )
-			position[ d ] = localizable.getDoublePosition( d );
+		localizable.localize( position );
 	}
 
 	@Override
@@ -215,8 +214,7 @@ public class RealPoint extends AbstractRealLocalizable implements RealPositionab
 	@Override
 	public void setPosition( final RealLocalizable localizable )
 	{
-		for ( int d = 0; d < n; ++d )
-			position[ d ] = localizable.getDoublePosition( d );
+		localizable.localize( position );
 	}
 
 	@Override

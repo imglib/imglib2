@@ -151,13 +151,10 @@ public class ArrayRandomAccess< T extends NativeType< T > > extends AbstractLoca
 	@Override
 	public void setPosition( final Localizable localizable )
 	{
+		localizable.localize( position );
 		int index = 0;
 		for ( int d = 0; d < n; ++d )
-		{
-			final int pos = localizable.getIntPosition( d );
-			position[ d ] = pos;
-			index += pos * container.steps[ d ];
-		}
+			index += position[ d ] * container.steps[ d ];
 		type.updateIndex( index );
 	}
 

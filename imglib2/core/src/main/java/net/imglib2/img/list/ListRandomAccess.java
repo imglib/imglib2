@@ -133,14 +133,10 @@ public class ListRandomAccess< T > extends AbstractLocalizableInt implements Ran
 	@Override
 	public void setPosition( final Localizable localizable )
 	{
-		i = localizable.getIntPosition( 0 );
-		position[ 0 ] = i;
+		localizable.localize( position );
+		i = position[ 0 ];
 		for ( int d = 1; d < n; ++d )
-		{
-			final int p = localizable.getIntPosition( d );
-			i += p * container.step[ d ];
-			position[ d ] = p;
-		}
+			i += position[ d ] * container.step[ d ];
 	}
 
 	@Override

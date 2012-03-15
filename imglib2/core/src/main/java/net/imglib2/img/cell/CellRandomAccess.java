@@ -281,34 +281,28 @@ public class CellRandomAccess< T extends NativeType< T >, A extends ArrayDataAcc
 	@Override
 	public void setPosition( final Localizable localizable )
 	{
+		localizable.localize( position );
+
 		for ( int d = 0; d < n; ++d )
 		{
-			final long pos = localizable.getLongPosition( d );
-			if ( pos != position[ d ] )
+			if ( position[ d ] < currentCellMin[ d ] || position[ d ] > currentCellMax[ d ] )
 			{
-				index += ( int ) ( pos - position[ d ] ) * currentCellSteps[ d ];
-				position[ d ] = pos;
-				if ( position[ d ] < currentCellMin[ d ] || position[ d ] > currentCellMax[ d ] )
-				{
-					randomAccessOnCells.setPosition( position[ d ] / defaultCellDims[ d ], d );
+				randomAccessOnCells.setPosition( position[ d ] / defaultCellDims[ d ], d );
+				for ( ++d; d < n; ++d )
+					if ( position[ d ] < currentCellMin[ d ] || position[ d ] > currentCellMax[ d ] )
+						randomAccessOnCells.setPosition( position[ d ] / defaultCellDims[ d ], d );
 
-					for ( ++d; d < n; ++d )
-					{
-						final long pos2 = localizable.getLongPosition( d );
-						if ( pos2 != position[ d ] )
-						{
-							position[ d ] = pos2;
-							if ( position[ d ] < currentCellMin[ d ] || position[ d ] > currentCellMax[ d ] )
-							{
-								randomAccessOnCells.setPosition( position[ d ] / defaultCellDims[ d ], d );
-							}
-						}
-					}
-
-					updatePosition();
-				}
+				final C cell = getCell();
+				currentCellSteps = cell.steps;
+				currentCellMin = cell.min;
+				currentCellMax = cell.max;
+				type.updateContainer( this );
 			}
 		}
+
+		for ( int d = 0; d < n; ++d )
+			positionInCell[ d ] = position[ d ] - currentCellMin[ d ];
+		index = getCell().localPositionToIndex( positionInCell );
 		type.updateIndex( index );
 	}
 

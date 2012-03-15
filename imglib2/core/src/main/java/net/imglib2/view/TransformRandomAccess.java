@@ -111,10 +111,9 @@ public final class TransformRandomAccess< T > extends AbstractLocalizable implem
 	@Override
 	public void setPosition( final Localizable localizable )
 	{
-		assert localizable.numDimensions() >= n;
+		assert localizable.numDimensions() == n;
 
-		for ( int d = 0; d < n; ++d )
-			this.position[ d ] = localizable.getLongPosition( d );
+		localizable.localize( position );
 		transformToSource.apply( position, tmp );
 		source.setPosition( tmp );
 	}

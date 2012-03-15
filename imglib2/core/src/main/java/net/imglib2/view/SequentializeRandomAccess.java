@@ -99,8 +99,7 @@ public final class SequentializeRandomAccess< T > extends AbstractLocalizable im
 	@Override
 	public void setPosition( final Localizable localizable )
 	{
-		for( int d = 0; d < n; ++d )
-			this.position[ d ] = localizable.getLongPosition( d );
+		localizable.localize( position );
 		transformToSource.apply( position, tmp );
 		s.setPosition( tmp );
 	}
