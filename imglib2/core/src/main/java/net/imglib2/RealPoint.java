@@ -40,6 +40,7 @@ public class RealPoint extends AbstractRealLocalizable implements RealPositionab
 	 * Protected constructor that re-uses the passed position array.
 	 *
 	 * @param position
+	 *            array used to store the position.
 	 * @param x
 	 *            unused parameter that changes the method signature
 	 */
@@ -64,7 +65,8 @@ public class RealPoint extends AbstractRealLocalizable implements RealPositionab
 	 * the position.
 	 *
 	 * @param position
-	 *            - position of the point
+	 *            the initial position. The length of the array determines the
+	 *            dimensionality of the space.
 	 */
 	public RealPoint( final double... position )
 	{
@@ -72,7 +74,8 @@ public class RealPoint extends AbstractRealLocalizable implements RealPositionab
 	}
 
 	/**
-	 * Create a point at a definite position
+	 * Create a point at a definite location in a space of the dimensionality of
+	 * the position.
 	 *
 	 * @param position
 	 *            the initial position. The length of the array determines the
@@ -85,10 +88,12 @@ public class RealPoint extends AbstractRealLocalizable implements RealPositionab
 	}
 
 	/**
-	 * Create a point using the position of a {@link Localizable}
+	 * Create a point using the position and dimensionality of a
+	 * {@link RealLocalizable}
 	 *
 	 * @param localizable
-	 *            get position from here
+	 *            the initial position. Its dimensionality determines the
+	 *            dimensionality of the space.
 	 */
 	public RealPoint( final RealLocalizable localizable )
 	{
@@ -124,28 +129,28 @@ public class RealPoint extends AbstractRealLocalizable implements RealPositionab
 	public void move( final Localizable localizable )
 	{
 		for ( int d = 0; d < n; d++ )
-			this.position[ d ] += localizable.getDoublePosition( d );
+			position[ d ] += localizable.getDoublePosition( d );
 	}
 
 	@Override
 	public void move( final int[] distance )
 	{
 		for ( int d = 0; d < n; d++ )
-			this.position[ d ] += distance[ d ];
+			position[ d ] += distance[ d ];
 	}
 
 	@Override
 	public void move( final long[] distance )
 	{
 		for ( int d = 0; d < n; d++ )
-			this.position[ d ] += distance[ d ];
+			position[ d ] += distance[ d ];
 	}
 
 	@Override
 	public void setPosition( final Localizable localizable )
 	{
 		for ( int d = 0; d < n; d++ )
-			this.position[ d ] = localizable.getDoublePosition( d );
+			position[ d ] = localizable.getDoublePosition( d );
 	}
 
 	@Override
@@ -177,55 +182,55 @@ public class RealPoint extends AbstractRealLocalizable implements RealPositionab
 	@Override
 	public void move( final float distance, final int d )
 	{
-		this.position[ d ] += distance;
+		position[ d ] += distance;
 	}
 
 	@Override
 	public void move( final double distance, final int d )
 	{
-		this.position[ d ] += distance;
+		position[ d ] += distance;
 	}
 
 	@Override
 	public void move( final RealLocalizable localizable )
 	{
-		for ( int i = 0; i < n; i++ )
-			this.position[ i ] += localizable.getDoublePosition( i );
+		for ( int d = 0; d < n; ++d )
+			position[ d ] += localizable.getDoublePosition( d );
 	}
 
 	@Override
 	public void move( final float[] distance )
 	{
-		for ( int i = 0; i < n; i++ )
-			this.position[ i ] += distance[ i ];
+		for ( int d = 0; d < n; ++d )
+			position[ d ] += distance[ d ];
 	}
 
 	@Override
 	public void move( final double[] distance )
 	{
-		for ( int i = 0; i < n; i++ )
-			this.position[ i ] += distance[ i ];
+		for ( int d = 0; d < n; ++d )
+			position[ d ] += distance[ d ];
 	}
 
 	@Override
 	public void setPosition( final RealLocalizable localizable )
 	{
-		for ( int d = 0; d < n; d++ )
-			this.position[ d ] = localizable.getDoublePosition( d );
+		for ( int d = 0; d < n; ++d )
+			position[ d ] = localizable.getDoublePosition( d );
 	}
 
 	@Override
 	public void setPosition( final float[] position )
 	{
-		for ( int i = 0; i < n; i++ )
-			this.position[ i ] = position[ i ];
+		for ( int d = 0; d < n; ++d )
+			this.position[ d ] = position[ d ];
 	}
 
 	@Override
 	public void setPosition( final double[] position )
 	{
-		for ( int i = 0; i < n; i++ )
-			this.position[ i ] = position[ i ];
+		for ( int d = 0; d < n; ++d )
+			this.position[ d ] = position[ d ];
 	}
 
 	@Override
@@ -262,7 +267,7 @@ public class RealPoint extends AbstractRealLocalizable implements RealPositionab
 	 * @param position
 	 *            array to use for storing the position.
 	 */
-	static public RealPoint wrap( final double[] position )
+	public static RealPoint wrap( final double[] position )
 	{
 		return new RealPoint( position, null );
 	}
