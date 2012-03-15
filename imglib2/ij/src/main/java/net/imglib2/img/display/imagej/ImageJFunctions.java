@@ -36,12 +36,14 @@ import java.util.concurrent.atomic.AtomicInteger;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.converter.Converter;
 import net.imglib2.converter.TypeIdentity;
+import net.imglib2.display.ComplexPowerGLogFloatConverter;
 import net.imglib2.display.RealFloatConverter;
 import net.imglib2.display.RealUnsignedByteConverter;
 import net.imglib2.display.RealUnsignedShortConverter;
 import net.imglib2.img.ImagePlusAdapter;
 import net.imglib2.img.Img;
 import net.imglib2.type.numeric.ARGBType;
+import net.imglib2.type.numeric.ComplexType;
 import net.imglib2.type.numeric.IntegerType;
 import net.imglib2.type.numeric.NumericType;
 import net.imglib2.type.numeric.RealType;
@@ -89,6 +91,35 @@ public class ImageJFunctions
 	}
 
 	/**
+	 * Displays a complex type as power spectrum, phase spectrum, real values or imaginary values depending on the converter 
+	 * 
+	 * @param img
+	 * @param converter
+	 * @return
+	 */
+	public static <T extends ComplexType<T>> ImagePlus show( final RandomAccessibleInterval<T> img, final Converter< T, FloatType > converter )
+	{
+		return show( img, converter, "Complex image " + ai.getAndIncrement() );
+	}
+
+	/**
+	 * Displays a complex type as power spectrum, phase spectrum, real values or imaginary values depending on the converter 
+	 * 
+	 * @param img
+	 * @param converter
+	 * @param title
+	 * @return
+	 */
+	public static <T extends ComplexType<T>> ImagePlus show( final RandomAccessibleInterval<T> img, final Converter< T, FloatType > converter, final String title )
+	{
+		final ImageJVirtualStackFloat< T > stack = new ImageJVirtualStackFloat< T >( img, converter );
+		final ImagePlus imp = new ImagePlus( title, stack );
+		imp.show();
+		
+		return imp;
+	}
+
+	/**
 	 * Create a single channel {@link ImagePlus} from a
 	 * {@link RandomAccessibleInterval}. The image type of the result
 	 * (ImagePlus.GRAY8, ImagePlus.GRAY16, ImagePlus.GRAY32, ImagePlus.COLOR_256
@@ -115,6 +146,8 @@ public class ImageJFunctions
 			return wrapUnsignedShort( ( RandomAccessibleInterval< RealType > )( Object )img, title );
 		else if ( RealType.class.isInstance( t ) )
 			return wrapFloat( ( RandomAccessibleInterval< RealType > )( Object )img, title );
+		else if ( ComplexType.class.isInstance( t ) )
+			return wrapFloat( ( RandomAccessibleInterval< ComplexType > )( Object )img, new ComplexPowerGLogFloatConverter(), title );
 		else
 		{
 			System.out.println( "Do not know how to display Type " + t.getClass().getSimpleName() );
