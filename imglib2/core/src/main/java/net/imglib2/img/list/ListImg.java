@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2009--2010, Stephan Preibisch & Stephan Saalfeld
+ * Copyright (c) 2009--2012, ImgLib2 developers
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -9,7 +9,7 @@
  * list of conditions and the following disclaimer.  Redistributions in binary
  * form must reproduce the above copyright notice, this list of conditions and
  * the following disclaimer in the documentation and/or other materials
- * provided with the distribution.  Neither the name of the Fiji project nor
+ * provided with the distribution.  Neither the name of the imglib project nor
  * the names of its contributors may be used to endorse or promote products
  * derived from this software without specific prior written permission.
  *
@@ -33,26 +33,36 @@ import java.util.Collection;
 import net.imglib2.Interval;
 import net.imglib2.IterableRealInterval;
 import net.imglib2.img.AbstractImg;
+import net.imglib2.img.Img;
 import net.imglib2.img.array.ArrayImg;
 import net.imglib2.type.Type;
 import net.imglib2.util.IntervalIndexer;
 
 /**
+ * This {@link Img} stores an image in a single linear {@link ArrayList}. Each
+ * pixel is stored as an individual object, so {@link ListImg} should only be
+ * used for images with relatively few pixels. In principle, the number of
+ * entities stored is limited to {@link Integer#MAX_VALUE}.
  *
  * @param <T>
- * @param <A>
+ *            The value type of the pixels. You can us {@link Type}s or
+ *            arbitrary {@link Object}s. If you use non-{@link Type} pixels,
+ *            note, that you cannot use {@link Type#set(Type)} to change the
+ *            value stored in every reference. Instead, you can use the
+ *            {@link ListCursor#set(Object)} and
+ *            {@link ListRandomAccess#set(Object)} methods to alter the
+ *            underlying {@link ArrayList}.
  *
  * @author Stephan Preibisch and Stephan Saalfeld
+ * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  */
 public class ListImg< T > extends AbstractImg< T >
 {
 	final protected int[] step;
+
 	final protected int[] dim;
 
-	final ArrayList<T> pixels;
-
-	// we have to overwrite those as this can change during the processing
-	protected int numPixels, numEntities;
+	final ArrayList< T > pixels;
 
 	protected ListImg( final long[] dim, final T type )
 	{
@@ -60,13 +70,12 @@ public class ListImg< T > extends AbstractImg< T >
 
 		this.dim = new int[ n ];
 		for ( int d = 0; d < n; ++d )
-			this.dim[ d ] = ( int )dim[ d ];
+			this.dim[ d ] = ( int ) dim[ d ];
 
 		this.step = new int[ n ];
 		IntervalIndexer.createAllocationSteps( this.dim, this.step );
-		this.numPixels = ( int ) super.numPixels;
 
-		this.pixels = new ArrayList< T >( numPixels );
+		this.pixels = new ArrayList< T >( ( int ) numPixels );
 
 		if ( type instanceof Type< ? > )
 		{
@@ -83,25 +92,31 @@ public class ListImg< T > extends AbstractImg< T >
 		}
 	}
 
-	public ListImg( final Collection<T> collection, final long[] dim )
+	public ListImg( final Collection< T > collection, final long[] dim )
 	{
 		super( dim );
 
 		this.dim = new int[ n ];
 		for ( int d = 0; d < n; ++d )
-			this.dim[ d ] = ( int )dim[ d ];
+			this.dim[ d ] = ( int ) dim[ d ];
 
 		this.step = new int[ n ];
 		IntervalIndexer.createAllocationSteps( this.dim, this.step );
 		this.numPixels = ( int ) super.numPixels;
 
-		this.pixels = new ArrayList< T >( numPixels );
+		this.pixels = new ArrayList< T >( ( int ) numPixels );
 		this.pixels.addAll( collection );
 	}
 
-	public int[] getSteps() { return step.clone(); }
+	public int[] getSteps()
+	{
+		return step.clone();
+	}
 
-	public int getStep( final int d ) { return step[ d ]; }
+	public int getStep( final int d )
+	{
+		return step[ d ];
+	}
 
 	public final int getPos( final int[] l )
 	{
@@ -114,7 +129,7 @@ public class ListImg< T > extends AbstractImg< T >
 
 	public final int getPos( final long[] l )
 	{
-		int i = (int)l[ 0 ];
+		int i = ( int ) l[ 0 ];
 		for ( int d = 1; d < n; ++d )
 			i += l[ d ] * step[ d ];
 
@@ -130,7 +145,7 @@ public class ListImg< T > extends AbstractImg< T >
 	@Override
 	public ListLocalizingCursor< T > localizingCursor()
 	{
-		return new ListLocalizingCursor< T >( this  );
+		return new ListLocalizingCursor< T >( this );
 	}
 
 	@Override
@@ -140,17 +155,20 @@ public class ListImg< T > extends AbstractImg< T >
 	}
 
 	@Override
-	public ListImgFactory<T> factory() { return new ListImgFactory<T>(); }
+	public ListImgFactory< T > factory()
+	{
+		return new ListImgFactory< T >();
+	}
 
 	@Override
-	public boolean equalIterationOrder( final IterableRealInterval<?> f )
+	public boolean equalIterationOrder( final IterableRealInterval< ? > f )
 	{
 		if ( f.numDimensions() != this.numDimensions() )
 			return false;
 
 		if ( getClass().isInstance( f ) || ArrayImg.class.isInstance( f ) )
 		{
-			final Interval a = ( Interval )f;
+			final Interval a = ( Interval ) f;
 			for ( int d = 0; d < n; ++d )
 				if ( dimension[ d ] != a.dimension( d ) )
 					return false;
@@ -187,11 +205,5 @@ public class ListImg< T > extends AbstractImg< T >
 		{
 			return new ListImg< T >( this.pixels, dimension );
 		}
-	}
-
-	// Must override or the superclass' numPixels would be returned
-	@Override
-	public long size() {
-		return this.numPixels;
 	}
 }

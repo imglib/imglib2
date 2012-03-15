@@ -1,18 +1,18 @@
 /**
- * Copyright (c) 2009--2010, Stephan Preibisch & Stephan Saalfeld
+ * Copyright (c) 2009--2012, ImgLib2 developers
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * Redistributions of source code must retain the above copyright notice, this
  * list of conditions and the following disclaimer.  Redistributions in binary
  * form must reproduce the above copyright notice, this list of conditions and
  * the following disclaimer in the documentation and/or other materials
- * provided with the distribution.  Neither the name of the Fiji project nor
+ * provided with the distribution.  Neither the name of the imglib project nor
  * the names of its contributors may be used to endorse or promote products
  * derived from this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -32,7 +32,7 @@ import java.util.ArrayList;
 import net.imglib2.AbstractRandomAccess;
 
 /**
- * 
+ *
  * @param <T>
  *
  * @author Stephan Preibisch and Stephan Saalfeld
@@ -40,37 +40,48 @@ import net.imglib2.AbstractRandomAccess;
 public class ListRandomAccess< T > extends AbstractRandomAccess< T >
 {
 	private int i;
-	
+
 	final private ArrayList< T > pixels;
 	final private ListImg< T > container;
-	
+
 	final private int[] step;
-	
-	public ListRandomAccess( final ListRandomAccess< T > randomAccess ) 
+
+	public ListRandomAccess( final ListRandomAccess< T > randomAccess )
 	{
 		super( randomAccess.numDimensions() );
-		
+
 		container = randomAccess.container;
 		this.pixels = randomAccess.pixels;
 		this.step = container.getSteps();
-		
+
 		for ( int d = 0; d < n; ++d )
 			position[ d ] = randomAccess.position[ d ];
-		
+
 		i = randomAccess.i;
 	}
-	
-	public ListRandomAccess( final ListImg< T > container ) 
+
+	public ListRandomAccess( final ListImg< T > container )
 	{
 		super( container.numDimensions() );
-		
+
 		this.container = container;
 		this.pixels = container.pixels;
 		this.step = container.getSteps();
-		
+
 		i = 0;
-	}	
-	
+	}
+
+	@Override
+	public T get()
+	{
+		return pixels.get( i );
+	}
+
+	public void set( final T t )
+	{
+		pixels.set( i, t );
+	}
+
 	@Override
 	public void fwd( final int dim )
 	{
@@ -84,7 +95,7 @@ public class ListRandomAccess< T > extends AbstractRandomAccess< T >
 		i += step[ dim ] * steps;
 		position[ dim ] += steps;
 	}
-	
+
 	@Override
 	public void move( final long distance, final int dim )
 	{
@@ -97,10 +108,10 @@ public class ListRandomAccess< T > extends AbstractRandomAccess< T >
 		i -= step[ dim ];
 		--position[ dim ];
 	}
-		
+
 	@Override
 	public void move( final int[] distance )
-	{		
+	{
 		for ( int d = 0; d < n; ++d )
 			move( distance[ d ], d );
 	}
@@ -116,7 +127,7 @@ public class ListRandomAccess< T > extends AbstractRandomAccess< T >
 	public void setPosition( final int[] position )
 	{
 		i = container.getPos( position );
-		
+
 		for ( int d = 0; d < n; ++d )
 			this.position[ d ] = position[ d ];
 	}
@@ -127,7 +138,7 @@ public class ListRandomAccess< T > extends AbstractRandomAccess< T >
 		i = container.getPos( position );
 
 		for ( int d = 0; d < n; ++d )
-			this.position[ d ] = ( int )position[ d ];		
+			this.position[ d ] = ( int )position[ d ];
 	}
 
 	@Override
@@ -143,10 +154,7 @@ public class ListRandomAccess< T > extends AbstractRandomAccess< T >
 	{
 		setPosition( ( int )position, dim );
 	}
-	
-	@Override
-	public T get(){ return pixels.get( i ); }
-	
+
 	@Override
 	public ListRandomAccess< T > copy()
 	{
