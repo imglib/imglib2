@@ -35,7 +35,7 @@ import net.imglib2.util.Util;
  * implement the {@link Localizable} interface.
  *
  * <p>
- * This is identical to {@link AbstractLocalizableSampler}, except that
+ * This is identical to {@link AbstractLocalizable}, except that
  * the position is limited to {@link Integer#MAX_VALUE} in every dimension.
  *
  * @param <T>
