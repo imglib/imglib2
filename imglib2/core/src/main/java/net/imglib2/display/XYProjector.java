@@ -42,11 +42,13 @@ import net.imglib2.converter.Converter;
 public class XYProjector< A, B > extends AbstractXYProjector< A, B >
 {
 	final protected IterableInterval< B > target;
+	final int numDimensions;
 	
 	public XYProjector( final RandomAccessible< A > source, final IterableInterval< B > target, final Converter< A, B > converter )
 	{
 		super( source, converter );
 		this.target = target;
+		this.numDimensions = source.numDimensions();
 	}
 
 	@Override
@@ -68,7 +70,8 @@ public class XYProjector< A, B > extends AbstractXYProjector< A, B >
 		{
 			final B b = targetCursor.next();
 			sourceRandomAccess.setPosition( targetCursor.getLongPosition( 0 ), 0 );
-			sourceRandomAccess.setPosition( targetCursor.getLongPosition( 1 ), 1 );
+			if ( numDimensions > 1 )
+				sourceRandomAccess.setPosition( targetCursor.getLongPosition( 1 ), 1 );
 			converter.convert( sourceRandomAccess.get(), b );
 		}
 	}
