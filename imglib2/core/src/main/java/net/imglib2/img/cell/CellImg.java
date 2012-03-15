@@ -1,6 +1,5 @@
 package net.imglib2.img.cell;
 
-import net.imglib2.Cursor;
 import net.imglib2.IterableRealInterval;
 import net.imglib2.img.AbstractNativeImg;
 import net.imglib2.img.basictypeaccess.array.ArrayDataAccess;
@@ -167,20 +166,15 @@ final public class CellImg< T extends NativeType< T >, A extends ArrayDataAccess
 	}
 
 	@Override
-	public CellImg<T,?,?> copy()
+	public CellImg< T, ?, ? > copy()
 	{
-		final CellImg<T,?,?> copy = factory().create( dimension, firstElement().createVariable() );
+		final CellImg< T, ?, ? > copy = factory().create( dimension, firstElement().createVariable() );
 
-		final Cursor<T> cursor1 = this.cursor();
-		final Cursor<T> cursor2 = copy.cursor();
+		final CellCursor< T, A, C > source = this.cursor();
+		final CellCursor< T, ?, ? > target = copy.cursor();
 
-		while ( cursor1.hasNext() )
-		{
-			cursor1.fwd();
-			cursor2.fwd();
-
-			cursor2.get().set( cursor1.get() );
-		}
+		while ( source.hasNext() )
+			target.next().set( source.next() );
 
 		return copy;
 	}

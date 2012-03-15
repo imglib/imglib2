@@ -165,23 +165,18 @@ public class ListImg< T > extends AbstractImg< T >
 	{
 		final ListImg< A > copy = new ListImg< A >( img.dimension, img.firstElement().createVariable() );
 
-		final ListCursor< A > cursor1 = img.cursor();
-		final ListCursor< A > cursor2 = copy.cursor();
+		final ListCursor< A > source = img.cursor();
+		final ListCursor< A > target = copy.cursor();
 
-		while ( cursor1.hasNext() )
-		{
-			cursor1.fwd();
-			cursor2.fwd();
-
-			cursor2.get().set( cursor1.get() );
-		}
+		while ( source.hasNext() )
+			target.next().set( source.next() );
 
 		return copy;
 	}
 
 	@SuppressWarnings( { "unchecked", "rawtypes" } )
 	@Override
-	public ListImg<T> copy()
+	public ListImg< T > copy()
 	{
 		final T type = firstElement();
 		if ( type instanceof Type< ? > )
