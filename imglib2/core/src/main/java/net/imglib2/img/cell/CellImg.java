@@ -3,9 +3,7 @@ package net.imglib2.img.cell;
 import net.imglib2.Cursor;
 import net.imglib2.IterableRealInterval;
 import net.imglib2.img.AbstractNativeImg;
-import net.imglib2.img.Img;
 import net.imglib2.img.basictypeaccess.array.ArrayDataAccess;
-import net.imglib2.img.list.ListImgFactory;
 import net.imglib2.type.NativeType;
 
 /**
@@ -14,65 +12,45 @@ import net.imglib2.type.NativeType;
  * @param <T>
  * @param <A>
  */
-final public class CellImg< T extends NativeType< T >, A extends ArrayDataAccess< A > > extends AbstractNativeImg< T, A >
+final public class CellImg< T extends NativeType< T >, A extends ArrayDataAccess< A >, C extends AbstractCell< A > > extends AbstractNativeImg< T, A >
 {
 	final protected CellImgFactory< T > factory;
-	
-	final protected Img< Cell< A > > cells;
-	
+
+	final protected Cells< A, C > cells;
+
 	/**
 	 *  Dimensions of a standard cell.
 	 *  Cells on the max border of the image may be cut off and have different dimensions.
 	 */
 	final int[] cellDims;
 
-	public CellImg( final CellImgFactory< T > factory, final A creator, final long[] dimensions, final int[] cellDimensions, int entitiesPerPixel )
+	private static long[] getDimensionsFromCells( final Cells< ?, ? > cells )
 	{
-		super( dimensions, entitiesPerPixel );
-		
-		this.factory = factory;
-
-		cellDims = cellDimensions.clone(); 
-
-		final long[] numCells = new long[ n ];
-		final int[] borderSize = new int[ n ];
-		final long[] currentCellOffset = new long[ n ];
-		final int[] currentCellDims = new int[ n ];
-
-		for ( int d = 0; d < n; ++d ) {
-			numCells[ d ] = ( dimensions[ d ] - 1 ) / cellDims[ d ] + 1;
-			borderSize[ d ] = ( int )( dimensions[ d ] - (numCells[ d ] - 1) * cellDims[ d ] );
-		}
-
-		cells = new ListImgFactory< Cell< A > >().create( numCells, new Cell< A >( n ) );
-
-		Cursor< Cell < A > > cellCursor = cells.localizingCursor();		
-		while ( cellCursor.hasNext() ) {
-			Cell< A > c = cellCursor.next();
-			
-			cellCursor.localize( currentCellOffset );
-			for ( int d = 0; d < n; ++d )
-			{
-				currentCellDims[ d ] = ( int )( (currentCellOffset[d] + 1 == numCells[d])  ?  borderSize[ d ]  :  cellDims[ d ] );
-				currentCellOffset[ d ] *= cellDims[ d ];
-			}
-			
-			c.set( new Cell< A >( creator, currentCellDims, currentCellOffset, entitiesPerPixel ) );
-		}
+		final long[] dim = new long[ cells.numDimensions() ];
+		cells.dimensions( dim );
+		return dim;
 	}
 
+	public CellImg( final CellImgFactory< T > factory, final Cells< A, C > cells )
+	{
+		super( getDimensionsFromCells( cells ), cells.getEntitiesPerPixel() );
 
+		this.factory = factory;
+		this.cells = cells;
+		cellDims = new int[ cells.numDimensions() ];
+		cells.cellDimensions( cellDims );
+	}
 
 	/**
 	 * This interface is implemented by all samplers on the {@link CellImg}. It
 	 * allows the container to ask for the cell the sampler is currently in.
 	 */
-	public interface CellContainerSampler<T extends NativeType< T >, A extends ArrayDataAccess< A > >
+	public interface CellContainerSampler<T extends NativeType< T >, A extends ArrayDataAccess< A >, C extends AbstractCell< A > >
 	{
 		/**
 		 * @return the cell the sampler is currently in.
 		 */
-		public Cell< A > getCell();
+		public C getCell();
 	}
 
 	@Override
@@ -84,14 +62,14 @@ final public class CellImg< T extends NativeType< T >, A extends ArrayDataAccess
 		 * know what to do with a CellCursor, however, it is not using it's
 		 * parameter anyway.
 		 */
-		return ( ( CellContainerSampler< T, A > ) cursor ).getCell().getData();
+		return ( ( CellContainerSampler< T, A, C > ) cursor ).getCell().getData();
 	}
 
 
 
 	/**
 	 * Get the position of the cell containing the element at {@link position}.
-	 * 
+	 *
 	 * @param position   position of an element in the {@link CellImg}.
 	 * @param cellPos    position within cell grid of the cell containing the element.
 	 */
@@ -105,7 +83,7 @@ final public class CellImg< T extends NativeType< T >, A extends ArrayDataAccess
 	/**
 	 * Translate a global element position into the position of the cell containing that element
 	 * and the element position within the cell.
-	 * 
+	 *
 	 * @param position    global element position
 	 * @param cellPos     receives position of cell
 	 * @param elementPos  receives position of element within cell
@@ -120,7 +98,7 @@ final public class CellImg< T extends NativeType< T >, A extends ArrayDataAccess
 
 	/**
 	 * Get the position of the cell containing element at {@link position}.
-	 * 
+	 *
 	 * @param position   position in dimension {@link dim} of an element in the {@link CellImg}
 	 * @param dim        which dimension
 	 * @return           position in dimension {@link dim} of the cell containing the element.
@@ -132,7 +110,7 @@ final public class CellImg< T extends NativeType< T >, A extends ArrayDataAccess
 
 	/**
 	 * Get the local position within the cell of the element at global {@link position}.
-	 * 
+	 *
 	 * @param position   position in dimension {@link dim} of an element in the {@link CellImg}
 	 * @param dim        which dimension
 	 * @return           local position in dimension {@link dim} within the cell containing the element.
@@ -144,21 +122,21 @@ final public class CellImg< T extends NativeType< T >, A extends ArrayDataAccess
 
 
 	@Override
-	public CellCursor< T, A > cursor()
+	public CellCursor< T, A, C > cursor()
 	{
-		return new CellCursor< T, A >( this );
+		return new CellCursor< T, A, C >( this );
 	}
 
 	@Override
-	public CellLocalizingCursor< T, A > localizingCursor()
+	public CellLocalizingCursor< T, A, C > localizingCursor()
 	{
-		return new CellLocalizingCursor< T, A >( this );
+		return new CellLocalizingCursor< T, A, C >( this );
 	}
 
 	@Override
-	public CellRandomAccess< T, A > randomAccess()
+	public CellRandomAccess< T, A, C > randomAccess()
 	{
-		return new CellRandomAccess< T, A >( this );
+		return new CellRandomAccess< T, A, C >( this );
 	}
 
 	@Override
@@ -169,41 +147,41 @@ final public class CellImg< T extends NativeType< T >, A extends ArrayDataAccess
 
 	@SuppressWarnings( "unchecked" )
 	@Override
-	public boolean equalIterationOrder( IterableRealInterval<?> f )
+	public boolean equalIterationOrder( final IterableRealInterval<?> f )
 	{
 		if ( f.numDimensions() != this.numDimensions() )
 			return false;
-		
+
 		if ( getClass().isInstance( f ) )
 		{
-			CellImg< T, A > other = (CellImg< T, A >) f;
+			final CellImg< T, A, C > other = (CellImg< T, A, C >) f;
 
-			for ( int d = 0; d < n; ++d ) 
+			for ( int d = 0; d < n; ++d )
 				if ( this.dimension[ d ] != other.dimension[ d ] || this.cellDims[ d ] != other.cellDims[ d ] )
 					return false;
-			
+
 			return true;
 		}
-		
+
 		return false;
 	}
-	
+
 	@Override
-	public CellImg<T,?> copy()
+	public CellImg<T,?,?> copy()
 	{
-		final CellImg<T,?> copy = factory().create( dimension, firstElement().createVariable() );
-		
+		final CellImg<T,?,?> copy = factory().create( dimension, firstElement().createVariable() );
+
 		final Cursor<T> cursor1 = this.cursor();
 		final Cursor<T> cursor2 = copy.cursor();
-		
+
 		while ( cursor1.hasNext() )
 		{
 			cursor1.fwd();
 			cursor2.fwd();
-			
+
 			cursor2.get().set( cursor1.get() );
 		}
-		
+
 		return copy;
-	}	
+	}
 }
