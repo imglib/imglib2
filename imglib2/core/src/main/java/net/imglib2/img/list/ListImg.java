@@ -108,34 +108,6 @@ public class ListImg< T > extends AbstractImg< T >
 		this.pixels.addAll( collection );
 	}
 
-	public int[] getSteps()
-	{
-		return step.clone();
-	}
-
-	public int getStep( final int d )
-	{
-		return step[ d ];
-	}
-
-	public final int getPos( final int[] l )
-	{
-		int i = l[ 0 ];
-		for ( int d = 1; d < n; ++d )
-			i += l[ d ] * step[ d ];
-
-		return i;
-	}
-
-	public final int getPos( final long[] l )
-	{
-		int i = ( int ) l[ 0 ];
-		for ( int d = 1; d < n; ++d )
-			i += l[ d ] * step[ d ];
-
-		return i;
-	}
-
 	@Override
 	public ListCursor< T > cursor()
 	{
