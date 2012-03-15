@@ -42,7 +42,7 @@ package net.imglib2;
  * 
  * @author Tobias Pietzsch, Stephan Preibisch and Stephan Saalfeld
  */
-public abstract class AbstractRandomAccessInt< T > extends AbstractLocalizableSamplerInt< T > implements RandomAccess< T >
+public abstract class AbstractRandomAccessInt< T > extends AbstractLocalizableInt implements RandomAccess< T >
 {
 	/**
 	 * @param n number of dimensions in the {@link net.imglib2.img.Img}.

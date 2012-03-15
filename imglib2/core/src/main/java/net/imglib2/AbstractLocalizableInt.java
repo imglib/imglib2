@@ -27,85 +27,99 @@
  */
 package net.imglib2;
 
-import net.imglib2.util.Util;
-
 /**
- * Abstract base class for localizable samplers.
- * The current position is stored in an int[] field and used to
- * implement the {@link Localizable} interface.
+ * An abstract class that implements the {@link Localizable} interface using an
+ * int[] array to maintain position.
  *
  * <p>
- * This is identical to {@link AbstractLocalizable}, except that
- * the position is limited to {@link Integer#MAX_VALUE} in every dimension.
- *
- * @param <T>
+ * This is identical to {@link AbstractLocalizable}, except that the position is
+ * limited to {@link Integer#MAX_VALUE} in every dimension.
  *
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
- * @author Tobias Pietzsch
+ * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  */
-public abstract class AbstractLocalizableSamplerInt< T > extends AbstractEuclideanSpace implements Localizable, Sampler< T >
+public abstract class AbstractLocalizableInt extends AbstractEuclideanSpace implements Localizable
 {
 	/**
 	 * The {@link Localizable} interface is implemented using the position
-	 * stored here. Subclasses use this array to keep track of the position of
-	 * the {@link Sampler}.
+	 * stored here. {@link Positionable} subclasses, such as {@link Point},
+	 * modify this array.
 	 */
 	final protected int[] position;
 
 	/**
-	 * @param n number of dimensions in the {@link net.imglib2.img.Img}.
+	 * @param n
+	 *            number of dimensions.
 	 */
-	public AbstractLocalizableSamplerInt( final int n )
+	public AbstractLocalizableInt( final int n )
 	{
 		super( n );
-
 		position = new int[ n ];
+	}
+
+	/**
+	 * Protected constructor that re-uses the passed position array. This is
+	 * intended to allow subclasses to provide a way to wrap a int[] array.
+	 *
+	 * @param position
+	 *            position array to use.
+	 */
+	protected AbstractLocalizableInt( final int[] position )
+	{
+		super( position.length );
+		this.position = position;
 	}
 
 	@Override
 	public void localize( final float[] pos )
 	{
-		for ( int d = 0; d < n; d++ )
+		for ( int d = 0; d < n; ++d )
 			pos[ d ] = position[ d ];
 	}
 
 	@Override
 	public void localize( final double[] pos )
 	{
-		for ( int d = 0; d < n; d++ )
+		for ( int d = 0; d < n; ++d )
 			pos[ d ] = position[ d ];
 	}
 
 	@Override
 	public void localize( final int[] pos )
 	{
-		for ( int d = 0; d < n; d++ )
+		for ( int d = 0; d < n; ++d )
 			pos[ d ] = position[ d ];
 	}
 
 	@Override
 	public void localize( final long[] pos )
 	{
-		for ( int d = 0; d < n; d++ )
+		for ( int d = 0; d < n; ++d )
 			pos[ d ] = position[ d ];
 	}
 
 	@Override
-	public float getFloatPosition( final int dim ){ return position[ dim ]; }
+	public float getFloatPosition( final int d )
+	{
+		return position[ d ];
+	}
 
 	@Override
-	public double getDoublePosition( final int dim ){ return position[ dim ]; }
+	public double getDoublePosition( final int d )
+	{
+		return position[ d ];
+	}
 
 	@Override
-	public int getIntPosition( final int dim ){ return position[ dim ]; }
+	public int getIntPosition( final int d )
+	{
+		return position[ d ];
+	}
 
 	@Override
-	public long getLongPosition( final int dim ){ return position[ dim ]; }
-
-	@Override
-	public String toString(){ return Util.printCoordinates( position ) + " = " + get(); }
-
-	@Override
-	abstract public AbstractLocalizableSamplerInt< T > copy();
+	public long getLongPosition( final int d )
+	{
+		return position[ d ];
+	}
 }
