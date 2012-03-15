@@ -7,6 +7,7 @@ import ij.process.ColorProcessor;
 import ij.process.FloatProcessor;
 import ij.process.ImageProcessor;
 import ij.process.ShortProcessor;
+import net.imglib2.Interval;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.converter.Converter;
 import net.imglib2.display.XYProjector;
@@ -29,14 +30,14 @@ public abstract class ImageJVirtualStack< S, T extends NativeType< T > > extends
 
 	protected ImageJVirtualStack( final RandomAccessibleInterval< S > source, final Converter< S, T > converter, final T type, final int ijtype )
 	{
-		super( ( int ) source.dimension( 0 ), ( int ) source.dimension( 1 ), null, null );
+		super( ( int ) source.dimension( 0 ), getDimension1Size( source ), null, null );
 
 		assert source.numDimensions() > 1;
 
 		this.size = ( source.numDimensions() > 2 ) ? ( int ) source.dimension( 2 ) : 1;
 
 		final int sizeX = ( int ) source.dimension( 0 );
-		final int sizeY = ( int ) source.dimension( 1 );
+		final int sizeY = getDimension1Size( source );
 
 		final ArrayImg< T, ? > img = new ArrayImgFactory< T >().create( new long[] { sizeX, sizeY }, type );
 
@@ -67,6 +68,20 @@ public abstract class ImageJVirtualStack< S, T extends NativeType< T > > extends
 		default:
 			throw new IllegalArgumentException( "unsupported color type " + ijtype );
 		}
+	}
+	
+	/**
+	 * Get the size of the Y-dimension. If it is a one-dimensional source, return 1.
+	 * 
+	 * @param interval
+	 * @return 1 if only-dimensional, else the size
+	 */
+	protected static int getDimension1Size( final Interval interval )
+	{
+		if ( interval.numDimensions() == 1 )
+			return 1;
+		else
+			return ( int ) interval.dimension( 1 );
 	}
 
 	/**
