@@ -29,18 +29,19 @@ package net.imglib2.img.list;
 
 import java.util.ArrayList;
 
-import net.imglib2.AbstractLocalizable;
+import net.imglib2.AbstractLocalizableInt;
 import net.imglib2.Localizable;
 import net.imglib2.RandomAccess;
-import net.imglib2.Sampler;
 
 /**
+ * {@link RandomAccess} on a {@link ListImg}.
  *
  * @param <T>
  *
  * @author Stephan Preibisch and Stephan Saalfeld
+ * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  */
-public class ListRandomAccess< T > extends AbstractLocalizable implements RandomAccess< T >
+public class ListRandomAccess< T > extends AbstractLocalizableInt implements RandomAccess< T >
 {
 	private int i;
 
@@ -82,17 +83,17 @@ public class ListRandomAccess< T > extends AbstractLocalizable implements Random
 	}
 
 	@Override
-	public void fwd( final int dim )
+	public void fwd( final int d )
 	{
-		i += container.step[ dim ];
-		++position[ dim ];
+		i += container.step[ d ];
+		++position[ d ];
 	}
 
 	@Override
-	public void bck( final int dim )
+	public void bck( final int d )
 	{
-		i -= container.step[ dim ];
-		--position[ dim ];
+		i -= container.step[ d ];
+		--position[ d ];
 	}
 
 	@Override
@@ -129,14 +130,17 @@ public class ListRandomAccess< T > extends AbstractLocalizable implements Random
 			move( ( int ) distance[ d ], d );
 	}
 
-	/* (non-Javadoc)
-	 * @see net.imglib2.Positionable#setPosition(net.imglib2.Localizable)
-	 */
 	@Override
 	public void setPosition( final Localizable localizable )
 	{
-		// TODO Auto-generated method stub
-
+		i = localizable.getIntPosition( 0 );
+		position[ 0 ] = i;
+		for ( int d = 1; d < n; ++d )
+		{
+			final int p = localizable.getIntPosition( d );
+			i += p * container.step[ d ];
+			position[ d ] = p;
+		}
 	}
 
 	@Override
@@ -165,59 +169,18 @@ public class ListRandomAccess< T > extends AbstractLocalizable implements Random
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see net.imglib2.Positionable#setPosition(int, int)
-	 */
 	@Override
 	public void setPosition( final int position, final int d )
 	{
-		// TODO Auto-generated method stub
-
+		i += container.step[ d ] * (position - this.position[ d ]);
+		this.position[ d ] = position;
 	}
 
-	/* (non-Javadoc)
-	 * @see net.imglib2.Positionable#setPosition(long, int)
-	 */
 	@Override
 	public void setPosition( final long position, final int d )
 	{
-		// TODO Auto-generated method stub
-
-	}
-
-	/* (non-Javadoc)
-	 * @see net.imglib2.Sampler#copy()
-	 */
-	@Override
-	public Sampler< T > copy()
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	/* (non-Javadoc)
-	 * @see net.imglib2.RandomAccess#copyRandomAccess()
-	 */
-	@Override
-	public RandomAccess< T > copyRandomAccess()
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	/*
-	@Override
-	public void setPosition( final int position, final int dim )
-	{
-		this.position[ dim ] = position;
-
-		i = container.getPos( this.position );
-	}
-
-	@Override
-	public void setPosition( final long position, final int dim )
-	{
-		setPosition( ( int )position, dim );
+		i += container.step[ d ] * (position - this.position[ d ]);
+		this.position[ d ] = ( int ) position;
 	}
 
 	@Override
@@ -231,5 +194,4 @@ public class ListRandomAccess< T > extends AbstractLocalizable implements Random
 	{
 		return copy();
 	}
-	*/
 }
