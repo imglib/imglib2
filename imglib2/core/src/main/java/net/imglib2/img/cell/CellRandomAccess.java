@@ -1,6 +1,7 @@
 package net.imglib2.img.cell;
 
-import net.imglib2.AbstractRandomAccess;
+import net.imglib2.AbstractLocalizable;
+import net.imglib2.Localizable;
 import net.imglib2.RandomAccess;
 import net.imglib2.img.basictypeaccess.array.ArrayDataAccess;
 import net.imglib2.type.NativeType;
@@ -11,7 +12,7 @@ import net.imglib2.type.NativeType;
  * No checks are performed to determine whether we stay in the same cell.
  * Instead, the cell position is computed and set on every access.
  */
-public class CellRandomAccess< T extends NativeType< T >, A extends ArrayDataAccess< A >, C extends AbstractCell< A > > extends AbstractRandomAccess< T > implements CellImg.CellContainerSampler< T, A, C >
+public class CellRandomAccess< T extends NativeType< T >, A extends ArrayDataAccess< A >, C extends AbstractCell< A > > extends AbstractLocalizable implements RandomAccess< T >, CellImg.CellContainerSampler< T, A, C >
 {
 	protected final T type;
 
@@ -103,38 +104,85 @@ public class CellRandomAccess< T extends NativeType< T >, A extends ArrayDataAcc
 	}
 
 	@Override
-	public void fwd( final int dim )
+	public void fwd( final int d )
 	{
-		index += currentCellSteps[ dim ];
-		if ( ++position[ dim ] > currentCellMax[ dim ] )
+		index += currentCellSteps[ d ];
+		if ( ++position[ d ] > currentCellMax[ d ] )
 		{
-			randomAccessOnCells.fwd( dim );
+			randomAccessOnCells.fwd( d );
 			updatePosition();
 		}
 		type.updateIndex( index );
 	}
 
 	@Override
-	public void bck( final int dim )
+	public void bck( final int d )
 	{
-		index -= currentCellSteps[ dim ];
-		if ( --position[ dim ] < currentCellMin[ dim ] )
+		index -= currentCellSteps[ d ];
+		if ( --position[ d ] < currentCellMin[ d ] )
 		{
-			randomAccessOnCells.bck( dim );
+			randomAccessOnCells.bck( d );
 			updatePosition();
 		}
 		type.updateIndex( index );
 	}
 
 	@Override
-	public void move( final long distance, final int dim )
+	public void move( final int distance, final int d )
 	{
-		index += ( int ) distance * currentCellSteps[ dim ];
-		position[ dim ] += distance;
-		if ( position[ dim ] < currentCellMin[ dim ] || position[ dim ] > currentCellMax[ dim ] )
+		index += distance * currentCellSteps[ d ];
+		position[ d ] += distance;
+		if ( position[ d ] < currentCellMin[ d ] || position[ d ] > currentCellMax[ d ] )
 		{
-			randomAccessOnCells.setPosition( position[ dim ] / defaultCellDims[ dim ], dim );
+			randomAccessOnCells.setPosition( position[ d ] / defaultCellDims[ d ], d );
 			updatePosition();
+		}
+		type.updateIndex( index );
+	}
+
+	@Override
+	public void move( final long distance, final int d )
+	{
+		index += ( int ) distance * currentCellSteps[ d ];
+		position[ d ] += distance;
+		if ( position[ d ] < currentCellMin[ d ] || position[ d ] > currentCellMax[ d ] )
+		{
+			randomAccessOnCells.setPosition( position[ d ] / defaultCellDims[ d ], d );
+			updatePosition();
+		}
+		type.updateIndex( index );
+	}
+
+	@Override
+	public void move( final Localizable localizable )
+	{
+		for ( int d = 0; d < n; ++d )
+		{
+			final long pos = localizable.getLongPosition( d );
+			if ( pos != 0 )
+			{
+				index += ( int ) pos * currentCellSteps[ d ];
+				position[ d ] += pos;
+				if ( position[ d ] < currentCellMin[ d ] || position[ d ] > currentCellMax[ d ] )
+				{
+					randomAccessOnCells.setPosition( position[ d ] / defaultCellDims[ d ], d );
+
+					for ( ++d; d < n; ++d )
+					{
+						final long pos2 = localizable.getLongPosition( d );
+						if ( pos2 != 0 )
+						{
+							position[ d ] += pos2;
+							if ( position[ d ] < currentCellMin[ d ] || position[ d ] > currentCellMax[ d ] )
+							{
+								randomAccessOnCells.setPosition( position[ d ] / defaultCellDims[ d ], d );
+							}
+						}
+					}
+
+					updatePosition();
+				}
+			}
 		}
 		type.updateIndex( index );
 	}
@@ -204,14 +252,62 @@ public class CellRandomAccess< T extends NativeType< T >, A extends ArrayDataAcc
 	}
 
 	@Override
-	public void setPosition( final long pos, final int dim )
+	public void setPosition( final int pos, final int d )
 	{
-		index += ( int ) ( pos - position[ dim ] ) * currentCellSteps[ dim ];
-		position[ dim ] = pos;
-		if ( pos < currentCellMin[ dim ] || pos > currentCellMax[ dim ] )
+		index += ( int ) ( pos - position[ d ] ) * currentCellSteps[ d ];
+		position[ d ] = pos;
+		if ( pos < currentCellMin[ d ] || pos > currentCellMax[ d ] )
 		{
-			randomAccessOnCells.setPosition( pos / defaultCellDims[ dim ], dim );
+			randomAccessOnCells.setPosition( pos / defaultCellDims[ d ], d );
 			updatePosition();
+		}
+		type.updateIndex( index );
+	}
+
+	@Override
+	public void setPosition( final long pos, final int d )
+	{
+		index += ( int ) ( pos - position[ d ] ) * currentCellSteps[ d ];
+		position[ d ] = pos;
+		if ( pos < currentCellMin[ d ] || pos > currentCellMax[ d ] )
+		{
+			randomAccessOnCells.setPosition( pos / defaultCellDims[ d ], d );
+			updatePosition();
+		}
+		type.updateIndex( index );
+	}
+
+
+	@Override
+	public void setPosition( final Localizable localizable )
+	{
+		for ( int d = 0; d < n; ++d )
+		{
+			final long pos = localizable.getLongPosition( d );
+			if ( pos != position[ d ] )
+			{
+				index += ( int ) ( pos - position[ d ] ) * currentCellSteps[ d ];
+				position[ d ] = pos;
+				if ( position[ d ] < currentCellMin[ d ] || position[ d ] > currentCellMax[ d ] )
+				{
+					randomAccessOnCells.setPosition( position[ d ] / defaultCellDims[ d ], d );
+
+					for ( ++d; d < n; ++d )
+					{
+						final long pos2 = localizable.getLongPosition( d );
+						if ( pos2 != position[ d ] )
+						{
+							position[ d ] = pos2;
+							if ( position[ d ] < currentCellMin[ d ] || position[ d ] > currentCellMax[ d ] )
+							{
+								randomAccessOnCells.setPosition( position[ d ] / defaultCellDims[ d ], d );
+							}
+						}
+					}
+
+					updatePosition();
+				}
+			}
 		}
 		type.updateIndex( index );
 	}
