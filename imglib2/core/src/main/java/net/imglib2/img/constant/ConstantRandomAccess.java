@@ -1,10 +1,10 @@
 /**
  * Copyright (c) 2009--2012, Tobias Pietzsch, Stephan Preibisch & Stephan Saalfeld
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * Redistributions of source code must retain the above copyright notice, this
  * list of conditions and the following disclaimer.  Redistributions in binary
  * form must reproduce the above copyright notice, this list of conditions and
@@ -12,7 +12,7 @@
  * provided with the distribution.  Neither the name of the Fiji project nor
  * the names of its contributors may be used to endorse or promote products
  * derived from this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -27,62 +27,37 @@
  */
 package net.imglib2.img.constant;
 
-import net.imglib2.AbstractRandomAccess;
+import net.imglib2.Point;
 import net.imglib2.RandomAccess;
 
 /**
- * A simple {@link RandomAccess} that always returns the same value at each position, but is positioned correctly.
- * 
+ * A simple {@link RandomAccess} that always returns the same value at each
+ * position, but is positioned correctly.
+ *
  * @author Stephan Preibisch
  *
  * @param <T>
  */
-public class ConstantRandomAccess< T > extends AbstractRandomAccess< T >
+public class ConstantRandomAccess< T > extends Point implements RandomAccess< T >
 {
 	final T type;
-	
+
 	public ConstantRandomAccess( final T type, final int numDimensions )
 	{
 		super( numDimensions );
-		
+
 		this.type = type;
 	}
-	
+
 	public ConstantRandomAccess( final ConstantRandomAccess< T > cursor )
 	{
 		super( cursor.n );
-		
+
 		this.type = cursor.type;
-		
+
 		for ( int d = 0; d < n; ++d )
 			this.position[ d ] = cursor.position[ d ];
 	}
-
-	@Override
-	public void fwd( final int d ) { ++position[ d ]; }
-
-	@Override
-	public void bck( final int d ) { --position[ d ]; } 
-
-	@Override
-	public void move( final long distance, final int d ) { position[ d ] += distance; }
-
-	@Override
-	public void setPosition( final int[] position )
-	{
-		for ( int d = 0; d < n; ++d )
-			this.position[ d ] = position[ d ];
-	}
-
-	@Override
-	public void setPosition( final long[] position )
-	{
-		for ( int d = 0; d < n; ++d )
-			this.position[ d ] = position[ d ];
-	}
-
-	@Override
-	public void setPosition( final long position, final int d ) { this.position[ d ] = position; }
 
 	@Override
 	public T get() { return type; }
