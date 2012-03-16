@@ -345,6 +345,43 @@ public class Interactive3DRotationExample< T extends RealType< T > & NativeType<
 		affine.preConcatenate( t );
 	}
 	
+	private void scale( final double dScale )
+	{
+		final double width = screenImage.dimension( 0 );
+		final double height = screenImage.dimension( 1 );
+		
+		final AffineTransform3D t = new AffineTransform3D();
+		
+		/* center shift */
+		t.set(
+				1, 0, 0, -width / 2.0,
+				0, 1, 0, -height / 2.0 * yScale,
+				0, 0, 1, -currentSlice );
+		
+		affine.preConcatenate( t );
+		affine.scale( dScale );
+		
+		/* center un-shift */
+		t.set(
+				1, 0, 0, width / 2.0,
+				0, 1, 0, height / 2.0 * yScale,
+				0, 0, 1, currentSlice );
+		
+		affine.preConcatenate( t );
+	}
+	
+	private void translate( final double dX, final double dY )
+	{
+		final AffineTransform3D t = new AffineTransform3D();
+		
+		t.set(
+				1, 0, 0, dX,
+				0, 1, 0, dY,
+				0, 0, 1, 0 );
+		
+		affine.preConcatenate( t );
+	}
+	
 	final private void shift( final double d )
 	{
 		currentSlice += d;
@@ -442,8 +479,10 @@ public class Interactive3DRotationExample< T extends RealType< T > & NativeType<
 				IJ.showMessage(
 						"Interactive Stack Rotation",
 						"Mouse control:" + NL + " " + NL +
-						"Pan and tilt the volume by dragging the image in the canvas and" + NL +
-						"browse alongside the z-axis using the mouse-wheel." + NL + " " + NL +
+						"Pan and tilt the volume by left-click and dragging the image in the canvas, " + NL +
+						"move the volume by middle-click and dragging the image in the canvas, " + NL +
+						"browse alongside the z-axis using the mouse-wheel, and" + NL +
+						"zoom in and out using the mouse-wheel holding CTRL+SHIFT." + NL + " " + NL +
 						"Key control:" + NL + " " + NL +
 						"X - Select x-axis as rotation axis." + NL +
 						"Y - Select y-axis as rotation axis." + NL +
@@ -451,7 +490,7 @@ public class Interactive3DRotationExample< T extends RealType< T > & NativeType<
 						"CURSOR LEFT - Rotate clockwise around the choosen rotation axis." + NL +
 						"CURSOR RIGHT - Rotate counter-clockwise around the choosen rotation axis." + NL +
 						"./> - Forward alongside z-axis." + NL +
-						",/< - Backward alongside z-axis." + NL +
+						",/< - Backwardi alongside z-axis." + NL +
 						"SHIFT - Rotate and browse 10x faster." + NL +
 						"CTRL - Rotate and browse 10x slower." + NL +
 						"ENTER/ESC - Return." + NL +
@@ -490,40 +529,65 @@ public class Interactive3DRotationExample< T extends RealType< T > & NativeType<
 	@Override
 	public void mouseWheelMoved( final MouseWheelEvent e )
 	{
-		final float v = keyModfiedSpeed( e.getModifiersEx() );
-		final int s = -e.getWheelRotation();
-		shift( v * s );
-		update();		
+		final int modifiers = e.getModifiersEx();
+		final float v = keyModfiedSpeed( modifiers );
+		final int s = e.getWheelRotation();
+		if (
+				( modifiers & KeyEvent.CTRL_DOWN_MASK ) != 0 &&
+				( modifiers & KeyEvent.SHIFT_DOWN_MASK ) != 0 )
+		{
+			final double dScale = 1.0 + 0.1;
+			if ( s > 0 )
+				scale( 1.0 / dScale );
+			else
+				scale( dScale );
+		}
+		else
+			shift( v * -s );
+		
+		update();	
 	}
 
 	@Override
 	public void mouseDragged( final MouseEvent e )
 	{
-		final float v = step * keyModfiedSpeed( e.getModifiersEx() );
-		dX = oX - e.getX() / imp.getCanvas().getMagnification();
-		dY = oY - e.getY() / imp.getCanvas().getMagnification();
-		
-		affine.set( mouseRotation );
-		
-		final AffineTransform3D t = new AffineTransform3D();
-		
-		/* center shift */
-		t.set(
-				1, 0, 0, -oX,
-				0, 1, 0, -oY,
-				0, 0, 1, -currentSlice );
-		
-		affine.preConcatenate( t );
-		affine.rotate( 0, -dY * v );
-		affine.rotate( 1, dX * v );
-		
-		/* center un-shift */
-		t.set(
-				1, 0, 0, oX,
-				0, 1, 0, oY,
-				0, 0, 1, currentSlice );
-		
-		affine.preConcatenate( t );
+		final int modifiers = e.getModifiersEx();
+		if ( ( modifiers & MouseEvent.BUTTON1_DOWN_MASK ) != 0 )
+		{
+			final float v = step * keyModfiedSpeed( e.getModifiersEx() );
+			dX = oX - e.getX() / imp.getCanvas().getMagnification();
+			dY = oY - e.getY() / imp.getCanvas().getMagnification();
+			
+			affine.set( mouseRotation );
+			
+			final AffineTransform3D t = new AffineTransform3D();
+			
+			/* center shift */
+			t.set(
+					1, 0, 0, -oX,
+					0, 1, 0, -oY,
+					0, 0, 1, -currentSlice );
+			
+			affine.preConcatenate( t );
+			affine.rotate( 0, -dY * v );
+			affine.rotate( 1, dX * v );
+			
+			/* center un-shift */
+			t.set(
+					1, 0, 0, oX,
+					0, 1, 0, oY,
+					0, 0, 1, currentSlice );
+			
+			affine.preConcatenate( t );
+		}
+		else if ( ( modifiers & MouseEvent.BUTTON2_DOWN_MASK ) != 0 )
+		{
+			dX = e.getX() / imp.getCanvas().getMagnification() - oX;
+			dY = e.getY() / imp.getCanvas().getMagnification() - oY;
+			oX += dX;
+			oY += dY;
+			translate( dX, dY );
+		}
 		
 		update();
 	}
