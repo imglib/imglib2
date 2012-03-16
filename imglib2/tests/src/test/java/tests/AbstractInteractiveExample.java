@@ -16,7 +16,6 @@ import java.awt.event.MouseWheelListener;
 import net.imglib2.RandomAccessible;
 import net.imglib2.display.ARGBScreenImage;
 import net.imglib2.display.XYRandomAccessibleProjector;
-import net.imglib2.img.Img;
 import net.imglib2.interpolation.InterpolatorFactory;
 import net.imglib2.interpolation.randomaccess.LanczosInterpolatorFactory;
 import net.imglib2.interpolation.randomaccess.NLinearInterpolatorFactory;
@@ -203,7 +202,6 @@ public abstract class AbstractInteractiveExample< T extends RealType< T > > impl
 	
 	final static protected String NL = System.getProperty( "line.separator" );
 	
-	protected Img< T > img;
 	protected ImagePlus imp;
 	protected GUI gui;
 	
@@ -220,9 +218,6 @@ public abstract class AbstractInteractiveExample< T extends RealType< T > > impl
 	
 	protected MappingThread painter;
 	
-	protected Object transform;
-	
-
 	abstract protected XYRandomAccessibleProjector< T, ARGBType > createProjector(
 			final InterpolatorFactory< T, RandomAccessible< T > > interpolatorFactory );
 	

@@ -19,6 +19,7 @@ import net.imglib2.RandomAccessible;
 import net.imglib2.display.ARGBScreenImage;
 import net.imglib2.display.RealARGBConverter;
 import net.imglib2.display.XYRandomAccessibleProjector;
+import net.imglib2.img.Img;
 import net.imglib2.img.ImgPlus;
 import net.imglib2.img.array.ArrayImgFactory;
 import net.imglib2.interpolation.Interpolant;
@@ -193,6 +194,7 @@ public class Interactive3DRotationExample< T extends RealType< T > & NativeType<
 	}
 	
 	final private ImgPlus< T > imgPlus;
+	final private Img< T > img;
 	final private ColorProcessor cp;
 	
 	final private ArrayList< AffineTransform3D > list = new ArrayList< AffineTransform3D >();
