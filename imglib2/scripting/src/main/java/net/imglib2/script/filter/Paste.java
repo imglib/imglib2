@@ -3,7 +3,7 @@ package net.imglib2.script.filter;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import net.imglib2.AbstractInterval;
+import net.imglib2.FinalInterval;
 import net.imglib2.Interval;
 import net.imglib2.IterableRealInterval;
 import net.imglib2.RandomAccessibleInterval;
@@ -33,11 +33,11 @@ public class Paste<T extends RealType<T>> extends FloatImageOperation
 		this.a = new ImageFunction<T>(new RandomAccessibleIntervalImgProxy<T>(
 				Views.interval(
 						Views.translate(Views.extendValue(source, background), offset),
-						new AbstractInterval(Util.intervalDimensions(target)){})));
+						new FinalInterval(Util.intervalDimensions(target)))));
 		this.b = new ImageFunction<R>(target);
 	}
 
-	
+
 	/**
 	 * @param <T> The {@link Type} of the source image.
 	 * @param source The image to paste, which can be smaller than the {@param target} image.
@@ -58,14 +58,14 @@ public class Paste<T extends RealType<T>> extends FloatImageOperation
 	}
 
 	private static final Interval extractDimensions(final IFunction target) {
-		ArrayList<IterableRealInterval<?>> iris = new ArrayList<IterableRealInterval<?>>();
+		final ArrayList<IterableRealInterval<?>> iris = new ArrayList<IterableRealInterval<?>>();
 		target.findImgs(iris);
-		return new AbstractInterval(
+		return new FinalInterval(
 				iris.isEmpty() ?
 						new long[]{1}
-						: Util.intervalDimensions(iris.get(0))) {};
+						: Util.intervalDimensions(iris.get(0)));
 	}
-	
+
 	/** For cloning this {@link IFunction}. */
 	protected Paste(final ImageFunction<T> a, final IFunction b, final T background) {
 		this.background = background;
@@ -81,7 +81,7 @@ public class Paste<T extends RealType<T>> extends FloatImageOperation
 		// return the source if inside
 		return background == in ? out : in.getRealDouble();
 	}
-	
+
 	@Override
 	public final void findCursors(final Collection<RealCursor<?>> cursors) {
 		a.findCursors(cursors);
@@ -96,7 +96,7 @@ public class Paste<T extends RealType<T>> extends FloatImageOperation
 	{
 		return new Paste<T>(a.duplicate(), b.duplicate(), background);
 	}
-	
+
 	@Override
 	public void findImgs(final Collection<IterableRealInterval<?>> iris)
 	{
