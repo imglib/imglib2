@@ -140,9 +140,10 @@ public final class TranslationRandomAccess< T > extends AbstractEuclideanSpace i
 	@Override
 	public void setPosition( final Localizable localizable )
 	{
-		assert localizable.numDimensions() >= n;
+		assert localizable.numDimensions() == n;
+		localizable.localize( tmp );
 		for ( int d = 0; d < n; ++d )
-			tmp[ d ] = localizable.getLongPosition( d ) + translation[ d ];
+			tmp[ d ] += translation[ d ];
 		s.setPosition( tmp );
 	}
 

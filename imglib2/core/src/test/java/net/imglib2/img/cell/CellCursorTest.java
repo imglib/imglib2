@@ -25,7 +25,7 @@ public class CellCursorTest
 
 	long intDataSum;
 
-	CellImg< IntType, ? > intImg;
+	CellImg< IntType, ?, ? > intImg;
 
 	@Before
 	public void createSourceData()

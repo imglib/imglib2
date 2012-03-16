@@ -32,12 +32,13 @@ package net.imglib2;
 import net.imglib2.util.Util;
 
 /**
- * Generic implementation of {@link net.imglib2.Iterator Iterator} mapping to
- * abstract {@link #fwd()} and {@link #get()}.
+ * Abstract implementation of {@link Cursor}. Java's {@link java.util.Iterator}
+ * interface is implemented by mapping to abstract {@link #fwd()} and
+ * {@link #get()}.
  *
  * <p>
- * For localization, default implementations are available that all build on
- * the abstract long variant.  For particular cursors, this may be implemented more
+ * For localization, default implementations are available that all build on the
+ * abstract long variant. For particular cursors, this may be implemented more
  * efficiently saving at least one loop over <em>n</em>.
  *
  * @author Tobias Pietzsch, Stephan Preibisch and Stephan Saalfeld
@@ -53,7 +54,8 @@ public abstract class AbstractCursor< T > extends AbstractEuclideanSpace impleme
 	final private long[] tmp;
 
 	/**
-	 * @param n number of dimensions in the {@link net.imglib2.img.Img}.
+	 * @param n
+	 *            number of dimensions in the {@link net.imglib2.img.Img}.
 	 */
 	public AbstractCursor( final int n )
 	{
@@ -107,7 +109,7 @@ public abstract class AbstractCursor< T > extends AbstractEuclideanSpace impleme
 	{
 		localize( this.tmp );
 		for ( int d = 0; d < n; d++ )
-			pos[ d ] = ( int )this.tmp[ d ];
+			pos[ d ] = ( int ) this.tmp[ d ];
 	}
 
 	@Override
@@ -125,7 +127,7 @@ public abstract class AbstractCursor< T > extends AbstractEuclideanSpace impleme
 	@Override
 	public int getIntPosition( final int d )
 	{
-		return ( int )getLongPosition( d );
+		return ( int ) getLongPosition( d );
 	}
 
 	@Override

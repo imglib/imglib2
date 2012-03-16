@@ -27,13 +27,14 @@ POSSIBILITY OF SUCH DAMAGE.
 */
 
 /**
- * 
+ *
  * @author Barry DeZonia
  *
  */
 package net.imglib2.io.img.virtual;
 
-import net.imglib2.AbstractRandomAccess;
+import net.imglib2.Point;
+import net.imglib2.RandomAccess;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 
@@ -42,22 +43,22 @@ import net.imglib2.type.numeric.RealType;
  * This class manages read only spatial access to a virtual image. Data
  * returned from get() can be written to but any changes are never saved
  * to disk.
- *  
+ *
  * @author Barry DeZonia
  *
  */
 public class VirtualRandomAccess<T extends NativeType<T> & RealType<T>>
-	extends AbstractRandomAccess<T>
+	extends Point implements RandomAccess<T>
 {
-	private VirtualImg<T> virtImage;
-	private VirtualAccessor<T> accessor;
-	
+	private final VirtualImg<T> virtImage;
+	private final VirtualAccessor<T> accessor;
+
 	/**
 	 * Constructor
-	 * 
+	 *
 	 * @param image - the VirtualImg to access randomly
 	 */
-	public VirtualRandomAccess(VirtualImg<T> image)
+	public VirtualRandomAccess(final VirtualImg<T> image)
 	{
 		super(image.numDimensions());
 		this.accessor = new VirtualAccessor<T>(image);
@@ -65,34 +66,7 @@ public class VirtualRandomAccess<T extends NativeType<T> & RealType<T>>
 	}
 
 	@Override
-	public void fwd(int d) {
-		position[d]++;
-	}
-
-	@Override
-	public void bck(int d) {
-		position[d]--;
-	}
-
-	@Override
-	public void move(long distance, int d) {
-		position[d] += distance;
-	}
-
-	@Override
-	public void setPosition(int[] pos) {
-		for (int i = 0; i < position.length; i++)
-			position[i] = pos[i];
-	}
-
-	@Override
-	public void setPosition(long[] pos) {
-		for (int i = 0; i < position.length; i++)
-			position[i] = pos[i];
-	}
-
-	@Override
-	public void setPosition(long pos, int d) {
+	public void setPosition(final long pos, final int d) {
 		position[d] = pos;
 	}
 
@@ -110,7 +84,7 @@ public class VirtualRandomAccess<T extends NativeType<T> & RealType<T>>
 	public T get() {
 		return accessor.get(position);
 	}
-	
+
 	public Object getCurrentPlane() {
 		return accessor.getCurrentPlane();
 	}

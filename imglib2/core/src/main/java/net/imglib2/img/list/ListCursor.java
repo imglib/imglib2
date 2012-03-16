@@ -1,10 +1,10 @@
 /**
  * Copyright (c) 2009--2010, Stephan Preibisch & Stephan Saalfeld
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * Redistributions of source code must retain the above copyright notice, this
  * list of conditions and the following disclaimer.  Redistributions in binary
  * form must reproduce the above copyright notice, this list of conditions and
@@ -12,7 +12,7 @@
  * provided with the distribution.  Neither the name of the Fiji project nor
  * the names of its contributors may be used to endorse or promote products
  * derived from this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -30,48 +30,52 @@ package net.imglib2.img.list;
 import java.util.ArrayList;
 
 import net.imglib2.AbstractCursor;
-import net.imglib2.type.Type;
 import net.imglib2.util.IntervalIndexer;
 
 /**
- * 
+ *
  * @param <T>
  *
  * @author Stephan Preibisch and Stephan Saalfeld
  */
-final public class ListCursor< T extends Type< T > > extends AbstractCursor< T >
+final public class ListCursor< T > extends AbstractCursor< T >
 {
 	private int i;
 	final private int maxNumPixels;
-	
+
 	final private ArrayList< T > pixels;
 	final private ListImg< T > container;
-	
+
 	protected ListCursor( final ListCursor< T > cursor )
 	{
 		super( cursor.numDimensions() );
-		
+
 		container = cursor.container;
 		this.pixels = container.pixels;
 		this.maxNumPixels = cursor.maxNumPixels;
-		
+
 		i = cursor.i;
 	}
-	
+
 	public ListCursor( final ListImg< T > container )
 	{
 		super( container.numDimensions() );
-		
+
 		this.container = container;
 		this.pixels = container.pixels;
 		this.maxNumPixels = ( int )container.size() - 1;
-		
+
 		reset();
 	}
-	
+
 	@Override
 	public T get() { return pixels.get( i ); }
-	
+
+	public void set( final T t )
+	{
+		pixels.set( i, t );
+	}
+
 	@Override
 	public ListCursor< T > copy()
 	{
@@ -95,7 +99,7 @@ final public class ListCursor< T extends Type< T > > extends AbstractCursor< T >
 
 	@Override
 	public void reset() { i = -1; }
-	
+
 	@Override
 	public long getLongPosition( final int dim )
 	{

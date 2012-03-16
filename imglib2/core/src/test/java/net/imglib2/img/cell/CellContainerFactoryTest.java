@@ -34,7 +34,7 @@ public class CellContainerFactoryTest
 		int[] expectedCellDims = {43, 43, 43, 43};
 		CellImgFactory< T > factory = new CellImgFactory< T >( defaultCellSize );
 		long[] dimension = {100, 80, 4, 3}; 
-		CellImg< T, ? > img = factory.create( dimension, type );
+		CellImg< T, ?, ? > img = factory.create( dimension, type );
 		assertArrayEquals( expectedCellDims, img.cellDims );
 	}
 	
@@ -53,7 +53,7 @@ public class CellContainerFactoryTest
 		int[] expectedCellDims = defaultCellDims.clone();
 		CellImgFactory< T > factory = new CellImgFactory< T >( defaultCellDims );
 		long[] dimension = {100, 80, 4, 3}; 
-		CellImg< T, ? > img = factory.create( dimension, type );
+		CellImg< T, ?, ? > img = factory.create( dimension, type );
 		assertArrayEquals( expectedCellDims, img.cellDims );
 	}
 

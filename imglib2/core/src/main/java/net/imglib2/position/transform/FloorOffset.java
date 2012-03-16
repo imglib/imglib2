@@ -1,10 +1,10 @@
 /**
  * Copyright (c) 2009--2012, ImgLib2 developers
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * Redistributions of source code must retain the above copyright notice, this
  * list of conditions and the following disclaimer.  Redistributions in binary
  * form must reproduce the above copyright notice, this list of conditions and
@@ -12,7 +12,7 @@
  * provided with the distribution.  Neither the name of the imglib project nor
  * the names of its contributors may be used to endorse or promote products
  * derived from this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -37,19 +37,19 @@ import net.imglib2.RealPositionable;
  * floor discrete coordinates plus a discrete offset vector.  For practical
  * useage, the floor operation is defined as the integer smaller than the real
  * value:
- * 
+ *
  * f = r < 0 ? (long)r - 1 : (long)r
- * 
+ *
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
 public class FloorOffset< LocalizablePositionable extends Localizable & Positionable > extends AbstractPositionableTransform< LocalizablePositionable >
 {
 	final protected long[] offset;
-	
+
 	public FloorOffset( final LocalizablePositionable target, final long[] offset )
 	{
 		super( target );
-		
+
 		this.offset = offset.clone();
 		for ( int d = 0; d < n; ++d )
 		{
@@ -57,11 +57,11 @@ public class FloorOffset< LocalizablePositionable extends Localizable & Position
 			target.setPosition( offset[ d ], d );
 		}
 	}
-	
+
 	public FloorOffset( final LocalizablePositionable target, final Localizable offset )
 	{
 		super( target );
-		
+
 		this.offset = new long[ n ];
 		for ( int d = 0; d < n; ++d )
 		{
@@ -69,11 +69,11 @@ public class FloorOffset< LocalizablePositionable extends Localizable & Position
 			target.setPosition( discrete[ d ], d );
 		}
 	}
-	
+
 	public FloorOffset( final RealLocalizable origin, final LocalizablePositionable target, final long[] offset )
 	{
 		super( target );
-		
+
 		this.offset = offset.clone();
 		for ( int d = 0; d < n; ++d )
 		{
@@ -82,11 +82,11 @@ public class FloorOffset< LocalizablePositionable extends Localizable & Position
 			target.setPosition( discrete[ d ], d );
 		}
 	}
-	
+
 	public FloorOffset( final RealLocalizable origin, final LocalizablePositionable target, final Localizable offset )
 	{
 		super( target );
-		
+
 		this.offset = new long[ n ];
 		for ( int d = 0; d < n; ++d )
 		{
@@ -96,38 +96,38 @@ public class FloorOffset< LocalizablePositionable extends Localizable & Position
 			target.setPosition( discrete[ d ], d );
 		}
 	}
-	
+
 	final static protected long f( final double r, final long off )
 	{
 		return r < 0 ? ( long )r + off - 1 : ( long )r + off;
 	}
-	
+
 	final static protected long f( final float r, final long off )
 	{
 		return r < 0 ? ( long )r + off - 1 : ( long )r + off;
 	}
-	
+
 	protected void f( final double[] r, final long[] f )
 	{
 		for ( int d = 0; d < r.length; ++d )
 			f[ d ] = f( r[ d ], offset[ d ] );
 	}
-	
+
 	protected void f( final float[] r, final long[] f )
 	{
 		for ( int d = 0; d < r.length; ++d )
 			f[ d ] = f( r[ d ], offset[ d ] );
 	}
-	
+
 	protected void f( final RealLocalizable r, final long[] f )
 	{
 		for ( int d = 0; d < f.length; ++d )
 			f[ d ] = f( r.getDoublePosition( d ), offset[ d ] );
 	}
-	
-	
+
+
 	/* RealPositionable */
-	
+
 	@Override
 	public void move( final float distance, final int d )
 	{
@@ -196,12 +196,9 @@ public class FloorOffset< LocalizablePositionable extends Localizable & Position
 	@Override
 	public void setPosition( final RealLocalizable localizable )
 	{
+		localizable.localize( position );
 		for ( int d = 0; d < n; ++d )
-		{
-			final double realPosition = localizable.getDoublePosition( d );
-			position[ d ] = realPosition;
-			discrete[ d ] = f( realPosition, offset[ d ] );
-		}
+			discrete[ d ] = f( position[ d ], offset[ d ] );
 		target.setPosition( discrete );
 	}
 
