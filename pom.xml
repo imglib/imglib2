@@ -126,6 +126,24 @@
       </properties>
     </developer>
     <developer>
+      <id>leek</id>
+      <name>Lee Kamentsky</name>
+      <email>leek@broadinstitute.org</email>
+      <url>http://www.broadinstitute.org/~leek/</url>
+      <organization>Broad Institute of MIT and Harvard</organization>
+      <organizationUrl>http://www.broadinstitute.org/</organizationUrl>
+      <roles>
+        <role>developer</role>
+      </roles>
+      <timezone>-5</timezone>
+      <properties>
+        <picUrl>http://www.broadinstitute.org/~leek/lee_small.jpg</picUrl>
+      </properties>
+    </developer>
+  </developers>
+
+  <contributors>
+    <contributor>
       <id>gharris</id>
       <name>Grant Harris</name>
       <email>gharris@mbl.edu</email>
@@ -139,8 +157,8 @@
       <properties>
         <picUrl>http://www.loci.wisc.edu/files/loci/images/people/GBH-2010.jpg</picUrl>
       </properties>
-    </developer>
-  </developers>
+    </contributor>
+  </contributors>
 
   <issueManagement>
     <!--
