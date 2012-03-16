@@ -22,14 +22,14 @@ import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.integer.UnsignedByteType;
 import net.imglib2.view.Views;
 
-public class Interactive2DRotationExample< T extends RealType< T > & NativeType< T > > extends AbstractInteractive2DRotationExample< T >
+public class Img2DViewerExample< T extends RealType< T > & NativeType< T > > extends AbstractInteractive2DViewer< T >
 {
 	final private ImgPlus< T > imgPlus;
 	final private Img< T > img;
 	
 	private double yScale;
 	
-	public Interactive2DRotationExample( final ImgPlus< T > imgPlus, final RealARGBConverter< T > converter )
+	public Img2DViewerExample( final ImgPlus< T > imgPlus, final RealARGBConverter< T > converter )
 	{
 		super( converter );
 		this.imgPlus = imgPlus;
@@ -124,6 +124,6 @@ public class Interactive2DRotationExample< T extends RealType< T > & NativeType<
 			e.printStackTrace();
 			return;
 		}
-		new Interactive2DRotationExample< UnsignedByteType >( imgPlus, new RealARGBConverter< UnsignedByteType >( 0, 255 ) ).run( "" );
+		new Img2DViewerExample< UnsignedByteType >( imgPlus, new RealARGBConverter< UnsignedByteType >( 0, 255 ) ).run( "" );
 	}
 }

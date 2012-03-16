@@ -18,7 +18,7 @@ import net.imglib2.realtransform.AffineTransform3D;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 
-abstract public class AbstractInteractive2DRotationExample< T extends RealType< T > & NativeType< T > > extends AbstractInteractiveExample< T >
+abstract public class AbstractInteractive2DViewer< T extends RealType< T > & NativeType< T > > extends AbstractInteractiveExample< T >
 {
 	final static protected double step = Math.PI /180;
 	protected double theta = 0.0;
@@ -57,7 +57,7 @@ abstract public class AbstractInteractive2DRotationExample< T extends RealType< 
 	
 	final protected RealARGBConverter< T > converter;
 	
-	public AbstractInteractive2DRotationExample( final RealARGBConverter< T > converter )
+	public AbstractInteractive2DViewer( final RealARGBConverter< T > converter )
 	{
 		this.converter = converter;
 		cp = new ColorProcessor( 800, 600 );

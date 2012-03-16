@@ -18,11 +18,11 @@ import net.imglib2.type.numeric.ARGBType;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.integer.UnsignedByteType;
 
-public class MandelbrotViewerExample< T extends RealType< T > & NativeType< T > > extends AbstractInteractive2DRotationExample< T >
+public class RealRandomAccessible2DViewerExample< T extends RealType< T > & NativeType< T > > extends AbstractInteractive2DViewer< T >
 {
 	final private RealRandomAccessible< T > source;
 	
-	public MandelbrotViewerExample( final RealRandomAccessible< T > source, final RealARGBConverter< T > converter )
+	public RealRandomAccessible2DViewerExample( final RealRandomAccessible< T > source, final RealARGBConverter< T > converter )
 	{
 		super( converter );
 		this.source = source;
@@ -119,6 +119,6 @@ public class MandelbrotViewerExample< T extends RealType< T > & NativeType< T > 
 			}
 			
 		};
-		new MandelbrotViewerExample< UnsignedByteType >( mandelbrot, new RealARGBConverter< UnsignedByteType >( 0, 255 ) ).run( "" );
+		new RealRandomAccessible2DViewerExample< UnsignedByteType >( mandelbrot, new RealARGBConverter< UnsignedByteType >( 0, 255 ) ).run( "" );
 	}
 }
