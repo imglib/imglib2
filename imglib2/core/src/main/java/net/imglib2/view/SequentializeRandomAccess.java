@@ -1,21 +1,22 @@
 package net.imglib2.view;
 
-import net.imglib2.AbstractRandomAccess;
+import net.imglib2.AbstractLocalizable;
+import net.imglib2.Localizable;
 import net.imglib2.RandomAccess;
 import net.imglib2.transform.Transform;
 
-public final class SequentializeRandomAccess< T > extends AbstractRandomAccess< T >
+public final class SequentializeRandomAccess< T > extends AbstractLocalizable implements RandomAccess< T >
 {
 	private final RandomAccess< T > s;
-	
+
 	private final Transform transformToSource;
 
 	// source dimension
 	private final int m;
-	
+
 	private final long[] tmp;
 
-	SequentializeRandomAccess( RandomAccess< T > source, Transform transformToSource )
+	SequentializeRandomAccess( final RandomAccess< T > source, final Transform transformToSource )
 	{
 		super( transformToSource.numSourceDimensions() );
 
@@ -37,55 +38,101 @@ public final class SequentializeRandomAccess< T > extends AbstractRandomAccess< 
 	}
 
 	@Override
-	public void fwd( int d )
+	public void fwd( final int d )
 	{
-		position[ d ] += 1;
-		transformToSource.apply( this.position, tmp );
+		++position[ d ];
+		transformToSource.apply( position, tmp );
 		s.setPosition( tmp );
 	}
 
 	@Override
-	public void bck( int d )
+	public void bck( final int d )
 	{
-		position[ d ] -= 1;
-		transformToSource.apply( this.position, tmp );
+		--position[ d ];
+		transformToSource.apply( position, tmp );
 		s.setPosition( tmp );
 	}
 
 	@Override
-	public void move( long distance, int d )
+	public void move( final int distance, final int d )
 	{
 		position[ d ] += distance;
-		transformToSource.apply( this.position, tmp );
+		transformToSource.apply( position, tmp );
 		s.setPosition( tmp );
 	}
 
 	@Override
-	public void setPosition( int[] position )
+	public void move( final long distance, final int d )
+	{
+		position[ d ] += distance;
+		transformToSource.apply( position, tmp );
+		s.setPosition( tmp );
+	}
+
+	@Override
+	public void move( final Localizable localizable )
+	{
+		for ( int d = 0; d < n; ++d )
+			position[ d ] += localizable.getLongPosition( d );
+		transformToSource.apply( position, tmp );
+		s.setPosition( tmp );
+	}
+
+	@Override
+	public void move( final int[] distance )
+	{
+		for ( int d = 0; d < n; ++d )
+			position[ d ] += distance[ d ];
+		transformToSource.apply( position, tmp );
+		s.setPosition( tmp );
+	}
+
+	@Override
+	public void move( final long[] distance )
+	{
+		for ( int d = 0; d < n; ++d )
+			position[ d ] += distance[ d ];
+		transformToSource.apply( position, tmp );
+		s.setPosition( tmp );
+	}
+
+	@Override
+	public void setPosition( final Localizable localizable )
+	{
+		localizable.localize( position );
+		transformToSource.apply( position, tmp );
+		s.setPosition( tmp );
+	}
+	@Override
+	public void setPosition( final int[] position )
 	{
 		for( int d = 0; d < n; ++d )
-		{
 			this.position[ d ] = position[ d ];
-		}
 		transformToSource.apply( this.position, tmp );
 		s.setPosition( tmp );
 	}
 
 	@Override
-	public void setPosition( long[] position )
+	public void setPosition( final long[] position )
 	{
 		for( int d = 0; d < n; ++d )
-		{
 			this.position[ d ] = position[ d ];
-		}
 		transformToSource.apply( this.position, tmp );
 		s.setPosition( tmp );
 	}
 
 	@Override
-	public void setPosition( long position, int d )
+	public void setPosition( final int position, final int d )
 	{
-		this.position[ d ] = position; 
+		this.position[ d ] = position;
+		transformToSource.apply( this.position, tmp );
+		s.setPosition( tmp );
+	}
+
+	@Override
+	public void setPosition( final long position, final int d )
+	{
+		this.position[ d ] = position;
 		transformToSource.apply( this.position, tmp );
 		s.setPosition( tmp );
 	}

@@ -37,7 +37,7 @@ import net.imglib2.type.Type;
  * 
  * @author Stephan Preibisch and Stephan Saalfeld
  */
-public class ListImgFactory< T extends Type< T > > extends ImgFactory< T >
+public class ListImgFactory< T > extends ImgFactory< T >
 {
 	@Override
 	public ListImg< T > create( final long[] dim, final T type )

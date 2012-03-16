@@ -21,8 +21,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Stack;
 
-import net.imglib2.AbstractRandomAccess;
 import net.imglib2.Interval;
+import net.imglib2.Point;
 import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessible;
 import net.imglib2.RealInterval;
@@ -192,78 +192,42 @@ public class VolumetricSearch< I extends RealInterval > implements RandomAccessi
 		return numDimensions;
 	}
 
-	@Override
-	public AbstractRandomAccess< List< I >> randomAccess()
+	private class VolumetricSearchRandomAccess extends Point implements RandomAccess< List< I > >
 	{
-		return new AbstractRandomAccess< List< I >>( numDimensions )
+		VolumetricSearchRandomAccess()
 		{
+			super( numDimensions );
+		}
 
-			@Override
-			public void fwd( final int d )
-			{
-				this.position[ d ]++;
-			}
+		@Override
+		public List< I > get()
+		{
+			return find( this );
+		}
 
-			@Override
-			public void bck( final int d )
-			{
-				this.position[ d ]--;
-			}
+		@Override
+		public VolumetricSearchRandomAccess copy()
+		{
+			final VolumetricSearchRandomAccess myCopy = new VolumetricSearchRandomAccess();
+			myCopy.setPosition( this );
+			return myCopy;
+		}
 
-			@Override
-			public void move( final long distance, final int d )
-			{
-				this.position[ d ] += distance;
-			}
-
-			@Override
-			public void setPosition( final int[] position )
-			{
-				for ( int i = 0; i < numDimensions; i++ )
-				{
-					this.position[ i ] = position[ i ];
-				}
-			}
-
-			@Override
-			public void setPosition( final long[] position )
-			{
-				for ( int i = 0; i < numDimensions; i++ )
-				{
-					this.position[ i ] = position[ i ];
-				}
-			}
-
-			@Override
-			public void setPosition( final long position, final int d )
-			{
-				this.position[ d ] = position;
-			}
-
-			@Override
-			public List< I > get()
-			{
-				return find( this );
-			}
-
-			@Override
-			public AbstractRandomAccess< List< I >> copy()
-			{
-				final AbstractRandomAccess< List< I >> myCopy = randomAccess();
-				myCopy.setPosition( this );
-				return myCopy;
-			}
-
-			@Override
-			public AbstractRandomAccess< List< I >> copyRandomAccess()
-			{
-				return copy();
-			}
-		};
+		@Override
+		public VolumetricSearchRandomAccess copyRandomAccess()
+		{
+			return copy();
+		}
 	}
 
 	@Override
-	public RandomAccess< List< I >> randomAccess( final Interval interval )
+	public RandomAccess< List< I > > randomAccess()
+	{
+		return new VolumetricSearchRandomAccess();
+	}
+
+	@Override
+	public RandomAccess< List< I > > randomAccess( final Interval interval )
 	{
 		return randomAccess();
 	}

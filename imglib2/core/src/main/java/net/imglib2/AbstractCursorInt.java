@@ -32,8 +32,9 @@ package net.imglib2;
 import net.imglib2.util.Util;
 
 /**
- * Generic implementation of {@link net.imglib2.Iterator Iterator} mapping to
- * abstract {@link #fwd()} and {@link #get()}.
+ * Abstract implementation of {@link Cursor}. Java's {@link java.util.Iterator}
+ * interface is implemented by mapping to abstract {@link #fwd()} and
+ * {@link #get()}.
  *
  * <p>
  * For localization, default implementations are available that all build on the
@@ -41,8 +42,8 @@ import net.imglib2.util.Util;
  * efficiently saving at least one loop over <em>n</em>.
  *
  * <p>
- * This is identical to {@link AbstractCursor}, except that default implementations
- * build on the abstract int instead of long variant here.
+ * This is identical to {@link AbstractCursor}, except that default
+ * implementations build on the abstract int instead of long variant here.
  *
  * @author Tobias Pietzsch, Stephan Preibisch and Stephan Saalfeld
  *

@@ -28,6 +28,7 @@ import net.imglib2.img.basictypeaccess.ByteAccess;
 import net.imglib2.img.basictypeaccess.array.ByteArray;
 import net.imglib2.img.cell.CellCursor;
 import net.imglib2.img.cell.CellImgFactory;
+import net.imglib2.img.cell.DefaultCell;
 import net.imglib2.img.planar.PlanarCursor;
 import net.imglib2.img.planar.PlanarImg;
 import net.imglib2.type.numeric.integer.UnsignedByteType;
@@ -106,7 +107,7 @@ public class PerformanceBenchmark {
 		reportMemoryUsage(memUsage);
 	}
 
-	public void testPerformance(final int iterationCount) throws IOException {		
+	public void testPerformance(final int iterationCount) throws IOException {
 		// initialize results map
 		results.clear();
 		for (int i = 0; i < iterationCount; i++) {
@@ -155,7 +156,7 @@ public class PerformanceBenchmark {
 		for (int iter = 0; iter < results.size(); iter++) {
 			final Map<String, Long> entry = results.get(iter);
 			sb.append(iter + 1);
-			for (String method : methods) {
+			for (final String method : methods) {
 				sb.append("\t");
 				sb.append(entry.get(method));
 			}
@@ -236,7 +237,7 @@ public class PerformanceBenchmark {
 	}
 
 	private long getMemUsage() {
-		Runtime r = Runtime.getRuntime();
+		final Runtime r = Runtime.getRuntime();
 		System.gc();
 		System.gc();
 		return r.totalMemory() - r.freeMemory();
@@ -295,18 +296,18 @@ public class PerformanceBenchmark {
 	}
 
 	private long computeDifference(final List<Long> list) {
-		long mem = list.remove(0);
+		final long mem = list.remove(0);
 		return list.get(0) - mem;
 	}
 
 	private void reportTime(final String label, final long time, final long... otherTimes) {
-		StringBuilder sb = new StringBuilder();
+		final StringBuilder sb = new StringBuilder();
 		sb.append("\t");
 		sb.append(label);
 		sb.append(": ");
 		sb.append(time);
 		sb.append(" ms");
-		for (long otherTime : otherTimes) {
+		for (final long otherTime : otherTimes) {
 			sb.append(", ");
 			sb.append(time / (float) otherTime);
 		}
@@ -318,7 +319,7 @@ public class PerformanceBenchmark {
 	private byte[] createRawData(final int w, final int h) {
 		final int size = w * h;
 		final int max = w + h;
-		byte[] data = new byte[size];
+		final byte[] data = new byte[size];
 		int index = 0;
 		for (int y = 0; y < h; y++) {
 			for (int x = 0; x < w; x++) {
@@ -332,9 +333,9 @@ public class PerformanceBenchmark {
 		return new ByteProcessor(w, h, data, null);
 	}
 
-	private PixelCube<Byte, BaseIndex> createPixelCube(ByteProcessor bp) {
+	private PixelCube<Byte, BaseIndex> createPixelCube(final ByteProcessor bp) {
 		final PixLib<Byte, BaseIndex> plib = new PixLib<Byte, BaseIndex>();
-		PixelCube<Byte, BaseIndex> pc = plib.cubeFrom(bp, Constants.BASE_INDEXING);
+		final PixelCube<Byte, BaseIndex> pc = plib.cubeFrom(bp, Constants.BASE_INDEXING);
 		return pc;
 	}
 
@@ -351,7 +352,7 @@ public class PerformanceBenchmark {
 	private Img<UnsignedByteType> createPlanarImage(final byte[] data, final int w, final int h) {
 		//return createImage(data, width, height, new PlanarContainerFactory());
 		// NB: Avoid copying the data.
-		PlanarImg<UnsignedByteType, ByteArray> planarContainer = new PlanarImg<UnsignedByteType, ByteArray>(new long[] {w, h}, 1);
+		final PlanarImg<UnsignedByteType, ByteArray> planarContainer = new PlanarImg<UnsignedByteType, ByteArray>(new long[] {w, h}, 1);
 		planarContainer.setPlane(0, new ByteArray(data));
 		planarContainer.setLinkedType(new UnsignedByteType(planarContainer));
 		return planarContainer;
@@ -371,7 +372,7 @@ public class PerformanceBenchmark {
 		final long[] dim = { w, h };
 		final Img< UnsignedByteType > img = cf.create( dim, new UnsignedByteType() );
 		int index = 0;
-		for ( UnsignedByteType t : img )
+		for ( final UnsignedByteType t : img )
 			t.set( data[ index++ ] );
 		return img;
 	}
@@ -418,7 +419,7 @@ public class PerformanceBenchmark {
 	/** Explicit cell version. */
 	private void invertCellImage(final Img<UnsignedByteType> img) {
 		@SuppressWarnings( "unchecked" )
-		final CellCursor< UnsignedByteType, ByteArray > c = ( CellCursor< UnsignedByteType, ByteArray > ) img.cursor();
+		final CellCursor< UnsignedByteType, ByteArray, DefaultCell< ByteArray > > c = ( CellCursor< UnsignedByteType, ByteArray, DefaultCell< ByteArray > > ) img.cursor();
 		while ( c.hasNext() ) {
 			final UnsignedByteType t = c.next();
 			final int value = t.get();
@@ -437,7 +438,7 @@ public class PerformanceBenchmark {
 			t.set(result);
 		}
 	}
-	
+
 	/** Explicit ImagePlus version. */
 	private void invertImagePlusImage(final Img<UnsignedByteType> img) {
 		final PlanarCursor<UnsignedByteType> c = (PlanarCursor<UnsignedByteType>) img.cursor();
@@ -448,10 +449,10 @@ public class PerformanceBenchmark {
 			t.set(result);
 		}
 	}
-	
+
 	private void invertPixelCubeReflection(final PixelCube<Byte, BaseIndex> pc) {
 		pc.setIterationPattern(Constants.IP_FWD + Constants.IP_SINGLE);
-		RasterForwardIterator<Byte> iterIn = (RasterForwardIterator<Byte>) pc.iterator();
+		final RasterForwardIterator<Byte> iterIn = (RasterForwardIterator<Byte>) pc.iterator();
 		while (iterIn.hasNext()) {
 			final int value = iterIn.next() & 0xff;
 			final int result = 255 - value;
@@ -462,7 +463,7 @@ public class PerformanceBenchmark {
 
 	private void invertPixelCubeGenArray(final PixelCube<Byte, BaseIndex> pc) {
 		pc.setIterationPattern(Constants.IP_PRIM +Constants.IP_FWD + Constants.IP_SINGLE);
-		ByteForwardIterator iter = (ByteForwardIterator) pc.iterator();
+		final ByteForwardIterator iter = (ByteForwardIterator) pc.iterator();
 		for (final byte b : pc) {
 			final int value = b & 0xff;
 			final int result = 255 - value;
@@ -472,7 +473,7 @@ public class PerformanceBenchmark {
 
 	private void invertPixelCubeByteArray(final PixelCube<Byte, BaseIndex> pc) {
 		pc.setIterationPattern(Constants.IP_PRIM +Constants.IP_FWD + Constants.IP_SINGLE);
-		ByteForwardIterator iter = (ByteForwardIterator) pc.iterator();
+		final ByteForwardIterator iter = (ByteForwardIterator) pc.iterator();
 		while (iter.hasNext() ) {
 			final int value = iter.nextByte() & 0xff;
 			final int result = 255 - value;
@@ -523,7 +524,7 @@ public class PerformanceBenchmark {
 	/** Explicit cell version. */
 	private void randomizeCellImage(final Img<UnsignedByteType> img) {
 		@SuppressWarnings( "unchecked" )
-		final CellCursor< UnsignedByteType, ByteArray > c = ( CellCursor< UnsignedByteType, ByteArray > ) img.cursor();
+		final CellCursor< UnsignedByteType, ByteArray, DefaultCell< ByteArray > > c = ( CellCursor< UnsignedByteType, ByteArray, DefaultCell< ByteArray > > ) img.cursor();
 		while ( c.hasNext() ) {
 			final UnsignedByteType t = c.next();
 			final int value = t.get();
@@ -556,7 +557,7 @@ public class PerformanceBenchmark {
 
 	private void randomizePixelCubeReflection(final PixelCube<Byte, BaseIndex> pc) {
 		pc.setIterationPattern(Constants.IP_FWD + Constants.IP_SINGLE);
-		RasterForwardIterator<Byte> iterIn = (RasterForwardIterator<Byte>) pc.iterator();
+		final RasterForwardIterator<Byte> iterIn = (RasterForwardIterator<Byte>) pc.iterator();
 		while (iterIn.hasNext()) {
 			final int value = iterIn.next() & 0xff;
 			final double result = expensiveOperation(value);
@@ -567,7 +568,7 @@ public class PerformanceBenchmark {
 
 	private void randomizePixelCubeGenArray(final PixelCube<Byte, BaseIndex> pc) {
 		pc.setIterationPattern(Constants.IP_PRIM +Constants.IP_FWD + Constants.IP_SINGLE);
-		ByteForwardIterator iter = (ByteForwardIterator) pc.iterator();
+		final ByteForwardIterator iter = (ByteForwardIterator) pc.iterator();
 		for (final byte b : pc) {
 			final int value = b & 0xff;
 			final double result = expensiveOperation(value);
@@ -577,7 +578,7 @@ public class PerformanceBenchmark {
 
 	private void randomizePixelCubeByteArray(final PixelCube<Byte, BaseIndex> pc) {
 		pc.setIterationPattern(Constants.IP_PRIM +Constants.IP_FWD + Constants.IP_SINGLE);
-		ByteForwardIterator iter = (ByteForwardIterator) pc.iterator();
+		final ByteForwardIterator iter = (ByteForwardIterator) pc.iterator();
 		while (iter.hasNext() ) {
 			final int value = iter.nextByte() & 0xff;
 			final double result = expensiveOperation(value);

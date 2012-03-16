@@ -22,8 +22,8 @@ public class CellRandomAccessBenchmark
 
 	long intDataSum;
 
-	CellImg< IntType, ? > intImg;
-	CellImg< IntType, ? > intImgCopy;
+	CellImg< IntType, ?, ? > intImg;
+	CellImg< IntType, ?, ? > intImgCopy;
 
 	public void createSourceData()
 	{

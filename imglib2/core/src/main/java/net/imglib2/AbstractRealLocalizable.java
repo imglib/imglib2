@@ -37,6 +37,11 @@ package net.imglib2;
  */
 public abstract class AbstractRealLocalizable extends AbstractEuclideanSpace implements RealLocalizable
 {
+	/**
+	 * The {@link RealLocalizable} interface is implemented using the position
+	 * stored here. {@link RealPositionable} subclasses, such as {@link RealPoint},
+	 * modify this array.
+	 */
 	protected final double[] position;
 
 	/**
@@ -65,14 +70,14 @@ public abstract class AbstractRealLocalizable extends AbstractEuclideanSpace imp
 	@Override
 	public void localize( final float[] pos )
 	{
-		for ( int d = 0; d < numDimensions(); ++d )
+		for ( int d = 0; d < n; ++d )
 			pos[ d ] = ( float ) position[ d ];
 	}
 
 	@Override
 	public void localize( final double[] pos )
 	{
-		for ( int d = 0; d < numDimensions(); ++d )
+		for ( int d = 0; d < n; ++d )
 			pos[ d ] = position[ d ];
 	}
 
