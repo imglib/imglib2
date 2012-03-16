@@ -27,9 +27,11 @@
  */
 package net.imglib2.outofbounds;
 
+import java.util.Random;
+
 import net.imglib2.Interval;
 import net.imglib2.RandomAccessible;
-import net.imglib2.type.Type;
+import net.imglib2.type.numeric.RealType;
 
 /**
  * 
@@ -37,46 +39,35 @@ import net.imglib2.type.Type;
  *
  * @author Stephan Preibisch and Stephan Saalfeld
  */
-public class OutOfBoundsConstantValue< T extends Type< T > > extends AbstractOutOfBoundsValue< T >
+public class OutOfBoundsRandomValueFactory< T extends RealType< T >, F extends Interval & RandomAccessible< T > >
+		implements OutOfBoundsFactory< T, F >
 {
-	final protected T value;
-	
-	protected OutOfBoundsConstantValue( final OutOfBoundsConstantValue< T > outOfBounds )
+	protected T value;
+	protected double min, max;
+	protected Random rnd;
+
+	public OutOfBoundsRandomValueFactory( final T value, final double min, final double max )
 	{
-		super( outOfBounds );
-		this.value = outOfBounds.value.copy();
-	}
-	
-	public < F extends Interval & RandomAccessible< T > > OutOfBoundsConstantValue( final F f, final T value )
-	{
-		super( f, value );
 		this.value = value;
+		this.min = min;
+		this.max = max;
+		this.rnd = new Random( System.currentTimeMillis() );
 	}
 
-	/* Sampler */
-	
-	@Override
-	final public T get()
+	public void setMinMax( final double min, final double max )
 	{
-		//System.out.println( getLocationAsString() + " " + isOutOfBounds );
-		if ( isOutOfBounds )
-			return value;
-		else
-			return sampler.get();
+		this.min = min;
+		this.max = max;
 	}
 	
-	@Override
-	final public OutOfBoundsConstantValue< T > copy()
+	public void setRandom( final Random rnd )
 	{
-		return new OutOfBoundsConstantValue< T >( this );
+		this.rnd = rnd;
 	}
 
-
-	/* RandomAccess */
-
 	@Override
-	final public OutOfBoundsConstantValue< T > copyRandomAccess()
+	public OutOfBoundsRandomValue< T > create( final F f )
 	{
-		return copy();
+		return new OutOfBoundsRandomValue< T >( f, value, rnd, min, max );
 	}
 }

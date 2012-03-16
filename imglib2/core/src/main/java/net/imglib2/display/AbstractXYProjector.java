@@ -49,7 +49,10 @@ abstract public class AbstractXYProjector< A, B > implements Projector< A, B >, 
 	{
 		this.source = source;
 		this.converter = converter;
-		position = new long[ source.numDimensions() ];
+		
+		// as this is an XY projector, we need at least two dimensions,
+		// even if the source is one-dimensional
+		position = new long[ Math.max( 2, source.numDimensions() ) ];
 		min = new long[ position.length ];
 		max = new long[ position.length ];
 	}
