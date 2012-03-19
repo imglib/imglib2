@@ -5,12 +5,12 @@ All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are met:
-  * Redistributions of source code must retain the above copyright
+ * Redistributions of source code must retain the above copyright
     notice, this list of conditions and the following disclaimer.
-  * Redistributions in binary form must reproduce the above copyright
+ * Redistributions in binary form must reproduce the above copyright
     notice, this list of conditions and the following disclaimer in the
     documentation and/or other materials provided with the distribution.
-  * Neither the name of the Fiji project developers nor the
+ * Neither the name of the Fiji project developers nor the
     names of its contributors may be used to endorse or promote products
     derived from this software without specific prior written permission.
 
@@ -25,7 +25,7 @@ INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
 CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE.
-*/
+ */
 
 package net.imglib2.ops.image;
 
@@ -40,48 +40,47 @@ import net.imglib2.type.numeric.RealType;
 /**
  * 
  * @author Christian Dietz
- *
+ * 
  */
-public class BinaryRelationAssigment<T extends RealType<T>, V extends RealType<V>>
-		implements
-		BinaryOperation<IterableInterval<T>, IterableInterval<V>, IterableInterval<BitType>> {
+public class BinaryRelationAssigment< T extends RealType< T >, V extends RealType< V >> implements BinaryOperation< IterableInterval< T >, IterableInterval< V >, IterableInterval< BitType >>
+{
 
-	private BinaryRelation<T, V> m_rel;
-	private ImgFactory<BitType> m_fac;
+	private BinaryRelation< T, V > m_rel;
 
-	public BinaryRelationAssigment(ImgFactory<BitType> fac,
-			BinaryRelation<T, V> rel) {
+	private ImgFactory< BitType > m_fac;
+
+	public BinaryRelationAssigment( ImgFactory< BitType > fac, BinaryRelation< T, V > rel )
+	{
 		m_rel = rel;
 		m_fac = fac;
 	}
 
 	@Override
-	public IterableInterval<BitType> compute(IterableInterval<T> input1,
-			IterableInterval<V> input2, IterableInterval<BitType> output) {
+	public IterableInterval< BitType > compute( IterableInterval< T > input1, IterableInterval< V > input2, IterableInterval< BitType > output )
+	{
+		if ( !IterationOrderUtil.equalIterationOrder( input1, input2 ) || !IterationOrderUtil.equalInterval( input1, input2 ) ) { throw new IllegalArgumentException( "Intervals are not compatible" ); }
 
-		Cursor<T> inCursor1 = input1.localizingCursor();
-		Cursor<V> inCursor2 = input2.localizingCursor();
+		Cursor< T > inCursor1 = input1.cursor();
+		Cursor< V > inCursor2 = input2.cursor();
 
-		if (input1.equalIterationOrder(input2)
-				&& input1.equalIterationOrder(output)) {
-			throw new IllegalArgumentException("Intervals are not compatible");
-		}
+		Cursor< BitType > outCursor = output.cursor();
 
-		Cursor<BitType> outCursor = output.cursor();
-		while (outCursor.hasNext()) {
+		while ( outCursor.hasNext() )
+		{
 			outCursor.fwd();
 			inCursor1.fwd();
 			inCursor2.fwd();
 
-			outCursor.get().set(m_rel.holds(inCursor1.get(), inCursor2.get()));
+			outCursor.get().set( m_rel.holds( inCursor1.get(), inCursor2.get() ) );
 		}
 		return output;
 
 	}
 
 	@Override
-	public BinaryOperation<IterableInterval<T>, IterableInterval<V>, IterableInterval<BitType>> copy() {
-		return new BinaryRelationAssigment<T, V>(m_fac, m_rel.copy());
+	public BinaryOperation< IterableInterval< T >, IterableInterval< V >, IterableInterval< BitType >> copy()
+	{
+		return new BinaryRelationAssigment< T, V >( m_fac, m_rel.copy() );
 	}
 
 }
