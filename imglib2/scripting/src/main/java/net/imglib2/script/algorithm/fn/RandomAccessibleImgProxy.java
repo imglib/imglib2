@@ -14,7 +14,7 @@ import net.imglib2.img.ImgFactory;
 import net.imglib2.img.array.ArrayImg;
 import net.imglib2.img.list.ListImg;
 import net.imglib2.type.numeric.NumericType;
-import net.imglib2.view.RandomAccessibleZeroMinIntervalCursor;
+import net.imglib2.view.RandomAccessibleIntervalCursor;
 import net.imglib2.view.Views;
 
 public class RandomAccessibleImgProxy<T extends NumericType<T>, RAI extends RandomAccessible<T>> implements Img<T> {
