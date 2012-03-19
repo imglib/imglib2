@@ -35,15 +35,15 @@ import net.imglib2.type.NativeType;
 
 /**
  * @author Tobias Pietzsch
- *
+ * 
  */
-public final class NtreeRandomAccess< T extends NativeType< T > > extends AbstractRandomAccess< T > implements PositionProvider
+public final class NtreeRandomAccess< T extends NativeType< T >> extends AbstractRandomAccess< T > implements PositionProvider
 {
-	private final NtreeImg< T > img;
+	private final NtreeImg< T, ? > img;
 
 	private final T type;
 
-	public NtreeRandomAccess( final NtreeImg< T > img )
+	public NtreeRandomAccess( final NtreeImg< T, ? > img )
 	{
 		super( img.numDimensions() );
 

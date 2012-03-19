@@ -29,98 +29,97 @@
  */
 package net.imglib2.img.sparse;
 
+import java.io.Serializable;
+
 import net.imglib2.Interval;
 import net.imglib2.IterableRealInterval;
 import net.imglib2.img.AbstractNativeImg;
 import net.imglib2.img.ImgFactory;
 import net.imglib2.img.array.ArrayImg;
-import net.imglib2.img.basictypeaccess.IntAccess;
 import net.imglib2.type.NativeType;
 import net.imglib2.view.IterableRandomAccessibleInterval;
 
 /**
  * @author Tobias Pietzsch
- *
+ * 
  */
-public final class NtreeImg< T extends NativeType< T > > extends AbstractNativeImg< T, IntAccess >
-{
+public final class NtreeImg<T extends NativeType<T>, A extends NtreeAccess<?, A>>
+		extends AbstractNativeImg<T, A> implements Serializable {
 
-	final Ntree< Integer > ntree;
+	/**
+	 * TODO: remove with proper serialization
+	 */
+	private static final long serialVersionUID = 1L;
 
-	public NtreeImg( final long[] dimensions )
-	{
-		super( dimensions, 1 );
-		ntree = new Ntree< Integer >( dimensions, 0 );
+	// final Ntree<?> ntree;
+	final A data;
+
+	public NtreeImg(final A data, final long[] dim, final int entitiesPerPixel) {
+		super(dim, entitiesPerPixel);
+
+		// this.ntree = new Ntree<Integer>(dimensions, 0);
+		this.data = data;
 	}
 
-	private NtreeImg( final NtreeImg< T > img )
-	{
-		super( img.dimension, 1 );
-		ntree = new Ntree< Integer >( img.ntree );
+	private NtreeImg(final NtreeImg<T, A> img) {
+		super(img.dimension, 1);
+
+		// this.ntree = new Ntree<Integer>(img.dimension, 0);
+		this.data = img.data;
 	}
 
-	static interface PositionProvider
-	{
+	public static interface PositionProvider {
 		long[] getPosition();
 	}
 
 	// updater is the RandomAccess / Cursor etc
 	// each call creates a new IntAccess wrapper
 	@Override
-	public IntAccess update( final Object updater )
-	{
-		return new NtreeIntAccess( ntree, ( ( PositionProvider ) updater ).getPosition() );
+	public A update(final Object updater) {
+		return data.createInstance(((PositionProvider) updater).getPosition());
 	}
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see net.imglib2.RandomAccessible#randomAccess()
 	 */
 	@Override
-	public NtreeRandomAccess< T > randomAccess()
-	{
-		return new NtreeRandomAccess< T >( this );
+	public NtreeRandomAccess<T> randomAccess() {
+		return new NtreeRandomAccess<T>(this);
 	}
 
 	@Override
-	public NtreeCursor< T > cursor()
-	{
-		return new NtreeCursor< T >( this );
+	public NtreeCursor<T> cursor() {
+		return new NtreeCursor<T>(this);
 	}
 
 	@Override
-	public NtreeCursor< T > localizingCursor()
-	{
+	public NtreeCursor<T> localizingCursor() {
 		return cursor();
 	}
 
 	@Override
-	public ImgFactory< T > factory()
-	{
+	public ImgFactory<T> factory() {
 		return new NtreeImgFactory<T>();
 	}
 
 	@Override
-	public NtreeImg< T > copy()
-	{
-		return new NtreeImg< T >( this );
+	public NtreeImg<T, A> copy() {
+		return new NtreeImg<T, A>(this);
 	}
 
 	@Override
-	public boolean equalIterationOrder( final IterableRealInterval< ? > f )
-	{
-		if (
-				f.numDimensions() == n &&
-				( NtreeImg.class.isInstance( f ) || ArrayImg.class.isInstance( f ) || IterableRandomAccessibleInterval.class.isInstance( f ) ) )
-		{
-			final Interval fAsInterval = ( Interval )f;
-			for ( int d = 0; d < n; ++d )
-			{
-				if ( dimension( d ) == fAsInterval.dimension( d ) )
+	public boolean equalIterationOrder(final IterableRealInterval<?> f) {
+		if (f.numDimensions() == n
+				&& (NtreeImg.class.isInstance(f)
+						|| ArrayImg.class.isInstance(f) || IterableRandomAccessibleInterval.class
+							.isInstance(f))) {
+			final Interval fAsInterval = (Interval) f;
+			for (int d = 0; d < n; ++d) {
+				if (dimension(d) == fAsInterval.dimension(d))
 					continue;
-				else
-					return false;
+				return false;
 			}
 			return true;
 		}
