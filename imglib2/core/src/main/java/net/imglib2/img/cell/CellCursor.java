@@ -74,7 +74,7 @@ public class CellCursor< T extends NativeType< T >, A extends ArrayDataAccess< A
 	@Override
 	public boolean hasNext()
 	{
-		return isNotLastCell || ( index < lastIndexInCell );
+		return ( index < lastIndexInCell ) || isNotLastCell;
 	}
 
 	@Override

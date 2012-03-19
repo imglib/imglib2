@@ -27,8 +27,8 @@ public abstract class AbstractCell< A extends ArrayDataAccess< A > >
 			max[ d ] = min[ d ] + dimensions[ d ] - 1;
 		}
 
-		int nPixels = 1;
-		for ( int d = 0; d < n; ++d ) {
+		int nPixels = dimensions[ 0 ];
+		for ( int d = 1; d < n; ++d ) {
 			nPixels *= dimensions[ d ];
 		}
 		numPixels = nPixels;
