@@ -83,7 +83,7 @@ public class CellRandomAccessBenchmark
 		randomAccessBenchmark.createSourceData();
 
 		System.out.println( "benchmarking fill" );
-		BenchmarkHelper.benchmark( new BenchmarkHelper.Benchmark()
+		BenchmarkHelper.benchmark( 20, false, new BenchmarkHelper.Benchmark()
 		{
 			@Override
 			public void run()
@@ -95,7 +95,7 @@ public class CellRandomAccessBenchmark
 
 		randomAccessBenchmark.intImgCopy = new CellImgFactory< IntType >( 32 ).create( randomAccessBenchmark.dimensions, new IntType() );
 		System.out.println( "benchmarking copy to smaller" );
-		BenchmarkHelper.benchmark( new BenchmarkHelper.Benchmark()
+		BenchmarkHelper.benchmark( 20, false, new BenchmarkHelper.Benchmark()
 		{
 			@Override
 			public void run()
@@ -107,7 +107,7 @@ public class CellRandomAccessBenchmark
 
 		randomAccessBenchmark.intImgCopy = new CellImgFactory< IntType >( 50 ).create( randomAccessBenchmark.dimensions, new IntType() );
 		System.out.println( "benchmarking copy to larger" );
-		BenchmarkHelper.benchmark( new BenchmarkHelper.Benchmark()
+		BenchmarkHelper.benchmark( 20, false, new BenchmarkHelper.Benchmark()
 		{
 			@Override
 			public void run()
@@ -119,7 +119,7 @@ public class CellRandomAccessBenchmark
 
 		randomAccessBenchmark.intImgCopy = new CellImgFactory< IntType >( new int[] {32, 64, 16} ).create( randomAccessBenchmark.dimensions, new IntType() );
 		System.out.println( "benchmarking copy to mixed" );
-		BenchmarkHelper.benchmark( new BenchmarkHelper.Benchmark()
+		BenchmarkHelper.benchmark( 20, false, new BenchmarkHelper.Benchmark()
 		{
 			@Override
 			public void run()
