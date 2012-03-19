@@ -35,6 +35,7 @@ package net.imglib2;
  *
  * @author Stephan Preibisch
  */
+@Deprecated
 public class Location extends Point
 {
 	public Location ( final Localizable position )
